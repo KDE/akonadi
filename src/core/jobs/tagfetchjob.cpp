@@ -5,10 +5,10 @@
 */
 
 #include "tagfetchjob.h"
+#include "attributefactory.h"
 #include "job_p.h"
 #include "protocolhelper_p.h"
 #include "tagfetchscope.h"
-#include "attributefactory.h"
 #include <QTimer>
 
 using namespace Akonadi;
@@ -27,10 +27,13 @@ public:
         mEmitTimer = new QTimer(q);
         mEmitTimer->setSingleShot(true);
         mEmitTimer->setInterval(100);
-        q->connect(mEmitTimer, &QTimer::timeout, q, [this]() { timeout(); });
+        q->connect(mEmitTimer, &QTimer::timeout, q, [this]() {
+            timeout();
+        });
     }
 
-    void aboutToFinish() override {
+    void aboutToFinish() override
+    {
         timeout();
     }
 

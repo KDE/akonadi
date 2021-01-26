@@ -13,7 +13,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class AkLocalServer : public QLocalServer
 {
     Q_OBJECT

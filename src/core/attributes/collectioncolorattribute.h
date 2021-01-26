@@ -15,7 +15,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @short Attribute that stores colors of a collection.
  *

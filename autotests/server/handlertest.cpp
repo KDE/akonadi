@@ -13,39 +13,40 @@
 #include <typeinfo>
 
 #include "handler.h"
-#include "handler/collectioncreatehandler.h"
-#include "handler/collectionfetchhandler.h"
-#include "handler/collectionstatsfetchhandler.h"
-#include "handler/collectiondeletehandler.h"
-#include "handler/collectionmodifyhandler.h"
 #include "handler/collectioncopyhandler.h"
+#include "handler/collectioncreatehandler.h"
+#include "handler/collectiondeletehandler.h"
+#include "handler/collectionfetchhandler.h"
+#include "handler/collectionmodifyhandler.h"
 #include "handler/collectionmovehandler.h"
-#include "handler/searchcreatehandler.h"
-#include "handler/searchhandler.h"
-#include "handler/itemfetchhandler.h"
-#include "handler/itemdeletehandler.h"
-#include "handler/itemmodifyhandler.h"
-#include "handler/itemcreatehandler.h"
+#include "handler/collectionstatsfetchhandler.h"
 #include "handler/itemcopyhandler.h"
+#include "handler/itemcreatehandler.h"
+#include "handler/itemdeletehandler.h"
+#include "handler/itemfetchhandler.h"
 #include "handler/itemlinkhandler.h"
+#include "handler/itemmodifyhandler.h"
 #include "handler/itemmovehandler.h"
-#include "handler/resourceselecthandler.h"
-#include "handler/transactionhandler.h"
 #include "handler/loginhandler.h"
 #include "handler/logouthandler.h"
+#include "handler/resourceselecthandler.h"
+#include "handler/searchcreatehandler.h"
+#include "handler/searchhandler.h"
+#include "handler/transactionhandler.h"
 
 #include "fakeakonadiserver.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-#define MAKE_CMD_ROW( command, class ) QTest::newRow(#command) << (command) << QByteArray(typeid(Akonadi::Server::class).name());
+#define MAKE_CMD_ROW(command, class) QTest::newRow(#command) << (command) << QByteArray(typeid(Akonadi::Server::class).name());
 
 class HandlerTest : public QObject
 {
     Q_OBJECT
 
     FakeAkonadiServer mAkonadi;
+
 public:
     explicit HandlerTest()
     {
@@ -93,16 +94,14 @@ private:
 
     void addInvalidCommands()
     {
-        //MAKE_CMD_ROW(Protocol::Command::Invalid, UnknownCommandHandler)
+        // MAKE_CMD_ROW(Protocol::Command::Invalid, UnknownCommandHandler)
     }
 
-    template<typename T>
-    QByteArray typeName(const T &t)
+    template<typename T> QByteArray typeName(const T &t)
     {
         const auto &v = *t;
         return typeid(v).name();
     }
-
 
 private Q_SLOTS:
     void testFindAuthenticatedCommand_data()
@@ -147,7 +146,6 @@ private Q_SLOTS:
     {
         QFETCH(Protocol::Command::Type, command);
         QFETCH(QByteArray, className);
-
 
         auto handler = Handler::findHandlerForCommandNonAuthenticated(command, mAkonadi);
         QVERIFY(handler);

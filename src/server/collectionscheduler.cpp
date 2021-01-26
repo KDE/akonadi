@@ -5,9 +5,9 @@
 */
 
 #include "collectionscheduler.h"
+#include "akonadiserver_debug.h"
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
-#include "akonadiserver_debug.h"
 
 #include <chrono>
 #include <private/tristate_p.h>
@@ -21,7 +21,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
  * @warning: QTimer's methods are not virtual, so it's necessary to always call
  * methods on pointer to PauseableTimer!
@@ -116,10 +115,12 @@ void CollectionScheduler::inhibit(bool inhibit)
 {
     if (inhibit) {
         const bool success = QMetaObject::invokeMethod(mScheduler, &PauseableTimer::pause, Qt::QueuedConnection);
-        Q_ASSERT(success); Q_UNUSED(success)
+        Q_ASSERT(success);
+        Q_UNUSED(success)
     } else {
         const bool success = QMetaObject::invokeMethod(mScheduler, &PauseableTimer::resume, Qt::QueuedConnection);
-        Q_ASSERT(success); Q_UNUSED(success)
+        Q_ASSERT(success);
+        Q_UNUSED(success)
     }
 }
 
@@ -154,7 +155,12 @@ void CollectionScheduler::collectionAdded(qint64 collectionId)
     Collection collection = Collection::retrieveById(collectionId);
     DataStore::self()->activeCachePolicy(collection);
     if (shouldScheduleCollection(collection)) {
-        QMetaObject::invokeMethod(this, [this, collection]() {scheduleCollection(collection);}, Qt::QueuedConnection);
+        QMetaObject::invokeMethod(
+            this,
+            [this, collection]() {
+                scheduleCollection(collection);
+            },
+            Qt::QueuedConnection);
     }
 }
 
@@ -170,7 +176,12 @@ void CollectionScheduler::collectionChanged(qint64 collectionId)
             if (shouldScheduleCollection(changed)) {
                 locker.unlock();
                 // Scheduling the changed collection will automatically remove the old one
-                QMetaObject::invokeMethod(this, [this, changed]() {scheduleCollection(changed);}, Qt::QueuedConnection);
+                QMetaObject::invokeMethod(
+                    this,
+                    [this, changed]() {
+                        scheduleCollection(changed);
+                    },
+                    Qt::QueuedConnection);
             } else {
                 locker.unlock();
                 // If the collection should no longer be scheduled then remove it
@@ -263,12 +274,16 @@ void CollectionScheduler::scheduleCollection(Collection collection, bool shouldS
 
 CollectionScheduler::ScheduleMap::const_iterator CollectionScheduler::constFind(qint64 collectionId) const
 {
-    return std::find_if(mSchedule.cbegin(), mSchedule.cend(), [collectionId](const Collection &c) { return c.id() == collectionId; });
+    return std::find_if(mSchedule.cbegin(), mSchedule.cend(), [collectionId](const Collection &c) {
+        return c.id() == collectionId;
+    });
 }
 
 CollectionScheduler::ScheduleMap::iterator CollectionScheduler::find(qint64 collectionId)
 {
-    return std::find_if(mSchedule.begin(), mSchedule.end(), [collectionId](const Collection &c) { return c.id() == collectionId; });
+    return std::find_if(mSchedule.begin(), mSchedule.end(), [collectionId](const Collection &c) {
+        return c.id() == collectionId;
+    });
 }
 
 // separate method so we call the const version of QMap::lowerBound
@@ -284,8 +299,7 @@ void CollectionScheduler::init()
 
     mScheduler = new PauseableTimer();
     mScheduler->setSingleShot(true);
-    connect(mScheduler, &QTimer::timeout,
-            this, &CollectionScheduler::schedulerTimeout);
+    connect(mScheduler, &QTimer::timeout, this, &CollectionScheduler::schedulerTimeout);
 
     // Only retrieve enabled collections and referenced collections, we don't care
     // about anything else

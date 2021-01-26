@@ -8,11 +8,10 @@
 #define AKONADI_ITEMMOVEJOB_H
 
 #include "akonadicore_export.h"
-#include "job.h"
 #include "item.h"
+#include "job.h"
 namespace Akonadi
 {
-
 class Collection;
 class ItemMoveJobPrivate;
 

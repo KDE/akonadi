@@ -9,29 +9,29 @@
 
 #include "asyncselectionhandler_p.h"
 
-#include "monitor.h"
+#include "collectioncreatejob.h"
 #include "collectionfetchscope.h"
 #include "collectionfilterproxymodel.h"
+#include "collectionutils.h"
 #include "entityrightsfiltermodel.h"
 #include "entitytreemodel.h"
 #include "entitytreeview.h"
+#include "monitor.h"
 #include "session.h"
-#include "collectioncreatejob.h"
-#include "collectionutils.h"
 
+#include <QCheckBox>
+#include <QDialogButtonBox>
 #include <QHeaderView>
 #include <QLabel>
 #include <QVBoxLayout>
-#include <QCheckBox>
-#include <QDialogButtonBox>
 
-#include <QLineEdit>
-#include <KLocalizedString>
-#include <QInputDialog>
-#include <QMessageBox>
-#include <QPushButton>
 #include <KConfig>
 #include <KConfigGroup>
+#include <KLocalizedString>
+#include <QInputDialog>
+#include <QLineEdit>
+#include <QMessageBox>
+#include <QPushButton>
 
 using namespace Akonadi;
 
@@ -50,8 +50,10 @@ public:
 
         auto *filterCollectionLineEdit = new QLineEdit(mParent);
         filterCollectionLineEdit->setClearButtonEnabled(true);
-        filterCollectionLineEdit->setPlaceholderText(i18nc("@info Displayed grayed-out inside the "
-                "textbox, verb to search", "Search"));
+        filterCollectionLineEdit->setPlaceholderText(
+            i18nc("@info Displayed grayed-out inside the "
+                  "textbox, verb to search",
+                  "Search"));
         layout->addWidget(filterCollectionLineEdit);
 
         mView = new EntityTreeView(mParent);
@@ -100,17 +102,21 @@ public:
         mView->setModel(mFilterCollection);
 
         changeCollectionDialogOptions(options);
-        mParent->connect(filterCollectionLineEdit, &QLineEdit::textChanged,
-                         mParent, [this](const QString &str) { slotFilterFixedString(str); });
+        mParent->connect(filterCollectionLineEdit, &QLineEdit::textChanged, mParent, [this](const QString &str) {
+            slotFilterFixedString(str);
+        });
 
-        mParent->connect(mView->selectionModel(), &QItemSelectionModel::selectionChanged,
-                         mParent, [this]() { slotSelectionChanged(); });
-        mParent->connect(mView, qOverload<const QModelIndex &>(&QAbstractItemView::doubleClicked),
-                         mParent, [this]() { slotDoubleClicked(); });
+        mParent->connect(mView->selectionModel(), &QItemSelectionModel::selectionChanged, mParent, [this]() {
+            slotSelectionChanged();
+        });
+        mParent->connect(mView, qOverload<const QModelIndex &>(&QAbstractItemView::doubleClicked), mParent, [this]() {
+            slotDoubleClicked();
+        });
 
         mSelectionHandler = new AsyncSelectionHandler(mFilterCollection, mParent);
-        mParent->connect(mSelectionHandler, &AsyncSelectionHandler::collectionAvailable,
-                         mParent, [this](const QModelIndex &index) {slotCollectionAvailable(index);});
+        mParent->connect(mSelectionHandler, &AsyncSelectionHandler::collectionAvailable, mParent, [this](const QModelIndex &index) {
+            slotCollectionAvailable(index);
+        });
         readConfig();
     }
 
@@ -137,7 +143,7 @@ public:
     {
         KConfig config(QStringLiteral("akonadi_contactrc"));
         KConfigGroup group(&config, QStringLiteral("CollectionDialog"));
-        const QSize size = group.readEntry("Size", QSize(800,  500));
+        const QSize size = group.readEntry("Size", QSize(800, 500));
         if (size.isValid()) {
             mParent->resize(size);
         }
@@ -219,7 +225,9 @@ void CollectionDialog::Private::changeCollectionDialogOptions(CollectionDialogOp
         mNewSubfolderButton->setIcon(QIcon::fromTheme(QStringLiteral("folder-new")));
         mNewSubfolderButton->setToolTip(i18n("Create a new subfolder under the currently selected folder"));
         mNewSubfolderButton->setEnabled(false);
-        connect(mNewSubfolderButton, &QPushButton::clicked, mParent, [this]() { slotAddChildCollection(); });
+        connect(mNewSubfolderButton, &QPushButton::clicked, mParent, [this]() {
+            slotAddChildCollection();
+        });
     }
     mKeepTreeExpanded = (options & KeepTreeExpanded);
     if (mKeepTreeExpanded) {
@@ -251,8 +259,7 @@ void CollectionDialog::Private::slotAddChildCollection()
 {
     const Akonadi::Collection parentCollection = mParent->selectedCollection();
     if (canCreateCollection(parentCollection)) {
-        const QString name = QInputDialog::getText(mParent, i18nc("@title:window", "New Folder"),
-                             i18nc("@label:textbox, name of a thing", "Name"));
+        const QString name = QInputDialog::getText(mParent, i18nc("@title:window", "New Folder"), i18nc("@label:textbox, name of a thing", "Name"));
         if (name.trimmed().isEmpty()) {
             return;
         }
@@ -264,15 +271,16 @@ void CollectionDialog::Private::slotAddChildCollection()
             collection.setContentMimeTypes(mContentMimeTypes);
         }
         auto *job = new Akonadi::CollectionCreateJob(collection);
-        connect(job, &Akonadi::CollectionCreateJob::result, mParent, [this](KJob *job) {slotCollectionCreationResult(job);});
+        connect(job, &Akonadi::CollectionCreateJob::result, mParent, [this](KJob *job) {
+            slotCollectionCreationResult(job);
+        });
     }
 }
 
 void CollectionDialog::Private::slotCollectionCreationResult(KJob *job)
 {
     if (job->error()) {
-        QMessageBox::critical(mParent, i18n("Folder creation failed"),
-                              i18n("Could not create folder: %1", job->errorString()));
+        QMessageBox::critical(mParent, i18n("Folder creation failed"), i18n("Could not create folder: %1", job->errorString()));
     }
 }
 

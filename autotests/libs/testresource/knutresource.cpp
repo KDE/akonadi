@@ -8,23 +8,23 @@
 #include "knutresource.h"
 #include "knutresource_debug.h"
 #include "settingsadaptor.h"
-#include "xmlwriter.h"
 #include "xmlreader.h"
+#include "xmlwriter.h"
 
+#include <QDBusConnection>
 #include <agentfactory.h>
 #include <changerecorder.h>
-#include <QDBusConnection>
 #include <itemfetchscope.h>
 #include <tagcreatejob.h>
 
-#include <QFileDialog>
 #include <KLocalizedString>
+#include <QFileDialog>
 
+#include <QDir>
 #include <QFile>
 #include <QFileSystemWatcher>
-#include <QDir>
-#include <QUuid>
 #include <QStandardPaths>
+#include <QUuid>
 
 using namespace Akonadi;
 
@@ -37,8 +37,7 @@ KnutResource::KnutResource(const QString &id)
     changeRecorder()->fetchCollection(true);
 
     new SettingsAdaptor(mSettings);
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Settings"),
-            mSettings, QDBusConnection::ExportAdaptors);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Settings"), mSettings, QDBusConnection::ExportAdaptors);
     connect(this, &KnutResource::reloadConfiguration, this, &KnutResource::load);
     connect(mWatcher, &QFileSystemWatcher::fileChanged, this, &KnutResource::load);
     load();
@@ -100,9 +99,11 @@ void KnutResource::configure(WId windowId)
 
     // TODO: Use windowId
     Q_UNUSED(windowId)
-    const QString newFile = QFileDialog::getSaveFileName(
-        nullptr, i18n("Select Data File"), QString(),
-        QStringLiteral("*.xml |") + i18nc("Filedialog filter for Akonadi data file", "Akonadi Knut Data File"));
+    const QString newFile =
+        QFileDialog::getSaveFileName(nullptr,
+                                     i18n("Select Data File"),
+                                     QString(),
+                                     QStringLiteral("*.xml |") + i18nc("Filedialog filter for Akonadi data file", "Akonadi Knut Data File"));
 
     if (newFile.isEmpty() || oldFile == newFile) {
         return;
@@ -219,7 +220,7 @@ void KnutResource::collectionChanged(const Akonadi::Collection &collection)
             continue;
         }
         if (child.tagName() == QLatin1String("item") || child.tagName() == QStringLiteral("collection")) {
-            newElem.appendChild(child);   // reparents
+            newElem.appendChild(child); // reparents
             --i; // children, despite being const is modified by the reparenting
         }
     }
@@ -246,7 +247,7 @@ void KnutResource::itemAdded(const Akonadi::Item &item, const Akonadi::Collectio
 {
     QDomElement parentElem = mDocument.collectionElementByRemoteId(collection.remoteId());
     if (parentElem.isNull()) {
-        Q_EMIT error(i18n("Parent collection '%1' not found in DOM tree." , collection.remoteId()));
+        Q_EMIT error(i18n("Parent collection '%1' not found in DOM tree.", collection.remoteId()));
         changeProcessed();
         return;
     }
@@ -357,8 +358,7 @@ void KnutResource::addSearch(const QString &query, const QString &queryLanguage,
     Q_UNUSED(query)
     Q_UNUSED(queryLanguage)
     Q_UNUSED(resultCollection)
-    qCDebug(KNUTRESOURCE_LOG) << "addSearch: query=" << query << ", queryLanguage="
-                              << queryLanguage << ", resultCollection=" << resultCollection.id();
+    qCDebug(KNUTRESOURCE_LOG) << "addSearch: query=" << query << ", queryLanguage=" << queryLanguage << ", resultCollection=" << resultCollection.id();
 }
 
 void KnutResource::removeSearch(const Collection &resultCollection)

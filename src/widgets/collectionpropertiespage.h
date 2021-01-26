@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 class Collection;
 
 /**
@@ -198,14 +197,14 @@ private:
  *
  * @ingroup AkonadiMacros
  */
-#define AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(factoryName, className) \
-    class factoryName : public Akonadi::CollectionPropertiesPageFactory \
-    { \
-    public: \
-        inline Akonadi::CollectionPropertiesPage *createWidget( QWidget *parent = nullptr ) const override \
-        { \
-            return new className( parent ); \
-        } \
+#define AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(factoryName, className)                                                                                     \
+    class factoryName : public Akonadi::CollectionPropertiesPageFactory                                                                                        \
+    {                                                                                                                                                          \
+    public:                                                                                                                                                    \
+        inline Akonadi::CollectionPropertiesPage *createWidget(QWidget *parent = nullptr) const override                                                       \
+        {                                                                                                                                                      \
+            return new className(parent);                                                                                                                      \
+        }                                                                                                                                                      \
     };
 
 }

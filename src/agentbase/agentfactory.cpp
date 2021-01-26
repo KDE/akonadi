@@ -11,8 +11,8 @@
 #include "servermanager.h"
 #include "servermanager_p.h"
 
-#include <KLocalizedString>
 #include <KGlobal>
+#include <KLocalizedString>
 
 #include <QThread>
 #include <QThreadStorage>
@@ -51,8 +51,8 @@ void AgentFactoryBase::createComponentData(const QString &identifier) const
     Q_ASSERT(!s_agentComponentDatas.hasLocalData());
 
     if (QThread::currentThread() != QCoreApplication::instance()->thread()) {
-        s_agentComponentDatas.setLocalData(new KComponentData(ServerManager::addNamespace(identifier).toLatin1(), d->catalogName.toLatin1(),
-                                           KComponentData::SkipMainComponentRegistration));
+        s_agentComponentDatas.setLocalData(
+            new KComponentData(ServerManager::addNamespace(identifier).toLatin1(), d->catalogName.toLatin1(), KComponentData::SkipMainComponentRegistration));
     } else {
         s_agentComponentDatas.setLocalData(new KComponentData(ServerManager::addNamespace(identifier).toLatin1(), d->catalogName.toLatin1()));
     }

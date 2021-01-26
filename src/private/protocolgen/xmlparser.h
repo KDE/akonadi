@@ -37,10 +37,10 @@ private:
     bool parseSetter(PropertyNode *parent);
 
     void printError(const QString &error);
+
 private:
     QXmlStreamReader mReader;
     std::unique_ptr<Node> mTree;
-
 };
 
 #endif // XMLPARSER_H

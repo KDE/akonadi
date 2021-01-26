@@ -13,7 +13,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class Collection;
 
 /**
@@ -24,7 +23,7 @@ class Collection;
   This commands deletes the selected collections including all their content
   and that of any child collection.
 */
-class CollectionDeleteHandler: public Handler
+class CollectionDeleteHandler : public Handler
 {
 public:
     CollectionDeleteHandler(AkonadiServer &akonadi);
@@ -34,7 +33,6 @@ public:
 
 private:
     bool deleteRecursive(Collection &col);
-
 };
 
 } // namespace Server

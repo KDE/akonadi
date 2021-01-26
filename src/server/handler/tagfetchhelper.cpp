@@ -5,11 +5,11 @@
 */
 
 #include "tagfetchhelper.h"
-#include "handler.h"
 #include "connection.h"
-#include "utils.h"
+#include "handler.h"
 #include "storage/querybuilder.h"
 #include "storage/tagqueryhelper.h"
+#include "utils.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -28,8 +28,7 @@ QSqlQuery TagFetchHelper::buildAttributeQuery() const
     qb.addColumn(TagAttribute::typeFullColumnName());
     qb.addColumn(TagAttribute::valueFullColumnName());
     qb.addSortColumn(TagAttribute::tagIdFullColumnName(), Query::Descending);
-    qb.addJoin(QueryBuilder::InnerJoin, Tag::tableName(),
-               TagAttribute::tagIdFullColumnName(), Tag::idFullColumnName());
+    qb.addJoin(QueryBuilder::InnerJoin, Tag::tableName(), TagAttribute::tagIdFullColumnName(), Tag::idFullColumnName());
     TagQueryHelper::scopeToQuery(mScope, mConnection->context(), qb);
 
     if (!qb.exec()) {
@@ -52,8 +51,9 @@ QSqlQuery TagFetchHelper::buildAttributeQuery(qint64 id, const Protocol::TagFetc
     if (!fetchScope.fetchAllAttributes() && !fetchScope.attributes().isEmpty()) {
         QVariantList typeNames;
         const auto attrs = fetchScope.attributes();
-        std::transform(attrs.cbegin(), attrs.cend(), std::back_inserter(typeNames),
-                [](const QByteArray &ba) { return QVariant(ba); });
+        std::transform(attrs.cbegin(), attrs.cend(), std::back_inserter(typeNames), [](const QByteArray &ba) {
+            return QVariant(ba);
+        });
         qb.addValueCondition(TagAttribute::typeColumn(), Query::In, typeNames);
     }
 
@@ -72,18 +72,15 @@ QSqlQuery TagFetchHelper::buildTagQuery()
     qb.addColumn(Tag::gidFullColumnName());
     qb.addColumn(Tag::parentIdFullColumnName());
 
-    qb.addJoin(QueryBuilder::InnerJoin, TagType::tableName(),
-               Tag::typeIdFullColumnName(), TagType::idFullColumnName());
+    qb.addJoin(QueryBuilder::InnerJoin, TagType::tableName(), Tag::typeIdFullColumnName(), TagType::idFullColumnName());
     qb.addColumn(TagType::nameFullColumnName());
 
     // Expose tag's remote ID only to resources
     if (mFetchScope.fetchRemoteID() && mConnection->context().resource().isValid()) {
         qb.addColumn(TagRemoteIdResourceRelation::remoteIdFullColumnName());
         Query::Condition joinCondition;
-        joinCondition.addValueCondition(TagRemoteIdResourceRelation::resourceIdFullColumnName(),
-                                        Query::Equals, mConnection->context().resource().id());
-        joinCondition.addColumnCondition(TagRemoteIdResourceRelation::tagIdFullColumnName(),
-                                         Query::Equals, Tag::idFullColumnName());
+        joinCondition.addValueCondition(TagRemoteIdResourceRelation::resourceIdFullColumnName(), Query::Equals, mConnection->context().resource().id());
+        joinCondition.addColumnCondition(TagRemoteIdResourceRelation::tagIdFullColumnName(), Query::Equals, Tag::idFullColumnName());
         qb.addJoin(QueryBuilder::LeftJoin, TagRemoteIdResourceRelation::tableName(), joinCondition);
     }
 
@@ -97,15 +94,13 @@ QSqlQuery TagFetchHelper::buildTagQuery()
     return qb.query();
 }
 
-QMap<QByteArray, QByteArray> TagFetchHelper::fetchTagAttributes(qint64 tagId,
-        const Protocol::TagFetchScope &fetchScope)
+QMap<QByteArray, QByteArray> TagFetchHelper::fetchTagAttributes(qint64 tagId, const Protocol::TagFetchScope &fetchScope)
 {
     QMap<QByteArray, QByteArray> attributes;
 
     QSqlQuery attributeQuery = buildAttributeQuery(tagId, fetchScope);
     while (attributeQuery.isValid()) {
-        attributes.insert(Utils::variantToByteArray(attributeQuery.value(1)),
-                          Utils::variantToByteArray(attributeQuery.value(2)));
+        attributes.insert(Utils::variantToByteArray(attributeQuery.value(1)), Utils::variantToByteArray(attributeQuery.value(2)));
         attributeQuery.next();
     }
     attributeQuery.finish();
@@ -147,8 +142,7 @@ bool TagFetchHelper::fetchTags()
                     break;
                 }
 
-                tagAttributes.insert(Utils::variantToByteArray(attributeQuery.value(1)),
-                                     Utils::variantToByteArray(attributeQuery.value(2)));
+                tagAttributes.insert(Utils::variantToByteArray(attributeQuery.value(1)), Utils::variantToByteArray(attributeQuery.value(2)));
                 attributeQuery.next();
             }
 

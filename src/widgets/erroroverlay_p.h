@@ -19,7 +19,6 @@ class ErrorOverlay;
 
 namespace Akonadi
 {
-
 /**
  * @internal
  * Overlay widget to block Akonadi-dependent widgets if the Akonadi server

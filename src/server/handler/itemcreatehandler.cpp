@@ -6,19 +6,19 @@
 
 #include "itemcreatehandler.h"
 
-#include "itemfetchhelper.h"
 #include "akonadi.h"
 #include "connection.h"
-#include "preprocessormanager.h"
 #include "handlerhelper.h"
+#include "itemfetchhelper.h"
+#include "preprocessormanager.h"
 #include "storage/datastore.h"
-#include "storage/transaction.h"
-#include "storage/parttypehelper.h"
 #include "storage/dbconfig.h"
-#include "storage/partstreamer.h"
-#include "storage/parthelper.h"
-#include "storage/selectquerybuilder.h"
 #include "storage/itemretrievalmanager.h"
+#include "storage/parthelper.h"
+#include "storage/partstreamer.h"
+#include "storage/parttypehelper.h"
+#include "storage/selectquerybuilder.h"
+#include "storage/transaction.h"
 #include <private/externalpartstorage_p.h>
 
 #include "shared/akranges.h"
@@ -32,10 +32,10 @@ using namespace AkRanges;
 
 ItemCreateHandler::ItemCreateHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
-bool ItemCreateHandler::buildPimItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
-                                     Collection &parentCol)
+bool ItemCreateHandler::buildPimItem(const Protocol::CreateItemCommand &cmd, PimItem &item, Collection &parentCol)
 {
     parentCol = HandlerHelper::collectionFromScope(cmd.collection(), connection()->context());
     if (!parentCol.isValid()) {
@@ -70,8 +70,7 @@ bool ItemCreateHandler::buildPimItem(const Protocol::CreateItemCommand &cmd, Pim
     return true;
 }
 
-bool ItemCreateHandler::insertItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
-                                   const Collection &parentCol)
+bool ItemCreateHandler::insertItem(const Protocol::CreateItemCommand &cmd, PimItem &item, const Collection &parentCol)
 {
     if (!item.datetime().isValid()) {
         item.setDatetime(QDateTime::currentDateTimeUtc());
@@ -146,9 +145,7 @@ bool ItemCreateHandler::insertItem(const Protocol::CreateItemCommand &cmd, PimIt
     return true;
 }
 
-bool ItemCreateHandler::mergeItem(const Protocol::CreateItemCommand &cmd,
-                                  PimItem &newItem, PimItem &currentItem,
-                                  const Collection &parentCol)
+bool ItemCreateHandler::mergeItem(const Protocol::CreateItemCommand &cmd, PimItem &newItem, PimItem &currentItem, const Collection &parentCol)
 {
     bool needsUpdate = false;
     QSet<QByteArray> changedParts;
@@ -198,12 +195,7 @@ bool ItemCreateHandler::mergeItem(const Protocol::CreateItemCommand &cmd,
         bool flagsChanged = false;
         QSet<QByteArray> flagNames = cmd.flags();
 
-        static QVector<QByteArray> localFlagsToPreserve = {
-            "$ATTACHMENT",
-            "$INVITATION",
-            "$ENCRYPTED",
-            "$SIGNED",
-            "$WATCHED" };
+        static QVector<QByteArray> localFlagsToPreserve = {"$ATTACHMENT", "$INVITATION", "$ENCRYPTED", "$SIGNED", "$WATCHED"};
 
         // Make sure we don't overwrite some local-only flags that can't come
         // through from Resource during ItemSync, like $ATTACHMENT, because the
@@ -310,16 +302,9 @@ bool ItemCreateHandler::sendResponse(const PimItem &item, Protocol::CreateItemCo
 
     Protocol::ItemFetchScope fetchScope;
     fetchScope.setAncestorDepth(Protocol::ItemFetchScope::ParentAncestor);
-    fetchScope.setFetch(Protocol::ItemFetchScope::AllAttributes |
-                        Protocol::ItemFetchScope::FullPayload |
-                        Protocol::ItemFetchScope::CacheOnly |
-                        Protocol::ItemFetchScope::Flags |
-                        Protocol::ItemFetchScope::GID |
-                        Protocol::ItemFetchScope::MTime |
-                        Protocol::ItemFetchScope::RemoteID |
-                        Protocol::ItemFetchScope::RemoteRevision |
-                        Protocol::ItemFetchScope::Size |
-                        Protocol::ItemFetchScope::Tags);
+    fetchScope.setFetch(Protocol::ItemFetchScope::AllAttributes | Protocol::ItemFetchScope::FullPayload | Protocol::ItemFetchScope::CacheOnly
+                        | Protocol::ItemFetchScope::Flags | Protocol::ItemFetchScope::GID | Protocol::ItemFetchScope::MTime | Protocol::ItemFetchScope::RemoteID
+                        | Protocol::ItemFetchScope::RemoteRevision | Protocol::ItemFetchScope::Size | Protocol::ItemFetchScope::Tags);
     ImapSet set;
     set.add(QVector<qint64>() << item.id());
     Scope scope;
@@ -344,8 +329,7 @@ bool ItemCreateHandler::notify(const PimItem &item, bool seen, const Collection 
     return true;
 }
 
-bool ItemCreateHandler::notify(const PimItem &item, const Collection &collection,
-                      const QSet<QByteArray> &changedParts)
+bool ItemCreateHandler::notify(const PimItem &item, const Collection &collection, const QSet<QByteArray> &changedParts)
 {
     if (!changedParts.isEmpty()) {
         storageBackend()->notificationCollector()->itemChanged(item, changedParts, collection);
@@ -378,13 +362,17 @@ void ItemCreateHandler::recoverFromMultipleMergeCandidates(const PimItem::List &
     // them as it would cause data loss. There's a chance next changeReplay will fix this, so
     // next time the ItemSync hits this multiple merge candidates, all changes will be committed
     // and this check will succeed
-    if (items | Actions::any([](const auto &item) { return item.dirty() || item.remoteId().isEmpty(); })) {
+    if (items | Actions::any([](const auto &item) {
+            return item.dirty() || item.remoteId().isEmpty();
+        })) {
         qCWarning(AKONADISERVER_LOG) << "Automatic multiple merge candidates recovery failed: at least one of the candidates has uncommitted changes!";
         return;
     }
 
     // This cannot happen with ItemSync, but in theory could happen during individual GID merge.
-    if (items | Actions::any([collection](const auto &item) { return item.collectionId() != collection.id(); })) {
+    if (items | Actions::any([collection](const auto &item) {
+            return item.collectionId() != collection.id();
+        })) {
         qCWarning(AKONADISERVER_LOG) << "Automatic multiple merge candidates recovery failed: all candidates do not belong to the same collection.";
         return;
     }
@@ -398,9 +386,13 @@ void ItemCreateHandler::recoverFromMultipleMergeCandidates(const PimItem::List &
     // Schedule a new sync of the collection, one that will succeed
     akonadi().itemRetrievalManager().triggerCollectionSync(collection.resource().name(), collection.id());
 
-    qCInfo(AKONADISERVER_LOG) << "Automatic multiple merge candidates recovery successful: conflicting items" << (items | Views::transform([](const auto &i) { return i.id(); }) | Actions::toQVector)
-                              << "in collection" << collection.name() << "(ID:" << collection.id() << ") were removed and a new sync was scheduled in the resource"
-                              << collection.resource().name();
+    qCInfo(AKONADISERVER_LOG) << "Automatic multiple merge candidates recovery successful: conflicting items"
+                              << (items | Views::transform([](const auto &i) {
+                                      return i.id();
+                                  })
+                                  | Actions::toQVector)
+                              << "in collection" << collection.name() << "(ID:" << collection.id()
+                              << ") were removed and a new sync was scheduled in the resource" << collection.resource().name();
 }
 
 bool ItemCreateHandler::parseStream()
@@ -485,10 +477,9 @@ bool ItemCreateHandler::parseStream()
         } else {
             qCWarning(AKONADISERVER_LOG) << "Multiple merge candidates, will attempt to recover:";
             for (const PimItem &item : result) {
-                qCWarning(AKONADISERVER_LOG) << "\tID:" << item.id() << ", RID:" << item.remoteId()
-                                           << ", GID:" << item.gid()
-                                           << ", Collection:" << item.collection().name() << "(" << item.collectionId() << ")"
-                                           << ", Resource:" << item.collection().resource().name() << "(" << item.collection().resourceId() << ")";
+                qCWarning(AKONADISERVER_LOG) << "\tID:" << item.id() << ", RID:" << item.remoteId() << ", GID:" << item.gid()
+                                             << ", Collection:" << item.collection().name() << "(" << item.collectionId() << ")"
+                                             << ", Resource:" << item.collection().resource().name() << "(" << item.collection().resourceId() << ")";
             }
 
             transaction.commit(); // commit the current transaction, before we attempt MMC recovery

@@ -6,10 +6,10 @@
 #ifndef RECENTCOLLECTIONACTION_P_H
 #define RECENTCOLLECTIONACTION_P_H
 
-#include <QStringList>
-#include <QModelIndex>
 #include "collection.h"
 #include <KSharedConfig>
+#include <QModelIndex>
+#include <QStringList>
 #include <standardactionmanager.h>
 
 class QMenu;
@@ -31,7 +31,10 @@ public:
     /**
      * Creates a new collection recent action
      */
-    explicit RecentCollectionAction(Akonadi::StandardActionManager::Type type, const Akonadi::Collection::List &selectedCollectionsList, const QAbstractItemModel *model, QMenu *menu);
+    explicit RecentCollectionAction(Akonadi::StandardActionManager::Type type,
+                                    const Akonadi::Collection::List &selectedCollectionsList,
+                                    const QAbstractItemModel *model,
+                                    QMenu *menu);
     /**
      * Destroys the collection recent action.
      */

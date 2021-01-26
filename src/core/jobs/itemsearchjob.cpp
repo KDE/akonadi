@@ -7,16 +7,15 @@
 #include "itemsearchjob.h"
 
 #include "itemfetchscope.h"
-#include "tagfetchscope.h"
 #include "job_p.h"
+#include "private/protocol_p.h"
 #include "protocolhelper_p.h"
 #include "searchquery.h"
-#include "private/protocol_p.h"
-
+#include "tagfetchscope.h"
 
 #include <QCoreApplication>
-#include <QTimer>
 #include <QThreadStorage>
+#include <QTimer>
 
 using namespace Akonadi;
 
@@ -33,7 +32,9 @@ public:
 
     void init()
     {
-        QObject::connect(&mEmitTimer, &QTimer::timeout, q_ptr, [this]() { timeout(); });
+        QObject::connect(&mEmitTimer, &QTimer::timeout, q_ptr, [this]() {
+            timeout();
+        });
     }
 
     void aboutToFinish() override
@@ -238,8 +239,7 @@ bool ItemSearchJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &res
     Q_D(ItemSearchJob);
 
     if (response->isResponse() && response->type() == Protocol::Command::FetchItems) {
-        const Item item = ProtocolHelper::parseItemFetchResult(
-            Protocol::cmdCast<Protocol::FetchItemsResponse>(response));
+        const Item item = ProtocolHelper::parseItemFetchResult(Protocol::cmdCast<Protocol::FetchItemsResponse>(response));
         if (!item.isValid()) {
             return false;
         }

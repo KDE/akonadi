@@ -5,13 +5,12 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include <QString>
-#include <QStandardItem>
 #include <QSignalSpy>
+#include <QStandardItem>
+#include <QString>
 
 namespace TestModelHelpers
 {
-
 // Prepares one row for a QStandardItemModel
 inline QList<QStandardItem *> makeStandardItems(const QStringList &texts)
 {
@@ -64,4 +63,3 @@ inline QString rowSpyToText(const QSignalSpy &spy)
 }
 
 }
-

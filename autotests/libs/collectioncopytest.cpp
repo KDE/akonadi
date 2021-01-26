@@ -6,9 +6,9 @@
 
 #include "agentinstance.h"
 #include "agentmanager.h"
-#include "control.h"
 #include "collectioncopyjob.h"
 #include "collectionfetchjob.h"
+#include "control.h"
 #include "item.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
@@ -28,7 +28,7 @@ private Q_SLOTS:
 
         Control::start();
         // switch target resources offline to reduce interference from them
-        foreach (Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances()) {   //krazy:exclude=foreach
+        foreach (Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances()) { // krazy:exclude=foreach
             if (agent.identifier() == QLatin1String("akonadi_knut_resource_2")) {
                 agent.setIsOnline(false);
             }
@@ -112,7 +112,6 @@ private Q_SLOTS:
         copy = new CollectionCopyJob(Collection(1), Collection(INT_MAX));
         QVERIFY(!copy->exec());
     }
-
 };
 
 QTEST_AKONADIMAIN(CollectionCopyTest)

@@ -8,21 +8,19 @@
 #ifndef KNUTRESOURCE_H
 #define KNUTRESOURCE_H
 
-#include <resourcebase.h>
 #include <collection.h>
 #include <item.h>
+#include <resourcebase.h>
 
-#include <xmldocument.h>
 #include <agentsearchinterface.h>
 #include <searchquery.h>
+#include <xmldocument.h>
 
 #include "settings.h"
 
 class QFileSystemWatcher;
 
-class KnutResource : public Akonadi::ResourceBase,
-    public Akonadi::AgentBase::ObserverV2,
-    public Akonadi::AgentSearchInterface
+class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::ObserverV2, public Akonadi::AgentSearchInterface
 {
     Q_OBJECT
 

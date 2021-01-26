@@ -10,13 +10,12 @@
 #include "entities.h"
 #include "handler.h"
 
-template <typename T> class QStack;
+template<typename T> class QStack;
 
 namespace Akonadi
 {
 namespace Server
 {
-
 /**
   @ingroup akonadi_server_handler
 
@@ -47,7 +46,7 @@ namespace Server
 
   The ancestors property is encoded as a list of UID/RID pairs.
 */
-class CollectionFetchHandler: public Handler
+class CollectionFetchHandler : public Handler
 {
 public:
     CollectionFetchHandler(AkonadiServer &akonadi);
@@ -56,15 +55,11 @@ public:
     bool parseStream() override;
 
 private:
-    void listCollection(const Collection &root,
-                        const QStack<Collection> &ancestors,
-                        const QStringList &mimeTypes,
-                        const CollectionAttribute::List &attributes);
+    void listCollection(const Collection &root, const QStack<Collection> &ancestors, const QStringList &mimeTypes, const CollectionAttribute::List &attributes);
     QStack<Collection> ancestorsForCollection(const Collection &col);
     void retrieveCollections(const Collection &topParent, int depth);
     bool checkFilterCondition(const Collection &col) const;
-    CollectionAttribute::List getAttributes(const Collection &colId,
-                                            const QSet<QByteArray> &filter = QSet<QByteArray>());
+    CollectionAttribute::List getAttributes(const Collection &colId, const QSet<QByteArray> &filter = QSet<QByteArray>());
     void retrieveAttributes(const QVariantList &collectionIds);
 
     Resource mResource;

@@ -9,8 +9,8 @@
 
 #include <KJob>
 
-#include "item.h"
 #include "collectionfetchjob.h"
+#include "item.h"
 #include "itemfetchscope.h"
 #include "mimetypechecker.h"
 
@@ -30,14 +30,14 @@ class AgentInstance;
 
 struct Node {
     using Id = qint64;
-    enum Type : char {
-        Item,
-        Collection
-    };
+    enum Type : char { Item, Collection };
 
     explicit Node(Type type, Id id, Akonadi::Collection::Id parentId)
-        : id(id), parent(parentId), type(type)
-    {}
+        : id(id)
+        , parent(parentId)
+        , type(type)
+    {
+    }
 
     static bool isItem(Node *node)
     {
@@ -54,10 +54,10 @@ struct Node {
     Type type;
 };
 
-template<typename Key, typename Value>
-class RefCountedHash
+template<typename Key, typename Value> class RefCountedHash
 {
     mutable Value *defaultValue = nullptr;
+
 public:
     explicit RefCountedHash() = default;
     Q_DISABLE_COPY_MOVE(RefCountedHash)
@@ -67,18 +67,48 @@ public:
         delete defaultValue;
     }
 
-    inline auto begin() { return mHash.begin(); }
-    inline auto end() { return mHash.end(); }
-    inline auto begin() const { return mHash.begin(); }
-    inline auto end() const { return mHash.end(); }
-    inline auto find(const Key &key) const { return mHash.find(key); }
-    inline auto find(const Key &key) { return mHash.find(key); }
+    inline auto begin()
+    {
+        return mHash.begin();
+    }
+    inline auto end()
+    {
+        return mHash.end();
+    }
+    inline auto begin() const
+    {
+        return mHash.begin();
+    }
+    inline auto end() const
+    {
+        return mHash.end();
+    }
+    inline auto find(const Key &key) const
+    {
+        return mHash.find(key);
+    }
+    inline auto find(const Key &key)
+    {
+        return mHash.find(key);
+    }
 
-    inline bool size() const { return mHash.size(); }
-    inline bool isEmpty() const { return mHash.isEmpty(); }
+    inline bool size() const
+    {
+        return mHash.size();
+    }
+    inline bool isEmpty() const
+    {
+        return mHash.isEmpty();
+    }
 
-    inline void clear() { mHash.clear(); }
-    inline bool contains(const Key &key) const { return mHash.contains(key); }
+    inline void clear()
+    {
+        mHash.clear();
+    }
+    inline bool contains(const Key &key) const
+    {
+        return mHash.contains(key);
+    }
 
     inline const Value &value(const Key &key) const
     {
@@ -117,10 +147,8 @@ public:
         }
     }
 
-
 private:
-    template<typename V>
-    struct RefCountedValue {
+    template<typename V> struct RefCountedValue {
         uint8_t refCnt = 0;
         V value;
     };
@@ -135,15 +163,11 @@ namespace Akonadi
 class AKONADI_TESTS_EXPORT EntityTreeModelPrivate
 {
 public:
-
     explicit EntityTreeModelPrivate(EntityTreeModel *parent);
     ~EntityTreeModelPrivate();
     EntityTreeModel *const q_ptr;
 
-    enum RetrieveDepth {
-        Base,
-        Recursive
-    };
+    enum RetrieveDepth { Base, Recursive };
 
     void init(Monitor *monitor);
 
@@ -162,9 +186,8 @@ public:
     void monitoredCollectionRemoved(const Akonadi::Collection &collection);
     void monitoredCollectionChanged(const Akonadi::Collection &collection);
     void monitoredCollectionStatisticsChanged(Akonadi::Collection::Id, const Akonadi::CollectionStatistics &statistics);
-    void monitoredCollectionMoved(const Akonadi::Collection &collection,
-                                  const Akonadi::Collection &sourceCollection,
-                                  const Akonadi::Collection &destCollection);
+    void
+    monitoredCollectionMoved(const Akonadi::Collection &collection, const Akonadi::Collection &sourceCollection, const Akonadi::Collection &destCollection);
 
     void monitoredItemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection);
     void monitoredItemRemoved(const Akonadi::Item &item, const Akonadi::Collection &collection = Akonadi::Collection());
@@ -212,7 +235,7 @@ public:
 
     QHash<Collection::Id, Collection> m_collections;
     RefCountedHash<Item::Id, Item> m_items;
-    QHash<Collection::Id, QList<Node *> > m_childEntities;
+    QHash<Collection::Id, QList<Node *>> m_childEntities;
     QSet<Collection::Id> m_populatedCols;
     QSet<Collection::Id> m_collectionsWithoutItems;
 
@@ -264,8 +287,7 @@ public:
     /**
      * Returns the index of the node in @p list with the id @p id. Returns -1 if not found.
      */
-    template<Node::Type Type>
-    int indexOf(const QList<Node *> &nodes, Node::Id id) const
+    template<Node::Type Type> int indexOf(const QList<Node *> &nodes, Node::Id id) const
     {
         int i = 0;
         for (const Node *node : nodes) {
@@ -289,9 +311,7 @@ public:
     bool isHidden(const Item &item) const;
     bool isHidden(const Collection &collection) const;
 
-    template<typename T>
-    bool isHiddenImpl(const T &entity, Node::Type type) const;
-
+    template<typename T> bool isHiddenImpl(const T &entity, Node::Type type) const;
 
     void ref(Collection::Id id);
     void deref(Collection::Id id);
@@ -327,8 +347,7 @@ public:
 
       @returns an iterator pointing to the next Collection after @p it, or at @p end
     */
-    QList<Node *>::iterator removeItems(QList<Node *>::iterator it, const QList<Node *>::iterator &end,
-                                        int *pos, const Collection &col);
+    QList<Node *>::iterator removeItems(QList<Node *>::iterator it, const QList<Node *>::iterator &end, int *pos, const Collection &col);
 
     /**
       Skips over Collections in m_childEntities up to a maximum of @p end. @p it is an iterator pointing to the first Collection
@@ -345,13 +364,13 @@ public:
     void dataChanged(const QModelIndex &top, const QModelIndex &bottom);
 
     /**
-    * Returns the model index for the given @p collection.
-    */
+     * Returns the model index for the given @p collection.
+     */
     QModelIndex indexForCollection(const Collection &collection) const;
 
     /**
-    * Returns the model indexes for the given @p item.
-    */
+     * Returns the model indexes for the given @p item.
+     */
     QModelIndexList indexesForItem(const Item &item) const;
 
     bool canFetchMore(const QModelIndex &parent) const;

@@ -5,9 +5,9 @@
 */
 
 #include "itemtest.h"
-#include "testattribute.h"
 #include "collection.h"
 #include "item.h"
+#include "testattribute.h"
 
 #include <QTest>
 

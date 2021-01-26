@@ -4,29 +4,28 @@
  * SPDX-License-Identifier: LGPL-2.0-or-later
  */
 
-#include "connection_p.h"
-#include "session_p.h"
-#include "servermanager_p.h"
 #include "akonadicore_debug.h"
 #include "commandbuffer_p.h"
+#include "connection_p.h"
+#include "servermanager_p.h"
+#include "session_p.h"
 #include <private/instance_p.h>
 
-#include <QFile>
 #include <QAbstractEventDispatcher>
-#include <QFileInfo>
-#include <QSettings>
 #include <QApplication>
 #include <QDateTime>
+#include <QFile>
+#include <QFileInfo>
+#include <QSettings>
 #include <QTimer>
 
+#include <private/datastream_p_p.h>
 #include <private/protocol_exception_p.h>
 #include <private/standarddirs_p.h>
-#include <private/datastream_p_p.h>
 
 using namespace Akonadi;
 
-Connection::Connection(ConnectionType connType, const QByteArray &sessionId,
-                       CommandBuffer *commandBuffer, QObject *parent)
+Connection::Connection(ConnectionType connType, const QByteArray &sessionId, CommandBuffer *commandBuffer, QObject *parent)
     : QObject(parent)
     , mConnectionType(connType)
     , mSessionId(sessionId)
@@ -37,11 +36,12 @@ Connection::Connection(ConnectionType connType, const QByteArray &sessionId,
 
     const QByteArray sessionLogFile = qgetenv("AKONADI_SESSION_LOGFILE");
     if (!sessionLogFile.isEmpty()) {
-        mLogFile = new QFile(QStringLiteral("%1.%2.%3.%4-%5").arg(QString::fromLatin1(sessionLogFile))
-                             .arg(QApplication::applicationPid())
-                             .arg(QString::number(reinterpret_cast<qulonglong>(this), 16),
-                                  QString::fromLatin1(mSessionId.replace('/', '_')),
-                                  connType == CommandConnection ? QStringLiteral("Cmd") : QStringLiteral("Ntf")));
+        mLogFile = new QFile(QStringLiteral("%1.%2.%3.%4-%5")
+                                 .arg(QString::fromLatin1(sessionLogFile))
+                                 .arg(QApplication::applicationPid())
+                                 .arg(QString::number(reinterpret_cast<qulonglong>(this), 16),
+                                      QString::fromLatin1(mSessionId.replace('/', '_')),
+                                      connType == CommandConnection ? QStringLiteral("Cmd") : QStringLiteral("Ntf")));
         if (!mLogFile->open(QIODevice::WriteOnly | QIODevice::Truncate)) {
             qCWarning(AKONADICORE_LOG) << "Failed to open Akonadi Session log file" << mLogFile->fileName();
             delete mLogFile;
@@ -77,7 +77,7 @@ QString Connection::defaultAddressForTypeAndMethod(ConnectionType type, const QS
         } else if (type == NotificationConnection) {
             return defaultSocketDir % QStringLiteral("akonadiserver-ntf.socket");
         }
-   } else if (method == QLatin1String("NamedPipe")) {
+    } else if (method == QLatin1String("NamedPipe")) {
         QString suffix;
         if (Instance::hasIdentifier()) {
             suffix += QStringLiteral("%1-").arg(Instance::identifier());
@@ -87,18 +87,17 @@ QString Connection::defaultAddressForTypeAndMethod(ConnectionType type, const QS
             return QStringLiteral("Akonadi-Cmd-") % suffix;
         } else if (type == NotificationConnection) {
             return QStringLiteral("Akonadi-Ntf-") % suffix;
-       }
-   }
+        }
+    }
 
-   Q_UNREACHABLE();
+    Q_UNREACHABLE();
 }
 
 void Connection::doReconnect()
 {
     Q_ASSERT(QThread::currentThread() == thread());
 
-    if (mSocket && (mSocket->state() == QLocalSocket::ConnectedState
-                    || mSocket->state() == QLocalSocket::ConnectingState)) {
+    if (mSocket && (mSocket->state() == QLocalSocket::ConnectedState || mSocket->state() == QLocalSocket::ConnectingState)) {
         // nothing to do, we are still/already connected
         return;
     }
@@ -138,7 +137,7 @@ void Connection::doReconnect()
         const QFileInfo fileInfo(connectionConfigFile);
         if (!fileInfo.exists()) {
             qCWarning(AKONADICORE_LOG) << "Akonadi Client Session: connection config file '"
-                                        "akonadi/akonadiconnectionrc' can not be found!";
+                                          "akonadi/akonadiconnectionrc' can not be found!";
         }
 
         QSettings connectionSettings(connectionConfigFile, QSettings::IniFormat);
@@ -157,15 +156,19 @@ void Connection::doReconnect()
 
     mSocket.reset(new QLocalSocket(this));
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
-    connect(mSocket.data(), static_cast<void(QLocalSocket::*)(QLocalSocket::LocalSocketError)>(&QLocalSocket::error), this,
+    connect(mSocket.data(),
+            static_cast<void (QLocalSocket::*)(QLocalSocket::LocalSocketError)>(&QLocalSocket::error),
+            this,
 #else
-    connect(mSocket.data(), &QLocalSocket::errorOccurred, this,
+    connect(mSocket.data(),
+            &QLocalSocket::errorOccurred,
+            this,
 #endif
             [this](QLocalSocket::LocalSocketError /*unused*/) {
-        qCWarning(AKONADICORE_LOG) << mSocket->errorString() << mSocket->serverName();
-        Q_EMIT socketError(mSocket->errorString());
-        Q_EMIT socketDisconnected();
-    });
+                qCWarning(AKONADICORE_LOG) << mSocket->errorString() << mSocket->serverName();
+                Q_EMIT socketError(mSocket->errorString());
+                Q_EMIT socketDisconnected();
+            });
     connect(mSocket.data(), &QLocalSocket::disconnected, this, &Connection::socketDisconnected);
     // note: we temporarily disconnect from readyRead-signal inside handleIncomingData()
     connect(mSocket.data(), &QLocalSocket::readyRead, this, &Connection::handleIncomingData);
@@ -187,8 +190,7 @@ void Connection::doReconnect()
 
 void Connection::forceReconnect()
 {
-    const bool ok = QMetaObject::invokeMethod(this, &Connection::doForceReconnect,
-                    Qt::QueuedConnection);
+    const bool ok = QMetaObject::invokeMethod(this, &Connection::doForceReconnect, Qt::QueuedConnection);
 
     Q_ASSERT(ok);
     Q_UNUSED(ok)
@@ -207,8 +209,7 @@ void Connection::doForceReconnect()
 
 void Connection::closeConnection()
 {
-    const bool ok = QMetaObject::invokeMethod(this, &Connection::doCloseConnection,
-                    Qt::QueuedConnection);
+    const bool ok = QMetaObject::invokeMethod(this, &Connection::doCloseConnection, Qt::QueuedConnection);
     Q_ASSERT(ok);
     Q_UNUSED(ok)
 }
@@ -241,7 +242,7 @@ void Connection::handleIncomingData()
         qint64 tag;
         stream >> tag;
 
-        // temporarily disconnect from readyRead-signal to avoid re-entering this function when we 
+        // temporarily disconnect from readyRead-signal to avoid re-entering this function when we
         // call waitForData() deep inside Protocol::deserialize
         disconnect(mSocket.data(), &QLocalSocket::readyRead, this, &Connection::handleIncomingData);
 
@@ -286,10 +287,7 @@ void Connection::handleIncomingData()
 
 void Connection::sendCommand(qint64 tag, const Protocol::CommandPtr &cmd)
 {
-    const bool ok = QMetaObject::invokeMethod(this, "doSendCommand",
-                    Qt::QueuedConnection,
-                    Q_ARG(qint64, tag),
-                    Q_ARG(Akonadi::Protocol::CommandPtr, cmd));
+    const bool ok = QMetaObject::invokeMethod(this, "doSendCommand", Qt::QueuedConnection, Q_ARG(qint64, tag), Q_ARG(Akonadi::Protocol::CommandPtr, cmd));
     Q_ASSERT(ok);
     Q_UNUSED(ok)
 }

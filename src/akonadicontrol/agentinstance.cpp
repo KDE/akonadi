@@ -7,8 +7,8 @@
 #include "agentinstance.h"
 #include "akonadicontrol_debug.h"
 
-#include "agenttype.h"
 #include "agentmanager.h"
+#include "agenttype.h"
 
 AgentInstance::AgentInstance(AgentManager &manager)
     : mManager(manager)
@@ -47,11 +47,12 @@ bool AgentInstance::obtainAgentInterface()
         return false;
     }
 
-    mSearchInterface =
-        findInterface<org::freedesktop::Akonadi::Agent::Search>(Akonadi::DBus::Agent, "/Search");
+    mSearchInterface = findInterface<org::freedesktop::Akonadi::Agent::Search>(Akonadi::DBus::Agent, "/Search");
 
-    connect(mAgentStatusInterface.get(), qOverload<int, const QString &>(&OrgFreedesktopAkonadiAgentStatusInterface::status),
-            this, &AgentInstance::statusChanged);
+    connect(mAgentStatusInterface.get(),
+            qOverload<int, const QString &>(&OrgFreedesktopAkonadiAgentStatusInterface::status),
+            this,
+            &AgentInstance::statusChanged);
     connect(mAgentStatusInterface.get(), &OrgFreedesktopAkonadiAgentStatusInterface::advancedStatus, this, &AgentInstance::advancedStatusChanged);
     connect(mAgentStatusInterface.get(), &OrgFreedesktopAkonadiAgentStatusInterface::percent, this, &AgentInstance::percentChanged);
     connect(mAgentStatusInterface.get(), &OrgFreedesktopAkonadiAgentStatusInterface::warning, this, &AgentInstance::warning);
@@ -150,18 +151,14 @@ void AgentInstance::refreshAgentStatus()
     }
 
     // async calls so we are not blocked by misbehaving agents
-    mAgentStatusInterface->callWithCallback(QStringLiteral("status"), QList<QVariant>(),
-                                            this, SLOT(statusStateChanged(int)),
+    mAgentStatusInterface->callWithCallback(QStringLiteral("status"), QList<QVariant>(), this, SLOT(statusStateChanged(int)), SLOT(errorHandler(QDBusError)));
+    mAgentStatusInterface->callWithCallback(QStringLiteral("statusMessage"),
+                                            QList<QVariant>(),
+                                            this,
+                                            SLOT(statusMessageChanged(QString)),
                                             SLOT(errorHandler(QDBusError)));
-    mAgentStatusInterface->callWithCallback(QStringLiteral("statusMessage"), QList<QVariant>(),
-                                            this, SLOT(statusMessageChanged(QString)),
-                                            SLOT(errorHandler(QDBusError)));
-    mAgentStatusInterface->callWithCallback(QStringLiteral("progress"), QList<QVariant>(),
-                                            this, SLOT(percentChanged(int)),
-                                            SLOT(errorHandler(QDBusError)));
-    mAgentStatusInterface->callWithCallback(QStringLiteral("isOnline"), QList<QVariant>(),
-                                            this, SLOT(onlineChanged(bool)),
-                                            SLOT(errorHandler(QDBusError)));
+    mAgentStatusInterface->callWithCallback(QStringLiteral("progress"), QList<QVariant>(), this, SLOT(percentChanged(int)), SLOT(errorHandler(QDBusError)));
+    mAgentStatusInterface->callWithCallback(QStringLiteral("isOnline"), QList<QVariant>(), this, SLOT(onlineChanged(bool)), SLOT(errorHandler(QDBusError)));
 }
 
 void AgentInstance::refreshResourceStatus()
@@ -171,28 +168,23 @@ void AgentInstance::refreshResourceStatus()
     }
 
     // async call so we are not blocked by misbehaving resources
-    mResourceInterface->callWithCallback(QStringLiteral("name"), QList<QVariant>(),
-                                         this, SLOT(resourceNameChanged(QString)),
-                                         SLOT(errorHandler(QDBusError)));
+    mResourceInterface->callWithCallback(QStringLiteral("name"), QList<QVariant>(), this, SLOT(resourceNameChanged(QString)), SLOT(errorHandler(QDBusError)));
 }
 
 void AgentInstance::errorHandler(const QDBusError &error)
 {
-    //avoid using the server tracer, can result in D-BUS lockups
-    qCCritical(AKONADICONTROL_LOG) <<  QStringLiteral("D-Bus communication error '%1': '%2'").arg(error.name(), error.message());
+    // avoid using the server tracer, can result in D-BUS lockups
+    qCCritical(AKONADICONTROL_LOG) << QStringLiteral("D-Bus communication error '%1': '%2'").arg(error.name(), error.message());
     // TODO try again after some time, esp. on timeout errors
 }
 
-template <typename T>
-std::unique_ptr<T> AgentInstance::findInterface(Akonadi::DBus::AgentType agentType, const char *path)
+template<typename T> std::unique_ptr<T> AgentInstance::findInterface(Akonadi::DBus::AgentType agentType, const char *path)
 {
-    auto iface = std::make_unique<T>(Akonadi::DBus::agentServiceName(mIdentifier, agentType),
-                                     QLatin1String(path), QDBusConnection::sessionBus(), this);
+    auto iface = std::make_unique<T>(Akonadi::DBus::agentServiceName(mIdentifier, agentType), QLatin1String(path), QDBusConnection::sessionBus(), this);
 
     if (!iface || !iface->isValid()) {
-        qCCritical(AKONADICONTROL_LOG) << Q_FUNC_INFO << "Cannot connect to agent instance with identifier"
-                                       << mIdentifier << ", error message:"
-                                       << (iface ? iface->lastError().message() : QString());
+        qCCritical(AKONADICONTROL_LOG) << Q_FUNC_INFO << "Cannot connect to agent instance with identifier" << mIdentifier
+                                       << ", error message:" << (iface ? iface->lastError().message() : QString());
         return {};
     }
     return iface;

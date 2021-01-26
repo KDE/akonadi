@@ -10,14 +10,13 @@
 #include "akonaditests_export.h"
 
 #include <QHash>
-#include <QString>
 #include <QObject>
+#include <QString>
 
 class QPluginLoader;
 
 namespace Akonadi
 {
-
 class AKONADI_TESTS_EXPORT PluginMetaData
 {
 public:

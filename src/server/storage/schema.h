@@ -13,7 +13,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /** Methods to access the desired database schema (@see DbInspector for accessing
     the actual database schema).
  */

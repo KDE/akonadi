@@ -6,9 +6,8 @@
 
 #include "fakeconnection.h"
 
-#include "fakedatastore.h"
 #include "fakeakonadiserver.h"
-
+#include "fakedatastore.h"
 
 using namespace Akonadi::Server;
 

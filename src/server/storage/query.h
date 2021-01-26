@@ -15,7 +15,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class QueryBuilder;
 
 /**
@@ -24,39 +23,20 @@ class QueryBuilder;
 */
 namespace Query
 {
-
 /**
   Compare operators to be used in query conditions.
 */
-enum CompareOperator {
-    Equals,
-    NotEquals,
-    Is,
-    IsNot,
-    Less,
-    LessOrEqual,
-    Greater,
-    GreaterOrEqual,
-    In,
-    NotIn,
-    Like
-};
+enum CompareOperator { Equals, NotEquals, Is, IsNot, Less, LessOrEqual, Greater, GreaterOrEqual, In, NotIn, Like };
 
 /**
   Logic operations used to combine multiple query conditions.
 */
-enum LogicOperator {
-    And,
-    Or
-};
+enum LogicOperator { And, Or };
 
 /**
   Sort orders.
 */
-enum SortOrder {
-    Ascending,
-    Descending
-};
+enum SortOrder { Ascending, Descending };
 
 /**
   Represents a WHERE condition tree.
@@ -64,6 +44,7 @@ enum SortOrder {
 class Condition
 {
     friend class Akonadi::Server::QueryBuilder;
+
 public:
     /** A list of conditions. */
     typedef QVector<Condition> List;
@@ -123,6 +104,7 @@ private:
 class Case
 {
     friend class Akonadi::Server::QueryBuilder;
+
 public:
     Case(const Condition &when, const QString &then, const QString &elseBranch = QString());
     Case(const QString &column, Query::CompareOperator op, const QVariant &value, const QString &when, const QString &elseBranch = QString());
@@ -134,7 +116,7 @@ public:
     void setElse(const QString &elseBranch);
 
 private:
-    QVector<QPair<Condition, QString> > mWhenThen;
+    QVector<QPair<Condition, QString>> mWhenThen;
     QString mElse;
 };
 

@@ -6,12 +6,12 @@
 
 #include "collectionstatsfetchhandler.h"
 
+#include "akonadi.h"
 #include "connection.h"
 #include "global.h"
 #include "handlerhelper.h"
-#include "akonadi.h"
-#include "storage/datastore.h"
 #include "storage/collectionstatistics.h"
+#include "storage/datastore.h"
 
 #include <private/scope_p.h>
 
@@ -20,7 +20,8 @@ using namespace Akonadi::Server;
 
 CollectionStatsFetchHandler::CollectionStatsFetchHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 bool CollectionStatsFetchHandler::parseStream()
 {

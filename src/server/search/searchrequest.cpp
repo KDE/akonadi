@@ -6,13 +6,12 @@
 
 #include "searchrequest.h"
 
-
-#include "akonadi.h"
-#include "searchtaskmanager.h"
 #include "abstractsearchplugin.h"
-#include "searchmanager.h"
-#include "connection.h"
+#include "akonadi.h"
 #include "akonadiserver_search_debug.h"
+#include "connection.h"
+#include "searchmanager.h"
+#include "searchtaskmanager.h"
 
 using namespace Akonadi::Server;
 
@@ -103,8 +102,8 @@ void SearchRequest::exec()
 {
     qCInfo(AKONADISERVER_SEARCH_LOG) << "Executing search" << mConnectionId;
 
-    //TODO should we move this to the AgentSearchManager as well? If we keep it here the agents can be searched in parallel
-    //since the plugin search is executed in this thread directly.
+    // TODO should we move this to the AgentSearchManager as well? If we keep it here the agents can be searched in parallel
+    // since the plugin search is executed in this thread directly.
     searchPlugins();
 
     // If remote search is disabled, just finish here after searching the plugins

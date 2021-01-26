@@ -5,17 +5,17 @@
 */
 
 #include "notificationsubscriber.h"
+#include "aggregatedfetchscope.h"
 #include "akonadiserver_debug.h"
 #include "notificationmanager.h"
-#include "aggregatedfetchscope.h"
 #include "utils.h"
 
 #include <QLocalSocket>
 #include <QPointer>
 
-#include <shared/akranges.h>
 #include <private/datastream_p_p.h>
 #include <private/protocol_exception_p.h>
+#include <shared/akranges.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -42,10 +42,8 @@ NotificationSubscriber::NotificationSubscriber(NotificationManager *manager, qui
     : NotificationSubscriber(manager)
 {
     mSocket = new QLocalSocket(this);
-    connect(mSocket, &QLocalSocket::readyRead,
-            this, &NotificationSubscriber::handleIncomingData);
-    connect(mSocket, &QLocalSocket::disconnected,
-            this, &NotificationSubscriber::socketDisconnected);
+    connect(mSocket, &QLocalSocket::readyRead, this, &NotificationSubscriber::handleIncomingData);
+    connect(mSocket, &QLocalSocket::disconnected, this, &NotificationSubscriber::socketDisconnected);
     mSocket->setSocketDescriptor(socketDescriptor);
 
     const SchemaVersion schema = SchemaVersion::retrieveAll().at(0);
@@ -133,11 +131,10 @@ void NotificationSubscriber::disconnectSubscriber()
     changeNtf->setSubscriber(mSubscriber);
     changeNtf->setSessionId(mSession);
     changeNtf->setOperation(Protocol::SubscriptionChangeNotification::Remove);
-    mManager->slotNotify({ changeNtf });
+    mManager->slotNotify({changeNtf});
 
     if (mSocket) {
-        disconnect(mSocket, &QLocalSocket::disconnected,
-                   this, &NotificationSubscriber::socketDisconnected);
+        disconnect(mSocket, &QLocalSocket::disconnected, this, &NotificationSubscriber::socketDisconnected);
         mSocket->close();
     }
 
@@ -170,7 +167,7 @@ void NotificationSubscriber::registerSubscriber(const Protocol::CreateSubscripti
     changeNtf->setSubscriber(mSubscriber);
     changeNtf->setSessionId(mSession);
     changeNtf->setOperation(Protocol::SubscriptionChangeNotification::Add);
-    mManager->slotNotify({ changeNtf });
+    mManager->slotNotify({changeNtf});
 }
 
 static QStringList canonicalMimeTypes(const QStringList &mimes)
@@ -179,7 +176,7 @@ static QStringList canonicalMimeTypes(const QStringList &mimes)
     QStringList ret;
     ret.reserve(mimes.count());
     auto canonicalMime = [](const QString &mime) {
-       return sMimeDatabase.mimeTypeForName(mime).name();
+        return sMimeDatabase.mimeTypeForName(mime).name();
     };
     std::transform(mimes.begin(), mimes.end(), std::back_inserter(ret), canonicalMime);
     return ret;
@@ -191,21 +188,20 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
 
     const auto modifiedParts = command.modifiedParts();
 
-#define START_MONITORING(type) \
-    (modifiedParts & Protocol::ModifySubscriptionCommand::ModifiedParts( \
-            Protocol::ModifySubscriptionCommand::type | Protocol::ModifySubscriptionCommand::Add))
-#define STOP_MONITORING(type) \
-    (modifiedParts & Protocol::ModifySubscriptionCommand::ModifiedParts( \
-            Protocol::ModifySubscriptionCommand::type | Protocol::ModifySubscriptionCommand::Remove))
+#define START_MONITORING(type)                                                                                                                                 \
+    (modifiedParts & Protocol::ModifySubscriptionCommand::ModifiedParts(Protocol::ModifySubscriptionCommand::type | Protocol::ModifySubscriptionCommand::Add))
+#define STOP_MONITORING(type)                                                                                                                                  \
+    (modifiedParts                                                                                                                                             \
+     & Protocol::ModifySubscriptionCommand::ModifiedParts(Protocol::ModifySubscriptionCommand::type | Protocol::ModifySubscriptionCommand::Remove))
 
-#define APPEND(set, newItems) \
-    Q_FOREACH (const auto &entity, (newItems)) { \
-        (set).insert(entity); \
+#define APPEND(set, newItems)                                                                                                                                  \
+    Q_FOREACH (const auto &entity, (newItems)) {                                                                                                               \
+        (set).insert(entity);                                                                                                                                  \
     }
 
-#define REMOVE(set, items) \
-    Q_FOREACH (const auto &entity, (items)) { \
-        (set).remove(entity); \
+#define REMOVE(set, items)                                                                                                                                     \
+    Q_FOREACH (const auto &entity, (items)) {                                                                                                                  \
+        (set).remove(entity);                                                                                                                                  \
     }
 
     if (START_MONITORING(Types)) {
@@ -280,13 +276,12 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
             // Did the caller just subscribed to subscription changes?
             if (command.startMonitoringTypes().contains(Protocol::ModifySubscriptionCommand::SubscriptionChanges)) {
                 // If yes, then send them list of all existing subscribers
-                mManager->mSubscribers
-                    | Views::filter(IsNotNull)
-                    | Actions::forEach([this](const auto &subscriber) {
-                        QMetaObject::invokeMethod(this, "notify", Qt::QueuedConnection,
-                                                  Q_ARG(Akonadi::Protocol::ChangeNotificationPtr,
-                                                  subscriber->toChangeNotification()));
-                    });
+                mManager->mSubscribers | Views::filter(IsNotNull) | Actions::forEach([this](const auto &subscriber) {
+                    QMetaObject::invokeMethod(this,
+                                              "notify",
+                                              Qt::QueuedConnection,
+                                              Q_ARG(Akonadi::Protocol::ChangeNotificationPtr, subscriber->toChangeNotification()));
+                });
             }
             if (command.startMonitoringTypes().contains(Protocol::ModifySubscriptionCommand::ChangeNotifications)) {
                 if (!mNotificationDebugging) {
@@ -304,7 +299,7 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
         // Emit subscription change notification
         auto changeNtf = toChangeNotification();
         changeNtf->setOperation(Protocol::SubscriptionChangeNotification::Modify);
-        mManager->slotNotify({ changeNtf });
+        mManager->slotNotify({changeNtf});
     }
 
 #undef START_MONITORING
@@ -453,9 +448,8 @@ bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::Colle
     // agents (that's what we have the exclusive subscription for) - but because
     // querying each Collection from database would be expensive, we use the
     // metadata hack to transfer this information from NotificationCollector
-    if (msg.metadata().contains("DISABLED")
-            && (msg.operation() != Protocol::CollectionChangeNotification::Unsubscribe)
-            && !msg.changedParts().contains("ENABLED")) {
+    if (msg.metadata().contains("DISABLED") && (msg.operation() != Protocol::CollectionChangeNotification::Unsubscribe)
+        && !msg.changedParts().contains("ENABLED")) {
         // Exclusive subscriber always gets it
         // If the subscriber is not exclusive (i.e. if we got here), then the subscriber does
         // not care about this one, so drop it
@@ -472,8 +466,7 @@ bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::Colle
 
     // we have a resource filter
     if (!mMonitoredResources.isEmpty()) {
-        const bool resourceMatches = mMonitoredResources.contains(msg.resource())
-                                     || isMoveDestinationResourceMonitored(msg);
+        const bool resourceMatches = mMonitoredResources.contains(msg.resource()) || isMoveDestinationResourceMonitored(msg);
 
         // a bit hacky, but match the behaviour from the item case,
         // if resource is the only thing we are filtering on, stop here, and if the resource filter matched, of course
@@ -488,9 +481,7 @@ bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::Colle
         return true;
     }
 
-    return isCollectionMonitored(msg.parentCollection())
-           || isCollectionMonitored(msg.parentDestCollection());
-
+    return isCollectionMonitored(msg.parentCollection()) || isCollectionMonitored(msg.parentDestCollection());
 }
 
 bool NotificationSubscriber::acceptsTagNotification(const Protocol::TagChangeNotification &msg) const
@@ -635,8 +626,7 @@ bool NotificationSubscriber::notify(const Protocol::ChangeNotificationPtr &notif
     }
 
     if (acceptsNotification(*notification)) {
-        QMetaObject::invokeMethod(this, "writeNotification", Qt::QueuedConnection,
-                                  Q_ARG(Akonadi::Protocol::ChangeNotificationPtr, notification));
+        QMetaObject::invokeMethod(this, "writeNotification", Qt::QueuedConnection, Q_ARG(Akonadi::Protocol::ChangeNotificationPtr, notification));
         return true;
     }
     return false;

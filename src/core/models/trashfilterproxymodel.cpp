@@ -5,8 +5,8 @@
 */
 #include "trashfilterproxymodel.h"
 #include "entitydeletedattribute.h"
-#include "item.h"
 #include "entitytreemodel.h"
+#include "item.h"
 
 using namespace Akonadi;
 

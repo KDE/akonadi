@@ -19,7 +19,8 @@ using namespace Akonadi::Server;
 
 ItemDeleteHandler::ItemDeleteHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 bool ItemDeleteHandler::parseStream()
 {

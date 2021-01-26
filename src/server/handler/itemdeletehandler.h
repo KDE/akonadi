@@ -13,7 +13,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
   @ingroup akonadi_server_handler
 
@@ -25,7 +24,7 @@ namespace Server
   - based on a global uid set (UID)
   - based on a remote identifier within the currently selected collection (RID)
 */
-class ItemDeleteHandler: public Handler
+class ItemDeleteHandler : public Handler
 {
 public:
     ItemDeleteHandler(AkonadiServer &akonadi);

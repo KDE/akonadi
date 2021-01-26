@@ -65,7 +65,7 @@ public:
         Q_UNUSED(tableName)
         return m_tableEmpty;
     }
-    QVector< ForeignKey > foreignKeyConstraints(const QString &tableName) override
+    QVector<ForeignKey> foreignKeyConstraints(const QString &tableName) override
     {
         Q_UNUSED(tableName)
         return m_foreignKeys;
@@ -87,14 +87,17 @@ void DbInitializerTest::testRun_data()
     QTest::addColumn<QString>("driverName");
     QTest::addColumn<QString>("filename");
     QTest::addColumn<bool>("hasTable");
-    QTest::addColumn<QVector<DbIntrospector::ForeignKey> >("fks");
+    QTest::addColumn<QVector<DbIntrospector::ForeignKey>>("fks");
     QTest::addColumn<bool>("hasFks");
 
     QVector<DbIntrospector::ForeignKey> fks;
 
-    QTest::newRow("mysql") << "QMYSQL" << ":dbinit_mysql" << false << fks << true;
-    QTest::newRow("sqlite") << "QSQLITE" << ":dbinit_sqlite" << false << fks << true;
-    QTest::newRow("psql") << "QPSQL" << ":dbinit_psql" << false << fks << true;
+    QTest::newRow("mysql") << "QMYSQL"
+                           << ":dbinit_mysql" << false << fks << true;
+    QTest::newRow("sqlite") << "QSQLITE"
+                            << ":dbinit_sqlite" << false << fks << true;
+    QTest::newRow("psql") << "QPSQL"
+                          << ":dbinit_psql" << false << fks << true;
 
     DbIntrospector::ForeignKey fk;
     fk.name = QL1S("myForeignKeyIdentifier");
@@ -105,9 +108,12 @@ void DbInitializerTest::testRun_data()
     fk.onDelete = QL1S("CASCADE");
     fks.push_back(fk);
 
-    QTest::newRow("mysql (incremental)") << "QMYSQL" << ":dbinit_mysql_incremental" << true << fks << true;
-    QTest::newRow("sqlite (incremental)") << "QSQLITE" << ":dbinit_sqlite_incremental" << true << fks << true;
-    QTest::newRow("psql (incremental)") << "QPSQL" << ":dbinit_psql_incremental" << true << fks << true;
+    QTest::newRow("mysql (incremental)") << "QMYSQL"
+                                         << ":dbinit_mysql_incremental" << true << fks << true;
+    QTest::newRow("sqlite (incremental)") << "QSQLITE"
+                                          << ":dbinit_sqlite_incremental" << true << fks << true;
+    QTest::newRow("psql (incremental)") << "QPSQL"
+                                        << ":dbinit_psql_incremental" << true << fks << true;
 }
 
 void DbInitializerTest::testRun()

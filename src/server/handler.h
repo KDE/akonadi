@@ -6,19 +6,16 @@
 #ifndef AKONADIHANDLER_H
 #define AKONADIHANDLER_H
 
-
-#include "global.h"
-#include "exception.h"
 #include "connection.h"
+#include "exception.h"
+#include "global.h"
 
 #include <private/protocol_p.h>
 
 namespace Akonadi
 {
-
 namespace Server
 {
-
 class AkonadiServer;
 class Response;
 
@@ -61,21 +58,24 @@ public:
     /**
      * Find a handler for a command that is always allowed, like LOGOUT.
      * @param cmd the command string
-     * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception is thrown from handelLine.
+     * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception
+     * is thrown from handelLine.
      */
     static std::unique_ptr<Handler> findHandlerForCommandAlwaysAllowed(Protocol::Command::Type cmd, AkonadiServer &akonadi);
 
     /**
      * Find a handler for a command that is allowed when the client is not yet authenticated, like LOGIN.
      * @param cmd the command string
-     * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception is thrown from handelLine.
+     * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception
+     * is thrown from handelLine.
      */
     static std::unique_ptr<Handler> findHandlerForCommandNonAuthenticated(Protocol::Command::Type cmd, AkonadiServer &akonadi);
 
     /**
      * Find a handler for a command that is allowed when the client is authenticated, like LIST, FETCH, etc.
      * @param cmd the command string
-     * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception is thrown from handelLine.
+     * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception
+     * is thrown from handelLine.
      */
     static std::unique_ptr<Handler> findHandlerForCommandAuthenticated(Protocol::Command::Type cmd, AkonadiServer &akonadi);
 
@@ -89,15 +89,11 @@ public:
     bool failureResponse(const QByteArray &response);
     bool failureResponse(const QString &response);
 
-    template<typename T>
-    inline bool successResponse();
-    template<typename T>
-    inline bool successResponse(T &&response);
+    template<typename T> inline bool successResponse();
+    template<typename T> inline bool successResponse(T &&response);
 
-    template<typename T>
-    inline void sendResponse(T &&response);
-    template<typename T>
-    inline void sendResponse();
+    template<typename T> inline void sendResponse(T &&response);
+    template<typename T> inline void sendResponse();
 
     /**
      * Parse and handle the IMAP message using the streaming parser. The implementation MUST leave the trailing newline character(s) in the stream!
@@ -120,28 +116,24 @@ protected:
     Protocol::CommandPtr m_command;
 };
 
-template<typename T>
-inline bool Handler::successResponse()
+template<typename T> inline bool Handler::successResponse()
 {
     sendResponse<T>(T{});
     return true;
 }
 
-template<typename T>
-inline bool Handler::successResponse(T &&response)
+template<typename T> inline bool Handler::successResponse(T &&response)
 {
     sendResponse<T>(std::move(response));
     return true;
 }
 
-template<typename T>
-inline void Handler::sendResponse()
+template<typename T> inline void Handler::sendResponse()
 {
     m_connection->sendResponse<T>(T{});
 }
 
-template<typename T>
-inline void Handler::sendResponse(T &&response)
+template<typename T> inline void Handler::sendResponse(T &&response)
 {
     m_connection->sendResponse<T>(std::move(response));
 }

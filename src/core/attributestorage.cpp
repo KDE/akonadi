@@ -13,8 +13,8 @@ AttributeStorage::AttributeStorage()
 }
 
 AttributeStorage::AttributeStorage(const AttributeStorage &other)
-    : mModifiedAttributes(other.mModifiedAttributes),
-      mDeletedAttributes(other.mDeletedAttributes)
+    : mModifiedAttributes(other.mModifiedAttributes)
+    , mDeletedAttributes(other.mDeletedAttributes)
 {
     for (Attribute *attr : qAsConst(other.mAttributes)) {
         mAttributes.insert(attr->type(), attr->clone());

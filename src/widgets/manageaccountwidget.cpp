@@ -6,21 +6,21 @@
 
 #include "manageaccountwidget.h"
 
+#include "agentconfigurationdialog.h"
+#include "agentfilterproxymodel.h"
 #include "agentinstance.h"
 #include "agentinstancecreatejob.h"
-#include "agenttypedialog.h"
-#include "agentfilterproxymodel.h"
 #include "agentmanager.h"
-#include "agentconfigurationdialog.h"
+#include "agenttypedialog.h"
 
 #include "ui_manageaccountwidget.h"
 
-#include <KMessageBox>
 #include <KLocalizedString>
+#include <KMessageBox>
 #include <KWindowSystem>
-#include <QKeyEvent>
 #include <QAbstractItemDelegate>
 #include <QAbstractItemView>
+#include <QKeyEvent>
 #include <QPointer>
 
 using namespace Akonadi;
@@ -38,8 +38,8 @@ public:
 };
 
 ManageAccountWidget::ManageAccountWidget(QWidget *parent)
-    : QWidget(parent),
-      d(new Akonadi::ManageAccountWidgetPrivate)
+    : QWidget(parent)
+    , d(new Akonadi::ManageAccountWidgetPrivate)
 {
     d->ui.setupUi(this);
     connect(d->ui.mAddAccountButton, &QPushButton::clicked, this, &ManageAccountWidget::slotAddAccount);
@@ -66,7 +66,6 @@ void ManageAccountWidget::slotSearchAgentType(const QString &str)
 {
     d->ui.mAccountList->agentFilterProxyModel()->setFilterRegularExpression(str);
 }
-
 
 void ManageAccountWidget::disconnectAddAccountButton()
 {
@@ -123,7 +122,6 @@ void ManageAccountWidget::slotAddAccount()
         const Akonadi::AgentType agentType = dlg.agentType();
 
         if (agentType.isValid()) {
-
             auto *job = new Akonadi::AgentInstanceCreateJob(agentType, this);
             job->configure(this);
             job->start();
@@ -188,7 +186,7 @@ void ManageAccountWidget::slotModifySelectedAccount()
 
 void ManageAccountWidget::slotRestartSelectedAccount()
 {
-    const Akonadi::AgentInstance instance =  d->ui.mAccountList->currentAgentInstance();
+    const Akonadi::AgentInstance instance = d->ui.mAccountList->currentAgentInstance();
     if (instance.isValid()) {
         instance.restart();
     }
@@ -196,11 +194,9 @@ void ManageAccountWidget::slotRestartSelectedAccount()
 
 void ManageAccountWidget::slotRemoveSelectedAccount()
 {
-    const Akonadi::AgentInstance instance =  d->ui.mAccountList->currentAgentInstance();
+    const Akonadi::AgentInstance instance = d->ui.mAccountList->currentAgentInstance();
 
-    const int rc = KMessageBox::questionYesNo(this,
-                   i18n("Do you want to remove account '%1'?", instance.name()),
-                   i18n("Remove account?"));
+    const int rc = KMessageBox::questionYesNo(this, i18n("Do you want to remove account '%1'?", instance.name()), i18n("Remove account?"));
     if (rc == KMessageBox::No) {
         return;
     }

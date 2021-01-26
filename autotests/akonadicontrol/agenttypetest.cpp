@@ -26,21 +26,19 @@ void AgentTypeTest::testLoad_data()
 {
     AgentType googleContactsResource;
     googleContactsResource.exec = QStringLiteral("akonadi_googlecontacts_resource");
-    googleContactsResource.mimeTypes = QStringList {QStringLiteral("text/directory"), QString()};
-    googleContactsResource.capabilities = QStringList {AgentType::CapabilityResource};
+    googleContactsResource.mimeTypes = QStringList{QStringLiteral("text/directory"), QString()};
+    googleContactsResource.capabilities = QStringList{AgentType::CapabilityResource};
     googleContactsResource.instanceCounter = 0;
     googleContactsResource.identifier = QStringLiteral("akonadi_googlecontacts_resource");
-    googleContactsResource.custom = QVariantMap {
-        { QStringLiteral("KAccounts"), QStringList { QStringLiteral("google-contacts"), QStringLiteral("google-calendar") } },
-        { QStringLiteral("HasLocalStorage"), true }
-    };
+    googleContactsResource.custom =
+        QVariantMap{{QStringLiteral("KAccounts"), QStringList{QStringLiteral("google-contacts"), QStringLiteral("google-calendar")}},
+                    {QStringLiteral("HasLocalStorage"), true}};
     googleContactsResource.launchMethod = AgentType::Process;
     // We test an UTF-8 name within quotes.
     googleContactsResource.name = QStringLiteral("\"Контакти Google\"");
     // We also check whether an unquoted string with a comma is not parsed as a QStringList. See bug #330010
     googleContactsResource.comment = QStringLiteral("Доступ до ваших записів контактів, Google з KDE");
     googleContactsResource.icon = QStringLiteral("im-google");
-
 
     QTest::addColumn<QString>("fileName");
     QTest::addColumn<AgentType>("expectedAgentType");

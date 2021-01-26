@@ -25,7 +25,7 @@ public:
     QStringList backends() const;
     bool setDbBackend(const QString &backend);
     QString dbBackend() const;
-    QList<QPair<QString, bool> > agents() const;
+    QList<QPair<QString, bool>> agents() const;
     QHash<QString, QString> envVars() const;
 
 protected:
@@ -43,7 +43,7 @@ private:
     QString mXdgConfigHome;
     QStringList mBackends;
     QString mDbBackend;
-    QList<QPair<QString, bool> > mAgents;
+    QList<QPair<QString, bool>> mAgents;
     QHash<QString, QString> mEnvVars;
 };
 

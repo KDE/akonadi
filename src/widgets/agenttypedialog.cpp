@@ -8,13 +8,13 @@
 #include "agenttypedialog.h"
 #include "agentfilterproxymodel.h"
 
-#include <QVBoxLayout>
 #include <KConfig>
+#include <QVBoxLayout>
 
-#include <KFilterProxySearchLine>
-#include <QLineEdit>
-#include <KSharedConfig>
 #include <KConfigGroup>
+#include <KFilterProxySearchLine>
+#include <KSharedConfig>
+#include <QLineEdit>
 
 #include <QDialogButtonBox>
 #include <QPushButton>
@@ -27,14 +27,13 @@ public:
     explicit Private(AgentTypeDialog *qq)
         : q(qq)
     {
-
     }
-    void readConfig(); 
+    void readConfig();
     void writeConfig() const;
     void slotSearchAgentType(const QString &str);
     AgentTypeWidget *Widget = nullptr;
     AgentType agentType;
-    AgentTypeDialog * const q;
+    AgentTypeDialog *const q;
 };
 
 void AgentTypeDialog::Private::writeConfig() const

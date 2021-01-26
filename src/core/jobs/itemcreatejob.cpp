@@ -9,14 +9,13 @@
 #include "itemcreatejob.h"
 
 #include "collection.h"
+#include "gidextractor_p.h"
 #include "item.h"
 #include "item_p.h"
 #include "itemserializer_p.h"
 #include "job_p.h"
-#include "protocolhelper_p.h"
-#include "gidextractor_p.h"
 #include "private/protocol_p.h"
-
+#include "protocolhelper_p.h"
 
 #include <QDateTime>
 #include <QFile>
@@ -44,15 +43,15 @@ public:
     QByteArray mPendingData;
     ItemCreateJob::MergeOptions mMergeOptions = ItemCreateJob::NoMerge;
     bool mItemReceived = false;
-
 };
 
 QString Akonadi::ItemCreateJobPrivate::jobDebuggingString() const
 {
     const QString collectionName = mCollection.name();
     QString str = QStringLiteral("%1 Item %2 from col %3")
-        .arg(mMergeOptions == ItemCreateJob::NoMerge ? QStringLiteral("Create") : QStringLiteral("Merge"))
-        .arg(mItem.id()).arg(mCollection.id());
+                      .arg(mMergeOptions == ItemCreateJob::NoMerge ? QStringLiteral("Create") : QStringLiteral("Merge"))
+                      .arg(mItem.id())
+                      .arg(mCollection.id());
     if (!collectionName.isEmpty()) {
         str += QStringLiteral(" (%1)").arg(collectionName);
     }
@@ -61,7 +60,7 @@ QString Akonadi::ItemCreateJobPrivate::jobDebuggingString() const
 
 Protocol::PartMetaData ItemCreateJobPrivate::preparePart(const QByteArray &partName)
 {
-    ProtocolHelper::PartNamespace ns; //dummy
+    ProtocolHelper::PartNamespace ns; // dummy
     const QByteArray partLabel = ProtocolHelper::decodePartIdentifier(partName, ns);
     if (!mParts.remove(partLabel)) {
         // ERROR?
@@ -126,8 +125,7 @@ void ItemCreateJob::doStart()
     if ((d->mMergeOptions & Silent)) {
         mergeModes |= Protocol::CreateItemCommand::Silent;
     }
-    const bool merge = (mergeModes & Protocol::CreateItemCommand::GID)
-                       || (mergeModes & Protocol::CreateItemCommand::RemoteID);
+    const bool merge = (mergeModes & Protocol::CreateItemCommand::GID) || (mergeModes & Protocol::CreateItemCommand::RemoteID);
     cmd->setMergeModes(mergeModes);
 
     if (d->mItem.d_ptr->mFlagsOverwritten || !merge) {

@@ -14,7 +14,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class AkThread : public QObject
 {
     Q_OBJECT
@@ -25,11 +24,8 @@ public:
         NoThread // for unit-tests
     };
 
-    explicit AkThread(const QString &objectName, QThread::Priority priority = QThread::InheritPriority,
-                      QObject *parent = nullptr);
-    explicit AkThread(const QString &objectName, StartMode startMode,
-                      QThread::Priority priority = QThread::InheritPriority,
-                      QObject *parent = nullptr);
+    explicit AkThread(const QString &objectName, QThread::Priority priority = QThread::InheritPriority, QObject *parent = nullptr);
+    explicit AkThread(const QString &objectName, StartMode startMode, QThread::Priority priority = QThread::InheritPriority, QObject *parent = nullptr);
     ~AkThread() override;
 
 protected:

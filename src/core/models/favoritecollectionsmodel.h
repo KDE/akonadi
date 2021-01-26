@@ -8,15 +8,14 @@
 #define AKONADI_FAVORITECOLLECTIONSMODEL_H
 
 #include "akonadicore_export.h"
-#include <KSelectionProxyModel>
 #include "collection.h"
+#include <KSelectionProxyModel>
 
 class KConfigGroup;
 class KJob;
 
 namespace Akonadi
 {
-
 class EntityTreeModel;
 
 /**

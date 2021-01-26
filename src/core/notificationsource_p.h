@@ -11,15 +11,14 @@
 
 #include "akonaditests_export.h"
 
-#include "tag.h"
 #include "collection.h"
 #include "item.h"
+#include "tag.h"
 
 #include "private/protocol_p.h"
 
 namespace Akonadi
 {
-
 class AKONADI_TESTS_EXPORT NotificationSource : public QObject
 {
     Q_OBJECT

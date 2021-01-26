@@ -16,7 +16,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
  * This interface can be reimplemented to deliver tracing information
  * of the akonadi server to the outside.
@@ -29,10 +28,7 @@ namespace Server
 class TracerInterface
 {
 public:
-    enum ConnectionFormat {
-        DebugString,
-        Json
-    };
+    enum ConnectionFormat { DebugString, Json };
 
     virtual ~TracerInterface() = default;
 
@@ -93,7 +89,10 @@ public:
      */
     virtual void error(const QString &componentName, const QString &msg) = 0;
 
-    virtual ConnectionFormat connectionFormat() const {return DebugString;}
+    virtual ConnectionFormat connectionFormat() const
+    {
+        return DebugString;
+    }
 
 protected:
     explicit TracerInterface() = default;

@@ -8,7 +8,6 @@
 
 #include "private/imapparser_p.h"
 
-
 using namespace Akonadi;
 
 class Q_DECL_HIDDEN EntityDisplayAttribute::Private
@@ -77,10 +76,8 @@ QByteArray EntityDisplayAttribute::serialized() const
     l << ImapParser::quote(d->activeIcon.toUtf8());
     QList<QByteArray> components;
     if (d->backgroundColor.isValid()) {
-        components = QList<QByteArray>() << QByteArray::number(d->backgroundColor.red())
-                     << QByteArray::number(d->backgroundColor.green())
-                     << QByteArray::number(d->backgroundColor.blue())
-                     << QByteArray::number(d->backgroundColor.alpha());
+        components = QList<QByteArray>() << QByteArray::number(d->backgroundColor.red()) << QByteArray::number(d->backgroundColor.green())
+                                         << QByteArray::number(d->backgroundColor.blue()) << QByteArray::number(d->backgroundColor.alpha());
     }
     l << '(' + ImapParser::join(components, " ") + ')';
     return '(' + ImapParser::join(l, " ") + ')';

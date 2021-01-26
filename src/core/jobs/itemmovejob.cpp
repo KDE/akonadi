@@ -8,8 +8,8 @@
 
 #include "collection.h"
 #include "job_p.h"
-#include "protocolhelper_p.h"
 #include "private/protocol_p.h"
+#include "protocolhelper_p.h"
 
 #include <KLocalizedString>
 
@@ -100,10 +100,9 @@ void ItemMoveJob::doStart()
     }
 
     try {
-        d->sendCommand(Protocol::MoveItemsCommandPtr::create(
-                           ProtocolHelper::entitySetToScope(d->items),
-                           ProtocolHelper::commandContextToProtocol(d->source, Tag(), d->items),
-                           ProtocolHelper::entityToScope(d->destination)));
+        d->sendCommand(Protocol::MoveItemsCommandPtr::create(ProtocolHelper::entitySetToScope(d->items),
+                                                             ProtocolHelper::commandContextToProtocol(d->source, Tag(), d->items),
+                                                             ProtocolHelper::entityToScope(d->destination)));
     } catch (const Akonadi::Exception &e) {
         setError(Job::Unknown);
         setErrorText(QString::fromUtf8(e.what()));
@@ -132,4 +131,3 @@ Item::List ItemMoveJob::items() const
     Q_D(const ItemMoveJob);
     return d->items;
 }
-

@@ -10,17 +10,17 @@
 #include <QItemSelectionModel>
 #include <QMimeData>
 
-#include <KConfigGroup>
-#include <KLocalizedString>
-#include <KJob>
-#include <QUrl>
 #include <KConfig>
+#include <KConfigGroup>
+#include <KJob>
+#include <KLocalizedString>
+#include <QUrl>
 
+#include "collectionmodifyjob.h"
 #include "entitytreemodel.h"
+#include "favoritecollectionattribute.h"
 #include "mimetypechecker.h"
 #include "pastehelper_p.h"
-#include "favoritecollectionattribute.h"
-#include "collectionmodifyjob.h"
 
 using namespace Akonadi;
 
@@ -52,7 +52,7 @@ public:
             if (!referencedCollections.contains(col)) {
                 reference(col);
             }
-            auto idx = EntityTreeModel::modelIndexForCollection(q, Collection{ col });
+            auto idx = EntityTreeModel::modelIndexForCollection(q, Collection{col});
             if (idx.isValid()) {
                 auto c = q->data(idx, EntityTreeModel::CollectionRole).value<Collection>();
                 if (c.isValid() && !c.hasAttribute<FavoriteCollectionAttribute>()) {
@@ -73,7 +73,7 @@ public:
      */
     void reload()
     {
-        //don't clear the selection model here. Otherwise we mess up the users selection as collections get removed and re-inserted.
+        // don't clear the selection model here. Otherwise we mess up the users selection as collections get removed and re-inserted.
         for (const Collection::Id &collectionId : qAsConst(collectionIds)) {
             insertIfAvailable(collectionId);
         }
@@ -171,7 +171,7 @@ public:
         collectionIds << collectionId;
         reference(collectionId);
         select(collectionId);
-        const auto idx = EntityTreeModel::modelIndexForCollection(q, Collection{ collectionId });
+        const auto idx = EntityTreeModel::modelIndexForCollection(q, Collection{collectionId});
         if (idx.isValid()) {
             auto col = q->data(idx, EntityTreeModel::CollectionRole).value<Collection>();
             if (col.isValid() && !col.hasAttribute<FavoriteCollectionAttribute>()) {
@@ -187,7 +187,7 @@ public:
         labelMap.remove(collectionId);
         dereference(collectionId);
         deselect(collectionId);
-        const auto idx = EntityTreeModel::modelIndexForCollection(q, Collection{ collectionId });
+        const auto idx = EntityTreeModel::modelIndexForCollection(q, Collection{collectionId});
         if (idx.isValid()) {
             auto col = q->data(idx, EntityTreeModel::CollectionRole).value<Collection>();
             if (col.isValid() && col.hasAttribute<FavoriteCollectionAttribute>()) {
@@ -207,7 +207,7 @@ public:
                 add(col);
             }
         }
-        //Remove what's left
+        // Remove what's left
         for (Akonadi::Collection::Id colId : qAsConst(colIds)) {
             remove(colId);
         }
@@ -274,11 +274,19 @@ FavoriteCollectionsModel::FavoriteCollectionsModel(QAbstractItemModel *source, c
     setFilterBehavior(ExactSelection);
 
     d->loadConfig();
-    //React to various changes in the source model
-    connect(source, &QAbstractItemModel::modelReset, this, [this]() { d->reload(); });
-    connect(source, &QAbstractItemModel::layoutChanged, this, [this]() { d->reload(); });
-    connect(source, &QAbstractItemModel::rowsInserted, this, [this](const QModelIndex &parent, int begin, int end) { d->rowsInserted(parent, begin, end); });
-    connect(source, &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &tl, const QModelIndex &br) { d->dataChanged(tl, br); });
+    // React to various changes in the source model
+    connect(source, &QAbstractItemModel::modelReset, this, [this]() {
+        d->reload();
+    });
+    connect(source, &QAbstractItemModel::layoutChanged, this, [this]() {
+        d->reload();
+    });
+    connect(source, &QAbstractItemModel::rowsInserted, this, [this](const QModelIndex &parent, int begin, int end) {
+        d->rowsInserted(parent, begin, end);
+    });
+    connect(source, &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &tl, const QModelIndex &br) {
+        d->dataChanged(tl, br);
+    });
 }
 
 FavoriteCollectionsModel::~FavoriteCollectionsModel()
@@ -339,9 +347,7 @@ void Akonadi::FavoriteCollectionsModel::setFavoriteLabel(const Collection &colle
 
 QVariant Akonadi::FavoriteCollectionsModel::data(const QModelIndex &index, int role) const
 {
-    if (index.column() == 0 &&
-            (role == Qt::DisplayRole ||
-             role == Qt::EditRole)) {
+    if (index.column() == 0 && (role == Qt::DisplayRole || role == Qt::EditRole)) {
         const QModelIndex sourceIndex = mapToSource(index);
         const Collection::Id collectionId = sourceModel()->data(sourceIndex, EntityTreeModel::CollectionIdRole).toLongLong();
 
@@ -353,8 +359,7 @@ QVariant Akonadi::FavoriteCollectionsModel::data(const QModelIndex &index, int r
 
 bool FavoriteCollectionsModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if (index.isValid() && index.column() == 0 &&
-            role == Qt::EditRole) {
+    if (index.isValid() && index.column() == 0 && role == Qt::EditRole) {
         const QString newLabel = value.toString();
         if (newLabel.isEmpty()) {
             return false;
@@ -399,9 +404,7 @@ QString Akonadi::FavoriteCollectionsModel::defaultFavoriteLabel(const Akonadi::C
 
 QVariant FavoriteCollectionsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (section == 0 &&
-            orientation == Qt::Horizontal &&
-            role == Qt::DisplayRole) {
+    if (section == 0 && orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         return i18n("Favorite Folders");
     } else {
         return KSelectionProxyModel::headerData(section, orientation, role);
@@ -429,8 +432,7 @@ bool FavoriteCollectionsModel::dropMimeData(const QMimeData *data, Qt::DropActio
             } else {
                 const Item item = Item::fromUrl(url);
                 if (item.isValid()) {
-                    if (item.parentCollection().id() == destCollection.id() &&
-                            action != Qt::CopyAction) {
+                    if (item.parentCollection().id() == destCollection.id() && action != Qt::CopyAction) {
                         qCDebug(AKONADICORE_LOG) << "Error: source and destination of move are the same.";
                         return false;
                     }
@@ -447,10 +449,8 @@ bool FavoriteCollectionsModel::dropMimeData(const QMimeData *data, Qt::DropActio
                     connect(job, &KJob::result, this, &FavoriteCollectionsModel::pasteJobDone);
                     // Accept the event so that it doesn't propagate.
                     return true;
-
                 }
             }
-
         }
         return true;
     }

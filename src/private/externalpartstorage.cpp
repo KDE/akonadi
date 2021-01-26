@@ -5,9 +5,9 @@
  *
  */
 
+#include "akonadiprivate_debug.h"
 #include "externalpartstorage_p.h"
 #include "standarddirs_p.h"
-#include "akonadiprivate_debug.h"
 
 #include <QDir>
 #include <QFileInfo>
@@ -74,12 +74,8 @@ QString ExternalPartStorage::resolveAbsolutePath(const QString &filename, bool *
     // to ensure even distribution of the part files into the subfolders.
     // PartID is encoded in filename as "PARTID_rX".
     const int revPos = filename.indexOf(QLatin1Char('_'));
-    const QString path = basePath
-                         + QDir::separator()
-                         + (revPos > 1 ? filename[revPos - 2] : QLatin1Char('0'))
-                         + (revPos > 0 ? filename[revPos - 1] : QLatin1Char('0'))
-                         + QDir::separator()
-                         + filename;
+    const QString path = basePath + QDir::separator() + (revPos > 1 ? filename[revPos - 2] : QLatin1Char('0'))
+        + (revPos > 0 ? filename[revPos - 1] : QLatin1Char('0')) + QDir::separator() + filename;
     // If legacy fallback is disabled, return it in any case
     if (!legacyFallback) {
         QFileInfo finfo(path);
@@ -111,8 +107,7 @@ QString ExternalPartStorage::resolveAbsolutePath(const QString &filename, bool *
     }
 }
 
-bool ExternalPartStorage::createPartFile(const QByteArray &data, qint64 partId,
-        QByteArray &partFileName)
+bool ExternalPartStorage::createPartFile(const QByteArray &data, qint64 partId, QByteArray &partFileName)
 {
     bool exists = false;
     partFileName = updateFileNameRevision(QByteArray::number(partId));
@@ -135,13 +130,12 @@ bool ExternalPartStorage::createPartFile(const QByteArray &data, qint64 partId,
     f.close();
 
     if (inTransaction()) {
-        addToTransaction({ { Operation::Create, path } });
+        addToTransaction({{Operation::Create, path}});
     }
     return true;
 }
 
-bool ExternalPartStorage::updatePartFile(const QByteArray &newData, const QByteArray &partFile,
-        QByteArray &newPartFile)
+bool ExternalPartStorage::updatePartFile(const QByteArray &newData, const QByteArray &partFile, QByteArray &newPartFile)
 {
     bool exists = false;
     const QString currentPartPath = resolveAbsolutePath(partFile, &exists);
@@ -172,9 +166,7 @@ bool ExternalPartStorage::updatePartFile(const QByteArray &newData, const QByteA
     f.close();
 
     if (inTransaction()) {
-        addToTransaction({ { Operation::Create, newPartPath },
-            { Operation::Delete, currentPartPath }
-        });
+        addToTransaction({{Operation::Create, newPartPath}, {Operation::Delete, currentPartPath}});
     } else {
         if (!QFile::remove(currentPartPath)) {
             // Not a reason to fail the operation
@@ -188,7 +180,7 @@ bool ExternalPartStorage::updatePartFile(const QByteArray &newData, const QByteA
 bool ExternalPartStorage::removePartFile(const QString &partFile)
 {
     if (inTransaction()) {
-        addToTransaction({ { Operation::Delete, partFile } });
+        addToTransaction({{Operation::Delete, partFile}});
     } else {
         if (!QFile::remove(partFile)) {
             // Not a reason to fail the operation

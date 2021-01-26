@@ -7,16 +7,14 @@
 #include "firstrun_p.h"
 
 #include <KAboutData>
-#include <QCommandLineParser>
 #include <QApplication>
+#include <QCommandLineParser>
 
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
 
-    KAboutData aboutData(QStringLiteral("akonadi-firstrun"),
-                         QStringLiteral("Test akonadi-firstrun"),
-                         QStringLiteral("0.10"));
+    KAboutData aboutData(QStringLiteral("akonadi-firstrun"), QStringLiteral("Test akonadi-firstrun"), QStringLiteral("0.10"));
     KAboutData::setApplicationData(aboutData);
 
     QCommandLineParser parser;

@@ -7,14 +7,14 @@
 #ifndef ITEMRETRIEVER_H
 #define ITEMRETRIEVER_H
 
-#include <QObject>
 #include <QDateTime>
+#include <QObject>
 
 #include "../exception.h"
 #include "entities.h"
 
-#include <private/scope_p.h>
 #include <private/imapset_p.h>
+#include <private/scope_p.h>
 
 #include <optional>
 
@@ -24,7 +24,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class Connection;
 class CommandContext;
 class ItemRetrievalManager;

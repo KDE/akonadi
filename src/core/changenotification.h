@@ -8,9 +8,9 @@
 #define AKONADI_CHANGENOTIFICATION_H
 
 #include <QDateTime>
-#include <QVector>
 #include <QSharedDataPointer>
 #include <QSharedPointer>
+#include <QVector>
 
 #include <akonadicore_export.h>
 
@@ -33,13 +33,7 @@ using ChangeNotificationPtr = QSharedPointer<ChangeNotification>;
 class AKONADICORE_EXPORT ChangeNotification
 {
 public:
-    enum Type {
-        Items,
-        Collection,
-        Tag,
-        Relation,
-        Subscription
-    };
+    enum Type { Items, Collection, Tag, Relation, Subscription };
 
     explicit ChangeNotification();
     ChangeNotification(const ChangeNotification &other);

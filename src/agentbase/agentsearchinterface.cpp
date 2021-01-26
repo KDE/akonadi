@@ -5,17 +5,17 @@
 */
 
 #include "agentsearchinterface.h"
-#include "akonadiagentbase_debug.h"
+#include "agentbase.h"
 #include "agentsearchinterface_p.h"
+#include "akonadiagentbase_debug.h"
 #include "collection.h"
-#include <QDBusConnection>
-#include "searchresultjob_p.h"
-#include "searchadaptor.h"
 #include "collectionfetchjob.h"
 #include "collectionfetchscope.h"
-#include "servermanager.h"
-#include "agentbase.h"
 #include "private/imapset_p.h"
+#include "searchadaptor.h"
+#include "searchresultjob_p.h"
+#include "servermanager.h"
+#include <QDBusConnection>
 
 using namespace Akonadi;
 
@@ -23,8 +23,7 @@ AgentSearchInterfacePrivate::AgentSearchInterfacePrivate(AgentSearchInterface *q
     : q(qq)
 {
     new Akonadi__SearchAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Search"),
-            this, QDBusConnection::ExportAdaptors);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Search"), this, QDBusConnection::ExportAdaptors);
 
     QTimer::singleShot(0, this, &AgentSearchInterfacePrivate::delayedInit);
 }
@@ -34,9 +33,10 @@ void AgentSearchInterfacePrivate::delayedInit()
     QDBusInterface iface(ServerManager::serviceName(ServerManager::Server),
                          QStringLiteral("/SearchManager"),
                          QStringLiteral("org.freedesktop.Akonadi.SearchManager"),
-                         QDBusConnection::sessionBus(), this);
+                         QDBusConnection::sessionBus(),
+                         this);
     QDBusMessage msg = iface.call(QStringLiteral("registerInstance"), dynamic_cast<AgentBase *>(q)->identifier());
-    //TODO ?
+    // TODO ?
 }
 
 void AgentSearchInterfacePrivate::addSearch(const QString &query, const QString &queryLanguage, quint64 resultCollectionId)
@@ -49,9 +49,7 @@ void AgentSearchInterfacePrivate::removeSearch(quint64 resultCollectionId)
     q->removeSearch(Collection(resultCollectionId));
 }
 
-void AgentSearchInterfacePrivate::search(const QByteArray &searchId,
-        const QString &query,
-        quint64 collectionId)
+void AgentSearchInterfacePrivate::search(const QByteArray &searchId, const QString &query, quint64 collectionId)
 {
     mSearchId = searchId;
     mCollectionId = collectionId;
@@ -79,8 +77,7 @@ void AgentSearchInterfacePrivate::collectionReceived(KJob *job)
     }
 
     const Collection collection = fetchJob->collections().at(0);
-    q->search(fetchJob->property("query").toString(),
-              collection);
+    q->search(fetchJob->property("query").toString(), collection);
 }
 
 AgentSearchInterface::AgentSearchInterface()

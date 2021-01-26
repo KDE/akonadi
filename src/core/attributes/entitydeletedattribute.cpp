@@ -25,7 +25,6 @@ public:
 EntityDeletedAttribute::EntityDeletedAttribute()
     : d(std::make_unique<EntityDeletedAttributePrivate>())
 {
-
 }
 
 EntityDeletedAttribute::~EntityDeletedAttribute() = default;

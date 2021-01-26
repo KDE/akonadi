@@ -5,19 +5,19 @@
 */
 
 #include "dbconfigmysql.h"
-#include "utils.h"
 #include "akonadiserver_debug.h"
+#include "utils.h"
 
 #include <private/standarddirs_p.h>
 
-#include <QSqlError>
+#include <QCoreApplication>
 #include <QDir>
-#include <QThread>
 #include <QRegularExpression>
 #include <QSqlDriver>
+#include <QSqlError>
 #include <QSqlQuery>
-#include <QCoreApplication>
 #include <QStandardPaths>
+#include <QThread>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -73,8 +73,7 @@ bool DbConfigMysql::init(QSettings &settings, bool storeSettings)
     QString defaultCleanShutdownCommand;
 
 #ifndef Q_OS_WIN
-    const QString socketDirectory = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")),
-                                                                    s_mysqlSocketFileName.length());
+    const QString socketDirectory = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")), s_mysqlSocketFileName.length());
 #endif
 
     const bool defaultInternalServer = true;
@@ -91,7 +90,7 @@ bool DbConfigMysql::init(QSettings &settings, bool storeSettings)
     if (!mysqladminPath.isEmpty()) {
 #ifndef Q_OS_WIN
         defaultCleanShutdownCommand = QStringLiteral("%1 --defaults-file=%2/mysql.conf --socket=%3/%4 shutdown")
-                                      .arg(mysqladminPath, StandardDirs::saveDir("data"), socketDirectory, s_mysqlSocketFileName);
+                                          .arg(mysqladminPath, StandardDirs::saveDir("data"), socketDirectory, s_mysqlSocketFileName);
 #else
         defaultCleanShutdownCommand = QString::fromLatin1("%1 shutdown --shared-memory").arg(mysqladminPath);
 #endif
@@ -204,18 +203,17 @@ bool DbConfigMysql::startInternalServer()
 {
     bool success = true;
 
-    const QString akDir   = StandardDirs::saveDir("data");
+    const QString akDir = StandardDirs::saveDir("data");
     const QString dataDir = StandardDirs::saveDir("data", QStringLiteral("db_data"));
 #ifndef Q_OS_WIN
-    const QString socketDirectory = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")),
-                                                                    s_mysqlSocketFileName.length());
+    const QString socketDirectory = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")), s_mysqlSocketFileName.length());
     const QString socketFile = QStringLiteral("%1/%2").arg(socketDirectory, s_mysqlSocketFileName);
     const QString pidFileName = QStringLiteral("%1/mysql.pid").arg(socketDirectory);
 #endif
 
     // generate config file
     const QString globalConfig = StandardDirs::locateResourceFile("config", QStringLiteral("mysql-global.conf"));
-    const QString localConfig  = StandardDirs::locateResourceFile("config", QStringLiteral("mysql-local.conf"));
+    const QString localConfig = StandardDirs::locateResourceFile("config", QStringLiteral("mysql-local.conf"));
     const QString actualConfig = StandardDirs::saveDir("data") + QLatin1String("/mysql.conf");
     if (globalConfig.isEmpty()) {
         qCCritical(AKONADISERVER_LOG) << "Did not find MySQL server default configuration (mysql-global.conf)";
@@ -250,14 +248,14 @@ bool DbConfigMysql::startInternalServer()
     // TODO: Parse "MariaDB" or "MySQL" from the version string instead of relying
     // on the version numbers
     const bool isMariaDB = localVersion >= MYSQL_VERSION_CHECK(10, 0, 0);
-    qCDebug(AKONADISERVER_LOG).nospace() << "mysqld reports version " << (localVersion >> 16) << "." << ((localVersion >> 8) & 0x0000FF) << "." << (localVersion & 0x0000FF)
-                                         << " (" << (isMariaDB ? "MariaDB" : "Oracle MySQL") << ")";
+    qCDebug(AKONADISERVER_LOG).nospace() << "mysqld reports version " << (localVersion >> 16) << "." << ((localVersion >> 8) & 0x0000FF) << "."
+                                         << (localVersion & 0x0000FF) << " (" << (isMariaDB ? "MariaDB" : "Oracle MySQL") << ")";
 
     bool confUpdate = false;
     QFile actualFile(actualConfig);
     // update conf only if either global (or local) is newer than actual
-    if ((QFileInfo(globalConfig).lastModified() > QFileInfo(actualFile).lastModified()) ||
-            (QFileInfo(localConfig).lastModified()  > QFileInfo(actualFile).lastModified())) {
+    if ((QFileInfo(globalConfig).lastModified() > QFileInfo(actualFile).lastModified())
+        || (QFileInfo(localConfig).lastModified() > QFileInfo(actualFile).lastModified())) {
         QFile globalFile(globalConfig);
         QFile localFile(localConfig);
         if (globalFile.open(QFile::ReadOnly) && actualFile.open(QFile::WriteOnly)) {
@@ -282,8 +280,8 @@ bool DbConfigMysql::startInternalServer()
     // MySQL doesn't like world writeable config files (which makes sense), but
     // our config file somehow ends up being world-writable on some systems for no
     // apparent reason nevertheless, so fix that
-    const QFile::Permissions allowedPerms = actualFile.permissions()
-                                            & (QFile::ReadOwner | QFile::WriteOwner | QFile::ReadGroup | QFile::WriteGroup | QFile::ReadOther);
+    const QFile::Permissions allowedPerms =
+        actualFile.permissions() & (QFile::ReadOwner | QFile::WriteOwner | QFile::ReadGroup | QFile::WriteGroup | QFile::ReadOther);
     if (allowedPerms != actualFile.permissions()) {
         actualFile.setPermissions(allowedPerms);
     }
@@ -406,10 +404,10 @@ bool DbConfigMysql::startInternalServer()
             return false;
         }
 
-        connect(mDatabaseProcess, QOverload<int,QProcess::ExitStatus>::of(&QProcess::finished), this, &DbConfigMysql::processFinished);
+        connect(mDatabaseProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &DbConfigMysql::processFinished);
 
         // wait until mysqld has created the socket file (workaround for QTBUG-47475 in Qt5.5.0)
-        int counter = 50;  // avoid an endless loop in case mysqld terminated
+        int counter = 50; // avoid an endless loop in case mysqld terminated
         while ((counter-- > 0) && !QFileInfo::exists(socketFile)) {
             QThread::msleep(100);
         }
@@ -423,7 +421,7 @@ bool DbConfigMysql::startInternalServer()
         QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QMYSQL"), initCon);
         apply(db);
 
-        db.setDatabaseName(QString());   // might not exist yet, then connecting to the actual db will fail
+        db.setDatabaseName(QString()); // might not exist yet, then connecting to the actual db will fail
         if (!db.isValid()) {
             qCCritical(AKONADISERVER_LOG) << "Invalid database object during database server startup";
             return false;
@@ -449,14 +447,14 @@ bool DbConfigMysql::startInternalServer()
 
         if (opened) {
             if (!mMysqlCheckPath.isEmpty()) {
-                execute(mMysqlCheckPath, { QStringLiteral("--defaults-file=%1/mysql.conf").arg(akDir),
-                                           QStringLiteral("--check-upgrade"),
-                                           QStringLiteral("--auto-repair"),
+                execute(mMysqlCheckPath,
+                        {QStringLiteral("--defaults-file=%1/mysql.conf").arg(akDir),
+                         QStringLiteral("--check-upgrade"),
+                         QStringLiteral("--auto-repair"),
 #ifndef Q_OS_WIN
-                                           QStringLiteral("--socket=%1/%2").arg(socketDirectory, s_mysqlSocketFileName),
+                         QStringLiteral("--socket=%1/%2").arg(socketDirectory, s_mysqlSocketFileName),
 #endif
-                                           mDatabaseName
-                                         });
+                         mDatabaseName});
             }
 
             // Verify MySQL version
@@ -484,8 +482,8 @@ bool DbConfigMysql::startInternalServer()
                     return false;
                 } else {
                     qCDebug(AKONADISERVER_LOG) << "MySQL version OK"
-                                               << "(required" << QStringLiteral("%1.%2").arg(MYSQL_MIN_MAJOR).arg(MYSQL_MIN_MINOR)
-                                               << ", available" << QStringLiteral("%1.%2").arg(versions[0], versions[1]) << ")";
+                                               << "(required" << QStringLiteral("%1.%2").arg(MYSQL_MIN_MAJOR).arg(MYSQL_MIN_MINOR) << ", available"
+                                               << QStringLiteral("%1.%2").arg(versions[0], versions[1]) << ")";
                 }
             }
 
@@ -525,8 +523,7 @@ void DbConfigMysql::processFinished(int exitCode, QProcess::ExitStatus exitStatu
 #ifndef Q_OS_WIN
     // when the server stopped unexpectedly, make sure to remove the stale socket file since otherwise
     // it can not be started again
-    const QString socketDirectory = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")),
-                                                                    s_mysqlSocketFileName.length());
+    const QString socketDirectory = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")), s_mysqlSocketFileName.length());
     const QString socketFile = QStringLiteral("%1/%2").arg(socketDirectory, s_mysqlSocketFileName);
     QFile::remove(socketFile);
 #endif
@@ -543,8 +540,7 @@ void DbConfigMysql::stopInternalServer()
     // closing initConnection this late to work around QTBUG-63108
     QSqlDatabase::removeDatabase(QStringLiteral("initConnection"));
 
-    disconnect(mDatabaseProcess, static_cast<void(QProcess::*)(int,QProcess::ExitStatus)>(&QProcess::finished),
-               this, &DbConfigMysql::processFinished);
+    disconnect(mDatabaseProcess, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &DbConfigMysql::processFinished);
 
     // first, try the nicest approach
     if (!mCleanServerShutdownCommand.isEmpty()) {
@@ -571,7 +567,7 @@ void DbConfigMysql::initSession(const QSqlDatabase &database)
 int DbConfigMysql::parseCommandLineToolsVersion() const
 {
     QProcess mysqldProcess;
-    mysqldProcess.start(mMysqldPath, { QStringLiteral("--version") });
+    mysqldProcess.start(mMysqldPath, {QStringLiteral("--version")});
     mysqldProcess.waitForFinished(10000 /* 10 secs */);
 
     const QString out = QString::fromLocal8Bit(mysqldProcess.readAllStandardOutput());
@@ -597,12 +593,12 @@ bool DbConfigMysql::initializeMariaDBDatabase(const QString &confFile, const QSt
     QDir dir = fi.dir();
     dir.cdUp();
     const QString baseDir = dir.absolutePath();
-    return 0 == execute(mMysqlInstallDbPath, {
-        QStringLiteral("--defaults-file=%1").arg(confFile),
-        QStringLiteral("--force"),
-        QStringLiteral("--basedir=%1").arg(baseDir),
-        QStringLiteral("--datadir=%1/").arg(dataDir)
-    });
+    return 0
+        == execute(mMysqlInstallDbPath,
+                   {QStringLiteral("--defaults-file=%1").arg(confFile),
+                    QStringLiteral("--force"),
+                    QStringLiteral("--basedir=%1").arg(baseDir),
+                    QStringLiteral("--datadir=%1/").arg(dataDir)});
 }
 
 /**
@@ -611,11 +607,9 @@ bool DbConfigMysql::initializeMariaDBDatabase(const QString &confFile, const QSt
  */
 bool DbConfigMysql::initializeMySQL5_7_6Database(const QString &confFile, const QString &dataDir) const
 {
-    return 0 == execute(mMysqldPath, {
-        QStringLiteral("--defaults-file=%1").arg(confFile),
-        QStringLiteral("--initialize"),
-        QStringLiteral("--datadir=%1/").arg(dataDir)
-    });
+    return 0
+        == execute(mMysqldPath,
+                   {QStringLiteral("--defaults-file=%1").arg(confFile), QStringLiteral("--initialize"), QStringLiteral("--datadir=%1/").arg(dataDir)});
 }
 
 bool DbConfigMysql::initializeMySQLDatabase(const QString &confFile, const QString &dataDir) const
@@ -632,9 +626,8 @@ bool DbConfigMysql::initializeMySQLDatabase(const QString &confFile, const QStri
     const QString baseDir = dir.absolutePath();
 
     // Don't use --force, it has been removed in MySQL 5.7.5
-    return 0 == execute(mMysqlInstallDbPath, {
-        QStringLiteral("--defaults-file=%1").arg(confFile),
-        QStringLiteral("--basedir=%1").arg(baseDir),
-        QStringLiteral("--datadir=%1/").arg(dataDir)
-    });
+    return 0
+        == execute(
+               mMysqlInstallDbPath,
+               {QStringLiteral("--defaults-file=%1").arg(confFile), QStringLiteral("--basedir=%1").arg(baseDir), QStringLiteral("--datadir=%1/").arg(dataDir)});
 }

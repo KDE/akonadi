@@ -5,9 +5,8 @@
 */
 
 #include "monitortest.h"
-#include "agentmanager.h"
 #include "agentinstance.h"
-#include "monitor.h"
+#include "agentmanager.h"
 #include "collectioncreatejob.h"
 #include "collectiondeletejob.h"
 #include "collectionfetchjob.h"
@@ -21,13 +20,14 @@
 #include "itemfetchscope.h"
 #include "itemmodifyjob.h"
 #include "itemmovejob.h"
+#include "monitor.h"
+#include "qtest_akonadi.h"
 #include "searchcreatejob.h"
 #include "searchquery.h"
 #include "subscriptionjob_p.h"
-#include "qtest_akonadi.h"
 
-#include <QVariant>
 #include <QSignalSpy>
+#include <QVariant>
 
 using namespace Akonadi;
 
@@ -66,7 +66,6 @@ void MonitorTest::testMonitor()
     monitor.itemFetchScope().setCacheOnly(true);
     QVERIFY(AkonadiTest::akWaitForSignal(&monitor, &Monitor::monitorReady));
 
-
     // monitor signals
     qRegisterMetaType<Akonadi::Collection>();
     /*
@@ -93,9 +92,9 @@ void MonitorTest::testMonitor()
     qRegisterMetaType<Akonadi::Collection::Id>("Akonadi::Collection::Id");
     qRegisterMetaType<Akonadi::Item>();
     qRegisterMetaType<Akonadi::CollectionStatistics>();
-    qRegisterMetaType<QSet<QByteArray> >();
+    qRegisterMetaType<QSet<QByteArray>>();
     QSignalSpy caddspy(&monitor, &Monitor::collectionAdded);
-    QSignalSpy cmodspy(&monitor, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)));
+    QSignalSpy cmodspy(&monitor, SIGNAL(collectionChanged(Akonadi::Collection, QSet<QByteArray>)));
     QSignalSpy cmvspy(&monitor, &Monitor::collectionMoved);
     QSignalSpy crmspy(&monitor, &Monitor::collectionRemoved);
     QSignalSpy cstatspy(&monitor, &Monitor::collectionStatisticsChanged);
@@ -193,7 +192,7 @@ void MonitorTest::testMonitor()
     QCOMPARE(monitorRef, item);
     QVERIFY(item.hasPayload<QByteArray>());
     QCOMPARE(item.payload<QByteArray>(), QByteArray("some new content"));
-    auto parts = arg.at(1).value<QSet<QByteArray> >();
+    auto parts = arg.at(1).value<QSet<QByteArray>>();
     QCOMPARE(parts, QSet<QByteArray>() << "PLD:RFC822");
 
     QVERIFY(caddspy.isEmpty());
@@ -213,18 +212,17 @@ void MonitorTest::testMonitor()
     // NOTE: We don't make any assumptions about the order of the collectionStatisticsChanged
     // signals, they seem to arrive in random order
     QList<Collection::Id> notifiedCols;
-    notifiedCols << cstatspy.takeFirst().at(0).value<Collection::Id>()
-                 << cstatspy.takeFirst().at(0).value<Collection::Id>();
-    QVERIFY(notifiedCols.contains(res3.id()));  // destination
+    notifiedCols << cstatspy.takeFirst().at(0).value<Collection::Id>() << cstatspy.takeFirst().at(0).value<Collection::Id>();
+    QVERIFY(notifiedCols.contains(res3.id())); // destination
     QVERIFY(notifiedCols.contains(monitorCol.id())); // source
 
     QCOMPARE(imvspy.count(), 1);
     arg = imvspy.takeFirst();
-    item = arg.at(0).value<Item>();   // the item
+    item = arg.at(0).value<Item>(); // the item
     QCOMPARE(monitorRef, item);
-    col = arg.at(1).value<Collection>();   // the source collection
+    col = arg.at(1).value<Collection>(); // the source collection
     QCOMPARE(col.id(), monitorCol.id());
-    col = arg.at(2).value<Collection>();   // the destination collection
+    col = arg.at(2).value<Collection>(); // the destination collection
     QCOMPARE(col.id(), res3.id());
 
     QVERIFY(caddspy.isEmpty());
@@ -390,7 +388,7 @@ void MonitorTest::testMonitor()
 void MonitorTest::testVirtualCollectionsMonitoring()
 {
     Monitor monitor;
-    monitor.setCollectionMonitored(Collection(1));       // top-level 'Search' collection
+    monitor.setCollectionMonitored(Collection(1)); // top-level 'Search' collection
     QVERIFY(AkonadiTest::akWaitForSignal(&monitor, &Monitor::monitorReady));
 
     QSignalSpy caddspy(&monitor, &Monitor::collectionAdded);
@@ -399,4 +397,3 @@ void MonitorTest::testVirtualCollectionsMonitoring()
     AKVERIFYEXEC(job);
     QTRY_COMPARE(caddspy.count(), 1);
 }
-

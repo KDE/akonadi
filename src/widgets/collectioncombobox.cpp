@@ -11,13 +11,13 @@
 #include "asyncselectionhandler_p.h"
 #include "collectiondialog.h"
 
-#include "monitor.h"
 #include "collectionfetchscope.h"
 #include "collectionfilterproxymodel.h"
+#include "collectionutils.h"
 #include "entityrightsfiltermodel.h"
 #include "entitytreemodel.h"
+#include "monitor.h"
 #include "session.h"
-#include "collectionutils.h"
 
 #include <KDescendantsProxyModel>
 
@@ -68,8 +68,9 @@ public:
         mParent->model()->sort(mParent->modelColumn());
 
         mSelectionHandler = new AsyncSelectionHandler(mRightsFilterModel, mParent);
-        mParent->connect(mSelectionHandler, &AsyncSelectionHandler::collectionAvailable,
-                         mParent, [this](const auto &mi) { activated(mi); });
+        mParent->connect(mSelectionHandler, &AsyncSelectionHandler::collectionAvailable, mParent, [this](const auto &mi) {
+            activated(mi);
+        });
     }
 
     ~Private() = default;
@@ -87,7 +88,7 @@ public:
     AsyncSelectionHandler *mSelectionHandler = nullptr;
 };
 
-void CollectionComboBox::Private::activated(int index) 
+void CollectionComboBox::Private::activated(int index)
 {
     const QModelIndex modelIndex = mParent->model()->index(index, 0);
     if (modelIndex.isValid()) {

@@ -13,12 +13,11 @@
 #include <KConfigGroup>
 #include <QUrl>
 
-#include "item.h"
 #include "entitytreemodel.h"
+#include "item.h"
 
 namespace Akonadi
 {
-
 class EntityOrderProxyModelPrivate
 {
 public:
@@ -33,7 +32,6 @@ public:
 
     Q_DECLARE_PUBLIC(EntityOrderProxyModel)
     EntityOrderProxyModel *const q_ptr;
-
 };
 
 } // namespace Akonadi
@@ -46,7 +44,7 @@ EntityOrderProxyModel::EntityOrderProxyModel(QObject *parent)
 {
     setRecursiveFilteringEnabled(true);
     setDynamicSortFilter(true);
-    //setSortCaseSensitivity( Qt::CaseInsensitive );
+    // setSortCaseSensitivity( Qt::CaseInsensitive );
 }
 
 EntityOrderProxyModel::~EntityOrderProxyModel()
@@ -156,7 +154,6 @@ bool EntityOrderProxyModel::dropMimeData(const QMimeData *data, Qt::DropAction a
         return QSortFilterProxyModel::dropMimeData(data, action, row, column, parent);
     }
 
-
     const QList<QUrl> urls = data->urls();
     if (urls.isEmpty()) {
         return false;
@@ -174,7 +171,6 @@ bool EntityOrderProxyModel::dropMimeData(const QMimeData *data, Qt::DropAction a
         const QModelIndex targetIndex = index(0, column, parent);
         parentCol = parentCollection(targetIndex);
     }
-
 
     bool containsMove = false;
     QStringList droppedList = configStringsForDroppedUrls(urls, parentCol, &containsMove);

@@ -10,14 +10,14 @@
 
 #include <KLocalizedString>
 
-#include <QTimer>
 #include <QDBusConnection>
+#include <QTimer>
 
 #ifdef WITH_ACCOUNTS
-#include <KAccounts/GetCredentialsJob>
-#include <KAccounts/Core>
-#include <Accounts/Manager>
 #include <Accounts/Account>
+#include <Accounts/Manager>
+#include <KAccounts/Core>
+#include <KAccounts/GetCredentialsJob>
 #endif
 
 using namespace Akonadi;
@@ -90,14 +90,13 @@ void AccountsIntegration::requestAuthData(const QString &serviceType, AuthDataCa
 
     auto *job = new GetCredentialsJob(mAccountId.value(), this);
     job->setServiceType(serviceType);
-    connect(job, &GetCredentialsJob::result,
-            this, [job, callback = std::move(callback), error = std::move(errCallback)]() {
-                if (job->error()) {
-                    error(job->errorString());
-                } else {
-                    callback(job->credentialsData());
-                }
-            });
+    connect(job, &GetCredentialsJob::result, this, [job, callback = std::move(callback), error = std::move(errCallback)]() {
+        if (job->error()) {
+            error(job->errorString());
+        } else {
+            callback(job->credentialsData());
+        }
+    });
     job->start();
 #else
     QTimer::singleShot(0s, this, [error = std::move(errCallback)]() {

@@ -8,23 +8,23 @@
 #include "qtest_akonadi.h"
 #include <shared/aktest.h>
 
-#include "tagselectioncombobox.h"
-#include "tagmodel.h"
 #include "monitor.h"
 #include "tag.h"
-#include "tagdeletejob.h"
 #include "tagcreatejob.h"
+#include "tagdeletejob.h"
+#include "tagmodel.h"
+#include "tagselectioncombobox.h"
 
+#include <QAbstractItemView>
+#include <QLineEdit>
 #include <QSignalSpy>
 #include <QTest>
-#include <QLineEdit>
-#include <QAbstractItemView>
 
 #include <memory>
 
 using namespace Akonadi;
 
-class TagSelectionComboBoxTest: public QObject
+class TagSelectionComboBoxTest : public QObject
 {
     Q_OBJECT
 
@@ -35,9 +35,9 @@ class TagSelectionComboBoxTest: public QObject
             widget->setCheckable(checkable);
             widget->show();
 
-            monitor = widget->findChild<Monitor*>();
+            monitor = widget->findChild<Monitor *>();
             QVERIFY(monitor);
-            model = widget->findChild<TagModel*>();
+            model = widget->findChild<TagModel *>();
             QVERIFY(model);
             QSignalSpy modelSpy(model, &TagModel::populated);
             QVERIFY(modelSpy.wait());
@@ -84,11 +84,11 @@ class TagSelectionComboBoxTest: public QObject
             return true;
         }
 
-        bool selectTagsInComboBox(const Tag::List &/*selection*/)
+        bool selectTagsInComboBox(const Tag::List & /*selection*/)
         {
             const auto windows = QApplication::topLevelWidgets();
             for (auto *window : windows) {
-                if (auto *combo = qobject_cast<TagSelectionComboBox*>(window)) {
+                if (auto *combo = qobject_cast<TagSelectionComboBox *>(window)) {
                     QTest::mouseClick(combo, Qt::LeftButton);
                     return true;
                 }
@@ -223,5 +223,3 @@ private Q_SLOTS:
 QTEST_AKONADIMAIN(TagSelectionComboBoxTest)
 
 #include "tagselectioncomboboxtest.moc"
-
-

@@ -7,14 +7,14 @@
 #ifndef ATTRIBUTESTORAGE_P_H
 #define ATTRIBUTESTORAGE_P_H
 
-#include <set>
-#include <vector>
+#include "attribute.h"
 #include <QHash>
 #include <QSet>
-#include "attribute.h"
+#include <set>
+#include <vector>
 
-namespace Akonadi {
-
+namespace Akonadi
+{
 /**
  * The AttributeStorage class is used by Collection, Item, Tag...
  * to store a set of attributes, remembering modifications.
@@ -26,7 +26,7 @@ class AttributeStorage
 public:
     AttributeStorage();
     AttributeStorage(const AttributeStorage &other);
-    AttributeStorage& operator=(const AttributeStorage &other);
+    AttributeStorage &operator=(const AttributeStorage &other);
     void swap(AttributeStorage &other) noexcept;
     ~AttributeStorage();
 

@@ -21,7 +21,6 @@ class QIODevice;
 
 namespace Akonadi
 {
-
 class Item;
 
 /**
@@ -31,15 +30,10 @@ class Item;
 class AKONADI_TESTS_EXPORT ItemSerializer
 {
 public:
-    enum PayloadStorage {
-        Internal,
-        External,
-        Foreign
-    };
+    enum PayloadStorage { Internal, External, Foreign };
 
     /** throws ItemSerializerException on failure */
-    static void deserialize(Item &item, const QByteArray &label, const QByteArray &data, int version,
-                            PayloadStorage storage);
+    static void deserialize(Item &item, const QByteArray &label, const QByteArray &data, int version, PayloadStorage storage);
     /** throws ItemSerializerException on failure */
     static void deserialize(Item &item, const QByteArray &label, QIODevice &data, int version);
     /** throws ItemSerializerException on failure */
@@ -86,14 +80,14 @@ public:
     static Item convert(const Item &item, int metaTypeId);
 
     /**
-    * Override the plugin-lookup with @p plugin.
-    *
-    * After calling this each lookup will always return @p plugin.
-    * This is useful to inject a special plugin for testing purposes.
-    * To reset the plugin, set to 0.
-    *
-    * @since 4.12
-    */
+     * Override the plugin-lookup with @p plugin.
+     *
+     * After calling this each lookup will always return @p plugin.
+     * This is useful to inject a special plugin for testing purposes.
+     * To reset the plugin, set to 0.
+     *
+     * @since 4.12
+     */
     static void overridePluginLookup(QObject *plugin);
 };
 

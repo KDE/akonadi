@@ -5,23 +5,22 @@
 */
 
 #include "agentserver.h"
-#include "akonadiagentserver_debug.h"
 #include "agentthread.h"
+#include "akonadiagentserver_debug.h"
 
 #include <private/dbus_p.h>
 
 #include <QCoreApplication>
+#include <QDBusConnection>
 #include <QPluginLoader>
 #include <QTimer>
-#include <QDBusConnection>
 
 using namespace Akonadi;
 
 AgentServer::AgentServer(QObject *parent)
     : QObject(parent)
 {
-    QDBusConnection::sessionBus().registerObject(QStringLiteral(AKONADI_DBUS_AGENTSERVER_PATH),
-            this, QDBusConnection::ExportScriptableSlots);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral(AKONADI_DBUS_AGENTSERVER_PATH), this, QDBusConnection::ExportScriptableSlots);
 }
 
 AgentServer::~AgentServer()
@@ -35,7 +34,7 @@ AgentServer::~AgentServer()
 void AgentServer::agentInstanceConfigure(const QString &identifier, qlonglong windowId)
 {
     m_configureQueue.enqueue(ConfigureInfo(identifier, windowId));
-    if (!m_processingConfigureRequests) {   // Start processing the requests if needed.
+    if (!m_processingConfigureRequests) { // Start processing the requests if needed.
         QTimer::singleShot(0, this, &AgentServer::processConfigureRequest);
     }
 }
@@ -47,10 +46,9 @@ bool AgentServer::started(const QString &identifier) const
 
 void AgentServer::startAgent(const QString &identifier, const QString &typeIdentifier, const QString &fileName)
 {
-    qCDebug(AKONADIAGENTSERVER_LOG) << "Starting agent" << identifier << "of type"
-                                    << typeIdentifier << "(file:" << fileName << ")";
+    qCDebug(AKONADIAGENTSERVER_LOG) << "Starting agent" << identifier << "of type" << typeIdentifier << "(file:" << fileName << ")";
 
-    //First try to load it staticly
+    // First try to load it staticly
     const QObjectList objList = QPluginLoader::staticInstances();
     for (QObject *plugin : objList) {
         if (plugin->objectName() == fileName) {

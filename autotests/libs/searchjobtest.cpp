@@ -12,11 +12,11 @@
 #include "collectiondeletejob.h"
 #include "collectionfetchjob.h"
 #include "collectionmodifyjob.h"
-#include "searchcreatejob.h"
-#include "itemfetchjob.h"
-#include "searchquery.h"
-#include "persistentsearchattribute.h"
 #include "collectionutils.h"
+#include "itemfetchjob.h"
+#include "persistentsearchattribute.h"
+#include "searchcreatejob.h"
+#include "searchquery.h"
 
 QTEST_AKONADIMAIN(SearchJobTest)
 
@@ -83,13 +83,13 @@ void SearchJobTest::testModifySearch()
     auto attr = created.attribute<PersistentSearchAttribute>();
     QVERIFY(!attr->isRecursive());
     QVERIFY(!attr->isRemoteSearchEnabled());
-    QCOMPARE(attr->queryCollections(), QVector<qint64>{ 0 });
+    QCOMPARE(attr->queryCollections(), QVector<qint64>{0});
     const QString oldQueryString = attr->queryString();
 
     // Change the attributes
     attr->setRecursive(true);
     attr->setRemoteSearchEnabled(true);
-    attr->setQueryCollections(QVector<qint64>{ 1 });
+    attr->setQueryCollections(QVector<qint64>{1});
     Akonadi::SearchQuery newQuery;
     newQuery.addTerm(Akonadi::SearchTerm(QStringLiteral("plugin"), 3));
     newQuery.addTerm(Akonadi::SearchTerm(QStringLiteral("resource"), 4));
@@ -108,7 +108,7 @@ void SearchJobTest::testModifySearch()
 
     QVERIFY(attr->isRecursive());
     QVERIFY(attr->isRemoteSearchEnabled());
-    QCOMPARE(attr->queryCollections(), QVector<qint64>{ 1 });
+    QCOMPARE(attr->queryCollections(), QVector<qint64>{1});
     QVERIFY(attr->queryString() != oldQueryString);
 
     auto delJob = new CollectionDeleteJob(col, this);

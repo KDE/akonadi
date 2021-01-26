@@ -6,10 +6,10 @@
 
 #include "qtest_akonadi.h"
 
+#include "agentinstance.h"
+#include "agentmanager.h"
 #include "collection.h"
 #include "item.h"
-#include "agentmanager.h"
-#include "agentinstance.h"
 #include "itemsearchjob.h"
 #include "searchquery.h"
 
@@ -21,7 +21,7 @@ class ItemSearchJobTest : public QObject
 {
     Q_OBJECT
 private:
-    Akonadi::SearchQuery createQuery(const QString &key, const QSet< qint64 > &resultSet)
+    Akonadi::SearchQuery createQuery(const QString &key, const QSet<qint64> &resultSet)
     {
         Akonadi::SearchQuery query;
         foreach (qint64 id, resultSet) {
@@ -40,7 +40,7 @@ private Q_SLOTS:
     {
         QTest::addColumn<bool>("remoteSearchEnabled");
         QTest::addColumn<SearchQuery>("query");
-        QTest::addColumn<QSet<qint64> >("resultSet");
+        QTest::addColumn<QSet<qint64>>("resultSet");
 
         {
             QSet<qint64> resultSet;
@@ -82,7 +82,6 @@ private Q_SLOTS:
         qDebug() << actualResultSet << resultSet;
         QCOMPARE(actualResultSet, resultSet);
     }
-
 };
 
 QTEST_AKONADIMAIN(ItemSearchJobTest)

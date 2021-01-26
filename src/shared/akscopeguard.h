@@ -10,15 +10,16 @@
 #include <functional>
 #include <type_traits>
 
-namespace Akonadi {
-
+namespace Akonadi
+{
 class AkScopeGuard
 {
 public:
-   template<typename U>
+    template<typename U>
     AkScopeGuard(U &&fun)
         : mFun(std::move(fun))
-    {}
+    {
+    }
 
     AkScopeGuard(const AkScopeGuard &) = delete;
     AkScopeGuard(AkScopeGuard &&) = default;

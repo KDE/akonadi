@@ -14,9 +14,8 @@
 
 #include "akonadiwidgets_debug.h"
 
-
-#include <KSharedConfig>
 #include <KConfigGroup>
+#include <KSharedConfig>
 #include <QTabWidget>
 
 #include <QDialogButtonBox>
@@ -45,7 +44,9 @@ public:
 
         // We use WA_DeleteOnClose => Don't use dialog as parent otherwise we can't save modified collection.
         auto *job = new CollectionModifyJob(mCollection);
-        connect(job, &CollectionModifyJob::result, q, [this](KJob *job) { saveResult(job); });
+        connect(job, &CollectionModifyJob::result, q, [this](KJob *job) {
+            saveResult(job);
+        });
         Q_EMIT q->settingsSaved();
     }
 
@@ -69,7 +70,7 @@ public:
         }
     }
 
-    CollectionPropertiesDialog * const q;
+    CollectionPropertiesDialog *const q;
     Collection mCollection;
     QStringList mPageNames;
     QTabWidget *mTabWidget = nullptr;
@@ -81,7 +82,8 @@ public:
     explicit CollectionPropertiesPageFactoryList() = default;
     CollectionPropertiesPageFactoryList(const CollectionPropertiesPageFactoryList &) = delete;
     CollectionPropertiesPageFactoryList &operator=(const CollectionPropertiesPageFactoryList &) = delete;
-    ~CollectionPropertiesPageFactoryList() {
+    ~CollectionPropertiesPageFactoryList()
+    {
         qDeleteAll(*this);
     }
 };
@@ -130,7 +132,7 @@ void CollectionPropertiesDialog::Private::init()
     q->connect(buttonBox, &QDialogButtonBox::rejected, q, &QDialog::reject);
     mainLayout->addWidget(buttonBox);
 
-    if (mPageNames.isEmpty()) {   // default loading
+    if (mPageNames.isEmpty()) { // default loading
         for (CollectionPropertiesPageFactory *factory : qAsConst(*s_pages)) {
             CollectionPropertiesPage *page = factory->createWidget(mTabWidget);
             if (page->canHandle(mCollection)) {
@@ -163,7 +165,9 @@ void CollectionPropertiesDialog::Private::init()
         }
     }
 
-    q->connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, q, [this]() { save(); });
+    q->connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, q, [this]() {
+        save();
+    });
     q->connect(buttonBox->button(QDialogButtonBox::Cancel), &QAbstractButton::clicked, q, &QObject::deleteLater);
 
     KConfigGroup group(KSharedConfig::openConfig(), "CollectionPropertiesDialog");
@@ -173,7 +177,6 @@ void CollectionPropertiesDialog::Private::init()
     } else {
         q->resize(q->sizeHint().width(), q->sizeHint().height());
     }
-
 }
 
 CollectionPropertiesDialog::CollectionPropertiesDialog(const Collection &collection, QWidget *parent)

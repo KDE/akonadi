@@ -9,12 +9,13 @@
 
 #include <functional>
 
-#include <QString>
 #include <QHash>
+#include <QString>
 
 /// A glue between Qt and the standard library
 
-namespace std {
+namespace std
+{
 }
 
 #endif

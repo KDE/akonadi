@@ -9,14 +9,13 @@
 
 #include "agentbase_p.h"
 
-#include "preprocessorbase.h"
 #include "itemfetchscope.h"
+#include "preprocessorbase.h"
 
 class KJob;
 
 namespace Akonadi
 {
-
 class PreprocessorBasePrivate : public AgentBasePrivate
 {
     Q_OBJECT

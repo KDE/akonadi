@@ -8,35 +8,34 @@
 #include "resourcebase.h"
 #include "agentbase_p.h"
 
-
-#include "resourceadaptor.h"
+#include "akonadifull-version.h"
 #include "collectiondeletejob.h"
 #include "collectionsync_p.h"
-#include <QDBusConnection>
-#include "akonadifull-version.h"
-#include "tagsync.h"
 #include "relationsync.h"
+#include "resourceadaptor.h"
 #include "resourcescheduler_p.h"
+#include "tagsync.h"
 #include "tracerinterface.h"
+#include <QDBusConnection>
 
 #include "changerecorder.h"
 #include "collectionfetchjob.h"
 #include "collectionfetchscope.h"
 #include "collectionmodifyjob.h"
+#include "favoritecollectionattribute.h"
 #include "invalidatecachejob_p.h"
+#include "itemcreatejob.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
 #include "itemmodifyjob.h"
 #include "itemmodifyjob_p.h"
-#include "itemcreatejob.h"
-#include "session.h"
-#include "resourceselectjob_p.h"
 #include "monitor_p.h"
-#include "servermanager_p.h"
 #include "recursivemover_p.h"
-#include "tagmodifyjob.h"
+#include "resourceselectjob_p.h"
+#include "servermanager_p.h"
+#include "session.h"
 #include "specialcollectionattribute.h"
-#include "favoritecollectionattribute.h"
+#include "tagmodifyjob.h"
 
 #include "akonadiagentbase_debug.h"
 
@@ -44,12 +43,12 @@
 #include <iterator>
 #include <shared/akranges.h>
 
-#include <KLocalizedString>
 #include <KAboutData>
+#include <KLocalizedString>
 
+#include <QApplication>
 #include <QHash>
 #include <QTimer>
-#include <QApplication>
 
 using namespace Akonadi;
 using namespace AkRanges;
@@ -93,7 +92,8 @@ public:
 
     Q_DECLARE_PUBLIC(ResourceBase)
 
-    void delayedInit() override {
+    void delayedInit() override
+    {
         const QString serviceId = ServerManager::agentServiceName(ServerManager::Resource, mId);
         if (!QDBusConnection::sessionBus().registerService(serviceId)) {
             QString reason = QDBusConnection::sessionBus().lastError().message();
@@ -110,7 +110,8 @@ public:
         }
     }
 
-    void changeProcessed() override {
+    void changeProcessed() override
+    {
         if (m_recursiveMover) {
             m_recursiveMover->changeProcessed();
             QTimer::singleShot(0, m_recursiveMover.data(), &RecursiveMover::replayNext);
@@ -131,7 +132,7 @@ public:
     void slotLocalListDone(KJob *job);
     void slotSynchronizeCollection(const Collection &col);
     void slotItemRetrievalCollectionFetchDone(KJob *job);
-    void slotCollectionListDone(KJob *job); 
+    void slotCollectionListDone(KJob *job);
     void slotSynchronizeCollectionAttributes(const Collection &col);
     void slotCollectionListForAttributesDone(KJob *job);
     void slotCollectionAttributesSyncDone(KJob *job);
@@ -174,7 +175,8 @@ public:
     {
         Q_Q(ResourceBase);
         Q_ASSERT_X(scheduler->currentTask().type == ResourceScheduler::SyncCollection,
-                   "createItemSyncInstance", "Calling items retrieval methods although no item retrieval is in progress");
+                   "createItemSyncInstance",
+                   "Calling items retrieval methods although no item retrieval is in progress");
         if (!mItemSyncer) {
             mItemSyncer = new ItemSync(q->currentCollection());
             mItemSyncer->setTransactionMode(mItemTransactionMode);
@@ -185,7 +187,10 @@ public:
             }
             mItemSyncer->setDisableAutomaticDeliveryDone(mDisableAutomaticItemDeliveryDone);
             mItemSyncer->setProperty("collection", QVariant::fromValue(q->currentCollection()));
-            connect(mItemSyncer, qOverload<KJob *, unsigned long>(&KJob::percent), this, &ResourceBasePrivate::slotPercent); // NOLINT(google-runtime-int): ulong comes from KJob
+            connect(mItemSyncer,
+                    qOverload<KJob *, unsigned long>(&KJob::percent),
+                    this,
+                    &ResourceBasePrivate::slotPercent); // NOLINT(google-runtime-int): ulong comes from KJob
             connect(mItemSyncer, &KJob::result, this, &ResourceBasePrivate::slotItemSyncDone);
             connect(mItemSyncer, &ItemSync::readyForNextBatch, q, &ResourceBase::retrieveNextItemSyncBatch);
         }
@@ -234,8 +239,7 @@ protected Q_SLOTS:
         AgentBasePrivate::itemChanged(item, partIdentifiers);
     }
 
-    void itemsFlagsChanged(const Akonadi::Item::List &items, const QSet<QByteArray> &addedFlags,
-                           const QSet<QByteArray> &removedFlags) override
+    void itemsFlagsChanged(const Akonadi::Item::List &items, const QSet<QByteArray> &addedFlags, const QSet<QByteArray> &removedFlags) override
     {
         if (addedFlags.isEmpty() && removedFlags.isEmpty()) {
             changeProcessed();
@@ -350,9 +354,9 @@ protected Q_SLOTS:
 
         // inter-resource moves, requires we know which resources the source and destination are in though
         if (!source.resource().isEmpty() && !destination.resource().isEmpty() && source.resource() != destination.resource()) {
-            if (source.resource() == q_ptr->identifier()) {   // moved away from us
+            if (source.resource() == q_ptr->identifier()) { // moved away from us
                 AgentBasePrivate::collectionRemoved(collection);
-            } else if (destination.resource() == q_ptr->identifier()) {   // moved to us
+            } else if (destination.resource() == q_ptr->identifier()) { // moved to us
                 scheduler->taskDone(); // stop change replay for now
                 auto *mover = new RecursiveMover(this);
                 mover->setCollection(collection, destination);
@@ -413,9 +417,12 @@ protected Q_SLOTS:
 private:
     static Item::List filterValidItems(Item::List items)
     {
-        items.erase(std::remove_if(items.begin(), items.end(),
-                                  [](const auto &item) { return item.remoteId().isEmpty(); }),
-                     items.end());
+        items.erase(std::remove_if(items.begin(),
+                                   items.end(),
+                                   [](const auto &item) {
+                                       return item.remoteId().isEmpty();
+                                   }),
+                    items.end());
         return items;
     }
 
@@ -456,9 +463,8 @@ ResourceBase::ResourceBase(const QString &id)
     d->scheduler = new ResourceScheduler(this);
 
     d->mChangeRecorder->setChangeRecordingEnabled(true);
-    d->mChangeRecorder->setCollectionMoveTranslationEnabled(false);   // we deal with this ourselves
-    connect(d->mChangeRecorder, &ChangeRecorder::changesAdded,
-            d->scheduler, &ResourceScheduler::scheduleChangeReplay);
+    d->mChangeRecorder->setCollectionMoveTranslationEnabled(false); // we deal with this ourselves
+    connect(d->mChangeRecorder, &ChangeRecorder::changesAdded, d->scheduler, &ResourceScheduler::scheduleChangeReplay);
 
     d->mChangeRecorder->setResourceMonitored(d->mId.toLatin1());
     d->mChangeRecorder->fetchCollection(true);
@@ -517,9 +523,7 @@ QString ResourceBase::parseArguments(int argc, char **argv)
 {
     Q_UNUSED(argc)
 
-    QCommandLineOption identifierOption(QStringLiteral("identifier"),
-                                        i18nc("@label command line option", "Resource identifier"),
-                                        QStringLiteral("argument"));
+    QCommandLineOption identifierOption(QStringLiteral("identifier"), i18nc("@label command line option", "Resource identifier"), QStringLiteral("argument"));
     QCommandLineParser parser;
     parser.addOption(identifierOption);
     parser.addHelpOption();
@@ -687,7 +691,7 @@ void ResourceBase::changesCommitted(const Item::List &items)
         auto *job = new ItemModifyJob(item, transaction);
         job->d_func()->setClean();
         job->disableRevisionCheck(); // TODO: remove, but where/how do we handle the error?
-        job->setIgnorePayload(true);   // we only want to reset the dirty flag and update the remote id
+        job->setIgnorePayload(true); // we only want to reset the dirty flag and update the remote id
     }
 }
 
@@ -739,40 +743,46 @@ void ResourceBase::requestItemDelivery(const QVector<qint64> &uids, const QByteA
 
     setDelayedReply(true);
 
-    const auto items = uids | Views::transform([](const auto uid) { return Item{uid}; }) | Actions::toQVector;
+    const auto items = uids | Views::transform([](const auto uid) {
+                           return Item{uid};
+                       })
+        | Actions::toQVector;
     d->scheduler->scheduleItemsFetch(items, QSet<QByteArray>::fromList(parts), message());
 }
 
 void ResourceBase::collectionsRetrieved(const Collection::List &collections)
 {
     Q_D(ResourceBase);
-    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncCollectionTree ||
-               d->scheduler->currentTask().type == ResourceScheduler::SyncAll,
+    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncCollectionTree || d->scheduler->currentTask().type == ResourceScheduler::SyncAll,
                "ResourceBase::collectionsRetrieved()",
                "Calling collectionsRetrieved() although no collection retrieval is in progress");
     if (!d->mCollectionSyncer) {
         d->mCollectionSyncer = new CollectionSync(identifier());
         d->mCollectionSyncer->setHierarchicalRemoteIds(d->mHierarchicalRid);
         d->mCollectionSyncer->setKeepLocalChanges(d->mKeepLocalCollectionChanges);
-        connect(d->mCollectionSyncer, qOverload<KJob *, unsigned long>(&KJob::percent), d, &ResourceBasePrivate::slotPercent); // NOLINT(google-runtime-int): ulong comes from KJob
+        connect(d->mCollectionSyncer,
+                qOverload<KJob *, unsigned long>(&KJob::percent),
+                d,
+                &ResourceBasePrivate::slotPercent); // NOLINT(google-runtime-int): ulong comes from KJob
         connect(d->mCollectionSyncer, &KJob::result, d, &ResourceBasePrivate::slotCollectionSyncDone);
     }
     d->mCollectionSyncer->setRemoteCollections(collections);
 }
 
-void ResourceBase::collectionsRetrievedIncremental(const Collection::List &changedCollections,
-        const Collection::List &removedCollections)
+void ResourceBase::collectionsRetrievedIncremental(const Collection::List &changedCollections, const Collection::List &removedCollections)
 {
     Q_D(ResourceBase);
-    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncCollectionTree ||
-               d->scheduler->currentTask().type == ResourceScheduler::SyncAll,
+    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncCollectionTree || d->scheduler->currentTask().type == ResourceScheduler::SyncAll,
                "ResourceBase::collectionsRetrievedIncremental()",
                "Calling collectionsRetrievedIncremental() although no collection retrieval is in progress");
     if (!d->mCollectionSyncer) {
         d->mCollectionSyncer = new CollectionSync(identifier());
         d->mCollectionSyncer->setHierarchicalRemoteIds(d->mHierarchicalRid);
         d->mCollectionSyncer->setKeepLocalChanges(d->mKeepLocalCollectionChanges);
-        connect(d->mCollectionSyncer, qOverload<KJob *, unsigned long>(&KJob::percent), d, &ResourceBasePrivate::slotPercent); // NOLINT(google-runtime-int): ulong comes from KJob
+        connect(d->mCollectionSyncer,
+                qOverload<KJob *, unsigned long>(&KJob::percent),
+                d,
+                &ResourceBasePrivate::slotPercent); // NOLINT(google-runtime-int): ulong comes from KJob
         connect(d->mCollectionSyncer, &KJob::result, d, &ResourceBasePrivate::slotCollectionSyncDone);
     }
     d->mCollectionSyncer->setRemoteCollections(changedCollections, removedCollections);
@@ -781,14 +791,16 @@ void ResourceBase::collectionsRetrievedIncremental(const Collection::List &chang
 void ResourceBase::setCollectionStreamingEnabled(bool enable)
 {
     Q_D(ResourceBase);
-    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncCollectionTree ||
-               d->scheduler->currentTask().type == ResourceScheduler::SyncAll,
+    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncCollectionTree || d->scheduler->currentTask().type == ResourceScheduler::SyncAll,
                "ResourceBase::setCollectionStreamingEnabled()",
                "Calling setCollectionStreamingEnabled() although no collection retrieval is in progress");
     if (!d->mCollectionSyncer) {
         d->mCollectionSyncer = new CollectionSync(identifier());
         d->mCollectionSyncer->setHierarchicalRemoteIds(d->mHierarchicalRid);
-        connect(d->mCollectionSyncer, qOverload<KJob *, unsigned long>(&KJob::percent), d, &ResourceBasePrivate::slotPercent); // NOLINT(google-runtime-int): ulong comes from KJob
+        connect(d->mCollectionSyncer,
+                qOverload<KJob *, unsigned long>(&KJob::percent),
+                d,
+                &ResourceBasePrivate::slotPercent); // NOLINT(google-runtime-int): ulong comes from KJob
         connect(d->mCollectionSyncer, &KJob::result, d, &ResourceBasePrivate::slotCollectionSyncDone);
     }
     d->mCollectionSyncer->setStreamingEnabled(enable);
@@ -797,8 +809,7 @@ void ResourceBase::setCollectionStreamingEnabled(bool enable)
 void ResourceBase::collectionsRetrievalDone()
 {
     Q_D(ResourceBase);
-    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncCollectionTree ||
-               d->scheduler->currentTask().type == ResourceScheduler::SyncAll,
+    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncCollectionTree || d->scheduler->currentTask().type == ResourceScheduler::SyncAll,
                "ResourceBase::collectionsRetrievalDone()",
                "Calling collectionsRetrievalDone() although no collection retrieval is in progress");
     // streaming enabled, so finalize the sync
@@ -842,20 +853,15 @@ void ResourceBasePrivate::slotCollectionSyncDone(KJob *job)
     scheduler->taskDone();
 }
 
-
-namespace {
-
+namespace
+{
 bool sortCollectionsForSync(const Collection &l, const Collection &r)
 {
-    const auto lType = l.hasAttribute<SpecialCollectionAttribute>()
-        ? l.attribute<SpecialCollectionAttribute>()->collectionType()
-        : QByteArray();
+    const auto lType = l.hasAttribute<SpecialCollectionAttribute>() ? l.attribute<SpecialCollectionAttribute>()->collectionType() : QByteArray();
     const bool lInbox = (lType == "inbox") || (l.remoteId().midRef(1).compare(QLatin1String("inbox"), Qt::CaseInsensitive) == 0);
     const bool lFav = l.hasAttribute<FavoriteCollectionAttribute>();
 
-    const auto rType = r.hasAttribute<SpecialCollectionAttribute>()
-        ? r.attribute<SpecialCollectionAttribute>()->collectionType()
-        : QByteArray();
+    const auto rType = r.hasAttribute<SpecialCollectionAttribute>() ? r.attribute<SpecialCollectionAttribute>()->collectionType() : QByteArray();
     const bool rInbox = (rType == "inbox") || (r.remoteId().midRef(1).compare(QLatin1String("inbox"), Qt::CaseInsensitive) == 0);
     const bool rFav = r.hasAttribute<FavoriteCollectionAttribute>();
 
@@ -917,8 +923,7 @@ void ResourceBasePrivate::slotSynchronizeCollection(const Collection &col)
                 Q_EMIT q->status(AgentBase::Running, i18nc("@info:status", "Syncing folder '%1'", currentCollection.displayName()));
             }
 
-            qCDebug(AKONADIAGENTBASE_LOG) << "Preparing collection sync of collection"
-                                          << currentCollection.id() << currentCollection.displayName();
+            qCDebug(AKONADIAGENTBASE_LOG) << "Preparing collection sync of collection" << currentCollection.id() << currentCollection.displayName();
             auto *fetchJob = new Akonadi::CollectionFetchJob(col, CollectionFetchJob::Base, this);
             fetchJob->setFetchScope(q->changeRecorder()->collectionFetchScope());
             connect(fetchJob, &KJob::result, this, &ResourceBasePrivate::slotItemRetrievalCollectionFetchDone);
@@ -993,13 +998,17 @@ void ResourceBasePrivate::slotAttributeRetrievalCollectionFetchDone(KJob *job)
 void ResourceBasePrivate::slotSynchronizeTags()
 {
     Q_Q(ResourceBase);
-    QMetaObject::invokeMethod(this, [q] { q->retrieveTags(); });
+    QMetaObject::invokeMethod(this, [q] {
+        q->retrieveTags();
+    });
 }
 
 void ResourceBasePrivate::slotSynchronizeRelations()
 {
     Q_Q(ResourceBase);
-    QMetaObject::invokeMethod(this, [q] { q->retrieveRelations(); });
+    QMetaObject::invokeMethod(this, [q] {
+        q->retrieveRelations();
+    });
 }
 
 void ResourceBasePrivate::slotPrepareItemRetrieval(const Item &item)
@@ -1007,8 +1016,7 @@ void ResourceBasePrivate::slotPrepareItemRetrieval(const Item &item)
     Q_Q(ResourceBase);
     auto *fetch = new ItemFetchJob(item, this);
     // we always need at least parent so we can use ItemCreateJob to merge
-    fetch->fetchScope().setAncestorRetrieval(qMax(ItemFetchScope::Parent,
-            q->changeRecorder()->itemFetchScope().ancestorRetrieval()));
+    fetch->fetchScope().setAncestorRetrieval(qMax(ItemFetchScope::Parent, q->changeRecorder()->itemFetchScope().ancestorRetrieval()));
     fetch->fetchScope().setCacheOnly(true);
     fetch->fetchScope().setFetchRemoteIdentification(true);
 
@@ -1047,8 +1055,7 @@ void ResourceBasePrivate::slotPrepareItemsRetrieval(const QVector<Item> &items)
     Q_Q(ResourceBase);
     auto *fetch = new ItemFetchJob(items, this);
     // we always need at least parent so we can use ItemCreateJob to merge
-    fetch->fetchScope().setAncestorRetrieval(qMax(ItemFetchScope::Parent,
-            q->changeRecorder()->itemFetchScope().ancestorRetrieval()));
+    fetch->fetchScope().setAncestorRetrieval(qMax(ItemFetchScope::Parent, q->changeRecorder()->itemFetchScope().ancestorRetrieval()));
     fetch->fetchScope().setCacheOnly(true);
     fetch->fetchScope().setFetchRemoteIdentification(true);
     // It's possible that one or more items were removed before this task was
@@ -1188,7 +1195,7 @@ void ResourceBase::cancelTask()
     }
     switch (d->scheduler->currentTask().type) {
     case ResourceScheduler::FetchItem:
-        itemRetrieved(Item());   // sends the error reply and
+        itemRetrieved(Item()); // sends the error reply and
         break;
     case ResourceScheduler::FetchItems:
         itemsRetrieved(Item::List());
@@ -1258,7 +1265,7 @@ void ResourceBasePrivate::slotCollectionListDone(KJob *job)
     if (!job->error()) {
         const Collection::List list = static_cast<CollectionFetchJob *>(job)->collections();
         for (const Collection &collection : list) {
-            //We also get collections that should not be synced but are part of the tree.
+            // We also get collections that should not be synced but are part of the tree.
             if (collection.shouldList(Collection::ListSync)) {
                 if (mScheduleAttributeSyncBeforeCollectionSync) {
                     scheduler->scheduleAttributesSync(collection);
@@ -1353,8 +1360,7 @@ void ResourceBase::itemsRetrieved(const Item::List &items)
     }
 }
 
-void ResourceBase::itemsRetrievedIncremental(const Item::List &changedItems,
-        const Item::List &removedItems)
+void ResourceBase::itemsRetrievedIncremental(const Item::List &changedItems, const Item::List &removedItems)
 {
     Q_D(ResourceBase);
     d->createItemSyncInstanceIfMissing();
@@ -1459,7 +1465,9 @@ bool ResourceBase::retrieveItem(const Akonadi::Item &item, const QSet<QByteArray
     qt_assert_x("Akonadi::ResourceBase::retrieveItem()",
                 "The base implementation of retrieveItem() must never be reached. "
                 "You must implement either retrieveItem() or retrieveItems(Akonadi::Item::List, QSet<QByteArray>) overload "
-                "to handle item retrieval requests.", __FILE__, __LINE__);
+                "to handle item retrieval requests.",
+                __FILE__,
+                __LINE__);
     return false;
 }
 
@@ -1537,14 +1545,16 @@ QString ResourceBase::dumpMemoryInfoToString() const
 void ResourceBase::tagsRetrieved(const Tag::List &tags, const QHash<QString, Item::List> &tagMembers)
 {
     Q_D(ResourceBase);
-    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncTags ||
-               d->scheduler->currentTask().type == ResourceScheduler::SyncAll ||
-               d->scheduler->currentTask().type == ResourceScheduler::Custom,
+    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncTags || d->scheduler->currentTask().type == ResourceScheduler::SyncAll
+                   || d->scheduler->currentTask().type == ResourceScheduler::Custom,
                "ResourceBase::tagsRetrieved()",
                "Calling tagsRetrieved() although no tag retrieval is in progress");
     if (!d->mTagSyncer) {
         d->mTagSyncer = new TagSync(this);
-        connect(d->mTagSyncer, qOverload<KJob *, unsigned long>(&KJob::percent), d, &ResourceBasePrivate::slotPercent); // NOLINT(google-runtime-int): ulong comes from KJob
+        connect(d->mTagSyncer,
+                qOverload<KJob *, unsigned long>(&KJob::percent),
+                d,
+                &ResourceBasePrivate::slotPercent); // NOLINT(google-runtime-int): ulong comes from KJob
         connect(d->mTagSyncer, &KJob::result, d, &ResourceBasePrivate::slotTagSyncDone);
     }
     d->mTagSyncer->setFullTagList(tags);
@@ -1568,14 +1578,16 @@ void ResourceBasePrivate::slotTagSyncDone(KJob *job)
 void ResourceBase::relationsRetrieved(const Relation::List &relations)
 {
     Q_D(ResourceBase);
-    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncRelations ||
-               d->scheduler->currentTask().type == ResourceScheduler::SyncAll ||
-               d->scheduler->currentTask().type == ResourceScheduler::Custom,
+    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncRelations || d->scheduler->currentTask().type == ResourceScheduler::SyncAll
+                   || d->scheduler->currentTask().type == ResourceScheduler::Custom,
                "ResourceBase::relationsRetrieved()",
                "Calling relationsRetrieved() although no relation retrieval is in progress");
     if (!d->mRelationSyncer) {
         d->mRelationSyncer = new RelationSync(this);
-        connect(d->mRelationSyncer, qOverload<KJob *, unsigned long>(&KJob::percent), d, &ResourceBasePrivate::slotPercent); // NOLINT(google-runtime-int): ulong comes from KJob
+        connect(d->mRelationSyncer,
+                qOverload<KJob *, unsigned long>(&KJob::percent),
+                d,
+                &ResourceBasePrivate::slotPercent); // NOLINT(google-runtime-int): ulong comes from KJob
         connect(d->mRelationSyncer, &KJob::result, d, &ResourceBasePrivate::slotRelationSyncDone);
     }
     d->mRelationSyncer->setRemoteRelations(relations);
@@ -1595,5 +1607,5 @@ void ResourceBasePrivate::slotRelationSyncDone(KJob *job)
     scheduler->taskDone();
 }
 
-#include "resourcebase.moc"
 #include "moc_resourcebase.cpp"
+#include "resourcebase.moc"

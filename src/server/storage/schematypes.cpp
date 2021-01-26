@@ -39,10 +39,9 @@ TableDescription::TableDescription()
 
 int TableDescription::primaryKeyColumnCount() const
 {
-    return std::count_if(columns.constBegin(), columns.constEnd(), [](const ColumnDescription & col) {
+    return std::count_if(columns.constBegin(), columns.constEnd(), [](const ColumnDescription &col) {
         return col.isPrimaryKey;
-    }
-                        );
+    });
 }
 
 RelationDescription::RelationDescription()

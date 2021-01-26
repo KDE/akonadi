@@ -97,7 +97,7 @@ public:
 };
 
 CollectionRightsAttribute::CollectionRightsAttribute()
-    :  d(std::make_unique<Private>())
+    : d(std::make_unique<Private>())
 {
 }
 

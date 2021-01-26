@@ -6,11 +6,11 @@
 
 #include <QObject>
 
-#include "qtest_akonadi.h"
-#include "testattribute.h"
 #include "attributefactory.h"
+#include "qtest_akonadi.h"
 #include "tag.h"
 #include "tagattribute.h"
+#include "testattribute.h"
 
 using namespace Akonadi;
 

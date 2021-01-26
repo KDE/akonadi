@@ -10,14 +10,14 @@
 
 #include "traceradaptor.h"
 
+#include "akonadiserver_debug.h"
 #include "dbustracer.h"
 #include "filetracer.h"
-#include "akonadiserver_debug.h"
 
 #include <private/standarddirs_p.h>
 
 // #define DEFAULT_TRACER QLatin1String( "dbus" )
-#define DEFAULT_TRACER QStringLiteral( "null" )
+#define DEFAULT_TRACER QStringLiteral("null")
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -58,7 +58,7 @@ void Tracer::connectionInput(const QString &identifier, const QByteArray &msg)
     }
 }
 
-void Akonadi::Server::Tracer::connectionInput(const QString& identifier, qint64 tag, const Protocol::CommandPtr &cmd)
+void Akonadi::Server::Tracer::connectionInput(const QString &identifier, qint64 tag, const Protocol::CommandPtr &cmd)
 {
     QMutexLocker locker(&mMutex);
     if (mTracerBackend) {
@@ -100,7 +100,6 @@ void Tracer::connectionOutput(const QString &identifier, qint64 tag, const Proto
         }
     }
 }
-
 
 void Tracer::signal(const QString &signalName, const QString &msg)
 {

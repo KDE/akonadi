@@ -16,7 +16,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class ItemRetrievalManager;
 
 /**

@@ -7,23 +7,23 @@
 #ifndef AKONADI_ENTITYCACHE_P_H
 #define AKONADI_ENTITYCACHE_P_H
 
-#include "item.h"
-#include "itemfetchjob.h"
-#include "itemfetchscope.h"
 #include "collection.h"
 #include "collectionfetchjob.h"
 #include "collectionfetchscope.h"
+#include "item.h"
+#include "itemfetchjob.h"
+#include "itemfetchscope.h"
+#include "session.h"
 #include "tag.h"
 #include "tagfetchjob.h"
 #include "tagfetchscope.h"
-#include "session.h"
 
 #include "akonaditests_export.h"
 
+#include <QHash>
 #include <QObject>
 #include <QQueue>
 #include <QVariant>
-#include <QHash>
 
 class KJob;
 
@@ -31,7 +31,6 @@ Q_DECLARE_METATYPE(QList<qint64>)
 
 namespace Akonadi
 {
-
 /**
   @internal
   QObject part of EntityCache.
@@ -54,8 +53,7 @@ private Q_SLOTS:
     virtual void processResult(KJob *job) = 0;
 };
 
-template <typename T>
-struct EntityCacheNode {
+template<typename T> struct EntityCacheNode {
     EntityCacheNode()
         : pending(false)
         , invalid(false)
@@ -76,8 +74,7 @@ struct EntityCacheNode {
  * @internal
  * A in-memory FIFO cache for a small amount of Item or Collection objects.
  */
-template<typename T, typename FetchJob, typename FetchScope_>
-class EntityCache : public EntityCacheBase
+template<typename T, typename FetchJob, typename FetchScope_> class EntityCache : public EntityCacheBase
 {
 public:
     typedef FetchScope_ FetchScope;
@@ -167,8 +164,7 @@ public:
 private:
     EntityCacheNode<T> *cacheNodeForId(typename T::Id id) const
     {
-        for (typename QQueue<EntityCacheNode<T> *>::const_iterator it = mCache.constBegin(), endIt = mCache.constEnd();
-                it != endIt; ++it) {
+        for (typename QQueue<EntityCacheNode<T> *>::const_iterator it = mCache.constBegin(), endIt = mCache.constEnd(); it != endIt; ++it) {
             if ((*it)->entity.id() == id) {
                 return *it;
             }
@@ -176,15 +172,14 @@ private:
         return nullptr;
     }
 
-    void processResult(KJob *job) override {
-        if (job->error())
-        {
-            //This can happen if we have stale notifications for items that have already been removed
+    void processResult(KJob *job) override
+    {
+        if (job->error()) {
+            // This can happen if we have stale notifications for items that have already been removed
         }
         auto id = job->property("EntityCacheNode").template value<typename T::Id>();
         EntityCacheNode<T> *node = cacheNodeForId(id);
-        if (!node)
-        {
+        if (!node) {
             return; // got replaced in the meantime
         }
 
@@ -192,8 +187,7 @@ private:
         extractResult(node, job);
         // make sure we find this node again if something went wrong here,
         // most likely the object got deleted from the server in the meantime
-        if (node->entity.id() != id)
-        {
+        if (node->entity.id() != id) {
             // TODO: Recursion guard? If this is called with non-existing ids, the if will never be true!
             node->entity.setId(id);
             node->invalid = true;
@@ -256,7 +250,9 @@ template<> inline void EntityCache<Tag, TagFetchJob, TagFetchScope>::extractResu
     }
 }
 
-template<> inline CollectionFetchJob *EntityCache<Collection, CollectionFetchJob, CollectionFetchScope>::createFetchJob(Collection::Id id, const CollectionFetchScope &scope)
+template<>
+inline CollectionFetchJob *EntityCache<Collection, CollectionFetchJob, CollectionFetchScope>::createFetchJob(Collection::Id id,
+                                                                                                             const CollectionFetchScope &scope)
 {
     CollectionFetchJob *fetch = new CollectionFetchJob(Collection(id), CollectionFetchJob::Base, session);
     fetch->setFetchScope(scope);
@@ -267,8 +263,7 @@ typedef EntityCache<Collection, CollectionFetchJob, CollectionFetchScope> Collec
 typedef EntityCache<Item, ItemFetchJob, ItemFetchScope> ItemCache;
 typedef EntityCache<Tag, TagFetchJob, TagFetchScope> TagCache;
 
-template <typename T>
-struct EntityListCacheNode {
+template<typename T> struct EntityListCacheNode {
     EntityListCacheNode()
         : pending(false)
         , invalid(false)
@@ -286,8 +281,7 @@ struct EntityListCacheNode {
     bool invalid;
 };
 
-template<typename T, typename FetchJob, typename FetchScope_>
-class EntityListCache : public EntityCacheBase
+template<typename T, typename FetchJob, typename FetchScope_> class EntityListCache : public EntityCacheBase
 {
 public:
     typedef FetchScope_ FetchScope;
@@ -383,8 +377,7 @@ public:
       a token to indicate which request has been finished in the
       dataAvailable() signal.
     */
-    void request(const QList<typename T::Id> &ids, const FetchScope &scope,
-                 const QList<typename T::Id> &preserveIds = QList<typename T::Id>())
+    void request(const QList<typename T::Id> &ids, const FetchScope &scope, const QList<typename T::Id> &preserveIds = QList<typename T::Id>())
     {
         Q_ASSERT(isNotRequested(ids));
         shrinkCache(preserveIds);
@@ -443,9 +436,9 @@ private:
         return job;
     }
 
-    void processResult(KJob *job) override {
-        if (job->error())
-        {
+    void processResult(KJob *job) override
+    {
+        if (job->error()) {
             qWarning() << job->errorString();
         }
         const QList<typename T::Id> ids = job->property("EntityListCacheIds").value<QList<typename T::Id>>();
@@ -453,8 +446,7 @@ private:
         typename T::List entities;
         extractResults(job, entities);
 
-        for (typename T::Id id : ids)
-        {
+        for (typename T::Id id : ids) {
             EntityListCacheNode<T> *node = mCache.value(id);
             if (!node) {
                 continue; // got replaced in the meantime
@@ -506,7 +498,7 @@ template<> inline void EntityListCache<Item, ItemFetchJob, ItemFetchScope>::extr
     items = fetch->items();
 }
 
-template<> inline void EntityListCache<Tag, TagFetchJob, TagFetchScope>::extractResults(KJob *job, Tag::List &tags)  const
+template<> inline void EntityListCache<Tag, TagFetchJob, TagFetchScope>::extractResults(KJob *job, Tag::List &tags) const
 {
     auto *fetch = qobject_cast<TagFetchJob *>(job);
     Q_ASSERT(fetch);
@@ -514,7 +506,8 @@ template<> inline void EntityListCache<Tag, TagFetchJob, TagFetchScope>::extract
 }
 
 template<>
-inline CollectionFetchJob *EntityListCache<Collection, CollectionFetchJob, CollectionFetchScope>::createFetchJob(const QList<Collection::Id> &ids, const CollectionFetchScope &scope)
+inline CollectionFetchJob *EntityListCache<Collection, CollectionFetchJob, CollectionFetchScope>::createFetchJob(const QList<Collection::Id> &ids,
+                                                                                                                 const CollectionFetchScope &scope)
 {
     auto *fetch = new CollectionFetchJob(ids, CollectionFetchJob::Base, session);
     fetch->setFetchScope(scope);

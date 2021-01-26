@@ -4,16 +4,15 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-
-#include "entitytreemodel.h"
-#include "control.h"
-#include "entitytreemodel_p.h"
-#include "monitor_p.h"
 #include "changerecorder_p.h"
-#include "qtest_akonadi.h"
 #include "collectioncreatejob.h"
-#include "itemcreatejob.h"
+#include "control.h"
+#include "entitytreemodel.h"
+#include "entitytreemodel_p.h"
 #include "favoritecollectionsmodel.h"
+#include "itemcreatejob.h"
+#include "monitor_p.h"
+#include "qtest_akonadi.h"
 
 #include <KConfigGroup>
 #include <KSharedConfig>
@@ -23,11 +22,13 @@
 
 using namespace Akonadi;
 
-class InspectableETM: public EntityTreeModel
+class InspectableETM : public EntityTreeModel
 {
 public:
     explicit InspectableETM(ChangeRecorder *monitor, QObject *parent = nullptr)
-        : EntityTreeModel(monitor, parent) {}
+        : EntityTreeModel(monitor, parent)
+    {
+    }
     EntityTreeModelPrivate *etmPrivate()
     {
         return d_ptr;
@@ -48,6 +49,7 @@ private Q_SLOTS:
     void testItemAdded();
     void testLoadConfig();
     void testInsertAfterModelCreation();
+
 private:
     InspectableETM *createETM();
 };
@@ -107,7 +109,7 @@ void FavoriteProxyTest::testItemAdded()
     auto *favoriteModel = new FavoriteCollectionsModel(model, configGroup, this);
 
     const int numberOfRootCollections = 4;
-    //Wait for initial listing to complete
+    // Wait for initial listing to complete
     QVERIFY(waitForPopulation(QModelIndex(), model, numberOfRootCollections));
 
     const QModelIndex res3Index = getIndex(QStringLiteral("res3"), model);
@@ -118,36 +120,38 @@ void FavoriteProxyTest::testItemAdded()
 
     QVERIFY(!model->etmPrivate()->isMonitored(favoriteCollection.id()));
 
-    //Ensure the collection is reference counted after being added to the favorite model
+    // Ensure the collection is reference counted after being added to the favorite model
     {
         favoriteModel->addCollection(favoriteCollection);
-        //the collection is in the favorites model
+        // the collection is in the favorites model
         QTRY_COMPARE(favoriteModel->rowCount(QModelIndex()), 1);
-        QTRY_COMPARE(favoriteModel->data(favoriteModel->index(0, 0, QModelIndex()), EntityTreeModel::CollectionIdRole).value<Akonadi::Collection::Id>(), favoriteCollection.id());
-        //the collection got referenced
+        QTRY_COMPARE(favoriteModel->data(favoriteModel->index(0, 0, QModelIndex()), EntityTreeModel::CollectionIdRole).value<Akonadi::Collection::Id>(),
+                     favoriteCollection.id());
+        // the collection got referenced
         QTRY_VERIFY(model->etmPrivate()->isMonitored(favoriteCollection.id()));
-        //the collection is not yet buffered though
+        // the collection is not yet buffered though
         QTRY_VERIFY(!model->etmPrivate()->isBuffered(favoriteCollection.id()));
     }
 
-    //Survive a reset
+    // Survive a reset
     {
         QSignalSpy resetSpy(model, &QAbstractItemModel::modelReset);
         model->reset();
         QTRY_COMPARE(resetSpy.count(), 1);
-        //the collection is in the favorites model
+        // the collection is in the favorites model
         QTRY_COMPARE(favoriteModel->rowCount(QModelIndex()), 1);
-        QTRY_COMPARE(favoriteModel->data(favoriteModel->index(0, 0, QModelIndex()), EntityTreeModel::CollectionIdRole).value<Akonadi::Collection::Id>(), favoriteCollection.id());
-        //the collection got referenced
+        QTRY_COMPARE(favoriteModel->data(favoriteModel->index(0, 0, QModelIndex()), EntityTreeModel::CollectionIdRole).value<Akonadi::Collection::Id>(),
+                     favoriteCollection.id());
+        // the collection got referenced
         QTRY_VERIFY(model->etmPrivate()->isMonitored(favoriteCollection.id()));
-        //the collection is not yet buffered though
+        // the collection is not yet buffered though
         QTRY_VERIFY(!model->etmPrivate()->isBuffered(favoriteCollection.id()));
     }
 
-    //Ensure the collection is no longer reference counted after being added to the favorite model, and moved to the buffer
+    // Ensure the collection is no longer reference counted after being added to the favorite model, and moved to the buffer
     {
         favoriteModel->removeCollection(favoriteCollection);
-        //moved from being reference counted to being buffered
+        // moved from being reference counted to being buffered
         QTRY_VERIFY(model->etmPrivate()->isBuffered(favoriteCollection.id()));
         QTRY_COMPARE(favoriteModel->rowCount(QModelIndex()), 0);
     }
@@ -158,7 +162,7 @@ void FavoriteProxyTest::testLoadConfig()
     InspectableETM *model = createETM();
 
     const int numberOfRootCollections = 4;
-    //Wait for initial listing to complete
+    // Wait for initial listing to complete
     QVERIFY(waitForPopulation(QModelIndex(), model, numberOfRootCollections));
     const QModelIndex res3Index = getIndex(QStringLiteral("res3"), model);
     QVERIFY(res3Index.isValid());
@@ -173,16 +177,17 @@ void FavoriteProxyTest::testLoadConfig()
 
     {
         QTRY_COMPARE(favoriteModel->rowCount(QModelIndex()), 1);
-        QTRY_COMPARE(favoriteModel->data(favoriteModel->index(0, 0, QModelIndex()), EntityTreeModel::CollectionIdRole).value<Akonadi::Collection::Id>(), favoriteCollection.id());
-        //the collection got referenced
+        QTRY_COMPARE(favoriteModel->data(favoriteModel->index(0, 0, QModelIndex()), EntityTreeModel::CollectionIdRole).value<Akonadi::Collection::Id>(),
+                     favoriteCollection.id());
+        // the collection got referenced
         QTRY_VERIFY(model->etmPrivate()->isMonitored(favoriteCollection.id()));
     }
 }
 
-class Filter: public QSortFilterProxyModel
+class Filter : public QSortFilterProxyModel
 {
 public:
-    bool filterAcceptsRow(int /*source_row*/, const QModelIndex & /*source_parent*/) const  override
+    bool filterAcceptsRow(int /*source_row*/, const QModelIndex & /*source_parent*/) const override
     {
         return accepts;
     }
@@ -197,7 +202,7 @@ void FavoriteProxyTest::testInsertAfterModelCreation()
     filter.setSourceModel(model);
 
     const int numberOfRootCollections = 4;
-    //Wait for initial listing to complete
+    // Wait for initial listing to complete
     QVERIFY(waitForPopulation(QModelIndex(), model, numberOfRootCollections));
     const QModelIndex res3Index = getIndex(QStringLiteral("res3"), model);
     QVERIFY(res3Index.isValid());
@@ -208,19 +213,20 @@ void FavoriteProxyTest::testInsertAfterModelCreation()
 
     auto *favoriteModel = new FavoriteCollectionsModel(&filter, configGroup, this);
 
-    //Make sure the filter is not letting anything through
+    // Make sure the filter is not letting anything through
     QTest::qWait(0);
     QCOMPARE(filter.rowCount(QModelIndex()), 0);
 
-    //The collection is not in the model yet
+    // The collection is not in the model yet
     favoriteModel->addCollection(favoriteCollection);
     filter.accepts = true;
     filter.invalidate();
 
     {
         QTRY_COMPARE(favoriteModel->rowCount(QModelIndex()), 1);
-        QTRY_COMPARE(favoriteModel->data(favoriteModel->index(0, 0, QModelIndex()), EntityTreeModel::CollectionIdRole).value<Akonadi::Collection::Id>(), favoriteCollection.id());
-        //the collection got referenced
+        QTRY_COMPARE(favoriteModel->data(favoriteModel->index(0, 0, QModelIndex()), EntityTreeModel::CollectionIdRole).value<Akonadi::Collection::Id>(),
+                     favoriteCollection.id());
+        // the collection got referenced
         QTRY_VERIFY(model->etmPrivate()->isMonitored(favoriteCollection.id()));
     }
 }

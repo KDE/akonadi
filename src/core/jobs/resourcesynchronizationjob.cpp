@@ -5,13 +5,13 @@
  */
 
 #include "resourcesynchronizationjob.h"
-#include <QDBusConnection>
-#include "kjobprivatebase_p.h"
-#include "servermanager.h"
 #include "agentinstance.h"
 #include "agentmanager.h"
 #include "akonadicore_debug.h"
+#include "kjobprivatebase_p.h"
 #include "resourceinterface.h"
+#include "servermanager.h"
+#include <QDBusConnection>
 
 #include <KLocalizedString>
 
@@ -20,7 +20,6 @@
 
 namespace Akonadi
 {
-
 class ResourceSynchronizationJobPrivate : public KJobPrivateBase
 {
     Q_OBJECT
@@ -95,10 +94,9 @@ void ResourceSynchronizationJobPrivate::doStart()
     }
 
     using ResourceIface = org::freedesktop::Akonadi::Resource;
-    interface = std::make_unique<ResourceIface>(
-            ServerManager::agentServiceName(ServerManager::Resource, instance.identifier()),
-            QStringLiteral("/"),
-            QDBusConnection::sessionBus());
+    interface = std::make_unique<ResourceIface>(ServerManager::agentServiceName(ServerManager::Resource, instance.identifier()),
+                                                QStringLiteral("/"),
+                                                QDBusConnection::sessionBus());
     if (collectionTreeOnly) {
         connect(interface.get(), &ResourceIface::collectionTreeSynchronized, this, &ResourceSynchronizationJobPrivate::slotSynchronized);
     } else {

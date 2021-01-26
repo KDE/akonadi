@@ -4,7 +4,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef AKONADI_SEARCHHANDLER_H_ 
+#ifndef AKONADI_SEARCHHANDLER_H_
 #define AKONADI_SEARCHHANDLER_H_
 
 #include "handler.h"
@@ -15,7 +15,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
   @ingroup akonadi_server_handler
 

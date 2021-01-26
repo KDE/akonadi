@@ -14,7 +14,6 @@ class QString;
 
 namespace Akonadi
 {
-
 namespace Instance
 {
 AKONADIPRIVATE_EXPORT bool hasIdentifier();

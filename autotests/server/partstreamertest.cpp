@@ -7,20 +7,20 @@
 
 #include <QObject>
 
-#include "fakeakonadiserver.h"
-#include "fakeconnection.h"
 #include "aktest.h"
 #include "entities.h"
+#include "fakeakonadiserver.h"
+#include "fakeconnection.h"
 
-#include <private/standarddirs_p.h>
 #include <private/externalpartstorage_p.h>
+#include <private/standarddirs_p.h>
 
 #include "storage/partstreamer.h"
 #include <storage/parthelper.h>
 
-#include <QTest>
-#include <QSettings>
 #include <QDir>
+#include <QSettings>
+#include <QTest>
 
 #include <private/scope_p.h>
 
@@ -35,6 +35,7 @@ class PartStreamerTest : public QObject
     Q_OBJECT
 
     FakeAkonadiServer mAkonadi;
+
 public:
     PartStreamerTest()
     {
@@ -49,7 +50,7 @@ public:
     Protocol::ModifyItemsCommandPtr createCommand(const PimItem &item)
     {
         auto cmd = Protocol::ModifyItemsCommandPtr::create(item.id());
-        cmd->setParts({ "PLD:DATA" });
+        cmd->setParts({"PLD:DATA"});
         return cmd;
     }
 
@@ -83,80 +84,119 @@ private Q_SLOTS:
         // Order of these tests matters!
         {
             TestScenario::List scenarios;
-            scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
-                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 3)))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data))
+            scenarios << FakeAkonadiServer::loginScenario() << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item))
+                      << TestScenario::create(5,
+                                              TestScenario::ServerCmd,
+                                              Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
+                      << TestScenario::create(5,
+                                              TestScenario::ClientCmd,
+                                              Protocol::StreamPayloadResponsePtr::create("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 3)))
+                      << TestScenario::create(5,
+                                              TestScenario::ServerCmd,
+                                              Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", "123"))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item.id(), 1));
 
-            QTest::newRow("item 1, internal") << scenarios << QByteArray("PLD:DATA") << QByteArray("123") << QByteArray() << 3ll << true << Part::Internal << item;
+            QTest::newRow("item 1, internal") << scenarios << QByteArray("PLD:DATA") << QByteArray("123") << QByteArray() << 3ll << true << Part::Internal
+                                              << item;
         }
 
         {
             TestScenario::List scenarios;
-            scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
-                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 9)))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data, QStringLiteral("%1_r0").arg(partId)))
+            scenarios << FakeAkonadiServer::loginScenario() << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item))
+                      << TestScenario::create(5,
+                                              TestScenario::ServerCmd,
+                                              Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
+                      << TestScenario::create(5,
+                                              TestScenario::ClientCmd,
+                                              Protocol::StreamPayloadResponsePtr::create("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 9)))
+                      << TestScenario::create(
+                             5,
+                             TestScenario::ServerCmd,
+                             Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data, QStringLiteral("%1_r0").arg(partId)))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA"))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item.id(), 2));
 
-            QTest::newRow("item 1, change to external") << scenarios << QByteArray("PLD:DATA") << QByteArray("15_r0") << QByteArray("123456789") << 9ll << true << Part::External << item;
+            QTest::newRow("item 1, change to external")
+                << scenarios << QByteArray("PLD:DATA") << QByteArray("15_r0") << QByteArray("123456789") << 9ll << true << Part::External << item;
         }
 
         {
             TestScenario::List scenarios;
-            scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
-                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 9)))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data, QStringLiteral("%1_r1").arg(partId)))
+            scenarios << FakeAkonadiServer::loginScenario() << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item))
+                      << TestScenario::create(5,
+                                              TestScenario::ServerCmd,
+                                              Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
+                      << TestScenario::create(5,
+                                              TestScenario::ClientCmd,
+                                              Protocol::StreamPayloadResponsePtr::create("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 9)))
+                      << TestScenario::create(
+                             5,
+                             TestScenario::ServerCmd,
+                             Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data, QStringLiteral("%1_r1").arg(partId)))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA"))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item.id(), 3));
 
-            QTest::newRow("item 1, update external") << scenarios << QByteArray("PLD:DATA") << QByteArray("15_r1") << QByteArray("987654321") << 9ll << true << Part::External << item;
+            QTest::newRow("item 1, update external") << scenarios << QByteArray("PLD:DATA") << QByteArray("15_r1") << QByteArray("987654321") << 9ll << true
+                                                     << Part::External << item;
         }
 
         {
             TestScenario::List scenarios;
-            scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
-                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 9)))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data, QStringLiteral("%1_r2").arg(partId)))
+            scenarios << FakeAkonadiServer::loginScenario() << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item))
+                      << TestScenario::create(5,
+                                              TestScenario::ServerCmd,
+                                              Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
+                      << TestScenario::create(5,
+                                              TestScenario::ClientCmd,
+                                              Protocol::StreamPayloadResponsePtr::create("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 9)))
+                      << TestScenario::create(
+                             5,
+                             TestScenario::ServerCmd,
+                             Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data, QStringLiteral("%1_r2").arg(partId)))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA"))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item.id(), 4));
 
-            QTest::newRow("item 1, external, no change") << scenarios << QByteArray("PLD:DATA") << QByteArray("15_r2") << QByteArray("987654321") << 9ll << false << Part::External << item;
+            QTest::newRow("item 1, external, no change")
+                << scenarios << QByteArray("PLD:DATA") << QByteArray("15_r2") << QByteArray("987654321") << 9ll << false << Part::External << item;
         }
 
         {
             TestScenario::List scenarios;
-            scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
-                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 4)))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data))
+            scenarios << FakeAkonadiServer::loginScenario() << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item))
+                      << TestScenario::create(5,
+                                              TestScenario::ServerCmd,
+                                              Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
+                      << TestScenario::create(5,
+                                              TestScenario::ClientCmd,
+                                              Protocol::StreamPayloadResponsePtr::create("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 4)))
+                      << TestScenario::create(5,
+                                              TestScenario::ServerCmd,
+                                              Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", "1234"))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item.id(), 5));
 
-            QTest::newRow("item 1, change to internal") << scenarios << QByteArray("PLD:DATA") << QByteArray("1234") << QByteArray() << 4ll << true << Part::Internal << item;
+            QTest::newRow("item 1, change to internal")
+                << scenarios << QByteArray("PLD:DATA") << QByteArray("1234") << QByteArray() << 4ll << true << Part::Internal << item;
         }
 
         {
             TestScenario::List scenarios;
-            scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
-                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 4)))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data))
+            scenarios << FakeAkonadiServer::loginScenario() << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item))
+                      << TestScenario::create(5,
+                                              TestScenario::ServerCmd,
+                                              Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
+                      << TestScenario::create(5,
+                                              TestScenario::ClientCmd,
+                                              Protocol::StreamPayloadResponsePtr::create("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 4)))
+                      << TestScenario::create(5,
+                                              TestScenario::ServerCmd,
+                                              Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", "1234"))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item.id(), 6));
 
-            QTest::newRow("item 1, internal, no change") << scenarios << QByteArray("PLD:DATA") << QByteArray("1234") << QByteArray() << 4ll << false << Part::Internal << item;
+            QTest::newRow("item 1, internal, no change")
+                << scenarios << QByteArray("PLD:DATA") << QByteArray("1234") << QByteArray() << 4ll << false << Part::Internal << item;
         }
 
         // Insert new item
@@ -166,15 +206,22 @@ private Q_SLOTS:
         const QString foreignPath = FakeAkonadiServer::basePath() + QStringLiteral("/tmp/foreignPayloadFile");
         {
             TestScenario::List scenarios;
-            scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item2))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
-                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 3, 0, Protocol::PartMetaData::Foreign)))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data))
+            scenarios << FakeAkonadiServer::loginScenario() << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item2))
+                      << TestScenario::create(5,
+                                              TestScenario::ServerCmd,
+                                              Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
+                      << TestScenario::create(
+                             5,
+                             TestScenario::ClientCmd,
+                             Protocol::StreamPayloadResponsePtr::create("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 3, 0, Protocol::PartMetaData::Foreign)))
+                      << TestScenario::create(5,
+                                              TestScenario::ServerCmd,
+                                              Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", foreignPath.toUtf8()))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item2.id(), 1));
 
-            QTest::newRow("item 2, new foreign part") << scenarios << QByteArray("PLD:DATA") << foreignPath.toUtf8() << QByteArray("123") << 3ll << false << Part::Foreign << item2;
+            QTest::newRow("item 2, new foreign part") << scenarios << QByteArray("PLD:DATA") << foreignPath.toUtf8() << QByteArray("123") << 3ll << false
+                                                      << Part::Foreign << item2;
         }
     }
 
@@ -254,7 +301,6 @@ private Q_SLOTS:
             }
         }
     }
-
 };
 
 AKTEST_FAKESERVER_MAIN(PartStreamerTest)

@@ -10,23 +10,26 @@
 
 #include <KLocalizedString>
 
-#include <qdom.h>
 #include <QFile>
+#include <qdom.h>
 
 #ifdef HAVE_LIBXML2
+#include <QStandardPaths>
 #include <libxml/parser.h>
 #include <libxml/xmlIO.h>
 #include <libxml/xmlschemas.h>
-#include <QStandardPaths>
 #endif
 
 using namespace Akonadi;
 
 // helper class for dealing with libxml resource management
-template <typename T, void FreeFunc(T)> class XmlPtr
+template<typename T, void FreeFunc(T)> class XmlPtr
 {
 public:
-    explicit XmlPtr(const T &t) : p(t) {}
+    explicit XmlPtr(const T &t)
+        : p(t)
+    {
+    }
 
     ~XmlPtr()
     {
@@ -72,12 +75,11 @@ static QDomElement findElementByRidHelper(const QDomElement &elem, const QString
 
 namespace Akonadi
 {
-
 class XmlDocumentPrivate
 {
 public:
-    XmlDocumentPrivate() :
-        valid(false)
+    XmlDocumentPrivate()
+        : valid(false)
     {
         lastError = i18n("No data loaded.");
     }
@@ -94,15 +96,15 @@ public:
 
 } // namespace Akonadi
 
-XmlDocument::XmlDocument() :
-    d(new XmlDocumentPrivate)
+XmlDocument::XmlDocument()
+    : d(new XmlDocumentPrivate)
 {
     const QDomElement rootElem = d->document.createElement(Format::Tag::root());
     d->document.appendChild(rootElem);
 }
 
-XmlDocument::XmlDocument(const QString &fileName) :
-    d(new XmlDocumentPrivate)
+XmlDocument::XmlDocument(const QString &fileName)
+    : d(new XmlDocumentPrivate)
 {
     loadFile(fileName);
 }

@@ -5,10 +5,10 @@
  */
 
 #include "collectionattributessynchronizationjob.h"
-#include <QDBusConnection>
+#include "akonadicore_debug.h"
 #include "kjobprivatebase_p.h"
 #include "servermanager.h"
-#include "akonadicore_debug.h"
+#include <QDBusConnection>
 
 #include "agentinstance.h"
 #include "agentmanager.h"
@@ -21,7 +21,6 @@
 
 namespace Akonadi
 {
-
 class CollectionAttributesSynchronizationJobPrivate : public KJobPrivateBase
 {
     Q_OBJECT
@@ -89,7 +88,8 @@ void CollectionAttributesSynchronizationJobPrivate::doStart()
     interface = new QDBusInterface(ServerManager::agentServiceName(ServerManager::Resource, instance.identifier()),
                                    QStringLiteral("/"),
                                    QStringLiteral("org.freedesktop.Akonadi.Resource"),
-                                   QDBusConnection::sessionBus(), this);
+                                   QDBusConnection::sessionBus(),
+                                   this);
     connect(interface, SIGNAL(attributesSynchronized(qlonglong)), this, SLOT(slotSynchronized(qlonglong))); // clazy:exclude=old-style-connect
 
     if (interface->isValid()) {

@@ -4,29 +4,28 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "protocolhelper_p.h"
 #include "akonadicore_debug.h"
 #include "attributefactory.h"
-#include "collectionstatistics.h"
-#include "item_p.h"
 #include "collection_p.h"
-#include "tag_p.h"
+#include "collectionstatistics.h"
 #include "exceptionbase.h"
+#include "item_p.h"
+#include "itemfetchscope.h"
 #include "itemserializer_p.h"
 #include "itemserializerplugin.h"
-#include "servermanager.h"
-#include "tagfetchscope.h"
 #include "persistentsearchattribute.h"
-#include "itemfetchscope.h"
+#include "protocolhelper_p.h"
+#include "servermanager.h"
+#include "tag_p.h"
+#include "tagfetchscope.h"
 
-#include "private/protocol_p.h"
 #include "private/externalpartstorage_p.h"
+#include "private/protocol_p.h"
 
 #include <shared/akranges.h>
 
 #include <QFile>
 #include <QVarLengthArray>
-
 
 using namespace Akonadi;
 using namespace AkRanges;
@@ -53,8 +52,7 @@ Protocol::CachePolicy ProtocolHelper::cachePolicyToProtocol(const CachePolicy &p
     return proto;
 }
 
-template<typename T>
-inline static void parseAttributesImpl(const Protocol::Attributes &attributes, T *entity)
+template<typename T> inline static void parseAttributesImpl(const Protocol::Attributes &attributes, T *entity)
 {
     for (auto iter = attributes.cbegin(), end = attributes.cend(); iter != end; ++iter) {
         Attribute *attribute = AttributeFactory::createAttribute(iter.key());
@@ -68,9 +66,8 @@ inline static void parseAttributesImpl(const Protocol::Attributes &attributes, T
 }
 
 template<typename T>
-inline static void parseAncestorsCachedImpl(const QVector<Protocol::Ancestor> &ancestors, T *entity,
-        Collection::Id parentCollection,
-        ProtocolHelperValuePool *pool)
+inline static void
+parseAncestorsCachedImpl(const QVector<Protocol::Ancestor> &ancestors, T *entity, Collection::Id parentCollection, ProtocolHelperValuePool *pool)
 {
     if (!pool || parentCollection == -1) {
         // if no pool or parent collection id is provided we can't cache anything, so continue as usual
@@ -88,8 +85,7 @@ inline static void parseAncestorsCachedImpl(const QVector<Protocol::Ancestor> &a
     }
 }
 
-template<typename T>
-inline static Protocol::Attributes attributesToProtocolImpl(const T &entity, bool ns)
+template<typename T> inline static Protocol::Attributes attributesToProtocolImpl(const T &entity, bool ns)
 {
     Protocol::Attributes attributes;
     const auto attrs = entity.attributes();
@@ -101,15 +97,17 @@ inline static Protocol::Attributes attributesToProtocolImpl(const T &entity, boo
 }
 
 void ProtocolHelper::parseAncestorsCached(const QVector<Protocol::Ancestor> &ancestors,
-        Item *item, Collection::Id parentCollection,
-        ProtocolHelperValuePool *pool)
+                                          Item *item,
+                                          Collection::Id parentCollection,
+                                          ProtocolHelperValuePool *pool)
 {
     parseAncestorsCachedImpl(ancestors, item, parentCollection, pool);
 }
 
 void ProtocolHelper::parseAncestorsCached(const QVector<Protocol::Ancestor> &ancestors,
-        Collection *collection, Collection::Id parentCollection,
-        ProtocolHelperValuePool *pool)
+                                          Collection *collection,
+                                          Collection::Id parentCollection,
+                                          ProtocolHelperValuePool *pool)
 {
     parseAncestorsCachedImpl(ancestors, collection, parentCollection, pool);
 }
@@ -231,7 +229,10 @@ Collection ProtocolHelper::parseCollection(const Protocol::FetchCollectionsRespo
     if (!data.searchQuery().isEmpty()) {
         auto *attr = collection.attribute<PersistentSearchAttribute>(Collection::AddIfMissing);
         attr->setQueryString(data.searchQuery());
-        const auto cols = data.searchCollections() | Views::transform([](const auto id) { return Collection{id}; }) | Actions::toQVector;
+        const auto cols = data.searchCollections() | Views::transform([](const auto id) {
+                              return Collection{id};
+                          })
+            | Actions::toQVector;
         attr->setQueryCollections(cols);
     }
 
@@ -271,10 +272,10 @@ QByteArray ProtocolHelper::encodePartIdentifier(PartNamespace ns, const QByteArr
 
 QByteArray ProtocolHelper::decodePartIdentifier(const QByteArray &data, PartNamespace &ns)
 {
-    if (data.startsWith("PLD:")) {     //krazy:exclude=strings
+    if (data.startsWith("PLD:")) { // krazy:exclude=strings
         ns = PartPayload;
         return data.mid(4);
-    } else if (data.startsWith("ATR:")) {     //krazy:exclude=strings
+    } else if (data.startsWith("ATR:")) { // krazy:exclude=strings
         ns = PartAttribute;
         return data.mid(4);
     } else {
@@ -283,9 +284,8 @@ QByteArray ProtocolHelper::decodePartIdentifier(const QByteArray &data, PartName
     }
 }
 
-Protocol::ScopeContext ProtocolHelper::commandContextToProtocol(const Akonadi::Collection &collection,
-        const Akonadi::Tag &tag,
-        const Item::List &requestedItems)
+Protocol::ScopeContext
+ProtocolHelper::commandContextToProtocol(const Akonadi::Collection &collection, const Akonadi::Tag &tag, const Item::List &requestedItems)
 {
     Protocol::ScopeContext ctx;
     if (tag.isValid()) {
@@ -293,7 +293,7 @@ Protocol::ScopeContext ProtocolHelper::commandContextToProtocol(const Akonadi::C
     }
 
     if (collection == Collection::root()) {
-        if (requestedItems.isEmpty() && !tag.isValid()) {   // collection content listing
+        if (requestedItems.isEmpty() && !tag.isValid()) { // collection content listing
             throw Exception("Cannot perform item operations on root collection.");
         }
     } else {
@@ -310,7 +310,7 @@ Protocol::ScopeContext ProtocolHelper::commandContextToProtocol(const Akonadi::C
 Scope ProtocolHelper::hierarchicalRidToScope(const Collection &col)
 {
     if (col == Collection::root()) {
-        return Scope({ Scope::HRID(0) });
+        return Scope({Scope::HRID(0)});
     }
     if (col.remoteId().isEmpty()) {
         return Scope();
@@ -322,12 +322,12 @@ Scope ProtocolHelper::hierarchicalRidToScope(const Collection &col)
         chain.append(Scope::HRID(c.id(), c.remoteId()));
         c = c.parentCollection();
     }
-    return Scope(chain + QVector<Scope::HRID> { Scope::HRID(0) });
+    return Scope(chain + QVector<Scope::HRID>{Scope::HRID(0)});
 }
 
 Scope ProtocolHelper::hierarchicalRidToScope(const Item &item)
 {
-    return Scope(QVector<Scope::HRID>({ Scope::HRID(item.id(), item.remoteId()) }) + hierarchicalRidToScope(item.parentCollection()).hridChain());
+    return Scope(QVector<Scope::HRID>({Scope::HRID(item.id(), item.remoteId())}) + hierarchicalRidToScope(item.parentCollection()).hridChain());
 }
 
 Protocol::ItemFetchScope ProtocolHelper::itemFetchScopeToProtocol(const ItemFetchScope &fetchScope)
@@ -340,11 +340,8 @@ Protocol::ItemFetchScope ProtocolHelper::itemFetchScopeToProtocol(const ItemFetc
     fs.setRequestedParts(parts);
 
     // The default scope
-    fs.setFetch(Protocol::ItemFetchScope::Flags |
-                Protocol::ItemFetchScope::Size |
-                Protocol::ItemFetchScope::RemoteID |
-                Protocol::ItemFetchScope::RemoteRevision |
-                Protocol::ItemFetchScope::MTime);
+    fs.setFetch(Protocol::ItemFetchScope::Flags | Protocol::ItemFetchScope::Size | Protocol::ItemFetchScope::RemoteID | Protocol::ItemFetchScope::RemoteRevision
+                | Protocol::ItemFetchScope::MTime);
 
     fs.setFetch(Protocol::ItemFetchScope::FullPayload, fetchScope.fullPayload());
     fs.setFetch(Protocol::ItemFetchScope::AllAttributes, fetchScope.allAttributes());
@@ -409,10 +406,10 @@ ItemFetchScope ProtocolHelper::parseItemFetchScope(const Protocol::ItemFetchScop
         ifs.setIgnoreRetrievalErrors(true);
     }
     switch (fetchScope.ancestorDepth()) {
-        case Protocol::ItemFetchScope::ParentAncestor:
+    case Protocol::ItemFetchScope::ParentAncestor:
         ifs.setAncestorRetrieval(ItemFetchScope::Parent);
         break;
-        case Protocol::ItemFetchScope::AllAncestors:
+    case Protocol::ItemFetchScope::AllAncestors:
         ifs.setAncestorRetrieval(ItemFetchScope::All);
         break;
     default:
@@ -588,7 +585,8 @@ static Item::Flags convertFlags(const QVector<QByteArray> &flags, ProtocolHelper
 }
 
 Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &data,
-                                          const Akonadi::ItemFetchScope *fetchScope, ProtocolHelperValuePool *valuePool)
+                                          const Akonadi::ItemFetchScope *fetchScope,
+                                          ProtocolHelperValuePool *valuePool)
 {
     Item item;
     item.setId(data.id());
@@ -660,8 +658,7 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
             if (fetchScope && !fetchScope->fullPayload() && !fetchScope->payloadParts().contains(plainKey)) {
                 continue;
             }
-            ItemSerializer::deserialize(item, plainKey, part.data(), metaData.version(),
-                                        static_cast<ItemSerializer::PayloadStorage>(metaData.storageType()));
+            ItemSerializer::deserialize(item, plainKey, part.data(), metaData.version(), static_cast<ItemSerializer::PayloadStorage>(metaData.storageType()));
             if (metaData.storageType() == Protocol::PartMetaData::Foreign) {
                 item.d_ptr->mPayloadPath = QString::fromUtf8(part.data());
             }
@@ -727,7 +724,7 @@ Relation ProtocolHelper::parseRelationFetchResult(const Protocol::FetchRelations
 bool ProtocolHelper::streamPayloadToFile(const QString &fileName, const QByteArray &data, QByteArray &error)
 {
     const QString filePath = ExternalPartStorage::resolveAbsolutePath(fileName);
-    //qCDebug(AKONADICORE_LOG) << filePath << fileName;
+    // qCDebug(AKONADICORE_LOG) << filePath << fileName;
     if (!filePath.startsWith(ExternalPartStorage::akonadiStoragePath())) {
         qCWarning(AKONADICORE_LOG) << "Invalid file path" << fileName;
         error = "Invalid file path";
@@ -744,7 +741,7 @@ bool ProtocolHelper::streamPayloadToFile(const QString &fileName, const QByteArr
         error = "Failed to store payload into file";
         return false;
     }
-    //qCDebug(AKONADICORE_LOG) << "Wrote" << data.size() << "bytes to " << file.fileName();
+    // qCDebug(AKONADICORE_LOG) << "Wrote" << data.size() << "bytes to " << file.fileName();
 
     // Make sure stuff is written to disk
     file.close();

@@ -14,37 +14,37 @@
 #include "collectioncreatejob.h"
 #include "collectiondeletejob.h"
 #include "collectiondialog.h"
+#include "collectionpropertiesdialog.h"
 #include "collectionpropertiespage.h"
 #include "collectionutils.h"
+#include "entitydeletedattribute.h"
 #include "entitytreemodel.h"
 #include "favoritecollectionsmodel.h"
 #include "itemdeletejob.h"
 #include "pastehelper_p.h"
-#include "specialcollectionattribute.h"
-#include "collectionpropertiesdialog.h"
-#include "subscriptiondialog.h"
+#include "recentcollectionaction_p.h"
 #include "renamefavoritedialog_p.h"
+#include "specialcollectionattribute.h"
+#include "subscriptiondialog.h"
 #include "trashjob.h"
 #include "trashrestorejob.h"
-#include "entitydeletedattribute.h"
-#include "recentcollectionaction_p.h"
 
-#include <QIcon>
-#include <QAction>
 #include <KActionCollection>
 #include <KActionMenu>
-#include <KLocalizedString>
 #include <KConfigGroup>
-#include <QMenu>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KToggleAction>
+#include <QAction>
+#include <QIcon>
+#include <QMenu>
 
-#include <QMimeData>
 #include <QApplication>
 #include <QClipboard>
-#include <QItemSelectionModel>
-#include <QPointer>
 #include <QInputDialog>
+#include <QItemSelectionModel>
+#include <QMimeData>
+#include <QPointer>
 #include <QRegularExpression>
 #include <QTimer>
 
@@ -54,8 +54,8 @@ using namespace Akonadi;
 
 enum ActionType {
     NormalAction,
-    ActionWithAlternative, //Normal action, but with an alternative state
-    ActionAlternative, //Alternative state of the ActionWithAlternative
+    ActionWithAlternative, // Normal action, but with an alternative state
+    ActionAlternative, // Alternative state of the ActionWithAlternative
     MenuAction,
     ToggleAction
 };
@@ -72,60 +72,204 @@ struct StandardActionData { // NOLINT(clang-analyzer-optin.performance.Padding) 
 };
 
 static const StandardActionData standardActionData[] = {
-    { "akonadi_collection_create", I18N_NOOP("&New Folder..."), I18N_NOOP("New"), "folder-new", nullptr, 0, SLOT(slotCreateCollection()), NormalAction },
-    { "akonadi_collection_copy", nullptr, nullptr, "edit-copy", nullptr, 0, SLOT(slotCopyCollections()), NormalAction },
-    { "akonadi_collection_delete", I18N_NOOP("&Delete Folder"), I18N_NOOP("Delete"), "edit-delete", nullptr, 0, SLOT(slotDeleteCollection()), NormalAction },
-    { "akonadi_collection_sync", I18N_NOOP("&Synchronize Folder"), I18N_NOOP("Synchronize"), "view-refresh", nullptr, Qt::Key_F5, SLOT(slotSynchronizeCollection()), NormalAction },
-    { "akonadi_collection_properties", I18N_NOOP("Folder &Properties"), I18N_NOOP("Properties"), "configure", nullptr, 0, SLOT(slotCollectionProperties()), NormalAction },
-    { "akonadi_item_copy", nullptr, nullptr, "edit-copy", nullptr, 0, SLOT(slotCopyItems()), NormalAction },
-    { "akonadi_paste", I18N_NOOP("&Paste"), I18N_NOOP("Paste"), "edit-paste", nullptr, Qt::CTRL | Qt::Key_V, SLOT(slotPaste()), NormalAction },
-    { "akonadi_item_delete", nullptr, nullptr, "edit-delete", nullptr, 0, SLOT(slotDeleteItems()), NormalAction },
-    { "akonadi_manage_local_subscriptions", I18N_NOOP("Manage Local &Subscriptions..."), I18N_NOOP("Manage Local Subscriptions"), "folder-bookmarks", nullptr, 0, SLOT(slotLocalSubscription()), NormalAction },
-    { "akonadi_collection_add_to_favorites", I18N_NOOP("Add to Favorite Folders"), I18N_NOOP("Add to Favorite"), "bookmark-new", nullptr, 0, SLOT(slotAddToFavorites()), NormalAction },
-    { "akonadi_collection_remove_from_favorites", I18N_NOOP("Remove from Favorite Folders"), I18N_NOOP("Remove from Favorite"), "edit-delete", nullptr, 0, SLOT(slotRemoveFromFavorites()), NormalAction },
-    { "akonadi_collection_rename_favorite", I18N_NOOP("Rename Favorite..."), I18N_NOOP("Rename"), "edit-rename", nullptr, 0, SLOT(slotRenameFavorite()), NormalAction },
-    { "akonadi_collection_copy_to_menu", I18N_NOOP("Copy Folder To..."), I18N_NOOP("Copy To"), "edit-copy", nullptr, 0, SLOT(slotCopyCollectionTo(QAction*)), MenuAction },
-    { "akonadi_item_copy_to_menu", I18N_NOOP("Copy Item To..."), I18N_NOOP("Copy To"), "edit-copy", nullptr, 0, SLOT(slotCopyItemTo(QAction*)), MenuAction },
-    { "akonadi_item_move_to_menu", I18N_NOOP("Move Item To..."), I18N_NOOP("Move To"), "edit-move", "go-jump", 0, SLOT(slotMoveItemTo(QAction*)), MenuAction },
-    { "akonadi_collection_move_to_menu", I18N_NOOP("Move Folder To..."), I18N_NOOP("Move To"), "edit-move", "go-jump", 0, SLOT(slotMoveCollectionTo(QAction*)), MenuAction },
-    { "akonadi_item_cut", I18N_NOOP("&Cut Item"), I18N_NOOP("Cut"), "edit-cut", nullptr, Qt::CTRL | Qt::Key_X, SLOT(slotCutItems()), NormalAction },
-    { "akonadi_collection_cut", I18N_NOOP("&Cut Folder"), I18N_NOOP("Cut"), "edit-cut", nullptr, Qt::CTRL | Qt::Key_X, SLOT(slotCutCollections()), NormalAction },
-    { "akonadi_resource_create", I18N_NOOP("Create Resource"), nullptr, "folder-new", nullptr, 0, SLOT(slotCreateResource()), NormalAction },
-    { "akonadi_resource_delete", I18N_NOOP("Delete Resource"), nullptr, "edit-delete", nullptr, 0, SLOT(slotDeleteResource()), NormalAction },
-    { "akonadi_resource_properties", I18N_NOOP("&Resource Properties"), I18N_NOOP("Properties"), "configure", nullptr, 0, SLOT(slotResourceProperties()), NormalAction },
-    { "akonadi_resource_synchronize", I18N_NOOP("Synchronize Resource"), I18N_NOOP("Synchronize"), "view-refresh", nullptr, 0, SLOT(slotSynchronizeResource()), NormalAction },
-    { "akonadi_work_offline", I18N_NOOP("Work Offline"), nullptr, "user-offline", nullptr, 0, SLOT(slotToggleWorkOffline(bool)), ToggleAction },
-    { "akonadi_collection_copy_to_dialog", I18N_NOOP("Copy Folder To..."), I18N_NOOP("Copy To"), "edit-copy", nullptr, 0, SLOT(slotCopyCollectionTo()), NormalAction },
-    { "akonadi_collection_move_to_dialog", I18N_NOOP("Move Folder To..."), I18N_NOOP("Move To"), "edit-move", "go-jump", 0, SLOT(slotMoveCollectionTo()), NormalAction },
-    { "akonadi_item_copy_to_dialog", I18N_NOOP("Copy Item To..."), I18N_NOOP("Copy To"), "edit-copy", nullptr, 0, SLOT(slotCopyItemTo()), NormalAction },
-    { "akonadi_item_move_to_dialog", I18N_NOOP("Move Item To..."), I18N_NOOP("Move To"), "edit-move", "go-jump", 0, SLOT(slotMoveItemTo()), NormalAction },
-    { "akonadi_collection_sync_recursive", I18N_NOOP("&Synchronize Folder Recursively"), I18N_NOOP("Synchronize Recursively"), "view-refresh", nullptr, Qt::CTRL | Qt::Key_F5, SLOT(slotSynchronizeCollectionRecursive()), NormalAction },
-    { "akonadi_move_collection_to_trash", I18N_NOOP("&Move Folder To Trash"), I18N_NOOP("Move Folder To Trash"), "edit-delete", nullptr, 0, SLOT(slotMoveCollectionToTrash()), NormalAction },
-    { "akonadi_move_item_to_trash", I18N_NOOP("&Move Item To Trash"), I18N_NOOP("Move Item To Trash"), "edit-delete", nullptr, 0, SLOT(slotMoveItemToTrash()), NormalAction },
-    { "akonadi_restore_collection_from_trash", I18N_NOOP("&Restore Folder From Trash"), I18N_NOOP("Restore Folder From Trash"), "view-refresh", nullptr, 0, SLOT(slotRestoreCollectionFromTrash()), NormalAction },
-    { "akonadi_restore_item_from_trash", I18N_NOOP("&Restore Item From Trash"), I18N_NOOP("Restore Item From Trash"), "view-refresh", nullptr, 0, SLOT(slotRestoreItemFromTrash()), NormalAction },
-    { "akonadi_collection_trash_restore", I18N_NOOP("&Restore Folder From Trash"), I18N_NOOP("Restore Folder From Trash"), "edit-delete", nullptr, 0, SLOT(slotTrashRestoreCollection()), ActionWithAlternative },
-    { nullptr, I18N_NOOP("&Restore Collection From Trash"), I18N_NOOP("Restore Collection From Trash"), "view-refresh", nullptr, 0, nullptr, ActionAlternative },
-    { "akonadi_item_trash_restore", I18N_NOOP("&Restore Item From Trash"), I18N_NOOP("Restore Item From Trash"), "edit-delete", nullptr, 0, SLOT(slotTrashRestoreItem()), ActionWithAlternative },
-    { nullptr, I18N_NOOP("&Restore Item From Trash"), I18N_NOOP("Restore Item From Trash"), "view-refresh", nullptr, 0, nullptr, ActionAlternative },
-    { "akonadi_collection_sync_favorite_folders", I18N_NOOP("&Synchronize Favorite Folders"), I18N_NOOP("Synchronize Favorite Folders"), "view-refresh", nullptr, Qt::CTRL | Qt::SHIFT | Qt::Key_L, SLOT(slotSynchronizeFavoriteCollections()), NormalAction },
-    { "akonadi_resource_synchronize_collectiontree", I18N_NOOP("Synchronize Folder Tree"), I18N_NOOP("Synchronize"), "view-refresh", nullptr, 0, SLOT(slotSynchronizeCollectionTree()), NormalAction },
+    {"akonadi_collection_create", I18N_NOOP("&New Folder..."), I18N_NOOP("New"), "folder-new", nullptr, 0, SLOT(slotCreateCollection()), NormalAction},
+    {"akonadi_collection_copy", nullptr, nullptr, "edit-copy", nullptr, 0, SLOT(slotCopyCollections()), NormalAction},
+    {"akonadi_collection_delete", I18N_NOOP("&Delete Folder"), I18N_NOOP("Delete"), "edit-delete", nullptr, 0, SLOT(slotDeleteCollection()), NormalAction},
+    {"akonadi_collection_sync",
+     I18N_NOOP("&Synchronize Folder"),
+     I18N_NOOP("Synchronize"),
+     "view-refresh",
+     nullptr,
+     Qt::Key_F5,
+     SLOT(slotSynchronizeCollection()),
+     NormalAction},
+    {"akonadi_collection_properties",
+     I18N_NOOP("Folder &Properties"),
+     I18N_NOOP("Properties"),
+     "configure",
+     nullptr,
+     0,
+     SLOT(slotCollectionProperties()),
+     NormalAction},
+    {"akonadi_item_copy", nullptr, nullptr, "edit-copy", nullptr, 0, SLOT(slotCopyItems()), NormalAction},
+    {"akonadi_paste", I18N_NOOP("&Paste"), I18N_NOOP("Paste"), "edit-paste", nullptr, Qt::CTRL | Qt::Key_V, SLOT(slotPaste()), NormalAction},
+    {"akonadi_item_delete", nullptr, nullptr, "edit-delete", nullptr, 0, SLOT(slotDeleteItems()), NormalAction},
+    {"akonadi_manage_local_subscriptions",
+     I18N_NOOP("Manage Local &Subscriptions..."),
+     I18N_NOOP("Manage Local Subscriptions"),
+     "folder-bookmarks",
+     nullptr,
+     0,
+     SLOT(slotLocalSubscription()),
+     NormalAction},
+    {"akonadi_collection_add_to_favorites",
+     I18N_NOOP("Add to Favorite Folders"),
+     I18N_NOOP("Add to Favorite"),
+     "bookmark-new",
+     nullptr,
+     0,
+     SLOT(slotAddToFavorites()),
+     NormalAction},
+    {"akonadi_collection_remove_from_favorites",
+     I18N_NOOP("Remove from Favorite Folders"),
+     I18N_NOOP("Remove from Favorite"),
+     "edit-delete",
+     nullptr,
+     0,
+     SLOT(slotRemoveFromFavorites()),
+     NormalAction},
+    {"akonadi_collection_rename_favorite",
+     I18N_NOOP("Rename Favorite..."),
+     I18N_NOOP("Rename"),
+     "edit-rename",
+     nullptr,
+     0,
+     SLOT(slotRenameFavorite()),
+     NormalAction},
+    {"akonadi_collection_copy_to_menu",
+     I18N_NOOP("Copy Folder To..."),
+     I18N_NOOP("Copy To"),
+     "edit-copy",
+     nullptr,
+     0,
+     SLOT(slotCopyCollectionTo(QAction *)),
+     MenuAction},
+    {"akonadi_item_copy_to_menu", I18N_NOOP("Copy Item To..."), I18N_NOOP("Copy To"), "edit-copy", nullptr, 0, SLOT(slotCopyItemTo(QAction *)), MenuAction},
+    {"akonadi_item_move_to_menu", I18N_NOOP("Move Item To..."), I18N_NOOP("Move To"), "edit-move", "go-jump", 0, SLOT(slotMoveItemTo(QAction *)), MenuAction},
+    {"akonadi_collection_move_to_menu",
+     I18N_NOOP("Move Folder To..."),
+     I18N_NOOP("Move To"),
+     "edit-move",
+     "go-jump",
+     0,
+     SLOT(slotMoveCollectionTo(QAction *)),
+     MenuAction},
+    {"akonadi_item_cut", I18N_NOOP("&Cut Item"), I18N_NOOP("Cut"), "edit-cut", nullptr, Qt::CTRL | Qt::Key_X, SLOT(slotCutItems()), NormalAction},
+    {"akonadi_collection_cut", I18N_NOOP("&Cut Folder"), I18N_NOOP("Cut"), "edit-cut", nullptr, Qt::CTRL | Qt::Key_X, SLOT(slotCutCollections()), NormalAction},
+    {"akonadi_resource_create", I18N_NOOP("Create Resource"), nullptr, "folder-new", nullptr, 0, SLOT(slotCreateResource()), NormalAction},
+    {"akonadi_resource_delete", I18N_NOOP("Delete Resource"), nullptr, "edit-delete", nullptr, 0, SLOT(slotDeleteResource()), NormalAction},
+    {"akonadi_resource_properties",
+     I18N_NOOP("&Resource Properties"),
+     I18N_NOOP("Properties"),
+     "configure",
+     nullptr,
+     0,
+     SLOT(slotResourceProperties()),
+     NormalAction},
+    {"akonadi_resource_synchronize",
+     I18N_NOOP("Synchronize Resource"),
+     I18N_NOOP("Synchronize"),
+     "view-refresh",
+     nullptr,
+     0,
+     SLOT(slotSynchronizeResource()),
+     NormalAction},
+    {"akonadi_work_offline", I18N_NOOP("Work Offline"), nullptr, "user-offline", nullptr, 0, SLOT(slotToggleWorkOffline(bool)), ToggleAction},
+    {"akonadi_collection_copy_to_dialog",
+     I18N_NOOP("Copy Folder To..."),
+     I18N_NOOP("Copy To"),
+     "edit-copy",
+     nullptr,
+     0,
+     SLOT(slotCopyCollectionTo()),
+     NormalAction},
+    {"akonadi_collection_move_to_dialog",
+     I18N_NOOP("Move Folder To..."),
+     I18N_NOOP("Move To"),
+     "edit-move",
+     "go-jump",
+     0,
+     SLOT(slotMoveCollectionTo()),
+     NormalAction},
+    {"akonadi_item_copy_to_dialog", I18N_NOOP("Copy Item To..."), I18N_NOOP("Copy To"), "edit-copy", nullptr, 0, SLOT(slotCopyItemTo()), NormalAction},
+    {"akonadi_item_move_to_dialog", I18N_NOOP("Move Item To..."), I18N_NOOP("Move To"), "edit-move", "go-jump", 0, SLOT(slotMoveItemTo()), NormalAction},
+    {"akonadi_collection_sync_recursive",
+     I18N_NOOP("&Synchronize Folder Recursively"),
+     I18N_NOOP("Synchronize Recursively"),
+     "view-refresh",
+     nullptr,
+     Qt::CTRL | Qt::Key_F5,
+     SLOT(slotSynchronizeCollectionRecursive()),
+     NormalAction},
+    {"akonadi_move_collection_to_trash",
+     I18N_NOOP("&Move Folder To Trash"),
+     I18N_NOOP("Move Folder To Trash"),
+     "edit-delete",
+     nullptr,
+     0,
+     SLOT(slotMoveCollectionToTrash()),
+     NormalAction},
+    {"akonadi_move_item_to_trash",
+     I18N_NOOP("&Move Item To Trash"),
+     I18N_NOOP("Move Item To Trash"),
+     "edit-delete",
+     nullptr,
+     0,
+     SLOT(slotMoveItemToTrash()),
+     NormalAction},
+    {"akonadi_restore_collection_from_trash",
+     I18N_NOOP("&Restore Folder From Trash"),
+     I18N_NOOP("Restore Folder From Trash"),
+     "view-refresh",
+     nullptr,
+     0,
+     SLOT(slotRestoreCollectionFromTrash()),
+     NormalAction},
+    {"akonadi_restore_item_from_trash",
+     I18N_NOOP("&Restore Item From Trash"),
+     I18N_NOOP("Restore Item From Trash"),
+     "view-refresh",
+     nullptr,
+     0,
+     SLOT(slotRestoreItemFromTrash()),
+     NormalAction},
+    {"akonadi_collection_trash_restore",
+     I18N_NOOP("&Restore Folder From Trash"),
+     I18N_NOOP("Restore Folder From Trash"),
+     "edit-delete",
+     nullptr,
+     0,
+     SLOT(slotTrashRestoreCollection()),
+     ActionWithAlternative},
+    {nullptr, I18N_NOOP("&Restore Collection From Trash"), I18N_NOOP("Restore Collection From Trash"), "view-refresh", nullptr, 0, nullptr, ActionAlternative},
+    {"akonadi_item_trash_restore",
+     I18N_NOOP("&Restore Item From Trash"),
+     I18N_NOOP("Restore Item From Trash"),
+     "edit-delete",
+     nullptr,
+     0,
+     SLOT(slotTrashRestoreItem()),
+     ActionWithAlternative},
+    {nullptr, I18N_NOOP("&Restore Item From Trash"), I18N_NOOP("Restore Item From Trash"), "view-refresh", nullptr, 0, nullptr, ActionAlternative},
+    {"akonadi_collection_sync_favorite_folders",
+     I18N_NOOP("&Synchronize Favorite Folders"),
+     I18N_NOOP("Synchronize Favorite Folders"),
+     "view-refresh",
+     nullptr,
+     Qt::CTRL | Qt::SHIFT | Qt::Key_L,
+     SLOT(slotSynchronizeFavoriteCollections()),
+     NormalAction},
+    {"akonadi_resource_synchronize_collectiontree",
+     I18N_NOOP("Synchronize Folder Tree"),
+     I18N_NOOP("Synchronize"),
+     "view-refresh",
+     nullptr,
+     0,
+     SLOT(slotSynchronizeCollectionTree()),
+     NormalAction},
 
 };
-static const int numStandardActionData = sizeof standardActionData / sizeof * standardActionData;
+static const int numStandardActionData = sizeof standardActionData / sizeof *standardActionData;
 
-static QIcon standardActionDataIcon(const StandardActionData &data) {
+static QIcon standardActionDataIcon(const StandardActionData &data)
+{
     if (data.altIcon) {
-        return QIcon::fromTheme(
-            QString::fromLatin1(data.icon),
-            QIcon::fromTheme(QString::fromLatin1(data.altIcon))
-        );
+        return QIcon::fromTheme(QString::fromLatin1(data.icon), QIcon::fromTheme(QString::fromLatin1(data.altIcon)));
     }
     return QIcon::fromTheme(QString::fromLatin1(data.icon));
 }
 
-static_assert(numStandardActionData == StandardActionManager::LastType,
-              "StandardActionData table does not match StandardActionManager types");
+static_assert(numStandardActionData == StandardActionManager::LastType, "StandardActionData table does not match StandardActionManager types");
 
 static bool canCreateCollection(const Akonadi::Collection &collection)
 {
@@ -192,101 +336,71 @@ public:
     {
         actions.fill(nullptr, StandardActionManager::LastType);
 
-        pluralLabels.insert(StandardActionManager::CopyCollections,
-                            ki18np("&Copy Folder", "&Copy %1 Folders"));
-        pluralLabels.insert(StandardActionManager::CopyItems,
-                            ki18np("&Copy Item", "&Copy %1 Items"));
-        pluralLabels.insert(StandardActionManager::CutItems,
-                            ki18np("&Cut Item", "&Cut %1 Items"));
-        pluralLabels.insert(StandardActionManager::CutCollections,
-                            ki18np("&Cut Folder", "&Cut %1 Folders"));
-        pluralLabels.insert(StandardActionManager::DeleteItems,
-                            ki18np("&Delete Item", "&Delete %1 Items"));
-        pluralLabels.insert(StandardActionManager::DeleteCollections,
-                            ki18np("&Delete Folder", "&Delete %1 Folders"));
-        pluralLabels.insert(StandardActionManager::SynchronizeCollections,
-                            ki18np("&Synchronize Folder", "&Synchronize %1 Folders"));
-        pluralLabels.insert(StandardActionManager::DeleteResources,
-                            ki18np("&Delete Resource", "&Delete %1 Resources"));
-        pluralLabels.insert(StandardActionManager::SynchronizeResources,
-                            ki18np("&Synchronize Resource", "&Synchronize %1 Resources"));
+        pluralLabels.insert(StandardActionManager::CopyCollections, ki18np("&Copy Folder", "&Copy %1 Folders"));
+        pluralLabels.insert(StandardActionManager::CopyItems, ki18np("&Copy Item", "&Copy %1 Items"));
+        pluralLabels.insert(StandardActionManager::CutItems, ki18np("&Cut Item", "&Cut %1 Items"));
+        pluralLabels.insert(StandardActionManager::CutCollections, ki18np("&Cut Folder", "&Cut %1 Folders"));
+        pluralLabels.insert(StandardActionManager::DeleteItems, ki18np("&Delete Item", "&Delete %1 Items"));
+        pluralLabels.insert(StandardActionManager::DeleteCollections, ki18np("&Delete Folder", "&Delete %1 Folders"));
+        pluralLabels.insert(StandardActionManager::SynchronizeCollections, ki18np("&Synchronize Folder", "&Synchronize %1 Folders"));
+        pluralLabels.insert(StandardActionManager::DeleteResources, ki18np("&Delete Resource", "&Delete %1 Resources"));
+        pluralLabels.insert(StandardActionManager::SynchronizeResources, ki18np("&Synchronize Resource", "&Synchronize %1 Resources"));
 
-        pluralIconLabels.insert(StandardActionManager::CopyCollections,
-                                ki18np("Copy Folder", "Copy %1 Folders"));
-        pluralIconLabels.insert(StandardActionManager::CopyItems,
-                                ki18np("Copy Item", "Copy %1 Items"));
-        pluralIconLabels.insert(StandardActionManager::CutItems,
-                                ki18np("Cut Item", "Cut %1 Items"));
-        pluralIconLabels.insert(StandardActionManager::CutCollections,
-                                ki18np("Cut Folder", "Cut %1 Folders"));
-        pluralIconLabels.insert(StandardActionManager::DeleteItems,
-                                ki18np("Delete Item", "Delete %1 Items"));
-        pluralIconLabels.insert(StandardActionManager::DeleteCollections,
-                                ki18np("Delete Folder", "Delete %1 Folders"));
-        pluralIconLabels.insert(StandardActionManager::SynchronizeCollections,
-                                ki18np("Synchronize Folder", "Synchronize %1 Folders"));
-        pluralIconLabels.insert(StandardActionManager::DeleteResources,
-                                ki18np("Delete Resource", "Delete %1 Resources"));
-        pluralIconLabels.insert(StandardActionManager::SynchronizeResources,
-                                ki18np("Synchronize Resource", "Synchronize %1 Resources"));
+        pluralIconLabels.insert(StandardActionManager::CopyCollections, ki18np("Copy Folder", "Copy %1 Folders"));
+        pluralIconLabels.insert(StandardActionManager::CopyItems, ki18np("Copy Item", "Copy %1 Items"));
+        pluralIconLabels.insert(StandardActionManager::CutItems, ki18np("Cut Item", "Cut %1 Items"));
+        pluralIconLabels.insert(StandardActionManager::CutCollections, ki18np("Cut Folder", "Cut %1 Folders"));
+        pluralIconLabels.insert(StandardActionManager::DeleteItems, ki18np("Delete Item", "Delete %1 Items"));
+        pluralIconLabels.insert(StandardActionManager::DeleteCollections, ki18np("Delete Folder", "Delete %1 Folders"));
+        pluralIconLabels.insert(StandardActionManager::SynchronizeCollections, ki18np("Synchronize Folder", "Synchronize %1 Folders"));
+        pluralIconLabels.insert(StandardActionManager::DeleteResources, ki18np("Delete Resource", "Delete %1 Resources"));
+        pluralIconLabels.insert(StandardActionManager::SynchronizeResources, ki18np("Synchronize Resource", "Synchronize %1 Resources"));
 
-        setContextText(StandardActionManager::CreateCollection, StandardActionManager::DialogTitle,
-                       i18nc("@title:window", "New Folder"));
-        setContextText(StandardActionManager::CreateCollection, StandardActionManager::DialogText,
-                       i18nc("@label:textbox name of Akonadi folder", "Name"));
-        setContextText(StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageText,
-                       ki18n("Could not create folder: %1"));
-        setContextText(StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle,
-                       i18n("Folder creation failed"));
+        setContextText(StandardActionManager::CreateCollection, StandardActionManager::DialogTitle, i18nc("@title:window", "New Folder"));
+        setContextText(StandardActionManager::CreateCollection, StandardActionManager::DialogText, i18nc("@label:textbox name of Akonadi folder", "Name"));
+        setContextText(StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageText, ki18n("Could not create folder: %1"));
+        setContextText(StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle, i18n("Folder creation failed"));
 
-        setContextText(StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxText,
-                       ki18np("Do you really want to delete this folder and all its sub-folders?",
-                              "Do you really want to delete %1 folders and all their sub-folders?"));
-        setContextText(StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxTitle,
+        setContextText(
+            StandardActionManager::DeleteCollections,
+            StandardActionManager::MessageBoxText,
+            ki18np("Do you really want to delete this folder and all its sub-folders?", "Do you really want to delete %1 folders and all their sub-folders?"));
+        setContextText(StandardActionManager::DeleteCollections,
+                       StandardActionManager::MessageBoxTitle,
                        ki18ncp("@title:window", "Delete folder?", "Delete folders?"));
-        setContextText(StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText,
-                       ki18n("Could not delete folder: %1"));
-        setContextText(StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle,
-                       i18n("Folder deletion failed"));
+        setContextText(StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText, ki18n("Could not delete folder: %1"));
+        setContextText(StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle, i18n("Folder deletion failed"));
 
-        setContextText(StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle,
-                       ki18nc("@title:window", "Properties of Folder %1"));
+        setContextText(StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle, ki18nc("@title:window", "Properties of Folder %1"));
 
-        setContextText(StandardActionManager::DeleteItems, StandardActionManager::MessageBoxText,
-                       ki18np("Do you really want to delete the selected item?",
-                              "Do you really want to delete %1 items?"));
-        setContextText(StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle,
-                       ki18ncp("@title:window", "Delete item?", "Delete items?"));
-        setContextText(StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageText,
-                       ki18n("Could not delete item: %1"));
-        setContextText(StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageTitle,
-                       i18n("Item deletion failed"));
+        setContextText(StandardActionManager::DeleteItems,
+                       StandardActionManager::MessageBoxText,
+                       ki18np("Do you really want to delete the selected item?", "Do you really want to delete %1 items?"));
+        setContextText(StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle, ki18ncp("@title:window", "Delete item?", "Delete items?"));
+        setContextText(StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageText, ki18n("Could not delete item: %1"));
+        setContextText(StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageTitle, i18n("Item deletion failed"));
 
-        setContextText(StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle,
-                       i18nc("@title:window", "Rename Favorite"));
-        setContextText(StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogText,
-                       i18nc("@label:textbox name of the folder", "Name:"));
+        setContextText(StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle, i18nc("@title:window", "Rename Favorite"));
+        setContextText(StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogText, i18nc("@label:textbox name of the folder", "Name:"));
 
-        setContextText(StandardActionManager::CreateResource, StandardActionManager::DialogTitle,
-                       i18nc("@title:window", "New Resource"));
-        setContextText(StandardActionManager::CreateResource, StandardActionManager::ErrorMessageText,
-                       ki18n("Could not create resource: %1"));
-        setContextText(StandardActionManager::CreateResource, StandardActionManager::ErrorMessageTitle,
-                       i18n("Resource creation failed"));
+        setContextText(StandardActionManager::CreateResource, StandardActionManager::DialogTitle, i18nc("@title:window", "New Resource"));
+        setContextText(StandardActionManager::CreateResource, StandardActionManager::ErrorMessageText, ki18n("Could not create resource: %1"));
+        setContextText(StandardActionManager::CreateResource, StandardActionManager::ErrorMessageTitle, i18n("Resource creation failed"));
 
-        setContextText(StandardActionManager::DeleteResources, StandardActionManager::MessageBoxText,
-                       ki18np("Do you really want to delete this resource?",
-                              "Do you really want to delete %1 resources?"));
-        setContextText(StandardActionManager::DeleteResources, StandardActionManager::MessageBoxTitle,
+        setContextText(StandardActionManager::DeleteResources,
+                       StandardActionManager::MessageBoxText,
+                       ki18np("Do you really want to delete this resource?", "Do you really want to delete %1 resources?"));
+        setContextText(StandardActionManager::DeleteResources,
+                       StandardActionManager::MessageBoxTitle,
                        ki18ncp("@title:window", "Delete Resource?", "Delete Resources?"));
 
-        setContextText(StandardActionManager::Paste, StandardActionManager::ErrorMessageText,
-                       ki18n("Could not paste data: %1"));
-        setContextText(StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle,
-                       i18n("Paste failed"));
+        setContextText(StandardActionManager::Paste, StandardActionManager::ErrorMessageText, ki18n("Could not paste data: %1"));
+        setContextText(StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle, i18n("Paste failed"));
 
         mDelayedUpdateTimer.setSingleShot(true);
-        connect(&mDelayedUpdateTimer, &QTimer::timeout, q, [this]() { updateActions(); });
+        connect(&mDelayedUpdateTimer, &QTimer::timeout, q, [this]() {
+            updateActions();
+        });
 
         qRegisterMetaType<Akonadi::Item::List>("Akonadi::Item::List");
     }
@@ -306,9 +420,9 @@ public:
         // Update the action menu
         auto *actionMenu = qobject_cast<KActionMenu *>(actions[type]);
         if (actionMenu) {
-            //get rid of the submenus, they are re-created in enableAction. clear() is not enough, doesn't remove the submenu object instances.
+            // get rid of the submenus, they are re-created in enableAction. clear() is not enough, doesn't remove the submenu object instances.
             QMenu *menu = actionMenu->menu();
-            //Not necessary to delete and recreate menu when it was not created
+            // Not necessary to delete and recreate menu when it was not created
             if (menu->property("actionType").isValid() && menu->isEmpty()) {
                 return;
             }
@@ -317,8 +431,10 @@ public:
             menu = new QMenu();
 
             menu->setProperty("actionType", static_cast<int>(type));
-            q->connect(menu, &QMenu::aboutToShow, q, [this]() { aboutToShowMenu(); });
-            q->connect(menu, SIGNAL(triggered(QAction*)), standardActionData[type].slot); // clazy:exclude=old-style-connect
+            q->connect(menu, &QMenu::aboutToShow, q, [this]() {
+                aboutToShowMenu();
+            });
+            q->connect(menu, SIGNAL(triggered(QAction *)), standardActionData[type].slot); // clazy:exclude=old-style-connect
             actionMenu->setMenu(menu);
         }
     }
@@ -340,30 +456,16 @@ public:
         QPointer<RecentCollectionAction> recentCollection = new RecentCollectionAction(type, selectedCollectionsList, collectionSelectionModel->model(), menu);
         mRecentCollectionsMenu.insert(type, recentCollection);
         const QSet<QString> mimeTypes = mimeTypesOfSelection(type);
-        fillFoldersMenu(selectedCollectionsList,
-                        mimeTypes,
-                        type,
-                        menu,
-                        collectionSelectionModel->model(),
-                        QModelIndex());
+        fillFoldersMenu(selectedCollectionsList, mimeTypes, type, menu, collectionSelectionModel->model(), QModelIndex());
     }
 
     void createActionFolderMenu(QMenu *menu, StandardActionManager::Type type)
     {
-        if (type == CopyCollectionToMenu ||
-                type == CopyItemToMenu ||
-                type == MoveItemToMenu ||
-                type == MoveCollectionToMenu) {
-
+        if (type == CopyCollectionToMenu || type == CopyItemToMenu || type == MoveItemToMenu || type == MoveCollectionToMenu) {
             new RecentCollectionAction(type, Akonadi::Collection::List(), collectionSelectionModel->model(), menu);
             Collection::List selectedCollectionsList = selectedCollections();
             const QSet<QString> mimeTypes = mimeTypesOfSelection(type);
-            fillFoldersMenu(selectedCollectionsList,
-                            mimeTypes,
-                            type,
-                            menu,
-                            collectionSelectionModel->model(),
-                            QModelIndex());
+            fillFoldersMenu(selectedCollectionsList, mimeTypes, type, menu, collectionSelectionModel->model(), QModelIndex());
         }
     }
 
@@ -403,7 +505,7 @@ public:
                 actions[type]->setIcon(standardActionDataIcon(standardActionData[type]));
             }
 
-            //actions[type]->setShortcut( standardActionData[type].shortcut );
+            // actions[type]->setShortcut( standardActionData[type].shortcut );
 
             /*if ( standardActionData[type].slot ) {
               switch ( standardActionData[type].actionType ) {
@@ -460,7 +562,7 @@ public:
 #endif
     }
 
-    static Akonadi::Collection::List collectionsForIndexes(const QModelIndexList& list)
+    static Akonadi::Collection::List collectionsForIndexes(const QModelIndexList &list)
     {
         Akonadi::Collection::List collectionList;
         for (const QModelIndex &index : list) {
@@ -570,6 +672,7 @@ public:
             Q_ASSERT(_p->insideSelectionSlot);
             _p->insideSelectionSlot = false;
         }
+
     private:
         Q_DISABLE_COPY(InsideSelectionSlotBlocker)
         Private *_p;
@@ -632,7 +735,8 @@ public:
             return;
         }
 
-        QString name = QInputDialog::getText(parentWidget, contextText(StandardActionManager::CreateCollection, StandardActionManager::DialogTitle),
+        QString name = QInputDialog::getText(parentWidget,
+                                             contextText(StandardActionManager::CreateCollection, StandardActionManager::DialogTitle),
                                              contextText(StandardActionManager::CreateCollection, StandardActionManager::DialogText));
         name = name.trimmed();
         if (name.isEmpty()) {
@@ -640,16 +744,11 @@ public:
         }
 
         if (name.contains(QLatin1Char('/'))) {
-            KMessageBox::error(parentWidget,
-                               i18n("We can not add \"/\" in folder name."),
-                               i18n("Create new folder error"));
+            KMessageBox::error(parentWidget, i18n("We can not add \"/\" in folder name."), i18n("Create new folder error"));
             return;
         }
-        if (name.startsWith(QLatin1Char('.')) ||
-                name.endsWith(QLatin1Char('.'))) {
-            KMessageBox::error(parentWidget,
-                               i18n("We can not add \".\" at begin or end of folder name."),
-                               i18n("Create new folder error"));
+        if (name.startsWith(QLatin1Char('.')) || name.endsWith(QLatin1Char('.'))) {
+            KMessageBox::error(parentWidget, i18n("We can not add \".\" at begin or end of folder name."), i18n("Create new folder error"));
             return;
         }
 
@@ -664,12 +763,13 @@ public:
         }
         if (parentCollection.contentMimeTypes().contains(Collection::virtualMimeType())) {
             collection.setVirtual(true);
-            collection.setContentMimeTypes(collection.contentMimeTypes()
-                                           << Collection::virtualMimeType());
+            collection.setContentMimeTypes(collection.contentMimeTypes() << Collection::virtualMimeType());
         }
 
         auto *job = new CollectionCreateJob(collection);
-        q->connect(job, &KJob::result, q, [this](KJob *job) { collectionCreationResult(job); });
+        q->connect(job, &KJob::result, q, [this](KJob *job) {
+            collectionCreationResult(job);
+        });
     }
 
     void slotCopyCollections()
@@ -709,19 +809,25 @@ public:
         }
 
         const QString collectionName = collections.first().name();
-        const QString text = contextText(StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxText,
-                                         collections.count(), collectionName);
+        const QString text = contextText(StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxText, collections.count(), collectionName);
 
-        if (KMessageBox::questionYesNo(parentWidget, text,
-                                       contextText(StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxTitle, collections.count(), collectionName),
-                                       KStandardGuiItem::del(), KStandardGuiItem::cancel(),
-                                       QString(), KMessageBox::Dangerous) != KMessageBox::Yes) {
+        if (KMessageBox::questionYesNo(
+                parentWidget,
+                text,
+                contextText(StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxTitle, collections.count(), collectionName),
+                KStandardGuiItem::del(),
+                KStandardGuiItem::cancel(),
+                QString(),
+                KMessageBox::Dangerous)
+            != KMessageBox::Yes) {
             return;
         }
 
         for (const Collection &collection : collections) {
             auto *job = new CollectionDeleteJob(collection, q);
-            q->connect(job, &CollectionDeleteJob::result, q, [this](KJob* job) { collectionDeletionResult(job); });
+            q->connect(job, &CollectionDeleteJob::result, q, [this](KJob *job) {
+                collectionDeletionResult(job);
+            });
         }
     }
 
@@ -734,7 +840,9 @@ public:
 
         for (const Collection &collection : collections) {
             auto *job = new TrashJob(collection, q);
-            q->connect(job, &TrashJob::result, q, [this](KJob *job) { moveCollectionToTrashResult(job);});
+            q->connect(job, &TrashJob::result, q, [this](KJob *job) {
+                moveCollectionToTrashResult(job);
+            });
         }
     }
 
@@ -747,7 +855,9 @@ public:
 
         for (const Collection &collection : collections) {
             auto *job = new TrashRestoreJob(collection, q);
-            q->connect(job, &TrashRestoreJob::result, q, [this](KJob*job) {moveCollectionToTrashResult(job);});
+            q->connect(job, &TrashRestoreJob::result, q, [this](KJob *job) {
+                moveCollectionToTrashResult(job);
+            });
         }
     }
 
@@ -778,7 +888,9 @@ public:
         }
 
         auto *job = new TrashJob(items, q);
-        q->connect(job, &TrashJob::result, q, [this](KJob *job) {moveItemToTrashResult(job); });
+        q->connect(job, &TrashJob::result, q, [this](KJob *job) {
+            moveItemToTrashResult(job);
+        });
     }
 
     void slotRestoreItemFromTrash()
@@ -789,7 +901,9 @@ public:
         }
 
         auto *job = new TrashRestoreJob(items, q);
-        q->connect(job, &TrashRestoreJob::result, q, [this](KJob *job) {moveItemToTrashResult(job);});
+        q->connect(job, &TrashRestoreJob::result, q, [this](KJob *job) {
+            moveItemToTrashResult(job);
+        });
     }
 
     void slotTrashRestoreCollection()
@@ -871,10 +985,13 @@ public:
 
         Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance(collection.resource());
         if (!instance.isOnline()) {
-            if (KMessageBox::questionYesNo(parentWidget,
-                                           i18n("Before syncing folder \"%1\" it is necessary to have the resource online. Do you want to make it online?", collection.displayName()),
-                                           i18n("Account \"%1\" is offline", instance.name()),
-                                           KGuiItem(i18nc("@action:button", "Go Online")), KStandardGuiItem::cancel()) != KMessageBox::Yes) {
+            if (KMessageBox::questionYesNo(
+                    parentWidget,
+                    i18n("Before syncing folder \"%1\" it is necessary to have the resource online. Do you want to make it online?", collection.displayName()),
+                    i18n("Account \"%1\" is offline", instance.name()),
+                    KGuiItem(i18nc("@action:button", "Go Online")),
+                    KStandardGuiItem::cancel())
+                != KMessageBox::Yes) {
                 return false;
             }
             instance.setIsOnline(true);
@@ -971,7 +1088,12 @@ public:
             return;
         }
 
-        QMetaObject::invokeMethod(q, [this, items] {slotDeleteItemsDeferred(items); }, Qt::QueuedConnection);
+        QMetaObject::invokeMethod(
+            q,
+            [this, items] {
+                slotDeleteItemsDeferred(items);
+            },
+            Qt::QueuedConnection);
     }
 
     void slotDeleteItemsDeferred(const Akonadi::Item::List &items)
@@ -981,13 +1103,18 @@ public:
         if (KMessageBox::questionYesNo(parentWidget,
                                        contextText(StandardActionManager::DeleteItems, StandardActionManager::MessageBoxText, items.count(), QString()),
                                        contextText(StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle, items.count(), QString()),
-                                       KStandardGuiItem::del(), KStandardGuiItem::cancel(),
-                                       QString(), KMessageBox::Dangerous) != KMessageBox::Yes) {
+                                       KStandardGuiItem::del(),
+                                       KStandardGuiItem::cancel(),
+                                       QString(),
+                                       KMessageBox::Dangerous)
+            != KMessageBox::Yes) {
             return;
         }
 
         auto *job = new ItemDeleteJob(items, q);
-        q->connect(job, &ItemDeleteJob::result, q, [this](KJob*job) {itemDeletionResult(job);});
+        q->connect(job, &ItemDeleteJob::result, q, [this](KJob *job) {
+            itemDeletionResult(job);
+        });
     }
 
     void slotLocalSubscription() const
@@ -1050,10 +1177,8 @@ public:
         const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
         Q_ASSERT(collection.isValid());
 
-        QPointer<RenameFavoriteDialog> dlg(new RenameFavoriteDialog(
-                    favoritesModel->favoriteLabel(collection),
-                    favoritesModel->defaultFavoriteLabel(collection),
-                    parentWidget));
+        QPointer<RenameFavoriteDialog> dlg(
+            new RenameFavoriteDialog(favoritesModel->favoriteLabel(collection), favoritesModel->defaultFavoriteLabel(collection), parentWidget));
         if (dlg->exec() == QDialog::Accepted) {
             favoritesModel->setFavoriteLabel(collection, dlg->newName());
         }
@@ -1165,7 +1290,9 @@ public:
 
             if (agentType.isValid()) {
                 auto *job = new AgentInstanceCreateJob(agentType, q);
-                q->connect(job, &KJob::result, q, [this](KJob *job) { resourceCreationResult(job); });
+                q->connect(job, &KJob::result, q, [this](KJob *job) {
+                    resourceCreationResult(job);
+                });
                 job->configure(parentWidget);
                 job->start();
             }
@@ -1180,11 +1307,15 @@ public:
             return;
         }
 
-        if (KMessageBox::questionYesNo(parentWidget,
-                                       contextText(StandardActionManager::DeleteResources, StandardActionManager::MessageBoxText, instances.count(), instances.first().name()),
-                                       contextText(StandardActionManager::DeleteResources, StandardActionManager::MessageBoxTitle, instances.count(), instances.first().name()),
-                                       KStandardGuiItem::del(), KStandardGuiItem::cancel(),
-                                       QString(), KMessageBox::Dangerous) != KMessageBox::Yes) {
+        if (KMessageBox::questionYesNo(
+                parentWidget,
+                contextText(StandardActionManager::DeleteResources, StandardActionManager::MessageBoxText, instances.count(), instances.first().name()),
+                contextText(StandardActionManager::DeleteResources, StandardActionManager::MessageBoxTitle, instances.count(), instances.first().name()),
+                KStandardGuiItem::del(),
+                KStandardGuiItem::cancel(),
+                QString(),
+                KMessageBox::Dangerous)
+            != KMessageBox::Yes) {
             return;
         }
 
@@ -1281,7 +1412,7 @@ public:
 
     void addRecentCollection(Akonadi::Collection::Id id) const
     {
-        QMapIterator<StandardActionManager::Type, QPointer<RecentCollectionAction> > item(mRecentCollectionsMenu);
+        QMapIterator<StandardActionManager::Type, QPointer<RecentCollectionAction>> item(mRecentCollectionsMenu);
         while (item.hasNext()) {
             item.next();
             if (item.value().data()) {
@@ -1402,7 +1533,8 @@ public:
         const bool canCreateNewItems = (collection.rights() & Collection::CanCreateItem);
 
         const bool canCreateNewCollections = (collection.rights() & Collection::CanCreateCollection);
-        const bool canContainCollections = collection.contentMimeTypes().contains(Collection::mimeType()) || collection.contentMimeTypes().contains(Collection::virtualMimeType());
+        const bool canContainCollections =
+            collection.contentMimeTypes().contains(Collection::mimeType()) || collection.contentMimeTypes().contains(Collection::virtualMimeType());
 
         const bool resourceAllowsRequiredMimeTypes = AgentManager::self()->instance(collection.resource()).type().mimeTypes().toSet().contains(mimeTypes);
         const bool isReadOnlyForItems = (isItemAction && (!canCreateNewItems || !canContainRequiredMimeTypes));
@@ -1411,8 +1543,12 @@ public:
         return !(CollectionUtils::isStructural(collection) || isReadOnlyForItems || isReadOnlyForCollections);
     }
 
-    void fillFoldersMenu(const Akonadi::Collection::List &selectedCollectionsList, const QSet<QString> &mimeTypes,  StandardActionManager::Type type, QMenu *menu,
-                         const QAbstractItemModel *model, const QModelIndex &parentIndex)
+    void fillFoldersMenu(const Akonadi::Collection::List &selectedCollectionsList,
+                         const QSet<QString> &mimeTypes,
+                         StandardActionManager::Type type,
+                         QMenu *menu,
+                         const QAbstractItemModel *model,
+                         const QModelIndex &parentIndex)
     {
         const int rowCount = model->rowCount(parentIndex);
 
@@ -1504,7 +1640,7 @@ public:
             return;
         }
 
-        const QByteArray cutSelectionData = "1"; //krazy:exclude=doublequote_chars
+        const QByteArray cutSelectionData = "1"; // krazy:exclude=doublequote_chars
         mimeData->setData(QStringLiteral("application/x-kde.akonadi-cutselection"), cutSelectionData);
     }
 
@@ -1514,7 +1650,7 @@ public:
         if (data.isEmpty()) {
             return false;
         } else {
-            return (data.at(0) == '1');   // true if 1
+            return (data.at(0) == '1'); // true if 1
         }
     }
 
@@ -1592,7 +1728,7 @@ public:
     QStringList mMimeTypeFilter;
     QStringList mCapabilityFilter;
     QStringList mCollectionPropertiesPageNames;
-    QMap<StandardActionManager::Type, QPointer<RecentCollectionAction> > mRecentCollectionsMenu;
+    QMap<StandardActionManager::Type, QPointer<RecentCollectionAction>> mRecentCollectionsMenu;
 };
 
 //@endcond
@@ -1605,7 +1741,9 @@ StandardActionManager::StandardActionManager(KActionCollection *actionCollection
     d->actionCollection = actionCollection;
     d->mActionStateManager.setReceiver(this);
 #ifndef QT_NO_CLIPBOARD
-    connect(QApplication::clipboard(), &QClipboard::changed, this, [this](auto mode) { d->clipboardChanged(mode); });
+    connect(QApplication::clipboard(), &QClipboard::changed, this, [this](auto mode) {
+        d->clipboardChanged(mode);
+    });
 #endif
 }
 
@@ -1617,7 +1755,9 @@ StandardActionManager::~StandardActionManager()
 void StandardActionManager::setCollectionSelectionModel(QItemSelectionModel *selectionModel)
 {
     d->collectionSelectionModel = selectionModel;
-    connect(selectionModel, &QItemSelectionModel::selectionChanged, this, [this]() { d->collectionSelectionChanged(); });
+    connect(selectionModel, &QItemSelectionModel::selectionChanged, this, [this]() {
+        d->collectionSelectionChanged();
+    });
 
     d->checkModelsConsistency();
 }
@@ -1625,7 +1765,9 @@ void StandardActionManager::setCollectionSelectionModel(QItemSelectionModel *sel
 void StandardActionManager::setItemSelectionModel(QItemSelectionModel *selectionModel)
 {
     d->itemSelectionModel = selectionModel;
-    connect(selectionModel, &QItemSelectionModel::selectionChanged, this, [this]() { d->delayedUpdateActions(); });
+    connect(selectionModel, &QItemSelectionModel::selectionChanged, this, [this]() {
+        d->delayedUpdateActions();
+    });
 }
 
 void StandardActionManager::setFavoriteCollectionsModel(FavoriteCollectionsModel *favoritesModel)
@@ -1637,7 +1779,9 @@ void StandardActionManager::setFavoriteCollectionsModel(FavoriteCollectionsModel
 void StandardActionManager::setFavoriteSelectionModel(QItemSelectionModel *selectionModel)
 {
     d->favoriteSelectionModel = selectionModel;
-    connect(selectionModel, &QItemSelectionModel::selectionChanged, this, [this]() { d->favoriteSelectionChanged(); });
+    connect(selectionModel, &QItemSelectionModel::selectionChanged, this, [this]() {
+        d->favoriteSelectionChanged();
+    });
     d->checkModelsConsistency();
 }
 
@@ -1657,7 +1801,7 @@ QAction *StandardActionManager::createAction(Type type)
         d->actions[type] = d->actions[type - 1];
         Q_ASSERT(d->actions[type]);
         if ((LastType > type + 1) && (standardActionData[type + 1].actionType == ActionAlternative)) {
-            createAction(static_cast<Type>(type + 1)); //ensure that alternative actions are initialized when not created by createAllActions
+            createAction(static_cast<Type>(type + 1)); // ensure that alternative actions are initialized when not created by createAllActions
         }
         return d->actions[type];
     case MenuAction:
@@ -1697,7 +1841,7 @@ QAction *StandardActionManager::createAction(Type type)
             break;
         case MenuAction: {
             auto *actionMenu = qobject_cast<KActionMenu *>(action);
-            connect(actionMenu->menu(), SIGNAL(triggered(QAction*)), standardActionData[type].slot); // clazy:exclude=old-style-connect
+            connect(actionMenu->menu(), SIGNAL(triggered(QAction *)), standardActionData[type].slot); // clazy:exclude=old-style-connect
             break;
         }
         case ToggleAction: {
@@ -1715,7 +1859,7 @@ QAction *StandardActionManager::createAction(Type type)
         action->setChecked(workOffline());
         connect(action, SIGNAL(triggered(bool)), this, standardActionData[type].slot); // clazy:exclude=old-style-connect
 
-        //TODO: find a way to check for updates to the config file
+        // TODO: find a way to check for updates to the config file
     }
 
     Q_ASSERT(standardActionData[type].name);
@@ -1723,7 +1867,7 @@ QAction *StandardActionManager::createAction(Type type)
     d->actionCollection->addAction(QString::fromLatin1(standardActionData[type].name), action);
     d->actions[type] = action;
     if ((standardActionData[type].actionType == ActionWithAlternative) && (standardActionData[type + 1].actionType == ActionAlternative)) {
-        createAction(static_cast<Type>(type + 1)); //ensure that alternative actions are initialized when not created by createAllActions
+        createAction(static_cast<Type>(type + 1)); // ensure that alternative actions are initialized when not created by createAllActions
     }
     d->updateActions();
     return action;

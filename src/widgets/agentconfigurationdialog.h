@@ -11,8 +11,8 @@
 
 #include "akonadiwidgets_export.h"
 
-namespace Akonadi {
-
+namespace Akonadi
+{
 class AgentInstance;
 class AKONADIWIDGETS_EXPORT AgentConfigurationDialog : public QDialog
 {

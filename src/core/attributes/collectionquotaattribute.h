@@ -14,7 +14,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @short Attribute that provides quota information for a collection.
  *

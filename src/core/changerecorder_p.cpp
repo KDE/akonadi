@@ -8,17 +8,15 @@
 #include "akonadicore_debug.h"
 #include "changerecorderjournal_p.h"
 
-
-#include <QFile>
-#include <QDir>
-#include <QSettings>
-#include <QFileInfo>
 #include <QDataStream>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
+#include <QSettings>
 
 using namespace Akonadi;
 
-ChangeRecorderPrivate::ChangeRecorderPrivate(ChangeNotificationDependenciesFactory *dependenciesFactory_,
-        ChangeRecorder *parent)
+ChangeRecorderPrivate::ChangeRecorderPrivate(ChangeNotificationDependenciesFactory *dependenciesFactory_, ChangeRecorder *parent)
     : MonitorPrivate(dependenciesFactory_, parent)
 {
 }
@@ -133,7 +131,7 @@ void ChangeRecorderPrivate::writeStartOffset() const
     // Skip "countAndVersion"
     file.seek(8);
 
-    //qCDebug(AKONADICORE_LOG) << "Writing start offset=" << m_startOffset;
+    // qCDebug(AKONADICORE_LOG) << "Writing start offset=" << m_startOffset;
 
     QDataStream stream(&file);
     stream.setVersion(QDataStream::Qt_4_6);
@@ -169,9 +167,8 @@ void ChangeRecorderPrivate::notificationsEnqueued(int count)
     if (enableChangeRecording) {
         m_lastKnownNotificationsCount += count;
         if (m_lastKnownNotificationsCount != pendingNotifications.count()) {
-            qCWarning(AKONADICORE_LOG) << this << "The number of pending notifications changed without telling us! Expected"
-                                       << m_lastKnownNotificationsCount << "but got" << pendingNotifications.count()
-                                       << "Caller just added" << count;
+            qCWarning(AKONADICORE_LOG) << this << "The number of pending notifications changed without telling us! Expected" << m_lastKnownNotificationsCount
+                                       << "but got" << pendingNotifications.count() << "Caller just added" << count;
             Q_ASSERT(pendingNotifications.count() == m_lastKnownNotificationsCount);
         }
 
@@ -187,7 +184,6 @@ void ChangeRecorderPrivate::dequeueNotification()
 
     pendingNotifications.dequeue();
     if (enableChangeRecording) {
-
         Q_ASSERT(pendingNotifications.count() == m_lastKnownNotificationsCount - 1);
         --m_lastKnownNotificationsCount;
 
@@ -219,7 +215,7 @@ bool ChangeRecorderPrivate::emitNotification(const Protocol::ChangeNotificationP
 {
     const bool someoneWasListening = MonitorPrivate::emitNotification(msg);
     if (!someoneWasListening && enableChangeRecording) {
-        //If no signal was emitted (e.g. because no one was connected to it), no one is going to call changeProcessed, so we help ourselves.
+        // If no signal was emitted (e.g. because no one was connected to it), no one is going to call changeProcessed, so we help ourselves.
         dequeueNotification();
         QMetaObject::invokeMethod(q_ptr, "replayNext", Qt::QueuedConnection);
     }

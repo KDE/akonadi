@@ -17,7 +17,6 @@
 
 namespace Akonadi
 {
-
 /**
   Parser for IMAP messages.
 */

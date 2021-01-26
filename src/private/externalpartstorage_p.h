@@ -5,16 +5,16 @@
  *
  */
 
-//krazy:excludeall=dpointer
+// krazy:excludeall=dpointer
 
 #ifndef EXTERNALPARTSTORAGE_P_H
 #define EXTERNALPARTSTORAGE_P_H
 
 #include "akonadiprivate_export.h"
 
-#include <QVector>
-#include <QMutex>
 #include <QHash>
+#include <QMutex>
+#include <QVector>
 
 class QString;
 class QByteArray;
@@ -22,7 +22,6 @@ class QThread;
 
 namespace Akonadi
 {
-
 class AKONADIPRIVATE_EXPORT ExternalPartStorageTransaction
 {
 public:
@@ -31,6 +30,7 @@ public:
 
     bool commit();
     bool rollback();
+
 private:
     Q_DISABLE_COPY(ExternalPartStorageTransaction)
 };

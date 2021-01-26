@@ -11,12 +11,10 @@
 
 namespace Akonadi
 {
-
 class Scope;
 
 namespace Server
 {
-
 class CommandContext;
 class QueryBuilder;
 
@@ -26,7 +24,6 @@ class QueryBuilder;
 */
 namespace TagQueryHelper
 {
-
 /**
   Add conditions to @p qb for the given remote identifier @p rid.
   The rid context is taken from @p context.

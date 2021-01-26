@@ -15,7 +15,6 @@ class QDataStream;
 
 namespace Akonadi
 {
-
 class ChangeRecorder;
 class ChangeNotificationDependenciesFactory;
 
@@ -40,6 +39,7 @@ public:
     void loadNotifications();
     QString dumpNotificationListToString() const;
     void saveNotifications();
+
 private:
     void dequeueNotification();
     void notificationsLoaded();

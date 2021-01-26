@@ -25,9 +25,7 @@ private Q_SLOTS:
 #include "itemserializer_p.h"
 #include "itemserializerplugin.h"
 
-class TestSerializer : public QObject,
-    public Akonadi::ItemSerializerPlugin,
-    public Akonadi::GidExtractorInterface
+class TestSerializer : public QObject, public Akonadi::ItemSerializerPlugin, public Akonadi::GidExtractorInterface
 {
     Q_OBJECT
     Q_INTERFACES(Akonadi::ItemSerializerPlugin)

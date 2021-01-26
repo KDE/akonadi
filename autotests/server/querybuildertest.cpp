@@ -22,11 +22,11 @@ using namespace Akonadi::Server;
 
 void QueryBuilderTest::testQueryBuilder_data()
 {
-    qRegisterMetaType<QVector<QVariant> >();
+    qRegisterMetaType<QVector<QVariant>>();
     mBuilders.clear();
     QTest::addColumn<int>("qbId");
     QTest::addColumn<QString>("sql");
-    QTest::addColumn<QVector<QVariant> >("bindValues");
+    QTest::addColumn<QVector<QVariant>>("bindValues");
 
     QueryBuilder qb(QStringLiteral("table"), QueryBuilder::Select);
     qb.addColumn(QStringLiteral("col1"));
@@ -56,7 +56,10 @@ void QueryBuilderTest::testQueryBuilder_data()
     subCon.addValueCondition(QStringLiteral("col1"), Query::NotEquals, QVariant());
     qb.addCondition(subCon);
     mBuilders << qb;
-    QTest::newRow("hierarchical where") << mBuilders.count() << QStringLiteral("SELECT col1, col2 FROM table WHERE ( col1 = :0 OR col1 <= col2 OR ( col1 > col2 AND col1 <> NULL ) )") << bindVals;
+    QTest::newRow("hierarchical where") << mBuilders.count()
+                                        << QStringLiteral(
+                                               "SELECT col1, col2 FROM table WHERE ( col1 = :0 OR col1 <= col2 OR ( col1 > col2 AND col1 <> NULL ) )")
+                                        << bindVals;
 
     qb = QueryBuilder(QStringLiteral("table"));
     qb.addAggregation(QStringLiteral("col1"), QStringLiteral("count"));
@@ -105,8 +108,9 @@ void QueryBuilderTest::testQueryBuilder_data()
     bindVals.clear();
     bindVals << QStringLiteral("bla");
     mBuilders << qb;
-    QTest::newRow("update multi table MYSQL") << mBuilders.count() << QStringLiteral("UPDATE table1, table2, table3 SET col1 = :0 WHERE ( ( table1.id = table2.id ) AND ( table1.id = table3.id ) )")
-                                              << bindVals;
+    QTest::newRow("update multi table MYSQL")
+        << mBuilders.count() << QStringLiteral("UPDATE table1, table2, table3 SET col1 = :0 WHERE ( ( table1.id = table2.id ) AND ( table1.id = table3.id ) )")
+        << bindVals;
 
     qb = QueryBuilder(QStringLiteral("table1"), QueryBuilder::Update);
     qb.setDatabaseType(DbType::PostgreSQL);
@@ -114,9 +118,10 @@ void QueryBuilderTest::testQueryBuilder_data()
     qb.addJoin(QueryBuilder::InnerJoin, QStringLiteral("table3"), QStringLiteral("table1.id"), QStringLiteral("table3.id"));
     qb.setColumnValue(QStringLiteral("col1"), QStringLiteral("bla"));
     mBuilders << qb;
-    QTest::newRow("update multi table PSQL") << mBuilders.count() << QStringLiteral("UPDATE table1 SET col1 = :0 FROM table2 JOIN table3 WHERE ( ( table1.id = table2.id ) AND ( table1.id = table3.id ) )")
-                                             << bindVals;
-    ///TODO: test for subquery in SQLite case
+    QTest::newRow("update multi table PSQL")
+        << mBuilders.count()
+        << QStringLiteral("UPDATE table1 SET col1 = :0 FROM table2 JOIN table3 WHERE ( ( table1.id = table2.id ) AND ( table1.id = table3.id ) )") << bindVals;
+    /// TODO: test for subquery in SQLite case
 
     qb = QueryBuilder(QStringLiteral("table"), QueryBuilder::Insert);
     qb.setColumnValue(QStringLiteral("col1"), QStringLiteral("bla"));
@@ -156,21 +161,28 @@ void QueryBuilderTest::testQueryBuilder_data()
     qb.addValueCondition(QStringLiteral("bar"), Equals, 1, QueryBuilder::HavingCondition);
     mBuilders << qb;
     bindVals << 1;
-    QTest::newRow("select with having valueCond") << mBuilders.count() << QStringLiteral("SELECT foo FROM table GROUP BY id1, id2 HAVING ( bar = :0 )") << bindVals;
+    QTest::newRow("select with having valueCond") << mBuilders.count() << QStringLiteral("SELECT foo FROM table GROUP BY id1, id2 HAVING ( bar = :0 )")
+                                                  << bindVals;
     // test: HAVING .addColumnCondition()
     qb.addColumnCondition(QStringLiteral("asdf"), Equals, QStringLiteral("yxcv"), QueryBuilder::HavingCondition);
     mBuilders << qb;
-    QTest::newRow("select with having columnCond") << mBuilders.count() << QStringLiteral("SELECT foo FROM table GROUP BY id1, id2 HAVING ( bar = :0 AND asdf = yxcv )") << bindVals;
+    QTest::newRow("select with having columnCond") << mBuilders.count()
+                                                   << QStringLiteral("SELECT foo FROM table GROUP BY id1, id2 HAVING ( bar = :0 AND asdf = yxcv )") << bindVals;
     // test: HAVING .addCondition()
     qb.addCondition(subCon, QueryBuilder::HavingCondition);
     mBuilders << qb;
-    QTest::newRow("select with having condition") << mBuilders.count() << QStringLiteral("SELECT foo FROM table GROUP BY id1, id2 HAVING ( bar = :0 AND asdf = yxcv AND ( col1 > col2 AND col1 <> NULL ) )") << bindVals;
+    QTest::newRow("select with having condition")
+        << mBuilders.count()
+        << QStringLiteral("SELECT foo FROM table GROUP BY id1, id2 HAVING ( bar = :0 AND asdf = yxcv AND ( col1 > col2 AND col1 <> NULL ) )") << bindVals;
     // test: HAVING and WHERE
     qb.addValueCondition(QStringLiteral("bla"), Equals, 2, QueryBuilder::WhereCondition);
     mBuilders << qb;
     bindVals.clear();
     bindVals << 2 << 1;
-    QTest::newRow("select with having and where") << mBuilders.count() << QStringLiteral("SELECT foo FROM table WHERE ( bla = :0 ) GROUP BY id1, id2 HAVING ( bar = :1 AND asdf = yxcv AND ( col1 > col2 AND col1 <> NULL ) )") << bindVals;
+    QTest::newRow("select with having and where")
+        << mBuilders.count()
+        << QStringLiteral("SELECT foo FROM table WHERE ( bla = :0 ) GROUP BY id1, id2 HAVING ( bar = :1 AND asdf = yxcv AND ( col1 > col2 AND col1 <> NULL ) )")
+        << bindVals;
 
     {
         /// SELECT with JOINS
@@ -183,24 +195,29 @@ void QueryBuilderTest::testQueryBuilder_data()
         qb.addJoin(QueryBuilder::InnerJoin, QStringLiteral("table2"), QStringLiteral("table2.t1_id"), QStringLiteral("table1.id"));
         qb.addJoin(QueryBuilder::LeftJoin, QStringLiteral("table3"), QStringLiteral("table1.id"), QStringLiteral("table3.t1_id"));
         mBuilders << qb;
-        QTest::newRow("select left join and inner join (different tables)") << mBuilders.count()
-                                                                            << QStringLiteral("SELECT col FROM table1 INNER JOIN table2 ON ( table2.t1_id = table1.id ) LEFT JOIN table3 ON ( table1.id = table3.t1_id )") << bindVals;
+        QTest::newRow("select left join and inner join (different tables)")
+            << mBuilders.count()
+            << QStringLiteral("SELECT col FROM table1 INNER JOIN table2 ON ( table2.t1_id = table1.id ) LEFT JOIN table3 ON ( table1.id = table3.t1_id )")
+            << bindVals;
 
         qb = qbTpl;
         qb.addJoin(QueryBuilder::InnerJoin, QStringLiteral("table2"), QStringLiteral("table2.t1_id"), QStringLiteral("table1.id"));
         qb.addJoin(QueryBuilder::LeftJoin, QStringLiteral("table2"), QStringLiteral("table2.t1_id"), QStringLiteral("table1.id"));
         mBuilders << qb;
         // join-condition too verbose but should not have any impact on speed
-        QTest::newRow("select left join and inner join (same table)") << mBuilders.count()
-                                                                      << QStringLiteral("SELECT col FROM table1 INNER JOIN table2 ON ( table2.t1_id = table1.id AND ( table2.t1_id = table1.id ) )") << bindVals;
+        QTest::newRow("select left join and inner join (same table)")
+            << mBuilders.count() << QStringLiteral("SELECT col FROM table1 INNER JOIN table2 ON ( table2.t1_id = table1.id AND ( table2.t1_id = table1.id ) )")
+            << bindVals;
 
         // order of joins in the query should be the same as we add the joins in code
         qb = qbTpl;
         qb.addJoin(QueryBuilder::InnerJoin, QStringLiteral("b_table"), QStringLiteral("b_table.t1_id"), QStringLiteral("table1.id"));
         qb.addJoin(QueryBuilder::InnerJoin, QStringLiteral("a_table"), QStringLiteral("a_table.b_id"), QStringLiteral("b_table.id"));
         mBuilders << qb;
-        QTest::newRow("select join order") << mBuilders.count()
-                                           << QStringLiteral("SELECT col FROM table1 INNER JOIN b_table ON ( b_table.t1_id = table1.id ) INNER JOIN a_table ON ( a_table.b_id = b_table.id )") << bindVals;
+        QTest::newRow("select join order")
+            << mBuilders.count()
+            << QStringLiteral("SELECT col FROM table1 INNER JOIN b_table ON ( b_table.t1_id = table1.id ) INNER JOIN a_table ON ( a_table.b_id = b_table.id )")
+            << bindVals;
     }
 
     {
@@ -214,8 +231,8 @@ void QueryBuilderTest::testQueryBuilder_data()
         bindVals.clear();
         bindVals << 42;
         mBuilders << qb;
-        QTest::newRow("select case simple") << mBuilders.count()
-                                            << QStringLiteral("SELECT col, CASE WHEN ( col1 > :0 ) THEN 1 ELSE 0 END FROM table1") << bindVals;
+        QTest::newRow("select case simple") << mBuilders.count() << QStringLiteral("SELECT col, CASE WHEN ( col1 > :0 ) THEN 1 ELSE 0 END FROM table1")
+                                            << bindVals;
 
         qb = qbTpl;
         qb.addAggregation(QStringLiteral("table1.col1"), QStringLiteral("sum"));
@@ -229,13 +246,15 @@ void QueryBuilderTest::testQueryBuilder_data()
         qb.addJoin(QueryBuilder::LeftJoin, QStringLiteral("table3"), QStringLiteral("table2.col2"), QStringLiteral("table3.col1"));
         bindVals.clear();
         bindVals << QStringLiteral("value1") << QStringLiteral("value2");
-        mBuilders <<qb;
-        QTest::newRow("select case, aggregation and joins") << mBuilders.count()
-                                                            << QString("SELECT sum(table1.col1), count(table1.col2), sum(CASE WHEN ( table3.col2 = :0 OR table3.col2 = :1 ) THEN 1 ELSE 0 END) "
-                                                                       "FROM table1 "
-                                                                       "LEFT JOIN table2 ON ( table1.col3 = table2.col1 ) "
-                                                                       "LEFT JOIN table3 ON ( table2.col2 = table3.col1 )")
-                                                            << bindVals;
+        mBuilders << qb;
+        QTest::newRow("select case, aggregation and joins")
+            << mBuilders.count()
+            << QString(
+                   "SELECT sum(table1.col1), count(table1.col2), sum(CASE WHEN ( table3.col2 = :0 OR table3.col2 = :1 ) THEN 1 ELSE 0 END) "
+                   "FROM table1 "
+                   "LEFT JOIN table2 ON ( table1.col3 = table2.col1 ) "
+                   "LEFT JOIN table3 ON ( table2.col2 = table3.col1 )")
+            << bindVals;
     }
 
     {
@@ -251,19 +270,25 @@ void QueryBuilderTest::testQueryBuilder_data()
         qb.setDatabaseType(DbType::MySQL);
         mBuilders << qb;
         QTest::newRow("update inner join MySQL") << mBuilders.count()
-                                                 << QStringLiteral("UPDATE table1, table2 SET col = :0 WHERE ( table2.answer <> :1 AND ( table2.t1_id = table1.id ) )") << bindVals;
+                                                 << QStringLiteral(
+                                                        "UPDATE table1, table2 SET col = :0 WHERE ( table2.answer <> :1 AND ( table2.t1_id = table1.id ) )")
+                                                 << bindVals;
 
         qb = qbTpl;
         qb.setDatabaseType(DbType::PostgreSQL);
         mBuilders << qb;
         QTest::newRow("update inner join PSQL") << mBuilders.count()
-                                                << QStringLiteral("UPDATE table1 SET col = :0 FROM table2 WHERE ( table2.answer <> :1 AND ( table2.t1_id = table1.id ) )") << bindVals;
+                                                << QStringLiteral(
+                                                       "UPDATE table1 SET col = :0 FROM table2 WHERE ( table2.answer <> :1 AND ( table2.t1_id = table1.id ) )")
+                                                << bindVals;
 
         qb = qbTpl;
         qb.setDatabaseType(DbType::Sqlite);
         mBuilders << qb;
-        QTest::newRow("update inner join SQLite") << mBuilders.count()
-                                                  << QStringLiteral("UPDATE table1 SET col = :0 WHERE ( ( SELECT table2.answer FROM table2 WHERE ( ( table2.t1_id = table1.id ) ) ) <> :1 )") << bindVals;
+        QTest::newRow("update inner join SQLite")
+            << mBuilders.count()
+            << QStringLiteral("UPDATE table1 SET col = :0 WHERE ( ( SELECT table2.answer FROM table2 WHERE ( ( table2.t1_id = table1.id ) ) ) <> :1 )")
+            << bindVals;
 
         qb = qbTpl;
         qb.setDatabaseType(DbType::Sqlite);
@@ -274,12 +299,14 @@ void QueryBuilderTest::testQueryBuilder_data()
         qb.addValueCondition(QStringLiteral("table1.id"), Query::Equals, 10);
         mBuilders << qb;
         bindVals << 666 << "text" << 10;
-        QTest::newRow("update inner join SQLite with subcondition") << mBuilders.count()
-                                                                    << QString("UPDATE table1 SET col = :0 WHERE ( ( SELECT table2.answer FROM table2 WHERE "
-                                                                               "( ( table2.t1_id = table1.id ) ) ) <> :1 AND "
-                                                                               "( ( SELECT table2.col2 FROM table2 WHERE ( ( table2.t1_id = table1.id ) ) ) = :2 AND table1.col3 = :3 ) AND "
-                                                                               "table1.id = :4 )") << bindVals;
-
+        QTest::newRow("update inner join SQLite with subcondition")
+            << mBuilders.count()
+            << QString(
+                   "UPDATE table1 SET col = :0 WHERE ( ( SELECT table2.answer FROM table2 WHERE "
+                   "( ( table2.t1_id = table1.id ) ) ) <> :1 AND "
+                   "( ( SELECT table2.col2 FROM table2 WHERE ( ( table2.t1_id = table1.id ) ) ) = :2 AND table1.col3 = :3 ) AND "
+                   "table1.id = :4 )")
+            << bindVals;
     }
 }
 
@@ -307,11 +334,8 @@ void QueryBuilderTest::benchQueryBuilder()
     const QString aggregate = QStringLiteral("COUNT");
     const QVariant value = QVariant::fromValue(QStringLiteral("asdf"));
 
-    const QStringList columns = QStringList()
-        << QStringLiteral("Table1.id")
-        << QStringLiteral("Table1.fooAsdf")
-        << QStringLiteral("Table2.barLala")
-        << QStringLiteral("Table3.xyzFsd");
+    const QStringList columns = QStringList() << QStringLiteral("Table1.id") << QStringLiteral("Table1.fooAsdf") << QStringLiteral("Table2.barLala")
+                                              << QStringLiteral("Table3.xyzFsd");
 
     bool executed = true;
 

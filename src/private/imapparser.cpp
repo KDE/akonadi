@@ -52,9 +52,7 @@ public:
 
 namespace
 {
-
-template <typename T>
-int parseParenthesizedListHelper(const QByteArray &data, T &result, int start)
+template<typename T> int parseParenthesizedListHelper(const QByteArray &data, T &result, int start)
 {
     result.clear();
     if (start >= data.length()) {
@@ -189,7 +187,7 @@ int ImapParser::parseQuotedString(const QByteArray &data, QByteArray &result, in
                 } else if (ch == '\"') {
                     result += '\"';
                 } else {
-                    //TODO: this is actually an error
+                    // TODO: this is actually an error
                     result += ch;
                 }
                 continue;
@@ -411,7 +409,7 @@ int ImapParser::parseSequenceSet(const QByteArray &data, ImapSet &result, int st
         } else if (isdigit(data[i])) {
             bool ok = false;
             i = parseNumber(data, value, &ok, i);
-            Q_ASSERT(ok);   // TODO handle error
+            Q_ASSERT(ok); // TODO handle error
             --i;
         } else {
             upper = value;
@@ -483,8 +481,8 @@ int ImapParser::parseDateTime(const QByteArray &data, QDateTime &dateTime, int s
     }
 
     bool ok = true;
-    const int day = (data[pos] == ' ' ? data[pos + 1] - '0'  // single digit day
-                     : data.mid(pos, 2).toInt(&ok));
+    const int day = (data[pos] == ' ' ? data[pos + 1] - '0' // single digit day
+                                      : data.mid(pos, 2).toInt(&ok));
     if (!ok) {
         return start;
     }
@@ -632,7 +630,6 @@ bool ImapParser::parseNextLine(const QByteArray &readBuffer)
         }
 
     } else {
-
         // open parentheses
         d->parenthesesCount += ImapParser::parenthesesBalance(readBuffer);
 

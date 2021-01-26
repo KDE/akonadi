@@ -14,13 +14,13 @@
 #include "akonadicore_debug.h"
 
 // Qt
-#include <QHash>
-#include <QString>
 #include <QByteArray>
-#include <QStringList>
+#include <QHash>
 #include <QMimeDatabase>
 #include <QMimeType>
 #include <QRegularExpression>
+#include <QString>
+#include <QStringList>
 
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/topological_sort.hpp>
@@ -28,8 +28,8 @@
 // temporary
 #include "pluginloader_p.h"
 
-#include <vector>
 #include <cassert>
+#include <vector>
 
 static const char LEGACY_NAME[] = "legacy";
 static const char DEFAULT_NAME[] = "default";
@@ -37,7 +37,6 @@ static const char _APPLICATION_OCTETSTREAM[] = "application/octet-stream";
 
 namespace Akonadi
 {
-
 Q_GLOBAL_STATIC(DefaultItemSerializerPlugin, s_defaultItemSerializerPlugin) // NOLINT(readability-redundant-member-init)
 
 class PluginEntry
@@ -73,8 +72,7 @@ public:
         mPlugin = object;
         if (!qobject_cast<ItemSerializerPlugin *>(mPlugin)) {
             qCWarning(AKONADICORE_LOG) << "ItemSerializerPluginLoader: "
-                                       << "plugin" << mIdentifier
-                                       << "doesn't provide interface ItemSerializerPlugin!";
+                                       << "plugin" << mIdentifier << "doesn't provide interface ItemSerializerPlugin!";
 
             // we try to use the default in that case
             mPlugin = s_defaultItemSerializerPlugin;
@@ -115,7 +113,8 @@ class MimeTypeEntry
 public:
     explicit MimeTypeEntry(const QString &mimeType)
         : m_mimeType(mimeType)
-    {}
+    {
+    }
 
     QString type() const
     {
@@ -144,7 +143,10 @@ public:
         // 2. Otherwise, look through the already instantiated plugins,
         //    and return one of them (preferably not the legacy one):
         bool sawZero = false;
-        for (QMap<int, QHash<QByteArray, PluginEntry>::const_iterator>::const_iterator it = m_pluginsByMetaTypeId.constBegin(), end = m_pluginsByMetaTypeId.constEnd(); it != end; ++it) {
+        for (QMap<int, QHash<QByteArray, PluginEntry>::const_iterator>::const_iterator it = m_pluginsByMetaTypeId.constBegin(),
+                                                                                       end = m_pluginsByMetaTypeId.constEnd();
+             it != end;
+             ++it) {
             if (it.key() == 0) {
                 sawZero = true;
             } else if (*it != m_plugins.end()) {
@@ -173,7 +175,8 @@ public:
         const QMap<int, QHash<QByteArray, PluginEntry>::const_iterator> &c_pluginsByMetaTypeId = m_pluginsByMetaTypeId;
         QMap<int, QHash<QByteArray, PluginEntry>::const_iterator>::const_iterator it = c_pluginsByMetaTypeId.find(metaTypeId);
         if (it == c_pluginsByMetaTypeId.end()) {
-            it = QMap<int, QHash<QByteArray, PluginEntry>::const_iterator>::const_iterator(m_pluginsByMetaTypeId.insert(metaTypeId, m_plugins.find(metaTypeId ? QMetaType::typeName(metaTypeId) : LEGACY_NAME)));
+            it = QMap<int, QHash<QByteArray, PluginEntry>::const_iterator>::const_iterator(
+                m_pluginsByMetaTypeId.insert(metaTypeId, m_plugins.find(metaTypeId ? QMetaType::typeName(metaTypeId) : LEGACY_NAME)));
         }
         return *it == m_plugins.end() ? nullptr : it->operator->();
     }
@@ -198,7 +201,7 @@ public:
 
 private:
     QString m_mimeType;
-    QHash<QByteArray/* class */, PluginEntry> m_plugins;
+    QHash<QByteArray /* class */, PluginEntry> m_plugins;
     mutable QMap<int, QHash<QByteArray, PluginEntry>::const_iterator> m_pluginsByMetaTypeId;
 };
 
@@ -244,7 +247,7 @@ public:
             it = map.insert(APPLICATION_OCTETSTREAM, MimeTypeEntry(APPLICATION_OCTETSTREAM));
         }
         it->add("QByteArray", mDefaultPlugin);
-        it->add(LEGACY_NAME,  mDefaultPlugin);
+        it->add(LEGACY_NAME, mDefaultPlugin);
         const int size = map.size();
         allMimeTypes.reserve(size);
         std::copy(map.begin(), map.end(), std::back_inserter(allMimeTypes));
@@ -336,36 +339,37 @@ private:
         }
 
         // step 3: ask each one in turn if it can handle any of the metaTypeIds:
-//       qCDebug(AKONADICORE_LOG) << "Looking for " << format( type, metaTypeIds );
+        //       qCDebug(AKONADICORE_LOG) << "Looking for " << format( type, metaTypeIds );
         for (QVector<int>::const_iterator it = order.constBegin(), end = order.constEnd(); it != end; ++it) {
-//         qCDebug(AKONADICORE_LOG) << "  Considering serializer plugin for type" << allMimeTypes[matchingIndexes[*it]].type()
-// //                  << "as the closest match";
+            //         qCDebug(AKONADICORE_LOG) << "  Considering serializer plugin for type" << allMimeTypes[matchingIndexes[*it]].type()
+            // //                  << "as the closest match";
             const MimeTypeEntry &mt = allMimeTypes[matchingIndexes[*it]];
             if (metaTypeIds.empty()) {
                 if (const PluginEntry *const entry = mt.defaultPlugin()) {
-//             qCDebug(AKONADICORE_LOG) << "    -> got " << entry->pluginClassName() << " and am happy with it.";
-                    //FIXME ? in qt5 we show "application/octet-stream" first so if will use default plugin. Exclude it until we look at all mimetype and use default at the end if necessary
+                    //             qCDebug(AKONADICORE_LOG) << "    -> got " << entry->pluginClassName() << " and am happy with it.";
+                    // FIXME ? in qt5 we show "application/octet-stream" first so if will use default plugin. Exclude it until we look at all mimetype and use
+                    // default at the end if necessary
                     if (allMimeTypes[matchingIndexes[*it]].type() != QLatin1String("application/octet-stream")) {
                         return entry->plugin();
                     }
                 } else {
-//             qCDebug(AKONADICORE_LOG) << "    -> no default plugin for this mime type, trying next";
+                    //             qCDebug(AKONADICORE_LOG) << "    -> no default plugin for this mime type, trying next";
                 }
             } else if (const PluginEntry *const entry = mt.plugin(metaTypeIds, chosen)) {
-//           qCDebug(AKONADICORE_LOG) << "    -> got " << entry->pluginClassName() << " and am happy with it.";
+                //           qCDebug(AKONADICORE_LOG) << "    -> got " << entry->pluginClassName() << " and am happy with it.";
                 return entry->plugin();
             } else {
-//           qCDebug(AKONADICORE_LOG) << "   -> can't handle any of the types, trying next";
+                //           qCDebug(AKONADICORE_LOG) << "   -> can't handle any of the types, trying next";
             }
         }
 
-//       qCDebug(AKONADICORE_LOG) << "  No further candidates, using default plugin";
+        //       qCDebug(AKONADICORE_LOG) << "  No further candidates, using default plugin";
         // no luck? Use the default plugin
         return mDefaultPlugin.plugin();
     }
 
     std::vector<MimeTypeEntry> allMimeTypes;
-    QHash<QString, QMap<int, QObject *> > cachedPlugins;
+    QHash<QString, QMap<int, QObject *>> cachedPlugins;
     QHash<QString, QObject *> cachedDefaultPlugins;
 
     // ### cache NULLs, too
@@ -378,7 +382,7 @@ private:
             }
         }
 
-        const QHash<QString, QMap<int, QObject *> >::const_iterator hit = cachedPlugins.find(mimeType);
+        const QHash<QString, QMap<int, QObject *>>::const_iterator hit = cachedPlugins.find(mimeType);
         if (hit == cachedPlugins.end()) {
             return nullptr;
         }

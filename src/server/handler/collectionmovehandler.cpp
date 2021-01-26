@@ -7,20 +7,21 @@
 #include "collectionmovehandler.h"
 
 #include "akonadi.h"
-#include "handlerhelper.h"
-#include "connection.h"
 #include "cachecleaner.h"
+#include "connection.h"
+#include "handlerhelper.h"
+#include "storage/collectionqueryhelper.h"
 #include "storage/datastore.h"
 #include "storage/itemretriever.h"
 #include "storage/transaction.h"
-#include "storage/collectionqueryhelper.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
 CollectionMoveHandler::CollectionMoveHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 bool CollectionMoveHandler::parseStream()
 {

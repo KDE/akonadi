@@ -7,14 +7,13 @@
 #ifndef AKONADI_AGENTINSTANCECREATEJOB_H
 #define AKONADI_AGENTINSTANCECREATEJOB_H
 
-#include "akonadicore_export.h"
 #include "agenttype.h"
+#include "akonadicore_export.h"
 
 #include <KJob>
 
 namespace Akonadi
 {
-
 class AgentInstance;
 class AgentInstanceCreateJobPrivate;
 

@@ -28,7 +28,6 @@ class KAboutData;
 
 namespace Akonadi
 {
-
 class AgentBasePrivate;
 class ChangeRecorder;
 class Collection;
@@ -174,7 +173,7 @@ public:
      *
      * @deprecated Use ObserverV2 instead
      */
-    class AKONADIAGENTBASE_DEPRECATED AKONADIAGENTBASE_EXPORT Observer  // krazy:exclude=dpointer
+    class AKONADIAGENTBASE_DEPRECATED AKONADIAGENTBASE_EXPORT Observer // krazy:exclude=dpointer
     {
     public:
         /**
@@ -211,7 +210,7 @@ public:
          * Reimplement to handle adding of new collections.
          * @param collection The newly added collection.
          * @param parent The parent collection.
-          */
+         */
         virtual void collectionAdded(const Akonadi::Collection &collection, const Akonadi::Collection &parent);
 
         /**
@@ -233,7 +232,7 @@ public:
      *
      * @since 4.4
      */
-    class AKONADIAGENTBASE_EXPORT ObserverV2 : public Observer  // krazy:exclude=dpointer
+    class AKONADIAGENTBASE_EXPORT ObserverV2 : public Observer // krazy:exclude=dpointer
     {
     public:
         using Observer::collectionChanged;
@@ -248,8 +247,7 @@ public:
          * @param collectionSource The collection the item has been moved from.
          * @param collectionDestination The collection the item has been moved to.
          */
-        virtual void itemMoved(const Akonadi::Item &item, const Akonadi::Collection &collectionSource,
-                               const Akonadi::Collection &collectionDestination);
+        virtual void itemMoved(const Akonadi::Item &item, const Akonadi::Collection &collectionSource, const Akonadi::Collection &collectionDestination);
 
         /**
          * Reimplement to handle item linking.
@@ -277,8 +275,8 @@ public:
          * @param collectionSource The previous parent collection.
          * @param collectionDestination The new parent collection.
          */
-        virtual void collectionMoved(const Akonadi::Collection &collection, const Akonadi::Collection &collectionSource,
-                                     const Akonadi::Collection &collectionDestination);
+        virtual void
+        collectionMoved(const Akonadi::Collection &collection, const Akonadi::Collection &collectionSource, const Akonadi::Collection &collectionDestination);
 
         /**
          * Reimplement to handle changes to existing collections.
@@ -328,8 +326,8 @@ public:
          * @param sourceCollection Collection from where the items were moved
          * @param destinationCollection Collection to which the items were moved
          */
-        virtual void itemsMoved(const Akonadi::Item::List &items, const Akonadi::Collection &sourceCollection,
-                                const Akonadi::Collection &destinationCollection);
+        virtual void
+        itemsMoved(const Akonadi::Item::List &items, const Akonadi::Collection &sourceCollection, const Akonadi::Collection &destinationCollection);
 
         /**
          * Reimplement to handle batch notifications about items linking.
@@ -410,9 +408,8 @@ public:
          * @param addedRelations the list of relations that were added to all @p items
          * @param removedRelations the list of relations that were removed from all @p items
          */
-        virtual void itemsRelationsChanged(const Akonadi::Item::List &items,
-                                           const Akonadi::Relation::List &addedRelations,
-                                           const Akonadi::Relation::List &removedRelations);
+        virtual void
+        itemsRelationsChanged(const Akonadi::Item::List &items, const Akonadi::Relation::List &addedRelations, const Akonadi::Relation::List &removedRelations);
     };
 
     /**
@@ -421,8 +418,8 @@ public:
      */
     enum Status {
         Idle = 0, ///< The agent does currently nothing.
-        Running,  ///< The agent is working on something.
-        Broken,    ///< The agent encountered an error state.
+        Running, ///< The agent is working on something.
+        Broken, ///< The agent encountered an error state.
         NotConfigured ///< The agent is lacking required configuration
     };
 
@@ -450,10 +447,8 @@ public:
      * @param argc number of arguments
      * @param argv arguments for the function
      */
-    template <typename T>
-    static int init(int argc, char **argv)
+    template<typename T> static int init(int argc, char **argv)
     {
-
         // Disable session management
         qunsetenv("SESSION_MANAGER");
 
@@ -554,7 +549,7 @@ public:
      * @since 4.3
      * @param name name of the agent
      */
-    //FIXME_API: make sure location is renamed to this by agentbase
+    // FIXME_API: make sure location is renamed to this by agentbase
     void setAgentName(const QString &name);
 
     /**
@@ -720,28 +715,28 @@ protected:
 
 protected:
     /**
-      * Sets the agent offline but will make it online again after a given time
-      *
-      * Use this method when the agent detects some problem with its backend but it wants
-      * to retry all pending operations after some time - e.g. a server can not be reached currently
-      *
-      * Example usage:
-      * @code
-      * void ExampleResource::onItemRemovedFinished(KJob *job)
-      * {
-      *     if (job->error()) {
-      *         Q_EMIT status(Broken, job->errorString());
-      *         deferTask();
-      *         setTemporaryOffline(300);
-      *         return;
-      *     }
-      *     ...
-      * }
-      * @endcode
-      *
-      * @since 4.13
-      * @param makeOnlineInSeconds timeout in seconds after which the agent changes to online
-      */
+     * Sets the agent offline but will make it online again after a given time
+     *
+     * Use this method when the agent detects some problem with its backend but it wants
+     * to retry all pending operations after some time - e.g. a server can not be reached currently
+     *
+     * Example usage:
+     * @code
+     * void ExampleResource::onItemRemovedFinished(KJob *job)
+     * {
+     *     if (job->error()) {
+     *         Q_EMIT status(Broken, job->errorString());
+     *         deferTask();
+     *         setTemporaryOffline(300);
+     *         return;
+     *     }
+     *     ...
+     * }
+     * @endcode
+     *
+     * @since 4.13
+     * @param makeOnlineInSeconds timeout in seconds after which the agent changes to online
+     */
     void setTemporaryOffline(int makeOnlineInSeconds = 300);
 
     //@cond PRIVATE
@@ -795,10 +790,10 @@ private:
 /**
  * Convenience Macro for the most common main() function for Akonadi agents.
  */
-#define AKONADI_AGENT_MAIN( agentClass )                       \
-    int main( int argc, char **argv )                            \
-    {                                                            \
-        return Akonadi::AgentBase::init<agentClass>( argc, argv ); \
+#define AKONADI_AGENT_MAIN(agentClass)                                                                                                                         \
+    int main(int argc, char **argv)                                                                                                                            \
+    {                                                                                                                                                          \
+        return Akonadi::AgentBase::init<agentClass>(argc, argv);                                                                                               \
     }
 #endif
 

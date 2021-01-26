@@ -11,13 +11,10 @@
 
 namespace Akonadi
 {
-
 namespace Format
 {
-
 namespace Tag
 {
-
 inline QString root()
 {
     return QStringLiteral("knut");
@@ -51,7 +48,6 @@ inline QString payload()
 
 namespace Attr
 {
-
 inline QString remoteId()
 {
     return QStringLiteral("rid");

@@ -5,43 +5,44 @@
  *  SPDX-License-Identifier: LGPL-2.0-or-later
  */
 
+#include "datastream_p_p.h"
+#include "imapset_p.h"
 #include "protocol_p.h"
 #include "scope_p.h"
-#include "imapset_p.h"
-#include "datastream_p_p.h"
 
 #include <type_traits>
 #include <typeinfo>
 
-#include <QJsonObject>
-#include <QJsonArray>
 #include <QHash>
+#include <QJsonArray>
+#include <QJsonObject>
 
 #include <cassert>
 
 // clazy:excludeall=function-args-by-value
 
 #undef AKONADI_DECLARE_PRIVATE
-#define AKONADI_DECLARE_PRIVATE(Class) \
-inline Class##Private* Class::d_func() {\
-    return reinterpret_cast<Class##Private*>(d_ptr.data()); \
-} \
-inline const Class##Private* Class::d_func() const {\
-    return reinterpret_cast<const Class##Private*>(d_ptr.constData()); \
-}
+#define AKONADI_DECLARE_PRIVATE(Class)                                                                                                                         \
+    inline Class##Private *Class::d_func()                                                                                                                     \
+    {                                                                                                                                                          \
+        return reinterpret_cast<Class##Private *>(d_ptr.data());                                                                                               \
+    }                                                                                                                                                          \
+    inline const Class##Private *Class::d_func() const                                                                                                         \
+    {                                                                                                                                                          \
+        return reinterpret_cast<const Class##Private *>(d_ptr.constData());                                                                                    \
+    }
 
-#define COMPARE(prop) \
-    ((prop) == ((decltype(this)) other)->prop)
+#define COMPARE(prop) ((prop) == ((decltype(this))other)->prop)
 
-namespace Akonadi {
-namespace Protocol {
-
+namespace Akonadi
+{
+namespace Protocol
+{
 QDebug operator<<(QDebug _dbg, Command::Type type)
 {
     QDebug dbg(_dbg.noquote());
 
-    switch (type)
-    {
+    switch (type) {
     case Command::Invalid:
         return dbg << "Invalid";
 
@@ -139,15 +140,13 @@ QDebug operator<<(QDebug _dbg, Command::Type type)
     return dbg << static_cast<int>(type);
 }
 
-template<typename T>
-DataStream &operator<<(DataStream &stream, const QSharedPointer<T> &ptr)
+template<typename T> DataStream &operator<<(DataStream &stream, const QSharedPointer<T> &ptr)
 {
     Protocol::serialize(stream, ptr);
     return stream;
 }
 
-template<typename T>
-DataStream &operator>>(DataStream &stream, QSharedPointer<T> &ptr)
+template<typename T> DataStream &operator>>(DataStream &stream, QSharedPointer<T> &ptr)
 {
     ptr = Protocol::deserialize(stream.device()).staticCast<T>();
     return stream;
@@ -169,61 +168,37 @@ void Command::toJson(QJsonObject &json) const
 {
     json[QStringLiteral("response")] = static_cast<bool>(mType & Command::_ResponseBit);
 
-#define case_label(x)    case Command::x: { \
-    json[QStringLiteral("type")] = QStringLiteral(#x); \
+#define case_label(x)                                                                                                                                          \
+    case Command::x: {                                                                                                                                         \
+        json[QStringLiteral("type")] = QStringLiteral(#x);                                                                                                     \
     } break;
 
-    switch (mType & ~Command::_ResponseBit)
-    {
-        case_label(Invalid)
-        case_label(Hello)
+    switch (mType & ~Command::_ResponseBit) {
+        case_label(Invalid) case_label(Hello)
 
-        case_label(Login)
-        case_label(Logout)
+            case_label(Login) case_label(Logout)
 
-        case_label(Transaction)
+                case_label(Transaction)
 
-        case_label(CreateItem)
-        case_label(CopyItems)
-        case_label(DeleteItems)
-        case_label(FetchItems)
-        case_label(LinkItems)
-        case_label(ModifyItems)
-        case_label(MoveItems)
+                    case_label(CreateItem) case_label(CopyItems) case_label(DeleteItems) case_label(FetchItems) case_label(LinkItems) case_label(ModifyItems)
+                        case_label(MoveItems)
 
-        case_label(CreateCollection)
-        case_label(CopyCollection)
-        case_label(DeleteCollection)
-        case_label(FetchCollections)
-        case_label(FetchCollectionStats)
-        case_label(ModifyCollection)
-        case_label(MoveCollection)
+                            case_label(CreateCollection) case_label(CopyCollection) case_label(DeleteCollection) case_label(FetchCollections)
+                                case_label(FetchCollectionStats) case_label(ModifyCollection) case_label(MoveCollection)
 
-        case_label(Search)
-        case_label(SearchResult)
-        case_label(StoreSearch)
+                                    case_label(Search) case_label(SearchResult) case_label(StoreSearch)
 
-        case_label(CreateTag)
-        case_label(DeleteTag)
-        case_label(FetchTags)
-        case_label(ModifyTag)
+                                        case_label(CreateTag) case_label(DeleteTag) case_label(FetchTags) case_label(ModifyTag)
 
-        case_label(FetchRelations)
-        case_label(ModifyRelation)
-        case_label(RemoveRelations)
+                                            case_label(FetchRelations) case_label(ModifyRelation) case_label(RemoveRelations)
 
-        case_label(SelectResource)
+                                                case_label(SelectResource)
 
-        case_label(StreamPayload)
-        case_label(CreateSubscription)
-        case_label(ModifySubscription)
+                                                    case_label(StreamPayload) case_label(CreateSubscription) case_label(ModifySubscription)
 
-        case_label(DebugChangeNotification)
-        case_label(ItemChangeNotification)
-        case_label(CollectionChangeNotification)
-        case_label(TagChangeNotification)
-        case_label(RelationChangeNotification)
-        case_label(SubscriptionChangeNotification)
+                                                        case_label(DebugChangeNotification) case_label(ItemChangeNotification)
+                                                            case_label(CollectionChangeNotification) case_label(TagChangeNotification)
+                                                                case_label(RelationChangeNotification) case_label(SubscriptionChangeNotification)
     }
 #undef case_label
 }
@@ -240,79 +215,86 @@ DataStream &operator>>(DataStream &stream, Command &cmd)
 
 QDebug operator<<(QDebug dbg, const Command &cmd)
 {
-    return dbg.noquote() << ((cmd.mType & Command::_ResponseBit) ? "Response:" : "Command:")
-                         << static_cast<Command::Type>(cmd.mType & ~Command::_ResponseBit) << "\n";
+    return dbg.noquote() << ((cmd.mType & Command::_ResponseBit) ? "Response:" : "Command:") << static_cast<Command::Type>(cmd.mType & ~Command::_ResponseBit)
+                         << "\n";
 }
 
 void toJson(const Akonadi::Protocol::Command *command, QJsonObject &json)
 {
-#define case_notificationlabel(x, class)    case Command::x: { \
-    static_cast<const Akonadi::Protocol::class *>(command)->toJson(json); \
+#define case_notificationlabel(x, class)                                                                                                                       \
+    case Command::x: {                                                                                                                                         \
+        static_cast<const Akonadi::Protocol::class *>(command)->toJson(json);                                                                                  \
     } break;
-#define case_commandlabel(x, cmd, resp) \
-case Command::x: { \
-      static_cast<const Akonadi::Protocol::cmd *>(command)->toJson(json); \
-    } break; \
-case Command::x | Command::_ResponseBit: { \
-      static_cast<const Akonadi::Protocol::resp *>(command)->toJson(json); \
+#define case_commandlabel(x, cmd, resp)                                                                                                                        \
+    case Command::x: {                                                                                                                                         \
+        static_cast<const Akonadi::Protocol::cmd *>(command)->toJson(json);                                                                                    \
+    } break;                                                                                                                                                   \
+    case Command::x | Command::_ResponseBit: {                                                                                                                 \
+        static_cast<const Akonadi::Protocol::resp *>(command)->toJson(json);                                                                                   \
     } break;
 
-    switch (command->mType)
-    {
-        case Command::Invalid:
-            break;
+    switch (command->mType) {
+    case Command::Invalid:
+        break;
 
-        case Command::Hello | Command::_ResponseBit:
-            {
-                static_cast<const Akonadi::Protocol::HelloResponse *>(command)->toJson(json);
-            }
-            break;
-        case_commandlabel(Login, LoginCommand, LoginResponse)
-        case_commandlabel(Logout, LogoutCommand, LogoutResponse)
+    case Command::Hello | Command::_ResponseBit: {
+        static_cast<const Akonadi::Protocol::HelloResponse *>(command)->toJson(json);
+    } break;
+        case_commandlabel(Login, LoginCommand, LoginResponse) case_commandlabel(Logout, LogoutCommand, LogoutResponse)
 
-        case_commandlabel(Transaction, TransactionCommand, TransactionResponse)
+            case_commandlabel(Transaction, TransactionCommand, TransactionResponse)
 
-        case_commandlabel(CreateItem, CreateItemCommand, CreateItemResponse)
-        case_commandlabel(CopyItems, CopyItemsCommand, CopyItemsResponse)
-        case_commandlabel(DeleteItems, DeleteItemsCommand, DeleteItemsResponse)
-        case_commandlabel(FetchItems, FetchItemsCommand, FetchItemsResponse)
-        case_commandlabel(LinkItems, LinkItemsCommand, LinkItemsResponse)
-        case_commandlabel(ModifyItems, ModifyItemsCommand, ModifyItemsResponse)
-        case_commandlabel(MoveItems, MoveItemsCommand, MoveItemsResponse)
+                case_commandlabel(CreateItem, CreateItemCommand, CreateItemResponse) case_commandlabel(CopyItems, CopyItemsCommand, CopyItemsResponse)
+                    case_commandlabel(DeleteItems, DeleteItemsCommand, DeleteItemsResponse) case_commandlabel(FetchItems, FetchItemsCommand, FetchItemsResponse)
+                        case_commandlabel(LinkItems, LinkItemsCommand, LinkItemsResponse) case_commandlabel(
+                            ModifyItems,
+                            ModifyItemsCommand,
+                            ModifyItemsResponse) case_commandlabel(MoveItems, MoveItemsCommand, MoveItemsResponse)
 
-        case_commandlabel(CreateCollection, CreateCollectionCommand, CreateCollectionResponse)
-        case_commandlabel(CopyCollection, CopyCollectionCommand, CopyCollectionResponse)
-        case_commandlabel(DeleteCollection, DeleteCollectionCommand, DeleteCollectionResponse)
-        case_commandlabel(FetchCollections, FetchCollectionsCommand, FetchCollectionsResponse)
-        case_commandlabel(FetchCollectionStats, FetchCollectionStatsCommand, FetchCollectionStatsResponse)
-        case_commandlabel(ModifyCollection, ModifyCollectionCommand, ModifyCollectionResponse)
-        case_commandlabel(MoveCollection, MoveCollectionCommand, MoveCollectionResponse)
+                            case_commandlabel(CreateCollection, CreateCollectionCommand, CreateCollectionResponse) case_commandlabel(
+                                CopyCollection,
+                                CopyCollectionCommand,
+                                CopyCollectionResponse) case_commandlabel(DeleteCollection, DeleteCollectionCommand, DeleteCollectionResponse)
+                                case_commandlabel(FetchCollections, FetchCollectionsCommand, FetchCollectionsResponse) case_commandlabel(
+                                    FetchCollectionStats,
+                                    FetchCollectionStatsCommand,
+                                    FetchCollectionStatsResponse) case_commandlabel(ModifyCollection, ModifyCollectionCommand, ModifyCollectionResponse)
+                                    case_commandlabel(MoveCollection, MoveCollectionCommand, MoveCollectionResponse)
 
-        case_commandlabel(Search, SearchCommand, SearchResponse)
-        case_commandlabel(SearchResult, SearchResultCommand, SearchResultResponse)
-        case_commandlabel(StoreSearch, StoreSearchCommand, StoreSearchResponse)
+                                        case_commandlabel(Search, SearchCommand, SearchResponse) case_commandlabel(
+                                            SearchResult,
+                                            SearchResultCommand,
+                                            SearchResultResponse) case_commandlabel(StoreSearch, StoreSearchCommand, StoreSearchResponse)
 
-        case_commandlabel(CreateTag, CreateTagCommand, CreateTagResponse)
-        case_commandlabel(DeleteTag, DeleteTagCommand, DeleteTagResponse)
-        case_commandlabel(FetchTags, FetchTagsCommand, FetchTagsResponse)
-        case_commandlabel(ModifyTag, ModifyTagCommand, ModifyTagResponse)
+                                            case_commandlabel(CreateTag, CreateTagCommand, CreateTagResponse)
+                                                case_commandlabel(DeleteTag, DeleteTagCommand, DeleteTagResponse)
+                                                    case_commandlabel(FetchTags, FetchTagsCommand, FetchTagsResponse)
+                                                        case_commandlabel(ModifyTag, ModifyTagCommand, ModifyTagResponse)
 
-        case_commandlabel(FetchRelations, FetchRelationsCommand, FetchRelationsResponse)
-        case_commandlabel(ModifyRelation, ModifyRelationCommand, ModifyRelationResponse)
-        case_commandlabel(RemoveRelations, RemoveRelationsCommand, RemoveRelationsResponse)
+                                                            case_commandlabel(FetchRelations, FetchRelationsCommand, FetchRelationsResponse)
+                                                                case_commandlabel(ModifyRelation, ModifyRelationCommand, ModifyRelationResponse)
+                                                                    case_commandlabel(RemoveRelations, RemoveRelationsCommand, RemoveRelationsResponse)
 
-        case_commandlabel(SelectResource, SelectResourceCommand, SelectResourceResponse)
+                                                                        case_commandlabel(SelectResource, SelectResourceCommand, SelectResourceResponse)
 
-        case_commandlabel(StreamPayload, StreamPayloadCommand, StreamPayloadResponse)
-        case_commandlabel(CreateSubscription, CreateSubscriptionCommand, CreateSubscriptionResponse)
-        case_commandlabel(ModifySubscription, ModifySubscriptionCommand, ModifySubscriptionResponse)
+                                                                            case_commandlabel(StreamPayload, StreamPayloadCommand, StreamPayloadResponse)
+                                                                                case_commandlabel(
+                                                                                    CreateSubscription,
+                                                                                    CreateSubscriptionCommand,
+                                                                                    CreateSubscriptionResponse) case_commandlabel(ModifySubscription,
+                                                                                                                                  ModifySubscriptionCommand,
+                                                                                                                                  ModifySubscriptionResponse)
 
-        case_notificationlabel(DebugChangeNotification, DebugChangeNotification)
-        case_notificationlabel(ItemChangeNotification, ItemChangeNotification)
-        case_notificationlabel(CollectionChangeNotification, CollectionChangeNotification)
-        case_notificationlabel(TagChangeNotification, TagChangeNotification)
-        case_notificationlabel(RelationChangeNotification, RelationChangeNotification)
-        case_notificationlabel(SubscriptionChangeNotification, SubscriptionChangeNotification)
+                                                                                    case_notificationlabel(DebugChangeNotification, DebugChangeNotification)
+                                                                                        case_notificationlabel(ItemChangeNotification, ItemChangeNotification)
+                                                                                            case_notificationlabel(CollectionChangeNotification,
+                                                                                                                   CollectionChangeNotification)
+                                                                                                case_notificationlabel(TagChangeNotification,
+                                                                                                                       TagChangeNotification)
+                                                                                                    case_notificationlabel(RelationChangeNotification,
+                                                                                                                           RelationChangeNotification)
+                                                                                                        case_notificationlabel(SubscriptionChangeNotification,
+                                                                                                                               SubscriptionChangeNotification)
     }
 #undef case_notificationlabel
 #undef case_commandlabel
@@ -334,9 +316,7 @@ Response::Response(Command::Type type)
 
 bool Response::operator==(const Response &other) const
 {
-    return *static_cast<const Command*>(this) == static_cast<const Command&>(other)
-        && mErrorCode == other.mErrorCode
-        && mErrorMsg == other.mErrorMsg;
+    return *static_cast<const Command *>(this) == static_cast<const Command &>(other) && mErrorCode == other.mErrorCode && mErrorMsg == other.mErrorMsg;
 }
 
 void Response::toJson(QJsonObject &json) const
@@ -354,27 +334,21 @@ void Response::toJson(QJsonObject &json) const
 
 DataStream &operator<<(DataStream &stream, const Response &cmd)
 {
-    return stream << static_cast<const Command &>(cmd)
-                  << cmd.mErrorCode
-                  << cmd.mErrorMsg;
+    return stream << static_cast<const Command &>(cmd) << cmd.mErrorCode << cmd.mErrorMsg;
 }
 
 DataStream &operator>>(DataStream &stream, Response &cmd)
 {
-    return stream >> static_cast<Command&>(cmd)
-                  >> cmd.mErrorCode
-                  >> cmd.mErrorMsg;
+    return stream >> static_cast<Command &>(cmd) >> cmd.mErrorCode >> cmd.mErrorMsg;
 }
 
 QDebug operator<<(QDebug dbg, const Response &resp)
 {
-    return dbg.noquote() << static_cast<const Command &>(resp)
-                         << "Error code:" << resp.mErrorCode << "\n"
+    return dbg.noquote() << static_cast<const Command &>(resp) << "Error code:" << resp.mErrorCode << "\n"
                          << "Error msg:" << resp.mErrorMsg << "\n";
 }
 
 /******************************************************************************/
-
 
 class FactoryPrivate
 {
@@ -446,19 +420,17 @@ public:
     QHash<std::underlying_type<Command::Type>::type, QPair<CommandFactoryFunc, ResponseFactoryFunc>> registrar;
 
 private:
-    template<typename T>
-    static CommandPtr commandFactoryFunc()
+    template<typename T> static CommandPtr commandFactoryFunc()
     {
         return QSharedPointer<T>::create();
     }
-    template<typename T>
-    static ResponsePtr responseFactoryFunc()
+    template<typename T> static ResponsePtr responseFactoryFunc()
     {
         return QSharedPointer<T>::create();
     }
 
-    template<Command::Type T,typename CmdType, typename RespType>
-    void registerType() {
+    template<Command::Type T, typename CmdType, typename RespType> void registerType()
+    {
         CommandFactoryFunc cmdFunc = &commandFactoryFunc<CmdType>;
         ResponseFactoryFunc respFunc = &responseFactoryFunc<RespType>;
         registrar.insert(T, qMakePair<CommandFactoryFunc, ResponseFactoryFunc>(cmdFunc, respFunc));
@@ -487,26 +459,19 @@ ResponsePtr Factory::response(Command::Type type)
 
 /******************************************************************************/
 
-
-
-
-
 /******************************************************************************/
 
 bool ItemFetchScope::operator==(const ItemFetchScope &other) const
 {
-    return mRequestedParts == other.mRequestedParts
-            && mChangedSince == other.mChangedSince
-            && mAncestorDepth == other.mAncestorDepth
-            && mFlags == other.mFlags;
+    return mRequestedParts == other.mRequestedParts && mChangedSince == other.mChangedSince && mAncestorDepth == other.mAncestorDepth && mFlags == other.mFlags;
 }
 
 QVector<QByteArray> ItemFetchScope::requestedPayloads() const
 {
     QVector<QByteArray> rv;
-    std::copy_if(mRequestedParts.begin(), mRequestedParts.end(),
-                 std::back_inserter(rv),
-                 [](const QByteArray &ba) { return ba.startsWith("PLD:"); });
+    std::copy_if(mRequestedParts.begin(), mRequestedParts.end(), std::back_inserter(rv), [](const QByteArray &ba) {
+        return ba.startsWith("PLD:");
+    });
     return rv;
 }
 
@@ -561,29 +526,22 @@ QDebug operator<<(QDebug dbg, ItemFetchScope::AncestorDepth depth)
 
 DataStream &operator<<(DataStream &stream, const ItemFetchScope &scope)
 {
-    return stream << scope.mRequestedParts
-                  << scope.mChangedSince
-                  << scope.mAncestorDepth
-                  << scope.mFlags;
+    return stream << scope.mRequestedParts << scope.mChangedSince << scope.mAncestorDepth << scope.mFlags;
 }
 
 DataStream &operator>>(DataStream &stream, ItemFetchScope &scope)
 {
-    return stream >> scope.mRequestedParts
-                  >> scope.mChangedSince
-                  >> scope.mAncestorDepth
-                  >> scope.mFlags;
+    return stream >> scope.mRequestedParts >> scope.mChangedSince >> scope.mAncestorDepth >> scope.mFlags;
 }
 
 QDebug operator<<(QDebug dbg, const ItemFetchScope &scope)
 {
     return dbg.noquote() << "FetchScope(\n"
-            << "Fetch Flags:" << scope.mFlags << "\n"
-            << "Changed Since:" << scope.mChangedSince << "\n"
-            << "Ancestor Depth:" << scope.mAncestorDepth << "\n"
-            << "Requested Parts:" << scope.mRequestedParts << ")\n";
+                         << "Fetch Flags:" << scope.mFlags << "\n"
+                         << "Changed Since:" << scope.mChangedSince << "\n"
+                         << "Ancestor Depth:" << scope.mAncestorDepth << "\n"
+                         << "Requested Parts:" << scope.mRequestedParts << ")\n";
 }
-
 
 /******************************************************************************/
 
@@ -659,7 +617,7 @@ DataStream &operator>>(DataStream &stream, ScopeContext &context)
     qint64 id;
     QString rid;
 
-    for (ScopeContext::Type type : { ScopeContext::Collection, ScopeContext::Tag }) {
+    for (ScopeContext::Type type : {ScopeContext::Collection, ScopeContext::Tag}) {
         stream >> vType;
         if (vType == QVariant::LongLong) {
             stream >> id;
@@ -691,7 +649,6 @@ QDebug operator<<(QDebug _dbg, const ScopeContext &ctx)
     return dbg << ")\n";
 }
 
-
 /******************************************************************************/
 
 ChangeNotification::ChangeNotification(Command::Type type)
@@ -701,17 +658,17 @@ ChangeNotification::ChangeNotification(Command::Type type)
 
 bool ChangeNotification::operator==(const ChangeNotification &other) const
 {
-    return static_cast<const Command &>(*this) == other
-        && mSessionId == other.mSessionId;
-        // metadata are not compared
+    return static_cast<const Command &>(*this) == other && mSessionId == other.mSessionId;
+    // metadata are not compared
 }
 
 QList<qint64> ChangeNotification::itemsToUids(const QVector<FetchItemsResponse> &items)
 {
     QList<qint64> rv;
     rv.reserve(items.size());
-    std::transform(items.cbegin(), items.cend(), std::back_inserter(rv),
-                    [](const FetchItemsResponse &item) { return item.id(); });
+    std::transform(items.cbegin(), items.cend(), std::back_inserter(rv), [](const FetchItemsResponse &item) {
+        return item.id();
+    });
     return rv;
 }
 
@@ -762,7 +719,7 @@ bool ChangeNotification::isMove() const
 
 bool ChangeNotification::appendAndCompress(ChangeNotificationList &list, const ChangeNotificationPtr &msg)
 {
-    //It is likely that compressable notifications are within the last few notifications, so avoid searching a list that is potentially huge
+    // It is likely that compressable notifications are within the last few notifications, so avoid searching a list that is potentially huge
     static const int maxCompressionSearchLength = 10;
     int searchCounter = 0;
     // There are often multiple Collection Modify notifications in the queue,
@@ -779,17 +736,11 @@ bool ChangeNotification::appendAndCompress(ChangeNotificationList &list, const C
                     auto &it = Protocol::cmdCast<class CollectionChangeNotification>(*iter);
                     const auto &msgCol = cmsg.collection();
                     const auto &itCol = it.collection();
-                    if (msgCol.id() == itCol.id()
-                        && msgCol.remoteId() == itCol.remoteId()
-                        && msgCol.remoteRevision() == itCol.remoteRevision()
-                        && msgCol.resource() == itCol.resource()
-                        && cmsg.destinationResource() == it.destinationResource()
-                        && cmsg.parentCollection() == it.parentCollection()
-                        && cmsg.parentDestCollection() == it.parentDestCollection())
-                    {
+                    if (msgCol.id() == itCol.id() && msgCol.remoteId() == itCol.remoteId() && msgCol.remoteRevision() == itCol.remoteRevision()
+                        && msgCol.resource() == itCol.resource() && cmsg.destinationResource() == it.destinationResource()
+                        && cmsg.parentCollection() == it.parentCollection() && cmsg.parentDestCollection() == it.parentDestCollection()) {
                         // both are modifications, merge them together and drop the new one
-                        if (cmsg.operation() == CollectionChangeNotification::Modify
-                                && it.operation() == CollectionChangeNotification::Modify) {
+                        if (cmsg.operation() == CollectionChangeNotification::Modify && it.operation() == CollectionChangeNotification::Modify) {
                             const auto parts = it.changedParts();
                             it.setChangedParts(parts + cmsg.changedParts());
                             return false;
@@ -828,36 +779,28 @@ void ChangeNotification::toJson(QJsonObject &json) const
 
 DataStream &operator<<(DataStream &stream, const ChangeNotification &ntf)
 {
-    return stream << static_cast<const Command &>(ntf)
-                  << ntf.mSessionId;
+    return stream << static_cast<const Command &>(ntf) << ntf.mSessionId;
 }
 
 DataStream &operator>>(DataStream &stream, ChangeNotification &ntf)
 {
-    return stream >> static_cast<Command &>(ntf)
-                  >> ntf.mSessionId;
+    return stream >> static_cast<Command &>(ntf) >> ntf.mSessionId;
 }
 
 QDebug operator<<(QDebug dbg, const ChangeNotification &ntf)
 {
-    return dbg.noquote() << static_cast<const Command &>(ntf)
-                  << "Session:" << ntf.mSessionId << "\n"
-                  << "MetaData:" << ntf.mMetaData << "\n";
+    return dbg.noquote() << static_cast<const Command &>(ntf) << "Session:" << ntf.mSessionId << "\n"
+                         << "MetaData:" << ntf.mMetaData << "\n";
 }
-
 
 DataStream &operator>>(DataStream &stream, ChangeNotification::Relation &relation)
 {
-    return stream >> relation.type
-                  >> relation.leftId
-                  >> relation.rightId;
+    return stream >> relation.type >> relation.leftId >> relation.rightId;
 }
 
 DataStream &operator<<(DataStream &stream, const ChangeNotification::Relation &relation)
 {
-    return stream << relation.type
-                  << relation.leftId
-                  << relation.rightId;
+    return stream << relation.type << relation.leftId << relation.rightId;
 }
 
 QDebug operator<<(QDebug _dbg, const ChangeNotification::Relation &rel)
@@ -869,21 +812,18 @@ QDebug operator<<(QDebug _dbg, const ChangeNotification::Relation &rel)
 } // namespace Protocol
 } // namespace Akonadi
 
-
-
 // Helpers for the generated code
-namespace Akonadi {
-namespace Protocol {
-
-template<typename Value, template<typename> class Container>
-inline bool containerComparator(const Container<Value> &c1, const Container<Value> &c2)
+namespace Akonadi
+{
+namespace Protocol
+{
+template<typename Value, template<typename> class Container> inline bool containerComparator(const Container<Value> &c1, const Container<Value> &c2)
 {
     return c1 == c2;
 }
 
 template<typename T, template<typename> class Container>
-inline bool containerComparator(const Container<QSharedPointer<T>> &c1,
-                                const Container<QSharedPointer<T>> &c2)
+inline bool containerComparator(const Container<QSharedPointer<T>> &c1, const Container<QSharedPointer<T>> &c2)
 {
     if (c1.size() != c2.size()) {
         return false;

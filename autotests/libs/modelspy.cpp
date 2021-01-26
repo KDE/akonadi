@@ -18,7 +18,9 @@ QVariantList extractModelColumn(const QAbstractItemModel &model, const QModelInd
 }
 
 ModelSpy::ModelSpy(QAbstractItemModel *model, QObject *parent)
-    : QObject{parent}, m_model{model}, m_isSpying{false}
+    : QObject{parent}
+    , m_model{model}
+    , m_isSpying{false}
 {
     qRegisterMetaType<QModelIndex>("QModelIndex");
 }
@@ -28,7 +30,7 @@ bool ModelSpy::isEmpty() const
     return QList<QVariantList>::isEmpty() && m_expectedSignals.isEmpty();
 }
 
-void ModelSpy::setExpectedSignals(const QList< ExpectedSignal > &expectedSignals)
+void ModelSpy::setExpectedSignals(const QList<ExpectedSignal> &expectedSignals)
 {
     m_expectedSignals = expectedSignals;
 }
@@ -73,7 +75,7 @@ void ModelSpy::verifySignal(SignalType type, const QModelIndex &topLeft, const Q
     const auto expectedSignal = m_expectedSignals.takeFirst();
     QCOMPARE(int(type), int(expectedSignal.signalType));
     QModelIndex parent = topLeft.parent();
-    //This check won't work for toplevel indexes
+    // This check won't work for toplevel indexes
     if (parent.isValid()) {
         if (expectedSignal.parentData.isValid()) {
             QCOMPARE(parent.data(), expectedSignal.parentData);
@@ -91,59 +93,36 @@ void ModelSpy::startSpying()
     // If a signal is connected to a slot multiple times, the slot gets called multiple times.
     // As we're doing start and stop spying all the time, we disconnect here first to make sure.
 
-    disconnect(m_model, &QAbstractItemModel::rowsAboutToBeInserted,
-               this, &ModelSpy::rowsAboutToBeInserted);
-    disconnect(m_model, &QAbstractItemModel::rowsInserted,
-               this, &ModelSpy::rowsInserted);
-    disconnect(m_model, &QAbstractItemModel::rowsAboutToBeRemoved,
-               this, &ModelSpy::rowsAboutToBeRemoved);
-    disconnect(m_model, &QAbstractItemModel::rowsRemoved,
-               this, &ModelSpy::rowsRemoved);
-    disconnect(m_model, &QAbstractItemModel::rowsAboutToBeMoved,
-               this, &ModelSpy::rowsAboutToBeMoved);
-    disconnect(m_model, &QAbstractItemModel::rowsMoved,
-               this, &ModelSpy::rowsMoved);
+    disconnect(m_model, &QAbstractItemModel::rowsAboutToBeInserted, this, &ModelSpy::rowsAboutToBeInserted);
+    disconnect(m_model, &QAbstractItemModel::rowsInserted, this, &ModelSpy::rowsInserted);
+    disconnect(m_model, &QAbstractItemModel::rowsAboutToBeRemoved, this, &ModelSpy::rowsAboutToBeRemoved);
+    disconnect(m_model, &QAbstractItemModel::rowsRemoved, this, &ModelSpy::rowsRemoved);
+    disconnect(m_model, &QAbstractItemModel::rowsAboutToBeMoved, this, &ModelSpy::rowsAboutToBeMoved);
+    disconnect(m_model, &QAbstractItemModel::rowsMoved, this, &ModelSpy::rowsMoved);
 
-    disconnect(m_model, &QAbstractItemModel::dataChanged,
-               this, &ModelSpy::dataChanged);
+    disconnect(m_model, &QAbstractItemModel::dataChanged, this, &ModelSpy::dataChanged);
 
-    connect(m_model, &QAbstractItemModel::rowsAboutToBeInserted,
-            this, &ModelSpy::rowsAboutToBeInserted);
-    connect(m_model, &QAbstractItemModel::rowsInserted,
-            this, &ModelSpy::rowsInserted);
-    connect(m_model, &QAbstractItemModel::rowsAboutToBeRemoved,
-            this, &ModelSpy::rowsAboutToBeRemoved);
-    connect(m_model, &QAbstractItemModel::rowsRemoved,
-            this, &ModelSpy::rowsRemoved);
-    connect(m_model, &QAbstractItemModel::rowsAboutToBeMoved,
-            this, &ModelSpy::rowsAboutToBeMoved);
-    connect(m_model, &QAbstractItemModel::rowsMoved,
-            this, &ModelSpy::rowsMoved);
+    connect(m_model, &QAbstractItemModel::rowsAboutToBeInserted, this, &ModelSpy::rowsAboutToBeInserted);
+    connect(m_model, &QAbstractItemModel::rowsInserted, this, &ModelSpy::rowsInserted);
+    connect(m_model, &QAbstractItemModel::rowsAboutToBeRemoved, this, &ModelSpy::rowsAboutToBeRemoved);
+    connect(m_model, &QAbstractItemModel::rowsRemoved, this, &ModelSpy::rowsRemoved);
+    connect(m_model, &QAbstractItemModel::rowsAboutToBeMoved, this, &ModelSpy::rowsAboutToBeMoved);
+    connect(m_model, &QAbstractItemModel::rowsMoved, this, &ModelSpy::rowsMoved);
 
-    connect(m_model, &QAbstractItemModel::dataChanged,
-            this, &ModelSpy::dataChanged);
-
+    connect(m_model, &QAbstractItemModel::dataChanged, this, &ModelSpy::dataChanged);
 }
 
 void ModelSpy::stopSpying()
 {
     m_isSpying = false;
-    disconnect(m_model, &QAbstractItemModel::rowsAboutToBeInserted,
-               this, &ModelSpy::rowsAboutToBeInserted);
-    disconnect(m_model, &QAbstractItemModel::rowsInserted,
-               this, &ModelSpy::rowsInserted);
-    disconnect(m_model, &QAbstractItemModel::rowsAboutToBeRemoved,
-               this, &ModelSpy::rowsAboutToBeRemoved);
-    disconnect(m_model, &QAbstractItemModel::rowsRemoved,
-               this, &ModelSpy::rowsRemoved);
-    disconnect(m_model, &QAbstractItemModel::rowsAboutToBeMoved,
-               this, &ModelSpy::rowsAboutToBeMoved);
-    disconnect(m_model, &QAbstractItemModel::rowsMoved,
-               this, &ModelSpy::rowsMoved);
+    disconnect(m_model, &QAbstractItemModel::rowsAboutToBeInserted, this, &ModelSpy::rowsAboutToBeInserted);
+    disconnect(m_model, &QAbstractItemModel::rowsInserted, this, &ModelSpy::rowsInserted);
+    disconnect(m_model, &QAbstractItemModel::rowsAboutToBeRemoved, this, &ModelSpy::rowsAboutToBeRemoved);
+    disconnect(m_model, &QAbstractItemModel::rowsRemoved, this, &ModelSpy::rowsRemoved);
+    disconnect(m_model, &QAbstractItemModel::rowsAboutToBeMoved, this, &ModelSpy::rowsAboutToBeMoved);
+    disconnect(m_model, &QAbstractItemModel::rowsMoved, this, &ModelSpy::rowsMoved);
 
-    disconnect(m_model, &QAbstractItemModel::dataChanged,
-               this, &ModelSpy::dataChanged);
-
+    disconnect(m_model, &QAbstractItemModel::dataChanged, this, &ModelSpy::dataChanged);
 }
 
 void ModelSpy::rowsAboutToBeInserted(const QModelIndex &parent, int start, int end)
@@ -208,4 +187,3 @@ void ModelSpy::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottom
         append(QVariantList{DataChanged, QVariant::fromValue(topLeft), QVariant::fromValue(bottomRight)});
     }
 }
-

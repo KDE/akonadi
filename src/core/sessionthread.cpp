@@ -4,9 +4,9 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "sessionthread_p.h"
-#include "session_p.h"
 #include "akonadicore_debug.h"
+#include "session_p.h"
+#include "sessionthread_p.h"
 
 #include <QCoreApplication>
 #include <QThread>
@@ -44,10 +44,9 @@ SessionThread::~SessionThread()
 void SessionThread::addConnection(Connection *connection)
 {
     connection->moveToThread(thread());
-    const bool invoke = QMetaObject::invokeMethod(this, "doAddConnection",
-                                                  Qt::BlockingQueuedConnection,
-                                                  Q_ARG(Akonadi::Connection*, connection));
-    Q_ASSERT(invoke); Q_UNUSED(invoke)
+    const bool invoke = QMetaObject::invokeMethod(this, "doAddConnection", Qt::BlockingQueuedConnection, Q_ARG(Akonadi::Connection *, connection));
+    Q_ASSERT(invoke);
+    Q_UNUSED(invoke)
 }
 
 void SessionThread::doAddConnection(Connection *connection)
@@ -55,10 +54,9 @@ void SessionThread::doAddConnection(Connection *connection)
     Q_ASSERT(thread() == QThread::currentThread());
     Q_ASSERT(!mConnections.contains(connection));
 
-    connect(connection, &QObject::destroyed,
-            this, [this](QObject * obj) {
-                mConnections.removeOne(static_cast<Connection *>(obj));
-            });
+    connect(connection, &QObject::destroyed, this, [this](QObject *obj) {
+        mConnections.removeOne(static_cast<Connection *>(obj));
+    });
     mConnections.push_back(connection);
 }
 
@@ -68,10 +66,9 @@ void SessionThread::destroyConnection(Connection *connection)
         return;
     }
 
-    const bool invoke = QMetaObject::invokeMethod(this, "doDestroyConnection",
-                                                  Qt::BlockingQueuedConnection,
-                                                  Q_ARG(Akonadi::Connection*, connection));
-    Q_ASSERT(invoke); Q_UNUSED(invoke)
+    const bool invoke = QMetaObject::invokeMethod(this, "doDestroyConnection", Qt::BlockingQueuedConnection, Q_ARG(Akonadi::Connection *, connection));
+    Q_ASSERT(invoke);
+    Q_UNUSED(invoke)
 }
 
 void SessionThread::doDestroyConnection(Connection *connection)

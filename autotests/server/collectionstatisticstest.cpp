@@ -7,10 +7,10 @@
 
 #include <QObject>
 
-#include "storage/collectionstatistics.h"
-#include "fakeakonadiserver.h"
-#include "dbinitializer.h"
 #include "aktest.h"
+#include "dbinitializer.h"
+#include "fakeakonadiserver.h"
+#include "storage/collectionstatistics.h"
 
 using namespace Akonadi::Server;
 
@@ -22,9 +22,11 @@ public:
     explicit IntrospectableCollectionStatistics(bool prefetch)
         : CollectionStatistics(prefetch)
         , mCalculationsCount(0)
-    {}
+    {
+    }
     ~IntrospectableCollectionStatistics() override
-    {}
+    {
+    }
 
     int calculationsCount() const
     {
@@ -42,13 +44,13 @@ private:
     int mCalculationsCount;
 };
 
-
 class CollectionStatisticsTest : public QObject
 {
     Q_OBJECT
 
     FakeAkonadiServer mAkonadi;
     std::unique_ptr<DbInitializer> dbInitializer;
+
 public:
     CollectionStatisticsTest()
     {
@@ -57,7 +59,7 @@ public:
         mAkonadi.setPopulateDb(false);
         mAkonadi.init();
 
-        dbInitializer =  std::make_unique<DbInitializer>();
+        dbInitializer = std::make_unique<DbInitializer>();
     }
 
 private Q_SLOTS:

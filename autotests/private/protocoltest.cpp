@@ -114,8 +114,6 @@ void ProtocolTest::testFactory()
     }
 }
 
-
-
 void ProtocolTest::testCommand()
 {
     // There is no way to construct a valid Command directly
@@ -169,13 +167,13 @@ void ProtocolTest::testAncestor()
     in.setId(42);
     in.setRemoteId(QStringLiteral("remoteId"));
     in.setName(QStringLiteral("Col 42"));
-    in.setAttributes({{ "Attr1", "Val 1" }, { "Attr2", "Röndom útéef řetězec" }});
+    in.setAttributes({{"Attr1", "Val 1"}, {"Attr2", "Röndom útéef řetězec"}});
 
     const Ancestor out = serializeAndDeserialize(in);
     QCOMPARE(out.id(), 42);
     QCOMPARE(out.remoteId(), QStringLiteral("remoteId"));
     QCOMPARE(out.name(), QStringLiteral("Col 42"));
-    QCOMPARE(out.attributes(), Attributes({{ "Attr1", "Val 1" }, { "Attr2", "Röndom útéef řetězec" }}));
+    QCOMPARE(out.attributes(), Attributes({{"Attr1", "Val 1"}, {"Attr2", "Röndom útéef řetězec"}}));
     QVERIFY(out == in);
     const bool notEquals = (out != in);
     QVERIFY(!notEquals);
@@ -187,24 +185,15 @@ void ProtocolTest::testFetchScope_data()
     QTest::addColumn<QVector<QByteArray>>("requestedParts");
     QTest::addColumn<QVector<QByteArray>>("expectedParts");
     QTest::addColumn<QVector<QByteArray>>("expectedPayloads");
-    QTest::newRow("full payload (via flag") << true
-                                << QVector<QByteArray>{ "PLD:HEAD", "ATR:MYATR" }
-                                << QVector<QByteArray>{ "PLD:HEAD", "ATR:MYATR", "PLD:RFC822" }
-                                << QVector<QByteArray>{ "PLD:HEAD", "PLD:RFC822" };
-    QTest::newRow("full payload (via part name") << false
-                                << QVector<QByteArray>{ "PLD:HEAD", "ATR:MYATR", "PLD:RFC822" }
-                                << QVector<QByteArray>{ "PLD:HEAD", "ATR:MYATR", "PLD:RFC822" }
-                                << QVector<QByteArray>{ "PLD:HEAD", "PLD:RFC822" };
-    QTest::newRow("full payload (via both") << true
-                                << QVector<QByteArray>{ "PLD:HEAD", "ATR:MYATR", "PLD:RFC822" }
-                                << QVector<QByteArray>{ "PLD:HEAD", "ATR:MYATR", "PLD:RFC822" }
-                                << QVector<QByteArray>{ "PLD:HEAD", "PLD:RFC822" };
-    QTest::newRow("without full payload") << false
-                                << QVector<QByteArray>{ "PLD:HEAD", "ATR:MYATR" }
-                                << QVector<QByteArray>{ "PLD:HEAD", "ATR:MYATR" }
-                                << QVector<QByteArray>{ "PLD:HEAD" };
+    QTest::newRow("full payload (via flag") << true << QVector<QByteArray>{"PLD:HEAD", "ATR:MYATR"}
+                                            << QVector<QByteArray>{"PLD:HEAD", "ATR:MYATR", "PLD:RFC822"} << QVector<QByteArray>{"PLD:HEAD", "PLD:RFC822"};
+    QTest::newRow("full payload (via part name") << false << QVector<QByteArray>{"PLD:HEAD", "ATR:MYATR", "PLD:RFC822"}
+                                                 << QVector<QByteArray>{"PLD:HEAD", "ATR:MYATR", "PLD:RFC822"} << QVector<QByteArray>{"PLD:HEAD", "PLD:RFC822"};
+    QTest::newRow("full payload (via both") << true << QVector<QByteArray>{"PLD:HEAD", "ATR:MYATR", "PLD:RFC822"}
+                                            << QVector<QByteArray>{"PLD:HEAD", "ATR:MYATR", "PLD:RFC822"} << QVector<QByteArray>{"PLD:HEAD", "PLD:RFC822"};
+    QTest::newRow("without full payload") << false << QVector<QByteArray>{"PLD:HEAD", "ATR:MYATR"} << QVector<QByteArray>{"PLD:HEAD", "ATR:MYATR"}
+                                          << QVector<QByteArray>{"PLD:HEAD"};
 }
-
 
 void ProtocolTest::testFetchScope()
 {
@@ -265,30 +254,19 @@ void ProtocolTest::testScopeContext_data()
     QTest::addColumn<qint64>("tagId");
     QTest::addColumn<QString>("tagRid");
 
-    QTest::newRow("collection - id") << 42LL << QString()
-                                     << 0LL << QString();
-    QTest::newRow("collection - rid") << 0LL << QStringLiteral("rid")
-                                      << 0LL << QString();
-    QTest::newRow("collection - both") << 42LL << QStringLiteral("rid")
-                                       << 0LL << QString();
+    QTest::newRow("collection - id") << 42LL << QString() << 0LL << QString();
+    QTest::newRow("collection - rid") << 0LL << QStringLiteral("rid") << 0LL << QString();
+    QTest::newRow("collection - both") << 42LL << QStringLiteral("rid") << 0LL << QString();
 
-    QTest::newRow("tag - id") << 0LL << QString()
-                              << 42LL << QString();
-    QTest::newRow("tag - rid") << 0LL << QString()
-                               << 0LL << QStringLiteral("rid");
-    QTest::newRow("tag - both") << 0LL << QString()
-                                << 42LL << QStringLiteral("rid");
+    QTest::newRow("tag - id") << 0LL << QString() << 42LL << QString();
+    QTest::newRow("tag - rid") << 0LL << QString() << 0LL << QStringLiteral("rid");
+    QTest::newRow("tag - both") << 0LL << QString() << 42LL << QStringLiteral("rid");
 
-    QTest::newRow("both - id") << 42LL << QString()
-                               << 10LL << QString();
-    QTest::newRow("both - rid") << 0LL << QStringLiteral("colRid")
-                                << 0LL << QStringLiteral("tagRid");
-    QTest::newRow("col - id, tag - rid") << 42LL << QString()
-                                         << 0LL << QStringLiteral("tagRid");
-    QTest::newRow("col - rid, tag - id") << 0LL << QStringLiteral("colRid")
-                                         << 42LL << QString();
-    QTest::newRow("both - both") << 42LL << QStringLiteral("colRid")
-                                 << 10LL << QStringLiteral("tagRid");
+    QTest::newRow("both - id") << 42LL << QString() << 10LL << QString();
+    QTest::newRow("both - rid") << 0LL << QStringLiteral("colRid") << 0LL << QStringLiteral("tagRid");
+    QTest::newRow("col - id, tag - rid") << 42LL << QString() << 0LL << QStringLiteral("tagRid");
+    QTest::newRow("col - rid, tag - id") << 0LL << QStringLiteral("colRid") << 42LL << QString();
+    QTest::newRow("both - both") << 42LL << QStringLiteral("colRid") << 10LL << QStringLiteral("tagRid");
 }
 
 void ProtocolTest::testScopeContext()
@@ -420,7 +398,7 @@ void ProtocolTest::testCachePolicy()
     in.setCheckInterval(42);
     in.setCacheTimeout(10);
     in.setSyncOnDemand(true);
-    in.setLocalParts({ QStringLiteral("PLD:HEAD"), QStringLiteral("PLD:ENVELOPE") });
+    in.setLocalParts({QStringLiteral("PLD:HEAD"), QStringLiteral("PLD:ENVELOPE")});
 
     const CachePolicy out = serializeAndDeserialize(in);
     QCOMPARE(out.inherit(), true);
@@ -526,7 +504,6 @@ void ProtocolTest::testLogoutResponse()
     QVERIFY(!notEquals);
 }
 
-
 void ProtocolTest::testTransactionCommand()
 {
     TransactionCommand in;
@@ -564,10 +541,10 @@ void ProtocolTest::testTransactionResponse()
 
 void ProtocolTest::testCreateItemCommand()
 {
-    Scope addedTags(QVector<qint64>{ 3, 4 });
-    Scope removedTags(QVector<qint64>{ 5, 6 });
-    Attributes attrs{ { "ATTR1", "MyAttr" }, { "ATTR2", "Můj chlupaťoučký kůň" } };
-    QSet<QByteArray> parts{ "PLD:HEAD", "PLD:ENVELOPE" };
+    Scope addedTags(QVector<qint64>{3, 4});
+    Scope removedTags(QVector<qint64>{5, 6});
+    Attributes attrs{{"ATTR1", "MyAttr"}, {"ATTR2", "Můj chlupaťoučký kůň"}};
+    QSet<QByteArray> parts{"PLD:HEAD", "PLD:ENVELOPE"};
 
     CreateItemCommand in;
     QVERIFY(!in.isResponse());
@@ -581,10 +558,10 @@ void ProtocolTest::testCreateItemCommand()
     in.setRemoteId(QStringLiteral("RID"));
     in.setRemoteRevision(QStringLiteral("RREV"));
     in.setDateTime(QDateTime(QDate(2015, 8, 11), QTime(14, 32, 21), Qt::UTC));
-    in.setFlags({ "\\SEEN", "FLAG" });
+    in.setFlags({"\\SEEN", "FLAG"});
     in.setFlagsOverwritten(true);
-    in.setAddedFlags({ "FLAG2" });
-    in.setRemovedFlags({ "FLAG3" });
+    in.setAddedFlags({"FLAG2"});
+    in.setRemovedFlags({"FLAG3"});
     in.setTags(Scope(2));
     in.setAddedTags(addedTags);
     in.setRemovedTags(removedTags);
@@ -602,10 +579,12 @@ void ProtocolTest::testCreateItemCommand()
     QCOMPARE(out->remoteId(), QStringLiteral("RID"));
     QCOMPARE(out->remoteRevision(), QStringLiteral("RREV"));
     QCOMPARE(out->dateTime(), QDateTime(QDate(2015, 8, 11), QTime(14, 32, 21), Qt::UTC));
-    QCOMPARE(out->flags(), QSet<QByteArray>() << "\\SEEN" << "FLAG");
+    QCOMPARE(out->flags(),
+             QSet<QByteArray>() << "\\SEEN"
+                                << "FLAG");
     QCOMPARE(out->flagsOverwritten(), true);
-    QCOMPARE(out->addedFlags(), QSet<QByteArray>{ "FLAG2" });
-    QCOMPARE(out->removedFlags(), QSet<QByteArray>{ "FLAG3" });
+    QCOMPARE(out->addedFlags(), QSet<QByteArray>{"FLAG2"});
+    QCOMPARE(out->removedFlags(), QSet<QByteArray>{"FLAG3"});
     QCOMPARE(out->tags(), Scope(2));
     QCOMPARE(out->addedTags(), addedTags);
     QCOMPARE(out->removedTags(), removedTags);
@@ -637,7 +616,7 @@ void ProtocolTest::testCreateItemResponse()
 
 void ProtocolTest::testCopyItemsCommand()
 {
-    const Scope items(QVector<qint64>{ 1, 2, 3, 10 });
+    const Scope items(QVector<qint64>{1, 2, 3, 10});
 
     CopyItemsCommand in;
     QVERIFY(in.isValid());

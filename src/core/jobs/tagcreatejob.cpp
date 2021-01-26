@@ -5,10 +5,10 @@
 */
 
 #include "tagcreatejob.h"
-#include "job_p.h"
-#include "tag.h"
-#include "protocolhelper_p.h"
 #include "akonadicore_debug.h"
+#include "job_p.h"
+#include "protocolhelper_p.h"
+#include "tag.h"
 #include <KLocalizedString>
 
 using namespace Akonadi;
@@ -66,8 +66,7 @@ bool TagCreateJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &resp
     Q_D(TagCreateJob);
 
     if (response->isResponse() && response->type() == Protocol::Command::FetchTags) {
-        d->mResultTag = ProtocolHelper::parseTagFetchResult(
-            Protocol::cmdCast<Protocol::FetchTagsResponse>(response));
+        d->mResultTag = ProtocolHelper::parseTagFetchResult(Protocol::cmdCast<Protocol::FetchTagsResponse>(response));
         return false;
     }
 

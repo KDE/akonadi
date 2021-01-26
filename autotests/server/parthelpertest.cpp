@@ -4,13 +4,13 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include <aktest.h>
-#include "entities.h"
 #include "storage/parthelper.h"
+#include "entities.h"
+#include <aktest.h>
 
+#include <QDir>
 #include <QObject>
 #include <QTest>
-#include <QDir>
 
 #define QL1S(x) QString::fromLatin1(x)
 

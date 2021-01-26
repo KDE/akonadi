@@ -63,9 +63,7 @@ Akonadi::Attribute *CollectionQuotaAttribute::clone() const
 
 QByteArray CollectionQuotaAttribute::serialized() const
 {
-    return QByteArray::number(d->mCurrentValue)
-           + ' '
-           + QByteArray::number(d->mMaximumValue);
+    return QByteArray::number(d->mCurrentValue) + ' ' + QByteArray::number(d->mMaximumValue);
 }
 
 void CollectionQuotaAttribute::deserialize(const QByteArray &data)

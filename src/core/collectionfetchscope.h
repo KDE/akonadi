@@ -10,14 +10,13 @@
 
 #include "akonadicore_export.h"
 
-#include <QSharedDataPointer>
 #include <QSet>
+#include <QSharedDataPointer>
 
 #include <QStringList>
 
 namespace Akonadi
 {
-
 class CollectionFetchScopePrivate;
 
 /**
@@ -96,10 +95,10 @@ public:
      */
     enum ListFilter {
         NoFilter, ///< No filtering, retrieve all collections
-        Display,  ///< Only retrieve collections for display, taking the local preference and enabled into account.
-        Sync,     ///< Only retrieve collections for synchronization, taking the local preference and enabled into account.
-        Index,    ///< Only retrieve collections for indexing, taking the local preference and enabled into account.
-        Enabled   ///< Only retrieve enabled collections, ignoring the local preference.
+        Display, ///< Only retrieve collections for display, taking the local preference and enabled into account.
+        Sync, ///< Only retrieve collections for synchronization, taking the local preference and enabled into account.
+        Index, ///< Only retrieve collections for indexing, taking the local preference and enabled into account.
+        Enabled ///< Only retrieve enabled collections, ignoring the local preference.
     };
 
     /**
@@ -218,7 +217,7 @@ public:
      *
      * @param fetch @c true if the attribute should be fetched, @c false otherwise.
      */
-    template <typename T> inline void fetchAttribute(bool fetch = true)
+    template<typename T> inline void fetchAttribute(bool fetch = true)
     {
         T dummy;
         fetchAttribute(dummy.type(), fetch);

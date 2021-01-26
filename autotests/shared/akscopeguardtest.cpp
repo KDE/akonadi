@@ -4,8 +4,8 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include <QTest>
 #include <QObject>
+#include <QTest>
 
 #include "shared/akscopeguard.h"
 
@@ -82,4 +82,3 @@ bool AkScopeGuardTest::mCalled = false;
 QTEST_GUILESS_MAIN(AkScopeGuardTest)
 
 #include "akscopeguardtest.moc"
-

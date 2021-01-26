@@ -8,12 +8,13 @@
 #include "agentmanager.h"
 #include "akonadicore_debug.h"
 
-
 #include <KAboutData>
 #include <QSize>
 
-namespace Akonadi {
-class Q_DECL_HIDDEN AgentConfigurationBase::Private {
+namespace Akonadi
+{
+class Q_DECL_HIDDEN AgentConfigurationBase::Private
+{
 public:
     Private(const KSharedConfigPtr &config, QWidget *parentWidget, const QVariantList &args)
         : config(config)
@@ -36,10 +37,8 @@ public:
 
 using namespace Akonadi;
 
-AgentConfigurationBase::AgentConfigurationBase(const KSharedConfigPtr &config,
-                                               QWidget *parentWidget,
-                                               const QVariantList &args)
-    : QObject(reinterpret_cast<QObject*>(parentWidget))
+AgentConfigurationBase::AgentConfigurationBase(const KSharedConfigPtr &config, QWidget *parentWidget, const QVariantList &args)
+    : QObject(reinterpret_cast<QObject *>(parentWidget))
     , d(new Private(config, parentWidget, args))
 {
 }
@@ -90,8 +89,9 @@ QSize AgentConfigurationBase::restoreDialogSize() const
     return {};
 }
 
-void AgentConfigurationBase::saveDialogSize(const QSize& /*unused*/) // clazy:exclude=function-args-by-value
-{}
+void AgentConfigurationBase::saveDialogSize(const QSize & /*unused*/) // clazy:exclude=function-args-by-value
+{
+}
 
 QDialogButtonBox::StandardButtons AgentConfigurationBase::standardButtons() const
 {

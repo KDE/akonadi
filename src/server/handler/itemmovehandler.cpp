@@ -7,24 +7,25 @@
 #include "itemmovehandler.h"
 
 #include "akonadi.h"
+#include "akonadiserver_debug.h"
+#include "cachecleaner.h"
 #include "connection.h"
 #include "handlerhelper.h"
-#include "cachecleaner.h"
+#include "storage/collectionqueryhelper.h"
 #include "storage/datastore.h"
+#include "storage/itemqueryhelper.h"
 #include "storage/itemretrievalmanager.h"
 #include "storage/itemretriever.h"
-#include "storage/itemqueryhelper.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
-#include "storage/collectionqueryhelper.h"
-#include "akonadiserver_debug.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
 ItemMoveHandler::ItemMoveHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 void ItemMoveHandler::itemsRetrieved(const QVector<qint64> &ids)
 {
@@ -35,7 +36,6 @@ void ItemMoveHandler::itemsRetrieved(const QVector<qint64> &ids)
     qb.setForUpdate();
     ItemQueryHelper::itemSetToQuery(ImapSet(ids), qb);
     qb.addValueCondition(PimItem::collectionIdFullColumnName(), Query::NotEquals, mDestination.id());
-
 
     if (!qb.exec()) {
         failureResponse("Unable to execute query");
@@ -52,7 +52,7 @@ void ItemMoveHandler::itemsRetrieved(const QVector<qint64> &ids)
     QMultiMap<Entity::Id /* collection */, PimItem> toMove;
     QMap<Entity::Id /* collection */, Collection> sources;
     ImapSet toMoveIds;
-    for (PimItem item : items) {  //krazy:exclude=foreach
+    for (PimItem item : items) { // krazy:exclude=foreach
         if (!item.isValid()) {
             failureResponse("Invalid item in result set!?");
             return;
@@ -83,7 +83,7 @@ void ItemMoveHandler::itemsRetrieved(const QVector<qint64> &ids)
         }
 
         toMove.insert(source.id(), item);
-        toMoveIds.add(QVector<qint64>{ item.id() });
+        toMoveIds.add(QVector<qint64>{item.id()});
     }
 
     if (!transaction.commit()) {
@@ -122,7 +122,6 @@ void ItemMoveHandler::itemsRetrieved(const QVector<qint64> &ids)
         failureResponse("Unable to update RID");
         return;
     }
-
 }
 
 bool ItemMoveHandler::parseStream()
@@ -151,10 +150,9 @@ bool ItemMoveHandler::parseStream()
     ItemRetriever retriever(akonadi().itemRetrievalManager(), connection(), context);
     retriever.setScope(cmd.items());
     retriever.setRetrieveFullPayload(true);
-    QObject::connect(&retriever, &ItemRetriever::itemsRetrieved,
-                     [this](const QVector<qint64> &ids) {
-                        itemsRetrieved(ids);
-                     });
+    QObject::connect(&retriever, &ItemRetriever::itemsRetrieved, [this](const QVector<qint64> &ids) {
+        itemsRetrieved(ids);
+    });
     if (!retriever.exec()) {
         return failureResponse(retriever.lastError());
     }

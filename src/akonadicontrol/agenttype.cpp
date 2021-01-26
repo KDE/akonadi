@@ -8,8 +8,8 @@
 #include "agentmanager.h"
 #include "akonadicontrol_debug.h"
 
-#include <private/standarddirs_p.h>
 #include <private/capabilities_p.h>
+#include <private/standarddirs_p.h>
 
 #include <KConfigGroup>
 #include <KDesktopFile>
@@ -87,8 +87,7 @@ bool AgentType::load(const QString &fileName, AgentManager *manager)
     // load instance count if needed
     if (!capabilities.contains(CapabilityUnique)) {
         QSettings agentrc(StandardDirs::agentsConfigFile(StandardDirs::ReadOnly), QSettings::IniFormat);
-        instanceCounter = agentrc.value(QStringLiteral("InstanceCounters/%1/InstanceCounter")
-                                        .arg(identifier), 0).toInt();
+        instanceCounter = agentrc.value(QStringLiteral("InstanceCounters/%1/InstanceCounter").arg(identifier), 0).toInt();
     }
 
     return true;

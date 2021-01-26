@@ -13,7 +13,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
   @ingroup akonadi_server_handler
 

@@ -11,7 +11,6 @@
 
 #include <iostream>
 
-
 #define qPrintableRef(x) reinterpret_cast<const char *>((x).unicode())
 
 XmlParser::XmlParser()
@@ -26,7 +25,6 @@ Node const *XmlParser::tree() const
 {
     return mTree.get();
 }
-
 
 bool XmlParser::parse(const QString &filename)
 {
@@ -61,17 +59,12 @@ bool XmlParser::parseProtocol()
 
     auto documentNode = std::make_unique<DocumentNode>(attrs.value(QLatin1String("version")).toInt());
 
-    while (!mReader.atEnd() &&
-        !(mReader.isEndElement() && mReader.name() == QLatin1String("protocol")))
-    {
+    while (!mReader.atEnd() && !(mReader.isEndElement() && mReader.name() == QLatin1String("protocol"))) {
         mReader.readNext();
         if (mReader.isStartElement()) {
             const auto elemName = mReader.name();
-            if (elemName == QLatin1String("class") ||
-                elemName == QLatin1String("command") ||
-                elemName == QLatin1String("response") ||
-                elemName == QLatin1String("notification"))
-            {
+            if (elemName == QLatin1String("class") || elemName == QLatin1String("command") || elemName == QLatin1String("response")
+                || elemName == QLatin1String("notification")) {
                 if (!parseCommand(documentNode.get())) {
                     return false;
                 }
@@ -95,22 +88,17 @@ bool XmlParser::parseCommand(DocumentNode *documentNode)
         return false;
     }
 
-    auto *classNode = new ClassNode(attrs.value(QLatin1String("name")).toString(),
-                                    ClassNode::elementNameToType(mReader.name()),
-                                    documentNode);
+    auto *classNode = new ClassNode(attrs.value(QLatin1String("name")).toString(), ClassNode::elementNameToType(mReader.name()), documentNode);
     new CtorNode({}, classNode);
 
-    while (!mReader.atEnd() &&
-        !(mReader.isEndElement() && classNode->classType() == ClassNode::elementNameToType(mReader.name())))
-    {
+    while (!mReader.atEnd() && !(mReader.isEndElement() && classNode->classType() == ClassNode::elementNameToType(mReader.name()))) {
         mReader.readNext();
         if (mReader.isStartElement()) {
             if (mReader.name() == QLatin1String("ctor")) {
                 if (!parseCtor(classNode)) {
                     return false;
                 }
-            } else if (mReader.name() == QLatin1String("enum")
-                || mReader.name() == QLatin1String("flag")) {
+            } else if (mReader.name() == QLatin1String("enum") || mReader.name() == QLatin1String("flag")) {
                 if (!parseEnum(classNode)) {
                     return false;
                 }
@@ -131,22 +119,19 @@ bool XmlParser::parseCommand(DocumentNode *documentNode)
 bool XmlParser::parseCtor(ClassNode *classNode)
 {
     QVector<CtorNode::Argument> args;
-    while (!mReader.atEnd() &&
-            !(mReader.isEndElement() && (mReader.name() == QLatin1String("ctor"))))
-    {
+    while (!mReader.atEnd() && !(mReader.isEndElement() && (mReader.name() == QLatin1String("ctor")))) {
         mReader.readNext();
         if (mReader.isStartElement()) {
             if (mReader.name() == QLatin1String("arg")) {
                 const auto attrs = mReader.attributes();
                 const QString name = attrs.value(QLatin1String("name")).toString();
                 const QString def = attrs.value(QLatin1String("default")).toString();
-                args << CtorNode::Argument{ name, QString(), def };
+                args << CtorNode::Argument{name, QString(), def};
             } else {
                 printError(QStringLiteral("Unsupported tag: ").append(mReader.name()));
                 return false;
             }
         }
-
     }
     new CtorNode(args, classNode);
 
@@ -161,12 +146,9 @@ bool XmlParser::parseEnum(ClassNode *classNode)
         return false;
     }
 
-    auto *enumNode = new EnumNode(attrs.value(QLatin1String("name")).toString(),
-                                  EnumNode::elementNameToType(mReader.name()),
-                                  classNode);
+    auto *enumNode = new EnumNode(attrs.value(QLatin1String("name")).toString(), EnumNode::elementNameToType(mReader.name()), classNode);
 
-    while (!mReader.atEnd() &&
-            !(mReader.isEndElement() && (enumNode->enumType() == EnumNode::elementNameToType(mReader.name())))) {
+    while (!mReader.atEnd() && !(mReader.isEndElement() && (enumNode->enumType() == EnumNode::elementNameToType(mReader.name())))) {
         mReader.readNext();
         if (mReader.isStartElement()) {
             if (mReader.name() == QLatin1String("value")) {
@@ -200,7 +182,6 @@ bool XmlParser::parseEnumValue(EnumNode *enumNode)
 
     return true;
 }
-
 
 bool XmlParser::parseParam(ClassNode *classNode)
 {
@@ -238,8 +219,7 @@ bool XmlParser::parseParam(ClassNode *classNode)
         paramNode->setAsReference(attrs.value(QLatin1String("asReference")) == QLatin1String("true"));
     }
 
-    while (!mReader.atEnd() &&
-        !(mReader.isEndElement() && mReader.name() == QLatin1String("param"))) {
+    while (!mReader.atEnd() && !(mReader.isEndElement() && mReader.name() == QLatin1String("param"))) {
         mReader.readNext();
         if (mReader.isStartElement()) {
             if (mReader.name() == QLatin1String("setter")) {
@@ -256,8 +236,7 @@ bool XmlParser::parseParam(ClassNode *classNode)
                     printError(QStringLiteral("Missing \"value\" attribute in <depends> tag!"));
                     return false;
                 }
-                paramNode->addDependency(dependsAttrs.value(QLatin1String("enum")).toString(),
-                                         dependsAttrs.value(QLatin1String("value")).toString());
+                paramNode->addDependency(dependsAttrs.value(QLatin1String("enum")).toString(), dependsAttrs.value(QLatin1String("value")).toString());
             } else {
                 printError(QStringLiteral("Unknown tag: ").append(mReader.name()));
                 return false;
@@ -275,8 +254,7 @@ bool XmlParser::parseSetter(PropertyNode *parent)
     setter->name = attrs.value(QLatin1String("name")).toString();
     setter->type = attrs.value(QLatin1String("type")).toString();
 
-    while (!mReader.atEnd() &&
-        !(mReader.isEndElement() && mReader.name() == QLatin1String("setter"))) {
+    while (!mReader.atEnd() && !(mReader.isEndElement() && mReader.name() == QLatin1String("setter"))) {
         mReader.readNext();
         if (mReader.isStartElement()) {
             if (mReader.name() == QLatin1String("append")) {
@@ -292,9 +270,7 @@ bool XmlParser::parseSetter(PropertyNode *parent)
     return true;
 }
 
-
 void XmlParser::printError(const QString &error)
 {
-    std::cerr << "Error:" << mReader.lineNumber() << ":" << mReader.columnNumber()
-              << ": " << qPrintable(error) << std::endl;
+    std::cerr << "Error:" << mReader.lineNumber() << ":" << mReader.columnNumber() << ": " << qPrintable(error) << std::endl;
 }

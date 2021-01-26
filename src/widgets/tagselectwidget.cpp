@@ -6,8 +6,8 @@
 
 #include "tagselectwidget.h"
 #include "monitor.h"
-#include "tagmodel.h"
 #include "tageditwidget.h"
+#include "tagmodel.h"
 
 #include "shared/akranges.h"
 
@@ -22,10 +22,9 @@ public:
     QScopedPointer<TagEditWidget> mTagEditWidget;
 };
 
-
 TagSelectWidget::TagSelectWidget(QWidget *parent)
-    : QWidget(parent),
-      d(new Private())
+    : QWidget(parent)
+    , d(new Private())
 {
     auto *mainLayout = new QHBoxLayout(this);
 
@@ -56,11 +55,16 @@ Tag::List TagSelectWidget::selection() const
 
 QStringList TagSelectWidget::tagToStringList() const
 {
-    return selection() | Views::transform([](const auto &tag) { return tag.url().url(); }) | Actions::toQList;
+    return selection() | Views::transform([](const auto &tag) {
+               return tag.url().url();
+           })
+        | Actions::toQList;
 }
 
 void TagSelectWidget::setSelectionFromStringList(const QStringList &lst)
 {
-    setSelection(lst | Views::transform([](const auto &cat) { return Tag::fromUrl(QUrl{cat}); }) | Actions::toQVector);
+    setSelection(lst | Views::transform([](const auto &cat) {
+                     return Tag::fromUrl(QUrl{cat});
+                 })
+                 | Actions::toQVector);
 }
-

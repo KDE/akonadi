@@ -14,7 +14,6 @@
 
 namespace Akonadi
 {
-
 class AKONADICORE_EXPORT NotificationSubscriber
 {
 public:

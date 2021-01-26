@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 class TagPrivate : public QSharedData
 {
 public:

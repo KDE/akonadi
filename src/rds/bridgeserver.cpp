@@ -14,7 +14,6 @@ BridgeServerBase::BridgeServerBase(quint16 port, QObject *parent)
 {
     connect(m_server, &QTcpServer::newConnection, this, &BridgeServerBase::slotNewConnection);
     if (!m_server->listen(QHostAddress::Any, port)) {
-        throw Exception<std::runtime_error>(QStringLiteral("Can't listen to port %1: %2")
-                                            .arg(port).arg(m_server->errorString()));
+        throw Exception<std::runtime_error>(QStringLiteral("Can't listen to port %1: %2").arg(port).arg(m_server->errorString()));
     }
 }

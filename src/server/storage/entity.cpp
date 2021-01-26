@@ -5,11 +5,11 @@
  ***************************************************************************/
 
 #include "entity.h"
-#include "datastore.h"
 #include "countquerybuilder.h"
+#include "datastore.h"
 
-#include <QVariant>
 #include <QSqlDatabase>
+#include <QVariant>
 
 using namespace Akonadi::Server;
 

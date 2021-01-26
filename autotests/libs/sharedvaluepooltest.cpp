@@ -7,8 +7,8 @@
 #include "../sharedvaluepool_p.h"
 #include <QTest>
 
-#include <QVector>
 #include <QSet>
+#include <QVector>
 #include <set>
 #include <vector>
 
@@ -39,8 +39,7 @@ private Q_SLOTS:
         }
 
         QBENCHMARK {
-            foreach (const QByteArray &b, data)
-            {
+            foreach (const QByteArray &b, data) {
                 pool.sharedValue(b);
             }
         }

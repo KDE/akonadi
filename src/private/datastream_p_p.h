@@ -22,10 +22,8 @@ namespace Akonadi
 {
 namespace Protocol
 {
-
 class AKONADIPRIVATE_EXPORT DataStream
 {
-
 public:
     explicit DataStream();
     explicit DataStream(QIODevice *device);
@@ -41,23 +39,15 @@ public:
 
     void flush();
 
-    template<typename T>
-    inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type
-    &operator<<(T val);
-    template<typename T>
-    inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type
-    &operator<<(T val);
+    template<typename T> inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type &operator<<(T val);
+    template<typename T> inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type &operator<<(T val);
 
     inline DataStream &operator<<(const QString &str);
     inline DataStream &operator<<(const QByteArray &data);
     inline DataStream &operator<<(const QDateTime &dt);
 
-    template<typename T>
-    inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type
-    &operator>>(T &val);
-    template<typename T>
-    inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type
-    &operator>>(T &val);
+    template<typename T> inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type &operator>>(T &val);
+    template<typename T> inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type &operator>>(T &val);
     inline DataStream &operator>>(QString &str);
     inline DataStream &operator>>(QByteArray &data);
     inline DataStream &operator>>(QDateTime &dt);
@@ -68,6 +58,7 @@ public:
     int readRawData(char *buffer, int len);
 
     void waitForData(quint32 size);
+
 private:
     Q_DISABLE_COPY(DataStream)
 
@@ -83,26 +74,22 @@ private:
     std::chrono::milliseconds mWaitTimeout = std::chrono::seconds{30};
 };
 
-template<typename T>
-inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type
-&DataStream::operator<<(T val)
+template<typename T> inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type &DataStream::operator<<(T val)
 {
     checkDevice();
     writeRawData((char *)&val, sizeof(T));
     return *this;
 }
 
-template<typename T>
-inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type
-&DataStream::operator<<(T val)
+template<typename T> inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type &DataStream::operator<<(T val)
 {
-    return *this << (typename std::underlying_type<T>::type) val;
+    return *this << (typename std::underlying_type<T>::type)val;
 }
 
 inline DataStream &DataStream::operator<<(const QString &str)
 {
     if (str.isNull()) {
-        *this << (quint32) 0xffffffff;
+        *this << (quint32)0xffffffff;
     } else {
         writeBytes(reinterpret_cast<const char *>(str.unicode()), sizeof(QChar) * str.length());
     }
@@ -112,7 +99,7 @@ inline DataStream &DataStream::operator<<(const QString &str)
 inline DataStream &DataStream::operator<<(const QByteArray &data)
 {
     if (data.isNull()) {
-        *this << (quint32) 0xffffffff;
+        *this << (quint32)0xffffffff;
     } else {
         writeBytes(data.constData(), data.size());
     }
@@ -121,9 +108,7 @@ inline DataStream &DataStream::operator<<(const QByteArray &data)
 
 inline DataStream &DataStream::operator<<(const QDateTime &dt)
 {
-    *this << dt.date().toJulianDay()
-          << dt.time().msecsSinceStartOfDay()
-          << dt.timeSpec();
+    *this << dt.date().toJulianDay() << dt.time().msecsSinceStartOfDay() << dt.timeSpec();
     if (dt.timeSpec() == Qt::OffsetFromUTC) {
         *this << dt.offsetFromUtc();
     } else if (dt.timeSpec() == Qt::TimeZone) {
@@ -132,9 +117,7 @@ inline DataStream &DataStream::operator<<(const QDateTime &dt)
     return *this;
 }
 
-template<typename T>
-inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type
-&DataStream::operator>>(T &val)
+template<typename T> inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type &DataStream::operator>>(T &val)
 {
     checkDevice();
 
@@ -146,9 +129,7 @@ inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type
     return *this;
 }
 
-template<typename T>
-inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type
-&DataStream::operator>>(T &val)
+template<typename T> inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type &DataStream::operator>>(T &val)
 {
     return *this >> reinterpret_cast<typename std::underlying_type<T>::type &>(val);
 }
@@ -179,8 +160,7 @@ inline DataStream &DataStream::operator>>(QString &str)
         const int blockSize = qMin(step, len - allocated);
         waitForData(blockSize * sizeof(QChar));
         str.resize(allocated + blockSize);
-        if (readRawData(reinterpret_cast<char *>(str.data()) + allocated * sizeof(QChar),
-                        blockSize * sizeof(QChar)) != int(blockSize * sizeof(QChar))) {
+        if (readRawData(reinterpret_cast<char *>(str.data()) + allocated * sizeof(QChar), blockSize * sizeof(QChar)) != int(blockSize * sizeof(QChar))) {
             throw Akonadi::ProtocolException("Failed to read enough data from stream");
         }
         allocated += blockSize;
@@ -223,9 +203,7 @@ inline DataStream &DataStream::operator>>(QDateTime &dt)
     int mds;
     Qt::TimeSpec spec;
 
-    *this >> jd
-          >> mds
-          >> spec;
+    *this >> jd >> mds >> spec;
     date = QDate::fromJulianDay(jd);
     time = QTime::fromMSecsSinceStartOfDay(mds);
     if (spec == Qt::OffsetFromUTC) {
@@ -248,26 +226,24 @@ inline DataStream &DataStream::operator>>(QDateTime &dt)
 
 // Inline functions
 
-template<typename T>
-inline Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream, QFlags<T> flags)
+template<typename T> inline Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream, QFlags<T> flags)
 {
     return stream << static_cast<typename QFlags<T>::Int>(flags);
 }
 
-template<typename T>
-inline Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream, QFlags<T> &flags)
+template<typename T> inline Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream, QFlags<T> &flags)
 {
-    stream >> reinterpret_cast<typename QFlags<T>::Int&>(flags);
+    stream >> reinterpret_cast<typename QFlags<T>::Int &>(flags);
     return stream;
 }
 
 // Generic streaming for all Qt value-based containers (as well as std containers that
 // implement operator<< for appending)
 template<typename T, template<typename> class Container>
-//typename std::enable_if<is_compatible_value_container<Container>::value, Akonadi::Protocol::DataStream>::type
+// typename std::enable_if<is_compatible_value_container<Container>::value, Akonadi::Protocol::DataStream>::type
 inline Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream, const Container<T> &list)
 {
-    stream << (quint32) list.size();
+    stream << (quint32)list.size();
     for (auto iter = list.cbegin(), end = list.cend(); iter != end; ++iter) {
         stream << *iter;
     }
@@ -297,7 +273,7 @@ inline Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &
 
 inline Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream, QStringList &list)
 {
-    return stream >> static_cast<QList<QString>&>(list);
+    return stream >> static_cast<QList<QString> &>(list);
 }
 
 namespace Akonadi
@@ -306,14 +282,12 @@ namespace Protocol
 {
 namespace Private
 {
-template<typename Key, typename Value, template<typename, typename> class Container>
-inline void container_reserve(Container<Key, Value> &container, int size)
+template<typename Key, typename Value, template<typename, typename> class Container> inline void container_reserve(Container<Key, Value> &container, int size)
 {
     container.reserve(size);
 }
 
-template<typename Key, typename Value>
-inline void container_reserve(QMap<Key, Value> &, int)
+template<typename Key, typename Value> inline void container_reserve(QMap<Key, Value> &, int)
 {
     // noop
 }
@@ -326,7 +300,7 @@ template<typename Key, typename Value, template<typename, typename> class Contai
 // typename std::enable_if<is_compatible_dictionary_container<Container>::value, Akonadi::Protocol::DataStream>::type
 inline Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream, const Container<Key, Value> &map)
 {
-    stream << (quint32) map.size();
+    stream << (quint32)map.size();
     auto iter = map.cend(), begin = map.cbegin();
     while (iter != begin) {
         --iter;

@@ -11,7 +11,6 @@ using namespace Akonadi;
 
 namespace Akonadi
 {
-
 /**
  * @internal
  */
@@ -26,8 +25,7 @@ public:
 
     bool rightsMatches(const QModelIndex &index) const
     {
-        if (mAccessRights == Collection::AllRights ||
-                mAccessRights == Collection::ReadOnly) {
+        if (mAccessRights == Collection::AllRights || mAccessRights == Collection::ReadOnly) {
             return true;
         }
 
@@ -64,7 +62,6 @@ EntityRightsFilterModel::~EntityRightsFilterModel()
 {
     delete d_ptr;
 }
-
 
 bool EntityRightsFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {

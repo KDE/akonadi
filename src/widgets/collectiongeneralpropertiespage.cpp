@@ -7,9 +7,9 @@
 #include "collectiongeneralpropertiespage_p.h"
 
 #include "collection.h"
-#include "entitydisplayattribute.h"
 #include "collectionstatistics.h"
 #include "collectionutils.h"
+#include "entitydisplayattribute.h"
 
 #include <KLocalizedString>
 
@@ -51,8 +51,7 @@ void CollectionGeneralPropertiesPage::load(const Collection &collection)
     ui.customIconCheckbox->setChecked(!iconName.isEmpty());
 
     if (collection.statistics().count() >= 0) {
-        ui.countLabel->setText(i18ncp("@label", "One object", "%1 objects",
-                                      collection.statistics().count()));
+        ui.countLabel->setText(i18ncp("@label", "One object", "%1 objects", collection.statistics().count()));
         ui.sizeLabel->setText(KFormat().formatByteSize(collection.statistics().size()));
     } else {
         ui.statsBox->hide();
@@ -61,8 +60,7 @@ void CollectionGeneralPropertiesPage::load(const Collection &collection)
 
 void CollectionGeneralPropertiesPage::save(Collection &collection)
 {
-    if (collection.hasAttribute<EntityDisplayAttribute>() &&
-            !collection.attribute<EntityDisplayAttribute>()->displayName().isEmpty()) {
+    if (collection.hasAttribute<EntityDisplayAttribute>() && !collection.attribute<EntityDisplayAttribute>()->displayName().isEmpty()) {
         collection.attribute<EntityDisplayAttribute>()->setDisplayName(ui.nameEdit->text());
     } else {
         collection.setName(ui.nameEdit->text());

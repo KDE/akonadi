@@ -11,16 +11,15 @@
 #include "item.h"
 #include "job.h"
 #include "job_p.h"
-#include "protocolhelper_p.h"
 #include "private/protocol_p.h"
+#include "protocolhelper_p.h"
 
 #include <KLocalizedString>
 
 namespace Akonadi
 {
-
 /** Shared implementation details between item and collection move jobs. */
-template <typename LinkJob> class LinkJobImpl : public JobPrivate
+template<typename LinkJob> class LinkJobImpl : public JobPrivate
 {
 public:
     LinkJobImpl(Job *parent)
@@ -30,7 +29,7 @@ public:
 
     inline void sendCommand(Protocol::LinkItemsCommand::Action action)
     {
-        auto *q = static_cast<LinkJob *>(q_func());  // Job would be enough already, but then we don't have access to the non-public stuff...
+        auto *q = static_cast<LinkJob *>(q_func()); // Job would be enough already, but then we don't have access to the non-public stuff...
         if (objectsToLink.isEmpty()) {
             q->emitResult();
             return;
@@ -43,9 +42,8 @@ public:
         }
 
         try {
-            JobPrivate::sendCommand(Protocol::LinkItemsCommandPtr::create(action,
-                                    ProtocolHelper::entitySetToScope(objectsToLink),
-                                    ProtocolHelper::entityToScope(destination)));
+            JobPrivate::sendCommand(
+                Protocol::LinkItemsCommandPtr::create(action, ProtocolHelper::entitySetToScope(objectsToLink), ProtocolHelper::entityToScope(destination)));
         } catch (const std::exception &e) {
             q->setError(Job::Unknown);
             q->setErrorText(QString::fromUtf8(e.what()));

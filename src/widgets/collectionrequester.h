@@ -14,7 +14,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @short A widget to request an Akonadi collection from the user.
  *

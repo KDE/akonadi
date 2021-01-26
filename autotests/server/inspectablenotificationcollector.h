@@ -10,9 +10,10 @@
 
 #include "storage/notificationcollector.h"
 
-namespace Akonadi {
-namespace Server {
-
+namespace Akonadi
+{
+namespace Server
+{
 class AkonadiServer;
 class DataStore;
 

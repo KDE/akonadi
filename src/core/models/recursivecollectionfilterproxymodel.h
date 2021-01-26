@@ -14,7 +14,6 @@
 
 namespace Akonadi
 {
-
 class RecursiveCollectionFilterProxyModelPrivate;
 
 /**
@@ -88,6 +87,7 @@ public:
 protected:
     int columnCount(const QModelIndex &index) const override;
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
+
 protected:
     RecursiveCollectionFilterProxyModelPrivate *const d_ptr;
     Q_DECLARE_PRIVATE(RecursiveCollectionFilterProxyModel)

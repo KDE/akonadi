@@ -4,8 +4,8 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "compressionstream_p.h"
 #include "akonadiprivate_debug.h"
+#include "compressionstream_p.h"
 
 #include <QByteArray>
 
@@ -15,27 +15,42 @@
 
 using namespace Akonadi;
 
-namespace {
-
+namespace
+{
 class LZMAErrorCategory : public std::error_category
 {
 public:
-    const char *name() const noexcept override { return "lzma"; }
+    const char *name() const noexcept override
+    {
+        return "lzma";
+    }
     std::string message(int ev) const noexcept override
     {
         switch (static_cast<lzma_ret>(ev)) {
-        case LZMA_OK: return "Operation completed succesfully";
-        case LZMA_STREAM_END: return "End of stream was reached";
-        case LZMA_NO_CHECK: return "Input stream has no integrity check";
-        case LZMA_UNSUPPORTED_CHECK: return "Cannot calculate the integrity check";
-        case LZMA_GET_CHECK: return "Integrity check type is now available";
-        case LZMA_MEM_ERROR: return "Cannot allocate memory";
-        case LZMA_MEMLIMIT_ERROR: return "Memory usage limit was reached";
-        case LZMA_FORMAT_ERROR: return "File format not recognized";
-        case LZMA_OPTIONS_ERROR: return "Invalid or unsupported options";
-        case LZMA_DATA_ERROR: return "Data is corrupt";
-        case LZMA_BUF_ERROR: return "No progress is possible";
-        case LZMA_PROG_ERROR: return "Programming error";
+        case LZMA_OK:
+            return "Operation completed succesfully";
+        case LZMA_STREAM_END:
+            return "End of stream was reached";
+        case LZMA_NO_CHECK:
+            return "Input stream has no integrity check";
+        case LZMA_UNSUPPORTED_CHECK:
+            return "Cannot calculate the integrity check";
+        case LZMA_GET_CHECK:
+            return "Integrity check type is now available";
+        case LZMA_MEM_ERROR:
+            return "Cannot allocate memory";
+        case LZMA_MEMLIMIT_ERROR:
+            return "Memory usage limit was reached";
+        case LZMA_FORMAT_ERROR:
+            return "File format not recognized";
+        case LZMA_OPTIONS_ERROR:
+            return "Invalid or unsupported options";
+        case LZMA_DATA_ERROR:
+            return "Data is corrupt";
+        case LZMA_BUF_ERROR:
+            return "No progress is possible";
+        case LZMA_PROG_ERROR:
+            return "Programming error";
         }
 
         Q_UNREACHABLE();
@@ -44,7 +59,7 @@ public:
 
 const LZMAErrorCategory &lzmaErrorCategory()
 {
-    static const LZMAErrorCategory lzmaErrorCategory {};
+    static const LZMAErrorCategory lzmaErrorCategory{};
     return lzmaErrorCategory;
 }
 
@@ -52,7 +67,8 @@ const LZMAErrorCategory &lzmaErrorCategory()
 
 namespace std
 {
-template<> struct is_error_code_enum<lzma_ret> : std::true_type {};
+template<> struct is_error_code_enum<lzma_ret> : std::true_type {
+};
 
 std::error_condition make_error_condition(lzma_ret ret)
 {
@@ -72,7 +88,8 @@ std::error_code make_error_code(lzma_ret e)
     return {static_cast<int>(e), lzmaErrorCategory()};
 }
 
-class Akonadi::Compressor {
+class Akonadi::Compressor
+{
 public:
     std::error_code initialize(QIODevice::OpenMode openMode)
     {
@@ -125,12 +142,12 @@ protected:
     lzma_stream mStream = LZMA_STREAM_INIT;
 };
 
-
 CompressionStream::CompressionStream(QIODevice *stream, QObject *parent)
     : QIODevice(parent)
     , mStream(stream)
     , mResult(LZMA_OK)
-{}
+{
+}
 
 CompressionStream::~CompressionStream()
 {
@@ -235,7 +252,6 @@ qint64 CompressionStream::readData(char *data, qint64 dataSize)
     return dataRead;
 }
 
-
 qint64 CompressionStream::writeData(const char *data, qint64 dataSize)
 {
     if (mResult != LZMA_OK) {
@@ -306,4 +322,3 @@ bool CompressionStream::isCompressed(QIODevice *data)
 
     return memcmp(magic.data(), buf, sizeof(buf)) == 0;
 }
-

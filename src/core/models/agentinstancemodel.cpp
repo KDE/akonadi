@@ -58,7 +58,7 @@ void AgentInstanceModel::Private::instanceChanged(const AgentInstance &instance)
     const int numberOfInstance(mInstances.count());
     for (int i = 0; i < numberOfInstance; ++i) {
         if (mInstances[i] == instance) {
-            //TODO why reassign it if equals ?
+            // TODO why reassign it if equals ?
             mInstances[i] = instance;
 
             const QModelIndex idx = mParent->index(i, 0);
@@ -75,18 +75,24 @@ AgentInstanceModel::AgentInstanceModel(QObject *parent)
 {
     d->mInstances = AgentManager::self()->instances();
 
-    connect(AgentManager::self(), &AgentManager::instanceAdded,
-            this, [this](const Akonadi::AgentInstance &inst) { d->instanceAdded(inst);});
-    connect(AgentManager::self(), &AgentManager::instanceRemoved,
-            this, [this](const Akonadi::AgentInstance &inst) { d->instanceRemoved(inst);});
-    connect(AgentManager::self(), &AgentManager::instanceStatusChanged,
-            this, [this](const Akonadi::AgentInstance &inst) { d->instanceChanged(inst);});
-    connect(AgentManager::self(), &AgentManager::instanceProgressChanged,
-            this, [this](const Akonadi::AgentInstance &inst) { d->instanceChanged(inst);});
-    connect(AgentManager::self(), &AgentManager::instanceNameChanged,
-            this, [this](const Akonadi::AgentInstance &inst) { d->instanceChanged(inst);});
-    connect(AgentManager::self(), &AgentManager::instanceOnline,
-            this, [this](const Akonadi::AgentInstance &inst) { d->instanceChanged(inst);});
+    connect(AgentManager::self(), &AgentManager::instanceAdded, this, [this](const Akonadi::AgentInstance &inst) {
+        d->instanceAdded(inst);
+    });
+    connect(AgentManager::self(), &AgentManager::instanceRemoved, this, [this](const Akonadi::AgentInstance &inst) {
+        d->instanceRemoved(inst);
+    });
+    connect(AgentManager::self(), &AgentManager::instanceStatusChanged, this, [this](const Akonadi::AgentInstance &inst) {
+        d->instanceChanged(inst);
+    });
+    connect(AgentManager::self(), &AgentManager::instanceProgressChanged, this, [this](const Akonadi::AgentInstance &inst) {
+        d->instanceChanged(inst);
+    });
+    connect(AgentManager::self(), &AgentManager::instanceNameChanged, this, [this](const Akonadi::AgentInstance &inst) {
+        d->instanceChanged(inst);
+    });
+    connect(AgentManager::self(), &AgentManager::instanceOnline, this, [this](const Akonadi::AgentInstance &inst) {
+        d->instanceChanged(inst);
+    });
 }
 
 AgentInstanceModel::~AgentInstanceModel()

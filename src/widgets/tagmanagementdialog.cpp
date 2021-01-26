@@ -9,26 +9,27 @@
 #include "tagmanagementdialog.h"
 #include "ui_tagmanagementdialog.h"
 
-#include "tagmodel.h"
-#include "monitor.h"
 #include "controlgui.h"
+#include "monitor.h"
+#include "tagmodel.h"
 
+#include <KConfigGroup>
 #include <KLocalizedString>
 #include <KSharedConfig>
-#include <KConfigGroup>
 
 using namespace Akonadi;
 
 struct Q_DECL_HIDDEN TagManagementDialog::Private {
     explicit Private(QDialog *parent)
         : q(parent)
-    {}
+    {
+    }
 
     void writeConfig() const;
     void readConfig() const;
 
     Ui::TagManagementDialog ui;
-    QDialog * const q;
+    QDialog *const q;
     QDialogButtonBox *buttonBox = nullptr;
 };
 
@@ -73,4 +74,3 @@ QDialogButtonBox *TagManagementDialog::buttons() const
 {
     return d->buttonBox;
 }
-

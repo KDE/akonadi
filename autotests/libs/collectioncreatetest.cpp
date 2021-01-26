@@ -6,8 +6,8 @@
  */
 
 #include "collectioncreatejob.h"
-#include "collectionfetchjob.h"
 #include "collectiondeletejob.h"
+#include "collectionfetchjob.h"
 #include "entitydisplayattribute.h"
 #include "qtest_akonadi.h"
 
@@ -30,7 +30,7 @@ private Q_SLOTS:
 
         Collection col;
         col.setName(QLatin1String("test_collection"));
-        col.setContentMimeTypes({ Collection::mimeType() });
+        col.setContentMimeTypes({Collection::mimeType()});
         col.setParentCollection(Collection(AkonadiTest::collectionIdFromPath(QLatin1String("res1"))));
         col.setRights(Collection::AllRights);
 

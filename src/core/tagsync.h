@@ -8,13 +8,12 @@
 
 #include "akonadicore_export.h"
 
+#include "item.h"
 #include "jobs/job.h"
 #include "tag.h"
-#include "item.h"
 
 namespace Akonadi
 {
-
 class AKONADICORE_EXPORT TagSync : public Akonadi::Job
 {
     Q_OBJECT

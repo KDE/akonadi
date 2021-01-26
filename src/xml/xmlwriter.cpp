@@ -28,8 +28,7 @@ QDomElement XmlWriter::attributeToElement(Attribute *attr, QDomDocument &documen
     return top;
 }
 
-template<typename T>
-static void writeAttributesImpl(const T &entity, QDomElement &parentElem)
+template<typename T> static void writeAttributesImpl(const T &entity, QDomElement &parentElem)
 {
     if (parentElem.isNull()) {
         return;
@@ -74,7 +73,7 @@ QDomElement XmlWriter::writeCollection(const Akonadi::Collection &collection, QD
 
     QDomDocument doc = parentElem.ownerDocument();
     const QDomElement elem = collectionToElement(collection, doc);
-    parentElem.insertBefore(elem, QDomNode());   // collection need to be before items to pass schema validation
+    parentElem.insertBefore(elem, QDomNode()); // collection need to be before items to pass schema validation
     return elem;
 }
 
@@ -118,4 +117,3 @@ QDomElement XmlWriter::writeItem(const Item &item, QDomElement &parentElem)
     parentElem.appendChild(elem);
     return elem;
 }
-

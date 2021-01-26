@@ -5,22 +5,22 @@
 */
 
 #include "collection.h"
-#include "control.h"
-#include "itemfetchjob.h"
-#include "itemcreatejob.h"
-#include "itemmovejob.h"
-#include "itemfetchscope.h"
 #include "collectionfetchscope.h"
+#include "control.h"
+#include "itemcreatejob.h"
+#include "itemfetchjob.h"
+#include "itemfetchscope.h"
+#include "itemmovejob.h"
 #include "monitor.h"
-#include "session.h"
 #include "qtest_akonadi.h"
 #include "resourceselectjob_p.h"
+#include "session.h"
 
 #include <QObject>
 
 using namespace Akonadi;
 
-class ItemMoveTest: public QObject
+class ItemMoveTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
@@ -47,7 +47,8 @@ private Q_SLOTS:
 
         QTest::newRow("inter-res single uid") << (Item::List() << Item(1)) << destination << Collection();
         QTest::newRow("inter-res two uid") << (Item::List() << Item(2) << Item(3)) << destination << Collection();
-        Item r1; r1.setRemoteId(QStringLiteral("D"));
+        Item r1;
+        r1.setRemoteId(QStringLiteral("D"));
         Collection ridDest;
         ridDest.setRemoteId(QStringLiteral("3"));
         Collection ridSource;
@@ -72,7 +73,7 @@ private Q_SLOTS:
         AkonadiTest::akWaitForSignal(&monitor, &Monitor::monitorReady);
 
         ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
-        AKVERIFYEXEC(select);   // for rid based moves
+        AKVERIFYEXEC(select); // for rid based moves
 
         auto *prefetchjob = new ItemFetchJob(destination, this);
         AKVERIFYEXEC(prefetchjob);
@@ -142,7 +143,7 @@ private Q_SLOTS:
 
         Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         Item item(QStringLiteral("application/octet-stream"));
-        item.setFlags({ "\\SEEN", "$ENCRYPTED" });
+        item.setFlags({"\\SEEN", "$ENCRYPTED"});
         item.setPayload(QByteArray("This is a test payload"));
         item.setSize(34);
         item.setParentCollection(col);

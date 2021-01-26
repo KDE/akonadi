@@ -16,7 +16,8 @@ using namespace Akonadi::Server;
 
 RelationModifyHandler::RelationModifyHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 Relation RelationModifyHandler::fetchRelation(qint64 leftId, qint64 rightId, qint64 typeId)
 {
@@ -106,4 +107,3 @@ bool RelationModifyHandler::parseStream()
 
     return successResponse<Protocol::ModifyRelationResponse>();
 }
-

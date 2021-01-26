@@ -16,9 +16,9 @@
 
 #include <shared/akranges.h>
 
-#include <QSqlRecord>
-#include <QSqlError>
 #include <QElapsedTimer>
+#include <QSqlError>
+#include <QSqlRecord>
 
 using namespace Akonadi::Server;
 
@@ -110,8 +110,7 @@ void QueryBuilder::setDatabaseType(DbType::Type type)
 
 void QueryBuilder::addJoin(JoinType joinType, const QString &table, const Query::Condition &condition)
 {
-    Q_ASSERT((joinType == InnerJoin && (mType == Select || mType == Update)) ||
-             (joinType == LeftJoin && mType == Select));
+    Q_ASSERT((joinType == InnerJoin && (mType == Select || mType == Update)) || (joinType == LeftJoin && mType == Select));
 
     if (mJoinedTables.contains(table)) {
         // InnerJoin is more restrictive than a LeftJoin, hence use that in doubt
@@ -357,15 +356,15 @@ bool QueryBuilder::exec()
         QueryCache::insert(statement, mQuery);
     }
 
-    //too heavy debug info but worths to have from time to time
-    //qCDebug(AKONADISERVER_LOG) << "Executing query" << statement;
+    // too heavy debug info but worths to have from time to time
+    // qCDebug(AKONADISERVER_LOG) << "Executing query" << statement;
     bool isBatch = false;
     for (int i = 0; i < mBindValues.count(); ++i) {
         mQuery.bindValue(QLatin1Char(':') + QString::number(i), mBindValues[i]);
         if (!isBatch && static_cast<QMetaType::Type>(mBindValues[i].type()) == QMetaType::QVariantList) {
             isBatch = true;
         }
-        //qCDebug(AKONADISERVER_LOG) << QString::fromLatin1( ":%1" ).arg( i ) <<  mBindValues[i];
+        // qCDebug(AKONADISERVER_LOG) << QString::fromLatin1( ":%1" ).arg( i ) <<  mBindValues[i];
     }
 
     bool ret;
@@ -378,8 +377,7 @@ bool QueryBuilder::exec()
         } else {
             ret = mQuery.exec();
         }
-        StorageDebugger::instance()->queryExecuted(reinterpret_cast<qint64>(DataStore::self()),
-                                                   mQuery, t.elapsed());
+        StorageDebugger::instance()->queryExecuted(reinterpret_cast<qint64>(DataStore::self()), mQuery, t.elapsed());
     } else {
         StorageDebugger::instance()->incSequence();
         if (isBatch) {
@@ -509,8 +507,7 @@ void QueryBuilder::buildWhereCondition(QString *query, const Query::Condition &c
                 if (cond.mComparedValue.canConvert(QVariant::List)) {
                     *query += QLatin1String("( ");
                     const QVariantList &entries = cond.mComparedValue.toList();
-                    Q_ASSERT_X(!entries.isEmpty(),
-                               "QueryBuilder::buildWhereCondition()", "No values given for IN condition.");
+                    Q_ASSERT_X(!entries.isEmpty(), "QueryBuilder::buildWhereCondition()", "No values given for IN condition.");
                     for (int i = 0, c = entries.size(); i < c; ++i) {
                         bindValue(query, entries.at(i));
                         if (i + 1 < c) {
@@ -535,7 +532,7 @@ void QueryBuilder::buildCaseStatement(QString *query, const Query::Case &caseStm
     *query += QLatin1String("CASE ");
     Q_FOREACH (const auto &whenThen, caseStmt.mWhenThen) {
         *query += QLatin1String("WHEN ");
-        buildWhereCondition(query, whenThen.first);    // When
+        buildWhereCondition(query, whenThen.first); // When
         *query += QLatin1String(" THEN ") + whenThen.second; // then
     }
     if (!caseStmt.mElse.isEmpty()) {

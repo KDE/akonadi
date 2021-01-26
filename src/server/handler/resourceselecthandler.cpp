@@ -13,7 +13,8 @@ using namespace Akonadi::Server;
 
 ResourceSelectHandler::ResourceSelectHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 bool ResourceSelectHandler::parseStream()
 {

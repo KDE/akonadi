@@ -14,7 +14,6 @@
 
 #include <QMimeDatabase>
 
-
 #include <QTest>
 
 QTEST_MAIN(MimeTypeCheckerTest)
@@ -24,8 +23,7 @@ using namespace Akonadi;
 MimeTypeCheckerTest::MimeTypeCheckerTest(QObject *parent)
     : QObject(parent)
 {
-    mCalendarSubTypes << QStringLiteral("application/x-vnd.akonadi.calendar.event")
-                      << QStringLiteral("application/x-vnd.akonadi.calendar.todo");
+    mCalendarSubTypes << QStringLiteral("application/x-vnd.akonadi.calendar.event") << QStringLiteral("application/x-vnd.akonadi.calendar.todo");
 }
 
 void MimeTypeCheckerTest::initTestCase()
@@ -55,10 +53,10 @@ void MimeTypeCheckerTest::initTestCase()
     QCOMPARE(aliasChecker.wantedMimeTypes().count(), 1);
 
     // test assignment works correctly
-    mEmptyChecker    = emptyChecker;
+    mEmptyChecker = emptyChecker;
     mCalendarChecker = calendarChecker;
-    mSubTypeChecker  = subTypeChecker;
-    mAliasChecker    = aliasChecker;
+    mSubTypeChecker = subTypeChecker;
+    mAliasChecker = aliasChecker;
 
     QVERIFY(mEmptyChecker.wantedMimeTypes().isEmpty());
     QVERIFY(!mEmptyChecker.hasWantedMimeTypes());
@@ -87,7 +85,7 @@ void MimeTypeCheckerTest::testCollectionCheck()
     Collection aliasCollection(6);
 
     const QLatin1String textCalendar = QLatin1String("text/calendar");
-    calendarCollection.setContentMimeTypes(QStringList() <<  textCalendar);
+    calendarCollection.setContentMimeTypes(QStringList() << textCalendar);
     const QLatin1String akonadiEvent = QLatin1String("application/x-vnd.akonadi.calendar.event");
     eventCollection.setContentMimeTypes(QStringList() << akonadiEvent);
     journalCollection.setContentMimeTypes(QStringList() << QStringLiteral("application/x-vnd.akonadi.calendar.journal"));
@@ -246,8 +244,7 @@ void MimeTypeCheckerTest::testStringMatchEquivalent()
     // can still be checked just like with direct string comparison
 
     const QLatin1String installedMimeType("text/plain");
-    const QString randomMimeType = QLatin1String("application/x-vnd.test.") +
-                                   KRandom::randomString(10);
+    const QString randomMimeType = QLatin1String("application/x-vnd.test.") + KRandom::randomString(10);
 
     MimeTypeChecker installedTypeChecker;
     installedTypeChecker.addWantedMimeType(installedMimeType);
@@ -292,4 +289,3 @@ void MimeTypeCheckerTest::testStringMatchEquivalent()
     QVERIFY(MimeTypeChecker::isWantedCollection(collection3, installedMimeType));
     QVERIFY(MimeTypeChecker::isWantedCollection(collection3, randomMimeType));
 }
-

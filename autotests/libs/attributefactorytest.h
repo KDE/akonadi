@@ -16,7 +16,6 @@ private Q_SLOTS:
     void initTestCase();
     void testUnknownAttribute();
     void testRegisteredAttribute();
-
 };
 
 #endif

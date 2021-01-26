@@ -17,7 +17,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class QueryBuilder;
 class Collection;
 
@@ -42,7 +41,7 @@ public:
     };
 
     explicit CollectionStatistics(bool prefetch = true);
-    virtual ~CollectionStatistics() = default; 
+    virtual ~CollectionStatistics() = default;
 
     Statistics statistics(const Collection &col);
 

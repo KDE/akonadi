@@ -17,7 +17,7 @@ using namespace Akonadi;
 
 void ImapSetTest::testAddList_data()
 {
-    QTest::addColumn<QList<qint64> >("source");
+    QTest::addColumn<QList<qint64>>("source");
     QTest::addColumn<ImapInterval::List>("intervals");
     QTest::addColumn<QByteArray>("seqset");
 
@@ -38,7 +38,7 @@ void ImapSetTest::testAddList_data()
     QTest::newRow("single 2 interval") << source << intervals << QByteArray("4:5");
 
     // single large interval
-    source << 6 << 3 << 7 << 2  << 8;
+    source << 6 << 3 << 7 << 2 << 8;
     intervals.clear();
     intervals << ImapInterval(2, 8);
     QTest::newRow("single 7 interval") << source << intervals << QByteArray("2:8");

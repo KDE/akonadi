@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 /**
   @internal
 
@@ -69,8 +68,7 @@ public:
       @param changedCollections A list of remotely added or changed collections.
       @param removedCollections A list of remotely deleted collections.
     */
-    void setRemoteCollections(const Collection::List &changedCollections,
-                              const Collection::List &removedCollections);
+    void setRemoteCollections(const Collection::List &changedCollections, const Collection::List &removedCollections);
 
     /**
       Enables streaming, that is not all collections are delivered at once.

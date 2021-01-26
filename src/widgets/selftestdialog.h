@@ -7,8 +7,8 @@
 #ifndef AKONADI_SELFTESTDIALOG_P_H
 #define AKONADI_SELFTESTDIALOG_P_H
 
-#include "ui_selftestdialog.h"
 #include "akonadiwidgets_export.h"
+#include "ui_selftestdialog.h"
 #include <QDialog>
 
 class QStandardItem;
@@ -49,12 +49,7 @@ private Q_SLOTS:
     void runTests();
 
 private:
-    enum ResultType {
-        Skip,
-        Success,
-        Warning,
-        Error
-    };
+    enum ResultType { Skip, Success, Warning, Error };
     QStandardItem *report(ResultType type, const KLocalizedString &summary, const KLocalizedString &details);
     QVariant serverSetting(const QString &group, const char *key, const QVariant &def) const;
     bool useStandaloneMysqlServer() const;

@@ -5,8 +5,8 @@
  *  SPDX-License-Identifier: LGPL-2.0-or-later
  */
 
-#include "scope_p.h"
 #include "datastream_p_p.h"
+#include "scope_p.h"
 
 #include <QJsonArray>
 #include <QJsonObject>
@@ -16,7 +16,6 @@
 
 namespace Akonadi
 {
-
 class ScopePrivate : public QSharedData
 {
 public:
@@ -29,17 +28,20 @@ public:
 
 Scope::HRID::HRID()
     : id(-1)
-{}
+{
+}
 
 Scope::HRID::HRID(qint64 id, const QString &remoteId)
     : id(id)
     , remoteId(remoteId)
-{}
+{
+}
 
 Scope::HRID::HRID(const HRID &other)
     : id(other.id)
     , remoteId(other.remoteId)
-{}
+{
+}
 
 Scope::HRID::HRID(HRID &&other) noexcept
     : id(other.id)
@@ -258,8 +260,7 @@ QStringList Scope::gidSet() const
 
 qint64 Scope::uid() const
 {
-    if (d->uidSet.intervals().size() == 1 &&
-            d->uidSet.intervals().at(0).size() == 1) {
+    if (d->uidSet.intervals().size() == 1 && d->uidSet.intervals().at(0).size() == 1) {
         return d->uidSet.intervals().at(0).begin();
     }
 
@@ -302,19 +303,17 @@ void Scope::toJson(QJsonObject &json) const
         json[QStringLiteral("type")] = QStringLiteral("GID");
         json[QStringLiteral("value")] = QJsonArray::fromStringList(gidSet());
         break;
-    case Scope::HierarchicalRid:
-        {
-            const auto &chain = hridChain();
-            QJsonArray hridArray;
-            for (const auto &hrid : chain) {
-                QJsonObject obj;
-                hrid.toJson(obj);
-                hridArray.append(obj);
-            }
-            json[QStringLiteral("type")] = QStringLiteral("HRID");
-            json[QStringLiteral("value")] = hridArray;
+    case Scope::HierarchicalRid: {
+        const auto &chain = hridChain();
+        QJsonArray hridArray;
+        for (const auto &hrid : chain) {
+            QJsonObject obj;
+            hrid.toJson(obj);
+            hridArray.append(obj);
         }
-        break;
+        json[QStringLiteral("type")] = QStringLiteral("HRID");
+        json[QStringLiteral("value")] = hridArray;
+    } break;
     default:
         json[QStringLiteral("type")] = QStringLiteral("invalid");
         json[QStringLiteral("value")] = QJsonValue(static_cast<int>(scope()));

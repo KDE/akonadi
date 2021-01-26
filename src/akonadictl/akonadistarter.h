@@ -7,8 +7,8 @@
 #ifndef AKONADISTARTER_H
 #define AKONADISTARTER_H
 
-#include <QObject>
 #include <QDBusServiceWatcher>
+#include <QObject>
 
 class AkonadiStarter : public QObject
 {

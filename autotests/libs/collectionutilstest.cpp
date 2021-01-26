@@ -4,9 +4,9 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include <qtest_akonadi.h>
-#include "collection.h"
 #include "../collectionutils.h"
+#include "collection.h"
+#include <qtest_akonadi.h>
 
 using namespace Akonadi;
 

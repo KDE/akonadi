@@ -11,28 +11,28 @@
 #include "connection.h"
 #include "handler.h"
 #include "handlerhelper.h"
-#include "storage/selectquerybuilder.h"
+#include "shared/akranges.h"
 #include "storage/itemqueryhelper.h"
 #include "storage/itemretrievalmanager.h"
 #include "storage/itemretrievalrequest.h"
 #include "storage/parthelper.h"
 #include "storage/parttypehelper.h"
+#include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
-#include "shared/akranges.h"
 
-#include "utils.h"
-#include "intervalcheck.h"
 #include "agentmanagerinterface.h"
-#include "tagfetchhelper.h"
-#include "relationfetchhandler.h"
 #include "akonadiserver_debug.h"
+#include "intervalcheck.h"
+#include "relationfetchhandler.h"
+#include "tagfetchhelper.h"
+#include "utils.h"
 
 #include <private/dbus_p.h>
 
-#include <QStringList>
-#include <QVariant>
 #include <QDateTime>
 #include <QSqlQuery>
+#include <QStringList>
+#include <QVariant>
 
 #include <QElapsedTimer>
 
@@ -42,21 +42,20 @@ using namespace AkRanges;
 
 #define ENABLE_FETCH_PROFILING 0
 #if ENABLE_FETCH_PROFILING
-#define BEGIN_TIMER(name) \
-    QElapsedTimer name##Timer; \
+#define BEGIN_TIMER(name)                                                                                                                                      \
+    QElapsedTimer name##Timer;                                                                                                                                 \
     name##Timer.start();
 
-#define END_TIMER(name) \
-    const double name##Elapsed = name##Timer.nsecsElapsed() / 1000000.0;
-#define PROF_INC(name) \
-    ++name;
+#define END_TIMER(name) const double name##Elapsed = name##Timer.nsecsElapsed() / 1000000.0;
+#define PROF_INC(name) ++name;
 #else
 #define BEGIN_TIMER(name)
 #define END_TIMER(name)
 #define PROF_INC(name)
 #endif
 
-ItemFetchHelper::ItemFetchHelper(Connection *connection, const Scope &scope,
+ItemFetchHelper::ItemFetchHelper(Connection *connection,
+                                 const Scope &scope,
                                  const Protocol::ItemFetchScope &itemFetchScope,
                                  const Protocol::TagFetchScope &tagFetchScope,
                                  AkonadiServer &akonadi)
@@ -64,8 +63,8 @@ ItemFetchHelper::ItemFetchHelper(Connection *connection, const Scope &scope,
 {
 }
 
-
-ItemFetchHelper::ItemFetchHelper(Connection *connection, const CommandContext &context,
+ItemFetchHelper::ItemFetchHelper(Connection *connection,
+                                 const CommandContext &context,
                                  const Scope &scope,
                                  const Protocol::ItemFetchScope &itemFetchScope,
                                  const Protocol::TagFetchScope &tagFetchScope,
@@ -96,7 +95,7 @@ enum PartQueryColumns {
 
 QSqlQuery ItemFetchHelper::buildPartQuery(const QVector<QByteArray> &partList, bool allPayload, bool allAttrs)
 {
-    ///TODO: merge with ItemQuery
+    /// TODO: merge with ItemQuery
     QueryBuilder partQuery(PimItem::tableName());
 
     if (!partList.isEmpty() || allPayload || allAttrs) {
@@ -146,7 +145,11 @@ QSqlQuery ItemFetchHelper::buildItemQuery()
     QueryBuilder itemQuery(PimItem::tableName());
 
     int column = 0;
-#define ADD_COLUMN(colName, colId) { itemQuery.addColumn( colName ); mItemQueryColumnMap[colId] = column++; }
+#define ADD_COLUMN(colName, colId)                                                                                                                             \
+    {                                                                                                                                                          \
+        itemQuery.addColumn(colName);                                                                                                                          \
+        mItemQueryColumnMap[colId] = column++;                                                                                                                 \
+    }
     ADD_COLUMN(PimItem::idFullColumnName(), ItemQueryPimItemIdColumn);
     if (mItemFetchScope.fetchRemoteId()) {
         ADD_COLUMN(PimItem::remoteIdFullColumnName(), ItemQueryPimItemRidColumn)
@@ -185,16 +188,12 @@ QSqlQuery ItemFetchHelper::buildItemQuery()
     return itemQuery.query();
 }
 
-enum FlagQueryColumns {
-    FlagQueryPimItemIdColumn,
-    FlagQueryFlagIdColumn
-};
+enum FlagQueryColumns { FlagQueryPimItemIdColumn, FlagQueryFlagIdColumn };
 
 QSqlQuery ItemFetchHelper::buildFlagQuery()
 {
     QueryBuilder flagQuery(PimItem::tableName());
-    flagQuery.addJoin(QueryBuilder::InnerJoin, PimItemFlagRelation::tableName(),
-                      PimItem::idFullColumnName(), PimItemFlagRelation::leftFullColumnName());
+    flagQuery.addJoin(QueryBuilder::InnerJoin, PimItemFlagRelation::tableName(), PimItem::idFullColumnName(), PimItemFlagRelation::leftFullColumnName());
     flagQuery.addColumn(PimItem::idFullColumnName());
     flagQuery.addColumn(PimItemFlagRelation::rightFullColumnName());
 
@@ -218,10 +217,8 @@ enum TagQueryColumns {
 QSqlQuery ItemFetchHelper::buildTagQuery()
 {
     QueryBuilder tagQuery(PimItem::tableName());
-    tagQuery.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(),
-                     PimItem::idFullColumnName(), PimItemTagRelation::leftFullColumnName());
-    tagQuery.addJoin(QueryBuilder::InnerJoin, Tag::tableName(),
-                     Tag::idFullColumnName(), PimItemTagRelation::rightFullColumnName());
+    tagQuery.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(), PimItem::idFullColumnName(), PimItemTagRelation::leftFullColumnName());
+    tagQuery.addJoin(QueryBuilder::InnerJoin, Tag::tableName(), Tag::idFullColumnName(), PimItemTagRelation::rightFullColumnName());
     tagQuery.addColumn(PimItem::idFullColumnName());
     tagQuery.addColumn(Tag::idFullColumnName());
 
@@ -237,15 +234,13 @@ QSqlQuery ItemFetchHelper::buildTagQuery()
     return tagQuery.query();
 }
 
-enum VRefQueryColumns {
-    VRefQueryCollectionIdColumn,
-    VRefQueryItemIdColumn
-};
+enum VRefQueryColumns { VRefQueryCollectionIdColumn, VRefQueryItemIdColumn };
 
 QSqlQuery ItemFetchHelper::buildVRefQuery()
 {
     QueryBuilder vRefQuery(PimItem::tableName());
-    vRefQuery.addJoin(QueryBuilder::LeftJoin, CollectionPimItemRelation::tableName(),
+    vRefQuery.addJoin(QueryBuilder::LeftJoin,
+                      CollectionPimItemRelation::tableName(),
                       CollectionPimItemRelation::rightFullColumnName(),
                       PimItem::idFullColumnName());
     vRefQuery.addColumn(CollectionPimItemRelation::leftFullColumnName());
@@ -273,14 +268,11 @@ bool ItemFetchHelper::isScopeLocal(const Scope &scope)
     QueryBuilder qb(PimItem::tableName(), QueryBuilder::Select);
     qb.setDistinct(true);
     qb.addColumn(Resource::nameFullColumnName());
-    qb.addJoin(QueryBuilder::LeftJoin, Collection::tableName(),
-               PimItem::collectionIdFullColumnName(), Collection::idFullColumnName());
-    qb.addJoin(QueryBuilder::LeftJoin, Resource::tableName(),
-               Collection::resourceIdFullColumnName(), Resource::idFullColumnName());
+    qb.addJoin(QueryBuilder::LeftJoin, Collection::tableName(), PimItem::collectionIdFullColumnName(), Collection::idFullColumnName());
+    qb.addJoin(QueryBuilder::LeftJoin, Resource::tableName(), Collection::resourceIdFullColumnName(), Resource::idFullColumnName());
     ItemQueryHelper::scopeToQuery(scope, mContext, qb);
     if (mContext.resource().isValid()) {
-        qb.addValueCondition(Resource::nameFullColumnName(), Query::NotEquals,
-                             mContext.resource().name());
+        qb.addValueCondition(Resource::nameFullColumnName(), Query::NotEquals, mContext.resource().name());
     }
 
     if (!qb.exec()) {
@@ -301,9 +293,7 @@ bool ItemFetchHelper::isScopeLocal(const Scope &scope)
     const QString resourceName = query.value(0).toString();
     query.finish();
 
-    org::freedesktop::Akonadi::AgentManager manager(DBus::serviceName(DBus::Control),
-            QStringLiteral("/AgentManager"),
-            QDBusConnection::sessionBus());
+    org::freedesktop::Akonadi::AgentManager manager(DBus::serviceName(DBus::Control), QStringLiteral("/AgentManager"), QDBusConnection::sessionBus());
     const QString typeIdentifier = manager.agentInstanceType(resourceName);
     const QVariantMap properties = manager.agentCustomProperties(typeIdentifier);
     return properties.value(QStringLiteral("HasLocalStorage"), false).toBool();
@@ -319,7 +309,6 @@ DataStore *ItemFetchHelper::storageBackend() const
 
     return DataStore::self();
 }
-
 
 bool ItemFetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse &&)> &&itemCallback)
 {
@@ -352,16 +341,16 @@ bool ItemFetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse
         retriever.setRetrieveParts(mItemFetchScope.requestedPayloads());
         retriever.setRetrieveFullPayload(mItemFetchScope.fullPayload());
         retriever.setChangedSince(mItemFetchScope.changedSince());
-        if (!retriever.exec() && !mItemFetchScope.ignoreErrors()) {   // There we go, retrieve the missing parts from the resource.
+        if (!retriever.exec() && !mItemFetchScope.ignoreErrors()) { // There we go, retrieve the missing parts from the resource.
             if (mContext.resource().isValid()) {
                 throw HandlerException(QStringLiteral("Unable to fetch item from backend (collection %1, resource %2) : %3")
-                                       .arg(mContext.collectionId())
-                                       .arg(mContext.resource().id())
-                                       .arg(QString::fromLatin1(retriever.lastError())));
+                                           .arg(mContext.collectionId())
+                                           .arg(mContext.resource().id())
+                                           .arg(QString::fromLatin1(retriever.lastError())));
             } else {
                 throw HandlerException(QStringLiteral("Unable to fetch item from backend (collection %1) : %2")
-                                       .arg(mContext.collectionId())
-                                       .arg(QString::fromLatin1(retriever.lastError())));
+                                           .arg(mContext.collectionId())
+                                           .arg(QString::fromLatin1(retriever.lastError())));
             }
         }
     }
@@ -503,16 +492,16 @@ bool ItemFetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse
 
             if (mTagFetchScope.fetchIdOnly()) {
                 tags = tagIds | Views::transform([](const auto tagId) {
-                                    Protocol::FetchTagsResponse resp;
-                                    resp.setId(tagId);
-                                    return resp;
-                                })
-                              | Actions::toQVector;
+                           Protocol::FetchTagsResponse resp;
+                           resp.setId(tagId);
+                           return resp;
+                       })
+                    | Actions::toQVector;
             } else {
                 tags = tagIds | Views::transform([this](const auto tagId) {
-                                    return HandlerHelper::fetchTagsResponse(Tag::retrieveById(tagId), mTagFetchScope, mConnection);
-                                })
-                              | Actions::toQVector;
+                           return HandlerHelper::fetchTagsResponse(Tag::retrieveById(tagId), mTagFetchScope, mConnection);
+                       })
+                    | Actions::toQVector;
             }
             response.setTags(tags);
         }
@@ -541,7 +530,8 @@ bool ItemFetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse
             condition.addValueCondition(Relation::leftIdFullColumnName(), Query::Equals, pimItemId);
             condition.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, pimItemId);
             qb.addCondition(condition);
-            qb.addGroupColumns(QStringList() << Relation::leftIdColumn() << Relation::rightIdColumn() << Relation::typeIdColumn() << Relation::remoteIdColumn());
+            qb.addGroupColumns(QStringList() << Relation::leftIdColumn() << Relation::rightIdColumn() << Relation::typeIdColumn()
+                                             << Relation::remoteIdColumn());
             if (!qb.exec()) {
                 throw HandlerException("Unable to list item relations");
             }
@@ -549,7 +539,8 @@ bool ItemFetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse
             const auto result = qb.result();
             relations.reserve(result.size());
             for (const Relation &rel : result) {
-                relations.push_back(HandlerHelper::fetchRelationsResponse(rel));;
+                relations.push_back(HandlerHelper::fetchRelationsResponse(rel));
+                ;
             }
             response.setRelations(relations);
         }
@@ -592,14 +583,13 @@ bool ItemFetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse
                 partQuery.next();
             } else {
                 if (mItemFetchScope.ignoreErrors() && data.isEmpty()) {
-                    //We wanted the payload, couldn't get it, and are ignoring errors. Skip the item.
-                    //This is not an error though, it's fine to have empty payload parts (to denote existing but not cached parts)
+                    // We wanted the payload, couldn't get it, and are ignoring errors. Skip the item.
+                    // This is not an error though, it's fine to have empty payload parts (to denote existing but not cached parts)
                     qCDebug(AKONADISERVER_LOG) << "item" << id << "has an empty payload part in parttable for part" << metaPart.name();
                     skipItem = true;
                     break;
                 }
-                metaPart.setStorageType(static_cast<Protocol::PartMetaData::StorageType>(
-                    partQuery.value(PartQueryStorageColumn).toInt()));
+                metaPart.setStorageType(static_cast<Protocol::PartMetaData::StorageType>(partQuery.value(PartQueryStorageColumn).toInt()));
                 if (data.isEmpty()) {
                     partData.setData(QByteArray(""));
                 } else {
@@ -642,8 +632,7 @@ bool ItemFetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse
 
     // update atime (only if the payload was actually requested, otherwise a simple resource sync prevents cache clearing)
     BEGIN_TIMER(aTime)
-    if (mUpdateATimeEnabled &&
-            (needsAccessTimeUpdate(mItemFetchScope.requestedParts()) || mItemFetchScope.fullPayload())) {
+    if (mUpdateATimeEnabled && (needsAccessTimeUpdate(mItemFetchScope.requestedParts()) || mItemFetchScope.fullPayload())) {
         updateItemAccessTime();
     }
     END_TIMER(aTime)
@@ -744,8 +733,7 @@ QVector<Protocol::Ancestor> ItemFetchHelper::ancestorsForItem(Collection::Id par
     return ancestors;
 }
 
-QVariant ItemFetchHelper::extractQueryResult(const QSqlQuery &query,
-                                             ItemFetchHelper::ItemQueryColumns column) const
+QVariant ItemFetchHelper::extractQueryResult(const QSqlQuery &query, ItemFetchHelper::ItemQueryColumns column) const
 {
     const int colId = mItemQueryColumnMap[column];
     Q_ASSERT(colId >= 0);

@@ -22,13 +22,7 @@ public:
     {
     }
 
-    enum TransactionState {
-        Idle,
-        Running,
-        WaitingForSubjobs,
-        RollingBack,
-        Committing
-    };
+    enum TransactionState { Idle, Running, WaitingForSubjobs, RollingBack, Committing };
 
     Q_DECLARE_PUBLIC(TransactionSequence)
 
@@ -60,7 +54,7 @@ public:
 
 QString Akonadi::TransactionSequencePrivate::jobDebuggingString() const
 {
-    //TODO add state
+    // TODO add state
     return QStringLiteral("autocommit %1").arg(mAutoCommit);
 }
 
@@ -77,13 +71,13 @@ bool TransactionSequence::addSubjob(KJob *job)
 {
     Q_D(TransactionSequence);
 
-    //Don't abort the rollback job, while keeping the state set.
+    // Don't abort the rollback job, while keeping the state set.
     if (d->mState == TransactionSequencePrivate::RollingBack) {
         return Job::addSubjob(job);
     }
 
     if (error()) {
-        //This can happen if a rollback is in progress, so make sure we don't set the state back to running.
+        // This can happen if a rollback is in progress, so make sure we don't set the state back to running.
         job->kill(EmitResult);
         return false;
     }
@@ -119,7 +113,9 @@ void TransactionSequence::slotResult(KJob *job)
                 }
                 d->mState = TransactionSequencePrivate::Committing;
                 auto *job = new TransactionCommitJob(this);
-                connect(job, &TransactionCommitJob::result, [d](KJob *job) { d->commitResult(job);});
+                connect(job, &TransactionCommitJob::result, [d](KJob *job) {
+                    d->commitResult(job);
+                });
             }
         }
     } else if (job->error() == KJob::KilledJobError) {
@@ -143,7 +139,9 @@ void TransactionSequence::slotResult(KJob *job)
             }
             d->mState = TransactionSequencePrivate::RollingBack;
             auto *job = new TransactionRollbackJob(this);
-            connect(job, &TransactionRollbackJob::result, this, [d](KJob *job) { d->rollbackResult(job);});
+            connect(job, &TransactionRollbackJob::result, this, [d](KJob *job) {
+                d->rollbackResult(job);
+            });
         }
     }
 }
@@ -173,11 +171,15 @@ void TransactionSequence::commit()
         if (!error()) {
             d->mState = TransactionSequencePrivate::Committing;
             auto *job = new TransactionCommitJob(this);
-            connect(job, &TransactionCommitJob::result, this, [d](KJob *job) { d->commitResult(job);});
+            connect(job, &TransactionCommitJob::result, this, [d](KJob *job) {
+                d->commitResult(job);
+            });
         } else {
             d->mState = TransactionSequencePrivate::RollingBack;
             auto *job = new TransactionRollbackJob(this);
-            connect(job, &TransactionRollbackJob::result, this, [d](KJob *job) { d->rollbackResult(job);});
+            connect(job, &TransactionRollbackJob::result, this, [d](KJob *job) {
+                d->rollbackResult(job);
+            });
         }
     }
 }
@@ -235,7 +237,9 @@ void TransactionSequence::rollback()
 
     d->mState = TransactionSequencePrivate::RollingBack;
     auto *job = new TransactionRollbackJob(this);
-    connect(job, &TransactionRollbackJob::result, this, [d](KJob *job) { d->rollbackResult(job);});
+    connect(job, &TransactionRollbackJob::result, this, [d](KJob *job) {
+        d->rollbackResult(job);
+    });
 }
 
 #include "moc_transactionsequence.cpp"

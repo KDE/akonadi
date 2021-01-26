@@ -13,7 +13,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
   @ingroup akonadi_server_handler
 
@@ -27,7 +26,7 @@ namespace Server
 
   Destination is a collection id.
 */
-class ItemMoveHandler: public Handler
+class ItemMoveHandler : public Handler
 {
 public:
     ItemMoveHandler(AkonadiServer &akonadi);

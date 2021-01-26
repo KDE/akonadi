@@ -9,15 +9,14 @@
 #ifdef HAVE_MALLOC_TRIM
 
 #include <QCoreApplication>
+#include <QThread>
 #include <QTimer>
 #include <QVariant>
-#include <QThread>
 
 #include <malloc.h>
 
 namespace Akonadi
 {
-
 class Braveheart
 {
 private:
@@ -30,8 +29,7 @@ private:
             return;
         }
         auto *freedom = new QTimer(qApp);
-        QObject::connect(freedom, &QTimer::timeout,
-        freedom, []() {
+        QObject::connect(freedom, &QTimer::timeout, freedom, []() {
             // They may take our lives, but they will never
             // take our memory!
             malloc_trim(50 * 1024 * 1024);
@@ -56,7 +54,6 @@ public:
 
 namespace
 {
-
 Braveheart Wallace; // clazy:exclude=non-pod-global-static
 
 }

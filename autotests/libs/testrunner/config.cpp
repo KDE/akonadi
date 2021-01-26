@@ -8,9 +8,9 @@
 #include "akonaditest_debug.h"
 
 #include <QDir>
-#include <QPair>
 #include <QFile>
 #include <QFileInfo>
+#include <QPair>
 #include <QXmlStreamReader>
 
 Q_GLOBAL_STATIC(Config, globalConfig) // NOLINT(readability-redundant-member-init)
@@ -138,7 +138,7 @@ void Config::insertAgent(const QString &agent, bool sync)
     mAgents.append(qMakePair(agent, sync));
 }
 
-QList<QPair<QString, bool> > Config::agents() const
+QList<QPair<QString, bool>> Config::agents() const
 {
     return mAgents;
 }

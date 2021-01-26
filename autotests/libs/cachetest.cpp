@@ -4,15 +4,15 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
+#include "agentinstance.h"
+#include "agentmanager.h"
 #include "collection.h"
 #include "collectionfetchjob.h"
 #include "collectionmodifyjob.h"
 #include "item.h"
+#include "itemcopyjob.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
-#include "agentmanager.h"
-#include "agentinstance.h"
-#include "itemcopyjob.h"
 #include "qtest_akonadi.h"
 
 #include <QHash>
@@ -82,7 +82,7 @@ private Q_SLOTS:
             item = fetch->items().first();
             QVERIFY(item.isValid());
             QVERIFY(item.hasPayload());
-            QVERIFY(item.revision() > 0);   // was changed by the resource delivering the payload
+            QVERIFY(item.revision() > 0); // was changed by the resource delivering the payload
         }
 
         fetch = new ItemFetchJob(item, this);
@@ -135,7 +135,6 @@ private Q_SLOTS:
         QVERIFY(item.isValid());
         QCOMPARE(item.hasPayload(), resourceEnabled);
     }
-
 };
 
 QTEST_AKONADIMAIN(CacheTest)

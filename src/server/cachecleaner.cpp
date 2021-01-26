@@ -6,12 +6,12 @@
 */
 
 #include "cachecleaner.h"
-#include "storage/parthelper.h"
-#include "storage/datastore.h"
-#include "storage/selectquerybuilder.h"
-#include "storage/entity.h"
 #include "akonadi.h"
 #include "akonadiserver_debug.h"
+#include "storage/datastore.h"
+#include "storage/entity.h"
+#include "storage/parthelper.h"
+#include "storage/selectquerybuilder.h"
 
 #include <private/protocol_p.h>
 
@@ -90,17 +90,16 @@ int CacheCleaner::collectionScheduleInterval(const Collection &collection)
 
 bool CacheCleaner::hasChanged(const Collection &collection, const Collection &changed)
 {
-    return collection.cachePolicyLocalParts() != changed.cachePolicyLocalParts()
-           || collection.cachePolicyCacheTimeout() != changed.cachePolicyCacheTimeout()
-           || collection.cachePolicyInherit() != changed.cachePolicyInherit();
+    return collection.cachePolicyLocalParts() != changed.cachePolicyLocalParts() || collection.cachePolicyCacheTimeout() != changed.cachePolicyCacheTimeout()
+        || collection.cachePolicyInherit() != changed.cachePolicyInherit();
 }
 
 bool CacheCleaner::shouldScheduleCollection(const Collection &collection)
 {
-    return collection.cachePolicyLocalParts() != QLatin1String("ALL")
-           && collection.cachePolicyCacheTimeout() >= 0
-           && (collection.enabled() || (collection.displayPref() == Collection::True) || (collection.syncPref() == Collection::True) || (collection.indexPref() == Collection::True))
-           && collection.resourceId() > 0;
+    return collection.cachePolicyLocalParts() != QLatin1String("ALL") && collection.cachePolicyCacheTimeout() >= 0
+        && (collection.enabled() || (collection.displayPref() == Collection::True) || (collection.syncPref() == Collection::True)
+            || (collection.indexPref() == Collection::True))
+        && collection.resourceId() > 0;
 }
 
 void CacheCleaner::collectionExpired(const Collection &collection)

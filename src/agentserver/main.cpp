@@ -11,9 +11,9 @@
 
 #include <shared/akapplication.h>
 
+#include <QApplication>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
-#include <QApplication>
 
 int main(int argc, char **argv)
 {

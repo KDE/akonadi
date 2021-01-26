@@ -9,22 +9,22 @@
 #include "abstractsearchplugin.h"
 #include "akonadiserver_search_debug.h"
 
-#include "akonadi.h"
 #include "agentsearchengine.h"
+#include "akonadi.h"
+#include "handler/searchhelper.h"
 #include "notificationmanager.h"
 #include "searchrequest.h"
 #include "searchtaskmanager.h"
 #include "storage/datastore.h"
 #include "storage/querybuilder.h"
-#include "storage/transaction.h"
 #include "storage/selectquerybuilder.h"
-#include "handler/searchhelper.h"
+#include "storage/transaction.h"
 
 #include <private/protocol_p.h>
 
+#include <QDBusConnection>
 #include <QDir>
 #include <QPluginLoader>
-#include <QDBusConnection>
 #include <QTimer>
 
 #include <memory>
@@ -39,8 +39,8 @@ Q_DECLARE_METATYPE(Collection)
 SearchManager::SearchManager(const QStringList &searchEngines, SearchTaskManager &agentSearchManager)
     : AkThread(QStringLiteral("SearchManager"), AkThread::ManualStart, QThread::InheritPriority)
     , mAgentSearchManager(agentSearchManager)
-    , mEngineNames(searchEngines),
-      mSearchUpdateTimer(nullptr)
+    , mEngineNames(searchEngines)
+    , mSearchUpdateTimer(nullptr)
 {
     qRegisterMetaType<Collection>();
 
@@ -51,8 +51,7 @@ SearchManager::SearchManager(const QStringList &searchEngines, SearchTaskManager
     // Register to DBus on the main thread connection - otherwise we don't appear
     // on the service.
     QDBusConnection conn = QDBusConnection::sessionBus();
-    conn.registerObject(QStringLiteral("/SearchManager"), this,
-                        QDBusConnection::ExportAllSlots);
+    conn.registerObject(QStringLiteral("/SearchManager"), this, QDBusConnection::ExportAllSlots);
 
     // Delay-call init()
     startThread();
@@ -78,8 +77,7 @@ void SearchManager::init()
     mSearchUpdateTimer = new QTimer(this);
     mSearchUpdateTimer->setInterval(15 * 1000);
     mSearchUpdateTimer->setSingleShot(true);
-    connect(mSearchUpdateTimer, &QTimer::timeout,
-            this, &SearchManager::searchUpdateTimeout);
+    connect(mSearchUpdateTimer, &QTimer::timeout, this, &SearchManager::searchUpdateTimeout);
 }
 
 void SearchManager::quit()
@@ -215,7 +213,12 @@ void SearchManager::searchUpdateTimeout()
 
 void SearchManager::updateSearchAsync(const Collection &collection)
 {
-    QMetaObject::invokeMethod(this, [this, collection]() { updateSearchImpl(collection); }, Qt::QueuedConnection);
+    QMetaObject::invokeMethod(
+        this,
+        [this, collection]() {
+            updateSearchImpl(collection);
+        },
+        Qt::QueuedConnection);
 }
 
 void SearchManager::updateSearch(const Collection &collection)
@@ -229,7 +232,12 @@ void SearchManager::updateSearch(const Collection &collection)
     }
     mUpdatingCollections.insert(collection.id());
     mLock.unlock();
-    QMetaObject::invokeMethod(this, [this, collection]() { updateSearchImpl(collection); }, Qt::BlockingQueuedConnection);
+    QMetaObject::invokeMethod(
+        this,
+        [this, collection]() {
+            updateSearchImpl(collection);
+        },
+        Qt::BlockingQueuedConnection);
     mLock.lock();
     mUpdatingCollections.remove(collection.id());
     mLock.unlock();
@@ -238,7 +246,8 @@ void SearchManager::updateSearch(const Collection &collection)
 void SearchManager::updateSearchImpl(const Collection &collection)
 {
     if (collection.queryString().size() >= 32768) {
-        qCWarning(AKONADISERVER_SEARCH_LOG) << "The query is at least 32768 chars long, which is the maximum size supported by the akonadi db schema. The query is therefore most likely truncated and will not be executed.";
+        qCWarning(AKONADISERVER_SEARCH_LOG) << "The query is at least 32768 chars long, which is the maximum size supported by the akonadi db schema. The "
+                                               "query is therefore most likely truncated and will not be executed.";
         return;
     }
     if (collection.queryString().isEmpty()) {
@@ -246,7 +255,7 @@ void SearchManager::updateSearchImpl(const Collection &collection)
     }
 
     const QStringList queryAttributes = collection.queryAttributes().split(QLatin1Char(' '));
-    const bool remoteSearch =  queryAttributes.contains(QLatin1String(AKONADI_PARAM_REMOTE));
+    const bool remoteSearch = queryAttributes.contains(QLatin1String(AKONADI_PARAM_REMOTE));
     bool recursive = queryAttributes.contains(QLatin1String(AKONADI_PARAM_RECURSIVE));
 
     QStringList queryMimeTypes;
@@ -277,7 +286,7 @@ void SearchManager::updateSearchImpl(const Collection &collection)
         queryCollections += SearchHelper::matchSubcollectionsByMimeType(queryAncestors, queryMimeTypes);
     }
 
-    //This happens if we try to search a virtual collection in recursive mode (because virtual collections are excluded from listCollectionsRecursive)
+    // This happens if we try to search a virtual collection in recursive mode (because virtual collections are excluded from listCollectionsRecursive)
     if (queryCollections.isEmpty()) {
         qCDebug(AKONADISERVER_SEARCH_LOG) << "No collections to search, you're probably trying to search a virtual collection.";
         return;
@@ -292,8 +301,7 @@ void SearchManager::updateSearchImpl(const Collection &collection)
     request.setRemoteSearch(remoteSearch);
     request.setStoreResults(true);
     request.setProperty("SearchCollection", QVariant::fromValue(collection));
-    connect(&request, &SearchRequest::resultsAvailable,
-            this, &SearchManager::searchUpdateResultsAvailable);
+    connect(&request, &SearchRequest::resultsAvailable, this, &SearchManager::searchUpdateResultsAvailable);
     request.exec(); // blocks until all searches are done
 
     const QSet<qint64> results = request.results();
@@ -333,8 +341,7 @@ void SearchManager::updateSearchImpl(const Collection &collection)
         DataStore::self()->notificationCollector()->itemsUnlinked(removedItems, collection);
     }
 
-    qCInfo(AKONADISERVER_SEARCH_LOG) << "Search update for collection" << collection.name() 
-                                     << "(" << collection.id() << ") finished:"
+    qCInfo(AKONADISERVER_SEARCH_LOG) << "Search update for collection" << collection.name() << "(" << collection.id() << ") finished:"
                                      << "all results: " << results.count() << ", removed results:" << toRemove.count();
 }
 
@@ -369,8 +376,7 @@ void SearchManager::searchUpdateResultsAvailable(const QSet<qint64> &results)
         return;
     }
 
-    Transaction transaction(DataStore::self(), QStringLiteral("PUSH SEARCH RESULTS"),
-                            !DataStore::self()->inTransaction());
+    Transaction transaction(DataStore::self(), QStringLiteral("PUSH SEARCH RESULTS"), !DataStore::self()->inTransaction());
 
     // First query all the IDs we got from search plugin/agent against the DB.
     // This will remove IDs that no longer exist in the DB.

@@ -9,8 +9,8 @@
 #include "collection.h"
 #include "collectionstatistics.h"
 #include "job_p.h"
-#include "protocolhelper_p.h"
 #include "private/protocol_p.h"
+#include "protocolhelper_p.h"
 
 using namespace Akonadi;
 
@@ -65,8 +65,7 @@ bool CollectionStatisticsJob::doHandleResponse(qint64 tag, const Protocol::Comma
         return Job::doHandleResponse(tag, response);
     }
 
-    d->mStatistics = ProtocolHelper::parseCollectionStatistics(
-        Protocol::cmdCast<Protocol::FetchCollectionStatsResponse>(response));
+    d->mStatistics = ProtocolHelper::parseCollectionStatistics(Protocol::cmdCast<Protocol::FetchCollectionStatsResponse>(response));
     return true;
 }
 

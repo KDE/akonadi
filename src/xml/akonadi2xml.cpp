@@ -9,11 +9,11 @@
 #include "collection.h"
 #include "collectionpathresolver.h"
 
-#include <QDebug>
-#include <QApplication>
 #include <KAboutData>
-#include <QCommandLineParser>
 #include <KLocalizedString>
+#include <QApplication>
+#include <QCommandLineParser>
+#include <QDebug>
 
 using namespace Akonadi;
 
@@ -54,4 +54,3 @@ int main(int argc, char *argv[])
         return -1;
     }
 }
-

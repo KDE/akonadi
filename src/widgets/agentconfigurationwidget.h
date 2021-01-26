@@ -7,12 +7,12 @@
 #ifndef AKONADI_AGENTCONFIGURATIONWIDGET_H
 #define AKONADI_AGENTCONFIGURATIONWIDGET_H
 
+#include "akonadiwidgets_export.h"
 #include <QDialogButtonBox>
 #include <QWidget>
-#include "akonadiwidgets_export.h"
 
-namespace Akonadi {
-
+namespace Akonadi
+{
 class AgentInstance;
 class AgentConfigurationDialog;
 /**
@@ -47,6 +47,5 @@ private:
 };
 
 }
-
 
 #endif

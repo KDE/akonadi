@@ -15,8 +15,7 @@ class EntityCacheTest : public QObject
 {
     Q_OBJECT
 private:
-    template <typename T, typename FetchJob, typename FetchScope>
-    void testCache()
+    template<typename T, typename FetchJob, typename FetchScope> void testCache()
     {
         EntityCache<T, FetchJob, FetchScope> cache(2);
         QSignalSpy spy(&cache, SIGNAL(dataAvailable()));

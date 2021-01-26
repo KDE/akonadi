@@ -7,15 +7,15 @@
 #ifndef AKONADI_QUERYBUILDER_H
 #define AKONADI_QUERYBUILDER_H
 
-#include "query.h"
 #include "dbtype.h"
+#include "query.h"
 
 #include <QPair>
+#include <QSqlQuery>
 #include <QString>
 #include <QStringList>
 #include <QVariant>
 #include <QVector>
-#include <QSqlQuery>
 
 #ifdef QUERYBUILDER_UNITTEST
 class QueryBuilderTest;
@@ -25,19 +25,13 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
   Helper class to construct arbitrary SQL queries.
 */
 class QueryBuilder
 {
 public:
-    enum QueryType {
-        Select,
-        Insert,
-        Update,
-        Delete
-    };
+    enum QueryType { Select, Insert, Update, Delete };
 
     /**
      * When the same table gets joined as both, Inner- and LeftJoin,
@@ -45,9 +39,9 @@ public:
      * restrictive.
      */
     enum JoinType {
-        ///NOTE: only supported for UPDATE and SELECT queries.
+        /// NOTE: only supported for UPDATE and SELECT queries.
         InnerJoin,
-        ///NOTE: only supported for SELECT queries
+        /// NOTE: only supported for SELECT queries
         LeftJoin
     };
 
@@ -265,15 +259,15 @@ private:
     QueryType mType;
     QStringList mColumns;
     QVector<QVariant> mBindValues;
-    QVector<QPair<QString, Query::SortOrder> > mSortColumns;
+    QVector<QPair<QString, Query::SortOrder>> mSortColumns;
     QStringList mGroupColumns;
-    QVector<QPair<QString, QVariant> > mColumnValues;
+    QVector<QPair<QString, QVariant>> mColumnValues;
     QString mIdentificationColumn;
 
     // we must make sure that the tables are joined in the correct order
     // QMap sorts by key which might invalidate the queries
     QStringList mJoinedTables;
-    QMap< QString, QPair< JoinType, Query::Condition > > mJoins;
+    QMap<QString, QPair<JoinType, Query::Condition>> mJoins;
     int mLimit;
     bool mDistinct;
     bool mForUpdate = false;

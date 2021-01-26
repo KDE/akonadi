@@ -13,7 +13,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /** Search engine for distributing searches to agents. */
 class AgentSearchEngine : public AbstractSearchEngine
 {

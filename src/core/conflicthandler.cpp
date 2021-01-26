@@ -44,7 +44,7 @@ void ConflictHandler::start()
 void ConflictHandler::slotOtherItemFetched(KJob *job)
 {
     if (job->error()) {
-        Q_EMIT error(job->errorText());   //TODO: extend error message
+        Q_EMIT error(job->errorText()); // TODO: extend error message
         return;
     }
 
@@ -60,7 +60,7 @@ void ConflictHandler::slotOtherItemFetched(KJob *job)
 
 void ConflictHandler::resolve()
 {
-#pragma message ("warning KF5 Port me!")
+#pragma message("warning KF5 Port me!")
 #if 0
     ConflictResolveDialog dlg;
     dlg.setConflictingItems(mChangedItem, mConflictingItem);
@@ -97,7 +97,7 @@ void ConflictHandler::useLocalItem()
 void ConflictHandler::slotUseLocalItemFinished(KJob *job)
 {
     if (job->error()) {
-        Q_EMIT error(job->errorText());   //TODO: extend error message
+        Q_EMIT error(job->errorText()); // TODO: extend error message
     } else {
         Q_EMIT conflictResolved();
     }
@@ -120,7 +120,7 @@ void ConflictHandler::useBothItems()
 void ConflictHandler::slotUseBothItemsFinished(KJob *job)
 {
     if (job->error()) {
-        Q_EMIT error(job->errorText());   //TODO: extend error message
+        Q_EMIT error(job->errorText()); // TODO: extend error message
     } else {
         Q_EMIT conflictResolved();
     }

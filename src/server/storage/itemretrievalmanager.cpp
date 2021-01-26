@@ -5,16 +5,16 @@
 */
 
 #include "itemretrievalmanager.h"
-#include "itemretrievaljob.h"
 #include "akonadiserver_debug.h"
+#include "itemretrievaljob.h"
 
 #include "resourceinterface.h"
 
 #include <private/dbus_p.h>
 
-#include <QScopedPointer>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
+#include <QScopedPointer>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -23,7 +23,8 @@ Q_DECLARE_METATYPE(Akonadi::Server::ItemRetrievalResult)
 
 class ItemRetrievalJobFactory : public AbstractItemRetrievalJobFactory
 {
-    AbstractItemRetrievalJob *retrievalJob(ItemRetrievalRequest request, QObject *parent) override {
+    AbstractItemRetrievalJob *retrievalJob(ItemRetrievalRequest request, QObject *parent) override
+    {
         return new ItemRetrievalJob(std::move(request), parent);
     }
 };
@@ -51,11 +52,8 @@ void ItemRetrievalManager::init()
     AkThread::init();
 
     QDBusConnection conn = QDBusConnection::sessionBus();
-    connect(conn.interface(), &QDBusConnectionInterface::serviceOwnerChanged,
-            this, &ItemRetrievalManager::serviceOwnerChanged);
-    connect(this, &ItemRetrievalManager::requestAdded,
-            this, &ItemRetrievalManager::processRequest,
-            Qt::QueuedConnection);
+    connect(conn.interface(), &QDBusConnectionInterface::serviceOwnerChanged, this, &ItemRetrievalManager::serviceOwnerChanged);
+    connect(this, &ItemRetrievalManager::requestAdded, this, &ItemRetrievalManager::processRequest, Qt::QueuedConnection);
 }
 
 // called within the retrieval thread
@@ -85,15 +83,17 @@ org::freedesktop::Akonadi::Resource *ItemRetrievalManager::resourceInterface(con
         return ifaceIt->second.get();
     }
 
-    auto iface = std::make_unique<org::freedesktop::Akonadi::Resource>(
-            DBus::agentServiceName(id, DBus::Resource), QStringLiteral("/"), QDBusConnection::sessionBus());
+    auto iface =
+        std::make_unique<org::freedesktop::Akonadi::Resource>(DBus::agentServiceName(id, DBus::Resource), QStringLiteral("/"), QDBusConnection::sessionBus());
     if (!iface->isValid()) {
-        qCCritical(AKONADISERVER_LOG, "Cannot connect to agent instance with identifier '%s', error message: '%s'",
-                   qUtf8Printable(id), qUtf8Printable(iface ? iface->lastError().message() : QString()));
+        qCCritical(AKONADISERVER_LOG,
+                   "Cannot connect to agent instance with identifier '%s', error message: '%s'",
+                   qUtf8Printable(id),
+                   qUtf8Printable(iface ? iface->lastError().message() : QString()));
         return nullptr;
     }
     // DBus calls can take some time to reply -- e.g. if a huge local mbox has to be parsed first.
-    iface->setTimeout(5 * 60 * 1000);   // 5 minutes, rather than 25 seconds
+    iface->setTimeout(5 * 60 * 1000); // 5 minutes, rather than 25 seconds
     std::tie(ifaceIt, std::ignore) = mResourceInterfaces.emplace(id, std::move(iface));
     return ifaceIt->second.get();
 }
@@ -102,9 +102,8 @@ org::freedesktop::Akonadi::Resource *ItemRetrievalManager::resourceInterface(con
 void ItemRetrievalManager::requestItemDelivery(ItemRetrievalRequest req)
 {
     QWriteLocker locker(&mLock);
-    qCDebug(AKONADISERVER_LOG) << "ItemRetrievalManager posting retrieval request for items" << req.ids
-                               << "to" <<req.resourceId << ". There are" << mPendingRequests.size() << "request queues and"
-                               << mPendingRequests[req.resourceId].size() << "items mine";
+    qCDebug(AKONADISERVER_LOG) << "ItemRetrievalManager posting retrieval request for items" << req.ids << "to" << req.resourceId << ". There are"
+                               << mPendingRequests.size() << "request queues and" << mPendingRequests[req.resourceId].size() << "items mine";
     mPendingRequests[req.resourceId].emplace_back(std::move(req));
     locker.unlock();
 
@@ -159,13 +158,14 @@ void ItemRetrievalManager::processRequest()
     }
 }
 
-namespace {
-
+namespace
+{
 bool isSubsetOf(const QByteArrayList &superset, const QByteArrayList &subset)
 {
     // For very small lists like these, this is faster than copy, sort and std::include
-    return std::all_of(subset.cbegin(), subset.cend(),
-                       [&superset](const auto &val) { return superset.contains(val); });
+    return std::all_of(subset.cbegin(), subset.cend(), [&superset](const auto &val) {
+        return superset.contains(val);
+    });
 }
 
 }

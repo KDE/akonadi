@@ -6,22 +6,23 @@
 
 #include "tagcreatehandler.h"
 
-#include "tagfetchhelper.h"
 #include "connection.h"
+#include "storage/countquerybuilder.h"
 #include "storage/datastore.h"
 #include "storage/querybuilder.h"
-#include "storage/countquerybuilder.h"
 #include "storage/transaction.h"
+#include "tagfetchhelper.h"
 
-#include <private/scope_p.h>
 #include <private/imapset_p.h>
+#include <private/scope_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
 TagCreateHandler::TagCreateHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 bool TagCreateHandler::parseStream()
 {
@@ -94,10 +95,10 @@ bool TagCreateHandler::parseStream()
         }
         const bool exists = (qb.result() > 0);
 
-        //If the relation is already existing simply update it (can happen if a resource simply creates the tag again while enabling merge)
+        // If the relation is already existing simply update it (can happen if a resource simply creates the tag again while enabling merge)
         bool ret = false;
         if (exists) {
-            //Simply using update() doesn't work since TagRemoteIdResourceRelation only takes the tagId for identification of the column
+            // Simply using update() doesn't work since TagRemoteIdResourceRelation only takes the tagId for identification of the column
             QueryBuilder qb(TagRemoteIdResourceRelation::tableName(), QueryBuilder::Update);
             qb.addValueCondition(TagRemoteIdResourceRelation::tagIdColumn(), Query::Equals, tagId);
             qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdColumn(), Query::Equals, resourceId);

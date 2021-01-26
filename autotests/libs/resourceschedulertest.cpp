@@ -7,8 +7,8 @@
 
 #include "../src/agentbase/resourcescheduler_p.h"
 
-#include <QTest>
 #include <QSignalSpy>
+#include <QTest>
 
 using namespace Akonadi;
 
@@ -16,10 +16,10 @@ QTEST_MAIN(ResourceSchedulerTest)
 
 Q_DECLARE_METATYPE(QSet<QByteArray>)
 
-ResourceSchedulerTest::ResourceSchedulerTest(QObject *parent):
-    QObject(parent)
+ResourceSchedulerTest::ResourceSchedulerTest(QObject *parent)
+    : QObject(parent)
 {
-    qRegisterMetaType<QSet<QByteArray> >();
+    qRegisterMetaType<QSet<QByteArray>>();
 }
 
 void ResourceSchedulerTest::testTaskComparison()
@@ -192,7 +192,7 @@ void ResourceSchedulerTest::testCompression()
     QSignalSpy fullSyncSpy(&scheduler, SIGNAL(executeFullSync()));
     QSignalSpy collectionTreeSyncSpy(&scheduler, SIGNAL(executeCollectionTreeSync()));
     QSignalSpy syncSpy(&scheduler, SIGNAL(executeCollectionSync(Akonadi::Collection)));
-    QSignalSpy fetchSpy(&scheduler, SIGNAL(executeItemFetch(Akonadi::Item,QSet<QByteArray>)));
+    QSignalSpy fetchSpy(&scheduler, SIGNAL(executeItemFetch(Akonadi::Item, QSet<QByteArray>)));
     QVERIFY(fullSyncSpy.isValid());
     QVERIFY(collectionTreeSyncSpy.isValid());
     QVERIFY(syncSpy.isValid());
@@ -202,7 +202,7 @@ void ResourceSchedulerTest::testCompression()
     QVERIFY(scheduler.isEmpty());
     scheduler.scheduleFullSync();
     scheduler.scheduleFullSync();
-    QTest::qWait(1);   // start execution
+    QTest::qWait(1); // start execution
     QCOMPARE(fullSyncSpy.count(), 1);
     scheduler.scheduleCollectionTreeSync();
     scheduler.taskDone();
@@ -214,7 +214,7 @@ void ResourceSchedulerTest::testCompression()
     QVERIFY(scheduler.isEmpty());
     scheduler.scheduleCollectionTreeSync();
     scheduler.scheduleCollectionTreeSync();
-    QTest::qWait(1);   // start execution
+    QTest::qWait(1); // start execution
     QCOMPARE(collectionTreeSyncSpy.count(), 1);
     scheduler.scheduleCollectionTreeSync();
     scheduler.taskDone();
@@ -225,7 +225,7 @@ void ResourceSchedulerTest::testCompression()
     // sync collection
     scheduler.scheduleSync(Akonadi::Collection(42));
     scheduler.scheduleSync(Akonadi::Collection(42));
-    QTest::qWait(1);   // start execution
+    QTest::qWait(1); // start execution
     QCOMPARE(syncSpy.count(), 1);
     scheduler.scheduleSync(Akonadi::Collection(43));
     scheduler.scheduleSync(Akonadi::Collection(42));
@@ -239,7 +239,7 @@ void ResourceSchedulerTest::testCompression()
     // sync collection
     scheduler.scheduleItemFetch(Akonadi::Item(42), QSet<QByteArray>(), QDBusMessage());
     scheduler.scheduleItemFetch(Akonadi::Item(42), QSet<QByteArray>(), QDBusMessage());
-    QTest::qWait(1);   // start execution
+    QTest::qWait(1); // start execution
     QCOMPARE(fetchSpy.count(), 1);
     scheduler.scheduleItemFetch(Akonadi::Item(43), QSet<QByteArray>(), QDBusMessage());
     scheduler.scheduleItemFetch(Akonadi::Item(42), QSet<QByteArray>(), QDBusMessage());
@@ -262,7 +262,7 @@ void ResourceSchedulerTest::testSyncCompletion()
     QVERIFY(scheduler.isEmpty());
     scheduler.scheduleFullSyncCompletion();
     scheduler.scheduleFullSyncCompletion();
-    QTest::qWait(1);   // start execution
+    QTest::qWait(1); // start execution
     QCOMPARE(completionSpy.count(), 1);
     scheduler.scheduleFullSyncCompletion();
     scheduler.taskDone();
@@ -285,7 +285,7 @@ void ResourceSchedulerTest::testPriorities()
     QSignalSpy fullSyncSpy(&scheduler, SIGNAL(executeFullSync()));
     QSignalSpy collectionTreeSyncSpy(&scheduler, SIGNAL(executeCollectionTreeSync()));
     QSignalSpy syncSpy(&scheduler, SIGNAL(executeCollectionSync(Akonadi::Collection)));
-    QSignalSpy fetchSpy(&scheduler, SIGNAL(executeItemFetch(Akonadi::Item,QSet<QByteArray>)));
+    QSignalSpy fetchSpy(&scheduler, SIGNAL(executeItemFetch(Akonadi::Item, QSet<QByteArray>)));
     QSignalSpy attributesSyncSpy(&scheduler, SIGNAL(executeCollectionAttributesSync(Akonadi::Collection)));
     QVERIFY(changeReplaySpy.isValid());
     QVERIFY(fullSyncSpy.isValid());
@@ -357,4 +357,3 @@ void ResourceSchedulerTest::testPriorities()
 
     QVERIFY(scheduler.isEmpty());
 }
-

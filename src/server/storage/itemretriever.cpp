@@ -19,8 +19,8 @@
 #include "storage/selectquerybuilder.h"
 #include "utils.h"
 
-#include <shared/akranges.h>
 #include <private/protocol_p.h>
+#include <shared/akranges.h>
 
 #include <QEventLoop>
 
@@ -42,10 +42,9 @@ ItemRetriever::ItemRetriever(ItemRetrievalManager &manager, Connection *connecti
 {
     qRegisterMetaType<ItemRetrievalResult>("Akonadi::Server::ItemRetrievalResult");
     if (mConnection) {
-        connect(mConnection, &Connection::disconnected,
-                this, [this]() {
-                    mCanceled = true;
-                });
+        connect(mConnection, &Connection::disconnected, this, [this]() {
+            mCanceled = true;
+        });
     }
 }
 
@@ -172,8 +171,7 @@ QSqlQuery ItemRetriever::buildQuery() const
     }
 
     if (mChangedSince.isValid()) {
-        qb.addValueCondition(PimItem::datetimeFullColumnName(), Query::GreaterOrEqual,
-                             mChangedSince.toUTC());
+        qb.addValueCondition(PimItem::datetimeFullColumnName(), Query::GreaterOrEqual, mChangedSince.toUTC());
     }
 
     qb.addSortColumn(PimItem::idFullColumnName(), Query::Ascending);
@@ -202,28 +200,31 @@ bool ItemRetriever::runItemRetrievalRequests(std::list<ItemRetrievalRequest> req
 {
     QEventLoop eventLoop;
     std::vector<ItemRetrievalRequest::Id> pendingRequests;
-    connect(&mItemRetrievalManager, &ItemRetrievalManager::requestFinished,
-            this, [this, &eventLoop, &pendingRequests](const ItemRetrievalResult &result) { // clazy:exclude=lambda-in-connect
-                    const auto requestId = std::find(pendingRequests.begin(), pendingRequests.end(), result.request.id);
-                    if (requestId != pendingRequests.end()) {
-                        if (mCanceled) {
-                            eventLoop.exit(1);
-                        } else if (result.errorMsg.has_value()) {
-                            mLastError = result.errorMsg->toUtf8();
-                            eventLoop.exit(1);
-                        } else {
-                            Q_EMIT itemsRetrieved(result.request.ids);
-                            pendingRequests.erase(requestId);
-                            if (pendingRequests.empty()) {
-                                eventLoop.quit();
-                            }
+    connect(&mItemRetrievalManager,
+            &ItemRetrievalManager::requestFinished,
+            this,
+            [this, &eventLoop, &pendingRequests](const ItemRetrievalResult &result) { // clazy:exclude=lambda-in-connect
+                const auto requestId = std::find(pendingRequests.begin(), pendingRequests.end(), result.request.id);
+                if (requestId != pendingRequests.end()) {
+                    if (mCanceled) {
+                        eventLoop.exit(1);
+                    } else if (result.errorMsg.has_value()) {
+                        mLastError = result.errorMsg->toUtf8();
+                        eventLoop.exit(1);
+                    } else {
+                        Q_EMIT itemsRetrieved(result.request.ids);
+                        pendingRequests.erase(requestId);
+                        if (pendingRequests.empty()) {
+                            eventLoop.quit();
                         }
                     }
-    });
+                }
+            });
 
     if (mConnection) {
-        connect(mConnection, &Connection::connectionClosing,
-                &eventLoop, [&eventLoop]() { eventLoop.exit(1); });
+        connect(mConnection, &Connection::connectionClosing, &eventLoop, [&eventLoop]() {
+            eventLoop.exit(1);
+        });
     }
 
     for (auto &&request : requests) {
@@ -236,7 +237,7 @@ bool ItemRetriever::runItemRetrievalRequests(std::list<ItemRetrievalRequest> req
         try {
             // Request is deleted inside ItemRetrievalManager, so we need to take
             // a copy here
-            //const auto ids = request->ids;
+            // const auto ids = request->ids;
             pendingRequests.push_back(request.id);
             mItemRetrievalManager.requestItemDelivery(std::move(request));
         } catch (const ItemRetrieverException &e) {
@@ -366,9 +367,13 @@ bool ItemRetriever::exec()
     verifyCache();
 
     QSqlQuery query = buildQuery();
-    const auto parts = mParts | Views::filter([](const auto &part) { return part.startsWith(AKONADI_PARAM_PLD); })
-                              | Views::transform([](const auto &part) { return part.mid(4); })
-                              | Actions::toQList;
+    const auto parts = mParts | Views::filter([](const auto &part) {
+                           return part.startsWith(AKONADI_PARAM_PLD);
+                       })
+        | Views::transform([](const auto &part) {
+                           return part.mid(4);
+                       })
+        | Actions::toQList;
 
     auto requests = prepareRequests(query, parts);
     if (!requests.has_value()) {
@@ -391,8 +396,7 @@ bool ItemRetriever::exec()
             retriever.setCollection(col, mRecursive);
             retriever.setRetrieveParts(mParts);
             retriever.setRetrieveFullPayload(mFullPayload);
-            connect(&retriever, &ItemRetriever::itemsRetrieved,
-                    this, &ItemRetriever::itemsRetrieved);
+            connect(&retriever, &ItemRetriever::itemsRetrieved, this, &ItemRetriever::itemsRetrieved);
             result = retriever.exec();
             if (!result) {
                 break;

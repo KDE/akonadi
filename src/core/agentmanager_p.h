@@ -9,8 +9,8 @@
 
 #include "agentmanagerinterface.h"
 
-#include "agenttype.h"
 #include "agentinstance.h"
+#include "agenttype.h"
 
 #include <QHash>
 
@@ -20,7 +20,6 @@ class QDBusServiceWatcher;
 
 namespace Akonadi
 {
-
 class AgentManager;
 
 /**
@@ -34,7 +33,8 @@ class AgentManagerPrivate : public QObject
 public:
     explicit AgentManagerPrivate(AgentManager *parent)
         : mParent(parent)
-    {}
+    {
+    }
 
     /*
      * Used by AgentInstanceCreateJob

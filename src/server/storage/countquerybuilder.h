@@ -7,8 +7,8 @@
 #ifndef AKONADI_COUNTQUERYBUILDER_H
 #define AKONADI_COUNTQUERYBUILDER_H
 
-#include "storage/querybuilder.h"
 #include "akonadiserver_debug.h"
+#include "storage/querybuilder.h"
 
 #include <QSqlError>
 
@@ -16,17 +16,13 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
   Helper class for creating queries to count elements in a database.
 */
 class CountQueryBuilder : public QueryBuilder
 {
 public:
-    enum CountMode {
-        All,
-        Distinct
-    };
+    enum CountMode { All, Distinct };
 
     /**
       Creates a new query builder that counts all entries in @p table.

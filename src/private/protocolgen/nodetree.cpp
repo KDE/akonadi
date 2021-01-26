@@ -4,7 +4,6 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-
 #include "nodetree.h"
 #include "cpphelper.h"
 #include "typehelper.h"
@@ -44,28 +43,23 @@ const QVector<Node const *> &Node::children() const
     return mChildren;
 }
 
-
-
 DocumentNode::DocumentNode(int version)
     : Node(Document, nullptr)
     , mVersion(version)
-{}
+{
+}
 
 int DocumentNode::version() const
 {
     return mVersion;
 }
 
-
-
-
-
-
 ClassNode::ClassNode(const QString &name, ClassType type, DocumentNode *parent)
     : Node(Node::Class, parent)
     , mName(name)
     , mClassType(type)
-{}
+{
+}
 
 QString ClassNode::name() const
 {
@@ -80,22 +74,34 @@ ClassNode::ClassType ClassNode::classType() const
 QString ClassNode::className() const
 {
     switch (mClassType) {
-    case Class: return mName;
-    case Command: return mName + QStringLiteral("Command");
-    case Response: return mName + QStringLiteral("Response");
-    case Notification: return mName + QStringLiteral("Notification");
-    default: Q_ASSERT(false); return QString();
+    case Class:
+        return mName;
+    case Command:
+        return mName + QStringLiteral("Command");
+    case Response:
+        return mName + QStringLiteral("Response");
+    case Notification:
+        return mName + QStringLiteral("Notification");
+    default:
+        Q_ASSERT(false);
+        return QString();
     }
 }
 
 QString ClassNode::parentClassName() const
 {
     switch (mClassType) {
-    case Class: return QString();
-    case Command: return QStringLiteral("Command");
-    case Response: return QStringLiteral("Response");
-    case Notification: return QStringLiteral("ChangeNotification");
-    case Invalid: Q_ASSERT(false); return QString();
+    case Class:
+        return QString();
+    case Command:
+        return QStringLiteral("Command");
+    case Response:
+        return QStringLiteral("Response");
+    case Notification:
+        return QStringLiteral("ChangeNotification");
+    case Invalid:
+        Q_ASSERT(false);
+        return QString();
     }
     Q_UNREACHABLE();
 }
@@ -127,17 +133,15 @@ QVector<PropertyNode const *> ClassNode::properties() const
     return rv;
 }
 
-
-
-
-
 CtorNode::CtorNode(const QVector<Argument> &args, ClassNode *parent)
     : Node(Ctor, parent)
     , mArgs(args)
-{}
+{
+}
 
 CtorNode::~CtorNode()
-{}
+{
+}
 
 QVector<CtorNode::Argument> CtorNode::arguments() const
 {
@@ -154,14 +158,12 @@ void CtorNode::setArgumentType(const QString &name, const QString &type)
     }
 }
 
-
-
-
 EnumNode::EnumNode(const QString &name, EnumType type, ClassNode *parent)
     : Node(Enum, parent)
     , mName(name)
     , mEnumType(type)
-{}
+{
+}
 
 QString EnumNode::name() const
 {
@@ -184,13 +186,12 @@ EnumNode::EnumType EnumNode::elementNameToType(const QStringRef &name)
     }
 }
 
-
-
 EnumValueNode::EnumValueNode(const QString &name, EnumNode *parent)
     : Node(EnumValue, parent)
     , mName(name)
     , mValue()
-{}
+{
+}
 
 QString EnumValueNode::name() const
 {
@@ -207,8 +208,6 @@ QString EnumValueNode::value() const
     return mValue;
 }
 
-
-
 PropertyNode::PropertyNode(const QString &name, const QString &type, ClassNode *parent)
     : Node(Property, parent)
     , mName(name)
@@ -216,7 +215,8 @@ PropertyNode::PropertyNode(const QString &name, const QString &type, ClassNode *
     , mSetter(nullptr)
     , mReadOnly(false)
     , mAsReference(false)
-{}
+{
+}
 
 PropertyNode::~PropertyNode()
 {

@@ -5,22 +5,22 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "changerecorderjournal_p.h"
 #include "akonadicore_debug.h"
+#include "changerecorderjournal_p.h"
 
-#include <QQueue>
 #include <QDataStream>
 #include <QFile>
+#include <QQueue>
 #include <QSettings>
 
 using namespace Akonadi;
 
-namespace {
+namespace
+{
 constexpr quint64 s_currentVersion = Q_UINT64_C(0x000800000000);
-constexpr quint64 s_versionMask    = Q_UINT64_C(0xFFFF00000000);
-constexpr quint64 s_sizeMask       = Q_UINT64_C(0x0000FFFFFFFF);
+constexpr quint64 s_versionMask = Q_UINT64_C(0xFFFF00000000);
+constexpr quint64 s_sizeMask = Q_UINT64_C(0x0000FFFFFFFF);
 }
-
 
 Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadQSettingsNotification(QSettings *settings)
 {
@@ -117,7 +117,7 @@ void ChangeRecorderJournalWriter::saveTo(const QQueue<Protocol::ChangeNotificati
     stream << countAndVersion;
     stream << quint64(0); // no start offset
 
-    //qCDebug(AKONADICORE_LOG) << "Saving" << pendingNotifications.count() << "notifications (full save)";
+    // qCDebug(AKONADICORE_LOG) << "Saving" << pendingNotifications.count() << "notifications (full save)";
 
     for (int i = 0; i < notifications.count(); ++i) {
         const Protocol::ChangeNotificationPtr &msg = notifications.at(i);
@@ -169,7 +169,6 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadQSettingsItemNo
     msg->setItemParts(itemParts);
     return msg;
 }
-
 
 Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadQSettingsCollectionNotification(QSettings *settings)
 {
@@ -426,7 +425,6 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadItemNotificatio
     return msg;
 }
 
-
 QSet<QByteArray> ChangeRecorderJournalWriter::encodeRelations(const QSet<Protocol::ItemChangeNotification::Relation> &relations)
 {
     QSet<QByteArray> rv;
@@ -444,55 +442,29 @@ void ChangeRecorderJournalWriter::saveItemNotification(QDataStream &stream, cons
     const auto &items = msg.items();
     stream << items.count();
     for (const auto &item : items) {
-        stream << item.id()
-               << item.revision()
-               << item.parentId()
-               << item.remoteId()
-               << item.remoteRevision()
-               << item.gid()
-               << item.size()
-               << item.mimeType()
-               << item.mTime()
-               << item.flags();
+        stream << item.id() << item.revision() << item.parentId() << item.remoteId() << item.remoteRevision() << item.gid() << item.size() << item.mimeType()
+               << item.mTime() << item.flags();
         const auto tags = item.tags();
         stream << tags.count();
         for (const auto &tag : tags) {
-            stream << tag.id()
-                   << tag.parentId()
-                   << tag.gid()
-                   << tag.type()
-                   << tag.remoteId()
-                   << tag.attributes();
+            stream << tag.id() << tag.parentId() << tag.gid() << tag.type() << tag.remoteId() << tag.attributes();
         }
         stream << item.virtualReferences();
         const auto relations = item.relations();
         stream << relations.count();
         for (const auto &relation : relations) {
-            stream << relation.left()
-                   << relation.leftMimeType()
-                   << relation.right()
-                   << relation.rightMimeType()
-                   << relation.type()
-                   << relation.remoteId();
+            stream << relation.left() << relation.leftMimeType() << relation.right() << relation.rightMimeType() << relation.type() << relation.remoteId();
         }
         const auto ancestors = item.ancestors();
         stream << ancestors.count();
         for (const auto &ancestor : ancestors) {
-            stream << ancestor.id()
-                   << ancestor.remoteId()
-                   << ancestor.name()
-                   << ancestor.attributes();
+            stream << ancestor.id() << ancestor.remoteId() << ancestor.name() << ancestor.attributes();
         }
         const auto parts = item.parts();
         stream << parts.count();
         for (const auto &part : parts) {
             const auto metaData = part.metaData();
-            stream << part.payloadName()
-                   << metaData.name()
-                   << metaData.size()
-                   << metaData.version()
-                   << static_cast<int>(metaData.storageType())
-                   << part.data();
+            stream << part.payloadName() << metaData.name() << metaData.size() << metaData.version() << static_cast<int>(metaData.storageType()) << part.data();
         }
         stream << item.cachedParts();
     }
@@ -620,11 +592,11 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadCollectionNotif
             collection.setAttributes(attrs);
             stream >> b;
             collection.setEnabled(b);
-            stream >> reinterpret_cast<qint8&>(tristate);
+            stream >> reinterpret_cast<qint8 &>(tristate);
             collection.setDisplayPref(tristate);
-            stream >> reinterpret_cast<qint8&>(tristate);
+            stream >> reinterpret_cast<qint8 &>(tristate);
             collection.setSyncPref(tristate);
-            stream >> reinterpret_cast<qint8&>(tristate);
+            stream >> reinterpret_cast<qint8 &>(tristate);
             collection.setIndexPref(tristate);
             stream >> b; // read the deprecated "isReferenced" value
             stream >> b;
@@ -663,7 +635,7 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadCollectionNotif
     } else {
         qCWarning(AKONADICORE_LOG) << "Error version is not correct here" << version;
         return msg;
-     }
+    }
 
     if (version >= 5) {
         msg->setOperation(static_cast<Protocol::CollectionChangeNotification::Operation>(operation));
@@ -702,10 +674,7 @@ void Akonadi::ChangeRecorderJournalWriter::saveCollectionNotification(QDataStrea
     const auto ancestors = col.ancestors();
     stream << ancestors.count();
     for (const auto &ancestor : ancestors) {
-        stream << ancestor.id()
-               << ancestor.remoteId()
-               << ancestor.name()
-               << ancestor.attributes();
+        stream << ancestor.id() << ancestor.remoteId() << ancestor.name() << ancestor.attributes();
     }
     const auto cachePolicy = col.cachePolicy();
     stream << cachePolicy.inherit();
@@ -720,7 +689,6 @@ void Akonadi::ChangeRecorderJournalWriter::saveCollectionNotification(QDataStrea
     stream << static_cast<qint8>(col.indexPref());
     stream << false; // write the deprecated "isReferenced" value
     stream << col.isVirtual();
-
 
     stream << msg.resource();
     stream << msg.destinationResource();
@@ -868,7 +836,7 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadRelationNotific
             relation.setLeftMimeType(ba);
             stream >> i64;
             relation.setRight(i64);
-            stream >>ba;
+            stream >> ba;
             relation.setRightMimeType(ba);
             stream >> ba;
             relation.setRemoteId(ba);

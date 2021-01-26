@@ -13,9 +13,10 @@
 
 class QByteArray;
 
-namespace Akonadi {
-namespace Server {
-
+namespace Akonadi
+{
+namespace Server
+{
 class AggregatedCollectionFetchScopePrivate;
 class AggregatedCollectionFetchScope
 {
@@ -23,8 +24,7 @@ public:
     explicit AggregatedCollectionFetchScope();
     ~AggregatedCollectionFetchScope();
 
-    void apply(const Protocol::CollectionFetchScope &oldScope,
-               const Protocol::CollectionFetchScope &newScope);
+    void apply(const Protocol::CollectionFetchScope &oldScope, const Protocol::CollectionFetchScope &newScope);
 
     QSet<QByteArray> attributes() const;
 
@@ -35,7 +35,7 @@ public:
     void removeSubscriber();
 
 private:
-    AggregatedCollectionFetchScopePrivate * const d_ptr;
+    AggregatedCollectionFetchScopePrivate *const d_ptr;
     Q_DECLARE_PRIVATE(AggregatedCollectionFetchScope)
 };
 
@@ -46,15 +46,13 @@ public:
     explicit AggregatedItemFetchScope();
     ~AggregatedItemFetchScope();
 
-    void apply(const Protocol::ItemFetchScope &oldScope,
-               const Protocol::ItemFetchScope &newScope);
+    void apply(const Protocol::ItemFetchScope &oldScope, const Protocol::ItemFetchScope &newScope);
     Protocol::ItemFetchScope toFetchScope() const;
 
     QSet<QByteArray> requestedParts() const;
 
     Protocol::ItemFetchScope::AncestorDepth ancestorDepth() const;
-    void updateAncestorDepth(Protocol::ItemFetchScope::AncestorDepth oldDepth,
-                             Protocol::ItemFetchScope::AncestorDepth newDepth);
+    void updateAncestorDepth(Protocol::ItemFetchScope::AncestorDepth oldDepth, Protocol::ItemFetchScope::AncestorDepth newDepth);
 
     bool cacheOnly() const;
     bool fullPayload() const;
@@ -74,10 +72,9 @@ public:
     void removeSubscriber();
 
 private:
-    AggregatedItemFetchScopePrivate * const d_ptr;
+    AggregatedItemFetchScopePrivate *const d_ptr;
     Q_DECLARE_PRIVATE(AggregatedItemFetchScope)
 };
-
 
 class AggregatedTagFetchScopePrivate;
 class AggregatedTagFetchScope
@@ -86,8 +83,7 @@ public:
     explicit AggregatedTagFetchScope();
     ~AggregatedTagFetchScope();
 
-    void apply(const Protocol::TagFetchScope &oldScope,
-               const Protocol::TagFetchScope &newScope);
+    void apply(const Protocol::TagFetchScope &oldScope, const Protocol::TagFetchScope &newScope);
     Protocol::TagFetchScope toFetchScope() const;
 
     QSet<QByteArray> attributes() const;
@@ -100,7 +96,7 @@ public:
     bool fetchAllAttributes() const;
 
 private:
-    AggregatedTagFetchScopePrivate * const d_ptr;
+    AggregatedTagFetchScopePrivate *const d_ptr;
     Q_DECLARE_PRIVATE(AggregatedTagFetchScope)
 };
 

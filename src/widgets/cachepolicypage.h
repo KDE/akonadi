@@ -12,7 +12,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @short A page in a collection properties dialog to configure the cache policy.
  *
@@ -35,8 +34,8 @@ public:
      * Describes the mode of the cache policy page.
      */
     enum GuiMode {
-        UserMode,     ///< A simplified UI for end-users will be provided.
-        AdvancedMode  ///< An advanced UI for debugging will be provided.
+        UserMode, ///< A simplified UI for end-users will be provided.
+        AdvancedMode ///< An advanced UI for debugging will be provided.
     };
 
     /**

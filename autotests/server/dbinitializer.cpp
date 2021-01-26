@@ -6,9 +6,9 @@
 #include "dbinitializer.h"
 #include "akonadiserver_debug.h"
 
-#include <storage/querybuilder.h>
 #include <storage/datastore.h>
 #include <storage/parttypehelper.h>
+#include <storage/querybuilder.h>
 
 #include "shared/akranges.h"
 
@@ -61,7 +61,7 @@ PimItem DbInitializer::createItem(const char *name, const Collection &parent)
     item.setMimeType(mimeType);
     item.setCollection(parent);
     item.setRemoteId(QLatin1String(name));
-    const bool ret = item.insert() ;
+    const bool ret = item.insert();
     Q_ASSERT(ret);
     Q_UNUSED(ret)
     return item;
@@ -93,7 +93,6 @@ QByteArray DbInitializer::toByteArray(bool enabled)
 
 QByteArray DbInitializer::toByteArray(Collection::Tristate tristate)
 {
-
     switch (tristate) {
     case Collection::True:
         return "TRUE";
@@ -106,10 +105,8 @@ QByteArray DbInitializer::toByteArray(Collection::Tristate tristate)
     return "DEFAULT";
 }
 
-Akonadi::Protocol::FetchCollectionsResponsePtr DbInitializer::listResponse(const Collection &col,
-                                                                           bool ancestors,
-                                                                           bool mimetypes,
-                                                                           const QStringList &ancestorFetchScope)
+Akonadi::Protocol::FetchCollectionsResponsePtr
+DbInitializer::listResponse(const Collection &col, bool ancestors, bool mimetypes, const QStringList &ancestorFetchScope)
 {
     auto resp = Akonadi::Protocol::FetchCollectionsResponsePtr::create(col.id());
     resp->setParentId(col.parentId());
@@ -123,7 +120,7 @@ Akonadi::Protocol::FetchCollectionsResponsePtr DbInitializer::listResponse(const
     resp->setIsVirtual(col.isVirtual());
     Akonadi::Protocol::CachePolicy cp;
     cp.setInherit(true);
-    cp.setLocalParts({ QLatin1String("ALL") });
+    cp.setLocalParts({QLatin1String("ALL")});
     resp->setCachePolicy(cp);
     if (ancestors) {
         QVector<Akonadi::Protocol::Ancestor> ancs;
@@ -136,7 +133,7 @@ Akonadi::Protocol::FetchCollectionsResponsePtr DbInitializer::listResponse(const
             if (!ancestorFetchScope.isEmpty()) {
                 anc.setRemoteId(parent.remoteId());
                 Akonadi::Protocol::Attributes attrs;
-                Q_FOREACH(const CollectionAttribute &attr, parent.attributes()) {
+                Q_FOREACH (const CollectionAttribute &attr, parent.attributes()) {
                     if (ancestorFetchScope.contains(QString::fromLatin1(attr.type()))) {
                         attrs.insert(attr.type(), attr.value());
                     }
@@ -157,7 +154,7 @@ Akonadi::Protocol::FetchCollectionsResponsePtr DbInitializer::listResponse(const
     resp->setIndexPref(static_cast<Tristate>(col.indexPref()));
 
     Akonadi::Protocol::Attributes attrs;
-    Q_FOREACH(const CollectionAttribute &attr, col.attributes()) {
+    Q_FOREACH (const CollectionAttribute &attr, col.attributes()) {
         attrs.insert(attr.type(), attr.value());
     }
     resp->setAttributes(attrs);
@@ -193,7 +190,7 @@ Collection DbInitializer::collection(const char *name)
 
 void DbInitializer::cleanup()
 {
-    Q_FOREACH (Collection col, mResource.collections()) { //krazy:exclude=foreach
+    Q_FOREACH (Collection col, mResource.collections()) { // krazy:exclude=foreach
         if (!col.isVirtual()) {
             col.remove();
         }
@@ -215,10 +212,10 @@ void DbInitializer::cleanup()
         }
     }
 
-    Q_FOREACH(Part part, Part::retrieveAll()) {          //krazy:exclude=foreach
+    Q_FOREACH (Part part, Part::retrieveAll()) { // krazy:exclude=foreach
         part.remove();
     }
-    Q_FOREACH(PimItem item, PimItem::retrieveAll()) {    //krazy:exclude=foreach
+    Q_FOREACH (PimItem item, PimItem::retrieveAll()) { // krazy:exclude=foreach
         item.remove();
     }
 }

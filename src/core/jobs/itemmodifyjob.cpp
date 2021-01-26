@@ -5,8 +5,8 @@
 */
 
 #include "itemmodifyjob.h"
-#include "itemmodifyjob_p.h"
 #include "akonadicore_debug.h"
+#include "itemmodifyjob_p.h"
 
 #include "changemediator_p.h"
 #include "collection.h"
@@ -15,8 +15,8 @@
 #include "itemserializer_p.h"
 #include "job_p.h"
 
-#include "protocolhelper_p.h"
 #include "gidextractor_p.h"
+#include "protocolhelper_p.h"
 
 #include <functional>
 
@@ -75,8 +75,7 @@ void ItemModifyJobPrivate::conflictResolveError(const QString &message)
 
 void ItemModifyJobPrivate::doUpdateItemRevision(Akonadi::Item::Id itemId, int oldRevision, int newRevision)
 {
-    auto it = std::find_if(mItems.begin(), mItems.end(),
-    [&itemId](const Item & item) -> bool {
+    auto it = std::find_if(mItems.begin(), mItems.end(), [&itemId](const Item &item) -> bool {
         return item.id() == itemId;
     });
     if (it != mItems.end() && (*it).revision() == oldRevision) {
@@ -223,9 +222,7 @@ Protocol::ModifyItemsCommandPtr ItemModifyJobPrivate::fullCommand() const
     }
 
     // nothing to do
-    if (cmd->modifiedParts() == Protocol::ModifyItemsCommand::None
-        && mParts.isEmpty()
-        && !cmd->invalidateCache()) {
+    if (cmd->modifiedParts() == Protocol::ModifyItemsCommand::None && mParts.isEmpty() && !cmd->invalidateCache()) {
         return cmd;
     }
 
@@ -298,8 +295,12 @@ bool ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &res
             if (d->mAutomaticConflictHandlingEnabled) {
                 auto *handler = new ConflictHandler(ConflictHandler::LocalLocalConflict, this);
                 handler->setConflictingItems(d->mItems.first(), d->mItems.first());
-                connect(handler, &ConflictHandler::conflictResolved, this, [d]() { d->conflictResolved(); });
-                connect(handler, &ConflictHandler::error, this, [d](const QString &str) { d->conflictResolveError(str); });
+                connect(handler, &ConflictHandler::conflictResolved, this, [d]() {
+                    d->conflictResolved();
+                });
+                connect(handler, &ConflictHandler::error, this, [d](const QString &str) {
+                    d->conflictResolveError(str);
+                });
                 QMetaObject::invokeMethod(handler, &ConflictHandler::start, Qt::QueuedConnection);
                 return true;
             }
@@ -310,8 +311,7 @@ bool ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &res
             item.setModificationTime(resp.modificationDateTime());
             item.d_ptr->resetChangeLog();
         } else if (resp.id() > -1) {
-            auto it = std::find_if(d->mItems.begin(), d->mItems.end(),
-            [&resp](const Item & item) -> bool {
+            auto it = std::find_if(d->mItems.begin(), d->mItems.end(), [&resp](const Item &item) -> bool {
                 return item.id() == resp.id();
             });
             if (it == d->mItems.end()) {

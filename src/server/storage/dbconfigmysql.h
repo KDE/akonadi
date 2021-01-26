@@ -15,7 +15,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class DbConfigMysql : public QObject, public DbConfig
 {
     Q_OBJECT

@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 class AgentFilterProxyModel;
 class AgentType;
 
@@ -76,9 +75,9 @@ Q_SIGNALS:
     void currentChanged(const Akonadi::AgentType &current, const Akonadi::AgentType &previous);
 
     /**
-      * This signal is emitted whenever the user activates an agent.
-      * @since 4.2
-      */
+     * This signal is emitted whenever the user activates an agent.
+     * @since 4.2
+     */
     void activated();
 
 private:

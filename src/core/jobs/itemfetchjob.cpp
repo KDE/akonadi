@@ -10,12 +10,10 @@
 #include "collection.h"
 #include "itemfetchscope.h"
 #include "job_p.h"
+#include "private/protocol_p.h"
 #include "protocolhelper_p.h"
 #include "session_p.h"
 #include "tagfetchscope.h"
-#include "private/protocol_p.h"
-
-
 
 #include <QTimer>
 
@@ -39,9 +37,12 @@ public:
 
     void init()
     {
-        QObject::connect(&mEmitTimer, &QTimer::timeout, q_ptr, [this]() { timeout(); });
+        QObject::connect(&mEmitTimer, &QTimer::timeout, q_ptr, [this]() {
+            timeout();
+        });
     }
-    void aboutToFinish() override {
+    void aboutToFinish() override
+    {
         timeout();
     }
 
@@ -84,7 +85,7 @@ public:
                     }
                 }
                 return itemStr;
-                //return QString(); //QString::fromLatin1(ProtocolHelper::entitySetToScope(mRequestedItems));
+                // return QString(); //QString::fromLatin1(ProtocolHelper::entitySetToScope(mRequestedItems));
             } catch (const Exception &e) {
                 return QString::fromUtf8(e.what());
             }
@@ -174,11 +175,10 @@ void ItemFetchJob::doStart()
     Q_D(ItemFetchJob);
 
     try {
-        d->sendCommand(Protocol::FetchItemsCommandPtr::create(
-                           d->mRequestedItems.isEmpty() ? Scope() : ProtocolHelper::entitySetToScope(d->mRequestedItems),
-                           ProtocolHelper::commandContextToProtocol(d->mCollection, d->mCurrentTag, d->mRequestedItems),
-                           ProtocolHelper::itemFetchScopeToProtocol(d->mFetchScope),
-                           ProtocolHelper::tagFetchScopeToProtocol(d->mFetchScope.tagFetchScope())));
+        d->sendCommand(Protocol::FetchItemsCommandPtr::create(d->mRequestedItems.isEmpty() ? Scope() : ProtocolHelper::entitySetToScope(d->mRequestedItems),
+                                                              ProtocolHelper::commandContextToProtocol(d->mCollection, d->mCurrentTag, d->mRequestedItems),
+                                                              ProtocolHelper::itemFetchScopeToProtocol(d->mFetchScope),
+                                                              ProtocolHelper::tagFetchScopeToProtocol(d->mFetchScope.tagFetchScope())));
     } catch (const Akonadi::Exception &e) {
         setError(Job::Unknown);
         setErrorText(QString::fromUtf8(e.what()));

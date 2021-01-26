@@ -7,12 +7,12 @@
 #ifndef DATASTORE_H
 #define DATASTORE_H
 
-#include <QObject>
 #include <QList>
-#include <QVector>
-#include <QThreadStorage>
-#include <QSqlDatabase>
 #include <QMutex>
+#include <QObject>
+#include <QSqlDatabase>
+#include <QThreadStorage>
+#include <QVector>
 
 class QSqlQuery;
 class QTimer;
@@ -26,7 +26,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class DataStore;
 class DataStoreFactory
 {
@@ -36,6 +35,7 @@ public:
 
 protected:
     explicit DataStoreFactory() = default;
+
 private:
     Q_DISABLE_COPY_MOVE(DataStoreFactory)
 };
@@ -131,22 +131,33 @@ public:
     static bool hasDataStore();
 
     /* --- ItemFlags ----------------------------------------------------- */
-    virtual bool setItemsFlags(const PimItem::List &items, const QVector<Flag> *currentFlags,
+    virtual bool setItemsFlags(const PimItem::List &items,
+                               const QVector<Flag> *currentFlags,
                                const QVector<Flag> &newFlags,
-                               bool *flagsChanged = nullptr, const Collection &col = Collection(), bool silent = false);
-    virtual bool appendItemsFlags(const PimItem::List &items, const QVector<Flag> &flags, bool *flagsChanged = nullptr,
-                                  bool checkIfExists = true, const Collection &col = Collection(), bool silent = false);
-    virtual bool removeItemsFlags(const PimItem::List &items, const QVector<Flag> &flags, bool *tagsChanged = nullptr,
-                                  const Collection &collection = Collection(), bool silent = false);
+                               bool *flagsChanged = nullptr,
+                               const Collection &col = Collection(),
+                               bool silent = false);
+    virtual bool appendItemsFlags(const PimItem::List &items,
+                                  const QVector<Flag> &flags,
+                                  bool *flagsChanged = nullptr,
+                                  bool checkIfExists = true,
+                                  const Collection &col = Collection(),
+                                  bool silent = false);
+    virtual bool removeItemsFlags(const PimItem::List &items,
+                                  const QVector<Flag> &flags,
+                                  bool *tagsChanged = nullptr,
+                                  const Collection &collection = Collection(),
+                                  bool silent = false);
 
     /* --- ItemTags ----------------------------------------------------- */
-    virtual bool setItemsTags(const PimItem::List &items, const Tag::List &tags,
-                              bool *tagsChanged = nullptr, bool silent = false);
-    virtual bool appendItemsTags(const PimItem::List &items, const Tag::List &tags,
-                                 bool *tagsChanged = nullptr, bool checkIfExists = true,
-                                 const Collection &col = Collection(), bool silent = false);
-    virtual bool removeItemsTags(const PimItem::List &items, const Tag::List &tags,
-                                 bool *tagsChanged = nullptr, bool silent = false);
+    virtual bool setItemsTags(const PimItem::List &items, const Tag::List &tags, bool *tagsChanged = nullptr, bool silent = false);
+    virtual bool appendItemsTags(const PimItem::List &items,
+                                 const Tag::List &tags,
+                                 bool *tagsChanged = nullptr,
+                                 bool checkIfExists = true,
+                                 const Collection &col = Collection(),
+                                 bool silent = false);
+    virtual bool removeItemsTags(const PimItem::List &items, const Tag::List &tags, bool *tagsChanged = nullptr, bool silent = false);
     virtual bool removeTags(const Tag::List &tags, bool silent = false);
 
     /* --- ItemParts ----------------------------------------------------- */
@@ -182,7 +193,7 @@ public:
     /// Returns all virtual collections the @p item is linked to
     QVector<Collection> virtualCollections(const PimItem &item);
 
-    QMap< Server::Entity::Id, QList< PimItem > > virtualCollections(const Akonadi::Server::PimItem::List &items);
+    QMap<Server::Entity::Id, QList<PimItem>> virtualCollections(const Akonadi::Server::PimItem::List &items);
 
     /* --- PimItem ------------------------------------------------------- */
     virtual bool appendPimItem(QVector<Part> &parts,
@@ -221,8 +232,7 @@ public:
     virtual bool unhideAllPimItems();
 
     /* --- Collection attributes ------------------------------------------ */
-    virtual bool addCollectionAttribute(const Collection &col, const QByteArray &key,
-                                        const QByteArray &value, bool silent = false);
+    virtual bool addCollectionAttribute(const Collection &col, const QByteArray &key, const QByteArray &value, bool silent = false);
     /**
      * Removes the given collection attribute for @p col.
      * @throws HandlerException on database errors
@@ -308,13 +318,9 @@ protected:
     void debugLastQueryError(const QSqlQuery &query, const char *actionDescription) const;
 
 private:
-    bool doAppendItemsFlag(const PimItem::List &items, const Flag &flag,
-                           const QSet<PimItem::Id> &existing, const Collection &col,
-                           bool silent);
+    bool doAppendItemsFlag(const PimItem::List &items, const Flag &flag, const QSet<PimItem::Id> &existing, const Collection &col, bool silent);
 
-    bool doAppendItemsTag(const PimItem::List &items, const Tag &tag,
-                          const QSet<Entity::Id> &existing, const Collection &col,
-                          bool silent);
+    bool doAppendItemsTag(const PimItem::List &items, const Tag &tag, const QSet<Entity::Id> &existing, const Collection &col, bool silent);
 
     /** Converts the given date/time to the database format, i.e.
         "YYYY-MM-DD HH:MM:SS".
@@ -359,7 +365,6 @@ private:
     static QMutex sTransactionMutex;
 
     friend class DataStoreFactory;
-
 };
 
 } // namespace Server

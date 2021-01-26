@@ -9,9 +9,10 @@
 
 #include "storage/itemretrievalmanager.h"
 
-namespace Akonadi {
-namespace Server {
-
+namespace Akonadi
+{
+namespace Server
+{
 class FakeItemRetrievalManager : public ItemRetrievalManager
 {
     Q_OBJECT

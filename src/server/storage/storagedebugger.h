@@ -8,11 +8,11 @@
 #ifndef STORAGEDEBUGGER_H
 #define STORAGEDEBUGGER_H
 
-#include <QObject>
-#include <QMutex>
-#include <QMap>
-#include <QVariant>
 #include <QFile>
+#include <QMap>
+#include <QMutex>
+#include <QObject>
+#include <QVariant>
 #include <QVector>
 
 #include <atomic>
@@ -36,7 +36,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class StorageDebugger : public QObject
 {
     Q_OBJECT
@@ -74,14 +73,17 @@ Q_SIGNALS:
     void connectionChanged(qint64 id, const QString &name);
     void connectionClosed(qint64 id, qint64 timestamp);
 
-    void transactionStarted(qint64 connectionId, const QString &name, qint64 timestamp,
-                            uint duration, const QString &error);
-    void transactionFinished(qint64 connectionId, bool commit, qint64 timestamp, uint duration,
-                             const QString &error);
+    void transactionStarted(qint64 connectionId, const QString &name, qint64 timestamp, uint duration, const QString &error);
+    void transactionFinished(qint64 connectionId, bool commit, qint64 timestamp, uint duration, const QString &error);
 
-    void queryExecuted(double sequence, qint64 connectionId, qint64 timestamp,
-                       uint duration, const QString &query, const QMap<QString, QVariant> &values,
-                       int resultsCount, const QList<QList<QVariant> > &result,
+    void queryExecuted(double sequence,
+                       qint64 connectionId,
+                       qint64 timestamp,
+                       uint duration,
+                       const QString &query,
+                       const QMap<QString, QVariant> &values,
+                       int resultsCount,
+                       const QList<QList<QVariant>> &result,
                        const QString &error);
 
 private:
@@ -95,7 +97,6 @@ private:
     std::atomic_bool mEnabled = {false};
     std::atomic_int64_t mSequence = {0};
     QVector<DbConnection> mConnections;
-
 };
 
 } // namespace Server

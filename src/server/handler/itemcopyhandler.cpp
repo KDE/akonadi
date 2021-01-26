@@ -7,15 +7,15 @@
 #include "itemcopyhandler.h"
 
 #include "akonadi.h"
+#include "cachecleaner.h"
 #include "connection.h"
 #include "handlerhelper.h"
-#include "cachecleaner.h"
 #include "storage/datastore.h"
 #include "storage/itemqueryhelper.h"
 #include "storage/itemretriever.h"
+#include "storage/parthelper.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
-#include "storage/parthelper.h"
 
 #include <private/imapset_p.h>
 
@@ -24,7 +24,8 @@ using namespace Akonadi::Server;
 
 ItemCopyHandler::ItemCopyHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 bool ItemCopyHandler::copyItem(const PimItem &item, const Collection &target)
 {
@@ -102,10 +103,9 @@ bool ItemCopyHandler::parseStream()
     ItemRetriever retriever(akonadi().itemRetrievalManager(), connection(), connection()->context());
     retriever.setItemSet(cmd.items().uidSet());
     retriever.setRetrieveFullPayload(true);
-    QObject::connect(&retriever, &ItemRetriever::itemsRetrieved,
-                     [this](const QVector<qint64> &ids) {
-                        processItems(ids);
-                     });
+    QObject::connect(&retriever, &ItemRetriever::itemsRetrieved, [this](const QVector<qint64> &ids) {
+        processItems(ids);
+    });
     if (!retriever.exec()) {
         return failureResponse(retriever.lastError());
     }

@@ -13,8 +13,7 @@ namespace Akonadi
 {
 namespace Server
 {
-
-class RelationRemoveHandler: public Handler
+class RelationRemoveHandler : public Handler
 {
 public:
     RelationRemoveHandler(AkonadiServer &akonadi);

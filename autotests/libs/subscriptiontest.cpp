@@ -4,15 +4,14 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "control.h"
 #include "collection.h"
 #include "collectionfetchjob.h"
 #include "collectionfetchscope.h"
-#include "subscriptionjob_p.h"
+#include "control.h"
 #include "qtest_akonadi.h"
+#include "subscriptionjob_p.h"
 
 #include <QObject>
-
 
 using namespace Akonadi;
 

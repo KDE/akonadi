@@ -9,13 +9,12 @@
 
 #include <QStringList>
 
-#include "entitydisplayattribute.h"
 #include "collectionstatistics.h"
+#include "entitydisplayattribute.h"
 #include "item.h"
 
 namespace Akonadi
 {
-
 /**
  * @internal
  */
@@ -28,7 +27,7 @@ Q_REQUIRED_RESULT inline bool isVirtualParent(const Collection &collection)
 
 Q_REQUIRED_RESULT inline bool isReadOnly(const Collection &collection)
 {
-    return !(collection.rights() &Collection::CanCreateItem);
+    return !(collection.rights() & Collection::CanCreateItem);
 }
 
 Q_REQUIRED_RESULT inline bool isRoot(const Collection &collection)
@@ -48,10 +47,7 @@ Q_REQUIRED_RESULT inline bool isStructural(const Collection &collection)
 
 Q_REQUIRED_RESULT inline bool isFolder(const Collection &collection)
 {
-    return (!isRoot(collection) &&
-            !isResource(collection) &&
-            !isStructural(collection) &&
-            collection.resource() != QLatin1String("akonadi_search_resource"));
+    return (!isRoot(collection) && !isResource(collection) && !isStructural(collection) && collection.resource() != QLatin1String("akonadi_search_resource"));
 }
 
 Q_REQUIRED_RESULT inline bool isUnifiedMailbox(const Collection &collection)
@@ -78,11 +74,9 @@ Q_REQUIRED_RESULT inline QString defaultIconName(const Collection &col)
     }
 
     const QStringList content = col.contentMimeTypes();
-    if ((content.size() == 1) ||
-            (content.size() == 2 && content.contains(Collection::mimeType()))) {
-        if (content.contains(QLatin1String("text/x-vcard")) ||
-                content.contains(QLatin1String("text/directory")) ||
-                content.contains(QLatin1String("text/vcard"))) {
+    if ((content.size() == 1) || (content.size() == 2 && content.contains(Collection::mimeType()))) {
+        if (content.contains(QLatin1String("text/x-vcard")) || content.contains(QLatin1String("text/directory"))
+            || content.contains(QLatin1String("text/vcard"))) {
             return QStringLiteral("x-office-address-book");
         }
         // TODO: add all other content types and/or fix their mimetypes
@@ -100,8 +94,7 @@ Q_REQUIRED_RESULT inline QString defaultIconName(const Collection &col)
 Q_REQUIRED_RESULT inline QString displayIconName(const Collection &col)
 {
     QString iconName = defaultIconName(col);
-    if (col.hasAttribute<EntityDisplayAttribute>() &&
-            !col.attribute<EntityDisplayAttribute>()->iconName().isEmpty()) {
+    if (col.hasAttribute<EntityDisplayAttribute>() && !col.attribute<EntityDisplayAttribute>()->iconName().isEmpty()) {
         if (!col.attribute<EntityDisplayAttribute>()->activeIconName().isEmpty() && col.statistics().unreadCount() > 0) {
             iconName = col.attribute<EntityDisplayAttribute>()->activeIconName();
         } else {
@@ -109,7 +102,6 @@ Q_REQUIRED_RESULT inline QString displayIconName(const Collection &col)
         }
     }
     return iconName;
-
 }
 Q_REQUIRED_RESULT inline bool hasValidHierarchicalRID(const Collection &col)
 {

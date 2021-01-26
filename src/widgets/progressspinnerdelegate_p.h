@@ -9,14 +9,13 @@
 #ifndef PROGRESSSPINNERDELEGATE_P_H
 #define PROGRESSSPINNERDELEGATE_P_H
 
-#include <QStyledItemDelegate>
 #include <QSet>
+#include <QStyledItemDelegate>
 
 #include <KPixmapSequence>
 
 namespace Akonadi
 {
-
 class DelegateAnimator : public QObject
 {
     Q_OBJECT
@@ -53,7 +52,6 @@ protected:
     void timerEvent(QTimerEvent *event) override;
 
 private:
-
     QSet<Animation> m_animations;
     QAbstractItemView *const m_view;
     KPixmapSequence m_pixmapSequence;

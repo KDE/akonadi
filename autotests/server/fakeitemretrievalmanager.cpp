@@ -18,8 +18,10 @@ FakeItemRetrievalManager::FakeItemRetrievalManager()
 
 void FakeItemRetrievalManager::requestItemDelivery(ItemRetrievalRequest request)
 {
-    QMetaObject::invokeMethod(this, [this, r = std::move(request)] {
+    QMetaObject::invokeMethod(
+        this,
+        [this, r = std::move(request)] {
             Q_EMIT requestFinished({r});
-    }, Qt::QueuedConnection);
+        },
+        Qt::QueuedConnection);
 }
-

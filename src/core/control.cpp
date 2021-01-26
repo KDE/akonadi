@@ -5,11 +5,11 @@
 */
 
 #include "control.h"
-#include "servermanager.h"
 #include "akonadicore_debug.h"
+#include "servermanager.h"
 
-#include <QEventLoop>
 #include <QCoreApplication>
+#include <QEventLoop>
 #include <QPointer>
 
 using namespace Akonadi;
@@ -18,7 +18,6 @@ namespace Akonadi
 {
 namespace Internal
 {
-
 class StaticControl : public Control
 {
     Q_OBJECT
@@ -79,8 +78,7 @@ void Control::Private::serverStateChanged(ServerManager::State state)
     qCDebug(AKONADICORE_LOG) << "Server state changed to" << state;
     if (mEventLoop && mEventLoop->isRunning()) {
         // ignore transient states going into the right direction
-        if ((mStarting && (state == ServerManager::Starting || state == ServerManager::Upgrading)) ||
-                (mStopping && state == ServerManager::Stopping)) {
+        if ((mStarting && (state == ServerManager::Starting || state == ServerManager::Upgrading)) || (mStopping && state == ServerManager::Stopping)) {
             return;
         }
         mEventLoop->quit();
@@ -91,12 +89,15 @@ void Control::Private::serverStateChanged(ServerManager::State state)
 Control::Control()
     : d(new Private(this))
 {
-    connect(ServerManager::self(), &ServerManager::stateChanged,
-            this, [this](Akonadi::ServerManager::State state) { d->serverStateChanged(state); });
+    connect(ServerManager::self(), &ServerManager::stateChanged, this, [this](Akonadi::ServerManager::State state) {
+        d->serverStateChanged(state);
+    });
     // mProgressIndicator is a widget, so it better be deleted before the QApplication is deleted
     // Otherwise we get a crash in QCursor code with Qt-4.5
     if (QCoreApplication::instance()) {
-        connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, [this]() {d->cleanup();});
+        connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, [this]() {
+            d->cleanup();
+        });
     }
 }
 

@@ -6,8 +6,8 @@
 
 #include <QObject>
 
-#include <shared/aktest.h>
 #include "aggregatedfetchscope.h"
+#include <shared/aktest.h>
 
 #include <QTest>
 

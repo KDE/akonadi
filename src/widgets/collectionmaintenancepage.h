@@ -12,7 +12,6 @@
 
 namespace Akonadi
 {
-
 class AKONADIWIDGETS_EXPORT CollectionMaintenancePage : public Akonadi::CollectionPropertiesPage
 {
     Q_OBJECT
@@ -37,6 +36,4 @@ AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CollectionMaintenancePageFactory, Col
 
 }
 
-
 #endif /* COLLECTIONMAINTENANCEPAGE_H */
-

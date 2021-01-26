@@ -19,7 +19,6 @@ namespace Akonadi
 {
 namespace Internal
 {
-
 /**
  * @internal
  */
@@ -60,7 +59,7 @@ public:
         }
     }
 
-    AgentTypeWidget * const mParent;
+    AgentTypeWidget *const mParent;
     QListView *mView = nullptr;
     AgentTypeModel *mModel = nullptr;
     AgentFilterProxyModel *proxyModel = nullptr;
@@ -102,10 +101,12 @@ AgentTypeWidget::AgentTypeWidget(QWidget *parent)
 
     d->mView->selectionModel()->setCurrentIndex(d->mView->model()->index(0, 0), QItemSelectionModel::Select);
     d->mView->scrollTo(d->mView->model()->index(0, 0));
-    connect(d->mView->selectionModel(), &QItemSelectionModel::currentChanged,
-            this, [this](const QModelIndex &start, const QModelIndex &end) {d->currentAgentTypeChanged(start, end);});
-    connect(d->mView, QOverload<const QModelIndex &>::of(&QListView::activated),
-            this, [this](const QModelIndex &index) { d->typeActivated(index); });
+    connect(d->mView->selectionModel(), &QItemSelectionModel::currentChanged, this, [this](const QModelIndex &start, const QModelIndex &end) {
+        d->currentAgentTypeChanged(start, end);
+    });
+    connect(d->mView, QOverload<const QModelIndex &>::of(&QListView::activated), this, [this](const QModelIndex &index) {
+        d->typeActivated(index);
+    });
 }
 
 AgentTypeWidget::~AgentTypeWidget()
@@ -179,8 +180,7 @@ void AgentTypeWidgetDelegate::paint(QPainter *painter, const QStyleOptionViewIte
     QApplication::style()->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter);
 
     QPen pen = painter->pen();
-    QPalette::ColorGroup cg = (option.state & QStyle::State_Enabled)
-                              ? QPalette::Normal : QPalette::Disabled;
+    QPalette::ColorGroup cg = (option.state & QStyle::State_Enabled) ? QPalette::Normal : QPalette::Disabled;
     if (cg == QPalette::Normal && !(option.state & QStyle::State_Active)) {
         cg = QPalette::Inactive;
     }
@@ -250,10 +250,8 @@ void AgentTypeWidgetDelegate::drawFocus(QPainter *painter, const QStyleOptionVie
         o.QStyleOption::operator=(option);
         o.rect = rect;
         o.state |= QStyle::State_KeyboardFocusChange;
-        QPalette::ColorGroup cg = (option.state & QStyle::State_Enabled)
-                                  ? QPalette::Normal : QPalette::Disabled;
-        o.backgroundColor = option.palette.color(cg, (option.state & QStyle::State_Selected)
-                            ? QPalette::Highlight : QPalette::Window);
+        QPalette::ColorGroup cg = (option.state & QStyle::State_Enabled) ? QPalette::Normal : QPalette::Disabled;
+        o.backgroundColor = option.palette.color(cg, (option.state & QStyle::State_Selected) ? QPalette::Highlight : QPalette::Window);
         QApplication::style()->drawPrimitive(QStyle::PE_FrameFocusRect, &o, painter);
     }
 }

@@ -24,27 +24,40 @@ private Q_SLOTS:
         QTest::addColumn<Scope>("result");
         QTest::addColumn<bool>("shouldThrow");
 
-        Item u1; u1.setId(1);
-        Item u2; u2.setId(2);
-        Item u3; u3.setId(3);
-        Item r1; r1.setRemoteId(QStringLiteral("A"));
-        Item r2; r2.setRemoteId(QStringLiteral("B"));
-        Item h1; h1.setRemoteId(QStringLiteral("H1")); h1.setParentCollection(Collection::root());
-        Item h2; h2.setRemoteId(QStringLiteral("H2a")); h2.parentCollection().setRemoteId(QStringLiteral("H2b")); h2.parentCollection().setParentCollection(Collection::root());
-        Item h3; h3.setRemoteId(QStringLiteral("H3a")); h3.parentCollection().setRemoteId(QStringLiteral("H3b"));
+        Item u1;
+        u1.setId(1);
+        Item u2;
+        u2.setId(2);
+        Item u3;
+        u3.setId(3);
+        Item r1;
+        r1.setRemoteId(QStringLiteral("A"));
+        Item r2;
+        r2.setRemoteId(QStringLiteral("B"));
+        Item h1;
+        h1.setRemoteId(QStringLiteral("H1"));
+        h1.setParentCollection(Collection::root());
+        Item h2;
+        h2.setRemoteId(QStringLiteral("H2a"));
+        h2.parentCollection().setRemoteId(QStringLiteral("H2b"));
+        h2.parentCollection().setParentCollection(Collection::root());
+        Item h3;
+        h3.setRemoteId(QStringLiteral("H3a"));
+        h3.parentCollection().setRemoteId(QStringLiteral("H3b"));
 
         QTest::newRow("empty") << Item::List() << Scope() << true;
         QTest::newRow("single uid") << (Item::List() << u1) << Scope(1) << false;
-        QTest::newRow("multi uid") << (Item::List() << u1 << u3) << Scope(QVector<qint64> { 1, 3 }) << false;
+        QTest::newRow("multi uid") << (Item::List() << u1 << u3) << Scope(QVector<qint64>{1, 3}) << false;
         QTest::newRow("block uid") << (Item::List() << u1 << u2 << u3) << Scope(ImapInterval(1, 3)) << false;
-        QTest::newRow("single rid") << (Item::List() << r1) << Scope(Scope::Rid, { QStringLiteral("A") }) << false;
-        QTest::newRow("multi rid") << (Item::List() << r1 << r2) << Scope(Scope::Rid, { QStringLiteral("A"), QStringLiteral("B") }) << false;
+        QTest::newRow("single rid") << (Item::List() << r1) << Scope(Scope::Rid, {QStringLiteral("A")}) << false;
+        QTest::newRow("multi rid") << (Item::List() << r1 << r2) << Scope(Scope::Rid, {QStringLiteral("A"), QStringLiteral("B")}) << false;
         QTest::newRow("invalid") << (Item::List() << Item()) << Scope() << true;
         QTest::newRow("mixed") << (Item::List() << u1 << r1) << Scope() << true;
-        QTest::newRow("single hrid") << (Item::List() << h1) << Scope({ Scope::HRID(-1, QStringLiteral("H1")), Scope::HRID(0) }) << false;
-        QTest::newRow("single hrid 2") << (Item::List() << h2) << Scope({ Scope::HRID(-1, QStringLiteral("H2a")), Scope::HRID(-2, QStringLiteral("H2b")), Scope::HRID(0) }) << false;
-        QTest::newRow("mixed hrid/rid") << (Item::List() << h1 << r1) << Scope(Scope::Rid, { QStringLiteral("H1"), QStringLiteral("A") }) << false;
-        QTest::newRow("unterminated hrid") << (Item::List() << h3) << Scope(Scope::Rid, { QStringLiteral("H3a") }) << false;
+        QTest::newRow("single hrid") << (Item::List() << h1) << Scope({Scope::HRID(-1, QStringLiteral("H1")), Scope::HRID(0)}) << false;
+        QTest::newRow("single hrid 2") << (Item::List() << h2)
+                                       << Scope({Scope::HRID(-1, QStringLiteral("H2a")), Scope::HRID(-2, QStringLiteral("H2b")), Scope::HRID(0)}) << false;
+        QTest::newRow("mixed hrid/rid") << (Item::List() << h1 << r1) << Scope(Scope::Rid, {QStringLiteral("H1"), QStringLiteral("A")}) << false;
+        QTest::newRow("unterminated hrid") << (Item::List() << h3) << Scope(Scope::Rid, {QStringLiteral("H3a")}) << false;
     }
 
     void testItemSetToByteArray()
@@ -69,7 +82,7 @@ private Q_SLOTS:
         QTest::addColumn<QVector<Protocol::Ancestor>>("input");
         QTest::addColumn<Collection>("parent");
 
-        QTest::newRow("top-level") << QVector<Protocol::Ancestor> { Protocol::Ancestor(0) } << Collection::root();
+        QTest::newRow("top-level") << QVector<Protocol::Ancestor>{Protocol::Ancestor(0)} << Collection::root();
 
         Protocol::Ancestor a1(42);
         a1.setRemoteId(QStringLiteral("net"));
@@ -78,7 +91,7 @@ private Q_SLOTS:
         c1.setRemoteId(QStringLiteral("net"));
         c1.setId(42);
         c1.setParentCollection(Collection::root());
-        QTest::newRow("till's obscure folder") << QVector<Protocol::Ancestor> { a1, Protocol::Ancestor(0) } << c1;
+        QTest::newRow("till's obscure folder") << QVector<Protocol::Ancestor>{a1, Protocol::Ancestor(0)} << c1;
     }
 
     void testAncestorParsing()
@@ -115,7 +128,7 @@ private Q_SLOTS:
             Protocol::FetchCollectionsResponse resp(3);
             resp.setParentId(2);
             resp.setRemoteId(QStringLiteral("r3"));
-            resp.setAncestors({ Protocol::Ancestor(2, QStringLiteral("r2")), Protocol::Ancestor(1, QStringLiteral("r1")), Protocol::Ancestor(0) });
+            resp.setAncestors({Protocol::Ancestor(2, QStringLiteral("r2")), Protocol::Ancestor(1, QStringLiteral("r1")), Protocol::Ancestor(0)});
 
             Collection c2;
             c2.setId(3);
@@ -154,7 +167,7 @@ private Q_SLOTS:
         Protocol::FetchCollectionsResponse resp(111);
         resp.setParentId(222);
         resp.setRemoteId(QStringLiteral("A"));
-        resp.setAncestors({ Protocol::Ancestor(222), Protocol::Ancestor(333), Protocol::Ancestor(0) });
+        resp.setAncestors({Protocol::Ancestor(222), Protocol::Ancestor(333), Protocol::Ancestor(0)});
 
         Collection parsedCollection = ProtocolHelper::parseCollection(resp);
 
@@ -179,7 +192,7 @@ private Q_SLOTS:
 
         {
             Scope scope;
-            scope.setHRidChain({ Scope::HRID(0) });
+            scope.setHRidChain({Scope::HRID(0)});
             QTest::newRow("root") << Collection::root() << scope;
         }
 
@@ -189,7 +202,7 @@ private Q_SLOTS:
         c.setRemoteId(QStringLiteral("r1"));
         {
             Scope scope;
-            scope.setHRidChain({ Scope::HRID(1, QStringLiteral("r1")), Scope::HRID(0) });
+            scope.setHRidChain({Scope::HRID(1, QStringLiteral("r1")), Scope::HRID(0)});
             QTest::newRow("one level") << c << scope;
         }
 
@@ -200,7 +213,7 @@ private Q_SLOTS:
             c2.setRemoteId(QStringLiteral("r2"));
 
             Scope scope;
-            scope.setHRidChain({ Scope::HRID(2, QStringLiteral("r2")), Scope::HRID(1, QStringLiteral("r1")), Scope::HRID(0) });
+            scope.setHRidChain({Scope::HRID(2, QStringLiteral("r2")), Scope::HRID(1, QStringLiteral("r1")), Scope::HRID(0)});
             QTest::newRow("two level ok") << c2 << scope;
         }
     }
@@ -219,11 +232,8 @@ private Q_SLOTS:
 
         {
             Protocol::ItemFetchScope fs;
-            fs.setFetch(Protocol::ItemFetchScope::Flags |
-                        Protocol::ItemFetchScope::Size |
-                        Protocol::ItemFetchScope::RemoteID |
-                        Protocol::ItemFetchScope::RemoteRevision |
-                        Protocol::ItemFetchScope::MTime);
+            fs.setFetch(Protocol::ItemFetchScope::Flags | Protocol::ItemFetchScope::Size | Protocol::ItemFetchScope::RemoteID
+                        | Protocol::ItemFetchScope::RemoteRevision | Protocol::ItemFetchScope::MTime);
             QTest::newRow("empty") << ItemFetchScope() << fs;
         }
 
@@ -235,14 +245,9 @@ private Q_SLOTS:
             scope.setIgnoreRetrievalErrors(true);
 
             Protocol::ItemFetchScope fs;
-            fs.setFetch(Protocol::ItemFetchScope::FullPayload |
-                        Protocol::ItemFetchScope::AllAttributes |
-                        Protocol::ItemFetchScope::Flags |
-                        Protocol::ItemFetchScope::Size |
-                        Protocol::ItemFetchScope::RemoteID |
-                        Protocol::ItemFetchScope::RemoteRevision |
-                        Protocol::ItemFetchScope::MTime |
-                        Protocol::ItemFetchScope::IgnoreErrors);
+            fs.setFetch(Protocol::ItemFetchScope::FullPayload | Protocol::ItemFetchScope::AllAttributes | Protocol::ItemFetchScope::Flags
+                        | Protocol::ItemFetchScope::Size | Protocol::ItemFetchScope::RemoteID | Protocol::ItemFetchScope::RemoteRevision
+                        | Protocol::ItemFetchScope::MTime | Protocol::ItemFetchScope::IgnoreErrors);
             fs.setAncestorDepth(Protocol::ItemFetchScope::AllAncestors);
             QTest::newRow("full") << scope << fs;
         }
@@ -253,8 +258,7 @@ private Q_SLOTS:
             scope.setFetchRemoteIdentification(false);
 
             Protocol::ItemFetchScope fs;
-            fs.setFetch(Protocol::ItemFetchScope::Flags |
-                        Protocol::ItemFetchScope::Size);
+            fs.setFetch(Protocol::ItemFetchScope::Flags | Protocol::ItemFetchScope::Size);
             QTest::newRow("minimal") << scope << fs;
         }
     }
@@ -278,7 +282,7 @@ private Q_SLOTS:
         response.setRemoteId("TAG13RID");
         response.setParentId(-1);
         response.setType("PLAIN");
-        response.setAttributes({ { "TAGAttribute", "MyAttribute" } });
+        response.setAttributes({{"TAGAttribute", "MyAttribute"}});
 
         Tag tag(15);
         tag.setGid("TAG13GID");

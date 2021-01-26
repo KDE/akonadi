@@ -4,18 +4,18 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "agentmanager.h"
+#include "itemsync.h"
 #include "agentinstance.h"
-#include "control.h"
+#include "agentmanager.h"
 #include "collection.h"
+#include "control.h"
 #include "item.h"
+#include "itemcreatejob.h"
 #include "itemdeletejob.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
-#include "itemsync.h"
-#include "itemcreatejob.h"
-#include "qtest_akonadi.h"
 #include "monitor.h"
+#include "qtest_akonadi.h"
 #include "resourceselectjob_p.h"
 
 #include <KRandom>
@@ -40,9 +40,11 @@ private:
         auto *fetch = new ItemFetchJob(col, this);
         fetch->fetchScope().fetchFullPayload();
         fetch->fetchScope().fetchAllAttributes();
-        fetch->fetchScope().setCacheOnly(true);   // resources are switched off anyway
+        fetch->fetchScope().setCacheOnly(true); // resources are switched off anyway
         if (!fetch->exec()) {
-            []() { QFAIL("Failed to fetch items!"); }();
+            []() {
+                QFAIL("Failed to fetch items!");
+            }();
         }
         return fetch->items();
     }
@@ -64,7 +66,9 @@ private:
         Item duplicate = item;
         duplicate.setId(-1);
         auto *job = new ItemCreateJob(duplicate, col);
-        [job]() { AKVERIFYEXEC(job); }();
+        [job]() {
+            AKVERIFYEXEC(job);
+        }();
         return job->item();
     }
 
@@ -104,8 +108,8 @@ private Q_SLOTS:
         QVERIFY(col.isValid());
         Item::List origItems = fetchItems(col);
 
-        //Since the item sync affects the knut resource we ensure we actually managed to load all items
-        //This needs to be adjusted should the testdataset change
+        // Since the item sync affects the knut resource we ensure we actually managed to load all items
+        // This needs to be adjusted should the testdataset change
         QCOMPARE(origItems.size(), 15);
 
         Akonadi::Monitor monitor;
@@ -174,7 +178,7 @@ private Q_SLOTS:
 
         for (int i = 0; i < origItems.count(); ++i) {
             Item::List l;
-            //Modify to trigger a changed signal
+            // Modify to trigger a changed signal
             l << modifyItem(origItems[i]);
             syncer->setFullSyncItems(l);
             if (goToEventLoopAfterAddingItems) {
@@ -252,7 +256,7 @@ private Q_SLOTS:
         delItems << itemWithOnlyRemoteId;
         resultItems.takeFirst();
 
-        //This item will not be removed since it isn't existing locally
+        // This item will not be removed since it isn't existing locally
         Item itemWithRandomRemoteId;
         itemWithRandomRemoteId.setRemoteId(KRandom::randomString(100));
         delItems << itemWithRandomRemoteId;
@@ -305,11 +309,11 @@ private Q_SLOTS:
 
         for (int i = 0; i < origItems.count(); ++i) {
             Item::List l;
-            //Modify to trigger a changed signal
+            // Modify to trigger a changed signal
             l << modifyItem(origItems[i]);
             syncer->setIncrementalSyncItems(l, Item::List());
             if (i < origItems.count() - 1) {
-                QTest::qWait(0);   // enter the event loop so itemsync actually can do something
+                QTest::qWait(0); // enter the event loop so itemsync actually can do something
             }
             QCOMPARE(spy.count(), 0);
         }
@@ -348,7 +352,7 @@ private Q_SLOTS:
         QVERIFY(transactionSpy.isValid());
         syncer->setIncrementalSyncItems(Item::List(), Item::List());
         AKVERIFYEXEC(syncer);
-        //It would be better if we didn't have a transaction at all, but so far the transaction is still created
+        // It would be better if we didn't have a transaction at all, but so far the transaction is still created
         QCOMPARE(transactionSpy.count(), 1);
 
         Item::List resultItems = fetchItems(col);
@@ -383,33 +387,33 @@ private Q_SLOTS:
 
         for (int i = 0; i < syncer->batchSize(); ++i) {
             Item::List l;
-            //Modify to trigger a changed signal
+            // Modify to trigger a changed signal
             l << modifyItem(origItems[i]);
             syncer->setIncrementalSyncItems(l, Item::List());
             if (i < (syncer->batchSize() - 1)) {
-                QTest::qWait(0);   // enter the event loop so itemsync actually can do something
+                QTest::qWait(0); // enter the event loop so itemsync actually can do something
             }
             QCOMPARE(spy.count(), 0);
         }
         QTest::qWait(100);
-        //this should process one batch of batchSize() items
+        // this should process one batch of batchSize() items
         QTRY_COMPARE(changedSpy.count(), syncer->batchSize());
-        QCOMPARE(transactionSpy.count(), 1); //one per batch
+        QCOMPARE(transactionSpy.count(), 1); // one per batch
 
         for (int i = syncer->batchSize(); i < origItems.count(); ++i) {
             Item::List l;
-            //Modify to trigger a changed signal
+            // Modify to trigger a changed signal
             l << modifyItem(origItems[i]);
             syncer->setIncrementalSyncItems(l, Item::List());
             if (i < origItems.count() - 1) {
-                QTest::qWait(0);   // enter the event loop so itemsync actually can do something
+                QTest::qWait(0); // enter the event loop so itemsync actually can do something
             }
             QCOMPARE(spy.count(), 0);
         }
 
         syncer->deliveryDone();
         QTRY_COMPARE(spy.count(), 1);
-        QCOMPARE(transactionSpy.count(), 2); //one per batch
+        QCOMPARE(transactionSpy.count(), 2); // one per batch
         QTest::qWait(100);
 
         Item::List resultItems = fetchItems(col);
@@ -487,7 +491,7 @@ private Q_SLOTS:
 
         for (int i = 0; i < syncer->batchSize(); ++i) {
             Item::List l;
-            //Modify to trigger a changed signal
+            // Modify to trigger a changed signal
             Item item = modifyItem(origItems[i]);
             // item.setRemoteId(QByteArray("foo"));
             item.setRemoteId(QString());
@@ -495,7 +499,7 @@ private Q_SLOTS:
             l << item;
             syncer->setIncrementalSyncItems(l, Item::List());
             if (i < (syncer->batchSize() - 1)) {
-                QTest::qWait(0);   // enter the event loop so itemsync actually can do something
+                QTest::qWait(0); // enter the event loop so itemsync actually can do something
             }
             QCOMPARE(spy.count(), 0);
         }
@@ -504,11 +508,11 @@ private Q_SLOTS:
 
         for (int i = syncer->batchSize(); i < origItems.count(); ++i) {
             Item::List l;
-            //Modify to trigger a changed signal
+            // Modify to trigger a changed signal
             l << modifyItem(origItems[i]);
             syncer->setIncrementalSyncItems(l, Item::List());
             if (i < origItems.count() - 1) {
-                QTest::qWait(0);   // enter the event loop so itemsync actually can do something
+                QTest::qWait(0); // enter the event loop so itemsync actually can do something
             }
             QCOMPARE(spy.count(), 0);
         }
@@ -528,7 +532,7 @@ private Q_SLOTS:
         QVERIFY(col.isValid());
         Item::List origItems = fetchItems(col);
 
-        //Create a duplicate that will trigger an error during the first batch
+        // Create a duplicate that will trigger an error during the first batch
         Item dupe = duplicateItem(origItems.at(0), col);
         origItems = fetchItems(col);
 
@@ -544,25 +548,25 @@ private Q_SLOTS:
 
         for (int i = 0; i < syncer->batchSize(); ++i) {
             Item::List l;
-            //Modify to trigger a changed signal
+            // Modify to trigger a changed signal
             l << modifyItem(origItems[i]);
             syncer->setIncrementalSyncItems(l, Item::List());
             if (i < (syncer->batchSize() - 1)) {
-                QTest::qWait(0);   // enter the event loop so itemsync actually can do something
+                QTest::qWait(0); // enter the event loop so itemsync actually can do something
             }
             QCOMPARE(spy.count(), 0);
         }
         QTest::qWait(100);
-        //Ensure the job hasn't finished yet due to the errors
+        // Ensure the job hasn't finished yet due to the errors
         QTRY_COMPARE(spy.count(), 0);
 
         for (int i = syncer->batchSize(); i < origItems.count(); ++i) {
             Item::List l;
-            //Modify to trigger a changed signal
+            // Modify to trigger a changed signal
             l << modifyItem(origItems[i]);
             syncer->setIncrementalSyncItems(l, Item::List());
             if (i < origItems.count() - 1) {
-                QTest::qWait(0);   // enter the event loop so itemsync actually can do something
+                QTest::qWait(0); // enter the event loop so itemsync actually can do something
             }
             QCOMPARE(spy.count(), 0);
         }
@@ -580,7 +584,7 @@ private Q_SLOTS:
         const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());
         Item::List origItems = fetchItems(col);
-        //Create a duplicate that will trigger an error during the first batch
+        // Create a duplicate that will trigger an error during the first batch
         Item dupe = duplicateItem(origItems.at(0), col);
         origItems = fetchItems(col);
 
@@ -600,8 +604,8 @@ private Q_SLOTS:
         Item::List resultItems = fetchItems(col);
         QCOMPARE(resultItems.count(), origItems.count());
         QTest::qWait(100);
-        //QCOMPARE(deletedSpy.count(), 1); // ## is this correct?
-        //QCOMPARE(addedSpy.count(), 1); // ## is this correct?
+        // QCOMPARE(deletedSpy.count(), 1); // ## is this correct?
+        // QCOMPARE(addedSpy.count(), 1); // ## is this correct?
         QCOMPARE(changedSpy.count(), 0);
 
         // cleanup

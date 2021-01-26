@@ -6,11 +6,10 @@
 
 #include "specialcollectionshelperjobs_p.h"
 
-#include <QDBusConnection>
+#include "servermanager.h"
 #include "specialcollectionattribute.h"
 #include "specialcollections.h"
-#include "servermanager.h"
-
+#include <QDBusConnection>
 
 #include "agentinstance.h"
 #include "agentinstancecreatejob.h"
@@ -23,8 +22,8 @@
 
 #include "akonadicore_debug.h"
 
-#include <KLocalizedString>
 #include <KCoreConfigSkeleton>
+#include <KLocalizedString>
 
 #include <QDBusConnectionInterface>
 #include <QDBusInterface>
@@ -93,7 +92,7 @@ class Q_DECL_HIDDEN Akonadi::ResourceScanJob::Private
 public:
     Private(KCoreConfigSkeleton *settings, ResourceScanJob *qq);
 
-    void fetchResult(KJob *job);   // slot
+    void fetchResult(KJob *job); // slot
 
     ResourceScanJob *const q;
 
@@ -139,8 +138,7 @@ void ResourceScanJob::Private::fetchResult(KJob *job)
         }
     }
 
-    qCDebug(AKONADICORE_LOG) << "Fetched root collection" << mRootCollection.id()
-                             << "and" << mSpecialCollections.count() << "local folders"
+    qCDebug(AKONADICORE_LOG) << "Fetched root collection" << mRootCollection.id() << "and" << mSpecialCollections.count() << "local folders"
                              << "(total" << fetchJob->collections().count() << "collections).";
 
     if (!mRootCollection.isValid()) {
@@ -198,12 +196,13 @@ void ResourceScanJob::doStart()
         return;
     }
 
-    CollectionFetchJob *fetchJob = new CollectionFetchJob(Collection::root(),
-            CollectionFetchJob::Recursive, this);
+    CollectionFetchJob *fetchJob = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, this);
     fetchJob->fetchScope().setResource(d->mResourceId);
     fetchJob->fetchScope().setIncludeStatistics(true);
     fetchJob->fetchScope().setListFilter(CollectionFetchScope::Display);
-    connect(fetchJob, &CollectionFetchJob::result, this, [this](KJob *job) { d->fetchResult(job); });
+    connect(fetchJob, &CollectionFetchJob::result, this, [this](KJob *job) {
+        d->fetchResult(job);
+    });
 }
 
 // ===================== DefaultResourceJob ============================
@@ -217,10 +216,10 @@ public:
     DefaultResourceJobPrivate(KCoreConfigSkeleton *settings, DefaultResourceJob *qq);
 
     void tryFetchResource();
-    void resourceCreateResult(KJob *job);   // slot
-    void resourceSyncResult(KJob *job);   // slot
-    void collectionFetchResult(KJob *job);   // slot
-    void collectionModifyResult(KJob *job);   // slot
+    void resourceCreateResult(KJob *job); // slot
+    void resourceSyncResult(KJob *job); // slot
+    void collectionFetchResult(KJob *job); // slot
+    void collectionModifyResult(KJob *job); // slot
 
     DefaultResourceJob *const q;
     KCoreConfigSkeleton *mSettings = nullptr;
@@ -260,7 +259,9 @@ void DefaultResourceJobPrivate::tryFetchResource()
         CollectionFetchJob *fetchJob = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, q);
         fetchJob->fetchScope().setResource(resourceId);
         fetchJob->fetchScope().setIncludeStatistics(true);
-        q->connect(fetchJob, &CollectionFetchJob::result, q, [this](KJob *job) { collectionFetchResult(job); });
+        q->connect(fetchJob, &CollectionFetchJob::result, q, [this](KJob *job) {
+            collectionFetchResult(job);
+        });
     } else {
         // Try harder: maybe the default resource has been removed and another one added
         //             without updating the config file, in this case search for a resource
@@ -286,7 +287,9 @@ void DefaultResourceJobPrivate::tryFetchResource()
         qCDebug(AKONADICORE_LOG) << "Creating maildir resource.";
         const AgentType type = AgentManager::self()->type(mDefaultResourceType);
         auto *job = new AgentInstanceCreateJob(type, q);
-        QObject::connect(job, &AgentInstanceCreateJob::result, q, [this](KJob *job) { resourceCreateResult(job); });
+        QObject::connect(job, &AgentInstanceCreateJob::result, q, [this](KJob *job) {
+            resourceCreateResult(job);
+        });
         job->start(); // non-Akonadi::Job
     }
 }
@@ -295,7 +298,7 @@ void DefaultResourceJobPrivate::resourceCreateResult(KJob *job)
 {
     if (job->error()) {
         qCWarning(AKONADICORE_LOG) << job->errorText();
-        //fail( i18n( "Failed to create the default resource (%1).", job->errorString() ) );
+        // fail( i18n( "Failed to create the default resource (%1).", job->errorString() ) );
         q->setError(job->error());
         q->setErrorText(job->errorText());
         q->emitResult();
@@ -331,8 +334,7 @@ void DefaultResourceJobPrivate::resourceCreateResult(KJob *job)
 
         QMap<QString, QVariant>::const_iterator it = mDefaultResourceOptions.cbegin();
         const QMap<QString, QVariant>::const_iterator itEnd = mDefaultResourceOptions.cend();
-        for (;it != itEnd; ++it) {
-
+        for (; it != itEnd; ++it) {
             if (it.key() == QLatin1String("Name")) {
                 continue;
             }
@@ -363,7 +365,9 @@ void DefaultResourceJobPrivate::resourceCreateResult(KJob *job)
     // Sync the resource.
     {
         auto *syncJob = new ResourceSynchronizationJob(agent, q);
-        QObject::connect(syncJob, &ResourceSynchronizationJob::result, q, [this](KJob *job) { resourceSyncResult(job); });
+        QObject::connect(syncJob, &ResourceSynchronizationJob::result, q, [this](KJob *job) {
+            resourceSyncResult(job);
+        });
         syncJob->start(); // non-Akonadi
     }
 }
@@ -372,7 +376,7 @@ void DefaultResourceJobPrivate::resourceSyncResult(KJob *job)
 {
     if (job->error()) {
         qCWarning(AKONADICORE_LOG) << job->errorText();
-        //fail( i18n( "ResourceSynchronizationJob failed (%1).", job->errorString() ) );
+        // fail( i18n( "ResourceSynchronizationJob failed (%1).", job->errorString() ) );
         return;
     }
 
@@ -380,14 +384,16 @@ void DefaultResourceJobPrivate::resourceSyncResult(KJob *job)
     qCDebug(AKONADICORE_LOG) << "Fetching maildir collections.";
     CollectionFetchJob *fetchJob = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, q);
     fetchJob->fetchScope().setResource(defaultResourceId(mSettings));
-    QObject::connect(fetchJob, &CollectionFetchJob::result, q, [this](KJob *job) { collectionFetchResult(job); });
+    QObject::connect(fetchJob, &CollectionFetchJob::result, q, [this](KJob *job) {
+        collectionFetchResult(job);
+    });
 }
 
 void DefaultResourceJobPrivate::collectionFetchResult(KJob *job)
 {
     if (job->error()) {
         qCWarning(AKONADICORE_LOG) << job->errorText();
-        //fail( i18n( "Failed to fetch the root maildir collection (%1).", job->errorString() ) );
+        // fail( i18n( "Failed to fetch the root maildir collection (%1).", job->errorString() ) );
         return;
     }
 
@@ -431,7 +437,7 @@ void DefaultResourceJobPrivate::collectionFetchResult(KJob *job)
     // These collections have been created by the maildir resource, when it
     // found the folders on disk. So give them the necessary attributes now.
     Q_ASSERT(mPendingModifyJobs == 0);
-    for (Collection collection : qAsConst(toRecover)) {             // krazy:exclude=foreach
+    for (Collection collection : qAsConst(toRecover)) { // krazy:exclude=foreach
 
         if (collection.hasAttribute<SpecialCollectionAttribute>()) {
             continue;
@@ -446,7 +452,9 @@ void DefaultResourceJobPrivate::collectionFetchResult(KJob *job)
             setCollectionAttributes(collection, type, mNameForTypeMap, mIconForTypeMap);
 
             auto *modifyJob = new CollectionModifyJob(collection, q);
-            QObject::connect(modifyJob, &CollectionModifyJob::result, q, [this](KJob *job) {collectionModifyResult(job); });
+            QObject::connect(modifyJob, &CollectionModifyJob::result, q, [this](KJob *job) {
+                collectionModifyResult(job);
+            });
             mPendingModifyJobs++;
         } else {
             qCDebug(AKONADICORE_LOG) << "Searching for names: " << typeForName.keys();
@@ -465,7 +473,7 @@ void DefaultResourceJobPrivate::collectionModifyResult(KJob *job)
 {
     if (job->error()) {
         qCWarning(AKONADICORE_LOG) << job->errorText();
-        //fail( i18n( "Failed to modify the root maildir collection (%1).", job->errorString() ) );
+        // fail( i18n( "Failed to modify the root maildir collection (%1).", job->errorString() ) );
         return;
     }
 
@@ -571,24 +579,24 @@ void GetLockJob::Private::doStart()
     const bool gotIt = bus.registerService(dbusServiceName());
 
     if (gotIt && !alreadyLocked) {
-        //qCDebug(AKONADICORE_LOG) << "Got lock immediately.";
+        // qCDebug(AKONADICORE_LOG) << "Got lock immediately.";
         q->emitResult();
     } else {
-        auto *watcher = new QDBusServiceWatcher(dbusServiceName(), QDBusConnection::sessionBus(),
-                QDBusServiceWatcher::WatchForUnregistration, q);
-        connect(watcher, &QDBusServiceWatcher::serviceUnregistered,
-                q, [this]() {
-                    if (QDBusConnection::sessionBus().registerService(dbusServiceName())) {
-                        mSafetyTimer->stop();
-                        q->emitResult();
-                    }
-                });
+        auto *watcher = new QDBusServiceWatcher(dbusServiceName(), QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForUnregistration, q);
+        connect(watcher, &QDBusServiceWatcher::serviceUnregistered, q, [this]() {
+            if (QDBusConnection::sessionBus().registerService(dbusServiceName())) {
+                mSafetyTimer->stop();
+                q->emitResult();
+            }
+        });
 
         mSafetyTimer = new QTimer(q);
         mSafetyTimer->setSingleShot(true);
         mSafetyTimer->setInterval(LOCK_WAIT_TIMEOUT_SECONDS * 1000);
         mSafetyTimer->start();
-        connect(mSafetyTimer, &QTimer::timeout, q, [this]() { timeout(); });
+        connect(mSafetyTimer, &QTimer::timeout, q, [this]() {
+            timeout();
+        });
     }
 }
 
@@ -613,10 +621,13 @@ GetLockJob::~GetLockJob()
 
 void GetLockJob::start()
 {
-    QTimer::singleShot(0, this, [this]() { d->doStart(); });
+    QTimer::singleShot(0, this, [this]() {
+        d->doStart();
+    });
 }
 
-void Akonadi::setCollectionAttributes(Akonadi::Collection &collection, const QByteArray &type,
+void Akonadi::setCollectionAttributes(Akonadi::Collection &collection,
+                                      const QByteArray &type,
                                       const QMap<QByteArray, QString> &nameForType,
                                       const QMap<QByteArray, QString> &iconForType)
 {

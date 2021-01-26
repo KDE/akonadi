@@ -12,24 +12,20 @@ class Item;
 #include "akonadicore_debug.h"
 #include "itemfetchscope.h"
 
-
 #include "jobs/itemfetchjob.h"
-#include "jobs/relationfetchjob.h"
 #include "jobs/relationcreatejob.h"
 #include "jobs/relationdeletejob.h"
-
+#include "jobs/relationfetchjob.h"
 
 using namespace Akonadi;
 
 RelationSync::RelationSync(QObject *parent)
     : Job(parent)
 {
-
 }
 
 RelationSync::~RelationSync()
 {
-
 }
 
 void RelationSync::setRemoteRelations(const Akonadi::Relation::List &relations)
@@ -41,7 +37,7 @@ void RelationSync::setRemoteRelations(const Akonadi::Relation::List &relations)
 
 void RelationSync::doStart()
 {
-    Akonadi::RelationFetchJob *fetch = new Akonadi::RelationFetchJob({ Akonadi::Relation::GENERIC }, this);
+    Akonadi::RelationFetchJob *fetch = new Akonadi::RelationFetchJob({Akonadi::Relation::GENERIC}, this);
     connect(fetch, &KJob::result, this, &RelationSync::onLocalFetchDone);
 }
 
@@ -71,14 +67,14 @@ void RelationSync::diffRelations()
         if (relationByRid.contains(remoteRelation.remoteId())) {
             relationByRid.remove(remoteRelation.remoteId());
         } else {
-            //New relation or had its GID updated, so create one now
+            // New relation or had its GID updated, so create one now
             auto *createJob = new RelationCreateJob(remoteRelation, this);
             connect(createJob, &KJob::result, this, &RelationSync::checkDone);
         }
     }
 
     for (const Akonadi::Relation &removedRelation : qAsConst(relationByRid)) {
-        //Removed remotely, remove locally
+        // Removed remotely, remove locally
         auto *removeJob = new RelationDeleteJob(removedRelation, this);
         connect(removeJob, &KJob::result, this, &RelationSync::checkDone);
     }
@@ -105,4 +101,3 @@ void RelationSync::checkDone()
     qCDebug(AKONADICORE_LOG) << "done";
     emitResult();
 }
-

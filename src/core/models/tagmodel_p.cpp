@@ -31,12 +31,20 @@ void TagModelPrivate::init(Monitor *monitor)
     mMonitor = monitor;
     mSession = mMonitor->session();
 
-    q->connect(mMonitor, &Monitor::tagAdded, q, [this](const Tag &tag) { monitoredTagAdded(tag); });
-    q->connect(mMonitor, &Monitor::tagChanged, q, [this](const Tag &tag) { monitoredTagChanged(tag); });
-    q->connect(mMonitor, &Monitor::tagRemoved, q, [this](const Tag &tag) { monitoredTagRemoved(tag); });
+    q->connect(mMonitor, &Monitor::tagAdded, q, [this](const Tag &tag) {
+        monitoredTagAdded(tag);
+    });
+    q->connect(mMonitor, &Monitor::tagChanged, q, [this](const Tag &tag) {
+        monitoredTagChanged(tag);
+    });
+    q->connect(mMonitor, &Monitor::tagRemoved, q, [this](const Tag &tag) {
+        monitoredTagRemoved(tag);
+    });
 
     // Delay starting the job to allow unit-tests to set up fake stuff
-    QTimer::singleShot(0, q, [this] { fillModel(); });
+    QTimer::singleShot(0, q, [this] {
+        fillModel();
+    });
 }
 
 void TagModelPrivate::fillModel()
@@ -45,8 +53,12 @@ void TagModelPrivate::fillModel()
 
     auto *fetchJob = new TagFetchJob(mSession);
     fetchJob->setFetchScope(mMonitor->tagFetchScope());
-    q->connect(fetchJob, &TagFetchJob::tagsReceived, q, [this](const auto &tags) { tagsFetched(tags); });
-    q->connect(fetchJob, &KJob::result, q, [this](KJob *job) { tagsFetchDone(job); });
+    q->connect(fetchJob, &TagFetchJob::tagsReceived, q, [this](const auto &tags) {
+        tagsFetched(tags);
+    });
+    q->connect(fetchJob, &KJob::result, q, [this](KJob *job) {
+        tagsFetchDone(job);
+    });
 }
 
 QModelIndex TagModelPrivate::indexForTag(const qint64 tagId) const

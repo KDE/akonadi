@@ -14,7 +14,6 @@
 
 namespace Akonadi
 {
-
 class SpecialCollectionsDiscoveryJobPrivate;
 
 /**
@@ -27,13 +26,12 @@ class SpecialCollectionsDiscoveryJobPrivate;
  *
  * @author David Faure <faure@kde.org>
  * @since 4.11
-*/
+ */
 class AKONADICORE_EXPORT SpecialCollectionsDiscoveryJob : public KCompositeJob
 {
     Q_OBJECT
 
 public:
-
     /**
      * Destroys the special collections request job.
      */

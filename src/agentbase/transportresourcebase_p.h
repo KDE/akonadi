@@ -15,7 +15,6 @@ class Akonadi__TransportAdaptor;
 
 namespace Akonadi
 {
-
 class TransportResourceBase;
 
 /**
@@ -36,7 +35,7 @@ Q_SIGNALS:
      * @param message An optional textual explanation of the result.
      * @since 4.4
      */
-    void transportResult(qlonglong item, int result, const QString &message);   // D-Bus signal
+    void transportResult(qlonglong item, int result, const QString &message); // D-Bus signal
 
 private Q_SLOTS:
     void fetchResult(KJob *job);
@@ -45,7 +44,7 @@ private:
     friend class TransportResourceBase;
     friend class ::Akonadi__TransportAdaptor;
 
-    void send(Akonadi::Item::Id message);   // D-Bus call
+    void send(Akonadi::Item::Id message); // D-Bus call
 
     TransportResourceBase *const q;
 };

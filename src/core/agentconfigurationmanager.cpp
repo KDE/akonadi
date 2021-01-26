@@ -8,15 +8,17 @@
 #include "akonadicore_debug.h"
 #include "servermanager.h"
 
-#include <QDBusConnectionInterface>
 #include <QCoreApplication>
-#include <QPluginLoader>
+#include <QDBusConnectionInterface>
 #include <QDir>
+#include <QPluginLoader>
 
 #include <QDBusConnection>
 
-namespace Akonadi {
-class Q_DECL_HIDDEN AgentConfigurationManager::Private {
+namespace Akonadi
+{
+class Q_DECL_HIDDEN AgentConfigurationManager::Private
+{
 public:
     QString serviceName(const QString &instance) const
     {

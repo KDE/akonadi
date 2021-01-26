@@ -16,8 +16,7 @@ DebugInterface::DebugInterface(Tracer &tracer)
     : m_tracer(tracer)
 {
     new DebugInterfaceAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/debug"),
-            this, QDBusConnection::ExportAdaptors);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/debug"), this, QDBusConnection::ExportAdaptors);
 }
 
 QString DebugInterface::tracer() const

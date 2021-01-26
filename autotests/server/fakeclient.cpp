@@ -7,30 +7,30 @@
 
 #include "fakeclient.h"
 
+#include <private/datastream_p_p.h>
 #include <private/protocol_exception_p.h>
 #include <private/protocol_p.h>
-#include <private/datastream_p_p.h>
 
 #include <QBuffer>
-#include <QTest>
-#include <QMutexLocker>
 #include <QLocalSocket>
+#include <QMutexLocker>
+#include <QTest>
 
-#define CLIENT_COMPARE(actual, expected, ...)\
-do {\
-    if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__)) {\
-        mSocket->disconnectFromServer();\
-        return __VA_ARGS__;\
-    }\
-} while (0)
+#define CLIENT_COMPARE(actual, expected, ...)                                                                                                                  \
+    do {                                                                                                                                                       \
+        if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__)) {                                                                      \
+            mSocket->disconnectFromServer();                                                                                                                   \
+            return __VA_ARGS__;                                                                                                                                \
+        }                                                                                                                                                      \
+    } while (0)
 
-#define CLIENT_VERIFY(statement, ...)\
-do {\
-    if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__)) {\
-        mSocket->disconnectFromServer();\
-        return __VA_ARGS__;\
-    }\
-} while (0)
+#define CLIENT_VERIFY(statement, ...)                                                                                                                          \
+    do {                                                                                                                                                       \
+        if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__)) {                                                                                \
+            mSocket->disconnectFromServer();                                                                                                                   \
+            return __VA_ARGS__;                                                                                                                                \
+        }                                                                                                                                                      \
+    } while (0)
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -71,8 +71,7 @@ bool FakeClient::dataAvailable()
 
 void FakeClient::readServerPart()
 {
-    while (!mScenarios.isEmpty() && (mScenarios.at(0).action == TestScenario::ServerCmd
-            || mScenarios.at(0).action == TestScenario::Ignore)) {
+    while (!mScenarios.isEmpty() && (mScenarios.at(0).action == TestScenario::ServerCmd || mScenarios.at(0).action == TestScenario::Ignore)) {
         TestScenario scenario = mScenarios.takeFirst();
         if (scenario.action == TestScenario::Ignore) {
             const int count = scenario.data.toInt();
@@ -131,9 +130,8 @@ void FakeClient::readServerPart()
     }
 
     if (!mScenarios.isEmpty()) {
-        CLIENT_VERIFY(mScenarios.at(0).action == TestScenario::ClientCmd
-                        || mScenarios.at(0).action == TestScenario::Wait
-                        || mScenarios.at(0).action ==TestScenario::Quit);
+        CLIENT_VERIFY(mScenarios.at(0).action == TestScenario::ClientCmd || mScenarios.at(0).action == TestScenario::Wait
+                      || mScenarios.at(0).action == TestScenario::Quit);
     } else {
         // Server replied and there's nothing else to send, then quit
         mSocket->disconnectFromServer();
@@ -142,11 +140,10 @@ void FakeClient::readServerPart()
 
 void FakeClient::writeClientPart()
 {
-    while (!mScenarios.isEmpty() && (mScenarios.at(0).action == TestScenario::ClientCmd
-            || mScenarios.at(0).action == TestScenario::Wait)) {
+    while (!mScenarios.isEmpty() && (mScenarios.at(0).action == TestScenario::ClientCmd || mScenarios.at(0).action == TestScenario::Wait)) {
         const TestScenario rule = mScenarios.takeFirst();
 
-       if (rule.action == TestScenario::ClientCmd) {
+        if (rule.action == TestScenario::ClientCmd) {
             mSocket->write(rule.data);
             CLIENT_VERIFY(mSocket->waitForBytesWritten());
         } else {
@@ -160,8 +157,7 @@ void FakeClient::writeClientPart()
     }
 
     if (!mScenarios.isEmpty()) {
-        CLIENT_VERIFY(mScenarios.at(0).action == TestScenario::ServerCmd
-                        || mScenarios.at(0).action == TestScenario::Ignore);
+        CLIENT_VERIFY(mScenarios.at(0).action == TestScenario::ServerCmd || mScenarios.at(0).action == TestScenario::Ignore);
     }
 }
 
@@ -171,11 +167,14 @@ void FakeClient::run()
     mSocket->connectToServer(FakeAkonadiServer::socketFile());
     connect(mSocket, &QLocalSocket::disconnected, this, &FakeClient::connectionLost);
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
-    connect(mSocket, QOverload<QLocalSocket::LocalSocketError>::of(&QLocalSocket::error),
+    connect(mSocket,
+            QOverload<QLocalSocket::LocalSocketError>::of(&QLocalSocket::error),
 #else
-    connect(mSocket, &QLocalSocket::errorOccurred,
+    connect(mSocket,
+            &QLocalSocket::errorOccurred,
 #endif
-            this, [this]() {
+            this,
+            [this]() {
                 qWarning() << "Client socket error: " << mSocket->errorString();
                 connectionLost();
                 QVERIFY(false);
@@ -206,7 +205,7 @@ void FakeClient::run()
                 break;
             }
 
-            if(!dataAvailable()) {
+            if (!dataAvailable()) {
                 break;
             }
         }

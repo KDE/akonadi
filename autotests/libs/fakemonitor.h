@@ -7,8 +7,8 @@
 #ifndef FAKEMONITOR_H
 #define FAKEMONITOR_H
 
-#include "changerecorder.h"
 #include "akonaditestfake_export.h"
+#include "changerecorder.h"
 
 using namespace Akonadi;
 

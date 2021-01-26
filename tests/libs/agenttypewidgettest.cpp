@@ -6,19 +6,19 @@
 
 #include "agenttypewidgettest.h"
 
-#include "agenttype.h"
 #include "agentfilterproxymodel.h"
+#include "agenttype.h"
 
-#include <QComboBox>
 #include <KAboutData>
+#include <QComboBox>
 
-#include <QCommandLineParser>
 #include <QApplication>
+#include <QCommandLineParser>
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
 
-//krazy:excludeall=qclasses
+// krazy:excludeall=qclasses
 
 Dialog::Dialog(QWidget *parent)
     : QDialog(parent)
@@ -33,8 +33,7 @@ Dialog::Dialog(QWidget *parent)
     connect(mFilter, qOverload<int>(&QComboBox::activated), this, &Dialog::filterChanged);
 
     mWidget = new Akonadi::AgentTypeWidget(this);
-    connect(mWidget, &Akonadi::AgentTypeWidget::currentChanged,
-            this, &Dialog::currentChanged);
+    connect(mWidget, &Akonadi::AgentTypeWidget::currentChanged, this, &Dialog::currentChanged);
 
     auto *box = new QDialogButtonBox(this);
 
@@ -76,9 +75,7 @@ void Dialog::filterChanged(int index)
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
-    KAboutData aboutData(QStringLiteral("agenttypeviewtest"),
-                         QStringLiteral("agenttypeviewtest"),
-                         QStringLiteral("0.10"));
+    KAboutData aboutData(QStringLiteral("agenttypeviewtest"), QStringLiteral("agenttypeviewtest"), QStringLiteral("0.10"));
     KAboutData::setApplicationData(aboutData);
 
     QCommandLineParser parser;

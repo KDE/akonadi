@@ -4,20 +4,19 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "changenotificationdependenciesfactory_p.h"
-#include "sessionthread_p.h"
-#include "connection_p.h"
-#include "changemediator_p.h"
-#include "servermanager.h"
 #include "akonadicore_debug.h"
+#include "changemediator_p.h"
+#include "changenotificationdependenciesfactory_p.h"
+#include "connection_p.h"
+#include "servermanager.h"
 #include "session_p.h"
+#include "sessionthread_p.h"
 
 #include <qdbusextratypes.h>
 
 using namespace Akonadi;
 
-Connection *ChangeNotificationDependenciesFactory::createNotificationConnection(Session *session,
-                                                                                CommandBuffer *commandBuffer)
+Connection *ChangeNotificationDependenciesFactory::createNotificationConnection(Session *session, CommandBuffer *commandBuffer)
 {
     if (!Akonadi::ServerManager::self()->isRunning()) {
         return nullptr;

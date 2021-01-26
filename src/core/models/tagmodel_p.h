@@ -14,7 +14,6 @@ class KJob;
 
 namespace Akonadi
 {
-
 class Monitor;
 class TagModel;
 class Session;
@@ -41,15 +40,14 @@ public:
     Monitor *mMonitor = nullptr;
     Session *mSession = nullptr;
 
-    QHash<Tag::Id /* parent */, Tag::List > mChildTags;
+    QHash<Tag::Id /* parent */, Tag::List> mChildTags;
     QHash<Tag::Id /* tag ID */, Tag> mTags;
 
-    QHash<Tag::Id /* missing parent */, Tag::List > mPendingTags;
+    QHash<Tag::Id /* missing parent */, Tag::List> mPendingTags;
 
 protected:
     Q_DECLARE_PUBLIC(TagModel)
     TagModel *q_ptr;
-
 };
 }
 

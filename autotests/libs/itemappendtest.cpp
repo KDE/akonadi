@@ -15,9 +15,9 @@
 #include "attributefactory.h"
 #include "collectionfetchjob.h"
 #include "itemcreatejob.h"
+#include "itemdeletejob.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
-#include "itemdeletejob.h"
 
 #include <QDebug>
 
@@ -387,4 +387,3 @@ void ItemAppendTest::testForeignPayload()
     QVERIFY(file.exists());
     QVERIFY(file.remove());
 }
-

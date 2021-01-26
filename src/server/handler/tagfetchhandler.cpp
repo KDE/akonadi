@@ -13,7 +13,8 @@ using namespace Akonadi::Server;
 
 TagFetchHandler::TagFetchHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 bool TagFetchHandler::parseStream()
 {
@@ -23,7 +24,7 @@ bool TagFetchHandler::parseStream()
         return failureResponse("Only UID-based TAGFETCH is supported");
     }
 
-    TagFetchHelper helper(connection(),  cmd.scope(), cmd.fetchScope());
+    TagFetchHelper helper(connection(), cmd.scope(), cmd.fetchScope());
     if (!helper.fetchTags()) {
         return failureResponse("Failed to fetch tags");
     }

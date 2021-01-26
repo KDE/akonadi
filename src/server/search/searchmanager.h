@@ -10,21 +10,19 @@
 
 #include "akthread.h"
 
-#include <QVector>
-#include <QSet>
 #include <QMutex>
+#include <QSet>
+#include <QVector>
 
 class QTimer;
 class QPluginLoader;
 
 namespace Akonadi
 {
-
 class AbstractSearchPlugin;
 
 namespace Server
 {
-
 class AbstractSearchEngine;
 class Collection;
 class SearchTaskManager;
@@ -104,7 +102,6 @@ private:
 
     QMutex mLock;
     QSet<qint64> mUpdatingCollections;
-
 };
 
 } // namespace Server

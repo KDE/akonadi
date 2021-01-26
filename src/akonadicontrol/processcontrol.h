@@ -14,7 +14,6 @@
 
 namespace Akonadi
 {
-
 /**
  * This class starts and observes a process. Depending on the
  * policy it also restarts the process when it crashes.
@@ -31,10 +30,7 @@ public:
      * @li StopOnCrash    - The application won't be restarted.
      * @li RestartOnCrash - The application is restarted with the same arguments.
      */
-    enum CrashPolicy {
-        StopOnCrash,
-        RestartOnCrash
-    };
+    enum CrashPolicy { StopOnCrash, RestartOnCrash };
 
     /**
      * Creates a new process control.
@@ -51,8 +47,7 @@ public:
     /**
      * Starts the @p application with the given list of @p arguments.
      */
-    void start(const QString &application, const QStringList &arguments = QStringList(),
-               CrashPolicy policy = RestartOnCrash);
+    void start(const QString &application, const QStringList &arguments = QStringList(), CrashPolicy policy = RestartOnCrash);
 
     /**
      * Starts the process with the previously set application and arguments.

@@ -14,7 +14,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
  * A base class that provides an unique access layer to configuration
  * and initialization of different database backends.
@@ -22,7 +21,6 @@ namespace Server
 class DbConfig
 {
 public:
-
     virtual ~DbConfig();
 
     /**
@@ -122,6 +120,7 @@ protected:
      * Calls QProcess::execute() and also prints the command and arguments via qCDebug()
      */
     int execute(const QString &cmd, const QStringList &args) const;
+
 private:
     Q_DISABLE_COPY(DbConfig)
 

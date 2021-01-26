@@ -15,7 +15,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
  * A tracer which forwards all tracing information as dbus signals.
  */
@@ -35,7 +34,10 @@ public:
     void warning(const QString &componentName, const QString &msg) override;
     void error(const QString &componentName, const QString &msg) override;
 
-    TracerInterface::ConnectionFormat connectionFormat() const override {return TracerInterface::Json;}
+    TracerInterface::ConnectionFormat connectionFormat() const override
+    {
+        return TracerInterface::Json;
+    }
 
 Q_SIGNALS:
     void connectionStarted(const QString &identifier, const QString &msg);

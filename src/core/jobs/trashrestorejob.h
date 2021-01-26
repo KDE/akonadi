@@ -9,12 +9,11 @@
 
 #include "akonadicore_export.h"
 #include "collection.h"
-#include "job.h"
 #include "item.h"
+#include "job.h"
 
 namespace Akonadi
 {
-
 /**
  * @short Job that restores entities from trash
  *
@@ -42,7 +41,6 @@ class AKONADICORE_EXPORT TrashRestoreJob : public Job
 {
     Q_OBJECT
 public:
-
     /**
      * All items need to be from the same resource
      */
@@ -62,6 +60,7 @@ public:
     void setTargetCollection(const Collection &collection);
 
     Q_REQUIRED_RESULT Item::List items() const;
+
 protected:
     void doStart() override;
 

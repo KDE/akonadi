@@ -8,12 +8,11 @@
 #define AKONADI_SEARCHCREATEJOB_H
 
 #include "akonadicore_export.h"
-#include "job.h"
 #include "collection.h"
+#include "job.h"
 
 namespace Akonadi
 {
-
 class Collection;
 class SearchQuery;
 class SearchCreateJobPrivate;

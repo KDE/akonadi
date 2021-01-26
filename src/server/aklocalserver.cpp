@@ -17,4 +17,3 @@ void AkLocalServer::incomingConnection(quintptr socketDescriptor)
 {
     Q_EMIT newConnection(socketDescriptor);
 }
-

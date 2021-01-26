@@ -15,7 +15,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class DbConfigPostgresql : public DbConfig
 {
 public:
@@ -84,7 +83,7 @@ private:
 
     QString mDatabaseName;
     QString mHostName;
-    int     mHostPort;
+    int mHostPort;
     QString mUserName;
     QString mPassword;
     QString mConnectionOptions;

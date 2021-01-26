@@ -4,15 +4,15 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "pluginloader_p.h"
 #include "akonadicore_debug.h"
-#include <private/standarddirs_p.h>
+#include "pluginloader_p.h"
+#include <KConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>
-#include <KConfig>
 #include <QDir>
-#include <QStandardPaths>
 #include <QPluginLoader>
+#include <QStandardPaths>
+#include <private/standarddirs_p.h>
 
 using namespace Akonadi;
 
@@ -66,7 +66,7 @@ QObject *PluginLoader::createForName(const QString &name)
 
     PluginMetaData &info = mPluginInfos[name];
 
-    //First try to load it staticly
+    // First try to load it staticly
     const auto instances = QPluginLoader::staticInstances();
     for (auto *plugin : instances) {
         if (QLatin1String(plugin->metaObject()->className()) == info.className) {
@@ -151,7 +151,7 @@ void PluginLoader::scan()
                     comment = i18n("No description available");
                 }
 
-                QString cname      = group.readEntry("X-KDE-ClassName");
+                QString cname = group.readEntry("X-KDE-ClassName");
                 if (cname.isEmpty()) {
                     qCWarning(AKONADICORE_LOG) << "missing or empty X-KDE-ClassName value in \"" << entry << "\"";
                 }
@@ -166,7 +166,8 @@ void PluginLoader::scan()
                 }
 
             } else {
-                qCWarning(AKONADICORE_LOG) << "Desktop file \"" << entry << "\" doesn't seem to describe a plugin " << "(misses Misc and/or Plugin group)";
+                qCWarning(AKONADICORE_LOG) << "Desktop file \"" << entry << "\" doesn't seem to describe a plugin "
+                                           << "(misses Misc and/or Plugin group)";
             }
         }
     }

@@ -55,11 +55,10 @@ private Q_SLOTS:
         QTest::addColumn<int>("size");
 
         QList<int> counts = QList<int>() << 1 << 10 << 100 << 1000; // << 10000;
-        QList<int> sizes = QList<int>() << 0 << 256  << 1024 << 8192 << 32768 << 65536;
+        QList<int> sizes = QList<int>() << 0 << 256 << 1024 << 8192 << 32768 << 65536;
         foreach (int count, counts)
             foreach (int size, sizes)
-                QTest::newRow(QString::fromLatin1("%1-%2").arg(count).arg(size).toLatin1().constData())
-                        << count << size;
+                QTest::newRow(QString::fromLatin1("%1-%2").arg(count).arg(size).toLatin1().constData()) << count << size;
     }
 
     void itemBenchmarkCreate_data()
@@ -80,12 +79,11 @@ private Q_SLOTS:
 
         Job *lastJob = 0;
         QBENCHMARK {
-            for (int i = 0; i < count; ++i)
-            {
+            for (int i = 0; i < count; ++i) {
                 lastJob = new ItemCreateJob(item, parent, this);
-                connect(lastJob, SIGNAL(result(KJob*)), SLOT(createResult(KJob*)));
+                connect(lastJob, SIGNAL(result(KJob *)), SLOT(createResult(KJob *)));
             }
-            AkonadiTest::akWaitForSignal(lastJob, SIGNAL(result(KJob*)));
+            AkonadiTest::akWaitForSignal(lastJob, SIGNAL(result(KJob *)));
         }
     }
 
@@ -105,16 +103,15 @@ private Q_SLOTS:
 
         QBENCHMARK {
             Item::List items;
-            for (int i = 0; i < count; ++i)
-            {
+            for (int i = 0; i < count; ++i) {
                 items << mCreatedItems[size].at(i);
             }
 
             ItemFetchJob *fetchJob = new ItemFetchJob(items, this);
             fetchJob->fetchScope().fetchFullPayload();
             fetchJob->fetchScope().setCacheOnly(true);
-            connect(fetchJob, SIGNAL(result(KJob*)), SLOT(fetchResult(KJob*)));
-            AkonadiTest::akWaitForSignal(fetchJob, SIGNAL(result(KJob*)));
+            connect(fetchJob, SIGNAL(result(KJob *)), SLOT(fetchResult(KJob *)));
+            AkonadiTest::akWaitForSignal(fetchJob, SIGNAL(result(KJob *)));
         }
     }
 
@@ -135,16 +132,15 @@ private Q_SLOTS:
         Job *lastJob = 0;
         const int newSize = qMax(size, 1);
         QBENCHMARK {
-            for (int i = 0; i < count; ++i)
-            {
+            for (int i = 0; i < count; ++i) {
                 Item item = mCreatedItems.value(size).at(i);
                 item.setPayload(QByteArray(newSize, 'Y'));
                 ItemModifyJob *job = new ItemModifyJob(item, this);
                 job->disableRevisionCheck();
                 lastJob = job;
-                connect(lastJob, SIGNAL(result(KJob*)), SLOT(modifyResult(KJob*)));
+                connect(lastJob, SIGNAL(result(KJob *)), SLOT(modifyResult(KJob *)));
             }
-            AkonadiTest::akWaitForSignal(lastJob, SIGNAL(result(KJob*)));
+            AkonadiTest::akWaitForSignal(lastJob, SIGNAL(result(KJob *)));
         }
     }
 
@@ -152,7 +148,7 @@ private Q_SLOTS:
     {
         data();
     }
-    void itemBenchmarkDelete()  /// Tests performance of removing items from the cache
+    void itemBenchmarkDelete() /// Tests performance of removing items from the cache
     {
         QFETCH(int, count);
         QFETCH(int, size);
@@ -160,18 +156,16 @@ private Q_SLOTS:
         Job *lastJob = 0;
         int emptyItemArrayIterations = 0;
         QBENCHMARK {
-            if (mCreatedItems[size].isEmpty())
-            {
+            if (mCreatedItems[size].isEmpty()) {
                 ++emptyItemArrayIterations;
             }
 
             Item::List items;
-            for (int i = 0; i < count && !mCreatedItems[size].isEmpty(); ++i)
-            {
+            for (int i = 0; i < count && !mCreatedItems[size].isEmpty(); ++i) {
                 items << mCreatedItems[size].takeFirst();
             }
             lastJob = new ItemDeleteJob(items, this);
-            AkonadiTest::akWaitForSignal(lastJob, SIGNAL(result(KJob*)));
+            AkonadiTest::akWaitForSignal(lastJob, SIGNAL(result(KJob *)));
         }
 
         if (emptyItemArrayIterations) {

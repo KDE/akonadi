@@ -10,10 +10,10 @@
 #include "akonadicore_export.h"
 #include "attribute.h"
 
-#include <QString>
-#include <QSharedPointer>
-#include <QUrl>
 #include <QDebug>
+#include <QSharedPointer>
+#include <QString>
+#include <QUrl>
 
 namespace Akonadi
 {
@@ -64,7 +64,7 @@ public:
 
     Tag &operator=(const Tag &);
     Tag &operator=(Tag &&) noexcept;
-    //Avoid slicing
+    // Avoid slicing
     bool operator==(const Tag &) const;
     bool operator!=(const Tag &) const;
 
@@ -113,8 +113,8 @@ public:
      * Describes the options that can be passed to access attributes.
      */
     enum CreateOption {
-        AddIfMissing,    ///< Creates the attribute if it is missing
-        DontCreate       ///< Does not create an attribute if it is missing (default)
+        AddIfMissing, ///< Creates the attribute if it is missing
+        DontCreate ///< Does not create an attribute if it is missing (default)
     };
 
     /**
@@ -124,26 +124,22 @@ public:
      *
      * @param option The create options.
      */
-    template <typename T>
-    inline T *attribute(CreateOption option = DontCreate);
+    template<typename T> inline T *attribute(CreateOption option = DontCreate);
 
     /**
      * Returns the attribute of the requested type or 0 if it is not available.
      */
-    template <typename T>
-    inline const T *attribute() const;
+    template<typename T> inline const T *attribute() const;
 
     /**
      * Removes and deletes the attribute of the requested type.
      */
-    template <typename T>
-    inline void removeAttribute();
+    template<typename T> inline void removeAttribute();
 
     /**
      * Returns whether the entity has an attribute of the requested type.
      */
-    template <typename T>
-    inline bool hasAttribute() const;
+    template<typename T> inline bool hasAttribute() const;
 
     /**
      * Returns the url of the tag.
@@ -203,8 +199,7 @@ private:
 
 AKONADICORE_EXPORT uint qHash(const Akonadi::Tag &);
 
-template <typename T>
-inline T *Tag::attribute(CreateOption option)
+template<typename T> inline T *Tag::attribute(CreateOption option)
 {
     const QByteArray type = T().type();
     markAttributeModified(type);
@@ -222,8 +217,7 @@ inline T *Tag::attribute(CreateOption option)
     return nullptr;
 }
 
-template <typename T>
-inline const T *Tag::attribute() const
+template<typename T> inline const T *Tag::attribute() const
 {
     const QByteArray type = T().type();
     if (hasAttribute(type)) {
@@ -236,15 +230,13 @@ inline const T *Tag::attribute() const
     return nullptr;
 }
 
-template <typename T>
-inline void Tag::removeAttribute()
+template<typename T> inline void Tag::removeAttribute()
 {
     const T dummy;
     removeAttribute(dummy.type());
 }
 
-template <typename T>
-inline bool Tag::hasAttribute() const
+template<typename T> inline bool Tag::hasAttribute() const
 {
     const T dummy;
     return hasAttribute(dummy.type());

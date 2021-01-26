@@ -11,9 +11,9 @@
 #include "monitor.h"
 #include "monitor_p.h"
 
+#include "akonaditestfake_export.h"
 #include "fakeakonadiservercommand.h"
 #include "fakeentitycache.h"
-#include "akonaditestfake_export.h"
 
 class InspectableMonitor;
 
@@ -25,7 +25,8 @@ public:
     {
     }
 
-    bool emitNotification(const Akonadi::Protocol::ChangeNotificationPtr &msg) override {
+    bool emitNotification(const Akonadi::Protocol::ChangeNotificationPtr &msg) override
+    {
         // TODO: Check/Log
         return Akonadi::MonitorPrivate::emitNotification(msg);
     }
@@ -64,12 +65,7 @@ private Q_SLOTS:
 
 private:
     struct MessageStruct {
-        enum Position {
-            Queued,
-            FilterPipelined,
-            Pipelined,
-            Emitted
-        };
+        enum Position { Queued, FilterPipelined, Pipelined, Emitted };
         Position position;
     };
     QQueue<MessageStruct> m_messages;

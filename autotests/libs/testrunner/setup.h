@@ -10,8 +10,8 @@
 #include <servermanager.h>
 
 #include <QObject>
-#include <QVector>
 #include <QPair>
+#include <QVector>
 
 #include <memory>
 

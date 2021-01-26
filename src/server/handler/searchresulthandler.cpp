@@ -7,11 +7,11 @@
 
 #include "searchresulthandler.h"
 
-#include "connection.h"
 #include "akonadi.h"
-#include "storage/querybuilder.h"
-#include "storage/itemqueryhelper.h"
+#include "connection.h"
 #include "search/searchtaskmanager.h"
+#include "storage/itemqueryhelper.h"
+#include "storage/querybuilder.h"
 
 #include <private/imapset_p.h>
 #include <private/scope_p.h>
@@ -21,7 +21,8 @@ using namespace Akonadi::Server;
 
 SearchResultHandler::SearchResultHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 bool SearchResultHandler::parseStream()
 {

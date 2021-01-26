@@ -72,7 +72,7 @@ void ETMViewStateSaver::selectCollections(const Akonadi::Collection::List &list)
     restoreSelection(colStrings);
 }
 
-void ETMViewStateSaver::selectCollections(const QList< Collection::Id > &list)
+void ETMViewStateSaver::selectCollections(const QList<Collection::Id> &list)
 {
     QStringList colStrings;
     colStrings.reserve(list.count());
@@ -92,7 +92,7 @@ void ETMViewStateSaver::selectItems(const Akonadi::Item::List &list)
     restoreSelection(itemStrings);
 }
 
-void ETMViewStateSaver::selectItems(const QList< Item::Id > &list)
+void ETMViewStateSaver::selectItems(const QList<Item::Id> &list)
 {
     QStringList itemStrings;
     itemStrings.reserve(list.count());

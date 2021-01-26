@@ -7,9 +7,9 @@
 #ifndef TAGSELECTWIDGET_H
 #define TAGSELECTWIDGET_H
 
-#include <QWidget>
-#include "tag.h"
 #include "akonadiwidgets_export.h"
+#include "tag.h"
+#include <QWidget>
 
 namespace Akonadi
 {
@@ -38,6 +38,7 @@ public:
      * @brief setSelectionFromStringList, convert a QStringList to Tag (converted from url)
      */
     void setSelectionFromStringList(const QStringList &lst);
+
 private:
     //@cond PRIVATE
     class Private;

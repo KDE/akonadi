@@ -7,9 +7,9 @@
 #ifndef SESSION_H
 #define SESSION_H
 
-#include <QObject>
-#include <QLocalSocket>
 #include <QElapsedTimer>
+#include <QLocalSocket>
+#include <QObject>
 
 class QIODevice;
 class QSocketNotifier;

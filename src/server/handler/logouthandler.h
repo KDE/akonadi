@@ -12,20 +12,18 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
   @ingroup akonadi_server_handler
 
   Handler for the logout command.
  */
-class LogoutHandler: public Handler
+class LogoutHandler : public Handler
 {
 public:
     LogoutHandler(AkonadiServer &akonadi);
     ~LogoutHandler() override = default;
 
     bool parseStream() override;
-
 };
 
 } // namespace Server

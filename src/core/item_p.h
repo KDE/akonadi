@@ -9,30 +9,29 @@
 
 #include <QDateTime>
 
-#include "itempayloadinternals_p.h"
 #include "itemchangelog_p.h"
+#include "itempayloadinternals_p.h"
 #include "tag.h"
 
-#include <memory>
 #include <algorithm>
 #include <cassert>
+#include <memory>
 #include <vector>
 
 namespace Akonadi
 {
-
 namespace _detail
 {
-
-template <typename T>
-class clone_ptr
+template<typename T> class clone_ptr
 {
     std::unique_ptr<T> t;
+
 public:
     explicit clone_ptr() = default;
     explicit clone_ptr(T *t)
         : t(t)
-    {}
+    {
+    }
 
     clone_ptr(const clone_ptr &other)
         : t(other.t ? other.t->clone() : nullptr)
@@ -92,8 +91,7 @@ public:
     }
 };
 
-template <typename T>
-inline void swap(clone_ptr<T> &lhs, clone_ptr<T> &rhs) noexcept
+template<typename T> inline void swap(clone_ptr<T> &lhs, clone_ptr<T> &rhs) noexcept
 {
     lhs.swap(rhs);
 }
@@ -114,8 +112,7 @@ struct BySharedPointerAndMetaTypeID {
     }
     bool operator()(const TypedPayload &tp) const
     {
-        return (mtid == -1 || mtid == tp.metaTypeId)
-               && (spid == -1 || spid == tp.sharedPointerId);
+        return (mtid == -1 || mtid == tp.metaTypeId) && (spid == -1 || spid == tp.sharedPointerId);
     }
 };
 
@@ -125,9 +122,7 @@ struct BySharedPointerAndMetaTypeID {
 
 namespace std
 {
-template <>
-inline void swap<Akonadi::_detail::TypedPayload>(Akonadi::_detail::TypedPayload &lhs,
-    Akonadi::_detail::TypedPayload &rhs) noexcept
+template<> inline void swap<Akonadi::_detail::TypedPayload>(Akonadi::_detail::TypedPayload &lhs, Akonadi::_detail::TypedPayload &rhs) noexcept
 {
     lhs.payload.swap(rhs.payload);
     swap(lhs.sharedPointerId, rhs.sharedPointerId);
@@ -140,17 +135,16 @@ namespace Akonadi
 typedef std::vector<_detail::TypedPayload> PayloadContainer;
 }
 
-namespace QtPrivate {
+namespace QtPrivate
+{
 // disable Q_FOREACH on PayloadContainer (b/c it likes to take copies and clone_ptr doesn't like that)
-template <>
-class QForeachContainer<Akonadi::PayloadContainer>
+template<> class QForeachContainer<Akonadi::PayloadContainer>
 {
 };
 }
 
 namespace Akonadi
 {
-
 /**
  * @internal
  */
@@ -229,12 +223,11 @@ public:
 
     Internal::PayloadBase *payloadBaseImpl(int spid, int mtid) const
     {
-        auto it = std::find_if(mPayloads.cbegin(), mPayloads.cend(),
-                               _detail::BySharedPointerAndMetaTypeID(spid, mtid));
+        auto it = std::find_if(mPayloads.cbegin(), mPayloads.cend(), _detail::BySharedPointerAndMetaTypeID(spid, mtid));
         return it == mPayloads.cend() ? nullptr : it->payload.get();
     }
 
-    bool movePayloadFrom(ItemPrivate *other, int mtid) const    /*sic!*/
+    bool movePayloadFrom(ItemPrivate *other, int mtid) const /*sic!*/
     {
         assert(other);
         const size_t oldSize = mPayloads.size();
@@ -252,7 +245,7 @@ public:
         return numMatching > 0;
     }
 
-    void setPayloadBaseImpl(int spid, int mtid, std::unique_ptr<Internal::PayloadBase> &p, bool add) const   /*sic!*/
+    void setPayloadBaseImpl(int spid, int mtid, std::unique_ptr<Internal::PayloadBase> &p, bool add) const /*sic!*/
     {
         if (!p.get()) {
             if (!add) {
@@ -270,7 +263,6 @@ public:
         tp.sharedPointerId = spid;
         tp.metaTypeId = mtid;
     }
-
 
     // Utilise the 4-bytes padding from QSharedData
     int mRevision;

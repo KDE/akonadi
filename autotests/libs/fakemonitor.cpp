@@ -22,15 +22,14 @@ public:
     {
     }
 
-    bool connectToNotificationManager() override {
+    bool connectToNotificationManager() override
+    {
         // Do nothing. This monitor should not connect to the notification manager.
         return true;
     }
-
 };
 
 FakeMonitor::FakeMonitor(QObject *parent)
     : ChangeRecorder(new FakeMonitorPrivate(this), parent)
 {
-
 }

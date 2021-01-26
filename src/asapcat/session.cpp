@@ -10,11 +10,11 @@
 
 #include <QCoreApplication>
 #include <QFile>
-#include <QSocketNotifier>
 #include <QSettings>
+#include <QSocketNotifier>
 
-#include <iostream>
 #include <fcntl.h>
+#include <iostream>
 #include <unistd.h>
 
 Session::Session(const QString &input, QObject *parent)

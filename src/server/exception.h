@@ -15,7 +15,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
   Base class for exception used internally by the Akonadi server.
 */
@@ -42,7 +41,8 @@ public:
 
     ~Exception() throw() override = default;
 
-    const char *what() const throw() override {
+    const char *what() const throw() override
+    {
         return mWhat.constData();
     }
 
@@ -50,30 +50,31 @@ public:
     {
         return "General Exception";
     }
+
 protected:
     QByteArray mWhat;
 };
 
-#define AKONADI_EXCEPTION_MAKE_INSTANCE( classname ) \
-    class classname : public Akonadi::Server::Exception \
-    { \
-    public: \
-        classname ( const char *what ) throw() \
-            : Akonadi::Server::Exception( what ) \
-        { \
-        } \
-        classname ( const QByteArray &what ) throw() \
-            : Akonadi::Server::Exception( what ) \
-        { \
-        } \
-        classname ( const QString &what ) throw() \
-            : Akonadi::Server::Exception( what ) \
-        { \
-        } \
-        const char *type() const throw() override \
-        { \
-            return "" #classname; \
-        } \
+#define AKONADI_EXCEPTION_MAKE_INSTANCE(classname)                                                                                                             \
+    class classname : public Akonadi::Server::Exception                                                                                                        \
+    {                                                                                                                                                          \
+    public:                                                                                                                                                    \
+        classname(const char *what) throw()                                                                                                                    \
+            : Akonadi::Server::Exception(what)                                                                                                                 \
+        {                                                                                                                                                      \
+        }                                                                                                                                                      \
+        classname(const QByteArray &what) throw()                                                                                                              \
+            : Akonadi::Server::Exception(what)                                                                                                                 \
+        {                                                                                                                                                      \
+        }                                                                                                                                                      \
+        classname(const QString &what) throw()                                                                                                                 \
+            : Akonadi::Server::Exception(what)                                                                                                                 \
+        {                                                                                                                                                      \
+        }                                                                                                                                                      \
+        const char *type() const throw() override                                                                                                              \
+        {                                                                                                                                                      \
+            return "" #classname;                                                                                                                              \
+        }                                                                                                                                                      \
     }
 
 } // namespace Server

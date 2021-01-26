@@ -5,33 +5,33 @@
 */
 
 #include "storagejanitor.h"
-#include "akonadi.h"
-#include "storage/queryhelper.h"
-#include "storage/transaction.h"
-#include "storage/datastore.h"
-#include "storage/selectquerybuilder.h"
-#include "storage/parthelper.h"
-#include "storage/dbconfig.h"
-#include "storage/collectionstatistics.h"
-#include "search/searchrequest.h"
-#include "search/searchmanager.h"
-#include "resourcemanager.h"
-#include "entities.h"
 #include "agentmanagerinterface.h"
+#include "akonadi.h"
 #include "akonadiserver_debug.h"
+#include "entities.h"
+#include "resourcemanager.h"
+#include "search/searchmanager.h"
+#include "search/searchrequest.h"
+#include "storage/collectionstatistics.h"
+#include "storage/datastore.h"
+#include "storage/dbconfig.h"
+#include "storage/parthelper.h"
+#include "storage/queryhelper.h"
+#include "storage/selectquerybuilder.h"
+#include "storage/transaction.h"
 
 #include <private/dbus_p.h>
+#include <private/externalpartstorage_p.h>
 #include <private/imapset_p.h>
 #include <private/protocol_p.h>
 #include <private/standarddirs_p.h>
-#include <private/externalpartstorage_p.h>
 
-#include <QStringBuilder>
-#include <QSqlQuery>
-#include <QSqlError>
+#include <QDateTime>
 #include <QDir>
 #include <QDirIterator>
-#include <QDateTime>
+#include <QSqlError>
+#include <QSqlQuery>
+#include <QStringBuilder>
 
 #include <algorithm>
 
@@ -56,7 +56,8 @@ void StorageJanitor::init()
 
     QDBusConnection conn = QDBusConnection::sessionBus();
     conn.registerService(DBus::serviceName(DBus::StorageJanitor));
-    conn.registerObject(QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH), this,
+    conn.registerObject(QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH),
+                        this,
                         QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableSignals);
 }
 
@@ -85,7 +86,7 @@ void StorageJanitor::check() // implementation of `akonadictl fsck`
 
     inform("Checking collection tree consistency...");
     const Collection::List cols = Collection::retrieveAll();
-    std::for_each(cols.begin(), cols.end(), [this](const Collection & col) {
+    std::for_each(cols.begin(), cols.end(), [this](const Collection &col) {
         checkPathToRoot(col);
     });
 
@@ -201,11 +202,7 @@ qint64 StorageJanitor::lostAndFoundCollection()
 void StorageJanitor::findOrphanedResources()
 {
     SelectQueryBuilder<Resource> qbres;
-    OrgFreedesktopAkonadiAgentManagerInterface iface(
-        DBus::serviceName(DBus::Control),
-        QStringLiteral("/AgentManager"),
-        QDBusConnection::sessionBus(),
-        this);
+    OrgFreedesktopAkonadiAgentManagerInterface iface(DBus::serviceName(DBus::Control), QStringLiteral("/AgentManager"), QDBusConnection::sessionBus(), this);
     if (!iface.isValid()) {
         inform(QStringLiteral("ERROR: Couldn't talk to %1").arg(DBus::Control));
         return;
@@ -216,12 +213,12 @@ void StorageJanitor::findOrphanedResources()
         return;
     }
     qbres.addValueCondition(Resource::nameFullColumnName(), Query::NotIn, QVariant(knownResources));
-    qbres.addValueCondition(Resource::idFullColumnName(), Query::NotEquals, 1);   // skip akonadi_search_resource
+    qbres.addValueCondition(Resource::idFullColumnName(), Query::NotEquals, 1); // skip akonadi_search_resource
     if (!qbres.exec()) {
         inform("Failed to query known resources, skipping test");
         return;
     }
-    //qCDebug(AKONADISERVER_LOG) << "SQL:" << qbres.query().lastQuery();
+    // qCDebug(AKONADISERVER_LOG) << "SQL:" << qbres.query().lastQuery();
     const Resource::List orphanResources = qbres.result();
     const int orphanResourcesSize(orphanResources.size());
     if (orphanResourcesSize > 0) {
@@ -230,7 +227,7 @@ void StorageJanitor::findOrphanedResources()
         for (const Resource &resource : orphanResources) {
             resourceNames.append(resource.name());
         }
-        inform(QStringLiteral("Found %1 orphan resources: %2").arg(orphanResourcesSize). arg(resourceNames.join(QLatin1Char(','))));
+        inform(QStringLiteral("Found %1 orphan resources: %2").arg(orphanResourcesSize).arg(resourceNames.join(QLatin1Char(','))));
         for (const QString &resourceName : qAsConst(resourceNames)) {
             inform(QStringLiteral("Removing resource %1").arg(resourceName));
             m_akonadi.resourceManager().removeResourceInstance(resourceName);
@@ -262,8 +259,7 @@ void StorageJanitor::checkPathToRoot(const Collection &col)
     }
     const Collection parent = col.parent();
     if (!parent.isValid()) {
-        inform(QLatin1String("Collection \"") + col.name() + QLatin1String("\" (id: ") + QString::number(col.id())
-               + QLatin1String(") has no valid parent."));
+        inform(QLatin1String("Collection \"") + col.name() + QLatin1String("\" (id: ") + QString::number(col.id()) + QLatin1String(") has no valid parent."));
         // TODO fix that by attaching to a top-level lost+found folder
         return;
     }
@@ -329,7 +325,7 @@ void StorageJanitor::findOrphanedParts()
     }
 }
 
-void StorageJanitor:: findOrphanedPimItemFlags()
+void StorageJanitor::findOrphanedPimItemFlags()
 {
     QueryBuilder sqb(PimItemFlagRelation::tableName(), QueryBuilder::Select);
     sqb.addColumn(PimItemFlagRelation::leftFullColumnName());
@@ -426,7 +422,8 @@ void StorageJanitor::verifyExternalParts()
         if (existingFiles.contains(partPath)) {
             usedFiles.insert(partPath);
         } else {
-            inform(QLatin1String("Cleaning up missing external file: ") + partPath + QLatin1String(" for item: ") + QString::number(pimItemId) + QLatin1String(" on part: ") + QString::number(partId));
+            inform(QLatin1String("Cleaning up missing external file: ") + partPath + QLatin1String(" for item: ") + QString::number(pimItemId)
+                   + QLatin1String(" on part: ") + QString::number(partId));
 
             Part part;
             part.setId(partId);
@@ -467,8 +464,7 @@ void StorageJanitor::findDirtyObjects()
     }
     const Collection::List ridLessCols = cqb.result();
     for (const Collection &col : ridLessCols) {
-        inform(QLatin1String("Collection \"") + col.name() + QLatin1String("\" (id: ") + QString::number(col.id())
-               + QLatin1String(") has no RID."));
+        inform(QLatin1String("Collection \"") + col.name() + QLatin1String("\" (id: ") + QString::number(col.id()) + QLatin1String(") has no RID."));
     }
     inform(QLatin1String("Found ") + QString::number(ridLessCols.size()) + QLatin1String(" collections without RID."));
 
@@ -482,8 +478,8 @@ void StorageJanitor::findDirtyObjects()
     }
     const PimItem::List ridLessItems = iqb1.result();
     for (const PimItem &item : ridLessItems) {
-        inform(QLatin1String("Item \"") + QString::number(item.id()) + QLatin1String("\" in collection \"") +
-                QString::number(item.collectionId()) + QLatin1String("\" has no RID."));
+        inform(QLatin1String("Item \"") + QString::number(item.id()) + QLatin1String("\" in collection \"") + QString::number(item.collectionId())
+               + QLatin1String("\" has no RID."));
     }
     inform(QLatin1String("Found ") + QString::number(ridLessItems.size()) + QLatin1String(" items without RID."));
 
@@ -783,7 +779,7 @@ void StorageJanitor::findOrphanSearchIndexEntries()
         inform(QStringLiteral("Checking Collection %1 search index...").arg(colId));
         SearchRequest req("StorageJanitor", m_akonadi.searchManager(), m_akonadi.agentSearchManager());
         req.setStoreResults(true);
-        req.setCollections({ colId });
+        req.setCollections({colId});
         req.setRemoteSearch(false);
         req.setQuery(QStringLiteral("{ }")); // empty query to match all
         QStringList mts;
@@ -853,7 +849,6 @@ void StorageJanitor::ensureSearchCollection()
         }
     }
 }
-
 
 void StorageJanitor::inform(const char *msg)
 {

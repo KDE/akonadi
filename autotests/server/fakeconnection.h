@@ -9,9 +9,10 @@
 
 #include "connection.h"
 
-namespace Akonadi {
-namespace Server {
-
+namespace Akonadi
+{
+namespace Server
+{
 class NotificationCollector;
 class FakeAkonadiServer;
 
@@ -26,7 +27,6 @@ public:
 
 public Q_SLOTS:
     Akonadi::Server::NotificationCollector *notificationCollector();
-
 };
 
 }

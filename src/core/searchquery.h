@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 /**
  * Search term represents the actual condition within query.
  *
@@ -26,19 +25,9 @@ namespace Akonadi
 class AKONADICORE_EXPORT SearchTerm
 {
 public:
-    enum Relation {
-        RelAnd,
-        RelOr
-    };
+    enum Relation { RelAnd, RelOr };
 
-    enum Condition {
-        CondEqual,
-        CondGreaterThan,
-        CondGreaterOrEqual,
-        CondLessThan,
-        CondLessOrEqual,
-        CondContains
-    };
+    enum Condition { CondEqual, CondGreaterThan, CondGreaterOrEqual, CondLessThan, CondLessOrEqual, CondContains };
 
     /**
      * Constructs a term where all subterms will be in given relation
@@ -168,7 +157,6 @@ public:
 private:
     class Private;
     QSharedDataPointer<Private> d;
-
 };
 
 /**
@@ -181,7 +169,6 @@ private:
 class AKONADICORE_EXPORT EmailSearchTerm : public SearchTerm
 {
 public:
-
     /**
      * All fields expect a search string unless noted otherwise.
      */
@@ -189,8 +176,8 @@ public:
         Unknown,
         Subject,
         Body,
-        Message, //Complete message including headers, body and attachment
-        Headers, //All headers
+        Message, // Complete message including headers, body and attachment
+        Headers, // All headers
         HeaderFrom,
         HeaderTo,
         HeaderCC,
@@ -202,11 +189,11 @@ public:
         HeaderXLoop,
         HeaderXMailingList,
         HeaderXSpamFlag,
-        HeaderDate, //Expects QDateTime
-        HeaderOnlyDate, //Expectes QDate
-        MessageStatus, //Expects message flag from Akonadi::MessageFlags. Boolean filter.
-        ByteSize, //Expects int
-        Attachment, //Textsearch on attachment
+        HeaderDate, // Expects QDateTime
+        HeaderOnlyDate, // Expectes QDate
+        MessageStatus, // Expects message flag from Akonadi::MessageFlags. Boolean filter.
+        ByteSize, // Expects int
+        Attachment, // Textsearch on attachment
         MessageTag
     };
 
@@ -242,7 +229,7 @@ public:
         Email,
         Nickname,
         Uid,
-        All //Special field: matches all contacts.
+        All // Special field: matches all contacts.
     };
 
     ContactSearchTerm(ContactSearchField field, const QVariant &value, SearchTerm::Condition condition = SearchTerm::CondEqual);
@@ -271,7 +258,7 @@ public:
     enum IncidenceSearchField {
         Unknown,
         All,
-        PartStatus,                                         // Own PartStatus
+        PartStatus, // Own PartStatus
         Organizer,
         Summary,
         Location

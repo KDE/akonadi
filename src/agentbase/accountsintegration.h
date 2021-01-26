@@ -7,8 +7,8 @@
 #ifndef AKONADI_ACCOUNTSINTEGRATION_H_
 #define AKONADI_ACCOUNTSINTEGRATION_H_
 
-#include <QObject>
 #include "akonadiagentbase_export.h"
+#include <QObject>
 
 #include <functional>
 #include <optional>
@@ -16,12 +16,12 @@
 class Akonadi__AccountsAdaptor;
 namespace Akonadi
 {
-
 class AKONADIAGENTBASE_EXPORT AccountsIntegration : public QObject
 {
     Q_OBJECT
 
     friend class ::Akonadi__AccountsAdaptor;
+
 public:
     explicit AccountsIntegration();
     ~AccountsIntegration() override = default;
@@ -49,8 +49,6 @@ private:
 
     std::optional<quint32> mAccountId;
 };
-
-
 
 } // namespace Akonadi
 

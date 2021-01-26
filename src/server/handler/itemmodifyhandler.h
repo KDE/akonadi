@@ -8,14 +8,13 @@
 #ifndef AKONADI_ITEMMODIFYHANDLER_H_
 #define AKONADI_ITEMMODIFYHANDLER_H_
 
-#include "handler.h"
 #include "entities.h"
+#include "handler.h"
 
 namespace Akonadi
 {
 namespace Server
 {
-
 /**
   @ingroup akonadi_server_handler
 
@@ -53,7 +52,7 @@ namespace Server
   - requires the previous item revision to be provided (@c REV)
 */
 
-class ItemModifyHandler: public Handler
+class ItemModifyHandler : public Handler
 {
 public:
     ItemModifyHandler(AkonadiServer &akonadi);

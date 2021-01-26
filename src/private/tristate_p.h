@@ -7,19 +7,14 @@
 #ifndef AKONADI_PRIVATE_TRISTATE_P_H_
 #define AKONADI_PRIVATE_TRISTATE_P_H_
 
-#include <QMetaType>
 #include <QDebug>
+#include <QMetaType>
 
 #include "akonadiprivate_export.h"
 
 namespace Akonadi
 {
-
-enum class Tristate : qint8 {
-    False     = 0,
-    True      = 1,
-    Undefined = 2
-};
+enum class Tristate : qint8 { False = 0, True = 1, Undefined = 2 };
 
 }
 

@@ -6,8 +6,8 @@
 
 #include "relationfetchjob.h"
 #include "job_p.h"
-#include "protocolhelper_p.h"
 #include "private/protocol_p.h"
+#include "protocolhelper_p.h"
 #include <QTimer>
 
 using namespace Akonadi;
@@ -24,10 +24,13 @@ public:
 
     void init()
     {
-        QObject::connect(&mEmitTimer, &QTimer::timeout, q_ptr, [this]() { timeout(); });
+        QObject::connect(&mEmitTimer, &QTimer::timeout, q_ptr, [this]() {
+            timeout();
+        });
     }
 
-    void aboutToFinish() override {
+    void aboutToFinish() override
+    {
         timeout();
     }
 
@@ -74,10 +77,10 @@ void RelationFetchJob::doStart()
     Q_D(RelationFetchJob);
 
     d->sendCommand(Protocol::FetchRelationsCommandPtr::create(
-                       d->mRequestedRelation.left().id(),
-                       d->mRequestedRelation.right().id(),
-                       (d->mTypes.isEmpty() && !d->mRequestedRelation.type().isEmpty()) ? QVector<QByteArray>() << d->mRequestedRelation.type() : d->mTypes,
-                       d->mResource));
+        d->mRequestedRelation.left().id(),
+        d->mRequestedRelation.right().id(),
+        (d->mTypes.isEmpty() && !d->mRequestedRelation.type().isEmpty()) ? QVector<QByteArray>() << d->mRequestedRelation.type() : d->mTypes,
+        d->mResource));
 }
 
 bool RelationFetchJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
@@ -88,8 +91,7 @@ bool RelationFetchJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &
         return Job::doHandleResponse(tag, response);
     }
 
-    const Relation rel = ProtocolHelper::parseRelationFetchResult(
-        Protocol::cmdCast<Protocol::FetchRelationsResponse>(response));
+    const Relation rel = ProtocolHelper::parseRelationFetchResult(Protocol::cmdCast<Protocol::FetchRelationsResponse>(response));
     // Invalid response means there will be no more responses
     if (!rel.isValid()) {
         return true;

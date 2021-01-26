@@ -7,9 +7,9 @@
 #ifndef FAKESESSION_H
 #define FAKESESSION_H
 
-#include "session.h"
-#include "collection.h"
 #include "akonaditestfake_export.h"
+#include "collection.h"
+#include "session.h"
 
 using namespace Akonadi;
 
@@ -17,10 +17,7 @@ class AKONADITESTFAKE_EXPORT FakeSession : public Session
 {
     Q_OBJECT
 public:
-    enum Mode {
-        EndJobsImmediately,
-        EndJobsManually
-    };
+    enum Mode { EndJobsImmediately, EndJobsManually };
 
     explicit FakeSession(const QByteArray &sessionId = QByteArray(), Mode mode = EndJobsImmediately, QObject *parent = nullptr);
 

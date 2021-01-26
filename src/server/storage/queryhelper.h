@@ -11,12 +11,10 @@ class QString;
 
 namespace Akonadi
 {
-
 class ImapSet;
 
 namespace Server
 {
-
 class QueryBuilder;
 
 /**

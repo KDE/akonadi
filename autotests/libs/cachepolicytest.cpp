@@ -11,12 +11,10 @@
 CachePolicyTest::CachePolicyTest(QObject *parent)
     : QObject(parent)
 {
-
 }
 
 CachePolicyTest::~CachePolicyTest()
 {
-
 }
 
 void CachePolicyTest::shouldHaveDefaultValue()
@@ -30,4 +28,3 @@ void CachePolicyTest::shouldHaveDefaultValue()
 }
 
 QTEST_MAIN(CachePolicyTest)
-

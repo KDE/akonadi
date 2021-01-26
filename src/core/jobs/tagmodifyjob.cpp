@@ -5,11 +5,11 @@
 */
 
 #include "tagmodifyjob.h"
+#include "changemediator_p.h"
 #include "job_p.h"
+#include "protocolhelper_p.h"
 #include "tag.h"
 #include "tag_p.h"
-#include "protocolhelper_p.h"
-#include "changemediator_p.h"
 
 using namespace Akonadi;
 
@@ -23,7 +23,6 @@ public:
 
     QString jobDebuggingString() const override;
     Tag mTag;
-
 };
 
 QString Akonadi::TagModifyJobPrivate::jobDebuggingString() const
@@ -67,7 +66,7 @@ bool TagModifyJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &resp
     Q_D(TagModifyJob);
 
     if (response->isResponse()) {
-        if (response->type() == Protocol::Command::FetchTags ||  response->type() == Protocol::Command::DeleteTag) {
+        if (response->type() == Protocol::Command::FetchTags || response->type() == Protocol::Command::DeleteTag) {
             // Tag was modified, deleted or merged, we ignore the response for now
             return false;
         } else if (response->type() == Protocol::Command::ModifyTag) {

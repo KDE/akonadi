@@ -7,12 +7,11 @@
 #ifndef AKONADI_DRAGDROPMANAGER_P_H
 #define AKONADI_DRAGDROPMANAGER_P_H
 
-#include <QAbstractItemView>
 #include "collection.h"
+#include <QAbstractItemView>
 
 namespace Akonadi
 {
-
 class DragDropManager
 {
 public:

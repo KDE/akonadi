@@ -7,8 +7,8 @@
 
 #include "intervalcheck.h"
 #include "storage/datastore.h"
-#include "storage/itemretrievalmanager.h"
 #include "storage/entity.h"
+#include "storage/itemretrievalmanager.h"
 
 using namespace Akonadi::Server;
 
@@ -28,7 +28,12 @@ IntervalCheck::~IntervalCheck()
 
 void IntervalCheck::requestCollectionSync(const Collection &collection)
 {
-    QMetaObject::invokeMethod(this, [this, collection]() { collectionExpired(collection); }, Qt::QueuedConnection);
+    QMetaObject::invokeMethod(
+        this,
+        [this, collection]() {
+            collectionExpired(collection);
+        },
+        Qt::QueuedConnection);
 }
 
 int IntervalCheck::collectionScheduleInterval(const Collection &collection)
@@ -38,15 +43,14 @@ int IntervalCheck::collectionScheduleInterval(const Collection &collection)
 
 bool IntervalCheck::hasChanged(const Collection &collection, const Collection &changed)
 {
-    return collection.cachePolicyCheckInterval() != changed.cachePolicyCheckInterval()
-           || collection.enabled() != changed.enabled()
-           || collection.syncPref() != changed.syncPref();
+    return collection.cachePolicyCheckInterval() != changed.cachePolicyCheckInterval() || collection.enabled() != changed.enabled()
+        || collection.syncPref() != changed.syncPref();
 }
 
 bool IntervalCheck::shouldScheduleCollection(const Collection &collection)
 {
     return collection.cachePolicyCheckInterval() > 0
-           && ((collection.syncPref() == Collection::True) || ((collection.syncPref() == Collection::Undefined) && collection.enabled()));
+        && ((collection.syncPref() == Collection::True) || ((collection.syncPref() == Collection::Undefined) && collection.enabled()));
 }
 
 void IntervalCheck::collectionExpired(const Collection &collection)

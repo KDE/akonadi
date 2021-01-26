@@ -8,17 +8,18 @@
 #ifndef AKONADI_SERVER_FAKECLIENT_H
 #define AKONADI_SERVER_FAKECLIENT_H
 
-#include <QThread>
-#include <QRecursiveMutex>
 #include "datastream_p_p.h"
+#include <QRecursiveMutex>
+#include <QThread>
 
 #include "fakeakonadiserver.h"
 
 class QLocalSocket;
 
-namespace Akonadi {
-namespace Server {
-
+namespace Akonadi
+{
+namespace Server
+{
 class FakeClient : public QThread
 {
     Q_OBJECT
@@ -49,6 +50,5 @@ private:
 };
 }
 }
-
 
 #endif // AKONADI_SERVER_FAKECLIENT_H

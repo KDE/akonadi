@@ -19,8 +19,8 @@
 
 #include "collection.h"
 #include "controlgui.h"
-#include "item.h"
 #include "entitytreemodel.h"
+#include "item.h"
 #include "progressspinnerdelegate_p.h"
 
 using namespace Akonadi;
@@ -58,8 +58,12 @@ void EntityListView::Private::init()
     mParent->setDragDropMode(DragDrop);
     mParent->setDragEnabled(true);
 #endif
-    mParent->connect(mParent, &QAbstractItemView::clicked, mParent, [this](const auto &index) { itemClicked(index); });
-    mParent->connect(mParent, &QAbstractItemView::doubleClicked, mParent, [this](const auto &index) { itemDoubleClicked(index); });
+    mParent->connect(mParent, &QAbstractItemView::clicked, mParent, [this](const auto &index) {
+        itemClicked(index);
+    });
+    mParent->connect(mParent, &QAbstractItemView::doubleClicked, mParent, [this](const auto &index) {
+        itemDoubleClicked(index);
+    });
 
     auto *animator = new DelegateAnimator(mParent);
     auto *customDelegate = new ProgressSpinnerDelegate(animator, mParent);
@@ -149,8 +153,9 @@ void EntityListView::setModel(QAbstractItemModel *model)
 
     QListView::setModel(model);
 
-    connect(selectionModel(), &QItemSelectionModel::currentChanged,
-            this, [this](const QModelIndex &index) { d->itemCurrentChanged(index); });
+    connect(selectionModel(), &QItemSelectionModel::currentChanged, this, [this](const QModelIndex &index) {
+        d->itemCurrentChanged(index);
+    });
 }
 
 #ifndef QT_NO_DRAGANDDROP
@@ -168,8 +173,7 @@ void EntityListView::dragMoveEvent(QDragMoveEvent *event)
 void EntityListView::dropEvent(QDropEvent *event)
 {
     bool menuCanceled = false;
-    if (d->mDragDropManager->processDropEvent(event, menuCanceled) &&
-            !menuCanceled) {
+    if (d->mDragDropManager->processDropEvent(event, menuCanceled) && !menuCanceled) {
         QListView::dropEvent(event);
     }
 }
@@ -189,11 +193,10 @@ void EntityListView::contextMenuEvent(QContextMenuEvent *event)
     // check if the index under the cursor is a collection or item
     const Collection collection = model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
     if (collection.isValid()) {
-        popup = static_cast<QMenu *>(d->mXmlGuiClient->factory()->container(
-                                         QStringLiteral("akonadi_favoriteview_contextmenu"), d->mXmlGuiClient));
+        popup = static_cast<QMenu *>(d->mXmlGuiClient->factory()->container(QStringLiteral("akonadi_favoriteview_contextmenu"), d->mXmlGuiClient));
     } else {
-        popup = static_cast<QMenu *>(d->mXmlGuiClient->factory()->container(
-                                         QStringLiteral("akonadi_favoriteview_emptyselection_contextmenu"), d->mXmlGuiClient));
+        popup =
+            static_cast<QMenu *>(d->mXmlGuiClient->factory()->container(QStringLiteral("akonadi_favoriteview_emptyselection_contextmenu"), d->mXmlGuiClient));
     }
 
     if (popup) {

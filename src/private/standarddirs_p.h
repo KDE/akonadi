@@ -13,25 +13,19 @@
 
 namespace Akonadi
 {
-
 /**
  * Convenience wrappers on top of QStandardPaths that are instance namespace aware.
  * @since 1.7
  */
 namespace StandardDirs
 {
-
 /**
  * @brief Open mode flags for resource files
  *
  * FileAccessMode is a typedef for QFlags<FileAccessFlag>. It stores
  * a OR combination of FileAccessFlag values
  */
-enum FileAccessMode {
-    ReadOnly  = 0x1,
-    WriteOnly = 0x2,
-    ReadWrite = ReadOnly | WriteOnly
-};
+enum FileAccessMode { ReadOnly = 0x1, WriteOnly = 0x2, ReadWrite = ReadOnly | WriteOnly };
 
 /**
  * Returns path to the config file @p configFile.

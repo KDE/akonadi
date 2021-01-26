@@ -13,7 +13,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
   @ingroup akonadi_server_handler
 
@@ -24,7 +23,7 @@ namespace Server
   to be unique per resource, so this command should be issued before running any RID based
   collection commands.
 */
-class ResourceSelectHandler: public Handler
+class ResourceSelectHandler : public Handler
 {
 public:
     ResourceSelectHandler(AkonadiServer &akonadi);

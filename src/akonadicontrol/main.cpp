@@ -5,11 +5,11 @@
  ***************************************************************************/
 
 #include "agentmanager.h"
+#include "akonadi_version.h"
+#include "akonadicontrol_debug.h"
+#include "config-akonadi.h"
 #include "controlmanager.h"
 #include "processcontrol.h"
-#include "akonadicontrol_debug.h"
-#include "akonadi_version.h"
-#include "config-akonadi.h"
 
 #ifdef WITH_ACCOUNTS
 #include "accountsintegration.h"
@@ -19,16 +19,16 @@
 
 #include <private/dbus_p.h>
 
+#include <QDBusConnection>
 #include <QGuiApplication>
 #include <QSessionManager>
-#include <QDBusConnection>
 
-#include <KCrash/KCrash>
 #include <KAboutData>
+#include <KCrash/KCrash>
 
 #include <stdlib.h>
 #ifdef HAVE_UNISTD_H
-# include <unistd.h>
+#include <unistd.h>
 #endif
 
 static AgentManager *sAgentManager = nullptr;
@@ -74,7 +74,7 @@ int main(int argc, char **argv)
     QGuiApplication::setFallbackSessionManagementEnabled(false);
 
     // akonadi_control is started on-demand, no need to auto restart by session.
-    auto disableSessionManagement = [](QSessionManager & sm) {
+    auto disableSessionManagement = [](QSessionManager &sm) {
         sm.setRestartHint(QSessionManager::RestartNever);
     };
     QObject::connect(qApp, &QGuiApplication::commitDataRequest, disableSessionManagement);

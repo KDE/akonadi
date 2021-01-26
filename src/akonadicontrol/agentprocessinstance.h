@@ -12,7 +12,6 @@
 
 namespace Akonadi
 {
-
 class ProcessControl;
 
 class AgentProcessInstance : public AgentInstance

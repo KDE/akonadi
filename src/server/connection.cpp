@@ -7,23 +7,20 @@
 #include "connection.h"
 #include "akonadiserver_debug.h"
 
-
-#include <QSettings>
 #include <QEventLoop>
+#include <QSettings>
 #include <QThreadStorage>
 
-#include "storage/datastore.h"
-#include "storage/dbdeadlockcatcher.h"
 #include "handler.h"
 #include "notificationmanager.h"
-
+#include "storage/datastore.h"
+#include "storage/dbdeadlockcatcher.h"
 
 #include <cassert>
 
 #ifndef Q_OS_WIN
 #include <cxxabi.h>
 #endif
-
 
 #include <private/standarddirs_p.h>
 
@@ -32,7 +29,8 @@ using namespace Akonadi::Server;
 
 #define IDLE_TIMER_TIMEOUT 180000 // 3 min
 
-static QString connectionIdentifier(Connection *c) {
+static QString connectionIdentifier(Connection *c)
+{
     const QString id = QString::asprintf("%p", static_cast<void *>(c));
     return id;
 }
@@ -60,10 +58,8 @@ void Connection::init()
 
     auto socket = std::make_unique<QLocalSocket>();
     if (!socket->setSocketDescriptor(m_socketDescriptor)) {
-        qCWarning(AKONADISERVER_LOG) << "Connection(" << m_identifier
-                                     << ")::run: failed to set socket descriptor: "
-                                     << socket->error()
-                                     << "(" << socket->errorString() << ")";
+        qCWarning(AKONADISERVER_LOG) << "Connection(" << m_identifier << ")::run: failed to set socket descriptor: " << socket->error() << "("
+                                     << socket->errorString() << ")";
         return;
     }
 
@@ -78,8 +74,7 @@ void Connection::init()
     if (m_socket->state() == QLocalSocket::ConnectedState) {
         QTimer::singleShot(0, this, &Connection::handleIncomingData);
     } else {
-        connect(m_socket.get(), &QLocalSocket::connected, this, &Connection::handleIncomingData,
-                Qt::QueuedConnection);
+        connect(m_socket.get(), &QLocalSocket::connected, this, &Connection::handleIncomingData, Qt::QueuedConnection);
     }
 
     try {
@@ -170,15 +165,13 @@ void Connection::parseStream(const Protocol::CommandPtr &cmd)
         } catch (...) {
             m_connectionClosing = true;
         }
-        qCWarning(AKONADISERVER_LOG) << "Error while handling command" << cmd->type()
-                                     << "on connection" << m_identifier;
+        qCWarning(AKONADISERVER_LOG) << "Error while handling command" << cmd->type() << "on connection" << m_identifier;
     }
 }
 
 void Connection::handleIncomingData()
 {
     Q_FOREVER {
-
         if (m_connectionClosing || !m_socket || m_socket->state() != QLocalSocket::ConnectedState) {
             break;
         }
@@ -216,19 +209,16 @@ void Connection::handleIncomingData()
             try {
                 cmd = Protocol::deserialize(m_socket.get());
             } catch (const Akonadi::ProtocolException &e) {
-                qCWarning(AKONADISERVER_LOG) << "ProtocolException while deserializing incoming data on connection"
-                                             << m_identifier << ":" <<  e.what();
+                qCWarning(AKONADISERVER_LOG) << "ProtocolException while deserializing incoming data on connection" << m_identifier << ":" << e.what();
                 setState(Server::LoggingOut);
                 return;
             } catch (const std::exception &e) {
-                qCWarning(AKONADISERVER_LOG) << "Unknown exception while deserializing incoming data on connection"
-                                             << m_identifier << ":" << e.what();
+                qCWarning(AKONADISERVER_LOG) << "Unknown exception while deserializing incoming data on connection" << m_identifier << ":" << e.what();
                 setState(Server::LoggingOut);
                 return;
             }
             if (cmd->type() == Protocol::Command::Invalid) {
-                qCWarning(AKONADISERVER_LOG) << "Received an invalid command on connection" << m_identifier
-                                             << ": resetting connection";
+                qCWarning(AKONADISERVER_LOG) << "Received an invalid command on connection" << m_identifier << ": resetting connection";
                 setState(Server::LoggingOut);
                 return;
             }
@@ -242,8 +232,7 @@ void Connection::handleIncomingData()
 
             m_currentHandler = findHandlerForCommand(cmd->type());
             if (!m_currentHandler) {
-                qCWarning(AKONADISERVER_LOG) << "Invalid command: no such handler for" << cmd->type()
-                                             << "on connection" << m_identifier;
+                qCWarning(AKONADISERVER_LOG) << "Invalid command: no such handler for" << cmd->type() << "on connection" << m_identifier;
                 setState(Server::LoggingOut);
                 return;
             }
@@ -255,7 +244,9 @@ void Connection::handleIncomingData()
             m_currentHandler->setTag(tag);
             m_currentHandler->setCommand(cmd);
             try {
-                DbDeadlockCatcher catcher([this, &cmd]() { parseStream(cmd); });
+                DbDeadlockCatcher catcher([this, &cmd]() {
+                    parseStream(cmd);
+                });
             } catch (const Akonadi::Server::HandlerException &e) {
                 if (m_currentHandler) {
                     try {
@@ -263,8 +254,8 @@ void Connection::handleIncomingData()
                     } catch (...) {
                         m_connectionClosing = true;
                     }
-                    qCWarning(AKONADISERVER_LOG) << "Handler exception when handling command" << cmd->type()
-                                                 << "on connection" << m_identifier << ":" << e.what();
+                    qCWarning(AKONADISERVER_LOG) << "Handler exception when handling command" << cmd->type() << "on connection" << m_identifier << ":"
+                                                 << e.what();
                 }
             } catch (const Akonadi::Server::Exception &e) {
                 if (m_currentHandler) {
@@ -273,17 +264,16 @@ void Connection::handleIncomingData()
                     } catch (...) {
                         m_connectionClosing = true;
                     }
-                    qCWarning(AKONADISERVER_LOG) << "General exception when handling command" << cmd->type()
-                                                 << "on connection" << m_identifier << ":" << e.what();
+                    qCWarning(AKONADISERVER_LOG) << "General exception when handling command" << cmd->type() << "on connection" << m_identifier << ":"
+                                                 << e.what();
                 }
             } catch (const Akonadi::ProtocolException &e) {
                 // No point trying to send anything back to client, the connection is
                 // already messed up
-                qCWarning(AKONADISERVER_LOG) << "Protocol exception when handling command" << cmd->type()
-                                             << "on connection" << m_identifier << ":" << e.what();
+                qCWarning(AKONADISERVER_LOG) << "Protocol exception when handling command" << cmd->type() << "on connection" << m_identifier << ":" << e.what();
                 m_connectionClosing = true;
 #if defined(Q_OS_LINUX) && !defined(_LIBCPP_VERSION)
-            } catch (abi::__forced_unwind&) {
+            } catch (abi::__forced_unwind &) {
                 // HACK: NPTL throws __forced_unwind during thread cancellation and
                 // we *must* rethrow it otherwise the program aborts. Due to the issue
                 // described in #376385 we might end up destroying (cancelling) the
@@ -294,8 +284,7 @@ void Connection::handleIncomingData()
                 throw;
 #endif
             } catch (...) {
-                qCCritical(AKONADISERVER_LOG) << "Unknown exception while handling command" << cmd->type()
-                                              << "on connection" << m_identifier;
+                qCCritical(AKONADISERVER_LOG) << "Unknown exception while handling command" << cmd->type() << "on connection" << m_identifier;
                 if (m_currentHandler) {
                     try {
                         m_currentHandler->failureResponse("Unknown exception caught");
@@ -353,10 +342,10 @@ std::unique_ptr<Handler> Connection::findHandlerForCommand(Protocol::Command::Ty
 
     switch (m_connectionState) {
     case NonAuthenticated:
-        handler =  Handler::findHandlerForCommandNonAuthenticated(command, m_akonadi);
+        handler = Handler::findHandlerForCommandNonAuthenticated(command, m_akonadi);
         break;
     case Authenticated:
-        handler =  Handler::findHandlerForCommandAuthenticated(command, m_akonadi);
+        handler = Handler::findHandlerForCommandAuthenticated(command, m_akonadi);
         break;
     case LoggingOut:
         break;
@@ -378,7 +367,7 @@ void Connection::setState(ConnectionState state)
     m_connectionState = state;
     switch (m_connectionState) {
     case NonAuthenticated:
-        assert(0);   // can't happen, it's only the initial state, we can't go back to it
+        assert(0); // can't happen, it's only the initial state, we can't go back to it
         break;
     case Authenticated:
         break;
@@ -392,12 +381,12 @@ void Connection::setSessionId(const QByteArray &id)
 {
     m_identifier = QString::asprintf("%s (%p)", id.data(), static_cast<void *>(this));
     m_akonadi.tracer().beginConnection(m_identifier, QString());
-    //m_streamParser->setTracerIdentifier(m_identifier);
+    // m_streamParser->setTracerIdentifier(m_identifier);
 
     m_sessionId = id;
     setObjectName(QString::fromLatin1(id));
     // this races with the use of objectName() in QThreadPrivate::start
-    //thread()->setObjectName(objectName() + QStringLiteral("-Thread"));
+    // thread()->setObjectName(objectName() + QStringLiteral("-Thread"));
     storageBackend()->setSessionId(id);
 }
 
@@ -454,7 +443,9 @@ void Connection::reportTime() const
     qCDebug(AKONADISERVER_LOG) << " total: " << m_totalTime;
     for (auto it = m_totalTimeByHandler.cbegin(), end = m_totalTimeByHandler.cend(); it != end; ++it) {
         const QString &handler = it.key();
-        qCDebug(AKONADISERVER_LOG) << "handler : " << handler << " time: " << m_totalTimeByHandler.value(handler) << " executions " << m_executionsByHandler.value(handler) << " avg: " << m_totalTimeByHandler.value(handler) / m_executionsByHandler.value(handler);
+        qCDebug(AKONADISERVER_LOG) << "handler : " << handler << " time: " << m_totalTimeByHandler.value(handler) << " executions "
+                                   << m_executionsByHandler.value(handler)
+                                   << " avg: " << m_totalTimeByHandler.value(handler) / m_executionsByHandler.value(handler);
     }
 }
 
@@ -476,7 +467,6 @@ void Connection::sendResponse(qint64 tag, const Protocol::CommandPtr &response)
         }
     }
 }
-
 
 Protocol::CommandPtr Connection::readCommand()
 {

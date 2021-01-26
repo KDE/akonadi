@@ -6,12 +6,12 @@
 
 #include "preprocessorbase_p.h"
 
-#include <QDBusConnection>
 #include "preprocessoradaptor.h"
 #include "servermanager.h"
+#include <QDBusConnection>
 
-#include "itemfetchjob.h"
 #include "akonadiagentbase_debug.h"
+#include "itemfetchjob.h"
 
 using namespace Akonadi;
 
@@ -25,14 +25,12 @@ PreprocessorBasePrivate::PreprocessorBasePrivate(PreprocessorBase *parent)
     if (!QDBusConnection::sessionBus().registerObject(QStringLiteral("/Preprocessor"), this, QDBusConnection::ExportAdaptors)) {
         Q_EMIT q->error(i18n("Unable to register object at dbus: %1", QDBusConnection::sessionBus().lastError().message()));
     }
-
 }
 
 void PreprocessorBasePrivate::delayedInit()
 {
     if (!QDBusConnection::sessionBus().registerService(ServerManager::agentServiceName(ServerManager::Preprocessor, mId))) {
-        qCCritical(AKONADIAGENTBASE_LOG) << "Unable to register service at D-Bus: "
-                                         << QDBusConnection::sessionBus().lastError().message();
+        qCCritical(AKONADIAGENTBASE_LOG) << "Unable to register service at D-Bus: " << QDBusConnection::sessionBus().lastError().message();
     }
     AgentBasePrivate::delayedInit();
 }

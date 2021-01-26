@@ -8,19 +8,17 @@
 
 #include "itemsync.h"
 
-#include "job_p.h"
 #include "collection.h"
 #include "item_p.h"
 #include "itemcreatejob.h"
 #include "itemdeletejob.h"
 #include "itemfetchjob.h"
-#include "itemmodifyjob.h"
-#include "transactionsequence.h"
 #include "itemfetchscope.h"
-
+#include "itemmodifyjob.h"
+#include "job_p.h"
+#include "transactionsequence.h"
 
 #include "akonadicore_debug.h"
-
 
 using namespace Akonadi;
 
@@ -122,12 +120,15 @@ void ItemSyncPrivate::createOrMerge(const Item &item)
         merge |= ItemCreateJob::RID;
     }
     create->setMerge(merge);
-    q->connect(create, &ItemCreateJob::result, q, [this](KJob *job) {slotLocalChangeDone(job);});
+    q->connect(create, &ItemCreateJob::result, q, [this](KJob *job) {
+        slotLocalChangeDone(job);
+    });
 }
 
 bool ItemSyncPrivate::allProcessed() const
 {
-    return mDeliveryDone && mCurrentBatchRemoteItems.isEmpty() && mRemoteItemQueue.isEmpty() && mRemovedRemoteItemQueue.isEmpty() && mCurrentBatchRemovedRemoteItems.isEmpty();
+    return mDeliveryDone && mCurrentBatchRemoteItems.isEmpty() && mRemoteItemQueue.isEmpty() && mRemovedRemoteItemQueue.isEmpty()
+        && mCurrentBatchRemovedRemoteItems.isEmpty();
 }
 
 void ItemSyncPrivate::checkDone()
@@ -139,8 +140,8 @@ void ItemSyncPrivate::checkDone()
     }
 
     if (mTransactionJobs > 0) {
-        //Commit the current transaction if we're in batch processing mode or done
-        //and wait until the transaction is committed to process the next batch
+        // Commit the current transaction if we're in batch processing mode or done
+        // and wait until the transaction is committed to process the next batch
         if (mTransactionMode == ItemSync::MultipleTransactions || (mDeliveryDone && mRemoteItemQueue.isEmpty())) {
             if (mCurrentTransaction) {
                 // Note that mCurrentTransaction->commit() is a no-op if we're already rolling back
@@ -163,7 +164,7 @@ void ItemSyncPrivate::checkDone()
 
     if (!mRemoteItemQueue.isEmpty()) {
         execute();
-        //We don't have enough items, request more
+        // We don't have enough items, request more
         if (!mProcessingBatch) {
             Q_EMIT q->readyForNextBatch(mBatchSize - mRemoteItemQueue.size());
         }
@@ -207,8 +208,7 @@ void ItemSync::setFullSyncItems(const Item::List &items)
     }
     d->mRemoteItemQueue += items;
     d->mTotalItemsProcessed += items.count();
-    qCDebug(AKONADICORE_LOG) << "Received batch: " << items.count()
-                             << "Already processed: " << d->mTotalItemsProcessed
+    qCDebug(AKONADICORE_LOG) << "Received batch: " << items.count() << "Already processed: " << d->mTotalItemsProcessed
                              << "Expected total amount: " << d->mTotalItems;
     if (!d->mDisableAutomaticDeliveryDone && (d->mTotalItemsProcessed == d->mTotalItems)) {
         d->mDeliveryDone = true;
@@ -254,7 +254,8 @@ void ItemSync::setIncrementalSyncItems(const Item::List &changedItems, const Ite
     d->mRemoteItemQueue += changedItems;
     d->mRemovedRemoteItemQueue += removedItems;
     d->mTotalItemsProcessed += changedItems.count() + removedItems.count();
-    qCDebug(AKONADICORE_LOG) << "Received: " << changedItems.count() << "Removed: " << removedItems.count() << "In total: " << d->mTotalItemsProcessed << " Wanted: " << d->mTotalItems;
+    qCDebug(AKONADICORE_LOG) << "Received: " << changedItems.count() << "Removed: " << removedItems.count() << "In total: " << d->mTotalItemsProcessed
+                             << " Wanted: " << d->mTotalItems;
     if (!d->mDisableAutomaticDeliveryDone && (d->mTotalItemsProcessed == d->mTotalItems)) {
         d->mDeliveryDone = true;
     }
@@ -291,15 +292,19 @@ void ItemSyncPrivate::fetchLocalItemsToDelete()
     // we only can fetch parts already in the cache, otherwise this will deadlock
     job->fetchScope().setCacheOnly(true);
 
-    QObject::connect(job, &ItemFetchJob::itemsReceived, q, [this](const Akonadi::Item::List &lst)  { slotItemsReceived(lst); });
-    QObject::connect(job, &ItemFetchJob::result, q, [this](KJob *job) { slotLocalListDone(job); });
+    QObject::connect(job, &ItemFetchJob::itemsReceived, q, [this](const Akonadi::Item::List &lst) {
+        slotItemsReceived(lst);
+    });
+    QObject::connect(job, &ItemFetchJob::result, q, [this](KJob *job) {
+        slotLocalListDone(job);
+    });
     mPendingJobs++;
 }
 
 void ItemSyncPrivate::slotItemsReceived(const Item::List &items)
 {
     for (const Akonadi::Item &item : items) {
-        //Don't delete items that have not yet been synchronized
+        // Don't delete items that have not yet been synchronized
         if (item.remoteId().isEmpty()) {
             continue;
         }
@@ -328,16 +333,16 @@ QString ItemSyncPrivate::jobDebuggingString() const
 
 void ItemSyncPrivate::execute()
 {
-    //shouldn't happen
+    // shouldn't happen
     if (mFinished) {
         qCWarning(AKONADICORE_LOG) << "Call to execute() on finished job.";
         Q_ASSERT(false);
         return;
     }
-    //not doing anything, start processing
+    // not doing anything, start processing
     if (!mProcessingBatch) {
         if (mRemoteItemQueue.size() >= mBatchSize || mDeliveryDone) {
-            //we have a new batch to process
+            // we have a new batch to process
             const int num = qMin(mBatchSize, mRemoteItemQueue.size());
             mCurrentBatchRemoteItems.reserve(mBatchSize);
             std::move(mRemoteItemQueue.begin(), mRemoteItemQueue.begin() + num, std::back_inserter(mCurrentBatchRemoteItems));
@@ -346,7 +351,7 @@ void ItemSyncPrivate::execute()
             mCurrentBatchRemovedRemoteItems += mRemovedRemoteItemQueue;
             mRemovedRemoteItemQueue.clear();
         } else {
-            //nothing to do, let's wait for more data
+            // nothing to do, let's wait for more data
             return;
         }
         mProcessingBatch = true;
@@ -356,7 +361,7 @@ void ItemSyncPrivate::execute()
     checkDone();
 }
 
-//process the current batch of items
+// process the current batch of items
 void ItemSyncPrivate::processBatch()
 {
     Q_Q(ItemSync);
@@ -368,14 +373,14 @@ void ItemSyncPrivate::processBatch()
         return;
     }
 
-    //request a transaction, there are items that require processing
+    // request a transaction, there are items that require processing
     requestTransaction();
 
     processItems();
 
     // removed
     if (!mIncremental && allProcessed()) {
-        //the full listing is done and we know which items to remove
+        // the full listing is done and we know which items to remove
         fetchLocalItemsToDelete();
     } else {
         deleteItems(mCurrentBatchRemovedRemoteItems);
@@ -415,7 +420,9 @@ void ItemSyncPrivate::deleteItems(const Item::List &itemsToDelete)
 
     mPendingJobs++;
     auto *job = new ItemDeleteJob(itemsToDelete, subjobParent());
-    q->connect(job, &ItemDeleteJob::result, q, [this](KJob *job) { slotLocalDeleteDone(job); });
+    q->connect(job, &ItemDeleteJob::result, q, [this](KJob *job) {
+        slotLocalDeleteDone(job);
+    });
 
     // It can happen that the groupware servers report us deleted items
     // twice, in this case this item delete job will fail on the second try.
@@ -463,12 +470,14 @@ void ItemSyncPrivate::slotTransactionResult(KJob *job)
 void ItemSyncPrivate::requestTransaction()
 {
     Q_Q(ItemSync);
-    //we never want parallel transactions, single transaction just makes one big transaction, and multi transaction uses multiple transaction sequentially
+    // we never want parallel transactions, single transaction just makes one big transaction, and multi transaction uses multiple transaction sequentially
     if (!mCurrentTransaction) {
         ++mTransactionJobs;
         mCurrentTransaction = new TransactionSequence(q);
         mCurrentTransaction->setAutomaticCommittingEnabled(false);
-        QObject::connect(mCurrentTransaction, &TransactionSequence::result, q, [this](KJob *job) { slotTransactionResult(job); });
+        QObject::connect(mCurrentTransaction, &TransactionSequence::result, q, [this](KJob *job) {
+            slotTransactionResult(job);
+        });
     }
 }
 

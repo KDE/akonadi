@@ -13,8 +13,7 @@ namespace Akonadi
 {
 namespace Server
 {
-
-class TagModifyHandler: public Handler
+class TagModifyHandler : public Handler
 {
 public:
     TagModifyHandler(AkonadiServer &akonadi);

@@ -12,13 +12,12 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
   @ingroup akonadi_server_handler
 
   Handler for the login command.
 */
-class LoginHandler: public Handler
+class LoginHandler : public Handler
 {
 public:
     LoginHandler(AkonadiServer &akonadi);

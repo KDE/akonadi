@@ -11,13 +11,11 @@
 
 namespace Akonadi
 {
-
 class ImapSet;
 class Scope;
 
 namespace Server
 {
-
 class CommandContext;
 class QueryBuilder;
 

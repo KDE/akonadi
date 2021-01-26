@@ -13,26 +13,26 @@
 
 #include <QCoreApplication>
 #include <QDateTime>
-#include <QVariant>
 #include <QSqlError>
 #include <QSqlField>
 #include <QSqlIndex>
 #include <QSqlQuery>
 #include <QStringList>
+#include <QVariant>
 #include <QVector>
 
 #include <QtSql/private/qsqldriver_p.h>
 
 #if defined Q_OS_WIN
-# include <qt_windows.h>
+#include <qt_windows.h>
 #else
-# include <unistd.h>
+#include <unistd.h>
 #endif
 
 #include <sqlite3.h>
 
-#include <QThread>
 #include "sqlite_blocking.h"
+#include <QThread>
 
 Q_DECLARE_OPAQUE_POINTER(sqlite3 *)
 Q_DECLARE_OPAQUE_POINTER(sqlite3_stmt *)
@@ -57,32 +57,25 @@ static QVariant::Type qGetColumnType(const QString &tpName)
 {
     const QString typeName = tpName.toLower();
 
-    if (typeName == QLatin1String("integer")
-            || typeName == QLatin1String("int")) {
+    if (typeName == QLatin1String("integer") || typeName == QLatin1String("int")) {
         return QVariant::Int;
     }
-    if (typeName == QLatin1String("double")
-            || typeName == QLatin1String("float")
-            || typeName == QLatin1String("real")
-            || typeName.startsWith(QLatin1String("numeric"))) {
+    if (typeName == QLatin1String("double") || typeName == QLatin1String("float") || typeName == QLatin1String("real")
+        || typeName.startsWith(QLatin1String("numeric"))) {
         return QVariant::Double;
     }
     if (typeName == QLatin1String("blob")) {
         return QVariant::ByteArray;
     }
-    if (typeName == QLatin1String("boolean")
-            || typeName == QLatin1String("bool")) {
+    if (typeName == QLatin1String("boolean") || typeName == QLatin1String("bool")) {
         return QVariant::Bool;
     }
     return QVariant::String;
 }
 
-static QSqlError qMakeError(sqlite3 *access, const QString &descr, QSqlError::ErrorType type,
-                            int errorCode = -1)
+static QSqlError qMakeError(sqlite3 *access, const QString &descr, QSqlError::ErrorType type, int errorCode = -1)
 {
-    return QSqlError(descr,
-                     QString(reinterpret_cast<const QChar *>(sqlite3_errmsg16(access))),
-                     type, QString::number(errorCode));
+    return QSqlError(descr, QString(reinterpret_cast<const QChar *>(sqlite3_errmsg16(access))), type, QString::number(errorCode));
 }
 
 class QSQLiteResultPrivate;
@@ -91,6 +84,7 @@ class QSQLiteResult : public QSqlCachedResult
 {
     friend class QSQLiteDriver;
     friend class QSQLiteResultPrivate;
+
 public:
     explicit QSQLiteResult(const QSQLiteDriver *db);
     ~QSQLiteResult() override;
@@ -115,7 +109,8 @@ private:
 class QSQLiteDriverPrivate : public QSqlDriverPrivate
 {
 public:
-    inline QSQLiteDriverPrivate() : access(nullptr)
+    inline QSQLiteDriverPrivate()
+        : access(nullptr)
     {
         dbmsType = QSqlDriver::SQLite;
     }
@@ -188,13 +183,10 @@ void QSQLiteResultPrivate::initColumns(bool emptyResultset)
     q->init(nCols);
 
     for (int i = 0; i < nCols; ++i) {
-        QString colName = QString::fromUtf16(
-                              static_cast<const ushort *>(sqlite3_column_name16(stmt, i))
-                          ).remove(QLatin1Char('"'));
+        QString colName = QString::fromUtf16(static_cast<const ushort *>(sqlite3_column_name16(stmt, i))).remove(QLatin1Char('"'));
 
         // must use typeName for resolving the type to match QSqliteDriver::record
-        QString typeName = QString::fromUtf16(
-                               static_cast<const ushort *>(sqlite3_column_decltype16(stmt, i)));
+        QString typeName = QString::fromUtf16(static_cast<const ushort *>(sqlite3_column_decltype16(stmt, i)));
 
         // sqlite3_column_type is documented to have undefined behavior if the result set is empty
         int stp = emptyResultset ? -1 : sqlite3_column_type(stmt, i);
@@ -256,7 +248,8 @@ bool QSQLiteResultPrivate::fetchNext(QSqlCachedResult::ValueCache &values, int i
 
     if (!stmt) {
         q->setLastError(QSqlError(QCoreApplication::translate("QSQLiteResult", "Unable to fetch row"),
-                                  QCoreApplication::translate("QSQLiteResult", "No query"), QSqlError::ConnectionError));
+                                  QCoreApplication::translate("QSQLiteResult", "No query"),
+                                  QSqlError::ConnectionError));
         q->setAt(QSql::AfterLastRow);
         return false;
     }
@@ -266,7 +259,7 @@ bool QSQLiteResultPrivate::fetchNext(QSqlCachedResult::ValueCache &values, int i
     case SQLITE_ROW:
         // check to see if should fill out columns
         if (rInf.isEmpty())
-            // must be first call.
+        // must be first call.
         {
             initColumns(false);
         }
@@ -276,9 +269,7 @@ bool QSQLiteResultPrivate::fetchNext(QSqlCachedResult::ValueCache &values, int i
         for (i = 0; i < rInf.count(); ++i) {
             switch (sqlite3_column_type(stmt, i)) {
             case SQLITE_BLOB:
-                values[i + idx] = QByteArray(static_cast<const char *>(
-                                                 sqlite3_column_blob(stmt, i)),
-                                             sqlite3_column_bytes(stmt, i));
+                values[i + idx] = QByteArray(static_cast<const char *>(sqlite3_column_blob(stmt, i)), sqlite3_column_bytes(stmt, i));
                 break;
             case SQLITE_INTEGER:
                 values[i + idx] = sqlite3_column_int64(stmt, i);
@@ -302,16 +293,14 @@ bool QSQLiteResultPrivate::fetchNext(QSqlCachedResult::ValueCache &values, int i
                 values[i + idx] = QVariant(QVariant::String);
                 break;
             default:
-                values[i + idx] = QString(reinterpret_cast<const QChar *>(
-                                              sqlite3_column_text16(stmt, i)),
-                                          sqlite3_column_bytes16(stmt, i) / sizeof(QChar));
+                values[i + idx] = QString(reinterpret_cast<const QChar *>(sqlite3_column_text16(stmt, i)), sqlite3_column_bytes16(stmt, i) / sizeof(QChar));
                 break;
             }
         }
         return true;
     case SQLITE_DONE:
         if (rInf.isEmpty())
-            // must be first call.
+        // must be first call.
         {
             initColumns(true);
         }
@@ -323,16 +312,14 @@ bool QSQLiteResultPrivate::fetchNext(QSqlCachedResult::ValueCache &values, int i
         // SQLITE_ERROR is a generic error code and we must call sqlite3_reset()
         // to get the specific error message.
         res = sqlite3_reset(stmt);
-        q->setLastError(qMakeError(access, QCoreApplication::translate("QSQLiteResult",
-                                   "Unable to fetch row"), QSqlError::ConnectionError, res));
+        q->setLastError(qMakeError(access, QCoreApplication::translate("QSQLiteResult", "Unable to fetch row"), QSqlError::ConnectionError, res));
         q->setAt(QSql::AfterLastRow);
         return false;
     case SQLITE_MISUSE:
     case SQLITE_BUSY:
     default:
         // something wrong, don't get col info, but still return false
-        q->setLastError(qMakeError(access, QCoreApplication::translate("QSQLiteResult",
-                                   "Unable to fetch row"), QSqlError::ConnectionError, res));
+        q->setLastError(qMakeError(access, QCoreApplication::translate("QSQLiteResult", "Unable to fetch row"), QSqlError::ConnectionError, res));
         sqlite3_reset(stmt);
         q->setAt(QSql::AfterLastRow);
         return false;
@@ -386,23 +373,22 @@ bool QSQLiteResult::prepare(const QString &query)
     const void *pzTail = nullptr;
 
 #if (SQLITE_VERSION_NUMBER >= 3003011)
-//    int res = sqlite3_prepare16_v2(d->access, query.constData(), (query.size() + 1) * sizeof(QChar),
-//                                   &d->stmt, 0);
-    int res = sqlite3_blocking_prepare16_v2(d->access, query.constData(), (query.size() + 1) * sizeof(QChar),
-                                            &d->stmt, &pzTail);
+    //    int res = sqlite3_prepare16_v2(d->access, query.constData(), (query.size() + 1) * sizeof(QChar),
+    //                                   &d->stmt, 0);
+    int res = sqlite3_blocking_prepare16_v2(d->access, query.constData(), (query.size() + 1) * sizeof(QChar), &d->stmt, &pzTail);
 #else
-    int res = sqlite3_prepare16(d->access, query.constData(), (query.size() + 1) * sizeof(QChar),
-                                &d->stmt, &pzTail);
+    int res = sqlite3_prepare16(d->access, query.constData(), (query.size() + 1) * sizeof(QChar), &d->stmt, &pzTail);
 #endif
 
     if (res != SQLITE_OK) {
-        setLastError(qMakeError(d->access, QCoreApplication::translate("QSQLiteResult",
-                                "Unable to execute statement"), QSqlError::StatementError, res));
+        setLastError(qMakeError(d->access, QCoreApplication::translate("QSQLiteResult", "Unable to execute statement"), QSqlError::StatementError, res));
         d->finalize();
         return false;
     } else if (pzTail && !QString(reinterpret_cast<const QChar *>(pzTail)).trimmed().isEmpty()) {
-        setLastError(qMakeError(d->access, QCoreApplication::translate("QSQLiteResult",
-                                "Unable to execute multiple statements at a time"), QSqlError::StatementError, SQLITE_MISUSE));
+        setLastError(qMakeError(d->access,
+                                QCoreApplication::translate("QSQLiteResult", "Unable to execute multiple statements at a time"),
+                                QSqlError::StatementError,
+                                SQLITE_MISUSE));
         d->finalize();
         return false;
     }
@@ -422,8 +408,7 @@ bool QSQLiteResult::exec()
 
     int res = sqlite3_reset(d->stmt);
     if (res != SQLITE_OK) {
-        setLastError(qMakeError(d->access, QCoreApplication::translate("QSQLiteResult",
-                                "Unable to reset statement"), QSqlError::StatementError, res));
+        setLastError(qMakeError(d->access, QCoreApplication::translate("QSQLiteResult", "Unable to reset statement"), QSqlError::StatementError, res));
         d->finalize();
         return false;
     }
@@ -439,8 +424,7 @@ bool QSQLiteResult::exec()
                 switch (value.type()) {
                 case QVariant::ByteArray: {
                     const auto *ba = static_cast<const QByteArray *>(value.constData());
-                    res = sqlite3_bind_blob(d->stmt, i + 1, ba->constData(),
-                                            ba->size(), SQLITE_STATIC);
+                    res = sqlite3_bind_blob(d->stmt, i + 1, ba->constData(), ba->size(), SQLITE_STATIC);
                     break;
                 }
                 case QVariant::Int:
@@ -457,43 +441,37 @@ bool QSQLiteResult::exec()
                 case QVariant::DateTime: {
                     const QDateTime dateTime = value.toDateTime();
                     const QString str = dateTime.toString(QStringLiteral("yyyy-MM-ddThh:mm:ss.zzz"));
-                    res = sqlite3_bind_text16(d->stmt, i + 1, str.utf16(),
-                                              str.size() * sizeof(ushort), SQLITE_TRANSIENT);
+                    res = sqlite3_bind_text16(d->stmt, i + 1, str.utf16(), str.size() * sizeof(ushort), SQLITE_TRANSIENT);
                     break;
                 }
                 case QVariant::Time: {
                     const QTime time = value.toTime();
                     const QString str = time.toString(QStringLiteral("hh:mm:ss.zzz"));
-                    res = sqlite3_bind_text16(d->stmt, i + 1, str.utf16(),
-                                              str.size() * sizeof(ushort), SQLITE_TRANSIENT);
+                    res = sqlite3_bind_text16(d->stmt, i + 1, str.utf16(), str.size() * sizeof(ushort), SQLITE_TRANSIENT);
                     break;
                 }
                 case QVariant::String: {
                     // lifetime of string == lifetime of its qvariant
                     const auto *str = static_cast<const QString *>(value.constData());
-                    res = sqlite3_bind_text16(d->stmt, i + 1, str->utf16(),
-                                              (str->size()) * sizeof(QChar), SQLITE_STATIC);
+                    res = sqlite3_bind_text16(d->stmt, i + 1, str->utf16(), (str->size()) * sizeof(QChar), SQLITE_STATIC);
                     break;
                 }
                 default: {
                     QString str = value.toString();
                     // SQLITE_TRANSIENT makes sure that sqlite buffers the data
-                    res = sqlite3_bind_text16(d->stmt, i + 1, str.utf16(),
-                                              (str.size()) * sizeof(QChar), SQLITE_TRANSIENT);
+                    res = sqlite3_bind_text16(d->stmt, i + 1, str.utf16(), (str.size()) * sizeof(QChar), SQLITE_TRANSIENT);
                     break;
                 }
                 }
             }
             if (res != SQLITE_OK) {
-                setLastError(qMakeError(d->access, QCoreApplication::translate("QSQLiteResult",
-                                        "Unable to bind parameters"), QSqlError::StatementError, res));
+                setLastError(qMakeError(d->access, QCoreApplication::translate("QSQLiteResult", "Unable to bind parameters"), QSqlError::StatementError, res));
                 d->finalize();
                 return false;
             }
         }
     } else {
-        setLastError(QSqlError(QCoreApplication::translate("QSQLiteResult",
-                               "Parameter count mismatch"), QString(), QSqlError::StatementError));
+        setLastError(QSqlError(QCoreApplication::translate("QSQLiteResult", "Parameter count mismatch"), QString(), QSqlError::StatementError));
         return false;
     }
     d->skippedStatus = d->fetchNext(d->firstRow, 0, true);
@@ -651,8 +629,7 @@ bool QSQLiteDriver::open(const QString &db, const QString &, const QString &, co
             d->access = nullptr;
         }
 
-        setLastError(qMakeError(d->access, tr("Error opening database"),
-                                QSqlError::ConnectionError));
+        setLastError(qMakeError(d->access, tr("Error opening database"), QSqlError::ConnectionError));
         setOpenError(true);
         return false;
     }
@@ -668,8 +645,7 @@ void QSQLiteDriver::close()
         }
 
         if (sqlite3_close(d->access) != SQLITE_OK)
-            setLastError(qMakeError(d->access, tr("Error closing database"),
-                                    QSqlError::ConnectionError));
+            setLastError(qMakeError(d->access, tr("Error closing database"), QSqlError::ConnectionError));
         d->access = nullptr;
         setOpen(false);
         setOpenError(false);
@@ -689,8 +665,7 @@ bool QSQLiteDriver::beginTransaction()
 
     QSqlQuery q(createResult());
     if (!q.exec(QStringLiteral("BEGIN"))) {
-        setLastError(QSqlError(tr("Unable to begin transaction"),
-                               q.lastError().databaseText(), QSqlError::TransactionError));
+        setLastError(QSqlError(tr("Unable to begin transaction"), q.lastError().databaseText(), QSqlError::TransactionError));
         return false;
     }
 
@@ -705,8 +680,7 @@ bool QSQLiteDriver::commitTransaction()
 
     QSqlQuery q(createResult());
     if (!q.exec(QStringLiteral("COMMIT"))) {
-        setLastError(QSqlError(tr("Unable to commit transaction"),
-                               q.lastError().databaseText(), QSqlError::TransactionError));
+        setLastError(QSqlError(tr("Unable to commit transaction"), q.lastError().databaseText(), QSqlError::TransactionError));
         return false;
     }
 
@@ -721,8 +695,7 @@ bool QSQLiteDriver::rollbackTransaction()
 
     QSqlQuery q(createResult());
     if (!q.exec(QStringLiteral("ROLLBACK"))) {
-        setLastError(QSqlError(tr("Unable to rollback transaction"),
-                               q.lastError().databaseText(), QSqlError::TransactionError));
+        setLastError(QSqlError(tr("Unable to rollback transaction"), q.lastError().databaseText(), QSqlError::TransactionError));
         return false;
     }
 
@@ -739,8 +712,9 @@ QStringList QSQLiteDriver::tables(QSql::TableType type) const
     QSqlQuery q(createResult());
     q.setForwardOnly(true);
 
-    QString sql = QStringLiteral("SELECT name FROM sqlite_master WHERE %1 "
-                                 "UNION ALL SELECT name FROM sqlite_temp_master WHERE %1");
+    QString sql = QStringLiteral(
+        "SELECT name FROM sqlite_master WHERE %1 "
+        "UNION ALL SELECT name FROM sqlite_temp_master WHERE %1");
     if ((type & QSql::Tables) && (type & QSql::Views)) {
         sql = sql.arg(QStringLiteral("type='table' OR type='view'"));
     } else if (type & QSql::Tables) {
@@ -785,8 +759,8 @@ static QSqlIndex qGetTableInfo(QSqlQuery &q, const QString &tableName, bool only
         QString typeName = q.value(2).toString().toLower();
         QSqlField fld(q.value(1).toString(), qGetColumnType(typeName));
         if (isPk && (typeName == QLatin1String("integer")))
-            // INTEGER PRIMARY KEY fields are auto-generated in sqlite
-            // INT PRIMARY KEY is not the same as INTEGER PRIMARY KEY!
+        // INTEGER PRIMARY KEY fields are auto-generated in sqlite
+        // INT PRIMARY KEY is not the same as INTEGER PRIMARY KEY!
         {
             fld.setAutoValue(true);
         }

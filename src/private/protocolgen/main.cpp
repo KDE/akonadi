@@ -4,14 +4,13 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include <QCoreApplication>
 #include <QCommandLineParser>
+#include <QCoreApplication>
 
 #include "cppgenerator.h"
 #include "xmlparser.h"
 
 #include <iostream>
-
 
 int main(int argc, char **argv)
 {

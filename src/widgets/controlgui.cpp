@@ -5,20 +5,19 @@
 */
 
 #include "controlgui.h"
+#include "akonadiwidgets_debug.h"
+#include "erroroverlay_p.h"
+#include "selftestdialog.h"
 #include "servermanager.h"
 #include "ui_controlprogressindicator.h"
-#include "selftestdialog.h"
-#include "erroroverlay_p.h"
-#include "akonadiwidgets_debug.h"
-
 
 #include <KLocalizedString>
 
-#include <QEventLoop>
 #include <QCoreApplication>
-#include <QTimer>
-#include <QPointer>
+#include <QEventLoop>
 #include <QFrame>
+#include <QPointer>
+#include <QTimer>
 
 using namespace Akonadi;
 
@@ -26,7 +25,6 @@ namespace Akonadi
 {
 namespace Internal
 {
-
 class ControlProgressIndicator : public QFrame
 {
     Q_OBJECT
@@ -102,7 +100,7 @@ public:
 
     void cleanup()
     {
-        //delete s_instance;
+        // delete s_instance;
     }
 
     bool exec();
@@ -111,7 +109,7 @@ public:
     QPointer<ControlGui> mParent;
     QEventLoop *mEventLoop = nullptr;
     QPointer<Internal::ControlProgressIndicator> mProgressIndicator;
-    QList<QPointer<QWidget> > mPendingOverlays;
+    QList<QPointer<QWidget>> mPendingOverlays;
     bool mSuccess;
 
     bool mStarting;
@@ -156,8 +154,7 @@ void ControlGui::Private::serverStateChanged(ServerManager::State state)
     qCDebug(AKONADIWIDGETS_LOG) << "Server state changed to" << state;
     if (mEventLoop && mEventLoop->isRunning()) {
         // ignore transient states going into the right direction
-        if ((mStarting && (state == ServerManager::Starting || state == ServerManager::Upgrading)) ||
-                (mStopping && state == ServerManager::Stopping)) {
+        if ((mStarting && (state == ServerManager::Starting || state == ServerManager::Upgrading)) || (mStopping && state == ServerManager::Stopping)) {
             return;
         }
         mEventLoop->quit();
@@ -168,12 +165,15 @@ void ControlGui::Private::serverStateChanged(ServerManager::State state)
 ControlGui::ControlGui()
     : d(new Private(this))
 {
-    connect(ServerManager::self(), &ServerManager::stateChanged,
-            this, [this](Akonadi::ServerManager::State state) { d->serverStateChanged(state); });
+    connect(ServerManager::self(), &ServerManager::stateChanged, this, [this](Akonadi::ServerManager::State state) {
+        d->serverStateChanged(state);
+    });
     // mProgressIndicator is a widget, so it better be deleted before the QApplication is deleted
     // Otherwise we get a crash in QCursor code with Qt-4.5
     if (QCoreApplication::instance()) {
-        connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, [this]() {d->cleanup();});
+        connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, [this]() {
+            d->cleanup();
+        });
     }
 }
 
@@ -252,7 +252,9 @@ void ControlGui::widgetNeedsAkonadi(QWidget *widget)
     s_instance->d->mPendingOverlays.append(widget);
     // delay the overlay creation since we rely on widget being reparented
     // correctly already
-    QTimer::singleShot(0, s_instance, []() { s_instance->d->createErrorOverlays(); });
+    QTimer::singleShot(0, s_instance, []() {
+        s_instance->d->createErrorOverlays();
+    });
 }
 
 } // namespace Akonadi

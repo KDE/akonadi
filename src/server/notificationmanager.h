@@ -11,8 +11,8 @@
 
 #include <private/protocol_p.h>
 
-#include <QTimer>
 #include <QPointer>
+#include <QTimer>
 
 class NotificationManagerTest;
 class QThreadPool;
@@ -21,7 +21,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class NotificationSubscriber;
 class AggregatedCollectionFetchScope;
 class AggregatedItemFetchScope;
@@ -37,9 +36,18 @@ public:
 
     void forgetSubscriber(NotificationSubscriber *subscriber);
 
-    AggregatedCollectionFetchScope *collectionFetchScope() const { return mCollectionFetchScope; }
-    AggregatedItemFetchScope *itemFetchScope() const { return mItemFetchScope; }
-    AggregatedTagFetchScope *tagFetchScope() const { return mTagFetchScope; }
+    AggregatedCollectionFetchScope *collectionFetchScope() const
+    {
+        return mCollectionFetchScope;
+    }
+    AggregatedItemFetchScope *itemFetchScope() const
+    {
+        return mItemFetchScope;
+    }
+    AggregatedTagFetchScope *tagFetchScope() const
+    {
+        return mTagFetchScope;
+    }
 
 public Q_SLOTS:
     void registerConnection(quintptr socketDescriptor);
@@ -52,8 +60,7 @@ protected:
     void init() override;
     void quit() override;
 
-    void emitDebugNotification(const Protocol::ChangeNotificationPtr &ntf,
-                               const QVector<QByteArray> &listeners);
+    void emitDebugNotification(const Protocol::ChangeNotificationPtr &ntf, const QVector<QByteArray> &listeners);
 
 private:
     Protocol::ChangeNotificationList mNotifications;

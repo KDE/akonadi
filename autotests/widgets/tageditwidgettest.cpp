@@ -8,21 +8,21 @@
 #include "qtest_akonadi.h"
 #include <shared/aktest.h>
 
-#include "tageditwidget.h"
-#include "tagmodel.h"
 #include "monitor.h"
 #include "tag.h"
-#include "tagdeletejob.h"
 #include "tagcreatejob.h"
+#include "tagdeletejob.h"
+#include "tageditwidget.h"
+#include "tagmodel.h"
 
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QLabel>
+#include <QLineEdit>
+#include <QListView>
+#include <QPushButton>
 #include <QSignalSpy>
 #include <QTest>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QListView>
-#include <QDialogButtonBox>
-#include <QDialog>
-#include <QLabel>
 
 #include <memory>
 
@@ -33,7 +33,7 @@ using namespace Akonadi;
  * both wrap TagEditWidget and provide their own own Monitor and TagModel,
  * just one allows selection and the other does not
  */
-class TagEditWidgetTest: public QObject
+class TagEditWidgetTest : public QObject
 {
     Q_OBJECT
 
@@ -53,14 +53,14 @@ class TagEditWidgetTest: public QObject
             widget->show();
             QVERIFY(QTest::qWaitForWindowActive(widget.get()));
 
-            newTagEdit = widget->findChild<QLineEdit*>(QStringLiteral("newTagEdit"));
+            newTagEdit = widget->findChild<QLineEdit *>(QStringLiteral("newTagEdit"));
             QVERIFY(newTagEdit);
-            newTagButton = widget->findChild<QPushButton*>(QStringLiteral("newTagButton"));
+            newTagButton = widget->findChild<QPushButton *>(QStringLiteral("newTagButton"));
             QVERIFY(newTagButton);
             QVERIFY(!newTagButton->isEnabled());
-            tagsView = widget->findChild<QListView*>(QStringLiteral("tagsView"));
+            tagsView = widget->findChild<QListView *>(QStringLiteral("tagsView"));
             QVERIFY(tagsView);
-            tagDeleteButton = widget->findChild<QPushButton*>(QStringLiteral("tagDeleteButton"));
+            tagDeleteButton = widget->findChild<QPushButton *>(QStringLiteral("tagDeleteButton"));
             QVERIFY(tagDeleteButton);
             QVERIFY(!tagDeleteButton->isVisible());
 
@@ -124,7 +124,7 @@ class TagEditWidgetTest: public QObject
 
             // Clicking the button blocks (QDialog::exec), so we need to confirm the
             // dialog from event loop
-            bool confirmed =false;
+            bool confirmed = false;
             QTimer::singleShot(100, [this, confirmDeletion, &confirmed]() {
                 confirmed = confirmDialog(confirmDeletion);
                 QVERIFY(confirmed);
@@ -143,10 +143,10 @@ class TagEditWidgetTest: public QObject
             for (const auto *window : windows) {
                 // We are using KMessageBox, which is not a QMessageBox but rather a custom QDialog
                 if (window->objectName() == QLatin1String("questionYesNo")) {
-                    const auto *const msgbox = qobject_cast<const QDialog*>(window);
+                    const auto *const msgbox = qobject_cast<const QDialog *>(window);
                     AKVERIFY(msgbox);
 
-                    const auto *const buttonBox = msgbox->findChild<const QDialogButtonBox*>();
+                    const auto *const buttonBox = msgbox->findChild<const QDialogButtonBox *>();
                     AKVERIFY(buttonBox);
                     auto *const button = buttonBox->button(confirmDeletion ? QDialogButtonBox::Yes : QDialogButtonBox::No);
                     AKVERIFY(button);
@@ -170,8 +170,6 @@ class TagEditWidgetTest: public QObject
         Tag::List createdTags;
 
         bool valid = false;
-
-
     };
 
 private Q_SLOTS:
@@ -303,7 +301,9 @@ private Q_SLOTS:
 
         // Compare the selectede tags
         auto currentSelection = test.widget->selection();
-        const auto sortTag = [](const Tag &l, const Tag &r) { return l.id() < r.id(); };
+        const auto sortTag = [](const Tag &l, const Tag &r) {
+            return l.id() < r.id();
+        };
         std::sort(currentSelection.begin(), currentSelection.end(), sortTag);
         std::sort(selectedTags.begin(), selectedTags.end(), sortTag);
         QCOMPARE(currentSelection, selectedTags);
@@ -349,7 +349,6 @@ private Q_SLOTS:
         QVERIFY(monitorSpy.empty());
         QCOMPARE(test.model->rowCount(), 1);
     }
-
 };
 
 QTEST_AKONADIMAIN(TagEditWidgetTest)

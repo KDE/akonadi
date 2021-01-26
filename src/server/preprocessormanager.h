@@ -12,10 +12,10 @@
 #ifndef AKONADI_PREPROCESSORMANAGER_H
 #define AKONADI_PREPROCESSORMANAGER_H
 
-#include <QObject>
-#include <QList>
 #include <QHash>
+#include <QList>
 #include <QMutex>
+#include <QObject>
 
 #include <deque>
 
@@ -27,7 +27,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class PimItem;
 class DataStore;
 class Tracer;
@@ -68,7 +67,7 @@ protected:
      * The hashtable of transaction wait queues. There is one wait
      * queue for each DataStore that is currently in a transaction.
      */
-    QHash< const DataStore *, std::deque< qint64 > *> mTransactionWaitQueueHash;
+    QHash<const DataStore *, std::deque<qint64> *> mTransactionWaitQueueHash;
 
     /**
      * The preprocessor chain.
@@ -77,7 +76,7 @@ protected:
      * In all the algorithms we assume that this list is actually very short
      * (say 3-4 elements) and reverse lookup (pointer->index) is really fast.
      */
-    QList< PreprocessorInstance *> mPreprocessorChain;
+    QList<PreprocessorInstance *> mPreprocessorChain;
 
     /**
      * Is preprocessing enabled at all in this Akonadi server instance?
@@ -97,8 +96,8 @@ protected:
      */
     QTimer *mHeartbeatTimer = nullptr;
 
-
     Tracer &mTracer;
+
 public:
     /**
      * Creates an instance of PreprocessorManager
@@ -184,7 +183,6 @@ public:
     void unregisterInstance(const QString &id);
 
 protected:
-
     /**
      * This is called by PreprocessorInstance to signal that a certain preprocessor has finished
      * handling an item.
@@ -194,7 +192,6 @@ protected:
     void preProcessorFinishedHandlingItem(PreprocessorInstance *preProcessor, qint64 itemId);
 
 private:
-
     /**
      * Finds the preprocessor instance by its identifier.
      *

@@ -14,7 +14,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @short Provides statistics information of a Collection.
  *

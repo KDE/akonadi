@@ -19,7 +19,7 @@ Akonadi::Collection TrashSettings::getTrashCollection(const QString &resource)
 {
     KConfig config(QStringLiteral("akonaditrashrc"));
     KConfigGroup group(&config, resource);
-    const auto colId = group.readEntry<Akonadi::Collection::Id> ("TrashCollection", -1);
+    const auto colId = group.readEntry<Akonadi::Collection::Id>("TrashCollection", -1);
     qCWarning(AKONADICORE_LOG) << resource << colId;
     return Collection(colId);
 }

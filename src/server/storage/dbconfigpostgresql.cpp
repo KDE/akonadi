@@ -5,20 +5,20 @@
 */
 
 #include "dbconfigpostgresql.h"
-#include "utils.h"
 #include "akonadiserver_debug.h"
+#include "utils.h"
 
 #include <private/standarddirs_p.h>
 #include <shared/akranges.h>
 
 #include <QDir>
 #include <QProcess>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
 #include <QSqlDriver>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QStandardPaths>
-#include <QRegularExpression>
-#include <QRegularExpressionMatch>
 
 #include <config-akonadi.h>
 #ifdef HAVE_UNISTD_H
@@ -48,10 +48,9 @@ QString DbConfigPostgresql::databaseName() const
     return mDatabaseName;
 }
 
-namespace {
-
+namespace
+{
 struct VersionCompare {
-
     bool operator()(const QFileInfo &lhsFi, const QFileInfo &rhsFi) const
     {
         const auto lhs = parseVersion(lhsFi.fileName());
@@ -102,9 +101,7 @@ QStringList DbConfigPostgresql::postgresSearchPaths(const QString &versionedPath
         paths.push_back(QStringLiteral(POSTGRES_PATH));
     }
 #endif
-    paths << QStringLiteral("/usr/bin")
-          << QStringLiteral("/usr/sbin")
-          << QStringLiteral("/usr/local/sbin");
+    paths << QStringLiteral("/usr/bin") << QStringLiteral("/usr/sbin") << QStringLiteral("/usr/local/sbin");
 
     // Locate all versions in /usr/lib/postgresql (i.e. /usr/lib/postgresql/X.Y) in reversed
     // sorted order, so we search from the newest one to the oldest.
@@ -115,8 +112,9 @@ QStringList DbConfigPostgresql::postgresSearchPaths(const QString &versionedPath
         std::sort(versionedDirs.begin(), versionedDirs.end(), VersionCompare());
         std::reverse(versionedDirs.begin(), versionedDirs.end());
         paths += versionedDirs | Views::transform([](const auto &dir) -> QString {
-                                    return dir.absoluteFilePath() + QStringLiteral("/bin"); })
-                               | Actions::toQList;
+                     return dir.absoluteFilePath() + QStringLiteral("/bin");
+                 })
+            | Actions::toQList;
     }
 
     return paths;
@@ -266,7 +264,7 @@ std::optional<DbConfigPostgresql::Versions> DbConfigPostgresql::checkPgVersion()
     const auto clusterVersion = pgVersionFile.readAll().toInt();
 
     QProcess pgctl;
-    pgctl.start(mServerPath, { QStringLiteral("--version") }, QIODevice::ReadOnly);
+    pgctl.start(mServerPath, {QStringLiteral("--version")}, QIODevice::ReadOnly);
     if (!pgctl.waitForFinished()) {
         return std::nullopt;
     }
@@ -282,7 +280,7 @@ std::optional<DbConfigPostgresql::Versions> DbConfigPostgresql::checkPgVersion()
     const auto serverVersion = match.captured(1).toInt();
 
     qDebug(AKONADISERVER_LOG) << "Detected psql versions - cluster:" << clusterVersion << ", server:" << serverVersion;
-    return {{ clusterVersion, serverVersion }};
+    return {{clusterVersion, serverVersion}};
 }
 
 bool DbConfigPostgresql::runInitDb(const QString &newDbPath)
@@ -304,14 +302,11 @@ bool DbConfigPostgresql::runInitDb(const QString &newDbPath)
 #endif
 
     // call 'initdb --pgdata=/home/user/.local/share/akonadi/data_db'
-    return execute(mInitDbPath, { QStringLiteral("--pgdata=%1").arg(newDbPath),
-                                  QStringLiteral("--encoding=UTF8"),
-                                  QStringLiteral("--no-locale")
-                                }) == 0;
+    return execute(mInitDbPath, {QStringLiteral("--pgdata=%1").arg(newDbPath), QStringLiteral("--encoding=UTF8"), QStringLiteral("--no-locale")}) == 0;
 }
 
-namespace {
-
+namespace
+{
 std::optional<QString> findBinPathForVersion(int version)
 {
     // First we need to find where the previous PostgreSQL version binaries are available
@@ -337,27 +332,34 @@ bool checkAndRemoveTmpCluster(const QDir &baseDir, const QString &clusterName)
     if (baseDir.exists(clusterName)) {
         qCInfo(AKONADISERVER_LOG) << "Postgres cluster update:" << clusterName << "cluster already exists, trying to remove it first";
         if (!QDir(baseDir.path() + QDir::separator() + clusterName).removeRecursively()) {
-            qCWarning(AKONADISERVER_LOG) << "Postgres cluster update: failed to remove" << clusterName << "cluster from some previous run, not performing auto-upgrade";
+            qCWarning(AKONADISERVER_LOG) << "Postgres cluster update: failed to remove" << clusterName
+                                         << "cluster from some previous run, not performing auto-upgrade";
             return false;
         }
     }
     return true;
 }
 
-bool runPgUpgrade(const QString &pgUpgrade, const QDir &baseDir, const QString &oldBinPath, const QString &newBinPath, const QString &oldDbData, const QString &newDbData)
+bool runPgUpgrade(const QString &pgUpgrade,
+                  const QDir &baseDir,
+                  const QString &oldBinPath,
+                  const QString &newBinPath,
+                  const QString &oldDbData,
+                  const QString &newDbData)
 {
     QProcess process;
-    const QStringList args = { QString(QStringLiteral("--old-bindir=%1").arg(oldBinPath)),
-                               QString(QStringLiteral("--new-bindir=%1").arg(newBinPath)),
-                               QString(QStringLiteral("--old-datadir=%1").arg(oldDbData)),
-                               QString(QStringLiteral("--new-datadir=%1").arg(newDbData)) };
+    const QStringList args = {QString(QStringLiteral("--old-bindir=%1").arg(oldBinPath)),
+                              QString(QStringLiteral("--new-bindir=%1").arg(newBinPath)),
+                              QString(QStringLiteral("--old-datadir=%1").arg(oldDbData)),
+                              QString(QStringLiteral("--new-datadir=%1").arg(newDbData))};
     qCInfo(AKONADISERVER_LOG) << "Postgres cluster update: starting pg_upgrade to upgrade your Akonadi DB cluster";
     qCDebug(AKONADISERVER_LOG) << "Executing pg_upgrade" << QStringList(args);
     process.setWorkingDirectory(baseDir.path());
     process.start(pgUpgrade, args);
     process.waitForFinished(std::chrono::milliseconds(1h).count());
     if (process.exitCode() != 0) {
-        qCWarning(AKONADISERVER_LOG) << "Postgres cluster update: pg_upgrade finished with exit code" << process.exitCode() << ", please run migration manually.";
+        qCWarning(AKONADISERVER_LOG) << "Postgres cluster update: pg_upgrade finished with exit code" << process.exitCode()
+                                     << ", please run migration manually.";
         return false;
     }
 
@@ -493,14 +495,12 @@ bool DbConfigPostgresql::startInternalServer()
         }
 #endif
         // call 'initdb --pgdata=/home/user/.local/share/akonadi/db_data'
-        execute(mInitDbPath, { QStringLiteral("--pgdata=%1").arg(mPgData),
-                               QStringLiteral("--encoding=UTF8"),
-                               QStringLiteral("--no-locale")
-                             });
+        execute(mInitDbPath, {QStringLiteral("--pgdata=%1").arg(mPgData), QStringLiteral("--encoding=UTF8"), QStringLiteral("--no-locale")});
     } else {
         const auto versions = checkPgVersion();
         if (versions.has_value() && (versions->clusterVersion < versions->pgServerVersion)) {
-            qCInfo(AKONADISERVER_LOG) << "Cluster PG_VERSION is" << versions->clusterVersion << ", PostgreSQL server is version " << versions->pgServerVersion << ", will attempt to upgrade the cluster";
+            qCInfo(AKONADISERVER_LOG) << "Cluster PG_VERSION is" << versions->clusterVersion << ", PostgreSQL server is version " << versions->pgServerVersion
+                                      << ", will attempt to upgrade the cluster";
             if (upgradeCluster(versions->clusterVersion)) {
                 qCInfo(AKONADISERVER_LOG) << "Successfully upgraded db cluster from Postgres" << versions->clusterVersion << "to" << versions->pgServerVersion;
             } else {
@@ -511,9 +511,7 @@ bool DbConfigPostgresql::startInternalServer()
 
     // synthesize the postgres command
     QStringList arguments;
-    arguments << QStringLiteral("start")
-              << QStringLiteral("-w")
-              << QStringLiteral("--timeout=10")   // default is 60 seconds.
+    arguments << QStringLiteral("start") << QStringLiteral("-w") << QStringLiteral("--timeout=10") // default is 60 seconds.
               << QStringLiteral("--pgdata=%1").arg(mPgData)
               // These options are passed to postgres
               //  -k - directory for unix domain socket communication
@@ -598,19 +596,13 @@ void DbConfigPostgresql::stopInternalServer()
     }
 
     // first, try a FAST shutdown
-    execute(mServerPath, { QStringLiteral("stop"),
-                           QStringLiteral("--pgdata=%1").arg(mPgData),
-                           QStringLiteral("--mode=fast")
-                         });
+    execute(mServerPath, {QStringLiteral("stop"), QStringLiteral("--pgdata=%1").arg(mPgData), QStringLiteral("--mode=fast")});
     if (!checkServerIsRunning()) {
         return;
     }
 
     // second, try an IMMEDIATE shutdown
-    execute(mServerPath, { QStringLiteral("stop"),
-                           QStringLiteral("--pgdata=%1").arg(mPgData),
-                           QStringLiteral("--mode=immediate")
-                         });
+    execute(mServerPath, {QStringLiteral("stop"), QStringLiteral("--pgdata=%1").arg(mPgData), QStringLiteral("--mode=immediate")});
     if (!checkServerIsRunning()) {
         return;
     }
@@ -625,10 +617,7 @@ void DbConfigPostgresql::stopInternalServer()
         QString postmasterPid = QString::fromUtf8(pidFile.readLine(0).trimmed());
         qCCritical(AKONADISERVER_LOG) << "The postmaster is still running. Killing it.";
 
-        execute(mServerPath, { QStringLiteral("kill"),
-                               QStringLiteral("ABRT"),
-                               postmasterPid
-                             });
+        execute(mServerPath, {QStringLiteral("kill"), QStringLiteral("ABRT"), postmasterPid});
     }
 }
 
@@ -636,8 +625,7 @@ bool DbConfigPostgresql::checkServerIsRunning()
 {
     const QString command = mServerPath;
     QStringList arguments;
-    arguments << QStringLiteral("status")
-              << QStringLiteral("--pgdata=%1").arg(mPgData);
+    arguments << QStringLiteral("status") << QStringLiteral("--pgdata=%1").arg(mPgData);
 
     QProcess pgCtl;
     pgCtl.start(command, arguments, QIODevice::ReadOnly);

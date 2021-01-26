@@ -14,7 +14,6 @@
 
 namespace Akonadi
 {
-
 class Collection;
 class ItemFetchScope;
 
@@ -81,9 +80,7 @@ public:
      * @param mimeTypes The list of mime types that will be used for filtering.
      * @param parent The parent object.
      */
-    explicit RecursiveItemFetchJob(const Akonadi::Collection &collection,
-                                   const QStringList &mimeTypes,
-                                   QObject *parent = nullptr);
+    explicit RecursiveItemFetchJob(const Akonadi::Collection &collection, const QStringList &mimeTypes, QObject *parent = nullptr);
 
     /**
      * Destroys the recursive item fetch job.

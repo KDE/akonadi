@@ -28,7 +28,7 @@ public:
 
     bool collectionAccepted(const QModelIndex &index, bool checkResourceVisibility = true);
 
-    QVector< QModelIndex > acceptedResources;
+    QVector<QModelIndex> acceptedResources;
     CollectionFilterProxyModel *const mParent;
     MimeTypeChecker mimeChecker;
     bool mExcludeVirtualCollections = false;
@@ -51,7 +51,6 @@ bool CollectionFilterProxyModel::Private::collectionAccepted(const QModelIndex &
     if (mimeChecker.isWantedCollection(collection)) {
         // The folder will be accepted, but we need to make sure the resource is visible too.
         if (checkResourceVisibility) {
-
             // find the resource
             QModelIndex resource = index;
             while (resource.parent().isValid()) {
@@ -81,7 +80,6 @@ bool CollectionFilterProxyModel::Private::collectionAccepted(const QModelIndex &
     QModelIndex childIndex = mParent->sourceModel()->index(0, 0, index);
     while (childIndex.isValid()) {
         if (collectionAccepted(childIndex, false /* don't check visibility of the parent, as we are checking the child now */)) {
-
             // Keep track of all the resources that are visible.
             if (!index.parent().isValid()) {
                 acceptedResources.append(index);

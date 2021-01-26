@@ -6,24 +6,24 @@
  */
 
 #include "setup.h"
-#include "config.h" //krazy:exclude=includes
 #include "akonaditest_debug.h"
+#include "config.h" //krazy:exclude=includes
 
 #include <agentinstance.h>
 #include <agentinstancecreatejob.h>
-#include <resourcesynchronizationjob.h>
 #include <private/standarddirs_p.h>
+#include <resourcesynchronizationjob.h>
 
 #include <KConfig>
 #include <KConfigGroup>
 #include <KProcess>
 
 #include <QCoreApplication>
+#include <QDBusConnection>
 #include <QDir>
 #include <QFile>
-#include <QTimer>
-#include <QDBusConnection>
 #include <QSettings>
+#include <QTimer>
 
 bool SetupTest::startAkonadiDaemon()
 {
@@ -31,12 +31,10 @@ bool SetupTest::startAkonadiDaemon()
 
     if (!mAkonadiDaemonProcess) {
         mAkonadiDaemonProcess = std::make_unique<KProcess>();
-        connect(mAkonadiDaemonProcess.get(), qOverload<int, QProcess::ExitStatus>(&KProcess::finished),
-                this, &SetupTest::slotAkonadiDaemonProcessFinished);
+        connect(mAkonadiDaemonProcess.get(), qOverload<int, QProcess::ExitStatus>(&KProcess::finished), this, &SetupTest::slotAkonadiDaemonProcessFinished);
     }
 
-    mAkonadiDaemonProcess->setProgram(Akonadi::StandardDirs::findExecutable(QStringLiteral("akonadi_control")),
-                                      { QStringLiteral("--instance"), instanceId() });
+    mAkonadiDaemonProcess->setProgram(Akonadi::StandardDirs::findExecutable(QStringLiteral("akonadi_control")), {QStringLiteral("--instance"), instanceId()});
     mAkonadiDaemonProcess->start();
     const bool started = mAkonadiDaemonProcess->waitForStarted(5000);
     qCInfo(AKONADITEST_LOG) << "Started akonadi daemon with pid:" << mAkonadiDaemonProcess->pid();
@@ -65,7 +63,7 @@ void SetupTest::setupAgents()
     mAgentsCreated = true;
     Config *config = Config::instance();
     const auto agents = config->agents();
-    for (const auto &[instance, sync]: agents) {
+    for (const auto &[instance, sync] : agents) {
         qCDebug(AKONADITEST_LOG) << "Creating agent" << instance << "...";
         ++mSetupJobCount;
         Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob(instance, this);
@@ -102,7 +100,7 @@ void SetupTest::agentCreationResult(KJob *job)
 
 void SetupTest::synchronizationResult(KJob *job)
 {
-    auto instance = qobject_cast<Akonadi::ResourceSynchronizationJob*>(job)->resource();
+    auto instance = qobject_cast<Akonadi::ResourceSynchronizationJob *>(job)->resource();
     qCDebug(AKONADITEST_LOG) << "Sync of" << instance.identifier() << "done";
 
     --mSetupJobCount;
@@ -134,8 +132,9 @@ void SetupTest::copyXdgDirectory(const QString &src, const QString &dst)
                 // namespace according to instance identifier
 #ifdef Q_OS_WIN
                 const bool isXdgConfig = src.contains(QLatin1String("/xdgconfig/"));
-                copyDirectory(fi.absoluteFilePath(), dst + QStringLiteral("/akonadi/") + (isXdgConfig ? QStringLiteral("config/") : QStringLiteral("data/"))
-                              + QStringLiteral("instance/") + instanceId());
+                copyDirectory(fi.absoluteFilePath(),
+                              dst + QStringLiteral("/akonadi/") + (isXdgConfig ? QStringLiteral("config/") : QStringLiteral("data/"))
+                                  + QStringLiteral("instance/") + instanceId());
 #else
                 copyDirectory(fi.absoluteFilePath(), dst + QStringLiteral("/akonadi/instance/") + instanceId());
 #endif
@@ -277,9 +276,10 @@ SetupTest::SetupTest()
     setEnvironmentVariable("AKONADI_DISABLE_AGENT_AUTOSTART", QStringLiteral("true"));
     setEnvironmentVariable("AKONADI_TESTRUNNER_PID", QString::number(QCoreApplication::instance()->applicationPid()));
     // enable all debugging, so we get some useful information when test fails
-    setEnvironmentVariable("QT_LOGGING_RULES", QStringLiteral("* = true\n"
-                                                              "qt.* = false\n"
-                                                              "kf5.coreaddons.desktopparser.debug = false"));
+    setEnvironmentVariable("QT_LOGGING_RULES",
+                           QStringLiteral("* = true\n"
+                                          "qt.* = false\n"
+                                          "kf5.coreaddons.desktopparser.debug = false"));
 
     // avoid KIO starting klauncher which can get the CI stuck
     setEnvironmentVariable("KDE_FORK_SLAVES", QStringLiteral("yes"));
@@ -297,10 +297,10 @@ SetupTest::SetupTest()
     KConfigGroup migrationCfg(&migratorConfig, "Migration");
     migrationCfg.writeEntry("Enabled", false);
 
-    connect(Akonadi::ServerManager::self(), &Akonadi::ServerManager::stateChanged,
-            this, &SetupTest::serverStateChanged);
+    connect(Akonadi::ServerManager::self(), &Akonadi::ServerManager::stateChanged, this, &SetupTest::serverStateChanged);
 
-    QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.Akonadi.Testrunner-") + QString::number(QCoreApplication::instance()->applicationPid()));
+    QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.Akonadi.Testrunner-")
+                                                  + QString::number(QCoreApplication::instance()->applicationPid()));
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/"), this, QDBusConnection::ExportScriptableSlots);
 }
 
@@ -358,8 +358,7 @@ void SetupTest::restartAkonadiServer()
     // it forcefully, if necessary, and know the pid
     startAkonadiDaemon();
     // from here on, the server exiting is an error again
-    connect(mAkonadiDaemonProcess.get(), qOverload<int, QProcess::ExitStatus>(&KProcess::finished),
-            this, &SetupTest::slotAkonadiDaemonProcessFinished);
+    connect(mAkonadiDaemonProcess.get(), qOverload<int, QProcess::ExitStatus>(&KProcess::finished), this, &SetupTest::slotAkonadiDaemonProcessFinished);
 }
 
 QString SetupTest::basePath() const
@@ -371,17 +370,16 @@ QString SetupTest::basePath() const
     return QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation);
 #else
     QString sysTempDirPath = QDir::tempPath();
-    #ifdef Q_OS_UNIX
+#ifdef Q_OS_UNIX
     // QDir::tempPath() makes sure to use the fully sym-link exploded
     // absolute path to the temp dir. That is nice, but on OSX it makes
     // that path really long. MySQL chokes on this, for it's socket path,
     // so work around that
     sysTempDirPath = QStringLiteral("/tmp");
-    #endif
+#endif
 
     const QDir sysTempDir(sysTempDirPath);
-    const QString tempDir = QStringLiteral("/aktestrunner-%1/")
-                            .arg(QCoreApplication::instance()->applicationPid());
+    const QString tempDir = QStringLiteral("/aktestrunner-%1/").arg(QCoreApplication::instance()->applicationPid());
     if (!sysTempDir.exists(tempDir)) {
         sysTempDir.mkdir(tempDir);
     }

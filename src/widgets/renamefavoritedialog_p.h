@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 class RenameFavoriteDialog : public QDialog
 {
     Q_OBJECT

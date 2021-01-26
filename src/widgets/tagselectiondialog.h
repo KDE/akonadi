@@ -18,7 +18,6 @@
 class QDialogButtonBox;
 namespace Akonadi
 {
-
 class TagModel;
 
 /**

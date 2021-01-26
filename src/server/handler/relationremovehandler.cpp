@@ -7,17 +7,18 @@
 #include "relationremovehandler.h"
 
 #include "connection.h"
-#include "storage/querybuilder.h"
-#include "storage/selectquerybuilder.h"
-#include "storage/queryhelper.h"
 #include "storage/datastore.h"
+#include "storage/querybuilder.h"
+#include "storage/queryhelper.h"
+#include "storage/selectquerybuilder.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
 RelationRemoveHandler::RelationRemoveHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 bool RelationRemoveHandler::parseStream()
 {
@@ -76,4 +77,3 @@ bool RelationRemoveHandler::parseStream()
 
     return successResponse<Protocol::RemoveRelationsResponse>();
 }
-

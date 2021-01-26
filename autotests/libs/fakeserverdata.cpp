@@ -6,48 +6,45 @@
 
 #include "fakeserverdata.h"
 
-#include "itemfetchjob.h"
 #include "collectionfetchjob.h"
+#include "itemfetchjob.h"
 
 #include <QTimer>
 
 FakeServerData::FakeServerData(EntityTreeModel *model, FakeSession *session, FakeMonitor *monitor, QObject *parent)
-    : QObject(parent),
-      m_model(model),
-      m_session(session),
-      m_monitor(monitor),
-      m_nextCollectionId(1),
-      m_nextItemId(0),
-      m_nextTagId(1)
+    : QObject(parent)
+    , m_model(model)
+    , m_session(session)
+    , m_monitor(monitor)
+    , m_nextCollectionId(1)
+    , m_nextItemId(0)
+    , m_nextTagId(1)
 {
     // can't use QueuedConnection here, because the Job might self-deleted before
     // the slot gets called
-    connect(session, &FakeSession::jobAdded,
-            [this](Akonadi::Job * job) {
-                Collection::Id fetchColId = job->property("FetchCollectionId").toULongLong();
-                QTimer::singleShot(0, [this, fetchColId]() {
-                    jobAdded(fetchColId);
-                });
-            });
+    connect(session, &FakeSession::jobAdded, [this](Akonadi::Job *job) {
+        Collection::Id fetchColId = job->property("FetchCollectionId").toULongLong();
+        QTimer::singleShot(0, [this, fetchColId]() {
+            jobAdded(fetchColId);
+        });
+    });
 }
 
 FakeServerData::FakeServerData(TagModel *model, FakeSession *session, FakeMonitor *monitor, QObject *parent)
-    : QObject(parent),
-      m_model(model),
-      m_session(session),
-      m_monitor(monitor),
-      m_nextCollectionId(1),
-      m_nextItemId(0),
-      m_nextTagId(1)
+    : QObject(parent)
+    , m_model(model)
+    , m_session(session)
+    , m_monitor(monitor)
+    , m_nextCollectionId(1)
+    , m_nextItemId(0)
+    , m_nextTagId(1)
 {
-    connect(session, &FakeSession::jobAdded,
-            [this](Akonadi::Job * /*unused*/) {
-                QTimer::singleShot(0, [this]() {
-                    jobAdded();
-                });
-            });
+    connect(session, &FakeSession::jobAdded, [this](Akonadi::Job * /*unused*/) {
+        QTimer::singleShot(0, [this]() {
+            jobAdded();
+        });
+    });
 }
-
 
 void FakeServerData::setCommands(const QList<FakeAkonadiServerCommand *> &list)
 {
@@ -105,8 +102,7 @@ bool FakeServerData::returnCollections(Collection::Id fetchColId)
 
     Collection fetchCollection = m_communicationQueue.head()->fetchCollection();
 
-    if (commType == FakeAkonadiServerCommand::RespondToCollectionFetch
-            && fetchColId == fetchCollection.id()) {
+    if (commType == FakeAkonadiServerCommand::RespondToCollectionFetch && fetchColId == fetchCollection.id()) {
         FakeAkonadiServerCommand *command = m_communicationQueue.dequeue();
         command->doCommand();
         if (!m_communicationQueue.isEmpty()) {

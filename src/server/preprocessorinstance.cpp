@@ -10,9 +10,9 @@
  *****************************************************************************/
 
 #include "preprocessorinstance.h"
+#include "akonadiserver_debug.h"
 #include "preprocessorinterface.h"
 #include "preprocessormanager.h"
-#include "akonadiserver_debug.h"
 
 #include "entities.h"
 
@@ -22,7 +22,6 @@
 #include "tracer.h"
 
 #include <private/dbus_p.h>
-
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -39,21 +38,18 @@ PreprocessorInstance::~PreprocessorInstance() = default;
 
 bool PreprocessorInstance::init()
 {
-    Q_ASSERT(!mBusy);   // must be called very early
+    Q_ASSERT(!mBusy); // must be called very early
     Q_ASSERT(!mInterface);
 
-    mInterface = new OrgFreedesktopAkonadiPreprocessorInterface(
-        DBus::agentServiceName(mId, DBus::Preprocessor),
-        QStringLiteral("/Preprocessor"),
-        QDBusConnection::sessionBus(),
-        this);
+    mInterface = new OrgFreedesktopAkonadiPreprocessorInterface(DBus::agentServiceName(mId, DBus::Preprocessor),
+                                                                QStringLiteral("/Preprocessor"),
+                                                                QDBusConnection::sessionBus(),
+                                                                this);
 
     if (!mInterface || !mInterface->isValid()) {
         mTracer.warning(
             QStringLiteral("PreprocessorInstance"),
-            QStringLiteral("Could not connect to pre-processor instance '%1': %2")
-            .arg(mId,
-                 mInterface ? mInterface->lastError().message() : QString()));
+            QStringLiteral("Could not connect to pre-processor instance '%1': %2").arg(mId, mInterface ? mInterface->lastError().message() : QString()));
         delete mInterface;
         mInterface = nullptr;
         return false;
@@ -66,7 +62,7 @@ bool PreprocessorInstance::init()
 
 void PreprocessorInstance::enqueueItem(qint64 itemId)
 {
-    qCDebug(AKONADISERVER_LOG) << "PreprocessorInstance::enqueueItem("  << itemId <<  ")";
+    qCDebug(AKONADISERVER_LOG) << "PreprocessorInstance::enqueueItem(" << itemId << ")";
 
     mItemQueue.push_back(itemId);
 
@@ -138,17 +134,11 @@ bool PreprocessorInstance::abortProcessing()
 {
     Q_ASSERT_X(mBusy, "PreprocessorInstance::abortProcessing()", "You shouldn't call this method when isBusy() returns false");
 
-    OrgFreedesktopAkonadiAgentControlInterface iface(
-        DBus::agentServiceName(mId, DBus::Agent),
-        QStringLiteral("/"),
-        QDBusConnection::sessionBus(),
-        this);
+    OrgFreedesktopAkonadiAgentControlInterface iface(DBus::agentServiceName(mId, DBus::Agent), QStringLiteral("/"), QDBusConnection::sessionBus(), this);
 
     if (!iface.isValid()) {
-        mTracer.warning(
-            QStringLiteral("PreprocessorInstance"),
-            QStringLiteral("Could not connect to pre-processor instance '%1': %2")
-            .arg(mId, iface.lastError().message()));
+        mTracer.warning(QStringLiteral("PreprocessorInstance"),
+                        QStringLiteral("Could not connect to pre-processor instance '%1': %2").arg(mId, iface.lastError().message()));
         return false;
     }
 
@@ -164,17 +154,12 @@ bool PreprocessorInstance::invokeRestart()
 {
     Q_ASSERT_X(mBusy, "PreprocessorInstance::invokeRestart()", "You shouldn't call this method when isBusy() returns false");
 
-    OrgFreedesktopAkonadiAgentManagerInterface iface(
-        DBus::serviceName(DBus::Control),
-        QStringLiteral("/AgentManager"),
-        QDBusConnection::sessionBus(),
-        this);
+    OrgFreedesktopAkonadiAgentManagerInterface iface(DBus::serviceName(DBus::Control), QStringLiteral("/AgentManager"), QDBusConnection::sessionBus(), this);
 
     if (!iface.isValid()) {
         mTracer.warning(
             QStringLiteral("PreprocessorInstance"),
-            QStringLiteral("Could not connect to the AgentManager in order to restart pre-processor instance '%1': %2")
-            .arg(mId, iface.lastError().message()));
+            QStringLiteral("Could not connect to the AgentManager in order to restart pre-processor instance '%1': %2").arg(mId, iface.lastError().message()));
         return false;
     }
 
@@ -185,15 +170,12 @@ bool PreprocessorInstance::invokeRestart()
 
 void PreprocessorInstance::itemProcessed(qlonglong id)
 {
-    qCDebug(AKONADISERVER_LOG) << "PreprocessorInstance::itemProcessed("  << id <<  ")";
+    qCDebug(AKONADISERVER_LOG) << "PreprocessorInstance::itemProcessed(" << id << ")";
 
     // We shouldn't be called if there are no items in the queue
     if (mItemQueue.empty()) {
-        mTracer.warning(
-            QStringLiteral("PreprocessorInstance"),
-            QStringLiteral("Pre-processor instance '%1' emitted itemProcessed(%2) but we actually have no item in the queue")
-            .arg(mId)
-            .arg(id));
+        mTracer.warning(QStringLiteral("PreprocessorInstance"),
+                        QStringLiteral("Pre-processor instance '%1' emitted itemProcessed(%2) but we actually have no item in the queue").arg(mId).arg(id));
         mBusy = false;
         return; // preprocessor is buggy (FIXME: What now ?)
     }
@@ -206,10 +188,7 @@ void PreprocessorInstance::itemProcessed(qlonglong id)
     if (itemId != id) {
         mTracer.warning(
             QStringLiteral("PreprocessorInstance"),
-            QStringLiteral("Pre-processor instance '%1' emitted itemProcessed(%2) but the head item in the queue has id %3")
-            .arg(mId)
-            .arg(id)
-            .arg(itemId));
+            QStringLiteral("Pre-processor instance '%1' emitted itemProcessed(%2) but the head item in the queue has id %3").arg(mId).arg(id).arg(itemId));
 
         // FIXME: And what now ?
     }

@@ -9,8 +9,7 @@
 #include <QString>
 #include <stdexcept>
 
-template <typename Ex>
-class Exception : Ex
+template<typename Ex> class Exception : Ex
 {
 public:
     explicit Exception(const QString &message)

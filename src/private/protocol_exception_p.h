@@ -4,7 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-//krazy:excludeall=dpointer,inline
+// krazy:excludeall=dpointer,inline
 
 #ifndef AKONADI_PROTOCOLEXCEPTION_P_H
 #define AKONADI_PROTOCOLEXCEPTION_P_H
@@ -18,7 +18,6 @@
 
 namespace Akonadi
 {
-
 class AKONADIPRIVATE_EXPORT ProtocolException : public std::exception
 {
 public:
@@ -32,7 +31,8 @@ public:
     ProtocolException(const ProtocolException &) = delete;
     ProtocolException &operator=(const ProtocolException &) = delete;
 
-    const char *what() const throw() override {
+    const char *what() const throw() override
+    {
         return mWhat.constData();
     }
 

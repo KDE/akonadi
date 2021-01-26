@@ -11,8 +11,6 @@
 
 namespace Akonadi
 {
-
-
 class AgentBrokenInstance : public AgentInstance
 {
     Q_OBJECT

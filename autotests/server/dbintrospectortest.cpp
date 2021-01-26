@@ -4,13 +4,13 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
+#include <QDebug>
 #include <QObject>
 #include <QTest>
-#include <QDebug>
 
 #include <aktest.h>
-#include <storage/dbintrospector.h>
 #include <storage/dbexception.h>
+#include <storage/dbintrospector.h>
 
 #define QL1S(x) QLatin1String(x)
 
@@ -25,9 +25,13 @@ private Q_SLOTS:
         QTest::addColumn<QString>("driverName");
         QTest::addColumn<QString>("indexQuery");
 
-        QTest::newRow("mysql") << "QMYSQL" << "SHOW INDEXES FROM myTable WHERE `Key_name` = 'myIndex'";
-        QTest::newRow("sqlite") << "QSQLITE" << "SELECT * FROM sqlite_master WHERE type='index' AND tbl_name='myTable' AND name='myIndex';";
-        QTest::newRow("psql") << "QPSQL" << "SELECT indexname FROM pg_catalog.pg_indexes WHERE tablename ilike 'myTable' AND  indexname ilike 'myIndex' UNION SELECT conname FROM pg_catalog.pg_constraint  WHERE conname ilike 'myIndex'";
+        QTest::newRow("mysql") << "QMYSQL"
+                               << "SHOW INDEXES FROM myTable WHERE `Key_name` = 'myIndex'";
+        QTest::newRow("sqlite") << "QSQLITE"
+                                << "SELECT * FROM sqlite_master WHERE type='index' AND tbl_name='myTable' AND name='myIndex';";
+        QTest::newRow("psql") << "QPSQL"
+                              << "SELECT indexname FROM pg_catalog.pg_indexes WHERE tablename ilike 'myTable' AND  indexname ilike 'myIndex' UNION SELECT "
+                                 "conname FROM pg_catalog.pg_constraint  WHERE conname ilike 'myIndex'";
     }
 
     void testHasIndexQuery()
@@ -73,7 +77,6 @@ private Q_SLOTS:
             QCOMPARE(didThrow, shouldThrow);
         }
     }
-
 };
 
 AKTEST_MAIN(DbIntrospectorTest)

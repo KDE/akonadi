@@ -26,7 +26,8 @@ public:
     {
         return data;
     }
-    void deserialize(const QByteArray &ba) override {
+    void deserialize(const QByteArray &ba) override
+    {
         data = ba;
     }
     TestAttribute *clone() const override

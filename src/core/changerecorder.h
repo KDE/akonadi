@@ -14,7 +14,6 @@ class QSettings;
 
 namespace Akonadi
 {
-
 class ChangeRecorderPrivate;
 
 /**

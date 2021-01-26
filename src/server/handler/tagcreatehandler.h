@@ -13,8 +13,7 @@ namespace Akonadi
 {
 namespace Server
 {
-
-class TagCreateHandler: public Handler
+class TagCreateHandler : public Handler
 {
 public:
     TagCreateHandler(AkonadiServer &akonadi);

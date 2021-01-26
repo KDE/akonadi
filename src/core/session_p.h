@@ -8,16 +8,15 @@
 #define AKONADI_SESSION_P_H
 
 #include "akonadicore_export.h"
-#include "session.h"
+#include "commandbuffer_p.h"
 #include "item.h"
 #include "servermanager.h"
-#include "commandbuffer_p.h"
+#include "session.h"
 
-
+#include <QFile>
+#include <QMetaObject>
 #include <QQueue>
 #include <QThreadStorage>
-#include <QMetaObject>
-#include <QFile>
 
 namespace Akonadi
 {

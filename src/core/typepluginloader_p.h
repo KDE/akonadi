@@ -8,13 +8,12 @@
 #ifndef AKONADI_TYPEPLUGINLOADER_P_H
 #define AKONADI_TYPEPLUGINLOADER_P_H
 
-#include <qglobal.h>
 #include "akonadicore_export.h"
+#include <qglobal.h>
 
 class QObject;
 class QString;
-template <typename T>
-class QVector;
+template<typename T> class QVector;
 
 namespace Akonadi
 {
@@ -34,7 +33,6 @@ class ItemSerializerPlugin;
  */
 namespace TypePluginLoader
 {
-
 enum Option {
     NoOptions,
     NoDefault = 1,

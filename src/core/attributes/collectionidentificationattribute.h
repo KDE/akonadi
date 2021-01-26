@@ -14,7 +14,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @short Attribute that stores additional information on a collection that can be used for searching.
  *
@@ -26,8 +25,11 @@ namespace Akonadi
 class AKONADICORE_EXPORT CollectionIdentificationAttribute : public Akonadi::Attribute
 {
 public:
-    explicit CollectionIdentificationAttribute(const QByteArray &identifier = QByteArray(), const QByteArray &folderNamespace = QByteArray(),
-            const QByteArray &name = QByteArray(), const QByteArray &organizationUnit = QByteArray(), const QByteArray &mail = QByteArray());
+    explicit CollectionIdentificationAttribute(const QByteArray &identifier = QByteArray(),
+                                               const QByteArray &folderNamespace = QByteArray(),
+                                               const QByteArray &name = QByteArray(),
+                                               const QByteArray &organizationUnit = QByteArray(),
+                                               const QByteArray &mail = QByteArray());
     ~CollectionIdentificationAttribute() override;
 
     /**

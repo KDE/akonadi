@@ -7,23 +7,24 @@
 #include "aggregatedfetchscope.h"
 #include <shared/akranges.h>
 
-#include <QRecursiveMutex>
 #include <QMutexLocker>
+#include <QRecursiveMutex>
 
-#define LOCKED_D(name) \
-    Q_D(name); \
+#define LOCKED_D(name)                                                                                                                                         \
+    Q_D(name);                                                                                                                                                 \
     QMutexLocker lock(&d->lock);
 
-
-namespace Akonadi {
-namespace Server {
-
+namespace Akonadi
+{
+namespace Server
+{
 class AggregatedFetchScopePrivate
 {
 public:
     AggregatedFetchScopePrivate()
         : lock() // recursive so that we can call our own getters/setters
-    {}
+    {
+    }
 
     inline void addToSet(const QByteArray &value, QSet<QByteArray> &set, QHash<QByteArray, int> &count)
     {
@@ -53,8 +54,7 @@ public:
         store += newValue ? 1 : -1;
     }
 
-    inline void  applySet(const QSet<QByteArray> &oldSet, const QSet<QByteArray> &newSet,
-                          QSet<QByteArray> &set, QHash<QByteArray, int> &count)
+    inline void applySet(const QSet<QByteArray> &oldSet, const QSet<QByteArray> &newSet, QSet<QByteArray> &set, QHash<QByteArray, int> &count)
     {
         const auto added = newSet - oldSet;
         for (const auto &value : added) {
@@ -80,7 +80,6 @@ public:
     int fetchStats = 0;
 };
 
-
 class AggregatedTagFetchScopePrivate : public AggregatedFetchScopePrivate
 {
 public:
@@ -103,7 +102,7 @@ public:
     QSet<QByteArray> tags;
     QHash<QByteArray, int> tagsCount;
     int subscribers = 0;
-    int ancestors[3] = { 0, 0, 0 }; // 3 = size of AncestorDepth enum
+    int ancestors[3] = {0, 0, 0}; // 3 = size of AncestorDepth enum
     int cacheOnly = 0;
     int fullPayload = 0;
     int allAttributes = 0;
@@ -136,8 +135,7 @@ AggregatedCollectionFetchScope::~AggregatedCollectionFetchScope()
     delete d_ptr;
 }
 
-void AggregatedCollectionFetchScope::apply(const Protocol::CollectionFetchScope &oldScope,
-                                           const Protocol::CollectionFetchScope &newScope)
+void AggregatedCollectionFetchScope::apply(const Protocol::CollectionFetchScope &oldScope, const Protocol::CollectionFetchScope &newScope)
 {
     LOCKED_D(AggregatedCollectionFetchScope)
 
@@ -185,7 +183,6 @@ void AggregatedCollectionFetchScope::removeSubscriber()
     --d->subscribers;
 }
 
-
 AggregatedItemFetchScope::AggregatedItemFetchScope()
     : d_ptr(new AggregatedItemFetchScopePrivate)
 {
@@ -196,8 +193,7 @@ AggregatedItemFetchScope::~AggregatedItemFetchScope()
     delete d_ptr;
 }
 
-void AggregatedItemFetchScope::apply(const Protocol::ItemFetchScope &oldScope,
-                                     const Protocol::ItemFetchScope &newScope)
+void AggregatedItemFetchScope::apply(const Protocol::ItemFetchScope &oldScope, const Protocol::ItemFetchScope &newScope)
 {
     LOCKED_D(AggregatedItemFetchScope);
 
@@ -299,8 +295,7 @@ ItemFetchScope::AncestorDepth AggregatedItemFetchScope::ancestorDepth() const
     }
 }
 
-void AggregatedItemFetchScope::updateAncestorDepth(ItemFetchScope::AncestorDepth oldDepth,
-                                                   ItemFetchScope::AncestorDepth newDepth)
+void AggregatedItemFetchScope::updateAncestorDepth(ItemFetchScope::AncestorDepth oldDepth, ItemFetchScope::AncestorDepth newDepth)
 {
     LOCKED_D(AggregatedItemFetchScope)
     if (d->ancestors[oldDepth] > 0) {
@@ -416,9 +411,6 @@ void AggregatedItemFetchScope::removeSubscriber()
     --d->subscribers;
 }
 
-
-
-
 AggregatedTagFetchScope::AggregatedTagFetchScope()
     : d_ptr(new AggregatedTagFetchScopePrivate)
 {
@@ -429,8 +421,7 @@ AggregatedTagFetchScope::~AggregatedTagFetchScope()
     delete d_ptr;
 }
 
-void AggregatedTagFetchScope::apply(const Protocol::TagFetchScope &oldScope,
-                                    const Protocol::TagFetchScope &newScope)
+void AggregatedTagFetchScope::apply(const Protocol::TagFetchScope &oldScope, const Protocol::TagFetchScope &newScope)
 {
     LOCKED_D(AggregatedTagFetchScope)
 

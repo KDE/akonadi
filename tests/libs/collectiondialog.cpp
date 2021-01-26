@@ -8,19 +8,17 @@
 
 #include <QDebug>
 
+#include <KAboutData>
 #include <KLocalizedString>
 #include <QApplication>
 #include <QCommandLineParser>
-#include <KAboutData>
 
 using namespace Akonadi;
 
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
-    KAboutData aboutData(QStringLiteral("test"),
-                         i18n("Test Application"),
-                         QStringLiteral("1.0"));
+    KAboutData aboutData(QStringLiteral("test"), i18n("Test Application"), QStringLiteral("1.0"));
 
     KAboutData::setApplicationData(aboutData);
 
@@ -31,7 +29,7 @@ int main(int argc, char **argv)
     aboutData.processCommandLine(&parser);
 
     CollectionDialog dlg;
-    dlg.setMimeTypeFilter( {QStringLiteral("text/directory")} );
+    dlg.setMimeTypeFilter({QStringLiteral("text/directory")});
     dlg.setAccessRightsFilter(Collection::CanCreateItem);
     dlg.setDescription(i18n("Select an address book for saving:"));
     dlg.setSelectionMode(QAbstractItemView::ExtendedSelection);

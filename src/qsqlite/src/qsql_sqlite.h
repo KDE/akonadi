@@ -12,9 +12,9 @@
 #ifndef QSQL_SQLITE_H
 #define QSQL_SQLITE_H
 
+#include <QtSql/private/qsqlcachedresult_p.h>
 #include <QtSql/qsqldriver.h>
 #include <QtSql/qsqlresult.h>
-#include <QtSql/private/qsqlcachedresult_p.h>
 
 struct sqlite3;
 
@@ -29,17 +29,13 @@ class QSQLiteDriver : public QSqlDriver
 {
     Q_OBJECT
     friend class QSQLiteResult;
+
 public:
     explicit QSQLiteDriver(QObject *parent = nullptr);
     explicit QSQLiteDriver(sqlite3 *connection, QObject *parent = nullptr);
     ~QSQLiteDriver() override;
     bool hasFeature(DriverFeature f) const override;
-    bool open(const QString &db,
-              const QString &user,
-              const QString &password,
-              const QString &host,
-              int port,
-              const QString &connOpts) override;
+    bool open(const QString &db, const QString &user, const QString &password, const QString &host, int port, const QString &connOpts) override;
     void close() override;
     QSqlResult *createResult() const override;
     bool beginTransaction() override;

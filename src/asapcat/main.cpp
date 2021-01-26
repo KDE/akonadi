@@ -13,8 +13,9 @@
 int main(int argc, char **argv)
 {
     AkCoreApplication app(argc, argv);
-    app.setDescription(QStringLiteral("Akonadi ASAP cat\n"
-                                      "This is a development tool, only use this if you know what you are doing."));
+    app.setDescription(
+        QStringLiteral("Akonadi ASAP cat\n"
+                       "This is a development tool, only use this if you know what you are doing."));
 
     app.addPositionalCommandLineOption(QStringLiteral("input"), QStringLiteral("Input file to read commands from"));
     app.parseCommandLine();

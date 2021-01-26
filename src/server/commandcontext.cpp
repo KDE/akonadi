@@ -85,4 +85,3 @@ bool CommandContext::isEmpty() const
 {
     return !mCollection.isValid() && !mTagId.has_value();
 }
-

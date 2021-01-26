@@ -8,13 +8,12 @@
 
 #include "progressspinnerdelegate_p.h"
 
-
 #include "entitytreemodel.h"
 
 #include <KIconLoader>
 
-#include <QTimerEvent>
 #include <QAbstractItemView>
+#include <QTimerEvent>
 
 using namespace Akonadi;
 
@@ -87,7 +86,6 @@ ProgressSpinnerDelegate::ProgressSpinnerDelegate(DelegateAnimator *animator, QOb
     : QStyledItemDelegate(parent)
     , m_animator(animator)
 {
-
 }
 
 void ProgressSpinnerDelegate::initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const

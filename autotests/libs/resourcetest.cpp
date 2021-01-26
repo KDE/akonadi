@@ -7,9 +7,9 @@
 #include <QObject>
 #include <QStringList>
 
-#include "qtest_akonadi.h"
-#include "agentmanager.h"
 #include "agentinstancecreatejob.h"
+#include "agentmanager.h"
+#include "qtest_akonadi.h"
 
 using namespace Akonadi;
 

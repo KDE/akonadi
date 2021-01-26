@@ -7,10 +7,10 @@
 #ifndef AGENTTYPE_H
 #define AGENTTYPE_H
 
+#include <QHash>
 #include <QString>
 #include <QStringList>
 #include <QVariantMap>
-#include <QHash>
 
 class AgentManager;
 class QSettings;
@@ -20,7 +20,7 @@ class AgentType
 public:
     enum LaunchMethod {
         Process, /// Standalone executable
-        Server,  /// Agent plugin launched in AgentManager
+        Server, /// Agent plugin launched in AgentManager
         Launcher /// Agent plugin launched in own process
     };
 

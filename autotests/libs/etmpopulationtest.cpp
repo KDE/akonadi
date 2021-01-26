@@ -6,15 +6,15 @@
 
 #include <QObject>
 
-#include "entitytreemodel.h"
-#include "control.h"
-#include "entitytreemodel_p.h"
-#include "monitor_p.h"
 #include "changerecorder_p.h"
-#include "qtest_akonadi.h"
 #include "collectioncreatejob.h"
 #include "collectiondeletejob.h"
+#include "control.h"
+#include "entitytreemodel.h"
+#include "entitytreemodel_p.h"
 #include "itemcreatejob.h"
+#include "monitor_p.h"
+#include "qtest_akonadi.h"
 
 using namespace Akonadi;
 
@@ -73,11 +73,13 @@ public Q_SLOTS:
     }
 };
 
-class InspectableETM: public EntityTreeModel
+class InspectableETM : public EntityTreeModel
 {
 public:
     explicit InspectableETM(ChangeRecorder *monitor, QObject *parent = nullptr)
-        : EntityTreeModel(monitor, parent) {}
+        : EntityTreeModel(monitor, parent)
+    {
+    }
     EntityTreeModelPrivate *etmPrivate()
     {
         return d_ptr;
@@ -238,7 +240,7 @@ void EtmPopulationTest::testAddMonitoringCollections()
     model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
 
     QTRY_VERIFY(model->isCollectionTreeFetched());
-    //The main collection may be loaded a little later since it is in the fetchAncestors path
+    // The main collection may be loaded a little later since it is in the fetchAncestors path
     QTRY_VERIFY(getIndex(mainCollectionName, model).isValid());
 
     model->setCollectionMonitored(col3, true);
@@ -267,7 +269,7 @@ void EtmPopulationTest::testRemoveMonitoringCollections()
     model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
 
     QTRY_VERIFY(model->isCollectionTreeFetched());
-    //The main collection may be loaded a little later since it is in the fetchAncestors path
+    // The main collection may be loaded a little later since it is in the fetchAncestors path
     QTRY_VERIFY(getIndex(mainCollectionName, model).isValid());
 
     model->setCollectionMonitored(col2, false);
@@ -333,4 +335,3 @@ void EtmPopulationTest::testLoadingOfHiddenCollection()
 #include "etmpopulationtest.moc"
 
 QTEST_AKONADIMAIN(EtmPopulationTest)
-

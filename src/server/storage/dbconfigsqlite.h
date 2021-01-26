@@ -13,13 +13,12 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class DbConfigSqlite : public DbConfig
 {
 public:
     enum Version {
         Default, /** Uses the Qt sqlite driver */
-        Custom   /** Uses the custom qsqlite driver from akonadi/qsqlite */
+        Custom /** Uses the custom qsqlite driver from akonadi/qsqlite */
     };
 
 public:
@@ -65,6 +64,7 @@ public:
      * Sets sqlite journal mode to WAL and synchronous mode to NORMAL
      */
     void setup() override;
+
 private:
     bool setPragma(QSqlDatabase &db, QSqlQuery &query, const QString &pragma);
 

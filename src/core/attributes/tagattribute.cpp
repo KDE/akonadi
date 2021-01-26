@@ -82,20 +82,16 @@ QByteArray TagAttribute::serialized() const
     {
         QList<QByteArray> components;
         if (d->backgroundColor.isValid()) {
-            components = QList<QByteArray>() << QByteArray::number(d->backgroundColor.red())
-                         << QByteArray::number(d->backgroundColor.green())
-                         << QByteArray::number(d->backgroundColor.blue())
-                         << QByteArray::number(d->backgroundColor.alpha());
+            components = QList<QByteArray>() << QByteArray::number(d->backgroundColor.red()) << QByteArray::number(d->backgroundColor.green())
+                                             << QByteArray::number(d->backgroundColor.blue()) << QByteArray::number(d->backgroundColor.alpha());
         }
         l << '(' + ImapParser::join(components, " ") + ')';
     }
     {
         QList<QByteArray> components;
         if (d->textColor.isValid()) {
-            components = QList<QByteArray>() << QByteArray::number(d->textColor.red())
-                         << QByteArray::number(d->textColor.green())
-                         << QByteArray::number(d->textColor.blue())
-                         << QByteArray::number(d->textColor.alpha());
+            components = QList<QByteArray>() << QByteArray::number(d->textColor.red()) << QByteArray::number(d->textColor.green())
+                                             << QByteArray::number(d->textColor.blue()) << QByteArray::number(d->textColor.alpha());
         }
         l << '(' + ImapParser::join(components, " ") + ')';
     }

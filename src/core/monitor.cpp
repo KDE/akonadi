@@ -79,7 +79,7 @@ void Monitor::setItemMonitored(const Item &item, bool monitored)
         }
     }
 
-    Q_EMIT itemMonitored(item,  monitored); // NOLINT(readability-misleading-indentation): false positive
+    Q_EMIT itemMonitored(item, monitored); // NOLINT(readability-misleading-indentation): false positive
 }
 
 void Monitor::setResourceMonitored(const QByteArray &resource, bool monitored)
@@ -148,7 +148,6 @@ void Monitor::setTypeMonitored(Monitor::Type type, bool monitored)
     }
 
     Q_EMIT typeMonitored(type, monitored); // NOLINT(readability-misleading-indentation): false positive
-
 }
 
 void Akonadi::Monitor::setAllMonitored(bool monitored)
@@ -186,7 +185,9 @@ void Monitor::ignoreSession(Session *session)
 
     if (!d->sessions.contains(session->sessionId())) {
         d->sessions << session->sessionId();
-        connect(session, &Session::destroyed, this, [d](QObject *o) { d->slotSessionDestroyed(o); });
+        connect(session, &Session::destroyed, this, [d](QObject *o) {
+            d->slotSessionDestroyed(o);
+        });
         d->pendingModification.startIgnoringSession(session->sessionId());
         d->scheduleSubscriptionUpdate();
     }

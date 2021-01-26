@@ -9,9 +9,9 @@
 #include <private/standarddirs_p.h>
 #include <shared/aktest.h>
 
-#include <QObject>
-#include <QFile>
 #include <QDir>
+#include <QFile>
+#include <QObject>
 
 using namespace Akonadi;
 
@@ -52,7 +52,6 @@ void ExternalPartStorageTest::testResolveAbsolutePath_data()
     QTest::newRow("123456_r0") << QStringLiteral("123456_r0") << QStringLiteral("56") << false;
     QTest::newRow("absolute path") << QStringLiteral("/tmp/akonadi/file_db_data/99_r3") << QString() << true;
 }
-
 
 void ExternalPartStorageTest::testResolveAbsolutePath()
 {
@@ -126,7 +125,6 @@ void ExternalPartStorageTest::testNameForPartId_data()
     QTest::newRow("9876543") << 9876543LL << QByteArray("9876543_r0");
 }
 
-
 void ExternalPartStorageTest::testNameForPartId()
 {
     QFETCH(qint64, id);
@@ -179,7 +177,6 @@ void ExternalPartStorageTest::testPartDelete()
     QVERIFY(ExternalPartStorage::self()->removePartFile(filePath));
     QVERIFY(!QFile::exists(filePath));
 }
-
 
 void ExternalPartStorageTest::testPartCreateTrxRollback()
 {
@@ -301,9 +298,6 @@ void ExternalPartStorageTest::testPartDeleteTrxCommit()
     QVERIFY(trx.commit());
     QVERIFY(!QFile::exists(filePath));
 }
-
-
-
 
 AKTEST_MAIN(ExternalPartStorageTest)
 

@@ -13,7 +13,8 @@ using namespace Akonadi::Server;
 
 TransactionHandler::TransactionHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 bool TransactionHandler::parseStream()
 {

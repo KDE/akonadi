@@ -7,12 +7,12 @@
 
 #include <storage/entity.h>
 
-#include "fakeakonadiserver.h"
 #include "aktest.h"
 #include "entities.h"
+#include "fakeakonadiserver.h"
 
-#include <private/scope_p.h>
 #include <private/imapset_p.h>
+#include <private/scope_p.h>
 
 #include <QTest>
 
@@ -24,6 +24,7 @@ class ItemMoveHandlerTest : public QObject
     Q_OBJECT
 
     FakeAkonadiServer mAkonadi;
+
 public:
     ItemMoveHandlerTest()
     {
@@ -62,34 +63,28 @@ private Q_SLOTS:
             auto cmd = Protocol::MoveItemsCommandPtr::create(1, destCol.id());
 
             TestScenario::List scenarios;
-            scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+            scenarios << FakeAkonadiServer::loginScenario() << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::MoveItemsResponsePtr::create());
 
             auto notification = Protocol::ItemChangeNotificationPtr::create(*notificationTemplate);
-            notification->setItems({ fetchResponse(1, QStringLiteral("A"), QString(), QStringLiteral("application/octet-stream")) });
+            notification->setItems({fetchResponse(1, QStringLiteral("A"), QString(), QStringLiteral("application/octet-stream"))});
 
-            QTest::newRow("move item") << scenarios << Protocol::ChangeNotificationList{ notification }
-                                       << QVariant::fromValue(destCol.id());
+            QTest::newRow("move item") << scenarios << Protocol::ChangeNotificationList{notification} << QVariant::fromValue(destCol.id());
         }
 
         {
-            auto cmd = Protocol::MoveItemsCommandPtr::create(QVector<qint64>{ 2, 3 }, destCol.id());
+            auto cmd = Protocol::MoveItemsCommandPtr::create(QVector<qint64>{2, 3}, destCol.id());
 
             TestScenario::List scenarios;
-            scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+            scenarios << FakeAkonadiServer::loginScenario() << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::MoveItemsResponsePtr::create());
 
             auto notification = Protocol::ItemChangeNotificationPtr::create(*notificationTemplate);
-            notification->setItems({
-                fetchResponse(3, QStringLiteral("C"), QString(), QStringLiteral("application/octet-stream")),
-                fetchResponse(2, QStringLiteral("B"), QString(), QStringLiteral("application/octet-stream")) });
+            notification->setItems({fetchResponse(3, QStringLiteral("C"), QString(), QStringLiteral("application/octet-stream")),
+                                    fetchResponse(2, QStringLiteral("B"), QString(), QStringLiteral("application/octet-stream"))});
 
-            QTest::newRow("move items") << scenarios << Protocol::ChangeNotificationList{ notification }
-                                        << QVariant::fromValue(destCol.id());
+            QTest::newRow("move items") << scenarios << Protocol::ChangeNotificationList{notification} << QVariant::fromValue(destCol.id());
         }
-
     }
 
     void testMove()
@@ -107,7 +102,7 @@ private Q_SLOTS:
             return;
         }
         QCOMPARE(notificationSpy->count(), 1);
-        //Only one notify call
+        // Only one notify call
         QCOMPARE(notificationSpy->first().count(), 1);
         const auto receivedNotifications = notificationSpy->first().first().value<Protocol::ChangeNotificationList>();
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
@@ -129,4 +124,3 @@ private Q_SLOTS:
 AKTEST_FAKESERVER_MAIN(ItemMoveHandlerTest)
 
 #include "itemmovehandlertest.moc"
-

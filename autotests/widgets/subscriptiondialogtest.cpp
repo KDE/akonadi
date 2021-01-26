@@ -7,60 +7,56 @@
 
 #include "qtest_akonadi.h"
 
-#include <shared/aktest.h>
 #include <shared/akscopeguard.h>
+#include <shared/aktest.h>
 
 #include "subscriptiondialog.h"
-#include "subscriptionmodel_p.h"
 #include "subscriptionjob_p.h"
+#include "subscriptionmodel_p.h"
 
-#include <QSignalSpy>
-#include <QTest>
+#include <QCheckBox>
+#include <QDialog>
+#include <QDialogButtonBox>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QSignalSpy>
+#include <QTest>
 #include <QTreeView>
-#include <QDialogButtonBox>
-#include <QDialog>
-#include <QCheckBox>
 
-#include <memory>
 #include <deque>
+#include <memory>
 
 using namespace Akonadi;
 
-class SubscriptionDialogTest: public QObject
+class SubscriptionDialogTest : public QObject
 {
     Q_OBJECT
 
     struct TestSetup {
         enum { defaultCollectionCount = 7 };
 
-
         TestSetup()
         {
-            widget = std::make_unique<SubscriptionDialog>(QStringList{
-                    Collection::mimeType(),
-                    QStringLiteral("application/octet-stream")
-            });
+            widget = std::make_unique<SubscriptionDialog>(QStringList{Collection::mimeType(), QStringLiteral("application/octet-stream")});
             widget->setAttribute(Qt::WA_DeleteOnClose, false);
             widget->show();
 
-            model = widget->findChild<SubscriptionModel*>();
+            model = widget->findChild<SubscriptionModel *>();
             QVERIFY(model);
             QSignalSpy modelLoadedSpy(model, &SubscriptionModel::modelLoaded);
 
-            buttonBox = widget->findChild<QDialogButtonBox*>();
+            buttonBox = widget->findChild<QDialogButtonBox *>();
             QVERIFY(buttonBox);
             QVERIFY(!buttonBox->button(QDialogButtonBox::Ok)->isEnabled());
-            searchLineEdit = widget->findChild<QLineEdit*>(QStringLiteral("searchLineEdit"));
+            searchLineEdit = widget->findChild<QLineEdit *>(QStringLiteral("searchLineEdit"));
             QVERIFY(searchLineEdit);
-            subscribedOnlyChkBox = widget->findChild<QCheckBox*>(QStringLiteral("subscribedOnlyCheckBox"));
+            subscribedOnlyChkBox = widget->findChild<QCheckBox *>(QStringLiteral("subscribedOnlyCheckBox"));
             QVERIFY(subscribedOnlyChkBox);
-            collectionView = widget->findChild<QTreeView*>(QStringLiteral("collectionView"));
+            collectionView = widget->findChild<QTreeView *>(QStringLiteral("collectionView"));
             QVERIFY(collectionView);
-            subscribeButton = widget->findChild<QPushButton*>(QStringLiteral("subscribeButton"));
+            subscribeButton = widget->findChild<QPushButton *>(QStringLiteral("subscribeButton"));
             QVERIFY(subscribeButton);
-            unsubscribeButton = widget->findChild<QPushButton*>(QStringLiteral("unsubscribeButton"));
+            unsubscribeButton = widget->findChild<QPushButton *>(QStringLiteral("unsubscribeButton"));
             QVERIFY(unsubscribeButton);
 
             QVERIFY(QTest::qWaitForWindowActive(widget.get()));
@@ -101,14 +97,16 @@ class SubscriptionDialogTest: public QObject
             return modifySubscription({col}, {});
         }
 
-        static bool modifySubscription(const Collection::List &subscribe,
-                                       const Collection::List &unsubscribe)
+        static bool modifySubscription(const Collection::List &subscribe, const Collection::List &unsubscribe)
         {
             auto *job = new SubscriptionJob();
             job->subscribe(subscribe);
             job->unsubscribe(unsubscribe);
             bool ok = false;
-            [job, &ok]() { AKVERIFYEXEC(job); ok = true; }();
+            [job, &ok]() {
+                AKVERIFYEXEC(job);
+                ok = true;
+            }();
             AKVERIFY(ok);
 
             return true;

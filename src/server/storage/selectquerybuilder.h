@@ -13,11 +13,10 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
   Helper class for creating and executing database SELECT queries.
 */
-template <typename T> class SelectQueryBuilder : public QueryBuilder
+template<typename T> class SelectQueryBuilder : public QueryBuilder
 {
 public:
     /**

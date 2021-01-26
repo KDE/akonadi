@@ -7,12 +7,11 @@
 #ifndef AKONADI_JOB_P_H
 #define AKONADI_JOB_P_H
 
-#include "session.h"
 #include "item.h"
+#include "session.h"
 
 namespace Akonadi
 {
-
 namespace Protocol
 {
 class Command;

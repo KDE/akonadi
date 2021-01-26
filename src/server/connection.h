@@ -7,20 +7,20 @@
 #ifndef AKONADI_CONNECTION_H
 #define AKONADI_CONNECTION_H
 
+#include <QElapsedTimer>
+#include <QLocalSocket>
 #include <QThread>
 #include <QTimer>
-#include <QLocalSocket>
-#include <QElapsedTimer>
 
 #include "akonadi.h"
 #include "akthread.h"
+#include "commandcontext.h"
 #include "entities.h"
 #include "global.h"
-#include "commandcontext.h"
 #include "tracer.h"
 
-#include <private/protocol_p.h>
 #include <private/datastream_p_p.h>
+#include <private/protocol_p.h>
 
 #include <memory>
 
@@ -28,7 +28,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class Handler;
 class Response;
 class DataStore;
@@ -49,7 +48,10 @@ public:
     const CommandContext &context() const;
     void setContext(const CommandContext &context);
 
-    AkonadiServer &akonadi() const { return m_akonadi; }
+    AkonadiServer &akonadi() const
+    {
+        return m_akonadi;
+    }
 
     /**
       Returns @c true if this connection belongs to the owning resource of @p item.
@@ -67,9 +69,7 @@ public:
 
     void setState(ConnectionState state);
 
-    template<typename T>
-    inline typename std::enable_if<std::is_base_of<Protocol::Command, T>::value>::type
-    sendResponse(T &&response);
+    template<typename T> inline typename std::enable_if<std::is_base_of<Protocol::Command, T>::value>::type sendResponse(T &&response);
 
     void sendResponse(qint64 tag, const Protocol::CommandPtr &response);
 
@@ -119,28 +119,21 @@ protected:
 
 private:
     void parseStream(const Protocol::CommandPtr &cmd);
-    template<typename T>
-    inline typename std::enable_if<std::is_base_of<Protocol::Command, T>::value>::type
-    sendResponse(qint64 tag, T &&response);
+    template<typename T> inline typename std::enable_if<std::is_base_of<Protocol::Command, T>::value>::type sendResponse(qint64 tag, T &&response);
 
     /** For debugging */
     void startTime();
     void stopTime(const QString &identifier);
     void reportTime() const;
     bool m_reportTime = false;
-
 };
 
-template<typename T>
-inline typename std::enable_if<std::is_base_of<Protocol::Command, T>::value>::type
-Connection::sendResponse(T &&response)
+template<typename T> inline typename std::enable_if<std::is_base_of<Protocol::Command, T>::value>::type Connection::sendResponse(T &&response)
 {
     sendResponse<T>(currentTag(), std::move(response));
 }
 
-template<typename T>
-inline typename std::enable_if<std::is_base_of<Protocol::Command, T>::value>::type
-Connection::sendResponse(qint64 tag, T &&response)
+template<typename T> inline typename std::enable_if<std::is_base_of<Protocol::Command, T>::value>::type Connection::sendResponse(qint64 tag, T &&response)
 {
     if (m_akonadi.tracer().currentTracer() != QLatin1String("null")) {
         m_akonadi.tracer().connectionOutput(m_identifier, tag, response);

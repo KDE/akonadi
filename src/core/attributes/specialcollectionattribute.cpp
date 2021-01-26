@@ -60,7 +60,6 @@ QByteArray SpecialCollectionAttribute::collectionType() const
 // Register the attribute when the library is loaded.
 namespace
 {
-
 bool dummySpecialCollectionAttribute()
 {
     using namespace Akonadi;

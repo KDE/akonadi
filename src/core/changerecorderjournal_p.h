@@ -8,24 +8,18 @@
 #ifndef CHANGERECORDERJOURNAL_P_H
 #define CHANGERECORDERJOURNAL_P_H
 
-#include "private/protocol_p.h"
 #include "akonaditests_export.h"
+#include "private/protocol_p.h"
 
 class QSettings;
 class QFile;
 
-namespace Akonadi {
-
+namespace Akonadi
+{
 class AKONADI_TESTS_EXPORT ChangeRecorderJournalReader
 {
 public:
-    enum LegacyType {
-        InvalidType,
-        Item,
-        Collection,
-        Tag,
-        Relation
-    };
+    enum LegacyType { InvalidType, Item, Collection, Tag, Relation };
 
     // Ancient QSettings legacy store
     static Protocol::ChangeNotificationPtr loadQSettingsNotification(QSettings *settings);
@@ -33,20 +27,7 @@ public:
     static QQueue<Protocol::ChangeNotificationPtr> loadFrom(QFile *device, bool &needsFullSave);
 
 private:
-    enum LegacyOp {
-        InvalidOp,
-        Add,
-        Modify,
-        Move,
-        Remove,
-        Link,
-        Unlink,
-        Subscribe,
-        Unsubscribe,
-        ModifyFlags,
-        ModifyTags,
-        ModifyRelations
-    };
+    enum LegacyOp { InvalidOp, Add, Modify, Move, Remove, Link, Unlink, Subscribe, Unsubscribe, ModifyFlags, ModifyTags, ModifyRelations };
 
     static Protocol::ChangeNotificationPtr loadQSettingsItemNotification(QSettings *settings);
     static Protocol::ChangeNotificationPtr loadQSettingsCollectionNotification(QSettings *settings);
@@ -84,4 +65,3 @@ private:
 } // namespace
 
 #endif
-

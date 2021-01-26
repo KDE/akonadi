@@ -11,9 +11,9 @@
 #include "schematypes.h"
 
 #include <QHash>
-#include <QStringList>
 #include <QSharedPointer>
 #include <QSqlDatabase>
+#include <QStringList>
 
 class DbInitializerTest;
 
@@ -21,7 +21,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class Schema;
 class DbUpdater;
 
@@ -49,6 +48,7 @@ private:
 class DbInitializer
 {
     friend class DbUpdater;
+
 public:
     typedef QSharedPointer<DbInitializer> Ptr;
 

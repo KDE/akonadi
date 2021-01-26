@@ -32,9 +32,10 @@ private Q_SLOTS:
         QList<int> counts = QList<int>() << 1 << 10 << 100 << 1000;
         QList<bool> transactions = QList<bool>() << false << true;
         foreach (int count, counts) {
-            foreach (bool transaction, transactions) {  //krazy:exclude=foreach
-                QTest::newRow(QString::fromLatin1("%1-%2").arg(count).arg(transaction ? QLatin1String("trans") : QLatin1String("notrans")).toLatin1().constData())
-                        << count << transaction;
+            foreach (bool transaction, transactions) { // krazy:exclude=foreach
+                QTest::newRow(
+                    QString::fromLatin1("%1-%2").arg(count).arg(transaction ? QLatin1String("trans") : QLatin1String("notrans")).toLatin1().constData())
+                    << count << transaction;
             }
         }
     }
@@ -50,22 +51,19 @@ private Q_SLOTS:
         static int index = 0;
         Job *lastJob = 0;
         QBENCHMARK {
-            if (useTransaction)
-            {
+            if (useTransaction) {
                 lastJob = new TransactionBeginJob(this);
             }
-            for (int i = 0; i < count; ++i)
-            {
+            for (int i = 0; i < count; ++i) {
                 Collection col;
                 col.setParentCollection(parent);
                 col.setName(QLatin1String("col") + QString::number(++index));
                 lastJob = new CollectionCreateJob(col, this);
             }
-            if (useTransaction)
-            {
+            if (useTransaction) {
                 lastJob = new TransactionCommitJob(this);
             }
-            AkonadiTest::akWaitForSignal(lastJob, SIGNAL(result(KJob*)), 15000);
+            AkonadiTest::akWaitForSignal(lastJob, SIGNAL(result(KJob *)), 15000);
         }
     }
 };

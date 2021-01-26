@@ -7,17 +7,17 @@
 #ifndef AKONADI_AGENTCONFIGURATIONBASE_H
 #define AKONADI_AGENTCONFIGURATIONBASE_H
 
-#include "akonadicore_export.h"
 #include "agentconfigurationfactorybase.h"
+#include "akonadicore_export.h"
 
-#include <QObject>
 #include <KSharedConfig>
 #include <QDialogButtonBox>
+#include <QObject>
 
 class KAboutData;
 
-namespace Akonadi {
-
+namespace Akonadi
+{
 /**
  * @brief Base class for configuration UI for Akonadi agents
  *
@@ -79,8 +79,7 @@ public:
      *
      * Subclasses must provide a constructor with this exact signature.
      */
-    explicit AgentConfigurationBase(const KSharedConfigPtr &config, QWidget *parentWidget,
-                                    const QVariantList &args);
+    explicit AgentConfigurationBase(const KSharedConfigPtr &config, QWidget *parentWidget, const QVariantList &args);
 
     ~AgentConfigurationBase() override;
 
@@ -122,7 +121,7 @@ public:
     /**
      * Reimplement to save dialog size.
      */
-    virtual void saveDialogSize(const QSize& size);
+    virtual void saveDialogSize(const QSize &size);
 
     virtual QDialogButtonBox::StandardButtons standardButtons() const;
 

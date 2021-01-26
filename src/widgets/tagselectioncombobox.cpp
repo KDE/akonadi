@@ -10,13 +10,13 @@
 #include "monitor.h"
 #include "tagmodel.h"
 
-#include <QItemSelectionModel>
 #include <KCheckableProxyModel>
+#include <QAbstractItemView>
+#include <QEvent>
+#include <QItemSelectionModel>
+#include <QKeyEvent>
 #include <QLineEdit>
 #include <QLocale>
-#include <QEvent>
-#include <QAbstractItemView>
-#include <QKeyEvent>
 
 #include <KLocalizedString>
 
@@ -25,10 +25,9 @@
 
 using namespace Akonadi;
 
-namespace {
-
-template<typename List>
-List tagsFromSelection(const QItemSelection &selection, int role)
+namespace
+{
+template<typename List> List tagsFromSelection(const QItemSelection &selection, int role)
 {
     List tags;
     for (int i = 0; i < selection.size(); ++i) {
@@ -45,8 +44,7 @@ QString getEditText(const QItemSelection &selection)
     const auto tags = tagsFromSelection<Tag::List>(selection, TagModel::TagRole);
     QStringList names;
     names.reserve(tags.size());
-    std::transform(tags.cbegin(), tags.cend(), std::back_inserter(names),
-                   std::bind(&Tag::name, std::placeholders::_1));
+    std::transform(tags.cbegin(), tags.cend(), std::back_inserter(names), std::bind(&Tag::name, std::placeholders::_1));
     return QLocale{}.createSeparatedList(names);
 }
 
@@ -57,15 +55,13 @@ class TagSelectionComboBox::Private
 public:
     explicit Private(TagSelectionComboBox *parent)
         : q(parent)
-    {}
+    {
+    }
 
-    enum LoopControl {
-        Break,
-        Continue
-    };
+    enum LoopControl { Break, Continue };
 
-    template<typename Selection, typename Comp>
-    void setSelection(const Selection &entries, Comp &&cmp) {
+    template<typename Selection, typename Comp> void setSelection(const Selection &entries, Comp &&cmp)
+    {
         if (!mModelReady) {
             mPendingSelection = entries;
             return;
@@ -105,9 +101,7 @@ public:
 
     void setItemChecked(const QModelIndex &tagModelIndex, Qt::CheckState state) const
     {
-        selectionModel->select(
-            tagModelIndex,
-            state == Qt::Checked ? QItemSelectionModel::Select: QItemSelectionModel::Deselect);
+        selectionModel->select(tagModelIndex, state == Qt::Checked ? QItemSelectionModel::Select : QItemSelectionModel::Deselect);
     }
 
     void setCheckable(bool checkable)
@@ -131,19 +125,17 @@ public:
             q->view()->installEventFilter(q);
             q->view()->viewport()->installEventFilter(q);
 
-            q->connect(selectionModel.get(), &QItemSelectionModel::selectionChanged,
-                       q, [this]() {
-                           const auto selection = selectionModel->selection();
-                           q->setEditText(getEditText(selection));
-                           Q_EMIT q->selectionChanged(tagsFromSelection<Tag::List>(selection, TagModel::TagRole));
-                    });
-            q->connect(q, qOverload<int>(&QComboBox::activated),
-                       selectionModel.get(), [this](int i) {
-                           if (q->view()->isVisible()) {
-                               const auto index = tagModel->index(i, 0);
-                               toggleItem(index);
-                           }
-                       });
+            q->connect(selectionModel.get(), &QItemSelectionModel::selectionChanged, q, [this]() {
+                const auto selection = selectionModel->selection();
+                q->setEditText(getEditText(selection));
+                Q_EMIT q->selectionChanged(tagsFromSelection<Tag::List>(selection, TagModel::TagRole));
+            });
+            q->connect(q, qOverload<int>(&QComboBox::activated), selectionModel.get(), [this](int i) {
+                if (q->view()->isVisible()) {
+                    const auto index = tagModel->index(i, 0);
+                    toggleItem(index);
+                }
+            });
         } else {
             // QComboBox automatically deletes models that it is a parent of
             // which breaks our stuff
@@ -177,26 +169,26 @@ public:
     std::variant<std::monostate, Tag::List, QStringList> mPendingSelection;
 
 private:
-    TagSelectionComboBox * const q;
+    TagSelectionComboBox *const q;
 };
 
 TagSelectionComboBox::TagSelectionComboBox(QWidget *parent)
     : QComboBox(parent)
     , d(new Private(this))
 {
-    auto *monitor  = new Monitor(this);
+    auto *monitor = new Monitor(this);
     monitor->setObjectName(QStringLiteral("TagSelectionComboBoxMonitor"));
     monitor->setTypeMonitored(Monitor::Tags);
 
     d->tagModel = std::make_unique<TagModel>(monitor, this);
     connect(d->tagModel.get(), &TagModel::populated, this, [this]() {
-            d->mModelReady = true;
-            if (auto *list = std::get_if<Tag::List>(&d->mPendingSelection)) {
-                setSelection(*list);
-            } else if (auto *slist = std::get_if<QStringList>(&d->mPendingSelection)) {
-                setSelection(*slist);
-            }
-            d->mPendingSelection = std::monostate{};
+        d->mModelReady = true;
+        if (auto *list = std::get_if<Tag::List>(&d->mPendingSelection)) {
+            setSelection(*list);
+        } else if (auto *slist = std::get_if<QStringList>(&d->mPendingSelection)) {
+            setSelection(*slist);
+        }
+        d->mPendingSelection = std::monostate{};
     });
 
     d->setCheckable(d->mCheckable);
@@ -219,12 +211,16 @@ bool TagSelectionComboBox::checkable() const
 
 void TagSelectionComboBox::setSelection(const Tag::List &tags)
 {
-    d->setSelection(tags, [](const Tag &a, const Tag &b) { return a.name() == b.name(); });
+    d->setSelection(tags, [](const Tag &a, const Tag &b) {
+        return a.name() == b.name();
+    });
 }
 
 void TagSelectionComboBox::setSelection(const QStringList &tagNames)
 {
-    d->setSelection(tagNames, [](const Tag &a, const QString &b) { return a.name() == b; });
+    d->setSelection(tagNames, [](const Tag &a, const QString &b) {
+        return a.name() == b;
+    });
 }
 
 Tag::List TagSelectionComboBox::selection() const

@@ -18,7 +18,6 @@ class QDragMoveEvent;
 
 namespace Akonadi
 {
-
 class Collection;
 class Item;
 

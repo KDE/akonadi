@@ -5,17 +5,17 @@
 */
 
 #include <QObject>
-#include <QTest>
 #include <QSettings>
 #include <QTemporaryDir>
+#include <QTest>
 
 #include <aktest.h>
 #include <private/standarddirs_p.h>
 #include <shared/akranges.h>
 
+#include <config-akonadi.h>
 #include <storage/dbconfig.h>
 #include <storage/dbconfigpostgresql.h>
-#include <config-akonadi.h>
 
 #define QL1S(x) QStringLiteral(x)
 
@@ -39,7 +39,7 @@ private Q_SLOTS:
     void testDbConfig()
     {
         // doesn't work, DbConfig has an internal singleton-like cache...
-        //QFETCH( QString, driverName );
+        // QFETCH( QString, driverName );
         const QString driverName(QL1S(AKONADI_DATABASE_BACKEND));
 
         // isolated config file to not conflict with a running instance
@@ -64,21 +64,31 @@ private Q_SLOTS:
         QTemporaryDir dir;
         QVERIFY(dir.isValid());
 
-        const QStringList versions{QStringLiteral("10.2"), QStringLiteral("10.0"), QStringLiteral("9.5"), QStringLiteral("12.4"),
-                                   QStringLiteral("8.0"), QStringLiteral("12.0")};
+        const QStringList versions{QStringLiteral("10.2"),
+                                   QStringLiteral("10.0"),
+                                   QStringLiteral("9.5"),
+                                   QStringLiteral("12.4"),
+                                   QStringLiteral("8.0"),
+                                   QStringLiteral("12.0")};
         for (const auto &version : versions) {
             QVERIFY(QDir(dir.path()).mkdir(version));
         }
 
         TestableDbConfigPostgresql dbConfig;
-        const auto paths = dbConfig.postgresSearchPaths(dir)
-                                | Views::filter([&dir](const auto &path) { return path.startsWith(dir.path()); })
-                                | Views::transform([&dir](const auto &path) {
-                                        return QString(path).remove(dir.path() + QStringLiteral("/")).remove(QStringLiteral("/bin")); })
-                                | Actions::toQList;
+        const auto paths = dbConfig.postgresSearchPaths(dir) | Views::filter([&dir](const auto &path) {
+                               return path.startsWith(dir.path());
+                           })
+            | Views::transform([&dir](const auto &path) {
+                               return QString(path).remove(dir.path() + QStringLiteral("/")).remove(QStringLiteral("/bin"));
+                           })
+            | Actions::toQList;
 
-        const QStringList expected{QStringLiteral("12.4"), QStringLiteral("12.0"), QStringLiteral("10.2"),
-                                   QStringLiteral("10.0"), QStringLiteral("9.5"), QStringLiteral("8.0")};
+        const QStringList expected{QStringLiteral("12.4"),
+                                   QStringLiteral("12.0"),
+                                   QStringLiteral("10.2"),
+                                   QStringLiteral("10.0"),
+                                   QStringLiteral("9.5"),
+                                   QStringLiteral("8.0")};
         QCOMPARE(paths, expected);
     }
 };

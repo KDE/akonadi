@@ -13,7 +13,8 @@ using namespace Akonadi::Server;
 
 LoginHandler::LoginHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 bool LoginHandler::parseStream()
 {

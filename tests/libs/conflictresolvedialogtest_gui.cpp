@@ -6,17 +6,15 @@
 
 #include "../src/widgets/conflictresolvedialog_p.h"
 
-#include <QApplication>
-#include <QStandardPaths>
-#include <QCommandLineParser>
 #include <KAboutData>
+#include <QApplication>
+#include <QCommandLineParser>
+#include <QStandardPaths>
 
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
-    KAboutData aboutData(QStringLiteral("conflictresolvedialogtest_gui"),
-                         QStringLiteral("conflictresolvedialogtest_gui"),
-                         QStringLiteral("0.10"));
+    KAboutData aboutData(QStringLiteral("conflictresolvedialogtest_gui"), QStringLiteral("conflictresolvedialogtest_gui"), QStringLiteral("0.10"));
     KAboutData::setApplicationData(aboutData);
 
     QCommandLineParser parser;

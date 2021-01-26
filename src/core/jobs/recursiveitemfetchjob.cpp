@@ -10,7 +10,6 @@
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
 
-
 #include <QStringList>
 
 using namespace Akonadi;
@@ -40,7 +39,9 @@ public:
         for (const Collection &collection : qAsConst(collections)) {
             auto *itemFetchJob = new ItemFetchJob(collection, mParent);
             itemFetchJob->setFetchScope(mFetchScope);
-            mParent->connect(itemFetchJob, &KJob::result, mParent, [this](KJob *job) { itemFetchResult(job) ;});
+            mParent->connect(itemFetchJob, &KJob::result, mParent, [this](KJob *job) {
+                itemFetchResult(job);
+            });
 
             mFetchCount++;
         }
@@ -108,7 +109,9 @@ void RecursiveItemFetchJob::start()
         job->fetchScope().setContentMimeTypes(d->mMimeTypes);
     }
 
-    connect(job, &CollectionFetchJob::result, this, [this](KJob *job) { d->collectionFetchResult(job); });
+    connect(job, &CollectionFetchJob::result, this, [this](KJob *job) {
+        d->collectionFetchResult(job);
+    });
 }
 
 Akonadi::Item::List RecursiveItemFetchJob::items() const

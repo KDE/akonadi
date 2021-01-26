@@ -52,4 +52,3 @@ void ItemSerializerTest::testDefaultSerializer()
     QEXPECT_FAIL("null", "Serializer cannot distinguish null vs. empty", Continue);
     QCOMPARE(data.isNull(), serialized.isNull());
 }
-

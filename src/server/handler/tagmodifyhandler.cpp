@@ -6,10 +6,10 @@
 
 #include "tagmodifyhandler.h"
 
-#include "tagfetchhelper.h"
 #include "connection.h"
 #include "storage/datastore.h"
 #include "storage/querybuilder.h"
+#include "tagfetchhelper.h"
 #include <shared/akranges.h>
 
 #include <private/imapset_p.h>
@@ -20,7 +20,8 @@ using namespace AkRanges;
 
 TagModifyHandler::TagModifyHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 bool TagModifyHandler::parseStream()
 {
@@ -35,7 +36,10 @@ bool TagModifyHandler::parseStream()
 
     // Retrieve all tag's attributes
     const TagAttribute::List attributes = TagAttribute::retrieveFiltered(TagAttribute::tagIdFullColumnName(), cmd.tagId());
-    const auto attributesMap = attributes | Views::transform([](const auto &attr) { return std::make_pair(attr.type(), attr); }) | Actions::toQMap;
+    const auto attributesMap = attributes | Views::transform([](const auto &attr) {
+                                   return std::make_pair(attr.type(), attr);
+                               })
+        | Actions::toQMap;
 
     if (cmd.modifiedParts() & Protocol::ModifyTagCommand::ParentId) {
         if (cmd.parentId() != changedTag.parentId()) {
@@ -63,7 +67,7 @@ bool TagModifyHandler::parseStream()
             return failureResponse("Only resources can change tag remote ID");
         }
 
-        //Simply using remove() doesn't work since we need two arguments
+        // Simply using remove() doesn't work since we need two arguments
         QueryBuilder qb(TagRemoteIdResourceRelation::tableName(), QueryBuilder::Delete);
         qb.addValueCondition(TagRemoteIdResourceRelation::tagIdColumn(), Query::Equals, cmd.tagId());
         qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdColumn(), Query::Equals, connection()->context().resource().id());

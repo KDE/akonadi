@@ -9,13 +9,12 @@
 #ifndef AKONADI_TAGEDITWIDGET_P_H
 #define AKONADI_TAGEDITWIDGET_P_H
 
-#include <QWidget>
-#include "tag.h"
 #include "akonadiwidgets_export.h"
+#include "tag.h"
+#include <QWidget>
 
 namespace Akonadi
 {
-
 class TagModel;
 /**
  * A widget that offers facilities to add/remove tags and optionally provides a way to select tags.

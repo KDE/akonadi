@@ -12,7 +12,6 @@ using namespace Akonadi;
 
 namespace Akonadi
 {
-
 class SelectionProxyModelPrivate
 {
 public:

@@ -7,21 +7,21 @@
 */
 
 #include "job.h"
-#include "job_p.h"
 #include "akonadicore_debug.h"
-#include <QDBusConnection>
-#include <QTime>
-#include "private/protocol_p.h"
+#include "job_p.h"
 #include "private/instance_p.h"
+#include "private/protocol_p.h"
 #include "session.h"
 #include "session_p.h"
+#include <QDBusConnection>
+#include <QTime>
 
 #include <KLocalizedString>
 
-#include <QTimer>
-#include <QElapsedTimer>
-#include <QDBusInterface>
 #include <QDBusConnectionInterface>
+#include <QDBusInterface>
+#include <QElapsedTimer>
+#include <QTimer>
 
 using namespace Akonadi;
 
@@ -67,7 +67,9 @@ void JobPrivate::handleResponse(qint64 tag, const Protocol::CommandPtr &response
 
         if (q->doHandleResponse(tag, response)) {
             mReadingFinished = true;
-            QTimer::singleShot(0, q, [this]() {delayedEmitResult(); });
+            QTimer::singleShot(0, q, [this]() {
+                delayedEmitResult();
+            });
         }
     }
 }
@@ -107,12 +109,13 @@ void JobPrivate::publishJob()
             if (!s_lastTime.isValid()) {
                 s_lastTime.start();
             }
-            const QString suffix  = Akonadi::Instance::identifier().isEmpty() ? QString() : QLatin1Char('-') + Akonadi::Instance::identifier();
+            const QString suffix = Akonadi::Instance::identifier().isEmpty() ? QString() : QLatin1Char('-') + Akonadi::Instance::identifier();
             if (QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.akonadiconsole") + suffix)) {
                 s_jobtracker = new QDBusInterface(QLatin1String("org.kde.akonadiconsole") + suffix,
                                                   QStringLiteral("/jobtracker"),
                                                   QStringLiteral("org.freedesktop.Akonadi.JobTracker"),
-                                                  QDBusConnection::sessionBus(), nullptr);
+                                                  QDBusConnection::sessionBus(),
+                                                  nullptr);
                 mSession->d->publishOtherJobs(q);
             } else {
                 s_lastTime.restart();
@@ -132,22 +135,20 @@ void JobPrivate::signalCreationToJobTracker()
         // xml interface document. Since this is purely a debugging aid, that seems preferable to
         // publishing something not intended for public consumption.
         // WARNING: for any signature change here, apply it to resourcescheduler.cpp too
-        const QList<QVariant> argumentList = QList<QVariant>() << QLatin1String(mSession->sessionId())
-                                             << QString::number(reinterpret_cast<quintptr>(q), 16)
-                                             << (mParentJob ? QString::number(reinterpret_cast<quintptr>(mParentJob), 16) : QString())
-                                             << QString::fromLatin1(q->metaObject()->className())
-                                             << jobDebuggingString();
+        const QList<QVariant> argumentList = QList<QVariant>() << QLatin1String(mSession->sessionId()) << QString::number(reinterpret_cast<quintptr>(q), 16)
+                                                               << (mParentJob ? QString::number(reinterpret_cast<quintptr>(mParentJob), 16) : QString())
+                                                               << QString::fromLatin1(q->metaObject()->className()) << jobDebuggingString();
         QDBusPendingCall call = s_jobtracker->asyncCallWithArgumentList(QStringLiteral("jobCreated"), argumentList);
 
         auto *watcher = new QDBusPendingCallWatcher(call, s_jobtracker);
         QObject::connect(watcher, &QDBusPendingCallWatcher::finished, s_jobtracker, [](QDBusPendingCallWatcher *w) {
-                QDBusPendingReply<void> reply = *w;
-                if (reply.isError() && s_jobtracker) {
-                    qDebug() << reply.error().name() << reply.error().message();
-                    s_jobtracker->deleteLater();
-                    s_jobtracker = nullptr;
-                }
-                w->deleteLater();
+            QDBusPendingReply<void> reply = *w;
+            if (reply.isError() && s_jobtracker) {
+                qDebug() << reply.error().name() << reply.error().message();
+                s_jobtracker->deleteLater();
+                s_jobtracker = nullptr;
+            }
+            w->deleteLater();
         });
     }
 }
@@ -157,7 +158,7 @@ void JobPrivate::signalStartedToJobTracker()
     Q_Q(Job);
     if (s_jobtracker) {
         // if there's a job tracker running, tell it a job started
-        const QList<QVariant> argumentList = { QString::number(reinterpret_cast<quintptr>(q), 16) };
+        const QList<QVariant> argumentList = {QString::number(reinterpret_cast<quintptr>(q), 16)};
         s_jobtracker->callWithArgumentList(QDBus::NoBlock, QStringLiteral("jobStarted"), argumentList);
     }
 }
@@ -186,7 +187,9 @@ void JobPrivate::startQueued()
 
     Q_EMIT q->aboutToStart(q);
     q->doStart();
-    QTimer::singleShot(0, q, [this]() { startNext(); });
+    QTimer::singleShot(0, q, [this]() {
+        startNext();
+    });
     QMetaObject::invokeMethod(q, "signalStartedToJobTracker", Qt::QueuedConnection);
 }
 
@@ -218,7 +221,9 @@ void JobPrivate::startNext()
         job->d_ptr->startQueued();
     } else if (mFinishPending && !q->hasSubjobs()) {
         // The last subjob we've been waiting for has finished, emitResult() finally
-        QTimer::singleShot(0, q, [this]() {delayedEmitResult(); });
+        QTimer::singleShot(0, q, [this]() {
+            delayedEmitResult();
+        });
     }
 }
 
@@ -323,7 +328,7 @@ bool Job::doKill()
 }
 
 QString Job::errorString() const
-{    
+{
     QString str;
     switch (error()) {
     case NoError:
@@ -353,8 +358,12 @@ bool Job::addSubjob(KJob *job)
 {
     bool rv = KCompositeJob::addSubjob(job);
     if (rv) {
-        connect(qobject_cast<Job*>(job), &Job::aboutToStart, this, [this](Job *job) { d_ptr->slotSubJobAboutToStart(job); });
-        QTimer::singleShot(0, this, [this]() { d_ptr->startNext(); });
+        connect(qobject_cast<Job *>(job), &Job::aboutToStart, this, [this](Job *job) {
+            d_ptr->slotSubJobAboutToStart(job);
+        });
+        QTimer::singleShot(0, this, [this]() {
+            d_ptr->startNext();
+        });
     }
     return rv;
 }
@@ -364,7 +373,9 @@ bool Job::removeSubjob(KJob *job)
     bool rv = KCompositeJob::removeSubjob(job);
     if (job == d_ptr->mCurrentSubJob) {
         d_ptr->mCurrentSubJob = nullptr;
-        QTimer::singleShot(0, this, [this]() { d_ptr->startNext(); });
+        QTimer::singleShot(0, this, [this]() {
+            d_ptr->startNext();
+        });
     }
     return rv;
 }
@@ -385,7 +396,9 @@ void Job::slotResult(KJob *job)
         d_ptr->mCurrentSubJob = nullptr;
         KCompositeJob::slotResult(job);
         if (!job->error()) {
-            QTimer::singleShot(0, this, [this]() { d_ptr->startNext(); });
+            QTimer::singleShot(0, this, [this]() {
+                d_ptr->startNext();
+            });
         }
     } else {
         // job that was still waiting for execution finished, probably canceled,

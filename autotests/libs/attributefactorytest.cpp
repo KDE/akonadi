@@ -13,8 +13,8 @@
 #include "itemcreatejob.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
-#include "resourceselectjob_p.h"
 #include "qtest_akonadi.h"
+#include "resourceselectjob_p.h"
 
 using namespace Akonadi;
 
@@ -54,9 +54,9 @@ void AttributeFactoryTest::testUnknownAttribute()
     AKVERIFYEXEC(fjob);
     QCOMPARE(fjob->items().count(), 1);
     item = fjob->items().first();
-    QVERIFY(item.hasAttribute<TestAttribute>());   // has DefaultAttribute
+    QVERIFY(item.hasAttribute<TestAttribute>()); // has DefaultAttribute
     ta = item.attribute<TestAttribute>();
-    QVERIFY(!ta);   // but can't cast it to TestAttribute
+    QVERIFY(!ta); // but can't cast it to TestAttribute
 }
 
 void AttributeFactoryTest::testRegisteredAttribute()

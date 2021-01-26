@@ -6,18 +6,16 @@
 
 #include <subscriptiondialog.h>
 
-#include <QApplication>
-#include <QObject>
 #include <KAboutData>
+#include <QApplication>
 #include <QCommandLineParser>
+#include <QObject>
 
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
     app.setQuitOnLastWindowClosed(false);
-    KAboutData aboutData(QStringLiteral("akonadi-subscriber"),
-                         QStringLiteral("Test akonadi subscriber"),
-                         QStringLiteral("0.10"));
+    KAboutData aboutData(QStringLiteral("akonadi-subscriber"), QStringLiteral("Test akonadi subscriber"), QStringLiteral("0.10"));
     KAboutData::setApplicationData(aboutData);
 
     QCommandLineParser parser;

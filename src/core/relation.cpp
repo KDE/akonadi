@@ -45,10 +45,7 @@ Relation &Relation::operator=(Relation &&) noexcept = default;
 bool Relation::operator==(const Relation &other) const
 {
     if (isValid() && other.isValid()) {
-        return d->left == other.d->left
-               && d->right == other.d->right
-               && d->type == other.d->type
-               && d->remoteId == other.d->remoteId;
+        return d->left == other.d->left && d->right == other.d->right && d->type == other.d->type && d->remoteId == other.d->remoteId;
     }
     return false;
 }
@@ -110,6 +107,7 @@ uint Akonadi::qHash(const Relation &relation)
 
 QDebug &operator<<(QDebug &debug, const Relation &relation)
 {
-    debug << "Akonadi::Relation( TYPE " << relation.type() << ", LEFT " << relation.left().id() << ", RIGHT " << relation.right().id() << ", REMOTEID " << relation.remoteId() << ")";
+    debug << "Akonadi::Relation( TYPE " << relation.type() << ", LEFT " << relation.left().id() << ", RIGHT " << relation.right().id() << ", REMOTEID "
+          << relation.remoteId() << ")";
     return debug;
 }

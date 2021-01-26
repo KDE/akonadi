@@ -19,7 +19,6 @@ class QNetworkConfigurationManager;
 
 namespace Akonadi
 {
-
 /**
  * @internal
  */
@@ -138,9 +137,8 @@ public Q_SLOTS:
 
     virtual void relationAdded(const Akonadi::Relation &relation);
     virtual void relationRemoved(const Akonadi::Relation &relation);
-    virtual void itemsRelationsChanged(const Akonadi::Item::List &items,
-                                       const Akonadi::Relation::List &addedRelations,
-                                       const Akonadi::Relation::List &removedRelations);
+    virtual void
+    itemsRelationsChanged(const Akonadi::Item::List &items, const Akonadi::Relation::List &addedRelations, const Akonadi::Relation::List &removedRelations);
 };
 
 }

@@ -5,35 +5,25 @@
 */
 
 #include "collectiontreecache.h"
+#include "akonadiserver_debug.h"
 #include "commandcontext.h"
 #include "selectquerybuilder.h"
-#include "akonadiserver_debug.h"
 
 #include <private/scope_p.h>
 
 #include <QStack>
 
-#include <map>
-#include <iterator>
 #include <algorithm>
+#include <iterator>
+#include <map>
 #include <tuple>
 
 using namespace Akonadi::Server;
 
-namespace {
-   enum Column {
-        IdColumn,
-        ParentIdColumn,
-        RIDColumn,
-        DisplayPrefColumn,
-        SyncPrefColumn,
-        IndexPrefColumn,
-        EnabledColumn,
-        ReferencedColumn,
-        ResourceNameColumn
-    };
+namespace
+{
+enum Column { IdColumn, ParentIdColumn, RIDColumn, DisplayPrefColumn, SyncPrefColumn, IndexPrefColumn, EnabledColumn, ReferencedColumn, ResourceNameColumn };
 }
-
 
 CollectionTreeCache::Node::Node()
     : parent(nullptr)
@@ -47,7 +37,8 @@ CollectionTreeCache::Node::Node(const Collection &col)
     , id(col.id())
     , collection(col)
 
-{}
+{
+}
 
 CollectionTreeCache::Node::~Node()
 {
@@ -65,7 +56,6 @@ void CollectionTreeCache::Node::removeChild(Node *child)
     child->parent = nullptr;
     children.removeOne(child);
 }
-
 
 CollectionTreeCache::CollectionTreeCache()
     : AkThread(QStringLiteral("CollectionTreeCache"))
@@ -88,7 +78,6 @@ void CollectionTreeCache::init()
     mRoot->parent = nullptr;
     mNodeLookup.insert(0, mRoot);
 
-
     SelectQueryBuilder<Collection> qb;
     qb.addSortColumn(Collection::idFullColumnName(), Query::Ascending);
 
@@ -109,7 +98,7 @@ void CollectionTreeCache::init()
             parent->appendChild(node);
             mNodeLookup.insert(node->id, node);
         } else {
-            pendingNodes.insert({ col.parentId(), node });
+            pendingNodes.insert({col.parentId(), node});
         }
     }
 
@@ -249,30 +238,27 @@ void CollectionTreeCache::collectionRemoved(const Collection &col)
     delete node;
 }
 
-
-
-CollectionTreeCache::Node *CollectionTreeCache::findNode(const QString &rid,
-                                                         const QString &resource) const
+CollectionTreeCache::Node *CollectionTreeCache::findNode(const QString &rid, const QString &resource) const
 {
     QReadLocker locker(&mLock);
 
     // Find a subtree that belongs to the respective resource
-    auto root = std::find_if(mRoot->children.cbegin(), mRoot->children.cend(),
-                             [resource](Node *node) {
-                                 // resource().name() may seem expensive, but really
-                                 // there are only few resources and they are all cached
-                                 // in memory.
-                                return node->collection.resource().name() == resource;
-                             });
+    auto root = std::find_if(mRoot->children.cbegin(), mRoot->children.cend(), [resource](Node *node) {
+        // resource().name() may seem expensive, but really
+        // there are only few resources and they are all cached
+        // in memory.
+        return node->collection.resource().name() == resource;
+    });
     if (root == mRoot->children.cend()) {
         return nullptr;
     }
 
-    return findNode((*root), [rid](Node *node) { return node->collection.remoteId() == rid; });
+    return findNode((*root), [rid](Node *node) {
+        return node->collection.remoteId() == rid;
+    });
 }
 
-QVector<Collection> CollectionTreeCache::retrieveCollections(CollectionTreeCache::Node *root,
-                                                             int depth, int ancestorDepth) const
+QVector<Collection> CollectionTreeCache::retrieveCollections(CollectionTreeCache::Node *root, int depth, int ancestorDepth) const
 {
     QReadLocker locker(&mLock);
 
@@ -289,7 +275,7 @@ QVector<Collection> CollectionTreeCache::retrieveCollections(CollectionTreeCache
         int depth;
     };
     QStack<StackTuple> stack;
-    stack.push({ root, 0 });
+    stack.push({root, 0});
     while (!stack.isEmpty()) {
         auto c = stack.pop();
         if (c.depth > depth) {
@@ -301,7 +287,7 @@ QVector<Collection> CollectionTreeCache::retrieveCollections(CollectionTreeCache
         }
 
         for (auto child : qAsConst(c.node->children)) {
-            stack.push({ child, c.depth + 1 });
+            stack.push({child, c.depth + 1});
         }
     }
 
@@ -340,8 +326,9 @@ QVector<Collection> CollectionTreeCache::retrieveCollections(CollectionTreeCache
         locker.unlock();
         QWriteLocker wLocker(&mLock);
         for (auto node : qAsConst(missing)) {
-            auto it = std::find_if(results.cbegin(), results.cend(),
-                                   [node](const Collection &col) { return node->id == col.id(); });
+            auto it = std::find_if(results.cbegin(), results.cend(), [node](const Collection &col) {
+                return node->id == col.id();
+            });
             if (Q_UNLIKELY(it == results.cend())) {
                 continue;
             }
@@ -353,12 +340,8 @@ QVector<Collection> CollectionTreeCache::retrieveCollections(CollectionTreeCache
     return cols;
 }
 
-
-QVector<Collection> CollectionTreeCache::retrieveCollections(const Scope &scope,
-                                                             int depth,
-                                                             int ancestorDepth,
-                                                             const QString &resource,
-                                                             CommandContext *context) const
+QVector<Collection>
+CollectionTreeCache::retrieveCollections(const Scope &scope, int depth, int ancestorDepth, const QString &resource, CommandContext *context) const
 {
     if (scope.isEmpty()) {
         return retrieveCollections(mRoot, depth, ancestorDepth);

@@ -14,7 +14,6 @@
 
 namespace Akonadi
 {
-
 class EntityRightsFilterModelPrivate;
 
 /**
@@ -82,8 +81,11 @@ public:
     /**
      * @reimp
      */
-    Q_REQUIRED_RESULT QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1,
-                          Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
+    Q_REQUIRED_RESULT QModelIndexList match(const QModelIndex &start,
+                                            int role,
+                                            const QVariant &value,
+                                            int hits = 1,
+                                            Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;

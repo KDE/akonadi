@@ -4,16 +4,16 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "agentmanager.h"
 #include "agentinstance.h"
-#include "control.h"
+#include "agentmanager.h"
 #include "collection.h"
+#include "collectiondeletejob.h"
 #include "collectionfetchjob.h"
 #include "collectionfetchscope.h"
-#include "collectiondeletejob.h"
 #include "collectionmodifyjob.h"
-#include "entitydisplayattribute.h"
 #include "collectionsync_p.h"
+#include "control.h"
+#include "entitydisplayattribute.h"
 #include "qtest_akonadi.h"
 #include "resourceselectjob_p.h"
 
@@ -105,7 +105,7 @@ private:
     CollectionSync *prepareBenchmarkSyncer(const Collection::List &collections)
     {
         CollectionSync *syncer = new CollectionSync(QStringLiteral("akonadi_knut_resource_0"));
-        connect(syncer, SIGNAL(percent(KJob*,ulong)), this, SLOT(syncBenchmarkProgress(KJob*,ulong)));
+        connect(syncer, SIGNAL(percent(KJob *, ulong)), this, SLOT(syncBenchmarkProgress(KJob *, ulong)));
         syncer->setHierarchicalRemoteIds(false);
         syncer->setRemoteCollections(collections);
         return syncer;
@@ -129,7 +129,7 @@ public Q_SLOTS:
     void syncBenchmarkProgress(KJob *job, ulong percent)
     {
         Q_UNUSED(job)
-        qDebug() << "CollectionSync progress:" <<  percent << "%";
+        qDebug() << "CollectionSync progress:" << percent << "%";
     }
 
 private Q_SLOTS:
@@ -190,7 +190,7 @@ private Q_SLOTS:
             l << origCols[i];
             syncer->setRemoteCollections(l);
             if (i < origCols.count() - 1) {
-                QTest::qWait(10);   // enter the event loop so itemsync actually can do something
+                QTest::qWait(10); // enter the event loop so itemsync actually can do something
             }
             QCOMPARE(spy.count(), 0);
         }
@@ -302,7 +302,7 @@ private Q_SLOTS:
             l << origCols[i];
             syncer->setRemoteCollections(l, Collection::List());
             if (i < origCols.count() - 1) {
-                QTest::qWait(10);   // enter the event loop so itemsync actually can do something
+                QTest::qWait(10); // enter the event loop so itemsync actually can do something
             }
             QCOMPARE(spy.count(), 0);
         }
@@ -365,7 +365,8 @@ private Q_SLOTS:
 
         auto *syncer = new CollectionSync(resource, this);
         if (keepLocalChanges) {
-            syncer->setKeepLocalChanges(QSet<QByteArray>() << "ENTITYDISPLAY" << "CONTENTMIMETYPES");
+            syncer->setKeepLocalChanges(QSet<QByteArray>() << "ENTITYDISPLAY"
+                                                           << "CONTENTMIMETYPES");
         } else {
             syncer->setKeepLocalChanges(QSet<QByteArray>());
         }

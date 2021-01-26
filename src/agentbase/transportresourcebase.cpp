@@ -7,8 +7,8 @@
 #include "transportresourcebase.h"
 #include "transportresourcebase_p.h"
 
-#include <QDBusConnection>
 #include "transportadaptor.h"
+#include <QDBusConnection>
 
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
@@ -21,8 +21,7 @@ TransportResourceBasePrivate::TransportResourceBasePrivate(TransportResourceBase
     : q(qq)
 {
     new Akonadi__TransportAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Transport"),
-            this, QDBusConnection::ExportAdaptors);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Transport"), this, QDBusConnection::ExportAdaptors);
 }
 
 void TransportResourceBasePrivate::send(Item::Id id)
@@ -58,9 +57,7 @@ TransportResourceBase::~TransportResourceBase()
     delete d;
 }
 
-void TransportResourceBase::itemSent(const Item &item,
-                                     TransportResult result,
-                                     const QString &message)
+void TransportResourceBase::itemSent(const Item &item, TransportResult result, const QString &message)
 {
     Q_EMIT d->transportResult(item.id(), static_cast<int>(result), message);
 }

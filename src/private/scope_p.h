@@ -5,7 +5,7 @@
  *  SPDX-License-Identifier: LGPL-2.0-or-later
  */
 
-//krazy:excludeall=dpointer
+// krazy:excludeall=dpointer
 
 #ifndef AKONADI_PRIVATE_SCOPE_P_H
 #define AKONADI_PRIVATE_SCOPE_P_H
@@ -32,13 +32,7 @@ class ScopePrivate;
 class AKONADIPRIVATE_EXPORT Scope
 {
 public:
-    enum SelectionScope : uchar {
-        Invalid = 0,
-        Uid = 1 << 0,
-        Rid = 1 << 1,
-        HierarchicalRid = 1 << 2,
-        Gid = 1 << 3
-    };
+    enum SelectionScope : uchar { Invalid = 0, Uid = 1 << 0, Rid = 1 << 1, HierarchicalRid = 1 << 2, Gid = 1 << 3 };
 
     class AKONADIPRIVATE_EXPORT HRID
     {
@@ -66,11 +60,11 @@ public:
     Scope(SelectionScope scope, const QStringList &ids);
 
     /* UID */
-    Scope(qint64 id);                       //krazy:exclude=explicit
-    Scope(const ImapSet &uidSet);           //krazy:exclude=explicit
-    Scope(const ImapInterval &interval);    //krazy:exclude=explicit
-    Scope(const QVector<qint64> &interval); //krazy:exclude=explicit
-    Scope(const QVector<HRID> &hridChain);  //krazy:exclude=explicit
+    Scope(qint64 id); // krazy:exclude=explicit
+    Scope(const ImapSet &uidSet); // krazy:exclude=explicit
+    Scope(const ImapInterval &interval); // krazy:exclude=explicit
+    Scope(const QVector<qint64> &interval); // krazy:exclude=explicit
+    Scope(const QVector<HRID> &hridChain); // krazy:exclude=explicit
 
     Scope(const Scope &other);
     Scope(Scope &&other) noexcept;
@@ -103,6 +97,7 @@ public:
     QString gid() const;
 
     void toJson(QJsonObject &json) const;
+
 private:
     QSharedDataPointer<ScopePrivate> d;
     friend class ScopePrivate;

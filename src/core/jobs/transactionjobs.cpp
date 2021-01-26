@@ -16,7 +16,8 @@ class Akonadi::TransactionJobPrivate : public JobPrivate
 public:
     explicit TransactionJobPrivate(Job *parent)
         : JobPrivate(parent)
-    {}
+    {
+    }
 };
 
 TransactionJob::TransactionJob(QObject *parent)

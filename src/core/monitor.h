@@ -8,16 +8,15 @@
 #define AKONADI_MONITOR_H
 
 #include "akonadicore_export.h"
-#include "tag.h"
 #include "collection.h"
 #include "item.h"
 #include "relation.h"
+#include "tag.h"
 
 #include <QObject>
 
 namespace Akonadi
 {
-
 class CollectionFetchScope;
 class CollectionStatistics;
 class Item;
@@ -442,8 +441,7 @@ Q_SIGNALS:
      * @param removedFlags Flags that have been removed from each item in @p items
      * @since 4.11
      */
-    void itemsFlagsChanged(const Akonadi::Item::List &items, const QSet<QByteArray> &addedFlags,
-                           const QSet<QByteArray> &removedFlags);
+    void itemsFlagsChanged(const Akonadi::Item::List &items, const QSet<QByteArray> &addedFlags, const QSet<QByteArray> &removedFlags);
 
     /**
      * This signal is emitted if tags of monitored items have changed.
@@ -453,8 +451,7 @@ Q_SIGNALS:
      * @param removedTags Tags that have been removed from each item in @p items
      * @since 4.13
      */
-    void itemsTagsChanged(const Akonadi::Item::List &items, const QSet<Akonadi::Tag> &addedTags,
-                          const QSet<Akonadi::Tag> &removedTags);
+    void itemsTagsChanged(const Akonadi::Item::List &items, const QSet<Akonadi::Tag> &addedTags, const QSet<Akonadi::Tag> &removedTags);
 
     /**
      * This signal is emitted if relations of monitored items have changed.
@@ -464,8 +461,8 @@ Q_SIGNALS:
      * @param removedRelations Relations that have been removed from each item in @p items
      * @since 4.15
      */
-    void itemsRelationsChanged(const Akonadi::Item::List &items, const Akonadi::Relation::List &addedRelations,
-                               const Akonadi::Relation::List &removedRelations);
+    void
+    itemsRelationsChanged(const Akonadi::Item::List &items, const Akonadi::Relation::List &addedRelations, const Akonadi::Relation::List &removedRelations);
 
     /**
      * This signal is emitted if a monitored item has been moved between two collections
@@ -474,8 +471,7 @@ Q_SIGNALS:
      * @param collectionSource The collection the item has been moved from.
      * @param collectionDestination The collection the item has been moved to.
      */
-    void itemMoved(const Akonadi::Item &item, const Akonadi::Collection &collectionSource,
-                   const Akonadi::Collection &collectionDestination);
+    void itemMoved(const Akonadi::Item &item, const Akonadi::Collection &collectionSource, const Akonadi::Collection &collectionDestination);
 
     /**
      * This is signal is emitted when multiple monitored items have been moved between two collections
@@ -486,8 +482,7 @@ Q_SIGNALS:
      *
      * @since 4.11
      */
-    void itemsMoved(const Akonadi::Item::List &items, const Akonadi::Collection &collectionSource,
-                    const Akonadi::Collection &collectionDestination);
+    void itemsMoved(const Akonadi::Item::List &items, const Akonadi::Collection &collectionSource, const Akonadi::Collection &collectionDestination);
 
     /**
      * This signal is emitted if an item has been added to a monitored collection in the Akonadi storage.
@@ -627,8 +622,7 @@ Q_SIGNALS:
      * @param statistics The updated collection statistics, invalid if automatic
      *                   fetching of statistics changes is disabled.
      */
-    void collectionStatisticsChanged(Akonadi::Collection::Id id,
-                                     const Akonadi::CollectionStatistics &statistics);
+    void collectionStatisticsChanged(Akonadi::Collection::Id id, const Akonadi::CollectionStatistics &statistics);
 
     /**
      * This signal is emitted if a tag has been added to Akonadi storage.

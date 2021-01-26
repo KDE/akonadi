@@ -7,9 +7,9 @@
 #ifndef CONNECTION_P_H
 #define CONNECTION_P_H
 
-#include <QThread>
 #include <QLocalSocket>
 #include <QScopedPointer>
+#include <QThread>
 
 #include "private/protocol_p.h"
 
@@ -19,7 +19,6 @@ class QFile;
 
 namespace Akonadi
 {
-
 class SessionThread;
 class SessionPrivate;
 class CommandBuffer;
@@ -29,14 +28,10 @@ class AKONADICORE_EXPORT Connection : public QObject
     Q_OBJECT
 
 public:
-    enum ConnectionType {
-        CommandConnection,
-        NotificationConnection
-    };
+    enum ConnectionType { CommandConnection, NotificationConnection };
     Q_ENUM(ConnectionType)
 
-    explicit Connection(ConnectionType connType, const QByteArray &sessionId,
-                        CommandBuffer *commandBuffer, QObject *parent = nullptr);
+    explicit Connection(ConnectionType connType, const QByteArray &sessionId, CommandBuffer *commandBuffer, QObject *parent = nullptr);
     ~Connection();
 
     void setSession(SessionPrivate *session);
@@ -62,7 +57,6 @@ private Q_SLOTS:
     void doForceReconnect();
     void doCloseConnection();
     void doSendCommand(qint64 tag, const Akonadi::Protocol::CommandPtr &command);
-
 
 private:
     QString defaultAddressForTypeAndMethod(ConnectionType type, const QString &method);

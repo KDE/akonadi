@@ -8,19 +8,19 @@
 #include "instance_p.h"
 
 #include <QString>
-#include <QStringView>
 #include <QStringList>
+#include <QStringView>
 #include <QVector>
 
 #include <array>
 
 using namespace Akonadi;
 
-#define AKONADI_DBUS_SERVER_SERVICE           u"org.freedesktop.Akonadi"
-#define AKONADI_DBUS_CONTROL_SERVICE          u"org.freedesktop.Akonadi.Control"
-#define AKONADI_DBUS_CONTROL_SERVICE_LOCK     u"org.freedesktop.Akonadi.Control.lock"
-#define AKONADI_DBUS_AGENTSERVER_SERVICE      u"org.freedesktop.Akonadi.AgentServer"
-#define AKONADI_DBUS_STORAGEJANITOR_SERVICE   u"org.freedesktop.Akonadi.Janitor"
+#define AKONADI_DBUS_SERVER_SERVICE u"org.freedesktop.Akonadi"
+#define AKONADI_DBUS_CONTROL_SERVICE u"org.freedesktop.Akonadi.Control"
+#define AKONADI_DBUS_CONTROL_SERVICE_LOCK u"org.freedesktop.Akonadi.Control.lock"
+#define AKONADI_DBUS_AGENTSERVER_SERVICE u"org.freedesktop.Akonadi.AgentServer"
+#define AKONADI_DBUS_STORAGEJANITOR_SERVICE u"org.freedesktop.Akonadi.Janitor"
 #define AKONADI_DBUS_SERVER_SERVICE_UPGRADING u"org.freedesktop.Akonadi.upgrading"
 
 static QString makeServiceName(QStringView base)
@@ -59,7 +59,7 @@ std::optional<DBus::AgentService> DBus::parseAgentServiceName(const QString &ser
 
     const auto parts = serviceName.midRef(QStringView(AKONADI_DBUS_SERVER_SERVICE ".").length()).split(QLatin1Char('.'));
     if ((parts.size() == 2 && !Akonadi::Instance::hasIdentifier())
-            || (parts.size() == 3 && Akonadi::Instance::hasIdentifier() && Akonadi::Instance::identifier() == parts.at(2))) {
+        || (parts.size() == 3 && Akonadi::Instance::hasIdentifier() && Akonadi::Instance::identifier() == parts.at(2))) {
         // switch on parts.at( 0 )
         if (parts.at(0) == QLatin1String("Agent")) {
             return AgentService{parts.at(1).toString(), DBus::Agent};

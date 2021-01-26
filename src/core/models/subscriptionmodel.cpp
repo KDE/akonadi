@@ -4,11 +4,11 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "subscriptionmodel_p.h"
 #include "collectionutils.h"
-#include "specialcollectionattribute.h"
 #include "entityhiddenattribute.h"
 #include "entitytreemodel.h"
+#include "specialcollectionattribute.h"
+#include "subscriptionmodel_p.h"
 
 #include "akonadicore_debug.h"
 #include <qnamespace.h>
@@ -22,7 +22,6 @@ using namespace AkRanges;
 
 namespace
 {
-
 class FilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
@@ -82,10 +81,13 @@ public:
 
     Collection::List changedSubscriptions(bool subscribed) const
     {
-        return Views::range(subscriptions.constKeyValueBegin(), subscriptions.constKeyValueEnd())
-                    | Views::filter([subscribed](const auto &val) { return val.second == subscribed; })
-                    | Views::transform([](const auto &val) { return Collection{val.first}; })
-                    | Actions::toQVector;
+        return Views::range(subscriptions.constKeyValueBegin(), subscriptions.constKeyValueEnd()) | Views::filter([subscribed](const auto &val) {
+                   return val.second == subscribed;
+               })
+            | Views::transform([](const auto &val) {
+                   return Collection{val.first};
+               })
+            | Actions::toQVector;
     }
 
     bool isSubscribable(const Collection &col)
@@ -108,9 +110,9 @@ public:
     QHash<Collection::Id, bool> subscriptions;
 };
 
-SubscriptionModel::SubscriptionModel(Monitor *monitor, QObject *parent) :
-    QIdentityProxyModel(parent),
-    d(new Private(monitor))
+SubscriptionModel::SubscriptionModel(Monitor *monitor, QObject *parent)
+    : QIdentityProxyModel(parent)
+    , d(new Private(monitor))
 {
     QIdentityProxyModel::setSourceModel(&d->proxy);
 
@@ -171,7 +173,7 @@ bool SubscriptionModel::setData(const QModelIndex &index, const QVariant &value,
     if (role == Qt::CheckStateRole) {
         const auto col = index.data(EntityTreeModel::CollectionRole).value<Collection>();
         if (!d->isSubscribable(col)) {
-            return true; //No change
+            return true; // No change
         }
         if (col.enabled() == (value == Qt::Checked)) { // No change compared to the underlying model
             d->subscriptions.remove(col.id());
@@ -205,4 +207,3 @@ bool SubscriptionModel::showHiddenCollections() const
 }
 
 #include "subscriptionmodel.moc"
-

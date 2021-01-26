@@ -8,9 +8,9 @@
 #include "storagedebugger.h"
 #include "storagedebuggeradaptor.h"
 
+#include <QSqlError>
 #include <QSqlQuery>
 #include <QSqlRecord>
-#include <QSqlError>
 
 #include <QDBusConnection>
 
@@ -19,18 +19,14 @@ QMutex Akonadi::Server::StorageDebugger::mMutex;
 
 using namespace Akonadi::Server;
 
-Q_DECLARE_METATYPE(QList< QList<QVariant> >)
+Q_DECLARE_METATYPE(QList<QList<QVariant>>)
 Q_DECLARE_METATYPE(DbConnection)
 Q_DECLARE_METATYPE(QVector<DbConnection>)
 
 QDBusArgument &operator<<(QDBusArgument &arg, const DbConnection &con)
 {
     arg.beginStructure();
-    arg << con.id
-        << con.name
-        << con.start
-        << con.trxName
-        << con.transactionStart;
+    arg << con.id << con.name << con.start << con.trxName << con.transactionStart;
     arg.endStructure();
     return arg;
 }
@@ -38,23 +34,18 @@ QDBusArgument &operator<<(QDBusArgument &arg, const DbConnection &con)
 const QDBusArgument &operator>>(const QDBusArgument &arg, DbConnection &con)
 {
     arg.beginStructure();
-    arg >> con.id
-        >> con.name
-        >> con.start
-        >> con.trxName
-        >> con.transactionStart;
+    arg >> con.id >> con.name >> con.start >> con.trxName >> con.transactionStart;
     arg.endStructure();
     return arg;
 }
 
-namespace {
-
+namespace
+{
 QVector<DbConnection>::Iterator findConnection(QVector<DbConnection> &vec, qint64 id)
 {
-    return std::find_if(vec.begin(), vec.end(),
-                         [id](const DbConnection &con) {
-                             return con.id == id;
-                         });
+    return std::find_if(vec.begin(), vec.end(), [id](const DbConnection &con) {
+        return con.id == id;
+    });
 }
 
 } // namespace
@@ -72,12 +63,11 @@ StorageDebugger *StorageDebugger::instance()
 
 StorageDebugger::StorageDebugger()
 {
-    qDBusRegisterMetaType<QList< QList<QVariant> > >();
+    qDBusRegisterMetaType<QList<QList<QVariant>>>();
     qDBusRegisterMetaType<DbConnection>();
     qDBusRegisterMetaType<QVector<DbConnection>>();
     new StorageDebuggerAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/storageDebug"),
-            this, QDBusConnection::ExportAdaptors);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/storageDebug"), this, QDBusConnection::ExportAdaptors);
 }
 
 StorageDebugger::~StorageDebugger() = default;
@@ -97,7 +87,7 @@ void StorageDebugger::addConnection(qint64 id, const QString &name)
 {
     QMutexLocker locker(&mMutex);
     const qint64 timestamp = QDateTime::currentMSecsSinceEpoch();
-    mConnections.push_back({ id, name, timestamp, QString(), 0LL });
+    mConnections.push_back({id, name, timestamp, QString(), 0LL});
     if (mEnabled) {
         Q_EMIT connectionOpened(id, timestamp, name);
     }
@@ -115,7 +105,6 @@ void StorageDebugger::removeConnection(qint64 id)
     if (mEnabled) {
         Q_EMIT connectionClosed(id, QDateTime::currentMSecsSinceEpoch());
     }
-
 }
 
 void StorageDebugger::changeConnection(qint64 id, const QString &name)
@@ -130,11 +119,9 @@ void StorageDebugger::changeConnection(qint64 id, const QString &name)
     if (mEnabled) {
         Q_EMIT connectionChanged(id, name);
     }
-
 }
 
-void StorageDebugger::addTransaction(qint64 connectionId, const QString &name,
-                                     uint duration, const QString &error)
+void StorageDebugger::addTransaction(qint64 connectionId, const QString &name, uint duration, const QString &error)
 {
     QMutexLocker locker(&mMutex);
     auto con = findConnection(mConnections, connectionId);
@@ -147,13 +134,10 @@ void StorageDebugger::addTransaction(qint64 connectionId, const QString &name,
     if (mEnabled) {
         Q_EMIT transactionStarted(connectionId, name, con->transactionStart, duration, error);
     }
-
 }
 
-void StorageDebugger::removeTransaction(qint64 connectionId, bool commit,
-                                        uint duration, const QString &error)
+void StorageDebugger::removeTransaction(qint64 connectionId, bool commit, uint duration, const QString &error)
 {
-
     QMutexLocker locker(&mMutex);
     auto con = findConnection(mConnections, connectionId);
     if (con == mConnections.end()) {
@@ -163,8 +147,7 @@ void StorageDebugger::removeTransaction(qint64 connectionId, bool commit,
     con->transactionStart = 0;
 
     if (mEnabled) {
-        Q_EMIT transactionFinished(connectionId, commit, QDateTime::currentMSecsSinceEpoch(),
-                                   duration, error);
+        Q_EMIT transactionFinished(connectionId, commit, QDateTime::currentMSecsSinceEpoch(), duration, error);
     }
 }
 
@@ -181,9 +164,15 @@ void StorageDebugger::queryExecuted(qint64 connectionId, const QSqlQuery &query,
 
     const qint64 seq = ++mSequence;
     if (query.lastError().isValid()) {
-        Q_EMIT queryExecuted(seq, connectionId, QDateTime::currentMSecsSinceEpoch(),
-                             duration, query.executedQuery(), query.boundValues(), 0,
-                             QList<QList<QVariant>>(), query.lastError().text());
+        Q_EMIT queryExecuted(seq,
+                             connectionId,
+                             QDateTime::currentMSecsSinceEpoch(),
+                             duration,
+                             query.executedQuery(),
+                             query.boundValues(),
+                             0,
+                             QList<QList<QVariant>>(),
+                             query.lastError().text());
         return;
     }
 
@@ -214,9 +203,15 @@ void StorageDebugger::queryExecuted(qint64 connectionId, const QSqlQuery &query,
     }
 
     const int querySize = query.isSelect() ? query.size() : query.numRowsAffected();
-    Q_EMIT queryExecuted(seq, connectionId, QDateTime::currentMSecsSinceEpoch(),
-                         duration, query.executedQuery(), query.boundValues(),
-                         querySize, result, QString());
+    Q_EMIT queryExecuted(seq,
+                         connectionId,
+                         QDateTime::currentMSecsSinceEpoch(),
+                         duration,
+                         query.executedQuery(),
+                         query.boundValues(),
+                         querySize,
+                         result,
+                         QString());
 
     if (mFile && mFile->isOpen()) {
         QTextStream out(mFile.get());

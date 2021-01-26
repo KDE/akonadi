@@ -14,7 +14,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @internal
  */
@@ -29,10 +28,8 @@ public:
         , mMonitor(new Monitor())
     {
         mMonitor->setObjectName(QStringLiteral("ItemMonitorMonitor"));
-        connect(mMonitor, &Monitor::itemChanged,
-                this, &Private::slotItemChanged);
-        connect(mMonitor, &Monitor::itemRemoved,
-                this, &Private::slotItemRemoved);
+        connect(mMonitor, &Monitor::itemChanged, this, &Private::slotItemChanged);
+        connect(mMonitor, &Monitor::itemRemoved, this, &Private::slotItemRemoved);
     }
 
     ~Private()

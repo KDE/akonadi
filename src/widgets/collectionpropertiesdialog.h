@@ -14,7 +14,6 @@
 
 namespace Akonadi
 {
-
 class Collection;
 
 /**
@@ -48,8 +47,8 @@ public:
      * @since 4.7
      */
     enum DefaultPage {
-        GeneralPage,      //!< General properties page
-        CachePage         //!< Cache properties page
+        GeneralPage, //!< General properties page
+        CachePage //!< Cache properties page
     };
 
     /**

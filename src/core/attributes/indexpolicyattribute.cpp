@@ -8,7 +8,6 @@
 
 #include "private/imapparser_p.h"
 
-
 using namespace Akonadi;
 
 class Q_DECL_HIDDEN IndexPolicyAttribute::Private
@@ -53,7 +52,7 @@ QByteArray IndexPolicyAttribute::serialized() const
     l.reserve(2);
     l.append("ENABLE");
     l.append(d->enable ? "true" : "false");
-    return "(" + ImapParser::join(l, " ") + ')';   //krazy:exclude=doublequote_chars
+    return "(" + ImapParser::join(l, " ") + ')'; // krazy:exclude=doublequote_chars
 }
 
 void IndexPolicyAttribute::deserialize(const QByteArray &data)

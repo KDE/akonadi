@@ -12,8 +12,8 @@
 #ifndef AKONADI_PREPROCESSORINSTANCE_H
 #define AKONADI_PREPROCESSORINSTANCE_H
 
-#include <QObject>
 #include <QDateTime>
+#include <QObject>
 
 #include <deque>
 
@@ -23,7 +23,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class PreprocessorManager;
 class AgentInstance;
 class Tracer;
@@ -44,7 +43,6 @@ class PreprocessorInstance : public QObject
     Q_OBJECT
 
 protected:
-
     /**
      * Create an instance of a PreprocessorInstance descriptor.
      */
@@ -67,7 +65,7 @@ private:
      * The head item in the queue is the one currently being processed.
      * The other ones are waiting.
      */
-    std::deque< qint64 > mItemQueue;
+    std::deque<qint64> mItemQueue;
 
     /**
      * Is this processor busy ?
@@ -96,7 +94,6 @@ private:
     OrgFreedesktopAkonadiPreprocessorInterface *mInterface = nullptr;
 
 protected:
-
     /**
      * This is called by PreprocessorManager just after the construction
      * in order to connect to the preprocessor instance via D-Bus.
@@ -140,7 +137,7 @@ protected:
      *
      * The returned pointer is granted to be non null.
      */
-    std::deque< qint64 > *itemQueue()
+    std::deque<qint64> *itemQueue()
     {
         return &mItemQueue;
     }
@@ -169,7 +166,6 @@ protected:
     bool invokeRestart();
 
 private:
-
     /**
      * This function starts processing of the first item in mItemQueue.
      * It's only used internally.

@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 class Collection;
 class ItemFetchScope;
 class ItemSyncPrivate;
@@ -43,10 +42,7 @@ class AKONADICORE_EXPORT ItemSync : public Job
     Q_OBJECT
 
 public:
-    enum MergeMode {
-        RIDMerge,
-        GIDMerge
-    };
+    enum MergeMode { RIDMerge, GIDMerge };
 
     /**
      * Creates a new item synchronizer.
@@ -111,8 +107,7 @@ public:
      * @param changedItems A list of items added or changed by the client.
      * @param removedItems A list of items deleted by the client.
      */
-    void setIncrementalSyncItems(const Item::List &changedItems,
-                                 const Item::List &removedItems);
+    void setIncrementalSyncItems(const Item::List &changedItems, const Item::List &removedItems);
 
     /**
      * Sets the item fetch scope.
@@ -154,9 +149,11 @@ public:
      * @since 4.6
      */
     enum TransactionMode {
-        SingleTransaction, ///< Use a single transaction for the entire sync process (default), provides maximum consistency ("all or nothing") and best performance
+        SingleTransaction, ///< Use a single transaction for the entire sync process (default), provides maximum consistency ("all or nothing") and best
+                           ///< performance
         MultipleTransactions, ///< Use one transaction per chunk of delivered items, good compromise between the other two when using streaming
-        NoTransaction ///< Use no transaction at all, provides highest responsiveness (might therefore feel faster even when actually taking slightly longer), no consistency guaranteed (can fail anywhere in the sync process)
+        NoTransaction ///< Use no transaction at all, provides highest responsiveness (might therefore feel faster even when actually taking slightly longer),
+                      ///< no consistency guaranteed (can fail anywhere in the sync process)
     };
 
     /**

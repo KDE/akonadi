@@ -10,9 +10,10 @@
 
 #include <search/searchmanager.h>
 
-namespace Akonadi {
-namespace Server {
-
+namespace Akonadi
+{
+namespace Server
+{
 class SearchTaskManager;
 
 /**

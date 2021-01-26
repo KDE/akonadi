@@ -29,13 +29,14 @@ InspectableMonitor::InspectableMonitor(FakeMonitorDependenciesFactory *dependenc
     connect(this, &Akonadi::Monitor::itemUnlinked, this, &InspectableMonitor::dummySignal);
     connect(this, &Akonadi::Monitor::collectionAdded, this, &InspectableMonitor::dummySignal);
     connect(this, SIGNAL(collectionChanged(Akonadi::Collection)), SIGNAL(dummySignal()));
-    connect(this, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)), SIGNAL(dummySignal()));
+    connect(this, SIGNAL(collectionChanged(Akonadi::Collection, QSet<QByteArray>)), SIGNAL(dummySignal()));
     connect(this, &Akonadi::Monitor::collectionMoved, this, &InspectableMonitor::dummySignal);
     connect(this, &Akonadi::Monitor::collectionRemoved, this, &InspectableMonitor::dummySignal);
     connect(this, &Akonadi::Monitor::collectionStatisticsChanged, this, &InspectableMonitor::dummySignal);
     connect(this, &Akonadi::Monitor::collectionSubscribed, this, &InspectableMonitor::dummySignal);
     connect(this, &Akonadi::Monitor::collectionUnsubscribed, this, &InspectableMonitor::dummySignal);
 
-    QTimer::singleShot(0, this, [this]() { doConnectToNotificationManager(); });
+    QTimer::singleShot(0, this, [this]() {
+        doConnectToNotificationManager();
+    });
 }
-

@@ -7,16 +7,14 @@
 #ifndef FAKEENTITYCACHE_H
 #define FAKEENTITYCACHE_H
 
-#include "monitor_p.h"
-#include "notificationsource_p.h"
+#include "akonaditestfake_export.h"
 #include "collectionfetchscope.h"
 #include "itemfetchscope.h"
-#include "akonaditestfake_export.h"
+#include "monitor_p.h"
+#include "notificationsource_p.h"
 #include "private/protocol_p.h"
 
-
-template<typename T, typename Cache>
-class FakeEntityCache : public Cache
+template<typename T, typename Cache> class FakeEntityCache : public Cache
 {
 public:
     FakeEntityCache(Akonadi::Session *session = nullptr, QObject *parent = nullptr)
@@ -116,10 +114,12 @@ public:
     explicit FakeNotificationConnection(Akonadi::CommandBuffer *buffer)
         : Connection(Connection::NotificationConnection, "", buffer)
         , mBuffer(buffer)
-    {}
+    {
+    }
 
     virtual ~FakeNotificationConnection()
-    {}
+    {
+    }
 
     void emitNotify(const Akonadi::Protocol::ChangeNotificationPtr &ntf)
     {
@@ -134,7 +134,6 @@ private:
 class FakeMonitorDependenciesFactory : public Akonadi::ChangeNotificationDependenciesFactory
 {
 public:
-
     FakeMonitorDependenciesFactory(FakeItemCache *itemCache_, FakeCollectionCache *collectionCache_)
         : Akonadi::ChangeNotificationDependenciesFactory()
         , itemCache(itemCache_)
@@ -142,25 +141,28 @@ public:
     {
     }
 
-    Akonadi::Connection *createNotificationConnection(Akonadi::Session *parent,
-                                                      Akonadi::CommandBuffer *buffer) override {
+    Akonadi::Connection *createNotificationConnection(Akonadi::Session *parent, Akonadi::CommandBuffer *buffer) override
+    {
         auto conn = new FakeNotificationConnection(buffer);
         addConnection(parent, conn);
         return conn;
     }
 
-    void destroyNotificationConnection(Akonadi::Session *parent, Akonadi::Connection *connection) override {
+    void destroyNotificationConnection(Akonadi::Session *parent, Akonadi::Connection *connection) override
+    {
         Q_UNUSED(parent)
         delete connection;
     }
 
-    Akonadi::CollectionCache *createCollectionCache(int maxCapacity, Akonadi::Session *session) override {
+    Akonadi::CollectionCache *createCollectionCache(int maxCapacity, Akonadi::Session *session) override
+    {
         Q_UNUSED(maxCapacity)
         Q_UNUSED(session)
         return collectionCache;
     }
 
-    Akonadi::ItemCache *createItemCache(int maxCapacity, Akonadi::Session *session) override {
+    Akonadi::ItemCache *createItemCache(int maxCapacity, Akonadi::Session *session) override
+    {
         Q_UNUSED(maxCapacity)
         Q_UNUSED(session)
         return itemCache;
@@ -169,7 +171,6 @@ public:
 private:
     FakeItemCache *itemCache = nullptr;
     FakeCollectionCache *collectionCache = nullptr;
-
 };
 
 #endif

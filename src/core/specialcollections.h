@@ -17,7 +17,6 @@ class KCoreConfigSkeleton;
 
 namespace Akonadi
 {
-
 class AgentInstance;
 class SpecialCollectionsPrivate;
 

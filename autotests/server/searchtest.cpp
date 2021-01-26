@@ -5,9 +5,9 @@
  *
  */
 
+#include "aktest.h"
 #include "fakeakonadiserver.h"
 #include "handler/searchhelper.h"
-#include "aktest.h"
 
 #include <entities.h>
 
@@ -23,6 +23,7 @@ class SearchTest : public QObject
     Q_OBJECT
 
     FakeAkonadiServer mAkonadi;
+
 public:
     SearchTest()
         : QObject()
@@ -68,48 +69,38 @@ private Q_SLOTS:
         Resource res(QStringLiteral("Test Resource"), false);
         res.insert();
 
-        Collection col1 = createCollection(res, QStringLiteral("Col 1"), Collection(),
-                                           QStringList() << QStringLiteral("inode/directory"));
-        Collection col2 = createCollection(res, QStringLiteral("Col 2"), col1,
-                                           QStringList() << QStringLiteral("inode/directory")
-                                                         << QStringLiteral("application/octet-stream"));
-        Collection col3 = createCollection(res, QStringLiteral("Col 3"), col2,
-                                           QStringList() << QStringLiteral("application/octet-stream"));
-        Collection col4 = createCollection(res, QStringLiteral("Col 4"), col2,
-                                           QStringList() << QStringLiteral("text/plain"));
-        Collection col5 = createCollection(res, QStringLiteral("Col 5"), Collection(),
-                                           QStringList() << QStringLiteral("inode/directory")
-                                                         << QStringLiteral("text/plain"));
-        Collection col6 = createCollection(res, QStringLiteral("Col 6"), col5,
-                                           QStringList() << QStringLiteral("inode/directory")
-                                                         << QStringLiteral("application/octet-stream"));
-        Collection col7 = createCollection(res, QStringLiteral("Col 7"), col5,
-                                           QStringList() << QStringLiteral("inode/directory")
-                                                         << QStringLiteral("text/plain"));
-        Collection col8 = createCollection(res, QStringLiteral("Col 8"), col7,
-                                           QStringList() << QStringLiteral("text/directory")
-                                                         << QStringLiteral("application/octet-stream"));
-        Collection col9 = createCollection(res, QStringLiteral("Col 9"), col8,
-                                           QStringList() << QStringLiteral("unique/mime-type"));
+        Collection col1 = createCollection(res, QStringLiteral("Col 1"), Collection(), QStringList() << QStringLiteral("inode/directory"));
+        Collection col2 = createCollection(res,
+                                           QStringLiteral("Col 2"),
+                                           col1,
+                                           QStringList() << QStringLiteral("inode/directory") << QStringLiteral("application/octet-stream"));
+        Collection col3 = createCollection(res, QStringLiteral("Col 3"), col2, QStringList() << QStringLiteral("application/octet-stream"));
+        Collection col4 = createCollection(res, QStringLiteral("Col 4"), col2, QStringList() << QStringLiteral("text/plain"));
+        Collection col5 =
+            createCollection(res, QStringLiteral("Col 5"), Collection(), QStringList() << QStringLiteral("inode/directory") << QStringLiteral("text/plain"));
+        Collection col6 = createCollection(res,
+                                           QStringLiteral("Col 6"),
+                                           col5,
+                                           QStringList() << QStringLiteral("inode/directory") << QStringLiteral("application/octet-stream"));
+        Collection col7 =
+            createCollection(res, QStringLiteral("Col 7"), col5, QStringList() << QStringLiteral("inode/directory") << QStringLiteral("text/plain"));
+        Collection col8 = createCollection(res,
+                                           QStringLiteral("Col 8"),
+                                           col7,
+                                           QStringList() << QStringLiteral("text/directory") << QStringLiteral("application/octet-stream"));
+        Collection col9 = createCollection(res, QStringLiteral("Col 9"), col8, QStringList() << QStringLiteral("unique/mime-type"));
 
         QTest::addColumn<QVector<qint64>>("ancestors");
         QTest::addColumn<QStringList>("mimetypes");
         QTest::addColumn<QVector<qint64>>("expectedResults");
 
-        QTest::newRow("") << (QVector<qint64>() << 0)
-                          << (QStringList() << QStringLiteral("text/plain"))
+        QTest::newRow("") << (QVector<qint64>() << 0) << (QStringList() << QStringLiteral("text/plain"))
                           << (QVector<qint64>() << col4.id() << col5.id() << col7.id());
-        QTest::newRow("") << (QVector<qint64>() << 0)
-                          << (QStringList() << QStringLiteral("application/octet-stream"))
+        QTest::newRow("") << (QVector<qint64>() << 0) << (QStringList() << QStringLiteral("application/octet-stream"))
                           << (QVector<qint64>() << col2.id() << col3.id() << col6.id() << col8.id());
-        QTest::newRow("") << (QVector<qint64>() << col1.id())
-                          << (QStringList() << QStringLiteral("text/plain"))
-                          << (QVector<qint64>() << col4.id());
-        QTest::newRow("") << (QVector<qint64>() << col1.id())
-                          << (QStringList() << QStringLiteral("unique/mime-type"))
-                          << QVector<qint64>();
-        QTest::newRow("") << (QVector<qint64>() << col2.id() << col7.id())
-                          << (QStringList() << QStringLiteral("application/octet-stream"))
+        QTest::newRow("") << (QVector<qint64>() << col1.id()) << (QStringList() << QStringLiteral("text/plain")) << (QVector<qint64>() << col4.id());
+        QTest::newRow("") << (QVector<qint64>() << col1.id()) << (QStringList() << QStringLiteral("unique/mime-type")) << QVector<qint64>();
+        QTest::newRow("") << (QVector<qint64>() << col2.id() << col7.id()) << (QStringList() << QStringLiteral("application/octet-stream"))
                           << (QVector<qint64>() << col3.id() << col8.id());
     }
 
@@ -127,7 +118,6 @@ private Q_SLOTS:
         QCOMPARE(results.size(), expectedResults.size());
         QCOMPARE(results, expectedResults);
     }
-
 };
 
 AKTEST_FAKESERVER_MAIN(SearchTest)

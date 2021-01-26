@@ -7,18 +7,17 @@
 #ifndef AKONADI_SERVER_COLLECTIONSCHEDULER_H
 #define AKONADI_SERVER_COLLECTIONSCHEDULER_H
 
-#include <QThread>
 #include <QMultiMap>
 #include <QMutex>
+#include <QThread>
 
-#include "entities.h"
 #include "akthread.h"
+#include "entities.h"
 
 namespace Akonadi
 {
 namespace Server
 {
-
 class Collection;
 class PauseableTimer;
 

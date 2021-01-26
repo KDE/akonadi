@@ -6,22 +6,22 @@
 
 #include <QObject>
 
+#include "attributefactory.h"
 #include "control.h"
-#include "tagcreatejob.h"
-#include "tagfetchjob.h"
-#include "tagdeletejob.h"
-#include "tagattribute.h"
-#include "tagfetchscope.h"
-#include "tagmodifyjob.h"
-#include "resourceselectjob_p.h"
-#include "qtest_akonadi.h"
 #include "item.h"
 #include "itemcreatejob.h"
-#include "itemmodifyjob.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
+#include "itemmodifyjob.h"
 #include "monitor.h"
-#include "attributefactory.h"
+#include "qtest_akonadi.h"
+#include "resourceselectjob_p.h"
+#include "tagattribute.h"
+#include "tagcreatejob.h"
+#include "tagdeletejob.h"
+#include "tagfetchjob.h"
+#include "tagfetchscope.h"
+#include "tagmodifyjob.h"
 
 using namespace Akonadi;
 
@@ -60,7 +60,7 @@ void TagTest::initTestCase()
     AkonadiTest::setAllResourcesOffline();
     AttributeFactory::registerAttribute<TagAttribute>();
     qRegisterMetaType<Akonadi::Tag>();
-    qRegisterMetaType<QSet<Akonadi::Tag> >();
+    qRegisterMetaType<QSet<Akonadi::Tag>>();
     qRegisterMetaType<Akonadi::Item::List>();
 
     // Delete the default Knut tag - it's interfering with this test
@@ -213,7 +213,6 @@ void TagTest::testRIDIsolation()
         QCOMPARE(fetchJob->tags().first().remoteId(), QByteArray("rid_1"));
 
         QCOMPARE(fetchJob->tags().first().id(), tagId);
-
     }
 
     TagDeleteJob *deleteJob = new TagDeleteJob(Tag(tagId), this);
@@ -333,7 +332,7 @@ void TagTest::testModify()
         tag = createjob->tag();
     }
 
-    //We can add an attribute
+    // We can add an attribute
     {
         auto *attr = tag.attribute<Akonadi::TagAttribute>(Tag::AddIfMissing);
         attr->setDisplayName(QStringLiteral("display name"));
@@ -348,7 +347,7 @@ void TagTest::testModify()
         QCOMPARE(fetchJob->tags().size(), 1);
         QVERIFY(fetchJob->tags().first().hasAttribute<Akonadi::TagAttribute>());
     }
-    //We can update an attribute
+    // We can update an attribute
     {
         auto *attr = tag.attribute<Akonadi::TagAttribute>(Tag::AddIfMissing);
         attr->setDisplayName(QStringLiteral("display name2"));
@@ -362,7 +361,7 @@ void TagTest::testModify()
         QVERIFY(fetchJob->tags().first().hasAttribute<Akonadi::TagAttribute>());
         QCOMPARE(fetchJob->tags().first().attribute<Akonadi::TagAttribute>()->displayName(), attr->displayName());
     }
-    //We can clear an attribute
+    // We can clear an attribute
     {
         tag.removeAttribute<Akonadi::TagAttribute>();
         auto *modJob = new TagModifyJob(tag, this);
@@ -450,15 +449,15 @@ void TagTest::testAttributes()
             AKVERIFYEXEC(fetchJob);
             QCOMPARE(fetchJob->tags().size(), 1);
             QVERIFY(fetchJob->tags().first().hasAttribute<TagAttribute>());
-            //we need to clone because the returned attribute is just a reference and destroyed on the next line
-            //FIXME we should find a better solution for this (like returning a smart pointer or value object)
+            // we need to clone because the returned attribute is just a reference and destroyed on the next line
+            // FIXME we should find a better solution for this (like returning a smart pointer or value object)
             QScopedPointer<TagAttribute> tagAttr(fetchJob->tags().first().attribute<TagAttribute>()->clone());
             QVERIFY(tagAttr);
             QCOMPARE(tagAttr->displayName(), QStringLiteral("name"));
             QCOMPARE(tagAttr->inToolbar(), true);
         }
     }
-    //Try fetching multiple items
+    // Try fetching multiple items
     Tag tag2;
     {
         tag2.setGid("gid22");
@@ -517,7 +516,7 @@ void TagTest::testTagItem()
 
     QTRY_VERIFY(tagsSpy.count() >= 1);
     QTRY_COMPARE(tagsSpy.last().first().value<Akonadi::Item::List>().first().id(), item1.id());
-    QTRY_COMPARE(tagsSpy.last().at(1).value< QSet<Tag> >().size(), 1); //1 added tag
+    QTRY_COMPARE(tagsSpy.last().at(1).value<QSet<Tag>>().size(), 1); // 1 added tag
 
     auto *fetchJob = new ItemFetchJob(item1, this);
     fetchJob->fetchScope().setFetchTags(true);
@@ -604,7 +603,7 @@ void TagTest::testFetchFullTagWithItem()
         auto *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
-        //FIXME This should also be possible with create, but isn't
+        // FIXME This should also be possible with create, but isn't
         item1.setTag(tag);
     }
 
@@ -732,7 +731,7 @@ void TagTest::testMonitor()
         QCOMPARE(createdTag.type(), tag.type());
         QCOMPARE(createdTag.name(), tag.name());
         QCOMPARE(createdTag.gid(), tag.gid());
-        //We usually pick up signals from the previous tests as well (due to server-side notification caching)
+        // We usually pick up signals from the previous tests as well (due to server-side notification caching)
         QTRY_VERIFY(addedSpy.count() >= 1);
         QTRY_COMPARE(addedSpy.last().first().value<Akonadi::Tag>().id(), createdTag.id());
         const Akonadi::Tag notifiedTag = addedSpy.last().first().value<Akonadi::Tag>();
@@ -749,7 +748,7 @@ void TagTest::testMonitor()
 
         auto *modJob = new TagModifyJob(createdTag, this);
         AKVERIFYEXEC(modJob);
-        //We usually pick up signals from the previous tests as well (due to server-side notification caching)
+        // We usually pick up signals from the previous tests as well (due to server-side notification caching)
         QTRY_VERIFY(modifiedSpy.count() >= 1);
         QTRY_COMPARE(modifiedSpy.last().first().value<Akonadi::Tag>().id(), createdTag.id());
         const Akonadi::Tag notifiedTag = modifiedSpy.last().first().value<Akonadi::Tag>();
@@ -800,7 +799,7 @@ void TagTest::testTagAttributeConfusionBug()
     monitor.setTypeMonitored(Akonadi::Monitor::Tags);
     QVERIFY(AkonadiTest::akWaitForSignal(&monitor, &Monitor::monitorReady));
 
-    const QList<Tag::Id> firstTagIdList{ firstTag.id() };
+    const QList<Tag::Id> firstTagIdList{firstTag.id()};
 
     // Modify attribute on the first tag
     // and check the notification
@@ -846,7 +845,7 @@ void TagTest::testFetchItemsByTag()
         auto *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
-        //FIXME This should also be possible with create, but isn't
+        // FIXME This should also be possible with create, but isn't
         item1.setTag(tag);
     }
 

@@ -7,8 +7,8 @@
 #ifndef AKONADI_AGENTCONFIGURATIONWIDGET_P_H
 #define AKONADI_AGENTCONFIGURATIONWIDGET_P_H
 
-#include "agentconfigurationwidget.h"
 #include "agentconfigurationfactorybase.h"
+#include "agentconfigurationwidget.h"
 #include "agentinstance.h"
 
 #include <QPluginLoader>
@@ -16,17 +16,19 @@
 
 #include <memory>
 
-namespace Akonadi {
-
-
-class Q_DECL_HIDDEN AgentConfigurationWidget::Private {
+namespace Akonadi
+{
+class Q_DECL_HIDDEN AgentConfigurationWidget::Private
+{
 private:
     struct PluginLoaderDeleter {
-        inline void operator()(QPluginLoader *loader) {
+        inline void operator()(QPluginLoader *loader)
+        {
             loader->unload();
             delete loader;
         }
     };
+
 public:
     Private(const AgentInstance &instance);
     ~Private();
@@ -42,6 +44,5 @@ public:
 };
 
 }
-
 
 #endif // AKONADI_AGENTCONFIGURATIONWIDGET_P_H

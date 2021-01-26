@@ -6,18 +6,17 @@
 
 #include "pastehelper_p.h"
 
-
 #include "collectioncopyjob.h"
-#include "collectionmovejob.h"
 #include "collectionfetchjob.h"
+#include "collectionmovejob.h"
 #include "item.h"
-#include "itemcreatejob.h"
 #include "itemcopyjob.h"
+#include "itemcreatejob.h"
 #include "itemmodifyjob.h"
 #include "itemmovejob.h"
 #include "linkjob.h"
-#include "transactionsequence.h"
 #include "session.h"
+#include "transactionsequence.h"
 #include "unlinkjob.h"
 
 #include "akonadicore_debug.h"
@@ -37,7 +36,8 @@ class PasteHelperJob : public Akonadi::TransactionSequence
     Q_OBJECT
 
 public:
-    explicit PasteHelperJob(Qt::DropAction action, const Akonadi::Item::List &items,
+    explicit PasteHelperJob(Qt::DropAction action,
+                            const Akonadi::Item::List &items,
                             const Akonadi::Collection::List &collections,
                             const Akonadi::Collection &destination,
                             QObject *parent = nullptr);
@@ -58,7 +58,8 @@ private:
     Qt::DropAction mAction;
 };
 
-PasteHelperJob::PasteHelperJob(Qt::DropAction action, const Item::List &items,
+PasteHelperJob::PasteHelperJob(Qt::DropAction action,
+                               const Item::List &items,
                                const Collection::List &collections,
                                const Collection &destination,
                                QObject *parent)
@@ -68,19 +69,18 @@ PasteHelperJob::PasteHelperJob(Qt::DropAction action, const Item::List &items,
     , mDestCollection(destination)
     , mAction(action)
 {
-    //FIXME: The below code disables transactions in order to avoid data loss due to nested
-    //transactions (copy and colcopy in the server doesn't see the items retrieved into the cache and copies empty payloads).
-    //Remove once this is fixed properly, see the other FIXME comments.
+    // FIXME: The below code disables transactions in order to avoid data loss due to nested
+    // transactions (copy and colcopy in the server doesn't see the items retrieved into the cache and copies empty payloads).
+    // Remove once this is fixed properly, see the other FIXME comments.
     setProperty("transactionsDisabled", true);
 
     Collection dragSourceCollection;
     if (!items.isEmpty() && items.first().parentCollection().isValid()) {
         // Check if all items have the same parent collection ID
         const Collection parent = items.first().parentCollection();
-        if (!std::any_of(items.cbegin(), items.cend(),
-                        [parent](const Item &item) {
-                            return item.parentCollection() != parent;
-                        })) {
+        if (!std::any_of(items.cbegin(), items.cend(), [parent](const Item &item) {
+                return item.parentCollection() != parent;
+            })) {
             dragSourceCollection = parent;
         }
     }
@@ -90,11 +90,8 @@ PasteHelperJob::PasteHelperJob(Qt::DropAction action, const Item::List &items,
         // after the transaction has ended leaves the job hanging
         setAutomaticCommittingEnabled(false);
 
-        auto *fetch = new CollectionFetchJob(dragSourceCollection,
-                CollectionFetchJob::Base,
-                this);
-        QObject::connect(fetch, &KJob::finished,
-                         this, &PasteHelperJob::onDragSourceCollectionFetched);
+        auto *fetch = new CollectionFetchJob(dragSourceCollection, CollectionFetchJob::Base, this);
+        QObject::connect(fetch, &KJob::finished, this, &PasteHelperJob::onDragSourceCollectionFetched);
     } else {
         runActions();
     }
@@ -186,12 +183,12 @@ void PasteHelperJob::runCollectionsActions()
 
     switch (mAction) {
     case Qt::CopyAction:
-        for (const Collection &col : qAsConst(mCollections)) {   // FIXME: remove once we have a batch job for collections as well
+        for (const Collection &col : qAsConst(mCollections)) { // FIXME: remove once we have a batch job for collections as well
             new CollectionCopyJob(col, mDestCollection, this);
         }
         break;
     case Qt::MoveAction:
-        for (const Collection &col : qAsConst(mCollections)) {   // FIXME: remove once we have a batch job for collections as well
+        for (const Collection &col : qAsConst(mCollections)) { // FIXME: remove once we have a batch job for collections as well
             new CollectionMoveJob(col, mDestCollection, this);
         }
         break;
@@ -319,9 +316,7 @@ KJob *PasteHelper::pasteUriList(const QMimeData *mimeData, const Collection &des
         // TODO: handle non Akonadi URLs?
     }
 
-    auto *job = new PasteHelperJob(action, items,
-            collections, destination,
-            session);
+    auto *job = new PasteHelperJob(action, items, collections, destination, session);
 
     return job;
 }

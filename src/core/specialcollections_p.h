@@ -21,7 +21,6 @@ class KJob;
 
 namespace Akonadi
 {
-
 class AgentInstance;
 class SpecialCollections;
 class Monitor;
@@ -37,10 +36,10 @@ public:
 
     QString defaultResourceId() const;
     void emitChanged(const QString &resourceId);
-    void collectionRemoved(const Collection &collection);   // slot
-    void collectionFetchJobFinished(KJob *job);  // slot
+    void collectionRemoved(const Collection &collection); // slot
+    void collectionFetchJobFinished(KJob *job); // slot
     void collectionStatisticsChanged(Akonadi::Collection::Id collectionId,
-                                     const Akonadi::CollectionStatistics &statistics);  // slot
+                                     const Akonadi::CollectionStatistics &statistics); // slot
 
     /**
       Forgets all folders owned by the given resource.
@@ -67,7 +66,7 @@ public:
 
     SpecialCollections *const q;
     KCoreConfigSkeleton *mSettings = nullptr;
-    QHash<QString, QHash<QByteArray, Collection> > mFoldersForResource;
+    QHash<QString, QHash<QByteArray, Collection>> mFoldersForResource;
     bool mBatchMode;
     QSet<QString> mToEmitChangedFor;
     Monitor *mMonitor = nullptr;

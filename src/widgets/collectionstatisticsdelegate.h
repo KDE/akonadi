@@ -15,7 +15,6 @@ class QTreeView;
 
 namespace Akonadi
 {
-
 class CollectionStatisticsDelegatePrivate;
 
 /**
@@ -54,7 +53,6 @@ class AKONADIWIDGETS_EXPORT CollectionStatisticsDelegate : public QStyledItemDel
     Q_OBJECT
 
 public:
-
     /**
      * Creates a new collection statistics delegate.
      *
@@ -110,15 +108,13 @@ protected:
      * @param option style options
      * @param index model index (QModelIndex)
      */
-    void paint(QPainter *painter, const QStyleOptionViewItem &option,
-               const QModelIndex &index) const override;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
     /**
      * @param option style option view item
      * @param index model index (QModelIndex)
      */
-    void initStyleOption(QStyleOptionViewItem *option,
-                         const QModelIndex &index) const override;
+    void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const override;
 
 private:
     //@cond PRIVATE

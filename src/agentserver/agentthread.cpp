@@ -9,8 +9,8 @@
 
 #include <QWidget> // Needed for WId
 
-#include <shared/akdebug.h>
 #include <QMetaObject>
+#include <shared/akdebug.h>
 
 using namespace Akonadi;
 
@@ -23,11 +23,8 @@ AgentThread::AgentThread(const QString &identifier, QObject *factory, QObject *p
 
 void AgentThread::run()
 {
-    const bool invokeSucceeded = QMetaObject::invokeMethod(m_factory,
-                                 "createInstance",
-                                 Qt::DirectConnection,
-                                 Q_RETURN_ARG(QObject*, m_instance),
-                                 Q_ARG(QString, m_identifier));
+    const bool invokeSucceeded =
+        QMetaObject::invokeMethod(m_factory, "createInstance", Qt::DirectConnection, Q_RETURN_ARG(QObject *, m_instance), Q_ARG(QString, m_identifier));
     if (invokeSucceeded) {
         qCDebug(AKONADIAGENTSERVER_LOG) << Q_FUNC_INFO << "agent instance created: " << m_instance;
     } else {
@@ -41,8 +38,5 @@ void AgentThread::run()
 
 void AgentThread::configure(qlonglong windowId)
 {
-    QMetaObject::invokeMethod(m_instance,
-                              "configure",
-                              Qt::DirectConnection,
-                              Q_ARG(WId, (WId)windowId));
+    QMetaObject::invokeMethod(m_instance, "configure", Qt::DirectConnection, Q_ARG(WId, (WId)windowId));
 }

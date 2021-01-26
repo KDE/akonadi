@@ -49,7 +49,7 @@ public:
 
     QStringList splitPath(const QString &path)
     {
-        if (path.isEmpty()) {   // path is normalized, so non-empty means at least one hit
+        if (path.isEmpty()) { // path is normalized, so non-empty means at least one hit
             return QStringList();
         }
 
@@ -112,7 +112,7 @@ void CollectionPathResolverPrivate::jobResult(KJob *job)
             }
         }
         if (!found) {
-            qCWarning(AKONADICORE_LOG) <<  "No such collection" << currentPart << "with parent" << mCurrentNode.id();
+            qCWarning(AKONADICORE_LOG) << "No such collection" << currentPart << "with parent" << mCurrentNode.id();
             mColId = -1;
             q->setError(CollectionPathResolver::Unknown);
             q->setErrorText(i18n("No such collection."));
@@ -135,7 +135,9 @@ void CollectionPathResolverPrivate::jobResult(KJob *job)
         }
         nextJob = new CollectionFetchJob(mCurrentNode, CollectionFetchJob::Base, q);
     }
-    q->connect(nextJob, &CollectionFetchJob::result, q, [this](KJob *job) { jobResult(job);});
+    q->connect(nextJob, &CollectionFetchJob::result, q, [this](KJob *job) {
+        jobResult(job);
+    });
 }
 
 CollectionPathResolver::CollectionPathResolver(const QString &path, QObject *parent)
@@ -208,7 +210,9 @@ void CollectionPathResolver::doStart()
         }
         job = new CollectionFetchJob(d->mCurrentNode, CollectionFetchJob::Base, this);
     }
-    connect(job, &CollectionFetchJob::result, this, [d](KJob *job) { d->jobResult(job);});
+    connect(job, &CollectionFetchJob::result, this, [d](KJob *job) {
+        d->jobResult(job);
+    });
 }
 
 //@endcond

@@ -17,7 +17,6 @@
 
 namespace Akonadi
 {
-
 class Attribute;
 
 /**

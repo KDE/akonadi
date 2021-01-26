@@ -10,14 +10,16 @@
 #include <QThread>
 #include <QTimer>
 
-namespace {
-
+namespace
+{
 const auto initRemoteLogger = []() {
     qAddPreRoutine([]() {
         // Initialize remote logging from event loop, this way applications like
         // Akonadi Console or TestRunner have a chance to change AKONADI_INSTANCE
         // before the RemoteLog class initialize
-        QTimer::singleShot(0, qApp, []() { akInitRemoteLog(); });
+        QTimer::singleShot(0, qApp, []() {
+            akInitRemoteLog();
+        });
     });
     return true;
 }();

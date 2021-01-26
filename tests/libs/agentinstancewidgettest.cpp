@@ -8,12 +8,12 @@
 
 #include "agentinstance.h"
 
+#include <KAboutData>
 #include <QApplication>
+#include <QCommandLineParser>
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
-#include <QCommandLineParser>
-#include <KAboutData>
 
 Dialog::Dialog(QWidget *parent)
     : QDialog(parent)
@@ -21,8 +21,7 @@ Dialog::Dialog(QWidget *parent)
     auto *layout = new QVBoxLayout(this);
 
     mWidget = new Akonadi::AgentInstanceWidget(this);
-    connect(mWidget, &Akonadi::AgentInstanceWidget::currentChanged,
-            this, &Dialog::currentChanged);
+    connect(mWidget, &Akonadi::AgentInstanceWidget::currentChanged, this, &Dialog::currentChanged);
 
     auto *box = new QDialogButtonBox(this);
 
@@ -52,9 +51,7 @@ void Dialog::currentChanged(const Akonadi::AgentInstance &current, const Akonadi
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
-    KAboutData aboutData(QStringLiteral("agentinstanceviewtest"),
-                         QStringLiteral("agentinstanceviewtest"),
-                         QStringLiteral("0.10"));
+    KAboutData aboutData(QStringLiteral("agentinstanceviewtest"), QStringLiteral("agentinstanceviewtest"), QStringLiteral("0.10"));
     KAboutData::setApplicationData(aboutData);
 
     QCommandLineParser parser;

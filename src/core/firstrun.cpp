@@ -5,8 +5,8 @@
 */
 
 #include "firstrun_p.h"
-#include <QDBusConnection>
 #include "servermanager.h"
+#include <QDBusConnection>
 
 #include "agentinstance.h"
 #include "agentinstancecreatejob.h"
@@ -19,13 +19,13 @@
 #include <KConfig>
 #include <KConfigGroup>
 
+#include <QCoreApplication>
 #include <QDBusInterface>
 #include <QDBusReply>
 #include <QDir>
 #include <QMetaMethod>
 #include <QMetaObject>
 #include <QStandardPaths>
-#include <QCoreApplication>
 
 static const char FIRSTRUN_DBUSLOCK[] = "org.kde.Akonadi.Firstrun.lock";
 
@@ -35,7 +35,7 @@ Firstrun::Firstrun(QObject *parent)
     : QObject(parent)
     , mConfig(new KConfig(ServerManager::addNamespace(QStringLiteral("akonadi-firstrunrc"))))
 {
-    //The code in firstrun is not safe in multi-instance mode
+    // The code in firstrun is not safe in multi-instance mode
     Q_ASSERT(!ServerManager::hasInstanceIdentifier());
     if (ServerManager::hasInstanceIdentifier()) {
         deleteLater();
@@ -80,7 +80,6 @@ void Firstrun::findPendingDefaults()
             mPendingDefaults << fullName;
         }
     }
-
 }
 
 void Firstrun::setupNext()
@@ -139,8 +138,7 @@ void Firstrun::instanceCreated(KJob *job)
     }
 
     const auto service = ServerManager::agentServiceName(ServerManager::Agent, instance.identifier());
-    QDBusInterface *iface = new QDBusInterface(service, QStringLiteral("/Settings"), QString(),
-            QDBusConnection::sessionBus(), this);
+    QDBusInterface *iface = new QDBusInterface(service, QStringLiteral("/Settings"), QString(), QDBusConnection::sessionBus(), this);
     if (!iface->isValid()) {
         qCCritical(AKONADICORE_LOG) << "Unable to obtain the KConfigXT D-Bus interface of " << instance.identifier();
         setupNext();

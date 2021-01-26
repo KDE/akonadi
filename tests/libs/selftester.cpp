@@ -7,15 +7,13 @@
 #include <../src/selftest/selftestdialog.h>
 
 #include <KAboutData>
-#include <QCommandLineParser>
 #include <QApplication>
+#include <QCommandLineParser>
 
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
-    KAboutData aboutData(QStringLiteral("akonadi-selftester"),
-                         QStringLiteral("akonadi-selftester"),
-                         QStringLiteral("0.10"));
+    KAboutData aboutData(QStringLiteral("akonadi-selftester"), QStringLiteral("akonadi-selftester"), QStringLiteral("0.10"));
     KAboutData::setApplicationData(aboutData);
 
     QCommandLineParser parser;

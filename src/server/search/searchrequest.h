@@ -8,15 +8,14 @@
 #define AKONADI_SEARCHREQUEST_H
 
 #include <QObject>
-#include <QVector>
 #include <QSet>
 #include <QStringList>
+#include <QVector>
 
 namespace Akonadi
 {
 namespace Server
 {
-
 class Connection;
 class SearchManager;
 class SearchTaskManager;

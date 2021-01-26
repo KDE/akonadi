@@ -5,18 +5,17 @@
 */
 
 #include "item.h"
-#include "item_p.h"
 #include "akonadicore_debug.h"
+#include "item_p.h"
 #include "itemserializer_p.h"
 #include "private/protocol_p.h"
-
 
 #include <QUrl>
 #include <QUrlQuery>
 
-#include <QStringList>
 #include <QReadWriteLock>
 #include <QScopedValueRollback>
+#include <QStringList>
 
 #include <algorithm>
 #include <map>
@@ -444,8 +443,7 @@ bool Item::ensureMetaTypeId(int mtid) const
 
 static QString format_type(int spid, int mtid)
 {
-    return QStringLiteral("sp(%1)<%2>")
-           .arg(spid).arg(QLatin1String(QMetaType::typeName(mtid)));
+    return QStringLiteral("sp(%1)<%2>").arg(spid).arg(QLatin1String(QMetaType::typeName(mtid)));
 }
 
 static QString format_types(const PayloadContainer &c)
@@ -466,8 +464,7 @@ void Item::throwPayloadException(int spid, int mtid) const
     } else {
         qCDebug(AKONADICORE_LOG) << "Throwing PayloadException: Wrong payload type (requested:" << format_type(spid, mtid)
                                  << "; present: " << format_types(d_ptr->mPayloads) << "), item mime type is" << mimeType();
-        throw PayloadException(QStringLiteral("Wrong payload type (requested: %1; present: %2)")
-                               .arg(format_type(spid, mtid), format_types(d_ptr->mPayloads)));
+        throw PayloadException(QStringLiteral("Wrong payload type (requested: %1; present: %2)").arg(format_type(spid, mtid), format_types(d_ptr->mPayloads)));
     }
 }
 

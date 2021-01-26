@@ -10,9 +10,9 @@
 #include "collectionstatistics.h"
 #include "control.h"
 #include "itemcopyjob.h"
+#include "itemcreatejob.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
-#include "itemcreatejob.h"
 
 #include "qtest_akonadi.h"
 
@@ -30,7 +30,7 @@ private Q_SLOTS:
         AkonadiTest::checkTestIsIsolated();
         Control::start();
         // switch target resources offline to reduce interference from them
-        foreach (Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances()) {   //krazy:exclude=foreach
+        foreach (Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances()) { // krazy:exclude=foreach
             if (agent.identifier() == QLatin1String("akonadi_knut_resource_2")) {
                 agent.setIsOnline(false);
             }
@@ -114,7 +114,6 @@ private Q_SLOTS:
         QVERIFY(copiedItem.hasPayload<QByteArray>());
         QCOMPARE(copiedItem.payload<QByteArray>(), item.payload<QByteArray>());
     }
-
 };
 
 QTEST_AKONADIMAIN(ItemCopyTest)

@@ -7,8 +7,8 @@
 #ifndef PARTHELPER_H
 #define PARTHELPER_H
 
-#include "entities.h"
 #include "../exception.h"
+#include "entities.h"
 
 class QString;
 class QVariant;
@@ -17,7 +17,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 AKONADI_EXCEPTION_MAKE_INSTANCE(PartHelperException);
 
 /**

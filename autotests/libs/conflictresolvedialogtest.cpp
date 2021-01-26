@@ -17,7 +17,6 @@ QTEST_MAIN(ConflictResolveDialogTest)
 ConflictResolveDialogTest::ConflictResolveDialogTest(QObject *parent)
     : QObject(parent)
 {
-
 }
 
 void ConflictResolveDialogTest::shouldHaveDefaultValues()

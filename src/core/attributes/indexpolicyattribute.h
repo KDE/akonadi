@@ -14,7 +14,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @short An attribute to specify how a collection should be indexed for searching.
  *

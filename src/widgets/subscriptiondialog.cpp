@@ -8,27 +8,27 @@
 #include "ui_subscriptiondialog.h"
 
 #include "controlgui.h"
+#include "monitor.h"
 #include "recursivecollectionfilterproxymodel.h"
 #include "subscriptionjob_p.h"
 #include "subscriptionmodel_p.h"
-#include "monitor.h"
 
 #include "akonadiwidgets_debug.h"
 #include <KSharedConfig>
 
-#include <KLocalizedString>
 #include <KConfigGroup>
+#include <KLocalizedString>
 
-#include <QVBoxLayout>
-#include <QHBoxLayout>
+#include <KMessageBox>
+#include <QCheckBox>
 #include <QDialogButtonBox>
-#include <QLineEdit>
-#include <QPushButton>
+#include <QHBoxLayout>
 #include <QHeaderView>
 #include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
 #include <QTreeView>
-#include <QCheckBox>
-#include <KMessageBox>
+#include <QVBoxLayout>
 #include <qnamespace.h>
 
 using namespace Akonadi;
@@ -60,23 +60,25 @@ public:
 
         ui.collectionView->setModel(&filterRecursiveCollectionFilter);
         ui.searchLineEdit->setFocus();
-        q->connect(ui.searchLineEdit, &QLineEdit::textChanged,
-                   q, [this](const QString &str) {
-                        filterRecursiveCollectionFilter.setSearchPattern(str);
-                        ui.collectionView->expandAll();
-                   });
-        q->connect(ui.subscribedOnlyCheckBox, &QCheckBox::toggled,
-                   q, [this](bool state) {
-                        filterRecursiveCollectionFilter.setIncludeCheckedOnly(state);
-                   });
-        q->connect(ui.subscribeButton, &QPushButton::clicked,
-                   q, [this]() { toggleSubscribed(Qt::Checked); });
-        q->connect(ui.unsubscribeButton, &QPushButton::clicked,
-                   q, [this]() { toggleSubscribed(Qt::Unchecked); });
+        q->connect(ui.searchLineEdit, &QLineEdit::textChanged, q, [this](const QString &str) {
+            filterRecursiveCollectionFilter.setSearchPattern(str);
+            ui.collectionView->expandAll();
+        });
+        q->connect(ui.subscribedOnlyCheckBox, &QCheckBox::toggled, q, [this](bool state) {
+            filterRecursiveCollectionFilter.setIncludeCheckedOnly(state);
+        });
+        q->connect(ui.subscribeButton, &QPushButton::clicked, q, [this]() {
+            toggleSubscribed(Qt::Checked);
+        });
+        q->connect(ui.unsubscribeButton, &QPushButton::clicked, q, [this]() {
+            toggleSubscribed(Qt::Unchecked);
+        });
 
         auto *okButton = ui.buttonBox->button(QDialogButtonBox::Ok);
         okButton->setEnabled(false);
-        connect(okButton, &QPushButton::clicked, q, [this] () { done(); });
+        connect(okButton, &QPushButton::clicked, q, [this]() {
+            done();
+        });
     }
 
     void done()
@@ -87,8 +89,7 @@ public:
         connect(job, &SubscriptionJob::result, q, [this](KJob *job) {
             if (job->error()) {
                 qCWarning(AKONADIWIDGETS_LOG) << job->errorString();
-                KMessageBox::sorry(q, i18n("Failed to update subscription: %1", job->errorString()),
-                                   i18nc("@title", "Subscription Error"));
+                KMessageBox::sorry(q, i18n("Failed to update subscription: %1", job->errorString()), i18nc("@title", "Subscription Error"));
                 q->reject();
             }
             q->accept();
@@ -119,16 +120,13 @@ public:
         ui.collectionView->setFocus();
     }
 
-
-    SubscriptionDialog * const q;
+    SubscriptionDialog *const q;
     Ui::SubscriptionDialog ui;
 
     Monitor monitor;
     SubscriptionModel model;
     RecursiveCollectionFilterProxyModel filterRecursiveCollectionFilter;
-
 };
-
 
 SubscriptionDialog::SubscriptionDialog(QWidget *parent)
     : SubscriptionDialog({}, parent)
@@ -157,6 +155,5 @@ void SubscriptionDialog::showHiddenCollection(bool showHidden)
 {
     d->model.setShowHiddenCollections(showHidden);
 }
-
 
 #include "moc_subscriptiondialog.cpp"

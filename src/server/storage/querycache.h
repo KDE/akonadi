@@ -16,14 +16,12 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
  * A per-thread cache (should be per session, but that'S the same for us) prepared
  * query cache.
  */
 namespace QueryCache
 {
-
 /// Returns the cached (and prepared) query for @p queryStatement
 std::optional<QSqlQuery> query(const QString &queryStatement);
 

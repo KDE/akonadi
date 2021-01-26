@@ -12,7 +12,6 @@
 
 namespace Akonadi
 {
-
 class TransactionJobPrivate;
 class AKONADICORE_EXPORT TransactionJob : public Job
 {

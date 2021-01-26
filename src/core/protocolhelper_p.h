@@ -9,10 +9,10 @@
 
 #include "cachepolicy.h"
 #include "collection.h"
+#include "collectionfetchscope.h"
 #include "collectionutils.h"
 #include "item.h"
 #include "itemfetchscope.h"
-#include "collectionfetchscope.h"
 #include "sharedvaluepool_p.h"
 #include "tag.h"
 
@@ -24,14 +24,13 @@
 #include <QString>
 
 #include <algorithm>
-#include <type_traits>
-#include <functional>
 #include <cassert>
+#include <functional>
 #include <set>
+#include <type_traits>
 
 namespace Akonadi
 {
-
 struct ProtocolHelperValuePool {
     typedef Internal::SharedValuePool<QByteArray, QVector> FlagPool;
     typedef Internal::SharedValuePool<QString, QVector> MimeTypePool;
@@ -53,11 +52,7 @@ class ProtocolHelper
 {
 public:
     /** Part namespaces. */
-    enum PartNamespace {
-        PartGlobal,
-        PartPayload,
-        PartAttribute
-    };
+    enum PartNamespace { PartGlobal, PartPayload, PartAttribute };
 
     /**
       Parse a cache policy definition.
@@ -140,8 +135,7 @@ public:
       Converts the given set of items into a protocol representation.
       @throws A Akonadi::Exception if the item set contains items with missing/invalid identifiers.
     */
-    template<typename T, template<typename> class Container>
-    static Scope entitySetToScope(const Container<T> &_objects)
+    template<typename T, template<typename> class Container> static Scope entitySetToScope(const Container<T> &_objects)
     {
         if (_objects.isEmpty()) {
             throw Exception("No objects specified");
@@ -149,12 +143,11 @@ public:
 
         Container<T> objects(_objects);
         using namespace std::placeholders;
-        std::sort(objects.begin(), objects.end(),
-        [](const T & a, const T & b) -> bool {
+        std::sort(objects.begin(), objects.end(), [](const T &a, const T &b) -> bool {
             return a.id() < b.id();
         });
         if (objects.at(0).isValid()) {
-            QVector<typename T::Id>  uids;
+            QVector<typename T::Id> uids;
             uids.reserve(objects.size());
             for (const T &object : objects) {
                 uids << object.id();
@@ -180,15 +173,13 @@ public:
         return entitySetToRemoteIdentifier(Scope::Rid, _objects, std::mem_fn(&T::remoteId));
     }
 
-    static Protocol::ScopeContext commandContextToProtocol(const Akonadi::Collection &collection, const Akonadi::Tag &tag,
-            const Item::List &requestedItems);
+    static Protocol::ScopeContext commandContextToProtocol(const Akonadi::Collection &collection, const Akonadi::Tag &tag, const Item::List &requestedItems);
 
     /**
       Converts the given object identifier into a protocol representation.
       @throws A Akonadi::Exception if the item set contains items with missing/invalid identifiers.
     */
-    template <typename T>
-    static Scope entityToScope(const T &object)
+    template<typename T> static Scope entityToScope(const T &object)
     {
         return entitySetToScope(QVector<T>() << object);
     }
@@ -205,7 +196,7 @@ public:
     */
     static Scope hierarchicalRidToScope(const Item &item);
 
-    static Scope hierarchicalRidToScope(const Tag &/*tag*/)
+    static Scope hierarchicalRidToScope(const Tag & /*tag*/)
     {
         assert(false);
         return Scope();
@@ -227,7 +218,8 @@ public:
      * Parses a single line from an item fetch job result into an Item object.
      * FIXME: std::optional
      */
-    static Item parseItemFetchResult(const Protocol::FetchItemsResponse &data, const ItemFetchScope *fetchScope = nullptr, ProtocolHelperValuePool *valuePool = nullptr);
+    static Item
+    parseItemFetchResult(const Protocol::FetchItemsResponse &data, const ItemFetchScope *fetchScope = nullptr, ProtocolHelperValuePool *valuePool = nullptr);
     static Tag parseTagFetchResult(const Protocol::FetchTagsResponse &data);
     static Relation parseRelationFetchResult(const Protocol::FetchRelationsResponse &data);
 
@@ -237,93 +229,80 @@ public:
 
 private:
     template<typename T, template<typename> class Container>
-    inline static
-    typename std::enable_if < !std::is_same<T, Akonadi::Collection>::value, bool >::type
-    entitySetHasGID(const Container<T> &objects)
+    inline static typename std::enable_if<!std::is_same<T, Akonadi::Collection>::value, bool>::type entitySetHasGID(const Container<T> &objects)
     {
         return entitySetHasRemoteIdentifier(objects, std::mem_fn(&T::gid));
     }
 
     template<typename T, template<typename> class Container>
-    inline static
-    typename std::enable_if<std::is_same<T, Akonadi::Collection>::value, bool>::type
-    entitySetHasGID(const Container<T> &/*objects*/, int * /*dummy*/ = nullptr)
+    inline static typename std::enable_if<std::is_same<T, Akonadi::Collection>::value, bool>::type entitySetHasGID(const Container<T> & /*objects*/,
+                                                                                                                   int * /*dummy*/ = nullptr)
     {
         return false;
     }
 
     template<typename T, template<typename> class Container>
-    inline static
-    typename std::enable_if < !std::is_same<T, Akonadi::Collection>::value, Scope >::type
-    entitySetToGID(const Container<T> &objects)
+    inline static typename std::enable_if<!std::is_same<T, Akonadi::Collection>::value, Scope>::type entitySetToGID(const Container<T> &objects)
     {
         return entitySetToRemoteIdentifier(Scope::Gid, objects, std::mem_fn(&T::gid));
     }
 
     template<typename T, template<typename> class Container>
-    inline static
-    typename std::enable_if<std::is_same<T, Akonadi::Collection>::value, Scope>::type
-    entitySetToGID(const Container<T> &/*objects*/, int * /*dummy*/ = nullptr)
+    inline static typename std::enable_if<std::is_same<T, Akonadi::Collection>::value, Scope>::type entitySetToGID(const Container<T> & /*objects*/,
+                                                                                                                   int * /*dummy*/ = nullptr)
     {
         return Scope();
     }
 
     template<typename T, template<typename> class Container, typename RIDFunc>
-    inline static
-    bool entitySetHasRemoteIdentifier(const Container<T> &objects, const RIDFunc &ridFunc)
+    inline static bool entitySetHasRemoteIdentifier(const Container<T> &objects, const RIDFunc &ridFunc)
     {
-        return std::find_if(objects.constBegin(), objects.constEnd(),
-        [ = ](const T & obj) {
-            return ridFunc(obj).isEmpty();
-        })
-        == objects.constEnd();
+        return std::find_if(objects.constBegin(),
+                            objects.constEnd(),
+                            [=](const T &obj) {
+                                return ridFunc(obj).isEmpty();
+                            })
+            == objects.constEnd();
     }
 
     template<typename T, template<typename> class Container, typename RIDFunc>
-    inline static
-    typename std::enable_if<std::is_same<QString, typename RIDFunc:: result_type>::value, Scope>::type
+    inline static typename std::enable_if<std::is_same<QString, typename RIDFunc::result_type>::value, Scope>::type
     entitySetToRemoteIdentifier(Scope::SelectionScope scope, const Container<T> &objects, const RIDFunc &ridFunc)
     {
         QStringList rids;
         rids.reserve(objects.size());
-        std::transform(objects.cbegin(), objects.cend(),
-        std::back_inserter(rids), [ = ](const T & obj) -> QString {
+        std::transform(objects.cbegin(), objects.cend(), std::back_inserter(rids), [=](const T &obj) -> QString {
             return ridFunc(obj);
         });
         return Scope(scope, rids);
     }
 
     template<typename T, template<typename> class Container, typename RIDFunc>
-    inline static
-    typename std::enable_if<std::is_same<QByteArray, typename RIDFunc:: result_type>::value, Scope>::type
+    inline static typename std::enable_if<std::is_same<QByteArray, typename RIDFunc::result_type>::value, Scope>::type
     entitySetToRemoteIdentifier(Scope::SelectionScope scope, const Container<T> &objects, const RIDFunc &ridFunc, int * /*dummy*/ = nullptr)
     {
         QStringList rids;
         rids.reserve(objects.size());
-        std::transform(objects.cbegin(), objects.cend(),
-        std::back_inserter(rids), [ = ](const T & obj) -> QString {
+        std::transform(objects.cbegin(), objects.cend(), std::back_inserter(rids), [=](const T &obj) -> QString {
             return QString::fromLatin1(ridFunc(obj));
         });
         return Scope(scope, rids);
     }
 
     template<typename T, template<typename> class Container>
-    inline static
-    typename std::enable_if < !std::is_same<T, Tag>::value, bool >::type
-    entitySetHasHRID(const Container<T> &objects)
+    inline static typename std::enable_if<!std::is_same<T, Tag>::value, bool>::type entitySetHasHRID(const Container<T> &objects)
     {
-        return objects.size() == 1 &&
-               std::find_if(objects.constBegin(), objects.constEnd(),
-        [](const T & obj) -> bool {
-            return !CollectionUtils::hasValidHierarchicalRID(obj);
-        })
-        == objects.constEnd();  // ### HRID sets are not yet specified
+        return objects.size() == 1
+            && std::find_if(objects.constBegin(),
+                            objects.constEnd(),
+                            [](const T &obj) -> bool {
+                                return !CollectionUtils::hasValidHierarchicalRID(obj);
+                            })
+            == objects.constEnd(); // ### HRID sets are not yet specified
     }
 
     template<typename T, template<typename> class Container>
-    inline static
-    typename std::enable_if<std::is_same<T, Tag>::value, bool>::type
-    entitySetHasHRID(const Container<T> &/*objects*/, int * /*dummy*/ = nullptr)
+    inline static typename std::enable_if<std::is_same<T, Tag>::value, bool>::type entitySetHasHRID(const Container<T> & /*objects*/, int * /*dummy*/ = nullptr)
     {
         return false;
     }

@@ -7,8 +7,8 @@
 #ifndef CPPGENERATOR_H
 #define CPPGENERATOR_H
 
-#include <QTextStream>
 #include <QFile>
+#include <QTextStream>
 
 class Node;
 class DocumentNode;
@@ -38,8 +38,7 @@ private:
     void writeImplFooter(DocumentNode const *node);
     void writeImplSerializer(DocumentNode const *node);
     void writeImplClass(ClassNode const *node);
-    void writeImplSerializer(PropertyNode const *node,
-                             const char *streamingOperator);
+    void writeImplSerializer(PropertyNode const *node, const char *streamingOperator);
 
     void writeImplPropertyDependencies(PropertyNode const *node);
 

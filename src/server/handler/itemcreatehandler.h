@@ -7,15 +7,13 @@
 #ifndef AKONADI_ITEMCREATEHANDLER_H_
 #define AKONADI_ITEMCREATEHANDLER_H_
 
-#include "handler.h"
 #include "entities.h"
+#include "handler.h"
 
 namespace Akonadi
 {
 namespace Server
 {
-
-
 /**
   @ingroup akonadi_server_handler
 
@@ -24,7 +22,7 @@ namespace Server
   This command is used to append an item with multiple parts.
 
  */
-class ItemCreateHandler: public Handler
+class ItemCreateHandler : public Handler
 {
 public:
     ItemCreateHandler(AkonadiServer &akonadi);
@@ -33,24 +31,16 @@ public:
     bool parseStream() override;
 
 private:
-    bool buildPimItem(const Protocol::CreateItemCommand &cmd,
-                      PimItem &item,
-                      Collection &parentCollection);
+    bool buildPimItem(const Protocol::CreateItemCommand &cmd, PimItem &item, Collection &parentCollection);
 
-    bool insertItem(const Protocol::CreateItemCommand &cmd,
-                    PimItem &item,
-                    const Collection &parentCollection);
+    bool insertItem(const Protocol::CreateItemCommand &cmd, PimItem &item, const Collection &parentCollection);
 
-    bool mergeItem(const Protocol::CreateItemCommand &cmd,
-                   PimItem &newItem,
-                   PimItem &currentItem,
-                   const Collection &parentCollection);
+    bool mergeItem(const Protocol::CreateItemCommand &cmd, PimItem &newItem, PimItem &currentItem, const Collection &parentCollection);
 
     bool sendResponse(const PimItem &item, Protocol::CreateItemCommand::MergeModes mergeModes);
 
     bool notify(const PimItem &item, bool seen, const Collection &collection);
-    bool notify(const PimItem &item, const Collection &collection,
-                const QSet<QByteArray> &changedParts);
+    bool notify(const PimItem &item, const Collection &collection, const QSet<QByteArray> &changedParts);
 
     void recoverFromMultipleMergeCandidates(const PimItem::List &items, const Collection &collection);
 };

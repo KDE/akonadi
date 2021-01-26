@@ -9,7 +9,6 @@
 
 #include <KProcess>
 
-
 TestRunner::TestRunner(const QStringList &args, QObject *parent)
     : QObject(parent)
     , mArguments(args)
@@ -29,8 +28,7 @@ void TestRunner::run()
     mProcess = new KProcess(this);
     mProcess->setProgram(mArguments);
     connect(mProcess, QOverload<int, QProcess::ExitStatus>::of(&KProcess::finished), this, &TestRunner::processFinished);
-    connect(mProcess, &KProcess::errorOccurred,
-            this, &TestRunner::processError);
+    connect(mProcess, &KProcess::errorOccurred, this, &TestRunner::processError);
     // environment setup seems to have been done by setuptest globally already
     mProcess->start();
     if (!mProcess->waitForStarted()) {

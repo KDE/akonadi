@@ -43,4 +43,3 @@ bool LinkJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
     return d_func()->handleResponse(tag, response);
 }
-

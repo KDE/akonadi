@@ -171,4 +171,3 @@ bool MimeTypeChecker::containsWantedMimeType(const QStringList &mimeTypes) const
     }
     return false;
 }
-

@@ -6,9 +6,9 @@
  ***************************************************************************/
 
 #include "parthelper.h"
-#include "selectquerybuilder.h"
 #include "dbconfig.h"
 #include "parttypehelper.h"
+#include "selectquerybuilder.h"
 
 #include <private/externalpartstorage_p.h>
 
@@ -62,8 +62,8 @@ bool PartHelper::insert(Part *part, qint64 *insertId)
     }
 
     const bool storeInFile = part->datasize() > DbConfig::configuredDatabase()->sizeThreshold();
-    //it is needed to insert first the metadata so a new id is generated for the part,
-    //and we need this id for the payload file name
+    // it is needed to insert first the metadata so a new id is generated for the part,
+    // and we need this id for the payload file name
     QByteArray data;
     if (storeInFile) {
         data = part->data();
@@ -106,8 +106,8 @@ bool PartHelper::remove(const QString &column, const QVariant &value)
     builder.addValueCondition(Part::storageColumn(), Query::Equals, Part::External);
     builder.addValueCondition(Part::dataColumn(), Query::IsNot, QVariant());
     if (!builder.exec()) {
-//      qCDebug(AKONADISERVER_LOG) << "Error selecting records to be deleted from table"
-//          << Part::tableName() << builder.query().lastError().text();
+        //      qCDebug(AKONADISERVER_LOG) << "Error selecting records to be deleted from table"
+        //          << Part::tableName() << builder.query().lastError().text();
         return false;
     }
     const Part::List parts = builder.result();

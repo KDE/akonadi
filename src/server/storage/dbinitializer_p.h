@@ -14,13 +14,13 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class DbInitializerMySql : public DbInitializer
 {
 public:
     explicit DbInitializerMySql(const QSqlDatabase &database);
 
     bool hasForeignKeyConstraints() const override;
+
 protected:
     QString sqlType(const ColumnDescription &col, int size) const override;
 
@@ -37,6 +37,7 @@ public:
     explicit DbInitializerSqlite(const QSqlDatabase &database);
 
     bool hasForeignKeyConstraints() const override;
+
 protected:
     QString buildCreateTableStatement(const TableDescription &tableDescription) const override;
     QString buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const override;
@@ -55,6 +56,7 @@ public:
     explicit DbInitializerPostgreSql(const QSqlDatabase &database);
 
     bool hasForeignKeyConstraints() const override;
+
 protected:
     QString sqlType(const ColumnDescription &col, int size) const override;
 

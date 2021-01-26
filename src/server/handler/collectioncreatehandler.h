@@ -12,11 +12,10 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
   @ingroup akonadi_server_handler
  */
-class CollectionCreateHandler: public Handler
+class CollectionCreateHandler : public Handler
 {
 public:
     CollectionCreateHandler(AkonadiServer &akonadi);

@@ -6,21 +6,21 @@
 */
 
 #include "notificationmanager.h"
+#include "aggregatedfetchscope.h"
+#include "akonadiserver_debug.h"
+#include "handlerhelper.h"
 #include "notificationsubscriber.h"
+#include "storage/collectionstatistics.h"
 #include "storage/notificationcollector.h"
 #include "tracer.h"
-#include "akonadiserver_debug.h"
-#include "aggregatedfetchscope.h"
-#include "storage/collectionstatistics.h"
-#include "handlerhelper.h"
 
-#include <shared/akranges.h>
-#include <private/standarddirs_p.h>
 #include <private/scope_p.h>
+#include <private/standarddirs_p.h>
+#include <shared/akranges.h>
 
+#include <QDateTime>
 #include <QSettings>
 #include <QThreadPool>
-#include <QDateTime>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -49,8 +49,7 @@ void NotificationManager::init()
     mTimer = new QTimer(this);
     mTimer->setInterval(settings.value(QStringLiteral("NotificationManager/Interval"), 50).toInt());
     mTimer->setSingleShot(true);
-    connect(mTimer, &QTimer::timeout,
-            this, &NotificationManager::emitPendingNotifications);
+    connect(mTimer, &QTimer::timeout, this, &NotificationManager::emitPendingNotifications);
 
     mNotifyThreadPool = new QThreadPool(this);
     mNotifyThreadPool->setMaxThreadCount(5);
@@ -86,16 +85,15 @@ void NotificationManager::registerConnection(quintptr socketDescriptor)
 
     auto *subscriber = new NotificationSubscriber(this, socketDescriptor);
     qCInfo(AKONADISERVER_LOG) << "New notification connection (registered as" << subscriber << ")";
-    connect(subscriber, &NotificationSubscriber::notificationDebuggingChanged,
-            this, [this](bool enabled) {
-                if (enabled) {
-                    ++mDebugNotifications;
-                } else {
-                    --mDebugNotifications;
-                }
-                Q_ASSERT(mDebugNotifications >= 0);
-                Q_ASSERT(mDebugNotifications <= mSubscribers.count());
-            });
+    connect(subscriber, &NotificationSubscriber::notificationDebuggingChanged, this, [this](bool enabled) {
+        if (enabled) {
+            ++mDebugNotifications;
+        } else {
+            --mDebugNotifications;
+        }
+        Q_ASSERT(mDebugNotifications >= 0);
+        Q_ASSERT(mDebugNotifications <= mSubscribers.count());
+    });
 
     mSubscribers.push_back(subscriber);
 }
@@ -135,8 +133,7 @@ void NotificationManager::slotNotify(const Protocol::ChangeNotificationList &msg
 class NotifyRunnable : public QRunnable
 {
 public:
-    explicit NotifyRunnable(NotificationSubscriber *subscriber,
-                            const Protocol::ChangeNotificationList &notifications)
+    explicit NotifyRunnable(NotificationSubscriber *subscriber, const Protocol::ChangeNotificationList &notifications)
         : mSubscriber(subscriber)
         , mNotifications(notifications)
     {
@@ -144,9 +141,9 @@ public:
 
     ~NotifyRunnable() override = default;
 
-    void run() override {
-        for (const auto &ntf : qAsConst(mNotifications))
-        {
+    void run() override
+    {
+        for (const auto &ntf : qAsConst(mNotifications)) {
             if (mSubscriber) {
                 mSubscriber->notify(ntf);
             } else {
@@ -171,18 +168,16 @@ void NotificationManager::emitPendingNotifications()
     }
 
     if (mDebugNotifications == 0) {
-        mSubscribers
-            | Views::filter(IsNotNull)
-            | Actions::forEach([this](const auto &subscriber) {
-                mNotifyThreadPool->start(new NotifyRunnable(subscriber, mNotifications));
-              });
+        mSubscribers | Views::filter(IsNotNull) | Actions::forEach([this](const auto &subscriber) {
+            mNotifyThreadPool->start(new NotifyRunnable(subscriber, mNotifications));
+        });
     } else {
         // When debugging notification we have to use a non-threaded approach
         // so that we can work with return value of notify()
         for (const auto &notification : qAsConst(mNotifications)) {
             QVector<QByteArray> listeners;
             for (NotificationSubscriber *subscriber : qAsConst(mSubscribers)) {
-               if (subscriber && subscriber->notify(notification)) {
+                if (subscriber && subscriber->notify(notification)) {
                     listeners.push_back(subscriber->subscriber());
                 }
             }
@@ -194,16 +189,13 @@ void NotificationManager::emitPendingNotifications()
     mNotifications.clear();
 }
 
-void NotificationManager::emitDebugNotification(const Protocol::ChangeNotificationPtr &ntf,
-        const QVector<QByteArray> &listeners)
+void NotificationManager::emitDebugNotification(const Protocol::ChangeNotificationPtr &ntf, const QVector<QByteArray> &listeners)
 {
     auto debugNtf = Protocol::DebugChangeNotificationPtr::create();
     debugNtf->setNotification(ntf);
     debugNtf->setListeners(listeners);
     debugNtf->setTimestamp(QDateTime::currentMSecsSinceEpoch());
-    mSubscribers
-        | Views::filter(IsNotNull)
-        | Actions::forEach([this, &debugNtf](const auto &subscriber) {
-              mNotifyThreadPool->start(new NotifyRunnable(subscriber, {debugNtf}));
-          });
+    mSubscribers | Views::filter(IsNotNull) | Actions::forEach([this, &debugNtf](const auto &subscriber) {
+        mNotifyThreadPool->start(new NotifyRunnable(subscriber, {debugNtf}));
+    });
 }

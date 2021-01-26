@@ -8,12 +8,11 @@
 #define AKONADI_LINKJOB_H
 
 #include "akonadicore_export.h"
-#include "job.h"
 #include "item.h"
+#include "job.h"
 
 namespace Akonadi
 {
-
 class Collection;
 class LinkJobPrivate;
 
@@ -76,7 +75,7 @@ protected:
 
 private:
     Q_DECLARE_PRIVATE(LinkJob)
-    template <typename T> friend class LinkJobImpl;
+    template<typename T> friend class LinkJobImpl;
 };
 
 }

@@ -6,17 +6,17 @@
 
 #include "gidtest.h"
 
-#include "control.h"
-#include "testattribute.h"
-#include "agentmanager.h"
 #include "agentinstance.h"
+#include "agentmanager.h"
 #include "collectionfetchjob.h"
+#include "control.h"
 #include "itemcreatejob.h"
 #include "itemdeletejob.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
 #include "itemmodifyjob.h"
 #include "qtest_akonadi.h"
+#include "testattribute.h"
 
 using namespace Akonadi;
 
@@ -80,14 +80,14 @@ void GidTest::testSetAndFetch_data()
     }
 }
 
-static void fetchAndSetGid(const Item& item)
+static void fetchAndSetGid(const Item &item)
 {
     auto *prefetchjob = new ItemFetchJob(item);
     prefetchjob->fetchScope().fetchFullPayload();
     AKVERIFYEXEC(prefetchjob);
     Item fetchedItem = prefetchjob->items()[0];
 
-    //Write the gid to the db
+    // Write the gid to the db
     fetchedItem.setGid(item.gid());
     auto *store = new ItemModifyJob(fetchedItem);
     store->setUpdateGid(true);
@@ -141,7 +141,7 @@ void GidTest::testSetWithIgnorePayload()
     Item fetchedItem = prefetchjob->items()[0];
     QVERIFY(fetchedItem.gid().isEmpty());
 
-    //Write the gid to the db
+    // Write the gid to the db
     fetchedItem.setGid(QStringLiteral("gid5"));
     auto *store = new ItemModifyJob(fetchedItem);
     store->setIgnorePayload(true);
@@ -183,4 +183,3 @@ void GidTest::testFetchScope()
         QVERIFY(!fetched.at(0).gid().isNull());
     }
 }
-

@@ -12,7 +12,6 @@
 
 namespace Akonadi
 {
-
 class Tag;
 class TagCreateJobPrivate;
 

@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     app.setQuitOnLastWindowClosed(false);
 
-    if (app.arguments().size() != 3) {   // Expected usage: ./agent_launcher ${plugin_name} ${identifier}
+    if (app.arguments().size() != 3) { // Expected usage: ./agent_launcher ${plugin_name} ${identifier}
         qCDebug(AKONADIAGENTSERVER_LOG) << "Invalid usage: expected: ./agent_launcher pluginName agentIdentifier";
         return 1;
     }
@@ -30,10 +30,10 @@ int main(int argc, char *argv[])
 
     QObject *instance = nullptr;
     const bool invokeSucceeded = QMetaObject::invokeMethod(factory->instance(),
-                                 "createInstance",
-                                 Qt::DirectConnection,
-                                 Q_RETURN_ARG(QObject*, instance),
-                                 Q_ARG(QString, agentIdentifier));
+                                                           "createInstance",
+                                                           Qt::DirectConnection,
+                                                           Q_RETURN_ARG(QObject *, instance),
+                                                           Q_ARG(QString, agentIdentifier));
     if (invokeSucceeded) {
         qCDebug(AKONADIAGENTSERVER_LOG) << "Agent instance created in separate process.";
     } else {

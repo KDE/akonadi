@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @internal
  */

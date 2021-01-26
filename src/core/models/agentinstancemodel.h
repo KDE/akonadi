@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @short Provides a data model for agent instances.
  *
@@ -44,18 +43,18 @@ public:
      * Describes the roles of this model.
      */
     enum Roles {
-        TypeRole = Qt::UserRole + 1,             ///< The agent type itself
-        TypeIdentifierRole,                      ///< The identifier of the agent type
-        DescriptionRole,                         ///< A description of the agent type
-        MimeTypesRole,                           ///< A list of supported mimetypes
-        CapabilitiesRole,                        ///< A list of supported capabilities
-        InstanceRole,                            ///< The agent instance itself
-        InstanceIdentifierRole,                  ///< The identifier of the agent instance
-        StatusRole,                              ///< The current status (numerical) of the instance
-        StatusMessageRole,                       ///< A textual presentation of the current status
-        ProgressRole,                            ///< The current progress (numerical in percent) of an operation
-        OnlineRole,                              ///< The current online/offline status
-        UserRole  = Qt::UserRole + 42            ///< Role for user extensions
+        TypeRole = Qt::UserRole + 1, ///< The agent type itself
+        TypeIdentifierRole, ///< The identifier of the agent type
+        DescriptionRole, ///< A description of the agent type
+        MimeTypesRole, ///< A list of supported mimetypes
+        CapabilitiesRole, ///< A list of supported capabilities
+        InstanceRole, ///< The agent instance itself
+        InstanceIdentifierRole, ///< The identifier of the agent instance
+        StatusRole, ///< The current status (numerical) of the instance
+        StatusMessageRole, ///< A textual presentation of the current status
+        ProgressRole, ///< The current progress (numerical in percent) of an operation
+        OnlineRole, ///< The current online/offline status
+        UserRole = Qt::UserRole + 42 ///< Role for user extensions
     };
 
     /**

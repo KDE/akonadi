@@ -4,12 +4,12 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "testattribute.h"
 #include "changerecorder.h"
+#include "agentmanager.h"
+#include "itemdeletejob.h"
 #include "itemfetchscope.h"
 #include "itemmodifyjob.h"
-#include "itemdeletejob.h"
-#include "agentmanager.h"
+#include "testattribute.h"
 
 #include "qtest_akonadi.h"
 
@@ -28,7 +28,7 @@ private Q_SLOTS:
     void initTestCase()
     {
         qRegisterMetaType<Akonadi::Item>();
-        qRegisterMetaType<QSet<QByteArray> >();
+        qRegisterMetaType<QSet<QByteArray>>();
         AkonadiTest::checkTestIsIsolated();
         AkonadiTest::setAllResourcesOffline();
 
@@ -48,10 +48,16 @@ private Q_SLOTS:
 
         QTest::newRow("nothingToReplay") << (QStringList() << QStringLiteral("rn"));
         QTest::newRow("nothingOneNothing") << (QStringList() << QStringLiteral("rn") << QStringLiteral("c2") << QStringLiteral("r2") << QStringLiteral("rn"));
-        QTest::newRow("multipleItems") << (QStringList() << QStringLiteral("c1") << QStringLiteral("c2") << QStringLiteral("c3") << QStringLiteral("r1") << QStringLiteral("c4") << QStringLiteral("r2") << QStringLiteral("r3") << QStringLiteral("r4") << QStringLiteral("rn"));
-        QTest::newRow("reload") << (QStringList() << QStringLiteral("c1") << QStringLiteral("c1") << QStringLiteral("c3") << QStringLiteral("reload") << QStringLiteral("r1") << QStringLiteral("r1") << QStringLiteral("r3") << QStringLiteral("rn"));
-        QTest::newRow("more") << (QStringList() << QStringLiteral("c1") << QStringLiteral("c2") << QStringLiteral("c3") << QStringLiteral("reload") << QStringLiteral("r1") << QStringLiteral("reload") << QStringLiteral("c4") << QStringLiteral("reload") << QStringLiteral("r2") << QStringLiteral("reload") << QStringLiteral("r3") << QStringLiteral("r4") << QStringLiteral("rn"));
-        //FIXME: Due to the event compression in the server we simply expect a removal signal
+        QTest::newRow("multipleItems") << (QStringList() << QStringLiteral("c1") << QStringLiteral("c2") << QStringLiteral("c3") << QStringLiteral("r1")
+                                                         << QStringLiteral("c4") << QStringLiteral("r2") << QStringLiteral("r3") << QStringLiteral("r4")
+                                                         << QStringLiteral("rn"));
+        QTest::newRow("reload") << (QStringList() << QStringLiteral("c1") << QStringLiteral("c1") << QStringLiteral("c3") << QStringLiteral("reload")
+                                                  << QStringLiteral("r1") << QStringLiteral("r1") << QStringLiteral("r3") << QStringLiteral("rn"));
+        QTest::newRow("more") << (QStringList() << QStringLiteral("c1") << QStringLiteral("c2") << QStringLiteral("c3") << QStringLiteral("reload")
+                                                << QStringLiteral("r1") << QStringLiteral("reload") << QStringLiteral("c4") << QStringLiteral("reload")
+                                                << QStringLiteral("r2") << QStringLiteral("reload") << QStringLiteral("r3") << QStringLiteral("r4")
+                                                << QStringLiteral("rn"));
+        // FIXME: Due to the event compression in the server we simply expect a removal signal
         // QTest::newRow("modifyThenDelete") << (QStringList() << "c1" << "d1" << "r1" << "rn");
     }
 
@@ -171,7 +177,6 @@ private:
     }
 
     QSettings *settings = nullptr;
-
 };
 
 QTEST_AKONADIMAIN(ChangeRecorderTest)

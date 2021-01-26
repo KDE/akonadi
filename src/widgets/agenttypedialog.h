@@ -8,14 +8,13 @@
 #ifndef AKONADI_AGENTTYPEDIALOG_H
 #define AKONADI_AGENTTYPEDIALOG_H
 
-#include "agenttypewidget.h"
 #include "agenttype.h"
+#include "agenttypewidget.h"
 
 #include <QDialog>
 
 namespace Akonadi
 {
-
 /**
  * @short A dialog to select an available agent type.
  *

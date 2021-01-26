@@ -11,12 +11,11 @@
 
 #include "akonadiwidgets_export.h"
 
-#include <QDialog>
 #include "tag.h"
+#include <QDialog>
 class QDialogButtonBox;
 namespace Akonadi
 {
-
 /**
  * A dialog to manage tags.
  *

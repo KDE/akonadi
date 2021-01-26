@@ -8,17 +8,17 @@
 
 #include "monitor_p.h"
 
+#include "akonadicore_debug.h"
+#include "changemediator_p.h"
+#include "changenotification.h"
 #include "collectionfetchjob.h"
 #include "collectionstatistics.h"
 #include "itemfetchjob.h"
 #include "notificationmanagerinterface.h"
-#include "session.h"
-#include "changemediator_p.h"
-#include "vectorhelper.h"
-#include "akonadicore_debug.h"
 #include "notificationsubscriber.h"
-#include "changenotification.h"
 #include "protocolhelper_p.h"
+#include "session.h"
+#include "vectorhelper.h"
 
 #include <shared/akranges.h>
 
@@ -71,14 +71,24 @@ void MonitorPrivate::init()
     // 20 tags looks like a reasonable amount to keep around
     tagCache = dependenciesFactory->createTagListCache(20, session);
 
-    QObject::connect(collectionCache, &CollectionCache::dataAvailable, q_ptr, [this]() { dataAvailable(); });
-    QObject::connect(itemCache, &ItemCache::dataAvailable, q_ptr, [this]() { dataAvailable(); });
-    QObject::connect(tagCache, &TagCache::dataAvailable, q_ptr, [this]() { dataAvailable(); });
-    QObject::connect(ServerManager::self(), &ServerManager::stateChanged, q_ptr, [this](auto state) { serverStateChanged(state); });
+    QObject::connect(collectionCache, &CollectionCache::dataAvailable, q_ptr, [this]() {
+        dataAvailable();
+    });
+    QObject::connect(itemCache, &ItemCache::dataAvailable, q_ptr, [this]() {
+        dataAvailable();
+    });
+    QObject::connect(tagCache, &TagCache::dataAvailable, q_ptr, [this]() {
+        dataAvailable();
+    });
+    QObject::connect(ServerManager::self(), &ServerManager::stateChanged, q_ptr, [this](auto state) {
+        serverStateChanged(state);
+    });
 
     statisticsCompressionTimer.setSingleShot(true);
     statisticsCompressionTimer.setInterval(500);
-    QObject::connect(&statisticsCompressionTimer, &QTimer::timeout, q_ptr, [this]() { slotFlushRecentlyChangedCollections(); });
+    QObject::connect(&statisticsCompressionTimer, &QTimer::timeout, q_ptr, [this]() {
+        slotFlushRecentlyChangedCollections();
+    });
 }
 
 bool MonitorPrivate::connectToNotificationManager()
@@ -126,13 +136,15 @@ void MonitorPrivate::invalidateCollectionCache(qint64 id)
 
 void MonitorPrivate::invalidateItemCache(qint64 id)
 {
-    itemCache->update({ id }, mItemFetchScope);
+    itemCache->update({id}, mItemFetchScope);
     // Also invalidate content of all any pending notification for given item
     for (auto it = pendingNotifications.begin(), end = pendingNotifications.end(); it != end; ++it) {
         if ((*it)->type() == Protocol::Command::ItemChangeNotification) {
             auto &ntf = Protocol::cmdCast<Protocol::ItemChangeNotification>(*it);
             const auto items = ntf.items();
-            if (std::any_of(items.cbegin(), items.cend(), [id](const Protocol::FetchItemsResponse &r) { return r.id() == id; })) {
+            if (std::any_of(items.cbegin(), items.cend(), [id](const Protocol::FetchItemsResponse &r) {
+                    return r.id() == id;
+                })) {
                 ntf.setMustRetrieve(true);
             }
         }
@@ -141,7 +153,7 @@ void MonitorPrivate::invalidateItemCache(qint64 id)
 
 void MonitorPrivate::invalidateTagCache(qint64 id)
 {
-    tagCache->update({ id }, mTagFetchScope);
+    tagCache->update({id}, mTagFetchScope);
 }
 
 int MonitorPrivate::pipelineSize() const
@@ -159,7 +171,9 @@ void MonitorPrivate::scheduleSubscriptionUpdate()
     pendingModificationTimer->setSingleShot(true);
     pendingModificationTimer->setInterval(0);
     pendingModificationTimer->start();
-    q_ptr->connect(pendingModificationTimer, &QTimer::timeout, q_ptr, [this]() { slotUpdateSubscription(); });
+    q_ptr->connect(pendingModificationTimer, &QTimer::timeout, q_ptr, [this]() {
+        slotUpdateSubscription();
+    });
 }
 
 void MonitorPrivate::slotUpdateSubscription()
@@ -204,16 +218,17 @@ bool MonitorPrivate::isLazilyIgnored(const Protocol::ChangeNotificationPtr &msg,
         const auto &itemNtf = Protocol::cmdCast<Protocol::ItemChangeNotification>(msg);
         const auto op = itemNtf.operation();
         if ((op == Protocol::ItemChangeNotification::Add && !hasListeners(&Monitor::itemAdded))
-                || (op == Protocol::ItemChangeNotification::Remove && !hasListeners(&Monitor::itemRemoved) && !hasListeners(&Monitor::itemsRemoved))
-                || (op == Protocol::ItemChangeNotification::Modify && !hasListeners(&Monitor::itemChanged))
-                || (op == Protocol::ItemChangeNotification::ModifyFlags && !hasListeners(&Monitor::itemsFlagsChanged)
-                        // Newly delivered ModifyFlags notifications will be converted to
-                        // itemChanged(item, "FLAGS") for legacy clients.
-                        && (!allowModifyFlagsConversion || !hasListeners(&Monitor::itemChanged)))
-                || (op == Protocol::ItemChangeNotification::ModifyTags && !hasListeners(&Monitor::itemsTagsChanged))
-                || (op == Protocol::ItemChangeNotification::Move && !hasListeners(&Monitor::itemMoved) && !hasListeners(&Monitor::itemsMoved))
-                || (op == Protocol::ItemChangeNotification::Link && !hasListeners(&Monitor::itemLinked) && !hasListeners(&Monitor::itemsLinked))
-                || (op == Protocol::ItemChangeNotification::Unlink && !hasListeners(&Monitor::itemUnlinked) && !hasListeners(&Monitor::itemsUnlinked))) {
+            || (op == Protocol::ItemChangeNotification::Remove && !hasListeners(&Monitor::itemRemoved) && !hasListeners(&Monitor::itemsRemoved))
+            || (op == Protocol::ItemChangeNotification::Modify && !hasListeners(&Monitor::itemChanged))
+            || (op == Protocol::ItemChangeNotification::ModifyFlags
+                && !hasListeners(&Monitor::itemsFlagsChanged)
+                // Newly delivered ModifyFlags notifications will be converted to
+                // itemChanged(item, "FLAGS") for legacy clients.
+                && (!allowModifyFlagsConversion || !hasListeners(&Monitor::itemChanged)))
+            || (op == Protocol::ItemChangeNotification::ModifyTags && !hasListeners(&Monitor::itemsTagsChanged))
+            || (op == Protocol::ItemChangeNotification::Move && !hasListeners(&Monitor::itemMoved) && !hasListeners(&Monitor::itemsMoved))
+            || (op == Protocol::ItemChangeNotification::Link && !hasListeners(&Monitor::itemLinked) && !hasListeners(&Monitor::itemsLinked))
+            || (op == Protocol::ItemChangeNotification::Unlink && !hasListeners(&Monitor::itemUnlinked) && !hasListeners(&Monitor::itemsUnlinked))) {
             return true;
         }
 
@@ -223,13 +238,10 @@ bool MonitorPrivate::isLazilyIgnored(const Protocol::ChangeNotificationPtr &msg,
 
         const Collection::Id parentCollectionId = itemNtf.parentCollection();
 
-        if ((op == Protocol::ItemChangeNotification::Add)
-                || (op == Protocol::ItemChangeNotification::Remove)
-                || (op == Protocol::ItemChangeNotification::Modify)
-                || (op == Protocol::ItemChangeNotification::ModifyFlags)
-                || (op == Protocol::ItemChangeNotification::ModifyTags)
-                || (op == Protocol::ItemChangeNotification::Link)
-                || (op == Protocol::ItemChangeNotification::Unlink)) {
+        if ((op == Protocol::ItemChangeNotification::Add) || (op == Protocol::ItemChangeNotification::Remove)
+            || (op == Protocol::ItemChangeNotification::Modify) || (op == Protocol::ItemChangeNotification::ModifyFlags)
+            || (op == Protocol::ItemChangeNotification::ModifyTags) || (op == Protocol::ItemChangeNotification::Link)
+            || (op == Protocol::ItemChangeNotification::Unlink)) {
             if (isMonitored(parentCollectionId)) {
                 return false;
             }
@@ -347,7 +359,7 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotificationPtr &
     if (msg->type() == Protocol::Command::TagChangeNotification) {
         const auto &tagMsg = Protocol::cmdCast<Protocol::TagChangeNotification>(msg);
         if (tagMsg.metadata().contains("FETCH_TAG")) {
-            if (!tagCache->ensureCached({ tagMsg.tag().id() }, mTagFetchScope)) {
+            if (!tagCache->ensureCached({tagMsg.tag().id()}, mTagFetchScope)) {
                 return false;
             }
         }
@@ -367,7 +379,7 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotificationPtr &
     }
 
     if (msg->type() == Protocol::Command::CollectionChangeNotification
-            && Protocol::cmdCast<Protocol::CollectionChangeNotification>(msg).operation() == Protocol::CollectionChangeNotification::Remove) {
+        && Protocol::cmdCast<Protocol::CollectionChangeNotification>(msg).operation() == Protocol::CollectionChangeNotification::Remove) {
         // For collection removals the collection is gone already, so we can't fetch it,
         // but we have to at least obtain the ancestor chain.
         const qint64 parentCollection = Protocol::cmdCast<Protocol::CollectionChangeNotification>(msg).parentCollection();
@@ -376,11 +388,11 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotificationPtr &
 
     bool allCached = true;
     if (fetchCollections()) {
-        const qint64 parentCollection = (msg->type() == Protocol::Command::ItemChangeNotification) ?
-                                        Protocol::cmdCast<Protocol::ItemChangeNotification>(msg).parentCollection() :
-                                        (msg->type() == Protocol::Command::CollectionChangeNotification) ?
-                                        Protocol::cmdCast<Protocol::CollectionChangeNotification>(msg).parentCollection() :
-                                        -1;
+        const qint64 parentCollection = (msg->type() == Protocol::Command::ItemChangeNotification)
+            ? Protocol::cmdCast<Protocol::ItemChangeNotification>(msg).parentCollection()
+            : (msg->type() == Protocol::Command::CollectionChangeNotification)
+            ? Protocol::cmdCast<Protocol::CollectionChangeNotification>(msg).parentCollection()
+            : -1;
         if (parentCollection > -1 && !collectionCache->ensureCached(parentCollection, mCollectionFetchScope)) {
             allCached = false;
         }
@@ -388,7 +400,7 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotificationPtr &
         qint64 parentDestCollection = -1;
 
         if ((msg->type() == Protocol::Command::ItemChangeNotification)
-                && (Protocol::cmdCast<Protocol::ItemChangeNotification>(msg).operation() == Protocol::ItemChangeNotification::Move)) {
+            && (Protocol::cmdCast<Protocol::ItemChangeNotification>(msg).operation() == Protocol::ItemChangeNotification::Move)) {
             parentDestCollection = Protocol::cmdCast<Protocol::ItemChangeNotification>(msg).parentDestCollection();
         } else if ((msg->type() == Protocol::Command::CollectionChangeNotification)
                    && (Protocol::cmdCast<Protocol::CollectionChangeNotification>(msg).operation() == Protocol::CollectionChangeNotification::Move)) {
@@ -397,7 +409,6 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotificationPtr &
         if (parentDestCollection > -1 && !collectionCache->ensureCached(parentDestCollection, mCollectionFetchScope)) {
             allCached = false;
         }
-
     }
 
     if (msg->isRemove()) {
@@ -406,21 +417,20 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotificationPtr &
 
     if (msg->type() == Protocol::Command::ItemChangeNotification && fetchItems()) {
         const auto &itemNtf = Protocol::cmdCast<Protocol::ItemChangeNotification>(msg);
-        if (mFetchChangedOnly && (itemNtf.operation() == Protocol::ItemChangeNotification::Modify
-                || itemNtf.operation() == Protocol::ItemChangeNotification::ModifyFlags)) {
-
+        if (mFetchChangedOnly
+            && (itemNtf.operation() == Protocol::ItemChangeNotification::Modify || itemNtf.operation() == Protocol::ItemChangeNotification::ModifyFlags)) {
             const auto changedParts = itemNtf.itemParts();
             const auto requestedParts = mItemFetchScope.payloadParts();
             const auto requestedAttrs = mItemFetchScope.attributes();
             QSet<QByteArray> missingParts;
             QSet<QByteArray> missingAttributes;
-            for (const QByteArray &part : changedParts)  {
+            for (const QByteArray &part : changedParts) {
                 const auto partName = part.mid(4);
-                if (part.startsWith("PLD:") &&    //krazy:exclude=strings since QByteArray
-                        (!mItemFetchScope.fullPayload() || !requestedParts.contains(partName))) {
+                if (part.startsWith("PLD:") && // krazy:exclude=strings since QByteArray
+                    (!mItemFetchScope.fullPayload() || !requestedParts.contains(partName))) {
                     missingParts.insert(partName);
-                } else if (part.startsWith("ATR:") &&    //krazy:exclude=strings since QByteArray
-                        (!mItemFetchScope.allAttributes() || !requestedAttrs.contains(partName))) {
+                } else if (part.startsWith("ATR:") && // krazy:exclude=strings since QByteArray
+                           (!mItemFetchScope.allAttributes() || !requestedAttrs.contains(partName))) {
                     missingAttributes.insert(partName);
                 }
             }
@@ -486,7 +496,7 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
         const bool fetched = tagNtf.metadata().contains("FETCH_TAG");
         Tag tag;
         if (fetched) {
-            const auto tags = tagCache->retrieve({ tagNtf.tag().id() });
+            const auto tags = tagCache->retrieve({tagNtf.tag().id()});
             tag = tags.isEmpty() ? Tag() : tags.at(0);
         } else {
             tag = ProtocolHelper::parseTag(tagNtf.tag());
@@ -505,10 +515,10 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
         }
 
         const bool fetched = colNtf.metadata().contains("FETCH_COLLECTION");
-        //For removals this will retrieve an invalid collection. We'll deal with that in emitCollectionNotification
+        // For removals this will retrieve an invalid collection. We'll deal with that in emitCollectionNotification
         const Collection col = fetched ? collectionCache->retrieve(colNtf.collection().id()) : ProtocolHelper::parseCollection(colNtf.collection(), true);
-        //It is possible that the retrieval fails also in the non-removal case (e.g. because the item was meanwhile removed while
-        //the changerecorder stored the notification or the notification was in the queue). In order to drop such invalid notifications we have to ignore them.
+        // It is possible that the retrieval fails also in the non-removal case (e.g. because the item was meanwhile removed while
+        // the changerecorder stored the notification or the notification was in the queue). In order to drop such invalid notifications we have to ignore them.
         if (col.isValid() || colNtf.operation() == Protocol::CollectionChangeNotification::Remove || !fetchCollections()) {
             someoneWasListening = emitCollectionNotification(colNtf, col, parent, destParent);
         }
@@ -520,7 +530,7 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
             destParent = collectionCache->retrieve(itemNtf.parentDestCollection());
         }
         const bool fetched = itemNtf.metadata().contains("FETCH_ITEM") || itemNtf.mustRetrieve();
-        //For removals this will retrieve an empty set. We'll deal with that in emitItemNotification
+        // For removals this will retrieve an empty set. We'll deal with that in emitItemNotification
         Item::List items;
         if (fetched && fetchItems()) {
             items = itemCache->retrieve(Protocol::ChangeNotification::itemsToUids(itemNtf.items()));
@@ -531,8 +541,8 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
                 items.push_back(ProtocolHelper::parseItemFetchResult(ntfItem, &mItemFetchScope));
             }
         }
-        //It is possible that the retrieval fails also in the non-removal case (e.g. because the item was meanwhile removed while
-        //the changerecorder stored the notification or the notification was in the queue). In order to drop such invalid notifications we have to ignore them.
+        // It is possible that the retrieval fails also in the non-removal case (e.g. because the item was meanwhile removed while
+        // the changerecorder stored the notification or the notification was in the queue). In order to drop such invalid notifications we have to ignore them.
         if (!items.isEmpty() || itemNtf.operation() == Protocol::ItemChangeNotification::Remove || !fetchItems()) {
             someoneWasListening = emitItemsNotification(itemNtf, items, parent, destParent);
         }
@@ -551,13 +561,21 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
             }
             monitorTypes.insert([](Protocol::ModifySubscriptionCommand::ChangeType type) {
                 switch (type) {
-                case Protocol::ModifySubscriptionCommand::ItemChanges: return Monitor::Items;
-                case Protocol::ModifySubscriptionCommand::CollectionChanges: return Monitor::Collections;
-                case Protocol::ModifySubscriptionCommand::TagChanges: return Monitor::Tags;
-                case Protocol::ModifySubscriptionCommand::RelationChanges: return Monitor::Relations;
-                case Protocol::ModifySubscriptionCommand::SubscriptionChanges: return Monitor::Subscribers;
-                case Protocol::ModifySubscriptionCommand::ChangeNotifications: return Monitor::Notifications;
-                default: Q_ASSERT(false); return Monitor::Items; //unreachable
+                case Protocol::ModifySubscriptionCommand::ItemChanges:
+                    return Monitor::Items;
+                case Protocol::ModifySubscriptionCommand::CollectionChanges:
+                    return Monitor::Collections;
+                case Protocol::ModifySubscriptionCommand::TagChanges:
+                    return Monitor::Tags;
+                case Protocol::ModifySubscriptionCommand::RelationChanges:
+                    return Monitor::Relations;
+                case Protocol::ModifySubscriptionCommand::SubscriptionChanges:
+                    return Monitor::Subscribers;
+                case Protocol::ModifySubscriptionCommand::ChangeNotifications:
+                    return Monitor::Notifications;
+                default:
+                    Q_ASSERT(false);
+                    return Monitor::Items; // unreachable
                 }
             }(type));
         }
@@ -589,7 +607,7 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
         case Protocol::Command::RelationChangeNotification:
             notification.setType(ChangeNotification::Relation);
             break;
-        case  Protocol::Command::SubscriptionChangeNotification:
+        case Protocol::Command::SubscriptionChangeNotification:
             notification.setType(ChangeNotification::Subscription);
             break;
         default:
@@ -636,8 +654,7 @@ void MonitorPrivate::slotStatisticsChangedFinished(KJob *job)
     } else {
         auto *statisticsJob = static_cast<CollectionStatisticsJob *>(job);
         Q_ASSERT(statisticsJob->collection().isValid());
-        Q_EMIT q_ptr->collectionStatisticsChanged(statisticsJob->collection().id(),
-                                                statisticsJob->statistics());
+        Q_EMIT q_ptr->collectionStatisticsChanged(statisticsJob->collection().id(), statisticsJob->statistics());
     }
 }
 
@@ -658,8 +675,7 @@ void MonitorPrivate::slotFlushRecentlyChangedCollections()
 int MonitorPrivate::translateAndCompress(QQueue<Protocol::ChangeNotificationPtr> &notificationQueue, const Protocol::ChangeNotificationPtr &msg)
 {
     // Always handle tags and relations
-    if (msg->type() == Protocol::Command::TagChangeNotification
-            || msg->type() == Protocol::Command::RelationChangeNotification) {
+    if (msg->type() == Protocol::Command::TagChangeNotification || msg->type() == Protocol::Command::RelationChangeNotification) {
         notificationQueue.enqueue(msg);
         return 1;
     }
@@ -719,15 +735,13 @@ int MonitorPrivate::translateAndCompress(QQueue<Protocol::ChangeNotificationPtr>
 
     if (sourceWatched) {
         if (msg->type() == Protocol::Command::ItemChangeNotification) {
-            auto removalMessage = Protocol::ItemChangeNotificationPtr::create(
-                    Protocol::cmdCast<Protocol::ItemChangeNotification>(msg));
+            auto removalMessage = Protocol::ItemChangeNotificationPtr::create(Protocol::cmdCast<Protocol::ItemChangeNotification>(msg));
             removalMessage->setOperation(Protocol::ItemChangeNotification::Remove);
             removalMessage->setParentDestCollection(-1);
             notificationQueue.enqueue(removalMessage);
             return 1;
         } else {
-            auto removalMessage = Protocol::CollectionChangeNotificationPtr::create(
-                    Protocol::cmdCast<Protocol::CollectionChangeNotification>(msg));
+            auto removalMessage = Protocol::CollectionChangeNotificationPtr::create(Protocol::cmdCast<Protocol::CollectionChangeNotification>(msg));
             removalMessage->setOperation(Protocol::CollectionChangeNotification::Remove);
             removalMessage->setParentDestCollection(-1);
             notificationQueue.enqueue(removalMessage);
@@ -737,8 +751,7 @@ int MonitorPrivate::translateAndCompress(QQueue<Protocol::ChangeNotificationPtr>
 
     // Transform into an insertion
     if (msg->type() == Protocol::Command::ItemChangeNotification) {
-        auto insertionMessage = Protocol::ItemChangeNotificationPtr::create(
-                Protocol::cmdCast<Protocol::ItemChangeNotification>(msg));
+        auto insertionMessage = Protocol::ItemChangeNotificationPtr::create(Protocol::cmdCast<Protocol::ItemChangeNotification>(msg));
         insertionMessage->setOperation(Protocol::ItemChangeNotification::Add);
         insertionMessage->setParentCollection(insertionMessage->parentDestCollection());
         insertionMessage->setParentDestCollection(-1);
@@ -749,8 +762,7 @@ int MonitorPrivate::translateAndCompress(QQueue<Protocol::ChangeNotificationPtr>
         }
         return split.count();
     } else if (msg->type() == Protocol::Command::CollectionChangeNotification) {
-        auto insertionMessage = Protocol::CollectionChangeNotificationPtr::create(
-                Protocol::cmdCast<Protocol::CollectionChangeNotification>(msg));
+        auto insertionMessage = Protocol::CollectionChangeNotificationPtr::create(Protocol::cmdCast<Protocol::CollectionChangeNotification>(msg));
         insertionMessage->setOperation(Protocol::CollectionChangeNotification::Add);
         insertionMessage->setParentCollection(insertionMessage->parentDestCollection());
         insertionMessage->setParentDestCollection(-1);
@@ -885,9 +897,7 @@ void MonitorPrivate::slotNotify(const Protocol::ChangeNotificationPtr &msg)
 
     const bool isModifyFlags = (msg->type() == Protocol::Command::ItemChangeNotification
                                 && Protocol::cmdCast<Protocol::ItemChangeNotification>(msg).operation() == Protocol::ItemChangeNotification::ModifyFlags);
-    if (supportsBatch
-            || (!needsSplit && !supportsBatch && !isModifyFlags)
-            || msg->type() == Protocol::Command::CollectionChangeNotification) {
+    if (supportsBatch || (!needsSplit && !supportsBatch && !isModifyFlags) || msg->type() == Protocol::Command::CollectionChangeNotification) {
         // Make sure the batch msg is always queued before the split notifications
         const int oldSize = pendingNotifications.size();
         const int appended = translateAndCompress(pendingNotifications, msg);
@@ -921,8 +931,7 @@ void MonitorPrivate::slotNotify(const Protocol::ChangeNotificationPtr &msg)
         // Add/Remove notifications
         if (msg->type() == Protocol::Command::ItemChangeNotification) {
             const auto &itemNtf = Protocol::cmdCast<Protocol::ItemChangeNotification>(msg);
-            if (itemNtf.operation() == Protocol::ItemChangeNotification::Move
-                && itemNtf.resource() != itemNtf.destinationResource()) {
+            if (itemNtf.operation() == Protocol::ItemChangeNotification::Move && itemNtf.resource() != itemNtf.destinationResource()) {
                 if (needsSplit) {
                     const Protocol::ChangeNotificationList split = splitMessage(itemNtf, !supportsBatch);
                     for (const auto &splitMsg : split) {
@@ -1000,7 +1009,10 @@ static Relation::List extractRelations(const QSet<Protocol::ItemChangeNotificati
     return relations;
 }
 
-bool MonitorPrivate::emitItemsNotification(const Protocol::ItemChangeNotification &msg, const Item::List &items, const Collection &collection, const Collection &collectionDest)
+bool MonitorPrivate::emitItemsNotification(const Protocol::ItemChangeNotification &msg,
+                                           const Item::List &items,
+                                           const Collection &collection,
+                                           const Collection &collectionDest)
 {
     Collection col = collection;
     Collection colDest = collectionDest;
@@ -1072,7 +1084,10 @@ bool MonitorPrivate::emitItemsNotification(const Protocol::ItemChangeNotificatio
     }
 }
 
-bool MonitorPrivate::emitCollectionNotification(const Protocol::CollectionChangeNotification &msg, const Collection &col, const Collection &par, const Collection &dest)
+bool MonitorPrivate::emitCollectionNotification(const Protocol::CollectionChangeNotification &msg,
+                                                const Collection &col,
+                                                const Collection &par,
+                                                const Collection &dest)
 {
     Collection parent = par;
     if (!parent.isValid()) {
@@ -1102,7 +1117,8 @@ bool MonitorPrivate::emitCollectionNotification(const Protocol::CollectionChange
         return emitToListeners(&Monitor::collectionAdded, collection, parent);
     case Protocol::CollectionChangeNotification::Modify:
         handled |= emitToListeners(QOverload<const Akonadi::Collection &>::of(&Monitor::collectionChanged), collection);
-        handled |= emitToListeners(QOverload<const Akonadi::Collection &, const QSet<QByteArray> &>::of(&Monitor::collectionChanged), collection, msg.changedParts());
+        handled |=
+            emitToListeners(QOverload<const Akonadi::Collection &, const QSet<QByteArray> &>::of(&Monitor::collectionChanged), collection, msg.changedParts());
         return handled;
     case Protocol::CollectionChangeNotification::Move:
         return emitToListeners(&Monitor::collectionMoved, collection, parent, destination);
@@ -1151,8 +1167,7 @@ bool MonitorPrivate::emitRelationNotification(const Protocol::RelationChangeNoti
     }
 }
 
-bool MonitorPrivate::emitSubscriptionChangeNotification(const Protocol::SubscriptionChangeNotification &msg,
-        const Akonadi::NotificationSubscriber &subscriber)
+bool MonitorPrivate::emitSubscriptionChangeNotification(const Protocol::SubscriptionChangeNotification &msg, const Akonadi::NotificationSubscriber &subscriber)
 {
     if (!subscriber.isValid()) {
         return false;
@@ -1171,8 +1186,7 @@ bool MonitorPrivate::emitSubscriptionChangeNotification(const Protocol::Subscrip
     }
 }
 
-bool MonitorPrivate::emitDebugChangeNotification(const Protocol::DebugChangeNotification &msg,
-        const ChangeNotification &ntf)
+bool MonitorPrivate::emitDebugChangeNotification(const Protocol::DebugChangeNotification &msg, const ChangeNotification &ntf)
 {
     Q_UNUSED(msg)
 
@@ -1225,10 +1239,10 @@ void MonitorPrivate::invalidateCaches(const Protocol::ChangeNotificationPtr &msg
         const auto &tagNtf = Protocol::cmdCast<Protocol::TagChangeNotification>(msg);
         switch (tagNtf.operation()) {
         case Protocol::TagChangeNotification::Modify:
-            tagCache->update({ tagNtf.tag().id() }, mTagFetchScope);
+            tagCache->update({tagNtf.tag().id()}, mTagFetchScope);
             break;
         case Protocol::TagChangeNotification::Remove:
-            tagCache->invalidate({ tagNtf.tag().id() });
+            tagCache->invalidate({tagNtf.tag().id()});
             break;
         default:
             break;
@@ -1333,10 +1347,10 @@ Protocol::ModifySubscriptionCommand::ChangeType MonitorPrivate::monitorTypeToPro
 
 void MonitorPrivate::updateListeners(QMetaMethod signal, ListenerAction action)
 {
-    #define UPDATE_LISTENERS(sig) \
-    if (signal == QMetaMethod::fromSignal(sig)) { \
-        updateListener(sig, action); \
-        return; \
+#define UPDATE_LISTENERS(sig)                                                                                                                                  \
+    if (signal == QMetaMethod::fromSignal(sig)) {                                                                                                              \
+        updateListener(sig, action);                                                                                                                           \
+        return;                                                                                                                                                \
     }
 
     UPDATE_LISTENERS(&Monitor::itemChanged)

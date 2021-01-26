@@ -10,16 +10,16 @@
 
 #include "dragdropmanager_p.h"
 
-#include <QTimer>
 #include <QApplication>
 #include <QDragMoveEvent>
 #include <QHeaderView>
 #include <QMenu>
+#include <QTimer>
 
 #include "collection.h"
 #include "controlgui.h"
-#include "item.h"
 #include "entitytreemodel.h"
+#include "item.h"
 
 #include <KXMLGUIClient>
 #include <KXMLGUIFactory>
@@ -65,13 +65,13 @@ void EntityTreeView::Private::init()
 
     mParent->header()->setSectionsClickable(true);
     mParent->header()->setStretchLastSection(false);
-//   mParent->setRootIsDecorated( false );
+    //   mParent->setRootIsDecorated( false );
 
     // QTreeView::autoExpandDelay has very strange behaviour. It toggles the collapse/expand state
     // of the item the cursor is currently over when a timer event fires.
     // The behaviour we want is to expand a collapsed row on drag-over, but not collapse it.
     // mDragExpandTimer is used to achieve this.
-//   mParent->setAutoExpandDelay ( QApplication::startDragTime() );
+    //   mParent->setAutoExpandDelay ( QApplication::startDragTime() );
 
     mParent->setSortingEnabled(true);
     mParent->sortByColumn(0, Qt::AscendingOrder);
@@ -83,8 +83,12 @@ void EntityTreeView::Private::init()
     mParent->setDragEnabled(true);
 #endif
 
-    mParent->connect(mParent, &QAbstractItemView::clicked, mParent, [this](const auto &index) { itemClicked(index); });
-    mParent->connect(mParent, &QAbstractItemView::doubleClicked, mParent, [this](const auto &index) { itemDoubleClicked(index); });
+    mParent->connect(mParent, &QAbstractItemView::clicked, mParent, [this](const auto &index) {
+        itemClicked(index);
+    });
+    mParent->connect(mParent, &QAbstractItemView::doubleClicked, mParent, [this](const auto &index) {
+        itemDoubleClicked(index);
+    });
 
     ControlGui::widgetNeedsAkonadi(mParent);
 }
@@ -199,10 +203,12 @@ void EntityTreeView::setModel(QAbstractItemModel *model)
     QTreeView::setModel(model);
     header()->setStretchLastSection(true);
 
-    connect(selectionModel(), &QItemSelectionModel::currentChanged,
-            this, [this](const auto &index) { d->itemCurrentChanged(index); });
-    connect(selectionModel(), &QItemSelectionModel::selectionChanged,
-            this, [this](const auto &oldSel, const auto &newSel) { d->slotSelectionChanged(oldSel, newSel); });
+    connect(selectionModel(), &QItemSelectionModel::currentChanged, this, [this](const auto &index) {
+        d->itemCurrentChanged(index);
+    });
+    connect(selectionModel(), &QItemSelectionModel::selectionChanged, this, [this](const auto &oldSel, const auto &newSel) {
+        d->slotSelectionChanged(oldSel, newSel);
+    });
 }
 
 void EntityTreeView::timerEvent(QTimerEvent *event)
@@ -251,11 +257,10 @@ void EntityTreeView::contextMenuEvent(QContextMenuEvent *event)
     const QModelIndex index = indexAt(event->pos());
     QString popupName = d->mDefaultPopupMenu;
 
-    if (index.isValid()) {                                  // popup not over empty space
+    if (index.isValid()) { // popup not over empty space
         // check whether the index under the cursor is a collection or item
         const Item item = model()->data(index, EntityTreeModel::ItemRole).value<Item>();
-        popupName = (item.isValid() ? QStringLiteral("akonadi_itemview_contextmenu") :
-                     QStringLiteral("akonadi_collectionview_contextmenu"));
+        popupName = (item.isValid() ? QStringLiteral("akonadi_itemview_contextmenu") : QStringLiteral("akonadi_collectionview_contextmenu"));
     }
 
     auto *popup = static_cast<QMenu *>(d->mXmlGuiClient->factory()->container(popupName, d->mXmlGuiClient));

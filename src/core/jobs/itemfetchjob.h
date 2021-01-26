@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 class Collection;
 class ItemFetchJobPrivate;
 class ItemFetchScope;
@@ -201,9 +200,9 @@ public:
     void setCollection(const Collection &collection);
 
     enum DeliveryOption {
-        ItemGetter = 0x1,            ///< items available through items()
+        ItemGetter = 0x1, ///< items available through items()
         EmitItemsIndividually = 0x2, ///< emitted via signal upon reception
-        EmitItemsInBatches = 0x4,    ///< emitted via signal in bulk (collected and emitted delayed via timer)
+        EmitItemsInBatches = 0x4, ///< emitted via signal in bulk (collected and emitted delayed via timer)
         Default = ItemGetter | EmitItemsInBatches
     };
     Q_DECLARE_FLAGS(DeliveryOptions, DeliveryOption)

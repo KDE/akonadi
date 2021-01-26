@@ -6,20 +6,20 @@
 
 #include <QObject>
 
+#include "attributefactory.h"
 #include "control.h"
-#include "relationcreatejob.h"
-#include "relationfetchjob.h"
-#include "relationdeletejob.h"
-#include "tagmodifyjob.h"
-#include "resourceselectjob_p.h"
-#include "qtest_akonadi.h"
 #include "item.h"
 #include "itemcreatejob.h"
-#include "itemmodifyjob.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
+#include "itemmodifyjob.h"
 #include "monitor.h"
-#include "attributefactory.h"
+#include "qtest_akonadi.h"
+#include "relationcreatejob.h"
+#include "relationdeletejob.h"
+#include "relationfetchjob.h"
+#include "resourceselectjob_p.h"
+#include "tagmodifyjob.h"
 
 using namespace Akonadi;
 
@@ -40,7 +40,7 @@ void RelationTest::initTestCase()
     AkonadiTest::checkTestIsIsolated();
     AkonadiTest::setAllResourcesOffline();
     qRegisterMetaType<Akonadi::Relation>();
-    qRegisterMetaType<QSet<Akonadi::Relation> >();
+    qRegisterMetaType<QSet<Akonadi::Relation>>();
     qRegisterMetaType<Akonadi::Item::List>();
 }
 
@@ -66,7 +66,7 @@ void RelationTest::testCreateFetch()
     auto *createjob = new RelationCreateJob(rel, this);
     AKVERIFYEXEC(createjob);
 
-    //Test fetch & create
+    // Test fetch & create
     {
         RelationFetchJob *fetchJob = new RelationFetchJob(QVector<QByteArray>(), this);
         AKVERIFYEXEC(fetchJob);
@@ -74,7 +74,7 @@ void RelationTest::testCreateFetch()
         QCOMPARE(fetchJob->relations().first().type(), QByteArray(Relation::GENERIC));
     }
 
-    //Test item fetch
+    // Test item fetch
     {
         auto *fetchJob = new ItemFetchJob(item1);
         fetchJob->fetchScope().setFetchRelations(true);
@@ -89,7 +89,7 @@ void RelationTest::testCreateFetch()
         QCOMPARE(fetchJob->items().first().relations().size(), 1);
     }
 
-    //Test delete
+    // Test delete
     {
         auto *deleteJob = new RelationDeleteJob(rel, this);
         AKVERIFYEXEC(deleteJob);
@@ -130,7 +130,7 @@ void RelationTest::testMonitor()
         auto *createjob = new RelationCreateJob(rel, this);
         AKVERIFYEXEC(createjob);
 
-        //We usually pick up signals from the previous tests as well (due to server-side notification caching)
+        // We usually pick up signals from the previous tests as well (due to server-side notification caching)
         QTRY_VERIFY(addedSpy.count() >= 1);
         QTRY_COMPARE(addedSpy.last().first().value<Akonadi::Relation>(), rel);
     }

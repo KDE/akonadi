@@ -6,12 +6,12 @@
 
 #include "itemhydratest.h"
 
-#include <memory>
 #include "item.h"
-#include <QTest>
 #include <QDebug>
 #include <QSharedPointer>
 #include <QTemporaryFile>
+#include <QTest>
+#include <memory>
 
 using namespace Akonadi;
 
@@ -20,19 +20,23 @@ struct Volker {
     {
         return f.who == who;
     }
-    virtual ~Volker() { }
+    virtual ~Volker()
+    {
+    }
     virtual Volker *clone() const = 0;
     QString who;
 };
 typedef std::shared_ptr<Volker> VolkerPtr;
 typedef QSharedPointer<Volker> VolkerQPtr;
 
-struct Rudi: public Volker {
+struct Rudi : public Volker {
     Rudi()
     {
         who = QStringLiteral("Rudi");
     }
-    ~Rudi() override { }
+    ~Rudi() override
+    {
+    }
     Rudi *clone() const override
     {
         return new Rudi(*this);
@@ -42,7 +46,7 @@ struct Rudi: public Volker {
 typedef std::shared_ptr<Rudi> RudiPtr;
 typedef QSharedPointer<Rudi> RudiQPtr;
 
-struct Gerd: public Volker {
+struct Gerd : public Volker {
     Gerd()
     {
         who = QStringLiteral("Gerd");
@@ -67,7 +71,8 @@ Q_DECLARE_METATYPE(Gerd)
 
 namespace Akonadi
 {
-template <> struct SuperClass<Rudi> : public SuperClassTrait<Volker> {};
+template<> struct SuperClass<Rudi> : public SuperClassTrait<Volker> {
+};
 }
 
 QTEST_MAIN(ItemHydra)
@@ -104,15 +109,15 @@ void ItemHydra::testItemPointerPayload()
     Rudi *rudi = new Rudi;
 
     // the below should not compile
-    //f.setPayload( rudi );
+    // f.setPayload( rudi );
 
     // std::auto_ptr is not copyconstructable and assignable, therefore this will fail as well
-    //f.setPayload( std::auto_ptr<Rudi>( rudi ) );
-    //QVERIFY( f.hasPayload() );
-    //QCOMPARE( f.payload< std::auto_ptr<Rudi> >()->who, rudi->who );
+    // f.setPayload( std::auto_ptr<Rudi>( rudi ) );
+    // QVERIFY( f.hasPayload() );
+    // QCOMPARE( f.payload< std::auto_ptr<Rudi> >()->who, rudi->who );
 
     // below doesn't compile, hopefully
-    //QCOMPARE( f.payload< Rudi* >()->who, rudi->who );
+    // QCOMPARE( f.payload< Rudi* >()->who, rudi->who );
 
     delete rudi;
 }
@@ -130,7 +135,6 @@ void ItemHydra::testItemCopy()
     s = f;
     QVERIFY(s.hasPayload());
     QCOMPARE(s.payload<Rudi>(), rudi);
-
 }
 
 void ItemHydra::testEmptyPayload()
@@ -153,13 +157,12 @@ void ItemHydra::testEmptyPayload()
         caughtException = true;
         caughtRightException = true;
     } catch (const Akonadi::Exception &e) {
-        qDebug() << "Caught Akonadi exception of type " << typeid(e).name() << ": " << e.what()
-                 << ", expected type" << typeid(Akonadi::PayloadException).name();
+        qDebug() << "Caught Akonadi exception of type " << typeid(e).name() << ": " << e.what() << ", expected type"
+                 << typeid(Akonadi::PayloadException).name();
         caughtException = true;
         caughtRightException = false;
     } catch (const std::exception &e) {
-        qDebug() << "Caught exception of type " << typeid(e).name() << ": " << e.what()
-                 << ", expected type" << typeid(Akonadi::PayloadException).name();
+        qDebug() << "Caught exception of type " << typeid(e).name() << ": " << e.what() << ", expected type" << typeid(Akonadi::PayloadException).name();
         caughtException = true;
         caughtRightException = false;
     } catch (...) {
@@ -184,14 +187,14 @@ void ItemHydra::testPointerPayload()
         QVERIFY(i1.hasPayload());
         QCOMPARE(p.use_count(), (long)2);
         {
-            QVERIFY(i1.hasPayload< RudiPtr >());
-            auto p2 = i1.payload< RudiPtr >();
+            QVERIFY(i1.hasPayload<RudiPtr>());
+            auto p2 = i1.payload<RudiPtr>();
             QCOMPARE(p.use_count(), (long)3);
         }
 
         {
-            QVERIFY(i1.hasPayload< VolkerPtr >());
-            auto p2 = i1.payload< VolkerPtr >();
+            QVERIFY(i1.hasPayload<VolkerPtr>());
+            auto p2 = i1.payload<VolkerPtr>();
             QCOMPARE(p.use_count(), (long)3);
         }
 
@@ -216,13 +219,13 @@ void ItemHydra::testPolymorphicPayloadWithTrait()
         QVERIFY(!i1.hasPayload<GerdPtr>());
         QCOMPARE(p.use_count(), (long)2);
         {
-            RudiPtr p2 = std::dynamic_pointer_cast<Rudi, Volker>(i1.payload< VolkerPtr >());
+            RudiPtr p2 = std::dynamic_pointer_cast<Rudi, Volker>(i1.payload<VolkerPtr>());
             QCOMPARE(p.use_count(), (long)3);
             QCOMPARE(p2->who, QStringLiteral("Rudi"));
         }
 
         {
-            auto p2 = i1.payload< RudiPtr >();
+            auto p2 = i1.payload<RudiPtr>();
             QCOMPARE(p.use_count(), (long)3);
             QCOMPARE(p2->who, QStringLiteral("Rudi"));
         }
@@ -253,13 +256,13 @@ void ItemHydra::testPolymorphicPayloadWithTypedef()
         QVERIFY(i1.hasPayload<GerdPtr>());
         QCOMPARE(p.use_count(), (long)2);
         {
-            auto p2 = std::dynamic_pointer_cast<Gerd, Volker>(i1.payload< VolkerPtr >());
+            auto p2 = std::dynamic_pointer_cast<Gerd, Volker>(i1.payload<VolkerPtr>());
             QCOMPARE(p.use_count(), (long)3);
             QCOMPARE(p2->who, QStringLiteral("Gerd"));
         }
 
         {
-            auto p2 = i1.payload< GerdPtr >();
+            auto p2 = i1.payload<GerdPtr>();
             QCOMPARE(p.use_count(), (long)3);
             QCOMPARE(p2->who, QStringLiteral("Gerd"));
         }
@@ -303,12 +306,12 @@ void ItemHydra::testQSharedPointerPayload()
     QVERIFY(!i.hasPayload<GerdQPtr>());
 
     {
-        auto p2 = i.payload< VolkerQPtr >();
+        auto p2 = i.payload<VolkerQPtr>();
         QCOMPARE(p2->who, QStringLiteral("Rudi"));
     }
 
     {
-        auto p2 = i.payload< RudiQPtr >();
+        auto p2 = i.payload<RudiQPtr>();
         QCOMPARE(p2->who, QStringLiteral("Rudi"));
     }
 
@@ -336,7 +339,6 @@ void ItemHydra::testHasPayload()
 
 void ItemHydra::testSharedPointerConversions()
 {
-
     Item a;
     RudiQPtr rudi(new Rudi);
     a.setPayload(rudi);
@@ -361,7 +363,6 @@ void ItemHydra::testSharedPointerConversions()
     }
     QVERIFY(thrown);
     QVERIFY(thrownCorrectly);
-
 }
 
 void ItemHydra::testForeignPayload()

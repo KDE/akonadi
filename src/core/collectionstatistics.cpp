@@ -6,8 +6,8 @@
 
 #include "collectionstatistics.h"
 
-#include <QSharedData>
 #include <QDebug>
+#include <QSharedData>
 
 using namespace Akonadi;
 
@@ -64,7 +64,7 @@ void CollectionStatistics::setSize(qint64 size)
     d->size = size;
 }
 
-CollectionStatistics &CollectionStatistics::operator =(const CollectionStatistics &other)
+CollectionStatistics &CollectionStatistics::operator=(const CollectionStatistics &other)
 {
     d = other.d;
     return *this;

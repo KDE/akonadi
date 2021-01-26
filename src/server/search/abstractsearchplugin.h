@@ -7,13 +7,12 @@
 #ifndef AKONADI_ABSTRACTSEARCHPLUGIN
 #define AKONADI_ABSTRACTSEARCHPLUGIN
 
-#include <QSet>
 #include <QObject>
+#include <QSet>
 #include <QStringList>
 
 namespace Akonadi
 {
-
 /**
  * @class AbstractSearchPlugin
  *
@@ -27,7 +26,6 @@ namespace Akonadi
  */
 class AbstractSearchPlugin
 {
-
 public:
     /**
      * Destructor.

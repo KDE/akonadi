@@ -11,7 +11,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @short A class that encapsulates an agent instance inside a thread.
  */

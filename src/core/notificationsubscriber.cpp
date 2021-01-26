@@ -5,8 +5,8 @@
 */
 
 #include "notificationsubscriber.h"
-#include "itemfetchscope.h"
 #include "collectionfetchscope.h"
+#include "itemfetchscope.h"
 #include "tagfetchscope.h"
 
 namespace Akonadi

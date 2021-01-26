@@ -17,20 +17,15 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
-  * @short A helper class that describes a column of a table for the DbInitializer
-  */
+ * @short A helper class that describes a column of a table for the DbInitializer
+ */
 class ColumnDescription
 {
 public:
     ColumnDescription();
 
-    enum ReferentialAction {
-        Cascade,
-        Restrict,
-        SetNull
-    };
+    enum ReferentialAction { Cascade, Restrict, SetNull };
 
     QString name;
     QString type;
@@ -51,8 +46,8 @@ public:
 };
 
 /**
-  * @short A helper class that describes indexes of a table for the DbInitializer
-  */
+ * @short A helper class that describes indexes of a table for the DbInitializer
+ */
 class IndexDescription
 {
 public:
@@ -65,22 +60,22 @@ public:
 };
 
 /**
-  * @short A helper class that describes the predefined data of a table for the DbInitializer
-  */
+ * @short A helper class that describes the predefined data of a table for the DbInitializer
+ */
 class DataDescription
 {
 public:
     DataDescription();
 
     /**
-      * Key contains the column name, value the data.
-      */
+     * Key contains the column name, value the data.
+     */
     QMap<QString, QString> data;
 };
 
 /**
-  * @short A helper class that describes a table for the DbInitializer
-  */
+ * @short A helper class that describes a table for the DbInitializer
+ */
 class TableDescription
 {
 public:
@@ -94,8 +89,8 @@ public:
 };
 
 /**
-  * @short A helper class that describes the relation between two tables for the DbInitializer
-  */
+ * @short A helper class that describes the relation between two tables for the DbInitializer
+ */
 class RelationDescription
 {
 public:

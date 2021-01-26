@@ -12,7 +12,6 @@
 
 #include "connection_p.h"
 
-
 namespace Akonadi
 {
 class SessionThread : public QObject

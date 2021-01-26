@@ -33,7 +33,7 @@ public:
     void slotCacheValueChanged(int /*interval*/);
     void slotRetrievalOptionsGroupBoxDisabled(bool disable);
 
-    Ui::CachePolicyPage * const mUi;
+    Ui::CachePolicyPage *const mUi;
 };
 
 void CachePolicyPage::Private::slotIntervalValueChanged(int interval)
@@ -63,9 +63,15 @@ CachePolicyPage::CachePolicyPage(QWidget *parent, GuiMode mode)
     setPageTitle(i18n("Retrieval"));
 
     d->mUi->setupUi(this);
-    connect(d->mUi->checkInterval, QOverload<int>::of(&QSpinBox::valueChanged), this, [this](int value) { d->slotIntervalValueChanged(value); });
-    connect(d->mUi->localCacheTimeout, QOverload<int>::of(&QSpinBox::valueChanged), this, [this](int value) { d->slotCacheValueChanged(value); });
-    connect(d->mUi->inherit, &QCheckBox::toggled, this, [this](bool checked) { d->slotRetrievalOptionsGroupBoxDisabled(checked); });
+    connect(d->mUi->checkInterval, QOverload<int>::of(&QSpinBox::valueChanged), this, [this](int value) {
+        d->slotIntervalValueChanged(value);
+    });
+    connect(d->mUi->localCacheTimeout, QOverload<int>::of(&QSpinBox::valueChanged), this, [this](int value) {
+        d->slotCacheValueChanged(value);
+    });
+    connect(d->mUi->inherit, &QCheckBox::toggled, this, [this](bool checked) {
+        d->slotRetrievalOptionsGroupBoxDisabled(checked);
+    });
     if (mode == AdvancedMode) {
         d->mUi->stackedWidget->setCurrentWidget(d->mUi->rawPage);
     }
@@ -104,7 +110,7 @@ void CachePolicyPage::load(const Collection &collection)
     const bool fetchBodies = policy.localParts().contains(QLatin1String("RFC822"));
     d->mUi->retrieveFullMessages->setChecked(fetchBodies);
 
-    //done explicitly to disable/enabled widgets
+    // done explicitly to disable/enabled widgets
     d->mUi->retrieveOnlyHeaders->setChecked(!fetchBodies);
     d->mUi->label->setEnabled(!fetchBodies);
     d->mUi->localCacheTimeout->setEnabled(!fetchBodies);
@@ -135,11 +141,9 @@ void CachePolicyPage::save(Collection &collection)
     // it otherwise. In "raw" mode we simple use the values from the list
     // view.
     if (d->mUi->stackedWidget->currentWidget() != d->mUi->rawPage) {
-        if (d->mUi->retrieveFullMessages->isChecked() &&
-                !localParts.contains(QLatin1String("RFC822"))) {
+        if (d->mUi->retrieveFullMessages->isChecked() && !localParts.contains(QLatin1String("RFC822"))) {
             localParts.append(QStringLiteral("RFC822"));
-        } else if (!d->mUi->retrieveFullMessages->isChecked() &&
-                   localParts.contains(QLatin1String("RFC822"))) {
+        } else if (!d->mUi->retrieveFullMessages->isChecked() && localParts.contains(QLatin1String("RFC822"))) {
             localParts.removeAll(QStringLiteral("RFC822"));
         }
     }

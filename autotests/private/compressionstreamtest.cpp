@@ -6,10 +6,10 @@
 
 #include "compressionstream_p.h"
 
-#include <QObject>
-#include <QTest>
 #include <QBuffer>
+#include <QObject>
 #include <QRandomGenerator>
+#include <QTest>
 
 #include <array>
 
@@ -64,17 +64,17 @@ private Q_SLOTS:
     void testUnbufferedCompressionOfLargeText()
     {
         std::array<std::string, 101> loremIpsum = {
-            "Lorem", "ipsum", "dolor", "sit", "amet,", "consectetur", "adipiscing", "elit.", "Integer",
-            "dictum", "massa", "orci,", "eget", "tempor", "neque", "euismod", "a.", "Suspendisse", "mi",
-            "arcu,", "facilisis", "eu", "risus", "at,", "varius", "vehicula", "mi.", "Proin", "tristique",
-            "eros", "nisl,", "vel", "porttitor", "erat", "elementum", "at.", "Quisque", "et", "ex", "id",
-            "risus", "hendrerit", "rhoncus", "eu", "vel", "enim.", "Vivamus", "at", "lorem", "laoreet", "ex",
-            "mattis", "feugiat", "vitae", "sit", "amet", "sem.", "Vestibulum", "in", "ante", "sagittis,",
-            "venenatis", "nibh", "et,", "consectetur", "est.", "Donec", "cursus", "enim", "ac", "pellentesque",
-            "euismod.", "Nullam", "interdum", "metus", "sed", "blandit", "dapibus.", "Ut", "nec", "euismod",
-            "magna.", "Aenean", "gravida", "elit", "metus,", "eget", "vehicula", "nibh", "euismod", "ut.",
-            "Vestibulum", "risus", "lectus,", "molestie", "elementum", "lobortis", "at,", "finibus", "a", "quam."
-        };
+            "Lorem",        "ipsum",      "dolor",     "sit",      "amet,",       "consectetur", "adipiscing", "elit.",       "Integer",   "dictum",
+            "massa",        "orci,",      "eget",      "tempor",   "neque",       "euismod",     "a.",         "Suspendisse", "mi",        "arcu,",
+            "facilisis",    "eu",         "risus",     "at,",      "varius",      "vehicula",    "mi.",        "Proin",       "tristique", "eros",
+            "nisl,",        "vel",        "porttitor", "erat",     "elementum",   "at.",         "Quisque",    "et",          "ex",        "id",
+            "risus",        "hendrerit",  "rhoncus",   "eu",       "vel",         "enim.",       "Vivamus",    "at",          "lorem",     "laoreet",
+            "ex",           "mattis",     "feugiat",   "vitae",    "sit",         "amet",        "sem.",       "Vestibulum",  "in",        "ante",
+            "sagittis,",    "venenatis",  "nibh",      "et,",      "consectetur", "est.",        "Donec",      "cursus",      "enim",      "ac",
+            "pellentesque", "euismod.",   "Nullam",    "interdum", "metus",       "sed",         "blandit",    "dapibus.",    "Ut",        "nec",
+            "euismod",      "magna.",     "Aenean",    "gravida",  "elit",        "metus,",      "eget",       "vehicula",    "nibh",      "euismod",
+            "ut.",          "Vestibulum", "risus",     "lectus,",  "molestie",    "elementum",   "lobortis",   "at,",         "finibus",   "a",
+            "quam."};
 
         QByteArray testData;
         QRandomGenerator *generator = QRandomGenerator::system();
@@ -126,13 +126,11 @@ private Q_SLOTS:
         QTest::newRow("Too short - random") << QVector<uint8_t>{0x65, 0x66} << false;
         QTest::newRow("Too short - valid start") << QVector<uint8_t>{0xfd, 0x37, 0x7a, 0x58, 0x5a} << false;
         QTest::newRow("Valid magic only") << QVector<uint8_t>{0xfd, 0x37, 0x7a, 0x58, 0x5a, 0x00} << true;
-        QTest::newRow("Valid input") << QVector<uint8_t>{
-            0xfd, 0x37, 0x7a, 0x58, 0x5a, 0x00, 0x00, 0x04, 0xe6, 0xd6,
-            0xb4, 0x46, 0x02, 0x00, 0x21, 0x01, 0x16, 0x00, 0x00, 0x00,
-            0x74, 0x2f, 0xe5, 0xa3, 0x01, 0x00, 0x01, 0x41, 0x0a, 0x00,
-            0x00, 0x00, 0x8f, 0xe8, 0x69, 0xe6, 0x2b, 0x6a, 0xcd, 0x94,
-            0x00, 0x01, 0x1a, 0x02, 0xdc, 0x2e, 0xa5, 0x7e, 0x1f, 0xb6,
-            0xf3, 0x7d, 0x01, 0x00, 0x00, 0x00, 0x00, 0x04, 0x59, 0x5a } << true;
+        QTest::newRow("Valid input") << QVector<uint8_t>{0xfd, 0x37, 0x7a, 0x58, 0x5a, 0x00, 0x00, 0x04, 0xe6, 0xd6, 0xb4, 0x46, 0x02, 0x00, 0x21,
+                                                         0x01, 0x16, 0x00, 0x00, 0x00, 0x74, 0x2f, 0xe5, 0xa3, 0x01, 0x00, 0x01, 0x41, 0x0a, 0x00,
+                                                         0x00, 0x00, 0x8f, 0xe8, 0x69, 0xe6, 0x2b, 0x6a, 0xcd, 0x94, 0x00, 0x01, 0x1a, 0x02, 0xdc,
+                                                         0x2e, 0xa5, 0x7e, 0x1f, 0xb6, 0xf3, 0x7d, 0x01, 0x00, 0x00, 0x00, 0x00, 0x04, 0x59, 0x5a}
+                                     << true;
     }
 
     void testDetection()

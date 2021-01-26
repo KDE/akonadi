@@ -11,12 +11,11 @@
 #include "akonadiwidgets_export.h"
 #include "collection.h"
 
-#include <QDialog>
 #include <QAbstractItemView>
+#include <QDialog>
 
 namespace Akonadi
 {
-
 /**
  * @short A collection selection dialog.
  *
@@ -58,11 +57,7 @@ class AKONADIWIDGETS_EXPORT CollectionDialog : public QDialog
 public:
     /* @since 4.6
      */
-    enum CollectionDialogOption {
-        None = 0,
-        AllowToCreateNewChildCollection = 1,
-        KeepTreeExpanded = 2
-    };
+    enum CollectionDialogOption { None = 0, AllowToCreateNewChildCollection = 1, KeepTreeExpanded = 2 };
 
     Q_DECLARE_FLAGS(CollectionDialogOptions, CollectionDialogOption)
 
@@ -180,12 +175,12 @@ public:
     void changeCollectionDialogOptions(CollectionDialogOptions options);
 
     /**
-      * @since 4.13
-      */
+     * @since 4.13
+     */
     void setUseFolderByDefault(bool b);
     /**
-      * @since 4.13
-      */
+     * @since 4.13
+     */
     Q_REQUIRED_RESULT bool useFolderByDefault() const;
     /**
      * Allow to specify collection content mimetype when we create new one.

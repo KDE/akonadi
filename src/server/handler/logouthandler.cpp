@@ -11,7 +11,8 @@ using namespace Akonadi::Server;
 
 LogoutHandler::LogoutHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 bool LogoutHandler::parseStream()
 {

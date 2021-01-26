@@ -14,7 +14,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class PartType;
 
 AKONADI_EXCEPTION_MAKE_INSTANCE(PartTypeException);
@@ -61,8 +60,7 @@ Query::Condition conditionFromFqNames(const QStringList &fqNames);
 /**
  * Convenience overload for the above.
  */
-template<template<typename> class T>
-Query::Condition conditionFromFqNames(const T<QByteArray> &fqNames)
+template<template<typename> class T> Query::Condition conditionFromFqNames(const T<QByteArray> &fqNames)
 {
     Query::Condition c;
     c.setSubQueryMode(Query::Or);

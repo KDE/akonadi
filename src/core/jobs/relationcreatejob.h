@@ -11,7 +11,6 @@
 
 namespace Akonadi
 {
-
 class Relation;
 class RelationCreateJobPrivate;
 

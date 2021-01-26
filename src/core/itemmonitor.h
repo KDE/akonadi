@@ -12,7 +12,6 @@
 
 namespace Akonadi
 {
-
 class Item;
 class ItemFetchScope;
 

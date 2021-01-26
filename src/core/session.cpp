@@ -7,29 +7,28 @@
 #include "session.h"
 #include "session_p.h"
 
-
 #include "job.h"
 #include "job_p.h"
+#include "private/protocol_p.h"
+#include "private/standarddirs_p.h"
+#include "protocolhelper_p.h"
 #include "servermanager.h"
 #include "servermanager_p.h"
-#include "protocolhelper_p.h"
 #include "sessionthread_p.h"
-#include "private/standarddirs_p.h"
-#include "private/protocol_p.h"
 
 #include "akonadicore_debug.h"
 
 #include <KLocalizedString>
 
 #include <QCoreApplication>
-#include <QThreadStorage>
-#include <QTimer>
-#include <QThread>
 #include <QPointer>
 #include <QRandomGenerator>
+#include <QThread>
+#include <QThreadStorage>
+#include <QTimer>
 
-#include <QHostAddress>
 #include <QApplication>
+#include <QHostAddress>
 
 // ### FIXME pipelining got broken by switching result emission in JobPrivate::handleResponse to delayed emission
 // in order to work around exec() deadlocks. As a result of that Session knows to late about a finished job and still
@@ -43,7 +42,9 @@ using namespace Akonadi;
 
 void SessionPrivate::startNext()
 {
-    QTimer::singleShot(0, mParent, [this]() { doStartNext(); });
+    QTimer::singleShot(0, mParent, [this]() {
+        doStartNext();
+    });
 }
 
 void SessionPrivate::reconnect()
@@ -51,10 +52,23 @@ void SessionPrivate::reconnect()
     if (!connection) {
         connection = new Connection(Connection::CommandConnection, sessionId, &mCommandBuffer);
         sessionThread()->addConnection(connection);
-        mParent->connect(connection, &Connection::reconnected, mParent, &Session::reconnected,
-                         Qt::QueuedConnection);
-        mParent->connect(connection, &Connection::socketDisconnected, mParent, [this]() { socketDisconnected(); }, Qt::QueuedConnection);
-        mParent->connect(connection, &Connection::socketError, mParent, [this](const QString &error) { socketError(error); }, Qt::QueuedConnection);
+        mParent->connect(connection, &Connection::reconnected, mParent, &Session::reconnected, Qt::QueuedConnection);
+        mParent->connect(
+            connection,
+            &Connection::socketDisconnected,
+            mParent,
+            [this]() {
+                socketDisconnected();
+            },
+            Qt::QueuedConnection);
+        mParent->connect(
+            connection,
+            &Connection::socketError,
+            mParent,
+            [this](const QString &error) {
+                socketError(error);
+            },
+            Qt::QueuedConnection);
     }
 
     connection->reconnect();
@@ -109,7 +123,9 @@ bool SessionPrivate::handleCommands()
             if (login.isError()) {
                 qCWarning(AKONADICORE_LOG) << "Unable to login to Akonadi server:" << login.errorMessage();
                 connection->closeConnection();
-                QTimer::singleShot(1000, mParent, [this]() { reconnect(); });
+                QTimer::singleShot(1000, mParent, [this]() {
+                    reconnect();
+                });
                 return false;
             }
 
@@ -166,17 +182,23 @@ void SessionPrivate::startJob(Job *job)
     if (protocolVersion != Protocol::version()) {
         job->setError(Job::ProtocolVersionMismatch);
         if (protocolVersion < Protocol::version()) {
-            job->setErrorText(i18n("Protocol version mismatch. Server version is older (%1) than ours (%2). "
-                                   "If you updated your system recently please restart the Akonadi server.",
-                                   protocolVersion, Protocol::version()));
-            qCWarning(AKONADICORE_LOG) << "Protocol version mismatch. Server version is older (" << protocolVersion << ") than ours (" << Protocol::version() << "). "
-                                       "If you updated your system recently please restart the Akonadi server.";
+            job->setErrorText(
+                i18n("Protocol version mismatch. Server version is older (%1) than ours (%2). "
+                     "If you updated your system recently please restart the Akonadi server.",
+                     protocolVersion,
+                     Protocol::version()));
+            qCWarning(AKONADICORE_LOG) << "Protocol version mismatch. Server version is older (" << protocolVersion << ") than ours (" << Protocol::version()
+                                       << "). "
+                                          "If you updated your system recently please restart the Akonadi server.";
         } else {
-            job->setErrorText(i18n("Protocol version mismatch. Server version is newer (%1) than ours (%2). "
-                                   "If you updated your system recently please restart all KDE PIM applications.",
-                                   protocolVersion, Protocol::version()));
-            qCWarning(AKONADICORE_LOG) << "Protocol version mismatch. Server version is newer (" << protocolVersion << ") than ours (" << Protocol::version() << "). "
-                                       "If you updated your system recently please restart all KDE PIM applications.";
+            job->setErrorText(
+                i18n("Protocol version mismatch. Server version is newer (%1) than ours (%2). "
+                     "If you updated your system recently please restart all KDE PIM applications.",
+                     protocolVersion,
+                     Protocol::version()));
+            qCWarning(AKONADICORE_LOG) << "Protocol version mismatch. Server version is newer (" << protocolVersion << ") than ours (" << Protocol::version()
+                                       << "). "
+                                          "If you updated your system recently please restart all KDE PIM applications.";
         }
         job->emitResult();
     } else {
@@ -226,16 +248,22 @@ void SessionPrivate::jobDestroyed(QObject *job)
 void SessionPrivate::addJob(Job *job)
 {
     queue.append(job);
-    QObject::connect(job, &KJob::result, mParent, [this](KJob *job) { jobDone(job); });
-    QObject::connect(job, &Job::writeFinished, mParent, [this](Job *job) { jobWriteFinished(job); });
-    QObject::connect(job, &QObject::destroyed, mParent, [this](QObject *o) { jobDestroyed(o); });
+    QObject::connect(job, &KJob::result, mParent, [this](KJob *job) {
+        jobDone(job);
+    });
+    QObject::connect(job, &Job::writeFinished, mParent, [this](Job *job) {
+        jobWriteFinished(job);
+    });
+    QObject::connect(job, &QObject::destroyed, mParent, [this](QObject *o) {
+        jobDestroyed(o);
+    });
     startNext();
 }
 
 void SessionPrivate::publishOtherJobs(Job *thanThisJob)
 {
     int count = 0;
-    for (const auto& job : qAsConst(queue)) {
+    for (const auto &job : qAsConst(queue)) {
         if (job != thanThisJob) {
             job->d_ptr->publishJob();
             ++count;
@@ -298,8 +326,7 @@ SessionPrivate::SessionPrivate(Session *parent)
     // Shutdown the thread before QApplication event loop quits - the
     // thread()->wait() mechanism in Connection dtor crashes sometimes
     // when called from QApplication destructor
-    connThreadCleanUp = QObject::connect(qApp, &QCoreApplication::aboutToQuit,
-    [this]() {
+    connThreadCleanUp = QObject::connect(qApp, &QCoreApplication::aboutToQuit, [this]() {
         delete mSessionThread;
         mSessionThread = nullptr;
     });
@@ -316,8 +343,7 @@ void SessionPrivate::init(const QByteArray &id)
     if (!id.isEmpty()) {
         sessionId = id;
     } else {
-        sessionId = QCoreApplication::instance()->applicationName().toUtf8()
-                    + '-' + QByteArray::number(QRandomGenerator::global()->generate());
+        sessionId = QCoreApplication::instance()->applicationName().toUtf8() + '-' + QByteArray::number(QRandomGenerator::global()->generate());
     }
 
     qCDebug(AKONADICORE_LOG) << "Initializing session with ID" << id;
@@ -329,8 +355,9 @@ void SessionPrivate::init(const QByteArray &id)
     if (ServerManager::state() == ServerManager::NotRunning) {
         ServerManager::start();
     }
-    QObject::connect(ServerManager::self(), &ServerManager::stateChanged,
-                     mParent, [this](ServerManager::State state) { serverStateChanged(state); });
+    QObject::connect(ServerManager::self(), &ServerManager::stateChanged, mParent, [this](ServerManager::State state) {
+        serverStateChanged(state);
+    });
     reconnect();
 }
 
@@ -341,7 +368,12 @@ void SessionPrivate::forceReconnect()
     if (connection) {
         connection->forceReconnect();
     }
-    QMetaObject::invokeMethod(mParent, [this]() { reconnect(); }, Qt::QueuedConnection);
+    QMetaObject::invokeMethod(
+        mParent,
+        [this]() {
+            reconnect();
+        },
+        Qt::QueuedConnection);
 }
 
 Session::Session(const QByteArray &sessionId, QObject *parent)
@@ -374,10 +406,8 @@ Q_GLOBAL_STATIC(QThreadStorage<QPointer<Session>>, instances) // NOLINT(readabil
 
 void SessionPrivate::createDefaultSession(const QByteArray &sessionId)
 {
-    Q_ASSERT_X(!sessionId.isEmpty(), "SessionPrivate::createDefaultSession",
-               "You tried to create a default session with empty session id!");
-    Q_ASSERT_X(!instances()->hasLocalData(), "SessionPrivate::createDefaultSession",
-               "You tried to create a default session twice!");
+    Q_ASSERT_X(!sessionId.isEmpty(), "SessionPrivate::createDefaultSession", "You tried to create a default session with empty session id!");
+    Q_ASSERT_X(!instances()->hasLocalData(), "SessionPrivate::createDefaultSession", "You tried to create a default session twice!");
 
     auto *session = new Session(sessionId);
     setDefaultSession(session);
@@ -385,11 +415,10 @@ void SessionPrivate::createDefaultSession(const QByteArray &sessionId)
 
 void SessionPrivate::setDefaultSession(Session *session)
 {
-    instances()->setLocalData({ session });
-    QObject::connect(qApp, &QCoreApplication::aboutToQuit,
-                     []() {
-                        instances()->setLocalData({});
-                     });
+    instances()->setLocalData({session});
+    QObject::connect(qApp, &QCoreApplication::aboutToQuit, []() {
+        instances()->setLocalData({});
+    });
 }
 
 Session *Session::defaultSession()
@@ -409,7 +438,7 @@ void Session::clear()
 void SessionPrivate::clear(bool forceReconnect)
 {
     for (Job *job : qAsConst(queue)) {
-        job->kill(KJob::EmitResult);   // safe, not started yet
+        job->kill(KJob::EmitResult); // safe, not started yet
     }
     queue.clear();
     for (Job *job : qAsConst(pipeline)) {

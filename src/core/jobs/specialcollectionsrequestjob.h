@@ -16,7 +16,6 @@
 
 namespace Akonadi
 {
-
 class SpecialCollectionsRequestJobPrivate;
 
 /**
@@ -37,13 +36,12 @@ class SpecialCollectionsRequestJobPrivate;
  *
  * @author Constantin Berzan <exit3219@gmail.com>
  * @since 4.4
-*/
+ */
 class AKONADICORE_EXPORT SpecialCollectionsRequestJob : public TransactionSequence
 {
     Q_OBJECT
 
 public:
-
     /**
      * Destroys the special collections request job.
      */

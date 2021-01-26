@@ -12,10 +12,8 @@
 #include "akonadicore_export.h"
 #include "tag.h"
 
-
 namespace Akonadi
 {
-
 class Monitor;
 class TagModelPrivate;
 

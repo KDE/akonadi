@@ -7,14 +7,13 @@
  */
 
 #include "collectionstatistics.h"
-#include "querybuilder.h"
-#include "countquerybuilder.h"
 #include "akonadiserver_debug.h"
-#include "entities.h"
+#include "countquerybuilder.h"
 #include "datastore.h"
+#include "entities.h"
+#include "querybuilder.h"
 
 #include <private/protocol_p.h>
-
 
 using namespace Akonadi::Server;
 
@@ -35,8 +34,10 @@ CollectionStatistics::CollectionStatistics(bool prefetch)
         // Collections
         qb = prepareGenericQuery();
         qb.addColumn(CollectionPimItemRelation::leftFullColumnName());
-        qb.addJoin(QueryBuilder::InnerJoin, CollectionPimItemRelation::tableName(),
-                   CollectionPimItemRelation::rightFullColumnName(), PimItem::idFullColumnName());
+        qb.addJoin(QueryBuilder::InnerJoin,
+                   CollectionPimItemRelation::tableName(),
+                   CollectionPimItemRelation::rightFullColumnName(),
+                   PimItem::idFullColumnName());
         qb.addGroupColumn(CollectionPimItemRelation::leftFullColumnName());
         builders << qb;
 
@@ -47,11 +48,7 @@ CollectionStatistics::CollectionStatistics(bool prefetch)
 
             auto query = qb.query();
             while (query.next()) {
-                mCache.insert(query.value(3).toLongLong(),
-                            { query.value(0).toLongLong(),
-                                query.value(1).toLongLong(),
-                                query.value(2).toLongLong()
-                            });
+                mCache.insert(query.value(3).toLongLong(), {query.value(0).toLongLong(), query.value(1).toLongLong(), query.value(2).toLongLong()});
             }
         }
 
@@ -69,7 +66,7 @@ CollectionStatistics::CollectionStatistics(bool prefetch)
         while (query.next()) {
             const auto colId = query.value(0).toLongLong();
             if (!mCache.contains(colId)) {
-                mCache.insert(colId, { 0, 0, 0 });
+                mCache.insert(colId, {0, 0, 0});
             }
         }
     }
@@ -138,8 +135,7 @@ QueryBuilder CollectionStatistics::prepareGenericQuery()
     static const QString SeenFlagsTableName = QStringLiteral("SeenFlags");
     static const QString IgnoredFlagsTableName = QStringLiteral("IgnoredFlags");
 
-    #define FLAGS_COLUMN(table, column) \
-    QStringLiteral("%1.%2").arg(table##TableName, PimItemFlagRelation::column())
+#define FLAGS_COLUMN(table, column) QStringLiteral("%1.%2").arg(table##TableName, PimItemFlagRelation::column())
 
     // COUNT(DISTINCT PimItemTable.id)
     CountQueryBuilder qb(PimItem::tableName(), PimItem::idFullColumnName(), CountQueryBuilder::Distinct);
@@ -166,23 +162,21 @@ QueryBuilder CollectionStatistics::prepareGenericQuery()
     {
         Query::Condition seenCondition(Query::And);
         seenCondition.addColumnCondition(PimItem::idFullColumnName(), Query::Equals, FLAGS_COLUMN(SeenFlags, leftColumn));
-        seenCondition.addValueCondition(FLAGS_COLUMN(SeenFlags, rightColumn), Query::Equals,
+        seenCondition.addValueCondition(FLAGS_COLUMN(SeenFlags, rightColumn),
+                                        Query::Equals,
                                         Flag::retrieveByNameOrCreate(QStringLiteral(AKONADI_FLAG_SEEN)).id());
-        qb.addJoin(QueryBuilder::LeftJoin,
-                   QStringLiteral("%1 AS %2").arg(PimItemFlagRelation::tableName(), SeenFlagsTableName),
-                   seenCondition);
+        qb.addJoin(QueryBuilder::LeftJoin, QStringLiteral("%1 AS %2").arg(PimItemFlagRelation::tableName(), SeenFlagsTableName), seenCondition);
     }
     {
         Query::Condition ignoredCondition(Query::And);
         ignoredCondition.addColumnCondition(PimItem::idFullColumnName(), Query::Equals, FLAGS_COLUMN(IgnoredFlags, leftColumn));
-        ignoredCondition.addValueCondition(FLAGS_COLUMN(IgnoredFlags, rightColumn), Query::Equals,
+        ignoredCondition.addValueCondition(FLAGS_COLUMN(IgnoredFlags, rightColumn),
+                                           Query::Equals,
                                            Flag::retrieveByNameOrCreate(QStringLiteral(AKONADI_FLAG_IGNORED)).id());
-        qb.addJoin(QueryBuilder::LeftJoin,
-                   QStringLiteral("%1 AS %2").arg(PimItemFlagRelation::tableName(), IgnoredFlagsTableName),
-                   ignoredCondition);
+        qb.addJoin(QueryBuilder::LeftJoin, QStringLiteral("%1 AS %2").arg(PimItemFlagRelation::tableName(), IgnoredFlagsTableName), ignoredCondition);
     }
 
-    #undef FLAGS_COLUMN
+#undef FLAGS_COLUMN
 
     return std::move(qb);
 }
@@ -192,24 +186,24 @@ CollectionStatistics::Statistics CollectionStatistics::calculateCollectionStatis
     auto qb = prepareGenericQuery();
 
     if (col.isVirtual()) {
-        qb.addJoin(QueryBuilder::InnerJoin, CollectionPimItemRelation::tableName(),
-                   CollectionPimItemRelation::rightFullColumnName(), PimItem::idFullColumnName());
+        qb.addJoin(QueryBuilder::InnerJoin,
+                   CollectionPimItemRelation::tableName(),
+                   CollectionPimItemRelation::rightFullColumnName(),
+                   PimItem::idFullColumnName());
         qb.addValueCondition(CollectionPimItemRelation::leftFullColumnName(), Query::Equals, col.id());
     } else {
         qb.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, col.id());
     }
 
     if (!qb.exec()) {
-        return { -1, -1, -1 };
+        return {-1, -1, -1};
     }
     if (!qb.query().next()) {
         qCCritical(AKONADISERVER_LOG) << "Error during retrieving result of statistics query:" << qb.query().lastError().text();
-        return { -1, -1, -1 };
+        return {-1, -1, -1};
     }
 
-    auto result = Statistics{ qb.query().value(0).toLongLong(),
-                              qb.query().value(1).toLongLong(),
-                              qb.query().value(2).toLongLong() };
+    auto result = Statistics{qb.query().value(0).toLongLong(), qb.query().value(1).toLongLong(), qb.query().value(2).toLongLong()};
     qb.query().finish();
     return result;
 }

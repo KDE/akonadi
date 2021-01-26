@@ -10,7 +10,6 @@
 #include "agentinstance.h"
 #include "agentinstancemodel.h"
 
-
 #include <QApplication>
 #include <QHBoxLayout>
 #include <QIcon>
@@ -22,7 +21,6 @@ namespace Akonadi
 {
 namespace Internal
 {
-
 static void iconsEarlyCleanup();
 
 struct Icons {
@@ -149,11 +147,15 @@ AgentInstanceWidget::AgentInstanceWidget(QWidget *parent)
     d->mView->selectionModel()->setCurrentIndex(d->mView->model()->index(0, 0), QItemSelectionModel::Select);
     d->mView->scrollTo(d->mView->model()->index(0, 0));
 
-    connect(d->mView->selectionModel(), &QItemSelectionModel::currentChanged,
-            this, [this](const auto &tl, const auto &br) { d->currentAgentInstanceChanged(tl, br); });
-    connect(d->mView, &QListView::doubleClicked,
-            this, [this](const QModelIndex &currentIndex) { d->currentAgentInstanceDoubleClicked(currentIndex); });
-    connect(d->mView, &QListView::clicked, this, [this](const auto &mi) { d->currentAgentInstanceClicked(mi); });
+    connect(d->mView->selectionModel(), &QItemSelectionModel::currentChanged, this, [this](const auto &tl, const auto &br) {
+        d->currentAgentInstanceChanged(tl, br);
+    });
+    connect(d->mView, &QListView::doubleClicked, this, [this](const QModelIndex &currentIndex) {
+        d->currentAgentInstanceDoubleClicked(currentIndex);
+    });
+    connect(d->mView, &QListView::clicked, this, [this](const auto &mi) {
+        d->currentAgentInstanceClicked(mi);
+    });
 }
 
 AgentInstanceWidget::~AgentInstanceWidget()
@@ -240,10 +242,13 @@ void AgentInstanceWidgetDelegate::paint(QPainter *painter, const QStyleOptionVie
     }
 
     const QPixmap iconPixmap = icon.pixmap(style->pixelMetric(QStyle::PM_MessageBoxIconSize));
-    QRect innerRect = option.rect.adjusted(s_delegatePaddingSize, s_delegatePaddingSize, -s_delegatePaddingSize, -s_delegatePaddingSize);   //add some padding round entire delegate
+    QRect innerRect = option.rect.adjusted(s_delegatePaddingSize,
+                                           s_delegatePaddingSize,
+                                           -s_delegatePaddingSize,
+                                           -s_delegatePaddingSize); // add some padding round entire delegate
 
     const QSize decorationSize = iconPixmap.size();
-    const QSize statusIconSize = statusPixmap.size();//= KIconLoader::global()->currentSize(KIconLoader::Small);
+    const QSize statusIconSize = statusPixmap.size(); //= KIconLoader::global()->currentSize(KIconLoader::Small);
 
     QFont nameFont = option.font;
     nameFont.setBold(true);
@@ -251,7 +256,7 @@ void AgentInstanceWidgetDelegate::paint(QPainter *painter, const QStyleOptionVie
     QFont statusTextFont = option.font;
     const QRect decorationRect(innerRect.left(), innerRect.top(), decorationSize.width(), innerRect.height());
     const QRect nameTextRect(decorationRect.topRight() + QPoint(4, 0), innerRect.topRight() + QPoint(0, innerRect.height() / 2));
-    const QRect statusTextRect(decorationRect.bottomRight() + QPoint(4, - innerRect.height() / 2), innerRect.bottomRight());
+    const QRect statusTextRect(decorationRect.bottomRight() + QPoint(4, -innerRect.height() / 2), innerRect.bottomRight());
 
     QPalette::ColorGroup cg = (option.state & QStyle::State_Enabled) ? QPalette::Normal : QPalette::Disabled;
     if (cg == QPalette::Normal && !(option.state & QStyle::State_Active)) {
@@ -278,10 +283,11 @@ QSize AgentInstanceWidgetDelegate::sizeHint(const QStyleOptionViewItem &option, 
 {
     Q_UNUSED(index)
 
-    const int iconHeight = QApplication::style()->pixelMetric(QStyle::PM_MessageBoxIconSize) + (s_delegatePaddingSize * 2);  //icon height + padding either side
-    const int textHeight = option.fontMetrics.height() + qMax(option.fontMetrics.height(), 16) + (s_delegatePaddingSize * 2);   //height of text + icon/text + padding either side
+    const int iconHeight = QApplication::style()->pixelMetric(QStyle::PM_MessageBoxIconSize) + (s_delegatePaddingSize * 2); // icon height + padding either side
+    const int textHeight =
+        option.fontMetrics.height() + qMax(option.fontMetrics.height(), 16) + (s_delegatePaddingSize * 2); // height of text + icon/text + padding either side
 
-    return QSize(1, qMax(iconHeight, textHeight));    //any width,the view will give us the whole thing in list mode
+    return QSize(1, qMax(iconHeight, textHeight)); // any width,the view will give us the whole thing in list mode
 }
 
 } // namespace Akonadi

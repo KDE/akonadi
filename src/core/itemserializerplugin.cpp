@@ -20,7 +20,7 @@ QSet<QByteArray> ItemSerializerPlugin::parts(const Item &item) const
         return {};
     }
 
-    return { Item::FullPayload };
+    return {Item::FullPayload};
 }
 
 void ItemSerializerPlugin::overridePluginLookup(QObject *p)
@@ -34,7 +34,7 @@ QSet<QByteArray> ItemSerializerPlugin::availableParts(const Item &item) const
         return {};
     }
 
-    return { Item::FullPayload };
+    return {Item::FullPayload};
 }
 
 void ItemSerializerPlugin::apply(Item &item, const Item &other)
@@ -60,5 +60,5 @@ QSet<QByteArray> ItemSerializerPlugin::allowedForeignParts(const Item &item) con
         return {};
     }
 
-    return { Item::FullPayload };
+    return {Item::FullPayload};
 }

@@ -10,13 +10,11 @@
 #include "akonadicore_export.h"
 #include "collection.h"
 
-
 class KJob;
 class QMimeData;
 
 namespace Akonadi
 {
-
 class Session;
 
 /**

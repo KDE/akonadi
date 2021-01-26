@@ -15,7 +15,6 @@
 
 namespace Akonadi
 {
-
 class AgentThread;
 
 class AgentServer : public QObject

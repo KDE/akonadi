@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @short Filter model which hides/shows entities marked as trash
  *

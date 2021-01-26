@@ -4,9 +4,9 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
+#include "akonadicore_debug.h"
 #include "asyncselectionhandler_p.h"
 #include "models/entitytreemodel.h"
-#include "akonadicore_debug.h"
 
 using namespace Akonadi;
 
@@ -43,7 +43,7 @@ bool AsyncSelectionHandler::scanSubTree(const QModelIndex &index, bool searchFor
 
     for (int row = 0; row < mModel->rowCount(index); ++row) {
         const QModelIndex childIndex = mModel->index(row, 0, index);
-        //This should not normally happen, but if it does we end up in an endless loop
+        // This should not normally happen, but if it does we end up in an endless loop
         if (!childIndex.isValid()) {
             qCWarning(AKONADICORE_LOG) << "Invalid child detected: " << index.data().toString();
             Q_ASSERT(false);

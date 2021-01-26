@@ -13,7 +13,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
  * @ingroup akonadi_server_handler
  *
@@ -22,7 +21,7 @@ namespace Server
  * These commands are used to add and remove references of a set of items to a
  * virtual collection.
  */
-class ItemLinkHandler: public Handler
+class ItemLinkHandler : public Handler
 {
 public:
     ItemLinkHandler(AkonadiServer &akonadi);

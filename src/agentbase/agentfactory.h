@@ -10,14 +10,13 @@
 #ifndef AKONADI_AGENTFACTORY_H
 #define AKONADI_AGENTFACTORY_H
 
-#include "akonadiagentbase_export.h"
 #include "agentbase.h"
+#include "akonadiagentbase_export.h"
 
 #include <QObject>
 
 namespace Akonadi
 {
-
 class AgentFactoryBasePrivate;
 
 /**
@@ -63,8 +62,7 @@ private:
  * @internal
  * @since 4.6
  */
-template <typename T>
-class AgentFactory : public AgentFactoryBase
+template<typename T> class AgentFactory : public AgentFactoryBase
 {
 public:
     /** reimplemented */

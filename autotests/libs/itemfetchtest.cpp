@@ -5,14 +5,14 @@
 */
 
 #include "itemfetchtest.h"
-#include "collectionpathresolver.h"
-#include "testattribute.h"
 #include "attributefactory.h"
+#include "collectionpathresolver.h"
 #include "itemcreatejob.h"
 #include "itemdeletejob.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
 #include "resourceselectjob_p.h"
+#include "testattribute.h"
 
 #include <qtest_akonadi.h>
 
@@ -108,7 +108,7 @@ void ItemFetchTest::testResourceRetrieval()
     item = job->items().first();
     QCOMPARE(item.id(), 1LL);
     QVERIFY(!item.remoteId().isEmpty());
-    QVERIFY(!item.hasPayload());   // not yet in cache
+    QVERIFY(!item.hasPayload()); // not yet in cache
     QCOMPARE(item.attributes().count(), 1);
 
     job = new ItemFetchJob(item, this);
@@ -261,6 +261,4 @@ void ItemFetchTest::testAncestorRetrieval()
     QCOMPARE(c2.remoteId(), QLatin1String("6"));
     const Collection c3 = c2.parentCollection();
     QCOMPARE(c3, Collection::root());
-
 }
-

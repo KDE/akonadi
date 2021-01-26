@@ -10,29 +10,27 @@
 
 #include "akonadicore_export.h"
 #include "attribute.h"
-#include "exceptionbase.h"
-#include "tag.h"
 #include "collection.h"
-#include "relation.h"
+#include "exceptionbase.h"
 #include "itempayloadinternals_p.h"
 #include "job.h"
+#include "relation.h"
+#include "tag.h"
 
 #include <QByteArray>
 #include <QMetaType>
 #include <QSet>
 
+#include <memory>
 #include <type_traits>
 #include <typeinfo>
-#include <memory>
 
 class QUrl;
 
-template <typename T>
-class QVector;
+template<typename T> class QVector;
 
 namespace Akonadi
 {
-
 class ItemPrivate;
 
 /**
@@ -307,8 +305,8 @@ public:
      * Describes the options that can be passed to access attributes.
      */
     enum CreateOption {
-        AddIfMissing,   ///< Creates the attribute if it is missing
-        DontCreate      ///< Do not create the attribute if it is missing (default)
+        AddIfMissing, ///< Creates the attribute if it is missing
+        DontCreate ///< Do not create the attribute if it is missing (default)
     };
 
     /**
@@ -318,26 +316,22 @@ public:
      *
      * @param option The create options.
      */
-    template <typename T>
-    inline T *attribute(CreateOption option = DontCreate);
+    template<typename T> inline T *attribute(CreateOption option = DontCreate);
 
     /**
      * Returns the attribute of the requested type or 0 if it is not available.
      */
-    template <typename T>
-    inline const T *attribute() const;
+    template<typename T> inline const T *attribute() const;
 
     /**
      * Removes and deletes the attribute of the requested type.
      */
-    template <typename T>
-    inline void removeAttribute();
+    template<typename T> inline void removeAttribute();
 
     /**
      * Returns whether the item has an attribute of the requested type.
      */
-    template <typename T>
-    inline bool hasAttribute() const;
+    template<typename T> inline bool hasAttribute() const;
 
     /**
      * Returns all flags of this item.
@@ -568,9 +562,9 @@ public:
      * and std::shared_ptr and make sure there is a specialization of
      * Akonadi::super_trait for your class.
      */
-    template <typename T> void setPayload(const T &p);
+    template<typename T> void setPayload(const T &p);
     //@cond PRIVATE
-    template <typename T> void setPayload(T *p);
+    template<typename T> void setPayload(T *p);
 
 // We know that auto_ptr is deprecated, but we still want to handle the case
 // without compilers yelling at us all the time just because item.h gets included
@@ -585,7 +579,7 @@ public:
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif
 #endif
-    template <typename T> void setPayload(std::auto_ptr<T> p);
+    template<typename T> void setPayload(std::auto_ptr<T> p);
 #ifdef __GNUC__
 #ifdef __clang__
 #pragma clang diagnostic pop
@@ -594,7 +588,7 @@ public:
 #endif
 #endif
 #endif
-    template <typename T> void setPayload(std::unique_ptr<T> p);
+    template<typename T> void setPayload(std::unique_ptr<T> p);
     //@endcond
 
     /**
@@ -610,7 +604,7 @@ public:
      *
      * Trying to retrieve a pointer type will fail to compile.
      */
-    template <typename T> T payload() const;
+    template<typename T> T payload() const;
 
     /**
      * Returns whether the item has a payload object.
@@ -626,14 +620,14 @@ public:
      *
      * Trying to retrieve a pointer type will fail to compile.
      */
-    template <typename T> bool hasPayload() const;
+    template<typename T> bool hasPayload() const;
 
     /**
      * Describes the type of url which is returned in url().
      */
     enum UrlType {
-        UrlShort = 0,         ///< A short url which contains the identifier only (default)
-        UrlWithMimeType = 1   ///< A url with identifier and mimetype
+        UrlShort = 0, ///< A short url which contains the identifier only (default)
+        UrlWithMimeType = 1 ///< A url with identifier and mimetype
     };
 
     /**
@@ -688,10 +682,8 @@ private:
     friend class ItemSync;
     friend class ProtocolHelper;
     Internal::PayloadBase *payloadBaseV2(int sharedPointerId, int metaTypeId) const;
-    void setPayloadBaseV2(int sharedPointerId, int metaTypeId,
-                          std::unique_ptr<Internal::PayloadBase> &p);
-    void addPayloadBaseVariant(int sharedPointerId, int metaTypeId,
-                               std::unique_ptr<Internal::PayloadBase> &p) const;
+    void setPayloadBaseV2(int sharedPointerId, int metaTypeId, std::unique_ptr<Internal::PayloadBase> &p);
+    void addPayloadBaseVariant(int sharedPointerId, int metaTypeId, std::unique_ptr<Internal::PayloadBase> &p) const;
 
     /**
      * Try to ensure that we have a variant of the payload for metatype id @a mtid.
@@ -699,40 +691,24 @@ private:
      */
     bool ensureMetaTypeId(int mtid) const;
 
-    template <typename T>
-    typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, void>::type
-    setPayloadImpl(const T &p, const int * /*disambiguate*/ = nullptr);
-    template <typename T>
-    typename std::enable_if < !Internal::PayloadTrait<T>::isPolymorphic, void >::type
-    setPayloadImpl(const T &p);
+    template<typename T>
+    typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, void>::type setPayloadImpl(const T &p, const int * /*disambiguate*/ = nullptr);
+    template<typename T> typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic, void>::type setPayloadImpl(const T &p);
 
-    template <typename T>
-    typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, T>::type
-    payloadImpl(const int * /*disambiguate*/ = nullptr) const;
-    template <typename T>
-    typename std::enable_if < !Internal::PayloadTrait<T>::isPolymorphic, T >::type
-    payloadImpl() const;
+    template<typename T> typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, T>::type payloadImpl(const int * /*disambiguate*/ = nullptr) const;
+    template<typename T> typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic, T>::type payloadImpl() const;
 
-    template <typename T>
-    typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, bool>::type
-    hasPayloadImpl(const int * /*disambiguate*/ = nullptr) const;
-    template <typename T>
-    typename std::enable_if < !Internal::PayloadTrait<T>::isPolymorphic, bool >::type
-    hasPayloadImpl() const;
+    template<typename T>
+    typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, bool>::type hasPayloadImpl(const int * /*disambiguate*/ = nullptr) const;
+    template<typename T> typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic, bool>::type hasPayloadImpl() const;
 
-    template <typename T>
-    typename std::enable_if<Internal::is_shared_pointer<T>::value, bool>::type
-    tryToClone(T *ret, const int * /*disambiguate*/ = nullptr) const;
-    template <typename T>
-    typename std::enable_if < !Internal::is_shared_pointer<T>::value, bool >::type
-    tryToClone(T *ret) const;
+    template<typename T>
+    typename std::enable_if<Internal::is_shared_pointer<T>::value, bool>::type tryToClone(T *ret, const int * /*disambiguate*/ = nullptr) const;
+    template<typename T> typename std::enable_if<!Internal::is_shared_pointer<T>::value, bool>::type tryToClone(T *ret) const;
 
-    template <typename T, typename NewT>
-    typename std::enable_if < !std::is_same<T, NewT>::value, bool >::type
-    tryToCloneImpl(T *ret, const int * /*disambiguate*/ = nullptr) const;
-    template <typename T, typename NewT>
-    typename std::enable_if<std::is_same<T, NewT>::value, bool>::type
-    tryToCloneImpl(T *ret) const;
+    template<typename T, typename NewT>
+    typename std::enable_if<!std::is_same<T, NewT>::value, bool>::type tryToCloneImpl(T *ret, const int * /*disambiguate*/ = nullptr) const;
+    template<typename T, typename NewT> typename std::enable_if<std::is_same<T, NewT>::value, bool>::type tryToCloneImpl(T *ret) const;
 
     /**
      * Set the collection ID to where the item is stored in. Should be set only by the ItemFetchJob.
@@ -767,16 +743,14 @@ private:
 
 AKONADICORE_EXPORT uint qHash(const Akonadi::Item &item);
 
-template <typename T>
-inline T *Item::attribute(Item::CreateOption option)
+template<typename T> inline T *Item::attribute(Item::CreateOption option)
 {
     const QByteArray type = T().type();
     if (hasAttribute(type)) {
         if (T *attr = dynamic_cast<T *>(attribute(type))) {
             return attr;
         }
-        qWarning() << "Found attribute of unknown type" << type
-                   << ". Did you forget to call AttributeFactory::registerAttribute()?";
+        qWarning() << "Found attribute of unknown type" << type << ". Did you forget to call AttributeFactory::registerAttribute()?";
     } else if (option == AddIfMissing) {
         T *attr = new T();
         addAttribute(attr);
@@ -786,35 +760,30 @@ inline T *Item::attribute(Item::CreateOption option)
     return nullptr;
 }
 
-template <typename T>
-inline const T *Item::attribute() const
+template<typename T> inline const T *Item::attribute() const
 {
     const QByteArray type = T().type();
     if (hasAttribute(type)) {
         if (const T *attr = dynamic_cast<const T *>(attribute(type))) {
             return attr;
         }
-        qWarning() << "Found attribute of unknown type" << type
-                   << ". Did you forget to call AttributeFactory::registerAttribute()?";
+        qWarning() << "Found attribute of unknown type" << type << ". Did you forget to call AttributeFactory::registerAttribute()?";
     }
 
     return nullptr;
 }
 
-template <typename T>
-inline void Item::removeAttribute()
+template<typename T> inline void Item::removeAttribute()
 {
     removeAttribute(T().type());
 }
 
-template <typename T>
-inline bool Item::hasAttribute() const
+template<typename T> inline bool Item::hasAttribute() const
 {
     return hasAttribute(T().type());
 }
 
-template <typename T>
-T Item::payload() const
+template<typename T> T Item::payload() const
 {
     static_assert(!std::is_pointer<T>::value, "Payload must not be a pointer");
 
@@ -825,29 +794,23 @@ T Item::payload() const
     return payloadImpl<T>();
 }
 
-template <typename T>
-typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, T>::type
-Item::payloadImpl(const int *) const
+template<typename T> typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, T>::type Item::payloadImpl(const int *) const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
-    static_assert(PayloadType::isPolymorphic,
-                  "Non-polymorphic payload type in polymorphic implementation is not allowed");
+    static_assert(PayloadType::isPolymorphic, "Non-polymorphic payload type in polymorphic implementation is not allowed");
 
     typedef typename Internal::get_hierarchy_root<T>::type Root_T;
     typedef Internal::PayloadTrait<Root_T> RootType;
     static_assert(!RootType::isPolymorphic,
-                  "Root type of payload type must not be polymorphic");   // prevent endless recursion
+                  "Root type of payload type must not be polymorphic"); // prevent endless recursion
 
     return PayloadType::castFrom(payloadImpl<Root_T>());
 }
 
-template <typename T>
-typename std::enable_if < !Internal::PayloadTrait<T>::isPolymorphic, T >::type
-Item::payloadImpl() const
+template<typename T> typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic, T>::type Item::payloadImpl() const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
-    static_assert(!PayloadType::isPolymorphic,
-                  "Polymorphic payload type in non-polymorphic implementation is not allowed");
+    static_assert(!PayloadType::isPolymorphic, "Polymorphic payload type in non-polymorphic implementation is not allowed");
 
     const int metaTypeId = PayloadType::elementMetaTypeId();
 
@@ -869,9 +832,7 @@ Item::payloadImpl() const
     return ret;
 }
 
-template<typename T, typename NewT>
-typename std::enable_if < !std::is_same<T, NewT>::value, bool >::type
-Item::tryToCloneImpl(T *ret, const int *) const
+template<typename T, typename NewT> typename std::enable_if<!std::is_same<T, NewT>::value, bool>::type Item::tryToCloneImpl(T *ret, const int *) const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
     typedef Internal::PayloadTrait<NewT> NewPayloadType;
@@ -896,58 +857,45 @@ Item::tryToCloneImpl(T *ret, const int *) const
     return tryToCloneImpl<T, typename Internal::shared_pointer_traits<NewT>::next_shared_ptr>(ret);
 }
 
-template <typename T, typename NewT>
-typename std::enable_if<std::is_same<T, NewT>::value, bool>::type
-Item::tryToCloneImpl(T *) const
+template<typename T, typename NewT> typename std::enable_if<std::is_same<T, NewT>::value, bool>::type Item::tryToCloneImpl(T *) const
 {
     return false;
 }
 
-template <typename T>
-typename std::enable_if<Internal::is_shared_pointer<T>::value, bool>::type
-Item::tryToClone(T *ret, const int *) const
+template<typename T> typename std::enable_if<Internal::is_shared_pointer<T>::value, bool>::type Item::tryToClone(T *ret, const int *) const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
-    static_assert(!PayloadType::isPolymorphic,
-                  "Polymorphic payload type in non-polymorphic implementation is not allowed");
+    static_assert(!PayloadType::isPolymorphic, "Polymorphic payload type in non-polymorphic implementation is not allowed");
 
     return tryToCloneImpl<T, typename Internal::shared_pointer_traits<T>::next_shared_ptr>(ret);
 }
 
-template <typename T>
-typename std::enable_if < !Internal::is_shared_pointer<T>::value, bool >::type
-Item::tryToClone(T *) const
+template<typename T> typename std::enable_if<!Internal::is_shared_pointer<T>::value, bool>::type Item::tryToClone(T *) const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
-    static_assert(!PayloadType::isPolymorphic,
-                  "Polymorphic payload type in non-polymorphic implementation is not allowed");
+    static_assert(!PayloadType::isPolymorphic, "Polymorphic payload type in non-polymorphic implementation is not allowed");
 
     return false;
 }
 
-template <typename T>
-bool Item::hasPayload() const
+template<typename T> bool Item::hasPayload() const
 {
     static_assert(!std::is_pointer<T>::value, "Payload type cannot be a pointer");
     return hasPayload() && hasPayloadImpl<T>();
 }
 
-template <typename T>
-typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, bool>::type
-Item::hasPayloadImpl(const int *) const
+template<typename T> typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, bool>::type Item::hasPayloadImpl(const int *) const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
-    static_assert(PayloadType::isPolymorphic,
-                  "Non-polymorphic payload type in polymorphic implementation is no allowed");
+    static_assert(PayloadType::isPolymorphic, "Non-polymorphic payload type in polymorphic implementation is no allowed");
 
     typedef typename Internal::get_hierarchy_root<T>::type Root_T;
     typedef Internal::PayloadTrait<Root_T> RootType;
     static_assert(!RootType::isPolymorphic,
-                  "Root type of payload type must not be polymorphic");   // prevent endless recursion
+                  "Root type of payload type must not be polymorphic"); // prevent endless recursion
 
     try {
-        return hasPayloadImpl<Root_T>()
-               && PayloadType::canCastFrom(payload<Root_T>());
+        return hasPayloadImpl<Root_T>() && PayloadType::canCastFrom(payload<Root_T>());
     } catch (const Akonadi::PayloadException &e) {
         qDebug() << e.what();
         Q_UNUSED(e)
@@ -955,13 +903,10 @@ Item::hasPayloadImpl(const int *) const
     }
 }
 
-template <typename T>
-typename std::enable_if < !Internal::PayloadTrait<T>::isPolymorphic, bool >::type
-Item::hasPayloadImpl() const
+template<typename T> typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic, bool>::type Item::hasPayloadImpl() const
 {
     typedef Internal::PayloadTrait<T> PayloadType;
-    static_assert(!PayloadType::isPolymorphic,
-                  "Polymorphic payload type in non-polymorphic implementation is not allowed");
+    static_assert(!PayloadType::isPolymorphic, "Polymorphic payload type in non-polymorphic implementation is not allowed");
 
     const int metaTypeId = PayloadType::elementMetaTypeId();
 
@@ -979,42 +924,33 @@ Item::hasPayloadImpl() const
     return tryToClone<T>(nullptr);
 }
 
-template <typename T>
-void Item::setPayload(const T &p)
+template<typename T> void Item::setPayload(const T &p)
 {
     static_assert(!std::is_pointer<T>::value, "Payload type must not be a pointer");
     setPayloadImpl(p);
 }
 
-template <typename T>
-typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic>::type
-Item::setPayloadImpl(const T &p, const int *)
+template<typename T> typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic>::type Item::setPayloadImpl(const T &p, const int *)
 {
     typedef Internal::PayloadTrait<T> PayloadType;
-    static_assert(PayloadType::isPolymorphic,
-                  "Non-polymorphic payload type in polymorphic implementation is not allowed");
+    static_assert(PayloadType::isPolymorphic, "Non-polymorphic payload type in polymorphic implementation is not allowed");
 
     typedef typename Internal::get_hierarchy_root<T>::type Root_T;
     typedef Internal::PayloadTrait<Root_T> RootType;
     static_assert(!RootType::isPolymorphic,
-                  "Root type of payload type must not be polymorphic");   // prevent endless recursion
+                  "Root type of payload type must not be polymorphic"); // prevent endless recursion
 
     setPayloadImpl<Root_T>(p);
 }
 
-template <typename T>
-typename std::enable_if < !Internal::PayloadTrait<T>::isPolymorphic >::type
-Item::setPayloadImpl(const T &p)
+template<typename T> typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic>::type Item::setPayloadImpl(const T &p)
 {
     typedef Internal::PayloadTrait<T> PayloadType;
     std::unique_ptr<Internal::PayloadBase> pb(new Internal::Payload<T>(p));
-    setPayloadBaseV2(PayloadType::sharedPointerId,
-                     PayloadType::elementMetaTypeId(),
-                     pb);
+    setPayloadBaseV2(PayloadType::sharedPointerId, PayloadType::elementMetaTypeId(), pb);
 }
 
-template <typename T>
-void Item::setPayload(T *p)
+template<typename T> void Item::setPayload(T *p)
 {
     p->You_MUST_NOT_use_a_pointer_as_payload;
 }
@@ -1029,8 +965,7 @@ void Item::setPayload(T *p)
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif
 #endif
-template <typename T>
-void Item::setPayload(std::auto_ptr<T> p)
+template<typename T> void Item::setPayload(std::auto_ptr<T> p)
 {
     p.Nice_try_but_a_std_auto_ptr_is_not_allowed_as_payload_either;
 }
@@ -1043,8 +978,7 @@ void Item::setPayload(std::auto_ptr<T> p)
 #endif
 #endif
 
-template <typename T>
-void Item::setPayload(std::unique_ptr<T> p)
+template<typename T> void Item::setPayload(std::unique_ptr<T> p)
 {
     p.Nope_even_std_unique_ptr_is_not_allowed;
 }

@@ -25,7 +25,6 @@ class DataStream;
 
 namespace Akonadi
 {
-
 /**
   Represents a single interval in an ImapSet.
   This class is implicitly shared.
@@ -144,13 +143,13 @@ public:
     */
     ImapSet();
 
-    ImapSet(qint64 Id);                     // krazy:exclude=explicit
+    ImapSet(qint64 Id); // krazy:exclude=explicit
 
-    ImapSet(const QVector<qint64> &ids);    // krazy:exclude=explicit
+    ImapSet(const QVector<qint64> &ids); // krazy:exclude=explicit
 
-    ImapSet(const QList<qint64> &ids);      // krazy:exclude=explicit
+    ImapSet(const QList<qint64> &ids); // krazy:exclude=explicit
 
-    ImapSet(const ImapInterval &interval);  // krazy:exclude=explicit
+    ImapSet(const ImapInterval &interval); // krazy:exclude=explicit
 
     /**
       Copy constructor.

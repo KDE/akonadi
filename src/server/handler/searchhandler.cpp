@@ -7,21 +7,22 @@
 #include "searchhandler.h"
 
 #include "akonadi.h"
-#include "connection.h"
-#include "itemfetchhelper.h"
-#include "handlerhelper.h"
-#include "search/agentsearchengine.h"
-#include "searchhelper.h"
-#include "search/searchrequest.h"
-#include "search/searchmanager.h"
 #include "akonadiserver_search_debug.h"
+#include "connection.h"
+#include "handlerhelper.h"
+#include "itemfetchhelper.h"
+#include "search/agentsearchengine.h"
+#include "search/searchmanager.h"
+#include "search/searchrequest.h"
+#include "searchhelper.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
 SearchHandler::SearchHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 bool SearchHandler::parseStream()
 {
@@ -34,7 +35,7 @@ bool SearchHandler::parseStream()
     QVector<qint64> collectionIds;
     bool recursive = cmd.recursive();
 
-    if (cmd.collections().isEmpty() || cmd.collections() == QVector<qint64> { 0LL }) {
+    if (cmd.collections().isEmpty() || cmd.collections() == QVector<qint64>{0LL}) {
         collectionIds << 0;
         recursive = true;
     }
@@ -63,13 +64,12 @@ bool SearchHandler::parseStream()
     request.setMimeTypes(cmd.mimeTypes());
     request.setQuery(cmd.query());
     request.setRemoteSearch(cmd.remote());
-    QObject::connect(&request, &SearchRequest::resultsAvailable,
-                     [this](const QSet<qint64> &results) {
-                        processResults(results);
-                     });
+    QObject::connect(&request, &SearchRequest::resultsAvailable, [this](const QSet<qint64> &results) {
+        processResults(results);
+    });
     request.exec();
 
-    //qCDebug(AKONADISERVER_SEARCH_LOG) << "\tResult:" << uids;
+    // qCDebug(AKONADISERVER_SEARCH_LOG) << "\tResult:" << uids;
     qCDebug(AKONADISERVER_SEARCH_LOG) << "\tResult:" << mAllResults.count() << "matches";
 
     return successResponse<Protocol::SearchResponse>();

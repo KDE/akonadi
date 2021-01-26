@@ -4,8 +4,8 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#include "bridgeserver.h"
 #include "bridgeconnection.h"
+#include "bridgeserver.h"
 
 #include <shared/akapplication.h>
 

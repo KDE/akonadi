@@ -10,9 +10,9 @@
 #include "collection_p.h"
 #include "collectionstatistics.h"
 #include "job_p.h"
-#include "protocolhelper_p.h"
-#include "private/protocol_p.h"
 #include "persistentsearchattribute.h"
+#include "private/protocol_p.h"
+#include "protocolhelper_p.h"
 
 using namespace Akonadi;
 

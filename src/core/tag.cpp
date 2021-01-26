@@ -5,12 +5,12 @@
 */
 
 #include "tag.h"
-#include "tag_p.h"
 #include "akonadicore_debug.h"
+#include "tag_p.h"
 
 #include "tagattribute.h"
-#include <QUuid>
 #include <QUrlQuery>
+#include <QUuid>
 
 using namespace Akonadi;
 
@@ -97,7 +97,7 @@ QUrl Tag::url() const
 
 void Tag::addAttribute(Attribute *attr)
 {
-   d_ptr->mAttributeStorage.addAttribute(attr);
+    d_ptr->mAttributeStorage.addAttribute(attr);
 }
 
 void Tag::removeAttribute(const QByteArray &type)
@@ -230,8 +230,7 @@ bool Tag::checkAttribute(const Attribute *attr, const QByteArray &type) const
     if (attr) {
         return true;
     }
-    qCWarning(AKONADICORE_LOG) << "Found attribute of unknown type" << type
-                               << ". Did you forget to call AttributeFactory::registerAttribute()?";
+    qCWarning(AKONADICORE_LOG) << "Found attribute of unknown type" << type << ". Did you forget to call AttributeFactory::registerAttribute()?";
     return false;
 }
 

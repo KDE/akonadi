@@ -5,29 +5,29 @@
 */
 
 #include "agentconfigurationdialog.h"
+#include "agentconfigurationbase.h"
 #include "agentconfigurationwidget.h"
 #include "agentconfigurationwidget_p.h"
-#include "agentconfigurationbase.h"
 #include "core/agentmanager.h"
 
-#include <QVBoxLayout>
-#include <QDialogButtonBox>
-#include <QPushButton>
 #include <QAction>
 #include <QDebug>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
-#include <KLocalizedString>
-#include <KHelpMenu>
 #include <KAboutData>
+#include <KHelpMenu>
+#include <KLocalizedString>
 
-namespace Akonadi {
+namespace Akonadi
+{
 class Q_DECL_HIDDEN AgentConfigurationDialog::Private
 {
 public:
     explicit Private(AgentConfigurationDialog *qq)
         : q(qq)
     {
-
     }
     void restoreDialogSize();
     AgentConfigurationDialog *const q;
@@ -66,19 +66,17 @@ AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance
     connect(btnBox, &QDialogButtonBox::accepted, this, &AgentConfigurationDialog::accept);
     connect(btnBox, &QDialogButtonBox::rejected, this, &AgentConfigurationDialog::reject);
     if (QPushButton *applyButton = btnBox->button(QDialogButtonBox::Apply)) {
-        connect(applyButton, &QPushButton::clicked,
-                d->widget.data(), &AgentConfigurationWidget::save);
+        connect(applyButton, &QPushButton::clicked, d->widget.data(), &AgentConfigurationWidget::save);
     }
     if ((d->okButton = btnBox->button(QDialogButtonBox::Ok))) {
-        connect(d->widget.data(), &AgentConfigurationWidget::enableOkButton,
-                d->okButton, &QPushButton::setEnabled);
+        connect(d->widget.data(), &AgentConfigurationWidget::enableOkButton, d->okButton, &QPushButton::setEnabled);
     }
 
     if (auto plugin = d->widget->d->plugin) {
         if (auto *aboutData = plugin->aboutData()) {
             auto *helpMenu = new KHelpMenu(this, *aboutData, true);
             helpMenu->action(KHelpMenu::menuDonate);
-            //Initialize menu
+            // Initialize menu
             QMenu *menu = helpMenu->menu();
             // HACK: the actions are populated from QGuiApplication so they would refer to the
             // current application not to the agent, so we have to adjust the strings in some

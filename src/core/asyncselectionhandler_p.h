@@ -18,7 +18,6 @@ class QModelIndex;
 
 namespace Akonadi
 {
-
 /**
  * @internal
  *

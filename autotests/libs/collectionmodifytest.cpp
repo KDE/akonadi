@@ -6,9 +6,9 @@
  */
 
 #include "collectioncreatejob.h"
+#include "collectiondeletejob.h"
 #include "collectionfetchjob.h"
 #include "collectionmodifyjob.h"
-#include "collectiondeletejob.h"
 #include "entitydisplayattribute.h"
 #include "qtest_akonadi.h"
 
@@ -28,7 +28,7 @@ private Q_SLOTS:
     {
         Collection col;
         col.setName(QLatin1String("test_collection"));
-        col.setContentMimeTypes({ Collection::mimeType() });
+        col.setContentMimeTypes({Collection::mimeType()});
         col.setParentCollection(Collection(AkonadiTest::collectionIdFromPath(QLatin1String("res1"))));
         col.setRights(Collection::AllRights);
 
@@ -39,7 +39,7 @@ private Q_SLOTS:
 
         auto *attr = col.attribute<EntityDisplayAttribute>(Collection::AddIfMissing);
         attr->setDisplayName(QStringLiteral("Test Collection"));
-        col.setContentMimeTypes({ Collection::mimeType(), QLatin1String("application/octet-stream") });
+        col.setContentMimeTypes({Collection::mimeType(), QLatin1String("application/octet-stream")});
 
         auto *mj = new CollectionModifyJob(col, this);
         AKVERIFYEXEC(mj);
@@ -64,4 +64,3 @@ private Q_SLOTS:
 QTEST_AKONADIMAIN(CollectionModifyTest)
 
 #include "collectionmodifytest.moc"
-

@@ -7,7 +7,6 @@
 #include "persistentsearchattribute.h"
 #include "collection.h"
 
-
 #include "private/imapparser_p.h"
 
 #include <QString>
@@ -116,7 +115,7 @@ QByteArray PersistentSearchAttribute::serialized() const
     if (d->recursive) {
         l.append("RECURSIVE");
     }
-    return "(" + ImapParser::join(l, " ") + ')';   //krazy:exclude=doublequote_chars
+    return "(" + ImapParser::join(l, " ") + ')'; // krazy:exclude=doublequote_chars
 }
 
 void PersistentSearchAttribute::deserialize(const QByteArray &data)

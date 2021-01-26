@@ -10,4 +10,5 @@ using namespace Akonadi;
 
 AgentConfigurationFactoryBase::AgentConfigurationFactoryBase(QObject *parent)
     : QObject(parent)
-{}
+{
+}

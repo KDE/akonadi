@@ -9,16 +9,15 @@
 
 #include "akonadicore_export.h"
 
+#include <QDateTime>
 #include <QMetaType>
 #include <QSet>
 #include <QSharedDataPointer>
-#include <QDateTime>
 
-template <typename T> class QSet;
+template<typename T> class QSet;
 
 namespace Akonadi
 {
-
 class ItemFetchScopePrivate;
 class TagFetchScope;
 
@@ -144,7 +143,7 @@ public:
      *
      * @param fetch @c true if the attribute should be fetched, @c false otherwise.
      */
-    template <typename T> inline void fetchAttribute(bool fetch = true)
+    template<typename T> inline void fetchAttribute(bool fetch = true)
     {
         T dummy;
         fetchAttribute(dummy.type(), fetch);

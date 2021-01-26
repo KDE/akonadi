@@ -5,15 +5,15 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "itemserializer_p.h"
-#include "item.h"
-#include "itemserializerplugin.h"
-#include "typepluginloader_p.h"
-#include "protocolhelper_p.h"
 #include "config_p.h"
+#include "item.h"
+#include "itemserializer_p.h"
+#include "itemserializerplugin.h"
+#include "protocolhelper_p.h"
+#include "typepluginloader_p.h"
 
-#include "private/externalpartstorage_p.h"
 #include "private/compressionstream_p.h"
+#include "private/externalpartstorage_p.h"
 
 #include "akonadicore_debug.h"
 
@@ -29,7 +29,6 @@ Q_DECLARE_METATYPE(std::string)
 
 namespace Akonadi
 {
-
 DefaultItemSerializerPlugin::DefaultItemSerializerPlugin() = default;
 
 bool DefaultItemSerializerPlugin::deserialize(Item &item, const QByteArray &label, QIODevice &data, int /*version*/)
@@ -74,8 +73,7 @@ void StdStringItemSerializerPlugin::serialize(const Item &item, const QByteArray
 }
 
 /*static*/
-void ItemSerializer::deserialize(Item &item, const QByteArray &label, const QByteArray &data,
-                                 int version, PayloadStorage storage)
+void ItemSerializer::deserialize(Item &item, const QByteArray &label, const QByteArray &data, int version, PayloadStorage storage)
 {
     if (storage == Internal) {
         QBuffer buffer;
@@ -95,9 +93,8 @@ void ItemSerializer::deserialize(Item &item, const QByteArray &label, const QByt
             deserialize(item, label, file, version);
             file.close();
         } else {
-            qCWarning(AKONADICORE_LOG) << "Failed to open"
-                    << ((storage == External) ? "external" : "foreign") << "payload:"
-                    << file.fileName() << file.errorString();
+            qCWarning(AKONADICORE_LOG) << "Failed to open" << ((storage == External) ? "external" : "foreign") << "payload:" << file.fileName()
+                                       << file.errorString();
         }
     }
 }
@@ -205,7 +202,7 @@ QSet<QByteArray> ItemSerializer::allowedForeignParts(const Item &item)
 
 Item ItemSerializer::convert(const Item &item, int mtid)
 {
-    qCDebug(AKONADICORE_LOG) << "asked to convert a" << item.mimeType() << "item to format" << ( mtid ? QMetaType::typeName( mtid ) : "<legacy>" );
+    qCDebug(AKONADICORE_LOG) << "asked to convert a" << item.mimeType() << "item to format" << (mtid ? QMetaType::typeName(mtid) : "<legacy>");
     if (!item.hasPayload()) {
         qCDebug(AKONADICORE_LOG) << "  -> but item has no payload!";
         return Item();
@@ -228,7 +225,7 @@ Item ItemSerializer::convert(const Item &item, int mtid)
             qCDebug(AKONADICORE_LOG) << "    -> conversion FAILED";
         }
     } else {
-//     qCDebug(AKONADICORE_LOG) << "  -> found NO plugin that feels responsible";
+        //     qCDebug(AKONADICORE_LOG) << "  -> found NO plugin that feels responsible";
     }
     return Item();
 }
@@ -239,4 +236,3 @@ void ItemSerializer::overridePluginLookup(QObject *p)
 }
 
 } // namespace Akonadi
-

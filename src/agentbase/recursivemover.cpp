@@ -4,11 +4,11 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "recursivemover_p.h"
 #include "collectionfetchjob.h"
+#include "collectionfetchscope.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
-#include "collectionfetchscope.h"
+#include "recursivemover_p.h"
 
 using namespace Akonadi;
 
@@ -21,7 +21,7 @@ RecursiveMover::RecursiveMover(AgentBasePrivate *parent)
 
 void RecursiveMover::start()
 {
-    Q_ASSERT(receivers(SIGNAL(result(KJob*))));
+    Q_ASSERT(receivers(SIGNAL(result(KJob *))));
 
     auto *job = new CollectionFetchJob(m_movedCollection, CollectionFetchJob::Recursive, this);
     connect(job, &CollectionFetchJob::finished, this, &RecursiveMover::collectionListResult);
@@ -139,7 +139,6 @@ void RecursiveMover::itemFetchResult(KJob *job)
 void RecursiveMover::replayNextCollection()
 {
     if (!m_pendingCollections.isEmpty()) {
-
         m_currentCollection = m_pendingCollections.takeFirst();
         auto *job = new ItemFetchJob(m_currentCollection, this);
         connect(job, &ItemFetchJob::result, this, &RecursiveMover::itemListResult);
@@ -152,7 +151,7 @@ void RecursiveMover::replayNextCollection()
             m_agentBase->collectionAdded(m_currentCollection, m_collections.value(m_currentCollection.parentCollection().id()));
             return;
         } else {
-            //replayNextItem(); - but waiting for the fetch job to finish first
+            // replayNextItem(); - but waiting for the fetch job to finish first
             m_pendingReplay = true;
             return;
         }

@@ -11,9 +11,10 @@
 
 #include <QSemaphore>
 
-namespace Akonadi {
-namespace Server {
-
+namespace Akonadi
+{
+namespace Server
+{
 class ItemRetrievalManager;
 
 class FakeIntervalCheck : public IntervalCheck

@@ -7,8 +7,8 @@
 #include <qtest_akonadi.h>
 
 #include "searchquery.h"
-#include <qjson/serializer.h>
 #include <qjson/parser.h>
+#include <qjson/serializer.h>
 
 using namespace Akonadi;
 
@@ -101,7 +101,7 @@ private Q_SLOTS:
             map[QStringLiteral("rel")] = static_cast<int>(SearchTerm::RelAnd);
             map[QStringLiteral("subTerms")] = subTerms;
 
-#if !defined( USE_QJSON_0_8 )
+#if !defined(USE_QJSON_0_8)
             const QByteArray json = serializer.serialize(map);
             QVERIFY(!json.isNull());
 #else
@@ -141,7 +141,6 @@ private Q_SLOTS:
             QCOMPARE(SearchQuery::fromJSON(serialized), query);
         }
     }
-
 };
 
 QTEST_AKONADIMAIN(SearchQueryTest, NoGUI)

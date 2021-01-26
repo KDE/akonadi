@@ -15,7 +15,6 @@
 
 namespace Akonadi
 {
-
 class AKONADI_TESTS_EXPORT ItemChangeLog
 {
 public:

@@ -8,11 +8,10 @@
 #define AKONADI_XMLWRITEJOB_H
 
 #include "akonadi-xml_export.h"
-#include "job.h"
 #include "collection.h"
+#include "job.h"
 namespace Akonadi
 {
-
 class Collection;
 class XmlWriteJobPrivate;
 

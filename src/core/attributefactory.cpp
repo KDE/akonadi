@@ -8,14 +8,14 @@
 
 #include "collectionquotaattribute.h"
 #include "collectionrightsattribute_p.h"
+#include "entityannotationsattribute.h"
+#include "entitydeletedattribute.h"
 #include "entitydisplayattribute.h"
 #include "entityhiddenattribute.h"
+#include "favoritecollectionattribute.h"
 #include "indexpolicyattribute.h"
 #include "persistentsearchattribute.h"
-#include "entitydeletedattribute.h"
 #include "tagattribute.h"
-#include "entityannotationsattribute.h"
-#include "favoritecollectionattribute.h"
 
 #include <QHash>
 
@@ -27,7 +27,6 @@ namespace Akonadi
 {
 namespace Internal
 {
-
 /**
  * @internal
  */
@@ -37,7 +36,8 @@ public:
     explicit DefaultAttribute(const QByteArray &type, const QByteArray &value = QByteArray())
         : mType(type)
         , mValue(value)
-    {}
+    {
+    }
 
     DefaultAttribute(const DefaultAttribute &) = delete;
     DefaultAttribute &operator=(const DefaultAttribute &) = delete;

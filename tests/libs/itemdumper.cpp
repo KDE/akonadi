@@ -10,18 +10,18 @@
 
 #include "item.h"
 
+#include <QApplication>
 #include <QDebug>
 #include <QFile>
-#include <QApplication>
 
 #include <KLocalizedString>
 
 #include <KAboutData>
-#include <QCommandLineParser>
 #include <QCommandLineOption>
+#include <QCommandLineParser>
 
-#include "transactionjobs.h"
 #include "itemcreatejob.h"
+#include "transactionjobs.h"
 
 #define GLOBAL_TRANSACTION 1
 
@@ -74,16 +74,20 @@ void ItemDumper::done(KJob *job)
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
-    KAboutData aboutData(QStringLiteral("test"),
-                         i18n("Test Application"),
-                         QStringLiteral("1.0"));
+    KAboutData aboutData(QStringLiteral("test"), i18n("Test Application"), QStringLiteral("1.0"));
 
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("path"), i18n("IMAP destination path"), QStringLiteral("argument")));
-    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("mimetype"), i18n("Source mimetype"), QStringLiteral("argument"), QStringLiteral("application/octet-stream")));
+    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("mimetype"),
+                                        i18n("Source mimetype"),
+                                        QStringLiteral("argument"),
+                                        QStringLiteral("application/octet-stream")));
     parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("file"), i18n("Source file"), QStringLiteral("argument")));
-    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("count"), i18n("Number of times this file is added"), QStringLiteral("argument"), QStringLiteral("1")));
+    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("count"),
+                                        i18n("Number of times this file is added"),
+                                        QStringLiteral("argument"),
+                                        QStringLiteral("1")));
 
     aboutData.setupCommandLine(&parser);
     parser.process(app);

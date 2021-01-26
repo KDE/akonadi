@@ -5,23 +5,23 @@
 */
 
 #include "collectionmaintenancepage.h"
-#include "ui_collectionmaintenancepage.h"
-#include "core/collectionstatistics.h"
-#include "monitor.h"
 #include "agentmanager.h"
 #include "akonadiwidgets_debug.h"
-#include "indexpolicyattribute.h"
 #include "cachepolicy.h"
+#include "core/collectionstatistics.h"
+#include "indexpolicyattribute.h"
+#include "monitor.h"
 #include "servermanager.h"
+#include "ui_collectionmaintenancepage.h"
 
 #include <QDBusInterface>
-#include <QDBusPendingReply>
 #include <QDBusPendingCallWatcher>
+#include <QDBusPendingReply>
 
-#include <QPushButton>
+#include <KFormat>
 #include <KLocalizedString>
 #include <QCheckBox>
-#include <KFormat>
+#include <QPushButton>
 
 using namespace Akonadi;
 
@@ -29,18 +29,17 @@ class CollectionMaintenancePage::Private
 {
 public:
     Private()
-    {}
+    {
+    }
 
     void slotReindexCollection()
     {
         if (currentCollection.isValid()) {
-            //Don't allow to reindex twice.
+            // Don't allow to reindex twice.
             ui.reindexButton->setEnabled(false);
 
             const auto service = ServerManager::agentServiceName(ServerManager::Agent, QStringLiteral("akonadi_indexing_agent"));
-            QDBusInterface indexingAgentIface(service,
-                                              QStringLiteral("/"),
-                                              QStringLiteral("org.freedesktop.Akonadi.Indexer"));
+            QDBusInterface indexingAgentIface(service, QStringLiteral("/"), QStringLiteral("org.freedesktop.Akonadi.Indexer"));
             if (indexingAgentIface.isValid()) {
                 indexingAgentIface.call(QStringLiteral("reindexCollection"), static_cast<qlonglong>(currentCollection.id()));
                 ui.indexedCountLbl->setText(i18n("Remember that indexing can take some minutes."));
@@ -85,11 +84,9 @@ void CollectionMaintenancePage::init(const Collection &col)
     d->monitor->setObjectName(QStringLiteral("CollectionMaintenancePageMonitor"));
     d->monitor->setCollectionMonitored(col, true);
     d->monitor->fetchCollectionStatistics(true);
-    connect(d->monitor, &Monitor::collectionStatisticsChanged,
-            this, [this](Collection::Id /*unused*/, const CollectionStatistics &stats) {
-                d->updateLabel(stats.count(), stats.unreadCount(), stats.size());
-            });
-
+    connect(d->monitor, &Monitor::collectionStatisticsChanged, this, [this](Collection::Id /*unused*/, const CollectionStatistics &stats) {
+        d->updateLabel(stats.count(), stats.unreadCount(), stats.size());
+    });
 
     if (!col.isVirtual()) {
         const AgentInstance instance = Akonadi::AgentManager::self()->instance(col.resource());
@@ -99,8 +96,9 @@ void CollectionMaintenancePage::init(const Collection &col)
         d->ui.filesLayout->labelForField(d->ui.folderTypeLbl)->hide();
     }
 
-    connect(d->ui.reindexButton, &QPushButton::clicked,
-            this, [this]() { d->slotReindexCollection(); });
+    connect(d->ui.reindexButton, &QPushButton::clicked, this, [this]() {
+        d->slotReindexCollection();
+    });
 
     // Check if the resource caches full payloads or at least has local storage
     // (so that the indexer can retrieve the payloads on demand)
@@ -121,25 +119,20 @@ void CollectionMaintenancePage::load(const Collection &col)
         d->ui.enableIndexingChkBox->setChecked(indexingWasEnabled);
         if (indexingWasEnabled) {
             const auto service = ServerManager::agentServiceName(ServerManager::Agent, QStringLiteral("akonadi_indexing_agent"));
-            QDBusInterface indexingAgentIface(service,
-                                              QStringLiteral("/"),
-                                              QStringLiteral("org.freedesktop.Akonadi.Indexer"));
+            QDBusInterface indexingAgentIface(service, QStringLiteral("/"), QStringLiteral("org.freedesktop.Akonadi.Indexer"));
             if (indexingAgentIface.isValid()) {
                 auto reply = indexingAgentIface.asyncCall(QStringLiteral("indexedItems"), static_cast<qint64>(col.id()));
                 auto *w = new QDBusPendingCallWatcher(reply, this);
-                connect(w, &QDBusPendingCallWatcher::finished,
-                        this, [this](QDBusPendingCallWatcher *w) {
-                            QDBusPendingReply<qint64> reply = *w;
-                            if (reply.isError()) {
-                                d->ui.indexedCountLbl->setText(i18n("Error while retrieving indexed items count"));
-                                qCWarning(AKONADIWIDGETS_LOG) << "Failed to retrieve indexed items count:" << reply.error().message();
-                            } else {
-                                d->ui.indexedCountLbl->setText(i18np("Indexed %1 item in this folder",
-                                                                      "Indexed %1 items in this folder",
-                                                                      reply.argumentAt<0>()));
-                            }
-                            w->deleteLater();
-                        });
+                connect(w, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *w) {
+                    QDBusPendingReply<qint64> reply = *w;
+                    if (reply.isError()) {
+                        d->ui.indexedCountLbl->setText(i18n("Error while retrieving indexed items count"));
+                        qCWarning(AKONADIWIDGETS_LOG) << "Failed to retrieve indexed items count:" << reply.error().message();
+                    } else {
+                        d->ui.indexedCountLbl->setText(i18np("Indexed %1 item in this folder", "Indexed %1 items in this folder", reply.argumentAt<0>()));
+                    }
+                    w->deleteLater();
+                });
                 d->ui.indexedCountLbl->setText(i18n("Calculating indexed items..."));
             } else {
                 qCDebug(AKONADIWIDGETS_LOG) << "Failed to obtain Indexer interface";

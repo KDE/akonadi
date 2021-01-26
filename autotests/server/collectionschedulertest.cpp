@@ -6,9 +6,9 @@
 
 #include <QObject>
 
-#include <shared/aktest.h>
 #include "fakeakonadiserver.h"
 #include "fakeintervalcheck.h"
+#include <shared/aktest.h>
 
 #include <QTest>
 
@@ -17,7 +17,6 @@ using namespace Akonadi::Server;
 using TimePoint = CollectionScheduler::TimePoint;
 
 using namespace std::literals::chrono_literals;
-
 
 class CollectionSchedulerTest : public QObject
 {

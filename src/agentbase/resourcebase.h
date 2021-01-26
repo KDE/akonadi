@@ -10,8 +10,8 @@
 #ifndef AKONADI_RESOURCEBASE_H
 #define AKONADI_RESOURCEBASE_H
 
-#include "akonadiagentbase_export.h"
 #include "agentbase.h"
+#include "akonadiagentbase_export.h"
 #include "collection.h"
 #include "item.h"
 #include "itemsync.h"
@@ -22,7 +22,6 @@ class ResourceState;
 
 namespace Akonadi
 {
-
 class ResourceBasePrivate;
 
 /**
@@ -164,10 +163,8 @@ public:
      * @param argc number of arguments
      * @param argv string arguments
      */
-    template <typename T>
-    static int init(int argc, char **argv)
+    template<typename T> static int init(int argc, char **argv)
     {
-
         // Disable session management
         qunsetenv("SESSION_MANAGER");
 
@@ -441,7 +438,7 @@ protected:
      * as well as any other collection attributes.
      * This implicitly calls changeProcessed().
      * @param collection The collection which changes have been handled.
-    */
+     */
     void changeCommitted(const Collection &collection);
 
     /**
@@ -449,7 +446,7 @@ protected:
      *
      * @param collections A list of collections.
      * @see collectionsRetrievedIncremental()
-    */
+     */
     void collectionsRetrieved(const Collection::List &collections);
 
     void tagsRetrieved(const Tag::List &tags, const QHash<QString, Item::List> &tagMembers);
@@ -462,8 +459,7 @@ protected:
      * @param removedCollections Collections that have been deleted.
      * @see collectionsRetrieved()
      */
-    void collectionsRetrievedIncremental(const Collection::List &changedCollections,
-                                         const Collection::List &removedCollections);
+    void collectionsRetrievedIncremental(const Collection::List &changedCollections, const Collection::List &removedCollections);
 
     /**
      * Enable collection streaming, that is collections don't have to be delivered at once
@@ -496,7 +492,7 @@ protected:
      *
      * @param parts A set parts for which local changes should be preserved.
      * @since 4.14
-    */
+     */
     void setKeepLocalCollectionChanges(const QSet<QByteArray> &parts);
 
     /**
@@ -603,8 +599,7 @@ protected:
      * @param changedItems Items changed in the backend.
      * @param removedItems Items removed from the backend.
      */
-    void itemsRetrievedIncremental(const Item::List &changedItems,
-                                   const Item::List &removedItems);
+    void itemsRetrievedIncremental(const Item::List &changedItems, const Item::List &removedItems);
 
     /**
      * Call this method to indicate you finished synchronizing the current collection.
@@ -767,9 +762,9 @@ protected:
      * @since 4.4
      */
     enum SchedulePriority {
-        Prepend,            ///< The task will be executed as soon as the current task has finished.
-        AfterChangeReplay,  ///< The task is scheduled after the last ChangeReplay task in the queue
-        Append              ///< The task will be executed after all tasks currently in the queue are finished
+        Prepend, ///< The task will be executed as soon as the current task has finished.
+        AfterChangeReplay, ///< The task is scheduled after the last ChangeReplay task in the queue
+        Append ///< The task will be executed after all tasks currently in the queue are finished
     };
 
     /**
@@ -877,10 +872,10 @@ private:
 /**
  * Convenience Macro for the most common main() function for Akonadi resources.
  */
-#define AKONADI_RESOURCE_MAIN( resourceClass )                       \
-    int main( int argc, char **argv )                                  \
-    {                                                                  \
-        return Akonadi::ResourceBase::init<resourceClass>( argc, argv ); \
+#define AKONADI_RESOURCE_MAIN(resourceClass)                                                                                                                   \
+    int main(int argc, char **argv)                                                                                                                            \
+    {                                                                                                                                                          \
+        return Akonadi::ResourceBase::init<resourceClass>(argc, argv);                                                                                         \
     }
 #endif
 

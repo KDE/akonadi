@@ -19,7 +19,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class DataStore;
 class Connection;
 class AkonadiServer;
@@ -53,9 +52,7 @@ public:
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
     */
-    void itemAdded(const PimItem &item, bool seen,
-                   const Collection &collection = Collection(),
-                   const QByteArray &resource = QByteArray());
+    void itemAdded(const PimItem &item, bool seen, const Collection &collection = Collection(), const QByteArray &resource = QByteArray());
 
     /**
       Notify about a changed item.
@@ -101,7 +98,8 @@ public:
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
     */
-    void itemsMoved(const PimItem::List &items, const Collection &collectionSrc = Collection(),
+    void itemsMoved(const PimItem::List &items,
+                    const Collection &collectionSrc = Collection(),
                     const Collection &collectionDest = Collection(),
                     const QByteArray &sourceResource = QByteArray());
 
@@ -110,8 +108,7 @@ public:
       Make sure you either provide all parameters or call this function before
       actually removing the item from database.
     */
-    void itemsRemoved(const PimItem::List &items, const Collection &collection = Collection(),
-                      const QByteArray &resource = QByteArray());
+    void itemsRemoved(const PimItem::List &items, const Collection &collection = Collection(), const QByteArray &resource = QByteArray());
 
     /**
      * Notify about linked items
@@ -128,17 +125,14 @@ public:
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
      */
-    void collectionAdded(const Collection &collection,
-                         const QByteArray &resource = QByteArray());
+    void collectionAdded(const Collection &collection, const QByteArray &resource = QByteArray());
 
     /**
       Notify about a changed collection.
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
     */
-    void collectionChanged(const Collection &collection,
-                           const QList<QByteArray> &changes,
-                           const QByteArray &resource = QByteArray());
+    void collectionChanged(const Collection &collection, const QList<QByteArray> &changes, const QByteArray &resource = QByteArray());
 
     /**
       Notify about a moved collection.
@@ -155,19 +149,16 @@ public:
       Make sure you either provide all parameters or call this function before
       actually removing the item from database.
      */
-    void collectionRemoved(const Collection &collection,
-                           const QByteArray &resource = QByteArray());
+    void collectionRemoved(const Collection &collection, const QByteArray &resource = QByteArray());
 
     /**
      *      Notify about a collection subscription.
      */
-    void collectionSubscribed(const Collection &collection,
-                              const QByteArray &resource = QByteArray());
+    void collectionSubscribed(const Collection &collection, const QByteArray &resource = QByteArray());
     /**
      *      Notify about a collection unsubscription
      */
-    void collectionUnsubscribed(const Collection &collection,
-                                const QByteArray &resource = QByteArray());
+    void collectionUnsubscribed(const Collection &collection, const QByteArray &resource = QByteArray());
 
     /**
       Notify about an added tag.
@@ -223,7 +214,8 @@ private:
                           const QSet<QByteArray> &parts = QSet<QByteArray>());
     void collectionNotification(Protocol::CollectionChangeNotification::Operation op,
                                 const Collection &collection,
-                                Collection::Id source, Collection::Id destination,
+                                Collection::Id source,
+                                Collection::Id destination,
                                 const QByteArray &resource,
                                 const QSet<QByteArray> &changes = QSet<QByteArray>(),
                                 const QByteArray &destResource = QByteArray());
@@ -231,8 +223,7 @@ private:
                          const Tag &tag,
                          const QByteArray &resource = QByteArray(),
                          const QString &remoteId = QString());
-    void relationNotification(Protocol::RelationChangeNotification::Operation op,
-                              const Relation &relation);
+    void relationNotification(Protocol::RelationChangeNotification::Operation op, const Relation &relation);
     void dispatchNotification(const Protocol::ChangeNotificationPtr &msg);
     void clear();
 

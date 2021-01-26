@@ -5,9 +5,9 @@
 */
 
 #include "fakesession.h"
-#include "session_p.h"
 #include "job.h"
 #include "private/protocol_p.h"
+#include "session_p.h"
 
 #include <QCoreApplication>
 #include <QTimer>
@@ -16,7 +16,9 @@ class FakeSessionPrivate : public SessionPrivate
 {
 public:
     FakeSessionPrivate(FakeSession *parent, FakeSession::Mode mode)
-        : SessionPrivate(parent), q_ptr(parent), m_mode(mode)
+        : SessionPrivate(parent)
+        , q_ptr(parent)
+        , m_mode(mode)
     {
         protocolVersion = Protocol::version();
     }
@@ -28,8 +30,7 @@ public:
         if (!id.isEmpty()) {
             sessionId = id;
         } else {
-            sessionId = QCoreApplication::instance()->applicationName().toUtf8()
-            + '-' + QByteArray::number(qrand());
+            sessionId = QCoreApplication::instance()->applicationName().toUtf8() + '-' + QByteArray::number(qrand());
         }
 
         connected = false;
@@ -75,7 +76,6 @@ public:
 FakeSession::FakeSession(const QByteArray &sessionId, FakeSession::Mode mode, QObject *parent)
     : Session(new FakeSessionPrivate(this, mode), sessionId, parent)
 {
-
 }
 
 void FakeSession::setAsDefaultSession()

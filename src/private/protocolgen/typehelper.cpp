@@ -7,8 +7,8 @@
 #include "typehelper.h"
 #include "nodetree.h"
 
-#include <QString>
 #include <QMetaType>
+#include <QString>
 
 bool TypeHelper::isNumericType(const QString &name)
 {
@@ -52,10 +52,9 @@ bool TypeHelper::isBoolType(const QString &name)
 bool TypeHelper::isBuiltInType(const QString &type)
 {
     // TODO: should be smarter than this....
-    return !type.startsWith(QLatin1String("Akonadi::Protocol"))
-            || type == QLatin1String("Akonadi::Protocol::Attributes") // typedef to QMap
-            || (type.startsWith(QLatin1String("Akonadi::Protocol")) // enums
-                    && type.count(QStringLiteral("::")) > 2);
+    return !type.startsWith(QLatin1String("Akonadi::Protocol")) || type == QLatin1String("Akonadi::Protocol::Attributes") // typedef to QMap
+        || (type.startsWith(QLatin1String("Akonadi::Protocol")) // enums
+            && type.count(QStringLiteral("::")) > 2);
 }
 
 bool TypeHelper::isContainer(const QString &type)

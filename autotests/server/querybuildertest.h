@@ -11,8 +11,10 @@
 
 #include <QObject>
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 class QueryBuilder;
 }
 }
@@ -25,7 +27,7 @@ private Q_SLOTS:
     void testQueryBuilder();
     void benchQueryBuilder();
 
-  private:
+private:
     QList<Akonadi::Server::QueryBuilder> mBuilders;
 };
 

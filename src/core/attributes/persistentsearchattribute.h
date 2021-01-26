@@ -14,7 +14,6 @@
 
 namespace Akonadi
 {
-
 class Collection;
 
 /**

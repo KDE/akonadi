@@ -7,20 +7,20 @@
 
 #include "itemstoretest.h"
 
-#include "control.h"
-#include "testattribute.h"
-#include "agentmanager.h"
 #include "agentinstance.h"
+#include "agentmanager.h"
 #include "attributefactory.h"
 #include "collectionfetchjob.h"
+#include "control.h"
 #include "itemcreatejob.h"
 #include "itemdeletejob.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
 #include "itemmodifyjob.h"
 #include "itemmodifyjob_p.h"
-#include "resourceselectjob_p.h"
 #include "qtest_akonadi.h"
+#include "resourceselectjob_p.h"
+#include "testattribute.h"
 
 using namespace Akonadi;
 
@@ -115,7 +115,7 @@ void ItemStoreTest::testDataChange_data()
     QByteArray b;
     QTest::newRow("big") << b.fill('a', 1 << 20) << 280LL;
     QTest::newRow("bignull") << b.fill('\0', 1 << 20) << 280LL;
-    QTest::newRow("bigcr") << b.fill('\r', 1 << 20) <<  280LL;
+    QTest::newRow("bigcr") << b.fill('\r', 1 << 20) << 280LL;
     QTest::newRow("biglf") << b.fill('\n', 1 << 20) << 280LL;
 }
 
@@ -178,7 +178,7 @@ void ItemStoreTest::testRemoteId()
     item.setRemoteId(rid);
     auto *store = new ItemModifyJob(item, this);
     store->disableRevisionCheck();
-    store->setIgnorePayload(true);   // we only want to update the remote id
+    store->setIgnorePayload(true); // we only want to update the remote id
     AKVERIFYEXEC(store);
 
     auto *fetch = new ItemFetchJob(item, this);
@@ -418,7 +418,7 @@ public:
     {
         sessions.reserve(numSessions);
         modifyJobs.reserve(numSessions);
-        for (int i = 0 ; i < numSessions; ++i) {
+        for (int i = 0; i < numSessions; ++i) {
             auto *session = new Session(QByteArray::number(i));
             sessions.push_back(session);
         }
@@ -442,15 +442,14 @@ public:
 
     void waitForAllJobs()
     {
-        for (int i = 0 ; i < modifyJobs.count(); ++i) {
+        for (int i = 0; i < modifyJobs.count(); ++i) {
             ItemModifyJob *mjob = modifyJobs.at(i);
             if (!doneJobs.contains(mjob)) {
                 QSignalSpy spy(mjob, &ItemModifyJob::result);
                 QVERIFY(spy.wait());
                 if (mjob->error()) {
                     qWarning() << mjob->errorString();
-
-}
+                }
                 QCOMPARE(mjob->error(), KJob::NoError);
             }
         }
@@ -478,7 +477,7 @@ void ItemStoreTest::testParallelJobsAddingAttributes()
 
     // When adding N attributes from N different sessions (e.g. threads or processes)
     ParallelJobsRunner runner(10);
-    for (int i = 0 ; i < runner.numSessions; ++i) {
+    for (int i = 0; i < runner.numSessions; ++i) {
         Item item(itemId);
         Attribute *attr = AttributeFactory::createAttribute("type" + QByteArray::number(i));
         QVERIFY(attr);

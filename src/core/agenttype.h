@@ -20,7 +20,6 @@ typedef QMap<QString, QVariant> QVariantMap;
 
 namespace Akonadi
 {
-
 /**
  * @short A representation of an agent type.
  *

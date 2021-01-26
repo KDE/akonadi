@@ -5,18 +5,18 @@
 */
 
 #include "collectionrequester.h"
-#include "entitydisplayattribute.h"
 #include "collectionfetchjob.h"
 #include "collectionfetchscope.h"
+#include "entitydisplayattribute.h"
 
-#include <QLineEdit>
 #include <KLocalizedString>
 #include <KStandardShortcut>
+#include <QLineEdit>
 
-#include <QEvent>
 #include <QAction>
-#include <QPushButton>
+#include <QEvent>
 #include <QHBoxLayout>
+#include <QPushButton>
 
 using namespace Akonadi;
 
@@ -41,7 +41,7 @@ public:
     void _k_collectionReceived(KJob *job);
     void _k_collectionsNamesReceived(KJob *job);
 
-    CollectionRequester * const q;
+    CollectionRequester *const q;
     Collection collection;
     QLineEdit *edit = nullptr;
     QPushButton *button = nullptr;
@@ -53,7 +53,9 @@ void CollectionRequester::Private::fetchCollection(const Collection &collection)
     auto *job = new CollectionFetchJob(collection, Akonadi::CollectionFetchJob::Base, q);
     job->setProperty("OriginalCollectionId", collection.id());
     job->fetchScope().setAncestorRetrieval(CollectionFetchScope::All);
-    connect(job, &CollectionFetchJob::finished, q, [this](KJob *job) {_k_collectionReceived(job);});
+    connect(job, &CollectionFetchJob::finished, q, [this](KJob *job) {
+        _k_collectionReceived(job);
+    });
 }
 
 void CollectionRequester::Private::_k_collectionReceived(KJob *job)
@@ -73,7 +75,9 @@ void CollectionRequester::Private::_k_collectionReceived(KJob *job)
         auto *namesFetch = new CollectionFetchJob(chain, CollectionFetchJob::Base, q);
         namesFetch->setProperty("OriginalCollectionId", job->property("OriginalCollectionId"));
         namesFetch->fetchScope().setAncestorRetrieval(CollectionFetchScope::Parent);
-        connect(namesFetch, &CollectionFetchJob::finished, q, [this](KJob *job) {_k_collectionsNamesReceived(job);});
+        connect(namesFetch, &CollectionFetchJob::finished, q, [this](KJob *job) {
+            _k_collectionsNamesReceived(job);
+        });
     } else {
         _k_collectionsNamesReceived(job);
     }
@@ -124,11 +128,15 @@ void CollectionRequester::Private::init()
     q->setFocusProxy(button);
     q->setFocusPolicy(Qt::StrongFocus);
 
-    q->connect(button, &QPushButton::clicked, q, [this]() { _k_slotOpenDialog(); });
+    q->connect(button, &QPushButton::clicked, q, [this]() {
+        _k_slotOpenDialog();
+    });
 
     auto *openAction = new QAction(q);
     openAction->setShortcut(KStandardShortcut::Open);
-    q->connect(openAction, &QAction::triggered, q, [this]() { _k_slotOpenDialog(); });
+    q->connect(openAction, &QAction::triggered, q, [this]() {
+        _k_slotOpenDialog();
+    });
 
     collectionDialog = new CollectionDialog(q);
     collectionDialog->setWindowIcon(QIcon::fromTheme(QStringLiteral("akonadi")));

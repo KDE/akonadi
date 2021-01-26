@@ -24,8 +24,7 @@ protected:
     QTcpServer *const m_server;
 };
 
-template <typename ConnectionType>
-class BridgeServer : public BridgeServerBase
+template<typename ConnectionType> class BridgeServer : public BridgeServerBase
 {
 public:
     explicit BridgeServer(quint16 port, QObject *parent = nullptr)
@@ -34,9 +33,9 @@ public:
     }
 
 protected:
-    void slotNewConnection() override {
-        while (m_server->hasPendingConnections())
-        {
+    void slotNewConnection() override
+    {
+        while (m_server->hasPendingConnections()) {
             new ConnectionType(m_server->nextPendingConnection(), this);
         }
     }

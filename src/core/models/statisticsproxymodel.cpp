@@ -8,19 +8,19 @@
 #include "statisticsproxymodel.h"
 #include "akonadicore_debug.h"
 
-#include "entitytreemodel.h"
-#include "collectionutils.h"
 #include "collectionquotaattribute.h"
 #include "collectionstatistics.h"
+#include "collectionutils.h"
 #include "entitydisplayattribute.h"
+#include "entitytreemodel.h"
 
+#include <KFormat>
 #include <KIconLoader>
 #include <KLocalizedString>
-#include <KFormat>
 
 #include <QApplication>
-#include <QPalette>
 #include <QMetaMethod>
+#include <QPalette>
 
 using namespace Akonadi;
 
@@ -47,7 +47,7 @@ public:
                 const int rowCount = index.model()->rowCount(index);
                 for (int row = 0; row < rowCount; row++) {
                     static const int column = 0;
-                    getCountRecursive(index.model()->index(row, column, index),  totalSize);
+                    getCountRecursive(index.model()->index(row, column, index), totalSize);
                 }
             }
         }
@@ -63,9 +63,7 @@ public:
         const QString bckColor = QApplication::palette().color(QPalette::ToolTipBase).name();
         const QString txtColor = QApplication::palette().color(QPalette::ToolTipText).name();
 
-        QString tip = QStringLiteral(
-                          "<table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">\n"
-                      );
+        QString tip = QStringLiteral("<table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">\n");
         const QString textDirection = (QApplication::layoutDirection() == Qt::LeftToRight) ? QStringLiteral("left") : QStringLiteral("right");
         tip += QStringLiteral(
                    "  <tr>\n"
@@ -74,19 +72,21 @@ public:
                    "      %3\n"
                    "      </div>\n"
                    "    </td>\n"
-                   "  </tr>\n"
-               ).arg(txtColor, bckColor, index.data(Qt::DisplayRole).toString(), textDirection);
+                   "  </tr>\n")
+                   .arg(txtColor, bckColor, index.data(Qt::DisplayRole).toString(), textDirection);
 
         tip += QStringLiteral(
                    "  <tr>\n"
-                   "    <td align=\"%1\" valign=\"top\">\n"
-               ).arg(textDirection);
+                   "    <td align=\"%1\" valign=\"top\">\n")
+                   .arg(textDirection);
 
         QString tipInfo = QStringLiteral(
-                       "      <strong>%1</strong>: %2<br>\n"
-                       "      <strong>%3</strong>: %4<br><br>\n"
-                   ).arg(i18n("Total Messages")).arg(collection.statistics().count())
-                   .arg(i18n("Unread Messages")).arg(collection.statistics().unreadCount());
+                              "      <strong>%1</strong>: %2<br>\n"
+                              "      <strong>%3</strong>: %4<br><br>\n")
+                              .arg(i18n("Total Messages"))
+                              .arg(collection.statistics().count())
+                              .arg(i18n("Unread Messages"))
+                              .arg(collection.statistics().unreadCount());
 
         if (collection.hasAttribute<CollectionQuotaAttribute>()) {
             const auto *quota = collection.attribute<CollectionQuotaAttribute>();
@@ -95,31 +95,24 @@ public:
 
                 if (qAbs(percentage) >= 0.01) {
                     QString percentStr = QString::number(percentage, 'f', 2);
-                    tipInfo += QStringLiteral(
-                                   "      <strong>%1</strong>: %2%<br>\n"
-                               ).arg(i18n("Quota"), percentStr);
+                    tipInfo += QStringLiteral("      <strong>%1</strong>: %2%<br>\n").arg(i18n("Quota"), percentStr);
                 }
             }
         }
 
         KFormat formatter;
         qint64 currentFolderSize(collection.statistics().size());
-        tipInfo += QStringLiteral(
-                       "      <strong>%1</strong>: %2<br>\n"
-                   ).arg(i18n("Storage Size"), formatter.formatByteSize(currentFolderSize));
+        tipInfo += QStringLiteral("      <strong>%1</strong>: %2<br>\n").arg(i18n("Storage Size"), formatter.formatByteSize(currentFolderSize));
 
         qint64 totalSize = 0;
         getCountRecursive(index, totalSize);
         totalSize -= currentFolderSize;
         if (totalSize > 0) {
-            tipInfo += QStringLiteral(
-                           "<strong>%1</strong>: %2<br>"
-                       ).arg(i18n("Subfolder Storage Size"), formatter.formatByteSize(totalSize));
+            tipInfo += QStringLiteral("<strong>%1</strong>: %2<br>").arg(i18n("Subfolder Storage Size"), formatter.formatByteSize(totalSize));
         }
 
         QString iconName = CollectionUtils::defaultIconName(collection);
-        if (collection.hasAttribute<EntityDisplayAttribute>() &&
-                !collection.attribute<EntityDisplayAttribute>()->iconName().isEmpty()) {
+        if (collection.hasAttribute<EntityDisplayAttribute>() && !collection.attribute<EntityDisplayAttribute>()->iconName().isEmpty()) {
             if (!collection.attribute<EntityDisplayAttribute>()->activeIconName().isEmpty() && collection.statistics().unreadCount() > 0) {
                 iconName = collection.attribute<EntityDisplayAttribute>()->activeIconName();
             } else {
@@ -127,15 +120,15 @@ public:
             }
         }
 
-        int iconSizes[] = { 32, 22 };
+        int iconSizes[] = {32, 22};
         int icon_size_found = 32;
 
         QString iconPath;
 
         for (int i = 0; i < 2; ++i) {
-            iconPath = KIconLoader::global()->iconPath(iconName, -iconSizes[ i ], true);
+            iconPath = KIconLoader::global()->iconPath(iconName, -iconSizes[i], true);
             if (!iconPath.isEmpty()) {
-                icon_size_found = iconSizes[ i ];
+                icon_size_found = iconSizes[i];
                 break;
             }
         }
@@ -148,8 +141,9 @@ public:
                               "      <table border=\"0\"><tr><td width=\"32\" height=\"32\" align=\"center\" valign=\"middle\">\n"
                               "      <img src=\"%1\" width=\"%2\" height=\"32\">\n"
                               "      </td></tr></table>\n"
-                              "    </td>\n"
-                          ).arg(iconPath).arg(icon_size_found);
+                              "    </td>\n")
+                              .arg(iconPath)
+                              .arg(icon_size_found);
 
         if (QApplication::layoutDirection() == Qt::LeftToRight) {
             tip += tipInfo + QStringLiteral("</td><td align=\"%3\" valign=\"top\">").arg(textDirection) + tipIcon;
@@ -158,16 +152,15 @@ public:
         }
 
         tip += QLatin1String(
-                   "  </tr>" \
-                   "</table>"
-               );
+            "  </tr>"
+            "</table>");
 
         return tip;
     }
 
     void _k_sourceDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
 
-    StatisticsProxyModel * const q;
+    StatisticsProxyModel *const q;
 
     bool mToolTipEnabled = false;
     bool mExtraColumnsEnabled = false;
@@ -193,17 +186,19 @@ void StatisticsProxyModel::setSourceModel(QAbstractItemModel *model)
     KExtraColumnsProxyModel::setSourceModel(model);
     if (model) {
         // Disconnect the default handling of dataChanged in QIdentityProxyModel, so we can extend it to the whole row
-        disconnect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), // clazy:exclude=old-style-connect
-                   this, SLOT(_q_sourceDataChanged(QModelIndex,QModelIndex,QVector<int>)));
+        disconnect(model,
+                   SIGNAL(dataChanged(QModelIndex, QModelIndex, QVector<int>)), // clazy:exclude=old-style-connect
+                   this,
+                   SLOT(_q_sourceDataChanged(QModelIndex, QModelIndex, QVector<int>)));
         connect(model, &QAbstractItemModel::dataChanged, this, [this](const auto &tl, const auto &br, const auto &roles) {
-                d->_k_sourceDataChanged(tl, br, roles);
-            });
+            d->_k_sourceDataChanged(tl, br, roles);
+        });
     }
 }
 
 StatisticsProxyModel::StatisticsProxyModel(QObject *parent)
-    : KExtraColumnsProxyModel(parent),
-      d(new Private(this))
+    : KExtraColumnsProxyModel(parent)
+    , d(new Private(this))
 {
     setExtraColumnsEnabled(true);
 }
@@ -268,8 +263,7 @@ QVariant StatisticsProxyModel::extraColumnData(const QModelIndex &parent, int ro
                 qCWarning(AKONADICORE_LOG) << "We shouldn't get there for a column which is not total, unread or size.";
             }
         }
-    }
-    break;
+    } break;
     case Qt::TextAlignmentRole: {
         return Qt::AlignRight;
     }
@@ -298,16 +292,15 @@ Qt::ItemFlags StatisticsProxyModel::flags(const QModelIndex &index_) const
     if (index_.column() >= d->sourceColumnCount()) {
         const QModelIndex firstColumn = index_.sibling(index_.row(), 0);
         return KExtraColumnsProxyModel::flags(firstColumn)
-               & (Qt::ItemIsSelectable | Qt::ItemIsDragEnabled  // Allowed flags
-                  | Qt::ItemIsDropEnabled | Qt::ItemIsEnabled);
+            & (Qt::ItemIsSelectable | Qt::ItemIsDragEnabled // Allowed flags
+               | Qt::ItemIsDropEnabled | Qt::ItemIsEnabled);
     }
 
     return KExtraColumnsProxyModel::flags(index_);
 }
 
 // Not sure this is still necessary....
-QModelIndexList StatisticsProxyModel::match(const QModelIndex &start, int role, const QVariant &value,
-        int hits, Qt::MatchFlags flags) const
+QModelIndexList StatisticsProxyModel::match(const QModelIndex &start, int role, const QVariant &value, int hits, Qt::MatchFlags flags) const
 {
     if (role < Qt::UserRole) {
         return KExtraColumnsProxyModel::match(start, role, value, hits, flags);
@@ -327,4 +320,3 @@ QModelIndexList StatisticsProxyModel::match(const QModelIndex &start, int role, 
 }
 
 #include "moc_statisticsproxymodel.cpp"
-

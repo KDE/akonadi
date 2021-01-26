@@ -14,13 +14,12 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
   @ingroup akonadi_server_handler
 
   Handler for the search_result command
 */
-class SearchResultHandler: public Handler
+class SearchResultHandler : public Handler
 {
 public:
     SearchResultHandler(AkonadiServer &akonadi);

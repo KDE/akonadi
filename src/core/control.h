@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @short Provides methods to control the Akonadi server process.
  *

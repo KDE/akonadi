@@ -15,7 +15,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
  * A tracer which forwards all tracing information to a
  * log file.

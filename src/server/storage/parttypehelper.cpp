@@ -6,8 +6,8 @@
 
 #include "parttypehelper.h"
 
-#include "selectquerybuilder.h"
 #include "entities.h"
+#include "selectquerybuilder.h"
 
 #include <QStringList>
 

@@ -4,8 +4,8 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include <storage/parttypehelper.h>
 #include <aktest.h>
+#include <storage/parttypehelper.h>
 
 #include <QObject>
 #include <QTest>
@@ -26,7 +26,9 @@ private Q_SLOTS:
         QTest::addColumn<bool>("shouldThrow");
 
         QTest::newRow("empty") << QString() << QString() << QString() << true;
-        QTest::newRow("valid") << "PLD:RFC822" << "PLD" << "RFC822" << false;
+        QTest::newRow("valid") << "PLD:RFC822"
+                               << "PLD"
+                               << "RFC822" << false;
         QTest::newRow("no separator") << "ABC" << QString() << QString() << true;
         QTest::newRow("no ns") << ":RFC822" << QString() << QString() << true;
         QTest::newRow("no name") << "PLD:" << QString() << QString() << true;

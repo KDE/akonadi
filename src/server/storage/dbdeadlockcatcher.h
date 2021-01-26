@@ -11,10 +11,8 @@
 
 namespace Akonadi
 {
-
 namespace Server
 {
-
 /**
   This class catches DbDeadlockException (as emitted by QueryBuilder)
   and retries execution of the method when it happens, as required by
@@ -23,19 +21,21 @@ namespace Server
 class DbDeadlockCatcher
 {
 public:
-    template <typename Func>
-    explicit DbDeadlockCatcher(Func &&func) { callFunc(func, 0); }
+    template<typename Func> explicit DbDeadlockCatcher(Func &&func)
+    {
+        callFunc(func, 0);
+    }
 
 private:
     static const int MaxRecursion = 5;
-    template <typename Func>
-    void callFunc(Func &&func, int recursionCounter) {
+    template<typename Func> void callFunc(Func &&func, int recursionCounter)
+    {
         try {
             func();
-        } catch(const DbDeadlockException &) {
+        } catch (const DbDeadlockException &) {
             if (recursionCounter == MaxRecursion) {
                 throw;
-             } else {
+            } else {
                 callFunc(func, ++recursionCounter); // recurse
             }
         }

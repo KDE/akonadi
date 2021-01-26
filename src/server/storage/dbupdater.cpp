@@ -5,30 +5,30 @@
 */
 
 #include "dbupdater.h"
-#include "dbtype.h"
-#include "entities.h"
 #include "akonadischema.h"
-#include "querybuilder.h"
-#include "selectquerybuilder.h"
+#include "akonadiserver_debug.h"
 #include "datastore.h"
 #include "dbconfig.h"
-#include "dbintrospector.h"
 #include "dbinitializer_p.h"
-#include "akonadiserver_debug.h"
+#include "dbintrospector.h"
+#include "dbtype.h"
+#include "entities.h"
+#include "querybuilder.h"
+#include "selectquerybuilder.h"
 
 #include <private/dbus_p.h>
 
 #include <QCoreApplication>
-#include <QMetaMethod>
 #include <QDBusConnection>
 #include <QDBusError>
-#include <QSqlQuery>
+#include <QMetaMethod>
 #include <QSqlError>
+#include <QSqlQuery>
 #include <QThread>
 
 #include <QDomDocument>
-#include <QFile>
 #include <QElapsedTimer>
+#include <QFile>
 #include <QSqlResult>
 
 using namespace Akonadi;
@@ -70,7 +70,7 @@ bool DbUpdater::run()
 
         bool success = false;
         bool hasTransaction = false;
-        if (it.value().complex) {   // complex update
+        if (it.value().complex) { // complex update
             const QString methodName = QStringLiteral("complexUpdate_%1()").arg(it.value().version);
             const int index = metaObject()->indexOfMethod(methodName.toLatin1().constData());
             if (index == -1) {
@@ -135,8 +135,7 @@ bool DbUpdater::parseUpdateSets(int currentVersion, UpdateSet::Map &updates) con
     int line;
     int column;
     if (!document.setContent(&file, &errorMsg, &line, &column)) {
-        qCCritical(AKONADISERVER_LOG) << "Unable to parse update description file" << m_filename << ":"
-                                      << errorMsg << "at line" << line << "column" << column;
+        qCCritical(AKONADISERVER_LOG) << "Unable to parse update description file" << m_filename << ":" << errorMsg << "at line" << line << "column" << column;
         return false;
     }
 
@@ -179,7 +178,7 @@ bool DbUpdater::parseUpdateSets(int currentVersion, UpdateSet::Map &updates) con
                             updateSet.complex = true;
                         }
                     }
-                    //TODO: check for generic tags here in the future
+                    // TODO: check for generic tags here in the future
 
                     childElement = childElement.nextSiblingElement();
                 }
@@ -358,24 +357,27 @@ bool DbUpdater::complexUpdate_25()
         QSqlQuery query(DataStore::self()->database());
         QString queryString;
         if (dbType == DbType::PostgreSQL) {
-            queryString = QStringLiteral("INSERT INTO PartTable_new (id, pimItemId, partTypeId, data, datasize, version, external) "
-                                         "SELECT PartTable.id, PartTable.pimItemId, PartTypeTable.id, PartTable.data, "
-                                         "       PartTable.datasize, PartTable.version, PartTable.external "
-                                         "FROM PartTable "
-                                         "LEFT JOIN PartTypeTable ON "
-                                         "          PartTable.name = CONCAT(PartTypeTable.ns, ':', PartTypeTable.name)");
+            queryString = QStringLiteral(
+                "INSERT INTO PartTable_new (id, pimItemId, partTypeId, data, datasize, version, external) "
+                "SELECT PartTable.id, PartTable.pimItemId, PartTypeTable.id, PartTable.data, "
+                "       PartTable.datasize, PartTable.version, PartTable.external "
+                "FROM PartTable "
+                "LEFT JOIN PartTypeTable ON "
+                "          PartTable.name = CONCAT(PartTypeTable.ns, ':', PartTypeTable.name)");
         } else if (dbType == DbType::MySQL) {
-            queryString = QStringLiteral("INSERT INTO PartTable_new (id, pimItemId, partTypeId, data, datasize, version, external) "
-                                         "SELECT PartTable.id, PartTable.pimItemId, PartTypeTable.id, PartTable.data, "
-                                         "PartTable.datasize, PartTable.version, PartTable.external "
-                                         "FROM PartTable "
-                                         "LEFT JOIN PartTypeTable ON PartTable.name = CONCAT(PartTypeTable.ns, ':', PartTypeTable.name)");
+            queryString = QStringLiteral(
+                "INSERT INTO PartTable_new (id, pimItemId, partTypeId, data, datasize, version, external) "
+                "SELECT PartTable.id, PartTable.pimItemId, PartTypeTable.id, PartTable.data, "
+                "PartTable.datasize, PartTable.version, PartTable.external "
+                "FROM PartTable "
+                "LEFT JOIN PartTypeTable ON PartTable.name = CONCAT(PartTypeTable.ns, ':', PartTypeTable.name)");
         } else if (dbType == DbType::Sqlite) {
-            queryString = QStringLiteral("INSERT INTO PartTable_new (id, pimItemId, partTypeId, data, datasize, version, external) "
-                                         "SELECT PartTable.id, PartTable.pimItemId, PartTypeTable.id, PartTable.data, "
-                                         "PartTable.datasize, PartTable.version, PartTable.external "
-                                         "FROM PartTable "
-                                         "LEFT JOIN PartTypeTable ON PartTable.name = PartTypeTable.ns || ':' || PartTypeTable.name");
+            queryString = QStringLiteral(
+                "INSERT INTO PartTable_new (id, pimItemId, partTypeId, data, datasize, version, external) "
+                "SELECT PartTable.id, PartTable.pimItemId, PartTypeTable.id, PartTable.data, "
+                "PartTable.datasize, PartTable.version, PartTable.external "
+                "FROM PartTable "
+                "LEFT JOIN PartTypeTable ON PartTable.name = PartTypeTable.ns || ':' || PartTypeTable.name");
         }
 
         if (!query.exec(queryString)) {
@@ -390,7 +392,7 @@ bool DbUpdater::complexUpdate_25()
 
         QSqlQuery query(DataStore::self()->database());
 
-        if (dbType == DbType::PostgreSQL  || dbType == DbType::Sqlite) {
+        if (dbType == DbType::PostgreSQL || dbType == DbType::Sqlite) {
             if (dbType == DbType::PostgreSQL) {
                 DataStore::self()->beginTransaction(QStringLiteral("DBUPDATER (r25)"));
             }
@@ -466,10 +468,9 @@ bool DbUpdater::complexUpdate_36()
     }
 
     const auto hasForeignKeys = [](const TableDescription &desc) {
-        return std::any_of(desc.columns.cbegin(), desc.columns.cend(),
-                           [](const ColumnDescription &col) {
-                               return !col.refTable.isEmpty() && !col.refColumn.isEmpty();
-                           });
+        return std::any_of(desc.columns.cbegin(), desc.columns.cend(), [](const ColumnDescription &col) {
+            return !col.refTable.isEmpty() && !col.refColumn.isEmpty();
+        });
     };
 
     const auto recreateTableWithForeignKeys = [](const TableDescription &table) -> QPair<bool, QSqlQuery> {
@@ -493,7 +494,10 @@ bool DbUpdater::complexUpdate_36()
             }
         }
 
-        qCDebug(AKONADISERVER_LOG, "\tCopying values from %s to %s_new (this may take a very long of time...)", qUtf8Printable(table.name), qUtf8Printable(table.name));
+        qCDebug(AKONADISERVER_LOG,
+                "\tCopying values from %s to %s_new (this may take a very long of time...)",
+                qUtf8Printable(table.name),
+                qUtf8Printable(table.name));
         if (!query.exec(QStringLiteral("INSERT INTO %1_new SELECT * FROM %1").arg(table.name))) {
             // If this fails, we will recover on next start
             return {false, query};

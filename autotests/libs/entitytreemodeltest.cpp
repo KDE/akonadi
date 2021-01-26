@@ -6,45 +6,45 @@
 
 #include <qtest_akonadi.h>
 
+#include "entitydisplayattribute.h"
+#include "entitytreemodel.h"
+#include "entitytreemodel_p.h"
+#include "fakemonitor.h"
 #include "fakeserverdata.h"
 #include "fakesession.h"
-#include "fakemonitor.h"
-#include "modelspy.h"
 #include "imapparser_p.h"
-#include "entitytreemodel.h"
-#include "entitydisplayattribute.h"
-#include "entitytreemodel_p.h"
+#include "modelspy.h"
 
 static const char serverContent1[] =
-        // The format of these lines are first a type, either 'C' or 'I' for Item and collection.
-        // The dashes show the depth in the hierarchy
-        // Collections have a list of mimetypes they can contain, followed by an optional
-        // displayName which is put into the EntityDisplayAttribute, followed by an optional order
-        // which is the order in which the collections are returned from the job to the ETM.
+    // The format of these lines are first a type, either 'C' or 'I' for Item and collection.
+    // The dashes show the depth in the hierarchy
+    // Collections have a list of mimetypes they can contain, followed by an optional
+    // displayName which is put into the EntityDisplayAttribute, followed by an optional order
+    // which is the order in which the collections are returned from the job to the ETM.
 
-        "- C (inode/directory)                  'Col 1'     4"
-        "- - C (text/directory, message/rfc822) 'Col 2'     3"
-        // Items just have the mimetype they contain in the payload.
-        "- - - I text/directory                 'Item 1'"
-        "- - - I text/directory                 'Item 2'"
-        "- - - I message/rfc822                 'Item 3'"
-        "- - - I message/rfc822                 'Item 4'"
-        "- - C (text/directory)                 'Col 3'     3"
-        "- - - C (text/directory)               'Col 4'     2"
-        "- - - - C (text/directory)             'Col 5'     1"  // <-- First collection to be returned
-        "- - - - - I text/directory             'Item 5'"
-        "- - - - - I text/directory             'Item 6'"
-        "- - - - I text/directory               'Item 7'"
-        "- - - I text/directory                 'Item 8'"
-        "- - - I text/directory                 'Item 9'"
-        "- - C (message/rfc822)                 'Col 6'     3"
-        "- - - I message/rfc822                 'Item 10'"
-        "- - - I message/rfc822                 'Item 11'"
-        "- - C (text/directory, message/rfc822) 'Col 7'     3"
-        "- - - I text/directory                 'Item 12'"
-        "- - - I text/directory                 'Item 13'"
-        "- - - I message/rfc822                 'Item 14'"
-        "- - - I message/rfc822                 'Item 15'";
+    "- C (inode/directory)                  'Col 1'     4"
+    "- - C (text/directory, message/rfc822) 'Col 2'     3"
+    // Items just have the mimetype they contain in the payload.
+    "- - - I text/directory                 'Item 1'"
+    "- - - I text/directory                 'Item 2'"
+    "- - - I message/rfc822                 'Item 3'"
+    "- - - I message/rfc822                 'Item 4'"
+    "- - C (text/directory)                 'Col 3'     3"
+    "- - - C (text/directory)               'Col 4'     2"
+    "- - - - C (text/directory)             'Col 5'     1" // <-- First collection to be returned
+    "- - - - - I text/directory             'Item 5'"
+    "- - - - - I text/directory             'Item 6'"
+    "- - - - I text/directory               'Item 7'"
+    "- - - I text/directory                 'Item 8'"
+    "- - - I text/directory                 'Item 9'"
+    "- - C (message/rfc822)                 'Col 6'     3"
+    "- - - I message/rfc822                 'Item 10'"
+    "- - - I message/rfc822                 'Item 11'"
+    "- - C (text/directory, message/rfc822) 'Col 7'     3"
+    "- - - I text/directory                 'Item 12'"
+    "- - - I text/directory                 'Item 13'"
+    "- - - I message/rfc822                 'Item 14'"
+    "- - - I message/rfc822                 'Item 15'";
 
 /**
  * This test verifies that the ETM reacts as expected to signals from the monitor.
@@ -108,7 +108,6 @@ private:
     ModelSpy *m_modelSpy = nullptr;
     FakeSession *m_fakeSession = nullptr;
     QByteArray m_sessionName;
-
 };
 
 QModelIndex firstMatchedIndex(const QAbstractItemModel &model, const QString &pattern)
@@ -149,44 +148,42 @@ void EntityTreeModelTest::testInitialFetch()
     m_modelSpy = new ModelSpy(model, this);
     m_modelSpy->startSpying();
 
-    const QList<ExpectedSignal> expectedSignals {
-        // First the model gets a signal about the first collection to be returned, which is not a top-level collection.
-        // It uses the parentCollection hierarchy to put placeholder collections in the model until the root is reached.
-        // Then it inserts only one row and emits the correct signals. After that, when the other collections
-        // arrive, dataChanged is emitted for them.
-        {RowsAboutToBeInserted, 0, 0},
-        {RowsInserted, 0, 0},
-        {DataChanged, 0, 0, QVariantList{QStringLiteral("Col 4")}},
-        {DataChanged, 0, 0, QVariantList{QStringLiteral("Col 3")}},
-        // New collections are prepended
-        {RowsAboutToBeInserted, 0, 0, QStringLiteral("Collection 1")},
-        {RowsInserted, 0, 0, QStringLiteral("Collection 1"), QVariantList{QStringLiteral("Col 2")}},
-        {RowsAboutToBeInserted, 0, 0, QStringLiteral("Collection 1")},
-        {RowsInserted, 0, 0, QStringLiteral("Collection 1"), QVariantList{QStringLiteral("Col 6")}},
-        {RowsAboutToBeInserted, 0, 0, QStringLiteral("Collection 1")},
-        {RowsInserted, 0, 0, QStringLiteral("Collection 1"), QVariantList{QStringLiteral("Col 7")}},
-        {DataChanged, 0, 0, QVariantList{QStringLiteral("Col 1")}},
-        // The items in the collections are appended.
-        {RowsAboutToBeInserted, 0, 3, QStringLiteral("Col 2")},
-        {RowsInserted, 0, 3, QStringLiteral("Col 2")},
-        {RowsAboutToBeInserted, 0, 1, QStringLiteral("Col 5")},
-        {RowsInserted, 0, 1, QStringLiteral("Col 5")},
-        {RowsAboutToBeInserted, 1, 1, QStringLiteral("Col 4")},
-        {RowsInserted, 1, 1, QStringLiteral("Col 4")},
-        {RowsAboutToBeInserted, 1, 2, QStringLiteral("Col 3")},
-        {RowsInserted, 1, 2, QStringLiteral("Col 3")},
-        {RowsAboutToBeInserted, 0, 1, QStringLiteral("Col 6")},
-        {RowsInserted, 0, 1, QStringLiteral("Col 6")},
-        {RowsAboutToBeInserted, 0, 3, QStringLiteral("Col 7")},
-        {RowsInserted, 0, 3, QStringLiteral("Col 7")},
-        {DataChanged, 0, 0, QVariantList{QStringLiteral("Col 1")}},
-        {DataChanged, 3, 3, QVariantList{QStringLiteral("Col 3")}},
-        {DataChanged, 0, 0, QVariantList{QStringLiteral("Col 5")}},
-        {DataChanged, 0, 0, QVariantList{QStringLiteral("Col 4")}},
-        {DataChanged, 2, 2, QVariantList{QStringLiteral("Col 2")}},
-        {DataChanged, 1, 1, QVariantList{QStringLiteral("Col 7")}},
-        {DataChanged, 0, 0, QVariantList{QStringLiteral("Col 6")}}
-    };
+    const QList<ExpectedSignal> expectedSignals{// First the model gets a signal about the first collection to be returned, which is not a top-level collection.
+                                                // It uses the parentCollection hierarchy to put placeholder collections in the model until the root is reached.
+                                                // Then it inserts only one row and emits the correct signals. After that, when the other collections
+                                                // arrive, dataChanged is emitted for them.
+                                                {RowsAboutToBeInserted, 0, 0},
+                                                {RowsInserted, 0, 0},
+                                                {DataChanged, 0, 0, QVariantList{QStringLiteral("Col 4")}},
+                                                {DataChanged, 0, 0, QVariantList{QStringLiteral("Col 3")}},
+                                                // New collections are prepended
+                                                {RowsAboutToBeInserted, 0, 0, QStringLiteral("Collection 1")},
+                                                {RowsInserted, 0, 0, QStringLiteral("Collection 1"), QVariantList{QStringLiteral("Col 2")}},
+                                                {RowsAboutToBeInserted, 0, 0, QStringLiteral("Collection 1")},
+                                                {RowsInserted, 0, 0, QStringLiteral("Collection 1"), QVariantList{QStringLiteral("Col 6")}},
+                                                {RowsAboutToBeInserted, 0, 0, QStringLiteral("Collection 1")},
+                                                {RowsInserted, 0, 0, QStringLiteral("Collection 1"), QVariantList{QStringLiteral("Col 7")}},
+                                                {DataChanged, 0, 0, QVariantList{QStringLiteral("Col 1")}},
+                                                // The items in the collections are appended.
+                                                {RowsAboutToBeInserted, 0, 3, QStringLiteral("Col 2")},
+                                                {RowsInserted, 0, 3, QStringLiteral("Col 2")},
+                                                {RowsAboutToBeInserted, 0, 1, QStringLiteral("Col 5")},
+                                                {RowsInserted, 0, 1, QStringLiteral("Col 5")},
+                                                {RowsAboutToBeInserted, 1, 1, QStringLiteral("Col 4")},
+                                                {RowsInserted, 1, 1, QStringLiteral("Col 4")},
+                                                {RowsAboutToBeInserted, 1, 2, QStringLiteral("Col 3")},
+                                                {RowsInserted, 1, 2, QStringLiteral("Col 3")},
+                                                {RowsAboutToBeInserted, 0, 1, QStringLiteral("Col 6")},
+                                                {RowsInserted, 0, 1, QStringLiteral("Col 6")},
+                                                {RowsAboutToBeInserted, 0, 3, QStringLiteral("Col 7")},
+                                                {RowsInserted, 0, 3, QStringLiteral("Col 7")},
+                                                {DataChanged, 0, 0, QVariantList{QStringLiteral("Col 1")}},
+                                                {DataChanged, 3, 3, QVariantList{QStringLiteral("Col 3")}},
+                                                {DataChanged, 0, 0, QVariantList{QStringLiteral("Col 5")}},
+                                                {DataChanged, 0, 0, QVariantList{QStringLiteral("Col 4")}},
+                                                {DataChanged, 2, 2, QVariantList{QStringLiteral("Col 2")}},
+                                                {DataChanged, 1, 1, QVariantList{QStringLiteral("Col 7")}},
+                                                {DataChanged, 0, 0, QVariantList{QStringLiteral("Col 6")}}};
     m_modelSpy->setExpectedSignals(expectedSignals);
 
     // Give the model a chance to run the event loop to process the signals.
@@ -206,18 +203,30 @@ void EntityTreeModelTest::testCollectionMove_data()
     QTest::addColumn<QString>("movedCollection");
     QTest::addColumn<QString>("targetCollection");
 
-    QTest::newRow("move-collection01") << serverContent1 << "Col 5" << "Col 1";
-    QTest::newRow("move-collection02") << serverContent1 << "Col 5" << "Col 2";
-    QTest::newRow("move-collection03") << serverContent1 << "Col 5" << "Col 3";
-    QTest::newRow("move-collection04") << serverContent1 << "Col 5" << "Col 6";
-    QTest::newRow("move-collection05") << serverContent1 << "Col 5" << "Col 7";
-    QTest::newRow("move-collection06") << serverContent1 << "Col 3" << "Col 2";
-    QTest::newRow("move-collection07") << serverContent1 << "Col 3" << "Col 6";
-    QTest::newRow("move-collection08") << serverContent1 << "Col 3" << "Col 7";
-    QTest::newRow("move-collection09") << serverContent1 << "Col 7" << "Col 2";
-    QTest::newRow("move-collection10") << serverContent1 << "Col 7" << "Col 5";
-    QTest::newRow("move-collection11") << serverContent1 << "Col 7" << "Col 4";
-    QTest::newRow("move-collection12") << serverContent1 << "Col 7" << "Col 3";
+    QTest::newRow("move-collection01") << serverContent1 << "Col 5"
+                                       << "Col 1";
+    QTest::newRow("move-collection02") << serverContent1 << "Col 5"
+                                       << "Col 2";
+    QTest::newRow("move-collection03") << serverContent1 << "Col 5"
+                                       << "Col 3";
+    QTest::newRow("move-collection04") << serverContent1 << "Col 5"
+                                       << "Col 6";
+    QTest::newRow("move-collection05") << serverContent1 << "Col 5"
+                                       << "Col 7";
+    QTest::newRow("move-collection06") << serverContent1 << "Col 3"
+                                       << "Col 2";
+    QTest::newRow("move-collection07") << serverContent1 << "Col 3"
+                                       << "Col 6";
+    QTest::newRow("move-collection08") << serverContent1 << "Col 3"
+                                       << "Col 7";
+    QTest::newRow("move-collection09") << serverContent1 << "Col 7"
+                                       << "Col 2";
+    QTest::newRow("move-collection10") << serverContent1 << "Col 7"
+                                       << "Col 5";
+    QTest::newRow("move-collection11") << serverContent1 << "Col 7"
+                                       << "Col 4";
+    QTest::newRow("move-collection12") << serverContent1 << "Col 7"
+                                       << "Col 3";
 }
 
 void EntityTreeModelTest::testCollectionMove()
@@ -233,17 +242,15 @@ void EntityTreeModelTest::testCollectionMove()
     const auto movedIndex = firstMatchedIndex(*model, movedCollection);
     Q_ASSERT(movedIndex.isValid());
     const auto sourceCollection = movedIndex.parent().data().toString();
-    const auto  sourceRow = movedIndex.row();
+    const auto sourceRow = movedIndex.row();
 
     auto *const moveCommand = new FakeCollectionMovedCommand(movedCollection, sourceCollection, targetCollection, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({moveCommand});
 
-    const QList<ExpectedSignal> expectedSignals {
-        {RowsAboutToBeMoved, sourceRow, sourceRow, sourceCollection, 0, targetCollection, {movedCollection}},
-        {RowsMoved, sourceRow, sourceRow, sourceCollection, 0, targetCollection , {movedCollection}}
-    };
+    const QList<ExpectedSignal> expectedSignals{{RowsAboutToBeMoved, sourceRow, sourceRow, sourceCollection, 0, targetCollection, {movedCollection}},
+                                                {RowsMoved, sourceRow, sourceRow, sourceCollection, 0, targetCollection, {movedCollection}}};
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
 
@@ -259,13 +266,20 @@ void EntityTreeModelTest::testCollectionAdded_data()
     QTest::addColumn<QString>("addedCollection");
     QTest::addColumn<QString>("parentCollection");
 
-    QTest::newRow("add-collection01") << serverContent1 << "new Collection" << "Col 1";
-    QTest::newRow("add-collection02") << serverContent1 << "new Collection" << "Col 2";
-    QTest::newRow("add-collection03") << serverContent1 << "new Collection" << "Col 3";
-    QTest::newRow("add-collection04") << serverContent1 << "new Collection" << "Col 4";
-    QTest::newRow("add-collection05") << serverContent1 << "new Collection" << "Col 5";
-    QTest::newRow("add-collection06") << serverContent1 << "new Collection" << "Col 6";
-    QTest::newRow("add-collection07") << serverContent1 << "new Collection" << "Col 7";
+    QTest::newRow("add-collection01") << serverContent1 << "new Collection"
+                                      << "Col 1";
+    QTest::newRow("add-collection02") << serverContent1 << "new Collection"
+                                      << "Col 2";
+    QTest::newRow("add-collection03") << serverContent1 << "new Collection"
+                                      << "Col 3";
+    QTest::newRow("add-collection04") << serverContent1 << "new Collection"
+                                      << "Col 4";
+    QTest::newRow("add-collection05") << serverContent1 << "new Collection"
+                                      << "Col 5";
+    QTest::newRow("add-collection06") << serverContent1 << "new Collection"
+                                      << "Col 6";
+    QTest::newRow("add-collection07") << serverContent1 << "new Collection"
+                                      << "Col 7";
 }
 
 void EntityTreeModelTest::testCollectionAdded()
@@ -282,12 +296,11 @@ void EntityTreeModelTest::testCollectionAdded()
     m_modelSpy->startSpying();
     serverData->setCommands({addCommand});
 
-    const QList<ExpectedSignal> expectedSignals {
+    const QList<ExpectedSignal> expectedSignals{
         {RowsAboutToBeInserted, 0, 0, parentCollection, QVariantList{addedCollection}},
         {RowsInserted, 0, 0, parentCollection, QVariantList{addedCollection}},
         // The data changed signal comes from the item fetch job that is triggered because we have ImmediatePopulation enabled
-        {DataChanged, 0, 0, parentCollection, QVariantList{addedCollection}}
-    };
+        {DataChanged, 0, 0, parentCollection, QVariantList{addedCollection}}};
 
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
@@ -304,7 +317,7 @@ void EntityTreeModelTest::testCollectionRemoved_data()
     QTest::addColumn<QString>("removedCollection");
 
     // The test suite doesn't handle this case yet.
-//   QTest::newRow("remove-collection01") << serverContent1 << "Col 1";
+    //   QTest::newRow("remove-collection01") << serverContent1 << "Col 1";
     QTest::newRow("remove-collection02") << serverContent1 << "Col 2";
     QTest::newRow("remove-collection03") << serverContent1 << "Col 3";
     QTest::newRow("remove-collection04") << serverContent1 << "Col 4";
@@ -331,10 +344,8 @@ void EntityTreeModelTest::testCollectionRemoved()
     m_modelSpy->startSpying();
     serverData->setCommands({removeCommand});
 
-    const QList<ExpectedSignal> expectedSignals {
-        {RowsAboutToBeRemoved, sourceRow, sourceRow, parentCollection, QVariantList{removedCollection}},
-        {RowsRemoved, sourceRow, sourceRow, parentCollection , QVariantList{removedCollection}}
-    };
+    const QList<ExpectedSignal> expectedSignals{{RowsAboutToBeRemoved, sourceRow, sourceRow, parentCollection, QVariantList{removedCollection}},
+                                                {RowsRemoved, sourceRow, sourceRow, parentCollection, QVariantList{removedCollection}}};
 
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
@@ -358,7 +369,7 @@ void EntityTreeModelTest::testCollectionChanged_data()
     QTest::newRow("change-collection05") << serverContent1 << "Col 5" << QString();
     QTest::newRow("change-collection06") << serverContent1 << "Col 6" << QString();
     QTest::newRow("change-collection07") << serverContent1 << "Col 7" << QString();
-    //Don't remove the parent due to a missing mimetype
+    // Don't remove the parent due to a missing mimetype
     QTest::newRow("change-collection08") << serverContent1 << "Col 1" << QStringLiteral("message/rfc822");
 }
 
@@ -382,9 +393,7 @@ void EntityTreeModelTest::testCollectionChanged()
     m_modelSpy->startSpying();
     serverData->setCommands({changeCommand});
 
-    const QList<ExpectedSignal> expectedSignals {
-        {DataChanged, changedRow, changedRow, parentCollection, QVariantList{collectionName}}
-    };
+    const QList<ExpectedSignal> expectedSignals{{DataChanged, changedRow, changedRow, parentCollection, QVariantList{collectionName}}};
 
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
@@ -401,12 +410,18 @@ void EntityTreeModelTest::testItemMove_data()
     QTest::addColumn<QString>("movedItem");
     QTest::addColumn<QString>("targetCollection");
 
-    QTest::newRow("move-item01") << serverContent1 << "Item 1" << "Col 7";
-    QTest::newRow("move-item02") << serverContent1 << "Item 5" << "Col 4";   // Move item to grandparent.
-    QTest::newRow("move-item03") << serverContent1 << "Item 7" << "Col 5";   // Move item to sibling.
-    QTest::newRow("move-item04") << serverContent1 << "Item 8" << "Col 5";   // Move item to nephew
-    QTest::newRow("move-item05") << serverContent1 << "Item 8" << "Col 6";   // Move item to uncle
-    QTest::newRow("move-item02") << serverContent1 << "Item 5" << "Col 3";   // Move item to great-grandparent.
+    QTest::newRow("move-item01") << serverContent1 << "Item 1"
+                                 << "Col 7";
+    QTest::newRow("move-item02") << serverContent1 << "Item 5"
+                                 << "Col 4"; // Move item to grandparent.
+    QTest::newRow("move-item03") << serverContent1 << "Item 7"
+                                 << "Col 5"; // Move item to sibling.
+    QTest::newRow("move-item04") << serverContent1 << "Item 8"
+                                 << "Col 5"; // Move item to nephew
+    QTest::newRow("move-item05") << serverContent1 << "Item 8"
+                                 << "Col 6"; // Move item to uncle
+    QTest::newRow("move-item02") << serverContent1 << "Item 5"
+                                 << "Col 3"; // Move item to great-grandparent.
 }
 
 void EntityTreeModelTest::testItemMove()
@@ -431,8 +446,8 @@ void EntityTreeModelTest::testItemMove()
     m_modelSpy->startSpying();
     serverData->setCommands({moveCommand});
 
-    const QList<ExpectedSignal> expectedSignals {
-        //Currently moves are implemented as remove + insert in the ETM.
+    const QList<ExpectedSignal> expectedSignals{
+        // Currently moves are implemented as remove + insert in the ETM.
         {RowsAboutToBeRemoved, sourceRow, sourceRow, sourceCollection, QVariantList{movedItem}},
         {RowsRemoved, sourceRow, sourceRow, sourceCollection, QVariantList{movedItem}},
         {RowsAboutToBeInserted, targetRow, targetRow, targetCollection, QVariantList{movedItem}},
@@ -456,13 +471,20 @@ void EntityTreeModelTest::testItemAdded_data()
     QTest::addColumn<QString>("addedItem");
     QTest::addColumn<QString>("parentCollection");
 
-    QTest::newRow("add-item01") << serverContent1 << "new Item" << "Col 1";
-    QTest::newRow("add-item02") << serverContent1 << "new Item" << "Col 2";
-    QTest::newRow("add-item03") << serverContent1 << "new Item" << "Col 3";
-    QTest::newRow("add-item04") << serverContent1 << "new Item" << "Col 4";
-    QTest::newRow("add-item05") << serverContent1 << "new Item" << "Col 5";
-    QTest::newRow("add-item06") << serverContent1 << "new Item" << "Col 6";
-    QTest::newRow("add-item07") << serverContent1 << "new Item" << "Col 7";
+    QTest::newRow("add-item01") << serverContent1 << "new Item"
+                                << "Col 1";
+    QTest::newRow("add-item02") << serverContent1 << "new Item"
+                                << "Col 2";
+    QTest::newRow("add-item03") << serverContent1 << "new Item"
+                                << "Col 3";
+    QTest::newRow("add-item04") << serverContent1 << "new Item"
+                                << "Col 4";
+    QTest::newRow("add-item05") << serverContent1 << "new Item"
+                                << "Col 5";
+    QTest::newRow("add-item06") << serverContent1 << "new Item"
+                                << "Col 6";
+    QTest::newRow("add-item07") << serverContent1 << "new Item"
+                                << "Col 7";
 }
 
 void EntityTreeModelTest::testItemAdded()
@@ -484,10 +506,8 @@ void EntityTreeModelTest::testItemAdded()
 
     serverData->setCommands({addedCommand});
 
-    const QList<ExpectedSignal> expectedSignals {
-        {RowsAboutToBeInserted, targetRow, targetRow, parentCollection, QVariantList{addedItem}},
-        {RowsInserted, targetRow, targetRow, parentCollection, QVariantList{addedItem}}
-    };
+    const QList<ExpectedSignal> expectedSignals{{RowsAboutToBeInserted, targetRow, targetRow, parentCollection, QVariantList{addedItem}},
+                                                {RowsInserted, targetRow, targetRow, parentCollection, QVariantList{addedItem}}};
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
 
@@ -537,10 +557,8 @@ void EntityTreeModelTest::testItemRemoved()
     m_modelSpy->startSpying();
     serverData->setCommands({removeCommand});
 
-    const QList<ExpectedSignal> expectedSignals {
-        {RowsAboutToBeRemoved, sourceRow, sourceRow, sourceCollection, QVariantList{removedItem}},
-        {RowsRemoved, sourceRow, sourceRow, sourceCollection, QVariantList{removedItem}}
-    };
+    const QList<ExpectedSignal> expectedSignals{{RowsAboutToBeRemoved, sourceRow, sourceRow, sourceCollection, QVariantList{removedItem}},
+                                                {RowsRemoved, sourceRow, sourceRow, sourceCollection, QVariantList{removedItem}}};
 
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
@@ -591,9 +609,7 @@ void EntityTreeModelTest::testItemChanged()
     m_modelSpy->startSpying();
     serverData->setCommands({changeCommand});
 
-    const QList<ExpectedSignal> expectedSignals {
-        {DataChanged, sourceRow, sourceRow, QVariantList{changedItem}}
-    };
+    const QList<ExpectedSignal> expectedSignals{{DataChanged, sourceRow, sourceRow, QVariantList{changedItem}}};
 
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
@@ -609,8 +625,7 @@ void EntityTreeModelTest::testRemoveCollectionOnChanged()
     const auto serverContent = QStringLiteral(
         "- C (inode/directory, text/directory)  'Col 1'     2"
         "- - C (text/directory)                 'Col 2'     1"
-        "- - - I text/directory                 'Item 1'"
-    );
+        "- - - I text/directory                 'Item 1'");
     const auto collectionName = QStringLiteral("Col 2");
     const auto monitoredMimeType = QStringLiteral("text/directory");
 
@@ -628,7 +643,7 @@ void EntityTreeModelTest::testRemoveCollectionOnChanged()
     m_modelSpy->startSpying();
     serverData->setCommands({changeCommand});
 
-    const QList<ExpectedSignal> expectedSignals {
+    const QList<ExpectedSignal> expectedSignals{
         {RowsAboutToBeRemoved, changedIndex.row(), changedIndex.row(), parentCollection, QVariantList{collectionName}},
         {RowsRemoved, changedIndex.row(), changedIndex.row(), parentCollection, QVariantList{collectionName}},
     };
@@ -645,4 +660,3 @@ void EntityTreeModelTest::testRemoveCollectionOnChanged()
 #include "entitytreemodeltest.moc"
 
 QTEST_MAIN(EntityTreeModelTest)
-

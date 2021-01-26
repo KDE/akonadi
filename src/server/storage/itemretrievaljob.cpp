@@ -5,8 +5,8 @@
 */
 
 #include "itemretrievaljob.h"
-#include "resourceinterface.h"
 #include "akonadiserver_debug.h"
+#include "resourceinterface.h"
 
 #include <QDBusPendingCallWatcher>
 
@@ -15,7 +15,8 @@ using namespace Akonadi::Server;
 AbstractItemRetrievalJob::AbstractItemRetrievalJob(ItemRetrievalRequest req, QObject *parent)
     : QObject(parent)
     , m_result(std::move(req))
-{}
+{
+}
 
 ItemRetrievalJob::~ItemRetrievalJob()
 {
@@ -24,15 +25,15 @@ ItemRetrievalJob::~ItemRetrievalJob()
 
 void ItemRetrievalJob::start()
 {
-    qCDebug(AKONADISERVER_LOG) << "processing retrieval request for item" << request().ids << " parts:" << request().parts << " of resource:" << request().resourceId;
+    qCDebug(AKONADISERVER_LOG) << "processing retrieval request for item" << request().ids << " parts:" << request().parts
+                               << " of resource:" << request().resourceId;
 
     // call the resource
     if (m_interface) {
         m_active = true;
         auto reply = m_interface->requestItemDelivery(request().ids, request().parts);
         auto *watcher = new QDBusPendingCallWatcher(reply, this);
-        connect(watcher, &QDBusPendingCallWatcher::finished,
-                this, &ItemRetrievalJob::callFinished);
+        connect(watcher, &QDBusPendingCallWatcher::finished, this, &ItemRetrievalJob::callFinished);
     } else {
         m_result.errorMsg = QStringLiteral("Unable to contact resource");
         Q_EMIT requestCompleted(this);

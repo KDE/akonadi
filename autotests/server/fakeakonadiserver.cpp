@@ -6,26 +6,26 @@
  */
 
 #include "fakeakonadiserver.h"
+#include "cachecleaner.h"
+#include "debuginterface.h"
+#include "fakeclient.h"
 #include "fakeconnection.h"
 #include "fakedatastore.h"
-#include "fakesearchmanager.h"
-#include "fakeclient.h"
-#include "fakeitemretrievalmanager.h"
-#include "inspectablenotificationcollector.h"
 #include "fakeintervalcheck.h"
-#include "storage/collectionstatistics.h"
-#include "cachecleaner.h"
-#include "storagejanitor.h"
+#include "fakeitemretrievalmanager.h"
+#include "fakesearchmanager.h"
+#include "inspectablenotificationcollector.h"
 #include "resourcemanager.h"
-#include "debuginterface.h"
 #include "search/searchtaskmanager.h"
+#include "storage/collectionstatistics.h"
+#include "storagejanitor.h"
 
-#include <QSettings>
+#include <QBuffer>
 #include <QCoreApplication>
 #include <QDir>
-#include <QTest>
-#include <QBuffer>
+#include <QSettings>
 #include <QStandardPaths>
+#include <QTest>
 
 #include <ctime>
 #include <private/scope_p.h>
@@ -33,19 +33,18 @@
 #include <shared/akapplication.h>
 
 #include "aklocalserver.h"
-#include "storage/dbconfig.h"
-#include "storage/datastore.h"
 #include "preprocessormanager.h"
 #include "search/searchmanager.h"
+#include "storage/datastore.h"
+#include "storage/dbconfig.h"
 #include "utils.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-Q_DECLARE_METATYPE(Akonadi::Server::InspectableNotificationCollector*)
+Q_DECLARE_METATYPE(Akonadi::Server::InspectableNotificationCollector *)
 
-TestScenario TestScenario::create(qint64 tag, TestScenario::Action action,
-                                  const Protocol::CommandPtr &response)
+TestScenario TestScenario::create(qint64 tag, TestScenario::Action action, const Protocol::CommandPtr &response)
 {
     TestScenario sc;
     sc.action = action;
@@ -84,7 +83,6 @@ TestScenario TestScenario::create(qint64 tag, TestScenario::Action action,
     return sc;
 }
 
-
 FakeAkonadiServer::FakeAkonadiServer()
 {
     qputenv("AKONADI_INSTANCE", qPrintable(instanceName()));
@@ -106,7 +104,7 @@ FakeAkonadiServer::~FakeAkonadiServer()
 QString FakeAkonadiServer::basePath()
 {
     return QStandardPaths::writableLocation(QStandardPaths::TempLocation)
-                + QStringLiteral("/akonadiserver-test-%1").arg(QCoreApplication::instance()->applicationPid());
+        + QStringLiteral("/akonadiserver-test-%1").arg(QCoreApplication::instance()->applicationPid());
 }
 
 QString FakeAkonadiServer::socketFile()
@@ -129,24 +127,16 @@ TestScenario::List FakeAkonadiServer::loginScenario(const QByteArray &sessionId)
     hello->setProtocolVersion(Protocol::version());
     hello->setGeneration(schema.generation());
 
-    return {
-        TestScenario::create(0, TestScenario::ServerCmd, hello),
-        TestScenario::create(1,TestScenario::ClientCmd,
-                             Protocol::LoginCommandPtr::create(sessionId.isEmpty() ? instanceName().toLatin1() : sessionId)),
-        TestScenario::create(1, TestScenario::ServerCmd,
-                             Protocol::LoginResponsePtr::create())
-    };
+    return {TestScenario::create(0, TestScenario::ServerCmd, hello),
+            TestScenario::create(1, TestScenario::ClientCmd, Protocol::LoginCommandPtr::create(sessionId.isEmpty() ? instanceName().toLatin1() : sessionId)),
+            TestScenario::create(1, TestScenario::ServerCmd, Protocol::LoginResponsePtr::create())};
 }
 
 TestScenario::List FakeAkonadiServer::selectResourceScenario(const QString &name)
 {
     const Resource resource = Resource::retrieveByName(name);
-    return {
-        TestScenario::create(3, TestScenario::ClientCmd,
-                             Protocol::SelectResourceCommandPtr::create(resource.name())),
-        TestScenario::create(3, TestScenario::ServerCmd,
-                             Protocol::SelectResourceResponsePtr::create())
-    };
+    return {TestScenario::create(3, TestScenario::ClientCmd, Protocol::SelectResourceCommandPtr::create(resource.name())),
+            TestScenario::create(3, TestScenario::ServerCmd, Protocol::SelectResourceResponsePtr::create())};
 }
 
 void FakeAkonadiServer::disableItemRetrievalManager()
@@ -285,9 +275,11 @@ void FakeAkonadiServer::newCmdConnection(quintptr socketDescriptor)
     // Connection is its own thread, so we have to make sure we get collector
     // from DataStore of the Connection's thread, not ours
     NotificationCollector *collector = nullptr;
-    QMetaObject::invokeMethod(mConnection.get(), "notificationCollector", Qt::BlockingQueuedConnection,
-                              Q_RETURN_ARG(Akonadi::Server::NotificationCollector*, collector));
-    mNtfCollector = dynamic_cast<InspectableNotificationCollector*>(collector);
+    QMetaObject::invokeMethod(mConnection.get(),
+                              "notificationCollector",
+                              Qt::BlockingQueuedConnection,
+                              Q_RETURN_ARG(Akonadi::Server::NotificationCollector *, collector));
+    mNtfCollector = dynamic_cast<InspectableNotificationCollector *>(collector);
     Q_ASSERT(mNtfCollector);
     mNotificationSpy.reset(new QSignalSpy(mNtfCollector, &Server::InspectableNotificationCollector::notifySignal));
     Q_ASSERT(mNotificationSpy->isValid());
@@ -296,22 +288,20 @@ void FakeAkonadiServer::newCmdConnection(quintptr socketDescriptor)
 void FakeAkonadiServer::runTest()
 {
     mCmdServer = std::make_unique<AkLocalServer>();
-    connect(mCmdServer.get(), static_cast<void(AkLocalServer::*)(quintptr)>(&AkLocalServer::newConnection),
-            this, &FakeAkonadiServer::newCmdConnection);
+    connect(mCmdServer.get(), static_cast<void (AkLocalServer::*)(quintptr)>(&AkLocalServer::newConnection), this, &FakeAkonadiServer::newCmdConnection);
     QVERIFY(mCmdServer->listen(socketFile()));
 
     QEventLoop serverLoop;
-    connect(mClient.get(), &QThread::finished,
-            this, [this, &serverLoop]() { // clazy:exclude=lambda-in-connect
-                disconnect(mClient.get(), &QThread::finished, this, nullptr);
-                // Flush any pending notifications and wait for them
-                // before shutting down the event loop
-                if (mNtfCollector->dispatchNotifications()) {
-                    mNotificationSpy->wait();
-                }
+    connect(mClient.get(), &QThread::finished, this, [this, &serverLoop]() { // clazy:exclude=lambda-in-connect
+        disconnect(mClient.get(), &QThread::finished, this, nullptr);
+        // Flush any pending notifications and wait for them
+        // before shutting down the event loop
+        if (mNtfCollector->dispatchNotifications()) {
+            mNotificationSpy->wait();
+        }
 
-                serverLoop.quit();
-            });
+        serverLoop.quit();
+    });
 
     // Start the client: the client will connect to the server and will
     // start playing the scenario

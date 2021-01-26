@@ -14,7 +14,6 @@ class KXmlGuiWindow;
 class KXMLGUIClient;
 namespace Akonadi
 {
-
 class Item;
 
 /**

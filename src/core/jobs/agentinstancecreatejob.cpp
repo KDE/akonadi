@@ -10,17 +10,17 @@
 #include "agentmanager.h"
 #include "agentmanager_p.h"
 #include "controlinterface.h"
-#include <QDBusConnection>
 #include "kjobprivatebase_p.h"
 #include "servermanager.h"
+#include <QDBusConnection>
 
 #include <KLocalizedString>
 
 #include <QTimer>
 
 #ifdef Q_OS_UNIX
-#include <sys/types.h>
 #include <signal.h>
+#include <sys/types.h>
 #endif
 
 using namespace Akonadi;
@@ -61,7 +61,9 @@ public:
     {
         org::freedesktop::Akonadi::Agent::Control *agentControlIface =
             new org::freedesktop::Akonadi::Agent::Control(ServerManager::agentServiceName(ServerManager::Agent, agentInstance.identifier()),
-                    QStringLiteral("/"), QDBusConnection::sessionBus(), q);
+                                                          QStringLiteral("/"),
+                                                          QDBusConnection::sessionBus(),
+                                                          q);
         if (!agentControlIface || !agentControlIface->isValid()) {
             delete agentControlIface;
 
@@ -71,17 +73,15 @@ public:
             return;
         }
 
-        connect(agentControlIface, &org::freedesktop::Akonadi::Agent::Control::configurationDialogAccepted,
-                this, [agentControlIface, this]() {
-                    agentControlIface->deleteLater();
-                    q->emitResult();
-                });
-        connect(agentControlIface, &org::freedesktop::Akonadi::Agent::Control::configurationDialogRejected,
-                this, [agentControlIface, this]() {
-                    agentControlIface->deleteLater();
-                    AgentManager::self()->removeInstance(agentInstance);
-                    q->emitResult();
-                });
+        connect(agentControlIface, &org::freedesktop::Akonadi::Agent::Control::configurationDialogAccepted, this, [agentControlIface, this]() {
+            agentControlIface->deleteLater();
+            q->emitResult();
+        });
+        connect(agentControlIface, &org::freedesktop::Akonadi::Agent::Control::configurationDialogRejected, this, [agentControlIface, this]() {
+            agentControlIface->deleteLater();
+            AgentManager::self()->removeInstance(agentInstance);
+            q->emitResult();
+        });
 
         agentInstance.configure(parentWidget);
     }
@@ -96,7 +96,7 @@ public:
 
     void doStart() override;
 
-    AgentInstanceCreateJob * const q;
+    AgentInstanceCreateJob *const q;
     AgentType agentType;
     QString agentTypeId;
     AgentInstance agentInstance;

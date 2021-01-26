@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @short Specifies which parts of a tag should be fetched from the Akonadi storage.
  *
@@ -22,7 +21,6 @@ namespace Akonadi
 class AKONADICORE_EXPORT TagFetchScope
 {
 public:
-
     /**
      * Creates an empty tag fetch scope.
      *
@@ -90,7 +88,7 @@ public:
      *
      * @param fetch @c true if the attribute should be fetched, @c false otherwise.
      */
-    template <typename T> inline void fetchAttribute(bool fetch = true)
+    template<typename T> inline void fetchAttribute(bool fetch = true)
     {
         T dummy;
         fetchAttribute(dummy.type(), fetch);

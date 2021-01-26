@@ -16,7 +16,6 @@
 
 namespace Akonadi
 {
-
 class XmlDocumentPrivate;
 
 /**

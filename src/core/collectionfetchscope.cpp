@@ -7,13 +7,12 @@
 
 #include "collectionfetchscope.h"
 
+#include <QScopedPointer>
 #include <QString>
 #include <QStringList>
-#include <QScopedPointer>
 
 namespace Akonadi
 {
-
 class CollectionFetchScopePrivate : public QSharedData
 {
 public:

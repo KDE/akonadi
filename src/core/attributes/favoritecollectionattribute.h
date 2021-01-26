@@ -7,11 +7,11 @@
 #ifndef AKONADI_CORE_FAVORITECOLLECTIONATTRIBUTE_H_
 #define AKONADI_CORE_FAVORITECOLLECTIONATTRIBUTE_H_
 
-#include "attribute.h"
 #include "akonadicore_export.h"
+#include "attribute.h"
 
-namespace Akonadi {
-
+namespace Akonadi
+{
 class AKONADICORE_EXPORT FavoriteCollectionAttribute : public Attribute
 {
 public:

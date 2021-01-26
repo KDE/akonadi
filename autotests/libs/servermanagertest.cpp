@@ -4,8 +4,8 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "control.h"
 #include "servermanager.h"
+#include "control.h"
 #include "qtest_akonadi.h"
 
 #include <QObject>
@@ -72,7 +72,6 @@ private Q_SLOTS:
         QVERIFY(ServerManager::isRunning());
         QCOMPARE(startSpy.count(), 1);
     }
-
 };
 
 QTEST_AKONADIMAIN(ServerManagerTest)

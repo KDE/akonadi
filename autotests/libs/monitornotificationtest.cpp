@@ -6,13 +6,13 @@
 
 #include "monitor.h"
 
+#include "akonaditestfake_export.h"
 #include "fakeserverdata.h"
 #include "fakesession.h"
-#include "inspectablemonitor.h"
 #include "inspectablechangerecorder.h"
-#include "akonaditestfake_export.h"
-#include <QTest>
+#include "inspectablemonitor.h"
 #include <QSignalSpy>
+#include <QTest>
 
 using namespace Akonadi;
 
@@ -43,12 +43,9 @@ private Q_SLOTS:
     void testMonitor_data();
 
 private:
-    template<typename MonitorImpl>
-    void testSingleMessage_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
-    template<typename MonitorImpl>
-    void testFillPipeline_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
-    template<typename MonitorImpl>
-    void testMonitor_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
+    template<typename MonitorImpl> void testSingleMessage_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
+    template<typename MonitorImpl> void testFillPipeline_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
+    template<typename MonitorImpl> void testMonitor_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
 
 private:
     FakeSession *m_fakeSession = nullptr;
@@ -80,7 +77,7 @@ void MonitorNotificationTest::testSingleMessage()
     }
 }
 
-template <typename MonitorImpl>
+template<typename MonitorImpl>
 void MonitorNotificationTest::testSingleMessage_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache)
 {
     Q_UNUSED(itemCache)
@@ -151,7 +148,7 @@ void MonitorNotificationTest::testFillPipeline()
     }
 }
 
-template <typename MonitorImpl>
+template<typename MonitorImpl>
 void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache)
 {
     Q_UNUSED(itemCache)
@@ -221,7 +218,7 @@ void MonitorNotificationTest::testMonitor()
     }
 }
 
-template <typename MonitorImpl>
+template<typename MonitorImpl>
 void MonitorNotificationTest::testMonitor_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache)
 {
     Q_UNUSED(itemCache)
@@ -262,7 +259,7 @@ void MonitorNotificationTest::testMonitor_impl(MonitorImpl *monitor, FakeCollect
     collectionCache->insert(col6);
 
     qRegisterMetaType<Akonadi::Collection>();
-    QSignalSpy collectionAddedSpy(monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)));
+    QSignalSpy collectionAddedSpy(monitor, SIGNAL(collectionAdded(Akonadi::Collection, Akonadi::Collection)));
 
     collectionCache->emitDataAvailable();
 

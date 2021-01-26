@@ -5,27 +5,26 @@
 */
 
 #include "entitytreemodel.h"
-#include "entitytreemodel_p.h"
 #include "akonadicore_debug.h"
+#include "entitytreemodel_p.h"
 #include "monitor_p.h"
 
-#include <QHash>
-#include <QMimeData>
 #include <QAbstractProxyModel>
+#include <QHash>
 #include <QMessageBox>
+#include <QMimeData>
 
 #include <KLocalizedString>
 #include <QUrl>
 #include <QUrlQuery>
 
 #include "attributefactory.h"
-#include "monitor.h"
 #include "collectionmodifyjob.h"
 #include "entitydisplayattribute.h"
-#include "transactionsequence.h"
 #include "itemmodifyjob.h"
+#include "monitor.h"
 #include "session.h"
-
+#include "transactionsequence.h"
 
 #include "collectionutils.h"
 
@@ -119,26 +118,24 @@ void EntityTreeModel::clearAndReset()
 
 QHash<int, QByteArray> EntityTreeModel::roleNames() const
 {
-    return {
-        { Qt::DecorationRole, "decoration" },
-        { Qt::DisplayRole, "display" },
+    return {{Qt::DecorationRole, "decoration"},
+            {Qt::DisplayRole, "display"},
 
-        { EntityTreeModel::ItemIdRole, "itemId" },
-        { EntityTreeModel::CollectionIdRole, "collectionId" },
+            {EntityTreeModel::ItemIdRole, "itemId"},
+            {EntityTreeModel::CollectionIdRole, "collectionId"},
 
-        { EntityTreeModel::UnreadCountRole, "unreadCount" },
-        // TODO: expose when states for reporting of fetching payload parts of items is changed
-        // { EntityTreeModel::FetchStateRole, "fetchState" },
-        { EntityTreeModel::EntityUrlRole, "url" },
-        { EntityTreeModel::RemoteIdRole, "remoteId" },
-        { EntityTreeModel::IsPopulatedRole, "isPopulated" },
-        { EntityTreeModel::CollectionRole, "collection" }
-    };
+            {EntityTreeModel::UnreadCountRole, "unreadCount"},
+            // TODO: expose when states for reporting of fetching payload parts of items is changed
+            // { EntityTreeModel::FetchStateRole, "fetchState" },
+            {EntityTreeModel::EntityUrlRole, "url"},
+            {EntityTreeModel::RemoteIdRole, "remoteId"},
+            {EntityTreeModel::IsPopulatedRole, "isPopulated"},
+            {EntityTreeModel::CollectionRole, "collection"}};
 }
 
 int EntityTreeModel::columnCount(const QModelIndex &parent) const
 {
-// TODO: Statistics?
+    // TODO: Statistics?
     if (parent.isValid() && parent.column() != 0) {
         return 0;
     }
@@ -238,8 +235,7 @@ QVariant EntityTreeModel::data(const QModelIndex &index, int role) const
 
     const Node *node = reinterpret_cast<Node *>(index.internalPointer());
 
-    if (ParentCollectionRole == role &&
-            d->m_collectionFetchStrategy != FetchNoCollections) {
+    if (ParentCollectionRole == role && d->m_collectionFetchStrategy != FetchNoCollections) {
         const Collection parentCollection = d->m_collections.value(node->parent);
         Q_ASSERT(parentCollection.isValid());
 
@@ -341,7 +337,6 @@ Qt::ItemFlags EntityTreeModel::flags(const QModelIndex &index) const
     if (Node::Collection == node->type) {
         const Collection collection = d->m_collections.value(node->id);
         if (collection.isValid()) {
-
             if (collection == Collection::root()) {
                 // Selectable and displayable only.
                 return flags;
@@ -364,7 +359,6 @@ Qt::ItemFlags EntityTreeModel::flags(const QModelIndex &index) const
 
             // dragging is always possible, even for read-only objects, but they can only be copied, not moved.
             flags |= Qt::ItemIsDragEnabled;
-
         }
     } else if (Node::Item == node->type) {
         // cut out entities are shown as disabled
@@ -429,17 +423,17 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
     // Needs to be handled when ordering is accounted for.
 
     // Handle dropping between items as well as on items.
-//   if ( row != -1 && column != -1 )
-//   {
-//   }
+    //   if ( row != -1 && column != -1 )
+    //   {
+    //   }
 
     if (action == Qt::IgnoreAction) {
         return true;
     }
 
-// Shouldn't do this. Need to be able to drop vcards for example.
-//   if ( !data->hasFormat( "text/uri-list" ) )
-//       return false;
+    // Shouldn't do this. Need to be able to drop vcards for example.
+    //   if ( !data->hasFormat( "text/uri-list" ) )
+    //       return false;
 
     Node *node = reinterpret_cast<Node *>(parent.internalId());
 
@@ -467,7 +461,6 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
         }
 
         if (data->hasFormat(QStringLiteral("text/uri-list"))) {
-
             MimeTypeChecker mimeChecker;
             mimeChecker.setWantedMimeTypes(destCollection.contentMimeTypes());
 
@@ -475,8 +468,7 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
             for (const QUrl &url : urls) {
                 const Collection collection = d->m_collections.value(Collection::fromUrl(url).id());
                 if (collection.isValid()) {
-                    if (collection.parentCollection().id() == destCollection.id() &&
-                            action != Qt::CopyAction) {
+                    if (collection.parentCollection().id() == destCollection.id() && action != Qt::CopyAction) {
                         qCWarning(AKONADICORE_LOG) << "Error: source and destination of move are the same.";
                         return false;
                     }
@@ -492,9 +484,10 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
                         const QStringList collectionNames = d->childCollectionNames(destCollection);
 
                         if (collectionNames.contains(collectionName)) {
-                            QMessageBox::critical(nullptr, i18nc("@window:title", "Error"),
-                                                  i18n("The target collection '%1' contains already\na collection with name '%2'.",
-                                                       destCollection.name(), collection.name()));
+                            QMessageBox::critical(
+                                nullptr,
+                                i18nc("@window:title", "Error"),
+                                i18n("The target collection '%1' contains already\na collection with name '%2'.", destCollection.name(), collection.name()));
                             return false;
                         }
                     }
@@ -519,12 +512,12 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
                 return false;
             }
 
-            connect(job, SIGNAL(result(KJob*)), SLOT(pasteJobDone(KJob*)));
+            connect(job, SIGNAL(result(KJob *)), SLOT(pasteJobDone(KJob *)));
 
             // Accept the event so that it doesn't propagate.
             return true;
         } else {
-//       not a set of uris. Maybe vcards etc. Check if the parent supports them, and maybe do
+            //       not a set of uris. Maybe vcards etc. Check if the parent supports them, and maybe do
             // fromMimeData for them. Hmm, put it in the same transaction with the above?
             // TODO: This should be handled first, not last.
         }
@@ -535,14 +528,13 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
 
 QModelIndex EntityTreeModel::index(int row, int column, const QModelIndex &parent) const
 {
-
     Q_D(const EntityTreeModel);
 
     if (parent.column() > 0) {
         return QModelIndex();
     }
 
-    //TODO: don't use column count here? Use some d-> func.
+    // TODO: don't use column count here? Use some d-> func.
     if (column >= columnCount() || column < 0) {
         return QModelIndex();
     }
@@ -577,8 +569,7 @@ QModelIndex EntityTreeModel::parent(const QModelIndex &index) const
         return QModelIndex();
     }
 
-    if (d->m_collectionFetchStrategy == InvisibleCollectionFetch ||
-            d->m_collectionFetchStrategy == FetchNoCollections) {
+    if (d->m_collectionFetchStrategy == InvisibleCollectionFetch || d->m_collectionFetchStrategy == FetchNoCollections) {
         return QModelIndex();
     }
 
@@ -615,8 +606,7 @@ int EntityTreeModel::rowCount(const QModelIndex &parent) const
 {
     Q_D(const EntityTreeModel);
 
-    if (d->m_collectionFetchStrategy == InvisibleCollectionFetch ||
-            d->m_collectionFetchStrategy == FetchNoCollections) {
+    if (d->m_collectionFetchStrategy == InvisibleCollectionFetch || d->m_collectionFetchStrategy == FetchNoCollections) {
         if (parent.isValid()) {
             return 0;
         } else {
@@ -738,10 +728,7 @@ bool EntityTreeModel::setData(const QModelIndex &index, const QVariant &value, i
         return true;
     }
 
-    if (index.isValid() &&
-            node->type == Node::Collection &&
-            (role == CollectionRefRole ||
-             role == CollectionDerefRole)) {
+    if (index.isValid() && node->type == Node::Collection && (role == CollectionRefRole || role == CollectionDerefRole)) {
         const Collection collection = index.data(CollectionRole).value<Collection>();
         Q_ASSERT(collection.isValid());
 
@@ -779,7 +766,7 @@ bool EntityTreeModel::setData(const QModelIndex &index, const QVariant &value, i
             }
 
             auto *job = new CollectionModifyJob(collection, d->m_session);
-            connect(job, SIGNAL(result(KJob*)), SLOT(updateJobDone(KJob*)));
+            connect(job, SIGNAL(result(KJob *)), SLOT(updateJobDone(KJob *)));
 
             return false;
         } else if (Node::Item == node->type) {
@@ -807,7 +794,7 @@ bool EntityTreeModel::setData(const QModelIndex &index, const QVariant &value, i
             }
 
             auto *itemModifyJob = new ItemModifyJob(item, d->m_session);
-            connect(itemModifyJob, SIGNAL(result(KJob*)), SLOT(updateJobDone(KJob*)));
+            connect(itemModifyJob, SIGNAL(result(KJob *)), SLOT(updateJobDone(KJob *)));
 
             return false;
         }
@@ -852,8 +839,7 @@ bool EntityTreeModel::hasChildren(const QModelIndex &parent) const
 {
     Q_D(const EntityTreeModel);
 
-    if (d->m_collectionFetchStrategy == InvisibleCollectionFetch ||
-            d->m_collectionFetchStrategy == FetchNoCollections) {
+    if (d->m_collectionFetchStrategy == InvisibleCollectionFetch || d->m_collectionFetchStrategy == FetchNoCollections) {
         return parent.isValid() ? false : !d->m_items.isEmpty();
     }
 
@@ -861,8 +847,7 @@ bool EntityTreeModel::hasChildren(const QModelIndex &parent) const
     // There is probably no way to tell if a collection
     // has child items in akonadi without first attempting an itemFetchJob...
     // Figure out a way to fix this. (Statistics)
-    return ((rowCount(parent) > 0) ||
-            (canFetchMore(parent) && d->m_itemPopulation == LazyPopulation));
+    return ((rowCount(parent) > 0) || (canFetchMore(parent) && d->m_itemPopulation == LazyPopulation));
 }
 
 bool EntityTreeModel::isCollectionTreeFetched() const
@@ -962,19 +947,19 @@ void EntityTreeModel::setItemPopulationStrategy(ItemPopulationStrategy strategy)
     d->m_itemPopulation = strategy;
 
     if (strategy == NoItemPopulation) {
-        disconnect(d->m_monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)),
-                   this, SLOT(monitoredItemAdded(Akonadi::Item,Akonadi::Collection)));
-        disconnect(d->m_monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
-                   this, SLOT(monitoredItemChanged(Akonadi::Item,QSet<QByteArray>)));
-        disconnect(d->m_monitor, SIGNAL(itemRemoved(Akonadi::Item)),
-                   this, SLOT(monitoredItemRemoved(Akonadi::Item)));
-        disconnect(d->m_monitor, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
-                   this, SLOT(monitoredItemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)));
+        disconnect(d->m_monitor, SIGNAL(itemAdded(Akonadi::Item, Akonadi::Collection)), this, SLOT(monitoredItemAdded(Akonadi::Item, Akonadi::Collection)));
+        disconnect(d->m_monitor, SIGNAL(itemChanged(Akonadi::Item, QSet<QByteArray>)), this, SLOT(monitoredItemChanged(Akonadi::Item, QSet<QByteArray>)));
+        disconnect(d->m_monitor, SIGNAL(itemRemoved(Akonadi::Item)), this, SLOT(monitoredItemRemoved(Akonadi::Item)));
+        disconnect(d->m_monitor,
+                   SIGNAL(itemMoved(Akonadi::Item, Akonadi::Collection, Akonadi::Collection)),
+                   this,
+                   SLOT(monitoredItemMoved(Akonadi::Item, Akonadi::Collection, Akonadi::Collection)));
 
-        disconnect(d->m_monitor, SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)),
-                   this, SLOT(monitoredItemLinked(Akonadi::Item,Akonadi::Collection)));
-        disconnect(d->m_monitor, SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)),
-                   this, SLOT(monitoredItemUnlinked(Akonadi::Item,Akonadi::Collection)));
+        disconnect(d->m_monitor, SIGNAL(itemLinked(Akonadi::Item, Akonadi::Collection)), this, SLOT(monitoredItemLinked(Akonadi::Item, Akonadi::Collection)));
+        disconnect(d->m_monitor,
+                   SIGNAL(itemUnlinked(Akonadi::Item, Akonadi::Collection)),
+                   this,
+                   SLOT(monitoredItemUnlinked(Akonadi::Item, Akonadi::Collection)));
     }
 
     d->m_monitor->d_ptr->useRefCounting = (strategy == LazyPopulation);
@@ -1022,17 +1007,17 @@ void EntityTreeModel::setCollectionFetchStrategy(CollectionFetchStrategy strateg
     d->beginResetModel();
     d->m_collectionFetchStrategy = strategy;
 
-    if (strategy == FetchNoCollections ||
-            strategy == InvisibleCollectionFetch) {
-        disconnect(d->m_monitor, SIGNAL(collectionChanged(Akonadi::Collection)),
-                   this, SLOT(monitoredCollectionChanged(Akonadi::Collection)));
-        disconnect(d->m_monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
-                   this, SLOT(monitoredCollectionAdded(Akonadi::Collection,Akonadi::Collection)));
-        disconnect(d->m_monitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
-                   this, SLOT(monitoredCollectionRemoved(Akonadi::Collection)));
+    if (strategy == FetchNoCollections || strategy == InvisibleCollectionFetch) {
+        disconnect(d->m_monitor, SIGNAL(collectionChanged(Akonadi::Collection)), this, SLOT(monitoredCollectionChanged(Akonadi::Collection)));
         disconnect(d->m_monitor,
-                   SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)),
-                   this, SLOT(monitoredCollectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)));
+                   SIGNAL(collectionAdded(Akonadi::Collection, Akonadi::Collection)),
+                   this,
+                   SLOT(monitoredCollectionAdded(Akonadi::Collection, Akonadi::Collection)));
+        disconnect(d->m_monitor, SIGNAL(collectionRemoved(Akonadi::Collection)), this, SLOT(monitoredCollectionRemoved(Akonadi::Collection)));
+        disconnect(d->m_monitor,
+                   SIGNAL(collectionMoved(Akonadi::Collection, Akonadi::Collection, Akonadi::Collection)),
+                   this,
+                   SLOT(monitoredCollectionMoved(Akonadi::Collection, Akonadi::Collection, Akonadi::Collection)));
         d->m_monitor->fetchCollection(false);
     } else {
         d->m_monitor->fetchCollection(true);
@@ -1103,26 +1088,24 @@ QModelIndexList EntityTreeModel::modelIndexesForItem(const QAbstractItemModel *m
     return proxyList;
 }
 
-Collection EntityTreeModel::updatedCollection(const QAbstractItemModel *model,
-                                              qint64 collectionId)
+Collection EntityTreeModel::updatedCollection(const QAbstractItemModel *model, qint64 collectionId)
 {
-    const auto *proxy = qobject_cast<const QAbstractProxyModel*>(model);
+    const auto *proxy = qobject_cast<const QAbstractProxyModel *>(model);
     const QAbstractItemModel *_model = model;
     while (proxy) {
         _model = proxy->sourceModel();
-        proxy = qobject_cast<const QAbstractProxyModel*>(_model);
+        proxy = qobject_cast<const QAbstractProxyModel *>(_model);
     }
 
-    const auto *etm = qobject_cast<const EntityTreeModel*>(_model);
+    const auto *etm = qobject_cast<const EntityTreeModel *>(_model);
     if (etm) {
         return etm->d_ptr->m_collections.value(collectionId);
     } else {
-        return Collection{ collectionId };
+        return Collection{collectionId};
     }
 }
 
-Collection EntityTreeModel::updatedCollection(const QAbstractItemModel *model,
-                                              const Collection &collection)
+Collection EntityTreeModel::updatedCollection(const QAbstractItemModel *model, const Collection &collection)
 {
     return updatedCollection(model, collection.id());
 }

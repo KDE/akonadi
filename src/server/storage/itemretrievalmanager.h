@@ -7,9 +7,9 @@
 #ifndef AKONADI_ITEMRETRIEVALMANAGER_H
 #define AKONADI_ITEMRETRIEVALMANAGER_H
 
-#include "itemretriever.h"
-#include "itemretrievalrequest.h"
 #include "akthread.h"
+#include "itemretrievalrequest.h"
+#include "itemretriever.h"
 #include <shared/akstd.h>
 
 #include <QHash>
@@ -25,7 +25,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class Collection;
 class ItemRetrievalJob;
 class AbstractItemRetrievalJob;

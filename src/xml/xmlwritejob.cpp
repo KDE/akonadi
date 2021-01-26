@@ -22,11 +22,13 @@ using namespace Akonadi;
 
 namespace Akonadi
 {
-
 class XmlWriteJobPrivate
 {
 public:
-    explicit XmlWriteJobPrivate(XmlWriteJob *parent) : q(parent) {}
+    explicit XmlWriteJobPrivate(XmlWriteJob *parent)
+        : q(parent)
+    {
+    }
 
     XmlWriteJob *const q;
     Collection::List roots;
@@ -79,7 +81,9 @@ void XmlWriteJobPrivate::processCollection()
     qDebug() << "Writing " << current.name() << "into" << elementStack.top().attribute(QStringLiteral("name"));
     elementStack.push(XmlWriter::writeCollection(current, elementStack.top()));
     auto *subfetch = new CollectionFetchJob(current, CollectionFetchJob::FirstLevel, q);
-    q->connect(subfetch, &CollectionFetchJob::result, q, [this](KJob *job) {collectionFetchResult(job); });
+    q->connect(subfetch, &CollectionFetchJob::result, q, [this](KJob *job) {
+        collectionFetchResult(job);
+    });
 }
 
 void XmlWriteJobPrivate::processItems()
@@ -88,7 +92,9 @@ void XmlWriteJobPrivate::processItems()
     auto *fetch = new ItemFetchJob(collection, q);
     fetch->fetchScope().fetchAllAttributes();
     fetch->fetchScope().fetchFullPayload();
-    q->connect(fetch, &ItemFetchJob::result, q, [this](KJob *job) { itemFetchResult(job); } );
+    q->connect(fetch, &ItemFetchJob::result, q, [this](KJob *job) {
+        itemFetchResult(job);
+    });
 }
 
 void XmlWriteJobPrivate::itemFetchResult(KJob *job)
@@ -107,17 +113,17 @@ void XmlWriteJobPrivate::itemFetchResult(KJob *job)
     processCollection();
 }
 
-XmlWriteJob::XmlWriteJob(const Collection &root, const QString &fileName, QObject *parent) :
-    Job(parent),
-    d(new XmlWriteJobPrivate(this))
+XmlWriteJob::XmlWriteJob(const Collection &root, const QString &fileName, QObject *parent)
+    : Job(parent)
+    , d(new XmlWriteJobPrivate(this))
 {
     d->roots.append(root);
     d->fileName = fileName;
 }
 
-XmlWriteJob::XmlWriteJob(const Collection::List &roots, const QString &fileName, QObject *parent) :
-    Job(parent),
-    d(new XmlWriteJobPrivate(this))
+XmlWriteJob::XmlWriteJob(const Collection::List &roots, const QString &fileName, QObject *parent)
+    : Job(parent)
+    , d(new XmlWriteJobPrivate(this))
 {
     d->roots = roots;
     d->fileName = fileName;
@@ -132,7 +138,9 @@ void XmlWriteJob::doStart()
 {
     d->elementStack.push(d->document.document().documentElement());
     auto *job = new CollectionFetchJob(d->roots, this);
-    connect(job, &CollectionFetchJob::result, this, [this](KJob *job) {d->collectionFetchResult(job);});
+    connect(job, &CollectionFetchJob::result, this, [this](KJob *job) {
+        d->collectionFetchResult(job);
+    });
 }
 
 void XmlWriteJob::done() // cannot be in the private class due to emitResult()

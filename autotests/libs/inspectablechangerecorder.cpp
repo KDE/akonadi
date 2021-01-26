@@ -6,11 +6,9 @@
 
 #include "inspectablechangerecorder.h"
 
-
 InspectableChangeRecorderPrivate::InspectableChangeRecorderPrivate(FakeMonitorDependenciesFactory *dependenciesFactory, InspectableChangeRecorder *parent)
     : ChangeRecorderPrivate(dependenciesFactory, parent)
 {
-
 }
 
 InspectableChangeRecorder::InspectableChangeRecorder(FakeMonitorDependenciesFactory *dependenciesFactory, QObject *parent)
@@ -23,4 +21,3 @@ void InspectableChangeRecorder::doConnectToNotificationManager()
 {
     d_ptr->connectToNotificationManager();
 }
-

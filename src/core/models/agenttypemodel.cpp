@@ -5,8 +5,8 @@
 */
 
 #include "agenttypemodel.h"
-#include "agenttype.h"
 #include "agentmanager.h"
+#include "agenttype.h"
 
 #include <QIcon>
 
@@ -49,8 +49,12 @@ AgentTypeModel::AgentTypeModel(QObject *parent)
     : QAbstractItemModel(parent)
     , d(new Private(this))
 {
-    connect(AgentManager::self(), &AgentManager::typeAdded, this, [this](const Akonadi::AgentType &type ) { d->typeAdded(type); });
-    connect(AgentManager::self(), &AgentManager::typeRemoved, this, [this](const Akonadi::AgentType &type ) { d->typeRemoved(type); });
+    connect(AgentManager::self(), &AgentManager::typeAdded, this, [this](const Akonadi::AgentType &type) {
+        d->typeAdded(type);
+    });
+    connect(AgentManager::self(), &AgentManager::typeRemoved, this, [this](const Akonadi::AgentType &type) {
+        d->typeRemoved(type);
+    });
 }
 
 AgentTypeModel::~AgentTypeModel()
@@ -129,8 +133,7 @@ Qt::ItemFlags AgentTypeModel::flags(const QModelIndex &index) const
     }
 
     const AgentType &type = d->mTypes[index.row()];
-    if (type.capabilities().contains(QLatin1String("Unique")) &&
-            AgentManager::self()->instance(type.identifier()).isValid()) {
+    if (type.capabilities().contains(QLatin1String("Unique")) && AgentManager::self()->instance(type.identifier()).isValid()) {
         return QAbstractItemModel::flags(index) & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
     }
     return QAbstractItemModel::flags(index);

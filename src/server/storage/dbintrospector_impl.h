@@ -14,7 +14,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class DbIntrospectorMySql : public DbIntrospector
 {
 public:

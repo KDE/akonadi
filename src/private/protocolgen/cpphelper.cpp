@@ -5,17 +5,17 @@
 */
 
 #include "cpphelper.h"
-#include "typehelper.h"
 #include "nodetree.h"
+#include "typehelper.h"
 
 #include <QHash>
-#include <QSharedDataPointer>
 #include <QMap>
 #include <QMetaType>
-#include <QSharedPointer>
 #include <QSet>
-namespace {
-
+#include <QSharedDataPointer>
+#include <QSharedPointer>
+namespace
+{
 class Dummy;
 
 // FIXME: This is based on hacks and guesses, does not work for generated types
@@ -24,26 +24,21 @@ class Dummy;
 // from the Node tree and understanding enums and QFlags types.
 size_t typeSize(const QString &typeName)
 {
-    static QHash<QByteArray, size_t> typeSizeLookup = {
-        { "Scope",        sizeof(QSharedDataPointer<Dummy>) },
-        { "ScopeContext", sizeof(QSharedDataPointer<Dummy>) },
-        { "QSharedPointer", sizeof(QSharedPointer<Dummy>) },
-        { "Tristate",     sizeof(qint8) },
-        { "Akonadi::Protocol::Attributes",   sizeof(QMap<int, Dummy>) },
-        { "QSet",         sizeof(QSet<Dummy>) },
-        { "QVector",      sizeof(QVector<Dummy>) }
-    };
+    static QHash<QByteArray, size_t> typeSizeLookup = {{"Scope", sizeof(QSharedDataPointer<Dummy>)},
+                                                       {"ScopeContext", sizeof(QSharedDataPointer<Dummy>)},
+                                                       {"QSharedPointer", sizeof(QSharedPointer<Dummy>)},
+                                                       {"Tristate", sizeof(qint8)},
+                                                       {"Akonadi::Protocol::Attributes", sizeof(QMap<int, Dummy>)},
+                                                       {"QSet", sizeof(QSet<Dummy>)},
+                                                       {"QVector", sizeof(QVector<Dummy>)}};
 
     QByteArray tn;
     // Don't you just loooove hacks?
     // TODO: Extract underlying type during XML parsing
-    if (typeName.startsWith(QLatin1String("Akonadi::Protocol")) &&
-        typeName.endsWith(QLatin1String("Ptr"))) {
+    if (typeName.startsWith(QLatin1String("Akonadi::Protocol")) && typeName.endsWith(QLatin1String("Ptr"))) {
         tn = "QSharedPointer";
     } else {
-        tn = TypeHelper::isContainer(typeName)
-                                ? TypeHelper::containerName(typeName).toUtf8()
-                                : typeName.toUtf8();
+        tn = TypeHelper::isContainer(typeName) ? TypeHelper::containerName(typeName).toUtf8() : typeName.toUtf8();
     }
     auto it = typeSizeLookup.find(tn);
     if (it == typeSizeLookup.end()) {
@@ -59,17 +54,14 @@ size_t typeSize(const QString &typeName)
 
 void CppHelper::sortMembers(QVector<PropertyNode const *> &props)
 {
-    std::sort(props.begin(), props.end(),
-              [](PropertyNode const *lhs, PropertyNode const *rhs) {
-                  return typeSize(lhs->type()) > typeSize(rhs->type());
-              });
+    std::sort(props.begin(), props.end(), [](PropertyNode const *lhs, PropertyNode const *rhs) {
+        return typeSize(lhs->type()) > typeSize(rhs->type());
+    });
 }
 
 void CppHelper::sortMembersForSerialization(QVector<PropertyNode const *> &props)
 {
-    std::sort(props.begin(), props.end(),
-              [](PropertyNode const *lhs, PropertyNode const *rhs) {
-                  return lhs->dependencies().isEmpty() > rhs->dependencies().isEmpty();
-              });
+    std::sort(props.begin(), props.end(), [](PropertyNode const *lhs, PropertyNode const *rhs) {
+        return lhs->dependencies().isEmpty() > rhs->dependencies().isEmpty();
+    });
 }
-

@@ -7,14 +7,13 @@
 #ifndef AKONADI_COLLECTIONCOPYHANDLER_H_
 #define AKONADI_COLLECTIONCOPYHANDLER_H_
 
-#include "handler/itemcopyhandler.h"
 #include "entities.h"
+#include "handler/itemcopyhandler.h"
 
 namespace Akonadi
 {
 namespace Server
 {
-
 /**
   @ingroup akonadi_server_handler
 

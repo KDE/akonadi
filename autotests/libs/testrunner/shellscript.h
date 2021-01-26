@@ -7,9 +7,9 @@
 #ifndef SHELLSCRIPT_H
 #define SHELLSCRIPT_H
 
+#include <QPair>
 #include <QString>
 #include <QVector>
-#include <QPair>
 
 class ShellScript
 {

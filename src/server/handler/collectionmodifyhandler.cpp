@@ -7,18 +7,18 @@
 #include "collectionmodifyhandler.h"
 
 #include "akonadi.h"
+#include "akonadiserver_debug.h"
+#include "cachecleaner.h"
 #include "connection.h"
 #include "handlerhelper.h"
-#include "cachecleaner.h"
 #include "intervalcheck.h"
-#include "storage/datastore.h"
-#include "storage/transaction.h"
-#include "storage/itemretriever.h"
-#include "storage/selectquerybuilder.h"
-#include "storage/collectionqueryhelper.h"
 #include "search/searchmanager.h"
 #include "shared/akranges.h"
-#include "akonadiserver_debug.h"
+#include "storage/collectionqueryhelper.h"
+#include "storage/datastore.h"
+#include "storage/itemretriever.h"
+#include "storage/selectquerybuilder.h"
+#include "storage/transaction.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -26,7 +26,8 @@ using namespace AkRanges;
 
 CollectionModifyHandler::CollectionModifyHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 bool CollectionModifyHandler::parseStream()
 {
@@ -41,8 +42,7 @@ bool CollectionModifyHandler::parseStream()
 
     if (cmd.modifiedParts() & Protocol::ModifyCollectionCommand::ParentID) {
         const Collection newParent = Collection::retrieveById(cmd.parentId());
-        if (newParent.isValid() && collection.parentId() != newParent.id()
-                && collection.resourceId() != newParent.resourceId()) {
+        if (newParent.isValid() && collection.parentId() != newParent.id() && collection.resourceId() != newParent.resourceId()) {
             inhibitor.inhibit();
             ItemRetriever retriever(akonadi().itemRetrievalManager(), connection(), connection()->context());
             retriever.setCollection(collection, true);
@@ -134,8 +134,7 @@ bool CollectionModifyHandler::parseStream()
     if (cmd.modifiedParts() & Protocol::ModifyCollectionCommand::RemoteID) {
         if (cmd.remoteId() != collection.remoteId() && !cmd.remoteId().isEmpty()) {
             if (!connection()->isOwnerResource(collection)) {
-                qCWarning(AKONADISERVER_LOG) << "Invalid attempt to modify the collection remoteID from"
-                                             << collection.remoteId() << "to" << cmd.remoteId();
+                qCWarning(AKONADISERVER_LOG) << "Invalid attempt to modify the collection remoteID from" << collection.remoteId() << "to" << cmd.remoteId();
                 return failureResponse("Only resources can modify remote identifiers");
             }
             collection.setRemoteId(cmd.remoteId());
@@ -180,7 +179,10 @@ bool CollectionModifyHandler::parseStream()
 
         QVector<qint64> inCols = cmd.persistentSearchCollections();
         std::sort(inCols.begin(), inCols.end());
-        const auto cols = inCols | Views::transform([](const auto col) { return QString::number(col); }) | Actions::toQList;
+        const auto cols = inCols | Views::transform([](const auto col) {
+                              return QString::number(col);
+                          })
+            | Actions::toQList;
         const QString colStr = cols.join(QLatin1Char(' '));
         if (colStr != collection.queryCollections()) {
             collection.setQueryCollections(colStr);
@@ -260,7 +262,7 @@ bool CollectionModifyHandler::parseStream()
             return failureResponse("Unable to update collection");
         }
         db->notificationCollector()->collectionChanged(collection, changes);
-        //For backwards compatibility. Must be after the changed notification (otherwise the compression removes it).
+        // For backwards compatibility. Must be after the changed notification (otherwise the compression removes it).
         if (changes.contains(AKONADI_PARAM_ENABLED)) {
             if (collection.enabled()) {
                 db->notificationCollector()->collectionSubscribed(collection);

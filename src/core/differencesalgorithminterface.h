@@ -8,10 +8,8 @@
 #ifndef DIFFERENCESALGORITHMINTERFACE_P_H
 #define DIFFERENCESALGORITHMINTERFACE_P_H
 
-
 namespace Akonadi
 {
-
 class AbstractDifferencesReporter;
 class Item;
 
@@ -39,9 +37,7 @@ public:
      * @param leftItem The left-hand side item that will be compared.
      * @param rightItem The right-hand side item that will be compared.
      */
-    virtual void compare(AbstractDifferencesReporter *reporter,
-                         const Akonadi::Item &leftItem,
-                         const Akonadi::Item &rightItem) = 0;
+    virtual void compare(AbstractDifferencesReporter *reporter, const Akonadi::Item &leftItem, const Akonadi::Item &rightItem) = 0;
 };
 
 }

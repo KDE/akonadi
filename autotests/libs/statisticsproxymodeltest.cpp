@@ -4,10 +4,10 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "collectionstatistics.h"
-#include "collection.h"
-#include "entitytreemodel.h"
 #include "statisticsproxymodel.h"
+#include "collection.h"
+#include "collectionstatistics.h"
+#include "entitytreemodel.h"
 #include "test_model_helpers.h"
 
 #include <QStandardItemModel>
@@ -51,8 +51,8 @@ static QString indexToText(const QModelIndex &index)
         return QStringLiteral("invalid");
     }
     return QString::number(index.row()) + QLatin1Char(',') + QString::number(index.column()) + QLatin1Char(',')
-           + QString::number(reinterpret_cast<qulonglong>(index.internalPointer()), 16)
-           + QLatin1String(" in ") + QString::number(reinterpret_cast<qulonglong>(index.model()), 16);
+        + QString::number(reinterpret_cast<qulonglong>(index.internalPointer()), 16) + QLatin1String(" in ")
+        + QString::number(reinterpret_cast<qulonglong>(index.model()), 16);
 }
 
 static QString indexRowCol(const QModelIndex &index)

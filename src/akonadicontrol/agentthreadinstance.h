@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 class AgentThreadInstance : public AgentInstance
 {
     Q_OBJECT

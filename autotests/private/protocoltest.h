@@ -8,11 +8,11 @@
 #ifndef PROTOCOLTEST_H
 #define PROTOCOLTEST_H
 
-#include <QObject>
 #include <QBuffer>
+#include <QObject>
 
-#include <private/protocol_p.h>
 #include <private/datastream_p_p.h>
+#include <private/protocol_p.h>
 
 #include <type_traits>
 
@@ -49,8 +49,7 @@ private Q_SLOTS:
 
 private:
     template<typename T>
-    typename std::enable_if<std::is_base_of<Akonadi::Protocol::Command, T>::value, QSharedPointer<T>>::type
-    serializeAndDeserialize(const QSharedPointer<T> &in)
+    typename std::enable_if<std::is_base_of<Akonadi::Protocol::Command, T>::value, QSharedPointer<T>>::type serializeAndDeserialize(const QSharedPointer<T> &in)
     {
         QBuffer buf;
         buf.open(QIODevice::ReadWrite);
@@ -60,12 +59,10 @@ private:
         stream.flush();
         buf.seek(0);
         return Akonadi::Protocol::deserialize(&buf).staticCast<T>();
-
     }
 
     template<typename T>
-    typename std::enable_if<std::is_base_of<Akonadi::Protocol::Command, T>::value == false, T>::type
-    serializeAndDeserialize(const T &in, int * = nullptr)
+    typename std::enable_if<std::is_base_of<Akonadi::Protocol::Command, T>::value == false, T>::type serializeAndDeserialize(const T &in, int * = nullptr)
     {
         QBuffer buf;
         buf.open(QIODevice::ReadWrite);

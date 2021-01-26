@@ -12,16 +12,16 @@
 
 #include <KLocalizedString>
 
-#include "itemdeletejob.h"
 #include "collectiondeletejob.h"
-#include "itemmovejob.h"
-#include "collectionmovejob.h"
-#include "itemmodifyjob.h"
-#include "collectionmodifyjob.h"
-#include "itemfetchscope.h"
-#include "collectionfetchscope.h"
-#include "itemfetchjob.h"
 #include "collectionfetchjob.h"
+#include "collectionfetchscope.h"
+#include "collectionmodifyjob.h"
+#include "collectionmovejob.h"
+#include "itemdeletejob.h"
+#include "itemfetchjob.h"
+#include "itemfetchscope.h"
+#include "itemmodifyjob.h"
+#include "itemmovejob.h"
 
 #include "akonadicore_debug.h"
 
@@ -36,23 +36,23 @@ public:
         : JobPrivate(parent)
     {
     }
-//4.
+    // 4.
     void selectResult(KJob *job);
-//3.
-    //Helper functions to recursively set the attribute on deleted collections
+    // 3.
+    // Helper functions to recursively set the attribute on deleted collections
     void setAttribute(const Akonadi::Collection::List & /*list*/);
     void setAttribute(const Akonadi::Item::List & /*list*/);
-    //Set attributes after ensuring that move job was successful
+    // Set attributes after ensuring that move job was successful
     void setAttribute(KJob *job);
 
-//2.
-    //called after parent of the trashed item was fetched (needed to see in which resource the item is in)
+    // 2.
+    // called after parent of the trashed item was fetched (needed to see in which resource the item is in)
     void parentCollectionReceived(const Akonadi::Collection::List & /*collections*/);
 
-//1.
-    //called after initial fetch of trashed items
+    // 1.
+    // called after initial fetch of trashed items
     void itemsReceived(const Akonadi::Item::List & /*items*/);
-    //called after initial fetch of trashed collection
+    // called after initial fetch of trashed collection
     void collectionsReceived(const Akonadi::Collection::List & /*collections*/);
 
     Q_DECLARE_PUBLIC(TrashJob)
@@ -62,11 +62,10 @@ public:
     Collection mRestoreCollection;
     Collection mTrashCollection;
     bool mKeepTrashInCollection = false;
-    bool mSetRestoreCollection = false; //only set restore collection when moved to trash collection (not in place)
+    bool mSetRestoreCollection = false; // only set restore collection when moved to trash collection (not in place)
     bool mDeleteIfInTrash = false;
-    QHash<Collection, Item::List> mCollectionItems; //list of trashed items sorted according to parent collection
-    QHash<Item::Id, Collection> mParentCollections; //fetched parent collection of items (containing the resource name)
-
+    QHash<Collection, Item::List> mCollectionItems; // list of trashed items sorted according to parent collection
+    QHash<Item::Id, Collection> mParentCollections; // fetched parent collection of items (containing the resource name)
 };
 
 void TrashJob::TrashJobPrivate::selectResult(KJob *job)
@@ -95,16 +94,22 @@ void TrashJob::TrashJobPrivate::setAttribute(const Akonadi::Collection::List &li
             eda->setRestoreCollection(mRestoreCollection);
         }
 
-        Collection modCol(col.id());   //really only modify attribute (forget old remote ids, etc.), otherwise we have an error because of the move
+        Collection modCol(col.id()); // really only modify attribute (forget old remote ids, etc.), otherwise we have an error because of the move
         modCol.addAttribute(eda);
 
         auto *job = new CollectionModifyJob(modCol, q);
-        q->connect(job, &KJob::result, q, [this](KJob *job) { selectResult(job); });
+        q->connect(job, &KJob::result, q, [this](KJob *job) {
+            selectResult(job);
+        });
 
         auto *itemFetchJob = new ItemFetchJob(col, q);
-        //TODO not sure if it is guaranteed that itemsReceived is always before result (otherwise the result is emitted before the attributes are set)
-        q->connect(itemFetchJob, &ItemFetchJob::itemsReceived, q, [this](const auto &items) { setAttribute(items); });
-        q->connect(itemFetchJob, &KJob::result, q, [this](KJob *job) { selectResult(job); });
+        // TODO not sure if it is guaranteed that itemsReceived is always before result (otherwise the result is emitted before the attributes are set)
+        q->connect(itemFetchJob, &ItemFetchJob::itemsReceived, q, [this](const auto &items) {
+            setAttribute(items);
+        });
+        q->connect(itemFetchJob, &KJob::result, q, [this](KJob *job) {
+            selectResult(job);
+        });
     }
 }
 
@@ -117,7 +122,7 @@ void TrashJob::TrashJobPrivate::setAttribute(const Akonadi::Item::List &list)
         const Item &item = i.next();
         auto *eda = new EntityDeletedAttribute();
         if (mSetRestoreCollection) {
-            //When deleting a collection, we want to restore the deleted collection's items restored to the deleted collection's parent, not the items parent
+            // When deleting a collection, we want to restore the deleted collection's items restored to the deleted collection's parent, not the items parent
             if (mRestoreCollection.isValid()) {
                 eda->setRestoreCollection(mRestoreCollection);
             } else {
@@ -126,14 +131,16 @@ void TrashJob::TrashJobPrivate::setAttribute(const Akonadi::Item::List &list)
             }
         }
 
-        Item modItem(item.id());   //really only modify attribute (forget old remote ids, etc.)
+        Item modItem(item.id()); // really only modify attribute (forget old remote ids, etc.)
         modItem.addAttribute(eda);
         auto *job = new ItemModifyJob(modItem, q);
         job->setIgnorePayload(true);
-        q->connect(job, &KJob::result, q, [this](KJob *job) { selectResult(job); });
+        q->connect(job, &KJob::result, q, [this](KJob *job) {
+            selectResult(job);
+        });
     }
 
-    //For some reason it is not possible to apply this change to multiple items at once
+    // For some reason it is not possible to apply this change to multiple items at once
     /*ItemModifyJob *job = new ItemModifyJob(items, q);
     q->connect( job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );*/
 }
@@ -149,7 +156,7 @@ void TrashJob::TrashJobPrivate::setAttribute(KJob *job)
         return;
     }
 
-    //For Items
+    // For Items
     const QVariant var = job->property("MovedItems");
     if (var.isValid()) {
         int id = var.toInt();
@@ -158,13 +165,17 @@ void TrashJob::TrashJobPrivate::setAttribute(KJob *job)
         return;
     }
 
-    //For a collection
+    // For a collection
     Q_ASSERT(mCollection.isValid());
     setAttribute(Collection::List() << mCollection);
-    //Set the attribute on all subcollections and items
+    // Set the attribute on all subcollections and items
     auto *colFetchJob = new CollectionFetchJob(mCollection, CollectionFetchJob::Recursive, q);
-    q->connect(colFetchJob, &CollectionFetchJob::collectionsReceived, q, [this](const auto &cols) { setAttribute(cols); });
-    q->connect(colFetchJob, &KJob::result, q, [this](KJob *job) { selectResult(job); });
+    q->connect(colFetchJob, &CollectionFetchJob::collectionsReceived, q, [this](const auto &cols) {
+        setAttribute(cols);
+    });
+    q->connect(colFetchJob, &KJob::result, q, [this](KJob *job) {
+        selectResult(job);
+    });
 }
 
 void TrashJob::TrashJobPrivate::parentCollectionReceived(const Akonadi::Collection::List &collections)
@@ -173,23 +184,27 @@ void TrashJob::TrashJobPrivate::parentCollectionReceived(const Akonadi::Collecti
     Q_ASSERT(collections.size() == 1);
     const Collection &parentCollection = collections.first();
 
-    //store attribute
+    // store attribute
     Q_ASSERT(!parentCollection.resource().isEmpty());
     Collection trashCollection = mTrashCollection;
     if (!mTrashCollection.isValid()) {
         trashCollection = TrashSettings::getTrashCollection(parentCollection.resource());
     }
-    if (!mKeepTrashInCollection && trashCollection.isValid()) {   //Only set the restore collection if the item is moved to trash
+    if (!mKeepTrashInCollection && trashCollection.isValid()) { // Only set the restore collection if the item is moved to trash
         mSetRestoreCollection = true;
     }
 
     mParentCollections.insert(parentCollection.id(), parentCollection);
 
-    if (trashCollection.isValid()) {    //Move the items to the correct collection if available
+    if (trashCollection.isValid()) { // Move the items to the correct collection if available
         ItemMoveJob *job = new ItemMoveJob(mCollectionItems.value(parentCollection), trashCollection, q);
         job->setProperty("MovedItems", parentCollection.id());
-        q->connect(job, &KJob::result, q, [this](KJob *job) { setAttribute(job); }); //Wait until the move finished to set the attribute
-        q->connect(job, &KJob::result, q, [this](KJob *job) { selectResult(job); });
+        q->connect(job, &KJob::result, q, [this](KJob *job) {
+            setAttribute(job);
+        }); // Wait until the move finished to set the attribute
+        q->connect(job, &KJob::result, q, [this](KJob *job) {
+            selectResult(job);
+        });
     } else {
         setAttribute(mCollectionItems.value(parentCollection));
     }
@@ -215,22 +230,25 @@ void TrashJob::TrashJobPrivate::itemsReceived(const Akonadi::Item::List &items)
             continue;
         }
         Q_ASSERT(item.parentCollection().isValid());
-        mCollectionItems[item.parentCollection()].append(item);   //Sort by parent col ( = restore collection)
+        mCollectionItems[item.parentCollection()].append(item); // Sort by parent col ( = restore collection)
     }
 
     for (auto it = mCollectionItems.cbegin(), e = mCollectionItems.cend(); it != e; ++it) {
         auto *job = new CollectionFetchJob(it.key(), Akonadi::CollectionFetchJob::Base, q);
-        q->connect(job, &CollectionFetchJob::collectionsReceived, q, [this](const auto &cols) { parentCollectionReceived(cols); });
+        q->connect(job, &CollectionFetchJob::collectionsReceived, q, [this](const auto &cols) {
+            parentCollectionReceived(cols);
+        });
     }
 
     if (mDeleteIfInTrash && !toDelete.isEmpty()) {
         auto *job = new ItemDeleteJob(toDelete, q);
-        q->connect(job, &KJob::result, q, [this](KJob *job) { selectResult(job); });
-    } else if (mCollectionItems.isEmpty()) {   //No job started, so we abort the job
+        q->connect(job, &KJob::result, q, [this](KJob *job) {
+            selectResult(job);
+        });
+    } else if (mCollectionItems.isEmpty()) { // No job started, so we abort the job
         qCWarning(AKONADICORE_LOG) << "Nothing to do";
         q->emitResult();
     }
-
 }
 
 void TrashJob::TrashJobPrivate::collectionsReceived(const Akonadi::Collection::List &collections)
@@ -245,10 +263,12 @@ void TrashJob::TrashJobPrivate::collectionsReceived(const Akonadi::Collection::L
     Q_ASSERT(collections.size() == 1);
     mCollection = collections.first();
 
-    if (mCollection.hasAttribute<EntityDeletedAttribute>()) {  //marked as deleted
+    if (mCollection.hasAttribute<EntityDeletedAttribute>()) { // marked as deleted
         if (mDeleteIfInTrash) {
             auto *job = new CollectionDeleteJob(mCollection, q);
-            q->connect(job, &KJob::result, q, [this](KJob *job) { selectResult(job); });
+            q->connect(job, &KJob::result, q, [this](KJob *job) {
+                selectResult(job);
+            });
         } else {
             qCWarning(AKONADICORE_LOG) << "Nothing to do";
             q->emitResult();
@@ -260,21 +280,24 @@ void TrashJob::TrashJobPrivate::collectionsReceived(const Akonadi::Collection::L
     if (!mTrashCollection.isValid()) {
         trashCollection = TrashSettings::getTrashCollection(mCollection.resource());
     }
-    if (!mKeepTrashInCollection && trashCollection.isValid()) {   //only set the restore collection if the item is moved to trash
+    if (!mKeepTrashInCollection && trashCollection.isValid()) { // only set the restore collection if the item is moved to trash
         mSetRestoreCollection = true;
         Q_ASSERT(mCollection.parentCollection().isValid());
         mRestoreCollection = mCollection.parentCollection();
-        mRestoreCollection.setResource(mCollection.resource());   //The parent collection doesn't contain the resource, so we have to set it manually
+        mRestoreCollection.setResource(mCollection.resource()); // The parent collection doesn't contain the resource, so we have to set it manually
     }
 
     if (trashCollection.isValid()) {
         auto *job = new CollectionMoveJob(mCollection, trashCollection, q);
-        q->connect(job, &KJob::result, q, [this](KJob *job) { setAttribute(job); });
-        q->connect(job, &KJob::result, q, [this](KJob *job) { selectResult(job); });
+        q->connect(job, &KJob::result, q, [this](KJob *job) {
+            setAttribute(job);
+        });
+        q->connect(job, &KJob::result, q, [this](KJob *job) {
+            selectResult(job);
+        });
     } else {
         setAttribute(Collection::List() << mCollection);
     }
-
 }
 
 TrashJob::TrashJob(const Item &item, QObject *parent)
@@ -330,18 +353,22 @@ void TrashJob::doStart()
 {
     Q_D(TrashJob);
 
-    //Fetch items first to ensure that the EntityDeletedAttribute is available
+    // Fetch items first to ensure that the EntityDeletedAttribute is available
     if (!d->mItems.isEmpty()) {
         auto *job = new ItemFetchJob(d->mItems, this);
-        job->fetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);   //so we have access to the resource
-        //job->fetchScope().setCacheOnly(true);
+        job->fetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent); // so we have access to the resource
+        // job->fetchScope().setCacheOnly(true);
         job->fetchScope().fetchAttribute<EntityDeletedAttribute>(true);
-        connect(job, &ItemFetchJob::itemsReceived, this, [d](const auto &items) { d->itemsReceived(items); });
+        connect(job, &ItemFetchJob::itemsReceived, this, [d](const auto &items) {
+            d->itemsReceived(items);
+        });
 
     } else if (d->mCollection.isValid()) {
         auto *job = new CollectionFetchJob(d->mCollection, CollectionFetchJob::Base, this);
         job->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::Parent);
-        connect(job, &CollectionFetchJob::collectionsReceived, this, [d](const auto &cols) { d->collectionsReceived(cols); });
+        connect(job, &CollectionFetchJob::collectionsReceived, this, [d](const auto &cols) {
+            d->collectionsReceived(cols);
+        });
 
     } else {
         qCWarning(AKONADICORE_LOG) << "No valid collection or empty itemlist";

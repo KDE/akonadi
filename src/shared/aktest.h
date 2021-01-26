@@ -15,40 +15,39 @@
 
 #include <QTest>
 
-#define AKTEST_MAIN(TestObject) \
-    int main(int argc, char **argv) \
-    { \
-        qputenv("XDG_DATA_HOME", ".local-unit-test/share"); \
-        qputenv("XDG_CONFIG_HOME", ".config-unit-test"); \
-        AkCoreApplication app(argc, argv); \
-        KCrash::setDrKonqiEnabled(false); \
-        app.parseCommandLine(); \
-        TestObject tc; \
-        return QTest::qExec(&tc, argc, argv); \
+#define AKTEST_MAIN(TestObject)                                                                                                                                \
+    int main(int argc, char **argv)                                                                                                                            \
+    {                                                                                                                                                          \
+        qputenv("XDG_DATA_HOME", ".local-unit-test/share");                                                                                                    \
+        qputenv("XDG_CONFIG_HOME", ".config-unit-test");                                                                                                       \
+        AkCoreApplication app(argc, argv);                                                                                                                     \
+        KCrash::setDrKonqiEnabled(false);                                                                                                                      \
+        app.parseCommandLine();                                                                                                                                \
+        TestObject tc;                                                                                                                                         \
+        return QTest::qExec(&tc, argc, argv);                                                                                                                  \
     }
 
-#define AKTEST_FAKESERVER_MAIN(TestObject) \
-    int main(int argc, char **argv) \
-    { \
-        AkCoreApplication app(argc, argv); \
-        KCrash::setDrKonqiEnabled(false); \
-        app.addCommandLineOptions(QCommandLineOption( \
-                                  QStringLiteral("no-cleanup"), QStringLiteral("Don't clean up the temporary runtime environment"))); \
-        app.parseCommandLine(); \
-	TestObject tc; \
-        return QTest::qExec(&tc, argc, argv); \
+#define AKTEST_FAKESERVER_MAIN(TestObject)                                                                                                                     \
+    int main(int argc, char **argv)                                                                                                                            \
+    {                                                                                                                                                          \
+        AkCoreApplication app(argc, argv);                                                                                                                     \
+        KCrash::setDrKonqiEnabled(false);                                                                                                                      \
+        app.addCommandLineOptions(QCommandLineOption(QStringLiteral("no-cleanup"), QStringLiteral("Don't clean up the temporary runtime environment")));       \
+        app.parseCommandLine();                                                                                                                                \
+        TestObject tc;                                                                                                                                         \
+        return QTest::qExec(&tc, argc, argv);                                                                                                                  \
     }
 
-#define AKCOMPARE(actual, expected) \
-    do {\
-        if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__))\
-            return false;\
+#define AKCOMPARE(actual, expected)                                                                                                                            \
+    do {                                                                                                                                                       \
+        if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__))                                                                        \
+            return false;                                                                                                                                      \
     } while (false)
 
-#define AKVERIFY(statement) \
-    do {\
-        if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__))\
-            return false;\
+#define AKVERIFY(statement)                                                                                                                                    \
+    do {                                                                                                                                                       \
+        if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__))                                                                                  \
+            return false;                                                                                                                                      \
     } while (false)
 
 inline void akTestSetInstanceIdentifier(const QString &instanceId)
@@ -60,8 +59,7 @@ inline void akTestSetInstanceIdentifier(const QString &instanceId)
 
 namespace QTest
 {
-template<>
-char *toString(const Akonadi::Protocol::ItemChangeNotificationPtr &msg)
+template<> char *toString(const Akonadi::Protocol::ItemChangeNotificationPtr &msg)
 {
     return qstrdup(qPrintable(Akonadi::Protocol::debugString(msg)));
 }
@@ -70,24 +68,22 @@ char *toString(const Akonadi::Protocol::ItemChangeNotificationPtr &msg)
 namespace AkTest
 {
 enum NtfField {
-    NtfType                   = (1 << 0),
-    NtfOperation              = (1 << 1),
-    NtfSession                = (1 << 2),
-    NtfEntities               = (1 << 3),
-    NtfResource               = (1 << 5),
-    NtfCollection             = (1 << 6),
-    NtfDestResource           = (1 << 7),
-    NtfDestCollection         = (1 << 8),
-    NtfAddedFlags             = (1 << 9),
-    NtfRemovedFlags           = (1 << 10),
-    NtfAddedTags              = (1 << 11),
-    NtfRemovedTags            = (1 << 12),
+    NtfType = (1 << 0),
+    NtfOperation = (1 << 1),
+    NtfSession = (1 << 2),
+    NtfEntities = (1 << 3),
+    NtfResource = (1 << 5),
+    NtfCollection = (1 << 6),
+    NtfDestResource = (1 << 7),
+    NtfDestCollection = (1 << 8),
+    NtfAddedFlags = (1 << 9),
+    NtfRemovedFlags = (1 << 10),
+    NtfAddedTags = (1 << 11),
+    NtfRemovedTags = (1 << 12),
 
-    NtfFlags                  = NtfAddedFlags | NtfRemovedTags,
-    NtfTags                   = NtfAddedTags | NtfRemovedTags,
-    NtfAll                    = NtfType | NtfOperation | NtfSession | NtfEntities |
-                                NtfResource | NtfCollection | NtfDestResource |
-                                NtfDestCollection | NtfFlags | NtfTags
+    NtfFlags = NtfAddedFlags | NtfRemovedTags,
+    NtfTags = NtfAddedTags | NtfRemovedTags,
+    NtfAll = NtfType | NtfOperation | NtfSession | NtfEntities | NtfResource | NtfCollection | NtfDestResource | NtfDestCollection | NtfFlags | NtfTags
 };
 typedef QFlags<NtfField> NtfFields;
 

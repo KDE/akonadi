@@ -12,7 +12,6 @@
 
 namespace Akonadi
 {
-
 class Collection;
 class AgentSearchInterfacePrivate;
 class ImapSet;
@@ -30,10 +29,7 @@ class ImapSet;
 class AKONADIAGENTBASE_EXPORT AgentSearchInterface
 {
 public:
-    enum ResultScope {
-        Uid,
-        Rid
-    };
+    enum ResultScope { Uid, Rid };
 
     /**
      * Creates a new agent search interface.
@@ -73,6 +69,7 @@ public:
     void searchFinished(const QVector<qint64> &result, ResultScope scope);
     void searchFinished(const ImapSet &result, ResultScope scope);
     void searchFinished(const QVector<QByteArray> &result);
+
 private:
     //@cond PRIVATE
     AgentSearchInterfacePrivate *const d;

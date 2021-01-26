@@ -16,7 +16,8 @@
 
 #include <memory>
 
-namespace Akonadi {
+namespace Akonadi
+{
 /**
  * @brief The TagSelectionCombo class
  */

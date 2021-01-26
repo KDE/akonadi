@@ -10,21 +10,19 @@
 #include "entitytreemodel.h"
 #include "mimetypechecker.h"
 
-
 using namespace Akonadi;
 
 namespace Akonadi
 {
-
 class RecursiveCollectionFilterProxyModelPrivate
 {
     Q_DECLARE_PUBLIC(RecursiveCollectionFilterProxyModel)
     RecursiveCollectionFilterProxyModel *q_ptr;
+
 public:
     explicit RecursiveCollectionFilterProxyModelPrivate(RecursiveCollectionFilterProxyModel *model)
         : q_ptr(model)
     {
-
     }
 
     QSet<QString> includedMimeTypes;
@@ -62,7 +60,7 @@ bool RecursiveCollectionFilterProxyModel::filterAcceptsRow(int sourceRow, const 
         return false;
     }
 
-    const bool collectionWanted =  d->checker.isWantedCollection(collection);
+    const bool collectionWanted = d->checker.isWantedCollection(collection);
     if (collectionWanted) {
         if (!d->pattern.isEmpty()) {
             const QString text = rowIndex.data(Qt::DisplayRole).toString();
@@ -71,7 +69,6 @@ bool RecursiveCollectionFilterProxyModel::filterAcceptsRow(int sourceRow, const 
     }
     return collectionWanted;
 }
-
 
 void RecursiveCollectionFilterProxyModel::addContentMimeTypeInclusionFilter(const QString &mimeType)
 {

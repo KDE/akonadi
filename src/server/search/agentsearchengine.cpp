@@ -5,8 +5,8 @@
 */
 
 #include "agentsearchengine.h"
-#include "entities.h"
 #include "akonadiserver_search_debug.h"
+#include "entities.h"
 
 #include <private/dbus_p.h>
 
@@ -21,9 +21,7 @@ void AgentSearchEngine::addSearch(const Collection &collection)
                             QStringLiteral(AKONADI_DBUS_AGENTMANAGER_PATH),
                             QStringLiteral("org.freedesktop.Akonadi.AgentManagerInternal"));
     if (agentMgr.isValid()) {
-        const QList<QVariant> args = QList<QVariant>() << collection.queryString()
-                                     << QLatin1String("")
-                                     << collection.id();
+        const QList<QVariant> args = QList<QVariant>() << collection.queryString() << QLatin1String("") << collection.id();
         agentMgr.callWithArgumentList(QDBus::NoBlock, QStringLiteral("addSearch"), args);
         return;
     }

@@ -10,9 +10,9 @@
 #include "selftestdialog_p.h"
 #endif
 
-#include <QIcon>
 #include <KLocalizedString>
 #include <KStandardGuiItem>
+#include <QIcon>
 
 #include <QEvent>
 #include <QPalette>
@@ -24,7 +24,7 @@ using namespace Akonadi;
 class ErrorOverlayStatic
 {
 public:
-    QVector<QPair<QPointer<QWidget>, QPointer<QWidget> > > baseWidgets;
+    QVector<QPair<QPointer<QWidget>, QPointer<QWidget>>> baseWidgets;
 };
 
 Q_GLOBAL_STATIC(ErrorOverlayStatic, sInstanceOverlay) // NOLINT(readability-redundant-member-init)
@@ -56,8 +56,8 @@ ErrorOverlay::ErrorOverlay(QWidget *baseWidget, QWidget *parent)
     mBaseWidgetIsParent = isParentOf(mBaseWidget, this);
 
     // check existing overlays to detect cascading
-    for (QVector<QPair< QPointer<QWidget>, QPointer<QWidget> > >::Iterator it = sInstanceOverlay->baseWidgets.begin();
-            it != sInstanceOverlay->baseWidgets.end();) {
+    for (QVector<QPair<QPointer<QWidget>, QPointer<QWidget>>>::Iterator it = sInstanceOverlay->baseWidgets.begin();
+         it != sInstanceOverlay->baseWidgets.end();) {
         if ((*it).first == nullptr || (*it).second == nullptr) {
             // garbage collection
             it = sInstanceOverlay->baseWidgets.erase(it);
@@ -72,7 +72,7 @@ ErrorOverlay::ErrorOverlay(QWidget *baseWidget, QWidget *parent)
         }
         if (isParentOf(baseWidget, (*it).first)) {
             // child already has overlay, kill that one
-            delete(*it).second;
+            delete (*it).second;
             it = sInstanceOverlay->baseWidgets.erase(it);
             continue;
         }
@@ -156,10 +156,9 @@ void ErrorOverlay::reposition()
 
 bool ErrorOverlay::eventFilter(QObject *object, QEvent *event)
 {
-    if (object == mBaseWidget && mOverlayActive &&
-            (event->type() == QEvent::Move || event->type() == QEvent::Resize ||
-             event->type() == QEvent::Show || event->type() == QEvent::Hide ||
-             event->type() == QEvent::ParentChange)) {
+    if (object == mBaseWidget && mOverlayActive
+        && (event->type() == QEvent::Move || event->type() == QEvent::Resize || event->type() == QEvent::Show || event->type() == QEvent::Hide
+            || event->type() == QEvent::ParentChange)) {
         reposition();
     }
     return QWidget::eventFilter(object, event);
@@ -225,8 +224,7 @@ void ErrorOverlay::serverStateChanged(ServerManager::State state)
             ui->stackWidget->setCurrentWidget(ui->brokenPage);
             if (!ServerManager::brokenReason().isEmpty()) {
                 ui->brokenDescription->setText(
-                    i18nc("%1 is a reason why", "Cannot connect to the Personal information management service.\n\n%1",
-                          ServerManager::brokenReason()));
+                    i18nc("%1 is a reason why", "Cannot connect to the Personal information management service.\n\n%1", ServerManager::brokenReason()));
             }
             break;
         case ServerManager::Starting:
@@ -241,9 +239,10 @@ void ErrorOverlay::serverStateChanged(ServerManager::State state)
             break;
         case ServerManager::Upgrading:
             ui->progressPage->setToolTip(i18n("Personal information management service is performing a database upgrade."));
-            ui->progressDescription->setText(i18n("Personal information management service is performing a database upgrade.\n"
-                                                  "This happens after a software update and is necessary to optimize performance.\n"
-                                                  "Depending on the amount of personal information, this might take a few minutes."));
+            ui->progressDescription->setText(
+                i18n("Personal information management service is performing a database upgrade.\n"
+                     "This happens after a software update and is necessary to optimize performance.\n"
+                     "Depending on the amount of personal information, this might take a few minutes."));
             ui->stackWidget->setCurrentWidget(ui->progressPage);
             break;
         case ServerManager::Running:

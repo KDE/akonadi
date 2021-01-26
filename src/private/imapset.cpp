@@ -4,8 +4,8 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "imapset_p.h"
 #include "datastream_p_p.h"
+#include "imapset_p.h"
 
 #include <QSharedData>
 
@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 class ImapInterval::Private : public QSharedData
 {
 public:
@@ -24,8 +23,7 @@ public:
 class ImapSet::Private : public QSharedData
 {
 public:
-    template<typename T>
-    void add(const T &values)
+    template<typename T> void add(const T &values)
     {
         T vals = values;
         std::sort(vals.begin(), vals.end());
@@ -262,14 +260,12 @@ bool ImapSet::isEmpty() const
 
 Protocol::DataStream &operator<<(Protocol::DataStream &stream, const Akonadi::ImapInterval &interval)
 {
-    return stream << interval.d->begin
-           << interval.d->end;
+    return stream << interval.d->begin << interval.d->end;
 }
 
 Protocol::DataStream &operator>>(Protocol::DataStream &stream, Akonadi::ImapInterval &interval)
 {
-    return stream >> interval.d->begin
-           >> interval.d->end;
+    return stream >> interval.d->begin >> interval.d->end;
 }
 
 Protocol::DataStream &operator<<(Protocol::DataStream &stream, const Akonadi::ImapSet &set)

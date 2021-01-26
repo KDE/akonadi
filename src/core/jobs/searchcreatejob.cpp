@@ -8,8 +8,8 @@
 
 #include "searchcreatejob.h"
 
-#include "protocolhelper_p.h"
 #include "job_p.h"
+#include "protocolhelper_p.h"
 #include "searchquery.h"
 
 #include "private/protocol_p.h"
@@ -33,7 +33,6 @@ public:
     bool mRecursive = false;
     bool mRemote = false;
     Collection mCreatedCollection;
-
 
     // JobPrivate interface
 public:
@@ -141,8 +140,7 @@ bool SearchCreateJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &r
 {
     Q_D(SearchCreateJob);
     if (response->isResponse() && response->type() == Protocol::Command::FetchCollections) {
-        d->mCreatedCollection = ProtocolHelper::parseCollection(
-            Protocol::cmdCast<Protocol::FetchCollectionsResponse>(response));
+        d->mCreatedCollection = ProtocolHelper::parseCollection(Protocol::cmdCast<Protocol::FetchCollectionsResponse>(response));
         return false;
     }
 

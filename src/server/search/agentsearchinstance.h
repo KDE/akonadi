@@ -19,7 +19,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class SearchTaskManager;
 class AgentSearchInstance : public QObject
 {

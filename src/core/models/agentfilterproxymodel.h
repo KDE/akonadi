@@ -12,7 +12,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @short A proxy model for filtering AgentType or AgentInstance
  *

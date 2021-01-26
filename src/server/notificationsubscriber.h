@@ -7,13 +7,13 @@
 #ifndef NOTIFICATIONSUBSCRIBER_H
 #define NOTIFICATIONSUBSCRIBER_H
 
-#include <QObject>
 #include <QByteArray>
 #include <QMimeDatabase>
 #include <QMutex>
+#include <QObject>
 
-#include <private/protocol_p.h>
 #include "entities.h"
+#include <private/protocol_p.h>
 
 class QLocalSocket;
 
@@ -21,7 +21,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class NotificationManager;
 
 class NotificationSubscriber : public QObject

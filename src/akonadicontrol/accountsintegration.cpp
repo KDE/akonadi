@@ -5,9 +5,9 @@
  ***************************************************************************/
 
 #include "accountsintegration.h"
+#include "accountsinterface.h"
 #include "agentmanager.h"
 #include "akonadicontrol_debug.h"
-#include "accountsinterface.h"
 
 #include <private/dbus_p.h>
 
@@ -20,8 +20,8 @@
 using namespace Akonadi;
 using namespace std::chrono_literals;
 
-namespace {
-
+namespace
+{
 const auto akonadiAgentType = QStringLiteral("akonadi/agentType");
 
 }
@@ -29,15 +29,12 @@ const auto akonadiAgentType = QStringLiteral("akonadi/agentType");
 AccountsIntegration::AccountsIntegration(AgentManager &agentManager)
     : mAgentManager(agentManager)
 {
-    connect(&mAccountsManager, &Accounts::Manager::accountCreated,
-            this, &AccountsIntegration::onAccountAdded);
-    connect(&mAccountsManager, &Accounts::Manager::accountRemoved,
-            this, &AccountsIntegration::onAccountRemoved);
+    connect(&mAccountsManager, &Accounts::Manager::accountCreated, this, &AccountsIntegration::onAccountAdded);
+    connect(&mAccountsManager, &Accounts::Manager::accountRemoved, this, &AccountsIntegration::onAccountRemoved);
 
     const auto accounts = mAccountsManager.accountList();
     for (const auto account : accounts) {
-        connect(mAccountsManager.account(account), &Accounts::Account::enabledChanged,
-                this, &AccountsIntegration::onAccountServiceEnabled);
+        connect(mAccountsManager.account(account), &Accounts::Account::enabledChanged, this, &AccountsIntegration::onAccountServiceEnabled);
     }
 }
 
@@ -115,8 +112,7 @@ void AccountsIntegration::onAccountAdded(Accounts::AccountId accId)
     }
     account->selectService();
 
-    connect(account, &Accounts::Account::enabledChanged,
-            this, &AccountsIntegration::onAccountServiceEnabled);
+    connect(account, &Accounts::Account::enabledChanged, this, &AccountsIntegration::onAccountServiceEnabled);
 }
 
 void AccountsIntegration::onAccountRemoved(Accounts::AccountId accId)
@@ -143,12 +139,12 @@ void AccountsIntegration::onAccountServiceEnabled(const QString &serviceType, bo
         return;
     }
 
-    auto *account = qobject_cast<Accounts::Account*>(sender());
+    auto *account = qobject_cast<Accounts::Account *>(sender());
     qCDebug(AKONADICONTROL_LOG) << "Online account ID" << account->id() << "service" << serviceType << "has been" << (enabled ? "enabled" : "disabled");
 
     const auto service = mAccountsManager.service(serviceType);
     account->selectService(service);
-    const auto agentType =  account->valueAsString(akonadiAgentType);
+    const auto agentType = account->valueAsString(akonadiAgentType);
     account->selectService();
     if (agentType.isEmpty()) {
         return; // this service does not support Akonadi (yet -;)

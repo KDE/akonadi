@@ -11,8 +11,8 @@
 
 #include "akonadicore_export.h"
 
-namespace Akonadi {
-
+namespace Akonadi
+{
 class AKONADICORE_EXPORT AgentConfigurationManager : public QObject
 {
     Q_OBJECT

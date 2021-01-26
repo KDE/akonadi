@@ -4,12 +4,12 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "pluginloader_p.h"
 #include "itemserializerplugin.h"
+#include "pluginloader_p.h"
 
+#include <QApplication>
 #include <QDebug>
 #include <QStringList>
-#include <QApplication>
 
 using namespace Akonadi;
 

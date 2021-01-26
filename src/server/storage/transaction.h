@@ -13,7 +13,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class DataStore;
 
 /**

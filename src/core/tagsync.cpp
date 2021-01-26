@@ -10,11 +10,11 @@ class Item;
 
 #include "tagsync.h"
 #include "akonadicore_debug.h"
-#include "jobs/itemfetchjob.h"
 #include "itemfetchscope.h"
+#include "jobs/itemfetchjob.h"
 #include "jobs/itemmodifyjob.h"
-#include "jobs/tagfetchjob.h"
 #include "jobs/tagcreatejob.h"
+#include "jobs/tagfetchjob.h"
 #include "jobs/tagmodifyjob.h"
 #include "tagfetchscope.h"
 
@@ -35,17 +35,15 @@ bool operator==(const Item &left, const Item &right)
 }
 
 TagSync::TagSync(QObject *parent)
-    : Job(parent),
-      mDeliveryDone(false),
-      mTagMembersDeliveryDone(false),
-      mLocalTagsFetched(false)
+    : Job(parent)
+    , mDeliveryDone(false)
+    , mTagMembersDeliveryDone(false)
+    , mLocalTagsFetched(false)
 {
-
 }
 
 TagSync::~TagSync()
 {
-
 }
 
 void TagSync::setFullTagList(const Akonadi::Tag::List &tags)
@@ -65,7 +63,7 @@ void TagSync::setTagMembers(const QHash<QString, Akonadi::Item::List> &ridMember
 void TagSync::doStart()
 {
     // qCDebug(AKONADICORE_LOG);
-    //This should include all tags, including the ones that don't have a remote id
+    // This should include all tags, including the ones that don't have a remote id
     auto *fetch = new Akonadi::TagFetchJob(this);
     fetch->fetchScope().setFetchRemoteId(true);
     connect(fetch, &KJob::result, this, &TagSync::onLocalTagFetchDone);
@@ -99,7 +97,7 @@ void TagSync::diffTags()
     }
     Q_FOREACH (const Akonadi::Tag &remoteTag, mRemoteTags) {
         if (tagByRid.contains(remoteTag.remoteId())) {
-            //Tag still exists, check members
+            // Tag still exists, check members
             Tag tag = tagByRid.value(remoteTag.remoteId());
             auto *itemFetch = new ItemFetchJob(tag, this);
             itemFetch->setProperty("tag", QVariant::fromValue(tag));
@@ -109,8 +107,8 @@ void TagSync::diffTags()
             connect(itemFetch, &KJob::result, this, &TagSync::onJobDone);
             tagById.remove(tagByRid.value(remoteTag.remoteId()).id());
         } else if (tagByGid.contains(remoteTag.gid())) {
-            //Tag exists but has no rid
-            //Merge members and set rid
+            // Tag exists but has no rid
+            // Merge members and set rid
             Tag tag = tagByGid.value(remoteTag.gid());
             tag.setRemoteId(remoteTag.remoteId());
             auto *itemFetch = new ItemFetchJob(tag, this);
@@ -121,7 +119,7 @@ void TagSync::diffTags()
             connect(itemFetch, &KJob::result, this, &TagSync::onJobDone);
             tagById.remove(tagByGid.value(remoteTag.gid()).id());
         } else {
-            //New tag, create
+            // New tag, create
             auto *createJob = new TagCreateJob(remoteTag, this);
             createJob->setMergeIfExisting(true);
             connect(createJob, &KJob::result, this, &TagSync::onCreateTagDone);
@@ -129,7 +127,7 @@ void TagSync::diffTags()
         }
     }
     Q_FOREACH (const Tag &tag, tagById) {
-        //Removed remotely, unset rid
+        // Removed remotely, unset rid
         Tag copy(tag);
         copy.setRemoteId(QByteArray(""));
         auto *modJob = new TagModifyJob(copy, this);
@@ -158,8 +156,7 @@ void TagSync::onCreateTagDone(KJob *job)
 static bool containsByGidOrRid(const Item::List &items, const Item &key)
 {
     return std::any_of(items.cbegin(), items.cend(), [&key](const Item &item) {
-            return ((!item.gid().isEmpty() && !key.gid().isEmpty()) && (item.gid() == key.gid()))
-                || (item.remoteId() == key.remoteId());
+        return ((!item.gid().isEmpty() && !key.gid().isEmpty()) && (item.gid() == key.gid())) || (item.remoteId() == key.remoteId());
     });
 }
 
@@ -175,7 +172,7 @@ void TagSync::onTagItemsFetchDone(KJob *job)
     const bool merge = job->property("merge").toBool();
     const Item::List remoteMembers = mRidMemberMap.value(QString::fromLatin1(tag.remoteId()));
 
-    //add = remote - local
+    // add = remote - local
     Item::List toAdd;
     for (const Item &remote : remoteMembers) {
         if (!containsByGidOrRid(items, remote)) {
@@ -183,11 +180,11 @@ void TagSync::onTagItemsFetchDone(KJob *job)
         }
     }
 
-    //remove = local - remote
+    // remove = local - remote
     Item::List toRemove;
     for (const Item &local : items) {
-        //Skip items that have no remote id yet
-        //Trying to them will only result in a conflict
+        // Skip items that have no remote id yet
+        // Trying to them will only result in a conflict
         if (local.remoteId().isEmpty()) {
             continue;
         }
@@ -236,4 +233,3 @@ void TagSync::checkDone()
     qCDebug(AKONADICORE_LOG) << "done";
     emitResult();
 }
-

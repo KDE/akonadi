@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 class CollectionFetchScope;
 class CollectionFetchJobPrivate;
 
@@ -47,10 +46,10 @@ public:
      * Describes the type of fetch depth.
      */
     enum Type {
-        Base,       ///< Only fetch the base collection.
+        Base, ///< Only fetch the base collection.
         FirstLevel, ///< Only list direct sub-collections of the base collection.
-        Recursive,  ///< List all sub-collections.
-        NonOverlappingRoots  ///< List the roots of a list of fetched collections. @since 4.7
+        Recursive, ///< List all sub-collections.
+        NonOverlappingRoots ///< List the roots of a list of fetched collections. @since 4.7
     };
 
     /**

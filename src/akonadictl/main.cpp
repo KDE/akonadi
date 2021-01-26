@@ -5,36 +5,35 @@
  ***************************************************************************/
 
 #include <QCoreApplication>
+#include <QDBusConnection>
 #include <QDir>
+#include <QPluginLoader>
+#include <QSettings>
 #include <QString>
 #include <QStringList>
-#include <QSettings>
-#include <QDBusConnection>
-#include <QPluginLoader>
 
 #include <KAboutData>
 
 #include <shared/akapplication.h>
 
+#include "akonadifull-version.h"
+#include "akonadistarter.h"
 #include "controlmanagerinterface.h"
 #include "janitorinterface.h"
-#include "akonadistarter.h"
-#include "akonadifull-version.h"
 
-
-#include <private/protocol_p.h>
 #include <private/dbus_p.h>
 #include <private/instance_p.h>
+#include <private/protocol_p.h>
 #include <private/standarddirs_p.h>
 
+#include <chrono>
 #include <iostream>
 #include <thread>
-#include <chrono>
 
 static bool startServer(bool verbose)
 {
     if (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Control))
-            || QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Server))) {
+        || QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Server))) {
         std::cerr << "Akonadi is already running." << std::endl;
         return false;
     }
@@ -45,8 +44,9 @@ static bool startServer(bool verbose)
 static bool stopServer()
 {
     org::freedesktop::Akonadi::ControlManager iface(Akonadi::DBus::serviceName(Akonadi::DBus::Control),
-            QStringLiteral("/ControlManager"),
-            QDBusConnection::sessionBus(), nullptr);
+                                                    QStringLiteral("/ControlManager"),
+                                                    QDBusConnection::sessionBus(),
+                                                    nullptr);
     if (!iface.isValid()) {
         std::cerr << "Akonadi is not running." << std::endl;
         return false;
@@ -78,7 +78,7 @@ static bool checkAkonadiServerStatus()
 
 static bool checkSearchSupportStatus()
 {
-    QStringList searchMethods {QStringLiteral("Remote Search")};
+    QStringList searchMethods{QStringLiteral("Remote Search")};
 
     const QString pluginOverride = QString::fromLatin1(qgetenv("AKONADI_OVERRIDE_SEARCHPLUGIN"));
     if (!pluginOverride.isEmpty()) {
@@ -151,7 +151,7 @@ static void listInstances()
         QString name;
         bool running;
     };
-    QVector<Instance> instances { { QStringLiteral("(default)"), instanceRunning() } };
+    QVector<Instance> instances{{QStringLiteral("(default)"), instanceRunning()}};
 #ifdef Q_OS_WIN
     const QDir instanceDir(QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + QStringLiteral("/akonadi/config/instance"));
 #else
@@ -160,7 +160,7 @@ static void listInstances()
     if (instanceDir.exists()) {
         const auto list = instanceDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
         for (const auto &e : list) {
-            instances.push_back({ e, instanceRunning(e) });
+            instances.push_back({e, instanceRunning(e)});
         }
     }
 
@@ -190,14 +190,12 @@ static void runJanitor(const QString &operation)
     }
 
     org::freedesktop::Akonadi::Janitor janitor(Akonadi::DBus::serviceName(Akonadi::DBus::StorageJanitor),
-            QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH),
-            QDBusConnection::sessionBus());
-    QObject::connect(&janitor, &org::freedesktop::Akonadi::Janitor::information,
-    [](const QString & msg) {
+                                               QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH),
+                                               QDBusConnection::sessionBus());
+    QObject::connect(&janitor, &org::freedesktop::Akonadi::Janitor::information, [](const QString &msg) {
         std::cerr << msg.toStdString() << std::endl;
     });
-    QObject::connect(&janitor, &org::freedesktop::Akonadi::Janitor::done,
-    []() {
+    QObject::connect(&janitor, &org::freedesktop::Akonadi::Janitor::done, []() {
         qApp->exit();
     });
     janitor.asyncCall(operation);
@@ -208,17 +206,18 @@ int main(int argc, char **argv)
 {
     AkCoreApplication app(argc, argv);
 
-    app.setDescription(QStringLiteral("Akonadi server manipulation tool\n\n"
-                                      "Commands:\n"
-                                      "  start          Starts the Akonadi server with all its processes\n"
-                                      "  stop           Stops the Akonadi server and all its processes cleanly\n"
-                                      "  restart        Restart Akonadi server with all its processes\n"
-                                      "  status         Shows a status overview of the Akonadi server\n"
-                                      "  instances      List all existing Akonadi instances\n"
-                                      "  vacuum         Vacuum internal storage (WARNING: needs a lot of time and disk\n"
-                                      "                 space!)\n"
-                                      "  fsck           Check (and attempt to fix) consistency of the internal storage\n"
-                                      "                 (can take some time)"));
+    app.setDescription(
+        QStringLiteral("Akonadi server manipulation tool\n\n"
+                       "Commands:\n"
+                       "  start          Starts the Akonadi server with all its processes\n"
+                       "  stop           Stops the Akonadi server and all its processes cleanly\n"
+                       "  restart        Restart Akonadi server with all its processes\n"
+                       "  status         Shows a status overview of the Akonadi server\n"
+                       "  instances      List all existing Akonadi instances\n"
+                       "  vacuum         Vacuum internal storage (WARNING: needs a lot of time and disk\n"
+                       "                 space!)\n"
+                       "  fsck           Check (and attempt to fix) consistency of the internal storage\n"
+                       "                 (can take some time)"));
 
     KAboutData aboutData(QStringLiteral("akonadictl"),
                          QStringLiteral("akonadictl"),
@@ -227,7 +226,8 @@ int main(int argc, char **argv)
                          KAboutLicense::LGPL_V2);
     KAboutData::setApplicationData(aboutData);
 
-    app.addPositionalCommandLineOption(QStringLiteral("command"), QStringLiteral("Command to execute"),
+    app.addPositionalCommandLineOption(QStringLiteral("command"),
+                                       QStringLiteral("Command to execute"),
                                        QStringLiteral("start|stop|restart|status|vacuum|fsck|instances"));
 
     app.parseCommandLine();

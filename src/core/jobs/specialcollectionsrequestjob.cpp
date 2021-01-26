@@ -14,9 +14,7 @@
 #include "collectioncreatejob.h"
 #include "entitydisplayattribute.h"
 
-
 #include "akonadicore_debug.h"
-
 
 using namespace Akonadi;
 
@@ -29,12 +27,12 @@ public:
     SpecialCollectionsRequestJobPrivate(SpecialCollections *collections, SpecialCollectionsRequestJob *qq);
 
     bool isEverythingReady() const;
-    void lockResult(KJob *job);   // slot
+    void lockResult(KJob *job); // slot
     void releaseLock(); // slot
     void nextResource();
-    void resourceScanResult(KJob *job);   // slot
+    void resourceScanResult(KJob *job); // slot
     void createRequestedFolders(ResourceScanJob *job, QHash<QByteArray, bool> &requestedFolders);
-    void collectionCreateResult(KJob *job);   // slot
+    void collectionCreateResult(KJob *job); // slot
 
     SpecialCollectionsRequestJob *const q;
     SpecialCollections *mSpecialCollections = nullptr;
@@ -46,7 +44,7 @@ public:
     // Input:
     QHash<QByteArray, bool> mDefaultFolders;
     bool mRequestingDefaultFolders;
-    QHash< QString, QHash<QByteArray, bool> > mFoldersForResource;
+    QHash<QString, QHash<QByteArray, bool>> mFoldersForResource;
     QString mDefaultResourceType;
     QVariantMap mDefaultResourceOptions;
     QList<QByteArray> mKnownTypes;
@@ -55,11 +53,10 @@ public:
 
     // Output:
     QStringList mToForget;
-    QVector< QPair<Collection, QByteArray> > mToRegister;
+    QVector<QPair<Collection, QByteArray>> mToRegister;
 };
 
-SpecialCollectionsRequestJobPrivate::SpecialCollectionsRequestJobPrivate(SpecialCollections *collections,
-        SpecialCollectionsRequestJob *qq)
+SpecialCollectionsRequestJobPrivate::SpecialCollectionsRequestJobPrivate(SpecialCollections *collections, SpecialCollectionsRequestJob *qq)
     : q(qq)
     , mSpecialCollections(collections)
     , mPendingCreateJobs(0)
@@ -108,7 +105,9 @@ void SpecialCollectionsRequestJobPrivate::lockResult(KJob *job)
         resjob->setTypes(mKnownTypes);
         resjob->setNameForTypeMap(mNameForTypeMap);
         resjob->setIconForTypeMap(mIconForTypeMap);
-        QObject::connect(resjob, &KJob::result, q, [this](KJob *job) { resourceScanResult(job); });
+        QObject::connect(resjob, &KJob::result, q, [this](KJob *job) {
+            resourceScanResult(job);
+        });
     } else {
         // If no default folders are requested, go straight to the next step.
         nextResource();
@@ -146,17 +145,20 @@ void SpecialCollectionsRequestJobPrivate::nextResource()
         mSpecialCollections->d->endBatchRegister();
 
         // Release the lock once the transaction has been committed.
-        QObject::connect(q, &KJob::result, q, [this]() { releaseLock(); });
+        QObject::connect(q, &KJob::result, q, [this]() {
+            releaseLock();
+        });
 
         // We are done!
         q->commit();
 
     } else {
         const QString resourceId = mFoldersForResource.cbegin().key();
-        qCDebug(AKONADICORE_LOG) << "A resource is done," << mFoldersForResource.count()
-                                 << "more to do. Now doing resource" << resourceId;
+        qCDebug(AKONADICORE_LOG) << "A resource is done," << mFoldersForResource.count() << "more to do. Now doing resource" << resourceId;
         auto *resjob = new ResourceScanJob(resourceId, mSpecialCollections->d->mSettings, q);
-        QObject::connect(resjob, &KJob::result, q, [this](KJob *job) { resourceScanResult(job); });
+        QObject::connect(resjob, &KJob::result, q, [this](KJob *job) {
+            resourceScanResult(job);
+        });
     }
 }
 
@@ -176,11 +178,10 @@ void SpecialCollectionsRequestJobPrivate::resourceScanResult(KJob *job)
     if (qobject_cast<DefaultResourceJob *>(job)) {
         // This is the default resource.
         if (resourceId != mSpecialCollections->d->defaultResourceId()) {
-            qCWarning(AKONADICORE_LOG) << "Resource id's don't match: " << resourceId
-                                       << mSpecialCollections->d->defaultResourceId();
+            qCWarning(AKONADICORE_LOG) << "Resource id's don't match: " << resourceId << mSpecialCollections->d->defaultResourceId();
             Q_ASSERT(false);
         }
-        //mToForget.append( mSpecialCollections->defaultResourceId() );
+        // mToForget.append( mSpecialCollections->defaultResourceId() );
         createRequestedFolders(resjob, mDefaultFolders);
     } else {
         // This is not the default resource.
@@ -190,8 +191,7 @@ void SpecialCollectionsRequestJobPrivate::resourceScanResult(KJob *job)
     }
 }
 
-void SpecialCollectionsRequestJobPrivate::createRequestedFolders(ResourceScanJob *scanJob,
-        QHash<QByteArray, bool> &requestedFolders)
+void SpecialCollectionsRequestJobPrivate::createRequestedFolders(ResourceScanJob *scanJob, QHash<QByteArray, bool> &requestedFolders)
 {
     // Remove from the request list the folders which already exist.
     const Akonadi::Collection::List lstSpecialCols = scanJob->specialCollections();
@@ -224,7 +224,9 @@ void SpecialCollectionsRequestJobPrivate::createRequestedFolders(ResourceScanJob
 
             auto *createJob = new CollectionCreateJob(collection, q);
             createJob->setProperty("type", it.key());
-            QObject::connect(createJob, &KJob::result, q, [this](KJob *job) { collectionCreateResult(job); });
+            QObject::connect(createJob, &KJob::result, q, [this](KJob *job) {
+                collectionCreateResult(job);
+            });
 
             mPendingCreateJobs++;
         }
@@ -324,7 +326,9 @@ void SpecialCollectionsRequestJob::doStart()
         emitResult();
     } else {
         auto *lockJob = new GetLockJob(this);
-        connect(lockJob, &GetLockJob::result, this, [this](KJob*job) { d->lockResult(job);});
+        connect(lockJob, &GetLockJob::result, this, [this](KJob *job) {
+            d->lockResult(job);
+        });
         lockJob->start();
     }
 }

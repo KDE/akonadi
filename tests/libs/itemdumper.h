@@ -26,7 +26,6 @@ private Q_SLOTS:
 private:
     QElapsedTimer mTime;
     int mJobCount;
-
 };
 
 #endif

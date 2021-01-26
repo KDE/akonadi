@@ -8,9 +8,8 @@
 
 #include "collection.h"
 #include "job_p.h"
-#include "protocolhelper_p.h"
 #include "private/protocol_p.h"
-
+#include "protocolhelper_p.h"
 
 using namespace Akonadi;
 
@@ -28,7 +27,6 @@ public:
     Item::List mItems;
     Collection mCollection;
     Tag mCurrentTag;
-
 };
 
 QString Akonadi::ItemDeleteJobPrivate::jobDebuggingString() const
@@ -95,9 +93,8 @@ void ItemDeleteJob::doStart()
     Q_D(ItemDeleteJob);
 
     try {
-        d->sendCommand(Protocol::DeleteItemsCommandPtr::create(
-                           d->mItems.isEmpty() ? Scope() : ProtocolHelper::entitySetToScope(d->mItems),
-                           ProtocolHelper::commandContextToProtocol(d->mCollection, d->mCurrentTag, d->mItems)));
+        d->sendCommand(Protocol::DeleteItemsCommandPtr::create(d->mItems.isEmpty() ? Scope() : ProtocolHelper::entitySetToScope(d->mItems),
+                                                               ProtocolHelper::commandContextToProtocol(d->mCollection, d->mCurrentTag, d->mItems)));
     } catch (const Akonadi::Exception &e) {
         setError(Job::Unknown);
         setErrorText(QString::fromUtf8(e.what()));

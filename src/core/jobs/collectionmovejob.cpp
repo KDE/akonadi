@@ -8,8 +8,8 @@
 #include "changemediator_p.h"
 #include "collection.h"
 #include "job_p.h"
-#include "protocolhelper_p.h"
 #include "private/protocol_p.h"
+#include "protocolhelper_p.h"
 
 #include <KLocalizedString>
 
@@ -28,7 +28,6 @@ public:
     Collection collection;
 
     Q_DECLARE_PUBLIC(CollectionMoveJob)
-
 };
 
 QString Akonadi::CollectionMoveJobPrivate::jobDebuggingString() const

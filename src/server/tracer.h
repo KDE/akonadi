@@ -7,10 +7,10 @@
 #ifndef AKONADI_TRACER_H
 #define AKONADI_TRACER_H
 
-#include <QObject>
-#include <QMutex>
-#include <QJsonObject>
 #include <QJsonDocument>
+#include <QJsonObject>
+#include <QMutex>
+#include <QObject>
 
 #include "tracerinterface.h"
 #include <private/protocol_p.h>
@@ -21,7 +21,6 @@ class QSettings;
 
 namespace Akonadi
 {
-
 namespace Protocol
 {
 class Command;
@@ -30,7 +29,6 @@ using CommandPtr = QSharedPointer<Command>;
 
 namespace Server
 {
-
 /**
  * The global tracer instance where all akonadi components can
  * send their tracing information to.
@@ -50,8 +48,8 @@ public:
     ~Tracer() override;
 
     template<typename T>
-    typename std::enable_if<std::is_base_of<Protocol::Command, T>::value>::type
-    connectionOutput(const QString &identifier, qint64 tag, const T &cmd) {
+    typename std::enable_if<std::is_base_of<Protocol::Command, T>::value>::type connectionOutput(const QString &identifier, qint64 tag, const T &cmd)
+    {
         QByteArray msg;
         if (mTracerBackend->connectionFormat() == TracerInterface::Json) {
             QJsonObject json;

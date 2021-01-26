@@ -10,7 +10,6 @@
 
 namespace Akonadi
 {
-
 class Config
 {
 public:
@@ -39,5 +38,3 @@ public:
 } // namespace Akonadi
 
 #endif
-
-

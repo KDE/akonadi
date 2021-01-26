@@ -8,10 +8,10 @@
 
 #include "agentmanager.h"
 #include "collectionutils.h"
+#include "entitydeletedattribute.h"
 #include "pastehelper_p.h"
 #include "specialcollectionattribute.h"
 #include "standardactionmanager.h"
-#include "entitydeletedattribute.h"
 
 #include <QApplication>
 #include <QClipboard>
@@ -24,8 +24,7 @@ static bool canCreateSubCollection(const Collection &collection)
         return false;
     }
 
-    if (!collection.contentMimeTypes().contains(Collection::mimeType()) &&
-            !collection.contentMimeTypes().contains(Collection::virtualMimeType())) {
+    if (!collection.contentMimeTypes().contains(Collection::mimeType()) && !collection.contentMimeTypes().contains(Collection::virtualMimeType())) {
         return false;
     }
 
@@ -38,9 +37,8 @@ static inline bool canContainItems(const Collection &collection)
         return false;
     }
 
-    if ((collection.contentMimeTypes().count() == 1) &&
-            ((collection.contentMimeTypes().at(0) == Collection::mimeType()) ||
-             (collection.contentMimeTypes().at(0) == Collection::virtualMimeType()))) {
+    if ((collection.contentMimeTypes().count() == 1)
+        && ((collection.contentMimeTypes().at(0) == Collection::mimeType()) || (collection.contentMimeTypes().at(0) == Collection::virtualMimeType()))) {
         return false;
     }
 
@@ -69,7 +67,7 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
     if (canDeleteCollections) {
         for (const Collection &collection : collections) {
             // do we have the necessary rights?
-            if (!(collection.rights() &Collection::CanDeleteCollection)) {
+            if (!(collection.rights() & Collection::CanDeleteCollection)) {
                 canDeleteCollections = false;
                 break;
             }
@@ -174,8 +172,9 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
     const Collection collection = (!collections.isEmpty() ? collections.first() : Collection());
 
     // collection specific actions
-    enableAction(StandardActionManager::CreateCollection, singleCollectionSelected &&  // we can create only inside one collection
-                 canCreateSubCollection(collection));    // we need the necessary rights
+    enableAction(StandardActionManager::CreateCollection,
+                 singleCollectionSelected && // we can create only inside one collection
+                     canCreateSubCollection(collection)); // we need the necessary rights
 
     enableAction(StandardActionManager::DeleteCollections, canDeleteCollections);
 
@@ -195,18 +194,20 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
 
     enableAction(StandardActionManager::MoveCollectionToDialog, canMoveCollections);
 
-    enableAction(StandardActionManager::CollectionProperties, singleCollectionSelected &&  // we can only configure one collection at a time
-                 !isRootCollection(collection));    // we can not configure the root collection
+    enableAction(StandardActionManager::CollectionProperties,
+                 singleCollectionSelected && // we can only configure one collection at a time
+                     !isRootCollection(collection)); // we can not configure the root collection
 
-    enableAction(StandardActionManager::SynchronizeCollections, atLeastOneCollectionCanHaveItems);   // it must be a valid folder collection
+    enableAction(StandardActionManager::SynchronizeCollections, atLeastOneCollectionCanHaveItems); // it must be a valid folder collection
 
-    enableAction(StandardActionManager::SynchronizeCollectionsRecursive, atLeastOneCollectionSelected &&
-                 collectionsAreFolders);  // it must be a valid folder collection
+    enableAction(StandardActionManager::SynchronizeCollectionsRecursive,
+                 atLeastOneCollectionSelected && collectionsAreFolders); // it must be a valid folder collection
 #ifndef QT_NO_CLIPBOARD
-    enableAction(StandardActionManager::Paste, singleCollectionSelected &&  // we can paste only into a single collection
-                 PasteHelper::canPaste(QApplication::clipboard()->mimeData(), collection, Qt::CopyAction));    // there must be data on the clipboard
+    enableAction(StandardActionManager::Paste,
+                 singleCollectionSelected && // we can paste only into a single collection
+                     PasteHelper::canPaste(QApplication::clipboard()->mimeData(), collection, Qt::CopyAction)); // there must be data on the clipboard
 #else
-    enableAction(StandardActionManager::Paste, false);   // no support for clipboard -> no paste
+    enableAction(StandardActionManager::Paste, false); // no support for clipboard -> no paste
 #endif
 
     // favorite collections specific actions
@@ -253,21 +254,21 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
 
     if (collectionsAreInTrash) {
         updateAlternatingAction(StandardActionManager::MoveToTrashRestoreCollectionAlternative);
-        //updatePluralLabel( StandardActionManager::MoveToTrashRestoreCollectionAlternative, collectionCount );
+        // updatePluralLabel( StandardActionManager::MoveToTrashRestoreCollectionAlternative, collectionCount );
     } else {
         updateAlternatingAction(StandardActionManager::MoveToTrashRestoreCollection);
     }
     enableAction(StandardActionManager::MoveToTrashRestoreCollection, atLeastOneCollectionSelected && canMoveCollections);
 
     // item specific actions
-    bool canDeleteItems = (!items.isEmpty());   //TODO: fixme
+    bool canDeleteItems = (!items.isEmpty()); // TODO: fixme
     for (const Item &item : qAsConst(items)) {
         const Collection parentCollection = item.parentCollection();
         if (!parentCollection.isValid()) {
             continue;
         }
 
-        canDeleteItems = canDeleteItems && (parentCollection.rights() &Collection::CanDeleteItem);
+        canDeleteItems = canDeleteItems && (parentCollection.rights() & Collection::CanDeleteItem);
     }
 
     bool itemsAreInTrash = false;
@@ -278,36 +279,41 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
         }
     }
 
-    enableAction(StandardActionManager::CopyItems, atLeastOneItemSelected);   // we need items to work with
+    enableAction(StandardActionManager::CopyItems, atLeastOneItemSelected); // we need items to work with
 
-    enableAction(StandardActionManager::CutItems, atLeastOneItemSelected &&  // we need items to work with
-                 canDeleteItems);  // we need the necessary rights
+    enableAction(StandardActionManager::CutItems,
+                 atLeastOneItemSelected && // we need items to work with
+                     canDeleteItems); // we need the necessary rights
 
-    enableAction(StandardActionManager::DeleteItems, atLeastOneItemSelected &&  // we need items to work with
-                 canDeleteItems);  // we need the necessary rights
+    enableAction(StandardActionManager::DeleteItems,
+                 atLeastOneItemSelected && // we need items to work with
+                     canDeleteItems); // we need the necessary rights
 
-    enableAction(StandardActionManager::CopyItemToMenu, atLeastOneItemSelected);   // we need items to work with
+    enableAction(StandardActionManager::CopyItemToMenu, atLeastOneItemSelected); // we need items to work with
 
-    enableAction(StandardActionManager::MoveItemToMenu, atLeastOneItemSelected &&  // we need items to work with
-                 canDeleteItems);  // we need the necessary rights
+    enableAction(StandardActionManager::MoveItemToMenu,
+                 atLeastOneItemSelected && // we need items to work with
+                     canDeleteItems); // we need the necessary rights
 
     enableAction(StandardActionManager::MoveItemsToTrash, atLeastOneItemSelected && canDeleteItems && !itemsAreInTrash);
 
     enableAction(StandardActionManager::RestoreItemsFromTrash, atLeastOneItemSelected && itemsAreInTrash);
 
-    enableAction(StandardActionManager::CopyItemToDialog, atLeastOneItemSelected);   // we need items to work with
+    enableAction(StandardActionManager::CopyItemToDialog, atLeastOneItemSelected); // we need items to work with
 
-    enableAction(StandardActionManager::MoveItemToDialog, atLeastOneItemSelected &&  // we need items to work with
-                 canDeleteItems);  // we need the necessary rights
+    enableAction(StandardActionManager::MoveItemToDialog,
+                 atLeastOneItemSelected && // we need items to work with
+                     canDeleteItems); // we need the necessary rights
 
     if (itemsAreInTrash) {
         updateAlternatingAction(StandardActionManager::MoveToTrashRestoreItemAlternative);
-        //updatePluralLabel( StandardActionManager::MoveToTrashRestoreItemAlternative, itemCount );
+        // updatePluralLabel( StandardActionManager::MoveToTrashRestoreItemAlternative, itemCount );
     } else {
         updateAlternatingAction(StandardActionManager::MoveToTrashRestoreItem);
     }
-    enableAction(StandardActionManager::MoveToTrashRestoreItem, atLeastOneItemSelected &&  // we need items to work with
-                 canDeleteItems);  // we need the necessary rights
+    enableAction(StandardActionManager::MoveToTrashRestoreItem,
+                 atLeastOneItemSelected && // we need items to work with
+                     canDeleteItems); // we need the necessary rights
 
     // update the texts of the actions
     updatePluralLabel(StandardActionManager::CopyCollections, collectionCount);
@@ -321,7 +327,6 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
     updatePluralLabel(StandardActionManager::DeleteResources, resourceCollectionCount);
     updatePluralLabel(StandardActionManager::SynchronizeResources, resourceCollectionCount);
     updatePluralLabel(StandardActionManager::SynchronizeCollectionTree, resourceCollectionCount);
-
 }
 
 bool ActionStateManager::isRootCollection(const Collection &collection) const
@@ -336,9 +341,7 @@ bool ActionStateManager::isResourceCollection(const Collection &collection) cons
 
 bool ActionStateManager::isFolderCollection(const Collection &collection) const
 {
-    return (CollectionUtils::isFolder(collection) ||
-            CollectionUtils::isResource(collection) ||
-            CollectionUtils::isStructural(collection));
+    return (CollectionUtils::isFolder(collection) || CollectionUtils::isResource(collection) || CollectionUtils::isStructural(collection));
 }
 
 bool ActionStateManager::isSpecialCollection(const Collection &collection) const
@@ -353,8 +356,7 @@ bool ActionStateManager::isFavoriteCollection(const Collection &collection) cons
     }
 
     bool result = false;
-    QMetaObject::invokeMethod(mReceiver, "isFavoriteCollection", Qt::DirectConnection,
-                              Q_RETURN_ARG(bool, result), Q_ARG(Akonadi::Collection, collection));
+    QMetaObject::invokeMethod(mReceiver, "isFavoriteCollection", Qt::DirectConnection, Q_RETURN_ARG(bool, result), Q_ARG(Akonadi::Collection, collection));
 
     return result;
 }
@@ -368,8 +370,7 @@ bool ActionStateManager::hasResourceCapability(const Collection &collection, con
 
 bool ActionStateManager::collectionCanHaveItems(const Collection &collection) const
 {
-    return !(collection.contentMimeTypes() == (QStringList() << QStringLiteral("inode/directory")) ||
-             CollectionUtils::isStructural(collection));
+    return !(collection.contentMimeTypes() == (QStringList() << QStringLiteral("inode/directory")) || CollectionUtils::isStructural(collection));
 }
 
 void ActionStateManager::enableAction(int action, bool state)

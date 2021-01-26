@@ -4,13 +4,13 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "qtest_akonadi.h"
 #include "collection.h"
 #include "collectionfetchjob.h"
 #include "collectionmovejob.h"
 #include "item.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
+#include "qtest_akonadi.h"
 
 #include <QHash>
 
@@ -58,11 +58,9 @@ private Q_SLOTS:
         QTest::addColumn<bool>("crossResource");
 
         QTest::newRow("inter-resource") << Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1")))
-                                        << Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res2")))
-                                        << true;
+                                        << Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res2"))) << true;
         QTest::newRow("intra-resource") << Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo/bla")))
-                                        << Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo/bar/bla")))
-                                        << false;
+                                        << Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo/bar/bla"))) << false;
     }
 
     // TODO: test signals

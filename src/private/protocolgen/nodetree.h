@@ -7,20 +7,13 @@
 #ifndef NODETREE_H
 #define NODETREE_H
 
-#include <QVector>
 #include <QMultiMap>
+#include <QVector>
 
 class Node
 {
 public:
-    enum NodeType {
-        Document,
-        Class,
-        Ctor,
-        Enum,
-        EnumValue,
-        Property
-    };
+    enum NodeType { Document, Class, Ctor, Enum, EnumValue, Property };
 
     Node(NodeType type, Node *parent);
     Node(const Node &) = delete;
@@ -43,8 +36,6 @@ protected:
     NodeType mType;
 };
 
-
-
 class DocumentNode : public Node
 {
 public:
@@ -60,13 +51,7 @@ class PropertyNode;
 class ClassNode : public Node
 {
 public:
-    enum ClassType {
-        Invalid,
-        Class,
-        Command,
-        Response,
-        Notification
-    };
+    enum ClassType { Invalid, Class, Command, Response, Notification };
 
     ClassNode(const QString &name, ClassType type, DocumentNode *parent);
     QString name() const;
@@ -81,7 +66,6 @@ private:
     QString mName;
     ClassType mClassType;
 };
-
 
 class CtorNode : public Node
 {
@@ -107,15 +91,10 @@ private:
     QVector<Argument> mArgs;
 };
 
-
 class EnumNode : public Node
 {
 public:
-    enum EnumType {
-        TypeInvalid,
-        TypeEnum,
-        TypeFlag
-    };
+    enum EnumType { TypeInvalid, TypeEnum, TypeFlag };
 
     EnumNode(const QString &name, EnumType type, ClassNode *parent);
 
@@ -128,7 +107,6 @@ private:
     QString mName;
     EnumType mEnumType;
 };
-
 
 class EnumValueNode : public Node
 {
@@ -143,7 +121,6 @@ private:
     QString mName;
     QString mValue;
 };
-
 
 class PropertyNode : public Node
 {

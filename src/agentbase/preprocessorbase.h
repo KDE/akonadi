@@ -9,14 +9,13 @@
 #ifndef AKONADI_PREPROCESSORBASE_H
 #define AKONADI_PREPROCESSORBASE_H
 
-#include "akonadiagentbase_export.h"
 #include "agentbase.h"
+#include "akonadiagentbase_export.h"
 #include "collection.h"
 #include "item.h"
 
 namespace Akonadi
 {
-
 class ItemFetchScope;
 
 class PreprocessorBasePrivate;
@@ -166,11 +165,11 @@ private:
 /**
  * Convenience Macro for the most common main() function for Akonadi preprocessors.
  */
-#define AKONADI_PREPROCESSOR_MAIN( preProcessorClass )                       \
-    int main( int argc, char **argv )                                          \
-    {                                                                          \
-        return Akonadi::PreprocessorBase::init<preProcessorClass>( argc, argv ); \
+#define AKONADI_PREPROCESSOR_MAIN(preProcessorClass)                                                                                                           \
+    int main(int argc, char **argv)                                                                                                                            \
+    {                                                                                                                                                          \
+        return Akonadi::PreprocessorBase::init<preProcessorClass>(argc, argv);                                                                                 \
     }
-#endif //!AKONADI_RESOURCE_MAIN
+#endif //! AKONADI_RESOURCE_MAIN
 
 #endif //!_PREPROCESSORBASE_H_

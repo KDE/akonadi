@@ -4,11 +4,11 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "invalidatecachejob_p.h"
-#include "job_p.h"
 #include "collectionfetchjob.h"
+#include "invalidatecachejob_p.h"
 #include "itemfetchjob.h"
 #include "itemmodifyjob.h"
+#include "job_p.h"
 
 #include <KLocalizedString>
 
@@ -16,7 +16,6 @@ using namespace Akonadi;
 
 namespace Akonadi
 {
-
 class InvalidateCacheJobPrivate : JobPrivate
 {
 public:
@@ -62,7 +61,9 @@ void InvalidateCacheJobPrivate::collectionFetchResult(KJob *job)
     }
 
     auto *itemFetch = new ItemFetchJob(collection, q);
-    QObject::connect(itemFetch, &ItemFetchJob::result, q, [this](KJob* job) { itemFetchResult(job);} );
+    QObject::connect(itemFetch, &ItemFetchJob::result, q, [this](KJob *job) {
+        itemFetchResult(job);
+    });
 }
 
 void InvalidateCacheJobPrivate::itemFetchResult(KJob *job)
@@ -84,7 +85,9 @@ void InvalidateCacheJobPrivate::itemFetchResult(KJob *job)
         item.clearPayload();
         modJob = new ItemModifyJob(item, q);
     }
-    QObject::connect(modJob, &KJob::result, q, [this](KJob *job) { itemStoreResult(job); });
+    QObject::connect(modJob, &KJob::result, q, [this](KJob *job) {
+        itemStoreResult(job);
+    });
 }
 
 void InvalidateCacheJobPrivate::itemStoreResult(KJob *job)
@@ -108,7 +111,9 @@ void InvalidateCacheJob::doStart()
     Q_D(InvalidateCacheJob);
     // resolve RID-only collections
     auto *job = new CollectionFetchJob(d->collection, Akonadi::CollectionFetchJob::Base, this);
-    connect(job, &KJob::result, this, [d](KJob *job) { d->collectionFetchResult(job); });
+    connect(job, &KJob::result, this, [d](KJob *job) {
+        d->collectionFetchResult(job);
+    });
 }
 
 #include "moc_invalidatecachejob_p.cpp"

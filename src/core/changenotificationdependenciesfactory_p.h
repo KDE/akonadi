@@ -7,12 +7,11 @@
 #ifndef CHANGENOTIFICATIONDEPENDENCIESFACTORY_P_H
 #define CHANGENOTIFICATIONDEPENDENCIESFACTORY_P_H
 
-#include "session.h"
 #include "entitycache_p.h"
+#include "session.h"
 
 namespace Akonadi
 {
-
 class Connection;
 class CommandBuffer;
 

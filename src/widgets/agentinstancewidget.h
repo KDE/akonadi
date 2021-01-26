@@ -15,7 +15,6 @@
 class QAbstractItemView;
 namespace Akonadi
 {
-
 class AgentInstance;
 class AgentFilterProxyModel;
 

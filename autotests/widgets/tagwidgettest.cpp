@@ -8,26 +8,26 @@
 #include "qtest_akonadi.h"
 #include <shared/aktest.h>
 
-#include "tagwidget.h"
-#include "tagselectiondialog.h"
-#include "tagmodel.h"
 #include "monitor.h"
 #include "tag.h"
-#include "tagdeletejob.h"
 #include "tagcreatejob.h"
+#include "tagdeletejob.h"
+#include "tagmodel.h"
+#include "tagselectiondialog.h"
+#include "tagwidget.h"
 
+#include <QDialogButtonBox>
+#include <QLineEdit>
+#include <QPushButton>
 #include <QSignalSpy>
 #include <QTest>
-#include <QLineEdit>
 #include <QToolButton>
-#include <QDialogButtonBox>
-#include <QPushButton>
 
 #include <memory>
 
 using namespace Akonadi;
 
-class TagWidgetTest: public QObject
+class TagWidgetTest : public QObject
 {
     Q_OBJECT
 
@@ -37,19 +37,19 @@ class TagWidgetTest: public QObject
             widget = std::make_unique<TagWidget>();
             widget->show();
 
-            monitor = widget->findChild<Monitor*>();
+            monitor = widget->findChild<Monitor *>();
             QVERIFY(monitor);
-            model = widget->findChild<TagModel*>();
+            model = widget->findChild<TagModel *>();
             QVERIFY(model);
             QSignalSpy modelSpy(model, &TagModel::populated);
             QVERIFY(modelSpy.wait());
 
             QVERIFY(QTest::qWaitForWindowActive(widget.get()));
 
-            tagView = widget->findChild<QLineEdit*>(QStringLiteral("tagView"));
+            tagView = widget->findChild<QLineEdit *>(QStringLiteral("tagView"));
             QVERIFY(tagView);
             QVERIFY(tagView->isReadOnly()); // always read-only
-            editButton = widget->findChild<QToolButton*>(QStringLiteral("editButton"));
+            editButton = widget->findChild<QToolButton *>(QStringLiteral("editButton"));
             QVERIFY(editButton);
 
             valid = true;
@@ -95,7 +95,7 @@ class TagWidgetTest: public QObject
         {
             const auto windows = QApplication::topLevelWidgets();
             for (auto *window : windows) {
-                if (auto *dlg = qobject_cast<TagSelectionDialog*>(window)) {
+                if (auto *dlg = qobject_cast<TagSelectionDialog *>(window)) {
                     // Set the selection through code, testing selecting tags with mouse is
                     // out-of-scope for this test, there's a dedicated TagEditWidget test for that.
                     dlg->setSelection(selection);
@@ -161,7 +161,10 @@ private Q_SLOTS:
         bool ok = false;
         // Clicking on the Edit button opens the dialog in a blocking way, so
         // we need to dispatch the test from event loop
-        QTimer::singleShot(100, this, [&test, &selection, &ok]() { QVERIFY(test.selectTagsInDialog(selection)); ok = true; });
+        QTimer::singleShot(100, this, [&test, &selection, &ok]() {
+            QVERIFY(test.selectTagsInDialog(selection));
+            ok = true;
+        });
         QTest::mouseClick(test.editButton, Qt::LeftButton);
         QVERIFY(ok);
 
@@ -190,5 +193,3 @@ private Q_SLOTS:
 QTEST_AKONADIMAIN(TagWidgetTest)
 
 #include "tagwidgettest.moc"
-
-

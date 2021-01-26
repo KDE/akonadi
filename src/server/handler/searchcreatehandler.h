@@ -4,7 +4,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef AKONADI_SEARCHCREATEHANDLER_H_ 
+#ifndef AKONADI_SEARCHCREATEHANDLER_H_
 #define AKONADI_SEARCHCREATEHANDLER_H_
 
 #include "handler.h"
@@ -13,13 +13,12 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
   @ingroup akonadi_server_handler
 
   Handler for the search_store search_delete commands.
 */
-class SearchCreateHandler: public Handler
+class SearchCreateHandler : public Handler
 {
 public:
     SearchCreateHandler(AkonadiServer &akonadi);

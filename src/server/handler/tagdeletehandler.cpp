@@ -6,19 +6,20 @@
 
 #include "tagdeletehandler.h"
 
-#include "storage/selectquerybuilder.h"
-#include "storage/queryhelper.h"
 #include "storage/datastore.h"
+#include "storage/queryhelper.h"
+#include "storage/selectquerybuilder.h"
 
-#include <private/scope_p.h>
 #include <private/imapset_p.h>
+#include <private/scope_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
 TagDeleteHandler::TagDeleteHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 bool TagDeleteHandler::parseStream()
 {

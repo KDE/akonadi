@@ -15,7 +15,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class Collection;
 class AkonadiServer;
 

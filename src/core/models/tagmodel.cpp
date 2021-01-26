@@ -5,8 +5,8 @@
 */
 
 #include "tagmodel.h"
-#include "tagmodel_p.h"
 #include "tagattribute.h"
+#include "tagmodel_p.h"
 
 #include <KLocalizedString>
 #include <QIcon>

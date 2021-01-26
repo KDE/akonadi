@@ -13,22 +13,20 @@
 #include <private/instance_p.h>
 
 #include <QCoreApplication>
+#include <QDBusConnection>
 #include <QProcess>
 #include <QTimer>
-#include <QDBusConnection>
 
 #include <iostream>
 
 AkonadiStarter::AkonadiStarter(QObject *parent)
     : QObject(parent)
-    , mWatcher(Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock), QDBusConnection::sessionBus(),
-               QDBusServiceWatcher::WatchForRegistration)
+    , mWatcher(Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock), QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForRegistration)
 {
-    connect(&mWatcher, &QDBusServiceWatcher::serviceRegistered,
-            this, [this]() {
-                mRegistered = true;
-                QCoreApplication::instance()->quit();
-            });
+    connect(&mWatcher, &QDBusServiceWatcher::serviceRegistered, this, [this]() {
+        mRegistered = true;
+        QCoreApplication::instance()->quit();
+    });
 }
 
 bool AkonadiStarter::start(bool verbose)
@@ -55,8 +53,7 @@ bool AkonadiStarter::start(bool verbose)
     QCoreApplication::instance()->exec();
 
     if (!mRegistered) {
-        std::cerr << "Error: akonadi_control was started but didn't register at D-Bus session bus."
-                  << std::endl
+        std::cerr << "Error: akonadi_control was started but didn't register at D-Bus session bus." << std::endl
                   << "Make sure your system is set up correctly!" << std::endl;
         return false;
     }
@@ -64,4 +61,3 @@ bool AkonadiStarter::start(bool verbose)
     qCInfo(AKONADICTL_LOG) << "   done.";
     return true;
 }
-

@@ -8,20 +8,19 @@
 #include "tagqueryhelper.h"
 
 #include "commandcontext.h"
-#include "storage/querybuilder.h"
 #include "handler.h"
+#include "storage/querybuilder.h"
 #include "storage/queryhelper.h"
 
-#include <private/scope_p.h>
 #include <private/imapset_p.h>
+#include <private/scope_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
 void TagQueryHelper::remoteIdToQuery(const QStringList &rids, const CommandContext &context, QueryBuilder &qb)
 {
-    qb.addJoin(QueryBuilder::InnerJoin, TagRemoteIdResourceRelation::tableName(),
-               Tag::idFullColumnName(), TagRemoteIdResourceRelation::tagIdFullColumnName());
+    qb.addJoin(QueryBuilder::InnerJoin, TagRemoteIdResourceRelation::tableName(), Tag::idFullColumnName(), TagRemoteIdResourceRelation::tagIdFullColumnName());
     qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdFullColumnName(), Query::Equals, context.resource().id());
 
     if (rids.size() == 1) {
@@ -34,8 +33,10 @@ void TagQueryHelper::remoteIdToQuery(const QStringList &rids, const CommandConte
 void TagQueryHelper::gidToQuery(const QStringList &gids, const CommandContext &context, QueryBuilder &qb)
 {
     if (context.resource().isValid()) {
-        qb.addJoin(QueryBuilder::InnerJoin, TagRemoteIdResourceRelation::tableName(),
-                   Tag::idFullColumnName(), TagRemoteIdResourceRelation::tagIdFullColumnName());
+        qb.addJoin(QueryBuilder::InnerJoin,
+                   TagRemoteIdResourceRelation::tableName(),
+                   Tag::idFullColumnName(),
+                   TagRemoteIdResourceRelation::tagIdFullColumnName());
         qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdFullColumnName(), Query::Equals, context.resource().id());
     }
 

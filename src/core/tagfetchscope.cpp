@@ -23,7 +23,6 @@ struct Q_DECL_HIDDEN Akonadi::TagFetchScope::Private {
 TagFetchScope::TagFetchScope()
     : d(new Private)
 {
-
 }
 
 TagFetchScope::~TagFetchScope()
@@ -89,4 +88,3 @@ bool TagFetchScope::fetchAllAttributes() const
 {
     return d->mFetchAllAttrs;
 }
-

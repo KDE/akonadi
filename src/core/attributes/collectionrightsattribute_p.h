@@ -9,14 +9,13 @@
 
 #include "akonadicore_export.h"
 
-#include "collection.h"
 #include "attribute.h"
+#include "collection.h"
 
 #include <memory>
 
 namespace Akonadi
 {
-
 /**
  * @internal
  *

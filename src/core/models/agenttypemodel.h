@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @short Provides a data model for agent types.
  *
@@ -44,12 +43,12 @@ public:
      * Describes the roles of this model.
      */
     enum Roles {
-        TypeRole = Qt::UserRole + 1,            ///< The agent type itself
-        IdentifierRole,                         ///< The identifier of the agent type
-        DescriptionRole,                        ///< A description of the agent type
-        MimeTypesRole,                          ///< A list of supported mimetypes
-        CapabilitiesRole,                       ///< A list of supported capabilities
-        UserRole  = Qt::UserRole + 42           ///< Role for user extensions
+        TypeRole = Qt::UserRole + 1, ///< The agent type itself
+        IdentifierRole, ///< The identifier of the agent type
+        DescriptionRole, ///< A description of the agent type
+        MimeTypesRole, ///< A list of supported mimetypes
+        CapabilitiesRole, ///< A list of supported capabilities
+        UserRole = Qt::UserRole + 42 ///< Role for user extensions
     };
 
     /**

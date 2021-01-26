@@ -5,8 +5,8 @@
 */
 
 #include "dbconfigsqlite.h"
-#include "utils.h"
 #include "akonadiserver_debug.h"
+#include "utils.h"
 
 #include <private/standarddirs_p.h>
 
@@ -23,8 +23,7 @@ static QString dataDir()
     QString akonadiHomeDir = StandardDirs::saveDir("data");
     if (!QDir(akonadiHomeDir).exists()) {
         if (!QDir().mkpath(akonadiHomeDir)) {
-            qCCritical(AKONADISERVER_LOG) << "Unable to create" << akonadiHomeDir
-                                          << "during database initialization";
+            qCCritical(AKONADISERVER_LOG) << "Unable to create" << akonadiHomeDir << "during database initialization";
             return QString();
         }
     }
@@ -142,7 +141,6 @@ bool DbConfigSqlite::useInternalServer() const
     return false;
 }
 
-
 bool DbConfigSqlite::setPragma(QSqlDatabase &db, QSqlQuery &query, const QString &pragma)
 {
     if (!query.exec(QStringLiteral("PRAGMA %1").arg(pragma))) {
@@ -154,7 +152,6 @@ bool DbConfigSqlite::setPragma(QSqlDatabase &db, QSqlQuery &query, const QString
     }
     return true;
 }
-
 
 void DbConfigSqlite::setup()
 {
@@ -188,8 +185,7 @@ void DbConfigSqlite::setup()
 
         db.setDatabaseName(mDatabaseName);
         if (!db.open()) {
-            qCCritical(AKONADISERVER_LOG) << "Could not open sqlite database" << mDatabaseName << "with driver"
-                                          << driverName() << "for initialization";
+            qCCritical(AKONADISERVER_LOG) << "Could not open sqlite database" << mDatabaseName << "with driver" << driverName() << "for initialization";
             db.close();
             return;
         }
@@ -206,7 +202,7 @@ void DbConfigSqlite::setup()
             return;
         }
 
-        if (!query.next()) {   // should never occur
+        if (!query.next()) { // should never occur
             qCCritical(AKONADISERVER_LOG) << "Could not query sqlite version";
             qCCritical(AKONADISERVER_LOG) << "Database: " << mDatabaseName;
             qCCritical(AKONADISERVER_LOG) << "Query error: " << query.lastError().text();
@@ -240,7 +236,7 @@ void DbConfigSqlite::setup()
             return;
         }
 
-        if (!query.next()) {   // should never occur
+        if (!query.next()) { // should never occur
             qCCritical(AKONADISERVER_LOG) << "Could not query sqlite journal mode";
             qCCritical(AKONADISERVER_LOG) << "Database: " << mDatabaseName;
             qCCritical(AKONADISERVER_LOG) << "Query error: " << query.lastError().text();

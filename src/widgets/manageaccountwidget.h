@@ -7,8 +7,8 @@
 #ifndef MANAGEACCOUNTWIDGET_H
 #define MANAGEACCOUNTWIDGET_H
 
-#include <QWidget>
 #include "akonadiwidgets_export.h"
+#include <QWidget>
 
 class QAbstractItemDelegate;
 class QAbstractItemView;
@@ -49,6 +49,7 @@ public:
 
     Q_REQUIRED_RESULT QPushButton *addAccountButton() const;
     void disconnectAddAccountButton();
+
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
 

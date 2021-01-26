@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 class AKONADICORE_EXPORT RelationSync : public Akonadi::Job
 {
     Q_OBJECT

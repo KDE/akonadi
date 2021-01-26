@@ -6,13 +6,13 @@
 
 #include "fakeakonadiservercommand.h"
 
-#include <QStringList>
 #include <QMetaMethod>
+#include <QStringList>
 
-#include "fakeserverdata.h"
-#include "entitydisplayattribute.h"
-#include "tagattribute.h"
 #include "akranges.h"
+#include "entitydisplayattribute.h"
+#include "fakeserverdata.h"
+#include "tagattribute.h"
 
 using namespace Akonadi;
 using namespace AkRanges;
@@ -27,20 +27,17 @@ FakeAkonadiServerCommand::FakeAkonadiServerCommand(FakeAkonadiServerCommand::Typ
 
 bool FakeAkonadiServerCommand::isTagSignal(const QByteArray &signal) const
 {
-    return signal.startsWith("emit_tag")
-            || signal.startsWith("emit_monitoredTag");
+    return signal.startsWith("emit_tag") || signal.startsWith("emit_monitoredTag");
 }
 
 bool FakeAkonadiServerCommand::isItemSignal(const QByteArray &signal) const
 {
-    return signal.startsWith("emit_item")
-            || signal.startsWith("emit_monitoredItem");
+    return signal.startsWith("emit_item") || signal.startsWith("emit_monitoredItem");
 }
 
 bool FakeAkonadiServerCommand::isCollectionSignal(const QByteArray &signal) const
 {
-    return signal.startsWith("emit_collection")
-            || signal.startsWith("emit_monitoredCollection");
+    return signal.startsWith("emit_collection") || signal.startsWith("emit_monitoredCollection");
 }
 
 void FakeAkonadiServerCommand::connectForwardingSignals()
@@ -50,9 +47,8 @@ void FakeAkonadiServerCommand::connectForwardingSignals()
         const QMetaMethod mm = mo->method(methodIndex);
         const QByteArray signature = mm.methodSignature();
         if (mm.methodType() == QMetaMethod::Signal) {
-            if ((qobject_cast<TagModel*>(m_model) && isTagSignal(signature)) ||
-                (qobject_cast<EntityTreeModel*>(m_model) && (isCollectionSignal(signature) || isItemSignal(signature))))
-            {
+            if ((qobject_cast<TagModel *>(m_model) && isTagSignal(signature))
+                || (qobject_cast<EntityTreeModel *>(m_model) && (isCollectionSignal(signature) || isItemSignal(signature)))) {
                 const int modelSlotIndex = m_model->metaObject()->indexOfSlot(signature.mid(5).constData());
                 if (modelSlotIndex < 0) {
                     qWarning() << "Slot not found in" << m_model->metaObject()->className() << ":" << signature.mid(5).constData();
@@ -66,7 +62,7 @@ void FakeAkonadiServerCommand::connectForwardingSignals()
 
 Collection FakeAkonadiServerCommand::getCollectionByDisplayName(const QString &displayName) const
 {
-    Q_ASSERT(qobject_cast<EntityTreeModel*>(m_model));
+    Q_ASSERT(qobject_cast<EntityTreeModel *>(m_model));
     QModelIndexList list = m_model->match(m_model->index(0, 0), Qt::DisplayRole, displayName, 1, Qt::MatchRecursive);
     if (list.isEmpty()) {
         return Collection();
@@ -76,7 +72,7 @@ Collection FakeAkonadiServerCommand::getCollectionByDisplayName(const QString &d
 
 Item FakeAkonadiServerCommand::getItemByDisplayName(const QString &displayName) const
 {
-    Q_ASSERT(qobject_cast<EntityTreeModel*>(m_model));
+    Q_ASSERT(qobject_cast<EntityTreeModel *>(m_model));
     QModelIndexList list = m_model->match(m_model->index(0, 0), Qt::DisplayRole, displayName, 1, Qt::MatchRecursive);
     if (list.isEmpty()) {
         return Item();
@@ -86,7 +82,7 @@ Item FakeAkonadiServerCommand::getItemByDisplayName(const QString &displayName) 
 
 Tag FakeAkonadiServerCommand::getTagByDisplayName(const QString &displayName) const
 {
-    Q_ASSERT(qobject_cast<TagModel*>(m_model));
+    Q_ASSERT(qobject_cast<TagModel *>(m_model));
     QModelIndexList list = m_model->match(m_model->index(0, 0), Qt::DisplayRole, displayName, 1, Qt::MatchRecursive);
     if (list.isEmpty()) {
         return Tag();
@@ -164,9 +160,7 @@ QList<FakeJobResponse *> FakeJobResponse::parseTreeString(FakeServerData *fakeSe
             continue;
         }
         Q_ASSERT(token.type == Token::Leaf);
-        parseEntityString(collectionResponseList, itemResponseMap, tagResponseList,
-                          recentCollections, recentTags, fakeServerData,
-                          token.content, depth);
+        parseEntityString(collectionResponseList, itemResponseMap, tagResponseList, recentCollections, recentTags, fakeServerData, token.content, depth);
 
         depth = 0;
     }
@@ -213,7 +207,7 @@ void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResp
         if (recentCollections.size() == (depth + 1)) {
             recentCollections.append(collection);
         } else {
-            recentCollections[ depth + 1 ] = collection;
+            recentCollections[depth + 1] = collection;
         }
 
         int order = 0;
@@ -240,9 +234,9 @@ void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResp
             order = 1;
         }
         while (collectionResponseList.size() < order) {
-            collectionResponseList.append(new FakeJobResponse(recentCollections[ depth ], FakeJobResponse::RespondToCollectionFetch, fakeServerData));
+            collectionResponseList.append(new FakeJobResponse(recentCollections[depth], FakeJobResponse::RespondToCollectionFetch, fakeServerData));
         }
-        collectionResponseList[ order - 1 ]->appendCollection(collection);
+        collectionResponseList[order - 1]->appendCollection(collection);
     }
     if (entityString.startsWith(QLatin1Char('I'))) {
         Item item;
@@ -281,13 +275,13 @@ void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResp
         item.setRemoteId(QStringLiteral("RId_%1 %2").arg(item.id()).arg(type));
         item.setParentCollection(recentCollections.at(depth));
 
-        Collection::Id colId = recentCollections[ depth ].id();
+        Collection::Id colId = recentCollections[depth].id();
         if (!itemResponseMap.contains(colId)) {
-            auto *newResponse = new FakeJobResponse(recentCollections[ depth ], FakeJobResponse::RespondToItemFetch, fakeServerData);
+            auto *newResponse = new FakeJobResponse(recentCollections[depth], FakeJobResponse::RespondToItemFetch, fakeServerData);
             itemResponseMap.insert(colId, newResponse);
             collectionResponseList.append(newResponse);
         }
-        itemResponseMap[ colId ]->appendItem(item);
+        itemResponseMap[colId]->appendItem(item);
     }
     if (entityString.startsWith(QLatin1Char('T'))) {
         Tag tag;
@@ -334,7 +328,7 @@ void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResp
         if (recentTags.size() == (depth + 1)) {
             recentTags.append(tag);
         } else {
-            recentTags[ depth + 1 ] = tag;
+            recentTags[depth + 1] = tag;
         }
 
         while (tagResponseList.size() < order) {

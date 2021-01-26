@@ -7,15 +7,15 @@
 #include "collectioncopyhandler.h"
 
 #include "akonadi.h"
+#include "cachecleaner.h"
 #include "connection.h"
 #include "handlerhelper.h"
-#include "cachecleaner.h"
 #include "protocol_p.h"
-#include "storage/datastore.h"
-#include "storage/transaction.h"
-#include "storage/itemretriever.h"
-#include "storage/collectionqueryhelper.h"
 #include "shared/akranges.h"
+#include "storage/collectionqueryhelper.h"
+#include "storage/datastore.h"
+#include "storage/itemretriever.h"
+#include "storage/transaction.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -23,7 +23,8 @@ using namespace AkRanges;
 
 CollectionCopyHandler::CollectionCopyHandler(AkonadiServer &akonadi)
     : ItemCopyHandler(akonadi)
-{}
+{
+}
 
 bool CollectionCopyHandler::copyCollection(const Collection &source, const Collection &target)
 {
@@ -43,12 +44,14 @@ bool CollectionCopyHandler::copyCollection(const Collection &source, const Colle
     }
 
     const auto mimeTypes = source.mimeTypes() | Views::transform(&MimeType::name) | Actions::toQList;
-    const auto attributes = source.attributes() | Views::transform([](const auto &attr) { return std::make_pair(attr.type(), attr.value()); }) | Actions::toQMap;
+    const auto attributes = source.attributes() | Views::transform([](const auto &attr) {
+                                return std::make_pair(attr.type(), attr.value());
+                            })
+        | Actions::toQMap;
 
     if (!storageBackend()->appendCollection(col, mimeTypes, attributes)) {
         return false;
     }
-
 
     // copy sub-collections
     const Collection::List lstCols = source.children();

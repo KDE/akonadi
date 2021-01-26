@@ -12,11 +12,11 @@
 #include "agentmanager.h"
 #include "agenttypedialog.h"
 
-#include <QAction>
-#include <QIcon>
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <KMessageBox>
+#include <QAction>
+#include <QIcon>
 
 #include <QItemSelectionModel>
 #include <QPointer>
@@ -31,24 +31,12 @@ static const struct {
     const char *icon;
     int shortcut;
     const char *slot;
-} agentActionData[] = {
-    {
-        "akonadi_agentinstance_create", I18N_NOOP("&New Agent Instance..."),
-        "folder-new", 0, SLOT(slotCreateAgentInstance())
-    },
-    {
-        "akonadi_agentinstance_delete", I18N_NOOP("&Delete Agent Instance"),
-        "edit-delete", 0, SLOT(slotDeleteAgentInstance())
-    },
-    {
-        "akonadi_agentinstance_configure", I18N_NOOP("&Configure Agent Instance"),
-        "configure", 0, SLOT(slotConfigureAgentInstance())
-    }
-};
-static const int numAgentActionData = sizeof agentActionData / sizeof * agentActionData;
+} agentActionData[] = {{"akonadi_agentinstance_create", I18N_NOOP("&New Agent Instance..."), "folder-new", 0, SLOT(slotCreateAgentInstance())},
+                       {"akonadi_agentinstance_delete", I18N_NOOP("&Delete Agent Instance"), "edit-delete", 0, SLOT(slotDeleteAgentInstance())},
+                       {"akonadi_agentinstance_configure", I18N_NOOP("&Configure Agent Instance"), "configure", 0, SLOT(slotConfigureAgentInstance())}};
+static const int numAgentActionData = sizeof agentActionData / sizeof *agentActionData;
 
-static_assert(numAgentActionData == AgentActionManager::LastType,
-              "agentActionData table does not match AgentActionManager types");
+static_assert(numAgentActionData == AgentActionManager::LastType, "agentActionData table does not match AgentActionManager types");
 
 /**
  * @internal
@@ -61,21 +49,13 @@ public:
     {
         mActions.fill(nullptr, AgentActionManager::LastType);
 
-        setContextText(AgentActionManager::CreateAgentInstance,
-                       AgentActionManager::DialogTitle,
-                       i18nc("@title:window", "New Agent Instance"));
+        setContextText(AgentActionManager::CreateAgentInstance, AgentActionManager::DialogTitle, i18nc("@title:window", "New Agent Instance"));
 
-        setContextText(AgentActionManager::CreateAgentInstance,
-                       AgentActionManager::ErrorMessageText,
-                       ki18n("Could not create agent instance: %1"));
+        setContextText(AgentActionManager::CreateAgentInstance, AgentActionManager::ErrorMessageText, ki18n("Could not create agent instance: %1"));
 
-        setContextText(AgentActionManager::CreateAgentInstance,
-                       AgentActionManager::ErrorMessageTitle,
-                       i18n("Agent instance creation failed"));
+        setContextText(AgentActionManager::CreateAgentInstance, AgentActionManager::ErrorMessageTitle, i18n("Agent instance creation failed"));
 
-        setContextText(AgentActionManager::DeleteAgentInstance,
-                       AgentActionManager::MessageBoxTitle,
-                       i18nc("@title:window", "Delete Agent Instance?"));
+        setContextText(AgentActionManager::DeleteAgentInstance, AgentActionManager::MessageBoxTitle, i18nc("@title:window", "Delete Agent Instance?"));
 
         setContextText(AgentActionManager::DeleteAgentInstance,
                        AgentActionManager::MessageBoxText,
@@ -126,9 +106,8 @@ public:
         }
 
         const QModelIndexList lstModelIndex = mSelectionModel->selectedRows();
-        for (const QModelIndex &index : lstModelIndex ) {
-            const AgentInstance instance =
-                index.data(AgentInstanceModel::InstanceRole).value<AgentInstance>();
+        for (const QModelIndex &index : lstModelIndex) {
+            const AgentInstance instance = index.data(AgentInstanceModel::InstanceRole).value<AgentInstance>();
             if (instance.isValid()) {
                 instances << instance;
             }
@@ -140,8 +119,7 @@ public:
     void slotCreateAgentInstance()
     {
         QPointer<Akonadi::AgentTypeDialog> dlg(new Akonadi::AgentTypeDialog(mParentWidget));
-        dlg->setWindowTitle(contextText(AgentActionManager::CreateAgentInstance,
-                                        AgentActionManager::DialogTitle));
+        dlg->setWindowTitle(contextText(AgentActionManager::CreateAgentInstance, AgentActionManager::DialogTitle));
 
         for (const QString &mimeType : qAsConst(mMimeTypeFilter)) {
             dlg->agentFilterProxyModel()->addMimeTypeFilter(mimeType);
@@ -156,7 +134,9 @@ public:
 
             if (agentType.isValid()) {
                 auto *job = new AgentInstanceCreateJob(agentType, q);
-                q->connect(job, &KJob::result, q, [this](KJob *job) { slotAgentInstanceCreationResult(job); });
+                q->connect(job, &KJob::result, q, [this](KJob *job) {
+                    slotAgentInstanceCreationResult(job);
+                });
                 job->configure(mParentWidget);
                 job->start();
             }
@@ -168,17 +148,14 @@ public:
     {
         const AgentInstance::List instances = selectedAgentInstances();
         if (!instances.isEmpty()) {
-            if (KMessageBox::questionYesNo(
-                        mParentWidget,
-                        contextText(AgentActionManager::DeleteAgentInstance,
-                                    AgentActionManager::MessageBoxText),
-                        contextText(AgentActionManager::DeleteAgentInstance,
-                                    AgentActionManager::MessageBoxTitle),
-                        KStandardGuiItem::del(),
-                        KStandardGuiItem::cancel(),
-                        QString(),
-                        KMessageBox::Dangerous) == KMessageBox::Yes) {
-
+            if (KMessageBox::questionYesNo(mParentWidget,
+                                           contextText(AgentActionManager::DeleteAgentInstance, AgentActionManager::MessageBoxText),
+                                           contextText(AgentActionManager::DeleteAgentInstance, AgentActionManager::MessageBoxTitle),
+                                           KStandardGuiItem::del(),
+                                           KStandardGuiItem::cancel(),
+                                           QString(),
+                                           KMessageBox::Dangerous)
+                == KMessageBox::Yes) {
                 for (const AgentInstance &instance : instances) {
                     AgentManager::self()->removeInstance(instance);
                 }
@@ -196,37 +173,31 @@ public:
         instances.first().configure(mParentWidget);
     }
 
-    void slotAgentInstanceCreationResult(KJob *job) 
+    void slotAgentInstanceCreationResult(KJob *job)
     {
         if (job->error()) {
-            KMessageBox::error(
-                mParentWidget,
-                contextText(AgentActionManager::CreateAgentInstance,
-                            AgentActionManager::ErrorMessageText).arg(job->errorString()),
-                contextText(AgentActionManager::CreateAgentInstance,
-                            AgentActionManager::ErrorMessageTitle));
+            KMessageBox::error(mParentWidget,
+                               contextText(AgentActionManager::CreateAgentInstance, AgentActionManager::ErrorMessageText).arg(job->errorString()),
+                               contextText(AgentActionManager::CreateAgentInstance, AgentActionManager::ErrorMessageTitle));
         }
     }
 
-    void setContextText(AgentActionManager::Type type,
-                        AgentActionManager::TextContext context, const QString &data)
+    void setContextText(AgentActionManager::Type type, AgentActionManager::TextContext context, const QString &data)
     {
         mContextTexts[type].insert(context, data);
     }
 
-    void setContextText(AgentActionManager::Type type,
-                        AgentActionManager::TextContext context, const KLocalizedString &data)
+    void setContextText(AgentActionManager::Type type, AgentActionManager::TextContext context, const KLocalizedString &data)
     {
         mContextTexts[type].insert(context, data.toString());
     }
 
-    QString contextText(AgentActionManager::Type type,
-                        AgentActionManager::TextContext context) const
+    QString contextText(AgentActionManager::Type type, AgentActionManager::TextContext context) const
     {
         return mContextTexts[type].value(context);
     }
 
-    AgentActionManager * const q;
+    AgentActionManager *const q;
     KActionCollection *mActionCollection = nullptr;
     QWidget *mParentWidget = nullptr;
     QItemSelectionModel *mSelectionModel = nullptr;
@@ -256,8 +227,9 @@ AgentActionManager::~AgentActionManager()
 void AgentActionManager::setSelectionModel(QItemSelectionModel *selectionModel)
 {
     d->mSelectionModel = selectionModel;
-    connect(selectionModel, &QItemSelectionModel::selectionChanged,
-            this, [this]() { d->updateActions(); });
+    connect(selectionModel, &QItemSelectionModel::selectionChanged, this, [this]() {
+        d->updateActions();
+    });
 }
 
 void AgentActionManager::setMimeTypeFilter(const QStringList &mimeTypes)
@@ -339,8 +311,7 @@ void AgentActionManager::setContextText(Type type, TextContext context, const QS
     d->setContextText(type, context, text);
 }
 
-void AgentActionManager::setContextText(Type type, TextContext context,
-                                        const KLocalizedString &text)
+void AgentActionManager::setContextText(Type type, TextContext context, const KLocalizedString &text)
 {
     d->setContextText(type, context, text);
 }

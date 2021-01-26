@@ -7,10 +7,10 @@
 #ifndef AKONADI_COLLECTION_P_H
 #define AKONADI_COLLECTION_P_H
 
-#include "collection.h"
-#include "cachepolicy.h"
-#include "collectionstatistics.h"
 #include "attributestorage_p.h"
+#include "cachepolicy.h"
+#include "collection.h"
+#include "collectionstatistics.h"
 
 #include <QStringList>
 
@@ -78,20 +78,20 @@ public:
     static Collection newRoot()
     {
         Collection rootCollection(0);
-        rootCollection.setContentMimeTypes({ Collection::mimeType() });
+        rootCollection.setContentMimeTypes({Collection::mimeType()});
         return rootCollection;
     }
 
     // Make use of the 4-bytes padding from QSharedData
-    Collection::ListPreference displayPreference: 2;
-    Collection::ListPreference syncPreference: 2;
-    Collection::ListPreference indexPreference: 2;
-    bool listPreferenceChanged: 1;
-    bool enabled: 1;
-    bool enabledChanged: 1;
-    bool contentTypesChanged: 1;
-    bool cachePolicyChanged: 1;
-    bool isVirtual: 1;
+    Collection::ListPreference displayPreference : 2;
+    Collection::ListPreference syncPreference : 2;
+    Collection::ListPreference indexPreference : 2;
+    bool listPreferenceChanged : 1;
+    bool enabled : 1;
+    bool enabledChanged : 1;
+    bool contentTypesChanged : 1;
+    bool cachePolicyChanged : 1;
+    bool isVirtual : 1;
     // 2 bytes padding here
 
     Collection::Id mId;
@@ -106,7 +106,6 @@ public:
     static const Collection root;
     CachePolicy cachePolicy;
     QSet<QByteArray> keepLocalChanges;
-
 };
 
 #endif

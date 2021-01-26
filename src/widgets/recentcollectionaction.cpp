@@ -4,19 +4,22 @@
  * SPDX-License-Identifier: LGPL-2.0-or-later
  */
 
-#include "recentcollectionaction_p.h"
 #include "entitytreemodel.h"
+#include "recentcollectionaction_p.h"
 #include <KConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>
 
-#include <QMenu>
 #include <QAction>
+#include <QMenu>
 using namespace Akonadi;
 
 static const int s_maximumRecentCollection = 10;
 
-RecentCollectionAction::RecentCollectionAction(Akonadi::StandardActionManager::Type type, const Akonadi::Collection::List &selectedCollectionsList, const QAbstractItemModel *model, QMenu *menu)
+RecentCollectionAction::RecentCollectionAction(Akonadi::StandardActionManager::Type type,
+                                               const Akonadi::Collection::List &selectedCollectionsList,
+                                               const QAbstractItemModel *model,
+                                               QMenu *menu)
     : QObject(menu)
     , mMenu(menu)
     , mModel(model)
@@ -32,9 +35,9 @@ RecentCollectionAction::RecentCollectionAction(Akonadi::StandardActionManager::T
 
 RecentCollectionAction::~RecentCollectionAction()
 {
-//    if (needToDeleteMenu) {
-//        delete mRecentAction->menu();
-//    }
+    //    if (needToDeleteMenu) {
+    //        delete mRecentAction->menu();
+    //    }
 }
 
 bool RecentCollectionAction::clear()
@@ -68,7 +71,7 @@ void RecentCollectionAction::fillRecentCollection(Akonadi::StandardActionManager
                 continue;
             }
 
-            const bool canCreateNewItems = (collection.rights() &Collection::CanCreateItem);
+            const bool canCreateNewItems = (collection.rights() & Collection::CanCreateItem);
             QAction *action = popup->addAction(actionName(index));
             const QIcon icon = mModel->data(index, Qt::DecorationRole).value<QIcon>();
             action->setIcon(icon);
@@ -112,7 +115,7 @@ void RecentCollectionAction::addRecentCollection(Akonadi::StandardActionManager:
 
     mListRecentCollection.prepend(newCollectionID);
     while (mListRecentCollection.count() > s_maximumRecentCollection) {
-            mListRecentCollection.removeLast();
+        mListRecentCollection.removeLast();
     }
 
     writeConfig();

@@ -4,8 +4,8 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include <qtest_akonadi.h>
 #include "collection.h"
+#include <qtest_akonadi.h>
 
 #include "../src/widgets/actionstatemanager_p.h"
 #include "../src/widgets/standardactionmanager.h"
@@ -467,7 +467,7 @@ private Q_SLOTS:
             collectionList << folderCollectionThreeOne;
 
             StateMap map;
-            map.insert(StandardActionManager::CreateCollection, false);   // content mimetype is missing
+            map.insert(StandardActionManager::CreateCollection, false); // content mimetype is missing
             map.insert(StandardActionManager::CopyCollections, true);
             map.insert(StandardActionManager::DeleteCollections, true);
             map.insert(StandardActionManager::SynchronizeCollections, false);
@@ -475,7 +475,7 @@ private Q_SLOTS:
             map.insert(StandardActionManager::CopyItems, false);
             map.insert(StandardActionManager::Paste, false);
             map.insert(StandardActionManager::DeleteItems, false);
-            map.insert(StandardActionManager::AddToFavoriteCollections, false);   // content mimetype is missing
+            map.insert(StandardActionManager::AddToFavoriteCollections, false); // content mimetype is missing
             map.insert(StandardActionManager::RemoveFromFavoriteCollections, false);
             map.insert(StandardActionManager::RenameFavoriteCollection, false);
             map.insert(StandardActionManager::CopyCollectionToMenu, true);
@@ -566,7 +566,7 @@ private Q_SLOTS:
         QHashIterator<StandardActionManager::Type, bool> it(stateMap);
         while (it.hasNext()) {
             it.next();
-            //qDebug() << it.key();
+            // qDebug() << it.key();
             QVERIFY(mStateMap.contains(it.key()));
             const bool expected = mStateMap.value(it.key());
             if (it.value() != expected) {

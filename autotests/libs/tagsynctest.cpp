@@ -4,24 +4,23 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "agentmanager.h"
-#include "agentinstance.h"
-#include "control.h"
-#include "tagfetchjob.h"
-#include "tagdeletejob.h"
-#include "tagcreatejob.h"
-#include "tag.h"
 #include "tagsync.h"
-#include "tagfetchscope.h"
-#include "resourceselectjob_p.h"
+#include "agentinstance.h"
+#include "agentmanager.h"
+#include "control.h"
 #include "itemcreatejob.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
+#include "resourceselectjob_p.h"
+#include "tag.h"
+#include "tagcreatejob.h"
+#include "tagdeletejob.h"
+#include "tagfetchjob.h"
+#include "tagfetchscope.h"
 
 #include "qtest_akonadi.h"
 
 #include <QObject>
-
 
 using namespace Akonadi;
 
@@ -111,7 +110,7 @@ private Q_SLOTS:
         }
 
         QHash<QString, Item::List> tagMembers;
-        tagMembers.insert(QString::fromLatin1(tag1.remoteId()), { item1 });
+        tagMembers.insert(QString::fromLatin1(tag1.remoteId()), {item1});
 
         auto *syncer = new TagSync(this);
         syncer->setFullTagList(remoteTags);
@@ -122,7 +121,7 @@ private Q_SLOTS:
         QCOMPARE(resultTags.count(), remoteTags.count());
         QCOMPARE(resultTags, remoteTags);
 
-        //We need the id of the fetch
+        // We need the id of the fetch
         tag1 = resultTags.first();
 
         auto *fetchJob = new ItemFetchJob(tag1);

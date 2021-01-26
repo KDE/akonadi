@@ -9,25 +9,20 @@
 
 #include <QString>
 
+#include "akonaditestfake_export.h"
 #include "collection.h"
 #include "entitytreemodel.h"
 #include "item.h"
-#include "tagmodel.h"
 #include "tag.h"
-#include "akonaditestfake_export.h"
+#include "tagmodel.h"
 
 class FakeServerData;
 
-class AKONADITESTFAKE_EXPORT FakeAkonadiServerCommand: public QObject
+class AKONADITESTFAKE_EXPORT FakeAkonadiServerCommand : public QObject
 {
     Q_OBJECT
 public:
-    enum Type {
-        Notification,
-        RespondToCollectionFetch,
-        RespondToItemFetch,
-        RespondToTagFetch
-    };
+    enum Type { Notification, RespondToCollectionFetch, RespondToItemFetch, RespondToTagFetch };
 
     FakeAkonadiServerCommand(Type type, FakeServerData *serverData);
 
@@ -67,6 +62,7 @@ Q_SIGNALS:
     void emit_monitoredTagAdded(const Akonadi::Tag &tag);
     void emit_monitoredTagChanged(const Akonadi::Tag &tag);
     void emit_monitoredTagRemoved(const Akonadi::Tag &tag);
+
 protected:
     Akonadi::Collection getCollectionByDisplayName(const QString &displayName) const;
     Akonadi::Item getItemByDisplayName(const QString &displayName) const;
@@ -83,7 +79,7 @@ protected:
     Akonadi::Tag m_parentTag;
     QHash<Akonadi::Collection::Id, Akonadi::Collection> m_collections;
     QHash<Akonadi::Item::Id, Akonadi::Item> m_items;
-    QHash<Akonadi::Collection::Id, QList<Akonadi::Collection::Id> > m_childElements;
+    QHash<Akonadi::Collection::Id, QList<Akonadi::Collection::Id>> m_childElements;
     QHash<Akonadi::Tag::Id, Akonadi::Tag> m_tags;
 
 private:
@@ -334,13 +330,11 @@ class AKONADITESTFAKE_EXPORT FakeJobResponse : public FakeAkonadiServerCommand
 {
     Q_OBJECT
     struct Token {
-        enum Type {
-            Branch,
-            Leaf
-        };
+        enum Type { Branch, Leaf };
         Type type;
         QString content;
     };
+
 public:
     FakeJobResponse(const Akonadi::Collection &parentCollection, Type respondTo, FakeServerData *serverData)
         : FakeAkonadiServerCommand(respondTo, serverData)

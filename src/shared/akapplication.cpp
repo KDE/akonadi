@@ -8,11 +8,11 @@
 #include "akdebug.h"
 #include "akremotelog.h"
 
-#include <private/instance_p.h>
 #include <akonadifull-version.h>
+#include <private/instance_p.h>
 
-#include <QTimer>
 #include <QCoreApplication>
+#include <QTimer>
 
 #include <iostream>
 
@@ -68,8 +68,7 @@ void AkApplicationBase::parseCommandLine()
                                             QStringLiteral("Namespace for starting multiple Akonadi instances in the same user session"),
                                             QStringLiteral("name"));
     mCmdLineParser.addOption(instanceOption);
-    const QCommandLineOption verboseOption(QStringLiteral("verbose"),
-                                           QStringLiteral("Make Akonadi very chatty"));
+    const QCommandLineOption verboseOption(QStringLiteral("verbose"), QStringLiteral("Make Akonadi very chatty"));
     mCmdLineParser.addOption(verboseOption);
 
     mCmdLineParser.process(QCoreApplication::arguments());

@@ -7,10 +7,10 @@
 #include "invalidatecachejob_p.h"
 
 #include "collectionpathresolver.h"
+#include "control.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
 #include "qtest_akonadi.h"
-#include "control.h"
 
 using namespace Akonadi;
 
@@ -22,7 +22,6 @@ private Q_SLOTS:
     void initTestCase();
     void shouldClearPayload();
 };
-
 
 void InvalidateCacheJobTest::initTestCase()
 {
@@ -42,7 +41,9 @@ void InvalidateCacheJobTest::shouldClearPayload()
     AKVERIFYEXEC(listJob);
     const Item::List items = listJob->items();
     QVERIFY(!items.isEmpty());
-    auto it = std::find_if(items.cbegin(), items.cend(), [](const Item &item) { return item.remoteId() == QLatin1Char('C'); });
+    auto it = std::find_if(items.cbegin(), items.cend(), [](const Item &item) {
+        return item.remoteId() == QLatin1Char('C');
+    });
     QVERIFY(it != items.cend());
     const Item::Id itemId = it->id();
 

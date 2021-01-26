@@ -6,20 +6,19 @@
 
 #include "collectionfetchjob.h"
 
-#include "job_p.h"
-#include "protocolhelper_p.h"
 #include "collection_p.h"
 #include "collectionfetchscope.h"
 #include "collectionutils.h"
+#include "job_p.h"
 #include "private/protocol_p.h"
+#include "protocolhelper_p.h"
 
 #include "akonadicore_debug.h"
 
-
 #include <KLocalizedString>
 
-#include <QObject>
 #include <QHash>
+#include <QObject>
 #include <QTimer>
 
 using namespace Akonadi;
@@ -36,7 +35,9 @@ public:
 
     void init()
     {
-        QObject::connect(&mEmitTimer, &QTimer::timeout, q_ptr, [this]() { timeout(); });
+        QObject::connect(&mEmitTimer, &QTimer::timeout, q_ptr, [this]() {
+            timeout();
+        });
     }
 
     Q_DECLARE_PUBLIC(CollectionFetchJob)
@@ -51,7 +52,8 @@ public:
     bool mBasePrefetch = false;
     Collection::List mPrefetchList;
 
-    void aboutToFinish() override {
+    void aboutToFinish() override
+    {
         timeout();
     }
 
@@ -81,7 +83,7 @@ public:
         if (mBase.isValid()) {
             return QStringLiteral("Collection Id %1").arg(mBase.id());
         } else if (CollectionUtils::hasValidHierarchicalRID(mBase)) {
-            //return QLatin1String("(") + ProtocolHelper::hierarchicalRidToScope(mBase).hridChain().join(QLatin1String(", ")) + QLatin1Char(')');
+            // return QLatin1String("(") + ProtocolHelper::hierarchicalRidToScope(mBase).hridChain().join(QLatin1String(", ")) + QLatin1Char(')');
             return QStringLiteral("HRID chain");
         } else {
             return QStringLiteral("Collection RemoteId %1").arg(mBase.remoteId());
@@ -98,9 +100,7 @@ public:
                 q->setErrorText(job->errorText());
             }
 
-            return error == Job::ConnectionFailed
-                    || error == Job::ProtocolVersionMismatch
-                    || error == Job::UserCanceled;
+            return error == Job::ConnectionFailed || error == Job::ProtocolVersionMismatch || error == Job::UserCanceled;
         } else {
             return job->error();
         }
@@ -198,7 +198,9 @@ void CollectionFetchJob::doStart()
         } else {
             for (const Collection &col : qAsConst(d->mBaseList)) {
                 auto *subJob = new CollectionFetchJob(col, d->mType, this);
-                connect(subJob, &CollectionFetchJob::collectionsReceived, this, [d](const auto &cols) { d->subJobCollectionReceived(cols); });
+                connect(subJob, &CollectionFetchJob::collectionsReceived, this, [d](const auto &cols) {
+                    d->subJobCollectionReceived(cols);
+                });
                 subJob->setFetchScope(fetchScope());
             }
         }
@@ -304,7 +306,7 @@ static Collection::List filterDescendants(const Collection::List &list)
 {
     Collection::List result;
 
-    QVector<QList<Collection::Id> > ids;
+    QVector<QList<Collection::Id>> ids;
     ids.reserve(list.count());
     for (const Collection &collection : list) {
         QList<Collection::Id> ancestors;
@@ -359,7 +361,9 @@ void CollectionFetchJob::slotResult(KJob *job)
         }
         d_ptr->mCurrentSubJob = nullptr;
         removeSubjob(job);
-        QTimer::singleShot(0, this, [d]() { d->startNext(); });
+        QTimer::singleShot(0, this, [d]() {
+            d->startNext();
+        });
     } else {
         Job::slotResult(job);
     }
@@ -371,7 +375,9 @@ void CollectionFetchJob::slotResult(KJob *job)
         if (!job->error()) {
             for (const Collection &col : roots) {
                 auto *subJob = new CollectionFetchJob(col, d->mType, this);
-                connect(subJob, &CollectionFetchJob::collectionsReceived, this, [d](const auto &cols) { d->subJobCollectionReceived(cols); });
+                connect(subJob, &CollectionFetchJob::collectionsReceived, this, [d](const auto &cols) {
+                    d->subJobCollectionReceived(cols);
+                });
                 subJob->setFetchScope(fetchScope());
             }
         }

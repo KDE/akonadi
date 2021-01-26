@@ -11,7 +11,6 @@ using namespace Akonadi;
 
 namespace Akonadi
 {
-
 class AKONADICORE_NO_EXPORT ChangeNotification::Private : public QSharedData
 {
 public:
@@ -87,4 +86,3 @@ void ChangeNotification::setNotification(const Protocol::ChangeNotificationPtr &
 {
     d->notification = ntf;
 }
-

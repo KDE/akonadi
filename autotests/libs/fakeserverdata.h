@@ -7,16 +7,16 @@
 #ifndef FAKE_SERVER_DATA_H
 #define FAKE_SERVER_DATA_H
 
-#include <QSharedPointer>
 #include <QQueue>
+#include <QSharedPointer>
 
-#include "job.h"
 #include "entitytreemodel.h"
+#include "job.h"
 
-#include "fakesession.h"
-#include "fakemonitor.h"
-#include "fakeakonadiservercommand.h"
 #include "akonaditestfake_export.h"
+#include "fakeakonadiservercommand.h"
+#include "fakemonitor.h"
+#include "fakesession.h"
 
 using namespace Akonadi;
 

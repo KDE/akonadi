@@ -7,31 +7,27 @@
 
 #include "collectionstatisticsdelegate.h"
 
+#include "akonadiwidgets_debug.h"
 #include <KColorScheme>
 #include <KFormat>
-#include "akonadiwidgets_debug.h"
 
+#include <QAbstractItemView>
 #include <QPainter>
 #include <QStyle>
 #include <QStyleOption>
 #include <QStyleOptionViewItem>
-#include <QAbstractItemView>
 #include <QTreeView>
 
-#include "entitytreemodel.h"
-#include "collectionstatistics.h"
 #include "collection.h"
+#include "collectionstatistics.h"
+#include "entitytreemodel.h"
 #include "progressspinnerdelegate_p.h"
 
 using namespace Akonadi;
 
 namespace Akonadi
 {
-
-enum CountType {
-    UnreadCount,
-    TotalCount
-};
+enum CountType { UnreadCount, TotalCount };
 
 class CollectionStatisticsDelegatePrivate
 {
@@ -70,10 +66,8 @@ public:
 
     void updateColor()
     {
-        mSelectedUnreadColor = KColorScheme(QPalette::Active, KColorScheme::Selection)
-                               .foreground(KColorScheme::LinkText).color();
-        mDeselectedUnreadColor = KColorScheme(QPalette::Active, KColorScheme::View)
-                                 .foreground(KColorScheme::LinkText).color();
+        mSelectedUnreadColor = KColorScheme(QPalette::Active, KColorScheme::Selection).foreground(KColorScheme::LinkText).color();
+        mDeselectedUnreadColor = KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::LinkText).color();
     }
 };
 
@@ -83,14 +77,12 @@ CollectionStatisticsDelegate::CollectionStatisticsDelegate(QAbstractItemView *pa
     : QStyledItemDelegate(parent)
     , d_ptr(new CollectionStatisticsDelegatePrivate(parent))
 {
-
 }
 
 CollectionStatisticsDelegate::CollectionStatisticsDelegate(QTreeView *parent)
     : QStyledItemDelegate(parent)
     , d_ptr(new CollectionStatisticsDelegatePrivate(parent))
 {
-
 }
 
 CollectionStatisticsDelegate::~CollectionStatisticsDelegate()
@@ -132,13 +124,11 @@ bool CollectionStatisticsDelegate::progressAnimationEnabled() const
     return (d->animator != nullptr);
 }
 
-void CollectionStatisticsDelegate::initStyleOption(QStyleOptionViewItem *option,
-        const QModelIndex &index) const
+void CollectionStatisticsDelegate::initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const
 {
     Q_D(const CollectionStatisticsDelegate);
 
-    auto *noTextOption =
-        qstyleoption_cast<QStyleOptionViewItem *>(option);
+    auto *noTextOption = qstyleoption_cast<QStyleOptionViewItem *>(option);
     QStyledItemDelegate::initStyleOption(noTextOption, index);
     if (option->decorationPosition != QStyleOptionViewItem::Top) {
         if (noTextOption) {
@@ -147,7 +137,6 @@ void CollectionStatisticsDelegate::initStyleOption(QStyleOptionViewItem *option,
     }
 
     if (d->animator) {
-
         const QVariant fetchState = index.data(Akonadi::EntityTreeModel::FetchStateRole);
         if (!fetchState.isValid() || fetchState.toInt() != Akonadi::EntityTreeModel::FetchingState) {
             d->animator->pop(index);
@@ -181,9 +170,7 @@ private:
     QPainter *mPainter = nullptr;
 };
 
-void CollectionStatisticsDelegate::paint(QPainter *painter,
-        const QStyleOptionViewItem &option,
-        const QModelIndex &index) const
+void CollectionStatisticsDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     Q_D(const CollectionStatisticsDelegate);
     PainterStateSaver stateSaver(painter);
@@ -221,7 +208,8 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
     auto collection = firstColumn.data(EntityTreeModel::CollectionRole).value<Collection>();
 
     if (!collection.isValid()) {
-        qCCritical(AKONADIWIDGETS_LOG) << "Invalid collection at index" << firstColumn << firstColumn.data().toString() << "sibling of" << index << "rowCount=" << index.model()->rowCount(index.parent()) << "parent=" << index.parent().data().toString();
+        qCCritical(AKONADIWIDGETS_LOG) << "Invalid collection at index" << firstColumn << firstColumn.data().toString() << "sibling of" << index
+                                       << "rowCount=" << index.model()->rowCount(index.parent()) << "parent=" << index.parent().data().toString();
         return;
     }
 
@@ -248,7 +236,7 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
         // Construct the string which will appear after the foldername (with the
         // unread count)
         QString unread;
-//     qCDebug(AKONADIWIDGETS_LOG) << expanded << unreadCount << unreadRecursiveCount;
+        //     qCDebug(AKONADIWIDGETS_LOG) << expanded << unreadCount << unreadRecursiveCount;
         if (expanded && unreadCount > 0) {
             unread = QStringLiteral(" (%1)").arg(unreadCount);
         } else if (!expanded) {
@@ -270,8 +258,7 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
         const QColor unreadColor = (option.state & QStyle::State_Selected) ? d->mSelectedUnreadColor : d->mDeselectedUnreadColor;
         const QRect iconRect = s->subElementRect(QStyle::SE_ItemViewItemDecoration, &option4, widget);
 
-        if (option.decorationPosition == QStyleOptionViewItem::Left ||
-                option.decorationPosition == QStyleOptionViewItem::Right) {
+        if (option.decorationPosition == QStyleOptionViewItem::Left || option.decorationPosition == QStyleOptionViewItem::Right) {
             // Squeeze the folder text if it is to big and calculate the rectangles
             // where the folder text and the unread count will be drawn to
             QString folderName = text;
@@ -281,8 +268,7 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
             const bool enoughPlaceForText = (option.rect.width() > (folderWidth + unreadWidth + iconRect.width()));
 
             if (!enoughPlaceForText && (folderWidth + unreadWidth > textRect.width())) {
-                folderName = fm.elidedText(folderName, Qt::ElideRight,
-                                           option.rect.width() - unreadWidth - iconRect.width());
+                folderName = fm.elidedText(folderName, Qt::ElideRight, option.rect.width() - unreadWidth - iconRect.width());
                 folderWidth = fm.horizontalAdvance(folderName);
             }
             QRect folderRect = textRect;
@@ -308,7 +294,6 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
     // For the unread/total column, paint the summed up count if the item
     // is collapsed
     if ((index.column() == 1 || index.column() == 2)) {
-
         QFont savedFont = painter->font();
         QString sumText;
         if (index.column() == 1 && ((!expanded && unreadRecursiveCount > 0) || (expanded && unreadCount > 0))) {
@@ -317,7 +302,6 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
             painter->setFont(font);
             sumText = QString::number(expanded ? unreadCount : unreadRecursiveCount);
         } else {
-
             qint64 totalCount = statistics.count();
             if (index.column() == 2 && ((!expanded && totalRecursiveCount > 0) || (expanded && totalCount > 0))) {
                 sumText = QString::number(expanded ? totalCount : totalRecursiveCount);
@@ -329,10 +313,9 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
         return;
     }
 
-    //total size
+    // total size
     if (index.column() == 3 && !expanded) {
-        painter->drawText(textRect, option4.displayAlignment | Qt::AlignVCenter,
-                          KFormat().formatByteSize(totalSize));
+        painter->drawText(textRect, option4.displayAlignment | Qt::AlignVCenter, KFormat().formatByteSize(totalSize));
         return;
     }
 

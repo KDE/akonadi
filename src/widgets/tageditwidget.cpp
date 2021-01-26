@@ -6,17 +6,17 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 #include "tageditwidget.h"
-#include "ui_tageditwidget.h"
 #include "changerecorder.h"
+#include "tagattribute.h"
 #include "tagcreatejob.h"
 #include "tagdeletejob.h"
 #include "tagfetchscope.h"
-#include "tagattribute.h"
 #include "tagmodel.h"
+#include "ui_tageditwidget.h"
 
+#include <KCheckableProxyModel>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KCheckableProxyModel>
 
 #include <QEvent>
 #include <QPushButton>
@@ -49,11 +49,9 @@ public:
     }
 
     void select(const QModelIndex &parent, int start, int end, QItemSelectionModel::SelectionFlag selectionFlag) const;
-    enum ItemType {
-        UrlTag = Qt::UserRole + 1
-    };
+    enum ItemType { UrlTag = Qt::UserRole + 1 };
 
-    QWidget * const d;
+    QWidget *const d;
     Ui::TagEditWidget ui;
 
     Akonadi::Tag::List m_tags;
@@ -66,7 +64,8 @@ public:
 
 TagEditWidget::Private::Private(QWidget *parent)
     : d(parent)
-{}
+{
+}
 
 void TagEditWidget::Private::select(const QModelIndex &parent, int start, int end, QItemSelectionModel::SelectionFlag selectionFlag) const
 {
@@ -112,8 +111,7 @@ void TagEditWidget::Private::slotCreateTag()
 void TagEditWidget::Private::slotCreateTagFinished(KJob *job)
 {
     if (job->error()) {
-        KMessageBox::error(d, i18n("Failed to create a new tag"),
-                              i18n("An error occurred while creating a new tag"));
+        KMessageBox::error(d, i18n("Failed to create a new tag"), i18n("An error occurred while creating a new tag"));
     }
 
     ui.newTagEdit->setEnabled(true);
@@ -161,9 +159,7 @@ void TagEditWidget::Private::deleteTag()
 {
     Q_ASSERT(m_deleteCandidate.isValid());
     const auto tag = m_deleteCandidate.data(Akonadi::TagModel::TagRole).value<Akonadi::Tag>();
-    const QString text = xi18nc("@info",
-                                "Do you really want to remove the tag <resource>%1</resource>?",
-                                tag.name());
+    const QString text = xi18nc("@info", "Do you really want to remove the tag <resource>%1</resource>?", tag.name());
     const QString caption = i18nc("@title", "Delete tag");
     if (KMessageBox::questionYesNo(d, text, caption, KStandardGuiItem::del(), KStandardGuiItem::cancel()) == KMessageBox::Yes) {
         new TagDeleteJob(tag, this);
@@ -176,14 +172,12 @@ TagEditWidget::TagEditWidget(QWidget *parent)
 {
     d->ui.setupUi(this);
 
-
     d->ui.tagsView->installEventFilter(this);
     connect(d->ui.tagsView, &QAbstractItemView::entered, d.get(), &Private::slotItemEntered);
 
     connect(d->ui.newTagEdit, &QLineEdit::textEdited, d.get(), &Private::slotTextEdited);
     connect(d->ui.newTagEdit, &QLineEdit::returnPressed, d.get(), &Private::slotCreateTag);
     connect(d->ui.newTagButton, &QAbstractButton::clicked, d.get(), &Private::slotCreateTag);
-
 
     // create the delete button, which is shown when
     // hovering the items
@@ -285,4 +279,3 @@ bool TagEditWidget::eventFilter(QObject *watched, QEvent *event)
 }
 
 #include "tageditwidget.moc"
-

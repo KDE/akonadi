@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 class Job;
 class JobPrivate;
 

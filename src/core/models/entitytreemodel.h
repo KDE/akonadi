@@ -17,7 +17,6 @@
 
 namespace Akonadi
 {
-
 class CollectionStatistics;
 class Item;
 class ItemFetchScope;
@@ -261,7 +260,8 @@ class EntityTreeModelPrivate;
  * titles for each column depending on the contents of the view.
  *
  * The way this is accomplished is by using the EntityMimeTypeFilterModel for splitting the model into a "CollectionTree" and an "Item List"
- * as in the above example, and using a type-specific EntityTreeModel subclass to return the type-specific data, typically for only one type (for example, contacts or emails).
+ * as in the above example, and using a type-specific EntityTreeModel subclass to return the type-specific data, typically for only one type (for example,
+ * contacts or emails).
  *
  * The following protected virtual methods should be implemented in the subclass:
  * - int entityColumnCount( HeaderGroup headerGroup ) const;
@@ -275,7 +275,8 @@ class EntityTreeModelPrivate;
  * - QVariant entityData( const Collection &collection, int column, int role = Qt::DisplayRole ) const;
  * -- Implement to return data for a particular Collection. Typically this will be the name of the collection or the EntityDisplayAttribute.
  * - QVariant entityData( const Item &item, int column, int role = Qt::DisplayRole ) const;
- * -- Implement to return the data for a particular item and column. In the case of email for example, this would be the actual subject, sender and date of the email.
+ * -- Implement to return the data for a particular item and column. In the case of email for example, this would be the actual subject, sender and date of the
+ * email.
  *
  * @note The entityData methods are just for convenience. the QAbstractItemModel::data method can be overridden if required.
  *
@@ -309,34 +310,34 @@ public:
      * Describes the roles for items. Roles for collections are defined by the superclass.
      */
     enum Roles {
-        //sebsauer, 2009-05-07; to be able here to keep the akonadi_next EntityTreeModel compatible with
-        //the akonadi_old ItemModel and CollectionModel, we need to use the same int-values for
-        //ItemRole, ItemIdRole and MimeTypeRole like the Akonadi::ItemModel is using and the same
-        //CollectionIdRole and CollectionRole like the Akonadi::CollectionModel is using.
-        ItemIdRole = Qt::UserRole + 1,          ///< The item id
-        ItemRole = Qt::UserRole + 2,            ///< The Item
-        MimeTypeRole = Qt::UserRole + 3,        ///< The mimetype of the entity
+        // sebsauer, 2009-05-07; to be able here to keep the akonadi_next EntityTreeModel compatible with
+        // the akonadi_old ItemModel and CollectionModel, we need to use the same int-values for
+        // ItemRole, ItemIdRole and MimeTypeRole like the Akonadi::ItemModel is using and the same
+        // CollectionIdRole and CollectionRole like the Akonadi::CollectionModel is using.
+        ItemIdRole = Qt::UserRole + 1, ///< The item id
+        ItemRole = Qt::UserRole + 2, ///< The Item
+        MimeTypeRole = Qt::UserRole + 3, ///< The mimetype of the entity
 
-        CollectionIdRole = Qt::UserRole + 10,   ///< The collection id.
-        CollectionRole = Qt::UserRole + 11,     ///< The collection.
+        CollectionIdRole = Qt::UserRole + 10, ///< The collection id.
+        CollectionRole = Qt::UserRole + 11, ///< The collection.
 
-        RemoteIdRole,                           ///< The remoteId of the entity
-        CollectionChildOrderRole,               ///< Ordered list of child items if available
-        ParentCollectionRole,                   ///< The parent collection of the entity
-        ColumnCountRole,                        ///< @internal Used by proxies to determine the number of columns for a header group.
-        LoadedPartsRole,                        ///< Parts available in the model for the item
-        AvailablePartsRole,                     ///< Parts available in the Akonadi server for the item
-        SessionRole,                            ///< @internal The Session used by this model
-        CollectionRefRole,                      ///< @internal Used to increase the reference count on a Collection
-        CollectionDerefRole,                    ///< @internal Used to decrease the reference count on a Collection
-        PendingCutRole,                         ///< Used to indicate items which are to be cut
-        EntityUrlRole,                          ///< The akonadi:/ Url of the entity as a string. Item urls will contain the mimetype.
-        UnreadCountRole,                        ///< Returns the number of unread items in a collection. @since 4.5
-        FetchStateRole,                         ///< Returns the FetchState of a particular item. @since 4.5
-        IsPopulatedRole,                        ///< Returns whether a Collection has been populated, i.e. whether its items have been fetched. @since 4.10
-        OriginalCollectionNameRole,             ///< Returns original name for collection @since 4.14
-        UserRole = Qt::UserRole + 500,          ///< First role for user extensions.
-        TerminalUserRole = 2000,                ///< Last role for user extensions. Don't use a role beyond this or headerData will break.
+        RemoteIdRole, ///< The remoteId of the entity
+        CollectionChildOrderRole, ///< Ordered list of child items if available
+        ParentCollectionRole, ///< The parent collection of the entity
+        ColumnCountRole, ///< @internal Used by proxies to determine the number of columns for a header group.
+        LoadedPartsRole, ///< Parts available in the model for the item
+        AvailablePartsRole, ///< Parts available in the Akonadi server for the item
+        SessionRole, ///< @internal The Session used by this model
+        CollectionRefRole, ///< @internal Used to increase the reference count on a Collection
+        CollectionDerefRole, ///< @internal Used to decrease the reference count on a Collection
+        PendingCutRole, ///< Used to indicate items which are to be cut
+        EntityUrlRole, ///< The akonadi:/ Url of the entity as a string. Item urls will contain the mimetype.
+        UnreadCountRole, ///< Returns the number of unread items in a collection. @since 4.5
+        FetchStateRole, ///< Returns the FetchState of a particular item. @since 4.5
+        IsPopulatedRole, ///< Returns whether a Collection has been populated, i.e. whether its items have been fetched. @since 4.10
+        OriginalCollectionNameRole, ///< Returns original name for collection @since 4.14
+        UserRole = Qt::UserRole + 500, ///< First role for user extensions.
+        TerminalUserRole = 2000, ///< Last role for user extensions. Don't use a role beyond this or headerData will break.
         EndRole = 65535
     };
 
@@ -355,8 +356,8 @@ public:
      * @since 4.5
      */
     enum FetchState {
-        IdleState,                              ///< There is no fetch of items in this collection in progress.
-        FetchingState                           ///< There is a fetch of items in this collection in progress.
+        IdleState, ///< There is no fetch of items in this collection in progress.
+        FetchingState ///< There is a fetch of items in this collection in progress.
         // TODO: Change states for reporting of fetching payload parts of items.
     };
 
@@ -364,12 +365,12 @@ public:
      * Describes what header information the model shall return.
      */
     enum HeaderGroup {
-        EntityTreeHeaders,      ///< Header information for a tree with collections and items
-        CollectionTreeHeaders,  ///< Header information for a collection-only tree
-        ItemListHeaders,        ///< Header information for a list of items
-        UserHeaders = 10,       ///< Last header information for submodel extensions
-        EndHeaderGroup = 32     ///< Last headergroup role. Don't use a role beyond this or headerData will break.
-                         // Note that we're splitting up available roles for the header data hack and int(EndRole / TerminalUserRole) == 32
+        EntityTreeHeaders, ///< Header information for a tree with collections and items
+        CollectionTreeHeaders, ///< Header information for a collection-only tree
+        ItemListHeaders, ///< Header information for a list of items
+        UserHeaders = 10, ///< Last header information for submodel extensions
+        EndHeaderGroup = 32 ///< Last headergroup role. Don't use a role beyond this or headerData will break.
+                            // Note that we're splitting up available roles for the header data hack and int(EndRole / TerminalUserRole) == 32
     };
 
     /**
@@ -389,9 +390,9 @@ public:
      * Describes how the model should populated its items.
      */
     enum ItemPopulationStrategy {
-        NoItemPopulation,    ///< Do not include items in the model.
+        NoItemPopulation, ///< Do not include items in the model.
         ImmediatePopulation, ///< Retrieve items immediately when their parent is in the model. This is the default.
-        LazyPopulation       ///< Fetch items only when requested (using canFetchMore/fetchMore)
+        LazyPopulation ///< Fetch items only when requested (using canFetchMore/fetchMore)
     };
 
     /**
@@ -478,10 +479,11 @@ public:
      * Describes what collections shall be fetched by and represent in the model.
      */
     enum CollectionFetchStrategy {
-        FetchNoCollections,               ///< Fetches nothing. This creates an empty model.
-        FetchFirstLevelChildCollections,  ///< Fetches first level collections in the root collection.
-        FetchCollectionsRecursive,        ///< Fetches collections in the root collection recursively. This is the default.
-        InvisibleCollectionFetch          ///< Fetches collections, but does not put them in the model. This can be used to create a list of items in all collections. The ParentCollectionRole can still be used to retrieve the parent collection of an Item. @since 4.5
+        FetchNoCollections, ///< Fetches nothing. This creates an empty model.
+        FetchFirstLevelChildCollections, ///< Fetches first level collections in the root collection.
+        FetchCollectionsRecursive, ///< Fetches collections in the root collection recursively. This is the default.
+        InvisibleCollectionFetch ///< Fetches collections, but does not put them in the model. This can be used to create a list of items in all collections.
+                                 ///< The ParentCollectionRole can still be used to retrieve the parent collection of an Item. @since 4.5
     };
 
     /**
@@ -548,7 +550,11 @@ public:
     /**
      * Reimplemented to handle the AmazingCompletionRole.
      */
-    Q_REQUIRED_RESULT QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
+    Q_REQUIRED_RESULT QModelIndexList match(const QModelIndex &start,
+                                            int role,
+                                            const QVariant &value,
+                                            int hits = 1,
+                                            Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
 
     /**
      * Returns a QModelIndex in @p model which points to @p collection.
@@ -669,8 +675,7 @@ private:
     bool removeColumns(int column, int count, const QModelIndex &index = QModelIndex()) override;
     bool removeRows(int row, int count, const QModelIndex &index = QModelIndex()) override;
 
-    Q_PRIVATE_SLOT(d_func(), void monitoredCollectionStatisticsChanged(Akonadi::Collection::Id,
-                   const Akonadi::CollectionStatistics &))
+    Q_PRIVATE_SLOT(d_func(), void monitoredCollectionStatisticsChanged(Akonadi::Collection::Id, const Akonadi::CollectionStatistics &))
 
     Q_PRIVATE_SLOT(d_func(), void startFirstListJob())
     Q_PRIVATE_SLOT(d_func(), void serverStarted())
@@ -693,14 +698,12 @@ private:
     Q_PRIVATE_SLOT(d_func(), void monitoredCollectionAdded(const Akonadi::Collection &, const Akonadi::Collection &))
     Q_PRIVATE_SLOT(d_func(), void monitoredCollectionRemoved(const Akonadi::Collection &))
     Q_PRIVATE_SLOT(d_func(), void monitoredCollectionChanged(const Akonadi::Collection &))
-    Q_PRIVATE_SLOT(d_func(), void monitoredCollectionMoved(const Akonadi::Collection &, const Akonadi::Collection &,
-                   const Akonadi::Collection &))
+    Q_PRIVATE_SLOT(d_func(), void monitoredCollectionMoved(const Akonadi::Collection &, const Akonadi::Collection &, const Akonadi::Collection &))
 
     Q_PRIVATE_SLOT(d_func(), void monitoredItemAdded(const Akonadi::Item &, const Akonadi::Collection &))
     Q_PRIVATE_SLOT(d_func(), void monitoredItemRemoved(const Akonadi::Item &))
     Q_PRIVATE_SLOT(d_func(), void monitoredItemChanged(const Akonadi::Item &, const QSet<QByteArray> &))
-    Q_PRIVATE_SLOT(d_func(), void monitoredItemMoved(const Akonadi::Item &, const Akonadi::Collection &,
-                   const Akonadi::Collection &))
+    Q_PRIVATE_SLOT(d_func(), void monitoredItemMoved(const Akonadi::Item &, const Akonadi::Collection &, const Akonadi::Collection &))
 
     Q_PRIVATE_SLOT(d_func(), void monitoredItemLinked(const Akonadi::Item &, const Akonadi::Collection &))
     Q_PRIVATE_SLOT(d_func(), void monitoredItemUnlinked(const Akonadi::Item &, const Akonadi::Collection &))

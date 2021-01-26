@@ -7,11 +7,11 @@
 #ifndef AKAPPLICATION_H
 #define AKAPPLICATION_H
 
-#include <QObject>
 #include <QCommandLineParser>
-#include <QLoggingCategory>
 #include <QDBusConnection>
 #include <QDBusError>
+#include <QLoggingCategory>
+#include <QObject>
 
 #include <memory>
 
@@ -62,8 +62,7 @@ private:
     QCommandLineParser mCmdLineParser;
 };
 
-template <typename T>
-class AkApplicationImpl : public AkApplicationBase
+template<typename T> class AkApplicationImpl : public AkApplicationBase
 {
 public:
     AkApplicationImpl(int &argc, char **argv, const QLoggingCategory &loggingCategory = *QLoggingCategory::defaultCategory())
@@ -73,8 +72,7 @@ public:
     }
 };
 
-template<typename T>
-class AkUniqueApplicationImpl : public AkApplicationBase
+template<typename T> class AkUniqueApplicationImpl : public AkApplicationBase
 {
 public:
     AkUniqueApplicationImpl(int &argc, char **argv, const QString &serviceName, const QLoggingCategory &loggingCategory = *QLoggingCategory::defaultCategory())

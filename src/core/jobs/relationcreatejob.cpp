@@ -5,11 +5,11 @@
 */
 
 #include "relationcreatejob.h"
-#include "job_p.h"
-#include "relation.h"
-#include "protocolhelper_p.h"
-#include "private/protocol_p.h"
 #include "akonadicore_debug.h"
+#include "job_p.h"
+#include "private/protocol_p.h"
+#include "protocolhelper_p.h"
+#include "relation.h"
 #include <KLocalizedString>
 
 using namespace Akonadi;
@@ -44,10 +44,8 @@ void RelationCreateJob::doStart()
         return;
     }
 
-    d->sendCommand(Protocol::ModifyRelationCommandPtr::create(d->mRelation.left().id(),
-                   d->mRelation.right().id(),
-                   d->mRelation.type(),
-                   d->mRelation.remoteId()));
+    d->sendCommand(
+        Protocol::ModifyRelationCommandPtr::create(d->mRelation.left().id(), d->mRelation.right().id(), d->mRelation.type(), d->mRelation.remoteId()));
 }
 
 bool RelationCreateJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)

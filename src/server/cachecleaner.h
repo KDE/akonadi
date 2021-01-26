@@ -15,7 +15,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class Collection;
 class CacheCleaner;
 class AkonadiServer;
@@ -71,7 +70,6 @@ protected:
 
 private:
     friend class CacheCleanerInhibitor;
-
 };
 
 } // namespace Server

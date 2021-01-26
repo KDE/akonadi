@@ -7,7 +7,6 @@
 
 #include <private/scope_p.h>
 
-
 #include "handler/collectioncopyhandler.h"
 #include "handler/collectioncreatehandler.h"
 #include "handler/collectiondeletehandler.h"
@@ -25,8 +24,8 @@
 #include "handler/loginhandler.h"
 #include "handler/logouthandler.h"
 #include "handler/relationfetchhandler.h"
-#include "handler/relationremovehandler.h"
 #include "handler/relationmodifyhandler.h"
+#include "handler/relationremovehandler.h"
 #include "handler/resourceselecthandler.h"
 #include "handler/searchcreatehandler.h"
 #include "handler/searchhandler.h"
@@ -64,19 +63,16 @@ std::unique_ptr<Handler> Handler::findHandlerForCommandAuthenticated(Protocol::C
 {
     switch (cmd) {
     case Protocol::Command::Invalid:
-        Q_ASSERT_X(cmd != Protocol::Command::Invalid, __FUNCTION__,
-                   "Invalid command is not allowed");
+        Q_ASSERT_X(cmd != Protocol::Command::Invalid, __FUNCTION__, "Invalid command is not allowed");
         return {};
     case Protocol::Command::Hello:
-        Q_ASSERT_X(cmd != Protocol::Command::Hello, __FUNCTION__,
-                   "Hello command is not allowed in this context");
+        Q_ASSERT_X(cmd != Protocol::Command::Hello, __FUNCTION__, "Hello command is not allowed in this context");
         return {};
     case Protocol::Command::Login:
     case Protocol::Command::Logout:
         return {};
     case Protocol::Command::_ResponseBit:
-        Q_ASSERT_X(cmd != Protocol::Command::_ResponseBit, __FUNCTION__,
-                   "ResponseBit is not a valid command type");
+        Q_ASSERT_X(cmd != Protocol::Command::_ResponseBit, __FUNCTION__, "ResponseBit is not a valid command type");
         return {};
 
     case Protocol::Command::Transaction:
@@ -139,41 +135,36 @@ std::unique_ptr<Handler> Handler::findHandlerForCommandAuthenticated(Protocol::C
         return std::make_unique<ResourceSelectHandler>(akonadi);
 
     case Protocol::Command::StreamPayload:
-        Q_ASSERT_X(cmd != Protocol::Command::StreamPayload, __FUNCTION__,
-                   "StreamPayload command is not allowed in this context");
+        Q_ASSERT_X(cmd != Protocol::Command::StreamPayload, __FUNCTION__, "StreamPayload command is not allowed in this context");
         return {};
 
     case Protocol::Command::ItemChangeNotification:
-        Q_ASSERT_X(cmd != Protocol::Command::ItemChangeNotification, __FUNCTION__,
-                   "ItemChangeNotification command is not allowed on this connection");
+        Q_ASSERT_X(cmd != Protocol::Command::ItemChangeNotification, __FUNCTION__, "ItemChangeNotification command is not allowed on this connection");
         return {};
     case Protocol::Command::CollectionChangeNotification:
-        Q_ASSERT_X(cmd != Protocol::Command::CollectionChangeNotification, __FUNCTION__,
+        Q_ASSERT_X(cmd != Protocol::Command::CollectionChangeNotification,
+                   __FUNCTION__,
                    "CollectionChangeNotification command is not allowed on this connection");
         return {};
     case Protocol::Command::TagChangeNotification:
-        Q_ASSERT_X(cmd != Protocol::Command::TagChangeNotification, __FUNCTION__,
-                   "TagChangeNotification command is not allowed on this connection");
+        Q_ASSERT_X(cmd != Protocol::Command::TagChangeNotification, __FUNCTION__, "TagChangeNotification command is not allowed on this connection");
         return {};
     case Protocol::Command::RelationChangeNotification:
-        Q_ASSERT_X(cmd != Protocol::Command::RelationChangeNotification, __FUNCTION__,
-                   "RelationChangeNotification command is not allowed on this connection");
+        Q_ASSERT_X(cmd != Protocol::Command::RelationChangeNotification, __FUNCTION__, "RelationChangeNotification command is not allowed on this connection");
         return {};
     case Protocol::Command::SubscriptionChangeNotification:
-        Q_ASSERT_X(cmd != Protocol::Command::SubscriptionChangeNotification, __FUNCTION__,
+        Q_ASSERT_X(cmd != Protocol::Command::SubscriptionChangeNotification,
+                   __FUNCTION__,
                    "SubscriptionChangeNotification command is not allowed on this connection");
         return {};
     case Protocol::Command::DebugChangeNotification:
-        Q_ASSERT_X(cmd != Protocol::Command::DebugChangeNotification, __FUNCTION__,
-                   "DebugChangeNotification command is not allowed on this connection");
+        Q_ASSERT_X(cmd != Protocol::Command::DebugChangeNotification, __FUNCTION__, "DebugChangeNotification command is not allowed on this connection");
         return {};
     case Protocol::Command::ModifySubscription:
-        Q_ASSERT_X(cmd != Protocol::Command::ModifySubscription, __FUNCTION__,
-                   "ModifySubscription command is not allowed on this connection");
+        Q_ASSERT_X(cmd != Protocol::Command::ModifySubscription, __FUNCTION__, "ModifySubscription command is not allowed on this connection");
         return {};
     case Protocol::Command::CreateSubscription:
-        Q_ASSERT_X(cmd != Protocol::Command::CreateSubscription, __FUNCTION__,
-                   "CreateSubscription command is not allowed on this connection");
+        Q_ASSERT_X(cmd != Protocol::Command::CreateSubscription, __FUNCTION__, "CreateSubscription command is not allowed on this connection");
         return {};
     }
 
@@ -182,7 +173,8 @@ std::unique_ptr<Handler> Handler::findHandlerForCommandAuthenticated(Protocol::C
 
 Handler::Handler(AkonadiServer &akonadi)
     : m_akonadi(akonadi)
-{}
+{
+}
 
 void Handler::setTag(quint64 tag)
 {

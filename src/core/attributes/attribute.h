@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @short Provides interface for custom attributes for Entity.
  *

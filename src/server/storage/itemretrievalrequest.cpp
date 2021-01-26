@@ -12,5 +12,5 @@ ItemRetrievalRequest::Id ItemRetrievalRequest::lastId{0};
 
 ItemRetrievalRequest::ItemRetrievalRequest()
     : id(lastId.next())
-{}
-
+{
+}

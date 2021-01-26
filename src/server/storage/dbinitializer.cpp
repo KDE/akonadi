@@ -6,16 +6,16 @@
  ***************************************************************************/
 
 #include "dbinitializer.h"
-#include "dbinitializer_p.h"
-#include "dbexception.h"
-#include "dbtype.h"
-#include "schema.h"
-#include "entities.h"
 #include "akonadiserver_debug.h"
+#include "dbexception.h"
+#include "dbinitializer_p.h"
+#include "dbtype.h"
+#include "entities.h"
+#include "schema.h"
 
-#include <QStringList>
-#include <QSqlQuery>
 #include <QDateTime>
+#include <QSqlQuery>
+#include <QStringList>
 
 #include <algorithm>
 
@@ -153,9 +153,9 @@ void DbInitializer::checkForeignKeys(const TableDescription &tableDescription)
                 if (!existingForeignKey.column.isEmpty()) {
                     // there's a constraint on this column, check if it's the correct one
                     if (QString::compare(existingForeignKey.refTable, column.refTable + QLatin1String("table"), Qt::CaseInsensitive) == 0
-                            && QString::compare(existingForeignKey.refColumn, column.refColumn, Qt::CaseInsensitive) == 0
-                            && QString::compare(existingForeignKey.onUpdate, referentialActionToString(column.onUpdate), Qt::CaseInsensitive) == 0
-                            && QString::compare(existingForeignKey.onDelete, referentialActionToString(column.onDelete), Qt::CaseInsensitive) == 0) {
+                        && QString::compare(existingForeignKey.refColumn, column.refColumn, Qt::CaseInsensitive) == 0
+                        && QString::compare(existingForeignKey.onUpdate, referentialActionToString(column.onUpdate), Qt::CaseInsensitive) == 0
+                        && QString::compare(existingForeignKey.onDelete, referentialActionToString(column.onDelete), Qt::CaseInsensitive) == 0) {
                         continue; // all good
                     }
 
@@ -168,7 +168,7 @@ void DbInitializer::checkForeignKeys(const TableDescription &tableDescription)
                 }
 
                 const auto statements = buildAddForeignKeyConstraintStatements(tableDescription, column);
-                if (statements.isEmpty()) {   // not supported
+                if (statements.isEmpty()) { // not supported
                     return;
                 }
 
@@ -313,15 +313,16 @@ QString DbInitializer::buildCreateIndexStatement(const TableDescription &tableDe
         columns = indexDescription.columns;
     } else {
         columns.reserve(indexDescription.columns.count());
-        std::transform(indexDescription.columns.cbegin(), indexDescription.columns.cend(),
+        std::transform(indexDescription.columns.cbegin(),
+                       indexDescription.columns.cend(),
                        std::back_insert_iterator<QStringList>(columns),
-        [&indexDescription](const QString & column) {
-            return QStringLiteral("%1 %2").arg(column, indexDescription.sort);
-        });
+                       [&indexDescription](const QString &column) {
+                           return QStringLiteral("%1 %2").arg(column, indexDescription.sort);
+                       });
     }
 
     return QStringLiteral("CREATE %1 INDEX %2 ON %3 (%4)")
-           .arg(indexDescription.isUnique ? QStringLiteral("UNIQUE") : QString(), indexName, tableDescription.name, columns.join(QLatin1Char(',')));
+        .arg(indexDescription.isUnique ? QStringLiteral("UNIQUE") : QString(), indexName, tableDescription.name, columns.join(QLatin1Char(',')));
 }
 
 QStringList DbInitializer::buildAddForeignKeyConstraintStatements(const TableDescription &table, const ColumnDescription &column) const
@@ -340,8 +341,7 @@ QStringList DbInitializer::buildRemoveForeignKeyConstraintStatements(const DbInt
 
 QString DbInitializer::buildReferentialAction(ColumnDescription::ReferentialAction onUpdate, ColumnDescription::ReferentialAction onDelete)
 {
-    return QLatin1String("ON UPDATE ") + referentialActionToString(onUpdate)
-           + QLatin1String(" ON DELETE ") + referentialActionToString(onDelete);
+    return QLatin1String("ON UPDATE ") + referentialActionToString(onUpdate) + QLatin1String(" ON DELETE ") + referentialActionToString(onDelete);
 }
 
 QString DbInitializer::referentialActionToString(ColumnDescription::ReferentialAction action)

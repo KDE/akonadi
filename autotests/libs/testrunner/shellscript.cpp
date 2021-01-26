@@ -20,15 +20,16 @@ void ShellScript::writeEnvironmentVariables()
 {
     for (const auto &envvar : qAsConst(mEnvVars)) {
 #ifdef Q_OS_WIN
-        const auto tmpl = QStringLiteral("$env:_old_%1=$env:%1\r\n"
-                                         "$env:%1=\"%2\"\r\n");
+        const auto tmpl = QStringLiteral(
+            "$env:_old_%1=$env:%1\r\n"
+            "$env:%1=\"%2\"\r\n");
 #else
-        const auto tmpl = QStringLiteral("_old_%1=$%1\n"
-                                         "%1=\"%2\"\n"
-                                         "export %1\n");
+        const auto tmpl = QStringLiteral(
+            "_old_%1=$%1\n"
+            "%1=\"%2\"\n"
+            "export %1\n");
 #endif
-        mScript += tmpl.arg(QString::fromLocal8Bit(envvar.first),
-                            QString::fromLocal8Bit(envvar.second).replace(QLatin1Char('"'), QStringLiteral("\\\"")));
+        mScript += tmpl.arg(QString::fromLocal8Bit(envvar.first), QString::fromLocal8Bit(envvar.second).replace(QLatin1Char('"'), QStringLiteral("\\\"")));
     }
 
 #ifdef Q_OS_WIN
@@ -41,20 +42,23 @@ void ShellScript::writeEnvironmentVariables()
 void ShellScript::writeShutdownFunction()
 {
 #ifdef Q_OS_WIN
-    const auto tmpl = QStringLiteral("Function shutdownTestEnvironment()\r\n"
-                                     "{\r\n"
-                                     "  qdbus %1 %2 %3\r\n"
-                                     "%4"
-                                     "}\r\n\r\n");
+    const auto tmpl = QStringLiteral(
+        "Function shutdownTestEnvironment()\r\n"
+        "{\r\n"
+        "  qdbus %1 %2 %3\r\n"
+        "%4"
+        "}\r\n\r\n");
     const auto restoreTmpl = QStringLiteral("  $env:%1=$env:_old_%1\r\n");
 #else
-    const auto tmpl = QStringLiteral("function shutdown-testenvironment()\n"
-                                     "{\n"
-                                     "  qdbus %1 %2 %3\n"
-                                     "%4"
-                                     "}\n\n");
-    const auto restoreTmpl = QStringLiteral("  %1=$_old_%1\n"
-                                            "  export %1\n");
+    const auto tmpl = QStringLiteral(
+        "function shutdown-testenvironment()\n"
+        "{\n"
+        "  qdbus %1 %2 %3\n"
+        "%4"
+        "}\n\n");
+    const auto restoreTmpl = QStringLiteral(
+        "  %1=$_old_%1\n"
+        "  export %1\n");
 #endif
     QString restore;
     for (const auto &envvar : qAsConst(mEnvVars)) {
@@ -70,7 +74,7 @@ void ShellScript::writeShutdownFunction()
 void ShellScript::makeShellScript(const QString &fileName)
 {
     qCDebug(AKONADITEST_LOG) << "Writing environment shell script to" << fileName;
-    QFile file(fileName);   //can user define the file name/location?
+    QFile file(fileName); // can user define the file name/location?
 
     if (file.open(QIODevice::WriteOnly)) {
         writeEnvironmentVariables();
@@ -83,7 +87,7 @@ void ShellScript::makeShellScript(const QString &fileName)
     }
 }
 
-void ShellScript::setEnvironmentVariables(const QVector< ShellScript::EnvVar > &envVars)
+void ShellScript::setEnvironmentVariables(const QVector<ShellScript::EnvVar> &envVars)
 {
     mEnvVars = envVars;
 }

@@ -7,21 +7,12 @@
 #ifndef MODELSPY_H
 #define MODELSPY_H
 
+#include "akonaditestfake_export.h"
+#include <QModelIndex>
 #include <QObject>
 #include <QVariantList>
-#include <QModelIndex>
-#include "akonaditestfake_export.h"
 
-enum SignalType {
-    NoSignal,
-    RowsAboutToBeInserted,
-    RowsInserted,
-    RowsAboutToBeRemoved,
-    RowsRemoved,
-    RowsAboutToBeMoved,
-    RowsMoved,
-    DataChanged
-};
+enum SignalType { NoSignal, RowsAboutToBeInserted, RowsInserted, RowsAboutToBeRemoved, RowsRemoved, RowsAboutToBeMoved, RowsMoved, DataChanged };
 
 struct ExpectedSignal {
     ExpectedSignal(SignalType type, int start, int end, const QVariantList &newData)
@@ -30,16 +21,30 @@ struct ExpectedSignal {
     }
 
     ExpectedSignal(SignalType type, int start, int end, const QVariant &parentData = {}, const QVariantList &newData = {})
-        : signalType(type), startRow(start), endRow(end), parentData(parentData), newData(newData)
+        : signalType(type)
+        , startRow(start)
+        , endRow(end)
+        , parentData(parentData)
+        , newData(newData)
     {
     }
 
-    ExpectedSignal(SignalType type, int start, int end, const QVariant &sourceParentData, int destRow, const QVariant &destParentData, const QVariantList &newData)
-        : signalType(type), startRow(start), endRow(end), parentData(destParentData)
-        , sourceParentData(sourceParentData), destRow(destRow), newData(newData)
+    ExpectedSignal(SignalType type,
+                   int start,
+                   int end,
+                   const QVariant &sourceParentData,
+                   int destRow,
+                   const QVariant &destParentData,
+                   const QVariantList &newData)
+        : signalType(type)
+        , startRow(start)
+        , endRow(end)
+        , parentData(destParentData)
+        , sourceParentData(sourceParentData)
+        , destRow(destRow)
+        , newData(newData)
     {
     }
-
 
     SignalType signalType;
     int startRow;

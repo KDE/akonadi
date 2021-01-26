@@ -7,14 +7,13 @@
 #ifndef AKONADISEARCHHELPER_H
 #define AKONADISEARCHHELPER_H
 
-#include <QVector>
 #include <QStringList>
+#include <QVector>
 
 namespace Akonadi
 {
 namespace Server
 {
-
 class SearchHelper
 {
 public:

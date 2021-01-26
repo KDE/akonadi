@@ -14,7 +14,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @short Represents the caching policy for a collection.
  *

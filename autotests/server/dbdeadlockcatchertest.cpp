@@ -5,8 +5,8 @@
 */
 
 #include <QObject>
-#include <QTest>
 #include <QSqlQuery>
+#include <QTest>
 
 #include "storage/dbdeadlockcatcher.h"
 
@@ -32,23 +32,28 @@ private Q_SLOTS:
     void testRecurseOnce()
     {
         m_myFuncCalled = 0;
-        DbDeadlockCatcher catcher([this](){ myFunc(1); });
+        DbDeadlockCatcher catcher([this]() {
+            myFunc(1);
+        });
         QCOMPARE(m_myFuncCalled, 2);
     }
 
     void testRecurseTwice()
     {
         m_myFuncCalled = 0;
-        DbDeadlockCatcher catcher([this](){ myFunc(2); });
+        DbDeadlockCatcher catcher([this]() {
+            myFunc(2);
+        });
         QCOMPARE(m_myFuncCalled, 3);
     }
 
     void testHitRecursionLimit()
     {
         m_myFuncCalled = 0;
-        QVERIFY_EXCEPTION_THROWN(
-                    DbDeadlockCatcher catcher([this](){ myFunc(10); }),
-                    DbDeadlockException);
+        QVERIFY_EXCEPTION_THROWN(DbDeadlockCatcher catcher([this]() {
+                                     myFunc(10);
+                                 }),
+                                 DbDeadlockException);
         QCOMPARE(m_myFuncCalled, 6);
     }
 };

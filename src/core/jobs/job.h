@@ -17,7 +17,6 @@ class QString;
 
 namespace Akonadi
 {
-
 namespace Protocol
 {
 class Command;
@@ -97,10 +96,10 @@ public:
      */
     enum Error {
         ConnectionFailed = UserDefinedError, ///< The connection to the Akonadi server failed.
-        ProtocolVersionMismatch,             ///< The server protocol version is too old or too new.
-        UserCanceled,                        ///< The user canceled this job.
-        Unknown,                             ///< Unknown error.
-        UserError = UserDefinedError + 42    ///< Starting point for error codes defined by sub-classes.
+        ProtocolVersionMismatch, ///< The server protocol version is too old or too new.
+        UserCanceled, ///< The user canceled this job.
+        Unknown, ///< Unknown error.
+        UserError = UserDefinedError + 42 ///< Starting point for error codes defined by sub-classes.
     };
 
     /**

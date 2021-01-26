@@ -37,19 +37,17 @@ CachePolicy::~CachePolicy()
 {
 }
 
-CachePolicy &CachePolicy::operator =(const CachePolicy &other)
+CachePolicy &CachePolicy::operator=(const CachePolicy &other)
 {
     d = other.d;
     return *this;
 }
 
-bool Akonadi::CachePolicy::operator ==(const CachePolicy &other) const
+bool Akonadi::CachePolicy::operator==(const CachePolicy &other) const
 {
     if (!d->inherit && !other.d->inherit) {
-        return d->localParts == other.d->localParts
-               && d->timeout == other.d->timeout
-               && d->interval == other.d->interval
-               && d->syncOnDemand == other.d->syncOnDemand;
+        return d->localParts == other.d->localParts && d->timeout == other.d->timeout && d->interval == other.d->interval
+            && d->syncOnDemand == other.d->syncOnDemand;
     }
     return d->inherit == other.d->inherit;
 }
@@ -107,9 +105,9 @@ void CachePolicy::setSyncOnDemand(bool enable)
 QDebug operator<<(QDebug d, const CachePolicy &c)
 {
     return d << "CachePolicy: \n"
-           << "   inherit:" << c.inheritFromParent() << '\n'
-           << "   interval:" << c.intervalCheckTime() << '\n'
-           << "   timeout:" << c.cacheTimeout() << '\n'
-           << "   sync on demand:" << c.syncOnDemand() << '\n'
-           << "   local parts:" << c.localParts();
+             << "   inherit:" << c.inheritFromParent() << '\n'
+             << "   interval:" << c.intervalCheckTime() << '\n'
+             << "   timeout:" << c.cacheTimeout() << '\n'
+             << "   sync on demand:" << c.syncOnDemand() << '\n'
+             << "   local parts:" << c.localParts();
 }

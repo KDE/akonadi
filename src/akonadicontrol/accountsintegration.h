@@ -7,8 +7,8 @@
 #ifndef ACCOUNTSINTEGRATION_H_
 #define ACCOUNTSINTEGRATION_H_
 
-#include <QObject>
 #include <QMap>
+#include <QObject>
 
 #include <Accounts/Manager>
 
@@ -22,7 +22,7 @@ class Service;
 
 class AgentManager;
 
-class AccountsIntegration: public QObject
+class AccountsIntegration : public QObject
 {
     Q_OBJECT
 public:
@@ -42,10 +42,7 @@ private:
     AgentManager &mAgentManager;
     Accounts::Manager mAccountsManager;
 
-
     QMap<QString, QString /* agent type */> mSupportedServices;
 };
-
-
 
 #endif

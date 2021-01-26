@@ -17,7 +17,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @short Attribute that stores the properties that are used to display an entity.
  *

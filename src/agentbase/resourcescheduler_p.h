@@ -12,12 +12,11 @@
 #include "item.h"
 #include "resourcebase.h"
 
-#include <QObject>
 #include <QDBusMessage>
+#include <QObject>
 
 namespace Akonadi
 {
-
 class RecursiveMover;
 
 //@cond PRIVATE
@@ -78,13 +77,8 @@ public:
 
         bool operator==(const Task &other) const
         {
-            return type == other.type
-                   && (collection == other.collection || (!collection.isValid() && !other.collection.isValid()))
-                   && items == other.items
-                   && itemParts == other.itemParts
-                   && receiver == other.receiver
-                   && methodName == other.methodName
-                   && argument == other.argument;
+            return type == other.type && (collection == other.collection || (!collection.isValid() && !other.collection.isValid())) && items == other.items
+                && itemParts == other.itemParts && receiver == other.receiver && methodName == other.methodName && argument == other.argument;
         }
     };
 
@@ -166,7 +160,8 @@ public:
       Insert a custom task.
       @param methodName The method name, without signature, do not use the SLOT() macro
     */
-    void scheduleCustomTask(QObject *receiver, const char *methodName, const QVariant &argument, ResourceBase::SchedulePriority priority = ResourceBase::Append);
+    void
+    scheduleCustomTask(QObject *receiver, const char *methodName, const QVariant &argument, ResourceBase::SchedulePriority priority = ResourceBase::Append);
 
     /**
      * Schedule a recursive move replay.

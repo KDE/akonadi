@@ -9,8 +9,8 @@
 
 #ifdef Q_OS_WIN
 #include <QEventLoop>
-#include <QTimer>
 #include <QLocalSocket>
+#include <QTimer>
 #endif
 
 using namespace Akonadi;
@@ -50,7 +50,7 @@ void DataStream::waitForData(QIODevice *device, int timeoutMs)
     // Apparently readyRead() gets emitted sometimes even if there are no data
     // so we will re-enter the wait again immediately
     while (device->bytesAvailable() == 0) {
-        auto ls = qobject_cast<QLocalSocket*>(device);
+        auto ls = qobject_cast<QLocalSocket *>(device);
         if (ls && ls->state() != QLocalSocket::ConnectedState) {
             throw ProtocolException("Socket not connected to server");
         }
@@ -119,7 +119,7 @@ void DataStream::writeRawData(const char *data, int len)
 
 void DataStream::writeBytes(const char *bytes, int len)
 {
-    *this << static_cast<quint32> (len);
+    *this << static_cast<quint32>(len);
     if (len) {
         writeRawData(bytes, len);
     }

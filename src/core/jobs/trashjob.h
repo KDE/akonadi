@@ -8,13 +8,12 @@
 #define AKONADI_TRASHJOB_H
 
 #include "akonadicore_export.h"
-#include "item.h"
 #include "collection.h"
+#include "item.h"
 #include "job.h"
 
 namespace Akonadi
 {
-
 /**
  * @short Job that moves items/collection to trash.
  *
@@ -54,7 +53,6 @@ class AKONADICORE_EXPORT TrashJob : public Job
     Q_OBJECT
 
 public:
-
     /**
      * Creates a new trash job that marks @p item as trash, and moves it to the configured trash collection.
      *

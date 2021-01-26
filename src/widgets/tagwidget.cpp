@@ -10,30 +10,30 @@
 
 #include "tagwidget.h"
 
-#include "tagmodel.h"
 #include "changerecorder.h"
+#include "tagmodel.h"
 #include "tagselectiondialog.h"
 
 #include <KLocalizedString>
 
-#include <QHBoxLayout>
-#include <QToolButton>
-#include <QMenu>
 #include <QContextMenuEvent>
+#include <QHBoxLayout>
 #include <QLocale>
+#include <QMenu>
+#include <QToolButton>
 
 using namespace Akonadi;
 
 namespace Akonadi
 {
-
 class Q_DECL_HIDDEN TagView : public QLineEdit
 {
     Q_OBJECT
 public:
     explicit TagView(QWidget *parent)
         : QLineEdit(parent)
-    {}
+    {
+    }
 
     void contextMenuEvent(QContextMenuEvent *event) override
     {
@@ -108,7 +108,7 @@ Akonadi::Tag::List TagWidget::selection() const
 void TagWidget::setReadOnly(bool readOnly)
 {
     d->ui.editButton->setEnabled(!readOnly);
-    //d->mTagView is always readOnly => not change it.
+    // d->mTagView is always readOnly => not change it.
 }
 
 void TagWidget::editTags()
@@ -137,4 +137,3 @@ void TagWidget::updateView()
 }
 
 #include "tagwidget.moc"
-

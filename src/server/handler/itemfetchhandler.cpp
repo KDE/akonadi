@@ -6,16 +6,17 @@
 
 #include "itemfetchhandler.h"
 
+#include "cachecleaner.h"
 #include "connection.h"
 #include "itemfetchhelper.h"
-#include "cachecleaner.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
 ItemFetchHandler::ItemFetchHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 bool ItemFetchHandler::parseStream()
 {

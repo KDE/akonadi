@@ -29,10 +29,8 @@ bool AgentSearchInstance::init()
 {
     Q_ASSERT(!mInterface);
 
-    mInterface = new OrgFreedesktopAkonadiAgentSearchInterface(
-        DBus::agentServiceName(mId, DBus::Agent),
-        QStringLiteral("/Search"),
-        QDBusConnection::sessionBus());
+    mInterface =
+        new OrgFreedesktopAkonadiAgentSearchInterface(DBus::agentServiceName(mId, DBus::Agent), QStringLiteral("/Search"), QDBusConnection::sessionBus());
 
     if (!mInterface || !mInterface->isValid()) {
         delete mInterface;
@@ -40,19 +38,17 @@ bool AgentSearchInstance::init()
         return false;
     }
 
-    mServiceWatcher = std::make_unique<QDBusServiceWatcher>(
-            DBus::agentServiceName(mId, DBus::Agent), QDBusConnection::sessionBus(),
-            QDBusServiceWatcher::WatchForUnregistration);
-    connect(mServiceWatcher.get(), &QDBusServiceWatcher::serviceUnregistered,
-            this, [this]() {
-                mManager.unregisterInstance(mId);
-            });
+    mServiceWatcher = std::make_unique<QDBusServiceWatcher>(DBus::agentServiceName(mId, DBus::Agent),
+                                                            QDBusConnection::sessionBus(),
+                                                            QDBusServiceWatcher::WatchForUnregistration);
+    connect(mServiceWatcher.get(), &QDBusServiceWatcher::serviceUnregistered, this, [this]() {
+        mManager.unregisterInstance(mId);
+    });
 
     return true;
 }
 
-void AgentSearchInstance::search(const QByteArray &searchId, const QString &query,
-                                 qlonglong collectionId)
+void AgentSearchInstance::search(const QByteArray &searchId, const QString &query, qlonglong collectionId)
 {
     mInterface->search(searchId, query, collectionId);
 }

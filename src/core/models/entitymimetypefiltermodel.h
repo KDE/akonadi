@@ -15,7 +15,6 @@
 
 namespace Akonadi
 {
-
 class EntityMimeTypeFilterModelPrivate;
 
 /**
@@ -119,7 +118,11 @@ public:
 
     Q_REQUIRED_RESULT bool canFetchMore(const QModelIndex &parent) const override;
 
-    Q_REQUIRED_RESULT QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
+    Q_REQUIRED_RESULT QModelIndexList match(const QModelIndex &start,
+                                            int role,
+                                            const QVariant &value,
+                                            int hits = 1,
+                                            Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
 
     Q_REQUIRED_RESULT int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 

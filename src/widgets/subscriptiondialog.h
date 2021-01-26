@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 /**
  * Local subscription dialog.
  */

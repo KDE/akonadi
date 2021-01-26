@@ -9,9 +9,10 @@
 
 #include "entities.h"
 
-namespace Akonadi {
-namespace Server {
-
+namespace Akonadi
+{
+namespace Server
+{
 class FakePart : public Part
 {
 public:

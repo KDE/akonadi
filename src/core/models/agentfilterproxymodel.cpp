@@ -6,14 +6,12 @@
 
 #include "agentfilterproxymodel.h"
 
-#include "agenttypemodel.h"
 #include "agentinstancemodel.h"
+#include "agenttypemodel.h"
 
-
-
-#include <QStringList>
 #include <QMimeDatabase>
 #include <QMimeType>
+#include <QStringList>
 
 using namespace Akonadi;
 
@@ -77,8 +75,7 @@ bool AgentFilterProxyModel::Private::filterAcceptRegExp(const QModelIndex &index
 {
     // First see if the name matches a set regexp filter.
     if (!filterRegExpStr.pattern().isEmpty()) {
-        return index.data(AgentTypeModel::IdentifierRole).toString().contains(filterRegExpStr)
-                || index.data().toString().contains(filterRegExpStr);
+        return index.data(AgentTypeModel::IdentifierRole).toString().contains(filterRegExpStr) || index.data().toString().contains(filterRegExpStr);
     }
     return true;
 }

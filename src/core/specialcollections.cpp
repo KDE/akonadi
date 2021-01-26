@@ -6,15 +6,15 @@
 
 #include "specialcollections.h"
 #include "akonadicore_debug.h"
-#include "specialcollections_p.h"
 #include "specialcollectionattribute.h"
+#include "specialcollections_p.h"
 
 #include "agentinstance.h"
 #include "agentmanager.h"
-#include "collectionmodifyjob.h"
 #include "collectionfetchjob.h"
-#include "monitor.h"
 #include "collectionfetchscope.h"
+#include "collectionmodifyjob.h"
+#include "monitor.h"
 
 #include <KCoreConfigSkeleton>
 
@@ -35,11 +35,12 @@ SpecialCollectionsPrivate::SpecialCollectionsPrivate(KCoreConfigSkeleton *settin
     /// from one of our specialcollection folders,
     /// we have to watch all mail item add/move/delete notifications
     /// and check for the parent to see if it is one we care about
-    QObject::connect(mMonitor, &Monitor::collectionRemoved,
-                     q, [this](const Akonadi::Collection &col) { collectionRemoved(col); });
-    QObject::connect(mMonitor, &Monitor::collectionStatisticsChanged,
-                     q, [this](Akonadi::Collection::Id id, const Akonadi::CollectionStatistics &statistics)
-    { collectionStatisticsChanged(id, statistics); });
+    QObject::connect(mMonitor, &Monitor::collectionRemoved, q, [this](const Akonadi::Collection &col) {
+        collectionRemoved(col);
+    });
+    QObject::connect(mMonitor, &Monitor::collectionStatisticsChanged, q, [this](Akonadi::Collection::Id id, const Akonadi::CollectionStatistics &statistics) {
+        collectionStatisticsChanged(id, statistics);
+    });
 }
 
 SpecialCollectionsPrivate::~SpecialCollectionsPrivate()
@@ -78,7 +79,6 @@ void SpecialCollectionsPrivate::collectionRemoved(const Collection &collection)
 {
     qCDebug(AKONADICORE_LOG) << "Collection" << collection.id() << "resource" << collection.resource();
     if (mFoldersForResource.contains(collection.resource())) {
-
         // Retrieve the list of special folders for the resource the collection belongs to
         QHash<QByteArray, Collection> &folders = mFoldersForResource[collection.resource()];
         {
@@ -108,7 +108,9 @@ void SpecialCollectionsPrivate::collectionStatisticsChanged(Akonadi::Collection:
     fetchJob->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::None);
     fetchJob->setProperty("statistics", QVariant::fromValue(statistics));
 
-    q->connect(fetchJob, &CollectionFetchJob::result, q, [this](KJob *job) { collectionFetchJobFinished(job); });
+    q->connect(fetchJob, &CollectionFetchJob::result, q, [this](KJob *job) {
+        collectionFetchJobFinished(job);
+    });
 }
 
 void SpecialCollectionsPrivate::collectionFetchJobFinished(KJob *job)
@@ -221,7 +223,7 @@ bool SpecialCollections::unregisterCollection(const Collection &collection)
     unsetSpecialCollection(collection);
 
     d->mMonitor->setCollectionMonitored(collection, false);
-    //Remove from list of collection
+    // Remove from list of collection
     d->collectionRemoved(collection);
     return true;
 }

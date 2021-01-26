@@ -7,15 +7,15 @@
 #include "collectionattributetest.h"
 #include "collectionpathresolver.h"
 
-#include "collection.h"
 #include "attributefactory.h"
+#include "collection.h"
 #include "collectioncreatejob.h"
 #include "collectiondeletejob.h"
 #include "collectionfetchjob.h"
+#include "collectionidentificationattribute.h"
 #include "collectionmodifyjob.h"
 #include "collectionrightsattribute_p.h"
 #include "control.h"
-#include "collectionidentificationattribute.h"
 
 #include "qtest_akonadi.h"
 
@@ -44,9 +44,11 @@ public:
     {
         return mData;
     }
-    void deserialize(const QByteArray &data) override {
+    void deserialize(const QByteArray &data) override
+    {
         mData = data;
     }
+
 private:
     QByteArray mData;
 };
@@ -91,8 +93,12 @@ void CollectionAttributeTest::testAttributes()
     QFETCH(QByteArray, attr2);
 
     struct Cleanup {
-        explicit Cleanup(const Collection &col) : m_col(col) {}
-        ~Cleanup() {
+        explicit Cleanup(const Collection &col)
+            : m_col(col)
+        {
+        }
+        ~Cleanup()
+        {
             // cleanup
             auto *del = new CollectionDeleteJob(m_col);
             AKVERIFYEXEC(del);

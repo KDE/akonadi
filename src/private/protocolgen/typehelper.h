@@ -11,7 +11,6 @@ class QString;
 
 namespace TypeHelper
 {
-
 bool isNumericType(const QString &name);
 bool isBoolType(const QString &name);
 

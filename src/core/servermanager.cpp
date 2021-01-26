@@ -7,29 +7,29 @@
 #include "servermanager.h"
 #include "servermanager_p.h"
 
-#include "agenttype.h"
 #include "agentmanager.h"
-#include "session_p.h"
+#include "agenttype.h"
 #include "firstrun_p.h"
+#include "session_p.h"
 
 #include "akonadicore_debug.h"
 
-#include <Kdelibs4ConfigMigrator>
 #include <KLocalizedString>
+#include <Kdelibs4ConfigMigrator>
 
-#include "private/protocol_p.h"
-#include "private/standarddirs_p.h"
 #include "private/dbus_p.h"
 #include "private/instance_p.h"
+#include "private/protocol_p.h"
+#include "private/standarddirs_p.h"
 
 #include <QDBusConnection>
-#include <QDBusServiceWatcher>
 #include <QDBusConnectionInterface>
 #include <QDBusInterface>
 #include <QDBusReply>
+#include <QDBusServiceWatcher>
 #include <QProcess>
-#include <QTimer>
 #include <QScopedPointer>
+#include <QTimer>
 #include <qnamespace.h>
 
 using namespace Akonadi;
@@ -45,7 +45,9 @@ public:
         mState = instance->state();
         mSafetyTimer->setSingleShot(true);
         mSafetyTimer->setInterval(30000);
-        QObject::connect(mSafetyTimer.data(), &QTimer::timeout, instance, [this]() { timeout();});
+        QObject::connect(mSafetyTimer.data(), &QTimer::timeout, instance, [this]() {
+            timeout();
+        });
         if (mState == ServerManager::Running && Internal::clientType() == Internal::User && !ServerManager::hasInstanceIdentifier()) {
             mFirstRunner = new Firstrun(instance);
         }
@@ -75,9 +77,9 @@ public:
                 Q_EMIT instance->stopped();
             }
             if (state == ServerManager::Starting || state == ServerManager::Stopping) {
-                QMetaObject::invokeMethod(mSafetyTimer.data(), QOverload<>::of(&QTimer::start), Qt::QueuedConnection);   // in case we are in a different thread
+                QMetaObject::invokeMethod(mSafetyTimer.data(), QOverload<>::of(&QTimer::start), Qt::QueuedConnection); // in case we are in a different thread
             } else {
-                QMetaObject::invokeMethod(mSafetyTimer.data(), &QTimer::stop, Qt::QueuedConnection);   // in case we are in a different thread
+                QMetaObject::invokeMethod(mSafetyTimer.data(), &QTimer::stop, Qt::QueuedConnection); // in case we are in a different thread
             }
         }
     }
@@ -115,9 +117,9 @@ ServerManager::ServerManager(ServerManagerPrivate *dd)
 
     qRegisterMetaType<Akonadi::ServerManager::State>();
 
-    d->serviceWatcher = std::make_unique<QDBusServiceWatcher>(
-            ServerManager::serviceName(ServerManager::Server), QDBusConnection::sessionBus(),
-            QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration);
+    d->serviceWatcher = std::make_unique<QDBusServiceWatcher>(ServerManager::serviceName(ServerManager::Server),
+                                                              QDBusConnection::sessionBus(),
+                                                              QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration);
     d->serviceWatcher->addWatchedService(ServerManager::serviceName(ServerManager::Control));
     d->serviceWatcher->addWatchedService(ServerManager::serviceName(ServerManager::ControlLock));
     d->serviceWatcher->addWatchedService(ServerManager::serviceName(ServerManager::UpgradeIndicator));
@@ -126,33 +128,55 @@ ServerManager::ServerManager(ServerManagerPrivate *dd)
     // the current agent types and instances
     // this ensures the invariant of AgentManager reporting a consistent state if ServerManager::state() == Running
     // that's the case with direct connections as well, but only after you enter the event loop once
-    connect(d->serviceWatcher.get(), &QDBusServiceWatcher::serviceRegistered,
-            this, [this]() {
-                d->serverProtocolVersion = -1;
-                d->checkStatusChanged();
-            }, Qt::QueuedConnection);
-    connect(d->serviceWatcher.get(), &QDBusServiceWatcher::serviceUnregistered,
-            this, [this](const QString &name) {
-                if (name == ServerManager::serviceName(ServerManager::ControlLock) && d->mState == ServerManager::Starting) {
-                    // Control.Lock has disappeared during startup, which means that akonadi_control
-                    // has terminated, most probably because it was not able to start akonadiserver
-                    // process. Don't wait 30 seconds for sefetyTimeout, but go into Broken state
-                    // immediately.
-                    d->setState(ServerManager::Broken);
-                    return;
-                }
+    connect(
+        d->serviceWatcher.get(),
+        &QDBusServiceWatcher::serviceRegistered,
+        this,
+        [this]() {
+            d->serverProtocolVersion = -1;
+            d->checkStatusChanged();
+        },
+        Qt::QueuedConnection);
+    connect(
+        d->serviceWatcher.get(),
+        &QDBusServiceWatcher::serviceUnregistered,
+        this,
+        [this](const QString &name) {
+            if (name == ServerManager::serviceName(ServerManager::ControlLock) && d->mState == ServerManager::Starting) {
+                // Control.Lock has disappeared during startup, which means that akonadi_control
+                // has terminated, most probably because it was not able to start akonadiserver
+                // process. Don't wait 30 seconds for sefetyTimeout, but go into Broken state
+                // immediately.
+                d->setState(ServerManager::Broken);
+                return;
+            }
 
-                d->serverProtocolVersion = -1;
-                d->checkStatusChanged();
-            }, Qt::QueuedConnection);
+            d->serverProtocolVersion = -1;
+            d->checkStatusChanged();
+        },
+        Qt::QueuedConnection);
 
     // AgentManager is dangerous to use for agents themselves
     if (Internal::clientType() != Internal::User) {
         return;
     }
 
-    connect(AgentManager::self(), &AgentManager::typeAdded, this, [this]() { d->checkStatusChanged(); }, Qt::QueuedConnection);
-    connect(AgentManager::self(), &AgentManager::typeRemoved, this, [this]() { d->checkStatusChanged(); }, Qt::QueuedConnection);
+    connect(
+        AgentManager::self(),
+        &AgentManager::typeAdded,
+        this,
+        [this]() {
+            d->checkStatusChanged();
+        },
+        Qt::QueuedConnection);
+    connect(
+        AgentManager::self(),
+        &AgentManager::typeRemoved,
+        this,
+        [this]() {
+            d->checkStatusChanged();
+        },
+        Qt::QueuedConnection);
 }
 
 ServerManager *Akonadi::ServerManager::self()
@@ -185,8 +209,7 @@ bool ServerManager::start()
         qCWarning(AKONADICORE_LOG) << "Unable to execute akonadi_control, falling back to D-Bus auto-launch";
         QDBusReply<void> reply = QDBusConnection::sessionBus().interface()->startService(ServerManager::serviceName(ServerManager::Control));
         if (!reply.isValid()) {
-            qCDebug(AKONADICORE_LOG) << "Akonadi server could not be started via D-Bus either: "
-                                     << reply.error().message();
+            qCDebug(AKONADICORE_LOG) << "Akonadi server could not be started via D-Bus either: " << reply.error().message();
             return false;
         }
     }
@@ -221,7 +244,7 @@ bool ServerManager::isRunning()
 ServerManager::State ServerManager::state()
 {
     ServerManager::State previousState = NotRunning;
-    if (sInstance.exists()) {   // be careful, this is called from the ServerManager::Private ctor, so using sInstance unprotected can cause infinite recursion
+    if (sInstance.exists()) { // be careful, this is called from the ServerManager::Private ctor, so using sInstance unprotected can cause infinite recursion
         previousState = sInstance->mState;
         sInstance->mBrokenReason.clear();
     }
@@ -236,11 +259,11 @@ ServerManager::State ServerManager::state()
     if (controlRegistered && serverRegistered) {
         // check if the server protocol is recent enough
         if (sInstance.exists()) {
-            if (Internal::serverProtocolVersion() >= 0 &&
-                    Internal::serverProtocolVersion() != Protocol::version()) {
-                sInstance->mBrokenReason = i18n("The Akonadi server protocol version differs from the protocol version used by this application.\n"
-                                                "If you recently updated your system please log out and back in to make sure all applications use the "
-                                                "correct protocol version.");
+            if (Internal::serverProtocolVersion() >= 0 && Internal::serverProtocolVersion() != Protocol::version()) {
+                sInstance->mBrokenReason = i18n(
+                    "The Akonadi server protocol version differs from the protocol version used by this application.\n"
+                    "If you recently updated your system please log out and back in to make sure all applications use the "
+                    "correct protocol version.");
                 return Broken;
             }
         }
@@ -265,7 +288,8 @@ ServerManager::State ServerManager::state()
 
     const bool controlLockRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::ControlLock));
     if (controlLockRegistered || controlRegistered) {
-        qCDebug(AKONADICORE_LOG) << "Akonadi server is only partially running. Server:" << serverRegistered << "ControlLock:" << controlLockRegistered << "Control:" << controlRegistered;
+        qCDebug(AKONADICORE_LOG) << "Akonadi server is only partially running. Server:" << serverRegistered << "ControlLock:" << controlLockRegistered
+                                 << "Control:" << controlRegistered;
         if (previousState == Running) {
             return NotRunning; // we don't know if it's starting or stopping, probably triggered by someone else
         }
@@ -277,7 +301,7 @@ ServerManager::State ServerManager::state()
         return Broken;
     }
 
-    if (previousState == Starting) {   // valid case where nothing is running (yet)
+    if (previousState == Starting) { // valid case where nothing is running (yet)
         return previousState;
     }
     return NotRunning;
@@ -333,10 +357,7 @@ QString ServerManager::agentServiceName(ServiceAgentType agentType, const QStrin
 
 QString ServerManager::serverConfigFilePath(OpenMode openMode)
 {
-    return StandardDirs::serverConfigFile(
-            openMode == Akonadi::ServerManager::ReadOnly
-                ? StandardDirs::ReadOnly
-                : StandardDirs::ReadWrite);
+    return StandardDirs::serverConfigFile(openMode == Akonadi::ServerManager::ReadOnly ? StandardDirs::ReadOnly : StandardDirs::ReadWrite);
 }
 
 QString ServerManager::agentConfigFilePath(const QString &identifier)

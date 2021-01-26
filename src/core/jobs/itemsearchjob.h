@@ -8,14 +8,12 @@
 #define AKONADI_ITEMSEARCHJOB_H
 
 #include "akonadicore_export.h"
+#include "collection.h"
 #include "item.h"
 #include "job.h"
-#include "collection.h"
-
 
 namespace Akonadi
 {
-
 class TagFetchScope;
 class ItemFetchScope;
 class ItemSearchJobPrivate;

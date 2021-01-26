@@ -4,15 +4,15 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "collectionsync_p.h"
-#include "collection.h"
 #include "akonadicore_debug.h"
+#include "collection.h"
 #include "collectioncreatejob.h"
 #include "collectiondeletejob.h"
 #include "collectionfetchjob.h"
-#include "collectionmodifyjob.h"
 #include "collectionfetchscope.h"
+#include "collectionmodifyjob.h"
 #include "collectionmovejob.h"
+#include "collectionsync_p.h"
 
 #include "cachepolicy.h"
 
@@ -35,8 +35,8 @@ public:
     {
     }
 
-    explicit inline RemoteId(const QStringList &ridChain):
-        ridChain(ridChain)
+    explicit inline RemoteId(const QStringList &ridChain)
+        : ridChain(ridChain)
     {
     }
 
@@ -72,10 +72,7 @@ Q_DECLARE_METATYPE(RemoteId)
 uint qHash(const RemoteId &rid)
 {
     uint hash = 0;
-    for (QStringList::ConstIterator iter = rid.ridChain.constBegin(),
-            end = rid.ridChain.constEnd();
-            iter != end;
-            ++iter) {
+    for (QStringList::ConstIterator iter = rid.ridChain.constBegin(), end = rid.ridChain.constEnd(); iter != end; ++iter) {
         hash += qHash(*iter);
     }
     return hash;
@@ -164,7 +161,7 @@ public:
 
     void addRemoteColection(const Collection &collection, bool removed = false)
     {
-        QHash<RemoteId, Collection::List > &map = (removed ? removedRemoteCollections : remoteCollections);
+        QHash<RemoteId, Collection::List> &map = (removed ? removedRemoteCollections : remoteCollections);
         const Collection parentCollection = collection.parentCollection();
         if (parentCollection.remoteId() == akonadiRootCollection.remoteId() || parentCollection.id() == akonadiRootCollection.id()) {
             Collection c2(collection);
@@ -248,7 +245,7 @@ public:
                     // the collection from scratch.
                     if (localCollection.isVirtual() != remoteCollection.isVirtual()) {
                         // Mark the local collection and all its children for deletion and re-creation
-                        QList<QPair<Collection/*local*/, Collection/*remote*/>> parents = {{localCollection,remoteCollection}};
+                        QList<QPair<Collection /*local*/, Collection /*remote*/>> parents = {{localCollection, remoteCollection}};
                         while (!parents.empty()) {
                             auto parent = parents.takeFirst();
                             qCDebug(AKONADICORE_LOG) << "Local collection " << parent.first.name() << " will be recreated";
@@ -257,9 +254,10 @@ public:
                             for (auto it = localChildren.begin(), end = localChildren.end(); it != end;) {
                                 if (it->parentCollection() == parent.first) {
                                     Collection remoteParent;
-                                    auto remoteIt = std::find_if(remoteChildren.begin(), remoteChildren.end(),
-                                                                 std::bind(&CollectionSync::Private::matchLocalAndRemoteCollection,
-                                                                           this, parent.first, std::placeholders::_1));
+                                    auto remoteIt = std::find_if(
+                                        remoteChildren.begin(),
+                                        remoteChildren.end(),
+                                        std::bind(&CollectionSync::Private::matchLocalAndRemoteCollection, this, parent.first, std::placeholders::_1));
                                     if (remoteIt != remoteChildren.end()) {
                                         remoteParent = *remoteIt;
                                         remoteEnd = remoteChildren.erase(remoteIt);
@@ -435,7 +433,9 @@ public:
             if (parentCollection == akonadiRootCollection || parentCollection.id() > 0) {
                 ++pendingJobs;
                 auto *create = new CollectionCreateJob(col, currentTransaction);
-                QObject::connect(create, &KJob::result, q, [this](KJob *job) { createLocalCollectionResult(job); });
+                QObject::connect(create, &KJob::result, q, [this](KJob *job) {
+                    createLocalCollectionResult(job);
+                });
 
                 // Commit transaction after every 100 collections are created,
                 // otherwise it overloads database journal and things get veeery slow
@@ -552,7 +552,7 @@ public:
             }
             Q_FOREACH (Attribute *remoteAttr, upd.attributes()) {
                 if (ignoreAttributeChanges(remote, remoteAttr->type()) && local.hasAttribute(remoteAttr->type())) {
-                    //We don't want to overwrite the attribute changes with the defaults provided by the resource.
+                    // We don't want to overwrite the attribute changes with the defaults provided by the resource.
                     const Attribute *localAttr = local.attribute(remoteAttr->type());
                     upd.removeAttribute(localAttr->type());
                     upd.addAttribute(localAttr->clone());
@@ -565,14 +565,18 @@ public:
             c.setParentCollection(local.parentCollection());
             ++pendingJobs;
             auto *mod = new CollectionModifyJob(c, currentTransaction);
-            QObject::connect(mod, &KJob::result, q, [this](KJob *job) { updateLocalCollectionResult(job); });
+            QObject::connect(mod, &KJob::result, q, [this](KJob *job) {
+                updateLocalCollectionResult(job);
+            });
 
             // detecting moves is only possible with global RIDs
             if (!hierarchicalRIDs) {
                 if (remote.parentCollection().isValid() && remote.parentCollection().id() != local.parentCollection().id()) {
                     ++pendingJobs;
                     CollectionMoveJob *move = new CollectionMoveJob(upd, remote.parentCollection(), currentTransaction);
-                    QObject::connect(move, &KJob::result, q, [this](KJob *job) { updateLocalCollectionResult(job); });
+                    QObject::connect(move, &KJob::result, q, [this](KJob *job) {
+                        updateLocalCollectionResult(job);
+                    });
                 }
             }
         }
@@ -605,12 +609,14 @@ public:
         }
 
         for (const Collection &col : qAsConst(localCollectionsToRemove)) {
-            Q_ASSERT(!col.remoteId().isEmpty());   // empty RID -> stuff we haven't even written to the remote side yet
+            Q_ASSERT(!col.remoteId().isEmpty()); // empty RID -> stuff we haven't even written to the remote side yet
 
             ++pendingJobs;
             Q_ASSERT(currentTransaction);
             auto *job = new CollectionDeleteJob(col, currentTransaction);
-            connect(job, &KJob::result, q, [this](KJob *job) { deleteLocalCollectionsResult(job); });
+            connect(job, &KJob::result, q, [this](KJob *job) {
+                deleteLocalCollectionsResult(job);
+            });
 
             // It can happen that the groupware servers report us deleted collections
             // twice, in this case this collection delete job will fail on the second try.
@@ -636,7 +642,7 @@ public:
     void done()
     {
         if (currentTransaction) {
-            //This can trigger a direct call of transactionSequenceResult
+            // This can trigger a direct call of transactionSequenceResult
             currentTransaction->commit();
             currentTransaction = nullptr;
         }
@@ -650,7 +656,7 @@ public:
 
     void emitResult()
     {
-        //Prevent double result emission
+        // Prevent double result emission
         Q_ASSERT(!resultEmitted);
         if (!resultEmitted) {
             if (q->hasSubjobs()) {
@@ -658,11 +664,14 @@ public:
                 // try again. This way we make sure we don't emit result() signal
                 // while there is still a Transaction job running
                 KJob *subjob = q->subjobs().at(0);
-                connect(subjob, &KJob::result,
-                q, [this](KJob * /*unused*/) {
-                    emitResult();
-                },
-                Qt::QueuedConnection);
+                connect(
+                    subjob,
+                    &KJob::result,
+                    q,
+                    [this](KJob * /*unused*/) {
+                        emitResult();
+                    },
+                    Qt::QueuedConnection);
             } else {
                 resultEmitted = true;
                 q->emitResult();
@@ -674,7 +683,9 @@ public:
     {
         currentTransaction = new TransactionSequence(q);
         currentTransaction->setAutomaticCommittingEnabled(false);
-        q->connect(currentTransaction, &TransactionSequence::finished, q, [this](KJob *job) { transactionSequenceResult(job); });
+        q->connect(currentTransaction, &TransactionSequence::finished, q, [this](KJob *job) {
+            transactionSequenceResult(job);
+        });
     }
 
     /** After the transaction has finished report we're done as well. */
@@ -707,8 +718,12 @@ public:
             job->fetchScope().setResource(resourceId);
             job->fetchScope().setListFilter(CollectionFetchScope::NoFilter);
             job->fetchScope().setAncestorRetrieval(CollectionFetchScope::All);
-            q->connect(job, &CollectionFetchJob::collectionsReceived, q, [this](const auto &cols) { localCollectionsReceived(cols); });
-            q->connect(job, &KJob::result, q, [this](KJob *job) { localCollectionFetchResult(job); });
+            q->connect(job, &CollectionFetchJob::collectionsReceived, q, [this](const auto &cols) {
+                localCollectionsReceived(cols);
+            });
+            q->connect(job, &KJob::result, q, [this](KJob *job) {
+                localCollectionFetchResult(job);
+            });
             return;
         }
 
@@ -746,13 +761,13 @@ public:
     // List of parts where local changes should not be overwritten
     QSet<QByteArray> keepLocalChanges;
 
-    QHash<RemoteId /* parent */, Collection::List /* children */ > removedRemoteCollections;
-    QHash<RemoteId /* parent */, Collection::List /* children */ > remoteCollections;
-    QHash<RemoteId /* parent */, Collection::List /* children */ > localCollections;
+    QHash<RemoteId /* parent */, Collection::List /* children */> removedRemoteCollections;
+    QHash<RemoteId /* parent */, Collection::List /* children */> remoteCollections;
+    QHash<RemoteId /* parent */, Collection::List /* children */> localCollections;
 
     Collection::List localCollectionsToRemove;
     Collection::List remoteCollectionsToCreate;
-    QList<QPair<Collection /* local */, Collection /* remote */> > remoteCollectionsToUpdate;
+    QList<QPair<Collection /* local */, Collection /* remote */>> remoteCollectionsToUpdate;
     QHash<Collection::Id, QString> uidRidMap;
 
     // HACK: To workaround Collection copy constructor being very expensive, we
@@ -761,7 +776,6 @@ public:
     Collection akonadiRootCollection;
 
     bool resultEmitted;
-
 };
 
 CollectionSync::CollectionSync(const QString &resourceId, QObject *parent)
@@ -843,4 +857,3 @@ void CollectionSync::setKeepLocalChanges(const QSet<QByteArray> &parts)
 }
 
 #include "moc_collectionsync_p.cpp"
-

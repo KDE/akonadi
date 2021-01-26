@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 /**
  * Base class for the private class of KJob but not Akonadi::Job based jobs that
  * require the Akonadi server to be operational.

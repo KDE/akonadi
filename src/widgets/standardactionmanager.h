@@ -23,7 +23,6 @@ class QMenu;
 
 namespace Akonadi
 {
-
 class FavoriteCollectionsModel;
 
 /**
@@ -119,58 +118,60 @@ public:
      * Describes the supported actions.
      */
     enum Type {
-        CreateCollection,                        ///< Creates an collection
-        CopyCollections,                         ///< Copies the selected collections
-        DeleteCollections,                       ///< Deletes the selected collections
-        SynchronizeCollections,                  ///< Synchronizes collections
-        CollectionProperties,                    ///< Provides collection properties
-        CopyItems,                               ///< Copies the selected items
-        Paste,                                   ///< Paste collections or items
-        DeleteItems,                             ///< Deletes the selected items
-        ManageLocalSubscriptions,                ///< Manages local subscriptions
-        AddToFavoriteCollections,                ///< Add the collection to the favorite collections model @since 4.4
-        RemoveFromFavoriteCollections,           ///< Remove the collection from the favorite collections model @since 4.4
-        RenameFavoriteCollection,                ///< Rename the collection of the favorite collections model @since 4.4
-        CopyCollectionToMenu,                    ///< Menu allowing to quickly copy a collection into another collection @since 4.4
-        CopyItemToMenu,                          ///< Menu allowing to quickly copy an item into a collection @since 4.4
-        MoveItemToMenu,                          ///< Menu allowing to move item into a collection @since 4.4
-        MoveCollectionToMenu,                    ///< Menu allowing to move a collection into another collection @since 4.4
-        CutItems,                                ///< Cuts the selected items @since 4.4
-        CutCollections,                          ///< Cuts the selected collections @since 4.4
-        CreateResource,                          ///< Creates a new resource @since 4.6
-        DeleteResources,                         ///< Deletes the selected resources @since 4.6
-        ResourceProperties,                      ///< Provides the resource properties @since 4.6
-        SynchronizeResources,                    ///< Synchronizes the selected resources @since 4.6
-        ToggleWorkOffline,                       ///< Toggles the work offline state of all resources @since 4.6
-        CopyCollectionToDialog,                  ///< Copy a collection into another collection, select the target in a dialog @since 4.6
-        MoveCollectionToDialog,                  ///< Move a collection into another collection, select the target in a dialog @since 4.6
-        CopyItemToDialog,                        ///< Copy an item into a collection, select the target in a dialog @since 4.6
-        MoveItemToDialog,                        ///< Move an item into a collection, select the target in a dialog @since 4.6
-        SynchronizeCollectionsRecursive,         ///< Synchronizes collections in a recursive way @since 4.6
-        MoveCollectionsToTrash,                  ///< Moves the selected collection to trash and marks it as deleted, needs EntityDeletedAttribute @since 4.8
-        MoveItemsToTrash,                        ///< Moves the selected items to trash and marks them as deleted, needs EntityDeletedAttribute @since 4.8
-        RestoreCollectionsFromTrash,             ///< Restores the selected collection from trash, needs EntityDeletedAttribute @since 4.8
-        RestoreItemsFromTrash,                   ///< Restores the selected items from trash, needs EntityDeletedAttribute @since 4.8
-        MoveToTrashRestoreCollection,            ///< Move Collection to Trash or Restore it from Trash, needs EntityDeletedAttribute @since 4.8
-        MoveToTrashRestoreCollectionAlternative, ///< Helper type for MoveToTrashRestoreCollection, do not create directly. Use this to override texts of the restore action. @since 4.8
-        MoveToTrashRestoreItem,                  ///< Move Item to Trash or Restore it from Trash, needs EntityDeletedAttribute @since 4.8
-        MoveToTrashRestoreItemAlternative,       ///< Helper type for MoveToTrashRestoreItem, do not create directly. Use this to override texts of the restore action. @since 4.8
-        SynchronizeFavoriteCollections,          ///< Synchronize favorite collections @since 4.8
-        SynchronizeCollectionTree,               ///< Synchronize collection tree @since 4.15
-        LastType                                 ///< Marks last action
+        CreateCollection, ///< Creates an collection
+        CopyCollections, ///< Copies the selected collections
+        DeleteCollections, ///< Deletes the selected collections
+        SynchronizeCollections, ///< Synchronizes collections
+        CollectionProperties, ///< Provides collection properties
+        CopyItems, ///< Copies the selected items
+        Paste, ///< Paste collections or items
+        DeleteItems, ///< Deletes the selected items
+        ManageLocalSubscriptions, ///< Manages local subscriptions
+        AddToFavoriteCollections, ///< Add the collection to the favorite collections model @since 4.4
+        RemoveFromFavoriteCollections, ///< Remove the collection from the favorite collections model @since 4.4
+        RenameFavoriteCollection, ///< Rename the collection of the favorite collections model @since 4.4
+        CopyCollectionToMenu, ///< Menu allowing to quickly copy a collection into another collection @since 4.4
+        CopyItemToMenu, ///< Menu allowing to quickly copy an item into a collection @since 4.4
+        MoveItemToMenu, ///< Menu allowing to move item into a collection @since 4.4
+        MoveCollectionToMenu, ///< Menu allowing to move a collection into another collection @since 4.4
+        CutItems, ///< Cuts the selected items @since 4.4
+        CutCollections, ///< Cuts the selected collections @since 4.4
+        CreateResource, ///< Creates a new resource @since 4.6
+        DeleteResources, ///< Deletes the selected resources @since 4.6
+        ResourceProperties, ///< Provides the resource properties @since 4.6
+        SynchronizeResources, ///< Synchronizes the selected resources @since 4.6
+        ToggleWorkOffline, ///< Toggles the work offline state of all resources @since 4.6
+        CopyCollectionToDialog, ///< Copy a collection into another collection, select the target in a dialog @since 4.6
+        MoveCollectionToDialog, ///< Move a collection into another collection, select the target in a dialog @since 4.6
+        CopyItemToDialog, ///< Copy an item into a collection, select the target in a dialog @since 4.6
+        MoveItemToDialog, ///< Move an item into a collection, select the target in a dialog @since 4.6
+        SynchronizeCollectionsRecursive, ///< Synchronizes collections in a recursive way @since 4.6
+        MoveCollectionsToTrash, ///< Moves the selected collection to trash and marks it as deleted, needs EntityDeletedAttribute @since 4.8
+        MoveItemsToTrash, ///< Moves the selected items to trash and marks them as deleted, needs EntityDeletedAttribute @since 4.8
+        RestoreCollectionsFromTrash, ///< Restores the selected collection from trash, needs EntityDeletedAttribute @since 4.8
+        RestoreItemsFromTrash, ///< Restores the selected items from trash, needs EntityDeletedAttribute @since 4.8
+        MoveToTrashRestoreCollection, ///< Move Collection to Trash or Restore it from Trash, needs EntityDeletedAttribute @since 4.8
+        MoveToTrashRestoreCollectionAlternative, ///< Helper type for MoveToTrashRestoreCollection, do not create directly. Use this to override texts of the
+                                                 ///< restore action. @since 4.8
+        MoveToTrashRestoreItem, ///< Move Item to Trash or Restore it from Trash, needs EntityDeletedAttribute @since 4.8
+        MoveToTrashRestoreItemAlternative, ///< Helper type for MoveToTrashRestoreItem, do not create directly. Use this to override texts of the restore
+                                           ///< action. @since 4.8
+        SynchronizeFavoriteCollections, ///< Synchronize favorite collections @since 4.8
+        SynchronizeCollectionTree, ///< Synchronize collection tree @since 4.15
+        LastType ///< Marks last action
     };
 
     /**
      * Describes the text context that can be customized.
      */
     enum TextContext {
-        DialogTitle,                ///< The window title of a dialog
-        DialogText,                 ///< The text of a dialog
-        MessageBoxTitle,            ///< The window title of a message box
-        MessageBoxText,             ///< The text of a message box
-        MessageBoxAlternativeText,  ///< An alternative text of a message box
-        ErrorMessageTitle,          ///< The window title of an error message
-        ErrorMessageText            ///< The text of an error message
+        DialogTitle, ///< The window title of a dialog
+        DialogText, ///< The text of a dialog
+        MessageBoxTitle, ///< The window title of a message box
+        MessageBoxText, ///< The text of a message box
+        MessageBoxAlternativeText, ///< An alternative text of a message box
+        ErrorMessageTitle, ///< The window title of an error message
+        ErrorMessageText ///< The text of an error message
     };
 
     /**

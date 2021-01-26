@@ -8,17 +8,18 @@
 
 #include <sys/types.h>
 
-#include <qtest_akonadi.h>
 #include "testattribute.h"
+#include <qtest_akonadi.h>
 
-#include "agentmanager.h"
 #include "agentinstance.h"
+#include "agentmanager.h"
 #include "attributefactory.h"
 #include "cachepolicy.h"
 #include "collection.h"
 #include "collectioncreatejob.h"
 #include "collectiondeletejob.h"
 #include "collectionfetchjob.h"
+#include "collectionfetchscope.h"
 #include "collectionmodifyjob.h"
 #include "collectionstatistics.h"
 #include "collectionstatisticsjob.h"
@@ -26,7 +27,6 @@
 #include "control.h"
 #include "item.h"
 #include "resourceselectjob_p.h"
-#include "collectionfetchscope.h"
 
 using namespace Akonadi;
 
@@ -51,7 +51,7 @@ static Collection findCol(const Collection::List &list, const QString &name)
 }
 
 // list compare which ignores the order
-template <class T> static void compareLists(const QList<T> &l1, const QList<T> &l2)
+template<class T> static void compareLists(const QList<T> &l1, const QList<T> &l2)
 {
     QCOMPARE(l1.count(), l2.count());
     foreach (const T &entry, l1) {
@@ -59,7 +59,7 @@ template <class T> static void compareLists(const QList<T> &l1, const QList<T> &
     }
 }
 
-template <class T> static void compareLists(const QVector<T> &l1, const QVector<T> &l2)
+template<class T> static void compareLists(const QVector<T> &l1, const QVector<T> &l2)
 {
     QCOMPARE(l1.count(), l2.count());
     foreach (const T &entry, l1) {
@@ -67,7 +67,7 @@ template <class T> static void compareLists(const QVector<T> &l1, const QVector<
     }
 }
 
-template <typename T> static T *extractAttribute(QList<Attribute *> attrs)
+template<typename T> static T *extractAttribute(QList<Attribute *> attrs)
 {
     T dummy;
     foreach (Attribute *attr, attrs) {
@@ -311,7 +311,7 @@ void CollectionJobTest::testCreateDeleteFolder_data()
     col.setName(QStringLiteral("foo2"));
     QTest::newRow("already existing") << col << false;
 
-    col.parentCollection().setId(res2ColId);   // Sibling of collection 'foo2'
+    col.parentCollection().setId(res2ColId); // Sibling of collection 'foo2'
     col.setName(QStringLiteral("foo2 "));
     QTest::newRow("name of an sibling with an additional ending space") << col << true;
 
@@ -331,7 +331,7 @@ void CollectionJobTest::testCreateDeleteFolder_data()
     col = Collection();
     col.setName(QStringLiteral("rid parent"));
     col.parentCollection().setRemoteId(QStringLiteral("8"));
-    QTest::newRow("rid parent") << col << false;   // missing resource context
+    QTest::newRow("rid parent") << col << false; // missing resource context
 }
 
 void CollectionJobTest::testCreateDeleteFolder()
@@ -402,8 +402,7 @@ void CollectionJobTest::testIllegalDeleteFolder()
 void CollectionJobTest::testStatistics()
 {
     // empty folder
-    CollectionStatisticsJob *statistics =
-        new CollectionStatisticsJob(Collection(res1ColId), this);
+    CollectionStatisticsJob *statistics = new CollectionStatisticsJob(Collection(res1ColId), this);
     AKVERIFYEXEC(statistics);
 
     CollectionStatistics s = statistics->statistics();
@@ -430,9 +429,10 @@ void CollectionJobTest::testModify_data()
     QTest::newRow("rid") << -1LL << QStringLiteral("10");
 }
 
-#define RESET_COLLECTION_ID \
-    col.setId( uid ); \
-    if ( !rid.isEmpty() ) col.setRemoteId( rid )
+#define RESET_COLLECTION_ID                                                                                                                                    \
+    col.setId(uid);                                                                                                                                            \
+    if (!rid.isEmpty())                                                                                                                                        \
+    col.setRemoteId(rid)
 
 void CollectionJobTest::testModify()
 {
@@ -444,9 +444,11 @@ void CollectionJobTest::testModify()
         AKVERIFYEXEC(rjob);
     }
 
-    const QStringList reference = { QStringLiteral("text/calendar"), QStringLiteral("text/directory"), QStringLiteral("message/rfc822"),
-                                    QStringLiteral("application/octet-stream"), QStringLiteral("inode/directory")
-                                  };
+    const QStringList reference = {QStringLiteral("text/calendar"),
+                                   QStringLiteral("text/directory"),
+                                   QStringLiteral("message/rfc822"),
+                                   QStringLiteral("application/octet-stream"),
+                                   QStringLiteral("inode/directory")};
 
     Collection col;
     RESET_COLLECTION_ID;
@@ -573,7 +575,7 @@ void CollectionJobTest::testUtf8CollectionName()
     QCOMPARE(list->collections().first().name(), col.name());
 
     // modify collection
-    col.setContentMimeTypes( { QStringLiteral("message/rfc822") } );
+    col.setContentMimeTypes({QStringLiteral("message/rfc822")});
     auto *modify = new CollectionModifyJob(col, this);
     AKVERIFYEXEC(modify);
 
@@ -646,7 +648,7 @@ void CollectionJobTest::testRecursiveMultiList()
     QCOMPARE(list.count(), 4 + 2);
     QVERIFY(findCol(list, QStringLiteral("foo")).isValid());
     QVERIFY(findCol(list, QStringLiteral("bar")).isValid());
-    QVERIFY(findCol(list, QStringLiteral("bla")).isValid());     //There are two bla folders, but we only check for one.
+    QVERIFY(findCol(list, QStringLiteral("bla")).isValid()); // There are two bla folders, but we only check for one.
     QVERIFY(findCol(list, QStringLiteral("foo2")).isValid());
     QVERIFY(findCol(list, QStringLiteral("space folder")).isValid());
 }
@@ -754,7 +756,7 @@ void CollectionJobTest::testAncestorRetrieval()
     ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"), this);
     AKVERIFYEXEC(select);
     Collection col2(col);
-    col2.setId(-1);   // make it invalid but keep the ancestor chain
+    col2.setId(-1); // make it invalid but keep the ancestor chain
     job = new CollectionFetchJob(col2, CollectionFetchJob::Base, this);
     AKVERIFYEXEC(job);
     QCOMPARE(job->collections().count(), 1);
@@ -790,7 +792,7 @@ void CollectionJobTest::testAncestorAttributeRetrieval()
         QCOMPARE(result.parentCollection().hasAttribute<TestAttribute>(), true);
     }
 
-    //Cleanup
+    // Cleanup
     auto *deleteJob = new CollectionDeleteJob(baseCol);
     AKVERIFYEXEC(deleteJob);
 }
@@ -858,7 +860,7 @@ void CollectionJobTest::testListPreference()
         QCOMPARE(result.localListPreference(Collection::ListIndex), Collection::ListEnabled);
     }
 
-    //Check list filter
+    // Check list filter
     {
         auto *job = new CollectionFetchJob(baseCol, CollectionFetchJob::FirstLevel);
         job->fetchScope().setListFilter(CollectionFetchScope::Display);
@@ -884,7 +886,7 @@ void CollectionJobTest::testListPreference()
         QCOMPARE(job->collections().size(), 2);
     }
 
-    //Cleanup
+    // Cleanup
     auto *deleteJob = new CollectionDeleteJob(baseCol);
     AKVERIFYEXEC(deleteJob);
 }

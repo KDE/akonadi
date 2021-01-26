@@ -5,20 +5,20 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later
  */
 
+#include "akonaditest_debug.h"
 #include "config.h" //krazy:exclude=includes
 #include "setup.h"
 #include "shellscript.h"
 #include "testrunner.h"
-#include "akonaditest_debug.h"
 
 #include <KAboutData>
 
 #include <KLocalizedString>
 
-#include <signal.h>
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QSessionManager>
+#include <signal.h>
 
 static SetupTest *setup = nullptr;
 static TestRunner *runner = nullptr;
@@ -27,14 +27,14 @@ void sigHandler(int signal)
 {
     qCCritical(AKONADITEST_LOG, "Received signal %d", signal);
     static int sigCounter = 0;
-    if (sigCounter == 0) {   // try clean shutdown
+    if (sigCounter == 0) { // try clean shutdown
         if (runner) {
             runner->terminate();
         }
         if (setup) {
             setup->shutdown();
         }
-    } else if (sigCounter == 1) {   // force shutdown
+    } else if (sigCounter == 1) { // force shutdown
         if (setup) {
             setup->shutdownHarder();
         }
@@ -57,15 +57,11 @@ int main(int argc, char **argv)
     app.setQuitLockEnabled(false);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutdata);
-    parser.addOption({ { QStringLiteral("c"), QStringLiteral("config") },
-                       i18n("Configuration file to open"), QStringLiteral("configfile"),
-                       QStringLiteral("config.xml") });
-    parser.addOption({ { QStringLiteral("b"), QStringLiteral("backend") },
-                       i18n("Database backend"), QStringLiteral("backend"), QStringLiteral("sqlite") });
-    parser.addOption({ QStringList{ QStringLiteral("!+[test]") },
-                       i18n("Test to run automatically, interactive if none specified"), QString() });
-    parser.addOption({ QStringList{ QStringLiteral("testenv") },
-                       i18n("Path where testenvironment would be saved"), QStringLiteral("path") });
+    parser.addOption(
+        {{QStringLiteral("c"), QStringLiteral("config")}, i18n("Configuration file to open"), QStringLiteral("configfile"), QStringLiteral("config.xml")});
+    parser.addOption({{QStringLiteral("b"), QStringLiteral("backend")}, i18n("Database backend"), QStringLiteral("backend"), QStringLiteral("sqlite")});
+    parser.addOption({QStringList{QStringLiteral("!+[test]")}, i18n("Test to run automatically, interactive if none specified"), QString()});
+    parser.addOption({QStringList{QStringLiteral("testenv")}, i18n("Path where testenvironment would be saved"), QStringLiteral("path")});
 
     aboutdata.setupCommandLine(&parser);
     parser.process(app);
@@ -79,9 +75,7 @@ int main(int argc, char **argv)
 
     if (parser.isSet(QStringLiteral("config"))) {
         const auto backend = parser.value(QStringLiteral("backend"));
-        if (backend != QLatin1String("sqlite")
-            && backend != QLatin1String("mysql")
-            && backend != QLatin1String("pgsql")) {
+        if (backend != QLatin1String("sqlite") && backend != QLatin1String("mysql") && backend != QLatin1String("pgsql")) {
             qCritical("Invalid backend specified. Supported values are: sqlite,mysql,pgsql");
             return 1;
         }

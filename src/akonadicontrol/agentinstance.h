@@ -8,10 +8,10 @@
 #define AKONADICONTROL_AGENTINSTANCE_H
 
 #include "controlinterface.h"
-#include "statusinterface.h"
-#include "resourceinterface.h"
 #include "preprocessorinterface.h"
+#include "resourceinterface.h"
 #include "searchinterface.h"
+#include "statusinterface.h"
 
 #include <private/dbus_p.h>
 
@@ -149,8 +149,7 @@ protected Q_SLOTS:
     void errorHandler(const QDBusError &error);
 
 private:
-    template <typename T> 
-    std::unique_ptr<T> findInterface(Akonadi::DBus::AgentType agentType, const char *path = nullptr);
+    template<typename T> std::unique_ptr<T> findInterface(Akonadi::DBus::AgentType agentType, const char *path = nullptr);
 
 protected:
     void setAgentType(const QString &agentType)
@@ -174,7 +173,6 @@ private:
     int mPercent = 0;
     bool mOnline = false;
     bool mPendingQuit = false;
-
 };
 
 #endif

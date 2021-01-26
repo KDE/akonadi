@@ -14,7 +14,6 @@
 
 namespace Akonadi
 {
-
 namespace Protocol
 {
 class ScopeContext;
@@ -22,7 +21,6 @@ class ScopeContext;
 
 namespace Server
 {
-
 class CommandContext
 {
 public:

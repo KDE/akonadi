@@ -109,7 +109,6 @@ void ImapParserTest::testParseQuotedString()
     consumed = ImapParser::parseQuotedString(input, result, 0);
     QCOMPARE(result, QByteArray("LOGOUT"));
     QCOMPARE(consumed, 6);
-
 }
 
 void ImapParserTest::testParseString()
@@ -147,7 +146,7 @@ void ImapParserTest::testParseString()
 void ImapParserTest::testParseParenthesizedList_data()
 {
     QTest::addColumn<QByteArray>("input");
-    QTest::addColumn<QList<QByteArray> >("result");
+    QTest::addColumn<QList<QByteArray>>("result");
     QTest::addColumn<int>("consumed");
 
     QList<QByteArray> reference;
@@ -282,11 +281,11 @@ void ImapParserTest::testQuote()
 
 void ImapParserTest::testMessageParser_data()
 {
-    QTest::addColumn<QList<QByteArray> >("input");
+    QTest::addColumn<QList<QByteArray>>("input");
     QTest::addColumn<QByteArray>("tag");
     QTest::addColumn<QByteArray>("data");
     QTest::addColumn<bool>("complete");
-    QTest::addColumn<QList<int> >("continuations");
+    QTest::addColumn<QList<int>>("continuations");
 
     QList<QByteArray> input;
     QList<int> continuations;
@@ -297,54 +296,54 @@ void ImapParserTest::testMessageParser_data()
 
     input.clear();
     input << "20 UID FETCH (foo)";
-    QTest::newRow("simple") << input << QByteArray("20")
-                            << QByteArray("UID FETCH (foo)") << true << continuations;
+    QTest::newRow("simple") << input << QByteArray("20") << QByteArray("UID FETCH (foo)") << true << continuations;
 
     input.clear();
-    input << "1 (bla (" << ") blub)";
-    QTest::newRow("parenthesis") << input << QByteArray("1")
-                                 << QByteArray("(bla () blub)") << true << continuations;
+    input << "1 (bla ("
+          << ") blub)";
+    QTest::newRow("parenthesis") << input << QByteArray("1") << QByteArray("(bla () blub)") << true << continuations;
 
     input.clear();
-    input << "1 {3}" << "bla";
+    input << "1 {3}"
+          << "bla";
     continuations << 0;
-    QTest::newRow("literal") << input << QByteArray("1") << QByteArray("{3}bla")
-                             << true << continuations;
+    QTest::newRow("literal") << input << QByteArray("1") << QByteArray("{3}bla") << true << continuations;
 
     input.clear();
     input << "1 FETCH (UID 5 DATA {3}"
           << "bla"
           << " RID 5)";
-    QTest::newRow("parenthesisEnclosedLiteral") << input << QByteArray("1")
-            << QByteArray("FETCH (UID 5 DATA {3}bla RID 5)") << true << continuations;
+    QTest::newRow("parenthesisEnclosedLiteral") << input << QByteArray("1") << QByteArray("FETCH (UID 5 DATA {3}bla RID 5)") << true << continuations;
 
     input.clear();
-    input << "1 {3}" << "bla {4}" << "blub";
+    input << "1 {3}"
+          << "bla {4}"
+          << "blub";
     continuations.clear();
     continuations << 0 << 1;
-    QTest::newRow("2literal") << input << QByteArray("1")
-                              << QByteArray("{3}bla {4}blub") << true << continuations;
+    QTest::newRow("2literal") << input << QByteArray("1") << QByteArray("{3}bla {4}blub") << true << continuations;
 
     input.clear();
-    input << "1 {4}" << "A{9}";
+    input << "1 {4}"
+          << "A{9}";
     continuations.clear();
     continuations << 0;
-    QTest::newRow("literal in literal") << input << QByteArray("1")
-                                        << QByteArray("{4}A{9}") << true << continuations;
+    QTest::newRow("literal in literal") << input << QByteArray("1") << QByteArray("{4}A{9}") << true << continuations;
 
     input.clear();
-    input << "* FETCH (UID 1 DATA {3}" << "bla" << " ENVELOPE {4}" << "blub" << " RID 5)";
+    input << "* FETCH (UID 1 DATA {3}"
+          << "bla"
+          << " ENVELOPE {4}"
+          << "blub"
+          << " RID 5)";
     continuations.clear();
     continuations << 0 << 2;
-    QTest::newRow("enclosed2literal") << input << QByteArray("*")
-                                      << QByteArray("FETCH (UID 1 DATA {3}bla ENVELOPE {4}blub RID 5)")
-                                      << true << continuations;
+    QTest::newRow("enclosed2literal") << input << QByteArray("*") << QByteArray("FETCH (UID 1 DATA {3}bla ENVELOPE {4}blub RID 5)") << true << continuations;
 
     input.clear();
     input << "1 DATA {0}";
     continuations.clear();
-    QTest::newRow("empty literal") << input << QByteArray("1")
-                                   << QByteArray("DATA {0}") << true << continuations;
+    QTest::newRow("empty literal") << input << QByteArray("1") << QByteArray("DATA {0}") << true << continuations;
 }
 
 void ImapParserTest::testMessageParser()
@@ -488,12 +487,9 @@ void ImapParserTest::testBulkParser_data()
     QTest::addColumn<QByteArray>("data");
 
     QTest::newRow("empty") << QByteArray("* PRE {0} POST\n") << QByteArray("PRE {0} POST\n");
-    QTest::newRow("small block") << QByteArray("* PRE {2}\nXX POST\n")
-                                 << QByteArray("PRE {2}\nXX POST\n");
-    QTest::newRow("small block 2") << QByteArray("* (PRE {2}\nXX\n POST)\n")
-                                   << QByteArray("(PRE {2}\nXX\n POST)\n");
-    QTest::newRow("large block") << QByteArray("* PRE {10}\n0123456789\n")
-                                 << QByteArray("PRE {10}\n0123456789\n");
+    QTest::newRow("small block") << QByteArray("* PRE {2}\nXX POST\n") << QByteArray("PRE {2}\nXX POST\n");
+    QTest::newRow("small block 2") << QByteArray("* (PRE {2}\nXX\n POST)\n") << QByteArray("(PRE {2}\nXX\n POST)\n");
+    QTest::newRow("large block") << QByteArray("* PRE {10}\n0123456789\n") << QByteArray("PRE {10}\n0123456789\n");
     QTest::newRow("store failure") << QByteArray("3 UID STORE (FOO bar ENV {3}\n(a) HEAD {3}\na\n\n BODY {3}\nabc)\n")
                                    << QByteArray("UID STORE (FOO bar ENV {3}\n(a) HEAD {3}\na\n\n BODY {3}\nabc)\n");
 }
@@ -510,15 +506,12 @@ void ImapParserTest::testBulkParser()
 
     // reading continuation as a single block
     forever {
-    if (buffer.atEnd())
-        {
+        if (buffer.atEnd()) {
             break;
         }
-        if (parser->continuationSize() > 0)
-        {
+        if (parser->continuationSize() > 0) {
             parser->parseBlock(buffer.read(parser->continuationSize()));
-        } else if (buffer.canReadLine())
-        {
+        } else if (buffer.canReadLine()) {
             const QByteArray line = buffer.readLine();
             bool res = parser->parseNextLine(line);
             QCOMPARE(res, buffer.atEnd());
@@ -530,18 +523,14 @@ void ImapParserTest::testBulkParser()
     buffer.reset();
     parser->reset();
     forever {
-    if (buffer.atEnd())
-        {
+        if (buffer.atEnd()) {
             break;
         }
-        if (parser->continuationSize() > 4)
-        {
+        if (parser->continuationSize() > 4) {
             parser->parseBlock(buffer.read(4));
-        } else if (parser->continuationSize() > 0)
-        {
+        } else if (parser->continuationSize() > 0) {
             parser->parseBlock(buffer.read(parser->continuationSize()));
-        } else if (buffer.canReadLine())
-        {
+        } else if (buffer.canReadLine()) {
             bool res = parser->parseNextLine(buffer.readLine());
             QCOMPARE(res, buffer.atEnd());
         }
@@ -552,12 +541,17 @@ void ImapParserTest::testBulkParser()
 
 void ImapParserTest::testJoin_data()
 {
-    QTest::addColumn<QList<QByteArray> >("list");
+    QTest::addColumn<QList<QByteArray>>("list");
     QTest::addColumn<QByteArray>("joined");
     QTest::newRow("empty") << QList<QByteArray>() << QByteArray();
     QTest::newRow("one") << (QList<QByteArray>() << "abab") << QByteArray("abab");
-    QTest::newRow("two") << (QList<QByteArray>() << "abab" << "cdcd") << QByteArray("abab cdcd");
-    QTest::newRow("three") << (QList<QByteArray>() << "abab" << "cdcd" << "efef") << QByteArray("abab cdcd efef");
+    QTest::newRow("two") << (QList<QByteArray>() << "abab"
+                                                 << "cdcd")
+                         << QByteArray("abab cdcd");
+    QTest::newRow("three") << (QList<QByteArray>() << "abab"
+                                                   << "cdcd"
+                                                   << "efef")
+                           << QByteArray("abab cdcd efef");
 }
 
 void ImapParserTest::testJoin()

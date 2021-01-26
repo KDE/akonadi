@@ -14,14 +14,14 @@
 
 #include <QDir>
 #include <QFileInfo>
-#include <QSettings>
 #include <QHostInfo>
+#include <QSettings>
 
 #if !defined(Q_OS_WIN)
+#include <cerrno>
 #include <cstdlib>
 #include <sys/types.h>
 #include <sys/un.h>
-#include <cerrno>
 #include <unistd.h>
 
 static QString akonadiSocketDirectory();
@@ -30,10 +30,10 @@ static bool createSocketDirectory(const QString &link);
 #endif
 
 #ifdef Q_OS_LINUX
-#include <stdio.h>
-#include <mntent.h>
-#include <sys/ioctl.h>
 #include <fcntl.h>
+#include <mntent.h>
+#include <stdio.h>
+#include <sys/ioctl.h>
 #endif
 
 using namespace Akonadi;
@@ -52,7 +52,7 @@ QString Utils::preferredSocketDirectory(const QString &defaultDirectory, int fnL
         // if no socket directory is defined, use the symlinked from /tmp
         socketDir = akonadiSocketDirectory();
 
-        if (socketDir.isEmpty()) {   // if that does not work, fall back on default
+        if (socketDir.isEmpty()) { // if that does not work, fall back on default
             socketDir = defaultDirectory;
         }
     } else {
@@ -195,15 +195,15 @@ void Utils::disableCoW(const QString &path)
 
     // from linux/fs.h, so that Akonadi does not depend on Linux header files
 #ifndef FS_IOC_GETFLAGS
-#define FS_IOC_GETFLAGS     _IOR('f', 1, long)
+#define FS_IOC_GETFLAGS _IOR('f', 1, long)
 #endif
 #ifndef FS_IOC_SETFLAGS
-#define FS_IOC_SETFLAGS     _IOW('f', 2, long)
+#define FS_IOC_SETFLAGS _IOW('f', 2, long)
 #endif
 
     // Disable COW on file
 #ifndef FS_NOCOW_FL
-#define FS_NOCOW_FL         0x00800000
+#define FS_NOCOW_FL 0x00800000
 #endif
 
     ulong flags = 0;

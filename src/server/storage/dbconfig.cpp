@@ -6,13 +6,13 @@
 
 #include "dbconfig.h"
 
+#include "akonadiserver_debug.h"
 #include "dbconfigmysql.h"
 #include "dbconfigpostgresql.h"
 #include "dbconfigsqlite.h"
-#include "akonadiserver_debug.h"
 
-#include <private/standarddirs_p.h>
 #include <private/instance_p.h>
+#include <private/standarddirs_p.h>
 
 #include <QProcess>
 #include <memory>
@@ -20,7 +20,7 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-//TODO: make me Q_GLOBAL_STATIC
+// TODO: make me Q_GLOBAL_STATIC
 static DbConfig *s_DbConfigInstance = nullptr;
 
 DbConfig::DbConfig()
@@ -38,7 +38,6 @@ DbConfig::DbConfig()
     } else {
         mSizeThreshold = 0;
     }
-
 }
 
 DbConfig::~DbConfig()
@@ -61,15 +60,13 @@ QString DbConfig::defaultAvailableDatabaseBackend(QSettings &settings)
         dbConfigFallbackTest.reset(new DbConfigPostgresql);
     }
 
-    if (dbConfigFallbackTest && !dbConfigFallbackTest->isAvailable(settings)
-        && DbConfigSqlite(DbConfigSqlite::Custom).isAvailable(settings)) {
+    if (dbConfigFallbackTest && !dbConfigFallbackTest->isAvailable(settings) && DbConfigSqlite(DbConfigSqlite::Custom).isAvailable(settings)) {
         qCWarning(AKONADISERVER_LOG) << driverName << " requirements not available. Falling back to using QSQLITE3.";
         driverName = QStringLiteral("QSQLITE3");
     }
 
     return driverName;
 }
-
 
 DbConfig *DbConfig::configuredDatabase()
 {

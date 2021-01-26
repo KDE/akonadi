@@ -26,10 +26,9 @@ public:
         mSubscriber = "TestSubscriber";
     }
 
-    using NotificationSubscriber::registerSubscriber;
-    using NotificationSubscriber::modifySubscription;
     using NotificationSubscriber::disconnectSubscriber;
-
+    using NotificationSubscriber::modifySubscription;
+    using NotificationSubscriber::registerSubscriber;
 };
 
 class NotificationManagerTest : public QObject

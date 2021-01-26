@@ -6,12 +6,12 @@
 
 #include "akremotelog.h"
 
-#include <QString>
 #include <QCoreApplication>
-#include <QTimer>
-#include <QThread>
 #include <QDateTime>
 #include <QLoggingCategory>
+#include <QString>
+#include <QThread>
+#include <QTimer>
 
 #include <QDBusConnection>
 #include <QDBusInterface>
@@ -25,18 +25,18 @@
 #define AKONADICONSOLE_LOGGER_PATH "/logger"
 #define AKONADICONSOLE_LOGGER_INTERFACE "org.kde.akonadiconsole.logger"
 
-namespace {
-
+namespace
+{
 class RemoteLogger : public QObject
 {
     Q_OBJECT
 public:
     explicit RemoteLogger()
-        : mWatcher(akonadiConsoleServiceName(), QDBusConnection::sessionBus(),
+        : mWatcher(akonadiConsoleServiceName(),
+                   QDBusConnection::sessionBus(),
                    QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration)
     {
-        connect(qApp, &QCoreApplication::aboutToQuit,
-                this, &RemoteLogger::deleteLater);
+        connect(qApp, &QCoreApplication::aboutToQuit, this, &RemoteLogger::deleteLater);
 
         sInstance = this;
 
@@ -45,55 +45,55 @@ public:
             return;
         }
 
-        connect(&mWatcher, &QDBusServiceWatcher::serviceRegistered,
-                this, &RemoteLogger::serviceRegistered);
-        connect(&mWatcher, &QDBusServiceWatcher::serviceUnregistered,
-                this, &RemoteLogger::serviceUnregistered);
+        connect(&mWatcher, &QDBusServiceWatcher::serviceRegistered, this, &RemoteLogger::serviceRegistered);
+        connect(&mWatcher, &QDBusServiceWatcher::serviceUnregistered, this, &RemoteLogger::serviceUnregistered);
 
         mOldHandler = qInstallMessageHandler(dbusLogger);
-     }
+    }
 
-     ~RemoteLogger()
-     {
-         sInstance = nullptr;
+    ~RemoteLogger()
+    {
+        sInstance = nullptr;
 
-         QLoggingCategory::installFilter(mOldFilter);
-         qInstallMessageHandler(mOldHandler);
+        QLoggingCategory::installFilter(mOldFilter);
+        qInstallMessageHandler(mOldHandler);
 
-         mEnabled = false;
-     }
+        mEnabled = false;
+    }
 
-     static RemoteLogger *self()
-     {
-         return sInstance;
-     }
+    static RemoteLogger *self()
+    {
+        return sInstance;
+    }
 
 private Q_SLOTS:
     void serviceRegistered(const QString &service)
     {
         mAkonadiConsoleInterface = std::make_unique<QDBusInterface>(service,
-                                                      QStringLiteral(AKONADICONSOLE_LOGGER_PATH),
-                                                      QStringLiteral(AKONADICONSOLE_LOGGER_INTERFACE),
-                                                      QDBusConnection::sessionBus(), this);
+                                                                    QStringLiteral(AKONADICONSOLE_LOGGER_PATH),
+                                                                    QStringLiteral(AKONADICONSOLE_LOGGER_INTERFACE),
+                                                                    QDBusConnection::sessionBus(),
+                                                                    this);
         if (!mAkonadiConsoleInterface->isValid()) {
             mAkonadiConsoleInterface.reset();
             return;
         }
 
-        connect(mAkonadiConsoleInterface.get(), SIGNAL(enabledChanged(bool)),  // clazy:exclude=old-style-connect
-                this, SLOT(onAkonadiConsoleLoggingEnabled(bool)));
+        connect(mAkonadiConsoleInterface.get(),
+                SIGNAL(enabledChanged(bool)), // clazy:exclude=old-style-connect
+                this,
+                SLOT(onAkonadiConsoleLoggingEnabled(bool)));
 
         QTimer::singleShot(0, this, [this]() {
             auto *watcher = new QDBusPendingCallWatcher(mAkonadiConsoleInterface->asyncCall(QStringLiteral("enabled")));
-            connect(watcher, &QDBusPendingCallWatcher::finished,
-                    this, [this](QDBusPendingCallWatcher *watcher) {
-                        watcher->deleteLater();
-                        QDBusPendingReply<bool> reply = *watcher;
-                        if (reply.isError()) {
-                            return;
-                        }
-                        onAkonadiConsoleLoggingEnabled(reply.argumentAt<0>());
-                    });
+            connect(watcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *watcher) {
+                watcher->deleteLater();
+                QDBusPendingReply<bool> reply = *watcher;
+                if (reply.isError()) {
+                    return;
+                }
+                onAkonadiConsoleLoggingEnabled(reply.argumentAt<0>());
+            });
         });
     }
 
@@ -162,13 +162,17 @@ private:
         that->mOldHandler(type, ctx, msg);
 
         if (that->mEnabled) {
-            that->mAkonadiConsoleInterface->asyncCallWithArgumentList(
-                QStringLiteral("message"),
-                QList<QVariant>{
-                    QDateTime::currentMSecsSinceEpoch(), qAppName(),
-                    qApp->applicationPid(), static_cast<int>(type),
-                    QString::fromUtf8(ctx.category), QString::fromUtf8(ctx.file),
-                    QString::fromUtf8(ctx.function), ctx.line, ctx.version, msg });
+            that->mAkonadiConsoleInterface->asyncCallWithArgumentList(QStringLiteral("message"),
+                                                                      QList<QVariant>{QDateTime::currentMSecsSinceEpoch(),
+                                                                                      qAppName(),
+                                                                                      qApp->applicationPid(),
+                                                                                      static_cast<int>(type),
+                                                                                      QString::fromUtf8(ctx.category),
+                                                                                      QString::fromUtf8(ctx.file),
+                                                                                      QString::fromUtf8(ctx.function),
+                                                                                      ctx.line,
+                                                                                      ctx.version,
+                                                                                      msg});
         }
     }
 
@@ -195,6 +199,4 @@ void akInitRemoteLog()
     }
 }
 
-
 #include "akremotelog.moc"
-

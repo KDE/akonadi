@@ -8,11 +8,11 @@
 
 #include "connection.h"
 #include "handlerhelper.h"
-#include "storage/datastore.h"
-#include "storage/transaction.h"
-#include "storage/selectquerybuilder.h"
-#include "storage/collectionqueryhelper.h"
 #include "search/searchmanager.h"
+#include "storage/collectionqueryhelper.h"
+#include "storage/datastore.h"
+#include "storage/selectquerybuilder.h"
+#include "storage/transaction.h"
 
 #include <private/scope_p.h>
 
@@ -21,7 +21,8 @@ using namespace Akonadi::Server;
 
 CollectionDeleteHandler::CollectionDeleteHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 bool CollectionDeleteHandler::deleteRecursive(Collection &col)
 {

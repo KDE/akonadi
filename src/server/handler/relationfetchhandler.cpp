@@ -5,8 +5,8 @@
  ***************************************************************************/
 
 #include "relationfetchhandler.h"
-#include "handlerhelper.h"
 #include "connection.h"
+#include "handlerhelper.h"
 #include "storage/selectquerybuilder.h"
 
 #include <private/imapset_p.h>
@@ -16,7 +16,8 @@ using namespace Akonadi::Server;
 
 RelationFetchHandler::RelationFetchHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 bool RelationFetchHandler::parseStream()
 {
@@ -60,7 +61,8 @@ bool RelationFetchHandler::parseStream()
         relationQuery.addJoin(QueryBuilder::InnerJoin, Collection::tableName(), PimItem::collectionIdFullColumnName(), Collection::idFullColumnName());
 
         relationQuery.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, res.id());
-        relationQuery.addGroupColumns(QStringList() << Relation::leftIdFullColumnName() << Relation::rightIdFullColumnName() << Relation::typeIdFullColumnName());
+        relationQuery.addGroupColumns(QStringList() << Relation::leftIdFullColumnName() << Relation::rightIdFullColumnName()
+                                                    << Relation::typeIdFullColumnName());
     }
 
     if (!relationQuery.exec()) {

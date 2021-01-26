@@ -6,24 +6,24 @@
 
 #include "collectionview.h"
 
+#include "akonadiwidgets_debug.h"
 #include "collection.h"
 #include "controlgui.h"
 #include "entitytreemodel.h"
-#include "akonadiwidgets_debug.h"
 
 #include <KLocalizedString>
 #include <KXMLGUIFactory>
 #include <kxmlguiwindow.h>
 
 #include <QAction>
-#include <QMimeData>
-#include <QTimer>
-#include <QUrlQuery>
 #include <QApplication>
 #include <QDragMoveEvent>
 #include <QHeaderView>
 #include <QMenu>
+#include <QMimeData>
+#include <QTimer>
 #include <QUrl>
+#include <QUrlQuery>
 
 using namespace Akonadi;
 
@@ -65,9 +65,13 @@ void CollectionView::Private::init()
     mParent->setDragEnabled(true);
 
     dragExpandTimer.setSingleShot(true);
-    mParent->connect(&dragExpandTimer, &QTimer::timeout, mParent, [this]() { dragExpand(); });
+    mParent->connect(&dragExpandTimer, &QTimer::timeout, mParent, [this]() {
+        dragExpand();
+    });
 
-    mParent->connect(mParent, &QAbstractItemView::clicked, mParent, [this](const QModelIndex &mi) { itemClicked(mi); });
+    mParent->connect(mParent, &QAbstractItemView::clicked, mParent, [this](const QModelIndex &mi) {
+        itemClicked(mi);
+    });
 
     ControlGui::widgetNeedsAkonadi(mParent);
 }
@@ -144,8 +148,9 @@ void CollectionView::setModel(QAbstractItemModel *model)
     QTreeView::setModel(model);
     header()->setStretchLastSection(true);
 
-    connect(selectionModel(), &QItemSelectionModel::currentChanged,
-            this, [this](const QModelIndex &mi) { d->itemCurrentChanged(mi); });
+    connect(selectionModel(), &QItemSelectionModel::currentChanged, this, [this](const QModelIndex &mi) {
+        d->itemCurrentChanged(mi);
+    });
 }
 
 void CollectionView::dragMoveEvent(QDragMoveEvent *event)
@@ -167,7 +172,6 @@ void CollectionView::dragMoveEvent(QDragMoveEvent *event)
     }
     const QList<QUrl> urls = mimeData->urls();
     for (const QUrl &url : urls) {
-
         const Collection collection = Collection::fromUrl(url);
         if (collection.isValid()) {
             if (!supportedContentTypes.contains(QLatin1String("inode/directory"))) {
@@ -179,7 +183,7 @@ void CollectionView::dragMoveEvent(QDragMoveEvent *event)
                 break;
             }
         } else {
-            const QList<QPair<QString, QString> > query = QUrlQuery(url).queryItems();
+            const QList<QPair<QString, QString>> query = QUrlQuery(url).queryItems();
             const int numberOfQuery(query.count());
             for (int i = 0; i < numberOfQuery; ++i) {
                 if (query.at(i).first == QLatin1String("type")) {
@@ -235,8 +239,7 @@ void CollectionView::contextMenuEvent(QContextMenuEvent *event)
     if (!d->xmlGuiClient) {
         return;
     }
-    QMenu *popup = static_cast<QMenu *>(d->xmlGuiClient->factory()->container(
-                                            QStringLiteral("akonadi_collectionview_contextmenu"), d->xmlGuiClient));
+    QMenu *popup = static_cast<QMenu *>(d->xmlGuiClient->factory()->container(QStringLiteral("akonadi_collectionview_contextmenu"), d->xmlGuiClient));
     if (popup) {
         popup->exec(event->globalPos());
     }

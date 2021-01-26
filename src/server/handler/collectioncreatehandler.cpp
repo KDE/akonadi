@@ -7,10 +7,10 @@
 
 #include "connection.h"
 #include "handlerhelper.h"
-#include "storage/datastore.h"
-#include "storage/transaction.h"
-#include "storage/selectquerybuilder.h"
 #include "shared/akranges.h"
+#include "storage/datastore.h"
+#include "storage/selectquerybuilder.h"
+#include "storage/transaction.h"
 
 #include <private/scope_p.h>
 
@@ -20,7 +20,8 @@ using namespace AkRanges;
 
 CollectionCreateHandler::CollectionCreateHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 bool CollectionCreateHandler::parseStream()
 {
@@ -44,7 +45,11 @@ bool CollectionCreateHandler::parseStream()
 
         // check if parent can contain a sub-folder
         parentContentTypes = parent.mimeTypes();
-        const auto hasMimeType = [](const QString &mimeType) { return [mimeType](const MimeType &mt) { return mt.name() == mimeType; }; };
+        const auto hasMimeType = [](const QString &mimeType) {
+            return [mimeType](const MimeType &mt) {
+                return mt.name() == mimeType;
+            };
+        };
         const bool canContainCollections = parentContentTypes | Actions::any(hasMimeType(CollectionMimeType));
         const bool canContainVirtualCollections = parentContentTypes | Actions::any(hasMimeType(VirtualCollectionMimeType));
 
@@ -107,8 +112,7 @@ bool CollectionCreateHandler::parseStream()
 
     db->activeCachePolicy(collection);
 
-    sendResponse<Protocol::FetchCollectionsResponse>(
-        HandlerHelper::fetchCollectionsResponse(akonadi(), collection));
+    sendResponse<Protocol::FetchCollectionsResponse>(HandlerHelper::fetchCollectionsResponse(akonadi(), collection));
 
     return successResponse<Protocol::CreateCollectionResponse>();
 }

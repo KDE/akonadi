@@ -5,12 +5,12 @@
  */
 
 #include "querycache.h"
-#include "dbtype.h"
 #include "datastore.h"
+#include "dbtype.h"
 
+#include <QHash>
 #include <QSqlQuery>
 #include <QThreadStorage>
-#include <QHash>
 #include <QTimer>
 
 #include <chrono>
@@ -20,8 +20,8 @@ using namespace std::chrono_literals;
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-namespace {
-
+namespace
+{
 // After these seconds without activity the cache is cleaned
 constexpr auto CleanupTimeout = 60s;
 constexpr int MaxCacheSize = 50;
@@ -112,4 +112,3 @@ void QueryCache::clear()
 
     g_queryCache.localData()->cleanup();
 }
-

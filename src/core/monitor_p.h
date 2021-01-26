@@ -8,19 +8,19 @@
 #define AKONADI_MONITOR_P_H
 
 #include "akonadicore_export.h"
-#include "monitor.h"
+#include "changenotificationdependenciesfactory_p.h"
 #include "collection.h"
-#include "collectionstatisticsjob.h"
 #include "collectionfetchscope.h"
+#include "collectionstatisticsjob.h"
+#include "commandbuffer_p.h"
+#include "connection_p.h"
+#include "entitycache_p.h"
 #include "item.h"
 #include "itemfetchscope.h"
-#include "tagfetchscope.h"
 #include "job.h"
-#include "entitycache_p.h"
+#include "monitor.h"
 #include "servermanager.h"
-#include "changenotificationdependenciesfactory_p.h"
-#include "connection_p.h"
-#include "commandbuffer_p.h"
+#include "tagfetchscope.h"
 
 #include "private/protocol_p.h"
 
@@ -33,7 +33,6 @@
 
 namespace Akonadi
 {
-
 class Monitor;
 class ChangeNotification;
 
@@ -44,9 +43,10 @@ struct SignalId {
 
     using Unit = uint;
     static constexpr int Size = sizeof(&Monitor::itemAdded) / sizeof(Unit);
-    Unit data[sizeof(&Monitor::itemAdded) / sizeof(Unit)] = { 0 };
+    Unit data[sizeof(&Monitor::itemAdded) / sizeof(Unit)] = {0};
 
-    inline bool operator==(SignalId other) const {
+    inline bool operator==(SignalId other) const
+    {
         for (int i = Size - 1; i >= 0; --i) {
             if (data[i] != other.data[i]) {
                 return false;
@@ -68,10 +68,7 @@ inline uint qHash(SignalId sig)
 class AKONADICORE_EXPORT MonitorPrivate
 {
 public:
-    enum ListenerAction {
-        AddListener,
-        RemoveListener
-    };
+    enum ListenerAction { AddListener, RemoveListener };
 
     MonitorPrivate(ChangeNotificationDependenciesFactory *dependenciesFactory_, Monitor *parent);
     virtual ~MonitorPrivate();
@@ -174,24 +171,26 @@ public:
      * Sends out a change notification for an item.
      * @return @c true if the notification was actually send to someone, @c false if no one was listening.
      */
-    bool emitItemsNotification(const Protocol::ItemChangeNotification &msg, const Item::List &items = Item::List(),
-                               const Collection &collection = Collection(), const Collection &collectionDest = Collection());
+    bool emitItemsNotification(const Protocol::ItemChangeNotification &msg,
+                               const Item::List &items = Item::List(),
+                               const Collection &collection = Collection(),
+                               const Collection &collectionDest = Collection());
     /**
      * Sends out a change notification for a collection.
      * @return @c true if the notification was actually send to someone, @c false if no one was listening.
      */
-    bool emitCollectionNotification(const Protocol::CollectionChangeNotification &msg, const Collection &col = Collection(),
-                                    const Collection &par = Collection(), const Collection &dest = Collection());
+    bool emitCollectionNotification(const Protocol::CollectionChangeNotification &msg,
+                                    const Collection &col = Collection(),
+                                    const Collection &par = Collection(),
+                                    const Collection &dest = Collection());
 
     bool emitTagNotification(const Protocol::TagChangeNotification &msg, const Tag &tags);
 
     bool emitRelationNotification(const Protocol::RelationChangeNotification &msg, const Relation &relation);
 
-    bool emitSubscriptionChangeNotification(const Protocol::SubscriptionChangeNotification &msg,
-                                            const NotificationSubscriber &subscriber);
+    bool emitSubscriptionChangeNotification(const Protocol::SubscriptionChangeNotification &msg, const NotificationSubscriber &subscriber);
 
-    bool emitDebugChangeNotification(const Protocol::DebugChangeNotification &msg,
-                                     const ChangeNotification &ntf);
+    bool emitDebugChangeNotification(const Protocol::DebugChangeNotification &msg, const ChangeNotification &ntf);
 
     void serverStateChanged(Akonadi::ServerManager::State state);
 
@@ -215,8 +214,7 @@ public:
 
     void updateListeners(QMetaMethod signal, ListenerAction action);
 
-    template<typename Signal>
-    void updateListener(Signal signal, ListenerAction action)
+    template<typename Signal> void updateListener(Signal signal, ListenerAction action)
     {
         auto it = listeners.find(signalId(signal));
         if (action == AddListener) {
@@ -249,6 +247,7 @@ public:
     {
         // Buffer the most recent 10 unreferenced Collections
         static const int MAXBUFFERSIZE = 10;
+
     public:
         explicit PurgeBuffer()
         {
@@ -346,8 +345,7 @@ private:
         return false;
     }
 
-    template<typename T>
-    bool isMoveDestinationResourceMonitored(const T &msg) const
+    template<typename T> bool isMoveDestinationResourceMonitored(const T &msg) const
     {
         if (msg.operation() != T::Move) {
             return false;
@@ -358,7 +356,9 @@ private:
     void fetchStatistics(Collection::Id colId)
     {
         CollectionStatisticsJob *job = new CollectionStatisticsJob(Collection(colId), session);
-        QObject::connect(job, &KJob::result, q_ptr, [this](KJob *job) { slotStatisticsChangedFinished(job); });
+        QObject::connect(job, &KJob::result, q_ptr, [this](KJob *job) {
+            slotStatisticsChangedFinished(job);
+        });
     }
 
     void notifyCollectionStatisticsWatchers(Collection::Id collection, const QByteArray &resource);
@@ -367,8 +367,7 @@ private:
 
     // A hack to "cast" pointer to member function to something we can easily
     // use as a key in the hashtable
-    template<typename Signal>
-    constexpr SignalId signalId(Signal signal) const
+    template<typename Signal> constexpr SignalId signalId(Signal signal) const
     {
         union {
             Signal in;
@@ -377,18 +376,16 @@ private:
         return h.out;
     }
 
-    template<typename Signal>
-    bool hasListeners(Signal signal) const
+    template<typename Signal> bool hasListeners(Signal signal) const
     {
         auto it = listeners.find(signalId(signal));
         return it != listeners.end();
     }
 
-    template<typename Signal, typename ... Args>
-    bool emitToListeners(Signal signal, Args ... args)
+    template<typename Signal, typename... Args> bool emitToListeners(Signal signal, Args... args)
     {
         if (hasListeners(signal)) {
-            Q_EMIT (q_ptr->*signal)(std::forward<Args>(args) ...);
+            Q_EMIT(q_ptr->*signal)(std::forward<Args>(args)...);
             return true;
         }
         return false;

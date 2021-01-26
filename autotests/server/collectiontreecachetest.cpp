@@ -4,12 +4,12 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "dbinitializer.h"
 #include "storage/collectiontreecache.h"
-#include "storage/selectquerybuilder.h"
-#include "private/scope_p.h"
 #include "aktest.h"
+#include "dbinitializer.h"
 #include "fakeakonadiserver.h"
+#include "private/scope_p.h"
+#include "storage/selectquerybuilder.h"
 
 #include <QObject>
 #include <QSignalSpy>
@@ -25,7 +25,8 @@ public:
     InspectableCollectionTreeCache()
         : CollectionTreeCache()
         , mCachePopulated(0)
-    {}
+    {
+    }
 
     bool waitForCachePopulated()
     {
@@ -102,7 +103,6 @@ private:
         colA5.update();
     }
 
-
 private Q_SLOTS:
     void populateTest()
     {
@@ -118,14 +118,15 @@ private Q_SLOTS:
         QVERIFY(qb.exec());
         auto expCols = qb.result();
 
-        const auto sort = [](const Collection &l, const Collection &r) { return l.id() < r.id(); };
+        const auto sort = [](const Collection &l, const Collection &r) {
+            return l.id() < r.id();
+        };
         std::sort(allCols.begin(), allCols.end(), sort);
         std::sort(expCols.begin(), expCols.end(), sort);
 
         QCOMPARE(allCols.size(), expCols.size());
         QCOMPARE(allCols, expCols);
     }
-
 };
 
 AKTEST_FAKESERVER_MAIN(CollectionTreeCacheTest)

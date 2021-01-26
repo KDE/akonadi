@@ -7,14 +7,13 @@
 
 #include "instance_p.h"
 
-#include <QString>
 #include <QGlobalStatic>
+#include <QString>
 
 using namespace Akonadi;
 
 namespace
 {
-
 Q_GLOBAL_STATIC(QString, sIdentifier) // NOLINT(readability-redundant-member-init)
 
 void loadIdentifier()

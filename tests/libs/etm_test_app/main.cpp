@@ -4,9 +4,9 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include <QApplication>
-#include <KLocalizedString>
 #include <KAboutData>
+#include <KLocalizedString>
+#include <QApplication>
 #include <QCommandLineParser>
 
 #include "mainwindow.h"

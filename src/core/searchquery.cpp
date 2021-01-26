@@ -7,9 +7,9 @@
 #include "searchquery.h"
 #include "akonadicore_debug.h"
 
-#include <QVariant>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QVariant>
 
 using namespace Akonadi;
 
@@ -18,12 +18,8 @@ class SearchTerm::Private : public QSharedData
 public:
     bool operator==(const Private &other) const
     {
-        return relation == other.relation
-               && isNegated == other.isNegated
-               && terms == other.terms
-               && key == other.key
-               && value == other.value
-               && condition == other.condition;
+        return relation == other.relation && isNegated == other.isNegated && terms == other.terms && key == other.key && value == other.value
+            && condition == other.condition;
     }
 
     QString key;
@@ -114,7 +110,7 @@ SearchTerm::SearchTerm(const SearchTerm &other)
 {
 }
 
-SearchTerm::~SearchTerm()= default;
+SearchTerm::~SearchTerm() = default;
 
 SearchTerm &SearchTerm::operator=(const SearchTerm &other)
 {
@@ -162,7 +158,7 @@ void SearchTerm::addSubTerm(const SearchTerm &term)
     d->terms << term;
 }
 
-QList< SearchTerm > SearchTerm::subTerms() const
+QList<SearchTerm> SearchTerm::subTerms() const
 {
     return d->terms;
 }
@@ -297,7 +293,6 @@ static QMap<EmailSearchTerm::EmailSearchField, QString> emailSearchFieldMapping(
 EmailSearchTerm::EmailSearchTerm(EmailSearchTerm::EmailSearchField field, const QVariant &value, SearchTerm::Condition condition)
     : SearchTerm(toKey(field), value, condition)
 {
-
 }
 
 QString EmailSearchTerm::toKey(EmailSearchTerm::EmailSearchField field)
@@ -326,7 +321,6 @@ static QMap<ContactSearchTerm::ContactSearchField, QString> contactSearchFieldMa
 ContactSearchTerm::ContactSearchTerm(ContactSearchTerm::ContactSearchField field, const QVariant &value, SearchTerm::Condition condition)
     : SearchTerm(toKey(field), value, condition)
 {
-
 }
 
 QString ContactSearchTerm::toKey(ContactSearchTerm::ContactSearchField field)
@@ -355,7 +349,6 @@ QMap<IncidenceSearchTerm::IncidenceSearchField, QString> incidenceSearchFieldMap
 IncidenceSearchTerm::IncidenceSearchTerm(IncidenceSearchTerm::IncidenceSearchField field, const QVariant &value, SearchTerm::Condition condition)
     : SearchTerm(toKey(field), value, condition)
 {
-
 }
 
 QString IncidenceSearchTerm::toKey(IncidenceSearchTerm::IncidenceSearchField field)

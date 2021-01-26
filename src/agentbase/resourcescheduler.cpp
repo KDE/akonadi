@@ -6,15 +6,15 @@
 
 #include "resourcescheduler_p.h"
 
-#include <QDBusConnection>
 #include "recursivemover_p.h"
+#include <QDBusConnection>
 
 #include "akonadiagentbase_debug.h"
 #include "private/instance_p.h"
 #include <KLocalizedString>
 
-#include <QTimer>
 #include <QDBusInterface>
+#include <QTimer>
 
 using namespace Akonadi;
 
@@ -109,8 +109,7 @@ void ResourceScheduler::scheduleAttributesSync(const Collection &collection)
     scheduleNext();
 }
 
-void ResourceScheduler::scheduleItemFetch(const Akonadi::Item &item, const QSet<QByteArray> &parts,
-        const QList<QDBusMessage> &msgs, qint64 parentId)
+void ResourceScheduler::scheduleItemFetch(const Akonadi::Item &item, const QSet<QByteArray> &parts, const QList<QDBusMessage> &msgs, qint64 parentId)
 
 {
     Task t;
@@ -145,7 +144,7 @@ void ResourceScheduler::scheduleItemsFetch(const Item::List &items, const QSet<Q
     TaskList &queue = queueForTaskType(t.type);
     const int idx = queue.indexOf(t);
     if (idx != -1) {
-        queue[ idx ].dbusMsgs << msg;
+        queue[idx].dbusMsgs << msg;
         return;
     }
 
@@ -241,7 +240,10 @@ void Akonadi::ResourceScheduler::scheduleCollectionTreeSyncCompletion()
     scheduleNext();
 }
 
-void Akonadi::ResourceScheduler::scheduleCustomTask(QObject *receiver, const char *methodName, const QVariant &argument, ResourceBase::SchedulePriority priority)
+void Akonadi::ResourceScheduler::scheduleCustomTask(QObject *receiver,
+                                                    const char *methodName,
+                                                    const QVariant &argument,
+                                                    ResourceBase::SchedulePriority priority)
 {
     Task t;
     t.type = Custom;
@@ -280,7 +282,7 @@ void ResourceScheduler::taskDone()
     }
 
     if (s_resourcetracker) {
-        const QList<QVariant> argumentList = { QString::number(mCurrentTask.serial), QString() };
+        const QList<QVariant> argumentList = {QString::number(mCurrentTask.serial), QString()};
         s_resourcetracker->asyncCallWithArgumentList(QStringLiteral("jobEnded"), argumentList);
     }
 
@@ -382,7 +384,7 @@ void ResourceScheduler::executeNext()
     }
 
     if (s_resourcetracker) {
-        const QList<QVariant> argumentList = { QString::number(mCurrentTask.serial) };
+        const QList<QVariant> argumentList = {QString::number(mCurrentTask.serial)};
         s_resourcetracker->asyncCallWithArgumentList(QStringLiteral("jobStarted"), argumentList);
     }
 
@@ -435,14 +437,17 @@ void ResourceScheduler::executeNext()
         bool success = false;
         if (hasSlotWithVariant) {
             success = QMetaObject::invokeMethod(mCurrentTask.receiver, mCurrentTask.methodName.constData(), Q_ARG(QVariant, mCurrentTask.argument));
-            Q_ASSERT_X(success || !mCurrentTask.argument.isValid(), "ResourceScheduler::executeNext", "Valid argument was provided but the method wasn't found");
+            Q_ASSERT_X(success || !mCurrentTask.argument.isValid(),
+                       "ResourceScheduler::executeNext",
+                       "Valid argument was provided but the method wasn't found");
         }
         if (!success) {
             success = QMetaObject::invokeMethod(mCurrentTask.receiver, mCurrentTask.methodName.constData());
         }
 
         if (!success) {
-            qCCritical(AKONADIAGENTBASE_LOG) << "Could not invoke slot" << mCurrentTask.methodName << "on" << mCurrentTask.receiver << "with argument" << mCurrentTask.argument;
+            qCCritical(AKONADIAGENTBASE_LOG) << "Could not invoke slot" << mCurrentTask.methodName << "on" << mCurrentTask.receiver << "with argument"
+                                             << mCurrentTask.argument;
         }
         break;
     }
@@ -483,7 +488,7 @@ void ResourceScheduler::setOnline(bool state)
         TaskList &itemFetchQueue = queueForTaskType(FetchItem);
         qint64 parentId = -1;
         Task lastTask;
-        for (QList< Task >::iterator it = itemFetchQueue.begin(); it != itemFetchQueue.end();) {
+        for (QList<Task>::iterator it = itemFetchQueue.begin(); it != itemFetchQueue.end();) {
             if ((*it).type == FetchItem) {
                 qint64 idx = it->argument.toLongLong();
                 if (parentId == -1) {
@@ -498,7 +503,7 @@ void ResourceScheduler::setOnline(bool state)
                 lastTask = (*it);
                 it = itemFetchQueue.erase(it);
                 if (s_resourcetracker) {
-                    const QList<QVariant> argumentList = { QString::number(mCurrentTask.serial), i18nc("@info", "Job canceled.")};
+                    const QList<QVariant> argumentList = {QString::number(mCurrentTask.serial), i18nc("@info", "Job canceled.")};
                     s_resourcetracker->asyncCallWithArgumentList(QStringLiteral("jobEnded"), argumentList);
                 }
             } else {
@@ -517,25 +522,25 @@ void ResourceScheduler::signalTaskToTracker(const Task &task, const QByteArray &
             s_resourcetracker = new QDBusInterface(QLatin1String("org.kde.akonadiconsole") + suffix,
                                                    QStringLiteral("/resourcesJobtracker"),
                                                    QStringLiteral("org.freedesktop.Akonadi.JobTracker"),
-                                                   QDBusConnection::sessionBus(), nullptr);
+                                                   QDBusConnection::sessionBus(),
+                                                   nullptr);
         }
     }
 
     if (s_resourcetracker) {
-        const QList<QVariant> argumentList = QList<QVariant>()
-                << static_cast<AgentBase *>(parent())->identifier()   // "session" (in our case resource)
-                << QString::number(task.serial)                       // "job"
-                << QString()                                          // "parent job"
-                << QString::fromLatin1(taskType)                      // "job type"
-                << debugString                                        // "job debugging string"
-                   ;
+        const QList<QVariant> argumentList = QList<QVariant>() << static_cast<AgentBase *>(parent())->identifier() // "session" (in our case resource)
+                                                               << QString::number(task.serial) // "job"
+                                                               << QString() // "parent job"
+                                                               << QString::fromLatin1(taskType) // "job type"
+                                                               << debugString // "job debugging string"
+            ;
         s_resourcetracker->asyncCallWithArgumentList(QStringLiteral("jobCreated"), argumentList);
     }
 }
 
 void ResourceScheduler::collectionRemoved(const Akonadi::Collection &collection)
 {
-    if (!collection.isValid()) {   // should not happen, but you never know...
+    if (!collection.isValid()) { // should not happen, but you never know...
         return;
     }
     TaskList &queue = queueForTaskType(SyncCollection);
@@ -640,24 +645,22 @@ void Akonadi::ResourceScheduler::cancelQueues()
     }
 }
 
-static const char s_taskTypes[][27] = {
-    "Invalid (no task)",
-    "SyncAll",
-    "SyncCollectionTree",
-    "SyncCollection",
-    "SyncCollectionAttributes",
-    "SyncTags",
-    "FetchItem",
-    "FetchItems",
-    "ChangeReplay",
-    "RecursiveMoveReplay",
-    "DeleteResourceCollection",
-    "InvalideCacheForCollection",
-    "SyncAllDone",
-    "SyncCollectionTreeDone",
-    "SyncRelations",
-    "Custom"
-};
+static const char s_taskTypes[][27] = {"Invalid (no task)",
+                                       "SyncAll",
+                                       "SyncCollectionTree",
+                                       "SyncCollection",
+                                       "SyncCollectionAttributes",
+                                       "SyncTags",
+                                       "FetchItem",
+                                       "FetchItems",
+                                       "ChangeReplay",
+                                       "RecursiveMoveReplay",
+                                       "DeleteResourceCollection",
+                                       "InvalideCacheForCollection",
+                                       "SyncAllDone",
+                                       "SyncCollectionTreeDone",
+                                       "SyncRelations",
+                                       "Custom"};
 
 QTextStream &Akonadi::operator<<(QTextStream &d, const ResourceScheduler::Task &task)
 {

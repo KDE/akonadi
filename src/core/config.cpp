@@ -6,15 +6,15 @@
 #include "config_p.h"
 #include "private/instance_p.h"
 
-#include <KSharedConfig>
 #include <KConfigGroup>
+#include <KSharedConfig>
 
 using namespace Akonadi;
 
 Q_GLOBAL_STATIC(Config, sConfig) // NOLINT(readability-redundant-member-init)
 
-namespace {
-
+namespace
+{
 QString getConfigName()
 {
     if (Instance::hasIdentifier()) {
@@ -26,11 +26,8 @@ QString getConfigName()
 
 static constexpr char group_PayloadCompression[] = "PayloadCompression";
 
-
 // Payload compression
 static constexpr char key_PC_Enabled[] = "enabled";
-
-
 
 } // namespace
 

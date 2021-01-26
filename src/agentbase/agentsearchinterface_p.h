@@ -16,7 +16,6 @@ class KJob;
 
 namespace Akonadi
 {
-
 class AgentSearchInterfacePrivate : public QObject
 {
     Q_OBJECT
@@ -35,7 +34,7 @@ private Q_SLOTS:
     void collectionReceived(KJob *job);
 
 private:
-    AgentSearchInterface * const q;
+    AgentSearchInterface *const q;
 };
 
 }

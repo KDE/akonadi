@@ -9,20 +9,19 @@
 
 #include "akthread.h"
 
+#include "agentmanagerinterface.h"
+#include "exception.h"
 #include <QMap>
-#include <QVector>
+#include <QMutex>
 #include <QSet>
 #include <QStringList>
-#include <QMutex>
+#include <QVector>
 #include <QWaitCondition>
-#include "exception.h"
-#include "agentmanagerinterface.h"
 
 namespace Akonadi
 {
 namespace Server
 {
-
 class Connection;
 class AgentSearchInstance;
 
@@ -38,7 +37,7 @@ public:
     QMutex sharedLock;
     QWaitCondition notifier;
 
-    QVector<QPair<QString /* resource */, qint64 /* collection */> > queries;
+    QVector<QPair<QString /* resource */, qint64 /* collection */>> queries;
     QSet<qint64> pendingResults;
 };
 
@@ -72,7 +71,7 @@ private:
         qint64 timestamp;
     };
 
-    typedef QMap<QString /* resource */, ResourceTask *>  TasksMap;
+    typedef QMap<QString /* resource */, ResourceTask *> TasksMap;
 
     bool mShouldStop;
 

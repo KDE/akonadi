@@ -13,7 +13,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @short An Attribute that marks that an entity was marked as deleted
  *

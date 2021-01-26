@@ -5,21 +5,21 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "standarddirs_p.h"
-#include "instance_p.h"
 #include "akonadiprivate_debug.h"
+#include "instance_p.h"
+#include "standarddirs_p.h"
 
 #include <QCoreApplication>
-#include <QStandardPaths>
+#include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QStandardPaths>
 #include <QVector>
-#include <QDir>
 
 using namespace Akonadi;
 
-namespace {
-
+namespace
+{
 QString buildFullRelPath(const char *resource, const QString &relPath)
 {
     QString fullRelPath = QStringLiteral("/akonadi");
@@ -48,7 +48,6 @@ QString StandardDirs::configFile(const QString &configFile, FileAccessMode openM
     if (openMode == WriteOnly) {
         return savePath;
     }
-
 
     auto path = QStandardPaths::locate(QStandardPaths::GenericConfigLocation, QLatin1String("akonadi/") + configFile);
     // HACK: when using instance namespaces, ignore the non-namespaced file
@@ -109,13 +108,11 @@ QString StandardDirs::saveDir(const char *resource, const QString &relPath)
         if (fileInfo.isDir()) {
             return fullPath;
         } else {
-            qCWarning(AKONADIPRIVATE_LOG) << "StandardDirs::saveDir: '" << fileInfo.absoluteFilePath()
-                                          << "' exists but is not a directory";
+            qCWarning(AKONADIPRIVATE_LOG) << "StandardDirs::saveDir: '" << fileInfo.absoluteFilePath() << "' exists but is not a directory";
         }
     } else {
         if (!QDir::home().mkpath(fileInfo.absoluteFilePath())) {
-            qCWarning(AKONADIPRIVATE_LOG) << "StandardDirs::saveDir: failed to create directory '"
-                                          << fileInfo.absoluteFilePath() << "'";
+            qCWarning(AKONADIPRIVATE_LOG) << "StandardDirs::saveDir: failed to create directory '" << fileInfo.absoluteFilePath() << "'";
         } else {
             return fullPath;
         }
@@ -130,12 +127,10 @@ QString StandardDirs::locateResourceFile(const char *resource, const QString &re
     QVector<QStandardPaths::StandardLocation> userLocations;
     QStandardPaths::StandardLocation genericLocation;
     if (qstrncmp(resource, "config", 6) == 0) {
-        userLocations = { QStandardPaths::AppConfigLocation,
-                          QStandardPaths::ConfigLocation };
+        userLocations = {QStandardPaths::AppConfigLocation, QStandardPaths::ConfigLocation};
         genericLocation = QStandardPaths::GenericConfigLocation;
     } else if (qstrncmp(resource, "data", 4) == 0) {
-        userLocations = { QStandardPaths::AppLocalDataLocation,
-                          QStandardPaths::AppDataLocation };
+        userLocations = {QStandardPaths::AppLocalDataLocation, QStandardPaths::AppDataLocation};
         genericLocation = QStandardPaths::GenericDataLocation;
     } else {
         qt_assert_x(__FUNCTION__, "Invalid resource type", __FILE__, __LINE__);
@@ -178,8 +173,7 @@ QString StandardDirs::locateResourceFile(const char *resource, const QString &re
 
 QStringList StandardDirs::locateAllResourceDirs(const QString &relPath)
 {
-    return QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, relPath,
-                                     QStandardPaths::LocateDirectory);
+    return QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, relPath, QStandardPaths::LocateDirectory);
 }
 
 QString StandardDirs::findExecutable(const QString &executableName)

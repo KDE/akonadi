@@ -7,9 +7,9 @@
 #include "qtest_akonadi.h"
 #include "servermanager.h"
 
-#include <QObject>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
+#include <QObject>
 
 using namespace Akonadi;
 
@@ -39,11 +39,11 @@ private Q_SLOTS:
     void testResources()
     {
         QVERIFY(QDBusConnection::sessionBus().interface()->isServiceRegistered(
-                    ServerManager::agentServiceName(ServerManager::Resource, QStringLiteral("akonadi_knut_resource_0"))));
+            ServerManager::agentServiceName(ServerManager::Resource, QStringLiteral("akonadi_knut_resource_0"))));
         QVERIFY(QDBusConnection::sessionBus().interface()->isServiceRegistered(
-                    ServerManager::agentServiceName(ServerManager::Resource, QStringLiteral("akonadi_knut_resource_1"))));
+            ServerManager::agentServiceName(ServerManager::Resource, QStringLiteral("akonadi_knut_resource_1"))));
         QVERIFY(QDBusConnection::sessionBus().interface()->isServiceRegistered(
-                    ServerManager::agentServiceName(ServerManager::Resource, QStringLiteral("akonadi_knut_resource_2"))));
+            ServerManager::agentServiceName(ServerManager::Resource, QStringLiteral("akonadi_knut_resource_2"))));
     }
 };
 

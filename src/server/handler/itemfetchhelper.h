@@ -7,15 +7,14 @@
 #ifndef AKONADI_ITEMFETCHHELPER_H
 #define AKONADI_ITEMFETCHHELPER_H
 
-
+#include "commandcontext.h"
 #include "storage/countquerybuilder.h"
 #include "storage/datastore.h"
 #include "storage/itemretriever.h"
-#include "commandcontext.h"
 
 #include <private/imapset_p.h>
-#include <private/scope_p.h>
 #include <private/protocol_p.h>
+#include <private/scope_p.h>
 
 #include <functional>
 
@@ -23,24 +22,25 @@ class ItemFetchHelperTest;
 
 namespace Akonadi
 {
-
 namespace Server
 {
-
 class Connection;
 class AkonadiServer;
 
 class ItemFetchHelper
 {
 public:
-    ItemFetchHelper(Connection *connection, const Scope &scope,
-            const Protocol::ItemFetchScope &itemFetchScope,
-            const Protocol::TagFetchScope &tagFagScope,
-            AkonadiServer &akonadi);
-    ItemFetchHelper(Connection *connection, const CommandContext &context, const Scope &scope,
-            const Protocol::ItemFetchScope &itemFetchScope,
-            const Protocol::TagFetchScope &tagFetchScope,
-            AkonadiServer &akonadi);
+    ItemFetchHelper(Connection *connection,
+                    const Scope &scope,
+                    const Protocol::ItemFetchScope &itemFetchScope,
+                    const Protocol::TagFetchScope &tagFagScope,
+                    AkonadiServer &akonadi);
+    ItemFetchHelper(Connection *connection,
+                    const CommandContext &context,
+                    const Scope &scope,
+                    const Protocol::ItemFetchScope &itemFetchScope,
+                    const Protocol::TagFetchScope &tagFetchScope,
+                    AkonadiServer &akonadi);
 
     bool fetchItems(std::function<void(Protocol::FetchItemsResponse &&)> &&callback = {});
 

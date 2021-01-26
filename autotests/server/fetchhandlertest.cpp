@@ -6,13 +6,13 @@
 
 #include <QObject>
 
-#include <private/scope_p.h>
 #include <private/imapset_p.h>
+#include <private/scope_p.h>
 
-#include "fakeakonadiserver.h"
 #include "aktest.h"
-#include "entities.h"
 #include "dbinitializer.h"
+#include "entities.h"
+#include "fakeakonadiserver.h"
 
 #include <QTest>
 
@@ -22,12 +22,12 @@ using namespace Akonadi::Server;
 Q_DECLARE_METATYPE(Akonadi::Server::Tag::List)
 Q_DECLARE_METATYPE(Akonadi::Server::Tag)
 
-
 class FetchHandlerTest : public QObject
 {
     Q_OBJECT
 
     FakeAkonadiServer mAkonadi;
+
 public:
     FetchHandlerTest()
         : QObject()
@@ -67,12 +67,11 @@ private Q_SLOTS:
         PimItem item1 = initializer->createItem("item1", col);
         PimItem item2 = initializer->createItem("item2", col);
 
-        QTest::addColumn<TestScenario::List >("scenarios");
+        QTest::addColumn<TestScenario::List>("scenarios");
 
         {
             TestScenario::List scenarios;
-            scenarios << mAkonadi.loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item1.id()))
+            scenarios << mAkonadi.loginScenario() << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item1.id()))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponsePtr::create());
 
@@ -81,7 +80,9 @@ private Q_SLOTS:
         {
             TestScenario::List scenarios;
             scenarios << mAkonadi.loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col.id())))
+                      << TestScenario::create(5,
+                                              TestScenario::ClientCmd,
+                                              createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col.id())))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item2))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponsePtr::create());
@@ -121,7 +122,9 @@ private Q_SLOTS:
         {
             TestScenario::List scenarios;
             scenarios << mAkonadi.loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Tag, tag.id())))
+                      << TestScenario::create(5,
+                                              TestScenario::ClientCmd,
+                                              createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Tag, tag.id())))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponsePtr::create());
 
@@ -129,9 +132,10 @@ private Q_SLOTS:
         }
         {
             TestScenario::List scenarios;
-            scenarios << mAkonadi.loginScenario()
-                      << mAkonadi.selectResourceScenario(QStringLiteral("testresource"))
-                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Tag, tag.id())))
+            scenarios << mAkonadi.loginScenario() << mAkonadi.selectResourceScenario(QStringLiteral("testresource"))
+                      << TestScenario::create(5,
+                                              TestScenario::ClientCmd,
+                                              createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Tag, tag.id())))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponsePtr::create());
 
@@ -139,9 +143,10 @@ private Q_SLOTS:
         }
         {
             TestScenario::List scenarios;
-            scenarios << mAkonadi.loginScenario()
-                      << mAkonadi.selectResourceScenario(QStringLiteral("testresource"))
-                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col.id())))
+            scenarios << mAkonadi.loginScenario() << mAkonadi.selectResourceScenario(QStringLiteral("testresource"))
+                      << TestScenario::create(5,
+                                              TestScenario::ClientCmd,
+                                              createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col.id())))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item2))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponsePtr::create());
@@ -181,15 +186,18 @@ private Q_SLOTS:
 
         {
             TestScenario::List scenarios;
-            scenarios << mAkonadi.loginScenario()
-                      << mAkonadi.selectResourceScenario(QStringLiteral("testresource"))
-                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col2.id())))
+            scenarios << mAkonadi.loginScenario() << mAkonadi.selectResourceScenario(QStringLiteral("testresource"))
+                      << TestScenario::create(5,
+                                              TestScenario::ClientCmd,
+                                              createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col2.id())))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponsePtr::create())
-                      << TestScenario::create(6, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Tag, tag.id())))
+                      << TestScenario::create(6,
+                                              TestScenario::ClientCmd,
+                                              createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Tag, tag.id())))
                       << TestScenario::create(6, TestScenario::ServerCmd, createResponse(item1))
                       << TestScenario::create(6, TestScenario::ServerCmd, Protocol::FetchItemsResponsePtr::create());
 
-            //Special case that used to be broken due to persistent command context
+            // Special case that used to be broken due to persistent command context
             QTest::newRow("fetch by tag after collection") << scenarios;
         }
     }
@@ -212,9 +220,9 @@ private Q_SLOTS:
         timer.start();
         QList<PimItem> items;
         for (int i = 0; i < 1000; i++) {
-            items.append(initializer->createItem(QString::number(i).toLatin1().constData(),col1));
+            items.append(initializer->createItem(QString::number(i).toLatin1().constData(), col1));
         }
-        qDebug() << timer.nsecsElapsed()/1.0e6 << "ms";
+        qDebug() << timer.nsecsElapsed() / 1.0e6 << "ms";
         timer.start();
 
         QTest::addColumn<TestScenario::List>("scenarios");
@@ -222,7 +230,9 @@ private Q_SLOTS:
         {
             TestScenario::List scenarios;
             scenarios << mAkonadi.loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col1.id())));
+                      << TestScenario::create(5,
+                                              TestScenario::ClientCmd,
+                                              createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col1.id())));
             while (!items.isEmpty()) {
                 const PimItem &item = items.takeLast();
                 scenarios << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item));
@@ -230,7 +240,7 @@ private Q_SLOTS:
             scenarios << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponsePtr::create());
             QTest::newRow("complete list") << scenarios;
         }
-        qDebug() << timer.nsecsElapsed()/1.0e6 << "ms";
+        qDebug() << timer.nsecsElapsed() / 1.0e6 << "ms";
     }
 
     void testList()
@@ -238,11 +248,10 @@ private Q_SLOTS:
         QFETCH(TestScenario::List, scenarios);
 
         mAkonadi.setScenarios(scenarios);
-        //StorageDebugger::instance()->enableSQLDebugging(true);
-        //StorageDebugger::instance()->writeToFile(QStringLiteral("sqllog.txt"));
+        // StorageDebugger::instance()->enableSQLDebugging(true);
+        // StorageDebugger::instance()->writeToFile(QStringLiteral("sqllog.txt"));
         mAkonadi.runTest();
     }
-
 };
 
 AKTEST_FAKESERVER_MAIN(FetchHandlerTest)

@@ -7,9 +7,9 @@
 #include "partfetcher.h"
 
 #include "entitytreemodel.h"
-#include "session.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
+#include "session.h"
 #include <KLocalizedString>
 
 Q_DECLARE_METATYPE(QSet<QByteArray>)
@@ -18,7 +18,6 @@ using namespace Akonadi;
 
 namespace Akonadi
 {
-
 class PartFetcherPrivate
 {
     PartFetcherPrivate(PartFetcher *partFetcher, const QModelIndex &index, const QByteArray &partName)
@@ -67,7 +66,7 @@ void PartFetcherPrivate::fetchJobDone(KJob *job)
         return;
     }
 
-    const QSet<QByteArray> loadedParts = m_persistentIndex.data(EntityTreeModel::LoadedPartsRole).value<QSet<QByteArray> >();
+    const QSet<QByteArray> loadedParts = m_persistentIndex.data(EntityTreeModel::LoadedPartsRole).value<QSet<QByteArray>>();
 
     Q_ASSERT(!loadedParts.contains(m_partName));
 
@@ -104,7 +103,7 @@ void PartFetcher::start()
 
     const QModelIndex index = d->m_persistentIndex;
 
-    const QSet<QByteArray> loadedParts = index.data(EntityTreeModel::LoadedPartsRole).value<QSet<QByteArray> >();
+    const QSet<QByteArray> loadedParts = index.data(EntityTreeModel::LoadedPartsRole).value<QSet<QByteArray>>();
 
     if (loadedParts.contains(d->m_partName)) {
         d->m_item = d->m_persistentIndex.data(EntityTreeModel::ItemRole).value<Item>();
@@ -112,7 +111,7 @@ void PartFetcher::start()
         return;
     }
 
-    const QSet<QByteArray> availableParts = index.data(EntityTreeModel::AvailablePartsRole).value<QSet<QByteArray> >();
+    const QSet<QByteArray> availableParts = index.data(EntityTreeModel::AvailablePartsRole).value<QSet<QByteArray>>();
     if (!availableParts.contains(d->m_partName)) {
         setError(UserDefinedError);
         setErrorText(i18n("Payload part '%1' is not available for this index", QString::fromLatin1(d->m_partName)));
@@ -142,7 +141,9 @@ void PartFetcher::start()
     scope.fetchPayloadPart(d->m_partName);
     auto *itemFetchJob = new Akonadi::ItemFetchJob(item, session);
     itemFetchJob->setFetchScope(scope);
-    connect(itemFetchJob, &KJob::result, this, [d](KJob *job) { d->fetchJobDone(job); });
+    connect(itemFetchJob, &KJob::result, this, [d](KJob *job) {
+        d->fetchJobDone(job);
+    });
 }
 
 QModelIndex PartFetcher::index() const

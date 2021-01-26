@@ -8,40 +8,40 @@
 #include "datastore.h"
 
 #include "akonadi.h"
+#include "akonadischema.h"
+#include "akonadiserver_debug.h"
+#include "collectionqueryhelper.h"
 #include "collectionstatistics.h"
+#include "countquerybuilder.h"
 #include "dbconfig.h"
 #include "dbinitializer.h"
 #include "dbupdater.h"
-#include "notificationmanager.h"
-#include "tracer.h"
-#include "transaction.h"
-#include "selectquerybuilder.h"
-#include "handlerhelper.h"
-#include "countquerybuilder.h"
-#include "parthelper.h"
 #include "handler.h"
-#include "collectionqueryhelper.h"
-#include "akonadischema.h"
+#include "handlerhelper.h"
+#include "notificationmanager.h"
+#include "parthelper.h"
 #include "parttypehelper.h"
 #include "querycache.h"
 #include "queryhelper.h"
-#include "akonadiserver_debug.h"
+#include "selectquerybuilder.h"
 #include "storagedebugger.h"
+#include "tracer.h"
+#include "transaction.h"
 #include <utils.h>
 
 #include <private/externalpartstorage_p.h>
 
 #include <QCoreApplication>
+#include <QElapsedTimer>
+#include <QFile>
+#include <QSqlDriver>
+#include <QSqlQuery>
 #include <QString>
 #include <QStringList>
 #include <QThread>
 #include <QTimer>
 #include <QUuid>
 #include <QVariant>
-#include <QSqlDriver>
-#include <QSqlQuery>
-#include <QFile>
-#include <QElapsedTimer>
 
 #include <functional>
 
@@ -53,14 +53,18 @@ QMutex DataStore::sTransactionMutex = {};
 
 static QThreadStorage<DataStore *> sInstances;
 
-#define TRANSACTION_MUTEX_LOCK if ( DbType::isSystemSQLite( m_database ) ) sTransactionMutex.lock()
-#define TRANSACTION_MUTEX_UNLOCK if ( DbType::isSystemSQLite( m_database ) ) sTransactionMutex.unlock()
+#define TRANSACTION_MUTEX_LOCK                                                                                                                                 \
+    if (DbType::isSystemSQLite(m_database))                                                                                                                    \
+    sTransactionMutex.lock()
+#define TRANSACTION_MUTEX_UNLOCK                                                                                                                               \
+    if (DbType::isSystemSQLite(m_database))                                                                                                                    \
+    sTransactionMutex.unlock()
 
-#define setBoolPtr(ptr, val) \
-    { \
-        if ((ptr)) { \
-            *(ptr) = (val); \
-        } \
+#define setBoolPtr(ptr, val)                                                                                                                                   \
+    {                                                                                                                                                          \
+        if ((ptr)) {                                                                                                                                           \
+            *(ptr) = (val);                                                                                                                                    \
+        }                                                                                                                                                      \
     }
 
 std::unique_ptr<DataStoreFactory> DataStore::sFactory;
@@ -69,7 +73,6 @@ void DataStore::setFactory(std::unique_ptr<DataStoreFactory> factory)
 {
     sFactory = std::move(factory);
 }
-
 
 /***************************************************************************
  *   DataStore                                                           *
@@ -86,8 +89,7 @@ DataStore::DataStore(AkonadiServer &akonadi)
         // without properly reporting the error
         m_keepAliveTimer = new QTimer(this);
         m_keepAliveTimer->setInterval(3600 * 1000);
-        QObject::connect(m_keepAliveTimer, &QTimer::timeout,
-                         this, &DataStore::sendKeepAliveQuery);
+        QObject::connect(m_keepAliveTimer, &QTimer::timeout, this, &DataStore::sendKeepAliveQuery);
     }
 }
 
@@ -116,15 +118,12 @@ void DataStore::open()
         qCDebug(AKONADISERVER_LOG) << "Database" << m_database.databaseName() << "opened using driver" << m_database.driverName();
     }
 
-    StorageDebugger::instance()->addConnection(reinterpret_cast<qint64>(this),
-                                               QThread::currentThread()->objectName());
-    connect(QThread::currentThread(), &QThread::objectNameChanged,
-            this, [this](const QString &name) {
-                if (!name.isEmpty()) {
-                    StorageDebugger::instance()->changeConnection(reinterpret_cast<qint64>(this),
-                                                                  name);
-                }
-            });
+    StorageDebugger::instance()->addConnection(reinterpret_cast<qint64>(this), QThread::currentThread()->objectName());
+    connect(QThread::currentThread(), &QThread::objectNameChanged, this, [this](const QString &name) {
+        if (!name.isEmpty()) {
+            StorageDebugger::instance()->changeConnection(reinterpret_cast<qint64>(this), name);
+        }
+    });
 
     DbConfig::configuredDatabase()->initSession(m_database);
 
@@ -143,7 +142,6 @@ QSqlDatabase DataStore::database()
 
 void DataStore::close()
 {
-
     if (m_keepAliveTimer) {
         m_keepAliveTimer->stop();
     }
@@ -232,7 +230,9 @@ bool DataStore::hasDataStore()
 bool DataStore::setItemsFlags(const PimItem::List &items,
                               const QVector<Flag> *currentFlags,
                               const QVector<Flag> &newFlags,
-                              bool *flagsChanged, const Collection &col_, bool silent)
+                              bool *flagsChanged,
+                              const Collection &col_,
+                              bool silent)
 {
     QSet<QString> removedFlags;
     QSet<QString> addedFlags;
@@ -305,9 +305,7 @@ bool DataStore::setItemsFlags(const PimItem::List &items,
     return true;
 }
 
-bool DataStore::doAppendItemsFlag(const PimItem::List &items, const Flag &flag,
-                                  const QSet<Entity::Id> &existing, const Collection &col_,
-                                  bool silent)
+bool DataStore::doAppendItemsFlag(const PimItem::List &items, const Flag &flag, const QSet<Entity::Id> &existing, const Collection &col_, bool silent)
 {
     Collection col = col_;
     QVariantList flagIds;
@@ -349,9 +347,12 @@ bool DataStore::doAppendItemsFlag(const PimItem::List &items, const Flag &flag,
     return true;
 }
 
-bool DataStore::appendItemsFlags(const PimItem::List &items, const QVector<Flag> &flags,
-                                 bool *flagsChanged, bool checkIfExists,
-                                 const Collection &col, bool silent)
+bool DataStore::appendItemsFlags(const PimItem::List &items,
+                                 const QVector<Flag> &flags,
+                                 bool *flagsChanged,
+                                 bool checkIfExists,
+                                 const Collection &col,
+                                 bool silent)
 {
     QVariantList itemsIds;
     itemsIds.reserve(items.count());
@@ -378,7 +379,7 @@ bool DataStore::appendItemsFlags(const PimItem::List &items, const QVector<Flag>
 
             QSqlQuery query = qb.query();
             if (query.driver()->hasFeature(QSqlDriver::QuerySize)) {
-                //The query size feature is not supported by the sqllite driver
+                // The query size feature is not supported by the sqllite driver
                 if (query.size() == items.count()) {
                     continue;
                 }
@@ -404,8 +405,7 @@ bool DataStore::appendItemsFlags(const PimItem::List &items, const QVector<Flag>
     return true;
 }
 
-bool DataStore::removeItemsFlags(const PimItem::List &items, const QVector<Flag> &flags,
-                                 bool *flagsChanged, const Collection &col_, bool silent)
+bool DataStore::removeItemsFlags(const PimItem::List &items, const QVector<Flag> &flags, bool *flagsChanged, const Collection &col_, bool silent)
 {
     Collection col = col_;
     QSet<QString> removedFlags;
@@ -458,8 +458,7 @@ bool DataStore::removeItemsFlags(const PimItem::List &items, const QVector<Flag>
 
 /* --- ItemTags ----------------------------------------------------- */
 
-bool DataStore::setItemsTags(const PimItem::List &items, const Tag::List &tags,
-                             bool *tagsChanged, bool silent)
+bool DataStore::setItemsTags(const PimItem::List &items, const Tag::List &tags, bool *tagsChanged, bool silent)
 {
     QSet<qint64> removedTags;
     QSet<qint64> addedTags;
@@ -521,9 +520,7 @@ bool DataStore::setItemsTags(const PimItem::List &items, const Tag::List &tags,
     return true;
 }
 
-bool DataStore::doAppendItemsTag(const PimItem::List &items, const Tag &tag,
-                                 const QSet<Entity::Id> &existing, const Collection &col,
-                                 bool silent)
+bool DataStore::doAppendItemsTag(const PimItem::List &items, const Tag &tag, const QSet<Entity::Id> &existing, const Collection &col, bool silent)
 {
     QVariantList tagIds;
     QVariantList appendIds;
@@ -558,9 +555,7 @@ bool DataStore::doAppendItemsTag(const PimItem::List &items, const Tag &tag,
     return true;
 }
 
-bool DataStore::appendItemsTags(const PimItem::List &items, const Tag::List &tags,
-                                bool *tagsChanged, bool checkIfExists,
-                                const Collection &col, bool silent)
+bool DataStore::appendItemsTags(const PimItem::List &items, const Tag::List &tags, bool *tagsChanged, bool checkIfExists, const Collection &col, bool silent)
 {
     QVariantList itemsIds;
     itemsIds.reserve(items.count());
@@ -612,8 +607,7 @@ bool DataStore::appendItemsTags(const PimItem::List &items, const Tag::List &tag
     return true;
 }
 
-bool DataStore::removeItemsTags(const PimItem::List &items, const Tag::List &tags,
-                                bool *tagsChanged, bool silent)
+bool DataStore::removeItemsTags(const PimItem::List &items, const Tag::List &tags, bool *tagsChanged, bool silent)
 {
     QSet<qint64> removedTags;
     QVariantList itemsIds;
@@ -687,8 +681,7 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
         // Emit special tagRemoved notification for each resource that owns the tag
         QueryBuilder qb(TagRemoteIdResourceRelation::tableName(), QueryBuilder::Select);
         qb.addColumn(TagRemoteIdResourceRelation::remoteIdFullColumnName());
-        qb.addJoin(QueryBuilder::InnerJoin, Resource::tableName(),
-                   TagRemoteIdResourceRelation::resourceIdFullColumnName(), Resource::idFullColumnName());
+        qb.addJoin(QueryBuilder::InnerJoin, Resource::tableName(), TagRemoteIdResourceRelation::resourceIdFullColumnName(), Resource::idFullColumnName());
         qb.addColumn(Resource::nameFullColumnName());
         qb.addValueCondition(TagRemoteIdResourceRelation::tagIdFullColumnName(), Query::Equals, tag.id());
         if (!qb.exec()) {
@@ -736,10 +729,10 @@ bool DataStore::removeItemParts(const PimItem &item, const QSet<QByteArray> &par
     }
 
     const Part::List existingParts = qb.result();
-    for (Part part : qAsConst(existingParts)) {  //krazy:exclude=foreach
+    for (Part part : qAsConst(existingParts)) { // krazy:exclude=foreach
         if (!PartHelper::remove(&part)) {
-            qCWarning(AKONADISERVER_LOG) << "Failed to remove part" << part.id() << "(" << part.partType().ns()
-                                         << ":" << part.partType().name() << ") from Item" << item.id();
+            qCWarning(AKONADISERVER_LOG) << "Failed to remove part" << part.id() << "(" << part.partType().ns() << ":" << part.partType().name()
+                                         << ") from Item" << item.id();
             return false;
         }
     }
@@ -768,8 +761,8 @@ bool DataStore::invalidateItemCache(const PimItem &item)
     // clear data field
     for (Part part : parts) {
         if (!PartHelper::truncate(part)) {
-            qCWarning(AKONADISERVER_LOG) << "Failed to truncate payload part" << part.id() << "(" << part.partType().ns()
-                                         << ":" << part.partType().name() << ") of Item" << item.id();
+            qCWarning(AKONADISERVER_LOG) << "Failed to truncate payload part" << part.id() << "(" << part.partType().ns() << ":" << part.partType().name()
+                                         << ") of Item" << item.id();
             return false;
         }
     }
@@ -783,21 +776,20 @@ bool DataStore::appendCollection(Collection &collection, const QStringList &mime
     // no need to check for already existing collection with the same name,
     // a unique index on parent + name prevents that in the database
     if (!collection.insert()) {
-        qCWarning(AKONADISERVER_LOG) << "Failed to append Collection" << collection.name() << "in resource"
-                                     << collection.resource().name();
+        qCWarning(AKONADISERVER_LOG) << "Failed to append Collection" << collection.name() << "in resource" << collection.resource().name();
         return false;
     }
 
     if (!appendMimeTypeForCollection(collection.id(), mimeTypes)) {
-        qCWarning(AKONADISERVER_LOG) << "Failed to append mimetypes" << mimeTypes << "to new collection" << collection.name()
-                                     << "(ID" << collection.id() << ") in resource" << collection.resource().name();
+        qCWarning(AKONADISERVER_LOG) << "Failed to append mimetypes" << mimeTypes << "to new collection" << collection.name() << "(ID" << collection.id()
+                                     << ") in resource" << collection.resource().name();
         return false;
     }
 
     for (auto it = attributes.cbegin(), end = attributes.cend(); it != end; ++it) {
         if (!addCollectionAttribute(collection, it.key(), it.value(), true)) {
-            qCWarning(AKONADISERVER_LOG) << "Failed to append attribute" << it.key() << "to new collection" << collection.name()
-                                         << "(ID" << collection.id() << ") in resource" << collection.resource().name();
+            qCWarning(AKONADISERVER_LOG) << "Failed to append attribute" << it.key() << "to new collection" << collection.name() << "(ID" << collection.id()
+                                         << ") in resource" << collection.resource().name();
             return false;
         }
     }
@@ -839,13 +831,11 @@ bool DataStore::cleanupCollection(Collection &collection)
 
     try {
         while (qb.query().next()) {
-            ExternalPartStorage::self()->removePartFile(
-                ExternalPartStorage::resolveAbsolutePath(qb.query().value(0).toByteArray()));
+            ExternalPartStorage::self()->removePartFile(ExternalPartStorage::resolveAbsolutePath(qb.query().value(0).toByteArray()));
         }
     } catch (const PartHelperException &e) {
         qb.query().finish();
-        qCWarning(AKONADISERVER_LOG) << "PartHelperException while cleaning up collection" << collection.name()
-                                     << "(ID" << collection.id() << "):" << e.what();
+        qCWarning(AKONADISERVER_LOG) << "PartHelperException while cleaning up collection" << collection.name() << "(ID" << collection.id() << "):" << e.what();
         return false;
     }
     qb.query().finish();
@@ -865,26 +855,26 @@ bool DataStore::cleanupCollection_slow(Collection &collection)
     notificationCollector()->itemsRemoved(items, collection, resource);
 
     for (const PimItem &item : items) {
-        if (!item.clearFlags()) {   // TODO: move out of loop and use only a single query
-            qCWarning(AKONADISERVER_LOG) << "Slow cleanup of collection" << collection.name() << "(ID" << collection.id() <<")"
+        if (!item.clearFlags()) { // TODO: move out of loop and use only a single query
+            qCWarning(AKONADISERVER_LOG) << "Slow cleanup of collection" << collection.name() << "(ID" << collection.id() << ")"
                                          << "failed: error clearing items flags";
             return false;
         }
-        if (!PartHelper::remove(Part::pimItemIdColumn(), item.id())) {     // TODO: reduce to single query
-            qCWarning(AKONADISERVER_LOG) << "Slow cleanup of collection" << collection.name() << "(ID" << collection.id() <<")"
+        if (!PartHelper::remove(Part::pimItemIdColumn(), item.id())) { // TODO: reduce to single query
+            qCWarning(AKONADISERVER_LOG) << "Slow cleanup of collection" << collection.name() << "(ID" << collection.id() << ")"
                                          << "failed: error clearing item payload parts";
 
             return false;
         }
 
-        if (!PimItem::remove(PimItem::idColumn(), item.id())) {     // TODO: move into single querya
-            qCWarning(AKONADISERVER_LOG) << "Slow cleanup of collection" << collection.name() << "(ID" << collection.id() <<")"
+        if (!PimItem::remove(PimItem::idColumn(), item.id())) { // TODO: move into single querya
+            qCWarning(AKONADISERVER_LOG) << "Slow cleanup of collection" << collection.name() << "(ID" << collection.id() << ")"
                                          << "failed: error clearing items";
             return false;
         }
 
-        if (!Entity::clearRelation<CollectionPimItemRelation>(item.id(), Entity::Right)) {     // TODO: move into single query
-            qCWarning(AKONADISERVER_LOG) << "Slow cleanup of collection" << collection.name() << "(ID" << collection.id() <<")"
+        if (!Entity::clearRelation<CollectionPimItemRelation>(item.id(), Entity::Right)) { // TODO: move into single query
+            qCWarning(AKONADISERVER_LOG) << "Slow cleanup of collection" << collection.name() << "(ID" << collection.id() << ")"
                                          << "failed: error clearing linked items";
             return false;
         }
@@ -895,7 +885,7 @@ bool DataStore::cleanupCollection_slow(Collection &collection)
     Collection::clearPimItems(collection.id());
 
     // delete attributes
-    Q_FOREACH (CollectionAttribute attr, collection.attributes()) { //krazy:exclude=foreach
+    Q_FOREACH (CollectionAttribute attr, collection.attributes()) { // krazy:exclude=foreach
         if (!attr.remove()) {
             qCWarning(AKONADISERVER_LOG) << "Slow cleanup of collection" << collection.name() << "(ID" << collection.id() << ")"
                                          << "failed: error clearing attribute" << attr.type();
@@ -918,8 +908,7 @@ static bool recursiveSetResourceId(const Collection &collection, qint64 resource
     qb.setColumnValue(Collection::remoteIdColumn(), QVariant());
     qb.setColumnValue(Collection::remoteRevisionColumn(), QVariant());
     if (!qb.exec()) {
-        qCWarning(AKONADISERVER_LOG) << "Failed to set resource ID" << resourceId << "to collection"
-                                     << collection.name() << "(ID" << collection.id() << ")";
+        qCWarning(AKONADISERVER_LOG) << "Failed to set resource ID" << resourceId << "to collection" << collection.name() << "(ID" << collection.id() << ")";
         return false;
     }
 
@@ -934,8 +923,7 @@ static bool recursiveSetResourceId(const Collection &collection, qint64 resource
     qb.setColumnValue(PimItem::atimeColumn(), now);
     qb.setColumnValue(PimItem::dirtyColumn(), true);
     if (!qb.exec()) {
-        qCWarning(AKONADISERVER_LOG) << "Failed reset RID/RREV for PimItems in Collection" << collection.name()
-                                     << "(ID" << collection.id() << ")";
+        qCWarning(AKONADISERVER_LOG) << "Failed reset RID/RREV for PimItems in Collection" << collection.name() << "(ID" << collection.id() << ")";
         return false;
     }
 
@@ -960,8 +948,7 @@ bool DataStore::moveCollection(Collection &collection, const Collection &newPare
     }
 
     if (!newParent.isValid()) {
-        qCWarning(AKONADISERVER_LOG) << "Failed to move collection" << collection.name() << "(ID"
-                                     << collection.id() << "): invalid destination";
+        qCWarning(AKONADISERVER_LOG) << "Failed to move collection" << collection.name() << "(ID" << collection.id() << "): invalid destination";
         return false;
     }
 
@@ -969,7 +956,7 @@ bool DataStore::moveCollection(Collection &collection, const Collection &newPare
 
     int resourceId = collection.resourceId();
     const Collection source = collection.parent();
-    if (newParent.id() > 0) {   // not root
+    if (newParent.id() > 0) { // not root
         resourceId = newParent.resourceId();
     }
     if (!CollectionQueryHelper::canBeMovedTo(collection, newParent)) {
@@ -1044,8 +1031,7 @@ void DataStore::activeCachePolicy(Collection &col)
 QVector<Collection> DataStore::virtualCollections(const PimItem &item)
 {
     SelectQueryBuilder<Collection> qb;
-    qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(),
-               Collection::idFullColumnName(), CollectionPimItemRelation::leftFullColumnName());
+    qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(), Collection::idFullColumnName(), CollectionPimItemRelation::leftFullColumnName());
     qb.addValueCondition(CollectionPimItemRelation::rightFullColumnName(), Query::Equals, item.id());
 
     if (!qb.exec()) {
@@ -1056,18 +1042,14 @@ QVector<Collection> DataStore::virtualCollections(const PimItem &item)
     return qb.result();
 }
 
-QMap<Entity::Id, QList<PimItem> > DataStore::virtualCollections(const PimItem::List &items)
+QMap<Entity::Id, QList<PimItem>> DataStore::virtualCollections(const PimItem::List &items)
 {
     QueryBuilder qb(CollectionPimItemRelation::tableName(), QueryBuilder::Select);
-    qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(),
-               Collection::idFullColumnName(), CollectionPimItemRelation::leftFullColumnName());
-    qb.addJoin(QueryBuilder::InnerJoin, PimItem::tableName(),
-               PimItem::idFullColumnName(), CollectionPimItemRelation::rightFullColumnName());
+    qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(), Collection::idFullColumnName(), CollectionPimItemRelation::leftFullColumnName());
+    qb.addJoin(QueryBuilder::InnerJoin, PimItem::tableName(), PimItem::idFullColumnName(), CollectionPimItemRelation::rightFullColumnName());
     qb.addColumn(Collection::idFullColumnName());
-    qb.addColumns(QStringList() << PimItem::idFullColumnName()
-                  << PimItem::remoteIdFullColumnName()
-                  << PimItem::remoteRevisionFullColumnName()
-                  << PimItem::mimeTypeIdFullColumnName());
+    qb.addColumns(QStringList() << PimItem::idFullColumnName() << PimItem::remoteIdFullColumnName() << PimItem::remoteRevisionFullColumnName()
+                                << PimItem::mimeTypeIdFullColumnName());
     qb.addSortColumn(Collection::idFullColumnName(), Query::Ascending);
 
     if (items.count() == 1) {
@@ -1083,11 +1065,11 @@ QMap<Entity::Id, QList<PimItem> > DataStore::virtualCollections(const PimItem::L
 
     if (!qb.exec()) {
         qCWarning(AKONADISERVER_LOG) << "Failed to query virtual Collections which PimItems" << items << "belong into";
-        return QMap<Entity::Id, QList<PimItem> >();
+        return QMap<Entity::Id, QList<PimItem>>();
     }
 
     QSqlQuery query = qb.query();
-    QMap<Entity::Id, QList<PimItem> > map;
+    QMap<Entity::Id, QList<PimItem>> map;
     query.next();
     while (query.isValid()) {
         const qlonglong collectionId = query.value(0).toLongLong();
@@ -1135,22 +1117,20 @@ bool DataStore::appendPimItem(QVector<Part> &parts,
     pimItem.setAtime(QDateTime::currentDateTimeUtc());
 
     if (!pimItem.insert()) {
-        qCWarning(AKONADISERVER_LOG) << "Failed to append new PimItem into Collection" << collection.name()
-                                     << "(ID" << collection.id() << ")";
+        qCWarning(AKONADISERVER_LOG) << "Failed to append new PimItem into Collection" << collection.name() << "(ID" << collection.id() << ")";
         return false;
     }
 
     // insert every part
     if (!parts.isEmpty()) {
-        //don't use foreach, the caller depends on knowing the part has changed, see the Append handler
+        // don't use foreach, the caller depends on knowing the part has changed, see the Append handler
         for (QVector<Part>::iterator it = parts.begin(); it != parts.end(); ++it) {
-
             (*it).setPimItemId(pimItem.id());
             if ((*it).datasize() < (*it).data().size()) {
                 (*it).setDatasize((*it).data().size());
             }
 
-//      qCDebug(AKONADISERVER_LOG) << "Insert from DataStore::appendPimItem";
+            //      qCDebug(AKONADISERVER_LOG) << "Insert from DataStore::appendPimItem";
             if (!PartHelper::insert(&(*it))) {
                 qCWarning(AKONADISERVER_LOG) << "Failed to add part" << it->partType().name() << "to new PimItem" << pimItem.id();
                 return false;
@@ -1160,15 +1140,14 @@ bool DataStore::appendPimItem(QVector<Part> &parts,
 
     bool seen = false;
     for (const Flag &flag : flags) {
-        seen |= (flag.name() == QLatin1String(AKONADI_FLAG_SEEN)
-                 || flag.name() == QLatin1String(AKONADI_FLAG_IGNORED));
+        seen |= (flag.name() == QLatin1String(AKONADI_FLAG_SEEN) || flag.name() == QLatin1String(AKONADI_FLAG_IGNORED));
         if (!pimItem.addFlag(flag)) {
             qCWarning(AKONADISERVER_LOG) << "Failed to add flag" << flag.name() << "to new PimItem" << pimItem.id();
             return false;
         }
     }
 
-//   qCDebug(AKONADISERVER_LOG) << "appendPimItem: " << pimItem;
+    //   qCDebug(AKONADISERVER_LOG) << "appendPimItem: " << pimItem;
 
     notificationCollector()->itemAdded(pimItem, seen, collection);
     return true;
@@ -1183,7 +1162,7 @@ bool DataStore::unhidePimItem(PimItem &pimItem)
     qCDebug(AKONADISERVER_LOG) << "DataStore::unhidePimItem(" << pimItem << ")";
 
     // FIXME: This is inefficient. Using a bit on the PimItemTable record would probably be some orders of magnitude faster...
-    return removeItemParts(pimItem, { AKONADI_ATTRIBUTE_HIDDEN });
+    return removeItemParts(pimItem, {AKONADI_ATTRIBUTE_HIDDEN});
 }
 
 bool DataStore::unhideAllPimItems()
@@ -1195,8 +1174,7 @@ bool DataStore::unhideAllPimItems()
     qCDebug(AKONADISERVER_LOG) << "DataStore::unhideAllPimItems()";
 
     try {
-        return PartHelper::remove(Part::partTypeIdFullColumnName(),
-                                  PartTypeHelper::fromFqName(QStringLiteral("ATR"), QStringLiteral("HIDDEN")).id());
+        return PartHelper::remove(Part::partTypeIdFullColumnName(), PartTypeHelper::fromFqName(QStringLiteral("ATR"), QStringLiteral("HIDDEN")).id());
     } catch (...) {
     } // we can live with this failing
 
@@ -1256,14 +1234,14 @@ bool DataStore::addCollectionAttribute(const Collection &col, const QByteArray &
     qb.addValueCondition(CollectionAttribute::collectionIdColumn(), Query::Equals, col.id());
     qb.addValueCondition(CollectionAttribute::typeColumn(), Query::Equals, key);
     if (!qb.exec()) {
-        qCWarning(AKONADISERVER_LOG) << "Failed to append attribute" << key << "to Collection" << col.name()
-                                     << "(ID" << col.id() << "): Failed to query existing attribute";
+        qCWarning(AKONADISERVER_LOG) << "Failed to append attribute" << key << "to Collection" << col.name() << "(ID" << col.id()
+                                     << "): Failed to query existing attribute";
         return false;
     }
 
     if (!qb.result().isEmpty()) {
-        qCWarning(AKONADISERVER_LOG) << "Failed to append attribute" << key << "to Collection" << col.name()
-                                     << "(ID" << col.id() << "): Attribute already exists";
+        qCWarning(AKONADISERVER_LOG) << "Failed to append attribute" << key << "to Collection" << col.name() << "(ID" << col.id()
+                                     << "): Attribute already exists";
         return false;
     }
 
@@ -1273,8 +1251,7 @@ bool DataStore::addCollectionAttribute(const Collection &col, const QByteArray &
     attr.setValue(value);
 
     if (!attr.insert()) {
-        qCWarning(AKONADISERVER_LOG) << "Failed to append attribute" << key << "to Collection" << col.name()
-                                     << "(ID" << col.id() << ")";
+        qCWarning(AKONADISERVER_LOG) << "Failed to append attribute" << key << "to Collection" << col.name() << "(ID" << col.id() << ")";
         return false;
     }
 
@@ -1314,10 +1291,8 @@ void DataStore::debugLastDbError(const char *actionDescription) const
     qCCritical(AKONADISERVER_LOG) << "  Last database error:" << m_database.lastError().databaseText();
 
     m_akonadi.tracer().error("DataStore (Database Error)",
-                          QStringLiteral("%1\nDriver said: %2\nDatabase said:%3")
-                          .arg(QString::fromLatin1(actionDescription),
-                               m_database.lastError().driverText(),
-                               m_database.lastError().databaseText()));
+                             QStringLiteral("%1\nDriver said: %2\nDatabase said:%3")
+                                 .arg(QString::fromLatin1(actionDescription), m_database.lastError().driverText(), m_database.lastError().databaseText()));
 }
 
 void DataStore::debugLastQueryError(const QSqlQuery &query, const char *actionDescription) const
@@ -1328,9 +1303,7 @@ void DataStore::debugLastQueryError(const QSqlQuery &query, const char *actionDe
     qCCritical(AKONADISERVER_LOG) << "  Last database error:" << m_database.lastError().databaseText();
 
     m_akonadi.tracer().error("DataStore (Database Query Error)",
-                          QStringLiteral("%1: %2")
-                          .arg(QString::fromLatin1(actionDescription),
-                               query.lastError().text()));
+                             QStringLiteral("%1: %2").arg(QString::fromLatin1(actionDescription), query.lastError().text()));
 }
 
 // static
@@ -1352,11 +1325,10 @@ QDateTime DataStore::dateTimeToQDateTime(const QByteArray &dateTime)
 bool DataStore::doRollback()
 {
     QSqlDriver *driver = m_database.driver();
-    QElapsedTimer timer; timer.start();
+    QElapsedTimer timer;
+    timer.start();
     driver->rollbackTransaction();
-    StorageDebugger::instance()->removeTransaction(reinterpret_cast<qint64>(this),
-                                                   false, timer.elapsed(),
-                                                   m_database.lastError().text());
+    StorageDebugger::instance()->removeTransaction(reinterpret_cast<qint64>(this), false, timer.elapsed(), m_database.lastError().text());
     if (m_database.lastError().isValid()) {
         TRANSACTION_MUTEX_UNLOCK;
         debugLastDbError("DataStore::rollbackTransaction");
@@ -1386,9 +1358,7 @@ bool DataStore::beginTransaction(const QString &name)
         TRANSACTION_MUTEX_LOCK;
         if (DbType::type(m_database) == DbType::Sqlite) {
             m_database.exec(QStringLiteral("BEGIN IMMEDIATE TRANSACTION"));
-            StorageDebugger::instance()->addTransaction(reinterpret_cast<qint64>(this),
-                                                        name, timer.elapsed(),
-                                                        m_database.lastError().text());
+            StorageDebugger::instance()->addTransaction(reinterpret_cast<qint64>(this), name, timer.elapsed(), m_database.lastError().text());
             if (m_database.lastError().isValid()) {
                 debugLastDbError("DataStore::beginTransaction (SQLITE)");
                 TRANSACTION_MUTEX_UNLOCK;
@@ -1396,9 +1366,7 @@ bool DataStore::beginTransaction(const QString &name)
             }
         } else {
             m_database.driver()->beginTransaction();
-            StorageDebugger::instance()->addTransaction(reinterpret_cast<qint64>(this),
-                                                        name, timer.elapsed(),
-                                                        m_database.lastError().text());
+            StorageDebugger::instance()->addTransaction(reinterpret_cast<qint64>(this), name, timer.elapsed(), m_database.lastError().text());
             if (m_database.lastError().isValid()) {
                 debugLastDbError("DataStore::beginTransaction");
                 TRANSACTION_MUTEX_UNLOCK;
@@ -1462,9 +1430,7 @@ bool DataStore::commitTransaction()
         QElapsedTimer timer;
         timer.start();
         driver->commitTransaction();
-        StorageDebugger::instance()->removeTransaction(reinterpret_cast<qint64>(this),
-                                                       true, timer.elapsed(),
-                                                       m_database.lastError().text());
+        StorageDebugger::instance()->removeTransaction(reinterpret_cast<qint64>(this), true, timer.elapsed(), m_database.lastError().text());
         if (m_database.lastError().isValid()) {
             debugLastDbError("DataStore::commitTransaction");
             rollbackTransaction();

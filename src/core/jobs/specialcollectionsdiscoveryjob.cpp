@@ -5,9 +5,9 @@
 */
 
 #include "specialcollectionsdiscoveryjob.h"
-#include "specialcollectionattribute.h"
-#include "collectionfetchscope.h"
 #include "collectionfetchjob.h"
+#include "collectionfetchscope.h"
+#include "specialcollectionattribute.h"
 #include <QStringList>
 
 #include "akonadicore_debug.h"

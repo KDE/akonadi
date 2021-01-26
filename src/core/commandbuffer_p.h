@@ -16,8 +16,8 @@ class QObject;
 
 #include "akonadicore_debug.h"
 
-namespace Akonadi {
-
+namespace Akonadi
+{
 class CommandBufferLocker;
 class CommandBufferNotifyBlocker;
 
@@ -25,6 +25,7 @@ class CommandBuffer
 {
     friend class CommandBufferLocker;
     friend class CommandBufferNotifyBlocker;
+
 public:
     struct Command {
         qint64 tag;
@@ -39,10 +40,11 @@ public:
 
     void enqueue(qint64 tag, const Protocol::CommandPtr &command)
     {
-        mCommands.enqueue({ tag, command });
+        mCommands.enqueue({tag, command});
         if (mNotify) {
             const bool ok = QMetaObject::invokeMethod(mParent, mNotifySlot.constData(), Qt::QueuedConnection);
-            Q_ASSERT(ok); Q_UNUSED(ok)
+            Q_ASSERT(ok);
+            Q_UNUSED(ok)
         }
     }
 
@@ -128,6 +130,7 @@ public:
     {
         mBuffer->mNotify = true;
     }
+
 private:
     Q_DISABLE_COPY_MOVE(CommandBufferNotifyBlocker)
 

@@ -6,16 +6,15 @@
 
 #include "searchcreatehandler.h"
 
-
 #include "akonadi.h"
+#include "akonadiserver_debug.h"
 #include "connection.h"
 #include "handlerhelper.h"
+#include "search/searchmanager.h"
 #include "storage/datastore.h"
 #include "storage/entity.h"
 #include "storage/transaction.h"
-#include "search/searchmanager.h"
 #include <shared/akranges.h>
-#include "akonadiserver_debug.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -23,7 +22,8 @@ using namespace AkRanges;
 
 SearchCreateHandler::SearchCreateHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 bool SearchCreateHandler::parseStream()
 {
@@ -51,14 +51,17 @@ bool SearchCreateHandler::parseStream()
 
     QVector<qint64> queryColIds = cmd.queryCollections();
     std::sort(queryColIds.begin(), queryColIds.end());
-    const auto queryCollections = queryColIds | Views::transform([](const auto id) { return QString::number(id); }) | Actions::toQList;
+    const auto queryCollections = queryColIds | Views::transform([](const auto id) {
+                                      return QString::number(id);
+                                  })
+        | Actions::toQList;
 
     Collection col;
     col.setQueryString(cmd.query());
     col.setQueryAttributes(queryAttributes.join(QLatin1Char(' ')));
     col.setQueryCollections(queryCollections.join(QLatin1Char(' ')));
-    col.setParentId(1);   // search root
-    col.setResourceId(1);   // search resource
+    col.setParentId(1); // search root
+    col.setResourceId(1); // search resource
     col.setName(cmd.name());
     col.setIsVirtual(true);
 

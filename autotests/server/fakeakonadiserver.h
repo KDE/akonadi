@@ -10,34 +10,29 @@
 #include "akonadi.h"
 #include "exception.h"
 
-#include <QSignalSpy>
 #include <QSharedPointer>
+#include <QSignalSpy>
 
-#include <type_traits>
 #include <memory>
+#include <type_traits>
 
 #include <private/protocol_p.h>
 
-
-namespace Akonadi {
-namespace Server {
-
+namespace Akonadi
+{
+namespace Server
+{
 class InspectableNotificationCollector;
 class FakeDataStore;
 class FakeConnection;
 class FakeClient;
 
-class TestScenario {
+class TestScenario
+{
 public:
     typedef QList<TestScenario> List;
 
-    enum Action {
-        ServerCmd,
-        ClientCmd,
-        Wait,
-        Quit,
-        Ignore
-    };
+    enum Action { ServerCmd, ClientCmd, Wait, Quit, Ignore };
 
     Action action;
     QByteArray data;
@@ -46,17 +41,17 @@ public:
 
     static TestScenario wait(int timeout)
     {
-        return TestScenario { Wait, QByteArray::number(timeout) };
+        return TestScenario{Wait, QByteArray::number(timeout)};
     }
 
     static TestScenario quit()
     {
-        return TestScenario { Quit, QByteArray() };
+        return TestScenario{Quit, QByteArray()};
     }
 
     static TestScenario ignore(int count)
     {
-        return TestScenario { Ignore, QByteArray::number(count) };
+        return TestScenario{Ignore, QByteArray::number(count)};
     }
 };
 
@@ -101,7 +96,6 @@ private:
     FakeDataStore *mDataStore = nullptr;
     std::unique_ptr<FakeConnection> mConnection;
     std::unique_ptr<FakeClient> mClient;
-
 
     InspectableNotificationCollector *mNtfCollector = nullptr;
     QSharedPointer<QSignalSpy> mNotificationSpy;

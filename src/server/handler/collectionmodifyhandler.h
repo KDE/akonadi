@@ -13,14 +13,13 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
   @ingroup akonadi_server_handler
 
   This command is used to modify collections. Its syntax is similar to the STORE
   command.
 */
-class CollectionModifyHandler: public Handler
+class CollectionModifyHandler : public Handler
 {
 public:
     CollectionModifyHandler(AkonadiServer &akonadi);

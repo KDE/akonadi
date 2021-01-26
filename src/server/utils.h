@@ -8,8 +8,8 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <QVariant>
 #include <QDateTime>
+#include <QVariant>
 
 #include "storage/datastore.h"
 #include "storage/dbtype.h"
@@ -20,7 +20,6 @@ namespace Server
 {
 namespace Utils
 {
-
 /**
  * Converts a QVariant to a QString depending on its internal type.
  */

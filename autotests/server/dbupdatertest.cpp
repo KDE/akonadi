@@ -6,7 +6,6 @@
 
 #include "dbupdatertest.h"
 
-
 #include "storage/dbupdater.h"
 #include <QTest>
 
@@ -25,7 +24,7 @@ void DbUpdaterTest::testMysqlUpdateStatements()
     {
         UpdateSet::Map updateSets;
         QVERIFY(updater.parseUpdateSets(1, updateSets));
-        const auto expectedSets ={ 2, 3, 4, 8, 10, 12, 13, 14, 15 ,16, 17, 18, 19, 20, 21, 22, 23,  25, 26, 28, 31, 35 };
+        const auto expectedSets = {2, 3, 4, 8, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 28, 31, 35};
         for (const auto expected : expectedSets) {
             QVERIFY(updateSets.contains(expected));
         }
@@ -35,7 +34,7 @@ void DbUpdaterTest::testMysqlUpdateStatements()
     {
         UpdateSet::Map updateSets;
         QVERIFY(updater.parseUpdateSets(13, updateSets));
-        const auto expectedSets = { 14, 15 ,16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 28, 31, 35 };
+        const auto expectedSets = {14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 28, 31, 35};
         for (int i = 0; i < 13; ++i) {
             QVERIFY(!updateSets.contains(i));
         }
@@ -58,7 +57,7 @@ void DbUpdaterTest::testPsqlUpdateStatements()
     {
         UpdateSet::Map updateSets;
         QVERIFY(updater.parseUpdateSets(1, updateSets));
-        const auto expectedSets = { 2, 3, 4, 8, 10, 12, 13, 14, 15, 16, 19, 23, 24, 25, 26, 28, 30, 33, 35 };
+        const auto expectedSets = {2, 3, 4, 8, 10, 12, 13, 14, 15, 16, 19, 23, 24, 25, 26, 28, 30, 33, 35};
         for (const auto expected : expectedSets) {
             QVERIFY(updateSets.contains(expected));
         }
@@ -68,7 +67,7 @@ void DbUpdaterTest::testPsqlUpdateStatements()
     {
         UpdateSet::Map updateSets;
         QVERIFY(updater.parseUpdateSets(13, updateSets));
-        const auto expectedSets = { 14, 15 ,16, 19, 23, 24, 25, 26, 28, 30, 33, 35 };
+        const auto expectedSets = {14, 15, 16, 19, 23, 24, 25, 26, 28, 30, 33, 35};
         for (int i = 0; i < 13; ++i) {
             QVERIFY(!updateSets.contains(i));
         }

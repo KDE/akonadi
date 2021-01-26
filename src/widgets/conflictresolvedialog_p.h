@@ -10,14 +10,13 @@
 
 #include <QDialog>
 
-#include "conflicthandler_p.h"
 #include "akonadiwidgetstests_export.h"
+#include "conflicthandler_p.h"
 
 class QTextBrowser;
 
 namespace Akonadi
 {
-
 /**
  * @short A dialog to ask the user for a resolve strategy for conflicts.
  *

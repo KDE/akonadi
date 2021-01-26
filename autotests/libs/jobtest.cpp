@@ -18,13 +18,20 @@ class FakeJob : public Job
 {
     Q_OBJECT
 public:
-    explicit FakeJob(QObject *parent = nullptr) : Job(parent) {}
+    explicit FakeJob(QObject *parent = nullptr)
+        : Job(parent)
+    {
+    }
     void done()
     {
         emitResult();
     }
+
 protected:
-    void doStart() override { emitWriteFinished(); }
+    void doStart() override
+    {
+        emitWriteFinished();
+    }
 };
 
 class JobTest : public QObject

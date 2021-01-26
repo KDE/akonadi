@@ -14,16 +14,15 @@ class QString;
 
 namespace Akonadi
 {
-
 /**
-  * @short Global Trash-related Settings
-  *
-  * All settings concerning the trashhandling should go here.
-  *
-  * @author Christian Mollekopf <chrigi_1@fastmail.fm>
-  * @since 4.8
-  */
-//TODO setting for time before items are deleted by janitor agent
+ * @short Global Trash-related Settings
+ *
+ * All settings concerning the trashhandling should go here.
+ *
+ * @author Christian Mollekopf <chrigi_1@fastmail.fm>
+ * @since 4.8
+ */
+// TODO setting for time before items are deleted by janitor agent
 namespace TrashSettings
 {
 /**

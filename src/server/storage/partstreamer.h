@@ -15,7 +15,6 @@
 
 namespace Akonadi
 {
-
 namespace Protocol
 {
 class PartMetaData;
@@ -25,7 +24,6 @@ using CommandPtr = QSharedPointer<Command>;
 
 namespace Server
 {
-
 AKONADI_EXCEPTION_MAKE_INSTANCE(PartStreamerException);
 
 class PimItem;

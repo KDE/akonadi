@@ -13,10 +13,9 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class Relation;
 
-class RelationModifyHandler: public Handler
+class RelationModifyHandler : public Handler
 {
 public:
     RelationModifyHandler(AkonadiServer &akonadi);

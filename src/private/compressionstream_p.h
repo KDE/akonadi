@@ -16,7 +16,6 @@
 
 namespace Akonadi
 {
-
 class Compressor;
 class AKONADIPRIVATE_EXPORT CompressionStream : public QIODevice
 {
@@ -49,4 +48,3 @@ private:
 } // namespace Akonadi
 
 #endif
-

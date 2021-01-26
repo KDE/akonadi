@@ -13,13 +13,12 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
   @ingroup akonadi_server_handler
 
   Handler for the RELATIONFETCH command.
  */
-class RelationFetchHandler: public Handler
+class RelationFetchHandler : public Handler
 {
 public:
     RelationFetchHandler(AkonadiServer &akonadi);

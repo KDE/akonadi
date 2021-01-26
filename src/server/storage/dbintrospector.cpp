@@ -6,15 +6,15 @@
 */
 
 #include "dbintrospector.h"
+#include "akonadiserver_debug.h"
+#include "dbexception.h"
 #include "dbintrospector_impl.h"
 #include "dbtype.h"
-#include "dbexception.h"
 #include "querybuilder.h"
-#include "akonadiserver_debug.h"
 
 #include <QSqlField>
-#include <QSqlRecord>
 #include <QSqlQuery>
+#include <QSqlRecord>
 
 using namespace Akonadi::Server;
 

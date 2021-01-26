@@ -7,10 +7,10 @@
 #include "collectionqueryhelper.h"
 
 #include "connection.h"
-#include "storage/querybuilder.h"
-#include "storage/selectquerybuilder.h"
 #include "handler.h"
 #include "queryhelper.h"
+#include "storage/querybuilder.h"
+#include "storage/selectquerybuilder.h"
 
 #include <private/imapset_p.h>
 
@@ -127,7 +127,7 @@ Collection CollectionQueryHelper::singleCollectionFromScope(const Scope &scope, 
     // root
     if (scope.scope() == Scope::Uid && scope.uidSet().intervals().count() == 1) {
         const ImapInterval i = scope.uidSet().intervals().at(0);
-        if (!i.size()) {   // ### why do we need this hack for 0, shouldn't that be size() == 1?
+        if (!i.size()) { // ### why do we need this hack for 0, shouldn't that be size() == 1?
             Collection root;
             root.setId(0);
             return root;

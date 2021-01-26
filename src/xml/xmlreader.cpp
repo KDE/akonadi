@@ -24,8 +24,7 @@ Attribute *XmlReader::elementToAttribute(const QDomElement &elem)
     return attr;
 }
 
-template<typename T>
-static void readAttributesImpl(const QDomElement &elem, T &entity)
+template<typename T> static void readAttributesImpl(const QDomElement &elem, T &entity)
 {
     if (elem.isNull()) {
         return;
@@ -102,7 +101,7 @@ Tag XmlReader::elementToTag(const QDomElement &elem)
     t.setGid(elem.attribute(Format::Attr::gid()).toUtf8());
     t.setType(elem.attribute(Format::Attr::type()).toUtf8());
 
-    //TODO Implement rid parent support in TagCreateJob first
+    // TODO Implement rid parent support in TagCreateJob first
     // const QDomElement parentElem = elem.parentNode().toElement();
     // if ( !parentElem.isNull() && parentElem.tagName() == Format::Tag::tag() ) {
     //   Tag parent;

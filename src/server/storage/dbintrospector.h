@@ -18,7 +18,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
  * Methods for introspecting the current state of a database schema.
  * I.e. this is about the structure of a database, not its content.

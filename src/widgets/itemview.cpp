@@ -9,8 +9,8 @@
 #include "controlgui.h"
 #include "entitytreemodel.h"
 
-#include <KXMLGUIFactory>
 #include <KXMLGUIClient>
+#include <KXMLGUIFactory>
 #include <QContextMenuEvent>
 #include <QHeaderView>
 #include <QMenu>
@@ -49,9 +49,15 @@ void ItemView::Private::init()
     mParent->header()->setSectionsClickable(true);
     mParent->header()->setStretchLastSection(true);
 
-    mParent->connect(mParent, &QAbstractItemView::activated, mParent, [this](const auto &index) { itemActivated(index); });
-    mParent->connect(mParent, &QAbstractItemView::clicked, mParent, [this](const auto &index) { itemClicked(index); });
-    mParent->connect(mParent, &QAbstractItemView::doubleClicked, [this](const auto &index) { itemDoubleClicked(index); });
+    mParent->connect(mParent, &QAbstractItemView::activated, mParent, [this](const auto &index) {
+        itemActivated(index);
+    });
+    mParent->connect(mParent, &QAbstractItemView::clicked, mParent, [this](const auto &index) {
+        itemClicked(index);
+    });
+    mParent->connect(mParent, &QAbstractItemView::doubleClicked, [this](const auto &index) {
+        itemDoubleClicked(index);
+    });
 
     ControlGui::widgetNeedsAkonadi(mParent);
 }
@@ -137,8 +143,9 @@ void ItemView::setModel(QAbstractItemModel *model)
 
     QTreeView::setModel(model);
 
-    connect(selectionModel(), &QItemSelectionModel::currentChanged,
-            this, [this](const auto &index) { d->itemCurrentChanged(index); });
+    connect(selectionModel(), &QItemSelectionModel::currentChanged, this, [this](const auto &index) {
+        d->itemCurrentChanged(index);
+    });
 }
 
 void ItemView::contextMenuEvent(QContextMenuEvent *event)
@@ -146,8 +153,7 @@ void ItemView::contextMenuEvent(QContextMenuEvent *event)
     if (!d->xmlGuiClient) {
         return;
     }
-    QMenu *popup = static_cast<QMenu *>(d->xmlGuiClient->factory()->container(
-                                            QStringLiteral("akonadi_itemview_contextmenu"), d->xmlGuiClient));
+    QMenu *popup = static_cast<QMenu *>(d->xmlGuiClient->factory()->container(QStringLiteral("akonadi_itemview_contextmenu"), d->xmlGuiClient));
     if (popup) {
         popup->exec(event->globalPos());
     }

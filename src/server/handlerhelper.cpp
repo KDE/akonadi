@@ -5,21 +5,21 @@
  ***************************************************************************/
 
 #include "handlerhelper.h"
+#include "akonadi.h"
+#include "commandcontext.h"
+#include "connection.h"
+#include "handler.h"
+#include "storage/collectionqueryhelper.h"
+#include "storage/collectionstatistics.h"
 #include "storage/countquerybuilder.h"
 #include "storage/datastore.h"
-#include "storage/selectquerybuilder.h"
-#include "storage/collectionstatistics.h"
 #include "storage/queryhelper.h"
-#include "storage/collectionqueryhelper.h"
-#include "commandcontext.h"
-#include "handler.h"
-#include "connection.h"
+#include "storage/selectquerybuilder.h"
 #include "utils.h"
-#include "akonadi.h"
 
 #include <private/imapset_p.h>
-#include <private/scope_p.h>
 #include <private/protocol_p.h>
+#include <private/scope_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -34,7 +34,7 @@ Collection HandlerHelper::collectionFromIdOrName(const QByteArray &id)
     }
 
     // id is a path
-    QString path = QString::fromUtf8(id);   // ### should be UTF-7 for real IMAP compatibility
+    QString path = QString::fromUtf8(id); // ### should be UTF-7 for real IMAP compatibility
 
     const QStringList pathParts = path.split(QLatin1Char('/'), Qt::SkipEmptyParts);
 
@@ -83,8 +83,7 @@ Protocol::CachePolicy HandlerHelper::cachePolicyResponse(const Collection &col)
     return cachePolicy;
 }
 
-Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(
-        AkonadiServer &akonadi, const Collection &col)
+Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(AkonadiServer &akonadi, const Collection &col)
 {
     QStringList mimeTypes;
     mimeTypes.reserve(col.mimeTypes().size());
@@ -92,19 +91,17 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(
         mimeTypes << mt.name();
     }
 
-    return fetchCollectionsResponse(akonadi, col, col.attributes(), false, 0, QStack<Collection>(),
-                                    QStack<CollectionAttribute::List>(), mimeTypes);
+    return fetchCollectionsResponse(akonadi, col, col.attributes(), false, 0, QStack<Collection>(), QStack<CollectionAttribute::List>(), mimeTypes);
 }
 
-Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(
-        AkonadiServer &akonadi,
-        const Collection &col,
-        const CollectionAttribute::List &attrs,
-        bool includeStatistics,
-        int ancestorDepth,
-        const QStack<Collection> &ancestors,
-        const QStack<CollectionAttribute::List> &ancestorAttributes,
-        const QStringList &mimeTypes)
+Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(AkonadiServer &akonadi,
+                                                                           const Collection &col,
+                                                                           const CollectionAttribute::List &attrs,
+                                                                           bool includeStatistics,
+                                                                           int ancestorDepth,
+                                                                           const QStack<Collection> &ancestors,
+                                                                           const QStack<CollectionAttribute::List> &ancestorAttributes,
+                                                                           const QStringList &mimeTypes)
 {
     Protocol::FetchCollectionsResponse response;
     response.setId(col.id());
@@ -142,8 +139,7 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(
     response.setCachePolicy(cachePolicy);
 
     if (ancestorDepth) {
-        QVector<Protocol::Ancestor> ancestorList
-            = HandlerHelper::ancestorsResponse(ancestorDepth, ancestors, ancestorAttributes);
+        QVector<Protocol::Ancestor> ancestorList = HandlerHelper::ancestorsResponse(ancestorDepth, ancestors, ancestorAttributes);
         response.setAncestors(ancestorList);
     }
 
@@ -161,12 +157,11 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(
     return response;
 }
 
-QVector<Protocol::Ancestor> HandlerHelper::ancestorsResponse(int ancestorDepth,
-        const QStack<Collection> &_ancestors,
-        const QStack<CollectionAttribute::List> &_ancestorsAttributes)
+QVector<Protocol::Ancestor>
+HandlerHelper::ancestorsResponse(int ancestorDepth, const QStack<Collection> &_ancestors, const QStack<CollectionAttribute::List> &_ancestorsAttributes)
 {
     QVector<Protocol::Ancestor> rv;
-    if (ancestorDepth  > 0) {
+    if (ancestorDepth > 0) {
         QStack<Collection> ancestors(_ancestors);
         QStack<CollectionAttribute::List> ancestorAttributes(_ancestorsAttributes);
         for (int i = 0; i < ancestorDepth; ++i) {
@@ -196,10 +191,7 @@ QVector<Protocol::Ancestor> HandlerHelper::ancestorsResponse(int ancestorDepth,
     return rv;
 }
 
-
-Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
-        const Protocol::TagFetchScope &tagFetchScope,
-        Connection *connection)
+Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag, const Protocol::TagFetchScope &tagFetchScope, Connection *connection)
 {
     Protocol::FetchTagsResponse response;
     response.setId(tag.id());
@@ -222,12 +214,8 @@ Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
         if (connection->context().resource().isValid()) {
             QueryBuilder qb(TagRemoteIdResourceRelation::tableName());
             qb.addColumn(TagRemoteIdResourceRelation::remoteIdColumn());
-            qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdColumn(),
-                                 Query::Equals,
-                                 connection->context().resource().id());
-            qb.addValueCondition(TagRemoteIdResourceRelation::tagIdColumn(),
-                                 Query::Equals,
-                                 tag.id());
+            qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdColumn(), Query::Equals, connection->context().resource().id());
+            qb.addValueCondition(TagRemoteIdResourceRelation::tagIdColumn(), Query::Equals, tag.id());
             if (!qb.exec()) {
                 throw HandlerException("Unable to query Tag Remote ID");
             }
@@ -242,15 +230,15 @@ Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
 
     if (tagFetchScope.fetchAllAttributes() || !tagFetchScope.attributes().isEmpty()) {
         QueryBuilder qb(TagAttribute::tableName());
-        qb.addColumns({ TagAttribute::typeFullColumnName(),
-                        TagAttribute::valueFullColumnName() });
+        qb.addColumns({TagAttribute::typeFullColumnName(), TagAttribute::valueFullColumnName()});
         Query::Condition cond(Query::And);
         cond.addValueCondition(TagAttribute::tagIdFullColumnName(), Query::Equals, tag.id());
         if (!tagFetchScope.fetchAllAttributes() && !tagFetchScope.attributes().isEmpty()) {
             QVariantList types;
             const auto scope = tagFetchScope.attributes();
-            std::transform(scope.cbegin(), scope.cend(), std::back_inserter(types),
-                    [](const QByteArray &ba) { return QVariant(ba); });
+            std::transform(scope.cbegin(), scope.cend(), std::back_inserter(types), [](const QByteArray &ba) {
+                return QVariant(ba);
+            });
             cond.addValueCondition(TagAttribute::typeFullColumnName(), Query::In, types);
         }
         qb.addCondition(cond);
@@ -260,8 +248,7 @@ Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
         QSqlQuery query = qb.query();
         Protocol::Attributes attributes;
         while (query.next()) {
-            attributes.insert(Utils::variantToByteArray(query.value(0)),
-                              Utils::variantToByteArray(query.value(1)));
+            attributes.insert(Utils::variantToByteArray(query.value(0)), Utils::variantToByteArray(query.value(1)));
         }
         query.finish();
         response.setAttributes(attributes);
@@ -415,7 +402,7 @@ Collection HandlerHelper::collectionFromScope(const Scope &scope, const CommandC
         return Collection();
     } else if (c.count() == 1) {
         return c.at(0);
-    } else  {
+    } else {
         throw HandlerException("Query returned more than one reslut");
     }
 }

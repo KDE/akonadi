@@ -9,8 +9,8 @@
 
 #include "akonadicore_export.h"
 
-#include "agenttype.h"
 #include "agentinstance.h"
+#include "agenttype.h"
 
 #include <QObject>
 
@@ -18,7 +18,6 @@
 
 namespace Akonadi
 {
-
 class AgentManagerPrivate;
 class Collection;
 

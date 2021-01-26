@@ -16,7 +16,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @short An Attribute that stores the special collection type of a collection.
  *

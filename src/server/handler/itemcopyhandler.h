@@ -7,14 +7,13 @@
 #ifndef AKONADI_ITEMCOPYHANDLER_H_
 #define AKONADI_ITEMCOPYHANDLER_H_
 
-#include "handler.h"
 #include "entities.h"
+#include "handler.h"
 
 namespace Akonadi
 {
 namespace Server
 {
-
 /**
   @ingroup akonadi_server_handler
 
@@ -31,7 +30,7 @@ namespace Server
   There is only the usual status response indicating success or failure of the
   COPY command
  */
-class ItemCopyHandler: public Handler
+class ItemCopyHandler : public Handler
 {
 public:
     ItemCopyHandler(AkonadiServer &akonadi);

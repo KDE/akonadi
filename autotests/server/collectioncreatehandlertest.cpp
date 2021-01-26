@@ -7,10 +7,10 @@
 
 #include <storage/entity.h>
 
-#include "fakeakonadiserver.h"
-#include "dbinitializer.h"
 #include "aktest.h"
+#include "dbinitializer.h"
 #include "entities.h"
+#include "fakeakonadiserver.h"
 
 #include <private/scope_p.h>
 
@@ -24,6 +24,7 @@ class CollectionCreateHandlerTest : public QObject
     Q_OBJECT
 
     FakeAkonadiServer mAkonadi;
+
 public:
     CollectionCreateHandlerTest()
     {
@@ -35,7 +36,7 @@ private Q_SLOTS:
     {
         DbInitializer dbInitializer;
 
-        QTest::addColumn<TestScenario::List >("scenarios");
+        QTest::addColumn<TestScenario::List>("scenarios");
         QTest::addColumn<Protocol::CollectionChangeNotificationPtr>("notification");
 
         auto notificationTemplate = Protocol::CollectionChangeNotificationPtr::create();
@@ -48,20 +49,18 @@ private Q_SLOTS:
             auto cmd = Protocol::CreateCollectionCommandPtr::create();
             cmd->setName(QStringLiteral("New Name"));
             cmd->setParent(Scope(3));
-            cmd->setAttributes({ { "MYRANDOMATTRIBUTE", "" } });
+            cmd->setAttributes({{"MYRANDOMATTRIBUTE", ""}});
 
             auto resp = Protocol::FetchCollectionsResponsePtr::create(8);
             resp->setName(QStringLiteral("New Name"));
             resp->setParentId(3);
-            resp->setAttributes({ { "MYRANDOMATTRIBUTE", "" } });
+            resp->setAttributes({{"MYRANDOMATTRIBUTE", ""}});
             resp->setResource(QStringLiteral("akonadi_fake_resource_0"));
-            resp->cachePolicy().setLocalParts({ QLatin1String("ALL") });
-            resp->setMimeTypes({ QLatin1String("application/octet-stream"),
-                                QLatin1String("inode/directory") });
+            resp->cachePolicy().setLocalParts({QLatin1String("ALL")});
+            resp->setMimeTypes({QLatin1String("application/octet-stream"), QLatin1String("inode/directory")});
 
             TestScenario::List scenarios;
-            scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+            scenarios << FakeAkonadiServer::loginScenario() << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, resp)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponsePtr::create());
 
@@ -69,7 +68,7 @@ private Q_SLOTS:
             auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             notification->setCollection(std::move(collection));
 
-            QTest::newRow("create collection") << scenarios <<  notification;
+            QTest::newRow("create collection") << scenarios << notification;
         }
         {
             auto cmd = Protocol::CreateCollectionCommandPtr::create();
@@ -88,14 +87,11 @@ private Q_SLOTS:
             resp->setSyncPref(Tristate::True);
             resp->setIndexPref(Tristate::True);
             resp->setResource(QStringLiteral("akonadi_fake_resource_0"));
-            resp->cachePolicy().setLocalParts({ QLatin1String("ALL") });
-            resp->setMimeTypes({ QLatin1String("application/octet-stream"),
-                                 QLatin1String("inode/directory") });
-
+            resp->cachePolicy().setLocalParts({QLatin1String("ALL")});
+            resp->setMimeTypes({QLatin1String("application/octet-stream"), QLatin1String("inode/directory")});
 
             TestScenario::List scenarios;
-            scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+            scenarios << FakeAkonadiServer::loginScenario() << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, resp)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponsePtr::create());
 
@@ -103,28 +99,25 @@ private Q_SLOTS:
             auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             notification->setCollection(std::move(collection));
 
-
-            QTest::newRow("create collection with local override") << scenarios <<  notification;
+            QTest::newRow("create collection with local override") << scenarios << notification;
         }
-
 
         {
             auto cmd = Protocol::CreateCollectionCommandPtr::create();
             cmd->setName(QStringLiteral("TopLevel"));
             cmd->setParent(Scope(0));
-            cmd->setMimeTypes({ QLatin1String("inode/directory") });
+            cmd->setMimeTypes({QLatin1String("inode/directory")});
 
             auto resp = Protocol::FetchCollectionsResponsePtr::create(10);
             resp->setName(QStringLiteral("TopLevel"));
             resp->setParentId(0);
             resp->setEnabled(true);
-            resp->setMimeTypes({ QLatin1String("inode/directory") });
-            resp->cachePolicy().setLocalParts({ QLatin1String("ALL") });
+            resp->setMimeTypes({QLatin1String("inode/directory")});
+            resp->cachePolicy().setLocalParts({QLatin1String("ALL")});
             resp->setResource(QStringLiteral("akonadi_fake_resource_0"));
 
             TestScenario::List scenarios;
-            scenarios << FakeAkonadiServer::loginScenario("akonadi_fake_resource_0")
-                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+            scenarios << FakeAkonadiServer::loginScenario("akonadi_fake_resource_0") << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, resp)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponsePtr::create());
 
@@ -134,10 +127,8 @@ private Q_SLOTS:
             notification->setParentCollection(0);
             notification->setCollection(std::move(collection));
 
-
-            QTest::newRow("create top-level collection") << scenarios <<  notification;
+            QTest::newRow("create top-level collection") << scenarios << notification;
         }
-
     }
 
     void testCreate()
@@ -163,7 +154,6 @@ private Q_SLOTS:
             QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<Protocol::ChangeNotificationList>().isEmpty());
         }
     }
-
 };
 
 AKTEST_FAKESERVER_MAIN(CollectionCreateHandlerTest)

@@ -7,16 +7,14 @@
 #ifndef COLLECTIONTEST_H
 #define COLLECTIONTEST_H
 
-#include <QObject>
 #include "collection.h"
+#include <QObject>
 
 class CollectionTest : public QObject
 {
     Q_OBJECT
 private:
-    void verifyCollection(const Akonadi::Collection::List &colist, int listPosition,
-                          const QString &remoteId, const QString &name,
-                          const QStringList &mimeType);
+    void verifyCollection(const Akonadi::Collection::List &colist, int listPosition, const QString &remoteId, const QString &name, const QStringList &mimeType);
 private Q_SLOTS:
     void serializeCollection();
     void testBuildCollection();

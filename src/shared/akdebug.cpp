@@ -12,12 +12,12 @@
 
 #include <private/standarddirs_p.h>
 
+#include <QDateTime>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QMutex>
 #include <QLoggingCategory>
-#include <QDateTime>
+#include <QMutex>
 
 #include <KCrash/KCrash>
 
@@ -37,16 +37,18 @@ public:
     {
         return true;
     }
-    qint64 readData(char * /*data*/, qint64 /*maxlen*/) override {
+    qint64 readData(char * /*data*/, qint64 /*maxlen*/) override
+    {
         return 0;
     }
-    qint64 readLineData(char * /*data*/, qint64 /*maxlen*/) override {
+    qint64 readLineData(char * /*data*/, qint64 /*maxlen*/) override
+    {
         return 0;
     }
 
-    qint64 writeData(const char *data, qint64 len) override {
-        if (!mFileName.isEmpty())
-        {
+    qint64 writeData(const char *data, qint64 len) override
+    {
+        if (!mFileName.isEmpty()) {
             QFile outputFile(mFileName);
             outputFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Unbuffered);
             outputFile.write(data, len);
@@ -66,6 +68,7 @@ public:
     {
         mType = type;
     }
+
 private:
     QString mFileName;
     QtMsgType mType;
@@ -87,10 +90,7 @@ public:
 
     static QString errorLogFileName(const QString &name)
     {
-        return Akonadi::StandardDirs::saveDir("data")
-                + QDir::separator()
-                + name
-                + QLatin1String(".error");
+        return Akonadi::StandardDirs::saveDir("data") + QDir::separator() + name + QLatin1String(".error");
     }
 
     QString errorLogFileName() const
@@ -195,8 +195,7 @@ void akMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
 
 void akCategoryFilter(QLoggingCategory *category)
 {
-    if ((qstrcmp(category->categoryName(), sInstance()->loggingCategory) == 0) ||
-            (qstrcmp(category->categoryName(), "org.kde.pim.akonadiprivate") == 0)) {
+    if ((qstrcmp(category->categoryName(), sInstance()->loggingCategory) == 0) || (qstrcmp(category->categoryName(), "org.kde.pim.akonadiprivate") == 0)) {
         category->setEnabled(QtDebugMsg, true);
         category->setEnabled(QtInfoMsg, true);
         category->setEnabled(QtWarningMsg, true);
@@ -218,9 +217,7 @@ void akInit(const QString &appName)
         QFile fileOld(infoOld.absoluteFilePath());
         const bool success = fileOld.remove();
         if (!success) {
-            qFatal("Cannot remove old log file '%s': %s",
-                qUtf8Printable(fileOld.fileName()),
-                qUtf8Printable(fileOld.errorString()));
+            qFatal("Cannot remove old log file '%s': %s", qUtf8Printable(fileOld.fileName()), qUtf8Printable(fileOld.errorString()));
         }
     }
 
@@ -230,10 +227,7 @@ void akInit(const QString &appName)
         const QString oldName = errorLogFile + QLatin1String(".old");
         const bool success = file.copy(oldName);
         if (!success) {
-            qFatal("Cannot rename log file '%s' to '%s': %s",
-                   qUtf8Printable(file.fileName()),
-                   qUtf8Printable(oldName),
-                   qUtf8Printable(file.errorString()));
+            qFatal("Cannot rename log file '%s' to '%s': %s", qUtf8Printable(file.fileName()), qUtf8Printable(oldName), qUtf8Printable(file.errorString()));
         }
     }
 
@@ -250,4 +244,3 @@ void akMakeVerbose(const QByteArray &category)
 }
 
 #include "akdebug.moc"
-

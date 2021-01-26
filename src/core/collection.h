@@ -10,15 +10,14 @@
 #include "akonadicore_export.h"
 #include "attribute.h"
 
+#include <QDebug>
 #include <QMetaType>
 #include <QSharedDataPointer>
-#include <QDebug>
 
 class QUrl;
 
 namespace Akonadi
 {
-
 class CachePolicy;
 class CollectionPrivate;
 class CollectionStatistics;
@@ -77,17 +76,17 @@ public:
      * Describes rights of a collection.
      */
     enum Right {
-        ReadOnly = 0x0,                   ///< Can only read items or subcollection of this collection
-        CanChangeItem = 0x1,              ///< Can change items in this collection
-        CanCreateItem = 0x2,              ///< Can create new items in this collection
-        CanDeleteItem = 0x4,              ///< Can delete items in this collection
-        CanChangeCollection = 0x8,        ///< Can change this collection
-        CanCreateCollection = 0x10,       ///< Can create new subcollections in this collection
-        CanDeleteCollection = 0x20,       ///< Can delete this collection
-        CanLinkItem = 0x40,               ///< Can create links to existing items in this virtual collection @since 4.4
-        CanUnlinkItem = 0x80,             ///< Can remove links to items in this virtual collection @since 4.4
-        AllRights = (CanChangeItem | CanCreateItem | CanDeleteItem |
-                     CanChangeCollection | CanCreateCollection | CanDeleteCollection)  ///< Has all rights on this storage collection
+        ReadOnly = 0x0, ///< Can only read items or subcollection of this collection
+        CanChangeItem = 0x1, ///< Can change items in this collection
+        CanCreateItem = 0x2, ///< Can create new items in this collection
+        CanDeleteItem = 0x4, ///< Can delete items in this collection
+        CanChangeCollection = 0x8, ///< Can change this collection
+        CanCreateCollection = 0x10, ///< Can create new subcollections in this collection
+        CanDeleteCollection = 0x20, ///< Can delete this collection
+        CanLinkItem = 0x40, ///< Can create links to existing items in this virtual collection @since 4.4
+        CanUnlinkItem = 0x80, ///< Can remove links to items in this virtual collection @since 4.4
+        AllRights = (CanChangeItem | CanCreateItem | CanDeleteItem | CanChangeCollection | CanCreateCollection
+                     | CanDeleteCollection) ///< Has all rights on this storage collection
     };
     Q_DECLARE_FLAGS(Rights, Right)
 
@@ -267,8 +266,8 @@ public:
      * Describes the options that can be passed to access attributes.
      */
     enum CreateOption {
-        AddIfMissing,    ///< Creates the attribute if it is missing
-        DontCreate       ///< Default value
+        AddIfMissing, ///< Creates the attribute if it is missing
+        DontCreate ///< Default value
     };
 
     /**
@@ -278,26 +277,22 @@ public:
      *
      * @param option The create options.
      */
-    template <typename T>
-    inline T *attribute(CreateOption option = DontCreate);
+    template<typename T> inline T *attribute(CreateOption option = DontCreate);
 
     /**
      * Returns the attribute of the requested type or 0 if it is not available.
      */
-    template <typename T>
-    inline const T *attribute() const;
+    template<typename T> inline const T *attribute() const;
 
     /**
      * Removes and deletes the attribute of the requested type.
      */
-    template <typename T>
-    inline void removeAttribute();
+    template<typename T> inline void removeAttribute();
 
     /**
      * Returns whether the collection has an attribute of the requested type.
      */
-    template <typename T>
-    inline bool hasAttribute() const;
+    template<typename T> inline bool hasAttribute() const;
 
     /**
      * Returns the i18n'ed name of the collection.
@@ -334,7 +329,7 @@ public:
      * Returns a list of possible content mimetypes,
      * e.g. message/rfc822, x-akonadi/collection for a mail folder that
      * supports sub-folders.
-    */
+     */
     Q_REQUIRED_RESULT QStringList contentMimeTypes() const;
 
     /**
@@ -395,8 +390,8 @@ public:
      * @since 4.7
      */
     enum UrlType {
-        UrlShort = 0,     ///< A short url which contains the identifier only (equivalent to url())
-        UrlWithName = 1   ///< A url with identifier and name
+        UrlShort = 0, ///< A short url which contains the identifier only (equivalent to url())
+        UrlWithName = 1 ///< A url with identifier and name
     };
 
     /**
@@ -455,9 +450,9 @@ public:
      * @since 4.14
      */
     enum ListPreference {
-        ListEnabled,  ///< Enable collection for specified purpose
+        ListEnabled, ///< Enable collection for specified purpose
         ListDisabled, ///< Disable collection for specified purpose
-        ListDefault   ///< Fallback to enabled state
+        ListDefault ///< Fallback to enabled state
     };
 
     /**
@@ -466,9 +461,9 @@ public:
      * @since 4.14
      */
     enum ListPurpose {
-        ListSync,     ///< Listing for synchronization
-        ListDisplay,  ///< Listing for display to the user
-        ListIndex     ///< Listing for indexing the content
+        ListSync, ///< Listing for synchronization
+        ListDisplay, ///< Listing for display to the user
+        ListIndex ///< Listing for indexing the content
     };
 
     /**
@@ -539,8 +534,7 @@ private:
 
 AKONADICORE_EXPORT uint qHash(const Akonadi::Collection &collection);
 
-template <typename T>
-inline T *Akonadi::Collection::attribute(Collection::CreateOption option)
+template<typename T> inline T *Akonadi::Collection::attribute(Collection::CreateOption option)
 {
     const QByteArray type = T().type();
     markAttributeModified(type); // do this first in case it detaches
@@ -548,8 +542,7 @@ inline T *Akonadi::Collection::attribute(Collection::CreateOption option)
         if (T *attr = dynamic_cast<T *>(attribute(type))) {
             return attr;
         }
-        qWarning() << "Found attribute of unknown type" << type
-                   << ". Did you forget to call AttributeFactory::registerAttribute()?";
+        qWarning() << "Found attribute of unknown type" << type << ". Did you forget to call AttributeFactory::registerAttribute()?";
     } else if (option == AddIfMissing) {
         T *attr = new T();
         addAttribute(attr);
@@ -559,29 +552,25 @@ inline T *Akonadi::Collection::attribute(Collection::CreateOption option)
     return nullptr;
 }
 
-template <typename T>
-inline const T *Akonadi::Collection::attribute() const
+template<typename T> inline const T *Akonadi::Collection::attribute() const
 {
     const QByteArray type = T().type();
     if (hasAttribute(type)) {
         if (const T *attr = dynamic_cast<const T *>(attribute(type))) {
             return attr;
         }
-        qWarning() << "Found attribute of unknown type" << type
-                   << ". Did you forget to call AttributeFactory::registerAttribute()?";
+        qWarning() << "Found attribute of unknown type" << type << ". Did you forget to call AttributeFactory::registerAttribute()?";
     }
 
     return nullptr;
 }
 
-template <typename T>
-inline void Akonadi::Collection::removeAttribute()
+template<typename T> inline void Akonadi::Collection::removeAttribute()
 {
     removeAttribute(T().type());
 }
 
-template <typename T>
-inline bool Akonadi::Collection::hasAttribute() const
+template<typename T> inline bool Akonadi::Collection::hasAttribute() const
 {
     return hasAttribute(T().type());
 }

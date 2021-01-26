@@ -9,10 +9,12 @@
 
 namespace Akonadi
 {
-
-static const auto IsNull = [](auto ptr) { return !(bool)ptr; };
-static const auto IsNotNull = [](auto ptr) { return (bool)ptr; };
-
+static const auto IsNull = [](auto ptr) {
+    return !(bool)ptr;
+};
+static const auto IsNotNull = [](auto ptr) {
+    return (bool)ptr;
+};
 
 } // namespace Akonadi
 

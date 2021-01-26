@@ -23,8 +23,11 @@ public:
     QByteArray mMail;
 };
 
-CollectionIdentificationAttribute::CollectionIdentificationAttribute(const QByteArray &identifier, const QByteArray &folderNamespace,
-        const QByteArray &name, const QByteArray &organizationUnit, const QByteArray &mail)
+CollectionIdentificationAttribute::CollectionIdentificationAttribute(const QByteArray &identifier,
+                                                                     const QByteArray &folderNamespace,
+                                                                     const QByteArray &name,
+                                                                     const QByteArray &organizationUnit,
+                                                                     const QByteArray &mail)
     : d(std::make_unique<Private>())
 {
     d->mIdentifier = identifier;
@@ -125,4 +128,3 @@ void CollectionIdentificationAttribute::deserialize(const QByteArray &data)
         d->mMail = l[4];
     }
 }
-

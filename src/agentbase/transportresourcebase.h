@@ -14,7 +14,6 @@
 
 namespace Akonadi
 {
-
 class TransportResourceBasePrivate;
 
 /**
@@ -55,7 +54,7 @@ public:
      */
     enum TransportResult {
         TransportSucceeded, ///< The transport process succeeded.
-        TransportFailed     ///< The transport process failed.
+        TransportFailed ///< The transport process failed.
     };
 
     /**
@@ -78,8 +77,7 @@ public:
      * @param message An optional text explanation of the result.
      * @see Transport.
      */
-    void itemSent(const Akonadi::Item &item, TransportResult result,
-                  const QString &message = QString());
+    void itemSent(const Akonadi::Item &item, TransportResult result, const QString &message = QString());
 
 private:
     //@cond PRIVATE

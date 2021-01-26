@@ -11,8 +11,8 @@
 #include <QHash>
 #include <QStringList>
 
-#include "agenttype.h"
 #include "agentinstance.h"
+#include "agenttype.h"
 
 class QDir;
 

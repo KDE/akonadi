@@ -19,7 +19,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class Connection;
 class ItemRetrievalManager;
 class SearchTaskManager;

@@ -7,14 +7,13 @@
 #ifndef ITEMFETCHSCOPE_P_H
 #define ITEMFETCHSCOPE_P_H
 
-#include <QSet>
-#include <QDateTime>
 #include "itemfetchscope.h"
 #include "tagfetchscope.h"
+#include <QDateTime>
+#include <QSet>
 
 namespace Akonadi
 {
-
 /**
  * @internal
  */

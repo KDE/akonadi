@@ -18,10 +18,9 @@ class QString;
 
 namespace Akonadi
 {
-
 #ifdef _MSC_VER
 #pragma warning(push)
-#pragma warning(disable: 4275) // we are exporting a subclass of an unexported class, MSVC complains
+#pragma warning(disable : 4275) // we are exporting a subclass of an unexported class, MSVC complains
 #endif
 
 /**
@@ -50,7 +49,7 @@ public:
     /**
       Destructor.
     */
-    ~Exception()  override;
+    ~Exception() override;
 
     /**
       Returns the error message associated with this exception.
@@ -70,16 +69,25 @@ private:
 #pragma warning(pop)
 #endif
 
-#define AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE(classname) \
-    class AKONADICORE_EXPORT classname : public Akonadi::Exception \
-    { \
-    public: \
-        explicit classname(const char *what): Akonadi::Exception(what) {} \
-        explicit classname(const QByteArray &what): Akonadi::Exception(what) {} \
-        explicit classname(const QString &what): Akonadi::Exception(what) {} \
-        classname(classname &&) = default; \
-        ~classname() override; \
-        QByteArray type() const override; \
+#define AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE(classname)                                                                                                     \
+    class AKONADICORE_EXPORT classname : public Akonadi::Exception                                                                                             \
+    {                                                                                                                                                          \
+    public:                                                                                                                                                    \
+        explicit classname(const char *what)                                                                                                                   \
+            : Akonadi::Exception(what)                                                                                                                         \
+        {                                                                                                                                                      \
+        }                                                                                                                                                      \
+        explicit classname(const QByteArray &what)                                                                                                             \
+            : Akonadi::Exception(what)                                                                                                                         \
+        {                                                                                                                                                      \
+        }                                                                                                                                                      \
+        explicit classname(const QString &what)                                                                                                                \
+            : Akonadi::Exception(what)                                                                                                                         \
+        {                                                                                                                                                      \
+        }                                                                                                                                                      \
+        classname(classname &&) = default;                                                                                                                     \
+        ~classname() override;                                                                                                                                 \
+        QByteArray type() const override;                                                                                                                      \
     }
 
 AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE(PayloadException);

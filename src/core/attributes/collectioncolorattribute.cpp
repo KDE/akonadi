@@ -12,7 +12,7 @@
 using namespace Akonadi;
 
 CollectionColorAttribute::CollectionColorAttribute(const QColor &color)
-    :  mColor(color)
+    : mColor(color)
 {
 }
 

@@ -5,13 +5,13 @@
 */
 
 #include "resourcemanager.h"
-#include "tracer.h"
+#include "resourcemanageradaptor.h"
 #include "storage/datastore.h"
 #include "storage/transaction.h"
-#include "resourcemanageradaptor.h"
+#include "tracer.h"
 
-#include <shared/akranges.h>
 #include <private/capabilities_p.h>
+#include <shared/akranges.h>
 
 #include <QDBusConnection>
 
@@ -49,8 +49,8 @@ void ResourceManager::removeResourceInstance(const QString &name)
     Resource resource = Resource::retrieveByName(name);
     if (resource.isValid()) {
         resource.collections() | Actions::forEach([](Collection col) {
-                DataStore::self()->cleanupCollection(col);
-            });
+            DataStore::self()->cleanupCollection(col);
+        });
 
         // remove resource
         resource.remove();
@@ -61,4 +61,3 @@ QStringList ResourceManager::resourceInstances() const
 {
     return Resource::retrieveAll() | Views::transform(&Resource::name) | Actions::toQList;
 }
-

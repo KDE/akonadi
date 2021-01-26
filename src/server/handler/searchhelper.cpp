@@ -37,10 +37,11 @@ QVector<qint64> SearchHelper::matchSubcollectionsByMimeType(const QVector<qint64
     qb.setDistinct(true);
     qb.addColumn(Collection::idFullColumnName());
     qb.addColumn(Collection::parentIdFullColumnName());
-    qb.addJoin(QueryBuilder::LeftJoin, CollectionMimeTypeRelation::tableName(),
-               CollectionMimeTypeRelation::leftFullColumnName(), Collection::idFullColumnName());
-    qb.addJoin(QueryBuilder::LeftJoin, MimeType::tableName(),
-               CollectionMimeTypeRelation::rightFullColumnName(), MimeType::idFullColumnName());
+    qb.addJoin(QueryBuilder::LeftJoin,
+               CollectionMimeTypeRelation::tableName(),
+               CollectionMimeTypeRelation::leftFullColumnName(),
+               Collection::idFullColumnName());
+    qb.addJoin(QueryBuilder::LeftJoin, MimeType::tableName(), CollectionMimeTypeRelation::rightFullColumnName(), MimeType::idFullColumnName());
     Query::Condition cond(Query::Or);
     for (const QString &mt : mimeTypes) {
         cond.addValueCondition(MimeType::nameFullColumnName(), Query::Equals, mt);
@@ -78,7 +79,7 @@ QVector<qint64> SearchHelper::matchSubcollectionsByMimeType(const QVector<qint64
         }
     }
 
-    for (auto iter = candidateCollections.begin(), iterEnd = candidateCollections.end() ; iter != iterEnd ; ++iter) {
+    for (auto iter = candidateCollections.begin(), iterEnd = candidateCollections.end(); iter != iterEnd; ++iter) {
         // Traverse the collection chain up to root
         qint64 parentId = iter.key();
         while (!ancestors.contains(parentId) && parentId > 0) {

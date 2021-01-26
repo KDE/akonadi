@@ -15,8 +15,8 @@
 #include <QTimer>
 
 #ifdef Q_OS_UNIX
-#include <sys/types.h>
 #include <signal.h>
+#include <sys/types.h>
 #endif
 
 using namespace Akonadi;
@@ -28,10 +28,8 @@ ProcessControl::ProcessControl(QObject *parent)
     : QObject(parent)
     , mShutdownTimeout(1s)
 {
-    connect(&mProcess, &QProcess::errorOccurred,
-            this, &ProcessControl::slotError);
-    connect(&mProcess, QOverload<int,QProcess::ExitStatus>::of(&QProcess::finished),
-            this, &ProcessControl::slotFinished);
+    connect(&mProcess, &QProcess::errorOccurred, this, &ProcessControl::slotError);
+    connect(&mProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &ProcessControl::slotFinished);
     mProcess.setProcessChannelMode(QProcess::ForwardedChannels);
 
     if (Akonadi::Instance::hasIdentifier()) {
@@ -115,8 +113,11 @@ void ProcessControl::slotFinished(int exitCode, QProcess::ExitStatus exitStatus)
         }
     } else {
         if (exitCode != 0) {
-            qCWarning(AKONADICONTROL_LOG, "ProcessControl: Application '%s' returned with exit code %d (%s)",
-                      qPrintable(mApplication), exitCode, qPrintable(mProcess.errorString()));
+            qCWarning(AKONADICONTROL_LOG,
+                      "ProcessControl: Application '%s' returned with exit code %d (%s)",
+                      qPrintable(mApplication),
+                      exitCode,
+                      qPrintable(mProcess.errorString()));
             if (mPolicy == RestartOnCrash) {
                 if (mCrashCount > s_maxCrashCount) {
                     qCCritical(AKONADICONTROL_LOG) << mApplication << "crashed too often and will not be restarted!";
@@ -126,7 +127,7 @@ void ProcessControl::slotFinished(int exitCode, QProcess::ExitStatus exitStatus)
                 }
                 ++mCrashCount;
                 QTimer::singleShot(std::chrono::seconds{60}, this, &ProcessControl::resetCrashCount);
-                if (!mFailedToStart) {   // don't try to start an unstartable application
+                if (!mFailedToStart) { // don't try to start an unstartable application
                     start();
                     Q_EMIT restarted();
                 }
@@ -162,7 +163,6 @@ void ProcessControl::start()
 #ifdef Q_OS_UNIX
     QString agentValgrind = akGetEnv("AKONADI_VALGRIND");
     if (!agentValgrind.isEmpty() && (mApplication.contains(agentValgrind) || listContains(mArguments, agentValgrind))) {
-
         mArguments.prepend(mApplication);
         const QString originalArguments = mArguments.join(QString::fromLocal8Bit(" "));
         mApplication = QString::fromLocal8Bit("valgrind");
@@ -172,9 +172,7 @@ void ProcessControl::start()
 
         const QString valgrindOptions = akGetEnv("AKONADI_VALGRIND_OPTIONS");
         if (!valgrindOptions.isEmpty()) {
-            mArguments = valgrindOptions.split(QLatin1Char(' '),
-                                               Qt::SkipEmptyParts
-                                               ) << mArguments;
+            mArguments = valgrindOptions.split(QLatin1Char(' '), Qt::SkipEmptyParts) << mArguments;
         }
 
         qCDebug(AKONADICONTROL_LOG);
@@ -192,7 +190,6 @@ void ProcessControl::start()
 
     const QString agentHeaptrack = akGetEnv("AKONADI_HEAPTRACK");
     if (!agentHeaptrack.isEmpty() && (mApplication.contains(agentHeaptrack) || listContains(mArguments, agentHeaptrack))) {
-
         mArguments.prepend(mApplication);
         const QString originalArguments = mArguments.join(QLatin1Char(' '));
         mApplication = QStringLiteral("heaptrack");
@@ -206,12 +203,11 @@ void ProcessControl::start()
 
     const QString agentPerf = akGetEnv("AKONADI_PERF");
     if (!agentPerf.isEmpty() && (mApplication.contains(agentPerf) || listContains(mArguments, agentPerf))) {
-
         mArguments.prepend(mApplication);
         const QString originalArguments = mArguments.join(QLatin1Char(' '));
         mApplication = QStringLiteral("perf");
 
-        mArguments = QStringList{ QStringLiteral("record"), QStringLiteral("--call-graph"), QStringLiteral("dwarf"), QStringLiteral("--") } + mArguments;
+        mArguments = QStringList{QStringLiteral("record"), QStringLiteral("--call-graph"), QStringLiteral("dwarf"), QStringLiteral("--")} + mArguments;
 
         qCDebug(AKONADICONTROL_LOG);
         qCDebug(AKONADICONTROL_LOG) << "============================================================";
@@ -223,9 +219,7 @@ void ProcessControl::start()
 
     mProcess.start(mApplication, mArguments);
     if (!mProcess.waitForStarted()) {
-        qCWarning(AKONADICONTROL_LOG,
-                  "ProcessControl: Unable to start application '%s' (%s)",
-                  qPrintable(mApplication), qPrintable(mProcess.errorString()));
+        qCWarning(AKONADICONTROL_LOG, "ProcessControl: Unable to start application '%s' (%s)", qPrintable(mApplication), qPrintable(mProcess.errorString()));
         Q_EMIT unableToStart();
         return;
     } else {
@@ -247,7 +241,6 @@ void ProcessControl::start()
 #endif
             qCDebug(AKONADICONTROL_LOG) << "============================================================";
             qCDebug(AKONADICONTROL_LOG);
-
         }
     }
 }

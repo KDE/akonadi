@@ -6,12 +6,12 @@
 
 #include "transactiontest.h"
 
-#include "itemcreatejob.h"
-#include "itemfetchjob.h"
 #include "collectioncreatejob.h"
 #include "collectiondeletejob.h"
 #include "collectionfetchjob.h"
 #include "control.h"
+#include "itemcreatejob.h"
+#include "itemfetchjob.h"
 #include "session.h"
 #include "transactionjobs.h"
 
@@ -84,4 +84,3 @@ void TransactionTest::testTransaction()
     auto *deleteJob = new CollectionDeleteJob(testCollection, Session::defaultSession());
     AKVERIFYEXEC(deleteJob);
 }
-

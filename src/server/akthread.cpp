@@ -5,14 +5,14 @@
 */
 
 #include "akthread.h"
-#include "storage/datastore.h"
 #include "akonadiserver_debug.h"
-
+#include "storage/datastore.h"
 
 using namespace Akonadi::Server;
 
 AkThread::AkThread(const QString &objectName, StartMode startMode, QThread::Priority priority, QObject *parent)
-    : QObject(parent), m_startMode(startMode)
+    : QObject(parent)
+    , m_startMode(startMode)
 {
     setObjectName(objectName);
     if (startMode != NoThread) {

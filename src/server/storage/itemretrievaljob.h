@@ -18,7 +18,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 class ItemRetrievalRequest;
 
 class AbstractItemRetrievalJob : public QObject
@@ -31,8 +30,14 @@ public:
     virtual void start() = 0;
     virtual void kill() = 0;
 
-    const ItemRetrievalRequest &request() const { return m_result.request; }
-    const ItemRetrievalResult &result() const { return m_result; }
+    const ItemRetrievalRequest &request() const
+    {
+        return m_result.request;
+    }
+    const ItemRetrievalResult &result() const
+    {
+        return m_result;
+    }
 
 Q_SIGNALS:
     void requestCompleted(Akonadi::Server::AbstractItemRetrievalJob *job);
@@ -48,7 +53,8 @@ class ItemRetrievalJob : public AbstractItemRetrievalJob
 public:
     ItemRetrievalJob(ItemRetrievalRequest req, QObject *parent)
         : AbstractItemRetrievalJob(std::move(req), parent)
-    {}
+    {
+    }
 
     void setInterface(OrgFreedesktopAkonadiResourceInterface *interface)
     {
@@ -65,7 +71,6 @@ private Q_SLOTS:
 private:
     bool m_active = false;
     OrgFreedesktopAkonadiResourceInterface *m_interface = nullptr;
-
 };
 
 } // namespace Server

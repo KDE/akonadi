@@ -7,10 +7,10 @@
 */
 
 #include "tagselectiondialog.h"
-#include "ui_tagselectiondialog.h"
-#include "tagmodel.h"
-#include "monitor.h"
 #include "controlgui.h"
+#include "monitor.h"
+#include "tagmodel.h"
+#include "ui_tagselectiondialog.h"
 
 #include <KConfigGroup>
 #include <KSharedConfig>
@@ -22,12 +22,13 @@ class Q_DECL_HIDDEN TagSelectionDialog::Private
 public:
     explicit Private(QDialog *parent)
         : q(parent)
-    {}
+    {
+    }
 
     void writeConfig() const;
     void readConfig() const;
 
-    QDialog * const q;
+    QDialog *const q;
     Ui::TagSelectionDialog ui;
 };
 
@@ -97,4 +98,3 @@ void TagSelectionDialog::setSelection(const Tag::List &tags)
 {
     d->ui.tagWidget->setSelection(tags);
 }
-

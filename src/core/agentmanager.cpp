@@ -7,11 +7,11 @@
 #include "agentmanager.h"
 #include "agentmanager_p.h"
 
-#include "agenttype_p.h"
 #include "agentinstance_p.h"
-#include <QDBusConnection>
-#include "servermanager.h"
+#include "agenttype_p.h"
 #include "collection.h"
+#include "servermanager.h"
+#include <QDBusConnection>
 
 #include "shared/akranges.h"
 
@@ -78,7 +78,6 @@ void AgentManagerPrivate::agentInstanceAdded(const QString &identifier)
 {
     const AgentInstance instance = fillAgentInstance(identifier);
     if (instance.isValid()) {
-
         // It is possible that this function is called when the instance is already
         // in our list we filled initially in the constructor.
         // This happens when the constructor is called during Akonadi startup, when
@@ -303,8 +302,9 @@ void AgentManagerPrivate::createDBusInterface()
 
     using AgentManagerIface = org::freedesktop::Akonadi::AgentManager;
     mManager = std::make_unique<AgentManagerIface>(ServerManager::serviceName(ServerManager::Control),
-            QStringLiteral("/AgentManager"),
-            QDBusConnection::sessionBus(), mParent);
+                                                   QStringLiteral("/AgentManager"),
+                                                   QDBusConnection::sessionBus(),
+                                                   mParent);
 
     connect(mManager.get(), &AgentManagerIface::agentTypeAdded, this, &AgentManagerPrivate::agentTypeAdded);
     connect(mManager.get(), &AgentManagerIface::agentTypeRemoved, this, &AgentManagerPrivate::agentTypeRemoved);
@@ -335,18 +335,17 @@ AgentManager::AgentManager()
 
     d->createDBusInterface();
 
-    d->mServiceWatcher = std::make_unique<QDBusServiceWatcher>(
-            ServerManager::serviceName(ServerManager::Control), QDBusConnection::sessionBus(),
-            QDBusServiceWatcher::WatchForRegistration);
-    connect(d->mServiceWatcher.get(), &QDBusServiceWatcher::serviceRegistered,
-            this, [this]() {
-                if (d->mTypes.isEmpty()) { // just to be safe
-                    d->readAgentTypes();
-                }
-                if (d->mInstances.isEmpty()) {
-                    d->readAgentInstances();
-                }
-            });
+    d->mServiceWatcher = std::make_unique<QDBusServiceWatcher>(ServerManager::serviceName(ServerManager::Control),
+                                                               QDBusConnection::sessionBus(),
+                                                               QDBusServiceWatcher::WatchForRegistration);
+    connect(d->mServiceWatcher.get(), &QDBusServiceWatcher::serviceRegistered, this, [this]() {
+        if (d->mTypes.isEmpty()) { // just to be safe
+            d->readAgentTypes();
+        }
+        if (d->mInstances.isEmpty()) {
+            d->readAgentInstances();
+        }
+    });
 }
 
 // @endcond

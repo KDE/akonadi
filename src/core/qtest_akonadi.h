@@ -10,54 +10,54 @@
 
 #include "agentinstance.h"
 #include "agentmanager.h"
-#include "servermanager.h"
-#include "collectionpathresolver.h"
-#include "monitor.h"
 #include "collectionfetchscope.h"
+#include "collectionpathresolver.h"
 #include "itemfetchscope.h"
+#include "monitor.h"
+#include "servermanager.h"
 
-#include <QTest>
-#include <QSignalSpy>
-#include <QTimer>
 #include <QDBusConnection>
 #include <QDBusInterface>
 #include <QDBusReply>
+#include <QSignalSpy>
+#include <QTest>
+#include <QTimer>
 
 /**
-* \short Akonadi Replacement for QTEST_MAIN from QTestLib
-*
-* This macro should be used for classes that run inside the Akonadi Testrunner.
-* So instead of writing QTEST_MAIN( TestClass ) you write
-* QTEST_AKONADIMAIN( TestClass ).
-*
-* Unlike QTEST_MAIN, this macro actually does call QApplication::exec() so
-* that the application is running during test execution. This is needed
-* for proper clean up of Sessions.
-*
-* \param TestObject The class you use for testing.
-*
-* \see QTestLib
-* \see QTEST_KDEMAIN
-*/
-#define QTEST_AKONADIMAIN(TestObject) \
-    int main(int argc, char *argv[]) \
-    { \
-        qputenv("LC_ALL", "C"); \
-        qunsetenv("KDE_COLOR_DEBUG"); \
-        QApplication app(argc, argv); \
-        app.setApplicationName(QStringLiteral("qttest")); \
-        app.setOrganizationDomain(QStringLiteral("kde.org")); \
-        app.setOrganizationName(QStringLiteral("KDE")); \
-        QGuiApplication::setQuitOnLastWindowClosed(false); \
-        qRegisterMetaType<QList<QUrl>>(); \
-        int result = 0; \
-        QTimer::singleShot(0, &app, [argc, argv, &result]() { \
-            TestObject tc; \
-            result = QTest::qExec(&tc, argc, argv); \
-            qApp->quit(); \
-        }); \
-        app.exec(); \
-        return result; \
+ * \short Akonadi Replacement for QTEST_MAIN from QTestLib
+ *
+ * This macro should be used for classes that run inside the Akonadi Testrunner.
+ * So instead of writing QTEST_MAIN( TestClass ) you write
+ * QTEST_AKONADIMAIN( TestClass ).
+ *
+ * Unlike QTEST_MAIN, this macro actually does call QApplication::exec() so
+ * that the application is running during test execution. This is needed
+ * for proper clean up of Sessions.
+ *
+ * \param TestObject The class you use for testing.
+ *
+ * \see QTestLib
+ * \see QTEST_KDEMAIN
+ */
+#define QTEST_AKONADIMAIN(TestObject)                                                                                                                          \
+    int main(int argc, char *argv[])                                                                                                                           \
+    {                                                                                                                                                          \
+        qputenv("LC_ALL", "C");                                                                                                                                \
+        qunsetenv("KDE_COLOR_DEBUG");                                                                                                                          \
+        QApplication app(argc, argv);                                                                                                                          \
+        app.setApplicationName(QStringLiteral("qttest"));                                                                                                      \
+        app.setOrganizationDomain(QStringLiteral("kde.org"));                                                                                                  \
+        app.setOrganizationName(QStringLiteral("KDE"));                                                                                                        \
+        QGuiApplication::setQuitOnLastWindowClosed(false);                                                                                                     \
+        qRegisterMetaType<QList<QUrl>>();                                                                                                                      \
+        int result = 0;                                                                                                                                        \
+        QTimer::singleShot(0, &app, [argc, argv, &result]() {                                                                                                  \
+            TestObject tc;                                                                                                                                     \
+            result = QTest::qExec(&tc, argc, argv);                                                                                                            \
+            qApp->quit();                                                                                                                                      \
+        });                                                                                                                                                    \
+        app.exec();                                                                                                                                            \
+        return result;                                                                                                                                         \
     }
 
 namespace AkonadiTest
@@ -85,8 +85,7 @@ void setAllResourcesOffline()
     }
 }
 
-template<typename Object, typename Func>
-bool akWaitForSignal(Object sender, Func member, int timeout = 1000)
+template<typename Object, typename Func> bool akWaitForSignal(Object sender, Func member, int timeout = 1000)
 {
     QSignalSpy spy(sender, member);
     bool ok = false;
@@ -129,10 +128,7 @@ QString testrunnerServiceName()
 
 bool restartAkonadiServer()
 {
-    QDBusInterface testrunnerIface(testrunnerServiceName(),
-                                   QStringLiteral("/"),
-                                   QStringLiteral("org.kde.Akonadi.Testrunner"),
-                                   QDBusConnection::sessionBus());
+    QDBusInterface testrunnerIface(testrunnerServiceName(), QStringLiteral("/"), QStringLiteral("org.kde.Akonadi.Testrunner"), QDBusConnection::sessionBus());
     if (!testrunnerIface.isValid()) {
         qWarning() << "Unable to get a dbus interface to the testrunner!";
     }
@@ -156,10 +152,7 @@ bool restartAkonadiServer()
 
 bool trackAkonadiProcess(bool track)
 {
-    QDBusInterface testrunnerIface(testrunnerServiceName(),
-                                   QStringLiteral("/"),
-                                   QStringLiteral("org.kde.Akonadi.Testrunner"),
-                                   QDBusConnection::sessionBus());
+    QDBusInterface testrunnerIface(testrunnerServiceName(), QStringLiteral("/"), QStringLiteral("org.kde.Akonadi.Testrunner"), QDBusConnection::sessionBus());
     if (!testrunnerIface.isValid()) {
         qWarning() << "Unable to get a dbus interface to the testrunner!";
     }
@@ -190,7 +183,6 @@ std::unique_ptr<Akonadi::Monitor> getTestMonitor()
     return std::unique_ptr<Akonadi::Monitor>(m);
 }
 
-
 } // namespace
 
 /**
@@ -198,7 +190,6 @@ std::unique_ptr<Akonadi::Monitor> getTestMonitor()
  * Similar to QVERIFY( job->exec() ) but includes the job error message
  * in the output in case of a failure.
  */
-#define AKVERIFYEXEC( job ) \
-    QVERIFY2( job->exec(), job->errorString().toUtf8().constData() )
+#define AKVERIFYEXEC(job) QVERIFY2(job->exec(), job->errorString().toUtf8().constData())
 
 #endif

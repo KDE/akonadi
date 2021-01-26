@@ -7,14 +7,13 @@
 #ifndef MIMETYPECHECKER_P_H
 #define MIMETYPECHECKER_P_H
 
-#include <QMimeType>
 #include <QMimeDatabase>
+#include <QMimeType>
 
 #include <QSet>
 
 namespace Akonadi
 {
-
 /**
  * @internal
  */

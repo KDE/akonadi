@@ -10,7 +10,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @short An interface to report differences between two arbitrary objects.
  *
@@ -84,8 +83,8 @@ public:
      * Describes the property modes.
      */
     enum Mode {
-        NormalMode,         ///< The left and right column show the same property values.
-        ConflictMode,       ///< The left and right column show conflicting property values.
+        NormalMode, ///< The left and right column show the same property values.
+        ConflictMode, ///< The left and right column show conflicting property values.
         AdditionalLeftMode, ///< The left column contains a property value that is not available in the right column.
         AdditionalRightMode ///< The right column contains a property value that is not available in the left column.
     };

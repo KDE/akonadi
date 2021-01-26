@@ -4,17 +4,17 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "qtest_akonadi.h"
 #include "collection.h"
 #include "collectionpathresolver.h"
 #include "control.h"
 #include "itemdeletejob.h"
 #include "itemfetchjob.h"
-#include "transactionjobs.h"
-#include "tagcreatejob.h"
 #include "itemmodifyjob.h"
-#include "resourceselectjob_p.h"
 #include "monitor.h"
+#include "qtest_akonadi.h"
+#include "resourceselectjob_p.h"
+#include "tagcreatejob.h"
+#include "transactionjobs.h"
 
 #include <QObject>
 
@@ -69,9 +69,7 @@ private Q_SLOTS:
         auto monitor = AkonadiTest::getTestMonitor();
         QSignalSpy spy(monitor.get(), &Monitor::itemsRemoved);
 
-        const QString path = QLatin1String("res1") +
-                             CollectionPathResolver::pathDelimiter() +
-                             QLatin1String("foo");
+        const QString path = QLatin1String("res1") + CollectionPathResolver::pathDelimiter() + QLatin1String("foo");
         auto *rjob = new CollectionPathResolver(path, this);
         AKVERIFYEXEC(rjob);
 
@@ -81,14 +79,14 @@ private Q_SLOTS:
         const Item::List items = fjob->items();
         QVERIFY(!items.isEmpty());
 
-        fjob = new ItemFetchJob(items[ 0 ], this);
+        fjob = new ItemFetchJob(items[0], this);
         AKVERIFYEXEC(fjob);
         QCOMPARE(fjob->items().count(), 1);
 
-        auto *djob = new ItemDeleteJob(items[ 0 ], this);
+        auto *djob = new ItemDeleteJob(items[0], this);
         AKVERIFYEXEC(djob);
 
-        fjob = new ItemFetchJob(items[ 0 ], this);
+        fjob = new ItemFetchJob(items[0], this);
         QVERIFY(!fjob->exec());
 
         QTRY_COMPARE(spy.count(), 1);
@@ -209,13 +207,12 @@ private Q_SLOTS:
 
         // delete from empty collection
         djob = new ItemDeleteJob(col, this);
-        QVERIFY(!djob->exec());   // error: no items found
+        QVERIFY(!djob->exec()); // error: no items found
 
         fjob = new ItemFetchJob(col, this);
         AKVERIFYEXEC(fjob);
         QCOMPARE(fjob->items().count(), 0);
     }
-
 };
 
 QTEST_AKONADIMAIN(ItemDeleteTest)

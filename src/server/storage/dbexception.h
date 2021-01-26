@@ -15,7 +15,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /** Exception for reporting SQL errors. */
 class DbException : public Exception
 {

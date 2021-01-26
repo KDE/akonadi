@@ -7,30 +7,30 @@
 
 #include "agentmanager.h"
 
+#include "agentbrokeninstance.h"
 #include "agentmanageradaptor.h"
 #include "agentmanagerinternaladaptor.h"
 #include "agentprocessinstance.h"
 #include "agentserverinterface.h"
-#include "agentbrokeninstance.h"
 #include "agentthreadinstance.h"
+#include "akonadicontrol_debug.h"
 #include "preprocessor_manager.h"
 #include "processcontrol.h"
 #include "resource_manager.h"
 #include "serverinterface.h"
-#include "akonadicontrol_debug.h"
 
-#include <private/protocol_p.h>
-#include <private/instance_p.h>
-#include <private/standarddirs_p.h>
 #include <private/dbus_p.h>
+#include <private/instance_p.h>
+#include <private/protocol_p.h>
+#include <private/standarddirs_p.h>
 
 #include <shared/akapplication.h>
 
 #include <QCoreApplication>
+#include <QDBusConnection>
 #include <QDir>
 #include <QScopedPointer>
 #include <QSettings>
-#include <QDBusConnection>
 
 using Akonadi::ProcessControl;
 using namespace std::chrono_literals;
@@ -44,17 +44,17 @@ public:
     explicit StorageProcessControl(const QStringList &args)
     {
         setShutdownTimeout(15s);
-        connect(this, &Akonadi::ProcessControl::unableToStart, this,
-                []() {
-                    QCoreApplication::instance()->exit(255);
-                });
+        connect(this, &Akonadi::ProcessControl::unableToStart, this, []() {
+            QCoreApplication::instance()->exit(255);
+        });
         start(QStringLiteral("akonadiserver"), args, RestartOnCrash);
     }
 
     ~StorageProcessControl() override
     {
         setCrashPolicy(ProcessControl::StopOnCrash);
-        org::freedesktop::Akonadi::Server serverIface(Akonadi::DBus::serviceName(Akonadi::DBus::Server), QStringLiteral("/Server"),
+        org::freedesktop::Akonadi::Server serverIface(Akonadi::DBus::serviceName(Akonadi::DBus::Server),
+                                                      QStringLiteral("/Server"),
                                                       QDBusConnection::sessionBus());
         serverIface.quit();
     }
@@ -66,10 +66,9 @@ class AgentServerProcessControl : public Akonadi::ProcessControl
 public:
     explicit AgentServerProcessControl(const QStringList &args)
     {
-        connect(this, &Akonadi::ProcessControl::unableToStart, this,
-                []() {
-                    qCCritical(AKONADICONTROL_LOG) << "Failed to start AgentServer!";
-                });
+        connect(this, &Akonadi::ProcessControl::unableToStart, this, []() {
+            qCCritical(AKONADICONTROL_LOG) << "Failed to start AgentServer!";
+        });
         start(QStringLiteral("akonadi_agent_server"), args, RestartOnCrash);
     }
 
@@ -77,11 +76,12 @@ public:
     {
         setCrashPolicy(ProcessControl::StopOnCrash);
         org::freedesktop::Akonadi::AgentServer agentServerIface(Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer),
-                                                                QStringLiteral("/AgentServer"), QDBusConnection::sessionBus(), this);
+                                                                QStringLiteral("/AgentServer"),
+                                                                QDBusConnection::sessionBus(),
+                                                                this);
         agentServerIface.quit();
     }
 };
-
 
 AgentManager::AgentManager(bool verbose, QObject *parent)
     : QObject(parent)
@@ -92,8 +92,7 @@ AgentManager::AgentManager(bool verbose, QObject *parent)
     new AgentManagerInternalAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/AgentManager"), this);
 
-    connect(QDBusConnection::sessionBus().interface(), &QDBusConnectionInterface::serviceOwnerChanged,
-            this, &AgentManager::serviceOwnerChanged);
+    connect(QDBusConnection::sessionBus().interface(), &QDBusConnectionInterface::serviceOwnerChanged, this, &AgentManager::serviceOwnerChanged);
 
     if (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Server))) {
         qFatal("akonadiserver already running!");
@@ -298,15 +297,17 @@ void AgentManager::removeAgentInstance(const QString &identifier)
 
     save();
 
-    org::freedesktop::Akonadi::ResourceManager resmanager(Akonadi::DBus::serviceName(Akonadi::DBus::Server), QStringLiteral("/ResourceManager"), QDBusConnection::sessionBus(), this);
+    org::freedesktop::Akonadi::ResourceManager resmanager(Akonadi::DBus::serviceName(Akonadi::DBus::Server),
+                                                          QStringLiteral("/ResourceManager"),
+                                                          QDBusConnection::sessionBus(),
+                                                          this);
     resmanager.removeResourceInstance(instance->identifier());
 
     // Kill the preprocessor instance, if any.
-    org::freedesktop::Akonadi::PreprocessorManager preProcessorManager(
-        Akonadi::DBus::serviceName(Akonadi::DBus::Server),
-        QStringLiteral("/PreprocessorManager"),
-        QDBusConnection::sessionBus(),
-        this);
+    org::freedesktop::Akonadi::PreprocessorManager preProcessorManager(Akonadi::DBus::serviceName(Akonadi::DBus::Server),
+                                                                       QStringLiteral("/PreprocessorManager"),
+                                                                       QDBusConnection::sessionBus(),
+                                                                       this);
 
     preProcessorManager.unregisterInstance(instance->identifier());
 
@@ -562,7 +563,10 @@ QStringList AgentManager::pluginInfoPathList()
 
 void AgentManager::load()
 {
-    org::freedesktop::Akonadi::ResourceManager resmanager(Akonadi::DBus::serviceName(Akonadi::DBus::Server), QStringLiteral("/ResourceManager"), QDBusConnection::sessionBus(), this);
+    org::freedesktop::Akonadi::ResourceManager resmanager(Akonadi::DBus::serviceName(Akonadi::DBus::Server),
+                                                          QStringLiteral("/ResourceManager"),
+                                                          QDBusConnection::sessionBus(),
+                                                          this);
     const QStringList knownResources = resmanager.resourceInstances();
 
     QSettings file(Akonadi::StandardDirs::agentsConfigFile(Akonadi::StandardDirs::ReadOnly), QSettings::IniFormat);
@@ -656,7 +660,7 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
 
     if ((name == Akonadi::DBus::serviceName(Akonadi::DBus::Server) || name == Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer)) && !newOwner.isEmpty()) {
         if (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Server))
-                && (!mAgentServer || QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer)))) {
+            && (!mAgentServer || QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer)))) {
             // server is operational, start agents
             continueStartup();
         }
@@ -735,11 +739,10 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
             return; // not our agent (?)
         }
 
-        org::freedesktop::Akonadi::PreprocessorManager preProcessorManager(
-            Akonadi::DBus::serviceName(Akonadi::DBus::Server),
-            QStringLiteral("/PreprocessorManager"),
-            QDBusConnection::sessionBus(),
-            this);
+        org::freedesktop::Akonadi::PreprocessorManager preProcessorManager(Akonadi::DBus::serviceName(Akonadi::DBus::Server),
+                                                                           QStringLiteral("/PreprocessorManager"),
+                                                                           QDBusConnection::sessionBus(),
+                                                                           this);
 
         if (!preProcessorManager.isValid()) {
             qCWarning(AKONADICONTROL_LOG) << "Could not connect to PreprocessorManager via D-Bus:" << preProcessorManager.lastError().message();
@@ -750,7 +753,6 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
                 preProcessorManager.unregisterInstance(service->identifier);
 
             } else {
-
                 // The preprocessor went up. Register it on server side.
 
                 if (!mAgentInstances.value(service->identifier)->obtainPreprocessorInterface()) {
@@ -797,8 +799,7 @@ bool AgentManager::checkResourceInterface(const QString &identifier, const QStri
     }
 
     if (!mAgentInstances[identifier]->hasResourceInterface()) {
-        qCWarning(AKONADICONTROL_LOG) << QLatin1String("AgentManager::") + method << " Agent instance "
-                                      << identifier << " has no resource interface!";
+        qCWarning(AKONADICONTROL_LOG) << QLatin1String("AgentManager::") + method << " Agent instance " << identifier << " has no resource interface!";
         return false;
     }
 
@@ -836,10 +837,11 @@ void AgentManager::ensureAutoStart(const AgentType &info)
     }
 
     org::freedesktop::Akonadi::AgentServer agentServer(Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer),
-            QStringLiteral("/AgentServer"), QDBusConnection::sessionBus(), this);
+                                                       QStringLiteral("/AgentServer"),
+                                                       QDBusConnection::sessionBus(),
+                                                       this);
 
-    if (mAgentInstances.contains(info.identifier) ||
-            (agentServer.isValid() && agentServer.started(info.identifier))) {
+    if (mAgentInstances.contains(info.identifier) || (agentServer.isValid() && agentServer.started(info.identifier))) {
         return; // already running
     }
 
@@ -874,8 +876,9 @@ void AgentManager::registerAgentAtServer(const QString &agentIdentifier, const A
     if (type.capabilities.contains(AgentType::CapabilityResource)) {
         QScopedPointer<org::freedesktop::Akonadi::ResourceManager> resmanager(
             new org::freedesktop::Akonadi::ResourceManager(Akonadi::DBus::serviceName(Akonadi::DBus::Server),
-                    QStringLiteral("/ResourceManager"),
-                    QDBusConnection::sessionBus(), this));
+                                                           QStringLiteral("/ResourceManager"),
+                                                           QDBusConnection::sessionBus(),
+                                                           this));
         resmanager->addResourceInstance(agentIdentifier, type.capabilities);
     }
 }

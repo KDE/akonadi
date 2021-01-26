@@ -13,7 +13,6 @@
 #include "collectionstatistics.h"
 #include "entitydisplayattribute.h"
 
-
 #include <QHash>
 #include <QString>
 #include <QStringList>
@@ -33,8 +32,7 @@ uint Akonadi::qHash(const Akonadi::Collection &collection)
 /**
  * Helper method for assignment operator and copy constructor.
  */
-static void assignCollectionPrivate(QSharedDataPointer<CollectionPrivate> &one,
-                                    const QSharedDataPointer<CollectionPrivate> &other)
+static void assignCollectionPrivate(QSharedDataPointer<CollectionPrivate> &one, const QSharedDataPointer<CollectionPrivate> &other)
 {
     // We can't simply do one = other here, we have to use a temp.
     // Otherwise ProtocolHelperTest::testParentCollectionAfterCollectionParsing()
@@ -60,7 +58,7 @@ public:
     CollectionRoot()
         : Collection(0)
     {
-        setContentMimeTypes({ Collection::mimeType() });
+        setContentMimeTypes({Collection::mimeType()});
 
         // The root collection is read-only for the users
         setRights(Collection::ReadOnly);
@@ -311,19 +309,18 @@ void Collection::setResource(const QString &resource)
     d_ptr->resource = resource;
 }
 
-QDebug operator <<(QDebug d, const Akonadi::Collection &collection)
+QDebug operator<<(QDebug d, const Akonadi::Collection &collection)
 {
-    return d << "Collection ID:" << collection.id()
-           << "   remote ID:" << collection.remoteId() << '\n'
-           << "   name:" << collection.name() << '\n'
-           << "   url:" << collection.url() << '\n'
-           << "   parent:" << collection.parentCollection().id() << collection.parentCollection().remoteId() << '\n'
-           << "   resource:" << collection.resource() << '\n'
-           << "   rights:" << collection.rights() << '\n'
-           << "   contents mime type:" << collection.contentMimeTypes() << '\n'
-           << "   isVirtual:" << collection.isVirtual() << '\n'
-           << "   " << collection.cachePolicy() << '\n'
-           << "   " << collection.statistics();
+    return d << "Collection ID:" << collection.id() << "   remote ID:" << collection.remoteId() << '\n'
+             << "   name:" << collection.name() << '\n'
+             << "   url:" << collection.url() << '\n'
+             << "   parent:" << collection.parentCollection().id() << collection.parentCollection().remoteId() << '\n'
+             << "   resource:" << collection.resource() << '\n'
+             << "   rights:" << collection.rights() << '\n'
+             << "   contents mime type:" << collection.contentMimeTypes() << '\n'
+             << "   isVirtual:" << collection.isVirtual() << '\n'
+             << "   " << collection.cachePolicy() << '\n'
+             << "   " << collection.statistics();
 }
 
 CollectionStatistics Collection::statistics() const

@@ -9,17 +9,16 @@
 #include "connection.h"
 #include "handlerhelper.h"
 #include "storage/datastore.h"
-#include "storage/transaction.h"
-#include "storage/itemqueryhelper.h"
-#include "storage/selectquerybuilder.h"
-#include "storage/parthelper.h"
 #include "storage/dbconfig.h"
+#include "storage/itemqueryhelper.h"
 #include "storage/itemretriever.h"
-#include "storage/parttypehelper.h"
+#include "storage/parthelper.h"
 #include "storage/partstreamer.h"
-#include <shared/akranges.h>
+#include "storage/parttypehelper.h"
+#include "storage/selectquerybuilder.h"
+#include "storage/transaction.h"
 #include <private/externalpartstorage_p.h>
-
+#include <shared/akranges.h>
 
 #include "akonadiserver_debug.h"
 
@@ -31,12 +30,15 @@ using namespace Akonadi::Server;
 
 static bool payloadChanged(const QSet<QByteArray> &changes)
 {
-    return changes | AkRanges::Actions::any([](const auto &change) { return change.startsWith(AKONADI_PARAM_PLD); });
+    return changes | AkRanges::Actions::any([](const auto &change) {
+               return change.startsWith(AKONADI_PARAM_PLD);
+           });
 }
 
 ItemModifyHandler::ItemModifyHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
-{}
+{
+}
 
 bool ItemModifyHandler::replaceFlags(const PimItem::List &items, const QSet<QByteArray> &flags, bool &flagsChanged)
 {
@@ -120,7 +122,7 @@ bool ItemModifyHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::ModifyItemsCommand>(m_command);
 
-    //parseCommand();
+    // parseCommand();
 
     DataStore *store = connection()->storageBackend();
     Transaction transaction(store, QStringLiteral("STORE"));
@@ -153,21 +155,24 @@ bool ItemModifyHandler::parseStream()
             const PimItem &pimItem = pimItems.at(i);
             if (connection()->isOwnerResource(pimItem)) {
                 if (pimItem.dirty()) {
-                    const QString error = QStringLiteral("[LRCONFLICT] Resource %1 tries to modify item %2 (%3) (in collection %4) with dirty payload, aborting STORE.");
+                    const QString error =
+                        QStringLiteral("[LRCONFLICT] Resource %1 tries to modify item %2 (%3) (in collection %4) with dirty payload, aborting STORE.");
                     return failureResponse(
-                               error.arg(pimItem.collection().resource().name())
-                               .arg(pimItem.id())
-                               .arg(pimItem.remoteId()).arg(pimItem.collectionId()));
+                        error.arg(pimItem.collection().resource().name()).arg(pimItem.id()).arg(pimItem.remoteId()).arg(pimItem.collectionId()));
                 }
             }
 
             // check and update revisions
             if (pimItem.rev() != cmd.oldRevision()) {
-                const QString error = QStringLiteral("[LLCONFLICT] Resource %1 tries to modify item %2 (%3) (in collection %4) with revision %5; the item was modified elsewhere and has revision %6, aborting STORE.");
+                const QString error = QStringLiteral(
+                    "[LLCONFLICT] Resource %1 tries to modify item %2 (%3) (in collection %4) with revision %5; the item was modified elsewhere and has "
+                    "revision %6, aborting STORE.");
                 return failureResponse(error.arg(pimItem.collection().resource().name())
-                                            .arg(pimItem.id())
-                                            .arg(pimItem.remoteId()).arg(pimItem.collectionId())
-                                            .arg(cmd.oldRevision()).arg(pimItems.at(i).rev()));
+                                           .arg(pimItem.id())
+                                           .arg(pimItem.remoteId())
+                                           .arg(pimItem.collectionId())
+                                           .arg(cmd.oldRevision())
+                                           .arg(pimItems.at(i).rev()));
             }
         }
     }
@@ -228,7 +233,8 @@ bool ItemModifyHandler::parseStream()
     if (item.isValid() && cmd.modifiedParts() & Protocol::ModifyItemsCommand::RemoteID) {
         if (item.remoteId() != cmd.remoteId() && !cmd.remoteId().isEmpty()) {
             if (!connection()->isOwnerResource(item)) {
-                qCWarning(AKONADISERVER_LOG) << "Invalid attempt to modify the remoteID for item" << item.id() << "from" << item.remoteId() << "to" << cmd.remoteId();
+                qCWarning(AKONADISERVER_LOG) << "Invalid attempt to modify the remoteID for item" << item.id() << "from" << item.remoteId() << "to"
+                                             << cmd.remoteId();
                 return failureResponse("Only resources can modify remote identifiers");
             }
             item.setRemoteId(cmd.remoteId());
@@ -307,7 +313,6 @@ bool ItemModifyHandler::parseStream()
 
     QDateTime datetime;
     if (!changes.isEmpty() || cmd.invalidateCache() || !cmd.dirty()) {
-
         // update item size
         if (pimItems.size() == 1 && (size > 0 || partSizes > 0)) {
             pimItems.first().setSize(qMax(size, partSizes));
@@ -315,17 +320,17 @@ bool ItemModifyHandler::parseStream()
 
         const bool onlyRemoteIdChanged = (changes.size() == 1 && changes.contains(AKONADI_PARAM_REMOTEID));
         const bool onlyRemoteRevisionChanged = (changes.size() == 1 && changes.contains(AKONADI_PARAM_REMOTEREVISION));
-        const bool onlyRemoteIdAndRevisionChanged = (changes.size() == 2 && changes.contains(AKONADI_PARAM_REMOTEID)
-                && changes.contains(AKONADI_PARAM_REMOTEREVISION));
+        const bool onlyRemoteIdAndRevisionChanged =
+            (changes.size() == 2 && changes.contains(AKONADI_PARAM_REMOTEID) && changes.contains(AKONADI_PARAM_REMOTEREVISION));
         const bool onlyFlagsChanged = (changes.size() == 1 && changes.contains(AKONADI_PARAM_FLAGS));
         const bool onlyGIDChanged = (changes.size() == 1 && changes.contains(AKONADI_PARAM_GID));
         // If only the remote id and/or the remote revision changed, we don't have to increase the REV,
         // because these updates do not change the payload and can only be done by the owning resource -> no conflicts possible
-        const bool revisionNeedsUpdate = (!changes.isEmpty() && !onlyRemoteIdChanged && !onlyRemoteRevisionChanged && !onlyRemoteIdAndRevisionChanged && !onlyGIDChanged);
+        const bool revisionNeedsUpdate =
+            (!changes.isEmpty() && !onlyRemoteIdChanged && !onlyRemoteRevisionChanged && !onlyRemoteIdAndRevisionChanged && !onlyGIDChanged);
 
         // run update query and prepare change notifications
         for (int i = 0; i < pimItems.count(); ++i) {
-
             PimItem &item = pimItems[i];
             if (revisionNeedsUpdate) {
                 item.setRev(item.rev() + 1);

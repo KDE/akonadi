@@ -5,19 +5,18 @@
 */
 
 #include "collection.h"
-#include "control.h"
-#include "linkjob.h"
-#include "itemfetchjob.h"
-#include "unlinkjob.h"
-#include "monitor.h"
 #include "collectionfetchjob.h"
+#include "control.h"
+#include "itemfetchjob.h"
 #include "itemfetchscope.h"
+#include "linkjob.h"
+#include "monitor.h"
+#include "qtest_akonadi.h"
 #include "searchcreatejob.h"
 #include "searchquery.h"
-#include "qtest_akonadi.h"
+#include "unlinkjob.h"
 
 #include <QObject>
-
 
 using namespace Akonadi;
 
@@ -53,7 +52,7 @@ private Q_SLOTS:
         auto *f = new ItemFetchJob(items, this);
         f->fetchScope().fetchFullPayload();
         AKVERIFYEXEC(f);
-        Q_FOREACH(const Item &item, f->items()) {
+        Q_FOREACH (const Item &item, f->items()) {
             QVERIFY(item.hasPayload<QByteArray>());
         }
 
@@ -101,7 +100,6 @@ private Q_SLOTS:
         AKVERIFYEXEC(fetch);
         QCOMPARE(fetch->items().count(), 0);
     }
-
 };
 
 QTEST_AKONADIMAIN(LinkTest)

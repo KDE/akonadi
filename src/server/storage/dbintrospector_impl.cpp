@@ -6,15 +6,15 @@
 */
 
 #include "dbintrospector_impl.h"
+#include "datastore.h"
 #include "dbexception.h"
 #include "querybuilder.h"
-#include "datastore.h"
 
 #include "akonadiserver_debug.h"
 
 using namespace Akonadi::Server;
 
-//BEGIN MySql
+// BEGIN MySql
 
 DbIntrospectorMySql::DbIntrospectorMySql(const QSqlDatabase &database)
     : DbIntrospector(database)
@@ -23,14 +23,14 @@ DbIntrospectorMySql::DbIntrospectorMySql(const QSqlDatabase &database)
 
 QString DbIntrospectorMySql::hasIndexQuery(const QString &tableName, const QString &indexName)
 {
-    return QStringLiteral("SHOW INDEXES FROM %1 WHERE `Key_name` = '%2'")
-           .arg(tableName, indexName);
+    return QStringLiteral("SHOW INDEXES FROM %1 WHERE `Key_name` = '%2'").arg(tableName, indexName);
 }
 
-QVector< DbIntrospector::ForeignKey > DbIntrospectorMySql::foreignKeyConstraints(const QString &tableName)
+QVector<DbIntrospector::ForeignKey> DbIntrospectorMySql::foreignKeyConstraints(const QString &tableName)
 {
     QueryBuilder qb(QStringLiteral("information_schema.REFERENTIAL_CONSTRAINTS"), QueryBuilder::Select);
-    qb.addJoin(QueryBuilder::InnerJoin, QStringLiteral("information_schema.KEY_COLUMN_USAGE"),
+    qb.addJoin(QueryBuilder::InnerJoin,
+               QStringLiteral("information_schema.KEY_COLUMN_USAGE"),
                QStringLiteral("information_schema.REFERENTIAL_CONSTRAINTS.CONSTRAINT_NAME"),
                QStringLiteral("information_schema.KEY_COLUMN_USAGE.CONSTRAINT_NAME"));
     qb.addColumn(QStringLiteral("information_schema.REFERENTIAL_CONSTRAINTS.CONSTRAINT_NAME"));
@@ -63,9 +63,9 @@ QVector< DbIntrospector::ForeignKey > DbIntrospectorMySql::foreignKeyConstraints
     return result;
 }
 
-//END MySql
+// END MySql
 
-//BEGIN Sqlite
+// BEGIN Sqlite
 
 DbIntrospectorSqlite::DbIntrospectorSqlite(const QSqlDatabase &database)
     : DbIntrospector(database)
@@ -96,13 +96,12 @@ QVector<DbIntrospector::ForeignKey> DbIntrospectorSqlite::foreignKeyConstraints(
 
 QString DbIntrospectorSqlite::hasIndexQuery(const QString &tableName, const QString &indexName)
 {
-    return QStringLiteral("SELECT * FROM sqlite_master WHERE type='index' AND tbl_name='%1' AND name='%2';")
-           .arg(tableName, indexName);
+    return QStringLiteral("SELECT * FROM sqlite_master WHERE type='index' AND tbl_name='%1' AND name='%2';").arg(tableName, indexName);
 }
 
-//END Sqlite
+// END Sqlite
 
-//BEGIN PostgreSql
+// BEGIN PostgreSql
 
 DbIntrospectorPostgreSql::DbIntrospectorPostgreSql(const QSqlDatabase &database)
     : DbIntrospector(database)
@@ -117,28 +116,37 @@ QVector<DbIntrospector::ForeignKey> DbIntrospectorPostgreSql::foreignKeyConstrai
 #define CONSTRAINT_COLUMN_USAGE "information_schema.constraint_column_usage"
 
     Query::Condition keyColumnUsageCondition(Query::And);
-    keyColumnUsageCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_catalog"), Query::Equals,
-            QStringLiteral(KEY_COLUMN_USAGE ".constraint_catalog"));
-    keyColumnUsageCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_schema"), Query::Equals,
-            QStringLiteral(KEY_COLUMN_USAGE ".constraint_schema"));
-    keyColumnUsageCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_name"), Query::Equals,
-            QStringLiteral(KEY_COLUMN_USAGE ".constraint_name"));
+    keyColumnUsageCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_catalog"),
+                                               Query::Equals,
+                                               QStringLiteral(KEY_COLUMN_USAGE ".constraint_catalog"));
+    keyColumnUsageCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_schema"),
+                                               Query::Equals,
+                                               QStringLiteral(KEY_COLUMN_USAGE ".constraint_schema"));
+    keyColumnUsageCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_name"),
+                                               Query::Equals,
+                                               QStringLiteral(KEY_COLUMN_USAGE ".constraint_name"));
 
     Query::Condition referentialConstraintsCondition(Query::And);
-    referentialConstraintsCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_catalog"), Query::Equals,
-            QStringLiteral(REFERENTIAL_CONSTRAINTS ".constraint_catalog"));
-    referentialConstraintsCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_schema"), Query::Equals,
-            QStringLiteral(REFERENTIAL_CONSTRAINTS ".constraint_schema"));
-    referentialConstraintsCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_name"), Query::Equals,
-            QStringLiteral(REFERENTIAL_CONSTRAINTS ".constraint_name"));
+    referentialConstraintsCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_catalog"),
+                                                       Query::Equals,
+                                                       QStringLiteral(REFERENTIAL_CONSTRAINTS ".constraint_catalog"));
+    referentialConstraintsCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_schema"),
+                                                       Query::Equals,
+                                                       QStringLiteral(REFERENTIAL_CONSTRAINTS ".constraint_schema"));
+    referentialConstraintsCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_name"),
+                                                       Query::Equals,
+                                                       QStringLiteral(REFERENTIAL_CONSTRAINTS ".constraint_name"));
 
     Query::Condition constraintColumnUsageCondition(Query::And);
-    constraintColumnUsageCondition.addColumnCondition(QStringLiteral(REFERENTIAL_CONSTRAINTS ".unique_constraint_catalog"), Query::Equals,
-            QStringLiteral(CONSTRAINT_COLUMN_USAGE ".constraint_catalog"));
-    constraintColumnUsageCondition.addColumnCondition(QStringLiteral(REFERENTIAL_CONSTRAINTS ".unique_constraint_schema"), Query::Equals,
-            QStringLiteral(CONSTRAINT_COLUMN_USAGE ".constraint_schema"));
-    constraintColumnUsageCondition.addColumnCondition(QStringLiteral(REFERENTIAL_CONSTRAINTS ".unique_constraint_name"), Query::Equals,
-            QStringLiteral(CONSTRAINT_COLUMN_USAGE ".constraint_name"));
+    constraintColumnUsageCondition.addColumnCondition(QStringLiteral(REFERENTIAL_CONSTRAINTS ".unique_constraint_catalog"),
+                                                      Query::Equals,
+                                                      QStringLiteral(CONSTRAINT_COLUMN_USAGE ".constraint_catalog"));
+    constraintColumnUsageCondition.addColumnCondition(QStringLiteral(REFERENTIAL_CONSTRAINTS ".unique_constraint_schema"),
+                                                      Query::Equals,
+                                                      QStringLiteral(CONSTRAINT_COLUMN_USAGE ".constraint_schema"));
+    constraintColumnUsageCondition.addColumnCondition(QStringLiteral(REFERENTIAL_CONSTRAINTS ".unique_constraint_name"),
+                                                      Query::Equals,
+                                                      QStringLiteral(CONSTRAINT_COLUMN_USAGE ".constraint_name"));
 
     QueryBuilder qb(QStringLiteral(TABLE_CONSTRAINTS), QueryBuilder::Select);
     qb.addColumn(QStringLiteral(TABLE_CONSTRAINTS ".constraint_name"));
@@ -150,10 +158,8 @@ QVector<DbIntrospector::ForeignKey> DbIntrospectorPostgreSql::foreignKeyConstrai
     qb.addJoin(QueryBuilder::LeftJoin, QStringLiteral(KEY_COLUMN_USAGE), keyColumnUsageCondition);
     qb.addJoin(QueryBuilder::LeftJoin, QStringLiteral(REFERENTIAL_CONSTRAINTS), referentialConstraintsCondition);
     qb.addJoin(QueryBuilder::LeftJoin, QStringLiteral(CONSTRAINT_COLUMN_USAGE), constraintColumnUsageCondition);
-    qb.addValueCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_type"),
-                         Query::Equals, QLatin1String("FOREIGN KEY"));
-    qb.addValueCondition(QStringLiteral(TABLE_CONSTRAINTS ".table_name"),
-                         Query::Equals, tableName.toLower());
+    qb.addValueCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_type"), Query::Equals, QLatin1String("FOREIGN KEY"));
+    qb.addValueCondition(QStringLiteral(TABLE_CONSTRAINTS ".table_name"), Query::Equals, tableName.toLower());
 
 #undef TABLE_CONSTRAINTS
 #undef KEY_COLUMN_USAGE
@@ -190,4 +196,4 @@ QString DbIntrospectorPostgreSql::hasIndexQuery(const QString &tableName, const 
     return query;
 }
 
-//END PostgreSql
+// END PostgreSql

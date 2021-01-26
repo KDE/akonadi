@@ -7,15 +7,14 @@
 #ifndef AKONADI_RECURSIVEMOVER_P_H
 #define AKONADI_RECURSIVEMOVER_P_H
 
-#include "item.h"
-#include "collection.h"
 #include "agentbase_p.h"
+#include "collection.h"
+#include "item.h"
 
 #include <KCompositeJob>
 
 namespace Akonadi
 {
-
 /**
  * Helper class for expanding inter-resource collection moves inside ResourceBase.
  *
@@ -62,11 +61,7 @@ private:
     Collection m_currentCollection;
     Item m_currentItem;
 
-    enum CurrentAction {
-        None,
-        AddCollection,
-        AddItem
-    } m_currentAction;
+    enum CurrentAction { None, AddCollection, AddItem } m_currentAction;
 
     int m_runningJobs = 0;
     bool m_pendingReplay = false;

@@ -7,8 +7,8 @@
 #ifndef AKONADI_AGENTACTIONMANAGER_H
 #define AKONADI_AGENTACTIONMANAGER_H
 
-#include "akonadiwidgets_export.h"
 #include "agentinstance.h"
+#include "akonadiwidgets_export.h"
 
 #include <QObject>
 
@@ -20,7 +20,6 @@ class QWidget;
 
 namespace Akonadi
 {
-
 /**
  * @short Manages generic actions for agent and agent instance views.
  *
@@ -35,23 +34,23 @@ public:
      * Describes the supported actions.
      */
     enum Type {
-        CreateAgentInstance,       ///< Creates an agent instance
-        DeleteAgentInstance,       ///< Deletes the selected agent instance
-        ConfigureAgentInstance,    ///< Configures the selected agent instance
-        LastType                   ///< Marks last action
+        CreateAgentInstance, ///< Creates an agent instance
+        DeleteAgentInstance, ///< Deletes the selected agent instance
+        ConfigureAgentInstance, ///< Configures the selected agent instance
+        LastType ///< Marks last action
     };
 
     /**
      * Describes the text context that can be customized.
      */
     enum TextContext {
-        DialogTitle,                ///< The window title of a dialog
-        DialogText,                 ///< The text of a dialog
-        MessageBoxTitle,            ///< The window title of a message box
-        MessageBoxText,             ///< The text of a message box
-        MessageBoxAlternativeText,  ///< An alternative text of a message box
-        ErrorMessageTitle,          ///< The window title of an error message
-        ErrorMessageText            ///< The text of an error message
+        DialogTitle, ///< The window title of a dialog
+        DialogText, ///< The text of a dialog
+        MessageBoxTitle, ///< The window title of a message box
+        MessageBoxText, ///< The text of a message box
+        MessageBoxAlternativeText, ///< An alternative text of a message box
+        ErrorMessageTitle, ///< The window title of an error message
+        ErrorMessageText ///< The text of an error message
     };
 
     /**

@@ -9,7 +9,6 @@
 
 #include "itemfetchscope.h"
 
-
 using namespace Akonadi;
 
 ItemMonitor::ItemMonitor()
@@ -43,7 +42,9 @@ void ItemMonitor::setItem(const Item &item)
     auto *job = new ItemFetchJob(d->mItem);
     job->setFetchScope(fetchScope());
 
-    d->connect(job, &ItemFetchJob::result, d, [this](KJob* job) {d->initialFetchDone(job); });
+    d->connect(job, &ItemFetchJob::result, d, [this](KJob *job) {
+        d->initialFetchDone(job);
+    });
 }
 
 Item ItemMonitor::item() const

@@ -16,7 +16,6 @@
 
 namespace Akonadi
 {
-
 /**
  * @short An Attribute that marks that an entity should be hidden in the UI.
  *

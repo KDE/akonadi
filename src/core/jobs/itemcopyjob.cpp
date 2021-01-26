@@ -8,8 +8,8 @@
 
 #include "collection.h"
 #include "job_p.h"
-#include "protocolhelper_p.h"
 #include "private/protocol_p.h"
+#include "protocolhelper_p.h"
 
 using namespace Akonadi;
 
@@ -66,8 +66,7 @@ void ItemCopyJob::doStart()
     Q_D(ItemCopyJob);
 
     try {
-        d->sendCommand(Protocol::CopyItemsCommandPtr::create(ProtocolHelper::entitySetToScope(d->mItems),
-                       ProtocolHelper::entityToScope(d->mTarget)));
+        d->sendCommand(Protocol::CopyItemsCommandPtr::create(ProtocolHelper::entitySetToScope(d->mItems), ProtocolHelper::entityToScope(d->mTarget)));
     } catch (std::exception &e) {
         setError(Unknown);
         setErrorText(QString::fromUtf8(e.what()));

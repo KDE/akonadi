@@ -7,10 +7,10 @@
 #ifndef AKONADI_DBUPDATER_H
 #define AKONADI_DBUPDATER_H
 
-#include <QObject>
 #include <QMap>
-#include <QStringList>
+#include <QObject>
 #include <QSqlDatabase>
+#include <QStringList>
 
 class QDomElement;
 class DbUpdaterTest;
@@ -19,7 +19,6 @@ namespace Akonadi
 {
 namespace Server
 {
-
 /**
  * @short A helper class that contains an update set.
  */
