@@ -186,7 +186,10 @@ Protocol::ModifyItemsCommandPtr ItemModifyJobPrivate::fullCommand() const
     }
 
     if (item.d_ptr->mTagsOverwritten) {
-        cmd->setTags(ProtocolHelper::entitySetToScope(item.tags()));
+        const auto tags = item.tags();
+        if (!tags.isEmpty()) {
+            cmd->setTags(ProtocolHelper::entitySetToScope(tags));
+        }
     } else {
         const auto addedTags = ItemChangeLog::instance()->addedTags(item.d_ptr);
         if (!addedTags.isEmpty()) {
