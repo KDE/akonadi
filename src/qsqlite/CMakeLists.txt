@@ -6,7 +6,7 @@ set(QSqlite_SRCS
 
 message(STATUS "Building QSQLITE3 driver")
 
-set(QSQLITE_INSTALL_PREFIX "${PLUGIN_INSTALL_DIR}/sqldrivers")
+set(QSQLITE_INSTALL_PREFIX "${KDE_INSTALL_PLUGINDIR}/sqldrivers")
 
 include_directories(
     ${Qt5Core_PRIVATE_INCLUDE_DIRS}
