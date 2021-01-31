@@ -52,7 +52,8 @@ private Q_SLOTS:
         auto *f = new ItemFetchJob(items, this);
         f->fetchScope().fetchFullPayload();
         AKVERIFYEXEC(f);
-        Q_FOREACH (const Item &item, f->items()) {
+        const auto itemsLst = f->items();
+        for (const Item &item : itemsLst) {
             QVERIFY(item.hasPayload<QByteArray>());
         }
 

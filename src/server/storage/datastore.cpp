@@ -729,7 +729,7 @@ bool DataStore::removeItemParts(const PimItem &item, const QSet<QByteArray> &par
     }
 
     const Part::List existingParts = qb.result();
-    for (Part part : qAsConst(existingParts)) { // krazy:exclude=foreach
+    for (Part part : qAsConst(existingParts)) {
         if (!PartHelper::remove(&part)) {
             qCWarning(AKONADISERVER_LOG) << "Failed to remove part" << part.id() << "(" << part.partType().ns() << ":" << part.partType().name()
                                          << ") from Item" << item.id();

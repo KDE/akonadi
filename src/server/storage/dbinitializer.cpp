@@ -61,13 +61,15 @@ bool DbInitializer::run()
     try {
         qCInfo(AKONADISERVER_LOG) << "Running DB initializer";
 
-        Q_FOREACH (const TableDescription &table, mSchema->tables()) {
+        const auto tables = mSchema->tables();
+        for (const TableDescription &table : tables) {
             if (!checkTable(table)) {
                 return false;
             }
         }
 
-        Q_FOREACH (const RelationDescription &relation, mSchema->relations()) {
+        const auto relations = mSchema->relations();
+        for (const RelationDescription &relation : relations) {
             if (!checkRelation(relation)) {
                 return false;
             }
@@ -142,7 +144,7 @@ void DbInitializer::checkForeignKeys(const TableDescription &tableDescription)
         const QVector<DbIntrospector::ForeignKey> existingForeignKeys = m_introspector->foreignKeyConstraints(tableDescription.name);
         Q_FOREACH (const ColumnDescription &column, tableDescription.columns) {
             DbIntrospector::ForeignKey existingForeignKey;
-            Q_FOREACH (const DbIntrospector::ForeignKey &fk, existingForeignKeys) {
+            for (const DbIntrospector::ForeignKey &fk : existingForeignKeys) {
                 if (QString::compare(fk.column, column.name, Qt::CaseInsensitive) == 0) {
                     existingForeignKey = fk;
                     break;

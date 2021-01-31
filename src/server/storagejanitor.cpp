@@ -188,7 +188,8 @@ qint64 StorageJanitor::lostAndFoundCollection()
         qCCritical(AKONADISERVER_LOG) << "Failed to create lost+found collection!";
     }
 
-    Q_FOREACH (const MimeType &mt, MimeType::retrieveAll()) {
+    const auto retrieveAll = MimeType::retrieveAll();
+    for (const MimeType &mt : retrieveAll) {
         lfCol.addMimeType(mt);
     }
 

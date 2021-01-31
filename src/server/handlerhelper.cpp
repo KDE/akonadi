@@ -86,8 +86,9 @@ Protocol::CachePolicy HandlerHelper::cachePolicyResponse(const Collection &col)
 Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(AkonadiServer &akonadi, const Collection &col)
 {
     QStringList mimeTypes;
-    mimeTypes.reserve(col.mimeTypes().size());
-    Q_FOREACH (const MimeType &mt, col.mimeTypes()) {
+    const auto mimeTypesList = col.mimeTypes();
+    mimeTypes.reserve(mimeTypesList.size());
+    for (const MimeType &mt : mimeTypesList) {
         mimeTypes << mt.name();
     }
 

@@ -36,7 +36,8 @@ int main(int argc, char **argv)
     dlg.changeCollectionDialogOptions(CollectionDialog::AllowToCreateNewChildCollection);
     dlg.exec();
 
-    foreach (const Collection &collection, dlg.selectedCollections()) {
+    const auto selectedCollections = dlg.selectedCollections();
+    for (const Collection &collection : selectedCollections) {
         qDebug() << "Selected collection:" << collection.name();
     }
 

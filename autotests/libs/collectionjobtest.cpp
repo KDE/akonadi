@@ -54,7 +54,7 @@ static Collection findCol(const Collection::List &list, const QString &name)
 template<class T> static void compareLists(const QList<T> &l1, const QList<T> &l2)
 {
     QCOMPARE(l1.count(), l2.count());
-    foreach (const T &entry, l1) {
+    for (const T &entry : l1) {
         QVERIFY(l2.contains(entry));
     }
 }
@@ -62,7 +62,7 @@ template<class T> static void compareLists(const QList<T> &l1, const QList<T> &l
 template<class T> static void compareLists(const QVector<T> &l1, const QVector<T> &l2)
 {
     QCOMPARE(l1.count(), l2.count());
-    foreach (const T &entry, l1) {
+    for (const T &entry : l1) {
         QVERIFY(l2.contains(entry));
     }
 }
@@ -70,7 +70,7 @@ template<class T> static void compareLists(const QVector<T> &l1, const QVector<T
 template<typename T> static T *extractAttribute(QList<Attribute *> attrs)
 {
     T dummy;
-    foreach (Attribute *attr, attrs) {
+    for (Attribute *attr : attrs) {
         if (attr->type() == dummy.type()) {
             return dynamic_cast<T *>(attr);
         }

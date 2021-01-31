@@ -72,7 +72,7 @@ QVector<qint64> SearchHelper::matchSubcollectionsByMimeType(const QVector<qint64
     }
 
     // Try to resolve direct descendants
-    Q_FOREACH (qint64 ancestor, ancestors) {
+    for (qint64 ancestor : ancestors) {
         const QVector<qint64> cols = candidateCollections.take(ancestor);
         if (!cols.isEmpty()) {
             results += cols;

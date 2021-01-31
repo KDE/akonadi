@@ -100,7 +100,7 @@ void GidTest::testSetAndFetch()
     QFETCH(Item, toFetch);
     QFETCH(Item::List, expected);
 
-    Q_FOREACH (const Item &item, input) {
+    for (const Item &item : qAsConst(input)) {
         fetchAndSetGid(item);
     }
 
@@ -109,7 +109,7 @@ void GidTest::testSetAndFetch()
     AKVERIFYEXEC(fetch);
     Item::List fetched = fetch->items();
     QCOMPARE(fetched.count(), expected.size());
-    Q_FOREACH (const Item &item, expected) {
+    for (const Item &item : qAsConst(expected)) {
         QVERIFY(expected.removeOne(item));
     }
     QVERIFY(expected.isEmpty());

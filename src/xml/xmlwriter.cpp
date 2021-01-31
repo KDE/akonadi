@@ -35,7 +35,8 @@ template<typename T> static void writeAttributesImpl(const T &entity, QDomElemen
     }
 
     QDomDocument doc = parentElem.ownerDocument();
-    Q_FOREACH (Attribute *attr, entity.attributes()) {
+    const auto attributes = entity.attributes();
+    for (Attribute *attr : attributes) {
         parentElem.appendChild(XmlWriter::attributeToElement(attr, doc));
     }
 }
@@ -96,7 +97,8 @@ QDomElement XmlWriter::itemToElement(const Akonadi::Item &item, QDomDocument &do
 
     writeAttributes(item, top);
 
-    Q_FOREACH (const Item::Flag &flag, item.flags()) {
+    const auto flags = item.flags();
+    for (const Item::Flag &flag : flags) {
         QDomElement flagElem = document.createElement(Format::Tag::flag());
         QDomText flagText = document.createTextNode(QString::fromUtf8(flag));
         flagElem.appendChild(flagText);

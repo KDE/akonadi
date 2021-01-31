@@ -33,8 +33,8 @@ void TransactionTest::testTransaction()
 
     CollectionFetchJob *listJob = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive);
     AKVERIFYEXEC(listJob);
-    Collection::List list = listJob->collections();
-    foreach (const Collection &col, list)
+    const Collection::List list = listJob->collections();
+    for (const Collection &col : list)
         if (col.name() == QLatin1String("res3")) {
             basisCollection = col;
         }

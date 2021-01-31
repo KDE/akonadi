@@ -103,7 +103,8 @@ bool ItemCreateHandler::insertItem(const Protocol::CreateItemCommand &cmd, PimIt
     // Handle individual parts
     qint64 partSizes = 0;
     PartStreamer streamer(connection(), item);
-    Q_FOREACH (const QByteArray &partName, cmd.parts()) {
+    const auto parts = cmd.parts();
+    for (const QByteArray &partName : parts) {
         qint64 partSize = 0;
         try {
             streamer.stream(true, partName, partSize);

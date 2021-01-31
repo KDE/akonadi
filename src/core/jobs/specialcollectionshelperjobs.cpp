@@ -437,8 +437,7 @@ void DefaultResourceJobPrivate::collectionFetchResult(KJob *job)
     // These collections have been created by the maildir resource, when it
     // found the folders on disk. So give them the necessary attributes now.
     Q_ASSERT(mPendingModifyJobs == 0);
-    for (Collection collection : qAsConst(toRecover)) { // krazy:exclude=foreach
-
+    for (Collection collection : qAsConst(toRecover)) {
         if (collection.hasAttribute<SpecialCollectionAttribute>()) {
             continue;
         }

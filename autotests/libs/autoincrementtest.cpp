@@ -97,7 +97,7 @@ void AutoIncrementTest::testCollectionAutoIncrement()
     }
 
     // Delete the 20 collections
-    foreach (const Collection &collection, collectionsToDelete) {
+    for (const Collection &collection : qAsConst(collectionsToDelete)) {
         auto *job = new CollectionDeleteJob(collection);
         AKVERIFYEXEC(job);
     }
