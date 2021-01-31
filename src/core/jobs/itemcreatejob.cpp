@@ -134,19 +134,23 @@ void ItemCreateJob::doStart()
         cmd->setFlags(d->mItem.flags());
         cmd->setFlagsOverwritten(d->mItem.d_ptr->mFlagsOverwritten);
     } else {
-        auto addedFlags = ItemChangeLog::instance()->addedFlags(d->mItem.d_ptr);
-        auto deletedFlags = ItemChangeLog::instance()->deletedFlags(d->mItem.d_ptr);
+        const auto addedFlags = ItemChangeLog::instance()->addedFlags(d->mItem.d_ptr);
+        const auto deletedFlags = ItemChangeLog::instance()->deletedFlags(d->mItem.d_ptr);
         cmd->setAddedFlags(addedFlags);
         cmd->setRemovedFlags(deletedFlags);
     }
-    auto addedTags = ItemChangeLog::instance()->addedTags(d->mItem.d_ptr);
-    auto deletedTags = ItemChangeLog::instance()->deletedTags(d->mItem.d_ptr);
-    if (!addedTags.isEmpty() && (d->mItem.d_ptr->mTagsOverwritten || !merge)) {
-        cmd->setTags(ProtocolHelper::entitySetToScope(addedTags));
+
+    if (d->mItem.d_ptr->mTagsOverwritten || !merge) {
+        const auto tags = d->mItem.tags();
+        if (!tags.isEmpty()) {
+            cmd->setTags(ProtocolHelper::entitySetToScope(tags));
+        }
     } else {
+        const auto addedTags = ItemChangeLog::instance()->addedTags(d->mItem.d_ptr);
         if (!addedTags.isEmpty()) {
             cmd->setAddedTags(ProtocolHelper::entitySetToScope(addedTags));
         }
+        const auto deletedTags = ItemChangeLog::instance()->deletedTags(d->mItem.d_ptr);
         if (!deletedTags.isEmpty()) {
             cmd->setRemovedTags(ProtocolHelper::entitySetToScope(deletedTags));
         }
