@@ -43,6 +43,7 @@ private Q_SLOTS:
     void testAttributes();
     void testTagItem();
     void testCreateItem();
+    void testCreateItemWithTags();
     void testRIDIsolation();
     void testFetchTagIdWithItem();
     void testFetchFullTagWithItem();
@@ -554,6 +555,48 @@ void TagTest::testCreateItem()
 
     TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);
     AKVERIFYEXEC(deleteJob);
+}
+
+void TagTest::testCreateItemWithTags()
+{
+    const Collection res3 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
+    Tag tag1;
+    {
+        TagCreateJob *createjob = new TagCreateJob(Tag(QStringLiteral("gid1")), this);
+        AKVERIFYEXEC(createjob);
+        tag1 = createjob->tag();
+    }
+    Tag tag2;
+    {
+        TagCreateJob *createjob = new TagCreateJob(Tag(QStringLiteral("gid2")), this);
+        AKVERIFYEXEC(createjob);
+        tag2 = createjob->tag();
+    }
+
+    Item item1;
+    {
+        item1.setMimeType(QStringLiteral("application/octet-stream"));
+        item1.setTags({tag1, tag2});
+        auto *append = new ItemCreateJob(item1, res3, this);
+        AKVERIFYEXEC(append);
+        item1 = append->item();
+    }
+
+    auto *fetchJob = new ItemFetchJob(item1, this);
+    fetchJob->fetchScope().setFetchTags(true);
+    AKVERIFYEXEC(fetchJob);
+    auto fetchTags = fetchJob->items().first().tags();
+
+    std::unique_ptr<TagDeleteJob, void (*)(TagDeleteJob *)> finally(
+        new TagDeleteJob({tag1, tag2}, this),
+        [] (TagDeleteJob *j)
+        {
+            j->exec();
+            delete j;
+        });
+    QCOMPARE(fetchTags.size(), 2);
+    QVERIFY(fetchTags.contains(tag1));
+    QVERIFY(fetchTags.contains(tag2));
 }
 
 void TagTest::testFetchTagIdWithItem()
