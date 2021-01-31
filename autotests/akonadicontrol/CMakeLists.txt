@@ -19,7 +19,7 @@ macro(add_unit_test _source)
     target_link_libraries(${_name}
         akonadi_shared
         KF5AkonadiPrivate
-        Qt5::Test
+        Qt::Test
         KF5::ConfigCore
         ${CMAKE_EXE_LINKER_FLAGS_ASAN}
     )

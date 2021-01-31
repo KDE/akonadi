@@ -58,15 +58,15 @@ target_link_libraries(akonadi_control
     KF5AkonadiPrivate
     KF5::CoreAddons
     KF5::ConfigCore
-    Qt5::Core
-    Qt5::DBus
-    Qt5::Gui
+    Qt::Core
+    Qt::DBus
+    Qt::Gui
 )
 
 if (WITH_ACCOUNTS)
     target_include_directories(akonadi_control PRIVATE ${ACCOUNTSQT_INCLUDE_DIRS})
-    # We need Qt5::Xml because the Accounts framework leaks QDocument includes into public interface
-    target_link_libraries(akonadi_control ${ACCOUNTSQT_LIBRARIES} Qt5::Xml)
+    # We need Qt::Xml because the Accounts framework leaks QDocument includes into public interface
+    target_link_libraries(akonadi_control ${ACCOUNTSQT_LIBRARIES} Qt::Xml)
 endif()
 
 install(TARGETS akonadi_control
