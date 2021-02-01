@@ -27,7 +27,7 @@ add_executable(akonadi_%{APPNAMELC}_resource ${%{APPNAMELC}resource_SRCS})
 set_target_properties(akonadi_%{APPNAMELC}_resource PROPERTIES MACOSX_BUNDLE FALSE)
 
 target_link_libraries(akonadi_%{APPNAMELC}_resource
-    Qt::DBus
+    Qt5::DBus
     KF5::AkonadiAgentBase
     KF5::ConfigCore
 )

@@ -33,8 +33,8 @@ set(akonadiprivate_SRCS
 
 set(akonadiprivate_LIBS
 PUBLIC
-    Qt::Core
-    Qt::DBus
+    Qt5::Core
+    Qt5::DBus
 PRIVATE
     ${LIBLZMA_LIBRARIES}
 )
@@ -42,7 +42,7 @@ if (WIN32)
     set(akonadiprivate_LIBS
     ${akonadiprivate_LIBS}
     PRIVATE
-        Qt::Network
+        Qt5::Network
     )
 endif()
 

@@ -29,7 +29,7 @@ target_link_libraries(akonadi_knut_resource
   KF5::AkonadiCore
   KF5::KIOCore
   KF5::AkonadiAgentBase
-  Qt::Xml
+  Qt5::Xml
   KF5::I18n
 )
 

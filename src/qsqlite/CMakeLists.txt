@@ -20,8 +20,8 @@ add_library(qsqlite3 SHARED ${QSqlite_SRCS} ${QSqlite_MOC_SRCS})
 set_target_properties(qsqlite3 PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/sqldrivers")
 
 target_link_libraries(qsqlite3
-    Qt::Core
-    Qt::Sql
+    Qt5::Core
+    Qt5::Sql
     ${SQLITE_LIBRARIES}
 )
 

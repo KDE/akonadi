@@ -312,11 +312,11 @@ target_link_libraries(KF5AkonadiCore
 PUBLIC
     KF5::CoreAddons # for KJob
     KF5::ItemModels
-    Qt::Gui # for QColor
+    Qt5::Gui # for QColor
     Boost::boost
 PRIVATE
-    Qt::Network
-    Qt::Widgets
+    Qt5::Network
+    Qt5::Widgets
     KF5::AkonadiPrivate
     KF5::I18n
     KF5::IconThemes

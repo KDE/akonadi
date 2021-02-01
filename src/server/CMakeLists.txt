@@ -176,11 +176,11 @@ set_target_properties(libakonadiserver PROPERTIES OUTPUT_NAME akonadiserver)
 target_link_libraries(libakonadiserver
     akonadi_shared
     KF5AkonadiPrivate
-    Qt::Core
-    Qt::Network
-    Qt::Sql
-    Qt::DBus
-    Qt::Xml
+    Qt5::Core
+    Qt5::Network
+    Qt5::Sql
+    Qt5::DBus
+    Qt5::Xml
 )
 
 add_executable(akonadiserver ${akonadiserver_SRCS})

@@ -114,14 +114,14 @@ target_link_libraries(KF5AkonadiWidgets
 PUBLIC
     KF5::AkonadiCore
     KF5::ItemModels
-    Qt::Widgets
+    Qt5::Widgets
     KF5::ConfigWidgets
 PRIVATE
     KF5::I18n
     KF5::IconThemes
     KF5::XmlGui
     KF5::ItemViews
-    Qt::Sql
+    Qt5::Sql
     KF5::AkonadiPrivate
     KF5::WindowSystem
 )

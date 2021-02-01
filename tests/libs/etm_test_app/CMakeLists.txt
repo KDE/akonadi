@@ -12,5 +12,5 @@ target_link_libraries(akonadi_etm_test_app
   KF5::AkonadiWidgets
   KF5::I18n
   akonaditestfake
-  Qt::Test
+  Qt5::Test
 )

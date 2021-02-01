@@ -13,7 +13,7 @@ macro(add_unit_test _source)
     endif()
     target_link_libraries(${_name}
         akonadi_shared
-        Qt::Test
+        Qt5::Test
         ${CMAKE_EXE_LINKER_FLAGS_ASAN}
     )
 endmacro()

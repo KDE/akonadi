@@ -22,7 +22,7 @@ macro(add_akonadi_test _source)
   get_filename_component(_name ${_source} NAME_WE)
   ecm_add_test(TEST_NAME ${_name} ${_test})
   set_tests_properties(${_name} PROPERTIES ENVIRONMENT "QT_HASH_SEED=1;QT_NO_CPU_FEATURE=sse4.2")
-  target_link_libraries(${_name} akonaditestfake Qt::Test KF5::AkonadiPrivate KF5::I18n)
+  target_link_libraries(${_name} akonaditestfake Qt5::Test KF5::AkonadiPrivate KF5::I18n)
 endmacro()
 
 # convenience macro to add akonadi qtestlib unit-tests
@@ -35,7 +35,7 @@ macro(add_akonadi_test_widgets _source)
   get_filename_component(_name ${_source} NAME_WE)
   ecm_add_test(TEST_NAME ${_name} ${_test})
   set_tests_properties(${_name} PROPERTIES ENVIRONMENT "QT_HASH_SEED=1;QT_NO_CPU_FEATURE=sse4.2")
-  target_link_libraries(${_name} akonaditestfake Qt::Test KF5::AkonadiWidgets KF5::AkonadiPrivate)
+  target_link_libraries(${_name} akonaditestfake Qt5::Test KF5::AkonadiWidgets KF5::AkonadiPrivate)
 endmacro()
 
 include(../KF5AkonadiMacros.cmake)

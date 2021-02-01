@@ -18,11 +18,11 @@ add_library(akonaditestfake SHARED
 generate_export_header(akonaditestfake BASE_NAME akonaditestfake)
 
 target_link_libraries(akonaditestfake
-        Qt::DBus
+        Qt5::DBus
         KF5::AkonadiCore
-        Qt::Test
-        Qt::Widgets
-        Qt::Network
+        Qt5::Test
+        Qt5::Widgets
+        Qt5::Network
         KF5::AkonadiPrivate
         akonadi_shared
 )
@@ -32,7 +32,7 @@ add_executable(akonadi-firstrun
     firstrunner.cpp
     ${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp
 )
-target_link_libraries( akonadi-firstrun  Qt::Test Qt::Core KF5::AkonadiCore KF5::AkonadiPrivate KF5::ConfigCore Qt::Widgets)
+target_link_libraries( akonadi-firstrun  Qt5::Test Qt5::Core KF5::AkonadiCore KF5::AkonadiPrivate KF5::ConfigCore Qt5::Widgets)
 
 add_akonadi_test(itemhydratest.cpp)
 add_akonadi_test(itemtest.cpp)
@@ -61,7 +61,7 @@ add_akonadi_test(cachepolicytest.cpp)
 #add_executable( resourceschedulertest resourceschedulertest.cpp ../src/agentbase/resourcescheduler.cpp )
 #add_test( resourceschedulertest resourceschedulertest )
 #ecm_mark_as_test(akonadi-resourceschedulertest)
-#target_link_libraries(resourceschedulertest  Qt::Test KF5::AkonadiAgentBase)
+#target_link_libraries(resourceschedulertest  Qt5::Test KF5::AkonadiAgentBase)
 
 
 # testrunner tests

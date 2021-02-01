@@ -31,8 +31,8 @@ target_link_libraries(akonadictl
     akonadi_shared
     KF5AkonadiPrivate
     KF5::CoreAddons
-    Qt::Core
-    Qt::DBus
+    Qt5::Core
+    Qt5::DBus
 )
 
 install(TARGETS akonadictl
