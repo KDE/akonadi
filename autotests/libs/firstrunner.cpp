@@ -22,7 +22,7 @@ int main(int argc, char **argv)
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
-    auto *f = new Akonadi::Firstrun();
+    auto f = new Akonadi::Firstrun();
     QObject::connect(f, &Akonadi::Firstrun::destroyed, &app, &QApplication::quit);
     app.exec();
 }

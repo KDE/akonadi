@@ -43,7 +43,7 @@ void RelationSync::doStart()
 
 void RelationSync::onLocalFetchDone(KJob *job)
 {
-    auto *fetch = static_cast<Akonadi::RelationFetchJob *>(job);
+    auto fetch = static_cast<Akonadi::RelationFetchJob *>(job);
     mLocalRelations = fetch->relations();
     mLocalRelationsFetched = true;
     diffRelations();
@@ -68,14 +68,14 @@ void RelationSync::diffRelations()
             relationByRid.remove(remoteRelation.remoteId());
         } else {
             // New relation or had its GID updated, so create one now
-            auto *createJob = new RelationCreateJob(remoteRelation, this);
+            auto createJob = new RelationCreateJob(remoteRelation, this);
             connect(createJob, &KJob::result, this, &RelationSync::checkDone);
         }
     }
 
     for (const Akonadi::Relation &removedRelation : qAsConst(relationByRid)) {
         // Removed remotely, remove locally
-        auto *removeJob = new RelationDeleteJob(removedRelation, this);
+        auto removeJob = new RelationDeleteJob(removedRelation, this);
         connect(removeJob, &KJob::result, this, &RelationSync::checkDone);
     }
     checkDone();

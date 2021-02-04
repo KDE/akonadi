@@ -59,7 +59,7 @@ void ItemStoreTest::testFlagChange()
     Item::Flags expectedFlags = origFlags;
     expectedFlags.insert("added_test_flag_1");
     item.setFlag("added_test_flag_1");
-    auto *sjob = new ItemModifyJob(item, this);
+    auto sjob = new ItemModifyJob(item, this);
     AKVERIFYEXEC(sjob);
 
     fjob = new ItemFetchJob(Item(1));
@@ -133,7 +133,7 @@ void ItemStoreTest::testDataChange()
     QCOMPARE(item.payload<QByteArray>(), data);
 
     // modify data
-    auto *sjob = new ItemModifyJob(item);
+    auto sjob = new ItemModifyJob(item);
     AKVERIFYEXEC(sjob);
 
     ItemFetchJob *fjob = new ItemFetchJob(Item(1));
@@ -176,12 +176,12 @@ void ItemStoreTest::testRemoteId()
     Item item = prefetchjob->items()[0];
 
     item.setRemoteId(rid);
-    auto *store = new ItemModifyJob(item, this);
+    auto store = new ItemModifyJob(item, this);
     store->disableRevisionCheck();
     store->setIgnorePayload(true); // we only want to update the remote id
     AKVERIFYEXEC(store);
 
-    auto *fetch = new ItemFetchJob(item, this);
+    auto fetch = new ItemFetchJob(item, this);
     AKVERIFYEXEC(fetch);
     QCOMPARE(fetch->items().count(), 1);
     item = fetch->items().at(0);
@@ -204,7 +204,7 @@ void ItemStoreTest::testMultiPart()
     item.attribute<TestAttribute>(Item::AddIfMissing)->data = "extra";
 
     // store item
-    auto *sjob = new ItemModifyJob(item);
+    auto sjob = new ItemModifyJob(item);
     AKVERIFYEXEC(sjob);
 
     ItemFetchJob *fjob = new ItemFetchJob(Item(1));
@@ -233,7 +233,7 @@ void ItemStoreTest::testPartRemove()
     item.attribute<TestAttribute>(Item::AddIfMissing)->data = "extra";
 
     // store item
-    auto *sjob = new ItemModifyJob(item);
+    auto sjob = new ItemModifyJob(item);
     AKVERIFYEXEC(sjob);
 
     // fetch item and its parts (should be RFC822, HEAD and EXTRA)
@@ -268,14 +268,14 @@ void ItemStoreTest::testRevisionCheck()
 {
     // fetch same item twice
     Item ref(2);
-    auto *prefetchjob = new ItemFetchJob(ref);
+    auto prefetchjob = new ItemFetchJob(ref);
     AKVERIFYEXEC(prefetchjob);
     QCOMPARE(prefetchjob->items().count(), 1);
     Item item1 = prefetchjob->items()[0];
     Item item2 = prefetchjob->items()[0];
 
     // store first item unmodified
-    auto *sjob = new ItemModifyJob(item1);
+    auto sjob = new ItemModifyJob(item1);
     AKVERIFYEXEC(sjob);
 
     // store the first item with modifications (should work)
@@ -285,7 +285,7 @@ void ItemStoreTest::testRevisionCheck()
 
     // try to store second item with modifications (should be detected as a conflict)
     item2.attribute<TestAttribute>(Item::AddIfMissing)->data = "random stuff 2";
-    auto *sjob2 = new ItemModifyJob(item2);
+    auto sjob2 = new ItemModifyJob(item2);
     sjob2->disableAutomaticConflictHandling();
     QVERIFY(!sjob2->exec());
 
@@ -295,7 +295,7 @@ void ItemStoreTest::testRevisionCheck()
     item1 = prefetchjob->items()[0];
 
     // delete item
-    auto *djob = new ItemDeleteJob(ref, this);
+    auto djob = new ItemDeleteJob(ref, this);
     AKVERIFYEXEC(djob);
 
     // try to store it
@@ -309,7 +309,7 @@ void ItemStoreTest::testModificationTime()
     item.setMimeType(QStringLiteral("text/directory"));
     QVERIFY(item.modificationTime().isNull());
 
-    auto *job = new ItemCreateJob(item, res1_foo);
+    auto job = new ItemCreateJob(item, res1_foo);
     AKVERIFYEXEC(job);
 
     // The item should have a datetime set now.
@@ -319,7 +319,7 @@ void ItemStoreTest::testModificationTime()
 
     // Fetch the same item again.
     Item item2(item.id());
-    auto *fjob = new ItemFetchJob(item2, this);
+    auto fjob = new ItemFetchJob(item2, this);
     AKVERIFYEXEC(fjob);
     item2 = fjob->items().first();
     QCOMPARE(initialDateTime, item2.modificationTime());
@@ -329,7 +329,7 @@ void ItemStoreTest::testModificationTime()
 
     // Modify the item
     item.attribute<TestAttribute>(Item::AddIfMissing)->data = "extra";
-    auto *mjob = new ItemModifyJob(item);
+    auto mjob = new ItemModifyJob(item);
     AKVERIFYEXEC(mjob);
 
     // The item should still have a datetime set and that date should be somewhere
@@ -340,7 +340,7 @@ void ItemStoreTest::testModificationTime()
 
     // Fetch the item after modification.
     Item item3(item.id());
-    auto *fjob2 = new ItemFetchJob(item3, this);
+    auto fjob2 = new ItemFetchJob(item3, this);
     AKVERIFYEXEC(fjob2);
 
     // item3 should have the same modification time as item.
@@ -348,7 +348,7 @@ void ItemStoreTest::testModificationTime()
     QCOMPARE(item3.modificationTime(), item.modificationTime());
 
     // Clean up
-    auto *idjob = new ItemDeleteJob(item, this);
+    auto idjob = new ItemDeleteJob(item, this);
     AKVERIFYEXEC(idjob);
 }
 
@@ -357,7 +357,7 @@ void ItemStoreTest::testRemoteIdRace()
     // Create an item and store it
     Item item;
     item.setMimeType(QStringLiteral("text/directory"));
-    auto *job = new ItemCreateJob(item, res1_foo);
+    auto job = new ItemCreateJob(item, res1_foo);
     AKVERIFYEXEC(job);
 
     // Fetch the same item again. It should not have a remote Id yet, as the resource
@@ -365,7 +365,7 @@ void ItemStoreTest::testRemoteIdRace()
     // The remote id should be null, not only empty, so that item modify jobs with this
     // item don't overwrite the remote id.
     Item item2(job->item().id());
-    auto *fetchJob = new ItemFetchJob(item2);
+    auto fetchJob = new ItemFetchJob(item2);
     AKVERIFYEXEC(fetchJob);
     QCOMPARE(fetchJob->items().size(), 1);
     QVERIFY(fetchJob->items().first().remoteId().isEmpty());
@@ -377,7 +377,7 @@ void ItemStoreTest::itemModifyJobShouldOnlySendModifiedAttributes()
     Item item;
     item.setMimeType(QStringLiteral("text/directory"));
     item.attribute<TestAttribute>(Item::AddIfMissing)->data = "initial";
-    auto *job = new ItemCreateJob(item, res1_foo);
+    auto job = new ItemCreateJob(item, res1_foo);
     AKVERIFYEXEC(job);
     item = job->item();
     QCOMPARE(item.attributes().count(), 1);
@@ -385,19 +385,19 @@ void ItemStoreTest::itemModifyJobShouldOnlySendModifiedAttributes()
     // When one job modifies this attribute, and another one does an unrelated change
     Item item1(item.id());
     item1.attribute<TestAttribute>(Item::AddIfMissing)->data = "modified";
-    auto *mjob = new ItemModifyJob(item1);
+    auto mjob = new ItemModifyJob(item1);
     mjob->disableRevisionCheck();
     AKVERIFYEXEC(mjob);
 
     item.setFlag("added_test_flag_1");
     // this job shouldn't send the old attribute again
-    auto *mjob2 = new ItemModifyJob(item);
+    auto mjob2 = new ItemModifyJob(item);
     mjob2->disableRevisionCheck();
     AKVERIFYEXEC(mjob2);
 
     // Then the item has the new value for the attribute (the other one didn't send the old attribute value)
     {
-        auto *fetchJob = new ItemFetchJob(Item(item.id()));
+        auto fetchJob = new ItemFetchJob(Item(item.id()));
         ItemFetchScope fetchScope;
         fetchScope.fetchAllAttributes(true);
         fetchJob->setFetchScope(fetchScope);
@@ -419,7 +419,7 @@ public:
         sessions.reserve(numSessions);
         modifyJobs.reserve(numSessions);
         for (int i = 0; i < numSessions; ++i) {
-            auto *session = new Session(QByteArray::number(i));
+            auto session = new Session(QByteArray::number(i));
             sessions.push_back(session);
         }
     }
@@ -469,7 +469,7 @@ void ItemStoreTest::testParallelJobsAddingAttributes()
     {
         Item item;
         item.setMimeType(QStringLiteral("text/directory"));
-        auto *job = new ItemCreateJob(item, res1_foo);
+        auto job = new ItemCreateJob(item, res1_foo);
         AKVERIFYEXEC(job);
         itemId = job->item().id();
         QVERIFY(itemId >= 0);
@@ -483,7 +483,7 @@ void ItemStoreTest::testParallelJobsAddingAttributes()
         QVERIFY(attr);
         attr->deserialize("attr" + QByteArray::number(i));
         item.addAttribute(attr);
-        auto *mjob = new ItemModifyJob(item, runner.sessions.at(i));
+        auto mjob = new ItemModifyJob(item, runner.sessions.at(i));
         runner.addJob(mjob);
     }
     runner.waitForAllJobs();

@@ -176,7 +176,7 @@ TagSelectionComboBox::TagSelectionComboBox(QWidget *parent)
     : QComboBox(parent)
     , d(new Private(this))
 {
-    auto *monitor = new Monitor(this);
+    auto monitor = new Monitor(this);
     monitor->setObjectName(QStringLiteral("TagSelectionComboBoxMonitor"));
     monitor->setTypeMonitored(Monitor::Tags);
 

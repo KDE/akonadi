@@ -51,11 +51,11 @@ private Q_SLOTS:
         QSignalSpy sessionQueueSpy(&session, &FakeSession::jobAdded);
         QVERIFY(sessionQueueSpy.isValid());
 
-        auto *job1 = new FakeJob(&session);
+        auto job1 = new FakeJob(&session);
         QSignalSpy job1DoneSpy(job1, &KJob::result);
         QVERIFY(job1DoneSpy.isValid());
 
-        auto *job2 = new FakeJob(&session);
+        auto job2 = new FakeJob(&session);
         QSignalSpy job2DoneSpy(job2, &KJob::result);
         QVERIFY(job2DoneSpy.isValid());
 
@@ -88,11 +88,11 @@ private Q_SLOTS:
         QSignalSpy sessionReconnectSpy(&session, &Session::reconnected);
         QVERIFY(sessionReconnectSpy.isValid());
 
-        auto *job1 = new FakeJob(&session);
+        auto job1 = new FakeJob(&session);
         QSignalSpy job1DoneSpy(job1, &KJob::result);
         QVERIFY(job1DoneSpy.isValid());
 
-        auto *job2 = new FakeJob(&session);
+        auto job2 = new FakeJob(&session);
         QSignalSpy job2DoneSpy(job2, &KJob::result);
         QVERIFY(job2DoneSpy.isValid());
 
@@ -118,11 +118,11 @@ private Q_SLOTS:
         QSignalSpy sessionReconnectSpy(&session, &Session::reconnected);
         QVERIFY(sessionReconnectSpy.isValid());
 
-        auto *job1 = new FakeJob(&session);
+        auto job1 = new FakeJob(&session);
         QSignalSpy job1DoneSpy(job1, &KJob::result);
         QVERIFY(job1DoneSpy.isValid());
 
-        auto *job2 = new FakeJob(&session);
+        auto job2 = new FakeJob(&session);
         QSignalSpy job2DoneSpy(job2, &KJob::result);
         QVERIFY(job2DoneSpy.isValid());
 
@@ -151,11 +151,11 @@ private Q_SLOTS:
         QSignalSpy sessionReconnectSpy(&session, &Session::reconnected);
         QVERIFY(sessionReconnectSpy.isValid());
 
-        auto *job1 = new FakeJob(&session);
+        auto job1 = new FakeJob(&session);
         QSignalSpy job1DoneSpy(job1, &KJob::result);
         QVERIFY(job1DoneSpy.isValid());
 
-        auto *job2 = new FakeJob(&session);
+        auto job2 = new FakeJob(&session);
         QSignalSpy job2DoneSpy(job2, &KJob::result);
         QVERIFY(job2DoneSpy.isValid());
 
@@ -187,19 +187,19 @@ private Q_SLOTS:
         QSignalSpy sessionQueueSpy(&session, &FakeSession::jobAdded);
         QSignalSpy sessionReconnectSpy(&session, &Session::reconnected);
 
-        auto *parentJob = new FakeJob(&session);
+        auto parentJob = new FakeJob(&session);
         parentJob->setObjectName(QStringLiteral("parentJob"));
         QSignalSpy parentJobDoneSpy(parentJob, &KJob::result);
 
-        auto *subjob = new FakeJob(parentJob);
+        auto subjob = new FakeJob(parentJob);
         subjob->setObjectName(QStringLiteral("subjob"));
         QSignalSpy subjobDoneSpy(subjob, &KJob::result);
 
-        auto *subjob2 = new FakeJob(parentJob);
+        auto subjob2 = new FakeJob(parentJob);
         subjob2->setObjectName(QStringLiteral("subjob2"));
         QSignalSpy subjob2DoneSpy(subjob2, &KJob::result);
 
-        auto *nextJob = new FakeJob(&session);
+        auto nextJob = new FakeJob(&session);
         nextJob->setObjectName(QStringLiteral("nextJob"));
         QSignalSpy nextJobDoneSpy(nextJob, &KJob::result);
 

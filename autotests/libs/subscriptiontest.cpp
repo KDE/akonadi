@@ -30,13 +30,13 @@ private Q_SLOTS:
         Collection::List l;
         l << Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res2/foo2")));
         QVERIFY(l.first().isValid());
-        auto *sjob = new SubscriptionJob(this);
+        auto sjob = new SubscriptionJob(this);
         sjob->unsubscribe(l);
         AKVERIFYEXEC(sjob);
 
         const Collection res2Col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res2")));
         QVERIFY(res2Col.isValid());
-        auto *ljob = new CollectionFetchJob(res2Col, CollectionFetchJob::FirstLevel, this);
+        auto ljob = new CollectionFetchJob(res2Col, CollectionFetchJob::FirstLevel, this);
         AKVERIFYEXEC(ljob);
         QCOMPARE(ljob->collections().count(), 1);
 
@@ -57,7 +57,7 @@ private Q_SLOTS:
     void testEmptySubscribe()
     {
         Collection::List l;
-        auto *sjob = new SubscriptionJob(this);
+        auto sjob = new SubscriptionJob(this);
         AKVERIFYEXEC(sjob);
     }
 
@@ -65,7 +65,7 @@ private Q_SLOTS:
     {
         Collection::List l;
         l << Collection(1);
-        auto *sjob = new SubscriptionJob(this);
+        auto sjob = new SubscriptionJob(this);
         sjob->subscribe(l);
         l << Collection(INT_MAX);
         sjob->unsubscribe(l);

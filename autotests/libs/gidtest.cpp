@@ -82,14 +82,14 @@ void GidTest::testSetAndFetch_data()
 
 static void fetchAndSetGid(const Item &item)
 {
-    auto *prefetchjob = new ItemFetchJob(item);
+    auto prefetchjob = new ItemFetchJob(item);
     prefetchjob->fetchScope().fetchFullPayload();
     AKVERIFYEXEC(prefetchjob);
     Item fetchedItem = prefetchjob->items()[0];
 
     // Write the gid to the db
     fetchedItem.setGid(item.gid());
-    auto *store = new ItemModifyJob(fetchedItem);
+    auto store = new ItemModifyJob(fetchedItem);
     store->setUpdateGid(true);
     AKVERIFYEXEC(store);
 }
@@ -104,7 +104,7 @@ void GidTest::testSetAndFetch()
         fetchAndSetGid(item);
     }
 
-    auto *fetch = new ItemFetchJob(toFetch, this);
+    auto fetch = new ItemFetchJob(toFetch, this);
     fetch->fetchScope().setFetchGid(true);
     AKVERIFYEXEC(fetch);
     Item::List fetched = fetch->items();
@@ -126,7 +126,7 @@ void GidTest::testCreate()
     item.setGid(QStringLiteral("createGid"));
     ItemCreateJob *createJob = new ItemCreateJob(item, Collection(colId), this);
     AKVERIFYEXEC(createJob);
-    auto *fetch = new ItemFetchJob(item, this);
+    auto fetch = new ItemFetchJob(item, this);
     AKVERIFYEXEC(fetch);
     Item::List fetched = fetch->items();
     QCOMPARE(fetched.count(), 1);
@@ -135,7 +135,7 @@ void GidTest::testCreate()
 void GidTest::testSetWithIgnorePayload()
 {
     Item item(5);
-    auto *prefetchjob = new ItemFetchJob(item);
+    auto prefetchjob = new ItemFetchJob(item);
     prefetchjob->fetchScope().fetchFullPayload();
     AKVERIFYEXEC(prefetchjob);
     Item fetchedItem = prefetchjob->items()[0];
@@ -143,13 +143,13 @@ void GidTest::testSetWithIgnorePayload()
 
     // Write the gid to the db
     fetchedItem.setGid(QStringLiteral("gid5"));
-    auto *store = new ItemModifyJob(fetchedItem);
+    auto store = new ItemModifyJob(fetchedItem);
     store->setIgnorePayload(true);
     store->setUpdateGid(true);
     AKVERIFYEXEC(store);
     Item toFetch;
     toFetch.setGid(QStringLiteral("gid5"));
-    auto *fetch = new ItemFetchJob(toFetch, this);
+    auto fetch = new ItemFetchJob(toFetch, this);
     AKVERIFYEXEC(fetch);
     Item::List fetched = fetch->items();
     QCOMPARE(fetched.count(), 1);
@@ -168,14 +168,14 @@ void GidTest::testFetchScope()
     ItemCreateJob *createJob = new ItemCreateJob(item, Collection(colId), this);
     AKVERIFYEXEC(createJob);
     {
-        auto *fetch = new ItemFetchJob(item, this);
+        auto fetch = new ItemFetchJob(item, this);
         AKVERIFYEXEC(fetch);
         Item::List fetched = fetch->items();
         QCOMPARE(fetched.count(), 1);
         QVERIFY(fetched.at(0).gid().isNull());
     }
     {
-        auto *fetch = new ItemFetchJob(item, this);
+        auto fetch = new ItemFetchJob(item, this);
         fetch->fetchScope().setFetchGid(true);
         AKVERIFYEXEC(fetch);
         Item::List fetched = fetch->items();

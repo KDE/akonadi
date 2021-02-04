@@ -260,7 +260,7 @@ private Q_SLOTS:
         // Setup
         for (int step = 0; step < 2; ++step) {
             DbInitializer dbInitializer;
-            auto *factory = new FakeItemRetrievalJobFactory(dbInitializer);
+            auto factory = new FakeItemRetrievalJobFactory(dbInitializer);
             ItemRetrievalManager mgr{std::unique_ptr<AbstractItemRetrievalJobFactory>(factory)};
             QTest::qWait(100);
 

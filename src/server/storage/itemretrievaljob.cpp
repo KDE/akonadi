@@ -32,7 +32,7 @@ void ItemRetrievalJob::start()
     if (m_interface) {
         m_active = true;
         auto reply = m_interface->requestItemDelivery(request().ids, request().parts);
-        auto *watcher = new QDBusPendingCallWatcher(reply, this);
+        auto watcher = new QDBusPendingCallWatcher(reply, this);
         connect(watcher, &QDBusPendingCallWatcher::finished, this, &ItemRetrievalJob::callFinished);
     } else {
         m_result.errorMsg = QStringLiteral("Unable to contact resource");

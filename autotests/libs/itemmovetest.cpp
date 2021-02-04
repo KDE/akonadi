@@ -75,14 +75,14 @@ private Q_SLOTS:
         ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
         AKVERIFYEXEC(select); // for rid based moves
 
-        auto *prefetchjob = new ItemFetchJob(destination, this);
+        auto prefetchjob = new ItemFetchJob(destination, this);
         AKVERIFYEXEC(prefetchjob);
         int baseline = prefetchjob->items().size();
 
-        auto *move = new ItemMoveJob(items, source, destination, this);
+        auto move = new ItemMoveJob(items, source, destination, this);
         AKVERIFYEXEC(move);
 
-        auto *fetch = new ItemFetchJob(destination, this);
+        auto fetch = new ItemFetchJob(destination, this);
         fetch->fetchScope().setAncestorRetrieval(ItemFetchScope::Parent);
         fetch->fetchScope().fetchFullPayload();
         AKVERIFYEXEC(fetch);
@@ -147,7 +147,7 @@ private Q_SLOTS:
         item.setPayload(QByteArray("This is a test payload"));
         item.setSize(34);
         item.setParentCollection(col);
-        auto *create = new ItemCreateJob(item, col, this);
+        auto create = new ItemCreateJob(item, col, this);
         AKVERIFYEXEC(create);
         item = create->item();
 
@@ -157,7 +157,7 @@ private Q_SLOTS:
         QCOMPARE(ntfItem.flags(), item.flags());
 
         Collection dest(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo/bar")));
-        auto *move = new ItemMoveJob(item, dest, this);
+        auto move = new ItemMoveJob(item, dest, this);
         AKVERIFYEXEC(move);
 
         QTRY_COMPARE(itemMovedSpy.size(), 1);

@@ -19,7 +19,7 @@ using namespace Akonadi;
 MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
     : QMainWindow(parent, flags)
 {
-    auto *monitor = new FakeMonitor(this);
+    auto monitor = new FakeMonitor(this);
     FakeSession *session = new FakeSession("FS1", FakeSession::EndJobsImmediately, this);
     monitor->setSession(session);
 
@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
                                                   "- - - I message/rfc822"));
     m_serverData->setCommands(initialFetchResponse);
 
-    auto *view = new EntityTreeView(this);
+    auto view = new EntityTreeView(this);
     view->setModel(m_model);
 
     view->expandAll();

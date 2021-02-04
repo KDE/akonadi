@@ -154,7 +154,7 @@ public:
     {
         Q_ASSERT(!isRequested(id));
         shrinkCache();
-        auto *node = new EntityCacheNode<T>(id);
+        auto node = new EntityCacheNode<T>(id);
         FetchJob *job = createFetchJob(id, scope);
         job->setProperty("EntityCacheNode", QVariant::fromValue<typename T::Id>(id));
         connect(job, SIGNAL(result(KJob *)), SLOT(processResult(KJob *)));
@@ -199,7 +199,7 @@ private:
 
     inline FetchJob *createFetchJob(typename T::Id id, const FetchScope &scope)
     {
-        auto *fetch = new FetchJob(T(id), session);
+        auto fetch = new FetchJob(T(id), session);
         fetch->setFetchScope(scope);
         return fetch;
     }
@@ -219,7 +219,7 @@ private:
 
 template<> inline void EntityCache<Collection, CollectionFetchJob, CollectionFetchScope>::extractResult(EntityCacheNode<Collection> *node, KJob *job) const
 {
-    auto *fetch = qobject_cast<CollectionFetchJob *>(job);
+    auto fetch = qobject_cast<CollectionFetchJob *>(job);
     Q_ASSERT(fetch);
     if (fetch->collections().isEmpty()) {
         node->entity = Collection();
@@ -230,7 +230,7 @@ template<> inline void EntityCache<Collection, CollectionFetchJob, CollectionFet
 
 template<> inline void EntityCache<Item, ItemFetchJob, ItemFetchScope>::extractResult(EntityCacheNode<Item> *node, KJob *job) const
 {
-    auto *fetch = qobject_cast<ItemFetchJob *>(job);
+    auto fetch = qobject_cast<ItemFetchJob *>(job);
     Q_ASSERT(fetch);
     if (fetch->items().isEmpty()) {
         node->entity = Item();
@@ -241,7 +241,7 @@ template<> inline void EntityCache<Item, ItemFetchJob, ItemFetchScope>::extractR
 
 template<> inline void EntityCache<Tag, TagFetchJob, TagFetchScope>::extractResult(EntityCacheNode<Tag> *node, KJob *job) const
 {
-    auto *fetch = qobject_cast<TagFetchJob *>(job);
+    auto fetch = qobject_cast<TagFetchJob *>(job);
     Q_ASSERT(fetch);
     if (fetch->tags().isEmpty()) {
         node->entity = Tag();
@@ -382,7 +382,7 @@ public:
         Q_ASSERT(isNotRequested(ids));
         shrinkCache(preserveIds);
         for (typename T::Id id : ids) {
-            auto *node = new EntityListCacheNode<T>(id);
+            auto node = new EntityListCacheNode<T>(id);
             mCache.insert(id, node);
         }
         FetchJob *job = createFetchJob(ids, scope);
@@ -431,7 +431,7 @@ private:
 
     inline FetchJob *createFetchJob(const QList<typename T::Id> &ids, const FetchScope &scope)
     {
-        auto *job = new FetchJob(ids, session);
+        auto job = new FetchJob(ids, session);
         job->setFetchScope(scope);
         return job;
     }
@@ -486,21 +486,21 @@ private:
 
 template<> inline void EntityListCache<Collection, CollectionFetchJob, CollectionFetchScope>::extractResults(KJob *job, Collection::List &collections) const
 {
-    auto *fetch = qobject_cast<CollectionFetchJob *>(job);
+    auto fetch = qobject_cast<CollectionFetchJob *>(job);
     Q_ASSERT(fetch);
     collections = fetch->collections();
 }
 
 template<> inline void EntityListCache<Item, ItemFetchJob, ItemFetchScope>::extractResults(KJob *job, Item::List &items) const
 {
-    auto *fetch = qobject_cast<ItemFetchJob *>(job);
+    auto fetch = qobject_cast<ItemFetchJob *>(job);
     Q_ASSERT(fetch);
     items = fetch->items();
 }
 
 template<> inline void EntityListCache<Tag, TagFetchJob, TagFetchScope>::extractResults(KJob *job, Tag::List &tags) const
 {
-    auto *fetch = qobject_cast<TagFetchJob *>(job);
+    auto fetch = qobject_cast<TagFetchJob *>(job);
     Q_ASSERT(fetch);
     tags = fetch->tags();
 }
@@ -509,7 +509,7 @@ template<>
 inline CollectionFetchJob *EntityListCache<Collection, CollectionFetchJob, CollectionFetchScope>::createFetchJob(const QList<Collection::Id> &ids,
                                                                                                                  const CollectionFetchScope &scope)
 {
-    auto *fetch = new CollectionFetchJob(ids, CollectionFetchJob::Base, session);
+    auto fetch = new CollectionFetchJob(ids, CollectionFetchJob::Base, session);
     fetch->setFetchScope(scope);
     return fetch;
 }

@@ -110,7 +110,7 @@ void CollectionStatisticsDelegate::setProgressAnimationEnabled(bool enable)
     }
     if (enable) {
         Q_ASSERT(!d->animator);
-        auto *animator = new Akonadi::DelegateAnimator(d->parent);
+        auto animator = new Akonadi::DelegateAnimator(d->parent);
         d->animator = animator;
     } else {
         delete d->animator;
@@ -128,7 +128,7 @@ void CollectionStatisticsDelegate::initStyleOption(QStyleOptionViewItem *option,
 {
     Q_D(const CollectionStatisticsDelegate);
 
-    auto *noTextOption = qstyleoption_cast<QStyleOptionViewItem *>(option);
+    auto noTextOption = qstyleoption_cast<QStyleOptionViewItem *>(option);
     QStyledItemDelegate::initStyleOption(noTextOption, index);
     if (option->decorationPosition != QStyleOptionViewItem::Top) {
         if (noTextOption) {
@@ -145,7 +145,7 @@ void CollectionStatisticsDelegate::initStyleOption(QStyleOptionViewItem *option,
 
         d->animator->push(index);
 
-        if (auto *v4 = qstyleoption_cast<QStyleOptionViewItem *>(option)) {
+        if (auto v4 = qstyleoption_cast<QStyleOptionViewItem *>(option)) {
             v4->icon = d->animator->sequenceFrame(index);
         }
     }
@@ -194,7 +194,7 @@ void CollectionStatisticsDelegate::paint(QPainter *painter, const QStyleOptionVi
     // When checking if the item is expanded, we need to check that for the first
     // column, as Qt only recognizes the index as expanded for the first column
     const QModelIndex firstColumn = index.sibling(index.row(), 0);
-    auto *treeView = qobject_cast<QTreeView *>(d->parent);
+    auto treeView = qobject_cast<QTreeView *>(d->parent);
     bool expanded = treeView && treeView->isExpanded(firstColumn);
 
     if (index.data(EntityTreeModel::PendingCutRole).toBool()) {

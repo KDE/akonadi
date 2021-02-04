@@ -87,7 +87,7 @@ QByteArray PersistentSearchAttribute::type() const
 
 Attribute *PersistentSearchAttribute::clone() const
 {
-    auto *attr = new PersistentSearchAttribute;
+    auto attr = new PersistentSearchAttribute;
     attr->setQueryString(queryString());
     attr->setQueryCollections(queryCollections());
     attr->setRecursive(isRecursive());

@@ -91,7 +91,7 @@ void EntityTreeModelPrivate::init(Monitor *monitor)
 
     m_rootCollectionDisplayName = QStringLiteral("[*]");
 
-    if (auto *cr = qobject_cast<Akonadi::ChangeRecorder *>(m_monitor)) {
+    if (auto cr = qobject_cast<Akonadi::ChangeRecorder *>(m_monitor)) {
         cr->setChangeRecordingEnabled(false);
     }
 
@@ -196,7 +196,7 @@ void EntityTreeModelPrivate::fetchItems(const Collection &parent)
     Q_ASSERT(parent.isValid());
     Q_ASSERT(m_collections.contains(parent.id()));
     // TODO: Use a more specific fetch scope to get only the envelope for mails etc.
-    auto *itemFetchJob = new Akonadi::ItemFetchJob(parent, m_session);
+    auto itemFetchJob = new Akonadi::ItemFetchJob(parent, m_session);
     itemFetchJob->setFetchScope(m_monitor->itemFetchScope());
     itemFetchJob->fetchScope().setAncestorRetrieval(ItemFetchScope::All);
     itemFetchJob->fetchScope().setIgnoreRetrievalErrors(true);
@@ -266,7 +266,7 @@ void EntityTreeModelPrivate::fetchCollections(const Collection::List &collection
 void EntityTreeModelPrivate::fetchCollections(const Collection &collection, CollectionFetchJob::Type type)
 {
     Q_ASSERT(collection.isValid());
-    auto *job = new CollectionFetchJob(collection, type, m_session);
+    auto job = new CollectionFetchJob(collection, type, m_session);
     fetchCollections(job);
 }
 
@@ -1270,7 +1270,7 @@ void EntityTreeModelPrivate::monitoredItemUnlinked(const Akonadi::Item &item, co
 void EntityTreeModelPrivate::collectionFetchJobDone(KJob *job)
 {
     m_pendingCollectionFetchJobs.remove(job);
-    auto *cJob = static_cast<CollectionFetchJob *>(job);
+    auto cJob = static_cast<CollectionFetchJob *>(job);
     if (job->error()) {
         qCWarning(AKONADICORE_LOG) << "Job error: " << job->errorString() << "for collection:" << cJob->collections();
         return;
@@ -1300,7 +1300,7 @@ void EntityTreeModelPrivate::itemFetchJobDone(Collection::Id collectionId, KJob 
         qCWarning(AKONADICORE_LOG) << "Collection has been removed while fetching items";
         return;
     }
-    auto *iJob = static_cast<ItemFetchJob *>(job);
+    auto iJob = static_cast<ItemFetchJob *>(job);
     qCDebug(DebugETM) << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
     qCDebug(DebugETM) << "was item fetch job: items:" << iJob->count();
 
@@ -1356,7 +1356,7 @@ void EntityTreeModelPrivate::rootFetchJobDone(KJob *job)
         qCWarning(AKONADICORE_LOG) << job->errorString();
         return;
     }
-    auto *collectionJob = qobject_cast<CollectionFetchJob *>(job);
+    auto collectionJob = qobject_cast<CollectionFetchJob *>(job);
     const Collection::List list = collectionJob->collections();
 
     Q_ASSERT(list.size() == 1);
@@ -1374,7 +1374,7 @@ void EntityTreeModelPrivate::startFirstListJob()
 
     // Even if the root collection is the invalid collection, we still need to start
     // the first list job with Collection::root.
-    auto *node = new Node{Node::Collection, m_rootCollection.id(), -1};
+    auto node = new Node{Node::Collection, m_rootCollection.id(), -1};
     if (m_showRootCollection) {
         // Notify the outside that we're putting collection::root into the model.
         q->beginInsertRows(QModelIndex(), 0, 0);
@@ -1747,7 +1747,7 @@ void EntityTreeModelPrivate::monitoredItemsRetrieved(KJob *job)
 
     Q_Q(EntityTreeModel);
 
-    auto *fetchJob = qobject_cast<ItemFetchJob *>(job);
+    auto fetchJob = qobject_cast<ItemFetchJob *>(job);
     Q_ASSERT(fetchJob);
     Item::List list = fetchJob->items();
 
@@ -1776,7 +1776,7 @@ void EntityTreeModelPrivate::fillModel()
                                return Item{id};
                            })
             | Actions::toQVector;
-        auto *itemFetch = new ItemFetchJob(items, m_session);
+        auto itemFetch = new ItemFetchJob(items, m_session);
         itemFetch->setFetchScope(m_monitor->itemFetchScope());
         itemFetch->fetchScope().setIgnoreRetrievalErrors(true);
         q->connect(itemFetch, SIGNAL(finished(KJob *)), q, SLOT(monitoredItemsRetrieved(KJob *)));
@@ -1795,7 +1795,7 @@ void EntityTreeModelPrivate::fillModel()
         QTimer::singleShot(0, q, SLOT(startFirstListJob()));
     } else {
         Q_ASSERT(m_rootCollection.isValid());
-        auto *rootFetchJob = new CollectionFetchJob(m_rootCollection, CollectionFetchJob::Base, m_session);
+        auto rootFetchJob = new CollectionFetchJob(m_rootCollection, CollectionFetchJob::Base, m_session);
         q->connect(rootFetchJob, SIGNAL(result(KJob *)), SLOT(rootFetchJobDone(KJob *)));
         qCDebug(DebugETM) << "";
         jobTimeTracker[rootFetchJob].start();

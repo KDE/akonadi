@@ -20,7 +20,7 @@
 Session::Session(const QString &input, QObject *parent)
     : QObject(parent)
 {
-    auto *file = new QFile(this);
+    auto file = new QFile(this);
     if (input != QLatin1String("-")) {
         file->setFileName(input);
         if (!file->open(QFile::ReadOnly)) {
@@ -58,7 +58,7 @@ void Session::connectToHost()
         qFatal("Unable to determine server address.");
     }
 
-    auto *socket = new QLocalSocket(this);
+    auto socket = new QLocalSocket(this);
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
     connect(socket, QOverload<QLocalSocket::LocalSocketError>::of(&QLocalSocket::error), this, &Session::serverError);
 #else

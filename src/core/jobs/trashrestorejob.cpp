@@ -77,7 +77,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::targetCollectionFetched(KJob *job)
 {
     Q_Q(TrashRestoreJob);
 
-    auto *fetchJob = qobject_cast<CollectionFetchJob *>(job);
+    auto fetchJob = qobject_cast<CollectionFetchJob *>(job);
     Q_ASSERT(fetchJob);
     const Collection::List &list = fetchJob->collections();
 
@@ -121,7 +121,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::targetCollectionFetched(KJob *job)
         // TODO only remove the attribute if the move job was successful (although it is unlikely that it fails since we already fetched the collection)
         removeAttribute(items);
         if (items.first().parentCollection() != list.first()) {
-            auto *job = new ItemMoveJob(items, list.first(), q);
+            auto job = new ItemMoveJob(items, list.first(), q);
             q->connect(job, &KJob::result, q, [this](KJob *job) {
                 selectResult(job);
             });
@@ -130,7 +130,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::targetCollectionFetched(KJob *job)
         Q_ASSERT(mCollection.isValid());
         // TODO only remove the attribute if the move job was successful
         removeAttribute(Collection::List() << mCollection);
-        auto *collectionFetchJob = new CollectionFetchJob(mCollection, CollectionFetchJob::Recursive, q);
+        auto collectionFetchJob = new CollectionFetchJob(mCollection, CollectionFetchJob::Recursive, q);
         q->connect(collectionFetchJob, &KJob::result, q, [this](KJob *job) {
             selectResult(job);
         });
@@ -139,7 +139,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::targetCollectionFetched(KJob *job)
         });
 
         if (mCollection.parentCollection() != list.first()) {
-            auto *job = new CollectionMoveJob(mCollection, list.first(), q);
+            auto job = new CollectionMoveJob(mCollection, list.first(), q);
             q->connect(job, &KJob::result, q, [this](KJob *job) {
                 selectResult(job);
             });
@@ -186,7 +186,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::itemsReceived(const Akonadi::Item:
         }
 
         // Try to fetch the target resource to see if it is available
-        auto *fetchJob = new CollectionFetchJob(targetCollection, Akonadi::CollectionFetchJob::Base, q);
+        auto fetchJob = new CollectionFetchJob(targetCollection, Akonadi::CollectionFetchJob::Base, q);
         if (!mTargetCollection.isValid()) { // explicit targets don't have a fallback
             fetchJob->setProperty("Resource", restoreResource);
         }
@@ -219,7 +219,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::collectionsReceived(const Akonadi:
     // Restore in place if no restore collection/resource is set
     if (!targetCollection.isValid()) {
         removeAttribute(Collection::List() << mCollection);
-        auto *collectionFetchJob = new CollectionFetchJob(mCollection, CollectionFetchJob::Recursive, q);
+        auto collectionFetchJob = new CollectionFetchJob(mCollection, CollectionFetchJob::Recursive, q);
         q->connect(collectionFetchJob, &KJob::result, q, [this](KJob *job) {
             selectResult(job);
         });
@@ -235,7 +235,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::collectionsReceived(const Akonadi:
     }
 
     // Fetch the target collection to check if it's valid
-    auto *fetchJob = new CollectionFetchJob(targetCollection, CollectionFetchJob::Base, q);
+    auto fetchJob = new CollectionFetchJob(targetCollection, CollectionFetchJob::Base, q);
     if (!mTargetCollection.isValid()) { // explicit targets don't have a fallback
         fetchJob->setProperty("Resource", restoreResource);
     }
@@ -252,12 +252,12 @@ void TrashRestoreJob::TrashRestoreJobPrivate::removeAttribute(const Akonadi::Col
         Collection col = i.next();
         col.removeAttribute<EntityDeletedAttribute>();
 
-        auto *job = new CollectionModifyJob(col, q);
+        auto job = new CollectionModifyJob(col, q);
         q->connect(job, &KJob::result, q, [this](KJob *job) {
             selectResult(job);
         });
 
-        auto *itemFetchJob = new ItemFetchJob(col, q);
+        auto itemFetchJob = new ItemFetchJob(col, q);
         itemFetchJob->fetchScope().fetchAttribute<EntityDeletedAttribute>(true);
         q->connect(itemFetchJob, &KJob::result, q, [this](KJob *job) {
             selectResult(job);
@@ -276,7 +276,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::removeAttribute(const Akonadi::Ite
     while (i.hasNext()) {
         Item &item = i.next();
         item.removeAttribute<EntityDeletedAttribute>();
-        auto *job = new ItemModifyJob(item, q);
+        auto job = new ItemModifyJob(item, q);
         job->setIgnorePayload(true);
         q->connect(job, &KJob::result, q, [this](KJob *job) {
             selectResult(job);
@@ -330,14 +330,14 @@ void TrashRestoreJob::doStart()
 
     // We always have to fetch the entities to ensure that the EntityDeletedAttribute is available
     if (!d->mItems.isEmpty()) {
-        auto *job = new ItemFetchJob(d->mItems, this);
+        auto job = new ItemFetchJob(d->mItems, this);
         job->fetchScope().setCacheOnly(true);
         job->fetchScope().fetchAttribute<EntityDeletedAttribute>(true);
         connect(job, &ItemFetchJob::itemsReceived, this, [d](const auto &items) {
             d->itemsReceived(items);
         });
     } else if (d->mCollection.isValid()) {
-        auto *job = new CollectionFetchJob(d->mCollection, CollectionFetchJob::Base, this);
+        auto job = new CollectionFetchJob(d->mCollection, CollectionFetchJob::Base, this);
         connect(job, &CollectionFetchJob::collectionsReceived, this, [d](const auto &cols) {
             d->collectionsReceived(cols);
         });

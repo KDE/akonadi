@@ -51,7 +51,7 @@ void TagModelPrivate::fillModel()
 {
     Q_Q(TagModel);
 
-    auto *fetchJob = new TagFetchJob(mSession);
+    auto fetchJob = new TagFetchJob(mSession);
     fetchJob->setFetchScope(mMonitor->tagFetchScope());
     q->connect(fetchJob, &TagFetchJob::tagsReceived, q, [this](const auto &tags) {
         tagsFetched(tags);

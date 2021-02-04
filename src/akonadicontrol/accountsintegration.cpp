@@ -139,7 +139,7 @@ void AccountsIntegration::onAccountServiceEnabled(const QString &serviceType, bo
         return;
     }
 
-    auto *account = qobject_cast<Accounts::Account *>(sender());
+    auto account = qobject_cast<Accounts::Account *>(sender());
     qCDebug(AKONADICONTROL_LOG) << "Online account ID" << account->id() << "service" << serviceType << "has been" << (enabled ? "enabled" : "disabled");
 
     const auto service = mAccountsManager.service(serviceType);

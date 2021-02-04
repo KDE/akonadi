@@ -218,7 +218,7 @@ void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResp
                 optionalSection.remove(0, 1);
                 QStringList optionalParts = optionalSection.split(QLatin1Char('\''));
                 displayName = optionalParts.takeFirst();
-                auto *eda = new EntityDisplayAttribute();
+                auto eda = new EntityDisplayAttribute();
                 eda->setDisplayName(displayName);
                 collection.addAttribute(eda);
                 optionalSection = optionalParts.first();
@@ -254,7 +254,7 @@ void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResp
                 optionalSection.remove(0, 1);
                 QStringList optionalParts = optionalSection.split(QLatin1Char('\''));
                 displayName = optionalParts.takeFirst();
-                auto *eda = new EntityDisplayAttribute();
+                auto eda = new EntityDisplayAttribute();
                 eda->setDisplayName(displayName);
                 item.addAttribute(eda);
                 optionalSection = optionalParts.first();
@@ -277,7 +277,7 @@ void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResp
 
         Collection::Id colId = recentCollections[depth].id();
         if (!itemResponseMap.contains(colId)) {
-            auto *newResponse = new FakeJobResponse(recentCollections[depth], FakeJobResponse::RespondToItemFetch, fakeServerData);
+            auto newResponse = new FakeJobResponse(recentCollections[depth], FakeJobResponse::RespondToItemFetch, fakeServerData);
             itemResponseMap.insert(colId, newResponse);
             collectionResponseList.append(newResponse);
         }
@@ -300,7 +300,7 @@ void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResp
                 optionalSection.remove(0, 1);
                 QStringList optionalParts = optionalSection.split(QLatin1Char('\''));
                 displayName = optionalParts.takeFirst();
-                auto *ta = new TagAttribute();
+                auto ta = new TagAttribute();
                 ta->setDisplayName(displayName);
                 tag.addAttribute(ta);
                 optionalSection = optionalParts.first();
@@ -365,7 +365,7 @@ void FakeCollectionAddedCommand::doCommand()
     collection.setRemoteId(QStringLiteral("remoteId %1").arg(collection.id()));
     collection.setParentCollection(parent);
 
-    auto *eda = new EntityDisplayAttribute();
+    auto eda = new EntityDisplayAttribute();
     eda->setDisplayName(m_collectionName);
     collection.addAttribute(eda);
 
@@ -421,7 +421,7 @@ void FakeItemAddedCommand::doCommand()
     item.setRemoteId(QStringLiteral("remoteId %1").arg(item.id()));
     item.setParentCollection(parent);
 
-    auto *eda = new EntityDisplayAttribute();
+    auto eda = new EntityDisplayAttribute();
     eda->setDisplayName(m_itemName);
     item.addAttribute(eda);
 

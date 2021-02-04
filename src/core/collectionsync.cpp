@@ -432,7 +432,7 @@ public:
             // The parent already exists locally
             if (parentCollection == akonadiRootCollection || parentCollection.id() > 0) {
                 ++pendingJobs;
-                auto *create = new CollectionCreateJob(col, currentTransaction);
+                auto create = new CollectionCreateJob(col, currentTransaction);
                 QObject::connect(create, &KJob::result, q, [this](KJob *job) {
                     createLocalCollectionResult(job);
                 });
@@ -564,7 +564,7 @@ public:
             Collection c(upd);
             c.setParentCollection(local.parentCollection());
             ++pendingJobs;
-            auto *mod = new CollectionModifyJob(c, currentTransaction);
+            auto mod = new CollectionModifyJob(c, currentTransaction);
             QObject::connect(mod, &KJob::result, q, [this](KJob *job) {
                 updateLocalCollectionResult(job);
             });
@@ -613,7 +613,7 @@ public:
 
             ++pendingJobs;
             Q_ASSERT(currentTransaction);
-            auto *job = new CollectionDeleteJob(col, currentTransaction);
+            auto job = new CollectionDeleteJob(col, currentTransaction);
             connect(job, &KJob::result, q, [this](KJob *job) {
                 deleteLocalCollectionsResult(job);
             });
@@ -714,7 +714,7 @@ public:
 
         if (!localListDone && deliveryDone) {
             Job *parent = (currentTransaction ? static_cast<Job *>(currentTransaction) : static_cast<Job *>(q));
-            auto *job = new CollectionFetchJob(akonadiRootCollection, CollectionFetchJob::Recursive, parent);
+            auto job = new CollectionFetchJob(akonadiRootCollection, CollectionFetchJob::Recursive, parent);
             job->fetchScope().setResource(resourceId);
             job->fetchScope().setListFilter(CollectionFetchScope::NoFilter);
             job->fetchScope().setAncestorRetrieval(CollectionFetchScope::All);

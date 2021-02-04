@@ -85,18 +85,18 @@ private Q_SLOTS:
 private:
     QPair<FakeServerData *, Akonadi::EntityTreeModel *> populateModel(const QString &serverContent, const QString &mimeType = QString())
     {
-        auto *const fakeMonitor = new FakeMonitor(this);
+        auto const fakeMonitor = new FakeMonitor(this);
 
         fakeMonitor->setSession(m_fakeSession);
         fakeMonitor->setCollectionMonitored(Collection::root());
         if (!mimeType.isEmpty()) {
             fakeMonitor->setMimeTypeMonitored(mimeType);
         }
-        auto *const model = new EntityTreeModel(fakeMonitor, this);
+        auto const model = new EntityTreeModel(fakeMonitor, this);
 
         m_modelSpy = new ModelSpy{model, this};
 
-        auto *const serverData = new FakeServerData(model, m_fakeSession, fakeMonitor, this);
+        auto const serverData = new FakeServerData(model, m_fakeSession, fakeMonitor, this);
         serverData->setCommands(FakeJobResponse::interpret(serverData, serverContent));
 
         // Give the model a chance to populate
@@ -136,13 +136,13 @@ void EntityTreeModelTest::cleanupTestCase()
 
 void EntityTreeModelTest::testInitialFetch()
 {
-    auto *const fakeMonitor = new FakeMonitor(this);
+    auto const fakeMonitor = new FakeMonitor(this);
 
     fakeMonitor->setSession(m_fakeSession);
     fakeMonitor->setCollectionMonitored(Collection::root());
-    auto *const model = new EntityTreeModel(fakeMonitor, this);
+    auto const model = new EntityTreeModel(fakeMonitor, this);
 
-    auto *const serverData = new FakeServerData(model, m_fakeSession, fakeMonitor, this);
+    auto const serverData = new FakeServerData(model, m_fakeSession, fakeMonitor, this);
     serverData->setCommands(FakeJobResponse::interpret(serverData, QString::fromLatin1(serverContent1)));
 
     m_modelSpy = new ModelSpy(model, this);
@@ -244,7 +244,7 @@ void EntityTreeModelTest::testCollectionMove()
     const auto sourceCollection = movedIndex.parent().data().toString();
     const auto sourceRow = movedIndex.row();
 
-    auto *const moveCommand = new FakeCollectionMovedCommand(movedCollection, sourceCollection, targetCollection, serverData);
+    auto const moveCommand = new FakeCollectionMovedCommand(movedCollection, sourceCollection, targetCollection, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({moveCommand});
@@ -291,7 +291,7 @@ void EntityTreeModelTest::testCollectionAdded()
     const auto testDrivers = populateModel(serverContent);
     auto *const serverData = testDrivers.first;
 
-    auto *const addCommand = new FakeCollectionAddedCommand(addedCollection, parentCollection, serverData);
+    auto const addCommand = new FakeCollectionAddedCommand(addedCollection, parentCollection, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({addCommand});
@@ -339,7 +339,7 @@ void EntityTreeModelTest::testCollectionRemoved()
     const auto parentCollection = removedIndex.parent().data().toString();
     const auto sourceRow = removedIndex.row();
 
-    auto *const removeCommand = new FakeCollectionRemovedCommand(removedCollection, parentCollection, serverData);
+    auto const removeCommand = new FakeCollectionRemovedCommand(removedCollection, parentCollection, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({removeCommand});
@@ -388,7 +388,7 @@ void EntityTreeModelTest::testCollectionChanged()
     qDebug() << parentCollection;
     const auto changedRow = changedIndex.row();
 
-    auto *const changeCommand = new FakeCollectionChangedCommand(collectionName, parentCollection, serverData);
+    auto const changeCommand = new FakeCollectionChangedCommand(collectionName, parentCollection, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({changeCommand});
@@ -441,7 +441,7 @@ void EntityTreeModelTest::testItemMove()
     const auto targetIndex = firstMatchedIndex(*model, targetCollection);
     const auto targetRow = model->rowCount(targetIndex);
 
-    auto *const moveCommand = new FakeItemMovedCommand(movedItem, sourceCollection, targetCollection, serverData);
+    auto const moveCommand = new FakeItemMovedCommand(movedItem, sourceCollection, targetCollection, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({moveCommand});
@@ -500,7 +500,7 @@ void EntityTreeModelTest::testItemAdded()
     const auto parentIndex = firstMatchedIndex(*model, parentCollection);
     const auto targetRow = model->rowCount(parentIndex);
 
-    auto *const addedCommand = new FakeItemAddedCommand(addedItem, parentCollection, serverData);
+    auto const addedCommand = new FakeItemAddedCommand(addedItem, parentCollection, serverData);
 
     m_modelSpy->startSpying();
 
@@ -552,7 +552,7 @@ void EntityTreeModelTest::testItemRemoved()
     const auto sourceCollection = removedIndex.parent().data().toString();
     const auto sourceRow = removedIndex.row();
 
-    auto *const removeCommand = new FakeItemRemovedCommand(removedItem, sourceCollection, serverData);
+    auto const removeCommand = new FakeItemRemovedCommand(removedItem, sourceCollection, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({removeCommand});
@@ -604,7 +604,7 @@ void EntityTreeModelTest::testItemChanged()
     const auto parentCollection = changedIndex.parent().data().toString();
     const auto sourceRow = changedIndex.row();
 
-    auto *const changeCommand = new FakeItemChangedCommand(changedItem, parentCollection, serverData);
+    auto const changeCommand = new FakeItemChangedCommand(changedItem, parentCollection, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({changeCommand});
@@ -638,7 +638,7 @@ void EntityTreeModelTest::testRemoveCollectionOnChanged()
     changedCol.setContentMimeTypes({QStringLiteral("foobar")});
     const auto parentCollection = changedIndex.parent().data().toString();
 
-    auto *const changeCommand = new FakeCollectionChangedCommand(changedCol, serverData);
+    auto const changeCommand = new FakeCollectionChangedCommand(changedCol, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({changeCommand});

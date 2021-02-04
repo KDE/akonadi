@@ -32,7 +32,7 @@ public:
     }
     TestAttribute *clone() const override
     {
-        auto *a = new TestAttribute;
+        auto a = new TestAttribute;
         a->data = data;
         return a;
     }

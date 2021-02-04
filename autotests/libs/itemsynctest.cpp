@@ -37,7 +37,7 @@ private:
     Item::List fetchItems(const Collection &col)
     {
         qDebug() << "fetching items from collection" << col.remoteId() << col.name();
-        auto *fetch = new ItemFetchJob(col, this);
+        auto fetch = new ItemFetchJob(col, this);
         fetch->fetchScope().fetchFullPayload();
         fetch->fetchScope().fetchAllAttributes();
         fetch->fetchScope().setCacheOnly(true); // resources are switched off anyway
@@ -56,7 +56,7 @@ private:
             item.setRemoteId(QStringLiteral("rid") + QString::number(i));
             item.setGid(QStringLiteral("gid") + QString::number(i));
             item.setPayload<QByteArray>("payload1");
-            auto *job = new ItemCreateJob(item, col);
+            auto job = new ItemCreateJob(item, col);
             AKVERIFYEXEC(job);
         }
     }
@@ -65,7 +65,7 @@ private:
     {
         Item duplicate = item;
         duplicate.setId(-1);
-        auto *job = new ItemCreateJob(duplicate, col);
+        auto job = new ItemCreateJob(duplicate, col);
         [job]() {
             AKVERIFYEXEC(job);
         }();
@@ -121,7 +121,7 @@ private Q_SLOTS:
         QSignalSpy changedSpy(&monitor, &Monitor::itemChanged);
         QVERIFY(changedSpy.isValid());
 
-        auto *syncer = new ItemSync(col);
+        auto syncer = new ItemSync(col);
         syncer->setTransactionMode(ItemSync::SingleTransaction);
         QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
         QVERIFY(transactionSpy.isValid());
@@ -163,7 +163,7 @@ private Q_SLOTS:
         QSignalSpy addedSpy(monitor.get(), &Monitor::itemAdded);
         QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
-        auto *syncer = new ItemSync(col);
+        auto syncer = new ItemSync(col);
         QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
         QVERIFY(transactionSpy.isValid());
         syncer->setTransactionMode(transactionMode);
@@ -228,7 +228,7 @@ private Q_SLOTS:
         QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
         {
-            auto *syncer = new ItemSync(col);
+            auto syncer = new ItemSync(col);
             QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
             QVERIFY(transactionSpy.isValid());
             syncer->setTransactionMode(ItemSync::SingleTransaction);
@@ -262,7 +262,7 @@ private Q_SLOTS:
         delItems << itemWithRandomRemoteId;
 
         {
-            auto *syncer = new ItemSync(col);
+            auto syncer = new ItemSync(col);
             syncer->setTransactionMode(ItemSync::SingleTransaction);
             QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
             QVERIFY(transactionSpy.isValid());
@@ -296,7 +296,7 @@ private Q_SLOTS:
         QSignalSpy addedSpy(monitor.get(), &Monitor::itemAdded);
         QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
-        auto *syncer = new ItemSync(col);
+        auto syncer = new ItemSync(col);
         syncer->setTransactionMode(ItemSync::SingleTransaction);
         QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
         QVERIFY(transactionSpy.isValid());
@@ -346,7 +346,7 @@ private Q_SLOTS:
         QSignalSpy addedSpy(monitor.get(), &Monitor::itemAdded);
         QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
-        auto *syncer = new ItemSync(col);
+        auto syncer = new ItemSync(col);
         syncer->setTransactionMode(ItemSync::SingleTransaction);
         QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
         QVERIFY(transactionSpy.isValid());
@@ -375,7 +375,7 @@ private Q_SLOTS:
         QSignalSpy addedSpy(monitor.get(), &Monitor::itemAdded);
         QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
-        auto *syncer = new ItemSync(col);
+        auto syncer = new ItemSync(col);
         QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
         QVERIFY(transactionSpy.isValid());
         QSignalSpy spy(syncer, &KJob::result);
@@ -433,7 +433,7 @@ private Q_SLOTS:
             item.setRemoteId(QStringLiteral("rid1"));
             item.setGid(QStringLiteral("gid1"));
             item.setPayload<QByteArray>("payload1");
-            auto *job = new ItemCreateJob(item, col);
+            auto job = new ItemCreateJob(item, col);
             AKVERIFYEXEC(job);
         }
         {
@@ -441,7 +441,7 @@ private Q_SLOTS:
             item.setRemoteId(QStringLiteral("rid2"));
             item.setGid(QStringLiteral("gid2"));
             item.setPayload<QByteArray>("payload1");
-            auto *job = new ItemCreateJob(item, col);
+            auto job = new ItemCreateJob(item, col);
             AKVERIFYEXEC(job);
         }
         Item modifiedItem(QStringLiteral("application/octet-stream"));
@@ -449,7 +449,7 @@ private Q_SLOTS:
         modifiedItem.setGid(QStringLiteral("gid2"));
         modifiedItem.setPayload<QByteArray>("payload2");
 
-        auto *syncer = new ItemSync(col);
+        auto syncer = new ItemSync(col);
         syncer->setTransactionMode(ItemSync::MultipleTransactions);
         syncer->setIncrementalSyncItems(Item::List() << modifiedItem, Item::List());
         AKVERIFYEXEC(syncer);
@@ -459,7 +459,7 @@ private Q_SLOTS:
 
         Item item;
         item.setGid(QStringLiteral("gid2"));
-        auto *fetchJob = new ItemFetchJob(item);
+        auto fetchJob = new ItemFetchJob(item);
         fetchJob->fetchScope().fetchFullPayload();
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->items().size(), 2);
@@ -479,7 +479,7 @@ private Q_SLOTS:
         QVERIFY(col.isValid());
         Item::List origItems = fetchItems(col);
 
-        auto *syncer = new ItemSync(col);
+        auto syncer = new ItemSync(col);
         QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
         QVERIFY(transactionSpy.isValid());
         QSignalSpy spy(syncer, &KJob::result);
@@ -536,7 +536,7 @@ private Q_SLOTS:
         Item dupe = duplicateItem(origItems.at(0), col);
         origItems = fetchItems(col);
 
-        auto *syncer = new ItemSync(col);
+        auto syncer = new ItemSync(col);
         QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
         QVERIFY(transactionSpy.isValid());
         QSignalSpy spy(syncer, &KJob::result);
@@ -575,7 +575,7 @@ private Q_SLOTS:
         QTRY_COMPARE(spy.count(), 1);
 
         // cleanup
-        auto *del = new ItemDeleteJob(dupe, this);
+        auto del = new ItemDeleteJob(dupe, this);
         AKVERIFYEXEC(del);
     }
 
@@ -593,7 +593,7 @@ private Q_SLOTS:
         QSignalSpy addedSpy(monitor.get(), &Monitor::itemAdded);
         QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
-        auto *syncer = new ItemSync(col);
+        auto syncer = new ItemSync(col);
         syncer->setTransactionMode(ItemSync::SingleTransaction);
         QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
         QVERIFY(transactionSpy.isValid());
@@ -609,7 +609,7 @@ private Q_SLOTS:
         QCOMPARE(changedSpy.count(), 0);
 
         // cleanup
-        auto *del = new ItemDeleteJob(dupe, this);
+        auto del = new ItemDeleteJob(dupe, this);
         AKVERIFYEXEC(del);
     }
 
@@ -634,7 +634,7 @@ private Q_SLOTS:
         QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
         QBENCHMARK {
-            auto *syncer = new ItemSync(col);
+            auto syncer = new ItemSync(col);
             syncer->setTransactionMode(ItemSync::SingleTransaction);
             QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
             QVERIFY(transactionSpy.isValid());
@@ -652,7 +652,7 @@ private Q_SLOTS:
         QCOMPARE(changedSpy.count(), 0);
 
         // delete all items; QBENCHMARK leads to the whole method being called more than once
-        auto *job = new ItemDeleteJob(resultItems);
+        auto job = new ItemDeleteJob(resultItems);
         AKVERIFYEXEC(job);
     }
 
@@ -664,7 +664,7 @@ private Q_SLOTS:
 
         const Item::List itemsToDelete = fetchItems(col);
         if (!itemsToDelete.isEmpty()) {
-            auto *deleteJob = new ItemDeleteJob(itemsToDelete);
+            auto deleteJob = new ItemDeleteJob(itemsToDelete);
             AKVERIFYEXEC(deleteJob);
         }
 
@@ -674,7 +674,7 @@ private Q_SLOTS:
         QCOMPARE(origItems.size(), itemCount);
 
         // and an ItemSync running
-        auto *syncer = new ItemSync(col);
+        auto syncer = new ItemSync(col);
         syncer->setTransactionMode(ItemSync::SingleTransaction);
         syncer->setFullSyncItems(origItems);
 
@@ -686,7 +686,7 @@ private Q_SLOTS:
         QCOMPARE(syncer->errorString(), QStringLiteral("User canceled operation."));
 
         // Cleanup
-        auto *job = new ItemDeleteJob(origItems);
+        auto job = new ItemDeleteJob(origItems);
         AKVERIFYEXEC(job);
     }
 };

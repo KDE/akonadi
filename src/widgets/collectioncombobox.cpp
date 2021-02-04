@@ -51,7 +51,7 @@ public:
         // Kolab
         // Kolab / Inbox
         // Kolab / Inbox / Calendar
-        auto *proxyModel = new KDescendantsProxyModel(parent);
+        auto proxyModel = new KDescendantsProxyModel(parent);
         proxyModel->setDisplayAncestorData(true);
         proxyModel->setSourceModel(mBaseModel);
 

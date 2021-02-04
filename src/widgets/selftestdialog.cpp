@@ -51,13 +51,13 @@ SelfTestDialog::SelfTestDialog(QWidget *parent)
     : QDialog(parent)
 {
     setWindowTitle(i18nc("@title:window", "Akonadi Server Self-Test"));
-    auto *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close, this);
-    auto *mainWidget = new QWidget(this);
-    auto *mainLayout = new QVBoxLayout(this);
+    auto buttonBox = new QDialogButtonBox(QDialogButtonBox::Close, this);
+    auto mainWidget = new QWidget(this);
+    auto mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(mainWidget);
-    auto *user1Button = new QPushButton(this);
+    auto user1Button = new QPushButton(this);
     buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-    auto *user2Button = new QPushButton(this);
+    auto user2Button = new QPushButton(this);
     buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SelfTestDialog::reject);
     mainLayout->addWidget(buttonBox);

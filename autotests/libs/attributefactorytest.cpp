@@ -36,7 +36,7 @@ void AttributeFactoryTest::testUnknownAttribute()
     Item item;
     item.setMimeType(QStringLiteral("text/directory"));
     item.setPayload<QByteArray>("payload");
-    auto *ta = new TestAttribute;
+    auto ta = new TestAttribute;
     {
         auto *created = AttributeFactory::createAttribute(ta->type()); // DefaultAttribute
         QVERIFY(created != nullptr);
@@ -44,11 +44,11 @@ void AttributeFactoryTest::testUnknownAttribute()
     }
     ta->data = "lalala";
     item.addAttribute(ta);
-    auto *cjob = new ItemCreateJob(item, res1);
+    auto cjob = new ItemCreateJob(item, res1);
     AKVERIFYEXEC(cjob);
     int id = cjob->item().id();
     item = Item(id);
-    auto *fjob = new ItemFetchJob(item);
+    auto fjob = new ItemFetchJob(item);
     fjob->fetchScope().fetchFullPayload();
     fjob->fetchScope().fetchAllAttributes();
     AKVERIFYEXEC(fjob);
@@ -66,7 +66,7 @@ void AttributeFactoryTest::testRegisteredAttribute()
     Item item;
     item.setMimeType(QStringLiteral("text/directory"));
     item.setPayload<QByteArray>("payload");
-    auto *ta = new TestAttribute;
+    auto ta = new TestAttribute;
     {
         auto *created = AttributeFactory::createAttribute(ta->type());
         QVERIFY(created != nullptr);
@@ -74,11 +74,11 @@ void AttributeFactoryTest::testRegisteredAttribute()
     }
     ta->data = "lalala";
     item.addAttribute(ta);
-    auto *cjob = new ItemCreateJob(item, res1);
+    auto cjob = new ItemCreateJob(item, res1);
     AKVERIFYEXEC(cjob);
     int id = cjob->item().id();
     item = Item(id);
-    auto *fjob = new ItemFetchJob(item);
+    auto fjob = new ItemFetchJob(item);
     fjob->fetchScope().fetchFullPayload();
     fjob->fetchScope().fetchAllAttributes();
     AKVERIFYEXEC(fjob);

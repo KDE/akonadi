@@ -52,7 +52,7 @@ void AgentServer::startAgent(const QString &identifier, const QString &typeIdent
     const QObjectList objList = QPluginLoader::staticInstances();
     for (QObject *plugin : objList) {
         if (plugin->objectName() == fileName) {
-            auto *thread = new AgentThread(identifier, plugin, this);
+            auto thread = new AgentThread(identifier, plugin, this);
             m_agents.insert(identifier, thread);
             thread->start();
             return;
@@ -66,7 +66,7 @@ void AgentServer::startAgent(const QString &identifier, const QString &typeIdent
 
     Q_ASSERT(loader->isLoaded());
 
-    auto *thread = new AgentThread(identifier, loader->instance(), this);
+    auto thread = new AgentThread(identifier, loader->instance(), this);
     m_agents.insert(identifier, thread);
     thread->start();
 }

@@ -56,12 +56,12 @@ AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance
     setWindowTitle(i18nc("%1 = agent name", "%1 Configuration", instance.name()));
     setWindowIcon(instance.type().icon());
 
-    auto *l = new QVBoxLayout(this);
+    auto l = new QVBoxLayout(this);
 
     d->widget.reset(new AgentConfigurationWidget(instance, this));
     l->addWidget(d->widget.data());
 
-    auto *btnBox = new QDialogButtonBox(d->widget->standardButtons(), this);
+    auto btnBox = new QDialogButtonBox(d->widget->standardButtons(), this);
     l->addWidget(btnBox);
     connect(btnBox, &QDialogButtonBox::accepted, this, &AgentConfigurationDialog::accept);
     connect(btnBox, &QDialogButtonBox::rejected, this, &AgentConfigurationDialog::reject);
@@ -74,7 +74,7 @@ AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance
 
     if (auto plugin = d->widget->d->plugin) {
         if (auto *aboutData = plugin->aboutData()) {
-            auto *helpMenu = new KHelpMenu(this, *aboutData, true);
+            auto helpMenu = new KHelpMenu(this, *aboutData, true);
             helpMenu->action(KHelpMenu::menuDonate);
             // Initialize menu
             QMenu *menu = helpMenu->menu();

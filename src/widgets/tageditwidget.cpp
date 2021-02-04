@@ -43,7 +43,7 @@ public:
     {
         Q_ASSERT(m_checkableProxy);
 
-        auto *selectionModel = new QItemSelectionModel(model, m_checkableProxy.get());
+        auto selectionModel = new QItemSelectionModel(model, m_checkableProxy.get());
         m_checkableProxy->setSourceModel(model);
         m_checkableProxy->setSelectionModel(selectionModel);
     }
@@ -99,7 +99,7 @@ void TagEditWidget::Private::onRowsInserted(const QModelIndex &parent, int start
 void TagEditWidget::Private::slotCreateTag()
 {
     if (ui.newTagButton->isEnabled()) {
-        auto *createJob = new TagCreateJob(Akonadi::Tag(ui.newTagEdit->text()), this);
+        auto createJob = new TagCreateJob(Akonadi::Tag(ui.newTagEdit->text()), this);
         connect(createJob, &TagCreateJob::finished, this, &TagEditWidget::Private::slotCreateTagFinished);
 
         ui.newTagEdit->clear();

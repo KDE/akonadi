@@ -23,7 +23,7 @@ int main(int argc, char **argv)
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
-    auto *dlg = new Akonadi::SubscriptionDialog();
+    auto dlg = new Akonadi::SubscriptionDialog();
     QObject::connect(dlg, &Akonadi::SubscriptionDialog::destroyed, &app, &QApplication::quit);
     dlg->show();
     return app.exec();

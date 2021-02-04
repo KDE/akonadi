@@ -100,20 +100,20 @@ void CollectionAttributeTest::testAttributes()
         ~Cleanup()
         {
             // cleanup
-            auto *del = new CollectionDeleteJob(m_col);
+            auto del = new CollectionDeleteJob(m_col);
             AKVERIFYEXEC(del);
         }
         Collection m_col;
     };
 
     // add a custom attribute
-    auto *attr = new TestAttribute();
+    auto attr = new TestAttribute();
     attr->deserialize(attr1);
     Collection col;
     col.setName(QStringLiteral("attribute test"));
     col.setParentCollection(Collection(parentColId));
     col.addAttribute(attr);
-    auto *create = new CollectionCreateJob(col, this);
+    auto create = new CollectionCreateJob(col, this);
     AKVERIFYEXEC(create);
     col = create->collection();
     QVERIFY(col.isValid());
@@ -123,7 +123,7 @@ void CollectionAttributeTest::testAttributes()
     QVERIFY(attr != nullptr);
     QCOMPARE(attr->serialized(), QByteArray(attr1));
 
-    auto *list = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
+    auto list = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
     AKVERIFYEXEC(list);
     QCOMPARE(list->collections().count(), 1);
     col = list->collections().at(0);
@@ -133,7 +133,7 @@ void CollectionAttributeTest::testAttributes()
     QVERIFY(attr != nullptr);
     QCOMPARE(attr->serialized(), QByteArray(attr1));
 
-    auto *attrB = new TestAttribute();
+    auto attrB = new TestAttribute();
     attrB->deserialize(attr2);
     col.addAttribute(attrB);
     attrB = col.attribute<TestAttribute>();
@@ -151,7 +151,7 @@ void CollectionAttributeTest::testAttributes()
 
     // modify a custom attribute
     col.attribute<TestAttribute>(Collection::AddIfMissing)->deserialize(attr2);
-    auto *modify = new CollectionModifyJob(col, this);
+    auto modify = new CollectionModifyJob(col, this);
     AKVERIFYEXEC(modify);
 
     list = new CollectionFetchJob(col, CollectionFetchJob::Base, this);

@@ -109,7 +109,7 @@ bool akWaitForSignal(const QObject *sender, const char *member, int timeout = 10
 
 qint64 collectionIdFromPath(const QString &path)
 {
-    auto *resolver = new Akonadi::CollectionPathResolver(path);
+    auto resolver = new Akonadi::CollectionPathResolver(path);
     bool success = resolver->exec();
     if (!success) {
         qDebug() << "path resolution for " << path << " failed: " << resolver->errorText();

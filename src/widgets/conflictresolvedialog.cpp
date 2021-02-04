@@ -185,22 +185,22 @@ ConflictResolveDialog::ConflictResolveDialog(QWidget *parent)
 {
     setWindowTitle(i18nc("@title:window", "Conflict Resolution"));
 
-    auto *mainLayout = new QVBoxLayout(this);
+    auto mainLayout = new QVBoxLayout(this);
     // Don't use QDialogButtonBox, order is very important (left on the left, right on the right)
-    auto *buttonLayout = new QHBoxLayout();
-    auto *takeLeftButton = new QPushButton(this);
+    auto buttonLayout = new QHBoxLayout();
+    auto takeLeftButton = new QPushButton(this);
     takeLeftButton->setText(i18nc("@action:button", "Take my version"));
     connect(takeLeftButton, &QPushButton::clicked, this, &ConflictResolveDialog::slotUseLocalItemChoosen);
     buttonLayout->addWidget(takeLeftButton);
     takeLeftButton->setObjectName(QStringLiteral("takeLeftButton"));
 
-    auto *takeRightButton = new QPushButton(this);
+    auto takeRightButton = new QPushButton(this);
     takeRightButton->setText(i18nc("@action:button", "Take their version"));
     takeRightButton->setObjectName(QStringLiteral("takeRightButton"));
     connect(takeRightButton, &QPushButton::clicked, this, &ConflictResolveDialog::slotUseOtherItemChoosen);
     buttonLayout->addWidget(takeRightButton);
 
-    auto *keepBothButton = new QPushButton(this);
+    auto keepBothButton = new QPushButton(this);
     keepBothButton->setText(i18nc("@action:button", "Keep both versions"));
     keepBothButton->setObjectName(QStringLiteral("keepBothButton"));
     buttonLayout->addWidget(keepBothButton);

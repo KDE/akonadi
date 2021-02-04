@@ -21,7 +21,7 @@ NotificationSource::~NotificationSource()
 
 QString NotificationSource::identifier() const
 {
-    auto *source = qobject_cast<org::freedesktop::Akonadi::NotificationSource *>(parent());
+    auto source = qobject_cast<org::freedesktop::Akonadi::NotificationSource *>(parent());
     return source->path();
 }
 

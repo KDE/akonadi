@@ -30,7 +30,7 @@ void TagTestSimple::testCustomAttributes()
     Tag t2;
     {
         Tag t1;
-        auto *attr = new TestAttribute;
+        auto attr = new TestAttribute;
         attr->deserialize("hello");
         t1.addAttribute(attr);
         t2 = t1;

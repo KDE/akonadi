@@ -120,7 +120,7 @@ private:
             }
         }
         for (const Collection &col : qAsConst(baseCols)) {
-            auto *del = new CollectionDeleteJob(col);
+            auto del = new CollectionDeleteJob(col);
             AKVERIFYEXEC(del);
         }
     }
@@ -154,7 +154,7 @@ private Q_SLOTS:
         Collection::List origCols = fetchCollections(resource);
         QVERIFY(!origCols.isEmpty());
 
-        auto *syncer = new CollectionSync(resource, this);
+        auto syncer = new CollectionSync(resource, this);
         syncer->setHierarchicalRemoteIds(hierarchicalRIDs);
         syncer->setRemoteCollections(origCols);
         AKVERIFYEXEC(syncer);
@@ -176,7 +176,7 @@ private Q_SLOTS:
         Collection::List origCols = fetchCollections(resource);
         QVERIFY(!origCols.isEmpty());
 
-        auto *syncer = new CollectionSync(resource, this);
+        auto syncer = new CollectionSync(resource, this);
         syncer->setHierarchicalRemoteIds(hierarchicalRIDs);
         syncer->setAutoDelete(false);
         QSignalSpy spy(syncer, &KJob::result);
@@ -224,7 +224,7 @@ private Q_SLOTS:
         Collection::List origCols = fetchCollections(resource);
         QVERIFY(!origCols.isEmpty());
 
-        auto *syncer = new CollectionSync(resource, this);
+        auto syncer = new CollectionSync(resource, this);
         syncer->setHierarchicalRemoteIds(hierarchicalRIDs);
         syncer->setRemoteCollections(origCols, Collection::List());
         AKVERIFYEXEC(syncer);
@@ -288,7 +288,7 @@ private Q_SLOTS:
         Collection::List origCols = fetchCollections(resource);
         QVERIFY(!origCols.isEmpty());
 
-        auto *syncer = new CollectionSync(resource, this);
+        auto syncer = new CollectionSync(resource, this);
         syncer->setHierarchicalRemoteIds(hierarchicalRIDs);
         syncer->setAutoDelete(false);
         QSignalSpy spy(syncer, &KJob::result);
@@ -332,7 +332,7 @@ private Q_SLOTS:
         Collection::List origCols = fetchCollections(resource);
         QVERIFY(!origCols.isEmpty());
 
-        auto *syncer = new CollectionSync(resource, this);
+        auto syncer = new CollectionSync(resource, this);
         syncer->setHierarchicalRemoteIds(hierarchicalRIDs);
         syncer->setRemoteCollections(Collection::List(), Collection::List());
         AKVERIFYEXEC(syncer);
@@ -356,14 +356,14 @@ private Q_SLOTS:
         col.attribute<EntityDisplayAttribute>(Akonadi::Collection::AddIfMissing)->setDisplayName(QStringLiteral("foo"));
         col.setContentMimeTypes(QStringList() << Akonadi::Collection::mimeType() << QStringLiteral("foo"));
         {
-            auto *job = new CollectionModifyJob(col);
+            auto job = new CollectionModifyJob(col);
             AKVERIFYEXEC(job);
         }
 
         col.attribute<EntityDisplayAttribute>()->setDisplayName(QStringLiteral("default"));
         col.setContentMimeTypes(QStringList() << Akonadi::Collection::mimeType() << QStringLiteral("default"));
 
-        auto *syncer = new CollectionSync(resource, this);
+        auto syncer = new CollectionSync(resource, this);
         if (keepLocalChanges) {
             syncer->setKeepLocalChanges(QSet<QByteArray>() << "ENTITYDISPLAY"
                                                            << "CONTENTMIMETYPES");
@@ -375,7 +375,7 @@ private Q_SLOTS:
         AKVERIFYEXEC(syncer);
 
         {
-            auto *job = new CollectionFetchJob(col, Akonadi::CollectionFetchJob::Base);
+            auto job = new CollectionFetchJob(col, Akonadi::CollectionFetchJob::Base);
             AKVERIFYEXEC(job);
             Collection resultCol = job->collections().first();
             if (keepLocalChanges) {
@@ -393,7 +393,7 @@ private Q_SLOTS:
         const QString resource(QStringLiteral("akonadi_knut_resource_0"));
         Collection col = fetchCollections(resource).first();
 
-        auto *syncer = new CollectionSync(resource, this);
+        auto syncer = new CollectionSync(resource, this);
         syncer->setStreamingEnabled(true);
         syncer->setRemoteCollections({col}, {});
 

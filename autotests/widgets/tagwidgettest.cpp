@@ -58,7 +58,7 @@ class TagWidgetTest : public QObject
         ~TestSetup()
         {
             if (!createdTags.empty()) {
-                auto *deleteJob = new TagDeleteJob(createdTags);
+                auto deleteJob = new TagDeleteJob(createdTags);
                 AKVERIFYEXEC(deleteJob);
             }
         }
@@ -68,7 +68,7 @@ class TagWidgetTest : public QObject
             const auto doCreateTags = [this, count]() {
                 QSignalSpy monitorSpy(monitor, &Monitor::tagAdded);
                 for (int i = 0; i < count; ++i) {
-                    auto *job = new TagCreateJob(Tag(QStringLiteral("TestTag-%1").arg(i)));
+                    auto job = new TagCreateJob(Tag(QStringLiteral("TestTag-%1").arg(i)));
                     AKVERIFYEXEC(job);
                     createdTags.push_back(job->tag());
                 }
@@ -95,7 +95,7 @@ class TagWidgetTest : public QObject
         {
             const auto windows = QApplication::topLevelWidgets();
             for (auto *window : windows) {
-                if (auto *dlg = qobject_cast<TagSelectionDialog *>(window)) {
+                if (auto dlg = qobject_cast<TagSelectionDialog *>(window)) {
                     // Set the selection through code, testing selecting tags with mouse is
                     // out-of-scope for this test, there's a dedicated TagEditWidget test for that.
                     dlg->setSelection(selection);

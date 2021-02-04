@@ -50,7 +50,7 @@ void XmlWriteJobPrivate::collectionFetchResult(KJob *job)
     if (job->error()) {
         return;
     }
-    auto *fetch = qobject_cast<CollectionFetchJob *>(job);
+    auto fetch = qobject_cast<CollectionFetchJob *>(job);
     Q_ASSERT(fetch);
     if (fetch->collections().isEmpty()) {
         processItems();
@@ -80,7 +80,7 @@ void XmlWriteJobPrivate::processCollection()
     const Collection current = pendingSiblings.top().first();
     qDebug() << "Writing " << current.name() << "into" << elementStack.top().attribute(QStringLiteral("name"));
     elementStack.push(XmlWriter::writeCollection(current, elementStack.top()));
-    auto *subfetch = new CollectionFetchJob(current, CollectionFetchJob::FirstLevel, q);
+    auto subfetch = new CollectionFetchJob(current, CollectionFetchJob::FirstLevel, q);
     q->connect(subfetch, &CollectionFetchJob::result, q, [this](KJob *job) {
         collectionFetchResult(job);
     });
@@ -89,7 +89,7 @@ void XmlWriteJobPrivate::processCollection()
 void XmlWriteJobPrivate::processItems()
 {
     const Collection collection = pendingSiblings.top().first();
-    auto *fetch = new ItemFetchJob(collection, q);
+    auto fetch = new ItemFetchJob(collection, q);
     fetch->fetchScope().fetchAllAttributes();
     fetch->fetchScope().fetchFullPayload();
     q->connect(fetch, &ItemFetchJob::result, q, [this](KJob *job) {
@@ -102,7 +102,7 @@ void XmlWriteJobPrivate::itemFetchResult(KJob *job)
     if (job->error()) {
         return;
     }
-    auto *fetch = qobject_cast<ItemFetchJob *>(job);
+    auto fetch = qobject_cast<ItemFetchJob *>(job);
     Q_ASSERT(fetch);
     const Akonadi::Item::List lstItems = fetch->items();
     for (const Item &item : lstItems) {
@@ -137,7 +137,7 @@ XmlWriteJob::~XmlWriteJob()
 void XmlWriteJob::doStart()
 {
     d->elementStack.push(d->document.document().documentElement());
-    auto *job = new CollectionFetchJob(d->roots, this);
+    auto job = new CollectionFetchJob(d->roots, this);
     connect(job, &CollectionFetchJob::result, this, [this](KJob *job) {
         d->collectionFetchResult(job);
     });

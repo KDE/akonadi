@@ -37,7 +37,7 @@ public:
         collections.prepend(mCollection);
 
         for (const Collection &collection : qAsConst(collections)) {
-            auto *itemFetchJob = new ItemFetchJob(collection, mParent);
+            auto itemFetchJob = new ItemFetchJob(collection, mParent);
             itemFetchJob->setFetchScope(mFetchScope);
             mParent->connect(itemFetchJob, &KJob::result, mParent, [this](KJob *job) {
                 itemFetchResult(job);
@@ -103,7 +103,7 @@ ItemFetchScope &RecursiveItemFetchJob::fetchScope()
 
 void RecursiveItemFetchJob::start()
 {
-    auto *job = new CollectionFetchJob(d->mCollection, CollectionFetchJob::Recursive, this);
+    auto job = new CollectionFetchJob(d->mCollection, CollectionFetchJob::Recursive, this);
 
     if (!d->mMimeTypes.isEmpty()) {
         job->fetchScope().setContentMimeTypes(d->mMimeTypes);

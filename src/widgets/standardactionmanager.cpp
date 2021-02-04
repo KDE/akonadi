@@ -418,7 +418,7 @@ public:
         }
 
         // Update the action menu
-        auto *actionMenu = qobject_cast<KActionMenu *>(actions[type]);
+        auto actionMenu = qobject_cast<KActionMenu *>(actions[type]);
         if (actionMenu) {
             // get rid of the submenus, they are re-created in enableAction. clear() is not enough, doesn't remove the submenu object instances.
             QMenu *menu = actionMenu->menu();
@@ -441,7 +441,7 @@ public:
 
     void aboutToShowMenu()
     {
-        auto *menu = qobject_cast<QMenu *>(q->sender());
+        auto menu = qobject_cast<QMenu *>(q->sender());
         if (!menu) {
             return;
         }
@@ -637,7 +637,7 @@ public:
 
     QItemSelection mapToEntityTreeModel(const QAbstractItemModel *model, const QItemSelection &selection) const
     {
-        const auto *proxy = qobject_cast<const QAbstractProxyModel *>(model);
+        const auto proxy = qobject_cast<const QAbstractProxyModel *>(model);
         if (proxy) {
             return mapToEntityTreeModel(proxy->sourceModel(), proxy->mapSelectionToSource(selection));
         } else {
@@ -647,7 +647,7 @@ public:
 
     QItemSelection mapFromEntityTreeModel(const QAbstractItemModel *model, const QItemSelection &selection) const
     {
-        const auto *proxy = qobject_cast<const QAbstractProxyModel *>(model);
+        const auto proxy = qobject_cast<const QAbstractProxyModel *>(model);
         if (proxy) {
             const QItemSelection select = mapFromEntityTreeModel(proxy->sourceModel(), selection);
             return proxy->mapSelectionFromSource(select);
@@ -766,7 +766,7 @@ public:
             collection.setContentMimeTypes(collection.contentMimeTypes() << Collection::virtualMimeType());
         }
 
-        auto *job = new CollectionCreateJob(collection);
+        auto job = new CollectionCreateJob(collection);
         q->connect(job, &KJob::result, q, [this](KJob *job) {
             collectionCreationResult(job);
         });
@@ -824,7 +824,7 @@ public:
         }
 
         for (const Collection &collection : collections) {
-            auto *job = new CollectionDeleteJob(collection, q);
+            auto job = new CollectionDeleteJob(collection, q);
             q->connect(job, &CollectionDeleteJob::result, q, [this](KJob *job) {
                 collectionDeletionResult(job);
             });
@@ -839,7 +839,7 @@ public:
         }
 
         for (const Collection &collection : collections) {
-            auto *job = new TrashJob(collection, q);
+            auto job = new TrashJob(collection, q);
             q->connect(job, &TrashJob::result, q, [this](KJob *job) {
                 moveCollectionToTrashResult(job);
             });
@@ -854,7 +854,7 @@ public:
         }
 
         for (const Collection &collection : collections) {
-            auto *job = new TrashRestoreJob(collection, q);
+            auto job = new TrashRestoreJob(collection, q);
             q->connect(job, &TrashRestoreJob::result, q, [this](KJob *job) {
                 moveCollectionToTrashResult(job);
             });
@@ -887,7 +887,7 @@ public:
             return;
         }
 
-        auto *job = new TrashJob(items, q);
+        auto job = new TrashJob(items, q);
         q->connect(job, &TrashJob::result, q, [this](KJob *job) {
             moveItemToTrashResult(job);
         });
@@ -900,7 +900,7 @@ public:
             return;
         }
 
-        auto *job = new TrashRestoreJob(items, q);
+        auto job = new TrashRestoreJob(items, q);
         q->connect(job, &TrashRestoreJob::result, q, [this](KJob *job) {
             moveItemToTrashResult(job);
         });
@@ -1033,7 +1033,7 @@ public:
         const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
         Q_ASSERT(collection.isValid());
 
-        auto *dlg = new CollectionPropertiesDialog(collection, mCollectionPropertiesPageNames, parentWidget);
+        auto dlg = new CollectionPropertiesDialog(collection, mCollectionPropertiesPageNames, parentWidget);
         dlg->setWindowTitle(contextText(StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle, collection.displayName()));
         dlg->show();
     }
@@ -1111,7 +1111,7 @@ public:
             return;
         }
 
-        auto *job = new ItemDeleteJob(items, q);
+        auto job = new ItemDeleteJob(items, q);
         q->connect(job, &ItemDeleteJob::result, q, [this](KJob *job) {
             itemDeletionResult(job);
         });
@@ -1119,7 +1119,7 @@ public:
 
     void slotLocalSubscription() const
     {
-        auto *dlg = new SubscriptionDialog(mMimeTypeFilter, parentWidget);
+        auto dlg = new SubscriptionDialog(mMimeTypeFilter, parentWidget);
         dlg->showHiddenCollection(true);
         dlg->show();
     }
@@ -1289,7 +1289,7 @@ public:
             const AgentType agentType = dlg->agentType();
 
             if (agentType.isValid()) {
-                auto *job = new AgentInstanceCreateJob(agentType, q);
+                auto job = new AgentInstanceCreateJob(agentType, q);
                 q->connect(job, &KJob::result, q, [this](KJob *job) {
                     resourceCreationResult(job);
                 });
@@ -1573,7 +1573,7 @@ public:
 
             if (model->rowCount(index) > 0) {
                 // new level
-                auto *popup = new QMenu(menu);
+                auto popup = new QMenu(menu);
                 const bool moveAction = (type == MoveCollectionToMenu || type == MoveItemToMenu);
                 popup->setObjectName(QStringLiteral("subMenu"));
                 popup->setTitle(label);
@@ -1611,7 +1611,7 @@ public:
 
         // find the base ETM of the favourites view
         const QAbstractItemModel *favModel = favoritesModel;
-        while (const auto *proxy = qobject_cast<const QAbstractProxyModel *>(favModel)) {
+        while (const auto proxy = qobject_cast<const QAbstractProxyModel *>(favModel)) {
             favModel = proxy->sourceModel();
         }
 
@@ -1619,7 +1619,7 @@ public:
         // EntityTreeModel than favoritesModel
         if (collectionSelectionModel != nullptr) {
             const QAbstractItemModel *model = collectionSelectionModel->model();
-            while (const auto *proxy = qobject_cast<const QAbstractProxyModel *>(model)) {
+            while (const auto proxy = qobject_cast<const QAbstractProxyModel *>(model)) {
                 model = proxy->sourceModel();
             }
 
@@ -1628,7 +1628,7 @@ public:
 
         // Check that the favorite selection model maps to favoritesModel
         const QAbstractItemModel *model = favoriteSelectionModel->model();
-        while (const auto *proxy = qobject_cast<const QAbstractProxyModel *>(model)) {
+        while (const auto proxy = qobject_cast<const QAbstractProxyModel *>(model)) {
             model = proxy->sourceModel();
         }
         Q_ASSERT(model == favModel);
@@ -1840,7 +1840,7 @@ QAction *StandardActionManager::createAction(Type type)
             connect(action, SIGNAL(triggered()), standardActionData[type].slot); // clazy:exclude=old-style-connect
             break;
         case MenuAction: {
-            auto *actionMenu = qobject_cast<KActionMenu *>(action);
+            auto actionMenu = qobject_cast<KActionMenu *>(action);
             connect(actionMenu->menu(), SIGNAL(triggered(QAction *)), standardActionData[type].slot); // clazy:exclude=old-style-connect
             break;
         }

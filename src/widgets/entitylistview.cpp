@@ -65,8 +65,8 @@ void EntityListView::Private::init()
         itemDoubleClicked(index);
     });
 
-    auto *animator = new DelegateAnimator(mParent);
-    auto *customDelegate = new ProgressSpinnerDelegate(animator, mParent);
+    auto animator = new DelegateAnimator(mParent);
+    auto customDelegate = new ProgressSpinnerDelegate(animator, mParent);
     mParent->setItemDelegate(customDelegate);
 
     ControlGui::widgetNeedsAkonadi(mParent);

@@ -358,7 +358,7 @@ protected Q_SLOTS:
                 AgentBasePrivate::collectionRemoved(collection);
             } else if (destination.resource() == q_ptr->identifier()) { // moved to us
                 scheduler->taskDone(); // stop change replay for now
-                auto *mover = new RecursiveMover(this);
+                auto mover = new RecursiveMover(this);
                 mover->setCollection(collection, destination);
                 scheduler->scheduleMoveReplay(collection, mover);
             }
@@ -550,7 +550,7 @@ QString ResourceBase::parseArguments(int argc, char **argv)
     // strip off full path and possible .exe suffix
     const QString catalog = fi.baseName();
 
-    auto *translator = new QTranslator();
+    auto translator = new QTranslator();
     translator->load(catalog);
     QCoreApplication::installTranslator(translator);
 
@@ -588,7 +588,7 @@ void ResourceBase::itemRetrieved(const Item &item)
         }
     }
 
-    auto *job = new ItemModifyJob(item);
+    auto job = new ItemModifyJob(item);
     job->d_func()->setSilent(true);
     // FIXME: remove once the item with which we call retrieveItem() has a revision number
     job->disableRevisionCheck();
@@ -615,7 +615,7 @@ void ResourceBase::collectionAttributesRetrieved(const Collection &collection)
         return;
     }
 
-    auto *job = new CollectionModifyJob(collection);
+    auto job = new CollectionModifyJob(collection);
     connect(job, &KJob::result, d, &ResourceBasePrivate::slotCollectionAttributesSyncDone);
 }
 
@@ -646,7 +646,7 @@ void ResourceBasePrivate::slotDeleteResourceCollectionDone(KJob *job)
         Q_EMIT q->error(job->errorString());
         scheduler->taskDone();
     } else {
-        const auto *fetchJob = static_cast<const CollectionFetchJob *>(job);
+        const auto fetchJob = static_cast<const CollectionFetchJob *>(job);
 
         if (!fetchJob->collections().isEmpty()) {
             CollectionDeleteJob *job = new CollectionDeleteJob(fetchJob->collections().at(0));
@@ -671,7 +671,7 @@ void ResourceBasePrivate::slotCollectionDeletionDone(KJob *job)
 void ResourceBasePrivate::slotInvalidateCache(const Akonadi::Collection &collection)
 {
     Q_Q(ResourceBase);
-    auto *job = new InvalidateCacheJob(collection, q);
+    auto job = new InvalidateCacheJob(collection, q);
     connect(job, &KJob::result, scheduler, &ResourceScheduler::taskDone);
 }
 
@@ -683,12 +683,12 @@ void ResourceBase::changeCommitted(const Item &item)
 void ResourceBase::changesCommitted(const Item::List &items)
 {
     Q_D(ResourceBase);
-    auto *transaction = new TransactionSequence(this);
+    auto transaction = new TransactionSequence(this);
     connect(transaction, &KJob::finished, d, &ResourceBasePrivate::changeCommittedResult);
 
     // Modify the items one-by-one, because STORE does not support mass RID change
     for (const Item &item : items) {
-        auto *job = new ItemModifyJob(item, transaction);
+        auto job = new ItemModifyJob(item, transaction);
         job->d_func()->setClean();
         job->disableRevisionCheck(); // TODO: remove, but where/how do we handle the error?
         job->setIgnorePayload(true); // we only want to reset the dirty flag and update the remote id
@@ -698,7 +698,7 @@ void ResourceBase::changesCommitted(const Item::List &items)
 void ResourceBase::changeCommitted(const Collection &collection)
 {
     Q_D(ResourceBase);
-    auto *job = new CollectionModifyJob(collection);
+    auto job = new CollectionModifyJob(collection);
     connect(job, &KJob::result, d, &ResourceBasePrivate::changeCommittedResult);
 }
 
@@ -727,7 +727,7 @@ void ResourceBasePrivate::changeCommittedResult(KJob *job)
 void ResourceBase::changeCommitted(const Tag &tag)
 {
     Q_D(ResourceBase);
-    auto *job = new TagModifyJob(tag);
+    auto job = new TagModifyJob(tag);
     connect(job, &KJob::result, d, &ResourceBasePrivate::changeCommittedResult);
 }
 
@@ -924,7 +924,7 @@ void ResourceBasePrivate::slotSynchronizeCollection(const Collection &col)
             }
 
             qCDebug(AKONADIAGENTBASE_LOG) << "Preparing collection sync of collection" << currentCollection.id() << currentCollection.displayName();
-            auto *fetchJob = new Akonadi::CollectionFetchJob(col, CollectionFetchJob::Base, this);
+            auto fetchJob = new Akonadi::CollectionFetchJob(col, CollectionFetchJob::Base, this);
             fetchJob->setFetchScope(q->changeRecorder()->collectionFetchScope());
             connect(fetchJob, &KJob::result, this, &ResourceBasePrivate::slotItemRetrievalCollectionFetchDone);
             mCurrentCollectionFetchJob = fetchJob;
@@ -943,7 +943,7 @@ void ResourceBasePrivate::slotItemRetrievalCollectionFetchDone(KJob *job)
         q->cancelTask(i18n("Failed to retrieve collection for sync."));
         return;
     }
-    auto *fetchJob = static_cast<Akonadi::CollectionFetchJob *>(job);
+    auto fetchJob = static_cast<Akonadi::CollectionFetchJob *>(job);
     const Collection::List collections = fetchJob->collections();
     if (collections.isEmpty()) {
         qCWarning(AKONADIAGENTBASE_LOG) << "The fetch job returned empty collection set. This is unexpected.";
@@ -974,7 +974,7 @@ void ResourceBase::setScheduleAttributeSyncBeforeItemSync(bool enable)
 void ResourceBasePrivate::slotSynchronizeCollectionAttributes(const Collection &col)
 {
     Q_Q(ResourceBase);
-    auto *fetchJob = new Akonadi::CollectionFetchJob(col, CollectionFetchJob::Base, this);
+    auto fetchJob = new Akonadi::CollectionFetchJob(col, CollectionFetchJob::Base, this);
     fetchJob->setFetchScope(q->changeRecorder()->collectionFetchScope());
     connect(fetchJob, &KJob::result, this, &ResourceBasePrivate::slotAttributeRetrievalCollectionFetchDone);
     Q_ASSERT(!mCurrentCollectionFetchJob);
@@ -990,7 +990,7 @@ void ResourceBasePrivate::slotAttributeRetrievalCollectionFetchDone(KJob *job)
         q->cancelTask(i18n("Failed to retrieve collection for attribute sync."));
         return;
     }
-    auto *fetchJob = static_cast<Akonadi::CollectionFetchJob *>(job);
+    auto fetchJob = static_cast<Akonadi::CollectionFetchJob *>(job);
     // FIXME: Why not call q-> directly?
     QMetaObject::invokeMethod(q, "retrieveCollectionAttributes", Q_ARG(Akonadi::Collection, fetchJob->collections().at(0)));
 }
@@ -1014,7 +1014,7 @@ void ResourceBasePrivate::slotSynchronizeRelations()
 void ResourceBasePrivate::slotPrepareItemRetrieval(const Item &item)
 {
     Q_Q(ResourceBase);
-    auto *fetch = new ItemFetchJob(item, this);
+    auto fetch = new ItemFetchJob(item, this);
     // we always need at least parent so we can use ItemCreateJob to merge
     fetch->fetchScope().setAncestorRetrieval(qMax(ItemFetchScope::Parent, q->changeRecorder()->itemFetchScope().ancestorRetrieval()));
     fetch->fetchScope().setCacheOnly(true);
@@ -1039,7 +1039,7 @@ void ResourceBasePrivate::slotPrepareItemRetrievalResult(KJob *job)
         q->cancelTask(job->errorText());
         return;
     }
-    auto *fetch = qobject_cast<ItemFetchJob *>(job);
+    auto fetch = qobject_cast<ItemFetchJob *>(job);
     if (fetch->items().count() != 1) {
         q->cancelTask(i18n("The requested item no longer exists"));
         return;
@@ -1053,7 +1053,7 @@ void ResourceBasePrivate::slotPrepareItemRetrievalResult(KJob *job)
 void ResourceBasePrivate::slotPrepareItemsRetrieval(const QVector<Item> &items)
 {
     Q_Q(ResourceBase);
-    auto *fetch = new ItemFetchJob(items, this);
+    auto fetch = new ItemFetchJob(items, this);
     // we always need at least parent so we can use ItemCreateJob to merge
     fetch->fetchScope().setAncestorRetrieval(qMax(ItemFetchScope::Parent, q->changeRecorder()->itemFetchScope().ancestorRetrieval()));
     fetch->fetchScope().setCacheOnly(true);
@@ -1081,7 +1081,7 @@ void ResourceBasePrivate::slotPrepareItemsRetrievalResult(KJob *job)
         q->cancelTask(job->errorText());
         return;
     }
-    auto *fetch = qobject_cast<ItemFetchJob *>(job);
+    auto fetch = qobject_cast<ItemFetchJob *>(job);
     const auto items = fetch->items();
     if (items.isEmpty()) {
         q->cancelTask();
@@ -1337,14 +1337,14 @@ void ResourceBase::itemsRetrieved(const Item::List &items)
 {
     Q_D(ResourceBase);
     if (d->scheduler->currentTask().type == ResourceScheduler::FetchItems) {
-        auto *trx = new TransactionSequence(this);
+        auto trx = new TransactionSequence(this);
         connect(trx, &KJob::result, d, &ResourceBasePrivate::slotItemSyncDone);
         for (const Item &item : items) {
             Q_ASSERT(item.parentCollection().isValid());
             if (item.isValid()) { // NOLINT(bugprone-branch-clone)
                 new ItemModifyJob(item, trx);
             } else if (!item.remoteId().isEmpty()) {
-                auto *job = new ItemCreateJob(item, item.parentCollection(), trx);
+                auto job = new ItemCreateJob(item, item.parentCollection(), trx);
                 job->setMerge(ItemCreateJob::RID);
             } else {
                 // This should not happen, but just to be sure...

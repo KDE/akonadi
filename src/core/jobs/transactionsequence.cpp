@@ -112,7 +112,7 @@ void TransactionSequence::slotResult(KJob *job)
                     return;
                 }
                 d->mState = TransactionSequencePrivate::Committing;
-                auto *job = new TransactionCommitJob(this);
+                auto job = new TransactionCommitJob(this);
                 connect(job, &TransactionCommitJob::result, [d](KJob *job) {
                     d->commitResult(job);
                 });
@@ -138,7 +138,7 @@ void TransactionSequence::slotResult(KJob *job)
                 return;
             }
             d->mState = TransactionSequencePrivate::RollingBack;
-            auto *job = new TransactionRollbackJob(this);
+            auto job = new TransactionRollbackJob(this);
             connect(job, &TransactionRollbackJob::result, this, [d](KJob *job) {
                 d->rollbackResult(job);
             });
@@ -170,13 +170,13 @@ void TransactionSequence::commit()
         }
         if (!error()) {
             d->mState = TransactionSequencePrivate::Committing;
-            auto *job = new TransactionCommitJob(this);
+            auto job = new TransactionCommitJob(this);
             connect(job, &TransactionCommitJob::result, this, [d](KJob *job) {
                 d->commitResult(job);
             });
         } else {
             d->mState = TransactionSequencePrivate::RollingBack;
-            auto *job = new TransactionRollbackJob(this);
+            auto job = new TransactionRollbackJob(this);
             connect(job, &TransactionRollbackJob::result, this, [d](KJob *job) {
                 d->rollbackResult(job);
             });
@@ -236,7 +236,7 @@ void TransactionSequence::rollback()
     }
 
     d->mState = TransactionSequencePrivate::RollingBack;
-    auto *job = new TransactionRollbackJob(this);
+    auto job = new TransactionRollbackJob(this);
     connect(job, &TransactionRollbackJob::result, this, [d](KJob *job) {
         d->rollbackResult(job);
     });

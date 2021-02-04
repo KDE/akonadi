@@ -64,7 +64,7 @@ void TagSync::doStart()
 {
     // qCDebug(AKONADICORE_LOG);
     // This should include all tags, including the ones that don't have a remote id
-    auto *fetch = new Akonadi::TagFetchJob(this);
+    auto fetch = new Akonadi::TagFetchJob(this);
     fetch->fetchScope().setFetchRemoteId(true);
     connect(fetch, &KJob::result, this, &TagSync::onLocalTagFetchDone);
 }
@@ -72,7 +72,7 @@ void TagSync::doStart()
 void TagSync::onLocalTagFetchDone(KJob *job)
 {
     // qCDebug(AKONADICORE_LOG);
-    auto *fetch = static_cast<TagFetchJob *>(job);
+    auto fetch = static_cast<TagFetchJob *>(job);
     mLocalTags = fetch->tags();
     mLocalTagsFetched = true;
     diffTags();
@@ -99,7 +99,7 @@ void TagSync::diffTags()
         if (tagByRid.contains(remoteTag.remoteId())) {
             // Tag still exists, check members
             Tag tag = tagByRid.value(remoteTag.remoteId());
-            auto *itemFetch = new ItemFetchJob(tag, this);
+            auto itemFetch = new ItemFetchJob(tag, this);
             itemFetch->setProperty("tag", QVariant::fromValue(tag));
             itemFetch->setProperty("merge", false);
             itemFetch->fetchScope().setFetchGid(true);
@@ -111,7 +111,7 @@ void TagSync::diffTags()
             // Merge members and set rid
             Tag tag = tagByGid.value(remoteTag.gid());
             tag.setRemoteId(remoteTag.remoteId());
-            auto *itemFetch = new ItemFetchJob(tag, this);
+            auto itemFetch = new ItemFetchJob(tag, this);
             itemFetch->setProperty("tag", QVariant::fromValue(tag));
             itemFetch->setProperty("merge", true);
             itemFetch->fetchScope().setFetchGid(true);
@@ -120,7 +120,7 @@ void TagSync::diffTags()
             tagById.remove(tagByGid.value(remoteTag.gid()).id());
         } else {
             // New tag, create
-            auto *createJob = new TagCreateJob(remoteTag, this);
+            auto createJob = new TagCreateJob(remoteTag, this);
             createJob->setMergeIfExisting(true);
             connect(createJob, &KJob::result, this, &TagSync::onCreateTagDone);
             connect(createJob, &KJob::result, this, &TagSync::onJobDone);
@@ -130,7 +130,7 @@ void TagSync::diffTags()
         // Removed remotely, unset rid
         Tag copy(tag);
         copy.setRemoteId(QByteArray(""));
-        auto *modJob = new TagModifyJob(copy, this);
+        auto modJob = new TagModifyJob(copy, this);
         connect(modJob, &KJob::result, this, &TagSync::onJobDone);
     }
     checkDone();
@@ -147,7 +147,7 @@ void TagSync::onCreateTagDone(KJob *job)
     const Item::List remoteMembers = mRidMemberMap.value(QString::fromLatin1(tag.remoteId()));
     for (Item item : remoteMembers) {
         item.setTag(tag);
-        auto *modJob = new ItemModifyJob(item, this);
+        auto modJob = new ItemModifyJob(item, this);
         connect(modJob, &KJob::result, this, &TagSync::onJobDone);
         qCDebug(AKONADICORE_LOG) << "setting tag " << item.remoteId();
     }
@@ -196,14 +196,14 @@ void TagSync::onTagItemsFetchDone(KJob *job)
     if (!merge) {
         for (Item item : qAsConst(toRemove)) {
             item.clearTag(tag);
-            auto *modJob = new ItemModifyJob(item, this);
+            auto modJob = new ItemModifyJob(item, this);
             connect(modJob, &KJob::result, this, &TagSync::onJobDone);
             qCDebug(AKONADICORE_LOG) << "removing tag " << item.remoteId();
         }
     }
     for (Item item : qAsConst(toAdd)) {
         item.setTag(tag);
-        auto *modJob = new ItemModifyJob(item, this);
+        auto modJob = new ItemModifyJob(item, this);
         connect(modJob, &KJob::result, this, &TagSync::onJobDone);
         qCDebug(AKONADICORE_LOG) << "setting tag " << item.remoteId();
     }

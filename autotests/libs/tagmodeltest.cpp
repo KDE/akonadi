@@ -46,17 +46,17 @@ private Q_SLOTS:
 private:
     QPair<FakeServerData *, Akonadi::TagModel *> populateModel(const QString &serverContent)
     {
-        auto *const fakeMonitor = new FakeMonitor(this);
+        auto const fakeMonitor = new FakeMonitor(this);
 
         fakeMonitor->setSession(m_fakeSession);
         fakeMonitor->setCollectionMonitored(Collection::root());
         fakeMonitor->setTypeMonitored(Akonadi::Monitor::Tags);
 
-        auto *const model = new TagModel(fakeMonitor, this);
+        auto const model = new TagModel(fakeMonitor, this);
 
         m_modelSpy = new ModelSpy{model, this};
 
-        auto *const serverData = new FakeServerData(model, m_fakeSession, fakeMonitor, this);
+        auto const serverData = new FakeServerData(model, m_fakeSession, fakeMonitor, this);
         serverData->setCommands(FakeJobResponse::interpret(serverData, serverContent));
 
         // Give the model a chance to populate
@@ -96,13 +96,13 @@ void TagModelTest::cleanupTestCase()
 
 void TagModelTest::testInitialFetch()
 {
-    auto *const fakeMonitor = new FakeMonitor(this);
+    auto const fakeMonitor = new FakeMonitor(this);
 
     fakeMonitor->setSession(m_fakeSession);
     fakeMonitor->setCollectionMonitored(Collection::root());
-    auto *const model = new TagModel(fakeMonitor, this);
+    auto const model = new TagModel(fakeMonitor, this);
 
-    auto *const serverData = new FakeServerData(model, m_fakeSession, fakeMonitor, this);
+    auto const serverData = new FakeServerData(model, m_fakeSession, fakeMonitor, this);
     const auto initialFetchResponse = FakeJobResponse::interpret(serverData, serverContent1);
     serverData->setCommands(initialFetchResponse);
 
@@ -163,7 +163,7 @@ void TagModelTest::testTagAdded()
     const auto parentIndex = firstMatchedIndex(*model, parentTag);
     const auto newRow = model->rowCount(parentIndex);
 
-    auto *const addCommand = new FakeTagAddedCommand(addedTag, parentTag, serverData);
+    auto const addCommand = new FakeTagAddedCommand(addedTag, parentTag, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({addCommand});
@@ -204,7 +204,7 @@ void TagModelTest::testTagChanged()
     const auto parentTag = changedIndex.parent().data().toString();
     const auto changedRow = changedIndex.row();
 
-    auto *const changeCommand = new FakeTagChangedCommand(tagName, parentTag, serverData);
+    auto const changeCommand = new FakeTagChangedCommand(tagName, parentTag, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands(QList<FakeAkonadiServerCommand *>() << changeCommand);
@@ -244,7 +244,7 @@ void TagModelTest::testTagRemoved()
     const auto parentTag = removedIndex.parent().data().toString();
     const auto sourceRow = removedIndex.row();
 
-    auto *const removeCommand = new FakeTagRemovedCommand(removedTag, parentTag, serverData);
+    auto const removeCommand = new FakeTagRemovedCommand(removedTag, parentTag, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({removeCommand});
@@ -300,7 +300,7 @@ void TagModelTest::testTagMoved()
     QModelIndex newParentIndex = firstMatchedIndex(*model, newParent);
     const auto destRow = model->rowCount(newParentIndex);
 
-    auto *const moveCommand = new FakeTagMovedCommand(changedTag, parentTag, newParent, serverData);
+    auto const moveCommand = new FakeTagMovedCommand(changedTag, parentTag, newParent, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({moveCommand});

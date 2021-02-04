@@ -49,7 +49,7 @@ private Q_SLOTS:
         items << Item(3) << Item(4) << Item(6);
 
         // Force-retrieve payload from resource
-        auto *f = new ItemFetchJob(items, this);
+        auto f = new ItemFetchJob(items, this);
         f->fetchScope().fetchFullPayload();
         AKVERIFYEXEC(f);
         const auto itemsLst = f->items();
@@ -69,7 +69,7 @@ private Q_SLOTS:
         QVERIFY(lspy.isValid());
         QVERIFY(uspy.isValid());
 
-        auto *link = new LinkJob(col, items, this);
+        auto link = new LinkJob(col, items, this);
         AKVERIFYEXEC(link);
 
         QTRY_COMPARE(lspy.count(), 3);
@@ -83,14 +83,14 @@ private Q_SLOTS:
 
         lspy.clear();
 
-        auto *fetch = new ItemFetchJob(col);
+        auto fetch = new ItemFetchJob(col);
         AKVERIFYEXEC(fetch);
         QCOMPARE(fetch->items().count(), 3);
         foreach (const Item &item, fetch->items()) {
             QVERIFY(items.contains(item));
         }
 
-        auto *unlink = new UnlinkJob(col, items, this);
+        auto unlink = new UnlinkJob(col, items, this);
         AKVERIFYEXEC(unlink);
 
         QTRY_COMPARE(uspy.count(), 3);

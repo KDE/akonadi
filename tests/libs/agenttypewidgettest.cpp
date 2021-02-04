@@ -23,7 +23,7 @@
 Dialog::Dialog(QWidget *parent)
     : QDialog(parent)
 {
-    auto *layout = new QVBoxLayout(this);
+    auto layout = new QVBoxLayout(this);
 
     mFilter = new QComboBox(this);
     mFilter->addItem(QStringLiteral("None"));
@@ -35,7 +35,7 @@ Dialog::Dialog(QWidget *parent)
     mWidget = new Akonadi::AgentTypeWidget(this);
     connect(mWidget, &Akonadi::AgentTypeWidget::currentChanged, this, &Dialog::currentChanged);
 
-    auto *box = new QDialogButtonBox(this);
+    auto box = new QDialogButtonBox(this);
 
     layout->addWidget(mFilter);
     layout->addWidget(mWidget);

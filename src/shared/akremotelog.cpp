@@ -85,7 +85,7 @@ private Q_SLOTS:
                 SLOT(onAkonadiConsoleLoggingEnabled(bool)));
 
         QTimer::singleShot(0, this, [this]() {
-            auto *watcher = new QDBusPendingCallWatcher(mAkonadiConsoleInterface->asyncCall(QStringLiteral("enabled")));
+            auto watcher = new QDBusPendingCallWatcher(mAkonadiConsoleInterface->asyncCall(QStringLiteral("enabled")));
             connect(watcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *watcher) {
                 watcher->deleteLater();
                 QDBusPendingReply<bool> reply = *watcher;

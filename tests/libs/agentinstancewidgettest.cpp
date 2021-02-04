@@ -18,12 +18,12 @@
 Dialog::Dialog(QWidget *parent)
     : QDialog(parent)
 {
-    auto *layout = new QVBoxLayout(this);
+    auto layout = new QVBoxLayout(this);
 
     mWidget = new Akonadi::AgentInstanceWidget(this);
     connect(mWidget, &Akonadi::AgentInstanceWidget::currentChanged, this, &Dialog::currentChanged);
 
-    auto *box = new QDialogButtonBox(this);
+    auto box = new QDialogButtonBox(this);
 
     layout->addWidget(mWidget);
     layout->addWidget(box);

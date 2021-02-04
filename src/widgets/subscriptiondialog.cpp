@@ -83,7 +83,7 @@ public:
 
     void done()
     {
-        auto *job = new SubscriptionJob(q);
+        auto job = new SubscriptionJob(q);
         job->subscribe(model.subscribed());
         job->unsubscribe(model.unsubscribed());
         connect(job, &SubscriptionJob::result, q, [this](KJob *job) {

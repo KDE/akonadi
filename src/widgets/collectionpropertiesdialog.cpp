@@ -38,12 +38,12 @@ public:
     {
         const int numberOfTab(mTabWidget->count());
         for (int i = 0; i < numberOfTab; ++i) {
-            auto *page = static_cast<CollectionPropertiesPage *>(mTabWidget->widget(i));
+            auto page = static_cast<CollectionPropertiesPage *>(mTabWidget->widget(i));
             page->save(mCollection);
         }
 
         // We use WA_DeleteOnClose => Don't use dialog as parent otherwise we can't save modified collection.
-        auto *job = new CollectionModifyJob(mCollection);
+        auto job = new CollectionModifyJob(mCollection);
         connect(job, &CollectionModifyJob::result, q, [this](KJob *job) {
             saveResult(job);
         });
@@ -119,12 +119,12 @@ void CollectionPropertiesDialog::Private::registerBuiltinPages()
 
 void CollectionPropertiesDialog::Private::init()
 {
-    auto *mainLayout = new QVBoxLayout(q);
+    auto mainLayout = new QVBoxLayout(q);
     q->setAttribute(Qt::WA_DeleteOnClose);
     mTabWidget = new QTabWidget(q);
     mainLayout->addWidget(mTabWidget);
 
-    auto *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, q);
+    auto buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, q);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return); // NOLINT(bugprone-suspicious-enum-usage)

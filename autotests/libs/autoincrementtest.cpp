@@ -67,7 +67,7 @@ void AutoIncrementTest::testItemAutoIncrement()
 
     // Delete the 20 items
     for (const Item &item : qAsConst(itemsToDelete)) {
-        auto *job = new ItemDeleteJob(item);
+        auto job = new ItemDeleteJob(item);
         AKVERIFYEXEC(job);
     }
 
@@ -98,7 +98,7 @@ void AutoIncrementTest::testCollectionAutoIncrement()
 
     // Delete the 20 collections
     for (const Collection &collection : qAsConst(collectionsToDelete)) {
-        auto *job = new CollectionDeleteJob(collection);
+        auto job = new CollectionDeleteJob(collection);
         AKVERIFYEXEC(job);
     }
 

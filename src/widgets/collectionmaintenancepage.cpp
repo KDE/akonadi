@@ -122,7 +122,7 @@ void CollectionMaintenancePage::load(const Collection &col)
             QDBusInterface indexingAgentIface(service, QStringLiteral("/"), QStringLiteral("org.freedesktop.Akonadi.Indexer"));
             if (indexingAgentIface.isValid()) {
                 auto reply = indexingAgentIface.asyncCall(QStringLiteral("indexedItems"), static_cast<qint64>(col.id()));
-                auto *w = new QDBusPendingCallWatcher(reply, this);
+                auto w = new QDBusPendingCallWatcher(reply, this);
                 connect(w, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *w) {
                     QDBusPendingReply<qint64> reply = *w;
                     if (reply.isError()) {

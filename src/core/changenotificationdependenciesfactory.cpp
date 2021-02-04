@@ -22,7 +22,7 @@ Connection *ChangeNotificationDependenciesFactory::createNotificationConnection(
         return nullptr;
     }
 
-    auto *connection = new Connection(Connection::NotificationConnection, session->sessionId(), commandBuffer);
+    auto connection = new Connection(Connection::NotificationConnection, session->sessionId(), commandBuffer);
     addConnection(session, connection);
     return connection;
 }

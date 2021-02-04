@@ -99,7 +99,7 @@ class SubscriptionDialogTest : public QObject
 
         static bool modifySubscription(const Collection::List &subscribe, const Collection::List &unsubscribe)
         {
-            auto *job = new SubscriptionJob();
+            auto job = new SubscriptionJob();
             job->subscribe(subscribe);
             job->unsubscribe(unsubscribe);
             bool ok = false;

@@ -53,7 +53,7 @@ void PreprocessorBasePrivate::itemFetched(KJob *job)
         return;
     }
 
-    auto *fetchJob = qobject_cast<ItemFetchJob *>(job);
+    auto fetchJob = qobject_cast<ItemFetchJob *>(job);
 
     if (fetchJob->items().isEmpty()) {
         Q_EMIT itemProcessed(PreprocessorBase::ProcessingFailed);

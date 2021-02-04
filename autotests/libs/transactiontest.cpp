@@ -43,44 +43,44 @@ void TransactionTest::testTransaction()
     testCollection.setParentCollection(basisCollection);
     testCollection.setName(QStringLiteral("transactionTest"));
     testCollection.setRemoteId(QStringLiteral("transactionTestRemoteId"));
-    auto *job = new CollectionCreateJob(testCollection, Session::defaultSession());
+    auto job = new CollectionCreateJob(testCollection, Session::defaultSession());
 
     AKVERIFYEXEC(job);
 
     testCollection = job->collection();
 
-    auto *beginTransaction1 = new TransactionBeginJob(Session::defaultSession());
+    auto beginTransaction1 = new TransactionBeginJob(Session::defaultSession());
     AKVERIFYEXEC(beginTransaction1);
 
-    auto *beginTransaction2 = new TransactionBeginJob(Session::defaultSession());
+    auto beginTransaction2 = new TransactionBeginJob(Session::defaultSession());
     AKVERIFYEXEC(beginTransaction2);
 
-    auto *commitTransaction2 = new TransactionCommitJob(Session::defaultSession());
+    auto commitTransaction2 = new TransactionCommitJob(Session::defaultSession());
     AKVERIFYEXEC(commitTransaction2);
 
-    auto *commitTransaction1 = new TransactionCommitJob(Session::defaultSession());
+    auto commitTransaction1 = new TransactionCommitJob(Session::defaultSession());
     AKVERIFYEXEC(commitTransaction1);
 
-    auto *commitTransactionX = new TransactionCommitJob(Session::defaultSession());
+    auto commitTransactionX = new TransactionCommitJob(Session::defaultSession());
     QVERIFY(commitTransactionX->exec() == false);
 
-    auto *beginTransaction3 = new TransactionBeginJob(Session::defaultSession());
+    auto beginTransaction3 = new TransactionBeginJob(Session::defaultSession());
     AKVERIFYEXEC(beginTransaction3);
 
     Item item;
     item.setMimeType(QStringLiteral("application/octet-stream"));
     item.setPayload<QByteArray>("body data");
-    auto *appendJob = new ItemCreateJob(item, testCollection, Session::defaultSession());
+    auto appendJob = new ItemCreateJob(item, testCollection, Session::defaultSession());
     AKVERIFYEXEC(appendJob);
 
-    auto *rollbackTransaction3 = new TransactionRollbackJob(Session::defaultSession());
+    auto rollbackTransaction3 = new TransactionRollbackJob(Session::defaultSession());
     AKVERIFYEXEC(rollbackTransaction3);
 
-    auto *fetchJob = new ItemFetchJob(testCollection, Session::defaultSession());
+    auto fetchJob = new ItemFetchJob(testCollection, Session::defaultSession());
     AKVERIFYEXEC(fetchJob);
 
     QVERIFY(fetchJob->items().isEmpty());
 
-    auto *deleteJob = new CollectionDeleteJob(testCollection, Session::defaultSession());
+    auto deleteJob = new CollectionDeleteJob(testCollection, Session::defaultSession());
     AKVERIFYEXEC(deleteJob);
 }

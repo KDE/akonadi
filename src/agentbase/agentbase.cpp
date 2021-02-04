@@ -917,7 +917,7 @@ QString AgentBase::parseArguments(int argc, char **argv)
     // strip off full path and possible .exe suffix
     const QString catalog = fi.baseName();
 
-    auto *translator = new QTranslator();
+    auto translator = new QTranslator();
     translator->load(catalog);
     QCoreApplication::installTranslator(translator);
 

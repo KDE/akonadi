@@ -47,7 +47,7 @@ void InvalidateCacheJobPrivate::collectionFetchResult(KJob *job)
         return; // handled by KCompositeJob
     }
 
-    auto *fetchJob = qobject_cast<CollectionFetchJob *>(job);
+    auto fetchJob = qobject_cast<CollectionFetchJob *>(job);
     Q_ASSERT(fetchJob);
     if (fetchJob->collections().size() == 1) {
         collection = fetchJob->collections().at(0);
@@ -60,7 +60,7 @@ void InvalidateCacheJobPrivate::collectionFetchResult(KJob *job)
         return;
     }
 
-    auto *itemFetch = new ItemFetchJob(collection, q);
+    auto itemFetch = new ItemFetchJob(collection, q);
     QObject::connect(itemFetch, &ItemFetchJob::result, q, [this](KJob *job) {
         itemFetchResult(job);
     });
@@ -72,7 +72,7 @@ void InvalidateCacheJobPrivate::itemFetchResult(KJob *job)
     if (job->error()) {
         return;
     }
-    auto *fetchJob = qobject_cast<ItemFetchJob *>(job);
+    auto fetchJob = qobject_cast<ItemFetchJob *>(job);
     Q_ASSERT(fetchJob);
     if (fetchJob->items().isEmpty()) {
         q->emitResult();
@@ -110,7 +110,7 @@ void InvalidateCacheJob::doStart()
 {
     Q_D(InvalidateCacheJob);
     // resolve RID-only collections
-    auto *job = new CollectionFetchJob(d->collection, Akonadi::CollectionFetchJob::Base, this);
+    auto job = new CollectionFetchJob(d->collection, Akonadi::CollectionFetchJob::Base, this);
     connect(job, &KJob::result, this, [d](KJob *job) {
         d->collectionFetchResult(job);
     });

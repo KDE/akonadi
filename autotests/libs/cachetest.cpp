@@ -44,7 +44,7 @@ private Q_SLOTS:
 
         enableAgent(QStringLiteral("akonadi_knut_resource_0"), false);
 
-        auto *fetch = new ItemFetchJob(col, this);
+        auto fetch = new ItemFetchJob(col, this);
         fetch->fetchScope().fetchFullPayload(true);
         QVERIFY(!fetch->exec());
     }
@@ -63,7 +63,7 @@ private Q_SLOTS:
         QFETCH(Item, item);
         QFETCH(bool, resourceEnabled);
 
-        auto *fetch = new ItemFetchJob(item, this);
+        auto fetch = new ItemFetchJob(item, this);
         fetch->fetchScope().fetchFullPayload();
         fetch->fetchScope().setCacheOnly(true);
         AKVERIFYEXEC(fetch);
@@ -109,7 +109,7 @@ private Q_SLOTS:
         QFETCH(Item, item);
         QFETCH(bool, resourceEnabled);
 
-        auto *fetch = new ItemFetchJob(item, this);
+        auto fetch = new ItemFetchJob(item, this);
         fetch->fetchScope().fetchFullPayload();
         fetch->fetchScope().setCacheOnly(true);
         AKVERIFYEXEC(fetch);
@@ -123,7 +123,7 @@ private Q_SLOTS:
         Collection dest(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
         QVERIFY(dest.isValid());
 
-        auto *copy = new ItemCopyJob(item, dest, this);
+        auto copy = new ItemCopyJob(item, dest, this);
         QCOMPARE(copy->exec(), resourceEnabled);
 
         fetch = new ItemFetchJob(item, this);

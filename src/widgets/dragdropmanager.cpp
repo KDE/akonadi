@@ -275,7 +275,7 @@ void DragDropManager::startDrag(Qt::DropActions supportedActions)
         return;
     }
 
-    auto *drag = new QDrag(m_view);
+    auto drag = new QDrag(m_view);
     drag->setMimeData(mimeData);
     if (indexes.size() > 1) {
         drag->setPixmap(QIcon::fromTheme(QStringLiteral("document-multiple")).pixmap(QSize(22, 22)));

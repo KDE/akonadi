@@ -87,10 +87,10 @@ bool waitForPopulation(const QModelIndex &idx, EntityTreeModel *model, int count
 
 InspectableETM *FavoriteProxyTest::createETM()
 {
-    auto *changeRecorder = new ChangeRecorder(this);
+    auto changeRecorder = new ChangeRecorder(this);
     changeRecorder->setCollectionMonitored(Collection::root());
     AkonadiTest::akWaitForSignal(changeRecorder, &Monitor::monitorReady);
-    auto *model = new InspectableETM(changeRecorder, this);
+    auto model = new InspectableETM(changeRecorder, this);
     model->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
     return model;
 }
@@ -106,7 +106,7 @@ void FavoriteProxyTest::testItemAdded()
 
     KConfigGroup configGroup(KSharedConfig::openConfig(), "favoritecollectionsmodeltest");
 
-    auto *favoriteModel = new FavoriteCollectionsModel(model, configGroup, this);
+    auto favoriteModel = new FavoriteCollectionsModel(model, configGroup, this);
 
     const int numberOfRootCollections = 4;
     // Wait for initial listing to complete
@@ -173,7 +173,7 @@ void FavoriteProxyTest::testLoadConfig()
     configGroup.writeEntry("FavoriteCollectionIds", QList<Akonadi::Collection::Id>() << favoriteCollection.id());
     configGroup.writeEntry("FavoriteCollectionLabels", QStringList() << QStringLiteral("label1"));
 
-    auto *favoriteModel = new FavoriteCollectionsModel(model, configGroup, this);
+    auto favoriteModel = new FavoriteCollectionsModel(model, configGroup, this);
 
     {
         QTRY_COMPARE(favoriteModel->rowCount(QModelIndex()), 1);
@@ -211,7 +211,7 @@ void FavoriteProxyTest::testInsertAfterModelCreation()
 
     KConfigGroup configGroup(KSharedConfig::openConfig(), "favoritecollectionsmodeltest2");
 
-    auto *favoriteModel = new FavoriteCollectionsModel(&filter, configGroup, this);
+    auto favoriteModel = new FavoriteCollectionsModel(&filter, configGroup, this);
 
     // Make sure the filter is not letting anything through
     QTest::qWait(0);

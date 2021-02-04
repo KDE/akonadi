@@ -88,7 +88,7 @@ void AccountsIntegration::requestAuthData(const QString &serviceType, AuthDataCa
         return;
     }
 
-    auto *job = new GetCredentialsJob(mAccountId.value(), this);
+    auto job = new GetCredentialsJob(mAccountId.value(), this);
     job->setServiceType(serviceType);
     connect(job, &GetCredentialsJob::result, this, [job, callback = std::move(callback), error = std::move(errCallback)]() {
         if (job->error()) {

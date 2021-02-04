@@ -118,7 +118,7 @@ void ResourceScanJob::Private::fetchResult(KJob *job)
         return;
     }
 
-    auto *fetchJob = qobject_cast<CollectionFetchJob *>(job);
+    auto fetchJob = qobject_cast<CollectionFetchJob *>(job);
     Q_ASSERT(fetchJob);
 
     Q_ASSERT(!mRootCollection.isValid());
@@ -286,7 +286,7 @@ void DefaultResourceJobPrivate::tryFetchResource()
         mResourceWasPreexisting = false;
         qCDebug(AKONADICORE_LOG) << "Creating maildir resource.";
         const AgentType type = AgentManager::self()->type(mDefaultResourceType);
-        auto *job = new AgentInstanceCreateJob(type, q);
+        auto job = new AgentInstanceCreateJob(type, q);
         QObject::connect(job, &AgentInstanceCreateJob::result, q, [this](KJob *job) {
             resourceCreateResult(job);
         });
@@ -309,7 +309,7 @@ void DefaultResourceJobPrivate::resourceCreateResult(KJob *job)
 
     // Get the resource instance.
     {
-        auto *createJob = qobject_cast<AgentInstanceCreateJob *>(job);
+        auto createJob = qobject_cast<AgentInstanceCreateJob *>(job);
         Q_ASSERT(createJob);
         agent = createJob->instance();
         setDefaultResourceId(mSettings, agent.identifier());
@@ -364,7 +364,7 @@ void DefaultResourceJobPrivate::resourceCreateResult(KJob *job)
 
     // Sync the resource.
     {
-        auto *syncJob = new ResourceSynchronizationJob(agent, q);
+        auto syncJob = new ResourceSynchronizationJob(agent, q);
         QObject::connect(syncJob, &ResourceSynchronizationJob::result, q, [this](KJob *job) {
             resourceSyncResult(job);
         });
@@ -397,7 +397,7 @@ void DefaultResourceJobPrivate::collectionFetchResult(KJob *job)
         return;
     }
 
-    auto *fetchJob = qobject_cast<CollectionFetchJob *>(job);
+    auto fetchJob = qobject_cast<CollectionFetchJob *>(job);
     Q_ASSERT(fetchJob);
 
     const Collection::List collections = fetchJob->collections();
@@ -450,7 +450,7 @@ void DefaultResourceJobPrivate::collectionFetchResult(KJob *job)
             qCDebug(AKONADICORE_LOG) << "Recovering collection" << name;
             setCollectionAttributes(collection, type, mNameForTypeMap, mIconForTypeMap);
 
-            auto *modifyJob = new CollectionModifyJob(collection, q);
+            auto modifyJob = new CollectionModifyJob(collection, q);
             QObject::connect(modifyJob, &CollectionModifyJob::result, q, [this](KJob *job) {
                 collectionModifyResult(job);
             });
@@ -581,7 +581,7 @@ void GetLockJob::Private::doStart()
         // qCDebug(AKONADICORE_LOG) << "Got lock immediately.";
         q->emitResult();
     } else {
-        auto *watcher = new QDBusServiceWatcher(dbusServiceName(), QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForUnregistration, q);
+        auto watcher = new QDBusServiceWatcher(dbusServiceName(), QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForUnregistration, q);
         connect(watcher, &QDBusServiceWatcher::serviceUnregistered, q, [this]() {
             if (QDBusConnection::sessionBus().registerService(dbusServiceName())) {
                 mSafetyTimer->stop();
@@ -631,7 +631,7 @@ void Akonadi::setCollectionAttributes(Akonadi::Collection &collection,
                                       const QMap<QByteArray, QString> &iconForType)
 {
     {
-        auto *attr = new EntityDisplayAttribute;
+        auto attr = new EntityDisplayAttribute;
         attr->setIconName(iconForType.value(type));
         attr->setDisplayName(nameForType.value(type));
         collection.addAttribute(attr);

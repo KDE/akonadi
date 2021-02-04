@@ -42,13 +42,13 @@ public:
         : mParent(parent)
     {
         // setup GUI
-        auto *layout = new QVBoxLayout(mParent);
+        auto layout = new QVBoxLayout(mParent);
 
         mTextLabel = new QLabel(mParent);
         layout->addWidget(mTextLabel);
         mTextLabel->hide();
 
-        auto *filterCollectionLineEdit = new QLineEdit(mParent);
+        auto filterCollectionLineEdit = new QLineEdit(mParent);
         filterCollectionLineEdit->setClearButtonEnabled(true);
         filterCollectionLineEdit->setPlaceholderText(
             i18nc("@info Displayed grayed-out inside the "
@@ -82,7 +82,7 @@ public:
             mMonitor->fetchCollection(true);
             mMonitor->setCollectionMonitored(Akonadi::Collection::root());
 
-            auto *model = new EntityTreeModel(mMonitor, mParent);
+            auto model = new EntityTreeModel(mMonitor, mParent);
             model->setItemPopulationStrategy(EntityTreeModel::NoItemPopulation);
             model->setListFilter(CollectionFetchScope::Display);
             baseModel = model;
@@ -270,7 +270,7 @@ void CollectionDialog::Private::slotAddChildCollection()
         if (!mContentMimeTypes.isEmpty()) {
             collection.setContentMimeTypes(mContentMimeTypes);
         }
-        auto *job = new Akonadi::CollectionCreateJob(collection);
+        auto job = new Akonadi::CollectionCreateJob(collection);
         connect(job, &Akonadi::CollectionCreateJob::result, mParent, [this](KJob *job) {
             slotCollectionCreationResult(job);
         });

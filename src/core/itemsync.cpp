@@ -112,7 +112,7 @@ void ItemSyncPrivate::createOrMerge(const Item &item)
         return;
     }
     mPendingJobs++;
-    auto *create = new ItemCreateJob(item, mSyncCollection, subjobParent());
+    auto create = new ItemCreateJob(item, mSyncCollection, subjobParent());
     ItemCreateJob::MergeOptions merge = ItemCreateJob::Silent;
     if (mMergeMode == ItemSync::GIDMerge && !item.gid().isEmpty()) {
         merge |= ItemCreateJob::GID;
@@ -285,7 +285,7 @@ void ItemSyncPrivate::fetchLocalItemsToDelete()
         qFatal("This must not be called while in incremental mode");
         return;
     }
-    auto *job = new ItemFetchJob(mSyncCollection, subjobParent());
+    auto job = new ItemFetchJob(mSyncCollection, subjobParent());
     job->fetchScope().setFetchRemoteIdentification(true);
     job->fetchScope().setFetchModificationTime(false);
     job->setDeliveryOption(ItemFetchJob::EmitItemsIndividually);
@@ -419,7 +419,7 @@ void ItemSyncPrivate::deleteItems(const Item::List &itemsToDelete)
     }
 
     mPendingJobs++;
-    auto *job = new ItemDeleteJob(itemsToDelete, subjobParent());
+    auto job = new ItemDeleteJob(itemsToDelete, subjobParent());
     q->connect(job, &ItemDeleteJob::result, q, [this](KJob *job) {
         slotLocalDeleteDone(job);
     });
@@ -428,7 +428,7 @@ void ItemSyncPrivate::deleteItems(const Item::List &itemsToDelete)
     // twice, in this case this item delete job will fail on the second try.
     // To avoid a rollback of the complete transaction we gracefully allow the job
     // to fail :)
-    auto *transaction = qobject_cast<TransactionSequence *>(subjobParent());
+    auto transaction = qobject_cast<TransactionSequence *>(subjobParent());
     if (transaction) {
         transaction->setIgnoreJobFailure(job);
     }

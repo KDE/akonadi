@@ -99,7 +99,7 @@ void SpecialCollectionsRequestJobPrivate::lockResult(KJob *job)
 
     if (mRequestingDefaultFolders) {
         // If default folders are requested, deal with that first.
-        auto *resjob = new DefaultResourceJob(mSpecialCollections->d->mSettings, q);
+        auto resjob = new DefaultResourceJob(mSpecialCollections->d->mSettings, q);
         resjob->setDefaultResourceType(mDefaultResourceType);
         resjob->setDefaultResourceOptions(mDefaultResourceOptions);
         resjob->setTypes(mKnownTypes);
@@ -155,7 +155,7 @@ void SpecialCollectionsRequestJobPrivate::nextResource()
     } else {
         const QString resourceId = mFoldersForResource.cbegin().key();
         qCDebug(AKONADICORE_LOG) << "A resource is done," << mFoldersForResource.count() << "more to do. Now doing resource" << resourceId;
-        auto *resjob = new ResourceScanJob(resourceId, mSpecialCollections->d->mSettings, q);
+        auto resjob = new ResourceScanJob(resourceId, mSpecialCollections->d->mSettings, q);
         QObject::connect(resjob, &KJob::result, q, [this](KJob *job) {
             resourceScanResult(job);
         });
@@ -164,7 +164,7 @@ void SpecialCollectionsRequestJobPrivate::nextResource()
 
 void SpecialCollectionsRequestJobPrivate::resourceScanResult(KJob *job)
 {
-    auto *resjob = qobject_cast<ResourceScanJob *>(job);
+    auto resjob = qobject_cast<ResourceScanJob *>(job);
     Q_ASSERT(resjob);
 
     const QString resourceId = resjob->resourceId();
@@ -222,7 +222,7 @@ void SpecialCollectionsRequestJobPrivate::createRequestedFolders(ResourceScanJob
 
             setCollectionAttributes(collection, it.key(), mNameForTypeMap, mIconForTypeMap);
 
-            auto *createJob = new CollectionCreateJob(collection, q);
+            auto createJob = new CollectionCreateJob(collection, q);
             createJob->setProperty("type", it.key());
             QObject::connect(createJob, &KJob::result, q, [this](KJob *job) {
                 collectionCreateResult(job);
@@ -244,7 +244,7 @@ void SpecialCollectionsRequestJobPrivate::collectionCreateResult(KJob *job)
         return;
     }
 
-    auto *createJob = qobject_cast<CollectionCreateJob *>(job);
+    auto createJob = qobject_cast<CollectionCreateJob *>(job);
     Q_ASSERT(createJob);
 
     const Collection collection = createJob->collection();
@@ -325,7 +325,7 @@ void SpecialCollectionsRequestJob::doStart()
     if (d->isEverythingReady()) {
         emitResult();
     } else {
-        auto *lockJob = new GetLockJob(this);
+        auto lockJob = new GetLockJob(this);
         connect(lockJob, &GetLockJob::result, this, [this](KJob *job) {
             d->lockResult(job);
         });

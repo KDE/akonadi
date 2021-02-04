@@ -58,7 +58,7 @@ QByteArray Akonadi::TagAttribute::type() const
 
 TagAttribute *TagAttribute::clone() const
 {
-    auto *attr = new TagAttribute();
+    auto attr = new TagAttribute();
     attr->d->name = d->name;
     attr->d->icon = d->icon;
     attr->d->backgroundColor = d->backgroundColor;

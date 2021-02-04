@@ -16,7 +16,7 @@ AkThread::AkThread(const QString &objectName, StartMode startMode, QThread::Prio
 {
     setObjectName(objectName);
     if (startMode != NoThread) {
-        auto *thread = new QThread();
+        auto thread = new QThread();
         thread->setObjectName(objectName + QStringLiteral("-Thread"));
         moveToThread(thread);
         thread->start(priority);

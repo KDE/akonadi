@@ -36,7 +36,7 @@ private Q_SLOTS:
         lst << QStringLiteral("Resource");
         QCOMPARE(type.capabilities(), lst);
 
-        auto *job = new AgentInstanceCreateJob(type);
+        auto job = new AgentInstanceCreateJob(type);
         AKVERIFYEXEC(job);
 
         AgentInstance instance = job->instance();

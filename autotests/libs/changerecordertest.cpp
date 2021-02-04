@@ -110,7 +110,7 @@ private:
         Item item(uid);
         auto *attr = item.attribute<TestAttribute>(Item::AddIfMissing);
         attr->data = QByteArray::number(++s_num);
-        auto *job = new ItemModifyJob(item);
+        auto job = new ItemModifyJob(item);
         job->disableRevisionCheck();
         AKVERIFYEXEC(job);
     }
@@ -118,7 +118,7 @@ private:
     void triggerDelete(Akonadi::Item::Id uid)
     {
         Item item(uid);
-        auto *job = new ItemDeleteJob(item);
+        auto job = new ItemDeleteJob(item);
         AKVERIFYEXEC(job);
     }
 
@@ -164,7 +164,7 @@ private:
         rec->itemFetchScope().setCacheOnly(true);
 
         // Ensure we listen to a signal, otherwise MonitorPrivate::isLazilyIgnored will ignore notifications
-        auto *spy = new QSignalSpy(rec.get(), &Monitor::itemChanged);
+        auto spy = new QSignalSpy(rec.get(), &Monitor::itemChanged);
         spy->setParent(rec.get());
 
         QSignalSpy readySpy(rec.get(), &Monitor::monitorReady);
