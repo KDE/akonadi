@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 # ECM setup
-set(KF5_MIN_VERSION "5.78.0")
+set(KF5_MIN_VERSION "5.79.0")
 
 find_package(ECM ${KF5_MIN_VERSION} CONFIG REQUIRED)
 
@@ -24,9 +24,7 @@ include(ECMGeneratePriFile)
 
 include(ECMSetupVersion)
 include(FeatureSummary)
-if(ECM_VERSION VERSION_GREATER_EQUAL 5.79)
-   include(KDEGitCommitHooks)
-endif()
+include(KDEGitCommitHooks)
 include(CheckAtomic)
 include(CheckIncludeFiles)
 include(ECMQtDeclareLoggingCategory)
@@ -322,6 +320,8 @@ add_definitions(-DKF_DISABLE_DEPRECATED_BEFORE_AND_AT=0x054F00)
 #add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050f00)
 add_definitions(-DQT_NO_EMIT)
 remove_definitions(-DQT_NO_FOREACH)
+remove_definitions(-DQT_NO_KEYWORDS)
+add_definitions(-DQT_NO_SIGNALS_SLOTS_KEYWORDS)
 
 add_subdirectory(src)
 add_subdirectory(icons)
@@ -388,7 +388,5 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5} COMPONENT Devel
 )
 
-if(ECM_VERSION VERSION_GREATER_EQUAL 5.79)
-    kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
-endif()
+kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
