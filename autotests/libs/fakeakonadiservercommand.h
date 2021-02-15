@@ -26,7 +26,7 @@ public:
 
     FakeAkonadiServerCommand(Type type, FakeServerData *serverData);
 
-    virtual ~FakeAkonadiServerCommand() = default;
+    ~FakeAkonadiServerCommand() override = default;
 
     Type respondTo() const
     {

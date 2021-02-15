@@ -14,7 +14,7 @@ class ConflictResolveDialogTest : public QObject
     Q_OBJECT
 public:
     explicit ConflictResolveDialogTest(QObject *parent = nullptr);
-    ~ConflictResolveDialogTest() = default;
+    ~ConflictResolveDialogTest() override = default;
 
 private Q_SLOTS:
     void shouldHaveDefaultValues();
