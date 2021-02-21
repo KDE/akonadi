@@ -187,9 +187,7 @@ public:
             }
             mItemSyncer->setDisableAutomaticDeliveryDone(mDisableAutomaticItemDeliveryDone);
             mItemSyncer->setProperty("collection", QVariant::fromValue(q->currentCollection()));
-            connect(mItemSyncer,
-                    qOverload<KJob *, unsigned long>(&KJob::percent),
-                    this,
+            connect(mItemSyncer, &KJob::percentChanged, this,
                     &ResourceBasePrivate::slotPercent); // NOLINT(google-runtime-int): ulong comes from KJob
             connect(mItemSyncer, &KJob::result, this, &ResourceBasePrivate::slotItemSyncDone);
             connect(mItemSyncer, &ItemSync::readyForNextBatch, q, &ResourceBase::retrieveNextItemSyncBatch);
@@ -760,9 +758,7 @@ void ResourceBase::collectionsRetrieved(const Collection::List &collections)
         d->mCollectionSyncer = new CollectionSync(identifier());
         d->mCollectionSyncer->setHierarchicalRemoteIds(d->mHierarchicalRid);
         d->mCollectionSyncer->setKeepLocalChanges(d->mKeepLocalCollectionChanges);
-        connect(d->mCollectionSyncer,
-                qOverload<KJob *, unsigned long>(&KJob::percent),
-                d,
+        connect(d->mCollectionSyncer, &KJob::percentChanged, d,
                 &ResourceBasePrivate::slotPercent); // NOLINT(google-runtime-int): ulong comes from KJob
         connect(d->mCollectionSyncer, &KJob::result, d, &ResourceBasePrivate::slotCollectionSyncDone);
     }
@@ -779,9 +775,7 @@ void ResourceBase::collectionsRetrievedIncremental(const Collection::List &chang
         d->mCollectionSyncer = new CollectionSync(identifier());
         d->mCollectionSyncer->setHierarchicalRemoteIds(d->mHierarchicalRid);
         d->mCollectionSyncer->setKeepLocalChanges(d->mKeepLocalCollectionChanges);
-        connect(d->mCollectionSyncer,
-                qOverload<KJob *, unsigned long>(&KJob::percent),
-                d,
+        connect(d->mCollectionSyncer, &KJob::percentChanged, d,
                 &ResourceBasePrivate::slotPercent); // NOLINT(google-runtime-int): ulong comes from KJob
         connect(d->mCollectionSyncer, &KJob::result, d, &ResourceBasePrivate::slotCollectionSyncDone);
     }
@@ -797,9 +791,7 @@ void ResourceBase::setCollectionStreamingEnabled(bool enable)
     if (!d->mCollectionSyncer) {
         d->mCollectionSyncer = new CollectionSync(identifier());
         d->mCollectionSyncer->setHierarchicalRemoteIds(d->mHierarchicalRid);
-        connect(d->mCollectionSyncer,
-                qOverload<KJob *, unsigned long>(&KJob::percent),
-                d,
+        connect(d->mCollectionSyncer, &KJob::percentChanged, d,
                 &ResourceBasePrivate::slotPercent); // NOLINT(google-runtime-int): ulong comes from KJob
         connect(d->mCollectionSyncer, &KJob::result, d, &ResourceBasePrivate::slotCollectionSyncDone);
     }
@@ -1551,9 +1543,7 @@ void ResourceBase::tagsRetrieved(const Tag::List &tags, const QHash<QString, Ite
                "Calling tagsRetrieved() although no tag retrieval is in progress");
     if (!d->mTagSyncer) {
         d->mTagSyncer = new TagSync(this);
-        connect(d->mTagSyncer,
-                qOverload<KJob *, unsigned long>(&KJob::percent),
-                d,
+        connect(d->mTagSyncer, &KJob::percentChanged, d,
                 &ResourceBasePrivate::slotPercent); // NOLINT(google-runtime-int): ulong comes from KJob
         connect(d->mTagSyncer, &KJob::result, d, &ResourceBasePrivate::slotTagSyncDone);
     }
@@ -1584,9 +1574,7 @@ void ResourceBase::relationsRetrieved(const Relation::List &relations)
                "Calling relationsRetrieved() although no relation retrieval is in progress");
     if (!d->mRelationSyncer) {
         d->mRelationSyncer = new RelationSync(this);
-        connect(d->mRelationSyncer,
-                qOverload<KJob *, unsigned long>(&KJob::percent),
-                d,
+        connect(d->mRelationSyncer, &KJob::percentChanged, d,
                 &ResourceBasePrivate::slotPercent); // NOLINT(google-runtime-int): ulong comes from KJob
         connect(d->mRelationSyncer, &KJob::result, d, &ResourceBasePrivate::slotRelationSyncDone);
     }
