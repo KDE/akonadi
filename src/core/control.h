@@ -87,10 +87,10 @@ protected:
     Control();
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class Private;
     Private *const d;
-    //@endcond
+    /// @endcond
 };
 
 }

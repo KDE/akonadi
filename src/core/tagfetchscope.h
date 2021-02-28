@@ -113,9 +113,9 @@ public:
 
 private:
     struct Private;
-    //@cond PRIVATE
+    /// @cond PRIVATE
     QSharedPointer<Private> d;
-    //@endcond
+    /// @endcond
 };
 
 }

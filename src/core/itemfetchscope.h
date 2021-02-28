@@ -412,9 +412,9 @@ public:
     Q_REQUIRED_RESULT bool fetchRelations() const;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     QSharedDataPointer<ItemFetchScopePrivate> d;
-    //@endcond
+    /// @endcond
 };
 
 }

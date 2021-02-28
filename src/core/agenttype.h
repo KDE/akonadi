@@ -125,10 +125,10 @@ public:
     bool operator==(const AgentType &other) const;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class Private;
     QSharedDataPointer<Private> d;
-    //@endcond
+    /// @endcond
 };
 
 }

@@ -116,10 +116,10 @@ Q_SIGNALS:
     void clicked(const Akonadi::AgentInstance &current);
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class Private;
     Private *const d;
-    //@endcond
+    /// @endcond
 };
 
 }

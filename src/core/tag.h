@@ -188,13 +188,13 @@ private:
     bool checkAttribute(const Attribute *attr, const QByteArray &type) const;
     void markAttributeModified(const QByteArray &type);
 
-    //@cond PRIVATE
+    /// @cond PRIVATE
     friend class TagModifyJob;
     friend class TagFetchJob;
     friend class ProtocolHelper;
 
     QSharedDataPointer<TagPrivate> d_ptr;
-    //@endcond
+    /// @endcond
 };
 
 AKONADICORE_EXPORT uint qHash(const Akonadi::Tag &);

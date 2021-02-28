@@ -104,7 +104,7 @@ protected:
     void slotResult(KJob *job) override;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     friend class SpecialCollectionsRequestJobPrivate;
     friend class DefaultResourceJobPrivate;
 
@@ -113,7 +113,7 @@ private:
     Q_PRIVATE_SLOT(d, void releaseLock())
     Q_PRIVATE_SLOT(d, void resourceScanResult(KJob *))
     Q_PRIVATE_SLOT(d, void collectionCreateResult(KJob *))
-    //@endcond
+    /// @endcond
 };
 
 } // namespace Akonadi

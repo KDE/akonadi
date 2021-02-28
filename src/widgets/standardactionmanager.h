@@ -362,7 +362,7 @@ Q_SIGNALS:
     void actionStateUpdated();
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class Private;
     Private *const d;
 
@@ -414,7 +414,7 @@ private:
     Q_PRIVATE_SLOT(d, void updatePluralLabel(int, int))
     Q_PRIVATE_SLOT(d, void updateAlternatingAction(int))
     Q_PRIVATE_SLOT(d, bool isFavoriteCollection(const Akonadi::Collection &))
-    //@endcond
+    /// @endcond
 };
 
 }

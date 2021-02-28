@@ -69,10 +69,10 @@ public:
     Q_REQUIRED_RESULT Qt::ItemFlags flags(const QModelIndex &index) const override;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class Private;
     Private *const d;
-    //@endcond
+    /// @endcond
 };
 
 }

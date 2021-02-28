@@ -96,11 +96,11 @@ public:
     Item item() const;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     Q_DECLARE_PRIVATE(Akonadi::PartFetcher)
     PartFetcherPrivate *const d_ptr;
 
-    //@endcond
+    /// @endcond
 };
 
 }

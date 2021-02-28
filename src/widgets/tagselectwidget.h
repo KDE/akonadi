@@ -40,9 +40,10 @@ public:
     void setSelectionFromStringList(const QStringList &lst);
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class Private;
     QScopedPointer<Private> const d;
+    /// @endcond
 };
 }
 

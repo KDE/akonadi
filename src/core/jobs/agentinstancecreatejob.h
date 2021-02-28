@@ -99,10 +99,10 @@ public:
     void start() override;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     friend class Akonadi::AgentInstanceCreateJobPrivate;
     AgentInstanceCreateJobPrivate *const d;
-    //@endcond
+    /// @endcond
 };
 
 }

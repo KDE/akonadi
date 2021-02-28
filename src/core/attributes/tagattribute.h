@@ -84,10 +84,10 @@ public:
 private:
     TagAttribute(const TagAttribute &other);
     TagAttribute &operator=(const TagAttribute &other);
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class Private;
     const std::unique_ptr<Private> d;
-    //@endcond
+    /// @endcond
 };
 
 } // namespace Akonadi

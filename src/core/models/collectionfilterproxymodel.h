@@ -99,10 +99,10 @@ protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class Private;
     Private *const d;
-    //@endcond
+    /// @endcond
 };
 
 }

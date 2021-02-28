@@ -73,10 +73,10 @@ public Q_SLOTS:
     void done(int result) override;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class Private;
     Private *const d;
-    //@endcond
+    /// @endcond
 };
 
 }

@@ -17,7 +17,7 @@
 
 using namespace Akonadi;
 
-//@cond PRIVATE
+/// @cond PRIVATE
 
 CollectionGeneralPropertiesPage::CollectionGeneralPropertiesPage(QWidget *parent)
     : CollectionPropertiesPage(parent)
@@ -73,6 +73,6 @@ void CollectionGeneralPropertiesPage::save(Collection &collection)
     }
 }
 
-//@endcond
+/// @endcond
 
 #include "moc_collectiongeneralpropertiespage_p.cpp"

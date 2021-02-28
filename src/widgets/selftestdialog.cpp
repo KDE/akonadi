@@ -36,7 +36,7 @@
 #include <QTextStream>
 #include <QVBoxLayout>
 
-// @cond PRIVATE
+/// @cond PRIVATE
 
 using namespace Akonadi;
 
@@ -660,4 +660,4 @@ void SelfTestDialog::linkActivated(const QString &link)
     QDesktopServices::openUrl(QUrl::fromLocalFile(link));
 }
 
-// @endcond
+/// @endcond

@@ -91,10 +91,10 @@ protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     Q_DECLARE_PRIVATE(EntityRightsFilterModel)
     EntityRightsFilterModelPrivate *const d_ptr;
-    //@endcond
+    /// @endcond
 };
 
 }

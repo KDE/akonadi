@@ -38,9 +38,9 @@ namespace Akonadi
 class AKONADICORE_EXPORT AttributeFactory
 {
 public:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     ~AttributeFactory();
-    //@endcond
+    /// @endcond
 
     /**
      * Registers a custom attribute of type T.
@@ -61,7 +61,7 @@ public:
     static Attribute *createAttribute(const QByteArray &type);
 
 protected:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     explicit AttributeFactory();
 
 private:
@@ -71,7 +71,7 @@ private:
 
     class Private;
     const std::unique_ptr<Private> d;
-    //@endcond
+    /// @endcond
 };
 
 } // namespace Akonadi

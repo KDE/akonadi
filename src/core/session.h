@@ -114,14 +114,14 @@ protected:
     explicit Session(SessionPrivate *d, const QByteArray &sessionId = QByteArray(), QObject *parent = nullptr);
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     SessionPrivate *const d;
     friend class ::FakeSession;
     friend class ::FakeNotificationConnection;
     friend class ChangeNotificationDependenciesFactory;
 
     Q_PRIVATE_SLOT(d, bool handleCommands())
-    //@endcond PRIVATE
+    /// @endcond
 };
 
 }

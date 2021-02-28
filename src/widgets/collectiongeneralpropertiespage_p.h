@@ -12,7 +12,7 @@
 
 namespace Akonadi
 {
-//@cond PRIVATE
+/// @cond PRIVATE
 
 /**
  * @internal
@@ -31,7 +31,7 @@ private:
 };
 
 AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CollectionGeneralPropertiesPageFactory, CollectionGeneralPropertiesPage)
-//@endcond
+/// @endcond
 
 }
 

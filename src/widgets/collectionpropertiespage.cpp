@@ -8,7 +8,7 @@
 
 using namespace Akonadi;
 
-//@cond PRIVATE
+/// @cond PRIVATE
 
 /**
  * @internal
@@ -19,7 +19,7 @@ public:
     QString title;
 };
 
-//@endcond
+/// @endcond
 
 CollectionPropertiesPage::CollectionPropertiesPage(QWidget *parent)
     : QWidget(parent)

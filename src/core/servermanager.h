@@ -201,11 +201,11 @@ Q_SIGNALS:
     void stateChanged(Akonadi::ServerManager::State state);
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     friend class ServerManagerPrivate;
     ServerManager(ServerManagerPrivate *dd);
     ServerManagerPrivate *const d;
-    //@endcond
+    /// @endcond
 };
 
 }

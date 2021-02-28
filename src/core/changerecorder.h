@@ -96,14 +96,14 @@ Q_SIGNALS:
     void nothingToReplay();
 
 protected:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     explicit ChangeRecorder(ChangeRecorderPrivate *d, QObject *parent = nullptr);
-    //@endcond
+    /// @endcond
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     Q_DECLARE_PRIVATE(ChangeRecorder)
-    //@endcond
+    /// @endcond
 };
 
 }

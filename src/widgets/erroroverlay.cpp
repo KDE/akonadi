@@ -19,7 +19,7 @@
 
 using namespace Akonadi;
 
-//@cond PRIVATE
+/// @cond PRIVATE
 
 class ErrorOverlayStatic
 {
@@ -251,6 +251,6 @@ void ErrorOverlay::serverStateChanged(ServerManager::State state)
     }
 }
 
-//@endcond
+/// @endcond
 
 #include "moc_erroroverlay_p.cpp"

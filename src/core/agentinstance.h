@@ -190,10 +190,10 @@ public:
     void restart() const;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class Private;
     QSharedDataPointer<Private> d;
-    //@endcond
+    /// @endcond
 };
 
 }

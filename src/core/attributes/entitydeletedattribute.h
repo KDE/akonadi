@@ -79,10 +79,10 @@ public:
     void deserialize(const QByteArray &data) override;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class EntityDeletedAttributePrivate;
     const std::unique_ptr<EntityDeletedAttributePrivate> d;
-    //@endcond
+    /// @endcond
 };
 
 } // namespace Akonadi

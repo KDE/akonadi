@@ -81,10 +81,10 @@ Q_SIGNALS:
     void activated();
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class Private;
     Private *const d;
-    //@endcond
+    /// @endcond
 };
 
 }

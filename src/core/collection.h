@@ -526,10 +526,10 @@ private:
 
     void markAttributeModified(const QByteArray &type);
 
-    //@cond PRIVATE
+    /// @cond PRIVATE
     QSharedDataPointer<CollectionPrivate> d_ptr;
     friend class CollectionPrivate;
-    //@endcond
+    /// @endcond
 };
 
 AKONADICORE_EXPORT uint qHash(const Akonadi::Collection &collection);

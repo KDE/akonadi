@@ -50,7 +50,7 @@
 
 using namespace Akonadi;
 
-//@cond PRIVATE
+/// @cond PRIVATE
 
 enum ActionType {
     NormalAction,
@@ -1731,7 +1731,7 @@ public:
     QMap<StandardActionManager::Type, QPointer<RecentCollectionAction>> mRecentCollectionsMenu;
 };
 
-//@endcond
+/// @endcond
 
 StandardActionManager::StandardActionManager(KActionCollection *actionCollection, QWidget *parent)
     : QObject(parent)

@@ -57,11 +57,11 @@ protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class TrashFilterProxyModelPrivate;
     TrashFilterProxyModelPrivate *const d_ptr;
     Q_DECLARE_PRIVATE(TrashFilterProxyModel)
-    //@endcond
+    /// @endcond
 };
 
 }

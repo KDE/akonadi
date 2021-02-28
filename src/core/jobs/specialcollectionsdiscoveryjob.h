@@ -52,9 +52,9 @@ protected:
     void slotResult(KJob *job) override;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     SpecialCollectionsDiscoveryJobPrivate *const d;
-    //@endcond
+    /// @endcond
 };
 
 } // namespace Akonadi

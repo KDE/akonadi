@@ -27,7 +27,7 @@ using namespace Akonadi;
 
 static QDBusAbstractInterface *s_jobtracker = nullptr;
 
-//@cond PRIVATE
+/// @cond PRIVATE
 void JobPrivate::handleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
     Q_Q(Job);
@@ -285,7 +285,7 @@ int JobPrivate::protocolVersion() const
 {
     return mSession->d->protocolVersion;
 }
-//@endcond
+/// @endcond
 
 Job::Job(QObject *parent)
     : KCompositeJob(parent)

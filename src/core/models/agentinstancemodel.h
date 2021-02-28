@@ -80,10 +80,10 @@ public:
     Q_REQUIRED_RESULT bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class Private;
     Private *const d;
-    //@endcond
+    /// @endcond
 };
 
 }

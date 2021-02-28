@@ -263,9 +263,9 @@ public:
     Q_REQUIRED_RESULT bool isEmpty() const;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     QSharedDataPointer<CollectionFetchScopePrivate> d;
-    //@endcond
+    /// @endcond
 };
 
 }

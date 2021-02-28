@@ -4,7 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-// @cond PRIVATE
+/// @cond PRIVATE
 
 #include "monitor_p.h"
 
@@ -1392,4 +1392,4 @@ void MonitorPrivate::updateListeners(QMetaMethod signal, ListenerAction action)
 #undef UPDATE_LISTENERS
 }
 
-// @endcond
+/// @endcond

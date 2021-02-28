@@ -787,7 +787,7 @@ Q_SIGNALS:
     void monitorReady();
 
 protected:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     void connectNotify(const QMetaMethod &signal) override;
     void disconnectNotify(const QMetaMethod &signal) override;
 
@@ -795,19 +795,19 @@ protected:
     friend class EntityTreeModelPrivate;
     MonitorPrivate *d_ptr;
     explicit Monitor(MonitorPrivate *d, QObject *parent = nullptr);
-    //@endcond
+    /// @endcond
 
 private:
     Q_DECLARE_PRIVATE(Monitor)
 
-    //@cond PRIVATE
+    /// @cond PRIVATE
     Q_PRIVATE_SLOT(d_ptr, void handleCommands())
     Q_PRIVATE_SLOT(d_ptr, void invalidateCollectionCache(qint64))
     Q_PRIVATE_SLOT(d_ptr, void invalidateItemCache(qint64))
     Q_PRIVATE_SLOT(d_ptr, void invalidateTagCache(qint64))
 
     friend class ResourceBasePrivate;
-    //@endcond
+    /// @endcond
 };
 
 }

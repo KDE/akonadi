@@ -126,10 +126,10 @@ Q_SIGNALS:
     void settingsSaved();
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class Private;
     Private *const d;
-    //@endcond
+    /// @endcond
 };
 
 }

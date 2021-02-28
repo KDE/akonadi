@@ -87,10 +87,10 @@ public:
     void setSourceModel(QAbstractItemModel *model) override;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class Private;
     Private *const d;
-    //@endcond
+    /// @endcond
 };
 
 }

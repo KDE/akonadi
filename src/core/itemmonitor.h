@@ -127,10 +127,10 @@ protected:
     ItemFetchScope &fetchScope();
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class Private;
     Private *const d;
-    //@endcond
+    /// @endcond
 
     Q_DISABLE_COPY(ItemMonitor)
 };

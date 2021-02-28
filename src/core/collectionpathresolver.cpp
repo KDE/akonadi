@@ -17,7 +17,7 @@
 
 using namespace Akonadi;
 
-//@cond PRIVATE
+/// @cond PRIVATE
 
 class Akonadi::CollectionPathResolverPrivate : public JobPrivate
 {
@@ -215,6 +215,6 @@ void CollectionPathResolver::doStart()
     });
 }
 
-//@endcond
+/// @endcond
 
 #include "moc_collectionpathresolver.cpp"

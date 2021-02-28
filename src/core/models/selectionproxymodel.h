@@ -97,13 +97,13 @@ public:
     ~SelectionProxyModel();
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     Q_DECLARE_PRIVATE(SelectionProxyModel)
     SelectionProxyModelPrivate *const d_ptr;
 
     Q_PRIVATE_SLOT(d_func(), void rootIndexAdded(const QModelIndex &))
     Q_PRIVATE_SLOT(d_func(), void rootIndexAboutToBeRemoved(const QModelIndex &))
-    //@endcond
+    /// @endcond
 };
 
 }

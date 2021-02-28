@@ -142,10 +142,10 @@ public:
     Q_REQUIRED_RESULT bool operator==(const CachePolicy &other) const;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class Private;
     QSharedDataPointer<Private> d;
-    //@endcond
+    /// @endcond
 };
 
 }

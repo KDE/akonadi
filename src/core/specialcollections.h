@@ -141,7 +141,7 @@ protected:
     explicit SpecialCollections(KCoreConfigSkeleton *config, QObject *parent = nullptr);
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     friend class SpecialCollectionsRequestJob;
     friend class SpecialCollectionsRequestJobPrivate;
     friend class SpecialCollectionsPrivate;
@@ -151,7 +151,7 @@ private:
 #endif
 
     SpecialCollectionsPrivate *const d;
-    //@endcond
+    /// @endcond
 };
 
 } // namespace Akonadi

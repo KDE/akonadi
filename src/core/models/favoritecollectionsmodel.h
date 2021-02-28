@@ -137,12 +137,12 @@ private Q_SLOTS:
     void pasteJobDone(KJob *job);
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     using KSelectionProxyModel::setSourceModel;
 
     class Private;
     Private *const d;
-    //@endcond
+    /// @endcond
 };
 
 }

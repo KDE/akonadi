@@ -348,7 +348,7 @@ AgentManager::AgentManager()
     });
 }
 
-// @endcond
+/// @endcond
 
 AgentManager::~AgentManager() = default;
 

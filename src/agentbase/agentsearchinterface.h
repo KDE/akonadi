@@ -71,9 +71,9 @@ public:
     void searchFinished(const QVector<QByteArray> &result);
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     AgentSearchInterfacePrivate *const d;
-    //@endcond
+    /// @endcond
 };
 
 }

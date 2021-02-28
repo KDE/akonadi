@@ -153,9 +153,9 @@ protected:
     ~PreprocessorBase() override;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     Q_DECLARE_PRIVATE(PreprocessorBase)
-    //@endcond
+    /// @endcond
 
 }; // class PreprocessorBase
 

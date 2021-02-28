@@ -124,13 +124,13 @@ Q_SIGNALS:
     void currentChanged(const Akonadi::Collection &collection);
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class Private;
     Private *const d;
 
     Q_PRIVATE_SLOT(d, void activated(int))
     Q_PRIVATE_SLOT(d, void activated(const QModelIndex &))
-    //@endcond
+    /// @endcond
 };
 
 }

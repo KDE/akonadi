@@ -306,7 +306,7 @@ void AgentBase::ObserverV4::itemsRelationsChanged(const Akonadi::Item::List &ite
     }
 }
 
-//@cond PRIVATE
+/// @cond PRIVATE
 
 AgentBasePrivate::AgentBasePrivate(AgentBase *parent)
     : q_ptr(parent)
@@ -924,7 +924,7 @@ QString AgentBase::parseArguments(int argc, char **argv)
     return identifier;
 }
 
-// @endcond
+/// @endcond
 
 int AgentBase::init(AgentBase &r)
 {

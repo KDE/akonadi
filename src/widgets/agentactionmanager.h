@@ -151,7 +151,7 @@ Q_SIGNALS:
     void actionStateUpdated();
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class Private;
     Private *const d;
 
@@ -162,7 +162,7 @@ private:
     Q_PRIVATE_SLOT(d, void slotConfigureAgentInstance())
 
     Q_PRIVATE_SLOT(d, void slotAgentInstanceCreationResult(KJob *))
-    //@endcond
+    /// @endcond
 };
 
 }

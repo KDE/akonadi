@@ -661,14 +661,14 @@ protected:
     virtual int entityColumnCount(HeaderGroup headerGroup) const;
 
 protected:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     Q_DECLARE_PRIVATE(EntityTreeModel)
     EntityTreeModelPrivate *d_ptr;
     EntityTreeModel(Monitor *monitor, EntityTreeModelPrivate *d, QObject *parent = nullptr);
-    //@endcond
+    /// @endcond
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     // Make these private, they shouldn't be called by applications
     bool insertRows(int row, int count, const QModelIndex &index = QModelIndex()) override;
     bool insertColumns(int column, int count, const QModelIndex &index = QModelIndex()) override;
@@ -711,7 +711,7 @@ private:
 
     Q_PRIVATE_SLOT(d_func(), void agentInstanceRemoved(Akonadi::AgentInstance))
     Q_PRIVATE_SLOT(d_func(), void monitoredItemsRetrieved(KJob *job))
-    //@endcond
+    /// @endcond
 };
 
 } // namespace

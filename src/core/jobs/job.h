@@ -201,20 +201,20 @@ protected Q_SLOTS:
     void slotResult(KJob *job) override;
 
 protected:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     Job(JobPrivate *dd, QObject *parent);
     JobPrivate *const d_ptr;
-    //@endcond
+    /// @endcond
 
 private:
     Q_DECLARE_PRIVATE(Job)
 
-    //@cond PRIVATE
+    /// @cond PRIVATE
     Q_PRIVATE_SLOT(d_func(), void startNext())
     Q_PRIVATE_SLOT(d_func(), void signalCreationToJobTracker())
     Q_PRIVATE_SLOT(d_func(), void signalStartedToJobTracker())
     Q_PRIVATE_SLOT(d_func(), void delayedEmitResult())
-    //@endcond
+    /// @endcond
 };
 
 }

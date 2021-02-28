@@ -29,7 +29,7 @@ Monitor::Monitor(QObject *parent)
     ChangeMediator::registerMonitor(this);
 }
 
-//@cond PRIVATE
+/// @cond PRIVATE
 Monitor::Monitor(MonitorPrivate *d, QObject *parent)
     : QObject(parent)
     , d_ptr(d)
@@ -39,7 +39,7 @@ Monitor::Monitor(MonitorPrivate *d, QObject *parent)
 
     ChangeMediator::registerMonitor(this);
 }
-//@endcond
+/// @endcond
 
 Monitor::~Monitor()
 {

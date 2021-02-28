@@ -19,7 +19,7 @@
 
 #include "exceptionbase.h"
 
-//@cond PRIVATE Doxygen 1.7.1 hangs processing this file. so skip it.
+/// @cond PRIVATE Doxygen 1.7.1 hangs processing this file. so skip it.
 // for more info, see https://bugzilla.gnome.org/show_bug.cgi?id=531637
 
 /* WARNING
@@ -432,6 +432,6 @@ template<typename T> inline Payload<T> *payload_cast(PayloadBase *payloadBase)
 
 } // namespace Akonadi
 
-//@endcond
+/// @endcond
 
 #endif

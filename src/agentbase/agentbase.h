@@ -739,13 +739,13 @@ protected:
      */
     void setTemporaryOffline(int makeOnlineInSeconds = 300);
 
-    //@cond PRIVATE
+    /// @cond PRIVATE
     static void debugAgent(int argc, char **argv);
 
     AgentBasePrivate *d_ptr;
     explicit AgentBase(AgentBasePrivate *d, const QString &id);
     friend class ObserverV2;
-    //@endcond
+    /// @endcond
 
     /**
      * This method is called whenever the @p online status has changed.
@@ -757,7 +757,7 @@ protected:
     virtual KAboutData aboutData() const;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     static QString parseArguments(int argc, char **argv);
     static int init(AgentBase &r);
     void setOnlineInternal(bool state);
@@ -781,7 +781,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotResumedFromSuspend())
     Q_PRIVATE_SLOT(d_func(), void slotTemporaryOfflineTimeout())
 
-    //@endcond
+    /// @endcond
 };
 
 }

@@ -38,7 +38,7 @@
 
 using namespace Akonadi;
 
-//@cond PRIVATE
+/// @cond PRIVATE
 
 void SessionPrivate::startNext()
 {
@@ -313,7 +313,7 @@ void SessionPrivate::itemRevisionChanged(Akonadi::Item::Id itemId, int oldRevisi
     }
 }
 
-//@endcond
+/// @endcond
 
 SessionPrivate::SessionPrivate(Session *parent)
     : mParent(parent)

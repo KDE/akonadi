@@ -246,9 +246,9 @@ public:
     Q_REQUIRED_RESULT static bool isWantedCollection(const Collection &collection, const QString &wantedMimeType);
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     QSharedDataPointer<MimeTypeCheckerPrivate> d;
-    //@endcond
+    /// @endcond
 };
 
 }

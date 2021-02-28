@@ -168,9 +168,9 @@ protected:
     bool doHandleResponse(qint64 tag, const Protocol::CommandPtr &response) override;
 
 protected Q_SLOTS:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     void slotResult(KJob *job) override;
-    //@endcond
+    /// @endcond
 
 private:
     Q_DECLARE_PRIVATE(CollectionFetchJob)

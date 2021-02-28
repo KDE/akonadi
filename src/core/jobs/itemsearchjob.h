@@ -238,11 +238,11 @@ protected:
     bool doHandleResponse(qint64 tag, const Protocol::CommandPtr &response) override;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     Q_DECLARE_PRIVATE(ItemSearchJob)
 
     Q_PRIVATE_SLOT(d_func(), void timeout())
-    //@endcond
+    /// @endcond
 };
 
 }

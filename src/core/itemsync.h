@@ -241,13 +241,13 @@ protected:
     void slotResult(KJob *job) override;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     Q_DECLARE_PRIVATE(ItemSync)
 
     Q_PRIVATE_SLOT(d_func(), void slotLocalListDone(KJob *))
     Q_PRIVATE_SLOT(d_func(), void slotTransactionResult(KJob *))
     Q_PRIVATE_SLOT(d_func(), void slotItemsReceived(const Akonadi::Item::List &))
-    //@endcond
+    /// @endcond
 };
 
 }

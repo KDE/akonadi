@@ -21,7 +21,7 @@ using namespace Akonadi;
 qint64 ResourceScheduler::Task::latestSerial = 0;
 static QDBusAbstractInterface *s_resourcetracker = nullptr;
 
-//@cond PRIVATE
+/// @cond PRIVATE
 
 ResourceScheduler::ResourceScheduler(QObject *parent)
     : QObject(parent)
@@ -693,6 +693,6 @@ QDebug Akonadi::operator<<(QDebug d, const ResourceScheduler::Task &task)
     return d;
 }
 
-//@endcond
+/// @endcond
 
 #include "moc_resourcescheduler_p.cpp"

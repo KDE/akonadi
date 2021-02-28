@@ -131,10 +131,10 @@ protected:
     bool filterAcceptsColumn(int sourceColumn, const QModelIndex &sourceParent) const override;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     Q_DECLARE_PRIVATE(EntityMimeTypeFilterModel)
     EntityMimeTypeFilterModelPrivate *const d_ptr;
-    //@endcond
+    /// @endcond
 };
 
 }

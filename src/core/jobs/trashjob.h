@@ -109,10 +109,10 @@ protected:
     void doStart() override;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class TrashJobPrivate;
     Q_DECLARE_PRIVATE(TrashJob)
-    //@endcond
+    /// @endcond
 };
 
 }

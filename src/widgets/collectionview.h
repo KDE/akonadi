@@ -113,13 +113,13 @@ protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class Private;
     Private *const d;
 
     Q_PRIVATE_SLOT(d, void itemClicked(const QModelIndex &))
     Q_PRIVATE_SLOT(d, void itemCurrentChanged(const QModelIndex &))
-    //@endcond
+    /// @endcond
 };
 
 }

@@ -19,7 +19,7 @@ namespace Akonadi
 {
 class RecursiveMover;
 
-//@cond PRIVATE
+/// @cond PRIVATE
 
 /**
   @internal
@@ -292,7 +292,7 @@ private:
 QDebug operator<<(QDebug, const ResourceScheduler::Task &task);
 QTextStream &operator<<(QTextStream &, const ResourceScheduler::Task &task);
 
-//@endcond
+/// @endcond
 
 }
 

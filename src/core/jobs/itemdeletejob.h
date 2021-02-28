@@ -127,9 +127,9 @@ protected:
     bool doHandleResponse(qint64 tag, const Protocol::CommandPtr &response) override;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     Q_DECLARE_PRIVATE(ItemDeleteJob)
-    //@endcond
+    /// @endcond
 };
 
 }

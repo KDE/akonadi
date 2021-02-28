@@ -130,10 +130,10 @@ public:
     CollectionStatistics &operator=(const CollectionStatistics &other);
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class Private;
     QSharedDataPointer<Private> d;
-    //@endcond
+    /// @endcond
 };
 
 }

@@ -61,10 +61,10 @@ public:
     void start() override;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     CollectionAttributesSynchronizationJobPrivate *const d;
     friend class CollectionAttributesSynchronizationJobPrivate;
-    //@endcond
+    /// @endcond
 };
 
 }

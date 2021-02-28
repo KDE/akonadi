@@ -117,9 +117,9 @@ protected:
     void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const override;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     CollectionStatisticsDelegatePrivate *const d_ptr;
-    //@endcond
+    /// @endcond
 
     Q_DECLARE_PRIVATE(CollectionStatisticsDelegate)
 };

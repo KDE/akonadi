@@ -23,7 +23,7 @@
 
 using namespace Akonadi;
 
-//@cond PRIVATE
+/// @cond PRIVATE
 
 static const struct {
     const char *name;
@@ -209,7 +209,7 @@ public:
     QHash<AgentActionManager::Type, ContextTexts> mContextTexts;
 };
 
-//@endcond
+/// @endcond
 
 AgentActionManager::AgentActionManager(KActionCollection *actionCollection, QWidget *parent)
     : QObject(parent)

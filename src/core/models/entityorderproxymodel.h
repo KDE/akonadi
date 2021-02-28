@@ -88,9 +88,9 @@ protected:
 private:
     QStringList configStringsForDroppedUrls(const QList<QUrl> &urls, const Akonadi::Collection &parentCol, bool *containsMove) const;
 
-    //@cond PRIVATE
+    /// @cond PRIVATE
     Q_DECLARE_PRIVATE(EntityOrderProxyModel)
-    //@endcond
+    /// @endcond
 };
 
 }

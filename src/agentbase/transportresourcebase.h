@@ -80,9 +80,9 @@ public:
     void itemSent(const Akonadi::Item &item, TransportResult result, const QString &message = QString());
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     TransportResourceBasePrivate *const d;
-    //@endcond
+    /// @endcond
 };
 
 }

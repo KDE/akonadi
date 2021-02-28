@@ -136,10 +136,10 @@ public:
     QString pageTitle() const;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class Private;
     Private *const d;
-    //@endcond
+    /// @endcond
 };
 
 /**

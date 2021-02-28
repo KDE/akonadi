@@ -93,10 +93,10 @@ public:
     Q_REQUIRED_RESULT int timeoutCountLimit() const;
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     ResourceSynchronizationJobPrivate *const d;
     friend class ResourceSynchronizationJobPrivate;
-    //@endcond
+    /// @endcond
 };
 
 }

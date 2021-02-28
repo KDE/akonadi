@@ -189,10 +189,10 @@ public:
     void setContentMimeTypes(const QStringList &mimetypes);
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     class Private;
     Private *const d;
-    //@endcond
+    /// @endcond
 };
 
 } // namespace Akonadi

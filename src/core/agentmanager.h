@@ -186,11 +186,11 @@ Q_SIGNALS:
     void instanceOnline(const Akonadi::AgentInstance &instance, bool online);
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     explicit AgentManager();
 
     std::unique_ptr<AgentManagerPrivate> const d;
-    //@endcond
+    /// @endcond
 };
 
 }

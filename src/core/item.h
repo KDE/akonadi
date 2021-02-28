@@ -563,7 +563,7 @@ public:
      * Akonadi::super_trait for your class.
      */
     template<typename T> void setPayload(const T &p);
-    //@cond PRIVATE
+    /// @cond PRIVATE
     template<typename T> void setPayload(T *p);
 
 // We know that auto_ptr is deprecated, but we still want to handle the case
@@ -589,7 +589,7 @@ public:
 #endif
 #endif
     template<typename T> void setPayload(std::unique_ptr<T> p);
-    //@endcond
+    /// @endcond
 
     /**
      * Returns the payload object of this PIM item. This method will only succeed if either
@@ -674,7 +674,7 @@ public:
     void setCachedPayloadParts(const QSet<QByteArray> &cachedParts);
 
 private:
-    //@cond PRIVATE
+    /// @cond PRIVATE
     friend class ItemCreateJob;
     friend class ItemCreateJobPrivate;
     friend class ItemModifyJob;
@@ -738,7 +738,7 @@ private:
 
     QSharedDataPointer<ItemPrivate> d_ptr;
     friend class ItemPrivate;
-    //@endcond
+    /// @endcond
 };
 
 AKONADICORE_EXPORT uint qHash(const Akonadi::Item &item);
