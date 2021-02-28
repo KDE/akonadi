@@ -138,7 +138,7 @@ namespace _detail
   std::find_if( coll.begin(), coll.end(), bind( _detail::ById<std::equal_to>(), _1, myId ) );
   // binary:
   std::lower_bound( coll.begin(), coll.end(), myId, _detail::ById<std::less>() );
-  \end
+  \endcode
 */
 template<template<typename U> class Op> struct ById {
     typedef bool result_type;
