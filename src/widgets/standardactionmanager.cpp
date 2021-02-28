@@ -338,11 +338,11 @@ public:
 
         pluralLabels.insert(StandardActionManager::CopyCollections, ki18np("&Copy Folder", "&Copy %1 Folders"));
         pluralLabels.insert(StandardActionManager::CopyItems, ki18np("&Copy Item", "&Copy %1 Items"));
-        pluralLabels.insert(StandardActionManager::CutItems, ki18np("&Cut Item", "&Cut %1 Items"));
-        pluralLabels.insert(StandardActionManager::CutCollections, ki18np("&Cut Folder", "&Cut %1 Folders"));
+        pluralLabels.insert(StandardActionManager::CutItems, ki18ncp("@action", "&Cut Item", "&Cut %1 Items"));
+        pluralLabels.insert(StandardActionManager::CutCollections, ki18ncp("@action", "&Cut Folder", "&Cut %1 Folders"));
         pluralLabels.insert(StandardActionManager::DeleteItems, ki18np("&Delete Item", "&Delete %1 Items"));
-        pluralLabels.insert(StandardActionManager::DeleteCollections, ki18np("&Delete Folder", "&Delete %1 Folders"));
-        pluralLabels.insert(StandardActionManager::SynchronizeCollections, ki18np("&Synchronize Folder", "&Synchronize %1 Folders"));
+        pluralLabels.insert(StandardActionManager::DeleteCollections, ki18ncp("@action", "&Delete Folder", "&Delete %1 Folders"));
+        pluralLabels.insert(StandardActionManager::SynchronizeCollections, ki18ncp("@action", "&Synchronize Folder", "&Synchronize %1 Folders"));
         pluralLabels.insert(StandardActionManager::DeleteResources, ki18np("&Delete Resource", "&Delete %1 Resources"));
         pluralLabels.insert(StandardActionManager::SynchronizeResources, ki18np("&Synchronize Resource", "&Synchronize %1 Resources"));
 
@@ -353,8 +353,8 @@ public:
         pluralIconLabels.insert(StandardActionManager::DeleteItems, ki18np("Delete Item", "Delete %1 Items"));
         pluralIconLabels.insert(StandardActionManager::DeleteCollections, ki18np("Delete Folder", "Delete %1 Folders"));
         pluralIconLabels.insert(StandardActionManager::SynchronizeCollections, ki18np("Synchronize Folder", "Synchronize %1 Folders"));
-        pluralIconLabels.insert(StandardActionManager::DeleteResources, ki18np("Delete Resource", "Delete %1 Resources"));
-        pluralIconLabels.insert(StandardActionManager::SynchronizeResources, ki18np("Synchronize Resource", "Synchronize %1 Resources"));
+        pluralIconLabels.insert(StandardActionManager::DeleteResources, ki18ncp("@action", "Delete Resource", "Delete %1 Resources"));
+        pluralIconLabels.insert(StandardActionManager::SynchronizeResources, ki18ncp("@action", "Synchronize Resource", "Synchronize %1 Resources"));
 
         setContextText(StandardActionManager::CreateCollection, StandardActionManager::DialogTitle, i18nc("@title:window", "New Folder"));
         setContextText(StandardActionManager::CreateCollection, StandardActionManager::DialogText, i18nc("@label:textbox name of Akonadi folder", "Name"));
