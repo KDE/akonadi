@@ -18,7 +18,6 @@ public:
     ~Config();
     static Config *instance();
     static Config *instance(const QString &pathToConfig);
-    static void destroyInstance();
     QString xdgDataHome() const;
     QString xdgConfigHome() const;
     QString basePath() const;

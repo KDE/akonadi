@@ -97,7 +97,6 @@ private:
     void stopDatabaseProcess();
     bool createServers(QSettings &settings, QSettings &connectionSettings);
     bool setupDatabase();
-    uint userId() const;
 
 protected:
     std::unique_ptr<QDBusServiceWatcher> mControlWatcher;
