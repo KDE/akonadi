@@ -9,7 +9,6 @@
 
 #include <QScopedPointer>
 #include <QString>
-#include <QStringList>
 
 namespace Akonadi
 {
