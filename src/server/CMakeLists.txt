@@ -172,6 +172,11 @@ add_library(libakonadiserver STATIC ${libakonadiserver_SRCS})
 #endif()
 
 set_target_properties(libakonadiserver PROPERTIES OUTPUT_NAME akonadiserver)
+
+if(MYSQLD_SCRIPTS_PATH)
+  target_compile_definitions(libakonadiserver PRIVATE MYSQLD_SCRIPTS_PATH="${MYSQLD_SCRIPTS_PATH}")
+endif()
+
 target_link_libraries(libakonadiserver
     akonadi_shared
     KF5AkonadiPrivate

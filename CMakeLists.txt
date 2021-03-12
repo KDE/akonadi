@@ -177,10 +177,20 @@ find_program(MYSQLD_EXECUTABLE NAMES mysqld
     DOC "The mysqld executable path. ONLY needed at runtime"
 )
 
+find_path(MYSQLD_SCRIPTS_PATH NAMES mysql_install_db
+    DOC "Path to the mysql or mariadb installation scripts (mysql_install_db, mysql_upgrade...)"
+)
+
 if(MYSQLD_EXECUTABLE)
     message(STATUS "MySQL Server found: ${MYSQLD_EXECUTABLE}")
 else()
     message(STATUS "MySQL Server wasn't found. it is required to use the MySQL backend.")
+endif()
+
+if(MYSQLD_SCRIPTS_PATH)
+    message(STATUS "MySQL scripts location: ${MYSQLD_SCRIPTS_PATH}")
+else()
+    message(STATUS "MySQL scripts location was not found. Use -DMYSQLD_SCRIPTS_PATH to point to the install location.")
 endif()
 
 find_path(POSTGRES_PATH NAMES pg_ctl
