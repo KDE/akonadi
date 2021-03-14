@@ -4,18 +4,19 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-#ifndef % {APPNAMEUC } RESOURCE_H
-#define % {APPNAMEUC } RESOURCE_H
+#ifndef %{APPNAMEUC}RESOURCE_H
+#define %{APPNAMEUC}RESOURCE_H
 
 #include <AkonadiAgentBase/ResourceBase>
 
-class % {APPNAME} Resource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Observer
+class %{APPNAME}Resource : public Akonadi::ResourceBase,
+                           public Akonadi::AgentBase::Observer
 {
     Q_OBJECT
 
 public:
-    explicit % {APPNAME} Resource(const QString &id);
-    ~ % {APPNAME} Resource() override;
+    explicit %{APPNAME}Resource(const QString &id);
+    ~%{APPNAME}Resource() override;
 
 public Q_SLOTS:
     void configure(WId windowId) override;
