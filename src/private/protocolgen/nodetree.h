@@ -13,7 +13,14 @@
 class Node
 {
 public:
-    enum NodeType { Document, Class, Ctor, Enum, EnumValue, Property };
+    enum NodeType {
+        Document,
+        Class,
+        Ctor,
+        Enum,
+        EnumValue,
+        Property,
+    };
 
     Node(NodeType type, Node *parent);
     Node(const Node &) = delete;
@@ -51,7 +58,13 @@ class PropertyNode;
 class ClassNode : public Node
 {
 public:
-    enum ClassType { Invalid, Class, Command, Response, Notification };
+    enum ClassType {
+        Invalid,
+        Class,
+        Command,
+        Response,
+        Notification,
+    };
 
     ClassNode(const QString &name, ClassType type, DocumentNode *parent);
     QString name() const;
@@ -94,7 +107,11 @@ private:
 class EnumNode : public Node
 {
 public:
-    enum EnumType { TypeInvalid, TypeEnum, TypeFlag };
+    enum EnumType {
+        TypeInvalid,
+        TypeEnum,
+        TypeFlag,
+    };
 
     EnumNode(const QString &name, EnumType type, ClassNode *parent);
 

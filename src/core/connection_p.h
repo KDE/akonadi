@@ -28,7 +28,10 @@ class AKONADICORE_EXPORT Connection : public QObject
     Q_OBJECT
 
 public:
-    enum ConnectionType { CommandConnection, NotificationConnection };
+    enum ConnectionType {
+        CommandConnection,
+        NotificationConnection,
+    };
     Q_ENUM(ConnectionType)
 
     explicit Connection(ConnectionType connType, const QByteArray &sessionId, CommandBuffer *commandBuffer, QObject *parent = nullptr);

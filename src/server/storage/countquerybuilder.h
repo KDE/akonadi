@@ -22,7 +22,10 @@ namespace Server
 class CountQueryBuilder : public QueryBuilder
 {
 public:
-    enum CountMode { All, Distinct };
+    enum CountMode {
+        All,
+        Distinct,
+    };
 
     /**
       Creates a new query builder that counts all entries in @p table.

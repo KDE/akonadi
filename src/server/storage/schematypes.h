@@ -25,7 +25,11 @@ class ColumnDescription
 public:
     ColumnDescription();
 
-    enum ReferentialAction { Cascade, Restrict, SetNull };
+    enum ReferentialAction {
+        Cascade,
+        Restrict,
+        SetNull,
+    };
 
     QString name;
     QString type;

@@ -52,7 +52,11 @@ class ProtocolHelper
 {
 public:
     /** Part namespaces. */
-    enum PartNamespace { PartGlobal, PartPayload, PartAttribute };
+    enum PartNamespace {
+        PartGlobal,
+        PartPayload,
+        PartAttribute,
+    };
 
     /**
       Parse a cache policy definition.

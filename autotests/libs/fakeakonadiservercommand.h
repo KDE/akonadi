@@ -22,7 +22,12 @@ class AKONADITESTFAKE_EXPORT FakeAkonadiServerCommand : public QObject
 {
     Q_OBJECT
 public:
-    enum Type { Notification, RespondToCollectionFetch, RespondToItemFetch, RespondToTagFetch };
+    enum Type {
+        Notification,
+        RespondToCollectionFetch,
+        RespondToItemFetch,
+        RespondToTagFetch,
+    };
 
     FakeAkonadiServerCommand(Type type, FakeServerData *serverData);
 
@@ -330,7 +335,10 @@ class AKONADITESTFAKE_EXPORT FakeJobResponse : public FakeAkonadiServerCommand
 {
     Q_OBJECT
     struct Token {
-        enum Type { Branch, Leaf };
+        enum Type {
+            Branch,
+            Leaf,
+        };
         Type type;
         QString content;
     };

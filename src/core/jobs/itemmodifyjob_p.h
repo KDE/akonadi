@@ -26,7 +26,12 @@ using ModifyItemsCommandPtr = QSharedPointer<ModifyItemsCommand>;
 class AKONADICORE_EXPORT ItemModifyJobPrivate : public JobPrivate
 {
 public:
-    enum Operation { RemoteId, RemoteRevision, Gid, Dirty };
+    enum Operation {
+        RemoteId,
+        RemoteRevision,
+        Gid,
+        Dirty,
+    };
 
     explicit ItemModifyJobPrivate(ItemModifyJob *parent);
 

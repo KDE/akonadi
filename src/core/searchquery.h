@@ -25,9 +25,19 @@ namespace Akonadi
 class AKONADICORE_EXPORT SearchTerm
 {
 public:
-    enum Relation { RelAnd, RelOr };
+    enum Relation {
+        RelAnd,
+        RelOr,
+    };
 
-    enum Condition { CondEqual, CondGreaterThan, CondGreaterOrEqual, CondLessThan, CondLessOrEqual, CondContains };
+    enum Condition {
+        CondEqual,
+        CondGreaterThan,
+        CondGreaterOrEqual,
+        CondLessThan,
+        CondLessOrEqual,
+        CondContains,
+    };
 
     /**
      * Constructs a term where all subterms will be in given relation

@@ -12,7 +12,16 @@
 #include <QObject>
 #include <QVariantList>
 
-enum SignalType { NoSignal, RowsAboutToBeInserted, RowsInserted, RowsAboutToBeRemoved, RowsRemoved, RowsAboutToBeMoved, RowsMoved, DataChanged };
+enum SignalType {
+    NoSignal,
+    RowsAboutToBeInserted,
+    RowsInserted,
+    RowsAboutToBeRemoved,
+    RowsRemoved,
+    RowsAboutToBeMoved,
+    RowsMoved,
+    DataChanged,
+};
 
 struct ExpectedSignal {
     ExpectedSignal(SignalType type, int start, int end, const QVariantList &newData)

@@ -32,7 +32,13 @@ class TestScenario
 public:
     typedef QList<TestScenario> List;
 
-    enum Action { ServerCmd, ClientCmd, Wait, Quit, Ignore };
+    enum Action {
+        ServerCmd,
+        ClientCmd,
+        Wait,
+        Quit,
+        Ignore,
+    };
 
     Action action;
     QByteArray data;

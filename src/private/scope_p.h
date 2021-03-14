@@ -32,7 +32,13 @@ class ScopePrivate;
 class AKONADIPRIVATE_EXPORT Scope
 {
 public:
-    enum SelectionScope : uchar { Invalid = 0, Uid = 1 << 0, Rid = 1 << 1, HierarchicalRid = 1 << 2, Gid = 1 << 3 };
+    enum SelectionScope : uchar {
+        Invalid = 0,
+        Uid = 1 << 0,
+        Rid = 1 << 1,
+        HierarchicalRid = 1 << 2,
+        Gid = 1 << 3,
+    };
 
     class AKONADIPRIVATE_EXPORT HRID
     {

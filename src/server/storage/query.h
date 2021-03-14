@@ -26,17 +26,35 @@ namespace Query
 /**
   Compare operators to be used in query conditions.
 */
-enum CompareOperator { Equals, NotEquals, Is, IsNot, Less, LessOrEqual, Greater, GreaterOrEqual, In, NotIn, Like };
+enum CompareOperator {
+    Equals,
+    NotEquals,
+    Is,
+    IsNot,
+    Less,
+    LessOrEqual,
+    Greater,
+    GreaterOrEqual,
+    In,
+    NotIn,
+    Like,
+};
 
 /**
   Logic operations used to combine multiple query conditions.
 */
-enum LogicOperator { And, Or };
+enum LogicOperator {
+    And,
+    Or,
+};
 
 /**
   Sort orders.
 */
-enum SortOrder { Ascending, Descending };
+enum SortOrder {
+    Ascending,
+    Descending,
+};
 
 /**
   Represents a WHERE condition tree.

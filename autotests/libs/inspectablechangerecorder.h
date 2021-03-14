@@ -65,7 +65,12 @@ private Q_SLOTS:
 
 private:
     struct MessageStruct {
-        enum Position { Queued, FilterPipelined, Pipelined, Emitted };
+        enum Position {
+            Queued,
+            FilterPipelined,
+            Pipelined,
+            Emitted,
+        };
         Position position;
     };
     QQueue<MessageStruct> m_messages;

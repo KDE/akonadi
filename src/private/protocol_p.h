@@ -305,7 +305,11 @@ public:
     };
     Q_DECLARE_FLAGS(FetchFlags, FetchFlag)
 
-    enum AncestorDepth : ushort { NoAncestor, ParentAncestor, AllAncestors };
+    enum AncestorDepth : ushort {
+        NoAncestor,
+        ParentAncestor,
+        AllAncestors,
+    };
 
     explicit ItemFetchScope() = default;
     ItemFetchScope(const ItemFetchScope &) = default;
@@ -440,7 +444,11 @@ AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, const Akonadi::Protocol::Sco
 class AKONADIPRIVATE_EXPORT ScopeContext
 {
 public:
-    enum Type : uchar { Any = 0, Collection, Tag };
+    enum Type : uchar {
+        Any = 0,
+        Collection,
+        Tag,
+    };
 
     explicit ScopeContext() = default;
     ScopeContext(Type type, qint64 id);

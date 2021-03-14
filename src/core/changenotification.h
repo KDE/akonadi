@@ -33,7 +33,13 @@ using ChangeNotificationPtr = QSharedPointer<ChangeNotification>;
 class AKONADICORE_EXPORT ChangeNotification
 {
 public:
-    enum Type { Items, Collection, Tag, Relation, Subscription };
+    enum Type {
+        Items,
+        Collection,
+        Tag,
+        Relation,
+        Subscription,
+    };
 
     explicit ChangeNotification();
     ChangeNotification(const ChangeNotification &other);

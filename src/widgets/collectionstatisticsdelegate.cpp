@@ -27,7 +27,10 @@ using namespace Akonadi;
 
 namespace Akonadi
 {
-enum CountType { UnreadCount, TotalCount };
+enum CountType {
+    UnreadCount,
+    TotalCount,
+};
 
 class CollectionStatisticsDelegatePrivate
 {

@@ -49,7 +49,9 @@ public:
     }
 
     void select(const QModelIndex &parent, int start, int end, QItemSelectionModel::SelectionFlag selectionFlag) const;
-    enum ItemType { UrlTag = Qt::UserRole + 1 };
+    enum ItemType {
+        UrlTag = Qt::UserRole + 1,
+    };
 
     QWidget *const d;
     Ui::TagEditWidget ui;

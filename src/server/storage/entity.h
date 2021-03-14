@@ -91,7 +91,10 @@ public:
         return Entity::removeFromRelationImpl(T::tableName(), T::leftColumn(), T::rightColumn(), leftId, rightId);
     }
 
-    enum RelationSide { Left, Right };
+    enum RelationSide {
+        Left,
+        Right,
+    };
 
     /**
       Clears all entries from a n:m relation table (specified by the given template parameter).

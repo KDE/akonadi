@@ -17,7 +17,12 @@ namespace Server
 namespace DbType
 {
 /** Supported database types. */
-enum Type { Unknown, Sqlite, MySQL, PostgreSQL };
+enum Type {
+    Unknown,
+    Sqlite,
+    MySQL,
+    PostgreSQL,
+};
 
 /** Returns the type of the given database object. */
 Type type(const QSqlDatabase &db);

@@ -29,7 +29,10 @@ class ImapSet;
 class AKONADIAGENTBASE_EXPORT AgentSearchInterface
 {
 public:
-    enum ResultScope { Uid, Rid };
+    enum ResultScope {
+        Uid,
+        Rid,
+    };
 
     /**
      * Creates a new agent search interface.

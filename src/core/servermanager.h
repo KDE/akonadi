@@ -110,7 +110,12 @@ public:
      * Types of known D-Bus services.
      * @since 4.10
      */
-    enum ServiceType { Server, Control, ControlLock, UpgradeIndicator };
+    enum ServiceType {
+        Server,
+        Control,
+        ControlLock,
+        UpgradeIndicator,
+    };
 
     /**
      * Returns the namespaced D-Bus service name for @p serviceType.
@@ -125,7 +130,11 @@ public:
      * Known agent types.
      * @since 4.10
      */
-    enum ServiceAgentType { Agent, Resource, Preprocessor };
+    enum ServiceAgentType {
+        Agent,
+        Resource,
+        Preprocessor,
+    };
 
     /**
      * Returns the namespaced D-Bus service name for an agent of type @p agentType with agent
@@ -150,7 +159,10 @@ public:
      */
     static ServerManager *self();
 
-    enum OpenMode { ReadOnly, ReadWrite };
+    enum OpenMode {
+        ReadOnly,
+        ReadWrite,
+    };
     /**
      * Returns absolute path to akonadiserverrc file with Akonadi server
      * configuration.

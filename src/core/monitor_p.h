@@ -68,7 +68,10 @@ inline uint qHash(SignalId sig)
 class AKONADICORE_EXPORT MonitorPrivate
 {
 public:
-    enum ListenerAction { AddListener, RemoveListener };
+    enum ListenerAction {
+        AddListener,
+        RemoveListener,
+    };
 
     MonitorPrivate(ChangeNotificationDependenciesFactory *dependenciesFactory_, Monitor *parent);
     virtual ~MonitorPrivate();

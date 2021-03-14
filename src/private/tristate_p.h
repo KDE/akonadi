@@ -14,8 +14,11 @@
 
 namespace Akonadi
 {
-enum class Tristate : qint8 { False = 0, True = 1, Undefined = 2 };
-
+enum class Tristate : qint8 {
+    False = 0,
+    True = 1,
+    Undefined = 2,
+};
 }
 
 Q_DECLARE_METATYPE(Akonadi::Tristate)

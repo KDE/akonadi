@@ -57,7 +57,11 @@ class AKONADIWIDGETS_EXPORT CollectionDialog : public QDialog
 public:
     /* @since 4.6
      */
-    enum CollectionDialogOption { None = 0, AllowToCreateNewChildCollection = 1, KeepTreeExpanded = 2 };
+    enum CollectionDialogOption {
+        None = 0,
+        AllowToCreateNewChildCollection = 1,
+        KeepTreeExpanded = 2,
+    };
 
     Q_DECLARE_FLAGS(CollectionDialogOptions, CollectionDialogOption)
 

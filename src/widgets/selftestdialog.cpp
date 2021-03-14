@@ -45,7 +45,14 @@ static QString makeLink(const QString &file)
     return QStringLiteral("<a href=\"%1\">%2</a>").arg(file, file);
 }
 
-enum SelfTestRole { ResultTypeRole = Qt::UserRole, FileIncludeRole, ListDirectoryRole, EnvVarRole, SummaryRole, DetailsRole };
+enum SelfTestRole {
+    ResultTypeRole = Qt::UserRole,
+    FileIncludeRole,
+    ListDirectoryRole,
+    EnvVarRole,
+    SummaryRole,
+    DetailsRole,
+};
 
 SelfTestDialog::SelfTestDialog(QWidget *parent)
     : QDialog(parent)

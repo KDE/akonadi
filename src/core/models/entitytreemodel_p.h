@@ -30,7 +30,10 @@ class AgentInstance;
 
 struct Node {
     using Id = qint64;
-    enum Type : char { Item, Collection };
+    enum Type : char {
+        Item,
+        Collection,
+    };
 
     explicit Node(Type type, Id id, Akonadi::Collection::Id parentId)
         : id(id)
@@ -167,7 +170,10 @@ public:
     ~EntityTreeModelPrivate();
     EntityTreeModel *const q_ptr;
 
-    enum RetrieveDepth { Base, Recursive };
+    enum RetrieveDepth {
+        Base,
+        Recursive,
+    };
 
     void init(Monitor *monitor);
 

@@ -42,7 +42,10 @@ class AKONADICORE_EXPORT ItemSync : public Job
     Q_OBJECT
 
 public:
-    enum MergeMode { RIDMerge, GIDMerge };
+    enum MergeMode {
+        RIDMerge,
+        GIDMerge,
+    };
 
     /**
      * Creates a new item synchronizer.

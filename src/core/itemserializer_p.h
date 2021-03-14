@@ -30,7 +30,11 @@ class Item;
 class AKONADI_TESTS_EXPORT ItemSerializer
 {
 public:
-    enum PayloadStorage { Internal, External, Foreign };
+    enum PayloadStorage {
+        Internal,
+        External,
+        Foreign,
+    };
 
     /** throws ItemSerializerException on failure */
     static void deserialize(Item &item, const QByteArray &label, const QByteArray &data, int version, PayloadStorage storage);

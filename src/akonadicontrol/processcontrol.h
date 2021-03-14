@@ -30,7 +30,10 @@ public:
      * @li StopOnCrash    - The application won't be restarted.
      * @li RestartOnCrash - The application is restarted with the same arguments.
      */
-    enum CrashPolicy { StopOnCrash, RestartOnCrash };
+    enum CrashPolicy {
+        StopOnCrash,
+        RestartOnCrash,
+    };
 
     /**
      * Creates a new process control.

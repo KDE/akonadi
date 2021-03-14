@@ -31,7 +31,12 @@ namespace Server
 class QueryBuilder
 {
 public:
-    enum QueryType { Select, Insert, Update, Delete };
+    enum QueryType {
+        Select,
+        Insert,
+        Update,
+        Delete,
+    };
 
     /**
      * When the same table gets joined as both, Inner- and LeftJoin,

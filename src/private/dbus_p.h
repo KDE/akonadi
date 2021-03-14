@@ -28,7 +28,14 @@ namespace Akonadi
 namespace DBus
 {
 /** D-Bus service types used by the Akonadi server processes. */
-enum ServiceType { Server, Control, ControlLock, AgentServer, StorageJanitor, UpgradeIndicator };
+enum ServiceType {
+    Server,
+    Control,
+    ControlLock,
+    AgentServer,
+    StorageJanitor,
+    UpgradeIndicator,
+};
 
 /**
  * Returns the service name for the given @p serviceType.
@@ -36,7 +43,12 @@ enum ServiceType { Server, Control, ControlLock, AgentServer, StorageJanitor, Up
 AKONADIPRIVATE_EXPORT QString serviceName(ServiceType serviceType);
 
 /** Known D-Bus service name types for agents. */
-enum AgentType { Unknown, Agent, Resource, Preprocessor };
+enum AgentType {
+    Unknown,
+    Agent,
+    Resource,
+    Preprocessor,
+};
 
 struct AgentService {
     QString identifier{};

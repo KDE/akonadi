@@ -22,7 +22,13 @@ public:
     {
     }
 
-    enum TransactionState { Idle, Running, WaitingForSubjobs, RollingBack, Committing };
+    enum TransactionState {
+        Idle,
+        Running,
+        WaitingForSubjobs,
+        RollingBack,
+        Committing,
+    };
 
     Q_DECLARE_PUBLIC(TransactionSequence)
 

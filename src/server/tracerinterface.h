@@ -28,7 +28,10 @@ namespace Server
 class TracerInterface
 {
 public:
-    enum ConnectionFormat { DebugString, Json };
+    enum ConnectionFormat {
+        DebugString,
+        Json,
+    };
 
     virtual ~TracerInterface() = default;
 

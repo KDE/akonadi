@@ -25,7 +25,11 @@ namespace StandardDirs
  * FileAccessMode is a typedef for QFlags<FileAccessFlag>. It stores
  * a OR combination of FileAccessFlag values
  */
-enum FileAccessMode { ReadOnly = 0x1, WriteOnly = 0x2, ReadWrite = ReadOnly | WriteOnly };
+enum FileAccessMode {
+    ReadOnly = 0x1,
+    WriteOnly = 0x2,
+    ReadWrite = ReadOnly | WriteOnly,
+};
 
 /**
  * Returns path to the config file @p configFile.

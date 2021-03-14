@@ -188,7 +188,10 @@ QSqlQuery ItemFetchHelper::buildItemQuery()
     return itemQuery.query();
 }
 
-enum FlagQueryColumns { FlagQueryPimItemIdColumn, FlagQueryFlagIdColumn };
+enum FlagQueryColumns {
+    FlagQueryPimItemIdColumn,
+    FlagQueryFlagIdColumn,
+};
 
 QSqlQuery ItemFetchHelper::buildFlagQuery()
 {
@@ -234,7 +237,10 @@ QSqlQuery ItemFetchHelper::buildTagQuery()
     return tagQuery.query();
 }
 
-enum VRefQueryColumns { VRefQueryCollectionIdColumn, VRefQueryItemIdColumn };
+enum VRefQueryColumns {
+    VRefQueryCollectionIdColumn,
+    VRefQueryItemIdColumn,
+};
 
 QSqlQuery ItemFetchHelper::buildVRefQuery()
 {

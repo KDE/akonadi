@@ -58,7 +58,10 @@ public:
     {
     }
 
-    enum LoopControl { Break, Continue };
+    enum LoopControl {
+        Break,
+        Continue,
+    };
 
     template<typename Selection, typename Comp> void setSelection(const Selection &entries, Comp &&cmp)
     {

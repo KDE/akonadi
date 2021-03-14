@@ -22,7 +22,17 @@ using namespace Akonadi::Server;
 
 namespace
 {
-enum Column { IdColumn, ParentIdColumn, RIDColumn, DisplayPrefColumn, SyncPrefColumn, IndexPrefColumn, EnabledColumn, ReferencedColumn, ResourceNameColumn };
+enum Column {
+    IdColumn,
+    ParentIdColumn,
+    RIDColumn,
+    DisplayPrefColumn,
+    SyncPrefColumn,
+    IndexPrefColumn,
+    EnabledColumn,
+    ReferencedColumn,
+    ResourceNameColumn,
+};
 }
 
 CollectionTreeCache::Node::Node()
