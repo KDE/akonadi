@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-#ifndef AKONADI_SERIALIZER_ % {APPNAMEUC } _H
-#define AKONADI_SERIALIZER_ % {APPNAMEUC} _H
+#ifndef AKONADI_SERIALIZER_%{APPNAMEUC}_H
+#define AKONADI_SERIALIZER_%{APPNAMEUC}_H
 
 #include <QObject>
 
@@ -13,14 +13,16 @@
 
 namespace Akonadi
 {
-class SerializerPlugin % {APPNAME} : public QObject, public ItemSerializerPlugin
+
+class SerializerPlugin%{APPNAME} : public QObject
+                                 , public ItemSerializerPlugin
 {
     Q_OBJECT
     Q_INTERFACES(Akonadi::ItemSerializerPlugin)
     Q_PLUGIN_METADATA(IID "org.kde.akonadi.SerializerPlugin%{APPNAME}")
 
 public:
-    bool deserialize(Item & item, const QByteArray &label, QIODevice &data, int version) override;
+    bool deserialize(Item &item, const QByteArray &label, QIODevice &data, int version) override;
     void serialize(const Item &item, const QByteArray &label, QIODevice &data, int &version) override;
 
     QSet<QByteArray> parts(const Item &item) const;
