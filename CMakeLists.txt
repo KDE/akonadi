@@ -230,9 +230,6 @@ if(NOT XMLLINT_EXECUTABLE)
 endif()
 
 check_include_files(unistd.h HAVE_UNISTD_H)
-if(HAVE_UNISTD_H)
-    add_definitions(-DHAVE_UNISTD_H)
-endif()
 
 if (IS_ABSOLUTE "${DBUS_INTERFACES_INSTALL_DIR}")
     set(AKONADI_DBUS_INTERFACES_INSTALL_DIR "${DBUS_INTERFACES_INSTALL_DIR}")
@@ -279,7 +276,6 @@ macro(SET_DEFAULT_DB_BACKEND)
     endif()
 
     message(STATUS "Using default db backend ${AKONADI_DATABASE_BACKEND}")
-    add_definitions(-DAKONADI_DATABASE_BACKEND="${AKONADI_DATABASE_BACKEND}")
 endmacro()
 
 #### DB BACKEND DEFAULT ####

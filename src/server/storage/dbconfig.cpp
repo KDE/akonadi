@@ -11,6 +11,8 @@
 #include "dbconfigpostgresql.h"
 #include "dbconfigsqlite.h"
 
+#include <config-akonadi.h>
+
 #include <private/instance_p.h>
 #include <private/standarddirs_p.h>
 
