@@ -48,6 +48,9 @@ QString DbConfigMysql::databaseName() const
 static QString findExecutable(const QString &bin)
 {
     static const QStringList mysqldSearchPath = {
+#ifdef MYSQLD_SCRIPTS_PATH
+        QStringLiteral(MYSQLD_SCRIPTS_PATH),
+#endif
         QStringLiteral("/usr/bin"),
         QStringLiteral("/usr/sbin"),
         QStringLiteral("/usr/local/sbin"),
