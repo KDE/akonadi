@@ -1,14 +1,6 @@
 include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR})
 
-if(MYSQLD_EXECUTABLE)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMYSQLD_EXECUTABLE=\"\\\"${MYSQLD_EXECUTABLE}\\\"\"")
-endif()
-
-if(POSTGRES_PATH)
-  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DPOSTGRES_PATH=\"\\\"${POSTGRES_PATH}\\\"\"")
-endif()
-
 ########### next target ###############
 set(AKONADI_DB_SCHEMA "${CMAKE_CURRENT_SOURCE_DIR}/storage/akonadidb.xml")
 
@@ -173,8 +165,16 @@ add_library(libakonadiserver STATIC ${libakonadiserver_SRCS})
 
 set_target_properties(libakonadiserver PROPERTIES OUTPUT_NAME akonadiserver)
 
+if(MYSQLD_EXECUTABLE)
+  target_compile_definitions(libakonadiserver PRIVATE MYSQLD_EXECUTABLE="${MYSQLD_EXECUTABLE}")
+endif()
+
 if(MYSQLD_SCRIPTS_PATH)
   target_compile_definitions(libakonadiserver PRIVATE MYSQLD_SCRIPTS_PATH="${MYSQLD_SCRIPTS_PATH}")
+endif()
+
+if(POSTGRES_PATH)
+  target_compile_definitions(libakonadiserver PRIVATE POSTGRES_PATH="${POSTGRES_PATH}")
 endif()
 
 target_link_libraries(libakonadiserver
