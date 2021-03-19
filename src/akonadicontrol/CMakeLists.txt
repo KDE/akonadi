@@ -42,6 +42,8 @@ if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(akonadi_control PROPERTIES UNITY_BUILD ON)
 endif()
 
+target_include_directories(akonadi_control BEFORE PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
+
 set_target_properties(akonadi_control PROPERTIES MACOSX_BUNDLE FALSE)
 set_target_properties(akonadi_control PROPERTIES OUTPUT_NAME akonadi_control)
 
