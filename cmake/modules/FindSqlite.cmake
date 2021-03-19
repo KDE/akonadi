@@ -105,6 +105,14 @@ find_package_handle_standard_args( Sqlite DEFAULT_MSG
                                    SQLITE_VERSION_OK
                                    SQLITE_HAS_UNLOCK_NOTIFY)
 
+if(Sqlite_FOUND AND NOT TARGET Sqlite::Sqlite)
+  add_library(Sqlite::Sqlite UNKNOWN IMPORTED)
+  set_target_properties(Sqlite::Sqlite PROPERTIES
+    IMPORTED_LOCATION "${SQLITE_LIBRARIES}"
+    INTERFACE_INCLUDE_DIRECTORIES "${SQLITE_INCLUDE_DIR}"
+  )
+endif()
+
 # show the SQLITE_INCLUDE_DIR and SQLITE_LIBRARIES variables only in the advanced view
 mark_as_advanced( SQLITE_INCLUDE_DIR SQLITE_LIBRARIES )
 

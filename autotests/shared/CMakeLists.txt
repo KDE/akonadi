@@ -1,7 +1,5 @@
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 
-include_directories(${Akonadi_SOURCE_DIR}/src/shared)
-
 macro(add_unit_test _source)
     set(_test ${_source})
     get_filename_component(_name ${_source} NAME_WE)

@@ -6,9 +6,9 @@ set_package_properties(LibXml2 PROPERTIES
     TYPE OPTIONAL
 )
 
-# Turn exceptions on
 if (LIBXML2_FOUND)
     add_definitions(-DHAVE_LIBXML2)
+    # TODO: Use LibXml2::LibXml2 when we'll require CMake >= 3.12
     include_directories(${LIBXML2_INCLUDE_DIR})
 endif ()
 

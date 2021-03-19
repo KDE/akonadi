@@ -1,6 +1,3 @@
-include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
-include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR})
-
 ########### next target ###############
 set(AKONADI_DB_SCHEMA "${CMAKE_CURRENT_SOURCE_DIR}/storage/akonadidb.xml")
 

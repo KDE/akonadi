@@ -1,5 +1,3 @@
-include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
-
 ########### next target ###############
 
 set(control_SRCS
@@ -22,7 +20,6 @@ ecm_qt_declare_logging_category(control_SRCS HEADER akonadicontrol_debug.h IDENT
         DESCRIPTION "akonadi (Akonadi Control)"
         EXPORT AKONADI
     )
-
 
 qt5_add_dbus_adaptor(control_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.AgentManager.xml agentmanager.h AgentManager)
 qt5_add_dbus_adaptor(control_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.ControlManager.xml controlmanager.h ControlManager)
@@ -71,7 +68,6 @@ endif()
 
 install(TARGETS akonadi_control
         ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
-
 
 configure_file(org.freedesktop.Akonadi.Control.service.cmake ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.Control.service)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.Control.service

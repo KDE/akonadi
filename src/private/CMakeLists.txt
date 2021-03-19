@@ -1,5 +1,6 @@
 add_subdirectory(protocolgen)
 
+# TODO: Use LibLZMA::LibLZMA when we'll require CMake >= 3.14
 include_directories(${LIBLZMA_INCLUDE_DIRS})
 
 if(NOT XMLLINT_EXECUTABLE)

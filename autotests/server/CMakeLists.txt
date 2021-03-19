@@ -5,10 +5,6 @@ remove_definitions(-DQT_GUI_LIB)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR}
-                    ${CMAKE_BINARY_DIR}/src/server
-                    ${Akonadi_SOURCE_DIR}/src/server)
-
 akonadi_run_xsltproc(
     XSL ${Akonadi_SOURCE_DIR}/src/server/storage/schema.xsl
     XML ${CMAKE_CURRENT_SOURCE_DIR}/dbtest_data/unittest_schema.xml
