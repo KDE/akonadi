@@ -41,9 +41,6 @@ qt5_add_dbus_interface(control_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.fre
 qt5_add_dbus_interface(control_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.PreprocessorManager.xml preprocessor_manager)
 
 add_executable(akonadi_control ${control_SRCS})
-if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
-    set_target_properties(akonadi_control PROPERTIES UNITY_BUILD ON)
-endif()
 
 set_target_properties(akonadi_control PROPERTIES MACOSX_BUNDLE FALSE)
 set_target_properties(akonadi_control PROPERTIES OUTPUT_NAME akonadi_control)

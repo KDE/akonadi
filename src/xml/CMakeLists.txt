@@ -32,9 +32,6 @@ ecm_generate_headers(AkonadiXml_HEADERS
 )
 
 add_executable(akonadi2xml akonadi2xml.cpp)
-if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
-    set_target_properties(akonadi2xml PROPERTIES UNITY_BUILD ON)
-endif()
 
 set_target_properties(akonadi2xml PROPERTIES MACOSX_BUNDLE FALSE)
 

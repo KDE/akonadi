@@ -20,9 +20,6 @@ qt5_add_dbus_interfaces(akonadictl_SRCS
 )
 
 add_executable(akonadictl ${akonadictl_SRCS})
-if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
-    set_target_properties(akonadictl PROPERTIES UNITY_BUILD ON)
-endif()
 
 set_target_properties(akonadictl PROPERTIES MACOSX_BUNDLE FALSE)
 set_target_properties(akonadictl PROPERTIES OUTPUT_NAME akonadictl)

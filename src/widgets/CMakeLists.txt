@@ -100,9 +100,6 @@ ecm_generate_headers(AkonadiWidgets_HEADERS
 ki18n_wrap_ui(akonadiwidgets_SRCS ${akonadiwidgets_UI})
 
 add_library(KF5AkonadiWidgets ${akonadiwidgets_SRCS})
-if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
-    set_target_properties(KF5AkonadiWidgets PROPERTIES UNITY_BUILD ON)
-endif()
 
 generate_export_header(KF5AkonadiWidgets BASE_NAME akonadiwidgets)
 

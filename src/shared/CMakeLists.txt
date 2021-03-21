@@ -5,9 +5,6 @@ set(akonadi_shared_srcs
 )
 
 add_library(akonadi_shared STATIC ${akonadi_shared_srcs})
-if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
-    set_target_properties(akonadi_shared PROPERTIES UNITY_BUILD ON)
-endif()
 
 target_include_directories(akonadi_shared INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 

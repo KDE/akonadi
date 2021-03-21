@@ -50,9 +50,6 @@ qt5_add_dbus_adaptor(akonadiagentbase_SRCS ../interfaces/org.kde.Akonadi.Account
     accountsintegration.h Akonadi::AccountsIntegration accountsadaptor Akonadi__AccountsAdaptor)
 
 add_library(KF5AkonadiAgentBase ${akonadiagentbase_SRCS})
-if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
-    set_target_properties(KF5AkonadiAgentBase PROPERTIES UNITY_BUILD ON)
-endif()
 
 generate_export_header(KF5AkonadiAgentBase BASE_NAME akonadiagentbase)
 
