@@ -6,8 +6,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_ENTITYORDERPROXYMODEL_H
-#define AKONADI_ENTITYORDERPROXYMODEL_H
+#pragma once
 
 #include "akonadicore_export.h"
 #include "collection.h"
@@ -95,4 +94,3 @@ private:
 
 }
 
-#endif

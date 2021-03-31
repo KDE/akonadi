@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_SHAREDVALUEPOOL_P_H
-#define AKONADI_SHAREDVALUEPOOL_P_H
+#pragma once
 
 #include <algorithm>
 
@@ -39,4 +38,3 @@ private:
 }
 }
 
-#endif

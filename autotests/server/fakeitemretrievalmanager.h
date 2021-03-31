@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_SERVER_FAKEITEMRETRIEVALMANAGER_H
-#define AKONADI_SERVER_FAKEITEMRETRIEVALMANAGER_H
+#pragma once
 
 #include "storage/itemretrievalmanager.h"
 
@@ -24,4 +23,3 @@ public:
 
 } // namespace Server
 } // namespace Akonadi
-#endif

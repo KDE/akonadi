@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef INTERVALCHECK_H
-#define INTERVALCHECK_H
+#pragma once
 
 #include "collectionscheduler.h"
 
@@ -53,4 +52,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

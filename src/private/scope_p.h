@@ -7,8 +7,7 @@
 
 // krazy:excludeall=dpointer
 
-#ifndef AKONADI_PRIVATE_SCOPE_P_H
-#define AKONADI_PRIVATE_SCOPE_P_H
+#pragma once
 
 #include "akonadiprivate_export.h"
 
@@ -116,4 +115,3 @@ private:
 
 AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug debug, const Akonadi::Scope &scope);
 
-#endif

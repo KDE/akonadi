@@ -4,8 +4,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef DATASTORE_H
-#define DATASTORE_H
+#pragma once
 
 #include <QList>
 #include <QMutex>
@@ -370,4 +369,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

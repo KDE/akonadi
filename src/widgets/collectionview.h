@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_COLLECTION_VIEW
-#define AKONADI_COLLECTION_VIEW
+#pragma once
 
 #include "akonadiwidgets_export.h"
 #include <QTreeView>
@@ -124,4 +123,3 @@ private:
 
 }
 
-#endif

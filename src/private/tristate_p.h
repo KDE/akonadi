@@ -4,8 +4,7 @@
  *    SPDX-License-Identifier: LGPL-2.0-or-later
  */
 
-#ifndef AKONADI_PRIVATE_TRISTATE_P_H_
-#define AKONADI_PRIVATE_TRISTATE_P_H_
+#pragma once
 
 #include <QDebug>
 #include <QMetaType>
@@ -25,4 +24,3 @@ Q_DECLARE_METATYPE(Akonadi::Tristate)
 
 AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, Akonadi::Tristate tristate);
 
-#endif

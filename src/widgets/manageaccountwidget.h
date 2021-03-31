@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef MANAGEACCOUNTWIDGET_H
-#define MANAGEACCOUNTWIDGET_H
+#pragma once
 
 #include "akonadiwidgets_export.h"
 #include <QWidget>
@@ -68,4 +67,3 @@ private:
 };
 }
 
-#endif // MANAGEACCOUNTWIDGET_H

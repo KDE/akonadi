@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef MIMETYPECHECKER_P_H
-#define MIMETYPECHECKER_P_H
+#pragma once
 
 #include <QMimeDatabase>
 #include <QMimeType>
@@ -57,4 +56,3 @@ public:
 
 }
 
-#endif

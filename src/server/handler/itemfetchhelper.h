@@ -4,8 +4,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef AKONADI_ITEMFETCHHELPER_H
-#define AKONADI_ITEMFETCHHELPER_H
+#pragma once
 
 #include "commandcontext.h"
 #include "storage/countquerybuilder.h"
@@ -92,4 +91,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

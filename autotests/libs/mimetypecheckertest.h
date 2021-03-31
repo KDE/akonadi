@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_MIMETYPECHECKERTEST_H
-#define AKONADI_MIMETYPECHECKERTEST_H
+#pragma once
 
 #include "mimetypechecker.h"
 
@@ -33,4 +32,3 @@ private Q_SLOTS:
     void testStringMatchEquivalent();
 };
 
-#endif

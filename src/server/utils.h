@@ -5,8 +5,7 @@
  *
  */
 
-#ifndef UTILS_H
-#define UTILS_H
+#pragma once
 
 #include <QDateTime>
 #include <QVariant>
@@ -108,4 +107,3 @@ void disableCoW(const QString &path);
 } // namespace Server
 } // namespace Akonadi
 
-#endif

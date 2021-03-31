@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_SEARCHREQUEST_H
-#define AKONADI_SEARCHREQUEST_H
+#pragma once
 
 #include <QObject>
 #include <QSet>
@@ -72,4 +71,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif // AKONADI_SEARCHREQUEST_H

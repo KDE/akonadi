@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_AGENTTYPE_H
-#define AKONADI_AGENTTYPE_H
+#pragma once
 
 #include "akonadicore_export.h"
 
@@ -137,4 +136,3 @@ Q_DECLARE_TYPEINFO(Akonadi::AgentType, Q_MOVABLE_TYPE);
 
 Q_DECLARE_METATYPE(Akonadi::AgentType)
 
-#endif

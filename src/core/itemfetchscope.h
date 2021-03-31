@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef ITEMFETCHSCOPE_H
-#define ITEMFETCHSCOPE_H
+#pragma once
 
 #include "akonadicore_export.h"
 
@@ -421,4 +420,3 @@ private:
 
 Q_DECLARE_METATYPE(Akonadi::ItemFetchScope)
 
-#endif

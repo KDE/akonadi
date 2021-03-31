@@ -3,8 +3,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_CONFIG_P_H
-#define AKONADI_CONFIG_P_H
+#pragma once
 
 #include <memory>
 
@@ -37,4 +36,3 @@ public:
 
 } // namespace Akonadi
 
-#endif

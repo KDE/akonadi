@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_COMPRESSIONSTREAM_H_
-#define AKONADI_COMPRESSIONSTREAM_H_
+#pragma once
 
 #include "akonadiprivate_export.h"
 
@@ -47,4 +46,3 @@ private:
 
 } // namespace Akonadi
 
-#endif

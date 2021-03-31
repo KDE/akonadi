@@ -3,8 +3,7 @@
 
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
-#ifndef TAGSYNC_H
-#define TAGSYNC_H
+#pragma once
 
 #include "akonadicore_export.h"
 
@@ -49,4 +48,3 @@ private:
 
 }
 
-#endif

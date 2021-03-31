@@ -4,8 +4,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef CONTROLMANAGER_H
-#define CONTROLMANAGER_H
+#pragma once
 
 #include <QObject>
 
@@ -35,4 +34,3 @@ public Q_SLOTS:
     void shutdown();
 };
 
-#endif

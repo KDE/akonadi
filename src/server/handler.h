@@ -3,8 +3,7 @@
  *                                                                         *
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
-#ifndef AKONADIHANDLER_H
-#define AKONADIHANDLER_H
+#pragma once
 
 #include "connection.h"
 #include "exception.h"
@@ -141,4 +140,3 @@ template<typename T> inline void Handler::sendResponse(T &&response)
 } // namespace Server
 } // namespace Akonadi
 
-#endif

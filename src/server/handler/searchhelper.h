@@ -4,8 +4,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef AKONADISEARCHHELPER_H
-#define AKONADISEARCHHELPER_H
+#pragma once
 
 #include <QStringList>
 #include <QVector>
@@ -23,4 +22,3 @@ public:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

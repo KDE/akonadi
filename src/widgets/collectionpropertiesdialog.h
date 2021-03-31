@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_COLLECTIONPROPERTIESDIALOG_H
-#define AKONADI_COLLECTIONPROPERTIESDIALOG_H
+#pragma once
 
 #include "akonadiwidgets_export.h"
 #include "collectionpropertiespage.h"
@@ -134,4 +133,3 @@ private:
 
 }
 
-#endif

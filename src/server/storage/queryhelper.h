@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_QUERYHELPER_H
-#define AKONADI_QUERYHELPER_H
+#pragma once
 
 class QString;
 
@@ -32,4 +31,3 @@ void setToQuery(const ImapSet &set, const QString &column, QueryBuilder &qb);
 } // namespace Server
 } // namespace Akonadi
 
-#endif

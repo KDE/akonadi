@@ -9,8 +9,7 @@
  *
  *****************************************************************************/
 
-#ifndef AKONADI_PREPROCESSORMANAGER_H
-#define AKONADI_PREPROCESSORMANAGER_H
+#pragma once
 
 #include <QHash>
 #include <QList>
@@ -258,4 +257,3 @@ private Q_SLOTS:
 } // namespace Server
 } // namespace Akonadi
 
-#endif //!_PREPROCESSORMANAGER_H_

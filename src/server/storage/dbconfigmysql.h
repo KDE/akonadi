@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef DBCONFIGMYSQL_H
-#define DBCONFIGMYSQL_H
+#pragma once
 
 #include "dbconfig.h"
 #include <QObject>
@@ -97,4 +96,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

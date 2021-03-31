@@ -5,8 +5,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef ABSTRACTDIFFERENCESREPORTER_P_H
-#define ABSTRACTDIFFERENCESREPORTER_P_H
+#pragma once
 
 namespace Akonadi
 {
@@ -131,4 +130,3 @@ private:
 
 }
 
-#endif

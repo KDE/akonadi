@@ -5,8 +5,7 @@
     SPDX-License-Identifier: LGPL-2.1-or-later
 */
 
-#ifndef AKONADI_AGENTTYPEDIALOG_H
-#define AKONADI_AGENTTYPEDIALOG_H
+#pragma once
 
 #include "agenttype.h"
 #include "agenttypewidget.h"
@@ -81,4 +80,3 @@ private:
 
 }
 
-#endif

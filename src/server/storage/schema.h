@@ -4,8 +4,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef SCHEMA_H
-#define SCHEMA_H
+#pragma once
 
 #include "schematypes.h"
 
@@ -37,4 +36,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

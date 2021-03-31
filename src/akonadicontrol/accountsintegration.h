@@ -4,8 +4,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef ACCOUNTSINTEGRATION_H_
-#define ACCOUNTSINTEGRATION_H_
+#pragma once
 
 #include <QMap>
 #include <QObject>
@@ -45,4 +44,3 @@ private:
     QMap<QString, QString /* agent type */> mSupportedServices;
 };
 
-#endif

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AGENTINSTANCEWIDGETTEST_H
-#define AGENTINSTANCEWIDGETTEST_H
+#pragma once
 
 #include <QDialog>
 
@@ -27,4 +26,3 @@ private:
     Akonadi::AgentInstanceWidget *mWidget;
 };
 
-#endif

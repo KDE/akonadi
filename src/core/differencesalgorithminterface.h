@@ -5,8 +5,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef DIFFERENCESALGORITHMINTERFACE_P_H
-#define DIFFERENCESALGORITHMINTERFACE_P_H
+#pragma once
 
 namespace Akonadi
 {
@@ -44,4 +43,3 @@ public:
 
 Q_DECLARE_INTERFACE(Akonadi::DifferencesAlgorithmInterface, "org.freedesktop.Akonadi.DifferencesAlgorithmInterface/1.0")
 
-#endif

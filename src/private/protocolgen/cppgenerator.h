@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef CPPGENERATOR_H
-#define CPPGENERATOR_H
+#pragma once
 
 #include <QFile>
 #include <QTextStream>
@@ -49,4 +48,3 @@ private:
     QTextStream mImpl;
 };
 
-#endif // CPPGENERATOR_H

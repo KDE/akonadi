@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef DBCONFIG_H
-#define DBCONFIG_H
+#pragma once
 
 #include <QSettings>
 #include <QSqlDatabase>
@@ -130,4 +129,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

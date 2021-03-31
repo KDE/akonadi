@@ -5,8 +5,7 @@
  *
  */
 
-#ifndef AKONADI_SERVER_PARTSTREAMER_H
-#define AKONADI_SERVER_PARTSTREAMER_H
+#pragma once
 
 #include <QSharedPointer>
 
@@ -64,4 +63,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif // AKONADI_SERVER_PARTSTREAMER_H

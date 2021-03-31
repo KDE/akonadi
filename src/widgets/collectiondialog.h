@@ -5,8 +5,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_COLLECTIONDIALOG_H
-#define AKONADI_COLLECTIONDIALOG_H
+#pragma once
 
 #include "akonadiwidgets_export.h"
 #include "collection.h"
@@ -201,4 +200,3 @@ private:
 
 } // namespace Akonadi
 
-#endif // AKONADI_COLLECTIONDIALOG_H

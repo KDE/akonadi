@@ -3,8 +3,7 @@
  *
  * SPDX-License-Identifier: LGPL-2.0-or-later
  */
-#ifndef RECENTCOLLECTIONACTION_P_H
-#define RECENTCOLLECTIONACTION_P_H
+#pragma once
 
 #include "collection.h"
 #include <KSharedConfig>
@@ -63,4 +62,3 @@ private:
 };
 }
 
-#endif /* RECENTCOLLECTIONACTION_P_H */

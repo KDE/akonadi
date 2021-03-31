@@ -5,8 +5,7 @@
  *
  */
 
-#ifndef AKONADI_SERVER_FAKECLIENT_H
-#define AKONADI_SERVER_FAKECLIENT_H
+#pragma once
 
 #include "datastream_p_p.h"
 #include <QRecursiveMutex>
@@ -51,4 +50,3 @@ private:
 }
 }
 
-#endif // AKONADI_SERVER_FAKECLIENT_H

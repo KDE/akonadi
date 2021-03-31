@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef MIMETYPECHECKER_H
-#define MIMETYPECHECKER_H
+#pragma once
 
 #include "akonadicore_export.h"
 
@@ -253,4 +252,3 @@ private:
 
 }
 
-#endif

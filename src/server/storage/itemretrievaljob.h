@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef ITEMRETRIEVALJOB_H
-#define ITEMRETRIEVALJOB_H
+#pragma once
 
 #include <QObject>
 
@@ -76,4 +75,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_COLLECTION_H
-#define AKONADI_COLLECTION_H
+#pragma once
 
 #include "akonadicore_export.h"
 #include "attribute.h"
@@ -587,4 +586,3 @@ Q_DECLARE_METATYPE(Akonadi::Collection::List)
 Q_DECLARE_OPERATORS_FOR_FLAGS(Akonadi::Collection::Rights)
 Q_DECLARE_TYPEINFO(Akonadi::Collection, Q_MOVABLE_TYPE);
 
-#endif

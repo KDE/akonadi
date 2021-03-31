@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_RESOURCESCHEDULER_P_H
-#define AKONADI_RESOURCESCHEDULER_P_H
+#pragma once
 
 #include "agentbase.h"
 #include "collection.h"
@@ -296,4 +295,3 @@ QTextStream &operator<<(QTextStream &, const ResourceScheduler::Task &task);
 
 }
 
-#endif

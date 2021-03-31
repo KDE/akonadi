@@ -4,8 +4,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef AKONADI_FILETRACER_H
-#define AKONADI_FILETRACER_H
+#pragma once
 
 #include "tracerinterface.h"
 
@@ -42,4 +41,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

@@ -5,8 +5,7 @@
  *
  */
 
-#ifndef STORAGEDEBUGGER_H
-#define STORAGEDEBUGGER_H
+#pragma once
 
 #include <QFile>
 #include <QMap>
@@ -102,4 +101,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif // STORAGEDEBUGGER_H

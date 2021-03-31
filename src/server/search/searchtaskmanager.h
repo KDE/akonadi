@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_SEARCHTASKMANAGER_H
-#define AKONADI_SEARCHTASKMANAGER_H
+#pragma once
 
 #include "akthread.h"
 
@@ -95,4 +94,3 @@ AKONADI_EXCEPTION_MAKE_INSTANCE(SearchException);
 } // namespace Server
 } // namespace Akonadi
 
-#endif // AKONADI_SEARCHTASKMANAGER_H

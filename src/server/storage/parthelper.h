@@ -4,8 +4,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef PARTHELPER_H
-#define PARTHELPER_H
+#pragma once
 
 #include "../exception.h"
 #include "entities.h"
@@ -67,4 +66,3 @@ bool verify(Part &part);
 } // namespace Server
 } // namespace Akonadi
 
-#endif

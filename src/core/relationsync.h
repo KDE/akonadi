@@ -3,8 +3,7 @@
 
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
-#ifndef RELATIONSYNC_H
-#define RELATIONSYNC_H
+#pragma once
 
 #include "akonadicore_export.h"
 
@@ -42,4 +41,3 @@ private:
 
 }
 
-#endif

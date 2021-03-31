@@ -5,8 +5,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef ITEMDUMPER_H
-#define ITEMDUMPER_H
+#pragma once
 
 #include "collection.h"
 
@@ -28,4 +27,3 @@ private:
     int mJobCount;
 };
 
-#endif

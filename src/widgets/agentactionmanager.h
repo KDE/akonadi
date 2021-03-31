@@ -4,8 +4,7 @@
   SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_AGENTACTIONMANAGER_H
-#define AKONADI_AGENTACTIONMANAGER_H
+#pragma once
 
 #include "agentinstance.h"
 #include "akonadiwidgets_export.h"
@@ -167,4 +166,3 @@ private:
 
 }
 
-#endif

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef PARTTYPEHELPER_H
-#define PARTTYPEHELPER_H
+#pragma once
 
 #include "exception.h"
 #include "query.h"
@@ -88,4 +87,3 @@ QString fullName(const PartType &type);
 } // namespace Server
 } // namespace Akonadi
 
-#endif

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AGENTBROKENINSTANCE_H
-#define AGENTBROKENINSTANCE_H
+#pragma once
 
 #include "agentinstance.h"
 
@@ -28,4 +27,3 @@ public:
 
 }
 
-#endif

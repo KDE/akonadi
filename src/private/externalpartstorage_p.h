@@ -7,8 +7,7 @@
 
 // krazy:excludeall=dpointer
 
-#ifndef EXTERNALPARTSTORAGE_P_H
-#define EXTERNALPARTSTORAGE_P_H
+#pragma once
 
 #include "akonadiprivate_export.h"
 
@@ -89,4 +88,3 @@ private:
 
 }
 
-#endif // EXTERNALPARTSTORAGE_P_H

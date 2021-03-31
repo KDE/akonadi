@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADICONTROL_AGENTINSTANCE_H
-#define AKONADICONTROL_AGENTINSTANCE_H
+#pragma once
 
 #include "controlinterface.h"
 #include "preprocessorinterface.h"
@@ -175,4 +174,3 @@ private:
     bool mPendingQuit = false;
 };
 
-#endif

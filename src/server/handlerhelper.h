@@ -4,8 +4,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef AKONADIHANDLERHELPER_H
-#define AKONADIHANDLERHELPER_H
+#pragma once
 
 #include "entities.h"
 
@@ -115,4 +114,3 @@ public:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

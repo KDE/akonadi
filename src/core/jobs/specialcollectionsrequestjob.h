@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_SPECIALCOLLECTIONSREQUESTJOB_H
-#define AKONADI_SPECIALCOLLECTIONSREQUESTJOB_H
+#pragma once
 
 #include "akonadicore_export.h"
 #include "collection.h"
@@ -118,4 +117,3 @@ private:
 
 } // namespace Akonadi
 
-#endif // AKONADI_SPECIALCOLLECTIONSREQUESTJOB_H

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_AGENTCONFIGURATIONDIALOG
-#define AKONADI_AGENTCONFIGURATIONDIALOG
+#pragma once
 
 #include <QDialog>
 
@@ -30,4 +29,3 @@ private:
 
 }
 
-#endif // AKONADI_AGENTCONFIGURATIONDIALOG

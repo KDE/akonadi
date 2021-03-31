@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef ENTITYTREEMODELPRIVATE_H
-#define ENTITYTREEMODELPRIVATE_H
+#pragma once
 
 #include <KJob>
 
@@ -395,4 +394,3 @@ public:
 
 }
 
-#endif

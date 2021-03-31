@@ -5,8 +5,7 @@
   SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef AKONADI_TAGSELECTIONCOMBO_H
-#define AKONADI_TAGSELECTIONCOMBO_H
+#pragma once
 
 #include "akonadiwidgets_export.h"
 
@@ -52,4 +51,3 @@ private:
 
 } // namespace
 
-#endif // TAGSELECTIONCOMBO_H

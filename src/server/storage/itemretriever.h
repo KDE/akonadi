@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef ITEMRETRIEVER_H
-#define ITEMRETRIEVER_H
+#pragma once
 
 #include <QDateTime>
 #include <QObject>
@@ -100,4 +99,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

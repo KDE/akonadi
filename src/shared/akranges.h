@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_AKRANGES_H
-#define AKONADI_AKRANGES_H
+#pragma once
 
 #include "akhelpers.h"
 #include "aktraits.h"
@@ -477,4 +476,3 @@ template<typename Iterator1, typename Iterator2, typename It = std::remove_refer
 
 } // namespace AkRanges
 
-#endif

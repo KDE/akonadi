@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef SESSIONTHREAD_P_H
-#define SESSIONTHREAD_P_H
+#pragma once
 
 #include <QObject>
 #include <QVector>
@@ -37,4 +36,3 @@ private:
 
 }
 
-#endif

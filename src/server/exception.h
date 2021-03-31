@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_EXCEPTION_H
-#define AKONADI_EXCEPTION_H
+#pragma once
 
 #include <QByteArray>
 #include <QString>
@@ -80,4 +79,3 @@ protected:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

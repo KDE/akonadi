@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_JOB_P_H
-#define AKONADI_JOB_P_H
+#pragma once
 
 #include "item.h"
 #include "session.h"
@@ -117,4 +116,3 @@ private:
 
 }
 
-#endif

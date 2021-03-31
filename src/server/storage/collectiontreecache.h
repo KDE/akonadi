@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef COLLECTIONTREECACHE_H
-#define COLLECTIONTREECACHE_H
+#pragma once
 
 #include "akthread.h"
 #include "entities.h"
@@ -102,4 +101,3 @@ template<typename Predicate> CollectionTreeCache::Node *CollectionTreeCache::fin
 
 } // namespace Server
 } // namespace Akonadi
-#endif // COLLECTIONTREECACHE

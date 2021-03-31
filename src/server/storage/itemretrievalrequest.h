@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef ITEMRETRIEVALREQUEST_H
-#define ITEMRETRIEVALREQUEST_H
+#pragma once
 
 #include <QByteArray>
 #include <QDebug>
@@ -76,4 +75,3 @@ inline QDebug operator<<(QDebug dbg, ItemRetrievalRequest::Id id)
 
 } // namespace Server
 } // namespace Akonadi
-#endif

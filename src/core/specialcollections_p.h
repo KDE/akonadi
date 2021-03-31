@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_SPECIALCOLLECTIONS_P_H
-#define AKONADI_SPECIALCOLLECTIONS_P_H
+#pragma once
 
 #include <QHash>
 #include <QString>
@@ -76,4 +75,3 @@ public:
 
 } // namespace Akonadi
 
-#endif // AKONADI_SPECIALCOLLECTIONS_P_H

@@ -4,8 +4,7 @@
 
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
-#ifndef DBINTROSPECTOR_H
-#define DBINTROSPECTOR_H
+#pragma once
 
 #include <QHash>
 #include <QSharedPointer>
@@ -111,4 +110,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif // DBINTROSPECTOR_H

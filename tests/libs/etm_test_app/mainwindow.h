@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QMainWindow>
 
@@ -30,4 +29,3 @@ private:
     Akonadi::EntityTreeModel *m_model = nullptr;
 };
 
-#endif

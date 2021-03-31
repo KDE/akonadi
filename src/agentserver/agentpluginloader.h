@@ -3,8 +3,7 @@
 
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
-#ifndef AGENTPLUGINLOADER_H
-#define AGENTPLUGINLOADER_H
+#pragma once
 
 #include <QHash>
 #include <QPluginLoader>
@@ -33,4 +32,3 @@ private:
     QHash<QString, QPluginLoader *> m_pluginLoaders;
 };
 
-#endif // AGENTPLUGINLOADER_H

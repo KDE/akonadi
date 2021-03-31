@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_AGENTTYPE_P_H
-#define AKONADI_AGENTTYPE_P_H
+#pragma once
 
 #include <QSharedData>
 #include <QStringList>
@@ -46,4 +45,3 @@ public:
 
 }
 
-#endif

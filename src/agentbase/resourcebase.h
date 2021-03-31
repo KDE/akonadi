@@ -7,8 +7,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_RESOURCEBASE_H
-#define AKONADI_RESOURCEBASE_H
+#pragma once
 
 #include "agentbase.h"
 #include "akonadiagentbase_export.h"
@@ -879,4 +878,3 @@ private:
     }
 #endif
 
-#endif

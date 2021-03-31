@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef COLLECTIONIDENTIFICATIONATTRIBUTE_H
-#define COLLECTIONIDENTIFICATIONATTRIBUTE_H
+#pragma once
 
 #include "attribute.h"
 #include <QByteArray>
@@ -70,4 +69,3 @@ private:
 
 } // namespace Akonadi
 
-#endif

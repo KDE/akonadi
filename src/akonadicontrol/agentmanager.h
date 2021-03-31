@@ -5,8 +5,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef AGENTMANAGER_H
-#define AGENTMANAGER_H
+#pragma once
 
 #include <QHash>
 #include <QStringList>
@@ -374,4 +373,3 @@ private:
     friend class AgentInstance;
 };
 
-#endif

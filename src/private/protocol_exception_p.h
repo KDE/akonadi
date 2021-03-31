@@ -6,8 +6,7 @@
 
 // krazy:excludeall=dpointer,inline
 
-#ifndef AKONADI_PROTOCOLEXCEPTION_P_H
-#define AKONADI_PROTOCOLEXCEPTION_P_H
+#pragma once
 
 #include "akonadiprivate_export.h"
 
@@ -41,4 +40,3 @@ private:
 };
 } // namespace Akonadi
 
-#endif

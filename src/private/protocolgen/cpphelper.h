@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef CPPHELPER_H
-#define CPPHELPER_H
+#pragma once
 
 class PropertyNode;
 
@@ -19,4 +18,3 @@ void sortMembersForSerialization(QVector<PropertyNode const *> &props);
 
 } // namespace CppHelper
 
-#endif

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKOANDI_COLLECTIONGENERALPROPERTIESPAGE_P_H
-#define AKOANDI_COLLECTIONGENERALPROPERTIESPAGE_P_H
+#pragma once
 
 #include "collectionpropertiespage.h"
 #include "ui_collectiongeneralpropertiespage.h"
@@ -35,4 +34,3 @@ AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CollectionGeneralPropertiesPageFactor
 
 }
 
-#endif

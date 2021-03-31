@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_AGENTINSTANCEMODEL_H
-#define AKONADI_AGENTINSTANCEMODEL_H
+#pragma once
 
 #include "akonadicore_export.h"
 
@@ -88,4 +87,3 @@ private:
 
 }
 
-#endif

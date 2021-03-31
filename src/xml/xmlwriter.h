@@ -5,8 +5,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_XMLWRITER_H
-#define AKONADI_XMLWRITER_H
+#pragma once
 
 #include "akonadi-xml_export.h"
 
@@ -62,4 +61,3 @@ AKONADI_XML_EXPORT QDomElement writeItem(const Item &item, QDomElement &parentEl
 
 }
 
-#endif

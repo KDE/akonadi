@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_TAGMODELPRIVATE_H
-#define AKONADI_TAGMODELPRIVATE_H
+#pragma once
 
 #include "tag.h"
 
@@ -51,4 +50,3 @@ protected:
 };
 }
 
-#endif // AKONADI_TAGMODELPRIVATE_H

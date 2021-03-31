@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_CHANGENOTIFICATION_H
-#define AKONADI_CHANGENOTIFICATION_H
+#pragma once
 
 #include <QDateTime>
 #include <QSharedDataPointer>
@@ -68,4 +67,3 @@ private:
 
 }
 
-#endif

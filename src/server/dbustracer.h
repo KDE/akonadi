@@ -4,8 +4,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef AKONADI_DBUSTRACER_H
-#define AKONADI_DBUSTRACER_H
+#pragma once
 
 #include <QObject>
 
@@ -52,4 +51,3 @@ Q_SIGNALS:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

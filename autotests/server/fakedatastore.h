@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_SERVER_FAKEDATASTORE_H
-#define AKONADI_SERVER_FAKEDATASTORE_H
+#pragma once
 
 #include "storage/datastore.h"
 
@@ -118,4 +117,3 @@ private:
 }
 }
 
-#endif // AKONADI_SERVER_FAKEDATASTORE_H

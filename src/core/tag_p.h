@@ -5,8 +5,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef TAG_P_H
-#define TAG_P_H
+#pragma once
 
 #include "attributestorage_p.h"
 #include "tag.h"
@@ -49,4 +48,3 @@ public:
 
 }
 
-#endif

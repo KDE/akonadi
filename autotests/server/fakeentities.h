@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef FAKEENTITIES_H
-#define FAKEENTITIES_H
+#pragma once
 
 #include "entities.h"
 
@@ -73,4 +72,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif // FAKEENTITIES_H

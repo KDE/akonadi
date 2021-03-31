@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AGENTTYPE_H
-#define AGENTTYPE_H
+#pragma once
 
 #include <QHash>
 #include <QString>
@@ -47,4 +46,3 @@ public:
     static const QLatin1String CapabilitySearch;
 };
 
-#endif

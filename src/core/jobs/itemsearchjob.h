@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_ITEMSEARCHJOB_H
-#define AKONADI_ITEMSEARCHJOB_H
+#pragma once
 
 #include "akonadicore_export.h"
 #include "collection.h"
@@ -247,4 +246,3 @@ private:
 
 }
 
-#endif

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADICORE_COMMANDBUFFER_P_H_
-#define AKONADICORE_COMMANDBUFFER_P_H_
+#pragma once
 
 class QObject;
 
@@ -139,4 +138,3 @@ private:
 
 } // namespace
 
-#endif

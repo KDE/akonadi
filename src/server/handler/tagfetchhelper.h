@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_TAGFETCHHELPER_H
-#define AKONADI_TAGFETCHHELPER_H
+#pragma once
 
 #include <QSqlQuery>
 
@@ -42,4 +41,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif // AKONADI_TAGFETCHHELPER_H

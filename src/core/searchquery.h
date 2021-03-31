@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_SEARCHQUERY_H
-#define AKONADI_SEARCHQUERY_H
+#pragma once
 
 #include <QSharedPointer>
 
@@ -289,4 +288,3 @@ public:
 
 }
 
-#endif // AKONADI_SEARCHQUERY_H

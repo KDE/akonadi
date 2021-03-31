@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef TAGFETCHSCOPE_H
-#define TAGFETCHSCOPE_H
+#pragma once
 
 #include "akonadicore_export.h"
 
@@ -122,4 +121,3 @@ private:
 
 // Q_DECLARE_METATYPE(Akonadi::TagFetchScope)
 
-#endif

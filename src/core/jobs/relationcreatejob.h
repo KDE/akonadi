@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_RELATIONCREATEJOB_H
-#define AKONADI_RELATIONCREATEJOB_H
+#pragma once
 
 #include "job.h"
 
@@ -46,4 +45,3 @@ private:
 
 }
 
-#endif

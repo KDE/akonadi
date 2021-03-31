@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_AGENTFILTERPROXYMODEL_H
-#define AKONADI_AGENTFILTERPROXYMODEL_H
+#pragma once
 
 #include "akonadicore_export.h"
 #include <QSortFilterProxyModel>
@@ -86,4 +85,3 @@ private:
 
 }
 
-#endif

@@ -3,8 +3,7 @@
 
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
-#ifndef AUTOINCREMENTTEST_H
-#define AUTOINCREMENTTEST_H
+#pragma once
 
 #include "collection.h"
 
@@ -31,4 +30,3 @@ private:
     Akonadi::Collection collectionTargetCollection;
 };
 
-#endif

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
  */
 
-#ifndef AKONADI_QUERYCACHE_H
-#define AKONADI_QUERYCACHE_H
+#pragma once
 
 #include <optional>
 
@@ -36,4 +35,3 @@ void clear();
 } // namespace Server
 } // namespace Akonadi
 
-#endif // AKONADI_QUERYCACHE_H

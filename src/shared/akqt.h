@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKQT_H_
-#define AKQT_H_
+#pragma once
 
 #include <utility>
 
@@ -35,4 +34,3 @@ constexpr QStringView operator""_qsv(const char16_t *str, std::size_t len)
     return QStringView(str, len);
 }
 
-#endif

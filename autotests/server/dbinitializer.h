@@ -3,8 +3,7 @@
 
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
-#ifndef AKTEST_DBINITIALIZER_H
-#define AKTEST_DBINITIALIZER_H
+#pragma once
 
 #include "entities.h"
 #include <private/protocol_p.h>
@@ -30,4 +29,3 @@ private:
     Akonadi::Server::Resource mResource;
 };
 
-#endif

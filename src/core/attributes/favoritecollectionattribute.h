@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_CORE_FAVORITECOLLECTIONATTRIBUTE_H_
-#define AKONADI_CORE_FAVORITECOLLECTIONATTRIBUTE_H_
+#pragma once
 
 #include "akonadicore_export.h"
 #include "attribute.h"
@@ -26,4 +25,3 @@ public:
 
 }
 
-#endif

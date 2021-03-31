@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_AGENTTHREAD_H
-#define AKONADI_AGENTTHREAD_H
+#pragma once
 
 #include <QThread>
 
@@ -46,4 +45,3 @@ private:
 
 }
 
-#endif

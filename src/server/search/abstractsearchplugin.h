@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_ABSTRACTSEARCHPLUGIN
-#define AKONADI_ABSTRACTSEARCHPLUGIN
+#pragma once
 
 #include <QObject>
 #include <QSet>
@@ -54,4 +53,3 @@ private:
 
 Q_DECLARE_INTERFACE(Akonadi::AbstractSearchPlugin, "org.freedesktop.Akonadi.AbstractSearchPlugin")
 
-#endif

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_NOTIFICATIONMANAGER_H
-#define AKONADI_NOTIFICATIONMANAGER_H
+#pragma once
 
 #include "akthread.h"
 
@@ -83,4 +82,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

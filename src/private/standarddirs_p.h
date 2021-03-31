@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKSTANDARDDIRS_P_H
-#define AKSTANDARDDIRS_P_H
+#pragma once
 
 #include "akonadiprivate_export.h"
 
@@ -99,4 +98,3 @@ AKONADIPRIVATE_EXPORT QString findExecutable(const QString &relPath);
 }
 }
 
-#endif

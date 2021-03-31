@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKSTD_H_
-#define AKSTD_H_
+#pragma once
 
 #include <functional>
 
@@ -18,4 +17,3 @@ namespace std
 {
 }
 
-#endif

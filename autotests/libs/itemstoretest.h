@@ -5,8 +5,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef ITEMSTORETEST_H
-#define ITEMSTORETEST_H
+#pragma once
 
 #include <QObject>
 
@@ -29,4 +28,3 @@ private Q_SLOTS:
     void testParallelJobsAddingAttributes();
 };
 
-#endif

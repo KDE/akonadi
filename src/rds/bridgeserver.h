@@ -4,8 +4,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef BRIDGESERVER_H
-#define BRIDGESERVER_H
+#pragma once
 
 #include <QObject>
 #include <QTcpServer>
@@ -41,4 +40,3 @@ protected:
     }
 };
 
-#endif // BRIDGESERVER_H

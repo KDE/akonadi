@@ -6,8 +6,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_ETMVIEWSTATESAVER_H
-#define AKONADI_ETMVIEWSTATESAVER_H
+#pragma once
 
 #include <KConfigViewStateSaver>
 
@@ -40,4 +39,3 @@ protected:
 
 }
 
-#endif

@@ -4,8 +4,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef SESSION_H
-#define SESSION_H
+#pragma once
 
 #include <QElapsedTimer>
 #include <QLocalSocket>
@@ -46,4 +45,3 @@ private:
     qint64 m_sentBytes = 0;
 };
 
-#endif // SESSION_H

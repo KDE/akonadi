@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_AGGREGATED_FETCHSCOPE_H_
-#define AKONADI_AGGREGATED_FETCHSCOPE_H_
+#pragma once
 
 #include <QSet>
 
@@ -103,4 +102,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

@@ -5,8 +5,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKTEST_H
-#define AKTEST_H
+#pragma once
 
 #include "akapplication.h"
 #include <private/instance_p.h>
@@ -129,4 +128,3 @@ bool compareNotifications(const Akonadi::Protocol::ItemChangeNotificationPtr &ac
 }
 }
 
-#endif

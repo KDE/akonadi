@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_ControlGuiGUI_H
-#define AKONADI_ControlGuiGUI_H
+#pragma once
 
 #include "akonadiwidgets_export.h"
 
@@ -125,4 +124,3 @@ private:
 
 }
 
-#endif

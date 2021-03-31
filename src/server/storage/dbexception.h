@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef DBEXCEPTION_H
-#define DBEXCEPTION_H
+#pragma once
 
 #include "exception.h"
 
@@ -32,4 +31,3 @@ public:
 } // namespace Server
 } // namespace Akonadi
 
-#endif // DBEXCEPTION_H

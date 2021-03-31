@@ -5,8 +5,7 @@
  *
  */
 
-#ifndef AKONADI_SERVER_COLLECTIONSTATISTICS_H
-#define AKONADI_SERVER_COLLECTIONSTATISTICS_H
+#pragma once
 
 class QMutex;
 
@@ -64,4 +63,3 @@ protected:
 } // namespace Server
 } // namespace Akonadi
 
-#endif // AKONADI_SERVER_COLLECTIONSTATISTICS_H

@@ -4,8 +4,7 @@
  SPDX-License-Identifier: LGPL-2.0-or-later
  */
 
-#ifndef TESTSEARCHPLUGIN_H
-#define TESTSEARCHPLUGIN_H
+#pragma once
 
 #include "../../../src/server/search/abstractsearchplugin.h"
 #include <QStringList>
@@ -22,4 +21,3 @@ public:
     static QSet<qint64> parseQuery(const QString &queryString);
 };
 
-#endif

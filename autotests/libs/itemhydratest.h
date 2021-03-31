@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef ITEMHYDRA_H
-#define ITEMHYDRA_H
+#pragma once
 
 #include <QObject>
 
@@ -33,4 +32,3 @@ private Q_SLOTS:
     void testForeignPayload();
 };
 
-#endif

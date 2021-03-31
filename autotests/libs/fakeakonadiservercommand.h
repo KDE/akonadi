@@ -4,8 +4,7 @@
   SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef FAKE_AKONADI_SERVER_COMMAND_H
-#define FAKE_AKONADI_SERVER_COMMAND_H
+#pragma once
 
 #include <QString>
 
@@ -388,4 +387,3 @@ private:
                                   int depth);
 };
 
-#endif

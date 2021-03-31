@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_SERVERMANAGER_P_H
-#define AKONADI_SERVERMANAGER_P_H
+#pragma once
 
 #include "akonadicore_export.h"
 
@@ -29,4 +28,3 @@ AKONADICORE_EXPORT void setClientType(ClientType type);
 }
 
 }
-#endif

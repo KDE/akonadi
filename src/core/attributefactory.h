@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_ATTRIBUTEFACTORY_H
-#define AKONADI_ATTRIBUTEFACTORY_H
+#pragma once
 
 #include "akonadicore_export.h"
 #include "attribute.h"
@@ -76,4 +75,3 @@ private:
 
 } // namespace Akonadi
 
-#endif

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef NODETREE_H
-#define NODETREE_H
+#pragma once
 
 #include <QMultiMap>
 #include <QVector>
@@ -185,4 +184,3 @@ private:
     bool mAsReference;
 };
 
-#endif // NODETREE_H

@@ -9,8 +9,7 @@
  *
  *****************************************************************************/
 
-#ifndef AKONADI_PREPROCESSORINSTANCE_H
-#define AKONADI_PREPROCESSORINSTANCE_H
+#pragma once
 
 #include <QDateTime>
 #include <QObject>
@@ -185,4 +184,3 @@ private Q_SLOTS:
 } // namespace Server
 } // namespace Akonadi
 
-#endif //!_PREPROCESSORINSTANCE_H_

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_ITEMCREATEJOB_H
-#define AKONADI_ITEMCREATEJOB_H
+#pragma once
 
 #include "akonadicore_export.h"
 #include "job.h"
@@ -123,4 +122,3 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(ItemCreateJob::MergeOptions)
 
 }
 
-#endif

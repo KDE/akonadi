@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKDEBUG_H
-#define AKDEBUG_H
+#pragma once
 
 #include <QString>
 
@@ -16,4 +15,3 @@ void akInit(const QString &appName);
 
 void akMakeVerbose(const QByteArray &category);
 
-#endif

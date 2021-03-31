@@ -5,8 +5,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_ITEM_H
-#define AKONADI_ITEM_H
+#pragma once
 
 #include "akonadicore_export.h"
 #include "attribute.h"
@@ -988,4 +987,3 @@ template<typename T> void Item::setPayload(std::unique_ptr<T> p)
 Q_DECLARE_METATYPE(Akonadi::Item)
 Q_DECLARE_METATYPE(Akonadi::Item::List)
 
-#endif

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_DBUS_P_H
-#define AKONADI_DBUS_P_H
+#pragma once
 
 #include "akonadiprivate_export.h"
 
@@ -76,4 +75,3 @@ AKONADIPRIVATE_EXPORT std::optional<QString> parseInstanceIdentifier(const QStri
 
 }
 
-#endif

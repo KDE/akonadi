@@ -5,8 +5,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_ENTITYMIMETYPEFILTERMODEL_H
-#define AKONADI_ENTITYMIMETYPEFILTERMODEL_H
+#pragma once
 
 #include "akonadicore_export.h"
 #include "entitytreemodel.h"
@@ -139,4 +138,3 @@ private:
 
 }
 
-#endif

@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later
  */
 
-#ifndef CONFIG_H
-#define CONFIG_H
+#pragma once
 
 #include <QHash>
 #include <QString>
@@ -46,4 +45,3 @@ private:
     QHash<QString, QString> mEnvVars;
 };
 
-#endif

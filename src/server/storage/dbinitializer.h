@@ -4,8 +4,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef DBINITIALIZER_H
-#define DBINITIALIZER_H
+#pragma once
 
 #include "dbintrospector.h"
 #include "schematypes.h"
@@ -182,4 +181,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

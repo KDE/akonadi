@@ -4,8 +4,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef AKONADI_CONNECTION_H
-#define AKONADI_CONNECTION_H
+#pragma once
 
 #include <QElapsedTimer>
 #include <QLocalSocket>
@@ -155,4 +154,3 @@ template<typename T> inline typename std::enable_if<std::is_base_of<Protocol::Co
 } // namespace Server
 } // namespace Akonadi
 
-#endif

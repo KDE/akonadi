@@ -5,8 +5,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_ABSTRACTSEARCHENGINE_H
-#define AKONADI_ABSTRACTSEARCHENGINE_H
+#pragma once
 
 #include <QtGlobal>
 
@@ -45,4 +44,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

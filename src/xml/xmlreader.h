@@ -5,8 +5,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_XMLREADER_H
-#define AKONADI_XMLREADER_H
+#pragma once
 
 #include "akonadi-xml_export.h"
 
@@ -70,4 +69,3 @@ Q_REQUIRED_RESULT AKONADI_XML_EXPORT Item elementToItem(const QDomElement &elem,
 
 }
 
-#endif

@@ -5,8 +5,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef SCHEMATYPES_H
-#define SCHEMATYPES_H
+#pragma once
 
 #include <QMap>
 #include <QString>
@@ -119,4 +118,3 @@ public:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

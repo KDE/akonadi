@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_CACHEPOLICYPAGE_H
-#define AKONADI_CACHEPOLICYPAGE_H
+#pragma once
 
 #include "akonadiwidgets_export.h"
 #include "collectionpropertiespage.h"
@@ -77,4 +76,3 @@ AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CachePolicyPageFactory, CachePolicyPa
 
 }
 
-#endif

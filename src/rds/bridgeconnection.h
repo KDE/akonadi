@@ -4,8 +4,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef BRIDGECONNECTION_H
-#define BRIDGECONNECTION_H
+#pragma once
 
 #include <QObject>
 
@@ -56,4 +55,3 @@ protected:
     void connectLocal() override;
 };
 
-#endif // BRIDGECONNECTION_H

@@ -5,8 +5,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef DBINITIALIZER_P_H
-#define DBINITIALIZER_P_H
+#pragma once
 
 #include "storage/dbinitializer.h"
 
@@ -70,4 +69,3 @@ protected:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

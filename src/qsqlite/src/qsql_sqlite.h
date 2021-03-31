@@ -9,8 +9,7 @@
 **
 ****************************************************************************/
 
-#ifndef QSQL_SQLITE_H
-#define QSQL_SQLITE_H
+#pragma once
 
 #include <QtSql/private/qsqlcachedresult_p.h>
 #include <QtSql/qsqldriver.h>
@@ -56,4 +55,3 @@ QT_END_NAMESPACE
 
 QT_END_HEADER
 
-#endif // QSQL_SQLITE_H

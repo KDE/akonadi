@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_AGENTSERVER_H
-#define AKONADI_AGENTSERVER_H
+#pragma once
 
 #include "agentpluginloader.h"
 
@@ -48,4 +47,3 @@ private:
 
 }
 
-#endif

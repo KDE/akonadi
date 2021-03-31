@@ -5,8 +5,7 @@
  *
  */
 
-#ifndef PROTOCOLTEST_H
-#define PROTOCOLTEST_H
+#pragma once
 
 #include <QBuffer>
 #include <QObject>
@@ -78,4 +77,3 @@ private:
     }
 };
 
-#endif // PROTOCOLTEST_H

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_SPECIALCOLLECTIONSHELPERJOBS_P_H
-#define AKONADI_SPECIALCOLLECTIONSHELPERJOBS_P_H
+#pragma once
 
 #include "akonaditests_export.h"
 #include "collection.h"
@@ -220,4 +219,3 @@ bool AKONADI_TESTS_EXPORT releaseLock();
 
 } // namespace Akonadi
 
-#endif // AKONADI_SPECIALCOLLECTIONSHELPERJOBS_P_H

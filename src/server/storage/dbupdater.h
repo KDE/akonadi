@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_DBUPDATER_H
-#define AKONADI_DBUPDATER_H
+#pragma once
 
 #include <QMap>
 #include <QObject>
@@ -81,4 +80,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

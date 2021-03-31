@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef ATTRIBUTESTORAGE_P_H
-#define ATTRIBUTESTORAGE_P_H
+#pragma once
 
 #include "attribute.h"
 #include <QHash>
@@ -52,4 +51,3 @@ private:
 
 }
 
-#endif // ATTRIBUTESTORAGE_P_H

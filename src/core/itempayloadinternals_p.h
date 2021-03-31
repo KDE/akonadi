@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef ITEMPAYLOADINTERNALS_P_H
-#define ITEMPAYLOADINTERNALS_P_H
+#pragma once
 
 #include "supertrait.h"
 
@@ -434,4 +433,3 @@ template<typename T> inline Payload<T> *payload_cast(PayloadBase *payloadBase)
 
 /// @endcond
 
-#endif

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef GIDTEST_H
-#define GIDTEST_H
+#pragma once
 
 #include <QObject>
 
@@ -37,4 +36,3 @@ public:
     QString extractGid(const Akonadi::Item &item) const override;
 };
 
-#endif

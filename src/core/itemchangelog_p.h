@@ -5,8 +5,7 @@
  *
  */
 
-#ifndef ITEMCHANGELOG_H
-#define ITEMCHANGELOG_H
+#pragma once
 
 #include "item.h"
 
@@ -46,4 +45,3 @@ private:
 
 } // namespace Akonadi
 
-#endif // ITEMCHANGELOG_H

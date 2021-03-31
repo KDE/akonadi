@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_ACCOUNTSINTEGRATION_H_
-#define AKONADI_ACCOUNTSINTEGRATION_H_
+#pragma once
 
 #include "akonadiagentbase_export.h"
 #include <QObject>
@@ -52,4 +51,3 @@ private:
 
 } // namespace Akonadi
 
-#endif

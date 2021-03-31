@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_SERVER_AKTHREAD_H
-#define AKONADI_SERVER_AKTHREAD_H
+#pragma once
 
 #include <QObject>
 #include <QThread>
@@ -43,4 +42,3 @@ private:
 }
 }
 
-#endif // AKONADI_SERVER_AKTHREAD_H

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_TAGMODEL_H
-#define AKONADI_TAGMODEL_H
+#pragma once
 
 #include <QAbstractItemModel>
 
@@ -76,4 +75,3 @@ private:
 };
 }
 
-#endif // AKONADI_TAGMODEL_H

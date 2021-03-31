@@ -5,8 +5,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef CHANGERECORDERJOURNAL_P_H
-#define CHANGERECORDERJOURNAL_P_H
+#pragma once
 
 #include "akonaditests_export.h"
 #include "private/protocol_p.h"
@@ -83,4 +82,3 @@ private:
 
 } // namespace
 
-#endif

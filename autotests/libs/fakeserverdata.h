@@ -4,8 +4,7 @@
   SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef FAKE_SERVER_DATA_H
-#define FAKE_SERVER_DATA_H
+#pragma once
 
 #include <QQueue>
 #include <QSharedPointer>
@@ -72,4 +71,3 @@ private:
     mutable Tag::Id m_nextTagId;
 };
 
-#endif

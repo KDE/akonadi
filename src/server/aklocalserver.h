@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKLOCALSERVER_H
-#define AKLOCALSERVER_H
+#pragma once
 
 #include <QLocalServer>
 
@@ -29,4 +28,3 @@ protected:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

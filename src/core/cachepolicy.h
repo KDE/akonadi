@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_CACHEPOLICY_H
-#define AKONADI_CACHEPOLICY_H
+#pragma once
 
 #include "akonadicore_export.h"
 
@@ -155,4 +154,3 @@ private:
  */
 AKONADICORE_EXPORT QDebug operator<<(QDebug, const Akonadi::CachePolicy &);
 
-#endif

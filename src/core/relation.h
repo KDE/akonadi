@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_RELATION_H
-#define AKONADI_RELATION_H
+#pragma once
 
 #include "akonadicore_export.h"
 
@@ -121,4 +120,3 @@ Q_DECLARE_METATYPE(Akonadi::Relation)
 Q_DECLARE_METATYPE(Akonadi::Relation::List)
 Q_DECLARE_METATYPE(QSet<Akonadi::Relation>)
 Q_DECLARE_TYPEINFO(Akonadi::Relation, Q_MOVABLE_TYPE);
-#endif

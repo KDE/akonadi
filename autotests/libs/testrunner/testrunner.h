@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later
  */
 
-#ifndef TESTRUNNER_H
-#define TESTRUNNER_H
+#pragma once
 
 #include <QObject>
 #include <QProcess>
@@ -39,4 +38,3 @@ private:
     KProcess *mProcess = nullptr;
 };
 
-#endif // TESTRUNNER_H

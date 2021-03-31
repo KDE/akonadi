@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKAPPLICATION_H
-#define AKAPPLICATION_H
+#pragma once
 
 #include <QCommandLineParser>
 #include <QDBusConnection>
@@ -116,4 +115,3 @@ typedef AkApplicationImpl<QApplication> AkApplication;
 typedef AkApplicationImpl<QGuiApplication> AkGuiApplication;
 typedef AkUniqueApplicationImpl<QGuiApplication> AkUniqueGuiApplication;
 
-#endif

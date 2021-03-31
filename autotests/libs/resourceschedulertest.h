@@ -3,8 +3,7 @@
 
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
-#ifndef RESOURCESCHEDULERTEST_H
-#define RESOURCESCHEDULERTEST_H
+#pragma once
 
 #include <QObject>
 #include <QVariant>
@@ -33,4 +32,3 @@ private:
     QVariant mLastArgument;
 };
 
-#endif

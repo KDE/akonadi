@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef DBTYPE_H
-#define DBTYPE_H
+#pragma once
 
 #include <QSqlDatabase>
 
@@ -37,4 +36,3 @@ bool isSystemSQLite(const QSqlDatabase &db);
 } // namespace Server
 } // namespace Akonadi
 
-#endif // DBTYPE_H

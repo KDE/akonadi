@@ -6,8 +6,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_PROTOCOL_P_H
-#define AKONADI_PROTOCOL_P_H
+#pragma once
 
 #include "akonadiprivate_export.h"
 
@@ -716,4 +715,3 @@ static const QString VirtualCollectionMimeType = QStringLiteral("application/x-v
 
 }
 
-#endif

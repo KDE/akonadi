@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later
  *
  */
-#ifndef FAKEAKONADISERVER_H
-#define FAKEAKONADISERVER_H
+#pragma once
 
 #include "akonadi.h"
 #include "exception.h"
@@ -118,4 +117,3 @@ AKONADI_EXCEPTION_MAKE_INSTANCE(FakeAkonadiServerException);
 Q_DECLARE_METATYPE(Akonadi::Server::TestScenario)
 Q_DECLARE_METATYPE(Akonadi::Server::TestScenario::List)
 
-#endif // FAKEAKONADISERVER_H

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_COLLECTIONQUERYHELPER_H
-#define AKONADI_COLLECTIONQUERYHELPER_H
+#pragma once
 
 #include "entities.h"
 
@@ -60,4 +59,3 @@ Collection singleCollectionFromScope(const Scope &scope, const CommandContext &c
 } // namespace Server
 } // namespace Akonadi
 
-#endif

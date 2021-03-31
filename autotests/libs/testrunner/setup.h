@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later
  */
 
-#ifndef SETUP_H
-#define SETUP_H
+#pragma once
 
 #include <servermanager.h>
 
@@ -83,4 +82,3 @@ private:
     QVector<EnvVar> mEnvVars;
 };
 
-#endif

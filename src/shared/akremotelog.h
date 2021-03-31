@@ -4,9 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKREMOTELOG_H_
-#define AKREMOTELOG_H_
+#pragma once
 
 void akInitRemoteLog();
 
-#endif

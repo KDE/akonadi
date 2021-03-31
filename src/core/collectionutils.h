@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_COLLECTIONUTILS_P_H
-#define AKONADI_COLLECTIONUTILS_P_H
+#pragma once
 
 #include <QStringList>
 
@@ -121,4 +120,3 @@ Q_REQUIRED_RESULT inline bool hasValidHierarchicalRID(const Item &item)
 
 }
 
-#endif

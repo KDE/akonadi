@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef VECTORHELPER_H
-#define VECTORHELPER_H
+#pragma once
 
 #include <QSet>
 #include <QVector>
@@ -46,4 +45,3 @@ template<typename Value, template<typename> class Container> QVector<Value> setT
 
 } // namespace Akonadi
 
-#endif // VECTORHELPER_H

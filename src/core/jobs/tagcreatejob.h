@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_TAGCREATEJOB_H
-#define AKONADI_TAGCREATEJOB_H
+#pragma once
 
 #include "akonadicore_export.h"
 #include "job.h"
@@ -55,4 +54,3 @@ private:
 
 }
 
-#endif

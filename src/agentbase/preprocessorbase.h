@@ -6,8 +6,7 @@
  *
  *****************************************************************************/
 
-#ifndef AKONADI_PREPROCESSORBASE_H
-#define AKONADI_PREPROCESSORBASE_H
+#pragma once
 
 #include "agentbase.h"
 #include "akonadiagentbase_export.h"
@@ -172,4 +171,3 @@ private:
     }
 #endif //! AKONADI_RESOURCE_MAIN
 
-#endif //!_PREPROCESSORBASE_H_

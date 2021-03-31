@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_NOTIFICATIONSUBSCRIBER_H
-#define AKONADI_NOTIFICATIONSUBSCRIBER_H
+#pragma once
 
 #include <akonadicore_export.h>
 
@@ -73,4 +72,3 @@ private:
 };
 
 }
-#endif

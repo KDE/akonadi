@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef INSPECTABLEMONITOR_H
-#define INSPECTABLEMONITOR_H
+#pragma once
 
 #include "entitycache_p.h"
 #include "monitor.h"
@@ -76,4 +75,3 @@ private:
     QQueue<MessageStruct> m_messages;
 };
 
-#endif

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADISTARTER_H
-#define AKONADISTARTER_H
+#pragma once
 
 #include <QDBusServiceWatcher>
 #include <QObject>
@@ -22,4 +21,3 @@ private:
     bool mRegistered = false;
 };
 
-#endif

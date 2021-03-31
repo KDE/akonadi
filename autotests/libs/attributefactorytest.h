@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef ATTRIBUTEFACTORYTEST_H
-#define ATTRIBUTEFACTORYTEST_H
+#pragma once
 
 #include <QObject>
 
@@ -18,4 +17,3 @@ private Q_SLOTS:
     void testRegisteredAttribute();
 };
 
-#endif

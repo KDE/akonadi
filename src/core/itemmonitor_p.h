@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_ITEMMONITOR_P_H
-#define AKONADI_ITEMMONITOR_P_H
+#pragma once
 
 #include <QObject>
 
@@ -73,4 +72,3 @@ public Q_SLOTS:
 
 }
 
-#endif

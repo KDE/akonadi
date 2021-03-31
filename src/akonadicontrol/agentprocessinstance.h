@@ -5,8 +5,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AGENTPROCESSINSTANCE_H
-#define AGENTPROCESSINSTANCE_H
+#pragma once
 
 #include "agentinstance.h"
 
@@ -37,4 +36,3 @@ private:
 
 }
 
-#endif // AGENTPROCESSINSTANCE_H

@@ -5,8 +5,7 @@
  *
  */
 
-#ifndef AKONADI_SERVER_FAKESEARCHMANAGER_H
-#define AKONADI_SERVER_FAKESEARCHMANAGER_H
+#pragma once
 
 #include <search/searchmanager.h>
 
@@ -39,4 +38,3 @@ public:
 } // namespace Server
 } // namespace Akonadi
 
-#endif // AKONADI_SERVER_FAKESEARCHMANAGER_H

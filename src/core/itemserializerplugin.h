@@ -5,8 +5,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_ITEMSERIALIZERPLUGIN_H
-#define AKONADI_ITEMSERIALIZERPLUGIN_H
+#pragma once
 
 #include <QByteArray>
 #include <QSet>
@@ -217,4 +216,3 @@ private:
 
 Q_DECLARE_INTERFACE(Akonadi::ItemSerializerPlugin, "org.freedesktop.Akonadi.ItemSerializerPlugin/2.0")
 
-#endif

@@ -5,8 +5,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef DBINTROSPECTOR_IMPL_H
-#define DBINTROSPECTOR_IMPL_H
+#pragma once
 
 #include "dbintrospector.h"
 
@@ -41,4 +40,3 @@ public:
 } // namespace Server
 } // namespace Akonadi
 
-#endif // DBINTROSPECTOR_IMPL_H

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_AGENTSEARCHINSTANCE_H
-#define AKONADI_AGENTSEARCHINSTANCE_H
+#pragma once
 
 #include <QObject>
 #include <QString>
@@ -43,4 +42,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif // AKONADI_AGENTSEARCHINSTANCE_H

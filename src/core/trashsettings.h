@@ -4,8 +4,7 @@
  SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_TRASHSETTINGS_H
-#define AKONADI_TRASHSETTINGS_H
+#pragma once
 
 #include "akonadicore_export.h"
 #include "collection.h"
@@ -37,4 +36,3 @@ Q_REQUIRED_RESULT AKONADICORE_EXPORT Collection getTrashCollection(const QString
 
 }
 
-#endif

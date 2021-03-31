@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_SELFTESTDIALOG_P_H
-#define AKONADI_SELFTESTDIALOG_P_H
+#pragma once
 
 #include "akonadiwidgets_export.h"
 #include "ui_selftestdialog.h"
@@ -79,4 +78,3 @@ private:
     QStandardItemModel *mTestModel = nullptr;
 };
 }
-#endif

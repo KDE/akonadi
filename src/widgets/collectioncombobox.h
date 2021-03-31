@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_COLLECTIONCOMBOBOX_H
-#define AKONADI_COLLECTIONCOMBOBOX_H
+#pragma once
 
 #include "akonadiwidgets_export.h"
 #include "collection.h"
@@ -135,4 +134,3 @@ private:
 
 }
 
-#endif

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef FAKESESSION_H
-#define FAKESESSION_H
+#pragma once
 
 #include "akonaditestfake_export.h"
 #include "collection.h"
@@ -35,4 +34,3 @@ Q_SIGNALS:
     friend class FakeSessionPrivate;
 };
 
-#endif

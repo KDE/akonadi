@@ -4,8 +4,7 @@
    SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef AKONADI_COLLECTIONMAINTENANCEPAGE_H
-#define AKONADI_COLLECTIONMAINTENANCEPAGE_H
+#pragma once
 
 #include "akonadiwidgets_export.h"
 #include "collectionpropertiespage.h"
@@ -36,4 +35,3 @@ AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CollectionMaintenancePageFactory, Col
 
 }
 
-#endif /* COLLECTIONMAINTENANCEPAGE_H */

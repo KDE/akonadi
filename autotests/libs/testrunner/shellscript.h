@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later
  */
 
-#ifndef SHELLSCRIPT_H
-#define SHELLSCRIPT_H
+#pragma once
 
 #include <QPair>
 #include <QString>
@@ -27,4 +26,3 @@ private:
     QString mScript;
     QVector<EnvVar> mEnvVars;
 };
-#endif

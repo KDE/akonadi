@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_TRANSPORTRESOURCEBASE_H
-#define AKONADI_TRANSPORTRESOURCEBASE_H
+#pragma once
 
 #include "akonadiagentbase_export.h"
 #include "item.h"
@@ -87,4 +86,3 @@ private:
 
 }
 
-#endif

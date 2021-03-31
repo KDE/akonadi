@@ -4,8 +4,7 @@
   SPDX-License-Identifier: LGPL-2.0-or-later
   */
 
-#ifndef TAGSELECTWIDGET_H
-#define TAGSELECTWIDGET_H
+#pragma once
 
 #include "akonadiwidgets_export.h"
 #include "tag.h"
@@ -47,4 +46,3 @@ private:
 };
 }
 
-#endif // TAGSELECTWIDGET_H

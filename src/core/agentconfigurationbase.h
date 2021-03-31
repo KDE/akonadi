@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_AGENTCONFIGURATIONBASE_H
-#define AKONADI_AGENTCONFIGURATIONBASE_H
+#pragma once
 
 #include "agentconfigurationfactorybase.h"
 #include "akonadicore_export.h"
@@ -155,4 +154,3 @@ private:
 
 } // namespace
 
-#endif // AKONADI_AGENTCONFIGURATIONBASE_H

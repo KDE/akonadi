@@ -5,8 +5,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef KNUTRESOURCE_H
-#define KNUTRESOURCE_H
+#pragma once
 
 #include <collection.h>
 #include <item.h>
@@ -66,4 +65,3 @@ private:
     KnutSettings *mSettings = nullptr;
 };
 
-#endif

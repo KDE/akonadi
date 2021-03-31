@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_RESOURCEMANAGER_H
-#define AKONADI_RESOURCEMANAGER_H
+#pragma once
 
 #include <QObject>
 
@@ -39,4 +38,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

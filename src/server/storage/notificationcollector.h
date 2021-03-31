@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_NOTIFICATIONCOLLECTOR_H
-#define AKONADI_NOTIFICATIONCOLLECTOR_H
+#pragma once
 
 #include "entities.h"
 
@@ -246,4 +245,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_EXCEPTIONBASE_H
-#define AKONADI_EXCEPTIONBASE_H
+#pragma once
 
 #include "akonadicore_export.h"
 
@@ -96,4 +95,3 @@ AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE(PayloadException);
 
 }
 
-#endif

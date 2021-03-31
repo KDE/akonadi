@@ -5,8 +5,7 @@
  *
  */
 
-#ifndef AKONADI_SEARCHRESULTHANDLER_H_
-#define AKONADI_SEARCHRESULTHANDLER_H_
+#pragma once
 
 #include "handler.h"
 
@@ -34,4 +33,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif // AKONADI_SEARCHRESULTHANDLER_H_

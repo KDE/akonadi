@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_CONTROL_H
-#define AKONADI_CONTROL_H
+#pragma once
 
 #include "akonadicore_export.h"
 
@@ -95,4 +94,3 @@ private:
 
 }
 
-#endif

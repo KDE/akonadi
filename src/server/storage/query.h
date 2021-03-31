@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_QUERY_H
-#define AKONADI_QUERY_H
+#pragma once
 
 #include <QString>
 #include <QVariant>
@@ -144,4 +143,3 @@ private:
 
 Q_DECLARE_TYPEINFO(Akonadi::Server::Query::Condition, Q_MOVABLE_TYPE);
 
-#endif

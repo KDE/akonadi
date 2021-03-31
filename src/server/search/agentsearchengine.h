@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AGENTSEARCHENGINE_H
-#define AGENTSEARCHENGINE_H
+#pragma once
 
 #include "abstractsearchengine.h"
 
@@ -24,4 +23,3 @@ public:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

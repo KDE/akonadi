@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef RENAMEFAVORITEDIALOG_H
-#define RENAMEFAVORITEDIALOG_H
+#pragma once
 
 #include <QDialog>
 
@@ -28,4 +27,3 @@ private:
 
 }
 
-#endif /* RENAMEFAVORITEDIALOG_H */

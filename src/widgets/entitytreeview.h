@@ -6,8 +6,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_ENTITYTREEVIEW_H
-#define AKONADI_ENTITYTREEVIEW_H
+#pragma once
 
 #include "akonadiwidgets_export.h"
 
@@ -223,4 +222,3 @@ private:
 
 }
 
-#endif

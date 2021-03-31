@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later
  */
 
-#ifndef AKONADI_RESOURCESYNCHRONIZATIONJOB_H
-#define AKONADI_RESOURCESYNCHRONIZATIONJOB_H
+#pragma once
 
 #include "akonadicore_export.h"
 
@@ -101,4 +100,3 @@ private:
 
 }
 
-#endif

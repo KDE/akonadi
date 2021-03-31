@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_XMLDOCUMENT_H
-#define AKONADI_XMLDOCUMENT_H
+#pragma once
 
 #include "akonadi-xml_export.h"
 
@@ -121,4 +120,3 @@ private:
 
 }
 
-#endif

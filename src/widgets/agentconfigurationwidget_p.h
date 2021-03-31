@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_AGENTCONFIGURATIONWIDGET_P_H
-#define AKONADI_AGENTCONFIGURATIONWIDGET_P_H
+#pragma once
 
 #include "agentconfigurationfactorybase.h"
 #include "agentconfigurationwidget.h"
@@ -45,4 +44,3 @@ public:
 
 }
 
-#endif // AKONADI_AGENTCONFIGURATIONWIDGET_P_H

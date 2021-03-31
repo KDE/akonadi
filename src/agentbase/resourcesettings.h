@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef RESOURCESETTINGS_H
-#define RESOURCESETTINGS_H
+#pragma once
 
 #include "akonadiagentbase_export.h"
 #include "resourcebasesettings.h"
@@ -26,4 +25,3 @@ private:
 
 }
 
-#endif /* RESOURCESETTINGS_H */

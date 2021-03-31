@@ -5,8 +5,7 @@
  *
  */
 
-#ifndef COMMANDCONTEXT_H
-#define COMMANDCONTEXT_H
+#pragma once
 
 #include "entities.h"
 
@@ -49,4 +48,3 @@ private:
 
 }
 
-#endif // COMMANDCONTEXT_H

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef INSPECTABLECHANGERECORDER_H
-#define INSPECTABLECHANGERECORDER_H
+#pragma once
 
 #include "changerecorder.h"
 #include "changerecorder_p.h"
@@ -76,4 +75,3 @@ private:
     QQueue<MessageStruct> m_messages;
 };
 
-#endif

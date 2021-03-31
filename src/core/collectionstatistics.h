@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_COLLECTIONSTATISTICS_H
-#define AKONADI_COLLECTIONSTATISTICS_H
+#pragma once
 
 #include "akonadicore_export.h"
 
@@ -145,4 +144,3 @@ AKONADICORE_EXPORT QDebug operator<<(QDebug d, const Akonadi::CollectionStatisti
 
 Q_DECLARE_METATYPE(Akonadi::CollectionStatistics)
 
-#endif

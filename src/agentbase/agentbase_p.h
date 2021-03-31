@@ -5,8 +5,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_AGENTBASE_P_H
-#define AKONADI_AGENTBASE_P_H
+#pragma once
 
 #include "agentbase.h"
 #include "tracerinterface.h"
@@ -143,4 +142,3 @@ public Q_SLOTS:
 
 }
 
-#endif

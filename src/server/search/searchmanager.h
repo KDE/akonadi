@@ -5,8 +5,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef SEARCHMANAGER_H
-#define SEARCHMANAGER_H
+#pragma once
 
 #include "akthread.h"
 
@@ -107,4 +106,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

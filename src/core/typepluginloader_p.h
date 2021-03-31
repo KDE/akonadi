@@ -5,8 +5,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_TYPEPLUGINLOADER_P_H
-#define AKONADI_TYPEPLUGINLOADER_P_H
+#pragma once
 
 #include "akonadicore_export.h"
 #include <qglobal.h>
@@ -81,4 +80,3 @@ AKONADICORE_EXPORT void overridePluginLookup(QObject *plugin);
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Akonadi::TypePluginLoader::Options)
 
-#endif

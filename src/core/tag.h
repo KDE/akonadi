@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_TAG_H
-#define AKONADI_TAG_H
+#pragma once
 
 #include "akonadicore_export.h"
 #include "attribute.h"
@@ -251,4 +250,3 @@ Q_DECLARE_METATYPE(Akonadi::Tag::List)
 Q_DECLARE_METATYPE(QSet<Akonadi::Tag>)
 Q_DECLARE_TYPEINFO(Akonadi::Tag, Q_MOVABLE_TYPE);
 
-#endif

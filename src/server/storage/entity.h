@@ -4,8 +4,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef ENTITY_H
-#define ENTITY_H
+#pragma once
 
 #include <QString>
 #include <QStringList>
@@ -167,4 +166,3 @@ template<template<typename U> class Op> struct ById {
 } // namespace Server
 } // namespace Akonadi
 
-#endif

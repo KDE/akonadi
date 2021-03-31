@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_COLLECTIONCOPYHANDLER_H_
-#define AKONADI_COLLECTIONCOPYHANDLER_H_
+#pragma once
 
 #include "entities.h"
 #include "handler/itemcopyhandler.h"
@@ -47,4 +46,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

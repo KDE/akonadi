@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_LINKJOBIMPL_P_H
-#define AKONADI_LINKJOBIMPL_P_H
+#pragma once
 
 #include "collection.h"
 #include "item.h"
@@ -68,4 +67,3 @@ public:
 
 }
 
-#endif

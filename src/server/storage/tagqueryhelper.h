@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_TAGQUERYHELPER_H
-#define AKONADI_TAGQUERYHELPER_H
+#pragma once
 
 #include "entities.h"
 
@@ -41,4 +40,3 @@ void scopeToQuery(const Scope &scope, const CommandContext &context, QueryBuilde
 } // namespace Server
 } // namespace Akonadi
 
-#endif

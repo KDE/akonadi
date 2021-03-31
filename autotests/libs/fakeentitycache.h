@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef FAKEENTITYCACHE_H
-#define FAKEENTITYCACHE_H
+#pragma once
 
 #include "akonaditestfake_export.h"
 #include "collectionfetchscope.h"
@@ -173,4 +172,3 @@ private:
     FakeCollectionCache *collectionCache = nullptr;
 };
 
-#endif

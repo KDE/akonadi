@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_COLLECTION_P_H
-#define AKONADI_COLLECTION_P_H
+#pragma once
 
 #include "attributestorage_p.h"
 #include "cachepolicy.h"
@@ -108,4 +107,3 @@ public:
     QSet<QByteArray> keepLocalChanges;
 };
 
-#endif

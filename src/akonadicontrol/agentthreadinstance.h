@@ -3,8 +3,7 @@
 
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
-#ifndef AGENTTHREADINSTANCE_H
-#define AGENTTHREADINSTANCE_H
+#pragma once
 
 #include "agentinstance.h"
 #include "agenttype.h"
@@ -35,4 +34,3 @@ private:
 
 }
 
-#endif // AGENTTHREADINSTANCE_H

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_SERVER_COLLECTIONSCHEDULER_H
-#define AKONADI_SERVER_COLLECTIONSCHEDULER_H
+#pragma once
 
 #include <QMultiMap>
 #include <QMutex>
@@ -95,4 +94,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif // AKONADI_SERVER_COLLECTIONSCHEDULER_H

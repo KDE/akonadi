@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_SUPERTRAIT_H
-#define AKONADI_SUPERTRAIT_H
+#pragma once
 
 namespace Akonadi
 {
@@ -48,4 +47,3 @@ template<typename Class> struct SuperClass : public SuperClassTrait<Class> {
 };
 }
 
-#endif

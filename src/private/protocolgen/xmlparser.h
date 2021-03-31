@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef XMLPARSER_H
-#define XMLPARSER_H
+#pragma once
 
 #include <QXmlStreamReader>
 
@@ -43,4 +42,3 @@ private:
     std::unique_ptr<Node> mTree;
 };
 
-#endif // XMLPARSER_H

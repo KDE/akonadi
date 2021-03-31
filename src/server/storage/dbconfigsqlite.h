@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef DBCONFIGSQLITE_H
-#define DBCONFIGSQLITE_H
+#pragma once
 
 #include "dbconfig.h"
 
@@ -79,4 +78,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

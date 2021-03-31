@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_PROTOCOLHELPER_P_H
-#define AKONADI_PROTOCOLHELPER_P_H
+#pragma once
 
 #include "cachepolicy.h"
 #include "collection.h"
@@ -314,4 +313,3 @@ private:
 
 }
 
-#endif

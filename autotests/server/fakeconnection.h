@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_FAKECONNECTION
-#define AKONADI_FAKECONNECTION
+#pragma once
 
 #include "connection.h"
 
@@ -32,4 +31,3 @@ public Q_SLOTS:
 }
 }
 
-#endif

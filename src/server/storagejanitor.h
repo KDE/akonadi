@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef STORAGEJANITOR_H
-#define STORAGEJANITOR_H
+#pragma once
 
 #include "akthread.h"
 
@@ -139,4 +138,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif // STORAGEJANITOR_H

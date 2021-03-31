@@ -5,8 +5,7 @@
     SPDX-License-Identifier: LGPL-2.0-only
 */
 
-#ifndef QTEST_AKONADI_H
-#define QTEST_AKONADI_H
+#pragma once
 
 #include "agentinstance.h"
 #include "agentmanager.h"
@@ -192,4 +191,3 @@ std::unique_ptr<Akonadi::Monitor> getTestMonitor()
  */
 #define AKVERIFYEXEC(job) QVERIFY2(job->exec(), job->errorString().toUtf8().constData())
 
-#endif

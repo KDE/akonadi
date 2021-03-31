@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef FAKEINTERVALCHECK_H
-#define FAKEINTERVALCHECK_H
+#pragma once
 
 #include <intervalcheck.h>
 
@@ -39,4 +38,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

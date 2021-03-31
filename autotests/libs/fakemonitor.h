@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef FAKEMONITOR_H
-#define FAKEMONITOR_H
+#pragma once
 
 #include "akonaditestfake_export.h"
 #include "changerecorder.h"
@@ -24,4 +23,3 @@ private:
     Q_DECLARE_PRIVATE(FakeMonitor)
 };
 
-#endif

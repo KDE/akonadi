@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef ITEMSERIALIZERTEST_H
-#define ITEMSERIALIZERTEST_H
+#pragma once
 
 #include <QObject>
 
@@ -18,4 +17,3 @@ private Q_SLOTS:
     void testDefaultSerializer();
 };
 
-#endif

@@ -4,8 +4,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef MOCKOBJECTS_H
-#define MOCKOBJECTS_H
+#pragma once
 
 #include "akonadiconnection.h"
 #include "teststoragebackend.h"
@@ -45,4 +44,3 @@ public:
     }
 }; // End of class MockObjects
 
-#endif // MOCKOBJECTS_H

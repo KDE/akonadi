@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_RECURSIVEMOVER_P_H
-#define AKONADI_RECURSIVEMOVER_P_H
+#pragma once
 
 #include "agentbase_p.h"
 #include "collection.h"
@@ -71,4 +70,3 @@ private:
 
 Q_DECLARE_METATYPE(Akonadi::RecursiveMover *)
 
-#endif // AKONADI_RECURSIVEMOVER_P_H

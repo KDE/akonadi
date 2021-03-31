@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_AKHELPERS_H_
-#define AKONADI_AKHELPERS_H_
+#pragma once
 
 namespace Akonadi
 {
@@ -18,4 +17,3 @@ static const auto IsNotNull = [](auto ptr) {
 
 } // namespace Akonadi
 
-#endif

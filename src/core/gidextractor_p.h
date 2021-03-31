@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef GIDEXTRACTOR_H
-#define GIDEXTRACTOR_H
+#pragma once
 
 #include <QString>
 
@@ -37,4 +36,3 @@ public:
 
 }
 
-#endif

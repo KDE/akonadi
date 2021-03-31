@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef CHANGENOTIFICATIONDEPENDENCIESFACTORY_P_H
-#define CHANGENOTIFICATIONDEPENDENCIESFACTORY_P_H
+#pragma once
 
 #include "entitycache_p.h"
 #include "session.h"
@@ -43,4 +42,3 @@ protected:
 
 }
 
-#endif

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_AGENTSEARCHINTERFACE_H
-#define AKONADI_AGENTSEARCHINTERFACE_H
+#pragma once
 
 #include "akonadiagentbase_export.h"
 #include <QString>
@@ -81,4 +80,3 @@ private:
 
 }
 
-#endif

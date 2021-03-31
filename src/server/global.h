@@ -3,8 +3,7 @@
  *                                                                         *
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
-#ifndef GLOBAL_H
-#define GLOBAL_H
+#pragma once
 
 namespace Akonadi
 {
@@ -22,4 +21,3 @@ enum ConnectionState {
 } // namespace Server
 } // namespace Akonadi
 
-#endif

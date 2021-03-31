@@ -3,8 +3,7 @@
  *                                                                         *
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
-#ifndef AKONADI_RDS_EXCEPTION_H
-#define AKONADI_RDS_EXCEPTION_H
+#pragma once
 
 #include <QString>
 #include <stdexcept>
@@ -22,4 +21,3 @@ public:
     }
 };
 
-#endif

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef ITEMFETCHSCOPE_P_H
-#define ITEMFETCHSCOPE_P_H
+#pragma once
 
 #include "itemfetchscope.h"
 #include "tagfetchscope.h"
@@ -79,4 +78,3 @@ public:
 
 }
 
-#endif

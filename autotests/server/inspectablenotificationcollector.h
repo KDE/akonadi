@@ -5,8 +5,7 @@
  *
  */
 
-#ifndef AKONADI_INSPECTABLENOTIFICATIONCOLLECTOR_H_
-#define AKONADI_INSPECTABLENOTIFICATIONCOLLECTOR_H_
+#pragma once
 
 #include "storage/notificationcollector.h"
 
@@ -33,4 +32,3 @@ Q_SIGNALS:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

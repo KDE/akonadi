@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_ITEMSYNC_H
-#define AKONADI_ITEMSYNC_H
+#pragma once
 
 #include "akonadicore_export.h"
 #include "item.h"
@@ -255,4 +254,3 @@ private:
 
 }
 
-#endif

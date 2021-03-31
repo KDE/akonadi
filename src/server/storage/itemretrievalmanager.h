@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_ITEMRETRIEVALMANAGER_H
-#define AKONADI_ITEMRETRIEVALMANAGER_H
+#pragma once
 
 #include "akthread.h"
 #include "itemretrievalrequest.h"
@@ -96,4 +95,3 @@ protected:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

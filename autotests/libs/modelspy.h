@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef MODELSPY_H
-#define MODELSPY_H
+#pragma once
 
 #include "akonaditestfake_export.h"
 #include <QModelIndex>
@@ -122,4 +121,3 @@ inline uint qHash(const QVariantList &list)
 }
 #endif
 
-#endif

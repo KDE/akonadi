@@ -4,8 +4,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 
-#ifndef AKONADI_TRACER_H
-#define AKONADI_TRACER_H
+#pragma once
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -155,4 +154,3 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-#endif

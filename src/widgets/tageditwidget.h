@@ -6,8 +6,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_TAGEDITWIDGET_P_H
-#define AKONADI_TAGEDITWIDGET_P_H
+#pragma once
 
 #include "akonadiwidgets_export.h"
 #include "tag.h"
@@ -48,4 +47,3 @@ private:
 
 }
 
-#endif

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_ITEMMONITOR_H
-#define AKONADI_ITEMMONITOR_H
+#pragma once
 
 #include "akonadicore_export.h"
 #include <qglobal.h>
@@ -137,4 +136,3 @@ private:
 
 }
 
-#endif

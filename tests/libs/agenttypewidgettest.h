@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AGENTTYPEWIDGETTEST_H
-#define AGENTTYPEWIDGETTEST_H
+#pragma once
 
 #include <QDialog>
 
@@ -31,4 +30,3 @@ private:
     QComboBox *mFilter;
 };
 
-#endif

@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_AKSCOPEGUARD_H_
-#define AKONADI_AKSCOPEGUARD_H_
+#pragma once
 
 #include <functional>
 #include <type_traits>
@@ -37,4 +36,3 @@ private:
 
 } // namespace Akonadi
 
-#endif

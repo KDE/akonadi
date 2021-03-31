@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef SQLITE_BLOCKING_H
-#define SQLITE_BLOCKING_H
+#pragma once
 
 #include <QtCore/QString>
 #include <QtCore/QThread>
@@ -23,4 +22,3 @@ int sqlite3_blocking_prepare16_v2(sqlite3 *db, /* Database handle. */
 
 int sqlite3_blocking_step(sqlite3_stmt *pStmt);
 
-#endif // SQLITE_BLOCKING_H

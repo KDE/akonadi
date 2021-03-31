@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_IMAPSET_P_H
-#define AKONADI_IMAPSET_P_H
+#pragma once
 
 #include "akonadiprivate_export.h"
 
@@ -228,4 +227,3 @@ Q_DECLARE_METATYPE(Akonadi::ImapInterval)
 Q_DECLARE_METATYPE(Akonadi::ImapInterval::List)
 Q_DECLARE_METATYPE(Akonadi::ImapSet)
 
-#endif

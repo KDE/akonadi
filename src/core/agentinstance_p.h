@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_AGENTINSTANCE_P_H
-#define AKONADI_AGENTINSTANCE_P_H
+#pragma once
 
 #include "agenttype.h"
 
@@ -50,4 +49,3 @@ public:
 
 }
 
-#endif

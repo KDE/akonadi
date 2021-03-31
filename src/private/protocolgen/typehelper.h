@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef TYPEHELPER_H
-#define TYPEHELPER_H
+#pragma once
 
 class QString;
 
@@ -26,4 +25,3 @@ QString containerName(const QString &type);
 bool isPointerType(const QString &type);
 
 }
-#endif

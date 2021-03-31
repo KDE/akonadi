@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef GIDEXTRACTORINTERFACE_H
-#define GIDEXTRACTORINTERFACE_H
+#pragma once
 
 #include <QObject>
 
@@ -46,4 +45,3 @@ private:
 
 Q_DECLARE_INTERFACE(Akonadi::GidExtractorInterface, "org.freedesktop.Akonadi.GidExtractorInterface/1.0")
 
-#endif

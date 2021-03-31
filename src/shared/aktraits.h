@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_AKTRAITS_H_
-#define AKONADI_AKTRAITS_H_
+#pragma once
 
 #include <type_traits>
 #include <utility>
@@ -116,4 +115,3 @@ template<typename T> constexpr bool isReservable = detail::isReservable<T>::valu
 
 #define AK_REQUIRES(...) bool AK_PP_CAT(_ak_requires_, __LINE__) = false, std::enable_if_t < AK_PP_CAT(_ak_requires_, __LINE__) || (__VA_ARGS__) > * = nullptr
 
-#endif
