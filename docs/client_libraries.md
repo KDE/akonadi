@@ -60,7 +60,7 @@ There is also Akonadi::CollectionModel, which is a self-updating model class whi
 be used in combination with Akonadi::CollectionView. Akonadi::CollectionFilterProxyModel
 can be used to limit a displayed collection tree to collections supporting a certain
 type of PIM items. Akonadi::CollectionPropertiesDialog provides an extensible properties
-dialog for collections. Often needed KAction for collection operations are provided by
+dialog for collections. Often needed QAction for collection operations are provided by
 Akonadi::StandardActionManager.
 
 # PIM item retrieval and manipulation # {#items}
@@ -76,7 +76,7 @@ The following classes are provided to manipulate PIM items:
 * Akonadi::ItemDeleteJob
 
 Akonadi::ItemModel provides a self-updating model class which can be used to display the content
-of a collection. Akonadi::ItemView is the base class for a corresponding view. Often needed KAction
+of a collection. Akonadi::ItemView is the base class for a corresponding view. Often needed QAction
 for item operations are provided by Akonadi::StandardActionManager.
 
 # Low-level access to the Akonadi server # {#jobs}
