@@ -111,7 +111,7 @@ add_akonadi_isolated_test(SOURCE collectionmodifytest.cpp)
 
 add_akonadi_isolated_test(SOURCE gidtest.cpp)
 add_akonadi_isolated_test(SOURCE lazypopulationtest.cpp)
-add_akonadi_isolated_test(SOURCE favoriteproxytest.cpp)
+add_akonadi_isolated_test(SOURCE favoriteproxytest.cpp LINK_LIBRARIES KF5::ConfigCore)
 # FIXME: this is constantly failing due to broken search: re-enable once the new search code is merged
 #add_akonadi_isolated_test(
 #    SOURCE itemsearchjobtest.cpp
