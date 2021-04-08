@@ -341,6 +341,14 @@ public:
      */
     void createActionFolderMenu(QMenu *menu, Type type);
 
+    /**
+     * Add a collection to the global recent collection list.
+     *
+     * @param id the collection ID
+     * @since 5.18
+     */
+    void addRecentCollection(Akonadi::Collection::Id id) const;
+
 Q_SIGNALS:
 
     /**

@@ -6,15 +6,30 @@
 
 #include "entitytreemodel.h"
 #include "recentcollectionaction_p.h"
-#include <KConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>
+#include <KSharedConfig>
 
 #include <QAction>
 #include <QMenu>
 using namespace Akonadi;
 
 static const int s_maximumRecentCollection = 10;
+
+static QStringList readConfig()
+{
+    const KSharedConfig::Ptr akonadiConfig = KSharedConfig::openConfig(QStringLiteral("akonadikderc"));
+    const KConfigGroup group(akonadiConfig, QStringLiteral("Recent Collections"));
+    return (group.readEntry("Collections", QStringList()));
+}
+
+static void writeConfig(const QStringList &list)
+{
+    KSharedConfig::Ptr akonadiConfig = KSharedConfig::openConfig(QStringLiteral("akonadikderc"));
+    KConfigGroup group(akonadiConfig, QStringLiteral("Recent Collections"));
+    group.writeEntry("Collections", list);
+    group.sync();
+}
 
 RecentCollectionAction::RecentCollectionAction(Akonadi::StandardActionManager::Type type,
                                                const Akonadi::Collection::List &selectedCollectionsList,
@@ -24,10 +39,7 @@ RecentCollectionAction::RecentCollectionAction(Akonadi::StandardActionManager::T
     , mMenu(menu)
     , mModel(model)
 {
-    mAkonadiConfig = KSharedConfig::openConfig(QStringLiteral("akonadikderc"));
-    KConfigGroup group(mAkonadiConfig, QStringLiteral("Recent Collections"));
-
-    mListRecentCollection = group.readEntry("Collections", QStringList());
+    mListRecentCollection = readConfig();
     mRecentAction = mMenu->addAction(i18n("Recent Folder"));
     mMenu->addSeparator();
     fillRecentCollection(type, selectedCollectionsList);
@@ -102,37 +114,38 @@ QString RecentCollectionAction::actionName(QModelIndex index)
 
 void RecentCollectionAction::addRecentCollection(Akonadi::StandardActionManager::Type type, Akonadi::Collection::Id id)
 {
-    const QString newCollectionID = QString::number(id);
-    if (mListRecentCollection.contains(newCollectionID)) {
-        // first() is safe to use if we get here
-        if (mListRecentCollection.first() == newCollectionID) {
-            // already most recently used, nothing to do
-            return;
-        }
-
-        mListRecentCollection.removeAll(newCollectionID);
-    }
-
-    mListRecentCollection.prepend(newCollectionID);
-    while (mListRecentCollection.count() > s_maximumRecentCollection) {
-        mListRecentCollection.removeLast();
-    }
-
-    writeConfig();
+    mListRecentCollection = addRecentCollection(id);
     fillRecentCollection(type, Akonadi::Collection::List());
 }
 
-void RecentCollectionAction::writeConfig()
+/* static */ QStringList RecentCollectionAction::addRecentCollection(Akonadi::Collection::Id id)
 {
-    KConfigGroup group(mAkonadiConfig, QStringLiteral("Recent Collections"));
-    group.writeEntry("Collections", mListRecentCollection);
-    group.sync();
+    QStringList listRecentCollection = readConfig();
+
+    const QString newCollectionID = QString::number(id);
+    if (listRecentCollection.contains(newCollectionID)) {
+        // first() is safe to use if we get here
+        if (listRecentCollection.first() == newCollectionID) {
+            // already most recently used, nothing to do
+            return (listRecentCollection);
+        }
+
+        listRecentCollection.removeAll(newCollectionID);
+    }
+
+    listRecentCollection.prepend(newCollectionID);
+    while (listRecentCollection.count() > s_maximumRecentCollection) {
+        listRecentCollection.removeLast();
+    }
+
+    writeConfig(listRecentCollection);
+    return (listRecentCollection);
 }
 
 void RecentCollectionAction::cleanRecentCollection()
 {
     mListRecentCollection.clear();
-    writeConfig();
+    writeConfig(mListRecentCollection);
     clear();
 }
 

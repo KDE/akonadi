@@ -31,6 +31,7 @@
 
 #include <KActionCollection>
 #include <KActionMenu>
+#include <KConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -1975,6 +1976,11 @@ void StandardActionManager::setCollectionPropertiesPageNames(const QStringList &
 void StandardActionManager::createActionFolderMenu(QMenu *menu, Type type)
 {
     d->createActionFolderMenu(menu, type);
+}
+
+void StandardActionManager::addRecentCollection(Akonadi::Collection::Id id) const
+{
+    RecentCollectionAction::addRecentCollection(id);
 }
 
 #include "moc_standardactionmanager.cpp"

@@ -6,7 +6,6 @@
 #pragma once
 
 #include "collection.h"
-#include <KSharedConfig>
 #include <QModelIndex>
 #include <QStringList>
 #include <standardactionmanager.h>
@@ -46,8 +45,15 @@ public:
 
     void cleanRecentCollection();
 
+    /**
+     * Add a new collection to the global list.
+     *
+     * @param id the collection ID
+     * @since 5.18
+     */
+    static QStringList addRecentCollection(Akonadi::Collection::Id id);
+
 private:
-    void writeConfig();
     void fillRecentCollection(Akonadi::StandardActionManager::Type type, const Akonadi::Collection::List &selectedCollectionsList);
     QString actionName(QModelIndex index);
     bool clear();
@@ -57,8 +63,6 @@ private:
     QMenu *const mMenu;
     const QAbstractItemModel *mModel = nullptr;
     QAction *mRecentAction = nullptr;
-    KSharedConfig::Ptr mAkonadiConfig;
     bool needToDeleteMenu = false;
 };
 }
-
