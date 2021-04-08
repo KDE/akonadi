@@ -7,7 +7,6 @@
 
 #pragma once
 
-class QMutex;
 
 #include <QHash>
 #include <QMutex>
