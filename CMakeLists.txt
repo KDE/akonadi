@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
 set(PIM_VERSION "5.17.40")
 project(Akonadi VERSION ${PIM_VERSION})
@@ -36,7 +36,7 @@ include(ECMSetupQtPluginMacroNames)
 
 include(AkonadiMacros)
 
-set(QT_REQUIRED_VERSION "5.14.0")
+set(QT_REQUIRED_VERSION "5.15.0")
 set(RELEASE_SERVICE_VERSION "21.07.40")
 set(AKONADI_FULL_VERSION "${PIM_VERSION} (${RELEASE_SERVICE_VERSION})")
 
@@ -152,16 +152,12 @@ if(BUILD_TESTING)
    set(BUILD_TOOLS TRUE)
 endif()
 
-option(USE_UNITY_CMAKE_SUPPORT "Use UNITY cmake support (speedup compile time)" FALSE)
+option(USE_UNITY_CMAKE_SUPPORT "Use UNITY cmake support (speedup compile time)" OFF)
 
-set(COMPILE_WITH_UNITY_CMAKE_SUPPORT false)
+set(COMPILE_WITH_UNITY_CMAKE_SUPPORT OFF)
 if (USE_UNITY_CMAKE_SUPPORT)
-    if(${CMAKE_VERSION} VERSION_LESS "3.16.0")
-        message(STATUS "CMAKE version is less than 3.16.0 . We can't use cmake unify build support")
-    else()
-        set(COMPILE_WITH_UNITY_CMAKE_SUPPORT true)
-	add_definitions(-DCOMPILE_WITH_UNITY_CMAKE_SUPPORT)
-    endif()
+    set(COMPILE_WITH_UNITY_CMAKE_SUPPORT ON)
+    add_definitions(-DCOMPILE_WITH_UNITY_CMAKE_SUPPORT)
 endif()
 set(SMI_MIN_VERSION "1.3")
 find_package(SharedMimeInfo ${SMI_MIN_VERSION} REQUIRED)
@@ -322,7 +318,7 @@ include_directories(
     src
 )
 
-add_definitions(-DKF_DISABLE_DEPRECATED_BEFORE_AND_AT=0x055100)
+add_definitions(-DKF_DISABLE_DEPRECATED_BEFORE_AND_AT=0x055200)
 #add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050f00)
 add_definitions(-DQT_NO_EMIT)
 remove_definitions(-DQT_NO_FOREACH)

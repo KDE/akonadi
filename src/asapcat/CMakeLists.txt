@@ -9,8 +9,8 @@ set_target_properties(asapcat PROPERTIES MACOSX_BUNDLE FALSE)
 target_link_libraries(asapcat
     akonadi_shared
     KF5AkonadiPrivate
-    Qt5::Core
-    Qt5::Network
+    Qt::Core
+    Qt::Network
 )
 
 install(TARGETS asapcat

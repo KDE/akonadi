@@ -12,9 +12,9 @@ macro(add_unit_test _source)
     target_link_libraries(${_name}
         akonadi_shared
         akonadiprivate_static
-        Qt5::Network
-        Qt5::Widgets
-        Qt5::Test
+        Qt::Network
+        Qt::Widgets
+        Qt::Test
         ${CMAKE_EXE_LINKER_FLAGS_ASAN}
     )
 endmacro()

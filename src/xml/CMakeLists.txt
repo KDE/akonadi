@@ -41,7 +41,7 @@ set_target_properties(akonadi2xml PROPERTIES MACOSX_BUNDLE FALSE)
 target_link_libraries(akonadi2xml
     KF5::AkonadiXml
     KF5::I18n
-    Qt5::Widgets # for QApplication
+    Qt::Widgets # for QApplication
 )
 
 add_library(KF5AkonadiXml ${akonadixml_SRCS})
@@ -56,7 +56,7 @@ target_include_directories(KF5AkonadiXml PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOU
 target_link_libraries(KF5AkonadiXml
 PUBLIC
     KF5::AkonadiCore
-    Qt5::Xml
+    Qt::Xml
 PRIVATE
     KF5::I18n
     ${LIBXML2_LIBRARIES}

@@ -59,11 +59,7 @@ void Session::connectToHost()
     }
 
     auto socket = new QLocalSocket(this);
-#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
-    connect(socket, QOverload<QLocalSocket::LocalSocketError>::of(&QLocalSocket::error), this, &Session::serverError);
-#else
     connect(socket, &QLocalSocket::errorOccurred, this, &Session::serverError);
-#endif
     connect(socket, &QLocalSocket::disconnected, this, &Session::serverDisconnected);
     connect(socket, &QIODevice::readyRead, this, &Session::serverRead);
     connect(socket, &QLocalSocket::connected, this, &Session::inputAvailable);

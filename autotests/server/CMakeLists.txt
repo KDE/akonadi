@@ -37,11 +37,11 @@ add_library(akonadi_unittest_common STATIC ${common_SRCS})
 target_link_libraries(akonadi_unittest_common
     KF5AkonadiPrivate
     libakonadiserver
-    Qt5::Core
-    Qt5::DBus
-    Qt5::Test
-    Qt5::Sql
-    Qt5::Network
+    Qt::Core
+    Qt::DBus
+    Qt::Test
+    Qt::Sql
+    Qt::Network
 )
 
 macro(add_server_test _source)
@@ -61,11 +61,11 @@ macro(add_server_test _source)
         akonadi_unittest_common
         libakonadiserver
         KF5AkonadiPrivate
-        Qt5::Core
-        Qt5::DBus
-        Qt5::Test
-        Qt5::Sql
-        Qt5::Network
+        Qt::Core
+        Qt::DBus
+        Qt::Test
+        Qt::Sql
+        Qt::Network
         ${CMAKE_SHARED_LINKER_FLAGS_ASAN}
     )
 endmacro()

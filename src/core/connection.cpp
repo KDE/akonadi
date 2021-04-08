@@ -155,15 +155,9 @@ void Connection::doReconnect()
     }
 
     mSocket.reset(new QLocalSocket(this));
-#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
-    connect(mSocket.data(),
-            static_cast<void (QLocalSocket::*)(QLocalSocket::LocalSocketError)>(&QLocalSocket::error),
-            this,
-#else
     connect(mSocket.data(),
             &QLocalSocket::errorOccurred,
             this,
-#endif
             [this](QLocalSocket::LocalSocketError /*unused*/) {
                 qCWarning(AKONADICORE_LOG) << mSocket->errorString() << mSocket->serverName();
                 Q_EMIT socketError(mSocket->errorString());

@@ -23,9 +23,9 @@ set_target_properties(akonadi_agent_server PROPERTIES MACOSX_BUNDLE FALSE)
 target_link_libraries(akonadi_agent_server
     akonadi_shared
     KF5AkonadiPrivate
-    Qt5::Core
-    Qt5::DBus
-    Qt5::Widgets
+    Qt::Core
+    Qt::DBus
+    Qt::Widgets
 )
 
 # Agent plugin launcher
@@ -45,8 +45,8 @@ set_target_properties(akonadi_agent_launcher PROPERTIES MACOSX_BUNDLE FALSE)
 target_link_libraries(akonadi_agent_launcher
     akonadi_shared
     KF5AkonadiPrivate
-    Qt5::Core
-    Qt5::Widgets
+    Qt::Core
+    Qt::Widgets
 )
 
 # Install both helper apps.
