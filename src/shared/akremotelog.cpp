@@ -79,8 +79,8 @@ private Q_SLOTS:
             return;
         }
 
-        connect(mAkonadiConsoleInterface.get(),
-                SIGNAL(enabledChanged(bool)), // clazy:exclude=old-style-connect
+        connect(mAkonadiConsoleInterface.get(), // clazy:exclude=old-style-connect
+                SIGNAL(enabledChanged(bool)),
                 this,
                 SLOT(onAkonadiConsoleLoggingEnabled(bool)));
 
