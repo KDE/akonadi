@@ -111,10 +111,9 @@ void ItemHydra::testItemPointerPayload()
     // the below should not compile
     // f.setPayload( rudi );
 
-    // std::auto_ptr is not copyconstructable and assignable, therefore this will fail as well
-    // f.setPayload( std::auto_ptr<Rudi>( rudi ) );
+    // f.setPayload( std::unique_ptr<Rudi>( rudi ) );
     // QVERIFY( f.hasPayload() );
-    // QCOMPARE( f.payload< std::auto_ptr<Rudi> >()->who, rudi->who );
+    // QCOMPARE( f.payload< std::unique_ptr<Rudi> >()->who, rudi->who );
 
     // below doesn't compile, hopefully
     // QCOMPARE( f.payload< Rudi* >()->who, rudi->who );
