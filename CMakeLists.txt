@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
-set(PIM_VERSION "5.17.0")
+set(PIM_VERSION "5.17.1")
 project(Akonadi VERSION ${PIM_VERSION})
 
 set(CMAKE_CXX_STANDARD 17)
@@ -38,7 +38,7 @@ include(ECMSetupQtPluginMacroNames)
 include(AkonadiMacros)
 
 set(QT_REQUIRED_VERSION "5.14.0")
-set(RELEASE_SERVICE_VERSION "21.04.0")
+set(RELEASE_SERVICE_VERSION "21.04.1")
 set(AKONADI_FULL_VERSION "${PIM_VERSION} (${RELEASE_SERVICE_VERSION})")
 
 configure_file(akonadifull-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/akonadifull-version.h @ONLY)
