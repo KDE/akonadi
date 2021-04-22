@@ -28,7 +28,10 @@
 #include <KLocalizedString>
 
 #include <KAboutData>
+#include <kcoreaddons_version.h>
+#if KCOREADDONS_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <Kdelibs4ConfigMigrator>
+#endif
 
 #include <QCommandLineParser>
 #include <QNetworkConfiguration>
@@ -337,11 +340,11 @@ AgentBasePrivate::~AgentBasePrivate()
 void AgentBasePrivate::init()
 {
     Q_Q(AgentBase);
-
+#if KCOREADDONS_VERSION < QT_VERSION_CHECK(6, 0, 0)
     Kdelibs4ConfigMigrator migrate(mId);
     migrate.setConfigFiles(QStringList() << QStringLiteral("%1rc").arg(mId));
     migrate.migrate();
-
+#endif
     /**
      * Create a default session for this process.
      */

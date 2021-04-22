@@ -15,7 +15,10 @@
 #include "akonadicore_debug.h"
 
 #include <KLocalizedString>
+#include <kcoreaddons_version.h>
+#if KCOREADDONS_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <Kdelibs4ConfigMigrator>
+#endif
 
 #include "private/dbus_p.h"
 #include "private/instance_p.h"
@@ -111,10 +114,11 @@ Q_GLOBAL_STATIC(ServerManagerPrivate, sInstance) // NOLINT(readability-redundant
 ServerManager::ServerManager(ServerManagerPrivate *dd)
     : d(dd)
 {
+#if KCOREADDONS_VERSION < QT_VERSION_CHECK(6, 0, 0)
     Kdelibs4ConfigMigrator migrate(QStringLiteral("servermanager"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("akonadi-firstrunrc"));
     migrate.migrate();
-
+#endif
     qRegisterMetaType<Akonadi::ServerManager::State>();
 
     d->serviceWatcher = std::make_unique<QDBusServiceWatcher>(ServerManager::serviceName(ServerManager::Server),
