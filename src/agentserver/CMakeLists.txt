@@ -25,7 +25,6 @@ target_link_libraries(akonadi_agent_server
     KF5AkonadiPrivate
     Qt::Core
     Qt::DBus
-    Qt::Widgets
 )
 
 # Agent plugin launcher
