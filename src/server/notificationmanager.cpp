@@ -21,6 +21,7 @@
 #include <QDateTime>
 #include <QSettings>
 #include <QThreadPool>
+#include <QTimer>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

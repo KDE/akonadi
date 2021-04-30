@@ -8,6 +8,7 @@
 #include "akonadiagentserver_debug.h"
 
 #include <QApplication>
+#include <QPluginLoader>
 
 int main(int argc, char *argv[])
 {

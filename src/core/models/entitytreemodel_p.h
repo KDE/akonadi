@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <KJob>
+class KJob;
 
 #include "collectionfetchjob.h"
 #include "item.h"

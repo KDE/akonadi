@@ -6,7 +6,7 @@
 #pragma once
 
 #include <QHash>
-#include <QPluginLoader>
+class QPluginLoader;
 
 class AgentPluginLoader
 {

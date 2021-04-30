@@ -11,7 +11,7 @@
 #include <private/protocol_p.h>
 
 #include <QPointer>
-#include <QTimer>
+class QTimer;
 
 class NotificationManagerTest;
 class QThreadPool;

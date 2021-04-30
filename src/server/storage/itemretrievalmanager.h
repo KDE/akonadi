@@ -12,7 +12,7 @@
 #include <shared/akstd.h>
 
 #include <QHash>
-#include <QObject>
+class QObject;
 #include <QReadWriteLock>
 #include <QWaitCondition>
 
