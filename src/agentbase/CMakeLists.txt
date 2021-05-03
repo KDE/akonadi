@@ -81,7 +81,7 @@ if (WITH_ACCOUNTS)
 endif()
 
 set_target_properties(KF5AkonadiAgentBase PROPERTIES
-    VERSION ${AKONADI_VERSION_STRING}
+    VERSION ${AKONADI_VERSION}
     SOVERSION ${AKONADI_SOVERSION}
     EXPORT_NAME AkonadiAgentBase
 )

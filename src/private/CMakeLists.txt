@@ -85,7 +85,7 @@ target_link_libraries(KF5AkonadiPrivate ${akonadiprivate_LIBS})
 generate_export_header(KF5AkonadiPrivate BASE_NAME akonadiprivate)
 
 set_target_properties(KF5AkonadiPrivate PROPERTIES
-    VERSION ${AKONADI_VERSION_STRING}
+    VERSION ${AKONADI_VERSION}
     SOVERSION ${AKONADI_SOVERSION}
     EXPORT_NAME AkonadiPrivate
 )
