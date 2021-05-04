@@ -135,7 +135,7 @@ void SpecialCollectionsRequestJobPrivate::nextResource()
         }
 
         // Register all the collections that we fetched / created.
-        typedef QPair<Collection, QByteArray> RegisterPair;
+        using RegisterPair = QPair<Collection, QByteArray>;
         for (const RegisterPair &pair : qAsConst(mToRegister)) {
             const bool ok = mSpecialCollections->registerCollection(pair.second, pair.first);
             Q_ASSERT(ok);
@@ -197,7 +197,7 @@ void SpecialCollectionsRequestJobPrivate::createRequestedFolders(ResourceScanJob
     const Akonadi::Collection::List lstSpecialCols = scanJob->specialCollections();
     for (const Collection &collection : lstSpecialCols) {
         Q_ASSERT(collection.hasAttribute<SpecialCollectionAttribute>());
-        const auto *attr = collection.attribute<SpecialCollectionAttribute>();
+        const auto attr = collection.attribute<SpecialCollectionAttribute>();
         const QByteArray type = attr->collectionType();
 
         if (!type.isEmpty()) {

@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
     : QMainWindow(parent, flags)
 {
     auto monitor = new FakeMonitor(this);
-    FakeSession *session = new FakeSession("FS1", FakeSession::EndJobsImmediately, this);
+    auto session = new FakeSession("FS1", FakeSession::EndJobsImmediately, this);
     monitor->setSession(session);
 
     m_model = new EntityTreeModel(monitor, this);
@@ -65,8 +65,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 void MainWindow::moveCollection()
 {
     // Move Col 3 from Col 4 to Col 7
-    FakeCollectionMovedCommand *moveCommand =
-        new FakeCollectionMovedCommand(QStringLiteral("Col 4"), QStringLiteral("Col 3"), QStringLiteral("Col 7"), m_serverData);
+    auto moveCommand = new FakeCollectionMovedCommand(QStringLiteral("Col 4"), QStringLiteral("Col 3"), QStringLiteral("Col 7"), m_serverData);
 
     m_serverData->setCommands(QList<FakeAkonadiServerCommand *>() << moveCommand);
     m_serverData->processNotifications();

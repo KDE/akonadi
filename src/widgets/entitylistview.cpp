@@ -78,7 +78,7 @@ void EntityListView::Private::itemClicked(const QModelIndex &index) const
         return;
     }
 
-    const Collection collection = index.model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
+    const auto collection = index.model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
     if (collection.isValid()) {
         Q_EMIT mParent->clicked(collection);
     } else {
@@ -95,7 +95,7 @@ void EntityListView::Private::itemDoubleClicked(const QModelIndex &index) const
         return;
     }
 
-    const Collection collection = index.model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
+    const auto collection = index.model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
     if (collection.isValid()) {
         Q_EMIT mParent->doubleClicked(collection);
     } else {
@@ -112,7 +112,7 @@ void EntityListView::Private::itemCurrentChanged(const QModelIndex &index) const
         return;
     }
 
-    const Collection collection = index.model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
+    const auto collection = index.model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
     if (collection.isValid()) {
         Q_EMIT mParent->currentChanged(collection);
     } else {
@@ -191,7 +191,7 @@ void EntityListView::contextMenuEvent(QContextMenuEvent *event)
     QMenu *popup = nullptr;
 
     // check if the index under the cursor is a collection or item
-    const Collection collection = model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
+    const auto collection = model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
     if (collection.isValid()) {
         popup = static_cast<QMenu *>(d->mXmlGuiClient->factory()->container(QStringLiteral("akonadi_favoriteview_contextmenu"), d->mXmlGuiClient));
     } else {

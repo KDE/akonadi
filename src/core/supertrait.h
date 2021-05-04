@@ -11,7 +11,7 @@ namespace Akonadi
 namespace Internal
 {
 template<typename T> struct check_type {
-    typedef void type;
+    using type = void;
 };
 }
 
@@ -20,11 +20,11 @@ template<typename T> struct check_type {
   @see SuperClass
 */
 template<typename Super, typename = void> struct SuperClassTrait {
-    typedef Super Type;
+    using Type = Super;
 };
 
 template<typename Class> struct SuperClassTrait<Class, typename Internal::check_type<typename Class::SuperClass>::type> {
-    typedef typename Class::SuperClass Type;
+    using Type = typename Class::SuperClass;
 };
 
 /**

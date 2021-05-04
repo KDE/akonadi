@@ -72,7 +72,7 @@ private Q_SLOTS:
         QSignalSpy moveSpy(&monitor, &Monitor::itemsMoved);
         AkonadiTest::akWaitForSignal(&monitor, &Monitor::monitorReady);
 
-        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
+        auto select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
         AKVERIFYEXEC(select); // for rid based moves
 
         auto prefetchjob = new ItemFetchJob(destination, this);
@@ -114,13 +114,13 @@ private Q_SLOTS:
         Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res2")));
         QVERIFY(col.isValid());
 
-        ItemFetchJob *prefetchjob = new ItemFetchJob(Item(1));
+        auto prefetchjob = new ItemFetchJob(Item(1));
         AKVERIFYEXEC(prefetchjob);
         QCOMPARE(prefetchjob->items().count(), 1);
         Item item = prefetchjob->items()[0];
 
         // move into invalid collection
-        ItemMoveJob *store = new ItemMoveJob(item, Collection(INT_MAX), this);
+        auto store = new ItemMoveJob(item, Collection(INT_MAX), this);
         QVERIFY(!store->exec());
 
         auto monitor = AkonadiTest::getTestMonitor();

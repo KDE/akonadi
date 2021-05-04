@@ -73,7 +73,7 @@ AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance
     }
 
     if (auto plugin = d->widget->d->plugin) {
-        if (auto *aboutData = plugin->aboutData()) {
+        if (auto aboutData = plugin->aboutData()) {
             auto helpMenu = new KHelpMenu(this, *aboutData, true);
             helpMenu->action(KHelpMenu::menuDonate);
             // Initialize menu

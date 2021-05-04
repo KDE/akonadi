@@ -103,22 +103,22 @@ public:
     /**
      * Describes the unique id type.
      */
-    typedef qint64 Id;
+    using Id = qint64;
 
     /**
      * Describes a list of items.
      */
-    typedef QVector<Item> List;
+    using List = QVector<Item>;
 
     /**
      * Describes a flag name.
      */
-    typedef QByteArray Flag;
+    using Flag = QByteArray;
 
     /**
      * Describes a set of flag names.
      */
-    typedef QSet<QByteArray> Flags;
+    using Flags = QSet<QByteArray>;
 
     /**
      * Describes the part name that is used to fetch the
@@ -771,11 +771,11 @@ template<typename T> T Item::payload() const
 
 template<typename T> typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, T>::type Item::payloadImpl(const int *) const
 {
-    typedef Internal::PayloadTrait<T> PayloadType;
+    using PayloadType = Internal::PayloadTrait<T>;
     static_assert(PayloadType::isPolymorphic, "Non-polymorphic payload type in polymorphic implementation is not allowed");
 
-    typedef typename Internal::get_hierarchy_root<T>::type Root_T;
-    typedef Internal::PayloadTrait<Root_T> RootType;
+    using Root_T = typename Internal::get_hierarchy_root<T>::type;
+    using RootType = Internal::PayloadTrait<Root_T>;
     static_assert(!RootType::isPolymorphic,
                   "Root type of payload type must not be polymorphic"); // prevent endless recursion
 
@@ -784,7 +784,7 @@ template<typename T> typename std::enable_if<Internal::PayloadTrait<T>::isPolymo
 
 template<typename T> typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic, T>::type Item::payloadImpl() const
 {
-    typedef Internal::PayloadTrait<T> PayloadType;
+    using PayloadType = Internal::PayloadTrait<T>;
     static_assert(!PayloadType::isPolymorphic, "Polymorphic payload type in non-polymorphic implementation is not allowed");
 
     const int metaTypeId = PayloadType::elementMetaTypeId();
@@ -809,8 +809,8 @@ template<typename T> typename std::enable_if<!Internal::PayloadTrait<T>::isPolym
 
 template<typename T, typename NewT> typename std::enable_if<!std::is_same<T, NewT>::value, bool>::type Item::tryToCloneImpl(T *ret, const int *) const
 {
-    typedef Internal::PayloadTrait<T> PayloadType;
-    typedef Internal::PayloadTrait<NewT> NewPayloadType;
+    using PayloadType = Internal::PayloadTrait<T>;
+    using NewPayloadType = Internal::PayloadTrait<NewT>;
 
     const int metaTypeId = PayloadType::elementMetaTypeId();
     Internal::PayloadBase *payloadBase = payloadBaseV2(NewPayloadType::sharedPointerId, metaTypeId);
@@ -839,7 +839,7 @@ template<typename T, typename NewT> typename std::enable_if<std::is_same<T, NewT
 
 template<typename T> typename std::enable_if<Internal::is_shared_pointer<T>::value, bool>::type Item::tryToClone(T *ret, const int *) const
 {
-    typedef Internal::PayloadTrait<T> PayloadType;
+    using PayloadType = Internal::PayloadTrait<T>;
     static_assert(!PayloadType::isPolymorphic, "Polymorphic payload type in non-polymorphic implementation is not allowed");
 
     return tryToCloneImpl<T, typename Internal::shared_pointer_traits<T>::next_shared_ptr>(ret);
@@ -847,7 +847,7 @@ template<typename T> typename std::enable_if<Internal::is_shared_pointer<T>::val
 
 template<typename T> typename std::enable_if<!Internal::is_shared_pointer<T>::value, bool>::type Item::tryToClone(T *) const
 {
-    typedef Internal::PayloadTrait<T> PayloadType;
+    using PayloadType = Internal::PayloadTrait<T>;
     static_assert(!PayloadType::isPolymorphic, "Polymorphic payload type in non-polymorphic implementation is not allowed");
 
     return false;
@@ -861,11 +861,11 @@ template<typename T> bool Item::hasPayload() const
 
 template<typename T> typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, bool>::type Item::hasPayloadImpl(const int *) const
 {
-    typedef Internal::PayloadTrait<T> PayloadType;
+    using PayloadType = Internal::PayloadTrait<T>;
     static_assert(PayloadType::isPolymorphic, "Non-polymorphic payload type in polymorphic implementation is no allowed");
 
-    typedef typename Internal::get_hierarchy_root<T>::type Root_T;
-    typedef Internal::PayloadTrait<Root_T> RootType;
+    using Root_T = typename Internal::get_hierarchy_root<T>::type;
+    using RootType = Internal::PayloadTrait<Root_T>;
     static_assert(!RootType::isPolymorphic,
                   "Root type of payload type must not be polymorphic"); // prevent endless recursion
 
@@ -880,7 +880,7 @@ template<typename T> typename std::enable_if<Internal::PayloadTrait<T>::isPolymo
 
 template<typename T> typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic, bool>::type Item::hasPayloadImpl() const
 {
-    typedef Internal::PayloadTrait<T> PayloadType;
+    using PayloadType = Internal::PayloadTrait<T>;
     static_assert(!PayloadType::isPolymorphic, "Polymorphic payload type in non-polymorphic implementation is not allowed");
 
     const int metaTypeId = PayloadType::elementMetaTypeId();
@@ -907,11 +907,11 @@ template<typename T> void Item::setPayload(const T &p)
 
 template<typename T> typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic>::type Item::setPayloadImpl(const T &p, const int *)
 {
-    typedef Internal::PayloadTrait<T> PayloadType;
+    using PayloadType = Internal::PayloadTrait<T>;
     static_assert(PayloadType::isPolymorphic, "Non-polymorphic payload type in polymorphic implementation is not allowed");
 
-    typedef typename Internal::get_hierarchy_root<T>::type Root_T;
-    typedef Internal::PayloadTrait<Root_T> RootType;
+    using Root_T = typename Internal::get_hierarchy_root<T>::type;
+    using RootType = Internal::PayloadTrait<Root_T>;
     static_assert(!RootType::isPolymorphic,
                   "Root type of payload type must not be polymorphic"); // prevent endless recursion
 
@@ -920,7 +920,7 @@ template<typename T> typename std::enable_if<Internal::PayloadTrait<T>::isPolymo
 
 template<typename T> typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic>::type Item::setPayloadImpl(const T &p)
 {
-    typedef Internal::PayloadTrait<T> PayloadType;
+    using PayloadType = Internal::PayloadTrait<T>;
     std::unique_ptr<Internal::PayloadBase> pb(new Internal::Payload<T>(p));
     setPayloadBaseV2(PayloadType::sharedPointerId, PayloadType::elementMetaTypeId(), pb);
 }

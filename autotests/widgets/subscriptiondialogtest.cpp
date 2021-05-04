@@ -138,13 +138,13 @@ class SubscriptionDialogTest : public QObject
 
         void acceptDialog() const
         {
-            auto *button = buttonBox->button(QDialogButtonBox::Ok);
+            auto button = buttonBox->button(QDialogButtonBox::Ok);
             QTest::mouseClick(button, Qt::LeftButton);
         }
 
         QModelIndex indexForCollection(const Collection &col) const
         {
-            auto *model = collectionView->model();
+            auto model = collectionView->model();
             std::deque<QModelIndex> idxQueue;
             idxQueue.push_back(QModelIndex{});
             while (!idxQueue.empty()) {

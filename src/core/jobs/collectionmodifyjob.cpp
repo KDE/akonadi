@@ -87,7 +87,7 @@ void CollectionModifyJob::doStart()
     if (d->mCollection.d_ptr->mAttributeStorage.hasModifiedAttributes()) {
         cmd->setAttributes(ProtocolHelper::attributesToProtocol(d->mCollection.d_ptr->mAttributeStorage.modifiedAttributes()));
     }
-    if (auto *attr = d->mCollection.attribute<Akonadi::PersistentSearchAttribute>()) {
+    if (auto attr = d->mCollection.attribute<Akonadi::PersistentSearchAttribute>()) {
         cmd->setPersistentSearchCollections(attr->queryCollections());
         cmd->setPersistentSearchQuery(attr->queryString());
         cmd->setPersistentSearchRecursive(attr->isRecursive());

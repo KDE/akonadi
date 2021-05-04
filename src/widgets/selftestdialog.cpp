@@ -93,7 +93,7 @@ void SelfTestDialog::hideIntroduction()
 
 QStandardItem *SelfTestDialog::report(ResultType type, const KLocalizedString &summary, const KLocalizedString &details)
 {
-    QStandardItem *item = new QStandardItem(summary.toString());
+    auto item = new QStandardItem(summary.toString());
     switch (type) {
     case Skip:
         item->setIcon(QIcon::fromTheme(QStringLiteral("dialog-ok")));

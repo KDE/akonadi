@@ -549,7 +549,7 @@ public:
         }
 
 #ifndef QT_NO_CLIPBOARD
-        auto *model = const_cast<QAbstractItemModel *>(selectionModel->model());
+        auto model = const_cast<QAbstractItemModel *>(selectionModel->model());
         QMimeData *mimeData = selectionModel->model()->mimeData(safeSelectedRows(selectionModel));
         model->setData(QModelIndex(), false, EntityTreeModel::PendingCutRole);
         markCutAction(mimeData, cut);
@@ -572,7 +572,7 @@ public:
                 continue;
             }
 
-            const Collection parentCollection = index.data(EntityTreeModel::ParentCollectionRole).value<Collection>();
+            const auto parentCollection = index.data(EntityTreeModel::ParentCollectionRole).value<Collection>();
             collection.setParentCollection(parentCollection);
 
             collectionList << std::move(collection);
@@ -612,7 +612,7 @@ public:
                     continue;
                 }
 
-                const Collection parentCollection = index.data(EntityTreeModel::ParentCollectionRole).value<Collection>();
+                const auto parentCollection = index.data(EntityTreeModel::ParentCollectionRole).value<Collection>();
                 item.setParentCollection(parentCollection);
 
                 selectedItems << item;
@@ -729,7 +729,7 @@ public:
 
         const QModelIndex index = collectionSelectionModel->selection().indexes().at(0);
         Q_ASSERT(index.isValid());
-        const Collection parentCollection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+        const auto parentCollection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
         Q_ASSERT(parentCollection.isValid());
 
         if (!canCreateCollection(parentCollection)) {
@@ -793,7 +793,7 @@ public:
 
         for (const QModelIndex &index : indexes) {
             Q_ASSERT(index.isValid());
-            const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+            const auto collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
             Q_ASSERT(collection.isValid());
 
             collections << collection;
@@ -1031,7 +1031,7 @@ public:
         const QModelIndex index = list.first();
         Q_ASSERT(index.isValid());
 
-        const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+        const auto collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
         Q_ASSERT(collection.isValid());
 
         auto dlg = new CollectionPropertiesDialog(collection, mCollectionPropertiesPageNames, parentWidget);
@@ -1063,7 +1063,7 @@ public:
 
 #ifndef QT_NO_CLIPBOARD
         // TODO: Copy or move? We can't seem to cut yet
-        auto *model = const_cast<QAbstractItemModel *>(collectionSelectionModel->model());
+        auto model = const_cast<QAbstractItemModel *>(collectionSelectionModel->model());
         const QMimeData *mimeData = QApplication::clipboard()->mimeData();
         model->dropMimeData(mimeData, isCutAction(mimeData) ? Qt::MoveAction : Qt::CopyAction, -1, -1, index);
         model->setData(QModelIndex(), false, EntityTreeModel::PendingCutRole);
@@ -1136,7 +1136,7 @@ public:
 
         for (const QModelIndex &index : list) {
             Q_ASSERT(index.isValid());
-            const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+            const auto collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
             Q_ASSERT(collection.isValid());
 
             favoritesModel->addCollection(collection);
@@ -1156,7 +1156,7 @@ public:
 
         for (const QModelIndex &index : list) {
             Q_ASSERT(index.isValid());
-            const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+            const auto collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
             Q_ASSERT(collection.isValid());
 
             favoritesModel->removeCollection(collection);
@@ -1175,7 +1175,7 @@ public:
         }
         const QModelIndex index = list.first();
         Q_ASSERT(index.isValid());
-        const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+        const auto collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
         Q_ASSERT(collection.isValid());
 
         QPointer<RenameFavoriteDialog> dlg(
@@ -1250,7 +1250,7 @@ public:
         const QModelIndexList lstIndexes = collectionSelectionModel->selection().indexes();
         for (const QModelIndex &index : lstIndexes) {
             Q_ASSERT(index.isValid());
-            const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+            const auto collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
             Q_ASSERT(collection.isValid());
 
             if (collection.isValid()) {
@@ -1383,7 +1383,7 @@ public:
 
             const QMimeData *mimeData = selectionModel->model()->mimeData(safeSelectedRows(selectionModel));
 
-            auto *model = const_cast<QAbstractItemModel *>(index.model());
+            auto model = const_cast<QAbstractItemModel *>(index.model());
             model->dropMimeData(mimeData, dropAction, -1, -1, index);
             delete mimeData;
         }
@@ -1404,8 +1404,8 @@ public:
         const QModelIndex index = action->data().toModelIndex();
         Q_ASSERT(index.isValid());
 
-        auto *model = const_cast<QAbstractItemModel *>(index.model());
-        const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+        auto model = const_cast<QAbstractItemModel *>(index.model());
+        const auto collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
         addRecentCollection(collection.id());
         model->dropMimeData(mimeData, dropAction, -1, -1, index);
         delete mimeData;
@@ -1507,7 +1507,7 @@ public:
         if (isCollectionAction) {
             list = safeSelectedRows(collectionSelectionModel);
             for (const QModelIndex &index : qAsConst(list)) {
-                const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+                const auto collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
 
                 // The mimetypes that the selected collection can possibly contain
                 const auto mimeTypesResult = AgentManager::self()->instance(collection.resource()).type().mimeTypes();
@@ -1555,7 +1555,7 @@ public:
 
         for (int row = 0; row < rowCount; ++row) {
             const QModelIndex index = model->index(row, 0, parentIndex);
-            const Collection collection = model->data(index, EntityTreeModel::CollectionRole).value<Collection>();
+            const auto collection = model->data(index, EntityTreeModel::CollectionRole).value<Collection>();
 
             if (collection.isVirtual()) {
                 continue;
@@ -1570,7 +1570,7 @@ public:
             QString label = model->data(index).toString();
             label.replace(QLatin1Char('&'), QStringLiteral("&&"));
 
-            const QIcon icon = model->data(index, Qt::DecorationRole).value<QIcon>();
+            const auto icon = model->data(index, Qt::DecorationRole).value<QIcon>();
 
             if (model->rowCount(index) > 0) {
                 // new level
@@ -1721,7 +1721,7 @@ public:
         bool isLocalized;
     };
 
-    typedef QHash<StandardActionManager::TextContext, ContextTextEntry> ContextTexts;
+    using ContextTexts = QHash<StandardActionManager::TextContext, ContextTextEntry>;
     QHash<StandardActionManager::Type, ContextTexts> contextTexts;
 
     ActionStateManager mActionStateManager;
@@ -1921,7 +1921,7 @@ Akonadi::Collection::List StandardActionManager::selectedCollections() const
 
     const QModelIndexList lst = safeSelectedRows(d->collectionSelectionModel);
     for (const QModelIndex &index : lst) {
-        const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+        const auto collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
         if (collection.isValid()) {
             collections << collection;
         }

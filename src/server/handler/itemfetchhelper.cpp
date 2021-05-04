@@ -308,7 +308,7 @@ bool ItemFetchHelper::isScopeLocal(const Scope &scope)
 DataStore *ItemFetchHelper::storageBackend() const
 {
     if (mConnection) {
-        if (auto *store = mConnection->storageBackend()) {
+        if (auto store = mConnection->storageBackend()) {
             return store;
         }
     }

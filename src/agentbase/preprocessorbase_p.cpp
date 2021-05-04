@@ -39,7 +39,7 @@ void PreprocessorBasePrivate::beginProcessItem(qlonglong itemId, qlonglong colle
 {
     qCDebug(AKONADIAGENTBASE_LOG) << "PreprocessorBase: about to process item " << itemId << " in collection " << collectionId << " with mimeType " << mimeType;
 
-    ItemFetchJob *fetchJob = new ItemFetchJob(Item(itemId), this);
+    auto fetchJob = new ItemFetchJob(Item(itemId), this);
     fetchJob->setFetchScope(mFetchScope);
     connect(fetchJob, &ItemFetchJob::result, this, &PreprocessorBasePrivate::itemFetched);
 }

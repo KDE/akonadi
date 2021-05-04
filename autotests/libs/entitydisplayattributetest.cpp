@@ -24,11 +24,11 @@ private Q_SLOTS:
         QTest::addColumn<QString>("activeIcon");
         QTest::addColumn<QByteArray>("output");
 
-        QTest::newRow("empty") << QByteArray("(\"\" \"\")") << QString() << QString() << QString() << QByteArray("(\"\" \"\" \"\" ())");
-        QTest::newRow("name+icon") << QByteArray("(\"name\" \"icon\")") << QStringLiteral("name") << QStringLiteral("icon") << QString()
-                                   << QByteArray("(\"name\" \"icon\" \"\" ())");
-        QTest::newRow("name+icon+activeIcon") << QByteArray("(\"name\" \"icon\" \"activeIcon\")") << QStringLiteral("name") << QStringLiteral("icon")
-                                              << QStringLiteral("activeIcon") << QByteArray("(\"name\" \"icon\" \"activeIcon\" ())");
+        QTest::newRow("empty") << QByteArray(R"(("" ""))") << QString() << QString() << QString() << QByteArray(R"(("" "" "" ()))");
+        QTest::newRow("name+icon") << QByteArray(R"(("name" "icon"))") << QStringLiteral("name") << QStringLiteral("icon") << QString()
+                                   << QByteArray(R"(("name" "icon" "" ()))");
+        QTest::newRow("name+icon+activeIcon") << QByteArray(R"(("name" "icon" "activeIcon"))") << QStringLiteral("name") << QStringLiteral("icon")
+                                              << QStringLiteral("activeIcon") << QByteArray(R"(("name" "icon" "activeIcon" ()))");
     }
 
     void testDeserialize()

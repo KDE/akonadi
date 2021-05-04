@@ -25,7 +25,7 @@ static Collection res1;
 void AttributeFactoryTest::initTestCase()
 {
     AkonadiTest::checkTestIsIsolated();
-    CollectionPathResolver *resolver = new CollectionPathResolver(QStringLiteral("res1"), this);
+    auto resolver = new CollectionPathResolver(QStringLiteral("res1"), this);
     AKVERIFYEXEC(resolver);
     res1 = Collection(resolver->collection());
 }
@@ -38,7 +38,7 @@ void AttributeFactoryTest::testUnknownAttribute()
     item.setPayload<QByteArray>("payload");
     auto ta = new TestAttribute;
     {
-        auto *created = AttributeFactory::createAttribute(ta->type()); // DefaultAttribute
+        auto created = AttributeFactory::createAttribute(ta->type()); // DefaultAttribute
         QVERIFY(created != nullptr);
         delete created;
     }
@@ -68,7 +68,7 @@ void AttributeFactoryTest::testRegisteredAttribute()
     item.setPayload<QByteArray>("payload");
     auto ta = new TestAttribute;
     {
-        auto *created = AttributeFactory::createAttribute(ta->type());
+        auto created = AttributeFactory::createAttribute(ta->type());
         QVERIFY(created != nullptr);
         delete created;
     }

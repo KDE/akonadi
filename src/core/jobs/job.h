@@ -86,7 +86,7 @@ public:
     /**
      * Describes a list of jobs.
      */
-    typedef QList<Job *> List;
+    using List = QList<Job *>;
 
     /**
      * Describes the error codes that can be emitted by this class.

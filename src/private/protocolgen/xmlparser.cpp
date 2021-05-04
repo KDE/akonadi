@@ -200,9 +200,9 @@ bool XmlParser::parseParam(ClassNode *classNode)
     const auto name = attrs.value(QLatin1String("name")).toString();
     const auto type = attrs.value(QLatin1String("type")).toString();
 
-    for (const auto *child : classNode->children()) {
+    for (const auto child : classNode->children()) {
         if (child->type() == Node::Ctor) {
-            auto *ctor = const_cast<CtorNode *>(static_cast<const CtorNode *>(child));
+            auto ctor = const_cast<CtorNode *>(static_cast<const CtorNode *>(child));
             ctor->setArgumentType(name, type);
         }
     }

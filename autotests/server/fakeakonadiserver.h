@@ -29,7 +29,7 @@ class FakeClient;
 class TestScenario
 {
 public:
-    typedef QList<TestScenario> List;
+    using List = QList<TestScenario>;
 
     enum Action {
         ServerCmd,

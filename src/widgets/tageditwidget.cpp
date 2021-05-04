@@ -78,7 +78,7 @@ void TagEditWidget::Private::select(const QModelIndex &parent, int start, int en
     QItemSelection selection;
     for (int i = start; i <= end; i++) {
         const QModelIndex index = m_model->index(i, 0, parent);
-        const Akonadi::Tag insertedTag = index.data(Akonadi::TagModel::TagRole).value<Akonadi::Tag>();
+        const auto insertedTag = index.data(Akonadi::TagModel::TagRole).value<Akonadi::Tag>();
         if (m_tags.contains(insertedTag)) {
             selection.select(index, index);
         }

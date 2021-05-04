@@ -92,7 +92,7 @@ void AccountsIntegration::removeAgentInstance(const QString &identifier)
 void AccountsIntegration::onAccountAdded(Accounts::AccountId accId)
 {
     qCDebug(AKONADICONTROL_LOG) << "Online account ID" << accId << "added.";
-    auto *account = mAccountsManager.account(accId);
+    auto account = mAccountsManager.account(accId);
     if (!account || !account->isEnabled()) {
         return;
     }

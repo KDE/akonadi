@@ -29,13 +29,13 @@ public:
             return true;
         }
 
-        const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+        const auto collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
         if (collection.isValid()) {
             return (mAccessRights & collection.rights());
         } else {
             const Item item = index.data(EntityTreeModel::ItemRole).value<Item>();
             if (item.isValid()) {
-                const Collection collection = index.data(EntityTreeModel::ParentCollectionRole).value<Collection>();
+                const auto collection = index.data(EntityTreeModel::ParentCollectionRole).value<Collection>();
                 return (mAccessRights & collection.rights());
             } else {
                 return false;

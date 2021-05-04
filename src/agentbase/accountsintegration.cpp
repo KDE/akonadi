@@ -67,7 +67,7 @@ std::optional<QString> AccountsIntegration::accountName() const
         return std::nullopt;
     }
 
-    auto *const account = KAccounts::accountsManager()->account(mAccountId.value());
+    auto const account = KAccounts::accountsManager()->account(mAccountId.value());
     if (!account) {
         return std::nullopt;
     }

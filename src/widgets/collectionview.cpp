@@ -101,7 +101,7 @@ void CollectionView::Private::itemClicked(const QModelIndex &index)
         return;
     }
 
-    const Collection collection = index.model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
+    const auto collection = index.model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
     if (!collection.isValid()) {
         return;
     }
@@ -115,7 +115,7 @@ void CollectionView::Private::itemCurrentChanged(const QModelIndex &index)
         return;
     }
 
-    const Collection collection = index.model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
+    const auto collection = index.model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
     if (!collection.isValid()) {
         return;
     }

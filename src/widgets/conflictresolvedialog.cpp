@@ -212,7 +212,7 @@ ConflictResolveDialog::ConflictResolveDialog(QWidget *parent)
     mView->setObjectName(QStringLiteral("view"));
     mView->setOpenLinks(false);
 
-    QLabel *docuLabel =
+    auto docuLabel =
         new QLabel(i18n("<qt>Your changes conflict with those made by someone else meanwhile.<br>"
                         "Unless one version can just be thrown away, you will have to integrate those changes manually.<br>"
                         "Click on <a href=\"opentexteditor\">\"Open text editor\"</a> to keep a copy of the texts, then select which version is most correct, "

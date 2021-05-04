@@ -51,7 +51,7 @@ public:
     /**
      * Describes a list of agent instances.
      */
-    typedef QVector<AgentInstance> List;
+    using List = QVector<AgentInstance>;
 
     /**
      * Describes the status of the agent instance.

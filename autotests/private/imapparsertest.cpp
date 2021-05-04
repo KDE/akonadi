@@ -45,7 +45,7 @@ void ImapParserTest::testStripLeadingSpaces()
 
 void ImapParserTest::testParseQuotedString()
 {
-    QByteArray input = "\"quoted \\\"NIL\\\"   string inside\"";
+    QByteArray input = R"("quoted \"NIL\"   string inside")";
     QByteArray result;
     int consumed;
 
@@ -70,7 +70,7 @@ void ImapParserTest::testParseQuotedString()
     QCOMPARE(consumed, 24);
 
     // NIL and emptiness tests
-    input = "NIL \"NIL\" \"\"";
+    input = R"(NIL "NIL" "")";
 
     // unquoted NIL
     consumed = ImapParser::parseQuotedString(input, result, 0);
@@ -99,7 +99,7 @@ void ImapParserTest::testParseQuotedString()
     QCOMPARE(consumed, input.length());
 
     // de-quoting
-    input = "\"\\\"some \\\\ quoted stuff\\\"\"";
+    input = R"("\"some \\ quoted stuff\"")";
     consumed = ImapParser::parseQuotedString(input, result, 0);
     QCOMPARE(result, QByteArray("\"some \\ quoted stuff\""));
     QCOMPARE(consumed, input.length());
@@ -256,8 +256,8 @@ void ImapParserTest::testQuote_data()
 
     QTest::newRow("empty") << QByteArray("") << QByteArray("\"\"");
     QTest::newRow("simple") << QByteArray("bla") << QByteArray("\"bla\"");
-    QTest::newRow("double-quotes") << QByteArray("\"test\"test\"") << QByteArray("\"\\\"test\\\"test\\\"\"");
-    QTest::newRow("backslash") << QByteArray("\\") << QByteArray("\"\\\\\"");
+    QTest::newRow("double-quotes") << QByteArray(R"("test"test")") << QByteArray(R"("\"test\"test\"")");
+    QTest::newRow("backslash") << QByteArray("\\") << QByteArray(R"("\\")");
     QByteArray binaryNonEncoded;
     binaryNonEncoded += '\000';
     QByteArray binaryEncoded("\"");
@@ -265,11 +265,11 @@ void ImapParserTest::testQuote_data()
     binaryEncoded += '"';
     QTest::newRow("binary") << binaryNonEncoded << binaryEncoded;
 
-    QTest::newRow("LF") << QByteArray("\n") << QByteArray("\"\\n\"");
-    QTest::newRow("CR") << QByteArray("\r") << QByteArray("\"\\r\"");
-    QTest::newRow("double quote") << QByteArray("\"") << QByteArray("\"\\\"\"");
-    QTest::newRow("mixed 1") << QByteArray("a\nb\\c") << QByteArray("\"a\\nb\\\\c\"");
-    QTest::newRow("mixed 2") << QByteArray("\"a\rb\"") << QByteArray("\"\\\"a\\rb\\\"\"");
+    QTest::newRow("LF") << QByteArray("\n") << QByteArray(R"("\n")");
+    QTest::newRow("CR") << QByteArray("\r") << QByteArray(R"("\r")");
+    QTest::newRow("double quote") << QByteArray("\"") << QByteArray(R"("\"")");
+    QTest::newRow("mixed 1") << QByteArray("a\nb\\c") << QByteArray(R"("a\nb\\c")");
+    QTest::newRow("mixed 2") << QByteArray("\"a\rb\"") << QByteArray(R"("\"a\rb\"")");
 }
 
 void ImapParserTest::testQuote()

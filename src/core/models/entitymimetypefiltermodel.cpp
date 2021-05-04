@@ -100,7 +100,7 @@ bool EntityMimeTypeFilterModel::filterAcceptsRow(int sourceRow, const QModelInde
     }
 
     if (d->includedMimeTypes.isEmpty() || d->includedMimeTypes.contains(rowMimetype)) {
-        const Akonadi::Item item = idx.data(EntityTreeModel::ItemRole).value<Akonadi::Item>();
+        const auto item = idx.data(EntityTreeModel::ItemRole).value<Akonadi::Item>();
 
         if (item.isValid() && !item.hasPayload()) {
             qCDebug(AKONADICORE_LOG) << "Item " << item.id() << " doesn't have payload";

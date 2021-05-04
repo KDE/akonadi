@@ -26,7 +26,7 @@ TransportResourceBasePrivate::TransportResourceBasePrivate(TransportResourceBase
 
 void TransportResourceBasePrivate::send(Item::Id id)
 {
-    ItemFetchJob *job = new ItemFetchJob(Item(id));
+    auto job = new ItemFetchJob(Item(id));
     job->fetchScope().fetchFullPayload();
     job->setProperty("id", QVariant(id));
     connect(job, &KJob::result, this, &TransportResourceBasePrivate::fetchResult);

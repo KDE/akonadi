@@ -23,7 +23,7 @@ namespace Server
 class Entity
 {
 public:
-    typedef qint64 Id;
+    using Id = qint64;
 
 protected:
     qint64 id() const;
@@ -143,7 +143,7 @@ namespace _detail
   \endcode
 */
 template<template<typename U> class Op> struct ById {
-    typedef bool result_type;
+    using result_type = bool;
     bool operator()(Entity::Id lhs, Entity::Id rhs) const
     {
         return Op<Entity::Id>()(lhs, rhs);

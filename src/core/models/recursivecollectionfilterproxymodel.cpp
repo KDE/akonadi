@@ -50,7 +50,7 @@ bool RecursiveCollectionFilterProxyModel::filterAcceptsRow(int sourceRow, const 
     Q_D(const RecursiveCollectionFilterProxyModel);
 
     const QModelIndex rowIndex = sourceModel()->index(sourceRow, 0, sourceParent);
-    const Akonadi::Collection collection = rowIndex.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+    const auto collection = rowIndex.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
     if (!collection.isValid()) {
         return false;
     }

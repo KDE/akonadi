@@ -35,7 +35,7 @@ class AgentInstance : public QObject
 {
     Q_OBJECT
 public:
-    typedef QSharedPointer<AgentInstance> Ptr;
+    using Ptr = QSharedPointer<AgentInstance>;
 
     explicit AgentInstance(AgentManager &manager);
     ~AgentInstance() override;

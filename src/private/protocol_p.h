@@ -535,7 +535,7 @@ namespace Akonadi
 namespace Protocol
 {
 class FetchItemsResponse;
-typedef QSharedPointer<FetchItemsResponse> FetchItemsResponsePtr;
+using FetchItemsResponsePtr = QSharedPointer<FetchItemsResponse>;
 
 AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream, const Akonadi::Protocol::ChangeNotification &ntf);
 AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream, Akonadi::Protocol::ChangeNotification &ntf);

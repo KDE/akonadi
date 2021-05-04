@@ -15,7 +15,7 @@ class QIcon;
 class QString;
 #include <QStringList>
 class QVariant;
-typedef QMap<QString, QVariant> QVariantMap;
+using QVariantMap = QMap<QString, QVariant>;
 
 namespace Akonadi
 {
@@ -48,7 +48,7 @@ public:
     /**
      * Describes a list of agent types.
      */
-    typedef QVector<AgentType> List;
+    using List = QVector<AgentType>;
 
     /**
      * Creates a new agent type.

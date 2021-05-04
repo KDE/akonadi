@@ -104,7 +104,7 @@ void SpecialCollectionsPrivate::collectionStatisticsChanged(Akonadi::Collection:
 {
     // need to get the name of the collection in order to be able to check if we are storing it,
     // but we have the id from the monitor, so fetch the name.
-    Akonadi::CollectionFetchJob *fetchJob = new Akonadi::CollectionFetchJob(Collection(collectionId), Akonadi::CollectionFetchJob::Base);
+    auto fetchJob = new Akonadi::CollectionFetchJob(Collection(collectionId), Akonadi::CollectionFetchJob::Base);
     fetchJob->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::None);
     fetchJob->setProperty("statistics", QVariant::fromValue(statistics));
 
@@ -124,7 +124,7 @@ void SpecialCollectionsPrivate::collectionFetchJobFinished(KJob *job)
 
     Q_ASSERT(!fetchJob->collections().empty());
     const Akonadi::Collection collection = fetchJob->collections().at(0);
-    const Akonadi::CollectionStatistics statistics = fetchJob->property("statistics").value<Akonadi::CollectionStatistics>();
+    const auto statistics = fetchJob->property("statistics").value<Akonadi::CollectionStatistics>();
 
     mFoldersForResource[collection.resource()][collection.name().toUtf8()].setStatistics(statistics);
 }
@@ -192,7 +192,7 @@ void SpecialCollections::setSpecialCollectionType(const QByteArray &type, const 
 {
     if (!collection.hasAttribute<SpecialCollectionAttribute>() || collection.attribute<SpecialCollectionAttribute>()->collectionType() != type) {
         Collection attributeCollection(collection);
-        auto *attribute = attributeCollection.attribute<SpecialCollectionAttribute>(Collection::AddIfMissing);
+        auto attribute = attributeCollection.attribute<SpecialCollectionAttribute>(Collection::AddIfMissing);
         attribute->setCollectionType(type);
         new CollectionModifyJob(attributeCollection);
     }

@@ -74,7 +74,7 @@ public:
             toggleSubscribed(Qt::Unchecked);
         });
 
-        auto *okButton = ui.buttonBox->button(QDialogButtonBox::Ok);
+        auto okButton = ui.buttonBox->button(QDialogButtonBox::Ok);
         okButton->setEnabled(false);
         connect(okButton, &QPushButton::clicked, q, [this]() {
             done();

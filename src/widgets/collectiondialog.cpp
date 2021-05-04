@@ -326,7 +326,7 @@ Akonadi::Collection::List CollectionDialog::selectedCollections() const
     const QModelIndexList selectedIndexes = selectionModel->selectedIndexes();
     for (const QModelIndex &index : selectedIndexes) {
         if (index.isValid()) {
-            const Collection collection = index.model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
+            const auto collection = index.model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
             if (collection.isValid()) {
                 collections.append(collection);
             }

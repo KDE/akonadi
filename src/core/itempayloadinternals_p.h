@@ -80,35 +80,35 @@ template<typename T> struct shared_pointer_traits {
 
 template<typename T> struct shared_pointer_traits<boost::shared_ptr<T>> {
     static const bool defined = true;
-    typedef T element_type;
+    using element_type = T;
 
     template<typename S> struct make {
-        typedef boost::shared_ptr<S> type;
+        using type = boost::shared_ptr<S>;
     };
 
-    typedef QSharedPointer<T> next_shared_ptr;
+    using next_shared_ptr = QSharedPointer<T>;
 };
 
 template<typename T> struct shared_pointer_traits<QSharedPointer<T>> {
     static const bool defined = true;
-    typedef T element_type;
+    using element_type = T;
 
     template<typename S> struct make {
-        typedef QSharedPointer<S> type;
+        using type = QSharedPointer<S>;
     };
 
-    typedef std::shared_ptr<T> next_shared_ptr;
+    using next_shared_ptr = std::shared_ptr<T>;
 };
 
 template<typename T> struct shared_pointer_traits<std::shared_ptr<T>> {
     static const bool defined = true;
-    typedef T element_type;
+    using element_type = T;
 
     template<typename S> struct make {
-        typedef std::shared_ptr<S> type;
+        using type = std::shared_ptr<S>;
     };
 
-    typedef boost::shared_ptr<T> next_shared_ptr;
+    using next_shared_ptr = boost::shared_ptr<T>;
 };
 
 template<typename T> struct is_shared_pointer {
@@ -116,7 +116,7 @@ template<typename T> struct is_shared_pointer {
 };
 
 template<typename T> struct identity {
-    typedef T type;
+    using type = T;
 };
 
 template<typename T> struct get_hierarchy_root;
@@ -131,15 +131,15 @@ template<typename T> struct get_hierarchy_root : get_hierarchy_root_recurse<T, t
 };
 
 template<typename T> struct get_hierarchy_root<boost::shared_ptr<T>> {
-    typedef boost::shared_ptr<typename get_hierarchy_root<T>::type> type;
+    using type = boost::shared_ptr<typename get_hierarchy_root<T>::type>;
 };
 
 template<typename T> struct get_hierarchy_root<QSharedPointer<T>> {
-    typedef QSharedPointer<typename get_hierarchy_root<T>::type> type;
+    using type = QSharedPointer<typename get_hierarchy_root<T>::type>;
 };
 
 template<typename T> struct get_hierarchy_root<std::shared_ptr<T>> {
-    typedef std::shared_ptr<typename get_hierarchy_root<T>::type> type;
+    using type = std::shared_ptr<typename get_hierarchy_root<T>::type>;
 };
 
 /**
@@ -150,7 +150,7 @@ template<typename T> struct get_hierarchy_root<std::shared_ptr<T>> {
 */
 template<typename T> struct PayloadTrait {
     /// type of the payload object contained inside a shared pointer
-    typedef T ElementType;
+    using ElementType = T;
     // the metatype id for the element type, or for pointer-to-element
     // type, if in a shared pointer
     static int elementMetaTypeId()
@@ -159,13 +159,13 @@ template<typename T> struct PayloadTrait {
     }
     /// type of the base class of the payload object inside a shared pointer,
     /// same as ElementType if there is no super class
-    typedef typename Akonadi::SuperClass<T>::Type SuperElementType;
+    using SuperElementType = typename Akonadi::SuperClass<T>::Type;
     /// type of this payload object
-    typedef T Type;
+    using Type = T;
     /// type of the payload to store a base class of this payload
     /// (eg. a shared pointer containing a pointer to SuperElementType)
     /// same as Type if there is not super class
-    typedef typename Akonadi::SuperClass<T>::Type SuperType;
+    using SuperType = typename Akonadi::SuperClass<T>::Type;
     /// indicates if this payload is polymorphic, that it is a shared pointer
     /// and has a known super class
     static const bool isPolymorphic = false;
@@ -205,14 +205,14 @@ template<typename T> struct PayloadTrait {
   for documentation of the various members, see above
 */
 template<typename T> struct PayloadTrait<boost::shared_ptr<T>> {
-    typedef T ElementType;
+    using ElementType = T;
     static int elementMetaTypeId()
     {
         return qMetaTypeId<T *>();
     }
-    typedef typename Akonadi::SuperClass<T>::Type SuperElementType;
-    typedef boost::shared_ptr<ElementType> Type;
-    typedef boost::shared_ptr<SuperElementType> SuperType;
+    using SuperElementType = typename Akonadi::SuperClass<T>::Type;
+    using Type = boost::shared_ptr<ElementType>;
+    using SuperType = boost::shared_ptr<SuperElementType>;
     static const bool isPolymorphic = !std::is_same<ElementType, SuperElementType>::value;
     static inline bool isNull(const Type &p)
     {
@@ -261,14 +261,14 @@ template<typename T> struct PayloadTrait<boost::shared_ptr<T>> {
   for documentation of the various members, see above
 */
 template<typename T> struct PayloadTrait<QSharedPointer<T>> {
-    typedef T ElementType;
+    using ElementType = T;
     static int elementMetaTypeId()
     {
         return qMetaTypeId<T *>();
     }
-    typedef typename Akonadi::SuperClass<T>::Type SuperElementType;
-    typedef QSharedPointer<ElementType> Type;
-    typedef QSharedPointer<SuperElementType> SuperType;
+    using SuperElementType = typename Akonadi::SuperClass<T>::Type;
+    using Type = QSharedPointer<ElementType>;
+    using SuperType = QSharedPointer<SuperElementType>;
     static const bool isPolymorphic = !std::is_same<ElementType, SuperElementType>::value;
     static inline bool isNull(const Type &p)
     {
@@ -317,14 +317,14 @@ template<typename T> struct PayloadTrait<QSharedPointer<T>> {
   for documentation of the various members, see above
 */
 template<typename T> struct PayloadTrait<std::shared_ptr<T>> {
-    typedef T ElementType;
+    using ElementType = T;
     static int elementMetaTypeId()
     {
         return qMetaTypeId<T *>();
     }
-    typedef typename Akonadi::SuperClass<T>::Type SuperElementType;
-    typedef std::shared_ptr<ElementType> Type;
-    typedef std::shared_ptr<SuperElementType> SuperType;
+    using SuperElementType = typename Akonadi::SuperClass<T>::Type;
+    using Type = std::shared_ptr<ElementType>;
+    using SuperType = std::shared_ptr<SuperElementType>;
     static const bool isPolymorphic = !std::is_same<ElementType, SuperElementType>::value;
     static inline bool isNull(const Type &p)
     {
@@ -419,7 +419,7 @@ template<typename T> struct Payload<T *> : public PayloadBase {
 */
 template<typename T> inline Payload<T> *payload_cast(PayloadBase *payloadBase)
 {
-    auto *p = dynamic_cast<Payload<T> *>(payloadBase);
+    auto p = dynamic_cast<Payload<T> *>(payloadBase);
     // try harder to cast, workaround for some gcc issue with template instances in multiple DSO's
     if (!p && payloadBase && strcmp(payloadBase->typeName(), typeid(p).name()) == 0) {
         p = static_cast<Payload<T> *>(payloadBase);

@@ -51,7 +51,7 @@ QString ETMViewStateSaver::indexToConfigString(const QModelIndex &index) const
     if (!index.isValid()) {
         return QStringLiteral("x-1");
     }
-    const Collection c = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+    const auto c = index.data(EntityTreeModel::CollectionRole).value<Collection>();
     if (c.isValid()) {
         return QStringLiteral("c%1").arg(c.id());
     }

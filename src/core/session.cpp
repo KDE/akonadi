@@ -424,7 +424,7 @@ void SessionPrivate::setDefaultSession(Session *session)
 Session *Session::defaultSession()
 {
     if (!instances()->hasLocalData()) {
-        Session *session = new Session();
+        auto session = new Session();
         SessionPrivate::setDefaultSession(session);
     }
     return instances()->localData().data();

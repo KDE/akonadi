@@ -128,7 +128,7 @@ void TagWidget::updateView()
     // Load the real tag names from the model
     for (int i = 0; i < d->mModel->rowCount(); ++i) {
         const QModelIndex index = d->mModel->index(i, 0);
-        const Akonadi::Tag tag = d->mModel->data(index, Akonadi::TagModel::TagRole).value<Akonadi::Tag>();
+        const auto tag = d->mModel->data(index, Akonadi::TagModel::TagRole).value<Akonadi::Tag>();
         if (d->mTags.contains(tag)) {
             tagsNames.push_back(tag.name());
         }

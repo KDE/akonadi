@@ -70,7 +70,7 @@ private:
         qint64 timestamp;
     };
 
-    typedef QMap<QString /* resource */, ResourceTask *> TasksMap;
+    using TasksMap = QMap<QString, ResourceTask *>;
 
     bool mShouldStop;
 

@@ -66,7 +66,7 @@ void PartFetcherPrivate::fetchJobDone(KJob *job)
         return;
     }
 
-    const QSet<QByteArray> loadedParts = m_persistentIndex.data(EntityTreeModel::LoadedPartsRole).value<QSet<QByteArray>>();
+    const auto loadedParts = m_persistentIndex.data(EntityTreeModel::LoadedPartsRole).value<QSet<QByteArray>>();
 
     Q_ASSERT(!loadedParts.contains(m_partName));
 
@@ -74,7 +74,7 @@ void PartFetcherPrivate::fetchJobDone(KJob *job)
 
     item.apply(list.at(0));
 
-    auto *model = const_cast<QAbstractItemModel *>(m_persistentIndex.model());
+    auto model = const_cast<QAbstractItemModel *>(m_persistentIndex.model());
 
     Q_ASSERT(model);
 
@@ -103,7 +103,7 @@ void PartFetcher::start()
 
     const QModelIndex index = d->m_persistentIndex;
 
-    const QSet<QByteArray> loadedParts = index.data(EntityTreeModel::LoadedPartsRole).value<QSet<QByteArray>>();
+    const auto loadedParts = index.data(EntityTreeModel::LoadedPartsRole).value<QSet<QByteArray>>();
 
     if (loadedParts.contains(d->m_partName)) {
         d->m_item = d->m_persistentIndex.data(EntityTreeModel::ItemRole).value<Item>();
@@ -111,7 +111,7 @@ void PartFetcher::start()
         return;
     }
 
-    const QSet<QByteArray> availableParts = index.data(EntityTreeModel::AvailablePartsRole).value<QSet<QByteArray>>();
+    const auto availableParts = index.data(EntityTreeModel::AvailablePartsRole).value<QSet<QByteArray>>();
     if (!availableParts.contains(d->m_partName)) {
         setError(UserDefinedError);
         setErrorText(i18n("Payload part '%1' is not available for this index", QString::fromLatin1(d->m_partName)));
@@ -128,7 +128,7 @@ void PartFetcher::start()
         return;
     }
 
-    const Akonadi::Item item = index.data(EntityTreeModel::ItemRole).value<Akonadi::Item>();
+    const auto item = index.data(EntityTreeModel::ItemRole).value<Akonadi::Item>();
 
     if (!item.isValid()) {
         setError(UserDefinedError);

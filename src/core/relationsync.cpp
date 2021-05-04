@@ -37,7 +37,7 @@ void RelationSync::setRemoteRelations(const Akonadi::Relation::List &relations)
 
 void RelationSync::doStart()
 {
-    Akonadi::RelationFetchJob *fetch = new Akonadi::RelationFetchJob({Akonadi::Relation::GENERIC}, this);
+    auto fetch = new Akonadi::RelationFetchJob({Akonadi::Relation::GENERIC}, this);
     connect(fetch, &KJob::result, this, &RelationSync::onLocalFetchDone);
 }
 

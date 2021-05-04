@@ -61,7 +61,7 @@ private Q_SLOTS:
 
     void testIllegalResourceManagement()
     {
-        AgentInstanceCreateJob *job = new AgentInstanceCreateJob(AgentManager::self()->type(QStringLiteral("non_existing_resource")));
+        auto job = new AgentInstanceCreateJob(AgentManager::self()->type(QStringLiteral("non_existing_resource")));
         QVERIFY(!job->exec());
 
         // unique agent

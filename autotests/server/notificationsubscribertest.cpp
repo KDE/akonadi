@@ -87,7 +87,7 @@ class NotificationSubscriberTest : public QObject
 {
     Q_OBJECT
 
-    typedef QList<NotificationSubscriber *> NSList;
+    using NSList = QList<NotificationSubscriber *>;
 
     Protocol::FetchItemsResponse itemResponse(qint64 id, const QString &rid, const QString &rrev, const QString &mt)
     {

@@ -43,7 +43,7 @@ Akonadi::SpecialCollectionsDiscoveryJob::~SpecialCollectionsDiscoveryJob()
 
 void Akonadi::SpecialCollectionsDiscoveryJob::start()
 {
-    CollectionFetchJob *job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, this);
+    auto job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, this);
     job->fetchScope().setContentMimeTypes(d->mMimeTypes);
     addSubjob(job);
 }

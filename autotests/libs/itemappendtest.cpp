@@ -161,7 +161,7 @@ void ItemAppendTest::testIllegalAppend()
     item.setMimeType(QStringLiteral("application/octet-stream"));
 
     // adding item to non-existing collection
-    ItemCreateJob *job = new ItemCreateJob(item, Collection(INT_MAX), this);
+    auto job = new ItemCreateJob(item, Collection(INT_MAX), this);
     QVERIFY(!job->exec());
 
     // adding item into a collection which can't handle items of this type
@@ -208,7 +208,7 @@ void ItemAppendTest::testInvalidMultipartAppend()
     item.setPayload<QByteArray>("body data");
     item.attribute<TestAttribute>(Item::AddIfMissing)->data = "extra data";
     item.setFlag("TestFlag");
-    ItemCreateJob *job = new ItemCreateJob(item, Collection(-1), this);
+    auto job = new ItemCreateJob(item, Collection(-1), this);
     QVERIFY(!job->exec());
 
     Item item2;
@@ -216,7 +216,7 @@ void ItemAppendTest::testInvalidMultipartAppend()
     item2.setPayload<QByteArray>("more body data");
     item2.attribute<TestAttribute>(Item::AddIfMissing)->data = "even more extra data";
     item2.setFlag("TestFlag");
-    ItemCreateJob *job2 = new ItemCreateJob(item2, Collection(-1), this);
+    auto job2 = new ItemCreateJob(item2, Collection(-1), this);
     QVERIFY(!job2->exec());
 }
 
@@ -342,7 +342,7 @@ void ItemAppendTest::testItemMerge()
     }
 
     if (merge->item().id() != createdItem.id()) {
-        ItemDeleteJob *del = new ItemDeleteJob(merge->item(), this);
+        auto del = new ItemDeleteJob(merge->item(), this);
         AKVERIFYEXEC(del);
     }
     auto del = new ItemDeleteJob(createdItem, this);

@@ -68,7 +68,7 @@ void StdStringItemSerializerPlugin::serialize(const Item &item, const QByteArray
     Q_UNUSED(version)
     Q_ASSERT(label == Item::FullPayload);
     Q_UNUSED(label)
-    const std::string str = item.payload<std::string>();
+    const auto str = item.payload<std::string>();
     data.write(QByteArray::fromRawData(str.data(), str.size()));
 }
 
@@ -102,7 +102,7 @@ void ItemSerializer::deserialize(Item &item, const QByteArray &label, const QByt
 /*static*/
 void ItemSerializer::deserialize(Item &item, const QByteArray &label, QIODevice &data, int version)
 {
-    auto *plugin = TypePluginLoader::defaultPluginForMimeType(item.mimeType());
+    auto plugin = TypePluginLoader::defaultPluginForMimeType(item.mimeType());
 
     const auto handleError = [&](QIODevice &device, bool compressed) {
         device.seek(0);

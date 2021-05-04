@@ -393,7 +393,7 @@ void MonitorTest::testVirtualCollectionsMonitoring()
 
     QSignalSpy caddspy(&monitor, &Monitor::collectionAdded);
 
-    SearchCreateJob *job = new SearchCreateJob(QStringLiteral("Test search collection"), Akonadi::SearchQuery(), this);
+    auto job = new SearchCreateJob(QStringLiteral("Test search collection"), Akonadi::SearchQuery(), this);
     AKVERIFYEXEC(job);
     QTRY_COMPARE(caddspy.count(), 1);
 }

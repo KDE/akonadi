@@ -196,7 +196,7 @@ void ResourceScanJob::doStart()
         return;
     }
 
-    CollectionFetchJob *fetchJob = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, this);
+    auto fetchJob = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, this);
     fetchJob->fetchScope().setResource(d->mResourceId);
     fetchJob->fetchScope().setIncludeStatistics(true);
     fetchJob->fetchScope().setListFilter(CollectionFetchScope::Display);
@@ -256,7 +256,7 @@ void DefaultResourceJobPrivate::tryFetchResource()
         qCDebug(AKONADICORE_LOG) << "Found resource" << resourceId;
         q->setResourceId(resourceId);
 
-        CollectionFetchJob *fetchJob = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, q);
+        auto fetchJob = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, q);
         fetchJob->fetchScope().setResource(resourceId);
         fetchJob->fetchScope().setIncludeStatistics(true);
         q->connect(fetchJob, &CollectionFetchJob::result, q, [this](KJob *job) {
@@ -382,7 +382,7 @@ void DefaultResourceJobPrivate::resourceSyncResult(KJob *job)
 
     // Fetch the collections of the resource.
     qCDebug(AKONADICORE_LOG) << "Fetching maildir collections.";
-    CollectionFetchJob *fetchJob = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, q);
+    auto fetchJob = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, q);
     fetchJob->fetchScope().setResource(defaultResourceId(mSettings));
     QObject::connect(fetchJob, &CollectionFetchJob::result, q, [this](KJob *job) {
         collectionFetchResult(job);
@@ -638,7 +638,7 @@ void Akonadi::setCollectionAttributes(Akonadi::Collection &collection,
     }
 
     {
-        SpecialCollectionAttribute *attr = new SpecialCollectionAttribute;
+        auto attr = new SpecialCollectionAttribute;
         attr->setCollectionType(type);
         collection.addAttribute(attr);
     }

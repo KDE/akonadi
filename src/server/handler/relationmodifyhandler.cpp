@@ -101,7 +101,7 @@ bool RelationModifyHandler::parseStream()
         throw HandlerException("Relations can only be created for items within the same resource");
     } */
 
-    auto *collector = storageBackend()->notificationCollector();
+    auto collector = storageBackend()->notificationCollector();
     collector->relationAdded(insertedRelation);
     collector->itemsRelationsChanged(items, {insertedRelation}, {});
 

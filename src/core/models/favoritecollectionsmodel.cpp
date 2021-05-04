@@ -318,7 +318,7 @@ Akonadi::Collection::List FavoriteCollectionsModel::collections() const
     cols.reserve(d->collectionIds.count());
     for (const Collection::Id &colId : qAsConst(d->collectionIds)) {
         const QModelIndex idx = EntityTreeModel::modelIndexForCollection(sourceModel(), Collection(colId));
-        const Collection collection = sourceModel()->data(idx, EntityTreeModel::CollectionRole).value<Collection>();
+        const auto collection = sourceModel()->data(idx, EntityTreeModel::CollectionRole).value<Collection>();
         cols << collection;
     }
     return cols;
@@ -365,7 +365,7 @@ bool FavoriteCollectionsModel::setData(const QModelIndex &index, const QVariant 
             return false;
         }
         const QModelIndex sourceIndex = mapToSource(index);
-        const Collection collection = sourceModel()->data(sourceIndex, EntityTreeModel::CollectionRole).value<Collection>();
+        const auto collection = sourceModel()->data(sourceIndex, EntityTreeModel::CollectionRole).value<Collection>();
         setFavoriteLabel(collection, newLabel);
         return true;
     }
@@ -420,7 +420,7 @@ bool FavoriteCollectionsModel::dropMimeData(const QMimeData *data, Qt::DropActio
         const QList<QUrl> urls = data->urls();
 
         const QModelIndex sourceIndex = mapToSource(parent);
-        const Collection destCollection = sourceModel()->data(sourceIndex, EntityTreeModel::CollectionRole).value<Collection>();
+        const auto destCollection = sourceModel()->data(sourceIndex, EntityTreeModel::CollectionRole).value<Collection>();
 
         MimeTypeChecker mimeChecker;
         mimeChecker.setWantedMimeTypes(destCollection.contentMimeTypes());

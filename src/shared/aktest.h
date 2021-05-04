@@ -84,7 +84,7 @@ enum NtfField {
     NtfTags = NtfAddedTags | NtfRemovedTags,
     NtfAll = NtfType | NtfOperation | NtfSession | NtfEntities | NtfResource | NtfCollection | NtfDestResource | NtfDestCollection | NtfFlags | NtfTags
 };
-typedef QFlags<NtfField> NtfFields;
+using NtfFields = QFlags<NtfField>;
 
 bool compareNotifications(const Akonadi::Protocol::ItemChangeNotificationPtr &actual,
                           const Akonadi::Protocol::ItemChangeNotificationPtr &expected,

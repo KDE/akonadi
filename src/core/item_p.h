@@ -131,7 +131,7 @@ template<> inline void swap<Akonadi::_detail::TypedPayload>(Akonadi::_detail::Ty
 
 namespace Akonadi
 {
-typedef std::vector<_detail::TypedPayload> PayloadContainer;
+using PayloadContainer = std::vector<_detail::TypedPayload>;
 }
 
 namespace QtPrivate

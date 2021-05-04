@@ -276,7 +276,7 @@ private:
         GenericTaskQueue,
         NQueueCount
     };
-    typedef QList<Task> TaskList;
+    using TaskList = QList<Task>;
 
     static QueueType queueTypeForTaskType(TaskType type);
     TaskList &queueForTaskType(TaskType type);

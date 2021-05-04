@@ -124,7 +124,7 @@ void GidTest::testCreate()
     item.setMimeType(QStringLiteral("application/octet-stream"));
     item.setPayload<QByteArray>(QByteArray("test"));
     item.setGid(QStringLiteral("createGid"));
-    ItemCreateJob *createJob = new ItemCreateJob(item, Collection(colId), this);
+    auto createJob = new ItemCreateJob(item, Collection(colId), this);
     AKVERIFYEXEC(createJob);
     auto fetch = new ItemFetchJob(item, this);
     AKVERIFYEXEC(fetch);
@@ -165,7 +165,7 @@ void GidTest::testFetchScope()
     item.setMimeType(QStringLiteral("application/octet-stream"));
     item.setPayload<QByteArray>(QByteArray("test"));
     item.setGid(QStringLiteral("createGid2"));
-    ItemCreateJob *createJob = new ItemCreateJob(item, Collection(colId), this);
+    auto createJob = new ItemCreateJob(item, Collection(colId), this);
     AKVERIFYEXEC(createJob);
     {
         auto fetch = new ItemFetchJob(item, this);

@@ -68,7 +68,7 @@ private Q_SLOTS:
 
     void newTag()
     {
-        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
+        auto select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
         AKVERIFYEXEC(select);
 
         Tag::List remoteTags;
@@ -91,7 +91,7 @@ private Q_SLOTS:
     void newTagWithItems()
     {
         const Collection res3 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
-        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_2"));
+        auto select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_2"));
         AKVERIFYEXEC(select);
 
         Tag::List remoteTags;
@@ -136,7 +136,7 @@ private Q_SLOTS:
 
     void existingTag()
     {
-        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
+        auto select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
         AKVERIFYEXEC(select);
 
         Tag tag1(QStringLiteral("tag1"));
@@ -163,7 +163,7 @@ private Q_SLOTS:
     {
         const Collection res3 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
 
-        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_2"));
+        auto select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_2"));
         AKVERIFYEXEC(select);
 
         Tag tag1(QStringLiteral("tag1"));
@@ -223,7 +223,7 @@ private Q_SLOTS:
 
     void removeTag()
     {
-        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
+        auto select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
         AKVERIFYEXEC(select);
 
         Tag tag1(QStringLiteral("tag1"));

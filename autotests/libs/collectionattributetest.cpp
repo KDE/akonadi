@@ -61,7 +61,7 @@ void CollectionAttributeTest::initTestCase()
     Control::start();
     AttributeFactory::registerAttribute<TestAttribute>();
 
-    CollectionPathResolver *resolver = new CollectionPathResolver(QStringLiteral("res3"), this);
+    auto resolver = new CollectionPathResolver(QStringLiteral("res3"), this);
     AKVERIFYEXEC(resolver);
     parentColId = resolver->collection();
     QVERIFY(parentColId > 0);
@@ -82,7 +82,7 @@ void CollectionAttributeTest::testAttributes_data()
     QTest::newRow("newline") << QByteArray("\n") << QByteArray("no newline");
     QTest::newRow("newline2") << QByteArray(" \\\n\\\nnn") << QByteArray("no newline");
     QTest::newRow("cr") << QByteArray("\r") << QByteArray("\\\r\n");
-    QTest::newRow("quotes") << QByteArray("\"quoted \\ test\"") << QByteArray("single \" quote \\");
+    QTest::newRow("quotes") << QByteArray(R"("quoted \ test")") << QByteArray("single \" quote \\");
     QTest::newRow("parenthesis") << QByteArray(")") << QByteArray("(");
     QTest::newRow("binary") << QByteArray("\000") << QByteArray("\001");
 }
@@ -243,8 +243,8 @@ void CollectionAttributeTest::testDetach()
     Collection col2 = col; // and a copy, so that non-const access detaches
 
     // WHEN
-    auto *attr = col2.attribute<TestAttribute>(Akonadi::Collection::AddIfMissing);
-    auto *attr2 = col2.attribute<TestAttribute>();
+    auto attr = col2.attribute<TestAttribute>(Akonadi::Collection::AddIfMissing);
+    auto attr2 = col2.attribute<TestAttribute>();
 
     // THEN
     QCOMPARE(attr, attr2);

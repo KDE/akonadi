@@ -25,8 +25,8 @@ class TagPrivate;
 class AKONADICORE_EXPORT Tag
 {
 public:
-    typedef QVector<Tag> List;
-    typedef qint64 Id;
+    using List = QVector<Tag>;
+    using Id = qint64;
 
     /**
      * The PLAIN type has the following properties:

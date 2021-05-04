@@ -42,7 +42,7 @@ bool FakeAkonadiServerCommand::isCollectionSignal(const QByteArray &signal) cons
 
 void FakeAkonadiServerCommand::connectForwardingSignals()
 {
-    const auto *mo = FakeAkonadiServerCommand::metaObject();
+    const auto mo = FakeAkonadiServerCommand::metaObject();
     for (int methodIndex = 0; methodIndex < mo->methodCount(); ++methodIndex) {
         const QMetaMethod mm = mo->method(methodIndex);
         const QByteArray signature = mm.methodSignature();

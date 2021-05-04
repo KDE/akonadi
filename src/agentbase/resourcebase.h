@@ -174,7 +174,7 @@ public:
 
         // check if T also inherits AgentBase::Observer and
         // if it does, automatically register it on itself
-        auto *observer = dynamic_cast<Observer *>(&r);
+        auto observer = dynamic_cast<Observer *>(&r);
         if (observer != nullptr) {
             r.registerObserver(observer);
         }

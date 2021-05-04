@@ -31,7 +31,7 @@ void TransactionTest::testTransaction()
 {
     Collection basisCollection;
 
-    CollectionFetchJob *listJob = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive);
+    auto listJob = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive);
     AKVERIFYEXEC(listJob);
     const Collection::List list = listJob->collections();
     for (const Collection &col : list)

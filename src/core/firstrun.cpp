@@ -138,7 +138,7 @@ void Firstrun::instanceCreated(KJob *job)
     }
 
     const auto service = ServerManager::agentServiceName(ServerManager::Agent, instance.identifier());
-    QDBusInterface *iface = new QDBusInterface(service, QStringLiteral("/Settings"), QString(), QDBusConnection::sessionBus(), this);
+    auto iface = new QDBusInterface(service, QStringLiteral("/Settings"), QString(), QDBusConnection::sessionBus(), this);
     if (!iface->isValid()) {
         qCCritical(AKONADICORE_LOG) << "Unable to obtain the KConfigXT D-Bus interface of " << instance.identifier();
         setupNext();

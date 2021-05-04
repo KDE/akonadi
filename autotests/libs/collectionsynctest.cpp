@@ -30,7 +30,7 @@ class CollectionSyncTest : public QObject
 private:
     Collection::List fetchCollections(const QString &res)
     {
-        CollectionFetchJob *fetch = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, this);
+        auto fetch = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, this);
         fetch->fetchScope().setResource(res);
         fetch->fetchScope().setAncestorRetrieval(CollectionFetchScope::All);
         if (!fetch->exec()) {
@@ -69,7 +69,7 @@ private:
     {
         Collection::List collections = fetchCollections(QStringLiteral("akonadi_knut_resource_0"));
 
-        ResourceSelectJob *resJob = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
+        auto resJob = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
         Q_ASSERT(resJob->exec());
 
         Collection root;
@@ -104,7 +104,7 @@ private:
 
     CollectionSync *prepareBenchmarkSyncer(const Collection::List &collections)
     {
-        CollectionSync *syncer = new CollectionSync(QStringLiteral("akonadi_knut_resource_0"));
+        auto syncer = new CollectionSync(QStringLiteral("akonadi_knut_resource_0"));
         connect(syncer, SIGNAL(percent(KJob *, ulong)), this, SLOT(syncBenchmarkProgress(KJob *, ulong)));
         syncer->setHierarchicalRemoteIds(false);
         syncer->setRemoteCollections(collections);

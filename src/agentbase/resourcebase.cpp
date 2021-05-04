@@ -633,7 +633,7 @@ void ResourceBasePrivate::slotDeleteResourceCollection()
 {
     Q_Q(ResourceBase);
 
-    CollectionFetchJob *job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::FirstLevel);
+    auto job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::FirstLevel);
     job->fetchScope().setResource(q->identifier());
     connect(job, &KJob::result, this, &ResourceBasePrivate::slotDeleteResourceCollectionDone);
 }
@@ -648,7 +648,7 @@ void ResourceBasePrivate::slotDeleteResourceCollectionDone(KJob *job)
         const auto fetchJob = static_cast<const CollectionFetchJob *>(job);
 
         if (!fetchJob->collections().isEmpty()) {
-            CollectionDeleteJob *job = new CollectionDeleteJob(fetchJob->collections().at(0));
+            auto job = new CollectionDeleteJob(fetchJob->collections().at(0));
             connect(job, &KJob::result, this, &ResourceBasePrivate::slotCollectionDeletionDone);
         } else {
             // there is no resource collection, so just ignore the request
@@ -831,7 +831,7 @@ void ResourceBasePrivate::slotCollectionSyncDone(KJob *job)
         }
     } else {
         if (scheduler->currentTask().type == ResourceScheduler::SyncAll) {
-            CollectionFetchJob *list = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive);
+            auto list = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive);
             list->setFetchScope(q->changeRecorder()->collectionFetchScope());
             list->fetchScope().fetchAttribute<SpecialCollectionAttribute>();
             list->fetchScope().fetchAttribute<FavoriteCollectionAttribute>();
@@ -1246,7 +1246,7 @@ void ResourceBase::synchronizeCollection(qint64 collectionId)
 void ResourceBase::synchronizeCollection(qint64 collectionId, bool recursive)
 {
     Q_D(ResourceBase);
-    CollectionFetchJob *job = new CollectionFetchJob(Collection(collectionId), recursive ? CollectionFetchJob::Recursive : CollectionFetchJob::Base);
+    auto job = new CollectionFetchJob(Collection(collectionId), recursive ? CollectionFetchJob::Recursive : CollectionFetchJob::Base);
     job->setFetchScope(changeRecorder()->collectionFetchScope());
     job->fetchScope().setResource(identifier());
     job->fetchScope().setListFilter(CollectionFetchScope::Sync);
@@ -1280,7 +1280,7 @@ void ResourceBase::synchronizeCollectionAttributes(const Akonadi::Collection &co
 void ResourceBase::synchronizeCollectionAttributes(qint64 collectionId)
 {
     Q_D(ResourceBase);
-    CollectionFetchJob *job = new CollectionFetchJob(Collection(collectionId), CollectionFetchJob::Base);
+    auto job = new CollectionFetchJob(Collection(collectionId), CollectionFetchJob::Base);
     job->setFetchScope(changeRecorder()->collectionFetchScope());
     job->fetchScope().setResource(identifier());
     connect(job, &KJob::result, d, &ResourceBasePrivate::slotCollectionListForAttributesDone);
@@ -1393,7 +1393,7 @@ void ResourceBasePrivate::slotPercent(KJob *job, quint64 percent)
 {
     mUnemittedProgress = static_cast<int>(percent);
 
-    const Collection collection = job->property("collection").value<Collection>();
+    const auto collection = job->property("collection").value<Collection>();
     if (collection.isValid()) {
         QVariantMap statusMap;
         statusMap.insert(QStringLiteral("key"), QStringLiteral("collectionSyncProgress"));

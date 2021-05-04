@@ -86,7 +86,7 @@ static Collection::Id searchColId = -1;
 void CollectionJobTest::testTopLevelList()
 {
     // non-recursive top-level list
-    CollectionFetchJob *job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::FirstLevel);
+    auto job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::FirstLevel);
     AKVERIFYEXEC(job);
     Collection::List list = job->collections();
 
@@ -119,7 +119,7 @@ void CollectionJobTest::testTopLevelList()
 void CollectionJobTest::testFolderList()
 {
     // recursive list of physical folders
-    CollectionFetchJob *job = new CollectionFetchJob(Collection(res1ColId), CollectionFetchJob::Recursive);
+    auto job = new CollectionFetchJob(Collection(res1ColId), CollectionFetchJob::Recursive);
     QSignalSpy spy(job, &CollectionFetchJob::collectionsReceived);
     QVERIFY(spy.isValid());
     AKVERIFYEXEC(job);
@@ -189,7 +189,7 @@ void CollectionJobTest::testSignalOrder()
 
 void CollectionJobTest::testNonRecursiveFolderList()
 {
-    CollectionFetchJob *job = new CollectionFetchJob(Collection(res1ColId), CollectionFetchJob::Base);
+    auto job = new CollectionFetchJob(Collection(res1ColId), CollectionFetchJob::Base);
     AKVERIFYEXEC(job);
     Collection::List list = job->collections();
 
@@ -199,7 +199,7 @@ void CollectionJobTest::testNonRecursiveFolderList()
 
 void CollectionJobTest::testEmptyFolderList()
 {
-    CollectionFetchJob *job = new CollectionFetchJob(Collection(res3ColId), CollectionFetchJob::FirstLevel);
+    auto job = new CollectionFetchJob(Collection(res3ColId), CollectionFetchJob::FirstLevel);
     AKVERIFYEXEC(job);
     Collection::List list = job->collections();
 
@@ -208,7 +208,7 @@ void CollectionJobTest::testEmptyFolderList()
 
 void CollectionJobTest::testSearchFolderList()
 {
-    CollectionFetchJob *job = new CollectionFetchJob(Collection(searchColId), CollectionFetchJob::FirstLevel);
+    auto job = new CollectionFetchJob(Collection(searchColId), CollectionFetchJob::FirstLevel);
     AKVERIFYEXEC(job);
     Collection::List list = job->collections();
 
@@ -218,7 +218,7 @@ void CollectionJobTest::testSearchFolderList()
 void CollectionJobTest::testResourceFolderList()
 {
     // non-existing resource
-    CollectionFetchJob *job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::FirstLevel);
+    auto job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::FirstLevel);
     job->fetchScope().setResource(QStringLiteral("i_dont_exist"));
     QVERIFY(!job->exec());
 
@@ -248,7 +248,7 @@ void CollectionJobTest::testResourceFolderList()
 
 void CollectionJobTest::testMimeTypeFilter()
 {
-    CollectionFetchJob *job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive);
+    auto job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive);
     job->fetchScope().setContentMimeTypes(QStringList() << QStringLiteral("message/rfc822"));
     AKVERIFYEXEC(job);
 
@@ -319,7 +319,7 @@ void CollectionJobTest::testCreateDeleteFolder_data()
     col.parentCollection().setId(2);
     QTest::newRow("already existing with different case") << col << true;
 
-    CollectionPathResolver *resolver = new CollectionPathResolver(QStringLiteral("res2/foo2"), this);
+    auto resolver = new CollectionPathResolver(QStringLiteral("res2/foo2"), this);
     AKVERIFYEXEC(resolver);
     col.parentCollection().setId(resolver->collection());
     col.setName(QStringLiteral("new folder"));
@@ -391,7 +391,7 @@ void CollectionJobTest::testCreateDeleteFolder()
 void CollectionJobTest::testIllegalDeleteFolder()
 {
     // non-existing folder
-    CollectionDeleteJob *del = new CollectionDeleteJob(Collection(INT_MAX), this);
+    auto del = new CollectionDeleteJob(Collection(INT_MAX), this);
     QVERIFY(!del->exec());
 
     // root
@@ -402,7 +402,7 @@ void CollectionJobTest::testIllegalDeleteFolder()
 void CollectionJobTest::testStatistics()
 {
     // empty folder
-    CollectionStatisticsJob *statistics = new CollectionStatisticsJob(Collection(res1ColId), this);
+    auto statistics = new CollectionStatisticsJob(Collection(res1ColId), this);
     AKVERIFYEXEC(statistics);
 
     CollectionStatistics s = statistics->statistics();
@@ -410,7 +410,7 @@ void CollectionJobTest::testStatistics()
     QCOMPARE(s.unreadCount(), 0LL);
 
     // folder with attributes and content
-    CollectionPathResolver *resolver = new CollectionPathResolver(QStringLiteral("res1/foo"), this);
+    auto resolver = new CollectionPathResolver(QStringLiteral("res1/foo"), this);
     AKVERIFYEXEC(resolver);
     statistics = new CollectionStatisticsJob(Collection(resolver->collection()), this);
     AKVERIFYEXEC(statistics);
@@ -440,7 +440,7 @@ void CollectionJobTest::testModify()
     QFETCH(QString, rid);
 
     if (!rid.isEmpty()) {
-        ResourceSelectJob *rjob = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
+        auto rjob = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
         AKVERIFYEXEC(rjob);
     }
 
@@ -568,7 +568,7 @@ void CollectionJobTest::testUtf8CollectionName()
     QCOMPARE(col.name(), folderName);
 
     // list parent
-    CollectionFetchJob *list = new CollectionFetchJob(Collection(res3ColId), CollectionFetchJob::Recursive, this);
+    auto list = new CollectionFetchJob(Collection(res3ColId), CollectionFetchJob::Recursive, this);
     AKVERIFYEXEC(list);
     QCOMPARE(list->collections().count(), 1);
     QCOMPARE(list->collections().first(), col);
@@ -712,7 +712,7 @@ void CollectionJobTest::testRidCreateDelete()
     collection.parentCollection().setRemoteId(QStringLiteral("8"));
     collection.setRemoteId(remoteId);
 
-    ResourceSelectJob *resSel = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_2"));
+    auto resSel = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_2"));
     AKVERIFYEXEC(resSel);
 
     auto createJob = new CollectionCreateJob(collection, this);
@@ -722,7 +722,7 @@ void CollectionJobTest::testRidCreateDelete()
     QVERIFY(createdCol.isValid());
     QCOMPARE(createdCol.name(), collection.name());
 
-    CollectionFetchJob *listJob = new CollectionFetchJob(Collection(res3ColId), CollectionFetchJob::FirstLevel, this);
+    auto listJob = new CollectionFetchJob(Collection(res3ColId), CollectionFetchJob::FirstLevel, this);
     AKVERIFYEXEC(listJob);
     Collection listedCol = findCol(listJob->collections(), collection.name());
     QCOMPARE(listedCol, createdCol);
@@ -753,7 +753,7 @@ void CollectionJobTest::testAncestorRetrieval()
     QCOMPARE(col.parentCollection().remoteId(), QStringLiteral("6"));
     QCOMPARE(col.parentCollection().parentCollection(), Collection::root());
 
-    ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"), this);
+    auto select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"), this);
     AKVERIFYEXEC(select);
     Collection col2(col);
     col2.setId(-1); // make it invalid but keep the ancestor chain
@@ -783,7 +783,7 @@ void CollectionJobTest::testAncestorAttributeRetrieval()
         auto create = new Akonadi::CollectionCreateJob(col);
         AKVERIFYEXEC(create);
 
-        CollectionFetchJob *job = new CollectionFetchJob(create->collection(), CollectionFetchJob::Base);
+        auto job = new CollectionFetchJob(create->collection(), CollectionFetchJob::Base);
         job->fetchScope().setAncestorRetrieval(CollectionFetchScope::All);
         job->fetchScope().ancestorFetchScope().setFetchIdOnly(false);
         job->fetchScope().ancestorFetchScope().fetchAttribute<TestAttribute>();
@@ -815,7 +815,7 @@ void CollectionJobTest::testListPreference()
         auto create = new Akonadi::CollectionCreateJob(col);
         AKVERIFYEXEC(create);
 
-        CollectionFetchJob *job = new CollectionFetchJob(create->collection(), CollectionFetchJob::Base);
+        auto job = new CollectionFetchJob(create->collection(), CollectionFetchJob::Base);
         AKVERIFYEXEC(job);
         Akonadi::Collection result = job->collections().first();
         QCOMPARE(result.enabled(), true);
@@ -833,7 +833,7 @@ void CollectionJobTest::testListPreference()
         col.setLocalListPreference(Collection::ListIndex, Collection::ListDisabled);
         auto create = new Akonadi::CollectionCreateJob(col);
         AKVERIFYEXEC(create);
-        CollectionFetchJob *job = new CollectionFetchJob(create->collection(), CollectionFetchJob::Base);
+        auto job = new CollectionFetchJob(create->collection(), CollectionFetchJob::Base);
         AKVERIFYEXEC(job);
         Akonadi::Collection result = job->collections().first();
         QCOMPARE(result.enabled(), true);
@@ -851,7 +851,7 @@ void CollectionJobTest::testListPreference()
         col.setLocalListPreference(Collection::ListIndex, Collection::ListEnabled);
         auto create = new Akonadi::CollectionCreateJob(col);
         AKVERIFYEXEC(create);
-        CollectionFetchJob *job = new CollectionFetchJob(create->collection(), CollectionFetchJob::Base);
+        auto job = new CollectionFetchJob(create->collection(), CollectionFetchJob::Base);
         AKVERIFYEXEC(job);
         Akonadi::Collection result = job->collections().first();
         QCOMPARE(result.enabled(), false);

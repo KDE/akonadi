@@ -76,7 +76,7 @@ template<typename T> struct EntityCacheNode {
 template<typename T, typename FetchJob, typename FetchScope_> class EntityCache : public EntityCacheBase
 {
 public:
-    typedef FetchScope_ FetchScope;
+    using FetchScope = FetchScope_;
     explicit EntityCache(int maxCapacity, Session *session = nullptr, QObject *parent = nullptr)
         : EntityCacheBase(session, parent)
         , mCapacity(maxCapacity)
@@ -253,14 +253,14 @@ template<>
 inline CollectionFetchJob *EntityCache<Collection, CollectionFetchJob, CollectionFetchScope>::createFetchJob(Collection::Id id,
                                                                                                              const CollectionFetchScope &scope)
 {
-    CollectionFetchJob *fetch = new CollectionFetchJob(Collection(id), CollectionFetchJob::Base, session);
+    auto fetch = new CollectionFetchJob(Collection(id), CollectionFetchJob::Base, session);
     fetch->setFetchScope(scope);
     return fetch;
 }
 
-typedef EntityCache<Collection, CollectionFetchJob, CollectionFetchScope> CollectionCache;
-typedef EntityCache<Item, ItemFetchJob, ItemFetchScope> ItemCache;
-typedef EntityCache<Tag, TagFetchJob, TagFetchScope> TagCache;
+using CollectionCache = EntityCache<Collection, CollectionFetchJob, CollectionFetchScope>;
+using ItemCache = EntityCache<Item, ItemFetchJob, ItemFetchScope>;
+using TagCache = EntityCache<Tag, TagFetchJob, TagFetchScope>;
 
 template<typename T> struct EntityListCacheNode {
     EntityListCacheNode()
@@ -283,7 +283,7 @@ template<typename T> struct EntityListCacheNode {
 template<typename T, typename FetchJob, typename FetchScope_> class EntityListCache : public EntityCacheBase
 {
 public:
-    typedef FetchScope_ FetchScope;
+    using FetchScope = FetchScope_;
 
     explicit EntityListCache(int maxCapacity, Session *session = nullptr, QObject *parent = nullptr)
         : EntityCacheBase(session, parent)
@@ -440,7 +440,7 @@ private:
         if (job->error()) {
             qWarning() << job->errorString();
         }
-        const QList<typename T::Id> ids = job->property("EntityListCacheIds").value<QList<typename T::Id>>();
+        const auto ids = job->property("EntityListCacheIds").value<QList<typename T::Id>>();
 
         typename T::List entities;
         extractResults(job, entities);
@@ -513,9 +513,8 @@ inline CollectionFetchJob *EntityListCache<Collection, CollectionFetchJob, Colle
     return fetch;
 }
 
-typedef EntityListCache<Collection, CollectionFetchJob, CollectionFetchScope> CollectionListCache;
-typedef EntityListCache<Item, ItemFetchJob, ItemFetchScope> ItemListCache;
-typedef EntityListCache<Tag, TagFetchJob, TagFetchScope> TagListCache;
-
+using CollectionListCache = EntityListCache<Collection, CollectionFetchJob, CollectionFetchScope>;
+using ItemListCache = EntityListCache<Item, ItemFetchJob, ItemFetchScope>;
+using TagListCache = EntityListCache<Tag, TagFetchJob, TagFetchScope>;
 }
 

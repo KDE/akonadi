@@ -168,7 +168,7 @@ void TagSync::onTagItemsFetchDone(KJob *job)
     }
 
     const Akonadi::Item::List items = static_cast<Akonadi::ItemFetchJob *>(job)->items();
-    const Akonadi::Tag tag = job->property("tag").value<Akonadi::Tag>();
+    const auto tag = job->property("tag").value<Akonadi::Tag>();
     const bool merge = job->property("merge").toBool();
     const Item::List remoteMembers = mRidMemberMap.value(QString::fromLatin1(tag.remoteId()));
 

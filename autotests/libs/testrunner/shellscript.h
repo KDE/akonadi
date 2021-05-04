@@ -16,7 +16,7 @@ public:
     ShellScript();
     void makeShellScript(const QString &filename);
 
-    typedef QPair<QByteArray, QByteArray> EnvVar;
+    using EnvVar = QPair<QByteArray, QByteArray>;
     void setEnvironmentVariables(const QVector<EnvVar> &envVars);
 
 private:

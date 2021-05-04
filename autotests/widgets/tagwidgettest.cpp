@@ -94,12 +94,12 @@ class TagWidgetTest : public QObject
         bool selectTagsInDialog(const Tag::List &selection)
         {
             const auto windows = QApplication::topLevelWidgets();
-            for (auto *window : windows) {
+            for (auto window : windows) {
                 if (auto dlg = qobject_cast<TagSelectionDialog *>(window)) {
                     // Set the selection through code, testing selecting tags with mouse is
                     // out-of-scope for this test, there's a dedicated TagEditWidget test for that.
                     dlg->setSelection(selection);
-                    auto *button = dlg->buttons()->button(QDialogButtonBox::Ok);
+                    auto button = dlg->buttons()->button(QDialogButtonBox::Ok);
                     AKVERIFY(button);
                     QTest::mouseClick(button, Qt::LeftButton);
                     return true;

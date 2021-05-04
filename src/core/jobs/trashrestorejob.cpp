@@ -95,7 +95,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::targetCollectionFetched(KJob *job)
         }
 
         // Try again with the root collection of the resource as fallback
-        CollectionFetchJob *resRootFetch = new CollectionFetchJob(Collection::root(), CollectionFetchJob::FirstLevel, q);
+        auto resRootFetch = new CollectionFetchJob(Collection::root(), CollectionFetchJob::FirstLevel, q);
         resRootFetch->fetchScope().setResource(res);
         const QVariant &var = fetchJob->property("Items");
         if (var.isValid()) {

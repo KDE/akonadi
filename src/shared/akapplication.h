@@ -110,8 +110,7 @@ private:
  */
 QString akGetEnv(const char *name, const QString &defaultValue = QString());
 
-typedef AkApplicationImpl<QCoreApplication> AkCoreApplication;
-typedef AkApplicationImpl<QApplication> AkApplication;
-typedef AkApplicationImpl<QGuiApplication> AkGuiApplication;
-typedef AkUniqueApplicationImpl<QGuiApplication> AkUniqueGuiApplication;
-
+using AkCoreApplication = AkApplicationImpl<QCoreApplication>;
+using AkApplication = AkApplicationImpl<QApplication>;
+using AkGuiApplication = AkApplicationImpl<QGuiApplication>;
+using AkUniqueGuiApplication = AkUniqueApplicationImpl<QGuiApplication>;

@@ -57,9 +57,9 @@ QString DbConfig::defaultAvailableDatabaseBackend(QSettings &settings)
 
     std::unique_ptr<DbConfig> dbConfigFallbackTest;
     if (driverName == QLatin1String("QMYSQL")) {
-        dbConfigFallbackTest.reset(new DbConfigMysql);
+        dbConfigFallbackTest = std::make_unique<DbConfigMysql>();
     } else if (driverName == QLatin1String("QPSQL")) {
-        dbConfigFallbackTest.reset(new DbConfigPostgresql);
+        dbConfigFallbackTest = std::make_unique<DbConfigPostgresql>();
     }
 
     if (dbConfigFallbackTest && !dbConfigFallbackTest->isAvailable(settings) && DbConfigSqlite(DbConfigSqlite::Custom).isAvailable(settings)) {

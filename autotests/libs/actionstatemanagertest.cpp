@@ -14,7 +14,7 @@
 #include "../src/widgets/actionstatemanager.cpp"
 #undef QT_NO_CLIPBOARD
 
-typedef QHash<Akonadi::StandardActionManager::Type, bool> StateMap;
+using StateMap = QHash<Akonadi::StandardActionManager::Type, bool>;
 Q_DECLARE_METATYPE(StateMap)
 
 using namespace Akonadi;

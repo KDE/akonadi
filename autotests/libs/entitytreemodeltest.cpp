@@ -236,8 +236,8 @@ void EntityTreeModelTest::testCollectionMove()
     QFETCH(QString, targetCollection);
 
     const auto testDrivers = populateModel(serverContent);
-    auto *const serverData = testDrivers.first;
-    auto *const model = testDrivers.second;
+    auto const serverData = testDrivers.first;
+    auto const model = testDrivers.second;
 
     const auto movedIndex = firstMatchedIndex(*model, movedCollection);
     Q_ASSERT(movedIndex.isValid());
@@ -289,7 +289,7 @@ void EntityTreeModelTest::testCollectionAdded()
     QFETCH(QString, parentCollection);
 
     const auto testDrivers = populateModel(serverContent);
-    auto *const serverData = testDrivers.first;
+    auto const serverData = testDrivers.first;
 
     auto const addCommand = new FakeCollectionAddedCommand(addedCollection, parentCollection, serverData);
 
@@ -332,8 +332,8 @@ void EntityTreeModelTest::testCollectionRemoved()
     QFETCH(QString, removedCollection);
 
     const auto testDrivers = populateModel(serverContent);
-    auto *const serverData = testDrivers.first;
-    auto *const model = testDrivers.second;
+    auto const serverData = testDrivers.first;
+    auto const model = testDrivers.second;
 
     const auto removedIndex = firstMatchedIndex(*model, removedCollection);
     const auto parentCollection = removedIndex.parent().data().toString();
@@ -380,8 +380,8 @@ void EntityTreeModelTest::testCollectionChanged()
     QFETCH(QString, monitoredMimeType); // ##### TODO: this is unused. Is this test correct?
 
     const auto testDrivers = populateModel(serverContent);
-    auto *const serverData = testDrivers.first;
-    auto *const model = testDrivers.second;
+    auto const serverData = testDrivers.first;
+    auto const model = testDrivers.second;
 
     const auto changedIndex = firstMatchedIndex(*model, collectionName);
     const auto parentCollection = changedIndex.parent().data().toString();
@@ -431,8 +431,8 @@ void EntityTreeModelTest::testItemMove()
     QFETCH(QString, targetCollection);
 
     const auto testDrivers = populateModel(serverContent);
-    auto *const serverData = testDrivers.first;
-    auto *const model = testDrivers.second;
+    auto const serverData = testDrivers.first;
+    auto const model = testDrivers.second;
 
     const auto movedIndex = firstMatchedIndex(*model, movedItem);
     const auto sourceCollection = movedIndex.parent().data().toString();
@@ -494,8 +494,8 @@ void EntityTreeModelTest::testItemAdded()
     QFETCH(QString, parentCollection);
 
     const auto testDrivers = populateModel(serverContent);
-    auto *const serverData = testDrivers.first;
-    auto *const model = testDrivers.second;
+    auto const serverData = testDrivers.first;
+    auto const model = testDrivers.second;
 
     const auto parentIndex = firstMatchedIndex(*model, parentCollection);
     const auto targetRow = model->rowCount(parentIndex);
@@ -545,8 +545,8 @@ void EntityTreeModelTest::testItemRemoved()
     QFETCH(QString, removedItem);
 
     const auto testDrivers = populateModel(serverContent);
-    auto *const serverData = testDrivers.first;
-    auto *const model = testDrivers.second;
+    auto const serverData = testDrivers.first;
+    auto const model = testDrivers.second;
 
     const auto removedIndex = firstMatchedIndex(*model, removedItem);
     const auto sourceCollection = removedIndex.parent().data().toString();
@@ -597,8 +597,8 @@ void EntityTreeModelTest::testItemChanged()
     QFETCH(QString, changedItem);
 
     const auto testDrivers = populateModel(serverContent);
-    auto *const serverData = testDrivers.first;
-    auto *const model = testDrivers.second;
+    auto const serverData = testDrivers.first;
+    auto const model = testDrivers.second;
 
     const auto changedIndex = firstMatchedIndex(*model, changedItem);
     const auto parentCollection = changedIndex.parent().data().toString();
@@ -630,8 +630,8 @@ void EntityTreeModelTest::testRemoveCollectionOnChanged()
     const auto monitoredMimeType = QStringLiteral("text/directory");
 
     const auto testDrivers = populateModel(serverContent, monitoredMimeType);
-    auto *const serverData = testDrivers.first;
-    auto *const model = testDrivers.second;
+    auto const serverData = testDrivers.first;
+    auto const model = testDrivers.second;
 
     const auto changedIndex = firstMatchedIndex(*model, collectionName);
     auto changedCol = changedIndex.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();

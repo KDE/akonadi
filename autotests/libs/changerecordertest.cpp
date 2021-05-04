@@ -108,7 +108,7 @@ private:
     {
         static int s_num = 0;
         Item item(uid);
-        auto *attr = item.attribute<TestAttribute>(Item::AddIfMissing);
+        auto attr = item.attribute<TestAttribute>(Item::AddIfMissing);
         attr->data = QByteArray::number(++s_num);
         auto job = new ItemModifyJob(item);
         job->disableRevisionCheck();

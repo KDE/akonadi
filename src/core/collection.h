@@ -64,12 +64,12 @@ public:
     /**
      * Describes the unique id type.
      */
-    typedef qint64 Id;
+    using Id = qint64;
 
     /**
      * Describes a list of collections.
      */
-    typedef QVector<Collection> List;
+    using List = QVector<Collection>;
 
     /**
      * Describes rights of a collection.

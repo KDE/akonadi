@@ -347,7 +347,7 @@ void SearchManager::updateSearchImpl(const Collection &collection)
 
 void SearchManager::searchUpdateResultsAvailable(const QSet<qint64> &results)
 {
-    const Collection collection = sender()->property("SearchCollection").value<Collection>();
+    const auto collection = sender()->property("SearchCollection").value<Collection>();
     qCDebug(AKONADISERVER_SEARCH_LOG) << "searchUpdateResultsAvailable" << collection.id() << results.count() << "results";
 
     QSet<qint64> newMatches = results;

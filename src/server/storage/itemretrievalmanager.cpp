@@ -124,7 +124,7 @@ QVector<AbstractItemRetrievalJob *> ItemRetrievalManager::scheduleJobsForIdleRes
             auto req = std::move(it->second.front());
             it->second.pop_front();
             Q_ASSERT(req.resourceId == it->first);
-            auto *job = mJobFactory->retrievalJob(std::move(req), this);
+            auto job = mJobFactory->retrievalJob(std::move(req), this);
             connect(job, &AbstractItemRetrievalJob::requestCompleted, this, &ItemRetrievalManager::retrievalJobFinished);
             mCurrentJobs.insert(job->request().resourceId, job);
             // delay job execution until after we unlocked the mutex, since the job can emit the finished signal immediately in some cases
@@ -150,7 +150,7 @@ void ItemRetrievalManager::processRequest()
     locker.unlock();
 
     // Start the jobs
-    for (auto *job : newJobs) {
+    for (auto job : newJobs) {
         if (auto j = qobject_cast<ItemRetrievalJob *>(job)) {
             j->setInterface(resourceInterface(j->request().resourceId));
         }
@@ -208,7 +208,7 @@ void ItemRetrievalManager::retrievalJobFinished(AbstractItemRetrievalJob *job)
 void ItemRetrievalManager::triggerCollectionSync(const QString &resource, qint64 colId)
 {
     QTimer::singleShot(0, this, [this, resource, colId]() {
-        if (auto *interface = resourceInterface(resource)) {
+        if (auto interface = resourceInterface(resource)) {
             interface->synchronizeCollection(colId);
         }
     });
@@ -217,7 +217,7 @@ void ItemRetrievalManager::triggerCollectionSync(const QString &resource, qint64
 void ItemRetrievalManager::triggerCollectionTreeSync(const QString &resource)
 {
     QTimer::singleShot(0, this, [this, resource]() {
-        if (auto *interface = resourceInterface(resource)) {
+        if (auto interface = resourceInterface(resource)) {
             interface->synchronizeCollectionTree();
         }
     });

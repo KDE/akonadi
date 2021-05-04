@@ -49,7 +49,7 @@ void ItemStoreTest::initTestCase()
 
 void ItemStoreTest::testFlagChange()
 {
-    ItemFetchJob *fjob = new ItemFetchJob(Item(1));
+    auto fjob = new ItemFetchJob(Item(1));
     AKVERIFYEXEC(fjob);
     QCOMPARE(fjob->items().count(), 1);
     Item item = fjob->items()[0];
@@ -125,7 +125,7 @@ void ItemStoreTest::testDataChange()
     QFETCH(qint64, expectedSize);
 
     Item item;
-    ItemFetchJob *prefetchjob = new ItemFetchJob(Item(1));
+    auto prefetchjob = new ItemFetchJob(Item(1));
     AKVERIFYEXEC(prefetchjob);
     item = prefetchjob->items()[0];
     item.setMimeType(QStringLiteral("application/octet-stream"));
@@ -136,7 +136,7 @@ void ItemStoreTest::testDataChange()
     auto sjob = new ItemModifyJob(item);
     AKVERIFYEXEC(sjob);
 
-    ItemFetchJob *fjob = new ItemFetchJob(Item(1));
+    auto fjob = new ItemFetchJob(Item(1));
     fjob->fetchScope().fetchFullPayload();
     fjob->fetchScope().setCacheOnly(true);
     AKVERIFYEXEC(fjob);
@@ -168,10 +168,10 @@ void ItemStoreTest::testRemoteId()
     QFETCH(QString, exprid);
 
     // pretend to be a resource, we cannot change remote identifiers otherwise
-    ResourceSelectJob *rsel = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"), this);
+    auto rsel = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"), this);
     AKVERIFYEXEC(rsel);
 
-    ItemFetchJob *prefetchjob = new ItemFetchJob(Item(1));
+    auto prefetchjob = new ItemFetchJob(Item(1));
     AKVERIFYEXEC(prefetchjob);
     Item item = prefetchjob->items()[0];
 
@@ -195,7 +195,7 @@ void ItemStoreTest::testRemoteId()
 
 void ItemStoreTest::testMultiPart()
 {
-    ItemFetchJob *prefetchjob = new ItemFetchJob(Item(1));
+    auto prefetchjob = new ItemFetchJob(Item(1));
     AKVERIFYEXEC(prefetchjob);
     QCOMPARE(prefetchjob->items().count(), 1);
     Item item = prefetchjob->items()[0];
@@ -207,7 +207,7 @@ void ItemStoreTest::testMultiPart()
     auto sjob = new ItemModifyJob(item);
     AKVERIFYEXEC(sjob);
 
-    ItemFetchJob *fjob = new ItemFetchJob(Item(1));
+    auto fjob = new ItemFetchJob(Item(1));
     fjob->fetchScope().fetchAttribute<TestAttribute>();
     fjob->fetchScope().fetchFullPayload();
     AKVERIFYEXEC(fjob);
@@ -226,7 +226,7 @@ void ItemStoreTest::testMultiPart()
 
 void ItemStoreTest::testPartRemove()
 {
-    ItemFetchJob *prefetchjob = new ItemFetchJob(Item(2));
+    auto prefetchjob = new ItemFetchJob(Item(2));
     AKVERIFYEXEC(prefetchjob);
     Item item = prefetchjob->items()[0];
     item.setMimeType(QStringLiteral("application/octet-stream"));
@@ -237,7 +237,7 @@ void ItemStoreTest::testPartRemove()
     AKVERIFYEXEC(sjob);
 
     // fetch item and its parts (should be RFC822, HEAD and EXTRA)
-    ItemFetchJob *fjob = new ItemFetchJob(Item(2));
+    auto fjob = new ItemFetchJob(Item(2));
     fjob->fetchScope().fetchFullPayload();
     fjob->fetchScope().fetchAllAttributes();
     fjob->fetchScope().setCacheOnly(true);
@@ -253,7 +253,7 @@ void ItemStoreTest::testPartRemove()
     AKVERIFYEXEC(sjob);
 
     // fetch item again (should only have RFC822 and HEAD left)
-    ItemFetchJob *fjob2 = new ItemFetchJob(Item(2));
+    auto fjob2 = new ItemFetchJob(Item(2));
     fjob2->fetchScope().fetchFullPayload();
     fjob2->fetchScope().fetchAllAttributes();
     fjob2->fetchScope().setCacheOnly(true);
@@ -489,7 +489,7 @@ void ItemStoreTest::testParallelJobsAddingAttributes()
     runner.waitForAllJobs();
 
     // Then the item should have all attributes
-    ItemFetchJob *fetchJob = new ItemFetchJob(Item(itemId));
+    auto fetchJob = new ItemFetchJob(Item(itemId));
     ItemFetchScope fetchScope;
     fetchScope.fetchAllAttributes(true);
     fetchJob->setFetchScope(fetchScope);

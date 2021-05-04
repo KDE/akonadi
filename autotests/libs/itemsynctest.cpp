@@ -213,7 +213,7 @@ private Q_SLOTS:
     void testIncrementalSync()
     {
         {
-            ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
+            auto select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
             AKVERIFYEXEC(select);
         }
 
@@ -280,7 +280,7 @@ private Q_SLOTS:
         QTRY_COMPARE(changedSpy.count(), 0);
 
         {
-            ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral(""));
+            auto select = new ResourceSelectJob(QStringLiteral(""));
             AKVERIFYEXEC(select);
         }
     }

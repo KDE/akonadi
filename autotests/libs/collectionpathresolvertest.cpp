@@ -22,7 +22,7 @@ void CollectionPathResolverTest::initTestCase()
 
 void CollectionPathResolverTest::testPathResolver()
 {
-    CollectionPathResolver *resolver = new CollectionPathResolver(QStringLiteral("/res1/foo/bar/bla"), this);
+    auto resolver = new CollectionPathResolver(QStringLiteral("/res1/foo/bar/bla"), this);
     AKVERIFYEXEC(resolver);
     int col = resolver->collection();
     QVERIFY(col > 0);
@@ -34,7 +34,7 @@ void CollectionPathResolverTest::testPathResolver()
 
 void CollectionPathResolverTest::testRoot()
 {
-    CollectionPathResolver *resolver = new CollectionPathResolver(CollectionPathResolver::pathDelimiter(), this);
+    auto resolver = new CollectionPathResolver(CollectionPathResolver::pathDelimiter(), this);
     AKVERIFYEXEC(resolver);
     QCOMPARE(resolver->collection(), Collection::root().id());
 
@@ -45,7 +45,7 @@ void CollectionPathResolverTest::testRoot()
 
 void CollectionPathResolverTest::testFailure()
 {
-    CollectionPathResolver *resolver = new CollectionPathResolver(QStringLiteral("/I/do not/exist"), this);
+    auto resolver = new CollectionPathResolver(QStringLiteral("/I/do not/exist"), this);
     QVERIFY(!resolver->exec());
 
     resolver = new CollectionPathResolver(Collection(INT_MAX), this);

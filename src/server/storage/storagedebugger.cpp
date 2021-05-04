@@ -13,6 +13,7 @@
 #include <QSqlRecord>
 
 #include <QDBusConnection>
+#include <memory>
 
 Akonadi::Server::StorageDebugger *Akonadi::Server::StorageDebugger::mSelf = nullptr;
 QMutex Akonadi::Server::StorageDebugger::mMutex;
@@ -79,7 +80,7 @@ void StorageDebugger::enableSQLDebugging(bool enable)
 
 void StorageDebugger::writeToFile(const QString &file)
 {
-    mFile.reset(new QFile(file));
+    mFile = std::make_unique<QFile>(file);
     mFile->open(QIODevice::WriteOnly);
 }
 

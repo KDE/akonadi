@@ -197,7 +197,7 @@ void TrashJob::TrashJobPrivate::parentCollectionReceived(const Akonadi::Collecti
     mParentCollections.insert(parentCollection.id(), parentCollection);
 
     if (trashCollection.isValid()) { // Move the items to the correct collection if available
-        ItemMoveJob *job = new ItemMoveJob(mCollectionItems.value(parentCollection), trashCollection, q);
+        auto job = new ItemMoveJob(mCollectionItems.value(parentCollection), trashCollection, q);
         job->setProperty("MovedItems", parentCollection.id());
         q->connect(job, &KJob::result, q, [this](KJob *job) {
             setAttribute(job);

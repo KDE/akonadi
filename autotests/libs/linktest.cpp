@@ -32,10 +32,10 @@ private Q_SLOTS:
 
     void testLink()
     {
-        SearchCreateJob *create = new SearchCreateJob(QStringLiteral("linkTestFolder"), SearchQuery(), this);
+        auto create = new SearchCreateJob(QStringLiteral("linkTestFolder"), SearchQuery(), this);
         AKVERIFYEXEC(create);
 
-        CollectionFetchJob *list = new CollectionFetchJob(Collection(1), CollectionFetchJob::Recursive, this);
+        auto list = new CollectionFetchJob(Collection(1), CollectionFetchJob::Recursive, this);
         AKVERIFYEXEC(list);
         Collection col;
         foreach (const Collection &c, list->collections()) {

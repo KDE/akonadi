@@ -26,8 +26,8 @@ struct Volker {
     virtual Volker *clone() const = 0;
     QString who;
 };
-typedef std::shared_ptr<Volker> VolkerPtr;
-typedef QSharedPointer<Volker> VolkerQPtr;
+using VolkerPtr = std::shared_ptr<Volker>;
+using VolkerQPtr = QSharedPointer<Volker>;
 
 struct Rudi : public Volker {
     Rudi()
@@ -43,8 +43,8 @@ struct Rudi : public Volker {
     }
 };
 
-typedef std::shared_ptr<Rudi> RudiPtr;
-typedef QSharedPointer<Rudi> RudiQPtr;
+using RudiPtr = std::shared_ptr<Rudi>;
+using RudiQPtr = QSharedPointer<Rudi>;
 
 struct Gerd : public Volker {
     Gerd()
@@ -56,11 +56,11 @@ struct Gerd : public Volker {
         return new Gerd(*this);
     }
 
-    typedef Volker SuperClass;
+    using SuperClass = Volker;
 };
 
-typedef std::shared_ptr<Gerd> GerdPtr;
-typedef QSharedPointer<Gerd> GerdQPtr;
+using GerdPtr = std::shared_ptr<Gerd>;
+using GerdQPtr = QSharedPointer<Gerd>;
 
 Q_DECLARE_METATYPE(Volker *)
 Q_DECLARE_METATYPE(Rudi *)

@@ -49,7 +49,7 @@ class DbInitializer
     friend class DbUpdater;
 
 public:
-    typedef QSharedPointer<DbInitializer> Ptr;
+    using Ptr = QSharedPointer<DbInitializer>;
 
     /**
       Returns an initializer instance for a given backend.

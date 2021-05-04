@@ -42,7 +42,7 @@ private Q_SLOTS:
         const Collection target(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
         QVERIFY(target.isValid());
 
-        ItemCopyJob *copy = new ItemCopyJob(Item(1), target);
+        auto copy = new ItemCopyJob(Item(1), target);
         AKVERIFYEXEC(copy);
 
         Item source(1);
@@ -71,7 +71,7 @@ private Q_SLOTS:
     void testIlleagalCopy()
     {
         // empty item list
-        ItemCopyJob *copy = new ItemCopyJob(Item::List(), Collection::root());
+        auto copy = new ItemCopyJob(Item::List(), Collection::root());
         QVERIFY(!copy->exec());
 
         // non-existing target

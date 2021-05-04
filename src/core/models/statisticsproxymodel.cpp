@@ -89,7 +89,7 @@ public:
                               .arg(collection.statistics().unreadCount());
 
         if (collection.hasAttribute<CollectionQuotaAttribute>()) {
-            const auto *quota = collection.attribute<CollectionQuotaAttribute>();
+            const auto quota = collection.attribute<CollectionQuotaAttribute>();
             if (quota->currentValue() > -1 && quota->maximumValue() > 0) {
                 qreal percentage = (100.0 * quota->currentValue()) / quota->maximumValue();
 
@@ -245,7 +245,7 @@ QVariant StatisticsProxyModel::extraColumnData(const QModelIndex &parent, int ro
     switch (role) {
     case Qt::DisplayRole: {
         const QModelIndex firstColumn = index(row, 0, parent);
-        const Collection collection = data(firstColumn, EntityTreeModel::CollectionRole).value<Collection>();
+        const auto collection = data(firstColumn, EntityTreeModel::CollectionRole).value<Collection>();
         if (collection.isValid() && collection.statistics().count() >= 0) {
             const CollectionStatistics stats = collection.statistics();
             if (extraColumn == 2) {
@@ -277,7 +277,7 @@ QVariant StatisticsProxyModel::data(const QModelIndex &index, int role) const
 {
     if (role == Qt::ToolTipRole && d->mToolTipEnabled) {
         const QModelIndex firstColumn = index.sibling(index.row(), 0);
-        const Collection collection = data(firstColumn, EntityTreeModel::CollectionRole).value<Collection>();
+        const auto collection = data(firstColumn, EntityTreeModel::CollectionRole).value<Collection>();
 
         if (collection.isValid()) {
             return d->toolTipForCollection(firstColumn, collection);

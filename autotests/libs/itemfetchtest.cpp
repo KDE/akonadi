@@ -29,12 +29,12 @@ void ItemFetchTest::initTestCase()
 
 void ItemFetchTest::testFetch()
 {
-    CollectionPathResolver *resolver = new CollectionPathResolver(QStringLiteral("res1"), this);
+    auto resolver = new CollectionPathResolver(QStringLiteral("res1"), this);
     AKVERIFYEXEC(resolver);
     int colId = resolver->collection();
 
     // listing of an empty folder
-    ItemFetchJob *job = new ItemFetchJob(Collection(colId), this);
+    auto job = new ItemFetchJob(Collection(colId), this);
     AKVERIFYEXEC(job);
     QVERIFY(job->items().isEmpty());
 
@@ -127,7 +127,7 @@ void ItemFetchTest::testResourceRetrieval()
 void ItemFetchTest::testIllegalFetch()
 {
     // fetch non-existing folder
-    ItemFetchJob *job = new ItemFetchJob(Collection(INT_MAX), this);
+    auto job = new ItemFetchJob(Collection(INT_MAX), this);
     QVERIFY(!job->exec());
 
     // listing of root
@@ -172,7 +172,7 @@ void ItemFetchTest::testMultipartFetch()
     QFETCH(bool, fetchSinglePayload);
     QFETCH(bool, fetchSingleAttr);
 
-    CollectionPathResolver *resolver = new CollectionPathResolver(QStringLiteral("res1/foo"), this);
+    auto resolver = new CollectionPathResolver(QStringLiteral("res1/foo"), this);
     AKVERIFYEXEC(resolver);
     int colId = resolver->collection();
 
@@ -180,7 +180,7 @@ void ItemFetchTest::testMultipartFetch()
     item.setMimeType(QStringLiteral("application/octet-stream"));
     item.setPayload<QByteArray>("body data");
     item.attribute<TestAttribute>(Item::AddIfMissing)->data = "extra data";
-    ItemCreateJob *job = new ItemCreateJob(item, Collection(colId), this);
+    auto job = new ItemCreateJob(item, Collection(colId), this);
     AKVERIFYEXEC(job);
     Item ref = job->item();
 
@@ -232,7 +232,7 @@ void ItemFetchTest::testRidFetch()
     Collection col;
     col.setRemoteId(QStringLiteral("10"));
 
-    ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"), this);
+    auto select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"), this);
     AKVERIFYEXEC(select);
 
     auto job = new ItemFetchJob(item, this);
@@ -247,7 +247,7 @@ void ItemFetchTest::testRidFetch()
 
 void ItemFetchTest::testAncestorRetrieval()
 {
-    ItemFetchJob *job = new ItemFetchJob(Item(1), this);
+    auto job = new ItemFetchJob(Item(1), this);
     job->fetchScope().setAncestorRetrieval(ItemFetchScope::All);
     AKVERIFYEXEC(job);
     QCOMPARE(job->items().count(), 1);

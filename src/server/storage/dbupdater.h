@@ -24,7 +24,7 @@ namespace Server
 class UpdateSet
 {
 public:
-    typedef QMap<int, UpdateSet> Map;
+    using Map = QMap<int, UpdateSet>;
 
     UpdateSet()
         : version(-1)

@@ -107,7 +107,7 @@ public:
 
         const QModelIndexList lstModelIndex = mSelectionModel->selectedRows();
         for (const QModelIndex &index : lstModelIndex) {
-            const AgentInstance instance = index.data(AgentInstanceModel::InstanceRole).value<AgentInstance>();
+            const auto instance = index.data(AgentInstanceModel::InstanceRole).value<AgentInstance>();
             if (instance.isValid()) {
                 instances << instance;
             }
@@ -205,7 +205,7 @@ public:
     QStringList mMimeTypeFilter;
     QStringList mCapabilityFilter;
 
-    typedef QHash<AgentActionManager::TextContext, QString> ContextTexts;
+    using ContextTexts = QHash<AgentActionManager::TextContext, QString>;
     QHash<AgentActionManager::Type, ContextTexts> mContextTexts;
 };
 
@@ -273,7 +273,7 @@ QAction *AgentActionManager::createAction(Type type)
 void AgentActionManager::createAllActions()
 {
     for (int type = 0; type < LastType; ++type) {
-        auto *action = createAction(static_cast<Type>(type));
+        auto action = createAction(static_cast<Type>(type));
         Q_UNUSED(action)
     }
 }

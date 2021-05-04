@@ -87,7 +87,7 @@ class TagSelectionComboBoxTest : public QObject
         bool selectTagsInComboBox(const Tag::List & /*selection*/)
         {
             const auto windows = QApplication::topLevelWidgets();
-            for (auto *window : windows) {
+            for (auto window : windows) {
                 if (auto combo = qobject_cast<TagSelectionComboBox *>(window)) {
                     QTest::mouseClick(combo, Qt::LeftButton);
                     return true;
@@ -99,7 +99,7 @@ class TagSelectionComboBoxTest : public QObject
 
         bool toggleDropdown() const
         {
-            auto *view = widget->view()->parentWidget();
+            auto view = widget->view()->parentWidget();
             const bool visible = view->isVisible();
             QTest::mouseClick(widget->lineEdit(), Qt::LeftButton);
             QTest::qWait(10);

@@ -1430,7 +1430,7 @@ void EntityTreeModelPrivate::startFirstListJob()
 void EntityTreeModelPrivate::fetchTopLevelCollections() const
 {
     Q_Q(const EntityTreeModel);
-    CollectionFetchJob *job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::FirstLevel, m_session);
+    auto job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::FirstLevel, m_session);
     q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)), q, SLOT(topLevelCollectionsFetched(Akonadi::Collection::List)));
     q->connect(job, SIGNAL(result(KJob *)), q, SLOT(collectionFetchJobDone(KJob *)));
     qCDebug(DebugETM) << "EntityTreeModelPrivate::fetchTopLevelCollections";
@@ -1713,7 +1713,7 @@ void EntityTreeModelPrivate::endResetModel()
 {
     Q_Q(EntityTreeModel);
     auto subjobs = m_session->findChildren<Akonadi::Job *>();
-    for (auto *job : subjobs) {
+    for (auto job : subjobs) {
         job->disconnect(q);
     }
     m_collections.clear();

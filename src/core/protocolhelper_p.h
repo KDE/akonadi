@@ -31,8 +31,8 @@
 namespace Akonadi
 {
 struct ProtocolHelperValuePool {
-    typedef Internal::SharedValuePool<QByteArray, QVector> FlagPool;
-    typedef Internal::SharedValuePool<QString, QVector> MimeTypePool;
+    using FlagPool = Internal::SharedValuePool<QByteArray, QVector>;
+    using MimeTypePool = Internal::SharedValuePool<QString, QVector>;
 
     FlagPool flagPool;
     MimeTypePool mimeTypePool;

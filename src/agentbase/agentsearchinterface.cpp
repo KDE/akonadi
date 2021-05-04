@@ -54,7 +54,7 @@ void AgentSearchInterfacePrivate::search(const QByteArray &searchId, const QStri
     mSearchId = searchId;
     mCollectionId = collectionId;
 
-    CollectionFetchJob *fetchJob = new CollectionFetchJob(Collection(mCollectionId), CollectionFetchJob::Base, this);
+    auto fetchJob = new CollectionFetchJob(Collection(mCollectionId), CollectionFetchJob::Base, this);
     fetchJob->fetchScope().setAncestorRetrieval(CollectionFetchScope::All);
     fetchJob->setProperty("query", query);
     connect(fetchJob, &KJob::finished, this, &AgentSearchInterfacePrivate::collectionReceived);
@@ -103,7 +103,7 @@ void AgentSearchInterface::searchFinished(const QVector<qint64> &result, ResultS
         return;
     }
 
-    SearchResultJob *resultJob = new SearchResultJob(d->mSearchId, Collection(d->mCollectionId), d);
+    auto resultJob = new SearchResultJob(d->mSearchId, Collection(d->mCollectionId), d);
     resultJob->setResult(result);
 }
 
@@ -123,13 +123,13 @@ void AgentSearchInterface::searchFinished(const ImapSet &result, ResultScope sco
         return;
     }
 
-    SearchResultJob *resultJob = new SearchResultJob(d->mSearchId, Collection(d->mCollectionId), d);
+    auto resultJob = new SearchResultJob(d->mSearchId, Collection(d->mCollectionId), d);
     resultJob->setResult(result);
 }
 
 void AgentSearchInterface::searchFinished(const QVector<QByteArray> &result)
 {
-    SearchResultJob *resultJob = new SearchResultJob(d->mSearchId, Collection(d->mCollectionId), d);
+    auto resultJob = new SearchResultJob(d->mSearchId, Collection(d->mCollectionId), d);
     resultJob->setResult(result);
 }
 

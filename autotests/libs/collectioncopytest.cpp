@@ -97,7 +97,7 @@ private Q_SLOTS:
     void testIlleagalCopy()
     {
         // invalid source
-        CollectionCopyJob *copy = new CollectionCopyJob(Collection(), Collection(1));
+        auto copy = new CollectionCopyJob(Collection(), Collection(1));
         QVERIFY(!copy->exec());
 
         // non-existing source

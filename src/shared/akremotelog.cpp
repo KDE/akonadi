@@ -136,7 +136,7 @@ private:
 
     static void categoryFilter(QLoggingCategory *cat)
     {
-        auto *const that = self();
+        auto const that = self();
         if (!that) {
             return;
         }
@@ -153,7 +153,7 @@ private:
 
     static void dbusLogger(QtMsgType type, const QMessageLogContext &ctx, const QString &msg)
     {
-        auto *const that = self();
+        auto const that = self();
         if (!that) {
             return;
         }

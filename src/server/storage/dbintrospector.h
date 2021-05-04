@@ -24,7 +24,7 @@ namespace Server
 class DbIntrospector
 {
 public:
-    typedef QSharedPointer<DbIntrospector> Ptr;
+    using Ptr = QSharedPointer<DbIntrospector>;
 
     /** A structure describing an existing foreign key. */
     class ForeignKey

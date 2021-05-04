@@ -357,7 +357,7 @@ private:
 
     void fetchStatistics(Collection::Id colId)
     {
-        CollectionStatisticsJob *job = new CollectionStatisticsJob(Collection(colId), session);
+        auto job = new CollectionStatisticsJob(Collection(colId), session);
         QObject::connect(job, &KJob::result, q_ptr, [this](KJob *job) {
             slotStatisticsChangedFinished(job);
         });

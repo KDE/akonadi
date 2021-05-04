@@ -127,7 +127,7 @@ public:
     /**
      * Describes a list of attributes.
      */
-    typedef QList<Attribute *> List;
+    using List = QList<Attribute *>;
 
     /**
      * Returns the type of the attribute.

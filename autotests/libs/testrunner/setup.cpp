@@ -66,7 +66,7 @@ void SetupTest::setupAgents()
     for (const auto &[instance, sync] : agents) {
         qCDebug(AKONADITEST_LOG) << "Creating agent" << instance << "...";
         ++mSetupJobCount;
-        Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob(instance, this);
+        auto job = new Akonadi::AgentInstanceCreateJob(instance, this);
         job->setProperty("sync", sync);
         connect(job, &Akonadi::AgentInstanceCreateJob::result, this, &SetupTest::agentCreationResult);
         job->start();
@@ -89,7 +89,7 @@ void SetupTest::agentCreationResult(KJob *job)
         if (needsSync) {
             ++mSetupJobCount;
             qCDebug(AKONADITEST_LOG) << "Scheduling Agent sync of" << instance.identifier();
-            Akonadi::ResourceSynchronizationJob *sync = new Akonadi::ResourceSynchronizationJob(instance, this);
+            auto sync = new Akonadi::ResourceSynchronizationJob(instance, this);
             connect(sync, &Akonadi::ResourceSynchronizationJob::result, this, &SetupTest::synchronizationResult);
             sync->start();
         }

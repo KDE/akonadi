@@ -56,8 +56,8 @@ public:
 private:
     QHash<typename T::Id, T> m_data;
 };
-typedef FakeEntityCache<Akonadi::Collection, Akonadi::CollectionCache> FakeCollectionCache;
-typedef FakeEntityCache<Akonadi::Item, Akonadi::ItemCache> FakeItemCache;
+using FakeCollectionCache = FakeEntityCache<Akonadi::Collection, Akonadi::CollectionCache>;
+using FakeItemCache = FakeEntityCache<Akonadi::Item, Akonadi::ItemCache>;
 
 class AKONADITESTFAKE_EXPORT FakeNotificationSource : public QObject
 {

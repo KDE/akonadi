@@ -34,7 +34,7 @@ private Q_SLOTS:
 
     void testIllegalDelete()
     {
-        ItemDeleteJob *djob = new ItemDeleteJob(Item(INT_MAX), this);
+        auto djob = new ItemDeleteJob(Item(INT_MAX), this);
         QVERIFY(!djob->exec());
 
         // make sure a failed delete doesn't leave a transaction open (the kpilot bug)
@@ -47,11 +47,11 @@ private Q_SLOTS:
         auto monitor = AkonadiTest::getTestMonitor();
         QSignalSpy spy(monitor.get(), &Monitor::itemsRemoved);
 
-        ItemFetchJob *fjob = new ItemFetchJob(Item(1), this);
+        auto fjob = new ItemFetchJob(Item(1), this);
         AKVERIFYEXEC(fjob);
         QCOMPARE(fjob->items().count(), 1);
 
-        ItemDeleteJob *djob = new ItemDeleteJob(Item(1), this);
+        auto djob = new ItemDeleteJob(Item(1), this);
         AKVERIFYEXEC(djob);
 
         fjob = new ItemFetchJob(Item(1), this);
@@ -73,7 +73,7 @@ private Q_SLOTS:
         auto rjob = new CollectionPathResolver(path, this);
         AKVERIFYEXEC(rjob);
 
-        ItemFetchJob *fjob = new ItemFetchJob(Collection(rjob->collection()), this);
+        auto fjob = new ItemFetchJob(Collection(rjob->collection()), this);
         AKVERIFYEXEC(fjob);
 
         const Item::List items = fjob->items();
@@ -102,7 +102,7 @@ private Q_SLOTS:
         QSignalSpy spy(monitor.get(), &Monitor::itemsRemoved);
 
         {
-            ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
+            auto select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
             AKVERIFYEXEC(select);
         }
         const Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
@@ -130,7 +130,7 @@ private Q_SLOTS:
         fjob->setCollection(col);
         QVERIFY(!fjob->exec());
         {
-            ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral(""));
+            auto select = new ResourceSelectJob(QStringLiteral(""));
             AKVERIFYEXEC(select);
         }
     }

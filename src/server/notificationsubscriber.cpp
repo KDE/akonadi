@@ -139,15 +139,15 @@ void NotificationSubscriber::disconnectSubscriber()
     }
 
     // Unregister ourselves from the aggregated collection fetch scope
-    auto *cfs = mManager->collectionFetchScope();
+    auto cfs = mManager->collectionFetchScope();
     cfs->apply(mCollectionFetchScope, Protocol::CollectionFetchScope());
     cfs->removeSubscriber();
 
-    auto *tfs = mManager->tagFetchScope();
+    auto tfs = mManager->tagFetchScope();
     tfs->apply(mTagFetchScope, Protocol::TagFetchScope());
     tfs->removeSubscriber();
 
-    auto *ifs = mManager->itemFetchScope();
+    auto ifs = mManager->itemFetchScope();
     ifs->apply(mItemFetchScope, Protocol::ItemFetchScope());
     ifs->removeSubscriber();
 

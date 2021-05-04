@@ -42,7 +42,7 @@ public:
     void setEnvironmentVariable(const QByteArray &name, const QString &value);
 
     /// retrieve all modified environment variables, for writing the shell script
-    typedef QPair<QByteArray, QByteArray> EnvVar;
+    using EnvVar = QPair<QByteArray, QByteArray>;
     QVector<EnvVar> environmentVariables() const;
 
 public Q_SLOTS:

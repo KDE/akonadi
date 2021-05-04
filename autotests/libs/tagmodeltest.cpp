@@ -157,8 +157,8 @@ void TagModelTest::testTagAdded()
     QFETCH(QString, parentTag);
 
     const auto testDrivers = populateModel(serverContent);
-    auto *const serverData = testDrivers.first;
-    auto *const model = testDrivers.second;
+    auto const serverData = testDrivers.first;
+    auto const model = testDrivers.second;
 
     const auto parentIndex = firstMatchedIndex(*model, parentTag);
     const auto newRow = model->rowCount(parentIndex);
@@ -197,8 +197,8 @@ void TagModelTest::testTagChanged()
     QFETCH(QString, tagName);
 
     const auto testDrivers = populateModel(serverContent);
-    auto *const serverData = testDrivers.first;
-    auto *const model = testDrivers.second;
+    auto const serverData = testDrivers.first;
+    auto const model = testDrivers.second;
 
     const auto changedIndex = firstMatchedIndex(*model, tagName);
     const auto parentTag = changedIndex.parent().data().toString();
@@ -237,8 +237,8 @@ void TagModelTest::testTagRemoved()
     QFETCH(QString, removedTag);
 
     const auto testDrivers = populateModel(serverContent);
-    auto *const serverData = testDrivers.first;
-    auto *const model = testDrivers.second;
+    auto const serverData = testDrivers.first;
+    auto const model = testDrivers.second;
 
     const auto removedIndex = firstMatchedIndex(*model, removedTag);
     const auto parentTag = removedIndex.parent().data().toString();
@@ -290,8 +290,8 @@ void TagModelTest::testTagMoved()
     QFETCH(QString, newParent);
 
     const auto testDrivers = populateModel(serverContent);
-    auto *const serverData = testDrivers.first;
-    auto *const model = testDrivers.second;
+    auto const serverData = testDrivers.first;
+    auto const model = testDrivers.second;
 
     const auto changedIndex = firstMatchedIndex(*model, changedTag);
     const auto parentTag = changedIndex.parent().data().toString();

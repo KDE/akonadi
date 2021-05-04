@@ -538,7 +538,7 @@ public:
             return;
         }
 
-        typedef QPair<Collection, Collection> CollectionPair;
+        using CollectionPair = QPair<Collection, Collection>;
         for (const CollectionPair &pair : qAsConst(remoteCollectionsToUpdate)) {
             const Collection local = pair.first;
             const Collection remote = pair.second;
@@ -573,7 +573,7 @@ public:
             if (!hierarchicalRIDs) {
                 if (remote.parentCollection().isValid() && remote.parentCollection().id() != local.parentCollection().id()) {
                     ++pendingJobs;
-                    CollectionMoveJob *move = new CollectionMoveJob(upd, remote.parentCollection(), currentTransaction);
+                    auto move = new CollectionMoveJob(upd, remote.parentCollection(), currentTransaction);
                     QObject::connect(move, &KJob::result, q, [this](KJob *job) {
                         updateLocalCollectionResult(job);
                     });

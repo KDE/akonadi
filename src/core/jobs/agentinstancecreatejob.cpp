@@ -59,7 +59,7 @@ public:
 
     void doConfigure()
     {
-        org::freedesktop::Akonadi::Agent::Control *agentControlIface =
+        auto agentControlIface =
             new org::freedesktop::Akonadi::Agent::Control(ServerManager::agentServiceName(ServerManager::Agent, agentInstance.identifier()),
                                                           QStringLiteral("/"),
                                                           QDBusConnection::sessionBus(),

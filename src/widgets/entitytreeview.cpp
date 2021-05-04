@@ -126,7 +126,7 @@ void EntityTreeView::Private::itemClicked(const QModelIndex &index) const
     }
     QModelIndex idx = index.sibling(index.row(), 0);
 
-    const Collection collection = idx.model()->data(idx, EntityTreeModel::CollectionRole).value<Collection>();
+    const auto collection = idx.model()->data(idx, EntityTreeModel::CollectionRole).value<Collection>();
     if (collection.isValid()) {
         Q_EMIT mParent->clicked(collection);
     } else {
@@ -143,7 +143,7 @@ void EntityTreeView::Private::itemDoubleClicked(const QModelIndex &index) const
         return;
     }
     QModelIndex idx = index.sibling(index.row(), 0);
-    const Collection collection = idx.model()->data(idx, EntityTreeModel::CollectionRole).value<Collection>();
+    const auto collection = idx.model()->data(idx, EntityTreeModel::CollectionRole).value<Collection>();
     if (collection.isValid()) {
         Q_EMIT mParent->doubleClicked(collection);
     } else {
@@ -160,7 +160,7 @@ void EntityTreeView::Private::itemCurrentChanged(const QModelIndex &index) const
         return;
     }
     QModelIndex idx = index.sibling(index.row(), 0);
-    const Collection collection = idx.model()->data(idx, EntityTreeModel::CollectionRole).value<Collection>();
+    const auto collection = idx.model()->data(idx, EntityTreeModel::CollectionRole).value<Collection>();
     if (collection.isValid()) {
         Q_EMIT mParent->currentChanged(collection);
     } else {

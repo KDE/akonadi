@@ -89,7 +89,7 @@ template<typename T> inline static Protocol::Attributes attributesToProtocolImpl
 {
     Protocol::Attributes attributes;
     const auto attrs = entity.attributes();
-    for (const auto *attr : attrs) {
+    for (const auto attr : attrs) {
         attributes.insert(ProtocolHelper::encodePartIdentifier(ns ? ProtocolHelper::PartAttribute : ProtocolHelper::PartGlobal, attr->type()),
                           attr->serialized());
     }
@@ -227,7 +227,7 @@ Collection ProtocolHelper::parseCollection(const Protocol::FetchCollectionsRespo
     collection.setLocalListPreference(Collection::ListSync, parsePreference(data.syncPref()));
 
     if (!data.searchQuery().isEmpty()) {
-        auto *attr = collection.attribute<PersistentSearchAttribute>(Collection::AddIfMissing);
+        auto attr = collection.attribute<PersistentSearchAttribute>(Collection::AddIfMissing);
         attr->setQueryString(data.searchQuery());
         const auto cols = data.searchCollections() | Views::transform([](const auto id) {
                               return Collection{id};

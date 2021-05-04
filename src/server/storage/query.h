@@ -64,7 +64,7 @@ class Condition
 
 public:
     /** A list of conditions. */
-    typedef QVector<Condition> List;
+    using List = QVector<Condition>;
 
     /**
       Create an empty condition.

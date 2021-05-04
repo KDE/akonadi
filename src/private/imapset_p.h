@@ -34,12 +34,12 @@ public:
     /**
      * Describes the ids stored in the interval.
      */
-    typedef qint64 Id;
+    using Id = qint64;
 
     /**
       A list of ImapInterval objects.
     */
-    typedef QList<ImapInterval> List;
+    using List = QList<ImapInterval>;
 
     /**
       Constructs an interval that covers all positive numbers.
@@ -135,7 +135,7 @@ public:
     /**
      * Describes the ids stored in the set.
      */
-    typedef qint64 Id;
+    using Id = qint64;
 
     /**
       Constructs an empty set.

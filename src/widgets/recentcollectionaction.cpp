@@ -85,7 +85,7 @@ void RecentCollectionAction::fillRecentCollection(Akonadi::StandardActionManager
 
             const bool canCreateNewItems = (collection.rights() & Collection::CanCreateItem);
             QAction *action = popup->addAction(actionName(index));
-            const QIcon icon = mModel->data(index, Qt::DecorationRole).value<QIcon>();
+            const auto icon = mModel->data(index, Qt::DecorationRole).value<QIcon>();
             action->setIcon(icon);
             action->setData(QVariant::fromValue<QModelIndex>(index));
             action->setEnabled(canCreateNewItems);

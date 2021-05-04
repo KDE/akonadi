@@ -37,7 +37,7 @@ private Q_SLOTS:
         col = cj->collection();
         QVERIFY(col.isValid());
 
-        auto *attr = col.attribute<EntityDisplayAttribute>(Collection::AddIfMissing);
+        auto attr = col.attribute<EntityDisplayAttribute>(Collection::AddIfMissing);
         attr->setDisplayName(QStringLiteral("Test Collection"));
         col.setContentMimeTypes({Collection::mimeType(), QLatin1String("application/octet-stream")});
 
