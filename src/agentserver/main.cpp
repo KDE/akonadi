@@ -11,16 +11,14 @@
 
 #include <shared/akapplication.h>
 
-#include <QApplication>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 
 int main(int argc, char **argv)
 {
-    AkApplication app(argc, argv, AKONADIAGENTSERVER_LOG());
+    AkCoreApplication app(argc, argv, AKONADIAGENTSERVER_LOG());
     app.setDescription(QStringLiteral("Akonadi Agent Server\nDo not run manually, use 'akonadictl' instead to start/stop Akonadi."));
     app.parseCommandLine();
-    qApp->setQuitOnLastWindowClosed(false);
 
     if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock))) {
         qCCritical(AKONADIAGENTSERVER_LOG) << "Akonadi control process not found - aborting.";

@@ -7,8 +7,6 @@
 #include "agentthread.h"
 #include "akonadiagentserver_debug.h"
 
-#include <QWidget> // Needed for WId
-
 #include <QMetaObject>
 #include <shared/akdebug.h>
 
@@ -38,5 +36,5 @@ void AgentThread::run()
 
 void AgentThread::configure(qlonglong windowId)
 {
-    QMetaObject::invokeMethod(m_instance, "configure", Qt::DirectConnection, Q_ARG(WId, (WId)windowId));
+    QMetaObject::invokeMethod(m_instance, "configure", Qt::DirectConnection, Q_ARG(quintptr, (quintptr)windowId));
 }
