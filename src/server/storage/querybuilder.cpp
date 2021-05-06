@@ -19,6 +19,8 @@
 #include <QElapsedTimer>
 #include <QSqlError>
 #include <QSqlRecord>
+#include <QSqlField>
+#include <QSqlDriver>
 
 using namespace Akonadi::Server;
 
@@ -97,6 +99,26 @@ QueryBuilder::QueryBuilder(const QString &table, QueryBuilder::QueryType type)
     , mType(type)
     , mIdentificationColumn()
     , mLimit(-1)
+    , mOffset(-1)
+    , mDistinct(false)
+{
+    static const QString defaultIdColumn = QStringLiteral("id");
+    mIdentificationColumn = defaultIdColumn;
+}
+
+QueryBuilder::QueryBuilder(const QSqlQuery &tableQuery, const QString &tableQueryAlias)
+    : mTable(tableQueryAlias)
+    , mTableSubQuery(tableQuery)
+#ifndef QUERYBUILDER_UNITTEST
+    , mDatabaseType(DbType::type(DataStore::self()->database()))
+    , mQuery(DataStore::self()->database())
+#else
+    , mDatabaseType(DbType::Unknown)
+#endif
+    , mType(QueryType::Select)
+    , mIdentificationColumn()
+    , mLimit(-1)
+    , mOffset(-1)
     , mDistinct(false)
 {
     static const QString defaultIdColumn = QStringLiteral("id");
@@ -202,7 +224,8 @@ void QueryBuilder::buildQuery(QString *statement)
         Q_ASSERT_X(mColumns.count() > 0, "QueryBuilder::exec()", "No columns specified");
         appendJoined(statement, mColumns);
         *statement += QLatin1String(" FROM ");
-        *statement += mTable;
+        *statement += mTableSubQuery.isValid()
+                    ? getTableQuery(mTableSubQuery, mTable) : mTable;
         for (const QString &joinedTable : qAsConst(mJoinedTables)) {
             const auto &[joinType, joinCond] = mJoins.value(joinedTable);
             switch (joinType) {
@@ -321,6 +344,9 @@ void QueryBuilder::buildQuery(QString *statement)
 
     if (mLimit > 0) {
         *statement += QLatin1String(" LIMIT ") + QString::number(mLimit);
+        if (mOffset > 0) {
+            *statement += QLatin1String(" OFFSET ") + QString::number(mOffset);
+        }
     }
 
     if (mType == Select && mForUpdate) {
@@ -580,9 +606,10 @@ void QueryBuilder::setDistinct(bool distinct)
     mDistinct = distinct;
 }
 
-void QueryBuilder::setLimit(int limit)
+void QueryBuilder::setLimit(int limit, int offset)
 {
     mLimit = limit;
+    mOffset = offset;
 }
 
 void QueryBuilder::setIdentificationColumn(const QString &column)
@@ -616,4 +643,44 @@ qint64 QueryBuilder::insertId()
 void QueryBuilder::setForUpdate(bool forUpdate)
 {
     mForUpdate = forUpdate;
+}
+
+QString QueryBuilder::getTable() const
+{
+    return mTable;
+}
+
+QString QueryBuilder::getTableQuery(const QSqlQuery& query, const QString &alias)
+{
+    Q_ASSERT_X(query.isValid() && query.isSelect(), "QueryBuilder::getTableQuery", "Table subquery use only for valid SELECT queries");
+
+    QString tableQuery = query.lastQuery();
+    if (tableQuery.isEmpty()) {
+        qCWarning(AKONADISERVER_LOG) << "Table subquery is empty";
+        return tableQuery;
+    }
+
+    tableQuery.prepend(QLatin1String("( "));
+
+    const auto boundValues = query.boundValues();
+    for (int pos = boundValues.size() - 1; pos >= 0; --pos) {
+
+        const QString key(QLatin1Char(':') + QString::number(pos));
+        const auto value = boundValues.value(key);
+
+        QSqlField field(QLatin1String(""), value.type());
+        if (value.isNull()) {
+            field.clear();
+        }
+        else {
+            field.setValue(value);
+        }
+
+        const QString formattedValue = query.driver()->formatValue(field);
+        tableQuery.replace(key, formattedValue);
+    }
+
+    tableQuery.append(QLatin1String(" ) AS %1").arg(alias));
+
+    return tableQuery;
 }

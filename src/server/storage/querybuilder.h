@@ -71,6 +71,13 @@ public:
     explicit QueryBuilder(const QString &table, QueryType type = Select);
 
     /**
+      Creates a new query builder with subquery in FROM cluase for SELECT queries.
+      @param tableQuery must be a valid select query
+      @param tableQueryAlias alias name for table query
+    */
+    explicit QueryBuilder(const QSqlQuery &tableQuery, const QString &tableQueryAlias);
+
+    /**
       Sets the database which should execute the query. Unfortunately the SQL "standard"
       is not interpreted in the same way everywhere...
     */
@@ -204,9 +211,11 @@ public:
     /**
      * Limits the amount of retrieved rows.
      * @param limit the maximum number of rows to retrieve.
+     * @param offset offset of the first row to retrieve.
+     * The default value for @p offset is -1, indicating no offset.
      * @note This has no effect on anything but SELECT queries.
      */
-    void setLimit(int limit);
+    void setLimit(int limit, int offset=-1);
 
     /**
      * Sets the column used for identification in an INSERT statement.
@@ -244,11 +253,17 @@ public:
      */
     void setForUpdate(bool forUpdate = true);
 
+    /**
+      Returns the name of the main table or subquery.
+    */
+    QString getTable() const;
+
 private:
     void buildQuery(QString *query);
     void bindValue(QString *query, const QVariant &value);
     void buildWhereCondition(QString *query, const Query::Condition &cond);
     void buildCaseStatement(QString *query, const Query::Case &caseStmt);
+    QString getTableQuery(const QSqlQuery &query, const QString &alias);
 
     /**
      * SQLite does not support JOINs with UPDATE, so we have to convert it into
@@ -258,6 +273,7 @@ private:
 
 private:
     QString mTable;
+    QSqlQuery mTableSubQuery;
     DbType::Type mDatabaseType;
     Query::Condition mRootCondition[NUM_CONDITIONS];
     QSqlQuery mQuery;
@@ -274,6 +290,7 @@ private:
     QStringList mJoinedTables;
     QMap<QString, QPair<JoinType, Query::Condition>> mJoins;
     int mLimit;
+    int mOffset;
     bool mDistinct;
     bool mForUpdate = false;
 #ifdef QUERYBUILDER_UNITTEST
