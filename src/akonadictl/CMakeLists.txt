@@ -12,7 +12,7 @@ ecm_qt_declare_logging_category(akonadictl_SRCS HEADER akonadictl_debug.h IDENTI
     )
 
 
-qt5_add_dbus_interfaces(akonadictl_SRCS
+qt_add_dbus_interfaces(akonadictl_SRCS
     ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.ControlManager.xml
     ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Janitor.xml
 )

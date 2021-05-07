@@ -1,7 +1,7 @@
 # akonadi test fake library
 set(akonaditestfake_xml ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.NotificationSource.xml)
 set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "protocol_p.h")
-qt5_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationsourceinterface )
+qt_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationsourceinterface )
 
 add_library(akonaditestfake SHARED
   ${akonaditestfake_srcs}

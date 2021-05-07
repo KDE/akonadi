@@ -17,7 +17,7 @@ kcfg_generate_dbus_interface(
     org.kde.Akonadi.%{APPNAME}.Settings
 )
 
-qt5_add_dbus_adaptor(%{APPNAMELC}resource_SRCS
+qt_add_dbus_adaptor(%{APPNAMELC}resource_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.%{APPNAME}.Settings.xml
     ${CMAKE_CURRENT_BINARY_DIR}/settings.h
     Settings
