@@ -33,13 +33,15 @@ public:
                     const Scope &scope,
                     const Protocol::ItemFetchScope &itemFetchScope,
                     const Protocol::TagFetchScope &tagFagScope,
-                    AkonadiServer &akonadi);
+                    AkonadiServer &akonadi,
+                    const Protocol::FetchLimit &itemsLimit = Protocol::FetchLimit());
     ItemFetchHelper(Connection *connection,
                     const CommandContext &context,
                     const Scope &scope,
                     const Protocol::ItemFetchScope &itemFetchScope,
                     const Protocol::TagFetchScope &tagFetchScope,
-                    AkonadiServer &akonadi);
+                    AkonadiServer &akonadi,
+                    const Protocol::FetchLimit &itemsLimit = Protocol::FetchLimit());
 
     bool fetchItems(std::function<void(Protocol::FetchItemsResponse &&)> &&callback = {});
 
@@ -84,6 +86,9 @@ private:
     int mItemQueryColumnMap[ItemQueryColumnCount];
     bool mUpdateATimeEnabled = true;
     AkonadiServer &mAkonadi;
+    Protocol::FetchLimit mItemsLimit;
+    QueryBuilder mItemQuery;
+    QString mPimItemQueryAlias;
 
     friend class ::ItemFetchHelperTest;
 };
