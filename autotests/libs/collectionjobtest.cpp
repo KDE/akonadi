@@ -67,7 +67,8 @@ template<class T> static void compareLists(const QVector<T> &l1, const QVector<T
     }
 }
 
-template<typename T> static T *extractAttribute(QList<Attribute *> attrs)
+template<typename T>
+static T *extractAttribute(const QList<Attribute *> &attrs)
 {
     T dummy;
     for (Attribute *attr : attrs) {

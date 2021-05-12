@@ -288,6 +288,7 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadItemNotificatio
                 item.setFlags(bav);
                 stream >> cnt;
                 QVector<Protocol::FetchTagsResponse> tags;
+                tags.reserve(cnt);
                 for (int k = 0; k < cnt; ++k) {
                     Protocol::FetchTagsResponse tag;
                     stream >> i64;

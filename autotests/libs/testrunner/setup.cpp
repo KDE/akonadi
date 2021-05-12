@@ -37,7 +37,7 @@ bool SetupTest::startAkonadiDaemon()
     mAkonadiDaemonProcess->setProgram(Akonadi::StandardDirs::findExecutable(QStringLiteral("akonadi_control")), {QStringLiteral("--instance"), instanceId()});
     mAkonadiDaemonProcess->start();
     const bool started = mAkonadiDaemonProcess->waitForStarted(5000);
-    qCInfo(AKONADITEST_LOG) << "Started akonadi daemon with pid:" << mAkonadiDaemonProcess->pid();
+    qCInfo(AKONADITEST_LOG) << "Started akonadi daemon with pid:" << mAkonadiDaemonProcess->processId();
     return started;
 }
 

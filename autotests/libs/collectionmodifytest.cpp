@@ -29,7 +29,7 @@ private Q_SLOTS:
         Collection col;
         col.setName(QLatin1String("test_collection"));
         col.setContentMimeTypes({Collection::mimeType()});
-        col.setParentCollection(Collection(AkonadiTest::collectionIdFromPath(QLatin1String("res1"))));
+        col.setParentCollection(Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1"))));
         col.setRights(Collection::AllRights);
 
         auto cj = new CollectionCreateJob(col, this);
@@ -39,7 +39,7 @@ private Q_SLOTS:
 
         auto attr = col.attribute<EntityDisplayAttribute>(Collection::AddIfMissing);
         attr->setDisplayName(QStringLiteral("Test Collection"));
-        col.setContentMimeTypes({Collection::mimeType(), QLatin1String("application/octet-stream")});
+        col.setContentMimeTypes({Collection::mimeType(), QStringLiteral("application/octet-stream")});
 
         auto mj = new CollectionModifyJob(col, this);
         AKVERIFYEXEC(mj);
