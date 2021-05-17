@@ -32,7 +32,7 @@ add_executable(akonadi-firstrun
     firstrunner.cpp
     ${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp
 )
-target_link_libraries( akonadi-firstrun  Qt::Test Qt5::Core KF5::AkonadiCore KF5::AkonadiPrivate KF5::ConfigCore Qt5::Widgets)
+target_link_libraries( akonadi-firstrun  Qt::Test Qt::Core KF5::AkonadiCore KF5::AkonadiPrivate KF5::ConfigCore Qt::Widgets)
 
 add_akonadi_test(itemhydratest.cpp)
 add_akonadi_test(itemtest.cpp)
