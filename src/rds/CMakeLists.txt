@@ -1,12 +1,12 @@
 ########### next target ###############
 
-set(akonadi_rds_srcs
+add_executable(akonadi_rds)
+target_sources(akonadi_rds PRIVATE
     bridgeserver.cpp
     bridgeconnection.cpp
     main.cpp
 )
 
-add_executable(akonadi_rds ${akonadi_rds_srcs})
 set_target_properties(akonadi_rds PROPERTIES MACOSX_BUNDLE FALSE)
 
 target_link_libraries(akonadi_rds

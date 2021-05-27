@@ -1,8 +1,4 @@
-set(selftest_SRCS
-    main.cpp
-)
-
-add_executable(akonadiselftest ${selftest_SRCS})
+add_executable(akonadiselftest main.cpp)
 
 target_link_libraries(akonadiselftest
 PRIVATE

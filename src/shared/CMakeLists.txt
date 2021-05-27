@@ -1,10 +1,10 @@
-set(akonadi_shared_srcs
+add_library(akonadi_shared STATIC)
+target_sources(akonadi_shared PRIVATE
     akapplication.cpp
     akdebug.cpp
     akremotelog.cpp
 )
 
-add_library(akonadi_shared STATIC ${akonadi_shared_srcs})
 if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(akonadi_shared PROPERTIES UNITY_BUILD ON)
 endif()

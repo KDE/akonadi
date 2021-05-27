@@ -1,6 +1,10 @@
 configure_file(akonadiwidgetstests_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadiwidgetstests_export.h")
 
-set(akonadiwidgets_SRCS
+add_library(KF5AkonadiWidgets)
+add_library(KF5::AkonadiWidgets ALIAS KF5AkonadiWidgets)
+
+
+target_sources(KF5AkonadiWidgets PRIVATE
     actionstatemanager.cpp
     agentactionmanager.cpp
     agentconfigurationdialog.cpp
@@ -41,7 +45,7 @@ set(akonadiwidgets_SRCS
     tagselectwidget.cpp
 )
 
-ecm_qt_declare_logging_category(akonadiwidgets_SRCS HEADER akonadiwidgets_debug.h IDENTIFIER AKONADIWIDGETS_LOG CATEGORY_NAME org.kde.pim.akonadiwidgets
+ecm_qt_declare_logging_category(KF5AkonadiWidgets HEADER akonadiwidgets_debug.h IDENTIFIER AKONADIWIDGETS_LOG CATEGORY_NAME org.kde.pim.akonadiwidgets
         DESCRIPTION "akonadi (Akonadi Widget Library)"
         OLD_CATEGORY_NAMES akonadiwidgets_log
         EXPORT AKONADI
@@ -97,16 +101,13 @@ ecm_generate_headers(AkonadiWidgets_HEADERS
     REQUIRED_HEADERS AkonadiWidgets_HEADERS
 )
 
-ki18n_wrap_ui(akonadiwidgets_SRCS ${akonadiwidgets_UI})
-
-add_library(KF5AkonadiWidgets ${akonadiwidgets_SRCS})
+ki18n_wrap_ui(KF5AkonadiWidgets ${akonadiwidgets_UI})
 if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(KF5AkonadiWidgets PROPERTIES UNITY_BUILD ON)
 endif()
 
 generate_export_header(KF5AkonadiWidgets BASE_NAME akonadiwidgets)
 
-add_library(KF5::AkonadiWidgets ALIAS KF5AkonadiWidgets)
 
 target_include_directories(KF5AkonadiWidgets INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiWidgets>")
 

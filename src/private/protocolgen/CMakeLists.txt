@@ -1,6 +1,7 @@
 project(protocolgen)
 
-set(protocolgen_SRCS
+add_executable(protocolgen)
+target_sources(protocolgen PRIVATE
     main.cpp
     cppgenerator.cpp
     cpphelper.cpp
@@ -9,7 +10,6 @@ set(protocolgen_SRCS
     xmlparser.cpp
 )
 
-add_executable(protocolgen ${protocolgen_SRCS})
 set_target_properties(protocolgen PROPERTIES MACOSX_BUNDLE FALSE)
 target_link_libraries(protocolgen
     Qt::Core
