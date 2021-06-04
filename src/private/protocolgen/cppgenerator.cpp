@@ -801,7 +801,13 @@ void CppGenerator::writeImplPropertyDependencies(const PropertyNode *node)
                 }
             }
             if (!values.isEmpty()) {
-                mImpl << "    m" << key[0].toUpper() << key.midRef(1) << " |= " << enumType << "(" << values.join(QLatin1String(" | ")) << ");\n";
+                mImpl << "    m" << key[0].toUpper()
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 2)
+                      << QStringView(key).mid(1)
+#else
+                      << key.midRef(1)
+#endif
+                      << " |= " << enumType << "(" << values.join(QLatin1String(" | ")) << ");\n";
                 values.clear();
             }
         }
@@ -809,7 +815,13 @@ void CppGenerator::writeImplPropertyDependencies(const PropertyNode *node)
     }
 
     if (!values.isEmpty()) {
-        mImpl << "    m" << key[0].toUpper() << key.midRef(1) << " |= " << enumType << "(" << values.join(QLatin1String(" | ")) << ");\n";
+        mImpl << "    m" << key[0].toUpper()
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 2)
+              << QStringView(key).mid(1)
+#else
+              << key.midRef(1)
+#endif
+              << " |= " << enumType << "(" << values.join(QLatin1String(" | ")) << ");\n";
     }
 }
 
