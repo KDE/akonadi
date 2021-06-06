@@ -72,6 +72,17 @@ int AgentTypeModel::rowCount(const QModelIndex & /*parent*/) const
     return d->mTypes.count();
 }
 
+QHash<int, QByteArray> AgentTypeModel::roleNames() const
+{
+    QHash<int, QByteArray> roles = QAbstractItemModel::roleNames();
+    roles.insert(TypeRole, QByteArrayLiteral("type"));
+    roles.insert(IdentifierRole, QByteArrayLiteral("identifier"));
+    roles.insert(DescriptionRole, QByteArrayLiteral("description"));
+    roles.insert(MimeTypesRole, QByteArrayLiteral("mimeTypes"));
+    roles.insert(CapabilitiesRole, QByteArrayLiteral("capabilities"));
+    return roles;
+}
+
 QVariant AgentTypeModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {

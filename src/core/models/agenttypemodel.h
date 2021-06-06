@@ -66,6 +66,7 @@ public:
     Q_REQUIRED_RESULT QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     Q_REQUIRED_RESULT QModelIndex parent(const QModelIndex &index) const override;
     Q_REQUIRED_RESULT Qt::ItemFlags flags(const QModelIndex &index) const override;
+    Q_REQUIRED_RESULT QHash<int, QByteArray> roleNames() const override;
 
 private:
     /// @cond PRIVATE
