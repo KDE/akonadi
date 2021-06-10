@@ -13,7 +13,6 @@
 #include <QSqlRecord>
 
 #include <QDBusConnection>
-#include <memory>
 
 Akonadi::Server::StorageDebugger *Akonadi::Server::StorageDebugger::mSelf = nullptr;
 QMutex Akonadi::Server::StorageDebugger::mMutex;
