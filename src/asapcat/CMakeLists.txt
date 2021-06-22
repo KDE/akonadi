@@ -1,9 +1,8 @@
-set(asapcat_srcs
+add_executable(asapcat)
+target_sources(asapcat PRIVATE
     main.cpp
     session.cpp
-)
-
-add_executable(asapcat ${asapcat_srcs})
+    )
 set_target_properties(asapcat PROPERTIES MACOSX_BUNDLE FALSE)
 
 target_link_libraries(asapcat

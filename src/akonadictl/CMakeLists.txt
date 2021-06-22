@@ -1,11 +1,8 @@
 ########### next target ###############
 
-set(akonadictl_SRCS
-    akonadistarter.cpp
-    main.cpp
-)
 
-ecm_qt_declare_logging_category(akonadictl_SRCS HEADER akonadictl_debug.h IDENTIFIER AKONADICTL_LOG CATEGORY_NAME org.kde.pim.akonadictl
+add_executable(akonadictl)
+ecm_qt_declare_logging_category(akonadictl HEADER akonadictl_debug.h IDENTIFIER AKONADICTL_LOG CATEGORY_NAME org.kde.pim.akonadictl
         DESCRIPTION "akonadi (Akonadi Control)"
         OLD_CATEGORY_NAMES log_akonadictl
         EXPORT AKONADI
@@ -16,8 +13,11 @@ qt_add_dbus_interfaces(akonadictl_SRCS
     ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.ControlManager.xml
     ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Janitor.xml
 )
+target_sources(akonadictl PRIVATE ${akonadictl_SRCS}
+    akonadistarter.cpp
+    main.cpp
+)
 
-add_executable(akonadictl ${akonadictl_SRCS})
 if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(akonadictl PROPERTIES UNITY_BUILD ON)
 endif()
