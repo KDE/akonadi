@@ -57,6 +57,7 @@ public:
         filterRecursiveCollectionFilter.setSortRole(Qt::DisplayRole);
         filterRecursiveCollectionFilter.setSortCaseSensitivity(Qt::CaseSensitive);
         filterRecursiveCollectionFilter.setSortLocaleAware(true);
+        filterRecursiveCollectionFilter.setExcludeUnifiedMailBox(true);
 
         ui.collectionView->setModel(&filterRecursiveCollectionFilter);
         ui.searchLineEdit->setFocus();

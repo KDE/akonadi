@@ -83,6 +83,12 @@ public:
      */
     void setIncludeCheckedOnly(bool checked);
 
+    /**
+     * Don't show unified mailbox
+     * @since 5.18.0
+     */
+    void setExcludeUnifiedMailBox(bool exclude);
+
 protected:
     int columnCount(const QModelIndex &index) const override;
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;

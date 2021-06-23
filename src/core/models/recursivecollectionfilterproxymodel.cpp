@@ -7,6 +7,7 @@
 
 #include "recursivecollectionfilterproxymodel.h"
 
+#include "collectionutils.h"
 #include "entitytreemodel.h"
 #include "mimetypechecker.h"
 
@@ -29,6 +30,7 @@ public:
     Akonadi::MimeTypeChecker checker;
     QString pattern;
     bool checkOnlyChecked = false;
+    bool excludeUnifiedMailBox = false;
 };
 
 } // namespace Akonadi
@@ -52,6 +54,9 @@ bool RecursiveCollectionFilterProxyModel::filterAcceptsRow(int sourceRow, const 
     const QModelIndex rowIndex = sourceModel()->index(sourceRow, 0, sourceParent);
     const auto collection = rowIndex.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
     if (!collection.isValid()) {
+        return false;
+    }
+    if (CollectionUtils::isUnifiedMailbox(collection)) {
         return false;
     }
     const bool checked = (rowIndex.data(Qt::CheckStateRole).toInt() == Qt::Checked);
@@ -128,6 +133,15 @@ void Akonadi::RecursiveCollectionFilterProxyModel::setIncludeCheckedOnly(bool ch
     Q_D(RecursiveCollectionFilterProxyModel);
     if (d->checkOnlyChecked != checked) {
         d->checkOnlyChecked = checked;
+        invalidate();
+    }
+}
+
+void RecursiveCollectionFilterProxyModel::setExcludeUnifiedMailBox(bool exclude)
+{
+    Q_D(RecursiveCollectionFilterProxyModel);
+    if (d->excludeUnifiedMailBox != exclude) {
+        d->excludeUnifiedMailBox = exclude;
         invalidate();
     }
 }
