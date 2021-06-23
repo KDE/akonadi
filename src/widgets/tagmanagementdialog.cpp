@@ -35,13 +35,13 @@ struct Q_DECL_HIDDEN TagManagementDialog::Private {
 
 void TagManagementDialog::Private::writeConfig() const
 {
-    KConfigGroup group(KSharedConfig::openConfig(), "TagManagementDialog");
+    KConfigGroup group(KSharedConfig::openStateConfig(), "TagManagementDialog");
     group.writeEntry("Size", q->size());
 }
 
 void TagManagementDialog::Private::readConfig() const
 {
-    KConfigGroup group(KSharedConfig::openConfig(), "TagManagementDialog");
+    KConfigGroup group(KSharedConfig::openStateConfig(), "TagManagementDialog");
     const QSize sizeDialog = group.readEntry("Size", QSize(500, 400));
     if (sizeDialog.isValid()) {
         q->resize(sizeDialog);

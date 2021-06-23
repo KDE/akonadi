@@ -34,13 +34,13 @@ public:
 
 void TagSelectionDialog::Private::writeConfig() const
 {
-    KConfigGroup group(KSharedConfig::openConfig(), "TagSelectionDialog");
+    KConfigGroup group(KSharedConfig::openStateConfig(), "TagSelectionDialog");
     group.writeEntry("Size", q->size());
 }
 
 void TagSelectionDialog::Private::readConfig() const
 {
-    KConfigGroup group(KSharedConfig::openConfig(), "TagSelectionDialog");
+    KConfigGroup group(KSharedConfig::openStateConfig(), "TagSelectionDialog");
     const QSize sizeDialog = group.readEntry("Size", QSize(500, 400));
     if (sizeDialog.isValid()) {
         q->resize(sizeDialog);

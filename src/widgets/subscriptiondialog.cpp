@@ -99,13 +99,13 @@ public:
 
     void writeConfig() const
     {
-        KConfigGroup group(KSharedConfig::openConfig(), "SubscriptionDialog");
+        KConfigGroup group(KSharedConfig::openStateConfig(), "SubscriptionDialog");
         group.writeEntry("Size", q->size());
     }
 
     void readConfig() const
     {
-        KConfigGroup group(KSharedConfig::openConfig(), "SubscriptionDialog");
+        KConfigGroup group(KSharedConfig::openStateConfig(), "SubscriptionDialog");
         const QSize sizeDialog = group.readEntry("Size", QSize(500, 400));
         if (sizeDialog.isValid()) {
             q->resize(sizeDialog);

@@ -38,13 +38,13 @@ public:
 
 void AgentTypeDialog::Private::writeConfig() const
 {
-    KConfigGroup group(KSharedConfig::openConfig(), "AgentTypeDialog");
+    KConfigGroup group(KSharedConfig::openStateConfig(), "AgentTypeDialog");
     group.writeEntry("Size", q->size());
 }
 
 void AgentTypeDialog::Private::readConfig()
 {
-    KConfigGroup group(KSharedConfig::openConfig(), "AgentTypeDialog");
+    KConfigGroup group(KSharedConfig::openStateConfig(), "AgentTypeDialog");
     const QSize sizeDialog = group.readEntry("Size", QSize(460, 320));
     if (sizeDialog.isValid()) {
         q->resize(sizeDialog);
