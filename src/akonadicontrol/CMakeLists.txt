@@ -1,22 +1,11 @@
 ########### next target ###############
-
-set(control_SRCS
-    agenttype.cpp
-    agentinstance.cpp
-    agentbrokeninstance.cpp
-    agentprocessinstance.cpp
-    agentthreadinstance.cpp
-    agentmanager.cpp
-    controlmanager.cpp
-    main.cpp
-    processcontrol.cpp
-)
+add_executable(akonadi_control )
 
 if (WITH_ACCOUNTS)
-    list(APPEND control_SRCS accountsintegration.cpp)
+    target_sources(akonadi_control PRIVATE accountsintegration.cpp)
 endif()
 
-ecm_qt_declare_logging_category(control_SRCS HEADER akonadicontrol_debug.h IDENTIFIER AKONADICONTROL_LOG CATEGORY_NAME org.kde.pim.akonadicontrol
+ecm_qt_declare_logging_category(akonadi_control HEADER akonadicontrol_debug.h IDENTIFIER AKONADICONTROL_LOG CATEGORY_NAME org.kde.pim.akonadicontrol
         DESCRIPTION "akonadi (Akonadi Control)"
         EXPORT AKONADI
     )
@@ -37,7 +26,18 @@ qt_add_dbus_interfaces(control_SRCS
 qt_add_dbus_interface(control_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.ResourceManager.xml resource_manager)
 qt_add_dbus_interface(control_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.PreprocessorManager.xml preprocessor_manager)
 
-add_executable(akonadi_control ${control_SRCS})
+target_sources(akonadi_control PRIVATE
+    agenttype.cpp
+    agentinstance.cpp
+    agentbrokeninstance.cpp
+    agentprocessinstance.cpp
+    agentthreadinstance.cpp
+    agentmanager.cpp
+    controlmanager.cpp
+    main.cpp
+    processcontrol.cpp
+    ${control_SRCS}
+)
 if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(akonadi_control PROPERTIES UNITY_BUILD ON)
 endif()

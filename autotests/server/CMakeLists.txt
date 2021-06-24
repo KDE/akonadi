@@ -19,7 +19,8 @@ akonadi_run_xsltproc(
 
 set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp PROPERTY SKIP_AUTOMOC TRUE)
 
-set(common_SRCS
+add_library(akonadi_unittest_common STATIC)
+target_sources(akonadi_unittest_common PRIVATE
     unittestschema.cpp
     fakeconnection.cpp
     fakeintervalcheck.cpp
@@ -33,7 +34,7 @@ set(common_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp
 )
 
-add_library(akonadi_unittest_common STATIC ${common_SRCS})
+
 target_link_libraries(akonadi_unittest_common
     KF5AkonadiPrivate
     libakonadiserver

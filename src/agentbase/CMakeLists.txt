@@ -1,17 +1,7 @@
-set(akonadiagentbase_SRCS
-    accountsintegration.cpp
-    agentbase.cpp
-    agentsearchinterface.cpp
-    preprocessorbase.cpp
-    preprocessorbase_p.cpp
-    recursivemover.cpp
-    resourcebase.cpp
-    resourcescheduler.cpp
-    resourcesettings.cpp
-    transportresourcebase.cpp
-)
+add_library(KF5AkonadiAgentBase)
+add_library(KF5::AkonadiAgentBase ALIAS KF5AkonadiAgentBase)
 
-ecm_qt_declare_logging_category(akonadiagentbase_SRCS HEADER akonadiagentbase_debug.h IDENTIFIER AKONADIAGENTBASE_LOG CATEGORY_NAME org.kde.pim.akonadiagentbase
+ecm_qt_declare_logging_category(KF5AkonadiAgentBase HEADER akonadiagentbase_debug.h IDENTIFIER AKONADIAGENTBASE_LOG CATEGORY_NAME org.kde.pim.akonadiagentbase
         DESCRIPTION "akonadi (Akonadi AgentBase Library)"
         OLD_CATEGORY_NAMES akonadiagentbase_log
         EXPORT AKONADI
@@ -30,7 +20,7 @@ ecm_generate_headers(AkonadiAgentBase_HEADERS
 )
 
 
-KCONFIG_ADD_KCFG_FILES(akonadiagentbase_SRCS resourcebasesettings.kcfgc)
+KCONFIG_ADD_KCFG_FILES(KF5AkonadiAgentBase resourcebasesettings.kcfgc)
 
 qt_add_dbus_interfaces(akonadiagentbase_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Tracer.xml )
 
@@ -49,14 +39,28 @@ qt_add_dbus_adaptor(akonadiagentbase_SRCS ../interfaces/org.freedesktop.Akonadi.
 qt_add_dbus_adaptor(akonadiagentbase_SRCS ../interfaces/org.kde.Akonadi.Accounts.xml
     accountsintegration.h Akonadi::AccountsIntegration accountsadaptor Akonadi__AccountsAdaptor)
 
-add_library(KF5AkonadiAgentBase ${akonadiagentbase_SRCS})
+target_sources(KF5AkonadiAgentBase PRIVATE
+    accountsintegration.cpp
+    agentbase.cpp
+    agentsearchinterface.cpp
+    preprocessorbase.cpp
+    preprocessorbase_p.cpp
+    recursivemover.cpp
+    resourcebase.cpp
+    resourcescheduler.cpp
+    resourcesettings.cpp
+    transportresourcebase.cpp
+    ${akonadiagentbase_SRCS}
+)
+
+
+
 if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(KF5AkonadiAgentBase PROPERTIES UNITY_BUILD ON)
 endif()
 
 generate_export_header(KF5AkonadiAgentBase BASE_NAME akonadiagentbase)
 
-add_library(KF5::AkonadiAgentBase ALIAS KF5AkonadiAgentBase)
 
 target_include_directories(KF5AkonadiAgentBase INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiAgentBase>")
 
