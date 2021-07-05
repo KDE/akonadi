@@ -393,7 +393,7 @@ void ItemSyncPrivate::processBatch()
 void ItemSyncPrivate::processItems()
 {
     // added / updated
-    for (const Item &remoteItem : qAsConst(mCurrentBatchRemoteItems)) {
+    for (const Item &remoteItem : std::as_const(mCurrentBatchRemoteItems)) {
         if (remoteItem.remoteId().isEmpty()) {
             qCWarning(AKONADICORE_LOG) << "Item " << remoteItem.id() << " does not have a remote identifier";
             continue;

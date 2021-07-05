@@ -57,13 +57,13 @@ void RelationSync::diffRelations()
     }
 
     QHash<QByteArray, Akonadi::Relation> relationByRid;
-    for (const Akonadi::Relation &localRelation : qAsConst(mLocalRelations)) {
+    for (const Akonadi::Relation &localRelation : std::as_const(mLocalRelations)) {
         if (!localRelation.remoteId().isEmpty()) {
             relationByRid.insert(localRelation.remoteId(), localRelation);
         }
     }
 
-    for (const Akonadi::Relation &remoteRelation : qAsConst(mRemoteRelations)) {
+    for (const Akonadi::Relation &remoteRelation : std::as_const(mRemoteRelations)) {
         if (relationByRid.contains(remoteRelation.remoteId())) {
             relationByRid.remove(remoteRelation.remoteId());
         } else {
@@ -73,7 +73,7 @@ void RelationSync::diffRelations()
         }
     }
 
-    for (const Akonadi::Relation &removedRelation : qAsConst(relationByRid)) {
+    for (const Akonadi::Relation &removedRelation : std::as_const(relationByRid)) {
         // Removed remotely, remove locally
         auto removeJob = new RelationDeleteJob(removedRelation, this);
         connect(removeJob, &KJob::result, this, &RelationSync::checkDone);

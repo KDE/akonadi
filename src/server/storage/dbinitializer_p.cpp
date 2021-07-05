@@ -139,7 +139,7 @@ QString DbInitializerSqlite::buildCreateTableStatement(const TableDescription &t
     QStringList columns;
 
     columns.reserve(tableDescription.columns.count() + 1);
-    for (const ColumnDescription &columnDescription : qAsConst(tableDescription.columns)) {
+    for (const ColumnDescription &columnDescription : std::as_const(tableDescription.columns)) {
         columns.append(buildColumnStatement(columnDescription, tableDescription));
     }
 
@@ -147,7 +147,7 @@ QString DbInitializerSqlite::buildCreateTableStatement(const TableDescription &t
         columns.push_back(buildPrimaryKeyStatement(tableDescription));
     }
     QStringList references;
-    for (const ColumnDescription &columnDescription : qAsConst(tableDescription.columns)) {
+    for (const ColumnDescription &columnDescription : std::as_const(tableDescription.columns)) {
         if (!columnDescription.refTable.isEmpty() && !columnDescription.refColumn.isEmpty()) {
             const auto constraintName =
                 QStringLiteral("%1%2_%3%4_fk").arg(tableDescription.name, columnDescription.name, columnDescription.refTable, columnDescription.refColumn);

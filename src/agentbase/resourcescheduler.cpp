@@ -556,7 +556,7 @@ void ResourceScheduler::collectionRemoved(const Akonadi::Collection &collection)
 
 void ResourceScheduler::Task::sendDBusReplies(const QString &errorMsg)
 {
-    for (const QDBusMessage &msg : qAsConst(dbusMsgs)) {
+    for (const QDBusMessage &msg : std::as_const(dbusMsgs)) {
         qCDebug(AKONADIAGENTBASE_LOG) << "Sending dbus reply for method" << methodName << "with error" << errorMsg;
         QDBusMessage reply;
         if (!errorMsg.isEmpty()) {
@@ -672,7 +672,7 @@ QTextStream &Akonadi::operator<<(QTextStream &d, const ResourceScheduler::Task &
         if (!task.items.isEmpty()) {
             QStringList ids;
             ids.reserve(task.items.size());
-            for (const auto &item : qAsConst(task.items)) {
+            for (const auto &item : std::as_const(task.items)) {
                 ids.push_back(QString::number(item.id()));
             }
             d << "items " << ids.join(QLatin1String(", ")) << " ";

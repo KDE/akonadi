@@ -65,7 +65,7 @@ QVector<qint64> SearchHelper::matchSubcollectionsByMimeType(const QVector<qint64
     // is sub collection of root
     QVector<qint64> results;
     if (ancestors.contains(0)) {
-        for (const QVector<qint64> &res : qAsConst(candidateCollections)) {
+        for (const QVector<qint64> &res : std::as_const(candidateCollections)) {
             results += res;
         }
         return results;

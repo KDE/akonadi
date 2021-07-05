@@ -262,7 +262,7 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
 
     // item specific actions
     bool canDeleteItems = (!items.isEmpty()); // TODO: fixme
-    for (const Item &item : qAsConst(items)) {
+    for (const Item &item : std::as_const(items)) {
         const Collection parentCollection = item.parentCollection();
         if (!parentCollection.isValid()) {
             continue;
@@ -272,7 +272,7 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
     }
 
     bool itemsAreInTrash = false;
-    for (const Item &item : qAsConst(items)) {
+    for (const Item &item : std::as_const(items)) {
         if (item.hasAttribute<EntityDeletedAttribute>()) {
             itemsAreInTrash = true;
             break;

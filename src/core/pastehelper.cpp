@@ -183,12 +183,12 @@ void PasteHelperJob::runCollectionsActions()
 
     switch (mAction) {
     case Qt::CopyAction:
-        for (const Collection &col : qAsConst(mCollections)) { // FIXME: remove once we have a batch job for collections as well
+        for (const Collection &col : std::as_const(mCollections)) { // FIXME: remove once we have a batch job for collections as well
             new CollectionCopyJob(col, mDestCollection, this);
         }
         break;
     case Qt::MoveAction:
-        for (const Collection &col : qAsConst(mCollections)) { // FIXME: remove once we have a batch job for collections as well
+        for (const Collection &col : std::as_const(mCollections)) { // FIXME: remove once we have a batch job for collections as well
             new CollectionMoveJob(col, mDestCollection, this);
         }
         break;
@@ -231,7 +231,7 @@ bool PasteHelper::canPaste(const QMimeData *mimeData, const Collection &collecti
         // check that the target collection supports the mime types of the
         // items/collections that shall be pasted
         bool supportsMimeTypes = true;
-        for (const QUrl &url : qAsConst(urls)) {
+        for (const QUrl &url : std::as_const(urls)) {
             const QUrlQuery query(url);
             // collections do not provide mimetype information, so ignore this check
             if (query.hasQueryItem(QStringLiteral("collection"))) {

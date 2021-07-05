@@ -54,7 +54,7 @@ private Q_SLOTS:
         QMap<Collection, Item::List> referenceData;
         Collection::List cols = fetch->collections();
         cols << source;
-        for (const Collection &c : qAsConst(cols)) {
+        for (const Collection &c : std::as_const(cols)) {
             auto job = new ItemFetchJob(c, this);
             AKVERIFYEXEC(job);
             referenceData.insert(c, job->items());
@@ -72,7 +72,7 @@ private Q_SLOTS:
         for (QMap<Collection, Item::List>::ConstIterator it = referenceData.constBegin(), end = referenceData.constEnd(); it != end; ++it) {
             QVERIFY(!cols.contains(it.key()));
             Collection col;
-            for (const Collection &c : qAsConst(cols)) {
+            for (const Collection &c : std::as_const(cols)) {
                 if (it.key().name() == c.name()) {
                     col = c;
                 }

@@ -119,7 +119,7 @@ private:
                 baseCols << col;
             }
         }
-        for (const Collection &col : qAsConst(baseCols)) {
+        for (const Collection &col : std::as_const(baseCols)) {
             auto del = new CollectionDeleteJob(col);
             AKVERIFYEXEC(del);
         }

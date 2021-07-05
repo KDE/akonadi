@@ -144,7 +144,7 @@ public:
 
     void run() override
     {
-        for (const auto &ntf : qAsConst(mNotifications)) {
+        for (const auto &ntf : std::as_const(mNotifications)) {
             if (mSubscriber) {
                 mSubscriber->notify(ntf);
             } else {
@@ -175,9 +175,9 @@ void NotificationManager::emitPendingNotifications()
     } else {
         // When debugging notification we have to use a non-threaded approach
         // so that we can work with return value of notify()
-        for (const auto &notification : qAsConst(mNotifications)) {
+        for (const auto &notification : std::as_const(mNotifications)) {
             QVector<QByteArray> listeners;
-            for (NotificationSubscriber *subscriber : qAsConst(mSubscribers)) {
+            for (NotificationSubscriber *subscriber : std::as_const(mSubscribers)) {
                 if (subscriber && subscriber->notify(notification)) {
                     listeners.push_back(subscriber->subscriber());
                 }

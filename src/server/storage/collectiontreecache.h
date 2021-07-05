@@ -91,7 +91,7 @@ template<typename Predicate> CollectionTreeCache::Node *CollectionTreeCache::fin
             return node;
         }
 
-        for (auto child : qAsConst(node->children)) {
+        for (auto child : std::as_const(node->children)) {
             toVisit.prepend(child);
         }
     }

@@ -140,7 +140,7 @@ Protocol::ModifyItemsCommandPtr ItemModifyJobPrivate::fullCommand() const
     auto cmd = Protocol::ModifyItemsCommandPtr::create();
 
     const Akonadi::Item item = mItems.first();
-    for (int op : qAsConst(mOperations)) {
+    for (int op : std::as_const(mOperations)) {
         switch (op) {
         case ItemModifyJobPrivate::RemoteId:
             if (!item.remoteId().isNull()) {
@@ -204,7 +204,7 @@ Protocol::ModifyItemsCommandPtr ItemModifyJobPrivate::fullCommand() const
     if (!mParts.isEmpty()) {
         QSet<QByteArray> parts;
         parts.reserve(mParts.size());
-        for (const QByteArray &part : qAsConst(mParts)) {
+        for (const QByteArray &part : std::as_const(mParts)) {
             parts.insert(ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, part));
         }
         cmd->setParts(parts);
@@ -333,7 +333,7 @@ bool ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &res
             return false;
         }
 
-        for (const Item &item : qAsConst(d->mItems)) {
+        for (const Item &item : std::as_const(d->mItems)) {
             ChangeMediator::invalidateItem(item);
         }
 

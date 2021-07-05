@@ -99,7 +99,7 @@ QByteArray PersistentSearchAttribute::serialized() const
 {
     QStringList cols;
     cols.reserve(d->queryCollections.count());
-    for (qint64 colId : qAsConst(d->queryCollections)) {
+    for (qint64 colId : std::as_const(d->queryCollections)) {
         cols << QString::number(colId);
     }
 
@@ -136,7 +136,7 @@ void PersistentSearchAttribute::deserialize(const QByteArray &data)
             ImapParser::parseParenthesizedList(l.at(i + 1), ids);
             d->queryCollections.clear();
             d->queryCollections.reserve(ids.count());
-            for (const QByteArray &id : qAsConst(ids)) {
+            for (const QByteArray &id : std::as_const(ids)) {
                 d->queryCollections << id.toLongLong();
             }
             ++i;

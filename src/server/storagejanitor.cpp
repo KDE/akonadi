@@ -229,7 +229,7 @@ void StorageJanitor::findOrphanedResources()
             resourceNames.append(resource.name());
         }
         inform(QStringLiteral("Found %1 orphan resources: %2").arg(orphanResourcesSize).arg(resourceNames.join(QLatin1Char(','))));
-        for (const QString &resourceName : qAsConst(resourceNames)) {
+        for (const QString &resourceName : std::as_const(resourceNames)) {
             inform(QStringLiteral("Removing resource %1").arg(resourceName));
             m_akonadi.resourceManager().removeResourceInstance(resourceName);
         }
@@ -296,7 +296,7 @@ void StorageJanitor::findOrphanedItems()
         qb.setColumnValue(PimItem::collectionIdColumn(), col);
         QVector<ImapSet::Id> imapIds;
         imapIds.reserve(orphans.count());
-        for (const PimItem &item : qAsConst(orphans)) {
+        for (const PimItem &item : std::as_const(orphans)) {
             imapIds.append(item.id());
         }
         ImapSet set;

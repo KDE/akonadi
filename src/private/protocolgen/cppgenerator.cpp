@@ -56,7 +56,7 @@ void CppGenerator::writeHeaderHeader(DocumentNode const *node)
                "\n";
 
     // Forward declarations
-    for (const auto *child : qAsConst(node->children())) {
+    for (const auto *child : std::as_const(node->children())) {
         if (child->type() == Node::Class) {
             mHeader << "class " << static_cast<const ClassNode *>(child)->className() << ";\n";
         }
@@ -127,7 +127,7 @@ void CppGenerator::writeImplSerializer(DocumentNode const *node)
              "    case Command::Invalid | Command::_ResponseBit:\n"
              "        stream << cmdCast<Response>(cmd);\n"
              "        break;\n";
-    for (const auto *child : qAsConst(node->children())) {
+    for (const auto *child : std::as_const(node->children())) {
         const auto *classNode = static_cast<ClassNode const *>(child);
         if (classNode->classType() == ClassNode::Response) {
             mImpl << "    case Command::" << classNode->name()
@@ -176,7 +176,7 @@ void CppGenerator::writeImplSerializer(DocumentNode const *node)
              "    case Command::Invalid | Command::_ResponseBit:\n"
              "        stream >> cmdCast<Response>(cmd);\n"
              "        return cmd;\n";
-    for (const auto *child : qAsConst(node->children())) {
+    for (const auto *child : std::as_const(node->children())) {
         const auto *classNode = static_cast<ClassNode const *>(child);
         if (classNode->classType() == ClassNode::Response) {
             mImpl << "    case Command::" << classNode->name()
@@ -216,7 +216,7 @@ void CppGenerator::writeImplSerializer(DocumentNode const *node)
              "    case Command::Invalid | Command::_ResponseBit:\n"
              "        QDebug(&out).noquote() << static_cast<const Response &>(cmd);\n"
              "        return out;\n";
-    for (const auto *child : qAsConst(node->children())) {
+    for (const auto *child : std::as_const(node->children())) {
         const auto *classNode = static_cast<ClassNode const *>(child);
         if (classNode->classType() == ClassNode::Response) {
             mImpl << "    case Command::" << classNode->name()
@@ -304,7 +304,7 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
     }
 
     // Ctors, dtor
-    for (const auto *child : qAsConst(node->children())) {
+    for (const auto *child : std::as_const(node->children())) {
         if (child->type() == Node::Ctor) {
             const auto *const ctor = static_cast<const CtorNode *>(child);
             const auto args = ctor->arguments();
@@ -582,7 +582,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
     if (!parentClass.isEmpty()) {
         mImpl << "    stream << static_cast<const " << parentClass << " &>(obj);\n";
     }
-    for (const auto *prop : qAsConst(serializeProperties)) {
+    for (const auto *prop : std::as_const(serializeProperties)) {
         writeImplSerializer(prop, "<<");
     }
     mImpl << "    return stream;\n"
@@ -596,7 +596,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
     if (!parentClass.isEmpty()) {
         mImpl << "    stream >> static_cast<" << parentClass << " &>(obj);\n";
     }
-    for (const auto *prop : qAsConst(serializeProperties)) {
+    for (const auto *prop : std::as_const(serializeProperties)) {
         writeImplSerializer(prop, ">>");
     }
     mImpl << "    return stream;\n"
@@ -613,13 +613,13 @@ void CppGenerator::writeImplClass(ClassNode const *node)
         mImpl << "    dbg.noquote()\n";
     }
 
-    for (const auto *prop : qAsConst(serializeProperties)) {
+    for (const auto *prop : std::as_const(serializeProperties)) {
         if (prop->isPointer()) {
             mImpl << "        << \"" << prop->name() << ":\" << *obj." << prop->mVariableName() << " << \"\\n\"\n";
         } else if (TypeHelper::isContainer(prop->type())) {
             mImpl << "        << \"" << prop->name()
                   << ": [\\n\";\n"
-                     "    for (const auto &type : qAsConst(obj."
+                     "    for (const auto &type : std::as_const(obj."
                   << prop->mVariableName()
                   << ")) {\n"
                      "        dbg.noquote() << \"    \" << ";
@@ -649,7 +649,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
     } else if (serializeProperties.isEmpty()) {
         mImpl << "    Q_UNUSED(json)\n";
     }
-    for (const auto *prop : qAsConst(serializeProperties)) {
+    for (const auto *prop : std::as_const(serializeProperties)) {
         if (prop->isPointer()) {
             mImpl << "    {\n"
                      "        QJsonObject jsonObject;\n"
@@ -664,7 +664,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
             const auto &containerType = TypeHelper::containerType(prop->type());
             mImpl << "    {\n"
                      "        QJsonArray jsonArray;\n"
-                     "        for (const auto &type : qAsConst("
+                     "        for (const auto &type : std::as_const("
                   << prop->mVariableName() << ")) {\n";
             if (TypeHelper::isPointerType(containerType)) {
                 mImpl << "            QJsonObject jsonObject;\n"

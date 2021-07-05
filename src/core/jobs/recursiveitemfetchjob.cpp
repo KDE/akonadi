@@ -36,7 +36,7 @@ public:
         Collection::List collections = fetchJob->collections();
         collections.prepend(mCollection);
 
-        for (const Collection &collection : qAsConst(collections)) {
+        for (const Collection &collection : std::as_const(collections)) {
             auto itemFetchJob = new ItemFetchJob(collection, mParent);
             itemFetchJob->setFetchScope(mFetchScope);
             mParent->connect(itemFetchJob, &KJob::result, mParent, [this](KJob *job) {

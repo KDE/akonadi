@@ -86,7 +86,7 @@ void SearchTaskManager::addTask(SearchTask *task)
     Q_ASSERT(!task->collections.isEmpty());
     QVariantList list;
     list.reserve(task->collections.size());
-    for (qint64 collection : qAsConst(task->collections)) {
+    for (qint64 collection : std::as_const(task->collections)) {
         list << collection;
     }
     qb.addValueCondition(Collection::idFullColumnName(), Query::In, list);

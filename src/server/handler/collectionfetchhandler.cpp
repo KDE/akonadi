@@ -254,7 +254,7 @@ void CollectionFetchHandler::retrieveCollections(const Collection &topParent, in
                            Collection::idFullColumnName());
                 QVariantList mimeTypeFilter;
                 mimeTypeFilter.reserve(mMimeTypes.size());
-                for (MimeType::Id mtId : qAsConst(mMimeTypes)) {
+                for (MimeType::Id mtId : std::as_const(mMimeTypes)) {
                     mimeTypeFilter << mtId;
                 }
                 qb.addValueCondition(CollectionMimeTypeRelation::rightColumn(), Query::In, mimeTypeFilter);
@@ -332,7 +332,7 @@ void CollectionFetchHandler::retrieveCollections(const Collection &topParent, in
 
     QSet<qint64> missingCollections;
     if (depth > 0) {
-        for (const Collection &col : qAsConst(mCollections)) {
+        for (const Collection &col : std::as_const(mCollections)) {
             if (col.parentId() != parentId && !mCollections.contains(col.parentId())) {
                 missingCollections.insert(col.parentId());
             }
@@ -353,7 +353,7 @@ void CollectionFetchHandler::retrieveCollections(const Collection &topParent, in
         SelectQueryBuilder<Collection> qb;
         QVariantList ids;
         ids.reserve(missingCollections.size());
-        for (qint64 id : qAsConst(missingCollections)) {
+        for (qint64 id : std::as_const(missingCollections)) {
             ids << id;
         }
         qb.addValueCondition(Collection::idFullColumnName(), Query::In, ids);

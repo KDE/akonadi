@@ -94,7 +94,7 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex & /*sour
             } else {
                 const QMimeType mt = mimeDb.mimeTypeForName(mimeType);
                 if (mt.isValid()) {
-                    for (const QString &type : qAsConst(d->mimeTypes)) {
+                    for (const QString &type : std::as_const(d->mimeTypes)) {
                         if (mt.inherits(type)) {
                             found = true;
                             break;

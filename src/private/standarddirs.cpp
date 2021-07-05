@@ -149,7 +149,7 @@ QString StandardDirs::locateResourceFile(const char *resource, const QString &re
     };
 
     // Always honor instance in user-specific locations
-    for (const auto location : qAsConst(userLocations)) {
+    for (const auto location : std::as_const(userLocations)) {
         const auto path = locateFile(location, fullRelPath);
         if (!path.isEmpty()) {
             return path;

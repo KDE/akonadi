@@ -517,7 +517,7 @@ void EntityTreeModelPrivate::itemsFetched(const Collection::Id collectionId, con
 
         const QModelIndex parentIndex = indexForCollection(m_collections.value(colId));
         q->beginInsertRows(parentIndex, startRow, startRow + itemsToInsert.size() - 1);
-        for (const Item &item : qAsConst(itemsToInsert)) {
+        for (const Item &item : std::as_const(itemsToInsert)) {
             const Item::Id itemId = item.id();
             m_items.ref(itemId, item);
 
@@ -641,7 +641,7 @@ bool EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collec
     // about the top-level one. The rest will be found automatically by the view.
     q->beginInsertRows(parent, row, row);
 
-    for (const auto &ancestor : qAsConst(ancestors)) {
+    for (const auto &ancestor : std::as_const(ancestors)) {
         Q_ASSERT(ancestor.parentCollection().isValid());
         m_collections.insert(ancestor.id(), ancestor);
 
@@ -1724,7 +1724,7 @@ void EntityTreeModelPrivate::endResetModel()
     m_pendingCollectionRetrieveJobs.clear();
     m_collectionTreeFetched = false;
 
-    for (const QList<Node *> &list : qAsConst(m_childEntities)) {
+    for (const QList<Node *> &list : std::as_const(m_childEntities)) {
         qDeleteAll(list);
     }
     m_childEntities.clear();

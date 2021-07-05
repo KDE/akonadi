@@ -109,13 +109,13 @@ void ManageAccountWidget::slotAddAccount()
     Akonadi::AgentTypeDialog dlg(this);
 
     Akonadi::AgentFilterProxyModel *filter = dlg.agentFilterProxyModel();
-    for (const QString &filterStr : qAsConst(d->mMimeTypeFilter)) {
+    for (const QString &filterStr : std::as_const(d->mMimeTypeFilter)) {
         filter->addMimeTypeFilter(filterStr);
     }
-    for (const QString &capa : qAsConst(d->mCapabilityFilter)) {
+    for (const QString &capa : std::as_const(d->mCapabilityFilter)) {
         filter->addCapabilityFilter(capa);
     }
-    for (const QString &capa : qAsConst(d->mExcludeCapabilities)) {
+    for (const QString &capa : std::as_const(d->mExcludeCapabilities)) {
         filter->excludeCapabilities(capa);
     }
     if (dlg.exec()) {
@@ -137,7 +137,7 @@ QStringList ManageAccountWidget::excludeCapabilities() const
 void ManageAccountWidget::setExcludeCapabilities(const QStringList &excludeCapabilities)
 {
     d->mExcludeCapabilities = excludeCapabilities;
-    for (const QString &capability : qAsConst(d->mExcludeCapabilities)) {
+    for (const QString &capability : std::as_const(d->mExcludeCapabilities)) {
         d->ui.mAccountList->agentFilterProxyModel()->excludeCapabilities(capability);
     }
 }
@@ -155,7 +155,7 @@ QStringList ManageAccountWidget::capabilityFilter() const
 void ManageAccountWidget::setCapabilityFilter(const QStringList &capabilityFilter)
 {
     d->mCapabilityFilter = capabilityFilter;
-    for (const QString &capability : qAsConst(d->mCapabilityFilter)) {
+    for (const QString &capability : std::as_const(d->mCapabilityFilter)) {
         d->ui.mAccountList->agentFilterProxyModel()->addCapabilityFilter(capability);
     }
 }
@@ -168,7 +168,7 @@ QStringList ManageAccountWidget::mimeTypeFilter() const
 void ManageAccountWidget::setMimeTypeFilter(const QStringList &mimeTypeFilter)
 {
     d->mMimeTypeFilter = mimeTypeFilter;
-    for (const QString &mimeType : qAsConst(d->mMimeTypeFilter)) {
+    for (const QString &mimeType : std::as_const(d->mMimeTypeFilter)) {
         d->ui.mAccountList->agentFilterProxyModel()->addMimeTypeFilter(mimeType);
     }
 }

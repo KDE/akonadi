@@ -194,14 +194,14 @@ void TagSync::onTagItemsFetchDone(KJob *job)
     }
 
     if (!merge) {
-        for (Item item : qAsConst(toRemove)) {
+        for (Item item : std::as_const(toRemove)) {
             item.clearTag(tag);
             auto modJob = new ItemModifyJob(item, this);
             connect(modJob, &KJob::result, this, &TagSync::onJobDone);
             qCDebug(AKONADICORE_LOG) << "removing tag " << item.remoteId();
         }
     }
-    for (Item item : qAsConst(toAdd)) {
+    for (Item item : std::as_const(toAdd)) {
         item.setTag(tag);
         auto modJob = new ItemModifyJob(item, this);
         connect(modJob, &KJob::result, this, &TagSync::onJobDone);

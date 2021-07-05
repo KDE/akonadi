@@ -263,7 +263,7 @@ void SessionPrivate::addJob(Job *job)
 void SessionPrivate::publishOtherJobs(Job *thanThisJob)
 {
     int count = 0;
-    for (const auto &job : qAsConst(queue)) {
+    for (const auto &job : std::as_const(queue)) {
         if (job != thanThisJob) {
             job->d_ptr->publishJob();
             ++count;
@@ -294,7 +294,7 @@ void SessionPrivate::serverStateChanged(ServerManager::State state)
     } else if (!connected && state == ServerManager::Broken) {
         // If the server is broken, cancel all pending jobs, otherwise they will be
         // blocked forever and applications waiting for them to finish would be stuck
-        for (Job *job : qAsConst(queue)) {
+        for (Job *job : std::as_const(queue)) {
             job->setError(Job::ConnectionFailed);
             job->kill(KJob::EmitResult);
         }
@@ -308,7 +308,7 @@ void SessionPrivate::itemRevisionChanged(Akonadi::Item::Id itemId, int oldRevisi
 {
     // only deal with the queue, for the guys in the pipeline it's too late already anyway
     // and they shouldn't have gotten there if they depend on a preceding job anyway.
-    for (Job *job : qAsConst(queue)) {
+    for (Job *job : std::as_const(queue)) {
         job->d_ptr->updateItemRevision(itemId, oldRevision, newRevision);
     }
 }
@@ -437,11 +437,11 @@ void Session::clear()
 
 void SessionPrivate::clear(bool forceReconnect)
 {
-    for (Job *job : qAsConst(queue)) {
+    for (Job *job : std::as_const(queue)) {
         job->kill(KJob::EmitResult); // safe, not started yet
     }
     queue.clear();
-    for (Job *job : qAsConst(pipeline)) {
+    for (Job *job : std::as_const(pipeline)) {
         job->d_ptr->mStarted = false; // avoid killing/reconnect loops
         job->kill(KJob::EmitResult);
     }

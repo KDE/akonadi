@@ -57,11 +57,11 @@ void SubscriptionJob::doStart()
         return;
     }
 
-    for (Collection col : qAsConst(d->mSub)) {
+    for (Collection col : std::as_const(d->mSub)) {
         col.setEnabled(true);
         new CollectionModifyJob(col, this);
     }
-    for (Collection col : qAsConst(d->mUnsub)) {
+    for (Collection col : std::as_const(d->mUnsub)) {
         col.setEnabled(false);
         new CollectionModifyJob(col, this);
     }

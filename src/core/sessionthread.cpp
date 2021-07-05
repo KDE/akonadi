@@ -86,7 +86,7 @@ void SessionThread::doThreadQuit()
 {
     Q_ASSERT(thread() == QThread::currentThread());
 
-    for (Connection *conn : qAsConst(mConnections)) {
+    for (Connection *conn : std::as_const(mConnections)) {
         conn->disconnect(this);
         conn->doCloseConnection(); // we can call directly because we are in the correct thread
         delete conn;

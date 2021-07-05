@@ -164,7 +164,7 @@ static void listInstances()
         }
     }
 
-    for (const auto &i : qAsConst(instances)) {
+    for (const auto &i : std::as_const(instances)) {
         std::cout << i.name.toStdString();
         if (i.running) {
             std::cout << " (running)";

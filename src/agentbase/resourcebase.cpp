@@ -893,7 +893,7 @@ void ResourceBasePrivate::slotLocalListDone(KJob *job)
     } else {
         Collection::List cols = static_cast<CollectionFetchJob *>(job)->collections();
         std::sort(cols.begin(), cols.end(), sortCollectionsForSync);
-        for (const Collection &col : qAsConst(cols)) {
+        for (const Collection &col : std::as_const(cols)) {
             scheduler->scheduleSync(col);
         }
         scheduler->scheduleFullSyncCompletion();
@@ -1381,7 +1381,7 @@ void ResourceBasePrivate::slotDelayedEmitProgress()
     if (mAutomaticProgressReporting) {
         Q_EMIT q->percent(mUnemittedProgress);
 
-        for (const QVariantMap &statusMap : qAsConst(mUnemittedAdvancedStatus)) {
+        for (const QVariantMap &statusMap : std::as_const(mUnemittedAdvancedStatus)) {
             Q_EMIT q->advancedStatus(statusMap);
         }
     }

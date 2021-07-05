@@ -74,7 +74,7 @@ void DelegateAnimator::timerEvent(QTimerEvent *event)
 
 QPixmap DelegateAnimator::sequenceFrame(const QModelIndex &index)
 {
-    for (const Animation &animation : qAsConst(m_animations)) {
+    for (const Animation &animation : std::as_const(m_animations)) {
         if (animation.index == index) {
             return m_pixmapSequence.frameAt(animation.frame);
         }

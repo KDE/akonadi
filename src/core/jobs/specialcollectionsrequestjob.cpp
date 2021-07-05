@@ -130,13 +130,13 @@ void SpecialCollectionsRequestJobPrivate::nextResource()
         mSpecialCollections->d->beginBatchRegister();
 
         // Forget everything we knew before about these resources.
-        for (const QString &resourceId : qAsConst(mToForget)) {
+        for (const QString &resourceId : std::as_const(mToForget)) {
             mSpecialCollections->d->forgetFoldersForResource(resourceId);
         }
 
         // Register all the collections that we fetched / created.
         using RegisterPair = QPair<Collection, QByteArray>;
-        for (const RegisterPair &pair : qAsConst(mToRegister)) {
+        for (const RegisterPair &pair : std::as_const(mToRegister)) {
             const bool ok = mSpecialCollections->registerCollection(pair.second, pair.first);
             Q_ASSERT(ok);
             Q_UNUSED(ok)

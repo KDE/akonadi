@@ -364,7 +364,7 @@ QString DbInitializer::referentialActionToString(ColumnDescription::ReferentialA
 QString DbInitializer::buildPrimaryKeyStatement(const TableDescription &table)
 {
     QStringList cols;
-    for (const ColumnDescription &column : qAsConst(table.columns)) {
+    for (const ColumnDescription &column : std::as_const(table.columns)) {
         if (column.isPrimaryKey) {
             cols.push_back(column.name);
         }

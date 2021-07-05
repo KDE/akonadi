@@ -124,7 +124,7 @@ ClassNode::ClassType ClassNode::elementNameToType(const QStringRef &name)
 QVector<PropertyNode const *> ClassNode::properties() const
 {
     QVector<const PropertyNode *> rv;
-    for (const auto node : qAsConst(mChildren)) {
+    for (const auto node : std::as_const(mChildren)) {
         if (node->type() == Node::Property) {
             rv << static_cast<PropertyNode const *>(node);
         }

@@ -877,7 +877,7 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadRelationNotific
             }
 
             Protocol::FetchRelationsResponse relation;
-            for (const QByteArray &part : qAsConst(itemParts)) {
+            for (const QByteArray &part : std::as_const(itemParts)) {
                 const QByteArrayList p = part.split(' ');
                 if (p.size() < 2) {
                     continue;

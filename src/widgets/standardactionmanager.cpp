@@ -1278,11 +1278,11 @@ public:
         QPointer<Akonadi::AgentTypeDialog> dlg(new Akonadi::AgentTypeDialog(parentWidget));
         dlg->setWindowTitle(contextText(StandardActionManager::CreateResource, StandardActionManager::DialogTitle));
 
-        for (const QString &mimeType : qAsConst(mMimeTypeFilter)) {
+        for (const QString &mimeType : std::as_const(mMimeTypeFilter)) {
             dlg->agentFilterProxyModel()->addMimeTypeFilter(mimeType);
         }
 
-        for (const QString &capability : qAsConst(mCapabilityFilter)) {
+        for (const QString &capability : std::as_const(mCapabilityFilter)) {
             dlg->agentFilterProxyModel()->addCapabilityFilter(capability);
         }
 
@@ -1499,14 +1499,14 @@ public:
         if (isItemAction) {
             list = safeSelectedRows(itemSelectionModel);
             mimeTypes.reserve(list.count());
-            for (const QModelIndex &index : qAsConst(list)) {
+            for (const QModelIndex &index : std::as_const(list)) {
                 mimeTypes << index.data(EntityTreeModel::MimeTypeRole).toString();
             }
         }
 
         if (isCollectionAction) {
             list = safeSelectedRows(collectionSelectionModel);
-            for (const QModelIndex &index : qAsConst(list)) {
+            for (const QModelIndex &index : std::as_const(list)) {
                 const auto collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
 
                 // The mimetypes that the selected collection can possibly contain

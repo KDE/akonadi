@@ -53,7 +53,7 @@ public:
             termJSON.insert(QStringLiteral("rel"), static_cast<int>(term.relation()));
             QVariantList subTermsJSON;
             subTermsJSON.reserve(subTerms.count());
-            for (const SearchTerm &term : qAsConst(subTerms)) {
+            for (const SearchTerm &term : std::as_const(subTerms)) {
                 subTermsJSON.append(termToJSON(term));
             }
             termJSON.insert(QStringLiteral("subTerms"), subTermsJSON);

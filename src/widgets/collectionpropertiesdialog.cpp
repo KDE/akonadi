@@ -133,7 +133,7 @@ void CollectionPropertiesDialog::Private::init()
     mainLayout->addWidget(buttonBox);
 
     if (mPageNames.isEmpty()) { // default loading
-        for (CollectionPropertiesPageFactory *factory : qAsConst(*s_pages)) {
+        for (CollectionPropertiesPageFactory *factory : std::as_const(*s_pages)) {
             CollectionPropertiesPage *page = factory->createWidget(mTabWidget);
             if (page->canHandle(mCollection)) {
                 mTabWidget->addTab(page, page->pageTitle());
@@ -145,7 +145,7 @@ void CollectionPropertiesDialog::Private::init()
     } else { // custom loading
         QHash<QString, CollectionPropertiesPage *> pages;
 
-        for (CollectionPropertiesPageFactory *factory : qAsConst(*s_pages)) {
+        for (CollectionPropertiesPageFactory *factory : std::as_const(*s_pages)) {
             CollectionPropertiesPage *page = factory->createWidget(mTabWidget);
             const QString pageName = page->objectName();
 
@@ -156,7 +156,7 @@ void CollectionPropertiesDialog::Private::init()
             }
         }
 
-        for (const QString &pageName : qAsConst(mPageNames)) {
+        for (const QString &pageName : std::as_const(mPageNames)) {
             CollectionPropertiesPage *page = pages.value(pageName);
             if (page) {
                 mTabWidget->addTab(page, page->pageTitle());

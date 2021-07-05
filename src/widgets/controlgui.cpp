@@ -90,7 +90,7 @@ public:
 
     void createErrorOverlays()
     {
-        for (QWidget *widget : qAsConst(mPendingOverlays)) {
+        for (QWidget *widget : std::as_const(mPendingOverlays)) {
             if (widget) {
                 new ErrorOverlay(widget);
             }

@@ -74,7 +74,7 @@ public:
     void reload()
     {
         // don't clear the selection model here. Otherwise we mess up the users selection as collections get removed and re-inserted.
-        for (const Collection::Id &collectionId : qAsConst(collectionIds)) {
+        for (const Collection::Id &collectionId : std::as_const(collectionIds)) {
             insertIfAvailable(collectionId);
         }
         // If a favorite folder was removed then surely it's gone from the selection model, so no need to do anything about that.
@@ -154,7 +154,7 @@ public:
 
     void clearReferences()
     {
-        for (const Collection::Id &collectionId : qAsConst(referencedCollections)) {
+        for (const Collection::Id &collectionId : std::as_const(referencedCollections)) {
             dereference(collectionId);
         }
     }
@@ -208,7 +208,7 @@ public:
             }
         }
         // Remove what's left
-        for (Akonadi::Collection::Id colId : qAsConst(colIds)) {
+        for (Akonadi::Collection::Id colId : std::as_const(colIds)) {
             remove(colId);
         }
     }
@@ -240,7 +240,7 @@ public:
     {
         QStringList labels;
         labels.reserve(collectionIds.count());
-        for (const Collection::Id &collectionId : qAsConst(collectionIds)) {
+        for (const Collection::Id &collectionId : std::as_const(collectionIds)) {
             labels << labelForCollection(collectionId);
         }
 
@@ -316,7 +316,7 @@ Akonadi::Collection::List FavoriteCollectionsModel::collections() const
 {
     Collection::List cols;
     cols.reserve(d->collectionIds.count());
-    for (const Collection::Id &colId : qAsConst(d->collectionIds)) {
+    for (const Collection::Id &colId : std::as_const(d->collectionIds)) {
         const QModelIndex idx = EntityTreeModel::modelIndexForCollection(sourceModel(), Collection(colId));
         const auto collection = sourceModel()->data(idx, EntityTreeModel::CollectionRole).value<Collection>();
         cols << collection;

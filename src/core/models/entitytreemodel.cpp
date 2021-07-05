@@ -55,7 +55,7 @@ EntityTreeModel::~EntityTreeModel()
 {
     Q_D(EntityTreeModel);
 
-    for (const QList<Node *> &list : qAsConst(d->m_childEntities)) {
+    for (const QList<Node *> &list : std::as_const(d->m_childEntities)) {
         qDeleteAll(list);
     }
 

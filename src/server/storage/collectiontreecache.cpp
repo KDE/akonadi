@@ -296,7 +296,7 @@ QVector<Collection> CollectionTreeCache::retrieveCollections(CollectionTreeCache
             nodes.push_back(c.node);
         }
 
-        for (auto child : qAsConst(c.node->children)) {
+        for (auto child : std::as_const(c.node->children)) {
             stack.push({child, c.depth + 1});
         }
     }
@@ -315,7 +315,7 @@ QVector<Collection> CollectionTreeCache::retrieveCollections(CollectionTreeCache
         // TODO: Check if no-one else is currently retrieving the same collections
         SelectQueryBuilder<Collection> qb;
         Query::Condition cond(Query::Or);
-        for (auto node : qAsConst(missing)) {
+        for (auto node : std::as_const(missing)) {
             cond.addValueCondition(Collection::idFullColumnName(), Query::Equals, node->id);
         }
         qb.addCondition(cond);
@@ -335,7 +335,7 @@ QVector<Collection> CollectionTreeCache::retrieveCollections(CollectionTreeCache
         // TODO: Needs a better lock-upgrade mechanism
         locker.unlock();
         QWriteLocker wLocker(&mLock);
-        for (auto node : qAsConst(missing)) {
+        for (auto node : std::as_const(missing)) {
             auto it = std::find_if(results.cbegin(), results.cend(), [node](const Collection &col) {
                 return node->id == col.id();
             });

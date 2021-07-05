@@ -660,7 +660,7 @@ void MonitorPrivate::slotStatisticsChangedFinished(KJob *job)
 
 void MonitorPrivate::slotFlushRecentlyChangedCollections()
 {
-    for (Collection::Id collection : qAsConst(recentlyChangedCollections)) {
+    for (Collection::Id collection : std::as_const(recentlyChangedCollections)) {
         Q_ASSERT(collection >= 0);
         if (fetchCollectionStatistics) {
             fetchStatistics(collection);
@@ -804,25 +804,25 @@ void MonitorPrivate::handleCommands()
 
             case Protocol::Command::CreateSubscription: {
                 auto msubCmd = Protocol::ModifySubscriptionCommandPtr::create();
-                for (const auto &col : qAsConst(collections)) {
+                for (const auto &col : std::as_const(collections)) {
                     msubCmd->startMonitoringCollection(col.id());
                 }
-                for (const auto &res : qAsConst(resources)) {
+                for (const auto &res : std::as_const(resources)) {
                     msubCmd->startMonitoringResource(res);
                 }
-                for (auto itemId : qAsConst(items)) {
+                for (auto itemId : std::as_const(items)) {
                     msubCmd->startMonitoringItem(itemId);
                 }
-                for (auto tagId : qAsConst(tags)) {
+                for (auto tagId : std::as_const(tags)) {
                     msubCmd->startMonitoringTag(tagId);
                 }
-                for (auto type : qAsConst(types)) {
+                for (auto type : std::as_const(types)) {
                     msubCmd->startMonitoringType(monitorTypeToProtocol(type));
                 }
-                for (const auto &mimetype : qAsConst(mimetypes)) {
+                for (const auto &mimetype : std::as_const(mimetypes)) {
                     msubCmd->startMonitoringMimeType(mimetype);
                 }
-                for (const auto &session : qAsConst(sessions)) {
+                for (const auto &session : std::as_const(sessions)) {
                     msubCmd->startIgnoringSession(session);
                 }
                 msubCmd->setAllMonitored(monitorAll);

@@ -41,7 +41,7 @@ public:
             return false;
         }
 
-        for (const QString &wantedMimeType : qAsConst(mWantedMimeTypes)) {
+        for (const QString &wantedMimeType : std::as_const(mWantedMimeTypes)) {
             if (mt.inherits(wantedMimeType)) {
                 return true;
             }

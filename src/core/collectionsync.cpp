@@ -491,7 +491,7 @@ public:
         if (collectionsToCreate.isEmpty() && !hierarchicalRIDs) {
             collectionsToCreate = remoteCollections.take(RemoteId(newLocal.remoteId()));
         }
-        for (Collection col : qAsConst(collectionsToCreate)) {
+        for (Collection col : std::as_const(collectionsToCreate)) {
             col.setParentCollection(newLocal);
             remoteCollectionsToCreate.append(col);
         }
@@ -539,7 +539,7 @@ public:
         }
 
         using CollectionPair = QPair<Collection, Collection>;
-        for (const CollectionPair &pair : qAsConst(remoteCollectionsToUpdate)) {
+        for (const CollectionPair &pair : std::as_const(remoteCollectionsToUpdate)) {
             const Collection local = pair.first;
             const Collection remote = pair.second;
             Collection upd(remote);
@@ -608,7 +608,7 @@ public:
             return;
         }
 
-        for (const Collection &col : qAsConst(localCollectionsToRemove)) {
+        for (const Collection &col : std::as_const(localCollectionsToRemove)) {
             Q_ASSERT(!col.remoteId().isEmpty()); // empty RID -> stuff we haven't even written to the remote side yet
 
             ++pendingJobs;

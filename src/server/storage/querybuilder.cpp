@@ -226,7 +226,7 @@ void QueryBuilder::buildQuery(QString *statement)
         *statement += QLatin1String(" FROM ");
         *statement += mTableSubQuery.isValid()
                     ? getTableQuery(mTableSubQuery, mTable) : mTable;
-        for (const QString &joinedTable : qAsConst(mJoinedTables)) {
+        for (const QString &joinedTable : std::as_const(mJoinedTables)) {
             const auto &[joinType, joinCond] = mJoins.value(joinedTable);
             switch (joinType) {
             case LeftJoin:
@@ -267,7 +267,7 @@ void QueryBuilder::buildQuery(QString *statement)
     case Update: {
         // put the ON condition into the WHERE part of the UPDATE query
         if (mDatabaseType != DbType::Sqlite) {
-            for (const QString &table : qAsConst(mJoinedTables)) {
+            for (const QString &table : std::as_const(mJoinedTables)) {
                 const auto &[joinType, joinCond] = mJoins.value(table);
                 Q_ASSERT(joinType == InnerJoin);
                 whereCondition.addCondition(joinCond);

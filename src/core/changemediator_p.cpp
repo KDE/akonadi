@@ -58,7 +58,7 @@ void ChangeMediator::unregisterMonitor(QObject *monitor)
 void ChangeMediator::invalidateCollection(const Akonadi::Collection &collection)
 {
     QMetaObject::invokeMethod(instance(), [colId = collection.id()]() {
-        for (auto monitor : qAsConst(instance()->m_monitors)) {
+        for (auto monitor : std::as_const(instance()->m_monitors)) {
             const bool ok = QMetaObject::invokeMethod(monitor, "invalidateCollectionCache", Q_ARG(qint64, colId));
             Q_ASSERT(ok);
             Q_UNUSED(ok)
@@ -70,7 +70,7 @@ void ChangeMediator::invalidateCollection(const Akonadi::Collection &collection)
 void ChangeMediator::invalidateItem(const Akonadi::Item &item)
 {
     QMetaObject::invokeMethod(instance(), [itemId = item.id()]() {
-        for (auto monitor : qAsConst(instance()->m_monitors)) {
+        for (auto monitor : std::as_const(instance()->m_monitors)) {
             const bool ok = QMetaObject::invokeMethod(monitor, "invalidateItemCache", Q_ARG(qint64, itemId));
             Q_ASSERT(ok);
             Q_UNUSED(ok)
@@ -82,7 +82,7 @@ void ChangeMediator::invalidateItem(const Akonadi::Item &item)
 void ChangeMediator::invalidateTag(const Tag &tag)
 {
     QMetaObject::invokeMethod(instance(), [tagId = tag.id()]() {
-        for (auto monitor : qAsConst(instance()->m_monitors)) {
+        for (auto monitor : std::as_const(instance()->m_monitors)) {
             const bool ok = QMetaObject::invokeMethod(monitor, "invalidateTagCache", Q_ARG(qint64, tagId));
             Q_ASSERT(ok);
             Q_UNUSED(ok)

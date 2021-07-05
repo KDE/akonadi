@@ -121,7 +121,7 @@ void SearchCreateJob::doStart()
     if (!d->mCollections.isEmpty()) {
         QVector<qint64> ids;
         ids.reserve(d->mCollections.size());
-        for (const Collection &col : qAsConst(d->mCollections)) {
+        for (const Collection &col : std::as_const(d->mCollections)) {
             ids << col.id();
         }
         cmd->setQueryCollections(ids);

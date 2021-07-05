@@ -159,7 +159,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::itemsReceived(const Akonadi::Item:
     mItems = items;
 
     // Sort by restore collection
-    for (const Item &item : qAsConst(mItems)) {
+    for (const Item &item : std::as_const(mItems)) {
         if (!item.hasAttribute<Akonadi::EntityDeletedAttribute>()) {
             continue;
         }

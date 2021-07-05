@@ -82,7 +82,7 @@ bool PreprocessorManager::isActive()
 
 PreprocessorInstance *PreprocessorManager::lockedFindInstance(const QString &id)
 {
-    for (PreprocessorInstance *instance : qAsConst(mPreprocessorChain)) {
+    for (PreprocessorInstance *instance : std::as_const(mPreprocessorChain)) {
         if (instance->id() == id) {
             return instance;
         }
@@ -378,7 +378,7 @@ void PreprocessorManager::heartbeat()
 
     QList<PreprocessorInstance *> firedPreprocessors;
 
-    for (PreprocessorInstance *instance : qAsConst(mPreprocessorChain)) {
+    for (PreprocessorInstance *instance : std::as_const(mPreprocessorChain)) {
         // In this loop we check for "stuck" preprocessors.
 
         int elapsedTime = instance->currentProcessingTime();
@@ -428,7 +428,7 @@ void PreprocessorManager::heartbeat()
     }
 
     // Kill the fired preprocessors, if any.
-    for (PreprocessorInstance *instance : qAsConst(firedPreprocessors)) {
+    for (PreprocessorInstance *instance : std::as_const(firedPreprocessors)) {
         lockedUnregisterInstance(instance->id());
     }
 }

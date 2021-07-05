@@ -16,7 +16,7 @@ AttributeStorage::AttributeStorage(const AttributeStorage &other)
     : mModifiedAttributes(other.mModifiedAttributes)
     , mDeletedAttributes(other.mDeletedAttributes)
 {
-    for (Attribute *attr : qAsConst(other.mAttributes)) {
+    for (Attribute *attr : std::as_const(other.mAttributes)) {
         mAttributes.insert(attr->type(), attr->clone());
     }
 }
@@ -76,7 +76,7 @@ Attribute::List AttributeStorage::attributes() const
 
 void AttributeStorage::clearAttributes()
 {
-    for (Attribute *attr : qAsConst(mAttributes)) {
+    for (Attribute *attr : std::as_const(mAttributes)) {
         mDeletedAttributes.insert(attr->type());
         delete attr;
     }

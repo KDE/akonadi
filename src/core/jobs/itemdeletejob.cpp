@@ -33,7 +33,7 @@ QString Akonadi::ItemDeleteJobPrivate::jobDebuggingString() const
 {
     QString itemStr = QStringLiteral("items id: ");
     bool firstItem = true;
-    for (const Akonadi::Item &item : qAsConst(mItems)) {
+    for (const Akonadi::Item &item : std::as_const(mItems)) {
         if (firstItem) {
             firstItem = false;
         } else {

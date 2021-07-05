@@ -127,12 +127,12 @@ void AgentManager::continueStartup()
     first = false;
 
     readPluginInfos();
-    for (const AgentType &info : qAsConst(mAgents)) {
+    for (const AgentType &info : std::as_const(mAgents)) {
         Q_EMIT agentTypeAdded(info.identifier);
     }
 
     load();
-    for (const AgentType &info : qAsConst(mAgents)) {
+    for (const AgentType &info : std::as_const(mAgents)) {
         ensureAutoStart(info);
     }
 
@@ -153,7 +153,7 @@ AgentManager::~AgentManager()
 
 void AgentManager::cleanup()
 {
-    for (const AgentInstance::Ptr &instance : qAsConst(mAgentInstances)) {
+    for (const AgentInstance::Ptr &instance : std::as_const(mAgentInstances)) {
         instance->quit();
     }
     mAgentInstances.clear();
@@ -496,7 +496,7 @@ void AgentManager::updatePluginInfos()
         }
     }
 
-    for (const AgentType &newInfo : qAsConst(mAgents)) {
+    for (const AgentType &newInfo : std::as_const(mAgents)) {
         if (!oldInfos.contains(newInfo.identifier)) {
             Q_EMIT agentTypeAdded(newInfo.identifier);
             ensureAutoStart(newInfo);
@@ -623,13 +623,13 @@ void AgentManager::save()
 {
     QSettings file(Akonadi::StandardDirs::agentsConfigFile(Akonadi::StandardDirs::WriteOnly), QSettings::IniFormat);
 
-    for (const AgentType &info : qAsConst(mAgents)) {
+    for (const AgentType &info : std::as_const(mAgents)) {
         info.save(&file);
     }
 
     file.beginGroup(QStringLiteral("Instances"));
     file.remove(QString());
-    for (const AgentInstance::Ptr &instance : qAsConst(mAgentInstances)) {
+    for (const AgentInstance::Ptr &instance : std::as_const(mAgentInstances)) {
         file.beginGroup(instance->identifier());
         file.setValue(QStringLiteral("AgentType"), instance->agentType());
         file.endGroup();
@@ -860,9 +860,9 @@ void AgentManager::agentExeChanged(const QString &fileName)
         return;
     }
 
-    for (const AgentType &type : qAsConst(mAgents)) {
+    for (const AgentType &type : std::as_const(mAgents)) {
         if (fileName.endsWith(type.exec)) {
-            for (const AgentInstance::Ptr &instance : qAsConst(mAgentInstances)) {
+            for (const AgentInstance::Ptr &instance : std::as_const(mAgentInstances)) {
                 if (instance->agentType() == type.identifier) {
                     instance->restartWhenIdle();
                 }
@@ -886,7 +886,7 @@ void AgentManager::registerAgentAtServer(const QString &agentIdentifier, const A
 void AgentManager::addSearch(const QString &query, const QString &queryLanguage, qint64 resultCollectionId)
 {
     qCDebug(AKONADICONTROL_LOG) << "AgentManager::addSearch" << query << queryLanguage << resultCollectionId;
-    for (const AgentInstance::Ptr &instance : qAsConst(mAgentInstances)) {
+    for (const AgentInstance::Ptr &instance : std::as_const(mAgentInstances)) {
         const AgentType type = mAgents.value(instance->agentType());
         if (type.capabilities.contains(AgentType::CapabilitySearch) && instance->searchInterface()) {
             instance->searchInterface()->addSearch(query, queryLanguage, resultCollectionId);
@@ -897,7 +897,7 @@ void AgentManager::addSearch(const QString &query, const QString &queryLanguage,
 void AgentManager::removeSearch(quint64 resultCollectionId)
 {
     qCDebug(AKONADICONTROL_LOG) << "AgentManager::removeSearch" << resultCollectionId;
-    for (const AgentInstance::Ptr &instance : qAsConst(mAgentInstances)) {
+    for (const AgentInstance::Ptr &instance : std::as_const(mAgentInstances)) {
         const AgentType type = mAgents.value(instance->agentType());
         if (type.capabilities.contains(AgentType::CapabilitySearch) && instance->searchInterface()) {
             instance->searchInterface()->removeSearch(resultCollectionId);

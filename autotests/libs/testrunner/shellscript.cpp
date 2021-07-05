@@ -18,7 +18,7 @@ ShellScript::ShellScript()
 
 void ShellScript::writeEnvironmentVariables()
 {
-    for (const auto &envvar : qAsConst(mEnvVars)) {
+    for (const auto &envvar : std::as_const(mEnvVars)) {
 #ifdef Q_OS_WIN
         const auto tmpl = QStringLiteral(
             "$env:_old_%1=$env:%1\r\n"
@@ -61,7 +61,7 @@ void ShellScript::writeShutdownFunction()
         "  export %1\n");
 #endif
     QString restore;
-    for (const auto &envvar : qAsConst(mEnvVars)) {
+    for (const auto &envvar : std::as_const(mEnvVars)) {
         restore += restoreTmpl.arg(QString::fromLocal8Bit(envvar.first));
     }
 

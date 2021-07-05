@@ -111,7 +111,7 @@ QSqlQuery ItemFetchHelper::buildPartQuery(const QVector<QByteArray> &partList, b
 
         if (!partList.isEmpty() || allPayload || allAttrs) {
             Query::Condition cond(Query::Or);
-            for (const QByteArray &b : qAsConst(partList)) {
+            for (const QByteArray &b : std::as_const(partList)) {
                 if (b.startsWith("PLD") || b.startsWith("ATR")) {
                     cond.addValueCondition(Part::partTypeIdFullColumnName(), Query::Equals, PartTypeHelper::fromFqName(b).id());
                 }

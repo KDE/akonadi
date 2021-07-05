@@ -62,7 +62,7 @@ void SearchManager::init()
     AkThread::init();
 
     mEngines.reserve(mEngineNames.size());
-    for (const QString &engineName : qAsConst(mEngineNames)) {
+    for (const QString &engineName : std::as_const(mEngineNames)) {
         if (engineName == QLatin1String("Agent")) {
             mEngines.append(new AgentSearchEngine);
         } else {
@@ -177,7 +177,7 @@ void SearchManager::loadSearchPlugins()
 
 void SearchManager::initSearchPlugins()
 {
-    for (QPluginLoader *loader : qAsConst(mPluginLoaders)) {
+    for (QPluginLoader *loader : std::as_const(mPluginLoaders)) {
         if (!loader->load()) {
             qCCritical(AKONADISERVER_SEARCH_LOG) << "Failed to load search plugin" << loader->fileName() << ":" << loader->errorString();
             continue;
@@ -382,7 +382,7 @@ void SearchManager::searchUpdateResultsAvailable(const QSet<qint64> &results)
     // This will remove IDs that no longer exist in the DB.
     QVariantList newMatchesVariant;
     newMatchesVariant.reserve(newMatches.count());
-    for (qint64 id : qAsConst(newMatches)) {
+    for (qint64 id : std::as_const(newMatches)) {
         newMatchesVariant << id;
     }
 

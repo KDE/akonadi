@@ -72,7 +72,7 @@ public:
             try {
                 QString itemStr = QStringLiteral("items id: ");
                 bool firstItem = true;
-                for (const Akonadi::Item &item : qAsConst(mRequestedItems)) {
+                for (const Akonadi::Item &item : std::as_const(mRequestedItems)) {
                     if (firstItem) {
                         firstItem = false;
                     } else {

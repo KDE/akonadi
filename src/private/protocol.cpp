@@ -505,7 +505,7 @@ void ItemFetchScope::toJson(QJsonObject &json) const
     json[QStringLiteral("AncestorDepth")] = static_cast<std::underlying_type<AncestorDepth>::type>(mAncestorDepth);
 
     QJsonArray requestedPartsArray;
-    for (const auto &part : qAsConst(mRequestedParts)) {
+    for (const auto &part : std::as_const(mRequestedParts)) {
         requestedPartsArray.append(QString::fromUtf8(part));
     }
     json[QStringLiteral("RequestedParts")] = requestedPartsArray;
@@ -771,7 +771,7 @@ void ChangeNotification::toJson(QJsonObject &json) const
     json[QStringLiteral("session")] = QString::fromUtf8(mSessionId);
 
     QJsonArray metadata;
-    for (const auto &m : qAsConst(mMetaData)) {
+    for (const auto &m : std::as_const(mMetaData)) {
         metadata.append(QString::fromUtf8(m));
     }
     json[QStringLiteral("metadata")] = metadata;

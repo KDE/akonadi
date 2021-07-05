@@ -321,7 +321,7 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
         auto copy = Protocol::ItemChangeNotificationPtr::create(*msg);
         QVector<Protocol::FetchItemsResponse> items;
         items.reserve(iter->size());
-        for (const auto &item : qAsConst(*iter)) {
+        for (const auto &item : std::as_const(*iter)) {
             items.append(virtItems.value(item.id()));
         }
         copy->setItems(items);

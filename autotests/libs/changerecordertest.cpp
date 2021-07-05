@@ -68,7 +68,7 @@ private Q_SLOTS:
 
         auto rec = createChangeRecorder();
         QVERIFY(rec->isEmpty());
-        for (const QString &action : qAsConst(actions)) {
+        for (const QString &action : std::as_const(actions)) {
             qDebug() << action;
             if (action == QLatin1String("rn")) {
                 replayNextAndExpectNothing(rec.get());

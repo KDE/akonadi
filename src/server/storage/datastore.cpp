@@ -291,10 +291,10 @@ bool DataStore::setItemsFlags(const PimItem::List &items,
     if (!silent && (!addedFlags.isEmpty() || !removedFlags.isEmpty())) {
         QSet<QByteArray> addedFlagsBa;
         QSet<QByteArray> removedFlagsBa;
-        for (const auto &addedFlag : qAsConst(addedFlags)) {
+        for (const auto &addedFlag : std::as_const(addedFlags)) {
             addedFlagsBa.insert(addedFlag.toLatin1());
         }
-        for (const auto &removedFlag : qAsConst(removedFlags)) {
+        for (const auto &removedFlag : std::as_const(removedFlags)) {
             removedFlagsBa.insert(removedFlag.toLatin1());
         }
         notificationCollector()->itemsFlagsChanged(items, addedFlagsBa, removedFlagsBa, col);
@@ -446,7 +446,7 @@ bool DataStore::removeItemsFlags(const PimItem::List &items, const QVector<Flag>
         setBoolPtr(flagsChanged, true);
         if (!silent) {
             QSet<QByteArray> removedFlagsBa;
-            for (const auto &remoteFlag : qAsConst(removedFlags)) {
+            for (const auto &remoteFlag : std::as_const(removedFlags)) {
                 removedFlagsBa.insert(remoteFlag.toLatin1());
             }
             notificationCollector()->itemsFlagsChanged(items, {}, removedFlagsBa, col);
@@ -729,7 +729,7 @@ bool DataStore::removeItemParts(const PimItem &item, const QSet<QByteArray> &par
     }
 
     const Part::List existingParts = qb.result();
-    for (Part part : qAsConst(existingParts)) {
+    for (Part part : std::as_const(existingParts)) {
         if (!PartHelper::remove(&part)) {
             qCWarning(AKONADISERVER_LOG) << "Failed to remove part" << part.id() << "(" << part.partType().ns() << ":" << part.partType().name()
                                          << ") from Item" << item.id();

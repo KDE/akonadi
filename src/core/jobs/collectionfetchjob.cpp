@@ -189,14 +189,14 @@ void CollectionFetchJob::doStart()
             // result needs to be filtered through filterDescendants before it is useful.
             new CollectionFetchJob(d->mBaseList, NonOverlappingRoots, this);
         } else if (d->mType == NonOverlappingRoots) {
-            for (const Collection &col : qAsConst(d->mBaseList)) {
+            for (const Collection &col : std::as_const(d->mBaseList)) {
                 // No need to connect to the collectionsReceived signal here. This job is internal. The (aggregated)
                 // result needs to be filtered through filterDescendants before it is useful.
                 auto subJob = new CollectionFetchJob(col, Base, this);
                 subJob->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::All);
             }
         } else {
-            for (const Collection &col : qAsConst(d->mBaseList)) {
+            for (const Collection &col : std::as_const(d->mBaseList)) {
                 auto subJob = new CollectionFetchJob(col, d->mType, this);
                 connect(subJob, &CollectionFetchJob::collectionsReceived, this, [d](const auto &cols) {
                     d->subJobCollectionReceived(cols);
@@ -325,7 +325,7 @@ static Collection::List filterDescendants(const Collection::List &list)
     QSet<Collection::Id> excludeList;
     for (const Collection &collection : list) {
         int i = 0;
-        for (const QList<Collection::Id> &ancestors : qAsConst(ids)) {
+        for (const QList<Collection::Id> &ancestors : std::as_const(ids)) {
             if (std::binary_search(ancestors.cbegin(), ancestors.cend(), collection.id())) {
                 excludeList.insert(list.at(i).id());
             }
