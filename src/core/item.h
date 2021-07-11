@@ -55,7 +55,7 @@ class ItemPrivate;
  * Technically the only restriction on payload objects is that they have to be copyable.
  * For safety reasons, pointer payloads are forbidden as well though, as the
  * ownership would not be clear. In this case, usage of a shared pointer is
- * recommended (such as boost::shared_ptr, QSharedPointer or std::shared_ptr).
+ * recommended (such as QSharedPointer or std::shared_ptr).
  *
  * Using a shared pointer is also required in case the payload is a polymorphic
  * type. For supported shared pointer types implicit casting is provided when possible.
@@ -67,7 +67,7 @@ class ItemPrivate;
  * Since KDE 4.6, Item supports multiple payload types per mime type,
  * and will automatically convert between them using the serialiser
  * plugins (which is slow). It also supports mixing shared pointer
- * types, e.g. inserting a boost::shared_ptr<Foo> and extracting a
+ * types, e.g. inserting a std::shared_ptr<Foo> and extracting a
  * QSharedPointer<Foo>. Since the two shared pointer types cannot
  * share ownership of the same object, the payload class @c T needs to
  * provide a @c clone() method with the usual signature, ie.
@@ -87,7 +87,7 @@ class ItemPrivate;
  * of the class), you want to restrict yourself to just one type and
  * one shared pointer type. This mechanism was mainly introduced for
  * backwards compatibility (e.g., putting in a
- * boost::shared_ptr<KCal::Incidence> and extracting a
+ * std::shared_ptr<KCal::Incidence> and extracting a
  * QSharedPointer<KCalCore::Incidence>), so it is not optimized for
  * performance.
  *
@@ -557,9 +557,8 @@ public:
      * fast (such as implicitly shared classes) is recommended.
      * If the payload type is polymorphic and you intend to set and retrieve payload
      * objects with mismatching but castable types, make sure to use a supported
-     * shared pointer implementation (currently boost::shared_ptr, QSharedPointer
-     * and std::shared_ptr and make sure there is a specialization of
-     * Akonadi::super_trait for your class.
+     * shared pointer implementation (currently QSharedPointer and std::shared_ptr)
+     * and make sure there is a specialization of Akonadi::super_trait for your class.
      */
     template<typename T> void setPayload(const T &p);
     /// @cond PRIVATE
@@ -569,8 +568,8 @@ public:
     /**
      * Returns the payload object of this PIM item. This method will only succeed if either
      * you requested the exact same payload type that was put in or the payload uses a
-     * supported shared pointer type (currently boost::shared_ptr, QSharedPointer and
-     * std::shared_ptr), and is castable to the requested type. For this to work there needs
+     * supported shared pointer type (currently QSharedPointer and std::shared_ptr),
+     * and is castable to the requested type. For this to work there needs
      * to be a specialization of Akonadi::super_trait of the used classes.
      *
      * If a mismatching or non-castable payload type is requested, an Akonadi::PayloadException
@@ -589,7 +588,7 @@ public:
     /**
      * Returns whether the item has a payload of type @c T.
      * This method will only return @c true if either you requested the exact same payload type
-     * that was put in or the payload uses a supported shared pointer type (currently boost::shared_ptr,
+     * that was put in or the payload uses a supported shared pointer type (currently
      * QSharedPointer and std::shared_ptr), and is castable to the requested type. For this to work there needs
      * to be a specialization of Akonadi::super_trait of the used classes.
      *
