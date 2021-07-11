@@ -93,7 +93,7 @@ void CollectionMaintenancePage::init(const Collection &col)
         d->ui.folderTypeLbl->setText(instance.type().name());
     } else {
         d->ui.folderTypeLbl->hide();
-        d->ui.filesLayout->labelForField(d->ui.folderTypeLbl)->hide();
+        d->ui.verticalLayout->labelForField(d->ui.folderTypeLbl)->hide();
     }
 
     connect(d->ui.reindexButton, &QPushButton::clicked, this, [this]() {
@@ -105,7 +105,10 @@ void CollectionMaintenancePage::init(const Collection &col)
     const auto resource = Akonadi::AgentManager::self()->instance(col.resource()).type();
     if (!col.cachePolicy().localParts().contains(QLatin1String("RFC822"))
         && resource.customProperties().value(QStringLiteral("HasLocalStorage"), QString()) != QLatin1String("true")) {
-        d->ui.indexingGroup->hide();
+        d->ui.indexingLabel->hide();
+        d->ui.enableIndexingChkBox->hide();
+        d->ui.indexedCountLbl->hide();
+        d->ui.reindexButton->hide();
     }
 }
 

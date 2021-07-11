@@ -34,6 +34,7 @@ public:
     void slotRetrievalOptionsGroupBoxDisabled(bool disable);
 
     Ui::CachePolicyPage *const mUi;
+    GuiMode mode;
 };
 
 void CachePolicyPage::Private::slotIntervalValueChanged(int interval)
@@ -48,7 +49,10 @@ void CachePolicyPage::Private::slotCacheValueChanged(int interval)
 
 void CachePolicyPage::Private::slotRetrievalOptionsGroupBoxDisabled(bool disable)
 {
-    mUi->retrievalOptionsGroupBox->setDisabled(disable);
+    mUi->retrieveFullMessages->setDisabled(disable);
+    mUi->retrieveFullMessages->setDisabled(disable);
+    mUi->retrieveOnlyHeaders->setDisabled(disable);
+    mUi->localCacheTimeout->setDisabled(disable);
     if (!disable) {
         mUi->label->setEnabled(mUi->retrieveOnlyHeaders->isChecked());
         mUi->localCacheTimeout->setEnabled(mUi->retrieveOnlyHeaders->isChecked());
@@ -61,6 +65,7 @@ CachePolicyPage::CachePolicyPage(QWidget *parent, GuiMode mode)
 {
     setObjectName(QStringLiteral("Akonadi::CachePolicyPage"));
     setPageTitle(i18n("Retrieval"));
+    d->mode = mode;
 
     d->mUi->setupUi(this);
     connect(d->mUi->checkInterval, QOverload<int>::of(&QSpinBox::valueChanged), this, [this](int value) {
@@ -73,7 +78,13 @@ CachePolicyPage::CachePolicyPage(QWidget *parent, GuiMode mode)
         d->slotRetrievalOptionsGroupBoxDisabled(checked);
     });
     if (mode == AdvancedMode) {
-        d->mUi->stackedWidget->setCurrentWidget(d->mUi->rawPage);
+        d->mUi->retrievalOptionsLabel->hide();
+        d->mUi->retrieveFullMessages->hide();
+        d->mUi->retrieveOnlyHeaders->hide();
+        d->mUi->localCacheTimeout->hide();
+    } else {
+        d->mUi->localParts->hide();
+        d->mUi->localPartsLabel->hide();
     }
 }
 
@@ -140,7 +151,7 @@ void CachePolicyPage::save(Collection &collection)
     // parts to keep around locally, if the user selected that, or remove
     // it otherwise. In "raw" mode we simple use the values from the list
     // view.
-    if (d->mUi->stackedWidget->currentWidget() != d->mUi->rawPage) {
+    if (d->mode != AdvancedMode) {
         if (d->mUi->retrieveFullMessages->isChecked() && !localParts.contains(QLatin1String("RFC822"))) {
             localParts.append(QStringLiteral("RFC822"));
         } else if (!d->mUi->retrieveFullMessages->isChecked() && localParts.contains(QLatin1String("RFC822"))) {

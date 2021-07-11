@@ -10,130 +10,92 @@
     <height>371</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
-    <widget class="QGroupBox" name="filesGroup">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+  <layout class="QFormLayout" name="verticalLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Folder type:</string>
      </property>
-     <property name="title">
-      <string>Files</string>
-     </property>
-     <layout class="QFormLayout" name="filesLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Folder type:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="folderTypeLbl">
-        <property name="text">
-         <string>unknown</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLabel" name="folderSizeLbl">
-        <property name="text">
-         <string>unknown</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Size:</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </widget>
    </item>
-   <item>
-    <widget class="QGroupBox" name="itemsGroup">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+   <item row="0" column="1">
+    <widget class="QLabel" name="folderTypeLbl">
+     <property name="text">
+      <string>unknown</string>
      </property>
-     <property name="title">
-      <string>Items</string>
-     </property>
-     <layout class="QFormLayout" name="itemsLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>Total items:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="itemsCountLbl">
-        <property name="text">
-         <string>unknown</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>Unread items:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLabel" name="unreadItemsCountLbl">
-        <property name="text">
-         <string>unknown</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </widget>
    </item>
-   <item>
-    <widget class="QGroupBox" name="indexingGroup">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+   <item row="1" column="1">
+    <widget class="QLabel" name="folderSizeLbl">
+     <property name="text">
+      <string>unknown</string>
      </property>
-     <property name="title">
-      <string>Indexing</string>
-     </property>
-     <layout class="QVBoxLayout" name="indexingLayout">
-      <item>
-       <widget class="QCheckBox" name="enableIndexingChkBox">
-        <property name="text">
-         <string>Enable fulltext indexing</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="indexedCountLbl">
-        <property name="text">
-         <string>Retrieving indexed items count ...</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="reindexButton">
-        <property name="text">
-         <string>Reindex folder</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </widget>
    </item>
-   <item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>File size:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>Total items:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QLabel" name="itemsCountLbl">
+     <property name="text">
+      <string>unknown</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_7">
+     <property name="text">
+      <string>Unread items:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLabel" name="unreadItemsCountLbl">
+     <property name="text">
+      <string>unknown</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="indexingLabel">
+     <property name="text">
+      <string>Indexing:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QCheckBox" name="enableIndexingChkBox">
+     <property name="text">
+      <string>Enable fulltext indexing</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QLabel" name="indexedCountLbl">
+     <property name="text">
+      <string>Retrieving indexed items count...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QPushButton" name="reindexButton">
+     <property name="text">
+      <string>Reindex folder</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
