@@ -48,7 +48,10 @@ void CachePolicyPage::Private::slotCacheValueChanged(int interval)
 
 void CachePolicyPage::Private::slotRetrievalOptionsGroupBoxDisabled(bool disable)
 {
-    mUi->retrievalOptionsGroupBox->setDisabled(disable);
+    mUi->retrieveFullMessages->setDisabled(disable);
+    mUi->retrieveFullMessages->setDisabled(disable);
+    mUi->retrieveOnlyHeaders->setDisabled(disable);
+    mUi->localCacheTimeout->setDisabled(disable);
     if (!disable) {
         mUi->label->setEnabled(mUi->retrieveOnlyHeaders->isChecked());
         mUi->localCacheTimeout->setEnabled(mUi->retrieveOnlyHeaders->isChecked());
