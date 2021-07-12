@@ -179,7 +179,7 @@ void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCo
     QVERIFY(monitor->pipeline().isEmpty());
     QVERIFY(monitor->pendingNotifications().isEmpty());
 
-    Q_FOREACH (const Protocol::ChangeNotificationPtr &ntf, list) {
+    for (const Protocol::ChangeNotificationPtr &ntf : std::as_const(list)) {
         monitor->notificationConnection()->emitNotify(ntf);
     }
 
@@ -266,7 +266,7 @@ void MonitorNotificationTest::testMonitor_impl(MonitorImpl *monitor, FakeCollect
     QTRY_VERIFY(monitor->pipeline().isEmpty());
     QVERIFY(monitor->pendingNotifications().isEmpty());
 
-    Q_FOREACH (const Protocol::ChangeNotificationPtr &ntf, list) {
+    for (const Protocol::ChangeNotificationPtr &ntf : std::as_const(list)) {
         monitor->notificationConnection()->emitNotify(ntf);
     }
 

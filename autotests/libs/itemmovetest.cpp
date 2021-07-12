@@ -100,7 +100,7 @@ private Q_SLOTS:
         QTRY_COMPARE(moveSpy.count(), 1);
         const Akonadi::Item::List &ntfItems = moveSpy.takeFirst().at(0).value<Akonadi::Item::List>();
         QCOMPARE(ntfItems.size(), items.size());
-        Q_FOREACH (const Item &ntfItem, ntfItems) {
+        for (const Item &ntfItem : ntfItems) {
             if (destination.id() >= 0) {
                 QCOMPARE(ntfItem.parentCollection().id(), destination.id());
             } else {

@@ -82,7 +82,7 @@ public:
     void updateParts(QVector<FakePart> &parts, const std::vector<PartHelper> &updatedParts)
     {
         parts.clear();
-        Q_FOREACH (const PartHelper &helper, updatedParts) {
+        for (const PartHelper &helper : updatedParts) {
             FakePart part;
 
             const QStringList types = helper.type.split(QLatin1Char(':'));
@@ -120,7 +120,7 @@ public:
     void updateTags(QVector<FakeTag> &tags, const std::vector<TagHelper> &updatedTags)
     {
         tags.clear();
-        Q_FOREACH (const TagHelper &helper, updatedTags) {
+        for (const TagHelper &helper : updatedTags) {
             FakeTag tag;
 
             TagType tagType;

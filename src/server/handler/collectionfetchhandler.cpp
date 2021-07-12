@@ -265,7 +265,8 @@ void CollectionFetchHandler::retrieveCollections(const Collection &topParent, in
         if (!qb.exec()) {
             throw HandlerException("Unable to retrieve collection for listing");
         }
-        Q_FOREACH (const Collection &col, qb.result()) {
+        const auto result{qb.result()};
+        for (const Collection &col : result) {
             mCollections.insert(col.id(), col);
         }
     }

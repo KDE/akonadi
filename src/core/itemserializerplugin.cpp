@@ -39,7 +39,8 @@ QSet<QByteArray> ItemSerializerPlugin::availableParts(const Item &item) const
 
 void ItemSerializerPlugin::apply(Item &item, const Item &other)
 {
-    Q_FOREACH (const QByteArray &part, other.loadedPayloadParts()) {
+    const auto loadedPayloadParts{other.loadedPayloadParts()};
+    for (const QByteArray &part : loadedPayloadParts) {
         QByteArray partData;
         QBuffer buffer;
         buffer.setBuffer(&partData);
