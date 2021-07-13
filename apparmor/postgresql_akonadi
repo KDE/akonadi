@@ -4,7 +4,7 @@
 
 @{postgresqlpath} = /usr/ /usr/lib/postgresql/*/ /usr/lib/postgresql*[0-9]/ /opt/pgsql*/
 
-profile postgresql_akonadi {
+profile postgresql_akonadi flags=(attach_disconnected) {
   #include <abstractions/base>
   #include <abstractions/bash>
   #include <abstractions/consoles>
@@ -16,6 +16,8 @@ profile postgresql_akonadi {
 
   signal receive set=kill peer=/usr/bin/akonadiserver,
   signal receive set=term peer=/usr/bin/akonadiserver,
+
+  deny / rw,  # disconnected path
 
   /etc/passwd r,
   /{usr/,}bin/{b,d}ash mrix,
