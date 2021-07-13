@@ -1,3 +1,5 @@
+abi <abi/3.0>,
+
 #include <tunables/global>
 
 @{xdg_data_home}=@{HOME}/.local/share
