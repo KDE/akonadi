@@ -2,7 +2,7 @@
 
 @{xdg_data_home}=@{HOME}/.local/share
 
-@{postgresqlpath} = /usr/ /usr/lib/postgresql/*/ /opt/pgsql*/
+@{postgresqlpath} = /usr/ /usr/lib/postgresql/*/ /usr/lib/postgresql*[0-9]/ /opt/pgsql*/
 
 profile postgresql_akonadi {
   #include <abstractions/base>
@@ -24,6 +24,7 @@ profile postgresql_akonadi {
   @{postgresqlpath}/bin/pg_ctl mrix,
   @{postgresqlpath}/bin/postgres mrix,
   /usr/share/postgresql/** r,
+  /usr/share/postgresql*[0-9]/timezonesets/Default r,
   owner /dev/shm/PostgreSQL.* rw,
   owner @{xdg_data_home}/akonadi/** rwlk,
   owner @{xdg_data_home}/akonadi/db_data/** l,
