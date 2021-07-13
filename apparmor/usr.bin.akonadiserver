@@ -4,6 +4,8 @@
 
 @{xdg_config_home}=@{HOME}/.config
 
+@{postgresqlpath} = /usr/ /usr/lib/postgresql/*/ /opt/pgsql*/
+
 /usr/bin/akonadiserver {
   #include <abstractions/base>
   #include <abstractions/consoles>
@@ -45,9 +47,9 @@
   /usr/bin/mysqladmin PUx -> mysqld_akonadi,
   /usr/bin/mysqlcheck PUx -> mysqld_akonadi,
   /usr/{,s}bin/mysqld PUx -> mysqld_akonadi,
-  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/initdb PUx -> postgresql_akonadi,
-  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/pg_ctl PUx -> postgresql_akonadi,
-  /{usr/,usr/lib/postgresql/*/}bin/pg_upgrade PUx -> postgresql_akonadi,
+  @{postgresqlpath}/bin/initdb PUx -> postgresql_akonadi,
+  @{postgresqlpath}/bin/pg_ctl PUx -> postgresql_akonadi,
+  @{postgresqlpath}/bin/pg_upgrade PUx -> postgresql_akonadi,
   /usr/sbin/mysqld PUx -> mysqld_akonadi,
   /usr/share/mime/mime.cache r,
   /usr/share/mime/packages/ r,

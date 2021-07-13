@@ -2,6 +2,8 @@
 
 @{xdg_data_home}=@{HOME}/.local/share
 
+@{postgresqlpath} = /usr/ /usr/lib/postgresql/*/ /opt/pgsql*/
+
 profile postgresql_akonadi {
   #include <abstractions/base>
   #include <abstractions/bash>
@@ -18,9 +20,9 @@ profile postgresql_akonadi {
   /etc/passwd r,
   /{usr/,}bin/{b,d}ash mrix,
   /{usr/,}bin/locale mrix,
-  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/initdb mrix,
-  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/pg_ctl mrix,
-  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/postgres mrix,
+  @{postgresqlpath}/bin/initdb mrix,
+  @{postgresqlpath}/bin/pg_ctl mrix,
+  @{postgresqlpath}/bin/postgres mrix,
   /usr/share/postgresql/** r,
   owner /dev/shm/PostgreSQL.* rw,
   owner @{xdg_data_home}/akonadi/** rwlk,
@@ -28,14 +30,14 @@ profile postgresql_akonadi {
   owner /{,var/}run/user/@{uid}/akonadi** rwk,
 
   # pg_upgrade
-  /{usr/,usr/lib/postgresql/*/}bin/pg_upgrade mrix,
+  @{postgresqlpath}/bin/pg_upgrade mrix,
   /opt/pgsql*/** mr,
-  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/pg_controldata mrix,
-  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/pg_resetwal mrix,
-  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/pg_dumpall mrix,
-  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/pg_dump mrix,
-  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/vacuumdb mrix,
-  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/psql mrix,
-  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/pg_restore mrix,
+  @{postgresqlpath}/bin/pg_controldata mrix,
+  @{postgresqlpath}/bin/pg_resetwal mrix,
+  @{postgresqlpath}/bin/pg_dumpall mrix,
+  @{postgresqlpath}/bin/pg_dump mrix,
+  @{postgresqlpath}/bin/vacuumdb mrix,
+  @{postgresqlpath}/bin/psql mrix,
+  @{postgresqlpath}/bin/pg_restore mrix,
   /{usr/,}bin/cp mrix,
 }
