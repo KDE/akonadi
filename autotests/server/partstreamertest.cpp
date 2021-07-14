@@ -39,7 +39,7 @@ class PartStreamerTest : public QObject
 public:
     PartStreamerTest()
     {
-        // Set a very small treshold for easier testing
+        // Set a very small threshold for easier testing
         const QString serverConfigFile = StandardDirs::serverConfigFile(StandardDirs::ReadWrite);
         QSettings settings(serverConfigFile, QSettings::IniFormat);
         settings.setValue(QStringLiteral("General/SizeThreshold"), 5);

@@ -72,7 +72,7 @@ bool RelationModifyHandler::parseStream()
 
     // Can't use insert(), does not work here (no "id" column)
     QueryBuilder inQb(Relation::tableName(), QueryBuilder::Insert);
-    inQb.setIdentificationColumn(QString()); // omit "RETURING xyz" with PSQL
+    inQb.setIdentificationColumn(QString()); // omit "RETURNING xyz" with PSQL
     inQb.setColumnValue(Relation::leftIdColumn(), cmd.left());
     inQb.setColumnValue(Relation::rightIdColumn(), cmd.right());
     inQb.setColumnValue(Relation::typeIdColumn(), relationType.id());

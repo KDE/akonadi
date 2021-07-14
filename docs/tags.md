@@ -37,7 +37,7 @@ could create a Tag of type SENDER, tagging each email with Rags representing
 the email sender, allowing to quickly perform a reverse-lookup for all emails
 from a certain sender.
 
-In Akonadi, two Tag types are present by defaut: PLAIN and GENERIC.
+In Akonadi, two Tag types are present by default: PLAIN and GENERIC.
 
 There's no limitation as to which attributes can be used with which type. Generally
 PLAIN Tags are not used much, and the GENERIC Tags are used as labels.
@@ -148,7 +148,7 @@ attributes.
 If the storage backend supports some form of labels it should implement support for Tags
 so that tags from the backend are synchronized into Akonadi and vice versa.
 
-To be notified abount changes in Tags, Resource implementation must inherit from
+To be notified about changes in Tags, Resource implementation must inherit from
 Akonadi::AgentBase::ObserverV4 (or later). 
 
 Akonadi::AgentBase::ObserverV4::tagAdded(), tagChanged() and tagRemoved() may be

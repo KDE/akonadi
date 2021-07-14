@@ -28,7 +28,7 @@ public:
     {
         switch (static_cast<lzma_ret>(ev)) {
         case LZMA_OK:
-            return "Operation completed succesfully";
+            return "Operation completed successfully";
         case LZMA_STREAM_END:
             return "End of stream was reached";
         case LZMA_NO_CHECK:

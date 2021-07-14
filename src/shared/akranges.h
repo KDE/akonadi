@@ -324,7 +324,7 @@ template<typename UnaryPredicate> struct NoneTag_ {
 } // namespace detail
 } // namespace AkRanges
 
-// Generic operator| for To_<> convertor
+// Generic operator| for To_<> converter
 template<typename RangeLike, template<typename> class OutContainer, typename T = typename RangeLike::value_type>
 auto operator|(const RangeLike &range, AkRanges::detail::ToTag_<OutContainer>) -> OutContainer<T>
 {
@@ -339,7 +339,7 @@ template<template<typename> class InContainer, typename T> auto operator|(const 
     return in;
 }
 
-// Generic operator| for ToAssoc_<> convertor
+// Generic operator| for ToAssoc_<> converter
 template<typename RangeLike, template<typename, typename> class OutContainer, typename T = typename RangeLike::value_type>
 auto operator|(const RangeLike &range, AkRanges::detail::ToAssocTag_<OutContainer>) -> OutContainer<typename T::first_type, typename T::second_type>
 {

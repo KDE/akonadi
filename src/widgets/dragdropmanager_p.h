@@ -33,7 +33,7 @@ public:
     /**
      * Starts a drag if possible and sets the appropriate supported actions to allow moves.
      *
-     * Also sets the pixmap for hte drag to something appropriately small, overriding the Qt
+     * Also sets the pixmap for the drag to something appropriately small, overriding the Qt
      * behaviour of creating a painting of all selected rows when dragging.
      */
     void startDrag(Qt::DropActions supportedActions);

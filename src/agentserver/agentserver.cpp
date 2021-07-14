@@ -48,7 +48,7 @@ void AgentServer::startAgent(const QString &identifier, const QString &typeIdent
 {
     qCDebug(AKONADIAGENTSERVER_LOG) << "Starting agent" << identifier << "of type" << typeIdentifier << "(file:" << fileName << ")";
 
-    // First try to load it staticly
+    // First try to load it statically
     const QObjectList objList = QPluginLoader::staticInstances();
     for (QObject *plugin : objList) {
         if (plugin->objectName() == fileName) {

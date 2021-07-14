@@ -23,7 +23,7 @@ class ProcessControl : public QObject
 
 public:
     /**
-     * Theses enums describe the behaviour when the observed
+     * These enums describe the behaviour when the observed
      * application crashed.
      *
      * @li StopOnCrash    - The application won't be restarted.

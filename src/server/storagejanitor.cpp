@@ -105,7 +105,7 @@ void StorageJanitor::check() // implementation of `akonadictl fsck`
     inform("Verifying external parts...");
     verifyExternalParts();
 
-    inform("Checking size treshold changes...");
+    inform("Checking size threshold changes...");
     checkSizeTreshold();
 
     inform("Looking for dirty objects...");
@@ -617,7 +617,7 @@ void StorageJanitor::checkSizeTreshold()
         qb.addValueCondition(Part::storageFullColumnName(), Query::Equals, Part::Internal);
         qb.addValueCondition(Part::datasizeFullColumnName(), Query::Greater, DbConfig::configuredDatabase()->sizeThreshold());
         if (!qb.exec()) {
-            inform("Failed to query parts larger than treshold, skipping test");
+            inform("Failed to query parts larger than threshold, skipping test");
             return;
         }
 
@@ -664,7 +664,7 @@ void StorageJanitor::checkSizeTreshold()
         qb.addValueCondition(Part::storageFullColumnName(), Query::Equals, Part::External);
         qb.addValueCondition(Part::datasizeFullColumnName(), Query::Less, DbConfig::configuredDatabase()->sizeThreshold());
         if (!qb.exec()) {
-            inform("Failed to query parts smaller than treshold, skipping test");
+            inform("Failed to query parts smaller than threshold, skipping test");
             return;
         }
 

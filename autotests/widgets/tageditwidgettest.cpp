@@ -131,7 +131,7 @@ class TagEditWidgetTest : public QObject
             });
             QTest::mouseClick(tagDeleteButton, Qt::LeftButton);
 
-            // Check that the confirmation was succesful
+            // Check that the confirmation was successful
             AKVERIFY(confirmed);
 
             return true;
@@ -293,7 +293,7 @@ private Q_SLOTS:
             QTest::keyClick(test.tagsView, Qt::Key_Space);
         }
 
-        // Confirm that the selection occured
+        // Confirm that the selection occurred
         for (int i = 0; i < model->rowCount(); ++i) {
             const auto expectedState = i % 2 == 0 ? Qt::Checked : Qt::Unchecked;
             QCOMPARE(model->data(model->index(i, 0), Qt::CheckStateRole).value<Qt::CheckState>(), expectedState);

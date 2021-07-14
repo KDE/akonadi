@@ -86,7 +86,7 @@ public:
     QStringList agentCapabilities(const QString &identifier) const;
 
     /**
-     * Returns a list of Custom added propeties of the agent type
+     * Returns a list of Custom added properties of the agent type
      * for the given @p identifier
      * @since 1.11
      */

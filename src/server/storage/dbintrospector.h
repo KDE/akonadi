@@ -91,7 +91,7 @@ protected:
     /**
      * Returns a query string to determine if @p tableName has an index @p indexName.
      * The query is expected to have one boolean result row/column.
-     * This is used by the default implementation of hasIndex() only, thus reimplmentation
+     * This is used by the default implementation of hasIndex() only, thus reimplementation
      * is not necessary if you reimplement hasIndex()
      * The default implementation asserts.
      */

@@ -453,7 +453,7 @@ void ImapParserTest::testParseDateTime_data()
     QTest::addColumn<QDateTime>("result");
     QTest::addColumn<int>("end");
 
-    QTest::newRow("emtpy") << QByteArray() << 0 << QDateTime() << 0;
+    QTest::newRow("empty") << QByteArray() << 0 << QDateTime() << 0;
 
     QByteArray data(" \"28-May-2006 01:03:35 +0200\"");
     QByteArray data2("22-Jul-2008 16:31:48 +0000");

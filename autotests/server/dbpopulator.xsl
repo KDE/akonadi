@@ -126,7 +126,7 @@
               <xsl:variable name="mimeTypeId" select="generate-id(exsl:node-set($attributes)/MimeTypes/*[@id = $mimeType])" />
               <xsl:text>mimeType</xsl:text><xsl:value-of select="$mimeTypeId"/><xsl:text>.id()</xsl:text>
             </xsl:when>
-            <!-- Get id of entity refered to via refTable and refColumn //-->
+            <!-- Get id of entity referred to via refTable and refColumn //-->
             <xsl:when test="$refElement">
               <xsl:call-template name="first-lower-case">
                 <xsl:with-param name="name" select="@refTable"/>

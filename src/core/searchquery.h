@@ -199,7 +199,7 @@ public:
         HeaderXMailingList,
         HeaderXSpamFlag,
         HeaderDate, // Expects QDateTime
-        HeaderOnlyDate, // Expectes QDate
+        HeaderOnlyDate, // Expects QDate
         MessageStatus, // Expects message flag from Akonadi::MessageFlags. Boolean filter.
         ByteSize, // Expects int
         Attachment, // Textsearch on attachment

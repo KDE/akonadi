@@ -255,7 +255,7 @@ class EntityTreeModelPrivate;
  *
  * Additionally, the actual data shown in the rows of the model should be type specific.
  *
- * In summary, it must be possible to have different numbers of columns, different data in hte rows of those columns, and different
+ * In summary, it must be possible to have different numbers of columns, different data in the rows of those columns, and different
  * titles for each column depending on the contents of the view.
  *
  * The way this is accomplished is by using the EntityMimeTypeFilterModel for splitting the model into a "CollectionTree" and an "Item List"

@@ -11,7 +11,7 @@
 <xsl:include href="entities-header.xsl"/>
 <xsl:include href="entities-source.xsl"/>
 
-<!-- select wether to generate header or implementation code. -->
+<!-- select whether to generate header or implementation code. -->
 <xsl:param name="code">header</xsl:param>
 
 <xsl:template match="/">

@@ -71,7 +71,7 @@ public:
     explicit QueryBuilder(const QString &table, QueryType type = Select);
 
     /**
-      Creates a new query builder with subquery in FROM cluase for SELECT queries.
+      Creates a new query builder with subquery in FROM clause for SELECT queries.
       @param tableQuery must be a valid select query
       @param tableQueryAlias alias name for table query
     */

@@ -512,7 +512,7 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
             // here would require a complex code (and I'm too lazy), so instead we simply
             // feed the Items to FetchHelper and retrieve them all with the setup from
             // the aggregated fetch scope. The worst case is that we re-fetch everything
-            // we already have, but that's stil better than the pre-ntf-payload situation
+            // we already have, but that's still better than the pre-ntf-payload situation
             QVector<qint64> ids;
             const auto items = msg->items();
             ids.reserve(items.size());

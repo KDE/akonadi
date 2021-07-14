@@ -72,7 +72,7 @@ void ItemMoveHandler::itemsRetrieved(const QVector<qint64> &ids)
         item.setCollectionId(mDestination.id());
         item.setAtime(mtime);
         item.setDatetime(mtime);
-        // if the resource moved itself, we assume it did so because the change happenned in the backend
+        // if the resource moved itself, we assume it did so because the change happened in the backend
         if (connection()->context().resource().id() != mDestination.resourceId()) {
             item.setDirty(true);
         }

@@ -51,7 +51,7 @@ public:
 
 protected:
     /**
-     * Sort filter criterias, according to how expensive the operation is
+     * Sort filter criteria, according to how expensive the operation is
      */
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 

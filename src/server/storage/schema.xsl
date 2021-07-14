@@ -11,7 +11,7 @@
 <xsl:include href="schema-header.xsl"/>
 <xsl:include href="schema-source.xsl"/>
 
-<!-- select wether to generate header or implementation code. -->
+<!-- select whether to generate header or implementation code. -->
 <xsl:param name="code">header</xsl:param>
 <!-- name of the generated schema class -->
 <xsl:param name="className">MySchema</xsl:param>

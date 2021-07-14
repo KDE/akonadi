@@ -264,7 +264,7 @@ bool DbConfigPostgresql::useInternalServer() const
 
 std::optional<DbConfigPostgresql::Versions> DbConfigPostgresql::checkPgVersion() const
 {
-    // Contains major version of Postgres that creted the cluster
+    // Contains major version of Postgres that created the cluster
     QFile pgVersionFile(QStringLiteral("%1/PG_VERSION").arg(mPgData));
     if (!pgVersionFile.open(QIODevice::ReadOnly)) {
         return std::nullopt;

@@ -45,7 +45,7 @@ public:
 };
 
 template<typename T, bool b> struct clone_traits_helper {
-    // runtime error (commented in) or compiletime error (commented out)?
+    // runtime error (commented in) or compile time error (commented out)?
     // ### runtime error, until we check has_clone_method in the
     // ### Item::payload<T> impl directly...
     template<typename U> static T *clone(U)

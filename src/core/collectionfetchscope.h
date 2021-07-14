@@ -232,7 +232,7 @@ public:
     void setFetchIdOnly(bool fetchIdOnly);
 
     /**
-     * Sets whether only the id of the tags should be retieved or the complete tag.
+     * Sets whether only the id of the tags should be retrieved or the complete tag.
      *
      * @see tagFetchScope()
      * @since 4.15

@@ -55,7 +55,7 @@ public:
     static int parseQuotedString(const QByteArray &data, QByteArray &result, int start = 0);
 
     /**
-      Returns the number of leading espaces in @p data starting from @p start.
+      Returns the number of leading spaces in @p data starting from @p start.
       @param data The source data.
       @param start Start parsing at this index.
     */

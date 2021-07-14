@@ -56,7 +56,7 @@ private Q_SLOTS:
         /*
         Fake Resource
           |- Col 1 (inode/directory)
-          |  |- Col 2 (inode/direcotry, application/octet-stream)
+          |  |- Col 2 (inode/directory, application/octet-stream)
           |  |  |- Col 3(application/octet-stream)
           |  |- Col 4 (text/plain)
           |- Col 5 (inode/directory, text/plain)

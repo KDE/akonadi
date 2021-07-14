@@ -185,7 +185,7 @@ ControlGui::~ControlGui()
 bool ControlGui::start()
 {
     if (ServerManager::state() == ServerManager::Stopping) {
-        qCDebug(AKONADIWIDGETS_LOG) << "Server is currently being stopped, wont try to start it now";
+        qCDebug(AKONADIWIDGETS_LOG) << "Server is currently being stopped, won't try to start it now";
         return false;
     }
     if (ServerManager::isRunning() || s_instance->d->mEventLoop) {

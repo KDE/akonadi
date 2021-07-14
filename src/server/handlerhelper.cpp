@@ -404,7 +404,7 @@ Collection HandlerHelper::collectionFromScope(const Scope &scope, const CommandC
     } else if (c.count() == 1) {
         return c.at(0);
     } else {
-        throw HandlerException("Query returned more than one reslut");
+        throw HandlerException("Query returned more than one result");
     }
 }
 

@@ -217,7 +217,7 @@ itemView->setModel(itemList);
 
 ![An email application using MailModel](/docs/images/mailmodelapp.png "An email application using MailModel")
 
-The content of the model is determined by the configuration of the Monitor passed into it. The examples below show a use of the EntityTreeModel and some proxy models for a simple heirarchical note collection. As the model is generic, the configuration and proxy models will also work with any other mimetype.
+The content of the model is determined by the configuration of the Monitor passed into it. The examples below show a use of the EntityTreeModel and some proxy models for a simple hierarchical note collection. As the model is generic, the configuration and proxy models will also work with any other mimetype.
 
 ~~~~~~~~~~~~~{.cpp}
 // Configure what should be shown in the model:
@@ -509,7 +509,7 @@ NOTE: The details here are only relevant if you are writing a new view using Ent
 
 Because communication with Akonadi happens asynchronously, and the models only hold a cached copy of the data on the akonadi server, some typical behaviours of models are not followed by Akonadi models.
 
-For example, when setting data on a model via a view, most models syncronously update their internal store and notify akonadi to update its view of the data by returning <tt>true</tt>.
+For example, when setting data on a model via a view, most models synchronously update their internal store and notify akonadi to update its view of the data by returning <tt>true</tt>.
 
 <!--
 TODO: Render this manually

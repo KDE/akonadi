@@ -157,7 +157,7 @@
 1.7.95                           11-July-2012
 ---------------------------------------------
 - Fix Nepomuk queries getting stuck if Nepomuk service crashes.
-- Fix unecessary remote retrieval of already cached item parts.
+- Fix unnecessary remote retrieval of already cached item parts.
 - Reset RID/RREV during cross-resource collection moves.
 - Increase timeout for remote item retrieval.
 
@@ -290,7 +290,7 @@
 ---------------------------------------------
 - Improve range query performance.
 - Fix MySQL database upgrade happening too early.
-- Fix MySQL database upgrade setting wrong priviledges.
+- Fix MySQL database upgrade setting wrong privileges.
 - Fix non-index access slowing down server startup.
 - ASAP parser performance optimizations
 - Respect SocketDirectory setting also for database sockets.
@@ -318,7 +318,7 @@
 ---------------------------------------------
 - Avoid unneeded full resource sync when using sync-on-demand cache policies.
 - Fix crash when using D-Bus session bus in a secondary thread.
-- Reduce emission of unneccessary change notifications.
+- Reduce emission of unnecessary change notifications.
 - Fix empty filename use in fs backend.
 
 1.3.80                            27-May-2010
@@ -378,12 +378,12 @@
 - Protocol parser fixes for non-Linux/non-KDE clients.
 - Support for single-shot searches using the Nepomuk query service.
 - Support HRID-based LIST operations.
-- Support RID-based MOVE, COLMOVE, LINK and UNLINK opertions.
+- Support RID-based MOVE, COLMOVE, LINK and UNLINK operations.
 - Respect cache-only retrieval also regarding on-demand syncing.
 - Add configuration accepted/rejected signals to the agent interface.
 - Fix change notification compression when using modified parts sets.
 - Use one retrieval pipeline per resource.
-- Reduce unecessary change notification on flag changes.
+- Reduce unnecessary change notification on flag changes.
 - Fix RID quoting.
 - Fix resource creating race for autostarted agents.
 - Create new database also when using external db servers.
@@ -408,7 +408,7 @@
 - Add support for collection size statistics.
 - Build fixes for Windows.
 - Support RID-based operations for CREATE, MODIFY and DELETE.
-- Avoid emitting unecessary change notifications when
+- Avoid emitting unnecessary change notifications when
   modifying items or collections.
 - Add COLMOVE command.
 - Reduce number of database writes when modifying a collection.
@@ -429,7 +429,7 @@
 ---------------------------------------------
 - Improved CMake scripts so it is possible to detect
   the Akonadi version in projects that depend on it.
-- Simplified the check for existance of tables.
+- Simplified the check for existence of tables.
 - Add a dedicated item deletion command, to get rid of 
   the old STORE/EXPUNGE which was extremely inefficient.
 - Some fixes to support sqlite in the future.
@@ -495,13 +495,13 @@
 - Add LINK/UNLINK commands to edit references to items in virtual collections.
 - Add a way to notify agents that their configuration has been changed remotely.
 - Make sure that all modification times are stored in UTC time zone.
-- Unquoted date time with a lenght of 26 characters was not parsed properly.
+- Unquoted date time with a length of 26 characters was not parsed properly.
 - Add serverside timestamp support for items.
 
 1.0.0                            22-July-2008
 ---------------------------------------------
 - First official stable release
-- Bugfix: Unquoted date time with a lenght of
+- Bugfix: Unquoted date time with a length of
   26 characters was not parsed properly.
 - Add serverside timestamp support for items.
 - Build system fixes (windows & automoc)

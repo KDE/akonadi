@@ -37,7 +37,7 @@ private Q_SLOTS:
     {
         AkonadiTest::checkTestIsIsolated();
     }
-    void testRetrievalErrorBurst() // caused rare server crashs with old item retrieval code
+    void testRetrievalErrorBurst() // caused rare server crashes with old item retrieval code
     {
         Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());

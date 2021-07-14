@@ -523,7 +523,7 @@ void Item::apply(const Item &other)
     if (mimeType() != other.mimeType() || id() != other.id()) {
         qCDebug(AKONADICORE_LOG) << "mimeType() = " << mimeType() << "; other.mimeType() = " << other.mimeType();
         qCDebug(AKONADICORE_LOG) << "id() = " << id() << "; other.id() = " << other.id();
-        Q_ASSERT_X(false, "Item::apply", "mimetype or id missmatch");
+        Q_ASSERT_X(false, "Item::apply", "mimetype or id mismatch");
     }
 
     setRemoteId(other.remoteId());

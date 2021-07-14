@@ -65,7 +65,7 @@ public:
     /// assignment operator
     <xsl:value-of select="$className"/> &amp;operator=(const <xsl:value-of select="$className"/> &amp;other);
 
-    /// comparisson operator, compares ids, not content
+    /// comparison operator, compares ids, not content
     bool operator==(const <xsl:value-of select="$className"/> &amp;other) const;
 
     // accessor methods
@@ -231,7 +231,7 @@ public:
     <xsl:for-each select="../relation[@table1 = $entityName]">
     <xsl:variable name="rightSideClass"><xsl:value-of select="@table2"/></xsl:variable>
     /**
-      Checks wether this record is in a n:m relation with the <xsl:value-of select="@table2"/> @p value.
+      Checks whether this record is in a n:m relation with the <xsl:value-of select="@table2"/> @p value.
     */
     bool relatesTo<xsl:value-of select="@table2"/>(const <xsl:value-of select="$rightSideClass"/> &amp;value) const;
     static bool relatesTo<xsl:value-of select="@table2"/>(qint64 leftId, qint64 rightId);

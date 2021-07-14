@@ -12,7 +12,7 @@ then run cmake:
 (a typical cmake option that is often used is: -DCMAKE_INSTALL_PREFIX=<prefix>)
 
 cmake then presents a configuration summary. At this point you may
-want to install missing dependancies (if you do, remove the CMakeCache.txt)
+want to install missing dependencies (if you do, remove the CMakeCache.txt)
 and run cmake again.
 
 Finally build Akonadi:
