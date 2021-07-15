@@ -259,8 +259,10 @@ void CollectionDialog::Private::slotAddChildCollection()
 {
     const Akonadi::Collection parentCollection = mParent->selectedCollection();
     if (canCreateCollection(parentCollection)) {
-        const QString name = QInputDialog::getText(mParent, i18nc("@title:window", "New Folder"), i18nc("@label:textbox, name of a thing", "Name"));
-        if (name.trimmed().isEmpty()) {
+        bool ok = false;
+        const QString name =
+            QInputDialog::getText(mParent, i18nc("@title:window", "New Folder"), i18nc("@label:textbox, name of a thing", "Name"), {}, {}, &ok);
+        if (name.trimmed().isEmpty() || !ok) {
             return;
         }
 

@@ -736,11 +736,15 @@ public:
             return;
         }
 
+        bool ok = false;
         QString name = QInputDialog::getText(parentWidget,
                                              contextText(StandardActionManager::CreateCollection, StandardActionManager::DialogTitle),
-                                             contextText(StandardActionManager::CreateCollection, StandardActionManager::DialogText));
+                                             contextText(StandardActionManager::CreateCollection, StandardActionManager::DialogText),
+                                             {},
+                                             {},
+                                             &ok);
         name = name.trimmed();
-        if (name.isEmpty()) {
+        if (name.isEmpty() || !ok) {
             return;
         }
 
