@@ -21,17 +21,17 @@ using namespace Akonadi::Server;
 void ItemQueryHelper::itemSetToQuery(const ImapSet &set, QueryBuilder &qb, const Collection &collection)
 {
     if (!set.isEmpty()) {
-        QueryHelper::setToQuery(set, qb.getTable() + QLatin1Char('.') + PimItem::idColumn(), qb);
+        QueryHelper::setToQuery(set, qb.getTableWithColumn(PimItem::idColumn()), qb);
     }
     if (collection.isValid()) {
         if (collection.isVirtual() || collection.resource().isVirtual()) {
             qb.addJoin(QueryBuilder::InnerJoin,
                        CollectionPimItemRelation::tableName(),
                        CollectionPimItemRelation::rightFullColumnName(),
-                       qb.getTable() + QLatin1Char('.') + PimItem::idColumn());
+                       qb.getTableWithColumn(PimItem::idColumn()));
             qb.addValueCondition(CollectionPimItemRelation::leftFullColumnName(), Query::Equals, collection.id());
         } else {
-            qb.addValueCondition(qb.getTable() + QLatin1Char('.') + PimItem::collectionIdColumn(), Query::Equals, collection.id());
+            qb.addValueCondition(qb.getTableWithColumn(PimItem::collectionIdColumn()), Query::Equals, collection.id());
         }
     }
 }
@@ -48,10 +48,10 @@ void ItemQueryHelper::itemSetToQuery(const ImapSet &set, const CommandContext &c
     if (tagId.has_value()) {
         // When querying for items by tag, only return matches from that resource
         if (context.resource().isValid()) {
-            qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(), qb.getTable() + QLatin1Char('.') + PimItem::collectionIdColumn(), Collection::idFullColumnName());
+            qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(), qb.getTableWithColumn(PimItem::collectionIdColumn()), Collection::idFullColumnName());
             qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, context.resource().id());
         }
-        qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(), qb.getTable() + QLatin1Char('.') + PimItem::idColumn(), PimItemTagRelation::leftFullColumnName());
+        qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(), qb.getTableWithColumn(PimItem::idColumn()), PimItemTagRelation::leftFullColumnName());
         qb.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::Equals, *tagId);
     }
 }
@@ -59,22 +59,22 @@ void ItemQueryHelper::itemSetToQuery(const ImapSet &set, const CommandContext &c
 void ItemQueryHelper::remoteIdToQuery(const QStringList &rids, const CommandContext &context, QueryBuilder &qb)
 {
     if (rids.size() == 1) {
-        qb.addValueCondition(qb.getTable() + QLatin1Char('.') + PimItem::remoteIdColumn(), Query::Equals, rids.first());
+        qb.addValueCondition(qb.getTableWithColumn(PimItem::remoteIdColumn()), Query::Equals, rids.first());
     } else {
-        qb.addValueCondition(qb.getTable() + QLatin1Char('.') + PimItem::remoteIdColumn(), Query::In, rids);
+        qb.addValueCondition(qb.getTableWithColumn(PimItem::remoteIdColumn()), Query::In, rids);
     }
 
     if (context.resource().isValid()) {
-        qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(), qb.getTable() + QLatin1Char('.') + PimItem::collectionIdColumn(), Collection::idFullColumnName());
+        qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(), qb.getTableWithColumn(PimItem::collectionIdColumn()), Collection::idFullColumnName());
         qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, context.resource().id());
     }
     if (context.collectionId() > 0) {
-        qb.addValueCondition(qb.getTable() + QLatin1Char('.') + PimItem::collectionIdColumn(), Query::Equals, context.collectionId());
+        qb.addValueCondition(qb.getTableWithColumn(PimItem::collectionIdColumn()), Query::Equals, context.collectionId());
     }
 
     const auto tagId = context.tagId();
     if (tagId.has_value()) {
-        qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(), qb.getTable() + QLatin1Char('.') + PimItem::idColumn(), PimItemTagRelation::leftFullColumnName());
+        qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(), qb.getTableWithColumn(PimItem::idColumn()), PimItemTagRelation::leftFullColumnName());
         qb.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::Equals, *tagId);
     }
 }
@@ -82,19 +82,19 @@ void ItemQueryHelper::remoteIdToQuery(const QStringList &rids, const CommandCont
 void ItemQueryHelper::gidToQuery(const QStringList &gids, const CommandContext &context, QueryBuilder &qb)
 {
     if (gids.size() == 1) {
-        qb.addValueCondition(qb.getTable() + QLatin1Char('.') + PimItem::gidColumn(), Query::Equals, gids.first());
+        qb.addValueCondition(qb.getTableWithColumn(PimItem::gidColumn()), Query::Equals, gids.first());
     } else {
-        qb.addValueCondition(qb.getTable() + QLatin1Char('.') + PimItem::gidColumn(), Query::In, gids);
+        qb.addValueCondition(qb.getTableWithColumn(PimItem::gidColumn()), Query::In, gids);
     }
 
     const auto tagId = context.tagId();
     if (tagId.has_value()) {
         // When querying for items by tag, only return matches from that resource
         if (context.resource().isValid()) {
-            qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(), qb.getTable() + QLatin1Char('.') + PimItem::collectionIdColumn(), Collection::idFullColumnName());
+            qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(), qb.getTableWithColumn(PimItem::collectionIdColumn()), Collection::idFullColumnName());
             qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, context.resource().id());
         }
-        qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(), qb.getTable() + QLatin1Char('.') + PimItem::idColumn(), PimItemTagRelation::leftFullColumnName());
+        qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(), qb.getTableWithColumn(PimItem::idColumn()), PimItemTagRelation::leftFullColumnName());
         qb.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::Equals, *tagId);
     }
 }

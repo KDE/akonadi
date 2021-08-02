@@ -107,15 +107,15 @@ QSqlQuery ItemFetchHelper::buildPartQuery(const QVector<QByteArray> &partList, b
     }
 
     if (!partList.isEmpty() || allPayload || allAttrs) {
-        partQuery.addJoin(QueryBuilder::InnerJoin, Part::tableName(), partQuery.getTable() + QLatin1Char('.') + PimItem::idColumn(), Part::pimItemIdFullColumnName());
-        partQuery.addColumn(partQuery.getTable() + QLatin1Char('.') + PimItem::idColumn());
+        partQuery.addJoin(QueryBuilder::InnerJoin, Part::tableName(), partQuery.getTableWithColumn(PimItem::idColumn()), Part::pimItemIdFullColumnName());
+        partQuery.addColumn(partQuery.getTableWithColumn(PimItem::idColumn()));
         partQuery.addColumn(Part::partTypeIdFullColumnName());
         partQuery.addColumn(Part::dataFullColumnName());
         partQuery.addColumn(Part::storageFullColumnName());
         partQuery.addColumn(Part::versionFullColumnName());
         partQuery.addColumn(Part::datasizeFullColumnName());
 
-        partQuery.addSortColumn(partQuery.getTable() + QLatin1Char('.') + PimItem::idColumn(), Query::Descending);
+        partQuery.addSortColumn(partQuery.getTableWithColumn(PimItem::idColumn()), Query::Descending);
 
         if (!partList.isEmpty() || allPayload || allAttrs) {
             Query::Condition cond(Query::Or);
@@ -209,13 +209,13 @@ QSqlQuery ItemFetchHelper::buildFlagQuery()
         flagQuery = QueryBuilder(mItemQuery.query(), mPimItemQueryAlias);
     }
 
-    flagQuery.addJoin(QueryBuilder::InnerJoin, PimItemFlagRelation::tableName(), flagQuery.getTable() + QLatin1Char('.') + PimItem::idColumn(),                     PimItemFlagRelation::leftFullColumnName());
+    flagQuery.addJoin(QueryBuilder::InnerJoin, PimItemFlagRelation::tableName(), flagQuery.getTableWithColumn(PimItem::idColumn()),                     PimItemFlagRelation::leftFullColumnName());
 
-    flagQuery.addColumn(flagQuery.getTable() + QLatin1Char('.') + PimItem::idColumn());
+    flagQuery.addColumn(flagQuery.getTableWithColumn(PimItem::idColumn()));
     flagQuery.addColumn(PimItemFlagRelation::rightFullColumnName());
 
     ItemQueryHelper::scopeToQuery(mScope, mContext, flagQuery);
-    flagQuery.addSortColumn(flagQuery.getTable() + QLatin1Char('.') + PimItem::idColumn(), Query::Descending);
+    flagQuery.addSortColumn(flagQuery.getTableWithColumn(PimItem::idColumn()), Query::Descending);
 
     if (!flagQuery.exec()) {
         throw HandlerException("Unable to retrieve item flags");
@@ -238,13 +238,13 @@ QSqlQuery ItemFetchHelper::buildTagQuery()
         tagQuery = QueryBuilder(mItemQuery.query(), mPimItemQueryAlias);
     }
 
-    tagQuery.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(), tagQuery.getTable() + QLatin1Char('.') + PimItem::idColumn(), PimItemTagRelation::leftFullColumnName());
+    tagQuery.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(), tagQuery.getTableWithColumn(PimItem::idColumn()), PimItemTagRelation::leftFullColumnName());
     tagQuery.addJoin(QueryBuilder::InnerJoin, Tag::tableName(), Tag::idFullColumnName(), PimItemTagRelation::rightFullColumnName());
-    tagQuery.addColumn(tagQuery.getTable() + QLatin1Char('.') + PimItem::idColumn());
+    tagQuery.addColumn(tagQuery.getTableWithColumn(PimItem::idColumn()));
     tagQuery.addColumn(Tag::idFullColumnName());
 
     ItemQueryHelper::scopeToQuery(mScope, mContext, tagQuery);
-    tagQuery.addSortColumn(tagQuery.getTable() + QLatin1Char('.') + PimItem::idColumn(), Query::Descending);
+    tagQuery.addSortColumn(tagQuery.getTableWithColumn(PimItem::idColumn()), Query::Descending);
 
     if (!tagQuery.exec()) {
         throw HandlerException("Unable to retrieve item tags");
@@ -270,11 +270,11 @@ QSqlQuery ItemFetchHelper::buildVRefQuery()
     vRefQuery.addJoin(QueryBuilder::LeftJoin,
                       CollectionPimItemRelation::tableName(),
                       CollectionPimItemRelation::rightFullColumnName(),
-                      vRefQuery.getTable() + QLatin1Char('.') + PimItem::idColumn());
+                      vRefQuery.getTableWithColumn(PimItem::idColumn()));
     vRefQuery.addColumn(CollectionPimItemRelation::leftFullColumnName());
     vRefQuery.addColumn(CollectionPimItemRelation::rightFullColumnName());
     ItemQueryHelper::scopeToQuery(mScope, mContext, vRefQuery);
-    vRefQuery.addSortColumn(vRefQuery.getTable() + QLatin1Char('.') + PimItem::idColumn(), Query::Descending);
+    vRefQuery.addSortColumn(vRefQuery.getTableWithColumn(PimItem::idColumn()), Query::Descending);
 
     if (!vRefQuery.exec()) {
         throw HandlerException("Unable to retrieve virtual references");
