@@ -77,7 +77,7 @@ public:
 
     bool moveCollection(Collection &collection, const Collection &newParent) override;
 
-    virtual bool appendMimeTypeForCollection(qint64 collectionId, const QStringList &mimeTypes) override;
+    bool appendMimeTypeForCollection(qint64 collectionId, const QStringList &mimeTypes) override;
 
     void activeCachePolicy(Collection &col) override;
 
