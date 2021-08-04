@@ -30,7 +30,8 @@ private Q_SLOTS:
         AkonadiTest::checkTestIsIsolated();
         Control::start();
         // switch target resources offline to reduce interference from them
-        foreach (Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances()) { // krazy:exclude=foreach
+        const Akonadi::AgentInstance::List agents = Akonadi::AgentManager::self()->instances();
+        for (Akonadi::AgentInstance agent : agents) {
             if (agent.identifier() == QLatin1String("akonadi_knut_resource_2")) {
                 agent.setIsOnline(false);
             }

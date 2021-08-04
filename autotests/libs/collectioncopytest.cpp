@@ -28,7 +28,8 @@ private Q_SLOTS:
 
         Control::start();
         // switch target resources offline to reduce interference from them
-        foreach (Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances()) { // krazy:exclude=foreach
+        const Akonadi::AgentInstance::List agents = Akonadi::AgentManager::self()->instances();
+        for (Akonadi::AgentInstance agent : agents) {
             if (agent.identifier() == QLatin1String("akonadi_knut_resource_2")) {
                 agent.setIsOnline(false);
             }
@@ -86,7 +87,8 @@ private Q_SLOTS:
             job->fetchScope().setCacheOnly(true);
             AKVERIFYEXEC(job);
             QCOMPARE(job->items().count(), it.value().count());
-            foreach (const Item &item, job->items()) {
+            const Item::List items = job->items();
+            for (const Item &item : items) {
                 QVERIFY(!it.value().contains(item));
                 QVERIFY(item.remoteId().isEmpty());
                 QVERIFY(item.hasPayload());

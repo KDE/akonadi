@@ -87,7 +87,8 @@ private Q_SLOTS:
         fetch->fetchScope().fetchFullPayload();
         AKVERIFYEXEC(fetch);
         QCOMPARE(fetch->items().count(), items.count() + baseline);
-        foreach (const Item &movedItem, fetch->items()) {
+        const Item::List movedItemList = fetch->items();
+        for (const Item &movedItem : movedItemList) {
             QVERIFY(movedItem.hasPayload());
             QVERIFY(!movedItem.payload<QByteArray>().isEmpty());
             if (destination.id() >= 0) {

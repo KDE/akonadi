@@ -16,6 +16,8 @@
 
 #include <QTest>
 
+#include <utility>
+
 QTEST_MAIN(MimeTypeCheckerTest)
 
 using namespace Akonadi;
@@ -107,21 +109,21 @@ void MimeTypeCheckerTest::testCollectionCheck()
 
     //// empty checker fails for all
     Collection::List collections = voidCollections + calendarCollections + contactCollections;
-    foreach (const Collection &collection, collections) {
+    for (const Collection &collection : std::as_const(collections)) {
         QVERIFY(!mEmptyChecker.isWantedCollection(collection));
         QVERIFY(!MimeTypeChecker::isWantedCollection(collection, QString()));
     }
 
     //// calendar checker fails for void and contact collections
     collections = voidCollections + contactCollections;
-    foreach (const Collection &collection, collections) {
+    for (const Collection &collection : std::as_const(collections)) {
         QVERIFY(!mCalendarChecker.isWantedCollection(collection));
         QVERIFY(!MimeTypeChecker::isWantedCollection(collection, textCalendar));
     }
 
     // but accepts all calendar collections
     collections = calendarCollections;
-    foreach (const Collection &collection, collections) {
+    for (const Collection &collection : std::as_const(collections)) {
         QVERIFY(mCalendarChecker.isWantedCollection(collection));
         QVERIFY(MimeTypeChecker::isWantedCollection(collection, textCalendar));
     }
@@ -129,28 +131,28 @@ void MimeTypeCheckerTest::testCollectionCheck()
     //// sub type checker fails for all but the event collection
     collections = voidCollections + calendarCollections + contactCollections;
     collections.removeAll(eventCollection);
-    foreach (const Collection &collection, collections) {
+    for (const Collection &collection : std::as_const(collections)) {
         QVERIFY(!mSubTypeChecker.isWantedCollection(collection));
         QVERIFY(!MimeTypeChecker::isWantedCollection(collection, akonadiEvent));
     }
 
     // but accepts the event collection
     collections = Collection::List() << eventCollection;
-    foreach (const Collection &collection, collections) {
+    for (const Collection &collection : std::as_const(collections)) {
         QVERIFY(mSubTypeChecker.isWantedCollection(collection));
         QVERIFY(MimeTypeChecker::isWantedCollection(collection, akonadiEvent));
     }
 
     //// alias checker fails for void and calendar collections
     collections = voidCollections + calendarCollections;
-    foreach (const Collection &collection, collections) {
+    for (const Collection &collection : std::as_const(collections)) {
         QVERIFY(!mAliasChecker.isWantedCollection(collection));
         QVERIFY(!MimeTypeChecker::isWantedCollection(collection, textDirectory));
     }
 
     // but accepts all contact collections
     collections = contactCollections;
-    foreach (const Collection &collection, collections) {
+    for (const Collection &collection : std::as_const(collections)) {
         QVERIFY(mAliasChecker.isWantedCollection(collection));
         QVERIFY(MimeTypeChecker::isWantedCollection(collection, textDirectory));
     }
@@ -189,21 +191,21 @@ void MimeTypeCheckerTest::testItemCheck()
 
     //// empty checker fails for all
     Item::List items = voidItems + calendarItems + contactItems;
-    foreach (const Item &item, items) {
+    for (const Item &item : std::as_const(items)) {
         QVERIFY(!mEmptyChecker.isWantedItem(item));
         QVERIFY(!MimeTypeChecker::isWantedItem(item, QString()));
     }
 
     //// calendar checker fails for void and contact items
     items = voidItems + contactItems;
-    foreach (const Item &item, items) {
+    for (const Item &item : std::as_const(items)) {
         QVERIFY(!mCalendarChecker.isWantedItem(item));
         QVERIFY(!MimeTypeChecker::isWantedItem(item, textCalendar));
     }
 
     // but accepts all calendar items
     items = calendarItems;
-    foreach (const Item &item, items) {
+    for (const Item &item : std::as_const(items)) {
         QVERIFY(mCalendarChecker.isWantedItem(item));
         QVERIFY(MimeTypeChecker::isWantedItem(item, textCalendar));
     }
@@ -211,28 +213,28 @@ void MimeTypeCheckerTest::testItemCheck()
     //// sub type checker fails for all but the event item
     items = voidItems + calendarItems + contactItems;
     items.removeAll(eventItem);
-    foreach (const Item &item, items) {
+    for (const Item &item : std::as_const(items)) {
         QVERIFY(!mSubTypeChecker.isWantedItem(item));
         QVERIFY(!MimeTypeChecker::isWantedItem(item, akonadiEvent));
     }
 
     // but accepts the event item
     items = Item::List() << eventItem;
-    foreach (const Item &item, items) {
+    for (const Item &item : std::as_const(items)) {
         QVERIFY(mSubTypeChecker.isWantedItem(item));
         QVERIFY(MimeTypeChecker::isWantedItem(item, akonadiEvent));
     }
 
     //// alias checker fails for void and calendar items
     items = voidItems + calendarItems;
-    foreach (const Item &item, items) {
+    for (const Item &item : std::as_const(items)) {
         QVERIFY(!mAliasChecker.isWantedItem(item));
         QVERIFY(!MimeTypeChecker::isWantedItem(item, textDirectory));
     }
 
     // but accepts all contact items
     items = contactItems;
-    foreach (const Item &item, items) {
+    for (const Item &item : std::as_const(items)) {
         QVERIFY(mAliasChecker.isWantedItem(item));
         QVERIFY(MimeTypeChecker::isWantedItem(item, textDirectory));
     }

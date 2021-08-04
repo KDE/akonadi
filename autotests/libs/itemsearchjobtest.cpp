@@ -24,7 +24,7 @@ private:
     Akonadi::SearchQuery createQuery(const QString &key, const QSet<qint64> &resultSet)
     {
         Akonadi::SearchQuery query;
-        foreach (qint64 id, resultSet) {
+        for (qint64 id : resultSet) {
             query.addTerm(Akonadi::SearchTerm(key, id));
         }
         return query;
@@ -76,7 +76,8 @@ private Q_SLOTS:
         itemSearchJob->setRecursive(true);
         AKVERIFYEXEC(itemSearchJob);
         QSet<qint64> actualResultSet;
-        foreach (const Item &item, itemSearchJob->items()) {
+        const Item::List foundItems = itemSearchJob->items();
+        for (const Item &item : foundItems) {
             actualResultSet << item.id();
         }
         qDebug() << actualResultSet << resultSet;

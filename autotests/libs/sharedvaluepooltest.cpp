@@ -10,6 +10,7 @@
 #include <QSet>
 #include <QVector>
 #include <set>
+#include <utility>
 #include <vector>
 
 using namespace Akonadi;
@@ -39,7 +40,7 @@ private Q_SLOTS:
         }
 
         QBENCHMARK {
-            foreach (const QByteArray &b, data) {
+            for (const QByteArray &b : std::as_const(data)) {
                 pool.sharedValue(b);
             }
         }

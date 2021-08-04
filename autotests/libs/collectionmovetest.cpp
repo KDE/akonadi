@@ -81,7 +81,8 @@ private Q_SLOTS:
         fetch = new CollectionFetchJob(source, CollectionFetchJob::Recursive);
         AKVERIFYEXEC(fetch);
         QHash<Collection, Item::List> referenceData;
-        foreach (const Collection &c, fetch->collections()) {
+        const Collection::List collections = fetch->collections();
+        for (const Collection &c : collections) {
             auto job = new ItemFetchJob(c, this);
             AKVERIFYEXEC(job);
             referenceData.insert(c, job->items());
@@ -118,7 +119,8 @@ private Q_SLOTS:
             job->fetchScope().fetchFullPayload();
             AKVERIFYEXEC(job);
             QCOMPARE(job->items().count(), it.value().count());
-            foreach (const Item &item, job->items()) {
+            const Item::List items = job->items();
+            for (const Item &item : items) {
                 QVERIFY(it.value().contains(item));
                 QVERIFY(item.hasPayload());
             }

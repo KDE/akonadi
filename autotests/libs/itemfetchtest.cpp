@@ -47,7 +47,7 @@ void ItemFetchTest::testFetch()
     QSignalSpy spy(job, &ItemFetchJob::itemsReceived);
     QVERIFY(spy.isValid());
     AKVERIFYEXEC(job);
-    Item::List items = job->items();
+    const Item::List items = job->items();
     QCOMPARE(items.count(), 15);
 
     int count = 0;
@@ -63,7 +63,7 @@ void ItemFetchTest::testFetch()
 
     // check if the fetch response is parsed correctly (note: order is undefined)
     Item item;
-    foreach (const Item &it, items) {
+    for (const Item &it : items) {
         if (it.remoteId() == QLatin1Char('A')) {
             item = it;
         }
@@ -76,7 +76,7 @@ void ItemFetchTest::testFetch()
     QVERIFY(item.hasFlag("\\DRAFT"));
 
     item = Item();
-    foreach (const Item &it, items) {
+    for (const Item &it : items) {
         if (it.remoteId() == QLatin1Char('B')) {
             item = it;
         }
@@ -86,7 +86,7 @@ void ItemFetchTest::testFetch()
     QVERIFY(item.hasFlag("\\FLAGGED"));
 
     item = Item();
-    foreach (const Item &it, items) {
+    for (const Item &it : items) {
         if (it.remoteId() == QLatin1Char('C')) {
             item = it;
         }

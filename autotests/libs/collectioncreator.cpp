@@ -29,10 +29,10 @@ private Q_SLOTS:
         QTest::addColumn<int>("count");
         QTest::addColumn<bool>("useTransaction");
 
-        QList<int> counts = QList<int>() << 1 << 10 << 100 << 1000;
-        QList<bool> transactions = QList<bool>() << false << true;
-        foreach (int count, counts) {
-            foreach (bool transaction, transactions) { // krazy:exclude=foreach
+        const int counts[]{1, 10, 100, 1000};
+        const bool transactions[]{false, true};
+        for (int count : counts) {
+            for (bool transaction : transactions) {
                 QTest::newRow(
                     QString::fromLatin1("%1-%2").arg(count).arg(transaction ? QLatin1String("trans") : QLatin1String("notrans")).toLatin1().constData())
                     << count << transaction;
