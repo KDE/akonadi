@@ -46,17 +46,18 @@ void sigHandler(int signal)
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
+    app.setQuitLockEnabled(false);
+
     KAboutData aboutdata(QStringLiteral("akonadi-TES"),
                          i18n("Akonadi Testing Environment Setup"),
                          QStringLiteral("1.0"),
                          i18n("Setup Environment"),
                          KAboutLicense::GPL,
                          i18n("(c) 2008 Igor Trindade Oliveira"));
-
-    QApplication app(argc, argv);
-    app.setQuitLockEnabled(false);
-    QCommandLineParser parser;
     KAboutData::setApplicationData(aboutdata);
+
+    QCommandLineParser parser;
     parser.addOption(
         {{QStringLiteral("c"), QStringLiteral("config")}, i18n("Configuration file to open"), QStringLiteral("configfile"), QStringLiteral("config.xml")});
     parser.addOption({{QStringLiteral("b"), QStringLiteral("backend")}, i18n("Database backend"), QStringLiteral("backend"), QStringLiteral("sqlite")});
