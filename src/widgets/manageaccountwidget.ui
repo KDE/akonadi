@@ -21,7 +21,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="mFilterAccount"/>
+      <widget class="QLineEdit" name="mFilterAccount">
+       <property class="placeholderText">
+        <string>Filter…</string>
+       </property>
+      </widget>
      </item>
      <item>
       <layout class="QHBoxLayout" name="hlay">
