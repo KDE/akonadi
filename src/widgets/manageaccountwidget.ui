@@ -22,7 +22,7 @@
      </item>
      <item>
       <widget class="QLineEdit" name="mFilterAccount">
-       <property class="placeholderText">
+       <property name="placeholderText">
         <string>Filter…</string>
        </property>
       </widget>
