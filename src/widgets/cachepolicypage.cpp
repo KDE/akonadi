@@ -54,6 +54,7 @@ void CachePolicyPage::Private::slotRetrievalOptionsGroupBoxDisabled(bool disable
     mUi->retrieveOnlyHeaders->setDisabled(disable);
     mUi->localCacheTimeout->setDisabled(disable);
     mUi->retrievalOptionsLabel->setDisabled(disable);
+    mUi->label->setDisabled(disable);
     if (!disable) {
         mUi->label->setEnabled(mUi->retrieveOnlyHeaders->isChecked());
         mUi->localCacheTimeout->setEnabled(mUi->retrieveOnlyHeaders->isChecked());
@@ -113,7 +114,6 @@ void CachePolicyPage::load(const Collection &collection)
         cache = 0;
     }
 
-    d->mUi->inherit->setChecked(policy.inheritFromParent());
     d->mUi->checkInterval->setValue(interval);
     d->mUi->localCacheTimeout->setValue(cache);
     d->mUi->syncOnDemand->setChecked(policy.syncOnDemand());
@@ -126,6 +126,9 @@ void CachePolicyPage::load(const Collection &collection)
     d->mUi->retrieveOnlyHeaders->setChecked(!fetchBodies);
     d->mUi->label->setEnabled(!fetchBodies);
     d->mUi->localCacheTimeout->setEnabled(!fetchBodies);
+    // last code otherwise it will call slotRetrievalOptionsGroupBoxDisabled before
+    // calling d->mUi->label->setEnabled(!fetchBodies);
+    d->mUi->inherit->setChecked(policy.inheritFromParent());
 }
 
 void CachePolicyPage::save(Collection &collection)
