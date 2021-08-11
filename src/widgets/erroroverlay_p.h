@@ -51,9 +51,9 @@ private Q_SLOTS:
 
 private:
     QPointer<QWidget> mBaseWidget;
-    bool mPreviousState;
-    bool mOverlayActive;
-    bool mBaseWidgetIsParent;
+    bool mPreviousState = false;
+    bool mOverlayActive = false;
+    bool mBaseWidgetIsParent = false;
     QScopedPointer<Ui::ErrorOverlay> ui;
 };
 

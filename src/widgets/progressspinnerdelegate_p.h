@@ -54,7 +54,7 @@ private:
     QSet<Animation> m_animations;
     QAbstractItemView *const m_view;
     KPixmapSequence m_pixmapSequence;
-    int m_timerId;
+    int m_timerId = -1;
 };
 
 uint qHash(const Akonadi::DelegateAnimator::Animation &anim);

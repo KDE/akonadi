@@ -55,7 +55,7 @@ void ItemView::Private::init()
     mParent->connect(mParent, &QAbstractItemView::clicked, mParent, [this](const auto &index) {
         itemClicked(index);
     });
-    mParent->connect(mParent, &QAbstractItemView::doubleClicked, [this](const auto &index) {
+    mParent->connect(mParent, &QAbstractItemView::doubleClicked, mParent, [this](const auto &index) {
         itemDoubleClicked(index);
     });
 

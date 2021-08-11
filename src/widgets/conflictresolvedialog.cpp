@@ -41,12 +41,12 @@ class HtmlDifferencesReporter : public AbstractDifferencesReporter
 public:
     HtmlDifferencesReporter() = default;
 
-    QString toHtml() const
+    Q_REQUIRED_RESULT QString toHtml() const
     {
         return header() + mContent + footer();
     }
 
-    QString plainText() const
+    Q_REQUIRED_RESULT QString plainText() const
     {
         return mTextContent;
     }

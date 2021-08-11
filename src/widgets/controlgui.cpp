@@ -66,11 +66,7 @@ class Q_DECL_HIDDEN ControlGui::Private
 public:
     explicit Private(ControlGui *parent)
         : mParent(parent)
-        , mEventLoop(nullptr)
         , mProgressIndicator(nullptr)
-        , mSuccess(false)
-        , mStarting(false)
-        , mStopping(false)
     {
     }
 
@@ -110,10 +106,10 @@ public:
     QEventLoop *mEventLoop = nullptr;
     QPointer<Internal::ControlProgressIndicator> mProgressIndicator;
     QList<QPointer<QWidget>> mPendingOverlays;
-    bool mSuccess;
+    bool mSuccess = false;
 
-    bool mStarting;
-    bool mStopping;
+    bool mStarting = false;
+    bool mStopping = false;
 };
 
 bool ControlGui::Private::exec()
