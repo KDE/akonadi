@@ -25,7 +25,7 @@
 #include <memory>
 
 using namespace Akonadi;
-
+using namespace std::chrono_literals;
 AgentConfigurationWidget::Private::Private(const AgentInstance &instance)
     : agentInstance(instance)
 {
@@ -88,7 +88,7 @@ AgentConfigurationWidget::AgentConfigurationWidget(const AgentInstance &instance
             if (auto dlg = qobject_cast<AgentConfigurationDialog *>(parent)) {
                 const_cast<AgentInstance &>(instance).configure(topLevelWidget()->parentWidget());
                 // If we are inside the AgentConfigurationDialog, hide the dialog
-                QTimer::singleShot(0, this, [dlg]() {
+                QTimer::singleShot(0s, this, [dlg]() {
                     dlg->reject();
                 });
             } else {

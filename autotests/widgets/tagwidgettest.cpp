@@ -26,7 +26,7 @@
 #include <memory>
 
 using namespace Akonadi;
-
+using namespace std::chrono_literals;
 class TagWidgetTest : public QObject
 {
     Q_OBJECT
@@ -161,7 +161,7 @@ private Q_SLOTS:
         bool ok = false;
         // Clicking on the Edit button opens the dialog in a blocking way, so
         // we need to dispatch the test from event loop
-        QTimer::singleShot(100, this, [&test, &selection, &ok]() {
+        QTimer::singleShot(100ms, this, [&test, &selection, &ok]() {
             QVERIFY(test.selectTagsInDialog(selection));
             ok = true;
         });

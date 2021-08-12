@@ -5,7 +5,7 @@
 */
 
 #include "inspectablechangerecorder.h"
-
+using namespace std::chrono_literals;
 InspectableChangeRecorderPrivate::InspectableChangeRecorderPrivate(FakeMonitorDependenciesFactory *dependenciesFactory, InspectableChangeRecorder *parent)
     : ChangeRecorderPrivate(dependenciesFactory, parent)
 {
@@ -14,7 +14,7 @@ InspectableChangeRecorderPrivate::InspectableChangeRecorderPrivate(FakeMonitorDe
 InspectableChangeRecorder::InspectableChangeRecorder(FakeMonitorDependenciesFactory *dependenciesFactory, QObject *parent)
     : ChangeRecorder(new Akonadi::ChangeRecorderPrivate(dependenciesFactory, this), parent)
 {
-    QTimer::singleShot(0, this, &InspectableChangeRecorder::doConnectToNotificationManager);
+    QTimer::singleShot(0s, this, &InspectableChangeRecorder::doConnectToNotificationManager);
 }
 
 void InspectableChangeRecorder::doConnectToNotificationManager()

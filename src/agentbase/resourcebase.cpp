@@ -52,7 +52,7 @@
 
 using namespace Akonadi;
 using namespace AkRanges;
-
+using namespace std::chrono_literals;
 class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 {
     Q_OBJECT
@@ -114,7 +114,7 @@ public:
     {
         if (m_recursiveMover) {
             m_recursiveMover->changeProcessed();
-            QTimer::singleShot(0, m_recursiveMover.data(), &RecursiveMover::replayNext);
+            QTimer::singleShot(0s, m_recursiveMover.data(), &RecursiveMover::replayNext);
             return;
         }
 

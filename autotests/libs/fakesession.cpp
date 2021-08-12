@@ -11,7 +11,7 @@
 
 #include <QCoreApplication>
 #include <QTimer>
-
+using namespace std::chrono_literals;
 class FakeSessionPrivate : public SessionPrivate
 {
 public:
@@ -48,7 +48,7 @@ public:
         }
 
         // Like Session does: delay the actual disconnect+reconnect
-        QTimer::singleShot(10, q_ptr, [&]() {
+        QTimer::singleShot(10ms, q_ptr, [&]() {
             socketDisconnected();
             Q_EMIT q_ptr->reconnected();
             connected = true;

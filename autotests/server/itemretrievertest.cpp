@@ -22,7 +22,7 @@
 #include <aktest.h>
 
 using namespace Akonadi::Server;
-
+using namespace std::chrono_literals;
 struct JobResult {
     qint64 pimItemId;
     QByteArray partname;
@@ -68,7 +68,7 @@ public:
             }
         }
 
-        QTimer::singleShot(0, this, [this]() {
+        QTimer::singleShot(0s, this, [this]() {
             Q_EMIT requestCompleted(this);
         });
     }

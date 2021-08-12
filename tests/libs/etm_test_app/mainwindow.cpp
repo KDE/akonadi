@@ -15,7 +15,7 @@
 #include <QTimer>
 
 using namespace Akonadi;
-
+using namespace std::chrono_literals;
 MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
     : QMainWindow(parent, flags)
 {
@@ -59,7 +59,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
     view->expandAll();
     setCentralWidget(view);
 
-    QTimer::singleShot(5000, this, &MainWindow::moveCollection);
+    QTimer::singleShot(5s, this, &MainWindow::moveCollection);
 }
 
 void MainWindow::moveCollection()

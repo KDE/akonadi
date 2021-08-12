@@ -5,7 +5,7 @@
 */
 
 #include "inspectablemonitor.h"
-
+using namespace std::chrono_literals;
 InspectableMonitorPrivate::InspectableMonitorPrivate(FakeMonitorDependenciesFactory *dependenciesFactory, InspectableMonitor *parent)
     : Akonadi::MonitorPrivate(dependenciesFactory, parent)
 {
@@ -36,7 +36,7 @@ InspectableMonitor::InspectableMonitor(FakeMonitorDependenciesFactory *dependenc
     connect(this, &Akonadi::Monitor::collectionSubscribed, this, &InspectableMonitor::dummySignal);
     connect(this, &Akonadi::Monitor::collectionUnsubscribed, this, &InspectableMonitor::dummySignal);
 
-    QTimer::singleShot(0, this, [this]() {
+    QTimer::singleShot(0s, this, [this]() {
         doConnectToNotificationManager();
     });
 }

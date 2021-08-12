@@ -10,7 +10,7 @@
 #include <QTimer>
 
 #include "controlmanageradaptor.h"
-
+using namespace std::chrono_literals;
 ControlManager::ControlManager(QObject *parent)
     : QObject(parent)
 {
@@ -24,5 +24,5 @@ ControlManager::~ControlManager()
 
 void ControlManager::shutdown()
 {
-    QTimer::singleShot(0, QCoreApplication::instance(), &QCoreApplication::quit);
+    QTimer::singleShot(0s, QCoreApplication::instance(), &QCoreApplication::quit);
 }

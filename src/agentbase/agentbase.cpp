@@ -55,7 +55,7 @@
 #include <thread>
 
 using namespace Akonadi;
-
+using namespace std::chrono_literals;
 static AgentBase *sAgentBase = nullptr;
 
 AgentBase::Observer::Observer()
@@ -422,7 +422,7 @@ void AgentBasePrivate::init()
     mResourceTypeName = AgentManager::self()->instance(mId).type().name();
     setProgramName();
 
-    QTimer::singleShot(0, q, [this] {
+    QTimer::singleShot(0s, q, [this] {
         delayedInit();
     });
 }
@@ -734,7 +734,7 @@ void AgentBasePrivate::collectionUnsubscribed(const Akonadi::Collection &collect
 void AgentBasePrivate::changeProcessed()
 {
     mChangeRecorder->changeProcessed();
-    QTimer::singleShot(0, mChangeRecorder, &ChangeRecorder::replayNext);
+    QTimer::singleShot(0s, mChangeRecorder, &ChangeRecorder::replayNext);
 }
 
 void AgentBasePrivate::slotStatus(int status, const QString &message)

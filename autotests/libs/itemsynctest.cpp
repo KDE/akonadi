@@ -29,7 +29,7 @@ using namespace Akonadi;
 
 Q_DECLARE_METATYPE(KJob *)
 Q_DECLARE_METATYPE(ItemSync::TransactionMode)
-
+using namespace std::chrono_literals;
 class ItemsyncTest : public QObject
 {
     Q_OBJECT
@@ -679,7 +679,7 @@ private Q_SLOTS:
         syncer->setFullSyncItems(origItems);
 
         // When the user cancels the ItemSync
-        QTimer::singleShot(10, syncer, &ItemSync::rollback);
+        QTimer::singleShot(10ms, syncer, &ItemSync::rollback);
 
         // Then the itemsync should finish at some point, and not crash
         QVERIFY(!syncer->exec());

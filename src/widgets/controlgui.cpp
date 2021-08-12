@@ -20,7 +20,7 @@
 #include <QTimer>
 
 using namespace Akonadi;
-
+using namespace std::chrono_literals;
 namespace Akonadi
 {
 namespace Internal
@@ -248,7 +248,7 @@ void ControlGui::widgetNeedsAkonadi(QWidget *widget)
     s_instance->d->mPendingOverlays.append(widget);
     // delay the overlay creation since we rely on widget being reparented
     // correctly already
-    QTimer::singleShot(0, s_instance, []() {
+    QTimer::singleShot(0s, s_instance, []() {
         s_instance->d->createErrorOverlays();
     });
 }

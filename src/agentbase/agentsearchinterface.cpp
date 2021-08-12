@@ -18,14 +18,14 @@
 #include <QDBusConnection>
 
 using namespace Akonadi;
-
+using namespace std::chrono_literals;
 AgentSearchInterfacePrivate::AgentSearchInterfacePrivate(AgentSearchInterface *qq)
     : q(qq)
 {
     new Akonadi__SearchAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Search"), this, QDBusConnection::ExportAdaptors);
 
-    QTimer::singleShot(0, this, &AgentSearchInterfacePrivate::delayedInit);
+    QTimer::singleShot(0s, this, &AgentSearchInterfacePrivate::delayedInit);
 }
 
 void AgentSearchInterfacePrivate::delayedInit()

@@ -17,7 +17,7 @@
 #include <QTimer>
 
 using namespace Akonadi;
-
+using namespace std::chrono_literals;
 qint64 ResourceScheduler::Task::latestSerial = 0;
 static QDBusAbstractInterface *s_resourcetracker = nullptr;
 
@@ -366,7 +366,7 @@ void ResourceScheduler::scheduleNext()
     if (mCurrentTask.type != Invalid || isEmpty() || !mOnline) {
         return;
     }
-    QTimer::singleShot(0, this, &ResourceScheduler::executeNext);
+    QTimer::singleShot(0s, this, &ResourceScheduler::executeNext);
 }
 
 void ResourceScheduler::executeNext()

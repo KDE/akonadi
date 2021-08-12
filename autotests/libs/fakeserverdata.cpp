@@ -10,6 +10,7 @@
 #include "itemfetchjob.h"
 
 #include <QTimer>
+using namespace std::chrono_literals;
 
 FakeServerData::FakeServerData(EntityTreeModel *model, FakeSession *session, FakeMonitor *monitor, QObject *parent)
     : QObject(parent)
@@ -24,7 +25,7 @@ FakeServerData::FakeServerData(EntityTreeModel *model, FakeSession *session, Fak
     // the slot gets called
     connect(session, &FakeSession::jobAdded, [this](Akonadi::Job *job) {
         Collection::Id fetchColId = job->property("FetchCollectionId").toULongLong();
-        QTimer::singleShot(0, [this, fetchColId]() {
+        QTimer::singleShot(0s, [this, fetchColId]() {
             jobAdded(fetchColId);
         });
     });
@@ -40,7 +41,7 @@ FakeServerData::FakeServerData(TagModel *model, FakeSession *session, FakeMonito
     , m_nextTagId(1)
 {
     connect(session, &FakeSession::jobAdded, [this](Akonadi::Job * /*unused*/) {
-        QTimer::singleShot(0, [this]() {
+        QTimer::singleShot(0s, [this]() {
             jobAdded();
         });
     });

@@ -24,6 +24,9 @@
 #include <QFile>
 #include <QSettings>
 #include <QTimer>
+#include <chrono>
+
+using namespace std::chrono_literals;
 
 bool SetupTest::startAkonadiDaemon()
 {
@@ -323,7 +326,7 @@ void SetupTest::shutdown()
         qCInfo(AKONADITEST_LOG) << "Shutting down Akonadi control...";
         Akonadi::ServerManager::self()->stop();
         // safety timeout
-        QTimer::singleShot(30 * 1000, this, &SetupTest::shutdownHarder);
+        QTimer::singleShot(30s, this, &SetupTest::shutdownHarder);
         break;
     case Akonadi::ServerManager::NotRunning:
     case Akonadi::ServerManager::Broken:
@@ -331,7 +334,7 @@ void SetupTest::shutdown()
         break;
     case Akonadi::ServerManager::Stopping:
         // safety timeout
-        QTimer::singleShot(30 * 1000, this, &SetupTest::shutdownHarder);
+        QTimer::singleShot(30s, this, &SetupTest::shutdownHarder);
         break;
     }
 }

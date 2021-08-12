@@ -43,7 +43,7 @@
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
-
+using namespace std::chrono_literals;
 namespace
 {
 class AkonadiDataStore : public DataStore
@@ -204,7 +204,7 @@ bool AkonadiServer::quit()
         qCCritical(AKONADISERVER_LOG) << "Failed to remove runtime connection config file";
     }
 
-    QTimer::singleShot(0, this, &AkonadiServer::doQuit);
+    QTimer::singleShot(0s, this, &AkonadiServer::doQuit);
 
     return true;
 }

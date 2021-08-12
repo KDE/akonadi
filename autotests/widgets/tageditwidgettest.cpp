@@ -25,7 +25,7 @@
 #include <QTest>
 
 #include <memory>
-
+using namespace std::chrono_literals;
 using namespace Akonadi;
 
 /***
@@ -125,7 +125,7 @@ class TagEditWidgetTest : public QObject
             // Clicking the button blocks (QDialog::exec), so we need to confirm the
             // dialog from event loop
             bool confirmed = false;
-            QTimer::singleShot(100, [this, confirmDeletion, &confirmed]() {
+            QTimer::singleShot(100ms, [this, confirmDeletion, &confirmed]() {
                 confirmed = confirmDialog(confirmDeletion);
                 QVERIFY(confirmed);
             });
