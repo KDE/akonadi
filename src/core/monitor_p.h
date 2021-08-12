@@ -104,8 +104,8 @@ public:
 
     Protocol::ModifySubscriptionCommand::ModifiedParts pendingModificationChanges;
     Protocol::ModifySubscriptionCommand pendingModification;
-    QTimer *pendingModificationTimer;
-    bool monitorReady;
+    QTimer *pendingModificationTimer = nullptr;
+    bool monitorReady = false;
 
     // The waiting list
     QQueue<Protocol::ChangeNotificationPtr> pendingNotifications;

@@ -104,7 +104,7 @@ QStringList EntityOrderProxyModel::configStringsForDroppedUrls(const QList<QUrl>
     QStringList droppedList;
     droppedList.reserve(urls.count());
     for (const QUrl &url : urls) {
-        Collection col = Collection::fromUrl(url);
+        const Collection col = Collection::fromUrl(url);
 
         if (!col.isValid()) {
             Item item = Item::fromUrl(url);

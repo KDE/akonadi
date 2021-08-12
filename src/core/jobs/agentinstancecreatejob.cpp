@@ -165,7 +165,7 @@ void AgentInstanceCreateJobPrivate::doStart()
         int timeout = safetyTimeout;
 #ifdef Q_OS_UNIX
         // Increate the timeout when valgrinding the agent, because that slows down things a log.
-        QString agentValgrind = QString::fromLocal8Bit(qgetenv("AKONADI_VALGRIND"));
+        const QString agentValgrind = QString::fromLocal8Bit(qgetenv("AKONADI_VALGRIND"));
         if (!agentValgrind.isEmpty() && agentType.identifier().contains(agentValgrind)) {
             timeout *= 15;
         }

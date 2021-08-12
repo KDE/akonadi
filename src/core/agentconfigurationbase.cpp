@@ -31,7 +31,7 @@ public:
     KSharedConfigPtr config;
     QString identifier;
     QScopedPointer<KAboutData> aboutData;
-    QWidget *parentWidget = nullptr;
+    QWidget *const parentWidget;
 };
 } // namespace Akonadi
 

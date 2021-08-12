@@ -24,7 +24,6 @@ class Akonadi::CollectionPathResolverPrivate : public JobPrivate
 public:
     explicit CollectionPathResolverPrivate(CollectionPathResolver *parent)
         : JobPrivate(parent)
-        , mColId(-1)
     {
     }
 
@@ -78,7 +77,7 @@ public:
     Collection mCurrentNode;
     QStringList mPathParts;
     QString mPath;
-    Collection::Id mColId;
+    Collection::Id mColId = -1;
     bool mPathToId = false;
 };
 

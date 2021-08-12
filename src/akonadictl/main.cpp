@@ -86,7 +86,7 @@ static bool checkSearchSupportStatus()
     } else {
         const QStringList dirs = QCoreApplication::libraryPaths();
         for (const QString &pluginDir : dirs) {
-            QDir dir(pluginDir + QLatin1String("/akonadi/"));
+            const QDir dir(pluginDir + QLatin1String("/akonadi/"));
             const QStringList pluginFiles = dir.entryList(QDir::Files);
             for (const QString &pluginFileName : pluginFiles) {
                 QPluginLoader loader(dir.absolutePath() + QLatin1Char('/') + pluginFileName);
@@ -112,7 +112,7 @@ static bool checkAvailableAgentTypes()
     const auto dirs = Akonadi::StandardDirs::locateAllResourceDirs(QStringLiteral("akonadi/agents"));
     QStringList types;
     for (const QString &pluginDir : dirs) {
-        QDir dir(pluginDir);
+        const QDir dir(pluginDir);
         const QStringList plugins = dir.entryList(QStringList() << QStringLiteral("*.desktop"), QDir::Files);
         for (const QString &plugin : plugins) {
             QSettings pluginInfo(pluginDir + QLatin1Char('/') + plugin, QSettings::IniFormat);

@@ -14,8 +14,8 @@
 using namespace Akonadi;
 
 MimeTypeChecker::MimeTypeChecker()
+    : d(new MimeTypeCheckerPrivate())
 {
-    d = new MimeTypeCheckerPrivate();
 }
 
 MimeTypeChecker::MimeTypeChecker(const MimeTypeChecker &other)

@@ -53,7 +53,7 @@ static QString defaultResourceId(KCoreConfigSkeleton *settings)
 
 static QString dbusServiceName()
 {
-    QString service = QStringLiteral("org.kde.pim.SpecialCollections");
+    const QString service = QStringLiteral("org.kde.pim.SpecialCollections");
     if (ServerManager::hasInstanceIdentifier()) {
         return service + ServerManager::instanceIdentifier();
     }

@@ -54,7 +54,7 @@ public:
     }
 
     Q_DECLARE_PUBLIC(SelectionProxyModel)
-    SelectionProxyModel *q_ptr;
+    SelectionProxyModel *const q_ptr;
 };
 
 } // namespace Akonadi

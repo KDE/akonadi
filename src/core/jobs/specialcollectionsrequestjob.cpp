@@ -36,14 +36,14 @@ public:
 
     SpecialCollectionsRequestJob *const q;
     SpecialCollections *mSpecialCollections = nullptr;
-    int mPendingCreateJobs;
+    int mPendingCreateJobs = 0;
 
     QByteArray mRequestedType;
     AgentInstance mRequestedResource;
 
     // Input:
     QHash<QByteArray, bool> mDefaultFolders;
-    bool mRequestingDefaultFolders;
+    bool mRequestingDefaultFolders = false;
     QHash<QString, QHash<QByteArray, bool>> mFoldersForResource;
     QString mDefaultResourceType;
     QVariantMap mDefaultResourceOptions;
@@ -59,8 +59,6 @@ public:
 SpecialCollectionsRequestJobPrivate::SpecialCollectionsRequestJobPrivate(SpecialCollections *collections, SpecialCollectionsRequestJob *qq)
     : q(qq)
     , mSpecialCollections(collections)
-    , mPendingCreateJobs(0)
-    , mRequestingDefaultFolders(false)
 {
 }
 

@@ -18,7 +18,7 @@ namespace Akonadi
 class RecursiveCollectionFilterProxyModelPrivate
 {
     Q_DECLARE_PUBLIC(RecursiveCollectionFilterProxyModel)
-    RecursiveCollectionFilterProxyModel *q_ptr;
+    RecursiveCollectionFilterProxyModel *const q_ptr;
 
 public:
     explicit RecursiveCollectionFilterProxyModelPrivate(RecursiveCollectionFilterProxyModel *model)

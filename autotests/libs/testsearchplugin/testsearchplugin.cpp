@@ -22,7 +22,7 @@ QSet<qint64> TestSearchPlugin::search(const QString &query, const QVector<qint64
 QSet<qint64> TestSearchPlugin::parseQuery(const QString &queryString)
 {
     QSet<qint64> resultSet;
-    Akonadi::SearchQuery query = Akonadi::SearchQuery::fromJSON(queryString.toLatin1());
+    const Akonadi::SearchQuery query = Akonadi::SearchQuery::fromJSON(queryString.toLatin1());
     const QList<Akonadi::SearchTerm> subTerms = query.term().subTerms();
     for (const Akonadi::SearchTerm &term : subTerms) {
         if (term.key() == QLatin1String("plugin")) {
