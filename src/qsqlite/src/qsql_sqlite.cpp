@@ -644,8 +644,9 @@ void QSQLiteDriver::close()
             result->d_func()->finalize();
         }
 
-        if (sqlite3_close(d->access) != SQLITE_OK)
+        if (sqlite3_close(d->access) != SQLITE_OK) {
             setLastError(qMakeError(d->access, tr("Error closing database"), QSqlError::ConnectionError));
+        }
         d->access = nullptr;
         setOpen(false);
         setOpenError(false);

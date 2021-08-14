@@ -270,7 +270,8 @@ private Q_SLOTS:
             << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
         QTest::newRow("multi-part") << scenarios << Notifications{notification} << pimItem << parts << flags << tags << uidnext << datetime << false;
 
-        TestScenario inScenario, outScenario;
+        TestScenario inScenario;
+        TestScenario outScenario;
         {
             auto cmd = Protocol::CreateItemCommandPtr::create();
             cmd->setCollection(Scope(100));
