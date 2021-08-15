@@ -90,11 +90,7 @@ public:
         QString mVariableName() const
         {
             return QStringLiteral("m") + name[0].toUpper() +
-#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 2)
                 QStringView(name).mid(1);
-#else
-                name.midRef(1);
-#endif
         }
     };
 

@@ -291,19 +291,11 @@ PropertyNode::Setter *PropertyNode::setter() const
 QString PropertyNode::mVariableName() const
 {
     return QStringLiteral("m") + mName[0].toUpper() +
-#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 2)
         QStringView(mName).mid(1);
-#else
-        mName.midRef(1);
-#endif
 }
 
 QString PropertyNode::setterName() const
 {
     return QStringLiteral("set") + mName[0].toUpper() +
-#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 2)
         QStringView(mName).mid(1);
-#else
-        mName.midRef(1);
-#endif
 }
