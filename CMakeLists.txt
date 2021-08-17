@@ -33,6 +33,11 @@ include(ECMAddTests)
 include(ECMSetupQtPluginMacroNames)
 
 include(AkonadiMacros)
+include(ECMAddQch)
+
+
+option(BUILD_QCH "Build API documentation in QCH format (for e.g. Qt Assistant, Qt Creator & KDevelop)" OFF)
+add_feature_info(QCH ${BUILD_QCH} "API documentation in QCH format (for e.g. Qt Assistant, Qt Creator & KDevelop)")
 
 set(QT_REQUIRED_VERSION "5.15.2")
 set(RELEASE_SERVICE_VERSION "21.11.40")
@@ -307,6 +312,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_ENABLE_EXCEPTIONS}")
 configure_file(config-akonadi.h.cmake ${Akonadi_BINARY_DIR}/config-akonadi.h)
 
 ############### build targets ###############
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5Akonadi")
 
 add_definitions(-DTRANSLATION_DOMAIN=\"libakonadi5\")
 
@@ -352,7 +358,6 @@ update_xdg_mimetypes(${KDE_INSTALL_MIMEDIR})
 
 ############### CMake Config Files ###############
 
-set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5Akonadi")
 
 configure_package_config_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/KF5AkonadiConfig.cmake.in"

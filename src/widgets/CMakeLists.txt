@@ -1,3 +1,13 @@
+if (BUILD_QCH)
+    ecm_install_qch_export(
+        TARGETS KF5AkonadiWidgets_QCH
+        FILE KF5AkonadiWidgetsQchTargets.cmake
+        DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+        COMPONENT Devel
+    )
+    set(PACKAGE_INCLUDE_QCHTARGETS "include(\"\${CMAKE_CURRENT_LIST_DIR}/KF5AkonadiWidgetsQchTargets.cmake\")")
+endif()
+
 configure_file(akonadiwidgetstests_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadiwidgetstests_export.h")
 
 add_library(KF5AkonadiWidgets)
@@ -196,6 +206,31 @@ if(BUILD_DESIGNERPLUGIN)
         KF5::AkonadiCore
         KF5::AkonadiWidgets
         INSTALL_DESTINATION "${KDE_INSTALL_QTPLUGINDIR}/designer"
+        COMPONENT Devel
+    )
+endif()
+
+if (BUILD_QCH)
+    ecm_add_qch(
+        KF5AkonadiWidgets_QCH
+        NAME KF5AkonadiWidgets
+        BASE_NAME KF5AkonadiWidgets
+        VERSION ${PIM_VERSION}
+        ORG_DOMAIN org.kde
+        SOURCES # using only public headers, to cover only public API
+            ${AkonadiWidgets_HEADERS}
+        #MD_MAINPAGE "${CMAKE_SOURCE_DIR}/README.md"
+        #IMAGE_DIRS "${CMAKE_SOURCE_DIR}/docs/pics"
+        LINK_QCHS
+            Qt5Core_QCH
+            Qt5Gui_QCH
+            Qt5Widgets_QCH
+        INCLUDE_DIRS
+            ${CMAKE_CURRENT_BINARY_DIR}
+        BLANK_MACROS
+            AKONADIWIDGETS_EXPORT
+        TAGFILE_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
+        QCH_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
         COMPONENT Devel
     )
 endif()
