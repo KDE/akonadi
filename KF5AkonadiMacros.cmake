@@ -111,6 +111,7 @@ function(add_akonadi_isolated_test_advanced source additional_sources link_libra
 endfunction()
 
 function(kcfg_generate_dbus_interface _kcfg _name)
+    find_program(XSLTPROC_EXECUTABLE xsltproc)
     if (NOT XSLTPROC_EXECUTABLE)
         message(FATAL_ERROR "xsltproc executable not found but needed by KCFG_GENERATE_DBUS_INTERFACE()")
     endif()
