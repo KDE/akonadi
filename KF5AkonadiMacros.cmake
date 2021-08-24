@@ -1,6 +1,7 @@
 #
 # Convenience macros to add akonadi testrunner unit-tests
 #
+# Set AKONADI_RUN_ISOLATED_TESTS to false to prevent any isolated Akonadi tests from being run
 # Set AKONADI_RUN_MYSQL_ISOLATED_TESTS to false to prevent run the tests against MySQL
 # Set AKONADI_RUN_PGSQL_ISOLATED_TESTS to false to prevent run the tests against PostgreSQL
 # Set AKONADI_RUN_SQLITE_ISOLATED_TESTS to false to prevent run the tests against SQLite
@@ -50,7 +51,8 @@ function(add_akonadi_isolated_test)
 
         function(_defineTest name backend)
             set(backends ${ARGN})
-            if (NOT DEFINED AKONADI_RUN_${backend}_ISOLATED_TESTS OR AKONADI_RUN_${backend}_ISOLATED_TESTS)
+            if ((NOT DEFINED AKONADI_RUN_${backend}_ISOLATED_TESTS OR AKONADI_RUN_${backend}_ISOLATED_TESTS) AND
+                (NOT DEFINED AKONADI_RUN_ISOLATED_TESTS OR AKONADI_RUN_ISOLATED_TESTS))
                 LIST(LENGTH "${backends}" backendsLen)
                 string(TOLOWER ${backend} lcbackend)
                 LIST(FIND "${backends}" ${lcbackend} enableBackend)
