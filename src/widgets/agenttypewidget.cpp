@@ -104,7 +104,7 @@ AgentTypeWidget::AgentTypeWidget(QWidget *parent)
     connect(d->mView->selectionModel(), &QItemSelectionModel::currentChanged, this, [this](const QModelIndex &start, const QModelIndex &end) {
         d->currentAgentTypeChanged(start, end);
     });
-    connect(d->mView, QOverload<const QModelIndex &>::of(&QListView::activated), this, [this](const QModelIndex &index) {
+    connect(d->mView, qOverload<const QModelIndex &>(&QListView::activated), this, [this](const QModelIndex &index) {
         d->typeActivated(index);
     });
 }

@@ -29,7 +29,7 @@ ProcessControl::ProcessControl(QObject *parent)
     , mShutdownTimeout(1s)
 {
     connect(&mProcess, &QProcess::errorOccurred, this, &ProcessControl::slotError);
-    connect(&mProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &ProcessControl::slotFinished);
+    connect(&mProcess, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), this, &ProcessControl::slotFinished);
     mProcess.setProcessChannelMode(QProcess::ForwardedChannels);
 
     if (Akonadi::Instance::hasIdentifier()) {

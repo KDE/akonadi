@@ -70,10 +70,10 @@ CachePolicyPage::CachePolicyPage(QWidget *parent, GuiMode mode)
     d->mode = mode;
 
     d->mUi->setupUi(this);
-    connect(d->mUi->checkInterval, QOverload<int>::of(&QSpinBox::valueChanged), this, [this](int value) {
+    connect(d->mUi->checkInterval, qOverload<int>(&QSpinBox::valueChanged), this, [this](int value) {
         d->slotIntervalValueChanged(value);
     });
-    connect(d->mUi->localCacheTimeout, QOverload<int>::of(&QSpinBox::valueChanged), this, [this](int value) {
+    connect(d->mUi->localCacheTimeout, qOverload<int>(&QSpinBox::valueChanged), this, [this](int value) {
         d->slotCacheValueChanged(value);
     });
     connect(d->mUi->inherit, &QCheckBox::toggled, this, [this](bool checked) {

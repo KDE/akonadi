@@ -80,7 +80,7 @@ public:
                 Q_EMIT instance->stopped();
             }
             if (state == ServerManager::Starting || state == ServerManager::Stopping) {
-                QMetaObject::invokeMethod(mSafetyTimer.data(), QOverload<>::of(&QTimer::start), Qt::QueuedConnection); // in case we are in a different thread
+                QMetaObject::invokeMethod(mSafetyTimer.data(), qOverload<>(&QTimer::start), Qt::QueuedConnection); // in case we are in a different thread
             } else {
                 QMetaObject::invokeMethod(mSafetyTimer.data(), &QTimer::stop, Qt::QueuedConnection); // in case we are in a different thread
             }
