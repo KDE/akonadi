@@ -37,7 +37,7 @@ include(ECMSetupQtPluginMacroNames)
 include(AkonadiMacros)
 
 set(QT_REQUIRED_VERSION "5.15.0")
-set(RELEASE_SERVICE_VERSION "21.08.1")
+set(RELEASE_SERVICE_VERSION "21.08.2")
 set(AKONADI_FULL_VERSION "${PIM_VERSION} (${RELEASE_SERVICE_VERSION})")
 
 configure_file(akonadifull-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/akonadifull-version.h @ONLY)
