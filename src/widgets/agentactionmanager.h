@@ -6,8 +6,9 @@
 
 #pragma once
 
-#include "agentinstance.h"
 #include "akonadiwidgets_export.h"
+// AkonadiCore
+#include <akonadi/agentinstance.h>
 
 #include <QObject>
 

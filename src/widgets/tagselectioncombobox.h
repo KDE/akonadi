@@ -9,7 +9,8 @@
 
 #include "akonadiwidgets_export.h"
 
-#include "tag.h"
+// AkonadiCore
+#include <akonadi/tag.h>
 
 #include <QComboBox>
 

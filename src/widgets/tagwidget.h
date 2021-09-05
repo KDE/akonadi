@@ -10,10 +10,10 @@
 #pragma once
 
 #include "akonadiwidgets_export.h"
+// AkonadiCore
+#include <akonadi/tag.h>
 
 #include <QLineEdit>
-
-#include "tag.h"
 
 namespace Akonadi
 {

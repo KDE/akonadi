@@ -1,3 +1,6 @@
+# base install include dir
+set(AkonadiAgentBase_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiAgentBase")
+
 add_library(KF5AkonadiAgentBase)
 add_library(KF5::AkonadiAgentBase ALIAS KF5AkonadiAgentBase)
 
@@ -7,7 +10,7 @@ ecm_qt_declare_logging_category(KF5AkonadiAgentBase HEADER akonadiagentbase_debu
         EXPORT AKONADI
     )
 
-ecm_generate_headers(AkonadiAgentBase_HEADERS
+akonadi_generate_headers_with_deprecated(AkonadiAgentBase_CC_HEADERS
     HEADER_NAMES
     AccountsIntegration
     AgentBase
@@ -17,10 +20,15 @@ ecm_generate_headers(AkonadiAgentBase_HEADERS
     ResourceSettings
     TransportResourceBase
     REQUIRED_HEADERS AkonadiAgentBase_HEADERS
+    DEPRECATED_DESTINATION ${AkonadiAgentBase_INSTALL_INCLUDEDIR}
 )
 
 
 KCONFIG_ADD_KCFG_FILES(KF5AkonadiAgentBase resourcebasesettings.kcfgc)
+akonadi_generate_deprecated_headers(
+    HEADERS resourcebasesettings.h
+    DEPRECATED_DESTINATION ${AkonadiAgentBase_INSTALL_INCLUDEDIR}
+)
 
 qt_add_dbus_interfaces(akonadiagentbase_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Tracer.xml )
 
@@ -62,7 +70,7 @@ endif()
 generate_export_header(KF5AkonadiAgentBase BASE_NAME akonadiagentbase)
 
 
-target_include_directories(KF5AkonadiAgentBase INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiAgentBase>")
+target_include_directories(KF5AkonadiAgentBase INTERFACE "$<INSTALL_INTERFACE:${AkonadiAgentBase_INSTALL_INCLUDEDIR}>")
 
 target_link_libraries(KF5AkonadiAgentBase
 PUBLIC
@@ -105,7 +113,14 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadiagentbase_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/resourcebasesettings.h
     ${AkonadiAgentBase_HEADERS}
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiAgentBase COMPONENT Devel
+    DESTINATION ${AkonadiAgentBase_INSTALL_INCLUDEDIR}/akonadi
+    COMPONENT Devel
+)
+
+install(FILES
+    ${AkonadiAgentBase_CC_HEADERS}
+    DESTINATION ${AkonadiAgentBase_INSTALL_INCLUDEDIR}/Akonadi
+    COMPONENT Devel
 )
 
 install(FILES

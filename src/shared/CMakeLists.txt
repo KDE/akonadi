@@ -1,3 +1,6 @@
+# base install include dir
+set(AkonadiCore_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiCore")
+
 add_library(akonadi_shared STATIC)
 target_sources(akonadi_shared PRIVATE
     akapplication.cpp
@@ -18,15 +21,22 @@ PUBLIC
     KF5::Crash
 )
 
-ecm_generate_headers(shared_HEADERS
+akonadi_generate_headers_with_deprecated(shared_CC_HEADERS
     HEADER_NAMES
     VectorHelper
     REQUIRED_HEADERS shared_HEADERS
+    DEPRECATED_DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}
 )
 
 # shared is not generally a public library, so install only the useful
 # public stuff to core
 install(FILES
     ${shared_HEADERS}
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiCore COMPONENT Devel
+    DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}/akonadi
+    COMPONENT Devel
+)
+install(FILES
+    ${shared_CC_HEADERS}
+    DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}/Akonadi
+    COMPONENT Devel
 )

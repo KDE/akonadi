@@ -9,6 +9,9 @@ if (BUILD_QCH)
 endif()
 configure_file(akonaditests_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonaditests_export.h")
 
+# base install include dir
+set(AkonadiCore_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiCore")
+
 set(akonadicore_base_SRCS
     agentconfigurationbase.cpp
     agentconfigurationfactorybase.cpp
@@ -71,7 +74,7 @@ set(akonadicore_base_SRCS
     typepluginloader.cpp
 )
 
-ecm_generate_headers(AkonadiCore_base_HEADERS
+akonadi_generate_headers_with_deprecated(AkonadiCore_base_CC_HEADERS
     HEADER_NAMES
     AbstractDifferencesReporter
     AgentConfigurationBase
@@ -111,6 +114,12 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     TrashSettings
     CollectionPathResolver
     REQUIRED_HEADERS AkonadiCore_base_HEADERS
+    PREFIX Akonadi
+    DEPRECATED_DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}
+)
+akonadi_generate_deprecated_headers(
+    HEADERS qtest_akonadi.h
+    DEPRECATED_DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}
 )
 
 set(akonadicore_attributes_SRCS
@@ -131,7 +140,7 @@ set(akonadicore_attributes_SRCS
     attributes/tagattribute.cpp
 )
 
-ecm_generate_headers(AkonadiCore_attributes_HEADERS
+akonadi_generate_headers_with_deprecated(AkonadiCore_attributes_CC_HEADERS
     HEADER_NAMES
     Attribute
     CollectionColorAttribute
@@ -148,6 +157,8 @@ ecm_generate_headers(AkonadiCore_attributes_HEADERS
     TagAttribute
     REQUIRED_HEADERS AkonadiCore_attributes_HEADERS
     RELATIVE attributes
+    PREFIX Akonadi
+    DEPRECATED_DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}
 )
 
 set(akonadicore_models_SRCS
@@ -170,7 +181,7 @@ set(akonadicore_models_SRCS
     models/trashfilterproxymodel.cpp
 )
 
-ecm_generate_headers(AkonadiCore_models_HEADERS
+akonadi_generate_headers_with_deprecated(AkonadiCore_models_CC_HEADERS
     HEADER_NAMES
     AgentFilterProxyModel
     AgentInstanceModel
@@ -188,6 +199,8 @@ ecm_generate_headers(AkonadiCore_models_HEADERS
     TrashFilterProxyModel
     REQUIRED_HEADERS AkonadiCore_models_HEADERS
     RELATIVE models
+    PREFIX Akonadi
+    DEPRECATED_DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}
 )
 
 set(akonadicore_jobs_SRCS
@@ -234,7 +247,7 @@ set(akonadicore_jobs_SRCS
     jobs/unlinkjob.cpp
 )
 
-ecm_generate_headers(AkonadiCore_jobs_HEADERS
+akonadi_generate_headers_with_deprecated(AkonadiCore_jobs_CC_HEADERS
     HEADER_NAMES
     AgentInstanceCreateJob
     CollectionAttributesSynchronizationJob
@@ -273,6 +286,8 @@ ecm_generate_headers(AkonadiCore_jobs_HEADERS
     UnlinkJob
     REQUIRED_HEADERS AkonadiCore_jobs_HEADERS
     RELATIVE jobs
+    PREFIX Akonadi
+    DEPRECATED_DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}
 )
 
 set(akonadicore_dbus_xml ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.NotificationManager.xml)
@@ -311,7 +326,7 @@ add_library(KF5AkonadiCore ${akonadicore_SRCS})
 generate_export_header(KF5AkonadiCore BASE_NAME akonadicore)
 
 add_library(KF5::AkonadiCore ALIAS KF5AkonadiCore)
-target_include_directories(KF5AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiCore>")
+target_include_directories(KF5AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${AkonadiCore_INSTALL_INCLUDEDIR}>")
 target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core;${Akonadi_BINARY_DIR}/src/private>")
 target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_BINARY_DIR};${Akonadi_SOURCE_DIR}/src/core/jobs;${Akonadi_SOURCE_DIR}/src/core/models;${Akonadi_SOURCE_DIR}/src/core/attributes>")
 
@@ -360,7 +375,18 @@ install(FILES
     qtest_akonadi.h
     itempayloadinternals_p.h
     ${Akonadi_BINARY_DIR}/config-akonadi.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiCore COMPONENT Devel
+    DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}/akonadi
+    COMPONENT Devel
+)
+
+install(FILES
+    ${AkonadiCore_base_CC_HEADERS}
+    ${AkonadiCore_attributes_CC_HEADERS}
+    ${AkonadiCore_models_CC_HEADERS}
+    ${AkonadiCore_jobs_CC_HEADERS}
+    ${AkonadiCore_CC_HEADERS}
+    DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}/Akonadi
+    COMPONENT Devel
 )
 
 install(FILES

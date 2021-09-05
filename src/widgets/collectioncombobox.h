@@ -7,7 +7,8 @@
 #pragma once
 
 #include "akonadiwidgets_export.h"
-#include "collection.h"
+// AkonadiCore
+#include <akonadi/collection.h>
 
 #include <QComboBox>
 

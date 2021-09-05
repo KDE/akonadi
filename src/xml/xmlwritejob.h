@@ -7,8 +7,9 @@
 #pragma once
 
 #include "akonadi-xml_export.h"
-#include "collection.h"
-#include "job.h"
+// AkonadiCore
+#include <akonadi/collection.h>
+#include <akonadi/job.h>
 namespace Akonadi
 {
 class Collection;

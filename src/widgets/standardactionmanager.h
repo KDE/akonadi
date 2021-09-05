@@ -8,10 +8,11 @@
 
 #include "akonadiwidgets_export.h"
 
-#include <QObject>
+// AkonadiCore
+#include <akonadi/collection.h>
+#include <akonadi/item.h>
 
-#include "collection.h"
-#include "item.h"
+#include <QObject>
 
 class QAction;
 class KActionCollection;

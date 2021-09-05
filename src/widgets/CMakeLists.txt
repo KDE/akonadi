@@ -10,6 +10,9 @@ endif()
 
 configure_file(akonadiwidgetstests_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadiwidgetstests_export.h")
 
+# base install include dir
+set(AkonadiWidgets_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiWidgets")
+
 add_library(KF5AkonadiWidgets)
 add_library(KF5::AkonadiWidgets ALIAS KF5AkonadiWidgets)
 
@@ -78,7 +81,7 @@ set(akonadiwidgets_UI
     tagwidget.ui
 )
 
-ecm_generate_headers(AkonadiWidgets_HEADERS
+akonadi_generate_headers_with_deprecated(AkonadiWidgets_CC_HEADERS
     HEADER_NAMES
     AgentActionManager
     AgentConfigurationDialog
@@ -109,6 +112,7 @@ ecm_generate_headers(AkonadiWidgets_HEADERS
     TagWidget
     TagSelectWidget
     REQUIRED_HEADERS AkonadiWidgets_HEADERS
+    DEPRECATED_DESTINATION ${AkonadiWidgets_INSTALL_INCLUDEDIR}
 )
 
 ki18n_wrap_ui(KF5AkonadiWidgets ${akonadiwidgets_UI})
@@ -119,7 +123,7 @@ endif()
 generate_export_header(KF5AkonadiWidgets BASE_NAME akonadiwidgets)
 
 
-target_include_directories(KF5AkonadiWidgets INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiWidgets>")
+target_include_directories(KF5AkonadiWidgets INTERFACE "$<INSTALL_INTERFACE:${AkonadiWidgets_INSTALL_INCLUDEDIR}>")
 
 target_link_libraries(KF5AkonadiWidgets
 PUBLIC
@@ -156,7 +160,13 @@ install(TARGETS
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadiwidgets_export.h
     ${AkonadiWidgets_HEADERS}
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiWidgets COMPONENT Devel
+    DESTINATION ${AkonadiWidgets_INSTALL_INCLUDEDIR}/akonadi
+    COMPONENT Devel
+)
+install(FILES
+    ${AkonadiWidgets_CC_HEADERS}
+    DESTINATION ${AkonadiWidgets_INSTALL_INCLUDEDIR}/Akonadi
+    COMPONENT Devel
 )
 
 install(FILES

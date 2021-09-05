@@ -22,13 +22,17 @@ set(akonadixml_SRCS
     xmlwriter.cpp
 )
 
-ecm_generate_headers(AkonadiXml_HEADERS
+# base install include dir
+set(AkonadiXml_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiXml")
+
+akonadi_generate_headers_with_deprecated(AkonadiXml_CC_HEADERS
     HEADER_NAMES
     XmlDocument
     XmlReader
     XmlWriteJob
     XmlWriter
     REQUIRED_HEADERS AkonadiXml_HEADERS
+    DEPRECATED_DESTINATION ${AkonadiXml_INSTALL_INCLUDEDIR}
 )
 
 add_executable(akonadi2xml akonadi2xml.cpp)
@@ -50,7 +54,7 @@ generate_export_header(KF5AkonadiXml BASE_NAME akonadi-xml)
 
 add_library(KF5::AkonadiXml ALIAS KF5AkonadiXml)
 
-target_include_directories(KF5AkonadiXml INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiXml>")
+target_include_directories(KF5AkonadiXml INTERFACE "$<INSTALL_INTERFACE:${AkonadiXml_INSTALL_INCLUDEDIR}>")
 target_include_directories(KF5AkonadiXml PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core>")
 
 target_link_libraries(KF5AkonadiXml
@@ -85,7 +89,13 @@ install(TARGETS
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadi-xml_export.h
     ${AkonadiXml_HEADERS}
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiXml COMPONENT Devel
+    DESTINATION ${AkonadiXml_INSTALL_INCLUDEDIR}/akonadi
+    COMPONENT Devel
+)
+install(FILES
+    ${AkonadiXml_CC_HEADERS}
+    DESTINATION ${AkonadiXml_INSTALL_INCLUDEDIR}/Akonadi
+    COMPONENT Devel
 )
 
 install(FILES

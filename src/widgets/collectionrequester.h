@@ -7,8 +7,10 @@
 #pragma once
 
 #include "akonadiwidgets_export.h"
-#include "collection.h"
 #include "collectiondialog.h"
+// AkonadiCore
+#include <akonadi/collection.h>
+
 #include <QWidget>
 
 namespace Akonadi

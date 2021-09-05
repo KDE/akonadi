@@ -7,8 +7,9 @@
 
 #pragma once
 
-#include "agenttype.h"
 #include "agenttypewidget.h"
+// AkonadiCore
+#include <akonadi/agenttype.h>
 
 #include <QDialog>
 

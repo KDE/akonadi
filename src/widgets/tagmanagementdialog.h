@@ -9,8 +9,9 @@
 #pragma once
 
 #include "akonadiwidgets_export.h"
+// AkonadiCore
+#include <akonadi/tag.h>
 
-#include "tag.h"
 #include <QDialog>
 class QDialogButtonBox;
 namespace Akonadi

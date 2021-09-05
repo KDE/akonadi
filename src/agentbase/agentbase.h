@@ -11,7 +11,8 @@
 #pragma once
 
 #include "akonadiagentbase_export.h"
-#include "item.h"
+// AkonadiCore
+#include <akonadi/item.h>
 
 #include <QApplication>
 

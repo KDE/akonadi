@@ -6,4 +6,4 @@ ItemAccessors=true
 Mutators=true
 Visibility=AKONADIAGENTBASE_EXPORT
 SetUserTextx=true
-IncludeFiles=akonadiagentbase_export.h
+IncludeFiles=\"akonadiagentbase_export.h\"
