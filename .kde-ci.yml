@@ -4,5 +4,6 @@
 Dependencies:
 - 'on': ['@all']
   'require':
+    'frameworks/extra-cmake-modules': '@latest'
     'frameworks/kdesignerplugin' : '@latest'
     'kde/kdenetwork/kaccounts-integration' : '@latest'
