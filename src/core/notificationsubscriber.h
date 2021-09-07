@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <akonadicore_export.h>
+#include "akonadicore_export.h"
 
 #include "monitor.h"
 #include <QSet>
