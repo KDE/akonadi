@@ -112,6 +112,7 @@ akonadi_generate_headers_with_deprecated(AkonadiWidgets_CC_HEADERS
     TagWidget
     TagSelectWidget
     REQUIRED_HEADERS AkonadiWidgets_HEADERS
+    PREFIX Akonadi
     DEPRECATED_DESTINATION ${AkonadiWidgets_INSTALL_INCLUDEDIR}
 )
 
@@ -180,25 +181,25 @@ install(FILES
 if(BUILD_DESIGNERPLUGIN)
     include(ECMAddQtDesignerPlugin)
     ecm_qtdesignerplugin_widget(Akonadi::AgentInstanceWidget
-        INCLUDE_FILE "agentinstancewidget.h"
+	    INCLUDE_FILE "Akonadi/AgentInstanceWidget"
         TOOLTIP "Akonadi Agent Instance Settings (Akonadi)"
         WHATSTHIS "A widget to configure akonadi instance."
         GROUP "Input (KDE-PIM)"
     )
     ecm_qtdesignerplugin_widget(Akonadi::EntityTreeView
-        INCLUDE_FILE "entitytreeview.h"
+	    INCLUDE_FILE "Akonadi/EntityTreeView"
         TOOLTIP "A view to show an item/collection tree provided by an EntityTreeModel (Akonadi)"
         WHATSTHIS "A view to show an item/collection tree provided by an EntityTreeModel."
         GROUP "Input (KDE-PIM)"
     )
     ecm_qtdesignerplugin_widget(Akonadi::TagSelectWidget
-        INCLUDE_FILE "tagselectwidget.h"
+	    INCLUDE_FILE "Akonadi/TagSelectWidget"
         TOOLTIP "A Widget to select tag (Akonadi)"
         WHATSTHIS "A Widget to select tag."
         GROUP "Input (KDE-PIM)"
     )
     ecm_qtdesignerplugin_widget(Akonadi::ManageAccountWidget
-        INCLUDE_FILE "manageaccountwidget.h"
+	    INCLUDE_FILE "Akonadi/ManageAccountWidget"
         TOOLTIP "A Widget to Manage Akonadi Account (KDE-PIM)"
         WHATSTHIS "A Widget to Manage Akonadi Account."
         GROUP "Input (KDE-PIM)"

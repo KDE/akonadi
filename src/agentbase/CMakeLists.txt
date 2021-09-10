@@ -20,6 +20,7 @@ akonadi_generate_headers_with_deprecated(AkonadiAgentBase_CC_HEADERS
     ResourceSettings
     TransportResourceBase
     REQUIRED_HEADERS AkonadiAgentBase_HEADERS
+    PREFIX Akonadi
     DEPRECATED_DESTINATION ${AkonadiAgentBase_INSTALL_INCLUDEDIR}
 )
 
