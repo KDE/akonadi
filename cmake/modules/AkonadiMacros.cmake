@@ -89,7 +89,7 @@ endfunction()
 function(_akonadi_generate_compat_header compat_header header include_path)
     set(content "#include <akonadi/${header}>\n")
     # enable once all PIM repos have been adapted, too much noise before
-    # string(APPEND content "#pragma message(\"Deprecated header, will be removed for Akonadi 5.19. Use #include <${include_path}> instead.\")\n")
+    string(APPEND content "#pragma message(\"Deprecated header, will be removed for Akonadi 5.19. Use #include <${include_path}> instead.\")\n")
     file(GENERATE OUTPUT "${compat_header}" CONTENT "${content}")
 endfunction()
 
