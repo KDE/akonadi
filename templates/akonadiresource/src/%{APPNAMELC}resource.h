@@ -7,7 +7,7 @@
 #ifndef %{APPNAMEUC}RESOURCE_H
 #define %{APPNAMEUC}RESOURCE_H
 
-#include <AkonadiAgentBase/ResourceBase>
+#include <Akonadi/ResourceBase>
 
 class %{APPNAME}Resource : public Akonadi::ResourceBase,
                            public Akonadi::AgentBase::Observer
