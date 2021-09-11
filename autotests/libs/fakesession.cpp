@@ -8,8 +8,8 @@
 #include "job.h"
 #include "private/protocol_p.h"
 #include "session_p.h"
-
 #include <QCoreApplication>
+#include <QRandomGenerator>
 #include <QTimer>
 using namespace std::chrono_literals;
 class FakeSessionPrivate : public SessionPrivate
@@ -30,7 +30,7 @@ public:
         if (!id.isEmpty()) {
             sessionId = id;
         } else {
-            sessionId = QCoreApplication::instance()->applicationName().toUtf8() + '-' + QByteArray::number(qrand());
+            sessionId = QCoreApplication::instance()->applicationName().toUtf8() + '-' + QByteArray::number(QRandomGenerator::global()->bounded(1, RAND_MAX));
         }
 
         connected = false;
