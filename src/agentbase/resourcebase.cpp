@@ -746,7 +746,9 @@ void ResourceBase::requestItemDelivery(const QVector<qint64> &uids, const QByteA
                            return Item{uid};
                        })
         | Actions::toQVector;
-    d->scheduler->scheduleItemsFetch(items, QSet<QByteArray>::fromList(parts), message());
+
+    const QSet<QByteArray> partSet = QSet<QByteArray>(parts.begin(), parts.end());
+    d->scheduler->scheduleItemsFetch(items, partSet, message());
 }
 
 void ResourceBase::collectionsRetrieved(const Collection::List &collections)

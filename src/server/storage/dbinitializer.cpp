@@ -79,7 +79,7 @@ bool DbInitializer::run()
         // Now finally check and set the generation identifier if necessary
         SchemaVersion version = SchemaVersion::retrieveAll().at(0);
         if (version.generation() == 0) {
-            version.setGeneration(QDateTime::currentDateTimeUtc().toTime_t());
+            version.setGeneration(QDateTime::currentDateTimeUtc().toSecsSinceEpoch());
             version.update();
 
             qCDebug(AKONADISERVER_LOG) << "Generation:" << version.generation();

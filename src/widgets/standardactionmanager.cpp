@@ -1534,14 +1534,20 @@ public:
         const bool isItemAction = (type == CopyItemToMenu || type == MoveItemToMenu);
         const bool isCollectionAction = (type == CopyCollectionToMenu || type == MoveCollectionToMenu);
 
-        const bool canContainRequiredMimeTypes = collection.contentMimeTypes().toSet().intersects(mimeTypes);
+        const auto contentMimeTypesList{collection.contentMimeTypes()};
+        const QSet<QString> contentMimeTypesSet = QSet<QString>(contentMimeTypesList.cbegin(), contentMimeTypesList.cend());
+
+        const bool canContainRequiredMimeTypes = contentMimeTypesSet.intersects(mimeTypes);
         const bool canCreateNewItems = (collection.rights() & Collection::CanCreateItem);
 
         const bool canCreateNewCollections = (collection.rights() & Collection::CanCreateCollection);
         const bool canContainCollections =
             collection.contentMimeTypes().contains(Collection::mimeType()) || collection.contentMimeTypes().contains(Collection::virtualMimeType());
 
-        const bool resourceAllowsRequiredMimeTypes = AgentManager::self()->instance(collection.resource()).type().mimeTypes().toSet().contains(mimeTypes);
+        const auto mimeTypesList{AgentManager::self()->instance(collection.resource()).type().mimeTypes()};
+        const QSet<QString> mimeTypesListSet = QSet<QString>(mimeTypesList.cbegin(), mimeTypesList.cend());
+
+        const bool resourceAllowsRequiredMimeTypes = mimeTypesListSet.contains(mimeTypes);
         const bool isReadOnlyForItems = (isItemAction && (!canCreateNewItems || !canContainRequiredMimeTypes));
         const bool isReadOnlyForCollections = (isCollectionAction && (!canCreateNewCollections || !canContainCollections || !resourceAllowsRequiredMimeTypes));
 
