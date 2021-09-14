@@ -229,6 +229,7 @@ public:
      * Sets the limit of fetched items.
      *
      * @param limit the maximum number of items to retrieve.
+     * The default value for @p limit is -1, indicating no limit.
      * @param start specifies the offset of the first item to retrieve.
      * @param order specifies whether items will be fetched
      * starting with the highest or lowest ID of the item.
