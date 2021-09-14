@@ -25,6 +25,7 @@ akonadi_generate_headers_with_deprecated(shared_CC_HEADERS
     HEADER_NAMES
     VectorHelper
     REQUIRED_HEADERS shared_HEADERS
+    PREFIX Akonadi
     DEPRECATED_DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}
 )
 

@@ -32,6 +32,7 @@ akonadi_generate_headers_with_deprecated(AkonadiXml_CC_HEADERS
     XmlWriteJob
     XmlWriter
     REQUIRED_HEADERS AkonadiXml_HEADERS
+    PREFIX Akonadi
     DEPRECATED_DESTINATION ${AkonadiXml_INSTALL_INCLUDEDIR}
 )
 
