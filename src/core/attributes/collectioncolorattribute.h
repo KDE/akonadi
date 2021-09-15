@@ -8,7 +8,7 @@
 
 #include "akonadicore_export.h"
 
-#include <attribute.h>
+#include "attribute.h"
 
 #include <QColor>
 
