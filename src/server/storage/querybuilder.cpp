@@ -650,6 +650,11 @@ QString QueryBuilder::getTable() const
     return mTable;
 }
 
+QString QueryBuilder::getTableWithColumn(const QString &column) const
+{
+    return mTable + QLatin1Char('.') + column;
+}
+
 QString QueryBuilder::getTableQuery(const QSqlQuery& query, const QString &alias)
 {
     Q_ASSERT_X(query.isValid() && query.isSelect(), "QueryBuilder::getTableQuery", "Table subquery use only for valid SELECT queries");

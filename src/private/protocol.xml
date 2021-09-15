@@ -81,6 +81,18 @@
     <param name="attributes" type="QSet&lt;QByteArray&gt;" />
   </class>
 
+  <class name="FetchLimit">
+    <ctor>
+      <arg name="limit" />
+      <arg name="limitOffset" default="-1" />
+      <arg name="sortOrder" default="Qt::DescendingOrder" />
+    </ctor>
+
+    <param name="limit" type="int" default="-1" />
+    <param name="limitOffset" type="int" default="-1" />
+    <param name="sortOrder" type="Qt::SortOrder" default="Qt::DescendingOrder" />
+  </class>
+
   <!-- Hello //-->
   <response name="Hello">
     <param name="serverName" type="QString" />
@@ -263,12 +275,14 @@
       <arg name="scopeContext" default="ScopeContext()" />
       <arg name="itemFetchScope" default="ItemFetchScope()" />
       <arg name="tagFetchScope" default="TagFetchScope()" />
+      <arg name="itemsLimit" default="FetchLimit()" />
     </ctor>
 
     <param name="scope" type="Scope" />
     <param name="scopeContext" type="Akonadi::Protocol::ScopeContext" />
     <param name="itemFetchScope" type="Akonadi::Protocol::ItemFetchScope" />
     <param name="tagFetchScope" type="Akonadi::Protocol::TagFetchScope" />
+    <param name="itemsLimit" type="Akonadi::Protocol::FetchLimit" />
 </command>
 
   <response name="FetchItems">

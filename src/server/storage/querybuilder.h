@@ -258,6 +258,13 @@ public:
     */
     QString getTable() const;
 
+    /**
+     * Returns concatenated table name with column name.
+     * @param column Column name.
+     * @note Pass only @p column that are not prefixed by table name.
+    */
+    QString getTableWithColumn(const QString &column) const;
+
 private:
     void buildQuery(QString *query);
     void bindValue(QString *query, const QVariant &value);
