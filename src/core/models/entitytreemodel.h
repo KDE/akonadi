@@ -72,7 +72,7 @@ class EntityTreeModelPrivate;
  *
  *   Monitor *monitor = new Monitor( this );
  *   monitor->setCollectionMonitored( Collection::root() );
- *   monitor->setMimeTypeMonitored( KContacts::addresseeMimeType() );
+ *   monitor->setMimeTypeMonitored( KContacts::Addressee::mimeType() );
  *   monitor->setSession( session );
  *
  *   EntityTreeModel *model = new EntityTreeModel( monitor, this );
@@ -85,10 +85,10 @@ class EntityTreeModelPrivate;
  * The EntityTreeModel will show items of a different type by changing the line
  *
  * @code
- * monitor->setMimeTypeMonitored( KContacts::addresseeMimeType() );
+ * monitor->setMimeTypeMonitored( KContacts::Addressee::mimeType() );
  * @endcode
  *
- * to a different mimetype. KContacts::addresseeMimeType() is an alias for "text/directory". If changed to KMime::Message::mimeType()
+ * to a different mimetype. KContacts::Addressee::mimeType() is an alias for "text/directory". If changed to KMime::Message::mimeType()
  * (an alias for "message/rfc822") the model would instead contain emails. The model can be configured to contain items of any mimetype
  * known to %Akonadi.
  *
