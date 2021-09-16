@@ -41,6 +41,7 @@ Comment[ar]=قالب سَلسَلة «أكونادي». قالب لملحقة س
 Comment[az]=Akonadi kontaktları məlumatlarının saxlanılması şablonu. Akonadi kontaktlarının məlumatları saxlama modulu üçün şablon
 Comment[ca]=Plantilla de serialitzador de l'Akonadi. Una plantilla per a un connector de serialització de dades de l'Akonadi
 Comment[ca@valencia]=Plantilla de serialitzador de l'Akonadi. Una plantilla per a un connector de serialització de dades de l'Akonadi
+Comment[cs]=Šablona seřazovače Akonadi. Šablona pro modul seřazovače Akonadi
 Comment[da]=Skabelon til Akonadi-serializer. En skabelon til et Akonadi data-serializer-plugin
 Comment[de]=Vorlage für Akonadi-Serialisierer. Eine Vorlage für einen Datenserialisierer für das Akonadi-PIM-Framework
 Comment[el]=Πρότυπο σειριακοποιητή Akonadi. Ένα πρότυπο για ένα πρόσθετο γραμμικής διάταξης δεδομένων του Akonadi
