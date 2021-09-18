@@ -17,7 +17,6 @@
 #include "private/protocol_p.h"
 #include "protocolhelper_p.h"
 
-#include <QDateTime>
 #include <QFile>
 
 #include <KLocalizedString>
@@ -39,7 +38,6 @@ public:
     Item mItem;
     QSet<QByteArray> mParts;
     QSet<QByteArray> mForeignParts;
-    QDateTime mDatetime;
     QByteArray mPendingData;
     ItemCreateJob::MergeOptions mMergeOptions = ItemCreateJob::NoMerge;
     bool mItemReceived = false;
@@ -228,7 +226,6 @@ Item ItemCreateJob::item() const
 
     Item item(d->mItem);
     item.setRevision(0);
-    item.setModificationTime(d->mDatetime);
     item.setParentCollection(d->mCollection);
     item.setStorageCollectionId(d->mCollection.id());
 
