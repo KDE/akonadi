@@ -845,7 +845,7 @@ bool EntityTreeModel::hasChildren(const QModelIndex &parent) const
     // There is probably no way to tell if a collection
     // has child items in akonadi without first attempting an itemFetchJob...
     // Figure out a way to fix this. (Statistics)
-    return ((rowCount(parent) > 0) || (canFetchMore(parent) && d->m_itemPopulation == LazyPopulation));
+    return ((rowCount(parent) > 0) || (d->canFetchMore(parent) && d->m_itemPopulation == LazyPopulation));
 }
 
 bool EntityTreeModel::isCollectionTreeFetched() const
