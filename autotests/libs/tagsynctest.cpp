@@ -48,7 +48,8 @@ private Q_SLOTS:
     Tag::List getTagsWithRid()
     {
         Tag::List tags;
-        Q_FOREACH (const Tag &t, getTags()) {
+        const auto allTags = getTags();
+        for (const Tag &t : allTags) {
             if (!t.remoteId().isEmpty()) {
                 tags << t;
                 qDebug() << t.remoteId();
@@ -59,7 +60,8 @@ private Q_SLOTS:
 
     void cleanTags()
     {
-        Q_FOREACH (const Tag &t, getTags()) {
+        const auto tags = getTags();
+        for (const Tag &t : tags) {
             auto job = new TagDeleteJob(t);
             bool ret = job->exec();
             Q_ASSERT(ret);

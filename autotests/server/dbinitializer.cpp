@@ -133,7 +133,8 @@ DbInitializer::listResponse(const Collection &col, bool ancestors, bool mimetype
             if (!ancestorFetchScope.isEmpty()) {
                 anc.setRemoteId(parent.remoteId());
                 Akonadi::Protocol::Attributes attrs;
-                Q_FOREACH (const CollectionAttribute &attr, parent.attributes()) {
+                const auto parentAttrs = parent.attributes();
+                for (const CollectionAttribute &attr : parentAttrs) {
                     if (ancestorFetchScope.contains(QString::fromLatin1(attr.type()))) {
                         attrs.insert(attr.type(), attr.value());
                     }
@@ -154,7 +155,8 @@ DbInitializer::listResponse(const Collection &col, bool ancestors, bool mimetype
     resp->setIndexPref(static_cast<Tristate>(col.indexPref()));
 
     Akonadi::Protocol::Attributes attrs;
-    Q_FOREACH (const CollectionAttribute &attr, col.attributes()) {
+    const auto colAttrs = col.attributes();
+    for (const CollectionAttribute &attr : colAttrs) {
         attrs.insert(attr.type(), attr.value());
     }
     resp->setAttributes(attrs);

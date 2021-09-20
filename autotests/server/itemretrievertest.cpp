@@ -43,7 +43,7 @@ public:
 
     void start() override
     {
-        Q_FOREACH (const JobResult &res, mResults) {
+        for (const JobResult &res : std::as_const(mResults)) {
             if (res.error.isEmpty()) {
                 // This is analogous to what STORE/MERGE does
                 const PimItem item = PimItem::retrieveById(res.pimItemId);
@@ -106,7 +106,7 @@ public:
     AbstractItemRetrievalJob *retrievalJob(ItemRetrievalRequest request, QObject *parent) override
     {
         QVector<JobResult> results;
-        Q_FOREACH (auto id, request.ids) {
+        for (auto id : std::as_const(request.ids)) {
             auto it = mJobResults.constFind(id);
             while (it != mJobResults.constEnd() && it.key() == id) {
                 if (request.parts.contains(it->partname)) {
@@ -270,11 +270,11 @@ private Q_SLOTS:
 
             // step 0: do it in the main thread, for easier debugging
             PimItem item = dbInitializer.createItem("1", col);
-            Q_FOREACH (const auto &existingPart, existingParts) {
+            for (const auto &existingPart : std::as_const(existingParts)) {
                 dbInitializer.createPart(item.id(), existingPart.first, existingPart.second);
             }
 
-            Q_FOREACH (const auto &availablePart, availableParts) {
+            for (const auto &availablePart : std::as_const(availableParts)) {
                 factory->addJobResult(item.id(), availablePart.first, availablePart.second);
             }
 
@@ -320,7 +320,7 @@ private Q_SLOTS:
             // Check that the parts now exist in the DB
             const auto parts = item.parts();
             QCOMPARE(parts.count(), expectedParts);
-            Q_FOREACH (const Part &dbPart, item.parts()) {
+            for (const Part &dbPart : parts) {
                 const QString fqname = dbPart.partType().ns() + QLatin1Char(':') + dbPart.partType().name();
                 if (!requestedParts.contains(fqname.toLatin1())) {
                     continue;

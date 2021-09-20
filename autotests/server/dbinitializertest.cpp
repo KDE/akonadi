@@ -146,7 +146,7 @@ void DbInitializerTest::testRun()
         QVERIFY(initializer->updateIndexesAndConstraints());
         QVERIFY(!collector.statements.isEmpty());
 
-        Q_FOREACH (const QString &statement, collector.statements) {
+        for (const QString &statement : std::as_const(collector.statements)) {
             const QString expected = readNextStatement(&file).simplified();
 
             QString normalized = statement.simplified();

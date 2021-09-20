@@ -67,7 +67,8 @@ private Q_SLOTS:
         Query::Condition c = PartTypeHelper::conditionFromFqNames(QStringList() << QL1S("PLD:RFC822") << QL1S("PLD:HEAD") << QL1S("PLD:ENVELOPE"));
         QVERIFY(!c.isEmpty());
         QCOMPARE(c.subConditions().size(), 3);
-        Q_FOREACH (const Query::Condition &subC, c.subConditions()) {
+        const auto subCs = c.subConditions();
+        for (const Query::Condition &subC : subCs) {
             QCOMPARE(subC.subConditions().size(), 2);
         }
     }

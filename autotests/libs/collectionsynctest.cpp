@@ -73,7 +73,7 @@ private:
         Q_ASSERT(resJob->exec());
 
         Collection root;
-        Q_FOREACH (const Collection &col, collections) {
+        for (const Collection &col : std::as_const(collections)) {
             if (col.parentCollection() == Collection::root()) {
                 root = col;
                 break;
@@ -236,7 +236,7 @@ private Q_SLOTS:
         Collection::List leafCols = resultCols;
         for (auto iter = leafCols.begin(); iter != leafCols.end();) {
             bool found = false;
-            Q_FOREACH (const Collection &c, resultCols) {
+            for (const Collection &c : std::as_const(resultCols)) {
                 if (c.parentCollection().id() == iter->id()) {
                     iter = leafCols.erase(iter);
                     found = true;

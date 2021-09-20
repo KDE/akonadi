@@ -152,7 +152,8 @@ private Q_SLOTS:
             QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<Protocol::ChangeNotificationList>().isEmpty());
         }
 
-        Q_FOREACH (const auto &entity, notification->items()) {
+        const auto entities = notification->items();
+        for (const auto &entity : entities) {
             if (expectFail) {
                 QVERIFY(!Collection::relatesToPimItem(notification->parentCollection(), entity.id()));
             } else {
@@ -262,7 +263,8 @@ private Q_SLOTS:
             QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<Protocol::ChangeNotificationList>().isEmpty());
         }
 
-        Q_FOREACH (const auto &entity, notification->items()) {
+        const auto entities = notification->items();
+        for (const auto &entity : entities) {
             if (expectFail) {
                 QVERIFY(Collection::relatesToPimItem(notification->parentCollection(), entity.id()));
             } else {

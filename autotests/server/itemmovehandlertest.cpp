@@ -113,7 +113,8 @@ private Q_SLOTS:
             const auto notification = receivedNotifications.at(i).staticCast<Protocol::ItemChangeNotification>();
             QCOMPARE(notification->parentDestCollection(), newValue.toInt());
 
-            Q_FOREACH (const auto &ntfItem, notification->items()) {
+            const auto ntfItems = notification->items();
+            for (const auto &ntfItem : ntfItems) {
                 const PimItem item = PimItem::retrieveById(ntfItem.id());
                 QCOMPARE(item.collectionId(), newValue.toInt());
             }
