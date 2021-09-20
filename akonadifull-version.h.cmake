@@ -1,7 +1,2 @@
-#ifndef AKONADIFULL_VERSION_H
-#define AKONADIFULL_VERSION_H
-
-
+#pragma once
 #define AKONADI_FULL_VERSION "@AKONADI_FULL_VERSION@"
-
-#endif
