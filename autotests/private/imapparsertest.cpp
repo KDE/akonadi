@@ -505,7 +505,7 @@ void ImapParserTest::testBulkParser()
     QVERIFY(buffer.open(QBuffer::ReadOnly));
 
     // reading continuation as a single block
-    forever {
+    for (;;) {
         if (buffer.atEnd()) {
             break;
         }
@@ -522,7 +522,7 @@ void ImapParserTest::testBulkParser()
     // reading continuations as smaller blocks
     buffer.reset();
     parser->reset();
-    forever {
+    for (;;) {
         if (buffer.atEnd()) {
             break;
         }

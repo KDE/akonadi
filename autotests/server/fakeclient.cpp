@@ -181,7 +181,7 @@ void FakeClient::run()
     }
     mStream.setDevice(mSocket);
 
-    Q_FOREVER {
+    for (;;) {
         if (mSocket->state() != QLocalSocket::ConnectedState) {
             connectionLost();
             break;

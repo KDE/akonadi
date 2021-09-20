@@ -122,7 +122,7 @@ void SearchRequest::exec()
     mAgentSearchManager.addTask(&task);
 
     task.sharedLock.lock();
-    Q_FOREVER {
+    for (;;) {
         if (task.complete) {
             break;
         }

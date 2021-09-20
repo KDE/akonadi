@@ -171,7 +171,7 @@ void Connection::parseStream(const Protocol::CommandPtr &cmd)
 
 void Connection::handleIncomingData()
 {
-    Q_FOREVER {
+    for (;;) {
         if (m_connectionClosing || !m_socket || m_socket->state() != QLocalSocket::ConnectedState) {
             break;
         }

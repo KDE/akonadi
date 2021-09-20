@@ -190,7 +190,7 @@ void SearchTaskManager::searchLoop()
 
     QMutexLocker locker(&mLock);
 
-    Q_FOREVER {
+    for (;;) {
         qCDebug(AKONADISERVER_SEARCH_LOG) << "Search loop is waiting, will wake again in" << timeout << "ms";
         mWait.wait(&mLock, QDeadlineTimer(QDeadlineTimer::Forever));
         if (mShouldStop) {
