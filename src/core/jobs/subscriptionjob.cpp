@@ -72,7 +72,8 @@ void SubscriptionJob::slotResult(KJob *job)
     if (job->error()) {
         setError(job->error());
         setErrorText(job->errorText());
-        Q_FOREACH (KJob *subjob, subjobs()) {
+        const auto subJobs = this->subjobs();
+        for (KJob *subjob : subJobs) {
             removeSubjob(subjob);
         }
         emitResult();

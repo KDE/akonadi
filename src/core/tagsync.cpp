@@ -88,14 +88,14 @@ void TagSync::diffTags()
     QHash<QByteArray, Akonadi::Tag> tagByGid;
     QHash<QByteArray, Akonadi::Tag> tagByRid;
     QHash<Akonadi::Tag::Id, Akonadi::Tag> tagById;
-    Q_FOREACH (const Akonadi::Tag &localTag, mLocalTags) {
+    for (const Akonadi::Tag &localTag : std::as_const(mLocalTags)) {
         tagByRid.insert(localTag.remoteId(), localTag);
         tagByGid.insert(localTag.gid(), localTag);
         if (!localTag.remoteId().isEmpty()) {
             tagById.insert(localTag.id(), localTag);
         }
     }
-    Q_FOREACH (const Akonadi::Tag &remoteTag, mRemoteTags) {
+    for (const Akonadi::Tag &remoteTag : std::as_const(mRemoteTags)) {
         if (tagByRid.contains(remoteTag.remoteId())) {
             // Tag still exists, check members
             Tag tag = tagByRid.value(remoteTag.remoteId());
@@ -126,7 +126,7 @@ void TagSync::diffTags()
             connect(createJob, &KJob::result, this, &TagSync::onJobDone);
         }
     }
-    Q_FOREACH (const Tag &tag, tagById) {
+    for (const Tag &tag : std::as_const(tagById)) {
         // Removed remotely, unset rid
         Tag copy(tag);
         copy.setRemoteId(QByteArray(""));

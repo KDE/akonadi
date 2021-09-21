@@ -552,7 +552,8 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
         subscriber.setMonitoredItems(subNtf.items());
         subscriber.setMonitoredTags(subNtf.tags());
         QSet<Monitor::Type> monitorTypes;
-        Q_FOREACH (auto type, subNtf.types()) {
+        const auto types = subNtf.types();
+        for (auto type : types) {
             if (type == Protocol::ModifySubscriptionCommand::NoType) {
                 continue;
             }

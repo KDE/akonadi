@@ -550,7 +550,8 @@ public:
             if (ignoreAttributeChanges(remote, CONTENTMIMETYPES)) {
                 upd.setContentMimeTypes(local.contentMimeTypes());
             }
-            Q_FOREACH (Attribute *remoteAttr, upd.attributes()) {
+            const auto remoteAttributes = upd.attributes();
+            for (Attribute *remoteAttr : remoteAttributes) {
                 if (ignoreAttributeChanges(remote, remoteAttr->type()) && local.hasAttribute(remoteAttr->type())) {
                     // We don't want to overwrite the attribute changes with the defaults provided by the resource.
                     const Attribute *localAttr = local.attribute(remoteAttr->type());
