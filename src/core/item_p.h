@@ -134,14 +134,6 @@ namespace Akonadi
 using PayloadContainer = std::vector<_detail::TypedPayload>;
 }
 
-namespace QtPrivate
-{
-// disable Q_FOREACH on PayloadContainer (b/c it likes to take copies and clone_ptr doesn't like that)
-template<> class QForeachContainer<Akonadi::PayloadContainer>
-{
-};
-}
-
 namespace Akonadi
 {
 /**

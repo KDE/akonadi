@@ -324,10 +324,6 @@ include_directories(
 
 add_definitions(-DKF_DISABLE_DEPRECATED_BEFORE_AND_AT=0x055700)
 #add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050f02)
-add_definitions(-DQT_NO_EMIT)
-remove_definitions(-DQT_NO_FOREACH)
-remove_definitions(-DQT_NO_KEYWORDS)
-add_definitions(-DQT_NO_SIGNALS_SLOTS_KEYWORDS)
 
 add_subdirectory(src)
 add_subdirectory(icons)
