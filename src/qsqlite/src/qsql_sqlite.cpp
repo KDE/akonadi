@@ -640,7 +640,7 @@ void QSQLiteDriver::close()
     Q_D(QSQLiteDriver);
 
     if (isOpen()) {
-        Q_FOREACH (QSQLiteResult *result, d->results) {
+        for (QSQLiteResult *result : std::as_const(d->results)) {
             result->d_func()->finalize();
         }
 
