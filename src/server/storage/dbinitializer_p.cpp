@@ -37,7 +37,7 @@ QString DbInitializerMySql::buildCreateTableStatement(const TableDescription &ta
     QStringList columns;
     QStringList references;
 
-    Q_FOREACH (const ColumnDescription &columnDescription, tableDescription.columns) {
+    for (const ColumnDescription &columnDescription : tableDescription.columns) {
         columns.append(buildColumnStatement(columnDescription, tableDescription));
 
         if (!columnDescription.refTable.isEmpty() && !columnDescription.refColumn.isEmpty()) {
@@ -284,7 +284,7 @@ QString DbInitializerPostgreSql::buildCreateTableStatement(const TableDescriptio
     QStringList columns;
     columns.reserve(tableDescription.columns.size() + 1);
 
-    Q_FOREACH (const ColumnDescription &columnDescription, tableDescription.columns) {
+    for (const ColumnDescription &columnDescription : tableDescription.columns) {
         columns.append(buildColumnStatement(columnDescription, tableDescription));
     }
 

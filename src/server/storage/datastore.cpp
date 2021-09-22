@@ -885,7 +885,8 @@ bool DataStore::cleanupCollection_slow(Collection &collection)
     Collection::clearPimItems(collection.id());
 
     // delete attributes
-    Q_FOREACH (CollectionAttribute attr, collection.attributes()) { // krazy:exclude=foreach
+    const CollectionAttribute::List attrs = collection.attributes();
+    for (CollectionAttribute attr : attrs) {
         if (!attr.remove()) {
             qCWarning(AKONADISERVER_LOG) << "Slow cleanup of collection" << collection.name() << "(ID" << collection.id() << ")"
                                          << "failed: error clearing attribute" << attr.type();
@@ -929,7 +930,8 @@ static bool recursiveSetResourceId(const Collection &collection, qint64 resource
 
     transaction.commit();
 
-    Q_FOREACH (const Collection &col, collection.children()) {
+    const auto children = collection.children();
+    for (const Collection &col : children) {
         if (!recursiveSetResourceId(col, resourceId)) {
             return false;
         }

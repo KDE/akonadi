@@ -269,11 +269,12 @@ bool ItemModifyHandler::parseStream()
     }
 
     if (item.isValid() && cmd.modifiedParts() & Protocol::ModifyItemsCommand::RemovedParts) {
-        if (!cmd.removedParts().isEmpty()) {
-            if (!store->removeItemParts(item, cmd.removedParts())) {
+        const auto removedParts = cmd.removedParts();
+        if (!removedParts.isEmpty()) {
+            if (!store->removeItemParts(item, removedParts)) {
                 return failureResponse("Unable to remove item parts");
             }
-            Q_FOREACH (const QByteArray &part, cmd.removedParts()) {
+            for (const QByteArray &part : removedParts) {
                 changes.insert(part);
             }
         }
@@ -281,7 +282,8 @@ bool ItemModifyHandler::parseStream()
 
     if (item.isValid() && cmd.modifiedParts() & Protocol::ModifyItemsCommand::Parts) {
         PartStreamer streamer(connection(), item);
-        Q_FOREACH (const QByteArray &partName, cmd.parts()) {
+        const auto partNames = cmd.parts();
+        for (const QByteArray &partName : partNames) {
             qint64 partSize = 0;
             try {
                 streamer.stream(true, partName, partSize);

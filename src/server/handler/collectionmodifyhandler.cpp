@@ -214,7 +214,8 @@ bool CollectionModifyHandler::parseStream()
     }
 
     if (cmd.modifiedParts() & Protocol::ModifyCollectionCommand::RemovedAttributes) {
-        Q_FOREACH (const QByteArray &attr, cmd.removedAttributes()) {
+        const auto attrs = cmd.removedAttributes();
+        for (const QByteArray &attr : attrs) {
             if (db->removeCollectionAttribute(collection, attr)) {
                 changes.append(attr);
             }

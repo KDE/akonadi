@@ -250,7 +250,8 @@ bool ItemCreateHandler::mergeItem(const Protocol::CreateItemCommand &cmd, PimIte
     }
 
     PartStreamer streamer(connection(), currentItem);
-    Q_FOREACH (const QByteArray &partName, cmd.parts()) {
+    const auto partNames = cmd.parts();
+    for (const QByteArray &partName : partNames) {
         bool changed = false;
         qint64 partSize = 0;
         try {

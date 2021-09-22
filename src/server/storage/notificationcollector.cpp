@@ -281,14 +281,14 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
     msg->setRemovedTags(removedTags);
     if (!addedRelations.isEmpty()) {
         QSet<Protocol::ItemChangeNotification::Relation> rels;
-        Q_FOREACH (const Relation &rel, addedRelations) {
+        for (const Relation &rel : addedRelations) {
             rels.insert(Protocol::ItemChangeNotification::Relation(rel.leftId(), rel.rightId(), rel.relationType().name()));
         }
         msg->setAddedRelations(rels);
     }
     if (!removedRelations.isEmpty()) {
         QSet<Protocol::ItemChangeNotification::Relation> rels;
-        Q_FOREACH (const Relation &rel, removedRelations) {
+        for (const Relation &rel : removedRelations) {
             rels.insert(Protocol::ItemChangeNotification::Relation(rel.leftId(), rel.rightId(), rel.relationType().name()));
         }
         msg->setRemovedRelations(rels);
@@ -303,7 +303,7 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
     msg->setParentDestCollection(collectionDest.id());
 
     QVector<Protocol::FetchItemsResponse> ntfItems;
-    Q_FOREACH (const PimItem &item, items) {
+    for (const PimItem &item : items) {
         Protocol::FetchItemsResponse i;
         i.setId(item.id());
         i.setRemoteId(item.remoteId());

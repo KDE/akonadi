@@ -38,11 +38,13 @@ bool RelationFetchHandler::parseStream()
             relationQuery.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, cmd.right());
         }
     }
-    if (!cmd.types().isEmpty()) {
+
+    const auto cmdTypes = cmd.types();
+    if (!cmdTypes.isEmpty()) {
         relationQuery.addJoin(QueryBuilder::InnerJoin, RelationType::tableName(), Relation::typeIdFullColumnName(), RelationType::idFullColumnName());
         QStringList types;
-        types.reserve(cmd.types().size());
-        Q_FOREACH (const QByteArray &type, cmd.types()) {
+        types.reserve(cmdTypes.size());
+        for (const QByteArray &type : cmdTypes) {
             types << QString::fromUtf8(type);
         }
         relationQuery.addValueCondition(RelationType::nameFullColumnName(), Query::In, types);

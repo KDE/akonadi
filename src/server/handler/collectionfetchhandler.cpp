@@ -363,7 +363,8 @@ void CollectionFetchHandler::retrieveCollections(const Collection &topParent, in
         }
 
         missingCollections.clear();
-        Q_FOREACH (const Collection &missingCol, qb.result()) {
+        const auto missingCols = qb.result();
+        for (const Collection &missingCol : missingCols) {
             mCollections.insert(missingCol.id(), missingCol);
             ancestorIds << missingCol.id();
             attributeIds << missingCol.id();

@@ -105,7 +105,7 @@ bool DbInitializer::checkTable(const TableDescription &tableDescription)
         execQuery(createTableStatement);
     } else {
         // Check for every column whether it exists, and add the missing ones
-        Q_FOREACH (const ColumnDescription &columnDescription, tableDescription.columns) {
+        for (const ColumnDescription &columnDescription : tableDescription.columns) {
             if (!m_introspector->hasColumn(tableDescription.name, columnDescription.name)) {
                 // Don't add the column on update, DbUpdater will add it
                 if (columnDescription.noUpdate) {
@@ -127,7 +127,7 @@ bool DbInitializer::checkTable(const TableDescription &tableDescription)
         return true;
     }
     if (m_introspector->isTableEmpty(tableDescription.name)) {
-        Q_FOREACH (const DataDescription &dataDescription, tableDescription.data) {
+        for (const DataDescription &dataDescription : tableDescription.data) {
             // Get the INSERT VALUES statement for the specific SQL dialect
             const QString statement = buildInsertValuesStatement(tableDescription, dataDescription);
             qCDebug(AKONADISERVER_LOG) << statement;
@@ -142,7 +142,7 @@ void DbInitializer::checkForeignKeys(const TableDescription &tableDescription)
 {
     try {
         const QVector<DbIntrospector::ForeignKey> existingForeignKeys = m_introspector->foreignKeyConstraints(tableDescription.name);
-        Q_FOREACH (const ColumnDescription &column, tableDescription.columns) {
+        for (const ColumnDescription &column : tableDescription.columns) {
             DbIntrospector::ForeignKey existingForeignKey;
             for (const DbIntrospector::ForeignKey &fk : existingForeignKeys) {
                 if (QString::compare(fk.column, column.name, Qt::CaseInsensitive) == 0) {
@@ -194,7 +194,7 @@ void DbInitializer::checkForeignKeys(const TableDescription &tableDescription)
 void DbInitializer::checkIndexes(const TableDescription &tableDescription)
 {
     // Add indices
-    Q_FOREACH (const IndexDescription &indexDescription, tableDescription.indexes) {
+    for (const IndexDescription &indexDescription : tableDescription.indexes) {
         // sqlite3 needs unique index identifiers per db
         const QString indexName = QStringLiteral("%1_%2").arg(tableDescription.name, indexDescription.name);
         if (!m_introspector->hasIndex(tableDescription.name, indexName)) {
@@ -216,12 +216,14 @@ QString DbInitializer::errorMsg() const
 
 bool DbInitializer::updateIndexesAndConstraints()
 {
-    Q_FOREACH (const TableDescription &table, mSchema->tables()) {
+    const auto tables = mSchema->tables();
+    for (const TableDescription &table : tables) {
         // Make sure the foreign key constraints are all there
         checkForeignKeys(table);
         checkIndexes(table);
     }
-    Q_FOREACH (const RelationDescription &relation, mSchema->relations()) {
+    const auto relations = mSchema->relations();
+    for (const RelationDescription &relation : relations) {
         RelationTableDescription relTable(relation);
         checkForeignKeys(relTable);
         checkIndexes(relTable);

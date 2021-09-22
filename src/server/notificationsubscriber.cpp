@@ -194,14 +194,20 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
     (modifiedParts                                                                                                                                             \
      & Protocol::ModifySubscriptionCommand::ModifiedParts(Protocol::ModifySubscriptionCommand::type | Protocol::ModifySubscriptionCommand::Remove))
 
-#define APPEND(set, newItems)                                                                                                                                  \
-    Q_FOREACH (const auto &entity, (newItems)) {                                                                                                               \
-        (set).insert(entity);                                                                                                                                  \
+#define APPEND(set, newItemsFetch)                                                                                                                             \
+    {                                                                                                                                                          \
+        const auto newItems = newItemsFetch;                                                                                                                   \
+        for (const auto &entity : newItems) {                                                                                                                  \
+            (set).insert(entity);                                                                                                                              \
+        }                                                                                                                                                      \
     }
 
-#define REMOVE(set, items)                                                                                                                                     \
-    Q_FOREACH (const auto &entity, (items)) {                                                                                                                  \
-        (set).remove(entity);                                                                                                                                  \
+#define REMOVE(set, itemsFetch)                                                                                                                                \
+    {                                                                                                                                                          \
+        const auto items = itemsFetch;                                                                                                                         \
+        for (const auto &entity : items) {                                                                                                                     \
+            (set).remove(entity);                                                                                                                              \
+        }                                                                                                                                                      \
     }
 
     if (START_MONITORING(Types)) {
@@ -403,7 +409,8 @@ bool NotificationSubscriber::acceptsItemNotification(const Protocol::ItemChangeN
             return true;
         }
 
-        Q_FOREACH (const auto &item, msg.items()) {
+        const auto items = msg.items();
+        for (const auto &item : items) {
             if (isMimeTypeMonitored(item.mimeType())) {
                 TRACE_NTF("ACCEPTS ITEM: ACCEPTED - mimetype monitored");
                 return true;
@@ -415,7 +422,8 @@ bool NotificationSubscriber::acceptsItemNotification(const Protocol::ItemChangeN
     }
 
     // we explicitly monitor that item or the collections it's in
-    Q_FOREACH (const auto &item, msg.items()) {
+    const auto items = msg.items();
+    for (const auto &item : items) {
         if (mMonitoredItems.contains(item.id())) {
             TRACE_NTF("ACCEPTS ITEM: ACCEPTED: item explicitly monitored");
             return true;

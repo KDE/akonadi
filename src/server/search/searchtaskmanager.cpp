@@ -194,7 +194,7 @@ void SearchTaskManager::searchLoop()
         qCDebug(AKONADISERVER_SEARCH_LOG) << "Search loop is waiting, will wake again in" << timeout << "ms";
         mWait.wait(&mLock, QDeadlineTimer(QDeadlineTimer::Forever));
         if (mShouldStop) {
-            Q_FOREACH (SearchTask *task, mTasklist) {
+            for (SearchTask *task : std::as_const(mTasklist)) {
                 QMutexLocker locker(&task->sharedLock);
                 task->queries.clear();
                 task->notifier.wakeAll();

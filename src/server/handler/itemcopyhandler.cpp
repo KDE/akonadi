@@ -37,18 +37,19 @@ bool ItemCopyHandler::copyItem(const PimItem &item, const Collection &target)
     newItem.setRemoteId(QString());
     newItem.setRemoteRevision(QString());
     newItem.setCollectionId(target.id());
-    Part::List parts;
-    parts.reserve(item.parts().count());
-    Q_FOREACH (const Part &part, item.parts()) {
+    Part::List newParts;
+    const auto parts = item.parts();
+    newParts.reserve(parts.size());
+    for (const Part &part : parts) {
         Part newPart(part);
         newPart.setData(PartHelper::translateData(newPart.data(), part.storage()));
         newPart.setPimItemId(-1);
         newPart.setStorage(Part::Internal);
-        parts << newPart;
+        newParts << newPart;
     }
 
     DataStore *store = connection()->storageBackend();
-    return store->appendPimItem(parts, item.flags(), item.mimeType(), target, QDateTime::currentDateTimeUtc(), QString(), QString(), item.gid(), newItem);
+    return store->appendPimItem(newParts, item.flags(), item.mimeType(), target, QDateTime::currentDateTimeUtc(), QString(), QString(), item.gid(), newItem);
 }
 
 void ItemCopyHandler::processItems(const QVector<qint64> &ids)

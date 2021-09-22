@@ -391,7 +391,8 @@ bool ItemRetriever::exec()
     // retrieve items in child collections if requested
     bool result = true;
     if (mRecursive && mCollection.isValid()) {
-        Q_FOREACH (const Collection &col, mCollection.children()) {
+        const auto children = mCollection.children();
+        for (const Collection &col : children) {
             ItemRetriever retriever(mItemRetrievalManager, mConnection, mContext);
             retriever.setCollection(col, mRecursive);
             retriever.setRetrieveParts(mParts);
