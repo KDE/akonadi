@@ -11,6 +11,7 @@
 #include "agentmanager.h"
 #include "attributefactory.h"
 #include "collectionfetchjob.h"
+#include "config_p.h"
 #include "control.h"
 #include "itemcreatejob.h"
 #include "itemdeletejob.h"
@@ -32,6 +33,9 @@ static Collection res3;
 
 void ItemStoreTest::initTestCase()
 {
+    // The Item size tests expect the payload not to be compressed.
+    QVERIFY(!Config::get().payloadCompression.enabled);
+
     AkonadiTest::checkTestIsIsolated();
     Control::start();
     AttributeFactory::registerAttribute<TestAttribute>();
@@ -104,19 +108,19 @@ void ItemStoreTest::testDataChange_data()
     QTest::addColumn<QByteArray>("data");
     QTest::addColumn<qint64>("expectedSize");
 
-    QTest::newRow("simple") << QByteArray("testbody") << 60LL;
+    QTest::newRow("simple") << QByteArray("testbody") << 8LL;
     QTest::newRow("null") << QByteArray() << 0LL;
     QTest::newRow("empty") << QByteArray("") << 0LL;
-    QTest::newRow("nullbyte") << QByteArray("\0", 1) << 56LL;
-    QTest::newRow("nullbyte2") << QByteArray("\0X", 2) << 56LL;
-    QTest::newRow("linebreaks") << QByteArray("line1\nline2\n\rline3\rline4\r\n") << 80LL;
-    QTest::newRow("linebreaks2") << QByteArray("line1\r\nline2\r\n\r\n") << 68LL;
-    QTest::newRow("linebreaks3") << QByteArray("line1\nline2") << 64LL;
+    QTest::newRow("nullbyte") << QByteArray("\0", 1) << 1LL;
+    QTest::newRow("nullbyte2") << QByteArray("\0X", 2) << 2LL;
+    QTest::newRow("linebreaks") << QByteArray("line1\nline2\n\rline3\rline4\r\n") << 26LL;
+    QTest::newRow("linebreaks2") << QByteArray("line1\r\nline2\r\n\r\n") << 16LL;
+    QTest::newRow("linebreaks3") << QByteArray("line1\nline2") << 11LL;
     QByteArray b;
-    QTest::newRow("big") << b.fill('a', 1 << 20) << 280LL;
-    QTest::newRow("bignull") << b.fill('\0', 1 << 20) << 280LL;
-    QTest::newRow("bigcr") << b.fill('\r', 1 << 20) << 280LL;
-    QTest::newRow("biglf") << b.fill('\n', 1 << 20) << 280LL;
+    QTest::newRow("big") << b.fill('a', 1 << 20) << (1LL << 20);
+    QTest::newRow("bignull") << b.fill('\0', 1 << 20) << (1LL << 20);
+    QTest::newRow("bigcr") << b.fill('\r', 1 << 20) << (1LL << 20);
+    QTest::newRow("biglf") << b.fill('\n', 1 << 20) << (1LL << 20);
 }
 
 void ItemStoreTest::testDataChange()

@@ -14,6 +14,7 @@
 #include "agentmanager.h"
 #include "attributefactory.h"
 #include "collectionfetchjob.h"
+#include "config_p.h"
 #include "itemcreatejob.h"
 #include "itemdeletejob.h"
 #include "itemfetchjob.h"
@@ -27,6 +28,9 @@ QTEST_AKONADIMAIN(ItemAppendTest)
 
 void ItemAppendTest::initTestCase()
 {
+    // The size checks in the test expects Item payload to not be compressed
+    QVERIFY(!Config::get().payloadCompression.enabled);
+
     AkonadiTest::checkTestIsIsolated();
     Control::start();
     AkonadiTest::setAllResourcesOffline();
@@ -228,9 +232,9 @@ void ItemAppendTest::testItemSize_data()
     Item i(QStringLiteral("application/octet-stream"));
     i.setPayload(QByteArray("ABCD"));
 
-    QTest::newRow("auto size") << i << 56LL;
+    QTest::newRow("auto size") << i << 4LL;
     i.setSize(3);
-    QTest::newRow("too small") << i << 56LL;
+    QTest::newRow("too small") << i << 4LL;
     i.setSize(100);
     QTest::newRow("too large") << i << 100LL;
 }
