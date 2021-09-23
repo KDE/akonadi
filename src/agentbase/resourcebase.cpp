@@ -63,7 +63,6 @@ public:
         : AgentBasePrivate(parent)
         , scheduler(nullptr)
         , mItemSyncer(nullptr)
-        , mItemSyncFetchScope(nullptr)
         , mItemTransactionMode(ItemSync::SingleTransaction)
         , mItemMergeMode(ItemSync::RIDMerge)
         , mCollectionSyncer(nullptr)
@@ -85,10 +84,7 @@ public:
         mKeepLocalCollectionChanges << "ENTITYDISPLAY";
     }
 
-    ~ResourceBasePrivate() override
-    {
-        delete mItemSyncFetchScope;
-    }
+    ~ResourceBasePrivate() override = default;
 
     Q_DECLARE_PUBLIC(ResourceBase)
 
@@ -182,9 +178,6 @@ public:
             mItemSyncer->setTransactionMode(mItemTransactionMode);
             mItemSyncer->setBatchSize(mItemSyncBatchSize);
             mItemSyncer->setMergeMode(mItemMergeMode);
-            if (mItemSyncFetchScope) {
-                mItemSyncer->setFetchScope(*mItemSyncFetchScope);
-            }
             mItemSyncer->setDisableAutomaticDeliveryDone(mDisableAutomaticItemDeliveryDone);
             mItemSyncer->setProperty("collection", QVariant::fromValue(q->currentCollection()));
             connect(mItemSyncer, &KJob::percentChanged, this,
@@ -431,7 +424,6 @@ public:
 
     ResourceScheduler *scheduler = nullptr;
     ItemSync *mItemSyncer = nullptr;
-    ItemFetchScope *mItemSyncFetchScope = nullptr;
     ItemSync::TransactionMode mItemTransactionMode;
     ItemSync::MergeMode mItemMergeMode;
     CollectionSync *mCollectionSyncer = nullptr;
@@ -1490,15 +1482,6 @@ void ResourceBase::setItemTransactionMode(ItemSync::TransactionMode mode)
 {
     Q_D(ResourceBase);
     d->mItemTransactionMode = mode;
-}
-
-void ResourceBase::setItemSynchronizationFetchScope(const ItemFetchScope &fetchScope)
-{
-    Q_D(ResourceBase);
-    if (!d->mItemSyncFetchScope) {
-        d->mItemSyncFetchScope = new ItemFetchScope;
-    }
-    *(d->mItemSyncFetchScope) = fetchScope;
 }
 
 void ResourceBase::setItemMergingMode(ItemSync::MergeMode mode)

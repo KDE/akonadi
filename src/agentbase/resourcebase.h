@@ -581,19 +581,6 @@ protected:
     void setItemMergingMode(ItemSync::MergeMode mode);
 
     /**
-     * Set the fetch scope applied for item synchronization.
-     * By default, the one set on the changeRecorder() is used. However, it can make sense
-     * to specify a specialized fetch scope for synchronization to improve performance.
-     * The rule of thumb is to remove anything from this fetch scope that does not provide
-     * additional information regarding whether and item has changed or not. This is primarily
-     * relevant for backends not supporting incremental retrieval.
-     * @param fetchScope The fetch scope to use by the internal Akonadi::ItemSync instance.
-     * @see Akonadi::ItemSync
-     * @since 4.6
-     */
-    void setItemSynchronizationFetchScope(const ItemFetchScope &fetchScope);
-
-    /**
      * Call this method to supply incrementally retrieved items from the remote server.
      *
      * @param changedItems Items changed in the backend.
