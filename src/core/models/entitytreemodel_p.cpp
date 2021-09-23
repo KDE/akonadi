@@ -365,7 +365,8 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
     {
         // Build a child-parent map that allows us to build the subtrees afterwards
         std::unordered_map<Collection::Id, Collection::Id> childParentMap;
-        for (const auto &col : collectionsToInsert) {
+        const auto initialCollectionsToInsert(collectionsToInsert);
+        for (const auto &col : initialCollectionsToInsert) {
             childParentMap.insert({col.id(), col.parentCollection().id()});
 
             // Complete the subtree up to the last known parent
