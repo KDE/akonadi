@@ -12,6 +12,8 @@
 
 #include <QTest>
 
+#include <QStandardPaths>
+
 using namespace Akonadi;
 
 QTEST_MAIN(ItemSerializerTest)
@@ -37,6 +39,10 @@ void ItemSerializerTest::testDefaultSerializer_data()
 
 void ItemSerializerTest::testDefaultSerializer()
 {
+    // Avoid ItemSerializer from picking config from user's config, which affects how/whether
+    // compresion is enabled or not.
+    QStandardPaths::setTestModeEnabled(true);
+
     QFETCH(QByteArray, serialized);
     Item item;
     item.setMimeType(QStringLiteral("application/octet-stream"));
