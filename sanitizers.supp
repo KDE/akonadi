@@ -14,3 +14,6 @@ leak:QObject::QObject
 leak:QObjectPrivate::addConnection
 leak:QObjectPrivate::connectImpl
 leak:QPropertyAnimation::QPropertyAnimation
+
+# We intentionally don't unload the search plugins, see SearchManager::quit()
+leak:Akonadi::Server::SearchManager::loadSearchPlugins
