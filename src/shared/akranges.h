@@ -184,6 +184,10 @@ template<typename RangeLike, typename Predicate, typename Iterator = typename Ra
 class FilterIterator : public IteratorBase<FilterIterator<RangeLike, Predicate>, RangeLike>
 {
 public:
+    // Filter iterator is just an InputIterator (for complexity reasons).
+    // It actually makes it more efficient with STL algos like std::find()
+    using iterator_category = std::input_iterator_tag;
+
     FilterIterator(const Iterator &iter, const Iterator &end, const Predicate &predicate, const RangeLike &range)
         : IteratorBase<FilterIterator, RangeLike>(iter, range)
         , mPredicate(predicate)
