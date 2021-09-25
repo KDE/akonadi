@@ -343,6 +343,12 @@ protected Q_SLOTS:
      * Add the requested payload parts and call itemsRetrieved() when done.
      * It is guaranteed that all @p items in the list belong to the same Collection.
      *
+     * If the items are retrieved synchronously in this method, in case of an error
+     * emit error(const QString &) and  return @c false, which will cancel the current task.
+     * If the items are retrieved asynchronously, in case of an non-immediate error you need
+     * to call cancelTask() or cancelTask(const QString&) in the respective handler methods
+     * explicitly.
+     *
      * @param items The items whose payload should be retrieved. Use those objects
      * when delivering the result instead of creating new items to ensure conflict
      * detection will work.
