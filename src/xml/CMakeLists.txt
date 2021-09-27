@@ -25,7 +25,7 @@ set(akonadixml_SRCS
 # base install include dir
 set(AkonadiXml_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiXml")
 
-akonadi_generate_headers_with_deprecated(AkonadiXml_CC_HEADERS
+ecm_generate_headers(AkonadiXml_CC_HEADERS
     HEADER_NAMES
     XmlDocument
     XmlReader
@@ -33,7 +33,6 @@ akonadi_generate_headers_with_deprecated(AkonadiXml_CC_HEADERS
     XmlWriter
     REQUIRED_HEADERS AkonadiXml_HEADERS
     PREFIX Akonadi
-    DEPRECATED_DESTINATION ${AkonadiXml_INSTALL_INCLUDEDIR}
 )
 
 add_executable(akonadi2xml akonadi2xml.cpp)

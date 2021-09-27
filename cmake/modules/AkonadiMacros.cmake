@@ -86,35 +86,3 @@ function(akonadi_add_xmllint_test)
     add_test(${TEST_UNPARSED_ARGUMENTS} ${XMLLINT_EXECUTABLE} --noout --schema ${xsd_relpath} ${xml_relpath})
 endfunction()
 
-function(akonadi_generate_headers_with_deprecated camelcase_forwarding_headers_var)
-    # extend as needed to support those ecm_generate_headers arguments akonadi cmake code does use
-    set(options)
-    set(oneValueArgs PREFIX REQUIRED_HEADERS DEPRECATED_DESTINATION RELATIVE)
-    set(multiValueArgs HEADER_NAMES)
-    cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-
-    if (ARG_UNPARSED_ARGUMENTS)
-        message(FATAL_ERROR "Unexpected argument to akonadi_generate_headers: ${ARG_UNPARSED_ARGUMENTS}")
-    endif()
-    if (NOT ARG_DEPRECATED_DESTINATION)
-        message(FATAL_ERROR "DEPRECATED_DESTINATION argument is required with akonadi_generate_headers")
-    endif()
-
-    # forward for normal macro
-    set(ecmOneValueArgL)
-    foreach(ecmOneValueArg PREFIX REQUIRED_HEADERS RELATIVE)
-        if (ARG_${ecmOneValueArg} )
-            list(APPEND ecmOneValueArgL ${ecmOneValueArg} ${ARG_${ecmOneValueArg}})
-        endif()
-    endforeach()
-    ecm_generate_headers(${camelcase_forwarding_headers_var}
-        ${ecmOneValueArgL}
-        HEADER_NAMES ${ARG_HEADER_NAMES}
-    )
-    set(${camelcase_forwarding_headers_var} ${${camelcase_forwarding_headers_var}} PARENT_SCOPE)
-    if (ARG_REQUIRED_HEADERS)
-        set(${ARG_REQUIRED_HEADERS} ${${ARG_REQUIRED_HEADERS}} PARENT_SCOPE)
-    endif ()
-
-endfunction()
-

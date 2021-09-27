@@ -10,7 +10,7 @@ ecm_qt_declare_logging_category(KF5AkonadiAgentBase HEADER akonadiagentbase_debu
         EXPORT AKONADI
     )
 
-akonadi_generate_headers_with_deprecated(AkonadiAgentBase_CC_HEADERS
+ecm_generate_headers(AkonadiAgentBase_CC_HEADERS
     HEADER_NAMES
     AccountsIntegration
     AgentBase
@@ -21,7 +21,6 @@ akonadi_generate_headers_with_deprecated(AkonadiAgentBase_CC_HEADERS
     TransportResourceBase
     REQUIRED_HEADERS AkonadiAgentBase_HEADERS
     PREFIX Akonadi
-    DEPRECATED_DESTINATION ${AkonadiAgentBase_INSTALL_INCLUDEDIR}
 )
 
 

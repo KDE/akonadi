@@ -74,7 +74,7 @@ set(akonadicore_base_SRCS
     typepluginloader.cpp
 )
 
-akonadi_generate_headers_with_deprecated(AkonadiCore_base_CC_HEADERS
+ecm_generate_headers(AkonadiCore_base_CC_HEADERS
     HEADER_NAMES
     AbstractDifferencesReporter
     AgentConfigurationBase
@@ -115,7 +115,6 @@ akonadi_generate_headers_with_deprecated(AkonadiCore_base_CC_HEADERS
     CollectionPathResolver
     REQUIRED_HEADERS AkonadiCore_base_HEADERS
     PREFIX Akonadi
-    DEPRECATED_DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}
 )
 
 set(akonadicore_attributes_SRCS
@@ -136,7 +135,7 @@ set(akonadicore_attributes_SRCS
     attributes/tagattribute.cpp
 )
 
-akonadi_generate_headers_with_deprecated(AkonadiCore_attributes_CC_HEADERS
+ecm_generate_headers(AkonadiCore_attributes_CC_HEADERS
     HEADER_NAMES
     Attribute
     CollectionColorAttribute
@@ -154,7 +153,6 @@ akonadi_generate_headers_with_deprecated(AkonadiCore_attributes_CC_HEADERS
     REQUIRED_HEADERS AkonadiCore_attributes_HEADERS
     RELATIVE attributes
     PREFIX Akonadi
-    DEPRECATED_DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}
 )
 
 set(akonadicore_models_SRCS
@@ -177,7 +175,7 @@ set(akonadicore_models_SRCS
     models/trashfilterproxymodel.cpp
 )
 
-akonadi_generate_headers_with_deprecated(AkonadiCore_models_CC_HEADERS
+ecm_generate_headers(AkonadiCore_models_CC_HEADERS
     HEADER_NAMES
     AgentFilterProxyModel
     AgentInstanceModel
@@ -196,7 +194,6 @@ akonadi_generate_headers_with_deprecated(AkonadiCore_models_CC_HEADERS
     REQUIRED_HEADERS AkonadiCore_models_HEADERS
     RELATIVE models
     PREFIX Akonadi
-    DEPRECATED_DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}
 )
 
 set(akonadicore_jobs_SRCS
@@ -243,7 +240,7 @@ set(akonadicore_jobs_SRCS
     jobs/unlinkjob.cpp
 )
 
-akonadi_generate_headers_with_deprecated(AkonadiCore_jobs_CC_HEADERS
+ecm_generate_headers(AkonadiCore_jobs_CC_HEADERS
     HEADER_NAMES
     AgentInstanceCreateJob
     CollectionAttributesSynchronizationJob
@@ -283,7 +280,6 @@ akonadi_generate_headers_with_deprecated(AkonadiCore_jobs_CC_HEADERS
     REQUIRED_HEADERS AkonadiCore_jobs_HEADERS
     RELATIVE jobs
     PREFIX Akonadi
-    DEPRECATED_DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}
 )
 
 set(akonadicore_dbus_xml ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.NotificationManager.xml)

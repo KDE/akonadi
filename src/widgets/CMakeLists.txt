@@ -81,7 +81,7 @@ set(akonadiwidgets_UI
     tagwidget.ui
 )
 
-akonadi_generate_headers_with_deprecated(AkonadiWidgets_CC_HEADERS
+ecm_generate_headers(AkonadiWidgets_CC_HEADERS
     HEADER_NAMES
     AgentActionManager
     AgentConfigurationDialog
@@ -113,7 +113,6 @@ akonadi_generate_headers_with_deprecated(AkonadiWidgets_CC_HEADERS
     TagSelectWidget
     REQUIRED_HEADERS AkonadiWidgets_HEADERS
     PREFIX Akonadi
-    DEPRECATED_DESTINATION ${AkonadiWidgets_INSTALL_INCLUDEDIR}
 )
 
 ki18n_wrap_ui(KF5AkonadiWidgets ${akonadiwidgets_UI})

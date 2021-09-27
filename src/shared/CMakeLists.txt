@@ -21,12 +21,11 @@ PUBLIC
     KF5::Crash
 )
 
-akonadi_generate_headers_with_deprecated(shared_CC_HEADERS
+ecm_generate_headers(shared_CC_HEADERS
     HEADER_NAMES
     VectorHelper
     REQUIRED_HEADERS shared_HEADERS
     PREFIX Akonadi
-    DEPRECATED_DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}
 )
 
 # shared is not generally a public library, so install only the useful
