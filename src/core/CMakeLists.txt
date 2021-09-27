@@ -117,10 +117,6 @@ akonadi_generate_headers_with_deprecated(AkonadiCore_base_CC_HEADERS
     PREFIX Akonadi
     DEPRECATED_DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}
 )
-akonadi_generate_deprecated_headers(
-    HEADERS qtest_akonadi.h
-    DEPRECATED_DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}
-)
 
 set(akonadicore_attributes_SRCS
     attributes/attribute.cpp

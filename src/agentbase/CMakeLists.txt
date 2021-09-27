@@ -26,10 +26,6 @@ akonadi_generate_headers_with_deprecated(AkonadiAgentBase_CC_HEADERS
 
 
 KCONFIG_ADD_KCFG_FILES(KF5AkonadiAgentBase resourcebasesettings.kcfgc)
-akonadi_generate_deprecated_headers(
-    HEADERS resourcebasesettings.h
-    DEPRECATED_DESTINATION ${AkonadiAgentBase_INSTALL_INCLUDEDIR}
-)
 
 qt_add_dbus_interfaces(akonadiagentbase_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Tracer.xml )
 
