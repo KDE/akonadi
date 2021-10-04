@@ -127,9 +127,9 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex & /*sour
             return false;
         }
 
-        if (found && !d->excludeCapabilities.isEmpty()) {
-            const QStringList lst = index.data(AgentTypeModel::CapabilitiesRole).toStringList();
-            for (const QString &capability : lst) {
+        if (!d->excludeCapabilities.isEmpty()) {
+            const QStringList lstCapabilities = index.data(AgentTypeModel::CapabilitiesRole).toStringList();
+            for (const QString &capability : lstCapabilities) {
                 if (d->excludeCapabilities.contains(capability)) {
                     found = false;
                     break;

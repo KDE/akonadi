@@ -99,8 +99,8 @@ QString ExternalPartStorage::resolveAbsolutePath(const QString &filename, bool *
         }
         return legacyPath;
     } else {
-        QFileInfo finfo(path);
-        QDir().mkpath(finfo.path());
+        QFileInfo legacyFinfo(path);
+        QDir().mkpath(legacyFinfo.path());
         // If neither legacy or new path exists, return the new path, so that
         // new items are created in the correct location
         return path;

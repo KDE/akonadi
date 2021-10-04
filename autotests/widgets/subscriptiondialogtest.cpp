@@ -144,17 +144,17 @@ class SubscriptionDialogTest : public QObject
 
         QModelIndex indexForCollection(const Collection &col) const
         {
-            auto model = collectionView->model();
+            auto collectionViewModel = collectionView->model();
             std::deque<QModelIndex> idxQueue;
             idxQueue.push_back(QModelIndex{});
             while (!idxQueue.empty()) {
                 const auto idx = idxQueue.front();
                 idxQueue.pop_front();
-                if (model->data(idx, EntityTreeModel::CollectionIdRole).value<qint64>() == col.id()) {
+                if (collectionViewModel->data(idx, EntityTreeModel::CollectionIdRole).value<qint64>() == col.id()) {
                     return idx;
                 }
-                for (int i = 0; i < model->rowCount(idx); ++i) {
-                    idxQueue.push_back(model->index(i, 0, idx));
+                for (int i = 0; i < collectionViewModel->rowCount(idx); ++i) {
+                    idxQueue.push_back(collectionViewModel->index(i, 0, idx));
                 }
             }
             return {};

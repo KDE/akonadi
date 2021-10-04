@@ -364,10 +364,10 @@ void CollectionJobTest::testCreateDeleteFolder()
     // fetch parent to compare inherited collection properties
     Collection parentCol = Collection::root();
     if (collection.parentCollection().isValid()) {
-        auto listJob = new CollectionFetchJob(collection.parentCollection(), CollectionFetchJob::Base, this);
-        AKVERIFYEXEC(listJob);
-        QCOMPARE(listJob->collections().count(), 1);
-        parentCol = listJob->collections().first();
+        auto newListJob = new CollectionFetchJob(collection.parentCollection(), CollectionFetchJob::Base, this);
+        AKVERIFYEXEC(newListJob);
+        QCOMPARE(newListJob->collections().count(), 1);
+        parentCol = newListJob->collections().first();
     }
 
     if (collection.contentMimeTypes().isEmpty()) {

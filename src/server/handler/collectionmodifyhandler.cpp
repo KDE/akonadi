@@ -232,8 +232,8 @@ bool CollectionModifyHandler::parseStream()
                 return failureResponse("Unable to retrieve collection attribute");
             }
 
-            const CollectionAttribute::List attrs = qb.result();
-            if (attrs.isEmpty()) {
+            const CollectionAttribute::List attrsList = qb.result();
+            if (attrsList.isEmpty()) {
                 CollectionAttribute newAttr;
                 newAttr.setCollectionId(collection.id());
                 newAttr.setType(iter.key());
@@ -242,8 +242,8 @@ bool CollectionModifyHandler::parseStream()
                     return failureResponse("Unable to add collection attribute");
                 }
                 changes.append(iter.key());
-            } else if (attrs.size() == 1) {
-                CollectionAttribute currAttr = attrs.first();
+            } else if (attrsList.size() == 1) {
+                CollectionAttribute currAttr = attrsList.first();
                 if (currAttr.value() == iter.value()) {
                     continue;
                 }

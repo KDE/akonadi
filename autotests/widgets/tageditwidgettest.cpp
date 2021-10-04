@@ -92,9 +92,9 @@ class TagEditWidgetTest : public QObject
 
         bool checkSelectionIsEmpty() const
         {
-            auto *const model = tagsView->model();
-            for (int i = 0; i < model->rowCount(); ++i) {
-                if (model->data(model->index(i, 0), Qt::CheckStateRole).value<Qt::CheckState>() != Qt::Unchecked) {
+            auto *const tagViewModel = tagsView->model();
+            for (int i = 0; i < tagViewModel->rowCount(); ++i) {
+                if (tagViewModel->data(tagViewModel->index(i, 0), Qt::CheckStateRole).value<Qt::CheckState>() != Qt::Unchecked) {
                     return false;
                 }
             }

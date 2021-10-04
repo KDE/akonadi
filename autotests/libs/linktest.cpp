@@ -88,8 +88,8 @@ private Q_SLOTS:
         AKVERIFYEXEC(fetch);
         QCOMPARE(fetch->items().count(), 3);
         const Item::List fetchedItems = fetch->items();
-        for (const Item &item : fetchedItems) {
-            QVERIFY(items.contains(item));
+        for (const Item &fetchedItem : fetchedItems) {
+            QVERIFY(items.contains(fetchedItem));
         }
 
         auto unlink = new UnlinkJob(col, items, this);

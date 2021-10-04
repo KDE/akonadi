@@ -557,7 +557,7 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadCollectionNotif
             collection.setSearchCollections(vb);
             stream >> entityCnt;
             QVector<Protocol::Ancestor> ancestors;
-            for (int i = 0; i < entityCnt; ++i) {
+            for (int j = 0; j < entityCnt; ++j) {
                 Protocol::Ancestor ancestor;
                 stream >> i64;
                 ancestor.setId(i64);

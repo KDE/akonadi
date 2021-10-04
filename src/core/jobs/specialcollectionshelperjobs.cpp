@@ -267,15 +267,15 @@ void DefaultResourceJobPrivate::tryFetchResource()
         //             without updating the config file, in this case search for a resource
         //             of the same type and the default name
         const AgentInstance::List resources = AgentManager::self()->instances();
-        for (const AgentInstance &resource : resources) {
-            if (resource.type().identifier() == mDefaultResourceType) {
-                if (resource.name() == mDefaultResourceOptions.value(QStringLiteral("Name")).toString()) {
+        for (const AgentInstance &resourceInstance : resources) {
+            if (resourceInstance.type().identifier() == mDefaultResourceType) {
+                if (resourceInstance.name() == mDefaultResourceOptions.value(QStringLiteral("Name")).toString()) {
                     // found a matching one...
-                    setDefaultResourceId(mSettings, resource.identifier());
+                    setDefaultResourceId(mSettings, resourceInstance.identifier());
                     mSettings->save();
                     mResourceWasPreexisting = true;
-                    qCDebug(AKONADICORE_LOG) << "Found resource" << resource.identifier();
-                    q->setResourceId(resource.identifier());
+                    qCDebug(AKONADICORE_LOG) << "Found resource" << resourceInstance.identifier();
+                    q->setResourceId(resourceInstance.identifier());
                     q->ResourceScanJob::doStart();
                     return;
                 }

@@ -39,8 +39,8 @@ class ActionStateManagerTest : public QObject
 
 public:
     ActionStateManagerTest()
+        : rootCollection(Collection::root())
     {
-        rootCollection = Collection::root();
         const QString dummyMimeType(QStringLiteral("text/dummy"));
 
         resourceCollectionOne.setId(1);
