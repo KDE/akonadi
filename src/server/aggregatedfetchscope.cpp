@@ -130,10 +130,7 @@ AggregatedCollectionFetchScope::AggregatedCollectionFetchScope()
 {
 }
 
-AggregatedCollectionFetchScope::~AggregatedCollectionFetchScope()
-{
-    delete d_ptr;
-}
+AggregatedCollectionFetchScope::~AggregatedCollectionFetchScope() = default;
 
 void AggregatedCollectionFetchScope::apply(const Protocol::CollectionFetchScope &oldScope, const Protocol::CollectionFetchScope &newScope)
 {
@@ -188,10 +185,7 @@ AggregatedItemFetchScope::AggregatedItemFetchScope()
 {
 }
 
-AggregatedItemFetchScope::~AggregatedItemFetchScope()
-{
-    delete d_ptr;
-}
+AggregatedItemFetchScope::~AggregatedItemFetchScope() = default;
 
 void AggregatedItemFetchScope::apply(const Protocol::ItemFetchScope &oldScope, const Protocol::ItemFetchScope &newScope)
 {
@@ -416,10 +410,7 @@ AggregatedTagFetchScope::AggregatedTagFetchScope()
 {
 }
 
-AggregatedTagFetchScope::~AggregatedTagFetchScope()
-{
-    delete d_ptr;
-}
+AggregatedTagFetchScope::~AggregatedTagFetchScope() = default;
 
 void AggregatedTagFetchScope::apply(const Protocol::TagFetchScope &oldScope, const Protocol::TagFetchScope &newScope)
 {

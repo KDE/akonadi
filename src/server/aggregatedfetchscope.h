@@ -10,6 +10,8 @@
 
 #include <private/protocol_p.h>
 
+#include <memory>
+
 class QByteArray;
 
 namespace Akonadi
@@ -34,7 +36,7 @@ public:
     void removeSubscriber();
 
 private:
-    AggregatedCollectionFetchScopePrivate *const d_ptr;
+    std::unique_ptr<AggregatedCollectionFetchScopePrivate> const d_ptr;
     Q_DECLARE_PRIVATE(AggregatedCollectionFetchScope)
 };
 
@@ -71,7 +73,7 @@ public:
     void removeSubscriber();
 
 private:
-    AggregatedItemFetchScopePrivate *const d_ptr;
+    std::unique_ptr<AggregatedItemFetchScopePrivate> const d_ptr;
     Q_DECLARE_PRIVATE(AggregatedItemFetchScope)
 };
 
@@ -95,7 +97,7 @@ public:
     bool fetchAllAttributes() const;
 
 private:
-    AggregatedTagFetchScopePrivate *const d_ptr;
+    std::unique_ptr<AggregatedTagFetchScopePrivate> const d_ptr;
     Q_DECLARE_PRIVATE(AggregatedTagFetchScope)
 };
 
