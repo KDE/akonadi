@@ -14,6 +14,8 @@
 
 #include <QObject>
 
+#include <memory>
+
 namespace Akonadi
 {
 class AgentFactoryBasePrivate;
@@ -51,7 +53,7 @@ protected:
     void createComponentData(const QString &identifier) const;
 
 private:
-    AgentFactoryBasePrivate *const d;
+    std::unique_ptr<AgentFactoryBasePrivate> const d;
 };
 
 /**

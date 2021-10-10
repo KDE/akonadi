@@ -21,6 +21,8 @@
 #include <QDBusConnection>
 #include <QDBusContext>
 
+#include <memory>
+
 class Akonadi__ControlAdaptor;
 class Akonadi__StatusAdaptor;
 
@@ -742,7 +744,7 @@ protected:
     /// @cond PRIVATE
     static void debugAgent(int argc, char **argv);
 
-    AgentBasePrivate *d_ptr;
+    std::unique_ptr<AgentBasePrivate> const d_ptr;
     explicit AgentBase(AgentBasePrivate *d, const QString &id);
     friend class ObserverV2;
     /// @endcond

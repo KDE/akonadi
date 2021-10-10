@@ -85,10 +85,7 @@ AgentSearchInterface::AgentSearchInterface()
 {
 }
 
-AgentSearchInterface::~AgentSearchInterface()
-{
-    delete d;
-}
+AgentSearchInterface::~AgentSearchInterface() = default;
 
 void AgentSearchInterface::searchFinished(const QVector<qint64> &result, ResultScope scope)
 {
@@ -103,7 +100,7 @@ void AgentSearchInterface::searchFinished(const QVector<qint64> &result, ResultS
         return;
     }
 
-    auto resultJob = new SearchResultJob(d->mSearchId, Collection(d->mCollectionId), d);
+    auto resultJob = new SearchResultJob(d->mSearchId, Collection(d->mCollectionId), d.get());
     resultJob->setResult(result);
 }
 
@@ -123,13 +120,13 @@ void AgentSearchInterface::searchFinished(const ImapSet &result, ResultScope sco
         return;
     }
 
-    auto resultJob = new SearchResultJob(d->mSearchId, Collection(d->mCollectionId), d);
+    auto resultJob = new SearchResultJob(d->mSearchId, Collection(d->mCollectionId), d.get());
     resultJob->setResult(result);
 }
 
 void AgentSearchInterface::searchFinished(const QVector<QByteArray> &result)
 {
-    auto resultJob = new SearchResultJob(d->mSearchId, Collection(d->mCollectionId), d);
+    auto resultJob = new SearchResultJob(d->mSearchId, Collection(d->mCollectionId), d.get());
     resultJob->setResult(result);
 }
 

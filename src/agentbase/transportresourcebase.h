@@ -12,6 +12,8 @@
 
 #include <QString>
 
+#include <memory>
+
 namespace Akonadi
 {
 class TransportResourceBasePrivate;
@@ -81,7 +83,7 @@ public:
 
 private:
     /// @cond PRIVATE
-    TransportResourceBasePrivate *const d;
+    std::unique_ptr<TransportResourceBasePrivate> const d;
     /// @endcond
 };
 

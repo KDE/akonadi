@@ -52,10 +52,7 @@ TransportResourceBase::TransportResourceBase()
 {
 }
 
-TransportResourceBase::~TransportResourceBase()
-{
-    delete d;
-}
+TransportResourceBase::~TransportResourceBase() = default;
 
 void TransportResourceBase::itemSent(const Item &item, TransportResult result, const QString &message)
 {

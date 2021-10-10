@@ -41,10 +41,7 @@ AgentFactoryBase::AgentFactoryBase(const char *catalogName, QObject *parent)
     ServerManager::self(); // make sure it's created in the main thread
 }
 
-AgentFactoryBase::~AgentFactoryBase()
-{
-    delete d;
-}
+AgentFactoryBase::~AgentFactoryBase() = default;
 
 void AgentFactoryBase::createComponentData(const QString &identifier) const
 {
