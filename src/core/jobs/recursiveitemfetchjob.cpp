@@ -86,10 +86,7 @@ RecursiveItemFetchJob::RecursiveItemFetchJob(const Collection &collection, const
 {
 }
 
-RecursiveItemFetchJob::~RecursiveItemFetchJob()
-{
-    delete d;
-}
+RecursiveItemFetchJob::~RecursiveItemFetchJob() = default;
 
 void RecursiveItemFetchJob::setFetchScope(const ItemFetchScope &fetchScope)
 {

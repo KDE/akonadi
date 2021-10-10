@@ -67,9 +67,6 @@ SelectionProxyModel::SelectionProxyModel(QItemSelectionModel *selectionModel, QO
     connect(this, SIGNAL(rootIndexAboutToBeRemoved(QModelIndex)), SLOT(rootIndexAboutToBeRemoved(QModelIndex))); // clazy:exclude=old-style-connect
 }
 
-SelectionProxyModel::~SelectionProxyModel()
-{
-    delete d_ptr;
-}
+SelectionProxyModel::~SelectionProxyModel() = default;
 
 #include "moc_selectionproxymodel.cpp"

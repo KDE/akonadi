@@ -11,6 +11,8 @@
 
 #include <QSortFilterProxyModel>
 
+#include <memory>
+
 namespace Akonadi
 {
 class RecursiveCollectionFilterProxyModelPrivate;
@@ -94,7 +96,7 @@ protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
 protected:
-    RecursiveCollectionFilterProxyModelPrivate *const d_ptr;
+    std::unique_ptr<RecursiveCollectionFilterProxyModelPrivate> const d_ptr;
     Q_DECLARE_PRIVATE(RecursiveCollectionFilterProxyModel)
 };
 

@@ -10,6 +10,8 @@
 
 #include "akonadicore_export.h"
 
+#include <memory>
+
 class QModelIndex;
 
 namespace Akonadi
@@ -97,7 +99,7 @@ public:
 private:
     /// @cond PRIVATE
     Q_DECLARE_PRIVATE(Akonadi::PartFetcher)
-    PartFetcherPrivate *const d_ptr;
+    std::unique_ptr<PartFetcherPrivate> const d_ptr;
 
     /// @endcond
 };

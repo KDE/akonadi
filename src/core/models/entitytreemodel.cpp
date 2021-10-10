@@ -58,8 +58,6 @@ EntityTreeModel::~EntityTreeModel()
     for (const QList<Node *> &list : std::as_const(d->m_childEntities)) {
         qDeleteAll(list);
     }
-
-    delete d_ptr;
 }
 
 CollectionFetchScope::ListFilter EntityTreeModel::listFilter() const

@@ -14,6 +14,8 @@
 
 #include <QObject>
 
+#include <memory>
+
 namespace Akonadi
 {
 class CollectionFetchScope;
@@ -792,7 +794,7 @@ protected:
 
     friend class EntityTreeModel;
     friend class EntityTreeModelPrivate;
-    MonitorPrivate *d_ptr;
+    std::unique_ptr<MonitorPrivate> const d_ptr;
     explicit Monitor(MonitorPrivate *d, QObject *parent = nullptr);
     /// @endcond
 

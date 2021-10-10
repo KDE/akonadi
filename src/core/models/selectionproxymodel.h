@@ -10,6 +10,8 @@
 
 #include "akonadicore_export.h"
 
+#include <memory>
+
 namespace Akonadi
 {
 class SelectionProxyModelPrivate;
@@ -98,7 +100,7 @@ public:
 private:
     /// @cond PRIVATE
     Q_DECLARE_PRIVATE(SelectionProxyModel)
-    SelectionProxyModelPrivate *const d_ptr;
+    std::unique_ptr<SelectionProxyModelPrivate> const d_ptr;
 
     Q_PRIVATE_SLOT(d_func(), void rootIndexAdded(const QModelIndex &))
     Q_PRIVATE_SLOT(d_func(), void rootIndexAboutToBeRemoved(const QModelIndex &))

@@ -42,10 +42,7 @@ RecursiveCollectionFilterProxyModel::RecursiveCollectionFilterProxyModel(QObject
     setRecursiveFilteringEnabled(true);
 }
 
-RecursiveCollectionFilterProxyModel::~RecursiveCollectionFilterProxyModel()
-{
-    delete d_ptr;
-}
+RecursiveCollectionFilterProxyModel::~RecursiveCollectionFilterProxyModel() = default;
 
 bool RecursiveCollectionFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {

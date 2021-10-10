@@ -26,7 +26,7 @@ public:
     }
     EntityTreeModelPrivate *etmPrivate()
     {
-        return d_ptr;
+        return d_ptr.get();
     }
 };
 

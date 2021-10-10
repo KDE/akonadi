@@ -57,10 +57,7 @@ AgentTypeModel::AgentTypeModel(QObject *parent)
     });
 }
 
-AgentTypeModel::~AgentTypeModel()
-{
-    delete d;
-}
+AgentTypeModel::~AgentTypeModel() = default;
 
 int AgentTypeModel::columnCount(const QModelIndex & /*parent*/) const
 {

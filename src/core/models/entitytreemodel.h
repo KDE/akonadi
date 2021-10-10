@@ -14,6 +14,8 @@
 #include <QAbstractItemModel>
 #include <QStringList>
 
+#include <memory>
+
 namespace Akonadi
 {
 class CollectionStatistics;
@@ -662,7 +664,7 @@ protected:
 protected:
     /// @cond PRIVATE
     Q_DECLARE_PRIVATE(EntityTreeModel)
-    EntityTreeModelPrivate *d_ptr;
+    std::unique_ptr<EntityTreeModelPrivate> const d_ptr;
     EntityTreeModel(Monitor *monitor, EntityTreeModelPrivate *d, QObject *parent = nullptr);
     /// @endcond
 

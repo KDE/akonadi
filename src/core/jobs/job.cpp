@@ -308,8 +308,6 @@ Job::~Job()
         const QList<QVariant> argumentList = {QString::number(reinterpret_cast<quintptr>(this), 16), errorString()};
         s_jobtracker->callWithArgumentList(QDBus::NoBlock, QStringLiteral("jobEnded"), argumentList);
     }
-
-    delete d_ptr;
 }
 
 void Job::start()

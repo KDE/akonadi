@@ -47,10 +47,7 @@ EntityOrderProxyModel::EntityOrderProxyModel(QObject *parent)
     // setSortCaseSensitivity( Qt::CaseInsensitive );
 }
 
-EntityOrderProxyModel::~EntityOrderProxyModel()
-{
-    delete d_ptr;
-}
+EntityOrderProxyModel::~EntityOrderProxyModel() = default;
 
 void EntityOrderProxyModel::setOrderConfig(const KConfigGroup &configGroup)
 {

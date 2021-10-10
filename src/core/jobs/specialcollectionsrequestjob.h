@@ -13,6 +13,8 @@
 
 #include <QVariant>
 
+#include <memory>
+
 namespace Akonadi
 {
 class SpecialCollectionsRequestJobPrivate;
@@ -107,7 +109,7 @@ private:
     friend class SpecialCollectionsRequestJobPrivate;
     friend class DefaultResourceJobPrivate;
 
-    SpecialCollectionsRequestJobPrivate *const d;
+    std::unique_ptr<SpecialCollectionsRequestJobPrivate> const d;
 
     Q_PRIVATE_SLOT(d, void releaseLock())
     Q_PRIVATE_SLOT(d, void resourceScanResult(KJob *))

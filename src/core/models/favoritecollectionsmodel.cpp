@@ -289,10 +289,7 @@ FavoriteCollectionsModel::FavoriteCollectionsModel(QAbstractItemModel *source, c
     });
 }
 
-FavoriteCollectionsModel::~FavoriteCollectionsModel()
-{
-    delete d;
-}
+FavoriteCollectionsModel::~FavoriteCollectionsModel() = default;
 
 void FavoriteCollectionsModel::setCollections(const Collection::List &collections)
 {

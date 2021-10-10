@@ -173,10 +173,7 @@ SpecialCollections::SpecialCollections(KCoreConfigSkeleton *settings, QObject *p
 {
 }
 
-SpecialCollections::~SpecialCollections()
-{
-    delete d;
-}
+SpecialCollections::~SpecialCollections() = default;
 
 bool SpecialCollections::hasCollection(const QByteArray &type, const AgentInstance &instance) const
 {

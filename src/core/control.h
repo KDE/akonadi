@@ -10,6 +10,8 @@
 
 #include <QObject>
 
+#include <memory>
+
 namespace Akonadi
 {
 /**
@@ -88,7 +90,7 @@ protected:
 private:
     /// @cond PRIVATE
     class Private;
-    Private *const d;
+    std::unique_ptr<Private> const d;
     /// @endcond
 };
 

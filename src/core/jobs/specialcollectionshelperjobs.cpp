@@ -159,10 +159,7 @@ ResourceScanJob::ResourceScanJob(const QString &resourceId, KCoreConfigSkeleton 
     setResourceId(resourceId);
 }
 
-ResourceScanJob::~ResourceScanJob()
-{
-    delete d;
-}
+ResourceScanJob::~ResourceScanJob() = default;
 
 QString ResourceScanJob::resourceId() const
 {
@@ -496,10 +493,7 @@ DefaultResourceJob::DefaultResourceJob(KCoreConfigSkeleton *settings, QObject *p
 {
 }
 
-DefaultResourceJob::~DefaultResourceJob()
-{
-    delete d;
-}
+DefaultResourceJob::~DefaultResourceJob() = default;
 
 void DefaultResourceJob::setDefaultResourceType(const QString &type)
 {
@@ -613,10 +607,7 @@ GetLockJob::GetLockJob(QObject *parent)
 {
 }
 
-GetLockJob::~GetLockJob()
-{
-    delete d;
-}
+GetLockJob::~GetLockJob() = default;
 
 void GetLockJob::start()
 {

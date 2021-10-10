@@ -29,10 +29,7 @@ TagModel::TagModel(Monitor *recorder, TagModelPrivate *dd, QObject *parent)
     d->init(recorder);
 }
 
-TagModel::~TagModel()
-{
-    delete d_ptr;
-}
+TagModel::~TagModel() = default;
 
 int TagModel::columnCount(const QModelIndex &parent) const
 {

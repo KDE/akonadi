@@ -13,6 +13,8 @@
 #include <QDialogButtonBox>
 #include <QObject>
 
+#include <memory>
+
 class KAboutData;
 
 namespace Akonadi
@@ -149,7 +151,7 @@ Q_SIGNALS:
 private:
     class Private;
     friend class Private;
-    QScopedPointer<Private> d;
+    std::unique_ptr<Private> const d;
 };
 
 } // namespace

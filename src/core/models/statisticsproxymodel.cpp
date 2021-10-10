@@ -203,10 +203,7 @@ StatisticsProxyModel::StatisticsProxyModel(QObject *parent)
     setExtraColumnsEnabled(true);
 }
 
-StatisticsProxyModel::~StatisticsProxyModel()
-{
-    delete d;
-}
+StatisticsProxyModel::~StatisticsProxyModel() = default;
 
 void StatisticsProxyModel::setToolTipEnabled(bool enable)
 {

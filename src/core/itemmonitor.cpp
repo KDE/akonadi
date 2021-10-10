@@ -16,10 +16,7 @@ ItemMonitor::ItemMonitor()
 {
 }
 
-ItemMonitor::~ItemMonitor()
-{
-    delete d;
-}
+ItemMonitor::~ItemMonitor() = default;
 
 void ItemMonitor::setItem(const Item &item)
 {
@@ -42,7 +39,7 @@ void ItemMonitor::setItem(const Item &item)
     auto job = new ItemFetchJob(d->mItem);
     job->setFetchScope(fetchScope());
 
-    d->connect(job, &ItemFetchJob::result, d, [this](KJob *job) {
+    d->connect(job, &ItemFetchJob::result, d.get(), [this](KJob *job) {
         d->initialFetchDone(job);
     });
 }

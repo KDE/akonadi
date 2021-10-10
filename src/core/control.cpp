@@ -101,10 +101,7 @@ Control::Control()
     }
 }
 
-Control::~Control()
-{
-    delete d;
-}
+Control::~Control() = default;
 
 bool Control::start()
 {

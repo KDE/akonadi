@@ -59,10 +59,7 @@ CollectionAttributesSynchronizationJob::CollectionAttributesSynchronizationJob(c
     d->collection = collection;
 }
 
-CollectionAttributesSynchronizationJob::~CollectionAttributesSynchronizationJob()
-{
-    delete d;
-}
+CollectionAttributesSynchronizationJob::~CollectionAttributesSynchronizationJob() = default;
 
 void CollectionAttributesSynchronizationJob::start()
 {

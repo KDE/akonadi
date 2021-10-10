@@ -12,6 +12,8 @@
 
 #include "entitytreemodel.h"
 
+#include <memory>
+
 namespace Akonadi
 {
 class Monitor;
@@ -70,7 +72,7 @@ Q_SIGNALS:
 
 private:
     class Private;
-    QScopedPointer<Private> const d;
+    std::unique_ptr<Private> const d;
 };
 
 }

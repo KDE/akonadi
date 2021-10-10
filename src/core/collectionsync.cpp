@@ -787,10 +787,7 @@ CollectionSync::CollectionSync(const QString &resourceId, QObject *parent)
     setTotalAmount(KJob::Bytes, 0);
 }
 
-CollectionSync::~CollectionSync()
-{
-    delete d;
-}
+CollectionSync::~CollectionSync() = default;
 
 void CollectionSync::setRemoteCollections(const Collection::List &remoteCollections)
 {

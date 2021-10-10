@@ -36,10 +36,7 @@ Akonadi::SpecialCollectionsDiscoveryJob::SpecialCollectionsDiscoveryJob(SpecialC
 {
 }
 
-Akonadi::SpecialCollectionsDiscoveryJob::~SpecialCollectionsDiscoveryJob()
-{
-    delete d;
-}
+Akonadi::SpecialCollectionsDiscoveryJob::~SpecialCollectionsDiscoveryJob() = default;
 
 void Akonadi::SpecialCollectionsDiscoveryJob::start()
 {

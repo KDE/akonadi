@@ -10,6 +10,8 @@
 
 #include <KJob>
 
+#include <memory>
+
 namespace Akonadi
 {
 class Collection;
@@ -61,8 +63,8 @@ public:
 
 private:
     /// @cond PRIVATE
-    CollectionAttributesSynchronizationJobPrivate *const d;
     friend class CollectionAttributesSynchronizationJobPrivate;
+    std::unique_ptr<CollectionAttributesSynchronizationJobPrivate> const d;
     /// @endcond
 };
 

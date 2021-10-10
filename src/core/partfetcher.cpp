@@ -92,10 +92,7 @@ PartFetcher::PartFetcher(const QModelIndex &index, const QByteArray &partName, Q
 {
 }
 
-PartFetcher::~PartFetcher()
-{
-    delete d_ptr;
-}
+PartFetcher::~PartFetcher() = default;
 
 void PartFetcher::start()
 {

@@ -265,10 +265,7 @@ SpecialCollectionsRequestJob::SpecialCollectionsRequestJob(SpecialCollections *c
     setProperty("transactionsDisabled", true);
 }
 
-SpecialCollectionsRequestJob::~SpecialCollectionsRequestJob()
-{
-    delete d;
-}
+SpecialCollectionsRequestJob::~SpecialCollectionsRequestJob() = default;
 
 void SpecialCollectionsRequestJob::requestDefaultCollection(const QByteArray &type)
 {

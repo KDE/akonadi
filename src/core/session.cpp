@@ -394,7 +394,6 @@ Session::Session(SessionPrivate *dd, const QByteArray &sessionId, QObject *paren
 Session::~Session()
 {
     d->clear(false);
-    delete d;
 }
 
 QByteArray Session::sessionId() const

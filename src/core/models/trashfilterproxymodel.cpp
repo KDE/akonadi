@@ -26,10 +26,7 @@ TrashFilterProxyModel::TrashFilterProxyModel(QObject *parent)
     setRecursiveFilteringEnabled(true);
 }
 
-TrashFilterProxyModel::~TrashFilterProxyModel()
-{
-    delete d_ptr;
-}
+TrashFilterProxyModel::~TrashFilterProxyModel() = default;
 
 void TrashFilterProxyModel::showTrash(bool enable)
 {

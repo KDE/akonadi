@@ -40,10 +40,7 @@ AgentFilterProxyModel::AgentFilterProxyModel(QObject *parent)
     setDynamicSortFilter(true);
 }
 
-AgentFilterProxyModel::~AgentFilterProxyModel()
-{
-    delete d;
-}
+AgentFilterProxyModel::~AgentFilterProxyModel() = default;
 
 void AgentFilterProxyModel::addMimeTypeFilter(const QString &mimeType)
 {

@@ -11,6 +11,8 @@
 #include "specialcollections.h"
 #include <KCompositeJob>
 
+#include <memory>
+
 namespace Akonadi
 {
 class SpecialCollectionsDiscoveryJobPrivate;
@@ -52,7 +54,7 @@ protected:
 
 private:
     /// @cond PRIVATE
-    SpecialCollectionsDiscoveryJobPrivate *const d;
+    std::unique_ptr<SpecialCollectionsDiscoveryJobPrivate> const d;
     /// @endcond
 };
 

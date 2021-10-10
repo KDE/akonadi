@@ -100,10 +100,7 @@ CollectionFilterProxyModel::CollectionFilterProxyModel(QObject *parent)
 {
 }
 
-CollectionFilterProxyModel::~CollectionFilterProxyModel()
-{
-    delete d;
-}
+CollectionFilterProxyModel::~CollectionFilterProxyModel() = default;
 
 void CollectionFilterProxyModel::addMimeTypeFilters(const QStringList &typeList)
 {

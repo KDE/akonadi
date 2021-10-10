@@ -58,10 +58,7 @@ EntityRightsFilterModel::EntityRightsFilterModel(QObject *parent)
     setRecursiveFilteringEnabled(true);
 }
 
-EntityRightsFilterModel::~EntityRightsFilterModel()
-{
-    delete d_ptr;
-}
+EntityRightsFilterModel::~EntityRightsFilterModel() = default;
 
 bool EntityRightsFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {

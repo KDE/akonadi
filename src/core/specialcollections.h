@@ -12,6 +12,8 @@
 
 #include <QObject>
 
+#include <memory>
+
 class KCoreConfigSkeleton;
 
 namespace Akonadi
@@ -149,7 +151,7 @@ private:
     friend class LocalFoldersTest;
 #endif
 
-    SpecialCollectionsPrivate *const d;
+    std::unique_ptr<SpecialCollectionsPrivate> const d;
     /// @endcond
 };
 

@@ -10,6 +10,8 @@
 #include "collection.h"
 #include <KSelectionProxyModel>
 
+#include <memory>
+
 class KConfigGroup;
 class KJob;
 
@@ -140,7 +142,7 @@ private:
     using KSelectionProxyModel::setSourceModel;
 
     class Private;
-    Private *const d;
+    std::unique_ptr<Private> const d;
     /// @endcond
 };
 

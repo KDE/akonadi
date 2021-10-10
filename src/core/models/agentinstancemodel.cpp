@@ -95,10 +95,7 @@ AgentInstanceModel::AgentInstanceModel(QObject *parent)
     });
 }
 
-AgentInstanceModel::~AgentInstanceModel()
-{
-    delete d;
-}
+AgentInstanceModel::~AgentInstanceModel() = default;
 
 QHash<int, QByteArray> AgentInstanceModel::roleNames() const
 {

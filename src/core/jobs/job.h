@@ -12,6 +12,8 @@
 
 #include <KCompositeJob>
 
+#include <memory>
+
 class QString;
 
 namespace Akonadi
@@ -202,7 +204,7 @@ protected Q_SLOTS:
 protected:
     /// @cond PRIVATE
     Job(JobPrivate *dd, QObject *parent);
-    JobPrivate *const d_ptr;
+    std::unique_ptr<JobPrivate> const d_ptr;
     /// @endcond
 
 private:

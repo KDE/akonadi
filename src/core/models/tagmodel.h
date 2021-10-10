@@ -11,6 +11,8 @@
 #include "akonadicore_export.h"
 #include "tag.h"
 
+#include <memory>
+
 namespace Akonadi
 {
 class Monitor;
@@ -55,7 +57,7 @@ public:
 
 protected:
     Q_DECLARE_PRIVATE(TagModel)
-    TagModelPrivate *d_ptr;
+    std::unique_ptr<TagModelPrivate> const d_ptr;
 
     TagModel(Monitor *recorder, TagModelPrivate *dd, QObject *parent);
 

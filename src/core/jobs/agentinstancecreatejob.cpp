@@ -122,10 +122,7 @@ AgentInstanceCreateJob::AgentInstanceCreateJob(const QString &typeId, QObject *p
     d->agentTypeId = typeId;
 }
 
-AgentInstanceCreateJob::~AgentInstanceCreateJob()
-{
-    delete d;
-}
+AgentInstanceCreateJob::~AgentInstanceCreateJob() = default;
 
 void AgentInstanceCreateJob::configure(QWidget *parent)
 {

@@ -44,8 +44,6 @@ Monitor::Monitor(MonitorPrivate *d, QObject *parent)
 Monitor::~Monitor()
 {
     ChangeMediator::unregisterMonitor(this);
-
-    delete d_ptr;
 }
 
 void Monitor::setCollectionMonitored(const Collection &collection, bool monitored)

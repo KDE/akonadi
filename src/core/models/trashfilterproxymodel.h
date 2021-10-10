@@ -10,6 +10,8 @@
 
 #include <QSortFilterProxyModel>
 
+#include <memory>
+
 namespace Akonadi
 {
 /**
@@ -58,7 +60,7 @@ protected:
 private:
     /// @cond PRIVATE
     class TrashFilterProxyModelPrivate;
-    TrashFilterProxyModelPrivate *const d_ptr;
+    std::unique_ptr<TrashFilterProxyModelPrivate> const d_ptr;
     Q_DECLARE_PRIVATE(TrashFilterProxyModel)
     /// @endcond
 };

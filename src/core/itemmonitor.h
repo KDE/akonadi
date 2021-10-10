@@ -9,6 +9,8 @@
 #include "akonadicore_export.h"
 #include <qglobal.h>
 
+#include <memory>
+
 namespace Akonadi
 {
 class Item;
@@ -128,7 +130,7 @@ protected:
 private:
     /// @cond PRIVATE
     class Private;
-    Private *const d;
+    std::unique_ptr<Private> const d;
     /// @endcond
 
     Q_DISABLE_COPY(ItemMonitor)

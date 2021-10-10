@@ -10,6 +10,8 @@
 
 #include "akonadicore_export.h"
 
+#include <memory>
+
 namespace Akonadi
 {
 class AKONADICORE_EXPORT AgentConfigurationManager : public QObject
@@ -31,7 +33,7 @@ private:
 
     class Private;
     friend class Private;
-    QScopedPointer<Private> const d;
+    std::unique_ptr<Private> const d;
     static AgentConfigurationManager *sInstance;
 };
 

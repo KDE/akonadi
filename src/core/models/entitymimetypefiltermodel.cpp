@@ -47,10 +47,7 @@ EntityMimeTypeFilterModel::EntityMimeTypeFilterModel(QObject *parent)
 {
 }
 
-EntityMimeTypeFilterModel::~EntityMimeTypeFilterModel()
-{
-    delete d_ptr;
-}
+EntityMimeTypeFilterModel::~EntityMimeTypeFilterModel() = default;
 
 void EntityMimeTypeFilterModel::addMimeTypeInclusionFilters(const QStringList &typeList)
 {

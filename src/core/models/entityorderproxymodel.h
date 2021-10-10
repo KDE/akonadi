@@ -13,6 +13,8 @@
 
 #include <QSortFilterProxyModel>
 
+#include <memory>
+
 class KConfigGroup;
 
 namespace Akonadi
@@ -78,7 +80,7 @@ public:
                                             Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
 
 protected:
-    EntityOrderProxyModelPrivate *const d_ptr;
+    std::unique_ptr<EntityOrderProxyModelPrivate> const d_ptr;
 
     virtual QString parentConfigString(const QModelIndex &index) const;
     virtual QString configString(const QModelIndex &index) const;

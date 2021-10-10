@@ -10,6 +10,8 @@
 
 #include <KJob>
 
+#include <memory>
+
 namespace Akonadi
 {
 class AgentInstance;
@@ -93,8 +95,8 @@ public:
 
 private:
     /// @cond PRIVATE
-    ResourceSynchronizationJobPrivate *const d;
     friend class ResourceSynchronizationJobPrivate;
+    std::unique_ptr<ResourceSynchronizationJobPrivate> const d;
     /// @endcond
 };
 

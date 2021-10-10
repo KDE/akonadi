@@ -54,10 +54,7 @@ ResourceSynchronizationJob::ResourceSynchronizationJob(const AgentInstance &inst
     d->instance = instance;
 }
 
-ResourceSynchronizationJob::~ResourceSynchronizationJob()
-{
-    delete d;
-}
+ResourceSynchronizationJob::~ResourceSynchronizationJob() = default;
 
 void ResourceSynchronizationJob::start()
 {
