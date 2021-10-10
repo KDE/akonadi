@@ -584,10 +584,7 @@ ImapParser::ImapParser()
     reset();
 }
 
-ImapParser::~ImapParser()
-{
-    delete d;
-}
+ImapParser::~ImapParser() = default;
 
 bool ImapParser::parseNextLine(const QByteArray &readBuffer)
 {
