@@ -90,10 +90,7 @@ CachePolicyPage::CachePolicyPage(QWidget *parent, GuiMode mode)
     }
 }
 
-CachePolicyPage::~CachePolicyPage()
-{
-    delete d;
-}
+CachePolicyPage::~CachePolicyPage() = default;
 
 bool Akonadi::CachePolicyPage::canHandle(const Collection &collection) const
 {

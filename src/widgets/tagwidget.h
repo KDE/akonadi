@@ -15,6 +15,8 @@
 
 #include <QLineEdit>
 
+#include <memory>
+
 namespace Akonadi
 {
 /**
@@ -44,7 +46,7 @@ private Q_SLOTS:
 
 private:
     class Private;
-    QScopedPointer<Private> d;
+    std::unique_ptr<Private> const d;
 };
 
 }

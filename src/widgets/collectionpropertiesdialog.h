@@ -11,6 +11,8 @@
 
 #include <QDialog>
 
+#include <memory>
+
 namespace Akonadi
 {
 class Collection;
@@ -127,7 +129,7 @@ Q_SIGNALS:
 private:
     /// @cond PRIVATE
     class Private;
-    Private *const d;
+    std::unique_ptr<Private> const d;
     /// @endcond
 };
 

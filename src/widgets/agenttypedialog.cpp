@@ -89,7 +89,6 @@ AgentTypeDialog::AgentTypeDialog(QWidget *parent)
 AgentTypeDialog::~AgentTypeDialog()
 {
     d->writeConfig();
-    delete d;
 }
 
 void AgentTypeDialog::done(int result)

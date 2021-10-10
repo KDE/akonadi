@@ -15,6 +15,8 @@
 
 #include <QDialog>
 
+#include <memory>
+
 class QDialogButtonBox;
 namespace Akonadi
 {
@@ -44,7 +46,7 @@ Q_SIGNALS:
 
 private:
     class Private;
-    QScopedPointer<Private> d;
+    std::unique_ptr<Private> const d;
 };
 
 }

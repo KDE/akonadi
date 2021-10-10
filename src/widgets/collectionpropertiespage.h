@@ -10,6 +10,8 @@
 
 #include <QWidget>
 
+#include <memory>
+
 namespace Akonadi
 {
 class Collection;
@@ -137,7 +139,7 @@ public:
 private:
     /// @cond PRIVATE
     class Private;
-    Private *const d;
+    std::unique_ptr<Private> const d;
     /// @endcond
 };
 

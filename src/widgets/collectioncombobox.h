@@ -12,6 +12,8 @@
 
 #include <QComboBox>
 
+#include <memory>
+
 class QAbstractItemModel;
 
 namespace Akonadi
@@ -126,7 +128,7 @@ Q_SIGNALS:
 private:
     /// @cond PRIVATE
     class Private;
-    Private *const d;
+    std::unique_ptr<Private> const d;
 
     Q_PRIVATE_SLOT(d, void activated(int))
     Q_PRIVATE_SLOT(d, void activated(const QModelIndex &))

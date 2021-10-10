@@ -14,6 +14,8 @@
 
 #include <QWidget>
 
+#include <memory>
+
 namespace Akonadi
 {
 class TagModel;
@@ -44,7 +46,7 @@ protected:
 
 private:
     class Private;
-    QScopedPointer<Private> d;
+    std::unique_ptr<Private> const d;
 };
 
 }

@@ -9,6 +9,8 @@
 #include "akonadiwidgets_export.h"
 #include "collectionpropertiespage.h"
 
+#include <memory>
+
 namespace Akonadi
 {
 class AKONADIWIDGETS_EXPORT CollectionMaintenancePage : public Akonadi::CollectionPropertiesPage
@@ -27,7 +29,7 @@ protected:
 private:
     /// @cond PRIVATE
     class Private;
-    Private *const d;
+    std::unique_ptr<Private> const d;
     /// @endcond
 };
 

@@ -88,10 +88,7 @@ CollectionStatisticsDelegate::CollectionStatisticsDelegate(QTreeView *parent)
 {
 }
 
-CollectionStatisticsDelegate::~CollectionStatisticsDelegate()
-{
-    delete d_ptr;
-}
+CollectionStatisticsDelegate::~CollectionStatisticsDelegate() = default;
 
 void CollectionStatisticsDelegate::setUnreadCountShown(bool enable)
 {

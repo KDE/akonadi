@@ -304,10 +304,7 @@ CollectionDialog::CollectionDialog(CollectionDialogOptions options, QAbstractIte
 {
 }
 
-CollectionDialog::~CollectionDialog()
-{
-    delete d;
-}
+CollectionDialog::~CollectionDialog() = default;
 
 Akonadi::Collection CollectionDialog::selectedCollection() const
 {

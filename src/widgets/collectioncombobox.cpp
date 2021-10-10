@@ -113,10 +113,7 @@ CollectionComboBox::CollectionComboBox(QAbstractItemModel *model, QWidget *paren
 {
 }
 
-CollectionComboBox::~CollectionComboBox()
-{
-    delete d;
-}
+CollectionComboBox::~CollectionComboBox() = default;
 
 void CollectionComboBox::setMimeTypeFilter(const QStringList &contentMimeTypes)
 {

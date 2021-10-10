@@ -10,6 +10,8 @@
 
 #include "akonadiwidgets_export.h"
 
+#include <memory>
+
 namespace Akonadi
 {
 class AgentInstance;
@@ -24,7 +26,7 @@ public:
 
 private:
     class Private;
-    const QScopedPointer<Private> d;
+    std::unique_ptr<Private> const d;
 };
 
 }

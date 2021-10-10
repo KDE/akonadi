@@ -190,7 +190,6 @@ EntityTreeView::EntityTreeView(KXMLGUIClient *xmlGuiClient, QWidget *parent)
 EntityTreeView::~EntityTreeView()
 {
     delete d->mDragDropManager;
-    delete d;
 }
 
 void EntityTreeView::setModel(QAbstractItemModel *model)

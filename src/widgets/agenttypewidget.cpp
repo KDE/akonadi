@@ -109,10 +109,7 @@ AgentTypeWidget::AgentTypeWidget(QWidget *parent)
     });
 }
 
-AgentTypeWidget::~AgentTypeWidget()
-{
-    delete d;
-}
+AgentTypeWidget::~AgentTypeWidget() = default;
 
 AgentType AgentTypeWidget::currentAgentType() const
 {

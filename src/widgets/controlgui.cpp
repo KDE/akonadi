@@ -173,10 +173,7 @@ ControlGui::ControlGui()
     }
 }
 
-ControlGui::~ControlGui()
-{
-    delete d;
-}
+ControlGui::~ControlGui() = default;
 
 bool ControlGui::start()
 {

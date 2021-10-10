@@ -196,7 +196,6 @@ CollectionPropertiesDialog::~CollectionPropertiesDialog()
 {
     KConfigGroup group(KSharedConfig::openStateConfig(), "CollectionPropertiesDialog");
     group.writeEntry("Size", size());
-    delete d;
 }
 
 void CollectionPropertiesDialog::registerPage(CollectionPropertiesPageFactory *factory)

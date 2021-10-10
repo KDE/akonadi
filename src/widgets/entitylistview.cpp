@@ -142,7 +142,6 @@ EntityListView::EntityListView(KXMLGUIClient *xmlGuiClient, QWidget *parent)
 EntityListView::~EntityListView()
 {
     delete d->mDragDropManager;
-    delete d;
 }
 
 void EntityListView::setModel(QAbstractItemModel *model)

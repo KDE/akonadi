@@ -219,10 +219,7 @@ AgentActionManager::AgentActionManager(KActionCollection *actionCollection, QWid
     d->mActionCollection = actionCollection;
 }
 
-AgentActionManager::~AgentActionManager()
-{
-    delete d;
-}
+AgentActionManager::~AgentActionManager() = default;
 
 void AgentActionManager::setSelectionModel(QItemSelectionModel *selectionModel)
 {

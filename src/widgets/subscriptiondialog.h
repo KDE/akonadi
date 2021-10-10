@@ -10,6 +10,8 @@
 
 #include <QDialog>
 
+#include <memory>
+
 namespace Akonadi
 {
 /**
@@ -52,7 +54,7 @@ public:
 
 private:
     class Private;
-    QScopedPointer<Private> const d;
+    std::unique_ptr<Private> const d;
 };
 
 }

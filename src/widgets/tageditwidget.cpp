@@ -188,7 +188,7 @@ TagEditWidget::TagEditWidget(QWidget *parent)
     d->m_deleteButton->setIcon(QIcon::fromTheme(QStringLiteral("edit-delete")));
     d->m_deleteButton->setToolTip(i18nc("@info", "Delete tag"));
     d->m_deleteButton->hide();
-    connect(d->m_deleteButton, &QAbstractButton::clicked, d.data(), &Private::deleteTag);
+    connect(d->m_deleteButton, &QAbstractButton::clicked, d.get(), &Private::deleteTag);
 }
 
 TagEditWidget::TagEditWidget(Akonadi::TagModel *model, QWidget *parent, bool enableSelection)

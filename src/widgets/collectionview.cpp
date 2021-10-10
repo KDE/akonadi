@@ -138,10 +138,7 @@ CollectionView::CollectionView(KXMLGUIClient *xmlGuiClient, QWidget *parent)
     d->init();
 }
 
-CollectionView::~CollectionView()
-{
-    delete d;
-}
+CollectionView::~CollectionView() = default;
 
 void CollectionView::setModel(QAbstractItemModel *model)
 {

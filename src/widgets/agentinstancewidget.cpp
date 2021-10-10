@@ -158,10 +158,7 @@ AgentInstanceWidget::AgentInstanceWidget(QWidget *parent)
     });
 }
 
-AgentInstanceWidget::~AgentInstanceWidget()
-{
-    delete d;
-}
+AgentInstanceWidget::~AgentInstanceWidget() = default;
 
 AgentInstance AgentInstanceWidget::currentAgentInstance() const
 {

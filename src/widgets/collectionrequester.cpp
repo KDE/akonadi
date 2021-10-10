@@ -173,10 +173,7 @@ CollectionRequester::CollectionRequester(const Akonadi::Collection &collection, 
     setCollection(collection);
 }
 
-CollectionRequester::~CollectionRequester()
-{
-    delete d;
-}
+CollectionRequester::~CollectionRequester() = default;
 
 Collection CollectionRequester::collection() const
 {

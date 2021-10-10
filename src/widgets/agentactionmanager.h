@@ -12,6 +12,8 @@
 
 #include <QObject>
 
+#include <memory>
+
 class QAction;
 class KActionCollection;
 class KLocalizedString;
@@ -153,7 +155,7 @@ Q_SIGNALS:
 private:
     /// @cond PRIVATE
     class Private;
-    Private *const d;
+    std::unique_ptr<Private> const d;
 
     Q_PRIVATE_SLOT(d, void updateActions())
 

@@ -9,6 +9,8 @@
 #include "akonadiwidgets_export.h"
 #include <QTreeView>
 
+#include <memory>
+
 class KXMLGUIClient;
 class KXmlGuiWindow;
 class QDragMoveEvent;
@@ -114,7 +116,7 @@ protected:
 private:
     /// @cond PRIVATE
     class Private;
-    Private *const d;
+    std::unique_ptr<Private> const d;
 
     Q_PRIVATE_SLOT(d, void itemClicked(const QModelIndex &))
     Q_PRIVATE_SLOT(d, void itemCurrentChanged(const QModelIndex &))

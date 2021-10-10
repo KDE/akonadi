@@ -9,6 +9,8 @@
 #include "akonadiwidgets_export.h"
 #include <QTreeView>
 
+#include <memory>
+
 class KXmlGuiWindow;
 class KXMLGUIClient;
 namespace Akonadi
@@ -125,7 +127,7 @@ protected:
 private:
     /// @cond PRIVATE
     class Private;
-    Private *const d;
+    std::unique_ptr<Private> const d;
     /// @endcond
 };
 

@@ -70,10 +70,7 @@ CollectionMaintenancePage::CollectionMaintenancePage(QWidget *parent)
     setPageTitle(i18n("Maintenance"));
 }
 
-CollectionMaintenancePage::~CollectionMaintenancePage()
-{
-    delete d;
-}
+CollectionMaintenancePage::~CollectionMaintenancePage() = default;
 
 void CollectionMaintenancePage::init(const Collection &col)
 {

@@ -130,10 +130,7 @@ ItemView::ItemView(KXMLGUIClient *xmlGuiClient, QWidget *parent)
     d->init();
 }
 
-ItemView::~ItemView()
-{
-    delete d;
-}
+ItemView::~ItemView() = default;
 
 void ItemView::setModel(QAbstractItemModel *model)
 {

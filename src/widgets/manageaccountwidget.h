@@ -9,6 +9,8 @@
 #include "akonadiwidgets_export.h"
 #include <QWidget>
 
+#include <memory>
+
 class QAbstractItemDelegate;
 class QAbstractItemView;
 class QPushButton;
@@ -63,7 +65,9 @@ private Q_SLOTS:
 
 private:
     void slotSearchAgentType(const QString &str);
-    QScopedPointer<ManageAccountWidgetPrivate> const d;
+
+private:
+    std::unique_ptr<ManageAccountWidgetPrivate> const d;
 };
 }
 

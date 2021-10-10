@@ -27,10 +27,7 @@ CollectionPropertiesPage::CollectionPropertiesPage(QWidget *parent)
 {
 }
 
-CollectionPropertiesPage::~CollectionPropertiesPage()
-{
-    delete d;
-}
+CollectionPropertiesPage::~CollectionPropertiesPage() = default;
 
 bool CollectionPropertiesPage::canHandle(const Collection &collection) const
 {

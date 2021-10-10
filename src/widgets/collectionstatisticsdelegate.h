@@ -9,6 +9,8 @@
 
 #include <QStyledItemDelegate>
 
+#include <memory>
+
 class QAbstractItemView;
 class QTreeView;
 
@@ -117,7 +119,7 @@ protected:
 
 private:
     /// @cond PRIVATE
-    CollectionStatisticsDelegatePrivate *const d_ptr;
+    std::unique_ptr<CollectionStatisticsDelegatePrivate> const d_ptr;
     /// @endcond
 
     Q_DECLARE_PRIVATE(CollectionStatisticsDelegate)

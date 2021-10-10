@@ -1758,10 +1758,7 @@ StandardActionManager::StandardActionManager(KActionCollection *actionCollection
 #endif
 }
 
-StandardActionManager::~StandardActionManager()
-{
-    delete d;
-}
+StandardActionManager::~StandardActionManager() = default;
 
 void StandardActionManager::setCollectionSelectionModel(QItemSelectionModel *selectionModel)
 {

@@ -10,6 +10,8 @@
 #include <QDialogButtonBox>
 #include <QWidget>
 
+#include <memory>
+
 namespace Akonadi
 {
 class AgentInstance;
@@ -42,7 +44,7 @@ private:
     class Private;
     friend class Private;
     friend class AgentConfigurationDialog;
-    QScopedPointer<Private> d;
+    std::unique_ptr<Private> const d;
 };
 
 }
