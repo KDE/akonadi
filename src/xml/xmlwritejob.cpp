@@ -129,10 +129,7 @@ XmlWriteJob::XmlWriteJob(const Collection::List &roots, const QString &fileName,
     d->fileName = fileName;
 }
 
-XmlWriteJob::~XmlWriteJob()
-{
-    delete d;
-}
+XmlWriteJob::~XmlWriteJob() = default;
 
 void XmlWriteJob::doStart()
 {

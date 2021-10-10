@@ -109,10 +109,7 @@ XmlDocument::XmlDocument(const QString &fileName)
     loadFile(fileName);
 }
 
-XmlDocument::~XmlDocument()
-{
-    delete d;
-}
+XmlDocument::~XmlDocument() = default;
 
 bool Akonadi::XmlDocument::loadFile(const QString &fileName)
 {

@@ -14,6 +14,8 @@
 
 #include <QDomDocument>
 
+#include <memory>
+
 namespace Akonadi
 {
 class XmlDocumentPrivate;
@@ -116,7 +118,7 @@ public:
 
 private:
     Q_DISABLE_COPY(XmlDocument)
-    XmlDocumentPrivate *const d;
+    std::unique_ptr<XmlDocumentPrivate> const d;
 };
 
 }
