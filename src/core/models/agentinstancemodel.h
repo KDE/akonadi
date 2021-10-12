@@ -82,8 +82,8 @@ public:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    std::unique_ptr<Private> const d;
+    class AgentInstanceModelPrivate;
+    std::unique_ptr<AgentInstanceModelPrivate> const d;
     /// @endcond
 };
 

@@ -18,10 +18,10 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class Q_DECL_HIDDEN AgentInstanceModel::Private
+class AgentInstanceModel::AgentInstanceModelPrivate
 {
 public:
-    explicit Private(AgentInstanceModel *parent)
+    explicit AgentInstanceModelPrivate(AgentInstanceModel *parent)
         : mParent(parent)
     {
     }
@@ -34,14 +34,14 @@ public:
     void instanceChanged(const AgentInstance & /*instance*/);
 };
 
-void AgentInstanceModel::Private::instanceAdded(const AgentInstance &instance)
+void AgentInstanceModel::AgentInstanceModelPrivate::instanceAdded(const AgentInstance &instance)
 {
     mParent->beginInsertRows(QModelIndex(), mInstances.count(), mInstances.count());
     mInstances.append(instance);
     mParent->endInsertRows();
 }
 
-void AgentInstanceModel::Private::instanceRemoved(const AgentInstance &instance)
+void AgentInstanceModel::AgentInstanceModelPrivate::instanceRemoved(const AgentInstance &instance)
 {
     const int index = mInstances.indexOf(instance);
     if (index == -1) {
@@ -53,7 +53,7 @@ void AgentInstanceModel::Private::instanceRemoved(const AgentInstance &instance)
     mParent->endRemoveRows();
 }
 
-void AgentInstanceModel::Private::instanceChanged(const AgentInstance &instance)
+void AgentInstanceModel::AgentInstanceModelPrivate::instanceChanged(const AgentInstance &instance)
 {
     const int numberOfInstance(mInstances.count());
     for (int i = 0; i < numberOfInstance; ++i) {
@@ -71,7 +71,7 @@ void AgentInstanceModel::Private::instanceChanged(const AgentInstance &instance)
 
 AgentInstanceModel::AgentInstanceModel(QObject *parent)
     : QAbstractItemModel(parent)
-    , d(new Private(this))
+    , d(new AgentInstanceModelPrivate(this))
 {
     d->mInstances = AgentManager::self()->instances();
 

@@ -149,9 +149,9 @@ Q_SIGNALS:
     void enableOkButton(bool enabled);
 
 private:
-    class Private;
-    friend class Private;
-    std::unique_ptr<Private> const d;
+    class AgentConfigurationBasePrivate;
+    friend class AgentConfigurationBasePrivate;
+    std::unique_ptr<AgentConfigurationBasePrivate> const d;
 };
 
 } // namespace

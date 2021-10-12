@@ -12,7 +12,7 @@
 using namespace Akonadi;
 
 AgentType::AgentType()
-    : d(new Private)
+    : d(new AgentTypePrivate)
 {
 }
 

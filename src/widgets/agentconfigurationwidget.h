@@ -41,10 +41,10 @@ protected:
     void childEvent(QChildEvent *event) override;
 
 private:
-    class Private;
-    friend class Private;
+    class AgentConfigurationWidgetPrivate;
+    friend class AgentConfigurationWidgetPrivate;
     friend class AgentConfigurationDialog;
-    std::unique_ptr<Private> const d;
+    std::unique_ptr<AgentConfigurationWidgetPrivate> const d;
 };
 
 }

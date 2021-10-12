@@ -15,14 +15,14 @@ namespace Akonadi
 /**
  * @internal
  */
-class AgentType::Private : public QSharedData
+class AgentType::AgentTypePrivate : public QSharedData
 {
 public:
-    Private()
+    AgentTypePrivate()
     {
     }
 
-    Private(const Private &other)
+    AgentTypePrivate(const AgentTypePrivate &other)
         : QSharedData(other)
     {
         mIdentifier = other.mIdentifier;

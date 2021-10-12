@@ -154,8 +154,8 @@ Q_SIGNALS:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    std::unique_ptr<Private> const d;
+    class AgentActionManagerPrivate;
+    std::unique_ptr<AgentActionManagerPrivate> const d;
 
     Q_PRIVATE_SLOT(d, void updateActions())
 

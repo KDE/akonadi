@@ -17,7 +17,7 @@
 
 namespace Akonadi
 {
-class Q_DECL_HIDDEN AgentConfigurationWidget::Private
+class Q_DECL_HIDDEN AgentConfigurationWidget::AgentConfigurationWidgetPrivate
 {
 private:
     struct PluginLoaderDeleter {
@@ -29,8 +29,8 @@ private:
     };
 
 public:
-    Private(const AgentInstance &instance);
-    ~Private();
+    AgentConfigurationWidgetPrivate(const AgentInstance &instance);
+    ~AgentConfigurationWidgetPrivate();
 
     void setupErrorWidget(QWidget *parent, const QString &text);
     bool loadPlugin(const QString &pluginPath);

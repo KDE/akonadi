@@ -13,10 +13,10 @@
 
 namespace Akonadi
 {
-class Q_DECL_HIDDEN AgentConfigurationBase::Private
+class Q_DECL_HIDDEN AgentConfigurationBase::AgentConfigurationBasePrivate
 {
 public:
-    Private(const KSharedConfigPtr &config, QWidget *parentWidget, const QVariantList &args)
+    AgentConfigurationBasePrivate(const KSharedConfigPtr &config, QWidget *parentWidget, const QVariantList &args)
         : config(config)
         , parentWidget(parentWidget)
     {
@@ -39,7 +39,7 @@ using namespace Akonadi;
 
 AgentConfigurationBase::AgentConfigurationBase(const KSharedConfigPtr &config, QWidget *parentWidget, const QVariantList &args)
     : QObject(reinterpret_cast<QObject *>(parentWidget))
-    , d(new Private(config, parentWidget, args))
+    , d(new AgentConfigurationBasePrivate(config, parentWidget, args))
 {
 }
 

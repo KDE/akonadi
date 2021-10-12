@@ -125,8 +125,8 @@ public:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    QSharedDataPointer<Private> d;
+    class AgentTypePrivate;
+    QSharedDataPointer<AgentTypePrivate> d;
     /// @endcond
 };
 

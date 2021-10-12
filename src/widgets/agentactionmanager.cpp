@@ -41,10 +41,10 @@ static_assert(numAgentActionData == AgentActionManager::LastType, "agentActionDa
 /**
  * @internal
  */
-class Q_DECL_HIDDEN AgentActionManager::Private
+class Q_DECL_HIDDEN AgentActionManager::AgentActionManagerPrivate
 {
 public:
-    explicit Private(AgentActionManager *parent)
+    explicit AgentActionManagerPrivate(AgentActionManager *parent)
         : q(parent)
     {
         mActions.fill(nullptr, AgentActionManager::LastType);
@@ -213,7 +213,7 @@ public:
 
 AgentActionManager::AgentActionManager(KActionCollection *actionCollection, QWidget *parent)
     : QObject(parent)
-    , d(new Private(this))
+    , d(new AgentActionManagerPrivate(this))
 {
     d->mParentWidget = parent;
     d->mActionCollection = actionCollection;

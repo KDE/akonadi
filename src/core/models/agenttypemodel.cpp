@@ -15,10 +15,10 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class Q_DECL_HIDDEN AgentTypeModel::Private
+class AgentTypeModel::AgentTypeModelPrivate
 {
 public:
-    explicit Private(AgentTypeModel *parent)
+    explicit AgentTypeModelPrivate(AgentTypeModel *parent)
         : mParent(parent)
     {
         mTypes = AgentManager::self()->types();
@@ -31,14 +31,14 @@ public:
     void typeRemoved(const AgentType &agentType);
 };
 
-void AgentTypeModel::Private::typeAdded(const AgentType &agentType)
+void AgentTypeModel::AgentTypeModelPrivate::typeAdded(const AgentType &agentType)
 {
     mTypes.append(agentType);
 
     Q_EMIT mParent->layoutChanged();
 }
 
-void AgentTypeModel::Private::typeRemoved(const AgentType &agentType)
+void AgentTypeModel::AgentTypeModelPrivate::typeRemoved(const AgentType &agentType)
 {
     mTypes.removeAll(agentType);
 
@@ -47,7 +47,7 @@ void AgentTypeModel::Private::typeRemoved(const AgentType &agentType)
 
 AgentTypeModel::AgentTypeModel(QObject *parent)
     : QAbstractItemModel(parent)
-    , d(new Private(this))
+    , d(new AgentTypeModelPrivate(this))
 {
     connect(AgentManager::self(), &AgentManager::typeAdded, this, [this](const Akonadi::AgentType &type) {
         d->typeAdded(type);
