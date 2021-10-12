@@ -80,7 +80,7 @@ AgentConfigurationWidget::AgentConfigurationWidget(const AgentInstance &instance
             configName = Akonadi::ServerManager::addNamespace(configName);
             KSharedConfigPtr config = KSharedConfig::openConfig(configName);
             auto layout = new QVBoxLayout(this);
-            layout->setContentsMargins(0, 0, 0, 0);
+            layout->setContentsMargins({});
             d->plugin = d->factory->create(config, this, {instance.identifier()});
             connect(d->plugin.data(), &AgentConfigurationBase::enableOkButton, this, &AgentConfigurationWidget::enableOkButton);
         } else {

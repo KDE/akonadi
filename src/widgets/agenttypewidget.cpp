@@ -85,7 +85,7 @@ AgentTypeWidget::AgentTypeWidget(QWidget *parent)
     , d(new Private(this))
 {
     auto layout = new QHBoxLayout(this);
-    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setContentsMargins({});
 
     d->mView = new QListView(this);
     d->mView->setItemDelegate(new AgentTypeWidgetDelegate(d->mView));
