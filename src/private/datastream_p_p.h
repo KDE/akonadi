@@ -320,7 +320,7 @@ inline Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &
         Key key;
         Value value;
         stream >> key >> value;
-        map.insertMulti(key, value);
+        map.insert(key, value);
     }
     return stream;
 }
