@@ -18,6 +18,8 @@
 
 namespace Akonadi
 {
+class ImapParserPrivate;
+
 /**
   Parser for IMAP messages.
 */
@@ -190,8 +192,7 @@ public:
 
 private:
     Q_DISABLE_COPY(ImapParser)
-    class Private;
-    std::unique_ptr<Private> const d;
+    std::unique_ptr<ImapParserPrivate> const d;
 };
 
 }
