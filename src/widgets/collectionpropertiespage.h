@@ -15,6 +15,7 @@
 namespace Akonadi
 {
 class Collection;
+class CollectionPropertiesPagePrivate;
 
 /**
  * @short A single page in a collection properties dialog.
@@ -138,8 +139,7 @@ public:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    std::unique_ptr<Private> const d;
+    std::unique_ptr<CollectionPropertiesPagePrivate> const d;
     /// @endcond
 };
 

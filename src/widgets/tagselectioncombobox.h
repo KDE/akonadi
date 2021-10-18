@@ -18,6 +18,8 @@
 
 namespace Akonadi
 {
+class TagSelectionComboBoxPrivate;
+
 /**
  * @brief The TagSelectionCombo class
  */
@@ -46,8 +48,7 @@ Q_SIGNALS:
     void selectionChanged(const Akonadi::Tag::List &selection);
 
 private:
-    class Private;
-    std::unique_ptr<Private> const d;
+    std::unique_ptr<TagSelectionComboBoxPrivate> const d;
 };
 
 } // namespace

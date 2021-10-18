@@ -35,10 +35,10 @@
 
 using namespace Akonadi;
 
-class Q_DECL_HIDDEN CollectionDialog::Private
+class Akonadi::CollectionDialogPrivate
 {
 public:
-    Private(QAbstractItemModel *customModel, CollectionDialog *parent, CollectionDialogOptions options)
+    CollectionDialogPrivate(QAbstractItemModel *customModel, CollectionDialog *parent, CollectionDialog::CollectionDialogOptions options)
         : mParent(parent)
     {
         // setup GUI
@@ -120,7 +120,7 @@ public:
         readConfig();
     }
 
-    ~Private()
+    ~CollectionDialogPrivate()
     {
         writeConfig();
     }
@@ -178,18 +178,18 @@ public:
     void slotAddChildCollection();
     void slotCollectionCreationResult(KJob *job);
     bool canCreateCollection(const Akonadi::Collection &parentCollection) const;
-    void changeCollectionDialogOptions(CollectionDialogOptions options);
+    void changeCollectionDialogOptions(CollectionDialog::CollectionDialogOptions options);
     bool canSelectCollection() const;
 };
 
-void CollectionDialog::Private::slotDoubleClicked()
+void CollectionDialogPrivate::slotDoubleClicked()
 {
     if (canSelectCollection()) {
         mParent->accept();
     }
 }
 
-bool CollectionDialog::Private::canSelectCollection() const
+bool CollectionDialogPrivate::canSelectCollection() const
 {
     bool result = (!mView->selectionModel()->selectedIndexes().isEmpty());
     if (mAllowToCreateNewChildCollection) {
@@ -202,7 +202,7 @@ bool CollectionDialog::Private::canSelectCollection() const
     return result;
 }
 
-void CollectionDialog::Private::slotSelectionChanged()
+void CollectionDialogPrivate::slotSelectionChanged()
 {
     mButtonBox->button(QDialogButtonBox::Ok)->setEnabled(!mView->selectionModel()->selectedIndexes().isEmpty());
     if (mAllowToCreateNewChildCollection) {
@@ -217,26 +217,26 @@ void CollectionDialog::Private::slotSelectionChanged()
     }
 }
 
-void CollectionDialog::Private::changeCollectionDialogOptions(CollectionDialogOptions options)
+void CollectionDialogPrivate::changeCollectionDialogOptions(CollectionDialog::CollectionDialogOptions options)
 {
-    mAllowToCreateNewChildCollection = (options & AllowToCreateNewChildCollection);
+    mAllowToCreateNewChildCollection = (options & CollectionDialog::AllowToCreateNewChildCollection);
     if (mAllowToCreateNewChildCollection) {
         mNewSubfolderButton = mButtonBox->addButton(i18n("&New Subfolder..."), QDialogButtonBox::NoRole);
         mNewSubfolderButton->setIcon(QIcon::fromTheme(QStringLiteral("folder-new")));
         mNewSubfolderButton->setToolTip(i18n("Create a new subfolder under the currently selected folder"));
         mNewSubfolderButton->setEnabled(false);
-        connect(mNewSubfolderButton, &QPushButton::clicked, mParent, [this]() {
+        QObject::connect(mNewSubfolderButton, &QPushButton::clicked, mParent, [this]() {
             slotAddChildCollection();
         });
     }
-    mKeepTreeExpanded = (options & KeepTreeExpanded);
+    mKeepTreeExpanded = (options & CollectionDialog::KeepTreeExpanded);
     if (mKeepTreeExpanded) {
         mParent->connect(mRightsFilterModel, &EntityRightsFilterModel::rowsInserted, mView, &EntityTreeView::expandAll, Qt::UniqueConnection);
         mView->expandAll();
     }
 }
 
-bool CollectionDialog::Private::canCreateCollection(const Akonadi::Collection &parentCollection) const
+bool CollectionDialogPrivate::canCreateCollection(const Akonadi::Collection &parentCollection) const
 {
     if (!parentCollection.isValid()) {
         return false;
@@ -255,7 +255,7 @@ bool CollectionDialog::Private::canCreateCollection(const Akonadi::Collection &p
     return false;
 }
 
-void CollectionDialog::Private::slotAddChildCollection()
+void CollectionDialogPrivate::slotAddChildCollection()
 {
     const Akonadi::Collection parentCollection = mParent->selectedCollection();
     if (canCreateCollection(parentCollection)) {
@@ -273,13 +273,13 @@ void CollectionDialog::Private::slotAddChildCollection()
             collection.setContentMimeTypes(mContentMimeTypes);
         }
         auto job = new Akonadi::CollectionCreateJob(collection);
-        connect(job, &Akonadi::CollectionCreateJob::result, mParent, [this](KJob *job) {
+        QObject::connect(job, &Akonadi::CollectionCreateJob::result, mParent, [this](KJob *job) {
             slotCollectionCreationResult(job);
         });
     }
 }
 
-void CollectionDialog::Private::slotCollectionCreationResult(KJob *job)
+void CollectionDialogPrivate::slotCollectionCreationResult(KJob *job)
 {
     if (job->error()) {
         QMessageBox::critical(mParent, i18n("Folder creation failed"), i18n("Could not create folder: %1", job->errorString()));
@@ -288,19 +288,19 @@ void CollectionDialog::Private::slotCollectionCreationResult(KJob *job)
 
 CollectionDialog::CollectionDialog(QWidget *parent)
     : QDialog(parent)
-    , d(new Private(nullptr, this, CollectionDialog::None))
+    , d(new CollectionDialogPrivate(nullptr, this, CollectionDialog::None))
 {
 }
 
 CollectionDialog::CollectionDialog(QAbstractItemModel *model, QWidget *parent)
     : QDialog(parent)
-    , d(new Private(model, this, CollectionDialog::None))
+    , d(new CollectionDialogPrivate(model, this, CollectionDialog::None))
 {
 }
 
 CollectionDialog::CollectionDialog(CollectionDialogOptions options, QAbstractItemModel *model, QWidget *parent)
     : QDialog(parent)
-    , d(new Private(model, this, options))
+    , d(new CollectionDialogPrivate(model, this, options))
 {
 }
 

@@ -20,15 +20,15 @@
 
 using namespace Akonadi;
 
-class Q_DECL_HIDDEN CollectionRequester::Private
+class Akonadi::CollectionRequesterPrivate
 {
 public:
-    explicit Private(CollectionRequester *parent)
+    explicit CollectionRequesterPrivate(CollectionRequester *parent)
         : q(parent)
     {
     }
 
-    ~Private()
+    ~CollectionRequesterPrivate()
     {
     }
 
@@ -48,17 +48,17 @@ public:
     CollectionDialog *collectionDialog = nullptr;
 };
 
-void CollectionRequester::Private::fetchCollection(const Collection &collection)
+void CollectionRequesterPrivate::fetchCollection(const Collection &collection)
 {
     auto job = new CollectionFetchJob(collection, Akonadi::CollectionFetchJob::Base, q);
     job->setProperty("OriginalCollectionId", collection.id());
     job->fetchScope().setAncestorRetrieval(CollectionFetchScope::All);
-    connect(job, &CollectionFetchJob::finished, q, [this](KJob *job) {
+    QObject::connect(job, &CollectionFetchJob::finished, q, [this](KJob *job) {
         _k_collectionReceived(job);
     });
 }
 
-void CollectionRequester::Private::_k_collectionReceived(KJob *job)
+void CollectionRequesterPrivate::_k_collectionReceived(KJob *job)
 {
     auto fetch = qobject_cast<CollectionFetchJob *>(job);
     if (!fetch) {
@@ -75,7 +75,7 @@ void CollectionRequester::Private::_k_collectionReceived(KJob *job)
         auto namesFetch = new CollectionFetchJob(chain, CollectionFetchJob::Base, q);
         namesFetch->setProperty("OriginalCollectionId", job->property("OriginalCollectionId"));
         namesFetch->fetchScope().setAncestorRetrieval(CollectionFetchScope::Parent);
-        connect(namesFetch, &CollectionFetchJob::finished, q, [this](KJob *job) {
+        QObject::connect(namesFetch, &CollectionFetchJob::finished, q, [this](KJob *job) {
             _k_collectionsNamesReceived(job);
         });
     } else {
@@ -83,7 +83,7 @@ void CollectionRequester::Private::_k_collectionReceived(KJob *job)
     }
 }
 
-void CollectionRequester::Private::_k_collectionsNamesReceived(KJob *job)
+void CollectionRequesterPrivate::_k_collectionsNamesReceived(KJob *job)
 {
     auto fetch = qobject_cast<CollectionFetchJob *>(job);
     const qint64 originalId = fetch->property("OriginalCollectionId").toLongLong();
@@ -103,7 +103,7 @@ void CollectionRequester::Private::_k_collectionsNamesReceived(KJob *job)
     edit->setText(namesList.join(QLatin1Char('/')));
 }
 
-void CollectionRequester::Private::init()
+void CollectionRequesterPrivate::init()
 {
     auto hbox = new QHBoxLayout(q);
     hbox->setContentsMargins({});
@@ -145,7 +145,7 @@ void CollectionRequester::Private::init()
     collectionDialog->changeCollectionDialogOptions(CollectionDialog::KeepTreeExpanded);
 }
 
-void CollectionRequester::Private::_k_slotOpenDialog()
+void CollectionRequesterPrivate::_k_slotOpenDialog()
 {
     CollectionDialog *dlg = collectionDialog;
 
@@ -160,14 +160,14 @@ void CollectionRequester::Private::_k_slotOpenDialog()
 
 CollectionRequester::CollectionRequester(QWidget *parent)
     : QWidget(parent)
-    , d(new Private(this))
+    , d(new CollectionRequesterPrivate(this))
 {
     d->init();
 }
 
 CollectionRequester::CollectionRequester(const Akonadi::Collection &collection, QWidget *parent)
     : QWidget(parent)
-    , d(new Private(this))
+    , d(new CollectionRequesterPrivate(this))
 {
     d->init();
     setCollection(collection);

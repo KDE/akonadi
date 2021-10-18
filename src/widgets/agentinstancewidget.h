@@ -18,6 +18,7 @@ namespace Akonadi
 {
 class AgentInstance;
 class AgentFilterProxyModel;
+class AgentInstanceWidgetPrivate;
 
 /**
  * @short Provides a widget that lists all available agent instances.
@@ -118,8 +119,7 @@ Q_SIGNALS:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    std::unique_ptr<Private> const d;
+    std::unique_ptr<AgentInstanceWidgetPrivate> const d;
     /// @endcond
 };
 

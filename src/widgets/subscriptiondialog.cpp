@@ -36,16 +36,16 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class Q_DECL_HIDDEN SubscriptionDialog::Private
+class Akonadi::SubscriptionDialogPrivate
 {
 public:
-    explicit Private(SubscriptionDialog *parent)
+    explicit SubscriptionDialogPrivate(SubscriptionDialog *parent)
         : q(parent)
         , model(&monitor, parent)
     {
         ui.setupUi(q);
 
-        connect(&model, &SubscriptionModel::modelLoaded, q, [this]() {
+        QObject::connect(&model, &SubscriptionModel::modelLoaded, q, [this]() {
             filterRecursiveCollectionFilter.sort(0, Qt::AscendingOrder);
             ui.collectionView->setEnabled(true);
             ui.collectionView->expandAll();
@@ -77,7 +77,7 @@ public:
 
         auto okButton = ui.buttonBox->button(QDialogButtonBox::Ok);
         okButton->setEnabled(false);
-        connect(okButton, &QPushButton::clicked, q, [this]() {
+        QObject::connect(okButton, &QPushButton::clicked, q, [this]() {
             done();
         });
     }
@@ -87,7 +87,7 @@ public:
         auto job = new SubscriptionJob(q);
         job->subscribe(model.subscribed());
         job->unsubscribe(model.unsubscribed());
-        connect(job, &SubscriptionJob::result, q, [this](KJob *job) {
+        QObject::connect(job, &SubscriptionJob::result, q, [this](KJob *job) {
             if (job->error()) {
                 qCWarning(AKONADIWIDGETS_LOG) << job->errorString();
                 KMessageBox::sorry(q, i18n("Failed to update subscription: %1", job->errorString()), i18nc("@title", "Subscription Error"));
@@ -136,7 +136,7 @@ SubscriptionDialog::SubscriptionDialog(QWidget *parent)
 
 SubscriptionDialog::SubscriptionDialog(const QStringList &mimetypes, QWidget *parent)
     : QDialog(parent)
-    , d(new Private(this))
+    , d(new SubscriptionDialogPrivate(this))
 {
     setAttribute(Qt::WA_DeleteOnClose);
 

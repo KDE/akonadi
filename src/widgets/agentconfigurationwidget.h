@@ -16,6 +16,8 @@ namespace Akonadi
 {
 class AgentInstance;
 class AgentConfigurationDialog;
+class AgentConfigurationWidgetPrivate;
+
 /**
  * @brief A widget for displaying agent configuration in applications.
  *
@@ -41,7 +43,6 @@ protected:
     void childEvent(QChildEvent *event) override;
 
 private:
-    class AgentConfigurationWidgetPrivate;
     friend class AgentConfigurationWidgetPrivate;
     friend class AgentConfigurationDialog;
     std::unique_ptr<AgentConfigurationWidgetPrivate> const d;

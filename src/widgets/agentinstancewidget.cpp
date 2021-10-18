@@ -67,10 +67,10 @@ using Akonadi::Internal::AgentInstanceWidgetDelegate;
 /**
  * @internal
  */
-class Q_DECL_HIDDEN AgentInstanceWidget::Private
+class AgentInstanceWidgetPrivate
 {
 public:
-    explicit Private(AgentInstanceWidget *parent)
+    explicit AgentInstanceWidgetPrivate(AgentInstanceWidget *parent)
         : mParent(parent)
     {
     }
@@ -85,7 +85,7 @@ public:
     AgentFilterProxyModel *proxy = nullptr;
 };
 
-void AgentInstanceWidget::Private::currentAgentInstanceChanged(const QModelIndex &currentIndex, const QModelIndex &previousIndex)
+void AgentInstanceWidgetPrivate::currentAgentInstanceChanged(const QModelIndex &currentIndex, const QModelIndex &previousIndex)
 {
     AgentInstance currentInstance;
     if (currentIndex.isValid()) {
@@ -100,7 +100,7 @@ void AgentInstanceWidget::Private::currentAgentInstanceChanged(const QModelIndex
     Q_EMIT mParent->currentChanged(currentInstance, previousInstance);
 }
 
-void AgentInstanceWidget::Private::currentAgentInstanceDoubleClicked(const QModelIndex &currentIndex)
+void AgentInstanceWidgetPrivate::currentAgentInstanceDoubleClicked(const QModelIndex &currentIndex)
 {
     AgentInstance currentInstance;
     if (currentIndex.isValid()) {
@@ -110,7 +110,7 @@ void AgentInstanceWidget::Private::currentAgentInstanceDoubleClicked(const QMode
     Q_EMIT mParent->doubleClicked(currentInstance);
 }
 
-void AgentInstanceWidget::Private::currentAgentInstanceClicked(const QModelIndex &currentIndex)
+void AgentInstanceWidgetPrivate::currentAgentInstanceClicked(const QModelIndex &currentIndex)
 {
     AgentInstance currentInstance;
     if (currentIndex.isValid()) {
@@ -122,7 +122,7 @@ void AgentInstanceWidget::Private::currentAgentInstanceClicked(const QModelIndex
 
 AgentInstanceWidget::AgentInstanceWidget(QWidget *parent)
     : QWidget(parent)
-    , d(new Private(this))
+    , d(new AgentInstanceWidgetPrivate(this))
 {
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins({});

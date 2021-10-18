@@ -322,10 +322,10 @@ static QModelIndexList safeSelectedRows(QItemSelectionModel *selectionModel)
 /**
  * @internal
  */
-class Q_DECL_HIDDEN StandardActionManager::Private
+class Akonadi::StandardActionManagerPrivate
 {
 public:
-    explicit Private(StandardActionManager *parent)
+    explicit StandardActionManagerPrivate(StandardActionManager *parent)
         : q(parent)
         , actionCollection(nullptr)
         , parentWidget(nullptr)
@@ -399,7 +399,7 @@ public:
         setContextText(StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle, i18n("Paste failed"));
 
         mDelayedUpdateTimer.setSingleShot(true);
-        connect(&mDelayedUpdateTimer, &QTimer::timeout, q, [this]() {
+        QObject::connect(&mDelayedUpdateTimer, &QTimer::timeout, q, [this]() {
             updateActions();
         });
 
@@ -462,7 +462,8 @@ public:
 
     void createActionFolderMenu(QMenu *menu, StandardActionManager::Type type)
     {
-        if (type == CopyCollectionToMenu || type == CopyItemToMenu || type == MoveItemToMenu || type == MoveCollectionToMenu) {
+        if (type == StandardActionManager::CopyCollectionToMenu || type == StandardActionManager::CopyItemToMenu
+            || type == StandardActionManager::MoveItemToMenu || type == StandardActionManager::MoveCollectionToMenu) {
             new RecentCollectionAction(type, Akonadi::Collection::List(), collectionSelectionModel->model(), menu);
             Collection::List selectedCollectionsList = selectedCollections();
             const QSet<QString> mimeTypes = mimeTypesOfSelection(type);
@@ -661,7 +662,7 @@ public:
     class InsideSelectionSlotBlocker
     {
     public:
-        explicit InsideSelectionSlotBlocker(Private *p)
+        explicit InsideSelectionSlotBlocker(StandardActionManagerPrivate *p)
             : _p(p)
         {
             Q_ASSERT(!p->insideSelectionSlot);
@@ -676,7 +677,7 @@ public:
 
     private:
         Q_DISABLE_COPY(InsideSelectionSlotBlocker)
-        Private *_p;
+        StandardActionManagerPrivate *const _p;
     };
 
     void collectionSelectionChanged()
@@ -1205,22 +1206,22 @@ public:
 
     void slotCopyCollectionTo()
     {
-        pasteTo(collectionSelectionModel, collectionSelectionModel->model(), CopyCollectionToMenu, Qt::CopyAction);
+        pasteTo(collectionSelectionModel, collectionSelectionModel->model(), StandardActionManager::CopyCollectionToMenu, Qt::CopyAction);
     }
 
     void slotCopyItemTo()
     {
-        pasteTo(itemSelectionModel, collectionSelectionModel->model(), CopyItemToMenu, Qt::CopyAction);
+        pasteTo(itemSelectionModel, collectionSelectionModel->model(), StandardActionManager::CopyItemToMenu, Qt::CopyAction);
     }
 
     void slotMoveCollectionTo()
     {
-        pasteTo(collectionSelectionModel, collectionSelectionModel->model(), MoveCollectionToMenu, Qt::MoveAction);
+        pasteTo(collectionSelectionModel, collectionSelectionModel->model(), StandardActionManager::MoveCollectionToMenu, Qt::MoveAction);
     }
 
     void slotMoveItemTo()
     {
-        pasteTo(itemSelectionModel, collectionSelectionModel->model(), MoveItemToMenu, Qt::MoveAction);
+        pasteTo(itemSelectionModel, collectionSelectionModel->model(), StandardActionManager::MoveItemToMenu, Qt::MoveAction);
     }
 
     void slotCopyCollectionTo(QAction *action)
@@ -1372,9 +1373,9 @@ public:
         QPointer<CollectionDialog> dlg(new CollectionDialog(const_cast<QAbstractItemModel *>(model)));
         dlg->setMimeTypeFilter(mimeTypes.values());
 
-        if (type == CopyItemToMenu || type == MoveItemToMenu) {
+        if (type == StandardActionManager::CopyItemToMenu || type == StandardActionManager::MoveItemToMenu) {
             dlg->setAccessRightsFilter(Collection::CanCreateItem);
-        } else if (type == CopyCollectionToMenu || type == MoveCollectionToMenu) {
+        } else if (type == StandardActionManager::CopyCollectionToMenu || type == StandardActionManager::MoveCollectionToMenu) {
             dlg->setAccessRightsFilter(Collection::CanCreateCollection);
         }
 
@@ -1497,8 +1498,8 @@ public:
         QModelIndexList list;
         QSet<QString> mimeTypes;
 
-        const bool isItemAction = (type == CopyItemToMenu || type == MoveItemToMenu);
-        const bool isCollectionAction = (type == CopyCollectionToMenu || type == MoveCollectionToMenu);
+        const bool isItemAction = (type == StandardActionManager::CopyItemToMenu || type == StandardActionManager::MoveItemToMenu);
+        const bool isCollectionAction = (type == StandardActionManager::CopyCollectionToMenu || type == StandardActionManager::MoveCollectionToMenu);
 
         if (isItemAction) {
             list = safeSelectedRows(itemSelectionModel);
@@ -1531,8 +1532,8 @@ public:
             return false;
         }
 
-        const bool isItemAction = (type == CopyItemToMenu || type == MoveItemToMenu);
-        const bool isCollectionAction = (type == CopyCollectionToMenu || type == MoveCollectionToMenu);
+        const bool isItemAction = (type == StandardActionManager::CopyItemToMenu || type == StandardActionManager::MoveItemToMenu);
+        const bool isCollectionAction = (type == StandardActionManager::CopyCollectionToMenu || type == StandardActionManager::MoveCollectionToMenu);
 
         const auto contentMimeTypesList{collection.contentMimeTypes()};
         const QSet<QString> contentMimeTypesSet = QSet<QString>(contentMimeTypesList.cbegin(), contentMimeTypesList.cend());
@@ -1573,7 +1574,7 @@ public:
 
             const bool readOnly = !isWritableTargetCollectionForMimeTypes(collection, mimeTypes, type);
             const bool collectionIsSelected = selectedCollectionsList.contains(collection);
-            if (type == MoveCollectionToMenu && collectionIsSelected) {
+            if (type == StandardActionManager::MoveCollectionToMenu && collectionIsSelected) {
                 continue;
             }
 
@@ -1585,13 +1586,13 @@ public:
             if (model->rowCount(index) > 0) {
                 // new level
                 auto popup = new QMenu(menu);
-                const bool moveAction = (type == MoveCollectionToMenu || type == MoveItemToMenu);
+                const bool moveAction = (type == StandardActionManager::MoveCollectionToMenu || type == StandardActionManager::MoveItemToMenu);
                 popup->setObjectName(QStringLiteral("subMenu"));
                 popup->setTitle(label);
                 popup->setIcon(icon);
 
                 fillFoldersMenu(selectedCollectionsList, mimeTypes, type, popup, model, index);
-                if (!(type == CopyCollectionToMenu && collectionIsSelected)) {
+                if (!(type == StandardActionManager::CopyCollectionToMenu && collectionIsSelected)) {
                     if (!readOnly) {
                         popup->addSeparator();
 
@@ -1746,7 +1747,7 @@ public:
 
 StandardActionManager::StandardActionManager(KActionCollection *actionCollection, QWidget *parent)
     : QObject(parent)
-    , d(new Private(this))
+    , d(new StandardActionManagerPrivate(this))
 {
     d->parentWidget = parent;
     d->actionCollection = actionCollection;

@@ -22,6 +22,8 @@ class QWidget;
 
 namespace Akonadi
 {
+class AgentActionManagerPrivate;
+
 /**
  * @short Manages generic actions for agent and agent instance views.
  *
@@ -154,7 +156,6 @@ Q_SIGNALS:
 
 private:
     /// @cond PRIVATE
-    class AgentActionManagerPrivate;
     std::unique_ptr<AgentActionManagerPrivate> const d;
 
     Q_PRIVATE_SLOT(d, void updateActions())

@@ -19,6 +19,8 @@
 
 namespace Akonadi
 {
+class TagWidgetPrivate;
+
 /**
  * A widget that shows a tag selection and provides means to edit that selection.
  *
@@ -45,8 +47,7 @@ private Q_SLOTS:
     void updateView();
 
 private:
-    class Private;
-    std::unique_ptr<Private> const d;
+    std::unique_ptr<TagWidgetPrivate> const d;
 };
 
 }

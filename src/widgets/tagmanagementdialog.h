@@ -19,6 +19,8 @@
 class QDialogButtonBox;
 namespace Akonadi
 {
+class TagManagementDialogPrivate;
+
 /**
  * A dialog to manage tags.
  *
@@ -34,8 +36,7 @@ public:
     Q_REQUIRED_RESULT QDialogButtonBox *buttons() const;
 
 private:
-    struct Private;
-    std::unique_ptr<Private> const d;
+    std::unique_ptr<TagManagementDialogPrivate> const d;
 };
 
 }

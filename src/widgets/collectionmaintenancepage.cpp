@@ -25,10 +25,10 @@
 
 using namespace Akonadi;
 
-class CollectionMaintenancePage::Private
+class Akonadi::CollectionMaintenancePagePrivate
 {
 public:
-    Private()
+    CollectionMaintenancePagePrivate()
     {
     }
 
@@ -64,7 +64,7 @@ public:
 
 CollectionMaintenancePage::CollectionMaintenancePage(QWidget *parent)
     : CollectionPropertiesPage(parent)
-    , d(new Private)
+    , d(new CollectionMaintenancePagePrivate)
 {
     setObjectName(QStringLiteral("Akonadi::CollectionMaintenancePage"));
     setPageTitle(i18n("Maintenance"));

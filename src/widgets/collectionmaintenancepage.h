@@ -13,6 +13,8 @@
 
 namespace Akonadi
 {
+class CollectionMaintenancePagePrivate;
+
 class AKONADIWIDGETS_EXPORT CollectionMaintenancePage : public Akonadi::CollectionPropertiesPage
 {
     Q_OBJECT
@@ -28,8 +30,7 @@ protected:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    std::unique_ptr<Private> const d;
+    std::unique_ptr<CollectionMaintenancePagePrivate> const d;
     /// @endcond
 };
 

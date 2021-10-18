@@ -16,6 +16,7 @@
 namespace Akonadi
 {
 class Collection;
+class CollectionPropertiesDialogPrivate;
 
 /**
  * @short A generic and extensible dialog for collection properties.
@@ -128,8 +129,7 @@ Q_SIGNALS:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    std::unique_ptr<Private> const d;
+    std::unique_ptr<CollectionPropertiesDialogPrivate> const d;
     /// @endcond
 };
 

@@ -18,6 +18,8 @@ class QAbstractItemModel;
 
 namespace Akonadi
 {
+class CollectionComboBoxPrivate;
+
 /**
  * @short A combobox for selecting an Akonadi collection.
  *
@@ -127,8 +129,7 @@ Q_SIGNALS:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    std::unique_ptr<Private> const d;
+    std::unique_ptr<CollectionComboBoxPrivate> const d;
 
     Q_PRIVATE_SLOT(d, void activated(int))
     Q_PRIVATE_SLOT(d, void activated(const QModelIndex &))

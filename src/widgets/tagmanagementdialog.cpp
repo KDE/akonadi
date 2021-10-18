@@ -19,8 +19,10 @@
 
 using namespace Akonadi;
 
-struct Q_DECL_HIDDEN TagManagementDialog::Private {
-    explicit Private(QDialog *parent)
+class Akonadi::TagManagementDialogPrivate
+{
+public:
+    explicit TagManagementDialogPrivate(QDialog *parent)
         : q(parent)
     {
     }
@@ -33,13 +35,13 @@ struct Q_DECL_HIDDEN TagManagementDialog::Private {
     QDialogButtonBox *buttonBox = nullptr;
 };
 
-void TagManagementDialog::Private::writeConfig() const
+void TagManagementDialogPrivate::writeConfig() const
 {
     KConfigGroup group(KSharedConfig::openStateConfig(), "TagManagementDialog");
     group.writeEntry("Size", q->size());
 }
 
-void TagManagementDialog::Private::readConfig() const
+void TagManagementDialogPrivate::readConfig() const
 {
     KConfigGroup group(KSharedConfig::openStateConfig(), "TagManagementDialog");
     const QSize sizeDialog = group.readEntry("Size", QSize(500, 400));
@@ -50,7 +52,7 @@ void TagManagementDialog::Private::readConfig() const
 
 TagManagementDialog::TagManagementDialog(QWidget *parent)
     : QDialog(parent)
-    , d(new Private(this))
+    , d(new TagManagementDialogPrivate(this))
 {
     auto monitor = new Monitor(this);
     monitor->setObjectName(QStringLiteral("TagManagementDialogMonitor"));

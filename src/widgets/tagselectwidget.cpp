@@ -16,7 +16,7 @@
 using namespace Akonadi;
 using namespace AkRanges;
 
-class Q_DECL_HIDDEN TagSelectWidget::Private
+class Akonadi::TagSelectWidgetPrivate
 {
 public:
     QScopedPointer<TagEditWidget> mTagEditWidget;
@@ -24,7 +24,7 @@ public:
 
 TagSelectWidget::TagSelectWidget(QWidget *parent)
     : QWidget(parent)
-    , d(new Private())
+    , d(new TagSelectWidgetPrivate())
 {
     auto mainLayout = new QHBoxLayout(this);
 

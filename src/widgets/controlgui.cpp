@@ -61,16 +61,16 @@ Q_GLOBAL_STATIC(Internal::StaticControlGui, s_instance) // NOLINT(readability-re
 /**
  * @internal
  */
-class Q_DECL_HIDDEN ControlGui::Private
+class ControlGuiPrivate
 {
 public:
-    explicit Private(ControlGui *parent)
+    explicit ControlGuiPrivate(ControlGui *parent)
         : mParent(parent)
         , mProgressIndicator(nullptr)
     {
     }
 
-    ~Private()
+    ~ControlGuiPrivate()
     {
         delete mProgressIndicator;
     }
@@ -112,7 +112,7 @@ public:
     bool mStopping = false;
 };
 
-bool ControlGui::Private::exec()
+bool ControlGuiPrivate::exec()
 {
     if (mProgressIndicator) {
         mProgressIndicator->show();
@@ -145,7 +145,7 @@ bool ControlGui::Private::exec()
     return rv;
 }
 
-void ControlGui::Private::serverStateChanged(ServerManager::State state)
+void ControlGuiPrivate::serverStateChanged(ServerManager::State state)
 {
     qCDebug(AKONADIWIDGETS_LOG) << "Server state changed to" << state;
     if (mEventLoop && mEventLoop->isRunning()) {
@@ -159,7 +159,7 @@ void ControlGui::Private::serverStateChanged(ServerManager::State state)
 }
 
 ControlGui::ControlGui()
-    : d(new Private(this))
+    : d(new ControlGuiPrivate(this))
 {
     connect(ServerManager::self(), &ServerManager::stateChanged, this, [this](Akonadi::ServerManager::State state) {
         d->serverStateChanged(state);

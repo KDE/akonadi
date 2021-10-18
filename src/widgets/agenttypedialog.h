@@ -17,6 +17,8 @@
 
 namespace Akonadi
 {
+class AgentTypeDialogPrivate;
+
 /**
  * @short A dialog to select an available agent type.
  *
@@ -76,8 +78,7 @@ public Q_SLOTS:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    std::unique_ptr<Private> const d;
+    std::unique_ptr<AgentTypeDialogPrivate> const d;
     /// @endcond
 };
 

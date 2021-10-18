@@ -21,10 +21,10 @@
 
 using namespace Akonadi;
 
-class Q_DECL_HIDDEN AgentTypeDialog::Private
+class Akonadi::AgentTypeDialogPrivate
 {
 public:
-    explicit Private(AgentTypeDialog *qq)
+    explicit AgentTypeDialogPrivate(AgentTypeDialog *qq)
         : q(qq)
     {
     }
@@ -36,13 +36,13 @@ public:
     AgentTypeDialog *const q;
 };
 
-void AgentTypeDialog::Private::writeConfig() const
+void AgentTypeDialogPrivate::writeConfig() const
 {
     KConfigGroup group(KSharedConfig::openStateConfig(), "AgentTypeDialog");
     group.writeEntry("Size", q->size());
 }
 
-void AgentTypeDialog::Private::readConfig()
+void AgentTypeDialogPrivate::readConfig()
 {
     KConfigGroup group(KSharedConfig::openStateConfig(), "AgentTypeDialog");
     const QSize sizeDialog = group.readEntry("Size", QSize(460, 320));
@@ -51,14 +51,14 @@ void AgentTypeDialog::Private::readConfig()
     }
 }
 
-void AgentTypeDialog::Private::slotSearchAgentType(const QString &str)
+void AgentTypeDialogPrivate::slotSearchAgentType(const QString &str)
 {
     Widget->agentFilterProxyModel()->setFilterRegularExpression(str);
 }
 
 AgentTypeDialog::AgentTypeDialog(QWidget *parent)
     : QDialog(parent)
-    , d(new Private(this))
+    , d(new AgentTypeDialogPrivate(this))
 {
     auto layout = new QVBoxLayout(this);
 

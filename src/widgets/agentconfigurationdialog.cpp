@@ -22,10 +22,10 @@
 
 namespace Akonadi
 {
-class Q_DECL_HIDDEN AgentConfigurationDialog::Private
+class AgentConfigurationDialogPrivate
 {
 public:
-    explicit Private(AgentConfigurationDialog *qq)
+    explicit AgentConfigurationDialogPrivate(AgentConfigurationDialog *qq)
         : q(qq)
     {
     }
@@ -35,7 +35,7 @@ public:
     QScopedPointer<AgentConfigurationWidget> widget;
 };
 
-void AgentConfigurationDialog::Private::restoreDialogSize()
+void AgentConfigurationDialogPrivate::restoreDialogSize()
 {
     if (widget) {
         const QSize size = widget->restoreDialogSize();
@@ -51,7 +51,7 @@ using namespace Akonadi;
 
 AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance, QWidget *parent)
     : QDialog(parent)
-    , d(new Private(this))
+    , d(new AgentConfigurationDialogPrivate(this))
 {
     setWindowTitle(i18nc("%1 = agent name", "%1 Configuration", instance.name()));
     setWindowIcon(instance.type().icon());

@@ -26,16 +26,16 @@
 
 using namespace Akonadi;
 using namespace std::chrono_literals;
-AgentConfigurationWidget::AgentConfigurationWidgetPrivate::AgentConfigurationWidgetPrivate(const AgentInstance &instance)
+AgentConfigurationWidgetPrivate::AgentConfigurationWidgetPrivate(const AgentInstance &instance)
     : agentInstance(instance)
 {
 }
 
-AgentConfigurationWidget::AgentConfigurationWidgetPrivate::~AgentConfigurationWidgetPrivate()
+AgentConfigurationWidgetPrivate::~AgentConfigurationWidgetPrivate()
 {
 }
 
-void AgentConfigurationWidget::AgentConfigurationWidgetPrivate::setupErrorWidget(QWidget *parent, const QString &text)
+void AgentConfigurationWidgetPrivate::setupErrorWidget(QWidget *parent, const QString &text)
 {
     auto layout = new QVBoxLayout(parent);
     layout->addStretch(2);
@@ -45,7 +45,7 @@ void AgentConfigurationWidget::AgentConfigurationWidgetPrivate::setupErrorWidget
     layout->addStretch(2);
 }
 
-bool AgentConfigurationWidget::AgentConfigurationWidgetPrivate::loadPlugin(const QString &pluginPath)
+bool AgentConfigurationWidgetPrivate::loadPlugin(const QString &pluginPath)
 {
     if (pluginPath.isEmpty()) {
         qCDebug(AKONADIWIDGETS_LOG) << "Haven't found config plugin for" << agentInstance.type().identifier();

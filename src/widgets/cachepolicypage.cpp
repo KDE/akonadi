@@ -16,15 +16,15 @@
 
 using namespace Akonadi;
 
-class Q_DECL_HIDDEN CachePolicyPage::Private
+class Akonadi::CachePolicyPagePrivate
 {
 public:
-    Private()
+    CachePolicyPagePrivate()
         : mUi(new Ui::CachePolicyPage)
     {
     }
 
-    ~Private()
+    ~CachePolicyPagePrivate()
     {
         delete mUi;
     }
@@ -34,20 +34,20 @@ public:
     void slotRetrievalOptionsGroupBoxDisabled(bool disable);
 
     Ui::CachePolicyPage *const mUi;
-    GuiMode mode;
+    CachePolicyPage::GuiMode mode;
 };
 
-void CachePolicyPage::Private::slotIntervalValueChanged(int interval)
+void CachePolicyPagePrivate::slotIntervalValueChanged(int interval)
 {
     mUi->checkInterval->setSuffix(QLatin1Char(' ') + i18np("minute", "minutes", interval));
 }
 
-void CachePolicyPage::Private::slotCacheValueChanged(int interval)
+void CachePolicyPagePrivate::slotCacheValueChanged(int interval)
 {
     mUi->localCacheTimeout->setSuffix(QLatin1Char(' ') + i18np("minute", "minutes", interval));
 }
 
-void CachePolicyPage::Private::slotRetrievalOptionsGroupBoxDisabled(bool disable)
+void CachePolicyPagePrivate::slotRetrievalOptionsGroupBoxDisabled(bool disable)
 {
     mUi->retrieveFullMessages->setDisabled(disable);
     mUi->retrieveFullMessages->setDisabled(disable);
@@ -63,7 +63,7 @@ void CachePolicyPage::Private::slotRetrievalOptionsGroupBoxDisabled(bool disable
 
 CachePolicyPage::CachePolicyPage(QWidget *parent, GuiMode mode)
     : CollectionPropertiesPage(parent)
-    , d(new Private)
+    , d(new CachePolicyPagePrivate)
 {
     setObjectName(QStringLiteral("Akonadi::CachePolicyPage"));
     setPageTitle(i18n("Retrieval"));

@@ -18,6 +18,8 @@
 
 namespace Akonadi
 {
+class CollectionDialogPrivate;
+
 /**
  * @short A collection selection dialog.
  *
@@ -196,8 +198,7 @@ public:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    std::unique_ptr<Private> const d;
+    std::unique_ptr<CollectionDialogPrivate> const d;
     /// @endcond
 };
 

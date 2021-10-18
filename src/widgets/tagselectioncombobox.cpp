@@ -50,10 +50,10 @@ QString getEditText(const QItemSelection &selection)
 
 } // namespace
 
-class TagSelectionComboBox::Private
+class Akonadi::TagSelectionComboBoxPrivate
 {
 public:
-    explicit Private(TagSelectionComboBox *parent)
+    explicit TagSelectionComboBoxPrivate(TagSelectionComboBox *parent)
         : q(parent)
     {
     }
@@ -177,7 +177,7 @@ private:
 
 TagSelectionComboBox::TagSelectionComboBox(QWidget *parent)
     : QComboBox(parent)
-    , d(new Private(this))
+    , d(new TagSelectionComboBoxPrivate(this))
 {
     auto monitor = new Monitor(this);
     monitor->setObjectName(QStringLiteral("TagSelectionComboBoxMonitor"));

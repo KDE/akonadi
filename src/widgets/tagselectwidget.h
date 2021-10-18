@@ -16,6 +16,8 @@
 
 namespace Akonadi
 {
+class TagSelectWidgetPrivate;
+
 /**
  * A widget that offers facilities to add/remove tags and provides a way to select tags.
  *
@@ -44,8 +46,7 @@ public:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    std::unique_ptr<Private> const d;
+    std::unique_ptr<TagSelectWidgetPrivate> const d;
     /// @endcond
 };
 }

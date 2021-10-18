@@ -42,10 +42,10 @@ using Akonadi::Internal::AgentTypeWidgetDelegate;
 /**
  * @internal
  */
-class Q_DECL_HIDDEN AgentTypeWidget::Private
+class AgentTypeWidgetPrivate
 {
 public:
-    explicit Private(AgentTypeWidget *parent)
+    explicit AgentTypeWidgetPrivate(AgentTypeWidget *parent)
         : mParent(parent)
     {
     }
@@ -65,7 +65,7 @@ public:
     AgentFilterProxyModel *proxyModel = nullptr;
 };
 
-void AgentTypeWidget::Private::currentAgentTypeChanged(const QModelIndex &currentIndex, const QModelIndex &previousIndex)
+void AgentTypeWidgetPrivate::currentAgentTypeChanged(const QModelIndex &currentIndex, const QModelIndex &previousIndex)
 {
     AgentType currentType;
     if (currentIndex.isValid()) {
@@ -82,7 +82,7 @@ void AgentTypeWidget::Private::currentAgentTypeChanged(const QModelIndex &curren
 
 AgentTypeWidget::AgentTypeWidget(QWidget *parent)
     : QWidget(parent)
-    , d(new Private(this))
+    , d(new AgentTypeWidgetPrivate(this))
 {
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins({});

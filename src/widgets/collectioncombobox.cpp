@@ -25,10 +25,10 @@
 
 using namespace Akonadi;
 
-class Q_DECL_HIDDEN CollectionComboBox::Private
+class Akonadi::CollectionComboBoxPrivate
 {
 public:
-    Private(QAbstractItemModel *customModel, CollectionComboBox *parent)
+    CollectionComboBoxPrivate(QAbstractItemModel *customModel, CollectionComboBox *parent)
         : mParent(parent)
     {
         if (customModel) {
@@ -73,7 +73,7 @@ public:
         });
     }
 
-    ~Private() = default;
+    ~CollectionComboBoxPrivate() = default;
 
     void activated(int index);
     void activated(const QModelIndex &index);
@@ -88,7 +88,7 @@ public:
     AsyncSelectionHandler *mSelectionHandler = nullptr;
 };
 
-void CollectionComboBox::Private::activated(int index)
+void CollectionComboBoxPrivate::activated(int index)
 {
     const QModelIndex modelIndex = mParent->model()->index(index, 0);
     if (modelIndex.isValid()) {
@@ -96,20 +96,20 @@ void CollectionComboBox::Private::activated(int index)
     }
 }
 
-void CollectionComboBox::Private::activated(const QModelIndex &index)
+void CollectionComboBoxPrivate::activated(const QModelIndex &index)
 {
     mParent->setCurrentIndex(index.row());
 }
 
 CollectionComboBox::CollectionComboBox(QWidget *parent)
     : QComboBox(parent)
-    , d(new Private(nullptr, this))
+    , d(new CollectionComboBoxPrivate(nullptr, this))
 {
 }
 
 CollectionComboBox::CollectionComboBox(QAbstractItemModel *model, QWidget *parent)
     : QComboBox(parent)
-    , d(new Private(model, this))
+    , d(new CollectionComboBoxPrivate(model, this))
 {
 }
 

@@ -17,7 +17,7 @@
 
 namespace Akonadi
 {
-class Q_DECL_HIDDEN AgentConfigurationWidget::AgentConfigurationWidgetPrivate
+class AgentConfigurationWidgetPrivate
 {
 private:
     struct PluginLoaderDeleter {

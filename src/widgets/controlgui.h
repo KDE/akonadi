@@ -14,6 +14,8 @@
 
 namespace Akonadi
 {
+class ControlGuiPrivate;
+
 /**
  * @short Provides methods to ControlGui the Akonadi server process.
  *
@@ -119,8 +121,7 @@ protected:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    std::unique_ptr<Private> const d;
+    std::unique_ptr<ControlGuiPrivate> const d;
     /// @endcond
 };
 

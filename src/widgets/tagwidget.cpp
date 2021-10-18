@@ -55,7 +55,7 @@ Q_SIGNALS:
 // include after defining TagView
 #include "ui_tagwidget.h"
 
-class Q_DECL_HIDDEN TagWidget::Private
+class Akonadi::TagWidgetPrivate
 {
 public:
     Ui::TagWidget ui;
@@ -65,7 +65,7 @@ public:
 
 TagWidget::TagWidget(QWidget *parent)
     : QWidget(parent)
-    , d(new Private)
+    , d(new TagWidgetPrivate)
 {
     auto monitor = new Monitor(this);
     monitor->setObjectName(QStringLiteral("TagWidgetMonitor"));

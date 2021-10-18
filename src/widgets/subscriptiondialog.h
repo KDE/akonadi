@@ -14,6 +14,8 @@
 
 namespace Akonadi
 {
+class SubscriptionDialogPrivate;
+
 /**
  * Local subscription dialog.
  */
@@ -53,8 +55,7 @@ public:
     void showHiddenCollection(bool showHidden);
 
 private:
-    class Private;
-    std::unique_ptr<Private> const d;
+    std::unique_ptr<SubscriptionDialogPrivate> const d;
 };
 
 }

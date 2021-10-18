@@ -21,6 +21,7 @@ class QDialogButtonBox;
 namespace Akonadi
 {
 class TagModel;
+class TagSelectionDialogPrivate;
 
 /**
  * A widget that shows a tag selection and provides means to edit that selection.
@@ -45,8 +46,7 @@ Q_SIGNALS:
     void selectionChanged(const Akonadi::Tag::List &tags);
 
 private:
-    class Private;
-    std::unique_ptr<Private> const d;
+    std::unique_ptr<TagSelectionDialogPrivate> const d;
 };
 
 }

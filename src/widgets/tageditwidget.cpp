@@ -23,11 +23,11 @@
 
 using namespace Akonadi;
 
-class Q_DECL_HIDDEN TagEditWidget::Private : public QObject
+class Akonadi::TagEditWidgetPrivate : public QObject
 {
     Q_OBJECT
 public:
-    explicit Private(QWidget *parent);
+    explicit TagEditWidgetPrivate(QWidget *parent);
 
 public Q_SLOTS:
     void slotTextEdited(const QString &text);
@@ -64,12 +64,12 @@ public:
     QPushButton *m_deleteButton = nullptr;
 };
 
-TagEditWidget::Private::Private(QWidget *parent)
+TagEditWidgetPrivate::TagEditWidgetPrivate(QWidget *parent)
     : d(parent)
 {
 }
 
-void TagEditWidget::Private::select(const QModelIndex &parent, int start, int end, QItemSelectionModel::SelectionFlag selectionFlag) const
+void TagEditWidgetPrivate::select(const QModelIndex &parent, int start, int end, QItemSelectionModel::SelectionFlag selectionFlag) const
 {
     if (!m_model) {
         return;
@@ -88,21 +88,21 @@ void TagEditWidget::Private::select(const QModelIndex &parent, int start, int en
     }
 }
 
-void TagEditWidget::Private::onModelPopulated()
+void TagEditWidgetPrivate::onModelPopulated()
 {
     select(QModelIndex(), 0, m_model->rowCount() - 1, QItemSelectionModel::ClearAndSelect);
 }
 
-void TagEditWidget::Private::onRowsInserted(const QModelIndex &parent, int start, int end)
+void TagEditWidgetPrivate::onRowsInserted(const QModelIndex &parent, int start, int end)
 {
     select(parent, start, end, QItemSelectionModel::Select);
 }
 
-void TagEditWidget::Private::slotCreateTag()
+void TagEditWidgetPrivate::slotCreateTag()
 {
     if (ui.newTagButton->isEnabled()) {
         auto createJob = new TagCreateJob(Akonadi::Tag(ui.newTagEdit->text()), this);
-        connect(createJob, &TagCreateJob::finished, this, &TagEditWidget::Private::slotCreateTagFinished);
+        connect(createJob, &TagCreateJob::finished, this, &TagEditWidgetPrivate::slotCreateTagFinished);
 
         ui.newTagEdit->clear();
         ui.newTagEdit->setEnabled(false);
@@ -110,7 +110,7 @@ void TagEditWidget::Private::slotCreateTag()
     }
 }
 
-void TagEditWidget::Private::slotCreateTagFinished(KJob *job)
+void TagEditWidgetPrivate::slotCreateTagFinished(KJob *job)
 {
     if (job->error()) {
         KMessageBox::error(d, i18n("Failed to create a new tag"), i18n("An error occurred while creating a new tag"));
@@ -119,7 +119,7 @@ void TagEditWidget::Private::slotCreateTagFinished(KJob *job)
     ui.newTagEdit->setEnabled(true);
 }
 
-void TagEditWidget::Private::slotTextEdited(const QString &text)
+void TagEditWidgetPrivate::slotTextEdited(const QString &text)
 {
     // Remove unnecessary spaces from a new tag is
     // mandatory, as the user cannot see the difference
@@ -142,7 +142,7 @@ void TagEditWidget::Private::slotTextEdited(const QString &text)
     ui.newTagButton->setEnabled(!exists);
 }
 
-void TagEditWidget::Private::slotItemEntered(const QModelIndex &index)
+void TagEditWidgetPrivate::slotItemEntered(const QModelIndex &index)
 {
     // align the delete-button to stay on the right border
     // of the item
@@ -157,7 +157,7 @@ void TagEditWidget::Private::slotItemEntered(const QModelIndex &index)
     m_deleteButton->show();
 }
 
-void TagEditWidget::Private::deleteTag()
+void TagEditWidgetPrivate::deleteTag()
 {
     Q_ASSERT(m_deleteCandidate.isValid());
     const auto tag = m_deleteCandidate.data(Akonadi::TagModel::TagRole).value<Akonadi::Tag>();
@@ -170,16 +170,16 @@ void TagEditWidget::Private::deleteTag()
 
 TagEditWidget::TagEditWidget(QWidget *parent)
     : QWidget(parent)
-    , d(new Private(this))
+    , d(new TagEditWidgetPrivate(this))
 {
     d->ui.setupUi(this);
 
     d->ui.tagsView->installEventFilter(this);
-    connect(d->ui.tagsView, &QAbstractItemView::entered, d.get(), &Private::slotItemEntered);
+    connect(d->ui.tagsView, &QAbstractItemView::entered, d.get(), &TagEditWidgetPrivate::slotItemEntered);
 
-    connect(d->ui.newTagEdit, &QLineEdit::textEdited, d.get(), &Private::slotTextEdited);
-    connect(d->ui.newTagEdit, &QLineEdit::returnPressed, d.get(), &Private::slotCreateTag);
-    connect(d->ui.newTagButton, &QAbstractButton::clicked, d.get(), &Private::slotCreateTag);
+    connect(d->ui.newTagEdit, &QLineEdit::textEdited, d.get(), &TagEditWidgetPrivate::slotTextEdited);
+    connect(d->ui.newTagEdit, &QLineEdit::returnPressed, d.get(), &TagEditWidgetPrivate::slotCreateTag);
+    connect(d->ui.newTagButton, &QAbstractButton::clicked, d.get(), &TagEditWidgetPrivate::slotCreateTag);
 
     // create the delete button, which is shown when
     // hovering the items
@@ -188,7 +188,7 @@ TagEditWidget::TagEditWidget(QWidget *parent)
     d->m_deleteButton->setIcon(QIcon::fromTheme(QStringLiteral("edit-delete")));
     d->m_deleteButton->setToolTip(i18nc("@info", "Delete tag"));
     d->m_deleteButton->hide();
-    connect(d->m_deleteButton, &QAbstractButton::clicked, d.get(), &Private::deleteTag);
+    connect(d->m_deleteButton, &QAbstractButton::clicked, d.get(), &TagEditWidgetPrivate::deleteTag);
 }
 
 TagEditWidget::TagEditWidget(Akonadi::TagModel *model, QWidget *parent, bool enableSelection)
@@ -222,20 +222,20 @@ void TagEditWidget::setSelectionEnabled(bool enabled)
 void TagEditWidget::setModel(TagModel *model)
 {
     if (d->m_model) {
-        disconnect(d->m_model, &QAbstractItemModel::rowsInserted, d.get(), &Private::onRowsInserted);
-        disconnect(d->m_model, &TagModel::populated, d.get(), &Private::onModelPopulated);
+        disconnect(d->m_model, &QAbstractItemModel::rowsInserted, d.get(), &TagEditWidgetPrivate::onRowsInserted);
+        disconnect(d->m_model, &TagModel::populated, d.get(), &TagEditWidgetPrivate::onModelPopulated);
     }
 
     d->m_model = model;
     if (d->m_model) {
-        connect(d->m_model, &QAbstractItemModel::rowsInserted, d.get(), &Private::onRowsInserted);
+        connect(d->m_model, &QAbstractItemModel::rowsInserted, d.get(), &TagEditWidgetPrivate::onRowsInserted);
         if (d->m_checkableProxy) {
             d->initCheckableProxy(d->m_model);
             d->ui.tagsView->setModel(d->m_checkableProxy.get());
         } else {
             d->ui.tagsView->setModel(d->m_model);
         }
-        connect(d->m_model, &TagModel::populated, d.get(), &Private::onModelPopulated);
+        connect(d->m_model, &TagModel::populated, d.get(), &TagEditWidgetPrivate::onModelPopulated);
     }
 }
 

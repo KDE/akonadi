@@ -41,7 +41,7 @@ static_assert(numAgentActionData == AgentActionManager::LastType, "agentActionDa
 /**
  * @internal
  */
-class Q_DECL_HIDDEN AgentActionManager::AgentActionManagerPrivate
+class Akonadi::AgentActionManagerPrivate
 {
 public:
     explicit AgentActionManagerPrivate(AgentActionManager *parent)
@@ -90,9 +90,9 @@ public:
             }
         }
 
-        enableAction(CreateAgentInstance, createActionEnabled);
-        enableAction(DeleteAgentInstance, deleteActionEnabled);
-        enableAction(ConfigureAgentInstance, configureActionEnabled);
+        enableAction(AgentActionManager::CreateAgentInstance, createActionEnabled);
+        enableAction(AgentActionManager::DeleteAgentInstance, deleteActionEnabled);
+        enableAction(AgentActionManager::ConfigureAgentInstance, configureActionEnabled);
 
         Q_EMIT q->actionStateUpdated();
     }

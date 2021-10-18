@@ -21,6 +21,7 @@ namespace Akonadi
 {
 class Collection;
 class Item;
+class EntityTreeViewPrivate;
 
 /**
  * @short A view to show an item/collection tree provided by an EntityTreeModel.
@@ -217,8 +218,7 @@ protected:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    std::unique_ptr<Private> const d;
+    std::unique_ptr<EntityTreeViewPrivate> const d;
     /// @endcond
 };
 

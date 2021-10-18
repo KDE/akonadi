@@ -28,10 +28,10 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class Q_DECL_HIDDEN EntityListView::Private
+class Akonadi::EntityListViewPrivate
 {
 public:
-    explicit Private(EntityListView *parent)
+    explicit EntityListViewPrivate(EntityListView *parent)
         : mParent(parent)
 #ifndef QT_NO_DRAGANDDROP
         , mDragDropManager(new DragDropManager(mParent))
@@ -49,13 +49,13 @@ public:
     KXMLGUIClient *mXmlGuiClient = nullptr;
 };
 
-void EntityListView::Private::init()
+void EntityListViewPrivate::init()
 {
     mParent->setEditTriggers(QAbstractItemView::EditKeyPressed);
     mParent->setAcceptDrops(true);
 #ifndef QT_NO_DRAGANDDROP
     mParent->setDropIndicatorShown(true);
-    mParent->setDragDropMode(DragDrop);
+    mParent->setDragDropMode(EntityListView::DragDrop);
     mParent->setDragEnabled(true);
 #endif
     mParent->connect(mParent, &QAbstractItemView::clicked, mParent, [this](const auto &index) {
@@ -72,7 +72,7 @@ void EntityListView::Private::init()
     ControlGui::widgetNeedsAkonadi(mParent);
 }
 
-void EntityListView::Private::itemClicked(const QModelIndex &index) const
+void EntityListViewPrivate::itemClicked(const QModelIndex &index) const
 {
     if (!index.isValid()) {
         return;
@@ -89,7 +89,7 @@ void EntityListView::Private::itemClicked(const QModelIndex &index) const
     }
 }
 
-void EntityListView::Private::itemDoubleClicked(const QModelIndex &index) const
+void EntityListViewPrivate::itemDoubleClicked(const QModelIndex &index) const
 {
     if (!index.isValid()) {
         return;
@@ -106,7 +106,7 @@ void EntityListView::Private::itemDoubleClicked(const QModelIndex &index) const
     }
 }
 
-void EntityListView::Private::itemCurrentChanged(const QModelIndex &index) const
+void EntityListViewPrivate::itemCurrentChanged(const QModelIndex &index) const
 {
     if (!index.isValid()) {
         return;
@@ -125,7 +125,7 @@ void EntityListView::Private::itemCurrentChanged(const QModelIndex &index) const
 
 EntityListView::EntityListView(QWidget *parent)
     : QListView(parent)
-    , d(new Private(this))
+    , d(new EntityListViewPrivate(this))
 {
     setSelectionMode(QAbstractItemView::SingleSelection);
     d->init();
@@ -133,7 +133,7 @@ EntityListView::EntityListView(QWidget *parent)
 
 EntityListView::EntityListView(KXMLGUIClient *xmlGuiClient, QWidget *parent)
     : QListView(parent)
-    , d(new Private(this))
+    , d(new EntityListViewPrivate(this))
 {
     d->mXmlGuiClient = xmlGuiClient;
     d->init();

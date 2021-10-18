@@ -19,6 +19,8 @@
 namespace Akonadi
 {
 class TagModel;
+class TagEditWidgetPrivate;
+
 /**
  * A widget that offers facilities to add/remove tags and optionally provides a way to select tags.
  *
@@ -45,8 +47,7 @@ protected:
     bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
-    class Private;
-    std::unique_ptr<Private> const d;
+    std::unique_ptr<TagEditWidgetPrivate> const d;
 };
 
 }

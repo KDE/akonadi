@@ -31,10 +31,10 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class Q_DECL_HIDDEN EntityTreeView::Private
+class Akonadi::EntityTreeViewPrivate
 {
 public:
-    explicit Private(EntityTreeView *parent)
+    explicit EntityTreeViewPrivate(EntityTreeView *parent)
         : mParent(parent)
 #ifndef QT_NO_DRAGANDDROP
         , mDragDropManager(new DragDropManager(mParent))
@@ -57,7 +57,7 @@ public:
     QString mDefaultPopupMenu;
 };
 
-void EntityTreeView::Private::init()
+void EntityTreeViewPrivate::init()
 {
     auto animator = new Akonadi::DelegateAnimator(mParent);
     auto customDelegate = new Akonadi::ProgressSpinnerDelegate(animator, mParent);
@@ -79,7 +79,7 @@ void EntityTreeView::Private::init()
     mParent->setAcceptDrops(true);
 #ifndef QT_NO_DRAGANDDROP
     mParent->setDropIndicatorShown(true);
-    mParent->setDragDropMode(DragDrop);
+    mParent->setDragDropMode(EntityTreeView::DragDrop);
     mParent->setDragEnabled(true);
 #endif
 
@@ -93,7 +93,7 @@ void EntityTreeView::Private::init()
     ControlGui::widgetNeedsAkonadi(mParent);
 }
 
-void EntityTreeView::Private::slotSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected) const
+void EntityTreeViewPrivate::slotSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected) const
 {
     Q_UNUSED(deselected)
     const int column = 0;
@@ -119,7 +119,7 @@ void EntityTreeView::Private::slotSelectionChanged(const QItemSelection &selecte
     }
 }
 
-void EntityTreeView::Private::itemClicked(const QModelIndex &index) const
+void EntityTreeViewPrivate::itemClicked(const QModelIndex &index) const
 {
     if (!index.isValid()) {
         return;
@@ -137,7 +137,7 @@ void EntityTreeView::Private::itemClicked(const QModelIndex &index) const
     }
 }
 
-void EntityTreeView::Private::itemDoubleClicked(const QModelIndex &index) const
+void EntityTreeViewPrivate::itemDoubleClicked(const QModelIndex &index) const
 {
     if (!index.isValid()) {
         return;
@@ -154,7 +154,7 @@ void EntityTreeView::Private::itemDoubleClicked(const QModelIndex &index) const
     }
 }
 
-void EntityTreeView::Private::itemCurrentChanged(const QModelIndex &index) const
+void EntityTreeViewPrivate::itemCurrentChanged(const QModelIndex &index) const
 {
     if (!index.isValid()) {
         return;
@@ -173,7 +173,7 @@ void EntityTreeView::Private::itemCurrentChanged(const QModelIndex &index) const
 
 EntityTreeView::EntityTreeView(QWidget *parent)
     : QTreeView(parent)
-    , d(new Private(this))
+    , d(new EntityTreeViewPrivate(this))
 {
     setSelectionMode(QAbstractItemView::SingleSelection);
     d->init();
@@ -181,7 +181,7 @@ EntityTreeView::EntityTreeView(QWidget *parent)
 
 EntityTreeView::EntityTreeView(KXMLGUIClient *xmlGuiClient, QWidget *parent)
     : QTreeView(parent)
-    , d(new Private(this))
+    , d(new EntityTreeViewPrivate(this))
 {
     d->mXmlGuiClient = xmlGuiClient;
     d->init();

@@ -26,6 +26,7 @@ class QMenu;
 namespace Akonadi
 {
 class FavoriteCollectionsModel;
+class StandardActionManagerPrivate;
 
 /**
  * @short Manages generic actions for collection and item views.
@@ -373,8 +374,8 @@ Q_SIGNALS:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    std::unique_ptr<Private> const d;
+    friend class StandardActionManagerPrivate;
+    std::unique_ptr<StandardActionManagerPrivate> const d;
 
     Q_PRIVATE_SLOT(d, void updateActions())
 
