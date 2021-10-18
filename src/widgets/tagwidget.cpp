@@ -26,7 +26,7 @@ using namespace Akonadi;
 
 namespace Akonadi
 {
-class Q_DECL_HIDDEN TagView : public QLineEdit
+class TagView : public QLineEdit
 {
     Q_OBJECT
 public:
