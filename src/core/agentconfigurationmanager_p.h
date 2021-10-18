@@ -14,6 +14,8 @@
 
 namespace Akonadi
 {
+class AgentConfigurationManagerPrivate;
+
 class AKONADICORE_EXPORT AgentConfigurationManager : public QObject
 {
     Q_OBJECT
@@ -31,9 +33,8 @@ public:
 private:
     AgentConfigurationManager(QObject *parent = nullptr);
 
-    class Private;
-    friend class Private;
-    std::unique_ptr<Private> const d;
+    friend class AgentConfigurationManagerPrivate;
+    std::unique_ptr<AgentConfigurationManagerPrivate> const d;
     static AgentConfigurationManager *sInstance;
 };
 

@@ -14,6 +14,7 @@
 namespace Akonadi
 {
 class CollectionModel;
+class CollectionFilterProxyModelPrivate;
 
 /**
  * @short A proxy model that filters collections by mime type.
@@ -101,8 +102,8 @@ protected:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    std::unique_ptr<Private> const d;
+    friend class CollectionFilterProxyModelPrivate;
+    std::unique_ptr<CollectionFilterProxyModelPrivate> const d;
     /// @endcond
 };
 

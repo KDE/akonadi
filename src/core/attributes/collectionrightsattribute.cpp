@@ -90,14 +90,14 @@ static QByteArray rightsToData(Collection::Rights &rights)
 /**
  * @internal
  */
-class CollectionRightsAttribute::Private
+class Akonadi::CollectionRightsAttributePrivate
 {
 public:
     QByteArray mData;
 };
 
 CollectionRightsAttribute::CollectionRightsAttribute()
-    : d(std::make_unique<Private>())
+    : d(new CollectionRightsAttributePrivate())
 {
 }
 

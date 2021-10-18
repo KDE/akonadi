@@ -16,6 +16,8 @@
 
 namespace Akonadi
 {
+class EntityDisplayAttributePrivate;
+
 /**
  * @short Attribute that stores the properties that are used to display an entity.
  *
@@ -103,8 +105,7 @@ public:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    const std::unique_ptr<Private> d;
+    const std::unique_ptr<EntityDisplayAttributePrivate> d;
     /// @endcond
 };
 

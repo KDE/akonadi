@@ -22,6 +22,7 @@ namespace Akonadi
 #pragma warning(disable : 4275) // we are exporting a subclass of an unexported class, MSVC complains
 #endif
 
+class ExceptionPrivate;
 /**
   Base class for exceptions used by the Akonadi library.
 */
@@ -61,8 +62,7 @@ public:
     virtual QByteArray type() const; // ### Akonadi 2: return const char *
 
 private:
-    class Private;
-    std::unique_ptr<Private> d;
+    std::unique_ptr<ExceptionPrivate> d;
 };
 #ifdef _MSC_VER
 #pragma warning(pop)

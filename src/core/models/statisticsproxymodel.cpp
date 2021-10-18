@@ -27,10 +27,10 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class Q_DECL_HIDDEN StatisticsProxyModel::Private
+class Akonadi::StatisticsProxyModelPrivate
 {
 public:
-    explicit Private(StatisticsProxyModel *parent)
+    explicit StatisticsProxyModelPrivate(StatisticsProxyModel *parent)
         : q(parent)
     {
     }
@@ -166,7 +166,7 @@ public:
     bool mExtraColumnsEnabled = false;
 };
 
-void StatisticsProxyModel::Private::_k_sourceDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
+void StatisticsProxyModelPrivate::_k_sourceDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
 {
     QModelIndex proxyTopLeft(q->mapFromSource(topLeft));
     QModelIndex proxyBottomRight(q->mapFromSource(bottomRight));
@@ -198,7 +198,7 @@ void StatisticsProxyModel::setSourceModel(QAbstractItemModel *model)
 
 StatisticsProxyModel::StatisticsProxyModel(QObject *parent)
     : KExtraColumnsProxyModel(parent)
-    , d(new Private(this))
+    , d(new StatisticsProxyModelPrivate(this))
 {
     setExtraColumnsEnabled(true);
 }

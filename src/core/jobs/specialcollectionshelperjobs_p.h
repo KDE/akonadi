@@ -19,6 +19,8 @@ namespace Akonadi
 {
 // ===================== ResourceScanJob ============================
 
+class ResourceScanJobPrivate;
+
 /**
   @internal
   Helper job for SpecialCollectionsRequestJob.
@@ -72,9 +74,8 @@ protected:
     void doStart() override;
 
 private:
-    class Private;
-    friend class Private;
-    std::unique_ptr<Private> const d;
+    friend class ResourceScanJobPrivate;
+    std::unique_ptr<ResourceScanJobPrivate> const d;
 };
 
 // ===================== DefaultResourceJob ============================
@@ -152,6 +153,7 @@ private:
 };
 
 // ===================== GetLockJob ============================
+class GetLockJobPrivate;
 
 /**
   @internal
@@ -190,9 +192,8 @@ public:
     void start() override;
 
 private:
-    class Private;
-    friend class Private;
-    std::unique_ptr<Private> const d;
+    friend class GetLockJobPrivate;
+    std::unique_ptr<GetLockJobPrivate> const d;
 
     Q_PRIVATE_SLOT(d, void doStart())
 };

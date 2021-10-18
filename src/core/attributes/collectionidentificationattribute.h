@@ -13,6 +13,8 @@
 
 namespace Akonadi
 {
+class CollectionIdentificationAttributePrivate;
+
 /**
  * @short Attribute that stores additional information on a collection that can be used for searching.
  *
@@ -62,8 +64,7 @@ public:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    const std::unique_ptr<Private> d;
+    const std::unique_ptr<CollectionIdentificationAttributePrivate> d;
     /// @endcond
 };
 

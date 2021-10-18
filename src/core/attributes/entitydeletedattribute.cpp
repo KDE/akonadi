@@ -15,7 +15,7 @@
 
 using namespace Akonadi;
 
-class EntityDeletedAttribute::EntityDeletedAttributePrivate
+class Akonadi::EntityDeletedAttributePrivate
 {
 public:
     Collection restoreCollection;
@@ -23,7 +23,7 @@ public:
 };
 
 EntityDeletedAttribute::EntityDeletedAttribute()
-    : d(std::make_unique<EntityDeletedAttributePrivate>())
+    : d(new EntityDeletedAttributePrivate())
 {
 }
 

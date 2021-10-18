@@ -14,6 +14,8 @@
 
 namespace Akonadi
 {
+class TrashFilterProxyModelPrivate;
+
 /**
  * @short Filter model which hides/shows entities marked as trash
  *
@@ -59,7 +61,6 @@ protected:
 
 private:
     /// @cond PRIVATE
-    class TrashFilterProxyModelPrivate;
     std::unique_ptr<TrashFilterProxyModelPrivate> const d_ptr;
     Q_DECLARE_PRIVATE(TrashFilterProxyModel)
     /// @endcond

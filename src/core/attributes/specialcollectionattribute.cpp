@@ -12,14 +12,14 @@ using namespace Akonadi;
 /**
   @internal
 */
-class Q_DECL_HIDDEN SpecialCollectionAttribute::Private
+class Akonadi::SpecialCollectionAttributePrivate
 {
 public:
     QByteArray mType;
 };
 
 SpecialCollectionAttribute::SpecialCollectionAttribute(const QByteArray &type)
-    : d(std::make_unique<Private>())
+    : d(new SpecialCollectionAttributePrivate())
 {
     d->mType = type;
 }

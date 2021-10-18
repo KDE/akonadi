@@ -66,10 +66,10 @@ private:
 /**
  * @internal
  */
-class SubscriptionModel::Private
+class Akonadi::SubscriptionModelPrivate
 {
 public:
-    explicit Private(Monitor *monitor)
+    explicit SubscriptionModelPrivate(Monitor *monitor)
         : etm(monitor)
     {
         etm.setShowSystemEntities(true); // show hidden collections
@@ -112,7 +112,7 @@ public:
 
 SubscriptionModel::SubscriptionModel(Monitor *monitor, QObject *parent)
     : QIdentityProxyModel(parent)
-    , d(new Private(monitor))
+    , d(new SubscriptionModelPrivate(monitor))
 {
     QIdentityProxyModel::setSourceModel(&d->proxy);
 

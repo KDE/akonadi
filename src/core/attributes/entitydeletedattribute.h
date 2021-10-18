@@ -12,6 +12,8 @@
 
 namespace Akonadi
 {
+class EntityDeletedAttributePrivate;
+
 /**
  * @short An Attribute that marks that an entity was marked as deleted
  *
@@ -79,7 +81,6 @@ public:
 
 private:
     /// @cond PRIVATE
-    class EntityDeletedAttributePrivate;
     const std::unique_ptr<EntityDeletedAttributePrivate> d;
     /// @endcond
 };

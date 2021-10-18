@@ -87,10 +87,10 @@ static QVariant::Type argumentType(const QMetaObject *mo, const QString &method)
 /**
   @internal
 */
-class Q_DECL_HIDDEN Akonadi::ResourceScanJob::Private
+class Akonadi::ResourceScanJobPrivate
 {
 public:
-    Private(KCoreConfigSkeleton *settings, ResourceScanJob *qq);
+    ResourceScanJobPrivate(KCoreConfigSkeleton *settings, ResourceScanJob *qq);
 
     void fetchResult(KJob *job); // slot
 
@@ -105,13 +105,13 @@ public:
     Collection::List mSpecialCollections;
 };
 
-ResourceScanJob::Private::Private(KCoreConfigSkeleton *settings, ResourceScanJob *qq)
+ResourceScanJobPrivate::ResourceScanJobPrivate(KCoreConfigSkeleton *settings, ResourceScanJob *qq)
     : q(qq)
     , mSettings(settings)
 {
 }
 
-void ResourceScanJob::Private::fetchResult(KJob *job)
+void ResourceScanJobPrivate::fetchResult(KJob *job)
 {
     if (job->error()) {
         qCWarning(AKONADICORE_LOG) << job->errorText();
@@ -142,7 +142,7 @@ void ResourceScanJob::Private::fetchResult(KJob *job)
                              << "(total" << fetchJob->collections().count() << "collections).";
 
     if (!mRootCollection.isValid()) {
-        q->setError(Unknown);
+        q->setError(ResourceScanJob::Unknown);
         q->setErrorText(i18n("Could not fetch root collection of resource %1.", mResourceId));
         q->emitResult();
         return;
@@ -154,7 +154,7 @@ void ResourceScanJob::Private::fetchResult(KJob *job)
 
 ResourceScanJob::ResourceScanJob(const QString &resourceId, KCoreConfigSkeleton *settings, QObject *parent)
     : Job(parent)
-    , d(new Private(settings, this))
+    , d(new ResourceScanJobPrivate(settings, this))
 {
     setResourceId(resourceId);
 }
@@ -544,10 +544,10 @@ void DefaultResourceJob::slotResult(KJob *job)
 
 // ===================== GetLockJob ============================
 
-class Q_DECL_HIDDEN Akonadi::GetLockJob::Private
+class Akonadi::GetLockJobPrivate
 {
 public:
-    explicit Private(GetLockJob *qq);
+    explicit GetLockJobPrivate(GetLockJob *qq);
 
     void doStart(); // slot
     void timeout(); // slot
@@ -556,13 +556,13 @@ public:
     QTimer *mSafetyTimer = nullptr;
 };
 
-GetLockJob::Private::Private(GetLockJob *qq)
+GetLockJobPrivate::GetLockJobPrivate(GetLockJob *qq)
     : q(qq)
     , mSafetyTimer(nullptr)
 {
 }
 
-void GetLockJob::Private::doStart()
+void GetLockJobPrivate::doStart()
 {
     // Just doing registerService() and checking its return value is not sufficient,
     // since we may *already* own the name, and then registerService() returns true.
@@ -576,7 +576,7 @@ void GetLockJob::Private::doStart()
         q->emitResult();
     } else {
         auto watcher = new QDBusServiceWatcher(dbusServiceName(), QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForUnregistration, q);
-        connect(watcher, &QDBusServiceWatcher::serviceUnregistered, q, [this]() {
+        QObject::connect(watcher, &QDBusServiceWatcher::serviceUnregistered, q, [this]() {
             if (QDBusConnection::sessionBus().registerService(dbusServiceName())) {
                 mSafetyTimer->stop();
                 q->emitResult();
@@ -587,13 +587,13 @@ void GetLockJob::Private::doStart()
         mSafetyTimer->setSingleShot(true);
         mSafetyTimer->setInterval(LOCK_WAIT_TIMEOUT_SECONDS * 1000);
         mSafetyTimer->start();
-        connect(mSafetyTimer, &QTimer::timeout, q, [this]() {
+        QObject::connect(mSafetyTimer, &QTimer::timeout, q, [this]() {
             timeout();
         });
     }
 }
 
-void GetLockJob::Private::timeout()
+void GetLockJobPrivate::timeout()
 {
     qCWarning(AKONADICORE_LOG) << "Timeout trying to get lock. Check who has acquired the name" << dbusServiceName() << "on DBus, using qdbus or qdbusviewer.";
     q->setError(Job::Unknown);
@@ -603,7 +603,7 @@ void GetLockJob::Private::timeout()
 
 GetLockJob::GetLockJob(QObject *parent)
     : KJob(parent)
-    , d(new Private(this))
+    , d(new GetLockJobPrivate(this))
 {
 }
 

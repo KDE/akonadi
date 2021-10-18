@@ -30,10 +30,10 @@ Q_GLOBAL_STATIC(Internal::StaticControl, s_instance) // NOLINT(readability-redun
 /**
  * @internal
  */
-class Q_DECL_HIDDEN Control::Private
+class ControlPrivate
 {
 public:
-    explicit Private(Control *parent)
+    explicit ControlPrivate(Control *parent)
         : mParent(parent)
     {
     }
@@ -53,7 +53,7 @@ public:
     bool mStopping = false;
 };
 
-bool Control::Private::exec()
+bool ControlPrivate::exec()
 {
     qCDebug(AKONADICORE_LOG) << "Starting/Stopping Akonadi (using an event loop).";
     mEventLoop = new QEventLoop(mParent);
@@ -73,7 +73,7 @@ bool Control::Private::exec()
     return rv;
 }
 
-void Control::Private::serverStateChanged(ServerManager::State state)
+void ControlPrivate::serverStateChanged(ServerManager::State state)
 {
     qCDebug(AKONADICORE_LOG) << "Server state changed to" << state;
     if (mEventLoop && mEventLoop->isRunning()) {
@@ -87,7 +87,7 @@ void Control::Private::serverStateChanged(ServerManager::State state)
 }
 
 Control::Control()
-    : d(new Private(this))
+    : d(new ControlPrivate(this))
 {
     connect(ServerManager::self(), &ServerManager::stateChanged, this, [this](Akonadi::ServerManager::State state) {
         d->serverStateChanged(state);

@@ -18,6 +18,7 @@ class KJob;
 namespace Akonadi
 {
 class EntityTreeModel;
+class FavoriteCollectionsModelPrivate;
 
 /**
  * @short A model that lists a set of favorite collections.
@@ -141,8 +142,7 @@ private:
     /// @cond PRIVATE
     using KSelectionProxyModel::setSourceModel;
 
-    class Private;
-    std::unique_ptr<Private> const d;
+    std::unique_ptr<FavoriteCollectionsModelPrivate> const d;
     /// @endcond
 };
 

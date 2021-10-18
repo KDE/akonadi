@@ -19,6 +19,8 @@ class KAboutData;
 
 namespace Akonadi
 {
+class AgentConfigurationBasePrivate;
+
 /**
  * @brief Base class for configuration UI for Akonadi agents
  *
@@ -149,7 +151,6 @@ Q_SIGNALS:
     void enableOkButton(bool enabled);
 
 private:
-    class AgentConfigurationBasePrivate;
     friend class AgentConfigurationBasePrivate;
     std::unique_ptr<AgentConfigurationBasePrivate> const d;
 };

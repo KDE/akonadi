@@ -17,7 +17,7 @@
 
 namespace Akonadi
 {
-class Q_DECL_HIDDEN AgentConfigurationManager::Private
+class AgentConfigurationManagerPrivate
 {
 public:
     QString serviceName(const QString &instance) const

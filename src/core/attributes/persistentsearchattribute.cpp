@@ -14,7 +14,7 @@
 
 using namespace Akonadi;
 
-class Q_DECL_HIDDEN PersistentSearchAttribute::Private
+class Akonadi::PersistentSearchAttributePrivate
 {
 public:
     QString queryString;
@@ -24,7 +24,7 @@ public:
 };
 
 PersistentSearchAttribute::PersistentSearchAttribute()
-    : d(std::make_unique<Private>())
+    : d(new PersistentSearchAttributePrivate())
 {
 }
 

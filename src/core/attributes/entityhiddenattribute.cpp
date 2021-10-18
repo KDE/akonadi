@@ -12,7 +12,7 @@
 
 using namespace Akonadi;
 
-class Q_DECL_HIDDEN EntityHiddenAttribute::Private
+class Akonadi::EntityHiddenAttributePrivate
 {
 };
 

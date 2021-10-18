@@ -15,6 +15,8 @@
 
 namespace Akonadi
 {
+class StatisticsProxyModelPrivate;
+
 /**
  * @short A proxy model that exposes collection statistics through extra columns.
  *
@@ -89,8 +91,7 @@ public:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    std::unique_ptr<Private> const d;
+    std::unique_ptr<StatisticsProxyModelPrivate> const d;
     /// @endcond
 };
 

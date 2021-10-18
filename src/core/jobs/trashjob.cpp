@@ -29,7 +29,7 @@
 
 using namespace Akonadi;
 
-class TrashJob::TrashJobPrivate : public JobPrivate
+class Akonadi::TrashJobPrivate : public JobPrivate
 {
 public:
     explicit TrashJobPrivate(TrashJob *parent)
@@ -68,7 +68,7 @@ public:
     QHash<Item::Id, Collection> mParentCollections; // fetched parent collection of items (containing the resource name)
 };
 
-void TrashJob::TrashJobPrivate::selectResult(KJob *job)
+void TrashJobPrivate::selectResult(KJob *job)
 {
     Q_Q(TrashJob);
     if (job->error()) {
@@ -82,7 +82,7 @@ void TrashJob::TrashJobPrivate::selectResult(KJob *job)
     }
 }
 
-void TrashJob::TrashJobPrivate::setAttribute(const Akonadi::Collection::List &list)
+void TrashJobPrivate::setAttribute(const Akonadi::Collection::List &list)
 {
     Q_Q(TrashJob);
     QVectorIterator<Collection> i(list);
@@ -113,7 +113,7 @@ void TrashJob::TrashJobPrivate::setAttribute(const Akonadi::Collection::List &li
     }
 }
 
-void TrashJob::TrashJobPrivate::setAttribute(const Akonadi::Item::List &list)
+void TrashJobPrivate::setAttribute(const Akonadi::Item::List &list)
 {
     Q_Q(TrashJob);
     Item::List items = list;
@@ -145,7 +145,7 @@ void TrashJob::TrashJobPrivate::setAttribute(const Akonadi::Item::List &list)
     q->connect( job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );*/
 }
 
-void TrashJob::TrashJobPrivate::setAttribute(KJob *job)
+void TrashJobPrivate::setAttribute(KJob *job)
 {
     Q_Q(TrashJob);
     if (job->error()) {
@@ -178,7 +178,7 @@ void TrashJob::TrashJobPrivate::setAttribute(KJob *job)
     });
 }
 
-void TrashJob::TrashJobPrivate::parentCollectionReceived(const Akonadi::Collection::List &collections)
+void TrashJobPrivate::parentCollectionReceived(const Akonadi::Collection::List &collections)
 {
     Q_Q(TrashJob);
     Q_ASSERT(collections.size() == 1);
@@ -210,7 +210,7 @@ void TrashJob::TrashJobPrivate::parentCollectionReceived(const Akonadi::Collecti
     }
 }
 
-void TrashJob::TrashJobPrivate::itemsReceived(const Akonadi::Item::List &items)
+void TrashJobPrivate::itemsReceived(const Akonadi::Item::List &items)
 {
     Q_Q(TrashJob);
     if (items.isEmpty()) {
@@ -251,7 +251,7 @@ void TrashJob::TrashJobPrivate::itemsReceived(const Akonadi::Item::List &items)
     }
 }
 
-void TrashJob::TrashJobPrivate::collectionsReceived(const Akonadi::Collection::List &collections)
+void TrashJobPrivate::collectionsReceived(const Akonadi::Collection::List &collections)
 {
     Q_Q(TrashJob);
     if (collections.isEmpty()) {

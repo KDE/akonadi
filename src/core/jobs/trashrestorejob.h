@@ -13,6 +13,7 @@
 
 namespace Akonadi
 {
+class TrashRestoreJobPrivate;
 /**
  * @short Job that restores entities from trash
  *
@@ -65,7 +66,6 @@ protected:
 
 private:
     /// @cond PRIVATE
-    class TrashRestoreJobPrivate;
     Q_DECLARE_PRIVATE(TrashRestoreJob)
     /// @endcond
 };

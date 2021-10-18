@@ -13,6 +13,8 @@
 
 namespace Akonadi
 {
+class TrashJobPrivate;
+
 /**
  * @short Job that moves items/collection to trash.
  *
@@ -109,7 +111,6 @@ protected:
 
 private:
     /// @cond PRIVATE
-    class TrashJobPrivate;
     Q_DECLARE_PRIVATE(TrashJob)
     /// @endcond
 };

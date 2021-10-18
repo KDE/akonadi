@@ -15,6 +15,7 @@ namespace Akonadi
 {
 class Item;
 class ItemFetchScope;
+class ItemMonitorPrivate;
 
 /**
  * @short A convenience class to monitor a single item for changes.
@@ -129,8 +130,8 @@ protected:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    std::unique_ptr<Private> const d;
+    friend class ItemMonitorPrivate;
+    std::unique_ptr<ItemMonitorPrivate> const d;
     /// @endcond
 
     Q_DISABLE_COPY(ItemMonitor)

@@ -15,7 +15,7 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class AgentTypeModel::AgentTypeModelPrivate
+class Akonadi::AgentTypeModelPrivate
 {
 public:
     explicit AgentTypeModelPrivate(AgentTypeModel *parent)
@@ -31,14 +31,14 @@ public:
     void typeRemoved(const AgentType &agentType);
 };
 
-void AgentTypeModel::AgentTypeModelPrivate::typeAdded(const AgentType &agentType)
+void AgentTypeModelPrivate::typeAdded(const AgentType &agentType)
 {
     mTypes.append(agentType);
 
     Q_EMIT mParent->layoutChanged();
 }
 
-void AgentTypeModel::AgentTypeModelPrivate::typeRemoved(const AgentType &agentType)
+void AgentTypeModelPrivate::typeRemoved(const AgentType &agentType)
 {
     mTypes.removeAll(agentType);
 

@@ -13,6 +13,8 @@
 
 namespace Akonadi
 {
+class AttributeFactoryPrivate;
+
 /**
  * @short Provides the functionality of registering and creating arbitrary
  *        entity attributes.
@@ -68,8 +70,7 @@ private:
     static AttributeFactory *self();
     void registerAttribute(std::unique_ptr<Attribute> attribute);
 
-    class Private;
-    const std::unique_ptr<Private> d;
+    const std::unique_ptr<AttributeFactoryPrivate> d;
     /// @endcond
 };
 

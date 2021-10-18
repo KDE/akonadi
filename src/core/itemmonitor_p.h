@@ -16,22 +16,22 @@ namespace Akonadi
 /**
  * @internal
  */
-class Q_DECL_HIDDEN ItemMonitor::Private : public QObject
+class ItemMonitorPrivate : public QObject
 {
     Q_OBJECT
 
 public:
-    Private(ItemMonitor *parent)
+    explicit ItemMonitorPrivate(ItemMonitor *parent)
         : QObject(nullptr)
         , mParent(parent)
         , mMonitor(new Monitor())
     {
         mMonitor->setObjectName(QStringLiteral("ItemMonitorMonitor"));
-        connect(mMonitor, &Monitor::itemChanged, this, &Private::slotItemChanged);
-        connect(mMonitor, &Monitor::itemRemoved, this, &Private::slotItemRemoved);
+        connect(mMonitor, &Monitor::itemChanged, this, &ItemMonitorPrivate::slotItemChanged);
+        connect(mMonitor, &Monitor::itemRemoved, this, &ItemMonitorPrivate::slotItemRemoved);
     }
 
-    ~Private()
+    ~ItemMonitorPrivate() override
     {
         delete mMonitor;
     }

@@ -12,10 +12,10 @@
 
 using namespace Akonadi;
 
-class Exception::Private
+class Akonadi::ExceptionPrivate
 {
 public:
-    explicit Private(const QByteArray &what)
+    explicit ExceptionPrivate(const QByteArray &what)
         : what(what)
     {
     }
@@ -27,7 +27,7 @@ public:
 Exception::Exception(const char *what)
 {
     try {
-        d = std::make_unique<Private>(what);
+        d = std::make_unique<ExceptionPrivate>(what);
     } catch (...) {
     }
 }
@@ -35,7 +35,7 @@ Exception::Exception(const char *what)
 Exception::Exception(const QByteArray &what)
 {
     try {
-        d = std::make_unique<Private>(what);
+        d = std::make_unique<ExceptionPrivate>(what);
     } catch (...) {
     }
 }
@@ -43,7 +43,7 @@ Exception::Exception(const QByteArray &what)
 Exception::Exception(const QString &what)
 {
     try {
-        d = std::make_unique<Private>(what.toUtf8());
+        d = std::make_unique<ExceptionPrivate>(what.toUtf8());
     } catch (...) {
     }
 }

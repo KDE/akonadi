@@ -13,6 +13,8 @@
 
 namespace Akonadi
 {
+class IndexPolicyAttributePrivate;
+
 /**
  * @short An attribute to specify how a collection should be indexed for searching.
  *
@@ -54,8 +56,7 @@ public:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    const std::unique_ptr<Private> d;
+    const std::unique_ptr<IndexPolicyAttributePrivate> d;
     /// @endcond
 };
 

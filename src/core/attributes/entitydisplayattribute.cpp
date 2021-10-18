@@ -10,7 +10,7 @@
 
 using namespace Akonadi;
 
-class Q_DECL_HIDDEN EntityDisplayAttribute::Private
+class Akonadi::EntityDisplayAttributePrivate
 {
 public:
     QString name;
@@ -20,7 +20,7 @@ public:
 };
 
 EntityDisplayAttribute::EntityDisplayAttribute()
-    : d(std::make_unique<Private>())
+    : d(new EntityDisplayAttributePrivate())
 {
 }
 

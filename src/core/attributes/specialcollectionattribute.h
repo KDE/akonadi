@@ -15,6 +15,8 @@
 
 namespace Akonadi
 {
+class SpecialCollectionAttributePrivate;
+
 /**
  * @short An Attribute that stores the special collection type of a collection.
  *
@@ -54,8 +56,7 @@ public:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    const std::unique_ptr<Private> d;
+    const std::unique_ptr<SpecialCollectionAttributePrivate> d;
     /// @endcond
 };
 

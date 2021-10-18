@@ -12,7 +12,7 @@
 
 using namespace Akonadi;
 
-class ImapParser::Private
+class Akonadi::ImapParserPrivate
 {
 public:
     QByteArray tagBuffer;
@@ -579,7 +579,7 @@ void ImapParser::splitVersionedKey(const QByteArray &data, QByteArray &key, int 
 }
 
 ImapParser::ImapParser()
-    : d(new Private)
+    : d(new ImapParserPrivate)
 {
     reset();
 }

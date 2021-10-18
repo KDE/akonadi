@@ -13,7 +13,7 @@
 
 namespace Akonadi
 {
-class Q_DECL_HIDDEN AgentConfigurationBase::AgentConfigurationBasePrivate
+class AgentConfigurationBasePrivate
 {
 public:
     AgentConfigurationBasePrivate(const KSharedConfigPtr &config, QWidget *parentWidget, const QVariantList &args)

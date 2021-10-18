@@ -24,7 +24,7 @@ static_assert(static_cast<int>(AgentTypeModel::MimeTypesRole) == static_cast<int
 /**
  * @internal
  */
-class Q_DECL_HIDDEN AgentFilterProxyModel::Private
+class Akonadi::AgentFilterProxyModelPrivate
 {
 public:
     QStringList mimeTypes;
@@ -35,7 +35,7 @@ public:
 
 AgentFilterProxyModel::AgentFilterProxyModel(QObject *parent)
     : QSortFilterProxyModel(parent)
-    , d(new Private)
+    , d(new AgentFilterProxyModelPrivate)
 {
     setDynamicSortFilter(true);
 }
@@ -68,7 +68,7 @@ void AgentFilterProxyModel::clearFilters()
     invalidateFilter();
 }
 
-bool AgentFilterProxyModel::Private::filterAcceptRegExp(const QModelIndex &index, const QRegularExpression &filterRegExpStr)
+bool AgentFilterProxyModelPrivate::filterAcceptRegExp(const QModelIndex &index, const QRegularExpression &filterRegExpStr)
 {
     // First see if the name matches a set regexp filter.
     if (!filterRegExpStr.pattern().isEmpty()) {

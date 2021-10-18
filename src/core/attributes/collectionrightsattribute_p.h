@@ -15,6 +15,8 @@
 
 namespace Akonadi
 {
+class CollectionRightsAttributePrivate;
+
 /**
  * @internal
  *
@@ -62,8 +64,7 @@ public:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    const std::unique_ptr<Private> d;
+    const std::unique_ptr<CollectionRightsAttributePrivate> d;
     /// @endcond
 };
 

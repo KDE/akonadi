@@ -16,6 +16,8 @@
 
 namespace Akonadi
 {
+class TagAttributePrivate;
+
 /**
  * @short Attribute that stores the properties that are used to display a tag.
  *
@@ -84,8 +86,7 @@ private:
     TagAttribute(const TagAttribute &other);
     TagAttribute &operator=(const TagAttribute &other);
     /// @cond PRIVATE
-    class Private;
-    const std::unique_ptr<Private> d;
+    const std::unique_ptr<TagAttributePrivate> d;
     /// @endcond
 };
 

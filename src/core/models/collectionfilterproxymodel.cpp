@@ -17,10 +17,10 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class Q_DECL_HIDDEN CollectionFilterProxyModel::Private
+class Akonadi::CollectionFilterProxyModelPrivate
 {
 public:
-    explicit Private(CollectionFilterProxyModel *parent)
+    explicit CollectionFilterProxyModelPrivate(CollectionFilterProxyModel *parent)
         : mParent(parent)
     {
         mimeChecker.addWantedMimeType(QStringLiteral("text/uri-list"));
@@ -34,7 +34,7 @@ public:
     bool mExcludeVirtualCollections = false;
 };
 
-bool CollectionFilterProxyModel::Private::collectionAccepted(const QModelIndex &index, bool checkResourceVisibility)
+bool CollectionFilterProxyModelPrivate::collectionAccepted(const QModelIndex &index, bool checkResourceVisibility)
 {
     // Retrieve supported mimetypes
     const auto collection = mParent->sourceModel()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
@@ -96,7 +96,7 @@ bool CollectionFilterProxyModel::Private::collectionAccepted(const QModelIndex &
 
 CollectionFilterProxyModel::CollectionFilterProxyModel(QObject *parent)
     : QSortFilterProxyModel(parent)
-    , d(new Private(this))
+    , d(new CollectionFilterProxyModelPrivate(this))
 {
 }
 

@@ -14,6 +14,8 @@
 
 namespace Akonadi
 {
+class CollectionSyncPrivate;
+
 /**
   @internal
 
@@ -114,8 +116,8 @@ protected:
     void doStart() override;
 
 private:
-    class Private;
-    std::unique_ptr<Private> const d;
+    friend class CollectionSyncPrivate;
+    std::unique_ptr<CollectionSyncPrivate> const d;
 };
 
 }

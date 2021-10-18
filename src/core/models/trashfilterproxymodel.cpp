@@ -10,7 +10,7 @@
 
 using namespace Akonadi;
 
-class TrashFilterProxyModel::TrashFilterProxyModelPrivate
+class Akonadi::TrashFilterProxyModelPrivate
 {
 public:
     TrashFilterProxyModelPrivate()

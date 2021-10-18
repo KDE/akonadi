@@ -17,6 +17,7 @@
 namespace Akonadi
 {
 class Monitor;
+class SubscriptionModelPrivate;
 
 /**
  * @internal
@@ -71,8 +72,7 @@ Q_SIGNALS:
     void modelLoaded();
 
 private:
-    class Private;
-    std::unique_ptr<Private> const d;
+    std::unique_ptr<SubscriptionModelPrivate> const d;
 };
 
 }

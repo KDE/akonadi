@@ -10,7 +10,7 @@
 
 using namespace Akonadi;
 
-class Q_DECL_HIDDEN CollectionQuotaAttribute::Private
+class Akonadi::CollectionQuotaAttributePrivate
 {
 public:
     qint64 mCurrentValue = -1;
@@ -18,12 +18,12 @@ public:
 };
 
 CollectionQuotaAttribute::CollectionQuotaAttribute()
-    : d(std::make_unique<Private>())
+    : d(new CollectionQuotaAttributePrivate())
 {
 }
 
 CollectionQuotaAttribute::CollectionQuotaAttribute(qint64 currentValue, qint64 maxValue)
-    : d(std::make_unique<Private>())
+    : d(new CollectionQuotaAttributePrivate())
 {
     d->mCurrentValue = currentValue;
     d->mMaximumValue = maxValue;

@@ -14,6 +14,8 @@
 
 namespace Akonadi
 {
+class AgentInstanceModelPrivate;
+
 /**
  * @short Provides a data model for agent instances.
  *
@@ -82,7 +84,7 @@ public:
 
 private:
     /// @cond PRIVATE
-    class AgentInstanceModelPrivate;
+    friend class AgentInstanceModelPrivate;
     std::unique_ptr<AgentInstanceModelPrivate> const d;
     /// @endcond
 };

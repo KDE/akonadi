@@ -14,6 +14,8 @@
 
 namespace Akonadi
 {
+class AgentTypeModelPrivate;
+
 /**
  * @short Provides a data model for agent types.
  *
@@ -72,7 +74,6 @@ public:
 
 private:
     /// @cond PRIVATE
-    class AgentTypeModelPrivate;
     std::unique_ptr<AgentTypeModelPrivate> const d;
     /// @endcond
 };

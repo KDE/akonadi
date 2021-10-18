@@ -10,7 +10,7 @@
 
 using namespace Akonadi;
 
-class Q_DECL_HIDDEN TagAttribute::Private
+class Akonadi::TagAttributePrivate
 {
 public:
     QString name;
@@ -24,7 +24,7 @@ public:
 };
 
 TagAttribute::TagAttribute()
-    : d(std::make_unique<Private>())
+    : d(new TagAttributePrivate())
 {
 }
 

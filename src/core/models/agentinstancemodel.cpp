@@ -18,7 +18,7 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class AgentInstanceModel::AgentInstanceModelPrivate
+class Akonadi::AgentInstanceModelPrivate
 {
 public:
     explicit AgentInstanceModelPrivate(AgentInstanceModel *parent)
@@ -34,14 +34,14 @@ public:
     void instanceChanged(const AgentInstance & /*instance*/);
 };
 
-void AgentInstanceModel::AgentInstanceModelPrivate::instanceAdded(const AgentInstance &instance)
+void AgentInstanceModelPrivate::instanceAdded(const AgentInstance &instance)
 {
     mParent->beginInsertRows(QModelIndex(), mInstances.count(), mInstances.count());
     mInstances.append(instance);
     mParent->endInsertRows();
 }
 
-void AgentInstanceModel::AgentInstanceModelPrivate::instanceRemoved(const AgentInstance &instance)
+void AgentInstanceModelPrivate::instanceRemoved(const AgentInstance &instance)
 {
     const int index = mInstances.indexOf(instance);
     if (index == -1) {
@@ -53,7 +53,7 @@ void AgentInstanceModel::AgentInstanceModelPrivate::instanceRemoved(const AgentI
     mParent->endRemoveRows();
 }
 
-void AgentInstanceModel::AgentInstanceModelPrivate::instanceChanged(const AgentInstance &instance)
+void AgentInstanceModelPrivate::instanceChanged(const AgentInstance &instance)
 {
     const int numberOfInstance(mInstances.count());
     for (int i = 0; i < numberOfInstance; ++i) {

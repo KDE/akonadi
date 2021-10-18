@@ -12,7 +12,7 @@
 using namespace Akonadi;
 
 ItemMonitor::ItemMonitor()
-    : d(new Private(this))
+    : d(new ItemMonitorPrivate(this))
 {
 }
 

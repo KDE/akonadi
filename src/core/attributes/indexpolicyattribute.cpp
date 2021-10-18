@@ -10,14 +10,14 @@
 
 using namespace Akonadi;
 
-class Q_DECL_HIDDEN IndexPolicyAttribute::Private
+class Akonadi::IndexPolicyAttributePrivate
 {
 public:
     bool enable = true;
 };
 
 IndexPolicyAttribute::IndexPolicyAttribute()
-    : d(std::make_unique<Private>())
+    : d(new IndexPolicyAttributePrivate())
 {
 }
 

@@ -15,6 +15,8 @@
 
 namespace Akonadi
 {
+class EntityHiddenAttributePrivate;
+
 /**
  * @short An Attribute that marks that an entity should be hidden in the UI.
  *
@@ -81,8 +83,7 @@ public:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    const std::unique_ptr<Private> d;
+    const std::unique_ptr<EntityHiddenAttributePrivate> d;
     /// @endcond
 };
 

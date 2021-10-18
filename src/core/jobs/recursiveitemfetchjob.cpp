@@ -14,10 +14,10 @@
 
 using namespace Akonadi;
 
-class Q_DECL_HIDDEN RecursiveItemFetchJob::Private
+class Akonadi::RecursiveItemFetchJobPrivate
 {
 public:
-    Private(const Collection &collection, const QStringList &mimeTypes, RecursiveItemFetchJob *parent)
+    RecursiveItemFetchJobPrivate(const Collection &collection, const QStringList &mimeTypes, RecursiveItemFetchJob *parent)
         : mParent(parent)
         , mCollection(collection)
         , mMimeTypes(mimeTypes)
@@ -82,7 +82,7 @@ public:
 
 RecursiveItemFetchJob::RecursiveItemFetchJob(const Collection &collection, const QStringList &mimeTypes, QObject *parent)
     : KJob(parent)
-    , d(new Private(collection, mimeTypes, this))
+    , d(new RecursiveItemFetchJobPrivate(collection, mimeTypes, this))
 {
 }
 
