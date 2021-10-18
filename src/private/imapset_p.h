@@ -24,6 +24,8 @@ class DataStream;
 
 namespace Akonadi
 {
+class ImapIntervalPrivate;
+
 /**
   Represents a single interval in an ImapSet.
   This class is implicitly shared.
@@ -117,12 +119,13 @@ public:
     QByteArray toImapSequence() const;
 
 private:
-    class Private;
-    QSharedDataPointer<Private> d;
+    QSharedDataPointer<ImapIntervalPrivate> d;
 
     friend Protocol::DataStream &operator<<(Protocol::DataStream &stream, const Akonadi::ImapInterval &interval);
     friend Protocol::DataStream &operator>>(Protocol::DataStream &stream, Akonadi::ImapInterval &interval);
 };
+
+class ImapSetPrivate;
 
 /**
   Represents a set of natural numbers (1->\f$\infty\f$) in a as compact as possible form.
@@ -208,8 +211,7 @@ public:
     bool isEmpty() const;
 
 private:
-    class Private;
-    QSharedDataPointer<Private> d;
+    QSharedDataPointer<ImapSetPrivate> d;
 
     friend Protocol::DataStream &operator<<(Protocol::DataStream &stream, const Akonadi::ImapSet &set);
     friend Protocol::DataStream &operator>>(Protocol::DataStream &stream, Akonadi::ImapSet &set);
