@@ -12,6 +12,8 @@
 
 namespace Akonadi
 {
+class TagFetchScopePrivate;
+
 /**
  * @short Specifies which parts of a tag should be fetched from the Akonadi storage.
  *
@@ -111,9 +113,8 @@ public:
     bool fetchIdOnly() const;
 
 private:
-    struct Private;
     /// @cond PRIVATE
-    QSharedPointer<Private> d;
+    QSharedPointer<TagFetchScopePrivate> d;
     /// @endcond
 };
 

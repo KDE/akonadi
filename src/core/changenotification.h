@@ -21,6 +21,8 @@ class ChangeNotification;
 using ChangeNotificationPtr = QSharedPointer<ChangeNotification>;
 }
 
+class ChangeNotificationPrivate;
+
 /**
  * Emitted by Monitor::debugNotification() signal.
  *
@@ -61,8 +63,7 @@ public:
     void setNotification(const Protocol::ChangeNotificationPtr &ntf);
 
 private:
-    class Private;
-    QSharedDataPointer<Private> d;
+    QSharedDataPointer<ChangeNotificationPrivate> d;
 };
 
 }

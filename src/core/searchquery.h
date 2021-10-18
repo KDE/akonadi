@@ -12,6 +12,8 @@
 
 namespace Akonadi
 {
+class SearchTermPrivate;
+
 /**
  * Search term represents the actual condition within query.
  *
@@ -101,9 +103,10 @@ public:
     Q_REQUIRED_RESULT bool isNegated() const;
 
 private:
-    class Private;
-    QSharedDataPointer<Private> d;
+    QSharedDataPointer<SearchTermPrivate> d;
 };
+
+class SearchQueryPrivate;
 
 /**
  * @brief A query that can be passed to ItemSearchJob or others.
@@ -164,8 +167,7 @@ public:
     static SearchQuery fromJSON(const QByteArray &json);
 
 private:
-    class Private;
-    QSharedDataPointer<Private> d;
+    QSharedDataPointer<SearchQueryPrivate> d;
 };
 
 /**

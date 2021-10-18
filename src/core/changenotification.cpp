@@ -11,7 +11,7 @@ using namespace Akonadi;
 
 namespace Akonadi
 {
-class AKONADICORE_NO_EXPORT ChangeNotification::Private : public QSharedData
+class ChangeNotificationPrivate : public QSharedData
 {
 public:
     QDateTime timestamp;
@@ -23,7 +23,7 @@ public:
 } // namespace Akonadi
 
 ChangeNotification::ChangeNotification()
-    : d(new Private)
+    : d(new ChangeNotificationPrivate)
 {
 }
 

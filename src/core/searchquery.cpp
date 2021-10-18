@@ -13,10 +13,10 @@
 
 using namespace Akonadi;
 
-class SearchTerm::Private : public QSharedData
+class Akonadi::SearchTermPrivate : public QSharedData
 {
 public:
-    bool operator==(const Private &other) const
+    bool operator==(const SearchTermPrivate &other) const
     {
         return relation == other.relation && isNegated == other.isNegated && terms == other.terms && key == other.key && value == other.value
             && condition == other.condition;
@@ -24,16 +24,16 @@ public:
 
     QString key;
     QVariant value;
-    Condition condition = SearchTerm::CondEqual;
-    Relation relation = SearchTerm::RelAnd;
+    SearchTerm::Condition condition = SearchTerm::CondEqual;
+    SearchTerm::Relation relation = SearchTerm::RelAnd;
     QList<SearchTerm> terms;
     bool isNegated = false;
 };
 
-class SearchQuery::Private : public QSharedData
+class Akonadi::SearchQueryPrivate : public QSharedData
 {
 public:
-    bool operator==(const Private &other) const
+    bool operator==(const SearchQueryPrivate &other) const
     {
         return rootTerm == other.rootTerm && limit == other.limit;
     }
@@ -91,13 +91,13 @@ public:
 };
 
 SearchTerm::SearchTerm(SearchTerm::Relation relation)
-    : d(new Private)
+    : d(new SearchTermPrivate)
 {
     d->relation = relation;
 }
 
 SearchTerm::SearchTerm(const QString &key, const QVariant &value, SearchTerm::Condition condition)
-    : d(new Private)
+    : d(new SearchTermPrivate)
 {
     d->relation = RelAnd;
     d->key = key;
@@ -169,7 +169,7 @@ SearchTerm::Relation SearchTerm::relation() const
 }
 
 SearchQuery::SearchQuery(SearchTerm::Relation rel)
-    : d(new Private)
+    : d(new SearchQueryPrivate)
 {
     d->rootTerm = SearchTerm(rel);
 }
@@ -233,7 +233,7 @@ QByteArray SearchQuery::toJSON() const
 {
     QVariantMap root;
     if (!d->rootTerm.isNull()) {
-        root = Private::termToJSON(d->rootTerm);
+        root = SearchQueryPrivate::termToJSON(d->rootTerm);
         root.insert(QStringLiteral("limit"), d->limit);
     }
 
@@ -253,7 +253,7 @@ SearchQuery SearchQuery::fromJSON(const QByteArray &jsonData)
 
     SearchQuery query;
     const QJsonObject obj = json.object();
-    query.d->rootTerm = Private::JSONToTerm(obj.toVariantMap());
+    query.d->rootTerm = SearchQueryPrivate::JSONToTerm(obj.toVariantMap());
     if (obj.contains(QLatin1String("limit"))) {
         query.d->limit = obj.value(QStringLiteral("limit")).toInt();
     }

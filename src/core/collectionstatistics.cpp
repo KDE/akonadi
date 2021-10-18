@@ -14,7 +14,7 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class Q_DECL_HIDDEN CollectionStatistics::Private : public QSharedData
+class Akonadi::CollectionStatisticsPrivate : public QSharedData
 {
 public:
     qint64 count = -1;
@@ -23,7 +23,7 @@ public:
 };
 
 CollectionStatistics::CollectionStatistics()
-    : d(new Private)
+    : d(new CollectionStatisticsPrivate)
 {
 }
 

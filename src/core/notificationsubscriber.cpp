@@ -11,7 +11,7 @@
 
 namespace Akonadi
 {
-class AKONADICORE_NO_EXPORT NotificationSubscriber::Private : public QSharedData
+class NotificationSubscriberPrivate : public QSharedData
 {
 public:
     QByteArray subscriber;
@@ -35,7 +35,7 @@ public:
 using namespace Akonadi;
 
 NotificationSubscriber::NotificationSubscriber()
-    : d(new Private)
+    : d(new NotificationSubscriberPrivate)
 {
 }
 

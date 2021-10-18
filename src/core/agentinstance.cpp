@@ -16,7 +16,7 @@
 using namespace Akonadi;
 
 AgentInstance::AgentInstance()
-    : d(new Private)
+    : d(new AgentInstancePrivate)
 {
 }
 

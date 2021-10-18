@@ -15,7 +15,7 @@ namespace Akonadi
 /**
  * @internal
  */
-class AgentType::AgentTypePrivate : public QSharedData
+class AgentTypePrivate : public QSharedData
 {
 public:
     AgentTypePrivate()

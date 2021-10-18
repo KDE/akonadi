@@ -13,6 +13,8 @@
 
 namespace Akonadi
 {
+class CollectionStatisticsPrivate;
+
 /**
  * @short Provides statistics information of a Collection.
  *
@@ -130,8 +132,7 @@ public:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    QSharedDataPointer<Private> d;
+    QSharedDataPointer<CollectionStatisticsPrivate> d;
     /// @endcond
 };
 

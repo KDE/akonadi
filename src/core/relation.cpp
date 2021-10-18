@@ -12,7 +12,9 @@ using namespace Akonadi;
 
 const char *Akonadi::Relation::GENERIC = "GENERIC";
 
-struct Q_DECL_HIDDEN Relation::Private : public QSharedData {
+class Akonadi::RelationPrivate : public QSharedData
+{
+public:
     Item left;
     Item right;
     QByteArray type;
@@ -20,12 +22,12 @@ struct Q_DECL_HIDDEN Relation::Private : public QSharedData {
 };
 
 Relation::Relation()
-    : d(new Private)
+    : d(new RelationPrivate)
 {
 }
 
 Relation::Relation(const QByteArray &type, const Item &left, const Item &right)
-    : d(new Private)
+    : d(new RelationPrivate)
 {
     d->left = left;
     d->right = right;

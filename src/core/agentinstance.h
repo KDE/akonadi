@@ -17,6 +17,7 @@ class QWidget;
 namespace Akonadi
 {
 class AgentType;
+class AgentInstancePrivate;
 
 /**
  * @short A representation of an agent instance.
@@ -190,8 +191,7 @@ public:
 
 private:
     /// @cond PRIVATE
-    class Private;
-    QSharedDataPointer<Private> d;
+    QSharedDataPointer<AgentInstancePrivate> d;
     /// @endcond
 };
 

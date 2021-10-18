@@ -22,6 +22,7 @@ AKONADICORE_EXPORT unsigned int qHash(const Akonadi::Relation &);
 namespace Akonadi
 {
 class Item;
+class RelationPrivate;
 
 /**
  * An Akonadi Relation.
@@ -108,8 +109,7 @@ public:
     Q_REQUIRED_RESULT bool isValid() const;
 
 private:
-    struct Private;
-    QSharedDataPointer<Private> d;
+    QSharedDataPointer<RelationPrivate> d;
 };
 
 }

@@ -9,8 +9,10 @@
 
 using namespace Akonadi;
 
-struct Q_DECL_HIDDEN Akonadi::TagFetchScope::Private {
-    Private()
+class Akonadi::TagFetchScopePrivate
+{
+public:
+    TagFetchScopePrivate()
     {
     }
 
@@ -21,7 +23,7 @@ struct Q_DECL_HIDDEN Akonadi::TagFetchScope::Private {
 };
 
 TagFetchScope::TagFetchScope()
-    : d(new Private)
+    : d(new TagFetchScopePrivate)
 {
 }
 
@@ -30,7 +32,7 @@ TagFetchScope::~TagFetchScope()
 }
 
 TagFetchScope::TagFetchScope(const TagFetchScope &other)
-    : d(new Private)
+    : d(new TagFetchScopePrivate)
 {
     operator=(other);
 }
