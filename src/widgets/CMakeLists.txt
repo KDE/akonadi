@@ -34,7 +34,6 @@ target_sources(KF5AkonadiWidgets PRIVATE
     collectionpropertiespage.cpp
     collectionrequester.cpp
     collectionstatisticsdelegate.cpp
-    collectionview.cpp
     conflictresolvedialog.cpp
     controlgui.cpp
     dragdropmanager.cpp
@@ -42,7 +41,6 @@ target_sources(KF5AkonadiWidgets PRIVATE
     entitytreeview.cpp
     erroroverlay.cpp
     etmviewstatesaver.cpp
-    itemview.cpp
     manageaccountwidget.cpp
     progressspinnerdelegate.cpp
     recentcollectionaction.cpp
@@ -96,12 +94,10 @@ ecm_generate_headers(AkonadiWidgets_CC_HEADERS
     CollectionMaintenancePage
     CollectionRequester
     CollectionStatisticsDelegate
-    CollectionView
     ControlGui
     EntityListView
     EntityTreeView
     ETMViewStateSaver
-    ItemView
     ManageAccountWidget
     StandardActionManager
     SubscriptionDialog
