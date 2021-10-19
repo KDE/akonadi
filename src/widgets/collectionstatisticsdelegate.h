@@ -94,14 +94,14 @@ public:
     /**
      * Returns whether the unread count is drawn next to the folder name.
      */
-    bool unreadCountShown() const;
+    Q_REQUIRED_RESULT bool unreadCountShown() const;
 
     /**
      * @param enable new mode of progress animation
      */
     void setProgressAnimationEnabled(bool enable);
 
-    bool progressAnimationEnabled() const;
+    Q_REQUIRED_RESULT bool progressAnimationEnabled() const;
 
 protected:
     /**

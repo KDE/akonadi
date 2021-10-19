@@ -135,7 +135,7 @@ public:
     /**
      * Returns the page title.
      */
-    QString pageTitle() const;
+    Q_REQUIRED_RESULT QString pageTitle() const;
 
 private:
     /// @cond PRIVATE

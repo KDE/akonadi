@@ -46,9 +46,9 @@ public:
     /**
      * Returns whether the drop action menu is shown on drop operation.
      */
-    bool showDropActionMenu() const;
+    Q_REQUIRED_RESULT bool showDropActionMenu() const;
 
-    bool isManualSortingActive() const;
+    Q_REQUIRED_RESULT bool isManualSortingActive() const;
 
     /**
      * Set true if we automatic sorting

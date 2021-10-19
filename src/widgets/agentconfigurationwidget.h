@@ -32,9 +32,9 @@ public:
 
     void load();
     void save();
-    QSize restoreDialogSize() const;
+    Q_REQUIRED_RESULT QSize restoreDialogSize() const;
     void saveDialogSize(QSize size);
-    QDialogButtonBox::StandardButtons standardButtons() const;
+    Q_REQUIRED_RESULT QDialogButtonBox::StandardButtons standardButtons() const;
 
 Q_SIGNALS:
     void enableOkButton(bool enabled);
