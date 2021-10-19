@@ -72,7 +72,7 @@ protected:
     void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const override;
 
 private:
-    DelegateAnimator *m_animator;
+    DelegateAnimator *const m_animator;
 };
 
 }
