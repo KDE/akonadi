@@ -6,6 +6,7 @@
 
 #include "attributefactory.h"
 
+#include "collectionidentificationattribute.h"
 #include "collectionquotaattribute.h"
 #include "collectionrightsattribute_p.h"
 #include "entityannotationsattribute.h"
@@ -88,6 +89,7 @@ public:
             AttributeFactory::registerAttribute<EntityAnnotationsAttribute>();
             AttributeFactory::registerAttribute<TagAttribute>();
             AttributeFactory::registerAttribute<FavoriteCollectionAttribute>();
+            AttributeFactory::registerAttribute<CollectionIdentificationAttribute>();
         }
     }
     bool initialized = false;
