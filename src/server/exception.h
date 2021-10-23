@@ -20,17 +20,17 @@ namespace Server
 class Exception : public std::exception
 {
 public:
-    explicit Exception(const char *what) throw()
+    explicit Exception(const char *what) noexcept
         : mWhat(what)
     {
     }
 
-    explicit Exception(const QByteArray &what) throw()
+    explicit Exception(const QByteArray &what) noexcept
         : mWhat(what)
     {
     }
 
-    explicit Exception(const QString &what) throw()
+    explicit Exception(const QString &what) noexcept
         : mWhat(what.toUtf8())
     {
     }
@@ -38,14 +38,14 @@ public:
     Exception(const Exception &) = delete;
     Exception &operator=(const Exception &) = delete;
 
-    ~Exception() throw() override = default;
+    ~Exception() override = default;
 
-    const char *what() const throw() override
+    const char *what() const noexcept override
     {
         return mWhat.constData();
     }
 
-    virtual const char *type() const throw()
+    virtual const char *type() const noexcept
     {
         return "General Exception";
     }
@@ -58,19 +58,19 @@ protected:
     class classname : public Akonadi::Server::Exception                                                                                                        \
     {                                                                                                                                                          \
     public:                                                                                                                                                    \
-        classname(const char *what) throw()                                                                                                                    \
+        classname(const char *what) noexcept                                                                                                                   \
             : Akonadi::Server::Exception(what)                                                                                                                 \
         {                                                                                                                                                      \
         }                                                                                                                                                      \
-        classname(const QByteArray &what) throw()                                                                                                              \
+        classname(const QByteArray &what) noexcept                                                                                                             \
             : Akonadi::Server::Exception(what)                                                                                                                 \
         {                                                                                                                                                      \
         }                                                                                                                                                      \
-        classname(const QString &what) throw()                                                                                                                 \
+        classname(const QString &what) noexcept                                                                                                                \
             : Akonadi::Server::Exception(what)                                                                                                                 \
         {                                                                                                                                                      \
         }                                                                                                                                                      \
-        const char *type() const throw() override                                                                                                              \
+        const char *type() const noexcept override                                                                                                             \
         {                                                                                                                                                      \
             return "" #classname;                                                                                                                              \
         }                                                                                                                                                      \

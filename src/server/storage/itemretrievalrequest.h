@@ -25,7 +25,9 @@ class ItemRetrievalRequest
 public:
     struct Id {
         explicit Id(uint32_t value)
-            : mValue(value){};
+            : mValue(value)
+        {
+        }
         bool operator==(Id other) const
         {
             return mValue == other.mValue;
