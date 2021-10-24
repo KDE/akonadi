@@ -59,7 +59,7 @@ public:
     /**
      * Destroys the transaction begin job.
      */
-    ~TransactionBeginJob();
+    ~TransactionBeginJob() override;
 };
 
 /**
@@ -89,7 +89,7 @@ public:
     /**
      * Destroys the transaction rollback job.
      */
-    ~TransactionRollbackJob();
+    ~TransactionRollbackJob() override;
 };
 
 /**
@@ -115,7 +115,7 @@ public:
     /**
      * Destroys the transaction commit job.
      */
-    ~TransactionCommitJob();
+    ~TransactionCommitJob() override;
 };
 
 }

@@ -46,7 +46,7 @@ public:
      *       be destructed automatically as soon as all changes
      *       are written back to the server.
      */
-    ~SubscriptionDialog();
+    ~SubscriptionDialog() override;
 
     /**
      * @param showHidden shows hidden collections if set as @c true

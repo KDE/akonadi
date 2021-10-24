@@ -44,7 +44,7 @@ public:
      * Destroys the change recorder.
      * All not yet processed changes are written back to the config file.
      */
-    ~ChangeRecorder();
+    ~ChangeRecorder() override;
 
     /**
      * Sets the QSettings object used for persistent recorded changes.

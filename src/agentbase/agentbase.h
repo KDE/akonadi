@@ -664,7 +664,7 @@ protected:
     /**
      * Destroys the agent base.
      */
-    ~AgentBase();
+    ~AgentBase() override;
 
     /**
      * This method is called whenever the agent application is about to

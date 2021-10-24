@@ -188,7 +188,7 @@ public:
     /**
      * Destroys the standard action manager.
      */
-    ~StandardActionManager();
+    ~StandardActionManager() override;
 
     /**
      * Sets the collection selection model based on which the collection

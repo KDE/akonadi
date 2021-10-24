@@ -25,7 +25,7 @@ class SearchRequest : public QObject
 
 public:
     explicit SearchRequest(const QByteArray &connectionId, SearchManager &searchManager, SearchTaskManager &agentSearchTask);
-    ~SearchRequest();
+    ~SearchRequest() override;
 
     void setQuery(const QString &query);
     QString query() const;

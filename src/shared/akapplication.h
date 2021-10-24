@@ -25,7 +25,7 @@ class AkApplicationBase : public QObject
 {
     Q_OBJECT
 public:
-    ~AkApplicationBase();
+    ~AkApplicationBase() override;
     void parseCommandLine();
     void setDescription(const QString &desc);
 

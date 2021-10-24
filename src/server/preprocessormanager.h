@@ -107,7 +107,7 @@ public:
      * Destroys the instance of PreprocessorManager
      * and frees all the relevant resources
      */
-    ~PreprocessorManager();
+    ~PreprocessorManager() override;
 
     /**
      * Returns true if preprocessing is active in this Akonadi server.

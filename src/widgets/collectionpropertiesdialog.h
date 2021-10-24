@@ -84,7 +84,7 @@ public:
      * @note Never call manually, the dialog is deleted automatically once all changes
      *       are written back to the Akonadi storage.
      */
-    ~CollectionPropertiesDialog();
+    ~CollectionPropertiesDialog() override;
 
     /**
      * Register custom pages for the collection properties dialog.

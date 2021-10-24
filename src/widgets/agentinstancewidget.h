@@ -67,7 +67,7 @@ public:
     /**
      * Destroys the agent instance widget.
      */
-    ~AgentInstanceWidget();
+    ~AgentInstanceWidget() override;
 
     /**
      * Returns the current agent instance or an invalid agent instance

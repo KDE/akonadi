@@ -19,7 +19,7 @@ class Session : public QObject
     Q_OBJECT
 public:
     explicit Session(const QString &input, QObject *parent = nullptr);
-    ~Session();
+    ~Session() override;
 
     void printStats() const;
 

@@ -99,7 +99,7 @@ public:
     /**
      * Destroys the collection properties page.
      */
-    ~CollectionPropertiesPage();
+    ~CollectionPropertiesPage() override;
 
     /**
      * Loads the page content from the given collection.

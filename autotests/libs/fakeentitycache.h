@@ -116,7 +116,7 @@ public:
     {
     }
 
-    virtual ~FakeNotificationConnection()
+    ~FakeNotificationConnection() override
     {
     }
 

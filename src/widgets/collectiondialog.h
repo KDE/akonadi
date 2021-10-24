@@ -107,7 +107,7 @@ public:
     /**
      * Destroys the collection dialog.
      */
-    ~CollectionDialog();
+    ~CollectionDialog() override;
 
     /**
      * Sets the mime types any of which the selected collection(s) shall support.

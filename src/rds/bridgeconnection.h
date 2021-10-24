@@ -17,7 +17,7 @@ class BridgeConnection : public QObject
 
 public:
     explicit BridgeConnection(QTcpSocket *remoteSocket, QObject *parent = nullptr);
-    ~BridgeConnection();
+    ~BridgeConnection() override;
 
 protected Q_SLOTS:
     virtual void connectLocal() = 0;

@@ -16,7 +16,7 @@ public:
     {
     }
 
-    ~Exception() throw()
+    ~Exception() throw() override
     {
     }
 };

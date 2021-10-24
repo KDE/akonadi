@@ -24,7 +24,7 @@ class SetupTest : public QObject
 
 public:
     SetupTest();
-    ~SetupTest();
+    ~SetupTest() override;
 
     /**
       Sets the instance identifier for the Akonadi session.

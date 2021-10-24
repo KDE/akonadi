@@ -53,7 +53,7 @@ public: // This is public only for qDeleteAll() called from PreprocessorManager
     /**
      * Destroy this instance of the PreprocessorInstance descriptor.
      */
-    ~PreprocessorInstance();
+    ~PreprocessorInstance() override;
 
 private:
     PreprocessorManager &mManager;

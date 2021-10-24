@@ -25,7 +25,7 @@ class AgentServer : public QObject
 
 public:
     explicit AgentServer(QObject *parent = nullptr);
-    ~AgentServer();
+    ~AgentServer() override;
 
 public Q_SLOTS:
     Q_SCRIPTABLE void agentInstanceConfigure(const QString &identifier, qlonglong windowId);

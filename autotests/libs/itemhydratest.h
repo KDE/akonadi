@@ -13,7 +13,7 @@ class ItemHydra : public QObject
     Q_OBJECT
 public:
     ItemHydra();
-    virtual ~ItemHydra()
+    ~ItemHydra() override
     {
     }
 private Q_SLOTS:

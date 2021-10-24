@@ -76,7 +76,7 @@ public:
     /**
      * Destroys the collection combobox.
      */
-    ~CollectionComboBox();
+    ~CollectionComboBox() override;
 
     /**
      * Sets the content @p mimetypes the collections shall be filtered by.

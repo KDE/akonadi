@@ -56,7 +56,7 @@ public:
     /**
      * Destroys the special collections object.
      */
-    ~SpecialCollections();
+    ~SpecialCollections() override;
 
     /**
      * Returns whether the given agent @p instance has a special collection of

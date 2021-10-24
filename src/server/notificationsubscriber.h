@@ -28,7 +28,7 @@ class NotificationSubscriber : public QObject
 
 public:
     explicit NotificationSubscriber(NotificationManager *manager, quintptr socketDescriptor);
-    ~NotificationSubscriber();
+    ~NotificationSubscriber() override;
 
     Q_REQUIRED_RESULT inline QByteArray subscriber() const
     {

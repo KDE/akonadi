@@ -75,7 +75,7 @@ public:
     /**
      * Destroys the session.
      */
-    ~Session();
+    ~Session() override;
 
     /**
      * Returns the session identifier.

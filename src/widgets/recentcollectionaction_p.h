@@ -36,7 +36,7 @@ public:
     /**
      * Destroys the collection recent action.
      */
-    ~RecentCollectionAction();
+    ~RecentCollectionAction() override;
 
     /**
      * Add new collection. Will create a new item.

@@ -95,7 +95,7 @@ public:
     };
 
     CtorNode(const QVector<Argument> &args, ClassNode *parent);
-    ~CtorNode();
+    ~CtorNode() override;
 
     QVector<Argument> arguments() const;
     void setArgumentType(const QString &name, const QString &type);
@@ -150,7 +150,7 @@ public:
     };
 
     PropertyNode(const QString &name, const QString &type, ClassNode *parent);
-    ~PropertyNode();
+    ~PropertyNode() override;
 
     QString type() const;
     QString name() const;

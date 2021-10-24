@@ -44,7 +44,7 @@ public:
     /**
      * Destroys the process control.
      */
-    ~ProcessControl();
+    ~ProcessControl() override;
 
     /**
      * Starts the @p application with the given list of @p arguments.

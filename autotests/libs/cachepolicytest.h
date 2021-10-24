@@ -13,7 +13,7 @@ class CachePolicyTest : public QObject
     Q_OBJECT
 public:
     explicit CachePolicyTest(QObject *parent = nullptr);
-    ~CachePolicyTest();
+    ~CachePolicyTest() override;
 private Q_SLOTS:
     void shouldHaveDefaultValue();
 };

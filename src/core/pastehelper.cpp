@@ -41,7 +41,7 @@ public:
                             const Akonadi::Collection::List &collections,
                             const Akonadi::Collection &destination,
                             QObject *parent = nullptr);
-    virtual ~PasteHelperJob();
+    ~PasteHelperJob() override;
 
 private Q_SLOTS:
     void onDragSourceCollectionFetched(KJob *job);

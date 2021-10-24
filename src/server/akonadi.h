@@ -39,7 +39,7 @@ class AkonadiServer : public QObject
 
 public:
     explicit AkonadiServer();
-    ~AkonadiServer();
+    ~AkonadiServer() override;
 
     /**
      * Can return a nullptr

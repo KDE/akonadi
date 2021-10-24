@@ -54,7 +54,7 @@ class Firstrun : public QObject
     Q_OBJECT
 public:
     explicit Firstrun(QObject *parent = nullptr);
-    ~Firstrun();
+    ~Firstrun() override;
 
 private:
     void findPendingDefaults();

@@ -53,7 +53,7 @@ public:
     /**
      * Destroys the agent type widget.
      */
-    ~AgentTypeWidget();
+    ~AgentTypeWidget() override;
 
     /**
      * Returns the current agent type or an invalid agent type

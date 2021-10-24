@@ -28,7 +28,7 @@ public:
         m_fakeSession->setAsDefaultSession();
     }
 
-    ~MonitorNotificationTest()
+    ~MonitorNotificationTest() override
     {
         delete m_fakeSession;
     }

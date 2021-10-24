@@ -34,7 +34,7 @@ public:
     Q_ENUM(ConnectionType)
 
     explicit Connection(ConnectionType connType, const QByteArray &sessionId, CommandBuffer *commandBuffer, QObject *parent = nullptr);
-    ~Connection();
+    ~Connection() override;
 
     void setSession(SessionPrivate *session);
 

@@ -41,7 +41,7 @@ public:
     /**
      * Destroys the agent manager.
      */
-    ~AgentManager();
+    ~AgentManager() override;
 
     /**
      * Called by the crash handler and dtor to terminate

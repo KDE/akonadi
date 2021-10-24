@@ -19,7 +19,7 @@ class SessionThread : public QObject
 
 public:
     explicit SessionThread(QObject *parent = nullptr);
-    ~SessionThread();
+    ~SessionThread() override;
 
     void addConnection(Connection *connection);
     void destroyConnection(Connection *connection);

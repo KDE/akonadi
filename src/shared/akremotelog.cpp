@@ -51,7 +51,7 @@ public:
         mOldHandler = qInstallMessageHandler(dbusLogger);
     }
 
-    ~RemoteLogger()
+    ~RemoteLogger() override
     {
         sInstance = nullptr;
 

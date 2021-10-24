@@ -68,7 +68,7 @@ public:
     /**
      * Destroys the agent action manager.
      */
-    ~AgentActionManager();
+    ~AgentActionManager() override;
 
     /**
      * Sets the agent selection @p model based on which the actions should operate.

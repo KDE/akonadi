@@ -25,7 +25,7 @@ public:
     /**
      * Destroys the control manager.
      */
-    ~ControlManager();
+    ~ControlManager() override;
 
 public Q_SLOTS:
     /**

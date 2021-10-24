@@ -58,7 +58,7 @@ public:
     /**
      * Destroys the control object.
      */
-    ~Control();
+    ~Control() override;
 
     /**
      * Starts the Akonadi server synchronously if it is not already running.

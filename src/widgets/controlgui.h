@@ -58,7 +58,7 @@ public:
     /**
      * Destroys the ControlGui object.
      */
-    ~ControlGui();
+    ~ControlGui() override;
 
     /**
      * Starts the Akonadi server synchronously if it is not already running.
