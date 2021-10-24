@@ -32,8 +32,6 @@
         return reinterpret_cast<const Class##Private *>(d_ptr.constData());                                                                                    \
     }
 
-#define COMPARE(prop) ((prop) == ((decltype(this))other)->prop)
-
 namespace Akonadi
 {
 namespace Protocol
