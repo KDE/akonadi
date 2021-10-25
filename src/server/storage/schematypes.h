@@ -118,3 +118,9 @@ public:
 } // namespace Server
 } // namespace Akonadi
 
+Q_DECLARE_TYPEINFO(Akonadi::Server::ColumnDescription, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(Akonadi::Server::IndexDescription, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(Akonadi::Server::DataDescription, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(Akonadi::Server::TableDescription, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(Akonadi::Server::RelationDescription, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(Akonadi::Server::RelationTableDescription, Q_MOVABLE_TYPE);

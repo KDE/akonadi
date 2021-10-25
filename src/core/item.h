@@ -933,4 +933,4 @@ template<typename T> void Item::setPayload(T *p)
 
 Q_DECLARE_METATYPE(Akonadi::Item)
 Q_DECLARE_METATYPE(Akonadi::Item::List)
-
+Q_DECLARE_TYPEINFO(Akonadi::Item, Q_MOVABLE_TYPE);
