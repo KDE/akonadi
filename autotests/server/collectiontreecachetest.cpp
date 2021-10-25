@@ -38,14 +38,14 @@ Q_SIGNALS:
     void cachePopulated();
 
 protected:
-    void init() Q_DECL_OVERRIDE
+    void init() override
     {
         CollectionTreeCache::init();
         mCachePopulated = 1;
         Q_EMIT cachePopulated();
     }
 
-    void quit() Q_DECL_OVERRIDE
+    void quit() override
     {
     }
 
