@@ -22,7 +22,6 @@
 #include <KLocalizedString>
 #include <KSharedConfig>
 
-#include <memory>
 
 using namespace Akonadi;
 using namespace std::chrono_literals;
