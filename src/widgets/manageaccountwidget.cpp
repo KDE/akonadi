@@ -196,7 +196,11 @@ void ManageAccountWidget::slotRemoveSelectedAccount()
 {
     const Akonadi::AgentInstance instance = d->ui.mAccountList->currentAgentInstance();
 
-    const int rc = KMessageBox::questionYesNo(this, i18n("Do you want to remove account '%1'?", instance.name()), i18n("Remove account?"));
+    const int rc = KMessageBox::questionYesNo(this,
+                                              i18n("Do you want to remove account '%1'?", instance.name()),
+                                              i18n("Remove account?"),
+                                              KStandardGuiItem::remove(),
+                                              KStandardGuiItem::cancel());
     if (rc == KMessageBox::No) {
         return;
     }
