@@ -72,7 +72,72 @@ set(akonadicore_base_SRCS
     tagsync.cpp
     trashsettings.cpp
     typepluginloader.cpp
-)
+
+    agentconfigurationbase.h
+    agentconfigurationfactorybase.h
+    agentconfigurationmanager_p.h
+    agentinstance_p.h
+    agentmanager.h
+    agenttype.h
+    asyncselectionhandler_p.h
+    attributefactory.h
+    attributestorage_p.h
+    cachepolicy.h
+    changemediator_p.h
+    changenotification.h
+    changenotificationdependenciesfactory_p.h
+    changerecorder.h
+    changerecorder_p.h
+    changerecorderjournal_p.h
+    config_p.h
+    connection_p.h
+    collection.h
+    collectionfetchscope.h
+    collectionpathresolver.h
+    collectionstatistics.h
+    collectionsync_p.h
+    conflicthandler_p.h
+    control.h
+    entitycache_p.h
+    firstrun_p.h
+    gidextractor_p.h
+    item.h
+    itemchangelog_p.h
+    itemfetchscope.h
+    itemfetchscope_p.h
+    itemmonitor.h
+    itemmonitor_p.h
+    itemserializer_p.h
+    itemserializerplugin.h
+    itemsync.h
+    mimetypechecker.h
+    mimetypechecker_p.h
+    monitor.h
+    monitor_p.h
+    notificationsource_p.h
+    notificationsubscriber.h
+    partfetcher.h
+    pastehelper_p.h
+    pluginloader_p.h
+    protocolhelper_p.h
+    relation.h
+    relationsync.h
+    searchquery.h
+    servermanager.h
+    servermanager_p.h
+    session.h
+    session_p.h
+    sessionthread_p.h
+    specialcollections.h
+    specialcollections_p.h
+    tag.h
+    tagfetchscope.h
+    tagsync.h
+    trashsettings.h
+    typepluginloader_p.h
+
+
+    )
 
 ecm_generate_headers(AkonadiCore_base_CC_HEADERS
     HEADER_NAMES
@@ -238,7 +303,48 @@ set(akonadicore_jobs_SRCS
     jobs/trashjob.cpp
     jobs/trashrestorejob.cpp
     jobs/unlinkjob.cpp
-)
+
+    jobs/agentinstancecreatejob.h
+    jobs/collectionattributessynchronizationjob.h
+    jobs/collectioncopyjob.h
+    jobs/collectioncreatejob.h
+    jobs/collectiondeletejob.h
+    jobs/collectionfetchjob.h
+    jobs/collectionmodifyjob.h
+    jobs/collectionmovejob.h
+    jobs/collectionstatisticsjob.h
+    jobs/itemcopyjob.h
+    jobs/itemcreatejob.h
+    jobs/itemdeletejob.h
+    jobs/itemfetchjob.h
+    jobs/itemmodifyjob.h
+    jobs/itemmovejob.h
+    jobs/itemsearchjob.h
+    jobs/job.h
+    jobs/kjobprivatebase_p.h
+    jobs/linkjob.h
+    jobs/recursiveitemfetchjob.h
+    jobs/resourceselectjob_p.h
+    jobs/resourcesynchronizationjob.h
+    jobs/relationfetchjob.h
+    jobs/relationcreatejob.h
+    jobs/relationdeletejob.h
+    jobs/searchcreatejob.h
+    jobs/searchresultjob_p.h
+    jobs/specialcollectionshelperjobs_p.h
+    jobs/specialcollectionsrequestjob.h
+    jobs/subscriptionjob_p.h
+    jobs/tagcreatejob.h
+    jobs/tagdeletejob.h
+    jobs/tagfetchjob.h
+    jobs/tagmodifyjob.h
+    jobs/transactionjobs.h
+    jobs/transactionsequence.h
+    jobs/trashjob.h
+    jobs/trashrestorejob.h
+    jobs/unlinkjob.h
+
+    )
 
 ecm_generate_headers(AkonadiCore_jobs_CC_HEADERS
     HEADER_NAMES

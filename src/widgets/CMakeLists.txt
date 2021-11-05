@@ -54,7 +54,45 @@ target_sources(KF5AkonadiWidgets PRIVATE
     tagselectiondialog.cpp
     tagwidget.cpp
     tagselectwidget.cpp
-)
+
+    actionstatemanager_p.h
+    agentactionmanager.h
+    agentconfigurationdialog.h
+    agentconfigurationwidget.h
+    agentinstancewidget.h
+    agenttypedialog.h
+    agenttypewidget.h
+    cachepolicypage.h
+    collectioncombobox.h
+    collectiondialog.h
+    collectiongeneralpropertiespage_p.h
+    collectionmaintenancepage.h
+    collectionpropertiesdialog.h
+    collectionpropertiespage.h
+    collectionrequester.h
+    collectionstatisticsdelegate.h
+    conflictresolvedialog_p.h
+    controlgui.h
+    dragdropmanager_p.h
+    entitylistview.h
+    entitytreeview.h
+    erroroverlay_p.h
+    etmviewstatesaver.h
+    manageaccountwidget.h
+    progressspinnerdelegate_p.h
+    recentcollectionaction_p.h
+    renamefavoritedialog_p.h
+    standardactionmanager.h
+    selftestdialog.h
+    subscriptiondialog.h
+    tageditwidget.h
+    tagmanagementdialog.h
+    tagselectioncombobox.h
+    tagselectiondialog.h
+    tagwidget.h
+    tagselectwidget.h
+
+    )
 
 ecm_qt_declare_logging_category(KF5AkonadiWidgets HEADER akonadiwidgets_debug.h IDENTIFIER AKONADIWIDGETS_LOG CATEGORY_NAME org.kde.pim.akonadiwidgets
         DESCRIPTION "akonadi (Akonadi Widget Library)"

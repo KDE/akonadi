@@ -16,6 +16,7 @@ qt_add_dbus_interfaces(akonadictl_SRCS
 target_sources(akonadictl PRIVATE ${akonadictl_SRCS}
     akonadistarter.cpp
     main.cpp
+    akonadistarter.h
 )
 
 if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)

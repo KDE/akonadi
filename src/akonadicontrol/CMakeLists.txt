@@ -34,9 +34,17 @@ target_sources(akonadi_control PRIVATE
     agentthreadinstance.cpp
     agentmanager.cpp
     controlmanager.cpp
-    main.cpp
     processcontrol.cpp
+    main.cpp
     ${control_SRCS}
+    agenttype.h
+    agentinstance.h
+    agentbrokeninstance.h
+    agentprocessinstance.h
+    agentthreadinstance.h
+    agentmanager.h
+    controlmanager.h
+    processcontrol.h
 )
 if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(akonadi_control PROPERTIES UNITY_BUILD ON)

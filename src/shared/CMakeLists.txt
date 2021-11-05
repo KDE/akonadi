@@ -6,6 +6,9 @@ target_sources(akonadi_shared PRIVATE
     akapplication.cpp
     akdebug.cpp
     akremotelog.cpp
+    akapplication.h
+    akdebug.h
+    akremotelog.h
 )
 
 if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)

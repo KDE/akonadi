@@ -4,6 +4,8 @@ add_executable(akonadi_rds)
 target_sources(akonadi_rds PRIVATE
     bridgeserver.cpp
     bridgeconnection.cpp
+    bridgeserver.h
+    bridgeconnection.h
     main.cpp
 )
 

@@ -8,6 +8,11 @@ target_sources(protocolgen PRIVATE
     nodetree.cpp
     typehelper.cpp
     xmlparser.cpp
+    cppgenerator.h
+    cpphelper.h
+    nodetree.h
+    typehelper.h
+    xmlparser.h
 )
 
 set_target_properties(protocolgen PROPERTIES MACOSX_BUNDLE FALSE)

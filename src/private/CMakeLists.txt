@@ -30,6 +30,15 @@ set(akonadiprivate_SRCS
     tristate.cpp
     standarddirs.cpp
     dbus.cpp
+    imapset_p.h
+    instance_p.h
+    compressionstream_p.h
+    externalpartstorage_p.h
+    protocol_p.h
+    scope_p.h
+    tristate_p.h
+    standarddirs_p.h
+    dbus_p.h
 )
 
 set(akonadiprivate_LIBS

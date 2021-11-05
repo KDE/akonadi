@@ -5,7 +5,10 @@ target_sources(akonadi_agent_server PRIVATE
     agentserver.cpp
     agentthread.cpp
     main.cpp
-)
+    agentpluginloader.h
+    agentserver.h
+    agentthread.h
+    )
 
 ecm_qt_declare_logging_category(akonadi_agent_server HEADER akonadiagentserver_debug.h IDENTIFIER AKONADIAGENTSERVER_LOG CATEGORY_NAME org.kde.pim.akonadiagentserver
         DESCRIPTION "akonadi (Akonadi Agent Server)"
@@ -33,7 +36,8 @@ target_sources(akonadi_agent_launcher PRIVATE
     agentpluginloader.cpp
     agentlauncher.cpp
     akonadiagentserver_debug.cpp
-)
+    agentpluginloader.h
+    )
 
 if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(akonadi_agent_launcher PROPERTIES UNITY_BUILD ON)

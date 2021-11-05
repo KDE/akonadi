@@ -54,6 +54,16 @@ target_sources(KF5AkonadiAgentBase PRIVATE
     resourcescheduler.cpp
     resourcesettings.cpp
     transportresourcebase.cpp
+    accountsintegration.h
+    agentbase.h
+    agentsearchinterface.h
+    preprocessorbase.h
+    preprocessorbase_p.h
+    recursivemover_p.h
+    resourcebase.h
+    resourcescheduler_p.h
+    resourcesettings.h
+    transportresourcebase.h
     ${akonadiagentbase_SRCS}
 )
 

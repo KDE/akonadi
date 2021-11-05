@@ -123,7 +123,102 @@ set(libakonadiserver_SRCS
     preprocessormanager.cpp
     storagejanitor.cpp
     storage/akonadidb.qrc
-)
+
+
+    akonadi.h
+    aggregatedfetchscope.h
+    aklocalserver.h
+    akthread.h
+    commandcontext.h
+    connection.h
+    collectionscheduler.h
+    handler.h
+    handlerhelper.h
+    intervalcheck.h
+    handler/collectioncopyhandler.h
+    handler/collectioncreatehandler.h
+    handler/collectiondeletehandler.h
+    handler/collectionfetchhandler.h
+    handler/collectionmodifyhandler.h
+    handler/collectionmovehandler.h
+    handler/collectionstatsfetchhandler.h
+    handler/itemcopyhandler.h
+    handler/itemcreatehandler.h
+    handler/itemdeletehandler.h
+    handler/itemfetchhandler.h
+    handler/itemfetchhelper.h
+    handler/itemlinkhandler.h
+    handler/itemmodifyhandler.h
+    handler/itemmovehandler.h
+    handler/loginhandler.h
+    handler/logouthandler.h
+    handler/relationfetchhandler.h
+    handler/relationmodifyhandler.h
+    handler/relationremovehandler.h
+    handler/resourceselecthandler.h
+    handler/searchhandler.h
+    handler/searchhelper.h
+    handler/searchcreatehandler.h
+    handler/searchresulthandler.h
+    handler/tagcreatehandler.h
+    handler/tagdeletehandler.h
+    handler/tagfetchhandler.h
+    handler/tagfetchhelper.h
+    handler/tagmodifyhandler.h
+    handler/transactionhandler.h
+    search/agentsearchengine.h
+    search/agentsearchinstance.h
+    search/searchtaskmanager.h
+    search/searchrequest.h
+    search/searchmanager.h
+
+    storage/collectionqueryhelper.h
+    storage/collectionstatistics.h
+    storage/entity.h
+    storage/datastore.h
+    storage/dbconfig.h
+    storage/dbconfigmysql.h
+    storage/dbconfigpostgresql.h
+    storage/dbconfigsqlite.h
+    storage/dbexception.h
+    storage/dbinitializer.h
+    storage/dbinitializer_p.h
+    storage/dbintrospector.h
+    storage/dbintrospector_impl.h
+    storage/dbupdater.h
+    storage/dbtype.h
+    storage/itemqueryhelper.h
+    storage/itemretriever.h
+    storage/itemretrievalmanager.h
+    storage/itemretrievaljob.h
+    storage/itemretrievalrequest.h
+    storage/notificationcollector.h
+    storage/parthelper.h
+    storage/parttypehelper.h
+    storage/query.h
+    storage/querybuilder.h
+    storage/querycache.h
+    storage/queryhelper.h
+    storage/schematypes.h
+    storage/tagqueryhelper.h
+    storage/transaction.h
+    storage/parthelper.h
+    storage/partstreamer.h
+    storage/storagedebugger.h
+    tracer.h
+    utils.h
+    dbustracer.h
+    filetracer.h
+    notificationmanager.h
+    notificationsubscriber.h
+    resourcemanager.h
+    cachecleaner.h
+    debuginterface.h
+    preprocessorinstance.h
+    preprocessormanager.h
+    storagejanitor.h
+
+    )
 
 set(akonadiserver_SRCS
     main.cpp
