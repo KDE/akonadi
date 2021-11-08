@@ -27,7 +27,7 @@ build_clazy_clang_tidy:
     - time ./tools/run-clang-tidy.sh $(pwd) $(pwd)/build
   variables:
     PLATFORM: SUSEQt5.15
-    BRANCH_GROUP: kf5-qt5
+    BRANCH_GROUP: stable-kf5-qt5
   artifacts:
     paths:
       - build/clang-tidy-report.xml
