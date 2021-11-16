@@ -18,8 +18,14 @@
 #include <QAction>
 #include <QIcon>
 
+#include "ki18n_version.h"
 #include <QItemSelectionModel>
 #include <QPointer>
+#if KI18N_VERSION >= QT_VERSION_CHECK(5, 89, 0)
+#include <klazylocalizedstring.h>
+#undef I18N_NOOP
+#define I18N_NOOP kli18n
+#endif
 
 using namespace Akonadi;
 
@@ -27,7 +33,11 @@ using namespace Akonadi;
 
 static const struct {
     const char *name;
+#if KI18N_VERSION < QT_VERSION_CHECK(5, 89, 0)
     const char *label;
+#else
+    const KLazyLocalizedString label;
+#endif
     const char *icon;
     int shortcut;
     const char *slot;
@@ -248,7 +258,11 @@ QAction *AgentActionManager::createAction(Type type)
     }
 
     auto action = new QAction(d->mParentWidget);
+#if KI18N_VERSION < QT_VERSION_CHECK(5, 89, 0)
     action->setText(i18n(agentActionData[type].label));
+#else
+    action->setText(KLocalizedString(agentActionData[type].label).toString());
+#endif
 
     if (agentActionData[type].icon) {
         action->setIcon(QIcon::fromTheme(QString::fromLatin1(agentActionData[type].icon)));
