@@ -516,7 +516,7 @@ public:
             } else if (standardActionData[type].label) {
                 actions[type]->setText(i18n(standardActionData[type].label));
 #else
-            } else if (!KLocalizedString(standardActionData[type].label).toString().isEmpty()) {
+            } else if (!KLocalizedString(standardActionData[type].label).untranslatedText().isEmpty()) {
                 actions[type]->setText(KLocalizedString(standardActionData[type].label).toString());
 #endif
             }
@@ -527,7 +527,7 @@ public:
                 actions[type]->setIconText(i18n(standardActionData[type].iconLabel));
             }
 #else
-            } else if (!KLocalizedString(standardActionData[type].iconLabel).toString().isEmpty()) {
+            } else if (!KLocalizedString(standardActionData[type].iconLabel).untranslatedText().isEmpty()) {
                 actions[type]->setIconText(KLocalizedString(standardActionData[type].iconLabel).toString());
             }
 #endif
@@ -1855,7 +1855,7 @@ QAction *StandardActionManager::createAction(Type type)
     } else if (standardActionData[type].label) {
         action->setText(i18n(standardActionData[type].label));
 #else
-    } else if (!KLocalizedString(standardActionData[type].label).toString().isEmpty()) {
+    } else if (!KLocalizedString(standardActionData[type].label).untranslatedText().isEmpty()) {
         action->setText(KLocalizedString(standardActionData[type].label).toString());
     }
 #endif
@@ -1865,8 +1865,8 @@ QAction *StandardActionManager::createAction(Type type)
         } else if (standardActionData[type].iconLabel) {
             action->setIconText(i18n(standardActionData[type].iconLabel));
 #else
-    } else if (!KLocalizedString(standardActionData[type].iconLabel).toString().isEmpty()) {
-        action->setIconText(KLocalizedString(standardActionData[type].iconLabel).toString());
+        } else if (!KLocalizedString(standardActionData[type].iconLabel).untranslatedText().isEmpty()) {
+            action->setIconText(KLocalizedString(standardActionData[type].iconLabel).toString());
 #endif
         }
 
