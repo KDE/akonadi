@@ -6,7 +6,7 @@ Dependencies:
   'require':
     'frameworks/extra-cmake-modules': '@latest'
     'frameworks/kdesignerplugin' : '@latest'
-    'kde/kdenetwork/kaccounts-integration' : '@latest'
+    'network/kaccounts-integration': '@latest'
     'frameworks/kconfig': '@latest'
     'frameworks/kconfigwidgets': '@latest'
     'frameworks/kcoreaddons': '@latest'
