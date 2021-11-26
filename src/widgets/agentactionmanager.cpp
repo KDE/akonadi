@@ -261,7 +261,7 @@ QAction *AgentActionManager::createAction(Type type)
 #if KI18N_VERSION < QT_VERSION_CHECK(5, 89, 0)
     action->setText(i18n(agentActionData[type].label));
 #else
-    action->setText(KLocalizedString(agentActionData[type].label).toString());
+    action->setText(agentActionData[type].label.toString());
 #endif
 
     if (agentActionData[type].icon) {

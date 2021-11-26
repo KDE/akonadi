@@ -506,7 +506,7 @@ public:
 #if KI18N_VERSION < QT_VERSION_CHECK(5, 89, 0)
             actions[type]->setText(i18n(standardActionData[type].label));
 #else
-            actions[type]->setText(KLocalizedString(standardActionData[type].label).toString());
+            actions[type]->setText(standardActionData[type].label.toString());
 #endif
             actions[type]->setIcon(standardActionDataIcon(standardActionData[type]));
 
@@ -516,8 +516,8 @@ public:
             } else if (standardActionData[type].label) {
                 actions[type]->setText(i18n(standardActionData[type].label));
 #else
-            } else if (!KLocalizedString(standardActionData[type].label).untranslatedText().isEmpty()) {
-                actions[type]->setText(KLocalizedString(standardActionData[type].label).toString());
+            } else if (!standardActionData[type].label.isEmpty()) {
+                actions[type]->setText(standardActionData[type].label.toString());
 #endif
             }
             if (pluralIconLabels.contains(type) && !pluralIconLabels.value(type).isEmpty()) {
@@ -527,8 +527,8 @@ public:
                 actions[type]->setIconText(i18n(standardActionData[type].iconLabel));
             }
 #else
-            } else if (!KLocalizedString(standardActionData[type].iconLabel).untranslatedText().isEmpty()) {
-                actions[type]->setIconText(KLocalizedString(standardActionData[type].iconLabel).toString());
+            } else if (!standardActionData[type].iconLabel.isEmpty()) {
+                actions[type]->setIconText(standardActionData[type].iconLabel.toString());
             }
 #endif
             if (standardActionData[type].icon) {
@@ -1855,8 +1855,8 @@ QAction *StandardActionManager::createAction(Type type)
     } else if (standardActionData[type].label) {
         action->setText(i18n(standardActionData[type].label));
 #else
-    } else if (!KLocalizedString(standardActionData[type].label).untranslatedText().isEmpty()) {
-        action->setText(KLocalizedString(standardActionData[type].label).toString());
+    } else if (!standardActionData[type].label.isEmpty()) {
+        action->setText(standardActionData[type].label.toString());
     }
 #endif
         if (d->pluralIconLabels.contains(type) && !d->pluralIconLabels.value(type).isEmpty()) {
@@ -1865,8 +1865,8 @@ QAction *StandardActionManager::createAction(Type type)
         } else if (standardActionData[type].iconLabel) {
             action->setIconText(i18n(standardActionData[type].iconLabel));
 #else
-        } else if (!KLocalizedString(standardActionData[type].iconLabel).untranslatedText().isEmpty()) {
-            action->setIconText(KLocalizedString(standardActionData[type].iconLabel).toString());
+        } else if (!standardActionData[type].iconLabel.isEmpty()) {
+            action->setIconText(standardActionData[type].iconLabel.toString());
 #endif
         }
 
