@@ -5,8 +5,8 @@ Dependencies:
 - 'on': ['@all']
   'require':
     'frameworks/extra-cmake-modules': '@latest'
-    'frameworks/kdesignerplugin' : '@latest'
-    'kde/kdenetwork/kaccounts-integration' : '@latest'
+    'frameworks/kdesignerplugin': '@latest'
+    'network/kaccounts-integration': '@latest'
     'frameworks/kconfig': '@latest'
     'frameworks/kconfigwidgets': '@latest'
     'frameworks/kcoreaddons': '@latest'
@@ -19,3 +19,6 @@ Dependencies:
     'frameworks/kwindowsystem': '@latest'
     'frameworks/kxmlgui': '@latest'
     'frameworks/kcrash': '@latest'
+
+Options:
+  cmake-options: "-DAKONADI_RUN_MYSQL_ISOLATED_TESTS=FALSE -DAKONADI_RUN_PGSQL_ISOLATED_TESTS=FALSE -DAKONADI_RUN_SQLITE_ISOLATED_TESTS=FALSE"
