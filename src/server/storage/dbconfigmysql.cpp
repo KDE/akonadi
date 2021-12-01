@@ -580,7 +580,7 @@ int DbConfigMysql::parseCommandLineToolsVersion() const
         return 0;
     }
 
-    return (match.capturedRef(1).toInt() << 16) | (match.capturedRef(2).toInt() << 8) | match.capturedRef(3).toInt();
+    return (match.capturedView(1).toInt() << 16) | (match.capturedView(2).toInt() << 8) | match.capturedView(3).toInt();
 }
 
 bool DbConfigMysql::initializeMariaDBDatabase(const QString &confFile, const QString &dataDir) const
