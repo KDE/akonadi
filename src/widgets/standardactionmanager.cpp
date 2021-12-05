@@ -1851,181 +1851,185 @@ QAction *StandardActionManager::createAction(Type type)
 
     if (d->pluralLabels.contains(type) && !d->pluralLabels.value(type).isEmpty()) {
         action->setText(d->pluralLabels.value(type).subs(1).toString());
+    }
 #if KI18N_VERSION < QT_VERSION_CHECK(5, 89, 0)
-    } else if (standardActionData[type].label) {
+    else if (standardActionData[type].label) {
         action->setText(i18n(standardActionData[type].label));
+    }
 #else
-    } else if (!standardActionData[type].label.isEmpty()) {
+    else if (!standardActionData[type].label.isEmpty()) {
         action->setText(standardActionData[type].label.toString());
     }
 #endif
-        if (d->pluralIconLabels.contains(type) && !d->pluralIconLabels.value(type).isEmpty()) {
-            action->setIconText(d->pluralIconLabels.value(type).subs(1).toString());
+    if (d->pluralIconLabels.contains(type) && !d->pluralIconLabels.value(type).isEmpty()) {
+        action->setIconText(d->pluralIconLabels.value(type).subs(1).toString());
+    }
 #if KI18N_VERSION < QT_VERSION_CHECK(5, 89, 0)
-        } else if (standardActionData[type].iconLabel) {
-            action->setIconText(i18n(standardActionData[type].iconLabel));
+    else if (standardActionData[type].iconLabel) {
+        action->setIconText(i18n(standardActionData[type].iconLabel));
+    }
 #else
-        } else if (!standardActionData[type].iconLabel.isEmpty()) {
-            action->setIconText(standardActionData[type].iconLabel.toString());
+    else if (!standardActionData[type].iconLabel.isEmpty()) {
+        action->setIconText(standardActionData[type].iconLabel.toString());
+    }
 #endif
-        }
 
-        if (standardActionData[type].icon) {
-            action->setIcon(standardActionDataIcon(standardActionData[type]));
-        }
-        if (d->actionCollection) {
-            d->actionCollection->setDefaultShortcut(action, QKeySequence(standardActionData[type].shortcut));
-        } else {
-            action->setShortcut(standardActionData[type].shortcut);
-        }
-
-        if (standardActionData[type].slot) {
-            switch (standardActionData[type].actionType) {
-            case NormalAction:
-            case ActionWithAlternative:
-                connect(action, SIGNAL(triggered()), standardActionData[type].slot); // clazy:exclude=old-style-connect
-                break;
-            case MenuAction: {
-                auto actionMenu = qobject_cast<KActionMenu *>(action);
-                connect(actionMenu->menu(), SIGNAL(triggered(QAction *)), standardActionData[type].slot); // clazy:exclude=old-style-connect
-                break;
-            }
-            case ToggleAction: {
-                connect(action, SIGNAL(triggered(bool)), standardActionData[type].slot); // clazy:exclude=old-style-connect
-                break;
-            }
-            case ActionAlternative:
-                Q_ASSERT(0);
-            }
-        }
-
-        if (type == ToggleWorkOffline) {
-            // inititalize the action state with information from config file
-            disconnect(action, SIGNAL(triggered(bool)), this, standardActionData[type].slot); // clazy:exclude=old-style-connect
-            action->setChecked(workOffline());
-            connect(action, SIGNAL(triggered(bool)), this, standardActionData[type].slot); // clazy:exclude=old-style-connect
-
-            // TODO: find a way to check for updates to the config file
-        }
-
-        Q_ASSERT(standardActionData[type].name);
-        Q_ASSERT(d->actionCollection);
-        d->actionCollection->addAction(QString::fromLatin1(standardActionData[type].name), action);
-        d->actions[type] = action;
-        if ((standardActionData[type].actionType == ActionWithAlternative) && (standardActionData[type + 1].actionType == ActionAlternative)) {
-            createAction(static_cast<Type>(type + 1)); // ensure that alternative actions are initialized when not created by createAllActions
-        }
-        d->updateActions();
-        return action;
+    if (standardActionData[type].icon) {
+        action->setIcon(standardActionDataIcon(standardActionData[type]));
+    }
+    if (d->actionCollection) {
+        d->actionCollection->setDefaultShortcut(action, QKeySequence(standardActionData[type].shortcut));
+    } else {
+        action->setShortcut(standardActionData[type].shortcut);
     }
 
-    void StandardActionManager::createAllActions()
-    {
-        for (uint i = 0; i < LastType; ++i) {
-            createAction(static_cast<Type>(i));
-        }
-    }
-
-    QAction *StandardActionManager::action(Type type) const
-    {
-        Q_ASSERT(type < LastType);
-        return d->actions[type];
-    }
-
-    void StandardActionManager::setActionText(Type type, const KLocalizedString &text)
-    {
-        Q_ASSERT(type < LastType);
-        d->pluralLabels.insert(type, text);
-        d->updateActions();
-    }
-
-    void StandardActionManager::interceptAction(Type type, bool intercept)
-    {
-        Q_ASSERT(type < LastType);
-
-        const QAction *action = d->actions[type];
-
-        if (!action) {
-            return;
-        }
-
-        if (intercept) {
-            disconnect(action, SIGNAL(triggered()), this, standardActionData[type].slot); // clazy:exclude=old-style-connect
-        } else {
+    if (standardActionData[type].slot) {
+        switch (standardActionData[type].actionType) {
+        case NormalAction:
+        case ActionWithAlternative:
             connect(action, SIGNAL(triggered()), standardActionData[type].slot); // clazy:exclude=old-style-connect
+            break;
+        case MenuAction: {
+            auto actionMenu = qobject_cast<KActionMenu *>(action);
+            connect(actionMenu->menu(), SIGNAL(triggered(QAction *)), standardActionData[type].slot); // clazy:exclude=old-style-connect
+            break;
+        }
+        case ToggleAction: {
+            connect(action, SIGNAL(triggered(bool)), standardActionData[type].slot); // clazy:exclude=old-style-connect
+            break;
+        }
+        case ActionAlternative:
+            Q_ASSERT(0);
         }
     }
 
-    Akonadi::Collection::List StandardActionManager::selectedCollections() const
-    {
-        Collection::List collections;
+    if (type == ToggleWorkOffline) {
+        // inititalize the action state with information from config file
+        disconnect(action, SIGNAL(triggered(bool)), this, standardActionData[type].slot); // clazy:exclude=old-style-connect
+        action->setChecked(workOffline());
+        connect(action, SIGNAL(triggered(bool)), this, standardActionData[type].slot); // clazy:exclude=old-style-connect
 
-        if (!d->collectionSelectionModel) {
-            return collections;
-        }
+        // TODO: find a way to check for updates to the config file
+    }
 
-        const QModelIndexList lst = safeSelectedRows(d->collectionSelectionModel);
-        for (const QModelIndex &index : lst) {
-            const auto collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
-            if (collection.isValid()) {
-                collections << collection;
-            }
-        }
+    Q_ASSERT(standardActionData[type].name);
+    Q_ASSERT(d->actionCollection);
+    d->actionCollection->addAction(QString::fromLatin1(standardActionData[type].name), action);
+    d->actions[type] = action;
+    if ((standardActionData[type].actionType == ActionWithAlternative) && (standardActionData[type + 1].actionType == ActionAlternative)) {
+        createAction(static_cast<Type>(type + 1)); // ensure that alternative actions are initialized when not created by createAllActions
+    }
+    d->updateActions();
+    return action;
+}
 
+void StandardActionManager::createAllActions()
+{
+    for (uint i = 0; i < LastType; ++i) {
+        createAction(static_cast<Type>(i));
+    }
+}
+
+QAction *StandardActionManager::action(Type type) const
+{
+    Q_ASSERT(type < LastType);
+    return d->actions[type];
+}
+
+void StandardActionManager::setActionText(Type type, const KLocalizedString &text)
+{
+    Q_ASSERT(type < LastType);
+    d->pluralLabels.insert(type, text);
+    d->updateActions();
+}
+
+void StandardActionManager::interceptAction(Type type, bool intercept)
+{
+    Q_ASSERT(type < LastType);
+
+    const QAction *action = d->actions[type];
+
+    if (!action) {
+        return;
+    }
+
+    if (intercept) {
+        disconnect(action, SIGNAL(triggered()), this, standardActionData[type].slot); // clazy:exclude=old-style-connect
+    } else {
+        connect(action, SIGNAL(triggered()), standardActionData[type].slot); // clazy:exclude=old-style-connect
+    }
+}
+
+Akonadi::Collection::List StandardActionManager::selectedCollections() const
+{
+    Collection::List collections;
+
+    if (!d->collectionSelectionModel) {
         return collections;
     }
 
-    Item::List StandardActionManager::selectedItems() const
-    {
-        Item::List items;
-
-        if (!d->itemSelectionModel) {
-            return items;
+    const QModelIndexList lst = safeSelectedRows(d->collectionSelectionModel);
+    for (const QModelIndex &index : lst) {
+        const auto collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+        if (collection.isValid()) {
+            collections << collection;
         }
-        const QModelIndexList lst = safeSelectedRows(d->itemSelectionModel);
-        for (const QModelIndex &index : lst) {
-            const Item item = index.data(EntityTreeModel::ItemRole).value<Item>();
-            if (item.isValid()) {
-                items << item;
-            }
-        }
+    }
 
+    return collections;
+}
+
+Item::List StandardActionManager::selectedItems() const
+{
+    Item::List items;
+
+    if (!d->itemSelectionModel) {
         return items;
     }
-
-    void StandardActionManager::setContextText(Type type, TextContext context, const QString &text)
-    {
-        d->setContextText(type, context, text);
+    const QModelIndexList lst = safeSelectedRows(d->itemSelectionModel);
+    for (const QModelIndex &index : lst) {
+        const Item item = index.data(EntityTreeModel::ItemRole).value<Item>();
+        if (item.isValid()) {
+            items << item;
+        }
     }
 
-    void StandardActionManager::setContextText(Type type, TextContext context, const KLocalizedString &text)
-    {
-        d->setContextText(type, context, text);
-    }
+    return items;
+}
 
-    void StandardActionManager::setMimeTypeFilter(const QStringList &mimeTypes)
-    {
-        d->mMimeTypeFilter = mimeTypes;
-    }
+void StandardActionManager::setContextText(Type type, TextContext context, const QString &text)
+{
+    d->setContextText(type, context, text);
+}
 
-    void StandardActionManager::setCapabilityFilter(const QStringList &capabilities)
-    {
-        d->mCapabilityFilter = capabilities;
-    }
+void StandardActionManager::setContextText(Type type, TextContext context, const KLocalizedString &text)
+{
+    d->setContextText(type, context, text);
+}
 
-    void StandardActionManager::setCollectionPropertiesPageNames(const QStringList &names)
-    {
-        d->mCollectionPropertiesPageNames = names;
-    }
+void StandardActionManager::setMimeTypeFilter(const QStringList &mimeTypes)
+{
+    d->mMimeTypeFilter = mimeTypes;
+}
 
-    void StandardActionManager::createActionFolderMenu(QMenu * menu, Type type)
-    {
-        d->createActionFolderMenu(menu, type);
-    }
+void StandardActionManager::setCapabilityFilter(const QStringList &capabilities)
+{
+    d->mCapabilityFilter = capabilities;
+}
 
-    void StandardActionManager::addRecentCollection(Akonadi::Collection::Id id) const
-    {
-        RecentCollectionAction::addRecentCollection(id);
-    }
+void StandardActionManager::setCollectionPropertiesPageNames(const QStringList &names)
+{
+    d->mCollectionPropertiesPageNames = names;
+}
+
+void StandardActionManager::createActionFolderMenu(QMenu *menu, Type type)
+{
+    d->createActionFolderMenu(menu, type);
+}
+
+void StandardActionManager::addRecentCollection(Akonadi::Collection::Id id) const
+{
+    RecentCollectionAction::addRecentCollection(id);
+}
 
 #include "moc_standardactionmanager.cpp"
