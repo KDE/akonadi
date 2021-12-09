@@ -100,7 +100,7 @@ set_package_properties(Boost PROPERTIES
     TYPE REQUIRED
 )
 
-set(AccountsQt5_MINIMUM_VERSION "1.15")
+set(AccountsQt5_MINIMUM_VERSION "1.16")
 find_package(AccountsQt5 ${AccountsQt5_MINIMUM_VERSION})
 set_package_properties(AccountsQt5 PROPERTIES
     DESCRIPTION "Qt bindings for the Accounts framework"
