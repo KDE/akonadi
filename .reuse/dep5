@@ -1,0 +1,8 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: akonadi
+Upstream-Contact: Montel Laurent <montel@kde.org>
+Source: https://invent.kde.org/pim/akonadi
+
+Files: autotests/widgets/unittestenv/* autotests/libs/unittestenv/* NEWS INSTALL AUTHORS Info.plist.template README.sqlite .kateconfig ExtraDesktop.sh 
+Copyright: none
+License: CC0-1.0
