@@ -20,12 +20,7 @@
 
 #include <QItemSelectionModel>
 #include <QPointer>
-#include <ki18n_version.h>
-#if KI18N_VERSION >= QT_VERSION_CHECK(5, 89, 0)
 #include <KLazyLocalizedString>
-#undef I18N_NOOP
-#define I18N_NOOP kli18n
-#endif
 
 using namespace Akonadi;
 
@@ -33,17 +28,13 @@ using namespace Akonadi;
 
 static const struct {
     const char *name;
-#if KI18N_VERSION < QT_VERSION_CHECK(5, 89, 0)
-    const char *label;
-#else
     const KLazyLocalizedString label;
-#endif
     const char *icon;
     int shortcut;
     const char *slot;
-} agentActionData[] = {{"akonadi_agentinstance_create", I18N_NOOP("&New Agent Instance..."), "folder-new", 0, SLOT(slotCreateAgentInstance())},
-                       {"akonadi_agentinstance_delete", I18N_NOOP("&Delete Agent Instance"), "edit-delete", 0, SLOT(slotDeleteAgentInstance())},
-                       {"akonadi_agentinstance_configure", I18N_NOOP("&Configure Agent Instance"), "configure", 0, SLOT(slotConfigureAgentInstance())}};
+} agentActionData[] = {{"akonadi_agentinstance_create", kli18n("&New Agent Instance..."), "folder-new", 0, SLOT(slotCreateAgentInstance())},
+                       {"akonadi_agentinstance_delete", kli18n("&Delete Agent Instance"), "edit-delete", 0, SLOT(slotDeleteAgentInstance())},
+                       {"akonadi_agentinstance_configure", kli18n("&Configure Agent Instance"), "configure", 0, SLOT(slotConfigureAgentInstance())}};
 static const int numAgentActionData = sizeof agentActionData / sizeof *agentActionData;
 
 static_assert(numAgentActionData == AgentActionManager::LastType, "agentActionData table does not match AgentActionManager types");
@@ -258,11 +249,7 @@ QAction *AgentActionManager::createAction(Type type)
     }
 
     auto action = new QAction(d->mParentWidget);
-#if KI18N_VERSION < QT_VERSION_CHECK(5, 89, 0)
-    action->setText(i18n(agentActionData[type].label));
-#else
     action->setText(agentActionData[type].label.toString());
-#endif
 
     if (agentActionData[type].icon) {
         action->setIcon(QIcon::fromTheme(QString::fromLatin1(agentActionData[type].icon)));

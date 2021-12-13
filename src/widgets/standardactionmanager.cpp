@@ -49,15 +49,7 @@
 #include <QRegularExpression>
 #include <QTimer>
 
-#include <ki18n_version.h>
-#if KI18N_VERSION >= QT_VERSION_CHECK(5, 89, 0)
 #include <KLazyLocalizedString>
-#undef I18N_NOOP
-#define I18N_NOOP kli18n
-#define I18N_NOOP_EMPTY KLazyLocalizedString()
-#else
-#define I18N_NOOP_EMPTY ""
-#endif
 
 using namespace Akonadi;
 
@@ -73,13 +65,8 @@ enum ActionType {
 
 struct StandardActionData { // NOLINT(clang-analyzer-optin.performance.Padding) FIXME
     const char *name;
-#if KI18N_VERSION < QT_VERSION_CHECK(5, 89, 0)
-    const char *label;
-    const char *iconLabel;
-#else
     const KLazyLocalizedString label;
     const KLazyLocalizedString iconLabel;
-#endif
     const char *icon;
     const char *altIcon;
     int shortcut;
@@ -88,186 +75,172 @@ struct StandardActionData { // NOLINT(clang-analyzer-optin.performance.Padding) 
 };
 
 static const StandardActionData standardActionData[] = {
-    {"akonadi_collection_create", I18N_NOOP("&New Folder..."), I18N_NOOP("New"), "folder-new", nullptr, 0, SLOT(slotCreateCollection()), NormalAction},
-    {"akonadi_collection_copy", I18N_NOOP_EMPTY, I18N_NOOP_EMPTY, "edit-copy", nullptr, 0, SLOT(slotCopyCollections()), NormalAction},
-    {"akonadi_collection_delete", I18N_NOOP("&Delete Folder"), I18N_NOOP("Delete"), "edit-delete", nullptr, 0, SLOT(slotDeleteCollection()), NormalAction},
+    {"akonadi_collection_create", kli18n("&New Folder..."), kli18n("New"), "folder-new", nullptr, 0, SLOT(slotCreateCollection()), NormalAction},
+    {"akonadi_collection_copy", KLazyLocalizedString(), KLazyLocalizedString(), "edit-copy", nullptr, 0, SLOT(slotCopyCollections()), NormalAction},
+    {"akonadi_collection_delete", kli18n("&Delete Folder"), kli18n("Delete"), "edit-delete", nullptr, 0, SLOT(slotDeleteCollection()), NormalAction},
     {"akonadi_collection_sync",
-     I18N_NOOP("&Synchronize Folder"),
-     I18N_NOOP("Synchronize"),
+     kli18n("&Synchronize Folder"),
+     kli18n("Synchronize"),
      "view-refresh",
      nullptr,
      Qt::Key_F5,
      SLOT(slotSynchronizeCollection()),
      NormalAction},
     {"akonadi_collection_properties",
-     I18N_NOOP("Folder &Properties"),
-     I18N_NOOP("Properties"),
+     kli18n("Folder &Properties"),
+     kli18n("Properties"),
      "configure",
      nullptr,
      0,
      SLOT(slotCollectionProperties()),
      NormalAction},
-    {"akonadi_item_copy", I18N_NOOP_EMPTY, I18N_NOOP_EMPTY, "edit-copy", nullptr, 0, SLOT(slotCopyItems()), NormalAction},
-    {"akonadi_paste", I18N_NOOP("&Paste"), I18N_NOOP("Paste"), "edit-paste", nullptr, Qt::CTRL | Qt::Key_V, SLOT(slotPaste()), NormalAction},
-    {"akonadi_item_delete", I18N_NOOP_EMPTY, I18N_NOOP_EMPTY, "edit-delete", nullptr, 0, SLOT(slotDeleteItems()), NormalAction},
+    {"akonadi_item_copy", KLazyLocalizedString(), KLazyLocalizedString(), "edit-copy", nullptr, 0, SLOT(slotCopyItems()), NormalAction},
+    {"akonadi_paste", kli18n("&Paste"), kli18n("Paste"), "edit-paste", nullptr, Qt::CTRL | Qt::Key_V, SLOT(slotPaste()), NormalAction},
+    {"akonadi_item_delete", KLazyLocalizedString(), KLazyLocalizedString(), "edit-delete", nullptr, 0, SLOT(slotDeleteItems()), NormalAction},
     {"akonadi_manage_local_subscriptions",
-     I18N_NOOP("Manage Local &Subscriptions..."),
-     I18N_NOOP("Manage Local Subscriptions"),
+     kli18n("Manage Local &Subscriptions..."),
+     kli18n("Manage Local Subscriptions"),
      "folder-bookmarks",
      nullptr,
      0,
      SLOT(slotLocalSubscription()),
      NormalAction},
     {"akonadi_collection_add_to_favorites",
-     I18N_NOOP("Add to Favorite Folders"),
-     I18N_NOOP("Add to Favorite"),
+     kli18n("Add to Favorite Folders"),
+     kli18n("Add to Favorite"),
      "bookmark-new",
      nullptr,
      0,
      SLOT(slotAddToFavorites()),
      NormalAction},
     {"akonadi_collection_remove_from_favorites",
-     I18N_NOOP("Remove from Favorite Folders"),
-     I18N_NOOP("Remove from Favorite"),
+     kli18n("Remove from Favorite Folders"),
+     kli18n("Remove from Favorite"),
      "edit-delete",
      nullptr,
      0,
      SLOT(slotRemoveFromFavorites()),
      NormalAction},
-    {"akonadi_collection_rename_favorite",
-     I18N_NOOP("Rename Favorite..."),
-     I18N_NOOP("Rename"),
-     "edit-rename",
-     nullptr,
-     0,
-     SLOT(slotRenameFavorite()),
-     NormalAction},
+    {"akonadi_collection_rename_favorite", kli18n("Rename Favorite..."), kli18n("Rename"), "edit-rename", nullptr, 0, SLOT(slotRenameFavorite()), NormalAction},
     {"akonadi_collection_copy_to_menu",
-     I18N_NOOP("Copy Folder To..."),
-     I18N_NOOP("Copy To"),
+     kli18n("Copy Folder To..."),
+     kli18n("Copy To"),
      "edit-copy",
      nullptr,
      0,
      SLOT(slotCopyCollectionTo(QAction *)),
      MenuAction},
-    {"akonadi_item_copy_to_menu", I18N_NOOP("Copy Item To..."), I18N_NOOP("Copy To"), "edit-copy", nullptr, 0, SLOT(slotCopyItemTo(QAction *)), MenuAction},
-    {"akonadi_item_move_to_menu", I18N_NOOP("Move Item To..."), I18N_NOOP("Move To"), "edit-move", "go-jump", 0, SLOT(slotMoveItemTo(QAction *)), MenuAction},
+    {"akonadi_item_copy_to_menu", kli18n("Copy Item To..."), kli18n("Copy To"), "edit-copy", nullptr, 0, SLOT(slotCopyItemTo(QAction *)), MenuAction},
+    {"akonadi_item_move_to_menu", kli18n("Move Item To..."), kli18n("Move To"), "edit-move", "go-jump", 0, SLOT(slotMoveItemTo(QAction *)), MenuAction},
     {"akonadi_collection_move_to_menu",
-     I18N_NOOP("Move Folder To..."),
-     I18N_NOOP("Move To"),
+     kli18n("Move Folder To..."),
+     kli18n("Move To"),
      "edit-move",
      "go-jump",
      0,
      SLOT(slotMoveCollectionTo(QAction *)),
      MenuAction},
-    {"akonadi_item_cut", I18N_NOOP("&Cut Item"), I18N_NOOP("Cut"), "edit-cut", nullptr, Qt::CTRL | Qt::Key_X, SLOT(slotCutItems()), NormalAction},
-    {"akonadi_collection_cut", I18N_NOOP("&Cut Folder"), I18N_NOOP("Cut"), "edit-cut", nullptr, Qt::CTRL | Qt::Key_X, SLOT(slotCutCollections()), NormalAction},
-    {"akonadi_resource_create", I18N_NOOP("Create Resource"), I18N_NOOP_EMPTY, "folder-new", nullptr, 0, SLOT(slotCreateResource()), NormalAction},
-    {"akonadi_resource_delete", I18N_NOOP("Delete Resource"), I18N_NOOP_EMPTY, "edit-delete", nullptr, 0, SLOT(slotDeleteResource()), NormalAction},
+    {"akonadi_item_cut", kli18n("&Cut Item"), kli18n("Cut"), "edit-cut", nullptr, Qt::CTRL | Qt::Key_X, SLOT(slotCutItems()), NormalAction},
+    {"akonadi_collection_cut", kli18n("&Cut Folder"), kli18n("Cut"), "edit-cut", nullptr, Qt::CTRL | Qt::Key_X, SLOT(slotCutCollections()), NormalAction},
+    {"akonadi_resource_create", kli18n("Create Resource"), KLazyLocalizedString(), "folder-new", nullptr, 0, SLOT(slotCreateResource()), NormalAction},
+    {"akonadi_resource_delete", kli18n("Delete Resource"), KLazyLocalizedString(), "edit-delete", nullptr, 0, SLOT(slotDeleteResource()), NormalAction},
     {"akonadi_resource_properties",
-     I18N_NOOP("&Resource Properties"),
-     I18N_NOOP("Properties"),
+     kli18n("&Resource Properties"),
+     kli18n("Properties"),
      "configure",
      nullptr,
      0,
      SLOT(slotResourceProperties()),
      NormalAction},
     {"akonadi_resource_synchronize",
-     I18N_NOOP("Synchronize Resource"),
-     I18N_NOOP("Synchronize"),
+     kli18n("Synchronize Resource"),
+     kli18n("Synchronize"),
      "view-refresh",
      nullptr,
      0,
      SLOT(slotSynchronizeResource()),
      NormalAction},
-    {"akonadi_work_offline", I18N_NOOP("Work Offline"), I18N_NOOP_EMPTY, "user-offline", nullptr, 0, SLOT(slotToggleWorkOffline(bool)), ToggleAction},
-    {"akonadi_collection_copy_to_dialog",
-     I18N_NOOP("Copy Folder To..."),
-     I18N_NOOP("Copy To"),
-     "edit-copy",
-     nullptr,
-     0,
-     SLOT(slotCopyCollectionTo()),
-     NormalAction},
+    {"akonadi_work_offline", kli18n("Work Offline"), KLazyLocalizedString(), "user-offline", nullptr, 0, SLOT(slotToggleWorkOffline(bool)), ToggleAction},
+    {"akonadi_collection_copy_to_dialog", kli18n("Copy Folder To..."), kli18n("Copy To"), "edit-copy", nullptr, 0, SLOT(slotCopyCollectionTo()), NormalAction},
     {"akonadi_collection_move_to_dialog",
-     I18N_NOOP("Move Folder To..."),
-     I18N_NOOP("Move To"),
+     kli18n("Move Folder To..."),
+     kli18n("Move To"),
      "edit-move",
      "go-jump",
      0,
      SLOT(slotMoveCollectionTo()),
      NormalAction},
-    {"akonadi_item_copy_to_dialog", I18N_NOOP("Copy Item To..."), I18N_NOOP("Copy To"), "edit-copy", nullptr, 0, SLOT(slotCopyItemTo()), NormalAction},
-    {"akonadi_item_move_to_dialog", I18N_NOOP("Move Item To..."), I18N_NOOP("Move To"), "edit-move", "go-jump", 0, SLOT(slotMoveItemTo()), NormalAction},
+    {"akonadi_item_copy_to_dialog", kli18n("Copy Item To..."), kli18n("Copy To"), "edit-copy", nullptr, 0, SLOT(slotCopyItemTo()), NormalAction},
+    {"akonadi_item_move_to_dialog", kli18n("Move Item To..."), kli18n("Move To"), "edit-move", "go-jump", 0, SLOT(slotMoveItemTo()), NormalAction},
     {"akonadi_collection_sync_recursive",
-     I18N_NOOP("&Synchronize Folder Recursively"),
-     I18N_NOOP("Synchronize Recursively"),
+     kli18n("&Synchronize Folder Recursively"),
+     kli18n("Synchronize Recursively"),
      "view-refresh",
      nullptr,
      Qt::CTRL | Qt::Key_F5,
      SLOT(slotSynchronizeCollectionRecursive()),
      NormalAction},
     {"akonadi_move_collection_to_trash",
-     I18N_NOOP("&Move Folder To Trash"),
-     I18N_NOOP("Move Folder To Trash"),
+     kli18n("&Move Folder To Trash"),
+     kli18n("Move Folder To Trash"),
      "edit-delete",
      nullptr,
      0,
      SLOT(slotMoveCollectionToTrash()),
      NormalAction},
     {"akonadi_move_item_to_trash",
-     I18N_NOOP("&Move Item To Trash"),
-     I18N_NOOP("Move Item To Trash"),
+     kli18n("&Move Item To Trash"),
+     kli18n("Move Item To Trash"),
      "edit-delete",
      nullptr,
      0,
      SLOT(slotMoveItemToTrash()),
      NormalAction},
     {"akonadi_restore_collection_from_trash",
-     I18N_NOOP("&Restore Folder From Trash"),
-     I18N_NOOP("Restore Folder From Trash"),
+     kli18n("&Restore Folder From Trash"),
+     kli18n("Restore Folder From Trash"),
      "view-refresh",
      nullptr,
      0,
      SLOT(slotRestoreCollectionFromTrash()),
      NormalAction},
     {"akonadi_restore_item_from_trash",
-     I18N_NOOP("&Restore Item From Trash"),
-     I18N_NOOP("Restore Item From Trash"),
+     kli18n("&Restore Item From Trash"),
+     kli18n("Restore Item From Trash"),
      "view-refresh",
      nullptr,
      0,
      SLOT(slotRestoreItemFromTrash()),
      NormalAction},
     {"akonadi_collection_trash_restore",
-     I18N_NOOP("&Restore Folder From Trash"),
-     I18N_NOOP("Restore Folder From Trash"),
+     kli18n("&Restore Folder From Trash"),
+     kli18n("Restore Folder From Trash"),
      "edit-delete",
      nullptr,
      0,
      SLOT(slotTrashRestoreCollection()),
      ActionWithAlternative},
-    {nullptr, I18N_NOOP("&Restore Collection From Trash"), I18N_NOOP("Restore Collection From Trash"), "view-refresh", nullptr, 0, nullptr, ActionAlternative},
+    {nullptr, kli18n("&Restore Collection From Trash"), kli18n("Restore Collection From Trash"), "view-refresh", nullptr, 0, nullptr, ActionAlternative},
     {"akonadi_item_trash_restore",
-     I18N_NOOP("&Restore Item From Trash"),
-     I18N_NOOP("Restore Item From Trash"),
+     kli18n("&Restore Item From Trash"),
+     kli18n("Restore Item From Trash"),
      "edit-delete",
      nullptr,
      0,
      SLOT(slotTrashRestoreItem()),
      ActionWithAlternative},
-    {nullptr, I18N_NOOP("&Restore Item From Trash"), I18N_NOOP("Restore Item From Trash"), "view-refresh", nullptr, 0, nullptr, ActionAlternative},
+    {nullptr, kli18n("&Restore Item From Trash"), kli18n("Restore Item From Trash"), "view-refresh", nullptr, 0, nullptr, ActionAlternative},
     {"akonadi_collection_sync_favorite_folders",
-     I18N_NOOP("&Synchronize Favorite Folders"),
-     I18N_NOOP("Synchronize Favorite Folders"),
+     kli18n("&Synchronize Favorite Folders"),
+     kli18n("Synchronize Favorite Folders"),
      "view-refresh",
      nullptr,
      Qt::CTRL | Qt::SHIFT | Qt::Key_L,
      SLOT(slotSynchronizeFavoriteCollections()),
      NormalAction},
     {"akonadi_resource_synchronize_collectiontree",
-     I18N_NOOP("Synchronize Folder Tree"),
-     I18N_NOOP("Synchronize"),
+     kli18n("Synchronize Folder Tree"),
+     kli18n("Synchronize"),
      "view-refresh",
      nullptr,
      0,
@@ -503,34 +476,19 @@ public:
          * The following simply changes the standardActionData
          */
         if ((standardActionData[type].actionType == ActionWithAlternative) || (standardActionData[type].actionType == ActionAlternative)) {
-#if KI18N_VERSION < QT_VERSION_CHECK(5, 89, 0)
-            actions[type]->setText(i18n(standardActionData[type].label));
-#else
             actions[type]->setText(standardActionData[type].label.toString());
-#endif
             actions[type]->setIcon(standardActionDataIcon(standardActionData[type]));
 
             if (pluralLabels.contains(type) && !pluralLabels.value(type).isEmpty()) {
                 actions[type]->setText(pluralLabels.value(type).subs(1).toString());
-#if KI18N_VERSION < QT_VERSION_CHECK(5, 89, 0)
-            } else if (standardActionData[type].label) {
-                actions[type]->setText(i18n(standardActionData[type].label));
-#else
             } else if (!standardActionData[type].label.isEmpty()) {
                 actions[type]->setText(standardActionData[type].label.toString());
-#endif
             }
             if (pluralIconLabels.contains(type) && !pluralIconLabels.value(type).isEmpty()) {
                 actions[type]->setIconText(pluralIconLabels.value(type).subs(1).toString());
-#if KI18N_VERSION < QT_VERSION_CHECK(5, 89, 0)
-            } else if (standardActionData[type].iconLabel) {
-                actions[type]->setIconText(i18n(standardActionData[type].iconLabel));
-            }
-#else
             } else if (!standardActionData[type].iconLabel.isEmpty()) {
                 actions[type]->setIconText(standardActionData[type].iconLabel.toString());
             }
-#endif
             if (standardActionData[type].icon) {
                 actions[type]->setIcon(standardActionDataIcon(standardActionData[type]));
             }
@@ -1852,27 +1810,15 @@ QAction *StandardActionManager::createAction(Type type)
     if (d->pluralLabels.contains(type) && !d->pluralLabels.value(type).isEmpty()) {
         action->setText(d->pluralLabels.value(type).subs(1).toString());
     }
-#if KI18N_VERSION < QT_VERSION_CHECK(5, 89, 0)
-    else if (standardActionData[type].label) {
-        action->setText(i18n(standardActionData[type].label));
-    }
-#else
     else if (!standardActionData[type].label.isEmpty()) {
         action->setText(standardActionData[type].label.toString());
     }
-#endif
     if (d->pluralIconLabels.contains(type) && !d->pluralIconLabels.value(type).isEmpty()) {
         action->setIconText(d->pluralIconLabels.value(type).subs(1).toString());
     }
-#if KI18N_VERSION < QT_VERSION_CHECK(5, 89, 0)
-    else if (standardActionData[type].iconLabel) {
-        action->setIconText(i18n(standardActionData[type].iconLabel));
-    }
-#else
     else if (!standardActionData[type].iconLabel.isEmpty()) {
         action->setIconText(standardActionData[type].iconLabel.toString());
     }
-#endif
 
     if (standardActionData[type].icon) {
         action->setIcon(standardActionDataIcon(standardActionData[type]));
