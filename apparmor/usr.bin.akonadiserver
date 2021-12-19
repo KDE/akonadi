@@ -6,7 +6,7 @@ abi <abi/3.0>,
 
 @{xdg_config_home}=@{HOME}/.config
 
-@{postgresqlpath} = /usr/ /usr/lib/postgresql/*/ /usr/lib/postgresql*[0-9]/ /opt/pgsql*/
+@{postgresqlpath} = /usr/ /usr/lib{,64}/postgresql/*/ /usr/lib{,64}/postgresql*[0-9]/ /opt/pgsql*/
 
 /usr/bin/akonadiserver {
   #include <abstractions/base>
