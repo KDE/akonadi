@@ -10,7 +10,7 @@ endif()
 configure_file(akonaditests_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonaditests_export.h")
 
 # base install include dir
-set(AkonadiCore_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiCore")
+set(AkonadiCore_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR_KF}/AkonadiCore")
 
 set(akonadicore_base_SRCS
     agentconfigurationbase.cpp
@@ -434,10 +434,10 @@ target_link_libraries(KF5AkonadiCore
 PUBLIC
     KF5::CoreAddons # for KJob
     KF5::ItemModels
-    Qt::Gui # for QColor
+    Qt${QT_MAJOR_VERSION}::Gui # for QColor
 PRIVATE
-    Qt::Network
-    Qt::Widgets
+    Qt${QT_MAJOR_VERSION}::Network
+    Qt${QT_MAJOR_VERSION}::Widgets
     KF5::AkonadiPrivate
     KF5::I18n
     KF5::IconThemes
@@ -493,7 +493,7 @@ install(FILES
 
 install( FILES
     kcfg2dbus.xsl
-    DESTINATION ${KDE_INSTALL_DATADIR_KF5}/akonadi
+    DESTINATION ${KDE_INSTALL_DATADIR_KF}/akonadi
 )
 
 

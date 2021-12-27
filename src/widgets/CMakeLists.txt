@@ -11,7 +11,7 @@ endif()
 configure_file(akonadiwidgetstests_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadiwidgetstests_export.h")
 
 # base install include dir
-set(AkonadiWidgets_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiWidgets")
+set(AkonadiWidgets_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR_KF}/AkonadiWidgets")
 
 add_library(KF5AkonadiWidgets)
 add_library(KF5::AkonadiWidgets ALIAS KF5AkonadiWidgets)
@@ -163,14 +163,14 @@ target_link_libraries(KF5AkonadiWidgets
 PUBLIC
     KF5::AkonadiCore
     KF5::ItemModels
-    Qt::Widgets
+    Qt${QT_MAJOR_VERSION}::Widgets
     KF5::ConfigWidgets
 PRIVATE
     KF5::I18n
     KF5::IconThemes
     KF5::XmlGui
     KF5::ItemViews
-    Qt::Sql
+    Qt${QT_MAJOR_VERSION}::Sql
     KF5::AkonadiPrivate
     KF5::WindowSystem
 )

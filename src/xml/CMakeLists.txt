@@ -23,7 +23,7 @@ set(akonadixml_SRCS
 )
 
 # base install include dir
-set(AkonadiXml_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiXml")
+set(AkonadiXml_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR_KF}/AkonadiXml")
 
 ecm_generate_headers(AkonadiXml_CC_HEADERS
     HEADER_NAMES
@@ -45,7 +45,7 @@ set_target_properties(akonadi2xml PROPERTIES MACOSX_BUNDLE FALSE)
 target_link_libraries(akonadi2xml
     KF5::AkonadiXml
     KF5::I18n
-    Qt::Widgets # for QApplication
+    Qt${QT_MAJOR_VERSION}::Widgets # for QApplication
 )
 
 add_library(KF5AkonadiXml ${akonadixml_SRCS})
@@ -60,7 +60,7 @@ target_include_directories(KF5AkonadiXml PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOU
 target_link_libraries(KF5AkonadiXml
 PUBLIC
     KF5::AkonadiCore
-    Qt::Xml
+    Qt${QT_MAJOR_VERSION}::Xml
 PRIVATE
     KF5::I18n
     ${LIBXML2_LIBRARIES}
@@ -105,5 +105,5 @@ install(FILES
 
 install(FILES
     akonadi-xml.xsd
-    DESTINATION ${KDE_INSTALL_DATADIR_KF5}/akonadi/
+    DESTINATION ${KDE_INSTALL_DATADIR_KF}/akonadi/
 )

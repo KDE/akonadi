@@ -5,8 +5,8 @@ PRIVATE
     KF5::AkonadiWidgets
     KF5::AkonadiPrivate
     KF5::I18n
-    Qt::Sql
-    Qt::Widgets
+    Qt${QT_MAJOR_VERSION}::Sql
+    Qt${QT_MAJOR_VERSION}::Widgets
 )
 
 install(TARGETS

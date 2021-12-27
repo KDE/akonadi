@@ -23,8 +23,8 @@ function(add_akonadi_isolated_test)
         add_executable(${_name} ${_test} ${CONFIG_ADDITIONAL_SOURCES})
         ecm_mark_as_test(${_name})
         target_link_libraries(${_name}
-                              Qt::Test Qt::Gui Qt::Widgets Qt::Network KF5::KIOCore
-                              KF5::AkonadiCore KF5::AkonadiPrivate Qt::DBus
+                              Qt${QT_MAJOR_VERSION}::Test Qt${QT_MAJOR_VERSION}::Gui Qt${QT_MAJOR_VERSION}::Widgets Qt${QT_MAJOR_VERSION}::Network KF5::KIOCore
+                              KF5::AkonadiCore KF5::AkonadiPrivate Qt${QT_MAJOR_VERSION}::DBus
                               ${CONFIG_LINK_LIBRARIES}
         )
 

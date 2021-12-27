@@ -11,4 +11,4 @@ set(icons
     sc-apps-akonadi.svgz
 )
 
-ecm_install_icons(ICONS ${icons} DESTINATION ${ICON_INSTALL_DIR})
+ecm_install_icons(ICONS ${icons} DESTINATION ${KDE_INSTALL_ICONDIR})

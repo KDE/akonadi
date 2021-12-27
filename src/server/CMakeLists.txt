@@ -272,11 +272,11 @@ endif()
 target_link_libraries(libakonadiserver
     akonadi_shared
     KF5AkonadiPrivate
-    Qt::Core
-    Qt::Network
-    Qt::Sql
-    Qt::DBus
-    Qt::Xml
+    Qt${QT_MAJOR_VERSION}::Core
+    Qt${QT_MAJOR_VERSION}::Network
+    Qt${QT_MAJOR_VERSION}::Sql
+    Qt${QT_MAJOR_VERSION}::DBus
+    Qt${QT_MAJOR_VERSION}::Xml
 )
 
 add_executable(akonadiserver ${akonadiserver_SRCS})
@@ -299,7 +299,7 @@ install(FILES
 
 install(FILES
   search/abstractsearchplugin.h
-  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/akonadi
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF}/akonadi
 )
 
 ## DBus XML files

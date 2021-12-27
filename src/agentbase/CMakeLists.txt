@@ -1,5 +1,5 @@
 # base install include dir
-set(AkonadiAgentBase_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiAgentBase")
+set(AkonadiAgentBase_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR_KF}/AkonadiAgentBase")
 
 add_library(KF5AkonadiAgentBase)
 add_library(KF5::AkonadiAgentBase ALIAS KF5AkonadiAgentBase)
@@ -80,8 +80,8 @@ target_include_directories(KF5AkonadiAgentBase INTERFACE "$<INSTALL_INTERFACE:${
 
 target_link_libraries(KF5AkonadiAgentBase
 PUBLIC
-    Qt::DBus
-    Qt::Widgets # for QApplication
+    Qt${QT_MAJOR_VERSION}::DBus
+    Qt${QT_MAJOR_VERSION}::Widgets # for QApplication
     KF5::AkonadiCore
     KF5::ConfigCore
     KF5::ConfigGui # for KConfigSkeleton
@@ -89,7 +89,7 @@ PRIVATE
     KF5::AkonadiPrivate
     KF5::AkonadiWidgets
     KF5::I18n
-    Qt::Network
+    Qt${QT_MAJOR_VERSION}::Network
     akonadi_shared
 )
 

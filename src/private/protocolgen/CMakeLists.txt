@@ -17,5 +17,5 @@ target_sources(protocolgen PRIVATE
 
 set_target_properties(protocolgen PROPERTIES MACOSX_BUNDLE FALSE)
 target_link_libraries(protocolgen
-    Qt::Core
+    Qt${QT_MAJOR_VERSION}::Core
 )

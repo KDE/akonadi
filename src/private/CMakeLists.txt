@@ -43,8 +43,8 @@ set(akonadiprivate_SRCS
 
 set(akonadiprivate_LIBS
 PUBLIC
-    Qt::Core
-    Qt::DBus
+    Qt${QT_MAJOR_VERSION}::Core
+    Qt${QT_MAJOR_VERSION}::DBus
 PRIVATE
     ${LIBLZMA_LIBRARIES}
 )
@@ -52,7 +52,7 @@ if (WIN32)
     set(akonadiprivate_LIBS
     ${akonadiprivate_LIBS}
     PRIVATE
-        Qt::Network
+        Qt${QT_MAJOR_VERSION}::Network
     )
 endif()
 
@@ -65,7 +65,7 @@ ecm_qt_declare_logging_category(akonadiprivate_SRCS HEADER akonadiprivate_debug.
 macro(update_include_directories _target)
     target_include_directories(${_target} PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/private;${Akonadi_BINARY_DIR}/src/private;${Akonadi_BINARY_DIR}/src>")
     target_include_directories(${_target} PRIVATE "${Akonadi_SOURCE_DIR}/src/shared")
-    target_include_directories(${_target} PUBLIC "$<BUILD_INTERFACE:${Qt5Core_INCLUDE_DIRS};${Qt5DBus_INCLUDE_DIRS}>")
+    target_include_directories(${_target} PUBLIC "$<BUILD_INTERFACE:${Qt${QT_MAJOR_VERSION}Core_INCLUDE_DIRS};${Qt${QT_MAJOR_VERSION}DBus_INCLUDE_DIRS}>")
 endmacro()
 
 if (WIN32)
@@ -120,7 +120,7 @@ install(FILES
     scope_p.h
     tristate_p.h
     compressionstream_p.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/akonadi/private
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF}/akonadi/private
 )
 
 

@@ -57,13 +57,13 @@ ecm_setup_version(PROJECT
     SOVERSION 5)
 
 # Find packages
-find_package(Qt5Core ${QT_REQUIRED_VERSION} REQUIRED COMPONENTS Private)
-find_package(Qt5Sql ${QT_REQUIRED_VERSION} REQUIRED COMPONENTS Private)
-find_package(Qt5DBus ${QT_REQUIRED_VERSION} REQUIRED)
-find_package(Qt5Network ${QT_REQUIRED_VERSION} REQUIRED)
-find_package(Qt5Test ${QT_REQUIRED_VERSION} REQUIRED)
-find_package(Qt5Widgets ${QT_REQUIRED_VERSION} REQUIRED)
-find_package(Qt5Xml ${QT_REQUIRED_VERSION} REQUIRED)
+find_package(Qt${QT_MAJOR_VERSION}Core ${QT_REQUIRED_VERSION} REQUIRED COMPONENTS Private)
+find_package(Qt${QT_MAJOR_VERSION}Sql ${QT_REQUIRED_VERSION} REQUIRED COMPONENTS Private)
+find_package(Qt${QT_MAJOR_VERSION}DBus ${QT_REQUIRED_VERSION} REQUIRED)
+find_package(Qt${QT_MAJOR_VERSION}Network ${QT_REQUIRED_VERSION} REQUIRED)
+find_package(Qt${QT_MAJOR_VERSION}Test ${QT_REQUIRED_VERSION} REQUIRED)
+find_package(Qt${QT_MAJOR_VERSION}Widgets ${QT_REQUIRED_VERSION} REQUIRED)
+find_package(Qt${QT_MAJOR_VERSION}Xml ${QT_REQUIRED_VERSION} REQUIRED)
 
 find_package(KF5Config ${KF5_MIN_VERSION} CONFIG REQUIRED)
 find_package(KF5ConfigWidgets ${KF5_MIN_VERSION} CONFIG REQUIRED)
@@ -77,7 +77,7 @@ find_package(KF5WidgetsAddons ${KF5_MIN_VERSION} CONFIG REQUIRED)
 find_package(KF5WindowSystem ${KF5_MIN_VERSION} CONFIG REQUIRED)
 find_package(KF5XmlGui ${KF5_MIN_VERSION} CONFIG REQUIRED)
 find_package(KF5Crash ${KF5_MIN_VERSION} CONFIG REQUIRED)
-find_package(Qt5Designer NO_MODULE)
+find_package(Qt${QT_MAJOR_VERSION}Designer NO_MODULE)
 set_package_properties(Qt5Designer PROPERTIES
    PURPOSE "Required to build the Qt Designer plugins"
    TYPE OPTIONAL
@@ -85,6 +85,9 @@ set_package_properties(Qt5Designer PROPERTIES
 
 option(BUILD_DESIGNERPLUGIN "Build plugin for Qt Designer" ON)
 add_feature_info(DESIGNERPLUGIN ${BUILD_DESIGNERPLUGIN} "Build plugin for Qt Designer")
+if (QT_MAJOR_VERSION STREQUAL "6")
+    find_package(Qt6Core5Compat)
+endif()
 
 set(AccountsQt5_MINIMUM_VERSION "1.16")
 find_package(AccountsQt5 ${AccountsQt5_MINIMUM_VERSION})
@@ -128,10 +131,10 @@ ecm_setup_qtplugin_macro_names(
 
 # Make sure the KF5Akonadi_DATA_DIR is absolute before passing it to KF5AkonadiConfig.cmake.in
 # otherwise build fails either on OSX CI, or for normal users
-if (IS_ABSOLUTE "${KDE_INSTALL_DATADIR_KF5}")
-    set(KF5Akonadi_DATA_DIR "${KDE_INSTALL_DATADIR_KF5}/akonadi")
+if (IS_ABSOLUTE "${KDE_INSTALL_DATADIR_KF}")
+    set(KF5Akonadi_DATA_DIR "${KDE_INSTALL_DATADIR_KF}/akonadi")
 else()
-    set(KF5Akonadi_DATA_DIR "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_DATADIR_KF5}/akonadi")
+    set(KF5Akonadi_DATA_DIR "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_DATADIR_KF}/akonadi")
 endif()
 
 check_symbol_exists(malloc_trim "malloc.h" HAVE_MALLOC_TRIM)
@@ -225,10 +228,10 @@ else()
     set(AKONADI_DBUS_INTERFACES_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/${DBUS_INTERFACES_INSTALL_DIR}")
 endif()
 
-if (IS_ABSOLUTE "${KDE_INSTALL_INCLUDEDIR_KF5}")
-    set(AKONADI_INCLUDE_DIR "${KDE_INSTALL_INCLUDEDIR_KF5}")
+if (IS_ABSOLUTE "${KDE_INSTALL_INCLUDEDIR_KF}")
+    set(AKONADI_INCLUDE_DIR "${KDE_INSTALL_INCLUDEDIR_KF}")
 else()
-    set(AKONADI_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_INCLUDEDIR_KF5}")
+    set(AKONADI_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_INCLUDEDIR_KF}")
 endif()
 
 ############### Build Options ###############
@@ -376,7 +379,7 @@ ecm_qt_install_logging_categories(
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadi_version.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5} COMPONENT Devel
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF} COMPONENT Devel
 )
 
 kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
