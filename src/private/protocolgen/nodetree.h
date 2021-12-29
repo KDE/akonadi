@@ -72,7 +72,11 @@ public:
     QString parentClassName() const;
     QVector<PropertyNode const *> properties() const;
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     static ClassType elementNameToType(const QStringRef &name);
+#else
+    static ClassType elementNameToType(QStringView name);
+#endif
 
 private:
     QString mName;
@@ -117,9 +121,11 @@ public:
 
     QString name() const;
     EnumType enumType() const;
-
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     static EnumType elementNameToType(const QStringRef &name);
-
+#else
+    static EnumType elementNameToType(QStringView name);
+#endif
 private:
     QString mName;
     EnumType mEnumType;

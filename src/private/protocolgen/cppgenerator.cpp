@@ -443,7 +443,13 @@ void CppGenerator::writeImplSerializer(PropertyNode const *node, const char *str
             --it;
             const QString mVar = it.key();
             mImpl << "(obj."
-                  << "m" << mVar[0].toUpper() << mVar.midRef(1) << " & " << it.value() << ")";
+                  << "m" << mVar[0].toUpper()
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+                  << mVar.midRef(1)
+#else
+                  << QStringView(mVar).mid(1)
+#endif
+                  << " & " << it.value() << ")";
             if (it == deps.cbegin()) {
                 break;
             } else {
@@ -536,10 +542,21 @@ void CppGenerator::writeImplClass(ClassNode const *node)
                   << " &val)\n"
                      "{\n";
             if (!setter->append.isEmpty()) {
-                mImpl << "    m" << setter->append[0].toUpper() << setter->append.midRef(1) << " << val;\n";
+                mImpl << "    m" << setter->append[0].toUpper()
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+                      << setter->append.midRef(1)
+#else
+                      << QStringView(setter->append).mid(1)
+#endif
+                      << " << val;\n";
             }
             if (!setter->remove.isEmpty()) {
-                const QString mVar = QLatin1String("m") + setter->remove[0].toUpper() + setter->remove.midRef(1);
+                const QString mVar = QLatin1String("m") + setter->remove[0].toUpper()
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+                    + setter->remove.midRef(1);
+#else
+                    + QStringView(setter->remove).mid(1);
+#endif
                 mImpl << "    auto it = std::find(" << mVar << ".begin(), " << mVar
                       << ".end(), val);\n"
                          "    if (it != "
