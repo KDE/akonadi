@@ -56,8 +56,11 @@ std::optional<DBus::AgentService> DBus::parseAgentServiceName(const QString &ser
     if (!serviceName.startsWith(AKONADI_DBUS_SERVER_SERVICE ".")) {
         return std::nullopt;
     }
-
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     const auto parts = serviceName.midRef(QStringView(AKONADI_DBUS_SERVER_SERVICE ".").length()).split(QLatin1Char('.'));
+#else
+    const auto parts = QStringView(serviceName).mid(QStringView(AKONADI_DBUS_SERVER_SERVICE ".").length()).split(QLatin1Char('.'));
+#endif
     if ((parts.size() == 2 && !Akonadi::Instance::hasIdentifier())
         || (parts.size() == 3 && Akonadi::Instance::hasIdentifier() && Akonadi::Instance::identifier() == parts.at(2))) {
         // switch on parts.at( 0 )
@@ -117,7 +120,11 @@ std::optional<QString> DBus::parseInstanceIdentifier(const QString &serviceName)
     }
 
     if (serviceName.startsWith(QStringView{AKONADI_DBUS_SERVER_SERVICE})) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         const auto split = serviceName.splitRef(QLatin1Char('.'));
+#else
+        const auto split = QStringView(serviceName).split(QLatin1Char('.'));
+#endif
         if (split.size() <= 3) {
             return std::nullopt;
         }

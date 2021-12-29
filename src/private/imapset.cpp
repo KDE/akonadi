@@ -160,13 +160,13 @@ ImapSet::ImapSet(Id id)
 {
     add(QVector<Id>() << id);
 }
-
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 ImapSet::ImapSet(const QVector<qint64> &ids)
     : d(new ImapSetPrivate)
 {
     add(ids);
 }
-
+#endif
 ImapSet::ImapSet(const QList<qint64> &ids)
     : d(new ImapSetPrivate)
 {
@@ -208,12 +208,12 @@ bool ImapSet::operator==(const ImapSet &other) const
 {
     return d->intervals == other.d->intervals;
 }
-
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void ImapSet::add(const QVector<Id> &values)
 {
     d->add(values);
 }
-
+#endif
 void ImapSet::add(const QList<Id> &values)
 {
     d->add(values);
