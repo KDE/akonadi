@@ -10,6 +10,7 @@
 #include "job_p.h"
 
 #include <QSet>
+#include <QVariant>
 
 using namespace Akonadi;
 

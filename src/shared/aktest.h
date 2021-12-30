@@ -10,7 +10,7 @@
 #include "akapplication.h"
 #include <private/instance_p.h>
 
-#include <KCrash/KCrash>
+#include <KCrash>
 
 #include <QTest>
 
