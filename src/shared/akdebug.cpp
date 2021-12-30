@@ -19,7 +19,7 @@
 #include <QLoggingCategory>
 #include <QMutex>
 
-#include <KCrash/KCrash>
+#include <KCrash>
 
 #include <cassert>
 
@@ -195,7 +195,8 @@ void akMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
 
 void akCategoryFilter(QLoggingCategory *category)
 {
-    if ((qstrcmp(category->categoryName(), sInstance()->loggingCategory) == 0) || (qstrcmp(category->categoryName(), "org.kde.pim.akonadiprivate") == 0)) {
+    if ((qstrcmp(category->categoryName(), sInstance()->loggingCategory.constData()) == 0)
+        || (qstrcmp(category->categoryName(), "org.kde.pim.akonadiprivate") == 0)) {
         category->setEnabled(QtDebugMsg, true);
         category->setEnabled(QtInfoMsg, true);
         category->setEnabled(QtWarningMsg, true);
