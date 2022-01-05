@@ -435,7 +435,6 @@ PUBLIC
     KF5::CoreAddons # for KJob
     KF5::ItemModels
     Qt::Gui # for QColor
-    Boost::boost
 PRIVATE
     Qt::Network
     Qt::Widgets

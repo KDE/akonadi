@@ -19,11 +19,9 @@
 #include <QMimeDatabase>
 #include <QMimeType>
 #include <QRegularExpression>
+#include <QStack>
 #include <QString>
 #include <QStringList>
-
-#include <boost/graph/adjacency_list.hpp>
-#include <boost/graph/topological_sort.hpp>
 
 // temporary
 #include "pluginloader_p.h"
@@ -294,6 +292,35 @@ public:
     }
 
 private:
+    // Returns plugin matches for a mimetype in best->worst order, in terms of mimetype specificity
+    void findSuitablePlugins(QMimeType mimeType, QSet<QMimeType> &checkedMimeTypes, QVector<int> &matchingIndexes, const QMimeDatabase &mimeDb) const
+    {
+        // Avoid adding duplicates to our matchingIndexes
+        if (checkedMimeTypes.contains(mimeType)) {
+            return;
+        }
+
+        checkedMimeTypes.insert(mimeType);
+
+        // Check each of the mimetypes we have plugins for to find a match
+        for (int i = 0, end = allMimeTypes.size(); i < end; ++i) {
+            const QMimeType pluginMimeType = mimeDb.mimeTypeForName(allMimeTypes[i].type()); // Convert from Akonadi::MimeTypeEntry
+            if (!pluginMimeType.isValid() || pluginMimeType != mimeType) {
+                continue;
+            }
+
+            matchingIndexes.append(i); // We found a match! This mimetype is supported by one of our plugins
+        }
+
+        auto parentTypes = mimeType.parentMimeTypes();
+
+        // Recursively move up the mimetype tree (checking less specific mimetypes)
+        for (const auto &parent : parentTypes) {
+            QMimeType parentType = mimeDb.mimeTypeForName(parent);
+            findSuitablePlugins(parentType, checkedMimeTypes, matchingIndexes, mimeDb);
+        }
+    };
+
     QObject *findBestMatchImpl(const QString &type, const QVector<int> &metaTypeIds, int &chosen) const
     {
         const QMimeDatabase mimeDb;
@@ -303,53 +330,23 @@ private:
             return mDefaultPlugin.plugin();
         }
 
-        // step 1: find all plugins that match at all
+        QSet<QMimeType> checkedMimeTypes;
         QVector<int> matchingIndexes;
-        for (int i = 0, end = allMimeTypes.size(); i < end; ++i) {
-            if (mimeType.inherits(allMimeTypes[i].type())) {
-                matchingIndexes.append(i);
-            }
-        }
 
-        // step 2: if we have more than one match, find the most specific one using topological sort
-        QVector<int> order;
-        if (matchingIndexes.size() <= 1) {
-            order.push_back(0);
-        } else {
-            boost::adjacency_list<> graph(matchingIndexes.size());
-            for (int i = 0, end = matchingIndexes.size(); i != end; ++i) {
-                const QMimeType mimeType = mimeDb.mimeTypeForName(allMimeTypes[matchingIndexes[i]].type());
-                if (!mimeType.isValid()) {
-                    continue;
-                }
-                for (int j = 0; j != end; ++j) {
-                    if (i != j && mimeType.inherits(allMimeTypes[matchingIndexes[j]].type())) {
-                        boost::add_edge(j, i, graph);
-                    }
-                }
-            }
+        findSuitablePlugins(mimeType, checkedMimeTypes, matchingIndexes, mimeDb);
 
-            order.reserve(matchingIndexes.size());
-            try {
-                boost::topological_sort(graph, std::back_inserter(order));
-            } catch (const boost::not_a_dag &e) {
-                qCWarning(AKONADICORE_LOG) << "Mimetype tree is not a DAG!";
-                return mDefaultPlugin.plugin();
-            }
-        }
-
-        // step 3: ask each one in turn if it can handle any of the metaTypeIds:
+        // Ask each one in turn if it can handle any of the metaTypeIds:
         //       qCDebug(AKONADICORE_LOG) << "Looking for " << format( type, metaTypeIds );
-        for (QVector<int>::const_iterator it = order.constBegin(), end = order.constEnd(); it != end; ++it) {
+        for (QVector<int>::const_iterator it = matchingIndexes.constBegin(), end = matchingIndexes.constEnd(); it != end; ++it) {
             //         qCDebug(AKONADICORE_LOG) << "  Considering serializer plugin for type" << allMimeTypes[matchingIndexes[*it]].type()
             // //                  << "as the closest match";
-            const MimeTypeEntry &mt = allMimeTypes[matchingIndexes[*it]];
+            const MimeTypeEntry &mt = allMimeTypes[*it];
             if (metaTypeIds.empty()) {
                 if (const PluginEntry *const entry = mt.defaultPlugin()) {
                     //             qCDebug(AKONADICORE_LOG) << "    -> got " << entry->pluginClassName() << " and am happy with it.";
                     // FIXME ? in qt5 we show "application/octet-stream" first so if will use default plugin. Exclude it until we look at all mimetype and use
                     // default at the end if necessary
-                    if (allMimeTypes[matchingIndexes[*it]].type() != QLatin1String("application/octet-stream")) {
+                    if (allMimeTypes[*it].type() != QLatin1String("application/octet-stream")) {
                         return entry->plugin();
                     }
                 } else {
@@ -368,7 +365,7 @@ private:
         return mDefaultPlugin.plugin();
     }
 
-    std::vector<MimeTypeEntry> allMimeTypes;
+    std::vector<MimeTypeEntry> allMimeTypes; // All the mimetypes that we have plugins for
     QHash<QString, QMap<int, QObject *>> cachedPlugins;
     QHash<QString, QObject *> cachedDefaultPlugins;
 

@@ -86,20 +86,6 @@ set_package_properties(Qt5Designer PROPERTIES
 option(BUILD_DESIGNERPLUGIN "Build plugin for Qt Designer" ON)
 add_feature_info(DESIGNERPLUGIN ${BUILD_DESIGNERPLUGIN} "Build plugin for Qt Designer")
 
-set(Boost_MINIMUM_VERSION "1.34.0")
-
-# The Boost CMake config files have been incompatible with the CMake files for
-# a long time. We'll only use what CMake's FindBoost.cmake module provides
-# until the minimum Boost version is raised to 1.70.
-set(Boost_NO_BOOST_CMAKE ON)
-
-find_package(Boost ${Boost_MINIMUM_VERSION} MODULE REQUIRED)
-set_package_properties(Boost PROPERTIES
-    DESCRIPTION "Boost C++ Libraries"
-    URL "https://www.boost.org"
-    TYPE REQUIRED
-)
-
 set(AccountsQt5_MINIMUM_VERSION "1.16")
 find_package(AccountsQt5 ${AccountsQt5_MINIMUM_VERSION})
 set_package_properties(AccountsQt5 PROPERTIES
