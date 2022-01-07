@@ -13,6 +13,14 @@ add_library(akonaditestfake SHARED
   fakeentitycache.cpp
   inspectablemonitor.cpp
   inspectablechangerecorder.cpp
+  fakeakonadiservercommand.h
+  fakesession.h
+  fakemonitor.h
+  fakeserverdata.h
+  modelspy.h
+  fakeentitycache.h
+  inspectablemonitor.h
+  inspectablechangerecorder.h
 )
 
 generate_export_header(akonaditestfake BASE_NAME akonaditestfake)

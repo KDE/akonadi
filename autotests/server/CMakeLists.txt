@@ -32,6 +32,15 @@ target_sources(akonadi_unittest_common PRIVATE
     dbinitializer.cpp
     inspectablenotificationcollector.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp
+    fakeconnection.h
+    fakeintervalcheck.h
+    fakedatastore.h
+    fakeclient.h
+    fakeakonadiserver.h
+    fakesearchmanager.h
+    fakeitemretrievalmanager.h
+    dbinitializer.h
+    inspectablenotificationcollector.h
 )
 
 
