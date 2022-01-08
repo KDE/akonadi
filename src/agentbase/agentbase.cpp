@@ -1052,7 +1052,12 @@ void AgentBase::doSetOnline(bool online)
 
 KAboutData AgentBase::aboutData() const
 {
-    return KAboutData(qApp->applicationName(), agentName(), qApp->applicationVersion());
+    // akonadi_google_resource_1 -> org.kde.akonadi_google_resource
+    const QString desktopEntry = QLatin1String("org.kde.") + qApp->applicationName().remove(QRegularExpression(QStringLiteral("_[0-9]+$")));
+
+    KAboutData data(qApp->applicationName(), agentName(), qApp->applicationVersion());
+    data.setDesktopFileName(desktopEntry);
+    return data;
 }
 
 void AgentBase::configure(WId windowId)
