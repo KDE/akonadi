@@ -8,8 +8,6 @@ set_package_properties(LibXml2 PROPERTIES
 
 if (LIBXML2_FOUND)
     add_definitions(-DHAVE_LIBXML2)
-    # TODO: Use LibXml2::LibXml2 when we'll require CMake >= 3.12
-    include_directories(${LIBXML2_INCLUDE_DIR})
 endif ()
 
 if (BUILD_TESTING)
@@ -63,8 +61,10 @@ PUBLIC
     Qt::Xml
 PRIVATE
     KF5::I18n
-    ${LIBXML2_LIBRARIES}
 )
+if (LIBXML2_FOUND)
+    target_link_libraries(KF5AkonadiXml PRIVATE LibXml2::LibXml2)
+endif()
 
 set_target_properties(KF5AkonadiXml PROPERTIES
     VERSION ${AKONADI_VERSION}
