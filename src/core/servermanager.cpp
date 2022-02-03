@@ -32,6 +32,7 @@
 #include <QDBusServiceWatcher>
 #include <QProcess>
 #include <QScopedPointer>
+#include <QStandardPaths>
 #include <QTimer>
 #include <qnamespace.h>
 
@@ -208,8 +209,8 @@ bool ServerManager::start()
     if (hasInstanceIdentifier()) {
         args << QStringLiteral("--instance") << instanceIdentifier();
     }
-    const bool ok = QProcess::startDetached(QStringLiteral("akonadi_control"), args);
-    if (!ok) {
+    const QString exec = QStandardPaths::findExecutable(QStringLiteral("akonadi_control"));
+    if (exec.isEmpty() || !QProcess::startDetached(QStringLiteral("akonadi_control"), args)) {
         qCWarning(AKONADICORE_LOG) << "Unable to execute akonadi_control, falling back to D-Bus auto-launch";
         QDBusReply<void> reply = QDBusConnection::sessionBus().interface()->startService(ServerManager::serviceName(ServerManager::Control));
         if (!reply.isValid()) {
@@ -237,7 +238,10 @@ bool ServerManager::stop()
 void ServerManager::showSelfTestDialog(QWidget *parent)
 {
     Q_UNUSED(parent)
-    QProcess::startDetached(QStringLiteral("akonadiselftest"), QStringList());
+    const QString exec = QStandardPaths::findExecutable(QStringLiteral("akonadiselftest"));
+    if (exec.isEmpty() || !QProcess::startDetached(QStringLiteral("akonadiselftest"), QStringList())) {
+        qCWarning(AKONADICORE_LOG) << "Could not find akonadiselftest in PATH.";
+    }
 }
 
 bool ServerManager::isRunning()

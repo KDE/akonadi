@@ -15,6 +15,7 @@
 #include <QCoreApplication>
 #include <QDBusConnection>
 #include <QProcess>
+#include <QStandardPaths>
 #include <QTimer>
 
 #include <iostream>
@@ -41,8 +42,8 @@ bool AkonadiStarter::start(bool verbose)
         serverArgs << QStringLiteral("--verbose");
     }
 
-    const bool ok = QProcess::startDetached(QStringLiteral("akonadi_control"), serverArgs);
-    if (!ok) {
+    const QString exec = QStandardPaths::findExecutable(QStringLiteral("akonadi_control"));
+    if (exec.isEmpty() || !QProcess::startDetached(QStringLiteral("akonadi_control"), serverArgs)) {
         std::cerr << "Error: unable to execute binary akonadi_control" << std::endl;
         return false;
     }
