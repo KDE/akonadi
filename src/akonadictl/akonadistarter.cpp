@@ -43,7 +43,7 @@ bool AkonadiStarter::start(bool verbose)
     }
 
     const QString exec = QStandardPaths::findExecutable(QStringLiteral("akonadi_control"));
-    if (exec.isEmpty() || !QProcess::startDetached(QStringLiteral("akonadi_control"), serverArgs)) {
+    if (exec.isEmpty() || !QProcess::startDetached(exec, serverArgs)) {
         std::cerr << "Error: unable to execute binary akonadi_control" << std::endl;
         return false;
     }
