@@ -15,7 +15,7 @@ include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings NO_POLICY_SCOPE)
 
 set(QT_MIN_VERSION "5.15.0")
-find_package(Qt5 ${QT_MIN_VERSION} REQUIRED Core Network Gui)
+find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} REQUIRED Core Network Gui)
 
 find_package(KF5Config ${KF5_MIN_VERSION} CONFIG REQUIRED)
 
