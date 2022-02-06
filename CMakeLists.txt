@@ -78,7 +78,7 @@ find_package(KF5WindowSystem ${KF5_MIN_VERSION} CONFIG REQUIRED)
 find_package(KF5XmlGui ${KF5_MIN_VERSION} CONFIG REQUIRED)
 find_package(KF5Crash ${KF5_MIN_VERSION} CONFIG REQUIRED)
 find_package(Qt${QT_MAJOR_VERSION}Designer NO_MODULE)
-set_package_properties(Qt5Designer PROPERTIES
+set_package_properties(Qt${QT_MAJOR_VERSION}Designer PROPERTIES
    PURPOSE "Required to build the Qt Designer plugins"
    TYPE OPTIONAL
 )
