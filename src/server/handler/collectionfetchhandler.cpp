@@ -303,7 +303,7 @@ void CollectionFetchHandler::retrieveCollections(const Collection &topParent, in
     QVariantList mimeTypeIds;
     QVariantList attributeIds;
     QVariantList ancestorIds;
-    const int collectionSize{mCollections.size()};
+    const auto collectionSize{mCollections.size()};
     mimeTypeIds.reserve(collectionSize);
     attributeIds.reserve(collectionSize);
     // We'd only require the non-leaf collections, but we don't know which those are, so we take all.

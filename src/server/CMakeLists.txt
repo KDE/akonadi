@@ -294,7 +294,7 @@ install(TARGETS akonadiserver
 install(FILES
   storage/mysql-global.conf
   storage/mysql-global-mobile.conf
-  DESTINATION ${CONFIG_INSTALL_DIR}/akonadi
+  DESTINATION ${KDE_INSTALL_CONFDIR}/akonadi
 )
 
 install(FILES

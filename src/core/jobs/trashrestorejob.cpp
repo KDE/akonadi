@@ -272,7 +272,11 @@ void TrashRestoreJobPrivate::removeAttribute(const Akonadi::Item::List &list)
 {
     Q_Q(TrashRestoreJob);
     Item::List items = list;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QMutableVectorIterator<Item> i(items);
+#else
+    QMutableListIterator<Item> i(items);
+#endif
     while (i.hasNext()) {
         Item &item = i.next();
         item.removeAttribute<EntityDeletedAttribute>();

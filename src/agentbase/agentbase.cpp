@@ -29,7 +29,7 @@
 
 #include <KAboutData>
 #include <kcoreaddons_version.h>
-#if KCOREADDONS_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <Kdelibs4ConfigMigrator>
 #endif
 
@@ -340,7 +340,7 @@ AgentBasePrivate::~AgentBasePrivate()
 void AgentBasePrivate::init()
 {
     Q_Q(AgentBase);
-#if KCOREADDONS_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     Kdelibs4ConfigMigrator migrate(mId);
     migrate.setConfigFiles(QStringList() << QStringLiteral("%1rc").arg(mId));
     migrate.migrate();
