@@ -171,6 +171,7 @@ set(libakonadiserver_SRCS
     search/searchtaskmanager.h
     search/searchrequest.h
     search/searchmanager.h
+    search/abstractsearchplugin.h
 
     storage/collectionqueryhelper.h
     storage/collectionstatistics.h
