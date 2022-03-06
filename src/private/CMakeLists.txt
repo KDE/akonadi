@@ -99,6 +99,9 @@ set_target_properties(KF5AkonadiPrivate PROPERTIES
     EXPORT_NAME AkonadiPrivate
 )
 
+target_include_directories(KF5AkonadiPrivate INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF}/Akonadi>")
+
+
 install(TARGETS
     KF5AkonadiPrivate
     EXPORT KF5AkonadiTargets
@@ -120,7 +123,7 @@ install(FILES
     scope_p.h
     tristate_p.h
     compressionstream_p.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF}/akonadi/private
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF}/Akonadi/akonadi/private
 )
 
 
