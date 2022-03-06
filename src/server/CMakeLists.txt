@@ -300,7 +300,7 @@ install(FILES
 
 install(FILES
   search/abstractsearchplugin.h
-  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF}/akonadi
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF}/AkonadiCore/akonadi
 )
 
 ## DBus XML files
