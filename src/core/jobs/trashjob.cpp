@@ -85,7 +85,11 @@ void TrashJobPrivate::selectResult(KJob *job)
 void TrashJobPrivate::setAttribute(const Akonadi::Collection::List &list)
 {
     Q_Q(TrashJob);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QVectorIterator<Collection> i(list);
+#else
+    QListIterator<Collection> i(list);
+#endif
     while (i.hasNext()) {
         const Collection &col = i.next();
         auto eda = new EntityDeletedAttribute();

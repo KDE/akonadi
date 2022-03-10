@@ -247,7 +247,11 @@ void TrashRestoreJobPrivate::collectionsReceived(const Akonadi::Collection::List
 void TrashRestoreJobPrivate::removeAttribute(const Akonadi::Collection::List &list)
 {
     Q_Q(TrashRestoreJob);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QVectorIterator<Collection> i(list);
+#else
+    QListIterator<Collection> i(list);
+#endif
     while (i.hasNext()) {
         Collection col = i.next();
         col.removeAttribute<EntityDeletedAttribute>();
