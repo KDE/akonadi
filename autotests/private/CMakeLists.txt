@@ -11,7 +11,7 @@ macro(add_unit_test _source)
     endif()
     target_link_libraries(${_name}
         akonadi_shared
-        akonadiprivate_static
+        KF5AkonadiPrivate
         Qt${QT_MAJOR_VERSION}::Network
         Qt${QT_MAJOR_VERSION}::Widgets
         Qt${QT_MAJOR_VERSION}::Test

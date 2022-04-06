@@ -125,16 +125,3 @@ install(FILES
     compressionstream_p.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF}/Akonadi/akonadi/private
 )
-
-
-### Private static library used by unit-tests ####
-
-add_library(akonadiprivate_static STATIC ${akonadiprivate_buildsources})
-if (WIN32)
-    add_dependencies(akonadiprivate_static generate_protocol)
-    update_include_directories(akonadiprivate_static)
-endif()
-set_target_properties(akonadiprivate_static PROPERTIES
-    COMPILE_FLAGS -DAKONADIPRIVATE_STATIC_DEFINE
-)
-target_link_libraries(akonadiprivate_static ${akonadiprivate_LIBS})
