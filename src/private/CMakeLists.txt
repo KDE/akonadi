@@ -62,34 +62,16 @@ ecm_qt_declare_logging_category(akonadiprivate_SRCS HEADER akonadiprivate_debug.
         EXPORT AKONADI
     )
 
-macro(update_include_directories _target)
-    target_include_directories(${_target} PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/private;${Akonadi_BINARY_DIR}/src/private;${Akonadi_BINARY_DIR}/src>")
-    target_include_directories(${_target} PRIVATE "${Akonadi_SOURCE_DIR}/src/shared")
-    target_include_directories(${_target} PUBLIC "$<BUILD_INTERFACE:${Qt${QT_MAJOR_VERSION}Core_INCLUDE_DIRS};${Qt${QT_MAJOR_VERSION}DBus_INCLUDE_DIRS}>")
-endmacro()
-
-if (WIN32)
-    # MSVC does not like when the same object files are reused for shared and
-    # static linking, so in this case we build all sources twice to make it happy
-    set(akonadiprivate_buildsources ${akonadiprivate_SRCS})
-else()
-    add_library(akonadiprivate_obj OBJECT ${akonadiprivate_SRCS})
-    update_include_directories(akonadiprivate_obj)
-    set_target_properties(akonadiprivate_obj PROPERTIES POSITION_INDEPENDENT_CODE 1)
-    add_dependencies(akonadiprivate_obj generate_protocol)
-    set(akonadiprivate_buildsources $<TARGET_OBJECTS:akonadiprivate_obj>)
-endif()
-
-add_library(KF5AkonadiPrivate SHARED ${akonadiprivate_buildsources})
+add_library(KF5AkonadiPrivate SHARED ${akonadiprivate_SRCS})
 if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(KF5AkonadiPrivate PROPERTIES UNITY_BUILD ON)
 endif()
 
 add_library(KF5::AkonadiPrivate ALIAS KF5AkonadiPrivate)
-if (WIN32)
-    add_dependencies(KF5AkonadiPrivate generate_protocol)
-    update_include_directories(KF5AkonadiPrivate)
-endif()
+add_dependencies(KF5AkonadiPrivate generate_protocol)
+target_include_directories(KF5AkonadiPrivate PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/private;${Akonadi_BINARY_DIR}/src/private;${Akonadi_BINARY_DIR}/src>")
+target_include_directories(KF5AkonadiPrivate PRIVATE "${Akonadi_SOURCE_DIR}/src/shared")
+target_include_directories(KF5AkonadiPrivate PUBLIC "$<BUILD_INTERFACE:${Qt${QT_MAJOR_VERSION}Core_INCLUDE_DIRS};${Qt${QT_MAJOR_VERSION}DBus_INCLUDE_DIRS}>")
 target_link_libraries(KF5AkonadiPrivate ${akonadiprivate_LIBS})
 generate_export_header(KF5AkonadiPrivate BASE_NAME akonadiprivate)
 
