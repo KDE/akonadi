@@ -1,8 +1,5 @@
 add_subdirectory(protocolgen)
 
-# TODO: Use LibLZMA::LibLZMA when we'll require CMake >= 3.14
-include_directories(${LIBLZMA_INCLUDE_DIRS})
-
 if(NOT XMLLINT_EXECUTABLE)
   message(STATUS "xmllint not found, skipping protocol.xml validation")
 else()
@@ -41,21 +38,6 @@ set(akonadiprivate_SRCS
     dbus_p.h
 )
 
-set(akonadiprivate_LIBS
-PUBLIC
-    Qt${QT_MAJOR_VERSION}::Core
-    Qt${QT_MAJOR_VERSION}::DBus
-PRIVATE
-    ${LIBLZMA_LIBRARIES}
-)
-if (WIN32)
-    set(akonadiprivate_LIBS
-    ${akonadiprivate_LIBS}
-    PRIVATE
-        Qt${QT_MAJOR_VERSION}::Network
-    )
-endif()
-
 ecm_qt_declare_logging_category(akonadiprivate_SRCS HEADER akonadiprivate_debug.h IDENTIFIER AKONADIPRIVATE_LOG CATEGORY_NAME org.kde.pim.akonadiprivate
         DESCRIPTION "akonadi (Akonadi Private Library)"
         OLD_CATEGORY_NAMES akonadiprivate_log
@@ -69,10 +51,14 @@ endif()
 
 add_library(KF5::AkonadiPrivate ALIAS KF5AkonadiPrivate)
 add_dependencies(KF5AkonadiPrivate generate_protocol)
-target_include_directories(KF5AkonadiPrivate PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/private;${Akonadi_BINARY_DIR}/src/private;${Akonadi_BINARY_DIR}/src>")
-target_include_directories(KF5AkonadiPrivate PRIVATE "${Akonadi_SOURCE_DIR}/src/shared")
-target_include_directories(KF5AkonadiPrivate PUBLIC "$<BUILD_INTERFACE:${Qt${QT_MAJOR_VERSION}Core_INCLUDE_DIRS};${Qt${QT_MAJOR_VERSION}DBus_INCLUDE_DIRS}>")
-target_link_libraries(KF5AkonadiPrivate ${akonadiprivate_LIBS})
+target_link_libraries(KF5AkonadiPrivate
+PUBLIC
+    Qt${QT_MAJOR_VERSION}::Core
+    Qt${QT_MAJOR_VERSION}::DBus
+PRIVATE
+    Qt${QT_MAJOR_VERSION}::Network
+    LibLZMA::LibLZMA
+)
 generate_export_header(KF5AkonadiPrivate BASE_NAME akonadiprivate)
 
 set_target_properties(KF5AkonadiPrivate PROPERTIES
