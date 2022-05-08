@@ -118,8 +118,6 @@ class StdStringItemSerializerPlugin : public QObject, public ItemSerializerPlugi
     Q_OBJECT
     Q_INTERFACES(Akonadi::ItemSerializerPlugin)
 public:
-    StdStringItemSerializerPlugin();
-
     bool deserialize(Item &item, const QByteArray &label, QIODevice &data, int version) override;
     void serialize(const Item &item, const QByteArray &label, QIODevice &data, int &version) override;
 };
