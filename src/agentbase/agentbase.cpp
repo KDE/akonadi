@@ -35,11 +35,11 @@
 
 #include <QCommandLineParser>
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#include <QNetworkConfiguration>
 #include <QNetworkConfigurationManager>
 #else
 #include <QNetworkInformation>
 #endif
-#include <QNetworkConfiguration>
 #include <QPointer>
 #include <QSettings>
 #include <QTimer>
@@ -330,7 +330,9 @@ AgentBasePrivate::AgentBasePrivate(AgentBase *parent)
     , mPowerInterface(nullptr)
     , mTemporaryOfflineTimer(nullptr)
     , mEventLoopLocker(nullptr)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     , mNetworkManager(nullptr)
+#endif
 {
     Internal::setClientType(Internal::Agent);
 }
@@ -996,7 +998,9 @@ void AgentBase::setNeedsNetwork(bool needsNetwork)
     }
 #else
     QNetworkInformation::load(QNetworkInformation::Feature::Reachability);
-    connect(QNetworkInformation::instance(), &QNetworkInformation::reachabilityChanged, d, &AgentBasePrivate::slotNetworkStatusChange, Qt::UniqueConnection);
+    connect(QNetworkInformation::instance(), &QNetworkInformation::reachabilityChanged, this, [this, d](auto reachability) {
+        d->slotNetworkStatusChange(reachability == QNetworkInformation::Reachability::Online);
+    });
 #endif
 }
 
