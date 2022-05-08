@@ -34,8 +34,12 @@
 #endif
 
 #include <QCommandLineParser>
-#include <QNetworkConfiguration>
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QNetworkConfigurationManager>
+#else
+#include <QNetworkInformation>
+#endif
+#include <QNetworkConfiguration>
 #include <QPointer>
 #include <QSettings>
 #include <QTimer>
@@ -804,7 +808,11 @@ void AgentBasePrivate::slotNetworkStatusChange(bool isOnline)
 void AgentBasePrivate::slotResumedFromSuspend()
 {
     if (mNeedsNetwork) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         slotNetworkStatusChange(mNetworkManager->isOnline());
+#else
+        slotNetworkStatusChange(QNetworkInformation::instance()->reachability() != QNetworkInformation::Reachability::Online);
+#endif
     }
 }
 
@@ -976,7 +984,7 @@ void AgentBase::setNeedsNetwork(bool needsNetwork)
     }
 
     d->mNeedsNetwork = needsNetwork;
-
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     if (d->mNeedsNetwork) {
         d->mNetworkManager = new QNetworkConfigurationManager(this);
         connect(d->mNetworkManager, &QNetworkConfigurationManager::onlineStateChanged, d, &AgentBasePrivate::slotNetworkStatusChange, Qt::UniqueConnection);
@@ -986,6 +994,10 @@ void AgentBase::setNeedsNetwork(bool needsNetwork)
         d->mNetworkManager = nullptr;
         setOnlineInternal(d->mDesiredOnlineState);
     }
+#else
+    QNetworkInformation::load(QNetworkInformation::Feature::Reachability);
+    connect(QNetworkInformation::instance(), &QNetworkInformation::reachabilityChanged, d, &AgentBasePrivate::slotNetworkStatusChange, Qt::UniqueConnection);
+#endif
 }
 
 void AgentBase::setOnline(bool state)
@@ -1025,10 +1037,17 @@ void AgentBase::setOnlineInternal(bool state)
 {
     Q_D(AgentBase);
     if (state && d->mNeedsNetwork) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         if (!d->mNetworkManager->isOnline()) {
             // Don't go online if the resource needs network but there is none
             state = false;
         }
+#else
+        if (QNetworkInformation::instance()->reachability() != QNetworkInformation::Reachability::Online) {
+            // Don't go online if the resource needs network but there is none
+            state = false;
+        }
+#endif
     }
     d->mOnline = state;
 
