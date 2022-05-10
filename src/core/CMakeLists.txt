@@ -37,6 +37,7 @@ set(akonadicore_base_SRCS
     collectionpathresolver.cpp
     collectionstatistics.cpp
     collectionsync.cpp
+    collectionutils.cpp
     conflicthandler.cpp
     control.cpp
     entitycache.cpp

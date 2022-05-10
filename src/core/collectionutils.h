@@ -116,6 +116,11 @@ Q_REQUIRED_RESULT inline bool hasValidHierarchicalRID(const Item &item)
 {
     return !item.remoteId().isEmpty() && hasValidHierarchicalRID(item.parentCollection());
 }
+
+/** Returns the collection represented by @p index.
+ *  @param index has to be provided by an EntityTreeModel instance or a proxy model on top of one.
+ */
+AKONADICORE_EXPORT Q_REQUIRED_RESULT Collection fromIndex(const QModelIndex &index);
 }
 
 }
