@@ -184,6 +184,11 @@ void Connection::handleIncomingData()
             connect(m_socket.get(), &QLocalSocket::stateChanged, &loop, &QEventLoop::quit);
             connect(this, &Connection::connectionClosing, &loop, &QEventLoop::quit);
             loop.exec();
+
+	    // RAII fails to clean QT's slot/signal connections above, leaking memory. Manually disconnect.
+            disconnect(m_socket.get(), &QLocalSocket::readyRead, &loop, &QEventLoop::quit);
+            disconnect(m_socket.get(), &QLocalSocket::stateChanged, &loop, &QEventLoop::quit);
+            disconnect(this, &Connection::connectionClosing, &loop, &QEventLoop::quit);
         }
 
         if (m_connectionClosing || !m_socket || m_socket->state() != QLocalSocket::ConnectedState) {
