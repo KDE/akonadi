@@ -988,9 +988,12 @@ void AgentBase::setNeedsNetwork(bool needsNetwork)
     d->mNeedsNetwork = needsNetwork;
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     if (d->mNeedsNetwork) {
+        QT_WARNING_PUSH
+        QT_WARNING_DISABLE_CLANG("-Wdeprecated-declarations")
+        QT_WARNING_DISABLE_GCC("-Wdeprecated-declarations")
         d->mNetworkManager = new QNetworkConfigurationManager(this);
         connect(d->mNetworkManager, &QNetworkConfigurationManager::onlineStateChanged, d, &AgentBasePrivate::slotNetworkStatusChange, Qt::UniqueConnection);
-
+        QT_WARNING_POP
     } else {
         delete d->mNetworkManager;
         d->mNetworkManager = nullptr;
