@@ -51,7 +51,7 @@ void EntityDisplayAttribute::setIconName(const QString &icon)
     d->icon = icon;
 }
 
-QByteArray Akonadi::EntityDisplayAttribute::type() const
+QByteArray EntityDisplayAttribute::type() const
 {
     static const QByteArray sType("ENTITYDISPLAY");
     return sType;
