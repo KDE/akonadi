@@ -60,6 +60,18 @@ class CollectionStatistics;
  */
 class AKONADICORE_EXPORT Collection
 {
+    Q_GADGET
+    Q_PROPERTY(Id id READ id WRITE setId)
+    Q_PROPERTY(QString remoteIdd READ remoteId WRITE setRemoteId)
+    Q_PROPERTY(bool isValid READ isValid)
+    Q_PROPERTY(QString remoteRevision READ remoteRevision WRITE setRemoteRevision)
+    Q_PROPERTY(bool enabled READ enabled WRITE setEnabled)
+    Q_PROPERTY(bool isVirtual READ isVirtual WRITE setVirtual)
+    Q_PROPERTY(QString name READ name WRITE setName)
+    Q_PROPERTY(QString displayName READ displayName)
+    Q_PROPERTY(Rights rights READ rights WRITE setRights)
+    Q_PROPERTY(QStringList contentMimeTypes READ contentMimeTypes WRITE setContentMimeTypes)
+    Q_PROPERTY(QString resource READ resource WRITE setResource)
 public:
     /**
      * Describes the unique id type.
@@ -88,6 +100,7 @@ public:
                      | CanDeleteCollection) ///< Has all rights on this storage collection
     };
     Q_DECLARE_FLAGS(Rights, Right)
+    Q_ENUM(Right)
 
     /**
      * Creates an invalid collection.
