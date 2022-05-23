@@ -9,7 +9,7 @@
 
 #include "akonadiwidgets_debug.h"
 #include <KColorScheme>
-#include <KFormat>
+#include <KIO/Global>
 
 #include <QAbstractItemView>
 #include <QPainter>
@@ -315,7 +315,7 @@ void CollectionStatisticsDelegate::paint(QPainter *painter, const QStyleOptionVi
 
     // total size
     if (index.column() == 3 && !expanded) {
-        painter->drawText(textRect, option4.displayAlignment | Qt::AlignVCenter, KFormat().formatByteSize(totalSize));
+        painter->drawText(textRect, option4.displayAlignment | Qt::AlignVCenter, KIO::convertSize(totalSize));
         return;
     }
 
