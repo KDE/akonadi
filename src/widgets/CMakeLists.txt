@@ -166,6 +166,7 @@ PUBLIC
     Qt${QT_MAJOR_VERSION}::Widgets
     KF5::ConfigWidgets
 PRIVATE
+    KF5::KIOCore
     KF5::I18n
     KF5::IconThemes
     KF5::XmlGui
