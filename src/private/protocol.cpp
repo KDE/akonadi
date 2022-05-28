@@ -431,7 +431,7 @@ private:
     {
         CommandFactoryFunc cmdFunc = &commandFactoryFunc<CmdType>;
         ResponseFactoryFunc respFunc = &responseFactoryFunc<RespType>;
-        registrar.insert(T, qMakePair<CommandFactoryFunc, ResponseFactoryFunc>(cmdFunc, respFunc));
+        registrar.insert(T, qMakePair(cmdFunc, respFunc));
     }
 };
 
