@@ -67,7 +67,11 @@ template<typename Iterator> struct IteratorTrait<Iterator *> {
     // QTypedArrayData::iterator::iterator_category
     using iterator_category = std::random_access_iterator_tag;
     using value_type = Iterator;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     using difference_type = int;
+#else
+    using difference_type = qsizetype;
+#endif
     using pointer = Iterator *;
     using reference = Iterator &;
 };
@@ -75,7 +79,11 @@ template<typename Iterator> struct IteratorTrait<Iterator *> {
 template<typename Iterator> struct IteratorTrait<const Iterator *> {
     using iterator_category = std::random_access_iterator_tag;
     using value_type = Iterator;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     using difference_type = int;
+#else
+    using difference_type = qsizetype;
+#endif
     using pointer = const Iterator *;
     using reference = const Iterator &;
 };

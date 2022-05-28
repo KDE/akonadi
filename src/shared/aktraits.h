@@ -52,10 +52,28 @@ DECLARE_HAS_MEBER_TYPE(value_type)
 
 #define DECLARE_HAS_METHOD_GENERIC(fun, R, ...) DECLARE_HAS_METHOD_GENERIC_IMPL(fun, fun, R (T::*)(__VA_ARGS__))
 
+// deal with Qt6 interface changes in QList::push_back/QList::insert
+template<typename T, typename = std::void_t<>>
+struct parameter_type {
+    typedef const typename T::value_type &type;
+};
+template<typename T>
+struct parameter_type<T, std::void_t<typename T::parameter_type>> {
+    typedef typename T::parameter_type type;
+};
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 DECLARE_HAS_METHOD_GENERIC_CONST(size, int, void)
-DECLARE_HAS_METHOD_GENERIC(push_back, void, const typename T::value_type &)
-DECLARE_HAS_METHOD_GENERIC(insert, typename T::iterator, const typename T::value_type &)
+#else
+DECLARE_HAS_METHOD_GENERIC_CONST(size, qsizetype, void)
+#endif
+DECLARE_HAS_METHOD_GENERIC(push_back, void, typename parameter_type<T>::type)
+DECLARE_HAS_METHOD_GENERIC(insert, typename T::iterator, typename parameter_type<T>::type)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 DECLARE_HAS_METHOD_GENERIC(reserve, void, int)
+#else
+DECLARE_HAS_METHOD_GENERIC(reserve, void, qsizetype)
+#endif
 
 #define DECLARE_HAS_FUNCTION(name, fun)                                                                                                                        \
     template<typename T> struct has_##name {                                                                                                                   \

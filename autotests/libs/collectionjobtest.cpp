@@ -60,6 +60,7 @@ template<class T> static void compareLists(const QList<T> &l1, const QList<T> &l
     }
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 template<class T> static void compareLists(const QVector<T> &l1, const QVector<T> &l2)
 {
     QCOMPARE(l1.count(), l2.count());
@@ -67,6 +68,7 @@ template<class T> static void compareLists(const QVector<T> &l1, const QVector<T
         QVERIFY(l2.contains(entry));
     }
 }
+#endif
 
 template<typename T>
 static T *extractAttribute(const QList<Attribute *> &attrs)
