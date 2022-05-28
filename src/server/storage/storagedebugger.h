@@ -74,7 +74,7 @@ Q_SIGNALS:
 
     void transactionStarted(qint64 connectionId, const QString &name, qint64 timestamp, uint duration, const QString &error);
     void transactionFinished(qint64 connectionId, bool commit, qint64 timestamp, uint duration, const QString &error);
-
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     void queryExecuted(double sequence,
                        qint64 connectionId,
                        qint64 timestamp,
@@ -84,7 +84,18 @@ Q_SIGNALS:
                        int resultsCount,
                        const QList<QList<QVariant>> &result,
                        const QString &error);
+#else
+    void queryExecuted(double sequence,
+                       qint64 connectionId,
+                       qint64 timestamp,
+                       uint duration,
+                       const QString &query,
+                       const QVariantList &values,
+                       int resultsCount,
+                       const QList<QList<QVariant>> &result,
+                       const QString &error);
 
+#endif
 private:
     StorageDebugger();
 
