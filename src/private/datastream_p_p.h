@@ -265,6 +265,7 @@ inline Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &
     return stream;
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 inline Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream, const QStringList &list)
 {
     return stream << static_cast<QList<QString>>(list);
@@ -274,6 +275,7 @@ inline Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &
 {
     return stream >> static_cast<QList<QString> &>(list);
 }
+#endif
 
 namespace Akonadi
 {
