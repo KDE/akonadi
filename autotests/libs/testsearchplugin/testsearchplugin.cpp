@@ -8,6 +8,7 @@
 
 #include "searchquery.h"
 #include <QDebug>
+#include <QVariant>
 
 QSet<qint64> TestSearchPlugin::search(const QString &query, const QVector<qint64> &collections, const QStringList &mimeTypes)
 {
