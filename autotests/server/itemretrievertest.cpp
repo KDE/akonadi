@@ -208,7 +208,7 @@ private Q_SLOTS:
         ItemRetriever r1(mAkonadi.itemRetrievalManager(), nullptr, context);
         r1.setRetrieveFullPayload(true);
         QCOMPARE(r1.retrieveParts().size(), 1);
-        QCOMPARE(r1.retrieveParts().at(0), {"PLD:RFC822"});
+        QCOMPARE(r1.retrieveParts().at(0), QByteArray{"PLD:RFC822"});
         r1.setRetrieveParts({"PLD:FOO"});
         QCOMPARE(r1.retrieveParts().size(), 2);
     }
