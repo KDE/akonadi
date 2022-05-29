@@ -114,19 +114,30 @@ void EntityTreeModel::clearAndReset()
 
 QHash<int, QByteArray> EntityTreeModel::roleNames() const
 {
-    return {{Qt::DecorationRole, "decoration"},
-            {Qt::DisplayRole, "display"},
+    return {
+        {Qt::DecorationRole, "decoration"},
+        {Qt::DisplayRole, "display"},
 
-            {EntityTreeModel::ItemIdRole, "itemId"},
-            {EntityTreeModel::CollectionIdRole, "collectionId"},
+        {EntityTreeModel::ItemIdRole, "itemId"},
+        {EntityTreeModel::ItemRole, "item"},
+        {EntityTreeModel::CollectionIdRole, "collectionId"},
+        {EntityTreeModel::CollectionRole, "collection"},
 
-            {EntityTreeModel::UnreadCountRole, "unreadCount"},
-            // TODO: expose when states for reporting of fetching payload parts of items is changed
-            // { EntityTreeModel::FetchStateRole, "fetchState" },
-            {EntityTreeModel::EntityUrlRole, "url"},
-            {EntityTreeModel::RemoteIdRole, "remoteId"},
-            {EntityTreeModel::IsPopulatedRole, "isPopulated"},
-            {EntityTreeModel::CollectionRole, "collection"}};
+        {EntityTreeModel::UnreadCountRole, "unreadCount"},
+        {EntityTreeModel::EntityUrlRole, "url"},
+        {EntityTreeModel::RemoteIdRole, "remoteId"},
+        {EntityTreeModel::IsPopulatedRole, "isPopulated"},
+        {EntityTreeModel::CollectionRole, "collection"},
+        {EntityTreeModel::MimeTypeRole, "mimeType"},
+        {EntityTreeModel::CollectionChildOrderRole, "collectionChildOrderRole"},
+        {EntityTreeModel::ParentCollectionRole, "parentCollection"},
+        {EntityTreeModel::SessionRole, "session"},
+        {EntityTreeModel::PendingCutRole, "pendingCut"},
+        {EntityTreeModel::LoadedPartsRole, "loadedParts"},
+        {EntityTreeModel::AvailablePartsRole, "availableParts"},
+        {EntityTreeModel::UnreadCountRole, "unreadCount"},
+        {EntityTreeModel::FetchStateRole, "fetchState"},
+    };
 }
 
 int EntityTreeModel::columnCount(const QModelIndex &parent) const
