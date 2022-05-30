@@ -15,7 +15,11 @@ QString GidExtractor::extractGid(const Item &item)
 {
     const QObject *object = TypePluginLoader::objectForMimeTypeAndClass(item.mimeType(), item.availablePayloadMetaTypeIds());
     if (object) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        const GidExtractorInterface *extractor = qobject_cast<const GidExtractorInterface *>(object);
+#else
         const GidExtractorInterface *extractor = qobject_cast<GidExtractorInterface *>(object);
+#endif
         if (extractor) {
             return extractor->extractGid(item);
         }
