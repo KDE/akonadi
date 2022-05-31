@@ -120,7 +120,7 @@ Q_REQUIRED_RESULT inline bool hasValidHierarchicalRID(const Item &item)
 /** Returns the collection represented by @p index.
  *  @param index has to be provided by an EntityTreeModel instance or a proxy model on top of one.
  */
-AKONADICORE_EXPORT Q_REQUIRED_RESULT Collection fromIndex(const QModelIndex &index);
+Q_REQUIRED_RESULT AKONADICORE_EXPORT Collection fromIndex(const QModelIndex &index);
 }
 
 }
