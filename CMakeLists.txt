@@ -380,7 +380,7 @@ ecm_qt_install_logging_categories(
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadi_version.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF} COMPONENT Devel
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF}/AkonadiCore COMPONENT Devel
 )
 
 kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
