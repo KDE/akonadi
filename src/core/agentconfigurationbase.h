@@ -66,7 +66,7 @@ class AgentConfigurationBasePrivate;
  * value must match the name of the @p X-Akonadi-Identifier value from the agent's
  * desktop file.
  *
- * The plugin binary should be installed into akonadi/config subdirectory in one
+ * The plugin binary should be installed into pim<version>/akonadi/config subdirectory in one
  * of the paths search by QCoreApplication::libraryPaths().
  */
 
