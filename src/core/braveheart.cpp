@@ -6,7 +6,7 @@
 
 #include <config-akonadi.h>
 
-#ifdef HAVE_MALLOC_TRIM
+#if HAVE_MALLOC_TRIM
 
 #include <QCoreApplication>
 #include <QThread>

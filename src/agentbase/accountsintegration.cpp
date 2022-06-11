@@ -13,7 +13,7 @@
 #include <QDBusConnection>
 #include <QTimer>
 
-#ifdef WITH_ACCOUNTS
+#if WITH_ACCOUNTS
 #include <Accounts/Account>
 #include <Accounts/Manager>
 #include <KAccounts/Core>
@@ -25,7 +25,7 @@ using namespace std::chrono_literals;
 
 AccountsIntegration::AccountsIntegration()
 {
-#ifdef WITH_ACCOUNTS
+#if WITH_ACCOUNTS
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Accounts"), this);
     new Akonadi__AccountsAdaptor(this);
 #endif
@@ -33,7 +33,7 @@ AccountsIntegration::AccountsIntegration()
 
 bool AccountsIntegration::isEnabled() const
 {
-#ifdef WITH_ACCOUNTS
+#if WITH_ACCOUNTS
     return true;
 #else
     return false;
@@ -62,7 +62,7 @@ void AccountsIntegration::setAccountId(quint32 accountId)
 
 std::optional<QString> AccountsIntegration::accountName() const
 {
-#ifdef WITH_ACCOUNTS
+#if WITH_ACCOUNTS
     if (!mAccountId.has_value()) {
         return std::nullopt;
     }
@@ -80,7 +80,7 @@ std::optional<QString> AccountsIntegration::accountName() const
 
 void AccountsIntegration::requestAuthData(const QString &serviceType, AuthDataCallback &&callback, ErrorCallback &&errCallback)
 {
-#ifdef WITH_ACCOUNTS
+#if WITH_ACCOUNTS
     if (!mAccountId.has_value()) {
         QTimer::singleShot(0s, this, [error = std::move(errCallback)]() {
             error(i18n("There is currently no account configured."));

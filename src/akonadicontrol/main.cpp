@@ -11,7 +11,7 @@
 #include "controlmanager.h"
 #include "processcontrol.h"
 
-#ifdef WITH_ACCOUNTS
+#if WITH_ACCOUNTS
 #include "accountsintegration.h"
 #endif
 
@@ -27,7 +27,7 @@
 #include <KCrash>
 
 #include <stdlib.h>
-#ifdef HAVE_UNISTD_H
+#if HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 
@@ -66,7 +66,7 @@ int main(int argc, char **argv)
     ControlManager controlManager;
 
     AgentManager agentManager(app.commandLineArguments().isSet(QStringLiteral("verbose")));
-#ifdef WITH_ACCOUNTS
+#if WITH_ACCOUNTS
     AccountsIntegration accountsIntegration(agentManager);
 #endif
     KCrash::setEmergencySaveFunction(crashHandler);
