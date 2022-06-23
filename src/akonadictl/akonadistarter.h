@@ -17,7 +17,7 @@ public:
     Q_REQUIRED_RESULT bool start(bool verbose);
 
 private:
-    QDBusServiceWatcher mWatcher;
+    const QDBusServiceWatcher mWatcher;
     bool mRegistered = false;
 };
 

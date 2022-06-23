@@ -185,7 +185,7 @@ public:
      *
      * @since 4.13
      */
-    bool isRecursive() const;
+    Q_REQUIRED_RESULT bool isRecursive() const;
 
     /**
      * Sets whether resources should be queried too.

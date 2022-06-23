@@ -20,9 +20,6 @@ class AgentInstancePrivate : public QSharedData
 {
 public:
     AgentInstancePrivate()
-        : mStatus(0)
-        , mProgress(0)
-        , mIsOnline(false)
     {
     }
 
@@ -41,10 +38,10 @@ public:
     AgentType mType;
     QString mIdentifier;
     QString mName;
-    int mStatus;
+    int mStatus = 0;
     QString mStatusMessage;
-    int mProgress;
-    bool mIsOnline;
+    int mProgress = 0;
+    bool mIsOnline = false;
 };
 
 }

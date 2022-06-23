@@ -33,7 +33,7 @@ public:
     SpecialCollectionsPrivate(KCoreConfigSkeleton *settings, SpecialCollections *qq);
     ~SpecialCollectionsPrivate();
 
-    QString defaultResourceId() const;
+    Q_REQUIRED_RESULT QString defaultResourceId() const;
     void emitChanged(const QString &resourceId);
     void collectionRemoved(const Collection &collection); // slot
     void collectionFetchJobFinished(KJob *job); // slot
@@ -61,7 +61,7 @@ public:
     */
     void endBatchRegister();
 
-    AgentInstance defaultResource() const;
+    Q_REQUIRED_RESULT AgentInstance defaultResource() const;
 
     SpecialCollections *const q;
     KCoreConfigSkeleton *mSettings = nullptr;

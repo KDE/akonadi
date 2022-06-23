@@ -40,9 +40,9 @@ private:
 private:
     Akonadi::Tag::List mRemoteTags;
     Akonadi::Tag::List mLocalTags;
-    bool mDeliveryDone;
-    bool mTagMembersDeliveryDone;
-    bool mLocalTagsFetched;
+    bool mDeliveryDone = false;
+    bool mTagMembersDeliveryDone = false;
+    bool mLocalTagsFetched = false;
     QHash<QString, Akonadi::Item::List> mRidMemberMap;
 };
 

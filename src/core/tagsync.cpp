@@ -36,9 +36,6 @@ bool operator==(const Item &left, const Item &right)
 
 TagSync::TagSync(QObject *parent)
     : Job(parent)
-    , mDeliveryDone(false)
-    , mTagMembersDeliveryDone(false)
-    , mLocalTagsFetched(false)
 {
 }
 
