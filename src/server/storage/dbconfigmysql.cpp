@@ -254,7 +254,6 @@ bool DbConfigMysql::startInternalServer()
     qCDebug(AKONADISERVER_LOG).nospace() << "mysqld reports version " << (localVersion >> 16) << "." << ((localVersion >> 8) & 0x0000FF) << "."
                                          << (localVersion & 0x0000FF) << " (" << (isMariaDB ? "MariaDB" : "Oracle MySQL") << ")";
 
-    bool confUpdate = false;
     QFile actualFile(actualConfig);
     // update conf only if either global (or local) is newer than actual
     if ((QFileInfo(globalConfig).lastModified() > QFileInfo(actualFile).lastModified())
@@ -271,7 +270,6 @@ bool DbConfigMysql::startInternalServer()
             }
             globalFile.close();
             actualFile.close();
-            confUpdate = true;
         } else {
             qCCritical(AKONADISERVER_LOG) << "Unable to create MySQL server configuration file.";
             qCCritical(AKONADISERVER_LOG) << "This means that either the default configuration file (mysql-global.conf) was not readable";
