@@ -530,7 +530,8 @@ void QueryBuilder::buildWhereCondition(QString *query, const Query::Condition &c
         *query += compareOperatorToString(cond.mCompareOp);
         if (cond.mComparedColumn.isEmpty()) {
             if (cond.mComparedValue.isValid()) {
-                if (cond.mComparedValue.canConvert(QVariant::List)) {
+                if (cond.mComparedValue.canConvert(QVariant::List) && cond.mComparedValue.type() != QVariant::String
+                    && cond.mComparedValue.type() != QVariant::ByteArray) {
                     *query += QLatin1String("( ");
                     const QVariantList &entries = cond.mComparedValue.toList();
                     Q_ASSERT_X(!entries.isEmpty(), "QueryBuilder::buildWhereCondition()", "No values given for IN condition.");
