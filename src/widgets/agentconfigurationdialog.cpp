@@ -81,7 +81,11 @@ AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance
             // HACK: the actions are populated from QGuiApplication so they would refer to the
             // current application not to the agent, so we have to adjust the strings in some
             // of the actions.
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
             helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(aboutData->programIconName()));
+#else
+#pragma "NEED TO PORT TO QT6"
+#endif
             helpMenu->action(KHelpMenu::menuHelpContents)->setText(i18n("%1 Handbook", aboutData->displayName()));
             helpMenu->action(KHelpMenu::menuAboutApp)->setText(i18n("About %1", aboutData->displayName()));
             btnBox->addButton(QDialogButtonBox::Help)->setMenu(menu);
