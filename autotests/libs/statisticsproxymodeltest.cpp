@@ -223,6 +223,10 @@ void StatisticsProxyModelTest::shouldHandleDataChangedInExtraColumn()
     Akonadi::Collection c1(1);
     c1.setName(QStringLiteral("c1"));
     c1.setStatistics(makeStats(3, 5, 8)); // changed: unread, count, size in bytes
+
+    // trick QStandardItemModel into noticing something changed here
+    m_model.item(0, 0)->setData(QVariant::fromValue(Akonadi::Collection()), Akonadi::EntityTreeModel::CollectionRole);
+    dataChangedSpy.clear();
     m_model.item(0, 0)->setData(QVariant::fromValue(c1), Akonadi::EntityTreeModel::CollectionRole);
 
     // Then the change should be available and notified
