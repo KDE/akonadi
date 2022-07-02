@@ -69,6 +69,7 @@ set(akonadicore_base_SRCS
     sessionthread.cpp
     specialcollections.cpp
     tag.cpp
+    tagcache.cpp
     tagfetchscope.cpp
     tagsync.cpp
     trashsettings.cpp
@@ -132,6 +133,7 @@ set(akonadicore_base_SRCS
     specialcollections.h
     specialcollections_p.h
     tag.h
+    tagcache.h
     tagfetchscope.h
     tagsync.h
     trashsettings.h
@@ -176,6 +178,7 @@ ecm_generate_headers(AkonadiCore_base_CC_HEADERS
     SpecialCollections
     Supertrait
     Tag
+    TagCache
     TagFetchScope
     TrashSettings
     CollectionPathResolver
