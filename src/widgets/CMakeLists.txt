@@ -92,6 +92,11 @@ target_sources(KF5AkonadiWidgets PRIVATE
     tagwidget.h
     tagselectwidget.h
 
+    clearcachejob.cpp
+    clearcachejob.h
+
+    dbaccess.cpp
+    dbaccess.h
     )
 
 ecm_qt_declare_logging_category(KF5AkonadiWidgets HEADER akonadiwidgets_debug.h IDENTIFIER AKONADIWIDGETS_LOG CATEGORY_NAME org.kde.pim.akonadiwidgets
@@ -125,6 +130,7 @@ ecm_generate_headers(AkonadiWidgets_CC_HEADERS
     AgentInstanceWidget
     AgentTypeDialog
     AgentTypeWidget
+    ClearCacheJob
     CollectionComboBox
     CollectionDialog
     CollectionPropertiesDialog
@@ -133,6 +139,7 @@ ecm_generate_headers(AkonadiWidgets_CC_HEADERS
     CollectionRequester
     CollectionStatisticsDelegate
     ControlGui
+    DbAccess
     EntityListView
     EntityTreeView
     ETMViewStateSaver
