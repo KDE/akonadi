@@ -29,6 +29,9 @@ public:
     Q_REQUIRED_RESULT QWidget *parentWidget() const;
     void setParentWidget(QWidget *newParentWidget);
 
+Q_SIGNALS:
+    void clearCacheDone();
+
 private:
     Akonadi::Collection mCollection;
     QWidget *mParentWidget = nullptr;

@@ -79,6 +79,7 @@ void ClearCacheJob::start()
     // TODO: ???
 
     KMessageBox::information(mParentWidget, i18n("Collection cache cleared. You should restart Akonadi now."));
+    Q_EMIT clearCacheDone();
 }
 
 bool ClearCacheJob::canStart() const
