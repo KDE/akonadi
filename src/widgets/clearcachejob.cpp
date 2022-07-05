@@ -50,12 +50,12 @@ void ClearCacheJob::start()
     const int emptyRidCount = query.value(0).toInt();
     if (emptyRidCount > 0) {
         if (KMessageBox::warningContinueCancel(mParentWidget,
-                                               QStringLiteral("The collection '%1' contains %2 items without Remote ID. "
-                                                              "Those items were likely never uploaded to the destination server, "
-                                                              "so clearing this collection means that those <b>data will be lost</b>. "
-                                                              "Are you sure you want to proceed?")
-                                                   .arg(mCollection.id())
-                                                   .arg(emptyRidCount),
+                                               i18n("The collection '%1' contains %2 items without Remote ID. "
+                                                    "Those items were likely never uploaded to the destination server, "
+                                                    "so clearing this collection means that those <b>data will be lost</b>. "
+                                                    "Are you sure you want to proceed?",
+                                                    QString::number(mCollection.id()),
+                                                    QString::number(emptyRidCount)),
                                                QStringLiteral("POSSIBLE DATA LOSS!"))
             == KMessageBox::Cancel) {
             return;
@@ -78,7 +78,7 @@ void ClearCacheJob::start()
     // TODO: Clear search index
     // TODO: ???
 
-    KMessageBox::information(mParentWidget, QStringLiteral("Collection cache cleared. You should restart Akonadi now."));
+    KMessageBox::information(mParentWidget, i18n("Collection cache cleared. You should restart Akonadi now."));
 }
 
 bool ClearCacheJob::canStart() const
