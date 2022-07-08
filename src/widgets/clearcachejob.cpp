@@ -43,6 +43,7 @@ void ClearCacheJob::start()
     if (!query.exec(ridCount)) {
         qCWarning(AKONADIWIDGETS_LOG) << "Failed to execute query" << ridCount << ":" << query.lastError().text();
         KMessageBox::error(mParentWidget, query.lastError().text());
+        deleteLater();
         return;
     }
 
@@ -58,6 +59,7 @@ void ClearCacheJob::start()
                                                     QString::number(emptyRidCount)),
                                                QStringLiteral("POSSIBLE DATA LOSS!"))
             == KMessageBox::Cancel) {
+            deleteLater();
             return;
         }
     }
@@ -80,6 +82,7 @@ void ClearCacheJob::start()
 
     KMessageBox::information(mParentWidget, i18n("Collection cache cleared. You should restart Akonadi now."));
     Q_EMIT clearCacheDone();
+    deleteLater();
 }
 
 bool ClearCacheJob::canStart() const
