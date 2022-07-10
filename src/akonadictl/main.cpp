@@ -193,7 +193,7 @@ static void runJanitor(const QString &operation)
                                                QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH),
                                                QDBusConnection::sessionBus());
     QObject::connect(&janitor, &org::freedesktop::Akonadi::Janitor::information, [](const QString &msg) {
-        std::cerr << msg.toStdString() << std::endl;
+        std::cout << msg.toStdString() << std::endl;
     });
     QObject::connect(&janitor, &org::freedesktop::Akonadi::Janitor::done, []() {
         qApp->exit();
