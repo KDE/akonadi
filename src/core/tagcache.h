@@ -8,6 +8,8 @@
 
 #include "akonadicore_export.h"
 
+#include <QObject>
+
 #include <Akonadi/Tag>
 
 #include <memory>

@@ -10,6 +10,7 @@
 #include "collection.h"
 
 #include <QElapsedTimer>
+#include <QObject>
 
 class KJob;
 
