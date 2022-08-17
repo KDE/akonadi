@@ -47,11 +47,11 @@ target_sources(akonadi_unittest_common PRIVATE
 target_link_libraries(akonadi_unittest_common
     KF5AkonadiPrivate
     libakonadiserver
-    Qt${QT_MAJOR_VERSION}::Core
-    Qt${QT_MAJOR_VERSION}::DBus
-    Qt${QT_MAJOR_VERSION}::Test
-    Qt${QT_MAJOR_VERSION}::Sql
-    Qt${QT_MAJOR_VERSION}::Network
+    Qt::Core
+    Qt::DBus
+    Qt::Test
+    Qt::Sql
+    Qt::Network
 )
 
 macro(add_server_test _source)
@@ -71,11 +71,11 @@ macro(add_server_test _source)
         akonadi_unittest_common
         libakonadiserver
         KF5AkonadiPrivate
-        Qt${QT_MAJOR_VERSION}::Core
-        Qt${QT_MAJOR_VERSION}::DBus
-        Qt${QT_MAJOR_VERSION}::Test
-        Qt${QT_MAJOR_VERSION}::Sql
-        Qt${QT_MAJOR_VERSION}::Network
+        Qt::Core
+        Qt::DBus
+        Qt::Test
+        Qt::Sql
+        Qt::Network
         ${CMAKE_SHARED_LINKER_FLAGS_ASAN}
     )
 endmacro()

@@ -273,11 +273,11 @@ endif()
 target_link_libraries(libakonadiserver
     akonadi_shared
     KF5AkonadiPrivate
-    Qt${QT_MAJOR_VERSION}::Core
-    Qt${QT_MAJOR_VERSION}::Network
-    Qt${QT_MAJOR_VERSION}::Sql
-    Qt${QT_MAJOR_VERSION}::DBus
-    Qt${QT_MAJOR_VERSION}::Xml
+    Qt::Core
+    Qt::Network
+    Qt::Sql
+    Qt::DBus
+    Qt::Xml
 )
 
 add_executable(akonadiserver ${akonadiserver_SRCS})

@@ -14,8 +14,8 @@ set_target_properties(akonadi_rds PROPERTIES MACOSX_BUNDLE FALSE)
 target_link_libraries(akonadi_rds
     akonadi_shared
     KF5AkonadiPrivate
-    Qt${QT_MAJOR_VERSION}::Core
-    Qt${QT_MAJOR_VERSION}::Network
+    Qt::Core
+    Qt::Network
 )
 
 install(TARGETS akonadi_rds

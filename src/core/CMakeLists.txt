@@ -438,10 +438,10 @@ target_link_libraries(KF5AkonadiCore
 PUBLIC
     KF5::CoreAddons # for KJob
     KF5::ItemModels
-    Qt${QT_MAJOR_VERSION}::Gui # for QColor
+    Qt::Gui # for QColor
 PRIVATE
-    Qt${QT_MAJOR_VERSION}::Network
-    Qt${QT_MAJOR_VERSION}::Widgets
+    Qt::Network
+    Qt::Widgets
     KF5::AkonadiPrivate
     KF5::KIOCore
     KF5::I18n

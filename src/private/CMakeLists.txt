@@ -53,10 +53,10 @@ add_library(KF5::AkonadiPrivate ALIAS KF5AkonadiPrivate)
 add_dependencies(KF5AkonadiPrivate generate_protocol)
 target_link_libraries(KF5AkonadiPrivate
 PUBLIC
-    Qt${QT_MAJOR_VERSION}::Core
-    Qt${QT_MAJOR_VERSION}::DBus
+    Qt::Core
+    Qt::DBus
 PRIVATE
-    Qt${QT_MAJOR_VERSION}::Network
+    Qt::Network
     LibLZMA::LibLZMA
 )
 generate_export_header(KF5AkonadiPrivate BASE_NAME akonadiprivate)

@@ -17,9 +17,9 @@ target_link_libraries(akonaditest
   KF5::AkonadiCore
   KF5::I18n
   KF5::ConfigCore
-  Qt${QT_MAJOR_VERSION}::Xml
-  Qt${QT_MAJOR_VERSION}::DBus
-  Qt${QT_MAJOR_VERSION}::Widgets
+  Qt::Xml
+  Qt::DBus
+  Qt::Widgets
 )
 
 install(TARGETS akonaditest ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})

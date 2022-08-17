@@ -20,7 +20,7 @@ target_include_directories(akonadi_shared INTERFACE $<BUILD_INTERFACE:${CMAKE_CU
 target_link_libraries(akonadi_shared
 PUBLIC
     KF5AkonadiPrivate
-    Qt${QT_MAJOR_VERSION}::Core
+    Qt::Core
     KF5::Crash
 )
 

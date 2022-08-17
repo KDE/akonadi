@@ -80,8 +80,8 @@ target_include_directories(KF5AkonadiAgentBase INTERFACE "$<INSTALL_INTERFACE:${
 
 target_link_libraries(KF5AkonadiAgentBase
 PUBLIC
-    Qt${QT_MAJOR_VERSION}::DBus
-    Qt${QT_MAJOR_VERSION}::Widgets # for QApplication
+    Qt::DBus
+    Qt::Widgets # for QApplication
     KF5::AkonadiCore
     KF5::ConfigCore
     KF5::ConfigGui # for KConfigSkeleton
@@ -89,7 +89,7 @@ PRIVATE
     KF5::AkonadiPrivate
     KF5::AkonadiWidgets
     KF5::I18n
-    Qt${QT_MAJOR_VERSION}::Network
+    Qt::Network
     akonadi_shared
 )
 
