@@ -14,5 +14,5 @@ target_link_libraries(asapcat
 )
 
 install(TARGETS asapcat
-        ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
+        ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
 )

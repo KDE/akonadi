@@ -79,11 +79,11 @@ ecm_generate_pri_file(BASE_NAME AkonadiXml
 
 install(TARGETS
     KF5AkonadiXml
-    EXPORT KF5AkonadiTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
+    EXPORT KF5AkonadiTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 install(TARGETS
-    akonadi2xml ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
+    akonadi2xml ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 install(FILES

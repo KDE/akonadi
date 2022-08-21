@@ -11,5 +11,5 @@ PRIVATE
 
 install(TARGETS
     akonadiselftest
-    ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
+    ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
 )

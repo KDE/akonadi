@@ -22,7 +22,7 @@ target_link_libraries(akonaditest
   Qt::Widgets
 )
 
-install(TARGETS akonaditest ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS akonaditest ${KF_INSTALL_TARGETS_DEFAULT_ARGS})
 
 # Set the akonaditest path (needed by AkonadiMacros.cmake when invoked in kdepimlibs)
 set(_akonaditest_DIR ${CMAKE_CURRENT_BINARY_DIR} CACHE PATH "akonaditest path")

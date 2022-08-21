@@ -73,7 +73,7 @@ target_include_directories(KF5AkonadiPrivate INTERFACE "$<INSTALL_INTERFACE:${KD
 install(TARGETS
     KF5AkonadiPrivate
     EXPORT KF5AkonadiTargets
-    ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
+    ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 install(FILES

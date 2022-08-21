@@ -196,7 +196,7 @@ ecm_generate_pri_file(BASE_NAME AkonadiWidgets
 
 install(TARGETS
     KF5AkonadiWidgets
-    EXPORT KF5AkonadiTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
+    EXPORT KF5AkonadiTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 install(FILES
