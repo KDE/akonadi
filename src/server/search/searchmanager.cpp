@@ -135,11 +135,12 @@ void SearchManager::loadSearchPlugins()
 
     const QStringList dirs = QCoreApplication::libraryPaths();
     for (const QString &pluginDir : dirs) {
-        QDir dir(pluginDir + QLatin1String("/akonadi"));
+        const QString path(pluginDir + QStringLiteral("/pim" QT_STRINGIFY(QT_VERSION_MAJOR)) + QStringLiteral("/akonadi"));
+        QDir dir(path);
         const QStringList fileNames = dir.entryList(QDir::Files);
-        qCDebug(AKONADISERVER_SEARCH_LOG) << "SEARCH MANAGER: searching in " << pluginDir + QLatin1String("/akonadi") << ":" << fileNames;
+        qCDebug(AKONADISERVER_SEARCH_LOG) << "SEARCH MANAGER: searching in " << path << ":" << fileNames;
         for (const QString &fileName : fileNames) {
-            const QString filePath = pluginDir % QLatin1String("/akonadi/") % fileName;
+            const QString filePath = path % QLatin1Char('/') % fileName;
             std::unique_ptr<QPluginLoader> loader(new QPluginLoader(filePath));
             const QVariantMap metadata = loader->metaData().value(QStringLiteral("MetaData")).toVariant().toMap();
             if (metadata.value(QStringLiteral("X-Akonadi-PluginType")).toString() != QLatin1String("SearchPlugin")) {
