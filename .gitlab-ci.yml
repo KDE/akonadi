@@ -7,4 +7,4 @@ include:
   - https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/windows.yml
   # Qt6 builds work without KAccounts, but that is configured as a dependency on the CI and
   # not available for Qt6 yet.
-  #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/linux-qt6.yml
+  # - https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/linux-qt6.yml
