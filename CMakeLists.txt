@@ -238,7 +238,6 @@ endif()
 ############### Build Options ###############
 
 include(CTest)  # Calls enable_testing().
-include(CTestConfig.cmake)
 
 if(NOT DEFINED DATABASE_BACKEND)
     set(DATABASE_BACKEND "MYSQL" CACHE STRING "The default database backend to use for Akonadi. Can be either MYSQL, POSTGRES or SQLITE")
