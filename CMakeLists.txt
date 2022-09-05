@@ -243,14 +243,6 @@ if(NOT DEFINED DATABASE_BACKEND)
     set(DATABASE_BACKEND "MYSQL" CACHE STRING "The default database backend to use for Akonadi. Can be either MYSQL, POSTGRES or SQLITE")
 endif()
 
-############### CTest options ###############
-# Set a timeout value of 1 minute per test
-set(DART_TESTING_TIMEOUT 60)
-
-# CTestCustom.cmake has to be in the CTEST_BINARY_DIR.
-# in the KDE build system, this is the same as CMAKE_BINARY_DIR.
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/CTestCustom.cmake ${CMAKE_CURRENT_BINARY_DIR}/CTestCustom.cmake COPYONLY)
-
 ############### Macros ###############
 
 macro(SET_DEFAULT_DB_BACKEND)
