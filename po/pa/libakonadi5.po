@@ -1,0 +1,2745 @@
+# translation of libakonadi.po to Punjabi
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Amanpreet Singh Alam <aalam@users.sf.net>, 2008.
+# A S Alam <aalam@users.sf.net>, 2009, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: libakonadi\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-09 00:46+0000\n"
+"PO-Revision-Date: 2010-01-16 08:17+0530\n"
+"Last-Translator: A S Alam <aalam@users.sf.net>\n"
+"Language-Team: ਪੰਜਾਬੀ <punjabi-users@lists.sf.net>\n"
+"Language: pa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 1.0\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "ਅਮਨਪਰੀਤ ਸਿੰਘ ਆਲਮ"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "aalam@users.sf.net"
+
+#: agentbase/accountsintegration.cpp:86
+#, kde-format
+msgid "There is currently no account configured."
+msgstr ""
+
+#: agentbase/accountsintegration.cpp:103
+#, kde-format
+msgid "Accounts integration is not supported"
+msgstr ""
+
+#: agentbase/agentbase.cpp:365 agentbase/preprocessorbase_p.cpp:26
+#, kde-format
+msgid "Unable to register object at dbus: %1"
+msgstr ""
+
+#: agentbase/agentbase.cpp:454
+#, kde-format
+msgctxt "Name and type of Akonadi resource"
+msgid "%1 of type %2"
+msgstr ""
+
+#: agentbase/agentbase.cpp:904
+#, kde-format
+msgid "Agent identifier"
+msgstr "ਏਜੰਟ ਪਛਾਣ"
+
+#: agentbase/agentbase.cpp:910
+#, kde-format
+msgid "Akonadi Agent"
+msgstr "ਅਕੋਂਡੀ ਏਜੰਟ"
+
+#: agentbase/agentbase_p.h:49 agentbase/resourcescheduler.cpp:281
+#, kde-format
+msgctxt "@info:status Application ready for work"
+msgid "Ready"
+msgstr "ਤਿਆਰ"
+
+#: agentbase/agentbase_p.h:51
+#, kde-format
+msgctxt "@info:status"
+msgid "Offline"
+msgstr "ਆਫਲਾਈਨ"
+
+#: agentbase/agentbase_p.h:56
+#, kde-format
+msgctxt "@info:status"
+msgid "Syncing..."
+msgstr "ਸੈਕਰੋ..."
+
+#: agentbase/agentbase_p.h:61
+#, kde-format
+msgctxt "@info:status"
+msgid "Error."
+msgstr "ਗਲਤੀ।"
+
+#: agentbase/agentbase_p.h:66
+#, kde-format
+msgctxt "@info:status"
+msgid "Not configured"
+msgstr ""
+
+#: agentbase/resourcebase.cpp:517
+#, fuzzy, kde-format
+#| msgctxt "@label, commandline option"
+#| msgid "Resource identifier"
+msgctxt "@label command line option"
+msgid "Resource identifier"
+msgstr "ਸਰੋਤ ਪਛਾਣਕਰਤਾ"
+
+#: agentbase/resourcebase.cpp:523
+#, fuzzy, kde-format
+#| msgctxt "@title, application name"
+#| msgid "Akonadi Resource"
+msgid "Akonadi Resource"
+msgstr "ਅਕੌਂਡੀ ਸਰੋਤ"
+
+#: agentbase/resourcebase.cpp:571
+#, kde-format
+msgctxt "@info"
+msgid "Invalid item retrieved"
+msgstr ""
+
+#: agentbase/resourcebase.cpp:594
+#, kde-format
+msgctxt "@info"
+msgid "Error while creating item: %1"
+msgstr ""
+
+#: agentbase/resourcebase.cpp:618
+#, kde-format
+msgctxt "@info"
+msgid "Error while updating collection: %1"
+msgstr ""
+
+#: agentbase/resourcebase.cpp:705
+#, kde-format
+msgctxt "@info"
+msgid "Updating local collection failed: %1."
+msgstr ""
+
+#: agentbase/resourcebase.cpp:710
+#, kde-format
+msgctxt "@info"
+msgid "Updating local items failed: %1."
+msgstr ""
+
+#: agentbase/resourcebase.cpp:729
+#, kde-format
+msgctxt "@info"
+msgid "Cannot fetch item in offline mode."
+msgstr ""
+
+#: agentbase/resourcebase.cpp:918
+#, kde-format
+msgctxt "@info:status"
+msgid "Syncing folder '%1'"
+msgstr ""
+
+#: agentbase/resourcebase.cpp:938 agentbase/resourcebase.cpp:945
+#, kde-format
+msgid "Failed to retrieve collection for sync."
+msgstr ""
+
+#: agentbase/resourcebase.cpp:985
+#, kde-format
+msgid "Failed to retrieve collection for attribute sync."
+msgstr ""
+
+#: agentbase/resourcebase.cpp:1039
+#, kde-format
+msgid "The requested item no longer exists"
+msgstr ""
+
+#: agentbase/resourcescheduler.cpp:500 agentbase/resourcescheduler.cpp:506
+#, kde-format
+msgctxt "@info"
+msgid "Job canceled."
+msgstr ""
+
+#: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
+#, kde-format
+msgid "No such collection."
+msgstr "ਕੋਈ ਭੰਡਾਰ ਨਹੀਂ"
+
+#: core/collectionsync.cpp:508 core/collectionsync.cpp:653
+#, kde-format
+msgid "Found unresolved orphan collections"
+msgstr ""
+
+#: core/conflicthandler.cpp:53
+#, kde-format
+msgid "Did not find other item for conflict handling"
+msgstr ""
+
+#: core/jobs/agentinstancecreatejob.cpp:71
+#, kde-format
+msgid "Unable to access D-Bus interface of created agent."
+msgstr ""
+
+#: core/jobs/agentinstancecreatejob.cpp:93
+#, kde-format
+msgid "Agent instance creation timed out."
+msgstr ""
+
+#: core/jobs/agentinstancecreatejob.cpp:151
+#, kde-format
+msgid "Unable to obtain agent type '%1'."
+msgstr ""
+
+#: core/jobs/agentinstancecreatejob.cpp:159
+#, kde-format
+msgid "Unable to create agent instance."
+msgstr ""
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:73
+#, fuzzy, kde-format
+#| msgid "Invalid collection given."
+msgid "Invalid collection instance."
+msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ ਦਿੱਤਾ ਹੈ।"
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:80
+#: core/jobs/resourcesynchronizationjob.cpp:88
+#, kde-format
+msgid "Invalid resource instance."
+msgstr ""
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:102
+#: core/jobs/resourcesynchronizationjob.cpp:113
+#, kde-format
+msgid "Unable to obtain D-Bus interface for resource '%1'"
+msgstr ""
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:125
+#, kde-format
+msgid "Collection attributes synchronization timed out."
+msgstr ""
+
+#: core/jobs/collectioncopyjob.cpp:55
+#, fuzzy, kde-format
+#| msgid "Invalid collection"
+msgid "Invalid collection to copy"
+msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ"
+
+#: core/jobs/collectioncopyjob.cpp:61
+#, fuzzy, kde-format
+#| msgid "Invalid collection"
+msgid "Invalid destination collection"
+msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ"
+
+#: core/jobs/collectioncreatejob.cpp:50
+#, kde-format
+msgid "Invalid parent"
+msgstr ""
+
+#: core/jobs/collectioncreatejob.cpp:98
+#, fuzzy, kde-format
+#| msgid "Folder &Properties"
+msgid "Failed to parse Collection from response"
+msgstr "ਫੋਲਡਰ ਵਿਸ਼ੇਸ਼ਤਾ(&P)"
+
+#: core/jobs/collectiondeletejob.cpp:52
+#, kde-format
+msgid "Invalid collection"
+msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ"
+
+#: core/jobs/collectionfetchjob.cpp:212
+#, kde-format
+msgid "Invalid collection given."
+msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ ਦਿੱਤਾ ਹੈ।"
+
+#: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:90
+#, kde-format
+msgid "No objects specified for moving"
+msgstr ""
+
+#: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
+#: core/jobs/linkjobimpl_p.h:38
+#, kde-format
+msgid "No valid destination specified"
+msgstr "ਕੋਈ ਢੁੱਕਵਾਂ ਟਿਕਾਣਾ ਨਹੀਂ ਦਿੱਤਾ"
+
+#: core/jobs/invalidatecachejob.cpp:58
+#, fuzzy, kde-format
+#| msgid "Invalid collection"
+msgid "Invalid collection."
+msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ"
+
+#: core/jobs/itemcreatejob.cpp:105
+#, fuzzy, kde-format
+#| msgid "Invalid collection"
+msgid "Invalid parent collection"
+msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ"
+
+#: core/jobs/job.cpp:335
+#, kde-format
+msgid "Cannot connect to the Akonadi service."
+msgstr "ਅਕੌਂਡੀ ਸਰਵਿਸ ਨਾਲ ਕੁਨੈਕਟ ਨਹੀਂ ਹੈ।"
+
+#: core/jobs/job.cpp:338
+#, kde-format
+msgid ""
+"The protocol version of the Akonadi server is incompatible. Make sure you "
+"have a compatible version installed."
+msgstr ""
+
+#: core/jobs/job.cpp:341
+#, kde-format
+msgid "User canceled operation."
+msgstr "ਯੂਜ਼ਰ ਨੇ ਓਪਰੇਸ਼ਨ ਰੱਦ ਕੀਤਾ।"
+
+#: core/jobs/job.cpp:346
+#, kde-format
+msgid "Unknown error."
+msgstr "ਅਣਜਾਣ ਗਲਤੀ।"
+
+#: core/jobs/job.cpp:385
+#, kde-format
+msgid "Unexpected response"
+msgstr ""
+
+#: core/jobs/relationcreatejob.cpp:42 core/jobs/relationdeletejob.cpp:42
+#, kde-format
+msgid "Failed to create relation."
+msgstr ""
+
+#: core/jobs/resourcesynchronizationjob.cpp:139
+#, kde-format
+msgid "Resource synchronization timed out."
+msgstr ""
+
+#: core/jobs/specialcollectionshelperjobs.cpp:146
+#, kde-format
+msgid "Could not fetch root collection of resource %1."
+msgstr ""
+
+#: core/jobs/specialcollectionshelperjobs.cpp:190
+#, kde-format
+msgid "No resource ID given."
+msgstr ""
+
+#: core/jobs/specialcollectionshelperjobs.cpp:327
+#, kde-format
+msgid "Invalid resource identifier '%1'"
+msgstr ""
+
+#: core/jobs/specialcollectionshelperjobs.cpp:343
+#: core/jobs/specialcollectionshelperjobs.cpp:351
+#, kde-format
+msgid "Failed to configure default resource via D-Bus."
+msgstr ""
+
+#: core/jobs/specialcollectionshelperjobs.cpp:416
+#, kde-format
+msgid "Failed to fetch the resource collection."
+msgstr ""
+
+#: core/jobs/specialcollectionshelperjobs.cpp:600
+#, kde-format
+msgid "Timeout trying to get lock."
+msgstr ""
+
+#: core/jobs/tagcreatejob.cpp:49
+#, kde-format
+msgid "Failed to create tag."
+msgstr ""
+
+#: core/jobs/trashjob.cpp:163
+#, kde-format
+msgid "Move to trash collection failed, aborting trash operation"
+msgstr ""
+
+#: core/jobs/trashjob.cpp:226 core/jobs/trashrestorejob.cpp:155
+#, kde-format
+msgid "Invalid items passed"
+msgstr ""
+
+#: core/jobs/trashjob.cpp:270 core/jobs/trashrestorejob.cpp:205
+#, fuzzy, kde-format
+#| msgid "Invalid collection"
+msgid "Invalid collection passed"
+msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ"
+
+#: core/jobs/trashjob.cpp:387 core/jobs/trashrestorejob.cpp:355
+#, fuzzy, kde-format
+#| msgid "Invalid collection given."
+msgid "No valid collection or empty itemlist"
+msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ ਦਿੱਤਾ ਹੈ।"
+
+#: core/jobs/trashrestorejob.cpp:90
+#, kde-format
+msgid "Could not find restore collection and restore resource is not available"
+msgstr ""
+
+#: core/models/agentinstancemodel.cpp:183
+#, kde-format
+msgctxt "@title:column, name of a thing"
+msgid "Name"
+msgstr "ਨਾਂ"
+
+#: core/models/entitytreemodel.cpp:195
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid "Syncing..."
+msgctxt "@info:status"
+msgid "Loading..."
+msgstr "ਸੈਕਰੋ..."
+
+#: core/models/entitytreemodel.cpp:487
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid "Error."
+msgctxt "@window:title"
+msgid "Error"
+msgstr "ਗਲਤੀ।"
+
+#: core/models/entitytreemodel.cpp:488
+#, kde-format
+msgid ""
+"The target collection '%1' contains already\n"
+"a collection with name '%2'."
+msgstr ""
+
+#: core/models/entitytreemodel.cpp:657
+#, kde-format
+msgctxt "@title:column Name of a thing"
+msgid "Name"
+msgstr "ਨਾਂ"
+
+#: core/models/entitytreemodel_p.cpp:1332
+#, fuzzy, kde-format
+#| msgid "Could not paste data: %1"
+msgctxt "@info"
+msgid "Could not copy item: <message>%1</message>"
+msgstr "ਡਾਟਾ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ: %1"
+
+#: core/models/entitytreemodel_p.cpp:1334
+#, fuzzy, kde-format
+#| msgid "Could not paste data: %1"
+msgctxt "@info"
+msgid "Could not copy collection: <message>%1</message>"
+msgstr "ਡਾਟਾ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ: %1"
+
+#: core/models/entitytreemodel_p.cpp:1336
+#, fuzzy, kde-format
+#| msgid "Could not open file '%1'"
+msgctxt "@info"
+msgid "Could not move item: <message>%1</message>"
+msgstr "ਫਾਇਲ '%1' ਖੋਲ੍ਹੀ ਨਹੀਂ ਜਾ ਸਕੀ"
+
+#: core/models/entitytreemodel_p.cpp:1338
+#, fuzzy, kde-format
+#| msgid "no collection"
+msgctxt "@info"
+msgid "Could not move collection: <message>%1</message>"
+msgstr "ਕੋਈ ਭੰਡਾਰ ਨਹੀਂ"
+
+#: core/models/entitytreemodel_p.cpp:1340
+#, kde-format
+msgctxt "@info"
+msgid "Could not link entity: <message>%1</message>"
+msgstr ""
+
+#: core/models/entitytreemodel_p.cpp:1342
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid "Error."
+msgctxt "@title:window"
+msgid "Error"
+msgstr "ਗਲਤੀ।"
+
+#: core/models/favoritecollectionsmodel.cpp:405
+#, kde-format
+msgid "Favorite Folders"
+msgstr "ਪਸੰਦੀਦਾ ਫੋਲਡਰ"
+
+#: core/models/statisticsproxymodel.cpp:86
+#, kde-format
+msgid "Total Messages"
+msgstr "ਕੁੱਲ ਸੁਨੇਹੇ"
+
+#: core/models/statisticsproxymodel.cpp:88
+#, kde-format
+msgid "Unread Messages"
+msgstr "ਨਾ-ਪੜ੍ਹੇ ਸੁਨੇਹੇ"
+
+#: core/models/statisticsproxymodel.cpp:98
+#, kde-format
+msgid "Quota"
+msgstr "ਕੋਟਾ"
+
+#: core/models/statisticsproxymodel.cpp:104
+#, kde-format
+msgid "Storage Size"
+msgstr "ਸਟੋਰੇਜ਼ ਸਾਈਜ਼"
+
+#: core/models/statisticsproxymodel.cpp:110
+#, fuzzy, kde-format
+#| msgid "Storage Size"
+msgid "Subfolder Storage Size"
+msgstr "ਸਟੋਰੇਜ਼ ਸਾਈਜ਼"
+
+#: core/models/statisticsproxymodel.cpp:224
+#, kde-format
+msgctxt "number of unread entities in the collection"
+msgid "Unread"
+msgstr "ਨਾ-ਪੜ੍ਹੇ"
+
+#: core/models/statisticsproxymodel.cpp:225
+#, kde-format
+msgctxt "number of entities in the collection"
+msgid "Total"
+msgstr "ਕੁੱਲ"
+
+#: core/models/statisticsproxymodel.cpp:226
+#, kde-format
+msgctxt "collection size"
+msgid "Size"
+msgstr "ਸਾਈਜ਼"
+
+#: core/models/tagmodel.cpp:64
+#, kde-format
+msgid "Tag"
+msgstr ""
+
+#: core/partfetcher.cpp:49
+#, kde-format
+msgid "Unable to fetch item for index"
+msgstr ""
+
+#: core/partfetcher.cpp:64
+#, kde-format
+msgid "Index is no longer available"
+msgstr ""
+
+#: core/partfetcher.cpp:114
+#, kde-format
+msgid "Payload part '%1' is not available for this index"
+msgstr ""
+
+#: core/partfetcher.cpp:123
+#, kde-format
+msgid "No session available for this index"
+msgstr "ਇਸ ਇੰਡੈਕਸ ਲਈ ਕੋਈ ਸ਼ੈਸ਼ਨ ਉਪਲੱਬਧ ਨਹੀਂ"
+
+#: core/partfetcher.cpp:132
+#, kde-format
+msgid "No item available for this index"
+msgstr ""
+
+#: core/pluginloader.cpp:145
+#, kde-format
+msgid "Unnamed plugin"
+msgstr "ਬਿਨ-ਨਾਂ ਪਲੱਗਇਨ"
+
+#: core/pluginloader.cpp:151
+#, kde-format
+msgid "No description available"
+msgstr "ਕੋਈ ਵੇਰਵਾ ਉਪਲੱਬਧ ਨਹੀਂ"
+
+#: core/servermanager.cpp:271
+#, kde-format
+msgid ""
+"The Akonadi server protocol version differs from the protocol version used "
+"by this application.\n"
+"If you recently updated your system please log out and back in to make sure "
+"all applications use the correct protocol version."
+msgstr ""
+
+#: core/servermanager.cpp:288
+#, kde-format
+msgid ""
+"There are no Akonadi Agents available. Please verify your KDE PIM "
+"installation."
+msgstr ""
+
+#: core/session.cpp:186
+#, kde-format
+msgid ""
+"Protocol version mismatch. Server version is older (%1) than ours (%2). If "
+"you updated your system recently please restart the Akonadi server."
+msgstr ""
+
+#: core/session.cpp:195
+#, kde-format
+msgid ""
+"Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
+"you updated your system recently please restart all KDE PIM applications."
+msgstr ""
+
+#: selftest/main.cpp:19
+#, fuzzy, kde-format
+#| msgid "Akonadi Server Self-Test"
+msgid "Akonadi Self Test"
+msgstr "ਅਕੌਂਡੀ ਸਰਵਰ ਸੈਲਫ਼-ਟੈਸਟ"
+
+#: selftest/main.cpp:21
+#, fuzzy, kde-format
+#| msgid "Cannot connect to the Akonadi service."
+msgid "Checks and reports state of Akonadi server"
+msgstr "ਅਕੌਂਡੀ ਸਰਵਿਸ ਨਾਲ ਕੁਨੈਕਟ ਨਹੀਂ ਹੈ।"
+
+#: selftest/main.cpp:23
+#, kde-format
+msgid "(c) 2008 Volker Krause <vkrause@kde.org>"
+msgstr ""
+
+#: widgets/agentactionmanager.cpp:35
+msgid "&New Agent Instance..."
+msgstr ""
+
+#: widgets/agentactionmanager.cpp:36
+#, fuzzy
+#| msgid "&Delete Item"
+#| msgid_plural "&Delete %1 Items"
+msgid "&Delete Agent Instance"
+msgstr "ਆਈਟਮ ਹਟਾਓ(&D)"
+
+#: widgets/agentactionmanager.cpp:37
+msgid "&Configure Agent Instance"
+msgstr ""
+
+#: widgets/agentactionmanager.cpp:53
+#, kde-format
+msgctxt "@title:window"
+msgid "New Agent Instance"
+msgstr ""
+
+#: widgets/agentactionmanager.cpp:55
+#, fuzzy, kde-format
+#| msgid "Could not paste data: %1"
+msgid "Could not create agent instance: %1"
+msgstr "ਡਾਟਾ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ: %1"
+
+#: widgets/agentactionmanager.cpp:57
+#, fuzzy, kde-format
+#| msgid "Folder creation failed"
+msgid "Agent instance creation failed"
+msgstr "ਫੋਲਡਰ ਬਣਾਉਣਾ ਫੇਲ੍ਹ"
+
+#: widgets/agentactionmanager.cpp:59
+#, fuzzy, kde-format
+#| msgid "Delete folder?"
+msgctxt "@title:window"
+msgid "Delete Agent Instance?"
+msgstr "ਫੋਲਡਰ ਹਟਾਉਣਾ ਹੈ?"
+
+#: widgets/agentactionmanager.cpp:63
+#, fuzzy, kde-format
+#| msgid "Do you really want to delete all selected items?"
+msgid "Do you really want to delete the selected agent instance?"
+msgstr "ਕੀ ਤੁਸੀਂ ਸਭ ਚੁਣੀਆਂ ਆਈਟਮਾਂ ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?"
+
+#: widgets/agentconfigurationdialog.cpp:56
+#, kde-format
+msgctxt "%1 = agent name"
+msgid "%1 Configuration"
+msgstr ""
+
+#: widgets/agentconfigurationdialog.cpp:89
+#, kde-format
+msgid "%1 Handbook"
+msgstr ""
+
+#: widgets/agentconfigurationdialog.cpp:90
+#, kde-format
+msgid "About %1"
+msgstr ""
+
+#: widgets/agentconfigurationwidget.cpp:96
+#, kde-format
+msgid "The configuration dialog has been opened in another window"
+msgstr ""
+
+#: widgets/agentconfigurationwidget.cpp:103
+#, kde-format
+msgid "Configuration for %1 is already opened elsewhere."
+msgstr ""
+
+#: widgets/agentconfigurationwidget.cpp:105
+#, kde-format
+msgid "Failed to register %1 configuration dialog."
+msgstr ""
+
+#: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
+#, kde-format
+msgid "minute"
+msgid_plural "minutes"
+msgstr[0] "ਮਿੰਟ"
+msgstr[1] "ਮਿੰਟ"
+
+#: widgets/cachepolicypage.cpp:69
+#, kde-format
+msgid "Retrieval"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, inherit)
+#: widgets/cachepolicypage.ui:20
+#, kde-format
+msgid "Use options from parent folder or account"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, syncOnDemand)
+#: widgets/cachepolicypage.ui:33
+#, fuzzy, kde-format
+#| msgid "Subscribe to selected folder"
+msgid "Synchronize when selecting this folder"
+msgstr "ਚੁਣੇ ਫੋਲਡਰ ਲਈ ਮੈਂਬਰ ਬਣੋ"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: widgets/cachepolicypage.ui:40
+#, fuzzy, kde-format
+#| msgid "&Synchronize Folder"
+msgid "Synchronize after:"
+msgstr "ਫੋਲਡਰ ਸੈਕਰੋਨਾਈਜ਼(&S)"
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, checkInterval)
+#: widgets/cachepolicypage.ui:47
+#, kde-format
+msgctxt "never check the cache"
+msgid "Never"
+msgstr "ਕਦੇ ਨਹੀਂ"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, checkInterval)
+#. i18n: ectx: property (suffix), widget (QSpinBox, localCacheTimeout)
+#: widgets/cachepolicypage.ui:50 widgets/cachepolicypage.ui:133
+#, kde-format
+msgid "minutes"
+msgstr "ਮਿੰਟ"
+
+#. i18n: ectx: property (text), widget (QLabel, localPartsLabel)
+#: widgets/cachepolicypage.ui:66
+#, fuzzy, kde-format
+#| msgid "Locally Cached Parts"
+msgid "Locally cached parts:"
+msgstr "ਲੋਕਲ ਕੈਸ਼ ਕੀਤੇ ਭਾਗ"
+
+#. i18n: ectx: property (title), widget (KEditListWidget, localParts)
+#: widgets/cachepolicypage.ui:87
+#, kde-format
+msgid "Locally Cached Parts"
+msgstr "ਲੋਕਲ ਕੈਸ਼ ਕੀਤੇ ਭਾਗ"
+
+#. i18n: ectx: property (text), widget (QLabel, retrievalOptionsLabel)
+#: widgets/cachepolicypage.ui:94
+#, kde-format
+msgid "Retrieval Options:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QRadioButton, retrieveFullMessages)
+#: widgets/cachepolicypage.ui:101
+#, kde-format
+msgid "Always retrieve full &messages"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QRadioButton, retrieveOnlyHeaders)
+#: widgets/cachepolicypage.ui:111
+#, kde-format
+msgid "&Retrieve message bodies on demand"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/cachepolicypage.ui:118
+#, kde-format
+msgid "Keep message bodies locally for:"
+msgstr ""
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, localCacheTimeout)
+#: widgets/cachepolicypage.ui:130
+#, fuzzy, kde-format
+#| msgctxt "no cache timeout"
+#| msgid "Never"
+msgctxt "no cache timeout"
+msgid "Forever"
+msgstr "ਕਦੇ ਨਹੀਂ"
+
+#: widgets/clearcachejob.cpp:54
+#, kde-format
+msgid ""
+"The collection '%1' contains %2 items without Remote ID. Those items were "
+"likely never uploaded to the destination server, so clearing this collection "
+"means that those <b>data will be lost</b>. Are you sure you want to proceed?"
+msgstr ""
+
+#: widgets/clearcachejob.cpp:83
+#, kde-format
+msgid "Collection cache cleared. You should restart Akonadi now."
+msgstr ""
+
+#: widgets/collectiondialog.cpp:56
+#, fuzzy, kde-format
+#| msgctxt "search folder"
+#| msgid "Search:"
+msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
+msgid "Search"
+msgstr "ਖੋਜ:"
+
+#: widgets/collectiondialog.cpp:64
+#, kde-format
+msgid "Use folder by default"
+msgstr ""
+
+#: widgets/collectiondialog.cpp:224
+#, fuzzy, kde-format
+#| msgid "&New Folder..."
+msgid "&New Subfolder..."
+msgstr "ਨਵਾਂ ਫੋਲਡਰ(&N)..."
+
+#: widgets/collectiondialog.cpp:226
+#, kde-format
+msgid "Create a new subfolder under the currently selected folder"
+msgstr ""
+
+#: widgets/collectiondialog.cpp:264 widgets/standardactionmanager.cpp:348
+#, kde-format
+msgctxt "@title:window"
+msgid "New Folder"
+msgstr "ਨਵਾਂ ਫੋਲਡਰ"
+
+#: widgets/collectiondialog.cpp:264
+#, kde-format
+msgctxt "@label:textbox, name of a thing"
+msgid "Name"
+msgstr "ਨਾਂ"
+
+#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:350
+#, kde-format
+msgid "Could not create folder: %1"
+msgstr "ਫੋਲਡਰ ਬਣ ਨਹੀਂ ਸਕਿਆ: %1"
+
+#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
+#, kde-format
+msgid "Folder creation failed"
+msgstr "ਫੋਲਡਰ ਬਣਾਉਣਾ ਫੇਲ੍ਹ"
+
+#: widgets/collectiongeneralpropertiespage.cpp:27
+#, kde-format
+msgctxt "@title:tab general properties page"
+msgid "General"
+msgstr "ਆਮ"
+
+#: widgets/collectiongeneralpropertiespage.cpp:54
+#, kde-format
+msgctxt "@label"
+msgid "One object"
+msgid_plural "%1 objects"
+msgstr[0] "ਇੱਕ ਆਬਜੈਕਟ"
+msgstr[1] "%1 ਆਬਜੈਕਟ"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/collectiongeneralpropertiespage.ui:16
+#, kde-format
+msgid "&Name:"
+msgstr "ਨਾਂ(&N):"
+
+#. i18n: ectx: property (text), widget (QCheckBox, customIconCheckbox)
+#: widgets/collectiongeneralpropertiespage.ui:29
+#, kde-format
+msgid "&Use custom icon:"
+msgstr "ਕਸਟਮ ਆਈਕਾਨ ਵਰਤੋਂ(&U):"
+
+#. i18n: ectx: property (icon), widget (KIconButton, customIcon)
+#: widgets/collectiongeneralpropertiespage.ui:39
+#, kde-format
+msgid "folder"
+msgstr "ਫੋਲਡਰ"
+
+#. i18n: ectx: property (title), widget (QGroupBox, statsBox)
+#: widgets/collectiongeneralpropertiespage.ui:62
+#, kde-format
+msgid "Statistics"
+msgstr "ਅੰਕੜੇ"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: widgets/collectiongeneralpropertiespage.ui:68
+#, kde-format
+msgctxt "object names"
+msgid "Content:"
+msgstr "ਸਮੱਗਰੀ:"
+
+#. i18n: ectx: property (text), widget (QLabel, countLabel)
+#: widgets/collectiongeneralpropertiespage.ui:75
+#, kde-format
+msgid "0 objects"
+msgstr "0 ਆਬਜੈਕਟ"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: widgets/collectiongeneralpropertiespage.ui:82
+#, kde-format
+msgid "Size:"
+msgstr "ਸਾਈਜ਼:"
+
+#. i18n: ectx: property (text), widget (QLabel, sizeLabel)
+#: widgets/collectiongeneralpropertiespage.ui:89
+#, kde-format
+msgid "0 Byte"
+msgstr "0 ਬਾਈਟ"
+
+#: widgets/collectionmaintenancepage.cpp:46
+#, kde-format
+msgid "Remember that indexing can take some minutes."
+msgstr ""
+
+#: widgets/collectionmaintenancepage.cpp:71
+#, kde-format
+msgid "Maintenance"
+msgstr ""
+
+#: widgets/collectionmaintenancepage.cpp:130
+#, kde-format
+msgid "Error while retrieving indexed items count"
+msgstr ""
+
+#: widgets/collectionmaintenancepage.cpp:133
+#, kde-format
+msgid "Indexed %1 item in this folder"
+msgid_plural "Indexed %1 items in this folder"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/collectionmaintenancepage.cpp:137
+#, kde-format
+msgid "Calculating indexed items..."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/collectionmaintenancepage.ui:17
+#, fuzzy, kde-format
+#| msgid "Folder &Properties"
+msgid "Folder type:"
+msgstr "ਫੋਲਡਰ ਵਿਸ਼ੇਸ਼ਤਾ(&P)"
+
+#. i18n: ectx: property (text), widget (QLabel, folderTypeLbl)
+#. i18n: ectx: property (text), widget (QLabel, folderSizeLbl)
+#. i18n: ectx: property (text), widget (QLabel, itemsCountLbl)
+#. i18n: ectx: property (text), widget (QLabel, unreadItemsCountLbl)
+#: widgets/collectionmaintenancepage.ui:24
+#: widgets/collectionmaintenancepage.ui:31
+#: widgets/collectionmaintenancepage.ui:52
+#: widgets/collectionmaintenancepage.ui:66
+#, kde-format
+msgid "unknown"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: widgets/collectionmaintenancepage.ui:38
+#, kde-format
+msgid "File size:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: widgets/collectionmaintenancepage.ui:45
+#, fuzzy, kde-format
+#| msgid "Total Messages"
+msgid "Total items:"
+msgstr "ਕੁੱਲ ਸੁਨੇਹੇ"
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: widgets/collectionmaintenancepage.ui:59
+#, fuzzy, kde-format
+#| msgid "Unread Messages"
+msgid "Unread items:"
+msgstr "ਨਾ-ਪੜ੍ਹੇ ਸੁਨੇਹੇ"
+
+#. i18n: ectx: property (text), widget (QLabel, indexingLabel)
+#: widgets/collectionmaintenancepage.ui:73
+#, kde-format
+msgid "Indexing:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, enableIndexingChkBox)
+#: widgets/collectionmaintenancepage.ui:80
+#, kde-format
+msgid "Enable fulltext indexing"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, indexedCountLbl)
+#: widgets/collectionmaintenancepage.ui:87
+#, kde-format
+msgid "Retrieving indexed items count..."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QPushButton, reindexButton)
+#: widgets/collectionmaintenancepage.ui:94
+#, fuzzy, kde-format
+#| msgid "&Delete Folder"
+msgid "Reindex folder"
+msgstr "ਫੋਲਡਰ ਹਟਾਓ(&D)"
+
+#: widgets/collectionrequester.cpp:113
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "New Folder"
+msgid "No Folder"
+msgstr "ਨਵਾਂ ਫੋਲਡਰ"
+
+#: widgets/collectionrequester.cpp:122
+#, kde-format
+msgid "Open collection dialog"
+msgstr ""
+
+#: widgets/collectionrequester.cpp:143
+#, fuzzy, kde-format
+#| msgid "Invalid collection"
+msgctxt "@title:window"
+msgid "Select a collection"
+msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ"
+
+#: widgets/conflictresolvedialog.cpp:129
+#, kde-format
+msgid "Modification Time"
+msgstr ""
+
+#: widgets/conflictresolvedialog.cpp:141
+#, kde-format
+msgid "Flags"
+msgstr ""
+
+#: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
+#: widgets/conflictresolvedialog.cpp:174
+#, kde-format
+msgid "Attribute: %1"
+msgstr ""
+
+#: widgets/conflictresolvedialog.cpp:186
+#, kde-format
+msgctxt "@title:window"
+msgid "Conflict Resolution"
+msgstr ""
+
+#: widgets/conflictresolvedialog.cpp:192
+#, kde-format
+msgctxt "@action:button"
+msgid "Take my version"
+msgstr ""
+
+#: widgets/conflictresolvedialog.cpp:198
+#, kde-format
+msgctxt "@action:button"
+msgid "Take their version"
+msgstr ""
+
+#: widgets/conflictresolvedialog.cpp:204
+#, kde-format
+msgctxt "@action:button"
+msgid "Keep both versions"
+msgstr ""
+
+#: widgets/conflictresolvedialog.cpp:216
+#, kde-format
+msgid ""
+"<qt>Your changes conflict with those made by someone else meanwhile."
+"<br>Unless one version can just be thrown away, you will have to integrate "
+"those changes manually.<br>Click on <a href=\"opentexteditor\">\"Open text "
+"editor\"</a> to keep a copy of the texts, then select which version is most "
+"correct, then re-open it and modify it again to add what's missing."
+msgstr ""
+
+#: widgets/conflictresolvedialog.cpp:265
+#, kde-format
+msgid "Data"
+msgstr ""
+
+#: widgets/controlgui.cpp:223
+#, kde-format
+msgid "Starting Akonadi server..."
+msgstr "ਅਕੌਂਡ ਸਰਵਰ ਸ਼ੁਰੂ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ..."
+
+#: widgets/controlgui.cpp:229
+#, kde-format
+msgid "Stopping Akonadi server..."
+msgstr "ਅਕੌਂਡੀ ਸਰਵਰ ਰੋਕਿਆ ਜਾ ਰਿਹਾ ਹੈ..."
+
+#: widgets/dragdropmanager.cpp:212
+#, kde-format
+msgid "&Move Here"
+msgstr "ਇੱਥੇ ਭੇਜੋ(&M)"
+
+#: widgets/dragdropmanager.cpp:218
+#, kde-format
+msgid "&Copy Here"
+msgstr "ਇੱਥੇ ਕਾਪੀ ਕਰੋ(&C)"
+
+#: widgets/dragdropmanager.cpp:224
+#, kde-format
+msgid "&Link Here"
+msgstr "ਇੱਥੇ ਲਿੰਕ ਕਰੋ(&L)"
+
+#: widgets/dragdropmanager.cpp:228
+#, kde-format
+msgid "C&ancel"
+msgstr "ਰੱਦ ਕਰੋ(&a)"
+
+#: widgets/erroroverlay.cpp:225
+#, fuzzy, kde-format
+#| msgid "Cannot connect to the Akonadi service."
+msgctxt "%1 is a reason why"
+msgid ""
+"Cannot connect to the Personal information management service.\n"
+"\n"
+"%1"
+msgstr "ਅਕੌਂਡੀ ਸਰਵਿਸ ਨਾਲ ਕੁਨੈਕਟ ਨਹੀਂ ਹੈ।"
+
+#: widgets/erroroverlay.cpp:229 widgets/erroroverlay.cpp:230
+#, kde-format
+msgid "Personal information management service is starting..."
+msgstr ""
+
+#: widgets/erroroverlay.cpp:234 widgets/erroroverlay.cpp:235
+#, kde-format
+msgid "Personal information management service is shutting down..."
+msgstr ""
+
+#: widgets/erroroverlay.cpp:239
+#, kde-format
+msgid ""
+"Personal information management service is performing a database upgrade."
+msgstr ""
+
+#: widgets/erroroverlay.cpp:241
+#, kde-format
+msgid ""
+"Personal information management service is performing a database upgrade.\n"
+"This happens after a software update and is necessary to optimize "
+"performance.\n"
+"Depending on the amount of personal information, this might take a few "
+"minutes."
+msgstr ""
+
+#. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
+#. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
+#: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
+#, kde-format
+msgid ""
+"The Akonadi personal information management service is not running. This "
+"application cannot be used without it."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QPushButton, startButton)
+#: widgets/erroroverlay.ui:116
+#, kde-format
+msgctxt "@action:button Start the Akonadi server"
+msgid "Start"
+msgstr ""
+
+#. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
+#: widgets/erroroverlay.ui:158
+#, kde-format
+msgid ""
+"The Akonadi personal information management framework is not operational.\n"
+"Click on \"Details...\" to obtain detailed information on this problem."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, brokenDescription)
+#: widgets/erroroverlay.ui:208
+#, kde-format
+msgid "The Akonadi personal information management service is not operational."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
+#: widgets/erroroverlay.ui:259
+#, fuzzy, kde-format
+#| msgid "Details"
+msgid "Details..."
+msgstr "ਵੇਰਵਾ"
+
+#: widgets/manageaccountwidget.cpp:200
+#, kde-format
+msgid "Do you want to remove account '%1'?"
+msgstr ""
+
+#: widgets/manageaccountwidget.cpp:201
+#, kde-format
+msgid "Remove account?"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/manageaccountwidget.ui:19
+#, kde-format
+msgid "Incoming accounts (add at least one):"
+msgstr ""
+
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
+#: widgets/manageaccountwidget.ui:26
+#, kde-format
+msgid "Filter…"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
+#: widgets/manageaccountwidget.ui:40
+#, kde-format
+msgid "A&dd..."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
+#: widgets/manageaccountwidget.ui:50
+#, kde-format
+msgid "&Modify..."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
+#: widgets/manageaccountwidget.ui:60
+#, kde-format
+msgid "R&emove"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QPushButton, mRestartAccountButton)
+#: widgets/manageaccountwidget.ui:77
+#, kde-format
+msgid "Restart"
+msgstr ""
+
+#: widgets/recentcollectionaction.cpp:43
+#, fuzzy, kde-format
+#| msgid "&Delete Folder"
+msgid "Recent Folder"
+msgstr "ਫੋਲਡਰ ਹਟਾਓ(&D)"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, RenameFavoriteDialog)
+#: widgets/renamefavoritedialog.ui:26
+#, fuzzy, kde-format
+#| msgid "Rename Favorite"
+msgid "Rename Favorite"
+msgstr "ਪਸੰਦੀਦਾ ਨਾਂ ਬਦਲੋ"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/renamefavoritedialog.ui:35
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox New name of the folder."
+#| msgid "Name:"
+msgid "Name:"
+msgstr "ਨਾਂ:"
+
+#: widgets/selftestdialog.cpp:60
+#, fuzzy, kde-format
+#| msgid "Akonadi Server Self-Test"
+msgctxt "@title:window"
+msgid "Akonadi Server Self-Test"
+msgstr "ਅਕੌਂਡੀ ਸਰਵਰ ਸੈਲਫ਼-ਟੈਸਟ"
+
+#: widgets/selftestdialog.cpp:71
+#, kde-format
+msgid "Save Report..."
+msgstr "ਰਿਪੋਰਟ ਸੰਭਾਲੋ..."
+
+#: widgets/selftestdialog.cpp:73
+#, kde-format
+msgid "Copy Report to Clipboard"
+msgstr "ਰਿਪੋਰਟ ਕਲਿੱਪਬੋਰਡ 'ਚ ਕਾਪੀ ਕਰੋ"
+
+#: widgets/selftestdialog.cpp:189
+#, kde-format
+msgid ""
+"The QtSQL driver '%1' is required by your current Akonadi server "
+"configuration and was found on your system."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:191
+#, kde-format
+msgid ""
+"The QtSQL driver '%1' is required by your current Akonadi server "
+"configuration.\n"
+"The following drivers are installed: %2.\n"
+"Make sure the required driver is installed."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:198
+#, kde-format
+msgid "Database driver found."
+msgstr "ਡਾਟਾਬੇਸ ਡਰਾਇਵਰ ਲੱਭਿਆ।"
+
+#: widgets/selftestdialog.cpp:200
+#, kde-format
+msgid "Database driver not found."
+msgstr "ਡਾਟਾਬੇਸ ਡਰਾਇਵਰ ਨਹੀਂ ਲੱਭਿਆ।"
+
+#: widgets/selftestdialog.cpp:208
+#, kde-format
+msgid "MySQL server executable not tested."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:208 widgets/selftestdialog.cpp:249
+#: widgets/selftestdialog.cpp:300
+#, kde-format
+msgid "The current configuration does not require an internal MySQL server."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:216
+#, kde-format
+msgid ""
+"You have currently configured Akonadi to use the MySQL server '%1'.\n"
+"Make sure you have the MySQL server installed, set the correct path and "
+"ensure you have the necessary read and execution rights on the server "
+"executable. The server executable is typically called 'mysqld'; its location "
+"varies depending on the distribution."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:224
+#, kde-format
+msgid "MySQL server not found."
+msgstr "MySQL ਸਰਵਰ ਨਹੀਂ ਲੱਭਿਆ।"
+
+#: widgets/selftestdialog.cpp:226
+#, kde-format
+msgid "MySQL server not readable."
+msgstr "MySQL ਸਰਵਰ ਪੜ੍ਹਨਯੋਗ ਨਹੀਂ ਹੈ।"
+
+#: widgets/selftestdialog.cpp:228
+#, kde-format
+msgid "MySQL server not executable."
+msgstr "MySQL ਚੱਲਣਯੋਗ ਨਹੀਂ ਲੱਭਿਆ।"
+
+#: widgets/selftestdialog.cpp:230
+#, kde-format
+msgid "MySQL found with unexpected name."
+msgstr "MySQL ਗਲਤ ਨਾਂ ਨਾਲ ਲੱਭਿਆ।"
+
+#: widgets/selftestdialog.cpp:232
+#, kde-format
+msgid "MySQL server found."
+msgstr "MySQL ਸਰਵਰ ਲੱਭਿਆ।"
+
+#: widgets/selftestdialog.cpp:238
+#, kde-format
+msgid "MySQL server found: %1"
+msgstr "MySQL ਸਰਵਰ ਲੱਭਿਆ: %1"
+
+#: widgets/selftestdialog.cpp:239
+#, kde-format
+msgid "MySQL server is executable."
+msgstr "MySQL ਸਰਵਰ ਚੱਲਣਯੋਗ ਹੈ।"
+
+#: widgets/selftestdialog.cpp:241
+#, kde-format
+msgid ""
+"Executing the MySQL server '%1' failed with the following error message: '%2'"
+msgstr ""
+
+#: widgets/selftestdialog.cpp:242
+#, kde-format
+msgid "Executing the MySQL server failed."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:249
+#, kde-format
+msgid "MySQL server error log not tested."
+msgstr "MySQL ਸਰਵਰ ਗਲਤੀ ਲਾਗ ਟੈਸਟ ਨਹੀਂ ਕੀਤਾ ਗਿਆ।"
+
+#: widgets/selftestdialog.cpp:257
+#, kde-format
+msgid "No current MySQL error log found."
+msgstr "ਕੋਈ ਮੌਜੂਦਾ MySQL ਗਲਤੀ ਲਾਗ ਨਹੀਂ ਲੱਭਿਆ।"
+
+#: widgets/selftestdialog.cpp:258
+#, kde-format
+msgid ""
+"The MySQL server did not report any errors during this startup. The log can "
+"be found in '%1'."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:264
+#, kde-format
+msgid "MySQL error log not readable."
+msgstr "MySQL ਗਲਤੀ ਲਾਗ ਪੜ੍ਹਨਯੋਗ ਨਹੀਂ।"
+
+#: widgets/selftestdialog.cpp:265
+#, kde-format
+msgid "A MySQL server error log file was found but is not readable: %1"
+msgstr "ਇੱਕ MySQL ਸਰਵਰ ਗਲਤੀ ਲਾਗ ਫਾਇਲ ਲੱਭੀ, ਪਰ ਪੜ੍ਹਨਯੋਗ ਨਹੀਂ ਹੈ: %1"
+
+#: widgets/selftestdialog.cpp:274
+#, kde-format
+msgid "MySQL server log contains errors."
+msgstr "MySQL ਸਰਵਰ ਵਿੱਚ ਗਲਤੀਆਂ ਹਨ।"
+
+#: widgets/selftestdialog.cpp:275
+#, kde-format
+msgid "The MySQL server error log file '%1' contains errors."
+msgstr "MySQL ਸਰਵਰ ਲਾਗ ਫਾਇਲ '%1' ਵਿੱਚ ਗਲਤੀਆਂ ਹਨ।"
+
+#: widgets/selftestdialog.cpp:285
+#, kde-format
+msgid "MySQL server log contains warnings."
+msgstr "MySQL ਸਰਵਰ ਲਾਗ ਵਿੱਚ ਚੇਤਾਵਨੀਆਂ ਹਨ।"
+
+#: widgets/selftestdialog.cpp:286
+#, kde-format
+msgid "The MySQL server log file '%1' contains warnings."
+msgstr "MySQL ਸਰਵਰ ਲਾਗ ਫਾਇਲ '%1' ਵਿੱਚ ਚੇਤਾਵਨੀਆਂ ਹਨ।"
+
+#: widgets/selftestdialog.cpp:289
+#, kde-format
+msgid "MySQL server log contains no errors."
+msgstr "MySQL ਸਰਵਰ ਲਾਗ ਵਿੱਚ ਕੋਈ ਗਲਤੀ ਨਹੀਂ ਹੈ।"
+
+#: widgets/selftestdialog.cpp:290
+#, kde-format
+msgid "The MySQL server log file '%1' does not contain any errors or warnings."
+msgstr "MySQL ਸਰਵਰ ਲਾਗ ਫਾਇਲ '%1' ਵਿੱਚ ਕੋਈ ਗਲਤੀ ਜਾਂ ਚੇਤਾਵਨੀ ਨਹੀਂ ਹੈ।"
+
+#: widgets/selftestdialog.cpp:300
+#, kde-format
+msgid "MySQL server configuration not tested."
+msgstr "MySQL ਸਰਵਰ ਸੰਰਚਨਾ ਟੈਸਟ ਨਹੀਂ ਕੀਤੀ।"
+
+#: widgets/selftestdialog.cpp:309
+#, kde-format
+msgid "MySQL server default configuration found."
+msgstr "MySQL ਸਰਵਰ ਡਿਫਾਲਟ ਸੰਰਚਨਾ ਮਿਲੀ ਹੈ।"
+
+#: widgets/selftestdialog.cpp:310
+#, kde-format
+msgid ""
+"The default configuration for the MySQL server was found and is readable at "
+"%1."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:314
+#, kde-format
+msgid "MySQL server default configuration not found."
+msgstr "MySQL ਸਰਵਰ ਡਿਫਾਲਟ ਸੰਰਚਨਾ ਨਹੀਂ ਲੱਭੀ।"
+
+#: widgets/selftestdialog.cpp:315
+#, kde-format
+msgid ""
+"The default configuration for the MySQL server was not found or was not "
+"readable. Check your Akonadi installation is complete and you have all "
+"required access rights."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:323
+#, kde-format
+msgid "MySQL server custom configuration not available."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:324
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was not found but is optional."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:327
+#, kde-format
+msgid "MySQL server custom configuration found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:328
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was found and is readable at %1"
+msgstr ""
+
+#: widgets/selftestdialog.cpp:332
+#, kde-format
+msgid "MySQL server custom configuration not readable."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:333
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was found at %1 but is not "
+"readable. Check your access rights."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:342
+#, kde-format
+msgid "MySQL server configuration not found or not readable."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:343
+#, kde-format
+msgid "The MySQL server configuration was not found or is not readable."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:346
+#, kde-format
+msgid "MySQL server configuration is usable."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:347
+#, kde-format
+msgid "The MySQL server configuration was found at %1 and is readable."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:376
+#, kde-format
+msgid "Cannot connect to PostgreSQL server."
+msgstr "PostgreSQL ਸਰਵਰ ਨਾਲ ਕੁਨੈਕਟ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ।"
+
+#: widgets/selftestdialog.cpp:378
+#, kde-format
+msgid "PostgreSQL server found."
+msgstr "PostgreSQL ਸਰਵਰ ਲੱਭਿਆ।"
+
+#: widgets/selftestdialog.cpp:378
+#, fuzzy, kde-format
+#| msgid "The PostgreSQL server was found and connection is working."
+msgid "The PostgreSQL server was found and connection is working."
+msgstr "PostgreSQL ਸਰਵਰ ਲਾਗ ਫਾਇਲ '%1' ਵਿੱਚ ਚੇਤਾਵਨੀਆਂ ਹਨ।"
+
+#: widgets/selftestdialog.cpp:388
+#, kde-format
+msgid "akonadictl not found"
+msgstr "akonadictl ਨਹੀਂ ਲੱਭਿਆ"
+
+#: widgets/selftestdialog.cpp:389
+#, kde-format
+msgid ""
+"The program 'akonadictl' needs to be accessible in $PATH. Make sure you have "
+"the Akonadi server installed."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:396
+#, kde-format
+msgid "akonadictl found and usable"
+msgstr ""
+
+#: widgets/selftestdialog.cpp:397
+#, kde-format
+msgid ""
+"The program '%1' to control the Akonadi server was found and could be "
+"executed successfully.\n"
+"Result:\n"
+"%2"
+msgstr ""
+
+#: widgets/selftestdialog.cpp:403
+#, kde-format
+msgid "akonadictl found but not usable"
+msgstr ""
+
+#: widgets/selftestdialog.cpp:404
+#, kde-format
+msgid ""
+"The program '%1' to control the Akonadi server was found but could not be "
+"executed successfully.\n"
+"Result:\n"
+"%2\n"
+"Make sure the Akonadi server is installed correctly."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:416
+#, kde-format
+msgid "Akonadi control process registered at D-Bus."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:417
+#, kde-format
+msgid ""
+"The Akonadi control process is registered at D-Bus which typically indicates "
+"it is operational."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:420
+#, kde-format
+msgid "Akonadi control process not registered at D-Bus."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:421
+#, kde-format
+msgid ""
+"The Akonadi control process is not registered at D-Bus which typically means "
+"it was not started or encountered a fatal error during startup."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:427
+#, kde-format
+msgid "Akonadi server process registered at D-Bus."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:428
+#, kde-format
+msgid ""
+"The Akonadi server process is registered at D-Bus which typically indicates "
+"it is operational."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:431
+#, kde-format
+msgid "Akonadi server process not registered at D-Bus."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:432
+#, kde-format
+msgid ""
+"The Akonadi server process is not registered at D-Bus which typically means "
+"it was not started or encountered a fatal error during startup."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:441
+#, kde-format
+msgid "Protocol version check not possible."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:442
+#, kde-format
+msgid ""
+"Without a connection to the server it is not possible to check if the "
+"protocol version meets the requirements."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:447
+#, kde-format
+msgid "Server protocol version is too old."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:448 widgets/selftestdialog.cpp:455
+#, kde-format
+msgid ""
+"The server protocol version is %1, but version %2 is required by the client. "
+"If you recently updated KDE PIM, please make sure to restart both Akonadi "
+"and KDE PIM applications."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:454
+#, kde-format
+msgid "Server protocol version is too new."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:460
+#, kde-format
+msgid "Server protocol version matches."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:460
+#, kde-format
+msgid "The current Protocol version is %1."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:478
+#, kde-format
+msgid "Resource agents found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:478
+#, kde-format
+msgid "At least one resource agent has been found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:481
+#, kde-format
+msgid "No resource agents found."
+msgstr "ਕੋਈ ਸਰੋਤ ਏਜੰਟ ਨਹੀਂ ਲੱਭਿਆ।"
+
+#: widgets/selftestdialog.cpp:482
+#, kde-format
+msgid ""
+"No resource agents have been found, Akonadi is not usable without at least "
+"one. This usually means that no resource agents are installed or that there "
+"is a setup problem. The following paths have been searched: '%1'. The "
+"XDG_DATA_DIRS environment variable is set to '%2'; make sure this includes "
+"all paths where Akonadi agents are installed."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:499
+#, kde-format
+msgid "No current Akonadi server error log found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:499
+#, kde-format
+msgid ""
+"The Akonadi server did not report any errors during its current startup."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:503
+#, kde-format
+msgid "Current Akonadi server error log found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:504
+#, kde-format
+msgid ""
+"The Akonadi server reported errors during its current startup. The log can "
+"be found in %1."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:512
+#, kde-format
+msgid "No previous Akonadi server error log found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:513
+#, kde-format
+msgid ""
+"The Akonadi server did not report any errors during its previous startup."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:517
+#, kde-format
+msgid "Previous Akonadi server error log found."
+msgstr "ਪਿਛਲਾ ਅਕੌਂਡੀ ਸਰਵਰ ਗਲਤੀ ਲਾਗ ਨਹੀਂ ਲੱਭਿਆ।"
+
+#: widgets/selftestdialog.cpp:518
+#, kde-format
+msgid ""
+"The Akonadi server reported errors during its previous startup. The log can "
+"be found in %1."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:529
+#, kde-format
+msgid "No current Akonadi control error log found."
+msgstr "ਕੋਈ ਮੌਜੂਦਾ ਅਕੌਂਡੀ ਕੰਟਰੋਲ ਗਲਤੀ ਲਾਗ ਨਹੀਂ ਲੱਭਿਆ।"
+
+#: widgets/selftestdialog.cpp:530
+#, kde-format
+msgid ""
+"The Akonadi control process did not report any errors during its current "
+"startup."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:534
+#, kde-format
+msgid "Current Akonadi control error log found."
+msgstr "ਮੌਜੂਦਾ ਅਕੌਂਡੀ ਕੰਟਰੋਲ ਗਲਤੀ ਲਾਗ ਲੱਭਿਆ।"
+
+#: widgets/selftestdialog.cpp:535
+#, kde-format
+msgid ""
+"The Akonadi control process reported errors during its current startup. The "
+"log can be found in %1."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:543
+#, kde-format
+msgid "No previous Akonadi control error log found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:544
+#, kde-format
+msgid ""
+"The Akonadi control process did not report any errors during its previous "
+"startup."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:548
+#, kde-format
+msgid "Previous Akonadi control error log found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:549
+#, kde-format
+msgid ""
+"The Akonadi control process reported errors during its previous startup. The "
+"log can be found in %1."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:559
+#, kde-format
+msgid "Akonadi was started as root"
+msgstr ""
+
+#: widgets/selftestdialog.cpp:560
+#, kde-format
+msgid ""
+"Running Internet-facing applications as root/administrator exposes you to "
+"many security risks. MySQL, used by this Akonadi installation, will not "
+"allow itself to run as root, to protect you from these risks."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:564
+#, kde-format
+msgid "Akonadi is not running as root"
+msgstr ""
+
+#: widgets/selftestdialog.cpp:565
+#, kde-format
+msgid ""
+"Akonadi is not running as a root/administrator user, which is the "
+"recommended setup for a secure system."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:643
+#, kde-format
+msgid "Save Test Report"
+msgstr "ਟੈਸਟ ਰਿਪੋਰਟ ਸੰਭਾਲੋ"
+
+#: widgets/selftestdialog.cpp:650
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid "Error."
+msgid "Error"
+msgstr "ਗਲਤੀ।"
+
+#: widgets/selftestdialog.cpp:650
+#, kde-format
+msgid "Could not open file '%1'"
+msgstr "ਫਾਇਲ '%1' ਖੋਲ੍ਹੀ ਨਹੀਂ ਜਾ ਸਕੀ"
+
+#. i18n: ectx: property (text), widget (QLabel, introductionLabel)
+#: widgets/selftestdialog.ui:16
+#, kde-format
+msgid ""
+"An error occurred during the startup of the Akonadi server. The following "
+"self-tests are supposed to help with tracking down and solving this problem. "
+"When requesting support or reporting bugs, please always include this report."
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, detailsGroup)
+#: widgets/selftestdialog.ui:39
+#, kde-format
+msgid "Details"
+msgstr "ਵੇਰਵਾ"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/selftestdialog.ui:61
+#, kde-format
+msgid ""
+"<p>For more troubleshooting tips please refer to <a href=\"https://userbase."
+"kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:78
+msgid "&New Folder..."
+msgstr "ਨਵਾਂ ਫੋਲਡਰ(&N)..."
+
+#: widgets/standardactionmanager.cpp:78
+msgid "New"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:80
+#, fuzzy
+#| msgid "&Delete Folder"
+msgid "&Delete Folder"
+msgstr "ਫੋਲਡਰ ਹਟਾਓ(&D)"
+
+#: widgets/standardactionmanager.cpp:80
+#, fuzzy
+#| msgid "Delete?"
+msgid "Delete"
+msgstr "ਹਟਾਉਣਾ?"
+
+#: widgets/standardactionmanager.cpp:82
+#, fuzzy
+#| msgid "&Synchronize Folder"
+msgid "&Synchronize Folder"
+msgstr "ਫੋਲਡਰ ਸੈਕਰੋਨਾਈਜ਼(&S)"
+
+#: widgets/standardactionmanager.cpp:83 widgets/standardactionmanager.cpp:157
+#: widgets/standardactionmanager.cpp:243
+#, fuzzy
+#| msgid "&Synchronize Folder"
+msgid "Synchronize"
+msgstr "ਫੋਲਡਰ ਸੈਕਰੋਨਾਈਜ਼(&S)"
+
+#: widgets/standardactionmanager.cpp:90
+msgid "Folder &Properties"
+msgstr "ਫੋਲਡਰ ਵਿਸ਼ੇਸ਼ਤਾ(&P)"
+
+#: widgets/standardactionmanager.cpp:91 widgets/standardactionmanager.cpp:149
+#, fuzzy
+#| msgid "Folder &Properties"
+msgid "Properties"
+msgstr "ਫੋਲਡਰ ਵਿਸ਼ੇਸ਼ਤਾ(&P)"
+
+#: widgets/standardactionmanager.cpp:98
+msgid "&Paste"
+msgstr "ਚੇਪੋ(&P)"
+
+#: widgets/standardactionmanager.cpp:98
+#, fuzzy
+#| msgid "&Paste"
+msgid "Paste"
+msgstr "ਚੇਪੋ(&P)"
+
+#: widgets/standardactionmanager.cpp:101
+msgid "Manage Local &Subscriptions..."
+msgstr "ਲੋਕਲ ਮੈਂਬਰੀ ਪਰਬੰਧ(&S)...."
+
+#: widgets/standardactionmanager.cpp:102
+#, fuzzy
+#| msgid "Manage Local &Subscriptions..."
+msgid "Manage Local Subscriptions"
+msgstr "ਲੋਕਲ ਮੈਂਬਰੀ ਪਰਬੰਧ(&S)...."
+
+#: widgets/standardactionmanager.cpp:109
+msgid "Add to Favorite Folders"
+msgstr "ਪਸੰਦੀਦਾ ਫੋਲਡਰ 'ਚ ਸ਼ਾਮਲ"
+
+#: widgets/standardactionmanager.cpp:110
+#, fuzzy
+#| msgid "Add to Favorite Folders"
+msgid "Add to Favorite"
+msgstr "ਪਸੰਦੀਦਾ ਫੋਲਡਰ 'ਚ ਸ਼ਾਮਲ"
+
+#: widgets/standardactionmanager.cpp:117
+msgid "Remove from Favorite Folders"
+msgstr "ਪਸੰਦੀਦਾ ਫੋਲਡਰ ਤੋਂ ਹਟਾਓ"
+
+#: widgets/standardactionmanager.cpp:118
+#, fuzzy
+#| msgid "Remove from Favorite Folders"
+msgid "Remove from Favorite"
+msgstr "ਪਸੰਦੀਦਾ ਫੋਲਡਰ ਤੋਂ ਹਟਾਓ"
+
+#: widgets/standardactionmanager.cpp:124
+msgid "Rename Favorite..."
+msgstr "ਪਸੰਦੀਦਾ ਨਾਂ ਬਦਲੋ..."
+
+#: widgets/standardactionmanager.cpp:124
+msgid "Rename"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:126 widgets/standardactionmanager.cpp:164
+msgid "Copy Folder To..."
+msgstr "ਫੋਲਡਰ ਕਾਪੀ ਕਰੋ..."
+
+#: widgets/standardactionmanager.cpp:127 widgets/standardactionmanager.cpp:133
+#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:173
+#, fuzzy
+#| msgid "&Copy Folder"
+#| msgid_plural "&Copy %1 Folders"
+msgid "Copy To"
+msgstr "ਫੋਲਡਰ ਕਾਪੀ ਕਰੋ(&C)"
+
+#: widgets/standardactionmanager.cpp:133 widgets/standardactionmanager.cpp:173
+msgid "Copy Item To..."
+msgstr "ਆਈਟਮ ਕਾਪੀ ਕਰੋ..."
+
+#: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:174
+msgid "Move Item To..."
+msgstr "ਆਈਟਮ ਭੇਜੋ..."
+
+#: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:137
+#: widgets/standardactionmanager.cpp:167 widgets/standardactionmanager.cpp:174
+#, fuzzy
+#| msgid "Move Item To..."
+msgid "Move To"
+msgstr "ਆਈਟਮ ਭੇਜੋ..."
+
+#: widgets/standardactionmanager.cpp:136 widgets/standardactionmanager.cpp:166
+msgid "Move Folder To..."
+msgstr "ਫੋਲਡਰ ਭੇਜੋ..."
+
+#: widgets/standardactionmanager.cpp:143
+#, fuzzy
+#| msgid "&Cut Item"
+#| msgid_plural "&Cut %1 Items"
+msgid "&Cut Item"
+msgstr "ਆਈਟਮ ਕੱਟੋ(&C)"
+
+#: widgets/standardactionmanager.cpp:143 widgets/standardactionmanager.cpp:144
+msgid "Cut"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:144
+#, fuzzy
+#| msgid "&Cut Folder"
+#| msgid_plural "&Cut %1 Folders"
+msgid "&Cut Folder"
+msgstr "ਫੋਲਡਰ ਕੱਟੋ(&C)"
+
+#: widgets/standardactionmanager.cpp:145
+#, fuzzy
+#| msgid "&Delete Folder"
+msgid "Create Resource"
+msgstr "ਫੋਲਡਰ ਹਟਾਓ(&D)"
+
+#: widgets/standardactionmanager.cpp:146
+#, fuzzy
+#| msgid "&Delete Folder"
+msgid "Delete Resource"
+msgstr "ਫੋਲਡਰ ਹਟਾਓ(&D)"
+
+#: widgets/standardactionmanager.cpp:148
+#, fuzzy
+#| msgid "Folder &Properties"
+msgid "&Resource Properties"
+msgstr "ਫੋਲਡਰ ਵਿਸ਼ੇਸ਼ਤਾ(&P)"
+
+#: widgets/standardactionmanager.cpp:156
+#, fuzzy
+#| msgid "&Synchronize Folder"
+msgid "Synchronize Resource"
+msgstr "ਫੋਲਡਰ ਸੈਕਰੋਨਾਈਜ਼(&S)"
+
+#: widgets/standardactionmanager.cpp:163
+#, fuzzy
+#| msgctxt "@info:status"
+#| msgid "Offline"
+msgid "Work Offline"
+msgstr "ਆਫਲਾਈਨ"
+
+#: widgets/standardactionmanager.cpp:176
+#, fuzzy
+#| msgid "&Synchronize Folder"
+msgid "&Synchronize Folder Recursively"
+msgstr "ਫੋਲਡਰ ਸੈਕਰੋਨਾਈਜ਼(&S)"
+
+#: widgets/standardactionmanager.cpp:177
+#, fuzzy
+#| msgid "&Synchronize Folder"
+msgid "Synchronize Recursively"
+msgstr "ਫੋਲਡਰ ਸੈਕਰੋਨਾਈਜ਼(&S)"
+
+#: widgets/standardactionmanager.cpp:184
+#, fuzzy
+#| msgid "Move Item To..."
+msgid "&Move Folder To Trash"
+msgstr "ਆਈਟਮ ਭੇਜੋ..."
+
+#: widgets/standardactionmanager.cpp:185
+#, fuzzy
+#| msgid "Move Item To..."
+msgid "Move Folder To Trash"
+msgstr "ਆਈਟਮ ਭੇਜੋ..."
+
+#: widgets/standardactionmanager.cpp:192
+#, fuzzy
+#| msgid "Move Item To..."
+msgid "&Move Item To Trash"
+msgstr "ਆਈਟਮ ਭੇਜੋ..."
+
+#: widgets/standardactionmanager.cpp:193
+#, fuzzy
+#| msgid "Move Item To..."
+msgid "Move Item To Trash"
+msgstr "ਆਈਟਮ ਭੇਜੋ..."
+
+#: widgets/standardactionmanager.cpp:200 widgets/standardactionmanager.cpp:216
+#, fuzzy
+#| msgid "Folder &Properties"
+msgid "&Restore Folder From Trash"
+msgstr "ਫੋਲਡਰ ਵਿਸ਼ੇਸ਼ਤਾ(&P)"
+
+#: widgets/standardactionmanager.cpp:201 widgets/standardactionmanager.cpp:217
+#, fuzzy
+#| msgid "Folder &Properties"
+msgid "Restore Folder From Trash"
+msgstr "ਫੋਲਡਰ ਵਿਸ਼ੇਸ਼ਤਾ(&P)"
+
+#: widgets/standardactionmanager.cpp:208 widgets/standardactionmanager.cpp:225
+#: widgets/standardactionmanager.cpp:232
+#, fuzzy
+#| msgid "Folder &Properties"
+msgid "&Restore Item From Trash"
+msgstr "ਫੋਲਡਰ ਵਿਸ਼ੇਸ਼ਤਾ(&P)"
+
+#: widgets/standardactionmanager.cpp:209 widgets/standardactionmanager.cpp:226
+#: widgets/standardactionmanager.cpp:232
+#, fuzzy
+#| msgid "Folder &Properties"
+msgid "Restore Item From Trash"
+msgstr "ਫੋਲਡਰ ਵਿਸ਼ੇਸ਼ਤਾ(&P)"
+
+#: widgets/standardactionmanager.cpp:223
+#, fuzzy
+#| msgid "Folder &Properties"
+msgid "&Restore Collection From Trash"
+msgstr "ਫੋਲਡਰ ਵਿਸ਼ੇਸ਼ਤਾ(&P)"
+
+#: widgets/standardactionmanager.cpp:223
+#, fuzzy
+#| msgid "Folder &Properties"
+msgid "Restore Collection From Trash"
+msgstr "ਫੋਲਡਰ ਵਿਸ਼ੇਸ਼ਤਾ(&P)"
+
+#: widgets/standardactionmanager.cpp:234
+#, fuzzy
+#| msgid "&Synchronize Folder"
+msgid "&Synchronize Favorite Folders"
+msgstr "ਫੋਲਡਰ ਸੈਕਰੋਨਾਈਜ਼(&S)"
+
+#: widgets/standardactionmanager.cpp:235
+#, fuzzy
+#| msgid "&Synchronize Folder"
+msgid "Synchronize Favorite Folders"
+msgstr "ਫੋਲਡਰ ਸੈਕਰੋਨਾਈਜ਼(&S)"
+
+#: widgets/standardactionmanager.cpp:242
+#, fuzzy
+#| msgid "&Synchronize Folder"
+msgid "Synchronize Folder Tree"
+msgstr "ਫੋਲਡਰ ਸੈਕਰੋਨਾਈਜ਼(&S)"
+
+#: widgets/standardactionmanager.cpp:328
+#, kde-format
+msgid "&Copy Folder"
+msgid_plural "&Copy %1 Folders"
+msgstr[0] "ਫੋਲਡਰ ਕਾਪੀ ਕਰੋ(&C)"
+msgstr[1] "%1 ਫੋਲਡਰ ਕਾਪੀ ਕਰੋ(&C)"
+
+#: widgets/standardactionmanager.cpp:329
+#, kde-format
+msgid "&Copy Item"
+msgid_plural "&Copy %1 Items"
+msgstr[0] "ਆਈਟਮ ਕਾਪੀ ਕਰੋ(&C)"
+msgstr[1] "%1 ਆਈਟਮਾਂ ਕਾਪੀ ਕਰੋ(&C)"
+
+#: widgets/standardactionmanager.cpp:330
+#, fuzzy, kde-format
+#| msgid "&Cut Item"
+#| msgid_plural "&Cut %1 Items"
+msgctxt "@action"
+msgid "&Cut Item"
+msgid_plural "&Cut %1 Items"
+msgstr[0] "ਆਈਟਮ ਕੱਟੋ(&C)"
+msgstr[1] "%1 ਆਈਟਮਾਂ ਕੱਟੋ(&C)"
+
+#: widgets/standardactionmanager.cpp:331
+#, fuzzy, kde-format
+#| msgid "&Cut Folder"
+#| msgid_plural "&Cut %1 Folders"
+msgctxt "@action"
+msgid "&Cut Folder"
+msgid_plural "&Cut %1 Folders"
+msgstr[0] "ਫੋਲਡਰ ਕੱਟੋ(&C)"
+msgstr[1] "%1 ਫੋਲਡਰ ਕੱਟੋ(&C)"
+
+#: widgets/standardactionmanager.cpp:332
+#, kde-format
+msgid "&Delete Item"
+msgid_plural "&Delete %1 Items"
+msgstr[0] "ਆਈਟਮ ਹਟਾਓ(&D)"
+msgstr[1] "%1 ਆਈਟਮਾਂ ਹਟਾਓ(&D)"
+
+#: widgets/standardactionmanager.cpp:333
+#, fuzzy, kde-format
+#| msgid "&Delete Folder"
+msgctxt "@action"
+msgid "&Delete Folder"
+msgid_plural "&Delete %1 Folders"
+msgstr[0] "ਫੋਲਡਰ ਹਟਾਓ(&D)"
+msgstr[1] "ਫੋਲਡਰ ਹਟਾਓ(&D)"
+
+#: widgets/standardactionmanager.cpp:334
+#, fuzzy, kde-format
+#| msgid "&Synchronize Folder"
+msgctxt "@action"
+msgid "&Synchronize Folder"
+msgid_plural "&Synchronize %1 Folders"
+msgstr[0] "ਫੋਲਡਰ ਸੈਕਰੋਨਾਈਜ਼(&S)"
+msgstr[1] "ਫੋਲਡਰ ਸੈਕਰੋਨਾਈਜ਼(&S)"
+
+#: widgets/standardactionmanager.cpp:335
+#, fuzzy, kde-format
+#| msgid "&Delete Folder"
+msgid "&Delete Resource"
+msgid_plural "&Delete %1 Resources"
+msgstr[0] "ਫੋਲਡਰ ਹਟਾਓ(&D)"
+msgstr[1] "ਫੋਲਡਰ ਹਟਾਓ(&D)"
+
+#: widgets/standardactionmanager.cpp:336
+#, fuzzy, kde-format
+#| msgid "&Synchronize Folder"
+msgid "&Synchronize Resource"
+msgid_plural "&Synchronize %1 Resources"
+msgstr[0] "ਫੋਲਡਰ ਸੈਕਰੋਨਾਈਜ਼(&S)"
+msgstr[1] "ਫੋਲਡਰ ਸੈਕਰੋਨਾਈਜ਼(&S)"
+
+#: widgets/standardactionmanager.cpp:338
+#, fuzzy, kde-format
+#| msgid "&Copy Folder"
+#| msgid_plural "&Copy %1 Folders"
+msgid "Copy Folder"
+msgid_plural "Copy %1 Folders"
+msgstr[0] "ਫੋਲਡਰ ਕਾਪੀ ਕਰੋ(&C)"
+msgstr[1] "%1 ਫੋਲਡਰ ਕਾਪੀ ਕਰੋ(&C)"
+
+#: widgets/standardactionmanager.cpp:339
+#, fuzzy, kde-format
+#| msgid "&Copy Item"
+#| msgid_plural "&Copy %1 Items"
+msgid "Copy Item"
+msgid_plural "Copy %1 Items"
+msgstr[0] "ਆਈਟਮ ਕਾਪੀ ਕਰੋ(&C)"
+msgstr[1] "%1 ਆਈਟਮਾਂ ਕਾਪੀ ਕਰੋ(&C)"
+
+#: widgets/standardactionmanager.cpp:340
+#, fuzzy, kde-format
+#| msgid "&Cut Item"
+#| msgid_plural "&Cut %1 Items"
+msgid "Cut Item"
+msgid_plural "Cut %1 Items"
+msgstr[0] "ਆਈਟਮ ਕੱਟੋ(&C)"
+msgstr[1] "%1 ਆਈਟਮਾਂ ਕੱਟੋ(&C)"
+
+#: widgets/standardactionmanager.cpp:341
+#, fuzzy, kde-format
+#| msgid "&Cut Folder"
+#| msgid_plural "&Cut %1 Folders"
+msgid "Cut Folder"
+msgid_plural "Cut %1 Folders"
+msgstr[0] "ਫੋਲਡਰ ਕੱਟੋ(&C)"
+msgstr[1] "%1 ਫੋਲਡਰ ਕੱਟੋ(&C)"
+
+#: widgets/standardactionmanager.cpp:342
+#, fuzzy, kde-format
+#| msgid "&Delete Item"
+#| msgid_plural "&Delete %1 Items"
+msgid "Delete Item"
+msgid_plural "Delete %1 Items"
+msgstr[0] "ਆਈਟਮ ਹਟਾਓ(&D)"
+msgstr[1] "%1 ਆਈਟਮਾਂ ਹਟਾਓ(&D)"
+
+#: widgets/standardactionmanager.cpp:343
+#, fuzzy, kde-format
+#| msgid "&Delete Folder"
+msgid "Delete Folder"
+msgid_plural "Delete %1 Folders"
+msgstr[0] "ਫੋਲਡਰ ਹਟਾਓ(&D)"
+msgstr[1] "ਫੋਲਡਰ ਹਟਾਓ(&D)"
+
+#: widgets/standardactionmanager.cpp:344
+#, fuzzy, kde-format
+#| msgid "&Synchronize Folder"
+msgid "Synchronize Folder"
+msgid_plural "Synchronize %1 Folders"
+msgstr[0] "ਫੋਲਡਰ ਸੈਕਰੋਨਾਈਜ਼(&S)"
+msgstr[1] "ਫੋਲਡਰ ਸੈਕਰੋਨਾਈਜ਼(&S)"
+
+#: widgets/standardactionmanager.cpp:345
+#, fuzzy, kde-format
+#| msgid "&Delete Folder"
+msgctxt "@action"
+msgid "Delete Resource"
+msgid_plural "Delete %1 Resources"
+msgstr[0] "ਫੋਲਡਰ ਹਟਾਓ(&D)"
+msgstr[1] "ਫੋਲਡਰ ਹਟਾਓ(&D)"
+
+#: widgets/standardactionmanager.cpp:346
+#, fuzzy, kde-format
+#| msgid "&Synchronize Folder"
+msgctxt "@action"
+msgid "Synchronize Resource"
+msgid_plural "Synchronize %1 Resources"
+msgstr[0] "ਫੋਲਡਰ ਸੈਕਰੋਨਾਈਜ਼(&S)"
+msgstr[1] "ਫੋਲਡਰ ਸੈਕਰੋਨਾਈਜ਼(&S)"
+
+#: widgets/standardactionmanager.cpp:349
+#, fuzzy, kde-format
+#| msgctxt "@title:column, name of a thing"
+#| msgid "Name"
+msgctxt "@label:textbox name of Akonadi folder"
+msgid "Name"
+msgstr "ਨਾਂ"
+
+#: widgets/standardactionmanager.cpp:356
+#, fuzzy, kde-format
+#| msgid "Do you really want to delete folder '%1' and all its sub-folders?"
+msgid "Do you really want to delete this folder and all its sub-folders?"
+msgid_plural ""
+"Do you really want to delete %1 folders and all their sub-folders?"
+msgstr[0] "ਕੀ ਤੁਸੀਂ '%1' ਫੋਲਡਰ ਅਤੇ ਇਸ ਦੇ ਸਬ-ਫੋਲਡਰਾਂ ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?"
+msgstr[1] "ਕੀ ਤੁਸੀਂ '%1' ਫੋਲਡਰ ਅਤੇ ਇਸ ਦੇ ਸਬ-ਫੋਲਡਰਾਂ ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?"
+
+#: widgets/standardactionmanager.cpp:359
+#, fuzzy, kde-format
+#| msgid "Delete folder?"
+msgctxt "@title:window"
+msgid "Delete folder?"
+msgid_plural "Delete folders?"
+msgstr[0] "ਫੋਲਡਰ ਹਟਾਉਣਾ ਹੈ?"
+msgstr[1] "ਫੋਲਡਰ ਹਟਾਉਣਾ ਹੈ?"
+
+#: widgets/standardactionmanager.cpp:360
+#, kde-format
+msgid "Could not delete folder: %1"
+msgstr "ਫੋਲਡਰ ਹਟਾਇਆ ਨਹੀਂ ਜਾ ਸਕਿਆ: %1"
+
+#: widgets/standardactionmanager.cpp:361
+#, kde-format
+msgid "Folder deletion failed"
+msgstr "ਫੋਲਡਰ ਹਟਾਉਣਾ ਫੇਲ੍ਹ"
+
+#: widgets/standardactionmanager.cpp:363
+#, fuzzy, kde-format
+#| msgid "Properties of Folder %1"
+msgctxt "@title:window"
+msgid "Properties of Folder %1"
+msgstr "ਫੋਲਡਰ %1 ਦੀ ਵਿਸ਼ੇਸ਼ਤਾ"
+
+#: widgets/standardactionmanager.cpp:367
+#, fuzzy, kde-format
+#| msgid "Do you really want to delete all selected items?"
+msgid "Do you really want to delete the selected item?"
+msgid_plural "Do you really want to delete %1 items?"
+msgstr[0] "ਕੀ ਤੁਸੀਂ ਸਭ ਚੁਣੀਆਂ ਆਈਟਮਾਂ ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?"
+msgstr[1] "ਕੀ ਤੁਸੀਂ ਸਭ ਚੁਣੀਆਂ ਆਈਟਮਾਂ ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?"
+
+#: widgets/standardactionmanager.cpp:368
+#, fuzzy, kde-format
+#| msgid "&Delete Item"
+#| msgid_plural "&Delete %1 Items"
+msgctxt "@title:window"
+msgid "Delete item?"
+msgid_plural "Delete items?"
+msgstr[0] "ਆਈਟਮ ਹਟਾਓ(&D)"
+msgstr[1] "%1 ਆਈਟਮਾਂ ਹਟਾਓ(&D)"
+
+#: widgets/standardactionmanager.cpp:369
+#, fuzzy, kde-format
+#| msgid "Could not delete folder: %1"
+msgid "Could not delete item: %1"
+msgstr "ਫੋਲਡਰ ਹਟਾਇਆ ਨਹੀਂ ਜਾ ਸਕਿਆ: %1"
+
+#: widgets/standardactionmanager.cpp:370
+#, fuzzy, kde-format
+#| msgid "Folder deletion failed"
+msgid "Item deletion failed"
+msgstr "ਫੋਲਡਰ ਹਟਾਉਣਾ ਫੇਲ੍ਹ"
+
+#: widgets/standardactionmanager.cpp:372
+#, fuzzy, kde-format
+#| msgid "Rename Favorite"
+msgctxt "@title:window"
+msgid "Rename Favorite"
+msgstr "ਪਸੰਦੀਦਾ ਨਾਂ ਬਦਲੋ"
+
+#: widgets/standardactionmanager.cpp:373
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox New name of the folder."
+#| msgid "Name:"
+msgctxt "@label:textbox name of the folder"
+msgid "Name:"
+msgstr "ਨਾਂ:"
+
+#: widgets/standardactionmanager.cpp:375
+#, fuzzy, kde-format
+#| msgid "&Delete Folder"
+msgctxt "@title:window"
+msgid "New Resource"
+msgstr "ਫੋਲਡਰ ਹਟਾਓ(&D)"
+
+#: widgets/standardactionmanager.cpp:376
+#, fuzzy, kde-format
+#| msgid "Could not create folder: %1"
+msgid "Could not create resource: %1"
+msgstr "ਫੋਲਡਰ ਬਣ ਨਹੀਂ ਸਕਿਆ: %1"
+
+#: widgets/standardactionmanager.cpp:377
+#, fuzzy, kde-format
+#| msgid "Folder creation failed"
+msgid "Resource creation failed"
+msgstr "ਫੋਲਡਰ ਬਣਾਉਣਾ ਫੇਲ੍ਹ"
+
+#: widgets/standardactionmanager.cpp:381
+#, fuzzy, kde-format
+#| msgid "Do you really want to delete all selected items?"
+msgid "Do you really want to delete this resource?"
+msgid_plural "Do you really want to delete %1 resources?"
+msgstr[0] "ਕੀ ਤੁਸੀਂ ਸਭ ਚੁਣੀਆਂ ਆਈਟਮਾਂ ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?"
+msgstr[1] "ਕੀ ਤੁਸੀਂ ਸਭ ਚੁਣੀਆਂ ਆਈਟਮਾਂ ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?"
+
+#: widgets/standardactionmanager.cpp:384
+#, fuzzy, kde-format
+#| msgid "Delete folder?"
+msgctxt "@title:window"
+msgid "Delete Resource?"
+msgid_plural "Delete Resources?"
+msgstr[0] "ਫੋਲਡਰ ਹਟਾਉਣਾ ਹੈ?"
+msgstr[1] "ਫੋਲਡਰ ਹਟਾਉਣਾ ਹੈ?"
+
+#: widgets/standardactionmanager.cpp:386
+#, kde-format
+msgid "Could not paste data: %1"
+msgstr "ਡਾਟਾ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ: %1"
+
+#: widgets/standardactionmanager.cpp:387
+#, kde-format
+msgid "Paste failed"
+msgstr "ਚੇਪਣਾ ਫੇਲ੍ਹ"
+
+#: widgets/standardactionmanager.cpp:739
+#, kde-format
+msgid "We can not add \"/\" in folder name."
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
+#, kde-format
+msgid "Create new folder error"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:743
+#, kde-format
+msgid "We can not add \".\" at begin or end of folder name."
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:982
+#, kde-format
+msgid ""
+"Before syncing folder \"%1\" it is necessary to have the resource online. Do "
+"you want to make it online?"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:983
+#, kde-format
+msgid "Account \"%1\" is offline"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:984
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid "Offline"
+msgctxt "@action:button"
+msgid "Go Online"
+msgstr "ਆਫਲਾਈਨ"
+
+#: widgets/standardactionmanager.cpp:1585
+#, fuzzy, kde-format
+#| msgid "Copy to This Folder"
+msgid "Move to This Folder"
+msgstr "ਇਹ ਫੋਲਡਰ ਕਾਪੀ ਕਰੋ"
+
+#: widgets/standardactionmanager.cpp:1585
+#, kde-format
+msgid "Copy to This Folder"
+msgstr "ਇਹ ਫੋਲਡਰ ਕਾਪੀ ਕਰੋ"
+
+#: widgets/subscriptiondialog.cpp:93
+#, kde-format
+msgid "Failed to update subscription: %1"
+msgstr ""
+
+#: widgets/subscriptiondialog.cpp:93
+#, fuzzy, kde-format
+#| msgid "Manage Local &Subscriptions..."
+msgctxt "@title"
+msgid "Subscription Error"
+msgstr "ਲੋਕਲ ਮੈਂਬਰੀ ਪਰਬੰਧ(&S)...."
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, SubscriptionDialog)
+#: widgets/subscriptiondialog.ui:14
+#, fuzzy, kde-format
+#| msgid "Manage Local &Subscriptions..."
+msgid "Local Subscriptions"
+msgstr "ਲੋਕਲ ਮੈਂਬਰੀ ਪਰਬੰਧ(&S)...."
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/subscriptiondialog.ui:22
+#, fuzzy, kde-format
+#| msgctxt "search folder"
+#| msgid "Search:"
+msgid "Search:"
+msgstr "ਖੋਜ:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, subscribedOnlyCheckBox)
+#: widgets/subscriptiondialog.ui:36
+#, fuzzy, kde-format
+#| msgctxt "@title:column"
+#| msgid "Subscribe To"
+msgid "&Subscribed only"
+msgstr "ਮੈਂਬਰ ਬਣਾਓ"
+
+#. i18n: ectx: property (text), widget (QPushButton, subscribeButton)
+#: widgets/subscriptiondialog.ui:62
+#, fuzzy, kde-format
+#| msgctxt "@title:column"
+#| msgid "Subscribe To"
+msgid "Su&bscribe"
+msgstr "ਮੈਂਬਰ ਬਣਾਓ"
+
+#. i18n: ectx: property (text), widget (QPushButton, unsubscribeButton)
+#: widgets/subscriptiondialog.ui:69
+#, fuzzy, kde-format
+#| msgctxt "@title:column"
+#| msgid "Unsubscribe From"
+msgid "&Unsubscribe"
+msgstr "ਇਸ ਦੀ ਮੈਂਬਰੀ ਛੱਡੋ"
+
+#: widgets/tageditwidget.cpp:116
+#, kde-format
+msgid "Failed to create a new tag"
+msgstr ""
+
+#: widgets/tageditwidget.cpp:116
+#, kde-format
+msgid "An error occurred while creating a new tag"
+msgstr ""
+
+#: widgets/tageditwidget.cpp:164
+#, fuzzy, kde-kuit-format
+#| msgid "Do you really want to delete all selected items?"
+msgctxt "@info"
+msgid "Do you really want to remove the tag <resource>%1</resource>?"
+msgstr "ਕੀ ਤੁਸੀਂ ਸਭ ਚੁਣੀਆਂ ਆਈਟਮਾਂ ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?"
+
+#: widgets/tageditwidget.cpp:165
+#, fuzzy, kde-format
+#| msgid "&Delete Item"
+#| msgid_plural "&Delete %1 Items"
+msgctxt "@title"
+msgid "Delete tag"
+msgstr "ਆਈਟਮ ਹਟਾਓ(&D)"
+
+#: widgets/tageditwidget.cpp:189
+#, fuzzy, kde-format
+#| msgid "&Delete Item"
+#| msgid_plural "&Delete %1 Items"
+msgctxt "@info"
+msgid "Delete tag"
+msgstr "ਆਈਟਮ ਹਟਾਓ(&D)"
+
+#. i18n: ectx: property (text), widget (QLabel, selectLabel)
+#: widgets/tageditwidget.ui:29
+#, kde-format
+msgid "Select tags that should be applied."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QPushButton, newTagButton)
+#: widgets/tageditwidget.ui:54
+#, kde-format
+msgid "Create new tag"
+msgstr ""
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
+#: widgets/tagmanagementdialog.ui:14
+#, kde-format
+msgid "Manage Tags"
+msgstr ""
+
+#: widgets/tagselectioncombobox.cpp:124
+#, fuzzy, kde-format
+#| msgid "&Delete Item"
+#| msgid_plural "&Delete %1 Items"
+msgctxt "@label Placeholder text in tag selection combobox"
+msgid "Select tags..."
+msgstr "ਆਈਟਮ ਹਟਾਓ(&D)"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
+#: widgets/tagselectiondialog.ui:14
+#, kde-format
+msgid "Select Tags"
+msgstr ""
+
+#: widgets/tagwidget.cpp:45
+#, kde-format
+msgid "Clear"
+msgstr ""
+
+#. i18n: ectx: property (placeholderText), widget (Akonadi::TagView, tagView)
+#: widgets/tagwidget.ui:20
+#, kde-format
+msgid "Click to add tags"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QToolButton, editButton)
+#: widgets/tagwidget.ui:27
+#, kde-format
+msgid "..."
+msgstr ""
+
+#: xml/akonadi2xml.cpp:25
+#, kde-format
+msgid "Akonadi To XML converter"
+msgstr ""
+
+#: xml/akonadi2xml.cpp:27
+#, kde-format
+msgid "Converts an Akonadi collection subtree into a XML file."
+msgstr ""
+
+#: xml/akonadi2xml.cpp:29
+#, kde-format
+msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
+msgstr ""
+
+#: xml/xmldocument.cpp:84
+#, kde-format
+msgid "No data loaded."
+msgstr ""
+
+#: xml/xmldocument.cpp:120
+#, fuzzy, kde-format
+#| msgid "No valid destination specified"
+msgid "No filename specified"
+msgstr "ਕੋਈ ਢੁੱਕਵਾਂ ਟਿਕਾਣਾ ਨਹੀਂ ਦਿੱਤਾ"
+
+#: xml/xmldocument.cpp:128
+#, fuzzy, kde-format
+#| msgid "Could not open file '%1'"
+msgid "Unable to open data file '%1'."
+msgstr "ਫਾਇਲ '%1' ਖੋਲ੍ਹੀ ਨਹੀਂ ਜਾ ਸਕੀ"
+
+#: xml/xmldocument.cpp:133
+#, kde-format
+msgid "File %1 does not exist."
+msgstr ""
+
+#: xml/xmldocument.cpp:141
+#, kde-format
+msgid "Unable to parse data file '%1'."
+msgstr ""
+
+#: xml/xmldocument.cpp:149
+#, kde-format
+msgid "Schema definition could not be loaded and parsed."
+msgstr ""
+
+#: xml/xmldocument.cpp:154
+#, kde-format
+msgid "Unable to create schema parser context."
+msgstr ""
+
+#: xml/xmldocument.cpp:159
+#, kde-format
+msgid "Unable to create schema."
+msgstr ""
+
+#: xml/xmldocument.cpp:164
+#, kde-format
+msgid "Unable to create schema validation context."
+msgstr ""
+
+#: xml/xmldocument.cpp:169
+#, fuzzy, kde-format
+#| msgid "Invalid collection"
+msgid "Invalid file format."
+msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ"
+
+#: xml/xmldocument.cpp:177
+#, fuzzy, kde-format
+#| msgid "Could not paste data: %1"
+msgid "Unable to parse data file: %1"
+msgstr "ਡਾਟਾ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ: %1"
+
+#: xml/xmldocument.cpp:302
+#, fuzzy, kde-format
+#| msgid "Invalid collection"
+msgid "Unable to find collection %1"
+msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ"
+
+#~ msgid "&Move here"
+#~ msgstr "ਇੱਥੇ ਭੇਜੋ(&M)"
+
+#~ msgid "&Copy here"
+#~ msgstr "ਇੱਥੇ ਕਾਪੀ ਕਰੋ(&C)"
+
+#~ msgid "Cancel"
+#~ msgstr "ਰੱਦ ਕਰੋ"
+
+#, fuzzy
+#~| msgid "&Cut Item"
+#~| msgid_plural "&Cut %1 Items"
+#~ msgid "Items"
+#~ msgstr "ਆਈਟਮ ਕੱਟੋ(&C)"
+
+#~ msgid "Id"
+#~ msgstr "Id"
+
+#~ msgid "Remote Id"
+#~ msgstr "ਰਿਮੋਟ Id"
+
+#~ msgid "MimeType"
+#~ msgstr "ਮਾਈਮ ਟਾਈਪ"
+
+#, fuzzy
+#~| msgid "Delete?"
+#~ msgctxt "@action:button"
+#~ msgid "Delete"
+#~ msgstr "ਹਟਾਉਣਾ?"
+
+#, fuzzy
+#~| msgid "Cancel"
+#~ msgctxt "@action:button"
+#~ msgid "Cancel"
+#~ msgstr "ਰੱਦ ਕਰੋ"
+
+#~ msgctxt "@title:column, number of unread messages"
+#~ msgid "Unread"
+#~ msgstr "ਨਾ-ਪੜ੍ਹੇ"
+
+#~ msgctxt "@title:column, total number of messages"
+#~ msgid "Total"
+#~ msgstr "ਕੁੱਲ"
+
+#~ msgctxt "@title:column, total size (in bytes) of the collection"
+#~ msgid "Size"
+#~ msgstr "ਸਾਈਜ਼"
+
+#, fuzzy
+#~| msgctxt "@title, application name"
+#~| msgid "Akonadi Resource"
+#~ msgctxt "@title application description"
+#~ msgid "Akonadi Resource"
+#~ msgstr "ਅਕੌਂਡੀ ਸਰੋਤ"
+
+#, fuzzy
+#~| msgctxt "@title:column, name of a thing"
+#~| msgid "Name"
+#~ msgctxt "@label:textbox name of a thing"
+#~ msgid "Name"
+#~ msgstr "ਨਾਂ"
+
+#~ msgid "KDE Test Program"
+#~ msgstr "KDE ਟੈਸਟ ਪਰੋਗਰਾਮ"
+
+#, fuzzy
+#~| msgid "&New Folder..."
+#~ msgid "New Folder..."
+#~ msgstr "ਨਵਾਂ ਫੋਲਡਰ(&N)..."
+
+#, fuzzy
+#~| msgid "Folder &Properties"
+#~ msgid "Resource Properties"
+#~ msgstr "ਫੋਲਡਰ ਵਿਸ਼ੇਸ਼ਤਾ(&P)"
+
+#~ msgid "Cache"
+#~ msgstr "ਕੈਸ਼"
+
+#~ msgid "Cache Policy"
+#~ msgstr "ਕੈਸ਼ ਪਾਲਸੀ"
+
+#~ msgid "Interval check time:"
+#~ msgstr "ਅੰਤਰਾਲ ਚੈਕ ਟਾਈਮ:"
+
+#~ msgid "Local cache timeout:"
+#~ msgstr "ਲੋਕਲ ਕੈਸ਼ ਟਾਈਮ-ਆਉਟ:"
+
+#~ msgid "Synchronize on demand"
+#~ msgstr "ਲੋੜ ਪੈਣ ਉੱਤੇ ਸੈਕਰੋਨਾਈਜ਼ "
+
+#, fuzzy
+#~| msgctxt "search folder"
+#~| msgid "Search:"
+#~ msgctxt "@label:textbox The clickMessage of a search line edit"
+#~ msgid "Search"
+#~ msgstr "ਖੋਜ:"
+
+#~ msgid "<b>Available Folders</b>"
+#~ msgstr "<b>ਉਪਲੱਬਧ ਫੋਲਡਰ</b>"
+
+#~ msgid "<b>Current Changes</b>"
+#~ msgstr "<b>ਮੌਜੂਦਾ ਬਦਲਾਅ</b>"
+
+#~ msgid "Unsubscribe from selected folder"
+#~ msgstr "ਚੁਣੇ ਫੋਲਡਰ ਲਈ ਮੈਂਬਰੀ ਹਟਾਓ"
+
+#~ msgid "TODO"
+#~ msgstr "ਟੂ-ਡੂ"
+
+#~ msgid ""
+#~ "<p style=\"color: white;\"><b>Akonadi not operational.<br/><a href="
+#~ "\"details\" style=\"color: white;\">Details...</a></b></p>"
+#~ msgstr ""
+#~ "<p style=\"color: white;\"><b>ਅਕੌਂਡੀ ਓਪਰੇਸ਼ਨਲ ਨਹੀਂ ਹੈ।<br/><a href=\"details\" "
+#~ "style=\"color: white;\">ਵੇਰਵਾ...</a></b></p>"
+
+#~ msgctxt "@title, application description"
+#~ msgid "Akonadi Resource"
+#~ msgstr "ਅਕੌਂਡੀ ਸਰੋਤ"
+
+#, fuzzy
+#~| msgid "No such collection."
+#~ msgid "&Cut Collection"
+#~ msgid_plural "&Cut %1 Collections"
+#~ msgstr[0] "ਕੋਈ ਭੰਡਾਰ ਨਹੀਂ"
+#~ msgstr[1] "ਕੋਈ ਭੰਡਾਰ ਨਹੀਂ"
+
+#, fuzzy
+#~| msgid "&Copy Folder"
+#~| msgid_plural "&Copy %1 Folders"
+#~ msgid "Copy failed"
+#~ msgstr "ਫੋਲਡਰ ਕਾਪੀ ਕਰੋ(&C)"

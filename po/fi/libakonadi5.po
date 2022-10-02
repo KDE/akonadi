@@ -1,0 +1,2636 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+# Tommi Nieminen <translator@legisign.org>, 2010, 2011, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022.
+# Lasse Liehu <lasse.liehu@gmail.com>, 2011, 2012, 2013, 2014, 2015, 2016, 2018.
+#
+# KDE Finnish translation sprint participants:
+# Author: Artnay
+# Author: Lliehu
+msgid ""
+msgstr ""
+"Project-Id-Version: libakonadi\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-09 00:46+0000\n"
+"PO-Revision-Date: 2022-07-29 11:21+0300\n"
+"Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
+"Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-POT-Import-Date: 2012-12-01 22:25:18+0000\n"
+"X-Generator: Lokalize 20.12.0\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Tommi Nieminen"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "translator@legisign.org"
+
+#: agentbase/accountsintegration.cpp:86
+#, kde-format
+msgid "There is currently no account configured."
+msgstr "Tilejä ei ole asetettu."
+
+#: agentbase/accountsintegration.cpp:103
+#, kde-format
+msgid "Accounts integration is not supported"
+msgstr "Tilien yhdistämistä ei tueta"
+
+#: agentbase/agentbase.cpp:365 agentbase/preprocessorbase_p.cpp:26
+#, kde-format
+msgid "Unable to register object at dbus: %1"
+msgstr "Ei saatu rekisteröidyksi oliota DBusiin: %1"
+
+# Esim. ”IMAP-sähköpostipalvelin [käyttäjän antama nimi]”
+#: agentbase/agentbase.cpp:454
+#, kde-format
+msgctxt "Name and type of Akonadi resource"
+msgid "%1 of type %2"
+msgstr "%2 %1"
+
+#: agentbase/agentbase.cpp:904
+#, kde-format
+msgid "Agent identifier"
+msgstr "Agentin tunniste"
+
+#: agentbase/agentbase.cpp:910
+#, kde-format
+msgid "Akonadi Agent"
+msgstr "Akonadi-agentti"
+
+#: agentbase/agentbase_p.h:49 agentbase/resourcescheduler.cpp:281
+#, kde-format
+msgctxt "@info:status Application ready for work"
+msgid "Ready"
+msgstr "Valmis"
+
+#: agentbase/agentbase_p.h:51
+#, kde-format
+msgctxt "@info:status"
+msgid "Offline"
+msgstr "Ei verkossa"
+
+#: agentbase/agentbase_p.h:56
+#, kde-format
+msgctxt "@info:status"
+msgid "Syncing..."
+msgstr "Synkronoidaan…"
+
+#: agentbase/agentbase_p.h:61
+#, kde-format
+msgctxt "@info:status"
+msgid "Error."
+msgstr "Virhe."
+
+#: agentbase/agentbase_p.h:66
+#, kde-format
+msgctxt "@info:status"
+msgid "Not configured"
+msgstr "Ei määritetty"
+
+#: agentbase/resourcebase.cpp:517
+#, kde-format
+msgctxt "@label command line option"
+msgid "Resource identifier"
+msgstr "Resurssin tunniste"
+
+#: agentbase/resourcebase.cpp:523
+#, kde-format
+msgid "Akonadi Resource"
+msgstr "Akonadi-resurssi"
+
+#: agentbase/resourcebase.cpp:571
+#, kde-format
+msgctxt "@info"
+msgid "Invalid item retrieved"
+msgstr "Saatiin virheellinen tietue"
+
+#: agentbase/resourcebase.cpp:594
+#, kde-format
+msgctxt "@info"
+msgid "Error while creating item: %1"
+msgstr "Virhe luotaessa tietuetta: %1"
+
+#: agentbase/resourcebase.cpp:618
+#, kde-format
+msgctxt "@info"
+msgid "Error while updating collection: %1"
+msgstr "Virhe virkistettäessä kokoelmaa: %1"
+
+#: agentbase/resourcebase.cpp:705
+#, kde-format
+msgctxt "@info"
+msgid "Updating local collection failed: %1."
+msgstr "Paikallisen kokoelman virkistäminen epäonnistui: %1."
+
+#: agentbase/resourcebase.cpp:710
+#, kde-format
+msgctxt "@info"
+msgid "Updating local items failed: %1."
+msgstr "Paikallisten tietueiden päivittäminen epäonnistui: %1."
+
+#: agentbase/resourcebase.cpp:729
+#, kde-format
+msgctxt "@info"
+msgid "Cannot fetch item in offline mode."
+msgstr "Tietuetta ei voi noutaa yhteydettömässä tilassa."
+
+#: agentbase/resourcebase.cpp:918
+#, kde-format
+msgctxt "@info:status"
+msgid "Syncing folder '%1'"
+msgstr "Synkronoidaan kansiota ”%1”"
+
+#: agentbase/resourcebase.cpp:938 agentbase/resourcebase.cpp:945
+#, kde-format
+msgid "Failed to retrieve collection for sync."
+msgstr "Kokoelmaa ei saatu noudetuksi synkronointia varten."
+
+#: agentbase/resourcebase.cpp:985
+#, kde-format
+msgid "Failed to retrieve collection for attribute sync."
+msgstr "Kokoelmaa ei saatu noudetuksi määritteen synkronointia varten."
+
+#: agentbase/resourcebase.cpp:1039
+#, kde-format
+msgid "The requested item no longer exists"
+msgstr "Pyydettyä kohdetta ei ole enää olemassa"
+
+#: agentbase/resourcescheduler.cpp:500 agentbase/resourcescheduler.cpp:506
+#, kde-format
+msgctxt "@info"
+msgid "Job canceled."
+msgstr "Työ peruttiin."
+
+#: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
+#, kde-format
+msgid "No such collection."
+msgstr "Kokoelmaa ei löydy."
+
+#: core/collectionsync.cpp:508 core/collectionsync.cpp:653
+#, kde-format
+msgid "Found unresolved orphan collections"
+msgstr "Löytyi ratkaisemattomia orpokokoelmia"
+
+#: core/conflicthandler.cpp:53
+#, kde-format
+msgid "Did not find other item for conflict handling"
+msgstr "Ei löytynyt muita kohtia ristiriidan käsittelyyn"
+
+#: core/jobs/agentinstancecreatejob.cpp:71
+#, kde-format
+msgid "Unable to access D-Bus interface of created agent."
+msgstr "Luodun agentin DBus-liittymään ei saada yhteyttä."
+
+#: core/jobs/agentinstancecreatejob.cpp:93
+#, kde-format
+msgid "Agent instance creation timed out."
+msgstr "Agentti-instanssin luomisen aikakatkaisu."
+
+#: core/jobs/agentinstancecreatejob.cpp:151
+#, kde-format
+msgid "Unable to obtain agent type '%1'."
+msgstr "Agentin tyyppiä ”%1” ei voi saada."
+
+#: core/jobs/agentinstancecreatejob.cpp:159
+#, kde-format
+msgid "Unable to create agent instance."
+msgstr "Agentti-instanssi ei voitu luoda."
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:73
+#, kde-format
+msgid "Invalid collection instance."
+msgstr "Virheellinen kokoelmainstanssi."
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:80
+#: core/jobs/resourcesynchronizationjob.cpp:88
+#, kde-format
+msgid "Invalid resource instance."
+msgstr "Virheellinen resurssin instanssi."
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:102
+#: core/jobs/resourcesynchronizationjob.cpp:113
+#, kde-format
+msgid "Unable to obtain D-Bus interface for resource '%1'"
+msgstr "D-Bus-liitäntää ei saatu resurssille ”%1”"
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:125
+#, kde-format
+msgid "Collection attributes synchronization timed out."
+msgstr "Kokoelman määritteiden synkronoinnin aikakatkaisu."
+
+#: core/jobs/collectioncopyjob.cpp:55
+#, kde-format
+msgid "Invalid collection to copy"
+msgstr "Virheellinen kopioitava kokoelma"
+
+#: core/jobs/collectioncopyjob.cpp:61
+#, kde-format
+msgid "Invalid destination collection"
+msgstr "Virheellinen kohdekokoelma"
+
+#: core/jobs/collectioncreatejob.cpp:50
+#, kde-format
+msgid "Invalid parent"
+msgstr "Virheellinen emo"
+
+#: core/jobs/collectioncreatejob.cpp:98
+#, kde-format
+msgid "Failed to parse Collection from response"
+msgstr "Vastauksesta saadun kokoelman jäsentäminen epäonnistui"
+
+#: core/jobs/collectiondeletejob.cpp:52
+#, kde-format
+msgid "Invalid collection"
+msgstr "Virheellinen kokoelma"
+
+#: core/jobs/collectionfetchjob.cpp:212
+#, kde-format
+msgid "Invalid collection given."
+msgstr "Annettu virheellinen kokoelma."
+
+#: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:90
+#, kde-format
+msgid "No objects specified for moving"
+msgstr "Siirrettäviä objekteja ei määritetty"
+
+#: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
+#: core/jobs/linkjobimpl_p.h:38
+#, kde-format
+msgid "No valid destination specified"
+msgstr "Kelvollista kohdetta ei määritetty"
+
+#: core/jobs/invalidatecachejob.cpp:58
+#, kde-format
+msgid "Invalid collection."
+msgstr "Virheellinen kokoelma."
+
+#: core/jobs/itemcreatejob.cpp:105
+#, kde-format
+msgid "Invalid parent collection"
+msgstr "Virheellinen emokokoelma"
+
+#: core/jobs/job.cpp:335
+#, kde-format
+msgid "Cannot connect to the Akonadi service."
+msgstr "Akonadi-palveluun ei saada yhteyttä."
+
+#: core/jobs/job.cpp:338
+#, kde-format
+msgid ""
+"The protocol version of the Akonadi server is incompatible. Make sure you "
+"have a compatible version installed."
+msgstr ""
+"Akonadi-palvelimen yhteyskäytäntöversio on yhteensopimaton. Varmista, että "
+"sinulla on yhteensopiva versio asennettuna."
+
+#: core/jobs/job.cpp:341
+#, kde-format
+msgid "User canceled operation."
+msgstr "Käyttäjä perui toiminnon."
+
+#: core/jobs/job.cpp:346
+#, kde-format
+msgid "Unknown error."
+msgstr "Tuntematon virhe."
+
+#: core/jobs/job.cpp:385
+#, kde-format
+msgid "Unexpected response"
+msgstr "Odottamaton vastaus"
+
+#: core/jobs/relationcreatejob.cpp:42 core/jobs/relationdeletejob.cpp:42
+#, kde-format
+msgid "Failed to create relation."
+msgstr "Suhteen luonti epäonnistui."
+
+#: core/jobs/resourcesynchronizationjob.cpp:139
+#, kde-format
+msgid "Resource synchronization timed out."
+msgstr "Resurssin synkronoinnin aikakatkaisu"
+
+#: core/jobs/specialcollectionshelperjobs.cpp:146
+#, kde-format
+msgid "Could not fetch root collection of resource %1."
+msgstr "Resurssin %1 juurikokoelmaa ei saatu noudetuksi."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:190
+#, kde-format
+msgid "No resource ID given."
+msgstr "Resurssin tunnistetta ei annettu."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:327
+#, kde-format
+msgid "Invalid resource identifier '%1'"
+msgstr "Virheellinen resurssin tunniste ”%1”"
+
+#: core/jobs/specialcollectionshelperjobs.cpp:343
+#: core/jobs/specialcollectionshelperjobs.cpp:351
+#, kde-format
+msgid "Failed to configure default resource via D-Bus."
+msgstr "Oletusresurssia ei voitu määrittää D-Busin kautta."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:416
+#, kde-format
+msgid "Failed to fetch the resource collection."
+msgstr "Resurssikokoelmaa ei saatu noudetuksi."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:600
+#, kde-format
+msgid "Timeout trying to get lock."
+msgstr "Aikakatkaisu yritettäessä lukitusta."
+
+#: core/jobs/tagcreatejob.cpp:49
+#, kde-format
+msgid "Failed to create tag."
+msgstr "Luokituksen luonti epäonnistui."
+
+#: core/jobs/trashjob.cpp:163
+#, kde-format
+msgid "Move to trash collection failed, aborting trash operation"
+msgstr ""
+"Roskakorikokoelmaan siirtäminen epäonnistui, keskeytetään roskakoriin siirto"
+
+#: core/jobs/trashjob.cpp:226 core/jobs/trashrestorejob.cpp:155
+#, kde-format
+msgid "Invalid items passed"
+msgstr "Annettiin virheellisiä tietueita"
+
+#: core/jobs/trashjob.cpp:270 core/jobs/trashrestorejob.cpp:205
+#, kde-format
+msgid "Invalid collection passed"
+msgstr "Annettiin virheellinen kokoelma"
+
+#: core/jobs/trashjob.cpp:387 core/jobs/trashrestorejob.cpp:355
+#, kde-format
+msgid "No valid collection or empty itemlist"
+msgstr "Ei kelvollista kokoelmaa tai tietueluettelo on tyhjä"
+
+#: core/jobs/trashrestorejob.cpp:90
+#, kde-format
+msgid "Could not find restore collection and restore resource is not available"
+msgstr "Palautuskokoelmaa ei löydetty ja palautusresurssi ei ole saatavilla"
+
+#: core/models/agentinstancemodel.cpp:183
+#, kde-format
+msgctxt "@title:column, name of a thing"
+msgid "Name"
+msgstr "Nimi"
+
+#: core/models/entitytreemodel.cpp:195
+#, kde-format
+msgctxt "@info:status"
+msgid "Loading..."
+msgstr "Ladataan…"
+
+#: core/models/entitytreemodel.cpp:487
+#, kde-format
+msgctxt "@window:title"
+msgid "Error"
+msgstr "Virhe"
+
+#: core/models/entitytreemodel.cpp:488
+#, kde-format
+msgid ""
+"The target collection '%1' contains already\n"
+"a collection with name '%2'."
+msgstr ""
+"Kohdekokoelma ”%1” sisältää jo kokoelman,\n"
+"jonka nimi on ”%2”."
+
+#: core/models/entitytreemodel.cpp:657
+#, kde-format
+msgctxt "@title:column Name of a thing"
+msgid "Name"
+msgstr "Nimi"
+
+#: core/models/entitytreemodel_p.cpp:1332
+#, kde-format
+msgctxt "@info"
+msgid "Could not copy item: <message>%1</message>"
+msgstr "Kohdetta ei voitu kopioida: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1334
+#, kde-format
+msgctxt "@info"
+msgid "Could not copy collection: <message>%1</message>"
+msgstr "Kokoelmaa ei voitu kopioida: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1336
+#, kde-format
+msgctxt "@info"
+msgid "Could not move item: <message>%1</message>"
+msgstr "Kohdetta ei voitu siirtää: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1338
+#, kde-format
+msgctxt "@info"
+msgid "Could not move collection: <message>%1</message>"
+msgstr "Kokoelmaa ei voitu siirtää: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1340
+#, kde-format
+msgctxt "@info"
+msgid "Could not link entity: <message>%1</message>"
+msgstr "Entiteettiä ei voitu linkittää: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1342
+#, kde-format
+msgctxt "@title:window"
+msgid "Error"
+msgstr "Virhe"
+
+#: core/models/favoritecollectionsmodel.cpp:405
+#, kde-format
+msgid "Favorite Folders"
+msgstr "Suosikkikansiot"
+
+#: core/models/statisticsproxymodel.cpp:86
+#, kde-format
+msgid "Total Messages"
+msgstr "Viestejä kaikkiaan"
+
+#: core/models/statisticsproxymodel.cpp:88
+#, kde-format
+msgid "Unread Messages"
+msgstr "Viestejä lukematta"
+
+#: core/models/statisticsproxymodel.cpp:98
+#, kde-format
+msgid "Quota"
+msgstr "Tilarajoitus"
+
+#: core/models/statisticsproxymodel.cpp:104
+#, kde-format
+msgid "Storage Size"
+msgstr "Tallennuskoko"
+
+#: core/models/statisticsproxymodel.cpp:110
+#, kde-format
+msgid "Subfolder Storage Size"
+msgstr "Alikansioiden tallennuskoko"
+
+#: core/models/statisticsproxymodel.cpp:224
+#, kde-format
+msgctxt "number of unread entities in the collection"
+msgid "Unread"
+msgstr "Lukematta"
+
+#: core/models/statisticsproxymodel.cpp:225
+#, kde-format
+msgctxt "number of entities in the collection"
+msgid "Total"
+msgstr "Kaikkiaan"
+
+#: core/models/statisticsproxymodel.cpp:226
+#, kde-format
+msgctxt "collection size"
+msgid "Size"
+msgstr "Koko"
+
+#: core/models/tagmodel.cpp:64
+#, kde-format
+msgid "Tag"
+msgstr "Luokitus"
+
+#: core/partfetcher.cpp:49
+#, kde-format
+msgid "Unable to fetch item for index"
+msgstr "Tietuetta ei saada noudettua indeksiksi"
+
+#: core/partfetcher.cpp:64
+#, kde-format
+msgid "Index is no longer available"
+msgstr "Indeksiä ei ole enää saatavilla"
+
+#: core/partfetcher.cpp:114
+#, kde-format
+msgid "Payload part '%1' is not available for this index"
+msgstr "Tälle indeksille ei ole saatavilla sisältöosaa ”%1”"
+
+#: core/partfetcher.cpp:123
+#, kde-format
+msgid "No session available for this index"
+msgstr "Tässä indeksissä ei ole saatavilla istuntoa"
+
+#: core/partfetcher.cpp:132
+#, kde-format
+msgid "No item available for this index"
+msgstr "Tässä indeksissä ei ole saatavilla tietueita"
+
+#: core/pluginloader.cpp:145
+#, kde-format
+msgid "Unnamed plugin"
+msgstr "Nimetön liitännäinen"
+
+#: core/pluginloader.cpp:151
+#, kde-format
+msgid "No description available"
+msgstr "Ei kuvausta saatavilla"
+
+#: core/servermanager.cpp:271
+#, kde-format
+msgid ""
+"The Akonadi server protocol version differs from the protocol version used "
+"by this application.\n"
+"If you recently updated your system please log out and back in to make sure "
+"all applications use the correct protocol version."
+msgstr ""
+"Akonadi-palvelimen yhteyskäytäntöversio eroaa sovelluksen käyttämästä "
+"versiosta.\n"
+"Jos järjestelmä on vastikään päivitetty, varmista kirjautumalla ulos ja "
+"takaisin sisään, että kaikki sovellukset käyttävät oikeaa "
+"yhteyskäytäntöversiota."
+
+#: core/servermanager.cpp:288
+#, kde-format
+msgid ""
+"There are no Akonadi Agents available. Please verify your KDE PIM "
+"installation."
+msgstr "Akonadi-agentteja ei ole saatavilla. Tarkista KDE PIM -asennus."
+
+#: core/session.cpp:186
+#, kde-format
+msgid ""
+"Protocol version mismatch. Server version is older (%1) than ours (%2). If "
+"you updated your system recently please restart the Akonadi server."
+msgstr ""
+"Yhteyskäytäntöversiot eivät täsmää. Palvelimen versio on vanhempi (%1) kuin "
+"ohjelman (%2). Jos olet vastikään päivittänyt järjestelmän, käynnistä "
+"Akonadi-palvelin uudelleen."
+
+#: core/session.cpp:195
+#, kde-format
+msgid ""
+"Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
+"you updated your system recently please restart all KDE PIM applications."
+msgstr ""
+"Yhteyskäytäntöversiot eivät täsmää. Palvelimen versio on uudempi (%1) kuin "
+"ohjelman (%2). Jos olet vastikään päivittänyt järjestelmän, käynnistä kaikki "
+"KDE:n PIM-sovellukset uudelleen."
+
+#: selftest/main.cpp:19
+#, kde-format
+msgid "Akonadi Self Test"
+msgstr "Akonadin itsetestaus"
+
+#: selftest/main.cpp:21
+#, kde-format
+msgid "Checks and reports state of Akonadi server"
+msgstr "Tarkastaa ja ilmoittaa Akonadi-palvelimen tilan"
+
+#: selftest/main.cpp:23
+#, kde-format
+msgid "(c) 2008 Volker Krause <vkrause@kde.org>"
+msgstr "© 2008 Volker Krause <vkrause@kde.org>"
+
+#: widgets/agentactionmanager.cpp:35
+msgid "&New Agent Instance..."
+msgstr "&Uusi agentti-instanssi…"
+
+#: widgets/agentactionmanager.cpp:36
+msgid "&Delete Agent Instance"
+msgstr "&Poista agentti-instanssi"
+
+#: widgets/agentactionmanager.cpp:37
+msgid "&Configure Agent Instance"
+msgstr "&Muokkaa agentti-instanssia"
+
+#: widgets/agentactionmanager.cpp:53
+#, kde-format
+msgctxt "@title:window"
+msgid "New Agent Instance"
+msgstr "Uusi agentti-instanssi"
+
+#: widgets/agentactionmanager.cpp:55
+#, kde-format
+msgid "Could not create agent instance: %1"
+msgstr "Agentti-instanssia ei voitu luoda: %1"
+
+#: widgets/agentactionmanager.cpp:57
+#, kde-format
+msgid "Agent instance creation failed"
+msgstr "Agentti-instanssin luominen epäonnistui"
+
+#: widgets/agentactionmanager.cpp:59
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete Agent Instance?"
+msgstr "Poistetaanko agentti-instanssi?"
+
+#: widgets/agentactionmanager.cpp:63
+#, kde-format
+msgid "Do you really want to delete the selected agent instance?"
+msgstr "Haluatko varmasti poistaa valitun agentti-instanssin?"
+
+#: widgets/agentconfigurationdialog.cpp:56
+#, kde-format
+msgctxt "%1 = agent name"
+msgid "%1 Configuration"
+msgstr "Asetukset: %1|/|$[gen %1] asetukset"
+
+#: widgets/agentconfigurationdialog.cpp:89
+#, kde-format
+msgid "%1 Handbook"
+msgstr "%1-käyttöohje|/|$[gen %1] käyttöohje"
+
+#: widgets/agentconfigurationdialog.cpp:90
+#, kde-format
+msgid "About %1"
+msgstr "Tietoa: %1|/|Tietoa $[yleisnimi_pienellä $[elat %1] ]"
+
+#: widgets/agentconfigurationwidget.cpp:96
+#, kde-format
+msgid "The configuration dialog has been opened in another window"
+msgstr "Toiseen ikkunaan on avattu asetusikkuna"
+
+#: widgets/agentconfigurationwidget.cpp:103
+#, kde-format
+msgid "Configuration for %1 is already opened elsewhere."
+msgstr ""
+"%1-asetukset on avattu jo toisaalla.|/|$[gen %1] asetukset on avattu jo "
+"toisaalla."
+
+#: widgets/agentconfigurationwidget.cpp:105
+#, kde-format
+msgid "Failed to register %1 configuration dialog."
+msgstr ""
+"%1-asetusikkunan rekisteröinti epäonnistui.|/|$[gen %1] asetusikkunan "
+"rekisteröinti epäonnistui."
+
+#: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
+#, kde-format
+msgid "minute"
+msgid_plural "minutes"
+msgstr[0] "minuutti"
+msgstr[1] "minuuttia"
+
+#: widgets/cachepolicypage.cpp:69
+#, kde-format
+msgid "Retrieval"
+msgstr "Nouto"
+
+#. i18n: ectx: property (text), widget (QCheckBox, inherit)
+#: widgets/cachepolicypage.ui:20
+#, kde-format
+msgid "Use options from parent folder or account"
+msgstr "Käytä ylemmän kansion tai tilin asetuksia"
+
+#. i18n: ectx: property (text), widget (QCheckBox, syncOnDemand)
+#: widgets/cachepolicypage.ui:33
+#, kde-format
+msgid "Synchronize when selecting this folder"
+msgstr "Synkronoi valittaessa tämä kansio"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: widgets/cachepolicypage.ui:40
+#, kde-format
+msgid "Synchronize after:"
+msgstr "Synkronoi ajassa:"
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, checkInterval)
+#: widgets/cachepolicypage.ui:47
+#, kde-format
+msgctxt "never check the cache"
+msgid "Never"
+msgstr "Ei koskaan"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, checkInterval)
+#. i18n: ectx: property (suffix), widget (QSpinBox, localCacheTimeout)
+#: widgets/cachepolicypage.ui:50 widgets/cachepolicypage.ui:133
+#, kde-format
+msgid "minutes"
+msgstr "minuuttia"
+
+#. i18n: ectx: property (text), widget (QLabel, localPartsLabel)
+#: widgets/cachepolicypage.ui:66
+#, kde-format
+msgid "Locally cached parts:"
+msgstr "Välimuistissa olevat osat:"
+
+#. i18n: ectx: property (title), widget (KEditListWidget, localParts)
+#: widgets/cachepolicypage.ui:87
+#, kde-format
+msgid "Locally Cached Parts"
+msgstr "Välimuistissa olevat osat"
+
+#. i18n: ectx: property (text), widget (QLabel, retrievalOptionsLabel)
+#: widgets/cachepolicypage.ui:94
+#, kde-format
+msgid "Retrieval Options:"
+msgstr "Noutovalinnat:"
+
+#. i18n: ectx: property (text), widget (QRadioButton, retrieveFullMessages)
+#: widgets/cachepolicypage.ui:101
+#, kde-format
+msgid "Always retrieve full &messages"
+msgstr "Nouda aina koko &viestit"
+
+#. i18n: ectx: property (text), widget (QRadioButton, retrieveOnlyHeaders)
+#: widgets/cachepolicypage.ui:111
+#, kde-format
+msgid "&Retrieve message bodies on demand"
+msgstr "Nouda viesti&rungot pyydettäessä"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/cachepolicypage.ui:118
+#, kde-format
+msgid "Keep message bodies locally for:"
+msgstr "Säilytä viestirungot paikallisesti:"
+
+# Oletus: liittyy edeltävään id:hen ”Keep message bodies locally for:”
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, localCacheTimeout)
+#: widgets/cachepolicypage.ui:130
+#, kde-format
+msgctxt "no cache timeout"
+msgid "Forever"
+msgstr "Aina"
+
+#: widgets/clearcachejob.cpp:54
+#, kde-format
+msgid ""
+"The collection '%1' contains %2 items without Remote ID. Those items were "
+"likely never uploaded to the destination server, so clearing this collection "
+"means that those <b>data will be lost</b>. Are you sure you want to proceed?"
+msgstr ""
+"Kokoelma ”%1” sisältää %2 etätunnisteetonta tietuetta. Niitä ei "
+"todennäköisesti ole koskaan lähetetty kohdepalvelimeen, joten kokoelman "
+"tyhjentäminen <b>poistaa kaikki nämä tiedot</b>. Haluatko varmasti jatkaa?"
+
+#: widgets/clearcachejob.cpp:83
+#, kde-format
+msgid "Collection cache cleared. You should restart Akonadi now."
+msgstr ""
+"Kokoelmavälimuisti tyhjennetty. Akonadi tulisi nyt käynnistää uudelleen."
+
+#: widgets/collectiondialog.cpp:56
+#, kde-format
+msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
+msgid "Search"
+msgstr "Etsi"
+
+#: widgets/collectiondialog.cpp:64
+#, kde-format
+msgid "Use folder by default"
+msgstr "Käytä kansiota oletusarvoisesti"
+
+#: widgets/collectiondialog.cpp:224
+#, kde-format
+msgid "&New Subfolder..."
+msgstr "&Uusi alikansio…"
+
+#: widgets/collectiondialog.cpp:226
+#, kde-format
+msgid "Create a new subfolder under the currently selected folder"
+msgstr "Luo uusi alikansio valitun kansion alle"
+
+#: widgets/collectiondialog.cpp:264 widgets/standardactionmanager.cpp:348
+#, kde-format
+msgctxt "@title:window"
+msgid "New Folder"
+msgstr "Uusi kansio"
+
+#: widgets/collectiondialog.cpp:264
+#, kde-format
+msgctxt "@label:textbox, name of a thing"
+msgid "Name"
+msgstr "Nimi"
+
+#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:350
+#, kde-format
+msgid "Could not create folder: %1"
+msgstr "Kansiota ei voitu luoda: %1"
+
+#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
+#, kde-format
+msgid "Folder creation failed"
+msgstr "Kansion luominen epäonnistui"
+
+#: widgets/collectiongeneralpropertiespage.cpp:27
+#, kde-format
+msgctxt "@title:tab general properties page"
+msgid "General"
+msgstr "Yleistä"
+
+#: widgets/collectiongeneralpropertiespage.cpp:54
+#, kde-format
+msgctxt "@label"
+msgid "One object"
+msgid_plural "%1 objects"
+msgstr[0] "Yksi objekti"
+msgstr[1] "%1 objektia"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/collectiongeneralpropertiespage.ui:16
+#, kde-format
+msgid "&Name:"
+msgstr "&Nimi:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, customIconCheckbox)
+#: widgets/collectiongeneralpropertiespage.ui:29
+#, kde-format
+msgid "&Use custom icon:"
+msgstr "Käytä &omaa kuvaketta:"
+
+#. i18n: ectx: property (icon), widget (KIconButton, customIcon)
+#: widgets/collectiongeneralpropertiespage.ui:39
+#, kde-format
+msgid "folder"
+msgstr "kansio"
+
+#. i18n: ectx: property (title), widget (QGroupBox, statsBox)
+#: widgets/collectiongeneralpropertiespage.ui:62
+#, kde-format
+msgid "Statistics"
+msgstr "Tilastot"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: widgets/collectiongeneralpropertiespage.ui:68
+#, kde-format
+msgctxt "object names"
+msgid "Content:"
+msgstr "Sisältö:"
+
+#. i18n: ectx: property (text), widget (QLabel, countLabel)
+#: widgets/collectiongeneralpropertiespage.ui:75
+#, kde-format
+msgid "0 objects"
+msgstr "0 objektia"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: widgets/collectiongeneralpropertiespage.ui:82
+#, kde-format
+msgid "Size:"
+msgstr "Koko:"
+
+#. i18n: ectx: property (text), widget (QLabel, sizeLabel)
+#: widgets/collectiongeneralpropertiespage.ui:89
+#, kde-format
+msgid "0 Byte"
+msgstr "0 tavua"
+
+#: widgets/collectionmaintenancepage.cpp:46
+#, kde-format
+msgid "Remember that indexing can take some minutes."
+msgstr "Huomaa, että indeksointi kestää joitakin minuutteja."
+
+#: widgets/collectionmaintenancepage.cpp:71
+#, kde-format
+msgid "Maintenance"
+msgstr "Ylläpito"
+
+#: widgets/collectionmaintenancepage.cpp:130
+#, kde-format
+msgid "Error while retrieving indexed items count"
+msgstr "Virhe noudettaessa indeksoitujen tietueiden määrää"
+
+#: widgets/collectionmaintenancepage.cpp:133
+#, kde-format
+msgid "Indexed %1 item in this folder"
+msgid_plural "Indexed %1 items in this folder"
+msgstr[0] "Indeksoi tästä kansiosta %1 tietue"
+msgstr[1] "Indeksoi tästä kansiosta %1 tietuetta"
+
+#: widgets/collectionmaintenancepage.cpp:137
+#, kde-format
+msgid "Calculating indexed items..."
+msgstr "Lasketaan indeksoituja tietueita…"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/collectionmaintenancepage.ui:17
+#, kde-format
+msgid "Folder type:"
+msgstr "Kansion tyyppi:"
+
+#. i18n: ectx: property (text), widget (QLabel, folderTypeLbl)
+#. i18n: ectx: property (text), widget (QLabel, folderSizeLbl)
+#. i18n: ectx: property (text), widget (QLabel, itemsCountLbl)
+#. i18n: ectx: property (text), widget (QLabel, unreadItemsCountLbl)
+#: widgets/collectionmaintenancepage.ui:24
+#: widgets/collectionmaintenancepage.ui:31
+#: widgets/collectionmaintenancepage.ui:52
+#: widgets/collectionmaintenancepage.ui:66
+#, kde-format
+msgid "unknown"
+msgstr "tuntematon"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: widgets/collectionmaintenancepage.ui:38
+#, kde-format
+msgid "File size:"
+msgstr "Tiedostokoko:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: widgets/collectionmaintenancepage.ui:45
+#, kde-format
+msgid "Total items:"
+msgstr "Tietueita kaikkiaan:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: widgets/collectionmaintenancepage.ui:59
+#, kde-format
+msgid "Unread items:"
+msgstr "Tietueita lukematta:"
+
+#. i18n: ectx: property (text), widget (QLabel, indexingLabel)
+#: widgets/collectionmaintenancepage.ui:73
+#, kde-format
+msgid "Indexing:"
+msgstr "Indeksointi:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, enableIndexingChkBox)
+#: widgets/collectionmaintenancepage.ui:80
+#, kde-format
+msgid "Enable fulltext indexing"
+msgstr "Salli koko tekstin indeksointi"
+
+#. i18n: ectx: property (text), widget (QLabel, indexedCountLbl)
+#: widgets/collectionmaintenancepage.ui:87
+#, kde-format
+msgid "Retrieving indexed items count..."
+msgstr "Noudetaan indeksoitujen tietueiden määrää…"
+
+#. i18n: ectx: property (text), widget (QPushButton, reindexButton)
+#: widgets/collectionmaintenancepage.ui:94
+#, kde-format
+msgid "Reindex folder"
+msgstr "Indeksoi kansio uudelleen"
+
+#: widgets/collectionrequester.cpp:113
+#, kde-format
+msgid "No Folder"
+msgstr "Ei kansioita"
+
+#: widgets/collectionrequester.cpp:122
+#, kde-format
+msgid "Open collection dialog"
+msgstr "Avaa kokoelmaikkuna"
+
+#: widgets/collectionrequester.cpp:143
+#, kde-format
+msgctxt "@title:window"
+msgid "Select a collection"
+msgstr "Valitse kokoelma"
+
+#: widgets/conflictresolvedialog.cpp:129
+#, kde-format
+msgid "Modification Time"
+msgstr "Muutosaika"
+
+#: widgets/conflictresolvedialog.cpp:141
+#, kde-format
+msgid "Flags"
+msgstr "Liput"
+
+#: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
+#: widgets/conflictresolvedialog.cpp:174
+#, kde-format
+msgid "Attribute: %1"
+msgstr "Määrite: %1"
+
+#: widgets/conflictresolvedialog.cpp:186
+#, kde-format
+msgctxt "@title:window"
+msgid "Conflict Resolution"
+msgstr "Ristiriidan ratkaisu"
+
+#: widgets/conflictresolvedialog.cpp:192
+#, kde-format
+msgctxt "@action:button"
+msgid "Take my version"
+msgstr "Käytä minun versiotani"
+
+#: widgets/conflictresolvedialog.cpp:198
+#, kde-format
+msgctxt "@action:button"
+msgid "Take their version"
+msgstr "Käytä heidän versiotaan"
+
+#: widgets/conflictresolvedialog.cpp:204
+#, kde-format
+msgctxt "@action:button"
+msgid "Keep both versions"
+msgstr "Säilytä kumpikin versio"
+
+#: widgets/conflictresolvedialog.cpp:216
+#, kde-format
+msgid ""
+"<qt>Your changes conflict with those made by someone else meanwhile."
+"<br>Unless one version can just be thrown away, you will have to integrate "
+"those changes manually.<br>Click on <a href=\"opentexteditor\">\"Open text "
+"editor\"</a> to keep a copy of the texts, then select which version is most "
+"correct, then re-open it and modify it again to add what's missing."
+msgstr ""
+"<qt>Muutokset ovat ristiriidassa toisaalla tehtyjen kanssa.<br>Ellei toista "
+"versioista hylätä, muutokset täytyy yhdistää käsin.<br>Teksteistä saa kopion "
+"napsauttamalla <a href=\"opentexteditor\">Avaa tekstimuokkain</a>, "
+"valitsemalla halutun version, avaamalla sen uudelleen ja lisäämällä siihen "
+"puuttuvat tiedot."
+
+#: widgets/conflictresolvedialog.cpp:265
+#, kde-format
+msgid "Data"
+msgstr "Data"
+
+#: widgets/controlgui.cpp:223
+#, kde-format
+msgid "Starting Akonadi server..."
+msgstr "Käynnistetään Akonadi-palvelinta…"
+
+#: widgets/controlgui.cpp:229
+#, kde-format
+msgid "Stopping Akonadi server..."
+msgstr "Pysäytetään Akonadi-palvelinta…"
+
+#: widgets/dragdropmanager.cpp:212
+#, kde-format
+msgid "&Move Here"
+msgstr "&Siirrä tähän"
+
+#: widgets/dragdropmanager.cpp:218
+#, kde-format
+msgid "&Copy Here"
+msgstr "&Kopioi tähän"
+
+#: widgets/dragdropmanager.cpp:224
+#, kde-format
+msgid "&Link Here"
+msgstr "&Linkitä tähän"
+
+#: widgets/dragdropmanager.cpp:228
+#, kde-format
+msgid "C&ancel"
+msgstr "Per&u"
+
+#: widgets/erroroverlay.cpp:225
+#, kde-format
+msgctxt "%1 is a reason why"
+msgid ""
+"Cannot connect to the Personal information management service.\n"
+"\n"
+"%1"
+msgstr ""
+"Ei saada yhteyttä PIM-palveluun.\n"
+"\n"
+"%1"
+
+#: widgets/erroroverlay.cpp:229 widgets/erroroverlay.cpp:230
+#, kde-format
+msgid "Personal information management service is starting..."
+msgstr "Henkilökohtaisten tietojen hallintapalvelu käynnistyy…"
+
+#: widgets/erroroverlay.cpp:234 widgets/erroroverlay.cpp:235
+#, kde-format
+msgid "Personal information management service is shutting down..."
+msgstr "Henkilökohtaisten tietojen hallintapalvelu sulkeutuu…"
+
+#: widgets/erroroverlay.cpp:239
+#, kde-format
+msgid ""
+"Personal information management service is performing a database upgrade."
+msgstr "Henkilökohtaisten tietojen hallintapalvelu päivittää tietokantaa."
+
+#: widgets/erroroverlay.cpp:241
+#, kde-format
+msgid ""
+"Personal information management service is performing a database upgrade.\n"
+"This happens after a software update and is necessary to optimize "
+"performance.\n"
+"Depending on the amount of personal information, this might take a few "
+"minutes."
+msgstr ""
+"Henkilökohtaisten tietojen hallintapalvelu päivittää tietokantaa. Näin käy\n"
+"ohjelmistopäivityksen jälkeen, ja se on tarpeen suorituskyvyn "
+"optimoimiseksi.\n"
+"Päivityksen nopeus riippuu henkilökohtaisten tietojen määrästä."
+
+#. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
+#. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
+#: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
+#, kde-format
+msgid ""
+"The Akonadi personal information management service is not running. This "
+"application cannot be used without it."
+msgstr ""
+"Akonadi, henkilökohtaisten tietojen hallintapalvelu, ei ole käynnissä.\n"
+"Tätä sovellusta ei voi käyttää ilman sitä."
+
+#. i18n: ectx: property (text), widget (QPushButton, startButton)
+#: widgets/erroroverlay.ui:116
+#, kde-format
+msgctxt "@action:button Start the Akonadi server"
+msgid "Start"
+msgstr "Käynnistä"
+
+#. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
+#: widgets/erroroverlay.ui:158
+#, kde-format
+msgid ""
+"The Akonadi personal information management framework is not operational.\n"
+"Click on \"Details...\" to obtain detailed information on this problem."
+msgstr ""
+"Akonadi, henkilökohtaisten tietojen hallintakehys, ei ole toiminnassa.\n"
+"Saat ongelmasta lisätietoa napsauttamalla ”Yksityiskohdat”."
+
+#. i18n: ectx: property (text), widget (QLabel, brokenDescription)
+#: widgets/erroroverlay.ui:208
+#, kde-format
+msgid "The Akonadi personal information management service is not operational."
+msgstr "Akonadi, henkilökohtaisten tietojen hallintakehys, ei ole toiminnassa."
+
+#. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
+#: widgets/erroroverlay.ui:259
+#, kde-format
+msgid "Details..."
+msgstr "Yksityiskohdat…"
+
+#: widgets/manageaccountwidget.cpp:200
+#, kde-format
+msgid "Do you want to remove account '%1'?"
+msgstr "Haluatko poistaa tilin ”%1”?"
+
+#: widgets/manageaccountwidget.cpp:201
+#, kde-format
+msgid "Remove account?"
+msgstr "Poistetaanko tili?"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/manageaccountwidget.ui:19
+#, kde-format
+msgid "Incoming accounts (add at least one):"
+msgstr "Saapuvien viestien tilit (lisää ainakin yksi):"
+
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
+#: widgets/manageaccountwidget.ui:26
+#, kde-format
+msgid "Filter…"
+msgstr "Suodata…"
+
+#. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
+#: widgets/manageaccountwidget.ui:40
+#, kde-format
+msgid "A&dd..."
+msgstr "&Lisää…"
+
+#. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
+#: widgets/manageaccountwidget.ui:50
+#, kde-format
+msgid "&Modify..."
+msgstr "&Muuta…"
+
+#. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
+#: widgets/manageaccountwidget.ui:60
+#, kde-format
+msgid "R&emove"
+msgstr "&Poista"
+
+#. i18n: ectx: property (text), widget (QPushButton, mRestartAccountButton)
+#: widgets/manageaccountwidget.ui:77
+#, kde-format
+msgid "Restart"
+msgstr "Käynnistä uudelleen"
+
+#: widgets/recentcollectionaction.cpp:43
+#, kde-format
+msgid "Recent Folder"
+msgstr "Viimeaikainen kansio"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, RenameFavoriteDialog)
+#: widgets/renamefavoritedialog.ui:26
+#, kde-format
+msgid "Rename Favorite"
+msgstr "Muuta suosikin nimeä"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/renamefavoritedialog.ui:35
+#, kde-format
+msgid "Name:"
+msgstr "Nimi:"
+
+#: widgets/selftestdialog.cpp:60
+#, kde-format
+msgctxt "@title:window"
+msgid "Akonadi Server Self-Test"
+msgstr "Akonadi-palvelimen itsetestaus"
+
+#: widgets/selftestdialog.cpp:71
+#, kde-format
+msgid "Save Report..."
+msgstr "Tallenna raportti…"
+
+#: widgets/selftestdialog.cpp:73
+#, kde-format
+msgid "Copy Report to Clipboard"
+msgstr "Kopioi raportti leikepöydälle"
+
+#: widgets/selftestdialog.cpp:189
+#, kde-format
+msgid ""
+"The QtSQL driver '%1' is required by your current Akonadi server "
+"configuration and was found on your system."
+msgstr ""
+"Nykyinen Akonadi-palvelinmääritys vaatii QtSQL-ajuria ”%1”, jota ei löydy "
+"järjestelmästä."
+
+#: widgets/selftestdialog.cpp:191
+#, kde-format
+msgid ""
+"The QtSQL driver '%1' is required by your current Akonadi server "
+"configuration.\n"
+"The following drivers are installed: %2.\n"
+"Make sure the required driver is installed."
+msgstr ""
+"Nykyinen Akonadi-palvelinmääritys vaatii QtSQL-ajuria ”%1”.\n"
+"Seuraavat ajurit on asennettu: %2.\n"
+"Varmista, että vaadittu ajuri on asennettu."
+
+#: widgets/selftestdialog.cpp:198
+#, kde-format
+msgid "Database driver found."
+msgstr "Tietokanta-ajuri löytynyt."
+
+#: widgets/selftestdialog.cpp:200
+#, kde-format
+msgid "Database driver not found."
+msgstr "Tietokanta-ajuria ei löytynyt."
+
+#: widgets/selftestdialog.cpp:208
+#, kde-format
+msgid "MySQL server executable not tested."
+msgstr "MySQL-palvelinohjelmaa ei testattu."
+
+#: widgets/selftestdialog.cpp:208 widgets/selftestdialog.cpp:249
+#: widgets/selftestdialog.cpp:300
+#, kde-format
+msgid "The current configuration does not require an internal MySQL server."
+msgstr "Nykyinen määritys ei vaadi sisäistä MySQL-palvelinta."
+
+#: widgets/selftestdialog.cpp:216
+#, kde-format
+msgid ""
+"You have currently configured Akonadi to use the MySQL server '%1'.\n"
+"Make sure you have the MySQL server installed, set the correct path and "
+"ensure you have the necessary read and execution rights on the server "
+"executable. The server executable is typically called 'mysqld'; its location "
+"varies depending on the distribution."
+msgstr ""
+"Olet määrittänyt Akonadin käyttämään MySQL-palvelinta ”%1”.\n"
+"Varmista, että MySQL-palvelin on asennettu, sijainti on asetettu oikein ja "
+"että sinulla on tarvittavat luku- ja suoritusoikeudet palvelinohjelmaan. "
+"Palvelinohjelman nimi on tavallisesti ”mysqld”, ja sen sijainti vaihtelee "
+"jakeluversioittain."
+
+#: widgets/selftestdialog.cpp:224
+#, kde-format
+msgid "MySQL server not found."
+msgstr "MySQL-palvelinta ei löytynyt."
+
+#: widgets/selftestdialog.cpp:226
+#, kde-format
+msgid "MySQL server not readable."
+msgstr "MySQL-palvelinta ei voi lukea."
+
+#: widgets/selftestdialog.cpp:228
+#, kde-format
+msgid "MySQL server not executable."
+msgstr "MySQL-palvelin ei ole ohjelma."
+
+#: widgets/selftestdialog.cpp:230
+#, kde-format
+msgid "MySQL found with unexpected name."
+msgstr "Odottamattoman niminen MySQL löytyi."
+
+#: widgets/selftestdialog.cpp:232
+#, kde-format
+msgid "MySQL server found."
+msgstr "MySQL-palvelin löytyi."
+
+#: widgets/selftestdialog.cpp:238
+#, kde-format
+msgid "MySQL server found: %1"
+msgstr "MySQL-palvelin löytyi: %1"
+
+#: widgets/selftestdialog.cpp:239
+#, kde-format
+msgid "MySQL server is executable."
+msgstr "MySQL-palvelin on ohjelma."
+
+#: widgets/selftestdialog.cpp:241
+#, kde-format
+msgid ""
+"Executing the MySQL server '%1' failed with the following error message: '%2'"
+msgstr ""
+"MySQL-palvelimen ”%1” suoritus päättyi epäonnistuneesti seuraavaan "
+"virheilmoitukseen: ”%2”"
+
+#: widgets/selftestdialog.cpp:242
+#, kde-format
+msgid "Executing the MySQL server failed."
+msgstr "MySQL-palvelimen suorittaminen epäonnistui."
+
+#: widgets/selftestdialog.cpp:249
+#, kde-format
+msgid "MySQL server error log not tested."
+msgstr "MySQL-palvelimen virhelokia ei testattu."
+
+#: widgets/selftestdialog.cpp:257
+#, kde-format
+msgid "No current MySQL error log found."
+msgstr "Nykyistä MySQL-virhelokia ei löytynyt."
+
+#: widgets/selftestdialog.cpp:258
+#, kde-format
+msgid ""
+"The MySQL server did not report any errors during this startup. The log can "
+"be found in '%1'."
+msgstr ""
+"MySQL-palvelin ei raportoinut virheistä tässä käynnistyksessä. Loki löytyy "
+"sijainnista ”%1”."
+
+#: widgets/selftestdialog.cpp:264
+#, kde-format
+msgid "MySQL error log not readable."
+msgstr "MySQL-virheloki ei ole luettavissa."
+
+#: widgets/selftestdialog.cpp:265
+#, kde-format
+msgid "A MySQL server error log file was found but is not readable: %1"
+msgstr "MySQL-palvelimen virheloki löytyi mutta ei ole luettavissa: %1"
+
+#: widgets/selftestdialog.cpp:274
+#, kde-format
+msgid "MySQL server log contains errors."
+msgstr "MySQL-palvelinloki sisältää virheitä."
+
+#: widgets/selftestdialog.cpp:275
+#, kde-format
+msgid "The MySQL server error log file '%1' contains errors."
+msgstr "MySQL-palvelimen virheloki ”%1” sisältää virheitä."
+
+#: widgets/selftestdialog.cpp:285
+#, kde-format
+msgid "MySQL server log contains warnings."
+msgstr "MySQL-palvelinloki sisältää varoituksia."
+
+#: widgets/selftestdialog.cpp:286
+#, kde-format
+msgid "The MySQL server log file '%1' contains warnings."
+msgstr "MySQL-palvelinloki ”%1” sisältää varoituksia."
+
+#: widgets/selftestdialog.cpp:289
+#, kde-format
+msgid "MySQL server log contains no errors."
+msgstr "MySQL-palvelinloki ei sisällä virheitä."
+
+#: widgets/selftestdialog.cpp:290
+#, kde-format
+msgid "The MySQL server log file '%1' does not contain any errors or warnings."
+msgstr "MySQL-palvelinloki ”%1” ei sisällä virheitä tai varoituksia."
+
+#: widgets/selftestdialog.cpp:300
+#, kde-format
+msgid "MySQL server configuration not tested."
+msgstr "MySQL-palvelimen määritystä ei testattu."
+
+#: widgets/selftestdialog.cpp:309
+#, kde-format
+msgid "MySQL server default configuration found."
+msgstr "MySQL-palvelimen oletusmääritys löytyi."
+
+#: widgets/selftestdialog.cpp:310
+#, kde-format
+msgid ""
+"The default configuration for the MySQL server was found and is readable at "
+"%1."
+msgstr "MySQL-palvelimen oletusmääritys löytyi ja on luettavissa (%1)."
+
+#: widgets/selftestdialog.cpp:314
+#, kde-format
+msgid "MySQL server default configuration not found."
+msgstr "MySQL-palvelimen oletusmääritystä ei löytynyt."
+
+#: widgets/selftestdialog.cpp:315
+#, kde-format
+msgid ""
+"The default configuration for the MySQL server was not found or was not "
+"readable. Check your Akonadi installation is complete and you have all "
+"required access rights."
+msgstr ""
+"MySQL-palvelimen oletusmääritystä ei löytynyt tai se ei ole luettavissa. "
+"Tarkista, että Akonadi-asennus on täydellinen ja että sinulla on tarvittavat "
+"käyttöoikeudet."
+
+#: widgets/selftestdialog.cpp:323
+#, kde-format
+msgid "MySQL server custom configuration not available."
+msgstr "MySQL-palvelimen mukautettu määritys ei ole saatavilla."
+
+#: widgets/selftestdialog.cpp:324
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was not found but is optional."
+msgstr "MySQL-palvelimen valinnaista mukautettua määritystä ei löytynyt."
+
+#: widgets/selftestdialog.cpp:327
+#, kde-format
+msgid "MySQL server custom configuration found."
+msgstr "MySQL-palvelimen mukautettu määritys löytyi."
+
+#: widgets/selftestdialog.cpp:328
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was found and is readable at %1"
+msgstr "MySQL-palvelimen mukautettu määritys löytyi (%1) ja on luettavissa."
+
+#: widgets/selftestdialog.cpp:332
+#, kde-format
+msgid "MySQL server custom configuration not readable."
+msgstr "MySQL-palvelimen mukautettu määritys ei ole luettavissa."
+
+#: widgets/selftestdialog.cpp:333
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was found at %1 but is not "
+"readable. Check your access rights."
+msgstr ""
+"MySQL-palvelimen mukautettu määritys löytyi (%1), mutta se ei ole "
+"luettavissa. Tarkista käyttöoikeutesi."
+
+#: widgets/selftestdialog.cpp:342
+#, kde-format
+msgid "MySQL server configuration not found or not readable."
+msgstr "MySQL-palvelimen määritystä ei löytynyt tai se ei ole luettavissa."
+
+#: widgets/selftestdialog.cpp:343
+#, kde-format
+msgid "The MySQL server configuration was not found or is not readable."
+msgstr "MySQL-palvelimen määritystä ei löytynyt tai se ei ole luettavissa."
+
+#: widgets/selftestdialog.cpp:346
+#, kde-format
+msgid "MySQL server configuration is usable."
+msgstr "MySQL-palvelimen määritys on käyttökelpoinen."
+
+#: widgets/selftestdialog.cpp:347
+#, kde-format
+msgid "The MySQL server configuration was found at %1 and is readable."
+msgstr "MySQL-palvelimen määritys löytyi (%1) ja on luettavissa."
+
+#: widgets/selftestdialog.cpp:376
+#, kde-format
+msgid "Cannot connect to PostgreSQL server."
+msgstr "PostgreSQL-palvelimeen ei saada yhteyttä."
+
+#: widgets/selftestdialog.cpp:378
+#, kde-format
+msgid "PostgreSQL server found."
+msgstr "PostgreSQL-palvelin löytyi."
+
+#: widgets/selftestdialog.cpp:378
+#, kde-format
+msgid "The PostgreSQL server was found and connection is working."
+msgstr "PostgreSQL-palvelin löytyi ja yhteys toimii."
+
+#: widgets/selftestdialog.cpp:388
+#, kde-format
+msgid "akonadictl not found"
+msgstr "akonadictl:ää ei löytynyt"
+
+#: widgets/selftestdialog.cpp:389
+#, kde-format
+msgid ""
+"The program 'akonadictl' needs to be accessible in $PATH. Make sure you have "
+"the Akonadi server installed."
+msgstr ""
+"Ohjelman ”akonadictl” tulee löytyä hakupolun ($PATH) varrelta. Tarkista, "
+"onko Akonadi-palvelin asennettu."
+
+#: widgets/selftestdialog.cpp:396
+#, kde-format
+msgid "akonadictl found and usable"
+msgstr "akonadictl löytyi ja on käytettävissä"
+
+#: widgets/selftestdialog.cpp:397
+#, kde-format
+msgid ""
+"The program '%1' to control the Akonadi server was found and could be "
+"executed successfully.\n"
+"Result:\n"
+"%2"
+msgstr ""
+"Akonadi-palvelinta hallitseva ohjelma ”%1” löytyi ja voitiin suorittaa.\n"
+"Tulos:\n"
+"%2"
+
+#: widgets/selftestdialog.cpp:403
+#, kde-format
+msgid "akonadictl found but not usable"
+msgstr "akonadictl löytyi muttei ole käytettävissä"
+
+#: widgets/selftestdialog.cpp:404
+#, kde-format
+msgid ""
+"The program '%1' to control the Akonadi server was found but could not be "
+"executed successfully.\n"
+"Result:\n"
+"%2\n"
+"Make sure the Akonadi server is installed correctly."
+msgstr ""
+"Akonadi-palvelinta hallitseva ohjelma ”%1” löytyi, mutta sitä ei onnistuttu "
+"suorittamaan.\n"
+"Tulos:\n"
+"%2\n"
+"Varmista, että Akonadi-palvelin on asennettu oikein."
+
+#: widgets/selftestdialog.cpp:416
+#, kde-format
+msgid "Akonadi control process registered at D-Bus."
+msgstr "Akonadi-hallintaprosessi rekisteröity D-Busiin."
+
+#: widgets/selftestdialog.cpp:417
+#, kde-format
+msgid ""
+"The Akonadi control process is registered at D-Bus which typically indicates "
+"it is operational."
+msgstr ""
+"Akonadi-hallintaprosessi on rekisteröity D-Busiin, mikä yleensä tarkoittaa "
+"sen olevan toiminnassa."
+
+#: widgets/selftestdialog.cpp:420
+#, kde-format
+msgid "Akonadi control process not registered at D-Bus."
+msgstr "Akonadin hallintaprosessia ei ole rekisteröity D-Busiin."
+
+#: widgets/selftestdialog.cpp:421
+#, kde-format
+msgid ""
+"The Akonadi control process is not registered at D-Bus which typically means "
+"it was not started or encountered a fatal error during startup."
+msgstr ""
+"Akonadin hallintaprosessia ei ole rekisteröity D-Busiin, mikä tavallisesti "
+"tarkoittaa, ettei sitä ole käynnistetty tai että se on käynnistettäessä "
+"kohdannut vakavan virheen."
+
+#: widgets/selftestdialog.cpp:427
+#, kde-format
+msgid "Akonadi server process registered at D-Bus."
+msgstr "Akonadin palvelinprosessi on rekisteröity D-Busiin."
+
+#: widgets/selftestdialog.cpp:428
+#, kde-format
+msgid ""
+"The Akonadi server process is registered at D-Bus which typically indicates "
+"it is operational."
+msgstr ""
+"Akonadin palvelinprosessi on rekisteröity D-Busiin, mikä tavallisesti "
+"osoittaa sen olevan toiminnassa."
+
+#: widgets/selftestdialog.cpp:431
+#, kde-format
+msgid "Akonadi server process not registered at D-Bus."
+msgstr "Akonadin palvelinprosessia ei ole rekisteröity D-Busiin."
+
+#: widgets/selftestdialog.cpp:432
+#, kde-format
+msgid ""
+"The Akonadi server process is not registered at D-Bus which typically means "
+"it was not started or encountered a fatal error during startup."
+msgstr ""
+"Akonadin palvelinprosessia ei ole rekisteröity D-Busiin, mikä tavallisesti "
+"tarkoittaa, ettei sitä ole käynnistetty tai että se on käynnistettäessä "
+"kohdannut vakavan virheen."
+
+#: widgets/selftestdialog.cpp:441
+#, kde-format
+msgid "Protocol version check not possible."
+msgstr "Yhteyskäytäntöversion tarkistus ei mahdollista."
+
+#: widgets/selftestdialog.cpp:442
+#, kde-format
+msgid ""
+"Without a connection to the server it is not possible to check if the "
+"protocol version meets the requirements."
+msgstr ""
+"Yhteydettä palvelimeen ei ole mahdollista tarkistaa, vastaako "
+"yhteyskäytäntöversio vaatimuksia."
+
+#: widgets/selftestdialog.cpp:447
+#, kde-format
+msgid "Server protocol version is too old."
+msgstr "Palvelimen yhteyskäytäntöversio on liian vanha."
+
+#: widgets/selftestdialog.cpp:448 widgets/selftestdialog.cpp:455
+#, kde-format
+msgid ""
+"The server protocol version is %1, but version %2 is required by the client. "
+"If you recently updated KDE PIM, please make sure to restart both Akonadi "
+"and KDE PIM applications."
+msgstr ""
+"Palvelimen yhteyskäytäntöversio on %1, mutta asiakasohjelma vaatii vähintään "
+"version %2. Jos olet äskettäin päivittänyt KDE PIMin, käynnistä uudelleen "
+"sekä Akonadi että KDE:n PIM-sovellukset."
+
+#: widgets/selftestdialog.cpp:454
+#, kde-format
+msgid "Server protocol version is too new."
+msgstr "Palvelimen yhteyskäytäntöversio on liian uusi."
+
+#: widgets/selftestdialog.cpp:460
+#, kde-format
+msgid "Server protocol version matches."
+msgstr "Palvelimen yhteyskäytäntöversio täsmää."
+
+#: widgets/selftestdialog.cpp:460
+#, kde-format
+msgid "The current Protocol version is %1."
+msgstr "Palvelimen yhteyskäytäntöversio on %1."
+
+#: widgets/selftestdialog.cpp:478
+#, kde-format
+msgid "Resource agents found."
+msgstr "Resurssiagentteja löytynyt."
+
+#: widgets/selftestdialog.cpp:478
+#, kde-format
+msgid "At least one resource agent has been found."
+msgstr "Ainakin yksi resurssiagentti on löytynyt."
+
+#: widgets/selftestdialog.cpp:481
+#, kde-format
+msgid "No resource agents found."
+msgstr "Resurssiagentteja ei löytynyt."
+
+#: widgets/selftestdialog.cpp:482
+#, kde-format
+msgid ""
+"No resource agents have been found, Akonadi is not usable without at least "
+"one. This usually means that no resource agents are installed or that there "
+"is a setup problem. The following paths have been searched: '%1'. The "
+"XDG_DATA_DIRS environment variable is set to '%2'; make sure this includes "
+"all paths where Akonadi agents are installed."
+msgstr ""
+"Resurssiagentteja ei löytynyt eikä Akonadi ole käytettävissä ilman vähintään "
+"yhtä. Yleensä tämä tarkoittaa, ettei resurssiagentteja ole asennettu tai "
+"asennuksessa on ollut ongelmia. Etsittiin seuraavista sijainneista: ”%1”. "
+"XDG_DATA_DIRS-ympäristömuuttujan arvo on ”%2”: varmista, että tämä sisältää "
+"kaikki kansiot, joihin Akonadi-agentteja on asennettu."
+
+#: widgets/selftestdialog.cpp:499
+#, kde-format
+msgid "No current Akonadi server error log found."
+msgstr "Nykyistä Akonadi-palvelimen virhelokia ei löytynyt."
+
+#: widgets/selftestdialog.cpp:499
+#, kde-format
+msgid ""
+"The Akonadi server did not report any errors during its current startup."
+msgstr "Akonadi-palvelin ei ilmoittanut virheistä viimeksi käynnistettäessä."
+
+#: widgets/selftestdialog.cpp:503
+#, kde-format
+msgid "Current Akonadi server error log found."
+msgstr "Nykyinen Akonadi-palvelimen virheloki löytyi."
+
+#: widgets/selftestdialog.cpp:504
+#, kde-format
+msgid ""
+"The Akonadi server reported errors during its current startup. The log can "
+"be found in %1."
+msgstr ""
+"Akonadi-palvelin ilmoitti virheistä tässä käynnistyksessä. Loki löytyy "
+"sijainnista %1."
+
+#: widgets/selftestdialog.cpp:512
+#, kde-format
+msgid "No previous Akonadi server error log found."
+msgstr "Edellistä Akonadi-palvelimen virhelokia ei löytynyt."
+
+#: widgets/selftestdialog.cpp:513
+#, kde-format
+msgid ""
+"The Akonadi server did not report any errors during its previous startup."
+msgstr "Akonadi-palvelin ei ilmoittanut virheistä edellisessä käynnistyksessä."
+
+#: widgets/selftestdialog.cpp:517
+#, kde-format
+msgid "Previous Akonadi server error log found."
+msgstr "Edellinen Akonadi-palvelimen virheloki löytyi."
+
+#: widgets/selftestdialog.cpp:518
+#, kde-format
+msgid ""
+"The Akonadi server reported errors during its previous startup. The log can "
+"be found in %1."
+msgstr ""
+"Akonadi-palvelin raportoi virheistä edellisessä käynnistyksessään. Loki "
+"löytyy sijainnista %1."
+
+#: widgets/selftestdialog.cpp:529
+#, kde-format
+msgid "No current Akonadi control error log found."
+msgstr "Nykyistä Akonadin hallintavirhelokia ei löytynyt."
+
+#: widgets/selftestdialog.cpp:530
+#, kde-format
+msgid ""
+"The Akonadi control process did not report any errors during its current "
+"startup."
+msgstr ""
+"Akonadin hallintaprosessi ei raportoinut virheistä viimeksi käynnistettäessä."
+
+#: widgets/selftestdialog.cpp:534
+#, kde-format
+msgid "Current Akonadi control error log found."
+msgstr "Nykyinen Akonadin hallintavirheloki löytyi."
+
+#: widgets/selftestdialog.cpp:535
+#, kde-format
+msgid ""
+"The Akonadi control process reported errors during its current startup. The "
+"log can be found in %1."
+msgstr ""
+"Akonadin hallintaprosessi ei raportoinut virheistä viimeksi "
+"käynnistettäessä. Loki löytyy sijainnista %1."
+
+#: widgets/selftestdialog.cpp:543
+#, kde-format
+msgid "No previous Akonadi control error log found."
+msgstr "Edellistä Akonadin hallintavirhelokia ei löytynyt."
+
+#: widgets/selftestdialog.cpp:544
+#, kde-format
+msgid ""
+"The Akonadi control process did not report any errors during its previous "
+"startup."
+msgstr ""
+"Akonadin hallintaprosessi ei raportoinut virheistä edellisen kerran "
+"käynnistettäessä."
+
+#: widgets/selftestdialog.cpp:548
+#, kde-format
+msgid "Previous Akonadi control error log found."
+msgstr "Edellinen Akonadi-hallintavirheloki löytyi."
+
+#: widgets/selftestdialog.cpp:549
+#, kde-format
+msgid ""
+"The Akonadi control process reported errors during its previous startup. The "
+"log can be found in %1."
+msgstr ""
+"Akonadi-hallintaprosessi raportoi virheistä edellisessä käynnistyksessään. "
+"Loki löytyy sijainnista %1."
+
+#: widgets/selftestdialog.cpp:559
+#, kde-format
+msgid "Akonadi was started as root"
+msgstr "Akonadi käynnistettiin ylläpitäjänä"
+
+#: widgets/selftestdialog.cpp:560
+#, kde-format
+msgid ""
+"Running Internet-facing applications as root/administrator exposes you to "
+"many security risks. MySQL, used by this Akonadi installation, will not "
+"allow itself to run as root, to protect you from these risks."
+msgstr ""
+"Internetiin yhteydessä olevien ohjelmien ajaminen ylläpitäjäoikeuksin "
+"altistaa sinut turvariskeille. Akonadi-asennuksen käyttämä MySQL ei salli "
+"itseään käynnistettävän ylläpitäjänä, jotta olisit suojassa niiltä."
+
+#: widgets/selftestdialog.cpp:564
+#, kde-format
+msgid "Akonadi is not running as root"
+msgstr "Akonadin omistaja ei ole root"
+
+#: widgets/selftestdialog.cpp:565
+#, kde-format
+msgid ""
+"Akonadi is not running as a root/administrator user, which is the "
+"recommended setup for a secure system."
+msgstr ""
+"Akonadin omistaja ei ole root (ylläpitäjätunnus), mikä on turvallisen "
+"järjestelmän suositusasetus."
+
+#: widgets/selftestdialog.cpp:643
+#, kde-format
+msgid "Save Test Report"
+msgstr "Tallenna testiraportti"
+
+#: widgets/selftestdialog.cpp:650
+#, kde-format
+msgid "Error"
+msgstr "Virhe"
+
+#: widgets/selftestdialog.cpp:650
+#, kde-format
+msgid "Could not open file '%1'"
+msgstr "Tiedostoa ”%1” ei voitu avata"
+
+#. i18n: ectx: property (text), widget (QLabel, introductionLabel)
+#: widgets/selftestdialog.ui:16
+#, kde-format
+msgid ""
+"An error occurred during the startup of the Akonadi server. The following "
+"self-tests are supposed to help with tracking down and solving this problem. "
+"When requesting support or reporting bugs, please always include this report."
+msgstr ""
+"Akonadi-palvelinta käynnistettäessä sattui virhe. Seuraavien itsetestausten "
+"on tarkoitus helpottaa ongelman jäljittämisessä ja ratkaisemisessa. "
+"Sisällytä tämä raportti pyytäessäsi tukea tai ilmoittaessasi "
+"ohjelmavirheistä."
+
+#. i18n: ectx: property (title), widget (QGroupBox, detailsGroup)
+#: widgets/selftestdialog.ui:39
+#, kde-format
+msgid "Details"
+msgstr "Yksityiskohdat"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/selftestdialog.ui:61
+#, kde-format
+msgid ""
+"<p>For more troubleshooting tips please refer to <a href=\"https://userbase."
+"kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
+msgstr ""
+"<p>Lisää vianmääritysvihjeitä löytää osoitteesta <a href=\"https://userbase."
+"kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
+
+#: widgets/standardactionmanager.cpp:78
+msgid "&New Folder..."
+msgstr "&Uusi kansio…"
+
+#: widgets/standardactionmanager.cpp:78
+msgid "New"
+msgstr "Uusi"
+
+#: widgets/standardactionmanager.cpp:80
+msgid "&Delete Folder"
+msgstr "&Poista kansio"
+
+#: widgets/standardactionmanager.cpp:80
+msgid "Delete"
+msgstr "Poista"
+
+#: widgets/standardactionmanager.cpp:82
+msgid "&Synchronize Folder"
+msgstr "S&ynkronoi kansio"
+
+#: widgets/standardactionmanager.cpp:83 widgets/standardactionmanager.cpp:157
+#: widgets/standardactionmanager.cpp:243
+msgid "Synchronize"
+msgstr "Synkronoi"
+
+#: widgets/standardactionmanager.cpp:90
+msgid "Folder &Properties"
+msgstr "Kansion &ominaisuudet"
+
+#: widgets/standardactionmanager.cpp:91 widgets/standardactionmanager.cpp:149
+msgid "Properties"
+msgstr "Ominaisuudet"
+
+#: widgets/standardactionmanager.cpp:98
+msgid "&Paste"
+msgstr "&Liitä"
+
+#: widgets/standardactionmanager.cpp:98
+msgid "Paste"
+msgstr "Liitä"
+
+#: widgets/standardactionmanager.cpp:101
+msgid "Manage Local &Subscriptions..."
+msgstr "Hallitse paikallisia &tilauksia…"
+
+#: widgets/standardactionmanager.cpp:102
+msgid "Manage Local Subscriptions"
+msgstr "Hallitse paikallisia tilauksia"
+
+#: widgets/standardactionmanager.cpp:109
+msgid "Add to Favorite Folders"
+msgstr "Lisää suosikkikansioihin"
+
+#: widgets/standardactionmanager.cpp:110
+msgid "Add to Favorite"
+msgstr "Lisää suosikkeihin"
+
+#: widgets/standardactionmanager.cpp:117
+msgid "Remove from Favorite Folders"
+msgstr "Poista suosikkikansioista"
+
+#: widgets/standardactionmanager.cpp:118
+msgid "Remove from Favorite"
+msgstr "Poista suosikeista"
+
+#: widgets/standardactionmanager.cpp:124
+msgid "Rename Favorite..."
+msgstr "Muuta suosikin nimeä…"
+
+#: widgets/standardactionmanager.cpp:124
+msgid "Rename"
+msgstr "Muuta nimeä"
+
+#: widgets/standardactionmanager.cpp:126 widgets/standardactionmanager.cpp:164
+msgid "Copy Folder To..."
+msgstr "Kopioi kansio kohteeseen…"
+
+#: widgets/standardactionmanager.cpp:127 widgets/standardactionmanager.cpp:133
+#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:173
+msgid "Copy To"
+msgstr "Kopioi kohteeseen"
+
+#: widgets/standardactionmanager.cpp:133 widgets/standardactionmanager.cpp:173
+msgid "Copy Item To..."
+msgstr "Kopioi tietue kohteeseen…"
+
+#: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:174
+msgid "Move Item To..."
+msgstr "Siirrä tietue kohteeseen…"
+
+#: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:137
+#: widgets/standardactionmanager.cpp:167 widgets/standardactionmanager.cpp:174
+msgid "Move To"
+msgstr "Siirrä kohteeseen"
+
+#: widgets/standardactionmanager.cpp:136 widgets/standardactionmanager.cpp:166
+msgid "Move Folder To..."
+msgstr "Siirrä kansio kohteeseen…"
+
+#: widgets/standardactionmanager.cpp:143
+msgid "&Cut Item"
+msgstr "L&eikkaa tietue"
+
+#: widgets/standardactionmanager.cpp:143 widgets/standardactionmanager.cpp:144
+msgid "Cut"
+msgstr "Leikkaa"
+
+#: widgets/standardactionmanager.cpp:144
+msgid "&Cut Folder"
+msgstr "L&eikkaa kansio"
+
+#: widgets/standardactionmanager.cpp:145
+msgid "Create Resource"
+msgstr "Luo resurssi"
+
+#: widgets/standardactionmanager.cpp:146
+msgid "Delete Resource"
+msgstr "Poista resurssi"
+
+#: widgets/standardactionmanager.cpp:148
+msgid "&Resource Properties"
+msgstr "&Resurssin ominaisuudet"
+
+#: widgets/standardactionmanager.cpp:156
+msgid "Synchronize Resource"
+msgstr "Synkronoi resurssi"
+
+#: widgets/standardactionmanager.cpp:163
+msgid "Work Offline"
+msgstr "Työskentele verkotta"
+
+#: widgets/standardactionmanager.cpp:176
+msgid "&Synchronize Folder Recursively"
+msgstr "&Synkronoi kansio alikansioineen"
+
+#: widgets/standardactionmanager.cpp:177
+msgid "Synchronize Recursively"
+msgstr "Synkronoi myös alikansiot"
+
+#: widgets/standardactionmanager.cpp:184
+msgid "&Move Folder To Trash"
+msgstr "&Siirrä kansio roskakoriin"
+
+#: widgets/standardactionmanager.cpp:185
+msgid "Move Folder To Trash"
+msgstr "Siirrä kansio roskakoriin"
+
+#: widgets/standardactionmanager.cpp:192
+msgid "&Move Item To Trash"
+msgstr "&Siirrä tietue roskakoriin"
+
+#: widgets/standardactionmanager.cpp:193
+msgid "Move Item To Trash"
+msgstr "Siirrä tietue roskakoriin"
+
+#: widgets/standardactionmanager.cpp:200 widgets/standardactionmanager.cpp:216
+msgid "&Restore Folder From Trash"
+msgstr "&Palauta kansio roskakorista"
+
+#: widgets/standardactionmanager.cpp:201 widgets/standardactionmanager.cpp:217
+msgid "Restore Folder From Trash"
+msgstr "Palauta kansio roskakorista"
+
+#: widgets/standardactionmanager.cpp:208 widgets/standardactionmanager.cpp:225
+#: widgets/standardactionmanager.cpp:232
+msgid "&Restore Item From Trash"
+msgstr "&Palauta tietue roskakorista"
+
+#: widgets/standardactionmanager.cpp:209 widgets/standardactionmanager.cpp:226
+#: widgets/standardactionmanager.cpp:232
+msgid "Restore Item From Trash"
+msgstr "Palauta tietue roskakorista"
+
+#: widgets/standardactionmanager.cpp:223
+msgid "&Restore Collection From Trash"
+msgstr "&Palauta kokoelma roskakorista"
+
+#: widgets/standardactionmanager.cpp:223
+msgid "Restore Collection From Trash"
+msgstr "Palauta kokoelma roskakorista"
+
+#: widgets/standardactionmanager.cpp:234
+msgid "&Synchronize Favorite Folders"
+msgstr "Synkronoi suosikkikansio&t"
+
+#: widgets/standardactionmanager.cpp:235
+msgid "Synchronize Favorite Folders"
+msgstr "Synkronoi suosikkikansiot"
+
+#: widgets/standardactionmanager.cpp:242
+msgid "Synchronize Folder Tree"
+msgstr "Synkronoi kansiopuu"
+
+#: widgets/standardactionmanager.cpp:328
+#, kde-format
+msgid "&Copy Folder"
+msgid_plural "&Copy %1 Folders"
+msgstr[0] "&Kopioi kansio"
+msgstr[1] "&Kopioi %1 kansiota"
+
+#: widgets/standardactionmanager.cpp:329
+#, kde-format
+msgid "&Copy Item"
+msgid_plural "&Copy %1 Items"
+msgstr[0] "&Kopioi tietue"
+msgstr[1] "Kopioi %1 tietuetta"
+
+#: widgets/standardactionmanager.cpp:330
+#, kde-format
+msgctxt "@action"
+msgid "&Cut Item"
+msgid_plural "&Cut %1 Items"
+msgstr[0] "L&eikkaa tietue"
+msgstr[1] "L&eikkaa %1 tietuetta"
+
+#: widgets/standardactionmanager.cpp:331
+#, kde-format
+msgctxt "@action"
+msgid "&Cut Folder"
+msgid_plural "&Cut %1 Folders"
+msgstr[0] "L&eikkaa kansio"
+msgstr[1] "L&eikkaa %1 kansiota"
+
+#: widgets/standardactionmanager.cpp:332
+#, kde-format
+msgid "&Delete Item"
+msgid_plural "&Delete %1 Items"
+msgstr[0] "&Poista tietue"
+msgstr[1] "&Poista %1 tietuetta"
+
+#: widgets/standardactionmanager.cpp:333
+#, kde-format
+msgctxt "@action"
+msgid "&Delete Folder"
+msgid_plural "&Delete %1 Folders"
+msgstr[0] "&Poista kansio"
+msgstr[1] "&Poista %1 kansiota"
+
+#: widgets/standardactionmanager.cpp:334
+#, kde-format
+msgctxt "@action"
+msgid "&Synchronize Folder"
+msgid_plural "&Synchronize %1 Folders"
+msgstr[0] "&Synkronoi kansio"
+msgstr[1] "&Synkronoi %1 kansiota"
+
+#: widgets/standardactionmanager.cpp:335
+#, kde-format
+msgid "&Delete Resource"
+msgid_plural "&Delete %1 Resources"
+msgstr[0] "&Poista resurssi"
+msgstr[1] "&Poista %1 resurssia"
+
+#: widgets/standardactionmanager.cpp:336
+#, kde-format
+msgid "&Synchronize Resource"
+msgid_plural "&Synchronize %1 Resources"
+msgstr[0] "&Synkronoi resurssi"
+msgstr[1] "&Synkronoi %1 resurssia"
+
+#: widgets/standardactionmanager.cpp:338
+#, kde-format
+msgid "Copy Folder"
+msgid_plural "Copy %1 Folders"
+msgstr[0] "Kopioi kansio"
+msgstr[1] "&Kopioi %1 kansiota"
+
+#: widgets/standardactionmanager.cpp:339
+#, kde-format
+msgid "Copy Item"
+msgid_plural "Copy %1 Items"
+msgstr[0] "Kopioi tietue"
+msgstr[1] "Kopioi %1 tietuetta"
+
+#: widgets/standardactionmanager.cpp:340
+#, kde-format
+msgid "Cut Item"
+msgid_plural "Cut %1 Items"
+msgstr[0] "Leikkaa tietue"
+msgstr[1] "Leikkaa %1 tietuetta"
+
+#: widgets/standardactionmanager.cpp:341
+#, kde-format
+msgid "Cut Folder"
+msgid_plural "Cut %1 Folders"
+msgstr[0] "Leikkaa kansio"
+msgstr[1] "Leikkaa %1 kansiota"
+
+#: widgets/standardactionmanager.cpp:342
+#, kde-format
+msgid "Delete Item"
+msgid_plural "Delete %1 Items"
+msgstr[0] "Poista tietue"
+msgstr[1] "Poista %1 tietuetta"
+
+#: widgets/standardactionmanager.cpp:343
+#, kde-format
+msgid "Delete Folder"
+msgid_plural "Delete %1 Folders"
+msgstr[0] "Poista kansio"
+msgstr[1] "Poista %1 kansiota"
+
+#: widgets/standardactionmanager.cpp:344
+#, kde-format
+msgid "Synchronize Folder"
+msgid_plural "Synchronize %1 Folders"
+msgstr[0] "Synkronoi kansio"
+msgstr[1] "Synkronoi %1 kansiota"
+
+#: widgets/standardactionmanager.cpp:345
+#, kde-format
+msgctxt "@action"
+msgid "Delete Resource"
+msgid_plural "Delete %1 Resources"
+msgstr[0] "Poista resurssi"
+msgstr[1] "Poista %1 resurssia"
+
+#: widgets/standardactionmanager.cpp:346
+#, kde-format
+msgctxt "@action"
+msgid "Synchronize Resource"
+msgid_plural "Synchronize %1 Resources"
+msgstr[0] "Synkronoi resurssi"
+msgstr[1] "Synkronoi %1 resurssia"
+
+#: widgets/standardactionmanager.cpp:349
+#, kde-format
+msgctxt "@label:textbox name of Akonadi folder"
+msgid "Name"
+msgstr "Nimi"
+
+#: widgets/standardactionmanager.cpp:356
+#, kde-format
+msgid "Do you really want to delete this folder and all its sub-folders?"
+msgid_plural ""
+"Do you really want to delete %1 folders and all their sub-folders?"
+msgstr[0] "Haluatko varmasti poistaa tämän kansion alikansioineen?"
+msgstr[1] "Haluatko varmasti poistaa %1 kansiota kaikkine alikansioineen?"
+
+#: widgets/standardactionmanager.cpp:359
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete folder?"
+msgid_plural "Delete folders?"
+msgstr[0] "Poistetaanko kansio?"
+msgstr[1] "Poistetaanko kansiot?"
+
+#: widgets/standardactionmanager.cpp:360
+#, kde-format
+msgid "Could not delete folder: %1"
+msgstr "Kansiota ei voitu poistaa: %1"
+
+#: widgets/standardactionmanager.cpp:361
+#, kde-format
+msgid "Folder deletion failed"
+msgstr "Kansion poistaminen epäonnistui"
+
+#: widgets/standardactionmanager.cpp:363
+#, kde-format
+msgctxt "@title:window"
+msgid "Properties of Folder %1"
+msgstr "Kansion %1 ominaisuudet"
+
+#: widgets/standardactionmanager.cpp:367
+#, kde-format
+msgid "Do you really want to delete the selected item?"
+msgid_plural "Do you really want to delete %1 items?"
+msgstr[0] "Haluatko varmasti poistaa valitun tietueen?"
+msgstr[1] "Haluatko varmasti poistaa %1 tietuetta?"
+
+#: widgets/standardactionmanager.cpp:368
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete item?"
+msgid_plural "Delete items?"
+msgstr[0] "Poista tietue?"
+msgstr[1] "Poista tietueet?"
+
+#: widgets/standardactionmanager.cpp:369
+#, kde-format
+msgid "Could not delete item: %1"
+msgstr "Tietuetta ei voitu poistaa: %1"
+
+#: widgets/standardactionmanager.cpp:370
+#, kde-format
+msgid "Item deletion failed"
+msgstr "Tietueen poistaminen epäonnistui"
+
+#: widgets/standardactionmanager.cpp:372
+#, kde-format
+msgctxt "@title:window"
+msgid "Rename Favorite"
+msgstr "Muuta suosikin nimeä"
+
+#: widgets/standardactionmanager.cpp:373
+#, kde-format
+msgctxt "@label:textbox name of the folder"
+msgid "Name:"
+msgstr "Nimi:"
+
+#: widgets/standardactionmanager.cpp:375
+#, kde-format
+msgctxt "@title:window"
+msgid "New Resource"
+msgstr "Uusi resurssi"
+
+#: widgets/standardactionmanager.cpp:376
+#, kde-format
+msgid "Could not create resource: %1"
+msgstr "Resurssia ei saatu luoduksi: %1"
+
+#: widgets/standardactionmanager.cpp:377
+#, kde-format
+msgid "Resource creation failed"
+msgstr "Resurssin luominen epäonnistui"
+
+#: widgets/standardactionmanager.cpp:381
+#, kde-format
+msgid "Do you really want to delete this resource?"
+msgid_plural "Do you really want to delete %1 resources?"
+msgstr[0] "Haluatko varmasti poistaa tämän resurssin?"
+msgstr[1] "Haluatko varmasti poistaa %1 resurssia?"
+
+#: widgets/standardactionmanager.cpp:384
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete Resource?"
+msgid_plural "Delete Resources?"
+msgstr[0] "Poistetaanko resurssi?"
+msgstr[1] "Poistetaanko resurssit?"
+
+#: widgets/standardactionmanager.cpp:386
+#, kde-format
+msgid "Could not paste data: %1"
+msgstr "Tietoa ei voitu liittää: %1"
+
+#: widgets/standardactionmanager.cpp:387
+#, kde-format
+msgid "Paste failed"
+msgstr "Liittäminen epäonnistui"
+
+#: widgets/standardactionmanager.cpp:739
+#, kde-format
+msgid "We can not add \"/\" in folder name."
+msgstr "Kansion nimessä ei voi olla ”/”."
+
+#: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
+#, kde-format
+msgid "Create new folder error"
+msgstr "Uuden kansion luontivirhe"
+
+#: widgets/standardactionmanager.cpp:743
+#, kde-format
+msgid "We can not add \".\" at begin or end of folder name."
+msgstr "Kansion nimen alussa tai lopussa ei voi olla pistettä (”.”)."
+
+#: widgets/standardactionmanager.cpp:982
+#, kde-format
+msgid ""
+"Before syncing folder \"%1\" it is necessary to have the resource online. Do "
+"you want to make it online?"
+msgstr ""
+"Ennen kansion ”%1” synkronointia resurssiin täytyy olla yhteys. Haluatko "
+"ottaa siihen yhteyden?"
+
+#: widgets/standardactionmanager.cpp:983
+#, kde-format
+msgid "Account \"%1\" is offline"
+msgstr "Tiliin ”%1” ei ole yhteyttä"
+
+#: widgets/standardactionmanager.cpp:984
+#, kde-format
+msgctxt "@action:button"
+msgid "Go Online"
+msgstr "Yhdistä verkkoon"
+
+#: widgets/standardactionmanager.cpp:1585
+#, kde-format
+msgid "Move to This Folder"
+msgstr "Siirrä tähän kansioon"
+
+#: widgets/standardactionmanager.cpp:1585
+#, kde-format
+msgid "Copy to This Folder"
+msgstr "Kopioi tähän kansioon"
+
+#: widgets/subscriptiondialog.cpp:93
+#, kde-format
+msgid "Failed to update subscription: %1"
+msgstr "Tilauksen päivitys epäonnistui: %1"
+
+#: widgets/subscriptiondialog.cpp:93
+#, kde-format
+msgctxt "@title"
+msgid "Subscription Error"
+msgstr "Tilausvirhe"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, SubscriptionDialog)
+#: widgets/subscriptiondialog.ui:14
+#, kde-format
+msgid "Local Subscriptions"
+msgstr "Paikalliset tilaukset"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/subscriptiondialog.ui:22
+#, kde-format
+msgid "Search:"
+msgstr "Etsi:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, subscribedOnlyCheckBox)
+#: widgets/subscriptiondialog.ui:36
+#, kde-format
+msgid "&Subscribed only"
+msgstr "&Vain tilatut"
+
+#. i18n: ectx: property (text), widget (QPushButton, subscribeButton)
+#: widgets/subscriptiondialog.ui:62
+#, kde-format
+msgid "Su&bscribe"
+msgstr "&Tilaa"
+
+#. i18n: ectx: property (text), widget (QPushButton, unsubscribeButton)
+#: widgets/subscriptiondialog.ui:69
+#, kde-format
+msgid "&Unsubscribe"
+msgstr "&Peru tilaus"
+
+#: widgets/tageditwidget.cpp:116
+#, kde-format
+msgid "Failed to create a new tag"
+msgstr "Uuden luokituksen luonti epäonnistui"
+
+#: widgets/tageditwidget.cpp:116
+#, kde-format
+msgid "An error occurred while creating a new tag"
+msgstr "Uutta luokitusta luotaessa tapahtui virhe"
+
+#: widgets/tageditwidget.cpp:164
+#, kde-kuit-format
+msgctxt "@info"
+msgid "Do you really want to remove the tag <resource>%1</resource>?"
+msgstr "Haluatko varmasti poistaa luokituksen <resource>%1</resource>?"
+
+#: widgets/tageditwidget.cpp:165
+#, kde-format
+msgctxt "@title"
+msgid "Delete tag"
+msgstr "Poista luokitus"
+
+#: widgets/tageditwidget.cpp:189
+#, kde-format
+msgctxt "@info"
+msgid "Delete tag"
+msgstr "Poista luokitus"
+
+#. i18n: ectx: property (text), widget (QLabel, selectLabel)
+#: widgets/tageditwidget.ui:29
+#, kde-format
+msgid "Select tags that should be applied."
+msgstr "Valitse käytettävät luokitukset."
+
+#. i18n: ectx: property (text), widget (QPushButton, newTagButton)
+#: widgets/tageditwidget.ui:54
+#, kde-format
+msgid "Create new tag"
+msgstr "Luo uusi luokitus"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
+#: widgets/tagmanagementdialog.ui:14
+#, kde-format
+msgid "Manage Tags"
+msgstr "Hallitse luokituksia"
+
+#: widgets/tagselectioncombobox.cpp:124
+#, kde-format
+msgctxt "@label Placeholder text in tag selection combobox"
+msgid "Select tags..."
+msgstr "Valitse luokitukset…"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
+#: widgets/tagselectiondialog.ui:14
+#, kde-format
+msgid "Select Tags"
+msgstr "Valitse luokitukset"
+
+#: widgets/tagwidget.cpp:45
+#, kde-format
+msgid "Clear"
+msgstr "Tyhjennä"
+
+#. i18n: ectx: property (placeholderText), widget (Akonadi::TagView, tagView)
+#: widgets/tagwidget.ui:20
+#, kde-format
+msgid "Click to add tags"
+msgstr "Lisää luokituksia napsauttamalla"
+
+#. i18n: ectx: property (text), widget (QToolButton, editButton)
+#: widgets/tagwidget.ui:27
+#, kde-format
+msgid "..."
+msgstr "…"
+
+#: xml/akonadi2xml.cpp:25
+#, kde-format
+msgid "Akonadi To XML converter"
+msgstr "Akonadi->XML-muunnin"
+
+#: xml/akonadi2xml.cpp:27
+#, kde-format
+msgid "Converts an Akonadi collection subtree into a XML file."
+msgstr "Muuntaa Akonadi-kokoelma-alipuun XML-tiedostoksi."
+
+#: xml/akonadi2xml.cpp:29
+#, kde-format
+msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
+msgstr "© 2009 Volker Krause <vkrause@kde.org>"
+
+#: xml/xmldocument.cpp:84
+#, kde-format
+msgid "No data loaded."
+msgstr "Ei ladattua tietoa."
+
+#: xml/xmldocument.cpp:120
+#, kde-format
+msgid "No filename specified"
+msgstr "Tiedostonimeä ei ole annettu"
+
+#: xml/xmldocument.cpp:128
+#, kde-format
+msgid "Unable to open data file '%1'."
+msgstr "Datatiedostoa ”%1” ei saada avatuksi."
+
+#: xml/xmldocument.cpp:133
+#, kde-format
+msgid "File %1 does not exist."
+msgstr "Tiedostoa %1 ei ole olemassa."
+
+#: xml/xmldocument.cpp:141
+#, kde-format
+msgid "Unable to parse data file '%1'."
+msgstr "Datatiedostoa ”%1” ei saada jäsennetyksi."
+
+#: xml/xmldocument.cpp:149
+#, kde-format
+msgid "Schema definition could not be loaded and parsed."
+msgstr "Ei saatu ladattua ja jäsennettyä skeeman määritelmää."
+
+#: xml/xmldocument.cpp:154
+#, kde-format
+msgid "Unable to create schema parser context."
+msgstr "Ei saatu luotua skeeman jäsennyskontekstia."
+
+#: xml/xmldocument.cpp:159
+#, kde-format
+msgid "Unable to create schema."
+msgstr "Ei voitu luoda skeemaa."
+
+#: xml/xmldocument.cpp:164
+#, kde-format
+msgid "Unable to create schema validation context."
+msgstr "Ei saatu luotua skeeman validointikontekstia."
+
+#: xml/xmldocument.cpp:169
+#, kde-format
+msgid "Invalid file format."
+msgstr "Virheellinen tiedostomuoto."
+
+#: xml/xmldocument.cpp:177
+#, kde-format
+msgid "Unable to parse data file: %1"
+msgstr "Datatiedostoa ei saada jäsennetyksi: %1"
+
+#: xml/xmldocument.cpp:302
+#, kde-format
+msgid "Unable to find collection %1"
+msgstr "Kokoelmaa %1 ei löydy"
+
+#~ msgid "Store emails locally:"
+#~ msgstr "Talleta sähköpostit paikallisesti:"
+
+#~ msgid "&Move here"
+#~ msgstr "&Siirrä tähän"
+
+#~ msgid "&Copy here"
+#~ msgstr "&Kopioi tähän"
+
+#~ msgid "Cancel"
+#~ msgstr "Peru"
+
+#~ msgid "Automatically synchronize after:"
+#~ msgstr "Synkronoi automaattisesti ajassa:"
+
+#~ msgid "Items"
+#~ msgstr "Tietueita"
+
+#~ msgid "Id"
+#~ msgstr "Tunniste"
+
+#~ msgid "Remote Id"
+#~ msgstr "Etätunniste"
+
+#~ msgid "MimeType"
+#~ msgstr "MIME-tyyppi"
+
+#~ msgid "Default Name"
+#~ msgstr "Oletusnimi"
+
+#~ msgctxt "@action:button"
+#~ msgid "Delete"
+#~ msgstr "Poista"
+
+#~ msgctxt "@action:button"
+#~ msgid "Cancel"
+#~ msgstr "Peru"
+
+#~ msgid "Take left one"
+#~ msgstr "Säilytä vasemmainen"
+
+#~ msgctxt "@label"
+#~ msgid ""
+#~ "Two updates conflict with each other.<nl/>Please choose which update(s) "
+#~ "to apply."
+#~ msgstr ""
+#~ "Kaksi päivitystä on ristiriidassa keskenään.<nl/>Valitse, mitkä "
+#~ "päivitykset otetaan käyttöön."
+
+#~ msgctxt "@title:column, number of unread messages"
+#~ msgid "Unread"
+#~ msgstr "Lukemattomia viestejä"
+
+#~ msgctxt "@title:column, total number of messages"
+#~ msgid "Total"
+#~ msgstr "Kaikkiaan"
+
+#~ msgctxt "@title:column, total size (in bytes) of the collection"
+#~ msgid "Size"
+#~ msgstr "Koko"
+
+#~ msgctxt "@title application description"
+#~ msgid "Akonadi Resource"
+#~ msgstr "Akonadi-resurssi"
+
+#~ msgctxt "@label:textbox name of a thing"
+#~ msgid "Name"
+#~ msgstr "Nimi"
+
+#~ msgid "Invalid collection specified"
+#~ msgstr "Määritetty virheellinen kokoelma"
+
+#~ msgid "Protocol version %1 found, expected at least %2"
+#~ msgstr "Protokollan versio %1 löytyi, odotettiin vähintään %2"
+
+#~ msgid "Server protocol version is recent enough."
+#~ msgstr "Palvelimen protokollaversio on tarpeeksi uusi."
+
+#~ msgid ""
+#~ "The server Protocol version is %1, which equal or newer than the required "
+#~ "version %2."
+#~ msgstr ""
+#~ "Palvelimen protokollaversio on %1, mikä on sama tai uudempi kuin vaadittu "
+#~ "versio %2."
+
+#~ msgid "Inconsistent local collection tree detected."
+#~ msgstr "Havaittu ristiriitainen paikallinen kokoelmapuu."
+
+#~ msgid ""
+#~ "Remote collection without root-terminated ancestor chain provided, "
+#~ "resource is broken."
+#~ msgstr ""
+#~ "Etäkokoelmalta puuttuu juureen päättyvä periytymisketju: resurssi on "
+#~ "rikki."
+
+#~ msgid "KDE Test Program"
+#~ msgstr "KDE-testiohjelma"

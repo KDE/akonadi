@@ -1,0 +1,2793 @@
+# translation of libakonadi.po to Dutch
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Bram Schoenmakers <bramschoenmakers@kde.nl>, 2007, 2008.
+# Rinse de Vries <rinsedevries@kde.nl>, 2007, 2008, 2010.
+# Antoon Tolboom <atolboo@gmail.com>, 2008.
+# Freek de Kruijf <freekdekruijf@kde.nl>, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: libakonadi\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-09 00:46+0000\n"
+"PO-Revision-Date: 2022-07-06 12:25+0200\n"
+"Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
+"Language-Team: \n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 22.04.2\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr ""
+"Bram Schoenmakers - 2007; 2008,Rinse de Vries - 2007; 2008,Antoon Tolboom - "
+"2008,Freek de Kruijf - 2009 t/m 2022"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr ",rinsedevries@kde.nl,,freekdekruijf@kde.nl"
+
+#: agentbase/accountsintegration.cpp:86
+#, kde-format
+msgid "There is currently no account configured."
+msgstr "Er is nu geen account geconfigureerd."
+
+#: agentbase/accountsintegration.cpp:103
+#, kde-format
+msgid "Accounts integration is not supported"
+msgstr "Integratie van accounts wordt niet ondersteund"
+
+#: agentbase/agentbase.cpp:365 agentbase/preprocessorbase_p.cpp:26
+#, kde-format
+msgid "Unable to register object at dbus: %1"
+msgstr "Kan object niet registreren in dbus: %1"
+
+#: agentbase/agentbase.cpp:454
+#, kde-format
+msgctxt "Name and type of Akonadi resource"
+msgid "%1 of type %2"
+msgstr "%1 van type %2"
+
+#: agentbase/agentbase.cpp:904
+#, kde-format
+msgid "Agent identifier"
+msgstr "Agent-ID"
+
+#: agentbase/agentbase.cpp:910
+#, kde-format
+msgid "Akonadi Agent"
+msgstr "Akonadi-agent"
+
+#: agentbase/agentbase_p.h:49 agentbase/resourcescheduler.cpp:281
+#, kde-format
+msgctxt "@info:status Application ready for work"
+msgid "Ready"
+msgstr "Gereed"
+
+#: agentbase/agentbase_p.h:51
+#, kde-format
+msgctxt "@info:status"
+msgid "Offline"
+msgstr "Offline"
+
+#: agentbase/agentbase_p.h:56
+#, kde-format
+msgctxt "@info:status"
+msgid "Syncing..."
+msgstr "Bezig met synchroniseren..."
+
+#: agentbase/agentbase_p.h:61
+#, kde-format
+msgctxt "@info:status"
+msgid "Error."
+msgstr "Fout."
+
+#: agentbase/agentbase_p.h:66
+#, kde-format
+msgctxt "@info:status"
+msgid "Not configured"
+msgstr "Niet ingesteld"
+
+#: agentbase/resourcebase.cpp:517
+#, kde-format
+msgctxt "@label command line option"
+msgid "Resource identifier"
+msgstr "Hulpbronidentificatie"
+
+#: agentbase/resourcebase.cpp:523
+#, kde-format
+msgid "Akonadi Resource"
+msgstr "Akonadi-hulpbron"
+
+#: agentbase/resourcebase.cpp:571
+#, kde-format
+msgctxt "@info"
+msgid "Invalid item retrieved"
+msgstr "Ongeldig item opgehaald"
+
+#: agentbase/resourcebase.cpp:594
+#, kde-format
+msgctxt "@info"
+msgid "Error while creating item: %1"
+msgstr "Fout bij aanmaken van item: %1"
+
+#: agentbase/resourcebase.cpp:618
+#, kde-format
+msgctxt "@info"
+msgid "Error while updating collection: %1"
+msgstr "Fout bij bijwerken van verzameling: %1."
+
+#: agentbase/resourcebase.cpp:705
+#, kde-format
+msgctxt "@info"
+msgid "Updating local collection failed: %1."
+msgstr "Bijwerken van lokale verzameling is mislukt: %1."
+
+#: agentbase/resourcebase.cpp:710
+#, kde-format
+msgctxt "@info"
+msgid "Updating local items failed: %1."
+msgstr "Bijwerken van lokale items is mislukt: %1."
+
+#: agentbase/resourcebase.cpp:729
+#, kde-format
+msgctxt "@info"
+msgid "Cannot fetch item in offline mode."
+msgstr "Kan het item niet ophalen in offline-modus."
+
+#: agentbase/resourcebase.cpp:918
+#, kde-format
+msgctxt "@info:status"
+msgid "Syncing folder '%1'"
+msgstr "Map '%1' wordt gesynchroniseerd"
+
+#: agentbase/resourcebase.cpp:938 agentbase/resourcebase.cpp:945
+#, kde-format
+msgid "Failed to retrieve collection for sync."
+msgstr "Het ophalen van de verzameling voor synchronisatie is mislukt."
+
+#: agentbase/resourcebase.cpp:985
+#, kde-format
+msgid "Failed to retrieve collection for attribute sync."
+msgstr ""
+"Het ophalen van de verzameling voor synchronisatie van attributen is mislukt."
+
+#: agentbase/resourcebase.cpp:1039
+#, kde-format
+msgid "The requested item no longer exists"
+msgstr "Het gevraagde item bestaat niet langer"
+
+#: agentbase/resourcescheduler.cpp:500 agentbase/resourcescheduler.cpp:506
+#, kde-format
+msgctxt "@info"
+msgid "Job canceled."
+msgstr "Taak geannuleerd."
+
+#: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
+#, kde-format
+msgid "No such collection."
+msgstr "Deze verzameling bestaat niet."
+
+#: core/collectionsync.cpp:508 core/collectionsync.cpp:653
+#, kde-format
+msgid "Found unresolved orphan collections"
+msgstr "Een niet opgeloste wees-verzameling gevonden"
+
+#: core/conflicthandler.cpp:53
+#, kde-format
+msgid "Did not find other item for conflict handling"
+msgstr "Kon het andere item voor de behandeling van een conflict niet vinden"
+
+#: core/jobs/agentinstancecreatejob.cpp:71
+#, kde-format
+msgid "Unable to access D-Bus interface of created agent."
+msgstr ""
+"Niet in staat om toegang te krijgen tot het D-Bus-interface van de "
+"aangemaakte agent."
+
+#: core/jobs/agentinstancecreatejob.cpp:93
+#, kde-format
+msgid "Agent instance creation timed out."
+msgstr "Tijdslimiet bij aanmaken exemplaar van agent overschreden."
+
+#: core/jobs/agentinstancecreatejob.cpp:151
+#, kde-format
+msgid "Unable to obtain agent type '%1'."
+msgstr "Kon agenttype '%1' niet verkrijgen."
+
+#: core/jobs/agentinstancecreatejob.cpp:159
+#, kde-format
+msgid "Unable to create agent instance."
+msgstr "Aanmaken exemplaar van agent is mislukt."
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:73
+#, kde-format
+msgid "Invalid collection instance."
+msgstr "Ongeldige verzameling."
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:80
+#: core/jobs/resourcesynchronizationjob.cpp:88
+#, kde-format
+msgid "Invalid resource instance."
+msgstr "Ongeldige hulpbron."
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:102
+#: core/jobs/resourcesynchronizationjob.cpp:113
+#, kde-format
+msgid "Unable to obtain D-Bus interface for resource '%1'"
+msgstr "Het verkrijgen van de DBus-interface voor hulpbron '%1' lukt niet"
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:125
+#, kde-format
+msgid "Collection attributes synchronization timed out."
+msgstr ""
+"Synchronisatie van attributen van verzameling heeft een tijdsoverschrijding."
+
+#: core/jobs/collectioncopyjob.cpp:55
+#, kde-format
+msgid "Invalid collection to copy"
+msgstr "Ongeldige te kopiëren verzameling"
+
+#: core/jobs/collectioncopyjob.cpp:61
+#, kde-format
+msgid "Invalid destination collection"
+msgstr "Ongeldige doelverzameling"
+
+#: core/jobs/collectioncreatejob.cpp:50
+#, kde-format
+msgid "Invalid parent"
+msgstr "Ongeldige ouder"
+
+#: core/jobs/collectioncreatejob.cpp:98
+#, kde-format
+msgid "Failed to parse Collection from response"
+msgstr "Verzameling ontlenen aan antwoord is mislukt"
+
+#: core/jobs/collectiondeletejob.cpp:52
+#, kde-format
+msgid "Invalid collection"
+msgstr "Ongeldige verzameling"
+
+#: core/jobs/collectionfetchjob.cpp:212
+#, kde-format
+msgid "Invalid collection given."
+msgstr "Ongeldige verzameling gegeven."
+
+#: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:90
+#, kde-format
+msgid "No objects specified for moving"
+msgstr "Geen objecten gespecificeerd voor de verplaatsing"
+
+#: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
+#: core/jobs/linkjobimpl_p.h:38
+#, kde-format
+msgid "No valid destination specified"
+msgstr "Geen geldige bestemming gespecificeerd"
+
+#: core/jobs/invalidatecachejob.cpp:58
+#, kde-format
+msgid "Invalid collection."
+msgstr "Ongeldige verzameling."
+
+#: core/jobs/itemcreatejob.cpp:105
+#, kde-format
+msgid "Invalid parent collection"
+msgstr "Ongeldige ouderverzameling"
+
+#: core/jobs/job.cpp:335
+#, kde-format
+msgid "Cannot connect to the Akonadi service."
+msgstr "Kan niet met de Akonadi-dienst verbinden."
+
+#: core/jobs/job.cpp:338
+#, kde-format
+msgid ""
+"The protocol version of the Akonadi server is incompatible. Make sure you "
+"have a compatible version installed."
+msgstr ""
+"De protocolversie van de Akonadi-server is incompatibel. Zorg ervoor dat er "
+"een compatibele versie geïnstalleerd is."
+
+#: core/jobs/job.cpp:341
+#, kde-format
+msgid "User canceled operation."
+msgstr "Door gebruiker geannuleerde actie."
+
+#: core/jobs/job.cpp:346
+#, kde-format
+msgid "Unknown error."
+msgstr "Onbekende fout."
+
+#: core/jobs/job.cpp:385
+#, kde-format
+msgid "Unexpected response"
+msgstr "Onverwacht antwoord"
+
+#: core/jobs/relationcreatejob.cpp:42 core/jobs/relationdeletejob.cpp:42
+#, kde-format
+msgid "Failed to create relation."
+msgstr "Een relatie aanmaken is mislukt."
+
+#: core/jobs/resourcesynchronizationjob.cpp:139
+#, kde-format
+msgid "Resource synchronization timed out."
+msgstr "Tijdslimiet bij hulpbronsynchronisatie overschreden."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:146
+#, kde-format
+msgid "Could not fetch root collection of resource %1."
+msgstr "Kan de hoofdverzameling van hulpbron %1 niet ophalen."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:190
+#, kde-format
+msgid "No resource ID given."
+msgstr "Geen hulpbron-ID gegeven."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:327
+#, kde-format
+msgid "Invalid resource identifier '%1'"
+msgstr "Hulpbronidentificatie '%1' ongeldig"
+
+#: core/jobs/specialcollectionshelperjobs.cpp:343
+#: core/jobs/specialcollectionshelperjobs.cpp:351
+#, kde-format
+msgid "Failed to configure default resource via D-Bus."
+msgstr "De standaard hulpbron via DBus configureren is mislukt."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:416
+#, kde-format
+msgid "Failed to fetch the resource collection."
+msgstr "Het ophalen van de hulpbronverzameling is mislukt."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:600
+#, kde-format
+msgid "Timeout trying to get lock."
+msgstr "Tijd verlopen bij een poging om een vergrendeling te verkrijgen."
+
+#: core/jobs/tagcreatejob.cpp:49
+#, kde-format
+msgid "Failed to create tag."
+msgstr "Een tag aanmaken is mislukt."
+
+#: core/jobs/trashjob.cpp:163
+#, kde-format
+msgid "Move to trash collection failed, aborting trash operation"
+msgstr ""
+"Naar prullenbak verplaatsen is mislukt, prullenbakhandeling wordt afgebroken"
+
+#: core/jobs/trashjob.cpp:226 core/jobs/trashrestorejob.cpp:155
+#, kde-format
+msgid "Invalid items passed"
+msgstr "Ongeldige items doorgegeven"
+
+#: core/jobs/trashjob.cpp:270 core/jobs/trashrestorejob.cpp:205
+#, kde-format
+msgid "Invalid collection passed"
+msgstr "Ongeldige verzameling doorgegeven"
+
+#: core/jobs/trashjob.cpp:387 core/jobs/trashrestorejob.cpp:355
+#, kde-format
+msgid "No valid collection or empty itemlist"
+msgstr "Ongeldige verzameling of lege lijst met items"
+
+#: core/jobs/trashrestorejob.cpp:90
+#, kde-format
+msgid "Could not find restore collection and restore resource is not available"
+msgstr ""
+"Kon de te herstellen verzameling niet vinden en herstelhulpbron is niet "
+"beschikbaar"
+
+#: core/models/agentinstancemodel.cpp:183
+#, kde-format
+msgctxt "@title:column, name of a thing"
+msgid "Name"
+msgstr "Naam"
+
+#: core/models/entitytreemodel.cpp:195
+#, kde-format
+msgctxt "@info:status"
+msgid "Loading..."
+msgstr "Bezig met laden..."
+
+#: core/models/entitytreemodel.cpp:487
+#, kde-format
+msgctxt "@window:title"
+msgid "Error"
+msgstr "Fout"
+
+#: core/models/entitytreemodel.cpp:488
+#, kde-format
+msgid ""
+"The target collection '%1' contains already\n"
+"a collection with name '%2'."
+msgstr ""
+"De doelverzameling '%1' bevat al\n"
+"een verzameling met de naam '%2'."
+
+#: core/models/entitytreemodel.cpp:657
+#, kde-format
+msgctxt "@title:column Name of a thing"
+msgid "Name"
+msgstr "Naam"
+
+#: core/models/entitytreemodel_p.cpp:1332
+#, kde-format
+msgctxt "@info"
+msgid "Could not copy item: <message>%1</message>"
+msgstr "Kon item niet kopiëren: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1334
+#, kde-format
+msgctxt "@info"
+msgid "Could not copy collection: <message>%1</message>"
+msgstr "Kon verzameling niet kopiëren: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1336
+#, kde-format
+msgctxt "@info"
+msgid "Could not move item: <message>%1</message>"
+msgstr "Kon item niet verplaatsen: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1338
+#, kde-format
+msgctxt "@info"
+msgid "Could not move collection: <message>%1</message>"
+msgstr "Kon verzameling niet verplaatsen: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1340
+#, kde-format
+msgctxt "@info"
+msgid "Could not link entity: <message>%1</message>"
+msgstr "Kon eenheid niet koppelen: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1342
+#, kde-format
+msgctxt "@title:window"
+msgid "Error"
+msgstr "Fout"
+
+#: core/models/favoritecollectionsmodel.cpp:405
+#, kde-format
+msgid "Favorite Folders"
+msgstr "Bladwijzers"
+
+#: core/models/statisticsproxymodel.cpp:86
+#, kde-format
+msgid "Total Messages"
+msgstr "Totaal aantal berichten"
+
+#: core/models/statisticsproxymodel.cpp:88
+#, kde-format
+msgid "Unread Messages"
+msgstr "Ongelezen berichten"
+
+#: core/models/statisticsproxymodel.cpp:98
+#, kde-format
+msgid "Quota"
+msgstr "Quota"
+
+#: core/models/statisticsproxymodel.cpp:104
+#, kde-format
+msgid "Storage Size"
+msgstr "Grootte van de opslag"
+
+#: core/models/statisticsproxymodel.cpp:110
+#, kde-format
+msgid "Subfolder Storage Size"
+msgstr "Grootte van de opslag in de submap"
+
+#: core/models/statisticsproxymodel.cpp:224
+#, kde-format
+msgctxt "number of unread entities in the collection"
+msgid "Unread"
+msgstr "Ongelezen"
+
+#: core/models/statisticsproxymodel.cpp:225
+#, kde-format
+msgctxt "number of entities in the collection"
+msgid "Total"
+msgstr "Totaal"
+
+#: core/models/statisticsproxymodel.cpp:226
+#, kde-format
+msgctxt "collection size"
+msgid "Size"
+msgstr "Grootte"
+
+#: core/models/tagmodel.cpp:64
+#, kde-format
+msgid "Tag"
+msgstr "Tag"
+
+#: core/partfetcher.cpp:49
+#, kde-format
+msgid "Unable to fetch item for index"
+msgstr "Ophalen van items voor de index lukt niet"
+
+#: core/partfetcher.cpp:64
+#, kde-format
+msgid "Index is no longer available"
+msgstr "Index is niet langer beschikbaar"
+
+#: core/partfetcher.cpp:114
+#, kde-format
+msgid "Payload part '%1' is not available for this index"
+msgstr "Ladingdeel '%1' is niet beschikbaar voor deze index"
+
+#: core/partfetcher.cpp:123
+#, kde-format
+msgid "No session available for this index"
+msgstr "Geen sessie beschikbaar voor deze index"
+
+#: core/partfetcher.cpp:132
+#, kde-format
+msgid "No item available for this index"
+msgstr "Geen item beschikbaar voor deze index"
+
+#: core/pluginloader.cpp:145
+#, kde-format
+msgid "Unnamed plugin"
+msgstr "Naamloze plug-in"
+
+#: core/pluginloader.cpp:151
+#, kde-format
+msgid "No description available"
+msgstr "Geen beschrijving beschikbaar"
+
+#: core/servermanager.cpp:271
+#, kde-format
+msgid ""
+"The Akonadi server protocol version differs from the protocol version used "
+"by this application.\n"
+"If you recently updated your system please log out and back in to make sure "
+"all applications use the correct protocol version."
+msgstr ""
+"De versie van het Akonadi-serverprotocol verschilt van de protocolversion "
+"gebruikt door deze toepassing.\n"
+"Als u recent uw systeem hebt bijgewerkt meldt u dan af en weer aan om er "
+"zeker van te zijn dat alle toepassingen de juiste versie van het protocol "
+"gebruiken."
+
+#: core/servermanager.cpp:288
+#, kde-format
+msgid ""
+"There are no Akonadi Agents available. Please verify your KDE PIM "
+"installation."
+msgstr ""
+"Er zijn geen Akonadi-agents beschikbaar. Controleer uw KDE PIM installatie."
+
+#: core/session.cpp:186
+#, kde-format
+msgid ""
+"Protocol version mismatch. Server version is older (%1) than ours (%2). If "
+"you updated your system recently please restart the Akonadi server."
+msgstr ""
+"Geen overeenkomende protocolversie. Serverversie is ouder (%1) dan onze "
+"(%2). Als u uw systeem recent hebt bijgewerkt start de Akonadi-server dan "
+"opnieuw."
+
+#: core/session.cpp:195
+#, kde-format
+msgid ""
+"Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
+"you updated your system recently please restart all KDE PIM applications."
+msgstr ""
+"Geen overeenkomende protocolversie. Serverversie is nieuwer (%1) dan onze "
+"(%2). Als u uw systeem recent hebt bijgewerkt start dan alle KDE-PIM-"
+"toepassingen opnieuw."
+
+#: selftest/main.cpp:19
+#, kde-format
+msgid "Akonadi Self Test"
+msgstr "Akonadi zelftest"
+
+#: selftest/main.cpp:21
+#, kde-format
+msgid "Checks and reports state of Akonadi server"
+msgstr "Controleert de Akonadi-server en rapporteert status."
+
+#: selftest/main.cpp:23
+#, kde-format
+msgid "(c) 2008 Volker Krause <vkrause@kde.org>"
+msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
+
+#: widgets/agentactionmanager.cpp:35
+msgid "&New Agent Instance..."
+msgstr "&Nieuw exemplaar van agent..."
+
+#: widgets/agentactionmanager.cpp:36
+msgid "&Delete Agent Instance"
+msgstr "Agentinstantie verwij&deren"
+
+#: widgets/agentactionmanager.cpp:37
+msgid "&Configure Agent Instance"
+msgstr "Agentinstantie aanmaken"
+
+#: widgets/agentactionmanager.cpp:53
+#, kde-format
+msgctxt "@title:window"
+msgid "New Agent Instance"
+msgstr "Nieuw exemplaar van agent"
+
+#: widgets/agentactionmanager.cpp:55
+#, kde-format
+msgid "Could not create agent instance: %1"
+msgstr "Aanmaken exemplaar van agent is mislukt: %1"
+
+#: widgets/agentactionmanager.cpp:57
+#, kde-format
+msgid "Agent instance creation failed"
+msgstr "Aanmaken exemplaar van agent is mislukt"
+
+#: widgets/agentactionmanager.cpp:59
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete Agent Instance?"
+msgstr "Agentinstantie verwijderen?"
+
+#: widgets/agentactionmanager.cpp:63
+#, kde-format
+msgid "Do you really want to delete the selected agent instance?"
+msgstr "Wilt u de geselecteerde exemplaar van agent verwijderen?"
+
+#: widgets/agentconfigurationdialog.cpp:56
+#, kde-format
+msgctxt "%1 = agent name"
+msgid "%1 Configuration"
+msgstr "%1 configuratie"
+
+#: widgets/agentconfigurationdialog.cpp:89
+#, kde-format
+msgid "%1 Handbook"
+msgstr "%1 Handboek"
+
+#: widgets/agentconfigurationdialog.cpp:90
+#, kde-format
+msgid "About %1"
+msgstr "Info over %1"
+
+#: widgets/agentconfigurationwidget.cpp:96
+#, kde-format
+msgid "The configuration dialog has been opened in another window"
+msgstr "De configuratiedialoog is geopend in een ander venster"
+
+#: widgets/agentconfigurationwidget.cpp:103
+#, kde-format
+msgid "Configuration for %1 is already opened elsewhere."
+msgstr "Configuratie voor %1 is al elders geopend."
+
+#: widgets/agentconfigurationwidget.cpp:105
+#, kde-format
+msgid "Failed to register %1 configuration dialog."
+msgstr "Registreren van %1 configuratiedialoog is mislukt."
+
+#: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
+#, kde-format
+msgid "minute"
+msgid_plural "minutes"
+msgstr[0] "minuut"
+msgstr[1] "minuten"
+
+#: widgets/cachepolicypage.cpp:69
+#, kde-format
+msgid "Retrieval"
+msgstr "Ophalen"
+
+#. i18n: ectx: property (text), widget (QCheckBox, inherit)
+#: widgets/cachepolicypage.ui:20
+#, kde-format
+msgid "Use options from parent folder or account"
+msgstr "Opties van de bovenliggende map of account gebruiken"
+
+#. i18n: ectx: property (text), widget (QCheckBox, syncOnDemand)
+#: widgets/cachepolicypage.ui:33
+#, kde-format
+msgid "Synchronize when selecting this folder"
+msgstr "Synchroniseren bij selectie van deze map"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: widgets/cachepolicypage.ui:40
+#, kde-format
+msgid "Synchronize after:"
+msgstr "Synchroniseren na:"
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, checkInterval)
+#: widgets/cachepolicypage.ui:47
+#, kde-format
+msgctxt "never check the cache"
+msgid "Never"
+msgstr "Nooit"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, checkInterval)
+#. i18n: ectx: property (suffix), widget (QSpinBox, localCacheTimeout)
+#: widgets/cachepolicypage.ui:50 widgets/cachepolicypage.ui:133
+#, kde-format
+msgid "minutes"
+msgstr "minuten"
+
+#. i18n: ectx: property (text), widget (QLabel, localPartsLabel)
+#: widgets/cachepolicypage.ui:66
+#, kde-format
+msgid "Locally cached parts:"
+msgstr "Lokaal gebufferde delen:"
+
+#. i18n: ectx: property (title), widget (KEditListWidget, localParts)
+#: widgets/cachepolicypage.ui:87
+#, kde-format
+msgid "Locally Cached Parts"
+msgstr "Lokaal gebufferde delen"
+
+#. i18n: ectx: property (text), widget (QLabel, retrievalOptionsLabel)
+#: widgets/cachepolicypage.ui:94
+#, kde-format
+msgid "Retrieval Options:"
+msgstr "Opties voor ophalen:"
+
+#. i18n: ectx: property (text), widget (QRadioButton, retrieveFullMessages)
+#: widgets/cachepolicypage.ui:101
+#, kde-format
+msgid "Always retrieve full &messages"
+msgstr "Altijd volledige &berichten ophalen"
+
+#. i18n: ectx: property (text), widget (QRadioButton, retrieveOnlyHeaders)
+#: widgets/cachepolicypage.ui:111
+#, kde-format
+msgid "&Retrieve message bodies on demand"
+msgstr "Inhoud van berichten op verzoek &ophalen"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/cachepolicypage.ui:118
+#, kde-format
+msgid "Keep message bodies locally for:"
+msgstr "Inhoud van berichten lokaal houden voor:"
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, localCacheTimeout)
+#: widgets/cachepolicypage.ui:130
+#, kde-format
+msgctxt "no cache timeout"
+msgid "Forever"
+msgstr "Altijd"
+
+#: widgets/clearcachejob.cpp:54
+#, kde-format
+msgid ""
+"The collection '%1' contains %2 items without Remote ID. Those items were "
+"likely never uploaded to the destination server, so clearing this collection "
+"means that those <b>data will be lost</b>. Are you sure you want to proceed?"
+msgstr ""
+"De verzameling '%1' bevat %2 items zonder Remote-ID. Deze items zijn "
+"waarschijnlijk nooit geüpload naar de bestemmingsserver, deze verzameling "
+"wissen betekent dat deze <b>gegevens verloren zullen gaan</b>. Wilt u "
+"doorgaan?"
+
+#: widgets/clearcachejob.cpp:83
+#, kde-format
+msgid "Collection cache cleared. You should restart Akonadi now."
+msgstr "Cache van verzameling gewist. U zou Akonadi nu opnieuw kunnen starten."
+
+#: widgets/collectiondialog.cpp:56
+#, kde-format
+msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
+msgid "Search"
+msgstr "Zoeken"
+
+#: widgets/collectiondialog.cpp:64
+#, kde-format
+msgid "Use folder by default"
+msgstr "Standaard een map gebruiken"
+
+#: widgets/collectiondialog.cpp:224
+#, kde-format
+msgid "&New Subfolder..."
+msgstr "&Nieuwe submap..."
+
+#: widgets/collectiondialog.cpp:226
+#, kde-format
+msgid "Create a new subfolder under the currently selected folder"
+msgstr "Een nieuwe submap aanmaken in de huidig geselecteerde map"
+
+#: widgets/collectiondialog.cpp:264 widgets/standardactionmanager.cpp:348
+#, kde-format
+msgctxt "@title:window"
+msgid "New Folder"
+msgstr "Nieuwe map"
+
+#: widgets/collectiondialog.cpp:264
+#, kde-format
+msgctxt "@label:textbox, name of a thing"
+msgid "Name"
+msgstr "Naam"
+
+#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:350
+#, kde-format
+msgid "Could not create folder: %1"
+msgstr "Kon de map niet aanmaken: %1"
+
+#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
+#, kde-format
+msgid "Folder creation failed"
+msgstr "Aanmaken van map mislukt"
+
+#: widgets/collectiongeneralpropertiespage.cpp:27
+#, kde-format
+msgctxt "@title:tab general properties page"
+msgid "General"
+msgstr "Algemeen"
+
+#: widgets/collectiongeneralpropertiespage.cpp:54
+#, kde-format
+msgctxt "@label"
+msgid "One object"
+msgid_plural "%1 objects"
+msgstr[0] "Een object"
+msgstr[1] "%1 objecten"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/collectiongeneralpropertiespage.ui:16
+#, kde-format
+msgid "&Name:"
+msgstr "&Naam:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, customIconCheckbox)
+#: widgets/collectiongeneralpropertiespage.ui:29
+#, kde-format
+msgid "&Use custom icon:"
+msgstr "&Aangepaste pictogram gebruiken:"
+
+#. i18n: ectx: property (icon), widget (KIconButton, customIcon)
+#: widgets/collectiongeneralpropertiespage.ui:39
+#, kde-format
+msgid "folder"
+msgstr "map"
+
+#. i18n: ectx: property (title), widget (QGroupBox, statsBox)
+#: widgets/collectiongeneralpropertiespage.ui:62
+#, kde-format
+msgid "Statistics"
+msgstr "Statistieken"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: widgets/collectiongeneralpropertiespage.ui:68
+#, kde-format
+msgctxt "object names"
+msgid "Content:"
+msgstr "Inhoud:"
+
+#. i18n: ectx: property (text), widget (QLabel, countLabel)
+#: widgets/collectiongeneralpropertiespage.ui:75
+#, kde-format
+msgid "0 objects"
+msgstr "0 objecten"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: widgets/collectiongeneralpropertiespage.ui:82
+#, kde-format
+msgid "Size:"
+msgstr "Grootte:"
+
+#. i18n: ectx: property (text), widget (QLabel, sizeLabel)
+#: widgets/collectiongeneralpropertiespage.ui:89
+#, kde-format
+msgid "0 Byte"
+msgstr "0 byte"
+
+#: widgets/collectionmaintenancepage.cpp:46
+#, kde-format
+msgid "Remember that indexing can take some minutes."
+msgstr "Bedenk dat indexering enige minuten kan duren."
+
+#: widgets/collectionmaintenancepage.cpp:71
+#, kde-format
+msgid "Maintenance"
+msgstr "Onderhoud"
+
+#: widgets/collectionmaintenancepage.cpp:130
+#, kde-format
+msgid "Error while retrieving indexed items count"
+msgstr "Fout bij ophalen van aantal geïndexeerde items"
+
+#: widgets/collectionmaintenancepage.cpp:133
+#, kde-format
+msgid "Indexed %1 item in this folder"
+msgid_plural "Indexed %1 items in this folder"
+msgstr[0] "%1 item geïndexeerd in deze map"
+msgstr[1] "%1 items geïndexeerd in deze map"
+
+#: widgets/collectionmaintenancepage.cpp:137
+#, kde-format
+msgid "Calculating indexed items..."
+msgstr "Geïndexeerde items berekenen..."
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/collectionmaintenancepage.ui:17
+#, kde-format
+msgid "Folder type:"
+msgstr "Maptype:"
+
+#. i18n: ectx: property (text), widget (QLabel, folderTypeLbl)
+#. i18n: ectx: property (text), widget (QLabel, folderSizeLbl)
+#. i18n: ectx: property (text), widget (QLabel, itemsCountLbl)
+#. i18n: ectx: property (text), widget (QLabel, unreadItemsCountLbl)
+#: widgets/collectionmaintenancepage.ui:24
+#: widgets/collectionmaintenancepage.ui:31
+#: widgets/collectionmaintenancepage.ui:52
+#: widgets/collectionmaintenancepage.ui:66
+#, kde-format
+msgid "unknown"
+msgstr "onbekend"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: widgets/collectionmaintenancepage.ui:38
+#, kde-format
+msgid "File size:"
+msgstr "Bestandsgrootte:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: widgets/collectionmaintenancepage.ui:45
+#, kde-format
+msgid "Total items:"
+msgstr "Totaal aantal items:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: widgets/collectionmaintenancepage.ui:59
+#, kde-format
+msgid "Unread items:"
+msgstr "Ongelezen items:"
+
+#. i18n: ectx: property (text), widget (QLabel, indexingLabel)
+#: widgets/collectionmaintenancepage.ui:73
+#, kde-format
+msgid "Indexing:"
+msgstr "Bezig te indexeren:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, enableIndexingChkBox)
+#: widgets/collectionmaintenancepage.ui:80
+#, kde-format
+msgid "Enable fulltext indexing"
+msgstr "Indexeren van volledige tekst inschakelen"
+
+#. i18n: ectx: property (text), widget (QLabel, indexedCountLbl)
+#: widgets/collectionmaintenancepage.ui:87
+#, kde-format
+msgid "Retrieving indexed items count..."
+msgstr "Ophalen van aantal geïndexeerde items ..."
+
+#. i18n: ectx: property (text), widget (QPushButton, reindexButton)
+#: widgets/collectionmaintenancepage.ui:94
+#, kde-format
+msgid "Reindex folder"
+msgstr "Map opnieuw indexeren"
+
+#: widgets/collectionrequester.cpp:113
+#, kde-format
+msgid "No Folder"
+msgstr "Geen map"
+
+#: widgets/collectionrequester.cpp:122
+#, kde-format
+msgid "Open collection dialog"
+msgstr "Dialoogvenster voor verzameling openen"
+
+#: widgets/collectionrequester.cpp:143
+#, kde-format
+msgctxt "@title:window"
+msgid "Select a collection"
+msgstr "Een verzameling selecteren"
+
+#: widgets/conflictresolvedialog.cpp:129
+#, kde-format
+msgid "Modification Time"
+msgstr "Tijdstip van wijziging"
+
+#: widgets/conflictresolvedialog.cpp:141
+#, kde-format
+msgid "Flags"
+msgstr "Vlaggen"
+
+#: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
+#: widgets/conflictresolvedialog.cpp:174
+#, kde-format
+msgid "Attribute: %1"
+msgstr "Attribuut: %1"
+
+#: widgets/conflictresolvedialog.cpp:186
+#, kde-format
+msgctxt "@title:window"
+msgid "Conflict Resolution"
+msgstr "Conflictoplossing"
+
+#: widgets/conflictresolvedialog.cpp:192
+#, kde-format
+msgctxt "@action:button"
+msgid "Take my version"
+msgstr "Mijn versie nemen"
+
+#: widgets/conflictresolvedialog.cpp:198
+#, kde-format
+msgctxt "@action:button"
+msgid "Take their version"
+msgstr "Hun versie nemen"
+
+#: widgets/conflictresolvedialog.cpp:204
+#, kde-format
+msgctxt "@action:button"
+msgid "Keep both versions"
+msgstr "Beide versies behouden"
+
+#: widgets/conflictresolvedialog.cpp:216
+#, kde-format
+msgid ""
+"<qt>Your changes conflict with those made by someone else meanwhile."
+"<br>Unless one version can just be thrown away, you will have to integrate "
+"those changes manually.<br>Click on <a href=\"opentexteditor\">\"Open text "
+"editor\"</a> to keep a copy of the texts, then select which version is most "
+"correct, then re-open it and modify it again to add what's missing."
+msgstr ""
+"<qt>Uw wijzigingen zijn intussen in conflict met die gemaakt door iemand "
+"anders.<br>Tenzij een versie gewoon weggegooid kan worden, moet u deze "
+"wijzigingen handmatig integreren.<br>Klik op <a href=\"opentexteditor\"</a> "
+"om een kopie van de teksten te behouden, selecteer daarna welke versie het "
+"meest juist is, open het daarna opnieuw en wijzig het opnieuw om toe te "
+"voegen wat er ontbreekt."
+
+#: widgets/conflictresolvedialog.cpp:265
+#, kde-format
+msgid "Data"
+msgstr "Gegevens"
+
+#: widgets/controlgui.cpp:223
+#, kde-format
+msgid "Starting Akonadi server..."
+msgstr "Akonadi-server starten..."
+
+#: widgets/controlgui.cpp:229
+#, kde-format
+msgid "Stopping Akonadi server..."
+msgstr "Akonadi-server stoppen..."
+
+#: widgets/dragdropmanager.cpp:212
+#, kde-format
+msgid "&Move Here"
+msgstr "Hierheen verplaat&sen"
+
+#: widgets/dragdropmanager.cpp:218
+#, kde-format
+msgid "&Copy Here"
+msgstr "Hierheen &kopiëren"
+
+#: widgets/dragdropmanager.cpp:224
+#, kde-format
+msgid "&Link Here"
+msgstr "Hierheen een koppe&ling maken"
+
+#: widgets/dragdropmanager.cpp:228
+#, kde-format
+msgid "C&ancel"
+msgstr "&Annuleren"
+
+#: widgets/erroroverlay.cpp:225
+#, kde-format
+msgctxt "%1 is a reason why"
+msgid ""
+"Cannot connect to the Personal information management service.\n"
+"\n"
+"%1"
+msgstr ""
+"Kan niet verbinden met de service Persoonlijke informatie beheerder.\n"
+"\n"
+"%1"
+
+#: widgets/erroroverlay.cpp:229 widgets/erroroverlay.cpp:230
+#, kde-format
+msgid "Personal information management service is starting..."
+msgstr "Service voor beheer van persoonlijke informatie start..."
+
+#: widgets/erroroverlay.cpp:234 widgets/erroroverlay.cpp:235
+#, kde-format
+msgid "Personal information management service is shutting down..."
+msgstr "Service voor beheer van persoonlijke informatie stopt..."
+
+#: widgets/erroroverlay.cpp:239
+#, kde-format
+msgid ""
+"Personal information management service is performing a database upgrade."
+msgstr ""
+"De service voor beheer van persoonlijke informatie is bezig met een "
+"opwaardering van de database."
+
+#: widgets/erroroverlay.cpp:241
+#, kde-format
+msgid ""
+"Personal information management service is performing a database upgrade.\n"
+"This happens after a software update and is necessary to optimize "
+"performance.\n"
+"Depending on the amount of personal information, this might take a few "
+"minutes."
+msgstr ""
+"De service voor beheer van persoonlijke informatie is bezig met een "
+"opwaardering van de database.\n"
+"Dit vindt plaats na het bijwerken van de software en is noodzakelijk om de "
+"prestaties te optimaliseren.\n"
+"Afhankelijk van de hoeveelheid persoonlijke informatie kan dit enkele "
+"minuten duren."
+
+#. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
+#. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
+#: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
+#, kde-format
+msgid ""
+"The Akonadi personal information management service is not running. This "
+"application cannot be used without it."
+msgstr ""
+"De Akonadi persoonlijke informatiebeheer-service draait niet. Deze "
+"applicatie kan niet worden gebruikt zonder dat."
+
+#. i18n: ectx: property (text), widget (QPushButton, startButton)
+#: widgets/erroroverlay.ui:116
+#, kde-format
+msgctxt "@action:button Start the Akonadi server"
+msgid "Start"
+msgstr "Starten"
+
+#. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
+#: widgets/erroroverlay.ui:158
+#, kde-format
+msgid ""
+"The Akonadi personal information management framework is not operational.\n"
+"Click on \"Details...\" to obtain detailed information on this problem."
+msgstr ""
+"Het Akonadi raamwerk voor beheer van persoonlijke informatie is niet "
+"operationeel.\n"
+"Klik op \"Details...\" om meer gedetailleerde informatie over dit probleem "
+"te verkrijgen."
+
+#. i18n: ectx: property (text), widget (QLabel, brokenDescription)
+#: widgets/erroroverlay.ui:208
+#, kde-format
+msgid "The Akonadi personal information management service is not operational."
+msgstr "Akonadi persoonlijke informatiebeheer-service draait niet."
+
+#. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
+#: widgets/erroroverlay.ui:259
+#, kde-format
+msgid "Details..."
+msgstr "Details..."
+
+#: widgets/manageaccountwidget.cpp:200
+#, kde-format
+msgid "Do you want to remove account '%1'?"
+msgstr "Wilt u het account '%1' verwijderen?"
+
+#: widgets/manageaccountwidget.cpp:201
+#, kde-format
+msgid "Remove account?"
+msgstr "Account verwijderen?"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/manageaccountwidget.ui:19
+#, kde-format
+msgid "Incoming accounts (add at least one):"
+msgstr "Inkomende accounts (voeg tenminste één account toe):"
+
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
+#: widgets/manageaccountwidget.ui:26
+#, kde-format
+msgid "Filter…"
+msgstr "Filter…"
+
+#. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
+#: widgets/manageaccountwidget.ui:40
+#, kde-format
+msgid "A&dd..."
+msgstr "&Toevoegen..."
+
+#. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
+#: widgets/manageaccountwidget.ui:50
+#, kde-format
+msgid "&Modify..."
+msgstr "&Wijzigen..."
+
+#. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
+#: widgets/manageaccountwidget.ui:60
+#, kde-format
+msgid "R&emove"
+msgstr "V&erwijderen"
+
+#. i18n: ectx: property (text), widget (QPushButton, mRestartAccountButton)
+#: widgets/manageaccountwidget.ui:77
+#, kde-format
+msgid "Restart"
+msgstr "Herstarten"
+
+#: widgets/recentcollectionaction.cpp:43
+#, kde-format
+msgid "Recent Folder"
+msgstr "Recente map"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, RenameFavoriteDialog)
+#: widgets/renamefavoritedialog.ui:26
+#, kde-format
+msgid "Rename Favorite"
+msgstr "Favoriet hernoemen"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/renamefavoritedialog.ui:35
+#, kde-format
+msgid "Name:"
+msgstr "Naam:"
+
+#: widgets/selftestdialog.cpp:60
+#, kde-format
+msgctxt "@title:window"
+msgid "Akonadi Server Self-Test"
+msgstr "Akonadi-server zelftest"
+
+#: widgets/selftestdialog.cpp:71
+#, kde-format
+msgid "Save Report..."
+msgstr "Rapport opslaan..."
+
+#: widgets/selftestdialog.cpp:73
+#, kde-format
+msgid "Copy Report to Clipboard"
+msgstr "Rapport kopiëren naar klembord"
+
+#: widgets/selftestdialog.cpp:189
+#, kde-format
+msgid ""
+"The QtSQL driver '%1' is required by your current Akonadi server "
+"configuration and was found on your system."
+msgstr ""
+"Het QtSQL-stuurprogramma '%1' is voor de huidige Akonadi-serverconfiguratie "
+"vereist en is op uw systeem gevonden."
+
+#: widgets/selftestdialog.cpp:191
+#, kde-format
+msgid ""
+"The QtSQL driver '%1' is required by your current Akonadi server "
+"configuration.\n"
+"The following drivers are installed: %2.\n"
+"Make sure the required driver is installed."
+msgstr ""
+"Het QtSQL-stuurprogramma %1 is voor de huidige Akonadi-serverconfiguratie "
+"vereist.\n"
+"De volgende stuurprogramma's zijn geïnstalleerd: %2.\n"
+"Zorg ervoor dat het vereiste stuurprogramma geïnstalleerd is."
+
+#: widgets/selftestdialog.cpp:198
+#, kde-format
+msgid "Database driver found."
+msgstr "Databasestuurprogramma gevonden."
+
+#: widgets/selftestdialog.cpp:200
+#, kde-format
+msgid "Database driver not found."
+msgstr "Databasestuurprogramma niet gevonden."
+
+#: widgets/selftestdialog.cpp:208
+#, kde-format
+msgid "MySQL server executable not tested."
+msgstr "Uitvoerbare MySQL-server bestand niet getest."
+
+#: widgets/selftestdialog.cpp:208 widgets/selftestdialog.cpp:249
+#: widgets/selftestdialog.cpp:300
+#, kde-format
+msgid "The current configuration does not require an internal MySQL server."
+msgstr "De huidige configuratie heeft geen interne MySQL-server nodig."
+
+#: widgets/selftestdialog.cpp:216
+#, kde-format
+msgid ""
+"You have currently configured Akonadi to use the MySQL server '%1'.\n"
+"Make sure you have the MySQL server installed, set the correct path and "
+"ensure you have the necessary read and execution rights on the server "
+"executable. The server executable is typically called 'mysqld'; its location "
+"varies depending on the distribution."
+msgstr ""
+"De huidige geconfigureerde Akonadi gebruikt de MySQL-server '%1'.\n"
+"Controleer of de MySQL-server geïnstalleerd is, zet het juiste pad en "
+"controleer de noodzakelijke lees- en uitvoeringsrechten van het "
+"serverprogramma. Het serverprogramma is normaliter 'mysqld' en de locatie is "
+"afhankelijk van de distributie."
+
+#: widgets/selftestdialog.cpp:224
+#, kde-format
+msgid "MySQL server not found."
+msgstr "MySQL-server niet gevonden."
+
+#: widgets/selftestdialog.cpp:226
+#, kde-format
+msgid "MySQL server not readable."
+msgstr "MySQL-server niet leesbaar."
+
+#: widgets/selftestdialog.cpp:228
+#, kde-format
+msgid "MySQL server not executable."
+msgstr "MySQL-server niet uitvoerbaar."
+
+#: widgets/selftestdialog.cpp:230
+#, kde-format
+msgid "MySQL found with unexpected name."
+msgstr "MySQL met onverwachte naam gevonden."
+
+#: widgets/selftestdialog.cpp:232
+#, kde-format
+msgid "MySQL server found."
+msgstr "MySQL-server gevonden."
+
+#: widgets/selftestdialog.cpp:238
+#, kde-format
+msgid "MySQL server found: %1"
+msgstr "MySQL-server gevonden: %1"
+
+#: widgets/selftestdialog.cpp:239
+#, kde-format
+msgid "MySQL server is executable."
+msgstr "MySQL-server is uitvoerbaar."
+
+#: widgets/selftestdialog.cpp:241
+#, kde-format
+msgid ""
+"Executing the MySQL server '%1' failed with the following error message: '%2'"
+msgstr ""
+"Het uitvoeren van MySQL-server '%1' is mislukt met de volgende foutmelding: "
+"'%2'"
+
+#: widgets/selftestdialog.cpp:242
+#, kde-format
+msgid "Executing the MySQL server failed."
+msgstr "Het uitvoeren van MySQL-server is mislukt."
+
+#: widgets/selftestdialog.cpp:249
+#, kde-format
+msgid "MySQL server error log not tested."
+msgstr "Foutlog van MySQL-server is niet getest."
+
+#: widgets/selftestdialog.cpp:257
+#, kde-format
+msgid "No current MySQL error log found."
+msgstr "Huidige MySQL-foutlog niet gevonden."
+
+#: widgets/selftestdialog.cpp:258
+#, kde-format
+msgid ""
+"The MySQL server did not report any errors during this startup. The log can "
+"be found in '%1'."
+msgstr ""
+"De MySQL-server heeft tijdens het starten geen fouten gerapporteerd. De log "
+"kan gevonden worden in '%1'."
+
+#: widgets/selftestdialog.cpp:264
+#, kde-format
+msgid "MySQL error log not readable."
+msgstr "MySQL-foutlog is niet leesbaar."
+
+#: widgets/selftestdialog.cpp:265
+#, kde-format
+msgid "A MySQL server error log file was found but is not readable: %1"
+msgstr ""
+"Een foutlog-bestand van MySQL-server gevonden maar is niet leesbaar: %1"
+
+#: widgets/selftestdialog.cpp:274
+#, kde-format
+msgid "MySQL server log contains errors."
+msgstr "MySQL-serverlog bevat fouten."
+
+#: widgets/selftestdialog.cpp:275
+#, kde-format
+msgid "The MySQL server error log file '%1' contains errors."
+msgstr "Het foutlog-bestand '%1' van MySQL-server bevat fouten."
+
+#: widgets/selftestdialog.cpp:285
+#, kde-format
+msgid "MySQL server log contains warnings."
+msgstr "MySQL-serverlog bevat waarschuwingen."
+
+#: widgets/selftestdialog.cpp:286
+#, kde-format
+msgid "The MySQL server log file '%1' contains warnings."
+msgstr "Het MySQL-serverlogbestand '%1' bevat waarschuwingen."
+
+#: widgets/selftestdialog.cpp:289
+#, kde-format
+msgid "MySQL server log contains no errors."
+msgstr "MySQL-serverlog bevat geen fouten."
+
+#: widgets/selftestdialog.cpp:290
+#, kde-format
+msgid "The MySQL server log file '%1' does not contain any errors or warnings."
+msgstr ""
+"Het MySQL-serverlogbestand '%1' bevat geen enkele fout of waarschuwing."
+
+#: widgets/selftestdialog.cpp:300
+#, kde-format
+msgid "MySQL server configuration not tested."
+msgstr "MySQL-serverconfiguratie niet getest."
+
+#: widgets/selftestdialog.cpp:309
+#, kde-format
+msgid "MySQL server default configuration found."
+msgstr "Standaard MySQL-serverconfiguratie gevonden."
+
+#: widgets/selftestdialog.cpp:310
+#, kde-format
+msgid ""
+"The default configuration for the MySQL server was found and is readable at "
+"%1."
+msgstr ""
+"De standaard configuratie voor de MySQL-server is gevonden en is leesbaar op "
+"%1."
+
+#: widgets/selftestdialog.cpp:314
+#, kde-format
+msgid "MySQL server default configuration not found."
+msgstr "Standaard MySQL-serverconfiguratie niet gevonden."
+
+#: widgets/selftestdialog.cpp:315
+#, kde-format
+msgid ""
+"The default configuration for the MySQL server was not found or was not "
+"readable. Check your Akonadi installation is complete and you have all "
+"required access rights."
+msgstr ""
+"De standaard configuratie voor de MySQL-server is niet gevonden of is niet "
+"leesbaar. Controleer of de Akonadi-installatie kompleet is en de "
+"toegangrechten voldoende zijn."
+
+#: widgets/selftestdialog.cpp:323
+#, kde-format
+msgid "MySQL server custom configuration not available."
+msgstr "Aangepaste MySQL-serverconfiguratie niet beschikbaar."
+
+#: widgets/selftestdialog.cpp:324
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was not found but is optional."
+msgstr ""
+"De aangepaste configuratie voor de MsSQL-server is niet gevonden maar is "
+"optioneel."
+
+#: widgets/selftestdialog.cpp:327
+#, kde-format
+msgid "MySQL server custom configuration found."
+msgstr "Aangepaste MySQL-serverconfiguratie gevonden."
+
+#: widgets/selftestdialog.cpp:328
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was found and is readable at %1"
+msgstr ""
+"De aangepaste configuratie voor de MySQL-server is gevonden en is leesbaar "
+"op %1"
+
+#: widgets/selftestdialog.cpp:332
+#, kde-format
+msgid "MySQL server custom configuration not readable."
+msgstr "Aangepaste MySQL-serverconfiguratie niet leesbaar."
+
+#: widgets/selftestdialog.cpp:333
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was found at %1 but is not "
+"readable. Check your access rights."
+msgstr ""
+"De aangepaste configuratie voor de MySQL-server is op %1 gevonden maar is "
+"niet leesbaar. Controleer de toegangsrechten."
+
+#: widgets/selftestdialog.cpp:342
+#, kde-format
+msgid "MySQL server configuration not found or not readable."
+msgstr "MySQL-serverconfiguratie niet gevonden of niet leesbaar."
+
+#: widgets/selftestdialog.cpp:343
+#, kde-format
+msgid "The MySQL server configuration was not found or is not readable."
+msgstr "De MySQL-serverconfiguratie is niet gevonden of is niet leesbaar."
+
+#: widgets/selftestdialog.cpp:346
+#, kde-format
+msgid "MySQL server configuration is usable."
+msgstr "MySQL-serverconfiguratie is bruikbaar."
+
+#: widgets/selftestdialog.cpp:347
+#, kde-format
+msgid "The MySQL server configuration was found at %1 and is readable."
+msgstr "De MySQL-serverconfiguratie is op %1 gevonden en is leesbaar."
+
+#: widgets/selftestdialog.cpp:376
+#, kde-format
+msgid "Cannot connect to PostgreSQL server."
+msgstr "Kan niet met de PostgresSQL-server verbinden."
+
+#: widgets/selftestdialog.cpp:378
+#, kde-format
+msgid "PostgreSQL server found."
+msgstr "PostgresSQL-server gevonden."
+
+#: widgets/selftestdialog.cpp:378
+#, kde-format
+msgid "The PostgreSQL server was found and connection is working."
+msgstr "De PostgresSQL-server is gevonden en werkt."
+
+#: widgets/selftestdialog.cpp:388
+#, kde-format
+msgid "akonadictl not found"
+msgstr "akonadictl niet gevonden"
+
+#: widgets/selftestdialog.cpp:389
+#, kde-format
+msgid ""
+"The program 'akonadictl' needs to be accessible in $PATH. Make sure you have "
+"the Akonadi server installed."
+msgstr ""
+"Het programma 'akonadictl' dient toegankelijk te zijn in $PATH. Zorg ervoor "
+"dat de Akonadi-server geïnstalleerd is."
+
+#: widgets/selftestdialog.cpp:396
+#, kde-format
+msgid "akonadictl found and usable"
+msgstr "akonadictl gevonden en bruikbaar"
+
+#: widgets/selftestdialog.cpp:397
+#, kde-format
+msgid ""
+"The program '%1' to control the Akonadi server was found and could be "
+"executed successfully.\n"
+"Result:\n"
+"%2"
+msgstr ""
+"Het programma '%1' om de Akonadi-server te beheren is gevonden en kon "
+"succesvol uitgevoerd worden.\n"
+"Resultaat:\n"
+"%2"
+
+#: widgets/selftestdialog.cpp:403
+#, kde-format
+msgid "akonadictl found but not usable"
+msgstr "akonadictl gevonden maar niet bruikbaar"
+
+#: widgets/selftestdialog.cpp:404
+#, kde-format
+msgid ""
+"The program '%1' to control the Akonadi server was found but could not be "
+"executed successfully.\n"
+"Result:\n"
+"%2\n"
+"Make sure the Akonadi server is installed correctly."
+msgstr ""
+"Het programma '%1' om de Akonadi-server te beheren is gevonden maar kon niet "
+"succesvol uitgevoerd worden.\n"
+"Resultaat:\n"
+"%2\n"
+"Zorg ervoor dat de Akonadi-server correct geïnstalleerd is."
+
+#: widgets/selftestdialog.cpp:416
+#, kde-format
+msgid "Akonadi control process registered at D-Bus."
+msgstr "Akonadi-beheerproces geregistreerd op D-Bus."
+
+#: widgets/selftestdialog.cpp:417
+#, kde-format
+msgid ""
+"The Akonadi control process is registered at D-Bus which typically indicates "
+"it is operational."
+msgstr ""
+"Het Akonadi-beheerproces is geregistreerd op D-Bus wat meestal aangeeft dat "
+"het operationeel is."
+
+#: widgets/selftestdialog.cpp:420
+#, kde-format
+msgid "Akonadi control process not registered at D-Bus."
+msgstr "Akonadi-beheerproces niet geregistreerd op D-Bus."
+
+#: widgets/selftestdialog.cpp:421
+#, kde-format
+msgid ""
+"The Akonadi control process is not registered at D-Bus which typically means "
+"it was not started or encountered a fatal error during startup."
+msgstr ""
+"Het Akonadi-beheerproces is niet geregistreerd op D-Bus wat meestal betekent "
+"dat het niet gestart is of dat er een fatale fout opgetreden is tijdens het "
+"opstarten."
+
+#: widgets/selftestdialog.cpp:427
+#, kde-format
+msgid "Akonadi server process registered at D-Bus."
+msgstr "Akonadi-serverproces geregistreerd op D-Bus."
+
+#: widgets/selftestdialog.cpp:428
+#, kde-format
+msgid ""
+"The Akonadi server process is registered at D-Bus which typically indicates "
+"it is operational."
+msgstr ""
+"Akonadi-serverproces is geregistreerd op D-Bus wat meestal betekent dat het "
+"operationeel is."
+
+#: widgets/selftestdialog.cpp:431
+#, kde-format
+msgid "Akonadi server process not registered at D-Bus."
+msgstr "Akonadi-serverproces niet geregistreerd op D-Bus."
+
+#: widgets/selftestdialog.cpp:432
+#, kde-format
+msgid ""
+"The Akonadi server process is not registered at D-Bus which typically means "
+"it was not started or encountered a fatal error during startup."
+msgstr ""
+"Akonadi-serverproces is niet geregistreerd op D-Bus wat meestal betekent dat "
+"het niet gestart is of dat er een fatale fout opgetreden is tijdens het "
+"opstarten."
+
+#: widgets/selftestdialog.cpp:441
+#, kde-format
+msgid "Protocol version check not possible."
+msgstr "Protocol versietest niet mogelijk."
+
+#: widgets/selftestdialog.cpp:442
+#, kde-format
+msgid ""
+"Without a connection to the server it is not possible to check if the "
+"protocol version meets the requirements."
+msgstr ""
+"Zonder een verbinding met de server is het niet mogelijk om te testen of de "
+"protocolversie aan de eisen voldoet."
+
+#: widgets/selftestdialog.cpp:447
+#, kde-format
+msgid "Server protocol version is too old."
+msgstr "Server protocolversie is te oud."
+
+#: widgets/selftestdialog.cpp:448 widgets/selftestdialog.cpp:455
+#, kde-format
+msgid ""
+"The server protocol version is %1, but version %2 is required by the client. "
+"If you recently updated KDE PIM, please make sure to restart both Akonadi "
+"and KDE PIM applications."
+msgstr ""
+"De server protocolversie is %1, maar versie %2 is vereist door de client. "
+"Als u recent KDE-PIM hebt bijgewerkt, ga dan na dat zowel de Akonadi-server "
+"als de KDE-PIM-applicaties opnieuw zijn opgestart."
+
+#: widgets/selftestdialog.cpp:454
+#, kde-format
+msgid "Server protocol version is too new."
+msgstr "Server protocolversie is te new."
+
+#: widgets/selftestdialog.cpp:460
+#, kde-format
+msgid "Server protocol version matches."
+msgstr "Server protocolversie komt overeen."
+
+#: widgets/selftestdialog.cpp:460
+#, kde-format
+msgid "The current Protocol version is %1."
+msgstr "De huidige protocolversie is %1."
+
+#: widgets/selftestdialog.cpp:478
+#, kde-format
+msgid "Resource agents found."
+msgstr "Hulpbronagenten gevonden."
+
+#: widgets/selftestdialog.cpp:478
+#, kde-format
+msgid "At least one resource agent has been found."
+msgstr "Tenminste een hulpbronagent is gevonden."
+
+#: widgets/selftestdialog.cpp:481
+#, kde-format
+msgid "No resource agents found."
+msgstr "Geen hulpbronagent gevonden."
+
+#: widgets/selftestdialog.cpp:482
+#, kde-format
+msgid ""
+"No resource agents have been found, Akonadi is not usable without at least "
+"one. This usually means that no resource agents are installed or that there "
+"is a setup problem. The following paths have been searched: '%1'. The "
+"XDG_DATA_DIRS environment variable is set to '%2'; make sure this includes "
+"all paths where Akonadi agents are installed."
+msgstr ""
+"Geen hulpbronagenten zijn gevonden, Akonadi is niet bruikbaar zonder "
+"minstens één hulpbronagent. Dit houdt meestal in dat geen hulpbronagenten "
+"geïnstalleerd zijn of dat er een probleem met de instellingen is. Er is in "
+"de volgende paden gezocht: '%1'. De XDG_DATA_DIRS-omgevingsvariabele is "
+"ingesteld op '%2', zorg ervoor dat deze alle paden bevat waar Akonadi-"
+"agenten geïnstalleerd zijn."
+
+#: widgets/selftestdialog.cpp:499
+#, kde-format
+msgid "No current Akonadi server error log found."
+msgstr "Geen huidige foutlog van Akonadi-server gevonden."
+
+#: widgets/selftestdialog.cpp:499
+#, kde-format
+msgid ""
+"The Akonadi server did not report any errors during its current startup."
+msgstr ""
+"De Akonadi-server heeft geen fouten tijdens het huidige opstarten "
+"gerapporteerd."
+
+#: widgets/selftestdialog.cpp:503
+#, kde-format
+msgid "Current Akonadi server error log found."
+msgstr "Huidige foutlog van Akonadi-server gevonden."
+
+#: widgets/selftestdialog.cpp:504
+#, kde-format
+msgid ""
+"The Akonadi server reported errors during its current startup. The log can "
+"be found in %1."
+msgstr ""
+"De Akonadi-server heeft fouten tijdens het huidige opstarten gerapporteerd. "
+"De log kan worden gevonden in %1."
+
+#: widgets/selftestdialog.cpp:512
+#, kde-format
+msgid "No previous Akonadi server error log found."
+msgstr "Geen vorige foutlog van Akonadi-server gevonden."
+
+#: widgets/selftestdialog.cpp:513
+#, kde-format
+msgid ""
+"The Akonadi server did not report any errors during its previous startup."
+msgstr ""
+"De Akonadi-server heeft geen fouten tijdens het vorige opstarten "
+"gerapporteerd."
+
+#: widgets/selftestdialog.cpp:517
+#, kde-format
+msgid "Previous Akonadi server error log found."
+msgstr "Vorige foutlog van Akonadi-server gevonden."
+
+#: widgets/selftestdialog.cpp:518
+#, kde-format
+msgid ""
+"The Akonadi server reported errors during its previous startup. The log can "
+"be found in %1."
+msgstr ""
+"De Akonadi-server heeft tijdens het vorige opstarten fouten gerapporteerd. "
+"De log kan worden gevonden in %1."
+
+#: widgets/selftestdialog.cpp:529
+#, kde-format
+msgid "No current Akonadi control error log found."
+msgstr "Geen huidige foutlog van Akonadi-beheer gevonden."
+
+#: widgets/selftestdialog.cpp:530
+#, kde-format
+msgid ""
+"The Akonadi control process did not report any errors during its current "
+"startup."
+msgstr ""
+"Het Akonadi-beheerproces heeft geen fouten tijdens het huidige opstarten "
+"gerapporteerd."
+
+#: widgets/selftestdialog.cpp:534
+#, kde-format
+msgid "Current Akonadi control error log found."
+msgstr "Huidige foutlog van Akonadi-beheer gevonden."
+
+#: widgets/selftestdialog.cpp:535
+#, kde-format
+msgid ""
+"The Akonadi control process reported errors during its current startup. The "
+"log can be found in %1."
+msgstr ""
+"Het Akonadi-besturingsproces heeft fouten tijdens het huidige opstarten "
+"gerapporteerd. De log kan worden gevonden in %1."
+
+#: widgets/selftestdialog.cpp:543
+#, kde-format
+msgid "No previous Akonadi control error log found."
+msgstr "Geen vorige foutlog van Akonadi-beheer gevonden."
+
+#: widgets/selftestdialog.cpp:544
+#, kde-format
+msgid ""
+"The Akonadi control process did not report any errors during its previous "
+"startup."
+msgstr ""
+"Het Akonadi-beheerproces heeft geen fouten tijdens het vorige opstarten "
+"gerapporteerd."
+
+#: widgets/selftestdialog.cpp:548
+#, kde-format
+msgid "Previous Akonadi control error log found."
+msgstr "Vorige foutlog van Akonadi-beheer gevonden."
+
+#: widgets/selftestdialog.cpp:549
+#, kde-format
+msgid ""
+"The Akonadi control process reported errors during its previous startup. The "
+"log can be found in %1."
+msgstr ""
+"Het Akonadi-besuringsproces heeft tijdens het vorige opstarten fouten "
+"gerapporteerd. De log kan worden gevonden in %1."
+
+#: widgets/selftestdialog.cpp:559
+#, kde-format
+msgid "Akonadi was started as root"
+msgstr "Akonadi is gestart als root"
+
+#: widgets/selftestdialog.cpp:560
+#, kde-format
+msgid ""
+"Running Internet-facing applications as root/administrator exposes you to "
+"many security risks. MySQL, used by this Akonadi installation, will not "
+"allow itself to run as root, to protect you from these risks."
+msgstr ""
+"Applicaties met een directe verbinding met het internet draaien als root/"
+"systeembeheerder stelt u bloot aan vele beveiligingsrisico's. MySQL, dat "
+"wordt gebruikt door deze Akonadi-installatie staat zichzelf niet toe om als  "
+"root te draaien om u beschermen tegen deze risico's."
+
+#: widgets/selftestdialog.cpp:564
+#, kde-format
+msgid "Akonadi is not running as root"
+msgstr "Akonadi draait niet als root"
+
+#: widgets/selftestdialog.cpp:565
+#, kde-format
+msgid ""
+"Akonadi is not running as a root/administrator user, which is the "
+"recommended setup for a secure system."
+msgstr ""
+"Akonadi draait niet als root/systeembeheerder, wat de aanbevolen manier is "
+"voor de opzet van een veilig systeem."
+
+#: widgets/selftestdialog.cpp:643
+#, kde-format
+msgid "Save Test Report"
+msgstr "Testrapport opslaan"
+
+#: widgets/selftestdialog.cpp:650
+#, kde-format
+msgid "Error"
+msgstr "Fout"
+
+#: widgets/selftestdialog.cpp:650
+#, kde-format
+msgid "Could not open file '%1'"
+msgstr "Kon het bestand '%1' niet openen"
+
+#. i18n: ectx: property (text), widget (QLabel, introductionLabel)
+#: widgets/selftestdialog.ui:16
+#, kde-format
+msgid ""
+"An error occurred during the startup of the Akonadi server. The following "
+"self-tests are supposed to help with tracking down and solving this problem. "
+"When requesting support or reporting bugs, please always include this report."
+msgstr ""
+"Tijdens het starten van de Akonadi-server is er een fout opgetreden. De "
+"volgende zelftesten zijn behulpzaam bij het opsporen en verhelpen van dit "
+"probleem. Voeg dit rapport altijd toe bij het vragen van ondersteuning of "
+"het indienen van een bug."
+
+#. i18n: ectx: property (title), widget (QGroupBox, detailsGroup)
+#: widgets/selftestdialog.ui:39
+#, kde-format
+msgid "Details"
+msgstr "Details"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/selftestdialog.ui:61
+#, kde-format
+msgid ""
+"<p>For more troubleshooting tips please refer to <a href=\"https://userbase."
+"kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
+msgstr ""
+"<p>Voor meer probleemoplossingtips kijk naar <a href=\"https://userbase.kde."
+"org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
+
+#: widgets/standardactionmanager.cpp:78
+msgid "&New Folder..."
+msgstr "&Nieuwe map..."
+
+#: widgets/standardactionmanager.cpp:78
+msgid "New"
+msgstr "Nieuw"
+
+#: widgets/standardactionmanager.cpp:80
+msgid "&Delete Folder"
+msgstr "Map verwij&deren"
+
+#: widgets/standardactionmanager.cpp:80
+msgid "Delete"
+msgstr "Verwijderen"
+
+#: widgets/standardactionmanager.cpp:82
+msgid "&Synchronize Folder"
+msgstr "Map &synchroniseren"
+
+#: widgets/standardactionmanager.cpp:83 widgets/standardactionmanager.cpp:157
+#: widgets/standardactionmanager.cpp:243
+msgid "Synchronize"
+msgstr "Synchroniseren"
+
+#: widgets/standardactionmanager.cpp:90
+msgid "Folder &Properties"
+msgstr "Ma&peigenschappen"
+
+#: widgets/standardactionmanager.cpp:91 widgets/standardactionmanager.cpp:149
+msgid "Properties"
+msgstr "Eigenschappen"
+
+#: widgets/standardactionmanager.cpp:98
+msgid "&Paste"
+msgstr "P&lakken"
+
+#: widgets/standardactionmanager.cpp:98
+msgid "Paste"
+msgstr "Plakken"
+
+#: widgets/standardactionmanager.cpp:101
+msgid "Manage Local &Subscriptions..."
+msgstr "Lokale in&schrijvingen beheren..."
+
+#: widgets/standardactionmanager.cpp:102
+msgid "Manage Local Subscriptions"
+msgstr "Lokale inschrijvingen beheren"
+
+#: widgets/standardactionmanager.cpp:109
+msgid "Add to Favorite Folders"
+msgstr "Aan bladwijzers toevoegen"
+
+#: widgets/standardactionmanager.cpp:110
+msgid "Add to Favorite"
+msgstr "Aan favorieten toevoegen"
+
+#: widgets/standardactionmanager.cpp:117
+msgid "Remove from Favorite Folders"
+msgstr "Uit bladwijzers verwijderen"
+
+#: widgets/standardactionmanager.cpp:118
+msgid "Remove from Favorite"
+msgstr "Uit favorieten verwijderen"
+
+#: widgets/standardactionmanager.cpp:124
+msgid "Rename Favorite..."
+msgstr "Bladwijzer hernoemen..."
+
+#: widgets/standardactionmanager.cpp:124
+msgid "Rename"
+msgstr "Hernoemen"
+
+#: widgets/standardactionmanager.cpp:126 widgets/standardactionmanager.cpp:164
+msgid "Copy Folder To..."
+msgstr "Map kopiëren naar..."
+
+#: widgets/standardactionmanager.cpp:127 widgets/standardactionmanager.cpp:133
+#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:173
+msgid "Copy To"
+msgstr "Kopiëren naar"
+
+#: widgets/standardactionmanager.cpp:133 widgets/standardactionmanager.cpp:173
+msgid "Copy Item To..."
+msgstr "Item kopiëren naar..."
+
+#: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:174
+msgid "Move Item To..."
+msgstr "Item verplaatsen naar..."
+
+#: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:137
+#: widgets/standardactionmanager.cpp:167 widgets/standardactionmanager.cpp:174
+msgid "Move To"
+msgstr "Verplaatsen naar"
+
+#: widgets/standardactionmanager.cpp:136 widgets/standardactionmanager.cpp:166
+msgid "Move Folder To..."
+msgstr "Map verplaatsen naar..."
+
+#: widgets/standardactionmanager.cpp:143
+msgid "&Cut Item"
+msgstr "Item &knippen"
+
+#: widgets/standardactionmanager.cpp:143 widgets/standardactionmanager.cpp:144
+msgid "Cut"
+msgstr "Knippen"
+
+#: widgets/standardactionmanager.cpp:144
+msgid "&Cut Folder"
+msgstr "Map &knippen"
+
+#: widgets/standardactionmanager.cpp:145
+msgid "Create Resource"
+msgstr "Hulpbron aanmaken"
+
+#: widgets/standardactionmanager.cpp:146
+msgid "Delete Resource"
+msgstr "Hulpbron verwijderen"
+
+#: widgets/standardactionmanager.cpp:148
+msgid "&Resource Properties"
+msgstr "&Hulpbroneigenschappen"
+
+#: widgets/standardactionmanager.cpp:156
+msgid "Synchronize Resource"
+msgstr "Hulpbron synchroniseren"
+
+#: widgets/standardactionmanager.cpp:163
+msgid "Work Offline"
+msgstr "Offline werken"
+
+#: widgets/standardactionmanager.cpp:176
+msgid "&Synchronize Folder Recursively"
+msgstr "Map recursief &synchroniseren"
+
+#: widgets/standardactionmanager.cpp:177
+msgid "Synchronize Recursively"
+msgstr "Recursief synchroniseren"
+
+#: widgets/standardactionmanager.cpp:184
+msgid "&Move Folder To Trash"
+msgstr "&Map naar prullenbak verplaatsen"
+
+#: widgets/standardactionmanager.cpp:185
+msgid "Move Folder To Trash"
+msgstr "Map naar prullenbak verplaatsen"
+
+#: widgets/standardactionmanager.cpp:192
+msgid "&Move Item To Trash"
+msgstr "Ite&m naar prullenbak verplaatsen"
+
+#: widgets/standardactionmanager.cpp:193
+msgid "Move Item To Trash"
+msgstr "Item naar prullenbak verplaatsen"
+
+#: widgets/standardactionmanager.cpp:200 widgets/standardactionmanager.cpp:216
+msgid "&Restore Folder From Trash"
+msgstr "Map uit prullenbak he&rstellen"
+
+#: widgets/standardactionmanager.cpp:201 widgets/standardactionmanager.cpp:217
+msgid "Restore Folder From Trash"
+msgstr "Map uit prullenbak herstellen"
+
+#: widgets/standardactionmanager.cpp:208 widgets/standardactionmanager.cpp:225
+#: widgets/standardactionmanager.cpp:232
+msgid "&Restore Item From Trash"
+msgstr "Item uit prullenbak he&rstellen"
+
+#: widgets/standardactionmanager.cpp:209 widgets/standardactionmanager.cpp:226
+#: widgets/standardactionmanager.cpp:232
+msgid "Restore Item From Trash"
+msgstr "Item uit prullenbak herstellen"
+
+#: widgets/standardactionmanager.cpp:223
+msgid "&Restore Collection From Trash"
+msgstr "Verzameling uit prullenbak he&rstellen"
+
+#: widgets/standardactionmanager.cpp:223
+msgid "Restore Collection From Trash"
+msgstr "Verzameling uit prullenbak herstellen"
+
+#: widgets/standardactionmanager.cpp:234
+msgid "&Synchronize Favorite Folders"
+msgstr "Favoriete mappen &synchroniseren"
+
+#: widgets/standardactionmanager.cpp:235
+msgid "Synchronize Favorite Folders"
+msgstr "Favoriete mappen synchroniseren"
+
+#: widgets/standardactionmanager.cpp:242
+msgid "Synchronize Folder Tree"
+msgstr "Alles in deze map synchroniseren"
+
+#: widgets/standardactionmanager.cpp:328
+#, kde-format
+msgid "&Copy Folder"
+msgid_plural "&Copy %1 Folders"
+msgstr[0] "Map &kopiëren"
+msgstr[1] "%1 mappen &kopiëren"
+
+#: widgets/standardactionmanager.cpp:329
+#, kde-format
+msgid "&Copy Item"
+msgid_plural "&Copy %1 Items"
+msgstr[0] "Item &kopiëren"
+msgstr[1] "%1 items &kopiëren"
+
+#: widgets/standardactionmanager.cpp:330
+#, kde-format
+msgctxt "@action"
+msgid "&Cut Item"
+msgid_plural "&Cut %1 Items"
+msgstr[0] "Item &knippen"
+msgstr[1] "%1 items &knippen"
+
+#: widgets/standardactionmanager.cpp:331
+#, kde-format
+msgctxt "@action"
+msgid "&Cut Folder"
+msgid_plural "&Cut %1 Folders"
+msgstr[0] "Map &knippen"
+msgstr[1] "%1 mappen &knippen"
+
+#: widgets/standardactionmanager.cpp:332
+#, kde-format
+msgid "&Delete Item"
+msgid_plural "&Delete %1 Items"
+msgstr[0] "Item verwij&deren"
+msgstr[1] "%1 items verwij&deren"
+
+#: widgets/standardactionmanager.cpp:333
+#, kde-format
+msgctxt "@action"
+msgid "&Delete Folder"
+msgid_plural "&Delete %1 Folders"
+msgstr[0] "Map verwij&deren"
+msgstr[1] "%1 mappen verwijderen"
+
+#: widgets/standardactionmanager.cpp:334
+#, kde-format
+msgctxt "@action"
+msgid "&Synchronize Folder"
+msgid_plural "&Synchronize %1 Folders"
+msgstr[0] "Map &synchroniseren"
+msgstr[1] "%1 mappen &synchroniseren"
+
+#: widgets/standardactionmanager.cpp:335
+#, kde-format
+msgid "&Delete Resource"
+msgid_plural "&Delete %1 Resources"
+msgstr[0] "Hulpbron verwij&deren"
+msgstr[1] "%1 hulpbronnen verwij&deren"
+
+#: widgets/standardactionmanager.cpp:336
+#, kde-format
+msgid "&Synchronize Resource"
+msgid_plural "&Synchronize %1 Resources"
+msgstr[0] "Hulpbron &synchroniseren"
+msgstr[1] "%1 hulpbronnen &synchroniseren"
+
+#: widgets/standardactionmanager.cpp:338
+#, kde-format
+msgid "Copy Folder"
+msgid_plural "Copy %1 Folders"
+msgstr[0] "Map kopiëren"
+msgstr[1] "%1 mappen &kopiëren"
+
+#: widgets/standardactionmanager.cpp:339
+#, kde-format
+msgid "Copy Item"
+msgid_plural "Copy %1 Items"
+msgstr[0] "Item kopiëren"
+msgstr[1] "%1 items kopiëren"
+
+#: widgets/standardactionmanager.cpp:340
+#, kde-format
+msgid "Cut Item"
+msgid_plural "Cut %1 Items"
+msgstr[0] "Item knippen"
+msgstr[1] "%1 items &knippen"
+
+#: widgets/standardactionmanager.cpp:341
+#, kde-format
+msgid "Cut Folder"
+msgid_plural "Cut %1 Folders"
+msgstr[0] "Map knippen"
+msgstr[1] "%1 mappen knippen"
+
+#: widgets/standardactionmanager.cpp:342
+#, kde-format
+msgid "Delete Item"
+msgid_plural "Delete %1 Items"
+msgstr[0] "Item verwijderen"
+msgstr[1] "%1 items verwij&deren"
+
+#: widgets/standardactionmanager.cpp:343
+#, kde-format
+msgid "Delete Folder"
+msgid_plural "Delete %1 Folders"
+msgstr[0] "Map verwijderen"
+msgstr[1] "%1 mappen verwijderen"
+
+#: widgets/standardactionmanager.cpp:344
+#, kde-format
+msgid "Synchronize Folder"
+msgid_plural "Synchronize %1 Folders"
+msgstr[0] "Map synchroniseren"
+msgstr[1] "%1 mappen synchroniseren"
+
+#: widgets/standardactionmanager.cpp:345
+#, kde-format
+msgctxt "@action"
+msgid "Delete Resource"
+msgid_plural "Delete %1 Resources"
+msgstr[0] "Hulpbron verwijderen"
+msgstr[1] "%1 hulpbronnen verwijderen"
+
+#: widgets/standardactionmanager.cpp:346
+#, kde-format
+msgctxt "@action"
+msgid "Synchronize Resource"
+msgid_plural "Synchronize %1 Resources"
+msgstr[0] "Hulpbron synchroniseren"
+msgstr[1] "%1 hulpbronnen synchroniseren"
+
+#: widgets/standardactionmanager.cpp:349
+#, kde-format
+msgctxt "@label:textbox name of Akonadi folder"
+msgid "Name"
+msgstr "Naam"
+
+#: widgets/standardactionmanager.cpp:356
+#, kde-format
+msgid "Do you really want to delete this folder and all its sub-folders?"
+msgid_plural ""
+"Do you really want to delete %1 folders and all their sub-folders?"
+msgstr[0] "Wilt u deze map en al haar submappen verwijderen?"
+msgstr[1] "Wilt u deze %1 mappen en al hun submappen verwijderen?"
+
+#: widgets/standardactionmanager.cpp:359
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete folder?"
+msgid_plural "Delete folders?"
+msgstr[0] "Map verwijderen?"
+msgstr[1] "Map verwijderen?"
+
+#: widgets/standardactionmanager.cpp:360
+#, kde-format
+msgid "Could not delete folder: %1"
+msgstr "Kon de map niet verwijderen: %1"
+
+#: widgets/standardactionmanager.cpp:361
+#, kde-format
+msgid "Folder deletion failed"
+msgstr "Verwijderen van de map is mislukt"
+
+#: widgets/standardactionmanager.cpp:363
+#, kde-format
+msgctxt "@title:window"
+msgid "Properties of Folder %1"
+msgstr "Eigenschappen voor map %1"
+
+#: widgets/standardactionmanager.cpp:367
+#, kde-format
+msgid "Do you really want to delete the selected item?"
+msgid_plural "Do you really want to delete %1 items?"
+msgstr[0] "Wilt u het geselecteerde item verwijderen?"
+msgstr[1] "Wilt u de %1 geselecteerde items verwijderen?"
+
+#: widgets/standardactionmanager.cpp:368
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete item?"
+msgid_plural "Delete items?"
+msgstr[0] "Item verwijderen?"
+msgstr[1] "Items verwijderen?"
+
+#: widgets/standardactionmanager.cpp:369
+#, kde-format
+msgid "Could not delete item: %1"
+msgstr "Kon item niet verwijderen: %1"
+
+#: widgets/standardactionmanager.cpp:370
+#, kde-format
+msgid "Item deletion failed"
+msgstr "Verwijderen van item is mislukt"
+
+#: widgets/standardactionmanager.cpp:372
+#, kde-format
+msgctxt "@title:window"
+msgid "Rename Favorite"
+msgstr "Favoriet hernoemen"
+
+#: widgets/standardactionmanager.cpp:373
+#, kde-format
+msgctxt "@label:textbox name of the folder"
+msgid "Name:"
+msgstr "Naam:"
+
+#: widgets/standardactionmanager.cpp:375
+#, kde-format
+msgctxt "@title:window"
+msgid "New Resource"
+msgstr "Nieuwe hulpbron"
+
+#: widgets/standardactionmanager.cpp:376
+#, kde-format
+msgid "Could not create resource: %1"
+msgstr "Kon de hulpbron niet aanmaken: %1"
+
+#: widgets/standardactionmanager.cpp:377
+#, kde-format
+msgid "Resource creation failed"
+msgstr "Aanmaken van hulpbron is mislukt"
+
+#: widgets/standardactionmanager.cpp:381
+#, kde-format
+msgid "Do you really want to delete this resource?"
+msgid_plural "Do you really want to delete %1 resources?"
+msgstr[0] "Wilt u deze hulpbron verwijderen?"
+msgstr[1] "Wilt u deze %1 hulpbronnen verwijderen?"
+
+#: widgets/standardactionmanager.cpp:384
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete Resource?"
+msgid_plural "Delete Resources?"
+msgstr[0] "Hulpbron verwijderen?"
+msgstr[1] "Hulpbronnen verwijderen?"
+
+#: widgets/standardactionmanager.cpp:386
+#, kde-format
+msgid "Could not paste data: %1"
+msgstr "Kon gegevens niet plakken: %1"
+
+#: widgets/standardactionmanager.cpp:387
+#, kde-format
+msgid "Paste failed"
+msgstr "Plakken is mislukt"
+
+#: widgets/standardactionmanager.cpp:739
+#, kde-format
+msgid "We can not add \"/\" in folder name."
+msgstr "Er kan geen \"/\" aan de mapnaam worden toegevoegd."
+
+#: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
+#, kde-format
+msgid "Create new folder error"
+msgstr "Fout bij aanmaken nieuwe map"
+
+#: widgets/standardactionmanager.cpp:743
+#, kde-format
+msgid "We can not add \".\" at begin or end of folder name."
+msgstr ""
+"Er kan geen \".\" aan het begin of eind van de mapnaam worden toegevoegd."
+
+#: widgets/standardactionmanager.cpp:982
+#, kde-format
+msgid ""
+"Before syncing folder \"%1\" it is necessary to have the resource online. Do "
+"you want to make it online?"
+msgstr ""
+"Alvorens map \"%1\" te kunnen synchroniseren is het nodig om de hulpbron "
+"online te hebben. Wilt u het online brengen?"
+
+#: widgets/standardactionmanager.cpp:983
+#, kde-format
+msgid "Account \"%1\" is offline"
+msgstr "Account \"%1\" is offline"
+
+#: widgets/standardactionmanager.cpp:984
+#, kde-format
+msgctxt "@action:button"
+msgid "Go Online"
+msgstr "Ga online"
+
+#: widgets/standardactionmanager.cpp:1585
+#, kde-format
+msgid "Move to This Folder"
+msgstr "Naar deze map verplaatsen"
+
+#: widgets/standardactionmanager.cpp:1585
+#, kde-format
+msgid "Copy to This Folder"
+msgstr "Naar deze map kopiëren"
+
+#: widgets/subscriptiondialog.cpp:93
+#, kde-format
+msgid "Failed to update subscription: %1"
+msgstr "Bijwerken van inschrijving is mislukt: %1"
+
+#: widgets/subscriptiondialog.cpp:93
+#, kde-format
+msgctxt "@title"
+msgid "Subscription Error"
+msgstr "Fout bij inschrijven"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, SubscriptionDialog)
+#: widgets/subscriptiondialog.ui:14
+#, kde-format
+msgid "Local Subscriptions"
+msgstr "Lokale inschrijvingen"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/subscriptiondialog.ui:22
+#, kde-format
+msgid "Search:"
+msgstr "Zoeken:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, subscribedOnlyCheckBox)
+#: widgets/subscriptiondialog.ui:36
+#, kde-format
+msgid "&Subscribed only"
+msgstr "Alleen &ingeschreven"
+
+#. i18n: ectx: property (text), widget (QPushButton, subscribeButton)
+#: widgets/subscriptiondialog.ui:62
+#, kde-format
+msgid "Su&bscribe"
+msgstr "&Inschrijven"
+
+#. i18n: ectx: property (text), widget (QPushButton, unsubscribeButton)
+#: widgets/subscriptiondialog.ui:69
+#, kde-format
+msgid "&Unsubscribe"
+msgstr "&Uitschrijven"
+
+#: widgets/tageditwidget.cpp:116
+#, kde-format
+msgid "Failed to create a new tag"
+msgstr "Een nieuwe tag aanmaken is mislukt"
+
+#: widgets/tageditwidget.cpp:116
+#, kde-format
+msgid "An error occurred while creating a new tag"
+msgstr "Fout bij aanmaken van een nieuwe tag"
+
+#: widgets/tageditwidget.cpp:164
+#, kde-kuit-format
+msgctxt "@info"
+msgid "Do you really want to remove the tag <resource>%1</resource>?"
+msgstr "Wilt u de tag <resource>%1</resource> verwijderen?"
+
+#: widgets/tageditwidget.cpp:165
+#, kde-format
+msgctxt "@title"
+msgid "Delete tag"
+msgstr "Tag verwijderen"
+
+#: widgets/tageditwidget.cpp:189
+#, kde-format
+msgctxt "@info"
+msgid "Delete tag"
+msgstr "Tag verwijderen"
+
+#. i18n: ectx: property (text), widget (QLabel, selectLabel)
+#: widgets/tageditwidget.ui:29
+#, kde-format
+msgid "Select tags that should be applied."
+msgstr "Tags selecteren om toegepast te worden."
+
+#. i18n: ectx: property (text), widget (QPushButton, newTagButton)
+#: widgets/tageditwidget.ui:54
+#, kde-format
+msgid "Create new tag"
+msgstr "Nieuwe tag aanmaken"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
+#: widgets/tagmanagementdialog.ui:14
+#, kde-format
+msgid "Manage Tags"
+msgstr "Tags beheren"
+
+#: widgets/tagselectioncombobox.cpp:124
+#, kde-format
+msgctxt "@label Placeholder text in tag selection combobox"
+msgid "Select tags..."
+msgstr "Tags selecteren..."
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
+#: widgets/tagselectiondialog.ui:14
+#, kde-format
+msgid "Select Tags"
+msgstr "Tags selecteren"
+
+#: widgets/tagwidget.cpp:45
+#, kde-format
+msgid "Clear"
+msgstr "Wissen"
+
+#. i18n: ectx: property (placeholderText), widget (Akonadi::TagView, tagView)
+#: widgets/tagwidget.ui:20
+#, kde-format
+msgid "Click to add tags"
+msgstr "Klik om tags toe te voegen"
+
+#. i18n: ectx: property (text), widget (QToolButton, editButton)
+#: widgets/tagwidget.ui:27
+#, kde-format
+msgid "..."
+msgstr "..."
+
+#: xml/akonadi2xml.cpp:25
+#, kde-format
+msgid "Akonadi To XML converter"
+msgstr "Akonadi naar XML converter"
+
+#: xml/akonadi2xml.cpp:27
+#, kde-format
+msgid "Converts an Akonadi collection subtree into a XML file."
+msgstr ""
+"Converteert een subboomstructuur van een verzameling in Akonadi in een XML-"
+"bestand."
+
+#: xml/akonadi2xml.cpp:29
+#, kde-format
+msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
+msgstr "(c) 2009 Volker Krause <vkrause@kde.org>"
+
+#: xml/xmldocument.cpp:84
+#, kde-format
+msgid "No data loaded."
+msgstr "Geen gegevens geladen."
+
+#: xml/xmldocument.cpp:120
+#, kde-format
+msgid "No filename specified"
+msgstr "Geen bestandsnaam opgegeven"
+
+#: xml/xmldocument.cpp:128
+#, kde-format
+msgid "Unable to open data file '%1'."
+msgstr "Gegevensbestand '%1' kon niet worden geopend."
+
+#: xml/xmldocument.cpp:133
+#, kde-format
+msgid "File %1 does not exist."
+msgstr "Bestand %1 bestaat niet."
+
+#: xml/xmldocument.cpp:141
+#, kde-format
+msgid "Unable to parse data file '%1'."
+msgstr "Gegevensbestand '%1' kon niet worden ontleden."
+
+#: xml/xmldocument.cpp:149
+#, kde-format
+msgid "Schema definition could not be loaded and parsed."
+msgstr "Definitie van schema kon niet geladen en ontleed worden."
+
+#: xml/xmldocument.cpp:154
+#, kde-format
+msgid "Unable to create schema parser context."
+msgstr "Niet in staat context van schema-ontleder aan te maken."
+
+#: xml/xmldocument.cpp:159
+#, kde-format
+msgid "Unable to create schema."
+msgstr "Niet in staat schema aan te maken."
+
+#: xml/xmldocument.cpp:164
+#, kde-format
+msgid "Unable to create schema validation context."
+msgstr "Niet in staat context van schema-validatie aan te maken."
+
+#: xml/xmldocument.cpp:169
+#, kde-format
+msgid "Invalid file format."
+msgstr "Ongeldig bestandsformaat."
+
+#: xml/xmldocument.cpp:177
+#, kde-format
+msgid "Unable to parse data file: %1"
+msgstr "Gegevensbestand kon niet worden ontleden: '%1'"
+
+#: xml/xmldocument.cpp:302
+#, kde-format
+msgid "Unable to find collection %1"
+msgstr "Verzameling %1 kan niet gevonden worden"
+
+#~ msgid "Store emails locally:"
+#~ msgstr "E-mailberichten lokaal opslaan:"
+
+#~ msgid "&Move here"
+#~ msgstr "Hier naar toe verplaat&sen"
+
+#~ msgid "&Copy here"
+#~ msgstr "Hier naar toe &kopiëren"
+
+#~ msgid "Cancel"
+#~ msgstr "Annuleren"
+
+#~ msgid "Automatically synchronize after:"
+#~ msgstr "Automatisch synchroniseren na:"
+
+#~ msgid "Items"
+#~ msgstr "Items"
+
+#~ msgid "Id"
+#~ msgstr "Id"
+
+#~ msgid "Remote Id"
+#~ msgstr "Externe Id"
+
+#~ msgid "MimeType"
+#~ msgstr "Mimetype"
+
+#~ msgid "Form"
+#~ msgstr "Formulier"
+
+#~ msgid "Default Name"
+#~ msgstr "Standaard naam"
+
+#~ msgctxt "@action:button"
+#~ msgid "Delete"
+#~ msgstr "Verwijderen"
+
+#~ msgctxt "@action:button"
+#~ msgid "Cancel"
+#~ msgstr "Annuleren"
+
+#~ msgctxt "@action:button"
+#~ msgid "Open text editor"
+#~ msgstr "Tekstbewerker openen"
+
+#~ msgid "Take left one"
+#~ msgstr "Linker nemen"
+
+#~ msgctxt "@label"
+#~ msgid ""
+#~ "Two updates conflict with each other.<nl/>Please choose which update(s) "
+#~ "to apply."
+#~ msgstr ""
+#~ "Twee exemplaren voor bijwerken zijn met elkaar in conflict.<nl/>Kies "
+#~ "welke bijwerking toegepast moet worden."
+
+#~ msgid "uknown"
+#~ msgstr "onbekend"
+
+#~ msgctxt "@title:column, number of unread messages"
+#~ msgid "Unread"
+#~ msgstr "Ongelezen"
+
+#~ msgctxt "@title:column, total number of messages"
+#~ msgid "Total"
+#~ msgstr "Totaal"
+
+#~ msgctxt "@title:column, total size (in bytes) of the collection"
+#~ msgid "Size"
+#~ msgstr "Grootte"
+
+#~ msgctxt "@title application description"
+#~ msgid "Akonadi Resource"
+#~ msgstr "Akonadi-hulpbron"
+
+#~ msgctxt "@label:textbox name of a thing"
+#~ msgid "Name"
+#~ msgstr "Naam"
+
+#~ msgid "Invalid collection specified"
+#~ msgstr "Ongeldige verzameling gespecificeerd"
+
+#~ msgid "Protocol version %1 found, expected at least %2"
+#~ msgstr "Protocolversie %1 gevonden, tenminste %2 verwacht"
+
+#~ msgid "Server protocol version is recent enough."
+#~ msgstr "Server protocolversie is voldoende recent."
+
+#~ msgid ""
+#~ "The server Protocol version is %1, which equal or newer than the required "
+#~ "version %2."
+#~ msgstr ""
+#~ "De server protocolversie is %1, wat gelijk of nieuwer is dan de vereiste "
+#~ "versie %2."
+
+#~ msgid "Inconsistent local collection tree detected."
+#~ msgstr "Inconsistente lokale boomstructuur van verzameling gedetecteerd."
+
+#~ msgid ""
+#~ "Remote collection without root-terminated ancestor chain provided, "
+#~ "resource is broken."
+#~ msgstr ""
+#~ "Verzameling op afstand zonder voorganger die eindigt in de "
+#~ "hoofdmapketting aangeleverd, hulpbron is gebroken."
+
+#~ msgid "KDE Test Program"
+#~ msgstr "KDE Testprogramma"
+
+#~ msgid "Cannot list root collection."
+#~ msgstr "Kan geen lijst maken van de hoofdverzameling."
+
+#~ msgid "Nepomuk search service registered at D-Bus."
+#~ msgstr "Nepomuk-zoekdienst geregistreerd op DBus."
+
+#~ msgid ""
+#~ "The Nepomuk search service is registered at D-Bus which typically "
+#~ "indicates it is operational."
+#~ msgstr ""
+#~ "De Nepomuk-zoekdienst is geregistreerd op DBus wat meestal betekent dat "
+#~ "het operationeel is."
+
+#~ msgid "Nepomuk search service not registered at D-Bus."
+#~ msgstr "Nepomuk-zoekdienst niet geregistreerd op DBus."
+
+#~ msgid ""
+#~ "The Nepomuk search service is not registered at D-Bus which typically "
+#~ "means it was not started or encountered a fatal error during startup."
+#~ msgstr ""
+#~ "De Nepomuk-zoekdienst is niet geregistreerd op DBus wat meestal betekent "
+#~ "dat het niet gestart is of dat er een fatale fout is opgetreden tijdens "
+#~ "het opstarten."
+
+#~ msgid "Nepomuk search service uses inappropriate backend."
+#~ msgstr "Nepomuk-zoekdienst gebruikt een niet geschikte backend."
+
+#~ msgid ""
+#~ "The Nepomuk search service uses the '%1' backend, which is not "
+#~ "recommended for use with Akonadi."
+#~ msgstr ""
+#~ "De Nepomuk-zoekdienst gebruikt de '%1'-backend, die niet wordt aanbevolen "
+#~ "om met Akonadi te gebruiken."
+
+#~ msgid "Nepomuk search service uses an appropriate backend. "
+#~ msgstr "Nepomuk-zoekdienst gebruikt een geschikte backend."
+
+#~ msgid "The Nepomuk search service uses one of the recommended backends."
+#~ msgstr "De Nepomuk-zoekdienst gebruikt een van de aanbevolen backends."
+
+#~ msgid ""
+#~ "Plugin \"%1\" is not builtin static, please specify this information in "
+#~ "the bug report."
+#~ msgstr ""
+#~ "Plug-in \"%1\" is geen statisch gebouwde built-in, gaarne deze informatie "
+#~ "in het bugrapport specificeren."
+
+#~ msgid "Plugin Not Built Statically"
+#~ msgstr "Plug-in is niet statisch gebouwd"
+
+#~ msgid "Fetch Job Error"
+#~ msgstr "Fout in job ophalen"
+
+#~| msgid "&New Folder..."
+#~ msgid "New Folder..."
+#~ msgstr "Nieuwe map..."
+
+#~| msgid "&Resource Properties"
+#~ msgid "Resource Properties"
+#~ msgstr "Hulpbroneigenschappen"
+
+#~ msgid "Cache"
+#~ msgstr "Buffer"
+
+#~ msgid "Inherit cache policy from parent"
+#~ msgstr "Bufferbeleid van parent overnemen"
+
+#~ msgid "Cache Policy"
+#~ msgstr "Bufferbeleid"
+
+#~ msgid "Interval check time:"
+#~ msgstr "Interval controletijd:"
+
+#~ msgid "Local cache timeout:"
+#~ msgstr "Verlooptijd lokaal buffer:"
+
+#~ msgid "Synchronize on demand"
+#~ msgstr "Op aanvraag synchroniseren"
+
+#~ msgid "Manage which folders you want to see in the folder tree"
+#~ msgstr "Beheer welke mappen u wilt zien in de mappenlijst"
+
+#~ msgctxt "@label:textbox The clickMessage of a search line edit"
+#~ msgid "Search"
+#~ msgstr "Zoeken"
+
+#~ msgid "<b>Available Folders</b>"
+#~ msgstr "<b>Beschikbare mappen</b>"
+
+#~ msgid "<b>Current Changes</b>"
+#~ msgstr "<b>Huidige veranderingen</b>"
+
+#~ msgid "Unsubscribe from selected folder"
+#~ msgstr "Uitschrijven van geselecteerde map"
+
+#~ msgid "The Akonadi server did report error during startup into %1."
+#~ msgstr ""
+#~ "De Akonadi-server heeft tijdens het opstarten fouten gerapporteerd in %1."
+
+#~ msgid "The Akonadi control process did report error during startup into %1."
+#~ msgstr ""
+#~ "Het Akonadi-beheerproces heeft tijdens het opstarten fouten gerapporteerd "
+#~ "in %1."
+
+#~ msgid "TODO"
+#~ msgstr "TAAK"
+
+#~ msgid ""
+#~ "<p style=\"color: white;\"><b>Akonadi not operational.<br/><a href="
+#~ "\"details\" style=\"color: white;\">Details...</a></b></p>"
+#~ msgstr ""
+#~ "<p style=\"color: white;\"><b>Akonadi niet operationeel.<br/><a href="
+#~ "\"details\" style=\"color: white;\">Details...</a></b></p>"
+
+#~ msgctxt "@title, application description"
+#~ msgid "Akonadi Resource"
+#~ msgstr "Akonadi-hulpbron"

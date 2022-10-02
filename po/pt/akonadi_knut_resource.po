@@ -1,0 +1,85 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: akonadi_knut_resource\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2021-01-27 03:05+0100\n"
+"PO-Revision-Date: 2016-01-19 11:06+0000\n"
+"Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
+"Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
+"Language: pt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-POFile-SpellExtra: Knut\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: knutresource.cpp:60
+#, kde-format
+msgid "No data file selected."
+msgstr "Não foi seleccionado nenhum ficheiro de dados."
+
+#: knutresource.cpp:77
+#, kde-format
+msgid "File '%1' loaded successfully."
+msgstr "O ficheiro '%1' foi carregado com sucesso."
+
+#: knutresource.cpp:104
+#, kde-format
+msgid "Select Data File"
+msgstr "Seleccione o Ficheiro de Dados"
+
+#: knutresource.cpp:106
+#, kde-format
+msgctxt "Filedialog filter for Akonadi data file"
+msgid "Akonadi Knut Data File"
+msgstr "Ficheiro de Dados do Knut para o Akonadi"
+
+#: knutresource.cpp:148 knutresource.cpp:168 knutresource.cpp:321
+#, kde-format
+msgid "No item found for remoteid %1"
+msgstr "Não foi encontrado nenhum item remoto com o ID %1"
+
+#: knutresource.cpp:186
+#, kde-format
+msgid "Parent collection not found in DOM tree."
+msgstr "A colecção-mãe não foi encontrada na árvore de DOM."
+
+#: knutresource.cpp:194
+#, kde-format
+msgid "Unable to write collection."
+msgstr "Não é possível gravar a colecção."
+
+#: knutresource.cpp:206
+#, kde-format
+msgid "Modified collection not found in DOM tree."
+msgstr "A colecção modificada não foi encontrada na árvore de DOM."
+
+#: knutresource.cpp:236
+#, kde-format
+msgid "Deleted collection not found in DOM tree."
+msgstr "A colecção removida não foi encontrada na árvore de DOM."
+
+#: knutresource.cpp:250 knutresource.cpp:308 knutresource.cpp:315
+#, kde-format
+msgid "Parent collection '%1' not found in DOM tree."
+msgstr "A colecção-mãe '%1' não foi encontrada na árvore de DOM."
+
+#: knutresource.cpp:258 knutresource.cpp:328
+#, kde-format
+msgid "Unable to write item."
+msgstr "Não foi possível gravar o item."
+
+#: knutresource.cpp:272
+#, kde-format
+msgid "Modified item not found in DOM tree."
+msgstr "O item modificado não foi encontrado na árvore de DOM."
+
+#: knutresource.cpp:287
+#, kde-format
+msgid "Deleted item not found in DOM tree."
+msgstr "O item removido não foi encontrado na árvore de DOM."

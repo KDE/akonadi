@@ -1,0 +1,2540 @@
+# Copyright (C) YEAR This file is copyright:
+# This file is distributed under the same license as the akonadi package.
+# Wantoyèk <wantoyek@gmail.com>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: akonadi\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-09 00:46+0000\n"
+"PO-Revision-Date: 2022-09-27 17:54+0700\n"
+"Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
+"Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 21.12.3\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Wantoyèk"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "wantoyek@gmail.com"
+
+#: agentbase/accountsintegration.cpp:86
+#, kde-format
+msgid "There is currently no account configured."
+msgstr "Saat ini belum ada akun yang dikonfigurasi."
+
+#: agentbase/accountsintegration.cpp:103
+#, kde-format
+msgid "Accounts integration is not supported"
+msgstr "Integrasi akun belumlah didukung"
+
+#: agentbase/agentbase.cpp:365 agentbase/preprocessorbase_p.cpp:26
+#, kde-format
+msgid "Unable to register object at dbus: %1"
+msgstr "Tidak dapat meregister obyek di dbus: %1"
+
+#: agentbase/agentbase.cpp:454
+#, kde-format
+msgctxt "Name and type of Akonadi resource"
+msgid "%1 of type %2"
+msgstr "%1 tipenya %2"
+
+#: agentbase/agentbase.cpp:904
+#, kde-format
+msgid "Agent identifier"
+msgstr "Pengenal Agen"
+
+#: agentbase/agentbase.cpp:910
+#, kde-format
+msgid "Akonadi Agent"
+msgstr "Agen Akonadi"
+
+#: agentbase/agentbase_p.h:49 agentbase/resourcescheduler.cpp:281
+#, kde-format
+msgctxt "@info:status Application ready for work"
+msgid "Ready"
+msgstr "Siap"
+
+#: agentbase/agentbase_p.h:51
+#, kde-format
+msgctxt "@info:status"
+msgid "Offline"
+msgstr "Luring"
+
+#: agentbase/agentbase_p.h:56
+#, kde-format
+msgctxt "@info:status"
+msgid "Syncing..."
+msgstr "Menyinkronkan..."
+
+#: agentbase/agentbase_p.h:61
+#, kde-format
+msgctxt "@info:status"
+msgid "Error."
+msgstr "Galat."
+
+#: agentbase/agentbase_p.h:66
+#, kde-format
+msgctxt "@info:status"
+msgid "Not configured"
+msgstr "Tidak dikonfigurasi"
+
+#: agentbase/resourcebase.cpp:517
+#, kde-format
+msgctxt "@label command line option"
+msgid "Resource identifier"
+msgstr "Pengenal sumberdaya"
+
+#: agentbase/resourcebase.cpp:523
+#, kde-format
+msgid "Akonadi Resource"
+msgstr "Sumberdaya Akonadi"
+
+#: agentbase/resourcebase.cpp:571
+#, kde-format
+msgctxt "@info"
+msgid "Invalid item retrieved"
+msgstr "Item yang diterima tidak valid"
+
+#: agentbase/resourcebase.cpp:594
+#, kde-format
+msgctxt "@info"
+msgid "Error while creating item: %1"
+msgstr "Galat selagi membuat item: %1"
+
+#: agentbase/resourcebase.cpp:618
+#, kde-format
+msgctxt "@info"
+msgid "Error while updating collection: %1"
+msgstr "Galat selagi memperbarui koleksi: %1"
+
+#: agentbase/resourcebase.cpp:705
+#, kde-format
+msgctxt "@info"
+msgid "Updating local collection failed: %1."
+msgstr "Gagal memperbarui koleksi lokal: %1."
+
+#: agentbase/resourcebase.cpp:710
+#, kde-format
+msgctxt "@info"
+msgid "Updating local items failed: %1."
+msgstr "Gagal memperbarui item lokal: %1."
+
+#: agentbase/resourcebase.cpp:729
+#, kde-format
+msgctxt "@info"
+msgid "Cannot fetch item in offline mode."
+msgstr "Tidak bisa mengambil item dalam mode luring."
+
+#: agentbase/resourcebase.cpp:918
+#, kde-format
+msgctxt "@info:status"
+msgid "Syncing folder '%1'"
+msgstr "Menyinkronkan folder '%1'"
+
+#: agentbase/resourcebase.cpp:938 agentbase/resourcebase.cpp:945
+#, kde-format
+msgid "Failed to retrieve collection for sync."
+msgstr "Gagal menerima koleksi untuk sinkronisasi."
+
+#: agentbase/resourcebase.cpp:985
+#, kde-format
+msgid "Failed to retrieve collection for attribute sync."
+msgstr "Gagal menerima koleksi untuk sinkronisasi atribut."
+
+#: agentbase/resourcebase.cpp:1039
+#, kde-format
+msgid "The requested item no longer exists"
+msgstr "Item yang diminta tidak ada lagi"
+
+#: agentbase/resourcescheduler.cpp:500 agentbase/resourcescheduler.cpp:506
+#, kde-format
+msgctxt "@info"
+msgid "Job canceled."
+msgstr "Job dibatalkan."
+
+#: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
+#, kde-format
+msgid "No such collection."
+msgstr "Tidak ada koleksi seperti itu."
+
+#: core/collectionsync.cpp:508 core/collectionsync.cpp:653
+#, kde-format
+msgid "Found unresolved orphan collections"
+msgstr "Ditemukan koleksi sendirian yang belum terselesaikan."
+
+#: core/conflicthandler.cpp:53
+#, kde-format
+msgid "Did not find other item for conflict handling"
+msgstr "Belum menemukan item lainnya untuk penanganan konflik"
+
+#: core/jobs/agentinstancecreatejob.cpp:71
+#, kde-format
+msgid "Unable to access D-Bus interface of created agent."
+msgstr "Tidak dapat mengakses antarmuka D-Bus pada agen yang dibuat."
+
+#: core/jobs/agentinstancecreatejob.cpp:93
+#, kde-format
+msgid "Agent instance creation timed out."
+msgstr "Pembuatan instansi agen waktunya habis."
+
+#: core/jobs/agentinstancecreatejob.cpp:151
+#, kde-format
+msgid "Unable to obtain agent type '%1'."
+msgstr "Tidak dapat memperoleh tipe agen '%1'."
+
+#: core/jobs/agentinstancecreatejob.cpp:159
+#, kde-format
+msgid "Unable to create agent instance."
+msgstr "Tidak dapat membuat instansi agen."
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:73
+#, kde-format
+msgid "Invalid collection instance."
+msgstr "Instansi koleksi tidak valid."
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:80
+#: core/jobs/resourcesynchronizationjob.cpp:88
+#, kde-format
+msgid "Invalid resource instance."
+msgstr "Instansi sumberdaya tidak valid."
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:102
+#: core/jobs/resourcesynchronizationjob.cpp:113
+#, kde-format
+msgid "Unable to obtain D-Bus interface for resource '%1'"
+msgstr "Tidak dapat memperoleh antarmuka D-Bus untuk sumberdaya '%1'"
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:125
+#, kde-format
+msgid "Collection attributes synchronization timed out."
+msgstr "Sinkronisasi atribut koleksi waktunya habis."
+
+#: core/jobs/collectioncopyjob.cpp:55
+#, kde-format
+msgid "Invalid collection to copy"
+msgstr "Koleksi tidak valid untuk penyalinan"
+
+#: core/jobs/collectioncopyjob.cpp:61
+#, kde-format
+msgid "Invalid destination collection"
+msgstr "Koleksi tujuan tidak valid"
+
+#: core/jobs/collectioncreatejob.cpp:50
+#, kde-format
+msgid "Invalid parent"
+msgstr "Induk tidak valid"
+
+#: core/jobs/collectioncreatejob.cpp:98
+#, kde-format
+msgid "Failed to parse Collection from response"
+msgstr "Gagal mengurai Koleksi dari respons"
+
+#: core/jobs/collectiondeletejob.cpp:52
+#, kde-format
+msgid "Invalid collection"
+msgstr "Koleksi tidak valid"
+
+#: core/jobs/collectionfetchjob.cpp:212
+#, kde-format
+msgid "Invalid collection given."
+msgstr "Koleksi yang diberikan tidak valid."
+
+#: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:90
+#, kde-format
+msgid "No objects specified for moving"
+msgstr "Tidak ada obyek yang ditentukan untuk pemindahan"
+
+#: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
+#: core/jobs/linkjobimpl_p.h:38
+#, kde-format
+msgid "No valid destination specified"
+msgstr "Tidak ada tujuan valid yang ditentukan"
+
+#: core/jobs/invalidatecachejob.cpp:58
+#, kde-format
+msgid "Invalid collection."
+msgstr "Koleksi tidak valid."
+
+#: core/jobs/itemcreatejob.cpp:105
+#, kde-format
+msgid "Invalid parent collection"
+msgstr "Koleksi induk tidak valid"
+
+#: core/jobs/job.cpp:335
+#, kde-format
+msgid "Cannot connect to the Akonadi service."
+msgstr "Tidak bisa konek ke layanan Akonadi."
+
+#: core/jobs/job.cpp:338
+#, kde-format
+msgid ""
+"The protocol version of the Akonadi server is incompatible. Make sure you "
+"have a compatible version installed."
+msgstr ""
+"Versi protokol layanan Akonadi tidaklah kopatibel. Pastikan kamu memiliki "
+"versi kompatibel yang terinstal."
+
+#: core/jobs/job.cpp:341
+#, kde-format
+msgid "User canceled operation."
+msgstr "Operasi dibatalkan oleh pengguna."
+
+#: core/jobs/job.cpp:346
+#, kde-format
+msgid "Unknown error."
+msgstr "Galat tak diketahui."
+
+#: core/jobs/job.cpp:385
+#, kde-format
+msgid "Unexpected response"
+msgstr "Respons tak diharapkan"
+
+#: core/jobs/relationcreatejob.cpp:42 core/jobs/relationdeletejob.cpp:42
+#, kde-format
+msgid "Failed to create relation."
+msgstr "Gagal membuat relasi."
+
+#: core/jobs/resourcesynchronizationjob.cpp:139
+#, kde-format
+msgid "Resource synchronization timed out."
+msgstr "Sinkronisasi sumberdaya waktunya habis."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:146
+#, kde-format
+msgid "Could not fetch root collection of resource %1."
+msgstr "Tidak dapat mengambil koleksi root pada sumberdaya %1."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:190
+#, kde-format
+msgid "No resource ID given."
+msgstr "Tidak ada ID sumberdaya yang diberikan."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:327
+#, kde-format
+msgid "Invalid resource identifier '%1'"
+msgstr "Pengenal sumberdaya '%1' tidak valid"
+
+#: core/jobs/specialcollectionshelperjobs.cpp:343
+#: core/jobs/specialcollectionshelperjobs.cpp:351
+#, kde-format
+msgid "Failed to configure default resource via D-Bus."
+msgstr "Gagal mengkonfigurasi sumberdaya default via D-Bus."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:416
+#, kde-format
+msgid "Failed to fetch the resource collection."
+msgstr "Gagal mengambil koleksi sumberdaya."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:600
+#, kde-format
+msgid "Timeout trying to get lock."
+msgstr "Waktu habis dalam percobaan untuk mendapatkan kunci."
+
+#: core/jobs/tagcreatejob.cpp:49
+#, kde-format
+msgid "Failed to create tag."
+msgstr "Gagal membuat tag."
+
+#: core/jobs/trashjob.cpp:163
+#, kde-format
+msgid "Move to trash collection failed, aborting trash operation"
+msgstr "Pindah ke koleksi tong sampah gagal, gugurkan operasi tong sampah"
+
+#: core/jobs/trashjob.cpp:226 core/jobs/trashrestorejob.cpp:155
+#, kde-format
+msgid "Invalid items passed"
+msgstr "Item-item tidak valid yang dilalui"
+
+#: core/jobs/trashjob.cpp:270 core/jobs/trashrestorejob.cpp:205
+#, kde-format
+msgid "Invalid collection passed"
+msgstr "Koleksi tidak valid yang dilalui"
+
+#: core/jobs/trashjob.cpp:387 core/jobs/trashrestorejob.cpp:355
+#, kde-format
+msgid "No valid collection or empty itemlist"
+msgstr "Tidak ada koleksi yang valid atau daftar item kosong"
+
+#: core/jobs/trashrestorejob.cpp:90
+#, kde-format
+msgid "Could not find restore collection and restore resource is not available"
+msgstr ""
+"Tidak dapat menemukan koleksi yang dikembalikan dan sumberdaya yang "
+"dikembalikan tidaklah tersedia"
+
+#: core/models/agentinstancemodel.cpp:183
+#, kde-format
+msgctxt "@title:column, name of a thing"
+msgid "Name"
+msgstr "Nama"
+
+#: core/models/entitytreemodel.cpp:195
+#, kde-format
+msgctxt "@info:status"
+msgid "Loading..."
+msgstr "Memuat..."
+
+#: core/models/entitytreemodel.cpp:487
+#, kde-format
+msgctxt "@window:title"
+msgid "Error"
+msgstr "Galat"
+
+#: core/models/entitytreemodel.cpp:488
+#, kde-format
+msgid ""
+"The target collection '%1' contains already\n"
+"a collection with name '%2'."
+msgstr "Koleksi target '%1' berisi koleksi yang sudah ada dengan nama '%2'."
+
+#: core/models/entitytreemodel.cpp:657
+#, kde-format
+msgctxt "@title:column Name of a thing"
+msgid "Name"
+msgstr "Nama"
+
+#: core/models/entitytreemodel_p.cpp:1332
+#, kde-format
+msgctxt "@info"
+msgid "Could not copy item: <message>%1</message>"
+msgstr "Tidak dapat menyalin item: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1334
+#, kde-format
+msgctxt "@info"
+msgid "Could not copy collection: <message>%1</message>"
+msgstr "Tidak dapat menyalin koleksi: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1336
+#, kde-format
+msgctxt "@info"
+msgid "Could not move item: <message>%1</message>"
+msgstr "Tidak dapat memindah item: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1338
+#, kde-format
+msgctxt "@info"
+msgid "Could not move collection: <message>%1</message>"
+msgstr "Tidak dapat memindah koleksi: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1340
+#, kde-format
+msgctxt "@info"
+msgid "Could not link entity: <message>%1</message>"
+msgstr "Tidak dapat menautkan entitas: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1342
+#, kde-format
+msgctxt "@title:window"
+msgid "Error"
+msgstr "Galat"
+
+#: core/models/favoritecollectionsmodel.cpp:405
+#, kde-format
+msgid "Favorite Folders"
+msgstr "Folder Favorit"
+
+#: core/models/statisticsproxymodel.cpp:86
+#, kde-format
+msgid "Total Messages"
+msgstr "Total Pesan"
+
+#: core/models/statisticsproxymodel.cpp:88
+#, kde-format
+msgid "Unread Messages"
+msgstr "Pesan Tak Terbaca"
+
+#: core/models/statisticsproxymodel.cpp:98
+#, kde-format
+msgid "Quota"
+msgstr "Kuota"
+
+#: core/models/statisticsproxymodel.cpp:104
+#, kde-format
+msgid "Storage Size"
+msgstr "Ukuran Penyimpanan"
+
+#: core/models/statisticsproxymodel.cpp:110
+#, kde-format
+msgid "Subfolder Storage Size"
+msgstr "Ukuran Penyimpanan Subfolder"
+
+#: core/models/statisticsproxymodel.cpp:224
+#, kde-format
+msgctxt "number of unread entities in the collection"
+msgid "Unread"
+msgstr "Tak Terbaca"
+
+#: core/models/statisticsproxymodel.cpp:225
+#, kde-format
+msgctxt "number of entities in the collection"
+msgid "Total"
+msgstr "Total"
+
+#: core/models/statisticsproxymodel.cpp:226
+#, kde-format
+msgctxt "collection size"
+msgid "Size"
+msgstr "Ukuran"
+
+#: core/models/tagmodel.cpp:64
+#, kde-format
+msgid "Tag"
+msgstr "Tag"
+
+#: core/partfetcher.cpp:49
+#, kde-format
+msgid "Unable to fetch item for index"
+msgstr "Tidak dapat mengambil item untuk indeks"
+
+#: core/partfetcher.cpp:64
+#, kde-format
+msgid "Index is no longer available"
+msgstr "Indeks tidak tersedia lagi"
+
+#: core/partfetcher.cpp:114
+#, kde-format
+msgid "Payload part '%1' is not available for this index"
+msgstr "Bagian payload '%1' tidaklah tersedia untuk indeks ini"
+
+#: core/partfetcher.cpp:123
+#, kde-format
+msgid "No session available for this index"
+msgstr "Tidak ada sesi yang tersedia untuk indeks ini"
+
+#: core/partfetcher.cpp:132
+#, kde-format
+msgid "No item available for this index"
+msgstr "Tidak ada item yang tersedia untuk indeks ini"
+
+#: core/pluginloader.cpp:145
+#, kde-format
+msgid "Unnamed plugin"
+msgstr "Plugin tak bernama"
+
+#: core/pluginloader.cpp:151
+#, kde-format
+msgid "No description available"
+msgstr "Tidak ada deskripsi yang tersedia"
+
+#: core/servermanager.cpp:271
+#, kde-format
+msgid ""
+"The Akonadi server protocol version differs from the protocol version used "
+"by this application.\n"
+"If you recently updated your system please log out and back in to make sure "
+"all applications use the correct protocol version."
+msgstr ""
+"Versi protokol server Akonadi berbeda dari versi protokol yang digunakan "
+"oleh aplikasi ini.\n"
+"Jika saat ini kamu sudah memperbarui sistem, silakan logout dan login "
+"kembali untuk mastikan semua aplikasi menggunakan versi protokol yang benar."
+
+#: core/servermanager.cpp:288
+#, kde-format
+msgid ""
+"There are no Akonadi Agents available. Please verify your KDE PIM "
+"installation."
+msgstr ""
+"Tidak ada Agen Akonadi yang tersedia. Silakan verifikasi instalasi KDE PIM "
+"kamu."
+
+#: core/session.cpp:186
+#, kde-format
+msgid ""
+"Protocol version mismatch. Server version is older (%1) than ours (%2). If "
+"you updated your system recently please restart the Akonadi server."
+msgstr ""
+"Versi protokol tidak cocok. Versi server (%1) lebih lama dari (%2) kita. "
+"Jika kamu saat ini sudah memperbarui sistem silakan jalankan ulang server "
+"Akonadi."
+
+#: core/session.cpp:195
+#, kde-format
+msgid ""
+"Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
+"you updated your system recently please restart all KDE PIM applications."
+msgstr ""
+"Versi protokol tidak cocok. Versi server (%1) lebih baru dari (%2) kita. "
+"Jika kamu saat ini sudah memperbarui sistem silakan jalankan ulang semua "
+"aplikasi KDE PIM."
+
+#: selftest/main.cpp:19
+#, kde-format
+msgid "Akonadi Self Test"
+msgstr "Uji Sendiri Akonadi"
+
+#: selftest/main.cpp:21
+#, kde-format
+msgid "Checks and reports state of Akonadi server"
+msgstr "Periksa dan laporkan keadaan server Akonadi"
+
+#: selftest/main.cpp:23
+#, kde-format
+msgid "(c) 2008 Volker Krause <vkrause@kde.org>"
+msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
+
+#: widgets/agentactionmanager.cpp:35
+msgid "&New Agent Instance..."
+msgstr "Instansi Agen &Baru..."
+
+#: widgets/agentactionmanager.cpp:36
+msgid "&Delete Agent Instance"
+msgstr "&Hapus Instansi Agen..."
+
+#: widgets/agentactionmanager.cpp:37
+msgid "&Configure Agent Instance"
+msgstr "&Konfigurasikan Instansi Agen"
+
+#: widgets/agentactionmanager.cpp:53
+#, kde-format
+msgctxt "@title:window"
+msgid "New Agent Instance"
+msgstr "Instansi Agen Baru"
+
+#: widgets/agentactionmanager.cpp:55
+#, kde-format
+msgid "Could not create agent instance: %1"
+msgstr "Tidak dapat membuat instansi agen: %1"
+
+#: widgets/agentactionmanager.cpp:57
+#, kde-format
+msgid "Agent instance creation failed"
+msgstr "Pembuatan instansi agen gagal"
+
+#: widgets/agentactionmanager.cpp:59
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete Agent Instance?"
+msgstr "Hapus Instansi Agen?"
+
+#: widgets/agentactionmanager.cpp:63
+#, kde-format
+msgid "Do you really want to delete the selected agent instance?"
+msgstr "Apakah kamu benar-benar ingin menghapus instansi agen yang dipilih?"
+
+#: widgets/agentconfigurationdialog.cpp:56
+#, kde-format
+msgctxt "%1 = agent name"
+msgid "%1 Configuration"
+msgstr "Konfigurasi %1"
+
+#: widgets/agentconfigurationdialog.cpp:89
+#, kde-format
+msgid "%1 Handbook"
+msgstr "Buku Catatan %1"
+
+#: widgets/agentconfigurationdialog.cpp:90
+#, kde-format
+msgid "About %1"
+msgstr "Tentang %1"
+
+#: widgets/agentconfigurationwidget.cpp:96
+#, kde-format
+msgid "The configuration dialog has been opened in another window"
+msgstr "Dialog konfigurasi sedang dibuka di jendela lainnya"
+
+#: widgets/agentconfigurationwidget.cpp:103
+#, kde-format
+msgid "Configuration for %1 is already opened elsewhere."
+msgstr "Konfigurasi %1 sudah dibuka di tempat lain. "
+
+#: widgets/agentconfigurationwidget.cpp:105
+#, kde-format
+msgid "Failed to register %1 configuration dialog."
+msgstr "Gagal meregister dialog konfigurasi %1."
+
+#: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
+#, kde-format
+msgid "minute"
+msgid_plural "minutes"
+msgstr[0] "menit"
+msgstr[1] "menit"
+
+#: widgets/cachepolicypage.cpp:69
+#, kde-format
+msgid "Retrieval"
+msgstr "Pengambilan"
+
+#. i18n: ectx: property (text), widget (QCheckBox, inherit)
+#: widgets/cachepolicypage.ui:20
+#, kde-format
+msgid "Use options from parent folder or account"
+msgstr "Gunakan opsi dari folder induk atau akun"
+
+#. i18n: ectx: property (text), widget (QCheckBox, syncOnDemand)
+#: widgets/cachepolicypage.ui:33
+#, kde-format
+msgid "Synchronize when selecting this folder"
+msgstr "Sinkronisasikan ketika memilih folder ini"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: widgets/cachepolicypage.ui:40
+#, kde-format
+msgid "Synchronize after:"
+msgstr "Sinkronisasikan sesudah:"
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, checkInterval)
+#: widgets/cachepolicypage.ui:47
+#, kde-format
+msgctxt "never check the cache"
+msgid "Never"
+msgstr "Tidak pernah"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, checkInterval)
+#. i18n: ectx: property (suffix), widget (QSpinBox, localCacheTimeout)
+#: widgets/cachepolicypage.ui:50 widgets/cachepolicypage.ui:133
+#, kde-format
+msgid "minutes"
+msgstr "menit"
+
+#. i18n: ectx: property (text), widget (QLabel, localPartsLabel)
+#: widgets/cachepolicypage.ui:66
+#, kde-format
+msgid "Locally cached parts:"
+msgstr "Bagian ter-cache secara lokal:"
+
+#. i18n: ectx: property (title), widget (KEditListWidget, localParts)
+#: widgets/cachepolicypage.ui:87
+#, kde-format
+msgid "Locally Cached Parts"
+msgstr "Bagian Ter-cache Secara Lokal"
+
+#. i18n: ectx: property (text), widget (QLabel, retrievalOptionsLabel)
+#: widgets/cachepolicypage.ui:94
+#, kde-format
+msgid "Retrieval Options:"
+msgstr "Opsi Pengambilan:"
+
+#. i18n: ectx: property (text), widget (QRadioButton, retrieveFullMessages)
+#: widgets/cachepolicypage.ui:101
+#, kde-format
+msgid "Always retrieve full &messages"
+msgstr "Selalu mengambil &pesan lengkap"
+
+#. i18n: ectx: property (text), widget (QRadioButton, retrieveOnlyHeaders)
+#: widgets/cachepolicypage.ui:111
+#, kde-format
+msgid "&Retrieve message bodies on demand"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/cachepolicypage.ui:118
+#, kde-format
+msgid "Keep message bodies locally for:"
+msgstr "Jaga bodi pesan secara lokal untuk:"
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, localCacheTimeout)
+#: widgets/cachepolicypage.ui:130
+#, kde-format
+msgctxt "no cache timeout"
+msgid "Forever"
+msgstr "Selamanya"
+
+#: widgets/clearcachejob.cpp:54
+#, kde-format
+msgid ""
+"The collection '%1' contains %2 items without Remote ID. Those items were "
+"likely never uploaded to the destination server, so clearing this collection "
+"means that those <b>data will be lost</b>. Are you sure you want to proceed?"
+msgstr ""
+
+#: widgets/clearcachejob.cpp:83
+#, kde-format
+msgid "Collection cache cleared. You should restart Akonadi now."
+msgstr ""
+
+#: widgets/collectiondialog.cpp:56
+#, kde-format
+msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
+msgid "Search"
+msgstr "Cari"
+
+#: widgets/collectiondialog.cpp:64
+#, kde-format
+msgid "Use folder by default"
+msgstr "Gunakan folder sebagai default"
+
+#: widgets/collectiondialog.cpp:224
+#, kde-format
+msgid "&New Subfolder..."
+msgstr "Subfolder &Baru..."
+
+#: widgets/collectiondialog.cpp:226
+#, kde-format
+msgid "Create a new subfolder under the currently selected folder"
+msgstr "Buat subfolder baru di bawah folder yang dipilih saat ini"
+
+#: widgets/collectiondialog.cpp:264 widgets/standardactionmanager.cpp:348
+#, kde-format
+msgctxt "@title:window"
+msgid "New Folder"
+msgstr "Folder Baru"
+
+#: widgets/collectiondialog.cpp:264
+#, kde-format
+msgctxt "@label:textbox, name of a thing"
+msgid "Name"
+msgstr "Nama"
+
+#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:350
+#, kde-format
+msgid "Could not create folder: %1"
+msgstr "Tidak dapat membuat folder: %1"
+
+#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
+#, kde-format
+msgid "Folder creation failed"
+msgstr "Pembuatan folder gagal"
+
+#: widgets/collectiongeneralpropertiespage.cpp:27
+#, kde-format
+msgctxt "@title:tab general properties page"
+msgid "General"
+msgstr "Umum"
+
+#: widgets/collectiongeneralpropertiespage.cpp:54
+#, kde-format
+msgctxt "@label"
+msgid "One object"
+msgid_plural "%1 objects"
+msgstr[0] "Satu obyek"
+msgstr[1] "%1 obyek"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/collectiongeneralpropertiespage.ui:16
+#, kde-format
+msgid "&Name:"
+msgstr "&Nama:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, customIconCheckbox)
+#: widgets/collectiongeneralpropertiespage.ui:29
+#, kde-format
+msgid "&Use custom icon:"
+msgstr "&Gunakan ikon kustom:"
+
+#. i18n: ectx: property (icon), widget (KIconButton, customIcon)
+#: widgets/collectiongeneralpropertiespage.ui:39
+#, kde-format
+msgid "folder"
+msgstr "folder"
+
+#. i18n: ectx: property (title), widget (QGroupBox, statsBox)
+#: widgets/collectiongeneralpropertiespage.ui:62
+#, kde-format
+msgid "Statistics"
+msgstr "Statistik"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: widgets/collectiongeneralpropertiespage.ui:68
+#, kde-format
+msgctxt "object names"
+msgid "Content:"
+msgstr "Konten:"
+
+#. i18n: ectx: property (text), widget (QLabel, countLabel)
+#: widgets/collectiongeneralpropertiespage.ui:75
+#, kde-format
+msgid "0 objects"
+msgstr "0 obyek"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: widgets/collectiongeneralpropertiespage.ui:82
+#, kde-format
+msgid "Size:"
+msgstr "Ukuran:"
+
+#. i18n: ectx: property (text), widget (QLabel, sizeLabel)
+#: widgets/collectiongeneralpropertiespage.ui:89
+#, kde-format
+msgid "0 Byte"
+msgstr "0 Byte"
+
+#: widgets/collectionmaintenancepage.cpp:46
+#, kde-format
+msgid "Remember that indexing can take some minutes."
+msgstr "Ingat pengindeksan tersebut bisa memakan benerapa menit."
+
+#: widgets/collectionmaintenancepage.cpp:71
+#, kde-format
+msgid "Maintenance"
+msgstr "Pemeliharaan"
+
+#: widgets/collectionmaintenancepage.cpp:130
+#, kde-format
+msgid "Error while retrieving indexed items count"
+msgstr "Galat selagi mengambil cacah item-item yang diindeks"
+
+#: widgets/collectionmaintenancepage.cpp:133
+#, kde-format
+msgid "Indexed %1 item in this folder"
+msgid_plural "Indexed %1 items in this folder"
+msgstr[0] "%1 item yang diindeks dalam folder ini"
+msgstr[1] "%1 item yang diindeks dalam folder in"
+
+#: widgets/collectionmaintenancepage.cpp:137
+#, kde-format
+msgid "Calculating indexed items..."
+msgstr "Menghitung item yang diindeks..."
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/collectionmaintenancepage.ui:17
+#, kde-format
+msgid "Folder type:"
+msgstr "Tipe folder:"
+
+#. i18n: ectx: property (text), widget (QLabel, folderTypeLbl)
+#. i18n: ectx: property (text), widget (QLabel, folderSizeLbl)
+#. i18n: ectx: property (text), widget (QLabel, itemsCountLbl)
+#. i18n: ectx: property (text), widget (QLabel, unreadItemsCountLbl)
+#: widgets/collectionmaintenancepage.ui:24
+#: widgets/collectionmaintenancepage.ui:31
+#: widgets/collectionmaintenancepage.ui:52
+#: widgets/collectionmaintenancepage.ui:66
+#, kde-format
+msgid "unknown"
+msgstr "tak diketahui"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: widgets/collectionmaintenancepage.ui:38
+#, kde-format
+msgid "File size:"
+msgstr "Ukuran file:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: widgets/collectionmaintenancepage.ui:45
+#, kde-format
+msgid "Total items:"
+msgstr "Total item:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: widgets/collectionmaintenancepage.ui:59
+#, kde-format
+msgid "Unread items:"
+msgstr "Item yang tak dibaca:"
+
+#. i18n: ectx: property (text), widget (QLabel, indexingLabel)
+#: widgets/collectionmaintenancepage.ui:73
+#, kde-format
+msgid "Indexing:"
+msgstr "Mengindeks:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, enableIndexingChkBox)
+#: widgets/collectionmaintenancepage.ui:80
+#, kde-format
+msgid "Enable fulltext indexing"
+msgstr "Fungsikan pengindeksan seluruh teks"
+
+#. i18n: ectx: property (text), widget (QLabel, indexedCountLbl)
+#: widgets/collectionmaintenancepage.ui:87
+#, kde-format
+msgid "Retrieving indexed items count..."
+msgstr "Mengambil cacah item yang diindeks..."
+
+#. i18n: ectx: property (text), widget (QPushButton, reindexButton)
+#: widgets/collectionmaintenancepage.ui:94
+#, kde-format
+msgid "Reindex folder"
+msgstr "Indeks ulang folder"
+
+#: widgets/collectionrequester.cpp:113
+#, kde-format
+msgid "No Folder"
+msgstr "Tidak Ada Folder"
+
+#: widgets/collectionrequester.cpp:122
+#, kde-format
+msgid "Open collection dialog"
+msgstr "Buka dialog koleksi"
+
+#: widgets/collectionrequester.cpp:143
+#, kde-format
+msgctxt "@title:window"
+msgid "Select a collection"
+msgstr "Pilih koleksi"
+
+#: widgets/conflictresolvedialog.cpp:129
+#, kde-format
+msgid "Modification Time"
+msgstr "Waktu Modifikasi"
+
+#: widgets/conflictresolvedialog.cpp:141
+#, kde-format
+msgid "Flags"
+msgstr "Bendera"
+
+#: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
+#: widgets/conflictresolvedialog.cpp:174
+#, kde-format
+msgid "Attribute: %1"
+msgstr "Atribut: %1"
+
+#: widgets/conflictresolvedialog.cpp:186
+#, kde-format
+msgctxt "@title:window"
+msgid "Conflict Resolution"
+msgstr "Resolusi Konflik"
+
+#: widgets/conflictresolvedialog.cpp:192
+#, kde-format
+msgctxt "@action:button"
+msgid "Take my version"
+msgstr "Ambil versiku"
+
+#: widgets/conflictresolvedialog.cpp:198
+#, kde-format
+msgctxt "@action:button"
+msgid "Take their version"
+msgstr "Ambil versi dia"
+
+#: widgets/conflictresolvedialog.cpp:204
+#, kde-format
+msgctxt "@action:button"
+msgid "Keep both versions"
+msgstr "Jaga kedua versi"
+
+#: widgets/conflictresolvedialog.cpp:216
+#, kde-format
+msgid ""
+"<qt>Your changes conflict with those made by someone else meanwhile."
+"<br>Unless one version can just be thrown away, you will have to integrate "
+"those changes manually.<br>Click on <a href=\"opentexteditor\">\"Open text "
+"editor\"</a> to keep a copy of the texts, then select which version is most "
+"correct, then re-open it and modify it again to add what's missing."
+msgstr ""
+"<qt>Perubahanmu bertentangan dengan yang dibuat oleh orang lain saat itu."
+"<br> Kecuali salahsatu versi saja yang dibuang, kamu harus "
+"mengintegrasikannya dengan mengubah secara manual.<br> Klik di  <a href="
+"\"opentexteditor\">\"Open text editor\"</a> untuk tetap menyalin teks, "
+"kemudian membukanya ulang dan memodifikasinya lagi untuk menambahkan apa "
+"yang hilang."
+
+#: widgets/conflictresolvedialog.cpp:265
+#, kde-format
+msgid "Data"
+msgstr "Data"
+
+#: widgets/controlgui.cpp:223
+#, kde-format
+msgid "Starting Akonadi server..."
+msgstr "Memulai server Akonadi..."
+
+#: widgets/controlgui.cpp:229
+#, kde-format
+msgid "Stopping Akonadi server..."
+msgstr "Menghentikan server Akonadi..."
+
+#: widgets/dragdropmanager.cpp:212
+#, kde-format
+msgid "&Move Here"
+msgstr "&Pindahkan Di Sini"
+
+#: widgets/dragdropmanager.cpp:218
+#, kde-format
+msgid "&Copy Here"
+msgstr "&Salinkan Di Sini"
+
+#: widgets/dragdropmanager.cpp:224
+#, kde-format
+msgid "&Link Here"
+msgstr "&Tautkan Di Sini"
+
+#: widgets/dragdropmanager.cpp:228
+#, kde-format
+msgid "C&ancel"
+msgstr "&Batal"
+
+#: widgets/erroroverlay.cpp:225
+#, kde-format
+msgctxt "%1 is a reason why"
+msgid ""
+"Cannot connect to the Personal information management service.\n"
+"\n"
+"%1"
+msgstr ""
+"Tidak dapat menghubungkan ke Layanan menajemen informasi personal.\n"
+"\n"
+"%1"
+
+#: widgets/erroroverlay.cpp:229 widgets/erroroverlay.cpp:230
+#, kde-format
+msgid "Personal information management service is starting..."
+msgstr "Layanan menajemen informasi personal telah dimulai..."
+
+#: widgets/erroroverlay.cpp:234 widgets/erroroverlay.cpp:235
+#, kde-format
+msgid "Personal information management service is shutting down..."
+msgstr "Layanan menajemen informasi personal telah dimatikan..."
+
+#: widgets/erroroverlay.cpp:239
+#, kde-format
+msgid ""
+"Personal information management service is performing a database upgrade."
+msgstr ""
+"Layanan menajemen informasi personal telah melakukan pemutakhiran database."
+
+#: widgets/erroroverlay.cpp:241
+#, kde-format
+msgid ""
+"Personal information management service is performing a database upgrade.\n"
+"This happens after a software update and is necessary to optimize "
+"performance.\n"
+"Depending on the amount of personal information, this might take a few "
+"minutes."
+msgstr ""
+"Layanan menajemen informasi personal telah melakukan pemutakhiran database.\n"
+"Ini terjadi setelah pembaruan perangkat lunak yang diperlukan untuk "
+"mengoptimalkan kinerja.\n"
+"Tergantung pada seberapa informasi personal, ini mungkin memakan beberapa "
+"menit."
+
+#. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
+#. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
+#: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
+#, kde-format
+msgid ""
+"The Akonadi personal information management service is not running. This "
+"application cannot be used without it."
+msgstr ""
+"Layanan menajemen informasi personal Akonadi tidak berjalan. Aplikasi ini "
+"tidak dapat digunakan tanpanya."
+
+#. i18n: ectx: property (text), widget (QPushButton, startButton)
+#: widgets/erroroverlay.ui:116
+#, kde-format
+msgctxt "@action:button Start the Akonadi server"
+msgid "Start"
+msgstr "Mulaikan"
+
+#. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
+#: widgets/erroroverlay.ui:158
+#, kde-format
+msgid ""
+"The Akonadi personal information management framework is not operational.\n"
+"Click on \"Details...\" to obtain detailed information on this problem."
+msgstr ""
+"Framework manajemen informasi personal Akonadi tidak beroperasi.\n"
+"Klik pada \"Detail...\" untuk memperoleh informasi terperinci pada masalah "
+"ini."
+
+#. i18n: ectx: property (text), widget (QLabel, brokenDescription)
+#: widgets/erroroverlay.ui:208
+#, kde-format
+msgid "The Akonadi personal information management service is not operational."
+msgstr "Layanan menajemen informasi personal Akonadi tidak beroperasi."
+
+#. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
+#: widgets/erroroverlay.ui:259
+#, kde-format
+msgid "Details..."
+msgstr "Detail..."
+
+#: widgets/manageaccountwidget.cpp:200
+#, kde-format
+msgid "Do you want to remove account '%1'?"
+msgstr "Apakah kamu ingin menghapus akun '%1'?"
+
+#: widgets/manageaccountwidget.cpp:201
+#, kde-format
+msgid "Remove account?"
+msgstr "Hapus akun?"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/manageaccountwidget.ui:19
+#, kde-format
+msgid "Incoming accounts (add at least one):"
+msgstr "Akun yang datang (tambahkan setidaknya satu):"
+
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
+#: widgets/manageaccountwidget.ui:26
+#, kde-format
+msgid "Filter…"
+msgstr "Filter..."
+
+#. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
+#: widgets/manageaccountwidget.ui:40
+#, kde-format
+msgid "A&dd..."
+msgstr "&Tambah..."
+
+#. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
+#: widgets/manageaccountwidget.ui:50
+#, kde-format
+msgid "&Modify..."
+msgstr "&Modifikasi..."
+
+#. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
+#: widgets/manageaccountwidget.ui:60
+#, kde-format
+msgid "R&emove"
+msgstr "&Hapus"
+
+#. i18n: ectx: property (text), widget (QPushButton, mRestartAccountButton)
+#: widgets/manageaccountwidget.ui:77
+#, kde-format
+msgid "Restart"
+msgstr "Mulai ulang"
+
+#: widgets/recentcollectionaction.cpp:43
+#, kde-format
+msgid "Recent Folder"
+msgstr "Folder Barusan"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, RenameFavoriteDialog)
+#: widgets/renamefavoritedialog.ui:26
+#, kde-format
+msgid "Rename Favorite"
+msgstr "Ubah Nama Favorit"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/renamefavoritedialog.ui:35
+#, kde-format
+msgid "Name:"
+msgstr "Nama:"
+
+#: widgets/selftestdialog.cpp:60
+#, kde-format
+msgctxt "@title:window"
+msgid "Akonadi Server Self-Test"
+msgstr "Server Akonadi Uji Sendiri"
+
+#: widgets/selftestdialog.cpp:71
+#, kde-format
+msgid "Save Report..."
+msgstr "Simpan Laporan..."
+
+#: widgets/selftestdialog.cpp:73
+#, kde-format
+msgid "Copy Report to Clipboard"
+msgstr "Salin Laporan ke Clipboard"
+
+#: widgets/selftestdialog.cpp:189
+#, kde-format
+msgid ""
+"The QtSQL driver '%1' is required by your current Akonadi server "
+"configuration and was found on your system."
+msgstr ""
+"Driver QtSQL '%1' dibutuhkan oleh konfigurasi server Akonadi kamu saat ini "
+"yang ditemukan pada sistem kamu."
+
+#: widgets/selftestdialog.cpp:191
+#, kde-format
+msgid ""
+"The QtSQL driver '%1' is required by your current Akonadi server "
+"configuration.\n"
+"The following drivers are installed: %2.\n"
+"Make sure the required driver is installed."
+msgstr ""
+"Driver QtSQL '%1' diperlukan oleh konfigurasi server Akonadi kamu saat ini.\n"
+"Driver berikut ini yang terinstal: %2.\n"
+"Pastikan driver yang dibutuhkan sudah terinstal."
+
+#: widgets/selftestdialog.cpp:198
+#, kde-format
+msgid "Database driver found."
+msgstr "Ditemukan driver database."
+
+#: widgets/selftestdialog.cpp:200
+#, kde-format
+msgid "Database driver not found."
+msgstr "Tidak ditemukan driver database."
+
+#: widgets/selftestdialog.cpp:208
+#, kde-format
+msgid "MySQL server executable not tested."
+msgstr "Eksekutabel server MySQL belum diuji."
+
+#: widgets/selftestdialog.cpp:208 widgets/selftestdialog.cpp:249
+#: widgets/selftestdialog.cpp:300
+#, kde-format
+msgid "The current configuration does not require an internal MySQL server."
+msgstr "Konfigurasi saat ini tidak membutuhkan server MySQL internal."
+
+#: widgets/selftestdialog.cpp:216
+#, kde-format
+msgid ""
+"You have currently configured Akonadi to use the MySQL server '%1'.\n"
+"Make sure you have the MySQL server installed, set the correct path and "
+"ensure you have the necessary read and execution rights on the server "
+"executable. The server executable is typically called 'mysqld'; its location "
+"varies depending on the distribution."
+msgstr ""
+"Kamu memiliki Akonadi yang dikonfigurasi baru-baru ini untuk menggunakan "
+"server MySQL '%1'.\n"
+"Pastikan kamu memiliki server MySQL yang terinstal, setel alur yang benar "
+"dan pastikan kamu memiliki pembacaan dan pengeksekusian yang diperlukan "
+"secara benar pada eksekutabel server. Eksekutabel server biasanya bernama "
+"'mysqld'; yang lokasinya bervariasi tergantung pada distribusi."
+
+#: widgets/selftestdialog.cpp:224
+#, kde-format
+msgid "MySQL server not found."
+msgstr "Server MySQL tidak ditemukan."
+
+#: widgets/selftestdialog.cpp:226
+#, kde-format
+msgid "MySQL server not readable."
+msgstr "Server MySQL tidak bisa dibaca."
+
+#: widgets/selftestdialog.cpp:228
+#, kde-format
+msgid "MySQL server not executable."
+msgstr "Server MySQL tidak bisa dieksekusi"
+
+#: widgets/selftestdialog.cpp:230
+#, kde-format
+msgid "MySQL found with unexpected name."
+msgstr "Ditemukan MySQL dengan nama yang tidak diharapkan."
+
+#: widgets/selftestdialog.cpp:232
+#, kde-format
+msgid "MySQL server found."
+msgstr "Ditemukan server MySQL."
+
+#: widgets/selftestdialog.cpp:238
+#, kde-format
+msgid "MySQL server found: %1"
+msgstr "Server MySQL yang ditemukan: %1"
+
+#: widgets/selftestdialog.cpp:239
+#, kde-format
+msgid "MySQL server is executable."
+msgstr "Server MySQL adalah eksekutabel."
+
+#: widgets/selftestdialog.cpp:241
+#, kde-format
+msgid ""
+"Executing the MySQL server '%1' failed with the following error message: '%2'"
+msgstr ""
+"Pengeksekusian server MySQL '%1' gagal dengan pesan galat berikut: '%2'"
+
+#: widgets/selftestdialog.cpp:242
+#, kde-format
+msgid "Executing the MySQL server failed."
+msgstr "Pengeksekusian server MySQL gagal."
+
+#: widgets/selftestdialog.cpp:249
+#, kde-format
+msgid "MySQL server error log not tested."
+msgstr "Log galat server MySQL tidak diuji."
+
+#: widgets/selftestdialog.cpp:257
+#, kde-format
+msgid "No current MySQL error log found."
+msgstr "Tidak ada log galat MySQL saat ini yang ditemukan."
+
+#: widgets/selftestdialog.cpp:258
+#, kde-format
+msgid ""
+"The MySQL server did not report any errors during this startup. The log can "
+"be found in '%1'."
+msgstr ""
+"Server MySQL enggak melaporkan galat apapun selama pemulaian ini. Log bisa "
+"ditemukan di dalam '%1'."
+
+#: widgets/selftestdialog.cpp:264
+#, kde-format
+msgid "MySQL error log not readable."
+msgstr "Log galat MySQL tidak dapat dibaca."
+
+#: widgets/selftestdialog.cpp:265
+#, kde-format
+msgid "A MySQL server error log file was found but is not readable: %1"
+msgstr ""
+"Sebuah file log galat server MySQL telah ditemukan tetapi tidak dapat "
+"dibaca: %1"
+
+#: widgets/selftestdialog.cpp:274
+#, kde-format
+msgid "MySQL server log contains errors."
+msgstr "Log server MySQL berisi kesalahan."
+
+#: widgets/selftestdialog.cpp:275
+#, kde-format
+msgid "The MySQL server error log file '%1' contains errors."
+msgstr "File log galat server MySQL '%1' berisi kesalahan."
+
+#: widgets/selftestdialog.cpp:285
+#, kde-format
+msgid "MySQL server log contains warnings."
+msgstr "Log server MySQL berisi peringatan."
+
+#: widgets/selftestdialog.cpp:286
+#, kde-format
+msgid "The MySQL server log file '%1' contains warnings."
+msgstr "File log server MySQL '%1' berisi peringatan."
+
+#: widgets/selftestdialog.cpp:289
+#, kde-format
+msgid "MySQL server log contains no errors."
+msgstr "Log server MySQL tidak berisi kesalahan."
+
+#: widgets/selftestdialog.cpp:290
+#, kde-format
+msgid "The MySQL server log file '%1' does not contain any errors or warnings."
+msgstr ""
+"File log server MySQL '%1' tidak berisi kesalahan atau peringatan apapun."
+
+#: widgets/selftestdialog.cpp:300
+#, kde-format
+msgid "MySQL server configuration not tested."
+msgstr "Konfigurasi server MySQL tidak diuji."
+
+#: widgets/selftestdialog.cpp:309
+#, kde-format
+msgid "MySQL server default configuration found."
+msgstr "Ditemukan konfigurasi default server MySQL."
+
+#: widgets/selftestdialog.cpp:310
+#, kde-format
+msgid ""
+"The default configuration for the MySQL server was found and is readable at "
+"%1."
+msgstr ""
+"Konfigurasi default untuk server MySQL telah ditemukan dan ia dapat dibaca "
+"di %1."
+
+#: widgets/selftestdialog.cpp:314
+#, kde-format
+msgid "MySQL server default configuration not found."
+msgstr "Konfigurasi default server MySQL tidak ditemukan."
+
+#: widgets/selftestdialog.cpp:315
+#, kde-format
+msgid ""
+"The default configuration for the MySQL server was not found or was not "
+"readable. Check your Akonadi installation is complete and you have all "
+"required access rights."
+msgstr ""
+"Konfigurasi default untuk server MySQL tidak ditemukan atau tidak dapat "
+"dibaca. Periksalah instalasi Akonadi-mu apakah beres dan apakah kamu "
+"memiliki semua akses yang dibutuhkan sudah benar."
+
+#: widgets/selftestdialog.cpp:323
+#, kde-format
+msgid "MySQL server custom configuration not available."
+msgstr "Konfigurasi kustom server MySQL tidak tersedia."
+
+#: widgets/selftestdialog.cpp:324
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was not found but is optional."
+msgstr "Konfigurasi kustom untuk server MySQL tidak ditemukan tetapi opsional."
+
+#: widgets/selftestdialog.cpp:327
+#, kde-format
+msgid "MySQL server custom configuration found."
+msgstr "Ditemukan konfigurasi kustom server MySQL."
+
+#: widgets/selftestdialog.cpp:328
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was found and is readable at %1"
+msgstr ""
+"Konfigurasi kustom untuk server MySQL telah ditemukan dan ia dapat dibaca di "
+"%1"
+
+#: widgets/selftestdialog.cpp:332
+#, kde-format
+msgid "MySQL server custom configuration not readable."
+msgstr "Konfigurasi kustom server MySQL tidak dapat dibaca."
+
+#: widgets/selftestdialog.cpp:333
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was found at %1 but is not "
+"readable. Check your access rights."
+msgstr ""
+"Konfigurasi kustom untuk server MySQL telah ditemukan di %1 tetapi ia tidak "
+"dapat dibaca. Periksalah aksemu apakah benar."
+
+#: widgets/selftestdialog.cpp:342
+#, kde-format
+msgid "MySQL server configuration not found or not readable."
+msgstr "Konfigurasi server MySQL tidak ditemukan atau tidak dapat dibaca."
+
+#: widgets/selftestdialog.cpp:343
+#, kde-format
+msgid "The MySQL server configuration was not found or is not readable."
+msgstr "Konfigurasi server MySQL tidak ketemu atau tidak dapat dibaca."
+
+#: widgets/selftestdialog.cpp:346
+#, kde-format
+msgid "MySQL server configuration is usable."
+msgstr "Konfigurasi server MySQL tidak dapat digunakan."
+
+#: widgets/selftestdialog.cpp:347
+#, kde-format
+msgid "The MySQL server configuration was found at %1 and is readable."
+msgstr "Konfigurasi server MySQL ketemu di %1 dan dapat dibaca."
+
+#: widgets/selftestdialog.cpp:376
+#, kde-format
+msgid "Cannot connect to PostgreSQL server."
+msgstr "Tidak bisa konek ke server PostgreSQL."
+
+#: widgets/selftestdialog.cpp:378
+#, kde-format
+msgid "PostgreSQL server found."
+msgstr "Ditemukan server PostgreSQL."
+
+#: widgets/selftestdialog.cpp:378
+#, kde-format
+msgid "The PostgreSQL server was found and connection is working."
+msgstr "Server PostgreSQL ketemu dan koneksi telah bekerja."
+
+#: widgets/selftestdialog.cpp:388
+#, kde-format
+msgid "akonadictl not found"
+msgstr "akonadictl tidak ditemukan"
+
+#: widgets/selftestdialog.cpp:389
+#, kde-format
+msgid ""
+"The program 'akonadictl' needs to be accessible in $PATH. Make sure you have "
+"the Akonadi server installed."
+msgstr ""
+"Program 'akonadictl' perlu dapat diakses di $PATH. Pastikan kamu memiliki "
+"server Akonadi yang terinstal."
+
+#: widgets/selftestdialog.cpp:396
+#, kde-format
+msgid "akonadictl found and usable"
+msgstr "Ditemukan akonadictl dan tidak dapat digunakan"
+
+#: widgets/selftestdialog.cpp:397
+#, kde-format
+msgid ""
+"The program '%1' to control the Akonadi server was found and could be "
+"executed successfully.\n"
+"Result:\n"
+"%2"
+msgstr ""
+"Program '%1' untuk mengendalikan server Akonadi ketemu dan bisa dieksekusi "
+"secara sukses.\n"
+"Hasilnya:\n"
+"%2"
+
+#: widgets/selftestdialog.cpp:403
+#, kde-format
+msgid "akonadictl found but not usable"
+msgstr "Ditemukan akonadictl tetapi tidak dapat digunakan"
+
+#: widgets/selftestdialog.cpp:404
+#, kde-format
+msgid ""
+"The program '%1' to control the Akonadi server was found but could not be "
+"executed successfully.\n"
+"Result:\n"
+"%2\n"
+"Make sure the Akonadi server is installed correctly."
+msgstr ""
+"Program '%1' untuk mengendalikan server Akonadi ketemu dan bisa dieksekusi "
+"secara sukses.\n"
+"Hasilnya:\n"
+"%2Pastikan server Akonadi telah terinstal secara benar."
+
+#: widgets/selftestdialog.cpp:416
+#, kde-format
+msgid "Akonadi control process registered at D-Bus."
+msgstr "Proses kendali Akonadi teregistrasi di D-Bus."
+
+#: widgets/selftestdialog.cpp:417
+#, kde-format
+msgid ""
+"The Akonadi control process is registered at D-Bus which typically indicates "
+"it is operational."
+msgstr ""
+"Proses kendali Akonadi telah teregistrasi di D-Bus yang mana biasanya "
+"menunjukkan itu beroperasi."
+
+#: widgets/selftestdialog.cpp:420
+#, kde-format
+msgid "Akonadi control process not registered at D-Bus."
+msgstr "Proses kendali Akonadi tidak teregistrasi di D-Bus."
+
+#: widgets/selftestdialog.cpp:421
+#, kde-format
+msgid ""
+"The Akonadi control process is not registered at D-Bus which typically means "
+"it was not started or encountered a fatal error during startup."
+msgstr ""
+"Proses kendali Akonadi tidak teregistrasi di D-Bus yang biasanya itu berarti "
+"ia tidak dijalankan atau ditemui sebuah galat fatal selama pemulaian."
+
+#: widgets/selftestdialog.cpp:427
+#, kde-format
+msgid "Akonadi server process registered at D-Bus."
+msgstr "Proses kendali Akonadi teregistrasi di D-Bus."
+
+#: widgets/selftestdialog.cpp:428
+#, kde-format
+msgid ""
+"The Akonadi server process is registered at D-Bus which typically indicates "
+"it is operational."
+msgstr ""
+"Proses kendali Akonadi telah teregistrasi di D-Bus yang mana biasanya "
+"menunjukkan itu beroperasi."
+
+#: widgets/selftestdialog.cpp:431
+#, kde-format
+msgid "Akonadi server process not registered at D-Bus."
+msgstr "Proses kendali Akonadi tidak teregistrasi di D-Bus."
+
+#: widgets/selftestdialog.cpp:432
+#, kde-format
+msgid ""
+"The Akonadi server process is not registered at D-Bus which typically means "
+"it was not started or encountered a fatal error during startup."
+msgstr ""
+"Proses kendali Akonadi tidak teregistrasi di D-Bus yang mana biasanya "
+"berarti itu tidak dijalankan atau ditemukan sebuah kesalahan fatal selama "
+"pemulaian."
+
+#: widgets/selftestdialog.cpp:441
+#, kde-format
+msgid "Protocol version check not possible."
+msgstr "Pemeriksaan versi protokol tidak memungkinkan."
+
+#: widgets/selftestdialog.cpp:442
+#, kde-format
+msgid ""
+"Without a connection to the server it is not possible to check if the "
+"protocol version meets the requirements."
+msgstr ""
+"Tanpa koneksi ke server hal ini mustahil untuk memeriksa jika versi protokol "
+"sesuai harapan yang diperlukan."
+
+#: widgets/selftestdialog.cpp:447
+#, kde-format
+msgid "Server protocol version is too old."
+msgstr "Versi protokol server terlalu tua."
+
+#: widgets/selftestdialog.cpp:448 widgets/selftestdialog.cpp:455
+#, kde-format
+msgid ""
+"The server protocol version is %1, but version %2 is required by the client. "
+"If you recently updated KDE PIM, please make sure to restart both Akonadi "
+"and KDE PIM applications."
+msgstr ""
+"Versi protokol server adalah %1, tetapi versi %2 lah yang dibutuhkan oleh "
+"klien. Jika kamu saat ini sudah memperbarui KDE PIM, silakan pastikan untuk "
+"menjalankan ulang kedua aplikasi Akonadi dan KDE PIM."
+
+#: widgets/selftestdialog.cpp:454
+#, kde-format
+msgid "Server protocol version is too new."
+msgstr "Versi protokol server terlalu baru."
+
+#: widgets/selftestdialog.cpp:460
+#, kde-format
+msgid "Server protocol version matches."
+msgstr "Versi protokol server cocok."
+
+#: widgets/selftestdialog.cpp:460
+#, kde-format
+msgid "The current Protocol version is %1."
+msgstr "Versi Protokol saat ini adalah %1."
+
+#: widgets/selftestdialog.cpp:478
+#, kde-format
+msgid "Resource agents found."
+msgstr "Ditemukan agen sumberdaya."
+
+#: widgets/selftestdialog.cpp:478
+#, kde-format
+msgid "At least one resource agent has been found."
+msgstr "Setidaknya satu agen sumberdaya ketemu."
+
+#: widgets/selftestdialog.cpp:481
+#, kde-format
+msgid "No resource agents found."
+msgstr "Tidak ada agen sumberdaya yang ditemukan."
+
+#: widgets/selftestdialog.cpp:482
+#, kde-format
+msgid ""
+"No resource agents have been found, Akonadi is not usable without at least "
+"one. This usually means that no resource agents are installed or that there "
+"is a setup problem. The following paths have been searched: '%1'. The "
+"XDG_DATA_DIRS environment variable is set to '%2'; make sure this includes "
+"all paths where Akonadi agents are installed."
+msgstr ""
+"Tidak ada agen sumberdaya yang ketemu, Akonadi tidak bermanfaat tanpa "
+"salahsatunya. Ini biasanya berarti bahwa tidak adanya agen sumberdaya yang "
+"terinstal atau ada penyetelan yang bermasalah. Alur berikut yang telah "
+"dicari: '%1'. Variabel lingkungan XDG_DATA_DIRS telah disetel untuk '%2'; "
+"pastikan ini termasuk semua alur tempat agen Akonadi terinstal."
+
+#: widgets/selftestdialog.cpp:499
+#, kde-format
+msgid "No current Akonadi server error log found."
+msgstr "Tidak ada log galat server Akonadi saat ini yang ditemukan."
+
+#: widgets/selftestdialog.cpp:499
+#, kde-format
+msgid ""
+"The Akonadi server did not report any errors during its current startup."
+msgstr ""
+"Server Akonadi belum melaporkan galat apapun selagi pemulaian saat ini."
+
+#: widgets/selftestdialog.cpp:503
+#, kde-format
+msgid "Current Akonadi server error log found."
+msgstr "Ditemukan log galat server Akonadi saat ini."
+
+#: widgets/selftestdialog.cpp:504
+#, kde-format
+msgid ""
+"The Akonadi server reported errors during its current startup. The log can "
+"be found in %1."
+msgstr ""
+"Server Akonadi melaporkan galat selagi pemulaian saat ini. Log bisa "
+"ditemukan di %1."
+
+#: widgets/selftestdialog.cpp:512
+#, kde-format
+msgid "No previous Akonadi server error log found."
+msgstr "Tidak ada yang ditemukan log galat server Akonadi sebelumnya."
+
+#: widgets/selftestdialog.cpp:513
+#, kde-format
+msgid ""
+"The Akonadi server did not report any errors during its previous startup."
+msgstr ""
+"Server Akonadi belum melaporkan galat apapun selagi pemulaian sebelumnya."
+
+#: widgets/selftestdialog.cpp:517
+#, kde-format
+msgid "Previous Akonadi server error log found."
+msgstr "Ditemukan log galat server Akonadi sebelumnya."
+
+#: widgets/selftestdialog.cpp:518
+#, kde-format
+msgid ""
+"The Akonadi server reported errors during its previous startup. The log can "
+"be found in %1."
+msgstr ""
+"Server Akonadi melaporkan galat selagi pemulaian sebelumnya. Log bisa "
+"ditemukan di %1."
+
+#: widgets/selftestdialog.cpp:529
+#, kde-format
+msgid "No current Akonadi control error log found."
+msgstr "Tidak ada log galat kendali Akonadi saat ini yang ditemukan."
+
+#: widgets/selftestdialog.cpp:530
+#, kde-format
+msgid ""
+"The Akonadi control process did not report any errors during its current "
+"startup."
+msgstr ""
+"Proses kendali Akonadi belum melaporkan galat apapun selagi pemulaian saat "
+"ini."
+
+#: widgets/selftestdialog.cpp:534
+#, kde-format
+msgid "Current Akonadi control error log found."
+msgstr "Log galat kendali Akonadi saat ini yang ditemukan."
+
+#: widgets/selftestdialog.cpp:535
+#, kde-format
+msgid ""
+"The Akonadi control process reported errors during its current startup. The "
+"log can be found in %1."
+msgstr ""
+"Proses kendali Akonadi melaporkan galat selagi pemulaian saat ini. Log bisa "
+"ditemukan di dalam %1."
+
+#: widgets/selftestdialog.cpp:543
+#, kde-format
+msgid "No previous Akonadi control error log found."
+msgstr "Tidak ada log galat kendali Akonadi yang ditemukan."
+
+#: widgets/selftestdialog.cpp:544
+#, kde-format
+msgid ""
+"The Akonadi control process did not report any errors during its previous "
+"startup."
+msgstr ""
+"Proses kendali Akonadi belum melaporkan galat apapun selama ia pemulaian "
+"sebelumnya."
+
+#: widgets/selftestdialog.cpp:548
+#, kde-format
+msgid "Previous Akonadi control error log found."
+msgstr "Log galat kendali Akonadi sebelumnya yang ditemukan."
+
+#: widgets/selftestdialog.cpp:549
+#, kde-format
+msgid ""
+"The Akonadi control process reported errors during its previous startup. The "
+"log can be found in %1."
+msgstr ""
+"Proses kendali Akonadi melaporkan galat selagi pemulaian sebelumnya. Log "
+"bisa ditemukan di %1."
+
+#: widgets/selftestdialog.cpp:559
+#, kde-format
+msgid "Akonadi was started as root"
+msgstr "Akonadi telah dijalankan sebagai root"
+
+#: widgets/selftestdialog.cpp:560
+#, kde-format
+msgid ""
+"Running Internet-facing applications as root/administrator exposes you to "
+"many security risks. MySQL, used by this Akonadi installation, will not "
+"allow itself to run as root, to protect you from these risks."
+msgstr ""
+"Menjalankan aplikasi terhadap Internet sebagai root/administrator mengekspos "
+"kamu ke banyak resiko keamanan. MySQL, digunakan oleh instalasi Akonadi ini, "
+"tidak akan mengizinkan sendiri berjalan sebagai root, untuk melindungimu "
+"dari resiko tersebut."
+
+#: widgets/selftestdialog.cpp:564
+#, kde-format
+msgid "Akonadi is not running as root"
+msgstr "Akonadi tidak berjalan sebagai root"
+
+#: widgets/selftestdialog.cpp:565
+#, kde-format
+msgid ""
+"Akonadi is not running as a root/administrator user, which is the "
+"recommended setup for a secure system."
+msgstr ""
+"Akonadi tidak berjalan sebagai pengguna admistrator/root, yang mana adalah "
+"setelan yang dianjurkan untuk sistem keamanan."
+
+#: widgets/selftestdialog.cpp:643
+#, kde-format
+msgid "Save Test Report"
+msgstr "Simpan Laporan Uji"
+
+#: widgets/selftestdialog.cpp:650
+#, kde-format
+msgid "Error"
+msgstr "Galat"
+
+#: widgets/selftestdialog.cpp:650
+#, kde-format
+msgid "Could not open file '%1'"
+msgstr "Tidak dapat membuka file '%1'"
+
+#. i18n: ectx: property (text), widget (QLabel, introductionLabel)
+#: widgets/selftestdialog.ui:16
+#, kde-format
+msgid ""
+"An error occurred during the startup of the Akonadi server. The following "
+"self-tests are supposed to help with tracking down and solving this problem. "
+"When requesting support or reporting bugs, please always include this report."
+msgstr ""
+"Sebuah galat terjadi selagi pemulaian server Akonadi. Uji sendiri berikut "
+"diperkirakan untuk menunjang pelacakan dan pemecahan masalah ini. Ketika "
+"meminta dukungan atau melaporkan bug, silakan selalu sertakan laporan ini."
+
+#. i18n: ectx: property (title), widget (QGroupBox, detailsGroup)
+#: widgets/selftestdialog.ui:39
+#, kde-format
+msgid "Details"
+msgstr "Detail"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/selftestdialog.ui:61
+#, kde-format
+msgid ""
+"<p>For more troubleshooting tips please refer to <a href=\"https://userbase."
+"kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
+msgstr ""
+"<p>Untuk kiat pemecahan masalah silakan merujuk ke <a href=\"https://"
+"userbase.kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
+
+#: widgets/standardactionmanager.cpp:78
+msgid "&New Folder..."
+msgstr "&Folder Baru..."
+
+#: widgets/standardactionmanager.cpp:78
+msgid "New"
+msgstr "Baru"
+
+#: widgets/standardactionmanager.cpp:80
+msgid "&Delete Folder"
+msgstr "&Hapus Folder"
+
+#: widgets/standardactionmanager.cpp:80
+msgid "Delete"
+msgstr "Hapus"
+
+#: widgets/standardactionmanager.cpp:82
+msgid "&Synchronize Folder"
+msgstr "&Sinkronkan Folder"
+
+#: widgets/standardactionmanager.cpp:83 widgets/standardactionmanager.cpp:157
+#: widgets/standardactionmanager.cpp:243
+msgid "Synchronize"
+msgstr "Sinkronkan"
+
+#: widgets/standardactionmanager.cpp:90
+msgid "Folder &Properties"
+msgstr "&Properti Folder"
+
+#: widgets/standardactionmanager.cpp:91 widgets/standardactionmanager.cpp:149
+msgid "Properties"
+msgstr "Properti"
+
+#: widgets/standardactionmanager.cpp:98
+msgid "&Paste"
+msgstr "&Tempel"
+
+#: widgets/standardactionmanager.cpp:98
+msgid "Paste"
+msgstr "Tempel"
+
+#: widgets/standardactionmanager.cpp:101
+msgid "Manage Local &Subscriptions..."
+msgstr "Kelola &Subskripsi Lokal"
+
+#: widgets/standardactionmanager.cpp:102
+msgid "Manage Local Subscriptions"
+msgstr "Kelola Subskripsi Lokal"
+
+#: widgets/standardactionmanager.cpp:109
+msgid "Add to Favorite Folders"
+msgstr "Tambahkan ke Folder Favorit"
+
+#: widgets/standardactionmanager.cpp:110
+msgid "Add to Favorite"
+msgstr "Tambahkan ke Faforit"
+
+#: widgets/standardactionmanager.cpp:117
+msgid "Remove from Favorite Folders"
+msgstr "Singkirkan dari Folder Favorit"
+
+#: widgets/standardactionmanager.cpp:118
+msgid "Remove from Favorite"
+msgstr "Singkirkan dari Favorit"
+
+#: widgets/standardactionmanager.cpp:124
+msgid "Rename Favorite..."
+msgstr "Ubah Nama Favorit..."
+
+#: widgets/standardactionmanager.cpp:124
+msgid "Rename"
+msgstr "Ubah Nama"
+
+#: widgets/standardactionmanager.cpp:126 widgets/standardactionmanager.cpp:164
+msgid "Copy Folder To..."
+msgstr "Salin Folder Ke..."
+
+#: widgets/standardactionmanager.cpp:127 widgets/standardactionmanager.cpp:133
+#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:173
+msgid "Copy To"
+msgstr "Salin Ke"
+
+#: widgets/standardactionmanager.cpp:133 widgets/standardactionmanager.cpp:173
+msgid "Copy Item To..."
+msgstr "Salin Item Ke..."
+
+#: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:174
+msgid "Move Item To..."
+msgstr "Pindah Item Ke..."
+
+#: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:137
+#: widgets/standardactionmanager.cpp:167 widgets/standardactionmanager.cpp:174
+msgid "Move To"
+msgstr "Pindah Ke"
+
+#: widgets/standardactionmanager.cpp:136 widgets/standardactionmanager.cpp:166
+msgid "Move Folder To..."
+msgstr "Pindahkan Folder Ke..."
+
+#: widgets/standardactionmanager.cpp:143
+msgid "&Cut Item"
+msgstr "&Potong Item"
+
+#: widgets/standardactionmanager.cpp:143 widgets/standardactionmanager.cpp:144
+msgid "Cut"
+msgstr "Potong"
+
+#: widgets/standardactionmanager.cpp:144
+msgid "&Cut Folder"
+msgstr "&Potong Folder"
+
+#: widgets/standardactionmanager.cpp:145
+msgid "Create Resource"
+msgstr "Buat Sumberdaya"
+
+#: widgets/standardactionmanager.cpp:146
+msgid "Delete Resource"
+msgstr "Hapus Sumberdaya"
+
+#: widgets/standardactionmanager.cpp:148
+msgid "&Resource Properties"
+msgstr "Properti Sum&berdaya"
+
+#: widgets/standardactionmanager.cpp:156
+msgid "Synchronize Resource"
+msgstr "Sinkronkan Sumberdaya"
+
+#: widgets/standardactionmanager.cpp:163
+msgid "Work Offline"
+msgstr "Bekerja Ofline"
+
+#: widgets/standardactionmanager.cpp:176
+msgid "&Synchronize Folder Recursively"
+msgstr "&Sinkronkan Folder Secara Saksama"
+
+#: widgets/standardactionmanager.cpp:177
+msgid "Synchronize Recursively"
+msgstr "Sinkronkan Secara Saksama"
+
+#: widgets/standardactionmanager.cpp:184
+msgid "&Move Folder To Trash"
+msgstr "&Pindahkan Folder Ke Tong Sampah"
+
+#: widgets/standardactionmanager.cpp:185
+msgid "Move Folder To Trash"
+msgstr "Pindahkan Folder Ke Tong Sampah"
+
+#: widgets/standardactionmanager.cpp:192
+msgid "&Move Item To Trash"
+msgstr "&Pindahkan Item Ke Tong Sampah"
+
+#: widgets/standardactionmanager.cpp:193
+msgid "Move Item To Trash"
+msgstr "Pindahkan Item Ke Tong Sampah"
+
+#: widgets/standardactionmanager.cpp:200 widgets/standardactionmanager.cpp:216
+msgid "&Restore Folder From Trash"
+msgstr "&Kembalikan Folder Dari Tong Sampah"
+
+#: widgets/standardactionmanager.cpp:201 widgets/standardactionmanager.cpp:217
+msgid "Restore Folder From Trash"
+msgstr "Kembalikan Folder Dari Tong Sampah"
+
+#: widgets/standardactionmanager.cpp:208 widgets/standardactionmanager.cpp:225
+#: widgets/standardactionmanager.cpp:232
+msgid "&Restore Item From Trash"
+msgstr "&Kembalikan Item Dari Tong Sampah"
+
+#: widgets/standardactionmanager.cpp:209 widgets/standardactionmanager.cpp:226
+#: widgets/standardactionmanager.cpp:232
+msgid "Restore Item From Trash"
+msgstr "Kembalikan Item Dari Tong Sampah"
+
+#: widgets/standardactionmanager.cpp:223
+msgid "&Restore Collection From Trash"
+msgstr "&Kembalikan Koleksi Dari Tong Sampah"
+
+#: widgets/standardactionmanager.cpp:223
+msgid "Restore Collection From Trash"
+msgstr "Kembalikan Koleksi Dari Tong Sampah"
+
+#: widgets/standardactionmanager.cpp:234
+msgid "&Synchronize Favorite Folders"
+msgstr "&Sinkronkan Folder Favorit"
+
+#: widgets/standardactionmanager.cpp:235
+msgid "Synchronize Favorite Folders"
+msgstr "Sinkronkan Folder Favorit"
+
+#: widgets/standardactionmanager.cpp:242
+msgid "Synchronize Folder Tree"
+msgstr "Sinkronkan Ranting Folder"
+
+#: widgets/standardactionmanager.cpp:328
+#, kde-format
+msgid "&Copy Folder"
+msgid_plural "&Copy %1 Folders"
+msgstr[0] "&Salin Folder"
+msgstr[1] "&Salin %1 Folder"
+
+#: widgets/standardactionmanager.cpp:329
+#, kde-format
+msgid "&Copy Item"
+msgid_plural "&Copy %1 Items"
+msgstr[0] "&Salin Item"
+msgstr[1] "&Salin %1 Item"
+
+#: widgets/standardactionmanager.cpp:330
+#, kde-format
+msgctxt "@action"
+msgid "&Cut Item"
+msgid_plural "&Cut %1 Items"
+msgstr[0] "&Potong Item"
+msgstr[1] "&Potong %1 Item"
+
+#: widgets/standardactionmanager.cpp:331
+#, kde-format
+msgctxt "@action"
+msgid "&Cut Folder"
+msgid_plural "&Cut %1 Folders"
+msgstr[0] "&Potong Folder"
+msgstr[1] "&Potong %1 Folder"
+
+#: widgets/standardactionmanager.cpp:332
+#, kde-format
+msgid "&Delete Item"
+msgid_plural "&Delete %1 Items"
+msgstr[0] "&Hapus Item"
+msgstr[1] "&Hapus %1 Item"
+
+#: widgets/standardactionmanager.cpp:333
+#, kde-format
+msgctxt "@action"
+msgid "&Delete Folder"
+msgid_plural "&Delete %1 Folders"
+msgstr[0] "&Hapus Folder"
+msgstr[1] "&Hapus %1 Folder"
+
+#: widgets/standardactionmanager.cpp:334
+#, kde-format
+msgctxt "@action"
+msgid "&Synchronize Folder"
+msgid_plural "&Synchronize %1 Folders"
+msgstr[0] "&Sinkronkan Folder"
+msgstr[1] "&Sinkronkan %1 Folder"
+
+#: widgets/standardactionmanager.cpp:335
+#, kde-format
+msgid "&Delete Resource"
+msgid_plural "&Delete %1 Resources"
+msgstr[0] "&Hapus Sumberdaya"
+msgstr[1] "&Hapus %1 Sumberdaya"
+
+#: widgets/standardactionmanager.cpp:336
+#, kde-format
+msgid "&Synchronize Resource"
+msgid_plural "&Synchronize %1 Resources"
+msgstr[0] "&Sinkronkan Sumberdaya"
+msgstr[1] "&Sinkronkan %1 Sumberdaya"
+
+#: widgets/standardactionmanager.cpp:338
+#, kde-format
+msgid "Copy Folder"
+msgid_plural "Copy %1 Folders"
+msgstr[0] "Salin Folder"
+msgstr[1] "Salin %1 Folder"
+
+#: widgets/standardactionmanager.cpp:339
+#, kde-format
+msgid "Copy Item"
+msgid_plural "Copy %1 Items"
+msgstr[0] "Salin Item"
+msgstr[1] "Salin %1 Item"
+
+#: widgets/standardactionmanager.cpp:340
+#, kde-format
+msgid "Cut Item"
+msgid_plural "Cut %1 Items"
+msgstr[0] "Potong Item"
+msgstr[1] "Potong %1 Item"
+
+#: widgets/standardactionmanager.cpp:341
+#, kde-format
+msgid "Cut Folder"
+msgid_plural "Cut %1 Folders"
+msgstr[0] "Potong Folder"
+msgstr[1] "Potong %1 Folder"
+
+#: widgets/standardactionmanager.cpp:342
+#, kde-format
+msgid "Delete Item"
+msgid_plural "Delete %1 Items"
+msgstr[0] "Hapus Item"
+msgstr[1] "Hapus %1 Item"
+
+#: widgets/standardactionmanager.cpp:343
+#, kde-format
+msgid "Delete Folder"
+msgid_plural "Delete %1 Folders"
+msgstr[0] "Hapus Folder"
+msgstr[1] "Hapus %1 Folder"
+
+#: widgets/standardactionmanager.cpp:344
+#, kde-format
+msgid "Synchronize Folder"
+msgid_plural "Synchronize %1 Folders"
+msgstr[0] "Sinkronkan Folder"
+msgstr[1] "Sinkronkan %1 Folder"
+
+#: widgets/standardactionmanager.cpp:345
+#, kde-format
+msgctxt "@action"
+msgid "Delete Resource"
+msgid_plural "Delete %1 Resources"
+msgstr[0] "Hapus Sumberdaya"
+msgstr[1] "Hapus %1 Sumberdaya"
+
+#: widgets/standardactionmanager.cpp:346
+#, kde-format
+msgctxt "@action"
+msgid "Synchronize Resource"
+msgid_plural "Synchronize %1 Resources"
+msgstr[0] "Sinkronkan Sumberdaya"
+msgstr[1] "Sinkronkan %1 Sumberdaya"
+
+#: widgets/standardactionmanager.cpp:349
+#, kde-format
+msgctxt "@label:textbox name of Akonadi folder"
+msgid "Name"
+msgstr "Nama"
+
+#: widgets/standardactionmanager.cpp:356
+#, kde-format
+msgid "Do you really want to delete this folder and all its sub-folders?"
+msgid_plural ""
+"Do you really want to delete %1 folders and all their sub-folders?"
+msgstr[0] ""
+"Apakah kamu benar-benar ingin menghapus folder ini dan subfoldernya?"
+msgstr[1] ""
+"Apakah kamu benar-benar ingin menghapus %1 folder ini dan subfoldernya?"
+
+#: widgets/standardactionmanager.cpp:359
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete folder?"
+msgid_plural "Delete folders?"
+msgstr[0] "Hapus folder?"
+msgstr[1] "Hapus folder-folder?"
+
+#: widgets/standardactionmanager.cpp:360
+#, kde-format
+msgid "Could not delete folder: %1"
+msgstr "Tidak dapat menghapus folder: %1"
+
+#: widgets/standardactionmanager.cpp:361
+#, kde-format
+msgid "Folder deletion failed"
+msgstr "Penghapusan folder gagal"
+
+#: widgets/standardactionmanager.cpp:363
+#, kde-format
+msgctxt "@title:window"
+msgid "Properties of Folder %1"
+msgstr "Properti Folder %1"
+
+#: widgets/standardactionmanager.cpp:367
+#, kde-format
+msgid "Do you really want to delete the selected item?"
+msgid_plural "Do you really want to delete %1 items?"
+msgstr[0] "Apakah kamu benar-benar ingin menghapus item?"
+msgstr[1] "Apakah kamu benar-benar ingin menghapus %1 item"
+
+#: widgets/standardactionmanager.cpp:368
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete item?"
+msgid_plural "Delete items?"
+msgstr[0] "Hapus item?"
+msgstr[1] "Hapus item-item?"
+
+#: widgets/standardactionmanager.cpp:369
+#, kde-format
+msgid "Could not delete item: %1"
+msgstr "Tidak dapat menghapus item: %1"
+
+#: widgets/standardactionmanager.cpp:370
+#, kde-format
+msgid "Item deletion failed"
+msgstr "Penghapusan item gagal"
+
+#: widgets/standardactionmanager.cpp:372
+#, kde-format
+msgctxt "@title:window"
+msgid "Rename Favorite"
+msgstr "Ubah Nama Favorit"
+
+#: widgets/standardactionmanager.cpp:373
+#, kde-format
+msgctxt "@label:textbox name of the folder"
+msgid "Name:"
+msgstr "Nama:"
+
+#: widgets/standardactionmanager.cpp:375
+#, kde-format
+msgctxt "@title:window"
+msgid "New Resource"
+msgstr "Sumberdaya Baru"
+
+#: widgets/standardactionmanager.cpp:376
+#, kde-format
+msgid "Could not create resource: %1"
+msgstr "Tidak dapat membuat sumberdaya: %1"
+
+#: widgets/standardactionmanager.cpp:377
+#, kde-format
+msgid "Resource creation failed"
+msgstr "Pembuatan sumberdaya gagal"
+
+#: widgets/standardactionmanager.cpp:381
+#, kde-format
+msgid "Do you really want to delete this resource?"
+msgid_plural "Do you really want to delete %1 resources?"
+msgstr[0] "Apakah kamu benar-benar ingin menghapus sumberdaya?"
+msgstr[1] "Apakah kamu benar-benar ingin menghapus %1 sumberdaya?"
+
+#: widgets/standardactionmanager.cpp:384
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete Resource?"
+msgid_plural "Delete Resources?"
+msgstr[0] "Hapus Sumberdaya?"
+msgstr[1] "Hapus Sumberdaya-sumberdaya?"
+
+#: widgets/standardactionmanager.cpp:386
+#, kde-format
+msgid "Could not paste data: %1"
+msgstr "Tidak dapat menempel data: %1"
+
+#: widgets/standardactionmanager.cpp:387
+#, kde-format
+msgid "Paste failed"
+msgstr "Gagal tempel"
+
+#: widgets/standardactionmanager.cpp:739
+#, kde-format
+msgid "We can not add \"/\" in folder name."
+msgstr "Kita tidak bisa menambahkan \"/\" di dalam nama folder."
+
+#: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
+#, kde-format
+msgid "Create new folder error"
+msgstr "Galat membuat folder baru"
+
+#: widgets/standardactionmanager.cpp:743
+#, kde-format
+msgid "We can not add \".\" at begin or end of folder name."
+msgstr "Kita tidak bisa menambahkan \".\" di awalan atau akhiran nama folder."
+
+#: widgets/standardactionmanager.cpp:982
+#, kde-format
+msgid ""
+"Before syncing folder \"%1\" it is necessary to have the resource online. Do "
+"you want to make it online?"
+msgstr ""
+"Sebelum menyinkronkan folder \"%1\" itu perlu memiliki sumberdaya onlen. "
+"Apakah kamu ingin membuatnya onlen? "
+
+#: widgets/standardactionmanager.cpp:983
+#, kde-format
+msgid "Account \"%1\" is offline"
+msgstr "Akun \"%1\" sedang oflen"
+
+#: widgets/standardactionmanager.cpp:984
+#, kde-format
+msgctxt "@action:button"
+msgid "Go Online"
+msgstr "Menuju Onlen"
+
+#: widgets/standardactionmanager.cpp:1585
+#, kde-format
+msgid "Move to This Folder"
+msgstr "Pindah ke Folder Ini"
+
+#: widgets/standardactionmanager.cpp:1585
+#, kde-format
+msgid "Copy to This Folder"
+msgstr "Salin ke Folder Ini"
+
+#: widgets/subscriptiondialog.cpp:93
+#, kde-format
+msgid "Failed to update subscription: %1"
+msgstr "Gagal memperbarui subskripsi: %1"
+
+#: widgets/subscriptiondialog.cpp:93
+#, kde-format
+msgctxt "@title"
+msgid "Subscription Error"
+msgstr "Subskripsi Galat"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, SubscriptionDialog)
+#: widgets/subscriptiondialog.ui:14
+#, kde-format
+msgid "Local Subscriptions"
+msgstr "Subskripsi Lokal"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/subscriptiondialog.ui:22
+#, kde-format
+msgid "Search:"
+msgstr "Cari:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, subscribedOnlyCheckBox)
+#: widgets/subscriptiondialog.ui:36
+#, kde-format
+msgid "&Subscribed only"
+msgstr "&Disubskrip saja"
+
+#. i18n: ectx: property (text), widget (QPushButton, subscribeButton)
+#: widgets/subscriptiondialog.ui:62
+#, kde-format
+msgid "Su&bscribe"
+msgstr "Su&bskrip"
+
+#. i18n: ectx: property (text), widget (QPushButton, unsubscribeButton)
+#: widgets/subscriptiondialog.ui:69
+#, kde-format
+msgid "&Unsubscribe"
+msgstr "&Batal subskrip"
+
+#: widgets/tageditwidget.cpp:116
+#, kde-format
+msgid "Failed to create a new tag"
+msgstr "Gagal membuat sebuah tag baru"
+
+#: widgets/tageditwidget.cpp:116
+#, kde-format
+msgid "An error occurred while creating a new tag"
+msgstr "Sebuah galat terjadi selagi membuat tag baru"
+
+#: widgets/tageditwidget.cpp:164
+#, kde-kuit-format
+msgctxt "@info"
+msgid "Do you really want to remove the tag <resource>%1</resource>?"
+msgstr ""
+"Apakah kamu benar-benar ingin menyingkirkan tag <resource>%1</resource>?"
+
+#: widgets/tageditwidget.cpp:165
+#, kde-format
+msgctxt "@title"
+msgid "Delete tag"
+msgstr "Hapus tag"
+
+#: widgets/tageditwidget.cpp:189
+#, kde-format
+msgctxt "@info"
+msgid "Delete tag"
+msgstr "Hapus tag"
+
+#. i18n: ectx: property (text), widget (QLabel, selectLabel)
+#: widgets/tageditwidget.ui:29
+#, kde-format
+msgid "Select tags that should be applied."
+msgstr "Pilih tag yang mau diterapkan."
+
+#. i18n: ectx: property (text), widget (QPushButton, newTagButton)
+#: widgets/tageditwidget.ui:54
+#, kde-format
+msgid "Create new tag"
+msgstr "Buat tag baru"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
+#: widgets/tagmanagementdialog.ui:14
+#, kde-format
+msgid "Manage Tags"
+msgstr "Kelola Tag"
+
+#: widgets/tagselectioncombobox.cpp:124
+#, kde-format
+msgctxt "@label Placeholder text in tag selection combobox"
+msgid "Select tags..."
+msgstr "Pilih tag..."
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
+#: widgets/tagselectiondialog.ui:14
+#, kde-format
+msgid "Select Tags"
+msgstr "Pilih Tag"
+
+#: widgets/tagwidget.cpp:45
+#, kde-format
+msgid "Clear"
+msgstr "Bersihkan"
+
+#. i18n: ectx: property (placeholderText), widget (Akonadi::TagView, tagView)
+#: widgets/tagwidget.ui:20
+#, kde-format
+msgid "Click to add tags"
+msgstr "Klik untuk menambahkan tag"
+
+#. i18n: ectx: property (text), widget (QToolButton, editButton)
+#: widgets/tagwidget.ui:27
+#, kde-format
+msgid "..."
+msgstr "..."
+
+#: xml/akonadi2xml.cpp:25
+#, kde-format
+msgid "Akonadi To XML converter"
+msgstr "Pengonversi Akonadi Ke XML"
+
+#: xml/akonadi2xml.cpp:27
+#, kde-format
+msgid "Converts an Akonadi collection subtree into a XML file."
+msgstr ""
+"Konversikan sebuah subranting koleksi Akonadi ke dalam sebuah file XML."
+
+#: xml/akonadi2xml.cpp:29
+#, kde-format
+msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
+msgstr "(c) 2009 Volker Krause <vkrause@kde.org>"
+
+#: xml/xmldocument.cpp:84
+#, kde-format
+msgid "No data loaded."
+msgstr "Tidak ada data yang dimuat."
+
+#: xml/xmldocument.cpp:120
+#, kde-format
+msgid "No filename specified"
+msgstr "Tidak ada nama file yang ditentukan"
+
+#: xml/xmldocument.cpp:128
+#, kde-format
+msgid "Unable to open data file '%1'."
+msgstr "Tak bisa membuka file data '%1'."
+
+#: xml/xmldocument.cpp:133
+#, kde-format
+msgid "File %1 does not exist."
+msgstr "File %1 enggak ada."
+
+#: xml/xmldocument.cpp:141
+#, kde-format
+msgid "Unable to parse data file '%1'."
+msgstr "Tak bisa mengurai data file '%1'."
+
+#: xml/xmldocument.cpp:149
+#, kde-format
+msgid "Schema definition could not be loaded and parsed."
+msgstr "Definisi skema tidak dapat dimuat dan diurai."
+
+#: xml/xmldocument.cpp:154
+#, kde-format
+msgid "Unable to create schema parser context."
+msgstr "Tak bisa membuat skema konteks pengurai."
+
+#: xml/xmldocument.cpp:159
+#, kde-format
+msgid "Unable to create schema."
+msgstr "Tak bisa membuat skema."
+
+#: xml/xmldocument.cpp:164
+#, kde-format
+msgid "Unable to create schema validation context."
+msgstr "Tak bisa membuat skema konteks validasi."
+
+#: xml/xmldocument.cpp:169
+#, kde-format
+msgid "Invalid file format."
+msgstr "Format file tidak valid."
+
+#: xml/xmldocument.cpp:177
+#, kde-format
+msgid "Unable to parse data file: %1"
+msgstr "Tak bisa mengurai data file: %1"
+
+#: xml/xmldocument.cpp:302
+#, kde-format
+msgid "Unable to find collection %1"
+msgstr "Tak bisa menemukan koleksi %1"

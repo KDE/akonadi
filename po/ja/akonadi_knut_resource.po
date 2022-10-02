@@ -1,0 +1,82 @@
+# Fumiaki Okushi <okushi@kde.gr.jp>, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: akonadi_knut_resource\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2021-01-27 03:05+0100\n"
+"PO-Revision-Date: 2010-11-21 13:35-0800\n"
+"Last-Translator: Fumiaki Okushi <okushi@kde.gr.jp>\n"
+"Language-Team: Japanese <kde-jp@kde.org>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Accelerator-Marker: &\n"
+"X-Text-Markup: kde4\n"
+
+#: knutresource.cpp:60
+#, kde-format
+msgid "No data file selected."
+msgstr "データファイルが選択されていません。"
+
+#: knutresource.cpp:77
+#, kde-format
+msgid "File '%1' loaded successfully."
+msgstr "ファイル %1 を読み込みました。"
+
+#: knutresource.cpp:104
+#, kde-format
+msgid "Select Data File"
+msgstr "データファイルを選択"
+
+#: knutresource.cpp:106
+#, kde-format
+msgctxt "Filedialog filter for Akonadi data file"
+msgid "Akonadi Knut Data File"
+msgstr "Akonadi Knut データファイル"
+
+#: knutresource.cpp:148 knutresource.cpp:168 knutresource.cpp:321
+#, kde-format
+msgid "No item found for remoteid %1"
+msgstr "リモート ID %1 のアイテムがありません。"
+
+#: knutresource.cpp:186
+#, kde-format
+msgid "Parent collection not found in DOM tree."
+msgstr "DOM ツリーに親コレクションがありません。"
+
+#: knutresource.cpp:194
+#, kde-format
+msgid "Unable to write collection."
+msgstr "コレクションを書くことができません。"
+
+#: knutresource.cpp:206
+#, kde-format
+msgid "Modified collection not found in DOM tree."
+msgstr "DOM ツリーに変更されたコレクションはありません。"
+
+#: knutresource.cpp:236
+#, kde-format
+msgid "Deleted collection not found in DOM tree."
+msgstr "DOM ツリーに削除されたコレクションはありません。"
+
+#: knutresource.cpp:250 knutresource.cpp:308 knutresource.cpp:315
+#, kde-format
+msgid "Parent collection '%1' not found in DOM tree."
+msgstr "親コレクション %1 が DOM ツリーにありません。"
+
+#: knutresource.cpp:258 knutresource.cpp:328
+#, kde-format
+msgid "Unable to write item."
+msgstr "アイテムを書くことができません。"
+
+#: knutresource.cpp:272
+#, kde-format
+msgid "Modified item not found in DOM tree."
+msgstr "DOM ツリーに変更されたアイテムはありません。"
+
+#: knutresource.cpp:287
+#, kde-format
+msgid "Deleted item not found in DOM tree."
+msgstr "DOM ツリーに削除されたアイテムはありません。"

@@ -1,0 +1,91 @@
+# translation of akonadi_knut_resource.po to Swedish
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Stefan Asserhäll <stefan.asserhall@bredband.net>, 2009, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: akonadi_knut_resource\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2021-01-27 03:05+0100\n"
+"PO-Revision-Date: 2010-07-01 20:58+0200\n"
+"Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
+"Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.0\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: knutresource.cpp:60
+#, kde-format
+msgid "No data file selected."
+msgstr "Ingen datafil vald."
+
+#: knutresource.cpp:77
+#, kde-format
+msgid "File '%1' loaded successfully."
+msgstr "Filen '%1' laddades med lyckat resultat."
+
+#: knutresource.cpp:104
+#, kde-format
+msgid "Select Data File"
+msgstr "Välj datafil"
+
+#: knutresource.cpp:106
+#, kde-format
+msgctxt "Filedialog filter for Akonadi data file"
+msgid "Akonadi Knut Data File"
+msgstr "Akonadi Knut-datafil"
+
+#: knutresource.cpp:148 knutresource.cpp:168 knutresource.cpp:321
+#, kde-format
+msgid "No item found for remoteid %1"
+msgstr "Inget objekt hittades för fjärridentifieraren %1"
+
+#: knutresource.cpp:186
+#, kde-format
+msgid "Parent collection not found in DOM tree."
+msgstr "Överliggande samling hittades inte i DOM-träd."
+
+#: knutresource.cpp:194
+#, kde-format
+msgid "Unable to write collection."
+msgstr "Kunde inte skriva samling."
+
+#: knutresource.cpp:206
+#, kde-format
+msgid "Modified collection not found in DOM tree."
+msgstr "Ändrad samling hittades inte i DOM-träd."
+
+#: knutresource.cpp:236
+#, kde-format
+msgid "Deleted collection not found in DOM tree."
+msgstr "Borttagen samling hittades inte i DOM-träd."
+
+#: knutresource.cpp:250 knutresource.cpp:308 knutresource.cpp:315
+#, kde-format
+msgid "Parent collection '%1' not found in DOM tree."
+msgstr "Överliggande samling '%1' hittades inte i DOM-träd."
+
+#: knutresource.cpp:258 knutresource.cpp:328
+#, kde-format
+msgid "Unable to write item."
+msgstr "Kunde inte skriva objekt."
+
+#: knutresource.cpp:272
+#, kde-format
+msgid "Modified item not found in DOM tree."
+msgstr "Ändrat objekt hittades inte i DOM-träd."
+
+#: knutresource.cpp:287
+#, kde-format
+msgid "Deleted item not found in DOM tree."
+msgstr "Borttaget objekt hittades inte i DOM-träd."
+
+#~ msgid "Path to the Knut data file."
+#~ msgstr "Sökväg till Knut-datafilen."
+
+#~ msgid "Do not change the actual backend data."
+#~ msgstr "Ändra inte gränssnittets verkliga data."

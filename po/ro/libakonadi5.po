@@ -1,0 +1,2848 @@
+# translation of libakonadi to Romanian
+# Copyright (C) 2008 This_file_is_part_of_KDE
+# This file is distributed under the same license as the libakonadi package.
+# Laurenţiu Buzdugan <lbuz@rolix.org>, 2008".
+# Sergiu Bivol <sergiu@cip.md>, 2008, 2009, 2011, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libakonadi\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-09 00:46+0000\n"
+"PO-Revision-Date: 2013-01-13 00:43+0200\n"
+"Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
+"Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Sergiu Bivol"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "sergiu@cip.md"
+
+#: agentbase/accountsintegration.cpp:86
+#, kde-format
+msgid "There is currently no account configured."
+msgstr ""
+
+#: agentbase/accountsintegration.cpp:103
+#, kde-format
+msgid "Accounts integration is not supported"
+msgstr ""
+
+#: agentbase/agentbase.cpp:365 agentbase/preprocessorbase_p.cpp:26
+#, kde-format
+msgid "Unable to register object at dbus: %1"
+msgstr "Ofiectul nu poate fi înregistrat la dbus: %1"
+
+#: agentbase/agentbase.cpp:454
+#, kde-format
+msgctxt "Name and type of Akonadi resource"
+msgid "%1 of type %2"
+msgstr "%1 de tip %2"
+
+#: agentbase/agentbase.cpp:904
+#, kde-format
+msgid "Agent identifier"
+msgstr "Identificator agent"
+
+#: agentbase/agentbase.cpp:910
+#, kde-format
+msgid "Akonadi Agent"
+msgstr "Agent Akonadi"
+
+#: agentbase/agentbase_p.h:49 agentbase/resourcescheduler.cpp:281
+#, kde-format
+msgctxt "@info:status Application ready for work"
+msgid "Ready"
+msgstr "Pregătit"
+
+#: agentbase/agentbase_p.h:51
+#, kde-format
+msgctxt "@info:status"
+msgid "Offline"
+msgstr "Deconectat"
+
+#: agentbase/agentbase_p.h:56
+#, kde-format
+msgctxt "@info:status"
+msgid "Syncing..."
+msgstr "Se sincronizează..."
+
+#: agentbase/agentbase_p.h:61
+#, kde-format
+msgctxt "@info:status"
+msgid "Error."
+msgstr "Eroare."
+
+#: agentbase/agentbase_p.h:66
+#, kde-format
+msgctxt "@info:status"
+msgid "Not configured"
+msgstr ""
+
+#: agentbase/resourcebase.cpp:517
+#, fuzzy, kde-format
+#| msgctxt "@label commandline option"
+#| msgid "Resource identifier"
+msgctxt "@label command line option"
+msgid "Resource identifier"
+msgstr "Identificator de resursă"
+
+#: agentbase/resourcebase.cpp:523
+#, fuzzy, kde-format
+#| msgctxt "@title application name"
+#| msgid "Akonadi Resource"
+msgid "Akonadi Resource"
+msgstr "Resursă Akonadi"
+
+#: agentbase/resourcebase.cpp:571
+#, kde-format
+msgctxt "@info"
+msgid "Invalid item retrieved"
+msgstr "S-a preluat un element nevalid"
+
+#: agentbase/resourcebase.cpp:594
+#, kde-format
+msgctxt "@info"
+msgid "Error while creating item: %1"
+msgstr "Eroare la crearea elementului: %1"
+
+#: agentbase/resourcebase.cpp:618
+#, kde-format
+msgctxt "@info"
+msgid "Error while updating collection: %1"
+msgstr "Eroare la actualizarea colecției: %1"
+
+#: agentbase/resourcebase.cpp:705
+#, kde-format
+msgctxt "@info"
+msgid "Updating local collection failed: %1."
+msgstr "Actualizarea colecției locale a eșuat: %1."
+
+#: agentbase/resourcebase.cpp:710
+#, fuzzy, kde-format
+#| msgctxt "@info"
+#| msgid "Updating local collection failed: %1."
+msgctxt "@info"
+msgid "Updating local items failed: %1."
+msgstr "Actualizarea colecției locale a eșuat: %1."
+
+#: agentbase/resourcebase.cpp:729
+#, kde-format
+msgctxt "@info"
+msgid "Cannot fetch item in offline mode."
+msgstr "Elementul nu poate fi obținut în regim deconectat."
+
+#: agentbase/resourcebase.cpp:918
+#, kde-format
+msgctxt "@info:status"
+msgid "Syncing folder '%1'"
+msgstr "Se sincronizează dosarul „%1”"
+
+#: agentbase/resourcebase.cpp:938 agentbase/resourcebase.cpp:945
+#, fuzzy, kde-format
+#| msgid "Failed to fetch the resource collection."
+msgid "Failed to retrieve collection for sync."
+msgstr "Preluarea colecției de resurse a eșuat."
+
+#: agentbase/resourcebase.cpp:985
+#, fuzzy, kde-format
+#| msgid "Failed to fetch the resource collection."
+msgid "Failed to retrieve collection for attribute sync."
+msgstr "Preluarea colecției de resurse a eșuat."
+
+#: agentbase/resourcebase.cpp:1039
+#, kde-format
+msgid "The requested item no longer exists"
+msgstr "Elementul cerut nu mai există"
+
+#: agentbase/resourcescheduler.cpp:500 agentbase/resourcescheduler.cpp:506
+#, kde-format
+msgctxt "@info"
+msgid "Job canceled."
+msgstr "Lucrare anulată."
+
+#: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
+#, kde-format
+msgid "No such collection."
+msgstr "Nicio colecție de acest fel."
+
+#: core/collectionsync.cpp:508 core/collectionsync.cpp:653
+#, kde-format
+msgid "Found unresolved orphan collections"
+msgstr "Au fost găsite colecții orfane nerezolvate"
+
+#: core/conflicthandler.cpp:53
+#, kde-format
+msgid "Did not find other item for conflict handling"
+msgstr "Nu s-a găsit celălalt element pentru manipularea conflictului"
+
+#: core/jobs/agentinstancecreatejob.cpp:71
+#, kde-format
+msgid "Unable to access D-Bus interface of created agent."
+msgstr "Nu se poate accesa interfața D-Bus a agentului creat."
+
+#: core/jobs/agentinstancecreatejob.cpp:93
+#, kde-format
+msgid "Agent instance creation timed out."
+msgstr "Crearea instanței de agent a expirat."
+
+#: core/jobs/agentinstancecreatejob.cpp:151
+#, kde-format
+msgid "Unable to obtain agent type '%1'."
+msgstr "Nu se poate obține tipul de agent „%1”."
+
+#: core/jobs/agentinstancecreatejob.cpp:159
+#, kde-format
+msgid "Unable to create agent instance."
+msgstr "Nu se poate crea instanța de agent."
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:73
+#, kde-format
+msgid "Invalid collection instance."
+msgstr "Instanță de colecție nevalidă."
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:80
+#: core/jobs/resourcesynchronizationjob.cpp:88
+#, kde-format
+msgid "Invalid resource instance."
+msgstr "Instanță de resursă nevalidă."
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:102
+#: core/jobs/resourcesynchronizationjob.cpp:113
+#, kde-format
+msgid "Unable to obtain D-Bus interface for resource '%1'"
+msgstr "Nu se poate obține interfața D-Bus pentru resursa „%1”"
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:125
+#, kde-format
+msgid "Collection attributes synchronization timed out."
+msgstr "Sincronizarea atributelor colecției a expirat."
+
+#: core/jobs/collectioncopyjob.cpp:55
+#, fuzzy, kde-format
+#| msgid "Invalid collection"
+msgid "Invalid collection to copy"
+msgstr "Colecție nevalidă"
+
+#: core/jobs/collectioncopyjob.cpp:61
+#, fuzzy, kde-format
+#| msgid "Invalid collection"
+msgid "Invalid destination collection"
+msgstr "Colecție nevalidă"
+
+#: core/jobs/collectioncreatejob.cpp:50
+#, kde-format
+msgid "Invalid parent"
+msgstr "Părinte nevalid"
+
+#: core/jobs/collectioncreatejob.cpp:98
+#, fuzzy, kde-format
+#| msgid "Failed to fetch the resource collection."
+msgid "Failed to parse Collection from response"
+msgstr "Preluarea colecției de resurse a eșuat."
+
+#: core/jobs/collectiondeletejob.cpp:52
+#, kde-format
+msgid "Invalid collection"
+msgstr "Colecție nevalidă"
+
+#: core/jobs/collectionfetchjob.cpp:212
+#, kde-format
+msgid "Invalid collection given."
+msgstr "Colecție nevalidă furnizată."
+
+#: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:90
+#, kde-format
+msgid "No objects specified for moving"
+msgstr "Nu au fost specificate obiecte pentru mutare"
+
+#: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
+#: core/jobs/linkjobimpl_p.h:38
+#, kde-format
+msgid "No valid destination specified"
+msgstr "Nu au fost specificate destinații valide"
+
+#: core/jobs/invalidatecachejob.cpp:58
+#, kde-format
+msgid "Invalid collection."
+msgstr "Colecție nevalidă."
+
+#: core/jobs/itemcreatejob.cpp:105
+#, fuzzy, kde-format
+#| msgid "Invalid collection"
+msgid "Invalid parent collection"
+msgstr "Colecție nevalidă"
+
+#: core/jobs/job.cpp:335
+#, kde-format
+msgid "Cannot connect to the Akonadi service."
+msgstr "Nu se poate conecta la serviciul Akonadi."
+
+#: core/jobs/job.cpp:338
+#, kde-format
+msgid ""
+"The protocol version of the Akonadi server is incompatible. Make sure you "
+"have a compatible version installed."
+msgstr ""
+"Versiunea de protocol a serverului Akonadi este incompatibilă. Asigurați-vă "
+"că aveți o versiune compatibilă instalată."
+
+#: core/jobs/job.cpp:341
+#, kde-format
+msgid "User canceled operation."
+msgstr "Utilizatorul a anulat operația."
+
+#: core/jobs/job.cpp:346
+#, kde-format
+msgid "Unknown error."
+msgstr "Eroare necunoscută."
+
+#: core/jobs/job.cpp:385
+#, kde-format
+msgid "Unexpected response"
+msgstr ""
+
+#: core/jobs/relationcreatejob.cpp:42 core/jobs/relationdeletejob.cpp:42
+#, fuzzy, kde-format
+#| msgid "Unable to create agent instance."
+msgid "Failed to create relation."
+msgstr "Nu se poate crea instanța de agent."
+
+#: core/jobs/resourcesynchronizationjob.cpp:139
+#, kde-format
+msgid "Resource synchronization timed out."
+msgstr "Sincronizarea resursei a expirat."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:146
+#, kde-format
+msgid "Could not fetch root collection of resource %1."
+msgstr "Nu s-a putut prelua colecția-rădăcină a resursei %1."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:190
+#, kde-format
+msgid "No resource ID given."
+msgstr "Nu a fost furnizat un identificator de resursă."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:327
+#, kde-format
+msgid "Invalid resource identifier '%1'"
+msgstr "Identificator de resursă nevalid „%1”"
+
+#: core/jobs/specialcollectionshelperjobs.cpp:343
+#: core/jobs/specialcollectionshelperjobs.cpp:351
+#, kde-format
+msgid "Failed to configure default resource via D-Bus."
+msgstr "Configurarea resursei implicite prin D-Bus a eșuat."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:416
+#, kde-format
+msgid "Failed to fetch the resource collection."
+msgstr "Preluarea colecției de resurse a eșuat."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:600
+#, kde-format
+msgid "Timeout trying to get lock."
+msgstr "Obținerea blocajului a expirat."
+
+#: core/jobs/tagcreatejob.cpp:49
+#, fuzzy, kde-format
+#| msgid "Unable to create agent instance."
+msgid "Failed to create tag."
+msgstr "Nu se poate crea instanța de agent."
+
+#: core/jobs/trashjob.cpp:163
+#, kde-format
+msgid "Move to trash collection failed, aborting trash operation"
+msgstr ""
+"Mutarea în colecția gunoiului a eșuat, se abandonează operația de mutare la "
+"gunoi"
+
+#: core/jobs/trashjob.cpp:226 core/jobs/trashrestorejob.cpp:155
+#, kde-format
+msgid "Invalid items passed"
+msgstr "Au fost transmise argumente nevalide"
+
+#: core/jobs/trashjob.cpp:270 core/jobs/trashrestorejob.cpp:205
+#, kde-format
+msgid "Invalid collection passed"
+msgstr "A fost transmisă o colecție nevalidă"
+
+#: core/jobs/trashjob.cpp:387 core/jobs/trashrestorejob.cpp:355
+#, kde-format
+msgid "No valid collection or empty itemlist"
+msgstr "Nicio colecție validă sau listă de elemente goală"
+
+#: core/jobs/trashrestorejob.cpp:90
+#, kde-format
+msgid "Could not find restore collection and restore resource is not available"
+msgstr ""
+"Colecția de restabilire nu a putut fi găsită și resursa de restabilire nu "
+"este disponibilă"
+
+#: core/models/agentinstancemodel.cpp:183
+#, kde-format
+msgctxt "@title:column, name of a thing"
+msgid "Name"
+msgstr "Denumire"
+
+#: core/models/entitytreemodel.cpp:195
+#, fuzzy, kde-format
+#| msgid "Loading..."
+msgctxt "@info:status"
+msgid "Loading..."
+msgstr "Se încarcă..."
+
+#: core/models/entitytreemodel.cpp:487
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid "Error."
+msgctxt "@window:title"
+msgid "Error"
+msgstr "Eroare."
+
+#: core/models/entitytreemodel.cpp:488
+#, kde-format
+msgid ""
+"The target collection '%1' contains already\n"
+"a collection with name '%2'."
+msgstr ""
+"Colecția-țintă „%1” conține deja\n"
+"o colecție cu denumirea „%2”."
+
+#: core/models/entitytreemodel.cpp:657
+#, kde-format
+msgctxt "@title:column Name of a thing"
+msgid "Name"
+msgstr "Denumire"
+
+#: core/models/entitytreemodel_p.cpp:1332
+#, fuzzy, kde-format
+#| msgid "Could not copy item:"
+msgctxt "@info"
+msgid "Could not copy item: <message>%1</message>"
+msgstr "Elementul nu poate fi copiat:"
+
+#: core/models/entitytreemodel_p.cpp:1334
+#, fuzzy, kde-format
+#| msgid "Could not copy collection:"
+msgctxt "@info"
+msgid "Could not copy collection: <message>%1</message>"
+msgstr "Colecția nu poate fi copiată:"
+
+#: core/models/entitytreemodel_p.cpp:1336
+#, fuzzy, kde-format
+#| msgid "Could not move item:"
+msgctxt "@info"
+msgid "Could not move item: <message>%1</message>"
+msgstr "Elementul nu poate fi mutat:"
+
+#: core/models/entitytreemodel_p.cpp:1338
+#, fuzzy, kde-format
+#| msgid "Could not move collection:"
+msgctxt "@info"
+msgid "Could not move collection: <message>%1</message>"
+msgstr "Colecția nu poate fi mutată:"
+
+#: core/models/entitytreemodel_p.cpp:1340
+#, fuzzy, kde-format
+#| msgid "Could not link entity:"
+msgctxt "@info"
+msgid "Could not link entity: <message>%1</message>"
+msgstr "Entitatea nu poate fi legată:"
+
+#: core/models/entitytreemodel_p.cpp:1342
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid "Error."
+msgctxt "@title:window"
+msgid "Error"
+msgstr "Eroare."
+
+#: core/models/favoritecollectionsmodel.cpp:405
+#, kde-format
+msgid "Favorite Folders"
+msgstr "Dosare favorite"
+
+#: core/models/statisticsproxymodel.cpp:86
+#, kde-format
+msgid "Total Messages"
+msgstr "Total mesaje"
+
+#: core/models/statisticsproxymodel.cpp:88
+#, kde-format
+msgid "Unread Messages"
+msgstr "Mesaje necitite"
+
+#: core/models/statisticsproxymodel.cpp:98
+#, kde-format
+msgid "Quota"
+msgstr "Cotă"
+
+#: core/models/statisticsproxymodel.cpp:104
+#, kde-format
+msgid "Storage Size"
+msgstr "Dimensiune stocare"
+
+#: core/models/statisticsproxymodel.cpp:110
+#, kde-format
+msgid "Subfolder Storage Size"
+msgstr "Dimensiune stocare subdosar"
+
+#: core/models/statisticsproxymodel.cpp:224
+#, kde-format
+msgctxt "number of unread entities in the collection"
+msgid "Unread"
+msgstr "Necitite"
+
+#: core/models/statisticsproxymodel.cpp:225
+#, kde-format
+msgctxt "number of entities in the collection"
+msgid "Total"
+msgstr "Total"
+
+#: core/models/statisticsproxymodel.cpp:226
+#, kde-format
+msgctxt "collection size"
+msgid "Size"
+msgstr "Dimensiune"
+
+#: core/models/tagmodel.cpp:64
+#, kde-format
+msgid "Tag"
+msgstr ""
+
+#: core/partfetcher.cpp:49
+#, kde-format
+msgid "Unable to fetch item for index"
+msgstr "Nu se poate obține un element pentru index"
+
+#: core/partfetcher.cpp:64
+#, kde-format
+msgid "Index is no longer available"
+msgstr "Indexul nu mai este disponibil"
+
+#: core/partfetcher.cpp:114
+#, kde-format
+msgid "Payload part '%1' is not available for this index"
+msgstr "Partea „%1” a sarcinii nu e disponibilă pentru acest index"
+
+#: core/partfetcher.cpp:123
+#, kde-format
+msgid "No session available for this index"
+msgstr "Nu este nicio sesiune disponibilă pentru acest index"
+
+#: core/partfetcher.cpp:132
+#, kde-format
+msgid "No item available for this index"
+msgstr "Nu este niciun element disponibil pentru acest index"
+
+#: core/pluginloader.cpp:145
+#, kde-format
+msgid "Unnamed plugin"
+msgstr "Extensie fără denumire"
+
+#: core/pluginloader.cpp:151
+#, kde-format
+msgid "No description available"
+msgstr "Nicio descriere disponibilă"
+
+#: core/servermanager.cpp:271
+#, kde-format
+msgid ""
+"The Akonadi server protocol version differs from the protocol version used "
+"by this application.\n"
+"If you recently updated your system please log out and back in to make sure "
+"all applications use the correct protocol version."
+msgstr ""
+
+#: core/servermanager.cpp:288
+#, kde-format
+msgid ""
+"There are no Akonadi Agents available. Please verify your KDE PIM "
+"installation."
+msgstr ""
+
+#: core/session.cpp:186
+#, kde-format
+msgid ""
+"Protocol version mismatch. Server version is older (%1) than ours (%2). If "
+"you updated your system recently please restart the Akonadi server."
+msgstr ""
+
+#: core/session.cpp:195
+#, kde-format
+msgid ""
+"Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
+"you updated your system recently please restart all KDE PIM applications."
+msgstr ""
+
+#: selftest/main.cpp:19
+#, fuzzy, kde-format
+#| msgid "Akonadi Server Self-Test"
+msgid "Akonadi Self Test"
+msgstr "Testare a serverului Akonadi"
+
+#: selftest/main.cpp:21
+#, fuzzy, kde-format
+#| msgid "Cannot connect to the Akonadi service."
+msgid "Checks and reports state of Akonadi server"
+msgstr "Nu se poate conecta la serviciul Akonadi."
+
+#: selftest/main.cpp:23
+#, kde-format
+msgid "(c) 2008 Volker Krause <vkrause@kde.org>"
+msgstr ""
+
+#: widgets/agentactionmanager.cpp:35
+msgid "&New Agent Instance..."
+msgstr "Instanță de agent &nouă..."
+
+#: widgets/agentactionmanager.cpp:36
+msgid "&Delete Agent Instance"
+msgstr "Ș&terge instanța agentului"
+
+#: widgets/agentactionmanager.cpp:37
+msgid "&Configure Agent Instance"
+msgstr "&Configurează instanța agentului"
+
+#: widgets/agentactionmanager.cpp:53
+#, kde-format
+msgctxt "@title:window"
+msgid "New Agent Instance"
+msgstr "Instanță de agent nouă"
+
+#: widgets/agentactionmanager.cpp:55
+#, kde-format
+msgid "Could not create agent instance: %1"
+msgstr "Instanța agentului nu poate fi creată: %1"
+
+#: widgets/agentactionmanager.cpp:57
+#, kde-format
+msgid "Agent instance creation failed"
+msgstr "Crearea instanței de agent a eșuat"
+
+#: widgets/agentactionmanager.cpp:59
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete Agent Instance?"
+msgstr "Ștergeți instanța agentului?"
+
+#: widgets/agentactionmanager.cpp:63
+#, kde-format
+msgid "Do you really want to delete the selected agent instance?"
+msgstr "Sigur doriți să ștergeți instanța agentului aleasă?"
+
+#: widgets/agentconfigurationdialog.cpp:56
+#, kde-format
+msgctxt "%1 = agent name"
+msgid "%1 Configuration"
+msgstr ""
+
+#: widgets/agentconfigurationdialog.cpp:89
+#, kde-format
+msgid "%1 Handbook"
+msgstr ""
+
+#: widgets/agentconfigurationdialog.cpp:90
+#, kde-format
+msgid "About %1"
+msgstr ""
+
+#: widgets/agentconfigurationwidget.cpp:96
+#, kde-format
+msgid "The configuration dialog has been opened in another window"
+msgstr ""
+
+#: widgets/agentconfigurationwidget.cpp:103
+#, kde-format
+msgid "Configuration for %1 is already opened elsewhere."
+msgstr ""
+
+#: widgets/agentconfigurationwidget.cpp:105
+#, fuzzy, kde-format
+#| msgid "Unable to create agent instance."
+msgid "Failed to register %1 configuration dialog."
+msgstr "Nu se poate crea instanța de agent."
+
+#: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
+#, kde-format
+msgid "minute"
+msgid_plural "minutes"
+msgstr[0] "minut"
+msgstr[1] "minute"
+msgstr[2] "de minute"
+
+#: widgets/cachepolicypage.cpp:69
+#, kde-format
+msgid "Retrieval"
+msgstr "Preluare"
+
+#. i18n: ectx: property (text), widget (QCheckBox, inherit)
+#: widgets/cachepolicypage.ui:20
+#, kde-format
+msgid "Use options from parent folder or account"
+msgstr "Folosește opțiunile de la dosarul sau contul părinte"
+
+#. i18n: ectx: property (text), widget (QCheckBox, syncOnDemand)
+#: widgets/cachepolicypage.ui:33
+#, kde-format
+msgid "Synchronize when selecting this folder"
+msgstr "Sincronizează la alegerea acestui dosar"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: widgets/cachepolicypage.ui:40
+#, fuzzy, kde-format
+#| msgid "Synchronize Folder"
+#| msgid_plural "Synchronize %1 Folders"
+msgid "Synchronize after:"
+msgstr "Sincronizează dosarul"
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, checkInterval)
+#: widgets/cachepolicypage.ui:47
+#, kde-format
+msgctxt "never check the cache"
+msgid "Never"
+msgstr "Niciodată"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, checkInterval)
+#. i18n: ectx: property (suffix), widget (QSpinBox, localCacheTimeout)
+#: widgets/cachepolicypage.ui:50 widgets/cachepolicypage.ui:133
+#, kde-format
+msgid "minutes"
+msgstr "minute"
+
+#. i18n: ectx: property (text), widget (QLabel, localPartsLabel)
+#: widgets/cachepolicypage.ui:66
+#, fuzzy, kde-format
+#| msgid "Locally Cached Parts"
+msgid "Locally cached parts:"
+msgstr "Componente depozitate local"
+
+#. i18n: ectx: property (title), widget (KEditListWidget, localParts)
+#: widgets/cachepolicypage.ui:87
+#, kde-format
+msgid "Locally Cached Parts"
+msgstr "Componente depozitate local"
+
+#. i18n: ectx: property (text), widget (QLabel, retrievalOptionsLabel)
+#: widgets/cachepolicypage.ui:94
+#, fuzzy, kde-format
+#| msgid "Retrieval Options"
+msgid "Retrieval Options:"
+msgstr "Opțiuni de preluare"
+
+#. i18n: ectx: property (text), widget (QRadioButton, retrieveFullMessages)
+#: widgets/cachepolicypage.ui:101
+#, fuzzy, kde-format
+#| msgid "Always retrieve full messages"
+msgid "Always retrieve full &messages"
+msgstr "Preia mesaje întregi întotdeauna"
+
+#. i18n: ectx: property (text), widget (QRadioButton, retrieveOnlyHeaders)
+#: widgets/cachepolicypage.ui:111
+#, fuzzy, kde-format
+#| msgid "Retrieve message bodies on demand"
+msgid "&Retrieve message bodies on demand"
+msgstr "Preia corpurile mesajelor la cerere"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/cachepolicypage.ui:118
+#, kde-format
+msgid "Keep message bodies locally for:"
+msgstr "Păstrează local corpurile mesajelor pentru:"
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, localCacheTimeout)
+#: widgets/cachepolicypage.ui:130
+#, kde-format
+msgctxt "no cache timeout"
+msgid "Forever"
+msgstr "Totdeauna"
+
+#: widgets/clearcachejob.cpp:54
+#, kde-format
+msgid ""
+"The collection '%1' contains %2 items without Remote ID. Those items were "
+"likely never uploaded to the destination server, so clearing this collection "
+"means that those <b>data will be lost</b>. Are you sure you want to proceed?"
+msgstr ""
+
+#: widgets/clearcachejob.cpp:83
+#, kde-format
+msgid "Collection cache cleared. You should restart Akonadi now."
+msgstr ""
+
+#: widgets/collectiondialog.cpp:56
+#, fuzzy, kde-format
+#| msgctxt ""
+#| "@info/plain Displayed grayed-out inside the textbox, verb to search"
+#| msgid "Search"
+msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
+msgid "Search"
+msgstr "Caută"
+
+#: widgets/collectiondialog.cpp:64
+#, kde-format
+msgid "Use folder by default"
+msgstr ""
+
+#: widgets/collectiondialog.cpp:224
+#, kde-format
+msgid "&New Subfolder..."
+msgstr "Subdosar &nou..."
+
+#: widgets/collectiondialog.cpp:226
+#, kde-format
+msgid "Create a new subfolder under the currently selected folder"
+msgstr "Creează un subdosar nou sub dosarul ales acum"
+
+#: widgets/collectiondialog.cpp:264 widgets/standardactionmanager.cpp:348
+#, kde-format
+msgctxt "@title:window"
+msgid "New Folder"
+msgstr "Dosar nou"
+
+#: widgets/collectiondialog.cpp:264
+#, kde-format
+msgctxt "@label:textbox, name of a thing"
+msgid "Name"
+msgstr "Denumire"
+
+#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:350
+#, kde-format
+msgid "Could not create folder: %1"
+msgstr "Dosarul nu poate fi creat: %1"
+
+#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
+#, kde-format
+msgid "Folder creation failed"
+msgstr "Crearea dosarului a eșuat"
+
+#: widgets/collectiongeneralpropertiespage.cpp:27
+#, kde-format
+msgctxt "@title:tab general properties page"
+msgid "General"
+msgstr "General"
+
+#: widgets/collectiongeneralpropertiespage.cpp:54
+#, kde-format
+msgctxt "@label"
+msgid "One object"
+msgid_plural "%1 objects"
+msgstr[0] "Un obiect"
+msgstr[1] "%1 obiecte"
+msgstr[2] "%1 de obiecte"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/collectiongeneralpropertiespage.ui:16
+#, kde-format
+msgid "&Name:"
+msgstr "De&numire:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, customIconCheckbox)
+#: widgets/collectiongeneralpropertiespage.ui:29
+#, kde-format
+msgid "&Use custom icon:"
+msgstr "Folosește &pictogramă personalizată:"
+
+#. i18n: ectx: property (icon), widget (KIconButton, customIcon)
+#: widgets/collectiongeneralpropertiespage.ui:39
+#, kde-format
+msgid "folder"
+msgstr "dosar"
+
+#. i18n: ectx: property (title), widget (QGroupBox, statsBox)
+#: widgets/collectiongeneralpropertiespage.ui:62
+#, kde-format
+msgid "Statistics"
+msgstr "Statistici"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: widgets/collectiongeneralpropertiespage.ui:68
+#, kde-format
+msgctxt "object names"
+msgid "Content:"
+msgstr "Conținut:"
+
+#. i18n: ectx: property (text), widget (QLabel, countLabel)
+#: widgets/collectiongeneralpropertiespage.ui:75
+#, kde-format
+msgid "0 objects"
+msgstr "0 obiecte"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: widgets/collectiongeneralpropertiespage.ui:82
+#, kde-format
+msgid "Size:"
+msgstr "Dimensiune:"
+
+#. i18n: ectx: property (text), widget (QLabel, sizeLabel)
+#: widgets/collectiongeneralpropertiespage.ui:89
+#, kde-format
+msgid "0 Byte"
+msgstr "0 Octeți"
+
+#: widgets/collectionmaintenancepage.cpp:46
+#, kde-format
+msgid "Remember that indexing can take some minutes."
+msgstr ""
+
+#: widgets/collectionmaintenancepage.cpp:71
+#, kde-format
+msgid "Maintenance"
+msgstr ""
+
+#: widgets/collectionmaintenancepage.cpp:130
+#, fuzzy, kde-format
+#| msgctxt "@info"
+#| msgid "Error while creating item: %1"
+msgid "Error while retrieving indexed items count"
+msgstr "Eroare la crearea elementului: %1"
+
+#: widgets/collectionmaintenancepage.cpp:133
+#, kde-format
+msgid "Indexed %1 item in this folder"
+msgid_plural "Indexed %1 items in this folder"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: widgets/collectionmaintenancepage.cpp:137
+#, kde-format
+msgid "Calculating indexed items..."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/collectionmaintenancepage.ui:17
+#, fuzzy, kde-format
+#| msgid "Folder &Properties"
+msgid "Folder type:"
+msgstr "&Proprietăți dosar"
+
+#. i18n: ectx: property (text), widget (QLabel, folderTypeLbl)
+#. i18n: ectx: property (text), widget (QLabel, folderSizeLbl)
+#. i18n: ectx: property (text), widget (QLabel, itemsCountLbl)
+#. i18n: ectx: property (text), widget (QLabel, unreadItemsCountLbl)
+#: widgets/collectionmaintenancepage.ui:24
+#: widgets/collectionmaintenancepage.ui:31
+#: widgets/collectionmaintenancepage.ui:52
+#: widgets/collectionmaintenancepage.ui:66
+#, kde-format
+msgid "unknown"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: widgets/collectionmaintenancepage.ui:38
+#, kde-format
+msgid "File size:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: widgets/collectionmaintenancepage.ui:45
+#, fuzzy, kde-format
+#| msgid "Total Messages"
+msgid "Total items:"
+msgstr "Total mesaje"
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: widgets/collectionmaintenancepage.ui:59
+#, fuzzy, kde-format
+#| msgid "Unread Messages"
+msgid "Unread items:"
+msgstr "Mesaje necitite"
+
+#. i18n: ectx: property (text), widget (QLabel, indexingLabel)
+#: widgets/collectionmaintenancepage.ui:73
+#, kde-format
+msgid "Indexing:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, enableIndexingChkBox)
+#: widgets/collectionmaintenancepage.ui:80
+#, kde-format
+msgid "Enable fulltext indexing"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, indexedCountLbl)
+#: widgets/collectionmaintenancepage.ui:87
+#, fuzzy, kde-format
+#| msgctxt "@info"
+#| msgid "Error while creating item: %1"
+msgid "Retrieving indexed items count..."
+msgstr "Eroare la crearea elementului: %1"
+
+#. i18n: ectx: property (text), widget (QPushButton, reindexButton)
+#: widgets/collectionmaintenancepage.ui:94
+#, fuzzy, kde-format
+#| msgid "Recent Folder"
+msgid "Reindex folder"
+msgstr "Dosar recent"
+
+#: widgets/collectionrequester.cpp:113
+#, kde-format
+msgid "No Folder"
+msgstr "Niciun dosar"
+
+#: widgets/collectionrequester.cpp:122
+#, kde-format
+msgid "Open collection dialog"
+msgstr "Deschide dialogul colecției"
+
+#: widgets/collectionrequester.cpp:143
+#, fuzzy, kde-format
+#| msgid "Select a collection"
+msgctxt "@title:window"
+msgid "Select a collection"
+msgstr "Alege o colecție"
+
+#: widgets/conflictresolvedialog.cpp:129
+#, kde-format
+msgid "Modification Time"
+msgstr "Ora modificării"
+
+#: widgets/conflictresolvedialog.cpp:141
+#, kde-format
+msgid "Flags"
+msgstr "Fanioane"
+
+#: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
+#: widgets/conflictresolvedialog.cpp:174
+#, kde-format
+msgid "Attribute: %1"
+msgstr "Atribut: %1"
+
+#: widgets/conflictresolvedialog.cpp:186
+#, kde-format
+msgctxt "@title:window"
+msgid "Conflict Resolution"
+msgstr "Rezolvare conflict"
+
+#: widgets/conflictresolvedialog.cpp:192
+#, fuzzy, kde-format
+#| msgid "Take right one"
+msgctxt "@action:button"
+msgid "Take my version"
+msgstr "Alege cea din dreapta"
+
+#: widgets/conflictresolvedialog.cpp:198
+#, kde-format
+msgctxt "@action:button"
+msgid "Take their version"
+msgstr ""
+
+#: widgets/conflictresolvedialog.cpp:204
+#, fuzzy, kde-format
+#| msgid "Keep both"
+msgctxt "@action:button"
+msgid "Keep both versions"
+msgstr "Păstrează ambele"
+
+#: widgets/conflictresolvedialog.cpp:216
+#, kde-format
+msgid ""
+"<qt>Your changes conflict with those made by someone else meanwhile."
+"<br>Unless one version can just be thrown away, you will have to integrate "
+"those changes manually.<br>Click on <a href=\"opentexteditor\">\"Open text "
+"editor\"</a> to keep a copy of the texts, then select which version is most "
+"correct, then re-open it and modify it again to add what's missing."
+msgstr ""
+
+#: widgets/conflictresolvedialog.cpp:265
+#, kde-format
+msgid "Data"
+msgstr "Date"
+
+#: widgets/controlgui.cpp:223
+#, kde-format
+msgid "Starting Akonadi server..."
+msgstr "Se pornește serverul Akonadi..."
+
+#: widgets/controlgui.cpp:229
+#, kde-format
+msgid "Stopping Akonadi server..."
+msgstr "Se oprește serverul Akonadi..."
+
+#: widgets/dragdropmanager.cpp:212
+#, kde-format
+msgid "&Move Here"
+msgstr "&Mută aici"
+
+#: widgets/dragdropmanager.cpp:218
+#, kde-format
+msgid "&Copy Here"
+msgstr "&Copiază aici"
+
+#: widgets/dragdropmanager.cpp:224
+#, kde-format
+msgid "&Link Here"
+msgstr "&Leagă aici"
+
+#: widgets/dragdropmanager.cpp:228
+#, kde-format
+msgid "C&ancel"
+msgstr "R&enunță"
+
+#: widgets/erroroverlay.cpp:225
+#, fuzzy, kde-format
+#| msgid "Cannot connect to the Akonadi service."
+msgctxt "%1 is a reason why"
+msgid ""
+"Cannot connect to the Personal information management service.\n"
+"\n"
+"%1"
+msgstr "Nu se poate conecta la serviciul Akonadi."
+
+#: widgets/erroroverlay.cpp:229 widgets/erroroverlay.cpp:230
+#, kde-format
+msgid "Personal information management service is starting..."
+msgstr "Serviciul de gestiune a informațiilor personale se pornește..."
+
+#: widgets/erroroverlay.cpp:234 widgets/erroroverlay.cpp:235
+#, kde-format
+msgid "Personal information management service is shutting down..."
+msgstr "Serviciul de gestiune a informațiilor personale se oprește..."
+
+#: widgets/erroroverlay.cpp:239
+#, kde-format
+msgid ""
+"Personal information management service is performing a database upgrade."
+msgstr ""
+"Serviciul de gestiune a informațiilor personale efectuează o înnoire a bazei "
+"de date."
+
+#: widgets/erroroverlay.cpp:241
+#, fuzzy, kde-format
+#| msgid ""
+#| "Personal information management service is performing a database upgrade. "
+#| "This happens after a software update and is necessary to optimize "
+#| "performance. Depending on the amount of personal information, this might "
+#| "take a few minutes."
+msgid ""
+"Personal information management service is performing a database upgrade.\n"
+"This happens after a software update and is necessary to optimize "
+"performance.\n"
+"Depending on the amount of personal information, this might take a few "
+"minutes."
+msgstr ""
+"Serviciul de gestiune a informațiilor personale efectuează o înnoire a bazei "
+"de date. Acest lucru se întâmplă după o actualizare a aplicațiilor și e "
+"necesar pentru a optimiza performanța. În dependență de volumul de "
+"informație personală, aceasta poate dura câteva minute."
+
+#. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
+#. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
+#: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
+#, kde-format
+msgid ""
+"The Akonadi personal information management service is not running. This "
+"application cannot be used without it."
+msgstr ""
+"Serviciul de gestiune a informațiilor personale Akonadi nu rulează. Această "
+"aplicație nu poate fi folosită fără el."
+
+#. i18n: ectx: property (text), widget (QPushButton, startButton)
+#: widgets/erroroverlay.ui:116
+#, kde-format
+msgctxt "@action:button Start the Akonadi server"
+msgid "Start"
+msgstr "Pornește"
+
+#. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
+#: widgets/erroroverlay.ui:158
+#, kde-format
+msgid ""
+"The Akonadi personal information management framework is not operational.\n"
+"Click on \"Details...\" to obtain detailed information on this problem."
+msgstr ""
+"Platforma de gestiune a informațiilor personale Akonadi nu este "
+"operațională.\n"
+"Apăsați pe „Detalii...” pentru a obține informații detaliate despre problemă."
+
+#. i18n: ectx: property (text), widget (QLabel, brokenDescription)
+#: widgets/erroroverlay.ui:208
+#, kde-format
+msgid "The Akonadi personal information management service is not operational."
+msgstr ""
+"Serviciul de gestiune a informațiilor personale Akonadi nu este operațional."
+
+#. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
+#: widgets/erroroverlay.ui:259
+#, kde-format
+msgid "Details..."
+msgstr "Detalii..."
+
+#: widgets/manageaccountwidget.cpp:200
+#, kde-format
+msgid "Do you want to remove account '%1'?"
+msgstr ""
+
+#: widgets/manageaccountwidget.cpp:201
+#, kde-format
+msgid "Remove account?"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/manageaccountwidget.ui:19
+#, kde-format
+msgid "Incoming accounts (add at least one):"
+msgstr ""
+
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
+#: widgets/manageaccountwidget.ui:26
+#, kde-format
+msgid "Filter…"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
+#: widgets/manageaccountwidget.ui:40
+#, kde-format
+msgid "A&dd..."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
+#: widgets/manageaccountwidget.ui:50
+#, kde-format
+msgid "&Modify..."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
+#: widgets/manageaccountwidget.ui:60
+#, kde-format
+msgid "R&emove"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QPushButton, mRestartAccountButton)
+#: widgets/manageaccountwidget.ui:77
+#, fuzzy, kde-format
+#| msgctxt "@action:button Start the Akonadi server"
+#| msgid "Start"
+msgid "Restart"
+msgstr "Pornește"
+
+#: widgets/recentcollectionaction.cpp:43
+#, kde-format
+msgid "Recent Folder"
+msgstr "Dosar recent"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, RenameFavoriteDialog)
+#: widgets/renamefavoritedialog.ui:26
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Rename Favorite"
+msgid "Rename Favorite"
+msgstr "Redenumește favoritul"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/renamefavoritedialog.ui:35
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox name of the folder"
+#| msgid "Name:"
+msgid "Name:"
+msgstr "Denumire:"
+
+#: widgets/selftestdialog.cpp:60
+#, fuzzy, kde-format
+#| msgid "Akonadi Server Self-Test"
+msgctxt "@title:window"
+msgid "Akonadi Server Self-Test"
+msgstr "Testare a serverului Akonadi"
+
+#: widgets/selftestdialog.cpp:71
+#, kde-format
+msgid "Save Report..."
+msgstr "Salvare raport..."
+
+#: widgets/selftestdialog.cpp:73
+#, kde-format
+msgid "Copy Report to Clipboard"
+msgstr "Copiază raportul în clipboard"
+
+#: widgets/selftestdialog.cpp:189
+#, kde-format
+msgid ""
+"The QtSQL driver '%1' is required by your current Akonadi server "
+"configuration and was found on your system."
+msgstr ""
+"Driverul QtSQL „%1” este cerut de către configurația actuală a serverului "
+"Akonadi și a fost găsit în sistemul dumneavoastră."
+
+#: widgets/selftestdialog.cpp:191
+#, kde-format
+msgid ""
+"The QtSQL driver '%1' is required by your current Akonadi server "
+"configuration.\n"
+"The following drivers are installed: %2.\n"
+"Make sure the required driver is installed."
+msgstr ""
+"Driverul QtSQL „%1” este cerut de către configurația actuală a serverului "
+"Akonadi.\n"
+"Următoarele drivere sunt instalate: %2.\n"
+"Asigurați-vă că driverul necesar este instalat."
+
+#: widgets/selftestdialog.cpp:198
+#, kde-format
+msgid "Database driver found."
+msgstr "Driverul pentru baza de date a fost găsit."
+
+#: widgets/selftestdialog.cpp:200
+#, kde-format
+msgid "Database driver not found."
+msgstr "Driverul pentru baza de date nu a fost găsit."
+
+#: widgets/selftestdialog.cpp:208
+#, kde-format
+msgid "MySQL server executable not tested."
+msgstr "Executabilul serverului MySQl nu este testat."
+
+#: widgets/selftestdialog.cpp:208 widgets/selftestdialog.cpp:249
+#: widgets/selftestdialog.cpp:300
+#, kde-format
+msgid "The current configuration does not require an internal MySQL server."
+msgstr "Configurația actuală nu necesită un server MySQL intern."
+
+#: widgets/selftestdialog.cpp:216
+#, kde-format
+msgid ""
+"You have currently configured Akonadi to use the MySQL server '%1'.\n"
+"Make sure you have the MySQL server installed, set the correct path and "
+"ensure you have the necessary read and execution rights on the server "
+"executable. The server executable is typically called 'mysqld'; its location "
+"varies depending on the distribution."
+msgstr ""
+"Acum aveți serverul Akonadi configurat să folosească serverul MySQL „%1”.\n"
+"Asigurați-vă că aveți serverul MySQL instalat, stabiliți calea corectă și "
+"asigurați-vă că aveți drepturile necesare de citire și execuție asupra "
+"executabilului serverului. Executabilul serverului se numește de obicei "
+"„mysqld”; amplasarea acestuia variază în dependență de distribuție."
+
+#: widgets/selftestdialog.cpp:224
+#, kde-format
+msgid "MySQL server not found."
+msgstr "Serverul MySQL nu a fost găsit."
+
+#: widgets/selftestdialog.cpp:226
+#, kde-format
+msgid "MySQL server not readable."
+msgstr "Serverul MySQL nu este citibil."
+
+#: widgets/selftestdialog.cpp:228
+#, kde-format
+msgid "MySQL server not executable."
+msgstr "Serverul MySQL nu este executabil."
+
+#: widgets/selftestdialog.cpp:230
+#, kde-format
+msgid "MySQL found with unexpected name."
+msgstr "S-a găsit MySQL cu denumire neașteptată."
+
+#: widgets/selftestdialog.cpp:232
+#, kde-format
+msgid "MySQL server found."
+msgstr "Serverul MySQL a fost găsit."
+
+#: widgets/selftestdialog.cpp:238
+#, kde-format
+msgid "MySQL server found: %1"
+msgstr "Server MySQL găsit: %1"
+
+#: widgets/selftestdialog.cpp:239
+#, kde-format
+msgid "MySQL server is executable."
+msgstr "Serverul MySQL este executabil."
+
+#: widgets/selftestdialog.cpp:241
+#, kde-format
+msgid ""
+"Executing the MySQL server '%1' failed with the following error message: '%2'"
+msgstr ""
+"Executarea serverului MySQL „%1” a eșuat cu următorul mesaj de eroare: „%2”"
+
+#: widgets/selftestdialog.cpp:242
+#, kde-format
+msgid "Executing the MySQL server failed."
+msgstr "Executarea serverului MySQl a eșuat."
+
+#: widgets/selftestdialog.cpp:249
+#, kde-format
+msgid "MySQL server error log not tested."
+msgstr "Jurnalul de erori al serverului MySQL netestat."
+
+#: widgets/selftestdialog.cpp:257
+#, kde-format
+msgid "No current MySQL error log found."
+msgstr "Nu s-a găsit un jurnal de erori MySQL actual."
+
+#: widgets/selftestdialog.cpp:258
+#, kde-format
+msgid ""
+"The MySQL server did not report any errors during this startup. The log can "
+"be found in '%1'."
+msgstr ""
+"Serverul MySQL nu a raportat erori în timpul pornirii. Jurnalul poate fi "
+"găsit în „%1”."
+
+#: widgets/selftestdialog.cpp:264
+#, kde-format
+msgid "MySQL error log not readable."
+msgstr "Jurnalul de erori MySQl nu este citibil."
+
+#: widgets/selftestdialog.cpp:265
+#, kde-format
+msgid "A MySQL server error log file was found but is not readable: %1"
+msgstr ""
+"A fost găsit un fișier cu jurnalul de erori al serverului MySQl, dar nu este "
+"citibil: %1"
+
+#: widgets/selftestdialog.cpp:274
+#, kde-format
+msgid "MySQL server log contains errors."
+msgstr "Jurnalul serverului MySQL conține erori."
+
+#: widgets/selftestdialog.cpp:275
+#, kde-format
+msgid "The MySQL server error log file '%1' contains errors."
+msgstr "Fișierul cu jurnalul de erori al serverului MySQl „%1” conține erori."
+
+#: widgets/selftestdialog.cpp:285
+#, kde-format
+msgid "MySQL server log contains warnings."
+msgstr "Jurnalul serverului MySQL conține avertizări."
+
+#: widgets/selftestdialog.cpp:286
+#, kde-format
+msgid "The MySQL server log file '%1' contains warnings."
+msgstr "Fișierul cu jurnalul serverului MySQl „%1” conține avertizări."
+
+#: widgets/selftestdialog.cpp:289
+#, kde-format
+msgid "MySQL server log contains no errors."
+msgstr "Jurnalul serverului MySQL nu conține erori."
+
+#: widgets/selftestdialog.cpp:290
+#, kde-format
+msgid "The MySQL server log file '%1' does not contain any errors or warnings."
+msgstr ""
+"Fișierul cu jurnalul serverului MySQl „%1” nu conține erori sau avertizări."
+
+#: widgets/selftestdialog.cpp:300
+#, kde-format
+msgid "MySQL server configuration not tested."
+msgstr "Configuraţia serverului MySQL nu este testată."
+
+#: widgets/selftestdialog.cpp:309
+#, kde-format
+msgid "MySQL server default configuration found."
+msgstr "Configurația implicită a serverului MySQL a fost găsită."
+
+#: widgets/selftestdialog.cpp:310
+#, kde-format
+msgid ""
+"The default configuration for the MySQL server was found and is readable at "
+"%1."
+msgstr ""
+"Configurația implicită a serverului MySQL a fost găsită și este lizibilă la "
+"%1."
+
+#: widgets/selftestdialog.cpp:314
+#, kde-format
+msgid "MySQL server default configuration not found."
+msgstr "Configurația implicită a serverului MySQL nu a fost găsită."
+
+#: widgets/selftestdialog.cpp:315
+#, kde-format
+msgid ""
+"The default configuration for the MySQL server was not found or was not "
+"readable. Check your Akonadi installation is complete and you have all "
+"required access rights."
+msgstr ""
+"Configurația implicită a serverului MySQL nu a fost găsită sau nu poate fi "
+"citită. Verificați dacă instalarea Akonadi este completă și dacă aveți toate "
+"drepturile de acces necesare."
+
+#: widgets/selftestdialog.cpp:323
+#, kde-format
+msgid "MySQL server custom configuration not available."
+msgstr "Configurația personalizată a serverului MySQL nu este disponibilă."
+
+#: widgets/selftestdialog.cpp:324
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was not found but is optional."
+msgstr ""
+"Configurația personalizată a serverului MySQL nu a fost găsită dar e "
+"opțională."
+
+#: widgets/selftestdialog.cpp:327
+#, kde-format
+msgid "MySQL server custom configuration found."
+msgstr "Configurația personalizată a serverului MySQL a fost găsită."
+
+#: widgets/selftestdialog.cpp:328
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was found and is readable at %1"
+msgstr ""
+"Configurația personalizată a serverului MySQL a fost găsită și este lizibilă "
+"la %1"
+
+#: widgets/selftestdialog.cpp:332
+#, kde-format
+msgid "MySQL server custom configuration not readable."
+msgstr "Configurația personalizată a serverului MySQL nu poate fi citită."
+
+#: widgets/selftestdialog.cpp:333
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was found at %1 but is not "
+"readable. Check your access rights."
+msgstr ""
+"Configurația personalizată a serverului MySQL a fost găsită la %1 dar nu "
+"poate fi citită. Verificați-vă drepturile de acces."
+
+#: widgets/selftestdialog.cpp:342
+#, kde-format
+msgid "MySQL server configuration not found or not readable."
+msgstr "Configurația serverului MySQL nu a fost găsită sau nu poate fi citită."
+
+#: widgets/selftestdialog.cpp:343
+#, kde-format
+msgid "The MySQL server configuration was not found or is not readable."
+msgstr "Configurația serverului MySQL nu a fost găsită sau nu poate fi citită."
+
+#: widgets/selftestdialog.cpp:346
+#, kde-format
+msgid "MySQL server configuration is usable."
+msgstr "Configurația serverului MySQL este utilizabilă."
+
+#: widgets/selftestdialog.cpp:347
+#, kde-format
+msgid "The MySQL server configuration was found at %1 and is readable."
+msgstr ""
+"Configurația serverului MySQL a fost găsită la %1 și este poate fi citită."
+
+#: widgets/selftestdialog.cpp:376
+#, kde-format
+msgid "Cannot connect to PostgreSQL server."
+msgstr "Imposibil de conectat la serverul PostgreSQL."
+
+#: widgets/selftestdialog.cpp:378
+#, kde-format
+msgid "PostgreSQL server found."
+msgstr "Serverul PostgreSQL a fost găsit."
+
+#: widgets/selftestdialog.cpp:378
+#, kde-format
+msgid "The PostgreSQL server was found and connection is working."
+msgstr "Serverul PostgreSQL a fost găsit și conexiunea funcționează."
+
+#: widgets/selftestdialog.cpp:388
+#, kde-format
+msgid "akonadictl not found"
+msgstr "akonadictl nu a fost găsit"
+
+#: widgets/selftestdialog.cpp:389
+#, kde-format
+msgid ""
+"The program 'akonadictl' needs to be accessible in $PATH. Make sure you have "
+"the Akonadi server installed."
+msgstr ""
+"Programul „akonadictl” trebuie să fie accesibil în $PATH. Asigurați-vă că "
+"aveți serverul Akondai instalat."
+
+#: widgets/selftestdialog.cpp:396
+#, kde-format
+msgid "akonadictl found and usable"
+msgstr "akonadictl găsit și utilizabil"
+
+#: widgets/selftestdialog.cpp:397
+#, kde-format
+msgid ""
+"The program '%1' to control the Akonadi server was found and could be "
+"executed successfully.\n"
+"Result:\n"
+"%2"
+msgstr ""
+"Programul „%1” pentru controlul serverului Akonadi a fost găsit și a putut "
+"fi executat cu succes.\n"
+"Rezultat:\n"
+"%2"
+
+#: widgets/selftestdialog.cpp:403
+#, kde-format
+msgid "akonadictl found but not usable"
+msgstr "akonadictl găsit dar inutilizabil"
+
+#: widgets/selftestdialog.cpp:404
+#, kde-format
+msgid ""
+"The program '%1' to control the Akonadi server was found but could not be "
+"executed successfully.\n"
+"Result:\n"
+"%2\n"
+"Make sure the Akonadi server is installed correctly."
+msgstr ""
+"Programul „%1” pentru controlul serverului Akonadi a fost găsit dar nu a "
+"putut fi executat cu succes.\n"
+"Rezultat:\n"
+"%2\n"
+"Asigurați-vă că serverul Akonadi este instalat corect."
+
+#: widgets/selftestdialog.cpp:416
+#, kde-format
+msgid "Akonadi control process registered at D-Bus."
+msgstr "Procesul de control Akonadi este înregistrat la D-Bus."
+
+#: widgets/selftestdialog.cpp:417
+#, kde-format
+msgid ""
+"The Akonadi control process is registered at D-Bus which typically indicates "
+"it is operational."
+msgstr ""
+"Procesul de control Akonadi este înregistrat la D-Bus, ceea ce indică de "
+"obicei că acesta e operațional."
+
+#: widgets/selftestdialog.cpp:420
+#, kde-format
+msgid "Akonadi control process not registered at D-Bus."
+msgstr "Procesul de control Akonadi nu este înregistrat la D-Bus."
+
+#: widgets/selftestdialog.cpp:421
+#, kde-format
+msgid ""
+"The Akonadi control process is not registered at D-Bus which typically means "
+"it was not started or encountered a fatal error during startup."
+msgstr ""
+"Procesul de control Akonadi nu este înregistrat la D-Bus, ceea ce de obicei "
+"înseamnă că acesta nu a fost pornit sau a întâmpinat o eroare fatală la "
+"pornire."
+
+#: widgets/selftestdialog.cpp:427
+#, kde-format
+msgid "Akonadi server process registered at D-Bus."
+msgstr "Procesul serverului Akonadi este înregistrat la D-Bus."
+
+#: widgets/selftestdialog.cpp:428
+#, kde-format
+msgid ""
+"The Akonadi server process is registered at D-Bus which typically indicates "
+"it is operational."
+msgstr ""
+"Procesul serverului Akonadi este înregistrat la D-Bus, ceea ce indică de "
+"obicei că acesta e operațional."
+
+#: widgets/selftestdialog.cpp:431
+#, kde-format
+msgid "Akonadi server process not registered at D-Bus."
+msgstr "Procesul serverului Akonadi nu este înregistrat la D-Bus."
+
+#: widgets/selftestdialog.cpp:432
+#, kde-format
+msgid ""
+"The Akonadi server process is not registered at D-Bus which typically means "
+"it was not started or encountered a fatal error during startup."
+msgstr ""
+"Procesul serverului Akonadi nu este înregistrat la D-Bus, ceea ce de obicei "
+"înseamnă că acesta nu a fost pornit sau a întâmpinat o eroare fatală la "
+"pornire."
+
+#: widgets/selftestdialog.cpp:441
+#, kde-format
+msgid "Protocol version check not possible."
+msgstr "Verificarea versiunii protocolului nu este posibilă."
+
+#: widgets/selftestdialog.cpp:442
+#, kde-format
+msgid ""
+"Without a connection to the server it is not possible to check if the "
+"protocol version meets the requirements."
+msgstr ""
+"Fără o conexiune la server nu e posibil să se verifice dacă versiunea "
+"protocolului întrunește cerințele."
+
+#: widgets/selftestdialog.cpp:447
+#, kde-format
+msgid "Server protocol version is too old."
+msgstr "Versiunea de protocol a serverului este prea veche."
+
+#: widgets/selftestdialog.cpp:448 widgets/selftestdialog.cpp:455
+#, fuzzy, kde-format
+#| msgid ""
+#| "The server protocol version is %1, but at least version %2 is required. "
+#| "Install a newer version of the Akonadi server."
+msgid ""
+"The server protocol version is %1, but version %2 is required by the client. "
+"If you recently updated KDE PIM, please make sure to restart both Akonadi "
+"and KDE PIM applications."
+msgstr ""
+"Versiunea de protocol a serverului este %1, dar este necesară măcar "
+"versiunea %2. Instalați o versiune mai nouă a serverului Akonadi."
+
+#: widgets/selftestdialog.cpp:454
+#, fuzzy, kde-format
+#| msgid "Server protocol version is too old."
+msgid "Server protocol version is too new."
+msgstr "Versiunea de protocol a serverului este prea veche."
+
+#: widgets/selftestdialog.cpp:460
+#, fuzzy, kde-format
+#| msgid "Server protocol version is too old."
+msgid "Server protocol version matches."
+msgstr "Versiunea de protocol a serverului este prea veche."
+
+#: widgets/selftestdialog.cpp:460
+#, fuzzy, kde-format
+#| msgid "Server protocol version is too old."
+msgid "The current Protocol version is %1."
+msgstr "Versiunea de protocol a serverului este prea veche."
+
+#: widgets/selftestdialog.cpp:478
+#, kde-format
+msgid "Resource agents found."
+msgstr "Au fost găsiți agenți de resurse."
+
+#: widgets/selftestdialog.cpp:478
+#, kde-format
+msgid "At least one resource agent has been found."
+msgstr "A fost găsit cel puțin un agent de resurse."
+
+#: widgets/selftestdialog.cpp:481
+#, kde-format
+msgid "No resource agents found."
+msgstr "Nu au fost găsiți agenți de resurse."
+
+#: widgets/selftestdialog.cpp:482
+#, kde-format
+msgid ""
+"No resource agents have been found, Akonadi is not usable without at least "
+"one. This usually means that no resource agents are installed or that there "
+"is a setup problem. The following paths have been searched: '%1'. The "
+"XDG_DATA_DIRS environment variable is set to '%2'; make sure this includes "
+"all paths where Akonadi agents are installed."
+msgstr ""
+"Nu au fost găsiți agenți de resurse, Akonadi nu e utilizabil fără cel puțin "
+"unul. Aceasta înseamnă de obicei că nu-i instalat niciun agent de resurse "
+"sau că este o problemă e configurație. Următoarele căi au fost căutate: „%1” "
+"Variabila de mediu XDG_DATA_DIRS este stabilită la „%2”; asigurațivă că "
+"aceasta include toate căile în care sunt instalați agenți Akonadi."
+
+#: widgets/selftestdialog.cpp:499
+#, kde-format
+msgid "No current Akonadi server error log found."
+msgstr "Nu s-a găsit niciun jurnal de erori Akonadi actual."
+
+#: widgets/selftestdialog.cpp:499
+#, kde-format
+msgid ""
+"The Akonadi server did not report any errors during its current startup."
+msgstr ""
+"Serverul Akonadi nu a raportat nicio eroare în timpul pornirii sale actuale."
+
+#: widgets/selftestdialog.cpp:503
+#, kde-format
+msgid "Current Akonadi server error log found."
+msgstr "S-a găsit un jurnal de erori actual al serverului Akonadi."
+
+#: widgets/selftestdialog.cpp:504
+#, kde-format
+msgid ""
+"The Akonadi server reported errors during its current startup. The log can "
+"be found in %1."
+msgstr ""
+"Serverul Akonadi a raportat erori în timpul pornirii sale actuale. Jurnalul "
+"poate fi găsit în %1."
+
+#: widgets/selftestdialog.cpp:512
+#, kde-format
+msgid "No previous Akonadi server error log found."
+msgstr "Nu s-a găsit niciun jurnal de erori precedent al serverului Akonadi."
+
+#: widgets/selftestdialog.cpp:513
+#, kde-format
+msgid ""
+"The Akonadi server did not report any errors during its previous startup."
+msgstr ""
+"Serverul Akonadi nu a raportat nicio eroare în timpul pornirii sale "
+"precedente."
+
+#: widgets/selftestdialog.cpp:517
+#, kde-format
+msgid "Previous Akonadi server error log found."
+msgstr "S-a găsit un jurnal de erori precedent al serverului Akonadi."
+
+#: widgets/selftestdialog.cpp:518
+#, kde-format
+msgid ""
+"The Akonadi server reported errors during its previous startup. The log can "
+"be found in %1."
+msgstr ""
+"Serverul Akonadi a raportat erori în timpul pornirii sale precedente. "
+"Jurnalul poate fi găsit în %1."
+
+#: widgets/selftestdialog.cpp:529
+#, kde-format
+msgid "No current Akonadi control error log found."
+msgstr "Nu s-a găsit niciun jurnal de erori actual al controlului Akonadi."
+
+#: widgets/selftestdialog.cpp:530
+#, kde-format
+msgid ""
+"The Akonadi control process did not report any errors during its current "
+"startup."
+msgstr ""
+"Procesul de control Akonadi nu a raportat nicio eroare în timpul pornirii "
+"sale actuale."
+
+#: widgets/selftestdialog.cpp:534
+#, kde-format
+msgid "Current Akonadi control error log found."
+msgstr "S-a găsit un jurnal de erori actual al controlului Akonadi."
+
+#: widgets/selftestdialog.cpp:535
+#, kde-format
+msgid ""
+"The Akonadi control process reported errors during its current startup. The "
+"log can be found in %1."
+msgstr ""
+"Procesul de control Akonadi a raportat erori în timpul pornirii sale "
+"actuale. Jurnalul poate fi găsit în %1."
+
+#: widgets/selftestdialog.cpp:543
+#, kde-format
+msgid "No previous Akonadi control error log found."
+msgstr "Nu s-a găsit niciun jurnal de erori precedent al controlului Akonadi."
+
+#: widgets/selftestdialog.cpp:544
+#, kde-format
+msgid ""
+"The Akonadi control process did not report any errors during its previous "
+"startup."
+msgstr ""
+"Procesul de control Akonadi nu a raportat nicio eroare în timpul pornirii "
+"sale precedente."
+
+#: widgets/selftestdialog.cpp:548
+#, kde-format
+msgid "Previous Akonadi control error log found."
+msgstr "S-a găsit un jurnal de erori precedent al controlului Akonadi."
+
+#: widgets/selftestdialog.cpp:549
+#, kde-format
+msgid ""
+"The Akonadi control process reported errors during its previous startup. The "
+"log can be found in %1."
+msgstr ""
+"Procesul de control Akonadi a raportat erori în timpul pornirii sale "
+"precedente. Jurnalul poate fi găsit în %1."
+
+#: widgets/selftestdialog.cpp:559
+#, kde-format
+msgid "Akonadi was started as root"
+msgstr "Akonadi a fost pornit ca root"
+
+#: widgets/selftestdialog.cpp:560
+#, kde-format
+msgid ""
+"Running Internet-facing applications as root/administrator exposes you to "
+"many security risks. MySQL, used by this Akonadi installation, will not "
+"allow itself to run as root, to protect you from these risks."
+msgstr ""
+"Rularea aplicațiilor accesibile din Internet ca root/administrator vă expune "
+"la multe riscuri de securitate. MySQL, folosit de această instalare Akonadi, "
+"nu va permite să fie rulat ca root, pentru a vă proteja de aceste riscuri."
+
+#: widgets/selftestdialog.cpp:564
+#, kde-format
+msgid "Akonadi is not running as root"
+msgstr "Akonadi nu rulează ca root"
+
+#: widgets/selftestdialog.cpp:565
+#, kde-format
+msgid ""
+"Akonadi is not running as a root/administrator user, which is the "
+"recommended setup for a secure system."
+msgstr ""
+"Akonadi nu rulează ca root/administrator, configurație recomandată pentru un "
+"sistem sigur."
+
+#: widgets/selftestdialog.cpp:643
+#, kde-format
+msgid "Save Test Report"
+msgstr "Salvează raportul testului"
+
+#: widgets/selftestdialog.cpp:650
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid "Error."
+msgid "Error"
+msgstr "Eroare."
+
+#: widgets/selftestdialog.cpp:650
+#, kde-format
+msgid "Could not open file '%1'"
+msgstr "Fișierul „%1” nu poate fi deschis"
+
+#. i18n: ectx: property (text), widget (QLabel, introductionLabel)
+#: widgets/selftestdialog.ui:16
+#, kde-format
+msgid ""
+"An error occurred during the startup of the Akonadi server. The following "
+"self-tests are supposed to help with tracking down and solving this problem. "
+"When requesting support or reporting bugs, please always include this report."
+msgstr ""
+"A intervenit o eroare în timpul pornirii serverului Akonadi. Următoarele "
+"teste ar trebui să ajute la depistarea și rezolvarea acestei probleme. Când "
+"cereți asistență sau raportați erori, includeți tot timpul acest raport."
+
+#. i18n: ectx: property (title), widget (QGroupBox, detailsGroup)
+#: widgets/selftestdialog.ui:39
+#, kde-format
+msgid "Details"
+msgstr "Detalii"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/selftestdialog.ui:61
+#, fuzzy, kde-format
+#| msgid ""
+#| "<p>For more troubleshooting tips please refer to <a href=\"http://"
+#| "userbase.kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
+msgid ""
+"<p>For more troubleshooting tips please refer to <a href=\"https://userbase."
+"kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
+msgstr ""
+"<p>Pentru sfaturi de depanare suplimentare accesați <a href=\"http://"
+"userbase.kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
+
+#: widgets/standardactionmanager.cpp:78
+msgid "&New Folder..."
+msgstr "Dosar &nou..."
+
+#: widgets/standardactionmanager.cpp:78
+msgid "New"
+msgstr "Nou"
+
+#: widgets/standardactionmanager.cpp:80
+#, fuzzy
+#| msgid "&Delete Folder"
+#| msgid_plural "&Delete %1 Folders"
+msgid "&Delete Folder"
+msgstr "Ș&terge dosarul"
+
+#: widgets/standardactionmanager.cpp:80
+msgid "Delete"
+msgstr "Șterge"
+
+#: widgets/standardactionmanager.cpp:82
+#, fuzzy
+#| msgid "&Synchronize Folder"
+#| msgid_plural "&Synchronize %1 Folders"
+msgid "&Synchronize Folder"
+msgstr "&Sincronizează dosarul"
+
+#: widgets/standardactionmanager.cpp:83 widgets/standardactionmanager.cpp:157
+#: widgets/standardactionmanager.cpp:243
+msgid "Synchronize"
+msgstr "Sincronizează"
+
+#: widgets/standardactionmanager.cpp:90
+msgid "Folder &Properties"
+msgstr "&Proprietăți dosar"
+
+#: widgets/standardactionmanager.cpp:91 widgets/standardactionmanager.cpp:149
+msgid "Properties"
+msgstr "Proprietăți"
+
+#: widgets/standardactionmanager.cpp:98
+msgid "&Paste"
+msgstr "Li&pește"
+
+#: widgets/standardactionmanager.cpp:98
+msgid "Paste"
+msgstr "Lipește"
+
+#: widgets/standardactionmanager.cpp:101
+msgid "Manage Local &Subscriptions..."
+msgstr "Ge&stiune abonări locale..."
+
+#: widgets/standardactionmanager.cpp:102
+msgid "Manage Local Subscriptions"
+msgstr "Gestionează abonările locale"
+
+#: widgets/standardactionmanager.cpp:109
+msgid "Add to Favorite Folders"
+msgstr "Adaugă la dosare favorite"
+
+#: widgets/standardactionmanager.cpp:110
+msgid "Add to Favorite"
+msgstr "Adaugă la favorite"
+
+#: widgets/standardactionmanager.cpp:117
+msgid "Remove from Favorite Folders"
+msgstr "Elimină din dosare favorile"
+
+#: widgets/standardactionmanager.cpp:118
+msgid "Remove from Favorite"
+msgstr "Elimină din favorite"
+
+#: widgets/standardactionmanager.cpp:124
+msgid "Rename Favorite..."
+msgstr "Redenumire favorit..."
+
+#: widgets/standardactionmanager.cpp:124
+msgid "Rename"
+msgstr "Redenumește"
+
+#: widgets/standardactionmanager.cpp:126 widgets/standardactionmanager.cpp:164
+msgid "Copy Folder To..."
+msgstr "Copiere dosar la..."
+
+#: widgets/standardactionmanager.cpp:127 widgets/standardactionmanager.cpp:133
+#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:173
+msgid "Copy To"
+msgstr "Copiază la"
+
+#: widgets/standardactionmanager.cpp:133 widgets/standardactionmanager.cpp:173
+msgid "Copy Item To..."
+msgstr "Copiere element la..."
+
+#: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:174
+msgid "Move Item To..."
+msgstr "Mutare element la..."
+
+#: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:137
+#: widgets/standardactionmanager.cpp:167 widgets/standardactionmanager.cpp:174
+msgid "Move To"
+msgstr "Mută la"
+
+#: widgets/standardactionmanager.cpp:136 widgets/standardactionmanager.cpp:166
+msgid "Move Folder To..."
+msgstr "Mutare dosar la..."
+
+#: widgets/standardactionmanager.cpp:143
+#, fuzzy
+#| msgid "&Cut Item"
+#| msgid_plural "&Cut %1 Items"
+msgid "&Cut Item"
+msgstr "&Taie elementul"
+
+#: widgets/standardactionmanager.cpp:143 widgets/standardactionmanager.cpp:144
+msgid "Cut"
+msgstr "Taie"
+
+#: widgets/standardactionmanager.cpp:144
+#, fuzzy
+#| msgid "&Cut Folder"
+#| msgid_plural "&Cut %1 Folders"
+msgid "&Cut Folder"
+msgstr "&Taie dosarul"
+
+#: widgets/standardactionmanager.cpp:145
+msgid "Create Resource"
+msgstr "Creează resursă"
+
+#: widgets/standardactionmanager.cpp:146
+#, fuzzy
+#| msgid "Delete Resource"
+#| msgid_plural "Delete %1 Resources"
+msgid "Delete Resource"
+msgstr "Șterge resursa"
+
+#: widgets/standardactionmanager.cpp:148
+msgid "&Resource Properties"
+msgstr "Proprietăți &resursă"
+
+#: widgets/standardactionmanager.cpp:156
+#, fuzzy
+#| msgid "Synchronize Resource"
+#| msgid_plural "Synchronize %1 Resources"
+msgid "Synchronize Resource"
+msgstr "Sincronizează resursa"
+
+#: widgets/standardactionmanager.cpp:163
+msgid "Work Offline"
+msgstr "Lucrează deconectat"
+
+#: widgets/standardactionmanager.cpp:176
+msgid "&Synchronize Folder Recursively"
+msgstr "&Sincronizează dosarul recursiv"
+
+#: widgets/standardactionmanager.cpp:177
+msgid "Synchronize Recursively"
+msgstr "&Sincronizează recursiv"
+
+#: widgets/standardactionmanager.cpp:184
+msgid "&Move Folder To Trash"
+msgstr "&Mută dosarul la gunoi"
+
+#: widgets/standardactionmanager.cpp:185
+msgid "Move Folder To Trash"
+msgstr "Mută dosarul la gunoi"
+
+#: widgets/standardactionmanager.cpp:192
+msgid "&Move Item To Trash"
+msgstr "&Mută elementul la gunoi"
+
+#: widgets/standardactionmanager.cpp:193
+msgid "Move Item To Trash"
+msgstr "Mută elementul la gunoi"
+
+#: widgets/standardactionmanager.cpp:200 widgets/standardactionmanager.cpp:216
+msgid "&Restore Folder From Trash"
+msgstr "&Restabilește dosarul din gunoi"
+
+#: widgets/standardactionmanager.cpp:201 widgets/standardactionmanager.cpp:217
+msgid "Restore Folder From Trash"
+msgstr "Restabilește dosarul din gunoi"
+
+#: widgets/standardactionmanager.cpp:208 widgets/standardactionmanager.cpp:225
+#: widgets/standardactionmanager.cpp:232
+msgid "&Restore Item From Trash"
+msgstr "&Restabilește elementul din gunoi"
+
+#: widgets/standardactionmanager.cpp:209 widgets/standardactionmanager.cpp:226
+#: widgets/standardactionmanager.cpp:232
+msgid "Restore Item From Trash"
+msgstr "Restabilește elementul din gunoi"
+
+#: widgets/standardactionmanager.cpp:223
+msgid "&Restore Collection From Trash"
+msgstr "&Restabilește colecția din gunoi"
+
+#: widgets/standardactionmanager.cpp:223
+msgid "Restore Collection From Trash"
+msgstr "Restabilește colecția din gunoi"
+
+#: widgets/standardactionmanager.cpp:234
+msgid "&Synchronize Favorite Folders"
+msgstr "&Sincronizează dosarele favorite"
+
+#: widgets/standardactionmanager.cpp:235
+msgid "Synchronize Favorite Folders"
+msgstr "Sincronizează dosarele favorite"
+
+#: widgets/standardactionmanager.cpp:242
+#, fuzzy
+#| msgid "Synchronize Folder"
+#| msgid_plural "Synchronize %1 Folders"
+msgid "Synchronize Folder Tree"
+msgstr "Sincronizează dosarul"
+
+#: widgets/standardactionmanager.cpp:328
+#, kde-format
+msgid "&Copy Folder"
+msgid_plural "&Copy %1 Folders"
+msgstr[0] "&Copiază dosarul"
+msgstr[1] "&Copiază %1 dosare"
+msgstr[2] "&Copiază %1 de dosare"
+
+#: widgets/standardactionmanager.cpp:329
+#, kde-format
+msgid "&Copy Item"
+msgid_plural "&Copy %1 Items"
+msgstr[0] "&Copiază elementul"
+msgstr[1] "&Copiază %1 elemente"
+msgstr[2] "&Copiază %1 de elemente"
+
+#: widgets/standardactionmanager.cpp:330
+#, fuzzy, kde-format
+#| msgid "&Cut Item"
+#| msgid_plural "&Cut %1 Items"
+msgctxt "@action"
+msgid "&Cut Item"
+msgid_plural "&Cut %1 Items"
+msgstr[0] "&Taie elementul"
+msgstr[1] "&Taie %1 elemente"
+msgstr[2] "&Taie %1 de elemente"
+
+#: widgets/standardactionmanager.cpp:331
+#, fuzzy, kde-format
+#| msgid "&Cut Folder"
+#| msgid_plural "&Cut %1 Folders"
+msgctxt "@action"
+msgid "&Cut Folder"
+msgid_plural "&Cut %1 Folders"
+msgstr[0] "&Taie dosarul"
+msgstr[1] "&Taie %1 dosare"
+msgstr[2] "&Taie %1 de dosare"
+
+#: widgets/standardactionmanager.cpp:332
+#, kde-format
+msgid "&Delete Item"
+msgid_plural "&Delete %1 Items"
+msgstr[0] "Ș&terge elementul"
+msgstr[1] "Ș&terge %1 elemente"
+msgstr[2] "Ș&terge %1 de elemente"
+
+#: widgets/standardactionmanager.cpp:333
+#, fuzzy, kde-format
+#| msgid "&Delete Folder"
+#| msgid_plural "&Delete %1 Folders"
+msgctxt "@action"
+msgid "&Delete Folder"
+msgid_plural "&Delete %1 Folders"
+msgstr[0] "Ș&terge dosarul"
+msgstr[1] "Ș&terge %1 dosare"
+msgstr[2] "Ș&terge %1 de dosare"
+
+#: widgets/standardactionmanager.cpp:334
+#, fuzzy, kde-format
+#| msgid "&Synchronize Folder"
+#| msgid_plural "&Synchronize %1 Folders"
+msgctxt "@action"
+msgid "&Synchronize Folder"
+msgid_plural "&Synchronize %1 Folders"
+msgstr[0] "&Sincronizează dosarul"
+msgstr[1] "&Sincronizează %1 dosare"
+msgstr[2] "&Sincronizează %1 de dosare"
+
+#: widgets/standardactionmanager.cpp:335
+#, kde-format
+msgid "&Delete Resource"
+msgid_plural "&Delete %1 Resources"
+msgstr[0] "Ș&terge resursa"
+msgstr[1] "Ș&terge %1 resurse"
+msgstr[2] "Ș&terge %1 de resurse"
+
+#: widgets/standardactionmanager.cpp:336
+#, kde-format
+msgid "&Synchronize Resource"
+msgid_plural "&Synchronize %1 Resources"
+msgstr[0] "&Sincronizează resursa"
+msgstr[1] "&Sincronizează %1 resurse"
+msgstr[2] "&Sincronizează %1 de resurse"
+
+#: widgets/standardactionmanager.cpp:338
+#, kde-format
+msgid "Copy Folder"
+msgid_plural "Copy %1 Folders"
+msgstr[0] "Copiază dosarul"
+msgstr[1] "Copiază %1 dosare"
+msgstr[2] "Copiază %1 de dosare"
+
+#: widgets/standardactionmanager.cpp:339
+#, kde-format
+msgid "Copy Item"
+msgid_plural "Copy %1 Items"
+msgstr[0] "Copiază elementul"
+msgstr[1] "Copiază %1 elemente"
+msgstr[2] "Copiază %1 de elemente"
+
+#: widgets/standardactionmanager.cpp:340
+#, kde-format
+msgid "Cut Item"
+msgid_plural "Cut %1 Items"
+msgstr[0] "Taie elementul"
+msgstr[1] "Taie %1 elemente"
+msgstr[2] "Taie %1 de elemente"
+
+#: widgets/standardactionmanager.cpp:341
+#, kde-format
+msgid "Cut Folder"
+msgid_plural "Cut %1 Folders"
+msgstr[0] "Taie dosarul"
+msgstr[1] "Taie %1 dosare"
+msgstr[2] "Taie %1 de dosare"
+
+#: widgets/standardactionmanager.cpp:342
+#, kde-format
+msgid "Delete Item"
+msgid_plural "Delete %1 Items"
+msgstr[0] "Șterge elementul"
+msgstr[1] "Șterge %1 elemente"
+msgstr[2] "Șterge %1 de elemente"
+
+#: widgets/standardactionmanager.cpp:343
+#, kde-format
+msgid "Delete Folder"
+msgid_plural "Delete %1 Folders"
+msgstr[0] "Șterge dosarul"
+msgstr[1] "Șterge %1 dosare"
+msgstr[2] "Șterge %1 de dosare"
+
+#: widgets/standardactionmanager.cpp:344
+#, kde-format
+msgid "Synchronize Folder"
+msgid_plural "Synchronize %1 Folders"
+msgstr[0] "Sincronizează dosarul"
+msgstr[1] "Sincronizează %1 dosare"
+msgstr[2] "Sincronizează %1 de dosare"
+
+#: widgets/standardactionmanager.cpp:345
+#, fuzzy, kde-format
+#| msgid "Delete Resource"
+#| msgid_plural "Delete %1 Resources"
+msgctxt "@action"
+msgid "Delete Resource"
+msgid_plural "Delete %1 Resources"
+msgstr[0] "Șterge resursa"
+msgstr[1] "Șterge %1 resurse"
+msgstr[2] "Șterge %1 de resurse"
+
+#: widgets/standardactionmanager.cpp:346
+#, fuzzy, kde-format
+#| msgid "Synchronize Resource"
+#| msgid_plural "Synchronize %1 Resources"
+msgctxt "@action"
+msgid "Synchronize Resource"
+msgid_plural "Synchronize %1 Resources"
+msgstr[0] "Sincronizează resursa"
+msgstr[1] "Sincronizează %1 resurse"
+msgstr[2] "Sincronizează %1 de resurse"
+
+#: widgets/standardactionmanager.cpp:349
+#, fuzzy, kde-format
+#| msgctxt "@title:column, name of a thing"
+#| msgid "Name"
+msgctxt "@label:textbox name of Akonadi folder"
+msgid "Name"
+msgstr "Denumire"
+
+#: widgets/standardactionmanager.cpp:356
+#, kde-format
+msgid "Do you really want to delete this folder and all its sub-folders?"
+msgid_plural ""
+"Do you really want to delete %1 folders and all their sub-folders?"
+msgstr[0] "Sigur doriți să ștergeți acest dosar și toate subdosarele acestuia?"
+msgstr[1] "Sigur doriți să ștergeți %1 dosare și toate subdosarele acestora?"
+msgstr[2] ""
+"Sigur doriți să ștergeți %1 de dosare și toate subdosarele acestora?"
+
+#: widgets/standardactionmanager.cpp:359
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete folder?"
+msgid_plural "Delete folders?"
+msgstr[0] "Se șterge dosarul?"
+msgstr[1] "Se șterg dosarele?"
+msgstr[2] "Se șterg dosarele?"
+
+#: widgets/standardactionmanager.cpp:360
+#, kde-format
+msgid "Could not delete folder: %1"
+msgstr "Dosarul nu poate fi șters: %1"
+
+#: widgets/standardactionmanager.cpp:361
+#, kde-format
+msgid "Folder deletion failed"
+msgstr "Ștergerea dosarului a eșuat"
+
+#: widgets/standardactionmanager.cpp:363
+#, kde-format
+msgctxt "@title:window"
+msgid "Properties of Folder %1"
+msgstr "Proprietățile dosarului %1"
+
+#: widgets/standardactionmanager.cpp:367
+#, kde-format
+msgid "Do you really want to delete the selected item?"
+msgid_plural "Do you really want to delete %1 items?"
+msgstr[0] "Sigur doriți să ștergeți elementul ales?"
+msgstr[1] "Sigur doriți să ștergeți %1 elemente?"
+msgstr[2] "Sigur doriți să ștergeți %1 de elemente?"
+
+#: widgets/standardactionmanager.cpp:368
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete item?"
+msgid_plural "Delete items?"
+msgstr[0] "Se șterge elementul?"
+msgstr[1] "Se șterg elementele?"
+msgstr[2] "Se șterg elementele?"
+
+#: widgets/standardactionmanager.cpp:369
+#, kde-format
+msgid "Could not delete item: %1"
+msgstr "Elementul nu poate fi șters: %1"
+
+#: widgets/standardactionmanager.cpp:370
+#, kde-format
+msgid "Item deletion failed"
+msgstr "Ștergerea elementului a eșuat"
+
+#: widgets/standardactionmanager.cpp:372
+#, kde-format
+msgctxt "@title:window"
+msgid "Rename Favorite"
+msgstr "Redenumește favoritul"
+
+#: widgets/standardactionmanager.cpp:373
+#, kde-format
+msgctxt "@label:textbox name of the folder"
+msgid "Name:"
+msgstr "Denumire:"
+
+#: widgets/standardactionmanager.cpp:375
+#, kde-format
+msgctxt "@title:window"
+msgid "New Resource"
+msgstr "Resursă nouă"
+
+#: widgets/standardactionmanager.cpp:376
+#, kde-format
+msgid "Could not create resource: %1"
+msgstr "Resursa nu a putut fi creată: %1"
+
+#: widgets/standardactionmanager.cpp:377
+#, kde-format
+msgid "Resource creation failed"
+msgstr "Crearea resursei a eșuat"
+
+#: widgets/standardactionmanager.cpp:381
+#, kde-format
+msgid "Do you really want to delete this resource?"
+msgid_plural "Do you really want to delete %1 resources?"
+msgstr[0] "Sigur doriți să ștergeți această resursă?"
+msgstr[1] "Sigur doriți să ștergeți aceste %1 resurse?"
+msgstr[2] "Sigur doriți să ștergeți aceste %1 de resurse?"
+
+#: widgets/standardactionmanager.cpp:384
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete Resource?"
+msgid_plural "Delete Resources?"
+msgstr[0] "Se șterge resursa?"
+msgstr[1] "Se șterg resursele?"
+msgstr[2] "Se șterg resursele?"
+
+#: widgets/standardactionmanager.cpp:386
+#, kde-format
+msgid "Could not paste data: %1"
+msgstr "Datele nu pot fi lipite: %1"
+
+#: widgets/standardactionmanager.cpp:387
+#, kde-format
+msgid "Paste failed"
+msgstr "Lipirea a eșuat"
+
+#: widgets/standardactionmanager.cpp:739
+#, kde-format
+msgid "We can not add \"/\" in folder name."
+msgstr "Nu se poate adăuga „/” în denumirea dosarului."
+
+#: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
+#, kde-format
+msgid "Create new folder error"
+msgstr "Eroare la crearea noului dosar"
+
+#: widgets/standardactionmanager.cpp:743
+#, kde-format
+msgid "We can not add \".\" at begin or end of folder name."
+msgstr "Nu se poate adăuga „.” la începutul sau sfârșitul denumirii dosarului."
+
+#: widgets/standardactionmanager.cpp:982
+#, kde-format
+msgid ""
+"Before syncing folder \"%1\" it is necessary to have the resource online. Do "
+"you want to make it online?"
+msgstr ""
+"Înainte de a sincroniza dosarul „%1” trebuie să conectați resursa. Doriți s-"
+"o conectați?"
+
+#: widgets/standardactionmanager.cpp:983
+#, kde-format
+msgid "Account \"%1\" is offline"
+msgstr "Contul „%1” este deconectat"
+
+#: widgets/standardactionmanager.cpp:984
+#, fuzzy, kde-format
+#| msgid "Work Offline"
+msgctxt "@action:button"
+msgid "Go Online"
+msgstr "Lucrează deconectat"
+
+#: widgets/standardactionmanager.cpp:1585
+#, kde-format
+msgid "Move to This Folder"
+msgstr "Mută în acest dosar"
+
+#: widgets/standardactionmanager.cpp:1585
+#, kde-format
+msgid "Copy to This Folder"
+msgstr "Copiază în acest dosar"
+
+#: widgets/subscriptiondialog.cpp:93
+#, fuzzy, kde-format
+#| msgid "Unable to create agent instance."
+msgid "Failed to update subscription: %1"
+msgstr "Nu se poate crea instanța de agent."
+
+#: widgets/subscriptiondialog.cpp:93
+#, fuzzy, kde-format
+#| msgid "Local Subscriptions"
+msgctxt "@title"
+msgid "Subscription Error"
+msgstr "Abonări locale"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, SubscriptionDialog)
+#: widgets/subscriptiondialog.ui:14
+#, fuzzy, kde-format
+#| msgid "Local Subscriptions"
+msgid "Local Subscriptions"
+msgstr "Abonări locale"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/subscriptiondialog.ui:22
+#, kde-format
+msgid "Search:"
+msgstr "Caută:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, subscribedOnlyCheckBox)
+#: widgets/subscriptiondialog.ui:36
+#, fuzzy, kde-format
+#| msgid "Subscribed only"
+msgid "&Subscribed only"
+msgstr "Numai abonate"
+
+#. i18n: ectx: property (text), widget (QPushButton, subscribeButton)
+#: widgets/subscriptiondialog.ui:62
+#, fuzzy, kde-format
+#| msgid "Subscribe"
+msgid "Su&bscribe"
+msgstr "Abonează"
+
+#. i18n: ectx: property (text), widget (QPushButton, unsubscribeButton)
+#: widgets/subscriptiondialog.ui:69
+#, fuzzy, kde-format
+#| msgid "Unsubscribe"
+msgid "&Unsubscribe"
+msgstr "Dezabonează"
+
+#: widgets/tageditwidget.cpp:116
+#, fuzzy, kde-format
+#| msgid "Unable to create agent instance."
+msgid "Failed to create a new tag"
+msgstr "Nu se poate crea instanța de agent."
+
+#: widgets/tageditwidget.cpp:116
+#, fuzzy, kde-format
+#| msgctxt "@info"
+#| msgid "Error while creating item: %1"
+msgid "An error occurred while creating a new tag"
+msgstr "Eroare la crearea elementului: %1"
+
+#: widgets/tageditwidget.cpp:164
+#, fuzzy, kde-kuit-format
+#| msgid "Do you really want to delete this resource?"
+#| msgid_plural "Do you really want to delete %1 resources?"
+msgctxt "@info"
+msgid "Do you really want to remove the tag <resource>%1</resource>?"
+msgstr "Sigur doriți să ștergeți această resursă?"
+
+#: widgets/tageditwidget.cpp:165
+#, fuzzy, kde-format
+#| msgid "Delete Item"
+#| msgid_plural "Delete %1 Items"
+msgctxt "@title"
+msgid "Delete tag"
+msgstr "Șterge elementul"
+
+#: widgets/tageditwidget.cpp:189
+#, fuzzy, kde-format
+#| msgid "Delete Item"
+#| msgid_plural "Delete %1 Items"
+msgctxt "@info"
+msgid "Delete tag"
+msgstr "Șterge elementul"
+
+#. i18n: ectx: property (text), widget (QLabel, selectLabel)
+#: widgets/tageditwidget.ui:29
+#, kde-format
+msgid "Select tags that should be applied."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QPushButton, newTagButton)
+#: widgets/tageditwidget.ui:54
+#, fuzzy, kde-format
+#| msgid "Unable to create agent instance."
+msgid "Create new tag"
+msgstr "Nu se poate crea instanța de agent."
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
+#: widgets/tagmanagementdialog.ui:14
+#, kde-format
+msgid "Manage Tags"
+msgstr ""
+
+#: widgets/tagselectioncombobox.cpp:124
+#, fuzzy, kde-format
+#| msgid "Delete Item"
+#| msgid_plural "Delete %1 Items"
+msgctxt "@label Placeholder text in tag selection combobox"
+msgid "Select tags..."
+msgstr "Șterge elementul"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
+#: widgets/tagselectiondialog.ui:14
+#, kde-format
+msgid "Select Tags"
+msgstr ""
+
+#: widgets/tagwidget.cpp:45
+#, kde-format
+msgid "Clear"
+msgstr ""
+
+#. i18n: ectx: property (placeholderText), widget (Akonadi::TagView, tagView)
+#: widgets/tagwidget.ui:20
+#, kde-format
+msgid "Click to add tags"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QToolButton, editButton)
+#: widgets/tagwidget.ui:27
+#, kde-format
+msgid "..."
+msgstr ""
+
+#: xml/akonadi2xml.cpp:25
+#, kde-format
+msgid "Akonadi To XML converter"
+msgstr ""
+
+#: xml/akonadi2xml.cpp:27
+#, kde-format
+msgid "Converts an Akonadi collection subtree into a XML file."
+msgstr ""
+
+#: xml/akonadi2xml.cpp:29
+#, kde-format
+msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
+msgstr ""
+
+#: xml/xmldocument.cpp:84
+#, kde-format
+msgid "No data loaded."
+msgstr ""
+
+#: xml/xmldocument.cpp:120
+#, fuzzy, kde-format
+#| msgid "No valid destination specified"
+msgid "No filename specified"
+msgstr "Nu au fost specificate destinații valide"
+
+#: xml/xmldocument.cpp:128
+#, fuzzy, kde-format
+#| msgid "Unable to obtain agent type '%1'."
+msgid "Unable to open data file '%1'."
+msgstr "Nu se poate obține tipul de agent „%1”."
+
+#: xml/xmldocument.cpp:133
+#, kde-format
+msgid "File %1 does not exist."
+msgstr ""
+
+#: xml/xmldocument.cpp:141
+#, fuzzy, kde-format
+#| msgid "Unable to obtain agent type '%1'."
+msgid "Unable to parse data file '%1'."
+msgstr "Nu se poate obține tipul de agent „%1”."
+
+#: xml/xmldocument.cpp:149
+#, kde-format
+msgid "Schema definition could not be loaded and parsed."
+msgstr ""
+
+#: xml/xmldocument.cpp:154
+#, fuzzy, kde-format
+#| msgid "Unable to create agent instance."
+msgid "Unable to create schema parser context."
+msgstr "Nu se poate crea instanța de agent."
+
+#: xml/xmldocument.cpp:159
+#, fuzzy, kde-format
+#| msgid "Unable to create agent instance."
+msgid "Unable to create schema."
+msgstr "Nu se poate crea instanța de agent."
+
+#: xml/xmldocument.cpp:164
+#, fuzzy, kde-format
+#| msgid "Unable to create agent instance."
+msgid "Unable to create schema validation context."
+msgstr "Nu se poate crea instanța de agent."
+
+#: xml/xmldocument.cpp:169
+#, fuzzy, kde-format
+#| msgctxt "@info"
+#| msgid "Invalid item retrieved"
+msgid "Invalid file format."
+msgstr "S-a preluat un element nevalid"
+
+#: xml/xmldocument.cpp:177
+#, fuzzy, kde-format
+#| msgid "Could not paste data: %1"
+msgid "Unable to parse data file: %1"
+msgstr "Datele nu pot fi lipite: %1"
+
+#: xml/xmldocument.cpp:302
+#, fuzzy, kde-format
+#| msgid "Invalid collection"
+msgid "Unable to find collection %1"
+msgstr "Colecție nevalidă"
+
+#~ msgid "&Move here"
+#~ msgstr "&Mută aici"
+
+#~ msgid "&Copy here"
+#~ msgstr "&Copiază aici"
+
+#~ msgid "Cancel"
+#~ msgstr "Renunță"
+
+#~ msgid "Automatically synchronize after:"
+#~ msgstr "Sincronizează automat după:"
+
+#, fuzzy
+#~| msgid "Cut Item"
+#~| msgid_plural "Cut %1 Items"
+#~ msgid "Items"
+#~ msgstr "Taie elementul"
+
+#~ msgid "Id"
+#~ msgstr "Identificator"
+
+#~ msgid "Remote Id"
+#~ msgstr "Identificator distant"
+
+#~ msgid "MimeType"
+#~ msgstr "Tip MIME"
+
+#~ msgid "Default Name"
+#~ msgstr "Denumire implicită"
+
+#, fuzzy
+#~| msgid "Delete"
+#~ msgctxt "@action:button"
+#~ msgid "Delete"
+#~ msgstr "Șterge"
+
+#, fuzzy
+#~| msgid "Cancel"
+#~ msgctxt "@action:button"
+#~ msgid "Cancel"
+#~ msgstr "Renunță"
+
+#~ msgid "Take left one"
+#~ msgstr "Alege cea din stânga"
+
+#~ msgctxt "@label"
+#~ msgid ""
+#~ "Two updates conflict with each other.<nl/>Please choose which update(s) "
+#~ "to apply."
+#~ msgstr ""
+#~ "Două actualizări se află în conflict.<nl />Alegeți care actualizare să "
+#~ "fie aplicată."
+
+#~ msgctxt "@title:column, number of unread messages"
+#~ msgid "Unread"
+#~ msgstr "Necitite"
+
+#~ msgctxt "@title:column, total number of messages"
+#~ msgid "Total"
+#~ msgstr "Total"
+
+#~ msgctxt "@title:column, total size (in bytes) of the collection"
+#~ msgid "Size"
+#~ msgstr "Dimensiune"
+
+#~ msgctxt "@title application description"
+#~ msgid "Akonadi Resource"
+#~ msgstr "Resursă Akonadi"
+
+#~ msgctxt "@label:textbox name of a thing"
+#~ msgid "Name"
+#~ msgstr "Denumire"
+
+#~ msgid "Invalid collection specified"
+#~ msgstr "Colecție specificată nevalidă"
+
+#~ msgid "Protocol version %1 found, expected at least %2"
+#~ msgstr "Versiunea de protocol %1 a fost găsită, se aștepta cel puțin %2"
+
+#~ msgid "Server protocol version is recent enough."
+#~ msgstr "Versiunea de protocol a serverului este destul de recentă."
+
+#~ msgid ""
+#~ "The server Protocol version is %1, which equal or newer than the required "
+#~ "version %2."
+#~ msgstr ""
+#~ "Versiunea protocolului este %1, care este la fel sau mai nouă decât "
+#~ "versiunea necesară %2."
+
+#~ msgid "Inconsistent local collection tree detected."
+#~ msgstr "A fost detectat un arbore inconsistent de colecție locală."
+
+#~ msgid ""
+#~ "Remote collection without root-terminated ancestor chain provided, "
+#~ "resource is broken."
+#~ msgstr ""
+#~ "A fost furnizată o colecție distantă fără lanț de strămoși terminat în "
+#~ "rădăcină, resursa este deteriorată."
+
+#~ msgid "KDE Test Program"
+#~ msgstr "Program de testare KDE"
+
+#~ msgid "Cannot list root collection."
+#~ msgstr "Nu se poate enumera colecția rădăcină."
+
+#~ msgid "Nepomuk search service registered at D-Bus."
+#~ msgstr "Serviciul de căutare Nepomuk este înregistrat la D-Bus."
+
+#~ msgid ""
+#~ "The Nepomuk search service is registered at D-Bus which typically "
+#~ "indicates it is operational."
+#~ msgstr ""
+#~ "Serviciul de căutare Nepomuk este înregistrat la D-Bus, ceea ce indică de "
+#~ "obicei că acesta e operațional."
+
+#~ msgid "Nepomuk search service not registered at D-Bus."
+#~ msgstr "Serviciul de căutare Nepomuk nu este înregistrat la D-Bus."
+
+#~ msgid ""
+#~ "The Nepomuk search service is not registered at D-Bus which typically "
+#~ "means it was not started or encountered a fatal error during startup."
+#~ msgstr ""
+#~ "Serviciul de căutare Nepomuk nu este înregistrat la D-Bus, ceea ce de "
+#~ "obicei înseamnă că acesta nu a fost pornit sau a întâmpinat o eroare "
+#~ "fatală la pornire."
+
+#~ msgid "Nepomuk search service uses inappropriate backend."
+#~ msgstr ""
+#~ "Serviciul de căutare Nepomuk folosește o platformă necorespunzătoare."
+
+#~ msgid ""
+#~ "The Nepomuk search service uses the '%1' backend, which is not "
+#~ "recommended for use with Akonadi."
+#~ msgstr ""
+#~ "Serviciul de căutare Nepomuk folosește platforma „%1” care nu este "
+#~ "recomandată pentru utilizarea cu Akonadi."
+
+#~ msgid "Nepomuk search service uses an appropriate backend. "
+#~ msgstr ""
+#~ "Serviciul de căutare Nepomuk folosește o platformă corespunzătoare. "
+
+#~ msgid "The Nepomuk search service uses one of the recommended backends."
+#~ msgstr ""
+#~ "Serviciul de căutare Nepomuk folosește una dintre platformele recomandate."
+
+#~ msgid ""
+#~ "Plugin \"%1\" is not builtin static, please specify this information in "
+#~ "the bug report."
+#~ msgstr ""
+#~ "Extensia „%1” nu este încorporată static. Să specificați această "
+#~ "informație în raportul de eroare."
+
+#~ msgid "Plugin Not Built Statically"
+#~ msgstr "Extensie neîncorporată static"
+
+#, fuzzy
+#~ msgid "Fetch Job Error"
+#~ msgstr "Eroare Producere Lucrare "

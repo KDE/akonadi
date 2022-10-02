@@ -1,0 +1,2778 @@
+# translation of libakonadi.po to Greek
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Spiros Georgaras <sng@hellug.gr>, 2007, 2008.
+# Toussis Manolis <manolis@koppermind.homelinux.org>, 2007, 2008, 2009.
+# Spiros Georgaras <sngeorgaras@otenet.gr>, 2008.
+# Dimitrios Glentadakis <dglent@gmail.com>, 2011.
+# Stelios <sstavra@gmail.com>, 2021.
+msgid ""
+msgstr ""
+"Project-Id-Version: libakonadi\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-09 00:46+0000\n"
+"PO-Revision-Date: 2021-09-02 08:48+0300\n"
+"Last-Translator: Stelios <sstavra@gmail.com>\n"
+"Language-Team: Greek <kde-i18n-el@kde.org>\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 20.04.2\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Τούσης Μανώλης"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "manolis@koppermind.homelinux.org"
+
+#: agentbase/accountsintegration.cpp:86
+#, kde-format
+msgid "There is currently no account configured."
+msgstr "Προς το παρόν δεν υπάρχει διαμορφωμένος λογαριασμός"
+
+#: agentbase/accountsintegration.cpp:103
+#, kde-format
+msgid "Accounts integration is not supported"
+msgstr "Η ενσωμάτωση λογαριασμών δεν υποστηρίζεται"
+
+#: agentbase/agentbase.cpp:365 agentbase/preprocessorbase_p.cpp:26
+#, kde-format
+msgid "Unable to register object at dbus: %1"
+msgstr "Αδυναμία εγγραφής αντικειμένου στο dbus: %1"
+
+#: agentbase/agentbase.cpp:454
+#, kde-format
+msgctxt "Name and type of Akonadi resource"
+msgid "%1 of type %2"
+msgstr "%1 τύπου %2"
+
+#: agentbase/agentbase.cpp:904
+#, kde-format
+msgid "Agent identifier"
+msgstr "Αναγνωριστικό πράκτορα"
+
+#: agentbase/agentbase.cpp:910
+#, kde-format
+msgid "Akonadi Agent"
+msgstr "Πράκτορας του Akonadi"
+
+#: agentbase/agentbase_p.h:49 agentbase/resourcescheduler.cpp:281
+#, kde-format
+msgctxt "@info:status Application ready for work"
+msgid "Ready"
+msgstr "Έτοιμο"
+
+#: agentbase/agentbase_p.h:51
+#, kde-format
+msgctxt "@info:status"
+msgid "Offline"
+msgstr "Χωρίς σύνδεση"
+
+#: agentbase/agentbase_p.h:56
+#, kde-format
+msgctxt "@info:status"
+msgid "Syncing..."
+msgstr "Συγχρονισμός..."
+
+#: agentbase/agentbase_p.h:61
+#, kde-format
+msgctxt "@info:status"
+msgid "Error."
+msgstr "Σφάλμα."
+
+#: agentbase/agentbase_p.h:66
+#, kde-format
+msgctxt "@info:status"
+msgid "Not configured"
+msgstr "Δεν έχει διαμορφωθεί"
+
+#: agentbase/resourcebase.cpp:517
+#, kde-format
+msgctxt "@label command line option"
+msgid "Resource identifier"
+msgstr "Αναγνωριστικό πόρου"
+
+#: agentbase/resourcebase.cpp:523
+#, kde-format
+msgid "Akonadi Resource"
+msgstr "Πόρος του Akonadi"
+
+#: agentbase/resourcebase.cpp:571
+#, kde-format
+msgctxt "@info"
+msgid "Invalid item retrieved"
+msgstr "Ανακτήθηκε μη έγκυρο αντικείμενο"
+
+#: agentbase/resourcebase.cpp:594
+#, kde-format
+msgctxt "@info"
+msgid "Error while creating item: %1"
+msgstr "Σφάλμα κατά τη δημιουργία αντικειμένου: %1"
+
+#: agentbase/resourcebase.cpp:618
+#, kde-format
+msgctxt "@info"
+msgid "Error while updating collection: %1"
+msgstr "Σφάλμα κατά την ενημέρωση της συλλογής: %1"
+
+#: agentbase/resourcebase.cpp:705
+#, kde-format
+msgctxt "@info"
+msgid "Updating local collection failed: %1."
+msgstr "Αποτυχία ενημέρωσης τοπικής συλλογής: %1."
+
+#: agentbase/resourcebase.cpp:710
+#, kde-format
+msgctxt "@info"
+msgid "Updating local items failed: %1."
+msgstr "Αποτυχία ενημέρωσης τοπικών αντικειμένων: %1."
+
+#: agentbase/resourcebase.cpp:729
+#, kde-format
+msgctxt "@info"
+msgid "Cannot fetch item in offline mode."
+msgstr "Αδυναμία λήψης του αντικειμένου σε λειτουργία χωρίς σύνδεση."
+
+#: agentbase/resourcebase.cpp:918
+#, kde-format
+msgctxt "@info:status"
+msgid "Syncing folder '%1'"
+msgstr "Συγχρονισμός φακέλου '%1'"
+
+#: agentbase/resourcebase.cpp:938 agentbase/resourcebase.cpp:945
+#, kde-format
+msgid "Failed to retrieve collection for sync."
+msgstr "Αποτυχία ανάκτησης συλλογής για συγχρονισμό."
+
+#: agentbase/resourcebase.cpp:985
+#, kde-format
+msgid "Failed to retrieve collection for attribute sync."
+msgstr "Αποτυχία ανάκτησης συλλογής για συγχρονισμό ιδιοτήτων."
+
+#: agentbase/resourcebase.cpp:1039
+#, kde-format
+msgid "The requested item no longer exists"
+msgstr "Το ζητούμενο αντικείμενο δεν υπάρχει πλέον."
+
+#: agentbase/resourcescheduler.cpp:500 agentbase/resourcescheduler.cpp:506
+#, kde-format
+msgctxt "@info"
+msgid "Job canceled."
+msgstr "Η εργασία ακυρώθηκε."
+
+#: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
+#, kde-format
+msgid "No such collection."
+msgstr "Δεν υπάρχει τέτοια συλλογή."
+
+#: core/collectionsync.cpp:508 core/collectionsync.cpp:653
+#, kde-format
+msgid "Found unresolved orphan collections"
+msgstr "Βρέθηκαν ανεπίλυτες ορφανές συλλογές"
+
+#: core/conflicthandler.cpp:53
+#, kde-format
+msgid "Did not find other item for conflict handling"
+msgstr "Δεν βρέθηκε άλλο αντικείμενο για χειρισμό της σύγκρουσης"
+
+#: core/jobs/agentinstancecreatejob.cpp:71
+#, kde-format
+msgid "Unable to access D-Bus interface of created agent."
+msgstr "Αδυναμία πρόσβασης στη D-Bus διεπαφή του δημιουργημένου πράκτορα."
+
+#: core/jobs/agentinstancecreatejob.cpp:93
+#, kde-format
+msgid "Agent instance creation timed out."
+msgstr "Λήξη χρονικού ορίου δημιουργίας πελάτη."
+
+#: core/jobs/agentinstancecreatejob.cpp:151
+#, kde-format
+msgid "Unable to obtain agent type '%1'."
+msgstr "Αδυναμία απόκτησης πράκτορα τύπου '%1'."
+
+#: core/jobs/agentinstancecreatejob.cpp:159
+#, kde-format
+msgid "Unable to create agent instance."
+msgstr "Αδυναμία δημιουργίας αντιγράφου πράκτορα."
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:73
+#, kde-format
+msgid "Invalid collection instance."
+msgstr "Μη έγκυρο στιγμιότυπο συλλογής."
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:80
+#: core/jobs/resourcesynchronizationjob.cpp:88
+#, kde-format
+msgid "Invalid resource instance."
+msgstr "Μη έγκυρο στιγμιότυπο πόρου."
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:102
+#: core/jobs/resourcesynchronizationjob.cpp:113
+#, kde-format
+msgid "Unable to obtain D-Bus interface for resource '%1'"
+msgstr "Αδυναμία απόκτησης D-Bus διεπαφής για τον πόρο '%1'"
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:125
+#, kde-format
+msgid "Collection attributes synchronization timed out."
+msgstr "Λήξη χρονικού ορίου για τον συγχρονισμό των ιδιοτήτων της συλλογής."
+
+#: core/jobs/collectioncopyjob.cpp:55
+#, kde-format
+msgid "Invalid collection to copy"
+msgstr "Μη έγκυρη συλλογή για αντιγραφή"
+
+#: core/jobs/collectioncopyjob.cpp:61
+#, kde-format
+msgid "Invalid destination collection"
+msgstr "Μη έγκυρη συλλογή προορισμού"
+
+#: core/jobs/collectioncreatejob.cpp:50
+#, kde-format
+msgid "Invalid parent"
+msgstr "Μη έγκυρος γονέας"
+
+#: core/jobs/collectioncreatejob.cpp:98
+#, kde-format
+msgid "Failed to parse Collection from response"
+msgstr "Αποτυχία ανάλυσης συλλογής από απόκριση"
+
+#: core/jobs/collectiondeletejob.cpp:52
+#, kde-format
+msgid "Invalid collection"
+msgstr "Μη έγκυρη συλλογή"
+
+#: core/jobs/collectionfetchjob.cpp:212
+#, kde-format
+msgid "Invalid collection given."
+msgstr "Δόθηκε μη έγκυρη συλλογή."
+
+#: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:90
+#, kde-format
+msgid "No objects specified for moving"
+msgstr "Δεν ορίσθηκαν αντικείμενα για μεταφορά"
+
+#: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
+#: core/jobs/linkjobimpl_p.h:38
+#, kde-format
+msgid "No valid destination specified"
+msgstr "Δεν καθορίστηκε έγκυρος προορισμός"
+
+#: core/jobs/invalidatecachejob.cpp:58
+#, kde-format
+msgid "Invalid collection."
+msgstr "Μη έγκυρη συλλογή."
+
+#: core/jobs/itemcreatejob.cpp:105
+#, kde-format
+msgid "Invalid parent collection"
+msgstr "Μη έγκυρη συλλογή γονέα"
+
+#: core/jobs/job.cpp:335
+#, kde-format
+msgid "Cannot connect to the Akonadi service."
+msgstr "Αδυναμία σύνδεσης στην υπηρεσία Akonadi."
+
+#: core/jobs/job.cpp:338
+#, kde-format
+msgid ""
+"The protocol version of the Akonadi server is incompatible. Make sure you "
+"have a compatible version installed."
+msgstr ""
+"Η έκδοση του πρωτοκόλλου του εξυπηρετητή Akonadi δεν είναι συμβατή. "
+"Σιγουρευτείτε ότι έχετε εγκατεστημένη μια συμβατή έκδοση."
+
+#: core/jobs/job.cpp:341
+#, kde-format
+msgid "User canceled operation."
+msgstr "Η λειτουργία ακυρώθηκε από το χρήστη."
+
+#: core/jobs/job.cpp:346
+#, kde-format
+msgid "Unknown error."
+msgstr "Άγνωστο σφάλμα."
+
+#: core/jobs/job.cpp:385
+#, kde-format
+msgid "Unexpected response"
+msgstr "Απρόσμενη απάντηση"
+
+#: core/jobs/relationcreatejob.cpp:42 core/jobs/relationdeletejob.cpp:42
+#, kde-format
+msgid "Failed to create relation."
+msgstr "Αποτυχία δημιουργίας σχέσης."
+
+#: core/jobs/resourcesynchronizationjob.cpp:139
+#, kde-format
+msgid "Resource synchronization timed out."
+msgstr "Λήξη χρονικού ορίου για τον συγχρονισμό πόρου."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:146
+#, kde-format
+msgid "Could not fetch root collection of resource %1."
+msgstr "Αδυναμία προσκόμισης της ριζικής συλλογής του πόρου %1."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:190
+#, kde-format
+msgid "No resource ID given."
+msgstr "Δεν δόθηκε αναγνωριστικό πόρου."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:327
+#, kde-format
+msgid "Invalid resource identifier '%1'"
+msgstr "Μη έγκυρο αναγνωριστικό πόρου '%1'"
+
+#: core/jobs/specialcollectionshelperjobs.cpp:343
+#: core/jobs/specialcollectionshelperjobs.cpp:351
+#, kde-format
+msgid "Failed to configure default resource via D-Bus."
+msgstr "Αποτυχία διαμόρφωσης του προκαθορισμένου πόρου μέσω D-Bus."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:416
+#, kde-format
+msgid "Failed to fetch the resource collection."
+msgstr "Αποτυχία προσκόμισης της συλλογής πόρων."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:600
+#, kde-format
+msgid "Timeout trying to get lock."
+msgstr "Τέλος χρόνου στην προσπάθεια αντησης κλειδώματος."
+
+#: core/jobs/tagcreatejob.cpp:49
+#, kde-format
+msgid "Failed to create tag."
+msgstr "Αδυναμία δημιουργίας ετικέτας."
+
+#: core/jobs/trashjob.cpp:163
+#, kde-format
+msgid "Move to trash collection failed, aborting trash operation"
+msgstr "Αποτυχία μετακίνησης στη συλλογή απορριμμάτων, εγκατάλειψη αποκομιδής"
+
+#: core/jobs/trashjob.cpp:226 core/jobs/trashrestorejob.cpp:155
+#, kde-format
+msgid "Invalid items passed"
+msgstr "Πέρασαν μη έγκυρα αντικείμενα"
+
+#: core/jobs/trashjob.cpp:270 core/jobs/trashrestorejob.cpp:205
+#, kde-format
+msgid "Invalid collection passed"
+msgstr "Πέρασε μη έγκυρη συλλογή"
+
+#: core/jobs/trashjob.cpp:387 core/jobs/trashrestorejob.cpp:355
+#, kde-format
+msgid "No valid collection or empty itemlist"
+msgstr "Μη έγκυρη συλλογή ή λίστα αντικειμένων κενή"
+
+#: core/jobs/trashrestorejob.cpp:90
+#, kde-format
+msgid "Could not find restore collection and restore resource is not available"
+msgstr ""
+"Αδυναμία εύρεσης συλλογής αποκατάστασης και ο πόρος αποκατάστασης δεν είναι "
+"διαθέσιμος"
+
+#: core/models/agentinstancemodel.cpp:183
+#, kde-format
+msgctxt "@title:column, name of a thing"
+msgid "Name"
+msgstr "Όνομα"
+
+#: core/models/entitytreemodel.cpp:195
+#, kde-format
+msgctxt "@info:status"
+msgid "Loading..."
+msgstr "Φόρτωση..."
+
+#: core/models/entitytreemodel.cpp:487
+#, kde-format
+msgctxt "@window:title"
+msgid "Error"
+msgstr "Σφάλμα"
+
+#: core/models/entitytreemodel.cpp:488
+#, kde-format
+msgid ""
+"The target collection '%1' contains already\n"
+"a collection with name '%2'."
+msgstr ""
+"Η συλλογή προορισμού '%1' περιέχει ήδη\n"
+"μια συλλογή με όνομα '%2'."
+
+#: core/models/entitytreemodel.cpp:657
+#, kde-format
+msgctxt "@title:column Name of a thing"
+msgid "Name"
+msgstr "Όνομα"
+
+#: core/models/entitytreemodel_p.cpp:1332
+#, kde-format
+msgctxt "@info"
+msgid "Could not copy item: <message>%1</message>"
+msgstr "Αδυναμία αντιγραφής αντικειμένου: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1334
+#, kde-format
+msgctxt "@info"
+msgid "Could not copy collection: <message>%1</message>"
+msgstr "Αδυναμια αντιγραφής συλλογής: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1336
+#, kde-format
+msgctxt "@info"
+msgid "Could not move item: <message>%1</message>"
+msgstr "Αδυναμία μετακίνησης αντικειμένου: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1338
+#, kde-format
+msgctxt "@info"
+msgid "Could not move collection: <message>%1</message>"
+msgstr "Αδυναμία μετακίνησης συλλογής: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1340
+#, kde-format
+msgctxt "@info"
+msgid "Could not link entity: <message>%1</message>"
+msgstr "Αδυναμία σύνδεσης οντότητας: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1342
+#, kde-format
+msgctxt "@title:window"
+msgid "Error"
+msgstr "Σφάλμα"
+
+#: core/models/favoritecollectionsmodel.cpp:405
+#, kde-format
+msgid "Favorite Folders"
+msgstr "Προτιμώμενοι φάκελοι"
+
+#: core/models/statisticsproxymodel.cpp:86
+#, kde-format
+msgid "Total Messages"
+msgstr "Σύνολο μηνυμάτων"
+
+#: core/models/statisticsproxymodel.cpp:88
+#, kde-format
+msgid "Unread Messages"
+msgstr "Μη αναγνωσμένα μηνύματα"
+
+#: core/models/statisticsproxymodel.cpp:98
+#, kde-format
+msgid "Quota"
+msgstr "Ποσοστό χρήσης"
+
+#: core/models/statisticsproxymodel.cpp:104
+#, kde-format
+msgid "Storage Size"
+msgstr "Μέγεθος αποθηκευτικού χώρου"
+
+#: core/models/statisticsproxymodel.cpp:110
+#, kde-format
+msgid "Subfolder Storage Size"
+msgstr "Μέγεθος αποθηκευτικού χώρου υποφακέλου"
+
+#: core/models/statisticsproxymodel.cpp:224
+#, kde-format
+msgctxt "number of unread entities in the collection"
+msgid "Unread"
+msgstr "Μη αναγνωσμένα"
+
+#: core/models/statisticsproxymodel.cpp:225
+#, kde-format
+msgctxt "number of entities in the collection"
+msgid "Total"
+msgstr "Σύνολο"
+
+#: core/models/statisticsproxymodel.cpp:226
+#, kde-format
+msgctxt "collection size"
+msgid "Size"
+msgstr "Μέγεθος"
+
+#: core/models/tagmodel.cpp:64
+#, kde-format
+msgid "Tag"
+msgstr "Ετικέτα"
+
+#: core/partfetcher.cpp:49
+#, kde-format
+msgid "Unable to fetch item for index"
+msgstr "Αδυναμία προσκόμισης αντικειμένου για το ευρετήριο"
+
+#: core/partfetcher.cpp:64
+#, kde-format
+msgid "Index is no longer available"
+msgstr "Το ευρετήριο δεν είναι πλέον διαθέσιμο"
+
+#: core/partfetcher.cpp:114
+#, kde-format
+msgid "Payload part '%1' is not available for this index"
+msgstr "Το τμήμα '%1' του φορτίου δεν είναι διαθέσιμο για αυτό το ευρετήριο"
+
+#: core/partfetcher.cpp:123
+#, kde-format
+msgid "No session available for this index"
+msgstr "Μη διαθέσιμη συνεδρία για αυτό το ευρετήριο"
+
+#: core/partfetcher.cpp:132
+#, kde-format
+msgid "No item available for this index"
+msgstr "Μη διαθέσιμο αντικείμενο για αυτό το ευρετήριο"
+
+#: core/pluginloader.cpp:145
+#, kde-format
+msgid "Unnamed plugin"
+msgstr "Πρόσθετο χωρίς όνομα"
+
+#: core/pluginloader.cpp:151
+#, kde-format
+msgid "No description available"
+msgstr "Μη διαθέσιμη περιγραφή"
+
+#: core/servermanager.cpp:271
+#, kde-format
+msgid ""
+"The Akonadi server protocol version differs from the protocol version used "
+"by this application.\n"
+"If you recently updated your system please log out and back in to make sure "
+"all applications use the correct protocol version."
+msgstr ""
+"Η έκδοση του πρωτοκόλλου του εξυπηρετητή Akonadi διαφέρει από την έκδοση "
+"πρωτοκόλλου που χρησιμοποιεί αυτή η εφαρμογή.\n"
+"Αν έχετε ενημερώσει το σύστημά σας πρόσφατα αποσυνδεθείτε και συνδεθείτε "
+"πάλι για να βεβαιωθείτε ότι όλες οι εφαρμογές χρησιμοποιούν τη σωστή έκδοση "
+"του πρωτοκόλλου."
+
+#: core/servermanager.cpp:288
+#, kde-format
+msgid ""
+"There are no Akonadi Agents available. Please verify your KDE PIM "
+"installation."
+msgstr ""
+"Δεν υπάρχουν διαθέσιμοι πράκτορες Akonadi. Επιβεβαιώστε ότι το KDE PIM έχει "
+"εγκατασταθεί."
+
+#: core/session.cpp:186
+#, kde-format
+msgid ""
+"Protocol version mismatch. Server version is older (%1) than ours (%2). If "
+"you updated your system recently please restart the Akonadi server."
+msgstr ""
+"Ασυμφωνία εκδόσεων πρωτοκόλλου. Η έκδοση του εξυπηρετητή είναι παλαιότερη "
+"(%1) από τη δική μας (%2). Αν έχετε ενημερώσει το σύστημά σας πρόσφατα "
+"επανεκκινήστε τον εξυπηρετητή Akonadi."
+
+#: core/session.cpp:195
+#, kde-format
+msgid ""
+"Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
+"you updated your system recently please restart all KDE PIM applications."
+msgstr ""
+"Ασυμφωνία εκδόσεων πρωτοκόλλου. Η έκδοση του εξυπηρετητή είναι νεότερη (%1) "
+"από τη δική μας (%2). Αν έχετε ενημερώσει το σύστημά σας πρόσφατα "
+"επανεκκινήστε όλες τις KDE PIM εφαρμογές."
+
+#: selftest/main.cpp:19
+#, kde-format
+msgid "Akonadi Self Test"
+msgstr "Αυτοέλεγχος Akonadi"
+
+#: selftest/main.cpp:21
+#, kde-format
+msgid "Checks and reports state of Akonadi server"
+msgstr "Ελέγχει και αναφέρει την κατάσταση του εξυπηρετητή Akonadi"
+
+#: selftest/main.cpp:23
+#, kde-format
+msgid "(c) 2008 Volker Krause <vkrause@kde.org>"
+msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
+
+#: widgets/agentactionmanager.cpp:35
+msgid "&New Agent Instance..."
+msgstr "&Νέος πράκτορας..."
+
+#: widgets/agentactionmanager.cpp:36
+msgid "&Delete Agent Instance"
+msgstr "&Διαγραφή πράκτορα"
+
+#: widgets/agentactionmanager.cpp:37
+msgid "&Configure Agent Instance"
+msgstr "&Διαμόρφωση πράκτορα"
+
+#: widgets/agentactionmanager.cpp:53
+#, kde-format
+msgctxt "@title:window"
+msgid "New Agent Instance"
+msgstr "Νέος πράκτορας"
+
+#: widgets/agentactionmanager.cpp:55
+#, kde-format
+msgid "Could not create agent instance: %1"
+msgstr "Αδυναμία δημιουργίας πράκτορα: %1"
+
+#: widgets/agentactionmanager.cpp:57
+#, kde-format
+msgid "Agent instance creation failed"
+msgstr "Αποτυχία δημιουργίας πράκτορα"
+
+#: widgets/agentactionmanager.cpp:59
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete Agent Instance?"
+msgstr "Να διαγραφεί η διεργασία πράκτορα;"
+
+#: widgets/agentactionmanager.cpp:63
+#, kde-format
+msgid "Do you really want to delete the selected agent instance?"
+msgstr "Θέλετε πράγματι να διαγραφεί η επιλεγμένη διεργασία πράκτορα;"
+
+#: widgets/agentconfigurationdialog.cpp:56
+#, kde-format
+msgctxt "%1 = agent name"
+msgid "%1 Configuration"
+msgstr "%1 διαμόρφωση"
+
+#: widgets/agentconfigurationdialog.cpp:89
+#, kde-format
+msgid "%1 Handbook"
+msgstr "%1 εγχειρίδιο"
+
+#: widgets/agentconfigurationdialog.cpp:90
+#, kde-format
+msgid "About %1"
+msgstr "Σχετικά %1"
+
+#: widgets/agentconfigurationwidget.cpp:96
+#, kde-format
+msgid "The configuration dialog has been opened in another window"
+msgstr "Ο διάλογος διαμόρφωσης έχει ανοίξει σε άλλο παράθυρο"
+
+#: widgets/agentconfigurationwidget.cpp:103
+#, kde-format
+msgid "Configuration for %1 is already opened elsewhere."
+msgstr "Η διαμόρφωση για το %1 είναι ήδη ανοιχτή κάπου αλλού."
+
+#: widgets/agentconfigurationwidget.cpp:105
+#, kde-format
+msgid "Failed to register %1 configuration dialog."
+msgstr "Αποτυχία εγγραφής %1 διαλόγου διαμόρφωσης."
+
+#: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
+#, kde-format
+msgid "minute"
+msgid_plural "minutes"
+msgstr[0] "λεπτό"
+msgstr[1] "λεπτά"
+
+#: widgets/cachepolicypage.cpp:69
+#, kde-format
+msgid "Retrieval"
+msgstr "Ανάκτηση"
+
+#. i18n: ectx: property (text), widget (QCheckBox, inherit)
+#: widgets/cachepolicypage.ui:20
+#, kde-format
+msgid "Use options from parent folder or account"
+msgstr "Να γίνει χρήση επιλογών από φάκελο γονέα ή από το λογαριασμό"
+
+#. i18n: ectx: property (text), widget (QCheckBox, syncOnDemand)
+#: widgets/cachepolicypage.ui:33
+#, kde-format
+msgid "Synchronize when selecting this folder"
+msgstr "Να γίνεται συγχρονισμός όταν επιλέγεται αυτός ο φάκελος"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: widgets/cachepolicypage.ui:40
+#, kde-format
+msgid "Synchronize after:"
+msgstr "Συγχρονισμός μετά από:"
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, checkInterval)
+#: widgets/cachepolicypage.ui:47
+#, kde-format
+msgctxt "never check the cache"
+msgid "Never"
+msgstr "Ποτέ"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, checkInterval)
+#. i18n: ectx: property (suffix), widget (QSpinBox, localCacheTimeout)
+#: widgets/cachepolicypage.ui:50 widgets/cachepolicypage.ui:133
+#, kde-format
+msgid "minutes"
+msgstr "λεπτά"
+
+#. i18n: ectx: property (text), widget (QLabel, localPartsLabel)
+#: widgets/cachepolicypage.ui:66
+#, kde-format
+msgid "Locally cached parts:"
+msgstr "Τοπικά τμήματα στη λανθάνουσα"
+
+#. i18n: ectx: property (title), widget (KEditListWidget, localParts)
+#: widgets/cachepolicypage.ui:87
+#, kde-format
+msgid "Locally Cached Parts"
+msgstr "Τοπικά τμήματα στη λανθάνουσα"
+
+#. i18n: ectx: property (text), widget (QLabel, retrievalOptionsLabel)
+#: widgets/cachepolicypage.ui:94
+#, kde-format
+msgid "Retrieval Options:"
+msgstr "Επιλογές ανάκτησης:"
+
+#. i18n: ectx: property (text), widget (QRadioButton, retrieveFullMessages)
+#: widgets/cachepolicypage.ui:101
+#, kde-format
+msgid "Always retrieve full &messages"
+msgstr "Πάντα να ανκτώνται πλήρη &μηνύματα"
+
+#. i18n: ectx: property (text), widget (QRadioButton, retrieveOnlyHeaders)
+#: widgets/cachepolicypage.ui:111
+#, kde-format
+msgid "&Retrieve message bodies on demand"
+msgstr "Ανάκτηση πε&ριεχομένου μηνυμάτων αν ζητηθεί"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/cachepolicypage.ui:118
+#, fuzzy, kde-format
+#| msgid "&Retrieve message bodies on demand"
+msgid "Keep message bodies locally for:"
+msgstr "Ανάκτηση πε&ριεχομένου μηνυμάτων αν ζητηθεί"
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, localCacheTimeout)
+#: widgets/cachepolicypage.ui:130
+#, kde-format
+msgctxt "no cache timeout"
+msgid "Forever"
+msgstr "Για πάντα"
+
+#: widgets/clearcachejob.cpp:54
+#, kde-format
+msgid ""
+"The collection '%1' contains %2 items without Remote ID. Those items were "
+"likely never uploaded to the destination server, so clearing this collection "
+"means that those <b>data will be lost</b>. Are you sure you want to proceed?"
+msgstr ""
+
+#: widgets/clearcachejob.cpp:83
+#, kde-format
+msgid "Collection cache cleared. You should restart Akonadi now."
+msgstr ""
+
+#: widgets/collectiondialog.cpp:56
+#, kde-format
+msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
+msgid "Search"
+msgstr "Αναζήτηση"
+
+#: widgets/collectiondialog.cpp:64
+#, kde-format
+msgid "Use folder by default"
+msgstr "Προκαθορισμένη χρήση φακέλου"
+
+#: widgets/collectiondialog.cpp:224
+#, kde-format
+msgid "&New Subfolder..."
+msgstr "&Νέος υποφάκελος..."
+
+#: widgets/collectiondialog.cpp:226
+#, kde-format
+msgid "Create a new subfolder under the currently selected folder"
+msgstr "Δημιουργία νέου υποφακέλου κάτω από τον τρέχοντα επιλεγμένο φάκελο"
+
+#: widgets/collectiondialog.cpp:264 widgets/standardactionmanager.cpp:348
+#, kde-format
+msgctxt "@title:window"
+msgid "New Folder"
+msgstr "Νέος φάκελος"
+
+#: widgets/collectiondialog.cpp:264
+#, kde-format
+msgctxt "@label:textbox, name of a thing"
+msgid "Name"
+msgstr "Όνομα"
+
+#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:350
+#, kde-format
+msgid "Could not create folder: %1"
+msgstr "Αδύνατη η δημιουργία του φακέλου: %1"
+
+#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
+#, kde-format
+msgid "Folder creation failed"
+msgstr "Η δημιουργία του φακέλου απέτυχε"
+
+#: widgets/collectiongeneralpropertiespage.cpp:27
+#, kde-format
+msgctxt "@title:tab general properties page"
+msgid "General"
+msgstr "Γενικά"
+
+#: widgets/collectiongeneralpropertiespage.cpp:54
+#, kde-format
+msgctxt "@label"
+msgid "One object"
+msgid_plural "%1 objects"
+msgstr[0] "Ένα αντικείμενο"
+msgstr[1] "%1 αντικείμενα"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/collectiongeneralpropertiespage.ui:16
+#, kde-format
+msgid "&Name:"
+msgstr "Ό&νομα:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, customIconCheckbox)
+#: widgets/collectiongeneralpropertiespage.ui:29
+#, kde-format
+msgid "&Use custom icon:"
+msgstr "&Προσαρμοσμένο εικονίδιο:"
+
+#. i18n: ectx: property (icon), widget (KIconButton, customIcon)
+#: widgets/collectiongeneralpropertiespage.ui:39
+#, kde-format
+msgid "folder"
+msgstr "φάκελος"
+
+#. i18n: ectx: property (title), widget (QGroupBox, statsBox)
+#: widgets/collectiongeneralpropertiespage.ui:62
+#, kde-format
+msgid "Statistics"
+msgstr "Στατιστικά"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: widgets/collectiongeneralpropertiespage.ui:68
+#, kde-format
+msgctxt "object names"
+msgid "Content:"
+msgstr "Περιεχόμενο:"
+
+#. i18n: ectx: property (text), widget (QLabel, countLabel)
+#: widgets/collectiongeneralpropertiespage.ui:75
+#, kde-format
+msgid "0 objects"
+msgstr "0 αντικείμενα"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: widgets/collectiongeneralpropertiespage.ui:82
+#, kde-format
+msgid "Size:"
+msgstr "Μέγεθος:"
+
+#. i18n: ectx: property (text), widget (QLabel, sizeLabel)
+#: widgets/collectiongeneralpropertiespage.ui:89
+#, kde-format
+msgid "0 Byte"
+msgstr "0 Byte"
+
+#: widgets/collectionmaintenancepage.cpp:46
+#, kde-format
+msgid "Remember that indexing can take some minutes."
+msgstr "Θυμηθείτε ότι η δικτοδότηση απαιτεί κάποιο χρόνο."
+
+#: widgets/collectionmaintenancepage.cpp:71
+#, kde-format
+msgid "Maintenance"
+msgstr "Συντήρηση"
+
+#: widgets/collectionmaintenancepage.cpp:130
+#, kde-format
+msgid "Error while retrieving indexed items count"
+msgstr "Σφάλμα κατά την ανάκτηση του πλήθους των δεικτοδοτημένων αντικειμένων"
+
+#: widgets/collectionmaintenancepage.cpp:133
+#, kde-format
+msgid "Indexed %1 item in this folder"
+msgid_plural "Indexed %1 items in this folder"
+msgstr[0] "Δεικτοδοτήθηκε %1 αντιμείμενο σε αυτόν το φάκελο"
+msgstr[1] "Δεικτοδοτήθηκαν %1 αντιμείμενα σε αυτόν το φάκελο"
+
+#: widgets/collectionmaintenancepage.cpp:137
+#, kde-format
+msgid "Calculating indexed items..."
+msgstr "Υπολογισμός δεικτοδοτημένων αντικειμένων..."
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/collectionmaintenancepage.ui:17
+#, kde-format
+msgid "Folder type:"
+msgstr "Τύπος φακέλου:"
+
+#. i18n: ectx: property (text), widget (QLabel, folderTypeLbl)
+#. i18n: ectx: property (text), widget (QLabel, folderSizeLbl)
+#. i18n: ectx: property (text), widget (QLabel, itemsCountLbl)
+#. i18n: ectx: property (text), widget (QLabel, unreadItemsCountLbl)
+#: widgets/collectionmaintenancepage.ui:24
+#: widgets/collectionmaintenancepage.ui:31
+#: widgets/collectionmaintenancepage.ui:52
+#: widgets/collectionmaintenancepage.ui:66
+#, kde-format
+msgid "unknown"
+msgstr "άγνωστο"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: widgets/collectionmaintenancepage.ui:38
+#, kde-format
+msgid "File size:"
+msgstr "Μέγεθος φακέλου:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: widgets/collectionmaintenancepage.ui:45
+#, kde-format
+msgid "Total items:"
+msgstr "Σύνολο αντικειμένων:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: widgets/collectionmaintenancepage.ui:59
+#, kde-format
+msgid "Unread items:"
+msgstr "Μη αναγνωσμένα αντικείμενα:"
+
+#. i18n: ectx: property (text), widget (QLabel, indexingLabel)
+#: widgets/collectionmaintenancepage.ui:73
+#, kde-format
+msgid "Indexing:"
+msgstr "Δεικτοδότηση:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, enableIndexingChkBox)
+#: widgets/collectionmaintenancepage.ui:80
+#, kde-format
+msgid "Enable fulltext indexing"
+msgstr "Ενεργοποίηση δεικτοδότησης για πλήρες κείμενο"
+
+#. i18n: ectx: property (text), widget (QLabel, indexedCountLbl)
+#: widgets/collectionmaintenancepage.ui:87
+#, kde-format
+msgid "Retrieving indexed items count..."
+msgstr "Ανάκτηση πλήθους δεικτοδοτημένων αντικειμένων..."
+
+#. i18n: ectx: property (text), widget (QPushButton, reindexButton)
+#: widgets/collectionmaintenancepage.ui:94
+#, kde-format
+msgid "Reindex folder"
+msgstr "Αναδεικτοδότηση φακέλου"
+
+#: widgets/collectionrequester.cpp:113
+#, kde-format
+msgid "No Folder"
+msgstr "Κανείς φάκελος"
+
+#: widgets/collectionrequester.cpp:122
+#, kde-format
+msgid "Open collection dialog"
+msgstr "Άνοιγμα διαλόγου συλλογής"
+
+#: widgets/collectionrequester.cpp:143
+#, kde-format
+msgctxt "@title:window"
+msgid "Select a collection"
+msgstr "Επιλογή συλλογής"
+
+#: widgets/conflictresolvedialog.cpp:129
+#, kde-format
+msgid "Modification Time"
+msgstr "Χρόνος τροποποίησης"
+
+#: widgets/conflictresolvedialog.cpp:141
+#, kde-format
+msgid "Flags"
+msgstr "Σημαίες"
+
+#: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
+#: widgets/conflictresolvedialog.cpp:174
+#, kde-format
+msgid "Attribute: %1"
+msgstr "Ιδιότητα: %1"
+
+#: widgets/conflictresolvedialog.cpp:186
+#, kde-format
+msgctxt "@title:window"
+msgid "Conflict Resolution"
+msgstr "Επίλυση σύγκρουσης"
+
+#: widgets/conflictresolvedialog.cpp:192
+#, kde-format
+msgctxt "@action:button"
+msgid "Take my version"
+msgstr "Με τη δική μου έκδοση"
+
+#: widgets/conflictresolvedialog.cpp:198
+#, kde-format
+msgctxt "@action:button"
+msgid "Take their version"
+msgstr "Με τη δική τους έκδοση"
+
+#: widgets/conflictresolvedialog.cpp:204
+#, kde-format
+msgctxt "@action:button"
+msgid "Keep both versions"
+msgstr "Να διατηρηθούν και οι δύο εκδόσεις"
+
+#: widgets/conflictresolvedialog.cpp:216
+#, kde-format
+msgid ""
+"<qt>Your changes conflict with those made by someone else meanwhile."
+"<br>Unless one version can just be thrown away, you will have to integrate "
+"those changes manually.<br>Click on <a href=\"opentexteditor\">\"Open text "
+"editor\"</a> to keep a copy of the texts, then select which version is most "
+"correct, then re-open it and modify it again to add what's missing."
+msgstr ""
+"<qt>Οι αλλαγές σας είναι σε σύγκρουση με εκείνες που έκανε στο μεταξύ "
+"κάποιος άλλος.<br>Εκτός εάν μια έκδοση μπορεί απλώς να απορριφθεί, θα "
+"χρειαστεί να ενσωματώσετε τις αλλαγές αυτές χειροκίνητα.<br>Με κλικ στο<a "
+"href=\"opentexteditor\">«Άνοιγμα επεξεργαστή κειμένου»</a> διατηρείτε ένα "
+"αντίγραφο των κειμένων και έπειτα επιλέγετε ποια έκδοση είναι η σωστότερη "
+"και έπειτα την ανοίγετε και την τροποποιείτε ξανά για να προσθέσετε ό,τι "
+"λείπει."
+
+#: widgets/conflictresolvedialog.cpp:265
+#, kde-format
+msgid "Data"
+msgstr "Δεδομένα"
+
+#: widgets/controlgui.cpp:223
+#, kde-format
+msgid "Starting Akonadi server..."
+msgstr "Εκκίνηση εξυπηρετητή Akonadi..."
+
+#: widgets/controlgui.cpp:229
+#, kde-format
+msgid "Stopping Akonadi server..."
+msgstr "Διακοπή εξυπηρετητή Akonadi..."
+
+#: widgets/dragdropmanager.cpp:212
+#, kde-format
+msgid "&Move Here"
+msgstr "&Μετακίνηση εδώ"
+
+#: widgets/dragdropmanager.cpp:218
+#, kde-format
+msgid "&Copy Here"
+msgstr "&Αντιγραφή εδώ"
+
+#: widgets/dragdropmanager.cpp:224
+#, kde-format
+msgid "&Link Here"
+msgstr "&Διασύνδεση εδώ"
+
+#: widgets/dragdropmanager.cpp:228
+#, kde-format
+msgid "C&ancel"
+msgstr "&Ακύρωση"
+
+#: widgets/erroroverlay.cpp:225
+#, kde-format
+msgctxt "%1 is a reason why"
+msgid ""
+"Cannot connect to the Personal information management service.\n"
+"\n"
+"%1"
+msgstr ""
+"Αδυναμία σύνδεσης στην υπηρεσία διαχείρισης προσωπικών πληροφοριών.\n"
+"\n"
+"%1"
+
+#: widgets/erroroverlay.cpp:229 widgets/erroroverlay.cpp:230
+#, kde-format
+msgid "Personal information management service is starting..."
+msgstr "Η υπηρεσία διαχείρισης προσωπικών πληροφοριών ξεκινά..."
+
+#: widgets/erroroverlay.cpp:234 widgets/erroroverlay.cpp:235
+#, kde-format
+msgid "Personal information management service is shutting down..."
+msgstr "Η υπηρεσία διαχείρισης προσωπικών πληροφοριών τερματίζεται..."
+
+#: widgets/erroroverlay.cpp:239
+#, kde-format
+msgid ""
+"Personal information management service is performing a database upgrade."
+msgstr ""
+"Η υπηρεσία διαχείρισης προσωπικών πληροφοριών αναβαθμίζει τη βάση δεδομένων."
+
+#: widgets/erroroverlay.cpp:241
+#, kde-format
+msgid ""
+"Personal information management service is performing a database upgrade.\n"
+"This happens after a software update and is necessary to optimize "
+"performance.\n"
+"Depending on the amount of personal information, this might take a few "
+"minutes."
+msgstr ""
+"Η υπηρεσία διαχείρισης προσωπικών πληροφοριών αναβαθμίζει τη βάση "
+"δεδομένων.\n"
+"Αυτό συμβαίνει μετά από μια αναβάθμιση λογισμικού και είναι απαραίτητο για "
+"τη βελτιστοποίηση των επιδόσεων.\n"
+"Ανάλογα με τον όγκο των προσωπικών πληροφοριών, μπορεί να διαρκέσει κάποια "
+"λεπτά."
+
+#. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
+#. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
+#: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
+#, kde-format
+msgid ""
+"The Akonadi personal information management service is not running. This "
+"application cannot be used without it."
+msgstr ""
+"Η υπηρεσία διαχείρισης προσωπικών πληροφοριών Akonadi δεν εκτελείται και "
+"έτσι η εφαρμογή αυτή δεν θα μπορεί να χρησιμοποιηθεί."
+
+#. i18n: ectx: property (text), widget (QPushButton, startButton)
+#: widgets/erroroverlay.ui:116
+#, kde-format
+msgctxt "@action:button Start the Akonadi server"
+msgid "Start"
+msgstr "Εκκίνηση"
+
+#. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
+#: widgets/erroroverlay.ui:158
+#, kde-format
+msgid ""
+"The Akonadi personal information management framework is not operational.\n"
+"Click on \"Details...\" to obtain detailed information on this problem."
+msgstr ""
+"Το σύστημα διαχείρισης προσωπικών πληροφοριών Akonadi δε λειτουργεί.\n"
+" Κάντε κλικ στις \"Λεπτομέρειες...\" για πληροφορίες σχετικά με αυτό το "
+"πρόβλημα."
+
+#. i18n: ectx: property (text), widget (QLabel, brokenDescription)
+#: widgets/erroroverlay.ui:208
+#, kde-format
+msgid "The Akonadi personal information management service is not operational."
+msgstr "Η υπηρεσία διαχείρισης προσωπικών πληροφοριών Akonadi δε λειτουργεί."
+
+#. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
+#: widgets/erroroverlay.ui:259
+#, kde-format
+msgid "Details..."
+msgstr "Λεπτομέρειες..."
+
+#: widgets/manageaccountwidget.cpp:200
+#, kde-format
+msgid "Do you want to remove account '%1'?"
+msgstr "Θέλετε πράγματι να διαγραφεί ο λογαριασμός '%1';"
+
+#: widgets/manageaccountwidget.cpp:201
+#, kde-format
+msgid "Remove account?"
+msgstr "Να διαγραφεί ο λογαριασμός;"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/manageaccountwidget.ui:19
+#, kde-format
+msgid "Incoming accounts (add at least one):"
+msgstr "Εισερχόμενοι λογαριασμοί (προσθέστε τουλάχιστον έναν):"
+
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
+#: widgets/manageaccountwidget.ui:26
+#, kde-format
+msgid "Filter…"
+msgstr "Φιλτράρισμα…"
+
+#. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
+#: widgets/manageaccountwidget.ui:40
+#, kde-format
+msgid "A&dd..."
+msgstr "Προσ&θήκη..."
+
+#. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
+#: widgets/manageaccountwidget.ui:50
+#, kde-format
+msgid "&Modify..."
+msgstr "&Τροποποίηση..."
+
+#. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
+#: widgets/manageaccountwidget.ui:60
+#, kde-format
+msgid "R&emove"
+msgstr "Δ&ιαγραφή"
+
+#. i18n: ectx: property (text), widget (QPushButton, mRestartAccountButton)
+#: widgets/manageaccountwidget.ui:77
+#, kde-format
+msgid "Restart"
+msgstr "Επανεκκίνηση"
+
+#: widgets/recentcollectionaction.cpp:43
+#, kde-format
+msgid "Recent Folder"
+msgstr "Πρόσφατος φάκελος"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, RenameFavoriteDialog)
+#: widgets/renamefavoritedialog.ui:26
+#, kde-format
+msgid "Rename Favorite"
+msgstr "Μετονομασία προτιμώμενου"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/renamefavoritedialog.ui:35
+#, kde-format
+msgid "Name:"
+msgstr "Όνομα:"
+
+#: widgets/selftestdialog.cpp:60
+#, kde-format
+msgctxt "@title:window"
+msgid "Akonadi Server Self-Test"
+msgstr "Αυτοέλεγχος εξυπηρετητή Akonadi"
+
+#: widgets/selftestdialog.cpp:71
+#, kde-format
+msgid "Save Report..."
+msgstr "Αποθήκευση αναφοράς..."
+
+#: widgets/selftestdialog.cpp:73
+#, kde-format
+msgid "Copy Report to Clipboard"
+msgstr "Αντιγραφή αναφοράς στο πρόχειρο"
+
+#: widgets/selftestdialog.cpp:189
+#, kde-format
+msgid ""
+"The QtSQL driver '%1' is required by your current Akonadi server "
+"configuration and was found on your system."
+msgstr ""
+"Ο οδηγός QtSQL '%1' απαιτείται από την τρέχουσα διαμόρφωση του εξυπηρετητή "
+"Akonadi και βρέθηκε στο σύστημά σας."
+
+#: widgets/selftestdialog.cpp:191
+#, kde-format
+msgid ""
+"The QtSQL driver '%1' is required by your current Akonadi server "
+"configuration.\n"
+"The following drivers are installed: %2.\n"
+"Make sure the required driver is installed."
+msgstr ""
+"Ο οδηγός QtSQL '%1' απαιτείται από τις τρέχουσες ρυθμίσεις του εξυπηρετητή "
+"Akonadi.\n"
+"Οι παρακάτω οδηγοί είναι εγκατεστημένοι: %2.\n"
+"Σιγουρευτείτε ότι ο απαιτούμενος οδηγός είναι εγκατεστημένος."
+
+#: widgets/selftestdialog.cpp:198
+#, kde-format
+msgid "Database driver found."
+msgstr "Βρέθηκε οδηγός βάσης δεδομένων."
+
+#: widgets/selftestdialog.cpp:200
+#, kde-format
+msgid "Database driver not found."
+msgstr "Δε βρέθηκε οδηγός βάσης δεδομένων."
+
+#: widgets/selftestdialog.cpp:208
+#, kde-format
+msgid "MySQL server executable not tested."
+msgstr "Το εκτελέσιμο του εξυπηρετητή MySQL δεν ελέγχθηκε."
+
+#: widgets/selftestdialog.cpp:208 widgets/selftestdialog.cpp:249
+#: widgets/selftestdialog.cpp:300
+#, kde-format
+msgid "The current configuration does not require an internal MySQL server."
+msgstr "Οι τρέχουσες ρυθμίσεις δεν απαιτούν έναν εσωτερικό εξυπηρετητή MySQL."
+
+#: widgets/selftestdialog.cpp:216
+#, kde-format
+msgid ""
+"You have currently configured Akonadi to use the MySQL server '%1'.\n"
+"Make sure you have the MySQL server installed, set the correct path and "
+"ensure you have the necessary read and execution rights on the server "
+"executable. The server executable is typically called 'mysqld'; its location "
+"varies depending on the distribution."
+msgstr ""
+"Έχετε διαμορφώσει τον Akonadi να χρησιμοποιεί τον εξυπηρετητή MySQL '%1'.\n"
+"Βεβαιωθείτε ότι ο εξυπηρετητής MySQL είναι εγκατεστημένος, ορίστε τη σωστή "
+"διαδρομή και ότι έχετε τα απαραίτητα δικαιώματα ανάγνωσης και εκτέλεσης στο "
+"εκτελέσιμο του εξυπηρετητή. Το εκτελέσιμο συνήθως ονομάζεται 'mysqld', με τη "
+"θέση του να διαφέρει ανάλογα με τη διανομή."
+
+#: widgets/selftestdialog.cpp:224
+#, kde-format
+msgid "MySQL server not found."
+msgstr "Δε βρέθηκε ο εξυπηρετητής MySQL."
+
+#: widgets/selftestdialog.cpp:226
+#, kde-format
+msgid "MySQL server not readable."
+msgstr "Αδύνατη η ανάγνωση του εξυπηρετητή MySQL."
+
+#: widgets/selftestdialog.cpp:228
+#, kde-format
+msgid "MySQL server not executable."
+msgstr "Μη εκτελέσιμος ο εξυπηρετητής MySQL."
+
+#: widgets/selftestdialog.cpp:230
+#, kde-format
+msgid "MySQL found with unexpected name."
+msgstr "Βρέθηκε η MySQL με μη αναμενόμενο όνομα."
+
+#: widgets/selftestdialog.cpp:232
+#, kde-format
+msgid "MySQL server found."
+msgstr "Βρέθηκε ο εξυπηρετητής MySQL."
+
+#: widgets/selftestdialog.cpp:238
+#, kde-format
+msgid "MySQL server found: %1"
+msgstr "Βρέθηκε ο εξυπηρετητής MySQL: %1"
+
+#: widgets/selftestdialog.cpp:239
+#, kde-format
+msgid "MySQL server is executable."
+msgstr "Ο εξυπηρετητής MySQL είναι εκτελέσιμος."
+
+#: widgets/selftestdialog.cpp:241
+#, kde-format
+msgid ""
+"Executing the MySQL server '%1' failed with the following error message: '%2'"
+msgstr ""
+"Η εκτέλεση του εξυπηρετητή MySQL '%1' απέτυχε με το παρακάτω μήνυμα "
+"σφάλματος: '%2'"
+
+#: widgets/selftestdialog.cpp:242
+#, kde-format
+msgid "Executing the MySQL server failed."
+msgstr "Αποτυχία εκτέλεσης του εξυπηρετητή MySQL."
+
+#: widgets/selftestdialog.cpp:249
+#, kde-format
+msgid "MySQL server error log not tested."
+msgstr "Δεν ελέγχθηκε η καταγραφή σφαλμάτων του εξυπηρετητή MySQL."
+
+#: widgets/selftestdialog.cpp:257
+#, kde-format
+msgid "No current MySQL error log found."
+msgstr "Δε βρέθηκε τρέχουσα καταγραφή σφαλμάτων MySQL."
+
+#: widgets/selftestdialog.cpp:258
+#, kde-format
+msgid ""
+"The MySQL server did not report any errors during this startup. The log can "
+"be found in '%1'."
+msgstr ""
+"Ο εξυπηρετητής MySQL δεν ανέφερε σφάλματα κατά την εκκίνηση. Η καταγραφή "
+"βρίσκεται στο '%1'."
+
+#: widgets/selftestdialog.cpp:264
+#, kde-format
+msgid "MySQL error log not readable."
+msgstr "Αδύνατη η ανάγνωση της καταγραφής σφαλμάτων MySQL."
+
+#: widgets/selftestdialog.cpp:265
+#, kde-format
+msgid "A MySQL server error log file was found but is not readable: %1"
+msgstr ""
+"Βρέθηκε αρχείο καταγραφής σφαλμάτων MySQL αλλά δεν είναι αναγνώσιμο: %1"
+
+#: widgets/selftestdialog.cpp:274
+#, kde-format
+msgid "MySQL server log contains errors."
+msgstr "Η καταγραφή του εξυπηρετητή MySQL περιέχει σφάλματα."
+
+#: widgets/selftestdialog.cpp:275
+#, kde-format
+msgid "The MySQL server error log file '%1' contains errors."
+msgstr "Το αρχείο καταγραφής σφαλμάτων MySQL '%1' περιέχει σφάλματα."
+
+#: widgets/selftestdialog.cpp:285
+#, kde-format
+msgid "MySQL server log contains warnings."
+msgstr "Η καταγραφή του εξυπηρετητή MySQL περιέχει προειδοποιήσεις."
+
+#: widgets/selftestdialog.cpp:286
+#, kde-format
+msgid "The MySQL server log file '%1' contains warnings."
+msgstr ""
+"Το αρχείο καταγραφής του εξυπηρετητή MySQL '%1' περιέχει προειδοποιήσεις."
+
+#: widgets/selftestdialog.cpp:289
+#, kde-format
+msgid "MySQL server log contains no errors."
+msgstr "Η καταγραφή του εξυπηρετητή MySQL δεν περιέχει σφάλματα."
+
+#: widgets/selftestdialog.cpp:290
+#, kde-format
+msgid "The MySQL server log file '%1' does not contain any errors or warnings."
+msgstr ""
+"Το αρχείο καταγραφής σφαλμάτων MySQL '%1' δεν περιέχει σφάλματα ή "
+"προειδοποιήσεις."
+
+#: widgets/selftestdialog.cpp:300
+#, kde-format
+msgid "MySQL server configuration not tested."
+msgstr "Δεν ελέγχθηκαν οι ρυθμίσεις του εξυπηρετητή MySQL."
+
+#: widgets/selftestdialog.cpp:309
+#, kde-format
+msgid "MySQL server default configuration found."
+msgstr "Βρέθηκαν οι προκαθορισμένες ρυθμίσεις του εξυπηρετητή MySQL."
+
+#: widgets/selftestdialog.cpp:310
+#, kde-format
+msgid ""
+"The default configuration for the MySQL server was found and is readable at "
+"%1."
+msgstr ""
+"Οι προκαθορισμένες ρυθμίσεις του εξυπηρετητή MySQL βρέθηκαν και είναι "
+"αναγνώσιμες στο %1."
+
+#: widgets/selftestdialog.cpp:314
+#, kde-format
+msgid "MySQL server default configuration not found."
+msgstr "Δε βρέθηκαν οι προκαθορισμένες ρυθμίσεις του εξυπηρετητή MySQL."
+
+#: widgets/selftestdialog.cpp:315
+#, kde-format
+msgid ""
+"The default configuration for the MySQL server was not found or was not "
+"readable. Check your Akonadi installation is complete and you have all "
+"required access rights."
+msgstr ""
+"Οι προκαθορισμένες ρυθμίσεις του εξυπηρετητή MySQL δε βρέθηκαν ή δεν ήταν  αναγνώσιμες. Ελέγξτε την εγκατάσταση του Akonadi και ότι έχετε τις "
+"απαραίτητες  άδειες πρόσβασης."
+
+#: widgets/selftestdialog.cpp:323
+#, kde-format
+msgid "MySQL server custom configuration not available."
+msgstr "Μη διαθέσιμες οι προσαρμοσμένες ρυθμίσεις του εξυπηρετητή MySQL."
+
+#: widgets/selftestdialog.cpp:324
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was not found but is optional."
+msgstr ""
+"Οι προσαρμοσμένες ρυθμίσεις του εξυπηρετητή MySQL δε βρέθηκαν αλλά είναι "
+"προαιρετικές."
+
+#: widgets/selftestdialog.cpp:327
+#, kde-format
+msgid "MySQL server custom configuration found."
+msgstr "Βρέθηκαν προσαρμοσμένες ρυθμίσεις του εξυπηρετητή MySQL."
+
+#: widgets/selftestdialog.cpp:328
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was found and is readable at %1"
+msgstr ""
+"Οι προσαρμοσμένες ρυθμίσεις του εξυπηρετητή MySQL βρέθηκαν και είναι "
+"αναγνώσιμες στο %1"
+
+#: widgets/selftestdialog.cpp:332
+#, kde-format
+msgid "MySQL server custom configuration not readable."
+msgstr "Αδύνατη η ανάγνωση των προσαρμοσμένων ρυθμίσεων του εξυπηρετητή MySQL."
+
+#: widgets/selftestdialog.cpp:333
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was found at %1 but is not "
+"readable. Check your access rights."
+msgstr ""
+"Οι σαρμοσμένες ρυθμίσεις του εξυπηρετητή MySQL βρέθηκαν στο %1 αλλά δεν "
+"είναι  αναγνώσιμες. Ελέγξτε τις άδειές σας πρόσβασης."
+
+#: widgets/selftestdialog.cpp:342
+#, kde-format
+msgid "MySQL server configuration not found or not readable."
+msgstr ""
+"Δε βρέθηκαν οι ρυθμίσεις του εξυπηρετητή MySQL ή δεν είναι αναγνώσιμες."
+
+#: widgets/selftestdialog.cpp:343
+#, kde-format
+msgid "The MySQL server configuration was not found or is not readable."
+msgstr ""
+"Δε βρέθηκαν οι ρυθμίσεις του εξυπηρετητή MySQL ή δεν είναι αναγνώσιμες."
+
+#: widgets/selftestdialog.cpp:346
+#, kde-format
+msgid "MySQL server configuration is usable."
+msgstr "Οι ρυθμίσεις του εξυπηρετητή MySQL μπορούν να χρησιμοποιηθούν."
+
+#: widgets/selftestdialog.cpp:347
+#, kde-format
+msgid "The MySQL server configuration was found at %1 and is readable."
+msgstr ""
+"Βρέθηκαν οι ρυθμίσεις του εξυπηρετητή MySQL στο %1 και είναι αναγνώσιμες."
+
+#: widgets/selftestdialog.cpp:376
+#, kde-format
+msgid "Cannot connect to PostgreSQL server."
+msgstr "Αδυναμία σύνδεσης στον εξυπηρετητή PostgreSQL."
+
+#: widgets/selftestdialog.cpp:378
+#, kde-format
+msgid "PostgreSQL server found."
+msgstr "Βρέθηκε ο εξυπηρετητής PostgreSQL."
+
+#: widgets/selftestdialog.cpp:378
+#, kde-format
+msgid "The PostgreSQL server was found and connection is working."
+msgstr "Ο εξυπηρετητής PostgreSQL βρέθηκε και η σύνδεση λειτουργεί."
+
+#: widgets/selftestdialog.cpp:388
+#, kde-format
+msgid "akonadictl not found"
+msgstr "δε βρέθηκε το akonadictl"
+
+#: widgets/selftestdialog.cpp:389
+#, kde-format
+msgid ""
+"The program 'akonadictl' needs to be accessible in $PATH. Make sure you have "
+"the Akonadi server installed."
+msgstr ""
+"Το πρόγραμμα 'akonadictl' πρέπει να είναι προσβάσιμο από το $PATH. "
+"Σιγουρευτείτε ότι ο εξυπηρετητής Akonadi είναι εγκατεστημένος."
+
+#: widgets/selftestdialog.cpp:396
+#, kde-format
+msgid "akonadictl found and usable"
+msgstr "βρέθηκε το akonadictl και μπορεί να χρησιμοποιηθεί"
+
+#: widgets/selftestdialog.cpp:397
+#, kde-format
+msgid ""
+"The program '%1' to control the Akonadi server was found and could be "
+"executed successfully.\n"
+"Result:\n"
+"%2"
+msgstr ""
+"Το πρόγραμμα '%1' για τον έλεγχο του εξυπηρετητή Akonadi βρέθηκε και μπορεί "
+"να εκτελεστεί με επιτυχία.\n"
+"Αποτέλεσμα:\n"
+"%2"
+
+#: widgets/selftestdialog.cpp:403
+#, kde-format
+msgid "akonadictl found but not usable"
+msgstr "βρέθηκε το akonadictl αλλά δεν μπορεί να χρησιμοποιηθεί"
+
+#: widgets/selftestdialog.cpp:404
+#, kde-format
+msgid ""
+"The program '%1' to control the Akonadi server was found but could not be "
+"executed successfully.\n"
+"Result:\n"
+"%2\n"
+"Make sure the Akonadi server is installed correctly."
+msgstr ""
+"Το πρόγραμμα '%1' για τον έλεγχο του εξυπηρετητή Akonadi βρέθηκε και μπορεί "
+"να εκτελεστεί με επιτυχία.\n"
+"Αποτέλεσμα:\n"
+"%2\n"
+"Σιγουρευτείτε ότι ο εξυπηρετητής Akonadi είναι εγκατεστημένος σωστά."
+
+#: widgets/selftestdialog.cpp:416
+#, kde-format
+msgid "Akonadi control process registered at D-Bus."
+msgstr "Η διεργασία ελέγχου του Akonadi καταχωρήθηκε στο D-Bus."
+
+#: widgets/selftestdialog.cpp:417
+#, kde-format
+msgid ""
+"The Akonadi control process is registered at D-Bus which typically indicates "
+"it is operational."
+msgstr ""
+"Η διεργασία ελέγχου του Akonadi καταχωρήθηκε στο D-Bus το οποίο υποδηλώνει "
+"και τη λειτουργικότητά του."
+
+#: widgets/selftestdialog.cpp:420
+#, kde-format
+msgid "Akonadi control process not registered at D-Bus."
+msgstr "Η διεργασία ελέγχου του Akonadi δεν καταχωρήθηκε στο D-Bus."
+
+#: widgets/selftestdialog.cpp:421
+#, kde-format
+msgid ""
+"The Akonadi control process is not registered at D-Bus which typically means "
+"it was not started or encountered a fatal error during startup."
+msgstr ""
+"Η διεργασία ελέγχου του Akonadi δεν καταχωρήθηκε στο D-Bus το οποίο "
+"υποδηλώνει ότι δεν εκκίνησε ή συνέβη κάποιο κρίσιμο σφάλμα κατά την εκκίνηση."
+
+#: widgets/selftestdialog.cpp:427
+#, kde-format
+msgid "Akonadi server process registered at D-Bus."
+msgstr "Η διεργασία εξυπηρετητή του Akonadi καταχωρήθηκε στο D-Bus."
+
+#: widgets/selftestdialog.cpp:428
+#, kde-format
+msgid ""
+"The Akonadi server process is registered at D-Bus which typically indicates "
+"it is operational."
+msgstr ""
+"Η διεργασία εξυπηρετητή του Akonadi καταχωρήθηκε στο D-Bus το οποίο "
+"υποδηλώνει και τη λειτουργικότητά του."
+
+#: widgets/selftestdialog.cpp:431
+#, kde-format
+msgid "Akonadi server process not registered at D-Bus."
+msgstr "Η διεργασία εξυπηρετητή του Akonadi δεν καταχωρήθηκε στο D-Bus."
+
+#: widgets/selftestdialog.cpp:432
+#, kde-format
+msgid ""
+"The Akonadi server process is not registered at D-Bus which typically means "
+"it was not started or encountered a fatal error during startup."
+msgstr ""
+"Η διεργασία εξυπηρετητή του Akonadi δεν καταχωρήθηκε στο D-Bus το οποίο "
+"υποδηλώνει ότι δεν εκκίνησε ή συνέβη ένα κρίσιμο σφάλμα κατά την εκκίνησή "
+"του."
+
+#: widgets/selftestdialog.cpp:441
+#, kde-format
+msgid "Protocol version check not possible."
+msgstr "Αδύνατος ο έλεγχος έκδοσης του πρωτοκόλλου."
+
+#: widgets/selftestdialog.cpp:442
+#, kde-format
+msgid ""
+"Without a connection to the server it is not possible to check if the "
+"protocol version meets the requirements."
+msgstr "Χωρίς σύνδεση με τον εξυπηρετητή δεν είναι δυνατός ο έλεγχος της  έκδοσης πρωτοκόλλου και αν αυτή συμμορφώνεται με τις απαιτήσεις."
+
+#: widgets/selftestdialog.cpp:447
+#, kde-format
+msgid "Server protocol version is too old."
+msgstr "Η έκδοση πρωτοκόλλου του εξυπηρετητή είναι πολύ παλιά."
+
+#: widgets/selftestdialog.cpp:448 widgets/selftestdialog.cpp:455
+#, kde-format
+msgid ""
+"The server protocol version is %1, but version %2 is required by the client. "
+"If you recently updated KDE PIM, please make sure to restart both Akonadi "
+"and KDE PIM applications."
+msgstr ""
+"Η έκδοση πρωτοκόλλου του εξυπηρετητή είναι η %1, ενώ η εφαρμογή απαιτεί την "
+"%2. Αν έχετε ενημερώσει το KDE PIM πρόσφατα, βεβαιωθείτε ότι έχετε "
+"επανεκκινήσει και το Akonadi και τις εφαρμογές KDE PIM."
+
+#: widgets/selftestdialog.cpp:454
+#, kde-format
+msgid "Server protocol version is too new."
+msgstr "Η έκδοση πρωτοκόλλου του εξυπηρετητή είναι πολύ νέα."
+
+#: widgets/selftestdialog.cpp:460
+#, kde-format
+msgid "Server protocol version matches."
+msgstr "Η έκδοση πρωτοκόλλου του εξυπηρετητή ταιριάζει."
+
+#: widgets/selftestdialog.cpp:460
+#, kde-format
+msgid "The current Protocol version is %1."
+msgstr "Η τρέχουσα έκδοση πρωτοκόλλου είναι η %1."
+
+#: widgets/selftestdialog.cpp:478
+#, kde-format
+msgid "Resource agents found."
+msgstr "Βρέθηκαν πελάτες πόρων."
+
+#: widgets/selftestdialog.cpp:478
+#, kde-format
+msgid "At least one resource agent has been found."
+msgstr "Βρέθηκε τουλάχιστον ένας πελάτης πόρου."
+
+#: widgets/selftestdialog.cpp:481
+#, kde-format
+msgid "No resource agents found."
+msgstr "Δε βρέθηκαν πελάτες πόρων."
+
+#: widgets/selftestdialog.cpp:482
+#, kde-format
+msgid ""
+"No resource agents have been found, Akonadi is not usable without at least "
+"one. This usually means that no resource agents are installed or that there "
+"is a setup problem. The following paths have been searched: '%1'. The "
+"XDG_DATA_DIRS environment variable is set to '%2'; make sure this includes "
+"all paths where Akonadi agents are installed."
+msgstr ""
+"Δε βρέθηκαν πελάτες πόρων. Το Akonadi δεν είναι λειτουργικό χωρίς έστω έναν. "
+"Αυτό συνήθως σημαίνει ότι δεν είναι εγκατεστημένοι ή ότι υπάρχει κάποιο "
+"πρόβλημα στην εγκατάστασή τους. Αναζητήθηκαν οι παρακάτω διαδρομές: '%1'. Η "
+"μεταβλητή περιβάλλοντος XDG_DATA_DIRS είναι ορισμένη σε '%2'. Βεβαιωθείτε "
+"ότι αυτό περιλαμβάνει όλες τις διαδρομές όπου είναι εγκατεστημένοι πελάτες "
+"του Akonadi."
+
+#: widgets/selftestdialog.cpp:499
+#, kde-format
+msgid "No current Akonadi server error log found."
+msgstr "Δε βρέθηκε η τρέχουσα καταγραφή σφαλμάτων του Akonadi."
+
+#: widgets/selftestdialog.cpp:499
+#, kde-format
+msgid ""
+"The Akonadi server did not report any errors during its current startup."
+msgstr ""
+"Ο εξυπηρετητής Akonadi δεν ανέφερε σφάλματα κατά την τρέχουσα εκκίνησή του."
+
+#: widgets/selftestdialog.cpp:503
+#, kde-format
+msgid "Current Akonadi server error log found."
+msgstr "Βρέθηκε τρέχουσα καταγραφή σφαλμάτων του εξυπηρετητή Akonadi."
+
+#: widgets/selftestdialog.cpp:504
+#, kde-format
+msgid ""
+"The Akonadi server reported errors during its current startup. The log can "
+"be found in %1."
+msgstr ""
+"Ο εξυπηρετητής Akonadi ανέφερε σφάλματα κατά την τρέχουσα εκκίνησή του. Η "
+"καταγραφή μπορεί να βρεθεί στο %1."
+
+#: widgets/selftestdialog.cpp:512
+#, kde-format
+msgid "No previous Akonadi server error log found."
+msgstr "Δε βρέθηκε προηγούμενη καταγραφή σφαλμάτων του εξυπηρετητή Akonadi."
+
+#: widgets/selftestdialog.cpp:513
+#, kde-format
+msgid ""
+"The Akonadi server did not report any errors during its previous startup."
+msgstr ""
+"Ο εξυπηρετητής Akonadi δεν ανέφερε σφάλματα κατά την προηγούμενη εκκίνησή "
+"του."
+
+#: widgets/selftestdialog.cpp:517
+#, kde-format
+msgid "Previous Akonadi server error log found."
+msgstr "Βρέθηκε προηγούμενη καταγραφή σφαλμάτων του εξυπηρετητή Akonadi."
+
+#: widgets/selftestdialog.cpp:518
+#, kde-format
+msgid ""
+"The Akonadi server reported errors during its previous startup. The log can "
+"be found in %1."
+msgstr ""
+"Ο εξυπηρετητής Akonadi ανέφερε σφάλματα κατά την προηγούμενη εκκίνησή του. Η "
+"καταγραφή μπορεί να βρεθεί στο %1."
+
+#: widgets/selftestdialog.cpp:529
+#, kde-format
+msgid "No current Akonadi control error log found."
+msgstr "Δε βρέθηκε τρέχουσα καταγραφή σφαλμάτων ελέγχου του Akonadi."
+
+#: widgets/selftestdialog.cpp:530
+#, kde-format
+msgid ""
+"The Akonadi control process did not report any errors during its current "
+"startup."
+msgstr ""
+"Η διεργασία ελέγχου του Akonadi δεν ανέφερε σφάλματα κατά την τρέχουσα  εκκίνησή του."
+
+#: widgets/selftestdialog.cpp:534
+#, kde-format
+msgid "Current Akonadi control error log found."
+msgstr "Βρέθηκε τρέχουσα καταγραφή σφαλμάτων ελέγχου του Akonadi."
+
+#: widgets/selftestdialog.cpp:535
+#, kde-format
+msgid ""
+"The Akonadi control process reported errors during its current startup. The "
+"log can be found in %1."
+msgstr "Η διεργασία ελέγχου του Akonadi ανέφερε σφάλματα κατά την τρέχουσα  εκκίνησή του. Η καταγραφή βρίσκεται στο %1."
+
+#: widgets/selftestdialog.cpp:543
+#, kde-format
+msgid "No previous Akonadi control error log found."
+msgstr "Δε βρέθηκε προηγούμενη καταγραφή σφαλμάτων ελέγχου του Akonadi."
+
+#: widgets/selftestdialog.cpp:544
+#, kde-format
+msgid ""
+"The Akonadi control process did not report any errors during its previous "
+"startup."
+msgstr ""
+"Η διεργασία ελέγχου του Akonadi δεν ανέφερε σφάλματα κατά την προηγούμενη  εκκίνησή της."
+
+#: widgets/selftestdialog.cpp:548
+#, kde-format
+msgid "Previous Akonadi control error log found."
+msgstr "Βρέθηκε προηγούμενη καταγραφή σφαλμάτων ελέγχου του Akonadi."
+
+#: widgets/selftestdialog.cpp:549
+#, kde-format
+msgid ""
+"The Akonadi control process reported errors during its previous startup. The "
+"log can be found in %1."
+msgstr ""
+"Η διεργασία ελέγχου του Akonadi ανέφερε σφάλματα κατά την προηγούμενη "
+"εκκίνησή της. Η καταγραφή βρίσκεται στο %1."
+
+#: widgets/selftestdialog.cpp:559
+#, kde-format
+msgid "Akonadi was started as root"
+msgstr "Το akonadi ξεκίνησε ως root"
+
+#: widgets/selftestdialog.cpp:560
+#, kde-format
+msgid ""
+"Running Internet-facing applications as root/administrator exposes you to "
+"many security risks. MySQL, used by this Akonadi installation, will not "
+"allow itself to run as root, to protect you from these risks."
+msgstr ""
+"Η εκτέλεση εφαρμογών που βλέπουν το διαδίκτυο με χρήστη root/διαχειριστή σάς "
+"εκθέτει σε πολλούς κινδύνους ασφάλειας. Η MySQL σε αυτήν την εγκατάσταση  "
+"του Akonadi, δεν θα εκτελεστεί ως root για να σας προστατέψει από αυτούς "
+"τους κινδύνους."
+
+#: widgets/selftestdialog.cpp:564
+#, kde-format
+msgid "Akonadi is not running as root"
+msgstr "Το akonadi δεν εκτελείται ως root"
+
+#: widgets/selftestdialog.cpp:565
+#, kde-format
+msgid ""
+"Akonadi is not running as a root/administrator user, which is the "
+"recommended setup for a secure system."
+msgstr ""
+"iΤο Akonadi δεν εκτελείται με χρήστη root/διαχειριστή και αυτή είναι η "
+"συνιστώμενη ρύθμιση για ένα ασφαλές σύστημα."
+
+#: widgets/selftestdialog.cpp:643
+#, kde-format
+msgid "Save Test Report"
+msgstr "Αποθήκευση αναφοράς ελέγχου"
+
+#: widgets/selftestdialog.cpp:650
+#, kde-format
+msgid "Error"
+msgstr "Σφάλμα"
+
+#: widgets/selftestdialog.cpp:650
+#, kde-format
+msgid "Could not open file '%1'"
+msgstr "Αδύνατο το άνοιγμα του αρχείου '%1'"
+
+#. i18n: ectx: property (text), widget (QLabel, introductionLabel)
+#: widgets/selftestdialog.ui:16
+#, kde-format
+msgid ""
+"An error occurred during the startup of the Akonadi server. The following "
+"self-tests are supposed to help with tracking down and solving this problem. "
+"When requesting support or reporting bugs, please always include this report."
+msgstr ""
+"Συνέβη ένα σφάλμα κατά την εκκίνηση του εξυπηρετητή Akonadi. Οι παρακάτω "
+"αυτοέλεγχοι βοηθούν στον εντοπισμό και την επίλυση του προβλήματος. Όταν "
+"ζητείτε υποστήριξη ή αναφέρετε σφάλματα, παρακαλώ συμπεριλάβετε και αυτήν "
+"την αναφορά."
+
+#. i18n: ectx: property (title), widget (QGroupBox, detailsGroup)
+#: widgets/selftestdialog.ui:39
+#, kde-format
+msgid "Details"
+msgstr "Λεπτομέρειες"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/selftestdialog.ui:61
+#, kde-format
+msgid ""
+"<p>For more troubleshooting tips please refer to <a href=\"https://userbase."
+"kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
+msgstr ""
+"<p>Για περισσότερες υποδείξεις επίλυσης προβλημάτων, ανατρέξτε στο <a href="
+"\"https://userbase.kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
+
+#: widgets/standardactionmanager.cpp:78
+msgid "&New Folder..."
+msgstr "&Νέος φάκελος..."
+
+#: widgets/standardactionmanager.cpp:78
+msgid "New"
+msgstr "Νέος"
+
+#: widgets/standardactionmanager.cpp:80
+msgid "&Delete Folder"
+msgstr "&Διαγραφή φακέλου"
+
+#: widgets/standardactionmanager.cpp:80
+msgid "Delete"
+msgstr "Διαγραφή"
+
+#: widgets/standardactionmanager.cpp:82
+msgid "&Synchronize Folder"
+msgstr "&Συγχρονισμός φακέλου"
+
+#: widgets/standardactionmanager.cpp:83 widgets/standardactionmanager.cpp:157
+#: widgets/standardactionmanager.cpp:243
+msgid "Synchronize"
+msgstr "Συγχρονισμός"
+
+#: widgets/standardactionmanager.cpp:90
+msgid "Folder &Properties"
+msgstr "Ι&διότητες φακέλου"
+
+#: widgets/standardactionmanager.cpp:91 widgets/standardactionmanager.cpp:149
+msgid "Properties"
+msgstr "Ιδιότητες"
+
+#: widgets/standardactionmanager.cpp:98
+msgid "&Paste"
+msgstr "&Επικόλληση"
+
+#: widgets/standardactionmanager.cpp:98
+msgid "Paste"
+msgstr "Επικόλληση"
+
+#: widgets/standardactionmanager.cpp:101
+msgid "Manage Local &Subscriptions..."
+msgstr "Διαχείριση τοπικών &συνδρομών..."
+
+#: widgets/standardactionmanager.cpp:102
+msgid "Manage Local Subscriptions"
+msgstr "Διαχείριση τοπικών συνδρομών"
+
+#: widgets/standardactionmanager.cpp:109
+msgid "Add to Favorite Folders"
+msgstr "Προσθήκη στους προτιμώμενους φακέλους"
+
+#: widgets/standardactionmanager.cpp:110
+msgid "Add to Favorite"
+msgstr "Προσθήκη στους προτιμώμενους"
+
+#: widgets/standardactionmanager.cpp:117
+msgid "Remove from Favorite Folders"
+msgstr "Διαγραφή από τους προτιμώμενους φακέλους"
+
+#: widgets/standardactionmanager.cpp:118
+msgid "Remove from Favorite"
+msgstr "Διαγραφή από τον προτιμώμενο"
+
+#: widgets/standardactionmanager.cpp:124
+msgid "Rename Favorite..."
+msgstr "Μετονομασία προτιμώμενου..."
+
+#: widgets/standardactionmanager.cpp:124
+msgid "Rename"
+msgstr "Μετονομασία"
+
+#: widgets/standardactionmanager.cpp:126 widgets/standardactionmanager.cpp:164
+msgid "Copy Folder To..."
+msgstr "Αντιγραφή φακέλου στο..."
+
+#: widgets/standardactionmanager.cpp:127 widgets/standardactionmanager.cpp:133
+#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:173
+msgid "Copy To"
+msgstr "Αντιγραφή στο"
+
+#: widgets/standardactionmanager.cpp:133 widgets/standardactionmanager.cpp:173
+msgid "Copy Item To..."
+msgstr "Αντιγραφή αντικειμένου στο..."
+
+#: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:174
+msgid "Move Item To..."
+msgstr "Μετακίνηση αντικειμένου στο..."
+
+#: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:137
+#: widgets/standardactionmanager.cpp:167 widgets/standardactionmanager.cpp:174
+msgid "Move To"
+msgstr "Μετακίνηση στο"
+
+#: widgets/standardactionmanager.cpp:136 widgets/standardactionmanager.cpp:166
+msgid "Move Folder To..."
+msgstr "Μετακίνηση φακέλου δακέλου στο..."
+
+#: widgets/standardactionmanager.cpp:143
+msgid "&Cut Item"
+msgstr "Αποκοπή αντικειμένου"
+
+#: widgets/standardactionmanager.cpp:143 widgets/standardactionmanager.cpp:144
+msgid "Cut"
+msgstr "Αποκοπή"
+
+#: widgets/standardactionmanager.cpp:144
+msgid "&Cut Folder"
+msgstr "Αποκοπή φακέλου"
+
+#: widgets/standardactionmanager.cpp:145
+msgid "Create Resource"
+msgstr "Δημιουργία πόρου"
+
+#: widgets/standardactionmanager.cpp:146
+msgid "Delete Resource"
+msgstr "Διαγραφή πόρου"
+
+#: widgets/standardactionmanager.cpp:148
+msgid "&Resource Properties"
+msgstr "Ι&διότητες πόρου"
+
+#: widgets/standardactionmanager.cpp:156
+msgid "Synchronize Resource"
+msgstr "Συγχρονισμός πόρου"
+
+#: widgets/standardactionmanager.cpp:163
+msgid "Work Offline"
+msgstr "Εργασία χωρίς σύνδεση"
+
+#: widgets/standardactionmanager.cpp:176
+msgid "&Synchronize Folder Recursively"
+msgstr "Αναδρομικός &συγχρονισμός φακέλου"
+
+#: widgets/standardactionmanager.cpp:177
+msgid "Synchronize Recursively"
+msgstr "αναδρομικός συγχρονισμός"
+
+#: widgets/standardactionmanager.cpp:184
+msgid "&Move Folder To Trash"
+msgstr "&Μετακίνηση φακέλου στα απορρίμματα"
+
+#: widgets/standardactionmanager.cpp:185
+msgid "Move Folder To Trash"
+msgstr "Μετακίνηση φακέλου στα απορρίμματα"
+
+#: widgets/standardactionmanager.cpp:192
+msgid "&Move Item To Trash"
+msgstr "Μετακίνηση αντικειμένου στα απορρίμματα"
+
+#: widgets/standardactionmanager.cpp:193
+msgid "Move Item To Trash"
+msgstr "Μετακίνηση αντικειμένου στα απορρίμματα"
+
+#: widgets/standardactionmanager.cpp:200 widgets/standardactionmanager.cpp:216
+msgid "&Restore Folder From Trash"
+msgstr "Επαναφο&ρά φακέλου από τα απορρίμματα"
+
+#: widgets/standardactionmanager.cpp:201 widgets/standardactionmanager.cpp:217
+msgid "Restore Folder From Trash"
+msgstr "Επαναφορά φακέλου από τα απορρίμματα"
+
+#: widgets/standardactionmanager.cpp:208 widgets/standardactionmanager.cpp:225
+#: widgets/standardactionmanager.cpp:232
+msgid "&Restore Item From Trash"
+msgstr "Επαναφο&ρά αντικειμένου από τα απορρίμματα"
+
+#: widgets/standardactionmanager.cpp:209 widgets/standardactionmanager.cpp:226
+#: widgets/standardactionmanager.cpp:232
+msgid "Restore Item From Trash"
+msgstr "Επαναφορά αντικειμένου από τα απορρίμματα"
+
+#: widgets/standardactionmanager.cpp:223
+msgid "&Restore Collection From Trash"
+msgstr "Επαναφο&ρά συλλογής από τα απορρίμματα"
+
+#: widgets/standardactionmanager.cpp:223
+msgid "Restore Collection From Trash"
+msgstr "Επαναφορά συλλογής από τα απορρίμματα"
+
+#: widgets/standardactionmanager.cpp:234
+msgid "&Synchronize Favorite Folders"
+msgstr "&Συγχρονισμός προτιμώμενων φακέλων"
+
+#: widgets/standardactionmanager.cpp:235
+msgid "Synchronize Favorite Folders"
+msgstr "Συγχρονισμός προτιμώμενων φακέλων"
+
+#: widgets/standardactionmanager.cpp:242
+msgid "Synchronize Folder Tree"
+msgstr "Συγχρονισμός δενδρικής δομής φακέλων"
+
+#: widgets/standardactionmanager.cpp:328
+#, kde-format
+msgid "&Copy Folder"
+msgid_plural "&Copy %1 Folders"
+msgstr[0] "&Αντιγραφή φακέλου"
+msgstr[1] "&Αντιγραφή %1 φακέλων"
+
+#: widgets/standardactionmanager.cpp:329
+#, kde-format
+msgid "&Copy Item"
+msgid_plural "&Copy %1 Items"
+msgstr[0] "&Αντιγραφή αντικειμένου"
+msgstr[1] "&Αντιγραφή %1 αντικειμένων"
+
+#: widgets/standardactionmanager.cpp:330
+#, kde-format
+msgctxt "@action"
+msgid "&Cut Item"
+msgid_plural "&Cut %1 Items"
+msgstr[0] "&Αποκοπή αντικειμένου"
+msgstr[1] "&Αποκοπή %1 αντικειμένων"
+
+#: widgets/standardactionmanager.cpp:331
+#, kde-format
+msgctxt "@action"
+msgid "&Cut Folder"
+msgid_plural "&Cut %1 Folders"
+msgstr[0] "&Αποκοπή φακέλου"
+msgstr[1] "&Αποκοπή %1 φακέλων"
+
+#: widgets/standardactionmanager.cpp:332
+#, kde-format
+msgid "&Delete Item"
+msgid_plural "&Delete %1 Items"
+msgstr[0] "&Διαγραφή αντικειμένου"
+msgstr[1] "&Διαγραφή %1 αντικειμένων"
+
+#: widgets/standardactionmanager.cpp:333
+#, kde-format
+msgctxt "@action"
+msgid "&Delete Folder"
+msgid_plural "&Delete %1 Folders"
+msgstr[0] "&Διαγραφή φακέλου"
+msgstr[1] "&Διαγραφή %1 φακέλων"
+
+#: widgets/standardactionmanager.cpp:334
+#, kde-format
+msgctxt "@action"
+msgid "&Synchronize Folder"
+msgid_plural "&Synchronize %1 Folders"
+msgstr[0] "&Συγχρονισμός φακέλου"
+msgstr[1] "&Συγχρονισμός %1 φακέλων"
+
+#: widgets/standardactionmanager.cpp:335
+#, kde-format
+msgid "&Delete Resource"
+msgid_plural "&Delete %1 Resources"
+msgstr[0] "&Διαγραφή πόρου"
+msgstr[1] "&Διαγραφή %1 πόρων"
+
+#: widgets/standardactionmanager.cpp:336
+#, kde-format
+msgid "&Synchronize Resource"
+msgid_plural "&Synchronize %1 Resources"
+msgstr[0] "&Συγχρονισμός πόρου"
+msgstr[1] "&Συγχρονισμός %1 πόρων"
+
+#: widgets/standardactionmanager.cpp:338
+#, kde-format
+msgid "Copy Folder"
+msgid_plural "Copy %1 Folders"
+msgstr[0] "Αντιγραφή φακέλου"
+msgstr[1] "Αντιγραφή %1 φακέλων"
+
+#: widgets/standardactionmanager.cpp:339
+#, kde-format
+msgid "Copy Item"
+msgid_plural "Copy %1 Items"
+msgstr[0] "Αντιγραφή αντικειμένου"
+msgstr[1] "Αντιγραφή %1 αντικειμένων"
+
+#: widgets/standardactionmanager.cpp:340
+#, kde-format
+msgid "Cut Item"
+msgid_plural "Cut %1 Items"
+msgstr[0] "Αποκοπή αντικειμένου"
+msgstr[1] "Αποκοπή %1 αντικειμένων"
+
+#: widgets/standardactionmanager.cpp:341
+#, kde-format
+msgid "Cut Folder"
+msgid_plural "Cut %1 Folders"
+msgstr[0] "Αποκοπή φακέλου"
+msgstr[1] "Αποκοπή %1 φακέλων"
+
+#: widgets/standardactionmanager.cpp:342
+#, kde-format
+msgid "Delete Item"
+msgid_plural "Delete %1 Items"
+msgstr[0] "Διαγραφή αντικειμένου"
+msgstr[1] "Διαγραφή %1 αντικειμένων"
+
+#: widgets/standardactionmanager.cpp:343
+#, kde-format
+msgid "Delete Folder"
+msgid_plural "Delete %1 Folders"
+msgstr[0] "Διαγραφή φακέλου"
+msgstr[1] "Διαγραφή %1 φακέλων"
+
+#: widgets/standardactionmanager.cpp:344
+#, kde-format
+msgid "Synchronize Folder"
+msgid_plural "Synchronize %1 Folders"
+msgstr[0] "Συγχρονισμός φακέλου"
+msgstr[1] "Συγχρονισμός %1 φακέλων"
+
+#: widgets/standardactionmanager.cpp:345
+#, kde-format
+msgctxt "@action"
+msgid "Delete Resource"
+msgid_plural "Delete %1 Resources"
+msgstr[0] "Διαγραφή πόρου"
+msgstr[1] "Διαγραφή %1 πόρων"
+
+#: widgets/standardactionmanager.cpp:346
+#, kde-format
+msgctxt "@action"
+msgid "Synchronize Resource"
+msgid_plural "Synchronize %1 Resources"
+msgstr[0] "Συγχρονισμός πόρου"
+msgstr[1] "Συγχρονισμός %1 πόρων"
+
+#: widgets/standardactionmanager.cpp:349
+#, kde-format
+msgctxt "@label:textbox name of Akonadi folder"
+msgid "Name"
+msgstr "Όνομα"
+
+#: widgets/standardactionmanager.cpp:356
+#, kde-format
+msgid "Do you really want to delete this folder and all its sub-folders?"
+msgid_plural ""
+"Do you really want to delete %1 folders and all their sub-folders?"
+msgstr[0] "Θέλετε πράγματι να διαγραφεί αυτός ο φάκελος με τους υποφάκελους;"
+msgstr[1] "Θέλετε πράγματι να διαγραφούν %1 φάκελοι με τους υποφάκελους;"
+
+#: widgets/standardactionmanager.cpp:359
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete folder?"
+msgid_plural "Delete folders?"
+msgstr[0] "Διαγραφή φακέλου;"
+msgstr[1] "Διαγραφή φακέλων;"
+
+#: widgets/standardactionmanager.cpp:360
+#, kde-format
+msgid "Could not delete folder: %1"
+msgstr "Αδύνατη η διαγραφή του φακέλου: %1"
+
+#: widgets/standardactionmanager.cpp:361
+#, kde-format
+msgid "Folder deletion failed"
+msgstr "Η διαγραφή του φακέλου απέτυχε"
+
+#: widgets/standardactionmanager.cpp:363
+#, kde-format
+msgctxt "@title:window"
+msgid "Properties of Folder %1"
+msgstr "Ιδιότητες του φακέλου %1"
+
+#: widgets/standardactionmanager.cpp:367
+#, kde-format
+msgid "Do you really want to delete the selected item?"
+msgid_plural "Do you really want to delete %1 items?"
+msgstr[0] "Θέλετε πράγματι να διαγραφεί το επιλεγμένο αντικείμενο;"
+msgstr[1] "Θέλετε πράγματι να διαγραφούν %1 αντικείμενα;"
+
+#: widgets/standardactionmanager.cpp:368
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete item?"
+msgid_plural "Delete items?"
+msgstr[0] "Διαγραφή αντικειμένου;"
+msgstr[1] "Διαγραφή αντικειμένων;"
+
+#: widgets/standardactionmanager.cpp:369
+#, kde-format
+msgid "Could not delete item: %1"
+msgstr "Αδυναμία διαγραφής του αντικειμένου: %1"
+
+#: widgets/standardactionmanager.cpp:370
+#, kde-format
+msgid "Item deletion failed"
+msgstr "Αποτυχία διαγραφής του αντικειμένου"
+
+#: widgets/standardactionmanager.cpp:372
+#, kde-format
+msgctxt "@title:window"
+msgid "Rename Favorite"
+msgstr "Μετονομασία προτιμώμενου"
+
+#: widgets/standardactionmanager.cpp:373
+#, kde-format
+msgctxt "@label:textbox name of the folder"
+msgid "Name:"
+msgstr "Όνομα:"
+
+#: widgets/standardactionmanager.cpp:375
+#, kde-format
+msgctxt "@title:window"
+msgid "New Resource"
+msgstr "Νέος πόρος"
+
+#: widgets/standardactionmanager.cpp:376
+#, kde-format
+msgid "Could not create resource: %1"
+msgstr "Αδυναμία δημιουργίας του πόρου: %1"
+
+#: widgets/standardactionmanager.cpp:377
+#, kde-format
+msgid "Resource creation failed"
+msgstr "Αποτυχία δημιουργίας του πόρου"
+
+#: widgets/standardactionmanager.cpp:381
+#, kde-format
+msgid "Do you really want to delete this resource?"
+msgid_plural "Do you really want to delete %1 resources?"
+msgstr[0] "Θέλετε πραγματι να διαγραφεί αυτός ο πόρος;"
+msgstr[1] "Θέλετε πράγματι τη διαγραφούν %1 πόροι;"
+
+#: widgets/standardactionmanager.cpp:384
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete Resource?"
+msgid_plural "Delete Resources?"
+msgstr[0] "Διαγραφή πόρου;"
+msgstr[1] "Διαγραφή πόρων;"
+
+#: widgets/standardactionmanager.cpp:386
+#, kde-format
+msgid "Could not paste data: %1"
+msgstr "Αδύνατη η επικόλληση δεδομένων: %1"
+
+#: widgets/standardactionmanager.cpp:387
+#, kde-format
+msgid "Paste failed"
+msgstr "Αποτυχία επικόλλησης"
+
+#: widgets/standardactionmanager.cpp:739
+#, kde-format
+msgid "We can not add \"/\" in folder name."
+msgstr "Αδυναμία προσθήκης \"/\" στο όνομα του φακέλου."
+
+#: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
+#, kde-format
+msgid "Create new folder error"
+msgstr "Σφάλμα κατά τη δημιουργία νέου φακέλου"
+
+#: widgets/standardactionmanager.cpp:743
+#, kde-format
+msgid "We can not add \".\" at begin or end of folder name."
+msgstr ""
+"Αδυναμία προσθήκης \"/\" στην αρχή ή στο τέλος του ονόματος του φακέλου."
+
+#: widgets/standardactionmanager.cpp:982
+#, kde-format
+msgid ""
+"Before syncing folder \"%1\" it is necessary to have the resource online. Do "
+"you want to make it online?"
+msgstr ""
+"Πριν το συγχρονισμό του φακέλου «%1» είναι απαραίτητο να είναι ο πόρος "
+"επιγρασμμικός. Θέλετε να τον κάνετε επιγραμμικό;"
+
+#: widgets/standardactionmanager.cpp:983
+#, kde-format
+msgid "Account \"%1\" is offline"
+msgstr "Ο λογαριασμός «%1» είναι εκτός σύνδεσης"
+
+#: widgets/standardactionmanager.cpp:984
+#, kde-format
+msgctxt "@action:button"
+msgid "Go Online"
+msgstr "Να γίνει επιγραμμικός"
+
+#: widgets/standardactionmanager.cpp:1585
+#, kde-format
+msgid "Move to This Folder"
+msgstr "Μετακίνηση σε αυτόν το φάκελο"
+
+#: widgets/standardactionmanager.cpp:1585
+#, kde-format
+msgid "Copy to This Folder"
+msgstr "Αντιγραφή σε αυτόν το φάκελο"
+
+#: widgets/subscriptiondialog.cpp:93
+#, kde-format
+msgid "Failed to update subscription: %1"
+msgstr "Αποτυχία ενημέρωσης συνδρομής: %1"
+
+#: widgets/subscriptiondialog.cpp:93
+#, kde-format
+msgctxt "@title"
+msgid "Subscription Error"
+msgstr "Σφάλμα συνδρομής"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, SubscriptionDialog)
+#: widgets/subscriptiondialog.ui:14
+#, kde-format
+msgid "Local Subscriptions"
+msgstr "Τοπικές συνδρομές"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/subscriptiondialog.ui:22
+#, kde-format
+msgid "Search:"
+msgstr "Αναζήτηση:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, subscribedOnlyCheckBox)
+#: widgets/subscriptiondialog.ui:36
+#, kde-format
+msgid "&Subscribed only"
+msgstr "Ε&γγεγραμμένοι μόνο"
+
+#. i18n: ectx: property (text), widget (QPushButton, subscribeButton)
+#: widgets/subscriptiondialog.ui:62
+#, kde-format
+msgid "Su&bscribe"
+msgstr "Εγγ&ραφή"
+
+#. i18n: ectx: property (text), widget (QPushButton, unsubscribeButton)
+#: widgets/subscriptiondialog.ui:69
+#, kde-format
+msgid "&Unsubscribe"
+msgstr "&Διαγραφή"
+
+#: widgets/tageditwidget.cpp:116
+#, kde-format
+msgid "Failed to create a new tag"
+msgstr "Αποτυχία δημιουργίας νέας ετικέτας"
+
+#: widgets/tageditwidget.cpp:116
+#, kde-format
+msgid "An error occurred while creating a new tag"
+msgstr "Παρουσιάστηκε σφάλμα κατά τη δημιουργία νέας ετικέτας"
+
+#: widgets/tageditwidget.cpp:164
+#, kde-kuit-format
+msgctxt "@info"
+msgid "Do you really want to remove the tag <resource>%1</resource>?"
+msgstr "Θέλετε πράγματι να αφαιρέσετε την ετικέτα <resource>%1</resource>;"
+
+#: widgets/tageditwidget.cpp:165
+#, kde-format
+msgctxt "@title"
+msgid "Delete tag"
+msgstr "Διαγραφή ετικέτας"
+
+#: widgets/tageditwidget.cpp:189
+#, kde-format
+msgctxt "@info"
+msgid "Delete tag"
+msgstr "Διαγραφή ετικέτας"
+
+#. i18n: ectx: property (text), widget (QLabel, selectLabel)
+#: widgets/tageditwidget.ui:29
+#, kde-format
+msgid "Select tags that should be applied."
+msgstr "Επιλογή ετικετών που πρέπει να εφαρμοστούν."
+
+#. i18n: ectx: property (text), widget (QPushButton, newTagButton)
+#: widgets/tageditwidget.ui:54
+#, kde-format
+msgid "Create new tag"
+msgstr "Δημιουργία νέας ετικέτας"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
+#: widgets/tagmanagementdialog.ui:14
+#, kde-format
+msgid "Manage Tags"
+msgstr "Διαχείριση ετικετών"
+
+#: widgets/tagselectioncombobox.cpp:124
+#, kde-format
+msgctxt "@label Placeholder text in tag selection combobox"
+msgid "Select tags..."
+msgstr "Επιλογή ετικετών..."
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
+#: widgets/tagselectiondialog.ui:14
+#, kde-format
+msgid "Select Tags"
+msgstr "Επιλογή ετικετών"
+
+#: widgets/tagwidget.cpp:45
+#, kde-format
+msgid "Clear"
+msgstr "Καθαρισμός"
+
+#. i18n: ectx: property (placeholderText), widget (Akonadi::TagView, tagView)
+#: widgets/tagwidget.ui:20
+#, kde-format
+msgid "Click to add tags"
+msgstr "Κλικ για προσθήκη ετικετών"
+
+#. i18n: ectx: property (text), widget (QToolButton, editButton)
+#: widgets/tagwidget.ui:27
+#, kde-format
+msgid "..."
+msgstr "..."
+
+#: xml/akonadi2xml.cpp:25
+#, kde-format
+msgid "Akonadi To XML converter"
+msgstr "Μετατροπέας Akonadi σε XML"
+
+#: xml/akonadi2xml.cpp:27
+#, kde-format
+msgid "Converts an Akonadi collection subtree into a XML file."
+msgstr "Μετατρέπει ένα υποδένδρο συλλογής Akonadi σε XML αρχείο."
+
+#: xml/akonadi2xml.cpp:29
+#, kde-format
+msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
+msgstr "(c) 2009 Volker Krause <vkrause@kde.org>"
+
+#: xml/xmldocument.cpp:84
+#, kde-format
+msgid "No data loaded."
+msgstr "Δεν φορτώθηκαν δεδομένα."
+
+#: xml/xmldocument.cpp:120
+#, kde-format
+msgid "No filename specified"
+msgstr "Δεν καθορίστηκε όνομα αρχείου"
+
+#: xml/xmldocument.cpp:128
+#, kde-format
+msgid "Unable to open data file '%1'."
+msgstr "Αδυναμία ανοίγματος αρχείου δεδομένων '%1'."
+
+#: xml/xmldocument.cpp:133
+#, kde-format
+msgid "File %1 does not exist."
+msgstr "Το αρχείο %1 δεν υπάρχει."
+
+#: xml/xmldocument.cpp:141
+#, kde-format
+msgid "Unable to parse data file '%1'."
+msgstr "Αδυναμία ανάλυσης αρχείου δεδομένων '%1'."
+
+#: xml/xmldocument.cpp:149
+#, kde-format
+msgid "Schema definition could not be loaded and parsed."
+msgstr "Αδυναμία φόρτωσης και ανάλυσης του ορισμού του συστήματος."
+
+#: xml/xmldocument.cpp:154
+#, kde-format
+msgid "Unable to create schema parser context."
+msgstr "Αδυναμία δημιουργίας περιεχομένου για τον αναλυτή σχήματος."
+
+#: xml/xmldocument.cpp:159
+#, kde-format
+msgid "Unable to create schema."
+msgstr "Αδυναμία δημιουργίας σχήματος."
+
+#: xml/xmldocument.cpp:164
+#, kde-format
+msgid "Unable to create schema validation context."
+msgstr "Αδυναμία δημιουργίας περιεχομένου επικύρωσης σχήματος."
+
+#: xml/xmldocument.cpp:169
+#, kde-format
+msgid "Invalid file format."
+msgstr "Μη έγκυρος τύπος αρχείου."
+
+#: xml/xmldocument.cpp:177
+#, kde-format
+msgid "Unable to parse data file: %1"
+msgstr "Αδυναμία ανάλυσης αρχείου δεδομένων: %1"
+
+#: xml/xmldocument.cpp:302
+#, kde-format
+msgid "Unable to find collection %1"
+msgstr "Αδυναμία εύρεσης συλλογής %1"
+
+#~ msgid "Store emails locally:"
+#~ msgstr "Αποθήκευση αλληλογραφίας τοπικά:"
+
+#~ msgid "&Move here"
+#~ msgstr "&Μετακίνηση εδώ"
+
+#~ msgid "&Copy here"
+#~ msgstr "&Αντιγραφή εδώ"
+
+#~ msgid "Cancel"
+#~ msgstr "Ακύρωση"
+
+#, fuzzy
+#~| msgid "&Copy Item"
+#~| msgid_plural "&Copy %1 Items"
+#~ msgid "Items"
+#~ msgstr "&Αντιγραφή αντικειμένου"
+
+#~ msgid "Id"
+#~ msgstr "Id"
+
+#~ msgid "Remote Id"
+#~ msgstr "Απομακρυσμένο Id"
+
+#~ msgid "MimeType"
+#~ msgstr "Τύπος mime"
+
+#~ msgid "Form"
+#~ msgstr "Φόρμα"
+
+#, fuzzy
+#~| msgid "Delete?"
+#~ msgctxt "@action:button"
+#~ msgid "Delete"
+#~ msgstr "Διαγραφή;"
+
+#, fuzzy
+#~| msgid "Cancel"
+#~ msgctxt "@action:button"
+#~ msgid "Cancel"
+#~ msgstr "Ακύρωση"
+
+#~ msgctxt "@title:column, number of unread messages"
+#~ msgid "Unread"
+#~ msgstr "Μη αναγνωσμένα"
+
+#~ msgctxt "@title:column, total number of messages"
+#~ msgid "Total"
+#~ msgstr "Σύνολο"
+
+#, fuzzy
+#~| msgid "Size:"
+#~ msgctxt "@title:column, total size (in bytes) of the collection"
+#~ msgid "Size"
+#~ msgstr "Μέγεθος:"
+
+#, fuzzy
+#~| msgctxt "@title, application name"
+#~| msgid "Akonadi Resource"
+#~ msgctxt "@title application description"
+#~ msgid "Akonadi Resource"
+#~ msgstr "Πόρος του Akonadi"
+
+#, fuzzy
+#~| msgctxt "@title:column, name of a thing"
+#~| msgid "Name"
+#~ msgctxt "@label:textbox name of a thing"
+#~ msgid "Name"
+#~ msgstr "Όνομα"
+
+#~ msgid "Protocol version %1 found, expected at least %2"
+#~ msgstr "Βρέθηκε έκδοση πρωτοκόλλου %1, αναμένονταν τουλάχιστον %2"
+
+#~ msgid "Server protocol version is recent enough."
+#~ msgstr "Η έκδοση πρωτοκόλλου του εξυπηρετητή είναι επαρκής."
+
+#~ msgid ""
+#~ "The server Protocol version is %1, which equal or newer than the required "
+#~ "version %2."
+#~ msgstr ""
+#~ "Η έκδοση πρωτοκόλλου του εξυπηρετητή είναι η %1, η οποία είναι ίση ή "
+#~ "νεότερη της  απαιτούμενης έκδοσης %2."
+
+#~ msgid "KDE Test Program"
+#~ msgstr "Πρόγραμμα ελέγχου KDE"
+
+#, fuzzy
+#~| msgid "No such collection."
+#~ msgid "Cannot list root collection."
+#~ msgstr "Δεν υπάρχει τέτοια συλλογή."
+
+#, fuzzy
+#~| msgid "Akonadi server process registered at D-Bus."
+#~ msgid "Nepomuk search service registered at D-Bus."
+#~ msgstr "Η διεργασία εξυπηρετητή του Akonadi καταχωρήθηκε στο D-Bus."
+
+#, fuzzy
+#~| msgid ""
+#~| "The Akonadi server process is registered at D-Bus which typically "
+#~| "indicates it is operational."
+#~ msgid ""
+#~ "The Nepomuk search service is registered at D-Bus which typically "
+#~ "indicates it is operational."
+#~ msgstr ""
+#~ "Η διεργασία εξυπηρετητή του Akonadi καταχωρήθηκε στο D-Bus το οποίο "
+#~ "υποδηλώνει και τη λειτουργικότητά του."
+
+#, fuzzy
+#~| msgid "Akonadi server process not registered at D-Bus."
+#~ msgid "Nepomuk search service not registered at D-Bus."
+#~ msgstr "Η διεργασία εξυπηρετητή του Akonadi δεν καταχωρήθηκε στο D-Bus."
+
+#, fuzzy
+#~| msgid ""
+#~| "The Akonadi server process is not registered at D-Bus which typically "
+#~| "means it was not started or encountered a fatal error during startup."
+#~ msgid ""
+#~ "The Nepomuk search service is not registered at D-Bus which typically "
+#~ "means it was not started or encountered a fatal error during startup."
+#~ msgstr ""
+#~ "Η διεργασία εξυπηρετητή του Akonadi δεν καταχωρήθηκε στο D-Bus το οποίο "
+#~ "υποδηλώνει ότι δεν εκκίνησε ή συνέβη ένα κρίσιμο σφάλμα κατά την εκκίνησή "
+#~ "του."
+
+#, fuzzy
+#~| msgid "Akonadi server process not registered at D-Bus."
+#~ msgid "Nepomuk search service uses inappropriate backend."
+#~ msgstr "Η διεργασία εξυπηρετητή του Akonadi δεν καταχωρήθηκε στο D-Bus."
+
+#, fuzzy
+#~| msgid "Akonadi server process not registered at D-Bus."
+#~ msgid "Nepomuk search service uses an appropriate backend. "
+#~ msgstr "Η διεργασία εξυπηρετητή του Akonadi δεν καταχωρήθηκε στο D-Bus."
+
+#, fuzzy
+#~| msgid "Akonadi server process registered at D-Bus."
+#~ msgid "The Nepomuk search service uses one of the recommended backends."
+#~ msgstr "Η διεργασία εξυπηρετητή του Akonadi καταχωρήθηκε στο D-Bus."
+
+#, fuzzy
+#~| msgid "&New Folder..."
+#~ msgid "New Folder..."
+#~ msgstr "&Νέος φάκελος..."
+
+#, fuzzy
+#~| msgid "Folder &Properties..."
+#~ msgid "Resource Properties"
+#~ msgstr "Ι&διότητες φακέλου..."
+
+#~ msgid "Cache"
+#~ msgstr "Λανθάνουσα μνήμη"
+
+#~ msgid "Inherit cache policy from parent"
+#~ msgstr "Πολιτική λανθάνουσας μνήμης από γονέα"
+
+#~ msgid "Cache Policy"
+#~ msgstr "Πολιτική λανθάνουσας μνήμης"
+
+#~ msgid "Interval check time:"
+#~ msgstr "Χρονικό διάστημα ελέγχου:"
+
+#~ msgid "Local cache timeout:"
+#~ msgstr "Λήξη τοπικής λανθάνουσας μνήμης:"
+
+#~ msgid "Synchronize on demand"
+#~ msgstr "Συγχρονισμός κατ' απαίτηση"
+
+#~ msgid "Manage which folders you want to see in the folder tree"
+#~ msgstr ""
+#~ "Επιλέξτε τους φακέλους που θέλετε να εμφανίζονται στο δέντρο φακέλων"
+
+#, fuzzy
+#~| msgctxt "search folder"
+#~| msgid "Search:"
+#~ msgctxt "@label:textbox The clickMessage of a search line edit"
+#~ msgid "Search"
+#~ msgstr "Αναζήτηση:"
+
+#~ msgid "<b>Available Folders</b>"
+#~ msgstr "<b>Διαθέσιμοι φάκελοι</b>"
+
+#~ msgid "<b>Current Changes</b>"
+#~ msgstr "<b>Τρέχουσες τροποποιήσεις</b>"
+
+#~ msgid "Unsubscribe from selected folder"
+#~ msgstr "Διαγραφή από τον επιλεγμένο φάκελο"
+
+#~ msgid "The Akonadi server did report error during startup into %1."
+#~ msgstr ""
+#~ "Ο εξυπηρετητής Akonadi δεν ανέφερε σφάλματα κατά την εκκίνησή του στο %1."
+
+#~ msgid "The Akonadi control process did report error during startup into %1."
+#~ msgstr ""
+#~ "Η διεργασία ελέγχου του Akonadi δεν ανέφερε σφάλματα κατά την εκκίνηση "
+#~ "στο %1."
+
+#~ msgid "TODO"
+#~ msgstr "TODO"
+
+#~ msgid ""
+#~ "<p style=\"color: white;\"><b>Akonadi not operational.<br/><a href="
+#~ "\"details\" style=\"color: white;\">Details...</a></b></p>"
+#~ msgstr ""
+#~ "<p style=\"color: white;\"><b>To Akonadi δε λειτουργεί.<br/><a href="
+#~ "\"details \" style=\"color: white;\">Λεπτομέρειες...</a></b></p>"
+
+#~ msgctxt "@title, application description"
+#~ msgid "Akonadi Resource"
+#~ msgstr "Πόρος του Akonadi"
+
+#, fuzzy
+#~| msgid "no collection"
+#~ msgid "&Cut Collection"
+#~ msgid_plural "&Cut %1 Collections"
+#~ msgstr[0] "καμία συλλογή"
+#~ msgstr[1] "καμία συλλογή"
+
+#, fuzzy
+#~| msgid "&Copy Folder"
+#~| msgid_plural "&Copy %1 Folders"
+#~ msgid "Copy failed"
+#~ msgstr "&Αντιγραφή φακέλου"
+
+#~ msgid "TextLabel"
+#~ msgstr "ΕτικέταΚειμένου"

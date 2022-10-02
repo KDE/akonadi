@@ -1,0 +1,2645 @@
+# Translation of libakonadi5.po into Serbian.
+# Chusslove Illich <caslav.ilic@gmx.net>, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017.
+# Dalibor Djuric <daliborddjuric@gmail.com>, 2009, 2010, 2011.
+msgid ""
+msgstr ""
+"Project-Id-Version: libakonadi5\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2020-06-11 02:14+0200\n"
+"PO-Revision-Date: 2017-12-17 18:01+0100\n"
+"Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
+"Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
+"Language: sr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
+"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Accelerator-Marker: &\n"
+"X-Text-Markup: kde4\n"
+"X-Environment: kde\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Часлав Илић"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "caslav.ilic@gmx.net"
+
+#: agentbase/accountsintegration.cpp:99
+#, kde-format
+msgid "There is currently no account configured."
+msgstr ""
+
+#: agentbase/accountsintegration.cpp:117
+#, kde-format
+msgid "Accounts integration is not supported"
+msgstr ""
+
+#: agentbase/agentbase.cpp:387 agentbase/preprocessorbase_p.cpp:42
+#, kde-format
+msgid "Unable to register object at dbus: %1"
+msgstr "Не могу да региструјем објекат на д‑бусу: %1"
+
+#: agentbase/agentbase.cpp:470
+#, kde-format
+msgctxt "Name and type of Akonadi resource"
+msgid "%1 of type %2"
+msgstr "%1 типа %2"
+
+#: agentbase/agentbase.cpp:920
+#, kde-format
+msgid "Agent identifier"
+msgstr "Идентификатор агента"
+
+#: agentbase/agentbase.cpp:927
+#, kde-format
+msgid "Akonadi Agent"
+msgstr "Аконадијев агент"
+
+#: agentbase/agentbase_p.h:64 agentbase/resourcescheduler.cpp:294
+#, kde-format
+msgctxt "@info:status Application ready for work"
+msgid "Ready"
+msgstr "Спреман."
+
+#: agentbase/agentbase_p.h:66
+#, kde-format
+msgctxt "@info:status"
+msgid "Offline"
+msgstr "Ван везе."
+
+#: agentbase/agentbase_p.h:71
+#, kde-format
+msgctxt "@info:status"
+msgid "Syncing..."
+msgstr "Синхронизујем..."
+
+#: agentbase/agentbase_p.h:76
+#, kde-format
+msgctxt "@info:status"
+msgid "Error."
+msgstr "Грешка."
+
+#: agentbase/agentbase_p.h:81
+#, kde-format
+msgctxt "@info:status"
+msgid "Not configured"
+msgstr "Није подешено"
+
+#: agentbase/resourcebase.cpp:535
+#, kde-format
+msgctxt "@label command line option"
+msgid "Resource identifier"
+msgstr "Идентификатор ресурса"
+
+#: agentbase/resourcebase.cpp:542
+#, kde-format
+msgid "Akonadi Resource"
+msgstr "Аконадијев ресурс"
+
+#: agentbase/resourcebase.cpp:590
+#, kde-format
+msgctxt "@info"
+msgid "Invalid item retrieved"
+msgstr "Добављена лоша ставка"
+
+#: agentbase/resourcebase.cpp:613
+#, kde-format
+msgctxt "@info"
+msgid "Error while creating item: %1"
+msgstr "Грешка при стварању ставке: %1"
+
+#: agentbase/resourcebase.cpp:637
+#, kde-format
+msgctxt "@info"
+msgid "Error while updating collection: %1"
+msgstr "Грешка при ажурирању збирке: %1"
+
+#: agentbase/resourcebase.cpp:723
+#, kde-format
+msgctxt "@info"
+msgid "Updating local collection failed: %1."
+msgstr "Пропало ажурирање локалне збирке: %1."
+
+#: agentbase/resourcebase.cpp:728
+#, kde-format
+msgctxt "@info"
+msgid "Updating local items failed: %1."
+msgstr "Пропало ажурирање локалних ставки: %1."
+
+#: agentbase/resourcebase.cpp:747
+#, kde-format
+msgctxt "@info"
+msgid "Cannot fetch item in offline mode."
+msgstr "Не могу ван везе дохватити ставку."
+
+#: agentbase/resourcebase.cpp:930
+#, kde-format
+msgctxt "@info:status"
+msgid "Syncing folder '%1'"
+msgstr "Синхронизујем фасциклу „%1“"
+
+#: agentbase/resourcebase.cpp:951 agentbase/resourcebase.cpp:958
+#, kde-format
+msgid "Failed to retrieve collection for sync."
+msgstr "Не могу да добавим збирку за синхронизовање."
+
+#: agentbase/resourcebase.cpp:998
+#, kde-format
+msgid "Failed to retrieve collection for attribute sync."
+msgstr "Не могу да добавим збирку за синхронизовање атрибута."
+
+#: agentbase/resourcebase.cpp:1049
+#, kde-format
+msgid "The requested item no longer exists"
+msgstr "Захтевана ставка више не постоји."
+
+#: agentbase/resourcescheduler.cpp:510 agentbase/resourcescheduler.cpp:516
+#, kde-format
+msgctxt "@info"
+msgid "Job canceled."
+msgstr "Посао отказан."
+
+#: core/collectionpathresolver.cpp:113 core/collectionpathresolver.cpp:132
+#, kde-format
+msgid "No such collection."
+msgstr "Нема такве збирке."
+
+#: core/collectionsync.cpp:521 core/collectionsync.cpp:659
+#, kde-format
+msgid "Found unresolved orphan collections"
+msgstr "Нађене су неразрешене збирке сирочићи."
+
+#: core/conflicthandler.cpp:66
+#, kde-format
+msgid "Did not find other item for conflict handling"
+msgstr "Није нађена друга ставка за обраду сукоба."
+
+#: core/jobs/agentinstancecreatejob.cpp:85
+#, kde-format
+msgid "Unable to access D-Bus interface of created agent."
+msgstr "Не могу да приступим д‑бус сучељу створеног агента."
+
+#: core/jobs/agentinstancecreatejob.cpp:109
+#, kde-format
+msgid "Agent instance creation timed out."
+msgstr "Истекло време за стварање примерка агента."
+
+#: core/jobs/agentinstancecreatejob.cpp:170
+#, kde-format
+msgid "Unable to obtain agent type '%1'."
+msgstr "Не могу да добавим тип агента „%1“."
+
+#: core/jobs/agentinstancecreatejob.cpp:178
+#, kde-format
+msgid "Unable to create agent instance."
+msgstr "Не могу да направим примерак агента."
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:88
+#, kde-format
+msgid "Invalid collection instance."
+msgstr "Лош примерак збирке."
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:95
+#: core/jobs/resourcesynchronizationjob.cpp:103
+#, kde-format
+msgid "Invalid resource instance."
+msgstr "Лош примерак ресурса."
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:116
+#: core/jobs/resourcesynchronizationjob.cpp:129
+#, kde-format
+msgid "Unable to obtain D-Bus interface for resource '%1'"
+msgstr "Не могу да приступим д‑бус сучељу за ресурс „%1“."
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:139
+#, kde-format
+msgid "Collection attributes synchronization timed out."
+msgstr "Истекло време за синхронизацију атрибута збирке."
+
+#: core/jobs/collectioncopyjob.cpp:68
+#, kde-format
+msgid "Invalid collection to copy"
+msgstr "Лоша збирка за копирање"
+
+#: core/jobs/collectioncopyjob.cpp:74
+#, kde-format
+msgid "Invalid destination collection"
+msgstr "Лоша одредишна збирка"
+
+#: core/jobs/collectioncreatejob.cpp:64
+#, kde-format
+msgid "Invalid parent"
+msgstr "Лош родитељ"
+
+#: core/jobs/collectioncreatejob.cpp:112
+#, kde-format
+msgid "Failed to parse Collection from response"
+msgstr "Не могу да рашчланим збирку из одговора"
+
+#: core/jobs/collectiondeletejob.cpp:66
+#, kde-format
+msgid "Invalid collection"
+msgstr "Лоша збирка"
+
+#: core/jobs/collectionfetchjob.cpp:223
+#, kde-format
+msgid "Invalid collection given."
+msgstr "Дата је лоша збирка."
+
+#: core/jobs/collectionmovejob.cpp:66 core/jobs/itemmovejob.cpp:104
+#, kde-format
+msgid "No objects specified for moving"
+msgstr "Нису задати објекти за премештање"
+
+#: core/jobs/collectionmovejob.cpp:73 core/jobs/itemmovejob.cpp:111
+#: core/jobs/linkjobimpl_p.h:53
+#, kde-format
+msgid "No valid destination specified"
+msgstr "Није наведено добро одредиште"
+
+#: core/jobs/invalidatecachejob.cpp:72
+#, kde-format
+msgid "Invalid collection."
+msgstr "Лоша збирка."
+
+#: core/jobs/itemcreatejob.cpp:121
+#, kde-format
+msgid "Invalid parent collection"
+msgstr "Лоша родитељска збирка"
+
+#: core/jobs/job.cpp:345
+#, kde-format
+msgid "Cannot connect to the Akonadi service."
+msgstr "Не могу да се повежем са сервисом Аконадија."
+
+#: core/jobs/job.cpp:348
+#, kde-format
+msgid ""
+"The protocol version of the Akonadi server is incompatible. Make sure you "
+"have a compatible version installed."
+msgstr ""
+"Несагласна верзија протокола на серверу Аконадија. Морате инсталирати "
+"сагласну."
+
+#: core/jobs/job.cpp:351
+#, kde-format
+msgid "User canceled operation."
+msgstr "Корисник отказа поступак."
+
+#: core/jobs/job.cpp:356
+#, kde-format
+msgid "Unknown error."
+msgstr "Непозната грешка."
+
+#: core/jobs/job.cpp:389
+#, kde-format
+msgid "Unexpected response"
+msgstr "Неочекиван одзив."
+
+#: core/jobs/relationcreatejob.cpp:55 core/jobs/relationdeletejob.cpp:55
+#, kde-format
+msgid "Failed to create relation."
+msgstr "Не могу да направим релацију."
+
+#: core/jobs/resourcesynchronizationjob.cpp:155
+#, kde-format
+msgid "Resource synchronization timed out."
+msgstr "Истекло време за синхронизацију ресурса."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:161
+#, kde-format
+msgid "Could not fetch root collection of resource %1."
+msgstr "Не могу да добавим корену збирку ресурса „%1“."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:208
+#, kde-format
+msgid "No resource ID given."
+msgstr "ИД ресурса није нађен."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:340
+#, kde-format
+msgid "Invalid resource identifier '%1'"
+msgstr "Лош идентификатор ресурса „%1“."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:357
+#: core/jobs/specialcollectionshelperjobs.cpp:365
+#, kde-format
+msgid "Failed to configure default resource via D-Bus."
+msgstr "Не могу да подесим подразумевани ресурс преко д‑буса."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:426
+#, kde-format
+msgid "Failed to fetch the resource collection."
+msgstr "Не могу да добавим збирку ресурса."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:612
+#, kde-format
+msgid "Timeout trying to get lock."
+msgstr "Прековреме при покушају закључавања."
+
+#: core/jobs/tagcreatejob.cpp:62
+#, kde-format
+msgid "Failed to create tag."
+msgstr "Не могу да направим ознаку."
+
+#: core/jobs/trashjob.cpp:166
+#, kde-format
+msgid "Move to trash collection failed, aborting trash operation"
+msgstr "Премештање у збирку смећа није успело, обустављам поступак бацања."
+
+#: core/jobs/trashjob.cpp:221 core/jobs/trashrestorejob.cpp:159
+#, kde-format
+msgid "Invalid items passed"
+msgstr "Прослеђене лоше ставке"
+
+#: core/jobs/trashjob.cpp:259 core/jobs/trashrestorejob.cpp:206
+#, kde-format
+msgid "Invalid collection passed"
+msgstr "Прослеђена лоша збирка"
+
+#: core/jobs/trashjob.cpp:367 core/jobs/trashrestorejob.cpp:330
+#, kde-format
+msgid "No valid collection or empty itemlist"
+msgstr "Нема добре збирке или празан списак ставки."
+
+#: core/jobs/trashrestorejob.cpp:105
+#, kde-format
+msgid "Could not find restore collection and restore resource is not available"
+msgstr "Не могу да нађем збирку враћања и ресурс враћања није доступан."
+
+#: core/models/agentinstancemodel.cpp:193
+#, kde-format
+msgctxt "@title:column, name of a thing"
+msgid "Name"
+msgstr "име"
+
+#: core/models/entitytreemodel.cpp:214
+#, fuzzy, kde-format
+#| msgid "Loading..."
+msgctxt "@info:status"
+msgid "Loading..."
+msgstr "Учитавам..."
+
+#: core/models/entitytreemodel.cpp:509
+#, fuzzy, kde-format
+#| msgid "Error"
+msgctxt "@window:title"
+msgid "Error"
+msgstr "Грешка"
+
+#: core/models/entitytreemodel.cpp:510
+#, kde-format
+msgid ""
+"The target collection '%1' contains already\n"
+"a collection with name '%2'."
+msgstr ""
+"Циљна збирка „%1“ већ садржи\n"
+"збирку по имену „%2“."
+
+#: core/models/entitytreemodel.cpp:683
+#, kde-format
+msgctxt "@title:column Name of a thing"
+msgid "Name"
+msgstr "име"
+
+#: core/models/entitytreemodel_p.cpp:1360
+#, fuzzy, kde-format
+#| msgid "Could not copy item:"
+msgctxt "@info"
+msgid "Could not copy item: <message>%1</message>"
+msgstr "Не могу да копирам ставку:"
+
+#: core/models/entitytreemodel_p.cpp:1362
+#, fuzzy, kde-format
+#| msgid "Could not copy collection:"
+msgctxt "@info"
+msgid "Could not copy collection: <message>%1</message>"
+msgstr "Не могу да копирам збирку:"
+
+#: core/models/entitytreemodel_p.cpp:1364
+#, fuzzy, kde-format
+#| msgid "Could not move item:"
+msgctxt "@info"
+msgid "Could not move item: <message>%1</message>"
+msgstr "Не могу да преместим ставку:"
+
+#: core/models/entitytreemodel_p.cpp:1366
+#, fuzzy, kde-format
+#| msgid "Could not move collection:"
+msgctxt "@info"
+msgid "Could not move collection: <message>%1</message>"
+msgstr "Не могу да преместим збирку:"
+
+#: core/models/entitytreemodel_p.cpp:1368
+#, fuzzy, kde-format
+#| msgid "Could not link entity:"
+msgctxt "@info"
+msgid "Could not link entity: <message>%1</message>"
+msgstr "Не могу да повежем ентитет:"
+
+#: core/models/entitytreemodel_p.cpp:1370
+#, fuzzy, kde-format
+#| msgid "Error"
+msgctxt "@title:window"
+msgid "Error"
+msgstr "Грешка"
+
+#: core/models/favoritecollectionsmodel.cpp:418
+#, kde-format
+msgid "Favorite Folders"
+msgstr "Омиљене фасцикле"
+
+# >> @label
+# >! Put together: "<strong>...</strong>: %1%"
+#: core/models/statisticsproxymodel.cpp:102
+#, kde-format
+msgid "Total Messages"
+msgstr "Укупно порука"
+
+# >> @label
+# >! Put together: "<strong>...</strong>: %1%"
+#: core/models/statisticsproxymodel.cpp:103
+#, kde-format
+msgid "Unread Messages"
+msgstr "Непрочитаних порука"
+
+# >> @label
+# >! Put together: "<strong>...</strong>: %1%"
+#: core/models/statisticsproxymodel.cpp:114
+#, kde-format
+msgid "Quota"
+msgstr "Квота"
+
+# >> @label
+# >! Put together: "<strong>...</strong>: %1%"
+#: core/models/statisticsproxymodel.cpp:123
+#, kde-format
+msgid "Storage Size"
+msgstr "Складишна величина"
+
+# >> @label
+# >! Put together: "<strong>...</strong>: %1%"
+#: core/models/statisticsproxymodel.cpp:131
+#, kde-format
+msgid "Subfolder Storage Size"
+msgstr "Складишна величина потфасцикле"
+
+# >> @title:column
+#: core/models/statisticsproxymodel.cpp:247
+#, kde-format
+msgctxt "number of unread entities in the collection"
+msgid "Unread"
+msgstr "непрочитано"
+
+# >> @title:column
+#: core/models/statisticsproxymodel.cpp:248
+#, kde-format
+msgctxt "number of entities in the collection"
+msgid "Total"
+msgstr "укупно"
+
+# >> @title:column
+#: core/models/statisticsproxymodel.cpp:249
+#, kde-format
+msgctxt "collection size"
+msgid "Size"
+msgstr "величина"
+
+#: core/models/tagmodel.cpp:80
+#, kde-format
+msgid "Tag"
+msgstr "Ознака"
+
+#: core/partfetcher.cpp:63
+#, kde-format
+msgid "Unable to fetch item for index"
+msgstr "Не могу да добавим ставку за индекс"
+
+#: core/partfetcher.cpp:78
+#, kde-format
+msgid "Index is no longer available"
+msgstr "Индекс више није доступан"
+
+#: core/partfetcher.cpp:131
+#, kde-format
+msgid "Payload part '%1' is not available for this index"
+msgstr "Товарни део „%1“ није доступан за овај индекс"
+
+#: core/partfetcher.cpp:140
+#, kde-format
+msgid "No session available for this index"
+msgstr "Сесија није доступна за овај индекс"
+
+#: core/partfetcher.cpp:149
+#, kde-format
+msgid "No item available for this index"
+msgstr "Ставка није доступна за овај индекс"
+
+#: core/pluginloader.cpp:158
+#, kde-format
+msgid "Unnamed plugin"
+msgstr "неименовани прикључак"
+
+#: core/pluginloader.cpp:164
+#, kde-format
+msgid "No description available"
+msgstr "Нема описа"
+
+#: core/servermanager.cpp:254
+#, kde-format
+msgid ""
+"The Akonadi server protocol version differs from the protocol version used "
+"by this application.\n"
+"If you recently updated your system please log out and back in to make sure "
+"all applications use the correct protocol version."
+msgstr ""
+"Верзија протокола сервера Аконадија разликује се од верзије коју користи "
+"овај програм.\n"
+"Ако сте недавно ажурирали систем, одјавите се и поново се пријавите да би "
+"сви програми почели да користе праву верзију протокола."
+
+#: core/servermanager.cpp:271
+#, kde-format
+msgid ""
+"There are no Akonadi Agents available. Please verify your KDE PIM "
+"installation."
+msgstr "Нема ниједног агента Аконадија. Проверите инсталацију КДЕ‑ПИМ‑а."
+
+#: core/session.cpp:181
+#, kde-format
+msgid ""
+"Protocol version mismatch. Server version is older (%1) than ours (%2). If "
+"you updated your system recently please restart the Akonadi server."
+msgstr ""
+"Несагласне верзије протокола. Верзија на серверу (%1) старија је од наше "
+"(%2). Ако сте недавно ажурирали систем, поново покрените сервер Аконадија."
+
+#: core/session.cpp:187
+#, kde-format
+msgid ""
+"Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
+"you updated your system recently please restart all KDE PIM applications."
+msgstr ""
+"Несагласне верзије протокола. Верзија на серверу (%1) новија је од наше "
+"(%2). Ако сте недавно ажурирали систем, поново покрените све програме из "
+"КДЕ‑ПИМ‑а."
+
+#: selftest/main.cpp:32
+#, kde-format
+msgid "Akonadi Self Test"
+msgstr "Самопроба Аконадија"
+
+#: selftest/main.cpp:34
+#, kde-format
+msgid "Checks and reports state of Akonadi server"
+msgstr "Проверава и извештава о стању сервера Аконадија"
+
+# |, no-check-markup
+#: selftest/main.cpp:36
+#, kde-format
+msgid "(c) 2008 Volker Krause <vkrause@kde.org>"
+msgstr "© 2008, Фолкер Краусе <vkrause@kde.org>"
+
+#: widgets/agentactionmanager.cpp:51
+#, kde-format
+msgid "&New Agent Instance..."
+msgstr "&Нови примерак агента..."
+
+#: widgets/agentactionmanager.cpp:55
+#, kde-format
+msgid "&Delete Agent Instance"
+msgstr "&Обриши примерак агента"
+
+#: widgets/agentactionmanager.cpp:59
+#, kde-format
+msgid "&Configure Agent Instance"
+msgstr "&Подеси примерак агента"
+
+#: widgets/agentactionmanager.cpp:84
+#, kde-format
+msgctxt "@title:window"
+msgid "New Agent Instance"
+msgstr "Нови примерак агента"
+
+#: widgets/agentactionmanager.cpp:88
+#, kde-format
+msgid "Could not create agent instance: %1"
+msgstr "Не могу да направим примерак агента: %1"
+
+#: widgets/agentactionmanager.cpp:92
+#, kde-format
+msgid "Agent instance creation failed"
+msgstr "Неуспело стварање примерка агента"
+
+#: widgets/agentactionmanager.cpp:96
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete Agent Instance?"
+msgstr "Обрисати примерак агента?"
+
+#: widgets/agentactionmanager.cpp:100
+#, kde-format
+msgid "Do you really want to delete the selected agent instance?"
+msgstr "Желите ли заиста да обришете изабрани примерак агента?"
+
+#: widgets/agentconfigurationdialog.cpp:69
+#, kde-format
+msgctxt "%1 = agent name"
+msgid "%1 Configuration"
+msgstr ""
+
+#: widgets/agentconfigurationdialog.cpp:100
+#, kde-format
+msgid "%1 Handbook"
+msgstr ""
+
+#: widgets/agentconfigurationdialog.cpp:101
+#, kde-format
+msgid "About %1"
+msgstr ""
+
+#: widgets/agentconfigurationwidget.cpp:110
+#, kde-format
+msgid "The configuration dialog has been opened in another window"
+msgstr ""
+
+#: widgets/agentconfigurationwidget.cpp:117
+#, kde-format
+msgid "Configuration for %1 is already opened elsewhere."
+msgstr ""
+
+#: widgets/agentconfigurationwidget.cpp:119
+#, fuzzy, kde-format
+#| msgid "Failed to create relation."
+msgid "Failed to register %1 configuration dialog."
+msgstr "Не могу да направим релацију."
+
+#: widgets/cachepolicypage.cpp:54 widgets/cachepolicypage.cpp:59
+#, kde-format
+msgid "minute"
+msgid_plural "minutes"
+msgstr[0] "минут"
+msgstr[1] "минута"
+msgstr[2] "минута"
+msgstr[3] "минут"
+
+#: widgets/cachepolicypage.cpp:76
+#, kde-format
+msgid "Retrieval"
+msgstr "Добављање"
+
+#. i18n: ectx: property (text), widget (QCheckBox, inherit)
+#: widgets/cachepolicypage.ui:20
+#, kde-format
+msgid "Use options from parent folder or account"
+msgstr "Користи опције родитељске фасцикле или налога"
+
+#. i18n: ectx: property (text), widget (QCheckBox, syncOnDemand)
+#: widgets/cachepolicypage.ui:33
+#, kde-format
+msgid "Synchronize when selecting this folder"
+msgstr "Синхронизуј фасциклу када се изабере"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: widgets/cachepolicypage.ui:42
+#, kde-format
+msgid "Automatically synchronize after:"
+msgstr "Аутоматски синхронизуј сваких:"
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, checkInterval)
+#: widgets/cachepolicypage.ui:49
+#, kde-format
+msgctxt "never check the cache"
+msgid "Never"
+msgstr "никад"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, checkInterval)
+#. i18n: ectx: property (suffix), widget (QSpinBox, localCacheTimeout)
+#: widgets/cachepolicypage.ui:52 widgets/cachepolicypage.ui:162
+#, kde-format
+msgid "minutes"
+msgstr "минута"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#. i18n: ectx: property (title), widget (KEditListWidget, localParts)
+#: widgets/cachepolicypage.ui:89 widgets/cachepolicypage.ui:101
+#, kde-format
+msgid "Locally Cached Parts"
+msgstr "Локално кеширани делови"
+
+#. i18n: ectx: property (title), widget (QGroupBox, retrievalOptionsGroupBox)
+#: widgets/cachepolicypage.ui:127
+#, kde-format
+msgid "Retrieval Options"
+msgstr "Опције добављања"
+
+#. i18n: ectx: property (text), widget (QRadioButton, retrieveFullMessages)
+#: widgets/cachepolicypage.ui:133
+#, kde-format
+msgid "Always retrieve full &messages"
+msgstr "Увек добављај &пуне поруке"
+
+#. i18n: ectx: property (text), widget (QRadioButton, retrieveOnlyHeaders)
+#: widgets/cachepolicypage.ui:143
+#, kde-format
+msgid "&Retrieve message bodies on demand"
+msgstr "Добављај &тела порука на захтев"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/cachepolicypage.ui:152
+#, kde-format
+msgid "Keep message bodies locally for:"
+msgstr "Држи тела порука локално:"
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, localCacheTimeout)
+#: widgets/cachepolicypage.ui:159
+#, kde-format
+msgctxt "no cache timeout"
+msgid "Forever"
+msgstr "заувек"
+
+#: widgets/collectiondialog.cpp:67
+#, kde-format
+msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
+msgid "Search"
+msgstr "Тражи"
+
+#: widgets/collectiondialog.cpp:75
+#, kde-format
+msgid "Use folder by default"
+msgstr "Подразумевано користи фасциклу"
+
+#: widgets/collectiondialog.cpp:231
+#, kde-format
+msgid "&New Subfolder..."
+msgstr "&Нова потфасцикла..."
+
+#: widgets/collectiondialog.cpp:233
+#, kde-format
+msgid "Create a new subfolder under the currently selected folder"
+msgstr "Направи нову потфасциклу унутар тренутно изабране фасцикле"
+
+#: widgets/collectiondialog.cpp:267 widgets/standardactionmanager.cpp:233
+#, kde-format
+msgctxt "@title:window"
+msgid "New Folder"
+msgstr "Нова фасцикла"
+
+#: widgets/collectiondialog.cpp:268
+#, kde-format
+msgctxt "@label:textbox, name of a thing"
+msgid "Name"
+msgstr "Име"
+
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:239
+#, kde-format
+msgid "Folder creation failed"
+msgstr "Неуспело стварање фасцикле"
+
+#: widgets/collectiondialog.cpp:288 widgets/standardactionmanager.cpp:237
+#, kde-format
+msgid "Could not create folder: %1"
+msgstr "Не могу да направим фасциклу: %1"
+
+#: widgets/collectiongeneralpropertiespage.cpp:40
+#, kde-format
+msgctxt "@title:tab general properties page"
+msgid "General"
+msgstr "Опште"
+
+#: widgets/collectiongeneralpropertiespage.cpp:67
+#, kde-format
+msgctxt "@label"
+msgid "One object"
+msgid_plural "%1 objects"
+msgstr[0] "%1 објекат"
+msgstr[1] "%1 објекта"
+msgstr[2] "%1 објеката"
+msgstr[3] "1 објекат"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/collectiongeneralpropertiespage.ui:16
+#, kde-format
+msgid "&Name:"
+msgstr "&Име:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, customIconCheckbox)
+#: widgets/collectiongeneralpropertiespage.ui:29
+#, kde-format
+msgid "&Use custom icon:"
+msgstr "&Посебна иконица:"
+
+#. i18n: ectx: property (icon), widget (KIconButton, customIcon)
+#: widgets/collectiongeneralpropertiespage.ui:39
+#, kde-format
+msgid "folder"
+msgstr "фасцикла"
+
+#. i18n: ectx: property (title), widget (QGroupBox, statsBox)
+#: widgets/collectiongeneralpropertiespage.ui:62
+#, kde-format
+msgid "Statistics"
+msgstr "Статистика"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: widgets/collectiongeneralpropertiespage.ui:68
+#, kde-format
+msgctxt "object names"
+msgid "Content:"
+msgstr "Садржај:"
+
+#. i18n: ectx: property (text), widget (QLabel, countLabel)
+#: widgets/collectiongeneralpropertiespage.ui:75
+#, kde-format
+msgid "0 objects"
+msgstr "без објеката"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: widgets/collectiongeneralpropertiespage.ui:82
+#: widgets/collectionmaintenancepage.ui:50
+#, kde-format
+msgid "Size:"
+msgstr "Величина:"
+
+#. i18n: ectx: property (text), widget (QLabel, sizeLabel)
+#: widgets/collectiongeneralpropertiespage.ui:89
+#, kde-format
+msgid "0 Byte"
+msgstr "0 бајтова"
+
+#: widgets/collectionmaintenancepage.cpp:59
+#, kde-format
+msgid "Remember that indexing can take some minutes."
+msgstr "Имајте на уму да индексирање може потрајати неколико минута."
+
+#: widgets/collectionmaintenancepage.cpp:84
+#, kde-format
+msgid "Maintenance"
+msgstr "Одржавање"
+
+#: widgets/collectionmaintenancepage.cpp:147
+#, kde-format
+msgid "Error while retrieving indexed items count"
+msgstr "Грешка при добављању броја индексираних ставки"
+
+#: widgets/collectionmaintenancepage.cpp:150
+#, kde-format
+msgid "Indexed %1 item in this folder"
+msgid_plural "Indexed %1 items in this folder"
+msgstr[0] "Индексирана %1 ставка у овој фасцикли"
+msgstr[1] "Индексиране %1 ставке у овој фасцикли"
+msgstr[2] "Индексирано %1 ставки у овој фасцикли"
+msgstr[3] "Индексирана %1 ставка у овој фасцикли"
+
+#: widgets/collectionmaintenancepage.cpp:156
+#, kde-format
+msgid "Calculating indexed items..."
+msgstr "Рачунам индексиране ставке..."
+
+#. i18n: ectx: property (title), widget (QGroupBox, filesGroup)
+#: widgets/collectionmaintenancepage.ui:23
+#, kde-format
+msgid "Files"
+msgstr "Фајлови"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/collectionmaintenancepage.ui:29
+#, kde-format
+msgid "Folder type:"
+msgstr "Тип фасцикле:"
+
+# >! Contexts.
+# >> @item
+#. i18n: ectx: property (text), widget (QLabel, folderTypeLbl)
+#. i18n: ectx: property (text), widget (QLabel, folderSizeLbl)
+#. i18n: ectx: property (text), widget (QLabel, itemsCountLbl)
+#. i18n: ectx: property (text), widget (QLabel, unreadItemsCountLbl)
+#: widgets/collectionmaintenancepage.ui:36
+#: widgets/collectionmaintenancepage.ui:43
+#: widgets/collectionmaintenancepage.ui:79
+#: widgets/collectionmaintenancepage.ui:93
+#, kde-format
+msgid "unknown"
+msgstr "непознато"
+
+#. i18n: ectx: property (title), widget (QGroupBox, itemsGroup)
+#: widgets/collectionmaintenancepage.ui:66
+#, kde-format
+msgid "Items"
+msgstr "Ставке"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: widgets/collectionmaintenancepage.ui:72
+#, kde-format
+msgid "Total items:"
+msgstr "Укупно ставки:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: widgets/collectionmaintenancepage.ui:86
+#, kde-format
+msgid "Unread items:"
+msgstr "Непрочитаних ставки:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, indexingGroup)
+#: widgets/collectionmaintenancepage.ui:109
+#, kde-format
+msgid "Indexing"
+msgstr "Индексирање"
+
+#. i18n: ectx: property (text), widget (QCheckBox, enableIndexingChkBox)
+#: widgets/collectionmaintenancepage.ui:115
+#, kde-format
+msgid "Enable fulltext indexing"
+msgstr "Индексирање пуног текста"
+
+#. i18n: ectx: property (text), widget (QLabel, indexedCountLbl)
+#: widgets/collectionmaintenancepage.ui:122
+#, kde-format
+msgid "Retrieving indexed items count ..."
+msgstr "Добављам број индексираних ставки..."
+
+#. i18n: ectx: property (text), widget (QPushButton, reindexButton)
+#: widgets/collectionmaintenancepage.ui:129
+#, kde-format
+msgid "Reindex folder"
+msgstr "Поново индексирај фасциклу"
+
+#: widgets/collectionrequester.cpp:123
+#, kde-format
+msgid "No Folder"
+msgstr "нема фасцикле"
+
+#: widgets/collectionrequester.cpp:132
+#, kde-format
+msgid "Open collection dialog"
+msgstr "Отвори дијалог збирке"
+
+# >> @title:window
+#: widgets/collectionrequester.cpp:149
+#, fuzzy, kde-format
+#| msgid "Select a collection"
+msgctxt "@title:window"
+msgid "Select a collection"
+msgstr "Избор збирке"
+
+#: widgets/collectionview.cpp:229
+#, kde-format
+msgid "&Move here"
+msgstr "&Премести овде"
+
+#: widgets/collectionview.cpp:230
+#, kde-format
+msgid "&Copy here"
+msgstr "&Копирај овде"
+
+#: widgets/collectionview.cpp:232
+#, kde-format
+msgid "Cancel"
+msgstr "Одустани"
+
+# >> @item
+#: widgets/conflictresolvedialog.cpp:142
+#, kde-format
+msgid "Modification Time"
+msgstr "време измене"
+
+# >> @item
+#: widgets/conflictresolvedialog.cpp:151
+#, kde-format
+msgid "Flags"
+msgstr "заставице"
+
+# >> @item
+#: widgets/conflictresolvedialog.cpp:163 widgets/conflictresolvedialog.cpp:170
+#: widgets/conflictresolvedialog.cpp:179
+#, kde-format
+msgid "Attribute: %1"
+msgstr "атрибут: %1"
+
+#: widgets/conflictresolvedialog.cpp:190
+#, kde-format
+msgctxt "@title:window"
+msgid "Conflict Resolution"
+msgstr "Разрешење сукоба"
+
+#: widgets/conflictresolvedialog.cpp:196
+#, kde-format
+msgctxt "@action:button"
+msgid "Take my version"
+msgstr "Узми моју верзију"
+
+#: widgets/conflictresolvedialog.cpp:202
+#, kde-format
+msgctxt "@action:button"
+msgid "Take their version"
+msgstr "Узми туђу верзију"
+
+#: widgets/conflictresolvedialog.cpp:208
+#, kde-format
+msgctxt "@action:button"
+msgid "Keep both versions"
+msgstr "Задржи обе верзије"
+
+#: widgets/conflictresolvedialog.cpp:220
+#, kde-format
+msgid ""
+"<qt>Your changes conflict with those made by someone else meanwhile."
+"<br>Unless one version can just be thrown away, you will have to integrate "
+"those changes manually.<br>Click on <a href=\"opentexteditor\">\"Open text "
+"editor\"</a> to keep a copy of the texts, then select which version is most "
+"correct, then re-open it and modify it again to add what's missing."
+msgstr ""
+"<p>Ваше измене су у сукобу са онима које је неко други направио у "
+"међувремену. У случају да не можете просто да одбаците једну од верзија, "
+"мораћете ручно да их уклопите.</p><p>Кликните на <a href=\"opentexteditor\">"
+"\"Отвори уређивач текста\"</a> да задржите копију текстова, затим изаберите "
+"ону која више одговара, поново је отворите и додајте јој оно што недостаје.</"
+"p>"
+
+# >> @item
+#: widgets/conflictresolvedialog.cpp:269
+#, kde-format
+msgid "Data"
+msgstr "подаци"
+
+#: widgets/controlgui.cpp:243
+#, kde-format
+msgid "Starting Akonadi server..."
+msgstr "Покрећем сервер Аконадија..."
+
+#: widgets/controlgui.cpp:249
+#, kde-format
+msgid "Stopping Akonadi server..."
+msgstr "Заустављам сервер Аконадија..."
+
+#: widgets/dragdropmanager.cpp:230
+#, kde-format
+msgid "&Move Here"
+msgstr "&Премести овде"
+
+#: widgets/dragdropmanager.cpp:236
+#, kde-format
+msgid "&Copy Here"
+msgstr "&Копирај овде"
+
+#: widgets/dragdropmanager.cpp:242
+#, kde-format
+msgid "&Link Here"
+msgstr "По&вежи овде"
+
+#: widgets/dragdropmanager.cpp:246
+#, kde-format
+msgid "C&ancel"
+msgstr "&Одустани"
+
+#: widgets/erroroverlay.cpp:241
+#, kde-format
+msgctxt "%1 is a reason why"
+msgid ""
+"Cannot connect to the Personal information management service.\n"
+"\n"
+"%1"
+msgstr ""
+"Не могу да се повежем са сервисом управљања личним подацима.\n"
+"\n"
+"%1"
+
+#: widgets/erroroverlay.cpp:246 widgets/erroroverlay.cpp:247
+#, kde-format
+msgid "Personal information management service is starting..."
+msgstr "Покрећем сервис за управљање личним подацима..."
+
+#: widgets/erroroverlay.cpp:251 widgets/erroroverlay.cpp:252
+#, kde-format
+msgid "Personal information management service is shutting down..."
+msgstr "Гасим сервис за управљање личним подацима..."
+
+#: widgets/erroroverlay.cpp:256
+#, kde-format
+msgid ""
+"Personal information management service is performing a database upgrade."
+msgstr "Сервис за управљање личним подацима надограђује базу..."
+
+#: widgets/erroroverlay.cpp:257
+#, kde-format
+msgid ""
+"Personal information management service is performing a database upgrade.\n"
+"This happens after a software update and is necessary to optimize "
+"performance.\n"
+"Depending on the amount of personal information, this might take a few "
+"minutes."
+msgstr ""
+"Сервис за управљање личним подацима надограђује базу.\n"
+"До овога долази после ажурирања софтвера и неопходно је ради оптимизације "
+"перформанси.\n"
+"У зависности од количине личних података, ово може потрајати неколико минута."
+
+#. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
+#. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
+#: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
+#, kde-format
+msgid ""
+"The Akonadi personal information management service is not running. This "
+"application cannot be used without it."
+msgstr ""
+"Аконади, сервис за управљање личним подацима, није у погону. Овај програм се "
+"не може користити без њега."
+
+#. i18n: ectx: property (text), widget (QPushButton, startButton)
+#: widgets/erroroverlay.ui:116
+#, kde-format
+msgctxt "@action:button Start the Akonadi server"
+msgid "Start"
+msgstr "Покрени"
+
+#. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
+#: widgets/erroroverlay.ui:158
+#, kde-format
+msgid ""
+"The Akonadi personal information management framework is not operational.\n"
+"Click on \"Details...\" to obtain detailed information on this problem."
+msgstr ""
+"Аконади, радни оквир за управљање личним подацима, није оперативан.\n"
+"Кликните на „Детаљи“ за детаљне информације о овом проблему."
+
+#. i18n: ectx: property (text), widget (QLabel, brokenDescription)
+#: widgets/erroroverlay.ui:208
+#, kde-format
+msgid "The Akonadi personal information management service is not operational."
+msgstr "Аконади, сервис за управљање личним подацима, није оперативан."
+
+#. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
+#: widgets/erroroverlay.ui:259
+#, kde-format
+msgid "Details..."
+msgstr "Детаљи..."
+
+#: widgets/manageaccountwidget.cpp:208
+#, kde-format
+msgid "Do you want to remove account '%1'?"
+msgstr "Желите ли да уклоните налог „%1“?"
+
+#: widgets/manageaccountwidget.cpp:209
+#, kde-format
+msgid "Remove account?"
+msgstr "Уклонити налог?"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/manageaccountwidget.ui:19
+#, kde-format
+msgid "Incoming accounts (add at least one):"
+msgstr "Долазни налози (додајте бар један):"
+
+#. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
+#: widgets/manageaccountwidget.ui:36
+#, kde-format
+msgid "A&dd..."
+msgstr "&Додај..."
+
+#. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
+#: widgets/manageaccountwidget.ui:46
+#, kde-format
+msgid "&Modify..."
+msgstr "&Измени..."
+
+#. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
+#: widgets/manageaccountwidget.ui:56
+#, kde-format
+msgid "R&emove"
+msgstr "&Уклони"
+
+#. i18n: ectx: property (text), widget (QPushButton, mRestartAccountButton)
+#: widgets/manageaccountwidget.ui:73
+#, kde-format
+msgid "Restart"
+msgstr "Покрени поново"
+
+#: widgets/recentcollectionaction.cpp:42
+#, kde-format
+msgid "Recent Folder"
+msgstr "Недавна фасцикла"
+
+# >> @title:window Rename favorite folder
+#. i18n: ectx: property (windowTitle), widget (QDialog, RenameFavoriteDialog)
+#: widgets/renamefavoritedialog.ui:26
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Rename Favorite"
+msgid "Rename Favorite"
+msgstr "Преименовање омиљене"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/renamefavoritedialog.ui:35
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox name of the folder"
+#| msgid "Name:"
+msgid "Name:"
+msgstr "Име:"
+
+#: widgets/selftestdialog.cpp:73
+#, fuzzy, kde-format
+#| msgid "Akonadi Server Self-Test"
+msgctxt "@title:window"
+msgid "Akonadi Server Self-Test"
+msgstr "Самопроба сервера Аконадија"
+
+#: widgets/selftestdialog.cpp:84
+#, kde-format
+msgid "Save Report..."
+msgstr "Сачувај извештај..."
+
+#: widgets/selftestdialog.cpp:86
+#, kde-format
+msgid "Copy Report to Clipboard"
+msgstr "Копирај извештај у клипборд"
+
+#: widgets/selftestdialog.cpp:202
+#, kde-format
+msgid ""
+"The QtSQL driver '%1' is required by your current Akonadi server "
+"configuration and was found on your system."
+msgstr ""
+"Текућа постава сервера Аконадија захтева драјвер КуТ‑СКуЛ‑а „%1“; нађен је "
+"на систему."
+
+#: widgets/selftestdialog.cpp:204
+#, kde-format
+msgid ""
+"The QtSQL driver '%1' is required by your current Akonadi server "
+"configuration.\n"
+"The following drivers are installed: %2.\n"
+"Make sure the required driver is installed."
+msgstr ""
+"Текућа постава сервера Аконадија захтева драјвер КуТ‑СКуЛ‑а „%1“.\n"
+"Инсталирани су следећи драјвери: %2.\n"
+"Побрините се да и захтевани буде инсталиран."
+
+#: widgets/selftestdialog.cpp:211
+#, kde-format
+msgid "Database driver found."
+msgstr "Драјвер базе података нађен."
+
+#: widgets/selftestdialog.cpp:213
+#, kde-format
+msgid "Database driver not found."
+msgstr "Драјвер базе података није нађен."
+
+#: widgets/selftestdialog.cpp:221
+#, kde-format
+msgid "MySQL server executable not tested."
+msgstr "Извршни фајл сервера МајСКуЛ‑а није испробан."
+
+#: widgets/selftestdialog.cpp:222 widgets/selftestdialog.cpp:263
+#: widgets/selftestdialog.cpp:312
+#, kde-format
+msgid "The current configuration does not require an internal MySQL server."
+msgstr "Тренутна постава не захтева унутрашњи сервер МајСКуЛ‑а."
+
+#: widgets/selftestdialog.cpp:229
+#, kde-format
+msgid ""
+"You have currently configured Akonadi to use the MySQL server '%1'.\n"
+"Make sure you have the MySQL server installed, set the correct path and "
+"ensure you have the necessary read and execution rights on the server "
+"executable. The server executable is typically called 'mysqld'; its location "
+"varies depending on the distribution."
+msgstr ""
+"Тренутно сте подесили Аконади да користи сервер МајСКуЛ‑а „%1“.\n"
+"Побрините се да је заиста инсталиран, поставите исправно путању и проверите "
+"да ли имате неопходна права читања и извршавања за извршни фајл сервера. "
+"Обично се зове mysqld, а тачна локација зависи од дистрибуције."
+
+#: widgets/selftestdialog.cpp:236
+#, kde-format
+msgid "MySQL server not found."
+msgstr "Сервер МајСКуЛ‑а није нађен."
+
+#: widgets/selftestdialog.cpp:238
+#, kde-format
+msgid "MySQL server not readable."
+msgstr "Сервер МајСКуЛ‑а није читљив."
+
+#: widgets/selftestdialog.cpp:240
+#, kde-format
+msgid "MySQL server not executable."
+msgstr "Сервер МајСКуЛ‑а није извршив."
+
+#: widgets/selftestdialog.cpp:242
+#, kde-format
+msgid "MySQL found with unexpected name."
+msgstr "МајСКуЛ нађен с неочекиваним именом."
+
+#: widgets/selftestdialog.cpp:244
+#, kde-format
+msgid "MySQL server found."
+msgstr "Сервер МајСКуЛ‑а нађен."
+
+#: widgets/selftestdialog.cpp:250
+#, kde-format
+msgid "MySQL server found: %1"
+msgstr "Сервер МајСКуЛ‑а нађен: %1"
+
+#: widgets/selftestdialog.cpp:251
+#, kde-format
+msgid "MySQL server is executable."
+msgstr "Сервер МајСКуЛ‑а је извршан."
+
+#: widgets/selftestdialog.cpp:253
+#, kde-format
+msgid ""
+"Executing the MySQL server '%1' failed with the following error message: '%2'"
+msgstr "Извршавање сервера МајСКуЛ‑а „%1“ пропало, са следећом грешком: „%2“"
+
+#: widgets/selftestdialog.cpp:255
+#, kde-format
+msgid "Executing the MySQL server failed."
+msgstr "Извршавање сервера МајСКуЛ‑а пропало."
+
+#: widgets/selftestdialog.cpp:262
+#, kde-format
+msgid "MySQL server error log not tested."
+msgstr "Дневник грешака сервера МајСКуЛ‑а није испробан."
+
+#: widgets/selftestdialog.cpp:271
+#, kde-format
+msgid "No current MySQL error log found."
+msgstr "Нема текућег дневника грешака МајСКуЛ‑а."
+
+#: widgets/selftestdialog.cpp:272
+#, kde-format
+msgid ""
+"The MySQL server did not report any errors during this startup. The log can "
+"be found in '%1'."
+msgstr ""
+"Сервер МајСКуЛ‑а није пријавио ниједну грешку током овог покретања. Дневник "
+"се налази у ‘%1’."
+
+#: widgets/selftestdialog.cpp:277
+#, kde-format
+msgid "MySQL error log not readable."
+msgstr "Дневник грешака МајСКуЛ‑а није читљив."
+
+#: widgets/selftestdialog.cpp:278
+#, kde-format
+msgid "A MySQL server error log file was found but is not readable: %1"
+msgstr "Фајл дневник грешака сервера МајСКуЛ‑а је нађен, али није читљив: %1"
+
+#: widgets/selftestdialog.cpp:286
+#, kde-format
+msgid "MySQL server log contains errors."
+msgstr "Дневник сервера МајСКуЛ‑а садржи грешке."
+
+#: widgets/selftestdialog.cpp:287
+#, kde-format
+msgid "The MySQL server error log file '%1' contains errors."
+msgstr "Фајл дневника грешака сервера МајСКуЛ‑а ‘%1’ садржи грешке."
+
+#: widgets/selftestdialog.cpp:296
+#, kde-format
+msgid "MySQL server log contains warnings."
+msgstr "Дневник сервера МајСКуЛ‑а садржи упозорења."
+
+#: widgets/selftestdialog.cpp:297
+#, kde-format
+msgid "The MySQL server log file '%1' contains warnings."
+msgstr "Фајл дневника сервера МајСКуЛ‑а ‘%1’ садржи упозорења."
+
+#: widgets/selftestdialog.cpp:299
+#, kde-format
+msgid "MySQL server log contains no errors."
+msgstr "Дневник сервера МајСКуЛ‑а не садржи грешке."
+
+#: widgets/selftestdialog.cpp:300
+#, kde-format
+msgid "The MySQL server log file '%1' does not contain any errors or warnings."
+msgstr "Фајл дневника сервера МајСКуЛ‑а ‘%1’ не садржи ни грешке ни упозорења."
+
+#: widgets/selftestdialog.cpp:311
+#, kde-format
+msgid "MySQL server configuration not tested."
+msgstr "Постава сервера МајСКуЛ‑а није испробана."
+
+#: widgets/selftestdialog.cpp:320
+#, kde-format
+msgid "MySQL server default configuration found."
+msgstr "Подразумевана постава сервера МајСКуЛ‑а нађена."
+
+#: widgets/selftestdialog.cpp:321
+#, kde-format
+msgid ""
+"The default configuration for the MySQL server was found and is readable at "
+"%1."
+msgstr ""
+"Подразумевана постава за сервер МајСКуЛ‑а нађена је и читљива код ‘%1’."
+
+#: widgets/selftestdialog.cpp:325
+#, kde-format
+msgid "MySQL server default configuration not found."
+msgstr "Подразумевана постава сервера МајСКуЛ‑а није нађена."
+
+#: widgets/selftestdialog.cpp:326
+#, kde-format
+msgid ""
+"The default configuration for the MySQL server was not found or was not "
+"readable. Check your Akonadi installation is complete and you have all "
+"required access rights."
+msgstr ""
+"Подразумевана постава за сервер МајСКуЛ‑а није нађена или није читљива. "
+"Проверите да ли је инсталација Аконадија потпуна, и да ли имате неопходна "
+"права приступа."
+
+#: widgets/selftestdialog.cpp:333
+#, kde-format
+msgid "MySQL server custom configuration not available."
+msgstr "Посебна постава сервера МајСКуЛ‑а није доступна."
+
+#: widgets/selftestdialog.cpp:334
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was not found but is optional."
+msgstr "Посебна постава за сервер МајСКуЛ‑а није нађена, али је опциона."
+
+#: widgets/selftestdialog.cpp:336
+#, kde-format
+msgid "MySQL server custom configuration found."
+msgstr "Посебна постава сервера МајСКуЛ‑а нађена."
+
+#: widgets/selftestdialog.cpp:337
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was found and is readable at %1"
+msgstr "Посебна постава за сервер МајСКуЛ‑а нађена је и читљива код ‘%1’."
+
+#: widgets/selftestdialog.cpp:341
+#, kde-format
+msgid "MySQL server custom configuration not readable."
+msgstr "Посебна постава сервера МајСКуЛ‑а није читљива."
+
+#: widgets/selftestdialog.cpp:342
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was found at %1 but is not "
+"readable. Check your access rights."
+msgstr ""
+"Посебна постава за сервер МајСКуЛ‑а нађена је код ‘%1’, али није читљива. "
+"Проверите права приступа."
+
+#: widgets/selftestdialog.cpp:349
+#, kde-format
+msgid "MySQL server configuration not found or not readable."
+msgstr "Постава сервера МајСКуЛ‑а није нађена или није читљива."
+
+#: widgets/selftestdialog.cpp:350
+#, kde-format
+msgid "The MySQL server configuration was not found or is not readable."
+msgstr "Постава за сервер МајСКуЛ‑а или није нађена или није читљива."
+
+#: widgets/selftestdialog.cpp:352
+#, kde-format
+msgid "MySQL server configuration is usable."
+msgstr "Постава сервера МајСКуЛ‑а употребљива."
+
+#: widgets/selftestdialog.cpp:353
+#, kde-format
+msgid "The MySQL server configuration was found at %1 and is readable."
+msgstr "Постава сервера МајСКуЛ‑а нађена је код ‘%1’ и читљива је."
+
+#: widgets/selftestdialog.cpp:382
+#, kde-format
+msgid "Cannot connect to PostgreSQL server."
+msgstr "Не могу да се повежем са сервером ПостгреСКуЛ‑а."
+
+#: widgets/selftestdialog.cpp:384
+#, kde-format
+msgid "PostgreSQL server found."
+msgstr "Сервер ПостгреСКуЛ‑а нађен."
+
+#: widgets/selftestdialog.cpp:385
+#, kde-format
+msgid "The PostgreSQL server was found and connection is working."
+msgstr "Сервер ПостгреСКуЛ‑а је нађен и веза ради."
+
+#: widgets/selftestdialog.cpp:394
+#, kde-format
+msgid "akonadictl not found"
+msgstr "akonadictl није нађена"
+
+#: widgets/selftestdialog.cpp:395
+#, kde-format
+msgid ""
+"The program 'akonadictl' needs to be accessible in $PATH. Make sure you have "
+"the Akonadi server installed."
+msgstr ""
+"Наредба akonadictl мора бити доступна у путањи. Проверите да ли је сервер "
+"Аконадија инсталиран."
+
+#: widgets/selftestdialog.cpp:401
+#, kde-format
+msgid "akonadictl found and usable"
+msgstr "akonadictl нађена и употребљива"
+
+#: widgets/selftestdialog.cpp:402
+#, kde-format
+msgid ""
+"The program '%1' to control the Akonadi server was found and could be "
+"executed successfully.\n"
+"Result:\n"
+"%2"
+msgstr ""
+"Наредба %1, за управљање сервером Аконадија, нађена је и успешно извршена.\n"
+"Резултат:\n"
+"%2"
+
+#: widgets/selftestdialog.cpp:405
+#, kde-format
+msgid "akonadictl found but not usable"
+msgstr "akonadictl нађена али неупотребљива"
+
+#: widgets/selftestdialog.cpp:406
+#, kde-format
+msgid ""
+"The program '%1' to control the Akonadi server was found but could not be "
+"executed successfully.\n"
+"Result:\n"
+"%2\n"
+"Make sure the Akonadi server is installed correctly."
+msgstr ""
+"Наредба %1, за управљање сервером Аконадија, нађена је али није могла бити "
+"успешно извршена.\n"
+"Резултат:\n"
+"%2\n"
+"Проверите да ли је сервер Аконадија исправно инсталиран."
+
+#: widgets/selftestdialog.cpp:415
+#, kde-format
+msgid "Akonadi control process registered at D-Bus."
+msgstr "Управљачки процес Аконадија регистрован на д‑бусу."
+
+#: widgets/selftestdialog.cpp:416
+#, kde-format
+msgid ""
+"The Akonadi control process is registered at D-Bus which typically indicates "
+"it is operational."
+msgstr ""
+"Управљачки процес Аконадија регистрован је на д‑бусу, што обично значи да је "
+"оперативан."
+
+#: widgets/selftestdialog.cpp:418
+#, kde-format
+msgid "Akonadi control process not registered at D-Bus."
+msgstr "Управљачки процес Аконадија није регистрован на д‑бусу."
+
+#: widgets/selftestdialog.cpp:419
+#, kde-format
+msgid ""
+"The Akonadi control process is not registered at D-Bus which typically means "
+"it was not started or encountered a fatal error during startup."
+msgstr ""
+"Управљачки процес Аконадија није регистрован на д‑бусу, што обично значи или "
+"да није покренут, или да је на покретању дошло до кобне грешке."
+
+#: widgets/selftestdialog.cpp:424
+#, kde-format
+msgid "Akonadi server process registered at D-Bus."
+msgstr "Серверски процес Аконадија регистрован на д‑бусу"
+
+#: widgets/selftestdialog.cpp:425
+#, kde-format
+msgid ""
+"The Akonadi server process is registered at D-Bus which typically indicates "
+"it is operational."
+msgstr ""
+"Серверски процес Аконадија регистрован је на д‑бусу, што обично значи да је "
+"оперативан."
+
+#: widgets/selftestdialog.cpp:427
+#, kde-format
+msgid "Akonadi server process not registered at D-Bus."
+msgstr "Серверски процес Аконадија није регистрован на д‑бусу."
+
+#: widgets/selftestdialog.cpp:428
+#, kde-format
+msgid ""
+"The Akonadi server process is not registered at D-Bus which typically means "
+"it was not started or encountered a fatal error during startup."
+msgstr ""
+"Серверски процес Аконадија није регистрован на д‑бусу, што обично значи или "
+"да није покренут, или да је на покретању дошло до кобне грешке."
+
+#: widgets/selftestdialog.cpp:436
+#, kde-format
+msgid "Protocol version check not possible."
+msgstr "Није могуће проверити верзију протокола."
+
+#: widgets/selftestdialog.cpp:437
+#, kde-format
+msgid ""
+"Without a connection to the server it is not possible to check if the "
+"protocol version meets the requirements."
+msgstr ""
+"Без везе са сервером није могуће проверити да ли верзија протокола испуњава "
+"захтеве."
+
+#: widgets/selftestdialog.cpp:441
+#, kde-format
+msgid "Server protocol version is too old."
+msgstr "Верзија протокола сервера превише стара."
+
+#: widgets/selftestdialog.cpp:442 widgets/selftestdialog.cpp:448
+#, kde-format
+msgid ""
+"The server protocol version is %1, but version %2 is required by the client. "
+"If you recently updated KDE PIM, please make sure to restart both Akonadi "
+"and KDE PIM applications."
+msgstr ""
+"Верзија протокола сервера је %1, али клијент захтева верзију %2. Ако сте "
+"недавно ажурирали КДЕ ПИМ‑а, поново покрените и Аконади и ПИМ програме."
+
+#: widgets/selftestdialog.cpp:447
+#, kde-format
+msgid "Server protocol version is too new."
+msgstr "Верзија протокола сервера превише нова."
+
+#: widgets/selftestdialog.cpp:453
+#, kde-format
+msgid "Server protocol version matches."
+msgstr "Верзија протокола сервера одговара."
+
+#: widgets/selftestdialog.cpp:454
+#, kde-format
+msgid "The current Protocol version is %1."
+msgstr "Тренутна верзија протокола је %1."
+
+#: widgets/selftestdialog.cpp:473
+#, kde-format
+msgid "Resource agents found."
+msgstr "Агенти ресурса нађени."
+
+#: widgets/selftestdialog.cpp:473
+#, kde-format
+msgid "At least one resource agent has been found."
+msgstr "Нађен је бар један агент ресурса."
+
+#: widgets/selftestdialog.cpp:475
+#, kde-format
+msgid "No resource agents found."
+msgstr "Агенти ресурса нису нађени."
+
+#: widgets/selftestdialog.cpp:476
+#, kde-format
+msgid ""
+"No resource agents have been found, Akonadi is not usable without at least "
+"one. This usually means that no resource agents are installed or that there "
+"is a setup problem. The following paths have been searched: '%1'. The "
+"XDG_DATA_DIRS environment variable is set to '%2'; make sure this includes "
+"all paths where Akonadi agents are installed."
+msgstr ""
+"Ниједан агент ресурса није нађен, а Аконади се не може користити без бар "
+"једног. Ово обично значи или да агенти ресурса нису инсталирани или да "
+"постоји проблем у постави. Претражене су следеће путање: „%1“. Променљива "
+"окружења $XDG_DATA_DIRS постављена је на „%2“, проверите укључује ли ово све "
+"путање где су инсталирани агенти Аконадија."
+
+#: widgets/selftestdialog.cpp:493
+#, kde-format
+msgid "No current Akonadi server error log found."
+msgstr "Текући дневник грешака сервера Аконадија није нађен."
+
+#: widgets/selftestdialog.cpp:494
+#, kde-format
+msgid ""
+"The Akonadi server did not report any errors during its current startup."
+msgstr "Сервер Аконадија није пријавио ниједну грешку током текућег покретања."
+
+#: widgets/selftestdialog.cpp:496
+#, kde-format
+msgid "Current Akonadi server error log found."
+msgstr "Текући дневник грешака сервера Аконадија нађен."
+
+#: widgets/selftestdialog.cpp:497
+#, kde-format
+msgid ""
+"The Akonadi server reported errors during its current startup. The log can "
+"be found in %1."
+msgstr ""
+"Сервер Аконадија пријавио је грешке током текућег покретања. Дневник се "
+"налази у ‘%1’."
+
+#: widgets/selftestdialog.cpp:504
+#, kde-format
+msgid "No previous Akonadi server error log found."
+msgstr "Претходни дневник грешака сервера Аконадија нађен."
+
+#: widgets/selftestdialog.cpp:505
+#, kde-format
+msgid ""
+"The Akonadi server did not report any errors during its previous startup."
+msgstr ""
+"Сервер Аконадија није пријавио ниједну грешку током претходног покретања."
+
+#: widgets/selftestdialog.cpp:507
+#, kde-format
+msgid "Previous Akonadi server error log found."
+msgstr "Претходни дневник грешака сервера Аконадија нађен."
+
+#: widgets/selftestdialog.cpp:508
+#, kde-format
+msgid ""
+"The Akonadi server reported errors during its previous startup. The log can "
+"be found in %1."
+msgstr ""
+"Сервер Аконадија пријавио је грешке при претходном покретању. Дневник се "
+"налази у ‘%1’."
+
+#: widgets/selftestdialog.cpp:518
+#, kde-format
+msgid "No current Akonadi control error log found."
+msgstr "Текући дневник грешака управљања Аконадија није нађен."
+
+#: widgets/selftestdialog.cpp:519
+#, kde-format
+msgid ""
+"The Akonadi control process did not report any errors during its current "
+"startup."
+msgstr ""
+"Управљачки процес Аконадија није пријавио ниједну грешку при текућем "
+"покретању."
+
+#: widgets/selftestdialog.cpp:521
+#, kde-format
+msgid "Current Akonadi control error log found."
+msgstr "Текући дневник грешака управљања Аконадија нађен."
+
+#: widgets/selftestdialog.cpp:522
+#, kde-format
+msgid ""
+"The Akonadi control process reported errors during its current startup. The "
+"log can be found in %1."
+msgstr ""
+"Управљачки процес Аконадија пријавио је грешке током текућег покретања. "
+"Дневник се налази у ‘%1’."
+
+#: widgets/selftestdialog.cpp:529
+#, kde-format
+msgid "No previous Akonadi control error log found."
+msgstr "Претходни дневник грешака управљања Аконадија нађен."
+
+#: widgets/selftestdialog.cpp:530
+#, kde-format
+msgid ""
+"The Akonadi control process did not report any errors during its previous "
+"startup."
+msgstr ""
+"Управљачки процес Аконадија није пријавио ниједну грешку током претходног "
+"покретања."
+
+#: widgets/selftestdialog.cpp:532
+#, kde-format
+msgid "Previous Akonadi control error log found."
+msgstr "Претходни дневник грешака управљања Аконадија нађен."
+
+#: widgets/selftestdialog.cpp:533
+#, kde-format
+msgid ""
+"The Akonadi control process reported errors during its previous startup. The "
+"log can be found in %1."
+msgstr ""
+"Управљачки процес Аконадија пријавио је грешке током претходног покретања. "
+"Дневник се налази у ‘%1’."
+
+#: widgets/selftestdialog.cpp:542
+#, kde-format
+msgid "Akonadi was started as root"
+msgstr "Аконади покренут под кореном"
+
+#: widgets/selftestdialog.cpp:542
+#, kde-format
+msgid ""
+"Running Internet-facing applications as root/administrator exposes you to "
+"many security risks. MySQL, used by this Akonadi installation, will not "
+"allow itself to run as root, to protect you from these risks."
+msgstr ""
+"Извршавање програма окренутих Интернету под кореном (администраторским "
+"налогом) излаже вас многим безбедносним ризицима. МајСКуЛ, који користи ова "
+"инсталација Аконадија, неће допустити извршавање под кореном да би вас "
+"заштитио од ових ризика."
+
+#: widgets/selftestdialog.cpp:544
+#, kde-format
+msgid "Akonadi is not running as root"
+msgstr "Аконади не ради под кореном"
+
+#: widgets/selftestdialog.cpp:544
+#, kde-format
+msgid ""
+"Akonadi is not running as a root/administrator user, which is the "
+"recommended setup for a secure system."
+msgstr ""
+"Аконади не ради под кореним (администраторским) корисником, што је и "
+"препоручена постава за безбедност система."
+
+# >> @title:window
+#: widgets/selftestdialog.cpp:623
+#, kde-format
+msgid "Save Test Report"
+msgstr "Уписивање извештаја о пробама"
+
+#: widgets/selftestdialog.cpp:630
+#, kde-format
+msgid "Error"
+msgstr "Грешка"
+
+#: widgets/selftestdialog.cpp:630
+#, kde-format
+msgid "Could not open file '%1'"
+msgstr "Не могу да отворим фајл ‘%1’"
+
+#. i18n: ectx: property (text), widget (QLabel, introductionLabel)
+#: widgets/selftestdialog.ui:16
+#, kde-format
+msgid ""
+"An error occurred during the startup of the Akonadi server. The following "
+"self-tests are supposed to help with tracking down and solving this problem. "
+"When requesting support or reporting bugs, please always include this report."
+msgstr ""
+"Дошло је до грешке при покретању сервера Аконадија. Следеће самопробе "
+"требало би да помогну у откривању и решавању овог проблема. Када тражите "
+"подршку или пријављујете грешке, молимо вас да увек укључите овај извештај."
+
+#. i18n: ectx: property (title), widget (QGroupBox, detailsGroup)
+#: widgets/selftestdialog.ui:39
+#, kde-format
+msgid "Details"
+msgstr "Детаљи"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/selftestdialog.ui:61
+#, fuzzy, kde-format
+#| msgid ""
+#| "<p>For more troubleshooting tips please refer to <a href=\"http://"
+#| "userbase.kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
+msgid ""
+"<p>For more troubleshooting tips please refer to <a href=\"https://userbase."
+"kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
+msgstr ""
+"<p>Још савета за претресање проблема потражите на <a href=\"http://userbase."
+"kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
+
+#: widgets/standardactionmanager.cpp:84
+#, kde-format
+msgid "&New Folder..."
+msgstr "&Нова фасцикла..."
+
+# >> New folder
+#: widgets/standardactionmanager.cpp:84
+#, kde-format
+msgid "New"
+msgstr "Нова"
+
+#: widgets/standardactionmanager.cpp:86 widgets/standardactionmanager.cpp:205
+#, kde-format
+msgid "&Delete Folder"
+msgid_plural "&Delete %1 Folders"
+msgstr[0] "&Обриши %1 фасциклу"
+msgstr[1] "&Обриши %1 фасцикле"
+msgstr[2] "&Обриши %1 фасцикли"
+msgstr[3] "&Обриши фасциклу"
+
+#: widgets/standardactionmanager.cpp:86
+#, kde-format
+msgid "Delete"
+msgstr "Обриши"
+
+#: widgets/standardactionmanager.cpp:87 widgets/standardactionmanager.cpp:207
+#, kde-format
+msgid "&Synchronize Folder"
+msgid_plural "&Synchronize %1 Folders"
+msgstr[0] "&Синхронизуј %1 фасциклу"
+msgstr[1] "&Синхронизуј %1 фасцикле"
+msgstr[2] "&Синхронизуј %1 фасцикли"
+msgstr[3] "&Синхронизуј фасциклу"
+
+#: widgets/standardactionmanager.cpp:87 widgets/standardactionmanager.cpp:105
+#: widgets/standardactionmanager.cpp:121
+#, kde-format
+msgid "Synchronize"
+msgstr "Синхронизуј"
+
+#: widgets/standardactionmanager.cpp:88
+#, kde-format
+msgid "Folder &Properties"
+msgstr "&Својства фасцикле"
+
+#: widgets/standardactionmanager.cpp:88 widgets/standardactionmanager.cpp:104
+#, kde-format
+msgid "Properties"
+msgstr "Својства"
+
+#: widgets/standardactionmanager.cpp:90
+#, kde-format
+msgid "&Paste"
+msgstr "&Налепи"
+
+#: widgets/standardactionmanager.cpp:90
+#, kde-format
+msgid "Paste"
+msgstr "Налепи"
+
+#: widgets/standardactionmanager.cpp:92
+#, kde-format
+msgid "Manage Local &Subscriptions..."
+msgstr "Управљај локалним &претплатама..."
+
+#: widgets/standardactionmanager.cpp:92
+#, kde-format
+msgid "Manage Local Subscriptions"
+msgstr "Управљај локалним претплатама"
+
+#: widgets/standardactionmanager.cpp:93
+#, kde-format
+msgid "Add to Favorite Folders"
+msgstr "Додај у омиљене фасцикле"
+
+#: widgets/standardactionmanager.cpp:93
+#, kde-format
+msgid "Add to Favorite"
+msgstr "Додај у омиљене"
+
+#: widgets/standardactionmanager.cpp:94
+#, kde-format
+msgid "Remove from Favorite Folders"
+msgstr "Уклони из омиљених фасцикли"
+
+#: widgets/standardactionmanager.cpp:94
+#, kde-format
+msgid "Remove from Favorite"
+msgstr "Уклони из омиљених"
+
+#: widgets/standardactionmanager.cpp:95
+#, kde-format
+msgid "Rename Favorite..."
+msgstr "Преименуј омиљену..."
+
+#: widgets/standardactionmanager.cpp:95
+#, kde-format
+msgid "Rename"
+msgstr "Преименуј"
+
+#: widgets/standardactionmanager.cpp:96 widgets/standardactionmanager.cpp:107
+#, kde-format
+msgid "Copy Folder To..."
+msgstr "Копирај фасциклу у..."
+
+#: widgets/standardactionmanager.cpp:96 widgets/standardactionmanager.cpp:97
+#: widgets/standardactionmanager.cpp:107 widgets/standardactionmanager.cpp:109
+#, kde-format
+msgid "Copy To"
+msgstr "Копирај у"
+
+#: widgets/standardactionmanager.cpp:97 widgets/standardactionmanager.cpp:109
+#, kde-format
+msgid "Copy Item To..."
+msgstr "Копирај ставку у..."
+
+#: widgets/standardactionmanager.cpp:98 widgets/standardactionmanager.cpp:110
+#, kde-format
+msgid "Move Item To..."
+msgstr "Премести ставку у..."
+
+#: widgets/standardactionmanager.cpp:98 widgets/standardactionmanager.cpp:99
+#: widgets/standardactionmanager.cpp:108 widgets/standardactionmanager.cpp:110
+#, kde-format
+msgid "Move To"
+msgstr "Премести у"
+
+#: widgets/standardactionmanager.cpp:99 widgets/standardactionmanager.cpp:108
+#, kde-format
+msgid "Move Folder To..."
+msgstr "Премести фасциклу у..."
+
+#: widgets/standardactionmanager.cpp:100 widgets/standardactionmanager.cpp:199
+#, kde-format
+msgid "&Cut Item"
+msgid_plural "&Cut %1 Items"
+msgstr[0] "&Исеци %1 ставку"
+msgstr[1] "&Исеци %1 ставке"
+msgstr[2] "&Исеци %1 ставки"
+msgstr[3] "&Исеци ставку"
+
+#: widgets/standardactionmanager.cpp:100 widgets/standardactionmanager.cpp:101
+#, kde-format
+msgid "Cut"
+msgstr "Исеци"
+
+#: widgets/standardactionmanager.cpp:101 widgets/standardactionmanager.cpp:201
+#, kde-format
+msgid "&Cut Folder"
+msgid_plural "&Cut %1 Folders"
+msgstr[0] "&Исеци %1 фасциклу"
+msgstr[1] "&Исеци %1 фасцикле"
+msgstr[2] "&Исеци %1 фасцикли"
+msgstr[3] "&Исеци фасциклу"
+
+#: widgets/standardactionmanager.cpp:102
+#, kde-format
+msgid "Create Resource"
+msgstr "Направи ресурс"
+
+#: widgets/standardactionmanager.cpp:103 widgets/standardactionmanager.cpp:228
+#, kde-format
+msgid "Delete Resource"
+msgid_plural "Delete %1 Resources"
+msgstr[0] "Обриши %1 ресурс"
+msgstr[1] "Обриши %1 ресурса"
+msgstr[2] "Обриши %1 ресурса"
+msgstr[3] "Обриши ресурс"
+
+#: widgets/standardactionmanager.cpp:104
+#, kde-format
+msgid "&Resource Properties"
+msgstr "Својства &ресурса"
+
+#: widgets/standardactionmanager.cpp:105 widgets/standardactionmanager.cpp:230
+#, kde-format
+msgid "Synchronize Resource"
+msgid_plural "Synchronize %1 Resources"
+msgstr[0] "Синхронизуј %1 ресурс"
+msgstr[1] "Синхронизуј %1 ресурса"
+msgstr[2] "Синхронизуј %1 ресурса"
+msgstr[3] "Синхронизуј ресурс"
+
+#: widgets/standardactionmanager.cpp:106
+#, kde-format
+msgid "Work Offline"
+msgstr "Ради ван везе"
+
+#: widgets/standardactionmanager.cpp:111
+#, kde-format
+msgid "&Synchronize Folder Recursively"
+msgstr "&Синхронизуј фасциклу рекурзивно"
+
+#: widgets/standardactionmanager.cpp:111
+#, kde-format
+msgid "Synchronize Recursively"
+msgstr "Синхронизуј рекурзивно"
+
+#: widgets/standardactionmanager.cpp:112
+#, kde-format
+msgid "&Move Folder To Trash"
+msgstr "&Премести фасциклу у смеће"
+
+#: widgets/standardactionmanager.cpp:112
+#, kde-format
+msgid "Move Folder To Trash"
+msgstr "Премести фасциклу у смеће"
+
+#: widgets/standardactionmanager.cpp:113
+#, kde-format
+msgid "&Move Item To Trash"
+msgstr "&Премести ставку у смеће"
+
+#: widgets/standardactionmanager.cpp:113
+#, kde-format
+msgid "Move Item To Trash"
+msgstr "Премести ставку у смеће"
+
+#: widgets/standardactionmanager.cpp:114 widgets/standardactionmanager.cpp:116
+#, kde-format
+msgid "&Restore Folder From Trash"
+msgstr "&Врати фасциклу из смећа"
+
+#: widgets/standardactionmanager.cpp:114 widgets/standardactionmanager.cpp:116
+#, kde-format
+msgid "Restore Folder From Trash"
+msgstr "Врати фасциклу из смећа"
+
+#: widgets/standardactionmanager.cpp:115 widgets/standardactionmanager.cpp:118
+#: widgets/standardactionmanager.cpp:119
+#, kde-format
+msgid "&Restore Item From Trash"
+msgstr "&Врати ставку из смећа"
+
+#: widgets/standardactionmanager.cpp:115 widgets/standardactionmanager.cpp:118
+#: widgets/standardactionmanager.cpp:119
+#, kde-format
+msgid "Restore Item From Trash"
+msgstr "Врати ставку из смећа"
+
+#: widgets/standardactionmanager.cpp:117
+#, kde-format
+msgid "&Restore Collection From Trash"
+msgstr "&Врати збирку из смећа"
+
+#: widgets/standardactionmanager.cpp:117
+#, kde-format
+msgid "Restore Collection From Trash"
+msgstr "Врати збирку из смећа"
+
+#: widgets/standardactionmanager.cpp:120
+#, kde-format
+msgid "&Synchronize Favorite Folders"
+msgstr "&Синхронизуј омиљене фасцикле"
+
+#: widgets/standardactionmanager.cpp:120
+#, kde-format
+msgid "Synchronize Favorite Folders"
+msgstr "Синхронизуј омиљене фасцикле"
+
+#: widgets/standardactionmanager.cpp:121
+#, kde-format
+msgid "Synchronize Folder Tree"
+msgstr "Синхронизуј стабло фасцикли"
+
+#: widgets/standardactionmanager.cpp:195
+#, kde-format
+msgid "&Copy Folder"
+msgid_plural "&Copy %1 Folders"
+msgstr[0] "&Копирај %1 фасциклу"
+msgstr[1] "&Копирај %1 фасцикле"
+msgstr[2] "&Копирај %1 фасцикли"
+msgstr[3] "&Копирај фасциклу"
+
+#: widgets/standardactionmanager.cpp:197
+#, kde-format
+msgid "&Copy Item"
+msgid_plural "&Copy %1 Items"
+msgstr[0] "&Копирај %1 ставку"
+msgstr[1] "&Копирај %1 ставке"
+msgstr[2] "&Копирај %1 ставки"
+msgstr[3] "&Копирај ставку"
+
+#: widgets/standardactionmanager.cpp:203
+#, kde-format
+msgid "&Delete Item"
+msgid_plural "&Delete %1 Items"
+msgstr[0] "&Обриши %1 ставку"
+msgstr[1] "&Обриши %1 ставке"
+msgstr[2] "&Обриши %1 ставки"
+msgstr[3] "&Обриши ставку"
+
+#: widgets/standardactionmanager.cpp:209
+#, kde-format
+msgid "&Delete Resource"
+msgid_plural "&Delete %1 Resources"
+msgstr[0] "&Обриши %1 ресурс"
+msgstr[1] "&Обриши %1 ресурса"
+msgstr[2] "&Обриши %1 ресурса"
+msgstr[3] "&Обриши ресурс"
+
+#: widgets/standardactionmanager.cpp:211
+#, kde-format
+msgid "&Synchronize Resource"
+msgid_plural "&Synchronize %1 Resources"
+msgstr[0] "&Синхронизуј %1 ресурс"
+msgstr[1] "&Синхронизуј %1 ресурса"
+msgstr[2] "&Синхронизуј %1 ресурса"
+msgstr[3] "&Синхронизуј ресурс"
+
+#: widgets/standardactionmanager.cpp:214
+#, kde-format
+msgid "Copy Folder"
+msgid_plural "Copy %1 Folders"
+msgstr[0] "Копирај %1 фасциклу"
+msgstr[1] "Копирај %1 фасцикле"
+msgstr[2] "Копирај %1 фасцикли"
+msgstr[3] "Копирај фасциклу"
+
+#: widgets/standardactionmanager.cpp:216
+#, kde-format
+msgid "Copy Item"
+msgid_plural "Copy %1 Items"
+msgstr[0] "Копирај %1 ставку"
+msgstr[1] "Копирај %1 ставке"
+msgstr[2] "Копирај %1 ставки"
+msgstr[3] "Копирај ставку"
+
+#: widgets/standardactionmanager.cpp:218
+#, kde-format
+msgid "Cut Item"
+msgid_plural "Cut %1 Items"
+msgstr[0] "Исеци %1 ставку"
+msgstr[1] "Исеци %1 ставке"
+msgstr[2] "Исеци %1 ставки"
+msgstr[3] "Исеци ставку"
+
+#: widgets/standardactionmanager.cpp:220
+#, kde-format
+msgid "Cut Folder"
+msgid_plural "Cut %1 Folders"
+msgstr[0] "Исеци %1 фасциклу"
+msgstr[1] "Исеци %1 фасцикле"
+msgstr[2] "Исеци %1 фасцикли"
+msgstr[3] "Исеци фасциклу"
+
+#: widgets/standardactionmanager.cpp:222
+#, kde-format
+msgid "Delete Item"
+msgid_plural "Delete %1 Items"
+msgstr[0] "Обриши %1 ставку"
+msgstr[1] "Обриши %1 ставке"
+msgstr[2] "Обриши %1 ставки"
+msgstr[3] "Обриши ставку"
+
+#: widgets/standardactionmanager.cpp:224
+#, kde-format
+msgid "Delete Folder"
+msgid_plural "Delete %1 Folders"
+msgstr[0] "Обриши %1 фасциклу"
+msgstr[1] "Обриши %1 фасцикле"
+msgstr[2] "Обриши %1 фасцикли"
+msgstr[3] "Обриши фасциклу"
+
+#: widgets/standardactionmanager.cpp:226
+#, kde-format
+msgid "Synchronize Folder"
+msgid_plural "Synchronize %1 Folders"
+msgstr[0] "Синхронизуј %1 фасциклу"
+msgstr[1] "Синхронизуј %1 фасцикле"
+msgstr[2] "Синхронизуј %1 фасцикли"
+msgstr[3] "Синхронизуј фасциклу"
+
+#: widgets/standardactionmanager.cpp:235
+#, kde-format
+msgctxt "@label:textbox name of Akonadi folder"
+msgid "Name"
+msgstr "Име"
+
+#: widgets/standardactionmanager.cpp:242
+#, kde-format
+msgid "Do you really want to delete this folder and all its sub-folders?"
+msgid_plural ""
+"Do you really want to delete %1 folders and all their sub-folders?"
+msgstr[0] "Желите ли заиста да обришете %1 фасциклу и све њихове потфасцикле?"
+msgstr[1] "Желите ли заиста да обришете %1 фасцикле и све њихове потфасцикле?"
+msgstr[2] "Желите ли заиста да обришете %1 фасцикли и све њихове потфасцикле?"
+msgstr[3] "Желите ли заиста да обришете ову фасциклу и све њене потфасцикле?"
+
+#: widgets/standardactionmanager.cpp:245
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete folder?"
+msgid_plural "Delete folders?"
+msgstr[0] "Обрисати фасцикле?"
+msgstr[1] "Обрисати фасцикле?"
+msgstr[2] "Обрисати фасцикле?"
+msgstr[3] "Обрисати фасциклу?"
+
+#: widgets/standardactionmanager.cpp:247
+#, kde-format
+msgid "Could not delete folder: %1"
+msgstr "Не могу да обришем фасциклу: %1"
+
+#: widgets/standardactionmanager.cpp:249
+#, kde-format
+msgid "Folder deletion failed"
+msgstr "Неуспело брисање фасцикле"
+
+#: widgets/standardactionmanager.cpp:252
+#, kde-format
+msgctxt "@title:window"
+msgid "Properties of Folder %1"
+msgstr "Својства фасцикле %1"
+
+#: widgets/standardactionmanager.cpp:255
+#, kde-format
+msgid "Do you really want to delete the selected item?"
+msgid_plural "Do you really want to delete %1 items?"
+msgstr[0] "Желите ли заиста да обришете %1 изабрану ставку?"
+msgstr[1] "Желите ли заиста да обришете %1 изабране ставке?"
+msgstr[2] "Желите ли заиста да обришете %1 изабраних ставки?"
+msgstr[3] "Желите ли заиста да обришете изабрану ставку?"
+
+#: widgets/standardactionmanager.cpp:258
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete item?"
+msgid_plural "Delete items?"
+msgstr[0] "Обрисати ставке?"
+msgstr[1] "Обрисати ставке?"
+msgstr[2] "Обрисати ставке?"
+msgstr[3] "Обрисати ставку?"
+
+#: widgets/standardactionmanager.cpp:260
+#, kde-format
+msgid "Could not delete item: %1"
+msgstr "Не могу да обришем ставку: %1"
+
+#: widgets/standardactionmanager.cpp:262
+#, kde-format
+msgid "Item deletion failed"
+msgstr "Неуспело брисање ставке"
+
+# >> @title:window Rename favorite folder
+#: widgets/standardactionmanager.cpp:265
+#, kde-format
+msgctxt "@title:window"
+msgid "Rename Favorite"
+msgstr "Преименовање омиљене"
+
+#: widgets/standardactionmanager.cpp:267
+#, kde-format
+msgctxt "@label:textbox name of the folder"
+msgid "Name:"
+msgstr "Име:"
+
+#: widgets/standardactionmanager.cpp:270
+#, kde-format
+msgctxt "@title:window"
+msgid "New Resource"
+msgstr "Нови ресурс"
+
+#: widgets/standardactionmanager.cpp:272
+#, kde-format
+msgid "Could not create resource: %1"
+msgstr "Не могу да направим ресурс: %1"
+
+#: widgets/standardactionmanager.cpp:274
+#, kde-format
+msgid "Resource creation failed"
+msgstr "Неуспело стварање ресурса"
+
+#: widgets/standardactionmanager.cpp:277
+#, kde-format
+msgid "Do you really want to delete this resource?"
+msgid_plural "Do you really want to delete %1 resources?"
+msgstr[0] "Желите ли заиста да обришете %1 ресурс?"
+msgstr[1] "Желите ли заиста да обришете %1 ресурса?"
+msgstr[2] "Желите ли заиста да обришете %1 ресурса?"
+msgstr[3] "Желите ли заиста да обришете овај ресурс?"
+
+#: widgets/standardactionmanager.cpp:280
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete Resource?"
+msgid_plural "Delete Resources?"
+msgstr[0] "Обрисати ресурсе?"
+msgstr[1] "Обрисати ресурсе?"
+msgstr[2] "Обрисати ресурсе?"
+msgstr[3] "Обрисати ресурс?"
+
+#: widgets/standardactionmanager.cpp:283
+#, kde-format
+msgid "Could not paste data: %1"
+msgstr "Не могу да налепим податке: %1"
+
+#: widgets/standardactionmanager.cpp:285
+#, kde-format
+msgid "Paste failed"
+msgstr "Неуспело налепљивање"
+
+#: widgets/standardactionmanager.cpp:633
+#, kde-format
+msgid "We can not add \"/\" in folder name."
+msgstr "Име фасцикле не може да садржи „/“."
+
+#: widgets/standardactionmanager.cpp:634 widgets/standardactionmanager.cpp:641
+#, kde-format
+msgid "Create new folder error"
+msgstr "Грешка у стварању нове фасцикле"
+
+#: widgets/standardactionmanager.cpp:640
+#, kde-format
+msgid "We can not add \".\" at begin or end of folder name."
+msgstr "Име фасцикле не може да почиње нити да се завршава тачком."
+
+#: widgets/standardactionmanager.cpp:864
+#, kde-format
+msgid ""
+"Before syncing folder \"%1\" it is necessary to have the resource online. Do "
+"you want to make it online?"
+msgstr ""
+"Пре синхронизовања фасцикле „%1“ неопходно је да ресурс буде на вези. Желите "
+"ли да га ставите на везу?"
+
+#: widgets/standardactionmanager.cpp:865
+#, kde-format
+msgid "Account \"%1\" is offline"
+msgstr "Налог „%1“ је ван везе"
+
+#: widgets/standardactionmanager.cpp:866
+#, kde-format
+msgctxt "@action:button"
+msgid "Go Online"
+msgstr "На везу"
+
+#: widgets/standardactionmanager.cpp:1442
+#, kde-format
+msgid "Move to This Folder"
+msgstr "Премести у ову фасциклу"
+
+#: widgets/standardactionmanager.cpp:1442
+#, kde-format
+msgid "Copy to This Folder"
+msgstr "Копирај у ову фасциклу"
+
+#: widgets/subscriptiondialog.cpp:103
+#, fuzzy, kde-format
+#| msgid "Failed to create relation."
+msgid "Failed to update subscription: %1"
+msgstr "Не могу да направим релацију."
+
+#: widgets/subscriptiondialog.cpp:104
+#, fuzzy, kde-format
+#| msgid "Local Subscriptions"
+msgctxt "@title"
+msgid "Subscription Error"
+msgstr "Локалне претплате"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, SubscriptionDialog)
+#: widgets/subscriptiondialog.ui:14
+#, kde-format
+msgid "Local Subscriptions"
+msgstr "Локалне претплате"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/subscriptiondialog.ui:22
+#, kde-format
+msgid "Search:"
+msgstr "Тражи:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, subscribedOnlyCheckBox)
+#: widgets/subscriptiondialog.ui:36
+#, fuzzy, kde-format
+#| msgid "Subscribed only"
+msgid "&Subscribed only"
+msgstr "Само у претплаћеним"
+
+#. i18n: ectx: property (text), widget (QPushButton, subscribeButton)
+#: widgets/subscriptiondialog.ui:62
+#, fuzzy, kde-format
+#| msgid "Subscribe"
+msgid "Su&bscribe"
+msgstr "Претплати се"
+
+#. i18n: ectx: property (text), widget (QPushButton, unsubscribeButton)
+#: widgets/subscriptiondialog.ui:69
+#, fuzzy, kde-format
+#| msgid "Unsubscribe"
+msgid "&Unsubscribe"
+msgstr "Откажи претплату"
+
+#: widgets/tageditwidget.cpp:128
+#, kde-format
+msgid "Failed to create a new tag"
+msgstr "Не могу да направим нову ознаку."
+
+#: widgets/tageditwidget.cpp:129
+#, kde-format
+msgid "An error occurred while creating a new tag"
+msgstr "Грешка при стварању нове ознаке"
+
+#: widgets/tageditwidget.cpp:178
+#, kde-kuit-format
+msgctxt "@info"
+msgid "Do you really want to remove the tag <resource>%1</resource>?"
+msgstr "Желите ли заиста да уклоните ознаку <resource>%1</resource>?"
+
+#: widgets/tageditwidget.cpp:180
+#, kde-format
+msgctxt "@title"
+msgid "Delete tag"
+msgstr "Брисање ознаке"
+
+#: widgets/tageditwidget.cpp:206
+#, kde-format
+msgctxt "@info"
+msgid "Delete tag"
+msgstr "Обриши ознаку"
+
+#. i18n: ectx: property (text), widget (QLabel, selectLabel)
+#: widgets/tageditwidget.ui:29
+#, fuzzy, kde-format
+#| msgctxt "@label:textbox"
+#| msgid "Configure which tags should be applied."
+msgid "Select tags that should be applied."
+msgstr "Подесите које ознаке треба применити."
+
+# >> @action:button
+#. i18n: ectx: property (text), widget (QPushButton, newTagButton)
+#: widgets/tageditwidget.ui:54
+#, fuzzy, kde-format
+#| msgctxt "@label"
+#| msgid "Create new tag"
+msgid "Create new tag"
+msgstr "Направи нову ознаку"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
+#: widgets/tagmanagementdialog.ui:14
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Manage Tags"
+msgid "Manage Tags"
+msgstr "Управљање ознакама"
+
+#: widgets/tagselectioncombobox.cpp:139
+#, fuzzy, kde-format
+#| msgctxt "@title"
+#| msgid "Delete tag"
+msgctxt "@label Placeholder text in tag selection combobox"
+msgid "Select tags..."
+msgstr "Брисање ознаке"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
+#: widgets/tagselectiondialog.ui:14
+#, kde-format
+msgid "Select Tags"
+msgstr ""
+
+#: widgets/tagwidget.cpp:58
+#, kde-format
+msgid "Clear"
+msgstr "Очисти"
+
+#. i18n: ectx: property (placeholderText), widget (Akonadi::TagView, tagView)
+#: widgets/tagwidget.ui:20
+#, fuzzy, kde-format
+#| msgid "Click to Add Tags"
+msgid "Click to add tags"
+msgstr "Кликните да додате ознаке"
+
+#. i18n: ectx: property (text), widget (QToolButton, editButton)
+#: widgets/tagwidget.ui:27
+#, kde-format
+msgid "..."
+msgstr "..."
+
+#: xml/akonadi2xml.cpp:38
+#, kde-format
+msgid "Akonadi To XML converter"
+msgstr "Претварач из Аконадија у ИксМЛ"
+
+#: xml/akonadi2xml.cpp:40
+#, kde-format
+msgid "Converts an Akonadi collection subtree into a XML file."
+msgstr "Претвара Аконадијево подстабло збирке у ИксМЛ фајл."
+
+# |, no-check-markup
+#: xml/akonadi2xml.cpp:42
+#, kde-format
+msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
+msgstr "© 2009, Фолкер Краусе <vkrause@kde.org>"
+
+#: xml/xmldocument.cpp:95
+#, kde-format
+msgid "No data loaded."
+msgstr "Нема учитаних података."
+
+#: xml/xmldocument.cpp:134
+#, kde-format
+msgid "No filename specified"
+msgstr "Није наведено име фајла."
+
+#: xml/xmldocument.cpp:142
+#, kde-format
+msgid "Unable to open data file '%1'."
+msgstr "Не могу да отворим фајл са подацима „%1“."
+
+#: xml/xmldocument.cpp:147
+#, kde-format
+msgid "File %1 does not exist."
+msgstr "Фајл „%1“ не постоји."
+
+#: xml/xmldocument.cpp:155
+#, kde-format
+msgid "Unable to parse data file '%1'."
+msgstr "Не могу рашчланим фајл са подацима „%1“."
+
+#: xml/xmldocument.cpp:162
+#, kde-format
+msgid "Schema definition could not be loaded and parsed."
+msgstr "Дефиниција шеме не може да се учита и рашчлани."
+
+#: xml/xmldocument.cpp:167
+#, kde-format
+msgid "Unable to create schema parser context."
+msgstr "Не могу да направим контекст рашчлањивача шеме."
+
+#: xml/xmldocument.cpp:172
+#, kde-format
+msgid "Unable to create schema."
+msgstr "Не могу да направим шему."
+
+#: xml/xmldocument.cpp:177
+#, kde-format
+msgid "Unable to create schema validation context."
+msgstr "Не могу да направим контекст овере шемом."
+
+#: xml/xmldocument.cpp:182
+#, kde-format
+msgid "Invalid file format."
+msgstr "Лош формат фајла."
+
+#: xml/xmldocument.cpp:190
+#, kde-format
+msgid "Unable to parse data file: %1"
+msgstr "Не могу да рашчланим фајл са подацима: %1"
+
+#: xml/xmldocument.cpp:315
+#, kde-format
+msgid "Unable to find collection %1"
+msgstr "Не могу да нађем збирку „%1“."
