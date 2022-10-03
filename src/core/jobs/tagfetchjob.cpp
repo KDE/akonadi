@@ -5,7 +5,6 @@
 */
 
 #include "tagfetchjob.h"
-#include "attributefactory.h"
 #include "job_p.h"
 #include "protocolhelper_p.h"
 #include "tagfetchscope.h"

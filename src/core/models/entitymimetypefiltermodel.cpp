@@ -7,7 +7,6 @@
 
 #include "entitymimetypefiltermodel.h"
 #include "akonadicore_debug.h"
-#include "mimetypechecker.h"
 
 #include <QString>
 #include <QStringList>

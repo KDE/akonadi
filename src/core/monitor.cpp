@@ -9,7 +9,6 @@
 
 #include "changemediator_p.h"
 #include "collectionfetchscope.h"
-#include "itemfetchjob.h"
 #include "session.h"
 
 #include <shared/akranges.h>

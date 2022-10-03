@@ -12,10 +12,8 @@
 #include "item_p.h"
 #include "itemfetchscope.h"
 #include "itemserializer_p.h"
-#include "itemserializerplugin.h"
 #include "persistentsearchattribute.h"
 #include "protocolhelper_p.h"
-#include "servermanager.h"
 #include "tag_p.h"
 #include "tagfetchscope.h"
 

@@ -10,7 +10,6 @@
 #include "specialcollectionattribute.h"
 #include "subscriptionmodel_p.h"
 
-#include "akonadicore_debug.h"
 #include <qnamespace.h>
 #include <shared/akranges.h>
 

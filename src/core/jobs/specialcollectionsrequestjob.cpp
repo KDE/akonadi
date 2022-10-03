@@ -12,7 +12,6 @@
 
 #include "agentmanager.h"
 #include "collectioncreatejob.h"
-#include "entitydisplayattribute.h"
 
 #include "akonadicore_debug.h"
 

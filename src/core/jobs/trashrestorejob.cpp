@@ -9,16 +9,12 @@
 #include "entitydeletedattribute.h"
 #include "job_p.h"
 
-#include "trashsettings.h"
-
 #include <KLocalizedString>
 
-#include "collectiondeletejob.h"
 #include "collectionfetchjob.h"
 #include "collectionfetchscope.h"
 #include "collectionmodifyjob.h"
 #include "collectionmovejob.h"
-#include "itemdeletejob.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
 #include "itemmodifyjob.h"

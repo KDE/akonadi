@@ -11,7 +11,6 @@
 #include "agentmanager_p.h"
 #include "controlinterface.h"
 #include "kjobprivatebase_p.h"
-#include "servermanager.h"
 #include <QDBusConnection>
 
 #include <KLocalizedString>

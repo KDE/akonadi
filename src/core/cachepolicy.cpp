@@ -5,7 +5,7 @@
 */
 
 #include "cachepolicy.h"
-#include "collection.h"
+#include <QDebug>
 
 using namespace Akonadi;
 

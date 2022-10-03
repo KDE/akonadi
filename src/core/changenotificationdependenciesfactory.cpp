@@ -4,7 +4,6 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "akonadicore_debug.h"
 #include "changemediator_p.h"
 #include "changenotificationdependenciesfactory_p.h"
 #include "connection_p.h"

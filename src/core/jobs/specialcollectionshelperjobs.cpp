@@ -8,7 +8,6 @@
 
 #include "servermanager.h"
 #include "specialcollectionattribute.h"
-#include "specialcollections.h"
 #include <QDBusConnection>
 
 #include "agentinstance.h"

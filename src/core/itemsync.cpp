@@ -14,7 +14,6 @@
 #include "itemdeletejob.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
-#include "itemmodifyjob.h"
 #include "job_p.h"
 #include "transactionsequence.h"
 

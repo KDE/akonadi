@@ -18,13 +18,11 @@
 #include <QUrl>
 #include <QUrlQuery>
 
-#include "attributefactory.h"
 #include "collectionmodifyjob.h"
 #include "entitydisplayattribute.h"
 #include "itemmodifyjob.h"
 #include "monitor.h"
 #include "session.h"
-#include "transactionsequence.h"
 
 #include "collectionutils.h"
 

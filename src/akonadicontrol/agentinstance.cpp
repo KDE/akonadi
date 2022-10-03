@@ -8,7 +8,6 @@
 #include "akonadicontrol_debug.h"
 
 #include "agentmanager.h"
-#include "agenttype.h"
 
 AgentInstance::AgentInstance(AgentManager &manager)
     : mManager(manager)

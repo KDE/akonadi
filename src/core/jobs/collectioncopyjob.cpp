@@ -8,7 +8,6 @@
 #include "collection.h"
 #include "job_p.h"
 #include "private/protocol_p.h"
-#include "protocolhelper_p.h"
 
 #include <KLocalizedString>
 

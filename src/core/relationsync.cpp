@@ -10,9 +10,7 @@ class Item;
 
 #include "relationsync.h"
 #include "akonadicore_debug.h"
-#include "itemfetchscope.h"
 
-#include "jobs/itemfetchjob.h"
 #include "jobs/relationcreatejob.h"
 #include "jobs/relationdeletejob.h"
 #include "jobs/relationfetchjob.h"

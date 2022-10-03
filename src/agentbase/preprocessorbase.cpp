@@ -10,8 +10,6 @@
 
 #include "preprocessorbase_p.h"
 
-#include "akonadiagentbase_debug.h"
-
 using namespace Akonadi;
 
 PreprocessorBase::PreprocessorBase(const QString &id)

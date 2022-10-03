@@ -9,7 +9,6 @@
 #include "akonadicontrol_debug.h"
 #include "config-akonadi.h"
 #include "controlmanager.h"
-#include "processcontrol.h"
 
 #if WITH_ACCOUNTS
 #include "accountsintegration.h"

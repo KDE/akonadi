@@ -5,7 +5,6 @@
 */
 
 #include "agentconfigurationbase.h"
-#include "agentmanager.h"
 #include "akonadicore_debug.h"
 
 #include <KAboutData>
