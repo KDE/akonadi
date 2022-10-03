@@ -1921,7 +1921,7 @@ msgstr "Propietats"
 
 #: widgets/standardactionmanager.cpp:98
 msgid "&Paste"
-msgstr "&Apega"
+msgstr "A&pega"
 
 #: widgets/standardactionmanager.cpp:98
 msgid "Paste"
