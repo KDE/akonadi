@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-09 00:46+0000\n"
+"POT-Creation-Date: 2022-10-04 00:45+0000\n"
 "PO-Revision-Date: 2022-07-10 09:46+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -177,22 +177,22 @@ msgstr "Намерени неразрешени колекции сираци"
 msgid "Did not find other item for conflict handling"
 msgstr "Не се откри друг елемент за обработка на конфликти"
 
-#: core/jobs/agentinstancecreatejob.cpp:71
+#: core/jobs/agentinstancecreatejob.cpp:70
 #, kde-format
 msgid "Unable to access D-Bus interface of created agent."
 msgstr "Няма достъп до интерфейса на D-Bus на създадения агент."
 
-#: core/jobs/agentinstancecreatejob.cpp:93
+#: core/jobs/agentinstancecreatejob.cpp:92
 #, kde-format
 msgid "Agent instance creation timed out."
 msgstr "Времето за изчакване на създаването на инстанция на агент е изтекло."
 
-#: core/jobs/agentinstancecreatejob.cpp:151
+#: core/jobs/agentinstancecreatejob.cpp:150
 #, kde-format
 msgid "Unable to obtain agent type '%1'."
 msgstr "Не може да се получи тип агент \"%1\"."
 
-#: core/jobs/agentinstancecreatejob.cpp:159
+#: core/jobs/agentinstancecreatejob.cpp:158
 #, kde-format
 msgid "Unable to create agent instance."
 msgstr "Не може да се създаде инстанция на агент."
@@ -219,12 +219,12 @@ msgstr "Не може да се получи интерфейс D-Bus за ре�
 msgid "Collection attributes synchronization timed out."
 msgstr "Времето за синхронизация на атрибутите на колекцията изтече."
 
-#: core/jobs/collectioncopyjob.cpp:55
+#: core/jobs/collectioncopyjob.cpp:54
 #, kde-format
 msgid "Invalid collection to copy"
 msgstr "Невалидна колекция за копиране"
 
-#: core/jobs/collectioncopyjob.cpp:61
+#: core/jobs/collectioncopyjob.cpp:60
 #, kde-format
 msgid "Invalid destination collection"
 msgstr "Невалидна колекция на дестинация"
@@ -309,33 +309,33 @@ msgstr "Неуспешно създаване на връзка."
 msgid "Resource synchronization timed out."
 msgstr "Времето за синхронизация на ресурса изтече."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:146
+#: core/jobs/specialcollectionshelperjobs.cpp:145
 #, kde-format
 msgid "Could not fetch root collection of resource %1."
 msgstr "Не можа да се извлече основната колекция на ресурс %1."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:190
+#: core/jobs/specialcollectionshelperjobs.cpp:189
 #, kde-format
 msgid "No resource ID given."
 msgstr "Не е даден идентификатор на ресурс."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:327
+#: core/jobs/specialcollectionshelperjobs.cpp:326
 #, kde-format
 msgid "Invalid resource identifier '%1'"
 msgstr "Невалиден идентификатор на ресурс '%1'"
 
-#: core/jobs/specialcollectionshelperjobs.cpp:343
-#: core/jobs/specialcollectionshelperjobs.cpp:351
+#: core/jobs/specialcollectionshelperjobs.cpp:342
+#: core/jobs/specialcollectionshelperjobs.cpp:350
 #, kde-format
 msgid "Failed to configure default resource via D-Bus."
 msgstr "Неуспешно конфигуриране на ресурс по подразбиране чрез D-Bus."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:416
+#: core/jobs/specialcollectionshelperjobs.cpp:415
 #, kde-format
 msgid "Failed to fetch the resource collection."
 msgstr "Неуспешно извличане на колекцията от ресурси."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:600
+#: core/jobs/specialcollectionshelperjobs.cpp:599
 #, kde-format
 msgid "Timeout trying to get lock."
 msgstr "Времето за изчакване се опитва да се заключи."
@@ -351,22 +351,22 @@ msgid "Move to trash collection failed, aborting trash operation"
 msgstr ""
 "Преместването на колекцията в кошчето е  неуспешно, прекъсване на операцията"
 
-#: core/jobs/trashjob.cpp:226 core/jobs/trashrestorejob.cpp:155
+#: core/jobs/trashjob.cpp:226 core/jobs/trashrestorejob.cpp:151
 #, kde-format
 msgid "Invalid items passed"
 msgstr "Изпратени са невалидни елементи"
 
-#: core/jobs/trashjob.cpp:270 core/jobs/trashrestorejob.cpp:205
+#: core/jobs/trashjob.cpp:270 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
 msgstr "Предаде се невалидна колекция"
 
-#: core/jobs/trashjob.cpp:387 core/jobs/trashrestorejob.cpp:355
+#: core/jobs/trashjob.cpp:387 core/jobs/trashrestorejob.cpp:351
 #, kde-format
 msgid "No valid collection or empty itemlist"
 msgstr "Няма валидна колекция или празен списък с елементи"
 
-#: core/jobs/trashrestorejob.cpp:90
+#: core/jobs/trashrestorejob.cpp:86
 #, kde-format
 msgid "Could not find restore collection and restore resource is not available"
 msgstr ""
@@ -378,19 +378,19 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Име"
 
-#: core/models/entitytreemodel.cpp:195
+#: core/models/entitytreemodel.cpp:193
 #, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
 msgstr "Зареждане..."
 
-#: core/models/entitytreemodel.cpp:487
+#: core/models/entitytreemodel.cpp:485
 #, kde-format
 msgctxt "@window:title"
 msgid "Error"
 msgstr "Грешка"
 
-#: core/models/entitytreemodel.cpp:488
+#: core/models/entitytreemodel.cpp:486
 #, kde-format
 msgid ""
 "The target collection '%1' contains already\n"
@@ -399,43 +399,43 @@ msgstr ""
 "Целевата колекция '%1' вече съдържа \n"
 "колекция с име '%2'."
 
-#: core/models/entitytreemodel.cpp:657
+#: core/models/entitytreemodel.cpp:655
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Име"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1330
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Не може да се копира елемент: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1332
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Не можа да се копира колекция: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1334
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Не можа да се премести елемент: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1336
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Не можа да се премести колекция: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1340
+#: core/models/entitytreemodel_p.cpp:1338
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "Не може да се свърже обект: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1342
+#: core/models/entitytreemodel_p.cpp:1340
 #, kde-format
 msgctxt "@title:window"
 msgid "Error"
@@ -550,7 +550,7 @@ msgid ""
 msgstr ""
 "Няма налични агенти на Akonadi. Моля, проверете вашата инсталация на KDE PIM."
 
-#: core/session.cpp:186
+#: core/session.cpp:185
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is older (%1) than ours (%2). If "
@@ -560,7 +560,7 @@ msgstr ""
 "от нашата (%2). Ако сте актуализирали системата си наскоро, моля, "
 "рестартирайте сървъра на Akonadi."
 
-#: core/session.cpp:195
+#: core/session.cpp:194
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "

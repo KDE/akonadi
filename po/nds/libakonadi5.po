@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-09 00:46+0000\n"
+"POT-Creation-Date: 2022-10-04 00:45+0000\n"
 "PO-Revision-Date: 2014-09-18 22:53+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -185,22 +185,22 @@ msgstr "Nich oplööst \"verlaten\" Sammeln opdeckt"
 msgid "Did not find other item for conflict handling"
 msgstr "Keen anner Indrag för Konfliktenbedoon funnen."
 
-#: core/jobs/agentinstancecreatejob.cpp:71
+#: core/jobs/agentinstancecreatejob.cpp:70
 #, kde-format
 msgid "Unable to access D-Bus interface of created agent."
 msgstr "D-Bus-Koppelsteed vun opstellt Hölper lett sik nich faatkriegen."
 
-#: core/jobs/agentinstancecreatejob.cpp:93
+#: core/jobs/agentinstancecreatejob.cpp:92
 #, kde-format
 msgid "Agent instance creation timed out."
 msgstr "Tietafloop bi't Opstellen vun den Hölper"
 
-#: core/jobs/agentinstancecreatejob.cpp:151
+#: core/jobs/agentinstancecreatejob.cpp:150
 #, kde-format
 msgid "Unable to obtain agent type '%1'."
 msgstr "Hölper-Typ \"%1\" lett sik nich halen."
 
-#: core/jobs/agentinstancecreatejob.cpp:159
+#: core/jobs/agentinstancecreatejob.cpp:158
 #, kde-format
 msgid "Unable to create agent instance."
 msgstr "Hölper lett sik nich opstellen."
@@ -227,13 +227,13 @@ msgstr "D-Bus-Koppelsteed na Ressource \"%1\" lett sik nich faatkriegen"
 msgid "Collection attributes synchronization timed out."
 msgstr "Tietafloop bi't Synkroniseren vun Sammelnattributen"
 
-#: core/jobs/collectioncopyjob.cpp:55
+#: core/jobs/collectioncopyjob.cpp:54
 #, fuzzy, kde-format
 #| msgid "Invalid collection"
 msgid "Invalid collection to copy"
 msgstr "Leeg Sammeln"
 
-#: core/jobs/collectioncopyjob.cpp:61
+#: core/jobs/collectioncopyjob.cpp:60
 #, fuzzy, kde-format
 #| msgid "Invalid collection"
 msgid "Invalid destination collection"
@@ -322,33 +322,33 @@ msgstr "Slötelwoort lett sik nich opstellen."
 msgid "Resource synchronization timed out."
 msgstr "Tietafloop bi't Synkroniseren vun en Ressource"
 
-#: core/jobs/specialcollectionshelperjobs.cpp:146
+#: core/jobs/specialcollectionshelperjobs.cpp:145
 #, kde-format
 msgid "Could not fetch root collection of resource %1."
 msgstr "Wörtel-Sammeln vun Ressource \"%1\" lett sik nich halen."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:190
+#: core/jobs/specialcollectionshelperjobs.cpp:189
 #, kde-format
 msgid "No resource ID given."
 msgstr "Keen Ressource-ID angeven."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:327
+#: core/jobs/specialcollectionshelperjobs.cpp:326
 #, kde-format
 msgid "Invalid resource identifier '%1'"
 msgstr "Leeg Ressourcekennen \"%1\""
 
-#: core/jobs/specialcollectionshelperjobs.cpp:343
-#: core/jobs/specialcollectionshelperjobs.cpp:351
+#: core/jobs/specialcollectionshelperjobs.cpp:342
+#: core/jobs/specialcollectionshelperjobs.cpp:350
 #, kde-format
 msgid "Failed to configure default resource via D-Bus."
 msgstr "Standard-Ressource lett sik nich över D-Bus instellen."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:416
+#: core/jobs/specialcollectionshelperjobs.cpp:415
 #, kde-format
 msgid "Failed to fetch the resource collection."
 msgstr "De Ressource-Sammeln lett sik nich halen."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:600
+#: core/jobs/specialcollectionshelperjobs.cpp:599
 #, kde-format
 msgid "Timeout trying to get lock."
 msgstr "Tiet bi't Halen vun Slott aflopen."
@@ -363,22 +363,22 @@ msgstr "Slötelwoort lett sik nich opstellen."
 msgid "Move to trash collection failed, aborting trash operation"
 msgstr "Verschuven na Affalltünn fehlslaan. Akschoon warrt afbraken."
 
-#: core/jobs/trashjob.cpp:226 core/jobs/trashrestorejob.cpp:155
+#: core/jobs/trashjob.cpp:226 core/jobs/trashrestorejob.cpp:151
 #, kde-format
 msgid "Invalid items passed"
 msgstr "Leeg Elementen övergeven"
 
-#: core/jobs/trashjob.cpp:270 core/jobs/trashrestorejob.cpp:205
+#: core/jobs/trashjob.cpp:270 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
 msgstr "Leeg Sammeln övergeven"
 
-#: core/jobs/trashjob.cpp:387 core/jobs/trashrestorejob.cpp:355
+#: core/jobs/trashjob.cpp:387 core/jobs/trashrestorejob.cpp:351
 #, kde-format
 msgid "No valid collection or empty itemlist"
 msgstr "Keen tolaten Sammeln oder de Elementenlist bargt keen Indrääg"
 
-#: core/jobs/trashrestorejob.cpp:90
+#: core/jobs/trashrestorejob.cpp:86
 #, kde-format
 msgid "Could not find restore collection and restore resource is not available"
 msgstr ""
@@ -391,14 +391,14 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Naam"
 
-#: core/models/entitytreemodel.cpp:195
+#: core/models/entitytreemodel.cpp:193
 #, fuzzy, kde-format
 #| msgid "Loading..."
 msgctxt "@info:status"
 msgid "Loading..."
 msgstr "An't Laden…"
 
-#: core/models/entitytreemodel.cpp:487
+#: core/models/entitytreemodel.cpp:485
 #, fuzzy, kde-format
 #| msgctxt "@info:status"
 #| msgid "Error."
@@ -406,7 +406,7 @@ msgctxt "@window:title"
 msgid "Error"
 msgstr "Fehler."
 
-#: core/models/entitytreemodel.cpp:488
+#: core/models/entitytreemodel.cpp:486
 #, kde-format
 msgid ""
 "The target collection '%1' contains already\n"
@@ -415,48 +415,48 @@ msgstr ""
 "De Teelsammeln \"%1\" bargt al\n"
 "en Sammeln mit den Naam \"%2\"."
 
-#: core/models/entitytreemodel.cpp:657
+#: core/models/entitytreemodel.cpp:655
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Naam"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1330
 #, fuzzy, kde-format
 #| msgid "Could not copy item:"
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Indrag lett sik nich koperen:"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1332
 #, fuzzy, kde-format
 #| msgid "Could not copy collection:"
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Sammeln lett sik nich koperen:"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1334
 #, fuzzy, kde-format
 #| msgid "Could not move item:"
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Indrag lett sik nich verschuven:"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1336
 #, fuzzy, kde-format
 #| msgid "Could not move collection:"
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Sammeln lett sik nich verschuven:"
 
-#: core/models/entitytreemodel_p.cpp:1340
+#: core/models/entitytreemodel_p.cpp:1338
 #, fuzzy, kde-format
 #| msgid "Could not link entity:"
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "Link na Entiteet lett sik nich opstellen:"
 
-#: core/models/entitytreemodel_p.cpp:1342
+#: core/models/entitytreemodel_p.cpp:1340
 #, fuzzy, kde-format
 #| msgctxt "@info:status"
 #| msgid "Error."
@@ -568,14 +568,14 @@ msgid ""
 "installation."
 msgstr ""
 
-#: core/session.cpp:186
+#: core/session.cpp:185
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is older (%1) than ours (%2). If "
 "you updated your system recently please restart the Akonadi server."
 msgstr ""
 
-#: core/session.cpp:195
+#: core/session.cpp:194
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "

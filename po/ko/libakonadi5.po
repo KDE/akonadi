@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-09 00:46+0000\n"
+"POT-Creation-Date: 2022-10-04 00:45+0000\n"
 "PO-Revision-Date: 2022-07-13 11:11+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -177,22 +177,22 @@ msgstr "부모를 찾을 수 없는 고아 모음집 찾음"
 msgid "Did not find other item for conflict handling"
 msgstr "충돌을 해결할 다른 항목을 찾을 수 없음"
 
-#: core/jobs/agentinstancecreatejob.cpp:71
+#: core/jobs/agentinstancecreatejob.cpp:70
 #, kde-format
 msgid "Unable to access D-Bus interface of created agent."
 msgstr "생성한 에이전트의 DBus 인터페이스에 접근할 수 없습니다."
 
-#: core/jobs/agentinstancecreatejob.cpp:93
+#: core/jobs/agentinstancecreatejob.cpp:92
 #, kde-format
 msgid "Agent instance creation timed out."
 msgstr "에이전트 생성 시간이 초과되었습니다."
 
-#: core/jobs/agentinstancecreatejob.cpp:151
+#: core/jobs/agentinstancecreatejob.cpp:150
 #, kde-format
 msgid "Unable to obtain agent type '%1'."
 msgstr "에이전트 종류 '%1'을(를) 가져올 수 없습니다."
 
-#: core/jobs/agentinstancecreatejob.cpp:159
+#: core/jobs/agentinstancecreatejob.cpp:158
 #, kde-format
 msgid "Unable to create agent instance."
 msgstr "에이전트 인스턴스를 만들 수 없습니다."
@@ -219,12 +219,12 @@ msgstr "자원 '%1'의 DBus 인터페이스를 가져올 수 없음"
 msgid "Collection attributes synchronization timed out."
 msgstr "모음집 속성 동기화 시간이 초과되었습니다."
 
-#: core/jobs/collectioncopyjob.cpp:55
+#: core/jobs/collectioncopyjob.cpp:54
 #, kde-format
 msgid "Invalid collection to copy"
 msgstr "잘못된 복사할 모음집"
 
-#: core/jobs/collectioncopyjob.cpp:61
+#: core/jobs/collectioncopyjob.cpp:60
 #, kde-format
 msgid "Invalid destination collection"
 msgstr "잘못된 대상 모음집"
@@ -309,33 +309,33 @@ msgstr "관계를 만들 수 없습니다."
 msgid "Resource synchronization timed out."
 msgstr "자원 동기화 시간이 초과되었습니다."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:146
+#: core/jobs/specialcollectionshelperjobs.cpp:145
 #, kde-format
 msgid "Could not fetch root collection of resource %1."
 msgstr "자원 %1의 루트 모음집을 가져올 수 없습니다."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:190
+#: core/jobs/specialcollectionshelperjobs.cpp:189
 #, kde-format
 msgid "No resource ID given."
 msgstr "자원 ID가 주어지지 않았습니다."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:327
+#: core/jobs/specialcollectionshelperjobs.cpp:326
 #, kde-format
 msgid "Invalid resource identifier '%1'"
 msgstr "잘못된 자원 식별자 '%1'"
 
-#: core/jobs/specialcollectionshelperjobs.cpp:343
-#: core/jobs/specialcollectionshelperjobs.cpp:351
+#: core/jobs/specialcollectionshelperjobs.cpp:342
+#: core/jobs/specialcollectionshelperjobs.cpp:350
 #, kde-format
 msgid "Failed to configure default resource via D-Bus."
 msgstr "DBus를 통하여 기본 자원을 설정할 수 없습니다."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:416
+#: core/jobs/specialcollectionshelperjobs.cpp:415
 #, kde-format
 msgid "Failed to fetch the resource collection."
 msgstr "자원 모음집을 가져올 수 없습니다."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:600
+#: core/jobs/specialcollectionshelperjobs.cpp:599
 #, kde-format
 msgid "Timeout trying to get lock."
 msgstr "잠금을 시도하는 중 시간이 초과되었습니다."
@@ -350,22 +350,22 @@ msgstr "태그를 만들 수 없습니다."
 msgid "Move to trash collection failed, aborting trash operation"
 msgstr "휴지통으로 모음집을 옮길 수 없음, 휴지통 버리기를 중단함"
 
-#: core/jobs/trashjob.cpp:226 core/jobs/trashrestorejob.cpp:155
+#: core/jobs/trashjob.cpp:226 core/jobs/trashrestorejob.cpp:151
 #, kde-format
 msgid "Invalid items passed"
 msgstr "잘못된 항목이 전달됨"
 
-#: core/jobs/trashjob.cpp:270 core/jobs/trashrestorejob.cpp:205
+#: core/jobs/trashjob.cpp:270 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
 msgstr "잘못된 모음집이 전달됨"
 
-#: core/jobs/trashjob.cpp:387 core/jobs/trashrestorejob.cpp:355
+#: core/jobs/trashjob.cpp:387 core/jobs/trashrestorejob.cpp:351
 #, kde-format
 msgid "No valid collection or empty itemlist"
 msgstr "올바른 모음집이 없거나 항목 목록이 비어 있음"
 
-#: core/jobs/trashrestorejob.cpp:90
+#: core/jobs/trashrestorejob.cpp:86
 #, kde-format
 msgid "Could not find restore collection and restore resource is not available"
 msgstr "복원 모음집을 찾을 수 없으며 복원 자원을 사용할 수 없음"
@@ -376,19 +376,19 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "이름"
 
-#: core/models/entitytreemodel.cpp:195
+#: core/models/entitytreemodel.cpp:193
 #, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
 msgstr "불러오는 중..."
 
-#: core/models/entitytreemodel.cpp:487
+#: core/models/entitytreemodel.cpp:485
 #, kde-format
 msgctxt "@window:title"
 msgid "Error"
 msgstr "오류"
 
-#: core/models/entitytreemodel.cpp:488
+#: core/models/entitytreemodel.cpp:486
 #, kde-format
 msgid ""
 "The target collection '%1' contains already\n"
@@ -397,43 +397,43 @@ msgstr ""
 "모음집 '%1'이(가) 이미 하위 모음집\n"
 "'%2'을(를) 포함합니다."
 
-#: core/models/entitytreemodel.cpp:657
+#: core/models/entitytreemodel.cpp:655
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "이름"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1330
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "항목을 복사할 수 없음: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1332
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "모음집을 복사할 수 없음: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1334
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "항목을 이동할 수 없음: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1336
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "모음집을 이동할 수 없음: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1340
+#: core/models/entitytreemodel_p.cpp:1338
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "엔티티를 링크할 수 없음: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1342
+#: core/models/entitytreemodel_p.cpp:1340
 #, kde-format
 msgctxt "@title:window"
 msgid "Error"
@@ -548,7 +548,7 @@ msgid ""
 msgstr ""
 "사용 가능한 Akondai 에이전트가 없습니다. KDE PIM 설치 상태를 확인하십시오."
 
-#: core/session.cpp:186
+#: core/session.cpp:185
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is older (%1) than ours (%2). If "
@@ -557,7 +557,7 @@ msgstr ""
 "프로토콜 버전이 일치하지 않습니다. 서버 쪽 버전(%1)이 클라이언트 쪽 버전(%2)"
 "보다 낮습니다. 시스템을 업데이트했다면 Akonadi 서버를 다시 시작하십시오."
 
-#: core/session.cpp:195
+#: core/session.cpp:194
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "

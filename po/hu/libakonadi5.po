@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.3\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-09 00:46+0000\n"
+"POT-Creation-Date: 2022-10-04 00:45+0000\n"
 "PO-Revision-Date: 2021-08-25 09:45+0200\n"
 "Last-Translator: Kristóf Kiszel <kiszel.kristof@gmail.com>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -179,22 +179,22 @@ msgstr "Feloldatlan árva gyűjtemények találhatók"
 msgid "Did not find other item for conflict handling"
 msgstr "Nem található egyéb elem az ütközéskezeléshez."
 
-#: core/jobs/agentinstancecreatejob.cpp:71
+#: core/jobs/agentinstancecreatejob.cpp:70
 #, kde-format
 msgid "Unable to access D-Bus interface of created agent."
 msgstr "Nem sikerült hozzáférni a létrehozott ügynök D-Bus felületéhez."
 
-#: core/jobs/agentinstancecreatejob.cpp:93
+#: core/jobs/agentinstancecreatejob.cpp:92
 #, kde-format
 msgid "Agent instance creation timed out."
 msgstr "Az ügynökpéldány létrehozása túllépte az időkorlátot."
 
-#: core/jobs/agentinstancecreatejob.cpp:151
+#: core/jobs/agentinstancecreatejob.cpp:150
 #, kde-format
 msgid "Unable to obtain agent type '%1'."
 msgstr "Nem sikerült megszerezni a(z) „%1” ügynöktípust."
 
-#: core/jobs/agentinstancecreatejob.cpp:159
+#: core/jobs/agentinstancecreatejob.cpp:158
 #, kde-format
 msgid "Unable to create agent instance."
 msgstr "Nem sikerült új ügynökpéldányt létrehozni."
@@ -221,12 +221,12 @@ msgstr "Nem sikerült megszerezni a(z) „%1” erőforrás D-Bus interfészét"
 msgid "Collection attributes synchronization timed out."
 msgstr "A gyűjtemény jellemzőinek szinkronizálása túllépte az időkorlátot."
 
-#: core/jobs/collectioncopyjob.cpp:55
+#: core/jobs/collectioncopyjob.cpp:54
 #, kde-format
 msgid "Invalid collection to copy"
 msgstr "Érvénytelen gyűjtemény, nem másolható"
 
-#: core/jobs/collectioncopyjob.cpp:61
+#: core/jobs/collectioncopyjob.cpp:60
 #, kde-format
 msgid "Invalid destination collection"
 msgstr "Érvénytelen célgyűjtemény"
@@ -311,33 +311,33 @@ msgstr "Nem sikerült kapcsolatot létrehozni."
 msgid "Resource synchronization timed out."
 msgstr "Az erőforrás szinkronizálása túllépte az időkorlátot."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:146
+#: core/jobs/specialcollectionshelperjobs.cpp:145
 #, kde-format
 msgid "Could not fetch root collection of resource %1."
 msgstr "Nem sikerült lekérni a(z) „%1” erőforrás gyökérgyűjteményét."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:190
+#: core/jobs/specialcollectionshelperjobs.cpp:189
 #, kde-format
 msgid "No resource ID given."
 msgstr "Nincs megadva erőforrás-azonosító."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:327
+#: core/jobs/specialcollectionshelperjobs.cpp:326
 #, kde-format
 msgid "Invalid resource identifier '%1'"
 msgstr "Érvénytelen erőforrás-azonosító: „%1”"
 
-#: core/jobs/specialcollectionshelperjobs.cpp:343
-#: core/jobs/specialcollectionshelperjobs.cpp:351
+#: core/jobs/specialcollectionshelperjobs.cpp:342
+#: core/jobs/specialcollectionshelperjobs.cpp:350
 #, kde-format
 msgid "Failed to configure default resource via D-Bus."
 msgstr "Nem sikerült beállítani az alapértelmezett erőforrást a D-Bus által."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:416
+#: core/jobs/specialcollectionshelperjobs.cpp:415
 #, kde-format
 msgid "Failed to fetch the resource collection."
 msgstr "Nem sikerült letölteni az erőforrás gyűjteményt."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:600
+#: core/jobs/specialcollectionshelperjobs.cpp:599
 #, kde-format
 msgid "Timeout trying to get lock."
 msgstr "Időtúllépés a zár megszerzésének kísérlete közben."
@@ -353,22 +353,22 @@ msgid "Move to trash collection failed, aborting trash operation"
 msgstr ""
 "Nem sikerült a gyűjtemény áthelyezése a kukába, a kuka művelet megszakítása"
 
-#: core/jobs/trashjob.cpp:226 core/jobs/trashrestorejob.cpp:155
+#: core/jobs/trashjob.cpp:226 core/jobs/trashrestorejob.cpp:151
 #, kde-format
 msgid "Invalid items passed"
 msgstr "Érvénytelen elem lett átadva"
 
-#: core/jobs/trashjob.cpp:270 core/jobs/trashrestorejob.cpp:205
+#: core/jobs/trashjob.cpp:270 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
 msgstr "Érvénytelen gyűjtemény lett átadva"
 
-#: core/jobs/trashjob.cpp:387 core/jobs/trashrestorejob.cpp:355
+#: core/jobs/trashjob.cpp:387 core/jobs/trashrestorejob.cpp:351
 #, kde-format
 msgid "No valid collection or empty itemlist"
 msgstr "Nincs érvényes gyűjtemény vagy üres az elemlista"
 
-#: core/jobs/trashrestorejob.cpp:90
+#: core/jobs/trashrestorejob.cpp:86
 #, kde-format
 msgid "Could not find restore collection and restore resource is not available"
 msgstr ""
@@ -381,19 +381,19 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Név"
 
-#: core/models/entitytreemodel.cpp:195
+#: core/models/entitytreemodel.cpp:193
 #, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
 msgstr "Betöltés…"
 
-#: core/models/entitytreemodel.cpp:487
+#: core/models/entitytreemodel.cpp:485
 #, kde-format
 msgctxt "@window:title"
 msgid "Error"
 msgstr "Hiba"
 
-#: core/models/entitytreemodel.cpp:488
+#: core/models/entitytreemodel.cpp:486
 #, kde-format
 msgid ""
 "The target collection '%1' contains already\n"
@@ -402,43 +402,43 @@ msgstr ""
 "A(z) „%1” célgyűjtemény már tartalmaz\n"
 "„%2” nevű gyűjteményt."
 
-#: core/models/entitytreemodel.cpp:657
+#: core/models/entitytreemodel.cpp:655
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Név"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1330
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Nem másolható az elem: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1332
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Nem másolható a gyűjtemény: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1334
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Nem helyezhető át az elem: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1336
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Nem helyezhető át a gyűjtemény: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1340
+#: core/models/entitytreemodel_p.cpp:1338
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "Nem sikerült összekapcsolni a bejegyzést: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1342
+#: core/models/entitytreemodel_p.cpp:1340
 #, kde-format
 msgctxt "@title:window"
 msgid "Error"
@@ -552,7 +552,7 @@ msgid ""
 "installation."
 msgstr "Nem érhető el Akonadi ügynök. Ellenőrizze a KDE PIM telepítését."
 
-#: core/session.cpp:186
+#: core/session.cpp:185
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is older (%1) than ours (%2). If "
@@ -561,7 +561,7 @@ msgstr ""
 "A protokollverziók eltérnek. A kiszolgálóé (%1) régebbi, mint az Öné (%2). "
 "Ha nemrég frissítette a rendszert, indítsa újra az Akonadi kiszolgálót."
 
-#: core/session.cpp:195
+#: core/session.cpp:194
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
