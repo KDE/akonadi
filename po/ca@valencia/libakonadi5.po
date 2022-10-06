@@ -837,7 +837,7 @@ msgstr "&Nom:"
 #: widgets/collectiongeneralpropertiespage.ui:29
 #, kde-format
 msgid "&Use custom icon:"
-msgstr "&Utilitza una icona personalitzada:"
+msgstr "Utilit&za una icona personalitzada:"
 
 #. i18n: ectx: property (icon), widget (KIconButton, customIcon)
 #: widgets/collectiongeneralpropertiespage.ui:39
