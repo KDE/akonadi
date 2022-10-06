@@ -129,7 +129,7 @@ QHash<int, QByteArray> EntityTreeModel::roleNames() const
         {EntityTreeModel::IsPopulatedRole, "isPopulated"},
         {EntityTreeModel::CollectionRole, "collection"},
         {EntityTreeModel::MimeTypeRole, "mimeType"},
-        {EntityTreeModel::CollectionChildOrderRole, "collectionChildOrderRole"},
+        {EntityTreeModel::CollectionChildOrderRole, "collectionChildOrder"},
         {EntityTreeModel::ParentCollectionRole, "parentCollection"},
         {EntityTreeModel::SessionRole, "session"},
         {EntityTreeModel::PendingCutRole, "pendingCut"},
