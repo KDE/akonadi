@@ -2541,15 +2541,3 @@ msgstr "データファイルを解析できませんでした: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "コレクション %1 は見つかりませんでした。"
-
-#~ msgid "&Move here"
-#~ msgstr "ここに移動(&M)"
-
-#~ msgid "&Copy here"
-#~ msgstr "ここにコピー(&C)"
-
-#~ msgid "Cancel"
-#~ msgstr "キャンセル"
-
-#~ msgid "Items"
-#~ msgstr "アイテム"
