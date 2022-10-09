@@ -282,7 +282,7 @@ void CollectionDialogPrivate::slotAddChildCollection()
 void CollectionDialogPrivate::slotCollectionCreationResult(KJob *job)
 {
     if (job->error()) {
-        QMessageBox::critical(mParent, i18n("Folder creation failed"), i18n("Could not create folder: %1", job->errorString()));
+        QMessageBox::critical(mParent, i18nc("@title:window", "Folder Creation Failed"), i18n("Could not create folder: %1", job->errorString()));
     }
 }
 

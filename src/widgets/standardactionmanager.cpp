@@ -348,7 +348,7 @@ public:
         setContextText(StandardActionManager::CreateCollection, StandardActionManager::DialogTitle, i18nc("@title:window", "New Folder"));
         setContextText(StandardActionManager::CreateCollection, StandardActionManager::DialogText, i18nc("@label:textbox name of Akonadi folder", "Name"));
         setContextText(StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageText, ki18n("Could not create folder: %1"));
-        setContextText(StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle, i18n("Folder creation failed"));
+        setContextText(StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle, i18nc("@title:window", "Folder Creation Failed"));
 
         setContextText(
             StandardActionManager::DeleteCollections,
@@ -356,25 +356,25 @@ public:
             ki18np("Do you really want to delete this folder and all its sub-folders?", "Do you really want to delete %1 folders and all their sub-folders?"));
         setContextText(StandardActionManager::DeleteCollections,
                        StandardActionManager::MessageBoxTitle,
-                       ki18ncp("@title:window", "Delete folder?", "Delete folders?"));
+                       ki18ncp("@title:window", "Delete Folder?", "Delete Folders?"));
         setContextText(StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText, ki18n("Could not delete folder: %1"));
-        setContextText(StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle, i18n("Folder deletion failed"));
+        setContextText(StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle, i18nc("@title:window", "Folder Deletion Failed"));
 
         setContextText(StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle, ki18nc("@title:window", "Properties of Folder %1"));
 
         setContextText(StandardActionManager::DeleteItems,
                        StandardActionManager::MessageBoxText,
                        ki18np("Do you really want to delete the selected item?", "Do you really want to delete %1 items?"));
-        setContextText(StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle, ki18ncp("@title:window", "Delete item?", "Delete items?"));
+        setContextText(StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle, ki18ncp("@title:window", "Delete Item?", "Delete Items?"));
         setContextText(StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageText, ki18n("Could not delete item: %1"));
-        setContextText(StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageTitle, i18n("Item deletion failed"));
+        setContextText(StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageTitle, i18nc("@title:window", "Item Deletion Failed"));
 
         setContextText(StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle, i18nc("@title:window", "Rename Favorite"));
         setContextText(StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogText, i18nc("@label:textbox name of the folder", "Name:"));
 
         setContextText(StandardActionManager::CreateResource, StandardActionManager::DialogTitle, i18nc("@title:window", "New Resource"));
         setContextText(StandardActionManager::CreateResource, StandardActionManager::ErrorMessageText, ki18n("Could not create resource: %1"));
-        setContextText(StandardActionManager::CreateResource, StandardActionManager::ErrorMessageTitle, i18n("Resource creation failed"));
+        setContextText(StandardActionManager::CreateResource, StandardActionManager::ErrorMessageTitle, i18nc("@title:window", "Resource Creation Failed"));
 
         setContextText(StandardActionManager::DeleteResources,
                        StandardActionManager::MessageBoxText,
@@ -384,7 +384,7 @@ public:
                        ki18ncp("@title:window", "Delete Resource?", "Delete Resources?"));
 
         setContextText(StandardActionManager::Paste, StandardActionManager::ErrorMessageText, ki18n("Could not paste data: %1"));
-        setContextText(StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle, i18n("Paste failed"));
+        setContextText(StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle, i18nc("@title:window", "Paste Failed"));
 
         mDelayedUpdateTimer.setSingleShot(true);
         QObject::connect(&mDelayedUpdateTimer, &QTimer::timeout, q, [this]() {
@@ -736,11 +736,11 @@ public:
         }
 
         if (name.contains(QLatin1Char('/'))) {
-            KMessageBox::error(parentWidget, i18n("We can not add \"/\" in folder name."), i18n("Create new folder error"));
+            KMessageBox::error(parentWidget, i18n("We can not add \"/\" in folder name."), i18nc("@title:window", "Create New Folder Error"));
             return;
         }
         if (name.startsWith(QLatin1Char('.')) || name.endsWith(QLatin1Char('.'))) {
-            KMessageBox::error(parentWidget, i18n("We can not add \".\" at begin or end of folder name."), i18n("Create new folder error"));
+            KMessageBox::error(parentWidget, i18n("We can not add \".\" at begin or end of folder name."), i18nc("@title:window", "Create New Folder Error"));
             return;
         }
 

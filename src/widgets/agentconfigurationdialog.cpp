@@ -53,7 +53,7 @@ AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance
     : QDialog(parent)
     , d(new AgentConfigurationDialogPrivate(this))
 {
-    setWindowTitle(i18nc("%1 = agent name", "%1 Configuration", instance.name()));
+    setWindowTitle(i18nc("@title:window, %1 = agent name", "%1 Configuration", instance.name()));
     setWindowIcon(instance.type().icon());
 
     auto l = new QVBoxLayout(this);

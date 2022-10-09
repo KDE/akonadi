@@ -90,7 +90,7 @@ public:
         QObject::connect(job, &SubscriptionJob::result, q, [this](KJob *job) {
             if (job->error()) {
                 qCWarning(AKONADIWIDGETS_LOG) << job->errorString();
-                KMessageBox::error(q, i18n("Failed to update subscription: %1", job->errorString()), i18nc("@title", "Subscription Error"));
+                KMessageBox::error(q, i18n("Failed to update subscription: %1", job->errorString()), i18nc("@title:window", "Subscription Error"));
                 q->reject();
             }
             q->accept();

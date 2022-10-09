@@ -647,7 +647,7 @@ void SelfTestDialog::saveReport()
 
     QFile file(fileName);
     if (!file.open(QFile::ReadWrite)) {
-        QMessageBox::critical(this, i18n("Error"), i18n("Could not open file '%1'", fileName));
+        QMessageBox::critical(this, i18nc("@title:window", "Error"), i18n("Could not open file '%1'", fileName));
         return;
     }
 

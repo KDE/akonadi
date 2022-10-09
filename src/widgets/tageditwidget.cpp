@@ -113,7 +113,7 @@ void TagEditWidgetPrivate::slotCreateTag()
 void TagEditWidgetPrivate::slotCreateTagFinished(KJob *job)
 {
     if (job->error()) {
-        KMessageBox::error(d, i18n("Failed to create a new tag"), i18n("An error occurred while creating a new tag"));
+        KMessageBox::error(d, i18n("Failed to create a new tag"), i18nc("@title:window", "An Error Occurred while Creating a New Tag"));
     }
 
     ui.newTagEdit->setEnabled(true);
@@ -162,7 +162,7 @@ void TagEditWidgetPrivate::deleteTag()
     Q_ASSERT(m_deleteCandidate.isValid());
     const auto tag = m_deleteCandidate.data(Akonadi::TagModel::TagRole).value<Akonadi::Tag>();
     const QString text = xi18nc("@info", "Do you really want to remove the tag <resource>%1</resource>?", tag.name());
-    const QString caption = i18nc("@title", "Delete tag");
+    const QString caption = i18nc("@title:window", "Delete Tag");
     if (KMessageBox::questionYesNo(d, text, caption, KStandardGuiItem::del(), KStandardGuiItem::cancel()) == KMessageBox::Yes) {
         new TagDeleteJob(tag, this);
     }
