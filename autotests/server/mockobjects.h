@@ -43,4 +43,3 @@ public:
         return s_connection;
     }
 }; // End of class MockObjects
-

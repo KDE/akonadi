@@ -16,7 +16,8 @@ namespace Internal
  * Pool of implicitly shared values, use for optimizing memory use
  * when having a large amount of copies from a small set of different values.
  */
-template<typename T, template<typename> class Container> class SharedValuePool
+template<typename T, template<typename> class Container>
+class SharedValuePool
 {
 public:
     /** Returns the shared value equal to @p value .*/
@@ -37,4 +38,3 @@ private:
 
 }
 }
-

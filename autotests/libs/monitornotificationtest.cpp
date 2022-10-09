@@ -43,9 +43,12 @@ private Q_SLOTS:
     void testMonitor_data();
 
 private:
-    template<typename MonitorImpl> void testSingleMessage_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
-    template<typename MonitorImpl> void testFillPipeline_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
-    template<typename MonitorImpl> void testMonitor_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
+    template<typename MonitorImpl>
+    void testSingleMessage_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
+    template<typename MonitorImpl>
+    void testFillPipeline_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
+    template<typename MonitorImpl>
+    void testMonitor_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
 
 private:
     FakeSession *m_fakeSession = nullptr;

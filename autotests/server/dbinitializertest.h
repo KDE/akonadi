@@ -21,4 +21,3 @@ private Q_SLOTS:
 private:
     static QString readNextStatement(QIODevice *io);
 };
-

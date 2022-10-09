@@ -31,4 +31,3 @@ private Q_SLOTS:
     void testSharedPointerConversions();
     void testForeignPayload();
 };
-

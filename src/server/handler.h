@@ -88,11 +88,15 @@ public:
     bool failureResponse(const QByteArray &response);
     bool failureResponse(const QString &response);
 
-    template<typename T> inline bool successResponse();
-    template<typename T> inline bool successResponse(T &&response);
+    template<typename T>
+    inline bool successResponse();
+    template<typename T>
+    inline bool successResponse(T &&response);
 
-    template<typename T> inline void sendResponse(T &&response);
-    template<typename T> inline void sendResponse();
+    template<typename T>
+    inline void sendResponse(T &&response);
+    template<typename T>
+    inline void sendResponse();
 
     /**
      * Parse and handle the IMAP message using the streaming parser. The implementation MUST leave the trailing newline character(s) in the stream!
@@ -115,28 +119,31 @@ protected:
     Protocol::CommandPtr m_command;
 };
 
-template<typename T> inline bool Handler::successResponse()
+template<typename T>
+inline bool Handler::successResponse()
 {
     sendResponse<T>(T{});
     return true;
 }
 
-template<typename T> inline bool Handler::successResponse(T &&response)
+template<typename T>
+inline bool Handler::successResponse(T &&response)
 {
     sendResponse<T>(std::move(response));
     return true;
 }
 
-template<typename T> inline void Handler::sendResponse()
+template<typename T>
+inline void Handler::sendResponse()
 {
     m_connection->sendResponse<T>(T{});
 }
 
-template<typename T> inline void Handler::sendResponse(T &&response)
+template<typename T>
+inline void Handler::sendResponse(T &&response)
 {
     m_connection->sendResponse<T>(std::move(response));
 }
 
 } // namespace Server
 } // namespace Akonadi
-

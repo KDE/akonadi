@@ -53,4 +53,3 @@ AKONADICORE_EXPORT KJob *pasteUriList(const QMimeData *mimeData, const Collectio
 }
 
 }
-

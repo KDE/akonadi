@@ -20,4 +20,3 @@ AKONADIPRIVATE_EXPORT void setIdentifier(const QString &identifier);
 AKONADIPRIVATE_EXPORT QString identifier();
 }
 }
-

@@ -14,10 +14,10 @@
 #include <private/dbus_p.h>
 
 #include <QDBusConnection>
+#include <QDeadlineTimer>
 #include <QSqlError>
 #include <QTime>
 #include <QTimer>
-#include <QDeadlineTimer>
 using namespace Akonadi;
 using namespace Akonadi::Server;
 

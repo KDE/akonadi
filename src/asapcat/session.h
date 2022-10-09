@@ -44,4 +44,3 @@ private:
     qint64 m_receivedBytes = 0;
     qint64 m_sentBytes = 0;
 };
-

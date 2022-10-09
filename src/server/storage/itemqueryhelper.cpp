@@ -51,7 +51,10 @@ void ItemQueryHelper::itemSetToQuery(const ImapSet &set, const CommandContext &c
             qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(), qb.getTableWithColumn(PimItem::collectionIdColumn()), Collection::idFullColumnName());
             qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, context.resource().id());
         }
-        qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(), qb.getTableWithColumn(PimItem::idColumn()), PimItemTagRelation::leftFullColumnName());
+        qb.addJoin(QueryBuilder::InnerJoin,
+                   PimItemTagRelation::tableName(),
+                   qb.getTableWithColumn(PimItem::idColumn()),
+                   PimItemTagRelation::leftFullColumnName());
         qb.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::Equals, *tagId);
     }
 }
@@ -74,7 +77,10 @@ void ItemQueryHelper::remoteIdToQuery(const QStringList &rids, const CommandCont
 
     const auto tagId = context.tagId();
     if (tagId.has_value()) {
-        qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(), qb.getTableWithColumn(PimItem::idColumn()), PimItemTagRelation::leftFullColumnName());
+        qb.addJoin(QueryBuilder::InnerJoin,
+                   PimItemTagRelation::tableName(),
+                   qb.getTableWithColumn(PimItem::idColumn()),
+                   PimItemTagRelation::leftFullColumnName());
         qb.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::Equals, *tagId);
     }
 }
@@ -94,7 +100,10 @@ void ItemQueryHelper::gidToQuery(const QStringList &gids, const CommandContext &
             qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(), qb.getTableWithColumn(PimItem::collectionIdColumn()), Collection::idFullColumnName());
             qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, context.resource().id());
         }
-        qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(), qb.getTableWithColumn(PimItem::idColumn()), PimItemTagRelation::leftFullColumnName());
+        qb.addJoin(QueryBuilder::InnerJoin,
+                   PimItemTagRelation::tableName(),
+                   qb.getTableWithColumn(PimItem::idColumn()),
+                   PimItemTagRelation::leftFullColumnName());
         qb.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::Equals, *tagId);
     }
 }

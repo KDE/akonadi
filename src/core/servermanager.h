@@ -222,4 +222,3 @@ private:
 }
 
 Q_DECLARE_METATYPE(Akonadi::ServerManager::State)
-

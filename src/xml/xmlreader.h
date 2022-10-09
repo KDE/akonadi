@@ -69,4 +69,3 @@ Q_REQUIRED_RESULT AKONADI_XML_EXPORT Item elementToItem(const QDomElement &elem,
 }
 
 }
-

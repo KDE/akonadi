@@ -69,4 +69,3 @@ private:
 }
 
 Q_DECLARE_METATYPE(Akonadi::RecursiveMover *)
-

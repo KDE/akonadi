@@ -33,4 +33,3 @@ AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CollectionGeneralPropertiesPageFactor
 /// @endcond
 
 }
-

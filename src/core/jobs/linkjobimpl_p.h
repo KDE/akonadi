@@ -18,7 +18,8 @@
 namespace Akonadi
 {
 /** Shared implementation details between item and collection move jobs. */
-template<typename LinkJob> class LinkJobImpl : public JobPrivate
+template<typename LinkJob>
+class LinkJobImpl : public JobPrivate
 {
 public:
     LinkJobImpl(Job *parent)
@@ -66,4 +67,3 @@ public:
 };
 
 }
-

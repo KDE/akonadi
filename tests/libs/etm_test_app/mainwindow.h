@@ -28,4 +28,3 @@ private:
     FakeServerData *m_serverData = nullptr;
     Akonadi::EntityTreeModel *m_model = nullptr;
 };
-

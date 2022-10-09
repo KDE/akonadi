@@ -31,4 +31,3 @@ private Q_SLOTS:
     void testItemCheck();
     void testStringMatchEquivalent();
 };
-

@@ -66,7 +66,8 @@ protected:
 
     Node *findNode(const QString &rid, const QString &resource) const;
 
-    template<typename Predicate> Node *findNode(Node *root, Predicate pred) const;
+    template<typename Predicate>
+    Node *findNode(Node *root, Predicate pred) const;
 
     QVector<Collection> retrieveCollections(Node *root, int depth, int ancestorDepth) const;
 
@@ -79,7 +80,8 @@ protected:
 };
 
 // Non-recursive depth-first tree traversal, looking for first Node matching the predicate
-template<typename Predicate> CollectionTreeCache::Node *CollectionTreeCache::findNode(Node *root, Predicate pred) const
+template<typename Predicate>
+CollectionTreeCache::Node *CollectionTreeCache::findNode(Node *root, Predicate pred) const
 {
     QList<Node *> toVisit = {root};
     // We expect a single subtree to not contain more than 1/4 of all collections,

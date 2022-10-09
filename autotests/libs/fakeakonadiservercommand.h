@@ -386,4 +386,3 @@ private:
                                   const QString &entityString,
                                   int depth);
 };
-

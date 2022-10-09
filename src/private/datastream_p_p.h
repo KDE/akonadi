@@ -38,15 +38,19 @@ public:
 
     void flush();
 
-    template<typename T> inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type &operator<<(T val);
-    template<typename T> inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type &operator<<(T val);
+    template<typename T>
+    inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type &operator<<(T val);
+    template<typename T>
+    inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type &operator<<(T val);
 
     inline DataStream &operator<<(const QString &str);
     inline DataStream &operator<<(const QByteArray &data);
     inline DataStream &operator<<(const QDateTime &dt);
 
-    template<typename T> inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type &operator>>(T &val);
-    template<typename T> inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type &operator>>(T &val);
+    template<typename T>
+    inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type &operator>>(T &val);
+    template<typename T>
+    inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type &operator>>(T &val);
     inline DataStream &operator>>(QString &str);
     inline DataStream &operator>>(QByteArray &data);
     inline DataStream &operator>>(QDateTime &dt);
@@ -73,14 +77,16 @@ private:
     std::chrono::milliseconds mWaitTimeout = std::chrono::seconds{30};
 };
 
-template<typename T> inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type &DataStream::operator<<(T val)
+template<typename T>
+inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type &DataStream::operator<<(T val)
 {
     checkDevice();
     writeRawData((char *)&val, sizeof(T));
     return *this;
 }
 
-template<typename T> inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type &DataStream::operator<<(T val)
+template<typename T>
+inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type &DataStream::operator<<(T val)
 {
     return *this << (typename std::underlying_type<T>::type)val;
 }
@@ -116,7 +122,8 @@ inline DataStream &DataStream::operator<<(const QDateTime &dt)
     return *this;
 }
 
-template<typename T> inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type &DataStream::operator>>(T &val)
+template<typename T>
+inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type &DataStream::operator>>(T &val)
 {
     checkDevice();
 
@@ -128,7 +135,8 @@ template<typename T> inline typename std::enable_if<std::is_integral<T>::value, 
     return *this;
 }
 
-template<typename T> inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type &DataStream::operator>>(T &val)
+template<typename T>
+inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type &DataStream::operator>>(T &val)
 {
     return *this >> reinterpret_cast<typename std::underlying_type<T>::type &>(val);
 }
@@ -225,12 +233,14 @@ inline DataStream &DataStream::operator>>(QDateTime &dt)
 
 // Inline functions
 
-template<typename T> inline Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream, QFlags<T> flags)
+template<typename T>
+inline Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream, QFlags<T> flags)
 {
     return stream << static_cast<typename QFlags<T>::Int>(flags);
 }
 
-template<typename T> inline Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream, QFlags<T> &flags)
+template<typename T>
+inline Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream, QFlags<T> &flags)
 {
     stream >> reinterpret_cast<typename QFlags<T>::Int &>(flags);
     return stream;
@@ -283,12 +293,14 @@ namespace Protocol
 {
 namespace Private
 {
-template<typename Key, typename Value, template<typename, typename> class Container> inline void container_reserve(Container<Key, Value> &container, int size)
+template<typename Key, typename Value, template<typename, typename> class Container>
+inline void container_reserve(Container<Key, Value> &container, int size)
 {
     container.reserve(size);
 }
 
-template<typename Key, typename Value> inline void container_reserve(QMap<Key, Value> &, int)
+template<typename Key, typename Value>
+inline void container_reserve(QMap<Key, Value> &, int)
 {
     // noop
 }
@@ -326,4 +338,3 @@ inline Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &
     }
     return stream;
 }
-

@@ -294,4 +294,3 @@ QTextStream &operator<<(QTextStream &, const ResourceScheduler::Task &task);
 /// @endcond
 
 }
-

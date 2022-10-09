@@ -13,7 +13,8 @@
 
 namespace Akonadi
 {
-template<typename Key, typename Value, template<typename, typename> class Container> QVector<Value> valuesToVector(const Container<Key, Value> &container)
+template<typename Key, typename Value, template<typename, typename> class Container>
+QVector<Value> valuesToVector(const Container<Key, Value> &container)
 {
     QVector<Value> values;
     values.reserve(container.size());
@@ -23,7 +24,8 @@ template<typename Key, typename Value, template<typename, typename> class Contai
     return values;
 }
 
-template<typename T> QSet<T> vectorToSet(const QVector<T> &container)
+template<typename T>
+QSet<T> vectorToSet(const QVector<T> &container)
 {
     QSet<T> set;
     set.reserve(container.size());
@@ -33,7 +35,8 @@ template<typename T> QSet<T> vectorToSet(const QVector<T> &container)
     return set;
 }
 
-template<typename Value, template<typename> class Container> QVector<Value> setToVector(const Container<Value> &container)
+template<typename Value, template<typename> class Container>
+QVector<Value> setToVector(const Container<Value> &container)
 {
     QVector<Value> values;
     values.reserve(container.size());
@@ -44,4 +47,3 @@ template<typename Value, template<typename> class Container> QVector<Value> setT
 }
 
 } // namespace Akonadi
-

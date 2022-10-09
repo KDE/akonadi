@@ -16,4 +16,3 @@ static const auto IsNotNull = [](auto ptr) {
 };
 
 } // namespace Akonadi
-

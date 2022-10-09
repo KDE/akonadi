@@ -52,7 +52,8 @@ public:
 
 namespace
 {
-template<typename T> int parseParenthesizedListHelper(const QByteArray &data, T &result, int start)
+template<typename T>
+int parseParenthesizedListHelper(const QByteArray &data, T &result, int start)
 {
     result.clear();
     if (start >= data.length()) {

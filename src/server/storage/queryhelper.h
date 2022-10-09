@@ -30,4 +30,3 @@ void setToQuery(const ImapSet &set, const QString &column, QueryBuilder &qb);
 
 } // namespace Server
 } // namespace Akonadi
-

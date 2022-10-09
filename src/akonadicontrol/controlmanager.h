@@ -33,4 +33,3 @@ public Q_SLOTS:
      */
     void shutdown();
 };
-

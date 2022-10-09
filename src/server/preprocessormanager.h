@@ -256,4 +256,3 @@ private Q_SLOTS:
 
 } // namespace Server
 } // namespace Akonadi
-

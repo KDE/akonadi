@@ -63,7 +63,8 @@ private:
  * @internal
  * @since 4.6
  */
-template<typename T> class AgentFactory : public AgentFactoryBase
+template<typename T>
+class AgentFactory : public AgentFactoryBase
 {
 public:
     /** reimplemented */
@@ -89,4 +90,3 @@ public:
 };
 
 }
-

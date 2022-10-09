@@ -44,4 +44,3 @@ private:
     QList<QPair<QString, bool>> mAgents;
     QHash<QString, QString> mEnvVars;
 };
-

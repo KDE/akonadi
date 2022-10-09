@@ -243,12 +243,14 @@ namespace Akonadi
 {
 namespace Protocol
 {
-template<typename X, typename T> inline const X &cmdCast(const QSharedPointer<T> &p)
+template<typename X, typename T>
+inline const X &cmdCast(const QSharedPointer<T> &p)
 {
     return static_cast<const X &>(*p);
 }
 
-template<typename X, typename T> inline X &cmdCast(QSharedPointer<T> &p)
+template<typename X, typename T>
+inline X &cmdCast(QSharedPointer<T> &p)
 {
     return static_cast<X &>(*p);
 }
@@ -260,7 +262,8 @@ public:
     static ResponsePtr response(Command::Type type);
 
 private:
-    template<typename T> friend AKONADIPRIVATE_EXPORT CommandPtr deserialize(QIODevice *device);
+    template<typename T>
+    friend AKONADIPRIVATE_EXPORT CommandPtr deserialize(QIODevice *device);
 };
 
 AKONADIPRIVATE_EXPORT void serialize(DataStream &stream, const CommandPtr &command);
@@ -715,4 +718,3 @@ static const QString CollectionMimeType = QStringLiteral("inode/directory");
 static const QString VirtualCollectionMimeType = QStringLiteral("application/x-vnd.akonadi.collection.virtual");
 
 }
-

@@ -16,4 +16,3 @@ private Q_SLOTS:
     void testUnknownAttribute();
     void testRegisteredAttribute();
 };
-

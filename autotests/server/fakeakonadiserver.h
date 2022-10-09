@@ -116,4 +116,3 @@ AKONADI_EXCEPTION_MAKE_INSTANCE(FakeAkonadiServerException);
 
 Q_DECLARE_METATYPE(Akonadi::Server::TestScenario)
 Q_DECLARE_METATYPE(Akonadi::Server::TestScenario::List)
-

@@ -21,4 +21,3 @@ int sqlite3_blocking_prepare16_v2(sqlite3 *db, /* Database handle. */
                                   const void **pzTail /* OUT: Pointer to unused portion of zSql */);
 
 int sqlite3_blocking_step(sqlite3_stmt *pStmt);
-

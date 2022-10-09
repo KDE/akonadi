@@ -35,4 +35,3 @@ public:
     void serialize(const Akonadi::Item &item, const QByteArray &label, QIODevice &data, int &version) override;
     QString extractGid(const Akonadi::Item &item) const override;
 };
-

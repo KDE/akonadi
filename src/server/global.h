@@ -20,4 +20,3 @@ enum ConnectionState {
 
 } // namespace Server
 } // namespace Akonadi
-

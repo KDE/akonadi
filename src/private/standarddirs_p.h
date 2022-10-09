@@ -97,4 +97,3 @@ AKONADIPRIVATE_EXPORT QString findExecutable(const QString &relPath);
 
 }
 }
-

@@ -58,4 +58,3 @@ Collection singleCollectionFromScope(const Scope &scope, const CommandContext &c
 
 } // namespace Server
 } // namespace Akonadi
-

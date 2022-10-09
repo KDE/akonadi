@@ -33,4 +33,3 @@ Q_SIGNALS:
 
     friend class FakeSessionPrivate;
 };
-

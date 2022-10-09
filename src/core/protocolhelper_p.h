@@ -138,7 +138,8 @@ public:
       Converts the given set of items into a protocol representation.
       @throws A Akonadi::Exception if the item set contains items with missing/invalid identifiers.
     */
-    template<typename T, template<typename> class Container> static Scope entitySetToScope(const Container<T> &_objects)
+    template<typename T, template<typename> class Container>
+    static Scope entitySetToScope(const Container<T> &_objects)
     {
         if (_objects.isEmpty()) {
             throw Exception("No objects specified");
@@ -182,7 +183,8 @@ public:
       Converts the given object identifier into a protocol representation.
       @throws A Akonadi::Exception if the item set contains items with missing/invalid identifiers.
     */
-    template<typename T> static Scope entityToScope(const T &object)
+    template<typename T>
+    static Scope entityToScope(const T &object)
     {
         return entitySetToScope(QVector<T>() << object);
     }
@@ -312,4 +314,3 @@ private:
 };
 
 }
-

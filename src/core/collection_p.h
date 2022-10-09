@@ -106,4 +106,3 @@ public:
     CachePolicy cachePolicy;
     QSet<QByteArray> keepLocalChanges;
 };
-

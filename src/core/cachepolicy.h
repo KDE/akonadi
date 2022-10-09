@@ -154,4 +154,3 @@ private:
  * Allows a cache policy to be output for debugging purposes.
  */
 AKONADICORE_EXPORT QDebug operator<<(QDebug, const Akonadi::CachePolicy &);
-

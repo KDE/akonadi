@@ -171,4 +171,3 @@ private:
         return Akonadi::PreprocessorBase::init<preProcessorClass>(argc, argv);                                                                                 \
     }
 #endif //! AKONADI_RESOURCE_MAIN
-

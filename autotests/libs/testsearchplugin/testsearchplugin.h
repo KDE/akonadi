@@ -20,4 +20,3 @@ public:
 
     static QSet<qint64> parseQuery(const QString &queryString);
 };
-

@@ -155,14 +155,11 @@ void Connection::doReconnect()
     }
 
     mSocket.reset(new QLocalSocket(this));
-    connect(mSocket.data(),
-            &QLocalSocket::errorOccurred,
-            this,
-            [this](QLocalSocket::LocalSocketError /*unused*/) {
-                qCWarning(AKONADICORE_LOG) << mSocket->errorString() << mSocket->serverName();
-                Q_EMIT socketError(mSocket->errorString());
-                Q_EMIT socketDisconnected();
-            });
+    connect(mSocket.data(), &QLocalSocket::errorOccurred, this, [this](QLocalSocket::LocalSocketError /*unused*/) {
+        qCWarning(AKONADICORE_LOG) << mSocket->errorString() << mSocket->serverName();
+        Q_EMIT socketError(mSocket->errorString());
+        Q_EMIT socketDisconnected();
+    });
     connect(mSocket.data(), &QLocalSocket::disconnected, this, &Connection::socketDisconnected);
     // note: we temporarily disconnect from readyRead-signal inside handleIncomingData()
     connect(mSocket.data(), &QLocalSocket::readyRead, this, &Connection::handleIncomingData);

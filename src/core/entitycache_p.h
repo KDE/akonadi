@@ -52,7 +52,8 @@ private Q_SLOTS:
     virtual void processResult(KJob *job) = 0;
 };
 
-template<typename T> struct EntityCacheNode {
+template<typename T>
+struct EntityCacheNode {
     EntityCacheNode()
         : pending(false)
         , invalid(false)
@@ -73,7 +74,8 @@ template<typename T> struct EntityCacheNode {
  * @internal
  * A in-memory FIFO cache for a small amount of Item or Collection objects.
  */
-template<typename T, typename FetchJob, typename FetchScope_> class EntityCache : public EntityCacheBase
+template<typename T, typename FetchJob, typename FetchScope_>
+class EntityCache : public EntityCacheBase
 {
 public:
     using FetchScope = FetchScope_;
@@ -216,7 +218,8 @@ private:
     int mCapacity;
 };
 
-template<> inline void EntityCache<Collection, CollectionFetchJob, CollectionFetchScope>::extractResult(EntityCacheNode<Collection> *node, KJob *job) const
+template<>
+inline void EntityCache<Collection, CollectionFetchJob, CollectionFetchScope>::extractResult(EntityCacheNode<Collection> *node, KJob *job) const
 {
     auto fetch = qobject_cast<CollectionFetchJob *>(job);
     Q_ASSERT(fetch);
@@ -227,7 +230,8 @@ template<> inline void EntityCache<Collection, CollectionFetchJob, CollectionFet
     }
 }
 
-template<> inline void EntityCache<Item, ItemFetchJob, ItemFetchScope>::extractResult(EntityCacheNode<Item> *node, KJob *job) const
+template<>
+inline void EntityCache<Item, ItemFetchJob, ItemFetchScope>::extractResult(EntityCacheNode<Item> *node, KJob *job) const
 {
     auto fetch = qobject_cast<ItemFetchJob *>(job);
     Q_ASSERT(fetch);
@@ -238,7 +242,8 @@ template<> inline void EntityCache<Item, ItemFetchJob, ItemFetchScope>::extractR
     }
 }
 
-template<> inline void EntityCache<Tag, TagFetchJob, TagFetchScope>::extractResult(EntityCacheNode<Tag> *node, KJob *job) const
+template<>
+inline void EntityCache<Tag, TagFetchJob, TagFetchScope>::extractResult(EntityCacheNode<Tag> *node, KJob *job) const
 {
     auto fetch = qobject_cast<TagFetchJob *>(job);
     Q_ASSERT(fetch);
@@ -262,7 +267,8 @@ using CollectionCache = EntityCache<Collection, CollectionFetchJob, CollectionFe
 using ItemCache = EntityCache<Item, ItemFetchJob, ItemFetchScope>;
 using TagCache = EntityCache<Tag, TagFetchJob, TagFetchScope>;
 
-template<typename T> struct EntityListCacheNode {
+template<typename T>
+struct EntityListCacheNode {
     EntityListCacheNode()
         : pending(false)
         , invalid(false)
@@ -280,7 +286,8 @@ template<typename T> struct EntityListCacheNode {
     bool invalid;
 };
 
-template<typename T, typename FetchJob, typename FetchScope_> class EntityListCache : public EntityCacheBase
+template<typename T, typename FetchJob, typename FetchScope_>
+class EntityListCache : public EntityCacheBase
 {
 public:
     using FetchScope = FetchScope_;
@@ -483,21 +490,24 @@ private:
     int mCapacity;
 };
 
-template<> inline void EntityListCache<Collection, CollectionFetchJob, CollectionFetchScope>::extractResults(KJob *job, Collection::List &collections) const
+template<>
+inline void EntityListCache<Collection, CollectionFetchJob, CollectionFetchScope>::extractResults(KJob *job, Collection::List &collections) const
 {
     auto fetch = qobject_cast<CollectionFetchJob *>(job);
     Q_ASSERT(fetch);
     collections = fetch->collections();
 }
 
-template<> inline void EntityListCache<Item, ItemFetchJob, ItemFetchScope>::extractResults(KJob *job, Item::List &items) const
+template<>
+inline void EntityListCache<Item, ItemFetchJob, ItemFetchScope>::extractResults(KJob *job, Item::List &items) const
 {
     auto fetch = qobject_cast<ItemFetchJob *>(job);
     Q_ASSERT(fetch);
     items = fetch->items();
 }
 
-template<> inline void EntityListCache<Tag, TagFetchJob, TagFetchScope>::extractResults(KJob *job, Tag::List &tags) const
+template<>
+inline void EntityListCache<Tag, TagFetchJob, TagFetchScope>::extractResults(KJob *job, Tag::List &tags) const
 {
     auto fetch = qobject_cast<TagFetchJob *>(job);
     Q_ASSERT(fetch);
@@ -517,4 +527,3 @@ using CollectionListCache = EntityListCache<Collection, CollectionFetchJob, Coll
 using ItemListCache = EntityListCache<Item, ItemFetchJob, ItemFetchScope>;
 using TagListCache = EntityListCache<Tag, TagFetchJob, TagFetchScope>;
 }
-

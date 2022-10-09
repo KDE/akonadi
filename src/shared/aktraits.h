@@ -13,36 +13,45 @@ namespace AkTraits
 {
 namespace detail
 {
-template<typename...> struct conjunction : std::true_type {
+template<typename...>
+struct conjunction : std::true_type {
 };
-template<typename T> struct conjunction<T> : T {
+template<typename T>
+struct conjunction<T> : T {
 };
-template<typename T, typename... Ts> struct conjunction<T, Ts...> : std::conditional_t<bool(T::value), conjunction<Ts...>, T> {
+template<typename T, typename... Ts>
+struct conjunction<T, Ts...> : std::conditional_t<bool(T::value), conjunction<Ts...>, T> {
 };
 
 #define DECLARE_HAS_MEBER_TYPE(type_name)                                                                                                                      \
-    template<typename T, typename U = std::void_t<>> struct hasMember_##type_name {                                                                            \
+    template<typename T, typename U = std::void_t<>>                                                                                                           \
+    struct hasMember_##type_name {                                                                                                                             \
         static constexpr bool value = false;                                                                                                                   \
     };                                                                                                                                                         \
                                                                                                                                                                \
-    template<typename T> struct hasMember_##type_name<T, std::void_t<typename T::type_name>> : std::true_type {                                                \
+    template<typename T>                                                                                                                                       \
+    struct hasMember_##type_name<T, std::void_t<typename T::type_name>> : std::true_type {                                                                     \
     };
 
 DECLARE_HAS_MEBER_TYPE(value_type)
 
 /// TODO: Use Boost TTI instead?
 #define DECLARE_HAS_METHOD_GENERIC_IMPL(name, fun, sign)                                                                                                       \
-    template<typename T, typename F = sign> struct hasMethod_##name {                                                                                          \
+    template<typename T, typename F = sign>                                                                                                                    \
+    struct hasMethod_##name {                                                                                                                                  \
     public:                                                                                                                                                    \
-        template<typename UType, UType> struct helperClass;                                                                                                    \
+        template<typename UType, UType>                                                                                                                        \
+        struct helperClass;                                                                                                                                    \
                                                                                                                                                                \
         using True = char;                                                                                                                                     \
         using False = struct {                                                                                                                                 \
             char dummy_[2];                                                                                                                                    \
         };                                                                                                                                                     \
                                                                                                                                                                \
-        template<typename U> static True helper(helperClass<F, &U::fun> *);                                                                                    \
-        template<typename> static False helper(...);                                                                                                           \
+        template<typename U>                                                                                                                                   \
+        static True helper(helperClass<F, &U::fun> *);                                                                                                         \
+        template<typename>                                                                                                                                     \
+        static False helper(...);                                                                                                                              \
                                                                                                                                                                \
     public:                                                                                                                                                    \
         static constexpr bool value = sizeof(helper<T>(nullptr)) == sizeof(True);                                                                              \
@@ -76,16 +85,20 @@ DECLARE_HAS_METHOD_GENERIC(reserve, void, qsizetype)
 #endif
 
 #define DECLARE_HAS_FUNCTION(name, fun)                                                                                                                        \
-    template<typename T> struct has_##name {                                                                                                                   \
-        template<typename U> struct helperClass;                                                                                                               \
+    template<typename T>                                                                                                                                       \
+    struct has_##name {                                                                                                                                        \
+        template<typename U>                                                                                                                                   \
+        struct helperClass;                                                                                                                                    \
                                                                                                                                                                \
         using True = char;                                                                                                                                     \
         using False = struct {                                                                                                                                 \
             char dummy_[2];                                                                                                                                    \
         };                                                                                                                                                     \
                                                                                                                                                                \
-        template<typename U> static True helper(helperClass<decltype(fun(std::declval<T>()))> *);                                                              \
-        template<typename> static False helper(...);                                                                                                           \
+        template<typename U>                                                                                                                                   \
+        static True helper(helperClass<decltype(fun(std::declval<T>()))> *);                                                                                   \
+        template<typename>                                                                                                                                     \
+        static False helper(...);                                                                                                                              \
                                                                                                                                                                \
     public:                                                                                                                                                    \
         static constexpr bool value = sizeof(helper<T>(nullptr)) == sizeof(True);                                                                              \
@@ -108,23 +121,29 @@ struct isContainer
 };
 
 /// Matches anything that is a container and has push_back() method.
-template<typename T> struct isAppendable : conjunction<isContainer<T>, hasMethod_push_back<T>> {
+template<typename T>
+struct isAppendable : conjunction<isContainer<T>, hasMethod_push_back<T>> {
 };
 
 /// Matches anything that is a container and has insert() method.
-template<typename T> struct isInsertable : conjunction<isContainer<T>, hasMethod_insert<T>> {
+template<typename T>
+struct isInsertable : conjunction<isContainer<T>, hasMethod_insert<T>> {
 };
 
 /// Matches anything that is a container and has reserve() method.
-template<typename T> struct isReservable : conjunction<isContainer<T>, hasMethod_reserve<T>> {
+template<typename T>
+struct isReservable : conjunction<isContainer<T>, hasMethod_reserve<T>> {
 };
 }
 
-template<typename T> constexpr bool isAppendable = detail::isAppendable<T>::value;
+template<typename T>
+constexpr bool isAppendable = detail::isAppendable<T>::value;
 
-template<typename T> constexpr bool isInsertable = detail::isInsertable<T>::value;
+template<typename T>
+constexpr bool isInsertable = detail::isInsertable<T>::value;
 
-template<typename T> constexpr bool isReservable = detail::isReservable<T>::value;
+template<typename T>
+constexpr bool isReservable = detail::isReservable<T>::value;
 
 } // namespace AkTraits
 
@@ -132,4 +151,3 @@ template<typename T> constexpr bool isReservable = detail::isReservable<T>::valu
 #define AK_PP_CAT(X, Y) AK_PP_CAT_(X, Y)
 
 #define AK_REQUIRES(...) bool AK_PP_CAT(_ak_requires_, __LINE__) = false, std::enable_if_t < AK_PP_CAT(_ak_requires_, __LINE__) || (__VA_ARGS__) > * = nullptr
-

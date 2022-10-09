@@ -449,7 +449,8 @@ public:
      * @param argc number of arguments
      * @param argv arguments for the function
      */
-    template<typename T> static int init(int argc, char **argv)
+    template<typename T>
+    static int init(int argc, char **argv)
     {
         // Disable session management
         qunsetenv("SESSION_MANAGER");
@@ -798,4 +799,3 @@ private:
         return Akonadi::AgentBase::init<agentClass>(argc, argv);                                                                                               \
     }
 #endif
-

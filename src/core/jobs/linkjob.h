@@ -74,8 +74,8 @@ protected:
 
 private:
     Q_DECLARE_PRIVATE(LinkJob)
-    template<typename T> friend class LinkJobImpl;
+    template<typename T>
+    friend class LinkJobImpl;
 };
 
 }
-

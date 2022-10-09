@@ -60,4 +60,3 @@ AKONADI_XML_EXPORT QDomElement writeItem(const Item &item, QDomElement &parentEl
 }
 
 }
-

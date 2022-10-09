@@ -70,4 +70,3 @@ private:
     std::unique_ptr<ManageAccountWidgetPrivate> const d;
 };
 }
-

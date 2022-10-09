@@ -74,4 +74,3 @@ private:
     };
     QQueue<MessageStruct> m_messages;
 };
-

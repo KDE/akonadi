@@ -232,4 +232,3 @@ Q_DECLARE_TYPEINFO(Akonadi::ImapSet, Q_MOVABLE_TYPE);
 Q_DECLARE_METATYPE(Akonadi::ImapInterval)
 Q_DECLARE_METATYPE(Akonadi::ImapInterval::List)
 Q_DECLARE_METATYPE(Akonadi::ImapSet)
-

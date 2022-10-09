@@ -103,7 +103,7 @@ QSqlQuery ItemFetchHelper::buildPartQuery(const QVector<QByteArray> &partList, b
     /// TODO: merge with ItemQuery
     QueryBuilder partQuery(PimItem::tableName());
     if (mItemsLimit.limit() > 0) {
-       partQuery = QueryBuilder(mItemQuery.query(), mPimItemQueryAlias);
+        partQuery = QueryBuilder(mItemQuery.query(), mPimItemQueryAlias);
     }
 
     if (!partList.isEmpty() || allPayload || allAttrs) {
@@ -153,7 +153,7 @@ QSqlQuery ItemFetchHelper::buildItemQuery()
     int column = 0;
 #define ADD_COLUMN(colName, colId)                                                                                                                             \
     {                                                                                                                                                          \
-        mItemQuery.addColumn(colName);                                                                                                                          \
+        mItemQuery.addColumn(colName);                                                                                                                         \
         mItemQueryColumnMap[colId] = column++;                                                                                                                 \
     }
     ADD_COLUMN(PimItem::idFullColumnName(), ItemQueryPimItemIdColumn);
@@ -209,7 +209,10 @@ QSqlQuery ItemFetchHelper::buildFlagQuery()
         flagQuery = QueryBuilder(mItemQuery.query(), mPimItemQueryAlias);
     }
 
-    flagQuery.addJoin(QueryBuilder::InnerJoin, PimItemFlagRelation::tableName(), flagQuery.getTableWithColumn(PimItem::idColumn()),                     PimItemFlagRelation::leftFullColumnName());
+    flagQuery.addJoin(QueryBuilder::InnerJoin,
+                      PimItemFlagRelation::tableName(),
+                      flagQuery.getTableWithColumn(PimItem::idColumn()),
+                      PimItemFlagRelation::leftFullColumnName());
 
     flagQuery.addColumn(flagQuery.getTableWithColumn(PimItem::idColumn()));
     flagQuery.addColumn(PimItemFlagRelation::rightFullColumnName());
@@ -238,7 +241,10 @@ QSqlQuery ItemFetchHelper::buildTagQuery()
         tagQuery = QueryBuilder(mItemQuery.query(), mPimItemQueryAlias);
     }
 
-    tagQuery.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(), tagQuery.getTableWithColumn(PimItem::idColumn()), PimItemTagRelation::leftFullColumnName());
+    tagQuery.addJoin(QueryBuilder::InnerJoin,
+                     PimItemTagRelation::tableName(),
+                     tagQuery.getTableWithColumn(PimItem::idColumn()),
+                     PimItemTagRelation::leftFullColumnName());
     tagQuery.addJoin(QueryBuilder::InnerJoin, Tag::tableName(), Tag::idFullColumnName(), PimItemTagRelation::rightFullColumnName());
     tagQuery.addColumn(tagQuery.getTableWithColumn(PimItem::idColumn()));
     tagQuery.addColumn(Tag::idFullColumnName());
@@ -263,7 +269,7 @@ enum VRefQueryColumns {
 QSqlQuery ItemFetchHelper::buildVRefQuery()
 {
     QueryBuilder vRefQuery(PimItem::tableName());
-    if(mItemsLimit.limit() > 0) {
+    if (mItemsLimit.limit() > 0) {
         vRefQuery = QueryBuilder(mItemQuery.query(), mPimItemQueryAlias);
     }
 

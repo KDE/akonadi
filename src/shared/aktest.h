@@ -58,7 +58,8 @@ inline void akTestSetInstanceIdentifier(const QString &instanceId)
 
 namespace QTest
 {
-template<> char *toString(const Akonadi::Protocol::ItemChangeNotificationPtr &msg)
+template<>
+char *toString(const Akonadi::Protocol::ItemChangeNotificationPtr &msg)
 {
     return qstrdup(qPrintable(Akonadi::Protocol::debugString(msg)));
 }
@@ -127,4 +128,3 @@ bool compareNotifications(const Akonadi::Protocol::ItemChangeNotificationPtr &ac
     return true;
 }
 }
-

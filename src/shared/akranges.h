@@ -23,7 +23,8 @@ namespace AkRanges
 {
 namespace detail
 {
-template<typename RangeLike, typename OutContainer, AK_REQUIRES(AkTraits::isAppendable<OutContainer>)> OutContainer copyContainer(const RangeLike &range)
+template<typename RangeLike, typename OutContainer, AK_REQUIRES(AkTraits::isAppendable<OutContainer>)>
+OutContainer copyContainer(const RangeLike &range)
 {
     OutContainer rv;
     rv.reserve(range.size());
@@ -33,7 +34,8 @@ template<typename RangeLike, typename OutContainer, AK_REQUIRES(AkTraits::isAppe
     return rv;
 }
 
-template<typename RangeLike, typename OutContainer, AK_REQUIRES(AkTraits::isInsertable<OutContainer>)> OutContainer copyContainer(const RangeLike &range)
+template<typename RangeLike, typename OutContainer, AK_REQUIRES(AkTraits::isInsertable<OutContainer>)>
+OutContainer copyContainer(const RangeLike &range)
 {
     OutContainer rv;
     rv.reserve(range.size());
@@ -43,7 +45,8 @@ template<typename RangeLike, typename OutContainer, AK_REQUIRES(AkTraits::isInse
     return rv;
 }
 
-template<typename RangeList, typename OutContainer> OutContainer copyAssocContainer(const RangeList &range)
+template<typename RangeList, typename OutContainer>
+OutContainer copyAssocContainer(const RangeList &range)
 {
     OutContainer rv;
     for (const auto &v : range) {
@@ -52,7 +55,8 @@ template<typename RangeList, typename OutContainer> OutContainer copyAssocContai
     return rv;
 }
 
-template<typename Iterator> struct IteratorTrait {
+template<typename Iterator>
+struct IteratorTrait {
     using iterator_category = typename Iterator::iterator_category;
     using value_type = typename Iterator::value_type;
     using difference_type = typename Iterator::difference_type;
@@ -63,7 +67,8 @@ template<typename Iterator> struct IteratorTrait {
 // Without QT_STRICT_ITERATORS QVector and QList iterators do not satisfy STL
 // iterator concepts since they are nothing more but typedefs to T* - for those
 // we need to provide custom traits.
-template<typename Iterator> struct IteratorTrait<Iterator *> {
+template<typename Iterator>
+struct IteratorTrait<Iterator *> {
     // QTypedArrayData::iterator::iterator_category
     using iterator_category = std::random_access_iterator_tag;
     using value_type = Iterator;
@@ -76,7 +81,8 @@ template<typename Iterator> struct IteratorTrait<Iterator *> {
     using reference = Iterator &;
 };
 
-template<typename Iterator> struct IteratorTrait<const Iterator *> {
+template<typename Iterator>
+struct IteratorTrait<const Iterator *> {
     using iterator_category = std::random_access_iterator_tag;
     using value_type = Iterator;
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -88,7 +94,8 @@ template<typename Iterator> struct IteratorTrait<const Iterator *> {
     using reference = const Iterator &;
 };
 
-template<typename IterImpl, typename RangeLike, typename Iterator = typename RangeLike::const_iterator> struct IteratorBase {
+template<typename IterImpl, typename RangeLike, typename Iterator = typename RangeLike::const_iterator>
+struct IteratorBase {
 public:
     using iterator_category = typename IteratorTrait<Iterator>::iterator_category;
     using value_type = typename IteratorTrait<Iterator>::value_type;
@@ -159,13 +166,16 @@ protected:
 template<typename RangeLike, typename TransformFn, typename Iterator = typename RangeLike::const_iterator>
 struct TransformIterator : public IteratorBase<TransformIterator<RangeLike, TransformFn>, RangeLike> {
 private:
-    template<typename... T> struct ResultOf;
+    template<typename... T>
+    struct ResultOf;
 
-    template<typename R, typename... Args> struct ResultOf<R(Args...)> {
+    template<typename R, typename... Args>
+    struct ResultOf<R(Args...)> {
         using type = R;
     };
 
-    template<typename... Ts> using FuncHelper = decltype(std::invoke(std::declval<Ts>()...))(Ts...);
+    template<typename... Ts>
+    using FuncHelper = decltype(std::invoke(std::declval<Ts>()...))(Ts...);
     using IteratorValueType = typename ResultOf<FuncHelper<TransformFn, typename IteratorTrait<Iterator>::value_type>>::type;
 
 public:
@@ -247,10 +257,13 @@ public:
     }
 };
 
-template<typename Container> using AssociativeContainerKeyIterator = AssociativeContainerIterator<Container, 0>;
-template<typename Container> using AssociativeContainerValueIterator = AssociativeContainerIterator<Container, 1>;
+template<typename Container>
+using AssociativeContainerKeyIterator = AssociativeContainerIterator<Container, 0>;
+template<typename Container>
+using AssociativeContainerValueIterator = AssociativeContainerIterator<Container, 1>;
 
-template<typename Iterator> struct Range {
+template<typename Iterator>
+struct Range {
 public:
     using iterator = Iterator;
     using const_iterator = Iterator;
@@ -292,16 +305,21 @@ private:
     Iterator mEnd;
 };
 
-template<typename T> using IsRange = typename std::is_same<T, Range<typename T::iterator>>;
+template<typename T>
+using IsRange = typename std::is_same<T, Range<typename T::iterator>>;
 
 // Tags
 
-template<template<typename> class Cont> struct ToTag_ {
-    template<typename T> using OutputContainer = Cont<T>;
+template<template<typename> class Cont>
+struct ToTag_ {
+    template<typename T>
+    using OutputContainer = Cont<T>;
 };
 
-template<template<typename, typename> class Cont> struct ToAssocTag_ {
-    template<typename Key, typename Value> using OuputContainer = Cont<Key, Value>;
+template<template<typename, typename> class Cont>
+struct ToAssocTag_ {
+    template<typename Key, typename Value>
+    using OuputContainer = Cont<Key, Value>;
 };
 
 struct ValuesTag_ {
@@ -309,27 +327,33 @@ struct ValuesTag_ {
 struct KeysTag_ {
 };
 
-template<typename UnaryOperation> struct TransformTag_ {
+template<typename UnaryOperation>
+struct TransformTag_ {
     UnaryOperation mFn;
 };
 
-template<typename UnaryPredicate> struct FilterTag_ {
+template<typename UnaryPredicate>
+struct FilterTag_ {
     UnaryPredicate mFn;
 };
 
-template<typename UnaryOperation> struct ForEachTag_ {
+template<typename UnaryOperation>
+struct ForEachTag_ {
     UnaryOperation mFn;
 };
 
-template<typename UnaryPredicate> struct AllTag_ {
+template<typename UnaryPredicate>
+struct AllTag_ {
     UnaryPredicate mFn;
 };
 
-template<typename UnaryPredicate> struct AnyTag_ {
+template<typename UnaryPredicate>
+struct AnyTag_ {
     UnaryPredicate mFn;
 };
 
-template<typename UnaryPredicate> struct NoneTag_ {
+template<typename UnaryPredicate>
+struct NoneTag_ {
     UnaryPredicate mFn;
 };
 
@@ -346,7 +370,8 @@ auto operator|(const RangeLike &range, AkRanges::detail::ToTag_<OutContainer>) -
 
 // Specialization for case when InContainer and OutContainer are identical
 // Create a copy, but for Qt container this is very cheap due to implicit sharing.
-template<template<typename> class InContainer, typename T> auto operator|(const InContainer<T> &in, AkRanges::detail::ToTag_<InContainer>) -> InContainer<T>
+template<template<typename> class InContainer, typename T>
+auto operator|(const InContainer<T> &in, AkRanges::detail::ToTag_<InContainer>) -> InContainer<T>
 {
     return in;
 }
@@ -360,7 +385,8 @@ auto operator|(const RangeLike &range, AkRanges::detail::ToAssocTag_<OutContaine
 }
 
 // Generic operator| for transform()
-template<typename RangeLike, typename UnaryOperation> auto operator|(const RangeLike &range, AkRanges::detail::TransformTag_<UnaryOperation> t)
+template<typename RangeLike, typename UnaryOperation>
+auto operator|(const RangeLike &range, AkRanges::detail::TransformTag_<UnaryOperation> t)
 {
     using namespace AkRanges::detail;
     using OutIt = TransformIterator<RangeLike, UnaryOperation>;
@@ -368,7 +394,8 @@ template<typename RangeLike, typename UnaryOperation> auto operator|(const Range
 }
 
 // Generic operator| for filter()
-template<typename RangeLike, typename UnaryPredicate> auto operator|(const RangeLike &range, AkRanges::detail::FilterTag_<UnaryPredicate> p)
+template<typename RangeLike, typename UnaryPredicate>
+auto operator|(const RangeLike &range, AkRanges::detail::FilterTag_<UnaryPredicate> p)
 {
     using namespace AkRanges::detail;
     using OutIt = FilterIterator<RangeLike, UnaryPredicate>;
@@ -376,7 +403,8 @@ template<typename RangeLike, typename UnaryPredicate> auto operator|(const Range
 }
 
 // Generic operator| for foreach()
-template<typename RangeLike, typename UnaryOperation> auto operator|(const RangeLike &range, AkRanges::detail::ForEachTag_<UnaryOperation> op)
+template<typename RangeLike, typename UnaryOperation>
+auto operator|(const RangeLike &range, AkRanges::detail::ForEachTag_<UnaryOperation> op)
 {
     std::for_each(std::cbegin(range), std::cend(range), [op = std::move(op)](const auto &val) mutable {
         std::invoke(op.mFn, val);
@@ -385,25 +413,29 @@ template<typename RangeLike, typename UnaryOperation> auto operator|(const Range
 }
 
 // Generic operator| for all
-template<typename RangeLike, typename UnaryPredicate> auto operator|(const RangeLike &range, AkRanges::detail::AllTag_<UnaryPredicate> p)
+template<typename RangeLike, typename UnaryPredicate>
+auto operator|(const RangeLike &range, AkRanges::detail::AllTag_<UnaryPredicate> p)
 {
     return std::all_of(std::cbegin(range), std::cend(range), p.mFn);
 }
 
 // Generic operator| for any
-template<typename RangeLike, typename PredicateFn> auto operator|(const RangeLike &range, AkRanges::detail::AnyTag_<PredicateFn> p)
+template<typename RangeLike, typename PredicateFn>
+auto operator|(const RangeLike &range, AkRanges::detail::AnyTag_<PredicateFn> p)
 {
     return std::any_of(std::cbegin(range), std::cend(range), p.mFn);
 }
 
 // Generic operator| for none
-template<typename RangeLike, typename UnaryPredicate> auto operator|(const RangeLike &range, AkRanges::detail::NoneTag_<UnaryPredicate> p)
+template<typename RangeLike, typename UnaryPredicate>
+auto operator|(const RangeLike &range, AkRanges::detail::NoneTag_<UnaryPredicate> p)
 {
     return std::none_of(std::cbegin(range), std::cend(range), p.mFn);
 }
 
 // Generic operator| for keys
-template<typename AssocContainer> auto operator|(const AssocContainer &in, AkRanges::detail::KeysTag_)
+template<typename AssocContainer>
+auto operator|(const AssocContainer &in, AkRanges::detail::KeysTag_)
 {
     using namespace AkRanges::detail;
     using OutIt = AssociativeContainerKeyIterator<AssocContainer>;
@@ -411,7 +443,8 @@ template<typename AssocContainer> auto operator|(const AssocContainer &in, AkRan
 }
 
 // Generic operator| for values
-template<typename AssocContainer> auto operator|(const AssocContainer &in, AkRanges::detail::ValuesTag_)
+template<typename AssocContainer>
+auto operator|(const AssocContainer &in, AkRanges::detail::ValuesTag_)
 {
     using namespace AkRanges::detail;
     using OutIt = AssociativeContainerValueIterator<AssocContainer>;
@@ -434,25 +467,29 @@ static constexpr auto toQMap = detail::ToAssocTag_<QMap>{};
 static constexpr auto toQHash = detail::ToAssocTag_<QHash>{};
 
 /// Non-lazily call UnaryOperation for each element of the container or range
-template<typename UnaryOperation> detail::ForEachTag_<UnaryOperation> forEach(UnaryOperation &&op)
+template<typename UnaryOperation>
+detail::ForEachTag_<UnaryOperation> forEach(UnaryOperation &&op)
 {
     return detail::ForEachTag_<UnaryOperation>{std::forward<UnaryOperation>(op)};
 }
 
 /// Non-lazily check that all elements in the range satisfy given predicate
-template<typename UnaryPredicate> detail::AllTag_<UnaryPredicate> all(UnaryPredicate &&pred)
+template<typename UnaryPredicate>
+detail::AllTag_<UnaryPredicate> all(UnaryPredicate &&pred)
 {
     return detail::AllTag_<UnaryPredicate>{std::forward<UnaryPredicate>(pred)};
 }
 
 /// Non-lazily check that at least one element in range satisfies the given predicate
-template<typename UnaryPredicate> detail::AnyTag_<UnaryPredicate> any(UnaryPredicate &&pred)
+template<typename UnaryPredicate>
+detail::AnyTag_<UnaryPredicate> any(UnaryPredicate &&pred)
 {
     return detail::AnyTag_<UnaryPredicate>{std::forward<UnaryPredicate>(pred)};
 }
 
 /// Non-lazily check that none of the elements in the range satisfies the given predicate
-template<typename UnaryPredicate> detail::NoneTag_<UnaryPredicate> none(UnaryPredicate &&pred)
+template<typename UnaryPredicate>
+detail::NoneTag_<UnaryPredicate> none(UnaryPredicate &&pred)
 {
     return detail::NoneTag_<UnaryPredicate>{std::forward<UnaryPredicate>(pred)};
 }
@@ -467,19 +504,22 @@ static constexpr auto values = detail::ValuesTag_{};
 static constexpr auto keys = detail::KeysTag_{};
 
 /// Lazily transform each element of a range or container using given transformation
-template<typename UnaryOperation> detail::TransformTag_<UnaryOperation> transform(UnaryOperation &&op)
+template<typename UnaryOperation>
+detail::TransformTag_<UnaryOperation> transform(UnaryOperation &&op)
 {
     return detail::TransformTag_<UnaryOperation>{std::forward<UnaryOperation>(op)};
 }
 
 /// Lazily filters a range or container by applying given predicate on each element
-template<typename UnaryPredicate> detail::FilterTag_<UnaryPredicate> filter(UnaryPredicate &&pred)
+template<typename UnaryPredicate>
+detail::FilterTag_<UnaryPredicate> filter(UnaryPredicate &&pred)
 {
     return detail::FilterTag_<UnaryPredicate>{std::forward<UnaryPredicate>(pred)};
 }
 
 /// Create a range, a view on a container from the given pair fo iterators
-template<typename Iterator1, typename Iterator2, typename It = std::remove_reference_t<Iterator1>> detail::Range<It> range(Iterator1 begin, Iterator2 end)
+template<typename Iterator1, typename Iterator2, typename It = std::remove_reference_t<Iterator1>>
+detail::Range<It> range(Iterator1 begin, Iterator2 end)
 {
     return detail::Range<It>(std::move(begin), std::move(end));
 }
@@ -487,4 +527,3 @@ template<typename Iterator1, typename Iterator2, typename It = std::remove_refer
 } // namespace View
 
 } // namespace AkRanges
-

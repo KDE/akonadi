@@ -74,4 +74,3 @@ AKONADIPRIVATE_EXPORT std::optional<QString> parseInstanceIdentifier(const QStri
 }
 
 }
-

@@ -97,7 +97,8 @@ private:
         // MAKE_CMD_ROW(Protocol::Command::Invalid, UnknownCommandHandler)
     }
 
-    template<typename T> QByteArray typeName(const T &t)
+    template<typename T>
+    QByteArray typeName(const T &t)
     {
         const auto &v = *t;
         return typeid(v).name();

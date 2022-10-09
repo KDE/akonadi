@@ -68,4 +68,3 @@ protected:
 
 } // namespace Server
 } // namespace Akonadi
-

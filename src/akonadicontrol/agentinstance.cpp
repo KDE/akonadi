@@ -177,7 +177,8 @@ void AgentInstance::errorHandler(const QDBusError &error)
     // TODO try again after some time, esp. on timeout errors
 }
 
-template<typename T> std::unique_ptr<T> AgentInstance::findInterface(Akonadi::DBus::AgentType agentType, const char *path)
+template<typename T>
+std::unique_ptr<T> AgentInstance::findInterface(Akonadi::DBus::AgentType agentType, const char *path)
 {
     auto iface = std::make_unique<T>(Akonadi::DBus::agentServiceName(mIdentifier, agentType), QLatin1String(path), QDBusConnection::sessionBus(), this);
 

@@ -30,4 +30,3 @@ public Q_SLOTS:
 
 }
 }
-

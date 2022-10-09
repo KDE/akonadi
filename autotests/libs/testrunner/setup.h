@@ -81,4 +81,3 @@ private:
     int mExitCode;
     QVector<EnvVar> mEnvVars;
 };
-

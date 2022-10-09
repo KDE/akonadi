@@ -47,7 +47,8 @@ public:
      * Registers a custom attribute of type T.
      * The same attribute cannot be registered more than once.
      */
-    template<typename T> inline static void registerAttribute()
+    template<typename T>
+    inline static void registerAttribute()
     {
         static_assert(std::is_default_constructible<T>::value, "An Attribute must be default-constructible.");
         AttributeFactory::self()->registerAttribute(std::unique_ptr<T>{new T{}});
@@ -75,4 +76,3 @@ private:
 };
 
 } // namespace Akonadi
-

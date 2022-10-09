@@ -29,4 +29,3 @@ private:
     Akonadi::AgentTypeWidget *mWidget;
     QComboBox *mFilter;
 };
-

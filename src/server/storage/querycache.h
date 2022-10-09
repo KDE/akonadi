@@ -34,4 +34,3 @@ void clear();
 
 } // namespace Server
 } // namespace Akonadi
-

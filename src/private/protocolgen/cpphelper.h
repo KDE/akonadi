@@ -17,4 +17,3 @@ void sortMembers(QVector<PropertyNode const *> &props);
 void sortMembersForSerialization(QVector<PropertyNode const *> &props);
 
 } // namespace CppHelper
-

@@ -45,4 +45,3 @@ public:
     static const QLatin1String CapabilityPreprocessor;
     static const QLatin1String CapabilitySearch;
 };
-

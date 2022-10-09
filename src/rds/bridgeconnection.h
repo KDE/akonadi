@@ -54,4 +54,3 @@ public:
 protected:
     void connectLocal() override;
 };
-

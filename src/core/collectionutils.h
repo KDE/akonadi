@@ -124,4 +124,3 @@ Q_REQUIRED_RESULT AKONADICORE_EXPORT Collection fromIndex(const QModelIndex &ind
 }
 
 }
-

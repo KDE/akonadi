@@ -71,4 +71,3 @@ public Q_SLOTS:
 };
 
 }
-

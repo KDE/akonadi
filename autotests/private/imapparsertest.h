@@ -34,4 +34,3 @@ private Q_SLOTS:
     void benchParseQuotedString_data();
     void benchParseQuotedString();
 };
-

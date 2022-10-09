@@ -15,7 +15,8 @@
 
 namespace Akonadi
 {
-template<typename DPtr, typename Slot> auto akPrivSlot(DPtr &&dptr, Slot &&slot)
+template<typename DPtr, typename Slot>
+auto akPrivSlot(DPtr &&dptr, Slot &&slot)
 {
     return [&dptr, &slot](auto &&...args) {
         (dptr->*slot)(std::forward<decltype(args)>(args)...);
@@ -33,4 +34,3 @@ constexpr QStringView operator""_qsv(const char16_t *str, std::size_t len)
 {
     return QStringView(str, len);
 }
-

@@ -106,4 +106,3 @@ void disableCoW(const QString &path);
 } // namespace Utils
 } // namespace Server
 } // namespace Akonadi
-

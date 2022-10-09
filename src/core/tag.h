@@ -123,22 +123,26 @@ public:
      *
      * @param option The create options.
      */
-    template<typename T> inline T *attribute(CreateOption option = DontCreate);
+    template<typename T>
+    inline T *attribute(CreateOption option = DontCreate);
 
     /**
      * Returns the attribute of the requested type or 0 if it is not available.
      */
-    template<typename T> inline const T *attribute() const;
+    template<typename T>
+    inline const T *attribute() const;
 
     /**
      * Removes and deletes the attribute of the requested type.
      */
-    template<typename T> inline void removeAttribute();
+    template<typename T>
+    inline void removeAttribute();
 
     /**
      * Returns whether the entity has an attribute of the requested type.
      */
-    template<typename T> inline bool hasAttribute() const;
+    template<typename T>
+    inline bool hasAttribute() const;
 
     /**
      * Returns the url of the tag.
@@ -198,7 +202,8 @@ private:
 
 AKONADICORE_EXPORT uint qHash(const Akonadi::Tag &);
 
-template<typename T> inline T *Tag::attribute(CreateOption option)
+template<typename T>
+inline T *Tag::attribute(CreateOption option)
 {
     const QByteArray type = T().type();
     markAttributeModified(type);
@@ -216,7 +221,8 @@ template<typename T> inline T *Tag::attribute(CreateOption option)
     return nullptr;
 }
 
-template<typename T> inline const T *Tag::attribute() const
+template<typename T>
+inline const T *Tag::attribute() const
 {
     const QByteArray type = T().type();
     if (hasAttribute(type)) {
@@ -229,13 +235,15 @@ template<typename T> inline const T *Tag::attribute() const
     return nullptr;
 }
 
-template<typename T> inline void Tag::removeAttribute()
+template<typename T>
+inline void Tag::removeAttribute()
 {
     const T dummy;
     removeAttribute(dummy.type());
 }
 
-template<typename T> inline bool Tag::hasAttribute() const
+template<typename T>
+inline bool Tag::hasAttribute() const
 {
     const T dummy;
     return hasAttribute(dummy.type());
@@ -249,4 +257,3 @@ Q_DECLARE_METATYPE(Akonadi::Tag)
 Q_DECLARE_METATYPE(Akonadi::Tag::List)
 Q_DECLARE_METATYPE(QSet<Akonadi::Tag>)
 Q_DECLARE_TYPEINFO(Akonadi::Tag, Q_MOVABLE_TYPE);
-

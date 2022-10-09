@@ -37,4 +37,3 @@ private:
     int mExitCode;
     KProcess *mProcess = nullptr;
 };
-

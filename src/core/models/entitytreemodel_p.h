@@ -56,7 +56,8 @@ struct Node {
     Type type;
 };
 
-template<typename Key, typename Value> class RefCountedHash
+template<typename Key, typename Value>
+class RefCountedHash
 {
     mutable Value *defaultValue = nullptr;
 
@@ -150,7 +151,8 @@ public:
     }
 
 private:
-    template<typename V> struct RefCountedValue {
+    template<typename V>
+    struct RefCountedValue {
         uint8_t refCnt = 0;
         V value;
     };
@@ -292,7 +294,8 @@ public:
     /**
      * Returns the index of the node in @p list with the id @p id. Returns -1 if not found.
      */
-    template<Node::Type Type> int indexOf(const QList<Node *> &nodes, Node::Id id) const
+    template<Node::Type Type>
+    int indexOf(const QList<Node *> &nodes, Node::Id id) const
     {
         int i = 0;
         for (const Node *node : nodes) {
@@ -316,7 +319,8 @@ public:
     bool isHidden(const Item &item) const;
     bool isHidden(const Collection &collection) const;
 
-    template<typename T> bool isHiddenImpl(const T &entity, Node::Type type) const;
+    template<typename T>
+    bool isHiddenImpl(const T &entity, Node::Type type) const;
 
     void ref(Collection::Id id);
     void deref(Collection::Id id);
@@ -393,4 +397,3 @@ public:
 };
 
 }
-

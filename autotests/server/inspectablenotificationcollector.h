@@ -31,4 +31,3 @@ Q_SIGNALS:
 
 } // namespace Server
 } // namespace Akonadi
-

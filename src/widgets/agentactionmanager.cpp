@@ -18,9 +18,9 @@
 #include <QAction>
 #include <QIcon>
 
+#include <KLazyLocalizedString>
 #include <QItemSelectionModel>
 #include <QPointer>
-#include <KLazyLocalizedString>
 
 using namespace Akonadi;
 

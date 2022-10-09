@@ -148,7 +148,8 @@ protected Q_SLOTS:
     void errorHandler(const QDBusError &error);
 
 private:
-    template<typename T> std::unique_ptr<T> findInterface(Akonadi::DBus::AgentType agentType, const char *path = nullptr);
+    template<typename T>
+    std::unique_ptr<T> findInterface(Akonadi::DBus::AgentType agentType, const char *path = nullptr);
 
 protected:
     void setAgentType(const QString &agentType)
@@ -173,4 +174,3 @@ private:
     bool mOnline = false;
     bool mPendingQuit = false;
 };
-

@@ -70,4 +70,3 @@ private:
     mutable Item::Id m_nextItemId;
     mutable Tag::Id m_nextTagId;
 };
-

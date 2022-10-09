@@ -28,4 +28,3 @@ private:
 
 } // namespace Server
 } // namespace Akonadi
-

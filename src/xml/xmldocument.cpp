@@ -23,7 +23,8 @@
 using namespace Akonadi;
 
 // helper class for dealing with libxml resource management
-template<typename T, void FreeFunc(T)> class XmlPtr
+template<typename T, void FreeFunc(T)>
+class XmlPtr
 {
 public:
     explicit XmlPtr(const T &t)

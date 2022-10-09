@@ -64,4 +64,3 @@ private:
     QFileSystemWatcher *mWatcher = nullptr;
     KnutSettings *mSettings = nullptr;
 };
-

@@ -39,4 +39,3 @@ private:
     QByteArray mWhat;
 };
 } // namespace Akonadi
-

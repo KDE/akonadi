@@ -166,14 +166,11 @@ void FakeClient::run()
     mSocket = new QLocalSocket();
     mSocket->connectToServer(FakeAkonadiServer::socketFile());
     connect(mSocket, &QLocalSocket::disconnected, this, &FakeClient::connectionLost);
-    connect(mSocket,
-            &QLocalSocket::errorOccurred,
-            this,
-            [this]() {
-                qWarning() << "Client socket error: " << mSocket->errorString();
-                connectionLost();
-                QVERIFY(false);
-            });
+    connect(mSocket, &QLocalSocket::errorOccurred, this, [this]() {
+        qWarning() << "Client socket error: " << mSocket->errorString();
+        connectionLost();
+        QVERIFY(false);
+    });
     if (!mSocket->waitForConnected()) {
         qFatal("Failed to connect to FakeAkonadiServer");
         QVERIFY(false);

@@ -47,4 +47,3 @@ private:
     QFile mImplFile;
     QTextStream mImpl;
 };
-

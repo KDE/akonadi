@@ -28,4 +28,3 @@ public:
 private:
     Akonadi::Server::Resource mResource;
 };
-

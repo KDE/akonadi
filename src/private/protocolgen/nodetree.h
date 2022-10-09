@@ -93,8 +93,7 @@ public:
 
         QString mVariableName() const
         {
-            return QStringLiteral("m") + name[0].toUpper() +
-                QStringView(name).mid(1);
+            return QStringLiteral("m") + name[0].toUpper() + QStringView(name).mid(1);
         }
     };
 
@@ -190,4 +189,3 @@ private:
     bool mReadOnly;
     bool mAsReference;
 };
-

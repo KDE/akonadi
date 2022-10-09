@@ -144,4 +144,3 @@ private:
 AKONADICORE_EXPORT QDebug operator<<(QDebug d, const Akonadi::CollectionStatistics &);
 
 Q_DECLARE_METATYPE(Akonadi::CollectionStatistics)
-

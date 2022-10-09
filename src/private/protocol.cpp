@@ -138,13 +138,15 @@ QDebug operator<<(QDebug _dbg, Command::Type type)
     return dbg << static_cast<int>(type);
 }
 
-template<typename T> DataStream &operator<<(DataStream &stream, const QSharedPointer<T> &ptr)
+template<typename T>
+DataStream &operator<<(DataStream &stream, const QSharedPointer<T> &ptr)
 {
     Protocol::serialize(stream, ptr);
     return stream;
 }
 
-template<typename T> DataStream &operator>>(DataStream &stream, QSharedPointer<T> &ptr)
+template<typename T>
+DataStream &operator>>(DataStream &stream, QSharedPointer<T> &ptr)
 {
     ptr = Protocol::deserialize(stream.device()).staticCast<T>();
     return stream;
@@ -418,16 +420,19 @@ public:
     QHash<std::underlying_type<Command::Type>::type, QPair<CommandFactoryFunc, ResponseFactoryFunc>> registrar;
 
 private:
-    template<typename T> static CommandPtr commandFactoryFunc()
+    template<typename T>
+    static CommandPtr commandFactoryFunc()
     {
         return QSharedPointer<T>::create();
     }
-    template<typename T> static ResponsePtr responseFactoryFunc()
+    template<typename T>
+    static ResponsePtr responseFactoryFunc()
     {
         return QSharedPointer<T>::create();
     }
 
-    template<Command::Type T, typename CmdType, typename RespType> void registerType()
+    template<Command::Type T, typename CmdType, typename RespType>
+    void registerType()
     {
         CommandFactoryFunc cmdFunc = &commandFactoryFunc<CmdType>;
         ResponseFactoryFunc respFunc = &responseFactoryFunc<RespType>;
@@ -815,7 +820,8 @@ namespace Akonadi
 {
 namespace Protocol
 {
-template<typename Value, template<typename> class Container> inline bool containerComparator(const Container<Value> &c1, const Container<Value> &c2)
+template<typename Value, template<typename> class Container>
+inline bool containerComparator(const Container<Value> &c1, const Container<Value> &c2)
 {
     return c1 == c2;
 }

@@ -27,4 +27,3 @@ private:
     QElapsedTimer mTime;
     int mJobCount;
 };
-

@@ -85,4 +85,3 @@ inline QString type()
 }
 
 }
-

@@ -42,4 +42,3 @@ public:
 }
 
 Q_DECLARE_INTERFACE(Akonadi::DifferencesAlgorithmInterface, "org.freedesktop.Akonadi.DifferencesAlgorithmInterface/1.0")
-

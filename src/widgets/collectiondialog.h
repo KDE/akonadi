@@ -203,4 +203,3 @@ private:
 };
 
 } // namespace Akonadi
-

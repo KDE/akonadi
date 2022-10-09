@@ -50,7 +50,8 @@ Protocol::CachePolicy ProtocolHelper::cachePolicyToProtocol(const CachePolicy &p
     return proto;
 }
 
-template<typename T> inline static void parseAttributesImpl(const Protocol::Attributes &attributes, T *entity)
+template<typename T>
+inline static void parseAttributesImpl(const Protocol::Attributes &attributes, T *entity)
 {
     for (auto iter = attributes.cbegin(), end = attributes.cend(); iter != end; ++iter) {
         Attribute *attribute = AttributeFactory::createAttribute(iter.key());
@@ -83,7 +84,8 @@ parseAncestorsCachedImpl(const QVector<Protocol::Ancestor> &ancestors, T *entity
     }
 }
 
-template<typename T> inline static Protocol::Attributes attributesToProtocolImpl(const T &entity, bool ns)
+template<typename T>
+inline static Protocol::Attributes attributesToProtocolImpl(const T &entity, bool ns)
 {
     Protocol::Attributes attributes;
     const auto attrs = entity.attributes();

@@ -35,4 +35,3 @@ bool isSystemSQLite(const QSqlDatabase &db);
 } // namespace DbType
 } // namespace Server
 } // namespace Akonadi
-

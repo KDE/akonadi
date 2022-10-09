@@ -31,4 +31,3 @@ private:
     int mCustomCallCount;
     QVariant mLastArgument;
 };
-

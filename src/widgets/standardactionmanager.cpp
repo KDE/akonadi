@@ -1809,14 +1809,12 @@ QAction *StandardActionManager::createAction(Type type)
 
     if (d->pluralLabels.contains(type) && !d->pluralLabels.value(type).isEmpty()) {
         action->setText(d->pluralLabels.value(type).subs(1).toString());
-    }
-    else if (!standardActionData[type].label.isEmpty()) {
+    } else if (!standardActionData[type].label.isEmpty()) {
         action->setText(standardActionData[type].label.toString());
     }
     if (d->pluralIconLabels.contains(type) && !d->pluralIconLabels.value(type).isEmpty()) {
         action->setIconText(d->pluralIconLabels.value(type).subs(1).toString());
-    }
-    else if (!standardActionData[type].iconLabel.isEmpty()) {
+    } else if (!standardActionData[type].iconLabel.isEmpty()) {
         action->setIconText(standardActionData[type].iconLabel.toString());
     }
 

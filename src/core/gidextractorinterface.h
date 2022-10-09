@@ -44,4 +44,3 @@ private:
 }
 
 Q_DECLARE_INTERFACE(Akonadi::GidExtractorInterface, "org.freedesktop.Akonadi.GidExtractorInterface/1.0")
-

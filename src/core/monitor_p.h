@@ -216,7 +216,8 @@ public:
 
     void updateListeners(QMetaMethod signal, ListenerAction action);
 
-    template<typename Signal> void updateListener(Signal signal, ListenerAction action)
+    template<typename Signal>
+    void updateListener(Signal signal, ListenerAction action)
     {
         auto it = listeners.find(signalId(signal));
         if (action == AddListener) {
@@ -347,7 +348,8 @@ private:
         return false;
     }
 
-    template<typename T> bool isMoveDestinationResourceMonitored(const T &msg) const
+    template<typename T>
+    bool isMoveDestinationResourceMonitored(const T &msg) const
     {
         if (msg.operation() != T::Move) {
             return false;
@@ -369,7 +371,8 @@ private:
 
     // A hack to "cast" pointer to member function to something we can easily
     // use as a key in the hashtable
-    template<typename Signal> constexpr SignalId signalId(Signal signal) const
+    template<typename Signal>
+    constexpr SignalId signalId(Signal signal) const
     {
         union {
             Signal in;
@@ -378,13 +381,15 @@ private:
         return h.out;
     }
 
-    template<typename Signal> bool hasListeners(Signal signal) const
+    template<typename Signal>
+    bool hasListeners(Signal signal) const
     {
         auto it = listeners.find(signalId(signal));
         return it != listeners.end();
     }
 
-    template<typename Signal, typename... Args> bool emitToListeners(Signal signal, Args... args)
+    template<typename Signal, typename... Args>
+    bool emitToListeners(Signal signal, Args... args)
     {
         if (hasListeners(signal)) {
             Q_EMIT(q_ptr->*signal)(std::forward<Args>(args)...);
@@ -395,4 +400,3 @@ private:
 };
 
 }
-

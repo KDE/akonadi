@@ -49,4 +49,3 @@ protected:
     TagModel *q_ptr;
 };
 }
-

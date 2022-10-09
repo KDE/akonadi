@@ -372,4 +372,3 @@ private:
 
     friend class AgentInstance;
 };
-

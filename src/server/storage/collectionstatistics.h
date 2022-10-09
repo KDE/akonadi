@@ -7,7 +7,6 @@
 
 #pragma once
 
-
 #include <QHash>
 #include <QMutex>
 
@@ -61,4 +60,3 @@ protected:
 
 } // namespace Server
 } // namespace Akonadi
-

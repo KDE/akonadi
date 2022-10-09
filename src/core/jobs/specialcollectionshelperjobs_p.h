@@ -221,4 +221,3 @@ void setCollectionAttributes(Akonadi::Collection &col,
 bool AKONADI_TESTS_EXPORT releaseLock();
 
 } // namespace Akonadi
-

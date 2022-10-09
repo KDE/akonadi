@@ -52,7 +52,8 @@ static Collection findCol(const Collection::List &list, const QString &name)
 }
 
 // list compare which ignores the order
-template<class T> static void compareLists(const QList<T> &l1, const QList<T> &l2)
+template<class T>
+static void compareLists(const QList<T> &l1, const QList<T> &l2)
 {
     QCOMPARE(l1.count(), l2.count());
     for (const T &entry : l1) {
@@ -61,7 +62,8 @@ template<class T> static void compareLists(const QList<T> &l1, const QList<T> &l
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-template<class T> static void compareLists(const QVector<T> &l1, const QVector<T> &l2)
+template<class T>
+static void compareLists(const QVector<T> &l1, const QVector<T> &l2)
 {
     QCOMPARE(l1.count(), l2.count());
     for (const T &entry : l1) {

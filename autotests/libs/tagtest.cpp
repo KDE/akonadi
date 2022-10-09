@@ -586,13 +586,10 @@ void TagTest::testCreateItemWithTags()
     AKVERIFYEXEC(fetchJob);
     auto fetchTags = fetchJob->items().first().tags();
 
-    std::unique_ptr<TagDeleteJob, void (*)(TagDeleteJob *)> finally(
-        new TagDeleteJob({tag1, tag2}, this),
-        [] (TagDeleteJob *j)
-        {
-            j->exec();
-            delete j;
-        });
+    std::unique_ptr<TagDeleteJob, void (*)(TagDeleteJob *)> finally(new TagDeleteJob({tag1, tag2}, this), [](TagDeleteJob *j) {
+        j->exec();
+        delete j;
+    });
     QCOMPARE(fetchTags.size(), 2);
     QVERIFY(fetchTags.contains(tag1));
     QVERIFY(fetchTags.contains(tag2));

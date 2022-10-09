@@ -14,4 +14,3 @@
 void akInit(const QString &appName);
 
 void akMakeVerbose(const QByteArray &category);
-

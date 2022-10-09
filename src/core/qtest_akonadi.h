@@ -84,7 +84,8 @@ void setAllResourcesOffline()
     }
 }
 
-template<typename Object, typename Func> bool akWaitForSignal(Object sender, Func member, int timeout = 1000)
+template<typename Object, typename Func>
+bool akWaitForSignal(Object sender, Func member, int timeout = 1000)
 {
     QSignalSpy spy(sender, member);
     bool ok = false;
@@ -190,4 +191,3 @@ std::unique_ptr<Akonadi::Monitor> getTestMonitor()
  * in the output in case of a failure.
  */
 #define AKVERIFYEXEC(job) QVERIFY2(job->exec(), job->errorString().toUtf8().constData())
-

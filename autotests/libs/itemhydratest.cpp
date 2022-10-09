@@ -71,7 +71,8 @@ Q_DECLARE_METATYPE(Gerd)
 
 namespace Akonadi
 {
-template<> struct SuperClass<Rudi> : public SuperClassTrait<Volker> {
+template<>
+struct SuperClass<Rudi> : public SuperClassTrait<Volker> {
 };
 }
 

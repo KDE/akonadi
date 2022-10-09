@@ -10,7 +10,8 @@ namespace Akonadi
 {
 namespace Internal
 {
-template<typename T> struct check_type {
+template<typename T>
+struct check_type {
     using type = void;
 };
 }
@@ -19,11 +20,13 @@ template<typename T> struct check_type {
   @internal
   @see SuperClass
 */
-template<typename Super, typename = void> struct SuperClassTrait {
+template<typename Super, typename = void>
+struct SuperClassTrait {
     using Type = Super;
 };
 
-template<typename Class> struct SuperClassTrait<Class, typename Internal::check_type<typename Class::SuperClass>::type> {
+template<typename Class>
+struct SuperClassTrait<Class, typename Internal::check_type<typename Class::SuperClass>::type> {
     using Type = typename Class::SuperClass;
 };
 
@@ -43,7 +46,7 @@ template<typename Class> struct SuperClassTrait<Class, typename Internal::check_
   This avoids having to include this header file if that's inconvenient from a dependency
   point of view.
 */
-template<typename Class> struct SuperClass : public SuperClassTrait<Class> {
+template<typename Class>
+struct SuperClass : public SuperClassTrait<Class> {
 };
 }
-

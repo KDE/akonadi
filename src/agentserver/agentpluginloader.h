@@ -31,4 +31,3 @@ private:
     Q_DISABLE_COPY(AgentPluginLoader)
     QHash<QString, QPluginLoader *> m_pluginLoaders;
 };
-

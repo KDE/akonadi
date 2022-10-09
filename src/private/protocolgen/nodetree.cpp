@@ -297,12 +297,10 @@ PropertyNode::Setter *PropertyNode::setter() const
 
 QString PropertyNode::mVariableName() const
 {
-    return QStringLiteral("m") + mName[0].toUpper() +
-        QStringView(mName).mid(1);
+    return QStringLiteral("m") + mName[0].toUpper() + QStringView(mName).mid(1);
 }
 
 QString PropertyNode::setterName() const
 {
-    return QStringLiteral("set") + mName[0].toUpper() +
-        QStringView(mName).mid(1);
+    return QStringLiteral("set") + mName[0].toUpper() + QStringView(mName).mid(1);
 }

@@ -22,7 +22,6 @@
 #include <KLocalizedString>
 #include <KSharedConfig>
 
-
 using namespace Akonadi;
 using namespace std::chrono_literals;
 AgentConfigurationWidgetPrivate::AgentConfigurationWidgetPrivate(const AgentInstance &instance)

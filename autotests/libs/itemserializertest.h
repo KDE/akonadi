@@ -16,4 +16,3 @@ private Q_SLOTS:
     void testDefaultSerializer_data();
     void testDefaultSerializer();
 };
-

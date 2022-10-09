@@ -20,14 +20,16 @@ namespace Server
 class DbDeadlockCatcher
 {
 public:
-    template<typename Func> explicit DbDeadlockCatcher(Func &&func)
+    template<typename Func>
+    explicit DbDeadlockCatcher(Func &&func)
     {
         callFunc(func, 0);
     }
 
 private:
     static const int MaxRecursion = 5;
-    template<typename Func> void callFunc(Func &&func, int recursionCounter)
+    template<typename Func>
+    void callFunc(Func &&func, int recursionCounter)
     {
         try {
             func();
@@ -43,4 +45,3 @@ private:
 
 } // namespace Server
 } // namespace Akonadi
-

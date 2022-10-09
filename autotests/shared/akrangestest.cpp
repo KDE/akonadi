@@ -395,7 +395,8 @@ private Q_SLOTS:
     }
 
 private:
-    template<template<typename, typename> class Container> void testKeysValuesHelper()
+    template<template<typename, typename> class Container>
+    void testKeysValuesHelper()
     {
         const Container<int, QString> in = {{1, QStringLiteral("1")}, {2, QStringLiteral("2")}, {3, QStringLiteral("3")}};
 

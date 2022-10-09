@@ -23,4 +23,3 @@ enum class Tristate : qint8 {
 Q_DECLARE_METATYPE(Akonadi::Tristate)
 
 AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, Akonadi::Tristate tristate);
-

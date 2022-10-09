@@ -37,4 +37,3 @@ private:
     Q_DECLARE_PRIVATE(SearchResultJob)
 };
 }
-

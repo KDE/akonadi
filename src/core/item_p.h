@@ -21,7 +21,8 @@ namespace Akonadi
 {
 namespace _detail
 {
-template<typename T> class clone_ptr
+template<typename T>
+class clone_ptr
 {
     std::unique_ptr<T> t;
 
@@ -90,7 +91,8 @@ public:
     }
 };
 
-template<typename T> inline void swap(clone_ptr<T> &lhs, clone_ptr<T> &rhs) noexcept
+template<typename T>
+inline void swap(clone_ptr<T> &lhs, clone_ptr<T> &rhs) noexcept
 {
     lhs.swap(rhs);
 }
@@ -121,7 +123,8 @@ struct BySharedPointerAndMetaTypeID {
 
 namespace std
 {
-template<> inline void swap<Akonadi::_detail::TypedPayload>(Akonadi::_detail::TypedPayload &lhs, Akonadi::_detail::TypedPayload &rhs) noexcept
+template<>
+inline void swap<Akonadi::_detail::TypedPayload>(Akonadi::_detail::TypedPayload &lhs, Akonadi::_detail::TypedPayload &rhs) noexcept
 {
     lhs.payload.swap(rhs.payload);
     swap(lhs.sharedPointerId, rhs.sharedPointerId);
@@ -283,4 +286,3 @@ public:
 };
 
 }
-

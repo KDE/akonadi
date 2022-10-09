@@ -28,7 +28,8 @@ QDomElement XmlWriter::attributeToElement(Attribute *attr, QDomDocument &documen
     return top;
 }
 
-template<typename T> static void writeAttributesImpl(const T &entity, QDomElement &parentElem)
+template<typename T>
+static void writeAttributesImpl(const T &entity, QDomElement &parentElem)
 {
     if (parentElem.isNull()) {
         return;

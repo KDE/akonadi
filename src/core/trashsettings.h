@@ -35,4 +35,3 @@ Q_REQUIRED_RESULT AKONADICORE_EXPORT Collection getTrashCollection(const QString
 }
 
 }
-

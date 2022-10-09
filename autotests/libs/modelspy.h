@@ -120,4 +120,3 @@ inline uint qHash(const QVariantList &list)
     return qHashRange(list.cbegin(), list.cend());
 }
 #endif
-

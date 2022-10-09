@@ -29,4 +29,3 @@ private:
     Akonadi::Collection itemTargetCollection;
     Akonadi::Collection collectionTargetCollection;
 };
-

@@ -34,4 +34,3 @@ public:
 
 } // namespace Server
 } // namespace Akonadi
-

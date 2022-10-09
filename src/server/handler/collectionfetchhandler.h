@@ -9,7 +9,8 @@
 #include "entities.h"
 #include "handler.h"
 
-template<typename T> class QStack;
+template<typename T>
+class QStack;
 
 namespace Akonadi
 {
@@ -77,4 +78,3 @@ private:
 
 } // namespace Server
 } // namespace Akonadi
-

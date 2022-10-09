@@ -41,4 +41,3 @@ public:
             return new ClassName(config, parent, args);                                                                                                        \
         }                                                                                                                                                      \
     };
-

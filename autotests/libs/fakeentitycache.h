@@ -13,7 +13,8 @@
 #include "notificationsource_p.h"
 #include "private/protocol_p.h"
 
-template<typename T, typename Cache> class FakeEntityCache : public Cache
+template<typename T, typename Cache>
+class FakeEntityCache : public Cache
 {
 public:
     FakeEntityCache(Akonadi::Session *session = nullptr, QObject *parent = nullptr)
@@ -171,4 +172,3 @@ private:
     FakeItemCache *itemCache = nullptr;
     FakeCollectionCache *collectionCache = nullptr;
 };
-

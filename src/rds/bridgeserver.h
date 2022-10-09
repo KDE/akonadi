@@ -23,7 +23,8 @@ protected:
     QTcpServer *const m_server;
 };
 
-template<typename ConnectionType> class BridgeServer : public BridgeServerBase
+template<typename ConnectionType>
+class BridgeServer : public BridgeServerBase
 {
 public:
     explicit BridgeServer(quint16 port, QObject *parent = nullptr)
@@ -39,4 +40,3 @@ protected:
         }
     }
 };
-

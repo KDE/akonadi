@@ -65,4 +65,3 @@ bool verify(Part &part);
 
 } // namespace Server
 } // namespace Akonadi
-

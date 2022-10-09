@@ -43,4 +43,3 @@ private:
 
     QMap<QString, QString /* agent type */> mSupportedServices;
 };
-

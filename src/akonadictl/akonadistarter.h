@@ -20,4 +20,3 @@ private:
     const QDBusServiceWatcher mWatcher;
     bool mRegistered = false;
 };
-

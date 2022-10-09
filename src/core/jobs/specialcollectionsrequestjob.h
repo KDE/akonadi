@@ -118,4 +118,3 @@ private:
 };
 
 } // namespace Akonadi
-

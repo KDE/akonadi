@@ -270,7 +270,8 @@ void EntityTreeModelPrivate::fetchCollections(const Collection &collection, Coll
 
 namespace Akonadi
 {
-template<typename T> inline bool EntityTreeModelPrivate::isHiddenImpl(const T &entity, Node::Type type) const
+template<typename T>
+inline bool EntityTreeModelPrivate::isHiddenImpl(const T &entity, Node::Type type) const
 {
     if (m_showSystemEntities) {
         return false;

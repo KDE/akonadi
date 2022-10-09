@@ -41,4 +41,3 @@ private:
     QXmlStreamReader mReader;
     std::unique_ptr<Node> mTree;
 };
-

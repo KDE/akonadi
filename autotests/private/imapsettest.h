@@ -15,4 +15,3 @@ private Q_SLOTS:
     void testAddList_data();
     void testAddList();
 };
-

@@ -23,7 +23,8 @@ public:
 class ImapSetPrivate : public QSharedData
 {
 public:
-    template<typename T> void add(const T &values)
+    template<typename T>
+    void add(const T &values)
     {
         T vals = values;
         std::sort(vals.begin(), vals.end());

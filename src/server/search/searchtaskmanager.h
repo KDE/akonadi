@@ -93,4 +93,3 @@ AKONADI_EXCEPTION_MAKE_INSTANCE(SearchException);
 
 } // namespace Server
 } // namespace Akonadi
-

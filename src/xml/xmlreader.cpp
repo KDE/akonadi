@@ -24,7 +24,8 @@ Attribute *XmlReader::elementToAttribute(const QDomElement &elem)
     return attr;
 }
 
-template<typename T> static void readAttributesImpl(const QDomElement &elem, T &entity)
+template<typename T>
+static void readAttributesImpl(const QDomElement &elem, T &entity)
 {
     if (elem.isNull()) {
         return;

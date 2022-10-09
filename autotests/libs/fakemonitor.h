@@ -22,4 +22,3 @@ public:
 private:
     Q_DECLARE_PRIVATE(FakeMonitor)
 };
-

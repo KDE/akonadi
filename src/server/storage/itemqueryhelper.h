@@ -51,4 +51,3 @@ void scopeToQuery(const Scope &scope, const CommandContext &context, QueryBuilde
 
 } // namespace Server
 } // namespace Akonadi
-

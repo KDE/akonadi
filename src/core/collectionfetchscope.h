@@ -216,7 +216,8 @@ public:
      *
      * @param fetch @c true if the attribute should be fetched, @c false otherwise.
      */
-    template<typename T> inline void fetchAttribute(bool fetch = true)
+    template<typename T>
+    inline void fetchAttribute(bool fetch = true)
     {
         T dummy;
         fetchAttribute(dummy.type(), fetch);
@@ -268,4 +269,3 @@ private:
 };
 
 }
-

@@ -52,4 +52,3 @@ private:
 }
 
 Q_DECLARE_INTERFACE(Akonadi::AbstractSearchPlugin, "org.freedesktop.Akonadi.AbstractSearchPlugin")
-

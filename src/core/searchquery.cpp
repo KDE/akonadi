@@ -335,7 +335,7 @@ ContactSearchTerm::ContactSearchField ContactSearchTerm::fromKey(const QString &
 
 QMap<IncidenceSearchTerm::IncidenceSearchField, QString> incidenceSearchFieldMapping()
 {
-    static  QMap<IncidenceSearchTerm::IncidenceSearchField, QString> mapping;
+    static QMap<IncidenceSearchTerm::IncidenceSearchField, QString> mapping;
     if (mapping.isEmpty()) {
         mapping.insert(IncidenceSearchTerm::All, QStringLiteral("all"));
         mapping.insert(IncidenceSearchTerm::PartStatus, QStringLiteral("partstatus"));
