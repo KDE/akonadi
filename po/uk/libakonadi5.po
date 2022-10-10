@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-04 00:45+0000\n"
+"POT-Creation-Date: 2022-10-10 00:46+0000\n"
 "PO-Revision-Date: 2022-07-06 09:18+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -259,7 +259,7 @@ msgid "No objects specified for moving"
 msgstr "Не вказано об’єктів для пересування"
 
 #: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
-#: core/jobs/linkjobimpl_p.h:38
+#: core/jobs/linkjobimpl_p.h:39
 #, kde-format
 msgid "No valid destination specified"
 msgstr "Не вказано коректного призначення"
@@ -410,37 +410,37 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Назва"
 
-#: core/models/entitytreemodel_p.cpp:1330
+#: core/models/entitytreemodel_p.cpp:1331
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Не вдалося скопіювати запис: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1333
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Не вдалося скопіювати збірку: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1335
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Не вдалося пересунути запис: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1337
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Не вдалося пересунути збірку: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1339
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "Не вдалося пов'язати елемент: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1340
+#: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
 #, kde-format
 msgctxt "@title:window"
 msgid "Error"
@@ -616,8 +616,10 @@ msgid "Could not create agent instance: %1"
 msgstr "Не вдалося створити екземпляр агента: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, kde-format
-msgid "Agent instance creation failed"
+#, fuzzy, kde-format
+#| msgid "Agent instance creation failed"
+msgctxt "@title:window"
+msgid "Agent Instance Creation Failed"
 msgstr "Спроба створення агента зазнала невдачі"
 
 #: widgets/agentactionmanager.cpp:59
@@ -632,8 +634,10 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "Ви справді бажаєте вилучити позначений екземпляр агента?"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, kde-format
-msgctxt "%1 = agent name"
+#, fuzzy, kde-format
+#| msgctxt "%1 = agent name"
+#| msgid "%1 Configuration"
+msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Налаштування %1"
 
@@ -647,17 +651,17 @@ msgstr "Підручник з %1"
 msgid "About %1"
 msgstr "Про %1"
 
-#: widgets/agentconfigurationwidget.cpp:96
+#: widgets/agentconfigurationwidget.cpp:95
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "Вікно налаштувань вже відкрито у іншому вікні програми"
 
-#: widgets/agentconfigurationwidget.cpp:103
+#: widgets/agentconfigurationwidget.cpp:102
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "Вікно налаштувань для %1 вже десь відкрито."
 
-#: widgets/agentconfigurationwidget.cpp:105
+#: widgets/agentconfigurationwidget.cpp:104
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Не вдалося зареєструвати вікно налаштувань %1."
@@ -807,8 +811,10 @@ msgid "Could not create folder: %1"
 msgstr "Не вдалося створити теку: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, kde-format
-msgid "Folder creation failed"
+#, fuzzy, kde-format
+#| msgid "Folder creation failed"
+msgctxt "@title:window"
+msgid "Folder Creation Failed"
 msgstr "Помилка створення теки"
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
@@ -976,9 +982,11 @@ msgid "Open collection dialog"
 msgstr "Відкрити діалогове вікно збірки"
 
 #: widgets/collectionrequester.cpp:143
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Select a collection"
 msgctxt "@title:window"
-msgid "Select a collection"
+msgid "Select a Collection"
 msgstr "Виберіть збірку"
 
 #: widgets/conflictresolvedialog.cpp:129
@@ -1067,7 +1075,7 @@ msgstr "&Скопіювати сюди"
 msgid "&Link Here"
 msgstr "С&творити посилання"
 
-#: widgets/dragdropmanager.cpp:228
+#: widgets/dragdropmanager.cpp:229
 #, kde-format
 msgid "C&ancel"
 msgstr "&Скасувати"
@@ -1852,11 +1860,6 @@ msgstr "Збереження звіту про перевірку"
 
 #: widgets/selftestdialog.cpp:650
 #, kde-format
-msgid "Error"
-msgstr "Помилка"
-
-#: widgets/selftestdialog.cpp:650
-#, kde-format
 msgid "Could not open file '%1'"
 msgstr "Не вдалося відкрити файл «%1»"
 
@@ -2268,14 +2271,16 @@ msgstr[2] "Ви справді бажаєте вилучити %1 тек і вс
 msgstr[3] "Ви справді бажаєте вилучити цю теку і всі її підтеки?"
 
 #: widgets/standardactionmanager.cpp:359
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Delete Folder"
+#| msgid_plural "Delete %1 Folders"
 msgctxt "@title:window"
-msgid "Delete folder?"
-msgid_plural "Delete folders?"
-msgstr[0] "Вилучити теки?"
-msgstr[1] "Вилучити теки?"
-msgstr[2] "Вилучити теки?"
-msgstr[3] "Вилучити теку?"
+msgid "Delete Folder?"
+msgid_plural "Delete Folders?"
+msgstr[0] "Вилучити %1 теку"
+msgstr[1] "Вилучити %1 теки"
+msgstr[2] "Вилучити %1 тек"
+msgstr[3] "Вилучити теку"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2283,8 +2288,10 @@ msgid "Could not delete folder: %1"
 msgstr "Не вдалося вилучити теку: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, kde-format
-msgid "Folder deletion failed"
+#, fuzzy, kde-format
+#| msgid "Folder deletion failed"
+msgctxt "@title:window"
+msgid "Folder Deletion Failed"
 msgstr "Помилка вилучення теки"
 
 #: widgets/standardactionmanager.cpp:363
@@ -2303,14 +2310,16 @@ msgstr[2] "Ви справді бажаєте вилучити %1 позначе
 msgstr[3] "Ви справді бажаєте вилучити позначений пункт?"
 
 #: widgets/standardactionmanager.cpp:368
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Delete Item"
+#| msgid_plural "Delete %1 Items"
 msgctxt "@title:window"
-msgid "Delete item?"
-msgid_plural "Delete items?"
-msgstr[0] "Вилучити пункти?"
-msgstr[1] "Вилучити пункти?"
-msgstr[2] "Вилучити пункти?"
-msgstr[3] "Вилучити пункт?"
+msgid "Delete Item?"
+msgid_plural "Delete Items?"
+msgstr[0] "Вилучити %1 елемент"
+msgstr[1] "Вилучити %1 елементи"
+msgstr[2] "Вилучити %1 елементів"
+msgstr[3] "Вилучити елемент"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2318,8 +2327,10 @@ msgid "Could not delete item: %1"
 msgstr "Не вдалося вилучити пункт: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, kde-format
-msgid "Item deletion failed"
+#, fuzzy, kde-format
+#| msgid "Item deletion failed"
+msgctxt "@title:window"
+msgid "Item Deletion Failed"
 msgstr "Помилка вилучення пункту"
 
 #: widgets/standardactionmanager.cpp:372
@@ -2346,8 +2357,10 @@ msgid "Could not create resource: %1"
 msgstr "Не вдалося створити ресурс: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, kde-format
-msgid "Resource creation failed"
+#, fuzzy, kde-format
+#| msgid "Resource creation failed"
+msgctxt "@title:window"
+msgid "Resource Creation Failed"
 msgstr "Спроба створення ресурсу зазнала невдачі"
 
 #: widgets/standardactionmanager.cpp:381
@@ -2375,8 +2388,10 @@ msgid "Could not paste data: %1"
 msgstr "Не вдалося вставити дані: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, kde-format
-msgid "Paste failed"
+#, fuzzy, kde-format
+#| msgid "Paste failed"
+msgctxt "@title:window"
+msgid "Paste Failed"
 msgstr "Спроба вставлення зазнала невдачі"
 
 #: widgets/standardactionmanager.cpp:739
@@ -2385,8 +2400,10 @@ msgid "We can not add \"/\" in folder name."
 msgstr "Не можна додавати «/» до назви теки."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, kde-format
-msgid "Create new folder error"
+#, fuzzy, kde-format
+#| msgid "Create new folder error"
+msgctxt "@title:window"
+msgid "Create New Folder Error"
 msgstr "Помилка створення теки"
 
 #: widgets/standardactionmanager.cpp:743
@@ -2430,8 +2447,10 @@ msgid "Failed to update subscription: %1"
 msgstr "Не вдалося оновити підписку: %1"
 
 #: widgets/subscriptiondialog.cpp:93
-#, kde-format
-msgctxt "@title"
+#, fuzzy, kde-format
+#| msgctxt "@title"
+#| msgid "Subscription Error"
+msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Помилка, пов'язана із підпискою"
 
@@ -2471,8 +2490,10 @@ msgid "Failed to create a new tag"
 msgstr "Не вдалося створити мітку"
 
 #: widgets/tageditwidget.cpp:116
-#, kde-format
-msgid "An error occurred while creating a new tag"
+#, fuzzy, kde-format
+#| msgid "An error occurred while creating a new tag"
+msgctxt "@title:window"
+msgid "An Error Occurred while Creating a New Tag"
 msgstr "Під час спроби створення мітки сталася помилка"
 
 #: widgets/tageditwidget.cpp:164
@@ -2482,9 +2503,11 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Ви справді хочете вилучити мітку <resource>%1</resource>?"
 
 #: widgets/tageditwidget.cpp:165
-#, kde-format
-msgctxt "@title"
-msgid "Delete tag"
+#, fuzzy, kde-format
+#| msgctxt "@title"
+#| msgid "Delete tag"
+msgctxt "@title:window"
+msgid "Delete Tag"
 msgstr "Вилучення мітки"
 
 #: widgets/tageditwidget.cpp:189
@@ -2511,7 +2534,7 @@ msgstr "Створити мітку"
 msgid "Manage Tags"
 msgstr "Керування мітками"
 
-#: widgets/tagselectioncombobox.cpp:124
+#: widgets/tagselectioncombobox.cpp:126
 #, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
@@ -2555,65 +2578,84 @@ msgstr "Перетворює ієрархію збірки Akonadi на файл
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
 msgstr "© Volker Krause <vkrause@kde.org>, 2009"
 
-#: xml/xmldocument.cpp:84
+#: xml/xmldocument.cpp:85
 #, kde-format
 msgid "No data loaded."
 msgstr "Дані не завантажено."
 
-#: xml/xmldocument.cpp:120
+#: xml/xmldocument.cpp:121
 #, kde-format
 msgid "No filename specified"
 msgstr "Не вказано назви файла"
 
-#: xml/xmldocument.cpp:128
+#: xml/xmldocument.cpp:129
 #, kde-format
 msgid "Unable to open data file '%1'."
 msgstr "Не вдалося відкрити файл даних «%1»."
 
-#: xml/xmldocument.cpp:133
+#: xml/xmldocument.cpp:134
 #, kde-format
 msgid "File %1 does not exist."
 msgstr "Файла %1 не існує."
 
-#: xml/xmldocument.cpp:141
+#: xml/xmldocument.cpp:142
 #, kde-format
 msgid "Unable to parse data file '%1'."
 msgstr "Не вдалося обробити файл даних «%1»."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "Не вдалося завантажити і обробити визначення схеми."
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "Не вдалося створити контекст обробки схеми."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "Не вдалося створити схему."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr "Не вдалося створити контекст перевірки чинності схеми."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "Некоректний формат файла."
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "Не вдалося обробити файл даних: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Не вдалося знайти збірку %1"
+
+#~ msgid "Error"
+#~ msgstr "Помилка"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete folder?"
+#~ msgid_plural "Delete folders?"
+#~ msgstr[0] "Вилучити теки?"
+#~ msgstr[1] "Вилучити теки?"
+#~ msgstr[2] "Вилучити теки?"
+#~ msgstr[3] "Вилучити теку?"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete item?"
+#~ msgid_plural "Delete items?"
+#~ msgstr[0] "Вилучити пункти?"
+#~ msgstr[1] "Вилучити пункти?"
+#~ msgstr[2] "Вилучити пункти?"
+#~ msgstr[3] "Вилучити пункт?"
 
 #~ msgid "Store emails locally:"
 #~ msgstr "Локальне зберігання повідомлень:"

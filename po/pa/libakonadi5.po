@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-04 00:45+0000\n"
+"POT-Creation-Date: 2022-10-10 00:46+0000\n"
 "PO-Revision-Date: 2010-01-16 08:17+0530\n"
 "Last-Translator: A S Alam <aalam@users.sf.net>\n"
 "Language-Team: ਪੰਜਾਬੀ <punjabi-users@lists.sf.net>\n"
@@ -265,7 +265,7 @@ msgid "No objects specified for moving"
 msgstr ""
 
 #: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
-#: core/jobs/linkjobimpl_p.h:38
+#: core/jobs/linkjobimpl_p.h:39
 #, kde-format
 msgid "No valid destination specified"
 msgstr "ਕੋਈ ਢੁੱਕਵਾਂ ਟਿਕਾਣਾ ਨਹੀਂ ਦਿੱਤਾ"
@@ -417,41 +417,41 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "ਨਾਂ"
 
-#: core/models/entitytreemodel_p.cpp:1330
+#: core/models/entitytreemodel_p.cpp:1331
 #, fuzzy, kde-format
 #| msgid "Could not paste data: %1"
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "ਡਾਟਾ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ: %1"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1333
 #, fuzzy, kde-format
 #| msgid "Could not paste data: %1"
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "ਡਾਟਾ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ: %1"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1335
 #, fuzzy, kde-format
 #| msgid "Could not open file '%1'"
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "ਫਾਇਲ '%1' ਖੋਲ੍ਹੀ ਨਹੀਂ ਜਾ ਸਕੀ"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1337
 #, fuzzy, kde-format
 #| msgid "no collection"
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "ਕੋਈ ਭੰਡਾਰ ਨਹੀਂ"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1339
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr ""
 
-#: core/models/entitytreemodel_p.cpp:1340
+#: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
 #, fuzzy, kde-format
 #| msgctxt "@info:status"
 #| msgid "Error."
@@ -625,7 +625,8 @@ msgstr "ਡਾਟਾ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ:
 #: widgets/agentactionmanager.cpp:57
 #, fuzzy, kde-format
 #| msgid "Folder creation failed"
-msgid "Agent instance creation failed"
+msgctxt "@title:window"
+msgid "Agent Instance Creation Failed"
 msgstr "ਫੋਲਡਰ ਬਣਾਉਣਾ ਫੇਲ੍ਹ"
 
 #: widgets/agentactionmanager.cpp:59
@@ -643,7 +644,7 @@ msgstr "ਕੀ ਤੁਸੀਂ ਸਭ ਚੁਣੀਆਂ ਆਈਟਮਾਂ ਨ�
 
 #: widgets/agentconfigurationdialog.cpp:56
 #, kde-format
-msgctxt "%1 = agent name"
+msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr ""
 
@@ -657,17 +658,17 @@ msgstr ""
 msgid "About %1"
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:96
+#: widgets/agentconfigurationwidget.cpp:95
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:103
+#: widgets/agentconfigurationwidget.cpp:102
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:105
+#: widgets/agentconfigurationwidget.cpp:104
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr ""
@@ -819,8 +820,10 @@ msgid "Could not create folder: %1"
 msgstr "ਫੋਲਡਰ ਬਣ ਨਹੀਂ ਸਕਿਆ: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, kde-format
-msgid "Folder creation failed"
+#, fuzzy, kde-format
+#| msgid "Folder creation failed"
+msgctxt "@title:window"
+msgid "Folder Creation Failed"
 msgstr "ਫੋਲਡਰ ਬਣਾਉਣਾ ਫੇਲ੍ਹ"
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
@@ -993,7 +996,7 @@ msgstr ""
 #, fuzzy, kde-format
 #| msgid "Invalid collection"
 msgctxt "@title:window"
-msgid "Select a collection"
+msgid "Select a Collection"
 msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ"
 
 #: widgets/conflictresolvedialog.cpp:129
@@ -1076,7 +1079,7 @@ msgstr "ਇੱਥੇ ਕਾਪੀ ਕਰੋ(&C)"
 msgid "&Link Here"
 msgstr "ਇੱਥੇ ਲਿੰਕ ਕਰੋ(&L)"
 
-#: widgets/dragdropmanager.cpp:228
+#: widgets/dragdropmanager.cpp:229
 #, kde-format
 msgid "C&ancel"
 msgstr "ਰੱਦ ਕਰੋ(&a)"
@@ -1767,13 +1770,6 @@ msgid "Save Test Report"
 msgstr "ਟੈਸਟ ਰਿਪੋਰਟ ਸੰਭਾਲੋ"
 
 #: widgets/selftestdialog.cpp:650
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Error."
-msgid "Error"
-msgstr "ਗਲਤੀ।"
-
-#: widgets/selftestdialog.cpp:650
 #, kde-format
 msgid "Could not open file '%1'"
 msgstr "ਫਾਇਲ '%1' ਖੋਲ੍ਹੀ ਨਹੀਂ ਜਾ ਸਕੀ"
@@ -2237,12 +2233,12 @@ msgstr[1] "ਕੀ ਤੁਸੀਂ '%1' ਫੋਲਡਰ ਅਤੇ ਇਸ ਦੇ �
 
 #: widgets/standardactionmanager.cpp:359
 #, fuzzy, kde-format
-#| msgid "Delete folder?"
+#| msgid "&Delete Folder"
 msgctxt "@title:window"
-msgid "Delete folder?"
-msgid_plural "Delete folders?"
-msgstr[0] "ਫੋਲਡਰ ਹਟਾਉਣਾ ਹੈ?"
-msgstr[1] "ਫੋਲਡਰ ਹਟਾਉਣਾ ਹੈ?"
+msgid "Delete Folder?"
+msgid_plural "Delete Folders?"
+msgstr[0] "ਫੋਲਡਰ ਹਟਾਓ(&D)"
+msgstr[1] "ਫੋਲਡਰ ਹਟਾਓ(&D)"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2250,8 +2246,10 @@ msgid "Could not delete folder: %1"
 msgstr "ਫੋਲਡਰ ਹਟਾਇਆ ਨਹੀਂ ਜਾ ਸਕਿਆ: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, kde-format
-msgid "Folder deletion failed"
+#, fuzzy, kde-format
+#| msgid "Folder deletion failed"
+msgctxt "@title:window"
+msgid "Folder Deletion Failed"
 msgstr "ਫੋਲਡਰ ਹਟਾਉਣਾ ਫੇਲ੍ਹ"
 
 #: widgets/standardactionmanager.cpp:363
@@ -2274,8 +2272,8 @@ msgstr[1] "ਕੀ ਤੁਸੀਂ ਸਭ ਚੁਣੀਆਂ ਆਈਟਮਾਂ �
 #| msgid "&Delete Item"
 #| msgid_plural "&Delete %1 Items"
 msgctxt "@title:window"
-msgid "Delete item?"
-msgid_plural "Delete items?"
+msgid "Delete Item?"
+msgid_plural "Delete Items?"
 msgstr[0] "ਆਈਟਮ ਹਟਾਓ(&D)"
 msgstr[1] "%1 ਆਈਟਮਾਂ ਹਟਾਓ(&D)"
 
@@ -2288,7 +2286,8 @@ msgstr "ਫੋਲਡਰ ਹਟਾਇਆ ਨਹੀਂ ਜਾ ਸਕਿਆ: %1"
 #: widgets/standardactionmanager.cpp:370
 #, fuzzy, kde-format
 #| msgid "Folder deletion failed"
-msgid "Item deletion failed"
+msgctxt "@title:window"
+msgid "Item Deletion Failed"
 msgstr "ਫੋਲਡਰ ਹਟਾਉਣਾ ਫੇਲ੍ਹ"
 
 #: widgets/standardactionmanager.cpp:372
@@ -2322,7 +2321,8 @@ msgstr "ਫੋਲਡਰ ਬਣ ਨਹੀਂ ਸਕਿਆ: %1"
 #: widgets/standardactionmanager.cpp:377
 #, fuzzy, kde-format
 #| msgid "Folder creation failed"
-msgid "Resource creation failed"
+msgctxt "@title:window"
+msgid "Resource Creation Failed"
 msgstr "ਫੋਲਡਰ ਬਣਾਉਣਾ ਫੇਲ੍ਹ"
 
 #: widgets/standardactionmanager.cpp:381
@@ -2348,8 +2348,10 @@ msgid "Could not paste data: %1"
 msgstr "ਡਾਟਾ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, kde-format
-msgid "Paste failed"
+#, fuzzy, kde-format
+#| msgid "Paste failed"
+msgctxt "@title:window"
+msgid "Paste Failed"
 msgstr "ਚੇਪਣਾ ਫੇਲ੍ਹ"
 
 #: widgets/standardactionmanager.cpp:739
@@ -2358,9 +2360,12 @@ msgid "We can not add \"/\" in folder name."
 msgstr ""
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, kde-format
-msgid "Create new folder error"
-msgstr ""
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "New Folder"
+msgctxt "@title:window"
+msgid "Create New Folder Error"
+msgstr "ਨਵਾਂ ਫੋਲਡਰ"
 
 #: widgets/standardactionmanager.cpp:743
 #, kde-format
@@ -2406,7 +2411,7 @@ msgstr ""
 #: widgets/subscriptiondialog.cpp:93
 #, fuzzy, kde-format
 #| msgid "Manage Local &Subscriptions..."
-msgctxt "@title"
+msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "ਲੋਕਲ ਮੈਂਬਰੀ ਪਰਬੰਧ(&S)...."
 
@@ -2456,7 +2461,8 @@ msgstr ""
 
 #: widgets/tageditwidget.cpp:116
 #, kde-format
-msgid "An error occurred while creating a new tag"
+msgctxt "@title:window"
+msgid "An Error Occurred while Creating a New Tag"
 msgstr ""
 
 #: widgets/tageditwidget.cpp:164
@@ -2470,8 +2476,8 @@ msgstr "ਕੀ ਤੁਸੀਂ ਸਭ ਚੁਣੀਆਂ ਆਈਟਮਾਂ ਨ�
 #, fuzzy, kde-format
 #| msgid "&Delete Item"
 #| msgid_plural "&Delete %1 Items"
-msgctxt "@title"
-msgid "Delete tag"
+msgctxt "@title:window"
+msgid "Delete Tag"
 msgstr "ਆਈਟਮ ਹਟਾਓ(&D)"
 
 #: widgets/tageditwidget.cpp:189
@@ -2500,7 +2506,7 @@ msgstr ""
 msgid "Manage Tags"
 msgstr ""
 
-#: widgets/tagselectioncombobox.cpp:124
+#: widgets/tagselectioncombobox.cpp:126
 #, fuzzy, kde-format
 #| msgid "&Delete Item"
 #| msgid_plural "&Delete %1 Items"
@@ -2546,70 +2552,93 @@ msgstr ""
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
 msgstr ""
 
-#: xml/xmldocument.cpp:84
+#: xml/xmldocument.cpp:85
 #, kde-format
 msgid "No data loaded."
 msgstr ""
 
-#: xml/xmldocument.cpp:120
+#: xml/xmldocument.cpp:121
 #, fuzzy, kde-format
 #| msgid "No valid destination specified"
 msgid "No filename specified"
 msgstr "ਕੋਈ ਢੁੱਕਵਾਂ ਟਿਕਾਣਾ ਨਹੀਂ ਦਿੱਤਾ"
 
-#: xml/xmldocument.cpp:128
+#: xml/xmldocument.cpp:129
 #, fuzzy, kde-format
 #| msgid "Could not open file '%1'"
 msgid "Unable to open data file '%1'."
 msgstr "ਫਾਇਲ '%1' ਖੋਲ੍ਹੀ ਨਹੀਂ ਜਾ ਸਕੀ"
 
-#: xml/xmldocument.cpp:133
+#: xml/xmldocument.cpp:134
 #, kde-format
 msgid "File %1 does not exist."
 msgstr ""
 
-#: xml/xmldocument.cpp:141
+#: xml/xmldocument.cpp:142
 #, kde-format
 msgid "Unable to parse data file '%1'."
 msgstr ""
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr ""
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr ""
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr ""
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr ""
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, fuzzy, kde-format
 #| msgid "Invalid collection"
 msgid "Invalid file format."
 msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ"
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, fuzzy, kde-format
 #| msgid "Could not paste data: %1"
 msgid "Unable to parse data file: %1"
 msgstr "ਡਾਟਾ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, fuzzy, kde-format
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"
 msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ"
+
+#, fuzzy
+#~| msgctxt "@info:status"
+#~| msgid "Error."
+#~ msgid "Error"
+#~ msgstr "ਗਲਤੀ।"
+
+#, fuzzy
+#~| msgid "Delete folder?"
+#~ msgctxt "@title:window"
+#~ msgid "Delete folder?"
+#~ msgid_plural "Delete folders?"
+#~ msgstr[0] "ਫੋਲਡਰ ਹਟਾਉਣਾ ਹੈ?"
+#~ msgstr[1] "ਫੋਲਡਰ ਹਟਾਉਣਾ ਹੈ?"
+
+#, fuzzy
+#~| msgid "&Delete Item"
+#~| msgid_plural "&Delete %1 Items"
+#~ msgctxt "@title:window"
+#~ msgid "Delete item?"
+#~ msgid_plural "Delete items?"
+#~ msgstr[0] "ਆਈਟਮ ਹਟਾਓ(&D)"
+#~ msgstr[1] "%1 ਆਈਟਮਾਂ ਹਟਾਓ(&D)"
 
 #~ msgid "&Move here"
 #~ msgstr "ਇੱਥੇ ਭੇਜੋ(&M)"

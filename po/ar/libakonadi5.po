@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-04 00:45+0000\n"
+"POT-Creation-Date: 2022-10-10 00:46+0000\n"
 "PO-Revision-Date: 2022-08-08 21:20+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: Arabic <kde-l10n-ar@kde.org>\n"
@@ -258,7 +258,7 @@ msgid "No objects specified for moving"
 msgstr "لم تُحدّد أي عناصر للنقل"
 
 #: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
-#: core/jobs/linkjobimpl_p.h:38
+#: core/jobs/linkjobimpl_p.h:39
 #, kde-format
 msgid "No valid destination specified"
 msgstr "لم يُضبط مقصد صالح"
@@ -406,37 +406,37 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "الاسم"
 
-#: core/models/entitytreemodel_p.cpp:1330
+#: core/models/entitytreemodel_p.cpp:1331
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "تعذّر نسخ العنصر: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1333
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "تعذّر نسخ التجميعة: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1335
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "تعذّر نقل العنصر: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1337
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "تعذّر نقل التجميعة: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1339
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "تعذّر ربط الكيان: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1340
+#: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
 #, kde-format
 msgctxt "@title:window"
 msgid "Error"
@@ -609,8 +609,10 @@ msgid "Could not create agent instance: %1"
 msgstr "تعذّر إنشاء سيرورة الوسيط: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, kde-format
-msgid "Agent instance creation failed"
+#, fuzzy, kde-format
+#| msgid "Agent instance creation failed"
+msgctxt "@title:window"
+msgid "Agent Instance Creation Failed"
 msgstr "فشل إنشاء سيرورة الوسيط"
 
 #: widgets/agentactionmanager.cpp:59
@@ -625,8 +627,10 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "أمتأكّد من حذف سيرورة الوسيط المنتقاة؟"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, kde-format
-msgctxt "%1 = agent name"
+#, fuzzy, kde-format
+#| msgctxt "%1 = agent name"
+#| msgid "%1 Configuration"
+msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "ضبط %1"
 
@@ -640,17 +644,17 @@ msgstr "كتيّب %1"
 msgid "About %1"
 msgstr "حول %1"
 
-#: widgets/agentconfigurationwidget.cpp:96
+#: widgets/agentconfigurationwidget.cpp:95
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "حواري الضبط مفتوح في نافذة أخرى"
 
-#: widgets/agentconfigurationwidget.cpp:103
+#: widgets/agentconfigurationwidget.cpp:102
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "الضبط لـ%1 مفتوح في مكان أخر."
 
-#: widgets/agentconfigurationwidget.cpp:105
+#: widgets/agentconfigurationwidget.cpp:104
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "فشل في تسجيل حواري ضبط %1."
@@ -801,8 +805,10 @@ msgid "Could not create folder: %1"
 msgstr "تعذّر إنشاء المجلد: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, kde-format
-msgid "Folder creation failed"
+#, fuzzy, kde-format
+#| msgid "Folder creation failed"
+msgctxt "@title:window"
+msgid "Folder Creation Failed"
 msgstr "فشل إنشاء المجلد"
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
@@ -974,9 +980,11 @@ msgid "Open collection dialog"
 msgstr "افتح حواريّ التجميعة"
 
 #: widgets/collectionrequester.cpp:143
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Select a collection"
 msgctxt "@title:window"
-msgid "Select a collection"
+msgid "Select a Collection"
 msgstr "اختر تجميعة"
 
 #: widgets/conflictresolvedialog.cpp:129
@@ -1063,7 +1071,7 @@ msgstr "ان&سخ هنا"
 msgid "&Link Here"
 msgstr "ارب&ط هنا"
 
-#: widgets/dragdropmanager.cpp:228
+#: widgets/dragdropmanager.cpp:229
 #, kde-format
 msgid "C&ancel"
 msgstr "أ&لغِ"
@@ -1806,11 +1814,6 @@ msgstr "احفظ تقرير الاختبار"
 
 #: widgets/selftestdialog.cpp:650
 #, kde-format
-msgid "Error"
-msgstr "خطأ"
-
-#: widgets/selftestdialog.cpp:650
-#, kde-format
 msgid "Could not open file '%1'"
 msgstr "تعذّر فتح الملف ”%1“"
 
@@ -2258,16 +2261,18 @@ msgstr[4] "أمتأكّد من حذف %1 عنصرًا مع مجلداتها ال
 msgstr[5] "أمتأكّد من حذف %1 عنصر مع مجلداتها الفرعيّة؟"
 
 #: widgets/standardactionmanager.cpp:359
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Delete Folder"
+#| msgid_plural "Delete %1 Folders"
 msgctxt "@title:window"
-msgid "Delete folder?"
-msgid_plural "Delete folders?"
-msgstr[0] "أأحذف المجلد؟"
-msgstr[1] "أأحذف المجلد؟"
-msgstr[2] "أأحذف المجلدين؟"
-msgstr[3] "أأحذف المجلدات؟"
-msgstr[4] "أأحذف المجلدات؟"
-msgstr[5] "أأحذف المجلدات؟"
+msgid "Delete Folder?"
+msgid_plural "Delete Folders?"
+msgstr[0] "احذف المجلد"
+msgstr[1] "احذف المجلد"
+msgstr[2] "احذف المجلدين"
+msgstr[3] "احذف %1 مجلدات"
+msgstr[4] "احذف %1 مجلدًا"
+msgstr[5] "احذف %1 مجلد"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2275,8 +2280,10 @@ msgid "Could not delete folder: %1"
 msgstr "تعذّر حذف المجلد: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, kde-format
-msgid "Folder deletion failed"
+#, fuzzy, kde-format
+#| msgid "Folder deletion failed"
+msgctxt "@title:window"
+msgid "Folder Deletion Failed"
 msgstr "فشل حذف المجلد"
 
 #: widgets/standardactionmanager.cpp:363
@@ -2297,16 +2304,18 @@ msgstr[4] "أمتأكّد من حذف %1 عنصرًا محدّدًا؟"
 msgstr[5] "أمتأكّد من حذف %1 عنصر محدّد؟"
 
 #: widgets/standardactionmanager.cpp:368
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Delete Item"
+#| msgid_plural "Delete %1 Items"
 msgctxt "@title:window"
-msgid "Delete item?"
-msgid_plural "Delete items?"
-msgstr[0] "أأحذف العنصر؟"
-msgstr[1] "أأحذف العنصر؟"
-msgstr[2] "أأحذف العنصرين؟"
-msgstr[3] "أأحذف العناصر؟"
-msgstr[4] "أأحذف العناصر؟"
-msgstr[5] "أأحذف العناصر؟"
+msgid "Delete Item?"
+msgid_plural "Delete Items?"
+msgstr[0] "احذف العنصر"
+msgstr[1] "احذف العنصر"
+msgstr[2] "احذف العنصرين"
+msgstr[3] "احذف %1 عناصر"
+msgstr[4] "احذف %1 عنصرًا"
+msgstr[5] "احذف %1 عنصر"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2314,8 +2323,10 @@ msgid "Could not delete item: %1"
 msgstr "تعذّر حذف العنصر: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, kde-format
-msgid "Item deletion failed"
+#, fuzzy, kde-format
+#| msgid "Item deletion failed"
+msgctxt "@title:window"
+msgid "Item Deletion Failed"
 msgstr "فشل حذف العنصر"
 
 #: widgets/standardactionmanager.cpp:372
@@ -2342,8 +2353,10 @@ msgid "Could not create resource: %1"
 msgstr "تعذّر إنشاء المورد الجديد: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, kde-format
-msgid "Resource creation failed"
+#, fuzzy, kde-format
+#| msgid "Resource creation failed"
+msgctxt "@title:window"
+msgid "Resource Creation Failed"
 msgstr "فشل إنشاء المورد"
 
 #: widgets/standardactionmanager.cpp:381
@@ -2375,8 +2388,10 @@ msgid "Could not paste data: %1"
 msgstr "تعذّر لصق البيانات: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, kde-format
-msgid "Paste failed"
+#, fuzzy, kde-format
+#| msgid "Paste failed"
+msgctxt "@title:window"
+msgid "Paste Failed"
 msgstr "فشل اللصق"
 
 #: widgets/standardactionmanager.cpp:739
@@ -2385,8 +2400,10 @@ msgid "We can not add \"/\" in folder name."
 msgstr "لا يمكننا إضافة ”/“ في اسم المجلد."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, kde-format
-msgid "Create new folder error"
+#, fuzzy, kde-format
+#| msgid "Create new folder error"
+msgctxt "@title:window"
+msgid "Create New Folder Error"
 msgstr "خطأ أثناء إنشاء مجلد جديد"
 
 #: widgets/standardactionmanager.cpp:743
@@ -2430,8 +2447,10 @@ msgid "Failed to update subscription: %1"
 msgstr "فشل في تحديث الاشتراك: %1"
 
 #: widgets/subscriptiondialog.cpp:93
-#, kde-format
-msgctxt "@title"
+#, fuzzy, kde-format
+#| msgctxt "@title"
+#| msgid "Subscription Error"
+msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "خطأ في الاشتراك"
 
@@ -2471,8 +2490,10 @@ msgid "Failed to create a new tag"
 msgstr "فشل إنشاء وسم جديد"
 
 #: widgets/tageditwidget.cpp:116
-#, kde-format
-msgid "An error occurred while creating a new tag"
+#, fuzzy, kde-format
+#| msgid "An error occurred while creating a new tag"
+msgctxt "@title:window"
+msgid "An Error Occurred while Creating a New Tag"
 msgstr "حدث خطأ أثناء إنشاء وسم جديد"
 
 #: widgets/tageditwidget.cpp:164
@@ -2482,9 +2503,11 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "أمتأكّد من إزالة الوسم <resource>%1</resource>؟"
 
 #: widgets/tageditwidget.cpp:165
-#, kde-format
-msgctxt "@title"
-msgid "Delete tag"
+#, fuzzy, kde-format
+#| msgctxt "@title"
+#| msgid "Delete tag"
+msgctxt "@title:window"
+msgid "Delete Tag"
 msgstr "حذف الوسم"
 
 #: widgets/tageditwidget.cpp:189
@@ -2511,7 +2534,7 @@ msgstr "أنشئ وسمًا جديدًا"
 msgid "Manage Tags"
 msgstr "أدِر الوسوم"
 
-#: widgets/tagselectioncombobox.cpp:124
+#: widgets/tagselectioncombobox.cpp:126
 #, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
@@ -2555,65 +2578,88 @@ msgstr "يُحوّل شجرة تجميعة «أكونادي» فرعية إلى 
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
 msgstr "‏© ٢٠٠٩ Volker Krause ‏<vkrause@kde.org>"
 
-#: xml/xmldocument.cpp:84
+#: xml/xmldocument.cpp:85
 #, kde-format
 msgid "No data loaded."
 msgstr "لا بيانات محمّلة."
 
-#: xml/xmldocument.cpp:120
+#: xml/xmldocument.cpp:121
 #, kde-format
 msgid "No filename specified"
 msgstr "لم يحدّد اسم الملف"
 
-#: xml/xmldocument.cpp:128
+#: xml/xmldocument.cpp:129
 #, kde-format
 msgid "Unable to open data file '%1'."
 msgstr "تعذّر فتح ملف البيانات ”%1“."
 
-#: xml/xmldocument.cpp:133
+#: xml/xmldocument.cpp:134
 #, kde-format
 msgid "File %1 does not exist."
 msgstr "الملف %1 غير موجود."
 
-#: xml/xmldocument.cpp:141
+#: xml/xmldocument.cpp:142
 #, kde-format
 msgid "Unable to parse data file '%1'."
 msgstr "تعذّر تحليل ملف البيانات ”%1“."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "تعذّر تحميل تعريف المخطّط وتحليله."
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "تعذّر إنشاء سياق محلّل المخطّطات."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "تعذّر إنشاء المخطّط."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr "تعذّر إنشاء سياق التحقّق من المخطّط."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "تنسيق الملف غير صالح."
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "تعذّر تحليل ملف البيانات: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "تعذّر العثور على التجميعة %1"
+
+#~ msgid "Error"
+#~ msgstr "خطأ"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete folder?"
+#~ msgid_plural "Delete folders?"
+#~ msgstr[0] "أأحذف المجلد؟"
+#~ msgstr[1] "أأحذف المجلد؟"
+#~ msgstr[2] "أأحذف المجلدين؟"
+#~ msgstr[3] "أأحذف المجلدات؟"
+#~ msgstr[4] "أأحذف المجلدات؟"
+#~ msgstr[5] "أأحذف المجلدات؟"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete item?"
+#~ msgid_plural "Delete items?"
+#~ msgstr[0] "أأحذف العنصر؟"
+#~ msgstr[1] "أأحذف العنصر؟"
+#~ msgstr[2] "أأحذف العنصرين؟"
+#~ msgstr[3] "أأحذف العناصر؟"
+#~ msgstr[4] "أأحذف العناصر؟"
+#~ msgstr[5] "أأحذف العناصر؟"
 
 #~ msgid "Store emails locally:"
 #~ msgstr "احفظ البريد الإلكتروني محليا:"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-04 00:45+0000\n"
+"POT-Creation-Date: 2022-10-10 00:46+0000\n"
 "PO-Revision-Date: 2014-01-31 20:40+0100\n"
 "Last-Translator: Samir Ribić <megaribi@epn.ba>\n"
 "Language-Team: bosanski <bs@li.org>\n"
@@ -271,7 +271,7 @@ msgid "No objects specified for moving"
 msgstr "Nisu zadati objekti za premještanje"
 
 #: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
-#: core/jobs/linkjobimpl_p.h:38
+#: core/jobs/linkjobimpl_p.h:39
 #, kde-format
 msgid "No valid destination specified"
 msgstr "Nije navedeno dobro odredište"
@@ -426,42 +426,42 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Naziv"
 
-#: core/models/entitytreemodel_p.cpp:1330
+#: core/models/entitytreemodel_p.cpp:1331
 #, fuzzy, kde-format
 #| msgid "Could not copy item:"
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Nije moguće kopirati stavku:"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1333
 #, fuzzy, kde-format
 #| msgid "Could not copy collection:"
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Nije moguće otvoriti kolekciju:"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1335
 #, fuzzy, kde-format
 #| msgid "Could not move item:"
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Nije moguće premjestiti stavku:"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1337
 #, fuzzy, kde-format
 #| msgid "Could not move collection:"
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Nije moguće premjestiti kolekciju"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1339
 #, fuzzy, kde-format
 #| msgid "Could not link entity:"
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "Nije moguće linkovati subjekat:"
 
-#: core/models/entitytreemodel_p.cpp:1340
+#: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
 #, fuzzy, kde-format
 #| msgctxt "@info:status"
 #| msgid "Error."
@@ -628,8 +628,10 @@ msgid "Could not create agent instance: %1"
 msgstr "Ne mogu da napravim primjerak agenta: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, kde-format
-msgid "Agent instance creation failed"
+#, fuzzy, kde-format
+#| msgid "Agent instance creation failed"
+msgctxt "@title:window"
+msgid "Agent Instance Creation Failed"
 msgstr "Neuspjelo stvaranje primjerka agenta"
 
 #: widgets/agentactionmanager.cpp:59
@@ -645,7 +647,7 @@ msgstr "Želite li zaista da obrišete izabrani primjerak agenta?"
 
 #: widgets/agentconfigurationdialog.cpp:56
 #, kde-format
-msgctxt "%1 = agent name"
+msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr ""
 
@@ -659,17 +661,17 @@ msgstr ""
 msgid "About %1"
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:96
+#: widgets/agentconfigurationwidget.cpp:95
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:103
+#: widgets/agentconfigurationwidget.cpp:102
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:105
+#: widgets/agentconfigurationwidget.cpp:104
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Failed to register %1 configuration dialog."
@@ -824,8 +826,10 @@ msgid "Could not create folder: %1"
 msgstr "Ne mogu da napravim direktorij: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, kde-format
-msgid "Folder creation failed"
+#, fuzzy, kde-format
+#| msgid "Folder creation failed"
+msgctxt "@title:window"
+msgid "Folder Creation Failed"
 msgstr "Neuspjelo stvaranje direktorija"
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
@@ -1002,7 +1006,7 @@ msgstr "Otvori prozor sa kolekcijom"
 #, fuzzy, kde-format
 #| msgid "Select a collection"
 msgctxt "@title:window"
-msgid "Select a collection"
+msgid "Select a Collection"
 msgstr "Izbor zbirke"
 
 #: widgets/conflictresolvedialog.cpp:129
@@ -1087,7 +1091,7 @@ msgstr "&Kopirajte ovdje"
 msgid "&Link Here"
 msgstr "&Poveži ovdje"
 
-#: widgets/dragdropmanager.cpp:228
+#: widgets/dragdropmanager.cpp:229
 #, kde-format
 msgid "C&ancel"
 msgstr "&Odustani"
@@ -1863,13 +1867,6 @@ msgid "Save Test Report"
 msgstr "Upisivanje izveštaja o probama"
 
 #: widgets/selftestdialog.cpp:650
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Error."
-msgid "Error"
-msgstr "Greška."
-
-#: widgets/selftestdialog.cpp:650
 #, kde-format
 msgid "Could not open file '%1'"
 msgstr "Ne mogu da otvorim datoteku %1"
@@ -2302,13 +2299,15 @@ msgstr[2] ""
 "Želite li zaista da obrišete %1 direktorija i sve njihove poddirektorije?"
 
 #: widgets/standardactionmanager.cpp:359
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Delete Folder"
+#| msgid_plural "Delete %1 Folders"
 msgctxt "@title:window"
-msgid "Delete folder?"
-msgid_plural "Delete folders?"
-msgstr[0] "Obrisati direktorij?"
-msgstr[1] "Obrisati direktorije?"
-msgstr[2] "Obrisati direktorije?"
+msgid "Delete Folder?"
+msgid_plural "Delete Folders?"
+msgstr[0] "Obriši %1 direktorij"
+msgstr[1] "Obriši %1 direktorija"
+msgstr[2] "Obriši %1 direktorija"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2316,8 +2315,10 @@ msgid "Could not delete folder: %1"
 msgstr "Ne mogu da obrišem direktorij: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, kde-format
-msgid "Folder deletion failed"
+#, fuzzy, kde-format
+#| msgid "Folder deletion failed"
+msgctxt "@title:window"
+msgid "Folder Deletion Failed"
 msgstr "Neuspjelo brisanje direktorija"
 
 #: widgets/standardactionmanager.cpp:363
@@ -2335,13 +2336,15 @@ msgstr[1] "Želite li zaista da obrišete %1 izabrane stavke?"
 msgstr[2] "Želite li zaista da obrišete %1 izabranih stavki?"
 
 #: widgets/standardactionmanager.cpp:368
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Delete Item"
+#| msgid_plural "Delete %1 Items"
 msgctxt "@title:window"
-msgid "Delete item?"
-msgid_plural "Delete items?"
-msgstr[0] "Obrisati stavke?"
-msgstr[1] "Obrisati stavke?"
-msgstr[2] "Obrisati stavke?"
+msgid "Delete Item?"
+msgid_plural "Delete Items?"
+msgstr[0] "Obriši %1 stavku"
+msgstr[1] "Obriši %1 stavke"
+msgstr[2] "Obriši %1 stavki"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2349,8 +2352,10 @@ msgid "Could not delete item: %1"
 msgstr "Ne mogu da obrišem stavku: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, kde-format
-msgid "Item deletion failed"
+#, fuzzy, kde-format
+#| msgid "Item deletion failed"
+msgctxt "@title:window"
+msgid "Item Deletion Failed"
 msgstr "Neuspjelo brisanje stavke"
 
 #: widgets/standardactionmanager.cpp:372
@@ -2377,8 +2382,10 @@ msgid "Could not create resource: %1"
 msgstr "Ne mogu da napravim resurs: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, kde-format
-msgid "Resource creation failed"
+#, fuzzy, kde-format
+#| msgid "Resource creation failed"
+msgctxt "@title:window"
+msgid "Resource Creation Failed"
 msgstr "Neuspjelo stvaranje resursa"
 
 #: widgets/standardactionmanager.cpp:381
@@ -2404,8 +2411,10 @@ msgid "Could not paste data: %1"
 msgstr "Ne mogu da umetnem podatke: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, kde-format
-msgid "Paste failed"
+#, fuzzy, kde-format
+#| msgid "Paste failed"
+msgctxt "@title:window"
+msgid "Paste Failed"
 msgstr "Neuspjelo umetanje"
 
 #: widgets/standardactionmanager.cpp:739
@@ -2414,8 +2423,10 @@ msgid "We can not add \"/\" in folder name."
 msgstr "Ne može se dodati \"/\" u ime fascikle."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, kde-format
-msgid "Create new folder error"
+#, fuzzy, kde-format
+#| msgid "Create new folder error"
+msgctxt "@title:window"
+msgid "Create New Folder Error"
 msgstr "Greška u kreiranju nove fascikle"
 
 #: widgets/standardactionmanager.cpp:743
@@ -2462,7 +2473,7 @@ msgstr "Ne mogu da stvorim primjerak agenta."
 #: widgets/subscriptiondialog.cpp:93
 #, fuzzy, kde-format
 #| msgid "Local Subscriptions"
-msgctxt "@title"
+msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Lokalne pretplate"
 
@@ -2510,7 +2521,8 @@ msgstr "Ne mogu da stvorim primjerak agenta."
 #, fuzzy, kde-format
 #| msgctxt "@info"
 #| msgid "Error while creating item: %1"
-msgid "An error occurred while creating a new tag"
+msgctxt "@title:window"
+msgid "An Error Occurred while Creating a New Tag"
 msgstr "Greška pri kreiranju elementa: %1"
 
 #: widgets/tageditwidget.cpp:164
@@ -2525,8 +2537,8 @@ msgstr "Želite li zaista da obrišete %1 resurs?"
 #, fuzzy, kde-format
 #| msgid "Delete Item"
 #| msgid_plural "Delete %1 Items"
-msgctxt "@title"
-msgid "Delete tag"
+msgctxt "@title:window"
+msgid "Delete Tag"
 msgstr "Obriši %1 stavku"
 
 #: widgets/tageditwidget.cpp:189
@@ -2556,7 +2568,7 @@ msgstr "Ne mogu da stvorim primjerak agenta."
 msgid "Manage Tags"
 msgstr ""
 
-#: widgets/tagselectioncombobox.cpp:124
+#: widgets/tagselectioncombobox.cpp:126
 #, fuzzy, kde-format
 #| msgid "Delete Item"
 #| msgid_plural "Delete %1 Items"
@@ -2602,75 +2614,95 @@ msgstr "Konvertuje Akonadi kolekciju podstabala u XML datoteku"
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
 msgstr "(c) 2009 Volker Krause <vkrause@kde.org>"
 
-#: xml/xmldocument.cpp:84
+#: xml/xmldocument.cpp:85
 #, kde-format
 msgid "No data loaded."
 msgstr "Nema učitanih podataka"
 
-#: xml/xmldocument.cpp:120
+#: xml/xmldocument.cpp:121
 #, fuzzy, kde-format
 #| msgid "No valid destination specified"
 msgid "No filename specified"
 msgstr "Nije navedeno dobro odredište"
 
-#: xml/xmldocument.cpp:128
+#: xml/xmldocument.cpp:129
 #, fuzzy, kde-format
 #| msgid "Unable to obtain agent type '%1'."
 msgid "Unable to open data file '%1'."
 msgstr "Ne mogu da dobavim tip agenta „%1“."
 
-#: xml/xmldocument.cpp:133
+#: xml/xmldocument.cpp:134
 #, kde-format
 msgid "File %1 does not exist."
 msgstr "Datoteka %1 ne postoji."
 
-#: xml/xmldocument.cpp:141
+#: xml/xmldocument.cpp:142
 #, fuzzy, kde-format
 #| msgid "Unable to obtain agent type '%1'."
 msgid "Unable to parse data file '%1'."
 msgstr "Ne mogu da dobavim tip agenta „%1“."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "Definicija sheme ne može biti učitana i raščlanjena"
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema parser context."
 msgstr "Ne mogu da stvorim primjerak agenta."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema."
 msgstr "Ne mogu da stvorim primjerak agenta."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema validation context."
 msgstr "Ne mogu da stvorim primjerak agenta."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, fuzzy, kde-format
 #| msgctxt "@info"
 #| msgid "Invalid item retrieved"
 msgid "Invalid file format."
 msgstr "Pogrešan tekst preuzet"
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, fuzzy, kde-format
 #| msgid "Could not paste data: %1"
 msgid "Unable to parse data file: %1"
 msgstr "Ne mogu da umetnem podatke: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, fuzzy, kde-format
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"
 msgstr "Loša zbirka"
+
+#, fuzzy
+#~| msgctxt "@info:status"
+#~| msgid "Error."
+#~ msgid "Error"
+#~ msgstr "Greška."
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete folder?"
+#~ msgid_plural "Delete folders?"
+#~ msgstr[0] "Obrisati direktorij?"
+#~ msgstr[1] "Obrisati direktorije?"
+#~ msgstr[2] "Obrisati direktorije?"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete item?"
+#~ msgid_plural "Delete items?"
+#~ msgstr[0] "Obrisati stavke?"
+#~ msgstr[1] "Obrisati stavke?"
+#~ msgstr[2] "Obrisati stavke?"
 
 #~ msgid "&Move here"
 #~ msgstr "&Pomjeri ovdje"

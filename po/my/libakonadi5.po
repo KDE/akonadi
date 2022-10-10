@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-04 00:45+0000\n"
+"POT-Creation-Date: 2022-10-10 00:46+0000\n"
 "PO-Revision-Date: 2021-09-27 23:52+0630\n"
 "Last-Translator: ဇေယျာလွင် <lw1nzayar@yandex.com>\n"
 "Language-Team: Burmese <kde-i18n-doc@kde.org>\n"
@@ -256,7 +256,7 @@ msgid "No objects specified for moving"
 msgstr "ရှေ့ဆက်သွားမည်"
 
 #: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
-#: core/jobs/linkjobimpl_p.h:38
+#: core/jobs/linkjobimpl_p.h:39
 #, fuzzy, kde-format
 msgid "No valid destination specified"
 msgstr "မသတ်မှတ်ထား"
@@ -400,37 +400,37 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "အမည်"
 
-#: core/models/entitytreemodel_p.cpp:1330
+#: core/models/entitytreemodel_p.cpp:1331
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "အိုင်တမ်ကို မကူးယူနိုင်ခဲ့ပါ -  <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1333
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "စုစည်းမှုကို မကူးယူနိုင်ခဲ့ပါ -  <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1335
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "အိုင်တမ်ကို မရွေ့ပြောင်းနိုင်ခဲ့ပါ -  <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1337
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "စုစည်းမှုကို မရွေ့ပြောင်းနိုင်ခဲ့ပါ -  <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1339
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr ""
 
-#: core/models/entitytreemodel_p.cpp:1340
+#: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
 #, kde-format
 msgctxt "@title:window"
 msgid "Error"
@@ -594,8 +594,10 @@ msgid "Could not create agent instance: %1"
 msgstr "အေးဂျင့်အင်းစတမ့်ကိုမဖန်တီးနိုင်ခဲ့ပါ - %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, kde-format
-msgid "Agent instance creation failed"
+#, fuzzy, kde-format
+#| msgid "Agent instance creation failed"
+msgctxt "@title:window"
+msgid "Agent Instance Creation Failed"
 msgstr "အေးဂျင့်အင်းစတမ့် ဖန်တီးမှု မအောင်မြင်ခဲ့ပါ"
 
 #: widgets/agentactionmanager.cpp:59
@@ -610,8 +612,10 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr ""
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, kde-format
-msgctxt "%1 = agent name"
+#, fuzzy, kde-format
+#| msgctxt "%1 = agent name"
+#| msgid "%1 Configuration"
+msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 ပြင်ဆင်မှု"
 
@@ -625,17 +629,17 @@ msgstr "လက်ကိုင်စာအုပ် %1"
 msgid "About %1"
 msgstr "%1 အကြောင်း"
 
-#: widgets/agentconfigurationwidget.cpp:96
+#: widgets/agentconfigurationwidget.cpp:95
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:103
+#: widgets/agentconfigurationwidget.cpp:102
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:105
+#: widgets/agentconfigurationwidget.cpp:104
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr ""
@@ -779,7 +783,8 @@ msgstr "ဖိုလ်ဒါကို မတည်ဆောက်နိုင�
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
 #, fuzzy, kde-format
-msgid "Folder creation failed"
+msgctxt "@title:window"
+msgid "Folder Creation Failed"
 msgstr "တောင်းဆိုထားသောဖိုလ်ဒါ တည်ဆောက်ရန် ကြိုးပမ်းမှု မအောင်မြင်ခဲ့ပါ။"
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
@@ -941,9 +946,11 @@ msgid "Open collection dialog"
 msgstr "ဖိုင်လ် အပြော-ဝင်းဒိုး ဖွင့်မည်"
 
 #: widgets/collectionrequester.cpp:143
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Select a collection"
 msgctxt "@title:window"
-msgid "Select a collection"
+msgid "Select a Collection"
 msgstr "စုစည်းမှု ရွေးချယ်မည်"
 
 #: widgets/conflictresolvedialog.cpp:129
@@ -1026,7 +1033,7 @@ msgstr "&Cဤနေရာသို့ကူးယူရန်"
 msgid "&Link Here"
 msgstr "&Lဤနေရာသို့လင့်ခ်ချိတ်ရန်"
 
-#: widgets/dragdropmanager.cpp:228
+#: widgets/dragdropmanager.cpp:229
 #, kde-format
 msgid "C&ancel"
 msgstr "&aပယ်ဖျက်"
@@ -1710,11 +1717,6 @@ msgstr "စမ်းသပ်မှုအစီရင်ခံစာ သိမ�
 
 #: widgets/selftestdialog.cpp:650
 #, kde-format
-msgid "Error"
-msgstr "အမှား"
-
-#: widgets/selftestdialog.cpp:650
-#, kde-format
 msgid "Could not open file '%1'"
 msgstr "ဖိုင်လ် '%1' ကိုမဖွင့်နိုင်ခဲ့ပါ"
 
@@ -2070,11 +2072,13 @@ msgid_plural ""
 msgstr[0] ""
 
 #: widgets/standardactionmanager.cpp:359
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Delete Folder"
+#| msgid_plural "Delete %1 Folders"
 msgctxt "@title:window"
-msgid "Delete folder?"
-msgid_plural "Delete folders?"
-msgstr[0] "ဖိုလ်ဒါဖျက်မှာလား။"
+msgid "Delete Folder?"
+msgid_plural "Delete Folders?"
+msgstr[0] "ဖိုလ်ဒါ %1ခု ဖျက်မည်"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2083,7 +2087,8 @@ msgstr "ဖိုလ်ဒါကိုမဖျက်နိုင်ခဲ့ပ
 
 #: widgets/standardactionmanager.cpp:361
 #, fuzzy, kde-format
-msgid "Folder deletion failed"
+msgctxt "@title:window"
+msgid "Folder Deletion Failed"
 msgstr "ဖျက်မည့်အချိန်"
 
 #: widgets/standardactionmanager.cpp:363
@@ -2099,11 +2104,13 @@ msgid_plural "Do you really want to delete %1 items?"
 msgstr[0] "ရွေးထားသော အိုင်တမ် %1ခု ကိုတကယ်ဖျက်တော့မှာလား။"
 
 #: widgets/standardactionmanager.cpp:368
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Delete Item"
+#| msgid_plural "Delete %1 Items"
 msgctxt "@title:window"
-msgid "Delete item?"
-msgid_plural "Delete items?"
-msgstr[0] "အိုင်တမ်ဖျက်မှာလား။"
+msgid "Delete Item?"
+msgid_plural "Delete Items?"
+msgstr[0] "အိုင်တမ် %1ခု ဖျက်မည်"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2111,8 +2118,10 @@ msgid "Could not delete item: %1"
 msgstr "အိုင်တမ်ကိုမဖျက်နိုင်ခဲ့ပါ - %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, kde-format
-msgid "Item deletion failed"
+#, fuzzy, kde-format
+#| msgid "Item deletion failed"
+msgctxt "@title:window"
+msgid "Item Deletion Failed"
 msgstr "အိုင်တမ်ဖျက်ခြင်းကျရှုံးခဲ့သည်"
 
 #: widgets/standardactionmanager.cpp:372
@@ -2140,7 +2149,8 @@ msgstr "ရင်းမြစ်ကိုမဖန်တီးနိုင်ခ
 
 #: widgets/standardactionmanager.cpp:377
 #, fuzzy, kde-format
-msgid "Resource creation failed"
+msgctxt "@title:window"
+msgid "Resource Creation Failed"
 msgstr "ကျရှုံးခဲ့သည်"
 
 #: widgets/standardactionmanager.cpp:381
@@ -2163,7 +2173,8 @@ msgstr "ဒေတာမပွားနိုင်ခဲ့ပါ - %1"
 
 #: widgets/standardactionmanager.cpp:387
 #, fuzzy, kde-format
-msgid "Paste failed"
+msgctxt "@title:window"
+msgid "Paste Failed"
 msgstr "ကျရှုံးခဲ့သည်"
 
 #: widgets/standardactionmanager.cpp:739
@@ -2172,8 +2183,10 @@ msgid "We can not add \"/\" in folder name."
 msgstr ""
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, kde-format
-msgid "Create new folder error"
+#, fuzzy, kde-format
+#| msgid "Create new folder error"
+msgctxt "@title:window"
+msgid "Create New Folder Error"
 msgstr "ဖိုလ်ဒါအသစ်တည်ဆောက်မှုအမှား"
 
 #: widgets/standardactionmanager.cpp:743
@@ -2217,10 +2230,11 @@ msgstr ""
 "%2"
 
 #: widgets/subscriptiondialog.cpp:93
-#, kde-format
-msgctxt "@title"
+#, fuzzy, kde-format
+#| msgid "Local Subscriptions"
+msgctxt "@title:window"
 msgid "Subscription Error"
-msgstr ""
+msgstr "စက်တွင်း စာရင်းသွင်းချက်များ"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, SubscriptionDialog)
 #: widgets/subscriptiondialog.ui:14
@@ -2258,9 +2272,12 @@ msgid "Failed to create a new tag"
 msgstr "တပ်ဂ်အသစ်ကိုမဖန်တီးနိုင်ခဲ့ပါ"
 
 #: widgets/tageditwidget.cpp:116
-#, kde-format
-msgid "An error occurred while creating a new tag"
-msgstr ""
+#, fuzzy, kde-format
+#| msgctxt "@info"
+#| msgid "Error while creating item: %1"
+msgctxt "@title:window"
+msgid "An Error Occurred while Creating a New Tag"
+msgstr "အိုင်တမ်ဖန်တီးနေစဥ်အမှားဖြစ်ပေါ်ခဲ့သည်- %1"
 
 #: widgets/tageditwidget.cpp:164
 #, kde-kuit-format
@@ -2269,9 +2286,11 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr ""
 
 #: widgets/tageditwidget.cpp:165
-#, kde-format
-msgctxt "@title"
-msgid "Delete tag"
+#, fuzzy, kde-format
+#| msgctxt "@title"
+#| msgid "Delete tag"
+msgctxt "@title:window"
+msgid "Delete Tag"
 msgstr "တပ်ဂ် ဖျက်မည်"
 
 #: widgets/tageditwidget.cpp:189
@@ -2298,7 +2317,7 @@ msgstr "တပ်ဂ်အသစ်ဖန်တီးမည်"
 msgid "Manage Tags"
 msgstr "တပ်ဂ်များစီမံမည်"
 
-#: widgets/tagselectioncombobox.cpp:124
+#: widgets/tagselectioncombobox.cpp:126
 #, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
@@ -2342,65 +2361,78 @@ msgstr ""
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
 msgstr "(c) ၂၀၀၉ ဗော်ကာခရောက်စ် <vkrause@kde.org>"
 
-#: xml/xmldocument.cpp:84
+#: xml/xmldocument.cpp:85
 #, kde-format
 msgid "No data loaded."
 msgstr "တွန်းတင်ထားသော ဒေတာများမရှိပါ။"
 
-#: xml/xmldocument.cpp:120
+#: xml/xmldocument.cpp:121
 #, kde-format
 msgid "No filename specified"
 msgstr "ဖိုင်လ်အမည်မပေးထားပါ"
 
-#: xml/xmldocument.cpp:128
+#: xml/xmldocument.cpp:129
 #, kde-format
 msgid "Unable to open data file '%1'."
 msgstr "'%1' ဒေတာဖိုင်လ်ကို မဖွင့်နိုင်ခဲ့ပါ။"
 
-#: xml/xmldocument.cpp:133
+#: xml/xmldocument.cpp:134
 #, kde-format
 msgid "File %1 does not exist."
 msgstr "ဖိုင်လ် %1 မရှိပါ။"
 
-#: xml/xmldocument.cpp:141
+#: xml/xmldocument.cpp:142
 #, kde-format
 msgid "Unable to parse data file '%1'."
 msgstr "'%1' ဒေတာဖိုင်လ်ကို အဓိပ္ပါယ်ရှိအောင် မဖတ်နိုင်ခဲ့ပါ။"
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "စခီးမား အဓိပ္ပါယ်ဖွင့်ဆိုမှုကို မတွန်းတင်နိုင်၍ မဖတ်နိုင်ခဲ့ပါ။"
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr ""
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "စခီးမားကို မဖန်တီးနိုင်ခဲ့ပါ။"
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr ""
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "မမှန်ကန်သော ဖိုင်လ်သိမ်းဆည်းပုံစံ။"
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "ဒေတာဖိုင်လ်ကို အဓိပ္ပါယ်ရှိအောင် မဖတ်နိုင်ခဲ့ပါ - %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "စုစည်းမှု %1 ကိုမရှာနိုင်ခဲ့ပါ"
+
+#~ msgid "Error"
+#~ msgstr "အမှား"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete folder?"
+#~ msgid_plural "Delete folders?"
+#~ msgstr[0] "ဖိုလ်ဒါဖျက်မှာလား။"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete item?"
+#~ msgid_plural "Delete items?"
+#~ msgstr[0] "အိုင်တမ်ဖျက်မှာလား။"
 
 #~ msgid "Store emails locally:"
 #~ msgstr "အီးမေးလ်များကို စက်တွင်းသိမ်းဆည်းမည် -"

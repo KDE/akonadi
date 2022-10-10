@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-04 00:45+0000\n"
+"POT-Creation-Date: 2022-10-10 00:46+0000\n"
 "PO-Revision-Date: 2020-11-17 19:45+0100\n"
 "Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -257,7 +257,7 @@ msgid "No objects specified for moving"
 msgstr "Ingen objekter angivet til flytning"
 
 #: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
-#: core/jobs/linkjobimpl_p.h:38
+#: core/jobs/linkjobimpl_p.h:39
 #, kde-format
 msgid "No valid destination specified"
 msgstr "Ingen gyldig destination angivet"
@@ -407,37 +407,37 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Navn"
 
-#: core/models/entitytreemodel_p.cpp:1330
+#: core/models/entitytreemodel_p.cpp:1331
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Kunne ikke kopiere element: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1333
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Kunne ikke kopiere samling: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1335
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Kunne ikke flytte element: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1337
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Kunne ikke flytte samling: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1339
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "Kunne ikke linke enhed: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1340
+#: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
 #, kde-format
 msgctxt "@title:window"
 msgid "Error"
@@ -612,8 +612,10 @@ msgid "Could not create agent instance: %1"
 msgstr "Kunne ikke oprette agentinstans: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, kde-format
-msgid "Agent instance creation failed"
+#, fuzzy, kde-format
+#| msgid "Agent instance creation failed"
+msgctxt "@title:window"
+msgid "Agent Instance Creation Failed"
 msgstr "Oprettelse af agentinstans mislykkedes"
 
 #: widgets/agentactionmanager.cpp:59
@@ -628,8 +630,10 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "Vil du virkelig slette den markerede agentinstans?"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, kde-format
-msgctxt "%1 = agent name"
+#, fuzzy, kde-format
+#| msgctxt "%1 = agent name"
+#| msgid "%1 Configuration"
+msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Konfiguration af %1"
 
@@ -643,17 +647,17 @@ msgstr "Håndbog til %1"
 msgid "About %1"
 msgstr "Om %1"
 
-#: widgets/agentconfigurationwidget.cpp:96
+#: widgets/agentconfigurationwidget.cpp:95
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "Konfigurationsdialogen er blevet åbnet i et andet vindue"
 
-#: widgets/agentconfigurationwidget.cpp:103
+#: widgets/agentconfigurationwidget.cpp:102
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "Konfiguration af %1 er allerede åbnet et andet sted."
 
-#: widgets/agentconfigurationwidget.cpp:105
+#: widgets/agentconfigurationwidget.cpp:104
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Kunne ikke registrere konfigurationsdialogen til %1."
@@ -801,8 +805,10 @@ msgid "Could not create folder: %1"
 msgstr "Kunne ikke oprette mappe: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, kde-format
-msgid "Folder creation failed"
+#, fuzzy, kde-format
+#| msgid "Folder creation failed"
+msgctxt "@title:window"
+msgid "Folder Creation Failed"
 msgstr "Oprettelse af mappe fejlede"
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
@@ -969,9 +975,11 @@ msgid "Open collection dialog"
 msgstr "Åbn samlingsdialog"
 
 #: widgets/collectionrequester.cpp:143
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Select a collection"
 msgctxt "@title:window"
-msgid "Select a collection"
+msgid "Select a Collection"
 msgstr "Vælg en samling"
 
 #: widgets/conflictresolvedialog.cpp:129
@@ -1060,7 +1068,7 @@ msgstr "&Kopiér hertil"
 msgid "&Link Here"
 msgstr "&Link hertil"
 
-#: widgets/dragdropmanager.cpp:228
+#: widgets/dragdropmanager.cpp:229
 #, kde-format
 msgid "C&ancel"
 msgstr "&Annullér"
@@ -1828,11 +1836,6 @@ msgstr "Gem testrapport"
 
 #: widgets/selftestdialog.cpp:650
 #, kde-format
-msgid "Error"
-msgstr "Fejl"
-
-#: widgets/selftestdialog.cpp:650
-#, kde-format
 msgid "Could not open file '%1'"
 msgstr "Kunne ikke åbne filen \"%1\""
 
@@ -2234,12 +2237,14 @@ msgstr[0] "Vil du virkelig slette denne mappe og alle dens undermapper?"
 msgstr[1] "Vil du virkelig slette %1 mapper og alle deres undermapper?"
 
 #: widgets/standardactionmanager.cpp:359
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Delete Folder"
+#| msgid_plural "Delete %1 Folders"
 msgctxt "@title:window"
-msgid "Delete folder?"
-msgid_plural "Delete folders?"
-msgstr[0] "Vil du slette mappen?"
-msgstr[1] "Vil du slette mapperne?"
+msgid "Delete Folder?"
+msgid_plural "Delete Folders?"
+msgstr[0] "Slet mappe"
+msgstr[1] "Slet %1 mapper"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2247,8 +2252,10 @@ msgid "Could not delete folder: %1"
 msgstr "Kunne ikke slette mappe: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, kde-format
-msgid "Folder deletion failed"
+#, fuzzy, kde-format
+#| msgid "Folder deletion failed"
+msgctxt "@title:window"
+msgid "Folder Deletion Failed"
 msgstr "Sletning af mappe fejlede"
 
 #: widgets/standardactionmanager.cpp:363
@@ -2265,12 +2272,14 @@ msgstr[0] "Vil du virkelig slette det markerede element?"
 msgstr[1] "Vil du virkelig slette %1 markerede elementer?"
 
 #: widgets/standardactionmanager.cpp:368
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Delete Item"
+#| msgid_plural "Delete %1 Items"
 msgctxt "@title:window"
-msgid "Delete item?"
-msgid_plural "Delete items?"
-msgstr[0] "Slet element?"
-msgstr[1] "Slet elementer?"
+msgid "Delete Item?"
+msgid_plural "Delete Items?"
+msgstr[0] "Slet element"
+msgstr[1] "Slet %1 elementer"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2278,8 +2287,10 @@ msgid "Could not delete item: %1"
 msgstr "Kunne ikke slette element: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, kde-format
-msgid "Item deletion failed"
+#, fuzzy, kde-format
+#| msgid "Item deletion failed"
+msgctxt "@title:window"
+msgid "Item Deletion Failed"
 msgstr "Sletning af element mislykkedes"
 
 #: widgets/standardactionmanager.cpp:372
@@ -2306,8 +2317,10 @@ msgid "Could not create resource: %1"
 msgstr "Kunne ikke oprette ressource: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, kde-format
-msgid "Resource creation failed"
+#, fuzzy, kde-format
+#| msgid "Resource creation failed"
+msgctxt "@title:window"
+msgid "Resource Creation Failed"
 msgstr "Oprettelse af ressource mislykkedes"
 
 #: widgets/standardactionmanager.cpp:381
@@ -2331,8 +2344,10 @@ msgid "Could not paste data: %1"
 msgstr "Kunne ikke sætte data ind: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, kde-format
-msgid "Paste failed"
+#, fuzzy, kde-format
+#| msgid "Paste failed"
+msgctxt "@title:window"
+msgid "Paste Failed"
 msgstr "Indsættelse fejlede"
 
 #: widgets/standardactionmanager.cpp:739
@@ -2341,8 +2356,10 @@ msgid "We can not add \"/\" in folder name."
 msgstr "Vi kan ikke tilføje \"/\" i et mappenavn."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, kde-format
-msgid "Create new folder error"
+#, fuzzy, kde-format
+#| msgid "Create new folder error"
+msgctxt "@title:window"
+msgid "Create New Folder Error"
 msgstr "Fejl ved oprettelse af ny mappe"
 
 #: widgets/standardactionmanager.cpp:743
@@ -2387,8 +2404,10 @@ msgid "Failed to update subscription: %1"
 msgstr "Kunne ikke opdatere abonnement: %1"
 
 #: widgets/subscriptiondialog.cpp:93
-#, kde-format
-msgctxt "@title"
+#, fuzzy, kde-format
+#| msgctxt "@title"
+#| msgid "Subscription Error"
+msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Abonnementsfejl"
 
@@ -2428,8 +2447,10 @@ msgid "Failed to create a new tag"
 msgstr "Kunne ikke oprette et nyt mærke"
 
 #: widgets/tageditwidget.cpp:116
-#, kde-format
-msgid "An error occurred while creating a new tag"
+#, fuzzy, kde-format
+#| msgid "An error occurred while creating a new tag"
+msgctxt "@title:window"
+msgid "An Error Occurred while Creating a New Tag"
 msgstr "Der opstod en fejl under oprettelse af nyt mærke"
 
 #: widgets/tageditwidget.cpp:164
@@ -2439,9 +2460,11 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Vil du virkelig fjerne mærket <resource>%1</resource>?"
 
 #: widgets/tageditwidget.cpp:165
-#, kde-format
-msgctxt "@title"
-msgid "Delete tag"
+#, fuzzy, kde-format
+#| msgctxt "@title"
+#| msgid "Delete tag"
+msgctxt "@title:window"
+msgid "Delete Tag"
 msgstr "Slet mærke"
 
 #: widgets/tageditwidget.cpp:189
@@ -2468,7 +2491,7 @@ msgstr "Opret nyt mærke"
 msgid "Manage Tags"
 msgstr "Håndtér mærker"
 
-#: widgets/tagselectioncombobox.cpp:124
+#: widgets/tagselectioncombobox.cpp:126
 #, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
@@ -2512,65 +2535,80 @@ msgstr "Konverterer et deltræ af en Akonadi-samling til en XML-fil."
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
 msgstr "(c) 2009 Volker Krause <vkrause@kde.org>"
 
-#: xml/xmldocument.cpp:84
+#: xml/xmldocument.cpp:85
 #, kde-format
 msgid "No data loaded."
 msgstr "Ingen data indlæst."
 
-#: xml/xmldocument.cpp:120
+#: xml/xmldocument.cpp:121
 #, kde-format
 msgid "No filename specified"
 msgstr "Intet filnavn angivet"
 
-#: xml/xmldocument.cpp:128
+#: xml/xmldocument.cpp:129
 #, kde-format
 msgid "Unable to open data file '%1'."
 msgstr "Kan ikke åbne datafilen \"%1\"."
 
-#: xml/xmldocument.cpp:133
+#: xml/xmldocument.cpp:134
 #, kde-format
 msgid "File %1 does not exist."
 msgstr "Filen %1 findes ikke."
 
-#: xml/xmldocument.cpp:141
+#: xml/xmldocument.cpp:142
 #, kde-format
 msgid "Unable to parse data file '%1'."
 msgstr "Kan ikke fortolke datafilen \"%1\"."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "Skemadefinitionen kunne ikke indlæses og fortolkes."
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "Kan ikke oprette kontekst til skemafortolker."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "Kan ikke oprette skema."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr "Kan ikke oprette kontekst til skemavalidering."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "Ugyldigt filformat."
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "Kan ikke fortolke datafilen: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Kan ikke finde samlingen %1"
+
+#~ msgid "Error"
+#~ msgstr "Fejl"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete folder?"
+#~ msgid_plural "Delete folders?"
+#~ msgstr[0] "Vil du slette mappen?"
+#~ msgstr[1] "Vil du slette mapperne?"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete item?"
+#~ msgid_plural "Delete items?"
+#~ msgstr[0] "Slet element?"
+#~ msgstr[1] "Slet elementer?"
 
 #~ msgid "&Move here"
 #~ msgstr "&Flyt hertil"

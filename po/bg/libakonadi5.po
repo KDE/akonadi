@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-04 00:45+0000\n"
+"POT-Creation-Date: 2022-10-10 00:46+0000\n"
 "PO-Revision-Date: 2022-07-10 09:46+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -255,7 +255,7 @@ msgid "No objects specified for moving"
 msgstr "Няма обекти, посочени за преместване"
 
 #: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
-#: core/jobs/linkjobimpl_p.h:38
+#: core/jobs/linkjobimpl_p.h:39
 #, kde-format
 msgid "No valid destination specified"
 msgstr "Не е посочена валидна дестинация"
@@ -405,37 +405,37 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Име"
 
-#: core/models/entitytreemodel_p.cpp:1330
+#: core/models/entitytreemodel_p.cpp:1331
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Не може да се копира елемент: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1333
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Не можа да се копира колекция: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1335
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Не можа да се премести елемент: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1337
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Не можа да се премести колекция: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1339
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "Не може да се свърже обект: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1340
+#: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
 #, kde-format
 msgctxt "@title:window"
 msgid "Error"
@@ -609,8 +609,10 @@ msgid "Could not create agent instance: %1"
 msgstr "Не можа да се създаде инстанция на агент: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, kde-format
-msgid "Agent instance creation failed"
+#, fuzzy, kde-format
+#| msgid "Agent instance creation failed"
+msgctxt "@title:window"
+msgid "Agent Instance Creation Failed"
 msgstr "Създаването на инстанция на агент е неуспешно"
 
 #: widgets/agentactionmanager.cpp:59
@@ -625,8 +627,10 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "Наистина ли искате да изтриете избраната инстанция на агент?"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, kde-format
-msgctxt "%1 = agent name"
+#, fuzzy, kde-format
+#| msgctxt "%1 = agent name"
+#| msgid "%1 Configuration"
+msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Конфигурация на %1"
 
@@ -640,17 +644,17 @@ msgstr "%1 Наръчник"
 msgid "About %1"
 msgstr "Относно %1"
 
-#: widgets/agentconfigurationwidget.cpp:96
+#: widgets/agentconfigurationwidget.cpp:95
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "Диалоговият прозорец за конфигуриране е отворен в друг прозорец"
 
-#: widgets/agentconfigurationwidget.cpp:103
+#: widgets/agentconfigurationwidget.cpp:102
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "Конфигурацията за %1 вече е отворена другаде."
 
-#: widgets/agentconfigurationwidget.cpp:105
+#: widgets/agentconfigurationwidget.cpp:104
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Неуспешно регистриране на %1 диалогов прозорец за конфигуриране."
@@ -798,8 +802,10 @@ msgid "Could not create folder: %1"
 msgstr "Грешка при създаване на папката: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, kde-format
-msgid "Folder creation failed"
+#, fuzzy, kde-format
+#| msgid "Folder creation failed"
+msgctxt "@title:window"
+msgid "Folder Creation Failed"
 msgstr "Неуспешно създаване на папка"
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
@@ -963,9 +969,11 @@ msgid "Open collection dialog"
 msgstr "Отваряне на диалоговия прозорец за колекции"
 
 #: widgets/collectionrequester.cpp:143
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Select a collection"
 msgctxt "@title:window"
-msgid "Select a collection"
+msgid "Select a Collection"
 msgstr "Избиране на колекция"
 
 #: widgets/conflictresolvedialog.cpp:129
@@ -1054,7 +1062,7 @@ msgstr "&Копиране тук"
 msgid "&Link Here"
 msgstr "&Създаване на връзка тук"
 
-#: widgets/dragdropmanager.cpp:228
+#: widgets/dragdropmanager.cpp:229
 #, kde-format
 msgid "C&ancel"
 msgstr "О&тказ"
@@ -1834,11 +1842,6 @@ msgstr "Запазване на протокола от теста"
 
 #: widgets/selftestdialog.cpp:650
 #, kde-format
-msgid "Error"
-msgstr "Грешка"
-
-#: widgets/selftestdialog.cpp:650
-#, kde-format
 msgid "Could not open file '%1'"
 msgstr "Грешка при отваряне на файла \"%1\""
 
@@ -2211,12 +2214,14 @@ msgstr[0] "Наистина ли искате да изтриете тази п�
 msgstr[1] "Наистина ли искате да изтриете %1 папки и всички техни подпапки?"
 
 #: widgets/standardactionmanager.cpp:359
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Delete Folder"
+#| msgid_plural "Delete %1 Folders"
 msgctxt "@title:window"
-msgid "Delete folder?"
-msgid_plural "Delete folders?"
-msgstr[0] "Да се изтрие ли папката?"
-msgstr[1] "Да се изтрият ли папките?"
+msgid "Delete Folder?"
+msgid_plural "Delete Folders?"
+msgstr[0] "Изтриване на папка"
+msgstr[1] "Изтриване на %1 папки"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2224,8 +2229,10 @@ msgid "Could not delete folder: %1"
 msgstr "Не може да се изтрие папка: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, kde-format
-msgid "Folder deletion failed"
+#, fuzzy, kde-format
+#| msgid "Folder deletion failed"
+msgctxt "@title:window"
+msgid "Folder Deletion Failed"
 msgstr "Неуспешно изтриване на папка"
 
 #: widgets/standardactionmanager.cpp:363
@@ -2242,12 +2249,14 @@ msgstr[0] "Наистина ли искате да изтриете избран
 msgstr[1] "Наистина ли искате да изтриете %1 елемента?"
 
 #: widgets/standardactionmanager.cpp:368
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Delete Item"
+#| msgid_plural "Delete %1 Items"
 msgctxt "@title:window"
-msgid "Delete item?"
-msgid_plural "Delete items?"
-msgstr[0] "Да се ​​изтрие ли елемент?"
-msgstr[1] "Да се ​​изтрият ли елементи?"
+msgid "Delete Item?"
+msgid_plural "Delete Items?"
+msgstr[0] "Изтриване на елемент"
+msgstr[1] "Изтриване на %1 елемента"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2255,8 +2264,10 @@ msgid "Could not delete item: %1"
 msgstr "Не може да се изтрие елемент: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, kde-format
-msgid "Item deletion failed"
+#, fuzzy, kde-format
+#| msgid "Item deletion failed"
+msgctxt "@title:window"
+msgid "Item Deletion Failed"
 msgstr "Изтриването на елемента е неуспешно"
 
 #: widgets/standardactionmanager.cpp:372
@@ -2283,8 +2294,10 @@ msgid "Could not create resource: %1"
 msgstr "Неуспешно създаване на ресурс: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, kde-format
-msgid "Resource creation failed"
+#, fuzzy, kde-format
+#| msgid "Resource creation failed"
+msgctxt "@title:window"
+msgid "Resource Creation Failed"
 msgstr "Създаването на ресурс е неуспешно"
 
 #: widgets/standardactionmanager.cpp:381
@@ -2308,8 +2321,10 @@ msgid "Could not paste data: %1"
 msgstr "Неуспешно поставяне на данни: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, kde-format
-msgid "Paste failed"
+#, fuzzy, kde-format
+#| msgid "Paste failed"
+msgctxt "@title:window"
+msgid "Paste Failed"
 msgstr "Поставянето е неуспешно"
 
 #: widgets/standardactionmanager.cpp:739
@@ -2318,8 +2333,10 @@ msgid "We can not add \"/\" in folder name."
 msgstr "Не можем да добавим \" / \"в името на папката."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, kde-format
-msgid "Create new folder error"
+#, fuzzy, kde-format
+#| msgid "Create new folder error"
+msgctxt "@title:window"
+msgid "Create New Folder Error"
 msgstr "Грешка при създаване на нова папка"
 
 #: widgets/standardactionmanager.cpp:743
@@ -2363,8 +2380,10 @@ msgid "Failed to update subscription: %1"
 msgstr "Неуспешно актуализиране на абонамента: %1"
 
 #: widgets/subscriptiondialog.cpp:93
-#, kde-format
-msgctxt "@title"
+#, fuzzy, kde-format
+#| msgctxt "@title"
+#| msgid "Subscription Error"
+msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Грешка в абонамента"
 
@@ -2404,8 +2423,10 @@ msgid "Failed to create a new tag"
 msgstr "Неуспешно създаване на нов етикет"
 
 #: widgets/tageditwidget.cpp:116
-#, kde-format
-msgid "An error occurred while creating a new tag"
+#, fuzzy, kde-format
+#| msgid "An error occurred while creating a new tag"
+msgctxt "@title:window"
+msgid "An Error Occurred while Creating a New Tag"
 msgstr "Възникна грешка при създаването на нов етикет"
 
 #: widgets/tageditwidget.cpp:164
@@ -2415,9 +2436,11 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Наистина ли искате да премахнете етикета <resource>%1</resource>?"
 
 #: widgets/tageditwidget.cpp:165
-#, kde-format
-msgctxt "@title"
-msgid "Delete tag"
+#, fuzzy, kde-format
+#| msgctxt "@title"
+#| msgid "Delete tag"
+msgctxt "@title:window"
+msgid "Delete Tag"
 msgstr "Изтриване на етикет"
 
 #: widgets/tageditwidget.cpp:189
@@ -2444,7 +2467,7 @@ msgstr "Създаване на нов етикет"
 msgid "Manage Tags"
 msgstr "Управление на етикети"
 
-#: widgets/tagselectioncombobox.cpp:124
+#: widgets/tagselectioncombobox.cpp:126
 #, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
@@ -2488,62 +2511,77 @@ msgstr "Преобразува колекция на Akonadi в XML файл."
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
 msgstr "(c) 2009 Volker Krause <vkrause@kde.org>"
 
-#: xml/xmldocument.cpp:84
+#: xml/xmldocument.cpp:85
 #, kde-format
 msgid "No data loaded."
 msgstr "Няма заредени данни."
 
-#: xml/xmldocument.cpp:120
+#: xml/xmldocument.cpp:121
 #, kde-format
 msgid "No filename specified"
 msgstr "Не е посочено име на файл"
 
-#: xml/xmldocument.cpp:128
+#: xml/xmldocument.cpp:129
 #, kde-format
 msgid "Unable to open data file '%1'."
 msgstr "Не може да се отвори файл с данни \"%1\"."
 
-#: xml/xmldocument.cpp:133
+#: xml/xmldocument.cpp:134
 #, kde-format
 msgid "File %1 does not exist."
 msgstr "Файл %1 не съществува."
 
-#: xml/xmldocument.cpp:141
+#: xml/xmldocument.cpp:142
 #, kde-format
 msgid "Unable to parse data file '%1'."
 msgstr "Не може да се анализира файл с данни \"%1\"."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "Определението на схемата не може да бъде заредено и анализирано."
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "Не може да се създаде контекст на анализатор на схема."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "Не може да се създаде схема."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr "Не може да се създаде контекст за проверка на схемата."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "Невалиден файлов формат."
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "Не може да се анализира файл с данни: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Не може да се намери колекция %1"
+
+#~ msgid "Error"
+#~ msgstr "Грешка"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete folder?"
+#~ msgid_plural "Delete folders?"
+#~ msgstr[0] "Да се изтрие ли папката?"
+#~ msgstr[1] "Да се изтрият ли папките?"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete item?"
+#~ msgid_plural "Delete items?"
+#~ msgstr[0] "Да се ​​изтрие ли елемент?"
+#~ msgstr[1] "Да се ​​изтрият ли елементи?"

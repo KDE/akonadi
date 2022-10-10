@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdepim/libakonadi.po\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-04 00:45+0000\n"
+"POT-Creation-Date: 2022-10-10 00:46+0000\n"
 "PO-Revision-Date: 2007-07-11 08:14-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -265,7 +265,7 @@ msgid "No objects specified for moving"
 msgstr ""
 
 #: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
-#: core/jobs/linkjobimpl_p.h:38
+#: core/jobs/linkjobimpl_p.h:39
 #, kde-format
 msgid "No valid destination specified"
 msgstr ""
@@ -417,42 +417,42 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Ainm"
 
-#: core/models/entitytreemodel_p.cpp:1330
+#: core/models/entitytreemodel_p.cpp:1331
 #, fuzzy, kde-format
 #| msgid "Could not copy item:"
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Níorbh fhéidir an mhír a chóipeáil:"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1333
 #, fuzzy, kde-format
 #| msgid "Could not copy collection:"
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Níorbh fhéidir an bailiúchán a chóipeáil:"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1335
 #, fuzzy, kde-format
 #| msgid "Could not move item:"
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Níorbh fhéidir an mhír a bhogadh:"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1337
 #, fuzzy, kde-format
 #| msgid "Could not move collection:"
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Níorbh fhéidir an bailiúchán a bhogadh:"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1339
 #, fuzzy, kde-format
 #| msgid "Could not link entity:"
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "Níorbh fhéidir aonán a nascadh:"
 
-#: core/models/entitytreemodel_p.cpp:1340
+#: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
 #, fuzzy, kde-format
 #| msgctxt "@info:status"
 #| msgid "Error."
@@ -619,9 +619,11 @@ msgid "Could not create agent instance: %1"
 msgstr "Níorbh fhéidir gníomhaire a chruthú: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, kde-format
-msgid "Agent instance creation failed"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "Agent instance creation timed out."
+msgctxt "@title:window"
+msgid "Agent Instance Creation Failed"
+msgstr "Cruthú an ghníomhaire thar am."
 
 #: widgets/agentactionmanager.cpp:59
 #, kde-format
@@ -636,7 +638,7 @@ msgstr ""
 
 #: widgets/agentconfigurationdialog.cpp:56
 #, kde-format
-msgctxt "%1 = agent name"
+msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr ""
 
@@ -650,17 +652,17 @@ msgstr ""
 msgid "About %1"
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:96
+#: widgets/agentconfigurationwidget.cpp:95
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:103
+#: widgets/agentconfigurationwidget.cpp:102
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:105
+#: widgets/agentconfigurationwidget.cpp:104
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Failed to register %1 configuration dialog."
@@ -816,8 +818,10 @@ msgid "Could not create folder: %1"
 msgstr "Níorbh fhéidir an fillteán a chruthú: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, kde-format
-msgid "Folder creation failed"
+#, fuzzy, kde-format
+#| msgid "Folder creation failed"
+msgctxt "@title:window"
+msgid "Folder Creation Failed"
 msgstr "Theip ar chruthú an fhillteáin"
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
@@ -998,7 +1002,7 @@ msgstr "Oscail dialóg bhailiúcháin"
 #, fuzzy, kde-format
 #| msgid "Select a collection"
 msgctxt "@title:window"
-msgid "Select a collection"
+msgid "Select a Collection"
 msgstr "Roghnaigh bailiúchán"
 
 #: widgets/conflictresolvedialog.cpp:129
@@ -1081,7 +1085,7 @@ msgstr "&Cóipeáil Anseo"
 msgid "&Link Here"
 msgstr "&Nasc Anseo"
 
-#: widgets/dragdropmanager.cpp:228
+#: widgets/dragdropmanager.cpp:229
 #, kde-format
 msgid "C&ancel"
 msgstr "Ce&alaigh"
@@ -1776,13 +1780,6 @@ msgid "Save Test Report"
 msgstr ""
 
 #: widgets/selftestdialog.cpp:650
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Error."
-msgid "Error"
-msgstr "Earráid."
-
-#: widgets/selftestdialog.cpp:650
 #, kde-format
 msgid "Could not open file '%1'"
 msgstr "Níorbh fhéidir comhad '%1' a oscailt"
@@ -2252,15 +2249,17 @@ msgstr[4] ""
 "gach fofhillteán atá iontu?"
 
 #: widgets/standardactionmanager.cpp:359
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Delete Folder"
+#| msgid_plural "Delete %1 Folders"
 msgctxt "@title:window"
-msgid "Delete folder?"
-msgid_plural "Delete folders?"
-msgstr[0] "Scrios an fillteán?"
-msgstr[1] "Scrios na fillteáin?"
-msgstr[2] "Scrios na fillteáin?"
-msgstr[3] "Scrios na fillteáin?"
-msgstr[4] "Scrios na fillteáin?"
+msgid "Delete Folder?"
+msgid_plural "Delete Folders?"
+msgstr[0] "Scrios Fillteán"
+msgstr[1] "Scrios %1 Fhillteán"
+msgstr[2] "Scrios %1 Fhillteán"
+msgstr[3] "Scrios %1 bhFillteán"
+msgstr[4] "Scrios %1 Fillteán"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2268,8 +2267,10 @@ msgid "Could not delete folder: %1"
 msgstr "Níorbh fhéidir an fillteán a scriosadh: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, kde-format
-msgid "Folder deletion failed"
+#, fuzzy, kde-format
+#| msgid "Folder deletion failed"
+msgctxt "@title:window"
+msgid "Folder Deletion Failed"
 msgstr "Theip ar scriosadh an fhillteáin"
 
 #: widgets/standardactionmanager.cpp:363
@@ -2291,15 +2292,17 @@ msgstr[3] "An bhfuil tú cinnte gur mian leat na %1 mír roghnaithe a scriosadh?
 msgstr[4] "An bhfuil tú cinnte gur mian leat na %1 mír roghnaithe a scriosadh?"
 
 #: widgets/standardactionmanager.cpp:368
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Delete Item"
+#| msgid_plural "Delete %1 Items"
 msgctxt "@title:window"
-msgid "Delete item?"
-msgid_plural "Delete items?"
-msgstr[0] "&Scrios an mhír"
-msgstr[1] "&Scrios na míreanna"
-msgstr[2] "&Scrios na míreanna"
-msgstr[3] "&Scrios na míreanna"
-msgstr[4] "&Scrios na míreanna"
+msgid "Delete Item?"
+msgid_plural "Delete Items?"
+msgstr[0] "Scrios Mír"
+msgstr[1] "Scrios %1 Mhír"
+msgstr[2] "Scrios %1 Mhír"
+msgstr[3] "Scrios %1 Mír"
+msgstr[4] "Scrios %1 Mír"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2307,8 +2310,10 @@ msgid "Could not delete item: %1"
 msgstr "Níorbh fhéidir an mhír a scriosadh: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, kde-format
-msgid "Item deletion failed"
+#, fuzzy, kde-format
+#| msgid "Item deletion failed"
+msgctxt "@title:window"
+msgid "Item Deletion Failed"
 msgstr "Theip ar scriosadh"
 
 #: widgets/standardactionmanager.cpp:372
@@ -2335,8 +2340,10 @@ msgid "Could not create resource: %1"
 msgstr "Níorbh fhéidir an acmhainn a chruthú: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, kde-format
-msgid "Resource creation failed"
+#, fuzzy, kde-format
+#| msgid "Resource creation failed"
+msgctxt "@title:window"
+msgid "Resource Creation Failed"
 msgstr "Theip ar chruthú"
 
 #: widgets/standardactionmanager.cpp:381
@@ -2366,8 +2373,10 @@ msgid "Could not paste data: %1"
 msgstr "Níorbh fhéidir na sonraí a ghreamú: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, kde-format
-msgid "Paste failed"
+#, fuzzy, kde-format
+#| msgid "Paste failed"
+msgctxt "@title:window"
+msgid "Paste Failed"
 msgstr "Theip ar ghreamú"
 
 #: widgets/standardactionmanager.cpp:739
@@ -2376,9 +2385,12 @@ msgid "We can not add \"/\" in folder name."
 msgstr ""
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, kde-format
-msgid "Create new folder error"
-msgstr ""
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "New Folder"
+msgctxt "@title:window"
+msgid "Create New Folder Error"
+msgstr "Fillteán Nua"
 
 #: widgets/standardactionmanager.cpp:743
 #, kde-format
@@ -2423,7 +2435,7 @@ msgstr "Níorbh fhéidir gníomhaire a chruthú."
 #: widgets/subscriptiondialog.cpp:93
 #, fuzzy, kde-format
 #| msgid "Local Subscriptions"
-msgctxt "@title"
+msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Síntiúis Logánta"
 
@@ -2471,7 +2483,8 @@ msgstr "Níorbh fhéidir gníomhaire a chruthú."
 #, fuzzy, kde-format
 #| msgctxt "@info"
 #| msgid "Error while creating item: %1"
-msgid "An error occurred while creating a new tag"
+msgctxt "@title:window"
+msgid "An Error Occurred while Creating a New Tag"
 msgstr "Earráid agus mír á cruthú: %1"
 
 #: widgets/tageditwidget.cpp:164
@@ -2486,8 +2499,8 @@ msgstr "An bhfuil tú cinnte gur mian leat an acmhainn seo a scriosadh?"
 #, fuzzy, kde-format
 #| msgid "Delete Item"
 #| msgid_plural "Delete %1 Items"
-msgctxt "@title"
-msgid "Delete tag"
+msgctxt "@title:window"
+msgid "Delete Tag"
 msgstr "Scrios Mír"
 
 #: widgets/tageditwidget.cpp:189
@@ -2517,7 +2530,7 @@ msgstr "Níorbh fhéidir gníomhaire a chruthú."
 msgid "Manage Tags"
 msgstr ""
 
-#: widgets/tagselectioncombobox.cpp:124
+#: widgets/tagselectioncombobox.cpp:126
 #, fuzzy, kde-format
 #| msgid "Delete Item"
 #| msgid_plural "Delete %1 Items"
@@ -2563,74 +2576,98 @@ msgstr ""
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
 msgstr ""
 
-#: xml/xmldocument.cpp:84
+#: xml/xmldocument.cpp:85
 #, kde-format
 msgid "No data loaded."
 msgstr ""
 
-#: xml/xmldocument.cpp:120
+#: xml/xmldocument.cpp:121
 #, kde-format
 msgid "No filename specified"
 msgstr ""
 
-#: xml/xmldocument.cpp:128
+#: xml/xmldocument.cpp:129
 #, fuzzy, kde-format
 #| msgid "Unable to obtain agent type '%1'."
 msgid "Unable to open data file '%1'."
 msgstr "Níorbh fhéidir cineál gníomhaire '%1' a fháil."
 
-#: xml/xmldocument.cpp:133
+#: xml/xmldocument.cpp:134
 #, kde-format
 msgid "File %1 does not exist."
 msgstr ""
 
-#: xml/xmldocument.cpp:141
+#: xml/xmldocument.cpp:142
 #, fuzzy, kde-format
 #| msgid "Unable to obtain agent type '%1'."
 msgid "Unable to parse data file '%1'."
 msgstr "Níorbh fhéidir cineál gníomhaire '%1' a fháil."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr ""
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema parser context."
 msgstr "Níorbh fhéidir gníomhaire a chruthú."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema."
 msgstr "Níorbh fhéidir gníomhaire a chruthú."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema validation context."
 msgstr "Níorbh fhéidir gníomhaire a chruthú."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, fuzzy, kde-format
 #| msgctxt "@info"
 #| msgid "Invalid item retrieved"
 msgid "Invalid file format."
 msgstr "Fuarthas mír neamhbhailí"
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, fuzzy, kde-format
 #| msgid "Could not paste data: %1"
 msgid "Unable to parse data file: %1"
 msgstr "Níorbh fhéidir na sonraí a ghreamú: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, fuzzy, kde-format
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"
 msgstr "Bailiúchán neamhbhailí"
+
+#, fuzzy
+#~| msgctxt "@info:status"
+#~| msgid "Error."
+#~ msgid "Error"
+#~ msgstr "Earráid."
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete folder?"
+#~ msgid_plural "Delete folders?"
+#~ msgstr[0] "Scrios an fillteán?"
+#~ msgstr[1] "Scrios na fillteáin?"
+#~ msgstr[2] "Scrios na fillteáin?"
+#~ msgstr[3] "Scrios na fillteáin?"
+#~ msgstr[4] "Scrios na fillteáin?"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete item?"
+#~ msgid_plural "Delete items?"
+#~ msgstr[0] "&Scrios an mhír"
+#~ msgstr[1] "&Scrios na míreanna"
+#~ msgstr[2] "&Scrios na míreanna"
+#~ msgstr[3] "&Scrios na míreanna"
+#~ msgstr[4] "&Scrios na míreanna"
 
 #~ msgid "&Move here"
 #~ msgstr "&Bog anseo"

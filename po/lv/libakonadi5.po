@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-04 00:45+0000\n"
+"POT-Creation-Date: 2022-10-10 00:46+0000\n"
 "PO-Revision-Date: 2010-01-01 15:34+0200\n"
 "Last-Translator: Viesturs Zarins <viesturs.zarins@mii.lu.lv>\n"
 "Language-Team: Latvian <locale@laka.lv>\n"
@@ -279,7 +279,7 @@ msgid "No objects specified for moving"
 msgstr "Nav norādīti pārvietojamie objekti"
 
 #: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
-#: core/jobs/linkjobimpl_p.h:38
+#: core/jobs/linkjobimpl_p.h:39
 #, kde-format
 msgid "No valid destination specified"
 msgstr "Nav norādīts derīgs mērķis"
@@ -437,41 +437,41 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Nosaukums"
 
-#: core/models/entitytreemodel_p.cpp:1330
+#: core/models/entitytreemodel_p.cpp:1331
 #, fuzzy, kde-format
 #| msgid "Could not open file '%1'"
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Neizdevās atvērt failu '%1'"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1333
 #, fuzzy, kde-format
 #| msgid "no collection"
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "nav kolekcijas"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1335
 #, fuzzy, kde-format
 #| msgid "Could not open file '%1'"
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Neizdevās atvērt failu '%1'"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1337
 #, fuzzy, kde-format
 #| msgid "no collection"
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "nav kolekcijas"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1339
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr ""
 
-#: core/models/entitytreemodel_p.cpp:1340
+#: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
 #, fuzzy, kde-format
 #| msgctxt "@info:status"
 #| msgid "Error."
@@ -645,7 +645,8 @@ msgstr "Neizdevās izveidot aģenta instanci."
 #: widgets/agentactionmanager.cpp:57
 #, fuzzy, kde-format
 #| msgid "Agent instance creation timed out."
-msgid "Agent instance creation failed"
+msgctxt "@title:window"
+msgid "Agent Instance Creation Failed"
 msgstr "Aģenta instances izveidošanas noildze."
 
 #: widgets/agentactionmanager.cpp:59
@@ -663,7 +664,7 @@ msgstr "Vai tiešām vēlaties dzēst visas iezīmētās vienības?"
 
 #: widgets/agentconfigurationdialog.cpp:56
 #, kde-format
-msgctxt "%1 = agent name"
+msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr ""
 
@@ -677,17 +678,17 @@ msgstr ""
 msgid "About %1"
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:96
+#: widgets/agentconfigurationwidget.cpp:95
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:103
+#: widgets/agentconfigurationwidget.cpp:102
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:105
+#: widgets/agentconfigurationwidget.cpp:104
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Failed to register %1 configuration dialog."
@@ -841,8 +842,10 @@ msgid "Could not create folder: %1"
 msgstr "Neizdevās izveidot mapi: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, kde-format
-msgid "Folder creation failed"
+#, fuzzy, kde-format
+#| msgid "Folder creation failed"
+msgctxt "@title:window"
+msgid "Folder Creation Failed"
 msgstr "Neveiksmīga mapes izveidošana"
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
@@ -1017,7 +1020,7 @@ msgstr "Atvērt kolekciju logu"
 #, fuzzy, kde-format
 #| msgid "Invalid collection"
 msgctxt "@title:window"
-msgid "Select a collection"
+msgid "Select a Collection"
 msgstr "Nederīga kolekcija"
 
 #: widgets/conflictresolvedialog.cpp:129
@@ -1100,7 +1103,7 @@ msgstr "&Kopēt šeit"
 msgid "&Link Here"
 msgstr "&Saitēt šeit"
 
-#: widgets/dragdropmanager.cpp:228
+#: widgets/dragdropmanager.cpp:229
 #, kde-format
 msgid "C&ancel"
 msgstr "&Atcelt"
@@ -1891,13 +1894,6 @@ msgid "Save Test Report"
 msgstr "Saglabāt pārbaudes atskaiti"
 
 #: widgets/selftestdialog.cpp:650
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Error."
-msgid "Error"
-msgstr "Kļūda."
-
-#: widgets/selftestdialog.cpp:650
 #, kde-format
 msgid "Could not open file '%1'"
 msgstr "Neizdevās atvērt failu '%1'"
@@ -2377,13 +2373,13 @@ msgstr[2] "Vai tiešām vēlaties dzēst mapi '%1' un visas tās apakšmapes?"
 
 #: widgets/standardactionmanager.cpp:359
 #, fuzzy, kde-format
-#| msgid "Delete folder?"
+#| msgid "&Delete Folder"
 msgctxt "@title:window"
-msgid "Delete folder?"
-msgid_plural "Delete folders?"
-msgstr[0] "Dzēst mapi?"
-msgstr[1] "Dzēst mapi?"
-msgstr[2] "Dzēst mapi?"
+msgid "Delete Folder?"
+msgid_plural "Delete Folders?"
+msgstr[0] "&Dzēst mapi"
+msgstr[1] "&Dzēst mapi"
+msgstr[2] "&Dzēst mapi"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2391,8 +2387,10 @@ msgid "Could not delete folder: %1"
 msgstr "Neizdevās izdzēst mapi: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, kde-format
-msgid "Folder deletion failed"
+#, fuzzy, kde-format
+#| msgid "Folder deletion failed"
+msgctxt "@title:window"
+msgid "Folder Deletion Failed"
 msgstr "Neveiksmīga mapes dzēšana"
 
 #: widgets/standardactionmanager.cpp:363
@@ -2416,8 +2414,8 @@ msgstr[2] "Vai tiešām vēlaties dzēst visas iezīmētās vienības?"
 #| msgid "&Delete Item"
 #| msgid_plural "&Delete %1 Items"
 msgctxt "@title:window"
-msgid "Delete item?"
-msgid_plural "Delete items?"
+msgid "Delete Item?"
+msgid_plural "Delete Items?"
 msgstr[0] "&Dzēst %1 vienību"
 msgstr[1] "&Dzēst %1 vienības"
 msgstr[2] "&Dzēst %1 vienību"
@@ -2431,7 +2429,8 @@ msgstr "Neizdevās izdzēst mapi: %1"
 #: widgets/standardactionmanager.cpp:370
 #, fuzzy, kde-format
 #| msgid "Folder deletion failed"
-msgid "Item deletion failed"
+msgctxt "@title:window"
+msgid "Item Deletion Failed"
 msgstr "Neveiksmīga mapes dzēšana"
 
 #: widgets/standardactionmanager.cpp:372
@@ -2466,7 +2465,8 @@ msgstr "Neizdevās izveidot mapi: %1"
 #: widgets/standardactionmanager.cpp:377
 #, fuzzy, kde-format
 #| msgid "Folder creation failed"
-msgid "Resource creation failed"
+msgctxt "@title:window"
+msgid "Resource Creation Failed"
 msgstr "Neveiksmīga mapes izveidošana"
 
 #: widgets/standardactionmanager.cpp:381
@@ -2494,8 +2494,10 @@ msgid "Could not paste data: %1"
 msgstr "Neizdevās ielīmēt datus: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, kde-format
-msgid "Paste failed"
+#, fuzzy, kde-format
+#| msgid "Paste failed"
+msgctxt "@title:window"
+msgid "Paste Failed"
 msgstr "Neizdevās ielīmēt"
 
 #: widgets/standardactionmanager.cpp:739
@@ -2504,9 +2506,12 @@ msgid "We can not add \"/\" in folder name."
 msgstr ""
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, kde-format
-msgid "Create new folder error"
-msgstr ""
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "New Folder"
+msgctxt "@title:window"
+msgid "Create New Folder Error"
+msgstr "Jauna mape"
 
 #: widgets/standardactionmanager.cpp:743
 #, kde-format
@@ -2553,7 +2558,7 @@ msgstr "Neizdevās izveidot aģenta instanci."
 #: widgets/subscriptiondialog.cpp:93
 #, fuzzy, kde-format
 #| msgid "Manage Local &Subscriptions..."
-msgctxt "@title"
+msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Pārvaldīt lokālos &pierakstus..."
 
@@ -2604,7 +2609,8 @@ msgstr "Neizdevās izveidot aģenta instanci."
 
 #: widgets/tageditwidget.cpp:116
 #, kde-format
-msgid "An error occurred while creating a new tag"
+msgctxt "@title:window"
+msgid "An Error Occurred while Creating a New Tag"
 msgstr ""
 
 #: widgets/tageditwidget.cpp:164
@@ -2618,8 +2624,8 @@ msgstr "Vai tiešām vēlaties dzēst meklēšanas skatu '%1'?"
 #, fuzzy, kde-format
 #| msgid "&Delete Item"
 #| msgid_plural "&Delete %1 Items"
-msgctxt "@title"
-msgid "Delete tag"
+msgctxt "@title:window"
+msgid "Delete Tag"
 msgstr "&Dzēst %1 vienību"
 
 #: widgets/tageditwidget.cpp:189
@@ -2649,7 +2655,7 @@ msgstr "Neizdevās izveidot aģenta instanci."
 msgid "Manage Tags"
 msgstr ""
 
-#: widgets/tagselectioncombobox.cpp:124
+#: widgets/tagselectioncombobox.cpp:126
 #, fuzzy, kde-format
 #| msgid "&Delete Item"
 #| msgid_plural "&Delete %1 Items"
@@ -2695,74 +2701,99 @@ msgstr ""
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
 msgstr ""
 
-#: xml/xmldocument.cpp:84
+#: xml/xmldocument.cpp:85
 #, kde-format
 msgid "No data loaded."
 msgstr ""
 
-#: xml/xmldocument.cpp:120
+#: xml/xmldocument.cpp:121
 #, fuzzy, kde-format
 #| msgid "No valid destination specified"
 msgid "No filename specified"
 msgstr "Nav norādīts derīgs mērķis"
 
-#: xml/xmldocument.cpp:128
+#: xml/xmldocument.cpp:129
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to open data file '%1'."
 msgstr "Neizdevās izveidot aģenta instanci."
 
-#: xml/xmldocument.cpp:133
+#: xml/xmldocument.cpp:134
 #, kde-format
 msgid "File %1 does not exist."
 msgstr ""
 
-#: xml/xmldocument.cpp:141
+#: xml/xmldocument.cpp:142
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to parse data file '%1'."
 msgstr "Neizdevās izveidot aģenta instanci."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr ""
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema parser context."
 msgstr "Neizdevās izveidot aģenta instanci."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema."
 msgstr "Neizdevās izveidot aģenta instanci."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema validation context."
 msgstr "Neizdevās izveidot aģenta instanci."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, fuzzy, kde-format
 #| msgid "Invalid parent"
 msgid "Invalid file format."
 msgstr "Nederīgs vecāks"
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, fuzzy, kde-format
 #| msgid "Could not paste data: %1"
 msgid "Unable to parse data file: %1"
 msgstr "Neizdevās ielīmēt datus: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, fuzzy, kde-format
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"
 msgstr "Nederīga kolekcija"
+
+#, fuzzy
+#~| msgctxt "@info:status"
+#~| msgid "Error."
+#~ msgid "Error"
+#~ msgstr "Kļūda."
+
+#, fuzzy
+#~| msgid "Delete folder?"
+#~ msgctxt "@title:window"
+#~ msgid "Delete folder?"
+#~ msgid_plural "Delete folders?"
+#~ msgstr[0] "Dzēst mapi?"
+#~ msgstr[1] "Dzēst mapi?"
+#~ msgstr[2] "Dzēst mapi?"
+
+#, fuzzy
+#~| msgid "&Delete Item"
+#~| msgid_plural "&Delete %1 Items"
+#~ msgctxt "@title:window"
+#~ msgid "Delete item?"
+#~ msgid_plural "Delete items?"
+#~ msgstr[0] "&Dzēst %1 vienību"
+#~ msgstr[1] "&Dzēst %1 vienības"
+#~ msgstr[2] "&Dzēst %1 vienību"
 
 #~ msgid "&Move here"
 #~ msgstr "&Pārvietot šeit"

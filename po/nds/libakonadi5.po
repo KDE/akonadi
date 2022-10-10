@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-04 00:45+0000\n"
+"POT-Creation-Date: 2022-10-10 00:46+0000\n"
 "PO-Revision-Date: 2014-09-18 22:53+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -266,7 +266,7 @@ msgid "No objects specified for moving"
 msgstr "Keen Objekten för't Verschuven angeven"
 
 #: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
-#: core/jobs/linkjobimpl_p.h:38
+#: core/jobs/linkjobimpl_p.h:39
 #, kde-format
 msgid "No valid destination specified"
 msgstr "Keen gellen Teel angeven"
@@ -421,42 +421,42 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Naam"
 
-#: core/models/entitytreemodel_p.cpp:1330
+#: core/models/entitytreemodel_p.cpp:1331
 #, fuzzy, kde-format
 #| msgid "Could not copy item:"
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Indrag lett sik nich koperen:"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1333
 #, fuzzy, kde-format
 #| msgid "Could not copy collection:"
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Sammeln lett sik nich koperen:"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1335
 #, fuzzy, kde-format
 #| msgid "Could not move item:"
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Indrag lett sik nich verschuven:"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1337
 #, fuzzy, kde-format
 #| msgid "Could not move collection:"
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Sammeln lett sik nich verschuven:"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1339
 #, fuzzy, kde-format
 #| msgid "Could not link entity:"
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "Link na Entiteet lett sik nich opstellen:"
 
-#: core/models/entitytreemodel_p.cpp:1340
+#: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
 #, fuzzy, kde-format
 #| msgctxt "@info:status"
 #| msgid "Error."
@@ -621,8 +621,10 @@ msgid "Could not create agent instance: %1"
 msgstr "Hölper lett sik nich opstellen: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, kde-format
-msgid "Agent instance creation failed"
+#, fuzzy, kde-format
+#| msgid "Agent instance creation failed"
+msgctxt "@title:window"
+msgid "Agent Instance Creation Failed"
 msgstr "Opstellen vun den Hölper fehlslaan"
 
 #: widgets/agentactionmanager.cpp:59
@@ -638,7 +640,7 @@ msgstr "Wullt Du den utsöchten Hölper redig wegdoon?"
 
 #: widgets/agentconfigurationdialog.cpp:56
 #, kde-format
-msgctxt "%1 = agent name"
+msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr ""
 
@@ -652,17 +654,17 @@ msgstr ""
 msgid "About %1"
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:96
+#: widgets/agentconfigurationwidget.cpp:95
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:103
+#: widgets/agentconfigurationwidget.cpp:102
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:105
+#: widgets/agentconfigurationwidget.cpp:104
 #, fuzzy, kde-format
 #| msgid "Failed to create tag."
 msgid "Failed to register %1 configuration dialog."
@@ -813,8 +815,10 @@ msgid "Could not create folder: %1"
 msgstr "Orner \"%1\" lett sik nich opstellen"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, kde-format
-msgid "Folder creation failed"
+#, fuzzy, kde-format
+#| msgid "Folder creation failed"
+msgctxt "@title:window"
+msgid "Folder Creation Failed"
 msgstr "Opstellen vun den Orner fehlslaan"
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
@@ -989,7 +993,7 @@ msgstr "Sammeln-Dialoog opmaken"
 #, fuzzy, kde-format
 #| msgid "Select a collection"
 msgctxt "@title:window"
-msgid "Select a collection"
+msgid "Select a Collection"
 msgstr "En Sammeln utsöken"
 
 #: widgets/conflictresolvedialog.cpp:129
@@ -1074,7 +1078,7 @@ msgstr "Hierhen &koperen"
 msgid "&Link Here"
 msgstr "Hierhen en &Link maken"
 
-#: widgets/dragdropmanager.cpp:228
+#: widgets/dragdropmanager.cpp:229
 #, kde-format
 msgid "C&ancel"
 msgstr "&Afbreken"
@@ -1859,13 +1863,6 @@ msgid "Save Test Report"
 msgstr "Pröövbericht sekern"
 
 #: widgets/selftestdialog.cpp:650
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Error."
-msgid "Error"
-msgstr "Fehler."
-
-#: widgets/selftestdialog.cpp:650
 #, kde-format
 msgid "Could not open file '%1'"
 msgstr "Datei \"%1\" lett sik nich opmaken."
@@ -2277,12 +2274,14 @@ msgstr[0] "Wullt Du dissen Orner un all sien Ünnerornern redig wegdoon?"
 msgstr[1] "Wullt Du disse %1 Ornern un all ehr Ünnerornern redig wegdoon?"
 
 #: widgets/standardactionmanager.cpp:359
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Delete Folder"
+#| msgid_plural "Delete %1 Folders"
 msgctxt "@title:window"
-msgid "Delete folder?"
-msgid_plural "Delete folders?"
-msgstr[0] "Orner wegmaken?"
-msgstr[1] "Orner wegdoon?"
+msgid "Delete Folder?"
+msgid_plural "Delete Folders?"
+msgstr[0] "Orner wegdoon"
+msgstr[1] "%1 Ornern wegdoon"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2290,8 +2289,10 @@ msgid "Could not delete folder: %1"
 msgstr "Orner \"%1\" lett sik nich wegdoon"
 
 #: widgets/standardactionmanager.cpp:361
-#, kde-format
-msgid "Folder deletion failed"
+#, fuzzy, kde-format
+#| msgid "Folder deletion failed"
+msgctxt "@title:window"
+msgid "Folder Deletion Failed"
 msgstr "Wegdoon vun den Orner fehlslaan"
 
 #: widgets/standardactionmanager.cpp:363
@@ -2308,12 +2309,14 @@ msgstr[0] "Wullt Du den utsöchten Indrag redig wegdoon?"
 msgstr[1] "Wullt Du redig %1 Indrääg wegdoon?"
 
 #: widgets/standardactionmanager.cpp:368
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Delete Item"
+#| msgid_plural "Delete %1 Items"
 msgctxt "@title:window"
-msgid "Delete item?"
-msgid_plural "Delete items?"
-msgstr[0] "Indrag wegmaken?"
-msgstr[1] "Indrääg wegmaken?"
+msgid "Delete Item?"
+msgid_plural "Delete Items?"
+msgstr[0] "Indrag wegdoon"
+msgstr[1] "%1 Indrääg wegdoon"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2321,8 +2324,10 @@ msgid "Could not delete item: %1"
 msgstr "Indrag \"%1\" lett sik nich wegdoon"
 
 #: widgets/standardactionmanager.cpp:370
-#, kde-format
-msgid "Item deletion failed"
+#, fuzzy, kde-format
+#| msgid "Item deletion failed"
+msgctxt "@title:window"
+msgid "Item Deletion Failed"
 msgstr "Wegdoon vun den Indrag fehlslaan"
 
 #: widgets/standardactionmanager.cpp:372
@@ -2349,8 +2354,10 @@ msgid "Could not create resource: %1"
 msgstr "Ressource \"%1\" lett sik nich opstellen."
 
 #: widgets/standardactionmanager.cpp:377
-#, kde-format
-msgid "Resource creation failed"
+#, fuzzy, kde-format
+#| msgid "Resource creation failed"
+msgctxt "@title:window"
+msgid "Resource Creation Failed"
 msgstr "Opstellen vun de Ressource fehlslaan"
 
 #: widgets/standardactionmanager.cpp:381
@@ -2374,8 +2381,10 @@ msgid "Could not paste data: %1"
 msgstr "Daten laat sik nich infögen: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, kde-format
-msgid "Paste failed"
+#, fuzzy, kde-format
+#| msgid "Paste failed"
+msgctxt "@title:window"
+msgid "Paste Failed"
 msgstr "Infögen fehlslaan"
 
 #: widgets/standardactionmanager.cpp:739
@@ -2384,8 +2393,10 @@ msgid "We can not add \"/\" in folder name."
 msgstr "En Ornernaam lett keen Dwarsstreek (\"/\") to."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, kde-format
-msgid "Create new folder error"
+#, fuzzy, kde-format
+#| msgid "Create new folder error"
+msgctxt "@title:window"
+msgid "Create New Folder Error"
 msgstr "Fehler bi't Opstellen vun en niegen Orner"
 
 #: widgets/standardactionmanager.cpp:743
@@ -2432,7 +2443,7 @@ msgstr "Slötelwoort lett sik nich opstellen."
 #: widgets/subscriptiondialog.cpp:93
 #, fuzzy, kde-format
 #| msgid "Local Subscriptions"
-msgctxt "@title"
+msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Lokale Bestellen"
 
@@ -2476,8 +2487,10 @@ msgid "Failed to create a new tag"
 msgstr "Slötelwoort lett sik nich opstellen"
 
 #: widgets/tageditwidget.cpp:116
-#, kde-format
-msgid "An error occurred while creating a new tag"
+#, fuzzy, kde-format
+#| msgid "An error occurred while creating a new tag"
+msgctxt "@title:window"
+msgid "An Error Occurred while Creating a New Tag"
 msgstr "Dat geev en Fehler bi't Opstellen vun en nieg Slötelwoort"
 
 #: widgets/tageditwidget.cpp:164
@@ -2489,9 +2502,11 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Wullt Du disse Ressource redig wegdoon?"
 
 #: widgets/tageditwidget.cpp:165
-#, kde-format
-msgctxt "@title"
-msgid "Delete tag"
+#, fuzzy, kde-format
+#| msgctxt "@title"
+#| msgid "Delete tag"
+msgctxt "@title:window"
+msgid "Delete Tag"
 msgstr "Slötelwoort wegdoon"
 
 #: widgets/tageditwidget.cpp:189
@@ -2524,7 +2539,7 @@ msgstr "Nieg Slötelwoort opstellen"
 msgid "Manage Tags"
 msgstr "Slötelwöör plegen"
 
-#: widgets/tagselectioncombobox.cpp:124
+#: widgets/tagselectioncombobox.cpp:126
 #, fuzzy, kde-format
 #| msgctxt "@title"
 #| msgid "Delete tag"
@@ -2570,65 +2585,83 @@ msgstr "Wannelt en Akonadisammeln-Ünnerboom na en XML-Datei üm."
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
 msgstr "(c) 2009 Volker Krause <vkrause@kde.org>"
 
-#: xml/xmldocument.cpp:84
+#: xml/xmldocument.cpp:85
 #, kde-format
 msgid "No data loaded."
 msgstr "Keen Daten laadt."
 
-#: xml/xmldocument.cpp:120
+#: xml/xmldocument.cpp:121
 #, kde-format
 msgid "No filename specified"
 msgstr "Keen Dateinaam angeven"
 
-#: xml/xmldocument.cpp:128
+#: xml/xmldocument.cpp:129
 #, kde-format
 msgid "Unable to open data file '%1'."
 msgstr "Datendatei „%1“ lett sik nich opmaken."
 
-#: xml/xmldocument.cpp:133
+#: xml/xmldocument.cpp:134
 #, kde-format
 msgid "File %1 does not exist."
 msgstr "Dat gifft de Datei „%1“ nich."
 
-#: xml/xmldocument.cpp:141
+#: xml/xmldocument.cpp:142
 #, kde-format
 msgid "Unable to parse data file '%1'."
 msgstr "Datendatei „%1“ lett sik nich inlesen."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "Schemadefinitschoon lett sik nich laden un inlesen."
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "Schemainleser-Ümgeven lett sik nich opstellen."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "Schema lett sik nich opstellen."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr "Schemaprööv-Ümgeven lett sik nich opstellen."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "Leeg Dateiformaat."
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "Datendatei lett sik nich inlesen: „%1“"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Sammeln „%1“ lett sik nich finnen"
+
+#, fuzzy
+#~| msgctxt "@info:status"
+#~| msgid "Error."
+#~ msgid "Error"
+#~ msgstr "Fehler."
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete folder?"
+#~ msgid_plural "Delete folders?"
+#~ msgstr[0] "Orner wegmaken?"
+#~ msgstr[1] "Orner wegdoon?"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete item?"
+#~ msgid_plural "Delete items?"
+#~ msgstr[0] "Indrag wegmaken?"
+#~ msgstr[1] "Indrääg wegmaken?"
 
 #~ msgid "&Move here"
 #~ msgstr "Hierhen &verschuven"

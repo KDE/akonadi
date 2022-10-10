@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-04 00:45+0000\n"
+"POT-Creation-Date: 2022-10-10 00:46+0000\n"
 "PO-Revision-Date: 2022-09-27 17:54+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -255,7 +255,7 @@ msgid "No objects specified for moving"
 msgstr "Tidak ada obyek yang ditentukan untuk pemindahan"
 
 #: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
-#: core/jobs/linkjobimpl_p.h:38
+#: core/jobs/linkjobimpl_p.h:39
 #, kde-format
 msgid "No valid destination specified"
 msgstr "Tidak ada tujuan valid yang ditentukan"
@@ -403,37 +403,37 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Nama"
 
-#: core/models/entitytreemodel_p.cpp:1330
+#: core/models/entitytreemodel_p.cpp:1331
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Tidak dapat menyalin item: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1333
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Tidak dapat menyalin koleksi: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1335
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Tidak dapat memindah item: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1337
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Tidak dapat memindah koleksi: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1339
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "Tidak dapat menautkan entitas: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1340
+#: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
 #, kde-format
 msgctxt "@title:window"
 msgid "Error"
@@ -608,8 +608,10 @@ msgid "Could not create agent instance: %1"
 msgstr "Tidak dapat membuat instansi agen: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, kde-format
-msgid "Agent instance creation failed"
+#, fuzzy, kde-format
+#| msgid "Agent instance creation failed"
+msgctxt "@title:window"
+msgid "Agent Instance Creation Failed"
 msgstr "Pembuatan instansi agen gagal"
 
 #: widgets/agentactionmanager.cpp:59
@@ -624,8 +626,10 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "Apakah kamu benar-benar ingin menghapus instansi agen yang dipilih?"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, kde-format
-msgctxt "%1 = agent name"
+#, fuzzy, kde-format
+#| msgctxt "%1 = agent name"
+#| msgid "%1 Configuration"
+msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Konfigurasi %1"
 
@@ -639,17 +643,17 @@ msgstr "Buku Catatan %1"
 msgid "About %1"
 msgstr "Tentang %1"
 
-#: widgets/agentconfigurationwidget.cpp:96
+#: widgets/agentconfigurationwidget.cpp:95
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "Dialog konfigurasi sedang dibuka di jendela lainnya"
 
-#: widgets/agentconfigurationwidget.cpp:103
+#: widgets/agentconfigurationwidget.cpp:102
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "Konfigurasi %1 sudah dibuka di tempat lain. "
 
-#: widgets/agentconfigurationwidget.cpp:105
+#: widgets/agentconfigurationwidget.cpp:104
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Gagal meregister dialog konfigurasi %1."
@@ -793,8 +797,10 @@ msgid "Could not create folder: %1"
 msgstr "Tidak dapat membuat folder: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, kde-format
-msgid "Folder creation failed"
+#, fuzzy, kde-format
+#| msgid "Folder creation failed"
+msgctxt "@title:window"
+msgid "Folder Creation Failed"
 msgstr "Pembuatan folder gagal"
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
@@ -958,9 +964,11 @@ msgid "Open collection dialog"
 msgstr "Buka dialog koleksi"
 
 #: widgets/collectionrequester.cpp:143
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Select a collection"
 msgctxt "@title:window"
-msgid "Select a collection"
+msgid "Select a Collection"
 msgstr "Pilih koleksi"
 
 #: widgets/conflictresolvedialog.cpp:129
@@ -1049,7 +1057,7 @@ msgstr "&Salinkan Di Sini"
 msgid "&Link Here"
 msgstr "&Tautkan Di Sini"
 
-#: widgets/dragdropmanager.cpp:228
+#: widgets/dragdropmanager.cpp:229
 #, kde-format
 msgid "C&ancel"
 msgstr "&Batal"
@@ -1822,11 +1830,6 @@ msgstr "Simpan Laporan Uji"
 
 #: widgets/selftestdialog.cpp:650
 #, kde-format
-msgid "Error"
-msgstr "Galat"
-
-#: widgets/selftestdialog.cpp:650
-#, kde-format
 msgid "Could not open file '%1'"
 msgstr "Tidak dapat membuka file '%1'"
 
@@ -2200,12 +2203,14 @@ msgstr[1] ""
 "Apakah kamu benar-benar ingin menghapus %1 folder ini dan subfoldernya?"
 
 #: widgets/standardactionmanager.cpp:359
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Delete Folder"
+#| msgid_plural "Delete %1 Folders"
 msgctxt "@title:window"
-msgid "Delete folder?"
-msgid_plural "Delete folders?"
-msgstr[0] "Hapus folder?"
-msgstr[1] "Hapus folder-folder?"
+msgid "Delete Folder?"
+msgid_plural "Delete Folders?"
+msgstr[0] "Hapus Folder"
+msgstr[1] "Hapus %1 Folder"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2213,8 +2218,10 @@ msgid "Could not delete folder: %1"
 msgstr "Tidak dapat menghapus folder: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, kde-format
-msgid "Folder deletion failed"
+#, fuzzy, kde-format
+#| msgid "Folder deletion failed"
+msgctxt "@title:window"
+msgid "Folder Deletion Failed"
 msgstr "Penghapusan folder gagal"
 
 #: widgets/standardactionmanager.cpp:363
@@ -2231,12 +2238,14 @@ msgstr[0] "Apakah kamu benar-benar ingin menghapus item?"
 msgstr[1] "Apakah kamu benar-benar ingin menghapus %1 item"
 
 #: widgets/standardactionmanager.cpp:368
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Delete Item"
+#| msgid_plural "Delete %1 Items"
 msgctxt "@title:window"
-msgid "Delete item?"
-msgid_plural "Delete items?"
-msgstr[0] "Hapus item?"
-msgstr[1] "Hapus item-item?"
+msgid "Delete Item?"
+msgid_plural "Delete Items?"
+msgstr[0] "Hapus Item"
+msgstr[1] "Hapus %1 Item"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2244,8 +2253,10 @@ msgid "Could not delete item: %1"
 msgstr "Tidak dapat menghapus item: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, kde-format
-msgid "Item deletion failed"
+#, fuzzy, kde-format
+#| msgid "Item deletion failed"
+msgctxt "@title:window"
+msgid "Item Deletion Failed"
 msgstr "Penghapusan item gagal"
 
 #: widgets/standardactionmanager.cpp:372
@@ -2272,8 +2283,10 @@ msgid "Could not create resource: %1"
 msgstr "Tidak dapat membuat sumberdaya: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, kde-format
-msgid "Resource creation failed"
+#, fuzzy, kde-format
+#| msgid "Resource creation failed"
+msgctxt "@title:window"
+msgid "Resource Creation Failed"
 msgstr "Pembuatan sumberdaya gagal"
 
 #: widgets/standardactionmanager.cpp:381
@@ -2297,8 +2310,10 @@ msgid "Could not paste data: %1"
 msgstr "Tidak dapat menempel data: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, kde-format
-msgid "Paste failed"
+#, fuzzy, kde-format
+#| msgid "Paste failed"
+msgctxt "@title:window"
+msgid "Paste Failed"
 msgstr "Gagal tempel"
 
 #: widgets/standardactionmanager.cpp:739
@@ -2307,8 +2322,10 @@ msgid "We can not add \"/\" in folder name."
 msgstr "Kita tidak bisa menambahkan \"/\" di dalam nama folder."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, kde-format
-msgid "Create new folder error"
+#, fuzzy, kde-format
+#| msgid "Create new folder error"
+msgctxt "@title:window"
+msgid "Create New Folder Error"
 msgstr "Galat membuat folder baru"
 
 #: widgets/standardactionmanager.cpp:743
@@ -2352,8 +2369,10 @@ msgid "Failed to update subscription: %1"
 msgstr "Gagal memperbarui subskripsi: %1"
 
 #: widgets/subscriptiondialog.cpp:93
-#, kde-format
-msgctxt "@title"
+#, fuzzy, kde-format
+#| msgctxt "@title"
+#| msgid "Subscription Error"
+msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Subskripsi Galat"
 
@@ -2393,8 +2412,10 @@ msgid "Failed to create a new tag"
 msgstr "Gagal membuat sebuah tag baru"
 
 #: widgets/tageditwidget.cpp:116
-#, kde-format
-msgid "An error occurred while creating a new tag"
+#, fuzzy, kde-format
+#| msgid "An error occurred while creating a new tag"
+msgctxt "@title:window"
+msgid "An Error Occurred while Creating a New Tag"
 msgstr "Sebuah galat terjadi selagi membuat tag baru"
 
 #: widgets/tageditwidget.cpp:164
@@ -2405,9 +2426,11 @@ msgstr ""
 "Apakah kamu benar-benar ingin menyingkirkan tag <resource>%1</resource>?"
 
 #: widgets/tageditwidget.cpp:165
-#, kde-format
-msgctxt "@title"
-msgid "Delete tag"
+#, fuzzy, kde-format
+#| msgctxt "@title"
+#| msgid "Delete tag"
+msgctxt "@title:window"
+msgid "Delete Tag"
 msgstr "Hapus tag"
 
 #: widgets/tageditwidget.cpp:189
@@ -2434,7 +2457,7 @@ msgstr "Buat tag baru"
 msgid "Manage Tags"
 msgstr "Kelola Tag"
 
-#: widgets/tagselectioncombobox.cpp:124
+#: widgets/tagselectioncombobox.cpp:126
 #, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
@@ -2479,62 +2502,77 @@ msgstr ""
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
 msgstr "(c) 2009 Volker Krause <vkrause@kde.org>"
 
-#: xml/xmldocument.cpp:84
+#: xml/xmldocument.cpp:85
 #, kde-format
 msgid "No data loaded."
 msgstr "Tidak ada data yang dimuat."
 
-#: xml/xmldocument.cpp:120
+#: xml/xmldocument.cpp:121
 #, kde-format
 msgid "No filename specified"
 msgstr "Tidak ada nama file yang ditentukan"
 
-#: xml/xmldocument.cpp:128
+#: xml/xmldocument.cpp:129
 #, kde-format
 msgid "Unable to open data file '%1'."
 msgstr "Tak bisa membuka file data '%1'."
 
-#: xml/xmldocument.cpp:133
+#: xml/xmldocument.cpp:134
 #, kde-format
 msgid "File %1 does not exist."
 msgstr "File %1 enggak ada."
 
-#: xml/xmldocument.cpp:141
+#: xml/xmldocument.cpp:142
 #, kde-format
 msgid "Unable to parse data file '%1'."
 msgstr "Tak bisa mengurai data file '%1'."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "Definisi skema tidak dapat dimuat dan diurai."
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "Tak bisa membuat skema konteks pengurai."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "Tak bisa membuat skema."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr "Tak bisa membuat skema konteks validasi."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "Format file tidak valid."
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "Tak bisa mengurai data file: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Tak bisa menemukan koleksi %1"
+
+#~ msgid "Error"
+#~ msgstr "Galat"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete folder?"
+#~ msgid_plural "Delete folders?"
+#~ msgstr[0] "Hapus folder?"
+#~ msgstr[1] "Hapus folder-folder?"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete item?"
+#~ msgid_plural "Delete items?"
+#~ msgstr[0] "Hapus item?"
+#~ msgstr[1] "Hapus item-item?"

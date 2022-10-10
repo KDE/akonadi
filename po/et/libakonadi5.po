@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-04 00:45+0000\n"
+"POT-Creation-Date: 2022-10-10 00:46+0000\n"
 "PO-Revision-Date: 2020-05-07 13:23+0300\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -256,7 +256,7 @@ msgid "No objects specified for moving"
 msgstr "Liigutamiseks pole ühtegi objekti määratud"
 
 #: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
-#: core/jobs/linkjobimpl_p.h:38
+#: core/jobs/linkjobimpl_p.h:39
 #, kde-format
 msgid "No valid destination specified"
 msgstr "Korrektset sihtkohta pole määratud"
@@ -404,37 +404,37 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Nimi"
 
-#: core/models/entitytreemodel_p.cpp:1330
+#: core/models/entitytreemodel_p.cpp:1331
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Elemendi kopeerimine nurjus: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1333
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Kogu kopeerimine nurjus: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1335
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Elemendi liigutamine nurjus: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1337
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Kogu liigutamine nurjus: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1339
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "Olemi linkimine nurjus: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1340
+#: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
 #, kde-format
 msgctxt "@title:window"
 msgid "Error"
@@ -608,8 +608,10 @@ msgid "Could not create agent instance: %1"
 msgstr "Agendi isendi loomine nurjus: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, kde-format
-msgid "Agent instance creation failed"
+#, fuzzy, kde-format
+#| msgid "Agent instance creation failed"
+msgctxt "@title:window"
+msgid "Agent Instance Creation Failed"
 msgstr "Agendi isendi loomine nurjus"
 
 #: widgets/agentactionmanager.cpp:59
@@ -624,8 +626,10 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "Kas tõesti kustutada kõik valitud agendi isendid?"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, kde-format
-msgctxt "%1 = agent name"
+#, fuzzy, kde-format
+#| msgctxt "%1 = agent name"
+#| msgid "%1 Configuration"
+msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 seadistamine"
 
@@ -639,17 +643,17 @@ msgstr "%1 käsiraamat"
 msgid "About %1"
 msgstr "%1 teave"
 
-#: widgets/agentconfigurationwidget.cpp:96
+#: widgets/agentconfigurationwidget.cpp:95
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "Seadistustedialoog on avatud teises aknas"
 
-#: widgets/agentconfigurationwidget.cpp:103
+#: widgets/agentconfigurationwidget.cpp:102
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "%1 seadistamine on mujal avatud."
 
-#: widgets/agentconfigurationwidget.cpp:105
+#: widgets/agentconfigurationwidget.cpp:104
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "%1 seadistustedialoogi registreerimine nurjus."
@@ -797,8 +801,10 @@ msgid "Could not create folder: %1"
 msgstr "Kausta loomine nurjus: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, kde-format
-msgid "Folder creation failed"
+#, fuzzy, kde-format
+#| msgid "Folder creation failed"
+msgctxt "@title:window"
+msgid "Folder Creation Failed"
 msgstr "Kausta loomine nurjus"
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
@@ -965,9 +971,11 @@ msgid "Open collection dialog"
 msgstr "Kogu avamise dialoog"
 
 #: widgets/collectionrequester.cpp:143
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Select a collection"
 msgctxt "@title:window"
-msgid "Select a collection"
+msgid "Select a Collection"
 msgstr "Kogu valimine"
 
 #: widgets/conflictresolvedialog.cpp:129
@@ -1055,7 +1063,7 @@ msgstr "&Kopeeri siia"
 msgid "&Link Here"
 msgstr "&Lingi siia"
 
-#: widgets/dragdropmanager.cpp:228
+#: widgets/dragdropmanager.cpp:229
 #, kde-format
 msgid "C&ancel"
 msgstr "&Loobu"
@@ -1812,11 +1820,6 @@ msgstr "Testi aruande salvestamine"
 
 #: widgets/selftestdialog.cpp:650
 #, kde-format
-msgid "Error"
-msgstr "Tõrge"
-
-#: widgets/selftestdialog.cpp:650
-#, kde-format
 msgid "Could not open file '%1'"
 msgstr "Faili '%1' avamine nurjus"
 
@@ -2218,12 +2221,14 @@ msgstr[0] "Kas tõesti kustutada see kaust ja kõik selle alamkaustad?"
 msgstr[1] "Kas tõesti kustutada %1 kausta ja kõik nende alamkaustad?"
 
 #: widgets/standardactionmanager.cpp:359
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Delete Folder"
+#| msgid_plural "Delete %1 Folders"
 msgctxt "@title:window"
-msgid "Delete folder?"
-msgid_plural "Delete folders?"
-msgstr[0] "Kas kustutada kaust?"
-msgstr[1] "Kas kustutada kaustad?"
+msgid "Delete Folder?"
+msgid_plural "Delete Folders?"
+msgstr[0] "Kustuta kaust"
+msgstr[1] "Kustuta %1 kausta"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2231,8 +2236,10 @@ msgid "Could not delete folder: %1"
 msgstr "Kausta kustutamine nurjus: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, kde-format
-msgid "Folder deletion failed"
+#, fuzzy, kde-format
+#| msgid "Folder deletion failed"
+msgctxt "@title:window"
+msgid "Folder Deletion Failed"
 msgstr "Kausta kustutamine nurjus"
 
 #: widgets/standardactionmanager.cpp:363
@@ -2249,12 +2256,14 @@ msgstr[0] "Kas tõesti kustutada valitud element?"
 msgstr[1] "Kas tõesti kustutada %1 elementi?"
 
 #: widgets/standardactionmanager.cpp:368
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Delete Item"
+#| msgid_plural "Delete %1 Items"
 msgctxt "@title:window"
-msgid "Delete item?"
-msgid_plural "Delete items?"
-msgstr[0] "Kas kustutada element?"
-msgstr[1] "Kas kustutada elemendid?"
+msgid "Delete Item?"
+msgid_plural "Delete Items?"
+msgstr[0] "Kustuta element"
+msgstr[1] "Kustuta %1 elementi"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2262,8 +2271,10 @@ msgid "Could not delete item: %1"
 msgstr "Elemendi kustutamine nurjus: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, kde-format
-msgid "Item deletion failed"
+#, fuzzy, kde-format
+#| msgid "Item deletion failed"
+msgctxt "@title:window"
+msgid "Item Deletion Failed"
 msgstr "Elemendi kustutamine nurjus"
 
 #: widgets/standardactionmanager.cpp:372
@@ -2290,8 +2301,10 @@ msgid "Could not create resource: %1"
 msgstr "Ressursi loomine nurjus: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, kde-format
-msgid "Resource creation failed"
+#, fuzzy, kde-format
+#| msgid "Resource creation failed"
+msgctxt "@title:window"
+msgid "Resource Creation Failed"
 msgstr "Ressursi loomine nurjus"
 
 #: widgets/standardactionmanager.cpp:381
@@ -2315,8 +2328,10 @@ msgid "Could not paste data: %1"
 msgstr "Andmete asetamine nurjus: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, kde-format
-msgid "Paste failed"
+#, fuzzy, kde-format
+#| msgid "Paste failed"
+msgctxt "@title:window"
+msgid "Paste Failed"
 msgstr "Asetamine nurjus"
 
 #: widgets/standardactionmanager.cpp:739
@@ -2325,8 +2340,10 @@ msgid "We can not add \"/\" in folder name."
 msgstr "Kausta nimesse ei saa lisada \"/\"."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, kde-format
-msgid "Create new folder error"
+#, fuzzy, kde-format
+#| msgid "Create new folder error"
+msgctxt "@title:window"
+msgid "Create New Folder Error"
 msgstr "Tõrge uue kausta loomisel"
 
 #: widgets/standardactionmanager.cpp:743
@@ -2369,8 +2386,10 @@ msgid "Failed to update subscription: %1"
 msgstr "Tellimuse uuendamine nurjus: %1"
 
 #: widgets/subscriptiondialog.cpp:93
-#, kde-format
-msgctxt "@title"
+#, fuzzy, kde-format
+#| msgctxt "@title"
+#| msgid "Subscription Error"
+msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Tellimuse tõrge"
 
@@ -2410,8 +2429,10 @@ msgid "Failed to create a new tag"
 msgstr "Uue sildi loomine nurjus"
 
 #: widgets/tageditwidget.cpp:116
-#, kde-format
-msgid "An error occurred while creating a new tag"
+#, fuzzy, kde-format
+#| msgid "An error occurred while creating a new tag"
+msgctxt "@title:window"
+msgid "An Error Occurred while Creating a New Tag"
 msgstr "Tõrge uue sildi loomisel"
 
 #: widgets/tageditwidget.cpp:164
@@ -2421,9 +2442,11 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Kas tõesti eemaldada silt <resource>%1</resource>?"
 
 #: widgets/tageditwidget.cpp:165
-#, kde-format
-msgctxt "@title"
-msgid "Delete tag"
+#, fuzzy, kde-format
+#| msgctxt "@title"
+#| msgid "Delete tag"
+msgctxt "@title:window"
+msgid "Delete Tag"
 msgstr "Sildi kustutamine"
 
 #: widgets/tageditwidget.cpp:189
@@ -2450,7 +2473,7 @@ msgstr "Loo uus silt"
 msgid "Manage Tags"
 msgstr "Siltide haldamine"
 
-#: widgets/tagselectioncombobox.cpp:124
+#: widgets/tagselectioncombobox.cpp:126
 #, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
@@ -2494,65 +2517,80 @@ msgstr "Akonadi kogu alampuu teisendamine XML-failiks."
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
 msgstr "(c) 2009: Volker Krause <vkrause@kde.org>"
 
-#: xml/xmldocument.cpp:84
+#: xml/xmldocument.cpp:85
 #, kde-format
 msgid "No data loaded."
 msgstr "Andmeid pole laaditud."
 
-#: xml/xmldocument.cpp:120
+#: xml/xmldocument.cpp:121
 #, kde-format
 msgid "No filename specified"
 msgstr "Failinime pole määratud"
 
-#: xml/xmldocument.cpp:128
+#: xml/xmldocument.cpp:129
 #, kde-format
 msgid "Unable to open data file '%1'."
 msgstr "Andmefaili \"%1\" avamine nurjus."
 
-#: xml/xmldocument.cpp:133
+#: xml/xmldocument.cpp:134
 #, kde-format
 msgid "File %1 does not exist."
 msgstr "Faili %1 ei ole olemas."
 
-#: xml/xmldocument.cpp:141
+#: xml/xmldocument.cpp:142
 #, kde-format
 msgid "Unable to parse data file '%1'."
 msgstr "Andmefaili \"%1\" parsimine nurjus."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "Skeemi definitsiooni ei saa laadida ega parsida."
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "Skeemi parseri konteksti loomine nurjus."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "Skeemi loomine nurjus."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr "Skeemi valideerimise konteksti loomine nurjus."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "Vigane failivorming."
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "Andmefaili parsimine nurjus: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Kogu %1 ei leitud"
+
+#~ msgid "Error"
+#~ msgstr "Tõrge"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete folder?"
+#~ msgid_plural "Delete folders?"
+#~ msgstr[0] "Kas kustutada kaust?"
+#~ msgstr[1] "Kas kustutada kaustad?"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete item?"
+#~ msgid_plural "Delete items?"
+#~ msgstr[0] "Kas kustutada element?"
+#~ msgstr[1] "Kas kustutada elemendid?"
 
 #~ msgid "&Move here"
 #~ msgstr "&Liiguta siia"

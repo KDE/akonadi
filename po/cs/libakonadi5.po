@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-04 00:45+0000\n"
+"POT-Creation-Date: 2022-10-10 00:46+0000\n"
 "PO-Revision-Date: 2021-09-15 22:42+0200\n"
 "Last-Translator: Vit Pelcak <vpelcak@suse.cz>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -258,7 +258,7 @@ msgid "No objects specified for moving"
 msgstr "Nezadány objekty pro přesunutí"
 
 #: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
-#: core/jobs/linkjobimpl_p.h:38
+#: core/jobs/linkjobimpl_p.h:39
 #, kde-format
 msgid "No valid destination specified"
 msgstr "Nezadán platný cíl"
@@ -406,37 +406,37 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Název"
 
-#: core/models/entitytreemodel_p.cpp:1330
+#: core/models/entitytreemodel_p.cpp:1331
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Nelze kopírovat položku: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1333
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Nelze kopírovat sbírku: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1335
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Nelze přesunout položku: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1337
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Nelze přesunout sbírku: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1339
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "Nelze propojit entitu: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1340
+#: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
 #, kde-format
 msgctxt "@title:window"
 msgid "Error"
@@ -600,8 +600,10 @@ msgid "Could not create agent instance: %1"
 msgstr "Nelze vytvořit instanci agenta: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, kde-format
-msgid "Agent instance creation failed"
+#, fuzzy, kde-format
+#| msgid "Agent instance creation failed"
+msgctxt "@title:window"
+msgid "Agent Instance Creation Failed"
 msgstr "Vytvoření instance agenta selhalo"
 
 #: widgets/agentactionmanager.cpp:59
@@ -616,8 +618,10 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "Opravdu si přejete smazat vybranou instanci agenta?"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, kde-format
-msgctxt "%1 = agent name"
+#, fuzzy, kde-format
+#| msgctxt "%1 = agent name"
+#| msgid "%1 Configuration"
+msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Nastavení %1"
 
@@ -631,17 +635,17 @@ msgstr "Příručka %1"
 msgid "About %1"
 msgstr "O aplikaci %1"
 
-#: widgets/agentconfigurationwidget.cpp:96
+#: widgets/agentconfigurationwidget.cpp:95
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "Konfigurační dialog byl otevřen v jiném okně"
 
-#: widgets/agentconfigurationwidget.cpp:103
+#: widgets/agentconfigurationwidget.cpp:102
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "Nastavení pro %1 je již otevřeno jinde."
 
-#: widgets/agentconfigurationwidget.cpp:105
+#: widgets/agentconfigurationwidget.cpp:104
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Selhala registrace konfiguračního dialogu %1."
@@ -786,8 +790,10 @@ msgid "Could not create folder: %1"
 msgstr "Nelze vytvořit složku: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, kde-format
-msgid "Folder creation failed"
+#, fuzzy, kde-format
+#| msgid "Folder creation failed"
+msgctxt "@title:window"
+msgid "Folder Creation Failed"
 msgstr "Vytvoření složky selhalo"
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
@@ -953,9 +959,11 @@ msgid "Open collection dialog"
 msgstr "Otevřít dialog sbírky"
 
 #: widgets/collectionrequester.cpp:143
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Select a collection"
 msgctxt "@title:window"
-msgid "Select a collection"
+msgid "Select a Collection"
 msgstr "Vybrat sbírku"
 
 #: widgets/conflictresolvedialog.cpp:129
@@ -1038,7 +1046,7 @@ msgstr "&Kopírovat sem"
 msgid "&Link Here"
 msgstr "Od&kaz sem"
 
-#: widgets/dragdropmanager.cpp:228
+#: widgets/dragdropmanager.cpp:229
 #, kde-format
 msgid "C&ancel"
 msgstr "Z&rušit"
@@ -1737,11 +1745,6 @@ msgstr "Uložit výsledky testu"
 
 #: widgets/selftestdialog.cpp:650
 #, kde-format
-msgid "Error"
-msgstr "Chyba"
-
-#: widgets/selftestdialog.cpp:650
-#, kde-format
 msgid "Could not open file '%1'"
 msgstr "Není možné otevřít soubor '%1'"
 
@@ -2129,13 +2132,15 @@ msgstr[1] "Opravdu si přejete smazat %1 složky a všechny jejich podsložky?"
 msgstr[2] "Opravdu si přejete smazat %1 složky a všechny jejich podsložky?"
 
 #: widgets/standardactionmanager.cpp:359
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Delete Folder"
+#| msgid_plural "Delete %1 Folders"
 msgctxt "@title:window"
-msgid "Delete folder?"
-msgid_plural "Delete folders?"
-msgstr[0] "Smazat složku?"
-msgstr[1] "Smazat složky?"
-msgstr[2] "Smazat složky?"
+msgid "Delete Folder?"
+msgid_plural "Delete Folders?"
+msgstr[0] "Smazat složku"
+msgstr[1] "Smazat %1 složky"
+msgstr[2] "Smazat %1 složek"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2143,8 +2148,10 @@ msgid "Could not delete folder: %1"
 msgstr "Nelze smazat složku: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, kde-format
-msgid "Folder deletion failed"
+#, fuzzy, kde-format
+#| msgid "Folder deletion failed"
+msgctxt "@title:window"
+msgid "Folder Deletion Failed"
 msgstr "Smazání složky selhalo"
 
 #: widgets/standardactionmanager.cpp:363
@@ -2162,13 +2169,15 @@ msgstr[1] "Opravdu si přejete smazat %1 zvolené položky?"
 msgstr[2] "Opravdu si přejete smazat %1 zvolených položek?"
 
 #: widgets/standardactionmanager.cpp:368
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Delete Item"
+#| msgid_plural "Delete %1 Items"
 msgctxt "@title:window"
-msgid "Delete item?"
-msgid_plural "Delete items?"
-msgstr[0] "Smazat položku?"
-msgstr[1] "Smazat položky?"
-msgstr[2] "Smazat položky?"
+msgid "Delete Item?"
+msgid_plural "Delete Items?"
+msgstr[0] "Smazat položku"
+msgstr[1] "Smazat %1 položky"
+msgstr[2] "Smazat %1 položek"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2176,8 +2185,10 @@ msgid "Could not delete item: %1"
 msgstr "Nelze smazat položku: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, kde-format
-msgid "Item deletion failed"
+#, fuzzy, kde-format
+#| msgid "Item deletion failed"
+msgctxt "@title:window"
+msgid "Item Deletion Failed"
 msgstr "Smazání položky selhalo"
 
 #: widgets/standardactionmanager.cpp:372
@@ -2204,8 +2215,10 @@ msgid "Could not create resource: %1"
 msgstr "Nelze vytvořit zdroj: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, kde-format
-msgid "Resource creation failed"
+#, fuzzy, kde-format
+#| msgid "Resource creation failed"
+msgctxt "@title:window"
+msgid "Resource Creation Failed"
 msgstr "Vytvoření zdroje selhalo"
 
 #: widgets/standardactionmanager.cpp:381
@@ -2230,8 +2243,10 @@ msgid "Could not paste data: %1"
 msgstr "Nelze vložit data: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, kde-format
-msgid "Paste failed"
+#, fuzzy, kde-format
+#| msgid "Paste failed"
+msgctxt "@title:window"
+msgid "Paste Failed"
 msgstr "Vložení selhalo"
 
 #: widgets/standardactionmanager.cpp:739
@@ -2240,9 +2255,12 @@ msgid "We can not add \"/\" in folder name."
 msgstr ""
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, kde-format
-msgid "Create new folder error"
-msgstr ""
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "New Folder"
+msgctxt "@title:window"
+msgid "Create New Folder Error"
+msgstr "Nová složka"
 
 #: widgets/standardactionmanager.cpp:743
 #, kde-format
@@ -2283,8 +2301,10 @@ msgid "Failed to update subscription: %1"
 msgstr ""
 
 #: widgets/subscriptiondialog.cpp:93
-#, kde-format
-msgctxt "@title"
+#, fuzzy, kde-format
+#| msgctxt "@title"
+#| msgid "Subscription Error"
+msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Chyba registrace"
 
@@ -2324,9 +2344,12 @@ msgid "Failed to create a new tag"
 msgstr "Nelze vytvořit značku"
 
 #: widgets/tageditwidget.cpp:116
-#, kde-format
-msgid "An error occurred while creating a new tag"
-msgstr ""
+#, fuzzy, kde-format
+#| msgctxt "@info"
+#| msgid "Error while creating item: %1"
+msgctxt "@title:window"
+msgid "An Error Occurred while Creating a New Tag"
+msgstr "Chyba při vytváření položky: %1"
 
 #: widgets/tageditwidget.cpp:164
 #, kde-kuit-format
@@ -2335,9 +2358,11 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Opravdu si přejete odstranit značku <resource>%1</resource>?"
 
 #: widgets/tageditwidget.cpp:165
-#, kde-format
-msgctxt "@title"
-msgid "Delete tag"
+#, fuzzy, kde-format
+#| msgctxt "@title"
+#| msgid "Delete tag"
+msgctxt "@title:window"
+msgid "Delete Tag"
 msgstr "Smazat značku"
 
 #: widgets/tageditwidget.cpp:189
@@ -2364,7 +2389,7 @@ msgstr "Vytvořit novou značku"
 msgid "Manage Tags"
 msgstr "Spravovat značky"
 
-#: widgets/tagselectioncombobox.cpp:124
+#: widgets/tagselectioncombobox.cpp:126
 #, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
@@ -2408,62 +2433,79 @@ msgstr "Převádí podstrom sbírky Akonadi do souboru XML."
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
 msgstr "(c) 2009 Volker Krause <vkrause@kde.org>"
 
-#: xml/xmldocument.cpp:84
+#: xml/xmldocument.cpp:85
 #, kde-format
 msgid "No data loaded."
 msgstr "Nebyla načten žádná data."
 
-#: xml/xmldocument.cpp:120
+#: xml/xmldocument.cpp:121
 #, kde-format
 msgid "No filename specified"
 msgstr "Není vybrán žádný název souboru"
 
-#: xml/xmldocument.cpp:128
+#: xml/xmldocument.cpp:129
 #, kde-format
 msgid "Unable to open data file '%1'."
 msgstr "Datový soubor '%1' nelze otevřít."
 
-#: xml/xmldocument.cpp:133
+#: xml/xmldocument.cpp:134
 #, kde-format
 msgid "File %1 does not exist."
 msgstr "Soubor %1 neexistuje."
 
-#: xml/xmldocument.cpp:141
+#: xml/xmldocument.cpp:142
 #, kde-format
 msgid "Unable to parse data file '%1'."
 msgstr "Datový soubor '%1' nelze zpracovat."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr ""
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr ""
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "Nelze vytvořit schéma."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr ""
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "Neplatný formát souboru."
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "Datový soubor nelze zpracovat: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Nelze najít sbírku %1"
+
+#~ msgid "Error"
+#~ msgstr "Chyba"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete folder?"
+#~ msgid_plural "Delete folders?"
+#~ msgstr[0] "Smazat složku?"
+#~ msgstr[1] "Smazat složky?"
+#~ msgstr[2] "Smazat složky?"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete item?"
+#~ msgid_plural "Delete items?"
+#~ msgstr[0] "Smazat položku?"
+#~ msgstr[1] "Smazat položky?"
+#~ msgstr[2] "Smazat položky?"
