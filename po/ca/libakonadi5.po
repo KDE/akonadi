@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-10 00:46+0000\n"
-"PO-Revision-Date: 2022-07-06 12:38+0200\n"
+"PO-Revision-Date: 2022-10-10 10:19+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -618,8 +618,7 @@ msgid "Could not create agent instance: %1"
 msgstr "No s'ha pogut crear la instància de l'agent: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "La creació de la instància de l'agent ha fallat"
@@ -636,9 +635,7 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "Realment voleu suprimir la instància seleccionada de l'agent?"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "%1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Configuració de %1"
@@ -813,8 +810,7 @@ msgid "Could not create folder: %1"
 msgstr "No s'ha pogut crear la carpeta: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
 msgstr "Ha fallat la creació de la carpeta"
@@ -980,9 +976,7 @@ msgid "Open collection dialog"
 msgstr "Diàleg d'obertura de col·lecció"
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select a collection"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "Selecció d'una col·lecció"
@@ -2230,14 +2224,12 @@ msgstr[0] ""
 msgstr[1] "Realment voleu suprimir %1 carpetes i totes les seves subcarpetes?"
 
 #: widgets/standardactionmanager.cpp:359
-#, fuzzy, kde-format
-#| msgid "Delete Folder"
-#| msgid_plural "Delete %1 Folders"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "Suprimeix la carpeta"
-msgstr[1] "Suprimeix %1 carpetes"
+msgstr[0] "Suprimeixo la carpeta?"
+msgstr[1] "Suprimeixo les carpetes?"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2245,11 +2237,10 @@ msgid "Could not delete folder: %1"
 msgstr "No s'ha pogut suprimir la carpeta: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
-msgstr "Ha fallat l'eliminació de la carpeta"
+msgstr "Ha fallat la supressió de la carpeta"
 
 #: widgets/standardactionmanager.cpp:363
 #, kde-format
@@ -2265,14 +2256,12 @@ msgstr[0] "Realment voleu suprimir l'element seleccionat?"
 msgstr[1] "Realment voleu suprimir %1 elements?"
 
 #: widgets/standardactionmanager.cpp:368
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "Suprimeix element"
-msgstr[1] "Suprimeix %1 elements"
+msgstr[0] "Suprimeixo l'element?"
+msgstr[1] "Suprimeixo els elements?"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2280,8 +2269,7 @@ msgid "Could not delete item: %1"
 msgstr "No s'ha pogut suprimir l'element: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, fuzzy, kde-format
-#| msgid "Item deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "Ha fallat la supressió de l'element"
@@ -2310,8 +2298,7 @@ msgid "Could not create resource: %1"
 msgstr "No s'ha pogut crear el recurs: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, fuzzy, kde-format
-#| msgid "Resource creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "Ha fallat la creació del recurs"
@@ -2337,8 +2324,7 @@ msgid "Could not paste data: %1"
 msgstr "No s'ha pogut enganxar les dades: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, fuzzy, kde-format
-#| msgid "Paste failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Ha fallat en enganxar"
@@ -2349,8 +2335,7 @@ msgid "We can not add \"/\" in folder name."
 msgstr "No es pot afegir «/» en el nom de la carpeta."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, fuzzy, kde-format
-#| msgid "Create new folder error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Error en crear una carpeta nova"
@@ -2396,9 +2381,7 @@ msgid "Failed to update subscription: %1"
 msgstr "Ha fallat en actualitzar la subscripció: %1"
 
 #: widgets/subscriptiondialog.cpp:93
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Subscription Error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Error de subscripció"
@@ -2439,8 +2422,7 @@ msgid "Failed to create a new tag"
 msgstr "Ha fallat en crear una etiqueta nova"
 
 #: widgets/tageditwidget.cpp:116
-#, fuzzy, kde-format
-#| msgid "An error occurred while creating a new tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Hi ha hagut un error en crear una etiqueta nova"
@@ -2452,18 +2434,16 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Esteu segur que voleu eliminar l'etiqueta <resource>%1</resource>?"
 
 #: widgets/tageditwidget.cpp:165
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Delete tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
-msgstr "Elimina l'etiqueta"
+msgstr "Suprimeix l'etiqueta"
 
 #: widgets/tageditwidget.cpp:189
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"
-msgstr "Elimina l'etiqueta"
+msgstr "Suprimeix l'etiqueta"
 
 #. i18n: ectx: property (text), widget (QLabel, selectLabel)
 #: widgets/tageditwidget.ui:29
@@ -2586,18 +2566,3 @@ msgstr "No s'ha pogut analitzar el fitxer de dades: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "No s'ha pogut trobar la col·lecció %1"
-
-#~ msgid "Error"
-#~ msgstr "Error"
-
-#~ msgctxt "@title:window"
-#~ msgid "Delete folder?"
-#~ msgid_plural "Delete folders?"
-#~ msgstr[0] "Suprimeixo la carpeta?"
-#~ msgstr[1] "Suprimeixo les carpetes?"
-
-#~ msgctxt "@title:window"
-#~ msgid "Delete item?"
-#~ msgid_plural "Delete items?"
-#~ msgstr[0] "Suprimeixo l'element?"
-#~ msgstr[1] "Suprimeixo els elements?"

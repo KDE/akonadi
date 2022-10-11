@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-10 00:46+0000\n"
-"PO-Revision-Date: 2022-09-02 22:01+0200\n"
+"PO-Revision-Date: 2022-10-10 07:32+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.08.0\n"
+"X-Generator: Lokalize 22.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -615,8 +615,7 @@ msgid "Could not create agent instance: %1"
 msgstr "Ezin izan da agentearen instantzia berria sortu: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "Agentearen instantzia sortzea huts egin du"
@@ -633,12 +632,10 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "Benetan ezabatu nahi duzu hautatutako agentearen instantzia?"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "%1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
-msgstr "%1 konfigurazioa"
+msgstr "%1(e)ren konfigurazioa"
 
 #: widgets/agentconfigurationdialog.cpp:89
 #, kde-format
@@ -808,8 +805,7 @@ msgid "Could not create folder: %1"
 msgstr "Ezin du karpeta sortu: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
 msgstr "Karpeta sortzea huts egin du"
@@ -975,9 +971,7 @@ msgid "Open collection dialog"
 msgstr "Ireki bilduma elkarrizketa-koadroa"
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select a collection"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "Hautatu bilduma bat"
@@ -2220,14 +2214,12 @@ msgstr[1] ""
 "Benetan ezabatu nahi dituzu %1 karpeta eta haren azpikarpeta guztiak?"
 
 #: widgets/standardactionmanager.cpp:359
-#, fuzzy, kde-format
-#| msgid "Delete Folder"
-#| msgid_plural "Delete %1 Folders"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "Ezabatu karpeta"
-msgstr[1] "Ezabatu %1 karpeta"
+msgstr[0] "Karpeta ezabatu?"
+msgstr[1] "Karpetak ezabatu?"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2235,8 +2227,7 @@ msgid "Could not delete folder: %1"
 msgstr "Ezin izan da karpeta ezabatu: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "Karpeta ezabatzea huts egin du"
@@ -2255,14 +2246,12 @@ msgstr[0] "Benetan ezabatu nahi duzu hautatutako elementua?"
 msgstr[1] "Benetan ezabatu nahi dituzu %1 elementu?"
 
 #: widgets/standardactionmanager.cpp:368
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "Ezabatu elementua"
-msgstr[1] "Ezabatu %1 elementu"
+msgstr[0] "Elementua ezabatu?"
+msgstr[1] "Elementuak ezabatu?"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2270,11 +2259,10 @@ msgid "Could not delete item: %1"
 msgstr "Ezin izan du elementua ezabatu: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, fuzzy, kde-format
-#| msgid "Item deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
-msgstr "Elementua ezabatzea huts egin du"
+msgstr "Elementu ezabatzea huts egin du"
 
 #: widgets/standardactionmanager.cpp:372
 #, kde-format
@@ -2300,8 +2288,7 @@ msgid "Could not create resource: %1"
 msgstr "Ezin izan da baliabidea sortu: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, fuzzy, kde-format
-#| msgid "Resource creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "Baliabide sorrerak huts egin du"
@@ -2327,8 +2314,7 @@ msgid "Could not paste data: %1"
 msgstr "Ezin izan da daturik itsatsi: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, fuzzy, kde-format
-#| msgid "Paste failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Itsastea huts egin du"
@@ -2339,11 +2325,10 @@ msgid "We can not add \"/\" in folder name."
 msgstr "Ezin da «/» gehitu karpeta baten izenean."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, fuzzy, kde-format
-#| msgid "Create new folder error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
-msgstr "Karpeta berria sortzean errorea"
+msgstr "Karpeta berria sortzeko errorea"
 
 #: widgets/standardactionmanager.cpp:743
 #, kde-format
@@ -2386,9 +2371,7 @@ msgid "Failed to update subscription: %1"
 msgstr "Huts egin du harpidetza eguneratzeak: %1"
 
 #: widgets/subscriptiondialog.cpp:93
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Subscription Error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Harpidetza errorea"
@@ -2429,8 +2412,7 @@ msgid "Failed to create a new tag"
 msgstr "Huts egin du etiketa berri bat sortzeak"
 
 #: widgets/tageditwidget.cpp:116
-#, fuzzy, kde-format
-#| msgid "An error occurred while creating a new tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Errore bat gertatu da etiketa berri bat sortzean"
@@ -2442,9 +2424,7 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Benetan kendu nahi duzu <resource>%1</resource> etiketa?"
 
 #: widgets/tageditwidget.cpp:165
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Delete tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Ezabatu etiketa"

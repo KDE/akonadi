@@ -9,16 +9,16 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-10 00:46+0000\n"
-"PO-Revision-Date: 2022-08-08 21:20+0400\n"
+"PO-Revision-Date: 2022-10-10 19:05+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
-"Language-Team: Arabic <kde-l10n-ar@kde.org>\n"
+"Language-Team: ar\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
-"X-Generator: Lokalize 21.07.70\n"
+"X-Generator: Lokalize 21.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -609,8 +609,7 @@ msgid "Could not create agent instance: %1"
 msgstr "تعذّر إنشاء سيرورة الوسيط: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "فشل إنشاء سيرورة الوسيط"
@@ -627,9 +626,7 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "أمتأكّد من حذف سيرورة الوسيط المنتقاة؟"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "%1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "ضبط %1"
@@ -805,8 +802,7 @@ msgid "Could not create folder: %1"
 msgstr "تعذّر إنشاء المجلد: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
 msgstr "فشل إنشاء المجلد"
@@ -980,9 +976,7 @@ msgid "Open collection dialog"
 msgstr "افتح حواريّ التجميعة"
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select a collection"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "اختر تجميعة"
@@ -2261,18 +2255,16 @@ msgstr[4] "أمتأكّد من حذف %1 عنصرًا مع مجلداتها ال
 msgstr[5] "أمتأكّد من حذف %1 عنصر مع مجلداتها الفرعيّة؟"
 
 #: widgets/standardactionmanager.cpp:359
-#, fuzzy, kde-format
-#| msgid "Delete Folder"
-#| msgid_plural "Delete %1 Folders"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "احذف المجلد"
-msgstr[1] "احذف المجلد"
-msgstr[2] "احذف المجلدين"
-msgstr[3] "احذف %1 مجلدات"
-msgstr[4] "احذف %1 مجلدًا"
-msgstr[5] "احذف %1 مجلد"
+msgstr[0] "احذف المجلد؟"
+msgstr[1] "احذف المجلد؟"
+msgstr[2] "احذف المجلدين؟"
+msgstr[3] "احذف المجلدات؟"
+msgstr[4] "احذف المجلدات؟"
+msgstr[5] "احذف المجلدات؟"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2280,8 +2272,7 @@ msgid "Could not delete folder: %1"
 msgstr "تعذّر حذف المجلد: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "فشل حذف المجلد"
@@ -2304,18 +2295,16 @@ msgstr[4] "أمتأكّد من حذف %1 عنصرًا محدّدًا؟"
 msgstr[5] "أمتأكّد من حذف %1 عنصر محدّد؟"
 
 #: widgets/standardactionmanager.cpp:368
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "احذف العنصر"
-msgstr[1] "احذف العنصر"
-msgstr[2] "احذف العنصرين"
-msgstr[3] "احذف %1 عناصر"
-msgstr[4] "احذف %1 عنصرًا"
-msgstr[5] "احذف %1 عنصر"
+msgstr[0] "احذف العنصر؟"
+msgstr[1] "احذف العنصر؟"
+msgstr[2] "احذف العنصرين؟"
+msgstr[3] "احذف العناصر؟"
+msgstr[4] "احذف العناصر؟"
+msgstr[5] "احذف العناصر؟"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2323,8 +2312,7 @@ msgid "Could not delete item: %1"
 msgstr "تعذّر حذف العنصر: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, fuzzy, kde-format
-#| msgid "Item deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "فشل حذف العنصر"
@@ -2353,8 +2341,7 @@ msgid "Could not create resource: %1"
 msgstr "تعذّر إنشاء المورد الجديد: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, fuzzy, kde-format
-#| msgid "Resource creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "فشل إنشاء المورد"
@@ -2388,8 +2375,7 @@ msgid "Could not paste data: %1"
 msgstr "تعذّر لصق البيانات: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, fuzzy, kde-format
-#| msgid "Paste failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "فشل اللصق"
@@ -2400,8 +2386,7 @@ msgid "We can not add \"/\" in folder name."
 msgstr "لا يمكننا إضافة ”/“ في اسم المجلد."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, fuzzy, kde-format
-#| msgid "Create new folder error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "خطأ أثناء إنشاء مجلد جديد"
@@ -2447,9 +2432,7 @@ msgid "Failed to update subscription: %1"
 msgstr "فشل في تحديث الاشتراك: %1"
 
 #: widgets/subscriptiondialog.cpp:93
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Subscription Error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "خطأ في الاشتراك"
@@ -2490,8 +2473,7 @@ msgid "Failed to create a new tag"
 msgstr "فشل إنشاء وسم جديد"
 
 #: widgets/tageditwidget.cpp:116
-#, fuzzy, kde-format
-#| msgid "An error occurred while creating a new tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "حدث خطأ أثناء إنشاء وسم جديد"
@@ -2503,9 +2485,7 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "أمتأكّد من إزالة الوسم <resource>%1</resource>؟"
 
 #: widgets/tageditwidget.cpp:165
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Delete tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "حذف الوسم"

@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-10 00:46+0000\n"
-"PO-Revision-Date: 2022-07-07 14:03+0200\n"
+"PO-Revision-Date: 2022-10-10 21:07+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@neuf.fr>\n"
 "Language-Team: French <kde-francophone@kde.org>\n"
 "Language: fr\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.04.2\n"
+"X-Generator: Lokalize 22.08.1\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
@@ -627,8 +627,7 @@ msgid "Could not create agent instance: %1"
 msgstr "Impossible de créer l'instance d'agent : %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "La création de l'instance d'agent a échoué"
@@ -645,9 +644,7 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "Voulez-vous vraiment supprimer l'instance d'agent sélectionnée ?"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "%1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Configuration de %1"
@@ -823,8 +820,7 @@ msgid "Could not create folder: %1"
 msgstr "Impossible de créer le dossier : %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
 msgstr "La création du dossier a échoué"
@@ -990,9 +986,7 @@ msgid "Open collection dialog"
 msgstr "Ouvrir la boîte de dialogue de collection"
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select a collection"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "Sélectionner une collection"
@@ -2257,14 +2251,12 @@ msgstr[1] ""
 "Voulez-vous vraiment supprimer %1 dossiers et tous leurs sous-dossiers ?"
 
 #: widgets/standardactionmanager.cpp:359
-#, fuzzy, kde-format
-#| msgid "Delete Folder"
-#| msgid_plural "Delete %1 Folders"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "Supprimer un dossier"
-msgstr[1] "Supprimer %1 dossiers"
+msgstr[0] "Supprimer un dossier ?"
+msgstr[1] "Supprimer des dossiers ?"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2272,8 +2264,7 @@ msgid "Could not delete folder: %1"
 msgstr "Impossible de supprimer un dossier : %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "La suppression du dossier a échoué"
@@ -2292,14 +2283,12 @@ msgstr[0] "Voulez-vous vraiment supprimer l'élément sélectionné ?"
 msgstr[1] "Voulez-vous vraiment supprimer %1 éléments ?"
 
 #: widgets/standardactionmanager.cpp:368
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "Supprimer un élément"
-msgstr[1] "Supprimer %1 éléments"
+msgstr[0] "Supprimer un élément ?"
+msgstr[1] "Supprimer des éléments ?"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2307,8 +2296,7 @@ msgid "Could not delete item: %1"
 msgstr "Impossible de supprimer l'élément : %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, fuzzy, kde-format
-#| msgid "Item deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "La suppression de l'élément a échoué"
@@ -2337,8 +2325,7 @@ msgid "Could not create resource: %1"
 msgstr "Impossible de créer une ressource : %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, fuzzy, kde-format
-#| msgid "Resource creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "La création de la ressource a échoué"
@@ -2364,8 +2351,7 @@ msgid "Could not paste data: %1"
 msgstr "Impossible de coller les données : %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, fuzzy, kde-format
-#| msgid "Paste failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Le collage a échoué"
@@ -2376,8 +2362,7 @@ msgid "We can not add \"/\" in folder name."
 msgstr "Impossible d'ajouter « / » dans le nom de dossier."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, fuzzy, kde-format
-#| msgid "Create new folder error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Erreur à la création d'un nouveau dossier"
@@ -2423,9 +2408,7 @@ msgid "Failed to update subscription: %1"
 msgstr "Impossible de mettre à jour l'abonnement : %1."
 
 #: widgets/subscriptiondialog.cpp:93
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Subscription Error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Erreur d'abonnement"
@@ -2466,11 +2449,10 @@ msgid "Failed to create a new tag"
 msgstr "Impossible de créer une nouvelle étiquette"
 
 #: widgets/tageditwidget.cpp:116
-#, fuzzy, kde-format
-#| msgid "An error occurred while creating a new tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
-msgstr "Erreur lors de la création d'une nouvelle étiquette"
+msgstr "Une erreur s'est produite lors de la création d'une nouvelle étiquette"
 
 #: widgets/tageditwidget.cpp:164
 #, kde-kuit-format
@@ -2479,12 +2461,10 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Voulez-vous vraiment supprimer l'étiquette <resource>%1</resource> ?"
 
 #: widgets/tageditwidget.cpp:165
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Delete tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
-msgstr "Supprimer l'étiquette"
+msgstr "Supprimer une étiquette"
 
 #: widgets/tageditwidget.cpp:189
 #, kde-format
