@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-10 00:46+0000\n"
-"PO-Revision-Date: 2022-07-10 09:46+0200\n"
+"PO-Revision-Date: 2022-10-12 22:17+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.04.2\n"
+"X-Generator: Poedit 3.1.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -609,8 +609,7 @@ msgid "Could not create agent instance: %1"
 msgstr "Не можа да се създаде инстанция на агент: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "Създаването на инстанция на агент е неуспешно"
@@ -627,9 +626,7 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "Наистина ли искате да изтриете избраната инстанция на агент?"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "%1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Конфигурация на %1"
@@ -802,8 +799,7 @@ msgid "Could not create folder: %1"
 msgstr "Грешка при създаване на папката: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
 msgstr "Неуспешно създаване на папка"
@@ -969,9 +965,7 @@ msgid "Open collection dialog"
 msgstr "Отваряне на диалоговия прозорец за колекции"
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select a collection"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "Избиране на колекция"
@@ -2214,14 +2208,12 @@ msgstr[0] "Наистина ли искате да изтриете тази п�
 msgstr[1] "Наистина ли искате да изтриете %1 папки и всички техни подпапки?"
 
 #: widgets/standardactionmanager.cpp:359
-#, fuzzy, kde-format
-#| msgid "Delete Folder"
-#| msgid_plural "Delete %1 Folders"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "Изтриване на папка"
-msgstr[1] "Изтриване на %1 папки"
+msgstr[0] "Да се изтрие ли папката?"
+msgstr[1] "Да се изтрият ли папките?"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2229,8 +2221,7 @@ msgid "Could not delete folder: %1"
 msgstr "Не може да се изтрие папка: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "Неуспешно изтриване на папка"
@@ -2249,14 +2240,12 @@ msgstr[0] "Наистина ли искате да изтриете избран
 msgstr[1] "Наистина ли искате да изтриете %1 елемента?"
 
 #: widgets/standardactionmanager.cpp:368
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "Изтриване на елемент"
-msgstr[1] "Изтриване на %1 елемента"
+msgstr[0] "Да се ​​изтрие ли елементът?"
+msgstr[1] "Да се ​​изтрият ли елементите?"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2264,8 +2253,7 @@ msgid "Could not delete item: %1"
 msgstr "Не може да се изтрие елемент: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, fuzzy, kde-format
-#| msgid "Item deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "Изтриването на елемента е неуспешно"
@@ -2294,8 +2282,7 @@ msgid "Could not create resource: %1"
 msgstr "Неуспешно създаване на ресурс: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, fuzzy, kde-format
-#| msgid "Resource creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "Създаването на ресурс е неуспешно"
@@ -2321,8 +2308,7 @@ msgid "Could not paste data: %1"
 msgstr "Неуспешно поставяне на данни: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, fuzzy, kde-format
-#| msgid "Paste failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Поставянето е неуспешно"
@@ -2333,8 +2319,7 @@ msgid "We can not add \"/\" in folder name."
 msgstr "Не можем да добавим \" / \"в името на папката."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, fuzzy, kde-format
-#| msgid "Create new folder error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Грешка при създаване на нова папка"
@@ -2380,9 +2365,7 @@ msgid "Failed to update subscription: %1"
 msgstr "Неуспешно актуализиране на абонамента: %1"
 
 #: widgets/subscriptiondialog.cpp:93
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Subscription Error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Грешка в абонамента"
@@ -2423,8 +2406,7 @@ msgid "Failed to create a new tag"
 msgstr "Неуспешно създаване на нов етикет"
 
 #: widgets/tageditwidget.cpp:116
-#, fuzzy, kde-format
-#| msgid "An error occurred while creating a new tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Възникна грешка при създаването на нов етикет"
@@ -2436,9 +2418,7 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Наистина ли искате да премахнете етикета <resource>%1</resource>?"
 
 #: widgets/tageditwidget.cpp:165
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Delete tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Изтриване на етикет"

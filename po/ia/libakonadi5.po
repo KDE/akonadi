@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-10 00:46+0000\n"
-"PO-Revision-Date: 2022-07-14 18:57+0200\n"
+"PO-Revision-Date: 2022-10-12 15:29+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -611,8 +611,7 @@ msgid "Could not create agent instance: %1"
 msgstr "Il non pote crear instantia de agente: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "Falleva in creation de instantia de agente"
@@ -629,9 +628,7 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "Tu vermente vole deler le instantia de agente selectionate?"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "%1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 Configuration"
@@ -804,8 +801,7 @@ msgid "Could not create folder: %1"
 msgstr "Il non pote crear dossier: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
 msgstr "Falleva in creation de dossier"
@@ -971,9 +967,7 @@ msgid "Open collection dialog"
 msgstr "Aperi dialogo de collection"
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select a collection"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "Selige un collection"
@@ -2220,14 +2214,12 @@ msgstr[0] "Tu vermente vole deler iste dossier e tote su sub-dossieres?"
 msgstr[1] "Tu vermente vole deler iste %1 dossieres e tote lor sub-dossieres?"
 
 #: widgets/standardactionmanager.cpp:359
-#, fuzzy, kde-format
-#| msgid "Delete Folder"
-#| msgid_plural "Delete %1 Folders"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "Dele dossier"
-msgstr[1] "Dele %1 dossieres"
+msgstr[0] "Dele dossier?"
+msgstr[1] "Dele  dossieres?"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2235,8 +2227,7 @@ msgid "Could not delete folder: %1"
 msgstr "Il non pote deler dossier: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "Il falleva deler dossier"
@@ -2255,14 +2246,12 @@ msgstr[0] "Tu vermente vole deler le elemento selectionate?"
 msgstr[1] "Tu realmente tu vole deler %1 elementos?"
 
 #: widgets/standardactionmanager.cpp:368
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "Dele elemento"
-msgstr[1] "Dele %1 elementos"
+msgstr[0] "Dele elemento?"
+msgstr[1] "Dele elementos"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2270,8 +2259,7 @@ msgid "Could not delete item: %1"
 msgstr "Il non pote deler elemento: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, fuzzy, kde-format
-#| msgid "Item deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "Il falleva deler elemento"
@@ -2300,8 +2288,7 @@ msgid "Could not create resource: %1"
 msgstr "Non pote crear ressource: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, fuzzy, kde-format
-#| msgid "Resource creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "Il falleva crear ressource"
@@ -2327,8 +2314,7 @@ msgid "Could not paste data: %1"
 msgstr "Il non pote collar datos: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, fuzzy, kde-format
-#| msgid "Paste failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Il falleva collar"
@@ -2339,8 +2325,7 @@ msgid "We can not add \"/\" in folder name."
 msgstr "Nos non pote adder \"/\" al nomine de dossier."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, fuzzy, kde-format
-#| msgid "Create new folder error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Crea Error de Nove Dossier"
@@ -2386,9 +2371,7 @@ msgid "Failed to update subscription: %1"
 msgstr "Il falleva actualisar subscription: %1 "
 
 #: widgets/subscriptiondialog.cpp:93
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Subscription Error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Error de Subscription"
@@ -2429,8 +2412,7 @@ msgid "Failed to create a new tag"
 msgstr "Incapace de crear un nove etiquetta"
 
 #: widgets/tageditwidget.cpp:116
-#, fuzzy, kde-format
-#| msgid "An error occurred while creating a new tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Error quando on creava un nove etiquetta"
@@ -2442,9 +2424,7 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Tu vermente vole remover le etiquetta <resource>%1</resource>?"
 
 #: widgets/tageditwidget.cpp:165
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Delete tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Dele etiquetta"
