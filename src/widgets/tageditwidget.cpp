@@ -13,6 +13,7 @@
 #include "tagfetchscope.h"
 #include "tagmodel.h"
 #include "ui_tageditwidget.h"
+#include <kwidgetsaddons_version.h>
 
 #include <KCheckableProxyModel>
 #include <KLocalizedString>
@@ -163,7 +164,12 @@ void TagEditWidgetPrivate::deleteTag()
     const auto tag = m_deleteCandidate.data(Akonadi::TagModel::TagRole).value<Akonadi::Tag>();
     const QString text = xi18nc("@info", "Do you really want to remove the tag <resource>%1</resource>?", tag.name());
     const QString caption = i18nc("@title:window", "Delete Tag");
+#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
+    if (KMessageBox::questionTwoActions(d, text, caption, KStandardGuiItem::del(), KStandardGuiItem::cancel()) == KMessageBox::ButtonCode::PrimaryAction) {
+#else
     if (KMessageBox::questionYesNo(d, text, caption, KStandardGuiItem::del(), KStandardGuiItem::cancel()) == KMessageBox::Yes) {
+
+#endif
         new TagDeleteJob(tag, this);
     }
 }
