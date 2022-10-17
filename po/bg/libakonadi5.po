@@ -2550,18 +2550,3 @@ msgstr "Не може да се анализира файл с данни: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Не може да се намери колекция %1"
-
-#~ msgid "Error"
-#~ msgstr "Грешка"
-
-#~ msgctxt "@title:window"
-#~ msgid "Delete folder?"
-#~ msgid_plural "Delete folders?"
-#~ msgstr[0] "Да се изтрие ли папката?"
-#~ msgstr[1] "Да се изтрият ли папките?"
-
-#~ msgctxt "@title:window"
-#~ msgid "Delete item?"
-#~ msgid_plural "Delete items?"
-#~ msgstr[0] "Да се ​​изтрие ли елемент?"
-#~ msgstr[1] "Да се ​​изтрият ли елементи?"
