@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-16 00:47+0000\n"
-"PO-Revision-Date: 2022-10-12 15:11+0300\n"
+"PO-Revision-Date: 2022-10-20 11:58+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -1261,7 +1261,7 @@ msgstr "Veritabanı sürücüsü bulunamadı."
 #: widgets/selftestdialog.cpp:208
 #, kde-format
 msgid "MySQL server executable not tested."
-msgstr "MySQL sunucusu çalıştırılabilir dosyası denenmedi."
+msgstr "MySQL sunucusu yürütülebiliri sınanmadı."
 
 #: widgets/selftestdialog.cpp:208 widgets/selftestdialog.cpp:249
 #: widgets/selftestdialog.cpp:300
@@ -1280,10 +1280,9 @@ msgid ""
 msgstr ""
 "Geçerli olarak Akonadi'yi MySQL sunucusu '%1' ile yapılandırmışsınız.\n"
 "MySQL sunucusunun kurulu olduğundan, doğru yolun ayarlandığından ve sunucu "
-"çalıştırılabilir dosyası üzerinde gerekli okuma ve çalıştırma haklarına "
-"sahip olduğunuzdan emin olun. Sunucu çalıştırılabilir dosyası genel olarak "
-"'mysqld' olarak adlandırılmıştır; konumu dağıtıma göre değişiklik "
-"göstermektedir."
+"yürütülebiliri üzerinde gerekli okuma ve yürütme izinlerine sahip "
+"olduğunuzdan emin olun. Sunucu yürütülebiliri genel olarak 'mysqld' olarak "
+"adlandırılmıştır; konumu dağıtıma göre değişiklik göstermektedir."
 
 #: widgets/selftestdialog.cpp:224
 #, kde-format
@@ -1298,7 +1297,7 @@ msgstr "MySQL sunucusu okunabilir değil."
 #: widgets/selftestdialog.cpp:228
 #, kde-format
 msgid "MySQL server not executable."
-msgstr "MySQL sunucusu çalıştırılabilir değil."
+msgstr "MySQL sunucusu yürütülebilir değil."
 
 #: widgets/selftestdialog.cpp:230
 #, kde-format
@@ -1318,7 +1317,7 @@ msgstr "MySQL sunucusu bulundu: %1"
 #: widgets/selftestdialog.cpp:239
 #, kde-format
 msgid "MySQL server is executable."
-msgstr "MySQL sunucusu çalıştırılabilir durumda."
+msgstr "MySQL sunucusu yürütülebilir durumda."
 
 #: widgets/selftestdialog.cpp:241
 #, kde-format
@@ -1329,7 +1328,7 @@ msgstr "'%1' MySQL sunucusu şu hata iletisini vererek başarısız oldu: '%2'"
 #: widgets/selftestdialog.cpp:242
 #, kde-format
 msgid "Executing the MySQL server failed."
-msgstr "MySQL sunucusunu çalıştırma işlemi başarısız oldu."
+msgstr "MySQL sunucusunu yürütme başarısız oldu."
 
 #: widgets/selftestdialog.cpp:249
 #, kde-format
