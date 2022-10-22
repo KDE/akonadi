@@ -885,7 +885,7 @@ void AgentBase::debugAgent(int argc, char **argv)
     Q_UNUSED(argc)
 #ifdef Q_OS_WIN
     if (qEnvironmentVariableIsSet("AKONADI_DEBUG_WAIT")) {
-        if (QByteArray(argv[0]).endsWith(qgetenv("AKONADI_DEBUG_WAIT") + ".exe")) {
+        if (QByteArray(argv[0]).endsWith(QByteArray(qgetenv("AKONADI_DEBUG_WAIT") + QByteArrayLiteral(".exe")))) {
             while (!IsDebuggerPresent()) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(100));
             }
