@@ -64,7 +64,7 @@ public:
     }
 
     struct PartHelper {
-        PartHelper(const QString &type_, const QByteArray &data_, int size_, Part::Storage storage_ = Part::Internal, int version_ = 0)
+        PartHelper(const QString &type_, const QByteArray &data_, qsizetype size_, Part::Storage storage_ = Part::Internal, int version_ = 0)
             : type(type_)
             , data(data_)
             , size(size_)
@@ -74,7 +74,7 @@ public:
         }
         QString type;
         QByteArray data;
-        int size;
+        qsizetype size;
         Part::Storage storage;
         int version;
     };
