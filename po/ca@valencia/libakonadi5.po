@@ -1032,7 +1032,7 @@ msgid ""
 msgstr ""
 "<qt>Els vostres canvis entren en conflicte amb els d'algú altre.<br> A menys "
 "que es puga llençar alguna versió, els haureu d'integrar manualment.<br>Feu "
-"clic a «<a href=\"opentexteditor\">Obri l'editor de text</a>» per a "
+"clic en «<a href=\"opentexteditor\">Obri l'editor de text</a>» per a "
 "mantindre una còpia dels textos, seleccioneu la versió més correcta, torneu-"
 "la a obrir i modifiqueu-la de nou per a afegir-hi el que falta."
 
@@ -1144,7 +1144,7 @@ msgid ""
 msgstr ""
 "El marc de treball per a la gestió de la informació personal Akonadi no es "
 "troba operatiu.\n"
-"Feu clic a «Detalls...» per a obtindre informació detallada quant a este "
+"Feu clic en «Detalls...» per a obtindre informació detallada quant a este "
 "problema."
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
