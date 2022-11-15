@@ -50,7 +50,6 @@
 #include <QTimer>
 
 #include <KLazyLocalizedString>
-#include <kwidgetsaddons_version.h>
 
 using namespace Akonadi;
 
@@ -804,12 +803,7 @@ public:
         const QString collectionName = collections.first().name();
         const QString text = contextText(StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxText, collections.count(), collectionName);
 
-#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
         if (KMessageBox::questionTwoActions(
-#else
-        if (KMessageBox::questionYesNo(
-
-#endif
                 parentWidget,
                 text,
                 contextText(StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxTitle, collections.count(), collectionName),
@@ -817,11 +811,7 @@ public:
                 KStandardGuiItem::cancel(),
                 QString(),
                 KMessageBox::Dangerous)
-#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
             != KMessageBox::ButtonCode::PrimaryAction) {
-#else
-            != KMessageBox::Yes) {
-#endif
             return;
         }
 
@@ -987,22 +977,13 @@ public:
 
         Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance(collection.resource());
         if (!instance.isOnline()) {
-#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
             if (KMessageBox::questionTwoActions(
-#else
-            if (KMessageBox::questionYesNo(
-
-#endif
                     parentWidget,
                     i18n("Before syncing folder \"%1\" it is necessary to have the resource online. Do you want to make it online?", collection.displayName()),
                     i18n("Account \"%1\" is offline", instance.name()),
                     KGuiItem(i18nc("@action:button", "Go Online")),
                     KStandardGuiItem::cancel())
-#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
                 != KMessageBox::ButtonCode::PrimaryAction) {
-#else
-                != KMessageBox::Yes) {
-#endif
                 return false;
             }
             instance.setIsOnline(true);
@@ -1111,23 +1092,14 @@ public:
     {
         Q_ASSERT(itemSelectionModel);
 
-#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
         if (KMessageBox::questionTwoActions(parentWidget,
-#else
-        if (KMessageBox::questionYesNo(parentWidget,
-
-#endif
                                             contextText(StandardActionManager::DeleteItems, StandardActionManager::MessageBoxText, items.count(), QString()),
                                             contextText(StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle, items.count(), QString()),
                                             KStandardGuiItem::del(),
                                             KStandardGuiItem::cancel(),
                                             QString(),
                                             KMessageBox::Dangerous)
-#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
             != KMessageBox::ButtonCode::PrimaryAction) {
-#else
-            != KMessageBox::Yes) {
-#endif
             return;
         }
 
@@ -1327,12 +1299,7 @@ public:
             return;
         }
 
-#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
         if (KMessageBox::questionTwoActions(
-#else
-        if (KMessageBox::questionYesNo(
-
-#endif
                 parentWidget,
                 contextText(StandardActionManager::DeleteResources, StandardActionManager::MessageBoxText, instances.count(), instances.first().name()),
                 contextText(StandardActionManager::DeleteResources, StandardActionManager::MessageBoxTitle, instances.count(), instances.first().name()),
@@ -1340,11 +1307,7 @@ public:
                 KStandardGuiItem::cancel(),
                 QString(),
                 KMessageBox::Dangerous)
-#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
             != KMessageBox::ButtonCode::PrimaryAction) {
-#else
-            != KMessageBox::Yes) {
-#endif
             return;
         }
 
