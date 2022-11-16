@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-16 00:47+0000\n"
+"POT-Creation-Date: 2022-11-16 00:47+0000\n"
 "PO-Revision-Date: 2022-07-29 11:21+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -590,43 +590,43 @@ msgstr "Tarkastaa ja ilmoittaa Akonadi-palvelimen tilan"
 msgid "(c) 2008 Volker Krause <vkrause@kde.org>"
 msgstr "© 2008 Volker Krause <vkrause@kde.org>"
 
-#: widgets/agentactionmanager.cpp:36
+#: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
 msgstr "&Uusi agentti-instanssi…"
 
-#: widgets/agentactionmanager.cpp:37
+#: widgets/agentactionmanager.cpp:36
 msgid "&Delete Agent Instance"
 msgstr "&Poista agentti-instanssi"
 
-#: widgets/agentactionmanager.cpp:38
+#: widgets/agentactionmanager.cpp:37
 msgid "&Configure Agent Instance"
 msgstr "&Muokkaa agentti-instanssia"
 
-#: widgets/agentactionmanager.cpp:54
+#: widgets/agentactionmanager.cpp:53
 #, kde-format
 msgctxt "@title:window"
 msgid "New Agent Instance"
 msgstr "Uusi agentti-instanssi"
 
-#: widgets/agentactionmanager.cpp:56
+#: widgets/agentactionmanager.cpp:55
 #, kde-format
 msgid "Could not create agent instance: %1"
 msgstr "Agentti-instanssia ei voitu luoda: %1"
 
-#: widgets/agentactionmanager.cpp:58
+#: widgets/agentactionmanager.cpp:57
 #, fuzzy, kde-format
 #| msgid "Agent instance creation failed"
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "Agentti-instanssin luominen epäonnistui"
 
-#: widgets/agentactionmanager.cpp:60
+#: widgets/agentactionmanager.cpp:59
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Agent Instance?"
 msgstr "Poistetaanko agentti-instanssi?"
 
-#: widgets/agentactionmanager.cpp:64
+#: widgets/agentactionmanager.cpp:63
 #, kde-format
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Haluatko varmasti poistaa valitun agentti-instanssin?"
@@ -794,7 +794,7 @@ msgstr "&Uusi alikansio…"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Luo uusi alikansio valitun kansion alle"
 
-#: widgets/collectiondialog.cpp:264 widgets/standardactionmanager.cpp:349
+#: widgets/collectiondialog.cpp:264 widgets/standardactionmanager.cpp:348
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
@@ -806,12 +806,12 @@ msgctxt "@label:textbox, name of a thing"
 msgid "Name"
 msgstr "Nimi"
 
-#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
+#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:350
 #, kde-format
 msgid "Could not create folder: %1"
 msgstr "Kansiota ei voitu luoda: %1"
 
-#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:352
+#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
 #, fuzzy, kde-format
 #| msgid "Folder creation failed"
 msgctxt "@title:window"
@@ -1158,12 +1158,12 @@ msgstr "Akonadi, henkilökohtaisten tietojen hallintakehys, ei ole toiminnassa."
 msgid "Details..."
 msgstr "Yksityiskohdat…"
 
-#: widgets/manageaccountwidget.cpp:205
+#: widgets/manageaccountwidget.cpp:200
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr "Haluatko poistaa tilin ”%1”?"
 
-#: widgets/manageaccountwidget.cpp:206
+#: widgets/manageaccountwidget.cpp:201
 #, kde-format
 msgid "Remove account?"
 msgstr "Poistetaanko tili?"
@@ -1863,214 +1863,214 @@ msgstr ""
 "<p>Lisää vianmääritysvihjeitä löytää osoitteesta <a href=\"https://userbase."
 "kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
 
-#: widgets/standardactionmanager.cpp:79
+#: widgets/standardactionmanager.cpp:78
 msgid "&New Folder..."
 msgstr "&Uusi kansio…"
 
-#: widgets/standardactionmanager.cpp:79
+#: widgets/standardactionmanager.cpp:78
 msgid "New"
 msgstr "Uusi"
 
-#: widgets/standardactionmanager.cpp:81
+#: widgets/standardactionmanager.cpp:80
 msgid "&Delete Folder"
 msgstr "&Poista kansio"
 
-#: widgets/standardactionmanager.cpp:81
+#: widgets/standardactionmanager.cpp:80
 msgid "Delete"
 msgstr "Poista"
 
-#: widgets/standardactionmanager.cpp:83
+#: widgets/standardactionmanager.cpp:82
 msgid "&Synchronize Folder"
 msgstr "S&ynkronoi kansio"
 
-#: widgets/standardactionmanager.cpp:84 widgets/standardactionmanager.cpp:158
-#: widgets/standardactionmanager.cpp:244
+#: widgets/standardactionmanager.cpp:83 widgets/standardactionmanager.cpp:157
+#: widgets/standardactionmanager.cpp:243
 msgid "Synchronize"
 msgstr "Synkronoi"
 
-#: widgets/standardactionmanager.cpp:91
+#: widgets/standardactionmanager.cpp:90
 msgid "Folder &Properties"
 msgstr "Kansion &ominaisuudet"
 
-#: widgets/standardactionmanager.cpp:92 widgets/standardactionmanager.cpp:150
+#: widgets/standardactionmanager.cpp:91 widgets/standardactionmanager.cpp:149
 msgid "Properties"
 msgstr "Ominaisuudet"
 
-#: widgets/standardactionmanager.cpp:99
+#: widgets/standardactionmanager.cpp:98
 msgid "&Paste"
 msgstr "&Liitä"
 
-#: widgets/standardactionmanager.cpp:99
+#: widgets/standardactionmanager.cpp:98
 msgid "Paste"
 msgstr "Liitä"
 
-#: widgets/standardactionmanager.cpp:102
+#: widgets/standardactionmanager.cpp:101
 msgid "Manage Local &Subscriptions..."
 msgstr "Hallitse paikallisia &tilauksia…"
 
-#: widgets/standardactionmanager.cpp:103
+#: widgets/standardactionmanager.cpp:102
 msgid "Manage Local Subscriptions"
 msgstr "Hallitse paikallisia tilauksia"
 
-#: widgets/standardactionmanager.cpp:110
+#: widgets/standardactionmanager.cpp:109
 msgid "Add to Favorite Folders"
 msgstr "Lisää suosikkikansioihin"
 
-#: widgets/standardactionmanager.cpp:111
+#: widgets/standardactionmanager.cpp:110
 msgid "Add to Favorite"
 msgstr "Lisää suosikkeihin"
 
-#: widgets/standardactionmanager.cpp:118
+#: widgets/standardactionmanager.cpp:117
 msgid "Remove from Favorite Folders"
 msgstr "Poista suosikkikansioista"
 
-#: widgets/standardactionmanager.cpp:119
+#: widgets/standardactionmanager.cpp:118
 msgid "Remove from Favorite"
 msgstr "Poista suosikeista"
 
-#: widgets/standardactionmanager.cpp:125
+#: widgets/standardactionmanager.cpp:124
 msgid "Rename Favorite..."
 msgstr "Muuta suosikin nimeä…"
 
-#: widgets/standardactionmanager.cpp:125
+#: widgets/standardactionmanager.cpp:124
 msgid "Rename"
 msgstr "Muuta nimeä"
 
-#: widgets/standardactionmanager.cpp:127 widgets/standardactionmanager.cpp:165
+#: widgets/standardactionmanager.cpp:126 widgets/standardactionmanager.cpp:164
 msgid "Copy Folder To..."
 msgstr "Kopioi kansio kohteeseen…"
 
-#: widgets/standardactionmanager.cpp:128 widgets/standardactionmanager.cpp:134
-#: widgets/standardactionmanager.cpp:165 widgets/standardactionmanager.cpp:174
+#: widgets/standardactionmanager.cpp:127 widgets/standardactionmanager.cpp:133
+#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:173
 msgid "Copy To"
 msgstr "Kopioi kohteeseen"
 
-#: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:174
+#: widgets/standardactionmanager.cpp:133 widgets/standardactionmanager.cpp:173
 msgid "Copy Item To..."
 msgstr "Kopioi tietue kohteeseen…"
 
-#: widgets/standardactionmanager.cpp:135 widgets/standardactionmanager.cpp:175
+#: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:174
 msgid "Move Item To..."
 msgstr "Siirrä tietue kohteeseen…"
 
-#: widgets/standardactionmanager.cpp:135 widgets/standardactionmanager.cpp:138
-#: widgets/standardactionmanager.cpp:168 widgets/standardactionmanager.cpp:175
+#: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:137
+#: widgets/standardactionmanager.cpp:167 widgets/standardactionmanager.cpp:174
 msgid "Move To"
 msgstr "Siirrä kohteeseen"
 
-#: widgets/standardactionmanager.cpp:137 widgets/standardactionmanager.cpp:167
+#: widgets/standardactionmanager.cpp:136 widgets/standardactionmanager.cpp:166
 msgid "Move Folder To..."
 msgstr "Siirrä kansio kohteeseen…"
 
-#: widgets/standardactionmanager.cpp:144
+#: widgets/standardactionmanager.cpp:143
 msgid "&Cut Item"
 msgstr "L&eikkaa tietue"
 
-#: widgets/standardactionmanager.cpp:144 widgets/standardactionmanager.cpp:145
+#: widgets/standardactionmanager.cpp:143 widgets/standardactionmanager.cpp:144
 msgid "Cut"
 msgstr "Leikkaa"
 
-#: widgets/standardactionmanager.cpp:145
+#: widgets/standardactionmanager.cpp:144
 msgid "&Cut Folder"
 msgstr "L&eikkaa kansio"
 
-#: widgets/standardactionmanager.cpp:146
+#: widgets/standardactionmanager.cpp:145
 msgid "Create Resource"
 msgstr "Luo resurssi"
 
-#: widgets/standardactionmanager.cpp:147
+#: widgets/standardactionmanager.cpp:146
 msgid "Delete Resource"
 msgstr "Poista resurssi"
 
-#: widgets/standardactionmanager.cpp:149
+#: widgets/standardactionmanager.cpp:148
 msgid "&Resource Properties"
 msgstr "&Resurssin ominaisuudet"
 
-#: widgets/standardactionmanager.cpp:157
+#: widgets/standardactionmanager.cpp:156
 msgid "Synchronize Resource"
 msgstr "Synkronoi resurssi"
 
-#: widgets/standardactionmanager.cpp:164
+#: widgets/standardactionmanager.cpp:163
 msgid "Work Offline"
 msgstr "Työskentele verkotta"
 
-#: widgets/standardactionmanager.cpp:177
+#: widgets/standardactionmanager.cpp:176
 msgid "&Synchronize Folder Recursively"
 msgstr "&Synkronoi kansio alikansioineen"
 
-#: widgets/standardactionmanager.cpp:178
+#: widgets/standardactionmanager.cpp:177
 msgid "Synchronize Recursively"
 msgstr "Synkronoi myös alikansiot"
 
-#: widgets/standardactionmanager.cpp:185
+#: widgets/standardactionmanager.cpp:184
 msgid "&Move Folder To Trash"
 msgstr "&Siirrä kansio roskakoriin"
 
-#: widgets/standardactionmanager.cpp:186
+#: widgets/standardactionmanager.cpp:185
 msgid "Move Folder To Trash"
 msgstr "Siirrä kansio roskakoriin"
 
-#: widgets/standardactionmanager.cpp:193
+#: widgets/standardactionmanager.cpp:192
 msgid "&Move Item To Trash"
 msgstr "&Siirrä tietue roskakoriin"
 
-#: widgets/standardactionmanager.cpp:194
+#: widgets/standardactionmanager.cpp:193
 msgid "Move Item To Trash"
 msgstr "Siirrä tietue roskakoriin"
 
-#: widgets/standardactionmanager.cpp:201 widgets/standardactionmanager.cpp:217
+#: widgets/standardactionmanager.cpp:200 widgets/standardactionmanager.cpp:216
 msgid "&Restore Folder From Trash"
 msgstr "&Palauta kansio roskakorista"
 
-#: widgets/standardactionmanager.cpp:202 widgets/standardactionmanager.cpp:218
+#: widgets/standardactionmanager.cpp:201 widgets/standardactionmanager.cpp:217
 msgid "Restore Folder From Trash"
 msgstr "Palauta kansio roskakorista"
 
-#: widgets/standardactionmanager.cpp:209 widgets/standardactionmanager.cpp:226
-#: widgets/standardactionmanager.cpp:233
+#: widgets/standardactionmanager.cpp:208 widgets/standardactionmanager.cpp:225
+#: widgets/standardactionmanager.cpp:232
 msgid "&Restore Item From Trash"
 msgstr "&Palauta tietue roskakorista"
 
-#: widgets/standardactionmanager.cpp:210 widgets/standardactionmanager.cpp:227
-#: widgets/standardactionmanager.cpp:233
+#: widgets/standardactionmanager.cpp:209 widgets/standardactionmanager.cpp:226
+#: widgets/standardactionmanager.cpp:232
 msgid "Restore Item From Trash"
 msgstr "Palauta tietue roskakorista"
 
-#: widgets/standardactionmanager.cpp:224
+#: widgets/standardactionmanager.cpp:223
 msgid "&Restore Collection From Trash"
 msgstr "&Palauta kokoelma roskakorista"
 
-#: widgets/standardactionmanager.cpp:224
+#: widgets/standardactionmanager.cpp:223
 msgid "Restore Collection From Trash"
 msgstr "Palauta kokoelma roskakorista"
 
-#: widgets/standardactionmanager.cpp:235
+#: widgets/standardactionmanager.cpp:234
 msgid "&Synchronize Favorite Folders"
 msgstr "Synkronoi suosikkikansio&t"
 
-#: widgets/standardactionmanager.cpp:236
+#: widgets/standardactionmanager.cpp:235
 msgid "Synchronize Favorite Folders"
 msgstr "Synkronoi suosikkikansiot"
 
-#: widgets/standardactionmanager.cpp:243
+#: widgets/standardactionmanager.cpp:242
 msgid "Synchronize Folder Tree"
 msgstr "Synkronoi kansiopuu"
 
-#: widgets/standardactionmanager.cpp:329
+#: widgets/standardactionmanager.cpp:328
 #, kde-format
 msgid "&Copy Folder"
 msgid_plural "&Copy %1 Folders"
 msgstr[0] "&Kopioi kansio"
 msgstr[1] "&Kopioi %1 kansiota"
 
-#: widgets/standardactionmanager.cpp:330
+#: widgets/standardactionmanager.cpp:329
 #, kde-format
 msgid "&Copy Item"
 msgid_plural "&Copy %1 Items"
 msgstr[0] "&Kopioi tietue"
 msgstr[1] "Kopioi %1 tietuetta"
 
-#: widgets/standardactionmanager.cpp:331
+#: widgets/standardactionmanager.cpp:330
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Item"
@@ -2078,7 +2078,7 @@ msgid_plural "&Cut %1 Items"
 msgstr[0] "L&eikkaa tietue"
 msgstr[1] "L&eikkaa %1 tietuetta"
 
-#: widgets/standardactionmanager.cpp:332
+#: widgets/standardactionmanager.cpp:331
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Folder"
@@ -2086,14 +2086,14 @@ msgid_plural "&Cut %1 Folders"
 msgstr[0] "L&eikkaa kansio"
 msgstr[1] "L&eikkaa %1 kansiota"
 
-#: widgets/standardactionmanager.cpp:333
+#: widgets/standardactionmanager.cpp:332
 #, kde-format
 msgid "&Delete Item"
 msgid_plural "&Delete %1 Items"
 msgstr[0] "&Poista tietue"
 msgstr[1] "&Poista %1 tietuetta"
 
-#: widgets/standardactionmanager.cpp:334
+#: widgets/standardactionmanager.cpp:333
 #, kde-format
 msgctxt "@action"
 msgid "&Delete Folder"
@@ -2101,7 +2101,7 @@ msgid_plural "&Delete %1 Folders"
 msgstr[0] "&Poista kansio"
 msgstr[1] "&Poista %1 kansiota"
 
-#: widgets/standardactionmanager.cpp:335
+#: widgets/standardactionmanager.cpp:334
 #, kde-format
 msgctxt "@action"
 msgid "&Synchronize Folder"
@@ -2109,70 +2109,70 @@ msgid_plural "&Synchronize %1 Folders"
 msgstr[0] "&Synkronoi kansio"
 msgstr[1] "&Synkronoi %1 kansiota"
 
-#: widgets/standardactionmanager.cpp:336
+#: widgets/standardactionmanager.cpp:335
 #, kde-format
 msgid "&Delete Resource"
 msgid_plural "&Delete %1 Resources"
 msgstr[0] "&Poista resurssi"
 msgstr[1] "&Poista %1 resurssia"
 
-#: widgets/standardactionmanager.cpp:337
+#: widgets/standardactionmanager.cpp:336
 #, kde-format
 msgid "&Synchronize Resource"
 msgid_plural "&Synchronize %1 Resources"
 msgstr[0] "&Synkronoi resurssi"
 msgstr[1] "&Synkronoi %1 resurssia"
 
-#: widgets/standardactionmanager.cpp:339
+#: widgets/standardactionmanager.cpp:338
 #, kde-format
 msgid "Copy Folder"
 msgid_plural "Copy %1 Folders"
 msgstr[0] "Kopioi kansio"
 msgstr[1] "&Kopioi %1 kansiota"
 
-#: widgets/standardactionmanager.cpp:340
+#: widgets/standardactionmanager.cpp:339
 #, kde-format
 msgid "Copy Item"
 msgid_plural "Copy %1 Items"
 msgstr[0] "Kopioi tietue"
 msgstr[1] "Kopioi %1 tietuetta"
 
-#: widgets/standardactionmanager.cpp:341
+#: widgets/standardactionmanager.cpp:340
 #, kde-format
 msgid "Cut Item"
 msgid_plural "Cut %1 Items"
 msgstr[0] "Leikkaa tietue"
 msgstr[1] "Leikkaa %1 tietuetta"
 
-#: widgets/standardactionmanager.cpp:342
+#: widgets/standardactionmanager.cpp:341
 #, kde-format
 msgid "Cut Folder"
 msgid_plural "Cut %1 Folders"
 msgstr[0] "Leikkaa kansio"
 msgstr[1] "Leikkaa %1 kansiota"
 
-#: widgets/standardactionmanager.cpp:343
+#: widgets/standardactionmanager.cpp:342
 #, kde-format
 msgid "Delete Item"
 msgid_plural "Delete %1 Items"
 msgstr[0] "Poista tietue"
 msgstr[1] "Poista %1 tietuetta"
 
-#: widgets/standardactionmanager.cpp:344
+#: widgets/standardactionmanager.cpp:343
 #, kde-format
 msgid "Delete Folder"
 msgid_plural "Delete %1 Folders"
 msgstr[0] "Poista kansio"
 msgstr[1] "Poista %1 kansiota"
 
-#: widgets/standardactionmanager.cpp:345
+#: widgets/standardactionmanager.cpp:344
 #, kde-format
 msgid "Synchronize Folder"
 msgid_plural "Synchronize %1 Folders"
 msgstr[0] "Synkronoi kansio"
 msgstr[1] "Synkronoi %1 kansiota"
 
-#: widgets/standardactionmanager.cpp:346
+#: widgets/standardactionmanager.cpp:345
 #, kde-format
 msgctxt "@action"
 msgid "Delete Resource"
@@ -2180,7 +2180,7 @@ msgid_plural "Delete %1 Resources"
 msgstr[0] "Poista resurssi"
 msgstr[1] "Poista %1 resurssia"
 
-#: widgets/standardactionmanager.cpp:347
+#: widgets/standardactionmanager.cpp:346
 #, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
@@ -2188,13 +2188,13 @@ msgid_plural "Synchronize %1 Resources"
 msgstr[0] "Synkronoi resurssi"
 msgstr[1] "Synkronoi %1 resurssia"
 
-#: widgets/standardactionmanager.cpp:350
+#: widgets/standardactionmanager.cpp:349
 #, kde-format
 msgctxt "@label:textbox name of Akonadi folder"
 msgid "Name"
 msgstr "Nimi"
 
-#: widgets/standardactionmanager.cpp:357
+#: widgets/standardactionmanager.cpp:356
 #, kde-format
 msgid "Do you really want to delete this folder and all its sub-folders?"
 msgid_plural ""
@@ -2202,7 +2202,7 @@ msgid_plural ""
 msgstr[0] "Haluatko varmasti poistaa tämän kansion alikansioineen?"
 msgstr[1] "Haluatko varmasti poistaa %1 kansiota kaikkine alikansioineen?"
 
-#: widgets/standardactionmanager.cpp:360
+#: widgets/standardactionmanager.cpp:359
 #, fuzzy, kde-format
 #| msgid "Delete Folder"
 #| msgid_plural "Delete %1 Folders"
@@ -2212,32 +2212,32 @@ msgid_plural "Delete Folders?"
 msgstr[0] "Poista kansio"
 msgstr[1] "Poista %1 kansiota"
 
-#: widgets/standardactionmanager.cpp:361
+#: widgets/standardactionmanager.cpp:360
 #, kde-format
 msgid "Could not delete folder: %1"
 msgstr "Kansiota ei voitu poistaa: %1"
 
-#: widgets/standardactionmanager.cpp:362
+#: widgets/standardactionmanager.cpp:361
 #, fuzzy, kde-format
 #| msgid "Folder deletion failed"
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "Kansion poistaminen epäonnistui"
 
-#: widgets/standardactionmanager.cpp:364
+#: widgets/standardactionmanager.cpp:363
 #, kde-format
 msgctxt "@title:window"
 msgid "Properties of Folder %1"
 msgstr "Kansion %1 ominaisuudet"
 
-#: widgets/standardactionmanager.cpp:368
+#: widgets/standardactionmanager.cpp:367
 #, kde-format
 msgid "Do you really want to delete the selected item?"
 msgid_plural "Do you really want to delete %1 items?"
 msgstr[0] "Haluatko varmasti poistaa valitun tietueen?"
 msgstr[1] "Haluatko varmasti poistaa %1 tietuetta?"
 
-#: widgets/standardactionmanager.cpp:369
+#: widgets/standardactionmanager.cpp:368
 #, fuzzy, kde-format
 #| msgid "Delete Item"
 #| msgid_plural "Delete %1 Items"
@@ -2247,56 +2247,56 @@ msgid_plural "Delete Items?"
 msgstr[0] "Poista tietue"
 msgstr[1] "Poista %1 tietuetta"
 
-#: widgets/standardactionmanager.cpp:370
+#: widgets/standardactionmanager.cpp:369
 #, kde-format
 msgid "Could not delete item: %1"
 msgstr "Tietuetta ei voitu poistaa: %1"
 
-#: widgets/standardactionmanager.cpp:371
+#: widgets/standardactionmanager.cpp:370
 #, fuzzy, kde-format
 #| msgid "Item deletion failed"
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "Tietueen poistaminen epäonnistui"
 
-#: widgets/standardactionmanager.cpp:373
+#: widgets/standardactionmanager.cpp:372
 #, kde-format
 msgctxt "@title:window"
 msgid "Rename Favorite"
 msgstr "Muuta suosikin nimeä"
 
-#: widgets/standardactionmanager.cpp:374
+#: widgets/standardactionmanager.cpp:373
 #, kde-format
 msgctxt "@label:textbox name of the folder"
 msgid "Name:"
 msgstr "Nimi:"
 
-#: widgets/standardactionmanager.cpp:376
+#: widgets/standardactionmanager.cpp:375
 #, kde-format
 msgctxt "@title:window"
 msgid "New Resource"
 msgstr "Uusi resurssi"
 
-#: widgets/standardactionmanager.cpp:377
+#: widgets/standardactionmanager.cpp:376
 #, kde-format
 msgid "Could not create resource: %1"
 msgstr "Resurssia ei saatu luoduksi: %1"
 
-#: widgets/standardactionmanager.cpp:378
+#: widgets/standardactionmanager.cpp:377
 #, fuzzy, kde-format
 #| msgid "Resource creation failed"
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "Resurssin luominen epäonnistui"
 
-#: widgets/standardactionmanager.cpp:382
+#: widgets/standardactionmanager.cpp:381
 #, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
 msgstr[0] "Haluatko varmasti poistaa tämän resurssin?"
 msgstr[1] "Haluatko varmasti poistaa %1 resurssia?"
 
-#: widgets/standardactionmanager.cpp:385
+#: widgets/standardactionmanager.cpp:384
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Resource?"
@@ -2304,36 +2304,36 @@ msgid_plural "Delete Resources?"
 msgstr[0] "Poistetaanko resurssi?"
 msgstr[1] "Poistetaanko resurssit?"
 
-#: widgets/standardactionmanager.cpp:387
+#: widgets/standardactionmanager.cpp:386
 #, kde-format
 msgid "Could not paste data: %1"
 msgstr "Tietoa ei voitu liittää: %1"
 
-#: widgets/standardactionmanager.cpp:388
+#: widgets/standardactionmanager.cpp:387
 #, fuzzy, kde-format
 #| msgid "Paste failed"
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Liittäminen epäonnistui"
 
-#: widgets/standardactionmanager.cpp:740
+#: widgets/standardactionmanager.cpp:739
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "Kansion nimessä ei voi olla ”/”."
 
-#: widgets/standardactionmanager.cpp:740 widgets/standardactionmanager.cpp:744
+#: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
 #, fuzzy, kde-format
 #| msgid "Create new folder error"
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Uuden kansion luontivirhe"
 
-#: widgets/standardactionmanager.cpp:744
+#: widgets/standardactionmanager.cpp:743
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "Kansion nimen alussa tai lopussa ei voi olla pistettä (”.”)."
 
-#: widgets/standardactionmanager.cpp:997
+#: widgets/standardactionmanager.cpp:982
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2342,23 +2342,23 @@ msgstr ""
 "Ennen kansion ”%1” synkronointia resurssiin täytyy olla yhteys. Haluatko "
 "ottaa siihen yhteyden?"
 
-#: widgets/standardactionmanager.cpp:998
+#: widgets/standardactionmanager.cpp:983
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "Tiliin ”%1” ei ole yhteyttä"
 
-#: widgets/standardactionmanager.cpp:999
+#: widgets/standardactionmanager.cpp:984
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Yhdistä verkkoon"
 
-#: widgets/standardactionmanager.cpp:1622
+#: widgets/standardactionmanager.cpp:1585
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Siirrä tähän kansioon"
 
-#: widgets/standardactionmanager.cpp:1622
+#: widgets/standardactionmanager.cpp:1585
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Kopioi tähän kansioon"
@@ -2406,25 +2406,25 @@ msgstr "&Tilaa"
 msgid "&Unsubscribe"
 msgstr "&Peru tilaus"
 
-#: widgets/tageditwidget.cpp:117
+#: widgets/tageditwidget.cpp:116
 #, kde-format
 msgid "Failed to create a new tag"
 msgstr "Uuden luokituksen luonti epäonnistui"
 
-#: widgets/tageditwidget.cpp:117
+#: widgets/tageditwidget.cpp:116
 #, fuzzy, kde-format
 #| msgid "An error occurred while creating a new tag"
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Uutta luokitusta luotaessa tapahtui virhe"
 
-#: widgets/tageditwidget.cpp:165
+#: widgets/tageditwidget.cpp:164
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Haluatko varmasti poistaa luokituksen <resource>%1</resource>?"
 
-#: widgets/tageditwidget.cpp:166
+#: widgets/tageditwidget.cpp:165
 #, fuzzy, kde-format
 #| msgctxt "@title"
 #| msgid "Delete tag"
@@ -2432,7 +2432,7 @@ msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Poista luokitus"
 
-#: widgets/tageditwidget.cpp:195
+#: widgets/tageditwidget.cpp:189
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"

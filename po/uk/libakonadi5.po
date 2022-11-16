@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-16 00:47+0000\n"
+"POT-Creation-Date: 2022-11-16 00:47+0000\n"
 "PO-Revision-Date: 2022-10-10 18:37+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -592,42 +592,42 @@ msgstr "Перевіряє сервер Akonadi і повідомляє про �
 msgid "(c) 2008 Volker Krause <vkrause@kde.org>"
 msgstr "© Volker Krause <vkrause@kde.org>, 2008"
 
-#: widgets/agentactionmanager.cpp:36
+#: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
 msgstr "С&творити екземпляр агента…"
 
-#: widgets/agentactionmanager.cpp:37
+#: widgets/agentactionmanager.cpp:36
 msgid "&Delete Agent Instance"
 msgstr "Ви&лучити екземпляр агента"
 
-#: widgets/agentactionmanager.cpp:38
+#: widgets/agentactionmanager.cpp:37
 msgid "&Configure Agent Instance"
 msgstr "&Налаштувати екземпляр агента"
 
-#: widgets/agentactionmanager.cpp:54
+#: widgets/agentactionmanager.cpp:53
 #, kde-format
 msgctxt "@title:window"
 msgid "New Agent Instance"
 msgstr "Новий екземпляр агента"
 
-#: widgets/agentactionmanager.cpp:56
+#: widgets/agentactionmanager.cpp:55
 #, kde-format
 msgid "Could not create agent instance: %1"
 msgstr "Не вдалося створити екземпляр агента: %1"
 
-#: widgets/agentactionmanager.cpp:58
+#: widgets/agentactionmanager.cpp:57
 #, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "Спроба створення агента зазнала невдачі"
 
-#: widgets/agentactionmanager.cpp:60
+#: widgets/agentactionmanager.cpp:59
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Agent Instance?"
 msgstr "Вилучити екземпляр агента?"
 
-#: widgets/agentactionmanager.cpp:64
+#: widgets/agentactionmanager.cpp:63
 #, kde-format
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Ви справді бажаєте вилучити позначений екземпляр агента?"
@@ -790,7 +790,7 @@ msgstr "&Нова підтека..."
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Створити нову підтеку у вибраній теці"
 
-#: widgets/collectiondialog.cpp:264 widgets/standardactionmanager.cpp:349
+#: widgets/collectiondialog.cpp:264 widgets/standardactionmanager.cpp:348
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
@@ -802,12 +802,12 @@ msgctxt "@label:textbox, name of a thing"
 msgid "Name"
 msgstr "Назва"
 
-#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
+#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:350
 #, kde-format
 msgid "Could not create folder: %1"
 msgstr "Не вдалося створити теку: %1"
 
-#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:352
+#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
@@ -1157,12 +1157,12 @@ msgstr "Служба керування особистою інформаціє�
 msgid "Details..."
 msgstr "Подробиці…"
 
-#: widgets/manageaccountwidget.cpp:205
+#: widgets/manageaccountwidget.cpp:200
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr "Хочете вилучити обліковий запис «%1»?"
 
-#: widgets/manageaccountwidget.cpp:206
+#: widgets/manageaccountwidget.cpp:201
 #, kde-format
 msgid "Remove account?"
 msgstr "Вилучити обліковий запис?"
@@ -1887,200 +1887,200 @@ msgstr ""
 "\"https://userbase.kde.org/Akonadi_(uk)\">userbase.kde.org/Akonadi_(uk)</a>."
 "</p>"
 
-#: widgets/standardactionmanager.cpp:79
+#: widgets/standardactionmanager.cpp:78
 msgid "&New Folder..."
 msgstr "&Нова тека..."
 
-#: widgets/standardactionmanager.cpp:79
+#: widgets/standardactionmanager.cpp:78
 msgid "New"
 msgstr "Створити"
 
-#: widgets/standardactionmanager.cpp:81
+#: widgets/standardactionmanager.cpp:80
 msgid "&Delete Folder"
 msgstr "&Вилучити теку"
 
-#: widgets/standardactionmanager.cpp:81
+#: widgets/standardactionmanager.cpp:80
 msgid "Delete"
 msgstr "Вилучити"
 
-#: widgets/standardactionmanager.cpp:83
+#: widgets/standardactionmanager.cpp:82
 msgid "&Synchronize Folder"
 msgstr "&Синхронізувати теку"
 
-#: widgets/standardactionmanager.cpp:84 widgets/standardactionmanager.cpp:158
-#: widgets/standardactionmanager.cpp:244
+#: widgets/standardactionmanager.cpp:83 widgets/standardactionmanager.cpp:157
+#: widgets/standardactionmanager.cpp:243
 msgid "Synchronize"
 msgstr "Синхронізувати"
 
-#: widgets/standardactionmanager.cpp:91
+#: widgets/standardactionmanager.cpp:90
 msgid "Folder &Properties"
 msgstr "В&ластивості теки"
 
-#: widgets/standardactionmanager.cpp:92 widgets/standardactionmanager.cpp:150
+#: widgets/standardactionmanager.cpp:91 widgets/standardactionmanager.cpp:149
 msgid "Properties"
 msgstr "Властивості"
 
-#: widgets/standardactionmanager.cpp:99
+#: widgets/standardactionmanager.cpp:98
 msgid "&Paste"
 msgstr "&Вставити"
 
-#: widgets/standardactionmanager.cpp:99
+#: widgets/standardactionmanager.cpp:98
 msgid "Paste"
 msgstr "Вставити"
 
-#: widgets/standardactionmanager.cpp:102
+#: widgets/standardactionmanager.cpp:101
 msgid "Manage Local &Subscriptions..."
 msgstr "Керування локальними &підписками..."
 
-#: widgets/standardactionmanager.cpp:103
+#: widgets/standardactionmanager.cpp:102
 msgid "Manage Local Subscriptions"
 msgstr "Керування локальними підписками"
 
-#: widgets/standardactionmanager.cpp:110
+#: widgets/standardactionmanager.cpp:109
 msgid "Add to Favorite Folders"
 msgstr "Додати до тек улюблених"
 
-#: widgets/standardactionmanager.cpp:111
+#: widgets/standardactionmanager.cpp:110
 msgid "Add to Favorite"
 msgstr "Додати до улюблених"
 
-#: widgets/standardactionmanager.cpp:118
+#: widgets/standardactionmanager.cpp:117
 msgid "Remove from Favorite Folders"
 msgstr "Вилучити з тек улюблених"
 
-#: widgets/standardactionmanager.cpp:119
+#: widgets/standardactionmanager.cpp:118
 msgid "Remove from Favorite"
 msgstr "Вилучити з улюблених"
 
-#: widgets/standardactionmanager.cpp:125
+#: widgets/standardactionmanager.cpp:124
 msgid "Rename Favorite..."
 msgstr "Перейменувати улюблене..."
 
-#: widgets/standardactionmanager.cpp:125
+#: widgets/standardactionmanager.cpp:124
 msgid "Rename"
 msgstr "Перейменувати"
 
-#: widgets/standardactionmanager.cpp:127 widgets/standardactionmanager.cpp:165
+#: widgets/standardactionmanager.cpp:126 widgets/standardactionmanager.cpp:164
 msgid "Copy Folder To..."
 msgstr "Скопіювати теку до..."
 
-#: widgets/standardactionmanager.cpp:128 widgets/standardactionmanager.cpp:134
-#: widgets/standardactionmanager.cpp:165 widgets/standardactionmanager.cpp:174
+#: widgets/standardactionmanager.cpp:127 widgets/standardactionmanager.cpp:133
+#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:173
 msgid "Copy To"
 msgstr "Скопіювати до"
 
-#: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:174
+#: widgets/standardactionmanager.cpp:133 widgets/standardactionmanager.cpp:173
 msgid "Copy Item To..."
 msgstr "Скопіювати запис до..."
 
-#: widgets/standardactionmanager.cpp:135 widgets/standardactionmanager.cpp:175
+#: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:174
 msgid "Move Item To..."
 msgstr "Пересунути запис до..."
 
-#: widgets/standardactionmanager.cpp:135 widgets/standardactionmanager.cpp:138
-#: widgets/standardactionmanager.cpp:168 widgets/standardactionmanager.cpp:175
+#: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:137
+#: widgets/standardactionmanager.cpp:167 widgets/standardactionmanager.cpp:174
 msgid "Move To"
 msgstr "Пересунути до"
 
-#: widgets/standardactionmanager.cpp:137 widgets/standardactionmanager.cpp:167
+#: widgets/standardactionmanager.cpp:136 widgets/standardactionmanager.cpp:166
 msgid "Move Folder To..."
 msgstr "Пересунути теку до..."
 
-#: widgets/standardactionmanager.cpp:144
+#: widgets/standardactionmanager.cpp:143
 msgid "&Cut Item"
 msgstr "Ви&різати запис"
 
-#: widgets/standardactionmanager.cpp:144 widgets/standardactionmanager.cpp:145
+#: widgets/standardactionmanager.cpp:143 widgets/standardactionmanager.cpp:144
 msgid "Cut"
 msgstr "Вирізати"
 
-#: widgets/standardactionmanager.cpp:145
+#: widgets/standardactionmanager.cpp:144
 msgid "&Cut Folder"
 msgstr "Ви&різати теку"
 
-#: widgets/standardactionmanager.cpp:146
+#: widgets/standardactionmanager.cpp:145
 msgid "Create Resource"
 msgstr "Створити ресурс"
 
-#: widgets/standardactionmanager.cpp:147
+#: widgets/standardactionmanager.cpp:146
 msgid "Delete Resource"
 msgstr "Вилучити ресурс"
 
-#: widgets/standardactionmanager.cpp:149
+#: widgets/standardactionmanager.cpp:148
 msgid "&Resource Properties"
 msgstr "В&ластивості ресурсу"
 
-#: widgets/standardactionmanager.cpp:157
+#: widgets/standardactionmanager.cpp:156
 msgid "Synchronize Resource"
 msgstr "Синхронізувати ресурс"
 
-#: widgets/standardactionmanager.cpp:164
+#: widgets/standardactionmanager.cpp:163
 msgid "Work Offline"
 msgstr "Працювати автономно"
 
-#: widgets/standardactionmanager.cpp:177
+#: widgets/standardactionmanager.cpp:176
 msgid "&Synchronize Folder Recursively"
 msgstr "&Синхронізувати теку рекурсивно"
 
-#: widgets/standardactionmanager.cpp:178
+#: widgets/standardactionmanager.cpp:177
 msgid "Synchronize Recursively"
 msgstr "Синхронізувати рекурсивно"
 
-#: widgets/standardactionmanager.cpp:185
+#: widgets/standardactionmanager.cpp:184
 msgid "&Move Folder To Trash"
 msgstr "&Пересунути теку до смітника"
 
-#: widgets/standardactionmanager.cpp:186
+#: widgets/standardactionmanager.cpp:185
 msgid "Move Folder To Trash"
 msgstr "Пересунути теку до смітника"
 
-#: widgets/standardactionmanager.cpp:193
+#: widgets/standardactionmanager.cpp:192
 msgid "&Move Item To Trash"
 msgstr "&Пересунути об’єкт до смітника"
 
-#: widgets/standardactionmanager.cpp:194
+#: widgets/standardactionmanager.cpp:193
 msgid "Move Item To Trash"
 msgstr "Пересунути об’єкт до смітника"
 
-#: widgets/standardactionmanager.cpp:201 widgets/standardactionmanager.cpp:217
+#: widgets/standardactionmanager.cpp:200 widgets/standardactionmanager.cpp:216
 msgid "&Restore Folder From Trash"
 msgstr "Ві&дновити теку зі смітника"
 
-#: widgets/standardactionmanager.cpp:202 widgets/standardactionmanager.cpp:218
+#: widgets/standardactionmanager.cpp:201 widgets/standardactionmanager.cpp:217
 msgid "Restore Folder From Trash"
 msgstr "Відновити теку зі смітника"
 
-#: widgets/standardactionmanager.cpp:209 widgets/standardactionmanager.cpp:226
-#: widgets/standardactionmanager.cpp:233
+#: widgets/standardactionmanager.cpp:208 widgets/standardactionmanager.cpp:225
+#: widgets/standardactionmanager.cpp:232
 msgid "&Restore Item From Trash"
 msgstr "Ві&дновити об’єкт зі смітника"
 
-#: widgets/standardactionmanager.cpp:210 widgets/standardactionmanager.cpp:227
-#: widgets/standardactionmanager.cpp:233
+#: widgets/standardactionmanager.cpp:209 widgets/standardactionmanager.cpp:226
+#: widgets/standardactionmanager.cpp:232
 msgid "Restore Item From Trash"
 msgstr "Відновити об’єкт зі смітника"
 
-#: widgets/standardactionmanager.cpp:224
+#: widgets/standardactionmanager.cpp:223
 msgid "&Restore Collection From Trash"
 msgstr "Ві&дновити збірку зі смітника"
 
-#: widgets/standardactionmanager.cpp:224
+#: widgets/standardactionmanager.cpp:223
 msgid "Restore Collection From Trash"
 msgstr "Відновити збірку зі смітника"
 
-#: widgets/standardactionmanager.cpp:235
+#: widgets/standardactionmanager.cpp:234
 msgid "&Synchronize Favorite Folders"
 msgstr "&Синхронізувати теки улюблених"
 
-#: widgets/standardactionmanager.cpp:236
+#: widgets/standardactionmanager.cpp:235
 msgid "Synchronize Favorite Folders"
 msgstr "Синхронізація тек улюблених"
 
-#: widgets/standardactionmanager.cpp:243
+#: widgets/standardactionmanager.cpp:242
 msgid "Synchronize Folder Tree"
 msgstr "Синхронізувати ієрархію тек"
 
-#: widgets/standardactionmanager.cpp:329
+#: widgets/standardactionmanager.cpp:328
 #, kde-format
 msgid "&Copy Folder"
 msgid_plural "&Copy %1 Folders"
@@ -2089,7 +2089,7 @@ msgstr[1] "&Скопіювати %1 теки"
 msgstr[2] "&Скопіювати %1 тек"
 msgstr[3] "&Скопіювати %1 теку"
 
-#: widgets/standardactionmanager.cpp:330
+#: widgets/standardactionmanager.cpp:329
 #, kde-format
 msgid "&Copy Item"
 msgid_plural "&Copy %1 Items"
@@ -2098,7 +2098,7 @@ msgstr[1] "&Скопіювати %1 елементи"
 msgstr[2] "&Скопіювати %1 елементів"
 msgstr[3] "&Скопіювати %1 елемент"
 
-#: widgets/standardactionmanager.cpp:331
+#: widgets/standardactionmanager.cpp:330
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Item"
@@ -2108,7 +2108,7 @@ msgstr[1] "Ви&різати %1 записи"
 msgstr[2] "Ви&різати %1 записів"
 msgstr[3] "Ви&різати запис"
 
-#: widgets/standardactionmanager.cpp:332
+#: widgets/standardactionmanager.cpp:331
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Folder"
@@ -2118,7 +2118,7 @@ msgstr[1] "Ви&різати %1 теки"
 msgstr[2] "Ви&різати %1 тек"
 msgstr[3] "Ви&різати теку"
 
-#: widgets/standardactionmanager.cpp:333
+#: widgets/standardactionmanager.cpp:332
 #, kde-format
 msgid "&Delete Item"
 msgid_plural "&Delete %1 Items"
@@ -2127,7 +2127,7 @@ msgstr[1] "&Вилучити %1 елементи"
 msgstr[2] "&Вилучити %1 елементів"
 msgstr[3] "&Вилучити %1 елемент"
 
-#: widgets/standardactionmanager.cpp:334
+#: widgets/standardactionmanager.cpp:333
 #, kde-format
 msgctxt "@action"
 msgid "&Delete Folder"
@@ -2137,7 +2137,7 @@ msgstr[1] "&Вилучити %1 теки"
 msgstr[2] "&Вилучити %1 тек"
 msgstr[3] "&Вилучити теку"
 
-#: widgets/standardactionmanager.cpp:335
+#: widgets/standardactionmanager.cpp:334
 #, kde-format
 msgctxt "@action"
 msgid "&Synchronize Folder"
@@ -2147,7 +2147,7 @@ msgstr[1] "&Синхронізувати %1 теки"
 msgstr[2] "&Синхронізувати %1 тек"
 msgstr[3] "&Синхронізувати теку"
 
-#: widgets/standardactionmanager.cpp:336
+#: widgets/standardactionmanager.cpp:335
 #, kde-format
 msgid "&Delete Resource"
 msgid_plural "&Delete %1 Resources"
@@ -2156,7 +2156,7 @@ msgstr[1] "Ви&лучити %1 ресурси"
 msgstr[2] "Ви&лучити %1 ресурсів"
 msgstr[3] "Ви&лучити ресурс"
 
-#: widgets/standardactionmanager.cpp:337
+#: widgets/standardactionmanager.cpp:336
 #, kde-format
 msgid "&Synchronize Resource"
 msgid_plural "&Synchronize %1 Resources"
@@ -2165,7 +2165,7 @@ msgstr[1] "Син&хронізувати %1 ресурси"
 msgstr[2] "Син&хронізувати %1 ресурсів"
 msgstr[3] "Син&хронізувати ресурс"
 
-#: widgets/standardactionmanager.cpp:339
+#: widgets/standardactionmanager.cpp:338
 #, kde-format
 msgid "Copy Folder"
 msgid_plural "Copy %1 Folders"
@@ -2174,7 +2174,7 @@ msgstr[1] "Копіювати %1 теки"
 msgstr[2] "Копіювати %1 тек"
 msgstr[3] "Копіювати теку"
 
-#: widgets/standardactionmanager.cpp:340
+#: widgets/standardactionmanager.cpp:339
 #, kde-format
 msgid "Copy Item"
 msgid_plural "Copy %1 Items"
@@ -2183,7 +2183,7 @@ msgstr[1] "Копіювати %1 елементи"
 msgstr[2] "Копіювати %1 елементів"
 msgstr[3] "Копіювати елемент"
 
-#: widgets/standardactionmanager.cpp:341
+#: widgets/standardactionmanager.cpp:340
 #, kde-format
 msgid "Cut Item"
 msgid_plural "Cut %1 Items"
@@ -2192,7 +2192,7 @@ msgstr[1] "Вирізати %1 елементи"
 msgstr[2] "Вирізати %1 елементів"
 msgstr[3] "Вирізати елемент"
 
-#: widgets/standardactionmanager.cpp:342
+#: widgets/standardactionmanager.cpp:341
 #, kde-format
 msgid "Cut Folder"
 msgid_plural "Cut %1 Folders"
@@ -2201,7 +2201,7 @@ msgstr[1] "Вирізати %1 теки"
 msgstr[2] "Вирізати %1 тек"
 msgstr[3] "Вирізати теку"
 
-#: widgets/standardactionmanager.cpp:343
+#: widgets/standardactionmanager.cpp:342
 #, kde-format
 msgid "Delete Item"
 msgid_plural "Delete %1 Items"
@@ -2210,7 +2210,7 @@ msgstr[1] "Вилучити %1 елементи"
 msgstr[2] "Вилучити %1 елементів"
 msgstr[3] "Вилучити елемент"
 
-#: widgets/standardactionmanager.cpp:344
+#: widgets/standardactionmanager.cpp:343
 #, kde-format
 msgid "Delete Folder"
 msgid_plural "Delete %1 Folders"
@@ -2219,7 +2219,7 @@ msgstr[1] "Вилучити %1 теки"
 msgstr[2] "Вилучити %1 тек"
 msgstr[3] "Вилучити теку"
 
-#: widgets/standardactionmanager.cpp:345
+#: widgets/standardactionmanager.cpp:344
 #, kde-format
 msgid "Synchronize Folder"
 msgid_plural "Synchronize %1 Folders"
@@ -2228,7 +2228,7 @@ msgstr[1] "Синхронізувати %1 теки"
 msgstr[2] "Синхронізувати %1 тек"
 msgstr[3] "Синхронізувати теку"
 
-#: widgets/standardactionmanager.cpp:346
+#: widgets/standardactionmanager.cpp:345
 #, kde-format
 msgctxt "@action"
 msgid "Delete Resource"
@@ -2238,7 +2238,7 @@ msgstr[1] "Вилучити %1 ресурси"
 msgstr[2] "Вилучити %1 ресурсів"
 msgstr[3] "Вилучити ресурс"
 
-#: widgets/standardactionmanager.cpp:347
+#: widgets/standardactionmanager.cpp:346
 #, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
@@ -2248,13 +2248,13 @@ msgstr[1] "Синхронізувати %1 ресурси"
 msgstr[2] "Синхронізувати %1 ресурсів"
 msgstr[3] "Синхронізувати ресурс"
 
-#: widgets/standardactionmanager.cpp:350
+#: widgets/standardactionmanager.cpp:349
 #, kde-format
 msgctxt "@label:textbox name of Akonadi folder"
 msgid "Name"
 msgstr "Назва"
 
-#: widgets/standardactionmanager.cpp:357
+#: widgets/standardactionmanager.cpp:356
 #, kde-format
 msgid "Do you really want to delete this folder and all its sub-folders?"
 msgid_plural ""
@@ -2264,7 +2264,7 @@ msgstr[1] "Ви справді бажаєте вилучити %1 теки і в
 msgstr[2] "Ви справді бажаєте вилучити %1 тек і всі їхні підтеки?"
 msgstr[3] "Ви справді бажаєте вилучити цю теку і всі її підтеки?"
 
-#: widgets/standardactionmanager.cpp:360
+#: widgets/standardactionmanager.cpp:359
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
@@ -2274,24 +2274,24 @@ msgstr[1] "Вилучити теки?"
 msgstr[2] "Вилучити теки?"
 msgstr[3] "Вилучити теку?"
 
-#: widgets/standardactionmanager.cpp:361
+#: widgets/standardactionmanager.cpp:360
 #, kde-format
 msgid "Could not delete folder: %1"
 msgstr "Не вдалося вилучити теку: %1"
 
-#: widgets/standardactionmanager.cpp:362
+#: widgets/standardactionmanager.cpp:361
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "Помилка вилучення теки"
 
-#: widgets/standardactionmanager.cpp:364
+#: widgets/standardactionmanager.cpp:363
 #, kde-format
 msgctxt "@title:window"
 msgid "Properties of Folder %1"
 msgstr "Властивості теки %1"
 
-#: widgets/standardactionmanager.cpp:368
+#: widgets/standardactionmanager.cpp:367
 #, kde-format
 msgid "Do you really want to delete the selected item?"
 msgid_plural "Do you really want to delete %1 items?"
@@ -2300,7 +2300,7 @@ msgstr[1] "Ви справді бажаєте вилучити %1 позначе
 msgstr[2] "Ви справді бажаєте вилучити %1 позначених пунктів?"
 msgstr[3] "Ви справді бажаєте вилучити позначений пункт?"
 
-#: widgets/standardactionmanager.cpp:369
+#: widgets/standardactionmanager.cpp:368
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
@@ -2310,47 +2310,47 @@ msgstr[1] "Вилучити записи?"
 msgstr[2] "Вилучити записи?"
 msgstr[3] "Вилучити запис?"
 
-#: widgets/standardactionmanager.cpp:370
+#: widgets/standardactionmanager.cpp:369
 #, kde-format
 msgid "Could not delete item: %1"
 msgstr "Не вдалося вилучити пункт: %1"
 
-#: widgets/standardactionmanager.cpp:371
+#: widgets/standardactionmanager.cpp:370
 #, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "Помилка вилучення запису"
 
-#: widgets/standardactionmanager.cpp:373
+#: widgets/standardactionmanager.cpp:372
 #, kde-format
 msgctxt "@title:window"
 msgid "Rename Favorite"
 msgstr "Перейменування улюбленого"
 
-#: widgets/standardactionmanager.cpp:374
+#: widgets/standardactionmanager.cpp:373
 #, kde-format
 msgctxt "@label:textbox name of the folder"
 msgid "Name:"
 msgstr "Назва:"
 
-#: widgets/standardactionmanager.cpp:376
+#: widgets/standardactionmanager.cpp:375
 #, kde-format
 msgctxt "@title:window"
 msgid "New Resource"
 msgstr "Новий ресурс"
 
-#: widgets/standardactionmanager.cpp:377
+#: widgets/standardactionmanager.cpp:376
 #, kde-format
 msgid "Could not create resource: %1"
 msgstr "Не вдалося створити ресурс: %1"
 
-#: widgets/standardactionmanager.cpp:378
+#: widgets/standardactionmanager.cpp:377
 #, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "Спроба створення ресурсу зазнала невдачі"
 
-#: widgets/standardactionmanager.cpp:382
+#: widgets/standardactionmanager.cpp:381
 #, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
@@ -2359,7 +2359,7 @@ msgstr[1] "Ви справді бажаєте вилучити %1 ресурси
 msgstr[2] "Ви справді бажаєте вилучити %1 ресурсів?"
 msgstr[3] "Ви справді бажаєте вилучити цей ресурс?"
 
-#: widgets/standardactionmanager.cpp:385
+#: widgets/standardactionmanager.cpp:384
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Resource?"
@@ -2369,34 +2369,34 @@ msgstr[1] "Вилучити ресурси?"
 msgstr[2] "Вилучити ресурси?"
 msgstr[3] "Вилучити ресурс?"
 
-#: widgets/standardactionmanager.cpp:387
+#: widgets/standardactionmanager.cpp:386
 #, kde-format
 msgid "Could not paste data: %1"
 msgstr "Не вдалося вставити дані: %1"
 
-#: widgets/standardactionmanager.cpp:388
+#: widgets/standardactionmanager.cpp:387
 #, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Спроба вставлення зазнала невдачі"
 
-#: widgets/standardactionmanager.cpp:740
+#: widgets/standardactionmanager.cpp:739
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "Не можна додавати «/» до назви теки."
 
-#: widgets/standardactionmanager.cpp:740 widgets/standardactionmanager.cpp:744
+#: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Помилка створення теки"
 
-#: widgets/standardactionmanager.cpp:744
+#: widgets/standardactionmanager.cpp:743
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "Не можна додавати «.» на початку або в кінці назви теки."
 
-#: widgets/standardactionmanager.cpp:997
+#: widgets/standardactionmanager.cpp:982
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2405,23 +2405,23 @@ msgstr ""
 "Для того, щоб розпочати синхронізацію теки «%1», ресурс має бути переведено "
 "у режим роботи у мережі. Бажаєте перевести його у такий режим?"
 
-#: widgets/standardactionmanager.cpp:998
+#: widgets/standardactionmanager.cpp:983
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "Обліковий запис «%1» перебуває поза мережею"
 
-#: widgets/standardactionmanager.cpp:999
+#: widgets/standardactionmanager.cpp:984
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Увійти в мережу"
 
-#: widgets/standardactionmanager.cpp:1622
+#: widgets/standardactionmanager.cpp:1585
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Пересунути до цієї теки"
 
-#: widgets/standardactionmanager.cpp:1622
+#: widgets/standardactionmanager.cpp:1585
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Скопіювати в цю теку"
@@ -2467,30 +2467,30 @@ msgstr "П&ідписатися"
 msgid "&Unsubscribe"
 msgstr "&Відписатися"
 
-#: widgets/tageditwidget.cpp:117
+#: widgets/tageditwidget.cpp:116
 #, kde-format
 msgid "Failed to create a new tag"
 msgstr "Не вдалося створити мітку"
 
-#: widgets/tageditwidget.cpp:117
+#: widgets/tageditwidget.cpp:116
 #, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Під час спроби створення мітки сталася помилка"
 
-#: widgets/tageditwidget.cpp:165
+#: widgets/tageditwidget.cpp:164
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Ви справді хочете вилучити мітку <resource>%1</resource>?"
 
-#: widgets/tageditwidget.cpp:166
+#: widgets/tageditwidget.cpp:165
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Вилучення мітки"
 
-#: widgets/tageditwidget.cpp:195
+#: widgets/tageditwidget.cpp:189
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"
