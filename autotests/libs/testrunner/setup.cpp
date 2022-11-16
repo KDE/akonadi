@@ -284,8 +284,6 @@ SetupTest::SetupTest()
                                           "qt.* = false\n"
                                           "kf5.coreaddons.desktopparser.debug = false"));
 
-    // avoid KIO starting klauncher which can get the CI stuck
-    setEnvironmentVariable("KDE_FORK_SLAVES", QStringLiteral("yes"));
     setEnvironmentVariable("KIO_DISABLE_CACHE_CLEANER", QStringLiteral("yes"));
 
     QHashIterator<QString, QString> iter(Config::instance()->envVars());
