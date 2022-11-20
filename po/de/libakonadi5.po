@@ -6,21 +6,22 @@
 # Torbjörn Klatt <opensource@torbjoern-klatt.de>, 2011.
 # Rolf Eike Beer <kde@opensource.sf-tec.de>, 2012.
 # Markus Slopianka <markus.s@kdemail.net>, 2013.
+# Alois Spitzbart <spitz234@hotmail.com>, 2022.
 # Intevation GmbH, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-16 00:47+0000\n"
-"PO-Revision-Date: 2022-02-20 10:17+0100\n"
-"Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
-"Language-Team: German <kde-i18n-doc@kde.org>\n"
+"PO-Revision-Date: 2022-11-13 23:04+0100\n"
+"Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
+"Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 21.08.0\n"
+"X-Generator: Lokalize 22.08.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -620,8 +621,7 @@ msgid "Could not create agent instance: %1"
 msgstr "Agent-Instanz kann nicht erstellt werden: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "Das Erstellen einer Agent-Instanz ist fehlgeschlagen."
@@ -638,9 +638,7 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "Möchten Sie die ausgewählte Agent-Instanz wirklich löschen?"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "%1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Einstellungen für %1"
@@ -764,11 +762,17 @@ msgid ""
 "likely never uploaded to the destination server, so clearing this collection "
 "means that those <b>data will be lost</b>. Are you sure you want to proceed?"
 msgstr ""
+"Die Sammlung „%1“ enthält %2 Elemente ohne entfernte Kennung. Diese Elemente "
+"wurden wahrscheinlich niemals auf den Zielserver hochgeladen, sodass das "
+"Leeren dieser Sammlung bedeutet, dass <b>die Daten verloren gehen</b>. "
+"Möchten Sie fortfahren?"
 
 #: widgets/clearcachejob.cpp:83
 #, kde-format
 msgid "Collection cache cleared. You should restart Akonadi now."
 msgstr ""
+"Zwischengespeicherte Sammlungen geleert. Sie sollten jetzt Akonadi neu "
+"starten."
 
 #: widgets/collectiondialog.cpp:56
 #, kde-format
@@ -809,8 +813,7 @@ msgid "Could not create folder: %1"
 msgstr "Der Ordner kann nicht angelegt werden: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
 msgstr "Erstellen des Ordners fehlgeschlagen"
@@ -976,9 +979,7 @@ msgid "Open collection dialog"
 msgstr "Sammlungs-Dialog öffnen"
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select a collection"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "Wählen Sie eine Sammlung"
@@ -2231,14 +2232,12 @@ msgstr[0] "Möchten Sie den Ordner und alle Unterordner wirklich löschen?"
 msgstr[1] "Möchten Sie %1 Ordner und all deren Unterordner wirklich löschen?"
 
 #: widgets/standardactionmanager.cpp:359
-#, fuzzy, kde-format
-#| msgid "Delete Folder"
-#| msgid_plural "Delete %1 Folders"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "Ordner löschen"
-msgstr[1] "%1 Ordner löschen"
+msgstr[0] "Ordner löschen?"
+msgstr[1] "Ordner löschen?"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2246,8 +2245,7 @@ msgid "Could not delete folder: %1"
 msgstr "Der Ordner kann nicht gelöscht werden: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "Löschen des Ordners fehlgeschlagen"
@@ -2266,14 +2264,12 @@ msgstr[0] "Möchten Sie den ausgewählten Eintrag wirklich löschen?"
 msgstr[1] "Möchten Sie diese %1 Einträge wirklich löschen?"
 
 #: widgets/standardactionmanager.cpp:368
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "Eintrag löschen"
-msgstr[1] "%1 Einträge löschen"
+msgstr[0] "Eintrag löschen?"
+msgstr[1] "Einträge löschen?"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2281,8 +2277,7 @@ msgid "Could not delete item: %1"
 msgstr "Der Eintrag kann nicht gelöscht werden: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, fuzzy, kde-format
-#| msgid "Item deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "Löschen des Eintrags fehlgeschlagen"
@@ -2311,8 +2306,7 @@ msgid "Could not create resource: %1"
 msgstr "Ressource kann nicht erstellt werden: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, fuzzy, kde-format
-#| msgid "Resource creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "Erstellen der Ressource fehlgeschlagen"
@@ -2338,8 +2332,7 @@ msgid "Could not paste data: %1"
 msgstr "Die Daten können nicht eingefügt werden: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, fuzzy, kde-format
-#| msgid "Paste failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Einfügen fehlgeschlagen"
@@ -2350,8 +2343,7 @@ msgid "We can not add \"/\" in folder name."
 msgstr "Das „/“-Zeichen kann dem Ordnernamen nicht hinzugefügt werden."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, fuzzy, kde-format
-#| msgid "Create new folder error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Fehler beim Erstellen eines neuen Ordners"
@@ -2399,9 +2391,7 @@ msgid "Failed to update subscription: %1"
 msgstr "Aktualisierung des Abonnements fehlgeschlagen: %1"
 
 #: widgets/subscriptiondialog.cpp:93
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Subscription Error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Abonnement-Fehler"
@@ -2442,8 +2432,7 @@ msgid "Failed to create a new tag"
 msgstr "Erstellen des neuen Stichworts ist fehlgeschlagen"
 
 #: widgets/tageditwidget.cpp:116
-#, fuzzy, kde-format
-#| msgid "An error occurred while creating a new tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Bei der Erstellung eines neuen Stichworts ist ein Fehler aufgetreten"
@@ -2455,9 +2444,7 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Möchten Sie das Stichwort <resource>%1</resource> wirklich entfernen?"
 
 #: widgets/tageditwidget.cpp:165
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Delete tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Stichwort löschen"
