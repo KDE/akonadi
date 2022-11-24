@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-16 00:47+0000\n"
-"PO-Revision-Date: 2022-09-28 20:47+0200\n"
+"PO-Revision-Date: 2022-11-23 20:44+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 22.04.1\n"
+"X-Generator: Lokalize 22.08.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -610,11 +610,10 @@ msgid "Could not create agent instance: %1"
 msgstr "Nie można utworzyć wystąpienia usługi: %1"
 
 #: widgets/agentactionmanager.cpp:58
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
-msgstr "Tworzenia wystąpienia usługi nie powiodło się"
+msgstr "Nie udało się utworzyć wystąpienia usługi"
 
 #: widgets/agentactionmanager.cpp:60
 #, kde-format
@@ -628,9 +627,7 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "Czy na pewno usunąć zaznaczone wystąpienie usługi?"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "%1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Ustawienia %1"
@@ -805,8 +802,7 @@ msgid "Could not create folder: %1"
 msgstr "Nie można utworzyć katalogu: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:352
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
 msgstr "Nie udało się utworzyć katalogu"
@@ -974,9 +970,7 @@ msgid "Open collection dialog"
 msgstr "Otwórz okno zbioru"
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select a collection"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "Wybierz zbiór"
@@ -2229,15 +2223,13 @@ msgstr[1] "Czy na pewno usunąć %1 katalogi i wszystkie ich podkatalogi?"
 msgstr[2] "Czy na pewno usunąć %1 katalogów i wszystkie ich podkatalogi?"
 
 #: widgets/standardactionmanager.cpp:360
-#, fuzzy, kde-format
-#| msgid "Delete Folder"
-#| msgid_plural "Delete %1 Folders"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "Usuń katalog"
-msgstr[1] "Usuń %1 katalogi"
-msgstr[2] "Usuń %1 katalogów"
+msgstr[0] "Usunąć katalog?"
+msgstr[1] "Usunąć katalogi?"
+msgstr[2] "Usunąć katalogi?"
 
 #: widgets/standardactionmanager.cpp:361
 #, kde-format
@@ -2245,8 +2237,7 @@ msgid "Could not delete folder: %1"
 msgstr "Nie można usunąć katalogu: %1"
 
 #: widgets/standardactionmanager.cpp:362
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "Nieudane usuwanie katalogu"
@@ -2261,32 +2252,29 @@ msgstr "Właściwości katalogu %1"
 #, kde-format
 msgid "Do you really want to delete the selected item?"
 msgid_plural "Do you really want to delete %1 items?"
-msgstr[0] "Czy na pewno usunąć zaznaczone elementy?"
-msgstr[1] "Czy na pewno usunąć %1 elementy?"
-msgstr[2] "Czy na pewno usunąć %1 elementów?"
+msgstr[0] "Czy na pewno usunąć zaznaczoną rzecz?"
+msgstr[1] "Czy na pewno usunąć %1 rzeczy?"
+msgstr[2] "Czy na pewno usunąć %1 rzeczy?"
 
 #: widgets/standardactionmanager.cpp:369
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "Usuń element"
-msgstr[1] "Usuń %1 elementy"
-msgstr[2] "Usuń %1 elementów"
+msgstr[0] "Usunąć rzecz?"
+msgstr[1] "Usuń rzeczy?"
+msgstr[2] "Usuń rzeczy?"
 
 #: widgets/standardactionmanager.cpp:370
 #, kde-format
 msgid "Could not delete item: %1"
-msgstr "Nie można usunąć elementu: %1"
+msgstr "Nie można usunąć rzeczy: %1"
 
 #: widgets/standardactionmanager.cpp:371
-#, fuzzy, kde-format
-#| msgid "Item deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
-msgstr "Usuwanie elementu nie powiodło się"
+msgstr "Nieudane usuwanie rzeczy"
 
 #: widgets/standardactionmanager.cpp:373
 #, kde-format
@@ -2312,11 +2300,10 @@ msgid "Could not create resource: %1"
 msgstr "Nie udało się utworzyć zasobu: %1"
 
 #: widgets/standardactionmanager.cpp:378
-#, fuzzy, kde-format
-#| msgid "Resource creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
-msgstr "Tworzenie zasobu nie powiodło się"
+msgstr "Nieudane tworzenie zasobu"
 
 #: widgets/standardactionmanager.cpp:382
 #, kde-format
@@ -2341,8 +2328,7 @@ msgid "Could not paste data: %1"
 msgstr "Nie można wkleić danych: %1"
 
 #: widgets/standardactionmanager.cpp:388
-#, fuzzy, kde-format
-#| msgid "Paste failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Wklejanie nieudane"
@@ -2353,8 +2339,7 @@ msgid "We can not add \"/\" in folder name."
 msgstr "Nie można dodać \"/\" do nazwy katalogu."
 
 #: widgets/standardactionmanager.cpp:740 widgets/standardactionmanager.cpp:744
-#, fuzzy, kde-format
-#| msgid "Create new folder error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Błąd tworzenia nowego katalogu"
@@ -2400,9 +2385,7 @@ msgid "Failed to update subscription: %1"
 msgstr "Nie udało się uaktualnić subskrypcji: %1"
 
 #: widgets/subscriptiondialog.cpp:93
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Subscription Error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Błąd subskrypcji"
@@ -2443,8 +2426,7 @@ msgid "Failed to create a new tag"
 msgstr "Nie udało się utworzyć nowego znacznika"
 
 #: widgets/tageditwidget.cpp:117
-#, fuzzy, kde-format
-#| msgid "An error occurred while creating a new tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Wystąpił błąd przy tworzeniu nowego znacznika"
@@ -2456,9 +2438,7 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Czy na pewno usunąć znacznik <resource>%1</resource>?"
 
 #: widgets/tageditwidget.cpp:166
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Delete tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Usuń znacznik"
