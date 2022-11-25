@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-16 00:47+0000\n"
-"PO-Revision-Date: 2022-10-20 11:58+0300\n"
+"PO-Revision-Date: 2022-11-24 16:58+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.08.1\n"
+"X-Generator: Lokalize 22.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1053,7 +1053,7 @@ msgstr "Buraya &Taşı"
 #: widgets/dragdropmanager.cpp:218
 #, kde-format
 msgid "&Copy Here"
-msgstr "&Buraya Kopyala"
+msgstr "Buraya Ko&pyala"
 
 #: widgets/dragdropmanager.cpp:224
 #, kde-format
@@ -2048,15 +2048,15 @@ msgstr "Klasör Ağacını Eşzamanla"
 #, kde-format
 msgid "&Copy Folder"
 msgid_plural "&Copy %1 Folders"
-msgstr[0] "Klasörü &Kopyala"
-msgstr[1] "%1 Klasörü &Kopyala"
+msgstr[0] "Klasörü Ko&pyala"
+msgstr[1] "%1 Klasörü Ko&pyala"
 
 #: widgets/standardactionmanager.cpp:330
 #, kde-format
 msgid "&Copy Item"
 msgid_plural "&Copy %1 Items"
-msgstr[0] "Öge &Kopyala"
-msgstr[1] "%1 Öge &Kopyala"
+msgstr[0] "Öge Ko&pyala"
+msgstr[1] "%1 Öge Ko&pyala"
 
 #: widgets/standardactionmanager.cpp:331
 #, kde-format
