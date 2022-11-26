@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
-set(PIM_VERSION "5.21.90")
+set(PIM_VERSION "5.22.0")
 project(Akonadi VERSION ${PIM_VERSION})
 
 
@@ -48,7 +48,7 @@ set(QT_REQUIRED_VERSION "5.15.2")
 if (QT_MAJOR_VERSION STREQUAL "6")
     set(QT_REQUIRED_VERSION "6.4.0")
 endif()
-set(RELEASE_SERVICE_VERSION "22.11.90")
+set(RELEASE_SERVICE_VERSION "22.12.0")
 set(AKONADI_FULL_VERSION "${PIM_VERSION} (${RELEASE_SERVICE_VERSION})")
 
 configure_file(akonadifull-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/akonadifull-version.h @ONLY)
