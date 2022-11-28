@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-16 00:47+0000\n"
-"PO-Revision-Date: 2022-08-02 22:04+0200\n"
+"PO-Revision-Date: 2022-11-27 21:07+0100\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
@@ -613,8 +613,7 @@ msgid "Could not create agent instance: %1"
 msgstr "Kunde inte skapa instans av agenten: %1"
 
 #: widgets/agentactionmanager.cpp:58
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "Misslyckades skapa instans av agenten"
@@ -631,9 +630,7 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "Vill du verkligen ta bort den markerade instansen av agenten?"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "%1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Inställning av %1"
@@ -805,8 +802,7 @@ msgid "Could not create folder: %1"
 msgstr "Kunde inte skapa katalog: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:352
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
 msgstr "Misslyckades skapa katalog"
@@ -972,9 +968,7 @@ msgid "Open collection dialog"
 msgstr "Öppna samlingsdialogruta"
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select a collection"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "Välj en samling"
@@ -2200,14 +2194,12 @@ msgstr[1] ""
 "Vill du verkligen ta bort %1 kataloger och alla deras underkataloger?"
 
 #: widgets/standardactionmanager.cpp:360
-#, fuzzy, kde-format
-#| msgid "Delete Folder"
-#| msgid_plural "Delete %1 Folders"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "Ta bort katalog"
-msgstr[1] "Ta bort %1 kataloger"
+msgstr[0] "Ta bort katalog?"
+msgstr[1] "Ta bort kataloger?"
 
 #: widgets/standardactionmanager.cpp:361
 #, kde-format
@@ -2215,8 +2207,7 @@ msgid "Could not delete folder: %1"
 msgstr "Kunde inte ta bort katalog: %1"
 
 #: widgets/standardactionmanager.cpp:362
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "Misslyckades ta bort katalog"
@@ -2235,14 +2226,12 @@ msgstr[0] "Vill du verkligen ta bort det markerade objektet?"
 msgstr[1] "Vill du verkligen ta bort %1 markerade objekt?"
 
 #: widgets/standardactionmanager.cpp:369
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "Ta bort objekt"
-msgstr[1] "Ta bort %1 objekt"
+msgstr[0] "Ta bort objekt?"
+msgstr[1] "Ta bort objekt?"
 
 #: widgets/standardactionmanager.cpp:370
 #, kde-format
@@ -2250,8 +2239,7 @@ msgid "Could not delete item: %1"
 msgstr "Kunde inte ta bort objekt: %1"
 
 #: widgets/standardactionmanager.cpp:371
-#, fuzzy, kde-format
-#| msgid "Item deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "Misslyckades ta bort objekt"
@@ -2280,8 +2268,7 @@ msgid "Could not create resource: %1"
 msgstr "Kunde inte skapa resurs: %1"
 
 #: widgets/standardactionmanager.cpp:378
-#, fuzzy, kde-format
-#| msgid "Resource creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "Misslyckades skapa resurs"
@@ -2307,8 +2294,7 @@ msgid "Could not paste data: %1"
 msgstr "Kunde inte klistra in data: %1"
 
 #: widgets/standardactionmanager.cpp:388
-#, fuzzy, kde-format
-#| msgid "Paste failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Misslyckades klistra in"
@@ -2319,8 +2305,7 @@ msgid "We can not add \"/\" in folder name."
 msgstr "Det går inte att använda \"/\" i katalognamn."
 
 #: widgets/standardactionmanager.cpp:740 widgets/standardactionmanager.cpp:744
-#, fuzzy, kde-format
-#| msgid "Create new folder error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Fel vid skapa ny katalog"
@@ -2367,9 +2352,7 @@ msgid "Failed to update subscription: %1"
 msgstr "Misslyckades uppdatera prenumeration: %1"
 
 #: widgets/subscriptiondialog.cpp:93
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Subscription Error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Prenumerationsfel"
@@ -2410,8 +2393,7 @@ msgid "Failed to create a new tag"
 msgstr "Misslyckades skapa ny etikett"
 
 #: widgets/tageditwidget.cpp:117
-#, fuzzy, kde-format
-#| msgid "An error occurred while creating a new tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Ett fel uppstod när en ny etikett skulle skapas"
@@ -2423,9 +2405,7 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Vill du verkligen ta bort etiketten <resource>%1</resource>?"
 
 #: widgets/tageditwidget.cpp:166
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Delete tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Ta bort etikett"
