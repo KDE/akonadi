@@ -2564,18 +2564,3 @@ msgstr "データファイルを解析できませんでした: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "コレクション %1 は見つかりませんでした。"
-
-#~ msgid "Error"
-#~ msgstr "エラー"
-
-#~ msgctxt "@title:window"
-#~ msgid "Delete folder?"
-#~ msgid_plural "Delete folders?"
-#~ msgstr[0] "フォルダを削除しますか？"
-#~ msgstr[1] "フォルダを削除しますか？"
-
-#~ msgctxt "@title:window"
-#~ msgid "Delete item?"
-#~ msgid_plural "Delete items?"
-#~ msgstr[0] "アイテムを削除"
-#~ msgstr[1] "アイテムを削除"
