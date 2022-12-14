@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-16 00:47+0000\n"
-"PO-Revision-Date: 2022-12-08 17:28+0100\n"
+"PO-Revision-Date: 2022-12-13 11:17+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -282,6 +282,8 @@ msgid ""
 "The protocol version of the Akonadi server is incompatible. Make sure you "
 "have a compatible version installed."
 msgstr ""
+"Akonadi-ის სერვერის ვერსია შეუთავსებელია. დარწმუნდით, რომ თქვენი ვერსიები "
+"თავსებადია."
 
 #: core/jobs/job.cpp:341
 #, kde-format
@@ -327,7 +329,7 @@ msgstr "არასწორი რესურსის იდენტიფ�
 #: core/jobs/specialcollectionshelperjobs.cpp:350
 #, kde-format
 msgid "Failed to configure default resource via D-Bus."
-msgstr ""
+msgstr "D-Bus-ით ნაგულისხმები რესურსის მორგების შეცდომა."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:415
 #, kde-format
@@ -347,7 +349,7 @@ msgstr "ჭდის შექმნის შეცდომა."
 #: core/jobs/trashjob.cpp:163
 #, kde-format
 msgid "Move to trash collection failed, aborting trash operation"
-msgstr ""
+msgstr "კოლექციის ნაგავში გადატანის შეცდომა. გადატანის ოპერაცია გაუქმდა"
 
 #: core/jobs/trashjob.cpp:226 core/jobs/trashrestorejob.cpp:151
 #, kde-format
@@ -362,12 +364,13 @@ msgstr "გადაცემულია არასწორი კოლე�
 #: core/jobs/trashjob.cpp:387 core/jobs/trashrestorejob.cpp:351
 #, kde-format
 msgid "No valid collection or empty itemlist"
-msgstr ""
+msgstr "არასწორი კოლექცია ან ცარიელი ელემენტების სია"
 
 #: core/jobs/trashrestorejob.cpp:86
 #, kde-format
 msgid "Could not find restore collection and restore resource is not available"
 msgstr ""
+"კოლექციის აღდგენის პოვნა შეუძლებელია და აღდგენის რესურსი ხელმიუწვდომელია"
 
 #: core/models/agentinstancemodel.cpp:183
 #, kde-format
@@ -393,6 +396,8 @@ msgid ""
 "The target collection '%1' contains already\n"
 "a collection with name '%2'."
 msgstr ""
+"სამიზნე კოლექცია '%1' უკვე შეიცავს კოლექციას\n"
+"სახელით '%2'."
 
 #: core/models/entitytreemodel.cpp:655
 #, kde-format
@@ -428,7 +433,7 @@ msgstr "კოლექციის გადატანის შეცდო�
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
-msgstr ""
+msgstr "ჩანაწერის ბმის შეცდომა: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
 #, kde-format
@@ -502,7 +507,7 @@ msgstr "ინდექსი ხელმისაწვდომი აღა�
 #: core/partfetcher.cpp:114
 #, kde-format
 msgid "Payload part '%1' is not available for this index"
-msgstr ""
+msgstr "შემცველობის ნაწილი '%1' ამ ინდექსისთვის ხელმიუწვდომელია"
 
 #: core/partfetcher.cpp:123
 #, kde-format
@@ -532,6 +537,10 @@ msgid ""
 "If you recently updated your system please log out and back in to make sure "
 "all applications use the correct protocol version."
 msgstr ""
+"Akonadi-ის სერვერის პროტოკოლი განსხვავდება ამ აპლიკაციის მიერ გამოყენებული "
+"პროტოკოლისგან.\n"
+"თუ თქვენი სისტემა ახლახანს განაახლეთ, რომ დარწმუნდეთ, რომ ყველა აპლიკაცია "
+"პროტოკოლის სწორ ვერსიას იყენებს, გადით სესიიდან და თავიდან შემოდით."
 
 #: core/servermanager.cpp:288
 #, kde-format
@@ -539,6 +548,7 @@ msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
 "installation."
 msgstr ""
+"Akonadi-ის აგენტები ხელმიუწვდომელია. შეამოწმეთ თქვენი KDE PIM-ის ფაილები."
 
 #: core/session.cpp:185
 #, kde-format
@@ -546,6 +556,8 @@ msgid ""
 "Protocol version mismatch. Server version is older (%1) than ours (%2). If "
 "you updated your system recently please restart the Akonadi server."
 msgstr ""
+"პროტოკოლის ვერსია არ ემთხვევა. სერვერის ვერსია (%1) უფრო ძველია, ვიდრე ჩვენი "
+"(%2). თუ სისტემა ახლახანს განაახლეთ, Akonadi-ის სერვერი გადატვირთეთ."
 
 #: core/session.cpp:194
 #, kde-format
@@ -553,6 +565,8 @@ msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
 "you updated your system recently please restart all KDE PIM applications."
 msgstr ""
+"პროტოკოლის ვერსია არ ემთხვევა. სერვერის ვერსია (%1) უფრო ახალია, ვიდრე ჩვენი "
+"(%2). თუ სისტემა ახლახანს განაახლეთ, გადატვირთეთ ყველა KDE PIM აპლიკაცია."
 
 #: selftest/main.cpp:19
 #, kde-format
@@ -628,12 +642,12 @@ msgstr "%1-ის შესახებ"
 #: widgets/agentconfigurationwidget.cpp:95
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
-msgstr ""
+msgstr "მორგების დიალოგი სხვა ფანჯარაში გაიხსნა"
 
 #: widgets/agentconfigurationwidget.cpp:102
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
-msgstr ""
+msgstr "%1-ის მორგების ფანჯარა უკვე ღიაა."
 
 #: widgets/agentconfigurationwidget.cpp:104
 #, kde-format
@@ -712,13 +726,13 @@ msgstr "ყოველთვის &სრული შეტყობინე
 #: widgets/cachepolicypage.ui:111
 #, kde-format
 msgid "&Retrieve message bodies on demand"
-msgstr ""
+msgstr "&შეტყობინების შემცველობის მოთხოვნისას მიღება"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/cachepolicypage.ui:118
 #, kde-format
 msgid "Keep message bodies locally for:"
-msgstr ""
+msgstr "შეტყობინების სხეულის ლოკალურად შენარჩუნების დრო:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, localCacheTimeout)
 #: widgets/cachepolicypage.ui:130
@@ -734,11 +748,16 @@ msgid ""
 "likely never uploaded to the destination server, so clearing this collection "
 "means that those <b>data will be lost</b>. Are you sure you want to proceed?"
 msgstr ""
+"კოლექცია '%1' შეიცავს %2 ჩანაწერს, რომელსაც დაშორებული ID არ გააჩნია. ეს "
+"ჩანაწერები ალბათ არასდროს ატვირთულა სამიზნე სერვერზე, ასე რომ ამ კოლექციის "
+"გასაუფთავება ნიშნავს, რომ <b>ეს მონაცემები დაიკარგება</b>. დარწმუნებული "
+"ბრძანდებით, რომ გნებავთ, გააგრძელოთ?"
 
 #: widgets/clearcachejob.cpp:83
 #, kde-format
 msgid "Collection cache cleared. You should restart Akonadi now."
 msgstr ""
+"კოლექციის ქეში გასუფთავდა. უმჯობესია, ახლა Akonadi-ის სერვერი გადატვირთოთ."
 
 #: widgets/collectiondialog.cpp:56
 #, kde-format
@@ -759,7 +778,7 @@ msgstr "&ქვესაქაღალდის შექმნა...."
 #: widgets/collectiondialog.cpp:226
 #, kde-format
 msgid "Create a new subfolder under the currently selected folder"
-msgstr ""
+msgstr "ამჟამად არჩეულ საქაღალდეში ახალი ქვესაქაღალდის შექმნა"
 
 #: widgets/collectiondialog.cpp:264 widgets/standardactionmanager.cpp:348
 #, kde-format
@@ -850,7 +869,7 @@ msgstr "0 ბაიტი"
 #: widgets/collectionmaintenancepage.cpp:46
 #, kde-format
 msgid "Remember that indexing can take some minutes."
-msgstr ""
+msgstr "დაიმახსოვრეთ, რომ ინდექსირებას რამდენიმე წუთი შეიძლება დასჭირდეს."
 
 #: widgets/collectionmaintenancepage.cpp:71
 #, kde-format
@@ -999,6 +1018,12 @@ msgid ""
 "editor\"</a> to keep a copy of the texts, then select which version is most "
 "correct, then re-open it and modify it again to add what's missing."
 msgstr ""
+"<qt>თქვენი ცვლილებები კონფლიქტშია ვიღაც სხვის მიერ შეტანილ ცვლილებებთან."
+"<br>იმ შემთხვევაში, თუ ერთ-ერთი ვერსიის წაშლა არ გნებავთ, ცვლილებების ხელით "
+"შეტანა მოგიწევთ. დააწკაპუნეთ <br>Click on <a href=\"opentexteditor\">"
+"\"ტექსტური რედაქტორის გახსნაზე\"</a>, რათა ტექსტის ასლი შეინარჩუნოთ, შემდეგ "
+"აირჩიეთ, რომელი ვერსია უფრო სწორია, თავიდან გახსენით ის და შეცვალეთ, როგორც "
+"გნებავთ."
 
 #: widgets/conflictresolvedialog.cpp:265
 #, kde-format
@@ -1043,6 +1068,9 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"პირადი ინფორმაციის მართვის სერვისთან მიერთების შეცდომა.\n"
+"\n"
+"%1"
 
 #: widgets/erroroverlay.cpp:229 widgets/erroroverlay.cpp:230
 #, kde-format
@@ -1083,6 +1111,8 @@ msgid ""
 "The Akonadi personal information management service is not running. This "
 "application cannot be used without it."
 msgstr ""
+"Akonadi-ის პირადი ინფორმაციის მართვის სერვისი გაშვებული არაა. ამ აპლიკაციას "
+"მის გარეშე ვერ გამოიყენებთ."
 
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #: widgets/erroroverlay.ui:116
@@ -1098,12 +1128,14 @@ msgid ""
 "The Akonadi personal information management framework is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
+"Akonadi-ის პირადი ინფორმაციის მართვის სერვისი არ მუშაობს.\n"
+"პრობლემის შესახებ დეტალური ინფორმაციის მისაღებად დააწექით \"დეტალები...\"."
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
 #, kde-format
 msgid "The Akonadi personal information management service is not operational."
-msgstr ""
+msgstr "Akonadi-ის პირადი ინფორმაციის მართვის სერვისი არ ფუნქციონირებს."
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
@@ -1196,6 +1228,8 @@ msgid ""
 "The QtSQL driver '%1' is required by your current Akonadi server "
 "configuration and was found on your system."
 msgstr ""
+"თქვენი მიმდინარე Akonadi-ის სერვერის კონფიგურაციას QtSQL -ის დრაივერი '%1' "
+"ესაჭიროება და ის აღმოჩენილია თქვენს სისტემაში."
 
 #: widgets/selftestdialog.cpp:191
 #, kde-format
@@ -1205,6 +1239,10 @@ msgid ""
 "The following drivers are installed: %2.\n"
 "Make sure the required driver is installed."
 msgstr ""
+"თქვენი მიმდინარე Akonadi-ის სერვერის კონფიგურაციას QtSQL -ის დრაივერი '%1' "
+"ესაჭიროება.\n"
+"დაყენებულია შემდეგი დრაივერები: %2.\n"
+"დარწმუნდით, რომ საჭირო დრაივერი დაყენებულია."
 
 #: widgets/selftestdialog.cpp:198
 #, kde-format
@@ -1225,7 +1263,7 @@ msgstr "MySQL-ის სერვერის გამშვები ფაი
 #: widgets/selftestdialog.cpp:300
 #, kde-format
 msgid "The current configuration does not require an internal MySQL server."
-msgstr ""
+msgstr "მიმდინარე კონფიგურაცია შიდა MySQL სერვერს არ მოითხოვს."
 
 #: widgets/selftestdialog.cpp:216
 #, kde-format
@@ -1236,6 +1274,11 @@ msgid ""
 "executable. The server executable is typically called 'mysqld'; its location "
 "varies depending on the distribution."
 msgstr ""
+"Akonadi ამჟამად MySQL სერვერის ('%1') გამოყენებაზეა მორგებული.\n"
+"დარწმუნდით, რომ MySQL სერვერი დაყენებული გაქვთ და ბილიკები სწორადაა "
+"მითითებული. ასევე გადაამოწმეთ საჭირო კითხვისა და გაშვების წვდომების არსებობა "
+"სერვერის გამშვებ ფაილზე. სერვერის გამშვებ ფაილს ჩვეულებრივ 'mysqld' ჰქვია, "
+"მდებარეობა კი დისტრიბუტივზე დამოკიდებულებით იცვლება."
 
 #: widgets/selftestdialog.cpp:224
 #, kde-format
@@ -1276,7 +1319,7 @@ msgstr "MySQL სერვერი გაშვებადია."
 #, kde-format
 msgid ""
 "Executing the MySQL server '%1' failed with the following error message: '%2'"
-msgstr ""
+msgstr "MySQL სერვერის '%1' გაშვების შეცდომა: '%2'"
 
 #: widgets/selftestdialog.cpp:242
 #, kde-format
@@ -1299,6 +1342,8 @@ msgid ""
 "The MySQL server did not report any errors during this startup. The log can "
 "be found in '%1'."
 msgstr ""
+"MySQL სერვერმა გაშვებისას შეცდომები არ გამოიტანა. ჟურნალის ნახვა შეგიძლიათ: "
+"'%1'."
 
 #: widgets/selftestdialog.cpp:264
 #, kde-format
@@ -1308,7 +1353,7 @@ msgstr "MySQL -ის შეცდომების ჟურნალი წ�
 #: widgets/selftestdialog.cpp:265
 #, kde-format
 msgid "A MySQL server error log file was found but is not readable: %1"
-msgstr ""
+msgstr "MySQL სერვერის ჟურნალის ფაილი '%1' ვიპოვე, მაგრამ წაკითხვადი არაა"
 
 #: widgets/selftestdialog.cpp:274
 #, kde-format
@@ -1339,6 +1384,7 @@ msgstr "MySQL სერვერის ჟურნალი შეცდომ�
 #, kde-format
 msgid "The MySQL server log file '%1' does not contain any errors or warnings."
 msgstr ""
+"MySQL სერვერის ჟურნალის ფაილი '%1' შეცდომებს და გაფრთხილებებს არ შეიცავს."
 
 #: widgets/selftestdialog.cpp:300
 #, kde-format
@@ -1355,7 +1401,7 @@ msgstr "MySQL -ის ნაგულისხმები კონფიგუ
 msgid ""
 "The default configuration for the MySQL server was found and is readable at "
 "%1."
-msgstr ""
+msgstr "MySQL სერვერის ნაგულისხმები კონფიგურაცია ნაპოვნია და კითხვადია %1."
 
 #: widgets/selftestdialog.cpp:314
 #, kde-format
@@ -1369,6 +1415,8 @@ msgid ""
 "readable. Check your Akonadi installation is complete and you have all "
 "required access rights."
 msgstr ""
+"MySQL სერვერის ნაგულისხმები კონფიგურაცია ვერ ვიპოვე ან წაკითხვადი არაა. "
+"შეამოწმეთ თქვენი Akonadi-ის კონფიგურაციის სისრულე და წვდომის უფლებები."
 
 #: widgets/selftestdialog.cpp:323
 #, kde-format
@@ -1380,6 +1428,7 @@ msgstr "MySQL სერვერის კონფიგურაციის �
 msgid ""
 "The custom configuration for the MySQL server was not found but is optional."
 msgstr ""
+"MySQL სერვერის მითითებული კონფიგურაცია ვერ ვიპოვე, მაგრამ ის არასავალდებულოა."
 
 #: widgets/selftestdialog.cpp:327
 #, kde-format
@@ -1390,7 +1439,7 @@ msgstr "ნაპოვნია MySQL სერვერის მორგე�
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was found and is readable at %1"
-msgstr ""
+msgstr "MySQL სერვერის მითითებული კონფიგურაცია ვიპოვე და კითხვადია %1"
 
 #: widgets/selftestdialog.cpp:332
 #, kde-format
@@ -1403,6 +1452,8 @@ msgid ""
 "The custom configuration for the MySQL server was found at %1 but is not "
 "readable. Check your access rights."
 msgstr ""
+"MySQL სერვერის მითითებული კონფიგურაცია აღმოჩენილია (%1) მაგრამ მისი წაკითხვა "
+"შეუძლებელია. შეამოწმეთ თქვენი წვდომის უფლებები."
 
 #: widgets/selftestdialog.cpp:342
 #, kde-format
@@ -1437,7 +1488,7 @@ msgstr "PostgreSQL სერვერი ნაპოვნია."
 #: widgets/selftestdialog.cpp:378
 #, kde-format
 msgid "The PostgreSQL server was found and connection is working."
-msgstr ""
+msgstr "PostgreSQL სერვერი ნაპოვნია და მიერთება მუშაობს."
 
 #: widgets/selftestdialog.cpp:388
 #, kde-format
@@ -1450,6 +1501,8 @@ msgid ""
 "The program 'akonadictl' needs to be accessible in $PATH. Make sure you have "
 "the Akonadi server installed."
 msgstr ""
+"პროგრამა akonadictl ხელმისაწვდომი უნდა იყოს $PATH-ში. დარწმუნდით, რომ "
+"Akonadi-ის სერვერი დაყენებულია."
 
 #: widgets/selftestdialog.cpp:396
 #, kde-format
@@ -1464,6 +1517,10 @@ msgid ""
 "Result:\n"
 "%2"
 msgstr ""
+"Akonadi-ის კონტროლის პროგრამა '%1' აღმოჩენილია და მისი გაშვება "
+"წარმატებულია.\n"
+"შედეგი:\n"
+"%2"
 
 #: widgets/selftestdialog.cpp:403
 #, kde-format
@@ -1479,6 +1536,10 @@ msgid ""
 "%2\n"
 "Make sure the Akonadi server is installed correctly."
 msgstr ""
+"Akonadi-ის კონტროლის პროგრამა '%1' ვიპოვე, მაგრამ მისი გაშვება შეუძლებელია.\n"
+"შედეგი:\n"
+"%2\n"
+"დარწმუნდით, რომ Akonadi-ის სერვერი სწორადაა დაყენებული."
 
 #: widgets/selftestdialog.cpp:416
 #, kde-format
@@ -1491,11 +1552,13 @@ msgid ""
 "The Akonadi control process is registered at D-Bus which typically indicates "
 "it is operational."
 msgstr ""
+"ფაქტი, რომ Akonadi-ის კონტროლის პროცესი რეგისტრირებულია D-Bus-ში ჩვეულებრივ "
+"ნიშნავს, რომ ის მუშაობს."
 
 #: widgets/selftestdialog.cpp:420
 #, kde-format
 msgid "Akonadi control process not registered at D-Bus."
-msgstr ""
+msgstr "Akonadi -ის საკონტროლო პროცესი D-Bus-თან დარეგისტრირებული არაა."
 
 #: widgets/selftestdialog.cpp:421
 #, kde-format
@@ -1503,6 +1566,9 @@ msgid ""
 "The Akonadi control process is not registered at D-Bus which typically means "
 "it was not started or encountered a fatal error during startup."
 msgstr ""
+"Akonadi-ის კონტროლის პროცესი D-Bus-ში რეგისტრირებული არაა, რაც ჩვეულებრივ "
+"ნიშნავს, რომ ის გაშვებული არაა ან მისი გაშვებისას ფატალური შეცდომებია "
+"დაფიქსირებული."
 
 #: widgets/selftestdialog.cpp:427
 #, kde-format
@@ -1515,6 +1581,8 @@ msgid ""
 "The Akonadi server process is registered at D-Bus which typically indicates "
 "it is operational."
 msgstr ""
+"ფაქტი, რომ Akonadi-ის სერვერის პროცესი რეგისტრირებულია D-Bus-ში ჩვეულებრივ "
+"ნიშნავს, რომ ის მუშაობს."
 
 #: widgets/selftestdialog.cpp:431
 #, kde-format
@@ -1527,6 +1595,9 @@ msgid ""
 "The Akonadi server process is not registered at D-Bus which typically means "
 "it was not started or encountered a fatal error during startup."
 msgstr ""
+"Akonadi-ის სერვერის პროცესი D-Bus-ში რეგისტრირებული არაა, რაც ჩვეულებრივ "
+"ნიშნავს, რომ ის გაშვებული არაა ან მისი გაშვებისას ფატალური შეცდომებია "
+"დაფიქსირებული."
 
 #: widgets/selftestdialog.cpp:441
 #, kde-format
@@ -1539,6 +1610,8 @@ msgid ""
 "Without a connection to the server it is not possible to check if the "
 "protocol version meets the requirements."
 msgstr ""
+"პროტოკოლის ვერსიის თავსებადობის შემოწმება სერვერთან მიერთების გარეშე "
+"შეუძლებელია."
 
 #: widgets/selftestdialog.cpp:447
 #, kde-format
@@ -1552,6 +1625,9 @@ msgid ""
 "If you recently updated KDE PIM, please make sure to restart both Akonadi "
 "and KDE PIM applications."
 msgstr ""
+"სერვერის პროტოკოლის ვერსიაა %1, მაგრამ კლიენტს %2 ესაჭიროება. თუ თქვენი KDE "
+"PIM ახლახანს განაახლეთ, დარწმუნდით, რომ ორივე, Akonadi-ის და KDE PIM-ის "
+"აპლიკაციები გადატვირთეთ."
 
 #: widgets/selftestdialog.cpp:454
 #, kde-format
@@ -1592,6 +1668,11 @@ msgid ""
 "XDG_DATA_DIRS environment variable is set to '%2'; make sure this includes "
 "all paths where Akonadi agents are installed."
 msgstr ""
+"რესურსის აგენტები ვერ ვიპოვე. Akonadi-ის გამოყენებისთვის ერთი მაინცაა "
+"საჭირო. ეს ჩვეულებრივ ნიშნავს, რომ რესურსის აგენტები დაყენებული არაა ან "
+"პრობლემა გაქვთ ფაილებთან. ვეძებდი შემდეგ ბილიკებზე: '%1'. XDG_DATA_DIRS "
+"გარსის ცვლადის მნიშვნელობაა '%2'. დარწმუნდით, რომ ის ყველა ბილიკს შეიცავს, "
+"სადაც Akonadi-ის აგენტებია დაყენებული."
 
 #: widgets/selftestdialog.cpp:499
 #, kde-format
@@ -1602,7 +1683,7 @@ msgstr "მიმდინარე Akonadi-ის ჟურნალი ნა�
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its current startup."
-msgstr ""
+msgstr "ამჟამინდელი გაშვებისას Akonadi-ის სერვერს შეცდომები არ ჰქონია."
 
 #: widgets/selftestdialog.cpp:503
 #, kde-format
@@ -1615,6 +1696,8 @@ msgid ""
 "The Akonadi server reported errors during its current startup. The log can "
 "be found in %1."
 msgstr ""
+"Akonadi-ის სერვერის ამჟამინდელი გაშვებისას დაფიქსირდა შეცდომები. ჟურნალის "
+"პოვნა აქ შეგიძლიათ: %1."
 
 #: widgets/selftestdialog.cpp:512
 #, kde-format
@@ -1625,7 +1708,7 @@ msgstr "Akonadi-ის სერვერის შეცდომების �
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its previous startup."
-msgstr ""
+msgstr "წინა გაშვებისას Akonadi-ის სერვერს შეცდომები არ ჰქონია."
 
 #: widgets/selftestdialog.cpp:517
 #, kde-format
@@ -1638,6 +1721,8 @@ msgid ""
 "The Akonadi server reported errors during its previous startup. The log can "
 "be found in %1."
 msgstr ""
+"Akonadi-ის სერვერის წინა გაშვებისას დაფიქსირდა შეცდომები. ჟურნალის პოვნა აქ "
+"შეგიძლიათ: %1."
 
 #: widgets/selftestdialog.cpp:529
 #, kde-format
@@ -1650,6 +1735,7 @@ msgid ""
 "The Akonadi control process did not report any errors during its current "
 "startup."
 msgstr ""
+"ამჟამინდელი გაშვებისას Akonadi-ის კონტროლის პროცესს შეცდომები არ ჰქონია."
 
 #: widgets/selftestdialog.cpp:534
 #, kde-format
@@ -1662,6 +1748,8 @@ msgid ""
 "The Akonadi control process reported errors during its current startup. The "
 "log can be found in %1."
 msgstr ""
+"Akonadi-ის კონტროლის პროცესის ამჟამინდელი გაშვებისას დაფიქსირდა შეცდომები. "
+"ჟურნალის პოვნა აქ შეგიძლიათ: %1."
 
 #: widgets/selftestdialog.cpp:543
 #, kde-format
@@ -1673,7 +1761,7 @@ msgstr "Akonadi -ის წინა კონტროლის შეცდო
 msgid ""
 "The Akonadi control process did not report any errors during its previous "
 "startup."
-msgstr ""
+msgstr "წინა გაშვებისას Akonadi-ის კონტროლის პროცესს შეცდომები არ ჰქონია."
 
 #: widgets/selftestdialog.cpp:548
 #, kde-format
@@ -1686,6 +1774,8 @@ msgid ""
 "The Akonadi control process reported errors during its previous startup. The "
 "log can be found in %1."
 msgstr ""
+"Akonadi-ის კონტროლის პროცესის წინა გაშვებისას დაფიქსირდა შეცდომები. ჟურნალის "
+"პოვნა აქ შეგიძლიათ: %1."
 
 #: widgets/selftestdialog.cpp:559
 #, kde-format
@@ -1699,6 +1789,9 @@ msgid ""
 "many security risks. MySQL, used by this Akonadi installation, will not "
 "allow itself to run as root, to protect you from these risks."
 msgstr ""
+"ინტერნეტში მაყურებელი აპლიკაციის root/administrator-ის წვდომებით გაშვება "
+"მეტისმეტად დიდი რისკია. MySQL, რომელსაც Akonadi იყენებს, არ გაეშვება root-"
+"ით, რითიც ამ რისკებისგან დაგიცავთ."
 
 #: widgets/selftestdialog.cpp:564
 #, kde-format
@@ -1711,6 +1804,8 @@ msgid ""
 "Akonadi is not running as a root/administrator user, which is the "
 "recommended setup for a secure system."
 msgstr ""
+"Akonadi არაა გაშვებული root/administrator მომხმარებლით, რაც დაცული "
+"სისტემებისთვის რეკომენდებული მიდგომაა."
 
 #: widgets/selftestdialog.cpp:643
 #, kde-format
@@ -1730,6 +1825,9 @@ msgid ""
 "self-tests are supposed to help with tracking down and solving this problem. "
 "When requesting support or reporting bugs, please always include this report."
 msgstr ""
+"შეცდომა Akonadi-ის სერვერის გაშვებისას. არსებობს თვით-ტესტები, რომლებიც "
+"წესით უნდა დაგეხმარონ, იპოვოთ და გადაჭრათ პრობლემა. შეცდომის შესახებ "
+"ანგარიშის გამოგზავნისას, გთხოვთ, ყოველთვის მოაყოლოთ ეს ანგარიში."
 
 #. i18n: ectx: property (title), widget (QGroupBox, detailsGroup)
 #: widgets/selftestdialog.ui:39
@@ -1744,6 +1842,8 @@ msgid ""
 "<p>For more troubleshooting tips please refer to <a href=\"https://userbase."
 "kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
 msgstr ""
+"<p>პრობლემების გადასაჭრელად მეტი ინფორმაციისთვის იხილეთ <a href=\"https://"
+"userbase.kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
 
 #: widgets/standardactionmanager.cpp:78
 msgid "&New Folder..."
@@ -2212,6 +2312,8 @@ msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
 "you want to make it online?"
 msgstr ""
+"საქაღალდის \"%1\" სინქრონიზაციამდე აუცილებელია რესურსი ონლაინ იყოს. გსურთ ის "
+"ონლაინ იყოს?"
 
 #: widgets/standardactionmanager.cpp:983
 #, kde-format
@@ -2359,7 +2461,7 @@ msgstr "Akonadi -დან XML -მდე გადამყვანი"
 #: xml/akonadi2xml.cpp:27
 #, kde-format
 msgid "Converts an Akonadi collection subtree into a XML file."
-msgstr ""
+msgstr "Akonadi-ის კოლექციის ქვეხის XML ფაილში გადაყვანა."
 
 #: xml/akonadi2xml.cpp:29
 #, kde-format
@@ -2394,12 +2496,12 @@ msgstr "მონაცემების ფაილის ('%1') დამუ
 #: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
-msgstr ""
+msgstr "სქემის აღწერის ჩატვირთვა და დამუშავება შეუძლებელია."
 
 #: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
-msgstr ""
+msgstr "სქემის დამუშავების კონტექსტის შექმნის შეცდომა."
 
 #: xml/xmldocument.cpp:160
 #, kde-format
@@ -2409,7 +2511,7 @@ msgstr "სქემის შექმნის შეცდომა."
 #: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
-msgstr ""
+msgstr "სქემის გადამოწმების კონტექსტის შექმნის შეცდომა."
 
 #: xml/xmldocument.cpp:170
 #, kde-format
