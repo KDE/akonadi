@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-16 00:47+0000\n"
-"PO-Revision-Date: 2022-07-12 16:18-0300\n"
+"PO-Revision-Date: 2022-12-20 10:52-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -618,8 +618,7 @@ msgid "Could not create agent instance: %1"
 msgstr "Não foi possível criar a instância do agente: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "Falha na criação da instância do agente"
@@ -636,9 +635,7 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "Deseja realmente excluir a instância do agente selecionada?"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "%1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Configuração de %1"
@@ -811,8 +808,7 @@ msgid "Could not create folder: %1"
 msgstr "Não foi possível criar a pasta: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
 msgstr "Falha na criação da pasta"
@@ -978,9 +974,7 @@ msgid "Open collection dialog"
 msgstr "Abrir o diálogo da coleção"
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select a collection"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "Selecione uma coleção"
@@ -2230,14 +2224,12 @@ msgstr[0] "Deseja realmente excluir esta pasta e todas as suas subpastas?"
 msgstr[1] "Deseja realmente excluir as %1 pastas e todas as suas subpastas?"
 
 #: widgets/standardactionmanager.cpp:359
-#, fuzzy, kde-format
-#| msgid "Delete Folder"
-#| msgid_plural "Delete %1 Folders"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "Excluir pasta"
-msgstr[1] "Excluir %1 pastas"
+msgstr[0] "Excluir pasta?"
+msgstr[1] "Excluir pastas?"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2245,8 +2237,7 @@ msgid "Could not delete folder: %1"
 msgstr "Não foi possível excluir a pasta: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "Falha na exclusão da pasta"
@@ -2265,14 +2256,12 @@ msgstr[0] "Deseja realmente excluir o item selecionado?"
 msgstr[1] "Deseja realmente excluir os %1 itens?"
 
 #: widgets/standardactionmanager.cpp:368
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "Excluir item"
-msgstr[1] "Excluir %1 itens"
+msgstr[0] "Excluir item?"
+msgstr[1] "Excluir itens?"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2280,8 +2269,7 @@ msgid "Could not delete item: %1"
 msgstr "Não foi possível excluir o item: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, fuzzy, kde-format
-#| msgid "Item deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "Falha na exclusão do item"
@@ -2310,8 +2298,7 @@ msgid "Could not create resource: %1"
 msgstr "Não foi possível criar o recurso: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, fuzzy, kde-format
-#| msgid "Resource creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "Falha na criação do recurso"
@@ -2337,8 +2324,7 @@ msgid "Could not paste data: %1"
 msgstr "Não foi possível colar os dados: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, fuzzy, kde-format
-#| msgid "Paste failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Falha ao colar"
@@ -2349,8 +2335,7 @@ msgid "We can not add \"/\" in folder name."
 msgstr "Não é possível adicionar o caractere \"/\" no nome da pasta."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, fuzzy, kde-format
-#| msgid "Create new folder error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Erro na criação da nova pasta"
@@ -2398,9 +2383,7 @@ msgid "Failed to update subscription: %1"
 msgstr "Ocorreu uma falha ao atualizar a inscrição: %1"
 
 #: widgets/subscriptiondialog.cpp:93
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Subscription Error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Erro na inscrição"
@@ -2441,8 +2424,7 @@ msgid "Failed to create a new tag"
 msgstr "Ocorreu uma falha ao criar uma nova etiqueta"
 
 #: widgets/tageditwidget.cpp:116
-#, fuzzy, kde-format
-#| msgid "An error occurred while creating a new tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Ocorreu um erro ao criar uma nova etiqueta"
@@ -2454,9 +2436,7 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Deseja realmente remover a etiqueta <resource>%1</resource>?"
 
 #: widgets/tageditwidget.cpp:165
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Delete tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Excluir etiqueta"
