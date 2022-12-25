@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-16 00:47+0000\n"
-"PO-Revision-Date: 2022-12-13 06:43+0100\n"
+"PO-Revision-Date: 2022-12-24 06:59+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -1018,6 +1018,12 @@ msgid ""
 "editor\"</a> to keep a copy of the texts, then select which version is most "
 "correct, then re-open it and modify it again to add what's missing."
 msgstr ""
+"<qt>თქვენი ცვლილებები კონფლიქტშია ვიღაც სხვის მიერ შეტანილ ცვლილებებთან."
+"<br>იმ შემთხვევაში, თუ ერთ-ერთი ვერსიის წაშლა არ გნებავთ, ცვლილებების ხელით "
+"შეტანა მოგიწევთ. დააწკაპუნეთ <br>Click on <a href=\"opentexteditor\">"
+"\"ტექსტური რედაქტორის გახსნაზე\"</a>, რათა ტექსტის ასლი შეინარჩუნოთ, შემდეგ "
+"აირჩიეთ, რომელი ვერსია უფრო სწორია, თავიდან გახსენით ის და შეცვალეთ, როგორც "
+"გნებავთ."
 
 #: widgets/conflictresolvedialog.cpp:265
 #, kde-format
@@ -1268,6 +1274,11 @@ msgid ""
 "executable. The server executable is typically called 'mysqld'; its location "
 "varies depending on the distribution."
 msgstr ""
+"Akonadi ამჟამად MySQL სერვერის ('%1') გამოყენებაზეა მორგებული.\n"
+"დარწმუნდით, რომ MySQL სერვერი დაყენებული გაქვთ და ბილიკები სწორადაა "
+"მითითებული. ასევე გადაამოწმეთ საჭირო კითხვისა და გაშვების წვდომების არსებობა "
+"სერვერის გამშვებ ფაილზე. სერვერის გამშვებ ფაილს ჩვეულებრივ 'mysqld' ჰქვია, "
+"მდებარეობა კი დისტრიბუტივზე დამოკიდებულებით იცვლება."
 
 #: widgets/selftestdialog.cpp:224
 #, kde-format
@@ -1657,6 +1668,11 @@ msgid ""
 "XDG_DATA_DIRS environment variable is set to '%2'; make sure this includes "
 "all paths where Akonadi agents are installed."
 msgstr ""
+"რესურსის აგენტები ვერ ვიპოვე. Akonadi-ის გამოყენებისთვის ერთი მაინცაა "
+"საჭირო. ეს ჩვეულებრივ ნიშნავს, რომ რესურსის აგენტები დაყენებული არაა ან "
+"პრობლემა გაქვთ ფაილებთან. ვეძებდი შემდეგ ბილიკებზე: '%1'. XDG_DATA_DIRS "
+"გარსის ცვლადის მნიშვნელობაა '%2'. დარწმუნდით, რომ ის ყველა ბილიკს შეიცავს, "
+"სადაც Akonadi-ის აგენტებია დაყენებული."
 
 #: widgets/selftestdialog.cpp:499
 #, kde-format
@@ -1773,6 +1789,9 @@ msgid ""
 "many security risks. MySQL, used by this Akonadi installation, will not "
 "allow itself to run as root, to protect you from these risks."
 msgstr ""
+"ინტერნეტში მაყურებელი აპლიკაციის root/administrator-ის წვდომებით გაშვება "
+"მეტისმეტად დიდი რისკია. MySQL, რომელსაც Akonadi იყენებს, არ გაეშვება root-"
+"ით, რითიც ამ რისკებისგან დაგიცავთ."
 
 #: widgets/selftestdialog.cpp:564
 #, kde-format
