@@ -16,7 +16,10 @@
 #include <KSharedConfig>
 
 using namespace Akonadi;
-
+namespace
+{
+static const char myTagSelectionDialogGroupName[] = "TagSelectionDialog";
+}
 class Akonadi::TagSelectionDialogPrivate
 {
 public:
@@ -34,13 +37,13 @@ public:
 
 void TagSelectionDialogPrivate::writeConfig() const
 {
-    KConfigGroup group(KSharedConfig::openStateConfig(), "TagSelectionDialog");
+    KConfigGroup group(KSharedConfig::openStateConfig(), myTagSelectionDialogGroupName);
     group.writeEntry("Size", q->size());
 }
 
 void TagSelectionDialogPrivate::readConfig() const
 {
-    KConfigGroup group(KSharedConfig::openStateConfig(), "TagSelectionDialog");
+    KConfigGroup group(KSharedConfig::openStateConfig(), myTagSelectionDialogGroupName);
     const QSize sizeDialog = group.readEntry("Size", QSize(500, 400));
     if (sizeDialog.isValid()) {
         q->resize(sizeDialog);

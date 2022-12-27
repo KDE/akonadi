@@ -20,7 +20,10 @@
 #include <QPushButton>
 
 using namespace Akonadi;
-
+namespace
+{
+static const char myAgentTypeDialogGroupName[] = "AgentTypeDialog";
+}
 class Akonadi::AgentTypeDialogPrivate
 {
 public:
@@ -38,13 +41,13 @@ public:
 
 void AgentTypeDialogPrivate::writeConfig() const
 {
-    KConfigGroup group(KSharedConfig::openStateConfig(), "AgentTypeDialog");
+    KConfigGroup group(KSharedConfig::openStateConfig(), myAgentTypeDialogGroupName);
     group.writeEntry("Size", q->size());
 }
 
 void AgentTypeDialogPrivate::readConfig()
 {
-    KConfigGroup group(KSharedConfig::openStateConfig(), "AgentTypeDialog");
+    KConfigGroup group(KSharedConfig::openStateConfig(), myAgentTypeDialogGroupName);
     const QSize sizeDialog = group.readEntry("Size", QSize(460, 320));
     if (sizeDialog.isValid()) {
         q->resize(sizeDialog);

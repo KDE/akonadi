@@ -18,7 +18,10 @@
 #include <KSharedConfig>
 
 using namespace Akonadi;
-
+namespace
+{
+static const char myTagManagementDialogGroupName[] = "TagManagementDialog";
+}
 class Akonadi::TagManagementDialogPrivate
 {
 public:
@@ -37,13 +40,13 @@ public:
 
 void TagManagementDialogPrivate::writeConfig() const
 {
-    KConfigGroup group(KSharedConfig::openStateConfig(), "TagManagementDialog");
+    KConfigGroup group(KSharedConfig::openStateConfig(), myTagManagementDialogGroupName);
     group.writeEntry("Size", q->size());
 }
 
 void TagManagementDialogPrivate::readConfig() const
 {
-    KConfigGroup group(KSharedConfig::openStateConfig(), "TagManagementDialog");
+    KConfigGroup group(KSharedConfig::openStateConfig(), myTagManagementDialogGroupName);
     const QSize sizeDialog = group.readEntry("Size", QSize(500, 400));
     if (sizeDialog.isValid()) {
         q->resize(sizeDialog);

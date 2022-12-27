@@ -33,6 +33,10 @@
 
 using namespace Akonadi;
 
+namespace
+{
+static const char mySubscriptionDialogGroupName[] = "SubscriptionDialog";
+}
 /**
  * @internal
  */
@@ -99,13 +103,13 @@ public:
 
     void writeConfig() const
     {
-        KConfigGroup group(KSharedConfig::openStateConfig(), "SubscriptionDialog");
+        KConfigGroup group(KSharedConfig::openStateConfig(), mySubscriptionDialogGroupName);
         group.writeEntry("Size", q->size());
     }
 
     void readConfig() const
     {
-        KConfigGroup group(KSharedConfig::openStateConfig(), "SubscriptionDialog");
+        KConfigGroup group(KSharedConfig::openStateConfig(), mySubscriptionDialogGroupName);
         const QSize sizeDialog = group.readEntry("Size", QSize(500, 400));
         if (sizeDialog.isValid()) {
             q->resize(sizeDialog);
