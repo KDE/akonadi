@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-16 00:47+0000\n"
+"POT-Creation-Date: 2022-12-28 00:49+0000\n"
 "PO-Revision-Date: 2022-09-26 17:46+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -2422,13 +2422,13 @@ msgstr "Переместить в эту папку"
 msgid "Copy to This Folder"
 msgstr "Копировать в эту папку"
 
-#: widgets/subscriptiondialog.cpp:93
+#: widgets/subscriptiondialog.cpp:97
 #, kde-format
 msgid "Failed to update subscription: %1"
 msgstr "Не удалось обновить подписку: %1"
 
 # BUGME: what does this mean exactly? --aspotashev
-#: widgets/subscriptiondialog.cpp:93
+#: widgets/subscriptiondialog.cpp:97
 #, fuzzy, kde-format
 #| msgctxt "@title"
 #| msgid "Subscription Error"

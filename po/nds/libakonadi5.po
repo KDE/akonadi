@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-16 00:47+0000\n"
+"POT-Creation-Date: 2022-12-28 00:49+0000\n"
 "PO-Revision-Date: 2014-09-18 22:53+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -2434,13 +2434,13 @@ msgstr "Na dissen Orner verschuven"
 msgid "Copy to This Folder"
 msgstr "Na dissen Orner koperen"
 
-#: widgets/subscriptiondialog.cpp:93
+#: widgets/subscriptiondialog.cpp:97
 #, fuzzy, kde-format
 #| msgid "Failed to create tag."
 msgid "Failed to update subscription: %1"
 msgstr "Slötelwoort lett sik nich opstellen."
 
-#: widgets/subscriptiondialog.cpp:93
+#: widgets/subscriptiondialog.cpp:97
 #, fuzzy, kde-format
 #| msgid "Local Subscriptions"
 msgctxt "@title:window"

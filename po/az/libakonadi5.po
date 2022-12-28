@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-16 00:47+0000\n"
+"POT-Creation-Date: 2022-12-28 00:49+0000\n"
 "PO-Revision-Date: 2022-07-31 23:12+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -2360,12 +2360,12 @@ msgstr "Bu qovluğa köçürmək"
 msgid "Copy to This Folder"
 msgstr "Bu qovluğa kopyalamaq"
 
-#: widgets/subscriptiondialog.cpp:93
+#: widgets/subscriptiondialog.cpp:97
 #, kde-format
 msgid "Failed to update subscription: %1"
 msgstr "Yenilənməsi mümkün olmayan abunəlik: %1"
 
-#: widgets/subscriptiondialog.cpp:93
+#: widgets/subscriptiondialog.cpp:97
 #, fuzzy, kde-format
 #| msgctxt "@title"
 #| msgid "Subscription Error"

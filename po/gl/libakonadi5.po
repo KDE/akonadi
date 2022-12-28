@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-16 00:47+0000\n"
+"POT-Creation-Date: 2022-12-28 00:49+0000\n"
 "PO-Revision-Date: 2019-11-01 17:00+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -2431,13 +2431,13 @@ msgstr "Mover para este cartafol"
 msgid "Copy to This Folder"
 msgstr "Copiar neste cartafol"
 
-#: widgets/subscriptiondialog.cpp:93
+#: widgets/subscriptiondialog.cpp:97
 #, fuzzy, kde-format
 #| msgid "Failed to create relation."
 msgid "Failed to update subscription: %1"
 msgstr "Non se puido crear a relación."
 
-#: widgets/subscriptiondialog.cpp:93
+#: widgets/subscriptiondialog.cpp:97
 #, fuzzy, kde-format
 #| msgid "Local Subscriptions"
 msgctxt "@title:window"

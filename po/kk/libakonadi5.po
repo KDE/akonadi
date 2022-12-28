@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-16 00:47+0000\n"
+"POT-Creation-Date: 2022-12-28 00:49+0000\n"
 "PO-Revision-Date: 2013-07-14 03:20+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -2400,13 +2400,13 @@ msgstr "Осы қапшыққа жылжыту"
 msgid "Copy to This Folder"
 msgstr "Осы қапшыққа көшірмелеу"
 
-#: widgets/subscriptiondialog.cpp:93
+#: widgets/subscriptiondialog.cpp:97
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Failed to update subscription: %1"
 msgstr "Агент данасын құруға болмайды."
 
-#: widgets/subscriptiondialog.cpp:93
+#: widgets/subscriptiondialog.cpp:97
 #, fuzzy, kde-format
 #| msgid "Local Subscriptions"
 msgctxt "@title:window"

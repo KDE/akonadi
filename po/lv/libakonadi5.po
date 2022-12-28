@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-16 00:47+0000\n"
+"POT-Creation-Date: 2022-12-28 00:49+0000\n"
 "PO-Revision-Date: 2010-01-01 15:34+0200\n"
 "Last-Translator: Viesturs Zarins <viesturs.zarins@mii.lu.lv>\n"
 "Language-Team: Latvian <locale@laka.lv>\n"
@@ -2549,13 +2549,13 @@ msgstr "Kopēt uz šo mapi"
 msgid "Copy to This Folder"
 msgstr "Kopēt uz šo mapi"
 
-#: widgets/subscriptiondialog.cpp:93
+#: widgets/subscriptiondialog.cpp:97
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Failed to update subscription: %1"
 msgstr "Neizdevās izveidot aģenta instanci."
 
-#: widgets/subscriptiondialog.cpp:93
+#: widgets/subscriptiondialog.cpp:97
 #, fuzzy, kde-format
 #| msgid "Manage Local &Subscriptions..."
 msgctxt "@title:window"
