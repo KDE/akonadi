@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-16 00:47+0000\n"
-"PO-Revision-Date: 2023-01-02 21:44+0100\n"
+"PO-Revision-Date: 2023-01-04 18:28+0100\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -50,7 +50,7 @@ msgstr "L'intégration des comptes n'est pas prise en charge."
 #: agentbase/agentbase.cpp:365 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
-msgstr "Impossible d'enregistrer l'objet sur D-Bus : %1"
+msgstr "Impossible d'enregistrer l'objet sur « D-Bus » : %1"
 
 #: agentbase/agentbase.cpp:454
 #, kde-format
@@ -192,7 +192,7 @@ msgstr ""
 #: core/jobs/agentinstancecreatejob.cpp:70
 #, kde-format
 msgid "Unable to access D-Bus interface of created agent."
-msgstr "Impossible d'accéder à l'interface D-Bus de l'agent créé."
+msgstr "Impossible d'accéder à l'interface « D-Bus » de l'agent créé."
 
 #: core/jobs/agentinstancecreatejob.cpp:92
 #, kde-format
@@ -1309,7 +1309,7 @@ msgid ""
 "varies depending on the distribution."
 msgstr ""
 "Vous avez configuré Akonadi pour qu'il utilise le serveur MySQL « %1 ».\n"
-"Veuillez vous assurer d'avoir installé un serveur MySQL, indiquer son "
+"Veuillez vous assurer d'avoir installé un serveur « MySQL », indiquer son "
 "emplacement correct et vous assurer que vous disposez des droits nécessaires "
 "en lecture et exécution sur l'exécutable du serveur. L'exécutable du serveur "
 "est le plus souvent nommé « mysqld » ; son emplacement varie selon les "
@@ -1458,9 +1458,9 @@ msgid ""
 "readable. Check your Akonadi installation is complete and you have all "
 "required access rights."
 msgstr ""
-"La configuration par défaut pour le serveur MySQL est introuvable ou n'est "
-"pas lisible. Veuillez vérifier que votre installation d'Akonadi est complète "
-"et que vous disposez des droits d'accès nécessaires."
+"La configuration par défaut pour le serveur « MySQL » est introuvable ou "
+"n'est pas lisible. Veuillez vérifier que votre installation de Akonadi est "
+"complète et que vous disposez des droits d'accès nécessaires."
 
 #: widgets/selftestdialog.cpp:323
 #, kde-format
@@ -1597,7 +1597,7 @@ msgstr ""
 #: widgets/selftestdialog.cpp:416
 #, kde-format
 msgid "Akonadi control process registered at D-Bus."
-msgstr "Processus de contrôle d'Akonadi enregistré dans D-Bus."
+msgstr "Processus de contrôle de Akonadi enregistré dans D-Bus."
 
 #: widgets/selftestdialog.cpp:417
 #, kde-format
@@ -1605,13 +1605,13 @@ msgid ""
 "The Akonadi control process is registered at D-Bus which typically indicates "
 "it is operational."
 msgstr ""
-"Le processus de contrôle d'Akonadi est bien enregistré dans D-Bus ce qui "
+"Le processus de contrôle de Akonadi est bien enregistré dans D-Bus ce qui "
 "indique qu'il est bien opérationnel."
 
 #: widgets/selftestdialog.cpp:420
 #, kde-format
 msgid "Akonadi control process not registered at D-Bus."
-msgstr "Processus de contrôle d'Akonadi non enregistré dans D-Bus."
+msgstr "Processus de contrôle de Akonadi non enregistré dans D-Bus."
 
 #: widgets/selftestdialog.cpp:421
 #, kde-format
@@ -1619,8 +1619,8 @@ msgid ""
 "The Akonadi control process is not registered at D-Bus which typically means "
 "it was not started or encountered a fatal error during startup."
 msgstr ""
-"Le processus de contrôle d'Akonadi n'a pas pu être enregistré dans D-Bus ce "
-"qui indique qu'il n'a pas été démarré ou a rencontré une erreur fatale au "
+"Le processus de contrôle de Akonadi n'a pas pu être enregistré sur « D-Bus » "
+"ce qui indique qu'il n'a pas été démarré ou a rencontré une erreur fatale au "
 "démarrage."
 
 #: widgets/selftestdialog.cpp:427
@@ -1851,9 +1851,10 @@ msgid ""
 "allow itself to run as root, to protect you from these risks."
 msgstr ""
 "L'exécution en tant qu'administrateur (root) des applications s'appuyant sur "
-"Internet vous expose à de nombreux risques de sécurité. MySQL, utilisé par "
-"cette installation d'Akonadi, s'interdira toute exécution en tant "
-"qu'administrateur (root), ceci pour vous protéger de ces risques."
+"Internet vous expose à de nombreux risques de sécurité. La base de données "
+"« MySQL », utilisé par cette installation de Akonadi, s'interdira toute "
+"exécution en tant qu'administrateur (root), ceci pour vous protéger de ces "
+"risques."
 
 #: widgets/selftestdialog.cpp:564
 #, kde-format
