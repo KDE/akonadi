@@ -1,44 +1,45 @@
 # translation of libakonadi.po to Chinese Traditional
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# Franklin Weng <franklin@goodhorse.idv.tw>, 2010, 2011, 2012, 2013, 2014, 2015.
 #
+# Franklin Weng <franklin@goodhorse.idv.tw>, 2010, 2011, 2012, 2013, 2014, 2015.
 # Franklin Weng <franklin at goodhorse dot idv dot tw>, 2007, 2008.
 # Frank Weng (a.k.a. Franklin) <franklin at goodhorse dot idv dot tw>, 2008, 2009, 2010.
+# Kisaragi Hiu <mail@kisaragi-hiu.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-28 00:49+0000\n"
-"PO-Revision-Date: 2018-03-29 13:00+0800\n"
-"Last-Translator: Cheng-Chia Tseng <pswo10680@gmail.com>\n"
-"Language-Team: Chinese Traditional <kde-i18n-doc@kde.org>\n"
+"PO-Revision-Date: 2023-01-07 04:46+0900\n"
+"Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
+"Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Lokalize 22.12.0\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Franklin Weng"
+msgstr "Franklin Weng, Kisaragi Hiu"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "franklin@goodhorse.idv.tw"
+msgstr "franklin@goodhorse.idv.tw, mail@kisaragi-hiu.com"
 
 #: agentbase/accountsintegration.cpp:86
 #, kde-format
 msgid "There is currently no account configured."
-msgstr ""
+msgstr "目前尚未設定帳號。"
 
 #: agentbase/accountsintegration.cpp:103
 #, kde-format
 msgid "Accounts integration is not supported"
-msgstr ""
+msgstr "帳號整合不受支援"
 
 #: agentbase/agentbase.cpp:365 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
@@ -106,7 +107,7 @@ msgstr "Akonadi 資源"
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
-msgstr "取得不合法的項目"
+msgstr "取得了無效的項目"
 
 #: agentbase/resourcebase.cpp:594
 #, kde-format
@@ -203,13 +204,13 @@ msgstr "無法建立代理程式實體。"
 #: core/jobs/collectionattributessynchronizationjob.cpp:73
 #, kde-format
 msgid "Invalid collection instance."
-msgstr "不合法的收藏實體。"
+msgstr "無效的收藏實體。"
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:80
 #: core/jobs/resourcesynchronizationjob.cpp:88
 #, kde-format
 msgid "Invalid resource instance."
-msgstr "不合法的資源實體。"
+msgstr "無效的資源實體。"
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:102
 #: core/jobs/resourcesynchronizationjob.cpp:113
@@ -223,59 +224,55 @@ msgid "Collection attributes synchronization timed out."
 msgstr "收藏屬性同步逾時。"
 
 #: core/jobs/collectioncopyjob.cpp:54
-#, fuzzy, kde-format
-#| msgid "Invalid collection"
+#, kde-format
 msgid "Invalid collection to copy"
-msgstr "不合法的收藏"
+msgstr "要複製的收藏是無效的"
 
 #: core/jobs/collectioncopyjob.cpp:60
-#, fuzzy, kde-format
-#| msgid "Invalid collection"
+#, kde-format
 msgid "Invalid destination collection"
-msgstr "不合法的收藏"
+msgstr "無效的目標收藏"
 
 #: core/jobs/collectioncreatejob.cpp:50
 #, kde-format
 msgid "Invalid parent"
-msgstr "不合法的父資源"
+msgstr "無效的親資源"
 
 #: core/jobs/collectioncreatejob.cpp:98
-#, fuzzy, kde-format
-#| msgid "Failed to retrieve collection for sync."
+#, kde-format
 msgid "Failed to parse Collection from response"
-msgstr "無法抓取收藏以同步。"
+msgstr "無法從回覆剖析收藏"
 
 #: core/jobs/collectiondeletejob.cpp:52
 #, kde-format
 msgid "Invalid collection"
-msgstr "不合法的收藏"
+msgstr "無效的收藏"
 
 #: core/jobs/collectionfetchjob.cpp:212
 #, kde-format
 msgid "Invalid collection given."
-msgstr "給定了不合法的收藏。"
+msgstr "給定了無效的收藏。"
 
 #: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:90
 #, kde-format
 msgid "No objects specified for moving"
-msgstr "沒有指定要移動的物件"
+msgstr "未指定要移動的物件"
 
 #: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
 #: core/jobs/linkjobimpl_p.h:39
 #, kde-format
 msgid "No valid destination specified"
-msgstr "沒有指定合法的目標"
+msgstr "未指定有效的目標"
 
 #: core/jobs/invalidatecachejob.cpp:58
 #, kde-format
 msgid "Invalid collection."
-msgstr "不合法的收藏。"
+msgstr "無效的收藏。"
 
 #: core/jobs/itemcreatejob.cpp:105
-#, fuzzy, kde-format
-#| msgid "Invalid collection"
+#, kde-format
 msgid "Invalid parent collection"
-msgstr "不合法的收藏"
+msgstr "無效的親收藏"
 
 #: core/jobs/job.cpp:335
 #, kde-format
@@ -302,7 +299,7 @@ msgstr "未知的錯誤。"
 #: core/jobs/job.cpp:385
 #, kde-format
 msgid "Unexpected response"
-msgstr ""
+msgstr "未預期的回覆"
 
 #: core/jobs/relationcreatejob.cpp:42 core/jobs/relationdeletejob.cpp:42
 #, kde-format
@@ -327,7 +324,7 @@ msgstr "沒有給定資源代碼。"
 #: core/jobs/specialcollectionshelperjobs.cpp:326
 #, kde-format
 msgid "Invalid resource identifier '%1'"
-msgstr "不合法的資源辨識 %1。"
+msgstr "無效的資源辨識 %1。"
 
 #: core/jobs/specialcollectionshelperjobs.cpp:342
 #: core/jobs/specialcollectionshelperjobs.cpp:350
@@ -358,17 +355,17 @@ msgstr "移到垃圾桶的動作失敗。放棄操作。"
 #: core/jobs/trashjob.cpp:226 core/jobs/trashrestorejob.cpp:151
 #, kde-format
 msgid "Invalid items passed"
-msgstr "不合法的項目已通過"
+msgstr "傳遞了無效的項目"
 
 #: core/jobs/trashjob.cpp:270 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
-msgstr "不合法的收藏已通過"
+msgstr "傳遞了無效的收藏"
 
 #: core/jobs/trashjob.cpp:387 core/jobs/trashrestorejob.cpp:351
 #, kde-format
 msgid "No valid collection or empty itemlist"
-msgstr "沒有合法收藏，或項目清單為空"
+msgstr "沒有有效收藏，或項目清單為空"
 
 #: core/jobs/trashrestorejob.cpp:86
 #, kde-format
@@ -382,19 +379,16 @@ msgid "Name"
 msgstr "名稱"
 
 #: core/models/entitytreemodel.cpp:193
-#, fuzzy, kde-format
-#| msgid "Loading..."
+#, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
-msgstr "載入中..."
+msgstr "載入中…"
 
 #: core/models/entitytreemodel.cpp:485
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Error."
+#, kde-format
 msgctxt "@window:title"
 msgid "Error"
-msgstr "錯誤："
+msgstr "錯誤"
 
 #: core/models/entitytreemodel.cpp:486
 #, kde-format
@@ -410,47 +404,40 @@ msgid "Name"
 msgstr "名稱"
 
 #: core/models/entitytreemodel_p.cpp:1331
-#, fuzzy, kde-format
-#| msgid "Could not copy item:"
+#, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
-msgstr "無法複製項目："
+msgstr "無法複製項目：<message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1333
-#, fuzzy, kde-format
-#| msgid "Could not copy collection:"
+#, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
-msgstr "無法複製收藏："
+msgstr "無法複製收藏：<message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1335
-#, fuzzy, kde-format
-#| msgid "Could not move item:"
+#, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
-msgstr "無法移動項目："
+msgstr "無法移動項目：<message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1337
-#, fuzzy, kde-format
-#| msgid "Could not move collection:"
+#, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
-msgstr "無法移動收藏："
+msgstr "無法移動收藏：<message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1339
-#, fuzzy, kde-format
-#| msgid "Could not link entity:"
+#, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
-msgstr "無法連結實體："
+msgstr "無法連結實體：<message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Error."
+#, kde-format
 msgctxt "@title:window"
 msgid "Error"
-msgstr "錯誤："
+msgstr "錯誤"
 
 #: core/models/favoritecollectionsmodel.cpp:405
 #, kde-format
@@ -548,13 +535,16 @@ msgid ""
 "If you recently updated your system please log out and back in to make sure "
 "all applications use the correct protocol version."
 msgstr ""
+"Akonadi 伺服器協定版本與本應用程式的協定版本不同。\n"
+"如果您最近剛更新您的系統，請登出後再重新登入來確保所有應用程式都使用正確的協"
+"定版本。"
 
 #: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
 "installation."
-msgstr ""
+msgstr "沒有可用的 Akonadi 代理程式。請檢查您的 KDE PIM 安裝。"
 
 #: core/session.cpp:185
 #, kde-format
@@ -562,6 +552,8 @@ msgid ""
 "Protocol version mismatch. Server version is older (%1) than ours (%2). If "
 "you updated your system recently please restart the Akonadi server."
 msgstr ""
+"協定版本不相符。伺服器版本 (%1) 比我們的 (%2) 舊。如果您最近剛更新系統請重新"
+"啟動 Akonadi 伺服器。"
 
 #: core/session.cpp:194
 #, kde-format
@@ -569,6 +561,8 @@ msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
 "you updated your system recently please restart all KDE PIM applications."
 msgstr ""
+"協定版本不相符。伺服器版本 (%1) 比我們的 (%2) 新。如果您最近剛更新系統請重新"
+"啟動所有 KDE PIM 應用程式。"
 
 #: selftest/main.cpp:19
 #, kde-format
@@ -609,11 +603,10 @@ msgid "Could not create agent instance: %1"
 msgstr "無法建立代理程式實體：%1"
 
 #: widgets/agentactionmanager.cpp:57
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
-msgstr "建立代理程式實體失敗。"
+msgstr "建立代理程式實體失敗"
 
 #: widgets/agentactionmanager.cpp:59
 #, kde-format
@@ -630,33 +623,32 @@ msgstr "您確定要刪除所有選取的代理程式實體嗎？"
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
-msgstr ""
+msgstr "%1 設定"
 
 #: widgets/agentconfigurationdialog.cpp:89
 #, kde-format
 msgid "%1 Handbook"
-msgstr ""
+msgstr "%1 手冊"
 
 #: widgets/agentconfigurationdialog.cpp:90
 #, kde-format
 msgid "About %1"
-msgstr ""
+msgstr "關於 %1"
 
 #: widgets/agentconfigurationwidget.cpp:95
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
-msgstr ""
+msgstr "設定對話框已在另一個視窗開啟"
 
 #: widgets/agentconfigurationwidget.cpp:102
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
-msgstr ""
+msgstr "%1 的設定已在其他地方開啟。"
 
 #: widgets/agentconfigurationwidget.cpp:104
-#, fuzzy, kde-format
-#| msgid "Failed to create relation."
+#, kde-format
 msgid "Failed to register %1 configuration dialog."
-msgstr "建立關聯時失敗。"
+msgstr "註冊 %1 設定對話框時失敗。"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
@@ -673,7 +665,7 @@ msgstr "收取"
 #: widgets/cachepolicypage.ui:20
 #, kde-format
 msgid "Use options from parent folder or account"
-msgstr "使用父資料夾或帳號的選項"
+msgstr "使用親資料夾或帳號的選項"
 
 #. i18n: ectx: property (text), widget (QCheckBox, syncOnDemand)
 #: widgets/cachepolicypage.ui:33
@@ -683,11 +675,9 @@ msgstr "選取此資料夾時同步"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: widgets/cachepolicypage.ui:40
-#, fuzzy, kde-format
-#| msgid "Synchronize Folder"
-#| msgid_plural "Synchronize %1 Folders"
+#, kde-format
 msgid "Synchronize after:"
-msgstr "同步 %1 個資料夾"
+msgstr "多久之後同步："
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, checkInterval)
 #: widgets/cachepolicypage.ui:47
@@ -705,10 +695,9 @@ msgstr "分"
 
 #. i18n: ectx: property (text), widget (QLabel, localPartsLabel)
 #: widgets/cachepolicypage.ui:66
-#, fuzzy, kde-format
-#| msgid "Locally Cached Parts"
+#, kde-format
 msgid "Locally cached parts:"
-msgstr "本地快取部件"
+msgstr "本地快取部件："
 
 #. i18n: ectx: property (title), widget (KEditListWidget, localParts)
 #: widgets/cachepolicypage.ui:87
@@ -718,24 +707,21 @@ msgstr "本地快取部件"
 
 #. i18n: ectx: property (text), widget (QLabel, retrievalOptionsLabel)
 #: widgets/cachepolicypage.ui:94
-#, fuzzy, kde-format
-#| msgid "Retrieval Options"
+#, kde-format
 msgid "Retrieval Options:"
-msgstr "收取選項"
+msgstr "取得選項："
 
 #. i18n: ectx: property (text), widget (QRadioButton, retrieveFullMessages)
 #: widgets/cachepolicypage.ui:101
-#, fuzzy, kde-format
-#| msgid "Always retrieve full messages"
+#, kde-format
 msgid "Always retrieve full &messages"
-msgstr "總是取出完整的信件"
+msgstr "總是取得完整的訊息(&M)"
 
 #. i18n: ectx: property (text), widget (QRadioButton, retrieveOnlyHeaders)
 #: widgets/cachepolicypage.ui:111
-#, fuzzy, kde-format
-#| msgid "Retrieve message bodies on demand"
+#, kde-format
 msgid "&Retrieve message bodies on demand"
-msgstr "只在必要時才取出信件的內文"
+msgstr "只在必要時才取得信件的內文(&R)"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/cachepolicypage.ui:118
@@ -757,11 +743,13 @@ msgid ""
 "likely never uploaded to the destination server, so clearing this collection "
 "means that those <b>data will be lost</b>. Are you sure you want to proceed?"
 msgstr ""
+"收藏 '%1' 包含 %2 個沒有遠端 ID 的項目。這些項目很可能從來沒有上傳到目標伺服"
+"器過，因此清除這個收藏時<b>將會造成資料遺失</b>。您確定要繼續嗎？"
 
 #: widgets/clearcachejob.cpp:83
 #, kde-format
 msgid "Collection cache cleared. You should restart Akonadi now."
-msgstr ""
+msgstr "收藏快取已清空。請現在重新啟動 Akonadi。"
 
 #: widgets/collectiondialog.cpp:56
 #, kde-format
@@ -802,8 +790,7 @@ msgid "Could not create folder: %1"
 msgstr "無法建立資料夾：%1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
 msgstr "資料夾建立失敗"
@@ -873,37 +860,34 @@ msgstr "0 位元組"
 #: widgets/collectionmaintenancepage.cpp:46
 #, kde-format
 msgid "Remember that indexing can take some minutes."
-msgstr ""
+msgstr "請記得索引可能會需要幾分鐘。"
 
 #: widgets/collectionmaintenancepage.cpp:71
 #, kde-format
 msgid "Maintenance"
-msgstr ""
+msgstr "維護"
 
 #: widgets/collectionmaintenancepage.cpp:130
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Error while creating item: %1"
+#, kde-format
 msgid "Error while retrieving indexed items count"
-msgstr "建立項目時發生錯誤：%1"
+msgstr "取得已索引項目數量時發生錯誤"
 
 #: widgets/collectionmaintenancepage.cpp:133
 #, kde-format
 msgid "Indexed %1 item in this folder"
 msgid_plural "Indexed %1 items in this folder"
-msgstr[0] ""
+msgstr[0] "已在此資料夾索引 %1 個項目"
 
 #: widgets/collectionmaintenancepage.cpp:137
 #, kde-format
 msgid "Calculating indexed items..."
-msgstr ""
+msgstr "正在計算索引項目…"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/collectionmaintenancepage.ui:17
-#, fuzzy, kde-format
-#| msgid "Folder &Properties"
+#, kde-format
 msgid "Folder type:"
-msgstr "資料夾屬性(&P)"
+msgstr "資料夾類型："
 
 #. i18n: ectx: property (text), widget (QLabel, folderTypeLbl)
 #. i18n: ectx: property (text), widget (QLabel, folderSizeLbl)
@@ -915,54 +899,49 @@ msgstr "資料夾屬性(&P)"
 #: widgets/collectionmaintenancepage.ui:66
 #, kde-format
 msgid "unknown"
-msgstr ""
+msgstr "未知"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: widgets/collectionmaintenancepage.ui:38
 #, kde-format
 msgid "File size:"
-msgstr ""
+msgstr "檔案大小："
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: widgets/collectionmaintenancepage.ui:45
-#, fuzzy, kde-format
-#| msgid "Total Messages"
+#, kde-format
 msgid "Total items:"
-msgstr "信件總數"
+msgstr "項目總數："
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: widgets/collectionmaintenancepage.ui:59
-#, fuzzy, kde-format
-#| msgid "Unread Messages"
+#, kde-format
 msgid "Unread items:"
-msgstr "未讀信件"
+msgstr "未讀項目："
 
 #. i18n: ectx: property (text), widget (QLabel, indexingLabel)
 #: widgets/collectionmaintenancepage.ui:73
 #, kde-format
 msgid "Indexing:"
-msgstr ""
+msgstr "索引："
 
 #. i18n: ectx: property (text), widget (QCheckBox, enableIndexingChkBox)
 #: widgets/collectionmaintenancepage.ui:80
 #, kde-format
 msgid "Enable fulltext indexing"
-msgstr ""
+msgstr "啟用全文索引"
 
 #. i18n: ectx: property (text), widget (QLabel, indexedCountLbl)
 #: widgets/collectionmaintenancepage.ui:87
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Error while creating item: %1"
+#, kde-format
 msgid "Retrieving indexed items count..."
-msgstr "建立項目時發生錯誤：%1"
+msgstr "正在取得已索引項目數…"
 
 #. i18n: ectx: property (text), widget (QPushButton, reindexButton)
 #: widgets/collectionmaintenancepage.ui:94
-#, fuzzy, kde-format
-#| msgid "Recent Folder"
+#, kde-format
 msgid "Reindex folder"
-msgstr "最近使用的資料夾"
+msgstr "重新索引資料夾"
 
 #: widgets/collectionrequester.cpp:113
 #, kde-format
@@ -975,8 +954,7 @@ msgid "Open collection dialog"
 msgstr "開啟收藏對話框"
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgid "Select a collection"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "選擇一個收藏"
@@ -1004,24 +982,22 @@ msgid "Conflict Resolution"
 msgstr "衝突解決"
 
 #: widgets/conflictresolvedialog.cpp:192
-#, fuzzy, kde-format
-#| msgid "Take right one"
+#, kde-format
 msgctxt "@action:button"
 msgid "Take my version"
-msgstr "使用右邊的"
+msgstr "用我的版本"
 
 #: widgets/conflictresolvedialog.cpp:198
 #, kde-format
 msgctxt "@action:button"
 msgid "Take their version"
-msgstr ""
+msgstr "用他們的版本"
 
 #: widgets/conflictresolvedialog.cpp:204
-#, fuzzy, kde-format
-#| msgid "Keep both"
+#, kde-format
 msgctxt "@action:button"
 msgid "Keep both versions"
-msgstr "兩個都保留"
+msgstr "兩個版本都保留"
 
 #: widgets/conflictresolvedialog.cpp:216
 #, kde-format
@@ -1032,6 +1008,10 @@ msgid ""
 "editor\"</a> to keep a copy of the texts, then select which version is most "
 "correct, then re-open it and modify it again to add what's missing."
 msgstr ""
+"<qt>您的變更與期間他人進行的變更有衝突。<br>除非其中一個版本可以直接被丟掉，"
+"不然您需要自行合併這些變更。<br>請點擊<a href=\"opentexteditor\">「開啟文字編"
+"輯器」</a>來保留文本的複本，然後選取最接近正確的版本，然後再重新開啟它並把缺"
+"失的部分加回去。"
 
 #: widgets/conflictresolvedialog.cpp:265
 #, kde-format
@@ -1069,14 +1049,16 @@ msgid "C&ancel"
 msgstr "取消(&A)"
 
 #: widgets/erroroverlay.cpp:225
-#, fuzzy, kde-format
-#| msgid "Cannot connect to the Akonadi service."
+#, kde-format
 msgctxt "%1 is a reason why"
 msgid ""
 "Cannot connect to the Personal information management service.\n"
 "\n"
 "%1"
-msgstr "無法連線到 Akonadi 服務。"
+msgstr ""
+"無法連線到個人資料管理服務。\n"
+"\n"
+"%1"
 
 #: widgets/erroroverlay.cpp:229 widgets/erroroverlay.cpp:230
 #, kde-format
@@ -1145,53 +1127,50 @@ msgid "Details..."
 msgstr "詳情..."
 
 #: widgets/manageaccountwidget.cpp:200
-#, fuzzy, kde-format
-#| msgid "Do you really want to delete the search view '%1'?"
+#, kde-format
 msgid "Do you want to remove account '%1'?"
-msgstr "您確定要刪除搜尋檢視 %1 嗎？"
+msgstr "您確定要刪除帳號 '%1' 嗎？"
 
 #: widgets/manageaccountwidget.cpp:201
 #, kde-format
 msgid "Remove account?"
-msgstr ""
+msgstr "移除帳號？"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/manageaccountwidget.ui:19
 #, kde-format
 msgid "Incoming accounts (add at least one):"
-msgstr ""
+msgstr "接收帳號（至少新增一個）："
 
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
 #: widgets/manageaccountwidget.ui:26
 #, kde-format
 msgid "Filter…"
-msgstr ""
+msgstr "過濾…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
 #: widgets/manageaccountwidget.ui:40
 #, kde-format
 msgid "A&dd..."
-msgstr ""
+msgstr "新增(&D)…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
 #: widgets/manageaccountwidget.ui:50
 #, kde-format
 msgid "&Modify..."
-msgstr ""
+msgstr "變更(&M)…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
 #: widgets/manageaccountwidget.ui:60
 #, kde-format
 msgid "R&emove"
-msgstr ""
+msgstr "移除(&E)"
 
 #. i18n: ectx: property (text), widget (QPushButton, mRestartAccountButton)
 #: widgets/manageaccountwidget.ui:77
-#, fuzzy, kde-format
-#| msgctxt "@action:button Start the Akonadi server"
-#| msgid "Start"
+#, kde-format
 msgid "Restart"
-msgstr "開始"
+msgstr "重新啟動"
 
 #: widgets/recentcollectionaction.cpp:43
 #, kde-format
@@ -1200,23 +1179,18 @@ msgstr "最近使用的資料夾"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, RenameFavoriteDialog)
 #: widgets/renamefavoritedialog.ui:26
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Rename Favorite"
+#, kde-format
 msgid "Rename Favorite"
 msgstr "重新命名我的最愛"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/renamefavoritedialog.ui:35
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox name of the folder"
-#| msgid "Name:"
+#, kde-format
 msgid "Name:"
 msgstr "名稱："
 
 #: widgets/selftestdialog.cpp:60
-#, fuzzy, kde-format
-#| msgid "Akonadi Server Self-Test"
+#, kde-format
 msgctxt "@title:window"
 msgid "Akonadi Server Self-Test"
 msgstr "Akonadi 伺服器自我測試"
@@ -1594,14 +1568,14 @@ msgstr ""
 #: widgets/selftestdialog.cpp:441
 #, kde-format
 msgid "Protocol version check not possible."
-msgstr "無法檢查通訊協定版本。"
+msgstr "無法檢查協定版本。"
 
 #: widgets/selftestdialog.cpp:442
 #, kde-format
 msgid ""
 "Without a connection to the server it is not possible to check if the "
 "protocol version meets the requirements."
-msgstr "若無法連接伺服器，將無法檢查協定版本是否相容。"
+msgstr "沒有與伺服器連接時無法檢查協定版本是否相容。"
 
 #: widgets/selftestdialog.cpp:447
 #, kde-format
@@ -1609,34 +1583,29 @@ msgid "Server protocol version is too old."
 msgstr "伺服器協定版本太舊了。"
 
 #: widgets/selftestdialog.cpp:448 widgets/selftestdialog.cpp:455
-#, fuzzy, kde-format
-#| msgid ""
-#| "The server protocol version is %1, but at least version %2 is required. "
-#| "Install a newer version of the Akonadi server."
+#, kde-format
 msgid ""
 "The server protocol version is %1, but version %2 is required by the client. "
 "If you recently updated KDE PIM, please make sure to restart both Akonadi "
 "and KDE PIM applications."
 msgstr ""
-"伺服器協定版本為 %1，但是最少需要 %2 以上。請安裝新版本的 Akonadi 伺服器。"
+"伺服器協定版本為 %1，但是用戶端需要 %2 以上。如果您最近剛更新 KDE PIM，請確保"
+"有重新啟動 Akonadi 和 KDE PIM 應用程式。"
 
 #: widgets/selftestdialog.cpp:454
-#, fuzzy, kde-format
-#| msgid "Server protocol version is too old."
+#, kde-format
 msgid "Server protocol version is too new."
-msgstr "伺服器協定版本太舊了。"
+msgstr "伺服器協定版本太新了。"
 
 #: widgets/selftestdialog.cpp:460
-#, fuzzy, kde-format
-#| msgid "Server protocol version is too old."
+#, kde-format
 msgid "Server protocol version matches."
-msgstr "伺服器協定版本太舊了。"
+msgstr "伺服器協定版本相符。"
 
 #: widgets/selftestdialog.cpp:460
-#, fuzzy, kde-format
-#| msgid "Server protocol version is too old."
+#, kde-format
 msgid "The current Protocol version is %1."
-msgstr "伺服器協定版本太舊了。"
+msgstr "目前的協定版本是 %1。"
 
 #: widgets/selftestdialog.cpp:478
 #, kde-format
@@ -1818,15 +1787,12 @@ msgstr "詳情"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/selftestdialog.ui:61
-#, fuzzy, kde-format
-#| msgid ""
-#| "<p>For more troubleshooting tips please refer to <a href=\"http://"
-#| "userbase.kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
+#, kde-format
 msgid ""
 "<p>For more troubleshooting tips please refer to <a href=\"https://userbase."
 "kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
 msgstr ""
-"<p>更多的錯誤解決提示，請參考<a href=\"http://userbase.kde.org/Akonadi"
+"<p>更多的錯誤解決提示，請參考<a href=\"https://userbase.kde.org/Akonadi"
 "\">userbase.kde.org/Akonadi</a>。</p>"
 
 #: widgets/standardactionmanager.cpp:78
@@ -1838,22 +1804,16 @@ msgid "New"
 msgstr "新增"
 
 #: widgets/standardactionmanager.cpp:80
-#, fuzzy
-#| msgid "&Delete Folder"
-#| msgid_plural "&Delete %1 Folders"
 msgid "&Delete Folder"
-msgstr "刪除 %1 個資料夾(&D)"
+msgstr "刪除資料夾(&D)"
 
 #: widgets/standardactionmanager.cpp:80
 msgid "Delete"
 msgstr "刪除"
 
 #: widgets/standardactionmanager.cpp:82
-#, fuzzy
-#| msgid "&Synchronize Folder"
-#| msgid_plural "&Synchronize %1 Folders"
 msgid "&Synchronize Folder"
-msgstr "同步 %1 個資料夾(&S)"
+msgstr "同步資料夾(&S)"
 
 #: widgets/standardactionmanager.cpp:83 widgets/standardactionmanager.cpp:157
 #: widgets/standardactionmanager.cpp:243
@@ -1935,44 +1895,32 @@ msgid "Move Folder To..."
 msgstr "移動資料夾到..."
 
 #: widgets/standardactionmanager.cpp:143
-#, fuzzy
-#| msgid "&Cut Item"
-#| msgid_plural "&Cut %1 Items"
 msgid "&Cut Item"
-msgstr "剪下 %1 個項目(&C)"
+msgstr "剪下項目(&C)"
 
 #: widgets/standardactionmanager.cpp:143 widgets/standardactionmanager.cpp:144
 msgid "Cut"
 msgstr "剪下"
 
 #: widgets/standardactionmanager.cpp:144
-#, fuzzy
-#| msgid "&Cut Folder"
-#| msgid_plural "&Cut %1 Folders"
 msgid "&Cut Folder"
-msgstr "剪下 %1 個資料夾(&C)"
+msgstr "剪下資料夾(&C)"
 
 #: widgets/standardactionmanager.cpp:145
 msgid "Create Resource"
 msgstr "建立資源"
 
 #: widgets/standardactionmanager.cpp:146
-#, fuzzy
-#| msgid "Delete Resource"
-#| msgid_plural "Delete %1 Resources"
 msgid "Delete Resource"
-msgstr "刪除 %1 個資源"
+msgstr "刪除資源"
 
 #: widgets/standardactionmanager.cpp:148
 msgid "&Resource Properties"
 msgstr "資源屬性(&R)"
 
 #: widgets/standardactionmanager.cpp:156
-#, fuzzy
-#| msgid "Synchronize Resource"
-#| msgid_plural "Synchronize %1 Resources"
 msgid "Synchronize Resource"
-msgstr "同步 %1 個資源"
+msgstr "同步資源"
 
 #: widgets/standardactionmanager.cpp:163
 msgid "Work Offline"
@@ -2053,18 +2001,14 @@ msgid_plural "&Copy %1 Items"
 msgstr[0] "複製 %1 個項目(&C)"
 
 #: widgets/standardactionmanager.cpp:330
-#, fuzzy, kde-format
-#| msgid "&Cut Item"
-#| msgid_plural "&Cut %1 Items"
+#, kde-format
 msgctxt "@action"
 msgid "&Cut Item"
 msgid_plural "&Cut %1 Items"
 msgstr[0] "剪下 %1 個項目(&C)"
 
 #: widgets/standardactionmanager.cpp:331
-#, fuzzy, kde-format
-#| msgid "&Cut Folder"
-#| msgid_plural "&Cut %1 Folders"
+#, kde-format
 msgctxt "@action"
 msgid "&Cut Folder"
 msgid_plural "&Cut %1 Folders"
@@ -2077,18 +2021,14 @@ msgid_plural "&Delete %1 Items"
 msgstr[0] "刪除 %1 個項目(&D)"
 
 #: widgets/standardactionmanager.cpp:333
-#, fuzzy, kde-format
-#| msgid "&Delete Folder"
-#| msgid_plural "&Delete %1 Folders"
+#, kde-format
 msgctxt "@action"
 msgid "&Delete Folder"
 msgid_plural "&Delete %1 Folders"
 msgstr[0] "刪除 %1 個資料夾(&D)"
 
 #: widgets/standardactionmanager.cpp:334
-#, fuzzy, kde-format
-#| msgid "&Synchronize Folder"
-#| msgid_plural "&Synchronize %1 Folders"
+#, kde-format
 msgctxt "@action"
 msgid "&Synchronize Folder"
 msgid_plural "&Synchronize %1 Folders"
@@ -2149,18 +2089,14 @@ msgid_plural "Synchronize %1 Folders"
 msgstr[0] "同步 %1 個資料夾"
 
 #: widgets/standardactionmanager.cpp:345
-#, fuzzy, kde-format
-#| msgid "Delete Resource"
-#| msgid_plural "Delete %1 Resources"
+#, kde-format
 msgctxt "@action"
 msgid "Delete Resource"
 msgid_plural "Delete %1 Resources"
 msgstr[0] "刪除 %1 個資源"
 
 #: widgets/standardactionmanager.cpp:346
-#, fuzzy, kde-format
-#| msgid "Synchronize Resource"
-#| msgid_plural "Synchronize %1 Resources"
+#, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
 msgid_plural "Synchronize %1 Resources"
@@ -2180,13 +2116,11 @@ msgid_plural ""
 msgstr[0] "您確定要刪除這 %1 個資料夾以及它所有的子資料夾嗎？"
 
 #: widgets/standardactionmanager.cpp:359
-#, fuzzy, kde-format
-#| msgid "Delete Folder"
-#| msgid_plural "Delete %1 Folders"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "刪除 %1 個資料夾"
+msgstr[0] "刪除資料夾？"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2194,11 +2128,10 @@ msgid "Could not delete folder: %1"
 msgstr "無法刪除資料夾：%1"
 
 #: widgets/standardactionmanager.cpp:361
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
-msgstr "刪除資料夾失敗"
+msgstr "資料夾刪除失敗"
 
 #: widgets/standardactionmanager.cpp:363
 #, kde-format
@@ -2213,13 +2146,11 @@ msgid_plural "Do you really want to delete %1 items?"
 msgstr[0] "您真的要刪除這  %1 個項目嗎？"
 
 #: widgets/standardactionmanager.cpp:368
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "刪除 %1 個項目"
+msgstr[0] "刪除項目？"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2227,11 +2158,10 @@ msgid "Could not delete item: %1"
 msgstr "無法刪除項目：%1"
 
 #: widgets/standardactionmanager.cpp:370
-#, fuzzy, kde-format
-#| msgid "Item deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
-msgstr "刪除項目失敗"
+msgstr "項目刪除失敗"
 
 #: widgets/standardactionmanager.cpp:372
 #, kde-format
@@ -2257,8 +2187,7 @@ msgid "Could not create resource: %1"
 msgstr "無法建立資源：%1"
 
 #: widgets/standardactionmanager.cpp:377
-#, fuzzy, kde-format
-#| msgid "Resource creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "資源建立失敗"
@@ -2282,8 +2211,7 @@ msgid "Could not paste data: %1"
 msgstr "無法貼上資料：%1"
 
 #: widgets/standardactionmanager.cpp:387
-#, fuzzy, kde-format
-#| msgid "Paste failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "貼上失敗"
@@ -2294,11 +2222,10 @@ msgid "We can not add \"/\" in folder name."
 msgstr "不能在資料夾名稱中加入 \"/\"。"
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, fuzzy, kde-format
-#| msgid "Create new folder error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
-msgstr "建立新的資料夾時發生錯誤"
+msgstr "建立新資料夾錯誤"
 
 #: widgets/standardactionmanager.cpp:743
 #, kde-format
@@ -2334,22 +2261,19 @@ msgid "Copy to This Folder"
 msgstr "複製到此資料夾"
 
 #: widgets/subscriptiondialog.cpp:97
-#, fuzzy, kde-format
-#| msgid "Failed to create relation."
+#, kde-format
 msgid "Failed to update subscription: %1"
-msgstr "建立關聯時失敗。"
+msgstr "更新訂閱時失敗：%1"
 
 #: widgets/subscriptiondialog.cpp:97
-#, fuzzy, kde-format
-#| msgid "Local Subscriptions"
+#, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
-msgstr "本地端的訂閱"
+msgstr "訂閱錯誤"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, SubscriptionDialog)
 #: widgets/subscriptiondialog.ui:14
-#, fuzzy, kde-format
-#| msgid "Local Subscriptions"
+#, kde-format
 msgid "Local Subscriptions"
 msgstr "本地端的訂閱"
 
@@ -2361,24 +2285,21 @@ msgstr "搜尋："
 
 #. i18n: ectx: property (text), widget (QCheckBox, subscribedOnlyCheckBox)
 #: widgets/subscriptiondialog.ui:36
-#, fuzzy, kde-format
-#| msgid "Subscribed only"
+#, kde-format
 msgid "&Subscribed only"
-msgstr "只有訂閱的群組"
+msgstr "僅已訂閱的(&S)"
 
 #. i18n: ectx: property (text), widget (QPushButton, subscribeButton)
 #: widgets/subscriptiondialog.ui:62
-#, fuzzy, kde-format
-#| msgid "Subscribe"
+#, kde-format
 msgid "Su&bscribe"
-msgstr "訂閱"
+msgstr "訂閱(&B)"
 
 #. i18n: ectx: property (text), widget (QPushButton, unsubscribeButton)
 #: widgets/subscriptiondialog.ui:69
-#, fuzzy, kde-format
-#| msgid "Unsubscribe"
+#, kde-format
 msgid "&Unsubscribe"
-msgstr "取消訂閱"
+msgstr "取消訂閱(&U)"
 
 #: widgets/tageditwidget.cpp:116
 #, kde-format
@@ -2386,8 +2307,7 @@ msgid "Failed to create a new tag"
 msgstr "建立新標籤時失敗"
 
 #: widgets/tageditwidget.cpp:116
-#, fuzzy, kde-format
-#| msgid "An error occurred while creating a new tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "建立新標籤時發生錯誤"
@@ -2399,9 +2319,7 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "您確定要刪除標籤 <resource>%1</resource> 嗎？"
 
 #: widgets/tageditwidget.cpp:165
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Delete tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "刪除標籤"
@@ -2414,52 +2332,44 @@ msgstr "刪除標籤"
 
 #. i18n: ectx: property (text), widget (QLabel, selectLabel)
 #: widgets/tageditwidget.ui:29
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Configure which tags should be applied."
+#, kde-format
 msgid "Select tags that should be applied."
-msgstr "設定哪些標籤要被套用。"
+msgstr "選取應該要被套用的標籤。"
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:54
-#, fuzzy, kde-format
-#| msgctxt "@label"
-#| msgid "Create new tag"
+#, kde-format
 msgid "Create new tag"
 msgstr "建立新標籤"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: widgets/tagmanagementdialog.ui:14
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Manage Tags"
+#, kde-format
 msgid "Manage Tags"
 msgstr "管理標籤"
 
 #: widgets/tagselectioncombobox.cpp:126
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Delete tag"
+#, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
-msgstr "刪除標籤"
+msgstr "選擇標籤…"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
 #: widgets/tagselectiondialog.ui:14
 #, kde-format
 msgid "Select Tags"
-msgstr ""
+msgstr "選擇標籤"
 
 #: widgets/tagwidget.cpp:45
 #, kde-format
 msgid "Clear"
-msgstr ""
+msgstr "清除"
 
 #. i18n: ectx: property (placeholderText), widget (Akonadi::TagView, tagView)
 #: widgets/tagwidget.ui:20
 #, kde-format
 msgid "Click to add tags"
-msgstr ""
+msgstr "按一下新增標籤"
 
 #. i18n: ectx: property (text), widget (QToolButton, editButton)
 #: widgets/tagwidget.ui:27
@@ -2490,7 +2400,7 @@ msgstr "沒有載入資料。"
 #: xml/xmldocument.cpp:121
 #, kde-format
 msgid "No filename specified"
-msgstr "沒有指定檔案名稱"
+msgstr "未指定檔案名稱"
 
 #: xml/xmldocument.cpp:129
 #, kde-format
