@@ -70,7 +70,7 @@ class TagEditWidgetTest : public QObject
         ~TestSetup()
         {
             if (!createdTags.empty()) {
-                auto *deleteJob = new TagDeleteJob(createdTags);
+                auto deleteJob = new TagDeleteJob(createdTags);
                 AKVERIFYEXEC(deleteJob);
             }
         }
@@ -80,7 +80,7 @@ class TagEditWidgetTest : public QObject
             const auto doCreateTags = [this, count]() {
                 QSignalSpy monitorSpy(monitor.get(), &Monitor::tagAdded);
                 for (int i = 0; i < count; ++i) {
-                    auto *job = new TagCreateJob(Tag(QStringLiteral("TestTag-%1").arg(i)));
+                    auto job = new TagCreateJob(Tag(QStringLiteral("TestTag-%1").arg(i)));
                     AKVERIFYEXEC(job);
                     createdTags.push_back(job->tag());
                 }

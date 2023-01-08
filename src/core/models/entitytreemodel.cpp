@@ -672,7 +672,7 @@ QMimeData *EntityTreeModel::mimeData(const QModelIndexList &indexes) const
 {
     Q_D(const EntityTreeModel);
 
-    auto *data = new QMimeData();
+    auto data = new QMimeData();
     QList<QUrl> urls;
     for (const QModelIndex &index : indexes) {
         if (index.column() != 0) {
@@ -761,7 +761,7 @@ bool EntityTreeModel::setData(const QModelIndex &index, const QVariant &value, i
                 collection = value.value<Collection>();
             }
 
-            auto *job = new CollectionModifyJob(collection, d->m_session);
+            auto job = new CollectionModifyJob(collection, d->m_session);
             connect(job, SIGNAL(result(KJob *)), SLOT(updateJobDone(KJob *)));
 
             return false;
@@ -789,7 +789,7 @@ bool EntityTreeModel::setData(const QModelIndex &index, const QVariant &value, i
                 Q_ASSERT(item.id() == node->id);
             }
 
-            auto *itemModifyJob = new ItemModifyJob(item, d->m_session);
+            auto itemModifyJob = new ItemModifyJob(item, d->m_session);
             connect(itemModifyJob, SIGNAL(result(KJob *)), SLOT(updateJobDone(KJob *)));
 
             return false;
