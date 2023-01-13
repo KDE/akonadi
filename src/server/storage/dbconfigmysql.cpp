@@ -218,6 +218,7 @@ bool DbConfigMysql::startInternalServer()
     const QString globalConfig = StandardDirs::locateResourceFile("config", QStringLiteral("mysql-global.conf"));
     const QString localConfig = StandardDirs::locateResourceFile("config", QStringLiteral("mysql-local.conf"));
     const QString actualConfig = StandardDirs::saveDir("data") + QLatin1String("/mysql.conf");
+    qCDebug(AKONADISERVER_LOG) << " globalConfig : " << globalConfig << " localConfig : " << localConfig << " actualConfig : " << actualConfig;
     if (globalConfig.isEmpty()) {
         qCCritical(AKONADISERVER_LOG) << "Did not find MySQL server default configuration (mysql-global.conf)";
         return false;
