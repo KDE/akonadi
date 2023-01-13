@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-16 00:47+0000\n"
-"PO-Revision-Date: 2023-01-02 07:16\n"
+"PO-Revision-Date: 2023-01-12 10:35\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -603,7 +603,7 @@ msgstr "无法创建代理实例：%1"
 #, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
-msgstr ""
+msgstr "代理实例创建失败"
 
 #: widgets/agentactionmanager.cpp:60
 #, kde-format
@@ -788,7 +788,7 @@ msgstr "无法创建文件夹：%1"
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
-msgstr ""
+msgstr "文件夹创建失败"
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
 #, kde-format
@@ -2117,7 +2117,7 @@ msgstr[0] "您确定要删除 %1 个文件夹及其子文件夹吗？"
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] ""
+msgstr[0] "删除文件夹吗？"
 
 #: widgets/standardactionmanager.cpp:361
 #, kde-format
@@ -2128,7 +2128,7 @@ msgstr "无法删除文件夹：%1"
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
-msgstr ""
+msgstr "文件夹删除失败"
 
 #: widgets/standardactionmanager.cpp:364
 #, kde-format
@@ -2187,7 +2187,7 @@ msgstr "无法创建资源：%1"
 #, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
-msgstr ""
+msgstr "资源创建失败"
 
 #: widgets/standardactionmanager.cpp:382
 #, kde-format
@@ -2211,7 +2211,7 @@ msgstr "无法粘贴数据：%1"
 #, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
-msgstr ""
+msgstr "粘贴失败"
 
 #: widgets/standardactionmanager.cpp:740
 #, kde-format
@@ -2222,7 +2222,7 @@ msgstr "无法在文件夹名称中添加“/”。"
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
-msgstr ""
+msgstr "创建新文件夹错误"
 
 #: widgets/standardactionmanager.cpp:744
 #, kde-format
@@ -2307,7 +2307,7 @@ msgstr "新建标签失败"
 #, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
-msgstr ""
+msgstr "新建标签时发生错误"
 
 #: widgets/tageditwidget.cpp:165
 #, kde-kuit-format
@@ -2319,7 +2319,7 @@ msgstr "您确定要删除标签 <resource>%1</resource>吗？"
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
-msgstr ""
+msgstr "删除标签"
 
 #: widgets/tageditwidget.cpp:195
 #, kde-format
