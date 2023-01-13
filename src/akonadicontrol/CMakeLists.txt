@@ -2,7 +2,7 @@
 add_executable(akonadi_control )
 
 if (WITH_ACCOUNTS)
-    target_sources(akonadi_control PRIVATE accountsintegration.cpp)
+    target_sources(akonadi_control PRIVATE accountsintegration.cpp accountsintegration.h)
 endif()
 
 ecm_qt_declare_logging_category(akonadi_control HEADER akonadicontrol_debug.h IDENTIFIER AKONADICONTROL_LOG CATEGORY_NAME org.kde.pim.akonadicontrol
