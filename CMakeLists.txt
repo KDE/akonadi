@@ -111,7 +111,7 @@ if (QT_MAJOR_VERSION STREQUAL "5")
 else()
     MESSAGE(STATUS "There is not AccountsQt6 version yet!")
 endif()
-if (${AccountsQt5_FOUND} AND ${KAccounts_FOUND})
+if (${AccountsQt${QT_MAJOR_VERSION}_FOUND} AND ${KAccounts_FOUND})
     set(WITH_ACCOUNTS TRUE)
 endif()
 
