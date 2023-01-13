@@ -93,20 +93,24 @@ if (QT_MAJOR_VERSION STREQUAL "6")
     find_package(Qt6Core5Compat)
 endif()
 
-set(AccountsQt5_MINIMUM_VERSION "1.16")
-find_package(AccountsQt5 ${AccountsQt5_MINIMUM_VERSION})
-set_package_properties(AccountsQt5 PROPERTIES
-    DESCRIPTION "Qt bindings for the Accounts framework"
-    URL "https://gitlab.com/accounts-sso/libaccounts-qt"
-    TYPE OPTIONAL
-)
-set(KAccounts_MINIMUM_VERSION "19.08.0")
-find_package(KAccounts ${KAccounts_MINIMUM_VERSION})
-set_package_properties(KAccounts PROPERTIES
-    DESCRIPTION "KDE library for Accounts framework integration"
-    URL "https://cgit.kde.org/kaccounts-integration.git"
-    TYPE OPTIONAL
-)
+if (QT_MAJOR_VERSION STREQUAL "5")
+    set(AccountsQt5_MINIMUM_VERSION "1.16")
+    find_package(AccountsQt5 ${AccountsQt5_MINIMUM_VERSION})
+    set_package_properties(AccountsQt5 PROPERTIES
+        DESCRIPTION "Qt bindings for the Accounts framework"
+        URL "https://gitlab.com/accounts-sso/libaccounts-qt"
+        TYPE OPTIONAL
+    )
+    set(KAccounts_MINIMUM_VERSION "19.08.0")
+    find_package(KAccounts ${KAccounts_MINIMUM_VERSION})
+    set_package_properties(KAccounts PROPERTIES
+        DESCRIPTION "KDE library for Accounts framework integration"
+        URL "https://cgit.kde.org/kaccounts-integration.git"
+        TYPE OPTIONAL
+    )
+else()
+    MESSAGE(STATUS "There is not AccountsQt6 version yet!")
+endif()
 if (${AccountsQt5_FOUND} AND ${KAccounts_FOUND})
     set(WITH_ACCOUNTS TRUE)
 endif()
