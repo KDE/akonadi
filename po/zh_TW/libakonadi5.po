@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-28 00:49+0000\n"
+"POT-Creation-Date: 2023-01-14 16:34+0000\n"
 "PO-Revision-Date: 2023-01-07 04:46+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
@@ -649,6 +649,13 @@ msgstr "%1 的設定已在其他地方開啟。"
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "註冊 %1 設定對話框時失敗。"
+
+#: widgets/agenttypedialog.cpp:67
+#, fuzzy, kde-format
+#| msgid "&Configure Agent Instance"
+msgctxt "@title:window"
+msgid "Configure Account"
+msgstr "設定代理程式實體(&C)"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format

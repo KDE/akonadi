@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-28 00:49+0000\n"
+"POT-Creation-Date: 2023-01-14 16:34+0000\n"
 "PO-Revision-Date: 2022-10-10 10:19+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -665,6 +665,13 @@ msgstr "La configuració per a %1 ja es troba oberta en un altre lloc."
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "No s'ha pogut registrar el diàleg de configuració %1."
+
+#: widgets/agenttypedialog.cpp:67
+#, fuzzy, kde-format
+#| msgid "&Configure Agent Instance"
+msgctxt "@title:window"
+msgid "Configure Account"
+msgstr "&Configura la instància de l'agent"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format

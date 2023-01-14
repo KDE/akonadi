@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-28 00:49+0000\n"
+"POT-Creation-Date: 2023-01-14 16:34+0000\n"
 "PO-Revision-Date: 2022-10-10 18:37+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -662,6 +662,13 @@ msgstr "Вікно налаштувань для %1 вже десь відкри
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Не вдалося зареєструвати вікно налаштувань %1."
+
+#: widgets/agenttypedialog.cpp:67
+#, fuzzy, kde-format
+#| msgid "&Configure Agent Instance"
+msgctxt "@title:window"
+msgid "Configure Account"
+msgstr "&Налаштувати екземпляр агента"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format

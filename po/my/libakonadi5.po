@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-28 00:49+0000\n"
+"POT-Creation-Date: 2023-01-14 16:34+0000\n"
 "PO-Revision-Date: 2021-09-27 23:52+0630\n"
 "Last-Translator: ဇေယျာလွင် <lw1nzayar@yandex.com>\n"
 "Language-Team: Burmese <kde-i18n-doc@kde.org>\n"
@@ -643,6 +643,13 @@ msgstr ""
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr ""
+
+#: widgets/agenttypedialog.cpp:67
+#, fuzzy, kde-format
+#| msgid "&Configure Agent Instance"
+msgctxt "@title:window"
+msgid "Configure Account"
+msgstr "&Cအေးဂျင့်အင်းစတမ့် ပြင်ဆင်မည်"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format

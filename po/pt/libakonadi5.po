@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-28 00:49+0000\n"
+"POT-Creation-Date: 2023-01-14 16:34+0000\n"
 "PO-Revision-Date: 2022-10-11 23:13+0100\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -657,6 +657,13 @@ msgstr "A configuração do %1 já está aberta noutro lado."
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Não foi possível registar a janela de configuração do %1."
+
+#: widgets/agenttypedialog.cpp:67
+#, fuzzy, kde-format
+#| msgid "&Configure Agent Instance"
+msgctxt "@title:window"
+msgid "Configure Account"
+msgstr "&Configurar a Instância do Agente"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format

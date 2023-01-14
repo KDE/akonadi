@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-28 00:49+0000\n"
+"POT-Creation-Date: 2023-01-14 16:34+0000\n"
 "PO-Revision-Date: 2013-03-08 10:11+0530\n"
 "Last-Translator: Chetan Khona <chetan@kompkin.com>\n"
 "Language-Team: Marathi <kde-i18n-doc@kde.org>\n"
@@ -641,6 +641,12 @@ msgstr ""
 #: widgets/agentconfigurationwidget.cpp:104
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
+msgstr ""
+
+#: widgets/agenttypedialog.cpp:67
+#, kde-format
+msgctxt "@title:window"
+msgid "Configure Account"
 msgstr ""
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
