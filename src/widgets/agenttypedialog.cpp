@@ -13,6 +13,7 @@
 
 #include <KConfigGroup>
 #include <KFilterProxySearchLine>
+#include <KLocalizedString>
 #include <KSharedConfig>
 #include <QLineEdit>
 
@@ -63,6 +64,7 @@ AgentTypeDialog::AgentTypeDialog(QWidget *parent)
     : QDialog(parent)
     , d(new AgentTypeDialogPrivate(this))
 {
+    setWindowTitle(i18nc("@title:window", "Configure Account"));
     auto layout = new QVBoxLayout(this);
 
     d->Widget = new Akonadi::AgentTypeWidget(this);
