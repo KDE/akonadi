@@ -1,16 +1,16 @@
 # Translation for libakonadi5.po to Euskara/Basque (eu).
-# Copyright (C) 2020-2022, This file is copyright:
+# Copyright (C) 2020-2023 This file is copyright:
 # This file is distributed under the same license as the akonadi package.
 # KDE euskaratzeko proiektuko arduraduna <xalba@ni.eus>.
 #
 # Translators:
-# Iñigo Salvador Azurmendi <xalba@ni.eus>, 2020, 2021, 2022.
+# Iñigo Salvador Azurmendi <xalba@ni.eus>, 2020, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-14 16:34+0000\n"
-"PO-Revision-Date: 2022-10-10 07:32+0200\n"
+"PO-Revision-Date: 2023-01-14 23:59+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.08.1\n"
+"X-Generator: Lokalize 22.12.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -663,11 +663,10 @@ msgid "Failed to register %1 configuration dialog."
 msgstr "Huts egin du «%1» konfiguratzeko elkarrizketa-koadroa erregistratzeak."
 
 #: widgets/agenttypedialog.cpp:67
-#, fuzzy, kde-format
-#| msgid "&Configure Agent Instance"
+#, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
-msgstr "&Konfiguratu Agentearen instantzia"
+msgstr "Konfiguratu kontua"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
