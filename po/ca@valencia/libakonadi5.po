@@ -1930,7 +1930,7 @@ msgstr "Gestiona les &subscripcions locals..."
 
 #: widgets/standardactionmanager.cpp:103
 msgid "Manage Local Subscriptions"
-msgstr "Gestió de les subscripcions locals"
+msgstr "Gestioneu les subscripcions locals"
 
 #: widgets/standardactionmanager.cpp:110
 msgid "Add to Favorite Folders"
@@ -2461,19 +2461,19 @@ msgstr "Crea una etiqueta nova"
 #: widgets/tagmanagementdialog.ui:14
 #, kde-format
 msgid "Manage Tags"
-msgstr "Gestió de les etiquetes"
+msgstr "Gestioneu les etiquetes"
 
 #: widgets/tagselectioncombobox.cpp:126
 #, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
-msgstr "Selecció d'etiquetes..."
+msgstr "Seleccioneu les etiquetes..."
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
 #: widgets/tagselectiondialog.ui:14
 #, kde-format
 msgid "Select Tags"
-msgstr "Selecció d'etiquetes"
+msgstr "Seleccioneu les etiquetes"
 
 #: widgets/tagwidget.cpp:45
 #, kde-format
