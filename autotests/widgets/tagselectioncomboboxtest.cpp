@@ -30,8 +30,8 @@ class TagSelectionComboBoxTest : public QObject
 
     struct TestSetup {
         explicit TestSetup(bool checkable)
+            : widget(std::make_unique<TagSelectionComboBox>())
         {
-            widget = std::make_unique<TagSelectionComboBox>();
             widget->setCheckable(checkable);
             widget->show();
 

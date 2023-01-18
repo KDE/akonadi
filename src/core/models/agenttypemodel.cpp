@@ -20,8 +20,8 @@ class Akonadi::AgentTypeModelPrivate
 public:
     explicit AgentTypeModelPrivate(AgentTypeModel *parent)
         : mParent(parent)
+        , mTypes(AgentManager::self()->types())
     {
-        mTypes = AgentManager::self()->types();
     }
 
     AgentTypeModel *const mParent;

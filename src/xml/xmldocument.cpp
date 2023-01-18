@@ -80,9 +80,9 @@ class XmlDocumentPrivate
 {
 public:
     XmlDocumentPrivate()
-        : valid(false)
+        : lastError(i18n("No data loaded."))
+        , valid(false)
     {
-        lastError = i18n("No data loaded.");
     }
 
     QDomElement findElementByRid(const QString &rid, const QString &elemName) const

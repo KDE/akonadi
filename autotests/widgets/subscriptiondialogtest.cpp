@@ -38,8 +38,8 @@ class SubscriptionDialogTest : public QObject
         };
 
         TestSetup()
+            : widget(std::make_unique<SubscriptionDialog>(QStringList{Collection::mimeType(), QStringLiteral("application/octet-stream")}))
         {
-            widget = std::make_unique<SubscriptionDialog>(QStringList{Collection::mimeType(), QStringLiteral("application/octet-stream")});
             widget->setAttribute(Qt::WA_DeleteOnClose, false);
             widget->show();
 

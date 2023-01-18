@@ -163,31 +163,31 @@ public:
 
     ItemPrivate(const ItemPrivate &other)
         : QSharedData(other)
+        , mRevision(other.mRevision)
+        , mId(other.mId)
+        , mRemoteId(other.mRemoteId)
+        , mRemoteRevision(other.mRemoteRevision)
+        , mPayloadPath(other.mPayloadPath)
+        , mPayloads(other.mPayloads)
+        , mFlags(other.mFlags)
+        , mTags(other.mTags)
+        , mRelations(other.mRelations)
+        , mCollectionId(other.mCollectionId)
+        , mVirtualReferences(other.mVirtualReferences)
+        , mSize(other.mSize)
+        , mModificationTime(other.mModificationTime)
+        , mMimeType(other.mMimeType)
+        , mGid(other.mGid)
+        , mCachedPayloadParts(other.mCachedPayloadParts)
+        , mFlagsOverwritten(other.mFlagsOverwritten)
+        , mTagsOverwritten(other.mTagsOverwritten)
+        , mSizeChanged(other.mSizeChanged)
+        , mClearPayload(other.mClearPayload)
+        , mConversionInProgress(false)
     {
-        mId = other.mId;
-        mRemoteId = other.mRemoteId;
-        mRemoteRevision = other.mRemoteRevision;
-        mPayloadPath = other.mPayloadPath;
         if (other.mParent) {
             mParent.reset(new Collection(*(other.mParent)));
         }
-        mFlags = other.mFlags;
-        mRevision = other.mRevision;
-        mTags = other.mTags;
-        mRelations = other.mRelations;
-        mSize = other.mSize;
-        mModificationTime = other.mModificationTime;
-        mMimeType = other.mMimeType;
-        mPayloads = other.mPayloads;
-        mFlagsOverwritten = other.mFlagsOverwritten;
-        mSizeChanged = other.mSizeChanged;
-        mCollectionId = other.mCollectionId;
-        mClearPayload = other.mClearPayload;
-        mVirtualReferences = other.mVirtualReferences;
-        mGid = other.mGid;
-        mCachedPayloadParts = other.mCachedPayloadParts;
-        mTagsOverwritten = other.mTagsOverwritten;
-        mConversionInProgress = false;
 
         ItemChangeLog *changelog = ItemChangeLog::instance();
         changelog->addedFlags(this) = changelog->addedFlags(&other);

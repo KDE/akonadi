@@ -38,23 +38,23 @@ public:
 
     ItemFetchScopePrivate(const ItemFetchScopePrivate &other)
         : QSharedData(other)
+        , mPayloadParts(other.mPayloadParts)
+        , mAttributes(other.mAttributes)
+        , mAncestorDepth(other.mAncestorDepth)
+        , mFullPayload(other.mFullPayload)
+        , mAllAttributes(other.mAllAttributes)
+        , mCacheOnly(other.mCacheOnly)
+        , mCheckCachedPayloadPartsOnly(other.mCheckCachedPayloadPartsOnly)
+        , mFetchMtime(other.mFetchMtime)
+        , mIgnoreRetrievalErrors(other.mIgnoreRetrievalErrors)
+        , mChangedSince(other.mChangedSince)
+        , mFetchRid(other.mFetchRid)
+        , mFetchGid(other.mFetchGid)
+        , mFetchTags(other.mFetchTags)
+        , mTagFetchScope(other.mTagFetchScope)
+        , mFetchVRefs(other.mFetchVRefs)
+        , mFetchRelations(other.mFetchRelations)
     {
-        mPayloadParts = other.mPayloadParts;
-        mAttributes = other.mAttributes;
-        mAncestorDepth = other.mAncestorDepth;
-        mFullPayload = other.mFullPayload;
-        mAllAttributes = other.mAllAttributes;
-        mCacheOnly = other.mCacheOnly;
-        mCheckCachedPayloadPartsOnly = other.mCheckCachedPayloadPartsOnly;
-        mFetchMtime = other.mFetchMtime;
-        mIgnoreRetrievalErrors = other.mIgnoreRetrievalErrors;
-        mChangedSince = other.mChangedSince;
-        mFetchRid = other.mFetchRid;
-        mFetchGid = other.mFetchGid;
-        mFetchTags = other.mFetchTags;
-        mTagFetchScope = other.mTagFetchScope;
-        mFetchVRefs = other.mFetchVRefs;
-        mFetchRelations = other.mFetchRelations;
     }
 
 public:

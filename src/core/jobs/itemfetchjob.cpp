@@ -24,8 +24,8 @@ class Akonadi::ItemFetchJobPrivate : public JobPrivate
 public:
     explicit ItemFetchJobPrivate(ItemFetchJob *parent)
         : JobPrivate(parent)
+        , mCollection(Collection::root())
     {
-        mCollection = Collection::root();
         mEmitTimer.setSingleShot(true);
         mEmitTimer.setInterval(std::chrono::milliseconds{100});
     }

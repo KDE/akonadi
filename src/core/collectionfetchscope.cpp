@@ -23,21 +23,21 @@ public:
 
     CollectionFetchScopePrivate(const CollectionFetchScopePrivate &other)
         : QSharedData(other)
+        , resource(other.resource)
+        , contentMimeTypes(other.contentMimeTypes)
+        , ancestorDepth(other.ancestorDepth)
+        , listFilter(other.listFilter)
+        , attributes(other.attributes)
+        , statistics(other.statistics)
+        , fetchIdOnly(other.fetchIdOnly)
+        , mIgnoreRetrievalErrors(other.mIgnoreRetrievalErrors)
     {
-        resource = other.resource;
-        contentMimeTypes = other.contentMimeTypes;
-        ancestorDepth = other.ancestorDepth;
-        statistics = other.statistics;
-        listFilter = other.listFilter;
-        attributes = other.attributes;
         if (!ancestorFetchScope && other.ancestorFetchScope) {
             ancestorFetchScope.reset(new CollectionFetchScope());
             *ancestorFetchScope = *other.ancestorFetchScope;
         } else if (ancestorFetchScope && !other.ancestorFetchScope) {
             ancestorFetchScope.reset(nullptr);
         }
-        fetchIdOnly = other.fetchIdOnly;
-        mIgnoreRetrievalErrors = other.mIgnoreRetrievalErrors;
     }
 
 public:

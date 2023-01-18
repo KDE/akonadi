@@ -36,10 +36,10 @@ RecentCollectionAction::RecentCollectionAction(Akonadi::StandardActionManager::T
                                                const QAbstractItemModel *model,
                                                QMenu *menu)
     : QObject(menu)
+    , mListRecentCollection(readConfig())
     , mMenu(menu)
     , mModel(model)
 {
-    mListRecentCollection = readConfig();
     mRecentAction = mMenu->addAction(i18n("Recent Folder"));
     mMenu->addSeparator();
     fillRecentCollection(type, selectedCollectionsList);

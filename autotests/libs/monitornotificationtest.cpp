@@ -22,8 +22,8 @@ class MonitorNotificationTest : public QObject
 public:
     explicit MonitorNotificationTest(QObject *parent = nullptr)
         : QObject(parent)
+        , m_sessionName("MonitorNotificationTest fake session")
     {
-        m_sessionName = "MonitorNotificationTest fake session";
         m_fakeSession = new FakeSession(m_sessionName, FakeSession::EndJobsImmediately);
         m_fakeSession->setAsDefaultSession();
     }

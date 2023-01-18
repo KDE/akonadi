@@ -24,14 +24,14 @@ public:
 
     AgentTypePrivate(const AgentTypePrivate &other)
         : QSharedData(other)
+        , mIdentifier(other.mIdentifier)
+        , mName(other.mName)
+        , mDescription(other.mDescription)
+        , mIconName(other.mIconName)
+        , mMimeTypes(other.mMimeTypes)
+        , mCapabilities(other.mCapabilities)
+        , mCustomProperties(other.mCustomProperties)
     {
-        mIdentifier = other.mIdentifier;
-        mName = other.mName;
-        mDescription = other.mDescription;
-        mIconName = other.mIconName;
-        mMimeTypes = other.mMimeTypes;
-        mCapabilities = other.mCapabilities;
-        mCustomProperties = other.mCustomProperties;
     }
 
     QString mIdentifier;

@@ -25,8 +25,8 @@ public:
 
     MimeTypeCheckerPrivate(const MimeTypeCheckerPrivate &other)
         : QSharedData(other)
+        , mWantedMimeTypes(other.mWantedMimeTypes)
     {
-        mWantedMimeTypes = other.mWantedMimeTypes;
     }
 
     bool isWantedMimeType(const QString &mimeType) const

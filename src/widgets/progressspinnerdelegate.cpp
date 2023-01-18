@@ -20,8 +20,8 @@ using namespace Akonadi;
 DelegateAnimator::DelegateAnimator(QAbstractItemView *view)
     : QObject(view)
     , m_view(view)
+    , m_pixmapSequence(KIconLoader::global()->loadPixmapSequence(QStringLiteral("process-working"), 22))
 {
-    m_pixmapSequence = KIconLoader::global()->loadPixmapSequence(QStringLiteral("process-working"), 22);
 }
 
 void DelegateAnimator::push(const QModelIndex &index)

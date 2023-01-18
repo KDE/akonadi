@@ -25,14 +25,14 @@ public:
 
     AgentInstancePrivate(const AgentInstancePrivate &other)
         : QSharedData(other)
+        , mType(other.mType)
+        , mIdentifier(other.mIdentifier)
+        , mName(other.mName)
+        , mStatus(other.mStatus)
+        , mStatusMessage(other.mStatusMessage)
+        , mProgress(other.mProgress)
+        , mIsOnline(other.mIsOnline)
     {
-        mType = other.mType;
-        mIdentifier = other.mIdentifier;
-        mName = other.mName;
-        mStatus = other.mStatus;
-        mStatusMessage = other.mStatusMessage;
-        mProgress = other.mProgress;
-        mIsOnline = other.mIsOnline;
     }
 
     AgentType mType;

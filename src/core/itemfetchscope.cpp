@@ -11,8 +11,8 @@
 using namespace Akonadi;
 
 ItemFetchScope::ItemFetchScope()
+    : d(new ItemFetchScopePrivate())
 {
-    d = new ItemFetchScopePrivate();
 }
 
 ItemFetchScope::ItemFetchScope(const ItemFetchScope &other)

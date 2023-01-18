@@ -39,8 +39,8 @@ class TagEditWidgetTest : public QObject
 
     struct TestSetup {
         TestSetup()
+            : monitor(std::make_unique<Monitor>())
         {
-            monitor = std::make_unique<Monitor>();
             monitor->setTypeMonitored(Monitor::Tags);
 
             model = std::make_unique<TagModel>(monitor.get());

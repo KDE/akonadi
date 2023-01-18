@@ -40,29 +40,29 @@ public:
 
     CollectionPrivate(const CollectionPrivate &other)
         : QSharedData(other)
+        , displayPreference(other.displayPreference)
+        , syncPreference(other.syncPreference)
+        , indexPreference(other.indexPreference)
+        , listPreferenceChanged(other.listPreferenceChanged)
+        , enabled(other.enabled)
+        , enabledChanged(other.enabledChanged)
+        , contentTypesChanged(other.contentTypesChanged)
+        , cachePolicyChanged(other.cachePolicyChanged)
+        , isVirtual(other.isVirtual)
+        , mId(other.mId)
+        , mRemoteId(other.mRemoteId)
+        , mRemoteRevision(other.mRemoteRevision)
+        , mAttributeStorage(other.mAttributeStorage)
+        , name(other.name)
+        , resource(other.resource)
+        , statistics(other.statistics)
+        , contentTypes(other.contentTypes)
+        , cachePolicy(other.cachePolicy)
+        , keepLocalChanges(other.keepLocalChanges)
     {
-        mId = other.mId;
-        mRemoteId = other.mRemoteId;
-        mRemoteRevision = other.mRemoteRevision;
-        mAttributeStorage = other.mAttributeStorage;
         if (other.mParent) {
             mParent.reset(new Collection(*(other.mParent)));
         }
-        name = other.name;
-        resource = other.resource;
-        statistics = other.statistics;
-        contentTypes = other.contentTypes;
-        cachePolicy = other.cachePolicy;
-        contentTypesChanged = other.contentTypesChanged;
-        cachePolicyChanged = other.cachePolicyChanged;
-        isVirtual = other.isVirtual;
-        enabled = other.enabled;
-        enabledChanged = other.enabledChanged;
-        displayPreference = other.displayPreference;
-        syncPreference = other.syncPreference;
-        indexPreference = other.indexPreference;
-        listPreferenceChanged = other.listPreferenceChanged;
-        keepLocalChanges = other.keepLocalChanges;
     }
 
     void resetChangeLog()

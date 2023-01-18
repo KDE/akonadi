@@ -33,8 +33,8 @@ class TagWidgetTest : public QObject
 
     struct TestSetup {
         TestSetup()
+            : widget(std::make_unique<TagWidget>())
         {
-            widget = std::make_unique<TagWidget>();
             widget->show();
 
             monitor = widget->findChild<Monitor *>();
