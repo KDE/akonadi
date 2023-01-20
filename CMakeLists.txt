@@ -5,9 +5,9 @@ project(Akonadi VERSION ${PIM_VERSION})
 
 
 # ECM setup
-set(KF5_MIN_VERSION "5.102.0")
+set(KF_MIN_VERSION "5.102.0")
 
-find_package(ECM ${KF5_MIN_VERSION} CONFIG REQUIRED)
+find_package(ECM ${KF_MIN_VERSION} CONFIG REQUIRED)
 
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 
@@ -69,18 +69,18 @@ find_package(Qt${QT_MAJOR_VERSION}Test ${QT_REQUIRED_VERSION} REQUIRED)
 find_package(Qt${QT_MAJOR_VERSION}Widgets ${QT_REQUIRED_VERSION} REQUIRED)
 find_package(Qt${QT_MAJOR_VERSION}Xml ${QT_REQUIRED_VERSION} REQUIRED)
 
-find_package(KF5Config ${KF5_MIN_VERSION} CONFIG REQUIRED)
-find_package(KF5ConfigWidgets ${KF5_MIN_VERSION} CONFIG REQUIRED)
-find_package(KF5CoreAddons ${KF5_MIN_VERSION} CONFIG REQUIRED)
-find_package(KF5I18n ${KF5_MIN_VERSION} CONFIG REQUIRED)
-find_package(KF5IconThemes ${KF5_MIN_VERSION} CONFIG REQUIRED)
-find_package(KF5ItemModels ${KF5_MIN_VERSION} CONFIG REQUIRED)
-find_package(KF5ItemViews ${KF5_MIN_VERSION} CONFIG REQUIRED)
-find_package(KF5KIO ${KF5_MIN_VERSION} CONFIG REQUIRED)
-find_package(KF5WidgetsAddons ${KF5_MIN_VERSION} CONFIG REQUIRED)
-find_package(KF5WindowSystem ${KF5_MIN_VERSION} CONFIG REQUIRED)
-find_package(KF5XmlGui ${KF5_MIN_VERSION} CONFIG REQUIRED)
-find_package(KF5Crash ${KF5_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF5Config ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF5ConfigWidgets ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF5CoreAddons ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF5I18n ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF5IconThemes ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF5ItemModels ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF5ItemViews ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF5KIO ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF5WidgetsAddons ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF5WindowSystem ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF5XmlGui ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF5Crash ${KF_MIN_VERSION} CONFIG REQUIRED)
 find_package(Qt${QT_MAJOR_VERSION}Designer NO_MODULE)
 set_package_properties(Qt${QT_MAJOR_VERSION}Designer PROPERTIES
    PURPOSE "Required to build the Qt Designer plugins"
