@@ -11,5 +11,5 @@ macro(add_libakonadixml_test _source)
   target_link_libraries(${_name} KF5AkonadiCore KF5::AkonadiXml Qt::Test Qt::Xml)
 endmacro()
 
-add_libakonadixml_test(collectiontest.cpp)
+add_libakonadixml_test(collectiontest.cpp collectiontest.h)
 add_libakonadixml_test(xmldocumenttest.cpp)

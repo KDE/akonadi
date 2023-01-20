@@ -14,10 +14,10 @@ if (BUILD_TESTING)
    add_subdirectory(autotests)
 endif()
 set(akonadixml_SRCS
-    xmldocument.cpp
-    xmlreader.cpp
-    xmlwritejob.cpp
-    xmlwriter.cpp
+    xmldocument.cpp xmldocument.h
+    xmlreader.cpp xmlreader.h
+    xmlwritejob.cpp xmlwritejob.h
+    xmlwriter.cpp xmlwriter.h
 )
 
 # base install include dir

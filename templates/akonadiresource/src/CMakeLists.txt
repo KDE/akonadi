@@ -1,5 +1,5 @@
 set(%{APPNAMELC}resource_SRCS
-    %{APPNAMELC}resource.cpp
+    %{APPNAMELC}resource.cpp %{APPNAMELC}resource.h
 )
 
 ecm_qt_declare_logging_category(%{APPNAMELC}resource_SRCS

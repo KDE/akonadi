@@ -37,7 +37,7 @@ set(akonadicore_base_SRCS
     collectionpathresolver.cpp
     collectionstatistics.cpp
     collectionsync.cpp
-    collectionutils.cpp
+    collectionutils.cpp collectionutils.h
     conflicthandler.cpp
     control.cpp
     entitycache.cpp
@@ -188,20 +188,20 @@ ecm_generate_headers(AkonadiCore_base_CC_HEADERS
 
 set(akonadicore_attributes_SRCS
     attributes/attribute.cpp
-    attributes/collectioncolorattribute.cpp
-    attributes/collectionquotaattribute.cpp
-    attributes/collectionidentificationattribute.cpp
+    attributes/collectioncolorattribute.cpp attributes/collectioncolorattribute.h
+    attributes/collectionquotaattribute.cpp attributes/collectionquotaattribute.h
+    attributes/collectionidentificationattribute.cpp attributes/collectionidentificationattribute.h
     attributes/collectionrightsattribute.cpp
-    attributes/entityannotationsattribute.cpp
-    attributes/entitydeletedattribute.cpp
-    attributes/entitydeletedattribute.cpp
-    attributes/entitydisplayattribute.cpp
-    attributes/entityhiddenattribute.cpp
-    attributes/favoritecollectionattribute.cpp
-    attributes/indexpolicyattribute.cpp
-    attributes/persistentsearchattribute.cpp
-    attributes/specialcollectionattribute.cpp
-    attributes/tagattribute.cpp
+    attributes/entityannotationsattribute.cpp attributes/entityannotationsattribute.h
+    attributes/entitydeletedattribute.cpp attributes/entitydeletedattribute.h
+    attributes/entitydeletedattribute.cpp attributes/entitydeletedattribute.h
+    attributes/entitydisplayattribute.cpp attributes/entitydisplayattribute.h
+    attributes/entityhiddenattribute.cpp attributes/entityhiddenattribute.h
+    attributes/favoritecollectionattribute.cpp attributes/favoritecollectionattribute.h
+    attributes/indexpolicyattribute.cpp attributes/indexpolicyattribute.h
+    attributes/persistentsearchattribute.cpp attributes/persistentsearchattribute.h
+    attributes/specialcollectionattribute.cpp attributes/specialcollectionattribute.h
+    attributes/tagattribute.cpp attributes/tagattribute.h
 )
 
 ecm_generate_headers(AkonadiCore_attributes_CC_HEADERS
@@ -225,23 +225,23 @@ ecm_generate_headers(AkonadiCore_attributes_CC_HEADERS
 )
 
 set(akonadicore_models_SRCS
-    models/agentfilterproxymodel.cpp
-    models/agentinstancemodel.cpp
-    models/agenttypemodel.cpp
+    models/agentfilterproxymodel.cpp models/agentfilterproxymodel.h
+    models/agentinstancemodel.cpp models/agentinstancemodel.h
+    models/agenttypemodel.cpp models/agenttypemodel.h
     models/collectionfilterproxymodel.cpp
-    models/entitymimetypefiltermodel.cpp
-    models/entityorderproxymodel.cpp
-    models/entityrightsfiltermodel.cpp
-    models/entitytreemodel.cpp
-    models/entitytreemodel_p.cpp
-    models/favoritecollectionsmodel.cpp
-    models/recursivecollectionfilterproxymodel.cpp
-    models/selectionproxymodel.cpp
-    models/statisticsproxymodel.cpp
+    models/entitymimetypefiltermodel.cpp models/entitymimetypefiltermodel.h
+    models/entityorderproxymodel.cpp models/entityorderproxymodel.h
+    models/entityrightsfiltermodel.cpp models/entityrightsfiltermodel.h
+    models/entitytreemodel.cpp models/entitytreemodel.h
+    models/entitytreemodel_p.cpp models/entitytreemodel_p.h
+    models/favoritecollectionsmodel.cpp models/favoritecollectionsmodel.h
+    models/recursivecollectionfilterproxymodel.cpp models/recursivecollectionfilterproxymodel.h
+    models/selectionproxymodel.cpp models/selectionproxymodel.h
+    models/statisticsproxymodel.cpp models/statisticsproxymodel.h
     models/subscriptionmodel.cpp
-    models/tagmodel.cpp
-    models/tagmodel_p.cpp
-    models/trashfilterproxymodel.cpp
+    models/tagmodel.cpp models/tagmodel.h
+    models/tagmodel_p.cpp models/tagmodel_p.h
+    models/trashfilterproxymodel.cpp models/trashfilterproxymodel.h
 )
 
 ecm_generate_headers(AkonadiCore_models_CC_HEADERS
@@ -294,7 +294,7 @@ set(akonadicore_jobs_SRCS
     jobs/relationdeletejob.cpp
     jobs/searchcreatejob.cpp
     jobs/searchresultjob.cpp
-    jobs/specialcollectionsdiscoveryjob.cpp
+    jobs/specialcollectionsdiscoveryjob.cpp jobs/specialcollectionsdiscoveryjob.h
     jobs/specialcollectionshelperjobs.cpp
     jobs/specialcollectionsrequestjob.cpp
     jobs/subscriptionjob.cpp

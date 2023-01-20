@@ -24,10 +24,10 @@ macro(add_akonadi_demo _source)
 endmacro()
 
 # demo applications
-add_akonadi_demo(itemdumper.cpp)
+add_akonadi_demo(itemdumper.cpp itemdumper.h)
 add_akonadi_demo(subscriber.cpp)
-add_akonadi_demo(agentinstancewidgettest.cpp)
-add_akonadi_demo(agenttypewidgettest.cpp)
+add_akonadi_demo(agentinstancewidgettest.cpp agentinstancewidgettest.h)
+add_akonadi_demo(agenttypewidgettest.cpp agenttypewidgettest.h)
 add_akonadi_demo(pluginloadertest.cpp)
 ##REACTIVATE
 #add_akonadi_demo(selftester.cpp)

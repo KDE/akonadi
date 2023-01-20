@@ -3,7 +3,7 @@ kde_enable_exceptions()
 
 set(etmtestapp_SRCS
   main.cpp
-  mainwindow.cpp
+  mainwindow.cpp mainwindow.h
 )
 
 add_executable(akonadi_etm_test_app ${etmtestapp_SRCS})

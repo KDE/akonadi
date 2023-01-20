@@ -2,10 +2,10 @@ kde_enable_exceptions()
 
 set(akonaditest_SRCS
   main.cpp
-  setup.cpp
+  setup.cpp setup.h
   config.cpp
-  shellscript.cpp
-  testrunner.cpp
+  shellscript.cpp shellscript.h
+  testrunner.cpp testrunner.h
 )
 
 ecm_qt_declare_logging_category(akonaditest_SRCS HEADER akonaditest_debug.h IDENTIFIER AKONADITEST_LOG CATEGORY_NAME org.kde.pim.akonaditest)

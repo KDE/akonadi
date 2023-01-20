@@ -8,7 +8,7 @@ add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_knut_resource\")
 # Disabled for now, resourcetester remained in kdepim-runtime
 #add_subdirectory( tests )
 
-set( knutresource_SRCS knutresource.cpp)
+set( knutresource_SRCS knutresource.cpp knutresource.h)
 
 ecm_qt_declare_logging_category(knutresource_SRCS HEADER knutresource_debug.h IDENTIFIER KNUTRESOURCE_LOG CATEGORY_NAME org.kde.pim.knut)
 
