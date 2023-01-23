@@ -16,6 +16,9 @@ Dependencies:
     'frameworks/kwindowsystem': '@latest'
     'frameworks/kxmlgui': '@latest'
     'frameworks/kcrash': '@latest'
+
+- 'on': ['Linux/Qt5', 'FreeBSD/Qt5']
+  'require':
     'network/kaccounts-integration': '@latest'
 
 - 'on': ['Linux/Qt6', 'FreeBSD/Qt6', 'Windows/Qt6']
