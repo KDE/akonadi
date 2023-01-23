@@ -83,12 +83,12 @@ PUBLIC
     Qt::DBus
     Qt::Widgets # for QApplication
     KF5::AkonadiCore
-    KF5::ConfigCore
-    KF5::ConfigGui # for KConfigSkeleton
+    KF${KF_MAJOR_VERSION}::ConfigCore
+    KF${KF_MAJOR_VERSION}::ConfigGui # for KConfigSkeleton
 PRIVATE
     KF5::AkonadiPrivate
     KF5::AkonadiWidgets
-    KF5::I18n
+    KF${KF_MAJOR_VERSION}::I18n
     Qt::Network
     akonadi_shared
 )

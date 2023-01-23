@@ -436,17 +436,17 @@ kde_target_enable_exceptions(KF5AkonadiCore PUBLIC)
 
 target_link_libraries(KF5AkonadiCore
 PUBLIC
-    KF5::CoreAddons # for KJob
-    KF5::ItemModels
+    KF${KF_MAJOR_VERSION}::CoreAddons # for KJob
+    KF${KF_MAJOR_VERSION}::ItemModels
     Qt::Gui # for QColor
 PRIVATE
     Qt::Network
     Qt::Widgets
     KF5::AkonadiPrivate
-    KF5::KIOCore
-    KF5::I18n
-    KF5::IconThemes
-    KF5::ConfigCore
+    KF${KF_MAJOR_VERSION}::KIOCore
+    KF${KF_MAJOR_VERSION}::I18n
+    KF${KF_MAJOR_VERSION}::IconThemes
+    KF${KF_MAJOR_VERSION}::ConfigCore
     KF5AkonadiPrivate
     akonadi_shared
 )

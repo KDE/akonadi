@@ -29,7 +29,7 @@ ecm_mark_nongui_executable(akonadictl)
 target_link_libraries(akonadictl
     akonadi_shared
     KF5AkonadiPrivate
-    KF5::CoreAddons
+    KF${KF_MAJOR_VERSION}::CoreAddons
     Qt::Core
     Qt::DBus
 )

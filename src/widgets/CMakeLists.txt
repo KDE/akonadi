@@ -169,18 +169,18 @@ target_include_directories(KF5AkonadiWidgets INTERFACE "$<INSTALL_INTERFACE:${Ak
 target_link_libraries(KF5AkonadiWidgets
 PUBLIC
     KF5::AkonadiCore
-    KF5::ItemModels
+    KF${KF_MAJOR_VERSION}::ItemModels
     Qt::Widgets
-    KF5::ConfigWidgets
+    KF${KF_MAJOR_VERSION}::ConfigWidgets
 PRIVATE
-    KF5::KIOCore
-    KF5::I18n
-    KF5::IconThemes
-    KF5::XmlGui
-    KF5::ItemViews
+    KF${KF_MAJOR_VERSION}::KIOCore
+    KF${KF_MAJOR_VERSION}::I18n
+    KF${KF_MAJOR_VERSION}::IconThemes
+    KF${KF_MAJOR_VERSION}::XmlGui
+    KF${KF_MAJOR_VERSION}::ItemViews
     Qt::Sql
     KF5::AkonadiPrivate
-    KF5::WindowSystem
+    KF${KF_MAJOR_VERSION}::WindowSystem
 )
 
 set_target_properties(KF5AkonadiWidgets PROPERTIES

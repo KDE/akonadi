@@ -285,7 +285,7 @@ set_target_properties(akonadiserver PROPERTIES MACOSX_BUNDLE FALSE)
 set_target_properties(akonadiserver PROPERTIES OUTPUT_NAME akonadiserver)
 target_link_libraries(akonadiserver
     libakonadiserver
-    KF5::CoreAddons
+    KF${KF_MAJOR_VERSION}::CoreAddons
 )
 
 install(TARGETS akonadiserver

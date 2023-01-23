@@ -40,7 +40,7 @@ add_executable(akonadi-firstrun
     firstrunner.cpp
     ${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp
 )
-target_link_libraries( akonadi-firstrun  Qt::Test Qt::Core KF5::AkonadiCore KF5::AkonadiPrivate KF5::ConfigCore Qt::Widgets)
+target_link_libraries( akonadi-firstrun  Qt::Test Qt::Core KF5::AkonadiCore KF5::AkonadiPrivate KF${KF_MAJOR_VERSION}::ConfigCore Qt::Widgets)
 
 add_akonadi_test(itemhydratest.cpp itemhydratest.h)
 add_akonadi_test(itemtest.cpp itemtest.h)
@@ -100,7 +100,7 @@ add_akonadi_isolated_test(SOURCE collectionmovetest.cpp)
 add_akonadi_isolated_test(
     SOURCE  collectionsynctest.cpp
     ADDITIONAL_SOURCES ${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp
-    LINK_LIBRARIES KF5::I18n
+    LINK_LIBRARIES KF${KF_MAJOR_VERSION}::I18n
 )
 add_akonadi_isolated_test(SOURCE itemsynctest.cpp)
 add_akonadi_isolated_test(SOURCE linktest.cpp)
@@ -119,7 +119,7 @@ add_akonadi_isolated_test(SOURCE collectionmodifytest.cpp)
 
 add_akonadi_isolated_test(SOURCE gidtest.cpp gidtest.h)
 add_akonadi_isolated_test(SOURCE lazypopulationtest.cpp)
-add_akonadi_isolated_test(SOURCE favoriteproxytest.cpp LINK_LIBRARIES KF5::ConfigCore)
+add_akonadi_isolated_test(SOURCE favoriteproxytest.cpp LINK_LIBRARIES KF${KF_MAJOR_VERSION}::ConfigCore)
 # FIXME: this is constantly failing due to broken search: re-enable once the new search code is merged
 #add_akonadi_isolated_test(
 #    SOURCE itemsearchjobtest.cpp searchjobtest.h

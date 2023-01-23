@@ -10,7 +10,7 @@ add_executable(akonadi_etm_test_app ${etmtestapp_SRCS})
 
 target_link_libraries(akonadi_etm_test_app
   KF5::AkonadiWidgets
-  KF5::I18n
+  KF${KF_MAJOR_VERSION}::I18n
   akonaditestfake
   Qt::Test
 )

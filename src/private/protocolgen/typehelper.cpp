@@ -12,7 +12,11 @@
 
 bool TypeHelper::isNumericType(const QString &name)
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     const int metaTypeId = QMetaType::type(qPrintable(name));
+#else
+    const int metaTypeId = QMetaType::fromName(qPrintable(name)).id();
+#endif
     if (metaTypeId == -1) {
         return false;
     }
@@ -36,7 +40,11 @@ bool TypeHelper::isNumericType(const QString &name)
 
 bool TypeHelper::isBoolType(const QString &name)
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     const int metaTypeId = QMetaType::type(qPrintable(name));
+#else
+    const int metaTypeId = QMetaType::fromName(qPrintable(name)).id();
+#endif
     if (metaTypeId == -1) {
         return false;
     }

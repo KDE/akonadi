@@ -21,7 +21,7 @@ target_link_libraries(akonadi_shared
 PUBLIC
     KF5AkonadiPrivate
     Qt::Core
-    KF5::Crash
+    KF${KF_MAJOR_VERSION}::Crash
 )
 
 ecm_generate_headers(shared_CC_HEADERS

@@ -42,7 +42,7 @@ set_target_properties(akonadi2xml PROPERTIES MACOSX_BUNDLE FALSE)
 
 target_link_libraries(akonadi2xml
     KF5::AkonadiXml
-    KF5::I18n
+    KF${KF_MAJOR_VERSION}::I18n
     Qt::Widgets # for QApplication
 )
 
@@ -60,7 +60,7 @@ PUBLIC
     KF5::AkonadiCore
     Qt::Xml
 PRIVATE
-    KF5::I18n
+    KF${KF_MAJOR_VERSION}::I18n
 )
 if (LIBXML2_FOUND)
     target_link_libraries(KF5AkonadiXml PRIVATE LibXml2::LibXml2)

@@ -42,7 +42,11 @@ size_t typeSize(const QString &typeName)
     }
     auto it = typeSizeLookup.find(tn);
     if (it == typeSizeLookup.end()) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         const auto typeId = QMetaType::type(tn);
+#else
+        const auto typeId = QMetaType::fromName(tn).id();
+#endif
         const int size = QMetaType(typeId).sizeOf();
         // for types of unknown size int
         it = typeSizeLookup.insert(tn, size ? size_t(size) : sizeof(int));

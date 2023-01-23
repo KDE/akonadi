@@ -19,7 +19,7 @@ macro(add_akonadi_demo _source)
   target_link_libraries(${_name}
         KF5AkonadiCore
         KF5AkonadiWidgets
-        KF5::I18n
+        KF${KF_MAJOR_VERSION}::I18n
   )
 endmacro()
 
