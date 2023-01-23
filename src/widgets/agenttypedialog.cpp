@@ -12,7 +12,6 @@
 #include <QVBoxLayout>
 
 #include <KConfigGroup>
-#include <KFilterProxySearchLine>
 #include <KLocalizedString>
 #include <KSharedConfig>
 #include <QLineEdit>
