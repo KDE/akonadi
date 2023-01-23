@@ -248,7 +248,7 @@ if(BUILD_DESIGNERPLUGIN)
 
     ecm_add_qtdesignerplugin(akonadiwidgets
         NAME AkonadiWidgets
-        OUTPUT_NAME akonadiwidgets
+        OUTPUT_NAME akonadi${QT_MAJOR_VERSION}widgets
         WIDGETS
         Akonadi::AgentInstanceWidget
         Akonadi::EntityTreeView
