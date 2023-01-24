@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-14 16:34+0000\n"
+"POT-Creation-Date: 2023-01-24 00:59+0000\n"
 "PO-Revision-Date: 2023-01-16 18:10+0100\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
 "Language-Team: fr\n"
@@ -676,7 +676,7 @@ msgstr "La configuration de %1 est déjà ouverte ailleurs."
 msgid "Failed to register %1 configuration dialog."
 msgstr "Impossible de déclarer la boîte de dialogue de configuration de %1."
 
-#: widgets/agenttypedialog.cpp:67
+#: widgets/agenttypedialog.cpp:66
 #, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"

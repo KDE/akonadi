@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-14 16:34+0000\n"
+"POT-Creation-Date: 2023-01-24 00:59+0000\n"
 "PO-Revision-Date: 2023-01-15 04:05+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
@@ -654,7 +654,7 @@ msgstr "%1-ის მორგების ფანჯარა უკვე �
 msgid "Failed to register %1 configuration dialog."
 msgstr "%1 კონფიგურაციის ფანჯრის რეგისტრაციის შეცდომა."
 
-#: widgets/agenttypedialog.cpp:67
+#: widgets/agenttypedialog.cpp:66
 #, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"

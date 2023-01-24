@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-14 16:34+0000\n"
+"POT-Creation-Date: 2023-01-24 00:59+0000\n"
 "PO-Revision-Date: 2023-01-14 23:59+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -662,7 +662,7 @@ msgstr "«%1» konfiguratzekoa jada beste nonbait irekita dago."
 msgid "Failed to register %1 configuration dialog."
 msgstr "Huts egin du «%1» konfiguratzeko elkarrizketa-koadroa erregistratzeak."
 
-#: widgets/agenttypedialog.cpp:67
+#: widgets/agenttypedialog.cpp:66
 #, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"

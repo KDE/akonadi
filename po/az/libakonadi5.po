@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-14 16:34+0000\n"
+"POT-Creation-Date: 2023-01-24 00:59+0000\n"
 "PO-Revision-Date: 2022-07-31 23:12+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -661,7 +661,7 @@ msgstr "%1 üçün tənzimləmə artıq başqa bir yerdə açılıb."
 msgid "Failed to register %1 configuration dialog."
 msgstr "%1 tənzimləmə dialoqunun qeydiyyatı baş tutmadı."
 
-#: widgets/agenttypedialog.cpp:67
+#: widgets/agenttypedialog.cpp:66
 #, fuzzy, kde-format
 #| msgid "&Configure Agent Instance"
 msgctxt "@title:window"

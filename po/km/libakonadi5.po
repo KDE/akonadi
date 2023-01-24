@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-14 16:34+0000\n"
+"POT-Creation-Date: 2023-01-24 00:59+0000\n"
 "PO-Revision-Date: 2012-07-11 10:23+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -677,7 +677,7 @@ msgstr ""
 msgid "Failed to register %1 configuration dialog."
 msgstr "មិន​អាច​បង្កើត​ធាតុ​ភ្នាក់ងារ​បាន​ឡើយ ។"
 
-#: widgets/agenttypedialog.cpp:67
+#: widgets/agenttypedialog.cpp:66
 #, fuzzy, kde-format
 #| msgid "&Configure Agent Instance"
 msgctxt "@title:window"

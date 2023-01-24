@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Youssef Chahibi <chahibi@gmail.com>, 2007.
 # Safa Alfulaij <safa1996alfulaij@gmail.com>, 2018.
-# Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2022.
+# Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-14 16:34+0000\n"
-"PO-Revision-Date: 2022-10-10 19:05+0400\n"
+"POT-Creation-Date: 2023-01-24 00:59+0000\n"
+"PO-Revision-Date: 2023-01-23 20:03+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -656,12 +656,11 @@ msgstr "الضبط لـ%1 مفتوح في مكان أخر."
 msgid "Failed to register %1 configuration dialog."
 msgstr "فشل في تسجيل حواري ضبط %1."
 
-#: widgets/agenttypedialog.cpp:67
-#, fuzzy, kde-format
-#| msgid "&Configure Agent Instance"
+#: widgets/agenttypedialog.cpp:66
+#, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
-msgstr "ا&ضبط سيرورة الوسيط"
+msgstr "اضبط الحساب"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format

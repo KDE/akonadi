@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-14 16:34+0000\n"
+"POT-Creation-Date: 2023-01-24 00:59+0000\n"
 "PO-Revision-Date: 2022-12-29 14:39+0200\n"
 "Last-Translator: Stelios <sstavra@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -663,7 +663,7 @@ msgstr "Η διαμόρφωση για το %1 είναι ήδη ανοιχτή 
 msgid "Failed to register %1 configuration dialog."
 msgstr "Αποτυχία εγγραφής %1 διαλόγου διαμόρφωσης."
 
-#: widgets/agenttypedialog.cpp:67
+#: widgets/agenttypedialog.cpp:66
 #, fuzzy, kde-format
 #| msgid "&Configure Agent Instance"
 msgctxt "@title:window"
