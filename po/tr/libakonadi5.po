@@ -8,13 +8,13 @@
 # Ozan Çağlayan <ozan@pardus.org.tr>, 2010.
 # Volkan Gezer <volkangezer@gmail.com>, 2013, 2014, 2015.
 # Kaan Ozdincer <kaanozdincer@gmail.com>, 2014.
-# Emir SARI <emir_sari@icloud.com>, 2022.
+# Emir SARI <emir_sari@icloud.com>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-16 00:47+0000\n"
-"PO-Revision-Date: 2022-11-24 16:58+0300\n"
+"PO-Revision-Date: 2023-01-31 01:22+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.08.3\n"
+"X-Generator: Lokalize 22.12.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -288,8 +288,8 @@ msgid ""
 "The protocol version of the Akonadi server is incompatible. Make sure you "
 "have a compatible version installed."
 msgstr ""
-"Akonadi sunucu protokolünün sürümü uyumsuz. Uygun sürümü yüklediğinizden "
-"emin olun."
+"Akonadi sunucu protokolünün sürümü uyumsuz. Uygun sürümü kurduğunuzdan emin "
+"olun."
 
 #: core/jobs/job.cpp:341
 #, kde-format
@@ -755,7 +755,7 @@ msgid ""
 "means that those <b>data will be lost</b>. Are you sure you want to proceed?"
 msgstr ""
 "'%1' koleksiyonu, Uzak Kimliksiz %2 öge içeriyor. Bu ögeler, büyük "
-"olasılıkla uzak sunuuya hiçbir zaman yüklenmedi; bundan dolayı bunları "
+"olasılıkla uzak sunucuya hiçbir zaman yüklenmedi; bundan dolayı bunları "
 "temizlemek <b>bu verinin kaybolacağı</b> anlamına gelir. Sürdürmek "
 "istediğinize emin misiniz?"
 
@@ -1244,9 +1244,9 @@ msgid ""
 "The following drivers are installed: %2.\n"
 "Make sure the required driver is installed."
 msgstr ""
-"QtSQL sürücüsü '%1' geçerli Akonadi sunucu yapılandırması için gerekiyor.\n"
-"Şu sürücüler yüklü: %2.\n"
-"Gerekli sürücünün yüklü olduğundan emin olun."
+"QtSQL sürücüsü '%1', geçerli Akonadi sunucu yapılandırması için gerekiyor.\n"
+"Şu sürücüler kurulu: %2.\n"
+"Gerekli sürücünün kurulmuş olduğundan emin olun."
 
 #: widgets/selftestdialog.cpp:198
 #, kde-format
@@ -1509,7 +1509,7 @@ msgid ""
 "the Akonadi server installed."
 msgstr ""
 "'akonadictl' uygulamasının $PATH içerisinden erişilebilir olması gerekiyor. "
-"Akonadi sunucusunu yüklediğinizden emin olun."
+"Akonadi sunucusunu kurduğunuzdan emin olun."
 
 #: widgets/selftestdialog.cpp:396
 #, kde-format
