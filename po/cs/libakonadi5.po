@@ -3,14 +3,14 @@
 # Vít Pelčák <vit@pelcak.org>, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020.
 # Lukáš Tinkl <ltinkl@redhat.com>, 2011, 2012.
 # Tomáš Chvátal <tomas.chvatal@gmail.com>, 2012.
-# Vit Pelcak <vit@pelcak.org>, 2021.
+# Vit Pelcak <vit@pelcak.org>, 2021, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-16 00:47+0000\n"
-"PO-Revision-Date: 2021-09-15 22:42+0200\n"
+"PO-Revision-Date: 2023-02-02 14:37+0100\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 21.08.1\n"
+"X-Generator: Lokalize 22.12.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -603,7 +603,7 @@ msgstr "Nelze vytvořit instanci agenta: %1"
 #, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
-msgstr ""
+msgstr "Vytvoření instance agenta selhalo"
 
 #: widgets/agentactionmanager.cpp:60
 #, kde-format
@@ -620,7 +620,7 @@ msgstr "Opravdu si přejete smazat vybranou instanci agenta?"
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
-msgstr ""
+msgstr "%1 Nastavení"
 
 #: widgets/agentconfigurationdialog.cpp:89
 #, kde-format
@@ -790,7 +790,7 @@ msgstr "Nelze vytvořit složku: %1"
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
-msgstr ""
+msgstr "Vytvoření složky selhalo"
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
 #, kde-format
@@ -958,7 +958,7 @@ msgstr "Otevřít dialog sbírky"
 #, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
-msgstr ""
+msgstr "Vyberte sbírku"
 
 #: widgets/conflictresolvedialog.cpp:129
 #, kde-format
@@ -2130,9 +2130,9 @@ msgstr[2] "Opravdu si přejete smazat %1 složky a všechny jejich podsložky?"
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Smazat složku?"
+msgstr[1] "Smazat složky?"
+msgstr[2] "Smazat složky?"
 
 #: widgets/standardactionmanager.cpp:361
 #, kde-format
@@ -2143,7 +2143,7 @@ msgstr "Nelze smazat složku: %1"
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
-msgstr ""
+msgstr "Smazání složky selhalo"
 
 #: widgets/standardactionmanager.cpp:364
 #, kde-format
@@ -2164,9 +2164,9 @@ msgstr[2] "Opravdu si přejete smazat %1 zvolených položek?"
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Smazat položku?"
+msgstr[1] "Smazat položky?"
+msgstr[2] "Smazat položky?"
 
 #: widgets/standardactionmanager.cpp:370
 #, kde-format
@@ -2177,7 +2177,7 @@ msgstr "Nelze smazat položku: %1"
 #, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
-msgstr ""
+msgstr "Smazání položky selhalo"
 
 #: widgets/standardactionmanager.cpp:373
 #, kde-format
@@ -2206,7 +2206,7 @@ msgstr "Nelze vytvořit zdroj: %1"
 #, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
-msgstr ""
+msgstr "Vytvoření zdroje selhalo"
 
 #: widgets/standardactionmanager.cpp:382
 #, kde-format
@@ -2244,7 +2244,7 @@ msgstr ""
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
-msgstr ""
+msgstr "Chyba při vytváření nové složky"
 
 #: widgets/standardactionmanager.cpp:744
 #, kde-format
@@ -2288,7 +2288,7 @@ msgstr ""
 #, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
-msgstr ""
+msgstr "Chyba registrace"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, SubscriptionDialog)
 #: widgets/subscriptiondialog.ui:14
@@ -2329,7 +2329,7 @@ msgstr "Nelze vytvořit značku"
 #, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
-msgstr ""
+msgstr "Při vytváření nové značky došlo k chybě"
 
 #: widgets/tageditwidget.cpp:165
 #, kde-kuit-format
@@ -2341,7 +2341,7 @@ msgstr "Opravdu si přejete odstranit značku <resource>%1</resource>?"
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
-msgstr ""
+msgstr "Odstranit značku"
 
 #: widgets/tageditwidget.cpp:195
 #, kde-format
