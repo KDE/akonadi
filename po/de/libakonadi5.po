@@ -1,5 +1,5 @@
 # Thomas Reitelbach <tr@erdfunkstelle.de>, 2007, 2008, 2009.
-# Frederik Schwarzer <schwarzer@kde.org>, 2008, 2010, 2011, 2012, 2013, 2015, 2016, 2018, 2020, 2022.
+# Frederik Schwarzer <schwarzer@kde.org>, 2008, 2010, 2011, 2012, 2013, 2015, 2016, 2018, 2020, 2022, 2023.
 # Burkhard Lück <lueck@hube-lueck.de>, 2008, 2009, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021.
 # Johannes Obermayr <johannesobermayr@gmx.de>, 2010.
 # Panagiotis Papadopoulos <pano_90@gmx.net>, 2010.
@@ -13,15 +13,15 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-24 00:59+0000\n"
-"PO-Revision-Date: 2022-11-13 23:04+0100\n"
-"Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
+"PO-Revision-Date: 2023-01-29 22:15+0100\n"
+"Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.08.2\n"
+"X-Generator: Lokalize 22.12.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -669,11 +669,10 @@ msgid "Failed to register %1 configuration dialog."
 msgstr "Die Registrierung des Einrichtungsdialogs %1 ist fehlgeschlagen."
 
 #: widgets/agenttypedialog.cpp:66
-#, fuzzy, kde-format
-#| msgid "&Configure Agent Instance"
+#, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
-msgstr "Agent-Instanz &konfigurieren"
+msgstr "Zugang einrichten"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
