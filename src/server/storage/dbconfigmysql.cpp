@@ -400,7 +400,7 @@ bool DbConfigMysql::startInternalServer()
             return false;
         }
 
-        connect(mDatabaseProcess, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), this, &DbConfigMysql::processFinished);
+        connect(mDatabaseProcess, &QProcess::finished, this, &DbConfigMysql::processFinished);
 
         // wait until mysqld has created the socket file (workaround for QTBUG-47475 in Qt5.5.0)
         int counter = 50; // avoid an endless loop in case mysqld terminated

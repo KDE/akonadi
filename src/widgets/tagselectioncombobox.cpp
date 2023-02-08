@@ -135,7 +135,7 @@ public:
                 q->setEditText(getEditText(selection));
                 Q_EMIT q->selectionChanged(tagsFromSelection<Tag::List>(selection, TagModel::TagRole));
             });
-            q->connect(q, qOverload<int>(&QComboBox::activated), selectionModel.get(), [this](int i) {
+            q->connect(q, &QComboBox::activated, selectionModel.get(), [this](int i) {
                 if (q->view()->isVisible()) {
                     const auto index = tagModel->index(i, 0);
                     toggleItem(index);

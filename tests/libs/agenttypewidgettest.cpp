@@ -30,7 +30,7 @@ Dialog::Dialog(QWidget *parent)
     mFilter->addItem(QStringLiteral("text/calendar"));
     mFilter->addItem(QStringLiteral("text/directory"));
     mFilter->addItem(QStringLiteral("message/rfc822"));
-    connect(mFilter, qOverload<int>(&QComboBox::activated), this, &Dialog::filterChanged);
+    connect(mFilter, &QComboBox::activated, this, &Dialog::filterChanged);
 
     mWidget = new Akonadi::AgentTypeWidget(this);
     connect(mWidget, &Akonadi::AgentTypeWidget::currentChanged, this, &Dialog::currentChanged);
