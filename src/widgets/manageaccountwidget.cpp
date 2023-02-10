@@ -177,7 +177,6 @@ void ManageAccountWidget::slotModifySelectedAccount()
 {
     Akonadi::AgentInstance instance = d->ui.mAccountList->currentAgentInstance();
     if (instance.isValid()) {
-        KWindowSystem::allowExternalProcessWindowActivation();
         QPointer<AgentConfigurationDialog> dlg(new AgentConfigurationDialog(instance, this));
         dlg->exec();
         delete dlg;
