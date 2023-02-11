@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-24 00:59+0000\n"
+"POT-Creation-Date: 2023-02-11 00:58+0000\n"
 "PO-Revision-Date: 2023-01-07 04:46+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
@@ -1133,12 +1133,12 @@ msgstr "Akonadi 個人資訊管理服務無法操作。"
 msgid "Details..."
 msgstr "詳情..."
 
-#: widgets/manageaccountwidget.cpp:200
+#: widgets/manageaccountwidget.cpp:199
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr "您確定要刪除帳號 '%1' 嗎？"
 
-#: widgets/manageaccountwidget.cpp:201
+#: widgets/manageaccountwidget.cpp:200
 #, kde-format
 msgid "Remove account?"
 msgstr "移除帳號？"
