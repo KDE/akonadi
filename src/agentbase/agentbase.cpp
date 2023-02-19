@@ -1018,7 +1018,7 @@ void AgentBase::setOnline(bool state)
     d->mDesiredOnlineState = state;
     if (!d->mSettings) {
         d->mSettings = new QSettings(ServerManager::agentConfigFilePath(identifier()), QSettings::IniFormat);
-        d->mSettings->setValue(QStringLiteral("Agent/Name"), d->mName);
+        d->mSettings->setValue(QStringLiteral("Agent/Name"), agentName());
     }
     d->mSettings->setValue(QStringLiteral("Agent/DesiredOnlineState"), state);
     setOnlineInternal(state);
