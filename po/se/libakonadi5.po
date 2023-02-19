@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-28 00:49+0000\n"
+"POT-Creation-Date: 2023-02-11 00:58+0000\n"
 "PO-Revision-Date: 2007-09-11 22:44+0200\n"
 "Last-Translator: Northern Sami translation team <i18n-sme@lister.ping.uio."
 "no>\n"
@@ -641,6 +641,12 @@ msgstr ""
 msgid "Failed to register %1 configuration dialog."
 msgstr ""
 
+#: widgets/agenttypedialog.cpp:66
+#, kde-format
+msgctxt "@title:window"
+msgid "Configure Account"
+msgstr ""
+
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
 msgid "minute"
@@ -1107,12 +1113,12 @@ msgstr ""
 msgid "Details..."
 msgstr "&Bienat"
 
-#: widgets/manageaccountwidget.cpp:200
+#: widgets/manageaccountwidget.cpp:199
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr ""
 
-#: widgets/manageaccountwidget.cpp:201
+#: widgets/manageaccountwidget.cpp:200
 #, kde-format
 msgid "Remove account?"
 msgstr ""
