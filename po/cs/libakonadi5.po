@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-11 00:58+0000\n"
+"POT-Creation-Date: 2023-02-20 00:58+0000\n"
 "PO-Revision-Date: 2023-02-02 14:37+0100\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -2417,7 +2417,7 @@ msgstr "Převádí podstrom sbírky Akonadi do souboru XML."
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
 msgstr "(c) 2009 Volker Krause <vkrause@kde.org>"
 
-#: xml/xmldocument.cpp:85
+#: xml/xmldocument.cpp:83
 #, kde-format
 msgid "No data loaded."
 msgstr "Nebyla načten žádná data."

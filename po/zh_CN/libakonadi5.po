@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-11 00:58+0000\n"
+"POT-Creation-Date: 2023-02-20 00:58+0000\n"
 "PO-Revision-Date: 2023-02-15 11:03\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -2395,7 +2395,7 @@ msgstr "转换 Akonadi 收藏子树为 XML 文件。"
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
 msgstr "(c) 2009 Volker Krause <vkrause@kde.org>"
 
-#: xml/xmldocument.cpp:85
+#: xml/xmldocument.cpp:83
 #, kde-format
 msgid "No data loaded."
 msgstr "数据未加载。"

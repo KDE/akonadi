@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-11 00:58+0000\n"
+"POT-Creation-Date: 2023-02-20 00:58+0000\n"
 "PO-Revision-Date: 2020-05-07 13:23+0300\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -2524,7 +2524,7 @@ msgstr "Akonadi kogu alampuu teisendamine XML-failiks."
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
 msgstr "(c) 2009: Volker Krause <vkrause@kde.org>"
 
-#: xml/xmldocument.cpp:85
+#: xml/xmldocument.cpp:83
 #, kde-format
 msgid "No data loaded."
 msgstr "Andmeid pole laaditud."
