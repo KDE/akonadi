@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-11 00:58+0000\n"
+"POT-Creation-Date: 2023-02-20 00:58+0000\n"
 "PO-Revision-Date: 2014-09-23 21:56+0200\n"
 "Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -2460,7 +2460,7 @@ msgstr "Gjør om et under-tre av en Akonadi-samling til en XML-fil."
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
 msgstr "© 2009 Volker Krause <vkrause@kde.org>"
 
-#: xml/xmldocument.cpp:85
+#: xml/xmldocument.cpp:83
 #, kde-format
 msgid "No data loaded."
 msgstr "Ingen data lastet inn."
