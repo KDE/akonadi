@@ -62,7 +62,8 @@ void KnutResource::load()
     }
 
     if (!QFile::exists(fileName)) {
-        fileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kf5/akonadi_knut_resource/knut-template.xml"));
+        fileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                          QStringLiteral("kf" QT_STRINGIFY(QT_VERSION_MAJOR)) + QStringLiteral("/akonadi_knut_resource/knut-template.xml"));
     }
 
     if (!mDocument.loadFile(fileName)) {
