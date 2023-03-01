@@ -59,7 +59,7 @@ PRIVATE
     Qt::Network
     LibLZMA::LibLZMA
 )
-generate_export_header(KPim${KF_MAJOR_VERSION}::AkonadiPrivate BASE_NAME akonadiprivate)
+generate_export_header(KPim${KF_MAJOR_VERSION}AkonadiPrivate BASE_NAME akonadiprivate)
 
 set_target_properties(KPim${KF_MAJOR_VERSION}AkonadiPrivate PROPERTIES
     VERSION ${AKONADI_VERSION}
