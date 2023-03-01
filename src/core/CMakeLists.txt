@@ -1,16 +1,16 @@
 if (BUILD_QCH)
     ecm_install_qch_export(
-        TARGETS KF5AkonadiCore_QCH
-        FILE KF5AkonadiCoreQchTargets.cmake
+        TARGETS KPim${KF_MAJOR_VERSION}AkonadiCore_QCH
+        FILE KPim${KF_MAJOR_VERSION}AkonadiCoreQchTargets.cmake
         DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
         COMPONENT Devel
     )
-    set(PACKAGE_INCLUDE_QCHTARGETS "include(\"\${CMAKE_CURRENT_LIST_DIR}/KF5AkonadiCoreQchTargets.cmake\")")
+    set(PACKAGE_INCLUDE_QCHTARGETS "include(\"\${CMAKE_CURRENT_LIST_DIR}/KPim${KF_MAJOR_VERSION}AkonadiCoreQchTargets.cmake\")")
 endif()
 configure_file(akonaditests_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonaditests_export.h")
 
 # base install include dir
-set(AkonadiCore_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR_KF}/AkonadiCore")
+set(AkonadiCore_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR}/KPim${KF_MAJOR_VERSION}/AkonadiCore")
 
 set(akonadicore_base_SRCS
     agentconfigurationbase.cpp
@@ -420,21 +420,22 @@ ecm_qt_declare_logging_category(akonadicore_SRCS HEADER akonadicore_debug.h IDEN
     )
 
 
-add_library(KF5AkonadiCore ${akonadicore_SRCS})
+add_library(KPim${KF_MAJOR_VERSION}AkonadiCore ${akonadicore_SRCS})
 #if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
-#    set_target_properties(KF5AkonadiCore PROPERTIES UNITY_BUILD ON)
+#    set_target_properties(KPim${KF_MAJOR_VERSION}AkonadiCore PROPERTIES UNITY_BUILD ON)
 #endif()
 
-generate_export_header(KF5AkonadiCore BASE_NAME akonadicore)
+generate_export_header(KPim${KF_MAJOR_VERSION}AkonadiCore BASE_NAME akonadicore)
 
-add_library(KF5::AkonadiCore ALIAS KF5AkonadiCore)
-target_include_directories(KF5AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${AkonadiCore_INSTALL_INCLUDEDIR}>")
-target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core;${Akonadi_BINARY_DIR}/src/private>")
-target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_BINARY_DIR};${Akonadi_SOURCE_DIR}/src/core/jobs;${Akonadi_SOURCE_DIR}/src/core/models;${Akonadi_SOURCE_DIR}/src/core/attributes>")
+add_library(KPim${KF_MAJOR_VERSION}::AkonadiCore ALIAS KPim${KF_MAJOR_VERSION}AkonadiCore)
+add_library(KF5::AkonadiCore ALIAS KPim${KF_MAJOR_VERSION}AkonadiCore)
+target_include_directories(KPim${KF_MAJOR_VERSION}AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${AkonadiCore_INSTALL_INCLUDEDIR}>")
+target_include_directories(KPim${KF_MAJOR_VERSION}AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core;${Akonadi_BINARY_DIR}/src/private>")
+target_include_directories(KPim${KF_MAJOR_VERSION}AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_BINARY_DIR};${Akonadi_SOURCE_DIR}/src/core/jobs;${Akonadi_SOURCE_DIR}/src/core/models;${Akonadi_SOURCE_DIR}/src/core/attributes>")
 
-kde_target_enable_exceptions(KF5AkonadiCore PUBLIC)
+kde_target_enable_exceptions(KPim${KF_MAJOR_VERSION}AkonadiCore PUBLIC)
 
-target_link_libraries(KF5AkonadiCore
+target_link_libraries(KPim${KF_MAJOR_VERSION}AkonadiCore
 PUBLIC
     KF${KF_MAJOR_VERSION}::CoreAddons # for KJob
     KF${KF_MAJOR_VERSION}::ItemModels
@@ -442,29 +443,28 @@ PUBLIC
 PRIVATE
     Qt::Network
     Qt::Widgets
-    KF5::AkonadiPrivate
     KF${KF_MAJOR_VERSION}::KIOCore
     KF${KF_MAJOR_VERSION}::I18n
     KF${KF_MAJOR_VERSION}::IconThemes
     KF${KF_MAJOR_VERSION}::ConfigCore
-    KF5AkonadiPrivate
+    KPim${KF_MAJOR_VERSION}::AkonadiPrivate
     akonadi_shared
 )
 
-set_target_properties(KF5AkonadiCore PROPERTIES
+set_target_properties(KPim${KF_MAJOR_VERSION}AkonadiCore PROPERTIES
     VERSION ${AKONADI_VERSION}
     SOVERSION ${AKONADI_SOVERSION}
     EXPORT_NAME AkonadiCore
 )
 
 ecm_generate_pri_file(BASE_NAME AkonadiCore
-    LIB_NAME KF5AkonadiCore
+    LIB_NAME KPim${KF_MAJOR_VERSION}AkonadiCore
     DEPS "KItemModels KCoreAddons" FILENAME_VAR PRI_FILENAME
 )
 
 install(TARGETS
-    KF5AkonadiCore
-    EXPORT KF5AkonadiTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
+    KPim${KF_MAJOR_VERSION}AkonadiCore
+    EXPORT KPim${KF_MAJOR_VERSION}AkonadiTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 install(FILES
@@ -504,9 +504,9 @@ install( FILES
 
 if (BUILD_QCH)
     ecm_add_qch(
-        KF5AkonadiCore_QCH
-        NAME KF5AkonadiCore
-        BASE_NAME KF5AkonadiCore
+        KPim${KF_MAJOR_VERSION}AkonadiCore_QCH
+        NAME KPim${KF_MAJOR_VERSION}AkonadiCore
+        BASE_NAME KPim${KF_MAJOR_VERSION}AkonadiCore
         VERSION ${PIM_VERSION}
         ORG_DOMAIN org.kde
         SOURCES # using only public headers, to cover only public API

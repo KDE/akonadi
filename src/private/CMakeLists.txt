@@ -44,14 +44,14 @@ ecm_qt_declare_logging_category(akonadiprivate_SRCS HEADER akonadiprivate_debug.
         EXPORT AKONADI
     )
 
-add_library(KF5AkonadiPrivate SHARED ${akonadiprivate_SRCS})
+add_library(KPim${KF_MAJOR_VERSION}AkonadiPrivate SHARED ${akonadiprivate_SRCS})
 if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
-    set_target_properties(KF5AkonadiPrivate PROPERTIES UNITY_BUILD ON)
+    set_target_properties(KPim${KF_MAJOR_VERSION}AkonadiPrivate PROPERTIES UNITY_BUILD ON)
 endif()
 
-add_library(KF5::AkonadiPrivate ALIAS KF5AkonadiPrivate)
-add_dependencies(KF5AkonadiPrivate generate_protocol)
-target_link_libraries(KF5AkonadiPrivate
+add_library(KPim${KF_MAJOR_VERSION}::AkonadiPrivate ALIAS KPim${KF_MAJOR_VERSION}AkonadiPrivate)
+add_dependencies(KPim${KF_MAJOR_VERSION}AkonadiPrivate generate_protocol)
+target_link_libraries(KPim${KF_MAJOR_VERSION}AkonadiPrivate
 PUBLIC
     Qt::Core
     Qt::DBus
@@ -59,20 +59,20 @@ PRIVATE
     Qt::Network
     LibLZMA::LibLZMA
 )
-generate_export_header(KF5AkonadiPrivate BASE_NAME akonadiprivate)
+generate_export_header(KPim${KF_MAJOR_VERSION}::AkonadiPrivate BASE_NAME akonadiprivate)
 
-set_target_properties(KF5AkonadiPrivate PROPERTIES
+set_target_properties(KPim${KF_MAJOR_VERSION}AkonadiPrivate PROPERTIES
     VERSION ${AKONADI_VERSION}
     SOVERSION ${AKONADI_SOVERSION}
     EXPORT_NAME AkonadiPrivate
 )
 
-target_include_directories(KF5AkonadiPrivate INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF}/Akonadi>")
+target_include_directories(KPim${KF_MAJOR_VERSION}AkonadiPrivate INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/KPim${KF_MAJOR_VERSION}/Akonadi>")
 
 
 install(TARGETS
-    KF5AkonadiPrivate
-    EXPORT KF5AkonadiTargets
+    KPim${KF_MAJOR_VERSION}AkonadiPrivate
+    EXPORT KPim${KF_MAJOR_VERSION}AkonadiTargets
     ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
@@ -91,5 +91,5 @@ install(FILES
     scope_p.h
     tristate_p.h
     compressionstream_p.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF}/Akonadi/akonadi/private
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/KPim${KF_MAJOR_VERSION}/Akonadi/akonadi/private
 )

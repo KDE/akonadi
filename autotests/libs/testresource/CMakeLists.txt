@@ -1,4 +1,4 @@
-include(${CMAKE_SOURCE_DIR}/KF5AkonadiMacros.cmake)
+include(${CMAKE_SOURCE_DIR}/KPimAkonadiMacros.cmake)
 
 kde_enable_exceptions()
 
@@ -25,10 +25,10 @@ add_executable(akonadi_knut_resource ${knutresource_SRCS})
 set_target_properties(akonadi_knut_resource PROPERTIES MACOSX_BUNDLE FALSE)
 
 target_link_libraries(akonadi_knut_resource
-  KF5::AkonadiXml
-  KF5::AkonadiCore
+  KPim${KF_MAJOR_VERSION}::AkonadiXml
+  KPim${KF_MAJOR_VERSION}::AkonadiCore
   KF${KF_MAJOR_VERSION}::KIOCore
-  KF5::AkonadiAgentBase
+  KPim${KF_MAJOR_VERSION}::AkonadiAgentBase
   Qt::Xml
   KF${KF_MAJOR_VERSION}::I18n
 )

@@ -21,7 +21,7 @@ set(akonadixml_SRCS
 )
 
 # base install include dir
-set(AkonadiXml_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR_KF}/AkonadiXml")
+set(AkonadiXml_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR}/KPim${KF_MAJOR_VERSION}/AkonadiXml")
 
 ecm_generate_headers(AkonadiXml_CC_HEADERS
     HEADER_NAMES
@@ -41,45 +41,45 @@ endif()
 set_target_properties(akonadi2xml PROPERTIES MACOSX_BUNDLE FALSE)
 
 target_link_libraries(akonadi2xml
-    KF5::AkonadiXml
+    KPim${KF_MAJOR_VERSION}::AkonadiXml
     KF${KF_MAJOR_VERSION}::I18n
     Qt::Widgets # for QApplication
 )
 
-add_library(KF5AkonadiXml ${akonadixml_SRCS})
+add_library(KPim${KF_MAJOR_VERSION}AkonadiXml ${akonadixml_SRCS})
 
-generate_export_header(KF5AkonadiXml BASE_NAME akonadi-xml)
+generate_export_header(KPim${KF_MAJOR_VERSION}AkonadiXml BASE_NAME akonadi-xml)
 
-add_library(KF5::AkonadiXml ALIAS KF5AkonadiXml)
+add_library(KPim${KF_MAJOR_VERSION}::AkonadiXml ALIAS KPim${KF_MAJOR_VERSION}AkonadiXml)
 
-target_include_directories(KF5AkonadiXml INTERFACE "$<INSTALL_INTERFACE:${AkonadiXml_INSTALL_INCLUDEDIR}>")
-target_include_directories(KF5AkonadiXml PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core>")
+target_include_directories(KPim${KF_MAJOR_VERSION}AkonadiXml INTERFACE "$<INSTALL_INTERFACE:${AkonadiXml_INSTALL_INCLUDEDIR}>")
+target_include_directories(KPim${KF_MAJOR_VERSION}AkonadiXml PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core>")
 
-target_link_libraries(KF5AkonadiXml
+target_link_libraries(KPim${KF_MAJOR_VERSION}AkonadiXml
 PUBLIC
-    KF5::AkonadiCore
+    KPim${KF_MAJOR_VERSION}::AkonadiCore
     Qt::Xml
 PRIVATE
     KF${KF_MAJOR_VERSION}::I18n
 )
 if (LIBXML2_FOUND)
-    target_link_libraries(KF5AkonadiXml PRIVATE LibXml2::LibXml2)
+    target_link_libraries(KPim${KF_MAJOR_VERSION}AkonadiXml PRIVATE LibXml2::LibXml2)
 endif()
 
-set_target_properties(KF5AkonadiXml PROPERTIES
+set_target_properties(KPim${KF_MAJOR_VERSION}AkonadiXml PROPERTIES
     VERSION ${AKONADI_VERSION}
     SOVERSION ${AKONADI_SOVERSION}
     EXPORT_NAME AkonadiXml
 )
 
 ecm_generate_pri_file(BASE_NAME AkonadiXml
-    LIB_NAME KF5AkonadiXml
+    LIB_NAME KPim${KF_MAJOR_VERSION}AkonadiXml
     DEPS "AkonadiCore QtXml" FILENAME_VAR PRI_FILENAME
 )
 
 install(TARGETS
-    KF5AkonadiXml
-    EXPORT KF5AkonadiTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
+    KPim${KF_MAJOR_VERSION}AkonadiXml
+    EXPORT KPim${KF_MAJOR_VERSION}AkonadiTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 install(TARGETS

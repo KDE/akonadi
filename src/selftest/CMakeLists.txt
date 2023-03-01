@@ -2,8 +2,8 @@ add_executable(akonadiselftest main.cpp)
 
 target_link_libraries(akonadiselftest
 PRIVATE
-    KF5::AkonadiWidgets
-    KF5::AkonadiPrivate
+    KPim${KF_MAJOR_VERSION}::AkonadiWidgets
+    KPim${KF_MAJOR_VERSION}::AkonadiPrivate
     KF${KF_MAJOR_VERSION}::I18n
     Qt::Sql
     Qt::Widgets

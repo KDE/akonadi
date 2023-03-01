@@ -27,11 +27,11 @@ generate_export_header(akonaditestfake BASE_NAME akonaditestfake)
 
 target_link_libraries(akonaditestfake
         Qt::DBus
-        KF5::AkonadiCore
+        KPim${KF_MAJOR_VERSION}::AkonadiCore
         Qt::Test
         Qt::Widgets
         Qt::Network
-        KF5::AkonadiPrivate
+        KPim${KF_MAJOR_VERSION}::AkonadiPrivate
         akonadi_shared
 )
 
@@ -40,7 +40,7 @@ add_executable(akonadi-firstrun
     firstrunner.cpp
     ${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp
 )
-target_link_libraries( akonadi-firstrun  Qt::Test Qt::Core KF5::AkonadiCore KF5::AkonadiPrivate KF${KF_MAJOR_VERSION}::ConfigCore Qt::Widgets)
+target_link_libraries( akonadi-firstrun  Qt::Test Qt::Core KPim${KF_MAJOR_VERSION}::AkonadiCore KPim${KF_MAJOR_VERSION}::AkonadiPrivate KF${KF_MAJOR_VERSION}::ConfigCore Qt::Widgets)
 
 add_akonadi_test(itemhydratest.cpp itemhydratest.h)
 add_akonadi_test(itemtest.cpp itemtest.h)
@@ -69,7 +69,7 @@ add_akonadi_test(cachepolicytest.cpp cachepolicytest.h)
 #add_executable( resourceschedulertest resourceschedulertest.cpp resourceschedulertest.h ../src/agentbase/resourcescheduler.cpp )
 #add_test( resourceschedulertest resourceschedulertest )
 #ecm_mark_as_test(akonadi-resourceschedulertest)
-#target_link_libraries(resourceschedulertest  Qt::Test KF5::AkonadiAgentBase)
+#target_link_libraries(resourceschedulertest  Qt::Test KPim${KF_MAJOR_VERSION}::AkonadiAgentBase)
 
 
 # testrunner tests
@@ -84,7 +84,7 @@ add_akonadi_isolated_test(SOURCE itemstoretest.cpp itemstoretest.h)
 add_akonadi_isolated_test(SOURCE itemdeletetest.cpp)
 add_akonadi_isolated_test(SOURCE entitycachetest.cpp)
 add_akonadi_isolated_test(SOURCE monitortest.cpp monitortest.h)
-#add_akonadi_isolated_test_advanced(monitorfiltertest.cpp "" "KF5::AkonadiPrivate")
+#add_akonadi_isolated_test_advanced(monitorfiltertest.cpp "" "KPim${KF_MAJOR_VERSION}::AkonadiPrivate")
 # FIXME: this is constantly failling due to broken search: re-enable once the new search code is merged
 #add_akonadi_isolated_test(SOURCE searchjobtest.cpp searchjobtest.h)
 add_akonadi_isolated_test(SOURCE changerecordertest.cpp)

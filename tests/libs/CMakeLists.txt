@@ -17,8 +17,8 @@ macro(add_akonadi_demo _source)
   get_filename_component(_name ${_source} NAME_WE)
   add_executable(${_name} ${_test})
   target_link_libraries(${_name}
-        KF5AkonadiCore
-        KF5AkonadiWidgets
+        KPim${KF_MAJOR_VERSION}::AkonadiCore
+        KPim${KF_MAJOR_VERSION}::AkonadiWidgets
         KF${KF_MAJOR_VERSION}::I18n
   )
 endmacro()

@@ -45,7 +45,7 @@ target_sources(akonadi_unittest_common PRIVATE
 
 
 target_link_libraries(akonadi_unittest_common
-    KF5AkonadiPrivate
+    KPim${KF_MAJOR_VERSION}::AkonadiPrivate
     libakonadiserver
     Qt::Core
     Qt::DBus
@@ -70,7 +70,7 @@ macro(add_server_test _source)
         akonadi_shared
         akonadi_unittest_common
         libakonadiserver
-        KF5AkonadiPrivate
+        KPim${KF_MAJOR_VERSION}::AkonadiPrivate
         Qt::Core
         Qt::DBus
         Qt::Test

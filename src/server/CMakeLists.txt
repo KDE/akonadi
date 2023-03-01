@@ -272,7 +272,7 @@ endif()
 
 target_link_libraries(libakonadiserver
     akonadi_shared
-    KF5AkonadiPrivate
+    KPim${KF_MAJOR_VERSION}::AkonadiPrivate
     Qt::Core
     Qt::Network
     Qt::Sql
@@ -300,7 +300,7 @@ install(FILES
 
 install(FILES
   search/abstractsearchplugin.h
-  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF}/AkonadiCore/akonadi
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR}/KPim${KF_MAJOR_VERSION}/AkonadiCore/akonadi
 )
 
 ## DBus XML files

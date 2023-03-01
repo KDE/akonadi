@@ -2,6 +2,6 @@ kde_enable_exceptions()
 
 add_library(akonadi_test_searchplugin MODULE testsearchplugin.cpp testsearchplugin.h)
 
-target_link_libraries(akonadi_test_searchplugin KF5::AkonadiCore)
+target_link_libraries(akonadi_test_searchplugin KPim${KF_MAJOR_VERSION}::AkonadiCore)
 
 install( TARGETS akonadi_test_searchplugin DESTINATION ${KDE_INSTALL_PLUGINDIR}/pim${QT_MAJOR_VERSION}/akonadi )

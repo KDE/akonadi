@@ -1,23 +1,23 @@
 if (BUILD_QCH)
     ecm_install_qch_export(
-        TARGETS KF5AkonadiWidgets_QCH
-        FILE KF5AkonadiWidgetsQchTargets.cmake
+        TARGETS KPim${KF_MAJOR_VERSION}AkonadiWidgets_QCH
+        FILE KPim${KF_MAJOR_VERSION}AkonadiWidgetsQchTargets.cmake
         DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
         COMPONENT Devel
     )
-    set(PACKAGE_INCLUDE_QCHTARGETS "include(\"\${CMAKE_CURRENT_LIST_DIR}/KF5AkonadiWidgetsQchTargets.cmake\")")
+    set(PACKAGE_INCLUDE_QCHTARGETS "include(\"\${CMAKE_CURRENT_LIST_DIR}/KPim${KF_MAJOR_VERSION}AkonadiWidgetsQchTargets.cmake\")")
 endif()
 
 configure_file(akonadiwidgetstests_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadiwidgetstests_export.h")
 
 # base install include dir
-set(AkonadiWidgets_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR_KF}/AkonadiWidgets")
+set(AkonadiWidgets_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR}/KPim${KF_MAJOR_VERSION}/AkonadiWidgets")
 
-add_library(KF5AkonadiWidgets)
-add_library(KF5::AkonadiWidgets ALIAS KF5AkonadiWidgets)
+add_library(KPim${KF_MAJOR_VERSION}AkonadiWidgets)
+add_library(KPim${KF_MAJOR_VERSION}::AkonadiWidgets ALIAS KPim${KF_MAJOR_VERSION}AkonadiWidgets)
 
 
-target_sources(KF5AkonadiWidgets PRIVATE
+target_sources(KPim${KF_MAJOR_VERSION}AkonadiWidgets PRIVATE
     actionstatemanager.cpp
     agentactionmanager.cpp
     agentconfigurationdialog.cpp
@@ -99,7 +99,7 @@ target_sources(KF5AkonadiWidgets PRIVATE
     dbaccess.h
     )
 
-ecm_qt_declare_logging_category(KF5AkonadiWidgets HEADER akonadiwidgets_debug.h IDENTIFIER AKONADIWIDGETS_LOG CATEGORY_NAME org.kde.pim.akonadiwidgets
+ecm_qt_declare_logging_category(KPim${KF_MAJOR_VERSION}AkonadiWidgets HEADER akonadiwidgets_debug.h IDENTIFIER AKONADIWIDGETS_LOG CATEGORY_NAME org.kde.pim.akonadiwidgets
         DESCRIPTION "akonadi (Akonadi Widget Library)"
         OLD_CATEGORY_NAMES akonadiwidgets_log
         EXPORT AKONADI
@@ -156,19 +156,19 @@ ecm_generate_headers(AkonadiWidgets_CC_HEADERS
     PREFIX Akonadi
 )
 
-ki18n_wrap_ui(KF5AkonadiWidgets ${akonadiwidgets_UI})
+ki18n_wrap_ui(KPim${KF_MAJOR_VERSION}AkonadiWidgets ${akonadiwidgets_UI})
 if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
-    set_target_properties(KF5AkonadiWidgets PROPERTIES UNITY_BUILD ON)
+    set_target_properties(KPim${KF_MAJOR_VERSION}AkonadiWidgets PROPERTIES UNITY_BUILD ON)
 endif()
 
-generate_export_header(KF5AkonadiWidgets BASE_NAME akonadiwidgets)
+generate_export_header(KPim${KF_MAJOR_VERSION}AkonadiWidgets BASE_NAME akonadiwidgets)
 
 
-target_include_directories(KF5AkonadiWidgets INTERFACE "$<INSTALL_INTERFACE:${AkonadiWidgets_INSTALL_INCLUDEDIR}>")
+target_include_directories(KPim${KF_MAJOR_VERSION}AkonadiWidgets INTERFACE "$<INSTALL_INTERFACE:${AkonadiWidgets_INSTALL_INCLUDEDIR}>")
 
-target_link_libraries(KF5AkonadiWidgets
+target_link_libraries(KPim${KF_MAJOR_VERSION}AkonadiWidgets
 PUBLIC
-    KF5::AkonadiCore
+    KPim${KF_MAJOR_VERSION}::AkonadiCore
     KF${KF_MAJOR_VERSION}::ItemModels
     Qt::Widgets
     KF${KF_MAJOR_VERSION}::ConfigWidgets
@@ -178,24 +178,24 @@ PRIVATE
     KF${KF_MAJOR_VERSION}::IconThemes
     KF${KF_MAJOR_VERSION}::XmlGui
     Qt::Sql
-    KF5::AkonadiPrivate
+    KPim${KF_MAJOR_VERSION}::AkonadiPrivate
     KF${KF_MAJOR_VERSION}::WindowSystem
 )
 
-set_target_properties(KF5AkonadiWidgets PROPERTIES
+set_target_properties(KPim${KF_MAJOR_VERSION}AkonadiWidgets PROPERTIES
     VERSION ${AKONADI_VERSION}
     SOVERSION ${AKONADI_SOVERSION}
     EXPORT_NAME AkonadiWidgets
 )
 
 ecm_generate_pri_file(BASE_NAME AkonadiWidgets
-    LIB_NAME KF5AkonadiWidgets
+    LIB_NAME KPim${KF_MAJOR_VERSION}AkonadiWidgets
     DEPS "AkonadiCore KItemModels" FILENAME_VAR PRI_FILENAME
 )
 
 install(TARGETS
-    KF5AkonadiWidgets
-    EXPORT KF5AkonadiTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
+    KPim${KF_MAJOR_VERSION}AkonadiWidgets
+    EXPORT KPim${KF_MAJOR_VERSION}AkonadiTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 install(FILES
@@ -254,8 +254,8 @@ if(BUILD_DESIGNERPLUGIN)
         Akonadi::TagSelectWidget
         Akonadi::ManageAccountWidget
         LINK_LIBRARIES
-        KF5::AkonadiCore
-        KF5::AkonadiWidgets
+        KPim${KF_MAJOR_VERSION}::AkonadiCore
+        KPim${KF_MAJOR_VERSION}::AkonadiWidgets
         INSTALL_DESTINATION "${KDE_INSTALL_QTPLUGINDIR}/designer"
         COMPONENT Devel
     )
@@ -263,9 +263,9 @@ endif()
 
 if (BUILD_QCH)
     ecm_add_qch(
-        KF5AkonadiWidgets_QCH
-        NAME KF5AkonadiWidgets
-        BASE_NAME KF5AkonadiWidgets
+        KPim${KF_MAJOR_VERSION}AkonadiWidgets_QCH
+        NAME KPim${KF_MAJOR_VERSION}AkonadiWidgets
+        BASE_NAME KPim${KF_MAJOR_VERSION}AkonadiWidgets
         VERSION ${PIM_VERSION}
         ORG_DOMAIN org.kde
         SOURCES # using only public headers, to cover only public API

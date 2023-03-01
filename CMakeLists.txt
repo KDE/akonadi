@@ -39,7 +39,6 @@ include(ECMSetupQtPluginMacroNames)
 
 include(AkonadiMacros)
 include(ECMAddQch)
-
 set(QT_REQUIRED_VERSION "5.15.2")
 if (QT_MAJOR_VERSION STREQUAL "6")
     set(QT_MIN_VERSION "6.4.0")
@@ -62,7 +61,7 @@ configure_file(akonadifull-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/akonadifu
 ecm_setup_version(PROJECT
     VARIABLE_PREFIX AKONADI
     VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi_version.h"
-    PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfigVersion.cmake"
+    PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KPim${KF_MAJOR_VERSION}AkonadiConfigVersion.cmake"
     SOVERSION 5)
 
 # Find packages
@@ -240,10 +239,10 @@ else()
     set(AKONADI_DBUS_INTERFACES_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_DBUSINTERFACEDIR}")
 endif()
 
-if (IS_ABSOLUTE "${KDE_INSTALL_INCLUDEDIR_KF}")
-    set(AKONADI_INCLUDE_DIR "${KDE_INSTALL_INCLUDEDIR_KF}")
+if (IS_ABSOLUTE "${KDE_INSTALL_INCLUDEDIR}/KPim${KF_MAJOR_VERSION}")
+    set(AKONADI_INCLUDE_DIR "${KDE_INSTALL_INCLUDEDIR}/KPim${KF_MAJOR_VERSION}")
 else()
-    set(AKONADI_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_INCLUDEDIR_KF}")
+    set(AKONADI_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_INCLUDEDIR}/KPim${KF_MAJOR_VERSION}")
 endif()
 
 ############### Build Options ###############
@@ -308,8 +307,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_ENABLE_EXCEPTIONS}")
 configure_file(config-akonadi.h.cmake ${Akonadi_BINARY_DIR}/config-akonadi.h)
 
 ############### build targets ###############
-set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5Akonadi")
-
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KPim${KF_MAJOR_VERSION}Akonadi")
+set(AKONADI_KF5_COMPAT FALSE)
 add_definitions(-DTRANSLATION_DOMAIN=\"libakonadi5\")
 
 include_directories(
@@ -352,8 +351,8 @@ update_xdg_mimetypes(${KDE_INSTALL_MIMEDIR})
 
 
 configure_package_config_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/KF5AkonadiConfig.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfig.cmake"
+    "${CMAKE_CURRENT_SOURCE_DIR}/KPimAkonadiConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/KPim${KF_MAJOR_VERSION}AkonadiConfig.cmake"
     INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
     PATH_VARS AKONADI_DBUS_INTERFACES_INSTALL_DIR
               AKONADI_INCLUDE_DIR
@@ -361,18 +360,18 @@ configure_package_config_file(
 )
 
 install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfigVersion.cmake"
-    "${CMAKE_CURRENT_SOURCE_DIR}/KF5AkonadiMacros.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/KPim${KF_MAJOR_VERSION}AkonadiConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/KPim${KF_MAJOR_VERSION}AkonadiConfigVersion.cmake"
+    "${CMAKE_CURRENT_SOURCE_DIR}/KPimAkonadiMacros.cmake"
     DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
     COMPONENT Devel
 )
 
 install(EXPORT
-    KF5AkonadiTargets
+    KPim${KF_MAJOR_VERSION}AkonadiTargets
     DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
-    FILE KF5AkonadiTargets.cmake
-    NAMESPACE KF5::)
+    FILE KPim${KF_MAJOR_VERSION}AkonadiTargets.cmake
+    NAMESPACE KPim${KF_MAJOR_VERSION}::)
 
 ecm_qt_install_logging_categories(
         EXPORT AKONADI
@@ -382,9 +381,46 @@ ecm_qt_install_logging_categories(
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadi_version.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF}/AkonadiCore COMPONENT Devel
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/KPim${KF_MAJOR_VERSION}/AkonadiCore COMPONENT Devel
 )
 
 kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
 ki18n_install(po)
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+
+#if (QT_MAJOR_VERSION STREQUAL "5")
+##
+# TODO: Backwards compatiblity. Remove in next major version
+##
+set(CMAKECONFIG_INSTALL_DIR_KF5 "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5Akonadi")
+set(AKONADI_KF5_COMPAT TRUE)
+configure_package_config_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/KPimAkonadiConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfig.cmake"
+    INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR_KF5}
+)
+
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfig.cmake"
+    DESTINATION "${CMAKECONFIG_INSTALL_DIR_KF5}"
+    COMPONENT Devel
+)
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/KPim${KF_MAJOR_VERSION}AkonadiConfigVersion.cmake"
+    RENAME "KF5AkonadiConfigVersion.cmake"
+    DESTINATION "${CMAKECONFIG_INSTALL_DIR_KF5}"
+    COMPONENT Devel
+)
+install(EXPORT KPim${KF_MAJOR_VERSION}AkonadiTargets
+    DESTINATION "${CMAKECONFIG_INSTALL_DIR_KF5}"
+    FILE KPim${KF_MAJOR_VERSION}AkonadiTargets.cmake
+    NAMESPACE KF5::
+)
+# remove KF5AkonadiMacros.cmake too
+install(FILES
+    "${CMAKE_CURRENT_SOURCE_DIR}/KF5AkonadiMacros.cmake"
+    DESTINATION "${CMAKECONFIG_INSTALL_DIR_KF5}"
+    COMPONENT Devel
+)
+
+#endif()

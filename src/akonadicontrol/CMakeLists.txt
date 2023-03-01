@@ -62,7 +62,7 @@ endif()
 
 target_link_libraries(akonadi_control
     akonadi_shared
-    KF5AkonadiPrivate
+    KPim${KF_MAJOR_VERSION}::AkonadiPrivate
     KF${KF_MAJOR_VERSION}::CoreAddons
     KF${KF_MAJOR_VERSION}::ConfigCore
     Qt::Core

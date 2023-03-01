@@ -1,10 +1,10 @@
 # base install include dir
-set(AkonadiAgentBase_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR_KF}/AkonadiAgentBase")
+set(AkonadiAgentBase_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR}/KPim${KF_MAJOR_VERSION}/AkonadiAgentBase")
 
-add_library(KF5AkonadiAgentBase)
-add_library(KF5::AkonadiAgentBase ALIAS KF5AkonadiAgentBase)
+add_library(KPim${KF_MAJOR_VERSION}AkonadiAgentBase)
+add_library(KPim${KF_MAJOR_VERSION}::AkonadiAgentBase ALIAS KPim${KF_MAJOR_VERSION}AkonadiAgentBase)
 
-ecm_qt_declare_logging_category(KF5AkonadiAgentBase HEADER akonadiagentbase_debug.h IDENTIFIER AKONADIAGENTBASE_LOG CATEGORY_NAME org.kde.pim.akonadiagentbase
+ecm_qt_declare_logging_category(KPim${KF_MAJOR_VERSION}AkonadiAgentBase HEADER akonadiagentbase_debug.h IDENTIFIER AKONADIAGENTBASE_LOG CATEGORY_NAME org.kde.pim.akonadiagentbase
         DESCRIPTION "akonadi (Akonadi AgentBase Library)"
         OLD_CATEGORY_NAMES akonadiagentbase_log
         EXPORT AKONADI
@@ -24,7 +24,7 @@ ecm_generate_headers(AkonadiAgentBase_CC_HEADERS
 )
 
 
-KCONFIG_ADD_KCFG_FILES(KF5AkonadiAgentBase resourcebasesettings.kcfgc)
+KCONFIG_ADD_KCFG_FILES(KPim${KF_MAJOR_VERSION}AkonadiAgentBase resourcebasesettings.kcfgc)
 
 qt_add_dbus_interfaces(akonadiagentbase_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Tracer.xml )
 
@@ -43,7 +43,7 @@ qt_add_dbus_adaptor(akonadiagentbase_SRCS ../interfaces/org.freedesktop.Akonadi.
 qt_add_dbus_adaptor(akonadiagentbase_SRCS ../interfaces/org.kde.Akonadi.Accounts.xml
     accountsintegration.h Akonadi::AccountsIntegration accountsadaptor Akonadi__AccountsAdaptor)
 
-target_sources(KF5AkonadiAgentBase PRIVATE
+target_sources(KPim${KF_MAJOR_VERSION}AkonadiAgentBase PRIVATE
     accountsintegration.cpp
     agentbase.cpp
     agentsearchinterface.cpp
@@ -70,48 +70,48 @@ target_sources(KF5AkonadiAgentBase PRIVATE
 
 
 if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
-    set_target_properties(KF5AkonadiAgentBase PROPERTIES UNITY_BUILD ON)
+    set_target_properties(KPim${KF_MAJOR_VERSION}AkonadiAgentBase PROPERTIES UNITY_BUILD ON)
 endif()
 
-generate_export_header(KF5AkonadiAgentBase BASE_NAME akonadiagentbase)
+generate_export_header(KPim${KF_MAJOR_VERSION}AkonadiAgentBase BASE_NAME akonadiagentbase)
 
 
-target_include_directories(KF5AkonadiAgentBase INTERFACE "$<INSTALL_INTERFACE:${AkonadiAgentBase_INSTALL_INCLUDEDIR}>")
+target_include_directories(KPim${KF_MAJOR_VERSION}AkonadiAgentBase INTERFACE "$<INSTALL_INTERFACE:${AkonadiAgentBase_INSTALL_INCLUDEDIR}>")
 
-target_link_libraries(KF5AkonadiAgentBase
+target_link_libraries(KPim${KF_MAJOR_VERSION}AkonadiAgentBase
 PUBLIC
     Qt::DBus
     Qt::Widgets # for QApplication
-    KF5::AkonadiCore
+    KPim${KF_MAJOR_VERSION}::AkonadiCore
     KF${KF_MAJOR_VERSION}::ConfigCore
     KF${KF_MAJOR_VERSION}::ConfigGui # for KConfigSkeleton
 PRIVATE
-    KF5::AkonadiPrivate
-    KF5::AkonadiWidgets
+    KPim${KF_MAJOR_VERSION}::AkonadiPrivate
+    KPim${KF_MAJOR_VERSION}::AkonadiWidgets
     KF${KF_MAJOR_VERSION}::I18n
     Qt::Network
     akonadi_shared
 )
 
 if (WITH_ACCOUNTS)
-    target_link_libraries(KF5AkonadiAgentBase PRIVATE KAccounts ${ACCOUNTSQT_LIBRARIES})
-    target_include_directories(KF5AkonadiAgentBase PRIVATE ${ACCOUNTSQT_INCLUDE_DIRS})
+    target_link_libraries(KPim${KF_MAJOR_VERSION}AkonadiAgentBase PRIVATE KAccounts ${ACCOUNTSQT_LIBRARIES})
+    target_include_directories(KPim${KF_MAJOR_VERSION}AkonadiAgentBase PRIVATE ${ACCOUNTSQT_INCLUDE_DIRS})
 endif()
 
-set_target_properties(KF5AkonadiAgentBase PROPERTIES
+set_target_properties(KPim${KF_MAJOR_VERSION}AkonadiAgentBase PROPERTIES
     VERSION ${AKONADI_VERSION}
     SOVERSION ${AKONADI_SOVERSION}
     EXPORT_NAME AkonadiAgentBase
 )
 
 ecm_generate_pri_file(BASE_NAME AkonadiAgentBase
-    LIB_NAME KF5AkonadiAgentBase
+    LIB_NAME KPim${KF_MAJOR_VERSION}AkonadiAgentBase
     DEPS "AkonadiCore AkonadiPrivate KConfigCore KConfigGui" FILENAME_VAR PRI_FILENAME
 )
 
 install(TARGETS
-    KF5AkonadiAgentBase
-    EXPORT KF5AkonadiTargets
+    KPim${KF_MAJOR_VERSION}AkonadiAgentBase
+    EXPORT KPim${KF_MAJOR_VERSION}AkonadiTargets
     ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
