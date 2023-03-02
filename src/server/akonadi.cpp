@@ -140,7 +140,7 @@ bool AkonadiServer::init()
     mControlWatcher =
         std::make_unique<QDBusServiceWatcher>(DBus::serviceName(DBus::Control), QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForUnregistration);
     connect(mControlWatcher.get(), &QDBusServiceWatcher::serviceUnregistered, this, [this]() {
-        qCCritical(AKONADISERVER_LOG) << "Control process died, committing suicide!";
+        qCCritical(AKONADISERVER_LOG) << "Control process died, exiting!";
         quit();
     });
 
