@@ -426,6 +426,7 @@ install(EXPORT KPim${KF_MAJOR_VERSION}AkonadiTargets
 # remove KF5AkonadiMacros.cmake too
 install(FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/KF5AkonadiMacros.cmake"
+    RENAME "KPimAkonadiMacros.cmake"
     DESTINATION "${CMAKECONFIG_INSTALL_DIR_KF5}"
     COMPONENT Devel
 )
