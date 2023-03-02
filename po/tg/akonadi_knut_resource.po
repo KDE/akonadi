@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-01-27 03:05+0100\n"
+"POT-Creation-Date: 2023-03-02 00:55+0000\n"
 "PO-Revision-Date: 2021-09-05 23:13-0700\n"
 "Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
 "Language-Team: Tajik Language Support\n"
@@ -22,63 +22,63 @@ msgstr ""
 msgid "No data file selected."
 msgstr "Ягон файли иттилоотӣ интихоб нашуд."
 
-#: knutresource.cpp:77
+#: knutresource.cpp:78
 #, kde-format
 msgid "File '%1' loaded successfully."
 msgstr "Файли '%1' бо муваффақият бор карда шуд."
 
-#: knutresource.cpp:104
+#: knutresource.cpp:105
 #, kde-format
 msgid "Select Data File"
 msgstr "Интихоб кардани файли иттилоотӣ"
 
-#: knutresource.cpp:106
+#: knutresource.cpp:107
 #, kde-format
 msgctxt "Filedialog filter for Akonadi data file"
 msgid "Akonadi Knut Data File"
 msgstr "Файли иттилоотии Akonadi Knut"
 
-#: knutresource.cpp:148 knutresource.cpp:168 knutresource.cpp:321
+#: knutresource.cpp:149 knutresource.cpp:169 knutresource.cpp:322
 #, kde-format
 msgid "No item found for remoteid %1"
 msgstr "Ягон ҷузъ барои муайянкунандаи дурдасти %1 ёфт нашуд"
 
-#: knutresource.cpp:186
+#: knutresource.cpp:187
 #, kde-format
 msgid "Parent collection not found in DOM tree."
 msgstr "Маҷмӯаи асосӣ дар дарахти DOM ёфт нашуд."
 
-#: knutresource.cpp:194
+#: knutresource.cpp:195
 #, kde-format
 msgid "Unable to write collection."
 msgstr "Ба маҷмӯа сабт карда нашуд."
 
-#: knutresource.cpp:206
+#: knutresource.cpp:207
 #, kde-format
 msgid "Modified collection not found in DOM tree."
 msgstr "Маҷмӯаи тағйирёфта дар дарахти DOM ёфт нашуд."
 
-#: knutresource.cpp:236
+#: knutresource.cpp:237
 #, kde-format
 msgid "Deleted collection not found in DOM tree."
 msgstr "Маҷмӯаи нестшуда дар дарахти DOM ёфт нашуд."
 
-#: knutresource.cpp:250 knutresource.cpp:308 knutresource.cpp:315
+#: knutresource.cpp:251 knutresource.cpp:309 knutresource.cpp:316
 #, kde-format
 msgid "Parent collection '%1' not found in DOM tree."
 msgstr "Маҷмӯаи асосии '%1' дар дарахти DOM ёфт нашуд."
 
-#: knutresource.cpp:258 knutresource.cpp:328
+#: knutresource.cpp:259 knutresource.cpp:329
 #, kde-format
 msgid "Unable to write item."
 msgstr "Ба ҷузъ сабт карда нашуд."
 
-#: knutresource.cpp:272
+#: knutresource.cpp:273
 #, kde-format
 msgid "Modified item not found in DOM tree."
 msgstr "Ҷузъи тағйирёфта дар дарахти DOM ёфт нашуд."
 
-#: knutresource.cpp:287
+#: knutresource.cpp:288
 #, kde-format
 msgid "Deleted item not found in DOM tree."
 msgstr "Ҷузъи нестшуда дар дарахти DOM ёфт нашуд."

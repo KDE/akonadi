@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi_knut_resource\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-01-27 03:05+0100\n"
+"POT-Creation-Date: 2023-03-02 00:55+0000\n"
 "PO-Revision-Date: 2010-01-18 20:14+0100\n"
 "Last-Translator: Stelios <sstavra@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -23,63 +23,63 @@ msgstr ""
 msgid "No data file selected."
 msgstr "Δεν επιλέχθηκε αρχείο δεδομένων."
 
-#: knutresource.cpp:77
+#: knutresource.cpp:78
 #, kde-format
 msgid "File '%1' loaded successfully."
 msgstr "Το αρχείο '%1' φορτώθηκε με επιτυχία."
 
-#: knutresource.cpp:104
+#: knutresource.cpp:105
 #, kde-format
 msgid "Select Data File"
 msgstr "Επιλογή αρχείου δεδομένων"
 
-#: knutresource.cpp:106
+#: knutresource.cpp:107
 #, kde-format
 msgctxt "Filedialog filter for Akonadi data file"
 msgid "Akonadi Knut Data File"
 msgstr "Αρχείο δεδομένων Knut του Akonadi"
 
-#: knutresource.cpp:148 knutresource.cpp:168 knutresource.cpp:321
+#: knutresource.cpp:149 knutresource.cpp:169 knutresource.cpp:322
 #, kde-format
 msgid "No item found for remoteid %1"
 msgstr "Δεν βρέθηκε αντικείμενο αναγνωριστικού απομακρυσμένης σύνδεσης %1"
 
-#: knutresource.cpp:186
+#: knutresource.cpp:187
 #, kde-format
 msgid "Parent collection not found in DOM tree."
 msgstr "Δεν βρέθηκε ιεραρχικά ανώτερη συλλογή στη δενδρική δομή DOM."
 
-#: knutresource.cpp:194
+#: knutresource.cpp:195
 #, kde-format
 msgid "Unable to write collection."
 msgstr "Αδυναμία εγγραφής συλλογής."
 
-#: knutresource.cpp:206
+#: knutresource.cpp:207
 #, kde-format
 msgid "Modified collection not found in DOM tree."
 msgstr "Δεν βρέθηκε τροποποιημένη συλλογή στη δενδρική δομή DOM."
 
-#: knutresource.cpp:236
+#: knutresource.cpp:237
 #, kde-format
 msgid "Deleted collection not found in DOM tree."
 msgstr "Δεν βρέθηκε διαγραμμένη συλλογή στη δενδρική δομή DOM."
 
-#: knutresource.cpp:250 knutresource.cpp:308 knutresource.cpp:315
+#: knutresource.cpp:251 knutresource.cpp:309 knutresource.cpp:316
 #, kde-format
 msgid "Parent collection '%1' not found in DOM tree."
 msgstr "Δεν βρέθηκε ιεραρχικά ανώτερη συλλογή '%1' στη δενδρική δομή DOM."
 
-#: knutresource.cpp:258 knutresource.cpp:328
+#: knutresource.cpp:259 knutresource.cpp:329
 #, kde-format
 msgid "Unable to write item."
 msgstr "Αδυναμία εγγραφής αντικειμένου."
 
-#: knutresource.cpp:272
+#: knutresource.cpp:273
 #, kde-format
 msgid "Modified item not found in DOM tree."
 msgstr "Δεν βρέθηκε τροποποιημένο αντικείμενο στη δενδρική δομή DOM."
 
-#: knutresource.cpp:287
+#: knutresource.cpp:288
 #, kde-format
 msgid "Deleted item not found in DOM tree."
 msgstr "Δεν βρέθηκε διαγραμμένο αντικείμενο στη δενδρική δομή DOM."

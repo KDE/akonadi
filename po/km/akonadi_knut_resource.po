@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi_knut_resource\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-01-27 03:05+0100\n"
+"POT-Creation-Date: 2023-03-02 00:55+0000\n"
 "PO-Revision-Date: 2010-11-29 09:02+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer <support@khmeros.info>\n"
@@ -20,63 +20,63 @@ msgstr ""
 msgid "No data file selected."
 msgstr "គ្មាន​ឯកសារ​ទិន្នន័យ​ដែល​បាន​ជ្រើស​ទេ ។"
 
-#: knutresource.cpp:77
+#: knutresource.cpp:78
 #, kde-format
 msgid "File '%1' loaded successfully."
 msgstr "បាន​ផ្ទុក​ឯកសារ '%1' ដោយ​ជោគជ័យ ។"
 
-#: knutresource.cpp:104
+#: knutresource.cpp:105
 #, kde-format
 msgid "Select Data File"
 msgstr "ជ្រើស​ឯកសារ​ទិន្នន័យ"
 
-#: knutresource.cpp:106
+#: knutresource.cpp:107
 #, kde-format
 msgctxt "Filedialog filter for Akonadi data file"
 msgid "Akonadi Knut Data File"
 msgstr "ឯកសារ​ទិន្នន័យ Akonadi Knut"
 
-#: knutresource.cpp:148 knutresource.cpp:168 knutresource.cpp:321
+#: knutresource.cpp:149 knutresource.cpp:169 knutresource.cpp:322
 #, kde-format
 msgid "No item found for remoteid %1"
 msgstr "រក​មិនឃើញ​ធាតុ​សម្រាប់ remoteid %1 ទេ"
 
-#: knutresource.cpp:186
+#: knutresource.cpp:187
 #, kde-format
 msgid "Parent collection not found in DOM tree."
 msgstr "សម្រាំង​មេ​រកមិនឃើញ​នៅ​ក្នុង​មែកធាង DOM ទេ ។"
 
-#: knutresource.cpp:194
+#: knutresource.cpp:195
 #, kde-format
 msgid "Unable to write collection."
 msgstr "មិនអាច​សរសេរ​​សម្រាំង​បាន​ទេ ។"
 
-#: knutresource.cpp:206
+#: knutresource.cpp:207
 #, kde-format
 msgid "Modified collection not found in DOM tree."
 msgstr "សម្រាំង​ដែលបានកែប្រែ​រក​មិនឃើញ​នៅ​ក្នុង​មែកធាង DOM ទេ ។"
 
-#: knutresource.cpp:236
+#: knutresource.cpp:237
 #, kde-format
 msgid "Deleted collection not found in DOM tree."
 msgstr "សម្រាំង​ដែល​បាន​លុប​រក​មិនឃើញ​នៅ​ក្នុង​មែកធាង DOM ទេ ។"
 
-#: knutresource.cpp:250 knutresource.cpp:308 knutresource.cpp:315
+#: knutresource.cpp:251 knutresource.cpp:309 knutresource.cpp:316
 #, kde-format
 msgid "Parent collection '%1' not found in DOM tree."
 msgstr "សម្រាំង​មេ '%1' រក​មិនឃើញ​នៅ​ក្នុង​មែកធាង DOM ទេ ។"
 
-#: knutresource.cpp:258 knutresource.cpp:328
+#: knutresource.cpp:259 knutresource.cpp:329
 #, kde-format
 msgid "Unable to write item."
 msgstr "មិនអាច​សរសេរ​ធាតុ​បាន​ទេ ។"
 
-#: knutresource.cpp:272
+#: knutresource.cpp:273
 #, kde-format
 msgid "Modified item not found in DOM tree."
 msgstr "ធាតុ​ដែលបានកែប្រែ​រក​មិនឃើញ​នៅ​ក្នុង​មែកធាង DOM ទេ ។"
 
-#: knutresource.cpp:287
+#: knutresource.cpp:288
 #, kde-format
 msgid "Deleted item not found in DOM tree."
 msgstr "ធាតុ​ដែល​បានលុប​រក​មិនឃើញ​នៅ​ក្នុង​មែកធាង DOM នោះ​ទេ ។"
