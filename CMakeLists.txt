@@ -394,17 +394,24 @@ feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 ##
 set(CMAKECONFIG_INSTALL_DIR_KF5 "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5Akonadi")
 set(AKONADI_KF5_COMPAT TRUE)
-configure_package_config_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/KPimAkonadiConfig.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfig.cmake"
-    INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR_KF5}
-)
-
+#configure_package_config_file(
+#    "${CMAKE_CURRENT_SOURCE_DIR}/KPimAkonadiConfig.cmake.in"
+#    "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfig.cmake"
+#    INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR_KF5}
+#)
 install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/KPim${KF_MAJOR_VERSION}AkonadiConfig.cmake"
+    RENAME "KF5AkonadiConfig.cmake"
     DESTINATION "${CMAKECONFIG_INSTALL_DIR_KF5}"
     COMPONENT Devel
 )
+
+
+#install(FILES
+#    "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfig.cmake"
+#    DESTINATION "${CMAKECONFIG_INSTALL_DIR_KF5}"
+#    COMPONENT Devel
+#)
 install(FILES
     "${CMAKE_CURRENT_BINARY_DIR}/KPim${KF_MAJOR_VERSION}AkonadiConfigVersion.cmake"
     RENAME "KF5AkonadiConfigVersion.cmake"
