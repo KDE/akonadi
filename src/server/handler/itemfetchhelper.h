@@ -74,7 +74,6 @@ private:
     QVariant extractQueryResult(const QSqlQuery &query, ItemQueryColumns column) const;
     bool isScopeLocal(const Scope &scope);
     DataStore *storageBackend() const;
-    static QByteArray relationsToByteArray(const Relation::List &relations);
 
 private:
     Connection *mConnection = nullptr;
