@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-20 00:58+0000\n"
-"PO-Revision-Date: 2022-07-29 11:21+0300\n"
+"PO-Revision-Date: 2022-11-22 12:28+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -614,8 +614,7 @@ msgid "Could not create agent instance: %1"
 msgstr "Agentti-instanssia ei voitu luoda: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "Agentti-instanssin luominen epäonnistui"
@@ -632,12 +631,10 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "Haluatko varmasti poistaa valitun agentti-instanssin?"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "%1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
-msgstr "Asetukset: %1|/|$[gen %1] asetukset"
+msgstr "%1 – asetukset"
 
 #: widgets/agentconfigurationdialog.cpp:89
 #, kde-format
@@ -819,8 +816,7 @@ msgid "Could not create folder: %1"
 msgstr "Kansiota ei voitu luoda: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
 msgstr "Kansion luominen epäonnistui"
@@ -986,9 +982,7 @@ msgid "Open collection dialog"
 msgstr "Avaa kokoelmaikkuna"
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select a collection"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "Valitse kokoelma"
@@ -2210,14 +2204,12 @@ msgstr[0] "Haluatko varmasti poistaa tämän kansion alikansioineen?"
 msgstr[1] "Haluatko varmasti poistaa %1 kansiota kaikkine alikansioineen?"
 
 #: widgets/standardactionmanager.cpp:359
-#, fuzzy, kde-format
-#| msgid "Delete Folder"
-#| msgid_plural "Delete %1 Folders"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "Poista kansio"
-msgstr[1] "Poista %1 kansiota"
+msgstr[0] "Poistetaanko kansio?"
+msgstr[1] "Poistetaanko kansiot?"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2225,8 +2217,7 @@ msgid "Could not delete folder: %1"
 msgstr "Kansiota ei voitu poistaa: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "Kansion poistaminen epäonnistui"
@@ -2245,14 +2236,12 @@ msgstr[0] "Haluatko varmasti poistaa valitun tietueen?"
 msgstr[1] "Haluatko varmasti poistaa %1 tietuetta?"
 
 #: widgets/standardactionmanager.cpp:368
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "Poista tietue"
-msgstr[1] "Poista %1 tietuetta"
+msgstr[0] "Poistetaanko tietue?"
+msgstr[1] "Poistetaanko tietueet?"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2260,8 +2249,7 @@ msgid "Could not delete item: %1"
 msgstr "Tietuetta ei voitu poistaa: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, fuzzy, kde-format
-#| msgid "Item deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "Tietueen poistaminen epäonnistui"
@@ -2290,8 +2278,7 @@ msgid "Could not create resource: %1"
 msgstr "Resurssia ei saatu luoduksi: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, fuzzy, kde-format
-#| msgid "Resource creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "Resurssin luominen epäonnistui"
@@ -2317,8 +2304,7 @@ msgid "Could not paste data: %1"
 msgstr "Tietoa ei voitu liittää: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, fuzzy, kde-format
-#| msgid "Paste failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Liittäminen epäonnistui"
@@ -2329,8 +2315,7 @@ msgid "We can not add \"/\" in folder name."
 msgstr "Kansion nimessä ei voi olla ”/”."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, fuzzy, kde-format
-#| msgid "Create new folder error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Uuden kansion luontivirhe"
@@ -2376,9 +2361,7 @@ msgid "Failed to update subscription: %1"
 msgstr "Tilauksen päivitys epäonnistui: %1"
 
 #: widgets/subscriptiondialog.cpp:97
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Subscription Error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Tilausvirhe"
@@ -2419,8 +2402,7 @@ msgid "Failed to create a new tag"
 msgstr "Uuden luokituksen luonti epäonnistui"
 
 #: widgets/tageditwidget.cpp:116
-#, fuzzy, kde-format
-#| msgid "An error occurred while creating a new tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Uutta luokitusta luotaessa tapahtui virhe"
@@ -2432,9 +2414,7 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Haluatko varmasti poistaa luokituksen <resource>%1</resource>?"
 
 #: widgets/tageditwidget.cpp:165
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Delete tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Poista luokitus"
