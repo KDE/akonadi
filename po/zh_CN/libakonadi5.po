@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-20 00:58+0000\n"
-"PO-Revision-Date: 2023-02-24 12:42\n"
+"PO-Revision-Date: 2023-03-11 04:55\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -14,8 +14,8 @@ msgstr ""
 "X-Crowdin-Project: kdeorg\n"
 "X-Crowdin-Project-ID: 269464\n"
 "X-Crowdin-Language: zh-CN\n"
-"X-Crowdin-File: /kf5-trunk/messages/akonadi/libakonadi5.pot\n"
-"X-Crowdin-File-ID: 3765\n"
+"X-Crowdin-File: /kf5-stable/messages/akonadi/libakonadi5.pot\n"
+"X-Crowdin-File-ID: 3177\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -648,10 +648,11 @@ msgid "Failed to register %1 configuration dialog."
 msgstr "注册 %1 配置对话框失败。"
 
 #: widgets/agenttypedialog.cpp:66
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "&Configure Agent Instance"
 msgctxt "@title:window"
 msgid "Configure Account"
-msgstr "配置账户"
+msgstr "配置代理实例(&C)"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
