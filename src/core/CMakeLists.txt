@@ -428,7 +428,6 @@ add_library(KPim${KF_MAJOR_VERSION}AkonadiCore ${akonadicore_SRCS})
 generate_export_header(KPim${KF_MAJOR_VERSION}AkonadiCore BASE_NAME akonadicore)
 
 add_library(KPim${KF_MAJOR_VERSION}::AkonadiCore ALIAS KPim${KF_MAJOR_VERSION}AkonadiCore)
-add_library(KF5::AkonadiCore ALIAS KPim${KF_MAJOR_VERSION}AkonadiCore)
 target_include_directories(KPim${KF_MAJOR_VERSION}AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${AkonadiCore_INSTALL_INCLUDEDIR}>")
 target_include_directories(KPim${KF_MAJOR_VERSION}AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core;${Akonadi_BINARY_DIR}/src/private>")
 target_include_directories(KPim${KF_MAJOR_VERSION}AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_BINARY_DIR};${Akonadi_SOURCE_DIR}/src/core/jobs;${Akonadi_SOURCE_DIR}/src/core/models;${Akonadi_SOURCE_DIR}/src/core/attributes>")
