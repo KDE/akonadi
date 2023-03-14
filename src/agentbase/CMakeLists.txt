@@ -112,7 +112,7 @@ ecm_generate_pri_file(BASE_NAME AkonadiAgentBase
 install(TARGETS
     KPim${KF_MAJOR_VERSION}AkonadiAgentBase
     EXPORT KPim${KF_MAJOR_VERSION}AkonadiTargets
-    ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
+    ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 install(FILES

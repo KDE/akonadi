@@ -14,5 +14,5 @@ target_link_libraries(asapcat
 )
 
 install(TARGETS asapcat
-        ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
+        ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )

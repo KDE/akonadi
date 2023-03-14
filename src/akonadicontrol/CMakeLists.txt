@@ -77,7 +77,7 @@ if (WITH_ACCOUNTS)
 endif()
 
 install(TARGETS akonadi_control
-        ${KF_INSTALL_TARGETS_DEFAULT_ARGS})
+        ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 configure_file(org.freedesktop.Akonadi.Control.service.cmake ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.Control.service)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.Control.service

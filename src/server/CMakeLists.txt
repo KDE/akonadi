@@ -289,7 +289,7 @@ target_link_libraries(akonadiserver
 )
 
 install(TARGETS akonadiserver
-        ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
+        ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 install(FILES
