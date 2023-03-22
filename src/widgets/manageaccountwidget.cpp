@@ -17,7 +17,6 @@
 
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KWindowSystem>
 #include <QAbstractItemDelegate>
 #include <QAbstractItemView>
 #include <QKeyEvent>
