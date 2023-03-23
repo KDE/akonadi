@@ -13,7 +13,6 @@ Dependencies:
     'frameworks/kitemmodels': '@latest'
     'frameworks/kio': '@latest'
     'frameworks/kwidgetsaddons': '@latest'
-    'frameworks/kwindowsystem': '@latest'
     'frameworks/kxmlgui': '@latest'
     'frameworks/kcrash': '@latest'
 
@@ -32,7 +31,6 @@ Dependencies:
     'frameworks/kitemmodels': '@latest-kf6'
     'frameworks/kio': '@latest-kf6'
     'frameworks/kwidgetsaddons': '@latest-kf6'
-    'frameworks/kwindowsystem': '@latest-kf6'
     'frameworks/kxmlgui': '@latest-kf6'
     'frameworks/kcrash': '@latest-kf6'
 

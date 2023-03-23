@@ -179,7 +179,6 @@ PRIVATE
     KF${KF_MAJOR_VERSION}::XmlGui
     Qt::Sql
     KPim${KF_MAJOR_VERSION}::AkonadiPrivate
-    KF${KF_MAJOR_VERSION}::WindowSystem
 )
 
 set_target_properties(KPim${KF_MAJOR_VERSION}AkonadiWidgets PROPERTIES
