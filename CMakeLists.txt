@@ -351,6 +351,7 @@ if (BUILD_QCH)
     ecm_install_qch_export(
         TARGETS KPim${KF_MAJOR_VERSION}AkonadiCore_QCH
         KPim${KF_MAJOR_VERSION}AkonadiWidgets_QCH
+        KPim${KF_MAJOR_VERSION}AkonadiAgent_QCH
         FILE KPim${KF_MAJOR_VERSION}AkonadiQchTargets.cmake
         DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
         COMPONENT Devel

@@ -138,3 +138,28 @@ install(FILES
     ${PRI_FILENAME}
     DESTINATION ${ECM_MKSPECS_INSTALL_DIR}
 )
+
+if (BUILD_QCH)
+    ecm_add_qch(
+        KPim${KF_MAJOR_VERSION}AkonadiAgent_QCH
+        NAME KPim${KF_MAJOR_VERSION}AkonadiAgent
+        BASE_NAME KPim${KF_MAJOR_VERSION}AkonadiAgent
+        VERSION ${PIM_VERSION}
+        ORG_DOMAIN org.kde
+        SOURCES # using only public headers, to cover only public API
+        ${AkonadiAgentBase_HEADERS}
+        #MD_MAINPAGE "${CMAKE_SOURCE_DIR}/README.md"
+        #IMAGE_DIRS "${CMAKE_SOURCE_DIR}/docs/pics"
+        LINK_QCHS
+            Qt${QT_MAJOR_VERSION}Core_QCH
+            Qt${QT_MAJOR_VERSION}Gui_QCH
+            Qt${QT_MAJOR_VERSION}Widgets_QCH
+        INCLUDE_DIRS
+            ${CMAKE_CURRENT_BINARY_DIR}
+        BLANK_MACROS
+            AKONADICORE_EXPORT
+        TAGFILE_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
+        QCH_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
+        COMPONENT Devel
+    )
+endif()
