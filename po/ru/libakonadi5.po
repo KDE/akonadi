@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-20 00:58+0000\n"
+"POT-Creation-Date: 2023-03-24 00:48+0000\n"
 "PO-Revision-Date: 2022-09-26 17:46+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -1182,13 +1182,13 @@ msgstr "Инфраструктура управления личной инфо�
 msgid "Details..."
 msgstr "Подробности…"
 
-#: widgets/manageaccountwidget.cpp:199
+#: widgets/manageaccountwidget.cpp:198
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr "Удалить учётную запись «%1»?"
 
 # BUGME: please remove question mark; please add ctxt @title:window --aspotashev
-#: widgets/manageaccountwidget.cpp:200
+#: widgets/manageaccountwidget.cpp:199
 #, kde-format
 msgid "Remove account?"
 msgstr "Удаление учётной записи"
