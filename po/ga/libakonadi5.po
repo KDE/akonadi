@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdepim/libakonadi.po\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-20 00:58+0000\n"
+"POT-Creation-Date: 2023-03-24 02:39+0000\n"
 "PO-Revision-Date: 2007-07-11 08:14-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -1170,13 +1170,13 @@ msgstr "Bainisteoir faisnéise phearsanta á thosú..."
 msgid "Details..."
 msgstr "Mionsonraí..."
 
-#: widgets/manageaccountwidget.cpp:199
+#: widgets/manageaccountwidget.cpp:198
 #, fuzzy, kde-format
 #| msgid "Do you really want to delete the search view '%1'?"
 msgid "Do you want to remove account '%1'?"
 msgstr "An bhfuil tú cinnte gur mian leat amharc cuardaigh '%1' a scriosadh?"
 
-#: widgets/manageaccountwidget.cpp:200
+#: widgets/manageaccountwidget.cpp:199
 #, kde-format
 msgid "Remove account?"
 msgstr ""

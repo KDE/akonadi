@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-20 00:58+0000\n"
+"POT-Creation-Date: 2023-03-24 02:39+0000\n"
 "PO-Revision-Date: 2007-07-27 15:55+0300\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian <i18n@mova.org>\n"
@@ -1141,12 +1141,12 @@ msgstr ""
 msgid "Details..."
 msgstr ""
 
-#: widgets/manageaccountwidget.cpp:199
+#: widgets/manageaccountwidget.cpp:198
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr ""
 
-#: widgets/manageaccountwidget.cpp:200
+#: widgets/manageaccountwidget.cpp:199
 #, kde-format
 msgid "Remove account?"
 msgstr ""
