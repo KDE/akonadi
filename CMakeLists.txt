@@ -347,7 +347,16 @@ install(FILES akonadi-mime.xml DESTINATION ${KDE_INSTALL_MIMEDIR})
 update_xdg_mimetypes(${KDE_INSTALL_MIMEDIR})
 
 ############### CMake Config Files ###############
-
+if (BUILD_QCH)
+    ecm_install_qch_export(
+        TARGETS KPim${KF_MAJOR_VERSION}AkonadiCore_QCH
+        KPim${KF_MAJOR_VERSION}AkonadiWidgets_QCH
+        FILE KPim${KF_MAJOR_VERSION}AkonadiQchTargets.cmake
+        DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+        COMPONENT Devel
+    )
+    set(PACKAGE_INCLUDE_QCHTARGETS "include(\"\${CMAKE_CURRENT_LIST_DIR}/KPim${KF_MAJOR_VERSION}AkonadiQchTargets.cmake\")")
+endif()
 
 configure_package_config_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/KPimAkonadiConfig.cmake.in"
@@ -422,12 +431,18 @@ install(EXPORT KPim${KF_MAJOR_VERSION}AkonadiTargets
     FILE KPim${KF_MAJOR_VERSION}AkonadiTargets.cmake
     NAMESPACE KF5::
 )
-# remove KF5AkonadiMacros.cmake too
+# rename KF5AkonadiMacros.cmake too
 install(FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/KF5AkonadiMacros.cmake"
     RENAME "KPimAkonadiMacros.cmake"
     DESTINATION "${CMAKECONFIG_INSTALL_DIR_KF5}"
     COMPONENT Devel
 )
-
+if (BUILD_QCH)
+    install(FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/KPim${KF_MAJOR_VERSION}AkonadiQchTargets.cmake"
+        DESTINATION "${CMAKECONFIG_INSTALL_DIR_KF5}"
+        COMPONENT Devel
+    )
+endif()
 #endif()
