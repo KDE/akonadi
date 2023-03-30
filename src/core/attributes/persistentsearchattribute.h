@@ -76,7 +76,7 @@ public:
     /**
      * Returns the query string used for this search.
      */
-    QString queryString() const;
+    Q_REQUIRED_RESULT QString queryString() const;
 
     /**
      * Sets the query string to be used for this search.
@@ -88,7 +88,7 @@ public:
      * Returns IDs of collections that will be queried
      * @since 4.13
      */
-    QVector<qint64> queryCollections() const;
+    Q_REQUIRED_RESULT QVector<qint64> queryCollections() const;
 
     /**
      * Sets collections to be queried.
@@ -147,7 +147,7 @@ public:
      *
      * @since 4.13
      */
-    bool isRecursive() const;
+    Q_REQUIRED_RESULT bool isRecursive() const;
 
     /// @cond PRIVATE
     QByteArray type() const override;

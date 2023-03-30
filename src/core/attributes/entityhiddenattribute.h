@@ -64,7 +64,7 @@ public:
     /**
      * Reimplemented from Attribute
      */
-    QByteArray type() const override;
+    Q_REQUIRED_RESULT QByteArray type() const override;
 
     /**
      * Reimplemented from Attribute
@@ -74,7 +74,7 @@ public:
     /**
      * Reimplemented from Attribute
      */
-    QByteArray serialized() const override;
+    Q_REQUIRED_RESULT QByteArray serialized() const override;
 
     /**
      * Reimplemented from Attribute

@@ -46,7 +46,7 @@ public:
     /**
      * Returns the special collections type of the collection.
      */
-    QByteArray collectionType() const;
+    Q_REQUIRED_RESULT QByteArray collectionType() const;
 
     /* reimpl */
     SpecialCollectionAttribute *clone() const override;

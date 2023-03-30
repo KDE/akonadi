@@ -58,12 +58,12 @@ public:
     /**
      * Returns the icon that should be used for this collection or item.
      */
-    QIcon icon() const;
+    Q_REQUIRED_RESULT QIcon icon() const;
 
     /**
      * Returns the icon name of the icon returned by icon().
      */
-    QString iconName() const;
+    Q_REQUIRED_RESULT QString iconName() const;
 
     /**
      * Sets the icon @p name for the active icon.
@@ -76,19 +76,19 @@ public:
      * Returns the icon that should be used for this collection or item when active.
      * @since 4.4
      */
-    QIcon activeIcon() const;
+    Q_REQUIRED_RESULT QIcon activeIcon() const;
 
     /**
      * Returns the icon name of an active item.
      * @since 4.4
      */
-    QString activeIconName() const;
+    Q_REQUIRED_RESULT QString activeIconName() const;
 
     /**
      * Returns the backgroundColor or an invalid color if none is set.
      * @since 4.4
      */
-    QColor backgroundColor() const;
+    Q_REQUIRED_RESULT QColor backgroundColor() const;
 
     /**
      * Sets the backgroundColor to @p color.
@@ -98,7 +98,7 @@ public:
     void setBackgroundColor(const QColor &color);
 
     /* reimpl */
-    QByteArray type() const override;
+    Q_REQUIRED_RESULT QByteArray type() const override;
     EntityDisplayAttribute *clone() const override;
     QByteArray serialized() const override;
     void deserialize(const QByteArray &data) override;
