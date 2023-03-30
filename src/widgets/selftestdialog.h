@@ -54,25 +54,25 @@ private:
         Warning,
         Error,
     };
-    QStandardItem *report(ResultType type, const KLocalizedString &summary, const KLocalizedString &details);
-    QVariant serverSetting(const QString &group, const char *key, const QVariant &def) const;
-    bool useStandaloneMysqlServer() const;
-    bool runProcess(const QString &app, const QStringList &args, QString &result) const;
+    AKONADIWIDGETS_NO_EXPORT QStandardItem *report(ResultType type, const KLocalizedString &summary, const KLocalizedString &details);
+    AKONADIWIDGETS_NO_EXPORT QVariant serverSetting(const QString &group, const char *key, const QVariant &def) const;
+    AKONADIWIDGETS_NO_EXPORT bool useStandaloneMysqlServer() const;
+    AKONADIWIDGETS_NO_EXPORT bool runProcess(const QString &app, const QStringList &args, QString &result) const;
 
-    void testSQLDriver();
-    void testMySQLServer();
-    void testMySQLServerLog();
-    void testMySQLServerConfig();
-    void testPSQLServer();
-    void testAkonadiCtl();
-    void testServerStatus();
-    void testProtocolVersion();
-    void testResources();
-    void testServerLog();
-    void testControlLog();
-    void testRootUser();
+    AKONADIWIDGETS_NO_EXPORT void testSQLDriver();
+    AKONADIWIDGETS_NO_EXPORT void testMySQLServer();
+    AKONADIWIDGETS_NO_EXPORT void testMySQLServerLog();
+    AKONADIWIDGETS_NO_EXPORT void testMySQLServerConfig();
+    AKONADIWIDGETS_NO_EXPORT void testPSQLServer();
+    AKONADIWIDGETS_NO_EXPORT void testAkonadiCtl();
+    AKONADIWIDGETS_NO_EXPORT void testServerStatus();
+    AKONADIWIDGETS_NO_EXPORT void testProtocolVersion();
+    AKONADIWIDGETS_NO_EXPORT void testResources();
+    AKONADIWIDGETS_NO_EXPORT void testServerLog();
+    AKONADIWIDGETS_NO_EXPORT void testControlLog();
+    AKONADIWIDGETS_NO_EXPORT void testRootUser();
 
-    QString createReport();
+    AKONADIWIDGETS_NO_EXPORT QString createReport();
 
     Ui::SelfTestDialog ui;
     QStandardItemModel *mTestModel = nullptr;

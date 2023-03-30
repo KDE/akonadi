@@ -58,13 +58,13 @@ public Q_SLOTS:
     void slotAddAccount();
 
 private Q_SLOTS:
-    void slotAccountSelected(const Akonadi::AgentInstance &current);
-    void slotRemoveSelectedAccount();
-    void slotRestartSelectedAccount();
-    void slotModifySelectedAccount();
+    AKONADIWIDGETS_NO_EXPORT void slotAccountSelected(const Akonadi::AgentInstance &current);
+    AKONADIWIDGETS_NO_EXPORT void slotRemoveSelectedAccount();
+    AKONADIWIDGETS_NO_EXPORT void slotRestartSelectedAccount();
+    AKONADIWIDGETS_NO_EXPORT void slotModifySelectedAccount();
 
 private:
-    void slotSearchAgentType(const QString &str);
+    AKONADIWIDGETS_NO_EXPORT void slotSearchAgentType(const QString &str);
 
 private:
     std::unique_ptr<ManageAccountWidgetPrivate> const d;
