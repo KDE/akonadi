@@ -27,20 +27,20 @@ class SearchQuery;
  * @code
  *
  * SearchQuery query;
- * query.addTerm( SearchTerm( "From", "user1@domain.example", SearchTerm::CondEqual ) );
- * query.addTerm( SearchTerm( "Date", QDateTime( QDate( 2014, 01, 27 ), QTime( 00, 00, 00 ) ), SearchTerm::CondGreaterThan );
+ * query.addTerm(SearchTerm("From", "user1@domain.example", SearchTerm::CondEqual));
+ * query.addTerm(SearchTerm("Date", QDateTime(QDate( 2014, 01, 27), QTime(00, 00, 00)), SearchTerm::CondGreaterThan);
  *
- * Akonadi::ItemSearchJob *job = new Akonadi::ItemSearchJob( query );
+ * auto job = new Akonadi::ItemSearchJob(query);
  * job->fetchScope().fetchFullPayload();
- * connect( job, SIGNAL(result(KJob*)), this, SLOT(searchResult(KJob*)) );
+ * connect(job, &Akonadi::ItemSearchJob::result, this, &MyClass::searchResult));
  *
  * ...
  *
- * MyClass::searchResult( KJob *job )
+ * MyClass::searchResult(KJob *job)
  * {
- *   Akonadi::ItemSearchJob *searchJob = qobject_cast<Akonadi::ItemSearchJob*>( job );
+ *   auto searchJob = qobject_cast<Akonadi::ItemSearchJob*>(job);
  *   const Akonadi::Item::List items = searchJob->items();
- *   for ( const Akonadi::Item &item : items ) {
+ *   for (const Akonadi::Item &item : items) {
  *     // extract the payload and do further stuff
  *   }
  * }
