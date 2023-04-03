@@ -5,7 +5,7 @@ project(Akonadi VERSION ${PIM_VERSION})
 
 
 # ECM setup
-set(KF_MIN_VERSION "5.104.0")
+set(KF_MIN_VERSION "5.105.0")
 
 find_package(ECM ${KF_MIN_VERSION} CONFIG REQUIRED)
 
