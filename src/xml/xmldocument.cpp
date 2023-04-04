@@ -143,8 +143,7 @@ bool Akonadi::XmlDocument::loadFile(const QString &fileName)
         return false;
     }
 
-    const QString &schemaFileName =
-        QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kf" QT_STRINGIFY(QT_VERSION_MAJOR) "/akonadi/akonadi-xml.xsd"));
+    const QString &schemaFileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kf6/akonadi/akonadi-xml.xsd"));
     XmlPtr<xmlDocPtr, xmlFreeDoc> schemaDoc(xmlReadFile(schemaFileName.toLocal8Bit().constData(), nullptr, XML_PARSE_NONET));
     if (!schemaDoc) {
         d->lastError = i18n("Schema definition could not be loaded and parsed.");

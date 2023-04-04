@@ -135,7 +135,7 @@ void SearchManager::loadSearchPlugins()
 
     const QStringList dirs = QCoreApplication::libraryPaths();
     for (const QString &pluginDir : dirs) {
-        const QString path(pluginDir + QStringLiteral("/pim" QT_STRINGIFY(QT_VERSION_MAJOR)) + QStringLiteral("/akonadi"));
+        const QString path(pluginDir + QStringLiteral("/pim6/akonadi"));
         QDir dir(path);
         const QStringList fileNames = dir.entryList(QDir::Files);
         qCDebug(AKONADISERVER_SEARCH_LOG) << "SEARCH MANAGER: searching in " << path << ":" << fileNames;
