@@ -33,14 +33,5 @@ endif()
 include(${CMAKE_CURRENT_LIST_DIR}/KPim6AkonadiTargets.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/KPimAkonadiMacros.cmake)
 
-if (@AKONADI_KF5_COMPAT@)
-    message(WARNING "\n"
-                    "************* DEPRECATION WARNING *************\n"
-		    "Using find_package(KF5Akonadi) and KF5::Akonadi targets is deprecated. "
-		    "Please use find_package(KPim6Akonadi) and KPim6::Akonadi instead. This backwards "
-                    "compatibility will be removed in the next major version.\n"
-                    "***********************************************\n")
-endif()
-
 @PACKAGE_SETUP_AUTOMOC_VARIABLES@
 @PACKAGE_INCLUDE_QCHTARGETS@
