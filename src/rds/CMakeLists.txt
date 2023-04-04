@@ -13,7 +13,7 @@ set_target_properties(akonadi_rds PROPERTIES MACOSX_BUNDLE FALSE)
 
 target_link_libraries(akonadi_rds
     akonadi_shared
-    KPim${KF_MAJOR_VERSION}::AkonadiPrivate
+    KPim6::AkonadiPrivate
     Qt::Core
     Qt::Network
 )

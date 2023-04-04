@@ -15,12 +15,12 @@ include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings NO_POLICY_SCOPE)
 
 set(QT_MIN_VERSION "5.15.0")
-find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} REQUIRED Core Network Gui)
+find_package(Qt6 ${QT_MIN_VERSION} REQUIRED Core Network Gui)
 
-find_package(KF5Config ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF6Config ${KF_MIN_VERSION} CONFIG REQUIRED)
 
 set(AKONADI_MIN_VERSION "5.16.0")
-find_package(KF5Akonadi ${AKONADI_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF6Akonadi ${AKONADI_MIN_VERSION} CONFIG REQUIRED)
 
 add_subdirectory(src)
 

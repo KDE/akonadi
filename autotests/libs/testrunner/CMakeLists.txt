@@ -13,10 +13,10 @@ ecm_qt_declare_logging_category(akonaditest_SRCS HEADER akonaditest_debug.h IDEN
 add_executable(akonaditest ${akonaditest_SRCS})
 
 target_link_libraries(akonaditest
-  KPim${KF_MAJOR_VERSION}::AkonadiPrivate
-  KPim${KF_MAJOR_VERSION}::AkonadiCore
-  KF${KF_MAJOR_VERSION}::I18n
-  KF${KF_MAJOR_VERSION}::ConfigCore
+  KPim6::AkonadiPrivate
+  KPim6::AkonadiCore
+  KF6::I18n
+  KF6::ConfigCore
   Qt::Xml
   Qt::DBus
   Qt::Widgets

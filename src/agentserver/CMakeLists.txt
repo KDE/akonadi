@@ -25,7 +25,7 @@ set_target_properties(akonadi_agent_server PROPERTIES MACOSX_BUNDLE FALSE)
 
 target_link_libraries(akonadi_agent_server
     akonadi_shared
-    KPim${KF_MAJOR_VERSION}::AkonadiPrivate
+    KPim6::AkonadiPrivate
     Qt::Core
     Qt::DBus
 )
@@ -47,7 +47,7 @@ set_target_properties(akonadi_agent_launcher PROPERTIES MACOSX_BUNDLE FALSE)
 
 target_link_libraries(akonadi_agent_launcher
     akonadi_shared
-    KPim${KF_MAJOR_VERSION}::AkonadiPrivate
+    KPim6::AkonadiPrivate
     Qt::Core
     Qt::Widgets
 )

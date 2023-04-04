@@ -245,7 +245,7 @@ public:
      *
      * This flag is useful to fetch a list of collections, where some might no longer be available.
      *
-     * @since KF5
+     * @since KF6
      */
     void setIgnoreRetrievalErrors(bool enabled);
 
@@ -253,7 +253,7 @@ public:
      * Returns whether retrieval errors should be ignored.
      *
      * @see setIgnoreRetrievalErrors()
-     * @since KF5
+     * @since KF6
      */
     Q_REQUIRED_RESULT bool ignoreRetrievalErrors() const;
 

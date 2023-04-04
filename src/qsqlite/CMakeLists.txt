@@ -10,8 +10,8 @@ set(QSQLITE_INSTALL_PREFIX "${KDE_INSTALL_PLUGINDIR}/sqldrivers")
 
 # TODO KF6: Use Qt6::CorePrivate and Qt6::SqlPrivate
 include_directories(
-    ${Qt${QT_MAJOR_VERSION}Core_PRIVATE_INCLUDE_DIRS}
-    ${Qt${QT_MAJOR_VERSION}Sql_PRIVATE_INCLUDE_DIRS}
+    ${Qt6Core_PRIVATE_INCLUDE_DIRS}
+    ${Qt6Sql_PRIVATE_INCLUDE_DIRS}
 )
 
 add_library(qsqlite3 SHARED ${QSqlite_SRCS} ${QSqlite_MOC_SRCS})

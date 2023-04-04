@@ -1,7 +1,7 @@
 configure_file(akonaditests_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonaditests_export.h")
 
 # base install include dir
-set(AkonadiCore_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR}/KPim${KF_MAJOR_VERSION}/AkonadiCore")
+set(AkonadiCore_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR}/KPim6/AkonadiCore")
 
 set(akonadicore_base_SRCS
     agentconfigurationbase.cpp
@@ -411,50 +411,50 @@ ecm_qt_declare_logging_category(akonadicore_SRCS HEADER akonadicore_debug.h IDEN
     )
 
 
-add_library(KPim${KF_MAJOR_VERSION}AkonadiCore ${akonadicore_SRCS})
+add_library(KPim6AkonadiCore ${akonadicore_SRCS})
 #if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
-#    set_target_properties(KPim${KF_MAJOR_VERSION}AkonadiCore PROPERTIES UNITY_BUILD ON)
+#    set_target_properties(KPim6AkonadiCore PROPERTIES UNITY_BUILD ON)
 #endif()
 
-generate_export_header(KPim${KF_MAJOR_VERSION}AkonadiCore BASE_NAME akonadicore)
+generate_export_header(KPim6AkonadiCore BASE_NAME akonadicore)
 
-add_library(KPim${KF_MAJOR_VERSION}::AkonadiCore ALIAS KPim${KF_MAJOR_VERSION}AkonadiCore)
-target_include_directories(KPim${KF_MAJOR_VERSION}AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${AkonadiCore_INSTALL_INCLUDEDIR}>")
-target_include_directories(KPim${KF_MAJOR_VERSION}AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core;${Akonadi_BINARY_DIR}/src/private>")
-target_include_directories(KPim${KF_MAJOR_VERSION}AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_BINARY_DIR};${Akonadi_SOURCE_DIR}/src/core/jobs;${Akonadi_SOURCE_DIR}/src/core/models;${Akonadi_SOURCE_DIR}/src/core/attributes>")
+add_library(KPim6::AkonadiCore ALIAS KPim6AkonadiCore)
+target_include_directories(KPim6AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${AkonadiCore_INSTALL_INCLUDEDIR}>")
+target_include_directories(KPim6AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core;${Akonadi_BINARY_DIR}/src/private>")
+target_include_directories(KPim6AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_BINARY_DIR};${Akonadi_SOURCE_DIR}/src/core/jobs;${Akonadi_SOURCE_DIR}/src/core/models;${Akonadi_SOURCE_DIR}/src/core/attributes>")
 
-kde_target_enable_exceptions(KPim${KF_MAJOR_VERSION}AkonadiCore PUBLIC)
+kde_target_enable_exceptions(KPim6AkonadiCore PUBLIC)
 
-target_link_libraries(KPim${KF_MAJOR_VERSION}AkonadiCore
+target_link_libraries(KPim6AkonadiCore
 PUBLIC
-    KF${KF_MAJOR_VERSION}::CoreAddons # for KJob
-    KF${KF_MAJOR_VERSION}::ItemModels
+    KF6::CoreAddons # for KJob
+    KF6::ItemModels
     Qt::Gui # for QColor
 PRIVATE
     Qt::Network
     Qt::Widgets
-    KF${KF_MAJOR_VERSION}::KIOCore
-    KF${KF_MAJOR_VERSION}::I18n
-    KF${KF_MAJOR_VERSION}::IconThemes
-    KF${KF_MAJOR_VERSION}::ConfigCore
-    KPim${KF_MAJOR_VERSION}::AkonadiPrivate
+    KF6::KIOCore
+    KF6::I18n
+    KF6::IconThemes
+    KF6::ConfigCore
+    KPim6::AkonadiPrivate
     akonadi_shared
 )
 
-set_target_properties(KPim${KF_MAJOR_VERSION}AkonadiCore PROPERTIES
+set_target_properties(KPim6AkonadiCore PROPERTIES
     VERSION ${AKONADI_VERSION}
     SOVERSION ${AKONADI_SOVERSION}
     EXPORT_NAME AkonadiCore
 )
 
 ecm_generate_pri_file(BASE_NAME AkonadiCore
-    LIB_NAME KPim${KF_MAJOR_VERSION}AkonadiCore
+    LIB_NAME KPim6AkonadiCore
     DEPS "KItemModels KCoreAddons" FILENAME_VAR PRI_FILENAME
 )
 
 install(TARGETS
-    KPim${KF_MAJOR_VERSION}AkonadiCore
-    EXPORT KPim${KF_MAJOR_VERSION}AkonadiTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
+    KPim6AkonadiCore
+    EXPORT KPim6AkonadiTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 install(FILES
@@ -494,9 +494,9 @@ install( FILES
 
 if (BUILD_QCH)
     ecm_add_qch(
-        KPim${KF_MAJOR_VERSION}AkonadiCore_QCH
-        NAME KPim${KF_MAJOR_VERSION}AkonadiCore
-        BASE_NAME KPim${KF_MAJOR_VERSION}AkonadiCore
+        KPim6AkonadiCore_QCH
+        NAME KPim6AkonadiCore
+        BASE_NAME KPim6AkonadiCore
         VERSION ${PIM_VERSION}
         ORG_DOMAIN org.kde
         SOURCES # using only public headers, to cover only public API
@@ -508,9 +508,9 @@ if (BUILD_QCH)
         #MD_MAINPAGE "${CMAKE_SOURCE_DIR}/README.md"
         #IMAGE_DIRS "${CMAKE_SOURCE_DIR}/docs/pics"
         LINK_QCHS
-            Qt${QT_MAJOR_VERSION}Core_QCH
-            Qt${QT_MAJOR_VERSION}Gui_QCH
-            Qt${QT_MAJOR_VERSION}Widgets_QCH
+            Qt6Core_QCH
+            Qt6Gui_QCH
+            Qt6Widgets_QCH
         INCLUDE_DIRS
             ${CMAKE_CURRENT_BINARY_DIR}
         BLANK_MACROS

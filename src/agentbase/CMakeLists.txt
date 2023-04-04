@@ -1,10 +1,10 @@
 # base install include dir
-set(AkonadiAgentBase_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR}/KPim${KF_MAJOR_VERSION}/AkonadiAgentBase")
+set(AkonadiAgentBase_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR}/KPim6/AkonadiAgentBase")
 
-add_library(KPim${KF_MAJOR_VERSION}AkonadiAgentBase)
-add_library(KPim${KF_MAJOR_VERSION}::AkonadiAgentBase ALIAS KPim${KF_MAJOR_VERSION}AkonadiAgentBase)
+add_library(KPim6AkonadiAgentBase)
+add_library(KPim6::AkonadiAgentBase ALIAS KPim6AkonadiAgentBase)
 
-ecm_qt_declare_logging_category(KPim${KF_MAJOR_VERSION}AkonadiAgentBase HEADER akonadiagentbase_debug.h IDENTIFIER AKONADIAGENTBASE_LOG CATEGORY_NAME org.kde.pim.akonadiagentbase
+ecm_qt_declare_logging_category(KPim6AkonadiAgentBase HEADER akonadiagentbase_debug.h IDENTIFIER AKONADIAGENTBASE_LOG CATEGORY_NAME org.kde.pim.akonadiagentbase
         DESCRIPTION "akonadi (Akonadi AgentBase Library)"
         OLD_CATEGORY_NAMES akonadiagentbase_log
         EXPORT AKONADI
@@ -24,7 +24,7 @@ ecm_generate_headers(AkonadiAgentBase_CC_HEADERS
 )
 
 
-KCONFIG_ADD_KCFG_FILES(KPim${KF_MAJOR_VERSION}AkonadiAgentBase resourcebasesettings.kcfgc)
+KCONFIG_ADD_KCFG_FILES(KPim6AkonadiAgentBase resourcebasesettings.kcfgc)
 
 qt_add_dbus_interfaces(akonadiagentbase_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Tracer.xml )
 
@@ -43,7 +43,7 @@ qt_add_dbus_adaptor(akonadiagentbase_SRCS ../interfaces/org.freedesktop.Akonadi.
 qt_add_dbus_adaptor(akonadiagentbase_SRCS ../interfaces/org.kde.Akonadi.Accounts.xml
     accountsintegration.h Akonadi::AccountsIntegration accountsadaptor Akonadi__AccountsAdaptor)
 
-target_sources(KPim${KF_MAJOR_VERSION}AkonadiAgentBase PRIVATE
+target_sources(KPim6AkonadiAgentBase PRIVATE
     accountsintegration.cpp
     agentbase.cpp
     agentsearchinterface.cpp
@@ -70,48 +70,48 @@ target_sources(KPim${KF_MAJOR_VERSION}AkonadiAgentBase PRIVATE
 
 
 if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
-    set_target_properties(KPim${KF_MAJOR_VERSION}AkonadiAgentBase PROPERTIES UNITY_BUILD ON)
+    set_target_properties(KPim6AkonadiAgentBase PROPERTIES UNITY_BUILD ON)
 endif()
 
-generate_export_header(KPim${KF_MAJOR_VERSION}AkonadiAgentBase BASE_NAME akonadiagentbase)
+generate_export_header(KPim6AkonadiAgentBase BASE_NAME akonadiagentbase)
 
 
-target_include_directories(KPim${KF_MAJOR_VERSION}AkonadiAgentBase INTERFACE "$<INSTALL_INTERFACE:${AkonadiAgentBase_INSTALL_INCLUDEDIR}>")
+target_include_directories(KPim6AkonadiAgentBase INTERFACE "$<INSTALL_INTERFACE:${AkonadiAgentBase_INSTALL_INCLUDEDIR}>")
 
-target_link_libraries(KPim${KF_MAJOR_VERSION}AkonadiAgentBase
+target_link_libraries(KPim6AkonadiAgentBase
 PUBLIC
     Qt::DBus
     Qt::Widgets # for QApplication
-    KPim${KF_MAJOR_VERSION}::AkonadiCore
-    KF${KF_MAJOR_VERSION}::ConfigCore
-    KF${KF_MAJOR_VERSION}::ConfigGui # for KConfigSkeleton
+    KPim6::AkonadiCore
+    KF6::ConfigCore
+    KF6::ConfigGui # for KConfigSkeleton
 PRIVATE
-    KPim${KF_MAJOR_VERSION}::AkonadiPrivate
-    KPim${KF_MAJOR_VERSION}::AkonadiWidgets
-    KF${KF_MAJOR_VERSION}::I18n
+    KPim6::AkonadiPrivate
+    KPim6::AkonadiWidgets
+    KF6::I18n
     Qt::Network
     akonadi_shared
 )
 
 if (WITH_ACCOUNTS)
-    target_link_libraries(KPim${KF_MAJOR_VERSION}AkonadiAgentBase PRIVATE KAccounts ${ACCOUNTSQT_LIBRARIES})
-    target_include_directories(KPim${KF_MAJOR_VERSION}AkonadiAgentBase PRIVATE ${ACCOUNTSQT_INCLUDE_DIRS})
+    target_link_libraries(KPim6AkonadiAgentBase PRIVATE KAccounts ${ACCOUNTSQT_LIBRARIES})
+    target_include_directories(KPim6AkonadiAgentBase PRIVATE ${ACCOUNTSQT_INCLUDE_DIRS})
 endif()
 
-set_target_properties(KPim${KF_MAJOR_VERSION}AkonadiAgentBase PROPERTIES
+set_target_properties(KPim6AkonadiAgentBase PROPERTIES
     VERSION ${AKONADI_VERSION}
     SOVERSION ${AKONADI_SOVERSION}
     EXPORT_NAME AkonadiAgentBase
 )
 
 ecm_generate_pri_file(BASE_NAME AkonadiAgentBase
-    LIB_NAME KPim${KF_MAJOR_VERSION}AkonadiAgentBase
+    LIB_NAME KPim6AkonadiAgentBase
     DEPS "AkonadiCore AkonadiPrivate KConfigCore KConfigGui" FILENAME_VAR PRI_FILENAME
 )
 
 install(TARGETS
-    KPim${KF_MAJOR_VERSION}AkonadiAgentBase
-    EXPORT KPim${KF_MAJOR_VERSION}AkonadiTargets
+    KPim6AkonadiAgentBase
+    EXPORT KPim6AkonadiTargets
     ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
@@ -141,9 +141,9 @@ install(FILES
 
 if (BUILD_QCH)
     ecm_add_qch(
-        KPim${KF_MAJOR_VERSION}AkonadiAgent_QCH
-        NAME KPim${KF_MAJOR_VERSION}AkonadiAgent
-        BASE_NAME KPim${KF_MAJOR_VERSION}AkonadiAgent
+        KPim6AkonadiAgent_QCH
+        NAME KPim6AkonadiAgent
+        BASE_NAME KPim6AkonadiAgent
         VERSION ${PIM_VERSION}
         ORG_DOMAIN org.kde
         SOURCES # using only public headers, to cover only public API
@@ -151,9 +151,9 @@ if (BUILD_QCH)
         #MD_MAINPAGE "${CMAKE_SOURCE_DIR}/README.md"
         #IMAGE_DIRS "${CMAKE_SOURCE_DIR}/docs/pics"
         LINK_QCHS
-            Qt${QT_MAJOR_VERSION}Core_QCH
-            Qt${QT_MAJOR_VERSION}Gui_QCH
-            Qt${QT_MAJOR_VERSION}Widgets_QCH
+            Qt6Core_QCH
+            Qt6Gui_QCH
+            Qt6Widgets_QCH
         INCLUDE_DIRS
             ${CMAKE_CURRENT_BINARY_DIR}
         BLANK_MACROS

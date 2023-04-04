@@ -272,7 +272,7 @@ endif()
 
 target_link_libraries(libakonadiserver
     akonadi_shared
-    KPim${KF_MAJOR_VERSION}::AkonadiPrivate
+    KPim6::AkonadiPrivate
     Qt::Core
     Qt::Network
     Qt::Sql
@@ -285,7 +285,7 @@ set_target_properties(akonadiserver PROPERTIES MACOSX_BUNDLE FALSE)
 set_target_properties(akonadiserver PROPERTIES OUTPUT_NAME akonadiserver)
 target_link_libraries(akonadiserver
     libakonadiserver
-    KF${KF_MAJOR_VERSION}::CoreAddons
+    KF6::CoreAddons
 )
 
 install(TARGETS akonadiserver
@@ -300,7 +300,7 @@ install(FILES
 
 install(FILES
   search/abstractsearchplugin.h
-  DESTINATION ${KDE_INSTALL_INCLUDEDIR}/KPim${KF_MAJOR_VERSION}/AkonadiCore/akonadi
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR}/KPim6/AkonadiCore/akonadi
 )
 
 ## DBus XML files

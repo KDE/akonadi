@@ -1,13 +1,13 @@
 configure_file(akonadiwidgetstests_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadiwidgetstests_export.h")
 
 # base install include dir
-set(AkonadiWidgets_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR}/KPim${KF_MAJOR_VERSION}/AkonadiWidgets")
+set(AkonadiWidgets_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR}/KPim6/AkonadiWidgets")
 
-add_library(KPim${KF_MAJOR_VERSION}AkonadiWidgets)
-add_library(KPim${KF_MAJOR_VERSION}::AkonadiWidgets ALIAS KPim${KF_MAJOR_VERSION}AkonadiWidgets)
+add_library(KPim6AkonadiWidgets)
+add_library(KPim6::AkonadiWidgets ALIAS KPim6AkonadiWidgets)
 
 
-target_sources(KPim${KF_MAJOR_VERSION}AkonadiWidgets PRIVATE
+target_sources(KPim6AkonadiWidgets PRIVATE
     actionstatemanager.cpp
     agentactionmanager.cpp
     agentconfigurationdialog.cpp
@@ -89,7 +89,7 @@ target_sources(KPim${KF_MAJOR_VERSION}AkonadiWidgets PRIVATE
     dbaccess.h
     )
 
-ecm_qt_declare_logging_category(KPim${KF_MAJOR_VERSION}AkonadiWidgets HEADER akonadiwidgets_debug.h IDENTIFIER AKONADIWIDGETS_LOG CATEGORY_NAME org.kde.pim.akonadiwidgets
+ecm_qt_declare_logging_category(KPim6AkonadiWidgets HEADER akonadiwidgets_debug.h IDENTIFIER AKONADIWIDGETS_LOG CATEGORY_NAME org.kde.pim.akonadiwidgets
         DESCRIPTION "akonadi (Akonadi Widget Library)"
         OLD_CATEGORY_NAMES akonadiwidgets_log
         EXPORT AKONADI
@@ -146,45 +146,45 @@ ecm_generate_headers(AkonadiWidgets_CC_HEADERS
     PREFIX Akonadi
 )
 
-ki18n_wrap_ui(KPim${KF_MAJOR_VERSION}AkonadiWidgets ${akonadiwidgets_UI})
+ki18n_wrap_ui(KPim6AkonadiWidgets ${akonadiwidgets_UI})
 if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
-    set_target_properties(KPim${KF_MAJOR_VERSION}AkonadiWidgets PROPERTIES UNITY_BUILD ON)
+    set_target_properties(KPim6AkonadiWidgets PROPERTIES UNITY_BUILD ON)
 endif()
 
-generate_export_header(KPim${KF_MAJOR_VERSION}AkonadiWidgets BASE_NAME akonadiwidgets)
+generate_export_header(KPim6AkonadiWidgets BASE_NAME akonadiwidgets)
 
 
-target_include_directories(KPim${KF_MAJOR_VERSION}AkonadiWidgets INTERFACE "$<INSTALL_INTERFACE:${AkonadiWidgets_INSTALL_INCLUDEDIR}>")
+target_include_directories(KPim6AkonadiWidgets INTERFACE "$<INSTALL_INTERFACE:${AkonadiWidgets_INSTALL_INCLUDEDIR}>")
 
-target_link_libraries(KPim${KF_MAJOR_VERSION}AkonadiWidgets
+target_link_libraries(KPim6AkonadiWidgets
 PUBLIC
-    KPim${KF_MAJOR_VERSION}::AkonadiCore
-    KF${KF_MAJOR_VERSION}::ItemModels
+    KPim6::AkonadiCore
+    KF6::ItemModels
     Qt::Widgets
-    KF${KF_MAJOR_VERSION}::ConfigWidgets
+    KF6::ConfigWidgets
 PRIVATE
-    KF${KF_MAJOR_VERSION}::KIOCore
-    KF${KF_MAJOR_VERSION}::I18n
-    KF${KF_MAJOR_VERSION}::IconThemes
-    KF${KF_MAJOR_VERSION}::XmlGui
+    KF6::KIOCore
+    KF6::I18n
+    KF6::IconThemes
+    KF6::XmlGui
     Qt::Sql
-    KPim${KF_MAJOR_VERSION}::AkonadiPrivate
+    KPim6::AkonadiPrivate
 )
 
-set_target_properties(KPim${KF_MAJOR_VERSION}AkonadiWidgets PROPERTIES
+set_target_properties(KPim6AkonadiWidgets PROPERTIES
     VERSION ${AKONADI_VERSION}
     SOVERSION ${AKONADI_SOVERSION}
     EXPORT_NAME AkonadiWidgets
 )
 
 ecm_generate_pri_file(BASE_NAME AkonadiWidgets
-    LIB_NAME KPim${KF_MAJOR_VERSION}AkonadiWidgets
+    LIB_NAME KPim6AkonadiWidgets
     DEPS "AkonadiCore KItemModels" FILENAME_VAR PRI_FILENAME
 )
 
 install(TARGETS
-    KPim${KF_MAJOR_VERSION}AkonadiWidgets
-    EXPORT KPim${KF_MAJOR_VERSION}AkonadiTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
+    KPim6AkonadiWidgets
+    EXPORT KPim6AkonadiTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 install(FILES
@@ -243,8 +243,8 @@ if(BUILD_DESIGNERPLUGIN)
         Akonadi::TagSelectWidget
         Akonadi::ManageAccountWidget
         LINK_LIBRARIES
-        KPim${KF_MAJOR_VERSION}::AkonadiCore
-        KPim${KF_MAJOR_VERSION}::AkonadiWidgets
+        KPim6::AkonadiCore
+        KPim6::AkonadiWidgets
         INSTALL_DESTINATION "${KDE_INSTALL_QTPLUGINDIR}/designer"
         COMPONENT Devel
     )
@@ -252,9 +252,9 @@ endif()
 
 if (BUILD_QCH)
     ecm_add_qch(
-        KPim${KF_MAJOR_VERSION}AkonadiWidgets_QCH
-        NAME KPim${KF_MAJOR_VERSION}AkonadiWidgets
-        BASE_NAME KPim${KF_MAJOR_VERSION}AkonadiWidgets
+        KPim6AkonadiWidgets_QCH
+        NAME KPim6AkonadiWidgets
+        BASE_NAME KPim6AkonadiWidgets
         VERSION ${PIM_VERSION}
         ORG_DOMAIN org.kde
         SOURCES # using only public headers, to cover only public API
@@ -262,9 +262,9 @@ if (BUILD_QCH)
         #MD_MAINPAGE "${CMAKE_SOURCE_DIR}/README.md"
         #IMAGE_DIRS "${CMAKE_SOURCE_DIR}/docs/pics"
         LINK_QCHS
-            Qt${QT_MAJOR_VERSION}Core_QCH
-            Qt${QT_MAJOR_VERSION}Gui_QCH
-            Qt${QT_MAJOR_VERSION}Widgets_QCH
+            Qt6Core_QCH
+            Qt6Gui_QCH
+            Qt6Widgets_QCH
         INCLUDE_DIRS
             ${CMAKE_CURRENT_BINARY_DIR}
         BLANK_MACROS

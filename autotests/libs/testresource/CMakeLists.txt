@@ -25,12 +25,12 @@ add_executable(akonadi_knut_resource ${knutresource_SRCS})
 set_target_properties(akonadi_knut_resource PROPERTIES MACOSX_BUNDLE FALSE)
 
 target_link_libraries(akonadi_knut_resource
-  KPim${KF_MAJOR_VERSION}::AkonadiXml
-  KPim${KF_MAJOR_VERSION}::AkonadiCore
-  KF${KF_MAJOR_VERSION}::KIOCore
-  KPim${KF_MAJOR_VERSION}::AkonadiAgentBase
+  KPim6::AkonadiXml
+  KPim6::AkonadiCore
+  KF6::KIOCore
+  KPim6::AkonadiAgentBase
   Qt::Xml
-  KF${KF_MAJOR_VERSION}::I18n
+  KF6::I18n
 )
 
 install( TARGETS akonadi_knut_resource ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

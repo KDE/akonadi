@@ -8,7 +8,7 @@ set_target_properties(asapcat PROPERTIES MACOSX_BUNDLE FALSE)
 
 target_link_libraries(asapcat
     akonadi_shared
-    KPim${KF_MAJOR_VERSION}::AkonadiPrivate
+    KPim6::AkonadiPrivate
     Qt::Core
     Qt::Network
 )

@@ -27,11 +27,11 @@ generate_export_header(akonaditestfake BASE_NAME akonaditestfake)
 
 target_link_libraries(akonaditestfake
         Qt::DBus
-        KPim${KF_MAJOR_VERSION}::AkonadiCore
+        KPim6::AkonadiCore
         Qt::Test
         Qt::Widgets
         Qt::Network
-        KPim${KF_MAJOR_VERSION}::AkonadiPrivate
+        KPim6::AkonadiPrivate
         akonadi_shared
 )
 
@@ -40,7 +40,7 @@ add_executable(akonadi-firstrun
     firstrunner.cpp
     ${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp
 )
-target_link_libraries( akonadi-firstrun  Qt::Test Qt::Core KPim${KF_MAJOR_VERSION}::AkonadiCore KPim${KF_MAJOR_VERSION}::AkonadiPrivate KF${KF_MAJOR_VERSION}::ConfigCore Qt::Widgets)
+target_link_libraries( akonadi-firstrun  Qt::Test Qt::Core KPim6::AkonadiCore KPim6::AkonadiPrivate KF6::ConfigCore Qt::Widgets)
 
 add_akonadi_test(itemhydratest.cpp itemhydratest.h)
 add_akonadi_test(itemtest.cpp itemtest.h)
@@ -69,7 +69,7 @@ add_akonadi_test(cachepolicytest.cpp cachepolicytest.h)
 #add_executable( resourceschedulertest resourceschedulertest.cpp resourceschedulertest.h ../src/agentbase/resourcescheduler.cpp )
 #add_test( resourceschedulertest resourceschedulertest )
 #ecm_mark_as_test(akonadi-resourceschedulertest)
-#target_link_libraries(resourceschedulertest  Qt::Test KPim${KF_MAJOR_VERSION}::AkonadiAgentBase)
+#target_link_libraries(resourceschedulertest  Qt::Test KPim6::AkonadiAgentBase)
 
 
 # testrunner tests
@@ -84,7 +84,7 @@ add_akonadi_isolated_test(SOURCE itemstoretest.cpp itemstoretest.h)
 add_akonadi_isolated_test(SOURCE itemdeletetest.cpp)
 add_akonadi_isolated_test(SOURCE entitycachetest.cpp)
 add_akonadi_isolated_test(SOURCE monitortest.cpp monitortest.h)
-#add_akonadi_isolated_test_advanced(monitorfiltertest.cpp "" "KPim${KF_MAJOR_VERSION}::AkonadiPrivate")
+#add_akonadi_isolated_test_advanced(monitorfiltertest.cpp "" "KPim6::AkonadiPrivate")
 # FIXME: this is constantly failling due to broken search: re-enable once the new search code is merged
 #add_akonadi_isolated_test(SOURCE searchjobtest.cpp searchjobtest.h)
 add_akonadi_isolated_test(SOURCE changerecordertest.cpp)
@@ -100,7 +100,7 @@ add_akonadi_isolated_test(SOURCE collectionmovetest.cpp)
 add_akonadi_isolated_test(
     SOURCE  collectionsynctest.cpp
     ADDITIONAL_SOURCES ${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp
-    LINK_LIBRARIES KF${KF_MAJOR_VERSION}::I18n
+    LINK_LIBRARIES KF6::I18n
 )
 add_akonadi_isolated_test(SOURCE itemsynctest.cpp)
 add_akonadi_isolated_test(SOURCE linktest.cpp)
@@ -119,7 +119,7 @@ add_akonadi_isolated_test(SOURCE collectionmodifytest.cpp)
 
 add_akonadi_isolated_test(SOURCE gidtest.cpp gidtest.h)
 add_akonadi_isolated_test(SOURCE lazypopulationtest.cpp)
-add_akonadi_isolated_test(SOURCE favoriteproxytest.cpp LINK_LIBRARIES KF${KF_MAJOR_VERSION}::ConfigCore)
+add_akonadi_isolated_test(SOURCE favoriteproxytest.cpp LINK_LIBRARIES KF6::ConfigCore)
 # FIXME: this is constantly failing due to broken search: re-enable once the new search code is merged
 #add_akonadi_isolated_test(
 #    SOURCE itemsearchjobtest.cpp searchjobtest.h

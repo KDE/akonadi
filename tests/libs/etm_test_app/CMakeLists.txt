@@ -9,8 +9,8 @@ set(etmtestapp_SRCS
 add_executable(akonadi_etm_test_app ${etmtestapp_SRCS})
 
 target_link_libraries(akonadi_etm_test_app
-  KPim${KF_MAJOR_VERSION}::AkonadiWidgets
-  KF${KF_MAJOR_VERSION}::I18n
+  KPim6::AkonadiWidgets
+  KF6::I18n
   akonaditestfake
   Qt::Test
 )

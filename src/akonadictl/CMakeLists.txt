@@ -28,8 +28,8 @@ set_target_properties(akonadictl PROPERTIES OUTPUT_NAME akonadictl)
 ecm_mark_nongui_executable(akonadictl)
 target_link_libraries(akonadictl
     akonadi_shared
-    KPim${KF_MAJOR_VERSION}::AkonadiPrivate
-    KF${KF_MAJOR_VERSION}::CoreAddons
+    KPim6::AkonadiPrivate
+    KF6::CoreAddons
     Qt::Core
     Qt::DBus
 )

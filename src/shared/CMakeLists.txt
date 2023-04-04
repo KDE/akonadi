@@ -1,5 +1,5 @@
 # base install include dir
-set(AkonadiCore_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR}/KPim${KF_MAJOR_VERSION}/AkonadiCore")
+set(AkonadiCore_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR}/KPim6/AkonadiCore")
 
 add_library(akonadi_shared STATIC)
 target_sources(akonadi_shared PRIVATE
@@ -19,9 +19,9 @@ target_include_directories(akonadi_shared INTERFACE $<BUILD_INTERFACE:${CMAKE_CU
 
 target_link_libraries(akonadi_shared
 PUBLIC
-    KPim${KF_MAJOR_VERSION}::AkonadiPrivate
+    KPim6::AkonadiPrivate
     Qt::Core
-    KF${KF_MAJOR_VERSION}::Crash
+    KF6::Crash
 )
 
 ecm_generate_headers(shared_CC_HEADERS

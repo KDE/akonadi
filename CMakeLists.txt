@@ -5,7 +5,8 @@ project(Akonadi VERSION ${PIM_VERSION})
 
 
 # ECM setup
-set(KF_MIN_VERSION "5.105.0")
+set(KF_MIN_VERSION "5.240.0")
+set(QT_MIN_VERSION "6.4.0")
 
 find_package(ECM ${KF_MIN_VERSION} CONFIG REQUIRED)
 
@@ -39,15 +40,6 @@ include(ECMSetupQtPluginMacroNames)
 
 include(AkonadiMacros)
 include(ECMAddQch)
-set(QT_REQUIRED_VERSION "5.15.2")
-if (QT_MAJOR_VERSION STREQUAL "6")
-    set(QT_MIN_VERSION "6.4.0")
-    set(KF_MIN_VERSION "5.240.0")
-    set(KF_MAJOR_VERSION "6")
-else()
-    set(KF_MAJOR_VERSION "5")
-endif()
-
 
 option(BUILD_QCH "Build API documentation in QCH format (for e.g. Qt Assistant, Qt Creator & KDevelop)" OFF)
 add_feature_info(QCH ${BUILD_QCH} "API documentation in QCH format (for e.g. Qt Assistant, Qt Creator & KDevelop)")
@@ -61,39 +53,37 @@ configure_file(akonadifull-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/akonadifu
 ecm_setup_version(PROJECT
     VARIABLE_PREFIX AKONADI
     VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi_version.h"
-    PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KPim${KF_MAJOR_VERSION}AkonadiConfigVersion.cmake"
-    SOVERSION 5)
+    PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KPim6AkonadiConfigVersion.cmake"
+    SOVERSION 6)
 
 # Find packages
-find_package(Qt${QT_MAJOR_VERSION}Core ${QT_REQUIRED_VERSION} REQUIRED COMPONENTS Private)
-find_package(Qt${QT_MAJOR_VERSION}Sql ${QT_REQUIRED_VERSION} REQUIRED COMPONENTS Private)
-find_package(Qt${QT_MAJOR_VERSION}DBus ${QT_REQUIRED_VERSION} REQUIRED)
-find_package(Qt${QT_MAJOR_VERSION}Network ${QT_REQUIRED_VERSION} REQUIRED)
-find_package(Qt${QT_MAJOR_VERSION}Test ${QT_REQUIRED_VERSION} REQUIRED)
-find_package(Qt${QT_MAJOR_VERSION}Widgets ${QT_REQUIRED_VERSION} REQUIRED)
-find_package(Qt${QT_MAJOR_VERSION}Xml ${QT_REQUIRED_VERSION} REQUIRED)
+find_package(Qt6Core ${QT_REQUIRED_VERSION} REQUIRED COMPONENTS Private)
+find_package(Qt6Sql ${QT_REQUIRED_VERSION} REQUIRED COMPONENTS Private)
+find_package(Qt6DBus ${QT_REQUIRED_VERSION} REQUIRED)
+find_package(Qt6Network ${QT_REQUIRED_VERSION} REQUIRED)
+find_package(Qt6Test ${QT_REQUIRED_VERSION} REQUIRED)
+find_package(Qt6Widgets ${QT_REQUIRED_VERSION} REQUIRED)
+find_package(Qt6Xml ${QT_REQUIRED_VERSION} REQUIRED)
 
-find_package(KF${KF_MAJOR_VERSION}Config ${KF_MIN_VERSION} CONFIG REQUIRED)
-find_package(KF${KF_MAJOR_VERSION}ConfigWidgets ${KF_MIN_VERSION} CONFIG REQUIRED)
-find_package(KF${KF_MAJOR_VERSION}CoreAddons ${KF_MIN_VERSION} CONFIG REQUIRED)
-find_package(KF${KF_MAJOR_VERSION}I18n ${KF_MIN_VERSION} CONFIG REQUIRED)
-find_package(KF${KF_MAJOR_VERSION}IconThemes ${KF_MIN_VERSION} CONFIG REQUIRED)
-find_package(KF${KF_MAJOR_VERSION}ItemModels ${KF_MIN_VERSION} CONFIG REQUIRED)
-find_package(KF${KF_MAJOR_VERSION}KIO ${KF_MIN_VERSION} CONFIG REQUIRED)
-find_package(KF${KF_MAJOR_VERSION}WidgetsAddons ${KF_MIN_VERSION} CONFIG REQUIRED)
-find_package(KF${KF_MAJOR_VERSION}XmlGui ${KF_MIN_VERSION} CONFIG REQUIRED)
-find_package(KF${KF_MAJOR_VERSION}Crash ${KF_MIN_VERSION} CONFIG REQUIRED)
-find_package(Qt${QT_MAJOR_VERSION}Designer NO_MODULE)
-set_package_properties(Qt${QT_MAJOR_VERSION}Designer PROPERTIES
+find_package(KF6Config ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF6ConfigWidgets ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF6CoreAddons ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF6I18n ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF6IconThemes ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF6ItemModels ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF6KIO ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF6WidgetsAddons ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF6XmlGui ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF6Crash ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(Qt6Designer NO_MODULE)
+set_package_properties(Qt6Designer PROPERTIES
    PURPOSE "Required to build the Qt Designer plugins"
    TYPE OPTIONAL
 )
 
 option(BUILD_DESIGNERPLUGIN "Build plugin for Qt Designer" ON)
 add_feature_info(DESIGNERPLUGIN ${BUILD_DESIGNERPLUGIN} "Build plugin for Qt Designer")
-if (QT_MAJOR_VERSION STREQUAL "6")
-    find_package(Qt6Core5Compat)
-endif()
+find_package(Qt6Core5Compat)
 
 if (QT_MAJOR_VERSION STREQUAL "5")
     set(AccountsQt5_MINIMUM_VERSION "1.16")
@@ -113,7 +103,7 @@ if (QT_MAJOR_VERSION STREQUAL "5")
 else()
     MESSAGE(STATUS "There is not AccountsQt6 version yet!")
 endif()
-if (${AccountsQt${QT_MAJOR_VERSION}_FOUND} AND ${KAccounts_FOUND})
+if (${AccountsQt6_FOUND} AND ${KAccounts_FOUND})
     set(WITH_ACCOUNTS TRUE)
 endif()
 
@@ -139,7 +129,7 @@ ecm_setup_qtplugin_macro_names(
         PACKAGE_SETUP_AUTOMOC_VARIABLES
 )
 
-# Make sure the KF5Akonadi_DATA_DIR is absolute before passing it to KF5AkonadiConfig.cmake.in
+# Make sure the KF6Akonadi_DATA_DIR is absolute before passing it to KF6AkonadiConfig.cmake.in
 # otherwise build fails either on OSX CI, or for normal users
 if (IS_ABSOLUTE "${KDE_INSTALL_DATADIR_KF}")
     set(KF5Akonadi_DATA_DIR "${KDE_INSTALL_DATADIR_KF}/akonadi")
@@ -238,10 +228,10 @@ else()
     set(AKONADI_DBUS_INTERFACES_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_DBUSINTERFACEDIR}")
 endif()
 
-if (IS_ABSOLUTE "${KDE_INSTALL_INCLUDEDIR}/KPim${KF_MAJOR_VERSION}")
-    set(AKONADI_INCLUDE_DIR "${KDE_INSTALL_INCLUDEDIR}/KPim${KF_MAJOR_VERSION}")
+if (IS_ABSOLUTE "${KDE_INSTALL_INCLUDEDIR}/KPim6")
+    set(AKONADI_INCLUDE_DIR "${KDE_INSTALL_INCLUDEDIR}/KPim6")
 else()
-    set(AKONADI_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_INCLUDEDIR}/KPim${KF_MAJOR_VERSION}")
+    set(AKONADI_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_INCLUDEDIR}/KPim6")
 endif()
 
 ############### Build Options ###############
@@ -306,8 +296,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_ENABLE_EXCEPTIONS}")
 configure_file(config-akonadi.h.cmake ${Akonadi_BINARY_DIR}/config-akonadi.h)
 
 ############### build targets ###############
-set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KPim${KF_MAJOR_VERSION}Akonadi")
-set(AKONADI_KF5_COMPAT FALSE)
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KPim6Akonadi")
+set(AKONADI_KF6_COMPAT FALSE)
 add_definitions(-DTRANSLATION_DOMAIN=\"libakonadi5\")
 
 include_directories(
@@ -349,19 +339,19 @@ update_xdg_mimetypes(${KDE_INSTALL_MIMEDIR})
 ############### CMake Config Files ###############
 if (BUILD_QCH)
     ecm_install_qch_export(
-        TARGETS KPim${KF_MAJOR_VERSION}AkonadiCore_QCH
-        KPim${KF_MAJOR_VERSION}AkonadiWidgets_QCH
-        KPim${KF_MAJOR_VERSION}AkonadiAgent_QCH
-        FILE KPim${KF_MAJOR_VERSION}AkonadiQchTargets.cmake
+        TARGETS KPim6AkonadiCore_QCH
+        KPim6AkonadiWidgets_QCH
+        KPim6AkonadiAgent_QCH
+        FILE KPim6AkonadiQchTargets.cmake
         DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
         COMPONENT Devel
     )
-    set(PACKAGE_INCLUDE_QCHTARGETS "include(\"\${CMAKE_CURRENT_LIST_DIR}/KPim${KF_MAJOR_VERSION}AkonadiQchTargets.cmake\")")
+    set(PACKAGE_INCLUDE_QCHTARGETS "include(\"\${CMAKE_CURRENT_LIST_DIR}/KPim6AkonadiQchTargets.cmake\")")
 endif()
 
 configure_package_config_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/KPimAkonadiConfig.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/KPim${KF_MAJOR_VERSION}AkonadiConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/KPim6AkonadiConfig.cmake"
     INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
     PATH_VARS AKONADI_DBUS_INTERFACES_INSTALL_DIR
               AKONADI_INCLUDE_DIR
@@ -369,18 +359,18 @@ configure_package_config_file(
 )
 
 install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/KPim${KF_MAJOR_VERSION}AkonadiConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/KPim${KF_MAJOR_VERSION}AkonadiConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/KPim6AkonadiConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/KPim6AkonadiConfigVersion.cmake"
     "${CMAKE_CURRENT_SOURCE_DIR}/KPimAkonadiMacros.cmake"
     DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
     COMPONENT Devel
 )
 
 install(EXPORT
-    KPim${KF_MAJOR_VERSION}AkonadiTargets
+    KPim6AkonadiTargets
     DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
-    FILE KPim${KF_MAJOR_VERSION}AkonadiTargets.cmake
-    NAMESPACE KPim${KF_MAJOR_VERSION}::)
+    FILE KPim6AkonadiTargets.cmake
+    NAMESPACE KPim6::)
 
 ecm_qt_install_logging_categories(
         EXPORT AKONADI
@@ -390,60 +380,9 @@ ecm_qt_install_logging_categories(
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadi_version.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/KPim${KF_MAJOR_VERSION}/AkonadiCore COMPONENT Devel
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/KPim6/AkonadiCore COMPONENT Devel
 )
 
 kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
 ki18n_install(po)
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
-
-#if (QT_MAJOR_VERSION STREQUAL "5")
-##
-# TODO: Backwards compatiblity. Remove in next major version
-##
-set(CMAKECONFIG_INSTALL_DIR_KF5 "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5Akonadi")
-set(AKONADI_KF5_COMPAT TRUE)
-#configure_package_config_file(
-#    "${CMAKE_CURRENT_SOURCE_DIR}/KPimAkonadiConfig.cmake.in"
-#    "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfig.cmake"
-#    INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR_KF5}
-#)
-install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/KPim${KF_MAJOR_VERSION}AkonadiConfig.cmake"
-    RENAME "KF5AkonadiConfig.cmake"
-    DESTINATION "${CMAKECONFIG_INSTALL_DIR_KF5}"
-    COMPONENT Devel
-)
-
-
-#install(FILES
-#    "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfig.cmake"
-#    DESTINATION "${CMAKECONFIG_INSTALL_DIR_KF5}"
-#    COMPONENT Devel
-#)
-install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/KPim${KF_MAJOR_VERSION}AkonadiConfigVersion.cmake"
-    RENAME "KF5AkonadiConfigVersion.cmake"
-    DESTINATION "${CMAKECONFIG_INSTALL_DIR_KF5}"
-    COMPONENT Devel
-)
-install(EXPORT KPim${KF_MAJOR_VERSION}AkonadiTargets
-    DESTINATION "${CMAKECONFIG_INSTALL_DIR_KF5}"
-    FILE KPim${KF_MAJOR_VERSION}AkonadiTargets.cmake
-    NAMESPACE KF5::
-)
-# rename KF5AkonadiMacros.cmake too
-install(FILES
-    "${CMAKE_CURRENT_SOURCE_DIR}/KF5AkonadiMacros.cmake"
-    RENAME "KPimAkonadiMacros.cmake"
-    DESTINATION "${CMAKECONFIG_INSTALL_DIR_KF5}"
-    COMPONENT Devel
-)
-if (BUILD_QCH)
-    install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/KPim${KF_MAJOR_VERSION}AkonadiQchTargets.cmake"
-        DESTINATION "${CMAKECONFIG_INSTALL_DIR_KF5}"
-        COMPONENT Devel
-    )
-endif()
-#endif()

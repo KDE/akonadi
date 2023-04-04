@@ -26,8 +26,8 @@ function(add_akonadi_isolated_test)
             set(KF_MAJOR_VERSION "5")
         endif()
         target_link_libraries(${_name}
-                              Qt::Test Qt::Gui Qt::Widgets Qt::Network KF${KF_MAJOR_VERSION}::KIOCore
-			      KF5::AkonadiCore KF5::AkonadiPrivate Qt::DBus
+                              Qt::Test Qt::Gui Qt::Widgets Qt::Network KF6::KIOCore
+			      KF6::AkonadiCore KF6::AkonadiPrivate Qt::DBus
                               ${CONFIG_LINK_LIBRARIES}
         )
 

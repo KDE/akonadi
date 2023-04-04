@@ -8,10 +8,10 @@ platforms:
 public_lib: true
 libraries:
     - qmake: AkonadiCore
-      cmake: KF5::AkonadiCore
-cmakename: KF5AkonadiCore
+      cmake: KPim6::AkonadiCore
+cmakename: KPim6AkonadiCore
 # TODO: kapidox currently assumes: one product == one metainfo.yaml == one cmake config file
-# listing KF5AkonadiAgentBase, KF5AkonadiAgentBase, KF5AkonadiWidgets, KF5AkonadiXml as separate
+# listing KPim6AkonadiAgentBase, KPim6AkonadiAgentBase, KPim6AkonadiWidgets, KPim6AkonadiXml as separate
 # packages in CMake's worldview needs changing kapidox first -> https://bugs.kde.org/show_bug.cgi?id=410452
 irc: akonadi
 

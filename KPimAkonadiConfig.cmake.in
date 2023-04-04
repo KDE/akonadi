@@ -11,33 +11,33 @@ if(NOT AKONADI_INSTALL_DIR)
    set(AKONADI_INSTALL_DIR "@CMAKE_INSTALL_PREFIX@")
 endif(NOT AKONADI_INSTALL_DIR)
 include(CMakeFindDependencyMacro)
-find_dependency(KF@KF_MAJOR_VERSION@Config "@KF_MIN_VERSION@")
-find_dependency(KF@KF_MAJOR_VERSION@ConfigWidgets "@KF_MIN_VERSION@")
-find_dependency(KF@KF_MAJOR_VERSION@CoreAddons "@KF_MIN_VERSION@")
-find_dependency(KF@KF_MAJOR_VERSION@ItemModels "@KF_MIN_VERSION@")
-find_dependency(KF@KF_MAJOR_VERSION@XmlGui "@KF_MIN_VERSION@")
+find_dependency(KF6Config "@KF_MIN_VERSION@")
+find_dependency(KF6ConfigWidgets "@KF_MIN_VERSION@")
+find_dependency(KF6CoreAddons "@KF_MIN_VERSION@")
+find_dependency(KF6ItemModels "@KF_MIN_VERSION@")
+find_dependency(KF6XmlGui "@KF_MIN_VERSION@")
 
-find_dependency(Qt@QT_MAJOR_VERSION@Core "@QT_REQUIRED_VERSION@")
-find_dependency(Qt@QT_MAJOR_VERSION@DBus "@QT_REQUIRED_VERSION@")
-find_dependency(Qt@QT_MAJOR_VERSION@Gui "@QT_REQUIRED_VERSION@")
-find_dependency(Qt@QT_MAJOR_VERSION@Network "@QT_REQUIRED_VERSION@")
-find_dependency(Qt@QT_MAJOR_VERSION@Widgets "@QT_REQUIRED_VERSION@")
-find_dependency(Qt@QT_MAJOR_VERSION@Xml "@QT_REQUIRED_VERSION@")
+find_dependency(Qt6Core "@QT_REQUIRED_VERSION@")
+find_dependency(Qt6DBus "@QT_REQUIRED_VERSION@")
+find_dependency(Qt6Gui "@QT_REQUIRED_VERSION@")
+find_dependency(Qt6Network "@QT_REQUIRED_VERSION@")
+find_dependency(Qt6Widgets "@QT_REQUIRED_VERSION@")
+find_dependency(Qt6Xml "@QT_REQUIRED_VERSION@")
 
 if(BUILD_TESTING)
     # Link targets required by KF5AkonadiMacros.cmake
-    find_dependency(KF@KF_MAJOR_VERSION@KIO "@KF_MIN_VERSION@")
-    find_dependency(Qt@QT_MAJOR_VERSION@Test "@QT_REQUIRED_VERSION@")
+    find_dependency(KF6KIO "@KF_MIN_VERSION@")
+    find_dependency(Qt6Test "@QT_REQUIRED_VERSION@")
 endif()
 
-include(${CMAKE_CURRENT_LIST_DIR}/KPim@KF_MAJOR_VERSION@AkonadiTargets.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/KPim6AkonadiTargets.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/KPimAkonadiMacros.cmake)
 
 if (@AKONADI_KF5_COMPAT@)
     message(WARNING "\n"
                     "************* DEPRECATION WARNING *************\n"
 		    "Using find_package(KF5Akonadi) and KF5::Akonadi targets is deprecated. "
-		    "Please use find_package(KPim@KF_MAJOR_VERSION@Akonadi) and KPim@KF_MAJOR_VERSION@::Akonadi instead. This backwards "
+		    "Please use find_package(KPim6Akonadi) and KPim6::Akonadi instead. This backwards "
                     "compatibility will be removed in the next major version.\n"
                     "***********************************************\n")
 endif()

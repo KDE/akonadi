@@ -1,4 +1,4 @@
-find_package(Qt${QT_MAJOR_VERSION} ${QT_REQUIRED_VERSION} CONFIG REQUIRED Test DBus)
+find_package(Qt6 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Test DBus)
 
 if(${EXECUTABLE_OUTPUT_PATH})
     set(PREVIOUS_EXEC_OUTPUT_PATH ${EXECUTABLE_OUTPUT_PATH})
@@ -22,7 +22,7 @@ macro(add_akonadi_test _source)
   get_filename_component(_name ${_source} NAME_WE)
   ecm_add_test(TEST_NAME ${_name} ${_test})
   set_tests_properties(${_name} PROPERTIES ENVIRONMENT "QT_HASH_SEED=1;QT_NO_CPU_FEATURE=sse4.2")
-  target_link_libraries(${_name} akonaditestfake Qt::Test KPim${KF_MAJOR_VERSION}::AkonadiPrivate KF${KF_MAJOR_VERSION}::I18n)
+  target_link_libraries(${_name} akonaditestfake Qt::Test KPim6::AkonadiPrivate KF6::I18n)
 endmacro()
 
 # convenience macro to add akonadi qtestlib unit-tests
@@ -35,7 +35,7 @@ macro(add_akonadi_test_widgets _source)
   get_filename_component(_name ${_source} NAME_WE)
   ecm_add_test(TEST_NAME ${_name} ${_test})
   set_tests_properties(${_name} PROPERTIES ENVIRONMENT "QT_HASH_SEED=1;QT_NO_CPU_FEATURE=sse4.2")
-  target_link_libraries(${_name} akonaditestfake Qt::Test KPim${KF_MAJOR_VERSION}::AkonadiWidgets KPim${KF_MAJOR_VERSION}::AkonadiPrivate)
+  target_link_libraries(${_name} akonaditestfake Qt::Test KPim6::AkonadiWidgets KPim6::AkonadiPrivate)
 endmacro()
 
 include(../KPimAkonadiMacros.cmake)
