@@ -146,19 +146,6 @@ ItemFetchJob::ItemFetchJob(const QList<Item::Id> &items, QObject *parent)
         d->mRequestedItems.append(Item(id));
     }
 }
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-ItemFetchJob::ItemFetchJob(const QVector<Item::Id> &items, QObject *parent)
-    : Job(new ItemFetchJobPrivate(this), parent)
-{
-    Q_D(ItemFetchJob);
-    d->init();
-
-    d->mRequestedItems.reserve(items.size());
-    for (auto id : items) {
-        d->mRequestedItems.append(Item(id));
-    }
-}
-#endif
 ItemFetchJob::ItemFetchJob(const Tag &tag, QObject *parent)
     : Job(new ItemFetchJobPrivate(this), parent)
 {

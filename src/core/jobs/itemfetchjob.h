@@ -121,13 +121,6 @@ public:
      * @since 4.8
      */
     explicit ItemFetchJob(const QList<Item::Id> &items, QObject *parent = nullptr);
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    /**
-     * Convenience ctor equivalent to ItemFetchJob(const Item::List &items, QObject *parent = nullptr)
-     * @since 5.4
-     */
-    explicit ItemFetchJob(const QVector<Item::Id> &items, QObject *parent = nullptr);
-#endif
     /**
      * Creates a new item fetch job that retrieves all items tagged with specified @p tag.
      *

@@ -668,19 +668,10 @@ QString QueryBuilder::getTableQuery(const QSqlQuery& query, const QString &alias
 
     tableQuery.prepend(QLatin1String("( "));
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     const QList<QVariant> boundValues = query.boundValues();
     for (int pos = boundValues.size() - 1; pos >= 0; --pos) {
         const QVariant &value = boundValues.at(pos);
         const QString key(QLatin1Char(':') + QString::number(pos));
-#else
-    const QMap<QString, QVariant> boundValues = query.boundValues();
-    for (int pos = boundValues.size() - 1; pos >= 0; --pos) {
-
-        const QString key(QLatin1Char(':') + QString::number(pos));
-        const auto value = boundValues.value(key);
-#endif
-
         QSqlField field(QLatin1String(""), value.type());
         if (value.isNull()) {
             field.clear();

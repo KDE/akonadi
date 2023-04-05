@@ -106,11 +106,7 @@ QString ClassNode::parentClassName() const
     Q_UNREACHABLE();
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-ClassNode::ClassType ClassNode::elementNameToType(const QStringRef &name)
-#else
 ClassNode::ClassType ClassNode::elementNameToType(QStringView name)
-#endif
 {
     if (name == QLatin1String("class")) {
         return Class;
@@ -178,11 +174,7 @@ EnumNode::EnumType EnumNode::enumType() const
 {
     return mEnumType;
 }
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-EnumNode::EnumType EnumNode::elementNameToType(const QStringRef &name)
-#else
 EnumNode::EnumType EnumNode::elementNameToType(QStringView name)
-#endif
 {
     if (name == QLatin1String("enum")) {
         return TypeEnum;

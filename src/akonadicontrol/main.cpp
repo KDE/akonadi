@@ -69,9 +69,6 @@ int main(int argc, char **argv)
     AccountsIntegration accountsIntegration(agentManager);
 #endif
     KCrash::setEmergencySaveFunction(crashHandler);
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    QGuiApplication::setFallbackSessionManagementEnabled(false);
-#endif
     // akonadi_control is started on-demand, no need to auto restart by session.
     auto disableSessionManagement = [](QSessionManager &sm) {
         sm.setRestartHint(QSessionManager::RestartNever);

@@ -172,11 +172,7 @@ private Q_SLOTS:
                                      })
                 | Actions::toQList; // 3rd copy (QList::append()) (Qt5 only)
             QCOMPARE(out.size(), in.size());
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-            QCOMPARE(out[0].copyCount, 3);
-#else
             QCOMPARE(out[0].copyCount, 2);
-#endif
             QCOMPARE(out[0].transformed, true);
         }
 
@@ -268,11 +264,7 @@ private Q_SLOTS:
     {
         {
             QStringList in = {QStringLiteral("foo"), QStringLiteral("foobar"), QStringLiteral("foob")};
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-            QList<int> out = {6};
-#else
             QList<qsizetype> out = {6};
-#endif
             QCOMPARE(in | Views::transform(&QString::size) | Views::filter([](int i) {
                          return i > 5;
                      }) | Actions::toQList,

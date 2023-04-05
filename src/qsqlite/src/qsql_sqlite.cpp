@@ -597,11 +597,7 @@ bool QSQLiteDriver::open(const QString &db, const QString &, const QString &, co
     for (const QString &option : opts) {
         if (option.startsWith(QLatin1String("QSQLITE_BUSY_TIMEOUT="))) {
             bool ok;
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
             const int nt = QStringView(option).mid(21).toInt(&ok);
-#else
-            const int nt = option.midRef(21).toInt(&ok);
-#endif
             if (ok) {
                 timeout = nt;
             }

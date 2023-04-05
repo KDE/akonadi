@@ -147,10 +147,6 @@ public:
 
     ImapSet(qint64 Id); // krazy:exclude=explicit
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    ImapSet(const QVector<qint64> &ids); // krazy:exclude=explicit
-#endif
-
     ImapSet(const QList<qint64> &ids); // krazy:exclude=explicit
 
     ImapSet(const ImapInterval &interval); // krazy:exclude=explicit
@@ -183,9 +179,6 @@ public:
       No interval merging is performed.
       @param values List of positive integer numbers in arbitrary order
     */
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    void add(const QVector<Id> &values);
-#endif
     void add(const QList<Id> &values);
 
     /**

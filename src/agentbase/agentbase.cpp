@@ -29,17 +29,9 @@
 
 #include <KAboutData>
 #include <kcoreaddons_version.h>
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <Kdelibs4ConfigMigrator>
-#endif
 
 #include <QCommandLineParser>
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <QNetworkConfiguration>
-#include <QNetworkConfigurationManager>
-#else
 #include <QNetworkInformation>
-#endif
 #include <QPointer>
 #include <QSettings>
 #include <QTimer>
@@ -330,9 +322,6 @@ AgentBasePrivate::AgentBasePrivate(AgentBase *parent)
     , mPowerInterface(nullptr)
     , mTemporaryOfflineTimer(nullptr)
     , mEventLoopLocker(nullptr)
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    , mNetworkManager(nullptr)
-#endif
 {
     Internal::setClientType(Internal::Agent);
 }
@@ -346,11 +335,6 @@ AgentBasePrivate::~AgentBasePrivate()
 void AgentBasePrivate::init()
 {
     Q_Q(AgentBase);
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    Kdelibs4ConfigMigrator migrate(mId);
-    migrate.setConfigFiles(QStringList() << QStringLiteral("%1rc").arg(mId));
-    migrate.migrate();
-#endif
     /**
      * Create a default session for this process.
      */
@@ -810,11 +794,7 @@ void AgentBasePrivate::slotNetworkStatusChange(bool isOnline)
 void AgentBasePrivate::slotResumedFromSuspend()
 {
     if (mNeedsNetwork) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        slotNetworkStatusChange(mNetworkManager->isOnline());
-#else
         slotNetworkStatusChange(QNetworkInformation::instance()->reachability() != QNetworkInformation::Reachability::Online);
-#endif
     }
 }
 
@@ -986,25 +966,10 @@ void AgentBase::setNeedsNetwork(bool needsNetwork)
     }
 
     d->mNeedsNetwork = needsNetwork;
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    if (d->mNeedsNetwork) {
-        QT_WARNING_PUSH
-        QT_WARNING_DISABLE_CLANG("-Wdeprecated-declarations")
-        QT_WARNING_DISABLE_GCC("-Wdeprecated-declarations")
-        d->mNetworkManager = new QNetworkConfigurationManager(this);
-        connect(d->mNetworkManager, &QNetworkConfigurationManager::onlineStateChanged, d, &AgentBasePrivate::slotNetworkStatusChange, Qt::UniqueConnection);
-        QT_WARNING_POP
-    } else {
-        delete d->mNetworkManager;
-        d->mNetworkManager = nullptr;
-        setOnlineInternal(d->mDesiredOnlineState);
-    }
-#else
     QNetworkInformation::load(QNetworkInformation::Feature::Reachability);
     connect(QNetworkInformation::instance(), &QNetworkInformation::reachabilityChanged, this, [this, d](auto reachability) {
         d->slotNetworkStatusChange(reachability == QNetworkInformation::Reachability::Online);
     });
-#endif
 }
 
 void AgentBase::setOnline(bool state)
@@ -1044,17 +1009,10 @@ void AgentBase::setOnlineInternal(bool state)
 {
     Q_D(AgentBase);
     if (state && d->mNeedsNetwork) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        if (!d->mNetworkManager->isOnline()) {
-            // Don't go online if the resource needs network but there is none
-            state = false;
-        }
-#else
         if (QNetworkInformation::instance()->reachability() != QNetworkInformation::Reachability::Online) {
             // Don't go online if the resource needs network but there is none
             state = false;
         }
-#endif
     }
     d->mOnline = state;
 
