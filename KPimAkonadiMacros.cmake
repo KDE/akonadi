@@ -22,9 +22,6 @@ function(add_akonadi_isolated_test)
         get_filename_component(_name ${CONFIG_SOURCE} NAME_WE)
         add_executable(${_name} ${_test} ${CONFIG_ADDITIONAL_SOURCES})
         ecm_mark_as_test(${_name})
-        if (NOT DEFINED KF_MAJOR_VERSION) # TODO remove once we fully port to 6, needed for backward compatibility for consumers not having KF_MAJOR_VERSION defined
-            set(KF_MAJOR_VERSION "5")
-        endif()
         target_link_libraries(${_name}
                               Qt::Test Qt::Gui Qt::Widgets Qt::Network KF6::KIOCore
                               KPim6::AkonadiCore KPim6::AkonadiPrivate Qt::DBus
