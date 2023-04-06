@@ -488,7 +488,7 @@ public:
 
     inline bool hasContextId(Type type) const
     {
-        return ctx(type).type() == QVariant::LongLong;
+        return ctx(type).typeId() == QMetaType::LongLong;
     }
     inline qint64 contextId(Type type) const
     {
@@ -497,7 +497,7 @@ public:
 
     inline bool hasContextRID(Type type) const
     {
-        return ctx(type).type() == QVariant::String;
+        return ctx(type).typeId() == QMetaType::QString;
     }
     inline QString contextRID(Type type) const
     {

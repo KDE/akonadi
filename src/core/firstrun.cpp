@@ -152,19 +152,19 @@ void Firstrun::instanceCreated(KJob *job)
     for (const QString &setting : lstSettings) {
         qCDebug(AKONADICORE_LOG) << "Setting up " << setting << " for agent " << instance.identifier();
         const QString methodName = QStringLiteral("set%1").arg(setting);
-        const QVariant::Type argType = argumentType(iface->metaObject(), methodName);
-        if (argType == QVariant::Invalid) {
+        const QMetaType::Type argType = argumentType(iface->metaObject(), methodName);
+        if (argType == QMetaType::UnknownType) {
             qCCritical(AKONADICORE_LOG) << "Setting " << setting << " not found in agent configuration interface of " << instance.identifier();
             continue;
         }
 
         QVariant arg;
-        if (argType == QVariant::String) {
+        if (argType == QMetaType::QString) {
             // Since a string could be a path we always use readPathEntry here,
             // that shouldn't harm any normal string settings
             arg = settings.readPathEntry(setting, QString());
         } else {
-            arg = settings.readEntry(setting, QVariant(argType));
+            arg = settings.readEntry(setting, QVariant(QMetaType(argType)));
         }
 
         const QDBusReply<void> reply = iface->call(methodName, arg);
@@ -187,26 +187,26 @@ void Firstrun::instanceCreated(KJob *job)
     setupNext();
 }
 
-QVariant::Type Firstrun::argumentType(const QMetaObject *mo, const QString &method)
+QMetaType::Type Firstrun::argumentType(const QMetaObject *metaObject, const QString &method)
 {
-    QMetaMethod m;
-    for (int i = 0; i < mo->methodCount(); ++i) {
-        const QString signature = QString::fromLatin1(mo->method(i).methodSignature());
+    QMetaMethod metaMethod;
+    for (int i = 0; i < metaObject->methodCount(); ++i) {
+        const QString signature = QString::fromLatin1(metaObject->method(i).methodSignature());
         if (signature.startsWith(method)) {
-            m = mo->method(i);
+            metaMethod = metaObject->method(i);
         }
     }
 
-    if (m.methodSignature().isEmpty()) {
-        return QVariant::Invalid;
+    if (metaMethod.methodSignature().isEmpty()) {
+        return QMetaType::UnknownType;
     }
 
-    const QList<QByteArray> argTypes = m.parameterTypes();
+    const QList<QByteArray> argTypes = metaMethod.parameterTypes();
     if (argTypes.count() != 1) {
-        return QVariant::Invalid;
+        return QMetaType::UnknownType;
     }
 
-    return QVariant::nameToType(argTypes.first().constData());
+    return static_cast<QMetaType::Type>(QMetaType::fromName(argTypes.first().constData()).id());
 }
 
 #include "moc_firstrun_p.cpp"

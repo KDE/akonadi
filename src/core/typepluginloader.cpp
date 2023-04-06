@@ -174,7 +174,7 @@ public:
         QMap<int, QHash<QByteArray, PluginEntry>::const_iterator>::const_iterator it = c_pluginsByMetaTypeId.find(metaTypeId);
         if (it == c_pluginsByMetaTypeId.end()) {
             it = QMap<int, QHash<QByteArray, PluginEntry>::const_iterator>::const_iterator(
-                m_pluginsByMetaTypeId.insert(metaTypeId, m_plugins.find(metaTypeId ? QMetaType::typeName(metaTypeId) : LEGACY_NAME)));
+                m_pluginsByMetaTypeId.insert(metaTypeId, m_plugins.find(metaTypeId ? QMetaType(metaTypeId).name() : LEGACY_NAME)));
         }
         return *it == m_plugins.end() ? nullptr : it->operator->();
     }

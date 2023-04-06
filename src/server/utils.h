@@ -24,9 +24,9 @@ namespace Utils
  */
 static inline QString variantToString(const QVariant &variant)
 {
-    if (variant.type() == QVariant::String) {
+    if (variant.typeId() == QMetaType::QString) {
         return variant.toString();
-    } else if (variant.type() == QVariant::ByteArray) {
+    } else if (variant.typeId() == QMetaType::QByteArray) {
         return QString::fromUtf8(variant.toByteArray());
     } else {
         qWarning("Unable to convert variant of type %s to QString", variant.typeName());
@@ -40,9 +40,9 @@ static inline QString variantToString(const QVariant &variant)
  */
 static inline QByteArray variantToByteArray(const QVariant &variant)
 {
-    if (variant.type() == QVariant::String) {
+    if (variant.typeId() == QMetaType::QString) {
         return variant.toString().toUtf8();
-    } else if (variant.type() == QVariant::ByteArray) {
+    } else if (variant.typeId() == QMetaType::QByteArray) {
         return variant.toByteArray();
     } else {
         qWarning("Unable to convert variant of type %s to QByteArray", variant.typeName());
@@ -53,7 +53,7 @@ static inline QByteArray variantToByteArray(const QVariant &variant)
 
 static inline QDateTime variantToDateTime(const QVariant &variant)
 {
-    if (variant.canConvert(QVariant::DateTime)) {
+    if (variant.canConvert(QMetaType::fromType<QDateTime>())) {
         // MySQL and SQLite backends read the datetime from the database and
         // assume it's local time. We stored it as UTC though, so we just need
         // to change the interpretation in QDateTime.

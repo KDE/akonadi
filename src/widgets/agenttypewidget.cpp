@@ -154,7 +154,7 @@ void AgentTypeWidgetDelegate::paint(QPainter *painter, const QStyleOptionViewIte
     const QVariant data = index.model()->data(index, Qt::DecorationRole);
 
     QPixmap pixmap;
-    if (data.isValid() && data.type() == QVariant::Icon) {
+    if (data.isValid() && data.typeId() == QMetaType::QIcon) {
         pixmap = qvariant_cast<QIcon>(data).pixmap(64, 64);
     }
 

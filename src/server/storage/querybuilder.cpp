@@ -7,6 +7,7 @@
 #include "querybuilder.h"
 #include "akonadiserver_debug.h"
 #include "dbexception.h"
+#include <qglobal.h>
 
 #ifndef QUERYBUILDER_UNITTEST
 #include "storage/datastore.h"
@@ -518,7 +519,7 @@ void QueryBuilder::buildWhereCondition(QString *query, const Query::Condition &c
         *query += QLatin1String("( ");
         const QLatin1String glue = logicOperatorToString(cond.mCombineOp);
         const Query::Condition::List &subConditions = cond.subConditions();
-        for (int i = 0, c = subConditions.size(); i < c; ++i) {
+        for (qsizetype i = 0, c = subConditions.size(); i < c; ++i) {
             buildWhereCondition(query, subConditions.at(i));
             if (i + 1 < c) {
                 *query += glue;
@@ -530,12 +531,12 @@ void QueryBuilder::buildWhereCondition(QString *query, const Query::Condition &c
         *query += compareOperatorToString(cond.mCompareOp);
         if (cond.mComparedColumn.isEmpty()) {
             if (cond.mComparedValue.isValid()) {
-                if (cond.mComparedValue.canConvert(QVariant::List) && cond.mComparedValue.type() != QVariant::String
-                    && cond.mComparedValue.type() != QVariant::ByteArray) {
+                if (cond.mComparedValue.canConvert(QMetaType(QMetaType::QVariantList)) && cond.mComparedValue.typeId() != QMetaType::QString
+                    && cond.mComparedValue.typeId() != QMetaType::QByteArray) {
                     *query += QLatin1String("( ");
                     const QVariantList &entries = cond.mComparedValue.toList();
                     Q_ASSERT_X(!entries.isEmpty(), "QueryBuilder::buildWhereCondition()", "No values given for IN condition.");
-                    for (int i = 0, c = entries.size(); i < c; ++i) {
+                    for (qsizetype i = 0, c = entries.size(); i < c; ++i) {
                         bindValue(query, entries.at(i));
                         if (i + 1 < c) {
                             *query += QLatin1String(", ");
@@ -681,7 +682,7 @@ QString QueryBuilder::getTableQuery(const QSqlQuery& query, const QString &alias
         const auto value = boundValues.value(key);
 #endif
 
-        QSqlField field(QLatin1String(""), value.type());
+        QSqlField field(QLatin1String(""), value.metaType());
         if (value.isNull()) {
             field.clear();
         }

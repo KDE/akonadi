@@ -595,19 +595,19 @@ DataStream &operator<<(DataStream &stream, const ScopeContext &context)
     // We don't have a custom generic DataStream streaming operator for QVariant
     // because it's very hard, esp. without access to QVariant private
     // stuff, so we have to decompose it manually here.
-    QVariant::Type vType = context.mColCtx.type();
+    auto vType = context.mColCtx.typeId();
     stream << vType;
-    if (vType == QVariant::LongLong) {
+    if (vType == QMetaType::LongLong) {
         stream << context.mColCtx.toLongLong();
-    } else if (vType == QVariant::String) {
+    } else if (vType == QMetaType::QString) {
         stream << context.mColCtx.toString();
     }
 
-    vType = context.mTagCtx.type();
+    vType = context.mTagCtx.typeId();
     stream << vType;
-    if (vType == QVariant::LongLong) {
+    if (vType == QMetaType::LongLong) {
         stream << context.mTagCtx.toLongLong();
-    } else if (vType == QVariant::String) {
+    } else if (vType == QMetaType::QString) {
         stream << context.mTagCtx.toString();
     }
 
@@ -616,16 +616,16 @@ DataStream &operator<<(DataStream &stream, const ScopeContext &context)
 
 DataStream &operator>>(DataStream &stream, ScopeContext &context)
 {
-    QVariant::Type vType;
+    int vType;
     qint64 id;
     QString rid;
 
     for (ScopeContext::Type type : {ScopeContext::Collection, ScopeContext::Tag}) {
         stream >> vType;
-        if (vType == QVariant::LongLong) {
+        if (vType == QMetaType::LongLong) {
             stream >> id;
             context.setContext(type, id);
-        } else if (vType == QVariant::String) {
+        } else if (vType == QMetaType::QString) {
             stream >> rid;
             context.setContext(type, rid);
         }
