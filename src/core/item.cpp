@@ -443,14 +443,14 @@ bool Item::ensureMetaTypeId(int mtid) const
 
 static QString format_type(int spid, int mtid)
 {
-    return QStringLiteral("sp(%1)<%2>").arg(spid).arg(QLatin1String(QMetaType::typeName(mtid)));
+    return QStringLiteral("sp(%1)<%2>").arg(spid).arg(QLatin1String(QMetaType(mtid).name()));
 }
 
-static QString format_types(const PayloadContainer &c)
+static QString format_types(const PayloadContainer &container)
 {
     QStringList result;
-    result.reserve(c.size());
-    for (auto it = c.begin(), end = c.end(); it != end; ++it) {
+    result.reserve(container.size());
+    for (auto it = container.begin(), end = container.end(); it != end; ++it) {
         result.push_back(format_type(it->sharedPointerId, it->metaTypeId));
     }
     return result.join(QLatin1String(", "));

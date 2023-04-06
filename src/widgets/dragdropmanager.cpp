@@ -30,7 +30,7 @@ DragDropManager::DragDropManager(QAbstractItemView *view)
 
 Akonadi::Collection DragDropManager::currentDropTarget(QDropEvent *event) const
 {
-    const QModelIndex index = m_view->indexAt(event->pos());
+    const QModelIndex index = m_view->indexAt(event->position().toPoint());
     auto collection = m_view->model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
     if (!collection.isValid()) {
         const Item item = m_view->model()->data(index, EntityTreeModel::ItemRole).value<Item>();
@@ -62,7 +62,7 @@ bool DragDropManager::dropAllowed(QDragMoveEvent *event) const
                 }
 
                 // Check if we don't try to drop on one of the children
-                if (hasAncestor(m_view->indexAt(event->pos()), collection.id())) {
+                if (hasAncestor(m_view->indexAt(event->position().toPoint()), collection.id())) {
                     break;
                 }
             } else { // This is an item.
@@ -228,7 +228,7 @@ bool DragDropManager::processDropEvent(QDropEvent *event, bool &menuCanceled, bo
     QAction *cancelAction =
         popup.addAction(QIcon::fromTheme(QStringLiteral("process-stop")), i18n("C&ancel") + QLatin1Char('\t') + QKeySequence(Qt::Key_Escape).toString());
 
-    QAction *activatedAction = popup.exec(m_view->viewport()->mapToGlobal(event->pos()));
+    QAction *activatedAction = popup.exec(m_view->viewport()->mapToGlobal(event->position().toPoint()));
     if (!activatedAction || (activatedAction == cancelAction)) {
         menuCanceled = true;
         return false;

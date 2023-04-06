@@ -59,7 +59,7 @@ public:
 private:
     void findPendingDefaults();
     void setupNext();
-    static QVariant::Type argumentType(const QMetaObject *mo, const QString &method);
+    static QMetaType::Type argumentType(const QMetaObject *mo, const QString &method);
 
 private Q_SLOTS:
     void instanceCreated(KJob *job);

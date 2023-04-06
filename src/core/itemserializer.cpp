@@ -202,7 +202,7 @@ QSet<QByteArray> ItemSerializer::allowedForeignParts(const Item &item)
 
 Item ItemSerializer::convert(const Item &item, int mtid)
 {
-    qCDebug(AKONADICORE_LOG) << "asked to convert a" << item.mimeType() << "item to format" << (mtid ? QMetaType::typeName(mtid) : "<legacy>");
+    qCDebug(AKONADICORE_LOG) << "asked to convert a" << item.mimeType() << "item to format" << (mtid ? QMetaType(mtid).name() : "<legacy>");
     if (!item.hasPayload()) {
         qCDebug(AKONADICORE_LOG) << "  -> but item has no payload!";
         return Item();

@@ -59,26 +59,26 @@ static QString dbusServiceName()
     return service;
 }
 
-static QVariant::Type argumentType(const QMetaObject *mo, const QString &method)
+static QMetaType::Type argumentType(const QMetaObject *metaObject, const QString &method)
 {
-    QMetaMethod m;
-    for (int i = 0; i < mo->methodCount(); ++i) {
-        const QString signature = QString::fromLatin1(mo->method(i).methodSignature());
+    QMetaMethod metaMethod;
+    for (int i = 0; i < metaObject->methodCount(); ++i) {
+        const QString signature = QString::fromLatin1(metaObject->method(i).methodSignature());
         if (signature.startsWith(method)) {
-            m = mo->method(i);
+            metaMethod = metaObject->method(i);
         }
     }
 
-    if (m.methodSignature().isEmpty()) {
-        return QVariant::Invalid;
+    if (metaMethod.methodSignature().isEmpty()) {
+        return QMetaType::UnknownType;
     }
 
-    const QList<QByteArray> argTypes = m.parameterTypes();
+    const QList<QByteArray> argTypes = metaMethod.parameterTypes();
     if (argTypes.count() != 1) {
-        return QVariant::Invalid;
+        return QMetaType::UnknownType;
     }
 
-    return QVariant::nameToType(argTypes.first().constData());
+    return static_cast<QMetaType::Type>(QMetaType::fromName(argTypes.first().constData()).id());
 }
 
 // ===================== ResourceScanJob ============================
@@ -336,8 +336,8 @@ void DefaultResourceJobPrivate::resourceCreateResult(KJob *job)
             }
 
             const QString methodName = QStringLiteral("set%1").arg(it.key());
-            const QVariant::Type argType = argumentType(conf.metaObject(), methodName);
-            if (argType == QVariant::Invalid) {
+            const QMetaType::Type argType = argumentType(conf.metaObject(), methodName);
+            if (argType == QMetaType::UnknownType) {
                 q->setError(Job::Unknown);
                 q->setErrorText(i18n("Failed to configure default resource via D-Bus."));
                 q->emitResult();
