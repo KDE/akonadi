@@ -50,12 +50,12 @@ using namespace Akonadi::Server;
 
 static QThreadStorage<DataStore *> sInstances;
 
-#define setBoolPtr(ptr, val)                                                                                                                                   \
-    {                                                                                                                                                          \
-        if ((ptr)) {                                                                                                                                           \
-            *(ptr) = (val);                                                                                                                                    \
-        }                                                                                                                                                      \
+static inline void setBoolPtr(bool *ptr, bool val)
+{
+    if (ptr) {
+        *ptr = val;
     }
+}
 
 std::unique_ptr<DataStoreFactory> DataStore::sFactory;
 
