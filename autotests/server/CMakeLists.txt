@@ -96,8 +96,6 @@ add_server_test(parttypehelpertest.cpp)
 add_server_test(collectionstatisticstest.cpp)
 add_server_test(aggregatedfetchscopetest.cpp)
 add_server_test(collectionschedulertest.cpp)
-
-if (SQLITE_FOUND) # tests using the fake server need the QSQLITE3 plugin
 add_server_test(partstreamertest.cpp)
 add_server_test(itemcreatehandlertest.cpp)
 add_server_test(itemlinkhandlertest.cpp)
@@ -109,4 +107,3 @@ add_server_test(searchtest.cpp akonadiprivate)
 add_server_test(relationhandlertest.cpp akonadiprivate)
 add_server_test(taghandlertest.cpp akonadiprivate)
 add_server_test(fetchhandlertest.cpp akonadiprivate)
-endif()

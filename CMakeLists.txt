@@ -150,7 +150,6 @@ endif()
 check_symbol_exists(malloc_trim "malloc.h" HAVE_MALLOC_TRIM)
 
 ############### Build Options ###############
-option(AKONADI_BUILD_QSQLITE "Build the Sqlite backend." TRUE)
 option(BUILD_TOOLS "Build and install tools for development and testing purposes." TRUE)
 option(INSTALL_APPARMOR "Install AppArmor profiles" TRUE)
 
@@ -207,24 +206,6 @@ else()
     message(STATUS "PostgreSQL wasn't found. it is required to use the Postgres backend.")
 endif()
 
-
-if("${DATABASE_BACKEND}" STREQUAL "SQLITE")
-    set(SQLITE_TYPE "REQUIRED")
-else()
-    set(SQLITE_TYPE "OPTIONAL")
-endif()
-
-if(AKONADI_BUILD_QSQLITE)
-    set(SQLITE_MIN_VERSION 3.6.23)
-    find_package(Sqlite ${SQLITE_MIN_VERSION})
-    set_package_properties(Sqlite PROPERTIES
-        URL "https://www.sqlite.org"
-        DESCRIPTION "The Sqlite database library"
-        TYPE ${SQLITE_TYPE}
-        PURPOSE "Required by the Sqlite backend"
-    )
-endif()
-
 find_program(XMLLINT_EXECUTABLE xmllint)
 if(NOT XMLLINT_EXECUTABLE)
     message(STATUS "xmllint not found, skipping akonadidb.xml schema validation")
@@ -257,14 +238,13 @@ endif()
 macro(SET_DEFAULT_DB_BACKEND)
     set(_backend ${ARGV0})
     if("${_backend}" STREQUAL "SQLITE")
-        set(AKONADI_DATABASE_BACKEND QSQLITE3)
-        set(AKONADI_BUILD_QSQLITE TRUE)
+        set(AKONADI_DATABASE_BACKEND QSQLITE)
+    elseif("${_backend}" STREQUAL "POSTGRES")
+        set(AKONADI_DATABASE_BACKEND QPSQL)
+    elseif("${_backend}" STREQUAL "MYSQL")
+        set(AKONADI_DATABASE_BACKEND QMYSQL)
     else()
-        if("${_backend}" STREQUAL "POSTGRES")
-          set(AKONADI_DATABASE_BACKEND QPSQL)
-        else()
-          set(AKONADI_DATABASE_BACKEND QMYSQL)
-        endif()
+        message(FATAL_ERROR "Invalid database backend \"${_backend}\". Supported values are MYSQL, POSTGRES and SQLITE.")
     endif()
 
     message(STATUS "Using default db backend ${AKONADI_DATABASE_BACKEND}")

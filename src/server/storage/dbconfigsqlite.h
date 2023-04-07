@@ -15,13 +15,7 @@ namespace Server
 class DbConfigSqlite : public DbConfig
 {
 public:
-    enum Version {
-        Default, /** Uses the Qt sqlite driver */
-        Custom /** Uses the custom qsqlite driver from akonadi/qsqlite */
-    };
-
-public:
-    explicit DbConfigSqlite(Version driver);
+    explicit DbConfigSqlite() = default;
 
     /**
      * Returns the name of the used driver.
@@ -44,7 +38,7 @@ public:
 
     /**
      * This method checks if the requirements for this database connection are met
-     * in the system (QSQLITE/QSQLITE3 driver is available, object can be initialized, etc.).
+     * in the system (QSQLITE driver is available, object can be initialized, etc.).
      */
     bool isAvailable(QSettings &settings) override;
 
@@ -67,7 +61,6 @@ public:
 private:
     bool setPragma(QSqlDatabase &db, QSqlQuery &query, const QString &pragma);
 
-    Version mDriverVersion;
     QString mDatabaseName;
     QString mHostName;
     QString mUserName;
