@@ -48,16 +48,7 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-QMutex DataStore::sTransactionMutex = {};
-
 static QThreadStorage<DataStore *> sInstances;
-
-#define TRANSACTION_MUTEX_LOCK                                                                                                                                 \
-    if (DbType::isSystemSQLite(m_database))                                                                                                                    \
-    sTransactionMutex.lock()
-#define TRANSACTION_MUTEX_UNLOCK                                                                                                                               \
-    if (DbType::isSystemSQLite(m_database))                                                                                                                    \
-    sTransactionMutex.unlock()
 
 #define setBoolPtr(ptr, val)                                                                                                                                   \
     {                                                                                                                                                          \
@@ -1269,11 +1260,9 @@ bool DataStore::doRollback()
     driver->rollbackTransaction();
     StorageDebugger::instance()->removeTransaction(reinterpret_cast<qint64>(this), false, timer.elapsed(), m_database.lastError().text());
     if (m_database.lastError().isValid()) {
-        TRANSACTION_MUTEX_UNLOCK;
         debugLastDbError("DataStore::rollbackTransaction");
         return false;
     }
-    TRANSACTION_MUTEX_UNLOCK;
     return true;
 }
 
@@ -1294,13 +1283,11 @@ bool DataStore::beginTransaction(const QString &name)
         m_transactionKilledByDB = false;
         QElapsedTimer timer;
         timer.start();
-        TRANSACTION_MUTEX_LOCK;
         if (DbType::type(m_database) == DbType::Sqlite) {
             m_database.exec(QStringLiteral("BEGIN IMMEDIATE TRANSACTION"));
             StorageDebugger::instance()->addTransaction(reinterpret_cast<qint64>(this), name, timer.elapsed(), m_database.lastError().text());
             if (m_database.lastError().isValid()) {
                 debugLastDbError("DataStore::beginTransaction (SQLITE)");
-                TRANSACTION_MUTEX_UNLOCK;
                 return false;
             }
         } else {
@@ -1308,7 +1295,6 @@ bool DataStore::beginTransaction(const QString &name)
             StorageDebugger::instance()->addTransaction(reinterpret_cast<qint64>(this), name, timer.elapsed(), m_database.lastError().text());
             if (m_database.lastError().isValid()) {
                 debugLastDbError("DataStore::beginTransaction");
-                TRANSACTION_MUTEX_UNLOCK;
                 return false;
             }
         }
@@ -1375,7 +1361,6 @@ bool DataStore::commitTransaction()
             rollbackTransaction();
             return false;
         } else {
-            TRANSACTION_MUTEX_UNLOCK;
             m_transactionLevel--;
             Q_EMIT transactionCommitted();
         }

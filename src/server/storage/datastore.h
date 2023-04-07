@@ -358,7 +358,6 @@ private:
     };
     QByteArray mSessionId;
     QTimer *m_keepAliveTimer = nullptr;
-    static QMutex sTransactionMutex;
 
     friend class DataStoreFactory;
 };
