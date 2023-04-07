@@ -141,12 +141,6 @@ bool FakeDataStore::cleanupCollection(Collection &collection)
     return DataStore::cleanupCollection(collection);
 }
 
-bool FakeDataStore::cleanupCollection_slow(Collection &collection)
-{
-    mChanges.insert(QStringLiteral("cleanupCollection_slow"), QVariantList() << QVariant::fromValue(collection));
-    return DataStore::cleanupCollection_slow(collection);
-}
-
 bool FakeDataStore::moveCollection(Collection &collection, const Collection &newParent)
 {
     mChanges.insert(QStringLiteral("moveCollection"), QVariantList() << QVariant::fromValue(collection) << QVariant::fromValue(newParent));

@@ -88,16 +88,15 @@ void DbInitializerTest::testRun_data()
     QTest::addColumn<QString>("filename");
     QTest::addColumn<bool>("hasTable");
     QTest::addColumn<QVector<DbIntrospector::ForeignKey>>("fks");
-    QTest::addColumn<bool>("hasFks");
 
     QVector<DbIntrospector::ForeignKey> fks;
 
     QTest::newRow("mysql") << "QMYSQL"
-                           << ":dbinit_mysql" << false << fks << true;
+                           << ":dbinit_mysql" << false << fks;
     QTest::newRow("sqlite") << "QSQLITE"
-                            << ":dbinit_sqlite" << false << fks << true;
+                            << ":dbinit_sqlite" << false << fks;
     QTest::newRow("psql") << "QPSQL"
-                          << ":dbinit_psql" << false << fks << true;
+                          << ":dbinit_psql" << false << fks;
 
     DbIntrospector::ForeignKey fk;
     fk.name = QL1S("myForeignKeyIdentifier");
@@ -109,11 +108,11 @@ void DbInitializerTest::testRun_data()
     fks.push_back(fk);
 
     QTest::newRow("mysql (incremental)") << "QMYSQL"
-                                         << ":dbinit_mysql_incremental" << true << fks << true;
+                                         << ":dbinit_mysql_incremental" << true << fks;
     QTest::newRow("sqlite (incremental)") << "QSQLITE"
-                                          << ":dbinit_sqlite_incremental" << true << fks << true;
+                                          << ":dbinit_sqlite_incremental" << true << fks;
     QTest::newRow("psql (incremental)") << "QPSQL"
-                                        << ":dbinit_psql_incremental" << true << fks << true;
+                                        << ":dbinit_psql_incremental" << true << fks;
 }
 
 void DbInitializerTest::testRun()
@@ -122,7 +121,6 @@ void DbInitializerTest::testRun()
     QFETCH(QString, filename);
     QFETCH(bool, hasTable);
     QFETCH(QVector<DbIntrospector::ForeignKey>, fks);
-    QFETCH(bool, hasFks);
 
     QFile file(filename);
     QVERIFY(file.open(QFile::ReadOnly));
@@ -156,7 +154,6 @@ void DbInitializerTest::testRun()
         }
 
         QVERIFY(initializer->errorMsg().isEmpty());
-        QCOMPARE(initializer->hasForeignKeyConstraints(), hasFks);
     }
 }
 

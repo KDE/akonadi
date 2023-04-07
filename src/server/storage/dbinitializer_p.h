@@ -18,8 +18,6 @@ class DbInitializerMySql : public DbInitializer
 public:
     explicit DbInitializerMySql(const QSqlDatabase &database);
 
-    bool hasForeignKeyConstraints() const override;
-
 protected:
     QString sqlType(const ColumnDescription &col, int size) const override;
 
@@ -34,8 +32,6 @@ class DbInitializerSqlite : public DbInitializer
 {
 public:
     explicit DbInitializerSqlite(const QSqlDatabase &database);
-
-    bool hasForeignKeyConstraints() const override;
 
 protected:
     QString buildCreateTableStatement(const TableDescription &tableDescription) const override;
@@ -53,8 +49,6 @@ class DbInitializerPostgreSql : public DbInitializer
 {
 public:
     explicit DbInitializerPostgreSql(const QSqlDatabase &database);
-
-    bool hasForeignKeyConstraints() const override;
 
 protected:
     QString sqlType(const ColumnDescription &col, int size) const override;

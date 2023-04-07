@@ -170,8 +170,6 @@ public:
 
     /// removes the given collection and all its content
     virtual bool cleanupCollection(Collection &collection);
-    /// same as the above but for database backends without working referential actions on foreign keys
-    virtual bool cleanupCollection_slow(Collection &collection);
 
     /// moves the collection @p collection to @p newParent.
     virtual bool moveCollection(Collection &collection, const Collection &newParent);
@@ -360,7 +358,6 @@ private:
     };
     QByteArray mSessionId;
     QTimer *m_keepAliveTimer = nullptr;
-    static bool s_hasForeignKeyConstraints;
     static QMutex sTransactionMutex;
 
     friend class DataStoreFactory;
