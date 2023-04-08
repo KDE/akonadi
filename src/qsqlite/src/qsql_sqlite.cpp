@@ -614,6 +614,8 @@ bool QSQLiteDriver::open(const QString &db, const QString &, const QString &, co
     if (openUriOption) {
         openMode |= SQLITE_OPEN_URI;
     }
+    // Use multi-threaded mode
+    openMode |= SQLITE_OPEN_NOMUTEX;
 
     sqlite3_enable_shared_cache(sharedCache);
 
