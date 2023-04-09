@@ -297,7 +297,6 @@ configure_file(config-akonadi.h.cmake ${Akonadi_BINARY_DIR}/config-akonadi.h)
 
 ############### build targets ###############
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KPim6Akonadi")
-set(AKONADI_KF6_COMPAT FALSE)
 add_definitions(-DTRANSLATION_DOMAIN=\"libakonadi5\")
 
 include_directories(
