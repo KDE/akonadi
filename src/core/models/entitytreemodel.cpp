@@ -170,7 +170,7 @@ QVariant EntityTreeModel::entityData(const Collection &collection, int column, i
 {
     Q_D(const EntityTreeModel);
 
-    if (column > 0) {
+    if (column != 0) {
         return QString();
     }
 
