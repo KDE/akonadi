@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-24 00:48+0000\n"
+"POT-Creation-Date: 2023-04-10 00:47+0000\n"
 "PO-Revision-Date: 2019-11-01 17:00+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -388,21 +388,21 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Nome"
 
-#: core/models/entitytreemodel.cpp:193
+#: core/models/entitytreemodel.cpp:204
 #, fuzzy, kde-format
 #| msgid "Loading..."
 msgctxt "@info:status"
 msgid "Loading..."
 msgstr "Cargando…"
 
-#: core/models/entitytreemodel.cpp:485
+#: core/models/entitytreemodel.cpp:496
 #, fuzzy, kde-format
 #| msgid "Error"
 msgctxt "@window:title"
 msgid "Error"
 msgstr "Erro"
 
-#: core/models/entitytreemodel.cpp:486
+#: core/models/entitytreemodel.cpp:497
 #, kde-format
 msgid ""
 "The target collection '%1' contains already\n"
@@ -411,7 +411,7 @@ msgstr ""
 "A colección de destino «%1» xa contén\n"
 "unha colección chamada «%2»."
 
-#: core/models/entitytreemodel.cpp:655
+#: core/models/entitytreemodel.cpp:666
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"

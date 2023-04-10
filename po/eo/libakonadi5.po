@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-24 00:48+0000\n"
+"POT-Creation-Date: 2023-04-10 00:47+0000\n"
 "PO-Revision-Date: 2023-02-10 20:03+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -378,19 +378,19 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Nomo"
 
-#: core/models/entitytreemodel.cpp:193
+#: core/models/entitytreemodel.cpp:204
 #, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
 msgstr "Ŝargante..."
 
-#: core/models/entitytreemodel.cpp:485
+#: core/models/entitytreemodel.cpp:496
 #, kde-format
 msgctxt "@window:title"
 msgid "Error"
 msgstr "Eraro"
 
-#: core/models/entitytreemodel.cpp:486
+#: core/models/entitytreemodel.cpp:497
 #, kde-format
 msgid ""
 "The target collection '%1' contains already\n"
@@ -399,7 +399,7 @@ msgstr ""
 "La cela kolekto '%1' enhavas jam\n"
 "kolekton kun nomo '%2'."
 
-#: core/models/entitytreemodel.cpp:655
+#: core/models/entitytreemodel.cpp:666
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"

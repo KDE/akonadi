@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-24 00:48+0000\n"
+"POT-Creation-Date: 2023-04-10 00:47+0000\n"
 "PO-Revision-Date: 2023-02-04 09:20+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -379,19 +379,19 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Nazwa"
 
-#: core/models/entitytreemodel.cpp:193
+#: core/models/entitytreemodel.cpp:204
 #, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
 msgstr "Wczytywanie..."
 
-#: core/models/entitytreemodel.cpp:485
+#: core/models/entitytreemodel.cpp:496
 #, kde-format
 msgctxt "@window:title"
 msgid "Error"
 msgstr "Błąd"
 
-#: core/models/entitytreemodel.cpp:486
+#: core/models/entitytreemodel.cpp:497
 #, kde-format
 msgid ""
 "The target collection '%1' contains already\n"
@@ -400,7 +400,7 @@ msgstr ""
 "Docelowy zbiór '%1' już zawiera\n"
 "zbiór o nazwie '%2'."
 
-#: core/models/entitytreemodel.cpp:655
+#: core/models/entitytreemodel.cpp:666
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"

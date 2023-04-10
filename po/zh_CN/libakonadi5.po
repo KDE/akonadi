@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-24 00:48+0000\n"
+"POT-Creation-Date: 2023-04-10 00:47+0000\n"
 "PO-Revision-Date: 2023-03-27 11:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -374,19 +374,19 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "名称"
 
-#: core/models/entitytreemodel.cpp:193
+#: core/models/entitytreemodel.cpp:204
 #, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
 msgstr "正在加载..."
 
-#: core/models/entitytreemodel.cpp:485
+#: core/models/entitytreemodel.cpp:496
 #, kde-format
 msgctxt "@window:title"
 msgid "Error"
 msgstr "错误"
 
-#: core/models/entitytreemodel.cpp:486
+#: core/models/entitytreemodel.cpp:497
 #, kde-format
 msgid ""
 "The target collection '%1' contains already\n"
@@ -395,7 +395,7 @@ msgstr ""
 "目标集合“%1”已包含\n"
 "名为“%2”的集合。"
 
-#: core/models/entitytreemodel.cpp:655
+#: core/models/entitytreemodel.cpp:666
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
