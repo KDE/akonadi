@@ -135,7 +135,9 @@ private Q_SLOTS:
         mAkonadi.setScenarios(scenarios);
         mAkonadi.runTest();
 
-        const auto receivedNotifications = extractNotifications(mAkonadi.notificationSpy());
+        auto notificationSpy = mAkonadi.notificationSpy();
+        QTRY_COMPARE(notificationSpy->empty(), expectedNotifications.empty());
+        const auto receivedNotifications = extractNotifications(notificationSpy);
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
         for (int i = 0; i < expectedNotifications.size(); i++) {
             QCOMPARE(*receivedNotifications.at(i), *expectedNotifications.at(i));
@@ -230,7 +232,9 @@ private Q_SLOTS:
         mAkonadi.setScenarios(scenarios);
         mAkonadi.runTest();
 
-        const auto receivedNotifications = extractNotifications(mAkonadi.notificationSpy());
+        auto notificationSpy = mAkonadi.notificationSpy();
+        QTRY_COMPARE(notificationSpy->empty(), expectedNotifications.empty());
+        const auto receivedNotifications = extractNotifications(notificationSpy);
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
         for (int i = 0; i < expectedNotifications.size(); i++) {
             QCOMPARE(*receivedNotifications.at(i), *expectedNotifications.at(i));

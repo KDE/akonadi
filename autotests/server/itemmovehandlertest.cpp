@@ -101,7 +101,7 @@ private Q_SLOTS:
             QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<Protocol::ChangeNotificationList>().isEmpty());
             return;
         }
-        QCOMPARE(notificationSpy->count(), 1);
+        QTRY_COMPARE(notificationSpy->count(), 1);
         // Only one notify call
         QCOMPARE(notificationSpy->first().count(), 1);
         const auto receivedNotifications = notificationSpy->first().first().value<Protocol::ChangeNotificationList>();

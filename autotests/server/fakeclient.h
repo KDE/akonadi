@@ -31,10 +31,14 @@ public:
 
     bool isScenarioDone() const;
 
-protected:
-    void run() override;
+    void start();
+    void startScenario();
+    void cleanup();
 
 private Q_SLOTS:
+    void do_connectToServer();
+    void do_startScenario();
+
     bool dataAvailable();
     void readServerPart();
     void writeClientPart();

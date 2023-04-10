@@ -7,6 +7,8 @@
 
 #include "inspectablenotificationcollector.h"
 
+#include <QTest>
+
 using namespace Akonadi;
 using namespace Akonadi::Server;
 

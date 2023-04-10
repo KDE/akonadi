@@ -21,9 +21,25 @@ FakeConnection::FakeConnection(AkonadiServer &akonadi)
 {
 }
 
-FakeConnection::~FakeConnection() = default;
+FakeConnection::~FakeConnection()
+{
+    quitThread();
+}
+
+void FakeConnection::init()
+{
+    Connection::init();
+
+    mNotificationCollector = storageBackend()->notificationCollector();
+}
+
+void FakeConnection::quit()
+{
+    mNotificationCollector->dispatchNotifications();
+    Connection::quit();
+}
 
 NotificationCollector *FakeConnection::notificationCollector()
 {
-    return storageBackend()->notificationCollector();
+    return mNotificationCollector;
 }

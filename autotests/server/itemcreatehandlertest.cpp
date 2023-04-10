@@ -806,7 +806,7 @@ private Q_SLOTS:
 
         auto notificationSpy = mAkonadi.notificationSpy();
 
-        QCOMPARE(notificationSpy->count(), notifications.count());
+        QTRY_COMPARE(notificationSpy->count(), notifications.count());
         for (int i = 0; i < notifications.count(); ++i) {
             const auto incomingNtfs = notificationSpy->at(i).first().value<Protocol::ChangeNotificationList>();
             QCOMPARE(incomingNtfs.count(), 1);
