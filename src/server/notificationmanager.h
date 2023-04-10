@@ -29,8 +29,13 @@ class NotificationManager : public AkThread
 {
     Q_OBJECT
 
-public:
+protected:
+    /**
+     * Use AkThread::create() to create and start a new NotificationManager thread.
+     */
     explicit NotificationManager(StartMode startMode = AutoStart);
+
+public:
     ~NotificationManager() override;
 
     void forgetSubscriber(NotificationSubscriber *subscriber);

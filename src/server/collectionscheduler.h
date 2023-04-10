@@ -24,8 +24,10 @@ class CollectionScheduler : public AkThread
 {
     Q_OBJECT
 
-public:
+protected:
     explicit CollectionScheduler(const QString &threadName, QThread::Priority priority, QObject *parent = nullptr);
+
+public:
     ~CollectionScheduler() override;
 
     void collectionChanged(qint64 collectionId);

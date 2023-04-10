@@ -25,8 +25,13 @@ class StorageJanitor : public AkThread
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.freedesktop.Akonadi.Janitor")
 
-public:
+protected:
+    /**
+     * Use AkThread::create() to create and start a new StorageJanitor thread.
+     */
     explicit StorageJanitor(AkonadiServer &mAkonadi);
+
+public:
     ~StorageJanitor() override;
 
 public Q_SLOTS:

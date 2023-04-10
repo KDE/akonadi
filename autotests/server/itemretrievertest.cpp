@@ -261,7 +261,7 @@ private Q_SLOTS:
         for (int step = 0; step < 2; ++step) {
             DbInitializer dbInitializer;
             auto factory = new FakeItemRetrievalJobFactory(dbInitializer);
-            ItemRetrievalManager mgr{std::unique_ptr<AbstractItemRetrievalJobFactory>(factory)};
+            auto mgr = AkThread::create<ItemRetrievalManager>(std::unique_ptr<AbstractItemRetrievalJobFactory>(factory));
             QTest::qWait(100);
 
             // Given a PimItem with existing parts
@@ -279,7 +279,7 @@ private Q_SLOTS:
             }
 
             if (step == 0) {
-                ClientThread thread(item.id(), requestedParts, mgr);
+                ClientThread thread(item.id(), requestedParts, *mgr);
                 thread.run();
 
                 const ClientThread::Results results = thread.results();
@@ -298,7 +298,7 @@ private Q_SLOTS:
             } else {
                 QVector<ClientThread *> threads;
                 for (int i = 0; i < 20; ++i) {
-                    threads.append(new ClientThread(item.id(), requestedParts, mgr));
+                    threads.append(new ClientThread(item.id(), requestedParts, *mgr));
                 }
                 for (int i = 0; i < threads.size(); ++i) {
                     threads.at(i)->start();

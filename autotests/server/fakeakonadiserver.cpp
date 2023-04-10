@@ -206,19 +206,19 @@ void FakeAkonadiServer::initFake()
 
     mTracer = std::make_unique<Tracer>();
     mCollectionStats = std::make_unique<CollectionStatistics>();
-    mCacheCleaner = std::make_unique<CacheCleaner>();
+    mCacheCleaner = AkThread::create<CacheCleaner>();
     if (!mDisableItemRetrievalManager) {
-        mItemRetrieval = std::make_unique<FakeItemRetrievalManager>();
+        mItemRetrieval = AkThread::create<FakeItemRetrievalManager>();
     }
-    mAgentSearchManager = std::make_unique<SearchTaskManager>();
+    mAgentSearchManager = AkThread::create<SearchTaskManager>();
 
     mDebugInterface = std::make_unique<DebugInterface>(*mTracer);
     mResourceManager = std::make_unique<ResourceManager>(*mTracer);
     mPreprocessorManager = std::make_unique<PreprocessorManager>(*mTracer);
     mPreprocessorManager->setEnabled(false);
-    mIntervalCheck = std::make_unique<FakeIntervalCheck>(*mItemRetrieval);
-    mSearchManager = std::make_unique<FakeSearchManager>(*mAgentSearchManager);
-    mStorageJanitor = std::make_unique<StorageJanitor>(*this);
+    mIntervalCheck = AkThread::create<FakeIntervalCheck>(*mItemRetrieval);
+    mSearchManager = AkThread::create<FakeSearchManager>(*mAgentSearchManager);
+    mStorageJanitor = AkThread::create<StorageJanitor>(*this);
 
     qDebug() << "==== Fake Akonadi Server started ====";
 }

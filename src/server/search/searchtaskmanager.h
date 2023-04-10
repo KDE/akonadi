@@ -44,8 +44,13 @@ class SearchTaskManager : public AkThread
 {
     Q_OBJECT
 
-public:
+protected:
+    /**
+     * Use AkThread::create() to create and start a new SearchTaskManager thread.
+     */
     explicit SearchTaskManager();
+
+public:
     ~SearchTaskManager() override;
 
     void registerInstance(const QString &id);

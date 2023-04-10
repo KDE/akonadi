@@ -38,8 +38,13 @@ class Collection;
 class Connection : public AkThread
 {
     Q_OBJECT
-public:
+protected:
+    /**
+     * Use AkThread::create() to construct and start a new connection thread.
+     */
     explicit Connection(quintptr socketDescriptor, AkonadiServer &akonadi);
+
+public:
     ~Connection() override;
 
     virtual DataStore *storageBackend();
@@ -84,11 +89,11 @@ protected Q_SLOTS:
     void slotSocketDisconnected();
     void slotSendHello();
 
-protected:
-    Connection(AkonadiServer &akonadi); // used for testing
-
     void init() override;
     void quit() override;
+
+protected:
+    Connection(AkonadiServer &akonadi); // used for testing
 
     std::unique_ptr<Handler> findHandlerForCommand(Protocol::Command::Type cmd);
 

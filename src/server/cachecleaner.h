@@ -53,12 +53,14 @@ class CacheCleaner : public CollectionScheduler
 {
     Q_OBJECT
 
-public:
+protected:
     /**
-      Creates a new cache cleaner thread.
+      Creates a new cache cleaner thread. Use AkThread::create() to create a new instance of CacheCleaner.
       @param parent The parent object.
     */
     explicit CacheCleaner(QObject *parent = nullptr);
+
+public:
     ~CacheCleaner() override;
 
 protected:

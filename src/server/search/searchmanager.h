@@ -35,10 +35,15 @@ class SearchManager : public AkThread
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.freedesktop.Akonadi.SearchManager")
 
-public:
-    /** Create a new search manager with the given @p searchEngines. */
+protected:
+    /**
+     * Create a new search manager with the given @p searchEngines.
+     *
+     * Use AkThread::create() to create and start a new SearchManager thread.
+     **/
     explicit SearchManager(const QStringList &searchEngines, SearchTaskManager &agentSearchManager);
 
+public:
     ~SearchManager() override;
 
     /**

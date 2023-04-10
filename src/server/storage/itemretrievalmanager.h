@@ -46,9 +46,14 @@ private:
 class ItemRetrievalManager : public AkThread
 {
     Q_OBJECT
-public:
+protected:
+    /**
+     * Use AkThread::create() to create and start a new ItemRetrievalManager thread.
+     */
     explicit ItemRetrievalManager(QObject *parent = nullptr);
     explicit ItemRetrievalManager(std::unique_ptr<AbstractItemRetrievalJobFactory> factory, QObject *parent = nullptr);
+
+public:
     ~ItemRetrievalManager() override;
 
     /**
