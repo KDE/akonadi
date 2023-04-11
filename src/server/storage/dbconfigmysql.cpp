@@ -105,6 +105,9 @@ bool DbConfigMysql::init(QSettings &settings, bool storeSettings)
     mMysqlCheckPath = findExecutable(QStringLiteral("mysqlcheck"));
     qCDebug(AKONADISERVER_LOG) << "Found mysqlcheck: " << mMysqlCheckPath;
 
+    mMysqlUpgradePath = findExecutable(QStringLiteral("mysql_upgrade"));
+    qCDebug(AKONADISERVER_LOG) << "Found mysql_upgrade: " << mMysqlUpgradePath;
+
     mInternalServer = settings.value(QStringLiteral("QMYSQL/StartServer"), defaultInternalServer).toBool();
 #ifndef Q_OS_WIN
     if (mInternalServer) {
@@ -451,6 +454,16 @@ bool DbConfigMysql::startInternalServer()
                          QStringLiteral("--socket=%1/%2").arg(socketDirectory, s_mysqlSocketFileName),
 #endif
                          mDatabaseName});
+            }
+
+            if (!mMysqlUpgradePath.isEmpty()) {
+                execute(mMysqlUpgradePath,
+                        {QStringLiteral("--defaults-file=%1/mysql.conf").arg(akDir)
+#ifndef Q_OS_WIN
+                             ,
+                         QStringLiteral("--socket=%1/%2").arg(socketDirectory, s_mysqlSocketFileName)
+#endif
+                        });
             }
 
             // Verify MySQL version
