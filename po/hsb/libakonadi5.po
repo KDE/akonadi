@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-24 00:48+0000\n"
+"POT-Creation-Date: 2023-04-10 00:47+0000\n"
 "PO-Revision-Date: 2021-11-13 21:43+0100\n"
 "Last-Translator: Edward Wornar <edi.werner@gmx.de>\n"
 "Language-Team: Upper Sorbian <kde-i18n-doc@kde.org>\n"
@@ -374,19 +374,19 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Mjeno"
 
-#: core/models/entitytreemodel.cpp:193
+#: core/models/entitytreemodel.cpp:204
 #, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
 msgstr "Začitam..."
 
-#: core/models/entitytreemodel.cpp:485
+#: core/models/entitytreemodel.cpp:496
 #, kde-format
 msgctxt "@window:title"
 msgid "Error"
 msgstr "Zmylk"
 
-#: core/models/entitytreemodel.cpp:486
+#: core/models/entitytreemodel.cpp:497
 #, kde-format
 msgid ""
 "The target collection '%1' contains already\n"
@@ -395,7 +395,7 @@ msgstr ""
 "Cilowa zběrka '%1' wobsahuje hižo\n"
 "zběrku z mjenom '%2´."
 
-#: core/models/entitytreemodel.cpp:655
+#: core/models/entitytreemodel.cpp:666
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"

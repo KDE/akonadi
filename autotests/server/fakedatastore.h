@@ -73,7 +73,6 @@ public:
     bool appendCollection(Collection &collection, const QStringList &mimeTypes, const QMap<QByteArray, QByteArray> &attributes) override;
 
     bool cleanupCollection(Collection &collection) override;
-    bool cleanupCollection_slow(Collection &collection) override;
 
     bool moveCollection(Collection &collection, const Collection &newParent) override;
 

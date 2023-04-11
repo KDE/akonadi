@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-24 00:48+0000\n"
+"POT-Creation-Date: 2023-04-10 00:47+0000\n"
 "PO-Revision-Date: 2013-01-13 00:43+0200\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -396,14 +396,14 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Denumire"
 
-#: core/models/entitytreemodel.cpp:193
+#: core/models/entitytreemodel.cpp:204
 #, fuzzy, kde-format
 #| msgid "Loading..."
 msgctxt "@info:status"
 msgid "Loading..."
 msgstr "Se încarcă..."
 
-#: core/models/entitytreemodel.cpp:485
+#: core/models/entitytreemodel.cpp:496
 #, fuzzy, kde-format
 #| msgctxt "@info:status"
 #| msgid "Error."
@@ -411,7 +411,7 @@ msgctxt "@window:title"
 msgid "Error"
 msgstr "Eroare."
 
-#: core/models/entitytreemodel.cpp:486
+#: core/models/entitytreemodel.cpp:497
 #, kde-format
 msgid ""
 "The target collection '%1' contains already\n"
@@ -420,7 +420,7 @@ msgstr ""
 "Colecția-țintă „%1” conține deja\n"
 "o colecție cu denumirea „%2”."
 
-#: core/models/entitytreemodel.cpp:655
+#: core/models/entitytreemodel.cpp:666
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"

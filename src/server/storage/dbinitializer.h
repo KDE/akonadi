@@ -76,13 +76,6 @@ public:
     QString errorMsg() const;
 
     /**
-     * Returns whether the database has working and complete foreign keys.
-     * This information can be used for query optimizations.
-     * @note Result is invalid before run() has been called.
-     */
-    virtual bool hasForeignKeyConstraints() const = 0;
-
-    /**
      * Checks and creates missing indexes.
      *
      * This method is run after DbUpdater to ensure that data in new columns

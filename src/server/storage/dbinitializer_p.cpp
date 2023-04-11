@@ -18,11 +18,6 @@ DbInitializerMySql::DbInitializerMySql(const QSqlDatabase &database)
 {
 }
 
-bool DbInitializerMySql::hasForeignKeyConstraints() const
-{
-    return true;
-}
-
 QString DbInitializerMySql::sqlType(const ColumnDescription &col, int size) const
 {
     if (col.type == QLatin1String("QString")) {
@@ -127,11 +122,6 @@ QStringList DbInitializerMySql::buildRemoveForeignKeyConstraintStatements(const 
 DbInitializerSqlite::DbInitializerSqlite(const QSqlDatabase &database)
     : DbInitializer(database)
 {
-}
-
-bool DbInitializerSqlite::hasForeignKeyConstraints() const
-{
-    return true;
 }
 
 QString DbInitializerSqlite::buildCreateTableStatement(const TableDescription &tableDescription) const
@@ -259,11 +249,6 @@ QStringList DbInitializerSqlite::buildUpdateForeignKeyConstraintsStatements(cons
 DbInitializerPostgreSql::DbInitializerPostgreSql(const QSqlDatabase &database)
     : DbInitializer(database)
 {
-}
-
-bool DbInitializerPostgreSql::hasForeignKeyConstraints() const
-{
-    return true;
 }
 
 QString DbInitializerPostgreSql::sqlType(const ColumnDescription &col, int size) const

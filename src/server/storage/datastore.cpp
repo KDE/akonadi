@@ -48,24 +48,14 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-bool DataStore::s_hasForeignKeyConstraints = false;
-QMutex DataStore::sTransactionMutex = {};
-
 static QThreadStorage<DataStore *> sInstances;
 
-#define TRANSACTION_MUTEX_LOCK                                                                                                                                 \
-    if (DbType::isSystemSQLite(m_database))                                                                                                                    \
-    sTransactionMutex.lock()
-#define TRANSACTION_MUTEX_UNLOCK                                                                                                                               \
-    if (DbType::isSystemSQLite(m_database))                                                                                                                    \
-    sTransactionMutex.unlock()
-
-#define setBoolPtr(ptr, val)                                                                                                                                   \
-    {                                                                                                                                                          \
-        if ((ptr)) {                                                                                                                                           \
-            *(ptr) = (val);                                                                                                                                    \
-        }                                                                                                                                                      \
+static inline void setBoolPtr(bool *ptr, bool val)
+{
+    if (ptr) {
+        *ptr = val;
     }
+}
 
 std::unique_ptr<DataStoreFactory> DataStore::sFactory;
 
@@ -177,7 +167,6 @@ bool DataStore::init()
         qCCritical(AKONADISERVER_LOG) << initializer->errorMsg();
         return false;
     }
-    s_hasForeignKeyConstraints = initializer->hasForeignKeyConstraints();
 
     if (QFile::exists(QStringLiteral(":dbupdate.xml"))) {
         DbUpdater updater(database(), QStringLiteral(":dbupdate.xml"));
@@ -800,13 +789,6 @@ bool DataStore::appendCollection(Collection &collection, const QStringList &mime
 
 bool DataStore::cleanupCollection(Collection &collection)
 {
-    if (!s_hasForeignKeyConstraints) {
-        return cleanupCollection_slow(collection);
-    }
-
-    // db will do most of the work for us, we just deal with notifications and external payload parts here
-    Q_ASSERT(s_hasForeignKeyConstraints);
-
     // collect item deletion notifications
     const PimItem::List items = collection.items();
     const QByteArray resource = collection.resource().name().toLatin1();
@@ -841,60 +823,6 @@ bool DataStore::cleanupCollection(Collection &collection)
     qb.query().finish();
 
     // delete the collection itself, referential actions will do the rest
-    notificationCollector()->collectionRemoved(collection);
-    return collection.remove();
-}
-
-bool DataStore::cleanupCollection_slow(Collection &collection)
-{
-    Q_ASSERT(!s_hasForeignKeyConstraints);
-
-    // delete the content
-    const PimItem::List items = collection.items();
-    const QByteArray resource = collection.resource().name().toLatin1();
-    notificationCollector()->itemsRemoved(items, collection, resource);
-
-    for (const PimItem &item : items) {
-        if (!item.clearFlags()) { // TODO: move out of loop and use only a single query
-            qCWarning(AKONADISERVER_LOG) << "Slow cleanup of collection" << collection.name() << "(ID" << collection.id() << ")"
-                                         << "failed: error clearing items flags";
-            return false;
-        }
-        if (!PartHelper::remove(Part::pimItemIdColumn(), item.id())) { // TODO: reduce to single query
-            qCWarning(AKONADISERVER_LOG) << "Slow cleanup of collection" << collection.name() << "(ID" << collection.id() << ")"
-                                         << "failed: error clearing item payload parts";
-
-            return false;
-        }
-
-        if (!PimItem::remove(PimItem::idColumn(), item.id())) { // TODO: move into single querya
-            qCWarning(AKONADISERVER_LOG) << "Slow cleanup of collection" << collection.name() << "(ID" << collection.id() << ")"
-                                         << "failed: error clearing items";
-            return false;
-        }
-
-        if (!Entity::clearRelation<CollectionPimItemRelation>(item.id(), Entity::Right)) { // TODO: move into single query
-            qCWarning(AKONADISERVER_LOG) << "Slow cleanup of collection" << collection.name() << "(ID" << collection.id() << ")"
-                                         << "failed: error clearing linked items";
-            return false;
-        }
-    }
-
-    // delete collection mimetypes
-    collection.clearMimeTypes();
-    Collection::clearPimItems(collection.id());
-
-    // delete attributes
-    const CollectionAttribute::List attrs = collection.attributes();
-    for (CollectionAttribute attr : attrs) {
-        if (!attr.remove()) {
-            qCWarning(AKONADISERVER_LOG) << "Slow cleanup of collection" << collection.name() << "(ID" << collection.id() << ")"
-                                         << "failed: error clearing attribute" << attr.type();
-            return false;
-        }
-    }
-
-    // delete the collection itself
     notificationCollector()->collectionRemoved(collection);
     return collection.remove();
 }
@@ -1332,11 +1260,9 @@ bool DataStore::doRollback()
     driver->rollbackTransaction();
     StorageDebugger::instance()->removeTransaction(reinterpret_cast<qint64>(this), false, timer.elapsed(), m_database.lastError().text());
     if (m_database.lastError().isValid()) {
-        TRANSACTION_MUTEX_UNLOCK;
         debugLastDbError("DataStore::rollbackTransaction");
         return false;
     }
-    TRANSACTION_MUTEX_UNLOCK;
     return true;
 }
 
@@ -1357,13 +1283,11 @@ bool DataStore::beginTransaction(const QString &name)
         m_transactionKilledByDB = false;
         QElapsedTimer timer;
         timer.start();
-        TRANSACTION_MUTEX_LOCK;
         if (DbType::type(m_database) == DbType::Sqlite) {
             m_database.exec(QStringLiteral("BEGIN IMMEDIATE TRANSACTION"));
             StorageDebugger::instance()->addTransaction(reinterpret_cast<qint64>(this), name, timer.elapsed(), m_database.lastError().text());
             if (m_database.lastError().isValid()) {
                 debugLastDbError("DataStore::beginTransaction (SQLITE)");
-                TRANSACTION_MUTEX_UNLOCK;
                 return false;
             }
         } else {
@@ -1371,7 +1295,6 @@ bool DataStore::beginTransaction(const QString &name)
             StorageDebugger::instance()->addTransaction(reinterpret_cast<qint64>(this), name, timer.elapsed(), m_database.lastError().text());
             if (m_database.lastError().isValid()) {
                 debugLastDbError("DataStore::beginTransaction");
-                TRANSACTION_MUTEX_UNLOCK;
                 return false;
             }
         }
@@ -1438,7 +1361,6 @@ bool DataStore::commitTransaction()
             rollbackTransaction();
             return false;
         } else {
-            TRANSACTION_MUTEX_UNLOCK;
             m_transactionLevel--;
             Q_EMIT transactionCommitted();
         }
