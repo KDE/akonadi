@@ -24,8 +24,13 @@ class IntervalCheck : public CollectionScheduler
 {
     Q_OBJECT
 
-public:
+protected:
+    /**
+     * Use AkThread::create() to create and start a new IntervalCheck thread.
+     */
     explicit IntervalCheck(ItemRetrievalManager &itemRetrievalManager);
+
+public:
     ~IntervalCheck() override;
 
     /**

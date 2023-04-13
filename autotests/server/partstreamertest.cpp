@@ -95,7 +95,8 @@ private Q_SLOTS:
                                               TestScenario::ServerCmd,
                                               Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", "123"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item.id(), 1));
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item.id(), 1))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create());
 
             QTest::newRow("item 1, internal") << scenarios << QByteArray("PLD:DATA") << QByteArray("123") << QByteArray() << 3ll << true << Part::Internal
                                               << item;
@@ -115,7 +116,8 @@ private Q_SLOTS:
                              TestScenario::ServerCmd,
                              Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data, QStringLiteral("%1_r0").arg(partId)))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item.id(), 2));
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item.id(), 2))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create());
 
             QTest::newRow("item 1, change to external")
                 << scenarios << QByteArray("PLD:DATA") << QByteArray("15_r0") << QByteArray("123456789") << 9ll << true << Part::External << item;
@@ -135,7 +137,8 @@ private Q_SLOTS:
                              TestScenario::ServerCmd,
                              Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data, QStringLiteral("%1_r1").arg(partId)))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item.id(), 3));
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item.id(), 3))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create());
 
             QTest::newRow("item 1, update external") << scenarios << QByteArray("PLD:DATA") << QByteArray("15_r1") << QByteArray("987654321") << 9ll << true
                                                      << Part::External << item;
@@ -155,7 +158,8 @@ private Q_SLOTS:
                              TestScenario::ServerCmd,
                              Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data, QStringLiteral("%1_r2").arg(partId)))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item.id(), 4));
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item.id(), 4))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create());
 
             QTest::newRow("item 1, external, no change")
                 << scenarios << QByteArray("PLD:DATA") << QByteArray("15_r2") << QByteArray("987654321") << 9ll << false << Part::External << item;
@@ -174,7 +178,8 @@ private Q_SLOTS:
                                               TestScenario::ServerCmd,
                                               Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", "1234"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item.id(), 5));
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item.id(), 5))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create());
 
             QTest::newRow("item 1, change to internal")
                 << scenarios << QByteArray("PLD:DATA") << QByteArray("1234") << QByteArray() << 4ll << true << Part::Internal << item;
@@ -193,7 +198,8 @@ private Q_SLOTS:
                                               TestScenario::ServerCmd,
                                               Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", "1234"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item.id(), 6));
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item.id(), 6))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create());
 
             QTest::newRow("item 1, internal, no change")
                 << scenarios << QByteArray("PLD:DATA") << QByteArray("1234") << QByteArray() << 4ll << false << Part::Internal << item;
@@ -218,7 +224,8 @@ private Q_SLOTS:
                                               TestScenario::ServerCmd,
                                               Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", foreignPath.toUtf8()))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item2.id(), 1));
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item2.id(), 1))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create());
 
             QTest::newRow("item 2, new foreign part") << scenarios << QByteArray("PLD:DATA") << foreignPath.toUtf8() << QByteArray("123") << 3ll << false
                                                       << Part::Foreign << item2;

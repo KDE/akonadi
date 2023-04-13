@@ -144,7 +144,7 @@ private Q_SLOTS:
 
         auto notificationSpy = mAkonadi.notificationSpy();
         if (notification->operation() != Protocol::ItemChangeNotification::InvalidOp) {
-            QCOMPARE(notificationSpy->count(), 1);
+            QTRY_COMPARE(notificationSpy->count(), 1);
             const Protocol::ChangeNotificationList notifications = notificationSpy->takeFirst().first().value<Protocol::ChangeNotificationList>();
             QCOMPARE(notifications.count(), 1);
             QCOMPARE(*notifications.first().staticCast<Protocol::ItemChangeNotification>(), *notification);
@@ -255,7 +255,7 @@ private Q_SLOTS:
 
         auto notificationSpy = mAkonadi.notificationSpy();
         if (notification->operation() != Protocol::ItemChangeNotification::InvalidOp) {
-            QCOMPARE(notificationSpy->count(), 1);
+            QTRY_COMPARE(notificationSpy->count(), 1);
             const auto notifications = notificationSpy->takeFirst().first().value<Protocol::ChangeNotificationList>();
             QCOMPARE(notifications.count(), 1);
             QCOMPARE(*notifications.first().staticCast<Protocol::ItemChangeNotification>(), *notification);

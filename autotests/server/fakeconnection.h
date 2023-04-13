@@ -26,6 +26,13 @@ public:
 
 public Q_SLOTS:
     Akonadi::Server::NotificationCollector *notificationCollector();
+
+protected Q_SLOTS:
+    void quit() override;
+    void init() override;
+
+private:
+    Akonadi::Server::NotificationCollector *mNotificationCollector = nullptr;
 };
 
 }

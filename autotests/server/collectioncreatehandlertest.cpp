@@ -141,7 +141,7 @@ private Q_SLOTS:
 
         auto notificationSpy = mAkonadi.notificationSpy();
         if (notification->operation() != Protocol::CollectionChangeNotification::InvalidOp) {
-            QCOMPARE(notificationSpy->count(), 1);
+            QTRY_COMPARE(notificationSpy->count(), 1);
             const auto notifications = notificationSpy->takeFirst().first().value<Protocol::ChangeNotificationList>();
             QCOMPARE(notifications.count(), 1);
             const auto actualNtf = notifications.first().staticCast<Protocol::CollectionChangeNotification>();

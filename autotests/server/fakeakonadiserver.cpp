@@ -206,19 +206,19 @@ void FakeAkonadiServer::initFake()
 
     mTracer = std::make_unique<Tracer>();
     mCollectionStats = std::make_unique<CollectionStatistics>();
-    mCacheCleaner = std::make_unique<CacheCleaner>();
+    mCacheCleaner = AkThread::create<CacheCleaner>();
     if (!mDisableItemRetrievalManager) {
-        mItemRetrieval = std::make_unique<FakeItemRetrievalManager>();
+        mItemRetrieval = AkThread::create<FakeItemRetrievalManager>();
     }
-    mAgentSearchManager = std::make_unique<SearchTaskManager>();
+    mAgentSearchManager = AkThread::create<SearchTaskManager>();
 
     mDebugInterface = std::make_unique<DebugInterface>(*mTracer);
     mResourceManager = std::make_unique<ResourceManager>(*mTracer);
     mPreprocessorManager = std::make_unique<PreprocessorManager>(*mTracer);
     mPreprocessorManager->setEnabled(false);
-    mIntervalCheck = std::make_unique<FakeIntervalCheck>(*mItemRetrieval);
-    mSearchManager = std::make_unique<FakeSearchManager>(*mAgentSearchManager);
-    mStorageJanitor = std::make_unique<StorageJanitor>(*this);
+    mIntervalCheck = AkThread::create<FakeIntervalCheck>(*mItemRetrieval);
+    mSearchManager = AkThread::create<FakeSearchManager>(*mAgentSearchManager);
+    mStorageJanitor = AkThread::create<StorageJanitor>(*this);
 
     qDebug() << "==== Fake Akonadi Server started ====";
 }
@@ -270,19 +270,17 @@ void FakeAkonadiServer::setScenarios(const TestScenario::List &scenarios)
 
 void FakeAkonadiServer::newCmdConnection(quintptr socketDescriptor)
 {
-    mConnection = std::make_unique<FakeConnection>(socketDescriptor, *this);
+    mConnection = AkThread::create<FakeConnection>(socketDescriptor, *this);
+    mConnection->waitForInitialized();
 
-    // Connection is its own thread, so we have to make sure we get collector
-    // from DataStore of the Connection's thread, not ours
-    NotificationCollector *collector = nullptr;
-    QMetaObject::invokeMethod(mConnection.get(),
-                              "notificationCollector",
-                              Qt::BlockingQueuedConnection,
-                              Q_RETURN_ARG(Akonadi::Server::NotificationCollector *, collector));
-    mNtfCollector = dynamic_cast<InspectableNotificationCollector *>(collector);
+    mNtfCollector = dynamic_cast<InspectableNotificationCollector *>(mConnection->notificationCollector());
     Q_ASSERT(mNtfCollector);
+
     mNotificationSpy.reset(new QSignalSpy(mNtfCollector, &Server::InspectableNotificationCollector::notifySignal));
     Q_ASSERT(mNotificationSpy->isValid());
+
+    // Now start replaying the scenario
+    mClient->startScenario();
 }
 
 void FakeAkonadiServer::runTest()
@@ -294,8 +292,7 @@ void FakeAkonadiServer::runTest()
     QEventLoop serverLoop;
     connect(mClient.get(), &QThread::finished, this, [this, &serverLoop]() { // clazy:exclude=lambda-in-connect
         disconnect(mClient.get(), &QThread::finished, this, nullptr);
-        // Flush any pending notifications and wait for them
-        // before shutting down the event loop
+        // Flush any pending notifications and wait for them before shutting down the event loop
         if (mNtfCollector->dispatchNotifications()) {
             mNotificationSpy->wait();
         }
@@ -303,14 +300,15 @@ void FakeAkonadiServer::runTest()
         serverLoop.quit();
     });
 
-    // Start the client: the client will connect to the server and will
-    // start playing the scenario
+    // Start the client: the client will connect to the server
     mClient->start();
 
     // Wait until the client disconnects, i.e. until the scenario is completed.
     serverLoop.exec();
 
     mCmdServer->close();
+
+    mConnection.reset();
 }
 
 QSharedPointer<QSignalSpy> FakeAkonadiServer::notificationSpy() const

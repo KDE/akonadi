@@ -119,16 +119,16 @@ bool AkonadiServer::init()
 
     mTracer = std::make_unique<Tracer>();
     mCollectionStats = std::make_unique<CollectionStatistics>();
-    mCacheCleaner = std::make_unique<CacheCleaner>();
-    mItemRetrieval = std::make_unique<ItemRetrievalManager>();
-    mAgentSearchManager = std::make_unique<SearchTaskManager>();
+    mCacheCleaner = AkThread::create<CacheCleaner>();
+    mItemRetrieval = AkThread::create<ItemRetrievalManager>();
+    mAgentSearchManager = AkThread::create<SearchTaskManager>();
 
     mDebugInterface = std::make_unique<DebugInterface>(*mTracer);
     mResourceManager = std::make_unique<ResourceManager>(*mTracer);
     mPreprocessorManager = std::make_unique<PreprocessorManager>(*mTracer);
-    mIntervalCheck = std::make_unique<IntervalCheck>(*mItemRetrieval);
-    mSearchManager = std::make_unique<SearchManager>(searchManagers, *mAgentSearchManager);
-    mStorageJanitor = std::make_unique<StorageJanitor>(*this);
+    mIntervalCheck = AkThread::create<IntervalCheck>(*mItemRetrieval);
+    mSearchManager = AkThread::create<SearchManager>(searchManagers, *mAgentSearchManager);
+    mStorageJanitor = AkThread::create<StorageJanitor>(*this);
 
     if (settings.value(QStringLiteral("General/DisablePreprocessing"), false).toBool()) {
         mPreprocessorManager->setEnabled(false);
@@ -220,7 +220,7 @@ void AkonadiServer::newCmdConnection(quintptr socketDescriptor)
         return;
     }
 
-    auto connection = std::make_unique<Connection>(socketDescriptor, *this);
+    auto connection = AkThread::create<Connection>(socketDescriptor, *this);
     connect(connection.get(), &Connection::disconnected, this, &AkonadiServer::connectionDisconnected);
     mConnections.push_back(std::move(connection));
 }
@@ -336,7 +336,7 @@ bool AkonadiServer::createServers(QSettings &settings, QSettings &connectionSett
     mCmdServer = std::make_unique<AkLocalServer>(this);
     connect(mCmdServer.get(), qOverload<quintptr>(&AkLocalServer::newConnection), this, &AkonadiServer::newCmdConnection);
 
-    mNotificationManager = std::make_unique<NotificationManager>();
+    mNotificationManager = AkThread::create<NotificationManager>();
     mNtfServer = std::make_unique<AkLocalServer>(this);
     // Note: this is a queued connection, as NotificationManager lives in its
     // own thread

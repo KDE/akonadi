@@ -19,8 +19,11 @@ class ItemRetrievalManager;
 class FakeIntervalCheck : public IntervalCheck
 {
     Q_OBJECT
-public:
+protected:
+    friend class AkThread;
     explicit FakeIntervalCheck(ItemRetrievalManager &retrievalManager);
+
+public:
     void waitForInit();
 
 protected:

@@ -8,6 +8,12 @@
 #include "akonadiserver_debug.h"
 #include "storage/datastore.h"
 
+#include <QAbstractEventDispatcher>
+
+#include <chrono>
+#include <thread>
+
+using namespace std::chrono_literals;
 using namespace Akonadi::Server;
 
 AkThread::AkThread(const QString &objectName, StartMode startMode, QThread::Priority priority, QObject *parent)
@@ -21,10 +27,6 @@ AkThread::AkThread(const QString &objectName, StartMode startMode, QThread::Prio
         moveToThread(thread);
         thread->start(priority);
     }
-
-    if (startMode == AutoStart) {
-        startThread();
-    }
 }
 
 AkThread::AkThread(const QString &objectName, QThread::Priority priority, QObject *parent)
@@ -34,16 +36,36 @@ AkThread::AkThread(const QString &objectName, QThread::Priority priority, QObjec
 
 AkThread::~AkThread() = default;
 
+void AkThread::waitForInitialized()
+{
+    while (!m_initialized) {
+        if (auto *dispatcher = QThread::currentThread()->eventDispatcher(); dispatcher != nullptr) {
+            dispatcher->processEvents(QEventLoop::AllEvents);
+        }
+        std::this_thread::sleep_for(50ms);
+    }
+}
+
 void AkThread::startThread()
 {
     Q_ASSERT(m_startMode != NoThread);
-    const bool init = QMetaObject::invokeMethod(this, &AkThread::init, Qt::QueuedConnection);
-    Q_ASSERT(init);
-    Q_UNUSED(init)
+    QMetaObject::invokeMethod(
+        this,
+        [this]() {
+            init();
+            m_initialized = true;
+            Q_EMIT initialized();
+        },
+        Qt::QueuedConnection);
 }
 
 void AkThread::quitThread()
 {
+    if (m_quitCalled) {
+        return;
+    }
+    m_quitCalled = true;
+
     if (m_startMode == NoThread) {
         return;
     }
