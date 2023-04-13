@@ -178,7 +178,7 @@ QueryBuilder CollectionStatistics::prepareGenericQuery()
 
 #undef FLAGS_COLUMN
 
-    return std::move(qb);
+    return qb;
 }
 
 CollectionStatistics::Statistics CollectionStatistics::calculateCollectionStatistics(const Collection &col)
