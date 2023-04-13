@@ -15,36 +15,33 @@ namespace Akonadi
 class AgentConfigurationBasePrivate
 {
 public:
-    AgentConfigurationBasePrivate(const KSharedConfigPtr &config, QWidget *parentWidget, const QVariantList &args)
+    AgentConfigurationBasePrivate(const KSharedConfigPtr &config, const QVariantList &args)
         : config(config)
-        , parentWidget(parentWidget)
     {
-        Q_ASSERT(!args.empty());
-        if (args.empty()) {
-            qCCritical(AKONADICORE_LOG, "AgentConfigurationBase instantiated with invalid arguments");
+        if (args.size() != 2) {
+            qCCritical(AKONADICORE_LOG, "AgentConfigurationBase instantiated with invalid number of arguments (expected 2, got %d)", args.size());
             return;
         }
         identifier = args.at(0).toString();
+        agentType = args.at(1).toString();
     }
 
     KSharedConfigPtr config;
     QString identifier;
+    QString agentType;
     QScopedPointer<KAboutData> aboutData;
-    QWidget *const parentWidget;
 };
 } // namespace Akonadi
 
 using namespace Akonadi;
 
-AgentConfigurationBase::AgentConfigurationBase(const KSharedConfigPtr &config, QWidget *parentWidget, const QVariantList &args)
-    : QObject(reinterpret_cast<QObject *>(parentWidget))
-    , d(new AgentConfigurationBasePrivate(config, parentWidget, args))
+AgentConfigurationBase::AgentConfigurationBase(const KSharedConfigPtr &config, QObject *parent, const QVariantList &args)
+    : QObject(parent)
+    , d(new AgentConfigurationBasePrivate(config, args))
 {
 }
 
-AgentConfigurationBase::~AgentConfigurationBase()
-{
-}
+AgentConfigurationBase::~AgentConfigurationBase() = default;
 
 KSharedConfigPtr AgentConfigurationBase::config() const
 {
@@ -54,6 +51,11 @@ KSharedConfigPtr AgentConfigurationBase::config() const
 QString AgentConfigurationBase::identifier() const
 {
     return d->identifier;
+}
+
+QString AgentConfigurationBase::agentType() const
+{
+    return d->agentType;
 }
 
 void AgentConfigurationBase::load()
@@ -68,11 +70,6 @@ bool AgentConfigurationBase::save() const
     return true;
 }
 
-QWidget *AgentConfigurationBase::parentWidget() const
-{
-    return d->parentWidget;
-}
-
 void AgentConfigurationBase::setKAboutData(const KAboutData &aboutData)
 {
     d->aboutData.reset(new KAboutData(aboutData));
@@ -81,18 +78,4 @@ void AgentConfigurationBase::setKAboutData(const KAboutData &aboutData)
 KAboutData *AgentConfigurationBase::aboutData() const
 {
     return d->aboutData.data();
-}
-
-QSize AgentConfigurationBase::restoreDialogSize() const
-{
-    return {};
-}
-
-void AgentConfigurationBase::saveDialogSize(const QSize & /*unused*/) // clazy:exclude=function-args-by-value
-{
-}
-
-QDialogButtonBox::StandardButtons AgentConfigurationBase::standardButtons() const
-{
-    return QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel;
 }

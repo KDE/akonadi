@@ -430,13 +430,13 @@ PUBLIC
     KF${KF_MAJOR_VERSION}::CoreAddons # for KJob
     KF${KF_MAJOR_VERSION}::ItemModels
     Qt::Gui # for QColor
+    KF${KF_MAJOR_VERSION}::ConfigCore
 PRIVATE
     Qt::Network
     Qt::Widgets
     KF${KF_MAJOR_VERSION}::KIOCore
     KF${KF_MAJOR_VERSION}::I18n
     KF${KF_MAJOR_VERSION}::IconThemes
-    KF${KF_MAJOR_VERSION}::ConfigCore
     KPim${KF_MAJOR_VERSION}::AkonadiPrivate
     akonadi_shared
 )

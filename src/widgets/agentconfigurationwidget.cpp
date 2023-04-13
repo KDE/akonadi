@@ -7,8 +7,8 @@
 #include "agentconfigurationwidget.h"
 #include "agentconfigurationdialog.h"
 #include "agentconfigurationwidget_p.h"
+#include "agentwidgetconfigurationbase.h"
 #include "akonadiwidgets_debug.h"
-#include "core/agentconfigurationbase.h"
 #include "core/agentconfigurationfactorybase.h"
 #include "core/agentconfigurationmanager_p.h"
 #include "core/agentmanager.h"
@@ -79,7 +79,8 @@ AgentConfigurationWidget::AgentConfigurationWidget(const AgentInstance &instance
             KSharedConfigPtr config = KSharedConfig::openConfig(configName);
             auto layout = new QVBoxLayout(this);
             layout->setContentsMargins({});
-            d->plugin = d->factory->create(config, this, {instance.identifier()});
+
+            d->plugin = d->factory->create(config, this, {instance.identifier(), instance.type().identifier()});
             connect(d->plugin.data(), &AgentConfigurationBase::enableOkButton, this, &AgentConfigurationWidget::enableOkButton);
         } else {
             // Hide this dialog and fallback to calling the out-of-process configuration
@@ -131,23 +132,23 @@ void AgentConfigurationWidget::save()
 
 QSize AgentConfigurationWidget::restoreDialogSize() const
 {
-    if (d->plugin) {
-        return d->plugin->restoreDialogSize();
+    if (auto *plugin = qobject_cast<AgentWidgetConfigurationBase *>(d->plugin.data()); plugin) {
+        return plugin->restoreDialogSize();
     }
     return {};
 }
 
 void AgentConfigurationWidget::saveDialogSize(QSize size)
 {
-    if (d->plugin) {
-        d->plugin->saveDialogSize(size);
+    if (auto *plugin = qobject_cast<AgentWidgetConfigurationBase *>(d->plugin.data()); plugin) {
+        plugin->saveDialogSize(size);
     }
 }
 
 QDialogButtonBox::StandardButtons AgentConfigurationWidget::standardButtons() const
 {
-    if (d->plugin) {
-        return d->plugin->standardButtons();
+    if (auto *plugin = qobject_cast<AgentWidgetConfigurationBase *>(d->plugin.data()); plugin) {
+        return plugin->standardButtons();
     }
     return QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel;
 }

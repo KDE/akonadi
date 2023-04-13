@@ -6,10 +6,12 @@
 
 #pragma once
 
-#include "agentconfigurationfactorybase.h"
-#include "akonadicore_export.h"
+#include "akonadiwidgets_export.h"
+#include <akonadi/agentconfigurationbase.h>
+#include <akonadi/agentconfigurationfactorybase.h>
 
 #include <KSharedConfig>
+#include <QDialogButtonBox>
 #include <QObject>
 
 #include <memory>
@@ -18,14 +20,10 @@ class KAboutData;
 
 namespace Akonadi
 {
-class AgentConfigurationBasePrivate;
+class AgentWidgetConfigurationBasePrivate;
 
 /**
- * @brief Base class for configuration UI for Akonadi agents
- *
- * This class should not be used directly, use instead AgentWidgetConfigurationBase
- * from AkonadiWidgets library or AgentQmlConfigurationBase from AkonadiQml library
- * if you want to implement configuration UI in QML.
+ * @brief Base class for QWidget-based configuration UI for Akonadi agents
  *
  * Each agent that has a graphical configuration should subclass this class
  * and create its configuration UI there.
@@ -70,80 +68,43 @@ class AgentConfigurationBasePrivate;
  * desktop file.
  *
  * The plugin binary should be installed into pim<version>/akonadi/config subdirectory in one
- * of the paths search by QCoreApplication::libraryPaths().
+ * of the paths searched by QCoreApplication::libraryPaths().
  */
 
-class AKONADICORE_EXPORT AgentConfigurationBase : public QObject
+class AKONADIWIDGETS_EXPORT AgentWidgetConfigurationBase : public AgentConfigurationBase
 {
     Q_OBJECT
 public:
     /**
-     * Creates a new AgentConfigurationBase objects.
+     * Creates a new AgentWidgetsConfigurationBase objects.
+     *
+     * The @p parentWidget should be used as a parent widget for the configuration
+     * widgets.
      *
      * Subclasses must provide a constructor with this exact signature.
      */
-    explicit AgentConfigurationBase(const KSharedConfigPtr &config, QObject *parent, const QVariantList &args);
+    explicit AgentWidgetConfigurationBase(const KSharedConfigPtr &config, QWidget *parentWidget, const QVariantList &args);
 
-    ~AgentConfigurationBase() override;
-
-    /**
-     * Reimplement to load settings from the configuration object into widgets.
-     *
-     * @warning Always call the base class implementation at the beginning of
-     * your overridden method!
-     *
-     * @see config(), save()
-     */
-    virtual void load();
+    ~AgentWidgetConfigurationBase() override;
 
     /**
-     * Reimplement to save new settings into the configuration object.
-     *
-     * Return true if the configuration has been successfully saved and should
-     * be applied to the agent, return false otherwise.
-     *
-     * @warning Always remember call the base class implementation at the end
-     * of your overridden method!
-     *
-     * @see config(), load()
+     * Reimplement to restore dialog size.
      */
-    virtual bool save() const;
+    virtual QSize restoreDialogSize() const;
 
     /**
-     * Returns about data for the currently configured component.
-     *
-     * May return a null pointer.
+     * Reimplement to save dialog size.
      */
-    KAboutData *aboutData() const;
+    virtual void saveDialogSize(const QSize &size);
+
+    virtual QDialogButtonBox::StandardButtons standardButtons() const;
 
 protected:
-    /**
-     * Returns KConfig object belonging to the current Akonadi agent instance.
-     */
-    KSharedConfigPtr config() const;
-
-    /**
-     * Returns identifier of the Akonadi agent instance currently being configured (e.g. akonadi_imap_resource_0)
-     */
-    Q_REQUIRED_RESULT QString identifier() const;
-
-    /**
-     * Returns type of the Akonadi agent currently being configured (e.g. akonadi_imap_resource)
-     */
-    Q_REQUIRED_RESULT QString agentType() const;
-
-    /**
-     * When KAboutData is provided the dialog will also contain KHelpMenu with
-     * access to user help etc.
-     */
-    void setKAboutData(const KAboutData &aboutData);
-
-Q_SIGNALS:
-    void enableOkButton(bool enabled);
+    QWidget *parentWidget() const;
 
 private:
-    friend class AgentConfigurationBasePrivate;
-    std::unique_ptr<AgentConfigurationBasePrivate> const d;
+    friend class AgentWidgetConfigurationBasePrivate;
+    std::unique_ptr<AgentWidgetConfigurationBasePrivate> const d;
 };
 
 } // namespace

@@ -15,6 +15,7 @@ target_sources(KPim${KF_MAJOR_VERSION}AkonadiWidgets PRIVATE
     agentinstancewidget.cpp
     agenttypedialog.cpp
     agenttypewidget.cpp
+    agentwidgetconfigurationbase.cpp
     cachepolicypage.cpp
     collectioncombobox.cpp
     collectiondialog.cpp
@@ -52,6 +53,7 @@ target_sources(KPim${KF_MAJOR_VERSION}AkonadiWidgets PRIVATE
     agentinstancewidget.h
     agenttypedialog.h
     agenttypewidget.h
+    agentwidgetconfigurationbase.h
     cachepolicypage.h
     collectioncombobox.h
     collectiondialog.h
@@ -120,6 +122,7 @@ ecm_generate_headers(AkonadiWidgets_CC_HEADERS
     AgentInstanceWidget
     AgentTypeDialog
     AgentTypeWidget
+    AgentWidgetConfigurationBase
     ClearCacheJob
     CollectionComboBox
     CollectionDialog
