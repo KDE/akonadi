@@ -5,13 +5,13 @@
 # Andrey Cherepanov <skull@kde.ru>, 2009.
 # Alexander Potashev <aspotashev@gmail.com>, 2010, 2011, 2014, 2015, 2016, 2017.
 # Alexander Lakhin <exclusion@gmail.com>, 2013.
-# Alexander Yavorsky <walker@mail.ru>, 2017, 2018, 2019, 2020, 2021, 2022.
+# Alexander Yavorsky <walker@mail.ru>, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-24 02:39+0000\n"
-"PO-Revision-Date: 2022-09-26 17:46+0300\n"
+"PO-Revision-Date: 2023-04-15 13:41+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -622,8 +622,7 @@ msgid "Could not create agent instance: %1"
 msgstr "Не удалось создать экземпляр агента: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "Ошибка создания экземпляра агента"
@@ -640,9 +639,7 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "Удалить выбранный экземпляр агента?"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "%1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Настройка %1"
@@ -673,11 +670,10 @@ msgid "Failed to register %1 configuration dialog."
 msgstr "Не удалось зарегистрировать диалог настройки %1."
 
 #: widgets/agenttypedialog.cpp:66
-#, fuzzy, kde-format
-#| msgid "&Configure Agent Instance"
+#, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
-msgstr "&Настроить экземпляр агента…"
+msgstr "Настройка учётной записи"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
@@ -827,8 +823,7 @@ msgid "Could not create folder: %1"
 msgstr "Невозможно создать папку: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
 msgstr "Ошибка создания папки"
@@ -1000,9 +995,7 @@ msgid "Open collection dialog"
 msgstr "Открыть диалоговое окно выбора коллекции"
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select a collection"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "Выбор коллекции"
@@ -2259,16 +2252,14 @@ msgstr[2] "Удалить %1 папок и все вложенные папки?
 msgstr[3] "Удалить эту папку и все вложенные папки?"
 
 #: widgets/standardactionmanager.cpp:359
-#, fuzzy, kde-format
-#| msgid "Delete Folder"
-#| msgid_plural "Delete %1 Folders"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "Удалить %1 папку"
-msgstr[1] "Удалить %1 папки"
-msgstr[2] "Удалить %1 папок"
-msgstr[3] "Удалить папку"
+msgstr[0] "Удаление папок"
+msgstr[1] "Удаление папок"
+msgstr[2] "Удаление папок"
+msgstr[3] "Удаление папки"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2276,8 +2267,7 @@ msgid "Could not delete folder: %1"
 msgstr "Невозможно удалить папку «%1»."
 
 #: widgets/standardactionmanager.cpp:361
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "Ошибка удаления папки"
@@ -2298,16 +2288,14 @@ msgstr[2] "Удалить %1 объектов?"
 msgstr[3] "Удалить выбранный объект?"
 
 #: widgets/standardactionmanager.cpp:368
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "Удалить %1 объект"
-msgstr[1] "Удалить %1 объекта"
-msgstr[2] "Удалить %1 объектов"
-msgstr[3] "Удалить объект"
+msgstr[0] "Удаление объектов"
+msgstr[1] "Удаление объектов"
+msgstr[2] "Удаление объектов"
+msgstr[3] "Удаление объекта"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2315,8 +2303,7 @@ msgid "Could not delete item: %1"
 msgstr "Не удалось удалить объект: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, fuzzy, kde-format
-#| msgid "Item deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "Ошибка удаления объекта"
@@ -2345,11 +2332,10 @@ msgid "Could not create resource: %1"
 msgstr "Не удалось создать источник данных Akonadi: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, fuzzy, kde-format
-#| msgid "Resource creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
-msgstr "Ошибка создания источника"
+msgstr "Ошибка создания источника данных"
 
 #: widgets/standardactionmanager.cpp:381
 #, kde-format
@@ -2376,8 +2362,7 @@ msgid "Could not paste data: %1"
 msgstr "Невозможно вставить данные: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, fuzzy, kde-format
-#| msgid "Paste failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Ошибка вставки"
@@ -2388,8 +2373,7 @@ msgid "We can not add \"/\" in folder name."
 msgstr "Мы не можем включить «/» в имя папки."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, fuzzy, kde-format
-#| msgid "Create new folder error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Ошибка создания новой папки"
@@ -2436,9 +2420,7 @@ msgstr "Не удалось обновить подписку: %1"
 
 # BUGME: what does this mean exactly? --aspotashev
 #: widgets/subscriptiondialog.cpp:97
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Subscription Error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Ошибка подписки"
@@ -2480,11 +2462,10 @@ msgid "Failed to create a new tag"
 msgstr "Не удалось создать новую метку"
 
 #: widgets/tageditwidget.cpp:116
-#, fuzzy, kde-format
-#| msgid "An error occurred while creating a new tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
-msgstr "При создании метки произошла ошибка"
+msgstr "Ошибка создания метки"
 
 #: widgets/tageditwidget.cpp:164
 #, kde-kuit-format
@@ -2493,9 +2474,7 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Удалить метку <resource>%1</resource>?"
 
 #: widgets/tageditwidget.cpp:165
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Delete tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Удаление метки"
