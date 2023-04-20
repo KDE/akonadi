@@ -293,7 +293,8 @@ void SessionPrivate::serverStateChanged(ServerManager::State state)
     } else if (!connected && state == ServerManager::Broken) {
         // If the server is broken, cancel all pending jobs, otherwise they will be
         // blocked forever and applications waiting for them to finish would be stuck
-        for (Job *job : std::as_const(queue)) {
+        auto q = queue;
+        for (Job *job : q) {
             job->setError(Job::ConnectionFailed);
             job->kill(KJob::EmitResult);
         }
@@ -435,11 +436,13 @@ void Session::clear()
 
 void SessionPrivate::clear(bool forceReconnect)
 {
-    for (Job *job : std::as_const(queue)) {
+    auto q = queue;
+    for (Job *job : q) {
         job->kill(KJob::EmitResult); // safe, not started yet
     }
     queue.clear();
-    for (Job *job : std::as_const(pipeline)) {
+    auto p = pipeline;
+    for (Job *job : p) {
         job->d_ptr->mStarted = false; // avoid killing/reconnect loops
         job->kill(KJob::EmitResult);
     }
