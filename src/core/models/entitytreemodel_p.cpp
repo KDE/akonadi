@@ -174,7 +174,7 @@ void EntityTreeModelPrivate::agentInstanceRemoved(const Akonadi::AgentInstance &
             }
             return;
         }
-        const auto &children = m_childEntities[Collection::root().id()];
+        const auto children = m_childEntities[Collection::root().id()];
         for (const Node *node : children) {
             Q_ASSERT(node->type == Node::Collection);
 
