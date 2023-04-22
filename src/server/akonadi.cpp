@@ -230,8 +230,10 @@ void AkonadiServer::connectionDisconnected()
     auto it = std::find_if(mConnections.begin(), mConnections.end(), [this](const auto &ptr) {
         return ptr.get() == sender();
     });
-    Q_ASSERT(it != mConnections.end());
-    mConnections.erase(it);
+
+    if (it != mConnections.end()) {
+        mConnections.erase(it);
+    }
 }
 
 bool AkonadiServer::setupDatabase()
