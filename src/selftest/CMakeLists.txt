@@ -11,5 +11,5 @@ PRIVATE
 
 install(TARGETS
     akonadiselftest
-    ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
+    ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )

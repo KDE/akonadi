@@ -73,7 +73,7 @@ target_include_directories(KPim${KF_MAJOR_VERSION}AkonadiPrivate INTERFACE "$<IN
 install(TARGETS
     KPim${KF_MAJOR_VERSION}AkonadiPrivate
     EXPORT KPim${KF_MAJOR_VERSION}AkonadiTargets
-    ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
+    ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 install(FILES

@@ -79,11 +79,11 @@ ecm_generate_pri_file(BASE_NAME AkonadiXml
 
 install(TARGETS
     KPim${KF_MAJOR_VERSION}AkonadiXml
-    EXPORT KPim${KF_MAJOR_VERSION}AkonadiTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
+    EXPORT KPim${KF_MAJOR_VERSION}AkonadiTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 install(TARGETS
-    akonadi2xml ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
+    akonadi2xml ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 install(FILES

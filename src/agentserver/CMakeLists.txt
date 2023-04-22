@@ -57,4 +57,4 @@ install(TARGETS akonadi_agent_launcher
           DESTINATION ${BIN_INSTALL_DIR})
 
 install(TARGETS akonadi_agent_server
-        ${KF_INSTALL_TARGETS_DEFAULT_ARGS})
+        ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

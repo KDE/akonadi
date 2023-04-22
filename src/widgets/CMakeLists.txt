@@ -194,7 +194,7 @@ ecm_generate_pri_file(BASE_NAME AkonadiWidgets
 
 install(TARGETS
     KPim${KF_MAJOR_VERSION}AkonadiWidgets
-    EXPORT KPim${KF_MAJOR_VERSION}AkonadiTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
+    EXPORT KPim${KF_MAJOR_VERSION}AkonadiTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 install(FILES

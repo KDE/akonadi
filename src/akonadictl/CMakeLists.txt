@@ -35,5 +35,5 @@ target_link_libraries(akonadictl
 )
 
 install(TARGETS akonadictl
-        ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
+        ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
