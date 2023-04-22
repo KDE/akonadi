@@ -152,13 +152,6 @@ public:
         }
     }
 
-    void clearReferences()
-    {
-        for (const Collection::Id &collectionId : std::as_const(referencedCollections)) {
-            dereference(collectionId);
-        }
-    }
-
     /**
      * Adds a collection to the favorite collections
      */

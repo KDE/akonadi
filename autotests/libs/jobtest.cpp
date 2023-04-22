@@ -96,16 +96,26 @@ private Q_SLOTS:
         QSignalSpy job2DoneSpy(job2, &KJob::result);
         QVERIFY(job2DoneSpy.isValid());
 
-        QCOMPARE(sessionQueueSpy.size(), 2);
+        auto job3 = new FakeJob(&session);
+        QSignalSpy job3DoneSpy(job3, &KJob::result);
+        QVERIFY(job3DoneSpy.isValid());
+
+        auto job4 = new FakeJob(&session);
+        QSignalSpy job4DoneSpy(job4, &KJob::result);
+        QVERIFY(job4DoneSpy.isValid());
+
+        QCOMPARE(sessionQueueSpy.size(), 4);
         QSignalSpy job1AboutToStartSpy(job1, &Job::aboutToStart);
         QVERIFY(job1AboutToStartSpy.wait());
 
-        // one job running, one queued, now kill the session
+        // one job running, 3 queued, now kill the session
         session.clear();
         QVERIFY(sessionReconnectSpy.wait());
 
         QCOMPARE(job1DoneSpy.size(), 1);
         QCOMPARE(job2DoneSpy.size(), 1);
+        QCOMPARE(job3DoneSpy.size(), 1);
+        QCOMPARE(job4DoneSpy.size(), 1);
         QCOMPARE(sessionReconnectSpy.size(), 2);
     }
 

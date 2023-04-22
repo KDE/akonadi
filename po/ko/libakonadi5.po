@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# Shinjo Park <kde@peremen.name>, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022.
+# Shinjo Park <kde@peremen.name>, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-10 00:47+0000\n"
-"PO-Revision-Date: 2022-07-13 11:11+0200\n"
+"PO-Revision-Date: 2023-04-21 23:09+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -605,8 +605,7 @@ msgid "Could not create agent instance: %1"
 msgstr "에이전트 인스턴스를 만들 수 없음: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "에이전트 인스턴스 생성 실패"
@@ -623,9 +622,7 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "선택한 에이전트 인스턴스를 삭제하시겠습니까?"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "%1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 설정"
@@ -656,11 +653,10 @@ msgid "Failed to register %1 configuration dialog."
 msgstr "%1 설정 대화 상자를 등록할 수 없습니다."
 
 #: widgets/agenttypedialog.cpp:66
-#, fuzzy, kde-format
-#| msgid "&Configure Agent Instance"
+#, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
-msgstr "에이전트 인스턴스 설정(&C)"
+msgstr "계정 설정"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
@@ -803,8 +799,7 @@ msgid "Could not create folder: %1"
 msgstr "폴더를 만들 수 없음: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
 msgstr "폴더 생성 실패"
@@ -968,9 +963,7 @@ msgid "Open collection dialog"
 msgstr "모음집 대화 상자 열기"
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select a collection"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "모음집 선택"
@@ -2152,13 +2145,11 @@ msgid_plural ""
 msgstr[0] "폴더 %1개와 하위 폴더를 삭제하시겠습니까?"
 
 #: widgets/standardactionmanager.cpp:359
-#, fuzzy, kde-format
-#| msgid "Delete Folder"
-#| msgid_plural "Delete %1 Folders"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "폴더 %1개 삭제"
+msgstr[0] "폴더를 삭제하시겠습니까?"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2166,8 +2157,7 @@ msgid "Could not delete folder: %1"
 msgstr "폴더를 삭제할 수 없음: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "폴더 삭제 실패"
@@ -2185,13 +2175,11 @@ msgid_plural "Do you really want to delete %1 items?"
 msgstr[0] "항목 %1개를 삭제하시겠습니까?"
 
 #: widgets/standardactionmanager.cpp:368
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "항목 %1개 삭제"
+msgstr[0] "항목을 삭제하시겠습니까?"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2199,8 +2187,7 @@ msgid "Could not delete item: %1"
 msgstr "항목을 삭제할 수 없음: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, fuzzy, kde-format
-#| msgid "Item deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "항목 삭제 실패"
@@ -2229,8 +2216,7 @@ msgid "Could not create resource: %1"
 msgstr "자원을 만들 수 없음: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, fuzzy, kde-format
-#| msgid "Resource creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "자원 생성 실패"
@@ -2254,8 +2240,7 @@ msgid "Could not paste data: %1"
 msgstr "데이터를 붙여넣을 수 없음: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, fuzzy, kde-format
-#| msgid "Paste failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "붙여넣기 실패"
@@ -2266,8 +2251,7 @@ msgid "We can not add \"/\" in folder name."
 msgstr "폴더 이름에 \"/\"를 추가할 수 없습니다."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, fuzzy, kde-format
-#| msgid "Create new folder error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "새 폴더 만들기 오류"
@@ -2313,9 +2297,7 @@ msgid "Failed to update subscription: %1"
 msgstr "구독을 업데이트할 수 없음: %1"
 
 #: widgets/subscriptiondialog.cpp:97
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Subscription Error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "구독 오류"
@@ -2356,8 +2338,7 @@ msgid "Failed to create a new tag"
 msgstr "새 태그를 만들 수 없음"
 
 #: widgets/tageditwidget.cpp:116
-#, fuzzy, kde-format
-#| msgid "An error occurred while creating a new tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "새 태그를 만드는 중 오류가 발생함"
@@ -2369,9 +2350,7 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "태그 <resource>%1</resource>을(를) 삭제하시겠습니까?"
 
 #: widgets/tageditwidget.cpp:165
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Delete tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "태그 삭제"

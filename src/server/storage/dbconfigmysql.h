@@ -89,6 +89,7 @@ private:
     QString mCleanServerShutdownCommand;
     QString mMysqlInstallDbPath;
     QString mMysqlCheckPath;
+    QString mMysqlUpgradePath;
     bool mInternalServer;
     QProcess *mDatabaseProcess = nullptr;
 };
