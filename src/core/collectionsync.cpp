@@ -376,8 +376,8 @@ public:
                 return true;
             } else {
                 for (int i = 0, total = remoteCollection.contentMimeTypes().size(); i < total; ++i) {
-                    const QString &m = remoteCollection.contentMimeTypes().at(i);
-                    if (!localCollection.contentMimeTypes().contains(m)) {
+                    const QString mimetype = remoteCollection.contentMimeTypes().at(i);
+                    if (!localCollection.contentMimeTypes().contains(mimetype)) {
                         return true;
                     }
                 }
