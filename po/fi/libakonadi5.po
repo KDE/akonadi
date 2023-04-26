@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-10 00:47+0000\n"
+"POT-Creation-Date: 2023-04-23 00:49+0000\n"
 "PO-Revision-Date: 2023-03-13 17:27+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -446,7 +446,7 @@ msgctxt "@title:window"
 msgid "Error"
 msgstr "Virhe"
 
-#: core/models/favoritecollectionsmodel.cpp:405
+#: core/models/favoritecollectionsmodel.cpp:398
 #, kde-format
 msgid "Favorite Folders"
 msgstr "Suosikkikansiot"

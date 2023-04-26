@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-10 00:47+0000\n"
+"POT-Creation-Date: 2023-04-23 00:49+0000\n"
 "PO-Revision-Date: 2015-01-27 22:40+0200\n"
 "Last-Translator: Liudas Ališauskas <liudas@akmc.lt>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -454,7 +454,7 @@ msgctxt "@title:window"
 msgid "Error"
 msgstr "Klaida."
 
-#: core/models/favoritecollectionsmodel.cpp:405
+#: core/models/favoritecollectionsmodel.cpp:398
 #, kde-format
 msgid "Favorite Folders"
 msgstr "Mėgstami aplankai"

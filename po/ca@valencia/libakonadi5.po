@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-10 00:47+0000\n"
+"POT-Creation-Date: 2023-04-23 00:49+0000\n"
 "PO-Revision-Date: 2023-01-15 10:16+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -449,7 +449,7 @@ msgctxt "@title:window"
 msgid "Error"
 msgstr "S'ha produït un error"
 
-#: core/models/favoritecollectionsmodel.cpp:405
+#: core/models/favoritecollectionsmodel.cpp:398
 #, kde-format
 msgid "Favorite Folders"
 msgstr "Carpetes preferides"
