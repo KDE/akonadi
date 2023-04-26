@@ -113,7 +113,10 @@ void DataStore::open()
     m_dbOpened = m_database.open();
 
     if (!m_dbOpened) {
-        debugLastDbError("Cannot open database.");
+        qCCritical(AKONADISERVER_LOG) << "Database error: Cannot open database.";
+        qCCritical(AKONADISERVER_LOG) << "  Last driver error:" << m_database.lastError().driverText();
+        qCCritical(AKONADISERVER_LOG) << "  Last database error:" << m_database.lastError().databaseText();
+        return;
     } else {
         qCDebug(AKONADISERVER_LOG) << "Database" << m_database.databaseName() << "opened using driver" << m_database.driverName();
     }
