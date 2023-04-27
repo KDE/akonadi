@@ -34,6 +34,7 @@ public:
 
     void setupErrorWidget(QWidget *parent, const QString &text);
     bool loadPlugin(const QString &pluginPath);
+    QString findUiPackagePath() const;
 
     std::unique_ptr<QPluginLoader, PluginLoaderDeleter> loader;
     QPointer<AgentConfigurationFactoryBase> factory = nullptr;

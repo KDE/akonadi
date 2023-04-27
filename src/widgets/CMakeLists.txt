@@ -170,8 +170,10 @@ PRIVATE
     KF${KF_MAJOR_VERSION}::I18n
     KF${KF_MAJOR_VERSION}::IconThemes
     KF${KF_MAJOR_VERSION}::XmlGui
+    Qt::QuickWidgets
     Qt::Sql
     KPim${KF_MAJOR_VERSION}::AkonadiPrivate
+    KPim${KF_MAJOR_VERSION}::AkonadiQml
 )
 
 set_target_properties(KPim${KF_MAJOR_VERSION}AkonadiWidgets PROPERTIES

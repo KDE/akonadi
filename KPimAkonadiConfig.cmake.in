@@ -2,9 +2,11 @@
 
 set_and_check(AKONADI_DBUS_INTERFACES_DIR  "@PACKAGE_AKONADI_DBUS_INTERFACES_INSTALL_DIR@")
 set_and_check(AKONADI_INCLUDE_DIR          "@PACKAGE_AKONADI_INCLUDE_DIR@")
+set_and_check(AKONADI_CONFIGUI_INSTALL_DIR  "@KDE_INSTALL_DATADIR@/akonadi/config-ui/)
 
 # The directory where akonadi-xml.xsd and kcfg2dbus.xsl are installed
 set(KF5Akonadi_DATA_DIR "@PACKAGE_KF5Akonadi_DATA_DIR@")
+
 
 # set the directories
 if(NOT AKONADI_INSTALL_DIR)

@@ -13,11 +13,15 @@
 #include "core/agentconfigurationmanager_p.h"
 #include "core/agentmanager.h"
 #include "core/servermanager.h"
+#include "qml/agentqmlconfigurationbase.h"
 
 #include <QChildEvent>
 #include <QLabel>
 #include <QTimer>
 #include <QVBoxLayout>
+
+#include <QQuickItem>
+#include <QQuickWidget>
 
 #include <KLocalizedString>
 #include <KSharedConfig>
@@ -67,6 +71,23 @@ bool AgentConfigurationWidgetPrivate::loadPlugin(const QString &pluginPath)
     return true;
 }
 
+QString AgentConfigurationWidgetPrivate::findUiPackagePath() const
+{
+    const auto metaData = loader->metaData().toVariantMap();
+    const auto md = metaData.value(QStringLiteral("MetaData")).toMap();
+    auto packageName = md.value(QStringLiteral("X-Akonadi-UiPackage-Name")).toString();
+    if (packageName.isEmpty()) {
+        return {};
+    }
+
+    auto packageMain = md.value(QStringLiteral("X-Akonadi-UiPackage-Main")).toString();
+    if (packageMain.isEmpty()) {
+        packageMain = QStringLiteral("ui/main.qml");
+    }
+
+    return QStandardPaths::locate(QStandardPaths::AppDataLocation, QStringLiteral("akonadi/config-ui/%1/%2").arg(packageName, packageMain));
+}
+
 AgentConfigurationWidget::AgentConfigurationWidget(const AgentInstance &instance, QWidget *parent)
     : QWidget(parent)
     , d(new AgentConfigurationWidgetPrivate(instance))
@@ -81,6 +102,20 @@ AgentConfigurationWidget::AgentConfigurationWidget(const AgentInstance &instance
             layout->setContentsMargins({});
 
             d->plugin = d->factory->create(config, this, {instance.identifier(), instance.type().identifier()});
+
+            if (auto *qmlPlugin = qobject_cast<AgentQmlConfigurationBase *>(d->plugin.data()); qmlPlugin) {
+                auto *quickWidget = new QQuickWidget(this);
+                layout->addWidget(quickWidget);
+
+                const auto packagePath = d->findUiPackagePath();
+
+                if (auto *item = qmlPlugin->mainUi(packagePath, quickWidget->engine(), quickWidget->rootContext()); item) {
+                    quickWidget->setContent(QUrl{}, nullptr, item);
+                } else {
+                    d->setupErrorWidget(this, i18n("Failed to load configuration UI for %1.", instance.name()));
+                }
+            }
+
             connect(d->plugin.data(), &AgentConfigurationBase::enableOkButton, this, &AgentConfigurationWidget::enableOkButton);
         } else {
             // Hide this dialog and fallback to calling the out-of-process configuration
