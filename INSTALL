@@ -41,9 +41,9 @@ The following options are available when running CMake:
 
 Required:
 
-* CMake (https://cmake.org/) >= 3.5
-* Qt5 >= 5.11.0 (http://qt.nokia.com/downloads)
-* Shared-mime-info >= 0.20 (https://freedesktop.org/wiki/Software/shared-mime-info/)
+* CMake (https://cmake.org/) >= 3.16
+* Qt5 >= 6.4.0 (http://qt.nokia.com/downloads)
+* Shared-mime-info >= 1.3 (https://freedesktop.org/wiki/Software/shared-mime-info/)
 * Xsltproc (http://xmlsoft.org/XSLT/downloads.html)
 
 Optional:
