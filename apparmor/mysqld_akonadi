@@ -31,6 +31,7 @@ profile mysqld_akonadi {
   /{usr/,}bin/sed mrix,
   /usr/bin/my_print_defaults mrix,
   /usr/bin/mysql_install_db mrix,
+  /usr/bin/mysql_upgrade mrix,
   /usr/bin/mysqladmin mrix,
   /usr/bin/mysqlcheck mrix,
   /usr/{,s}bin/mysqld mrix,
