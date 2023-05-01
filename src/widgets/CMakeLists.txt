@@ -83,7 +83,9 @@ target_sources(KPim${KF_MAJOR_VERSION}AkonadiWidgets PRIVATE
     tagselectwidget.h
 
     clearcachejob.cpp
+    clearcachefoldersjob.cpp
     clearcachejob.h
+    clearcachefoldersjob.h
 
     dbaccess.cpp
     dbaccess.h
