@@ -123,6 +123,7 @@ ecm_generate_headers(AkonadiWidgets_CC_HEADERS
     AgentTypeDialog
     AgentTypeWidget
     ClearCacheJob
+    ClearCacheFoldersJob
     CollectionComboBox
     CollectionDialog
     CollectionPropertiesDialog
