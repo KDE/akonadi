@@ -37,6 +37,11 @@ void ClearCacheFoldersJob::slotClearNextFolder()
         deleteLater();
         return;
     }
+    if (!mCollections.at(mNumberJob).isValid()) {
+        Q_EMIT clearCacheDone();
+        deleteLater();
+        return;
+    }
     const auto akonadiId = mCollections.at(mNumberJob).id();
     const auto ridCount = QStringLiteral("SELECT COUNT(*) FROM PimItemTable WHERE collectionId=%1 AND remoteId=''").arg(akonadiId);
     QSqlQuery query(DbAccess::database());
