@@ -34,11 +34,13 @@ void ClearCacheFoldersJob::slotClearNextFolder()
     if (mNumberJob == -1) {
         KMessageBox::information(mParentWidget, i18n("Collection cache cleared. You should restart Akonadi now."));
         Q_EMIT clearCacheDone();
+        Q_EMIT finished(true);
         deleteLater();
         return;
     }
     if (!mCollections.at(mNumberJob).isValid()) {
         Q_EMIT clearCacheDone();
+        Q_EMIT finished(false);
         deleteLater();
         return;
     }
@@ -48,6 +50,7 @@ void ClearCacheFoldersJob::slotClearNextFolder()
     if (!query.exec(ridCount)) {
         qCWarning(AKONADIWIDGETS_LOG) << "Failed to execute query" << ridCount << ":" << query.lastError().text();
         KMessageBox::error(mParentWidget, query.lastError().text());
+        Q_EMIT finished(false);
         deleteLater();
         return;
     }
@@ -64,6 +67,7 @@ void ClearCacheFoldersJob::slotClearNextFolder()
                                                     QString::number(emptyRidCount)),
                                                QStringLiteral("POSSIBLE DATA LOSS!"))
             == KMessageBox::Cancel) {
+            Q_EMIT finished(false);
             deleteLater();
             return;
         }
@@ -73,9 +77,10 @@ void ClearCacheFoldersJob::slotClearNextFolder()
     qCWarning(AKONADIWIDGETS_LOG) << str;
     query = QSqlQuery(str, DbAccess::database());
     if (query.exec()) {
-        if (query.lastError().isValid()) {
-            qCWarning(AKONADIWIDGETS_LOG) << query.lastError();
-            KMessageBox::error(mParentWidget, query.lastError().text());
+        const auto lastError = query.lastError();
+        if (lastError.isValid()) {
+            qCWarning(AKONADIWIDGETS_LOG) << lastError;
+            KMessageBox::error(mParentWidget, lastError.text());
         }
     }
     mNumberJob--;
@@ -86,7 +91,7 @@ void ClearCacheFoldersJob::start()
 {
     if (!canStart()) {
         deleteLater();
-        // TODO emit signal
+        Q_EMIT finished(false);
         return;
     }
     mNumberJob--;

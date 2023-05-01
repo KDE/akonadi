@@ -30,6 +30,7 @@ public:
 Q_SIGNALS:
     void clearCacheDone();
     void clearNextFolder();
+    void finished(bool success);
 
 private:
     void slotClearNextFolder();
