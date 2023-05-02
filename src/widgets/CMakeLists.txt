@@ -82,8 +82,8 @@ target_sources(KPim6AkonadiWidgets PRIVATE
     tagwidget.h
     tagselectwidget.h
 
-    clearcachejob.cpp
-    clearcachejob.h
+    clearcachefoldersjob.cpp
+    clearcachefoldersjob.h
 
     dbaccess.cpp
     dbaccess.h
@@ -120,7 +120,7 @@ ecm_generate_headers(AkonadiWidgets_CC_HEADERS
     AgentInstanceWidget
     AgentTypeDialog
     AgentTypeWidget
-    ClearCacheJob
+    ClearCacheFoldersJob
     CollectionComboBox
     CollectionDialog
     CollectionPropertiesDialog

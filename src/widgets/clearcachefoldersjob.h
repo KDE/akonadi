@@ -12,15 +12,13 @@
 #include <QObject>
 namespace Akonadi
 {
-class AKONADIWIDGETS_EXPORT ClearCacheJob : public QObject
+class AKONADIWIDGETS_EXPORT ClearCacheFoldersJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit ClearCacheJob(QObject *parent = nullptr);
-    ~ClearCacheJob() override;
-
-    Q_REQUIRED_RESULT const Akonadi::Collection &collection() const;
-    void setCollection(const Akonadi::Collection &newCollection);
+    explicit ClearCacheFoldersJob(const Akonadi::Collection &folder, QObject *parent = nullptr);
+    explicit ClearCacheFoldersJob(const Akonadi::Collection::List &folders, QObject *parent = nullptr);
+    ~ClearCacheFoldersJob() override;
 
     void start();
 
@@ -31,9 +29,13 @@ public:
 
 Q_SIGNALS:
     void clearCacheDone();
+    void clearNextFolder();
+    void finished(bool success);
 
 private:
-    Akonadi::Collection mCollection;
+    void slotClearNextFolder();
+    Akonadi::Collection::List mCollections;
     QWidget *mParentWidget = nullptr;
+    int mNumberJob = 0;
 };
 }
