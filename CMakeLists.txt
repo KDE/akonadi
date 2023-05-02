@@ -447,3 +447,5 @@ if (BUILD_QCH)
     )
 endif()
 #endif()
+
+install(PROGRAMS org.kde.akonadi.desktop DESTINATION ${KDE_INSTALL_APPDIR})

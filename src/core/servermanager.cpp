@@ -14,7 +14,9 @@
 
 #include "akonadicore_debug.h"
 
+#include <KIO/CommandLauncherJob>
 #include <KLocalizedString>
+#include <qstringliteral.h>
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <Kdelibs4ConfigMigrator>
 #endif
@@ -209,7 +211,12 @@ bool ServerManager::start()
         args << QStringLiteral("--instance") << instanceIdentifier();
     }
     const QString exec = QStandardPaths::findExecutable(QStringLiteral("akonadi_control"));
-    if (exec.isEmpty() || !QProcess::startDetached(exec, args)) {
+
+    auto job = new KIO::CommandLauncherJob(exec, args);
+    job->setDesktopName(QStringLiteral("org.kde.akonadi"));
+    job->start();
+
+    if (exec.isEmpty()) {
         qCWarning(AKONADICORE_LOG) << "Unable to execute akonadi_control, falling back to D-Bus auto-launch";
         QDBusReply<void> reply = QDBusConnection::sessionBus().interface()->startService(ServerManager::serviceName(ServerManager::Control));
         if (!reply.isValid()) {

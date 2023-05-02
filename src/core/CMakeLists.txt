@@ -434,6 +434,7 @@ PRIVATE
     Qt::Network
     Qt::Widgets
     KF${KF_MAJOR_VERSION}::KIOCore
+    KF${KF_MAJOR_VERSION}::KIOGui
     KF${KF_MAJOR_VERSION}::I18n
     KF${KF_MAJOR_VERSION}::IconThemes
     KF${KF_MAJOR_VERSION}::ConfigCore

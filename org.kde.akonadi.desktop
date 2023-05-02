@@ -1,0 +1,13 @@
+# SPDX-FileCopyrightText: 2023 Carl Schwan <carl@carlschwan.eu>
+# SPDX-License-Identifier: CC0-1.0
+
+[Desktop Entry]
+Name=Akonadi
+GenericName=Groupware background services
+Comment=Synchronize your events, mails and contacts
+Categories=Qt;KDE;Office;Calendar;Mail
+Icon=kontact
+Type=Service
+NoDisplay=true
+Terminal=false
+StartupNotify=false
