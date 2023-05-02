@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-23 00:49+0000\n"
+"POT-Creation-Date: 2023-05-02 00:49+0000\n"
 "PO-Revision-Date: 2023-01-14 22:27+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -758,7 +758,12 @@ msgctxt "no cache timeout"
 msgid "Forever"
 msgstr "Нескінченний"
 
-#: widgets/clearcachejob.cpp:54
+#: widgets/clearcachefoldersjob.cpp:35 widgets/clearcachejob.cpp:83
+#, kde-format
+msgid "Collection cache cleared. You should restart Akonadi now."
+msgstr "Кеш збірок спорожнено. Тепер вам слід перезапустити Akonadi."
+
+#: widgets/clearcachefoldersjob.cpp:62 widgets/clearcachejob.cpp:54
 #, kde-format
 msgid ""
 "The collection '%1' contains %2 items without Remote ID. Those items were "
@@ -769,11 +774,6 @@ msgstr ""
 "записи, ймовірно, ніколи не було вивантажено на сервер призначення, тому "
 "спорожнення цієї збірки означатиме, що ці <b>дані буде втрачено</b>. Ви "
 "справді хочете спорожнити збірку?"
-
-#: widgets/clearcachejob.cpp:83
-#, kde-format
-msgid "Collection cache cleared. You should restart Akonadi now."
-msgstr "Кеш збірок спорожнено. Тепер вам слід перезапустити Akonadi."
 
 #: widgets/collectiondialog.cpp:56
 #, kde-format

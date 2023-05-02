@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-23 00:49+0000\n"
+"POT-Creation-Date: 2023-05-02 00:49+0000\n"
 "PO-Revision-Date: 2023-04-21 23:09+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -744,7 +744,12 @@ msgctxt "no cache timeout"
 msgid "Forever"
 msgstr "영구"
 
-#: widgets/clearcachejob.cpp:54
+#: widgets/clearcachefoldersjob.cpp:35 widgets/clearcachejob.cpp:83
+#, kde-format
+msgid "Collection cache cleared. You should restart Akonadi now."
+msgstr "모음집 캐시를 비웠습니다. Akonadi를 다시 시작하십시오."
+
+#: widgets/clearcachefoldersjob.cpp:62 widgets/clearcachejob.cpp:54
 #, kde-format
 msgid ""
 "The collection '%1' contains %2 items without Remote ID. Those items were "
@@ -754,11 +759,6 @@ msgstr ""
 "모음집 '%1'에 원격 ID가 없는 항목이 %2개 있습니다. 해당 항목은 서버에 업로드"
 "되지 않았을 가능성이 높으므로 이 모음집을 비우면 <b>데이터가 손실될 수 있습니"
 "다</b>. 계속 진행하시겠습니까?"
-
-#: widgets/clearcachejob.cpp:83
-#, kde-format
-msgid "Collection cache cleared. You should restart Akonadi now."
-msgstr "모음집 캐시를 비웠습니다. Akonadi를 다시 시작하십시오."
 
 #: widgets/collectiondialog.cpp:56
 #, kde-format

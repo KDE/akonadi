@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-23 00:49+0000\n"
+"POT-Creation-Date: 2023-05-02 00:49+0000\n"
 "PO-Revision-Date: 2023-01-07 04:46+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
@@ -743,7 +743,12 @@ msgctxt "no cache timeout"
 msgid "Forever"
 msgstr "永遠"
 
-#: widgets/clearcachejob.cpp:54
+#: widgets/clearcachefoldersjob.cpp:35 widgets/clearcachejob.cpp:83
+#, kde-format
+msgid "Collection cache cleared. You should restart Akonadi now."
+msgstr "收藏快取已清空。請現在重新啟動 Akonadi。"
+
+#: widgets/clearcachefoldersjob.cpp:62 widgets/clearcachejob.cpp:54
 #, kde-format
 msgid ""
 "The collection '%1' contains %2 items without Remote ID. Those items were "
@@ -752,11 +757,6 @@ msgid ""
 msgstr ""
 "收藏 '%1' 包含 %2 個沒有遠端 ID 的項目。這些項目很可能從來沒有上傳到目標伺服"
 "器過，因此清除這個收藏時<b>將會造成資料遺失</b>。您確定要繼續嗎？"
-
-#: widgets/clearcachejob.cpp:83
-#, kde-format
-msgid "Collection cache cleared. You should restart Akonadi now."
-msgstr "收藏快取已清空。請現在重新啟動 Akonadi。"
 
 #: widgets/collectiondialog.cpp:56
 #, kde-format

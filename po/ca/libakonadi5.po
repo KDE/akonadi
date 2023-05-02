@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-23 00:49+0000\n"
+"POT-Creation-Date: 2023-05-02 00:49+0000\n"
 "PO-Revision-Date: 2023-01-15 10:16+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -758,7 +758,14 @@ msgctxt "no cache timeout"
 msgid "Forever"
 msgstr "Per sempre"
 
-#: widgets/clearcachejob.cpp:54
+#: widgets/clearcachefoldersjob.cpp:35 widgets/clearcachejob.cpp:83
+#, kde-format
+msgid "Collection cache cleared. You should restart Akonadi now."
+msgstr ""
+"S'ha netejat la memòria cau de la col·lecció. Ara caldria reiniciar "
+"l'Akonadi."
+
+#: widgets/clearcachefoldersjob.cpp:62 widgets/clearcachejob.cpp:54
 #, kde-format
 msgid ""
 "The collection '%1' contains %2 items without Remote ID. Those items were "
@@ -769,13 +776,6 @@ msgstr ""
 "elements mai s'han pujat al servidor de destinació, de manera que netejar "
 "aquesta col·lació vol dir que aquestes <b>dades es perdran</b>. Segur que "
 "voleu continuar?"
-
-#: widgets/clearcachejob.cpp:83
-#, kde-format
-msgid "Collection cache cleared. You should restart Akonadi now."
-msgstr ""
-"S'ha netejat la memòria cau de la col·lecció. Ara caldria reiniciar "
-"l'Akonadi."
 
 #: widgets/collectiondialog.cpp:56
 #, kde-format
