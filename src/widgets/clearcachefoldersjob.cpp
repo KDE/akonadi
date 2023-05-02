@@ -31,6 +31,12 @@ ClearCacheFoldersJob::~ClearCacheFoldersJob() = default;
 
 void ClearCacheFoldersJob::slotClearNextFolder()
 {
+    if (mCanceled) {
+        Q_EMIT clearCacheDone();
+        Q_EMIT finished(false);
+        deleteLater();
+        return;
+    }
     if (mNumberJob == -1) {
         KMessageBox::information(mParentWidget, i18n("Collection cache cleared. You should restart Akonadi now."));
         Q_EMIT clearCacheDone();
@@ -44,6 +50,7 @@ void ClearCacheFoldersJob::slotClearNextFolder()
         deleteLater();
         return;
     }
+
     const auto akonadiId = mCollections.at(mNumberJob).id();
     const auto ridCount = QStringLiteral("SELECT COUNT(*) FROM PimItemTable WHERE collectionId=%1 AND remoteId=''").arg(akonadiId);
     QSqlQuery query(DbAccess::database());
@@ -85,6 +92,16 @@ void ClearCacheFoldersJob::slotClearNextFolder()
     }
     mNumberJob--;
     Q_EMIT clearNextFolder();
+}
+
+bool ClearCacheFoldersJob::canceled() const
+{
+    return mCanceled;
+}
+
+void ClearCacheFoldersJob::setCanceled(bool newCanceled)
+{
+    mCanceled = newCanceled;
 }
 
 void ClearCacheFoldersJob::start()

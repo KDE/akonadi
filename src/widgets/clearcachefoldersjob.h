@@ -27,6 +27,9 @@ public:
     Q_REQUIRED_RESULT QWidget *parentWidget() const;
     void setParentWidget(QWidget *newParentWidget);
 
+    Q_REQUIRED_RESULT bool canceled() const;
+    void setCanceled(bool newCanceled);
+
 Q_SIGNALS:
     void clearCacheDone();
     void clearNextFolder();
@@ -37,5 +40,6 @@ private:
     Akonadi::Collection::List mCollections;
     QWidget *mParentWidget = nullptr;
     int mNumberJob = 0;
+    bool mCanceled = false;
 };
 }
