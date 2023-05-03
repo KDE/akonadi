@@ -33,11 +33,7 @@
 #include &lt;QtCore/QString&gt;
 #include &lt;QtCore/QVariant&gt;
 #include &lt;QtCore/QStringList&gt;
-#if QT_VERSION &lt; QT_VERSION_CHECK(6, 0, 0)
-template &lt;typename T&gt; class QVector;
-#else
 template &lt;typename T&gt; class QList;
-#endif
 
 class QSqlQuery;
 

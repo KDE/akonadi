@@ -100,9 +100,6 @@ public:
     QTimer *mTemporaryOfflineTimer = nullptr;
 
     QEventLoopLocker *mEventLoopLocker = nullptr;
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    QNetworkConfigurationManager *mNetworkManager = nullptr;
-#endif
 public Q_SLOTS:
     // Dump the contents of the current ChangeReplay
     Q_SCRIPTABLE QString dumpNotificationListToString() const;

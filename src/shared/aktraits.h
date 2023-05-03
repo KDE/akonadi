@@ -71,18 +71,10 @@ struct parameter_type<T, std::void_t<typename T::parameter_type>> {
     typedef typename T::parameter_type type;
 };
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-DECLARE_HAS_METHOD_GENERIC_CONST(size, int, void)
-#else
 DECLARE_HAS_METHOD_GENERIC_CONST(size, qsizetype, void)
-#endif
 DECLARE_HAS_METHOD_GENERIC(push_back, void, typename parameter_type<T>::type)
 DECLARE_HAS_METHOD_GENERIC(insert, typename T::iterator, typename parameter_type<T>::type)
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-DECLARE_HAS_METHOD_GENERIC(reserve, void, int)
-#else
 DECLARE_HAS_METHOD_GENERIC(reserve, void, qsizetype)
-#endif
 
 #define DECLARE_HAS_FUNCTION(name, fun)                                                                                                                        \
     template<typename T>                                                                                                                                       \
