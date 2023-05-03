@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-02 00:49+0000\n"
+"POT-Creation-Date: 2023-05-03 00:49+0000\n"
 "PO-Revision-Date: 2023-03-13 17:27+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -759,13 +759,13 @@ msgctxt "no cache timeout"
 msgid "Forever"
 msgstr "Aina"
 
-#: widgets/clearcachefoldersjob.cpp:35 widgets/clearcachejob.cpp:83
+#: widgets/clearcachefoldersjob.cpp:41
 #, kde-format
 msgid "Collection cache cleared. You should restart Akonadi now."
 msgstr ""
 "Kokoelmavälimuisti tyhjennetty. Akonadi tulisi nyt käynnistää uudelleen."
 
-#: widgets/clearcachefoldersjob.cpp:62 widgets/clearcachejob.cpp:54
+#: widgets/clearcachefoldersjob.cpp:69
 #, kde-format
 msgid ""
 "The collection '%1' contains %2 items without Remote ID. Those items were "
