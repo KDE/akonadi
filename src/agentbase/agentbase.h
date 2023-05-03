@@ -455,7 +455,7 @@ public:
         // Disable session management
         qunsetenv("SESSION_MANAGER");
 
-        QApplication app(argc, argv);
+        QCoreApplication app(argc, argv);
         debugAgent(argc, argv);
         const QString id = parseArguments(argc, argv);
         T r(id);
