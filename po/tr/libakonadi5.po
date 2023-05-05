@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-02 00:49+0000\n"
+"POT-Creation-Date: 2023-05-03 00:49+0000\n"
 "PO-Revision-Date: 2023-02-08 19:03+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -753,13 +753,13 @@ msgctxt "no cache timeout"
 msgid "Forever"
 msgstr "Her Zaman"
 
-#: widgets/clearcachefoldersjob.cpp:35 widgets/clearcachejob.cpp:83
+#: widgets/clearcachefoldersjob.cpp:41
 #, kde-format
 msgid "Collection cache cleared. You should restart Akonadi now."
 msgstr ""
 "Koleksiyon önbelleği temizlendi. Akonadi'yi şimdi yeniden başlatmalısınız."
 
-#: widgets/clearcachefoldersjob.cpp:62 widgets/clearcachejob.cpp:54
+#: widgets/clearcachefoldersjob.cpp:69
 #, kde-format
 msgid ""
 "The collection '%1' contains %2 items without Remote ID. Those items were "
