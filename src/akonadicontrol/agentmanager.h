@@ -15,7 +15,7 @@
 
 class QDir;
 
-namespace Akonadi
+namespace AkonadiControl
 {
 class ProcessControl;
 }
@@ -157,6 +157,12 @@ public:
      * @param windowId Parent window id for the configuration dialog.
      */
     void agentInstanceConfigure(const QString &identifier, qlonglong windowId);
+
+    /**
+     * Triggers the agent instance with the given @p identifier to show
+     * its configuration dialog.
+     */
+    void agentInstanceConfigure(const QString &identifier);
 
     /**
      * Triggers the agent instance with the given @p identifier to start
@@ -365,8 +371,8 @@ private:
      */
     QHash<QString, AgentInstance::Ptr> mAgentInstances;
 
-    std::unique_ptr<Akonadi::ProcessControl> mAgentServer;
-    std::unique_ptr<Akonadi::ProcessControl> mStorageController;
+    std::unique_ptr<AkonadiControl::ProcessControl> mAgentServer;
+    std::unique_ptr<AkonadiControl::ProcessControl> mStorageController;
     bool mAgentServerEnabled = false;
     bool mVerbose = false;
 

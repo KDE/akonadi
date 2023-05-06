@@ -19,7 +19,7 @@
 #include <sys/types.h>
 #endif
 
-using namespace Akonadi;
+using namespace AkonadiControl;
 using namespace std::chrono_literals;
 
 static const int s_maxCrashCount = 2;
@@ -158,7 +158,7 @@ static bool listContains(const QStringList &list, const QString &pattern)
 void ProcessControl::start()
 {
     // Prefer akonadiserver from the builddir
-    mApplication = StandardDirs::findExecutable(mApplication);
+    mApplication = Akonadi::StandardDirs::findExecutable(mApplication);
 
 #ifdef Q_OS_UNIX
     QString agentValgrind = akGetEnv("AKONADI_VALGRIND");

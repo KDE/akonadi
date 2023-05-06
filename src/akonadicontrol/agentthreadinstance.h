@@ -10,7 +10,7 @@
 
 #include <QDBusServiceWatcher>
 
-namespace Akonadi
+namespace AkonadiControl
 {
 class AgentThreadInstance : public AgentInstance
 {

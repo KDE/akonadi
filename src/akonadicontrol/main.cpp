@@ -18,8 +18,8 @@
 
 #include <private/dbus_p.h>
 
+#include <QApplication>
 #include <QDBusConnection>
-#include <QGuiApplication>
 #include <QSessionManager>
 
 #include <KAboutData>
@@ -43,7 +43,7 @@ void crashHandler(int /*unused*/)
 
 int main(int argc, char **argv)
 {
-    AkUniqueGuiApplication app(argc, argv, Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock), AKONADICONTROL_LOG());
+    AkUniqueApplication app(argc, argv, Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock), AKONADICONTROL_LOG());
     app.setDescription(QStringLiteral("Akonadi Control Process\nDo not run this manually, use 'akonadictl' instead to start/stop Akonadi."));
 
     KAboutData aboutData(QStringLiteral("akonadi_control"),

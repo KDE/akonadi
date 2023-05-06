@@ -10,7 +10,7 @@
 
 #include <private/dbus_p.h>
 
-using namespace Akonadi;
+using namespace AkonadiControl;
 
 AgentThreadInstance::AgentThreadInstance(AgentManager &manager)
     : AgentInstance(manager)
@@ -68,7 +68,7 @@ void AgentThreadInstance::agentServerRegistered()
     start(mAgentType);
 }
 
-void Akonadi::AgentThreadInstance::configure(qlonglong windowId)
+void AgentThreadInstance::configure(qlonglong windowId)
 {
     org::freedesktop::Akonadi::AgentServer agentServer(Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer),
                                                        QStringLiteral("/AgentServer"),

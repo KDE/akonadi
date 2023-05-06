@@ -11,7 +11,7 @@
 
 #include <chrono>
 
-namespace Akonadi
+namespace AkonadiControl
 {
 /**
  * This class starts and observes a process. Depending on the

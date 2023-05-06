@@ -67,7 +67,8 @@ target_link_libraries(akonadi_control
     KF${KF_MAJOR_VERSION}::ConfigCore
     Qt::Core
     Qt::DBus
-    Qt::Gui
+    Qt::Widgets
+    KPim${KF_MAJOR_VERSION}::AkonadiWidgets
 )
 
 if (WITH_ACCOUNTS)

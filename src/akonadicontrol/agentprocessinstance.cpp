@@ -13,7 +13,7 @@
 
 #include <QStandardPaths>
 
-using namespace Akonadi;
+using namespace AkonadiControl;
 
 AgentProcessInstance::AgentProcessInstance(AgentManager &manager)
     : AgentInstance(manager)
@@ -38,7 +38,7 @@ bool AgentProcessInstance::start(const AgentType &agentInfo)
         return false;
     }
 
-    mController = std::make_unique<Akonadi::ProcessControl>();
+    mController = std::make_unique<AkonadiControl::ProcessControl>();
     connect(mController.get(), &ProcessControl::unableToStart, this, &AgentProcessInstance::failedToStart);
 
     if (agentInfo.launchMethod == AgentType::Process) {
@@ -55,13 +55,13 @@ bool AgentProcessInstance::start(const AgentType &agentInfo)
 
 void AgentProcessInstance::quit()
 {
-    mController->setCrashPolicy(Akonadi::ProcessControl::StopOnCrash);
+    mController->setCrashPolicy(AkonadiControl::ProcessControl::StopOnCrash);
     AgentInstance::quit();
 }
 
 void AgentProcessInstance::cleanup()
 {
-    mController->setCrashPolicy(Akonadi::ProcessControl::StopOnCrash);
+    mController->setCrashPolicy(AkonadiControl::ProcessControl::StopOnCrash);
     AgentInstance::cleanup();
 }
 
@@ -77,7 +77,7 @@ void AgentProcessInstance::restartWhenIdle()
     }
 }
 
-void Akonadi::AgentProcessInstance::configure(qlonglong windowId)
+void AgentProcessInstance::configure(qlonglong windowId)
 {
     controlInterface()->configure(windowId);
 }

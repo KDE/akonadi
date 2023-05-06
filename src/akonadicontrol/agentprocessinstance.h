@@ -9,7 +9,7 @@
 
 #include "agentinstance.h"
 
-namespace Akonadi
+namespace AkonadiControl
 {
 class ProcessControl;
 
@@ -31,7 +31,7 @@ private Q_SLOTS:
     void failedToStart();
 
 private:
-    std::unique_ptr<Akonadi::ProcessControl> mController;
+    std::unique_ptr<AkonadiControl::ProcessControl> mController;
 };
 
 }

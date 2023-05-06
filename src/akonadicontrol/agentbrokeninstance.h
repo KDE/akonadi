@@ -8,7 +8,7 @@
 
 #include "agentinstance.h"
 
-namespace Akonadi
+namespace AkonadiControl
 {
 class AgentBrokenInstance : public AgentInstance
 {

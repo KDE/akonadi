@@ -114,5 +114,6 @@ QString akGetEnv(const char *name, const QString &defaultValue = QString());
 
 using AkCoreApplication = AkApplicationImpl<QCoreApplication>;
 using AkApplication = AkApplicationImpl<QApplication>;
+using AkUniqueApplication = AkUniqueApplicationImpl<QApplication>;
 using AkGuiApplication = AkApplicationImpl<QGuiApplication>;
 using AkUniqueGuiApplication = AkUniqueApplicationImpl<QGuiApplication>;

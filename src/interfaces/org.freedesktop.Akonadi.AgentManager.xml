@@ -117,6 +117,9 @@
       <arg name="identifier" type="s" direction="in"/>
       <arg name="windowId" type="x" direction="in"/>
     </method>
+    <method name="agentInstanceConfigure">
+      <arg name="identifier" type="s" direction="in"/>
+    </method>
     <method name="agentInstanceSynchronize">
       <arg name="identifier" type="s" direction="in"/>
     </method>

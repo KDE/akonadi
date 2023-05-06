@@ -12,6 +12,7 @@
 
 #include "agentconfigurationdialog.h"
 #include "agentmanager.h"
+#include "agentmanagerinterface.h"
 #include "akonadifull-version.h"
 #include "changerecorder.h"
 #include "controladaptor.h"
@@ -22,6 +23,7 @@
 #include "session.h"
 #include "session_p.h"
 #include "statusadaptor.h"
+#include <private/dbus_p.h>
 
 #include "akonadiagentbase_debug.h"
 
@@ -1308,6 +1310,14 @@ void AgentBase::abort()
 void AgentBase::reconfigure()
 {
     Q_EMIT reloadConfiguration();
+}
+
+void AgentBase::openSettings()
+{
+    OrgFreedesktopAkonadiAgentManagerInterface iface(DBus::serviceName(DBus::Control), QStringLiteral("/AgentManager"), QDBusConnection::sessionBus(), this);
+    if (iface.isValid()) {
+        iface.agentInstanceConfigure(identifier());
+    }
 }
 
 #include "moc_agentbase.cpp"

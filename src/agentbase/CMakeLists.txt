@@ -4,11 +4,14 @@ set(AkonadiAgentBase_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR}/KPim${KF_MAJO
 add_library(KPim${KF_MAJOR_VERSION}AkonadiAgentBase)
 add_library(KPim${KF_MAJOR_VERSION}::AkonadiAgentBase ALIAS KPim${KF_MAJOR_VERSION}AkonadiAgentBase)
 
-ecm_qt_declare_logging_category(KPim${KF_MAJOR_VERSION}AkonadiAgentBase HEADER akonadiagentbase_debug.h IDENTIFIER AKONADIAGENTBASE_LOG CATEGORY_NAME org.kde.pim.akonadiagentbase
-        DESCRIPTION "akonadi (Akonadi AgentBase Library)"
-        OLD_CATEGORY_NAMES akonadiagentbase_log
-        EXPORT AKONADI
-    )
+ecm_qt_declare_logging_category(KPim${KF_MAJOR_VERSION}AkonadiAgentBase
+    HEADER akonadiagentbase_debug.h
+    IDENTIFIER AKONADIAGENTBASE_LOG
+    CATEGORY_NAME org.kde.pim.akonadiagentbase
+    DESCRIPTION "akonadi (Akonadi AgentBase Library)"
+    OLD_CATEGORY_NAMES akonadiagentbase_log
+    EXPORT AKONADI
+)
 
 ecm_generate_headers(AkonadiAgentBase_CC_HEADERS
     HEADER_NAMES
@@ -27,6 +30,7 @@ ecm_generate_headers(AkonadiAgentBase_CC_HEADERS
 KCONFIG_ADD_KCFG_FILES(KPim${KF_MAJOR_VERSION}AkonadiAgentBase resourcebasesettings.kcfgc)
 
 qt_add_dbus_interfaces(akonadiagentbase_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Tracer.xml )
+qt_add_dbus_interfaces(akonadiagentbase_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.AgentManager.xml)
 
 qt_add_dbus_adaptor(akonadiagentbase_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Resource.xml
     resourcebase.h Akonadi::ResourceBase resourceadaptor Akonadi__ResourceAdaptor)

@@ -6,7 +6,7 @@
 
 #include "agentbrokeninstance.h"
 
-using namespace Akonadi;
+using namespace AkonadiControl;
 
 AgentBrokenInstance::AgentBrokenInstance(const QString &type, AgentManager &manager)
     : AgentInstance(manager)

@@ -7,6 +7,8 @@
 
 #include "agentmanager.h"
 
+#include "../core/agentmanager.h"
+#include "../widgets/agentconfigurationdialog.h"
 #include "agentbrokeninstance.h"
 #include "agentmanageradaptor.h"
 #include "agentmanagerinternaladaptor.h"
@@ -32,19 +34,19 @@
 #include <QScopedPointer>
 #include <QSettings>
 
-using Akonadi::ProcessControl;
+using AkonadiControl::ProcessControl;
 using namespace std::chrono_literals;
 
 static const bool enableAgentServerDefault = false;
 
-class StorageProcessControl : public Akonadi::ProcessControl
+class StorageProcessControl : public AkonadiControl::ProcessControl
 {
     Q_OBJECT
 public:
     explicit StorageProcessControl(const QStringList &args)
     {
         setShutdownTimeout(15s);
-        connect(this, &Akonadi::ProcessControl::unableToStart, this, []() {
+        connect(this, &AkonadiControl::ProcessControl::unableToStart, this, []() {
             QCoreApplication::instance()->exit(255);
         });
         start(QStringLiteral("akonadiserver"), args, RestartOnCrash);
@@ -60,13 +62,13 @@ public:
     }
 };
 
-class AgentServerProcessControl : public Akonadi::ProcessControl
+class AgentServerProcessControl : public AkonadiControl::ProcessControl
 {
     Q_OBJECT
 public:
     explicit AgentServerProcessControl(const QStringList &args)
     {
-        connect(this, &Akonadi::ProcessControl::unableToStart, this, []() {
+        connect(this, &AkonadiControl::ProcessControl::unableToStart, this, []() {
             qCCritical(AKONADICONTROL_LOG) << "Failed to start AgentServer!";
         });
         start(QStringLiteral("akonadi_agent_server"), args, RestartOnCrash);
@@ -109,10 +111,10 @@ AgentManager::AgentManager(bool verbose, QObject *parent)
         serviceArgs << QStringLiteral("--verbose");
     }
 
-    mStorageController = std::unique_ptr<Akonadi::ProcessControl>(new StorageProcessControl(serviceArgs));
+    mStorageController = std::unique_ptr<AkonadiControl::ProcessControl>(new StorageProcessControl(serviceArgs));
 
     if (mAgentServerEnabled) {
-        mAgentServer = std::unique_ptr<Akonadi::ProcessControl>(new AgentServerProcessControl(serviceArgs));
+        mAgentServer = std::unique_ptr<AkonadiControl::ProcessControl>(new AgentServerProcessControl(serviceArgs));
     }
 }
 
@@ -229,10 +231,10 @@ AgentInstance::Ptr AgentManager::createAgentInstance(const AgentType &info)
 {
     switch (info.launchMethod) {
     case AgentType::Server:
-        return QSharedPointer<Akonadi::AgentThreadInstance>::create(*this);
+        return QSharedPointer<AkonadiControl::AgentThreadInstance>::create(*this);
     case AgentType::Launcher: // Fall through
     case AgentType::Process:
-        return QSharedPointer<Akonadi::AgentProcessInstance>::create(*this);
+        return QSharedPointer<AkonadiControl::AgentProcessInstance>::create(*this);
     default:
         Q_ASSERT_X(false, "AgentManger::createAgentInstance", "Unhandled AgentType::LaunchMethod case");
     }
@@ -378,6 +380,15 @@ void AgentManager::agentInstanceConfigure(const QString &identifier, qlonglong w
     }
 
     mAgentInstances.value(identifier)->configure(windowId);
+}
+
+void AgentManager::agentInstanceConfigure(const QString &identifier)
+{
+    auto instance = Akonadi::AgentManager::self()->instance(identifier);
+    if (instance.isValid()) {
+        Akonadi::AgentConfigurationDialog dlg(instance, nullptr);
+        dlg.exec();
+    }
 }
 
 bool AgentManager::agentInstanceOnline(const QString &identifier)
@@ -592,7 +603,7 @@ void AgentManager::load()
                 mAgents.insert(type.identifier, type);
             }
 
-            auto brokenInstance = AgentInstance::Ptr{new Akonadi::AgentBrokenInstance{agentType, *this}};
+            auto brokenInstance = AgentInstance::Ptr{new AkonadiControl::AgentBrokenInstance{agentType, *this}};
             brokenInstance->setIdentifier(instanceIdentifier);
             mAgentInstances.insert(instanceIdentifier, brokenInstance);
             file.endGroup();

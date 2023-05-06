@@ -509,6 +509,14 @@ public Q_SLOTS:
      */
     virtual void configure(WId windowId);
 
+    /**
+     * Open agent settings out of process.
+     *
+     * \warning This only works for agents which expose their settings as plugin.
+     * \see Akonadi::AgentConfigurationBase
+     */
+    void openSettings();
+
 public:
     /**
      * This method returns the windows id, which should be used for dialogs.
