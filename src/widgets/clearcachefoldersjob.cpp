@@ -81,7 +81,7 @@ void ClearCacheFoldersJob::slotClearNextFolder()
     }
 
     const QString str = QStringLiteral("DELETE FROM PimItemTable WHERE collectionId=%1").arg(akonadiId);
-    qCWarning(AKONADIWIDGETS_LOG) << str;
+    // qCWarning(AKONADIWIDGETS_LOG) << str;
     query = QSqlQuery(str, DbAccess::database());
     if (query.exec()) {
         const auto lastError = query.lastError();
