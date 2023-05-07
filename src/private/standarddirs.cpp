@@ -156,6 +156,14 @@ QString StandardDirs::locateResourceFile(const char *resource, const QString &re
         }
     }
 
+    const auto configPath = QStringLiteral(CONFIG_INSTALL_DIR);
+    if (!configPath.isEmpty()) {
+        QFileInfo file(configPath);
+        if (file.exists() && file.isFile() && file.isReadable()) {
+            return configPath;
+        }
+    }
+
     // First try instance-specific path in generic locations
     auto path = locateFile(genericLocation, fullRelPath);
     if (!path.isEmpty()) {

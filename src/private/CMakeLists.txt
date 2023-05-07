@@ -61,6 +61,8 @@ PRIVATE
 )
 generate_export_header(KPim6AkonadiPrivate BASE_NAME akonadiprivate)
 
+target_compile_definitions(KPim6AkonadiPrivate PRIVATE CONFIG_INSTALL_DIR=\"${KDE_INSTALL_FULL_CONFDIR}\")
+
 set_target_properties(KPim6AkonadiPrivate PROPERTIES
     VERSION ${AKONADI_VERSION}
     SOVERSION ${AKONADI_SOVERSION}
