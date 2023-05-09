@@ -28,7 +28,6 @@
 #include <KLocalizedString>
 
 #include <KAboutData>
-#include <kcoreaddons_version.h>
 
 #include <QCommandLineParser>
 #include <QNetworkInformation>
