@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
-set(PIM_VERSION "5.23.1")
+set(PIM_VERSION "5.23.2")
 project(Akonadi VERSION ${PIM_VERSION})
 
 
