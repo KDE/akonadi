@@ -583,7 +583,7 @@ msgstr "يتحقّق ويُبلغ عن حالة خادوم «أكونادي»"
 #: selftest/main.cpp:23
 #, kde-format
 msgid "(c) 2008 Volker Krause <vkrause@kde.org>"
-msgstr "‏© ٢٠٠٨ Volker Krause ‏<vkrause@kde.org>"
+msgstr "‏© 2008 Volker Krause ‏<vkrause@kde.org>"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
@@ -2562,7 +2562,7 @@ msgstr "يُحوّل شجرة تجميعة «أكونادي» فرعية إلى 
 #: xml/akonadi2xml.cpp:29
 #, kde-format
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
-msgstr "‏© ٢٠٠٩ Volker Krause ‏<vkrause@kde.org>"
+msgstr "‏© 2009 Volker Krause ‏<vkrause@kde.org>"
 
 #: xml/xmldocument.cpp:83
 #, kde-format
