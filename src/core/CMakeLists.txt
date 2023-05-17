@@ -179,6 +179,7 @@ ecm_generate_headers(AkonadiCore_base_CC_HEADERS
 
 set(akonadicore_attributes_SRCS
     attributes/attribute.cpp
+    attributes/collectionannotationsattribute.cpp attributes/collectionannotationsattribute.h
     attributes/collectioncolorattribute.cpp attributes/collectioncolorattribute.h
     attributes/collectionquotaattribute.cpp attributes/collectionquotaattribute.h
     attributes/collectionidentificationattribute.cpp attributes/collectionidentificationattribute.h
@@ -198,6 +199,7 @@ set(akonadicore_attributes_SRCS
 ecm_generate_headers(AkonadiCore_attributes_CC_HEADERS
     HEADER_NAMES
     Attribute
+    CollectionAnnotationsAttribute
     CollectionColorAttribute
     CollectionIdentificationAttribute
     CollectionQuotaAttribute

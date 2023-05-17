@@ -1,0 +1,45 @@
+/*
+  SPDX-FileCopyrightText: 2008 Omat Holding B.V. <info@omat.nl>
+
+  SPDX-License-Identifier: LGPL-2.0-or-later
+*/
+
+#pragma once
+
+#include "attribute.h"
+
+#include <QMap>
+
+namespace Akonadi
+{
+
+/**
+ *  Collection annotations attribute.
+ *
+ *  This is primarily meant for storing IMAP ANNOTATION (RFC5257) data for resources
+ *  supporting that.
+ *
+ *  @since 5.23.43
+ */
+class AKONADICORE_EXPORT CollectionAnnotationsAttribute : public Akonadi::Attribute
+{
+public:
+    CollectionAnnotationsAttribute();
+    explicit CollectionAnnotationsAttribute(const QMap<QByteArray, QByteArray> &annotations);
+    ~CollectionAnnotationsAttribute() override = default;
+
+    void setAnnotations(const QMap<QByteArray, QByteArray> &annotations);
+    QMap<QByteArray, QByteArray> annotations() const;
+
+    QByteArray type() const override;
+    CollectionAnnotationsAttribute *clone() const override;
+    QByteArray serialized() const override;
+    void deserialize(const QByteArray &data) override;
+
+    bool operator==(const CollectionAnnotationsAttribute &other) const;
+
+private:
+    QMap<QByteArray, QByteArray> mAnnotations;
+};
+
+}
