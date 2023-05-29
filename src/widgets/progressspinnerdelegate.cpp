@@ -10,7 +10,7 @@
 
 #include "entitytreemodel.h"
 
-#include <KIconLoader>
+#include <KPixmapSequenceLoader>
 
 #include <QAbstractItemView>
 #include <QTimerEvent>
@@ -20,7 +20,7 @@ using namespace Akonadi;
 DelegateAnimator::DelegateAnimator(QAbstractItemView *view)
     : QObject(view)
     , m_view(view)
-    , m_pixmapSequence(KIconLoader::global()->loadPixmapSequence(QStringLiteral("process-working"), 22))
+    , m_pixmapSequence(KPixmapSequenceLoader::load(QStringLiteral("process-working"), 22))
 {
 }
 

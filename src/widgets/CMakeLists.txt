@@ -166,6 +166,7 @@ PRIVATE
     KF6::KIOCore
     KF6::I18n
     KF6::IconThemes
+    KF6::IconWidgets
     KF6::XmlGui
     Qt::Sql
     KPim6::AkonadiPrivate
