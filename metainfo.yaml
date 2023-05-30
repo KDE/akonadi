@@ -9,6 +9,8 @@ public_lib: true
 libraries:
     - qmake: AkonadiCore
       cmake: KPim6::AkonadiCore
+    - qmake: AkonadiWidgets
+      cmake: KPim6::AkonadiWidgets
 cmakename: KPim6AkonadiCore
 # TODO: kapidox currently assumes: one product == one metainfo.yaml == one cmake config file
 # listing KPim6AkonadiAgentBase, KPim6AkonadiAgentBase, KPim6AkonadiWidgets, KPim6AkonadiXml as separate
