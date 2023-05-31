@@ -15,7 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
 
@@ -670,7 +670,6 @@ msgstr "エージェントのインスタンスを設定(&C)"
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "分"
-msgstr[1] "分"
 
 #: widgets/cachepolicypage.cpp:69
 #, kde-format
@@ -826,8 +825,7 @@ msgstr "全般"
 msgctxt "@label"
 msgid "One object"
 msgid_plural "%1 objects"
-msgstr[0] "オブジェクト 1 個"
-msgstr[1] "オブジェクト %1 個"
+msgstr[0] "オブジェクト %1 個"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/collectiongeneralpropertiespage.ui:16
@@ -898,7 +896,6 @@ msgstr ""
 msgid "Indexed %1 item in this folder"
 msgid_plural "Indexed %1 items in this folder"
 msgstr[0] ""
-msgstr[1] ""
 
 #: widgets/collectionmaintenancepage.cpp:137
 #, kde-format
@@ -2071,133 +2068,115 @@ msgstr "フォルダツリーを同期"
 #, kde-format
 msgid "&Copy Folder"
 msgid_plural "&Copy %1 Folders"
-msgstr[0] "フォルダをコピー(&C)"
-msgstr[1] "%1 フォルダをコピー(&C)"
+msgstr[0] "%1 フォルダをコピー(&C)"
 
 #: widgets/standardactionmanager.cpp:329
 #, kde-format
 msgid "&Copy Item"
 msgid_plural "&Copy %1 Items"
-msgstr[0] "アイテムをコピー(&C)"
-msgstr[1] "%1 アイテムをコピー(&C)"
+msgstr[0] "%1 アイテムをコピー(&C)"
 
 #: widgets/standardactionmanager.cpp:330
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Item"
 msgid_plural "&Cut %1 Items"
-msgstr[0] "アイテムを切り取り(&C)"
-msgstr[1] "%1 個のアイテムを切り取り(&C)"
+msgstr[0] "%1 個のアイテムを切り取り(&C)"
 
 #: widgets/standardactionmanager.cpp:331
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Folder"
 msgid_plural "&Cut %1 Folders"
-msgstr[0] "フォルダを切り取り(&C)"
-msgstr[1] "%1 個のフォルダを切り取り(&C)"
+msgstr[0] "%1 個のフォルダを切り取り(&C)"
 
 #: widgets/standardactionmanager.cpp:332
 #, kde-format
 msgid "&Delete Item"
 msgid_plural "&Delete %1 Items"
-msgstr[0] "アイテムを削除(&D)"
-msgstr[1] "%1 アイテムを削除(&D)"
+msgstr[0] "%1 アイテムを削除(&D)"
 
 #: widgets/standardactionmanager.cpp:333
 #, kde-format
 msgctxt "@action"
 msgid "&Delete Folder"
 msgid_plural "&Delete %1 Folders"
-msgstr[0] "フォルダを削除(&D)"
-msgstr[1] "%1 個のフォルダを削除(&D)"
+msgstr[0] "%1 個のフォルダを削除(&D)"
 
 #: widgets/standardactionmanager.cpp:334
 #, kde-format
 msgctxt "@action"
 msgid "&Synchronize Folder"
 msgid_plural "&Synchronize %1 Folders"
-msgstr[0] "フォルダを同期(&S)"
-msgstr[1] "%1 個のフォルダを同期(&S)"
+msgstr[0] "%1 個のフォルダを同期(&S)"
 
 #: widgets/standardactionmanager.cpp:335
 #, kde-format
 msgid "&Delete Resource"
 msgid_plural "&Delete %1 Resources"
-msgstr[0] "リソースを削除(&D)"
-msgstr[1] "%1 個のリソースを削除(&D)"
+msgstr[0] "%1 個のリソースを削除(&D)"
 
 #: widgets/standardactionmanager.cpp:336
 #, kde-format
 msgid "&Synchronize Resource"
 msgid_plural "&Synchronize %1 Resources"
-msgstr[0] "リソースを同期(&S)"
-msgstr[1] "%1 個のリソースを同期(&S)"
+msgstr[0] "%1 個のリソースを同期(&S)"
 
 #: widgets/standardactionmanager.cpp:338
 #, kde-format
 msgid "Copy Folder"
 msgid_plural "Copy %1 Folders"
-msgstr[0] "フォルダをコピー(&C)"
-msgstr[1] "%1 個のフォルダをコピー(&C)"
+msgstr[0] "%1 個のフォルダをコピー(&C)"
 
 #: widgets/standardactionmanager.cpp:339
 #, kde-format
 msgid "Copy Item"
 msgid_plural "Copy %1 Items"
-msgstr[0] "アイテムをコピー(&C)"
-msgstr[1] "%1 個のアイテムをコピー(&C)"
+msgstr[0] "%1 個のアイテムをコピー(&C)"
 
 #: widgets/standardactionmanager.cpp:340
 #, kde-format
 msgid "Cut Item"
 msgid_plural "Cut %1 Items"
-msgstr[0] "アイテムを切り取り(&C)"
-msgstr[1] "%1 個のアイテムを切り取り(&C)"
+msgstr[0] "%1 個のアイテムを切り取り(&C)"
 
 #: widgets/standardactionmanager.cpp:341
 #, kde-format
 msgid "Cut Folder"
 msgid_plural "Cut %1 Folders"
-msgstr[0] "フォルダを切り取り(&C)"
-msgstr[1] "%1 個のフォルダを切り取り(&C)"
+msgstr[0] "%1 個のフォルダを切り取り(&C)"
 
 #: widgets/standardactionmanager.cpp:342
 #, kde-format
 msgid "Delete Item"
 msgid_plural "Delete %1 Items"
-msgstr[0] "アイテムを削除(&D)"
-msgstr[1] "%1 個のアイテムを削除(&D)"
+msgstr[0] "%1 個のアイテムを削除(&D)"
 
 #: widgets/standardactionmanager.cpp:343
 #, kde-format
 msgid "Delete Folder"
 msgid_plural "Delete %1 Folders"
-msgstr[0] "フォルダを削除"
-msgstr[1] "%1 個のフォルダを削除"
+msgstr[0] "%1 個のフォルダを削除"
 
 #: widgets/standardactionmanager.cpp:344
 #, kde-format
 msgid "Synchronize Folder"
 msgid_plural "Synchronize %1 Folders"
-msgstr[0] "フォルダを同期"
-msgstr[1] "%1 個のフォルダを同期"
+msgstr[0] "%1 個のフォルダを同期"
 
 #: widgets/standardactionmanager.cpp:345
 #, kde-format
 msgctxt "@action"
 msgid "Delete Resource"
 msgid_plural "Delete %1 Resources"
-msgstr[0] "リソースを削除"
-msgstr[1] "%1 個のリソースを削除"
+msgstr[0] "%1 個のリソースを削除"
 
 #: widgets/standardactionmanager.cpp:346
 #, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
 msgid_plural "Synchronize %1 Resources"
-msgstr[0] "リソースを同期"
-msgstr[1] "%1 個のリソースを同期"
+msgstr[0] "%1 個のリソースを同期"
 
 #: widgets/standardactionmanager.cpp:349
 #, kde-format
@@ -2210,8 +2189,7 @@ msgstr "名前"
 msgid "Do you really want to delete this folder and all its sub-folders?"
 msgid_plural ""
 "Do you really want to delete %1 folders and all their sub-folders?"
-msgstr[0] "このフォルダとそのすべてのサブフォルダを本当に削除しますか？"
-msgstr[1] "%1 個のフォルダとそれらすべてのサブフォルダを本当に削除しますか？"
+msgstr[0] "%1 個のフォルダとそれらすべてのサブフォルダを本当に削除しますか？"
 
 #: widgets/standardactionmanager.cpp:359
 #, fuzzy, kde-format
@@ -2220,8 +2198,7 @@ msgstr[1] "%1 個のフォルダとそれらすべてのサブフォルダを本
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "フォルダを削除"
-msgstr[1] "%1 個のフォルダを削除"
+msgstr[0] "%1 個のフォルダを削除"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2245,8 +2222,7 @@ msgstr "フォルダ “%1” のプロパティ"
 #, kde-format
 msgid "Do you really want to delete the selected item?"
 msgid_plural "Do you really want to delete %1 items?"
-msgstr[0] "選択したアイテムを本当に削除しますか？"
-msgstr[1] "%1 個のアイテムを本当に削除しますか？"
+msgstr[0] "%1 個のアイテムを本当に削除しますか？"
 
 #: widgets/standardactionmanager.cpp:368
 #, fuzzy, kde-format
@@ -2255,8 +2231,7 @@ msgstr[1] "%1 個のアイテムを本当に削除しますか？"
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "アイテムを削除(&D)"
-msgstr[1] "%1 個のアイテムを削除(&D)"
+msgstr[0] "%1 個のアイテムを削除(&D)"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2304,8 +2279,7 @@ msgstr "リソースの作成に失敗"
 #, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
-msgstr[0] "このリソースを本当に削除しますか？"
-msgstr[1] "%1 個のリソースを本当に削除しますか？"
+msgstr[0] "%1 個のリソースを本当に削除しますか？"
 
 #: widgets/standardactionmanager.cpp:384
 #, kde-format
@@ -2313,7 +2287,6 @@ msgctxt "@title:window"
 msgid "Delete Resource?"
 msgid_plural "Delete Resources?"
 msgstr[0] "リソースを削除しますか？"
-msgstr[1] "リソースを削除しますか？"
 
 #: widgets/standardactionmanager.cpp:386
 #, kde-format
