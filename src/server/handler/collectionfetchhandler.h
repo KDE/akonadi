@@ -63,7 +63,7 @@ private:
     void retrieveAttributes(const QVariantList &collectionIds);
 
     Resource mResource;
-    QVector<MimeType::Id> mMimeTypes;
+    QList<MimeType::Id> mMimeTypes;
     int mAncestorDepth = 0;
     bool mIncludeStatistics = false;
     bool mEnabledCollections = false;

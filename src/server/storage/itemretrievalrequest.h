@@ -8,8 +8,8 @@
 
 #include <QByteArray>
 #include <QDebug>
+#include <QList>
 #include <QString>
-#include <QVector>
 
 #include <optional>
 
@@ -47,7 +47,7 @@ public:
     explicit ItemRetrievalRequest();
 
     Id id;
-    QVector<qint64> ids;
+    QList<qint64> ids;
     QString resourceId;
     QByteArrayList parts; // list instead of vector to simplify client-side handling
 

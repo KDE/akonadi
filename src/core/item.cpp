@@ -493,9 +493,9 @@ QSet<QByteArray> Item::availablePayloadParts() const
     return ItemSerializer::availableParts(*this);
 }
 
-QVector<int> Item::availablePayloadMetaTypeIds() const
+QList<int> Item::availablePayloadMetaTypeIds() const
 {
-    QVector<int> result;
+    QList<int> result;
     result.reserve(d_ptr->mPayloads.size());
     // Stable Insertion Sort - N is typically _very_ low (1 or 2).
     for (auto it = d_ptr->mPayloads.begin(), end = d_ptr->mPayloads.end(); it != end; ++it) {

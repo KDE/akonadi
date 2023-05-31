@@ -8,11 +8,11 @@
 #pragma once
 
 #include <QFile>
+#include <QList>
 #include <QMap>
 #include <QMutex>
 #include <QObject>
 #include <QVariant>
-#include <QVector>
 
 #include <atomic>
 #include <memory>
@@ -65,7 +65,7 @@ public:
 
     void writeToFile(const QString &file);
 
-    Q_SCRIPTABLE QVector<DbConnection> connections() const;
+    Q_SCRIPTABLE QList<DbConnection> connections() const;
 
 Q_SIGNALS:
     void connectionOpened(qint64 id, qint64 timestamp, const QString &name);
@@ -94,7 +94,7 @@ private:
 
     std::atomic_bool mEnabled = {false};
     std::atomic_int64_t mSequence = {0};
-    QVector<DbConnection> mConnections;
+    QList<DbConnection> mConnections;
 };
 
 } // namespace Server

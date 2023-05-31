@@ -20,9 +20,9 @@
 
 using namespace Akonadi::Server;
 
-QVector&lt;TableDescription&gt; <xsl:value-of select="$className"/>::tables()
+QList&lt;TableDescription&gt; <xsl:value-of select="$className"/>::tables()
 {
-  QVector&lt;TableDescription&gt; tabs;
+  QList&lt;TableDescription&gt; tabs;
   tabs.reserve(<xsl:value-of select="count(database/table)"/>);
   <xsl:for-each select="database/table">
   {
@@ -121,9 +121,9 @@ QVector&lt;TableDescription&gt; <xsl:value-of select="$className"/>::tables()
   return tabs;
 }
 
-QVector&lt;RelationDescription&gt; <xsl:value-of select="$className"/>::relations()
+QList&lt;RelationDescription&gt; <xsl:value-of select="$className"/>::relations()
 {
-  QVector&lt;RelationDescription&gt; rels;
+  QList&lt;RelationDescription&gt; rels;
   rels.reserve(<xsl:value-of select="count(database/relation)"/>);
   <xsl:for-each select="database/relation">
   {

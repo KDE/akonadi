@@ -11,7 +11,6 @@
 #include <QObject>
 #include <QSqlDatabase>
 #include <QThreadStorage>
-#include <QVector>
 
 class QSqlQuery;
 class QTimer;
@@ -131,19 +130,19 @@ public:
 
     /* --- ItemFlags ----------------------------------------------------- */
     virtual bool setItemsFlags(const PimItem::List &items,
-                               const QVector<Flag> *currentFlags,
-                               const QVector<Flag> &newFlags,
+                               const QList<Flag> *currentFlags,
+                               const QList<Flag> &newFlags,
                                bool *flagsChanged = nullptr,
                                const Collection &col = Collection(),
                                bool silent = false);
     virtual bool appendItemsFlags(const PimItem::List &items,
-                                  const QVector<Flag> &flags,
+                                  const QList<Flag> &flags,
                                   bool *flagsChanged = nullptr,
                                   bool checkIfExists = true,
                                   const Collection &col = Collection(),
                                   bool silent = false);
     virtual bool removeItemsFlags(const PimItem::List &items,
-                                  const QVector<Flag> &flags,
+                                  const QList<Flag> &flags,
                                   bool *tagsChanged = nullptr,
                                   const Collection &collection = Collection(),
                                   bool silent = false);
@@ -188,13 +187,13 @@ public:
     virtual void activeCachePolicy(Collection &col);
 
     /// Returns all virtual collections the @p item is linked to
-    QVector<Collection> virtualCollections(const PimItem &item);
+    QList<Collection> virtualCollections(const PimItem &item);
 
     QMap<Server::Entity::Id, QList<PimItem>> virtualCollections(const Akonadi::Server::PimItem::List &items);
 
     /* --- PimItem ------------------------------------------------------- */
-    virtual bool appendPimItem(QVector<Part> &parts,
-                               const QVector<Flag> &flags,
+    virtual bool appendPimItem(QList<Part> &parts,
+                               const QList<Flag> &flags,
                                const MimeType &mimetype,
                                const Collection &collection,
                                const QDateTime &dateTime,
@@ -353,7 +352,7 @@ private:
     uint m_transactionLevel;
     struct TransactionQuery {
         QString query;
-        QVector<QVariant> boundValues;
+        QList<QVariant> boundValues;
         bool isBatch;
     };
     QByteArray mSessionId;

@@ -157,7 +157,7 @@ public:
         return tip;
     }
 
-    void _k_sourceDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
+    void _k_sourceDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QList<int> &roles);
 
     StatisticsProxyModel *const q;
 
@@ -165,7 +165,7 @@ public:
     bool mExtraColumnsEnabled = false;
 };
 
-void StatisticsProxyModelPrivate::_k_sourceDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
+void StatisticsProxyModelPrivate::_k_sourceDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QList<int> &roles)
 {
     QModelIndex proxyTopLeft(q->mapFromSource(topLeft));
     QModelIndex proxyBottomRight(q->mapFromSource(bottomRight));
@@ -186,9 +186,9 @@ void StatisticsProxyModel::setSourceModel(QAbstractItemModel *model)
     if (model) {
         // Disconnect the default handling of dataChanged in QIdentityProxyModel, so we can extend it to the whole row
         disconnect(model,
-                   SIGNAL(dataChanged(QModelIndex, QModelIndex, QVector<int>)), // clazy:exclude=old-style-connect
+                   SIGNAL(dataChanged(QModelIndex, QModelIndex, QList<int>)), // clazy:exclude=old-style-connect
                    this,
-                   SLOT(_q_sourceDataChanged(QModelIndex, QModelIndex, QVector<int>)));
+                   SLOT(_q_sourceDataChanged(QModelIndex, QModelIndex, QList<int>)));
         connect(model, &QAbstractItemModel::dataChanged, this, [this](const auto &tl, const auto &br, const auto &roles) {
             d->_k_sourceDataChanged(tl, br, roles);
         });

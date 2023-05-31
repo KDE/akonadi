@@ -31,7 +31,7 @@ public:
      */
     explicit RelationFetchJob(const Relation &relation, QObject *parent = nullptr);
 
-    explicit RelationFetchJob(const QVector<QByteArray> &types, QObject *parent = nullptr);
+    explicit RelationFetchJob(const QList<QByteArray> &types, QObject *parent = nullptr);
 
     void setResource(const QString &identifier);
 

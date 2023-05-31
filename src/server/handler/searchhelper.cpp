@@ -30,7 +30,7 @@ static qint64 parentCollectionId(qint64 collectionId)
     return parentId;
 }
 
-QVector<qint64> SearchHelper::matchSubcollectionsByMimeType(const QVector<qint64> &ancestors, const QStringList &mimeTypes)
+QList<qint64> SearchHelper::matchSubcollectionsByMimeType(const QList<qint64> &ancestors, const QStringList &mimeTypes)
 {
     // Get all collections with given mime types
     QueryBuilder qb(Collection::tableName(), QueryBuilder::Select);
@@ -52,10 +52,10 @@ QVector<qint64> SearchHelper::matchSubcollectionsByMimeType(const QVector<qint64
 
     if (!qb.exec()) {
         qCWarning(AKONADISERVER_LOG) << "Failed to query search collections";
-        return QVector<qint64>();
+        return QList<qint64>();
     }
 
-    QMap<qint64 /* parentId */, QVector<qint64> /* collectionIds */> candidateCollections;
+    QMap<qint64 /* parentId */, QList<qint64> /* collectionIds */> candidateCollections;
     while (qb.query().next()) {
         candidateCollections[qb.query().value(1).toLongLong()].append(qb.query().value(0).toLongLong());
     }
@@ -63,9 +63,9 @@ QVector<qint64> SearchHelper::matchSubcollectionsByMimeType(const QVector<qint64
 
     // If the ancestors list contains root, then return what we got, since everything
     // is sub collection of root
-    QVector<qint64> results;
+    QList<qint64> results;
     if (ancestors.contains(0)) {
-        for (const QVector<qint64> &res : std::as_const(candidateCollections)) {
+        for (const QList<qint64> &res : std::as_const(candidateCollections)) {
             results += res;
         }
         return results;
@@ -73,7 +73,7 @@ QVector<qint64> SearchHelper::matchSubcollectionsByMimeType(const QVector<qint64
 
     // Try to resolve direct descendants
     for (qint64 ancestor : ancestors) {
-        const QVector<qint64> cols = candidateCollections.take(ancestor);
+        const QList<qint64> cols = candidateCollections.take(ancestor);
         if (!cols.isEmpty()) {
             results += cols;
         }

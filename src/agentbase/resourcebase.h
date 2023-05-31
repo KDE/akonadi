@@ -823,7 +823,7 @@ private:
     // dbus resource interface
     friend class ::Akonadi__ResourceAdaptor;
 
-    void requestItemDelivery(const QVector<qint64> &uids, const QByteArrayList &parts);
+    void requestItemDelivery(const QList<qint64> &uids, const QByteArrayList &parts);
 
 private:
     Q_DECLARE_PRIVATE(ResourceBase)
@@ -846,7 +846,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotDelayedEmitProgress())
     Q_PRIVATE_SLOT(d_func(), void slotPrepareItemRetrieval(const Akonadi::Item &items))
     Q_PRIVATE_SLOT(d_func(), void slotPrepareItemRetrievalResult(KJob *))
-    Q_PRIVATE_SLOT(d_func(), void slotPrepareItemsRetrieval(const QVector<Akonadi::Item> &items))
+    Q_PRIVATE_SLOT(d_func(), void slotPrepareItemsRetrieval(const QList<Akonadi::Item> &items))
     Q_PRIVATE_SLOT(d_func(), void slotPrepareItemsRetrievalResult(KJob *))
     Q_PRIVATE_SLOT(d_func(), void changeCommittedResult(KJob *))
     Q_PRIVATE_SLOT(d_func(), void slotSessionReconnected())

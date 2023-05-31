@@ -24,9 +24,9 @@ using namespace Akonadi;
 using namespace Akonadi::Server;
 
 Q_DECLARE_METATYPE(PimItem)
-Q_DECLARE_METATYPE(QVector<Flag>)
-Q_DECLARE_METATYPE(QVector<FakePart>)
-Q_DECLARE_METATYPE(QVector<FakeTag>)
+Q_DECLARE_METATYPE(QList<Flag>)
+Q_DECLARE_METATYPE(QList<FakePart>)
+Q_DECLARE_METATYPE(QList<FakeTag>)
 
 class ItemCreateHandlerTest : public QObject
 {
@@ -79,7 +79,7 @@ public:
         int version;
     };
 
-    void updateParts(QVector<FakePart> &parts, const std::vector<PartHelper> &updatedParts)
+    void updateParts(QList<FakePart> &parts, const std::vector<PartHelper> &updatedParts)
     {
         parts.clear();
         for (const PartHelper &helper : updatedParts) {
@@ -96,7 +96,7 @@ public:
         }
     }
 
-    void updateFlags(QVector<Flag> &flags, const QStringList &updatedFlags)
+    void updateFlags(QList<Flag> &flags, const QStringList &updatedFlags)
     {
         flags.clear();
         for (const QString &flagName : updatedFlags) {
@@ -117,7 +117,7 @@ public:
         QString gid;
         QString remoteId;
     };
-    void updateTags(QVector<FakeTag> &tags, const std::vector<TagHelper> &updatedTags)
+    void updateTags(QList<FakeTag> &tags, const std::vector<TagHelper> &updatedTags)
     {
         tags.clear();
         for (const TagHelper &helper : updatedTags) {
@@ -153,7 +153,7 @@ public:
     Protocol::FetchItemsResponsePtr createResponse(qint64 expectedId,
                                                    const PimItem &pimItem,
                                                    const QDateTime &datetime,
-                                                   const QVector<Protocol::StreamPayloadResponse> &parts,
+                                                   const QList<Protocol::StreamPayloadResponse> &parts,
                                                    qint64 overrideSize = -1)
     {
         const qint64 size = overrideSize > -1 ? overrideSize : pimItem.size();
@@ -182,14 +182,14 @@ public:
 private Q_SLOTS:
     void testItemCreate_data()
     {
-        using Notifications = QVector<Protocol::ItemChangeNotificationPtr>;
+        using Notifications = QList<Protocol::ItemChangeNotificationPtr>;
 
         QTest::addColumn<TestScenario::List>("scenarios");
         QTest::addColumn<Notifications>("notifications");
         QTest::addColumn<PimItem>("pimItem");
-        QTest::addColumn<QVector<FakePart>>("parts");
-        QTest::addColumn<QVector<Flag>>("flags");
-        QTest::addColumn<QVector<FakeTag>>("tags");
+        QTest::addColumn<QList<FakePart>>("parts");
+        QTest::addColumn<QList<Flag>>("flags");
+        QTest::addColumn<QList<FakeTag>>("tags");
         QTest::addColumn<qint64>("uidnext");
         QTest::addColumn<QDateTime>("datetime");
         QTest::addColumn<bool>("expectFail");
@@ -199,9 +199,9 @@ private Q_SLOTS:
         qint64 uidnext = 0;
         QDateTime datetime(QDate(2014, 05, 12), QTime(14, 46, 00), Qt::UTC);
         PimItem pimItem;
-        QVector<FakePart> parts;
-        QVector<Flag> flags;
-        QVector<FakeTag> tags;
+        QList<FakePart> parts;
+        QList<Flag> flags;
+        QList<FakeTag> tags;
 
         pimItem.setCollectionId(4);
         pimItem.setSize(10);
@@ -279,7 +279,7 @@ private Q_SLOTS:
         }
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario() << inScenario << errorResponse(QStringLiteral("Invalid parent collection"));
-        QTest::newRow("invalid collection") << scenarios << Notifications{} << PimItem() << QVector<FakePart>() << QVector<Flag>() << QVector<FakeTag>() << -1ll
+        QTest::newRow("invalid collection") << scenarios << Notifications{} << PimItem() << QList<FakePart>() << QList<Flag>() << QList<FakeTag>() << -1ll
                                             << QDateTime() << true;
 
         {
@@ -289,7 +289,7 @@ private Q_SLOTS:
         }
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario() << inScenario << errorResponse(QStringLiteral("Cannot append item into virtual collection"));
-        QTest::newRow("virtual collection") << scenarios << Notifications{} << PimItem() << QVector<FakePart>() << QVector<Flag>() << QVector<FakeTag>() << -1ll
+        QTest::newRow("virtual collection") << scenarios << Notifications{} << PimItem() << QList<FakePart>() << QList<Flag>() << QList<FakeTag>() << -1ll
                                             << QDateTime() << true;
 
         updatePimItem(pimItem, QStringLiteral("TEST-3"), 5);
@@ -341,8 +341,8 @@ private Q_SLOTS:
             << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data))
             << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", "123"))
             << errorResponse(QStringLiteral("Payload size mismatch"));
-        QTest::newRow("incomplete part data") << scenarios << Notifications{} << PimItem() << QVector<FakePart>() << QVector<Flag>() << QVector<FakeTag>()
-                                              << -1ll << QDateTime() << true;
+        QTest::newRow("incomplete part data") << scenarios << Notifications{} << PimItem() << QList<FakePart>() << QList<Flag>() << QList<FakeTag>() << -1ll
+                                              << QDateTime() << true;
 
         scenarios.clear();
         scenarios
@@ -353,7 +353,7 @@ private Q_SLOTS:
             << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", "1234567890"))
             << errorResponse(QStringLiteral("Payload size mismatch"));
         QTest::newRow("part data larger than advertised")
-            << scenarios << Notifications{} << PimItem() << QVector<FakePart>() << QVector<Flag>() << QVector<FakeTag>() << -1ll << QDateTime() << true;
+            << scenarios << Notifications{} << PimItem() << QList<FakePart>() << QList<Flag>() << QList<FakeTag>() << -1ll << QDateTime() << true;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
         updatePimItem(pimItem, QStringLiteral("TEST-5"), 0);
@@ -793,11 +793,11 @@ private Q_SLOTS:
     void testItemCreate()
     {
         QFETCH(TestScenario::List, scenarios);
-        QFETCH(QVector<Protocol::ItemChangeNotificationPtr>, notifications);
+        QFETCH(QList<Protocol::ItemChangeNotificationPtr>, notifications);
         QFETCH(PimItem, pimItem);
-        QFETCH(QVector<FakePart>, parts);
-        QFETCH(QVector<Flag>, flags);
-        QFETCH(QVector<FakeTag>, tags);
+        QFETCH(QList<FakePart>, parts);
+        QFETCH(QList<Flag>, flags);
+        QFETCH(QList<FakeTag>, tags);
         QFETCH(qint64, uidnext);
         QFETCH(bool, expectFail);
 

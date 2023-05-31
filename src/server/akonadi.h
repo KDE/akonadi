@@ -6,8 +6,8 @@
 
 #pragma once
 
+#include <QList>
 #include <QObject>
-#include <QVector>
 
 #include <memory>
 

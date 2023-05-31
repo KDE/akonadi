@@ -87,7 +87,7 @@ void ShellScript::makeShellScript(const QString &fileName)
     }
 }
 
-void ShellScript::setEnvironmentVariables(const QVector<ShellScript::EnvVar> &envVars)
+void ShellScript::setEnvironmentVariables(const QList<ShellScript::EnvVar> &envVars)
 {
     mEnvVars = envVars;
 }

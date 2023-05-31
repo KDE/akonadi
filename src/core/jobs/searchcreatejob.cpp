@@ -29,7 +29,7 @@ public:
     const QString mName;
     const SearchQuery mQuery;
     QStringList mMimeTypes;
-    QVector<Collection> mCollections;
+    QList<Collection> mCollections;
     bool mRecursive = false;
     bool mRemote = false;
     Collection mCreatedCollection;
@@ -60,14 +60,14 @@ SearchCreateJob::~SearchCreateJob()
 {
 }
 
-void SearchCreateJob::setSearchCollections(const QVector<Collection> &collections)
+void SearchCreateJob::setSearchCollections(const QList<Collection> &collections)
 {
     Q_D(SearchCreateJob);
 
     d->mCollections = collections;
 }
 
-QVector<Collection> SearchCreateJob::searchCollections() const
+QList<Collection> SearchCreateJob::searchCollections() const
 {
     return d_func()->mCollections;
 }
@@ -119,7 +119,7 @@ void SearchCreateJob::doStart()
     cmd->setRecursive(d->mRecursive);
     cmd->setRemote(d->mRemote);
     if (!d->mCollections.isEmpty()) {
-        QVector<qint64> ids;
+        QList<qint64> ids;
         ids.reserve(d->mCollections.size());
         for (const Collection &col : std::as_const(d->mCollections)) {
             ids << col.id();

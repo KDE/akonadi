@@ -141,7 +141,7 @@ bool DbInitializer::checkTable(const TableDescription &tableDescription)
 void DbInitializer::checkForeignKeys(const TableDescription &tableDescription)
 {
     try {
-        const QVector<DbIntrospector::ForeignKey> existingForeignKeys = m_introspector->foreignKeyConstraints(tableDescription.name);
+        const QList<DbIntrospector::ForeignKey> existingForeignKeys = m_introspector->foreignKeyConstraints(tableDescription.name);
         for (const ColumnDescription &column : tableDescription.columns) {
             DbIntrospector::ForeignKey existingForeignKey;
             for (const DbIntrospector::ForeignKey &fk : existingForeignKeys) {

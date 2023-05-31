@@ -120,7 +120,7 @@ bool TagCreateHandler::parseStream()
 
     Scope scope;
     ImapSet set;
-    set.add(QVector<qint64>() << tagId);
+    set.add(QList<qint64>() << tagId);
     scope.setUidSet(set);
 
     Protocol::TagFetchScope fetchScope;

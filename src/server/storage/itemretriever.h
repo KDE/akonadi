@@ -44,8 +44,8 @@ public:
 
     Connection *connection() const;
 
-    void setRetrieveParts(const QVector<QByteArray> &parts);
-    QVector<QByteArray> retrieveParts() const;
+    void setRetrieveParts(const QList<QByteArray> &parts);
+    QList<QByteArray> retrieveParts() const;
     void setRetrieveFullPayload(bool fullPayload);
     void setChangedSince(const QDateTime &changedSince);
     void setItemSet(const ImapSet &set, const Collection &collection = Collection());
@@ -63,7 +63,7 @@ public:
     QByteArray lastError() const;
 
 Q_SIGNALS:
-    void itemsRetrieved(const QVector<qint64> &ids);
+    void itemsRetrieved(const QList<qint64> &ids);
 
 private:
     QSqlQuery buildQuery() const;
@@ -78,7 +78,7 @@ private:
     bool runItemRetrievalRequests(std::list<ItemRetrievalRequest> requests);
     struct PreparedRequests {
         std::list<ItemRetrievalRequest> requests;
-        QVector<qint64> readyItems;
+        QList<qint64> readyItems;
     };
     std::optional<PreparedRequests> prepareRequests(QSqlQuery &query, const QByteArrayList &parts);
 
@@ -88,7 +88,7 @@ private:
     ItemRetrievalManager &mItemRetrievalManager;
     Connection *mConnection = nullptr;
     const CommandContext &mContext;
-    QVector<QByteArray> mParts;
+    QList<QByteArray> mParts;
     bool mFullPayload;
     bool mRecursive;
     QDateTime mChangedSince;

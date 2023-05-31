@@ -88,21 +88,21 @@ public:
      * Returns IDs of collections that will be queried
      * @since 4.13
      */
-    Q_REQUIRED_RESULT QVector<qint64> queryCollections() const;
+    Q_REQUIRED_RESULT QList<qint64> queryCollections() const;
 
     /**
      * Sets collections to be queried.
      * @param collections List of collections to be queries
      * @since 4.13
      */
-    void setQueryCollections(const QVector<Collection> &collections);
+    void setQueryCollections(const QList<Collection> &collections);
 
     /**
      * Sets IDs of collections to be queries
      * @param collectionsIds IDs of collections to query
      * @since 4.13
      */
-    void setQueryCollections(const QVector<qint64> &collectionsIds);
+    void setQueryCollections(const QList<qint64> &collectionsIds);
 
     /**
      * Sets whether resources should be queried too.

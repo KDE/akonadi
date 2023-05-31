@@ -127,7 +127,7 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(Akona
 
     if (!col.queryString().isEmpty()) {
         response.setSearchQuery(col.queryString());
-        QVector<qint64> searchCols;
+        QList<qint64> searchCols;
         const QStringList searchColIds = col.queryCollections().split(QLatin1Char(' '));
         searchCols.reserve(searchColIds.size());
         for (const QString &searchColId : searchColIds) {
@@ -140,7 +140,7 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(Akona
     response.setCachePolicy(cachePolicy);
 
     if (ancestorDepth) {
-        QVector<Protocol::Ancestor> ancestorList = HandlerHelper::ancestorsResponse(ancestorDepth, ancestors, ancestorAttributes);
+        QList<Protocol::Ancestor> ancestorList = HandlerHelper::ancestorsResponse(ancestorDepth, ancestors, ancestorAttributes);
         response.setAncestors(ancestorList);
     }
 
@@ -158,10 +158,10 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(Akona
     return response;
 }
 
-QVector<Protocol::Ancestor>
+QList<Protocol::Ancestor>
 HandlerHelper::ancestorsResponse(int ancestorDepth, const QStack<Collection> &_ancestors, const QStack<CollectionAttribute::List> &_ancestorsAttributes)
 {
-    QVector<Protocol::Ancestor> rv;
+    QList<Protocol::Ancestor> rv;
     if (ancestorDepth > 0) {
         QStack<Collection> ancestors(_ancestors);
         QStack<CollectionAttribute::List> ancestorAttributes(_ancestorsAttributes);

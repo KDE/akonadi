@@ -10,7 +10,7 @@
       <arg name="monitored" type="b" direction="in"/>
     </method>
     <method name="monitoredCollections">
-      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVector&lt;qint64&gt;"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QList&lt;qint64&gt;"/>
       <arg type="ax" direction="out"/>
     </method>
     <signal name="monitoredCollectionsChanged" />
@@ -21,7 +21,7 @@
       <arg name="monitored" type="b" direction="in"/>
     </method>
     <method name="monitoredItems">
-      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVector&lt;qint64&gt;"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QList&lt;qint64&gt;"/>
       <arg type="ax" direction="out"/>
     </method>
     <signal name="monitoredItemsChanged" />
@@ -32,7 +32,7 @@
       <arg name="monitored" type="b" direction="in"/>
     </method>
     <method name="monitoredTags">
-      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVector&lt;qint64&gt;"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QList&lt;qint64&gt;"/>
       <arg type="ax" direction="out"/>
     </method>
     <signal name="monitoredTagsChanged"/>
@@ -43,7 +43,7 @@
       <arg name="monitored" type="b" direction="in"/>
     </method>
     <method name="monitoredTypes">
-      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVector&lt;Akonadi::Protocol::ChangeNotification::Type&gt;"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QList&lt;Akonadi::Protocol::ChangeNotification::Type&gt;"/>
       <arg type="a(i)" direction="out"/>
     </method>
     <signal name="monitoredTypesChanged"/>
@@ -54,7 +54,7 @@
       <arg name="monitored" type="b" direction="in"/>
     </method>
     <method name="monitoredResources">
-      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVector&lt;QByteArray&gt;"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QList&lt;QByteArray&gt;"/>
       <arg type="aay" direction="out"/>
     </method>
     <signal name="monitoredResourcesChanged" />
@@ -91,7 +91,7 @@
       <arg name="ignored" type="b" direction="in"/>
     </method>
     <method name="ignoredSessions">
-      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVector&lt;QByteArray&gt;"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QList&lt;QByteArray&gt;"/>
       <arg type="aay" direction="out"/>
     </method>
     <signal name="ignoredSessionsChanged"/>

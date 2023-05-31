@@ -26,7 +26,7 @@ QString DbIntrospectorMySql::hasIndexQuery(const QString &tableName, const QStri
     return QStringLiteral("SHOW INDEXES FROM %1 WHERE `Key_name` = '%2'").arg(tableName, indexName);
 }
 
-QVector<DbIntrospector::ForeignKey> DbIntrospectorMySql::foreignKeyConstraints(const QString &tableName)
+QList<DbIntrospector::ForeignKey> DbIntrospectorMySql::foreignKeyConstraints(const QString &tableName)
 {
     QueryBuilder qb(QStringLiteral("information_schema.REFERENTIAL_CONSTRAINTS"), QueryBuilder::Select);
     qb.addJoin(QueryBuilder::InnerJoin,
@@ -47,7 +47,7 @@ QVector<DbIntrospector::ForeignKey> DbIntrospectorMySql::foreignKeyConstraints(c
         throw DbException(qb.query());
     }
 
-    QVector<ForeignKey> result;
+    QList<ForeignKey> result;
     while (qb.query().next()) {
         ForeignKey fk;
         fk.name = qb.query().value(0).toString();
@@ -72,14 +72,14 @@ DbIntrospectorSqlite::DbIntrospectorSqlite(const QSqlDatabase &database)
 {
 }
 
-QVector<DbIntrospector::ForeignKey> DbIntrospectorSqlite::foreignKeyConstraints(const QString &tableName)
+QList<DbIntrospector::ForeignKey> DbIntrospectorSqlite::foreignKeyConstraints(const QString &tableName)
 {
     QSqlQuery query(DataStore::self()->database());
     if (!query.exec(QStringLiteral("PRAGMA foreign_key_list(%1)").arg(tableName))) {
         throw DbException(query);
     }
 
-    QVector<ForeignKey> result;
+    QList<ForeignKey> result;
     while (query.next()) {
         ForeignKey fk;
         fk.column = query.value(3).toString();
@@ -108,7 +108,7 @@ DbIntrospectorPostgreSql::DbIntrospectorPostgreSql(const QSqlDatabase &database)
 {
 }
 
-QVector<DbIntrospector::ForeignKey> DbIntrospectorPostgreSql::foreignKeyConstraints(const QString &tableName)
+QList<DbIntrospector::ForeignKey> DbIntrospectorPostgreSql::foreignKeyConstraints(const QString &tableName)
 {
 #define TABLE_CONSTRAINTS "information_schema.table_constraints"
 #define KEY_COLUMN_USAGE "information_schema.key_column_usage"
@@ -170,7 +170,7 @@ QVector<DbIntrospector::ForeignKey> DbIntrospectorPostgreSql::foreignKeyConstrai
         throw DbException(qb.query());
     }
 
-    QVector<ForeignKey> result;
+    QList<ForeignKey> result;
     while (qb.query().next()) {
         ForeignKey fk;
         fk.name = qb.query().value(0).toString();

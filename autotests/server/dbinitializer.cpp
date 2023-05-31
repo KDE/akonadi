@@ -123,7 +123,7 @@ DbInitializer::listResponse(const Collection &col, bool ancestors, bool mimetype
     cp.setLocalParts({QLatin1String("ALL")});
     resp->setCachePolicy(cp);
     if (ancestors) {
-        QVector<Akonadi::Protocol::Ancestor> ancs;
+        QList<Akonadi::Protocol::Ancestor> ancs;
         Collection parent = col.parent();
         while (parent.isValid()) {
             Akonadi::Protocol::Ancestor anc;
@@ -176,7 +176,7 @@ Akonadi::Protocol::FetchItemsResponsePtr DbInitializer::fetchResponse(const PimI
     resp->setRemoteRevision(item.remoteRevision());
     resp->setGid(item.gid());
     const auto flags = item.flags();
-    QVector<QByteArray> flagNames;
+    QList<QByteArray> flagNames;
     for (const auto &flag : flags) {
         flagNames.push_back(flag.name().toUtf8());
     }

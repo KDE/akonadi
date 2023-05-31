@@ -17,7 +17,7 @@ class SearchResultJobPrivate : public Akonadi::JobPrivate
 public:
     explicit SearchResultJobPrivate(SearchResultJob *parent);
 
-    QVector<QByteArray> rid;
+    QList<QByteArray> rid;
     QByteArray searchId;
     Collection collection;
     ImapSet uid;
@@ -73,7 +73,7 @@ void SearchResultJob::setResult(const ImapSet &set)
     d->uid = set;
 }
 
-void SearchResultJob::setResult(const QVector<qint64> &ids)
+void SearchResultJob::setResult(const QList<qint64> &ids)
 {
     Q_D(SearchResultJob);
     d->rid.clear();
@@ -81,7 +81,7 @@ void SearchResultJob::setResult(const QVector<qint64> &ids)
     d->uid.add(ids);
 }
 
-void SearchResultJob::setResult(const QVector<QByteArray> &remoteIds)
+void SearchResultJob::setResult(const QList<QByteArray> &remoteIds)
 {
     Q_D(SearchResultJob);
     d->uid = ImapSet();

@@ -201,19 +201,19 @@
     <ctor>
       <arg name="left" />
       <arg name="right" />
-      <arg name="types" default="QVector&lt;QByteArray&gt;()" />
+      <arg name="types" default="QList&lt;QByteArray&gt;()" />
       <arg name="resource" default="QString()" />
     </ctor>
     <ctor>
       <arg name="side" />
-      <arg name="types" default="QVector&lt;QByteArray&gt;()" />
+      <arg name="types" default="QList&lt;QByteArray&gt;()" />
       <arg name="resource" default="QString()" />
     </ctor>
 
     <param name="left" type="qint64" default="-1" />
     <param name="right" type="qint64" default="-1" />
     <param name="side" type="qint64" default="-1" />
-    <param name="types" type="QVector&lt;QByteArray&gt;" />
+    <param name="types" type="QList&lt;QByteArray&gt;" />
     <param name="resource" type="QString" />
   </command>
 
@@ -299,13 +299,13 @@
     <param name="size" type="qint64" />
     <param name="mimeType" type="QString" />
     <param name="mTime" type="QDateTime" />
-    <param name="flags" type="QVector&lt;QByteArray&gt;" />
-    <param name="tags" type="QVector&lt;Akonadi::Protocol::FetchTagsResponse&gt;" />
-    <param name="virtualReferences" type="QVector&lt;qint64&gt;" />
-    <param name="relations" type="QVector&lt;Akonadi::Protocol::FetchRelationsResponse&gt;" />
-    <param name="ancestors" type="QVector&lt;Akonadi::Protocol::Ancestor&gt;" />
-    <param name="parts" type="QVector&lt;Akonadi::Protocol::StreamPayloadResponse&gt;"/>
-    <param name="cachedParts" type="QVector&lt;QByteArray&gt;" />
+    <param name="flags" type="QList&lt;QByteArray&gt;" />
+    <param name="tags" type="QList&lt;Akonadi::Protocol::FetchTagsResponse&gt;" />
+    <param name="virtualReferences" type="QList&lt;qint64&gt;" />
+    <param name="relations" type="QList&lt;Akonadi::Protocol::FetchRelationsResponse&gt;" />
+    <param name="ancestors" type="QList&lt;Akonadi::Protocol::Ancestor&gt;" />
+    <param name="parts" type="QList&lt;Akonadi::Protocol::StreamPayloadResponse&gt;"/>
+    <param name="cachedParts" type="QList&lt;QByteArray&gt;" />
   </response>
 
 
@@ -537,8 +537,8 @@
     <param name="resource" type="QString" />
     <param name="statistics" type="Akonadi::Protocol::FetchCollectionStatsResponse" />
     <param name="searchQuery" type="QString" />
-    <param name="searchCollections" type="QVector&lt;qint64&gt;" />
-    <param name="ancestors" type="QVector&lt;Akonadi::Protocol::Ancestor&gt;" />
+    <param name="searchCollections" type="QList&lt;qint64&gt;" />
+    <param name="ancestors" type="QList&lt;Akonadi::Protocol::Ancestor&gt;" />
     <param name="cachePolicy" type="Akonadi::Protocol::CachePolicy" />
     <param name="attributes" type="Akonadi::Protocol::Attributes" />
     <param name="enabled" type="bool" default="true" />
@@ -592,7 +592,7 @@
     <param name="persistentSearchQuery" type="QString">
       <depends enum="modifiedParts" value="ModifyCollectionCommand::PersistentSearch" />
     </param>
-    <param name="persistentSearchCollections" type="QVector&lt;qint64&gt;">
+    <param name="persistentSearchCollections" type="QList&lt;qint64&gt;">
       <depends enum="modifiedParts" value="ModifyCollectionCommand::PersistentSearch" />
     </param>
     <param name="persistentSearchRecursive" type="bool">
@@ -645,7 +645,7 @@
     </ctor>
 
     <param name="mimeTypes" type="QStringList" />
-    <param name="collections" type="QVector&lt;qint64&gt;" />
+    <param name="collections" type="QList&lt;qint64&gt;" />
     <param name="query" type="QString" />
     <param name="itemFetchScope" type="Akonadi::Protocol::ItemFetchScope" />
     <param name="tagFetchScope" type="Akonadi::Protocol::TagFetchScope" />
@@ -677,7 +677,7 @@
     <param name="name" type="QString" />
     <param name="query" type="QString" />
     <param name="mimeTypes" type="QStringList" />
-    <param name="queryCollections" type="QVector&lt;qint64&gt;" />
+    <param name="queryCollections" type="QList&lt;qint64&gt;" />
     <param name="remote" type="bool" />
     <param name="recursive" type="bool" />
   </command>
@@ -862,7 +862,7 @@
 
     <param name="mustRetrieve" type="bool" default="false" />
 
-    <param name="items" type="QVector&lt;Akonadi::Protocol::FetchItemsResponse&gt;" asReference="true" />
+    <param name="items" type="QList&lt;Akonadi::Protocol::FetchItemsResponse&gt;" asReference="true" />
   </notification>
 
   <!-- Collection Change Notification //-->
@@ -960,7 +960,7 @@
 
     <param name="modifiedParts" type="ModifySubscriptionCommand::ModifiedParts" default="None" readonly="true" />
     <param name="subscriberName" type="QByteArray" />
-    <param name="startMonitoringCollections" type="QVector&lt;qint64&gt;">
+    <param name="startMonitoringCollections" type="QList&lt;qint64&gt;">
       <setter name="startMonitoringCollection" type="qint64">
         <append name="startMonitoringCollections" />
         <remove name="stopMonitoringCollections" />
@@ -968,7 +968,7 @@
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::Collections" />
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::Add" />
     </param>
-    <param name="stopMonitoringCollections" type="QVector&lt;qint64&gt;">
+    <param name="stopMonitoringCollections" type="QList&lt;qint64&gt;">
       <setter name="stopMonitoringCollection" type="qint64">
         <append name="stopMonitoringCollections" />
         <remove name="startMonitoringCollections" />
@@ -976,7 +976,7 @@
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::Collections" />
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::Remove" />
     </param>
-    <param name="startMonitoringItems" type="QVector&lt;qint64&gt;">
+    <param name="startMonitoringItems" type="QList&lt;qint64&gt;">
       <setter name="startMonitoringItem" type="qint64">
         <append name="startMonitoringItems" />
         <remove name="stopMonitoringItems" />
@@ -984,7 +984,7 @@
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::Items" />
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::Add" />
     </param>
-    <param name="stopMonitoringItems" type="QVector&lt;qint64&gt;">
+    <param name="stopMonitoringItems" type="QList&lt;qint64&gt;">
       <setter name="stopMonitoringItem" type="qint64">
         <append name="stopMonitoringItems" />
         <remove name="startMonitoringItems" />
@@ -992,7 +992,7 @@
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::Items" />
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::Remove" />
     </param>
-    <param name="startMonitoringTags" type="QVector&lt;qint64&gt;">
+    <param name="startMonitoringTags" type="QList&lt;qint64&gt;">
       <setter name="startMonitoringTag" type="qint64">
         <append name="startMonitoringTags" />
         <remove name="stopMonitoringTags" />
@@ -1000,7 +1000,7 @@
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::Tags" />
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::Add" />
     </param>
-    <param name="stopMonitoringTags" type="QVector&lt;qint64&gt;">
+    <param name="stopMonitoringTags" type="QList&lt;qint64&gt;">
       <setter name="stopMonitoringTag" type="qint64">
         <append name="stopMonitoringTags" />
         <remove name="startMonitoringTags" />
@@ -1008,7 +1008,7 @@
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::Tags" />
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::Remove" />
     </param>
-    <param name="startMonitoringTypes" type="QVector&lt;ModifySubscriptionCommand::ChangeType&gt;">
+    <param name="startMonitoringTypes" type="QList&lt;ModifySubscriptionCommand::ChangeType&gt;">
       <setter name="startMonitoringType" type="ModifySubscriptionCommand::ChangeType">
         <append name="startMonitoringTypes" />
         <remove name="stopMonitoringTypes" />
@@ -1016,7 +1016,7 @@
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::Types" />
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::Add" />
     </param>
-    <param name="stopMonitoringTypes" type="QVector&lt;ModifySubscriptionCommand::ChangeType&gt;">
+    <param name="stopMonitoringTypes" type="QList&lt;ModifySubscriptionCommand::ChangeType&gt;">
       <setter name="stopMonitoringType" type="ModifySubscriptionCommand::ChangeType">
         <append name="stopMonitoringTypes" />
         <remove name="startMonitoringTypes" />
@@ -1024,7 +1024,7 @@
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::Types" />
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::Remove" />
     </param>
-    <param name="startMonitoringResources" type="QVector&lt;QByteArray&gt;">
+    <param name="startMonitoringResources" type="QList&lt;QByteArray&gt;">
       <setter name="startMonitoringResource" type="QByteArray">
         <append name="startMonitoringResources" />
         <remove name="stopMonitoringResources" />
@@ -1032,7 +1032,7 @@
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::Resources" />
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::Add" />
     </param>
-    <param name="stopMonitoringResources" type="QVector&lt;QByteArray&gt;">
+    <param name="stopMonitoringResources" type="QList&lt;QByteArray&gt;">
       <setter name="stopMonitoringResource" type="QByteArray">
         <append name="stopMonitoringResources" />
         <remove name="startMonitoringResources" />
@@ -1062,7 +1062,7 @@
     <param name="isExclusive" type="bool">
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::ExclusiveFlag" />
     </param>
-    <param name="startIgnoringSessions" type="QVector&lt;QByteArray&gt;">
+    <param name="startIgnoringSessions" type="QList&lt;QByteArray&gt;">
       <setter name="startIgnoringSession" type="QByteArray">
         <append name="startIgnoringSessions" />
         <remove name="stopIgnoringSessions" />
@@ -1070,7 +1070,7 @@
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::Sessions" />
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::Add" />
     </param>
-    <param name="stopIgnoringSessions" type="QVector&lt;QByteArray&gt;">
+    <param name="stopIgnoringSessions" type="QList&lt;QByteArray&gt;">
       <setter name="stopIgnoringSession" type="QByteArray">
         <append name="stopIgnoringSessions" />
         <remove name="startIgnoringSessions" />
@@ -1119,7 +1119,7 @@
   <!-- Debug Change Notification //-->
   <notification name="DebugChange">
     <param name="notification" type="Akonadi::Protocol::ChangeNotificationPtr" />
-    <param name="listeners" type="QVector&lt;QByteArray&gt;" />
+    <param name="listeners" type="QList&lt;QByteArray&gt;" />
     <param name="timestamp" type="qint64" default="0" />
   </notification>
 

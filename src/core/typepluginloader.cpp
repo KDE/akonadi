@@ -179,10 +179,10 @@ public:
         return *it == m_plugins.end() ? nullptr : it->operator->();
     }
 
-    const PluginEntry *plugin(const QVector<int> &metaTypeIds, int &chosen) const
+    const PluginEntry *plugin(const QList<int> &metaTypeIds, int &chosen) const
     {
         bool sawZero = false;
-        for (QVector<int>::const_iterator it = metaTypeIds.begin(), end = metaTypeIds.end(); it != end; ++it) {
+        for (QList<int>::const_iterator it = metaTypeIds.begin(), end = metaTypeIds.end(); it != end; ++it) {
             if (*it == 0) {
                 sawZero = true; // skip the legacy type and see if we can find something else first
             } else if (const PluginEntry *const entry = plugin(*it)) {
@@ -251,7 +251,7 @@ public:
         std::copy(map.begin(), map.end(), std::back_inserter(allMimeTypes));
     }
 
-    QObject *findBestMatch(const QString &type, const QVector<int> &metaTypeId, TypePluginLoader::Options opt)
+    QObject *findBestMatch(const QString &type, const QList<int> &metaTypeId, TypePluginLoader::Options opt)
     {
         if (QObject *const plugin = findBestMatch(type, metaTypeId)) {
             {
@@ -264,7 +264,7 @@ public:
         return nullptr;
     }
 
-    QObject *findBestMatch(const QString &type, const QVector<int> &metaTypeIds)
+    QObject *findBestMatch(const QString &type, const QList<int> &metaTypeIds)
     {
         if (mOverridePlugin) {
             return mOverridePlugin;
@@ -293,7 +293,7 @@ public:
 
 private:
     // Returns plugin matches for a mimetype in best->worst order, in terms of mimetype specificity
-    void findSuitablePlugins(QMimeType mimeType, QSet<QMimeType> &checkedMimeTypes, QVector<int> &matchingIndexes, const QMimeDatabase &mimeDb) const
+    void findSuitablePlugins(QMimeType mimeType, QSet<QMimeType> &checkedMimeTypes, QList<int> &matchingIndexes, const QMimeDatabase &mimeDb) const
     {
         // Avoid adding duplicates to our matchingIndexes
         if (checkedMimeTypes.contains(mimeType)) {
@@ -321,7 +321,7 @@ private:
         }
     };
 
-    QObject *findBestMatchImpl(const QString &type, const QVector<int> &metaTypeIds, int &chosen) const
+    QObject *findBestMatchImpl(const QString &type, const QList<int> &metaTypeIds, int &chosen) const
     {
         const QMimeDatabase mimeDb;
         const QMimeType mimeType = mimeDb.mimeTypeForName(type);
@@ -331,13 +331,13 @@ private:
         }
 
         QSet<QMimeType> checkedMimeTypes;
-        QVector<int> matchingIndexes;
+        QList<int> matchingIndexes;
 
         findSuitablePlugins(mimeType, checkedMimeTypes, matchingIndexes, mimeDb);
 
         // Ask each one in turn if it can handle any of the metaTypeIds:
         //       qCDebug(AKONADICORE_LOG) << "Looking for " << format( type, metaTypeIds );
-        for (QVector<int>::const_iterator it = matchingIndexes.constBegin(), end = matchingIndexes.constEnd(); it != end; ++it) {
+        for (QList<int>::const_iterator it = matchingIndexes.constBegin(), end = matchingIndexes.constEnd(); it != end; ++it) {
             //         qCDebug(AKONADICORE_LOG) << "  Considering serializer plugin for type" << allMimeTypes[matchingIndexes[*it]].type()
             // //                  << "as the closest match";
             const MimeTypeEntry &mt = allMimeTypes[*it];
@@ -370,7 +370,7 @@ private:
     QHash<QString, QObject *> cachedDefaultPlugins;
 
     // ### cache NULLs, too
-    QObject *cacheLookup(const QString &mimeType, const QVector<int> &metaTypeIds) const
+    QObject *cacheLookup(const QString &mimeType, const QList<int> &metaTypeIds) const
     {
         if (metaTypeIds.empty()) {
             const QHash<QString, QObject *>::const_iterator hit = cachedDefaultPlugins.find(mimeType);
@@ -384,7 +384,7 @@ private:
             return nullptr;
         }
         bool sawZero = false;
-        for (QVector<int>::const_iterator it = metaTypeIds.begin(), end = metaTypeIds.end(); it != end; ++it) {
+        for (QList<int>::const_iterator it = metaTypeIds.begin(), end = metaTypeIds.end(); it != end; ++it) {
             if (*it == 0) {
                 sawZero = true; // skip the legacy type and see if we can find something else first
             } else if (QObject *const o = hit->value(*it)) {
@@ -404,17 +404,17 @@ private:
 
 Q_GLOBAL_STATIC(PluginRegistry, s_pluginRegistry) // NOLINT(readability-redundant-member-init)
 
-QObject *TypePluginLoader::objectForMimeTypeAndClass(const QString &mimetype, const QVector<int> &metaTypeIds, Options opt)
+QObject *TypePluginLoader::objectForMimeTypeAndClass(const QString &mimetype, const QList<int> &metaTypeIds, Options opt)
 {
     return s_pluginRegistry->findBestMatch(mimetype, metaTypeIds, opt);
 }
 
 QObject *TypePluginLoader::defaultObjectForMimeType(const QString &mimetype)
 {
-    return objectForMimeTypeAndClass(mimetype, QVector<int>());
+    return objectForMimeTypeAndClass(mimetype, QList<int>());
 }
 
-ItemSerializerPlugin *TypePluginLoader::pluginForMimeTypeAndClass(const QString &mimetype, const QVector<int> &metaTypeIds, Options opt)
+ItemSerializerPlugin *TypePluginLoader::pluginForMimeTypeAndClass(const QString &mimetype, const QList<int> &metaTypeIds, Options opt)
 {
     return qobject_cast<ItemSerializerPlugin *>(objectForMimeTypeAndClass(mimetype, metaTypeIds, opt));
 }

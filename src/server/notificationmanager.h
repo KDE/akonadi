@@ -64,14 +64,14 @@ protected:
     void init() override;
     void quit() override;
 
-    void emitDebugNotification(const Protocol::ChangeNotificationPtr &ntf, const QVector<QByteArray> &listeners);
+    void emitDebugNotification(const Protocol::ChangeNotificationPtr &ntf, const QList<QByteArray> &listeners);
 
 private:
     Protocol::ChangeNotificationList mNotifications;
     QTimer *mTimer = nullptr;
 
     QThreadPool *mNotifyThreadPool = nullptr;
-    QVector<QPointer<NotificationSubscriber>> mSubscribers;
+    QList<QPointer<NotificationSubscriber>> mSubscribers;
     int mDebugNotifications;
     AggregatedCollectionFetchScope *mCollectionFetchScope = nullptr;
     AggregatedItemFetchScope *mItemFetchScope = nullptr;

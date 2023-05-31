@@ -12,8 +12,8 @@
 #include <private/tristate_p.h>
 
 #include <QHash>
+#include <QList>
 #include <QReadWriteLock>
-#include <QVector>
 
 namespace Akonadi
 {
@@ -40,7 +40,7 @@ protected:
         void removeChild(Node *child);
 
         Node *parent = nullptr;
-        QVector<Node *> children;
+        QList<Node *> children;
         QAtomicInt lruCounter;
         qint64 id;
 
@@ -51,7 +51,7 @@ public:
     explicit CollectionTreeCache();
     ~CollectionTreeCache() override;
 
-    QVector<Collection>
+    QList<Collection>
     retrieveCollections(const Scope &scope, int depth, int ancestorDepth, const QString &resource = QString(), CommandContext *context = nullptr) const;
 
 public Q_SLOTS:
@@ -69,7 +69,7 @@ protected:
     template<typename Predicate>
     Node *findNode(Node *root, Predicate pred) const;
 
-    QVector<Collection> retrieveCollections(Node *root, int depth, int ancestorDepth) const;
+    QList<Collection> retrieveCollections(Node *root, int depth, int ancestorDepth) const;
 
 protected:
     mutable QReadWriteLock mLock;

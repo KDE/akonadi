@@ -10,11 +10,11 @@
 
 #include "agentmanagerinterface.h"
 #include "exception.h"
+#include <QList>
 #include <QMap>
 #include <QMutex>
 #include <QSet>
 #include <QStringList>
-#include <QVector>
 #include <QWaitCondition>
 
 namespace Akonadi
@@ -30,13 +30,13 @@ public:
     QByteArray id;
     QString query;
     QStringList mimeTypes;
-    QVector<qint64> collections;
+    QList<qint64> collections;
     bool complete;
 
     QMutex sharedLock;
     QWaitCondition notifier;
 
-    QVector<QPair<QString /* resource */, qint64 /* collection */>> queries;
+    QList<QPair<QString /* resource */, qint64 /* collection */>> queries;
     QSet<qint64> pendingResults;
 };
 
@@ -88,10 +88,10 @@ private:
     QWaitCondition mWait;
     QMutex mLock;
 
-    QVector<SearchTask *> mTasklist;
+    QList<SearchTask *> mTasklist;
 
     QMap<QString /* resource */, ResourceTask *> mRunningTasks;
-    QVector<ResourceTask *> mPendingResults;
+    QList<ResourceTask *> mPendingResults;
 };
 
 AKONADI_EXCEPTION_MAKE_INSTANCE(SearchException);

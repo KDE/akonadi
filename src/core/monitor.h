@@ -343,7 +343,7 @@ public:
      *
      * @since 4.6
      */
-    Q_REQUIRED_RESULT QVector<Item::Id> itemsMonitoredEx() const;
+    Q_REQUIRED_RESULT QList<Item::Id> itemsMonitoredEx() const;
 
     /**
      * Returns the number of items being monitored.
@@ -371,14 +371,14 @@ public:
      *
      * @since 4.13
      */
-    Q_REQUIRED_RESULT QVector<Tag::Id> tagsMonitored() const;
+    Q_REQUIRED_RESULT QList<Tag::Id> tagsMonitored() const;
 
     /**
      * Returns the set of types being monitored.
      *
      * @since 4.13
      */
-    Q_REQUIRED_RESULT QVector<Type> typesMonitored() const;
+    Q_REQUIRED_RESULT QList<Type> typesMonitored() const;
 
     /**
      * Returns the set of identifiers for resources being monitored.

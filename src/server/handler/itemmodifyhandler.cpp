@@ -70,7 +70,7 @@ bool ItemModifyHandler::deleteFlags(const PimItem::List &items, const QSet<QByte
 {
     DataStore *store = connection()->storageBackend();
 
-    QVector<Flag> flagList;
+    QList<Flag> flagList;
     flagList.reserve(flags.size());
     for (auto iter = flags.cbegin(), end = flags.cend(); iter != end; ++iter) {
         Flag flag = Flag::retrieveByName(QString::fromUtf8(*iter));

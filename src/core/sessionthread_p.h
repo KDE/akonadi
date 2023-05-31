@@ -6,8 +6,8 @@
 
 #pragma once
 
+#include <QList>
 #include <QObject>
-#include <QVector>
 
 #include "connection_p.h"
 
@@ -31,7 +31,7 @@ private Q_SLOTS:
     void doThreadQuit();
 
 private:
-    QVector<Connection *> mConnections;
+    QList<Connection *> mConnections;
 };
 
 }

@@ -202,7 +202,7 @@ public:
     KActionCollection *mActionCollection = nullptr;
     QWidget *mParentWidget = nullptr;
     QItemSelectionModel *mSelectionModel = nullptr;
-    QVector<QAction *> mActions;
+    QList<QAction *> mActions;
     QStringList mMimeTypeFilter;
     QStringList mCapabilityFilter;
 

@@ -9,9 +9,9 @@
 #include "akhelpers.h"
 #include "aktraits.h"
 
+#include <QList>
 #include <QMap>
 #include <QSet>
-#include <QVector>
 
 #include <algorithm>
 #include <functional>
@@ -64,7 +64,7 @@ struct IteratorTrait {
     using reference = typename Iterator::reference;
 };
 
-// Without QT_STRICT_ITERATORS QVector and QList iterators do not satisfy STL
+// Without QT_STRICT_ITERATORS QList and QList iterators do not satisfy STL
 // iterator concepts since they are nothing more but typedefs to T* - for those
 // we need to provide custom traits.
 template<typename Iterator>
@@ -447,8 +447,8 @@ namespace AkRanges
 {
 namespace Actions
 {
-/// Non-lazily convert given range or container to QVector
-static constexpr auto toQVector = detail::ToTag_<QVector>{};
+/// Non-lazily convert given range or container to QList
+static constexpr auto toQVector = detail::ToTag_<QList>{};
 /// Non-lazily convert given range or container to QSet
 static constexpr auto toQSet = detail::ToTag_<QSet>{};
 /// Non-lazily convert given range or container to QList

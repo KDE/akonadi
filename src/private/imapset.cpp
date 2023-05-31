@@ -159,7 +159,7 @@ ImapSet::ImapSet()
 ImapSet::ImapSet(Id id)
     : d(new ImapSetPrivate)
 {
-    add(QVector<Id>() << id);
+    add(QList<Id>() << id);
 }
 ImapSet::ImapSet(const QList<qint64> &ids)
     : d(new ImapSetPrivate)
@@ -210,7 +210,7 @@ void ImapSet::add(const QList<Id> &values)
 
 void ImapSet::add(const QSet<Id> &values)
 {
-    QVector<Id> v;
+    QList<Id> v;
     v.reserve(values.size());
     for (QSet<Id>::ConstIterator iter = values.constBegin(); iter != values.constEnd(); ++iter) {
         v.push_back(*iter);

@@ -68,8 +68,8 @@ public:
     Scope(qint64 id); // krazy:exclude=explicit
     Scope(const ImapSet &uidSet); // krazy:exclude=explicit
     Scope(const ImapInterval &interval); // krazy:exclude=explicit
-    Scope(const QVector<qint64> &interval); // krazy:exclude=explicit
-    Scope(const QVector<HRID> &hridChain); // krazy:exclude=explicit
+    Scope(const QList<qint64> &interval); // krazy:exclude=explicit
+    Scope(const QList<HRID> &hridChain); // krazy:exclude=explicit
 
     Scope(const Scope &other);
     Scope(Scope &&other) noexcept;
@@ -91,8 +91,8 @@ public:
     void setRidSet(const QStringList &ridSet);
     QStringList ridSet() const;
 
-    void setHRidChain(const QVector<HRID> &ridChain);
-    QVector<HRID> hridChain() const;
+    void setHRidChain(const QList<HRID> &ridChain);
+    QList<HRID> hridChain() const;
 
     void setGidSet(const QStringList &gidChain);
     QStringList gidSet() const;

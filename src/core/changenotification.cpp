@@ -15,7 +15,7 @@ class ChangeNotificationPrivate : public QSharedData
 {
 public:
     QDateTime timestamp;
-    QVector<QByteArray> listeners;
+    QList<QByteArray> listeners;
     Protocol::ChangeNotificationPtr notification;
     ChangeNotification::Type type;
 };
@@ -57,12 +57,12 @@ ChangeNotification::Type ChangeNotification::type() const
     return d->type;
 }
 
-void ChangeNotification::setListeners(const QVector<QByteArray> &listeners)
+void ChangeNotification::setListeners(const QList<QByteArray> &listeners)
 {
     d->listeners = listeners;
 }
 
-QVector<QByteArray> ChangeNotification::listeners() const
+QList<QByteArray> ChangeNotification::listeners() const
 {
     return d->listeners;
 }

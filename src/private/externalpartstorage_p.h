@@ -12,8 +12,8 @@
 #include "akonadiprivate_export.h"
 
 #include <QHash>
+#include <QList>
 #include <QMutex>
-#include <QVector>
 
 class QString;
 class QByteArray;
@@ -79,11 +79,11 @@ private:
     bool commitTransaction();
     bool rollbackTransaction();
 
-    bool replayTransaction(const QVector<Operation> &trx, bool commit);
-    void addToTransaction(const QVector<Operation> &ops);
+    bool replayTransaction(const QList<Operation> &trx, bool commit);
+    void addToTransaction(const QList<Operation> &ops);
 
     mutable QMutex mTransactionLock;
-    QHash<QThread *, QVector<Operation>> mTransactions;
+    QHash<QThread *, QList<Operation>> mTransactions;
 };
 
 }

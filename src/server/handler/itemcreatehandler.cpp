@@ -196,7 +196,7 @@ bool ItemCreateHandler::mergeItem(const Protocol::CreateItemCommand &cmd, PimIte
         bool flagsChanged = false;
         QSet<QByteArray> flagNames = cmd.flags();
 
-        static QVector<QByteArray> localFlagsToPreserve = {"$ATTACHMENT", "$INVITATION", "$ENCRYPTED", "$SIGNED", "$WATCHED"};
+        static QList<QByteArray> localFlagsToPreserve = {"$ATTACHMENT", "$INVITATION", "$ENCRYPTED", "$SIGNED", "$WATCHED"};
 
         // Make sure we don't overwrite some local-only flags that can't come
         // through from Resource during ItemSync, like $ATTACHMENT, because the
@@ -308,7 +308,7 @@ bool ItemCreateHandler::sendResponse(const PimItem &item, Protocol::CreateItemCo
                         | Protocol::ItemFetchScope::Flags | Protocol::ItemFetchScope::GID | Protocol::ItemFetchScope::MTime | Protocol::ItemFetchScope::RemoteID
                         | Protocol::ItemFetchScope::RemoteRevision | Protocol::ItemFetchScope::Size | Protocol::ItemFetchScope::Tags);
     ImapSet set;
-    set.add(QVector<qint64>() << item.id());
+    set.add(QList<qint64>() << item.id());
     Scope scope;
     scope.setUidSet(set);
 
@@ -452,7 +452,7 @@ bool ItemCreateHandler::parseStream()
             return failureResponse("Failed to query database for item");
         }
 
-        const QVector<PimItem> result = qb.result();
+        const QList<PimItem> result = qb.result();
         if (result.isEmpty()) {
             // No item with such GID/RID exists, so call ItemCreateHandler::insert() and behave
             // like if this was a new item

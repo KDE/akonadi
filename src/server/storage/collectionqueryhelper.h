@@ -47,7 +47,7 @@ bool canBeMovedTo(const Collection &collection, const Collection &parent);
 /**
   Retrieve the collection referred to by the given hierarchical RID chain.
 */
-Collection resolveHierarchicalRID(const QVector<Scope::HRID> &hridChain, Resource::Id resId);
+Collection resolveHierarchicalRID(const QList<Scope::HRID> &hridChain, Resource::Id resId);
 
 /**
   Returns an existing collection specified by the given scope. If that does not

@@ -20,8 +20,8 @@ namespace Server {
 class <xsl:value-of select="$className"/> : public Schema
 {
   public:
-    QVector&lt;TableDescription&gt; tables() override;
-    QVector&lt;RelationDescription&gt; relations() override;
+    QList&lt;TableDescription&gt; tables() override;
+    QList&lt;RelationDescription&gt; relations() override;
 };
 
 } // namespace Server

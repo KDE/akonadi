@@ -28,7 +28,7 @@ public:
 
     bool collectionAccepted(const QModelIndex &index, bool checkResourceVisibility = true);
 
-    QVector<QModelIndex> acceptedResources;
+    QList<QModelIndex> acceptedResources;
     CollectionFilterProxyModel *const mParent;
     MimeTypeChecker mimeChecker;
     bool mExcludeVirtualCollections = false;

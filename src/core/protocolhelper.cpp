@@ -66,7 +66,7 @@ inline static void parseAttributesImpl(const Protocol::Attributes &attributes, T
 
 template<typename T>
 inline static void
-parseAncestorsCachedImpl(const QVector<Protocol::Ancestor> &ancestors, T *entity, Collection::Id parentCollection, ProtocolHelperValuePool *pool)
+parseAncestorsCachedImpl(const QList<Protocol::Ancestor> &ancestors, T *entity, Collection::Id parentCollection, ProtocolHelperValuePool *pool)
 {
     if (!pool || parentCollection == -1) {
         // if no pool or parent collection id is provided we can't cache anything, so continue as usual
@@ -96,7 +96,7 @@ inline static Protocol::Attributes attributesToProtocolImpl(const T &entity, boo
     return attributes;
 }
 
-void ProtocolHelper::parseAncestorsCached(const QVector<Protocol::Ancestor> &ancestors,
+void ProtocolHelper::parseAncestorsCached(const QList<Protocol::Ancestor> &ancestors,
                                           Item *item,
                                           Collection::Id parentCollection,
                                           ProtocolHelperValuePool *pool)
@@ -104,7 +104,7 @@ void ProtocolHelper::parseAncestorsCached(const QVector<Protocol::Ancestor> &anc
     parseAncestorsCachedImpl(ancestors, item, parentCollection, pool);
 }
 
-void ProtocolHelper::parseAncestorsCached(const QVector<Protocol::Ancestor> &ancestors,
+void ProtocolHelper::parseAncestorsCached(const QList<Protocol::Ancestor> &ancestors,
                                           Collection *collection,
                                           Collection::Id parentCollection,
                                           ProtocolHelperValuePool *pool)
@@ -112,7 +112,7 @@ void ProtocolHelper::parseAncestorsCached(const QVector<Protocol::Ancestor> &anc
     parseAncestorsCachedImpl(ancestors, collection, parentCollection, pool);
 }
 
-void ProtocolHelper::parseAncestors(const QVector<Protocol::Ancestor> &ancestors, Item *item)
+void ProtocolHelper::parseAncestors(const QList<Protocol::Ancestor> &ancestors, Item *item)
 {
     Collection fakeCollection;
     parseAncestors(ancestors, &fakeCollection);
@@ -120,7 +120,7 @@ void ProtocolHelper::parseAncestors(const QVector<Protocol::Ancestor> &ancestors
     item->setParentCollection(fakeCollection.parentCollection());
 }
 
-void ProtocolHelper::parseAncestors(const QVector<Protocol::Ancestor> &ancestors, Collection *collection)
+void ProtocolHelper::parseAncestors(const QList<Protocol::Ancestor> &ancestors, Collection *collection)
 {
     static const Collection::Id rootCollectionId = Collection::root().id();
 
@@ -316,24 +316,24 @@ Scope ProtocolHelper::hierarchicalRidToScope(const Collection &col)
         return Scope();
     }
 
-    QVector<Scope::HRID> chain;
+    QList<Scope::HRID> chain;
     Collection c = col;
     while (!c.remoteId().isEmpty()) {
         chain.append(Scope::HRID(c.id(), c.remoteId()));
         c = c.parentCollection();
     }
-    return Scope(chain + QVector<Scope::HRID>{Scope::HRID(0)});
+    return Scope(chain + QList<Scope::HRID>{Scope::HRID(0)});
 }
 
 Scope ProtocolHelper::hierarchicalRidToScope(const Item &item)
 {
-    return Scope(QVector<Scope::HRID>({Scope::HRID(item.id(), item.remoteId())}) + hierarchicalRidToScope(item.parentCollection()).hridChain());
+    return Scope(QList<Scope::HRID>({Scope::HRID(item.id(), item.remoteId())}) + hierarchicalRidToScope(item.parentCollection()).hridChain());
 }
 
 Protocol::ItemFetchScope ProtocolHelper::itemFetchScopeToProtocol(const ItemFetchScope &fetchScope)
 {
     Protocol::ItemFetchScope fs;
-    QVector<QByteArray> parts;
+    QList<QByteArray> parts;
     parts.reserve(fetchScope.payloadParts().size() + fetchScope.attributes().size());
     parts += fetchScope.payloadParts() | Views::transform(std::bind(encodePartIdentifier, PartPayload, std::placeholders::_1)) | Actions::toQVector;
     parts += fetchScope.attributes() | Views::transform(std::bind(encodePartIdentifier, PartAttribute, std::placeholders::_1)) | Actions::toQVector;
@@ -560,7 +560,7 @@ TagFetchScope ProtocolHelper::parseTagFetchScope(const Protocol::TagFetchScope &
     return tfs;
 }
 
-static Item::Flags convertFlags(const QVector<QByteArray> &flags, ProtocolHelperValuePool *valuePool)
+static Item::Flags convertFlags(const QList<QByteArray> &flags, ProtocolHelperValuePool *valuePool)
 {
 #if __cplusplus >= 201103L || defined(__GNUC__) || defined(__clang__)
     // When the compiler supports thread-safe static initialization (mandated by the C++11 memory model)

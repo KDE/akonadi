@@ -118,7 +118,7 @@ bool XmlParser::parseCommand(DocumentNode *documentNode)
 
 bool XmlParser::parseCtor(ClassNode *classNode)
 {
-    QVector<CtorNode::Argument> args;
+    QList<CtorNode::Argument> args;
     while (!mReader.atEnd() && !(mReader.isEndElement() && (mReader.name() == QLatin1String("ctor")))) {
         mReader.readNext();
         if (mReader.isStartElement()) {

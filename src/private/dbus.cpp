@@ -7,10 +7,10 @@
 #include "dbus_p.h"
 #include "instance_p.h"
 
+#include <QList>
 #include <QString>
 #include <QStringList>
 #include <QStringView>
-#include <QVector>
 
 #include <array>
 

@@ -108,7 +108,7 @@ public:
     /**
      * Describes a list of items.
      */
-    using List = QVector<Item>;
+    using List = QList<Item>;
 
     /**
      * Describes a flag name.
@@ -524,7 +524,7 @@ public:
      *
      * The result is always sorted (increasing ids).
      */
-    QVector<int> availablePayloadMetaTypeIds() const;
+    QList<int> availablePayloadMetaTypeIds() const;
 
     /**
      * Sets a path to a file with full payload.

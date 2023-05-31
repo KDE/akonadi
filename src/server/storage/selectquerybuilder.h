@@ -31,7 +31,7 @@ public:
     /**
       Returns the result of this SELECT query.
     */
-    QVector<T> result()
+    QList<T> result()
     {
         return T::extractResult(query());
     }

@@ -261,9 +261,9 @@ bool <xsl:value-of select="$className"/>::exists(const <xsl:value-of select="col
 
 
 // result extraction
-QVector&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$className"/>::extractResult(QSqlQuery &amp;query)
+QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$className"/>::extractResult(QSqlQuery &amp;query)
 {
-    QVector&lt;<xsl:value-of select="$className"/>&gt; rv;
+    QList&lt;<xsl:value-of select="$className"/>&gt; rv;
     if (query.driver()->hasFeature(QSqlDriver::QuerySize)) {
         rv.reserve(query.size());
     }
@@ -367,7 +367,7 @@ QVector&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classN
 }
 </xsl:if>
 
-QVector&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$className"/>::retrieveAll()
+QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$className"/>::retrieveAll()
 {
     QSqlDatabase db = DataStore::self()->database();
     if (!db.isOpen()) {
@@ -384,7 +384,7 @@ QVector&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classN
     return extractResult(qb.query());
 }
 
-QVector&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$className"/>::retrieveFiltered(const QString &amp;key, const QVariant &amp;value)
+QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$className"/>::retrieveFiltered(const QString &amp;key, const QVariant &amp;value)
 {
     QSqlDatabase db = DataStore::self()->database();
     if (!db.isOpen()) {
@@ -425,7 +425,7 @@ void <xsl:value-of select="$className"/>::
 
 // data retrieval for inverse referenced tables
 <xsl:for-each select="reference">
-QVector&lt;<xsl:value-of select="@table"/>&gt; <xsl:value-of select="$className"/>::<xsl:value-of select="@name"/>() const
+QList&lt;<xsl:value-of select="@table"/>&gt; <xsl:value-of select="$className"/>::<xsl:value-of select="@name"/>() const
 {
     return <xsl:value-of select="@table"/>::retrieveFiltered(<xsl:value-of select="@table"/>::<xsl:value-of select="@key"/>Column(), id());
 }
@@ -438,7 +438,7 @@ QVector&lt;<xsl:value-of select="@table"/>&gt; <xsl:value-of select="$className"
 <xsl:variable name="rightSideEntity"><xsl:value-of select="@table2"/></xsl:variable>
 
 // data retrieval for n:m relations
-QVector&lt;<xsl:value-of select="$rightSideClass"/>&gt; <xsl:value-of select="$className"/>::<xsl:value-of select="concat(translate(substring(@table2,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), substring(@table2,2))"/>s() const
+QList&lt;<xsl:value-of select="$rightSideClass"/>&gt; <xsl:value-of select="$className"/>::<xsl:value-of select="concat(translate(substring(@table2,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), substring(@table2,2))"/>s() const
 {
     QSqlDatabase db = DataStore::self()->database();
     if (!db.isOpen()) {

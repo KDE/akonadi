@@ -6,9 +6,9 @@
 
 #pragma once
 
+#include <QList>
 #include <QString>
 #include <QVariant>
-#include <QVector>
 
 namespace Akonadi
 {
@@ -64,7 +64,7 @@ class Condition
 
 public:
     /** A list of conditions. */
-    using List = QVector<Condition>;
+    using List = QList<Condition>;
 
     /**
       Create an empty condition.
@@ -133,7 +133,7 @@ public:
     void setElse(const QString &elseBranch);
 
 private:
-    QVector<QPair<Condition, QString>> mWhenThen;
+    QList<QPair<Condition, QString>> mWhenThen;
     QString mElse;
 };
 

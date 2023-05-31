@@ -25,7 +25,7 @@ class TagPrivate;
 class AKONADICORE_EXPORT Tag
 {
 public:
-    using List = QVector<Tag>;
+    using List = QList<Tag>;
     using Id = qint64;
 
     /**

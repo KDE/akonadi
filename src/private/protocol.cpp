@@ -469,9 +469,9 @@ bool ItemFetchScope::operator==(const ItemFetchScope &other) const
     return mRequestedParts == other.mRequestedParts && mChangedSince == other.mChangedSince && mAncestorDepth == other.mAncestorDepth && mFlags == other.mFlags;
 }
 
-QVector<QByteArray> ItemFetchScope::requestedPayloads() const
+QList<QByteArray> ItemFetchScope::requestedPayloads() const
 {
-    QVector<QByteArray> rv;
+    QList<QByteArray> rv;
     std::copy_if(mRequestedParts.begin(), mRequestedParts.end(), std::back_inserter(rv), [](const QByteArray &ba) {
         return ba.startsWith("PLD:");
     });
@@ -665,7 +665,7 @@ bool ChangeNotification::operator==(const ChangeNotification &other) const
     // metadata are not compared
 }
 
-QList<qint64> ChangeNotification::itemsToUids(const QVector<FetchItemsResponse> &items)
+QList<qint64> ChangeNotification::itemsToUids(const QList<FetchItemsResponse> &items)
 {
     QList<qint64> rv;
     rv.reserve(items.size());

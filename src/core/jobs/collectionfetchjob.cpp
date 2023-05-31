@@ -306,7 +306,7 @@ static Collection::List filterDescendants(const Collection::List &list)
 {
     Collection::List result;
 
-    QVector<QList<Collection::Id>> ids;
+    QList<QList<Collection::Id>> ids;
     ids.reserve(list.count());
     for (const Collection &collection : list) {
         QList<Collection::Id> ancestors;

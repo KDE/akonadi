@@ -11,7 +11,7 @@
 using namespace Akonadi;
 
 Q_DECLARE_METATYPE(Scope)
-Q_DECLARE_METATYPE(QVector<Protocol::Ancestor>)
+Q_DECLARE_METATYPE(QList<Protocol::Ancestor>)
 Q_DECLARE_METATYPE(Protocol::ItemFetchScope)
 
 class ProtocolHelperTest : public QObject
@@ -47,7 +47,7 @@ private Q_SLOTS:
 
         QTest::newRow("empty") << Item::List() << Scope() << true;
         QTest::newRow("single uid") << (Item::List() << u1) << Scope(1) << false;
-        QTest::newRow("multi uid") << (Item::List() << u1 << u3) << Scope(QVector<qint64>{1, 3}) << false;
+        QTest::newRow("multi uid") << (Item::List() << u1 << u3) << Scope(QList<qint64>{1, 3}) << false;
         QTest::newRow("block uid") << (Item::List() << u1 << u2 << u3) << Scope(ImapInterval(1, 3)) << false;
         QTest::newRow("single rid") << (Item::List() << r1) << Scope(Scope::Rid, {QStringLiteral("A")}) << false;
         QTest::newRow("multi rid") << (Item::List() << r1 << r2) << Scope(Scope::Rid, {QStringLiteral("A"), QStringLiteral("B")}) << false;
@@ -79,10 +79,10 @@ private Q_SLOTS:
 
     void testAncestorParsing_data()
     {
-        QTest::addColumn<QVector<Protocol::Ancestor>>("input");
+        QTest::addColumn<QList<Protocol::Ancestor>>("input");
         QTest::addColumn<Collection>("parent");
 
-        QTest::newRow("top-level") << QVector<Protocol::Ancestor>{Protocol::Ancestor(0)} << Collection::root();
+        QTest::newRow("top-level") << QList<Protocol::Ancestor>{Protocol::Ancestor(0)} << Collection::root();
 
         Protocol::Ancestor a1(42);
         a1.setRemoteId(QStringLiteral("net"));
@@ -91,12 +91,12 @@ private Q_SLOTS:
         c1.setRemoteId(QStringLiteral("net"));
         c1.setId(42);
         c1.setParentCollection(Collection::root());
-        QTest::newRow("till's obscure folder") << QVector<Protocol::Ancestor>{a1, Protocol::Ancestor(0)} << c1;
+        QTest::newRow("till's obscure folder") << QList<Protocol::Ancestor>{a1, Protocol::Ancestor(0)} << c1;
     }
 
     void testAncestorParsing()
     {
-        QFETCH(QVector<Protocol::Ancestor>, input);
+        QFETCH(QList<Protocol::Ancestor>, input);
         QFETCH(Collection, parent);
 
         Item i;

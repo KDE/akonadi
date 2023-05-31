@@ -16,29 +16,29 @@
 
 QTEST_MAIN(QueryBuilderTest)
 
-Q_DECLARE_METATYPE(QVector<QVariant>)
+Q_DECLARE_METATYPE(QList<QVariant>)
 
 using namespace Akonadi::Server;
 
 void QueryBuilderTest::testQueryBuilder_data()
 {
-    qRegisterMetaType<QVector<QVariant>>();
+    qRegisterMetaType<QList<QVariant>>();
     mBuilders.clear();
     QTest::addColumn<int>("qbId");
     QTest::addColumn<QString>("sql");
-    QTest::addColumn<QVector<QVariant>>("bindValues");
+    QTest::addColumn<QList<QVariant>>("bindValues");
 
     QueryBuilder qb(QStringLiteral("table"), QueryBuilder::Select);
     qb.addColumn(QStringLiteral("col1"));
     mBuilders << qb;
-    QTest::newRow("simple select") << mBuilders.count() << QStringLiteral("SELECT col1 FROM table") << QVector<QVariant>();
+    QTest::newRow("simple select") << mBuilders.count() << QStringLiteral("SELECT col1 FROM table") << QList<QVariant>();
 
     qb.addColumn(QStringLiteral("col2"));
     mBuilders << qb;
-    QTest::newRow("simple select 2") << mBuilders.count() << QStringLiteral("SELECT col1, col2 FROM table") << QVector<QVariant>();
+    QTest::newRow("simple select 2") << mBuilders.count() << QStringLiteral("SELECT col1, col2 FROM table") << QList<QVariant>();
 
     qb.addValueCondition(QStringLiteral("col1"), Query::Equals, QVariant(5));
-    QVector<QVariant> bindVals;
+    QList<QVariant> bindVals;
     bindVals << QVariant(5);
     mBuilders << qb;
     QTest::newRow("single where") << mBuilders.count() << QStringLiteral("SELECT col1, col2 FROM table WHERE ( col1 = :0 )") << bindVals;
@@ -64,17 +64,17 @@ void QueryBuilderTest::testQueryBuilder_data()
     qb = QueryBuilder(QStringLiteral("table"));
     qb.addAggregation(QStringLiteral("col1"), QStringLiteral("count"));
     mBuilders << qb;
-    QTest::newRow("single aggregation") << mBuilders.count() << QStringLiteral("SELECT count(col1) FROM table") << QVector<QVariant>();
+    QTest::newRow("single aggregation") << mBuilders.count() << QStringLiteral("SELECT count(col1) FROM table") << QList<QVariant>();
 
     qb = QueryBuilder(QStringLiteral("table"));
     qb.addColumn(QStringLiteral("col1"));
     qb.addSortColumn(QStringLiteral("col1"));
     mBuilders << qb;
-    QTest::newRow("single order by") << mBuilders.count() << QStringLiteral("SELECT col1 FROM table ORDER BY col1 ASC") << QVector<QVariant>();
+    QTest::newRow("single order by") << mBuilders.count() << QStringLiteral("SELECT col1 FROM table ORDER BY col1 ASC") << QList<QVariant>();
 
     qb.addSortColumn(QStringLiteral("col2"), Query::Descending);
     mBuilders << qb;
-    QTest::newRow("multiple order by") << mBuilders.count() << QStringLiteral("SELECT col1 FROM table ORDER BY col1 ASC, col2 DESC") << QVector<QVariant>();
+    QTest::newRow("multiple order by") << mBuilders.count() << QStringLiteral("SELECT col1 FROM table ORDER BY col1 ASC, col2 DESC") << QList<QVariant>();
 
     qb = QueryBuilder(QStringLiteral("table"));
     qb.addColumn(QStringLiteral("col1"));
@@ -91,7 +91,7 @@ void QueryBuilderTest::testQueryBuilder_data()
     qb.addColumn(QStringLiteral("col1"));
     qb.setLimit(1);
     mBuilders << qb;
-    QTest::newRow("SELECT with LIMIT") << mBuilders.count() << QStringLiteral("SELECT col1 FROM table LIMIT 1") << QVector<QVariant>();
+    QTest::newRow("SELECT with LIMIT") << mBuilders.count() << QStringLiteral("SELECT col1 FROM table LIMIT 1") << QList<QVariant>();
 
     qb = QueryBuilder(QStringLiteral("table"), QueryBuilder::Update);
     qb.setColumnValue(QStringLiteral("col1"), QStringLiteral("bla"));
@@ -314,7 +314,7 @@ void QueryBuilderTest::testQueryBuilder()
 {
     QFETCH(int, qbId);
     QFETCH(QString, sql);
-    QFETCH(QVector<QVariant>, bindValues);
+    QFETCH(QList<QVariant>, bindValues);
 
     --qbId;
 

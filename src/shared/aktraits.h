@@ -96,7 +96,7 @@ DECLARE_HAS_METHOD_GENERIC(reserve, void, qsizetype)
         static constexpr bool value = sizeof(helper<T>(nullptr)) == sizeof(True);                                                                              \
     };
 
-// For some obscure reason QVector::begin() actually has a default
+// For some obscure reason QList::begin() actually has a default
 // argument, but QList::begin() does not, thus a regular hasMethod_* check
 // won't cut it here. Instead we check whether the container object can be
 // used with std::begin() and std::end() helpers.

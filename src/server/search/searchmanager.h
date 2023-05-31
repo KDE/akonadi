@@ -9,9 +9,9 @@
 
 #include "akthread.h"
 
+#include <QList>
 #include <QMutex>
 #include <QSet>
-#include <QVector>
 
 class QTimer;
 class QPluginLoader;
@@ -59,7 +59,7 @@ public:
     /**
      * Returns currently available search plugins.
      */
-    virtual QVector<AbstractSearchPlugin *> searchPlugins() const;
+    virtual QList<AbstractSearchPlugin *> searchPlugins() const;
 
 public Q_SLOTS:
     virtual void scheduleSearchUpdate();
@@ -98,9 +98,9 @@ private:
 
     SearchTaskManager &mAgentSearchManager;
     QStringList mEngineNames;
-    QVector<QPluginLoader *> mPluginLoaders;
-    QVector<AbstractSearchEngine *> mEngines;
-    QVector<AbstractSearchPlugin *> mPlugins;
+    QList<QPluginLoader *> mPluginLoaders;
+    QList<AbstractSearchEngine *> mEngines;
+    QList<AbstractSearchPlugin *> mPlugins;
 
     QTimer *mSearchUpdateTimer = nullptr;
 

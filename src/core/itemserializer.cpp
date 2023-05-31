@@ -208,7 +208,7 @@ Item ItemSerializer::convert(const Item &item, int mtid)
         return Item();
     }
 
-    if (ItemSerializerPlugin *const plugin = TypePluginLoader::pluginForMimeTypeAndClass(item.mimeType(), QVector<int>(1, mtid), TypePluginLoader::NoDefault)) {
+    if (ItemSerializerPlugin *const plugin = TypePluginLoader::pluginForMimeTypeAndClass(item.mimeType(), QList<int>(1, mtid), TypePluginLoader::NoDefault)) {
         qCDebug(AKONADICORE_LOG) << "  -> found a plugin that feels responsible, trying serialising the payload";
         QBuffer buffer;
         buffer.open(QIODevice::ReadWrite);

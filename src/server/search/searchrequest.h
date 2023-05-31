@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include <QList>
 #include <QObject>
 #include <QSet>
 #include <QStringList>
-#include <QVector>
 
 namespace Akonadi
 {
@@ -29,8 +29,8 @@ public:
 
     void setQuery(const QString &query);
     QString query() const;
-    void setCollections(const QVector<qint64> &collections);
-    QVector<qint64> collections() const;
+    void setCollections(const QList<qint64> &collections);
+    QList<qint64> collections() const;
     void setMimeTypes(const QStringList &mimeTypes);
     QStringList mimeTypes() const;
     void setRemoteSearch(bool remote);
@@ -58,7 +58,7 @@ private:
 
     QByteArray mConnectionId;
     QString mQuery;
-    QVector<qint64> mCollections;
+    QList<qint64> mCollections;
     QStringList mMimeTypes;
     bool mRemoteSearch = false;
     bool mStoreResults = false;

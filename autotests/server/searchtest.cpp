@@ -90,27 +90,27 @@ private Q_SLOTS:
                                            QStringList() << QStringLiteral("text/directory") << QStringLiteral("application/octet-stream"));
         Collection col9 = createCollection(res, QStringLiteral("Col 9"), col8, QStringList() << QStringLiteral("unique/mime-type"));
 
-        QTest::addColumn<QVector<qint64>>("ancestors");
+        QTest::addColumn<QList<qint64>>("ancestors");
         QTest::addColumn<QStringList>("mimetypes");
-        QTest::addColumn<QVector<qint64>>("expectedResults");
+        QTest::addColumn<QList<qint64>>("expectedResults");
 
-        QTest::newRow("") << (QVector<qint64>() << 0) << (QStringList() << QStringLiteral("text/plain"))
-                          << (QVector<qint64>() << col4.id() << col5.id() << col7.id());
-        QTest::newRow("") << (QVector<qint64>() << 0) << (QStringList() << QStringLiteral("application/octet-stream"))
-                          << (QVector<qint64>() << col2.id() << col3.id() << col6.id() << col8.id());
-        QTest::newRow("") << (QVector<qint64>() << col1.id()) << (QStringList() << QStringLiteral("text/plain")) << (QVector<qint64>() << col4.id());
-        QTest::newRow("") << (QVector<qint64>() << col1.id()) << (QStringList() << QStringLiteral("unique/mime-type")) << QVector<qint64>();
-        QTest::newRow("") << (QVector<qint64>() << col2.id() << col7.id()) << (QStringList() << QStringLiteral("application/octet-stream"))
-                          << (QVector<qint64>() << col3.id() << col8.id());
+        QTest::newRow("") << (QList<qint64>() << 0) << (QStringList() << QStringLiteral("text/plain"))
+                          << (QList<qint64>() << col4.id() << col5.id() << col7.id());
+        QTest::newRow("") << (QList<qint64>() << 0) << (QStringList() << QStringLiteral("application/octet-stream"))
+                          << (QList<qint64>() << col2.id() << col3.id() << col6.id() << col8.id());
+        QTest::newRow("") << (QList<qint64>() << col1.id()) << (QStringList() << QStringLiteral("text/plain")) << (QList<qint64>() << col4.id());
+        QTest::newRow("") << (QList<qint64>() << col1.id()) << (QStringList() << QStringLiteral("unique/mime-type")) << QList<qint64>();
+        QTest::newRow("") << (QList<qint64>() << col2.id() << col7.id()) << (QStringList() << QStringLiteral("application/octet-stream"))
+                          << (QList<qint64>() << col3.id() << col8.id());
     }
 
     void testSearchHelperCollectionListing()
     {
-        QFETCH(QVector<qint64>, ancestors);
+        QFETCH(QList<qint64>, ancestors);
         QFETCH(QStringList, mimetypes);
-        QFETCH(QVector<qint64>, expectedResults);
+        QFETCH(QList<qint64>, expectedResults);
 
-        QVector<qint64> results = SearchHelper::matchSubcollectionsByMimeType(ancestors, mimetypes);
+        QList<qint64> results = SearchHelper::matchSubcollectionsByMimeType(ancestors, mimetypes);
 
         std::sort(expectedResults.begin(), expectedResults.end());
         std::sort(results.begin(), results.end());

@@ -92,10 +92,10 @@ bool DbIntrospector::isTableEmpty(const QString &tableName)
     return (query.size() == 0 || !query.first());
 }
 
-QVector<DbIntrospector::ForeignKey> DbIntrospector::foreignKeyConstraints(const QString &tableName)
+QList<DbIntrospector::ForeignKey> DbIntrospector::foreignKeyConstraints(const QString &tableName)
 {
     Q_UNUSED(tableName)
-    return QVector<ForeignKey>();
+    return QList<ForeignKey>();
 }
 
 QString DbIntrospector::hasIndexQuery(const QString &tableName, const QString &indexName)

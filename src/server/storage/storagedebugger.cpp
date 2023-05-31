@@ -21,7 +21,7 @@ using namespace Akonadi::Server;
 
 Q_DECLARE_METATYPE(QList<QList<QVariant>>)
 Q_DECLARE_METATYPE(DbConnection)
-Q_DECLARE_METATYPE(QVector<DbConnection>)
+Q_DECLARE_METATYPE(QList<DbConnection>)
 
 QDBusArgument &operator<<(QDBusArgument &arg, const DbConnection &con)
 {
@@ -41,7 +41,7 @@ const QDBusArgument &operator>>(const QDBusArgument &arg, DbConnection &con)
 
 namespace
 {
-QVector<DbConnection>::Iterator findConnection(QVector<DbConnection> &vec, qint64 id)
+QList<DbConnection>::Iterator findConnection(QList<DbConnection> &vec, qint64 id)
 {
     return std::find_if(vec.begin(), vec.end(), [id](const DbConnection &con) {
         return con.id == id;
@@ -65,7 +65,7 @@ StorageDebugger::StorageDebugger()
 {
     qDBusRegisterMetaType<QList<QList<QVariant>>>();
     qDBusRegisterMetaType<DbConnection>();
-    qDBusRegisterMetaType<QVector<DbConnection>>();
+    qDBusRegisterMetaType<QList<DbConnection>>();
     new StorageDebuggerAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/storageDebug"), this, QDBusConnection::ExportAdaptors);
 }
@@ -151,7 +151,7 @@ void StorageDebugger::removeTransaction(qint64 connectionId, bool commit, uint d
     }
 }
 
-QVector<DbConnection> StorageDebugger::connections() const
+QList<DbConnection> StorageDebugger::connections() const
 {
     return mConnections;
 }

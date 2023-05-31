@@ -52,7 +52,7 @@ public:
 
     // Output:
     QStringList mToForget;
-    QVector<QPair<Collection, QByteArray>> mToRegister;
+    QList<QPair<Collection, QByteArray>> mToRegister;
 };
 
 SpecialCollectionsRequestJobPrivate::SpecialCollectionsRequestJobPrivate(SpecialCollections *collections, SpecialCollectionsRequestJob *qq)

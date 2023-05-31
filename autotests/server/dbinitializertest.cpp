@@ -19,7 +19,7 @@
 
 using namespace Akonadi::Server;
 
-Q_DECLARE_METATYPE(QVector<DbIntrospector::ForeignKey>)
+Q_DECLARE_METATYPE(QList<DbIntrospector::ForeignKey>)
 
 class StatementCollector : public TestInterface
 {
@@ -65,13 +65,13 @@ public:
         Q_UNUSED(tableName)
         return m_tableEmpty;
     }
-    QVector<ForeignKey> foreignKeyConstraints(const QString &tableName) override
+    QList<ForeignKey> foreignKeyConstraints(const QString &tableName) override
     {
         Q_UNUSED(tableName)
         return m_foreignKeys;
     }
 
-    QVector<ForeignKey> m_foreignKeys;
+    QList<ForeignKey> m_foreignKeys;
     bool m_hasTable;
     bool m_hasIndex;
     bool m_tableEmpty;
@@ -87,9 +87,9 @@ void DbInitializerTest::testRun_data()
     QTest::addColumn<QString>("driverName");
     QTest::addColumn<QString>("filename");
     QTest::addColumn<bool>("hasTable");
-    QTest::addColumn<QVector<DbIntrospector::ForeignKey>>("fks");
+    QTest::addColumn<QList<DbIntrospector::ForeignKey>>("fks");
 
-    QVector<DbIntrospector::ForeignKey> fks;
+    QList<DbIntrospector::ForeignKey> fks;
 
     QTest::newRow("mysql") << "QMYSQL"
                            << ":dbinit_mysql" << false << fks;
@@ -120,7 +120,7 @@ void DbInitializerTest::testRun()
     QFETCH(QString, driverName);
     QFETCH(QString, filename);
     QFETCH(bool, hasTable);
-    QFETCH(QVector<DbIntrospector::ForeignKey>, fks);
+    QFETCH(QList<DbIntrospector::ForeignKey>, fks);
 
     QFile file(filename);
     QVERIFY(file.open(QFile::ReadOnly));

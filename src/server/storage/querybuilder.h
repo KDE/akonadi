@@ -10,12 +10,12 @@
 #include "dbtype.h"
 #include "query.h"
 
+#include <QList>
 #include <QPair>
 #include <QSqlQuery>
 #include <QString>
 #include <QStringList>
 #include <QVariant>
-#include <QVector>
 
 #ifdef QUERYBUILDER_UNITTEST
 class QueryBuilderTest;
@@ -286,10 +286,10 @@ private:
     QSqlQuery mQuery;
     QueryType mType;
     QStringList mColumns;
-    QVector<QVariant> mBindValues;
-    QVector<QPair<QString, Query::SortOrder>> mSortColumns;
+    QList<QVariant> mBindValues;
+    QList<QPair<QString, Query::SortOrder>> mSortColumns;
     QStringList mGroupColumns;
-    QVector<QPair<QString, QVariant>> mColumnValues;
+    QList<QPair<QString, QVariant>> mColumnValues;
     QString mIdentificationColumn;
 
     // we must make sure that the tables are joined in the correct order

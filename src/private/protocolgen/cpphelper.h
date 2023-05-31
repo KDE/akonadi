@@ -8,12 +8,12 @@
 
 class PropertyNode;
 
-#include <QVector>
+#include <QList>
 
 namespace CppHelper
 {
-void sortMembers(QVector<PropertyNode const *> &props);
+void sortMembers(QList<PropertyNode const *> &props);
 
-void sortMembersForSerialization(QVector<PropertyNode const *> &props);
+void sortMembersForSerialization(QList<PropertyNode const *> &props);
 
 } // namespace CppHelper

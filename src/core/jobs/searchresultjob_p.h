@@ -26,8 +26,8 @@ public:
     Q_REQUIRED_RESULT QByteArray searchId() const;
 
     void setResult(const ImapSet &set);
-    void setResult(const QVector<QByteArray> &remoteIds);
-    void setResult(const QVector<qint64> &ids);
+    void setResult(const QList<QByteArray> &remoteIds);
+    void setResult(const QList<qint64> &ids);
 
 protected:
     void doStart() override;

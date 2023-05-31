@@ -177,7 +177,7 @@ bool CollectionModifyHandler::parseStream()
             collection.setQueryAttributes(QString::fromLatin1(queryAttributes.join(' ')));
         }
 
-        QVector<qint64> inCols = cmd.persistentSearchCollections();
+        QList<qint64> inCols = cmd.persistentSearchCollections();
         std::sort(inCols.begin(), inCols.end());
         const auto cols = inCols | Views::transform([](const auto col) {
                               return QString::number(col);

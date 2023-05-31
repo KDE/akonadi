@@ -1707,7 +1707,7 @@ public:
     FavoriteCollectionsModel *favoritesModel;
     QItemSelectionModel *favoriteSelectionModel;
     bool insideSelectionSlot;
-    QVector<QAction *> actions;
+    QList<QAction *> actions;
     QHash<StandardActionManager::Type, KLocalizedString> pluralLabels;
     QHash<StandardActionManager::Type, KLocalizedString> pluralIconLabels;
     QTimer mDelayedUpdateTimer;

@@ -218,7 +218,7 @@ bool ExternalPartStorage::beginTransaction()
         return false;
     }
 
-    mTransactions.insert(QThread::currentThread(), QVector<Operation>());
+    mTransactions.insert(QThread::currentThread(), QList<Operation>());
     return true;
 }
 
@@ -236,7 +236,7 @@ bool ExternalPartStorage::commitTransaction()
         return false;
     }
 
-    const QVector<Operation> trx = iter.value();
+    const QList<Operation> trx = iter.value();
     mTransactions.erase(iter);
     locker.unlock();
 
@@ -252,7 +252,7 @@ bool ExternalPartStorage::rollbackTransaction()
         return false;
     }
 
-    const QVector<Operation> trx = iter.value();
+    const QList<Operation> trx = iter.value();
     mTransactions.erase(iter);
     locker.unlock();
 
@@ -265,7 +265,7 @@ bool ExternalPartStorage::inTransaction() const
     return mTransactions.contains(QThread::currentThread());
 }
 
-void ExternalPartStorage::addToTransaction(const QVector<Operation> &ops)
+void ExternalPartStorage::addToTransaction(const QList<Operation> &ops)
 {
     QMutexLocker locker(&mTransactionLock);
     auto iter = mTransactions.find(QThread::currentThread());
@@ -277,7 +277,7 @@ void ExternalPartStorage::addToTransaction(const QVector<Operation> &ops)
     }
 }
 
-bool ExternalPartStorage::replayTransaction(const QVector<Operation> &trx, bool commit)
+bool ExternalPartStorage::replayTransaction(const QList<Operation> &trx, bool commit)
 {
     for (auto iter = trx.constBegin(), end = trx.constEnd(); iter != end; ++iter) {
         const Operation &op = *iter;

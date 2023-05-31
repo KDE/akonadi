@@ -87,10 +87,10 @@ AgentSearchInterface::AgentSearchInterface()
 
 AgentSearchInterface::~AgentSearchInterface() = default;
 
-void AgentSearchInterface::searchFinished(const QVector<qint64> &result, ResultScope scope)
+void AgentSearchInterface::searchFinished(const QList<qint64> &result, ResultScope scope)
 {
     if (scope == Akonadi::AgentSearchInterface::Rid) {
-        QVector<QByteArray> rids;
+        QList<QByteArray> rids;
         rids.reserve(result.size());
         for (qint64 rid : result) {
             rids << QByteArray::number(rid);
@@ -107,7 +107,7 @@ void AgentSearchInterface::searchFinished(const QVector<qint64> &result, ResultS
 void AgentSearchInterface::searchFinished(const ImapSet &result, ResultScope scope)
 {
     if (scope == Akonadi::AgentSearchInterface::Rid) {
-        QVector<QByteArray> rids;
+        QList<QByteArray> rids;
         const ImapInterval::List lstInterval = result.intervals();
         for (const ImapInterval &interval : lstInterval) {
             const int endInterval(interval.end());
@@ -124,7 +124,7 @@ void AgentSearchInterface::searchFinished(const ImapSet &result, ResultScope sco
     resultJob->setResult(result);
 }
 
-void AgentSearchInterface::searchFinished(const QVector<QByteArray> &result)
+void AgentSearchInterface::searchFinished(const QList<QByteArray> &result)
 {
     auto resultJob = new SearchResultJob(d->mSearchId, Collection(d->mCollectionId), d.get());
     resultJob->setResult(result);

@@ -231,7 +231,7 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadItemNotificatio
     QSet<QByteArray> removedFlags;
     QSet<qint64> addedTags;
     QSet<qint64> removedTags;
-    QVector<Protocol::FetchItemsResponse> items;
+    QList<Protocol::FetchItemsResponse> items;
 
     auto msg = Protocol::ItemChangeNotificationPtr::create();
 
@@ -260,8 +260,8 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadItemNotificatio
             int i;
             QDateTime dt;
             QString str;
-            QVector<QByteArray> bav;
-            QVector<qint64> i64v;
+            QList<QByteArray> bav;
+            QList<qint64> i64v;
             QMap<QByteArray, QByteArray> babaMap;
             int cnt;
             for (int j = 0; j < entityCnt; ++j) {
@@ -287,7 +287,7 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadItemNotificatio
                 stream >> bav;
                 item.setFlags(bav);
                 stream >> cnt;
-                QVector<Protocol::FetchTagsResponse> tags;
+                QList<Protocol::FetchTagsResponse> tags;
                 tags.reserve(cnt);
                 for (int k = 0; k < cnt; ++k) {
                     Protocol::FetchTagsResponse tag;
@@ -309,7 +309,7 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadItemNotificatio
                 stream >> i64v;
                 item.setVirtualReferences(i64v);
                 stream >> cnt;
-                QVector<Protocol::FetchRelationsResponse> relations;
+                QList<Protocol::FetchRelationsResponse> relations;
                 for (int k = 0; k < cnt; ++k) {
                     Protocol::FetchRelationsResponse relation;
                     stream >> i64;
@@ -328,7 +328,7 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadItemNotificatio
                 }
                 item.setRelations(relations);
                 stream >> cnt;
-                QVector<Protocol::Ancestor> ancestors;
+                QList<Protocol::Ancestor> ancestors;
                 for (int k = 0; k < cnt; ++k) {
                     Protocol::Ancestor ancestor;
                     stream >> i64;
@@ -343,7 +343,7 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadItemNotificatio
                 }
                 item.setAncestors(ancestors);
                 stream >> cnt;
-                QVector<Protocol::StreamPayloadResponse> parts;
+                QList<Protocol::StreamPayloadResponse> parts;
                 for (int k = 0; k < cnt; ++k) {
                     Protocol::StreamPayloadResponse part;
                     stream >> ba;
@@ -521,7 +521,7 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadCollectionNotif
             QString str;
             QStringList stringList;
             qint64 i64;
-            QVector<qint64> vb;
+            QList<qint64> vb;
             QMap<QByteArray, QByteArray> attrs;
             bool b;
             int i;
@@ -556,7 +556,7 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadCollectionNotif
             stream >> vb;
             collection.setSearchCollections(vb);
             stream >> entityCnt;
-            QVector<Protocol::Ancestor> ancestors;
+            QList<Protocol::Ancestor> ancestors;
             for (int j = 0; j < entityCnt; ++j) {
                 Protocol::Ancestor ancestor;
                 stream >> i64;

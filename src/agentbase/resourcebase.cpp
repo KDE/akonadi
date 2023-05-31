@@ -149,7 +149,7 @@ public:
     void slotPrepareItemRetrieval(const Akonadi::Item &item);
     void slotPrepareItemRetrievalResult(KJob *job);
 
-    void slotPrepareItemsRetrieval(const QVector<Akonadi::Item> &item);
+    void slotPrepareItemsRetrieval(const QList<Akonadi::Item> &item);
     void slotPrepareItemsRetrievalResult(KJob *job);
 
     void changeCommittedResult(KJob *job);
@@ -722,7 +722,7 @@ void ResourceBase::changeCommitted(const Tag &tag)
     connect(job, &KJob::result, d, &ResourceBasePrivate::changeCommittedResult);
 }
 
-void ResourceBase::requestItemDelivery(const QVector<qint64> &uids, const QByteArrayList &parts)
+void ResourceBase::requestItemDelivery(const QList<qint64> &uids, const QByteArrayList &parts)
 {
     Q_D(ResourceBase);
     if (!isOnline()) {
@@ -1037,7 +1037,7 @@ void ResourceBasePrivate::slotPrepareItemRetrievalResult(KJob *job)
     }
 }
 
-void ResourceBasePrivate::slotPrepareItemsRetrieval(const QVector<Item> &items)
+void ResourceBasePrivate::slotPrepareItemsRetrieval(const QList<Item> &items)
 {
     Q_Q(ResourceBase);
     auto fetch = new ItemFetchJob(items, this);

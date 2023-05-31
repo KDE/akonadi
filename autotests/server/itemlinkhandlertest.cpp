@@ -88,7 +88,7 @@ private Q_SLOTS:
         scenarios << FakeAkonadiServer::loginScenario()
                   << TestScenario::create(5,
                                           TestScenario::ClientCmd,
-                                          Protocol::LinkItemsCommandPtr::create(Protocol::LinkItemsCommand::Link, QVector<qint64>{4, 123456}, 6))
+                                          Protocol::LinkItemsCommandPtr::create(Protocol::LinkItemsCommand::Link, QList<qint64>{4, 123456}, 6))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::LinkItemsResponsePtr::create());
         QTest::newRow("existent and non-existent item") << scenarios << notification << false;
 
@@ -199,7 +199,7 @@ private Q_SLOTS:
         scenarios << FakeAkonadiServer::loginScenario()
                   << TestScenario::create(5,
                                           TestScenario::ClientCmd,
-                                          Protocol::LinkItemsCommandPtr::create(Protocol::LinkItemsCommand::Unlink, QVector<qint64>{4, 2048}, 6))
+                                          Protocol::LinkItemsCommandPtr::create(Protocol::LinkItemsCommand::Unlink, QList<qint64>{4, 2048}, 6))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::LinkItemsResponsePtr::create());
         QTest::newRow("existent and non-existent item") << scenarios << notification << false;
 

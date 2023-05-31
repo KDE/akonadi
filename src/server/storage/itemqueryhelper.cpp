@@ -134,7 +134,7 @@ void ItemQueryHelper::scopeToQuery(const Scope &scope, const CommandContext &con
         ItemQueryHelper::remoteIdToQuery(scope.ridSet(), context, qb);
         return;
     } else if (scope.scope() == Scope::HierarchicalRid) {
-        QVector<Scope::HRID> hridChain = scope.hridChain();
+        QList<Scope::HRID> hridChain = scope.hridChain();
         const Scope::HRID itemHRID = hridChain.takeFirst();
         const Collection parentCol = CollectionQueryHelper::resolveHierarchicalRID(hridChain, context.resource().id());
         const Collection oldSelection = context.collection();

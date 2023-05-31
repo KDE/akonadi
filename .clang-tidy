@@ -49,7 +49,7 @@ CheckOptions:
     - key: IgnoreClassesWithAllMemberVariablesBeingPublic
       value: true
     - key: VectorLikeClasses
-      value: 'std::vector;QVector'
+      value: 'std::vector;QList'
 WarningsAsErrors: bugprone-*,
                   clang-*,
                   google-*,

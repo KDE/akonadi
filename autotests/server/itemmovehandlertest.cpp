@@ -73,7 +73,7 @@ private Q_SLOTS:
         }
 
         {
-            auto cmd = Protocol::MoveItemsCommandPtr::create(QVector<qint64>{2, 3}, destCol.id());
+            auto cmd = Protocol::MoveItemsCommandPtr::create(QList<qint64>{2, 3}, destCol.id());
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario() << TestScenario::create(5, TestScenario::ClientCmd, cmd)

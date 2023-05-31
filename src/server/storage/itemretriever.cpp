@@ -53,7 +53,7 @@ Connection *ItemRetriever::connection() const
     return mConnection;
 }
 
-void ItemRetriever::setRetrieveParts(const QVector<QByteArray> &parts)
+void ItemRetriever::setRetrieveParts(const QList<QByteArray> &parts)
 {
     mParts = parts;
     std::sort(mParts.begin(), mParts.end());
@@ -119,7 +119,7 @@ void ItemRetriever::setChangedSince(const QDateTime &changedSince)
     mChangedSince = changedSince;
 }
 
-QVector<QByteArray> ItemRetriever::retrieveParts() const
+QList<QByteArray> ItemRetriever::retrieveParts() const
 {
     return mParts;
 }
@@ -262,7 +262,7 @@ std::optional<ItemRetriever::PreparedRequests> ItemRetriever::prepareRequests(QS
     std::list<ItemRetrievalRequest> requests;
     QHash<qint64 /* collection */, decltype(requests)::iterator> colRequests;
     QHash<qint64 /* item */, decltype(requests)::iterator> itemRequests;
-    QVector<qint64> readyItems;
+    QList<qint64> readyItems;
     qint64 prevPimItemId = -1;
     QSet<QByteArray> availableParts;
     auto lastRequest = requests.end();

@@ -51,7 +51,7 @@ public:
     Relation::List mResultRelations;
     Relation::List mPendingRelations; // relation pending for emitting itemsReceived()
     QTimer mEmitTimer;
-    QVector<QByteArray> mTypes;
+    QList<QByteArray> mTypes;
     QString mResource;
     Relation mRequestedRelation;
 };
@@ -64,7 +64,7 @@ RelationFetchJob::RelationFetchJob(const Relation &relation, QObject *parent)
     d->mRequestedRelation = relation;
 }
 
-RelationFetchJob::RelationFetchJob(const QVector<QByteArray> &types, QObject *parent)
+RelationFetchJob::RelationFetchJob(const QList<QByteArray> &types, QObject *parent)
     : Job(new RelationFetchJobPrivate(this), parent)
 {
     Q_D(RelationFetchJob);
@@ -79,7 +79,7 @@ void RelationFetchJob::doStart()
     d->sendCommand(Protocol::FetchRelationsCommandPtr::create(
         d->mRequestedRelation.left().id(),
         d->mRequestedRelation.right().id(),
-        (d->mTypes.isEmpty() && !d->mRequestedRelation.type().isEmpty()) ? QVector<QByteArray>() << d->mRequestedRelation.type() : d->mTypes,
+        (d->mTypes.isEmpty() && !d->mRequestedRelation.type().isEmpty()) ? QList<QByteArray>() << d->mRequestedRelation.type() : d->mTypes,
         d->mResource));
 }
 

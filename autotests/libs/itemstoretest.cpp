@@ -462,7 +462,7 @@ public:
 
     const int numSessions;
     std::vector<Session *> sessions;
-    QVector<ItemModifyJob *> modifyJobs, doneJobs;
+    QList<ItemModifyJob *> modifyJobs, doneJobs;
     QStringList errors;
 };
 

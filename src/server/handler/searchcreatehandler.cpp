@@ -49,7 +49,7 @@ bool SearchCreateHandler::parseStream()
         queryAttributes << QStringLiteral(AKONADI_PARAM_RECURSIVE);
     }
 
-    QVector<qint64> queryColIds = cmd.queryCollections();
+    QList<qint64> queryColIds = cmd.queryCollections();
     std::sort(queryColIds.begin(), queryColIds.end());
     const auto queryCollections = queryColIds | Views::transform([](const auto id) {
                                       return QString::number(id);

@@ -6,9 +6,9 @@
 
 #pragma once
 
+#include <QList>
 #include <QPair>
 #include <QString>
-#include <QVector>
 
 class ShellScript
 {
@@ -17,12 +17,12 @@ public:
     void makeShellScript(const QString &filename);
 
     using EnvVar = QPair<QByteArray, QByteArray>;
-    void setEnvironmentVariables(const QVector<EnvVar> &envVars);
+    void setEnvironmentVariables(const QList<EnvVar> &envVars);
 
 private:
     void writeEnvironmentVariables();
     void writeShutdownFunction();
 
     QString mScript;
-    QVector<EnvVar> mEnvVars;
+    QList<EnvVar> mEnvVars;
 };

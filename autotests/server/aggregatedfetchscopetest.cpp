@@ -104,7 +104,7 @@ private Q_SLOTS:
         scope.addSubscriber();
         Protocol::ItemFetchScope oldItemScope;
         Protocol::ItemFetchScope itemScopeA;
-        QVector<QByteArray> parts = {"FOO"};
+        QList<QByteArray> parts = {"FOO"};
         QSet<QByteArray> partsSet = {"FOO"};
         itemScopeA.setRequestedParts(parts);
         itemScopeA.setAncestorDepth(Protocol::ItemFetchScope::ParentAncestor);

@@ -120,7 +120,7 @@ void SearchManager::unregisterInstance(const QString &id)
     mAgentSearchManager.unregisterInstance(id);
 }
 
-QVector<AbstractSearchPlugin *> SearchManager::searchPlugins() const
+QList<AbstractSearchPlugin *> SearchManager::searchPlugins() const
 {
     return mPlugins;
 }
@@ -260,14 +260,14 @@ void SearchManager::updateSearchImpl(const Collection &collection)
     bool recursive = queryAttributes.contains(QLatin1String(AKONADI_PARAM_RECURSIVE));
 
     QStringList queryMimeTypes;
-    const QVector<MimeType> mimeTypes = collection.mimeTypes();
+    const QList<MimeType> mimeTypes = collection.mimeTypes();
     queryMimeTypes.reserve(mimeTypes.count());
 
     for (const MimeType &mt : mimeTypes) {
         queryMimeTypes << mt.name();
     }
 
-    QVector<qint64> queryAncestors;
+    QList<qint64> queryAncestors;
     if (collection.queryCollections().isEmpty()) {
         queryAncestors << 0;
         recursive = true;
@@ -280,7 +280,7 @@ void SearchManager::updateSearchImpl(const Collection &collection)
     }
 
     // Always query the given collections
-    QVector<qint64> queryCollections = queryAncestors;
+    QList<qint64> queryCollections = queryAncestors;
 
     if (recursive) {
         // Resolve subcollections if necessary
@@ -338,7 +338,7 @@ void SearchManager::updateSearchImpl(const Collection &collection)
             return;
         }
 
-        const QVector<PimItem> removedItems = qb.result();
+        const QList<PimItem> removedItems = qb.result();
         DataStore::self()->notificationCollector()->itemsUnlinked(removedItems, collection);
     }
 

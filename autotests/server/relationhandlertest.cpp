@@ -299,7 +299,7 @@ private Q_SLOTS:
         {
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommandPtr::create(-1, QVector<QByteArray>{"type"}))
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommandPtr::create(-1, QList<QByteArray>{"type"}))
                       << TestScenario::create(5,
                                               TestScenario::ServerCmd,
                                               Protocol::FetchRelationsResponsePtr::create(item1.id(),
@@ -372,7 +372,7 @@ private Q_SLOTS:
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5,
                                               TestScenario::ClientCmd,
-                                              Protocol::FetchRelationsCommandPtr::create(-1, QVector<QByteArray>{}, QLatin1String("testresource")))
+                                              Protocol::FetchRelationsCommandPtr::create(-1, QList<QByteArray>{}, QLatin1String("testresource")))
                       << TestScenario::create(5,
                                               TestScenario::ServerCmd,
                                               Protocol::FetchRelationsResponsePtr::create(item1.id(),
@@ -418,7 +418,7 @@ private Q_SLOTS:
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5,
                                               TestScenario::ClientCmd,
-                                              Protocol::FetchRelationsCommandPtr::create(-1, QVector<QByteArray>{}, QLatin1String("testresource2")))
+                                              Protocol::FetchRelationsCommandPtr::create(-1, QList<QByteArray>{}, QLatin1String("testresource2")))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create());
 
             QTest::newRow("filter by resource with nonmatching resource") << scenarios;
@@ -426,9 +426,7 @@ private Q_SLOTS:
         {
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5,
-                                              TestScenario::ClientCmd,
-                                              Protocol::FetchRelationsCommandPtr::create(item1.id(), -1, QVector<QByteArray>{"type"}))
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommandPtr::create(item1.id(), -1, QList<QByteArray>{"type"}))
                       << TestScenario::create(5,
                                               TestScenario::ServerCmd,
                                               Protocol::FetchRelationsResponsePtr::create(item1.id(),
@@ -444,9 +442,7 @@ private Q_SLOTS:
         {
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5,
-                                              TestScenario::ClientCmd,
-                                              Protocol::FetchRelationsCommandPtr::create(-1, item2.id(), QVector<QByteArray>{"type"}))
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommandPtr::create(-1, item2.id(), QList<QByteArray>{"type"}))
                       << TestScenario::create(5,
                                               TestScenario::ServerCmd,
                                               Protocol::FetchRelationsResponsePtr::create(item1.id(),
@@ -462,7 +458,7 @@ private Q_SLOTS:
         {
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommandPtr::create(item3.id(), QVector<QByteArray>{"type"}))
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommandPtr::create(item3.id(), QList<QByteArray>{"type"}))
                       << TestScenario::create(5,
                                               TestScenario::ServerCmd,
                                               Protocol::FetchRelationsResponsePtr::create(item3.id(),

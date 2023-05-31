@@ -6,8 +6,8 @@
 
 #pragma once
 
+#include <QList>
 #include <QStringList>
-#include <QVector>
 
 namespace Akonadi
 {
@@ -16,7 +16,7 @@ namespace Server
 class SearchHelper
 {
 public:
-    static QVector<qint64> matchSubcollectionsByMimeType(const QVector<qint64> &ancestors, const QStringList &mimeTypes);
+    static QList<qint64> matchSubcollectionsByMimeType(const QList<qint64> &ancestors, const QStringList &mimeTypes);
 };
 
 } // namespace Server

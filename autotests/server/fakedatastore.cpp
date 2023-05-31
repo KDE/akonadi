@@ -20,9 +20,9 @@ Q_DECLARE_METATYPE(PimItem)
 Q_DECLARE_METATYPE(PimItem::List)
 Q_DECLARE_METATYPE(Collection)
 Q_DECLARE_METATYPE(Flag)
-Q_DECLARE_METATYPE(QVector<Flag>)
+Q_DECLARE_METATYPE(QList<Flag>)
 Q_DECLARE_METATYPE(Tag)
-Q_DECLARE_METATYPE(QVector<Tag>)
+Q_DECLARE_METATYPE(QList<Tag>)
 Q_DECLARE_METATYPE(MimeType)
 Q_DECLARE_METATYPE(QList<QByteArray>)
 
@@ -63,8 +63,8 @@ bool FakeDataStore::init()
 }
 
 bool FakeDataStore::setItemsFlags(const PimItem::List &items,
-                                  const QVector<Flag> *currentFlags,
-                                  const QVector<Flag> &flags,
+                                  const QList<Flag> *currentFlags,
+                                  const QList<Flag> &flags,
                                   bool *flagsChanged,
                                   const Collection &col,
                                   bool silent)
@@ -75,7 +75,7 @@ bool FakeDataStore::setItemsFlags(const PimItem::List &items,
 }
 
 bool FakeDataStore::appendItemsFlags(const PimItem::List &items,
-                                     const QVector<Flag> &flags,
+                                     const QList<Flag> &flags,
                                      bool *flagsChanged,
                                      bool checkIfExists,
                                      const Collection &col,
@@ -86,7 +86,7 @@ bool FakeDataStore::appendItemsFlags(const PimItem::List &items,
     return DataStore::appendItemsFlags(items, flags, flagsChanged, checkIfExists, col, silent);
 }
 
-bool FakeDataStore::removeItemsFlags(const PimItem::List &items, const QVector<Flag> &flags, bool *flagsChanged, const Collection &col, bool silent)
+bool FakeDataStore::removeItemsFlags(const PimItem::List &items, const QList<Flag> &flags, bool *flagsChanged, const Collection &col, bool silent)
 {
     mChanges.insert(QStringLiteral("removeItemsFlags"),
                     QVariantList() << QVariant::fromValue(items) << QVariant::fromValue(flags) << QVariant::fromValue(col) << silent);
@@ -159,8 +159,8 @@ void FakeDataStore::activeCachePolicy(Collection &col)
     return DataStore::activeCachePolicy(col);
 }
 
-bool FakeDataStore::appendPimItem(QVector<Part> &parts,
-                                  const QVector<Flag> &flags,
+bool FakeDataStore::appendPimItem(QList<Part> &parts,
+                                  const QList<Flag> &flags,
                                   const MimeType &mimetype,
                                   const Collection &collection,
                                   const QDateTime &dateTime,

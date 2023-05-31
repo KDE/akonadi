@@ -43,7 +43,7 @@ protected:
       The changes mentioned above are applied.
     */
     bool copyItem(const PimItem &item, const Collection &target);
-    void processItems(const QVector<qint64> &ids);
+    void processItems(const QList<qint64> &ids);
 
 private:
     Collection mTargetCollection;

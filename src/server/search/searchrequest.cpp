@@ -41,12 +41,12 @@ QString SearchRequest::query() const
     return mQuery;
 }
 
-void SearchRequest::setCollections(const QVector<qint64> &collectionsIds)
+void SearchRequest::setCollections(const QList<qint64> &collectionsIds)
 {
     mCollections = collectionsIds;
 }
 
-QVector<qint64> SearchRequest::collections() const
+QList<qint64> SearchRequest::collections() const
 {
     return mCollections;
 }
@@ -91,7 +91,7 @@ void SearchRequest::emitResults(const QSet<qint64> &results)
 
 void SearchRequest::searchPlugins()
 {
-    const QVector<AbstractSearchPlugin *> plugins = mSearchManager.searchPlugins();
+    const QList<AbstractSearchPlugin *> plugins = mSearchManager.searchPlugins();
     for (AbstractSearchPlugin *plugin : plugins) {
         const QSet<qint64> result = plugin->search(mQuery, mCollections, mMimeTypes);
         emitResults(result);

@@ -21,7 +21,7 @@ class ScopePrivate : public QSharedData
 public:
     ImapSet uidSet;
     QStringList ridSet;
-    QVector<Scope::HRID> hridChain;
+    QList<Scope::HRID> hridChain;
     QStringList gidSet;
     Scope::SelectionScope scope = Scope::Invalid;
 };
@@ -110,7 +110,7 @@ Scope::Scope(const ImapInterval &interval)
     setUidSet(interval);
 }
 
-Scope::Scope(const QVector<qint64> &interval)
+Scope::Scope(const QList<qint64> &interval)
     : d(new ScopePrivate)
 {
     setUidSet(interval);
@@ -129,7 +129,7 @@ Scope::Scope(SelectionScope scope, const QStringList &ids)
     }
 }
 
-Scope::Scope(const QVector<HRID> &hrid)
+Scope::Scope(const QList<HRID> &hrid)
     : d(new ScopePrivate)
 {
     d->scope = HierarchicalRid;
@@ -236,13 +236,13 @@ QStringList Scope::ridSet() const
     return d->ridSet;
 }
 
-void Scope::setHRidChain(const QVector<HRID> &hridChain)
+void Scope::setHRidChain(const QList<HRID> &hridChain)
 {
     d->scope = HierarchicalRid;
     d->hridChain = hridChain;
 }
 
-QVector<Scope::HRID> Scope::hridChain() const
+QList<Scope::HRID> Scope::hridChain() const
 {
     return d->hridChain;
 }

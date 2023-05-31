@@ -8,9 +8,9 @@
 
 #include <servermanager.h>
 
+#include <QList>
 #include <QObject>
 #include <QPair>
-#include <QVector>
 
 #include <memory>
 
@@ -43,7 +43,7 @@ public:
 
     /// retrieve all modified environment variables, for writing the shell script
     using EnvVar = QPair<QByteArray, QByteArray>;
-    QVector<EnvVar> environmentVariables() const;
+    QList<EnvVar> environmentVariables() const;
 
 public Q_SLOTS:
     Q_SCRIPTABLE void shutdown();
@@ -79,5 +79,5 @@ private:
     bool mTrackAkonadiProcess;
     int mSetupJobCount;
     int mExitCode;
-    QVector<EnvVar> mEnvVars;
+    QList<EnvVar> mEnvVars;
 };

@@ -262,7 +262,7 @@ private Q_SLOTS:
         mAkonadi.runTest();
 
         PimItem item = PimItem::retrieveById(pimItem.id());
-        const QVector<Part> parts = item.parts();
+        const QList<Part> parts = item.parts();
         QVERIFY(parts.count() == 1);
         const Part part = parts[0];
         QCOMPARE(part.datasize(), expectedPartSize);

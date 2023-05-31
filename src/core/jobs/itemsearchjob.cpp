@@ -218,7 +218,7 @@ void ItemSearchJob::doStart()
     auto cmd = Protocol::SearchCommandPtr::create();
     cmd->setMimeTypes(d->mMimeTypes);
     if (!d->mCollections.isEmpty()) {
-        QVector<qint64> ids;
+        QList<qint64> ids;
         ids.reserve(d->mCollections.size());
         for (const Collection &col : std::as_const(d->mCollections)) {
             ids << col.id();

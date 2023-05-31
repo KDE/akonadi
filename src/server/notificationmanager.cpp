@@ -176,7 +176,7 @@ void NotificationManager::emitPendingNotifications()
         // When debugging notification we have to use a non-threaded approach
         // so that we can work with return value of notify()
         for (const auto &notification : std::as_const(mNotifications)) {
-            QVector<QByteArray> listeners;
+            QList<QByteArray> listeners;
             for (NotificationSubscriber *subscriber : std::as_const(mSubscribers)) {
                 if (subscriber && subscriber->notify(notification)) {
                     listeners.push_back(subscriber->subscriber());
@@ -190,7 +190,7 @@ void NotificationManager::emitPendingNotifications()
     mNotifications.clear();
 }
 
-void NotificationManager::emitDebugNotification(const Protocol::ChangeNotificationPtr &ntf, const QVector<QByteArray> &listeners)
+void NotificationManager::emitDebugNotification(const Protocol::ChangeNotificationPtr &ntf, const QList<QByteArray> &listeners)
 {
     auto debugNtf = Protocol::DebugChangeNotificationPtr::create();
     debugNtf->setNotification(ntf);

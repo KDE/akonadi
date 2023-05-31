@@ -71,7 +71,7 @@ Q_SIGNALS:
 
 private:
     OrgFreedesktopAkonadiResourceInterface *resourceInterface(const QString &id);
-    QVector<AbstractItemRetrievalJob *> scheduleJobsForIdleResourcesLocked();
+    QList<AbstractItemRetrievalJob *> scheduleJobsForIdleResourcesLocked();
 
 private Q_SLOTS:
     void init() override;

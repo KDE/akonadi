@@ -82,9 +82,9 @@ public:
     /**
       Returns the protocol representation of a collection ancestor chain.
     */
-    static QVector<Protocol::Ancestor> ancestorsResponse(int ancestorDepth,
-                                                         const QStack<Collection> &ancestors,
-                                                         const QStack<CollectionAttribute::List> &_ancestorsAttributes = QStack<CollectionAttribute::List>());
+    static QList<Protocol::Ancestor> ancestorsResponse(int ancestorDepth,
+                                                       const QStack<Collection> &ancestors,
+                                                       const QStack<CollectionAttribute::List> &_ancestorsAttributes = QStack<CollectionAttribute::List>());
 
     static Protocol::FetchTagsResponse fetchTagsResponse(const Tag &tag, const Protocol::TagFetchScope &tagFetchScope, Connection *connection = nullptr);
 

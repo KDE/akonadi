@@ -7,9 +7,9 @@
 #pragma once
 
 #include <QDateTime>
+#include <QList>
 #include <QSharedDataPointer>
 #include <QSharedPointer>
-#include <QVector>
 
 #include "akonadicore_export.h"
 
@@ -53,8 +53,8 @@ public:
     Q_REQUIRED_RESULT QDateTime timestamp() const;
     void setTimestamp(const QDateTime &timestamp);
 
-    Q_REQUIRED_RESULT QVector<QByteArray> listeners() const;
-    void setListeners(const QVector<QByteArray> &listeners);
+    Q_REQUIRED_RESULT QList<QByteArray> listeners() const;
+    void setListeners(const QList<QByteArray> &listeners);
 
     Q_REQUIRED_RESULT Type type() const;
     void setType(Type type);

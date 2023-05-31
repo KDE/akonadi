@@ -262,10 +262,10 @@ Akonadi::Collection::List Monitor::collectionsMonitored() const
     return d->collections;
 }
 
-QVector<Item::Id> Monitor::itemsMonitoredEx() const
+QList<Item::Id> Monitor::itemsMonitoredEx() const
 {
     Q_D(const Monitor);
-    QVector<Item::Id> result;
+    QList<Item::Id> result;
     result.reserve(d->items.size());
     std::copy(d->items.begin(), d->items.end(), std::back_inserter(result));
     return result;
@@ -277,19 +277,19 @@ int Monitor::numItemsMonitored() const
     return d->items.size();
 }
 
-QVector<Tag::Id> Monitor::tagsMonitored() const
+QList<Tag::Id> Monitor::tagsMonitored() const
 {
     Q_D(const Monitor);
-    QVector<Tag::Id> result;
+    QList<Tag::Id> result;
     result.reserve(d->tags.size());
     std::copy(d->tags.begin(), d->tags.end(), std::back_inserter(result));
     return result;
 }
 
-QVector<Monitor::Type> Monitor::typesMonitored() const
+QList<Monitor::Type> Monitor::typesMonitored() const
 {
     Q_D(const Monitor);
-    QVector<Monitor::Type> result;
+    QList<Monitor::Type> result;
     result.reserve(d->types.size());
     std::copy(d->types.begin(), d->types.end(), std::back_inserter(result));
     return result;

@@ -268,11 +268,11 @@ CollectionTreeCache::Node *CollectionTreeCache::findNode(const QString &rid, con
     });
 }
 
-QVector<Collection> CollectionTreeCache::retrieveCollections(CollectionTreeCache::Node *root, int depth, int ancestorDepth) const
+QList<Collection> CollectionTreeCache::retrieveCollections(CollectionTreeCache::Node *root, int depth, int ancestorDepth) const
 {
     QReadLocker locker(&mLock);
 
-    QVector<Node *> nodes;
+    QList<Node *> nodes;
     // Get all ancestors for root
     Node *parent = root->parent;
     for (int i = 0; i < ancestorDepth && parent != nullptr; ++i) {
@@ -301,8 +301,8 @@ QVector<Collection> CollectionTreeCache::retrieveCollections(CollectionTreeCache
         }
     }
 
-    QVector<Collection> cols;
-    QVector<Node *> missing;
+    QList<Collection> cols;
+    QList<Node *> missing;
     for (auto node : nodes) {
         if (node->collection.isValid()) {
             cols.push_back(node->collection);
@@ -350,7 +350,7 @@ QVector<Collection> CollectionTreeCache::retrieveCollections(CollectionTreeCache
     return cols;
 }
 
-QVector<Collection>
+QList<Collection>
 CollectionTreeCache::retrieveCollections(const Scope &scope, int depth, int ancestorDepth, const QString &resource, CommandContext *context) const
 {
     if (scope.isEmpty()) {

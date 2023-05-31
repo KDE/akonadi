@@ -52,7 +52,7 @@ public:
     /**
      * Describes a list of agent instances.
      */
-    using List = QVector<AgentInstance>;
+    using List = QList<AgentInstance>;
 
     /**
      * Describes the status of the agent instance.

@@ -7,10 +7,10 @@
 
 #pragma once
 
+#include <QList>
 #include <QMap>
 #include <QString>
 #include <QStringList>
-#include <QVector>
 
 namespace Akonadi
 {
@@ -86,9 +86,9 @@ public:
     int primaryKeyColumnCount() const;
 
     QString name;
-    QVector<ColumnDescription> columns;
-    QVector<IndexDescription> indexes;
-    QVector<DataDescription> data;
+    QList<ColumnDescription> columns;
+    QList<IndexDescription> indexes;
+    QList<DataDescription> data;
 };
 
 /**
@@ -103,7 +103,7 @@ public:
     QString firstColumn;
     QString secondTable;
     QString secondColumn;
-    QVector<IndexDescription> indexes;
+    QList<IndexDescription> indexes;
 };
 
 /**

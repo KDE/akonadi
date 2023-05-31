@@ -14,8 +14,8 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QJsonObject>
+#include <QList>
 #include <QSharedPointer>
-#include <QVector>
 
 #include "scope_p.h"
 #include "tristate_p.h"
@@ -327,15 +327,15 @@ public:
         return !operator==(other);
     }
 
-    inline void setRequestedParts(const QVector<QByteArray> &requestedParts)
+    inline void setRequestedParts(const QList<QByteArray> &requestedParts)
     {
         mRequestedParts = requestedParts;
     }
-    inline QVector<QByteArray> requestedParts() const
+    inline QList<QByteArray> requestedParts() const
     {
         return mRequestedParts;
     }
-    QVector<QByteArray> requestedPayloads() const;
+    QList<QByteArray> requestedPayloads() const;
 
     inline void setChangedSince(const QDateTime &changedSince)
     {
@@ -421,7 +421,7 @@ private:
     AncestorDepth mAncestorDepth = NoAncestor;
     // 2 bytes free
     FetchFlags mFlags = None;
-    QVector<QByteArray> mRequestedParts;
+    QList<QByteArray> mRequestedParts;
     QDateTime mChangedSince;
 
     friend AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream,
@@ -545,12 +545,12 @@ AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator>>(Akonadi::Protoco
 AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, const Akonadi::Protocol::ChangeNotification &ntf);
 
 using ChangeNotificationPtr = QSharedPointer<ChangeNotification>;
-using ChangeNotificationList = QVector<ChangeNotificationPtr>;
+using ChangeNotificationList = QList<ChangeNotificationPtr>;
 
 class AKONADIPRIVATE_EXPORT ChangeNotification : public Command
 {
 public:
-    static QList<qint64> itemsToUids(const QVector<Akonadi::Protocol::FetchItemsResponse> &items);
+    static QList<qint64> itemsToUids(const QList<Akonadi::Protocol::FetchItemsResponse> &items);
 
     class Relation
     {
@@ -614,7 +614,7 @@ public:
     {
         mMetaData.removeAll(metadata);
     }
-    QVector<QByteArray> metadata() const
+    QList<QByteArray> metadata() const
     {
         return mMetaData;
     }
@@ -634,7 +634,7 @@ protected:
     // For internal use only: Akonadi server can add some additional information
     // that might be useful when evaluating the notification for example, but
     // it is never transferred to clients
-    QVector<QByteArray> mMetaData;
+    QList<QByteArray> mMetaData;
 
     friend AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream,
                                                                            const Akonadi::Protocol::ChangeNotification &ntf);

@@ -98,7 +98,7 @@ enum PartQueryColumns {
     PartQueryDataSizeColumn
 };
 
-QSqlQuery ItemFetchHelper::buildPartQuery(const QVector<QByteArray> &partList, bool allPayload, bool allAttrs)
+QSqlQuery ItemFetchHelper::buildPartQuery(const QList<QByteArray> &partList, bool allPayload, bool allAttrs)
 {
     /// TODO: merge with ItemQuery
     QueryBuilder partQuery(PimItem::tableName());
@@ -488,7 +488,7 @@ bool ItemFetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse
         }
 
         if (mItemFetchScope.fetchFlags()) {
-            QVector<QByteArray> flags;
+            QList<QByteArray> flags;
             while (flagQuery.isValid()) {
                 const qint64 id = flagQuery.value(FlagQueryPimItemIdColumn).toLongLong();
                 if (id > pimItemId) {
@@ -509,8 +509,8 @@ bool ItemFetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse
         }
 
         if (mItemFetchScope.fetchTags()) {
-            QVector<qint64> tagIds;
-            QVector<Protocol::FetchTagsResponse> tags;
+            QList<qint64> tagIds;
+            QList<Protocol::FetchTagsResponse> tags;
             while (tagQuery.isValid()) {
                 PROF_INC(tagsCount)
                 const qint64 id = tagQuery.value(TagQueryItemIdColumn).toLongLong();
@@ -541,7 +541,7 @@ bool ItemFetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse
         }
 
         if (mItemFetchScope.fetchVirtualReferences()) {
-            QVector<qint64> vRefs;
+            QList<qint64> vRefs;
             while (vRefQuery.isValid()) {
                 PROF_INC(vRefsCount)
                 const qint64 id = vRefQuery.value(VRefQueryItemIdColumn).toLongLong();
@@ -569,7 +569,7 @@ bool ItemFetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse
             if (!qb.exec()) {
                 throw HandlerException("Unable to list item relations");
             }
-            QVector<Protocol::FetchRelationsResponse> relations;
+            QList<Protocol::FetchRelationsResponse> relations;
             const auto result = qb.result();
             relations.reserve(result.size());
             for (const Relation &rel : result) {
@@ -585,8 +585,8 @@ bool ItemFetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse
 
         bool skipItem = false;
 
-        QVector<QByteArray> cachedParts;
-        QVector<Protocol::StreamPayloadResponse> parts;
+        QList<QByteArray> cachedParts;
+        QList<Protocol::StreamPayloadResponse> parts;
         while (partQuery.isValid()) {
             PROF_INC(partsCount)
             const qint64 id = partQuery.value(PartQueryPimIdColumn).toLongLong();
@@ -693,7 +693,7 @@ bool ItemFetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse
     return true;
 }
 
-bool ItemFetchHelper::needsAccessTimeUpdate(const QVector<QByteArray> &parts)
+bool ItemFetchHelper::needsAccessTimeUpdate(const QList<QByteArray> &parts)
 {
     // TODO technically we should compare the part list with the cache policy of
     // the parent collection of the retrieved items, but that's kinda expensive
@@ -737,17 +737,17 @@ void ItemFetchHelper::triggerOnDemandFetch()
     mConnection->akonadi().intervalChecker().requestCollectionSync(collection);
 }
 
-QVector<Protocol::Ancestor> ItemFetchHelper::ancestorsForItem(Collection::Id parentColId)
+QList<Protocol::Ancestor> ItemFetchHelper::ancestorsForItem(Collection::Id parentColId)
 {
     if (mItemFetchScope.ancestorDepth() == Protocol::ItemFetchScope::NoAncestor || parentColId == 0) {
-        return QVector<Protocol::Ancestor>();
+        return QList<Protocol::Ancestor>();
     }
     const auto it = mAncestorCache.constFind(parentColId);
     if (it != mAncestorCache.cend()) {
         return *it;
     }
 
-    QVector<Protocol::Ancestor> ancestors;
+    QList<Protocol::Ancestor> ancestors;
     Collection col = Collection::retrieveById(parentColId);
     const int depthNum = mItemFetchScope.ancestorDepth() == Protocol::ItemFetchScope::ParentAncestor ? 1 : INT_MAX;
     for (int i = 0; i < depthNum; ++i) {

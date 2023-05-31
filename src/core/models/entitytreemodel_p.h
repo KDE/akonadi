@@ -246,8 +246,8 @@ public:
     QSet<Collection::Id> m_populatedCols;
     QSet<Collection::Id> m_collectionsWithoutItems;
 
-    QVector<Item::Id> m_pendingCutItems;
-    QVector<Item::Id> m_pendingCutCollections;
+    QList<Item::Id> m_pendingCutItems;
+    QList<Item::Id> m_pendingCutCollections;
     mutable QSet<Collection::Id> m_pendingCollectionRetrieveJobs;
     mutable QSet<KJob *> m_pendingCollectionFetchJobs;
 

@@ -182,25 +182,25 @@ void ProtocolTest::testAncestor()
 void ProtocolTest::testFetchScope_data()
 {
     QTest::addColumn<bool>("fullPayload");
-    QTest::addColumn<QVector<QByteArray>>("requestedParts");
-    QTest::addColumn<QVector<QByteArray>>("expectedParts");
-    QTest::addColumn<QVector<QByteArray>>("expectedPayloads");
-    QTest::newRow("full payload (via flag") << true << QVector<QByteArray>{"PLD:HEAD", "ATR:MYATR"}
-                                            << QVector<QByteArray>{"PLD:HEAD", "ATR:MYATR", "PLD:RFC822"} << QVector<QByteArray>{"PLD:HEAD", "PLD:RFC822"};
-    QTest::newRow("full payload (via part name") << false << QVector<QByteArray>{"PLD:HEAD", "ATR:MYATR", "PLD:RFC822"}
-                                                 << QVector<QByteArray>{"PLD:HEAD", "ATR:MYATR", "PLD:RFC822"} << QVector<QByteArray>{"PLD:HEAD", "PLD:RFC822"};
-    QTest::newRow("full payload (via both") << true << QVector<QByteArray>{"PLD:HEAD", "ATR:MYATR", "PLD:RFC822"}
-                                            << QVector<QByteArray>{"PLD:HEAD", "ATR:MYATR", "PLD:RFC822"} << QVector<QByteArray>{"PLD:HEAD", "PLD:RFC822"};
-    QTest::newRow("without full payload") << false << QVector<QByteArray>{"PLD:HEAD", "ATR:MYATR"} << QVector<QByteArray>{"PLD:HEAD", "ATR:MYATR"}
-                                          << QVector<QByteArray>{"PLD:HEAD"};
+    QTest::addColumn<QList<QByteArray>>("requestedParts");
+    QTest::addColumn<QList<QByteArray>>("expectedParts");
+    QTest::addColumn<QList<QByteArray>>("expectedPayloads");
+    QTest::newRow("full payload (via flag") << true << QList<QByteArray>{"PLD:HEAD", "ATR:MYATR"} << QList<QByteArray>{"PLD:HEAD", "ATR:MYATR", "PLD:RFC822"}
+                                            << QList<QByteArray>{"PLD:HEAD", "PLD:RFC822"};
+    QTest::newRow("full payload (via part name") << false << QList<QByteArray>{"PLD:HEAD", "ATR:MYATR", "PLD:RFC822"}
+                                                 << QList<QByteArray>{"PLD:HEAD", "ATR:MYATR", "PLD:RFC822"} << QList<QByteArray>{"PLD:HEAD", "PLD:RFC822"};
+    QTest::newRow("full payload (via both") << true << QList<QByteArray>{"PLD:HEAD", "ATR:MYATR", "PLD:RFC822"}
+                                            << QList<QByteArray>{"PLD:HEAD", "ATR:MYATR", "PLD:RFC822"} << QList<QByteArray>{"PLD:HEAD", "PLD:RFC822"};
+    QTest::newRow("without full payload") << false << QList<QByteArray>{"PLD:HEAD", "ATR:MYATR"} << QList<QByteArray>{"PLD:HEAD", "ATR:MYATR"}
+                                          << QList<QByteArray>{"PLD:HEAD"};
 }
 
 void ProtocolTest::testFetchScope()
 {
     QFETCH(bool, fullPayload);
-    QFETCH(QVector<QByteArray>, requestedParts);
-    QFETCH(QVector<QByteArray>, expectedParts);
-    QFETCH(QVector<QByteArray>, expectedPayloads);
+    QFETCH(QList<QByteArray>, requestedParts);
+    QFETCH(QList<QByteArray>, expectedParts);
+    QFETCH(QList<QByteArray>, expectedPayloads);
 
     ItemFetchScope in;
     for (unsigned i = ItemFetchScope::CacheOnly; i <= ItemFetchScope::VirtReferences; i = i << 1) {
@@ -541,8 +541,8 @@ void ProtocolTest::testTransactionResponse()
 
 void ProtocolTest::testCreateItemCommand()
 {
-    Scope addedTags(QVector<qint64>{3, 4});
-    Scope removedTags(QVector<qint64>{5, 6});
+    Scope addedTags(QList<qint64>{3, 4});
+    Scope removedTags(QList<qint64>{5, 6});
     Attributes attrs{{"ATTR1", "MyAttr"}, {"ATTR2", "Můj chlupaťoučký kůň"}};
     QSet<QByteArray> parts{"PLD:HEAD", "PLD:ENVELOPE"};
 
@@ -616,7 +616,7 @@ void ProtocolTest::testCreateItemResponse()
 
 void ProtocolTest::testCopyItemsCommand()
 {
-    const Scope items(QVector<qint64>{1, 2, 3, 10});
+    const Scope items(QList<qint64>{1, 2, 3, 10});
 
     CopyItemsCommand in;
     QVERIFY(in.isValid());

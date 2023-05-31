@@ -137,7 +137,7 @@ bool TagModifyHandler::parseStream()
         }
 
         ImapSet set;
-        set.add(QVector<qint64>() << cmd.tagId());
+        set.add(QList<qint64>() << cmd.tagId());
 
         Protocol::TagFetchScope fetchScope;
         fetchScope.setFetchRemoteID(true);

@@ -101,7 +101,7 @@ void EntityDisplayAttribute::deserialize(const QByteArray &data)
             if (componentData.size() != 4) {
                 return;
             }
-            QVector<int> components;
+            QList<int> components;
             components.reserve(4);
 
             bool ok;

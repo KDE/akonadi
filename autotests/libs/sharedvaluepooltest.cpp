@@ -7,8 +7,8 @@
 #include "../sharedvaluepool_p.h"
 #include <QTest>
 
+#include <QList>
 #include <QSet>
-#include <QVector>
 #include <set>
 #include <utility>
 #include <vector>
@@ -29,8 +29,8 @@ private Q_SLOTS:
     void testQVector()
     {
         QFETCH(int, size);
-        QVector<QByteArray> data;
-        Internal::SharedValuePool<QByteArray, QVector> pool;
+        QList<QByteArray> data;
+        Internal::SharedValuePool<QByteArray, QList> pool;
 
         for (int i = 0; i < size; ++i) {
             QByteArray b(10, static_cast<char>(i));
@@ -56,7 +56,7 @@ private Q_SLOTS:
     void testQSet()
     {
       QFETCH( int, size );
-      QVector<QByteArray> data;
+      QList<QByteArray> data;
       Internal::SharedValuePool<QByteArray, QSet> pool;
 
       for ( int i = 0; i < size; ++i ) {

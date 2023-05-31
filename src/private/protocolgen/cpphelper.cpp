@@ -30,7 +30,7 @@ size_t typeSize(const QString &typeName)
                                                        {"Tristate", sizeof(qint8)},
                                                        {"Akonadi::Protocol::Attributes", sizeof(QMap<int, Dummy>)},
                                                        {"QSet", sizeof(QSet<Dummy>)},
-                                                       {"QVector", sizeof(QVector<Dummy>)}};
+                                                       {"QList", sizeof(QList<Dummy>)}};
 
     QByteArray tn;
     // Don't you just loooove hacks?
@@ -52,14 +52,14 @@ size_t typeSize(const QString &typeName)
 
 } // namespace
 
-void CppHelper::sortMembers(QVector<PropertyNode const *> &props)
+void CppHelper::sortMembers(QList<PropertyNode const *> &props)
 {
     std::sort(props.begin(), props.end(), [](PropertyNode const *lhs, PropertyNode const *rhs) {
         return typeSize(lhs->type()) > typeSize(rhs->type());
     });
 }
 
-void CppHelper::sortMembersForSerialization(QVector<PropertyNode const *> &props)
+void CppHelper::sortMembersForSerialization(QList<PropertyNode const *> &props)
 {
     std::sort(props.begin(), props.end(), [](PropertyNode const *lhs, PropertyNode const *rhs) {
         return lhs->dependencies().isEmpty() > rhs->dependencies().isEmpty();

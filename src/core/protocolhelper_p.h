@@ -31,8 +31,8 @@
 namespace Akonadi
 {
 struct ProtocolHelperValuePool {
-    using FlagPool = Internal::SharedValuePool<QByteArray, QVector>;
-    using MimeTypePool = Internal::SharedValuePool<QString, QVector>;
+    using FlagPool = Internal::SharedValuePool<QByteArray, QList>;
+    using MimeTypePool = Internal::SharedValuePool<QString, QList>;
 
     FlagPool flagPool;
     MimeTypePool mimeTypePool;
@@ -72,12 +72,12 @@ public:
     /**
       Convert a ancestor chain from its protocol representation into an Item object.
     */
-    static void parseAncestors(const QVector<Protocol::Ancestor> &ancestors, Item *item);
+    static void parseAncestors(const QList<Protocol::Ancestor> &ancestors, Item *item);
 
     /**
       Convert a ancestor chain from its protocol representation into a Collection object.
     */
-    static void parseAncestors(const QVector<Protocol::Ancestor> &ancestors, Collection *collection);
+    static void parseAncestors(const QList<Protocol::Ancestor> &ancestors, Collection *collection);
 
     /**
       Convert a ancestor chain from its protocol representation into an Item object.
@@ -85,10 +85,8 @@ public:
       This method allows to pass a @p valuePool which acts as cache, so ancestor paths for the
       same @p parentCollection don't have to be parsed twice.
     */
-    static void parseAncestorsCached(const QVector<Protocol::Ancestor> &ancestors,
-                                     Item *item,
-                                     Collection::Id parentCollection,
-                                     ProtocolHelperValuePool *valuePool = nullptr);
+    static void
+    parseAncestorsCached(const QList<Protocol::Ancestor> &ancestors, Item *item, Collection::Id parentCollection, ProtocolHelperValuePool *valuePool = nullptr);
 
     /**
       Convert a ancestor chain from its protocol representation into an Collection object.
@@ -96,7 +94,7 @@ public:
       This method allows to pass a @p valuePool which acts as cache, so ancestor paths for the
       same @p parentCollection don't have to be parsed twice.
     */
-    static void parseAncestorsCached(const QVector<Protocol::Ancestor> &ancestors,
+    static void parseAncestorsCached(const QList<Protocol::Ancestor> &ancestors,
                                      Collection *collection,
                                      Collection::Id parentCollection,
                                      ProtocolHelperValuePool *valuePool = nullptr);
@@ -151,7 +149,7 @@ public:
             return a.id() < b.id();
         });
         if (objects.at(0).isValid()) {
-            QVector<typename T::Id> uids;
+            QList<typename T::Id> uids;
             uids.reserve(objects.size());
             for (const T &object : objects) {
                 uids << object.id();
@@ -186,7 +184,7 @@ public:
     template<typename T>
     static Scope entityToScope(const T &object)
     {
-        return entitySetToScope(QVector<T>() << object);
+        return entitySetToScope(QList<T>() << object);
     }
 
     /**

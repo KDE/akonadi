@@ -40,9 +40,9 @@ void FakeSearchManager::updateSearchAsync(const Collection &collection)
     Q_UNUSED(collection)
 }
 
-QVector<Akonadi::AbstractSearchPlugin *> FakeSearchManager::searchPlugins() const
+QList<Akonadi::AbstractSearchPlugin *> FakeSearchManager::searchPlugins() const
 {
-    return QVector<Akonadi::AbstractSearchPlugin *>();
+    return QList<Akonadi::AbstractSearchPlugin *>();
 }
 
 void FakeSearchManager::scheduleSearchUpdate()

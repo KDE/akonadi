@@ -34,7 +34,7 @@ public:
     bool parseStream() override;
 
 private:
-    void itemsRetrieved(const QVector<qint64> &ids);
+    void itemsRetrieved(const QList<qint64> &ids);
 
     Collection mDestination;
 };

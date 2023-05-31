@@ -302,7 +302,7 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
 
     msg->setParentDestCollection(collectionDest.id());
 
-    QVector<Protocol::FetchItemsResponse> ntfItems;
+    QList<Protocol::FetchItemsResponse> ntfItems;
     for (const PimItem &item : items) {
         Protocol::FetchItemsResponse i;
         i.setId(item.id());
@@ -319,7 +319,7 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
     }
     for (auto iter = vCollections.cbegin(), end = vCollections.constEnd(); iter != end; ++iter) {
         auto copy = Protocol::ItemChangeNotificationPtr::create(*msg);
-        QVector<Protocol::FetchItemsResponse> items;
+        QList<Protocol::FetchItemsResponse> items;
         items.reserve(iter->size());
         for (const auto &item : std::as_const(*iter)) {
             items.append(virtItems.value(item.id()));
@@ -513,7 +513,7 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
             // feed the Items to FetchHelper and retrieve them all with the setup from
             // the aggregated fetch scope. The worst case is that we re-fetch everything
             // we already have, but that's still better than the pre-ntf-payload situation
-            QVector<qint64> ids;
+            QList<qint64> ids;
             const auto items = msg->items();
             ids.reserve(items.size());
             bool allHaveRID = true;
@@ -539,7 +539,7 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
                 // The Item was just changed, which means the atime was
                 // updated, no need to do it again a couple milliseconds later.
                 helper.disableATimeUpdates();
-                QVector<Protocol::FetchItemsResponse> fetchedItems;
+                QList<Protocol::FetchItemsResponse> fetchedItems;
                 auto callback = [&fetchedItems](Protocol::FetchItemsResponse &&cmd) {
                     fetchedItems.push_back(std::move(cmd));
                 };
@@ -549,7 +549,7 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
                     qCWarning(AKONADISERVER_LOG) << "NotificationCollector railed to retrieve Items for notification!";
                 }
             } else {
-                QVector<Protocol::FetchItemsResponse> fetchedItems;
+                QList<Protocol::FetchItemsResponse> fetchedItems;
                 for (const auto &item : items) {
                     Protocol::FetchItemsResponse resp;
                     resp.setId(item.id());

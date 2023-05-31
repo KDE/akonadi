@@ -39,7 +39,7 @@ class RelationPrivate;
 class AKONADICORE_EXPORT Relation
 {
 public:
-    using List = QVector<Relation>;
+    using List = QList<Relation>;
 
     /**
      * The GENERIC type represents a generic relation between two items.

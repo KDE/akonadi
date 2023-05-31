@@ -27,7 +27,7 @@ ItemMoveHandler::ItemMoveHandler(AkonadiServer &akonadi)
 {
 }
 
-void ItemMoveHandler::itemsRetrieved(const QVector<qint64> &ids)
+void ItemMoveHandler::itemsRetrieved(const QList<qint64> &ids)
 {
     DataStore *store = connection()->storageBackend();
     Transaction transaction(store, QStringLiteral("MOVE"));
@@ -42,7 +42,7 @@ void ItemMoveHandler::itemsRetrieved(const QVector<qint64> &ids)
         return;
     }
 
-    const QVector<PimItem> items = qb.result();
+    const QList<PimItem> items = qb.result();
     if (items.isEmpty()) {
         return;
     }
@@ -83,7 +83,7 @@ void ItemMoveHandler::itemsRetrieved(const QVector<qint64> &ids)
         }
 
         toMove.insert(source.id(), item);
-        toMoveIds.add(QVector<qint64>{item.id()});
+        toMoveIds.add(QList<qint64>{item.id()});
     }
 
     if (!transaction.commit()) {
@@ -150,7 +150,7 @@ bool ItemMoveHandler::parseStream()
     ItemRetriever retriever(akonadi().itemRetrievalManager(), connection(), context);
     retriever.setScope(cmd.items());
     retriever.setRetrieveFullPayload(true);
-    QObject::connect(&retriever, &ItemRetriever::itemsRetrieved, [this](const QVector<qint64> &ids) {
+    QObject::connect(&retriever, &ItemRetriever::itemsRetrieved, [this](const QList<qint64> &ids) {
         itemsRetrieved(ids);
     });
     if (!retriever.exec()) {

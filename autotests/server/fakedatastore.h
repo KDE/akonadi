@@ -40,19 +40,19 @@ public:
     }
 
     bool setItemsFlags(const PimItem::List &items,
-                       const QVector<Flag> *currentFlags,
-                       const QVector<Flag> &flags,
+                       const QList<Flag> *currentFlags,
+                       const QList<Flag> &flags,
                        bool *flagsChanged = nullptr,
                        const Collection &col = Collection(),
                        bool silent = false) override;
     bool appendItemsFlags(const PimItem::List &items,
-                          const QVector<Flag> &flags,
+                          const QList<Flag> &flags,
                           bool *flagsChanged = nullptr,
                           bool checkIfExists = true,
                           const Collection &col = Collection(),
                           bool silent = false) override;
     bool removeItemsFlags(const PimItem::List &items,
-                          const QVector<Flag> &flags,
+                          const QList<Flag> &flags,
                           bool *flagsChanged = nullptr,
                           const Collection &col = Collection(),
                           bool silent = false) override;
@@ -80,8 +80,8 @@ public:
 
     void activeCachePolicy(Collection &col) override;
 
-    bool appendPimItem(QVector<Part> &parts,
-                       const QVector<Flag> &flags,
+    bool appendPimItem(QList<Part> &parts,
+                       const QList<Flag> &flags,
                        const MimeType &mimetype,
                        const Collection &collection,
                        const QDateTime &dateTime,

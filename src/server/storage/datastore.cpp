@@ -220,8 +220,8 @@ bool DataStore::hasDataStore()
 /* --- ItemFlags ----------------------------------------------------- */
 
 bool DataStore::setItemsFlags(const PimItem::List &items,
-                              const QVector<Flag> *currentFlags,
-                              const QVector<Flag> &newFlags,
+                              const QList<Flag> *currentFlags,
+                              const QList<Flag> &newFlags,
                               bool *flagsChanged,
                               const Collection &col_,
                               bool silent)
@@ -340,7 +340,7 @@ bool DataStore::doAppendItemsFlag(const PimItem::List &items, const Flag &flag, 
 }
 
 bool DataStore::appendItemsFlags(const PimItem::List &items,
-                                 const QVector<Flag> &flags,
+                                 const QList<Flag> &flags,
                                  bool *flagsChanged,
                                  bool checkIfExists,
                                  const Collection &col,
@@ -397,7 +397,7 @@ bool DataStore::appendItemsFlags(const PimItem::List &items,
     return true;
 }
 
-bool DataStore::removeItemsFlags(const PimItem::List &items, const QVector<Flag> &flags, bool *flagsChanged, const Collection &col_, bool silent)
+bool DataStore::removeItemsFlags(const PimItem::List &items, const QList<Flag> &flags, bool *flagsChanged, const Collection &col_, bool silent)
 {
     Collection col = col_;
     QSet<QString> removedFlags;
@@ -961,7 +961,7 @@ void DataStore::activeCachePolicy(Collection &col)
     col.setCachePolicyLocalParts(QStringLiteral("ALL"));
 }
 
-QVector<Collection> DataStore::virtualCollections(const PimItem &item)
+QList<Collection> DataStore::virtualCollections(const PimItem &item)
 {
     SelectQueryBuilder<Collection> qb;
     qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(), Collection::idFullColumnName(), CollectionPimItemRelation::leftFullColumnName());
@@ -969,7 +969,7 @@ QVector<Collection> DataStore::virtualCollections(const PimItem &item)
 
     if (!qb.exec()) {
         qCWarning(AKONADISERVER_LOG) << "Failed to query virtual collections which PimItem" << item.id() << "belongs into";
-        return QVector<Collection>();
+        return QList<Collection>();
     }
 
     return qb.result();
@@ -1022,8 +1022,8 @@ QMap<Entity::Id, QList<PimItem>> DataStore::virtualCollections(const PimItem::Li
 }
 
 /* --- PimItem ------------------------------------------------------- */
-bool DataStore::appendPimItem(QVector<Part> &parts,
-                              const QVector<Flag> &flags,
+bool DataStore::appendPimItem(QList<Part> &parts,
+                              const QList<Flag> &flags,
                               const MimeType &mimetype,
                               const Collection &collection,
                               const QDateTime &dateTime,
@@ -1057,7 +1057,7 @@ bool DataStore::appendPimItem(QVector<Part> &parts,
     // insert every part
     if (!parts.isEmpty()) {
         // don't use foreach, the caller depends on knowing the part has changed, see the Append handler
-        for (QVector<Part>::iterator it = parts.begin(); it != parts.end(); ++it) {
+        for (QList<Part>::iterator it = parts.begin(); it != parts.end(); ++it) {
             (*it).setPimItemId(pimItem.id());
             if ((*it).datasize() < (*it).data().size()) {
                 (*it).setDatasize((*it).data().size());
@@ -1203,7 +1203,7 @@ bool DataStore::removeCollectionAttribute(const Collection &col, const QByteArra
         throw HandlerException("Unable to query for collection attribute");
     }
 
-    const QVector<CollectionAttribute> result = qb.result();
+    const QList<CollectionAttribute> result = qb.result();
     for (CollectionAttribute attr : result) {
         if (!attr.remove()) {
             throw HandlerException("Unable to remove collection attribute");

@@ -78,7 +78,7 @@ public:
      * The default implementation returns an empty list, so any backend supporting
      * referential integrity should reimplement this.
      */
-    virtual QVector<ForeignKey> foreignKeyConstraints(const QString &tableName);
+    virtual QList<ForeignKey> foreignKeyConstraints(const QString &tableName);
 
 protected:
     /**

@@ -81,7 +81,7 @@ public:
     /**
      * Describes a list of collections.
      */
-    using List = QVector<Collection>;
+    using List = QList<Collection>;
 
     /**
      * Describes rights of a collection.

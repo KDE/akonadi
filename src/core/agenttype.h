@@ -50,7 +50,7 @@ public:
     /**
      * Describes a list of agent types.
      */
-    using List = QVector<AgentType>;
+    using List = QList<AgentType>;
 
     /**
      * Creates a new agent type.

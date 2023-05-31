@@ -38,7 +38,7 @@ void Node::appendNode(Node *child)
     mChildren.push_back(child);
 }
 
-const QVector<Node const *> &Node::children() const
+const QList<Node const *> &Node::children() const
 {
     return mChildren;
 }
@@ -121,9 +121,9 @@ ClassNode::ClassType ClassNode::elementNameToType(QStringView name)
     }
 }
 
-QVector<PropertyNode const *> ClassNode::properties() const
+QList<PropertyNode const *> ClassNode::properties() const
 {
-    QVector<const PropertyNode *> rv;
+    QList<const PropertyNode *> rv;
     for (const auto node : std::as_const(mChildren)) {
         if (node->type() == Node::Property) {
             rv << static_cast<PropertyNode const *>(node);
@@ -133,7 +133,7 @@ QVector<PropertyNode const *> ClassNode::properties() const
     return rv;
 }
 
-CtorNode::CtorNode(const QVector<Argument> &args, ClassNode *parent)
+CtorNode::CtorNode(const QList<Argument> &args, ClassNode *parent)
     : Node(Ctor, parent)
     , mArgs(args)
 {
@@ -143,7 +143,7 @@ CtorNode::~CtorNode()
 {
 }
 
-QVector<CtorNode::Argument> CtorNode::arguments() const
+QList<CtorNode::Argument> CtorNode::arguments() const
 {
     return mArgs;
 }

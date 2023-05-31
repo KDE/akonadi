@@ -18,7 +18,7 @@ class Akonadi::PersistentSearchAttributePrivate
 {
 public:
     QString queryString;
-    QVector<qint64> queryCollections;
+    QList<qint64> queryCollections;
     bool remote = false;
     bool recursive = false;
 };
@@ -40,12 +40,12 @@ void PersistentSearchAttribute::setQueryString(const QString &query)
     d->queryString = query;
 }
 
-QVector<qint64> PersistentSearchAttribute::queryCollections() const
+QList<qint64> PersistentSearchAttribute::queryCollections() const
 {
     return d->queryCollections;
 }
 
-void PersistentSearchAttribute::setQueryCollections(const QVector<Collection> &collections)
+void PersistentSearchAttribute::setQueryCollections(const QList<Collection> &collections)
 {
     d->queryCollections.clear();
     d->queryCollections.reserve(collections.count());
@@ -54,7 +54,7 @@ void PersistentSearchAttribute::setQueryCollections(const QVector<Collection> &c
     }
 }
 
-void PersistentSearchAttribute::setQueryCollections(const QVector<qint64> &collectionsIds)
+void PersistentSearchAttribute::setQueryCollections(const QList<qint64> &collectionsIds)
 {
     d->queryCollections = collectionsIds;
 }

@@ -13,8 +13,8 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QList>
 #include <QStandardPaths>
-#include <QVector>
 
 using namespace Akonadi;
 
@@ -124,7 +124,7 @@ QString StandardDirs::saveDir(const char *resource, const QString &relPath)
 QString StandardDirs::locateResourceFile(const char *resource, const QString &relPath)
 {
     const QString fullRelPath = buildFullRelPath(resource, relPath);
-    QVector<QStandardPaths::StandardLocation> userLocations;
+    QList<QStandardPaths::StandardLocation> userLocations;
     QStandardPaths::StandardLocation genericLocation;
     if (qstrncmp(resource, "config", 6) == 0) {
         userLocations = {QStandardPaths::AppConfigLocation, QStandardPaths::ConfigLocation};

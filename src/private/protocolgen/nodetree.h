@@ -6,8 +6,8 @@
 
 #pragma once
 
+#include <QList>
 #include <QMultiMap>
-#include <QVector>
 
 class Node
 {
@@ -34,11 +34,11 @@ public:
 
     void appendNode(Node *child);
 
-    const QVector<Node const *> &children() const;
+    const QList<Node const *> &children() const;
 
 protected:
     Node *mParent;
-    QVector<Node const *> mChildren;
+    QList<Node const *> mChildren;
     NodeType mType;
 };
 
@@ -70,7 +70,7 @@ public:
     ClassType classType() const;
     QString className() const;
     QString parentClassName() const;
-    QVector<PropertyNode const *> properties() const;
+    QList<PropertyNode const *> properties() const;
 
     static ClassType elementNameToType(QStringView name);
 
@@ -93,14 +93,14 @@ public:
         }
     };
 
-    CtorNode(const QVector<Argument> &args, ClassNode *parent);
+    CtorNode(const QList<Argument> &args, ClassNode *parent);
     ~CtorNode() override;
 
-    QVector<Argument> arguments() const;
+    QList<Argument> arguments() const;
     void setArgumentType(const QString &name, const QString &type);
 
 private:
-    QVector<Argument> mArgs;
+    QList<Argument> mArgs;
 };
 
 class EnumNode : public Node

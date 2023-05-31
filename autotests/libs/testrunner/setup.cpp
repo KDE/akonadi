@@ -437,7 +437,7 @@ void SetupTest::setEnvironmentVariable(const QByteArray &name, const QString &va
     qputenv(name.constData(), value.toLatin1());
 }
 
-QVector<SetupTest::EnvVar> SetupTest::environmentVariables() const
+QList<SetupTest::EnvVar> SetupTest::environmentVariables() const
 {
     return mEnvVars;
 }

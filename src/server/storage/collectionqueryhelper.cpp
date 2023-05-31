@@ -63,7 +63,7 @@ bool CollectionQueryHelper::hasAllowedName(const Collection &collection, const Q
     if (!qb.exec()) {
         return false;
     }
-    const QVector<Collection> result = qb.result();
+    const QList<Collection> result = qb.result();
     if (!result.isEmpty()) {
         return result.first().id() == collection.id();
     }
@@ -87,7 +87,7 @@ bool CollectionQueryHelper::canBeMovedTo(const Collection &collection, const Col
     return hasAllowedName(collection, collection.name(), _parent.id());
 }
 
-Collection CollectionQueryHelper::resolveHierarchicalRID(const QVector<Scope::HRID> &ridChain, Resource::Id resId)
+Collection CollectionQueryHelper::resolveHierarchicalRID(const QList<Scope::HRID> &ridChain, Resource::Id resId)
 {
     if (ridChain.size() < 2) {
         throw HandlerException("Empty or incomplete hierarchical RID chain");

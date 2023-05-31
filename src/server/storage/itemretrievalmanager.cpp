@@ -110,9 +110,9 @@ void ItemRetrievalManager::requestItemDelivery(ItemRetrievalRequest req)
     Q_EMIT requestAdded();
 }
 
-QVector<AbstractItemRetrievalJob *> ItemRetrievalManager::scheduleJobsForIdleResourcesLocked()
+QList<AbstractItemRetrievalJob *> ItemRetrievalManager::scheduleJobsForIdleResourcesLocked()
 {
-    QVector<AbstractItemRetrievalJob *> newJobs;
+    QList<AbstractItemRetrievalJob *> newJobs;
     for (auto it = mPendingRequests.begin(); it != mPendingRequests.end();) {
         if (it->second.empty()) {
             it = mPendingRequests.erase(it);

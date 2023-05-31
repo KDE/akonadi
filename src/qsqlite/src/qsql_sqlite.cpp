@@ -13,13 +13,13 @@
 
 #include <QCoreApplication>
 #include <QDateTime>
+#include <QList>
 #include <QSqlError>
 #include <QSqlField>
 #include <QSqlIndex>
 #include <QSqlQuery>
 #include <QStringList>
 #include <QVariant>
-#include <QVector>
 
 #include <QtSql/private/qsqldriver_p.h>
 
@@ -136,7 +136,7 @@ public:
     bool skippedStatus; // the status of the fetchNext() that's skipped
     bool skipRow; // skip the next fetchNext()?
     QSqlRecord rInf;
-    QVector<QVariant> firstRow;
+    QList<QVariant> firstRow;
 
     Q_DECLARE_PUBLIC(QSQLiteResult)
 };
@@ -398,7 +398,7 @@ bool QSQLiteResult::prepare(const QString &query)
 bool QSQLiteResult::exec()
 {
     Q_D(QSQLiteResult);
-    const QVector<QVariant> values = boundValues();
+    const QList<QVariant> values = boundValues();
 
     d->skippedStatus = false;
     d->skipRow = false;

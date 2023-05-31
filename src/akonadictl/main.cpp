@@ -151,7 +151,7 @@ static void listInstances()
         QString name;
         bool running;
     };
-    QVector<Instance> instances{{QStringLiteral("(default)"), instanceRunning()}};
+    QList<Instance> instances{{QStringLiteral("(default)"), instanceRunning()}};
 #ifdef Q_OS_WIN
     const QDir instanceDir(QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + QStringLiteral("/akonadi/config/instance"));
 #else

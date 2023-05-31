@@ -15,7 +15,7 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-Q_DECLARE_METATYPE(QVector<QString>)
+Q_DECLARE_METATYPE(QList<QString>)
 
 class TestableNotificationSubscriber : public NotificationSubscriber
 {
@@ -105,16 +105,16 @@ private Q_SLOTS:
         qRegisterMetaType<Protocol::ChangeNotificationList>();
 
         QTest::addColumn<bool>("allMonitored");
-        QTest::addColumn<QVector<Entity::Id>>("monitoredCollections");
-        QTest::addColumn<QVector<Entity::Id>>("monitoredItems");
-        QTest::addColumn<QVector<QByteArray>>("monitoredResources");
-        QTest::addColumn<QVector<QString>>("monitoredMimeTypes");
-        QTest::addColumn<QVector<QByteArray>>("ignoredSessions");
+        QTest::addColumn<QList<Entity::Id>>("monitoredCollections");
+        QTest::addColumn<QList<Entity::Id>>("monitoredItems");
+        QTest::addColumn<QList<QByteArray>>("monitoredResources");
+        QTest::addColumn<QList<QString>>("monitoredMimeTypes");
+        QTest::addColumn<QList<QByteArray>>("ignoredSessions");
         QTest::addColumn<Protocol::ChangeNotificationPtr>("notification");
         QTest::addColumn<bool>("accepted");
 
-#define EmptyList(T) (QVector<T>())
-#define List(T, x) (QVector<T>() << (x))
+#define EmptyList(T) (QList<T>())
+#define List(T, x) (QList<T>() << (x))
 
         auto itemMsg = Protocol::ItemChangeNotificationPtr::create();
         itemMsg->setOperation(Protocol::ItemChangeNotification::Add);
@@ -250,11 +250,11 @@ private Q_SLOTS:
     void testSourceFilter()
     {
         QFETCH(bool, allMonitored);
-        QFETCH(QVector<Entity::Id>, monitoredCollections);
-        QFETCH(QVector<Entity::Id>, monitoredItems);
-        QFETCH(QVector<QByteArray>, monitoredResources);
-        QFETCH(QVector<QString>, monitoredMimeTypes);
-        QFETCH(QVector<QByteArray>, ignoredSessions);
+        QFETCH(QList<Entity::Id>, monitoredCollections);
+        QFETCH(QList<Entity::Id>, monitoredItems);
+        QFETCH(QList<QByteArray>, monitoredResources);
+        QFETCH(QList<QString>, monitoredMimeTypes);
+        QFETCH(QList<QByteArray>, ignoredSessions);
         QFETCH(Protocol::ChangeNotificationPtr, notification);
         QFETCH(bool, accepted);
 

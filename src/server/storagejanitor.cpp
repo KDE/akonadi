@@ -294,7 +294,7 @@ void StorageJanitor::findOrphanedItems()
             return;
         }
         qb.setColumnValue(PimItem::collectionIdColumn(), col);
-        QVector<ImapSet::Id> imapIds;
+        QList<ImapSet::Id> imapIds;
         imapIds.reserve(orphans.count());
         for (const PimItem &item : std::as_const(orphans)) {
             imapIds.append(item.id());
@@ -336,7 +336,7 @@ void StorageJanitor::findOrphanedPimItemFlags()
         inform("Failed to query orphaned item flags, skipping test");
         return;
     }
-    QVector<ImapSet::Id> imapIds;
+    QList<ImapSet::Id> imapIds;
     int count = 0;
     while (sqb.query().next()) {
         ++count;
@@ -521,7 +521,7 @@ void StorageJanitor::findRIDDuplicates()
         duplicates.exec();
 
         Akonadi::Server::Collection col = Akonadi::Server::Collection::retrieveById(colId);
-        const QVector<Akonadi::Server::MimeType> contentMimeTypes = col.mimeTypes();
+        const QList<Akonadi::Server::MimeType> contentMimeTypes = col.mimeTypes();
         QVariantList contentMimeTypesVariantList;
         contentMimeTypesVariantList.reserve(contentMimeTypes.count());
         for (const Akonadi::Server::MimeType &mimeType : contentMimeTypes) {

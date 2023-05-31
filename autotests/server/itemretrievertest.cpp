@@ -34,7 +34,7 @@ class FakeItemRetrievalJob : public AbstractItemRetrievalJob
 {
     Q_OBJECT
 public:
-    FakeItemRetrievalJob(ItemRetrievalRequest req, DbInitializer &dbInitializer, const QVector<JobResult> &results, QObject *parent)
+    FakeItemRetrievalJob(ItemRetrievalRequest req, DbInitializer &dbInitializer, const QList<JobResult> &results, QObject *parent)
         : AbstractItemRetrievalJob(std::move(req), parent)
         , mDbInitializer(dbInitializer)
         , mResults(results)
@@ -81,7 +81,7 @@ public:
 
 private:
     DbInitializer &mDbInitializer;
-    QVector<JobResult> mResults;
+    QList<JobResult> mResults;
 };
 
 class FakeItemRetrievalJobFactory : public AbstractItemRetrievalJobFactory
@@ -105,7 +105,7 @@ public:
 
     AbstractItemRetrievalJob *retrievalJob(ItemRetrievalRequest request, QObject *parent) override
     {
-        QVector<JobResult> results;
+        QList<JobResult> results;
         for (auto id : std::as_const(request.ids)) {
             auto it = mJobResults.constFind(id);
             while (it != mJobResults.constEnd() && it.key() == id) {
@@ -131,7 +131,7 @@ private:
     QMultiHash<qint64, JobResult> mJobResults;
 };
 
-using RequestedParts = QVector<QByteArray /* FQ name */>;
+using RequestedParts = QList<QByteArray /* FQ name */>;
 
 class ClientThread : public QThread
 {
@@ -158,7 +158,7 @@ public:
         m_results.success = success;
         m_results.signalsCount = spy.count();
         if (m_results.signalsCount > 0) {
-            m_results.emittedItems = spy.at(0).at(0).value<QVector<qint64>>();
+            m_results.emittedItems = spy.at(0).at(0).value<QList<qint64>>();
         }
 
         DataStore::self()->close();
@@ -167,7 +167,7 @@ public:
     struct Results {
         bool success;
         int signalsCount;
-        QVector<qint64> emittedItems;
+        QList<qint64> emittedItems;
     };
     Results results() const
     {
@@ -188,8 +188,8 @@ class ItemRetrieverTest : public QObject
 {
     Q_OBJECT
 
-    using ExistingParts = QVector<QPair<QByteArray /* name */, QByteArray /* data */>>;
-    using AvailableParts = QVector<QPair<QByteArray /* name */, QByteArray /* data */>>;
+    using ExistingParts = QList<QPair<QByteArray /* name */, QByteArray /* data */>>;
+    using AvailableParts = QList<QPair<QByteArray /* name */, QByteArray /* data */>>;
 
     FakeAkonadiServer mAkonadi;
 
@@ -289,14 +289,14 @@ private Q_SLOTS:
                 QCOMPARE(results.signalsCount, expectedSignals);
                 // ... with that one item
                 if (expectedSignals > 0) {
-                    QCOMPARE(results.emittedItems, QVector<qint64>{item.id()});
+                    QCOMPARE(results.emittedItems, QList<qint64>{item.id()});
                 }
 
                 // Check that the factory had exactly one retrieval job
                 QCOMPARE(factory->jobsCount(), expectedRetrievalJobs);
 
             } else {
-                QVector<ClientThread *> threads;
+                QList<ClientThread *> threads;
                 for (int i = 0; i < 20; ++i) {
                     threads.append(new ClientThread(item.id(), requestedParts, *mgr));
                 }
@@ -311,7 +311,7 @@ private Q_SLOTS:
                     QVERIFY(results.success);
                     QCOMPARE(results.signalsCount, expectedSignals);
                     if (expectedSignals > 0) {
-                        QCOMPARE(results.emittedItems, QVector<qint64>{item.id()});
+                        QCOMPARE(results.emittedItems, QList<qint64>{item.id()});
                     }
                 }
                 qDeleteAll(threads);
