@@ -11,10 +11,22 @@
    </rect>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <widget class="Akonadi::TagView" name="tagView">
      <property name="readOnly">
-       <bool>true</bool>
+      <bool>true</bool>
      </property>
      <property name="placeholderText">
       <string>Click to add tags</string>
