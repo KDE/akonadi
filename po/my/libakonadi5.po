@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-03 00:49+0000\n"
+"POT-Creation-Date: 2023-06-02 00:48+0000\n"
 "PO-Revision-Date: 2021-09-27 23:52+0630\n"
 "Last-Translator: ဇေယျာလွင် <lw1nzayar@yandex.com>\n"
 "Language-Team: Burmese <kde-i18n-doc@kde.org>\n"
@@ -2342,13 +2342,13 @@ msgid "Clear"
 msgstr "ရှင်းမည်"
 
 #. i18n: ectx: property (placeholderText), widget (Akonadi::TagView, tagView)
-#: widgets/tagwidget.ui:20
+#: widgets/tagwidget.ui:32
 #, kde-format
 msgid "Click to add tags"
 msgstr "တပ်ဂ်များထည့်ရန် နှိပ်ပါ"
 
 #. i18n: ectx: property (text), widget (QToolButton, editButton)
-#: widgets/tagwidget.ui:27
+#: widgets/tagwidget.ui:39
 #, kde-format
 msgid "..."
 msgstr "..."
