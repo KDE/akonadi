@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.3\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-03 00:49+0000\n"
+"POT-Creation-Date: 2023-06-02 00:48+0000\n"
 "PO-Revision-Date: 2021-08-25 09:45+0200\n"
 "Last-Translator: Kristóf Kiszel <kiszel.kristof@gmail.com>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -2475,13 +2475,13 @@ msgid "Clear"
 msgstr "Törlés"
 
 #. i18n: ectx: property (placeholderText), widget (Akonadi::TagView, tagView)
-#: widgets/tagwidget.ui:20
+#: widgets/tagwidget.ui:32
 #, kde-format
 msgid "Click to add tags"
 msgstr "Kattintson címkék hozzáadásához"
 
 #. i18n: ectx: property (text), widget (QToolButton, editButton)
-#: widgets/tagwidget.ui:27
+#: widgets/tagwidget.ui:39
 #, kde-format
 msgid "..."
 msgstr "…"

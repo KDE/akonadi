@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-03 00:49+0000\n"
+"POT-Creation-Date: 2023-06-02 00:48+0000\n"
 "PO-Revision-Date: 2023-01-14 22:41+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -2477,13 +2477,13 @@ msgid "Clear"
 msgstr "Netta"
 
 #. i18n: ectx: property (placeholderText), widget (Akonadi::TagView, tagView)
-#: widgets/tagwidget.ui:20
+#: widgets/tagwidget.ui:32
 #, kde-format
 msgid "Click to add tags"
 msgstr "Pulsa per adder etiquettas"
 
 #. i18n: ectx: property (text), widget (QToolButton, editButton)
-#: widgets/tagwidget.ui:27
+#: widgets/tagwidget.ui:39
 #, kde-format
 msgid "..."
 msgstr "..."

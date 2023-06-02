@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-03 00:49+0000\n"
+"POT-Creation-Date: 2023-06-02 00:48+0000\n"
 "PO-Revision-Date: 2023-05-29 21:25+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -2459,13 +2459,13 @@ msgid "Clear"
 msgstr "Klara"
 
 #. i18n: ectx: property (placeholderText), widget (Akonadi::TagView, tagView)
-#: widgets/tagwidget.ui:20
+#: widgets/tagwidget.ui:32
 #, kde-format
 msgid "Click to add tags"
 msgstr "Klaku por aldoni etikedojn"
 
 #. i18n: ectx: property (text), widget (QToolButton, editButton)
-#: widgets/tagwidget.ui:27
+#: widgets/tagwidget.ui:39
 #, kde-format
 msgid "..."
 msgstr "..."
