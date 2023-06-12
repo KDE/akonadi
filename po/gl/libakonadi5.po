@@ -1,7 +1,6 @@
 # translation of libakonadi.po to galician
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-#
 # mvillarino <mvillarino@users.sourceforge.net>, 2008, 2009.
 # marce villarino <mvillarino@users.sourceforge.net>, 2009.
 # Xosé <xosecalvo@gmail.com>, 2009, 2010.
@@ -9,13 +8,14 @@
 # Xosé <xosecalvo@edu.xunta.es>, 2009, 2011, 2013.
 # Marce Villarino <mvillarino@kde-espana.es>, 2012, 2013, 2014.
 # Adrian Chaves Fernandez <adriyetichaves@gmail.com>, 2013, 2015, 2016, 2017.
-# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2017, 2018, 2019.
+# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2017, 2018, 2019, 2023.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-23 04:11+0000\n"
-"PO-Revision-Date: 2019-11-01 17:00+0100\n"
+"PO-Revision-Date: 2023-06-11 21:56+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 19.08.2\n"
+"X-Generator: Lokalize 23.04.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -389,15 +389,13 @@ msgid "Name"
 msgstr "Nome"
 
 #: core/models/entitytreemodel.cpp:193
-#, fuzzy, kde-format
-#| msgid "Loading..."
+#, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
 msgstr "Cargando…"
 
 #: core/models/entitytreemodel.cpp:485
-#, fuzzy, kde-format
-#| msgid "Error"
+#, kde-format
 msgctxt "@window:title"
 msgid "Error"
 msgstr "Erro"
@@ -418,43 +416,37 @@ msgid "Name"
 msgstr "Nome"
 
 #: core/models/entitytreemodel_p.cpp:1331
-#, fuzzy, kde-format
-#| msgid "Could not copy item:"
+#, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
-msgstr "Non se puido copiar o elemento:"
+msgstr "Non se puido copiar o elemento: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1333
-#, fuzzy, kde-format
-#| msgid "Could not copy collection:"
+#, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
-msgstr "Non se puido copiar a colección:"
+msgstr "Non se puido copiar a colección: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1335
-#, fuzzy, kde-format
-#| msgid "Could not move item:"
+#, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
-msgstr "Non se puido mover o elemento:"
+msgstr "Non se puido mover o elemento: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1337
-#, fuzzy, kde-format
-#| msgid "Could not move collection:"
+#, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
-msgstr "Non se puido mover a colección:"
+msgstr "Non se puido mover a colección: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1339
-#, fuzzy, kde-format
-#| msgid "Could not link entity:"
+#, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
-msgstr "Non se puido ligar a entidade:"
+msgstr "Non se puido ligar a entidade: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
-#, fuzzy, kde-format
-#| msgid "Error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Error"
 msgstr "Erro"
@@ -628,8 +620,7 @@ msgid "Could not create agent instance: %1"
 msgstr "Non se puido crear a instancia do axente: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "Fallou a creación da instancia do axente"
@@ -646,9 +637,7 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "Seguro que quere eliminar todas as instancias do axente escollidas?"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "%1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Configuración de %1"
@@ -679,11 +668,10 @@ msgid "Failed to register %1 configuration dialog."
 msgstr "Non se puido rexistrar o diálogo de configuración de %1."
 
 #: widgets/agenttypedialog.cpp:66
-#, fuzzy, kde-format
-#| msgid "&Configure Agent Instance"
+#, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
-msgstr "&Configurar a instancia do axente"
+msgstr "Configurar a conta"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
@@ -711,11 +699,9 @@ msgstr "Sincronizar ao escoller este cartafol"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: widgets/cachepolicypage.ui:40
-#, fuzzy, kde-format
-#| msgid "Synchronize Folder"
-#| msgid_plural "Synchronize %1 Folders"
+#, kde-format
 msgid "Synchronize after:"
-msgstr "Sincronizar o cartafol"
+msgstr "Sincronizar despois de:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, checkInterval)
 #: widgets/cachepolicypage.ui:47
@@ -733,10 +719,9 @@ msgstr "minutos"
 
 #. i18n: ectx: property (text), widget (QLabel, localPartsLabel)
 #: widgets/cachepolicypage.ui:66
-#, fuzzy, kde-format
-#| msgid "Locally Cached Parts"
+#, kde-format
 msgid "Locally cached parts:"
-msgstr "Partes na caché local"
+msgstr "Partes na caché local:"
 
 #. i18n: ectx: property (title), widget (KEditListWidget, localParts)
 #: widgets/cachepolicypage.ui:87
@@ -746,10 +731,9 @@ msgstr "Partes na caché local"
 
 #. i18n: ectx: property (text), widget (QLabel, retrievalOptionsLabel)
 #: widgets/cachepolicypage.ui:94
-#, fuzzy, kde-format
-#| msgid "Retrieval Options"
+#, kde-format
 msgid "Retrieval Options:"
-msgstr "Opcións de obtención"
+msgstr "Opcións de obtención:"
 
 #. i18n: ectx: property (text), widget (QRadioButton, retrieveFullMessages)
 #: widgets/cachepolicypage.ui:101
@@ -783,11 +767,14 @@ msgid ""
 "likely never uploaded to the destination server, so clearing this collection "
 "means that those <b>data will be lost</b>. Are you sure you want to proceed?"
 msgstr ""
+"A colección «%1» contén %2 elementos sen identificador remoto. Probablemente "
+"non se subisen nunca ao servidor de destino, así que borrar a colección "
+"resultaría nunha <b>perda de datos</b>. Seguro que quere continuar?"
 
 #: widgets/clearcachejob.cpp:83
 #, kde-format
 msgid "Collection cache cleared. You should restart Akonadi now."
-msgstr ""
+msgstr "Borrouse a caché de coleccións. Reinicie Akonadi."
 
 #: widgets/collectiondialog.cpp:56
 #, kde-format
@@ -828,11 +815,10 @@ msgid "Could not create folder: %1"
 msgstr "Non se puido crear o cartafol: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
-msgstr "Fallou a creación do cartafol"
+msgstr "A creación do cartafol fallou"
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
 #, kde-format
@@ -944,10 +930,9 @@ msgstr "descoñecido"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: widgets/collectionmaintenancepage.ui:38
-#, fuzzy, kde-format
-#| msgid "Files"
+#, kde-format
 msgid "File size:"
-msgstr "Ficheiros"
+msgstr "Tamaño do ficheiro:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: widgets/collectionmaintenancepage.ui:45
@@ -963,10 +948,9 @@ msgstr "Elementos sen ler:"
 
 #. i18n: ectx: property (text), widget (QLabel, indexingLabel)
 #: widgets/collectionmaintenancepage.ui:73
-#, fuzzy, kde-format
-#| msgid "Indexing"
+#, kde-format
 msgid "Indexing:"
-msgstr "Indexación"
+msgstr "Indexando:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, enableIndexingChkBox)
 #: widgets/collectionmaintenancepage.ui:80
@@ -976,8 +960,7 @@ msgstr "Activar a indexación de texto completo."
 
 #. i18n: ectx: property (text), widget (QLabel, indexedCountLbl)
 #: widgets/collectionmaintenancepage.ui:87
-#, fuzzy, kde-format
-#| msgid "Retrieving indexed items count ..."
+#, kde-format
 msgid "Retrieving indexed items count..."
 msgstr "Obtendo o número de elementos indexados…"
 
@@ -998,8 +981,7 @@ msgid "Open collection dialog"
 msgstr "Diálogo para abrir coleccións"
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgid "Select a collection"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "Escolla unha colección"
@@ -1201,7 +1183,7 @@ msgstr "Contas de recepción (engada polo menos unha):"
 #: widgets/manageaccountwidget.ui:26
 #, kde-format
 msgid "Filter…"
-msgstr ""
+msgstr "Filtrar…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
 #: widgets/manageaccountwidget.ui:40
@@ -1234,23 +1216,18 @@ msgstr "Cartafol recente"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, RenameFavoriteDialog)
 #: widgets/renamefavoritedialog.ui:26
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Rename Favorite"
+#, kde-format
 msgid "Rename Favorite"
 msgstr "Renomear o favorito"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/renamefavoritedialog.ui:35
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox name of the folder"
-#| msgid "Name:"
+#, kde-format
 msgid "Name:"
 msgstr "Nome:"
 
 #: widgets/selftestdialog.cpp:60
-#, fuzzy, kde-format
-#| msgid "Akonadi Server Self-Test"
+#, kde-format
 msgctxt "@title:window"
 msgid "Akonadi Server Self-Test"
 msgstr "Probas internas do servidor Akonadi"
@@ -1271,7 +1248,7 @@ msgid ""
 "The QtSQL driver '%1' is required by your current Akonadi server "
 "configuration and was found on your system."
 msgstr ""
-"O configuración actual do servidor Akonadi require o controlador de QtSQL "
+"A configuración actual do servidor Akonadi require o controlador de QtSQL "
 "«%1», que se atopou no sistema."
 
 #: widgets/selftestdialog.cpp:191
@@ -1915,20 +1892,14 @@ msgid "New"
 msgstr "Novo"
 
 #: widgets/standardactionmanager.cpp:80
-#, fuzzy
-#| msgid "&Delete Folder"
-#| msgid_plural "&Delete %1 Folders"
 msgid "&Delete Folder"
-msgstr "Elimina&r o cartafol"
+msgstr "&Eliminar o cartafol"
 
 #: widgets/standardactionmanager.cpp:80
 msgid "Delete"
 msgstr "Eliminar"
 
 #: widgets/standardactionmanager.cpp:82
-#, fuzzy
-#| msgid "&Synchronize Folder"
-#| msgid_plural "&Synchronize %1 Folders"
 msgid "&Synchronize Folder"
 msgstr "&Sincronizar o cartafol"
 
@@ -2012,9 +1983,6 @@ msgid "Move Folder To..."
 msgstr "Mover o cartafol para…"
 
 #: widgets/standardactionmanager.cpp:143
-#, fuzzy
-#| msgid "&Cut Item"
-#| msgid_plural "&Cut %1 Items"
 msgid "&Cut Item"
 msgstr "Re&cortar o elemento"
 
@@ -2023,9 +1991,6 @@ msgid "Cut"
 msgstr "Recortar"
 
 #: widgets/standardactionmanager.cpp:144
-#, fuzzy
-#| msgid "&Cut Folder"
-#| msgid_plural "&Cut %1 Folders"
 msgid "&Cut Folder"
 msgstr "Re&cortar o cartafol"
 
@@ -2034,9 +1999,6 @@ msgid "Create Resource"
 msgstr "Crear un recurso"
 
 #: widgets/standardactionmanager.cpp:146
-#, fuzzy
-#| msgid "Delete Resource"
-#| msgid_plural "Delete %1 Resources"
 msgid "Delete Resource"
 msgstr "Eliminar o recurso"
 
@@ -2045,9 +2007,6 @@ msgid "&Resource Properties"
 msgstr "P&ropiedades do recurso"
 
 #: widgets/standardactionmanager.cpp:156
-#, fuzzy
-#| msgid "Synchronize Resource"
-#| msgid_plural "Synchronize %1 Resources"
 msgid "Synchronize Resource"
 msgstr "Sincronizar o recurso"
 
@@ -2132,9 +2091,7 @@ msgstr[0] "&Copiar o elemento"
 msgstr[1] "&Copiar os %1 elementos"
 
 #: widgets/standardactionmanager.cpp:330
-#, fuzzy, kde-format
-#| msgid "&Cut Item"
-#| msgid_plural "&Cut %1 Items"
+#, kde-format
 msgctxt "@action"
 msgid "&Cut Item"
 msgid_plural "&Cut %1 Items"
@@ -2142,9 +2099,7 @@ msgstr[0] "Re&cortar o elemento"
 msgstr[1] "Re&cortar os %1 elementos"
 
 #: widgets/standardactionmanager.cpp:331
-#, fuzzy, kde-format
-#| msgid "&Cut Folder"
-#| msgid_plural "&Cut %1 Folders"
+#, kde-format
 msgctxt "@action"
 msgid "&Cut Folder"
 msgid_plural "&Cut %1 Folders"
@@ -2155,23 +2110,19 @@ msgstr[1] "Re&cortar os %1 cartafoles"
 #, kde-format
 msgid "&Delete Item"
 msgid_plural "&Delete %1 Items"
-msgstr[0] "Elimina&r este elemento"
-msgstr[1] "Elimina&r estes %1 elementos"
+msgstr[0] "Elimina&r o elemento"
+msgstr[1] "Elimina&r os %1 elementos"
 
 #: widgets/standardactionmanager.cpp:333
-#, fuzzy, kde-format
-#| msgid "&Delete Folder"
-#| msgid_plural "&Delete %1 Folders"
+#, kde-format
 msgctxt "@action"
 msgid "&Delete Folder"
 msgid_plural "&Delete %1 Folders"
-msgstr[0] "Elimina&r o cartafol"
+msgstr[0] "&Eliminar o cartafol"
 msgstr[1] "Elimina&r %1 cartafoles"
 
 #: widgets/standardactionmanager.cpp:334
-#, fuzzy, kde-format
-#| msgid "&Synchronize Folder"
-#| msgid_plural "&Synchronize %1 Folders"
+#, kde-format
 msgctxt "@action"
 msgid "&Synchronize Folder"
 msgid_plural "&Synchronize %1 Folders"
@@ -2224,8 +2175,8 @@ msgstr[1] "Recortar os %1 cartafoles"
 #, kde-format
 msgid "Delete Item"
 msgid_plural "Delete %1 Items"
-msgstr[0] "Eliminar este elemento"
-msgstr[1] "Eliminar estes %1 elementos"
+msgstr[0] "Eliminar o elemento"
+msgstr[1] "Eliminar os %1 elementos"
 
 #: widgets/standardactionmanager.cpp:343
 #, kde-format
@@ -2242,9 +2193,7 @@ msgstr[0] "Sincronizar o cartafol"
 msgstr[1] "Sincronizar os %1 cartafoles"
 
 #: widgets/standardactionmanager.cpp:345
-#, fuzzy, kde-format
-#| msgid "Delete Resource"
-#| msgid_plural "Delete %1 Resources"
+#, kde-format
 msgctxt "@action"
 msgid "Delete Resource"
 msgid_plural "Delete %1 Resources"
@@ -2252,9 +2201,7 @@ msgstr[0] "Eliminar o recurso"
 msgstr[1] "Eliminar os %1 recursos"
 
 #: widgets/standardactionmanager.cpp:346
-#, fuzzy, kde-format
-#| msgid "Synchronize Resource"
-#| msgid_plural "Synchronize %1 Resources"
+#, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
 msgid_plural "Synchronize %1 Resources"
@@ -2278,14 +2225,12 @@ msgstr[1] ""
 "Seguro que quere eliminar os %1 cartafoles e todos os seus subcartafoles?"
 
 #: widgets/standardactionmanager.cpp:359
-#, fuzzy, kde-format
-#| msgid "Delete Folder"
-#| msgid_plural "Delete %1 Folders"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "Eliminar o cartafol"
-msgstr[1] "Eliminar os %1 cartafoles"
+msgstr[0] "Eliminar o cartafol?"
+msgstr[1] "Eliminar os cartafoles?"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2293,11 +2238,10 @@ msgid "Could not delete folder: %1"
 msgstr "Non se puido eliminar o cartafol: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
-msgstr "Fallou a eliminación do cartafol"
+msgstr "A eliminación do cartafol fallou"
 
 #: widgets/standardactionmanager.cpp:363
 #, kde-format
@@ -2313,14 +2257,12 @@ msgstr[0] "Seguro que quere eliminar o elemento escollido?"
 msgstr[1] "Seguro que quere eliminar %1 elementos?"
 
 #: widgets/standardactionmanager.cpp:368
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "Eliminar este elemento"
-msgstr[1] "Eliminar estes %1 elementos"
+msgstr[0] "Eliminar o elemento?"
+msgstr[1] "Eliminar os elementos?"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2328,11 +2270,10 @@ msgid "Could not delete item: %1"
 msgstr "Non se puido eliminar o elemento: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, fuzzy, kde-format
-#| msgid "Item deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
-msgstr "Fallou a eliminación do elemento"
+msgstr "A eliminación do elemento fallou"
 
 #: widgets/standardactionmanager.cpp:372
 #, kde-format
@@ -2358,11 +2299,10 @@ msgid "Could not create resource: %1"
 msgstr "Non se puido crear o recurso: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, fuzzy, kde-format
-#| msgid "Resource creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
-msgstr "Fallou a creación do recurso"
+msgstr "A creación do recurso fallou"
 
 #: widgets/standardactionmanager.cpp:381
 #, kde-format
@@ -2385,11 +2325,10 @@ msgid "Could not paste data: %1"
 msgstr "Non se puideron pegar os datos: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, fuzzy, kde-format
-#| msgid "Paste failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
-msgstr "Pegar fallou."
+msgstr "Pegar fallou"
 
 #: widgets/standardactionmanager.cpp:739
 #, kde-format
@@ -2397,8 +2336,7 @@ msgid "We can not add \"/\" in folder name."
 msgstr "Non pode engadirse «/» ao nome do cartafol."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, fuzzy, kde-format
-#| msgid "Create new folder error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Erro ao crear o novo cartafol"
@@ -2439,17 +2377,15 @@ msgid "Copy to This Folder"
 msgstr "Copiar neste cartafol"
 
 #: widgets/subscriptiondialog.cpp:97
-#, fuzzy, kde-format
-#| msgid "Failed to create relation."
+#, kde-format
 msgid "Failed to update subscription: %1"
-msgstr "Non se puido crear a relación."
+msgstr "Non se puido actualizar a subscrición: %1"
 
 #: widgets/subscriptiondialog.cpp:97
-#, fuzzy, kde-format
-#| msgid "Local Subscriptions"
+#, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
-msgstr "Subscricións locais…"
+msgstr "Erro coa subscrición"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, SubscriptionDialog)
 #: widgets/subscriptiondialog.ui:14
@@ -2465,24 +2401,21 @@ msgstr "Buscar:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, subscribedOnlyCheckBox)
 #: widgets/subscriptiondialog.ui:36
-#, fuzzy, kde-format
-#| msgid "Subscribed only"
+#, kde-format
 msgid "&Subscribed only"
-msgstr "Só os subscritos"
+msgstr "&Só xente subscrita"
 
 #. i18n: ectx: property (text), widget (QPushButton, subscribeButton)
 #: widgets/subscriptiondialog.ui:62
-#, fuzzy, kde-format
-#| msgid "Subscribe"
+#, kde-format
 msgid "Su&bscribe"
 msgstr "Subscribirse"
 
 #. i18n: ectx: property (text), widget (QPushButton, unsubscribeButton)
 #: widgets/subscriptiondialog.ui:69
-#, fuzzy, kde-format
-#| msgid "Unsubscribe"
+#, kde-format
 msgid "&Unsubscribe"
-msgstr "Cancelar a subscrición"
+msgstr "Anular a s&ubscrición"
 
 #: widgets/tageditwidget.cpp:116
 #, kde-format
@@ -2490,11 +2423,10 @@ msgid "Failed to create a new tag"
 msgstr "Non se puido crear unha etiqueta nova"
 
 #: widgets/tageditwidget.cpp:116
-#, fuzzy, kde-format
-#| msgid "An error occurred while creating a new tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
-msgstr "Produciuse un erro ao crear unha etiqueta nova"
+msgstr "Produciuse un erro ao crear unha nova etiqueta"
 
 #: widgets/tageditwidget.cpp:164
 #, kde-kuit-format
@@ -2503,12 +2435,10 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Seguro que quere retirar a etiqueta <resource>%1</resource>?"
 
 #: widgets/tageditwidget.cpp:165
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Delete tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
-msgstr "Eliminar esta etiqueta"
+msgstr "Eliminar a etiqueta"
 
 #: widgets/tageditwidget.cpp:189
 #, kde-format
@@ -2518,41 +2448,33 @@ msgstr "Eliminar esta etiqueta"
 
 #. i18n: ectx: property (text), widget (QLabel, selectLabel)
 #: widgets/tageditwidget.ui:29
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox"
-#| msgid "Configure which tags should be applied."
+#, kde-format
 msgid "Select tags that should be applied."
-msgstr "Configurar as etiquetas que se desexa aplicar."
+msgstr "Seleccione as etiquetas para aplicar."
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:54
-#, fuzzy, kde-format
-#| msgctxt "@label"
-#| msgid "Create new tag"
+#, kde-format
 msgid "Create new tag"
 msgstr "Crear unha etiqueta nova"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: widgets/tagmanagementdialog.ui:14
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Manage Tags"
+#, kde-format
 msgid "Manage Tags"
 msgstr "Xestionar as etiquetas"
 
 #: widgets/tagselectioncombobox.cpp:126
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Delete tag"
+#, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
-msgstr "Eliminar esta etiqueta"
+msgstr "Seleccione etiquetas…"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
 #: widgets/tagselectiondialog.ui:14
 #, kde-format
 msgid "Select Tags"
-msgstr ""
+msgstr "Seleccionar as etiquetas"
 
 #: widgets/tagwidget.cpp:45
 #, kde-format
