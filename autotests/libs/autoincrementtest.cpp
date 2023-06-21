@@ -112,3 +112,5 @@ void AutoIncrementTest::testCollectionAutoIncrement()
 
     QVERIFY(newCollection.id() > lastId);
 }
+
+#include "moc_autoincrementtest.cpp"

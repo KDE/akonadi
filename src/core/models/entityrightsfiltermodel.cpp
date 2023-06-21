@@ -111,3 +111,5 @@ QModelIndexList EntityRightsFilterModel::match(const QModelIndex &start, int rol
 
     return list;
 }
+
+#include "moc_entityrightsfiltermodel.cpp"

@@ -40,3 +40,5 @@ void AgentThread::configure(qlonglong windowId)
 {
     QMetaObject::invokeMethod(m_instance, "configure", Qt::DirectConnection, Q_ARG(quintptr, (quintptr)windowId));
 }
+
+#include "moc_agentthread.cpp"

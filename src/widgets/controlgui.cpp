@@ -253,3 +253,5 @@ void ControlGui::widgetNeedsAkonadi(QWidget *widget)
 } // namespace Akonadi
 
 #include "controlgui.moc"
+
+#include "moc_controlgui.cpp"

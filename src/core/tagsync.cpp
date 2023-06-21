@@ -230,3 +230,5 @@ void TagSync::checkDone()
     qCDebug(AKONADICORE_LOG) << "done";
     emitResult();
 }
+
+#include "moc_tagsync.cpp"

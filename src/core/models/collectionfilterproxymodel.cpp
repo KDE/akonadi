@@ -160,3 +160,5 @@ Qt::ItemFlags CollectionFilterProxyModel::flags(const QModelIndex &index) const
         return QSortFilterProxyModel::flags(index) & ~(Qt::ItemIsSelectable);
     }
 }
+
+#include "moc_collectionfilterproxymodel.cpp"

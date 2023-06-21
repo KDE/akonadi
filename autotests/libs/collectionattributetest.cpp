@@ -249,3 +249,5 @@ void CollectionAttributeTest::testDetach()
     // THEN
     QCOMPARE(attr, attr2);
 }
+
+#include "moc_collectionattributetest.cpp"

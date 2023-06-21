@@ -162,3 +162,5 @@ void AgentConfigurationWidget::childEvent(QChildEvent *event)
 
     QWidget::childEvent(event);
 }
+
+#include "moc_agentconfigurationwidget.cpp"

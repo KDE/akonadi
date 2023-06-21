@@ -82,3 +82,5 @@ void FakeSession::setAsDefaultSession()
 {
     d->setDefaultSession(this);
 }
+
+#include "moc_fakesession.cpp"

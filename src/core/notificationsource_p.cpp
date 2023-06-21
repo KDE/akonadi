@@ -99,3 +99,5 @@ QObject *NotificationSource::source() const
 {
     return parent();
 }
+
+#include "moc_notificationsource_p.cpp"

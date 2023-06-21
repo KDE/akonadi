@@ -319,3 +319,5 @@ void Connection::doSendCommand(qint64 tag, const Protocol::CommandPtr &cmd)
         // TODO: Queue the commands and resend on reconnect?
     }
 }
+
+#include "moc_connection_p.cpp"

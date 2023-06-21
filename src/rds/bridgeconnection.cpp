@@ -109,3 +109,5 @@ void BridgeConnection::doConnects()
     connect(m_remoteSocket, &QIODevice::readyRead, this, &BridgeConnection::slotDataAvailable);
     connect(m_localSocket, &QLocalSocket::connected, this, &BridgeConnection::slotDataAvailable);
 }
+
+#include "moc_bridgeconnection.cpp"

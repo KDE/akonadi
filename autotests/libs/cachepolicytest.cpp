@@ -28,3 +28,5 @@ void CachePolicyTest::shouldHaveDefaultValue()
 }
 
 QTEST_MAIN(CachePolicyTest)
+
+#include "moc_cachepolicytest.cpp"

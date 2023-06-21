@@ -101,3 +101,5 @@ void AgentConfigurationDialog::accept()
 
     QDialog::accept();
 }
+
+#include "moc_agentconfigurationdialog.cpp"

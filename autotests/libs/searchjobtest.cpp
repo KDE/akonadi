@@ -114,3 +114,5 @@ void SearchJobTest::testModifySearch()
     auto delJob = new CollectionDeleteJob(col, this);
     AKVERIFYEXEC(delJob);
 }
+
+#include "moc_searchjobtest.cpp"

@@ -99,3 +99,5 @@ void RelationSync::checkDone()
     qCDebug(AKONADICORE_LOG) << "done";
     emitResult();
 }
+
+#include "moc_relationsync.cpp"

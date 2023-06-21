@@ -226,3 +226,5 @@ void FakeDataStore::setPopulateDb(bool populate)
 {
     mPopulateDb = populate;
 }
+
+#include "moc_fakedatastore.cpp"

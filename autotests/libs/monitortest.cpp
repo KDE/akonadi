@@ -397,3 +397,5 @@ void MonitorTest::testVirtualCollectionsMonitoring()
     AKVERIFYEXEC(job);
     QTRY_COMPARE(caddspy.count(), 1);
 }
+
+#include "moc_monitortest.cpp"

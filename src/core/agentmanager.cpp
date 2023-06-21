@@ -405,3 +405,5 @@ void AgentManager::synchronizeCollection(const Collection &collection, bool recu
 }
 
 #include "moc_agentmanager.cpp"
+
+#include "moc_agentmanager_p.cpp"

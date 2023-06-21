@@ -114,3 +114,5 @@ bool SearchResultJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &r
 
     return true;
 }
+
+#include "moc_searchresultjob_p.cpp"

@@ -161,3 +161,5 @@ void Tracer::activateTracer(const QString &type)
     mSettings->setValue(QStringLiteral("Debug/Tracer"), type);
     mSettings->sync();
 }
+
+#include "moc_tracer.cpp"

@@ -22,3 +22,5 @@ void InspectableNotificationCollector::notify(Protocol::ChangeNotificationList &
     Q_EMIT notifySignal(ntfs);
     NotificationCollector::notify(std::move(ntfs));
 }
+
+#include "moc_inspectablenotificationcollector.cpp"

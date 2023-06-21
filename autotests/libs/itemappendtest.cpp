@@ -391,3 +391,5 @@ void ItemAppendTest::testForeignPayload()
     QVERIFY(file.exists());
     QVERIFY(file.remove());
 }
+
+#include "moc_itemappendtest.cpp"

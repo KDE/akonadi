@@ -388,3 +388,5 @@ void ItemHydra::testForeignPayload()
     QCOMPARE(c.payload<QByteArray>(), QByteArray("123456789"));
     QCOMPARE(c.payloadPath(), file.fileName());
 }
+
+#include "moc_itemhydratest.cpp"

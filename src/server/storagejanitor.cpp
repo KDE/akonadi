@@ -862,3 +862,5 @@ void StorageJanitor::inform(const QString &msg)
     qCDebug(AKONADISERVER_LOG) << msg;
     Q_EMIT information(msg);
 }
+
+#include "moc_storagejanitor.cpp"

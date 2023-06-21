@@ -38,3 +38,5 @@ QSet<QByteArray> SerializerPlugin%{APPNAME}::parts(const Item &item) const
     // i.e. when using the "label" parameter of the other two methods
     return ItemSerializerPlugin::parts(item);
 }
+
+#include "moc_akonadi_serializer_%{APPNAMELC}.cpp"

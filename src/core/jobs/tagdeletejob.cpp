@@ -56,3 +56,5 @@ Tag::List TagDeleteJob::tags() const
     Q_D(const TagDeleteJob);
     return d->mTagsToRemove;
 }
+
+#include "moc_tagdeletejob.cpp"

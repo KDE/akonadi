@@ -206,3 +206,5 @@ bool SubscriptionModel::showHiddenCollections() const
 }
 
 #include "subscriptionmodel.moc"
+
+#include "moc_subscriptionmodel_p.cpp"

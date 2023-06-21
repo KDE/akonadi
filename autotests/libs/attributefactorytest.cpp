@@ -89,3 +89,5 @@ void AttributeFactoryTest::testRegisteredAttribute()
     QVERIFY(ta);
     QCOMPARE(ta->data, QByteArray("lalala"));
 }
+
+#include "moc_attributefactorytest.cpp"

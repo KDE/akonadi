@@ -315,3 +315,5 @@ void EntityOrderProxyModel::clearTreeOrder()
     d->m_orderConfig.deleteGroup();
     invalidate();
 }
+
+#include "moc_entityorderproxymodel.cpp"

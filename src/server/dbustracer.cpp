@@ -53,3 +53,5 @@ void DBusTracer::error(const QString &componentName, const QString &msg)
 {
     Q_EMIT errorEmitted(componentName, msg);
 }
+
+#include "moc_dbustracer.cpp"

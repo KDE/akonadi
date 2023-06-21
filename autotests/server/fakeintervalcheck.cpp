@@ -45,3 +45,5 @@ void FakeIntervalCheck::collectionExpired(const Collection &collection)
     Q_UNUSED(collection)
     // Nothing here. The granularity is in whole minutes, we don't have time to wait for that in a unittest.
 }
+
+#include "moc_fakeintervalcheck.cpp"

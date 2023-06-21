@@ -1396,3 +1396,5 @@ void DataStore::cleanupAfterRollback()
     m_akonadi.collectionStatistics().expireCache();
     QueryCache::clear();
 }
+
+#include "moc_datastore.cpp"

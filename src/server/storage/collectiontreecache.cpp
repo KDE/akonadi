@@ -380,3 +380,5 @@ CollectionTreeCache::retrieveCollections(const Scope &scope, int depth, int ance
 
     return {};
 }
+
+#include "moc_collectiontreecache.cpp"

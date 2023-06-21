@@ -222,3 +222,5 @@ void ItemRetrievalManager::triggerCollectionTreeSync(const QString &resource)
         }
     });
 }
+
+#include "moc_itemretrievalmanager.cpp"

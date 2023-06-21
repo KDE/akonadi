@@ -12,3 +12,5 @@ AgentConfigurationFactoryBase::AgentConfigurationFactoryBase(QObject *parent)
     : QObject(parent)
 {
 }
+
+#include "moc_agentconfigurationfactorybase.cpp"

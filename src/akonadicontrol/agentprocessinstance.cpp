@@ -86,3 +86,5 @@ void AgentProcessInstance::failedToStart()
 {
     statusChanged(2 /*Broken*/, QStringLiteral("Unable to start."));
 }
+
+#include "moc_agentprocessinstance.cpp"

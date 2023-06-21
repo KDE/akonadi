@@ -40,3 +40,5 @@ InspectableMonitor::InspectableMonitor(FakeMonitorDependenciesFactory *dependenc
         doConnectToNotificationManager();
     });
 }
+
+#include "moc_inspectablemonitor.cpp"

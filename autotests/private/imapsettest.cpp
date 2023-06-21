@@ -61,3 +61,5 @@ void ImapSetTest::testAddList()
     QCOMPARE(result, intervals);
     QCOMPARE(set.toImapSequenceSet(), seqset);
 }
+
+#include "moc_imapsettest.cpp"

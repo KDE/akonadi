@@ -28,3 +28,5 @@ void DebugInterface::setTracer(const QString &tracer)
 {
     m_tracer.activateTracer(tracer);
 }
+
+#include "moc_debuginterface.cpp"

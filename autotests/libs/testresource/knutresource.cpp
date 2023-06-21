@@ -369,3 +369,5 @@ void KnutResource::removeSearch(const Collection &resultCollection)
 }
 
 AKONADI_RESOURCE_MAIN(KnutResource)
+
+#include "moc_knutresource.cpp"

@@ -183,3 +183,5 @@ void GidTest::testFetchScope()
         QVERIFY(!fetched.at(0).gid().isNull());
     }
 }
+
+#include "moc_gidtest.cpp"

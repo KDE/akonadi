@@ -62,3 +62,5 @@ bool AkonadiStarter::start(bool verbose)
     qCInfo(AKONADICTL_LOG) << "   done.";
     return true;
 }
+
+#include "moc_akonadistarter.cpp"

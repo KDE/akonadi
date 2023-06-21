@@ -111,3 +111,5 @@ void ETMViewStateSaver::setCurrentCollection(const Akonadi::Collection &col)
 {
     restoreCurrentItem(QStringLiteral("c%1").arg(col.id()));
 }
+
+#include "moc_etmviewstatesaver.cpp"

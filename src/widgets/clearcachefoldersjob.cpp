@@ -129,3 +129,5 @@ void ClearCacheFoldersJob::setParentWidget(QWidget *newParentWidget)
 {
     mParentWidget = newParentWidget;
 }
+
+#include "moc_clearcachefoldersjob.cpp"

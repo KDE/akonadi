@@ -82,3 +82,5 @@ CollectionStatistics Akonadi::CollectionStatisticsJob::statistics() const
 
     return d->mStatistics;
 }
+
+#include "moc_collectionstatisticsjob.cpp"

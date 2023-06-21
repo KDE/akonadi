@@ -124,3 +124,5 @@ Collection CollectionModifyJob::collection() const
     const Q_D(CollectionModifyJob);
     return d->mCollection;
 }
+
+#include "moc_collectionmodifyjob.cpp"

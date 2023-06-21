@@ -17,3 +17,5 @@ void AkLocalServer::incomingConnection(quintptr socketDescriptor)
 {
     Q_EMIT newConnection(socketDescriptor);
 }
+
+#include "moc_aklocalserver.cpp"

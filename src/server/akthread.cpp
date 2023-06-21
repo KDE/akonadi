@@ -98,3 +98,5 @@ void AkThread::quit()
         thread()->quit();
     }
 }
+
+#include "moc_akthread.cpp"

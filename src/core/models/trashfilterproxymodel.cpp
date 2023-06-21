@@ -59,3 +59,5 @@ bool TrashFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &s
     }
     return !d->mTrashIsShown;
 }
+
+#include "moc_trashfilterproxymodel.cpp"

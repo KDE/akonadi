@@ -40,3 +40,5 @@ void AgentBrokenInstance::configure(qlonglong /*windowId*/)
 {
     // no-op
 }
+
+#include "moc_agentbrokeninstance.cpp"

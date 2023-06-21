@@ -640,3 +640,5 @@ bool DbConfigMysql::initializeMySQLDatabase(const QString &confFile, const QStri
                mMysqlInstallDbPath,
                {QStringLiteral("--defaults-file=%1").arg(confFile), QStringLiteral("--basedir=%1").arg(baseDir), QStringLiteral("--datadir=%1/").arg(dataDir)});
 }
+
+#include "moc_dbconfigmysql.cpp"

@@ -666,3 +666,5 @@ void NotificationSubscriber::writeCommand(qint64 tag, const Protocol::CommandPtr
         qCWarning(AKONADISERVER_LOG) << "ProtocolException while writing into stream for subscriber" << mSubscriber << ":" << e.what();
     }
 }
+
+#include "moc_notificationsubscriber.cpp"

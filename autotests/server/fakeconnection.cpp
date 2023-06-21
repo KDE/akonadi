@@ -43,3 +43,5 @@ NotificationCollector *FakeConnection::notificationCollector()
 {
     return mNotificationCollector;
 }
+
+#include "moc_fakeconnection.cpp"

@@ -72,3 +72,5 @@ bool CollectionCopyJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr 
 
     return true;
 }
+
+#include "moc_collectioncopyjob.cpp"

@@ -96,3 +96,5 @@ QDialogButtonBox::StandardButtons AgentConfigurationBase::standardButtons() cons
 {
     return QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel;
 }
+
+#include "moc_agentconfigurationbase.cpp"

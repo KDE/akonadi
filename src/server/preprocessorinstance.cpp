@@ -206,3 +206,5 @@ void PreprocessorInstance::itemProcessed(qlonglong id)
     // Stay busy and process next item in the queue
     processHeadItem();
 }
+
+#include "moc_preprocessorinstance.cpp"

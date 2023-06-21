@@ -231,3 +231,5 @@ void FakeClient::connectionLost()
     // Otherwise this is an error on server-side, we expected more talking
     CLIENT_VERIFY(isScenarioDone());
 }
+
+#include "moc_fakeclient.cpp"

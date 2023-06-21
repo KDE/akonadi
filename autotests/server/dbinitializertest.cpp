@@ -172,3 +172,5 @@ QString DbInitializerTest::readNextStatement(QIODevice *io)
 }
 
 AKTEST_MAIN(DbInitializerTest)
+
+#include "moc_dbinitializertest.cpp"

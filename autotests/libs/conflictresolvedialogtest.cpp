@@ -48,3 +48,5 @@ void ConflictResolveDialogTest::shouldHaveDefaultValues()
     QVERIFY(docuLabel->wordWrap());
     QCOMPARE(docuLabel->contextMenuPolicy(), Qt::NoContextMenu);
 }
+
+#include "moc_conflictresolvedialogtest.cpp"

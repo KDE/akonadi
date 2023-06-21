@@ -223,3 +223,5 @@ void ManageAccountWidget::slotAccountSelected(const Akonadi::AgentInstance &curr
         d->ui.mRestartAccountButton->setEnabled(false);
     }
 }
+
+#include "moc_manageaccountwidget.cpp"

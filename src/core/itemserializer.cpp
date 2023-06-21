@@ -236,3 +236,5 @@ void ItemSerializer::overridePluginLookup(QObject *p)
 }
 
 } // namespace Akonadi
+
+#include "moc_itemserializer_p.cpp"

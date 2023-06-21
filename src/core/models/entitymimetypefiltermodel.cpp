@@ -229,3 +229,5 @@ bool EntityMimeTypeFilterModel::canFetchMore(const QModelIndex &parent) const
     }
     return QSortFilterProxyModel::canFetchMore(parent);
 }
+
+#include "moc_entitymimetypefiltermodel.cpp"

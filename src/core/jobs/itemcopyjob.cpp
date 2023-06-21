@@ -82,3 +82,5 @@ bool ItemCopyJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &respo
 
     return true;
 }
+
+#include "moc_itemcopyjob.cpp"

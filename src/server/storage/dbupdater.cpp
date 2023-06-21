@@ -568,3 +568,5 @@ bool DbUpdater::complexUpdate_36()
 
     return true;
 }
+
+#include "moc_dbupdater.cpp"

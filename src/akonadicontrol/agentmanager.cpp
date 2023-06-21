@@ -906,3 +906,5 @@ void AgentManager::removeSearch(quint64 resultCollectionId)
 }
 
 #include "agentmanager.moc"
+
+#include "moc_agentmanager.cpp"

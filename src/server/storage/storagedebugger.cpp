@@ -221,3 +221,5 @@ void StorageDebugger::queryExecuted(qint64 connectionId, const QSqlQuery &query,
     // Reset the query
     q.seek(-1, false);
 }
+
+#include "moc_storagedebugger.cpp"

@@ -291,3 +291,5 @@ void MimeTypeCheckerTest::testStringMatchEquivalent()
     QVERIFY(MimeTypeChecker::isWantedCollection(collection3, installedMimeType));
     QVERIFY(MimeTypeChecker::isWantedCollection(collection3, randomMimeType));
 }
+
+#include "moc_mimetypecheckertest.cpp"

@@ -70,3 +70,5 @@ void MainWindow::moveCollection()
     m_serverData->setCommands(QList<FakeAkonadiServerCommand *>() << moveCommand);
     m_serverData->processNotifications();
 }
+
+#include "moc_mainwindow.cpp"

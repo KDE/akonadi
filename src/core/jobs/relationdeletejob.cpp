@@ -61,3 +61,5 @@ Relation RelationDeleteJob::relation() const
     Q_D(const RelationDeleteJob);
     return d->mRelation;
 }
+
+#include "moc_relationdeletejob.cpp"

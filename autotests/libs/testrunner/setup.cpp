@@ -441,3 +441,5 @@ QList<SetupTest::EnvVar> SetupTest::environmentVariables() const
 {
     return mEnvVars;
 }
+
+#include "moc_setup.cpp"

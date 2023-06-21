@@ -137,3 +137,5 @@ void CollectionAttributesSynchronizationJobPrivate::slotTimeout()
 } // namespace Akonadi
 
 #include "collectionattributessynchronizationjob.moc"
+
+#include "moc_collectionattributessynchronizationjob.cpp"

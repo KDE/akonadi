@@ -109,3 +109,5 @@ void ItemTest::testComparison()
         QVERIFY(!(itemA == itemB));
     }
 }
+
+#include "moc_itemtest.cpp"

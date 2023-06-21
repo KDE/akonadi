@@ -114,3 +114,5 @@ QString akGetEnv(const char *name, const QString &defaultValue)
     const QString v = QString::fromLocal8Bit(qgetenv(name));
     return !v.isEmpty() ? v : defaultValue;
 }
+
+#include "moc_akapplication.cpp"

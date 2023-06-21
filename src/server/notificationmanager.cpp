@@ -200,3 +200,5 @@ void NotificationManager::emitDebugNotification(const Protocol::ChangeNotificati
         mNotifyThreadPool->start(new NotifyRunnable(subscriber, {debugNtf}));
     });
 }
+
+#include "moc_notificationmanager.cpp"

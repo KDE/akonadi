@@ -112,3 +112,5 @@ void AgentServer::processConfigureRequest()
 
     m_processingConfigureRequests = false;
 }
+
+#include "moc_agentserver.cpp"

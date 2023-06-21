@@ -62,3 +62,5 @@ Relation RelationCreateJob::relation() const
     Q_D(const RelationCreateJob);
     return d->mRelation;
 }
+
+#include "moc_relationcreatejob.cpp"

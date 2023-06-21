@@ -149,3 +149,5 @@ bool Control::restart()
 } // namespace Akonadi
 
 #include "control.moc"
+
+#include "moc_control.cpp"

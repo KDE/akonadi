@@ -88,3 +88,5 @@ void NotificationMessageTest::testPartModificationMerge()
              (QSet<QByteArray>() << "PART1"
                                  << "PART2"));
 }
+
+#include "moc_notificationmessagetest.cpp"

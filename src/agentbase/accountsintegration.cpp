@@ -104,3 +104,5 @@ void AccountsIntegration::requestAuthData(const QString &serviceType, AuthDataCa
     });
 #endif
 }
+
+#include "moc_accountsintegration.cpp"

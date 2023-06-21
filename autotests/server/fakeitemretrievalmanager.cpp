@@ -25,3 +25,5 @@ void FakeItemRetrievalManager::requestItemDelivery(ItemRetrievalRequest request)
         },
         Qt::QueuedConnection);
 }
+
+#include "moc_fakeitemretrievalmanager.cpp"

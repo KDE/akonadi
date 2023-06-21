@@ -79,3 +79,5 @@ void IntervalCheck::collectionExpired(const Collection &collection)
     mLastChecks.insert(collection.id(), now);
     mItemRetrievalManager.triggerCollectionSync(collection.resource().name(), collection.id());
 }
+
+#include "moc_intervalcheck.cpp"

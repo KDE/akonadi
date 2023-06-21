@@ -100,3 +100,5 @@ int main(int argc, char **argv)
     ItemDumper d(path, file, mimetype, count);
     return app.exec();
 }
+
+#include "moc_itemdumper.cpp"

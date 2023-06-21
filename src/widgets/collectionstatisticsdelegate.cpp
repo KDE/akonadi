@@ -327,3 +327,5 @@ void CollectionStatisticsDelegate::updatePalette()
     Q_D(CollectionStatisticsDelegate);
     d->updateColor();
 }
+
+#include "moc_collectionstatisticsdelegate.cpp"

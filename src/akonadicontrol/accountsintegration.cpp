@@ -157,3 +157,5 @@ void AccountsIntegration::onAccountServiceEnabled(const QString &serviceType, bo
         removeAgentInstance(identifier.value());
     }
 }
+
+#include "moc_accountsintegration.cpp"

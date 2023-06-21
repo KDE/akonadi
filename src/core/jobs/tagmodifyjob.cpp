@@ -77,3 +77,5 @@ bool TagModifyJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &resp
 
     return Job::doHandleResponse(tag, response);
 }
+
+#include "moc_tagmodifyjob.cpp"

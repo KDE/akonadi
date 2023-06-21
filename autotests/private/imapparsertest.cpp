@@ -589,3 +589,5 @@ void ImapParserTest::benchParseQuotedString()
         }
     }
 }
+
+#include "moc_imapparsertest.cpp"

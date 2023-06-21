@@ -130,3 +130,5 @@ void Session::printStats() const
     std::cerr << "Sent: " << m_sentBytes << " bytes" << std::endl;
     std::cerr << "Received: " << m_receivedBytes << " bytes" << std::endl;
 }
+
+#include "moc_session.cpp"

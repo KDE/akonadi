@@ -5,3 +5,5 @@
 */
 
 #include "fakeentitycache.h"
+
+#include "moc_fakeentitycache.cpp"

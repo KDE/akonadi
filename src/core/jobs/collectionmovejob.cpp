@@ -77,3 +77,5 @@ bool CollectionMoveJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr 
 
     return true;
 }
+
+#include "moc_collectionmovejob.cpp"

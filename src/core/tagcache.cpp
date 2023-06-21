@@ -118,3 +118,5 @@ TagCache *TagCache::instance()
     static TagCache s_instance;
     return &s_instance;
 }
+
+#include "moc_tagcache.cpp"

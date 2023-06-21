@@ -17,3 +17,5 @@ BridgeServerBase::BridgeServerBase(quint16 port, QObject *parent)
         throw Exception<std::runtime_error>(QStringLiteral("Can't listen to port %1: %2").arg(port).arg(m_server->errorString()));
     }
 }
+
+#include "moc_bridgeserver.cpp"

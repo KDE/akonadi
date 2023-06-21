@@ -60,3 +60,5 @@ void Akonadi::SpecialCollectionsDiscoveryJob::slotResult(KJob *job)
     }
     emitResult();
 }
+
+#include "moc_specialcollectionsdiscoveryjob.cpp"

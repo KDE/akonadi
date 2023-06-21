@@ -57,3 +57,5 @@ OrgFreedesktopAkonadiAgentSearchInterface *AgentSearchInstance::interface() cons
 {
     return mInterface;
 }
+
+#include "moc_agentsearchinstance.cpp"

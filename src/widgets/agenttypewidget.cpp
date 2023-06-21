@@ -256,3 +256,5 @@ void AgentTypeWidgetDelegate::drawFocus(QPainter *painter, const QStyleOptionVie
 } // namespace Akonadi
 
 #include "agenttypewidget.moc"
+
+#include "moc_agenttypewidget.cpp"

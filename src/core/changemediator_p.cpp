@@ -91,3 +91,5 @@ void ChangeMediator::invalidateTag(const Tag &tag)
 }
 
 #include "changemediator_p.moc"
+
+#include "moc_changemediator_p.cpp"

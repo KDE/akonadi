@@ -51,3 +51,5 @@ void CollectionPathResolverTest::testFailure()
     resolver = new CollectionPathResolver(Collection(INT_MAX), this);
     QVERIFY(!resolver->exec());
 }
+
+#include "moc_collectionpathresolvertest.cpp"

@@ -113,3 +113,5 @@ QString Akonadi::ChangeRecorder::dumpNotificationListToString() const
     Q_D(const ChangeRecorder);
     return d->dumpNotificationListToString();
 }
+
+#include "moc_changerecorder.cpp"

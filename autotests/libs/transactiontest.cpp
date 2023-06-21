@@ -85,3 +85,5 @@ void TransactionTest::testTransaction()
     auto deleteJob = new CollectionDeleteJob(testCollection, Session::defaultSession());
     AKVERIFYEXEC(deleteJob);
 }
+
+#include "moc_transactiontest.cpp"

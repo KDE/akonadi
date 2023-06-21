@@ -109,3 +109,5 @@ uint Akonadi::qHash(const Akonadi::DelegateAnimator::Animation &anim)
 {
     return qHash(anim.index);
 }
+
+#include "moc_progressspinnerdelegate_p.cpp"

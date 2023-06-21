@@ -54,3 +54,5 @@ void AgentFactoryBase::createComponentData(const QString &identifier) const
         s_agentComponentDatas.setLocalData(new KComponentData(ServerManager::addNamespace(identifier).toLatin1(), d->catalogName.toLatin1()));
     }
 }
+
+#include "moc_agentfactory.cpp"

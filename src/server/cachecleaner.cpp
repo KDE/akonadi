@@ -137,3 +137,5 @@ void CacheCleaner::collectionExpired(const Collection &collection)
         }
     }
 }
+
+#include "moc_cachecleaner.cpp"

@@ -65,3 +65,5 @@ bool CollectionDeleteJob::doHandleResponse(qint64 tag, const Protocol::CommandPt
 
     return true;
 }
+
+#include "moc_collectiondeletejob.cpp"

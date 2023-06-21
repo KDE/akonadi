@@ -455,3 +455,5 @@ QString AkonadiServer::serverPath() const
 }
 
 #include "akonadi.moc"
+
+#include "moc_akonadi.cpp"

@@ -420,3 +420,5 @@ void SearchManager::searchUpdateResultsAvailable(const QSet<qint64> &results)
 
     qCDebug(AKONADISERVER_SEARCH_LOG) << "Added results:" << items.count();
 }
+
+#include "moc_searchmanager.cpp"

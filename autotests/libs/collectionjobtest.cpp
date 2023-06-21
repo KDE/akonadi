@@ -887,3 +887,5 @@ void CollectionJobTest::testListPreference()
 }
 
 #include "collectionjobtest.moc"
+
+#include "moc_collectionjobtest.cpp"

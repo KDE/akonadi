@@ -89,3 +89,5 @@ void DbUpdaterTest::cleanupTestCase()
 }
 
 QTEST_MAIN(DbUpdaterTest)
+
+#include "moc_dbupdatertest.cpp"

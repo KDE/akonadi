@@ -113,3 +113,5 @@ bool CollectionCreateJob::doHandleResponse(qint64 tag, const Protocol::CommandPt
 
     return Job::doHandleResponse(tag, response);
 }
+
+#include "moc_collectioncreatejob.cpp"

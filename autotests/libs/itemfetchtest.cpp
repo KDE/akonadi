@@ -262,3 +262,5 @@ void ItemFetchTest::testAncestorRetrieval()
     const Collection c3 = c2.parentCollection();
     QCOMPARE(c3, Collection::root());
 }
+
+#include "moc_itemfetchtest.cpp"

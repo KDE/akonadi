@@ -75,3 +75,5 @@ void Akonadi::AgentThreadInstance::configure(qlonglong windowId)
                                                        QDBusConnection::sessionBus());
     agentServer.agentInstanceConfigure(identifier(), windowId);
 }
+
+#include "moc_agentthreadinstance.cpp"

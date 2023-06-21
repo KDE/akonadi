@@ -432,3 +432,5 @@ void PreprocessorManager::heartbeat()
         lockedUnregisterInstance(instance->id());
     }
 }
+
+#include "moc_preprocessormanager.cpp"

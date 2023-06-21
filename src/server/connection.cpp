@@ -486,3 +486,5 @@ Protocol::CommandPtr Connection::readCommand()
     // TODO: compare tag with m_currentHandler->tag() ?
     return Protocol::deserialize(m_socket.get());
 }
+
+#include "moc_connection.cpp"

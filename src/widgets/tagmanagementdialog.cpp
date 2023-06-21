@@ -79,3 +79,5 @@ QDialogButtonBox *TagManagementDialog::buttons() const
 {
     return d->buttonBox;
 }
+
+#include "moc_tagmanagementdialog.cpp"

@@ -150,3 +150,5 @@ bool SearchCreateJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &r
 
     return Job::doHandleResponse(tag, response);
 }
+
+#include "moc_searchcreatejob.cpp"

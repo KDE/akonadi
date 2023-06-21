@@ -187,3 +187,5 @@ void ModelSpy::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottom
         append(QVariantList{DataChanged, QVariant::fromValue(topLeft), QVariant::fromValue(bottomRight)});
     }
 }
+
+#include "moc_modelspy.cpp"

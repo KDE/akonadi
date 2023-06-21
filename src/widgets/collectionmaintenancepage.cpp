@@ -154,3 +154,5 @@ void CollectionMaintenancePage::save(Collection &collection)
     auto attr = collection.attribute<Akonadi::IndexPolicyAttribute>(Akonadi::Collection::AddIfMissing);
     attr->setIndexingEnabled(d->ui.enableIndexingChkBox->isChecked());
 }
+
+#include "moc_collectionmaintenancepage.cpp"

@@ -819,3 +819,5 @@ QString QSQLiteDriver::escapeIdentifier(const QString &identifier, IdentifierTyp
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qsql_sqlite.cpp"

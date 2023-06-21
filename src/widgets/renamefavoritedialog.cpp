@@ -34,3 +34,5 @@ QString RenameFavoriteDialog::newName() const
 {
     return ui.lineEdit->text();
 }
+
+#include "moc_renamefavoritedialog_p.cpp"

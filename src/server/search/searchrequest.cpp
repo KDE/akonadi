@@ -143,3 +143,5 @@ void SearchRequest::exec()
 
     qCInfo(AKONADISERVER_SEARCH_LOG) << "Search" << mConnectionId << "done (with remote search)";
 }
+
+#include "moc_searchrequest.cpp"

@@ -44,3 +44,5 @@ bool UnlinkJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &respons
     Q_D(UnlinkJob);
     return d->handleResponse(tag, response);
 }
+
+#include "moc_unlinkjob.cpp"

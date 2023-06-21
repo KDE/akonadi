@@ -142,3 +142,5 @@ void RecursiveCollectionFilterProxyModel::setExcludeUnifiedMailBox(bool exclude)
         invalidate();
     }
 }
+
+#include "moc_recursivecollectionfilterproxymodel.cpp"

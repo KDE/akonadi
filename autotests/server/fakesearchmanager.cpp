@@ -48,3 +48,5 @@ QList<Akonadi::AbstractSearchPlugin *> FakeSearchManager::searchPlugins() const
 void FakeSearchManager::scheduleSearchUpdate()
 {
 }
+
+#include "moc_fakesearchmanager.cpp"

@@ -21,3 +21,5 @@ void InspectableChangeRecorder::doConnectToNotificationManager()
 {
     d_ptr->connectToNotificationManager();
 }
+
+#include "moc_inspectablechangerecorder.cpp"

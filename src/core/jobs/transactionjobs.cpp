@@ -84,3 +84,5 @@ TransactionCommitJob::TransactionCommitJob(QObject *parent)
 TransactionCommitJob::~TransactionCommitJob()
 {
 }
+
+#include "moc_transactionjobs.cpp"

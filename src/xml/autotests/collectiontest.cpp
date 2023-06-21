@@ -93,3 +93,5 @@ void CollectionTest::verifyCollection(const Collection::List &colist,
     QVERIFY(colist.at(listPosition).remoteId() == remoteId);
     QVERIFY(colist.at(listPosition).contentMimeTypes() == mimeType);
 }
+
+#include "moc_collectiontest.cpp"

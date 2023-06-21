@@ -439,3 +439,5 @@ QByteArray ItemRetriever::lastError() const
 {
     return mLastError;
 }
+
+#include "moc_itemretriever.cpp"

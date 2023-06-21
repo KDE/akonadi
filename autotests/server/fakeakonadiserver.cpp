@@ -320,3 +320,5 @@ void FakeAkonadiServer::setPopulateDb(bool populate)
 {
     mPopulateDb = populate;
 }
+
+#include "moc_fakeakonadiserver.cpp"

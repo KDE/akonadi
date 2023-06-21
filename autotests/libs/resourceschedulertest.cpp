@@ -357,3 +357,5 @@ void ResourceSchedulerTest::testPriorities()
 
     QVERIFY(scheduler.isEmpty());
 }
+
+#include "moc_resourceschedulertest.cpp"

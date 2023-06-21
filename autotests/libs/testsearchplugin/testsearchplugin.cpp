@@ -32,3 +32,5 @@ QSet<qint64> TestSearchPlugin::parseQuery(const QString &queryString)
     }
     return resultSet;
 }
+
+#include "moc_testsearchplugin.cpp"

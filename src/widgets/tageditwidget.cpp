@@ -281,3 +281,5 @@ bool TagEditWidget::eventFilter(QObject *watched, QEvent *event)
 }
 
 #include "tageditwidget.moc"
+
+#include "moc_tageditwidget.cpp"

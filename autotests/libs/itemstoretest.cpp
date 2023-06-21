@@ -502,3 +502,5 @@ void ItemStoreTest::testParallelJobsAddingAttributes()
     const Item fetchedItem = fetchJob->items().first();
     QCOMPARE(fetchedItem.attributes().count(), runner.numSessions);
 }
+
+#include "moc_itemstoretest.cpp"

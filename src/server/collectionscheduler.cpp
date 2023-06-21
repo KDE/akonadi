@@ -339,3 +339,5 @@ void CollectionScheduler::schedulerTimeout()
 }
 
 #include "collectionscheduler.moc"
+
+#include "moc_collectionscheduler.cpp"

@@ -137,3 +137,5 @@ void TagWidget::updateView()
 }
 
 #include "tagwidget.moc"
+
+#include "moc_tagwidget.cpp"

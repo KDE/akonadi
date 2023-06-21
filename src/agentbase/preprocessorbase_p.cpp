@@ -82,3 +82,5 @@ void PreprocessorBasePrivate::itemFetched(KJob *job)
         break;
     }
 }
+
+#include "moc_preprocessorbase_p.cpp"

@@ -101,3 +101,5 @@ void TagSelectionDialog::setSelection(const Tag::List &tags)
 {
     d->ui.tagWidget->setSelection(tags);
 }
+
+#include "moc_tagselectiondialog.cpp"

@@ -490,3 +490,5 @@ void FakeTagRemovedCommand::doCommand()
 
     Q_EMIT emit_monitoredTagRemoved(tag);
 }
+
+#include "moc_fakeakonadiservercommand.cpp"

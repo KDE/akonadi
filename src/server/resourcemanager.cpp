@@ -61,3 +61,5 @@ QStringList ResourceManager::resourceInstances() const
 {
     return Resource::retrieveAll() | Views::transform(&Resource::name) | Actions::toQList;
 }
+
+#include "moc_resourcemanager.cpp"

@@ -82,3 +82,5 @@ Tag TagCreateJob::tag() const
     Q_D(const TagCreateJob);
     return d->mResultTag;
 }
+
+#include "moc_tagcreatejob.cpp"

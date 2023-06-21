@@ -139,3 +139,5 @@ void FakeServerData::returnTags()
         delete command;
     }
 }
+
+#include "moc_fakeserverdata.cpp"

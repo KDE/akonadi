@@ -26,3 +26,5 @@ void ControlManager::shutdown()
 {
     QTimer::singleShot(0s, QCoreApplication::instance(), &QCoreApplication::quit);
 }
+
+#include "moc_controlmanager.cpp"

@@ -425,3 +425,5 @@ void Collection::markAttributeModified(const QByteArray &type)
 {
     d_ptr->mAttributeStorage.markAttributeModified(type);
 }
+
+#include "moc_collection.cpp"

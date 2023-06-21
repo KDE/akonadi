@@ -654,3 +654,5 @@ void ProtocolTest::testCopyItemsResponse()
 }
 
 QTEST_MAIN(ProtocolTest)
+
+#include "moc_protocoltest.cpp"

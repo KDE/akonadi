@@ -68,3 +68,5 @@ void TestRunner::terminate()
         mProcess->terminate();
     }
 }
+
+#include "moc_testrunner.cpp"

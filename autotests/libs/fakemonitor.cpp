@@ -33,3 +33,5 @@ FakeMonitor::FakeMonitor(QObject *parent)
     : ChangeRecorder(new FakeMonitorPrivate(this), parent)
 {
 }
+
+#include "moc_fakemonitor.cpp"

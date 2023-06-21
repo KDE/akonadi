@@ -189,3 +189,5 @@ std::unique_ptr<T> AgentInstance::findInterface(Akonadi::DBus::AgentType agentTy
     }
     return iface;
 }
+
+#include "moc_agentinstance.cpp"

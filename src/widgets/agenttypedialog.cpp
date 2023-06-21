@@ -115,3 +115,5 @@ AgentFilterProxyModel *AgentTypeDialog::agentFilterProxyModel() const
 {
     return d->Widget->agentFilterProxyModel();
 }
+
+#include "moc_agenttypedialog.cpp"

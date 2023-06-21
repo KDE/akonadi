@@ -131,3 +131,5 @@ Item::List ItemMoveJob::items() const
     Q_D(const ItemMoveJob);
     return d->items;
 }
+
+#include "moc_itemmovejob.cpp"

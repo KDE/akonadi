@@ -61,3 +61,5 @@ void ItemRetrievalJob::callFinished(QDBusPendingCallWatcher *watcher)
     }
     deleteLater();
 }
+
+#include "moc_itemretrievaljob.cpp"

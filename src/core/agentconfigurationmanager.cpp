@@ -102,3 +102,5 @@ QString AgentConfigurationManager::findConfigPlugin(const QString &type) const
 
     return {};
 }
+
+#include "moc_agentconfigurationmanager_p.cpp"

@@ -160,3 +160,5 @@ AgentInstance ResourceSynchronizationJob::resource() const
 } // namespace Akonadi
 
 #include "resourcesynchronizationjob.moc"
+
+#include "moc_resourcesynchronizationjob.cpp"

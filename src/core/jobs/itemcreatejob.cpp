@@ -231,3 +231,5 @@ Item ItemCreateJob::item() const
 
     return item;
 }
+
+#include "moc_itemcreatejob.cpp"

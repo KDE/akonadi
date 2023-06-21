@@ -103,3 +103,5 @@ void %{APPNAME}Resource::itemRemoved(const Akonadi::Item &item)
 }
 
 AKONADI_RESOURCE_MAIN(%{APPNAME}Resource)
+
+#include "moc_%{APPNAMELC}resource.cpp"

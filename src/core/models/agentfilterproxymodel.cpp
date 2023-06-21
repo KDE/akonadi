@@ -141,3 +141,5 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex & /*sour
 
     return d->filterAcceptRegExp(index, filterRegularExpression());
 }
+
+#include "moc_agentfilterproxymodel.cpp"

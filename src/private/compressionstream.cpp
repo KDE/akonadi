@@ -325,3 +325,5 @@ bool CompressionStream::isCompressed(QIODevice *data)
 
     return memcmp(magic.data(), buf, sizeof(buf)) == 0;
 }
+
+#include "moc_compressionstream_p.cpp"

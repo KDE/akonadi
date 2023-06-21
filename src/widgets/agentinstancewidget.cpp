@@ -290,3 +290,5 @@ QSize AgentInstanceWidgetDelegate::sizeHint(const QStyleOptionViewItem &option, 
 } // namespace Akonadi
 
 #include "agentinstancewidget.moc"
+
+#include "moc_agentinstancewidget.cpp"

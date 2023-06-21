@@ -259,3 +259,5 @@ void ProcessControl::setShutdownTimeout(std::chrono::milliseconds timeout)
 {
     mShutdownTimeout = timeout;
 }
+
+#include "moc_processcontrol.cpp"

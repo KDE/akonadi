@@ -68,3 +68,5 @@ void TagSelectWidget::setSelectionFromStringList(const QStringList &lst)
                  })
                  | Actions::toQVector);
 }
+
+#include "moc_tagselectwidget.cpp"

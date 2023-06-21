@@ -27,3 +27,5 @@ ResourceSettings::ResourceSettings()
 ResourceSettings::~ResourceSettings()
 {
 }
+
+#include "moc_resourcesettings.cpp"

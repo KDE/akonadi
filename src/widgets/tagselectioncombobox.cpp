@@ -299,3 +299,5 @@ bool TagSelectionComboBox::eventFilter(QObject *receiver, QEvent *event)
     }
     return QComboBox::eventFilter(receiver, event);
 }
+
+#include "moc_tagselectioncombobox.cpp"

@@ -298,3 +298,5 @@ void SearchTaskManager::searchLoop()
         }
     }
 }
+
+#include "moc_searchtaskmanager.cpp"

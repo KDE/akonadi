@@ -94,3 +94,5 @@ void SessionThread::doThreadQuit()
 
     thread()->quit();
 }
+
+#include "moc_sessionthread_p.cpp"

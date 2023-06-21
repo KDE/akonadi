@@ -48,3 +48,5 @@ void CollectionPropertiesPage::setPageTitle(const QString &title)
 CollectionPropertiesPageFactory::~CollectionPropertiesPageFactory()
 {
 }
+
+#include "moc_collectionpropertiespage.cpp"
