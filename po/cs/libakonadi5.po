@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-23 04:11+0000\n"
-"PO-Revision-Date: 2023-02-02 14:37+0100\n"
+"PO-Revision-Date: 2023-06-29 13:40+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 22.12.1\n"
+"X-Generator: Lokalize 23.04.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -147,12 +147,12 @@ msgstr "Synchronizuje se složka '%1'"
 #: agentbase/resourcebase.cpp:938 agentbase/resourcebase.cpp:945
 #, kde-format
 msgid "Failed to retrieve collection for sync."
-msgstr ""
+msgstr "Získání sbírky pro synchronizaci selhalo."
 
 #: agentbase/resourcebase.cpp:985
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
-msgstr ""
+msgstr "Získání sbírky pro synchronizaci atributů selhalo."
 
 #: agentbase/resourcebase.cpp:1039
 #, kde-format
@@ -173,12 +173,12 @@ msgstr "Taková sbírka není."
 #: core/collectionsync.cpp:508 core/collectionsync.cpp:653
 #, kde-format
 msgid "Found unresolved orphan collections"
-msgstr ""
+msgstr "Byly nalezeny nevyřešené osiřelé sbírky"
 
 #: core/conflicthandler.cpp:53
 #, kde-format
 msgid "Did not find other item for conflict handling"
-msgstr ""
+msgstr "Nebyla nalezena další položka pro řešení konfliktů"
 
 #: core/jobs/agentinstancecreatejob.cpp:70
 #, kde-format
@@ -315,33 +315,33 @@ msgstr "Synchronizace zdroje vypršela."
 #: core/jobs/specialcollectionshelperjobs.cpp:145
 #, kde-format
 msgid "Could not fetch root collection of resource %1."
-msgstr ""
+msgstr "Nepovedlo se stáhnout hlavní sbírku zdroje %1."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:189
 #, kde-format
 msgid "No resource ID given."
-msgstr ""
+msgstr "Nebylo poskytnuto ID zdroje."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:326
 #, kde-format
 msgid "Invalid resource identifier '%1'"
-msgstr ""
+msgstr "Neplatný identifikátor zdroje '%1'"
 
 #: core/jobs/specialcollectionshelperjobs.cpp:342
 #: core/jobs/specialcollectionshelperjobs.cpp:350
 #, kde-format
 msgid "Failed to configure default resource via D-Bus."
-msgstr ""
+msgstr "Nepovedlo se nastavení výchozího zdroje pomocí D-Bus."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:415
 #, kde-format
 msgid "Failed to fetch the resource collection."
-msgstr ""
+msgstr "Nepovedlo se stáhnout sbírku zdroje."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:599
 #, kde-format
 msgid "Timeout trying to get lock."
-msgstr ""
+msgstr "Vypršení časového limitu při pokusu o zamčení."
 
 #: core/jobs/tagcreatejob.cpp:49
 #, kde-format
