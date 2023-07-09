@@ -230,7 +230,7 @@ void SetupTest::writeAkonadiserverrc(const QString &path)
 {
     QString backend;
     if (Config::instance()->dbBackend() == QLatin1String("sqlite")) {
-        backend = QStringLiteral("QSQLITE3");
+        backend = QStringLiteral("QSQLITE");
     } else if (Config::instance()->dbBackend() == QLatin1String("mysql")) {
         backend = QStringLiteral("QMYSQL");
     } else if (Config::instance()->dbBackend() == QLatin1String("pgsql")) {

@@ -111,7 +111,7 @@ protected:
     /*
      * Returns the Database backend we should use by default. Usually it should be the same value
      * configured as AKONADI_DATABASE_BACKEND at build time, but this method checks if that
-     * backend is really available and if it's not, it falls back to returning "QSQLITE3".
+     * backend is really available and if it's not, it falls back to returning "QSQLITE".
      */
     static QString defaultAvailableDatabaseBackend(QSettings &settings);
 

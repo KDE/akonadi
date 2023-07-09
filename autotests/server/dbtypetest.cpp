@@ -27,7 +27,6 @@ private Q_SLOTS:
 
         QTest::newRow("mysql") << "QMYSQL" << DbType::MySQL;
         QTest::newRow("sqlite") << "QSQLITE" << DbType::Sqlite;
-        QTest::newRow("sqlite3") << "QSQLITE3" << DbType::Sqlite;
         QTest::newRow("psql") << "QPSQL" << DbType::PostgreSQL;
     }
 

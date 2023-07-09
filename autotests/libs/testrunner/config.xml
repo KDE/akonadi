@@ -1,7 +1,7 @@
 <configs>
   <config name="sqlite">
     <datahome>xdglocal</datahome>
-    <!-- Acceptable values: QSQLITE, QSQLITE3, QMYSQL, QPSQL //-->
-    <dbbackend>QSQLITE3</dbbackend>
+    <!-- Acceptable values: QSQLITE, QMYSQL, QPSQL //-->
+    <dbbackend>QSQLITE</dbbackend>
   </config>
 </configs>

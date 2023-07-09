@@ -52,18 +52,9 @@ static QString sqliteDataFile()
     return akonadiPath;
 }
 
-DbConfigSqlite::DbConfigSqlite(Version driverVersion)
-    : mDriverVersion(driverVersion)
-{
-}
-
 QString DbConfigSqlite::driverName() const
 {
-    if (mDriverVersion == Default) {
-        return QStringLiteral("QSQLITE");
-    } else {
-        return QStringLiteral("QSQLITE3");
-    }
+    return QStringLiteral("QSQLITE");
 }
 
 QString DbConfigSqlite::databaseName() const

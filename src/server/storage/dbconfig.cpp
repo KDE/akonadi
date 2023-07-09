@@ -62,9 +62,9 @@ QString DbConfig::defaultAvailableDatabaseBackend(QSettings &settings)
         dbConfigFallbackTest = std::make_unique<DbConfigPostgresql>();
     }
 
-    if (dbConfigFallbackTest && !dbConfigFallbackTest->isAvailable(settings) && DbConfigSqlite(DbConfigSqlite::Custom).isAvailable(settings)) {
-        qCWarning(AKONADISERVER_LOG) << driverName << " requirements not available. Falling back to using QSQLITE3.";
-        driverName = QStringLiteral("QSQLITE3");
+    if (dbConfigFallbackTest && !dbConfigFallbackTest->isAvailable(settings) && DbConfigSqlite().isAvailable(settings)) {
+        qCWarning(AKONADISERVER_LOG) << driverName << " requirements not available. Falling back to using QSQLITE.";
+        driverName = QStringLiteral("QSQLITE");
     }
 
     return driverName;
@@ -88,10 +88,10 @@ DbConfig *DbConfig::configuredDatabase()
 
         if (driverName == QLatin1String("QMYSQL")) {
             s_DbConfigInstance = new DbConfigMysql;
-        } else if (driverName == QLatin1String("QSQLITE")) {
-            s_DbConfigInstance = new DbConfigSqlite(DbConfigSqlite::Default);
-        } else if (driverName == QLatin1String("QSQLITE3")) {
-            s_DbConfigInstance = new DbConfigSqlite(DbConfigSqlite::Custom);
+        } else if (driverName == QLatin1String("QSQLITE") || driverName == QLatin1String("QSQLITE3")) {
+            // QSQLITE3 is legacy name for the Akonadi fork of the upstream QSQLITE driver.
+            // It is kept here for backwards compatibility with old server config files.
+            s_DbConfigInstance = new DbConfigSqlite();
         } else if (driverName == QLatin1String("QPSQL")) {
             s_DbConfigInstance = new DbConfigPostgresql;
         } else {

@@ -164,17 +164,17 @@ void FakeAkonadiServer::initFake()
     qputenv("AKONADI_INSTANCE", qPrintable(instanceName()));
     QSettings settings(StandardDirs::serverConfigFile(StandardDirs::WriteOnly), QSettings::IniFormat);
     settings.beginGroup(QStringLiteral("General"));
-    settings.setValue(QStringLiteral("Driver"), QLatin1String("QSQLITE3"));
+    settings.setValue(QStringLiteral("Driver"), QLatin1String("QSQLITE"));
     settings.endGroup();
 
-    settings.beginGroup(QStringLiteral("QSQLITE3"));
+    settings.beginGroup(QStringLiteral("QSQLITE"));
     settings.setValue(QStringLiteral("Name"), QString(basePath() + QLatin1String("/local/share/akonadi/akonadi.db")));
     settings.endGroup();
     settings.sync();
 
     DbConfig *dbConfig = DbConfig::configuredDatabase();
-    if (dbConfig->driverName() != QLatin1String("QSQLITE3")) {
-        throw FakeAkonadiServerException(QLatin1String("Unexpected driver specified. Expected QSQLITE3, got ") + dbConfig->driverName());
+    if (dbConfig->driverName() != QLatin1String("QSQLITE")) {
+        throw FakeAkonadiServerException(QLatin1String("Unexpected driver specified. Expected QSQLITE, got ") + dbConfig->driverName());
     }
 
     const QLatin1String initCon("initConnection");

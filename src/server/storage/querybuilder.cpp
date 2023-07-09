@@ -437,7 +437,7 @@ bool QueryBuilder::exec()
                 // Not sure retrying helps, maybe error is good enough.... but doesn't hurt to retry a few times before giving up.
                 needsRetry = true;
             }
-        } else if (mDatabaseType == DbType::Sqlite && !DbType::isSystemSQLite(DataStore::self()->database())) {
+        } else if (mDatabaseType == DbType::Sqlite) {
             const QString lastErrorStr = mQuery.lastError().nativeErrorCode();
             const int error = lastErrorStr.isEmpty() ? -1 : lastErrorStr.toInt();
             if (error == 6 /* SQLITE_LOCKED */) {
@@ -451,10 +451,6 @@ bool QueryBuilder::exec()
                 DataStore::self()->doRollback();
                 needsRetry = true;
             }
-        } else if (mDatabaseType == DbType::Sqlite) {
-            // We can't have a transaction deadlock in SQLite when using driver shipped
-            // with Qt, because it does not support concurrent transactions and DataStore
-            // serializes them through a global lock.
         }
 
         if (needsRetry) {
