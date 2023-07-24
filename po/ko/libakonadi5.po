@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-02 00:48+0000\n"
-"PO-Revision-Date: 2023-04-21 23:09+0200\n"
+"PO-Revision-Date: 2023-07-23 22:07+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -535,10 +535,10 @@ msgid ""
 "If you recently updated your system please log out and back in to make sure "
 "all applications use the correct protocol version."
 msgstr ""
-"Akonadi 서버의 프로토콜과 이 프로그램에서 사용하는 프로토콜의 버전이 서로 다"
-"릅니다.\n"
-"시스템을 최근에 업데이트했다면 모든 프로그램이 올바른 프로토콜 버전을 사용하"
-"도록 로그아웃한 후 다시 로그인하십시오."
+"Akonadi 서버의 프로토콜과 이 앱에서 사용하는 프로토콜의 버전이 서로 다릅니"
+"다.\n"
+"시스템을 최근에 업데이트했다면 모든 앱이 올바른 프로토콜 버전을 사용하도록 로"
+"그아웃한 후 다시 로그인하십시오."
 
 #: core/servermanager.cpp:288
 #, kde-format
@@ -564,7 +564,7 @@ msgid ""
 "you updated your system recently please restart all KDE PIM applications."
 msgstr ""
 "프로토콜 버전이 일치하지 않습니다. 서버 쪽 버전(%1)이 클라이언트 쪽 버전(%2)"
-"보다 높습니다. 시스템을 업데이트했다면 KDE PIM 프로그램을 다시 시작하십시오."
+"보다 높습니다. 시스템을 업데이트했다면 KDE PIM 앱을 다시 시작하십시오."
 
 #: selftest/main.cpp:19
 #, kde-format
@@ -1107,8 +1107,8 @@ msgid ""
 "The Akonadi personal information management service is not running. This "
 "application cannot be used without it."
 msgstr ""
-"Akonadi 개인 정보 관리 서비스가 실행 중이 아닙니다. 이 프로그램은 해당 서비"
-"스 없이 사용할 수 없습니다."
+"Akonadi 개인 정보 관리 서비스가 실행 중이 아닙니다. 이 앱은 해당 서비스 없이 "
+"사용할 수 없습니다."
 
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #: widgets/erroroverlay.ui:116
@@ -1608,8 +1608,8 @@ msgid ""
 "and KDE PIM applications."
 msgstr ""
 "현재 서버 프로토콜 버전이 %1이지만 최소한 버전 %2이(가) 클라이언트에서 필요합"
-"니다. KDE PIM을 업그레이드했다면 Akonadi와 KDE PIM 프로그램을 모두 다시 시작"
-"하십시오."
+"니다. KDE PIM을 업그레이드했다면 Akonadi와 KDE PIM 앱을 모두 다시 시작하십시"
+"오."
 
 #: widgets/selftestdialog.cpp:454
 #, kde-format
@@ -1769,9 +1769,9 @@ msgid ""
 "many security risks. MySQL, used by this Akonadi installation, will not "
 "allow itself to run as root, to protect you from these risks."
 msgstr ""
-"인터넷에 접근할 수 있는 프로그램을 루트/관리자 권한으로 시작하면 보안 문제에 "
-"노출될 수 있습니다. 이 Akonadi 설치본에 사용된 MySQL은 루트로 시작되지 않으므"
-"로 이러한 위험에서 보호될 수 있습니다."
+"인터넷에 접근할 수 있는 앱을 루트/관리자 권한으로 시작하면 보안 문제에 노출"
+"될 수 있습니다. 이 Akonadi 설치본에 사용된 MySQL은 루트로 시작되지 않으므로 "
+"이러한 위험에서 보호될 수 있습니다."
 
 #: widgets/selftestdialog.cpp:564
 #, kde-format
