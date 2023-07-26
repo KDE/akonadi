@@ -219,8 +219,8 @@ private:
 AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug d, const Akonadi::ImapInterval &interval);
 AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug d, const Akonadi::ImapSet &set);
 
-Q_DECLARE_TYPEINFO(Akonadi::ImapInterval, Q_MOVABLE_TYPE);
-Q_DECLARE_TYPEINFO(Akonadi::ImapSet, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(Akonadi::ImapInterval, Q_RELOCATABLE_TYPE);
+Q_DECLARE_TYPEINFO(Akonadi::ImapSet, Q_RELOCATABLE_TYPE);
 
 Q_DECLARE_METATYPE(Akonadi::ImapInterval)
 Q_DECLARE_METATYPE(Akonadi::ImapInterval::List)

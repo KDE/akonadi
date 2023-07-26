@@ -133,6 +133,6 @@ private:
 
 }
 
-Q_DECLARE_TYPEINFO(Akonadi::AgentType, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(Akonadi::AgentType, Q_RELOCATABLE_TYPE);
 
 Q_DECLARE_METATYPE(Akonadi::AgentType)

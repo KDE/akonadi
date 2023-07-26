@@ -113,6 +113,6 @@ private:
 
 } // namespace Akonadi
 
-Q_DECLARE_TYPEINFO(Akonadi::Scope::HRID, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(Akonadi::Scope::HRID, Q_RELOCATABLE_TYPE);
 
 AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug debug, const Akonadi::Scope &scope);

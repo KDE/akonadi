@@ -658,7 +658,7 @@ AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator>>(Akonadi::Protoco
 
 Q_DECLARE_METATYPE(Akonadi::Protocol::ChangeNotificationPtr)
 Q_DECLARE_METATYPE(Akonadi::Protocol::ChangeNotificationList)
-Q_DECLARE_TYPEINFO(Akonadi::Protocol::ChangeNotification::Relation, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(Akonadi::Protocol::ChangeNotification::Relation, Q_RELOCATABLE_TYPE);
 
 /******************************************************************************/
 

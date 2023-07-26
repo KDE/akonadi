@@ -197,6 +197,6 @@ private:
 
 }
 
-Q_DECLARE_TYPEINFO(Akonadi::AgentInstance, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(Akonadi::AgentInstance, Q_RELOCATABLE_TYPE);
 
 Q_DECLARE_METATYPE(Akonadi::AgentInstance)

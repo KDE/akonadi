@@ -69,7 +69,7 @@ QList&lt;QString&gt; allDatabaseTables();
 </xsl:for-each>
 
 <xsl:for-each select="database/table">
-Q_DECLARE_TYPEINFO(Akonadi::Server::<xsl:value-of select="@name"/>, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(Akonadi::Server::<xsl:value-of select="@name"/>, Q_RELOCATABLE_TYPE);
 </xsl:for-each>
 #endif
 

@@ -965,4 +965,4 @@ void Item::setPayload(T *p)
 
 Q_DECLARE_METATYPE(Akonadi::Item)
 Q_DECLARE_METATYPE(Akonadi::Item::List)
-Q_DECLARE_TYPEINFO(Akonadi::Item, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(Akonadi::Item, Q_RELOCATABLE_TYPE);

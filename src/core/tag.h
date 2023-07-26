@@ -256,4 +256,4 @@ AKONADICORE_EXPORT QDebug operator<<(QDebug debug, const Akonadi::Tag &tag);
 Q_DECLARE_METATYPE(Akonadi::Tag)
 Q_DECLARE_METATYPE(Akonadi::Tag::List)
 Q_DECLARE_METATYPE(QSet<Akonadi::Tag>)
-Q_DECLARE_TYPEINFO(Akonadi::Tag, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(Akonadi::Tag, Q_RELOCATABLE_TYPE);

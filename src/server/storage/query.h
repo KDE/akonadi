@@ -141,4 +141,4 @@ private:
 } // namespace Server
 } // namespace Akonadi
 
-Q_DECLARE_TYPEINFO(Akonadi::Server::Query::Condition, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(Akonadi::Server::Query::Condition, Q_RELOCATABLE_TYPE);
