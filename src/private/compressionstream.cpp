@@ -76,14 +76,6 @@ std::error_condition make_error_condition(lzma_ret ret)
     return std::error_condition(static_cast<int>(ret), lzmaErrorCategory());
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
-QDebug operator<<(QDebug dbg, const std::string &str)
-{
-    dbg << QString::fromStdString(str);
-    return dbg;
-}
-#endif
-
 } // namespace std
 
 std::error_code make_error_code(lzma_ret e)
