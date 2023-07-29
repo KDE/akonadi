@@ -710,24 +710,7 @@ private:
      */
     void setStorageCollectionId(Collection::Id collectionId);
 
-#if 0
-    /**
-     * Helper function for non-template throwing of PayloadException.
-     */
-    QString payloadExceptionText(int spid, int mtid) const;
-
-    /**
-     * Non-template throwing of PayloadException.
-     * Needs to be inline, otherwise catch (Akonadi::PayloadException)
-     * won't work (only catch (Akonadi::Exception))
-     */
-    inline void throwPayloadException(int spid, int mtid) const
-    {
-        throw PayloadException(payloadExceptionText(spid, mtid));
-    }
-#else
     void throwPayloadException(int spid, int mtid) const;
-#endif
 
     QSharedDataPointer<ItemPrivate> d_ptr;
     friend class ItemPrivate;
