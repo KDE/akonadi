@@ -456,15 +456,28 @@ static QString format_types(const PayloadContainer &container)
     return result.join(QLatin1String(", "));
 }
 
+static QString format_reason(bool valid, Item::Id id)
+{
+    if (valid) {
+        return QStringLiteral("itemId: %1").arg(id);
+    } else {
+        return QStringLiteral("Item is not valid");
+    }
+}
+
 void Item::throwPayloadException(int spid, int mtid) const
 {
+    const auto reason = format_reason(isValid(), id());
+
     if (d_ptr->mPayloads.empty()) {
-        qCDebug(AKONADICORE_LOG) << "Throwing PayloadException: No payload set";
-        throw PayloadException("No payload set");
+        qCDebug(AKONADICORE_LOG) << "Throwing PayloadException for Item" << id() << ": No payload set";
+        throw PayloadException(QStringLiteral("No Item payload set (%1)").arg(reason));
     } else {
-        qCDebug(AKONADICORE_LOG) << "Throwing PayloadException: Wrong payload type (requested:" << format_type(spid, mtid)
-                                 << "; present: " << format_types(d_ptr->mPayloads) << "), item mime type is" << mimeType();
-        throw PayloadException(QStringLiteral("Wrong payload type (requested: %1; present: %2)").arg(format_type(spid, mtid), format_types(d_ptr->mPayloads)));
+        const auto requestedType = format_type(spid, mtid);
+        const auto presentType = format_types(d_ptr->mPayloads);
+        qCDebug(AKONADICORE_LOG) << "Throwing PayloadException for Item" << id() << ": Wrong payload type (requested:" << requestedType
+                                 << "; present: " << presentType << "), item mime type is" << mimeType();
+        throw PayloadException(QStringLiteral("Wrong Item payload type (requested: %1; present: %2, %3)").arg(requestedType, presentType, reason));
     }
 }
 
