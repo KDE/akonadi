@@ -459,7 +459,7 @@ bool CollectionFetchHandler::parseStream()
     if (!cmd.resource().isEmpty()) {
         mResource = Resource::retrieveByName(cmd.resource());
         if (!mResource.isValid()) {
-            return failureResponse("Unknown resource");
+            return failureResponse(QStringLiteral("Unknown resource %1").arg(cmd.resource()));
         }
     }
     const QStringList lstMimeTypes = cmd.mimeTypes();
