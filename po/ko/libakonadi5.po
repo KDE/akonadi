@@ -92,12 +92,12 @@ msgstr "설정되지 않음"
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
-msgstr "자원 식별자"
+msgstr "리소스 식별자"
 
 #: agentbase/resourcebase.cpp:523
 #, kde-format
 msgid "Akonadi Resource"
-msgstr "Akonadi 자원"
+msgstr "Akonadi 리소스"
 
 #: agentbase/resourcebase.cpp:571
 #, kde-format
@@ -206,13 +206,13 @@ msgstr "잘못된 모음집 인스턴스입니다."
 #: core/jobs/resourcesynchronizationjob.cpp:88
 #, kde-format
 msgid "Invalid resource instance."
-msgstr "잘못된 자원 인스턴스입니다."
+msgstr "잘못된 리소스 인스턴스입니다."
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:102
 #: core/jobs/resourcesynchronizationjob.cpp:113
 #, kde-format
 msgid "Unable to obtain D-Bus interface for resource '%1'"
-msgstr "자원 '%1'의 DBus 인터페이스를 가져올 수 없음"
+msgstr "리소스 '%1'의 DBus 인터페이스를 가져올 수 없음"
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:125
 #, kde-format
@@ -307,33 +307,33 @@ msgstr "관계를 만들 수 없습니다."
 #: core/jobs/resourcesynchronizationjob.cpp:139
 #, kde-format
 msgid "Resource synchronization timed out."
-msgstr "자원 동기화 시간이 초과되었습니다."
+msgstr "리소스 동기화 시간이 초과되었습니다."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:145
 #, kde-format
 msgid "Could not fetch root collection of resource %1."
-msgstr "자원 %1의 루트 모음집을 가져올 수 없습니다."
+msgstr "리소스 %1의 루트 모음집을 가져올 수 없습니다."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:189
 #, kde-format
 msgid "No resource ID given."
-msgstr "자원 ID가 주어지지 않았습니다."
+msgstr "리소스 ID가 주어지지 않았습니다."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:326
 #, kde-format
 msgid "Invalid resource identifier '%1'"
-msgstr "잘못된 자원 식별자 '%1'"
+msgstr "잘못된 리소스 식별자 '%1'"
 
 #: core/jobs/specialcollectionshelperjobs.cpp:342
 #: core/jobs/specialcollectionshelperjobs.cpp:350
 #, kde-format
 msgid "Failed to configure default resource via D-Bus."
-msgstr "DBus를 통하여 기본 자원을 설정할 수 없습니다."
+msgstr "DBus를 통하여 기본 리소스를 설정할 수 없습니다."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:415
 #, kde-format
 msgid "Failed to fetch the resource collection."
-msgstr "자원 모음집을 가져올 수 없습니다."
+msgstr "리소스 모음집을 가져올 수 없습니다."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:599
 #, kde-format
@@ -368,7 +368,7 @@ msgstr "올바른 모음집이 없거나 항목 목록이 비어 있음"
 #: core/jobs/trashrestorejob.cpp:86
 #, kde-format
 msgid "Could not find restore collection and restore resource is not available"
-msgstr "복원 모음집을 찾을 수 없으며 복원 자원을 사용할 수 없음"
+msgstr "복원 모음집을 찾을 수 없으며 복원 리소스를 사용할 수 없음"
 
 #: core/models/agentinstancemodel.cpp:183
 #, kde-format
@@ -1629,17 +1629,17 @@ msgstr "현재 프로토콜 버전은 %1입니다."
 #: widgets/selftestdialog.cpp:478
 #, kde-format
 msgid "Resource agents found."
-msgstr "자원 에이전트를 찾았습니다."
+msgstr "리소스 에이전트를 찾았습니다."
 
 #: widgets/selftestdialog.cpp:478
 #, kde-format
 msgid "At least one resource agent has been found."
-msgstr "최소한 하나의 자원 에이전트를 찾았습니다."
+msgstr "최소한 하나의 리소스 에이전트를 찾았습니다."
 
 #: widgets/selftestdialog.cpp:481
 #, kde-format
 msgid "No resource agents found."
-msgstr "자원 에이전트를 찾을 수 없습니다."
+msgstr "리소스 에이전트를 찾을 수 없습니다."
 
 #: widgets/selftestdialog.cpp:482
 #, kde-format
@@ -1650,11 +1650,11 @@ msgid ""
 "XDG_DATA_DIRS environment variable is set to '%2'; make sure this includes "
 "all paths where Akonadi agents are installed."
 msgstr ""
-"자원 에이전트를 찾을 수 없습니다. Akonadi가 작동하려면 최소한 하나의 자원 에"
-"이전트가 필요합니다. 자원 에이전트가 설치되지 않았거나 설치 상황에 문제가 있"
-"습니다. 다음 경로를 찾았습니다: '%1'. XDG_DATA_DIRS 환경 변수가 '%2'(으)로 설"
-"정되어 있으며, Akonadi 에이전트가 설치되어 있는 경로가 들어 있는지 확인하십시"
-"오."
+"리소스 에이전트를 찾을 수 없습니다. Akonadi가 작동하려면 최소한 하나의 리소"
+"스 에이전트가 필요합니다. 리소스 에이전트가 설치되지 않았거나 설치 상황에 문"
+"제가 있습니다. 다음 경로를 찾았습니다: '%1'. XDG_DATA_DIRS 환경 변수가 "
+"'%2'(으)로 설정되어 있으며, Akonadi 에이전트가 설치되어 있는 경로가 들어 있는"
+"지 확인하십시오."
 
 #: widgets/selftestdialog.cpp:499
 #, kde-format
@@ -1937,19 +1937,19 @@ msgstr "폴더 잘라내기(&C)"
 
 #: widgets/standardactionmanager.cpp:145
 msgid "Create Resource"
-msgstr "자원 만들기"
+msgstr "리소스 만들기"
 
 #: widgets/standardactionmanager.cpp:146
 msgid "Delete Resource"
-msgstr "자원 삭제"
+msgstr "리소스 삭제"
 
 #: widgets/standardactionmanager.cpp:148
 msgid "&Resource Properties"
-msgstr "자원 속성(&R)"
+msgstr "리소스 속성(&R)"
 
 #: widgets/standardactionmanager.cpp:156
 msgid "Synchronize Resource"
-msgstr "자원 동기화"
+msgstr "리소스 동기화"
 
 #: widgets/standardactionmanager.cpp:163
 msgid "Work Offline"
@@ -2067,13 +2067,13 @@ msgstr[0] "폴더 %1개 동기화(&S)"
 #, kde-format
 msgid "&Delete Resource"
 msgid_plural "&Delete %1 Resources"
-msgstr[0] "자원 %1개 삭제(&D)"
+msgstr[0] "리소스 %1개 삭제(&D)"
 
 #: widgets/standardactionmanager.cpp:336
 #, kde-format
 msgid "&Synchronize Resource"
 msgid_plural "&Synchronize %1 Resources"
-msgstr[0] "자원 %1개 동기화(&S)"
+msgstr[0] "리소스 %1개 동기화(&S)"
 
 #: widgets/standardactionmanager.cpp:338
 #, kde-format
@@ -2122,14 +2122,14 @@ msgstr[0] "폴더 %1개 동기화"
 msgctxt "@action"
 msgid "Delete Resource"
 msgid_plural "Delete %1 Resources"
-msgstr[0] "자원 %1개 삭제"
+msgstr[0] "리소스 %1개 삭제"
 
 #: widgets/standardactionmanager.cpp:346
 #, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
 msgid_plural "Synchronize %1 Resources"
-msgstr[0] "자원 %1개 동기화"
+msgstr[0] "리소스 %1개 동기화"
 
 #: widgets/standardactionmanager.cpp:349
 #, kde-format
@@ -2208,31 +2208,31 @@ msgstr "이름:"
 #, kde-format
 msgctxt "@title:window"
 msgid "New Resource"
-msgstr "새 자원"
+msgstr "새 리소스"
 
 #: widgets/standardactionmanager.cpp:376
 #, kde-format
 msgid "Could not create resource: %1"
-msgstr "자원을 만들 수 없음: %1"
+msgstr "리소스를 만들 수 없음: %1"
 
 #: widgets/standardactionmanager.cpp:377
 #, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
-msgstr "자원 생성 실패"
+msgstr "리소스 생성 실패"
 
 #: widgets/standardactionmanager.cpp:381
 #, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
-msgstr[0] "자원 %1개를 삭제하시겠습니까?"
+msgstr[0] "리소스 %1개를 삭제하시겠습니까?"
 
 #: widgets/standardactionmanager.cpp:384
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Resource?"
 msgid_plural "Delete Resources?"
-msgstr[0] "자원 삭제?"
+msgstr[0] "리소스 삭제?"
 
 #: widgets/standardactionmanager.cpp:386
 #, kde-format
@@ -2267,8 +2267,8 @@ msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
 "you want to make it online?"
 msgstr ""
-"폴더 \"%1\"을(를) 동기화하기 전 해당하는 자원을 온라인으로 전환해야 합니다. "
-"온라인으로 전환하시겠습니까?"
+"폴더 \"%1\"을(를) 동기화하기 전 해당하는 리소스를 온라인으로 전환해야 합니"
+"다. 온라인으로 전환하시겠습니까?"
 
 #: widgets/standardactionmanager.cpp:983
 #, kde-format
