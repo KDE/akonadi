@@ -29,57 +29,64 @@ namespace Akonadi
  *
  * class SecrecyAttribute : public Akonadi::Attribute
  * {
- *    public:
- *      enum Secrecy
- *      {
- *        Public,
- *        Private,
- *        Confidential
- *      };
+ *     Q_GADGET
  *
- *      SecrecyAttribute( Secrecy secrecy = Public )
- *        : mSecrecy( secrecy )
- *      {
- *      }
+ * public:
+ *     enum Secrecy
+ *     {
+ *         Public,
+ *         Private,
+ *         Confidential
+ *     };
+ *     Q_ENUM(Secrecy);
  *
- *      void setSecrecy( Secrecy secrecy )
- *      {
- *        mSecrecy = secrecy;
- *      }
+ *     SecrecyAttribute(Secrecy secrecy = Public)
+ *         : mSecrecy(secrecy)
+ *     {
+ *     }
  *
- *      Secrecy secrecy() const
- *      {
- *        return mSecrecy;
- *      }
+ *     void setSecrecy(Secrecy secrecy)
+ *     {
+ *         mSecrecy = secrecy;
+ *     }
  *
- *      virtual QByteArray type() const
- *      {
- *        return "secrecy";
- *      }
+ *     Secrecy secrecy() const
+ *     {
+ *         return mSecrecy;
+ *     }
  *
- *      virtual Attribute* clone() const
- *      {
- *        return new SecrecyAttribute( mSecrecy );
- *      }
+ *     virtual QByteArray type() const
+ *     {
+ *         return "secrecy";
+ *     }
  *
- *      virtual QByteArray serialized() const
- *      {
- *        switch ( mSecrecy ) {
- *          case Public: return "public"; break;
- *          case Private: return "private"; break;
- *          case Confidential: return "confidential"; break;
- *        }
- *      }
+ *     virtual Attribute* clone() const
+ *     {
+ *         return new SecrecyAttribute(mSecrecy);
+ *     }
  *
- *      virtual void deserialize( const QByteArray &data )
- *      {
- *        if ( data == "public" )
- *          mSecrecy = Public;
- *        else if ( data == "private" )
- *          mSecrecy = Private;
- *        else if ( data == "confidential" )
- *          mSecrecy = Confidential;
- *      }
+ *     virtual QByteArray serialized() const
+ *     {
+ *         switch (mSecrecy) {
+ *         case Public:
+ *             return "public";
+ *         case Private:
+ *             return "private";
+ *         case Confidential:
+ *             return "confidential";
+ *         }
+ *     }
+ *
+ *     virtual void deserialize(const QByteArray &data)
+ *     {
+ *         if (data == "public") {
+ *             mSecrecy = Public;
+ *         } else if (data == "private") {
+ *             mSecrecy = Private;
+ *         } else if (data == "confidential") {
+ *             mSecrecy = Confidential;
+ *         }
+ *     }
  * }
  *
  * @endcode
@@ -99,9 +106,9 @@ namespace Akonadi
  *
  * @code
  *
- * Akonadi::Item item( "text/directory" );
- * SecrecyAttribute* attr = item.attribute<SecrecyAttribute>( Item::AddIfMissing );
- * attr->setSecrecy( SecrecyAttribute::Confidential );
+ * Akonadi::Item item(QStringLiteral("text/directory"));
+ * SecrecyAttribute* attr = item.attribute<SecrecyAttribute>(Item::AddIfMissing);
+ * attr->setSecrecy(SecrecyAttribute::Confidential);
  *
  * @endcode
  *
@@ -111,7 +118,7 @@ namespace Akonadi
  *
  * Akonadi::Item item = ...
  *
- * if ( item.hasAttribute<SecrecyAttribute>() ) {
+ * if (item.hasAttribute<SecrecyAttribute>()) {
  *   SecrecyAttribute *attr = item.attribute<SecrecyAttribute>();
  *
  *   SecrecyAttribute::Secrecy secrecy = attr->secrecy();
