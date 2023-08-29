@@ -34,8 +34,8 @@ The following options are available when running CMake:
 * KDE_INSTALL_USE_QT_SYS_PATHS (Default: FALSE): Useful for distributions.
   Once enabled, the qsqlite3 backend will be installed in the sqlbackends subdirectory of the default Qt plugins directory
   specified at Qt build time.
-* DATABASE_BACKEND (Default: MYSQL, available: MYSQL, POSTGRES, SQLITE): Define which database driver to use by default.
-  MYSQL is preferred, SQLITE should be avoided.
+* DATABASE_BACKEND (Default: MYSQL, available: MYSQL, POSTGRES, SQLITE): Define which database driver to use by default. MYSQL
+  is the default right now, SQLITE is recommended for most users.
 
 === Build Requirements ===
 
@@ -48,13 +48,12 @@ Required:
 
 Optional:
 
-* Mysqld (https://www.mysql.com/) - Optional at build time. You can pass -DMYSQLD_EXECUTABLE=/path/to/mysqld when running CMake instead
-* SQlite >= 3.6.23 (https://www.sqlite.org/index.html) - Needed if you want to build the Sqlite backend
+* MySQL/MariaDB (https://www.mysql.com/) - Optional at build time. You can pass -DMYSQLD_EXECUTABLE=/path/to/mysqld when running CMake instead
 * Postgresql (https://www.postgresql.org/) - Optional at build time. You can pass -DPOSTGRES_PATH=/path/to/pg_ctl when running CMake instead
 
 === Runtime Requirements ===
 
-* SQlite if you plan to use the SQLite backend (NOT RECOMMENDED for desktop)
-* MySQL server >= 5.1.3 (or compatible replacements such as MariaDB) if you plan to use the Mysql backend
+* SQLite if you plan to use the SQLite backend
+* MySQL server >= 5.1.3 (or compatible replacements such as MariaDB) if you plan to use the MySQL backend
 * a Postgresql server if you plan to use the Postgres backend
 
