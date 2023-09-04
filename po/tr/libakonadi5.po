@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-02 00:48+0000\n"
-"PO-Revision-Date: 2023-07-17 22:54+0300\n"
+"PO-Revision-Date: 2023-09-03 21:11+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 23.07.70\n"
+"X-Generator: Lokalize 23.11.70\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -460,7 +460,7 @@ msgstr "Toplam İleti Sayısı"
 #: core/models/statisticsproxymodel.cpp:88
 #, kde-format
 msgid "Unread Messages"
-msgstr "Okunmamış İletiler"
+msgstr "Okunmayan İletiler"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
@@ -481,7 +481,7 @@ msgstr "Alt Klasör Depolama Boyutu"
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
-msgstr "Okunmamış"
+msgstr "Okunmayan"
 
 #: core/models/statisticsproxymodel.cpp:225
 #, kde-format
@@ -940,7 +940,7 @@ msgstr "Toplam Öge:"
 #: widgets/collectionmaintenancepage.ui:59
 #, kde-format
 msgid "Unread items:"
-msgstr "Okunmamış ögeler:"
+msgstr "Okunmayan ögeler:"
 
 #. i18n: ectx: property (text), widget (QLabel, indexingLabel)
 #: widgets/collectionmaintenancepage.ui:73
