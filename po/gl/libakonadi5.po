@@ -772,7 +772,7 @@ msgid ""
 "likely never uploaded to the destination server, so clearing this collection "
 "means that those <b>data will be lost</b>. Are you sure you want to proceed?"
 msgstr ""
-"A colección «%1» contén %2 elementos sen identificador remoto. Probablemente "
+"A colección «%1» contén %2 elementos sen identificador remoto. Probabelmente "
 "non se subisen nunca ao servidor de destino, así que borrar a colección "
 "resultaría nunha <b>perda de datos</b>. Seguro que quere continuar?"
 
