@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-02 00:48+0000\n"
+"POT-Creation-Date: 2023-09-21 00:45+0000\n"
 "PO-Revision-Date: 2022-04-07 17:43+0200\n"
 "Last-Translator: Roman Paholik <wizzardsk@gmail.com>\n"
 "Language-Team: Slovak <kde-sk@linux.sk>\n"
@@ -36,23 +36,23 @@ msgstr "Momentálne nie je nakonfigurovaný žiadny účet."
 msgid "Accounts integration is not supported"
 msgstr "Integrácia účtov nie je podporovaná"
 
-#: agentbase/agentbase.cpp:365 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:348 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Nemôžem registrovať objekt na dbus: %1"
 
-#: agentbase/agentbase.cpp:454
+#: agentbase/agentbase.cpp:437
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 typu %2"
 
-#: agentbase/agentbase.cpp:904
+#: agentbase/agentbase.cpp:883
 #, kde-format
 msgid "Agent identifier"
 msgstr "Identifikátor agenta"
 
-#: agentbase/agentbase.cpp:910
+#: agentbase/agentbase.cpp:889
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi Agent"
@@ -134,23 +134,23 @@ msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Nemôžete vybrať položku v offline móde."
 
-#: agentbase/resourcebase.cpp:918
+#: agentbase/resourcebase.cpp:910
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Synchronizujem priečinok '%1'"
 
-#: agentbase/resourcebase.cpp:938 agentbase/resourcebase.cpp:945
+#: agentbase/resourcebase.cpp:930 agentbase/resourcebase.cpp:937
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Zlyhalo získanie kolekcie pre sync."
 
-#: agentbase/resourcebase.cpp:985
+#: agentbase/resourcebase.cpp:977
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Zlyhalo získanie kolekcie pre atribút sync."
 
-#: agentbase/resourcebase.cpp:1039
+#: agentbase/resourcebase.cpp:1031
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Vyžadovaná položka už neexistuje"
@@ -166,7 +166,7 @@ msgstr "Úloha zrušená."
 msgid "No such collection."
 msgstr "Žiadna kolekcia."
 
-#: core/collectionsync.cpp:508 core/collectionsync.cpp:653
+#: core/collectionsync.cpp:509 core/collectionsync.cpp:654
 #, kde-format
 msgid "Found unresolved orphan collections"
 msgstr "Nájdené nevyriešené opustené kolekcie"
@@ -344,22 +344,22 @@ msgstr "Vypršal čas pokusu o získanie zámku."
 msgid "Failed to create tag."
 msgstr "Zlyhalo vytvorenie značky."
 
-#: core/jobs/trashjob.cpp:163
+#: core/jobs/trashjob.cpp:155
 #, kde-format
 msgid "Move to trash collection failed, aborting trash operation"
 msgstr "Presun do kolekcie koša zlyhal, ruší sa operácia koša"
 
-#: core/jobs/trashjob.cpp:226 core/jobs/trashrestorejob.cpp:151
+#: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format
 msgid "Invalid items passed"
 msgstr "Zadané neplatné položky"
 
-#: core/jobs/trashjob.cpp:270 core/jobs/trashrestorejob.cpp:201
+#: core/jobs/trashjob.cpp:258 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
 msgstr "Zadaná neplatná kolekcia"
 
-#: core/jobs/trashjob.cpp:387 core/jobs/trashrestorejob.cpp:351
+#: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
 #, kde-format
 msgid "No valid collection or empty itemlist"
 msgstr "Žiadna platná kolekcia alebo prázdny zoznam položiek"
@@ -526,7 +526,7 @@ msgstr "Nepomenovaný plugin"
 msgid "No description available"
 msgstr "Popis nie je k dispozícii"
 
-#: core/servermanager.cpp:271
+#: core/servermanager.cpp:263
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -539,7 +539,7 @@ msgstr ""
 "Ak ste nedávno aktualizovali systém, prosím odhláste sa a prihláste, aby "
 "všetky aplikácie používali rovnakú verziu protokolu."
 
-#: core/servermanager.cpp:288
+#: core/servermanager.cpp:280
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -631,12 +631,12 @@ msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 Nastavenia"
 
-#: widgets/agentconfigurationdialog.cpp:89
+#: widgets/agentconfigurationdialog.cpp:81
 #, kde-format
 msgid "%1 Handbook"
 msgstr "%1 Príručka"
 
-#: widgets/agentconfigurationdialog.cpp:90
+#: widgets/agentconfigurationdialog.cpp:82
 #, kde-format
 msgid "About %1"
 msgstr "O %1"
@@ -1070,7 +1070,7 @@ msgstr "&Odkaz sem"
 msgid "C&ancel"
 msgstr "&Zrušiť"
 
-#: widgets/erroroverlay.cpp:225
+#: widgets/erroroverlay.cpp:224
 #, kde-format
 msgctxt "%1 is a reason why"
 msgid ""
@@ -1082,23 +1082,23 @@ msgstr ""
 "\n"
 "%1"
 
-#: widgets/erroroverlay.cpp:229 widgets/erroroverlay.cpp:230
+#: widgets/erroroverlay.cpp:228 widgets/erroroverlay.cpp:229
 #, kde-format
 msgid "Personal information management service is starting..."
 msgstr "Služba správy osobných informácií sa spúšťa..."
 
-#: widgets/erroroverlay.cpp:234 widgets/erroroverlay.cpp:235
+#: widgets/erroroverlay.cpp:233 widgets/erroroverlay.cpp:234
 #, kde-format
 msgid "Personal information management service is shutting down..."
 msgstr "Služba správy osobných informácií sa vypína..."
 
-#: widgets/erroroverlay.cpp:239
+#: widgets/erroroverlay.cpp:238
 #, kde-format
 msgid ""
 "Personal information management service is performing a database upgrade."
 msgstr "Služba správy osobných informácií vykonáva inováciu databázy."
 
-#: widgets/erroroverlay.cpp:241
+#: widgets/erroroverlay.cpp:240
 #, kde-format
 msgid ""
 "Personal information management service is performing a database upgrade.\n"
@@ -2543,37 +2543,37 @@ msgstr "Súbor %1 neexistuje."
 msgid "Unable to parse data file '%1'."
 msgstr "Nemôžem spracovať dátový súbor '%1'."
 
-#: xml/xmldocument.cpp:150
+#: xml/xmldocument.cpp:149
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "Definícia schémy sa nedá načítať a spracovať."
 
-#: xml/xmldocument.cpp:155
+#: xml/xmldocument.cpp:154
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "Nemôžem vytvoriť kontext spracovača schémy."
 
-#: xml/xmldocument.cpp:160
+#: xml/xmldocument.cpp:159
 #, kde-format
 msgid "Unable to create schema."
 msgstr "Nemôžem vytvoriť schému."
 
-#: xml/xmldocument.cpp:165
+#: xml/xmldocument.cpp:164
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr "Nemôžem vytvoriť kontext kontroly schémy."
 
-#: xml/xmldocument.cpp:170
+#: xml/xmldocument.cpp:169
 #, kde-format
 msgid "Invalid file format."
 msgstr "Neznámy formát súboru."
 
-#: xml/xmldocument.cpp:178
+#: xml/xmldocument.cpp:177
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "Nemôžem spracovať dátový súbor: %1"
 
-#: xml/xmldocument.cpp:303
+#: xml/xmldocument.cpp:302
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Nemôžem nájsť kolekciu %1"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-02 00:48+0000\n"
+"POT-Creation-Date: 2023-09-21 00:45+0000\n"
 "PO-Revision-Date: 2022-09-27 17:54+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -37,23 +37,23 @@ msgstr "Saat ini belum ada akun yang dikonfigurasi."
 msgid "Accounts integration is not supported"
 msgstr "Integrasi akun belumlah didukung"
 
-#: agentbase/agentbase.cpp:365 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:348 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Tidak dapat meregister obyek di dbus: %1"
 
-#: agentbase/agentbase.cpp:454
+#: agentbase/agentbase.cpp:437
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 tipenya %2"
 
-#: agentbase/agentbase.cpp:904
+#: agentbase/agentbase.cpp:883
 #, kde-format
 msgid "Agent identifier"
 msgstr "Pengenal Agen"
 
-#: agentbase/agentbase.cpp:910
+#: agentbase/agentbase.cpp:889
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Agen Akonadi"
@@ -135,23 +135,23 @@ msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Tidak bisa mengambil item dalam mode luring."
 
-#: agentbase/resourcebase.cpp:918
+#: agentbase/resourcebase.cpp:910
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Menyinkronkan folder '%1'"
 
-#: agentbase/resourcebase.cpp:938 agentbase/resourcebase.cpp:945
+#: agentbase/resourcebase.cpp:930 agentbase/resourcebase.cpp:937
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Gagal menerima koleksi untuk sinkronisasi."
 
-#: agentbase/resourcebase.cpp:985
+#: agentbase/resourcebase.cpp:977
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Gagal menerima koleksi untuk sinkronisasi atribut."
 
-#: agentbase/resourcebase.cpp:1039
+#: agentbase/resourcebase.cpp:1031
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Item yang diminta tidak ada lagi"
@@ -167,7 +167,7 @@ msgstr "Job dibatalkan."
 msgid "No such collection."
 msgstr "Tidak ada koleksi seperti itu."
 
-#: core/collectionsync.cpp:508 core/collectionsync.cpp:653
+#: core/collectionsync.cpp:509 core/collectionsync.cpp:654
 #, kde-format
 msgid "Found unresolved orphan collections"
 msgstr "Ditemukan koleksi sendirian yang belum terselesaikan."
@@ -345,22 +345,22 @@ msgstr "Waktu habis dalam percobaan untuk mendapatkan kunci."
 msgid "Failed to create tag."
 msgstr "Gagal membuat tag."
 
-#: core/jobs/trashjob.cpp:163
+#: core/jobs/trashjob.cpp:155
 #, kde-format
 msgid "Move to trash collection failed, aborting trash operation"
 msgstr "Pindah ke koleksi tong sampah gagal, gugurkan operasi tong sampah"
 
-#: core/jobs/trashjob.cpp:226 core/jobs/trashrestorejob.cpp:151
+#: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format
 msgid "Invalid items passed"
 msgstr "Item-item tidak valid yang dilalui"
 
-#: core/jobs/trashjob.cpp:270 core/jobs/trashrestorejob.cpp:201
+#: core/jobs/trashjob.cpp:258 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
 msgstr "Koleksi tidak valid yang dilalui"
 
-#: core/jobs/trashjob.cpp:387 core/jobs/trashrestorejob.cpp:351
+#: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
 #, kde-format
 msgid "No valid collection or empty itemlist"
 msgstr "Tidak ada koleksi yang valid atau daftar item kosong"
@@ -527,7 +527,7 @@ msgstr "Plugin tak bernama"
 msgid "No description available"
 msgstr "Tidak ada deskripsi yang tersedia"
 
-#: core/servermanager.cpp:271
+#: core/servermanager.cpp:263
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -540,7 +540,7 @@ msgstr ""
 "Jika saat ini kamu sudah memperbarui sistem, silakan logout dan login "
 "kembali untuk mastikan semua aplikasi menggunakan versi protokol yang benar."
 
-#: core/servermanager.cpp:288
+#: core/servermanager.cpp:280
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -633,12 +633,12 @@ msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Konfigurasi %1"
 
-#: widgets/agentconfigurationdialog.cpp:89
+#: widgets/agentconfigurationdialog.cpp:81
 #, kde-format
 msgid "%1 Handbook"
 msgstr "Buku Catatan %1"
 
-#: widgets/agentconfigurationdialog.cpp:90
+#: widgets/agentconfigurationdialog.cpp:82
 #, kde-format
 msgid "About %1"
 msgstr "Tentang %1"
@@ -1069,7 +1069,7 @@ msgstr "&Tautkan Di Sini"
 msgid "C&ancel"
 msgstr "&Batal"
 
-#: widgets/erroroverlay.cpp:225
+#: widgets/erroroverlay.cpp:224
 #, kde-format
 msgctxt "%1 is a reason why"
 msgid ""
@@ -1081,24 +1081,24 @@ msgstr ""
 "\n"
 "%1"
 
-#: widgets/erroroverlay.cpp:229 widgets/erroroverlay.cpp:230
+#: widgets/erroroverlay.cpp:228 widgets/erroroverlay.cpp:229
 #, kde-format
 msgid "Personal information management service is starting..."
 msgstr "Layanan menajemen informasi personal telah dimulai..."
 
-#: widgets/erroroverlay.cpp:234 widgets/erroroverlay.cpp:235
+#: widgets/erroroverlay.cpp:233 widgets/erroroverlay.cpp:234
 #, kde-format
 msgid "Personal information management service is shutting down..."
 msgstr "Layanan menajemen informasi personal telah dimatikan..."
 
-#: widgets/erroroverlay.cpp:239
+#: widgets/erroroverlay.cpp:238
 #, kde-format
 msgid ""
 "Personal information management service is performing a database upgrade."
 msgstr ""
 "Layanan menajemen informasi personal telah melakukan pemutakhiran database."
 
-#: widgets/erroroverlay.cpp:241
+#: widgets/erroroverlay.cpp:240
 #, kde-format
 msgid ""
 "Personal information management service is performing a database upgrade.\n"
@@ -2534,37 +2534,37 @@ msgstr "File %1 enggak ada."
 msgid "Unable to parse data file '%1'."
 msgstr "Tak bisa mengurai data file '%1'."
 
-#: xml/xmldocument.cpp:150
+#: xml/xmldocument.cpp:149
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "Definisi skema tidak dapat dimuat dan diurai."
 
-#: xml/xmldocument.cpp:155
+#: xml/xmldocument.cpp:154
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "Tak bisa membuat skema konteks pengurai."
 
-#: xml/xmldocument.cpp:160
+#: xml/xmldocument.cpp:159
 #, kde-format
 msgid "Unable to create schema."
 msgstr "Tak bisa membuat skema."
 
-#: xml/xmldocument.cpp:165
+#: xml/xmldocument.cpp:164
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr "Tak bisa membuat skema konteks validasi."
 
-#: xml/xmldocument.cpp:170
+#: xml/xmldocument.cpp:169
 #, kde-format
 msgid "Invalid file format."
 msgstr "Format file tidak valid."
 
-#: xml/xmldocument.cpp:178
+#: xml/xmldocument.cpp:177
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "Tak bisa mengurai data file: %1"
 
-#: xml/xmldocument.cpp:303
+#: xml/xmldocument.cpp:302
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Tak bisa menemukan koleksi %1"

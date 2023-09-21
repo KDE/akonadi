@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-02 00:55+0000\n"
+"POT-Creation-Date: 2023-09-21 00:45+0000\n"
 "PO-Revision-Date: 2014-03-04 19:43+0100\n"
 "Last-Translator: Antoni Bella Pérez <antonibella5@yahoo.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -28,63 +28,63 @@ msgstr ""
 msgid "No data file selected."
 msgstr "No s'ha seleccionat cap fitxer de dades."
 
-#: knutresource.cpp:78
+#: knutresource.cpp:77
 #, kde-format
 msgid "File '%1' loaded successfully."
 msgstr "El fitxer «%1» s'ha carregat correctament."
 
-#: knutresource.cpp:105
+#: knutresource.cpp:104
 #, kde-format
 msgid "Select Data File"
 msgstr "Seleccioneu un fitxer de dades"
 
-#: knutresource.cpp:107
+#: knutresource.cpp:106
 #, kde-format
 msgctxt "Filedialog filter for Akonadi data file"
 msgid "Akonadi Knut Data File"
 msgstr "Fitxer de dades Knut d'Akonadi"
 
-#: knutresource.cpp:149 knutresource.cpp:169 knutresource.cpp:322
+#: knutresource.cpp:148 knutresource.cpp:168 knutresource.cpp:321
 #, kde-format
 msgid "No item found for remoteid %1"
 msgstr "No s'ha trobat cap element per a l'ID remot %1"
 
-#: knutresource.cpp:187
+#: knutresource.cpp:186
 #, kde-format
 msgid "Parent collection not found in DOM tree."
 msgstr "No s'ha trobat la col·lecció pare en l'arbre DOM."
 
-#: knutresource.cpp:195
+#: knutresource.cpp:194
 #, kde-format
 msgid "Unable to write collection."
 msgstr "No s'ha pogut escriure la col·lecció."
 
-#: knutresource.cpp:207
+#: knutresource.cpp:206
 #, kde-format
 msgid "Modified collection not found in DOM tree."
 msgstr "No s'ha trobat la col·lecció modificada en l'arbre DOM."
 
-#: knutresource.cpp:237
+#: knutresource.cpp:236
 #, kde-format
 msgid "Deleted collection not found in DOM tree."
 msgstr "No s'ha trobat la col·lecció eliminada en l'arbre DOM."
 
-#: knutresource.cpp:251 knutresource.cpp:309 knutresource.cpp:316
+#: knutresource.cpp:250 knutresource.cpp:308 knutresource.cpp:315
 #, kde-format
 msgid "Parent collection '%1' not found in DOM tree."
 msgstr "No s'ha trobat la col·lecció pare «%1» en l'arbre DOM."
 
-#: knutresource.cpp:259 knutresource.cpp:329
+#: knutresource.cpp:258 knutresource.cpp:328
 #, kde-format
 msgid "Unable to write item."
 msgstr "No s'ha pogut escriure l'element."
 
-#: knutresource.cpp:273
+#: knutresource.cpp:272
 #, kde-format
 msgid "Modified item not found in DOM tree."
 msgstr "No s'ha trobat l'element modificat en l'arbre DOM."
 
-#: knutresource.cpp:288
+#: knutresource.cpp:287
 #, kde-format
 msgid "Deleted item not found in DOM tree."
 msgstr "No s'ha trobat l'element eliminat en l'arbre DOM."

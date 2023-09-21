@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-02 00:48+0000\n"
+"POT-Creation-Date: 2023-09-21 00:45+0000\n"
 "PO-Revision-Date: 2023-01-15 10:16+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -42,23 +42,23 @@ msgstr "Actualment no hi ha cap compte configurat."
 msgid "Accounts integration is not supported"
 msgstr "La integració dels comptes no està admesa"
 
-#: agentbase/agentbase.cpp:365 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:348 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "No s'ha pogut registrar l'objecte en el «dbus»: %1"
 
-#: agentbase/agentbase.cpp:454
+#: agentbase/agentbase.cpp:437
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 del tipus %2"
 
-#: agentbase/agentbase.cpp:904
+#: agentbase/agentbase.cpp:883
 #, kde-format
 msgid "Agent identifier"
 msgstr "Identificador de l'agent"
 
-#: agentbase/agentbase.cpp:910
+#: agentbase/agentbase.cpp:889
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Agent de l'Akonadi"
@@ -140,24 +140,24 @@ msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "No es pot recuperar l'element en el mode desconnectat."
 
-#: agentbase/resourcebase.cpp:918
+#: agentbase/resourcebase.cpp:910
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "S'està sincronitzant la carpeta «%1»"
 
-#: agentbase/resourcebase.cpp:938 agentbase/resourcebase.cpp:945
+#: agentbase/resourcebase.cpp:930 agentbase/resourcebase.cpp:937
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Ha fallat en recuperar la col·lecció per a sincronitzar-la."
 
-#: agentbase/resourcebase.cpp:985
+#: agentbase/resourcebase.cpp:977
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr ""
 "Ha fallat en recuperar la col·lecció per a la sincronització dels atributs."
 
-#: agentbase/resourcebase.cpp:1039
+#: agentbase/resourcebase.cpp:1031
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "L'element sol·licitat ja no existeix"
@@ -173,7 +173,7 @@ msgstr "Treball cancel·lat."
 msgid "No such collection."
 msgstr "Aquesta col·lecció no existeix."
 
-#: core/collectionsync.cpp:508 core/collectionsync.cpp:653
+#: core/collectionsync.cpp:509 core/collectionsync.cpp:654
 #, kde-format
 msgid "Found unresolved orphan collections"
 msgstr "S'han trobat col·leccions òrfenes sense resoldre"
@@ -351,23 +351,23 @@ msgstr "Ha caducat el temps en provar d'obtenir el bloqueig."
 msgid "Failed to create tag."
 msgstr "Ha fallat en crear l'etiqueta."
 
-#: core/jobs/trashjob.cpp:163
+#: core/jobs/trashjob.cpp:155
 #, kde-format
 msgid "Move to trash collection failed, aborting trash operation"
 msgstr ""
 "Ha fallat en moure la col·lecció a la paperera, s'ha interromput l'operació"
 
-#: core/jobs/trashjob.cpp:226 core/jobs/trashrestorejob.cpp:151
+#: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format
 msgid "Invalid items passed"
 msgstr "S'han passat elements no vàlids"
 
-#: core/jobs/trashjob.cpp:270 core/jobs/trashrestorejob.cpp:201
+#: core/jobs/trashjob.cpp:258 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
 msgstr "S'ha passat una col·lecció no vàlida"
 
-#: core/jobs/trashjob.cpp:387 core/jobs/trashrestorejob.cpp:351
+#: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
 #, kde-format
 msgid "No valid collection or empty itemlist"
 msgstr "Col·lecció no vàlida o llista d'elements buida"
@@ -536,7 +536,7 @@ msgstr "Connector sense nom"
 msgid "No description available"
 msgstr "No hi ha disponible cap descripció"
 
-#: core/servermanager.cpp:271
+#: core/servermanager.cpp:263
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -550,7 +550,7 @@ msgstr ""
 "connectar per a assegurar-vos que totes les aplicacions empren la versió "
 "correcta del protocol."
 
-#: core/servermanager.cpp:288
+#: core/servermanager.cpp:280
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -640,12 +640,12 @@ msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Configuració de %1"
 
-#: widgets/agentconfigurationdialog.cpp:89
+#: widgets/agentconfigurationdialog.cpp:81
 #, kde-format
 msgid "%1 Handbook"
 msgstr "Manual del %1"
 
-#: widgets/agentconfigurationdialog.cpp:90
+#: widgets/agentconfigurationdialog.cpp:82
 #, kde-format
 msgid "About %1"
 msgstr "Quant al %1"
@@ -1077,7 +1077,7 @@ msgstr "&Enllaça aquí"
 msgid "C&ancel"
 msgstr "C&ancel·la"
 
-#: widgets/erroroverlay.cpp:225
+#: widgets/erroroverlay.cpp:224
 #, kde-format
 msgctxt "%1 is a reason why"
 msgid ""
@@ -1090,17 +1090,17 @@ msgstr ""
 "\n"
 "%1"
 
-#: widgets/erroroverlay.cpp:229 widgets/erroroverlay.cpp:230
+#: widgets/erroroverlay.cpp:228 widgets/erroroverlay.cpp:229
 #, kde-format
 msgid "Personal information management service is starting..."
 msgstr "S'està iniciant el servei per a la gestió de la informació personal..."
 
-#: widgets/erroroverlay.cpp:234 widgets/erroroverlay.cpp:235
+#: widgets/erroroverlay.cpp:233 widgets/erroroverlay.cpp:234
 #, kde-format
 msgid "Personal information management service is shutting down..."
 msgstr "S'està aturant el servei per a la gestió de la informació personal..."
 
-#: widgets/erroroverlay.cpp:239
+#: widgets/erroroverlay.cpp:238
 #, kde-format
 msgid ""
 "Personal information management service is performing a database upgrade."
@@ -1108,7 +1108,7 @@ msgstr ""
 "El servei per a la gestió de la informació personal està realitzant una "
 "actualització de la base de dades..."
 
-#: widgets/erroroverlay.cpp:241
+#: widgets/erroroverlay.cpp:240
 #, kde-format
 msgid ""
 "Personal information management service is performing a database upgrade.\n"
@@ -2538,37 +2538,37 @@ msgstr "El fitxer %1 no existeix."
 msgid "Unable to parse data file '%1'."
 msgstr "No s'ha pogut analitzar el fitxer de dades «%1»."
 
-#: xml/xmldocument.cpp:150
+#: xml/xmldocument.cpp:149
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "No s'ha pogut carregar i analitzar la definició de l'esquema."
 
-#: xml/xmldocument.cpp:155
+#: xml/xmldocument.cpp:154
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "No s'ha pogut crear l'esquema d'anàlisi del context."
 
-#: xml/xmldocument.cpp:160
+#: xml/xmldocument.cpp:159
 #, kde-format
 msgid "Unable to create schema."
 msgstr "No s'ha pogut crear l'esquema."
 
-#: xml/xmldocument.cpp:165
+#: xml/xmldocument.cpp:164
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr "No s'ha pogut crear l'esquema de validació del context."
 
-#: xml/xmldocument.cpp:170
+#: xml/xmldocument.cpp:169
 #, kde-format
 msgid "Invalid file format."
 msgstr "Format de fitxer no vàlid."
 
-#: xml/xmldocument.cpp:178
+#: xml/xmldocument.cpp:177
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "No s'ha pogut analitzar el fitxer de dades: %1"
 
-#: xml/xmldocument.cpp:303
+#: xml/xmldocument.cpp:302
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "No s'ha pogut trobar la col·lecció %1"

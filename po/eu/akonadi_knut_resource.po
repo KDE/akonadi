@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-02 00:55+0000\n"
+"POT-Creation-Date: 2023-09-21 00:45+0000\n"
 "PO-Revision-Date: 2020-09-20 09:36+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -25,63 +25,63 @@ msgstr ""
 msgid "No data file selected."
 msgstr "Ez da datu-fitxategirik hautatu."
 
-#: knutresource.cpp:78
+#: knutresource.cpp:77
 #, kde-format
 msgid "File '%1' loaded successfully."
 msgstr "«%1» fitxategia ondo zamatu da."
 
-#: knutresource.cpp:105
+#: knutresource.cpp:104
 #, kde-format
 msgid "Select Data File"
 msgstr "Hautatu datu-fitxategia"
 
-#: knutresource.cpp:107
+#: knutresource.cpp:106
 #, kde-format
 msgctxt "Filedialog filter for Akonadi data file"
 msgid "Akonadi Knut Data File"
 msgstr "Akonadi Knut datu-fitxategia"
 
-#: knutresource.cpp:149 knutresource.cpp:169 knutresource.cpp:322
+#: knutresource.cpp:148 knutresource.cpp:168 knutresource.cpp:321
 #, kde-format
 msgid "No item found for remoteid %1"
 msgstr "Ez da elementurik aurkitu «%1» urruneko ID-rako"
 
-#: knutresource.cpp:187
+#: knutresource.cpp:186
 #, kde-format
 msgid "Parent collection not found in DOM tree."
 msgstr "Guraso-bilduma ez da aurkitu DOM zuhaitzean."
 
-#: knutresource.cpp:195
+#: knutresource.cpp:194
 #, kde-format
 msgid "Unable to write collection."
 msgstr "Ezin du bilduma idatzi."
 
-#: knutresource.cpp:207
+#: knutresource.cpp:206
 #, kde-format
 msgid "Modified collection not found in DOM tree."
 msgstr "Aldatutako bilduma ez da aurkitu DOM zuhaitzean."
 
-#: knutresource.cpp:237
+#: knutresource.cpp:236
 #, kde-format
 msgid "Deleted collection not found in DOM tree."
 msgstr "Ezabatutako bilduma ez da aurkitu DOM zuhaitzean."
 
-#: knutresource.cpp:251 knutresource.cpp:309 knutresource.cpp:316
+#: knutresource.cpp:250 knutresource.cpp:308 knutresource.cpp:315
 #, kde-format
 msgid "Parent collection '%1' not found in DOM tree."
 msgstr "«%1» guraso-bilduma ez da aurkitu DOM zuhaitzean."
 
-#: knutresource.cpp:259 knutresource.cpp:329
+#: knutresource.cpp:258 knutresource.cpp:328
 #, kde-format
 msgid "Unable to write item."
 msgstr "Ezin du elementua idatzi."
 
-#: knutresource.cpp:273
+#: knutresource.cpp:272
 #, kde-format
 msgid "Modified item not found in DOM tree."
 msgstr "Aldatutako elementua ez da aurkitu DOM zuhaitzean."
 
-#: knutresource.cpp:288
+#: knutresource.cpp:287
 #, kde-format
 msgid "Deleted item not found in DOM tree."
 msgstr "Ezabatutako elementua ez da aurkitu DOM zuhaitzean."

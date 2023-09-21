@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-02 00:48+0000\n"
+"POT-Creation-Date: 2023-09-21 00:45+0000\n"
 "PO-Revision-Date: 2013-07-14 03:20+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -37,23 +37,23 @@ msgstr ""
 msgid "Accounts integration is not supported"
 msgstr ""
 
-#: agentbase/agentbase.cpp:365 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:348 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "D-Bus нысанды тіркемеді: %1"
 
-#: agentbase/agentbase.cpp:454
+#: agentbase/agentbase.cpp:437
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%2 түрдегі %1"
 
-#: agentbase/agentbase.cpp:904
+#: agentbase/agentbase.cpp:883
 #, kde-format
 msgid "Agent identifier"
 msgstr "Агенттің идентификаторы"
 
-#: agentbase/agentbase.cpp:910
+#: agentbase/agentbase.cpp:889
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi агенті"
@@ -141,25 +141,25 @@ msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Желіден тыс режімде керегі алынбайды."
 
-#: agentbase/resourcebase.cpp:918
+#: agentbase/resourcebase.cpp:910
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "'%1' қапшығын қадамдастыру"
 
-#: agentbase/resourcebase.cpp:938 agentbase/resourcebase.cpp:945
+#: agentbase/resourcebase.cpp:930 agentbase/resourcebase.cpp:937
 #, fuzzy, kde-format
 #| msgid "Failed to fetch the resource collection."
 msgid "Failed to retrieve collection for sync."
 msgstr "Дерек жинағын алу жаңылысы."
 
-#: agentbase/resourcebase.cpp:985
+#: agentbase/resourcebase.cpp:977
 #, fuzzy, kde-format
 #| msgid "Failed to fetch the resource collection."
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Дерек жинағын алу жаңылысы."
 
-#: agentbase/resourcebase.cpp:1039
+#: agentbase/resourcebase.cpp:1031
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Сұралғаны енді жоқ екен"
@@ -175,7 +175,7 @@ msgstr "Тапсырма доғарылды."
 msgid "No such collection."
 msgstr "Бұндай жинақ жоқ."
 
-#: core/collectionsync.cpp:508 core/collectionsync.cpp:653
+#: core/collectionsync.cpp:509 core/collectionsync.cpp:654
 #, kde-format
 msgid "Found unresolved orphan collections"
 msgstr "Түзелмейтіндей зақымдалған жинаққа тап болды"
@@ -359,22 +359,22 @@ msgstr "Бұғаттауды күту уақыты өтті."
 msgid "Failed to create tag."
 msgstr "Агент данасын құруға болмайды."
 
-#: core/jobs/trashjob.cpp:163
+#: core/jobs/trashjob.cpp:155
 #, kde-format
 msgid "Move to trash collection failed, aborting trash operation"
 msgstr "Жинақты Шелекке тастау жаңылысы, тастау доғарылады"
 
-#: core/jobs/trashjob.cpp:226 core/jobs/trashrestorejob.cpp:151
+#: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format
 msgid "Invalid items passed"
 msgstr "Жарамсыз аталымдарды тастап кеттік"
 
-#: core/jobs/trashjob.cpp:270 core/jobs/trashrestorejob.cpp:201
+#: core/jobs/trashjob.cpp:258 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
 msgstr "Жарамсыз жинақты тастап кеттік"
 
-#: core/jobs/trashjob.cpp:387 core/jobs/trashrestorejob.cpp:351
+#: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
 #, kde-format
 msgid "No valid collection or empty itemlist"
 msgstr "Жарамсыз жинақ жоқ немесе бос аталым тізімі"
@@ -551,7 +551,7 @@ msgstr "Атаусыз плагині"
 msgid "No description available"
 msgstr "Сипаттамасы жоқ"
 
-#: core/servermanager.cpp:271
+#: core/servermanager.cpp:263
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -560,7 +560,7 @@ msgid ""
 "all applications use the correct protocol version."
 msgstr ""
 
-#: core/servermanager.cpp:288
+#: core/servermanager.cpp:280
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -645,12 +645,12 @@ msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr ""
 
-#: widgets/agentconfigurationdialog.cpp:89
+#: widgets/agentconfigurationdialog.cpp:81
 #, kde-format
 msgid "%1 Handbook"
 msgstr ""
 
-#: widgets/agentconfigurationdialog.cpp:90
+#: widgets/agentconfigurationdialog.cpp:82
 #, kde-format
 msgid "About %1"
 msgstr ""
@@ -1091,7 +1091,7 @@ msgstr "Осында &сілтеме құру"
 msgid "C&ancel"
 msgstr "Бас &тарту"
 
-#: widgets/erroroverlay.cpp:225
+#: widgets/erroroverlay.cpp:224
 #, fuzzy, kde-format
 #| msgid "Cannot connect to the Akonadi service."
 msgctxt "%1 is a reason why"
@@ -1101,23 +1101,23 @@ msgid ""
 "%1"
 msgstr "Akonadi қызметіне қосыла алмады."
 
-#: widgets/erroroverlay.cpp:229 widgets/erroroverlay.cpp:230
+#: widgets/erroroverlay.cpp:228 widgets/erroroverlay.cpp:229
 #, kde-format
 msgid "Personal information management service is starting..."
 msgstr "Дербес ақпарат басқару қызметін жегу..."
 
-#: widgets/erroroverlay.cpp:234 widgets/erroroverlay.cpp:235
+#: widgets/erroroverlay.cpp:233 widgets/erroroverlay.cpp:234
 #, kde-format
 msgid "Personal information management service is shutting down..."
 msgstr "Дербес ақпарат басқару қызметін доғару..."
 
-#: widgets/erroroverlay.cpp:239
+#: widgets/erroroverlay.cpp:238
 #, kde-format
 msgid ""
 "Personal information management service is performing a database upgrade."
 msgstr "Дербес ақпарат басқару қызметі дерек қорды жаңартуда."
 
-#: widgets/erroroverlay.cpp:241
+#: widgets/erroroverlay.cpp:240
 #, fuzzy, kde-format
 #| msgid ""
 #| "Personal information management service is performing a database upgrade. "
@@ -2585,43 +2585,43 @@ msgstr "%1 деген файл жоқ."
 msgid "Unable to parse data file '%1'."
 msgstr "Агенттің '%1' түрі туралы мәлімет алынбады."
 
-#: xml/xmldocument.cpp:150
+#: xml/xmldocument.cpp:149
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "Сұлба анықтамасы жүктеп талдауға келмеді."
 
-#: xml/xmldocument.cpp:155
+#: xml/xmldocument.cpp:154
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema parser context."
 msgstr "Агент данасын құруға болмайды."
 
-#: xml/xmldocument.cpp:160
+#: xml/xmldocument.cpp:159
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema."
 msgstr "Агент данасын құруға болмайды."
 
-#: xml/xmldocument.cpp:165
+#: xml/xmldocument.cpp:164
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema validation context."
 msgstr "Агент данасын құруға болмайды."
 
-#: xml/xmldocument.cpp:170
+#: xml/xmldocument.cpp:169
 #, fuzzy, kde-format
 #| msgctxt "@info"
 #| msgid "Invalid item retrieved"
 msgid "Invalid file format."
 msgstr "Жарамсыз аталым алынды"
 
-#: xml/xmldocument.cpp:178
+#: xml/xmldocument.cpp:177
 #, fuzzy, kde-format
 #| msgid "Could not paste data: %1"
 msgid "Unable to parse data file: %1"
 msgstr "Дерек орналастырылмады: %1"
 
-#: xml/xmldocument.cpp:303
+#: xml/xmldocument.cpp:302
 #, fuzzy, kde-format
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"

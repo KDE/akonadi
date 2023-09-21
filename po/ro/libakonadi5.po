@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-02 00:48+0000\n"
+"POT-Creation-Date: 2023-09-21 00:45+0000\n"
 "PO-Revision-Date: 2013-01-13 00:43+0200\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -39,23 +39,23 @@ msgstr ""
 msgid "Accounts integration is not supported"
 msgstr ""
 
-#: agentbase/agentbase.cpp:365 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:348 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Ofiectul nu poate fi înregistrat la dbus: %1"
 
-#: agentbase/agentbase.cpp:454
+#: agentbase/agentbase.cpp:437
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 de tip %2"
 
-#: agentbase/agentbase.cpp:904
+#: agentbase/agentbase.cpp:883
 #, kde-format
 msgid "Agent identifier"
 msgstr "Identificator agent"
 
-#: agentbase/agentbase.cpp:910
+#: agentbase/agentbase.cpp:889
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Agent Akonadi"
@@ -143,25 +143,25 @@ msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Elementul nu poate fi obținut în regim deconectat."
 
-#: agentbase/resourcebase.cpp:918
+#: agentbase/resourcebase.cpp:910
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Se sincronizează dosarul „%1”"
 
-#: agentbase/resourcebase.cpp:938 agentbase/resourcebase.cpp:945
+#: agentbase/resourcebase.cpp:930 agentbase/resourcebase.cpp:937
 #, fuzzy, kde-format
 #| msgid "Failed to fetch the resource collection."
 msgid "Failed to retrieve collection for sync."
 msgstr "Preluarea colecției de resurse a eșuat."
 
-#: agentbase/resourcebase.cpp:985
+#: agentbase/resourcebase.cpp:977
 #, fuzzy, kde-format
 #| msgid "Failed to fetch the resource collection."
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Preluarea colecției de resurse a eșuat."
 
-#: agentbase/resourcebase.cpp:1039
+#: agentbase/resourcebase.cpp:1031
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Elementul cerut nu mai există"
@@ -177,7 +177,7 @@ msgstr "Lucrare anulată."
 msgid "No such collection."
 msgstr "Nicio colecție de acest fel."
 
-#: core/collectionsync.cpp:508 core/collectionsync.cpp:653
+#: core/collectionsync.cpp:509 core/collectionsync.cpp:654
 #, kde-format
 msgid "Found unresolved orphan collections"
 msgstr "Au fost găsite colecții orfane nerezolvate"
@@ -361,24 +361,24 @@ msgstr "Obținerea blocajului a expirat."
 msgid "Failed to create tag."
 msgstr "Nu se poate crea instanța de agent."
 
-#: core/jobs/trashjob.cpp:163
+#: core/jobs/trashjob.cpp:155
 #, kde-format
 msgid "Move to trash collection failed, aborting trash operation"
 msgstr ""
 "Mutarea în colecția gunoiului a eșuat, se abandonează operația de mutare la "
 "gunoi"
 
-#: core/jobs/trashjob.cpp:226 core/jobs/trashrestorejob.cpp:151
+#: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format
 msgid "Invalid items passed"
 msgstr "Au fost transmise argumente nevalide"
 
-#: core/jobs/trashjob.cpp:270 core/jobs/trashrestorejob.cpp:201
+#: core/jobs/trashjob.cpp:258 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
 msgstr "A fost transmisă o colecție nevalidă"
 
-#: core/jobs/trashjob.cpp:387 core/jobs/trashrestorejob.cpp:351
+#: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
 #, kde-format
 msgid "No valid collection or empty itemlist"
 msgstr "Nicio colecție validă sau listă de elemente goală"
@@ -557,7 +557,7 @@ msgstr "Extensie fără denumire"
 msgid "No description available"
 msgstr "Nicio descriere disponibilă"
 
-#: core/servermanager.cpp:271
+#: core/servermanager.cpp:263
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -566,7 +566,7 @@ msgid ""
 "all applications use the correct protocol version."
 msgstr ""
 
-#: core/servermanager.cpp:288
+#: core/servermanager.cpp:280
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -651,12 +651,12 @@ msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr ""
 
-#: widgets/agentconfigurationdialog.cpp:89
+#: widgets/agentconfigurationdialog.cpp:81
 #, kde-format
 msgid "%1 Handbook"
 msgstr ""
 
-#: widgets/agentconfigurationdialog.cpp:90
+#: widgets/agentconfigurationdialog.cpp:82
 #, kde-format
 msgid "About %1"
 msgstr ""
@@ -1103,7 +1103,7 @@ msgstr "&Leagă aici"
 msgid "C&ancel"
 msgstr "R&enunță"
 
-#: widgets/erroroverlay.cpp:225
+#: widgets/erroroverlay.cpp:224
 #, fuzzy, kde-format
 #| msgid "Cannot connect to the Akonadi service."
 msgctxt "%1 is a reason why"
@@ -1113,17 +1113,17 @@ msgid ""
 "%1"
 msgstr "Nu se poate conecta la serviciul Akonadi."
 
-#: widgets/erroroverlay.cpp:229 widgets/erroroverlay.cpp:230
+#: widgets/erroroverlay.cpp:228 widgets/erroroverlay.cpp:229
 #, kde-format
 msgid "Personal information management service is starting..."
 msgstr "Serviciul de gestiune a informațiilor personale se pornește..."
 
-#: widgets/erroroverlay.cpp:234 widgets/erroroverlay.cpp:235
+#: widgets/erroroverlay.cpp:233 widgets/erroroverlay.cpp:234
 #, kde-format
 msgid "Personal information management service is shutting down..."
 msgstr "Serviciul de gestiune a informațiilor personale se oprește..."
 
-#: widgets/erroroverlay.cpp:239
+#: widgets/erroroverlay.cpp:238
 #, kde-format
 msgid ""
 "Personal information management service is performing a database upgrade."
@@ -1131,7 +1131,7 @@ msgstr ""
 "Serviciul de gestiune a informațiilor personale efectuează o înnoire a bazei "
 "de date."
 
-#: widgets/erroroverlay.cpp:241
+#: widgets/erroroverlay.cpp:240
 #, fuzzy, kde-format
 #| msgid ""
 #| "Personal information management service is performing a database upgrade. "
@@ -2665,43 +2665,43 @@ msgstr ""
 msgid "Unable to parse data file '%1'."
 msgstr "Nu se poate obține tipul de agent „%1”."
 
-#: xml/xmldocument.cpp:150
+#: xml/xmldocument.cpp:149
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr ""
 
-#: xml/xmldocument.cpp:155
+#: xml/xmldocument.cpp:154
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema parser context."
 msgstr "Nu se poate crea instanța de agent."
 
-#: xml/xmldocument.cpp:160
+#: xml/xmldocument.cpp:159
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema."
 msgstr "Nu se poate crea instanța de agent."
 
-#: xml/xmldocument.cpp:165
+#: xml/xmldocument.cpp:164
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema validation context."
 msgstr "Nu se poate crea instanța de agent."
 
-#: xml/xmldocument.cpp:170
+#: xml/xmldocument.cpp:169
 #, fuzzy, kde-format
 #| msgctxt "@info"
 #| msgid "Invalid item retrieved"
 msgid "Invalid file format."
 msgstr "S-a preluat un element nevalid"
 
-#: xml/xmldocument.cpp:178
+#: xml/xmldocument.cpp:177
 #, fuzzy, kde-format
 #| msgid "Could not paste data: %1"
 msgid "Unable to parse data file: %1"
 msgstr "Datele nu pot fi lipite: %1"
 
-#: xml/xmldocument.cpp:303
+#: xml/xmldocument.cpp:302
 #, fuzzy, kde-format
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"
