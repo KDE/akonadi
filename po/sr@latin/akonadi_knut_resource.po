@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi_knut_resource\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2020-06-11 02:14+0200\n"
+"POT-Creation-Date: 2023-09-21 00:45+0000\n"
 "PO-Revision-Date: 2011-08-20 23:55+0200\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -18,68 +18,68 @@ msgstr ""
 "X-Text-Markup: kde4\n"
 "X-Environment: kde\n"
 
-#: knutresource.cpp:78
+#: knutresource.cpp:60
 #, kde-format
 msgid "No data file selected."
 msgstr "Nije izabran nijedan fajl sa podacima."
 
-#: knutresource.cpp:95
+#: knutresource.cpp:77
 #, kde-format
 msgid "File '%1' loaded successfully."
 msgstr "Fajl „%1“ je uspešno učitan."
 
-#: knutresource.cpp:121
+#: knutresource.cpp:104
 #, kde-format
 msgid "Select Data File"
 msgstr "Izbor fajla sa podacima"
 
-#: knutresource.cpp:122
+#: knutresource.cpp:106
 #, kde-format
 msgctxt "Filedialog filter for Akonadi data file"
 msgid "Akonadi Knut Data File"
 msgstr "Akonadijev KNUT fajl sa podacima"
 
-#: knutresource.cpp:164 knutresource.cpp:184 knutresource.cpp:337
+#: knutresource.cpp:148 knutresource.cpp:168 knutresource.cpp:321
 #, kde-format
 msgid "No item found for remoteid %1"
 msgstr "Nije nađena nijedna stavka za udaljeni ID %1."
 
-#: knutresource.cpp:202
+#: knutresource.cpp:186
 #, kde-format
 msgid "Parent collection not found in DOM tree."
 msgstr "Roditeljska zbirka nije nađena u DOM stablu."
 
-#: knutresource.cpp:210
+#: knutresource.cpp:194
 #, kde-format
 msgid "Unable to write collection."
 msgstr "Ne mogu da upišem zbirku."
 
-#: knutresource.cpp:222
+#: knutresource.cpp:206
 #, kde-format
 msgid "Modified collection not found in DOM tree."
 msgstr "Izmenjena zbirka nije nađena u DOM stablu."
 
-#: knutresource.cpp:252
+#: knutresource.cpp:236
 #, kde-format
 msgid "Deleted collection not found in DOM tree."
 msgstr "Obrisana zbirka nije nađena u DOM stablu."
 
-#: knutresource.cpp:266 knutresource.cpp:324 knutresource.cpp:331
+#: knutresource.cpp:250 knutresource.cpp:308 knutresource.cpp:315
 #, kde-format
 msgid "Parent collection '%1' not found in DOM tree."
 msgstr "Roditeljska zbirka „%1“ nije nađena u DOM stablu."
 
-#: knutresource.cpp:274 knutresource.cpp:344
+#: knutresource.cpp:258 knutresource.cpp:328
 #, kde-format
 msgid "Unable to write item."
 msgstr "Ne mogu da upišem stavku."
 
-#: knutresource.cpp:288
+#: knutresource.cpp:272
 #, kde-format
 msgid "Modified item not found in DOM tree."
 msgstr "Izmenjena stavka nije nađena u DOM stablu."
 
-#: knutresource.cpp:303
+#: knutresource.cpp:287
 #, kde-format
 msgid "Deleted item not found in DOM tree."
 msgstr "Obrisana stavka nije nađena u DOM stablu."
