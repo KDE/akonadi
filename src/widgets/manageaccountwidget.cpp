@@ -196,7 +196,7 @@ void ManageAccountWidget::slotRemoveSelectedAccount()
 
     const int rc = KMessageBox::questionTwoActions(this,
                                                    i18n("Do you want to remove account '%1'?", instance.name()),
-                                                   i18n("Remove account?"),
+                                                   i18nc("@title:window", "Remove account?"),
                                                    KStandardGuiItem::remove(),
                                                    KStandardGuiItem::cancel());
     if (rc == KMessageBox::ButtonCode::SecondaryAction) {
