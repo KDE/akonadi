@@ -72,11 +72,13 @@ int AgentTypeModel::rowCount(const QModelIndex & /*parent*/) const
 QHash<int, QByteArray> AgentTypeModel::roleNames() const
 {
     QHash<int, QByteArray> roles = QAbstractItemModel::roleNames();
+    roles.insert(NameRole, QByteArrayLiteral("name"));
     roles.insert(TypeRole, QByteArrayLiteral("type"));
     roles.insert(IdentifierRole, QByteArrayLiteral("identifier"));
     roles.insert(DescriptionRole, QByteArrayLiteral("description"));
     roles.insert(MimeTypesRole, QByteArrayLiteral("mimeTypes"));
     roles.insert(CapabilitiesRole, QByteArrayLiteral("capabilities"));
+    roles.insert(IconNameRole, QByteArrayLiteral("iconName"));
     return roles;
 }
 
@@ -94,9 +96,12 @@ QVariant AgentTypeModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
     case Qt::DisplayRole:
+    case NameRole:
         return type.name();
     case Qt::DecorationRole:
         return type.icon();
+    case IconNameRole:
+        return type.icon().name();
     case TypeRole: {
         QVariant var;
         var.setValue(type);

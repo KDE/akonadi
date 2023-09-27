@@ -47,6 +47,8 @@ public:
      */
     enum Roles {
         TypeRole = Qt::UserRole + 1, ///< The agent type itself
+        NameRole, /// The display nme of the agent type
+        IconNameRole, /// The icon name of the agent
         IdentifierRole, ///< The identifier of the agent type
         DescriptionRole, ///< A description of the agent type
         MimeTypesRole, ///< A list of supported mimetypes
