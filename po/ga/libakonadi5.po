@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdepim/libakonadi.po\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-21 00:45+0000\n"
+"POT-Creation-Date: 2023-09-27 01:41+0000\n"
 "PO-Revision-Date: 2007-07-11 08:14-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -1178,6 +1178,7 @@ msgstr "An bhfuil tú cinnte gur mian leat amharc cuardaigh '%1' a scriosadh?"
 
 #: widgets/manageaccountwidget.cpp:199
 #, kde-format
+msgctxt "@title:window"
 msgid "Remove account?"
 msgstr ""
 

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-21 00:45+0000\n"
+"POT-Creation-Date: 2023-09-27 01:41+0000\n"
 "PO-Revision-Date: 2023-06-15 04:08+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Chinese <zh-l10n@linux.org.tw>\n"
@@ -1138,7 +1138,9 @@ msgid "Do you want to remove account '%1'?"
 msgstr "您確定要刪除帳號 '%1' 嗎？"
 
 #: widgets/manageaccountwidget.cpp:199
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Remove account?"
+msgctxt "@title:window"
 msgid "Remove account?"
 msgstr "移除帳號？"
 
