@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-27 01:41+0000\n"
+"POT-Creation-Date: 2023-09-28 01:40+0000\n"
 "PO-Revision-Date: 2023-09-16 10:08\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -368,7 +368,7 @@ msgstr "无效的收藏或空项目列表"
 msgid "Could not find restore collection and restore resource is not available"
 msgstr "无法找到恢复收藏并且恢复资源不可用"
 
-#: core/models/agentinstancemodel.cpp:183
+#: core/models/agentinstancemodel.cpp:188
 #, kde-format
 msgctxt "@title:column, name of a thing"
 msgid "Name"

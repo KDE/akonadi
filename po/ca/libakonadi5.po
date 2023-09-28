@@ -10,15 +10,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-27 01:41+0000\n"
-"PO-Revision-Date: 2023-01-15 10:16+0100\n"
+"POT-Creation-Date: 2023-09-28 01:40+0000\n"
+"PO-Revision-Date: 2023-09-27 12:35+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 20.12.0\n"
+"X-Generator: Lokalize 22.12.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
 
@@ -379,7 +379,7 @@ msgstr ""
 "No s'ha pogut trobar la col·lecció a restaurar i el recurs de restauració no "
 "està disponible"
 
-#: core/models/agentinstancemodel.cpp:183
+#: core/models/agentinstancemodel.cpp:188
 #, kde-format
 msgctxt "@title:column, name of a thing"
 msgid "Name"
@@ -1173,8 +1173,7 @@ msgid "Do you want to remove account '%1'?"
 msgstr "Voleu eliminar el compte «%1»?"
 
 #: widgets/manageaccountwidget.cpp:199
-#, fuzzy, kde-format
-#| msgid "Remove account?"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"
 msgstr "Elimino el compte?"
@@ -2439,7 +2438,7 @@ msgstr "Hi ha hagut un error en crear una etiqueta nova"
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
-msgstr "Esteu segur que voleu eliminar l'etiqueta <resource>%1</resource>?"
+msgstr "Realment voleu eliminar l'etiqueta <resource>%1</resource>?"
 
 #: widgets/tageditwidget.cpp:165
 #, kde-format

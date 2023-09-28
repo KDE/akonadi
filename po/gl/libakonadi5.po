@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-27 01:41+0000\n"
+"POT-Creation-Date: 2023-09-28 01:40+0000\n"
 "PO-Revision-Date: 2023-09-03 13:23+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -382,7 +382,7 @@ msgstr ""
 "Non se puido atopar a funcionalidade de restaurar a colección, e a de "
 "restaurar o recurso non está dispoñíbel."
 
-#: core/models/agentinstancemodel.cpp:183
+#: core/models/agentinstancemodel.cpp:188
 #, kde-format
 msgctxt "@title:column, name of a thing"
 msgid "Name"

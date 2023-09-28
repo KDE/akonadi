@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-27 01:41+0000\n"
+"POT-Creation-Date: 2023-09-28 01:40+0000\n"
 "PO-Revision-Date: 2020-05-07 13:23+0300\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -371,7 +371,7 @@ msgstr "Korrektne kogu puudub või on elementide loend tühi"
 msgid "Could not find restore collection and restore resource is not available"
 msgstr "Taastatud kogu ei leitud ja taastamisressurss pole kättesaadav"
 
-#: core/models/agentinstancemodel.cpp:183
+#: core/models/agentinstancemodel.cpp:188
 #, kde-format
 msgctxt "@title:column, name of a thing"
 msgid "Name"

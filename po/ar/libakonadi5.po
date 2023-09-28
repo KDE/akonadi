@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-27 01:41+0000\n"
+"POT-Creation-Date: 2023-09-28 01:40+0000\n"
 "PO-Revision-Date: 2023-01-23 20:03+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -373,7 +373,7 @@ msgstr "لا تجميعة صالحة أو أن قائمة العناصر فار�
 msgid "Could not find restore collection and restore resource is not available"
 msgstr "تعذّر العثور على التجميعة لاسترجاعها ومورد الاسترجاع غير متوفّر"
 
-#: core/models/agentinstancemodel.cpp:183
+#: core/models/agentinstancemodel.cpp:188
 #, kde-format
 msgctxt "@title:column, name of a thing"
 msgid "Name"
