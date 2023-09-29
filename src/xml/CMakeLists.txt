@@ -72,11 +72,6 @@ set_target_properties(KPim6AkonadiXml PROPERTIES
     EXPORT_NAME AkonadiXml
 )
 
-ecm_generate_pri_file(BASE_NAME AkonadiXml
-    LIB_NAME KPim6AkonadiXml
-    DEPS "AkonadiCore QtXml" FILENAME_VAR PRI_FILENAME
-)
-
 install(TARGETS
     KPim6AkonadiXml
     EXPORT KPim6AkonadiTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
@@ -96,11 +91,6 @@ install(FILES
     ${AkonadiXml_CC_HEADERS}
     DESTINATION ${AkonadiXml_INSTALL_INCLUDEDIR}/Akonadi
     COMPONENT Devel
-)
-
-install(FILES
-    ${PRI_FILENAME}
-    DESTINATION ${ECM_MKSPECS_INSTALL_DIR}
 )
 
 install(FILES

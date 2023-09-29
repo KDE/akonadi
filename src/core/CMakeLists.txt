@@ -449,11 +449,6 @@ set_target_properties(KPim6AkonadiCore PROPERTIES
     EXPORT_NAME AkonadiCore
 )
 
-ecm_generate_pri_file(BASE_NAME AkonadiCore
-    LIB_NAME KPim6AkonadiCore
-    DEPS "KItemModels KCoreAddons" FILENAME_VAR PRI_FILENAME
-)
-
 install(TARGETS
     KPim6AkonadiCore
     EXPORT KPim6AkonadiTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
@@ -481,11 +476,6 @@ install(FILES
     ${AkonadiCore_CC_HEADERS}
     DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}/Akonadi
     COMPONENT Devel
-)
-
-install(FILES
-    ${PRI_FILENAME}
-    DESTINATION ${ECM_MKSPECS_INSTALL_DIR}
 )
 
 install( FILES

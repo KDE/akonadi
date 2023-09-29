@@ -104,11 +104,6 @@ set_target_properties(KPim6AkonadiAgentBase PROPERTIES
     EXPORT_NAME AkonadiAgentBase
 )
 
-ecm_generate_pri_file(BASE_NAME AkonadiAgentBase
-    LIB_NAME KPim6AkonadiAgentBase
-    DEPS "AkonadiCore AkonadiPrivate KConfigCore KConfigGui" FILENAME_VAR PRI_FILENAME
-)
-
 install(TARGETS
     KPim6AkonadiAgentBase
     EXPORT KPim6AkonadiTargets
@@ -132,11 +127,6 @@ install(FILES
 install(FILES
     resourcebase.kcfg
     DESTINATION ${KDE_INSTALL_KCFGDIR}
-)
-
-install(FILES
-    ${PRI_FILENAME}
-    DESTINATION ${ECM_MKSPECS_INSTALL_DIR}
 )
 
 if (BUILD_QCH)
