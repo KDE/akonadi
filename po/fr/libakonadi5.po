@@ -4,7 +4,7 @@
 # Mickael Sibelle <kimael@gmail.com>, 2008, 2009, 2010, 2011.
 # Mickaël Sibelle <kimael@gmail.com>, 2010, 2012.
 # Sébastien Renard <renard@kde.org>, 2012, 2013, 2014.
-# xavier <xavier.besnard@neuf.fr>, 2012, 2013, 2020, 2021, 2022.
+# SPDX-FileCopyrightText: 2012, 2013, 2020, 2021, 2022, 2023 xavier <xavier.besnard@neuf.fr>
 # Vincent Pinon <vpinon@kde.org>, 2017, 2018.
 # Simon Depiets <sdepiets@gmail.com>, 2018, 2019.
 # Xavier BESNARD <xavier.besnard@neuf.fr>, 2023.
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.12.1\n"
+"X-Generator: Lokalize 23.08.1\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
