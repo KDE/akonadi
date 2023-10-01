@@ -51,7 +51,7 @@ msgstr "Non se atopou a colección pai na árbore DOM."
 #: knutresource.cpp:194
 #, kde-format
 msgid "Unable to write collection."
-msgstr "Non se pode escribir a colección."
+msgstr "Non é posíbel escribir a colección."
 
 #: knutresource.cpp:206
 #, kde-format
@@ -71,7 +71,7 @@ msgstr "Non se atopou a colección pai «%1» na árbore DOM."
 #: knutresource.cpp:258 knutresource.cpp:328
 #, kde-format
 msgid "Unable to write item."
-msgstr "Non se pode escribir o elemento."
+msgstr "Non é posíbel escribir o elemento."
 
 #: knutresource.cpp:272
 #, kde-format
