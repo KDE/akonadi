@@ -94,12 +94,12 @@ public:
     /**
      * Returns the list of mime type inclusion filters.
      */
-    Q_REQUIRED_RESULT QStringList mimeTypeInclusionFilters() const;
+    [[nodiscard]] QStringList mimeTypeInclusionFilters() const;
 
     /**
      * Returns the list of mime type exclusion filters.
      */
-    Q_REQUIRED_RESULT QStringList mimeTypeExclusionFilters() const;
+    [[nodiscard]] QStringList mimeTypeExclusionFilters() const;
 
     /**
      * Clear all mime type filters.
@@ -115,17 +115,17 @@ public:
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
-    Q_REQUIRED_RESULT bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
+    [[nodiscard]] bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
 
-    Q_REQUIRED_RESULT bool canFetchMore(const QModelIndex &parent) const override;
+    [[nodiscard]] bool canFetchMore(const QModelIndex &parent) const override;
 
-    Q_REQUIRED_RESULT QModelIndexList match(const QModelIndex &start,
-                                            int role,
-                                            const QVariant &value,
-                                            int hits = 1,
-                                            Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
+    [[nodiscard]] QModelIndexList match(const QModelIndex &start,
+                                        int role,
+                                        const QVariant &value,
+                                        int hits = 1,
+                                        Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
 
-    Q_REQUIRED_RESULT int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    [[nodiscard]] int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;

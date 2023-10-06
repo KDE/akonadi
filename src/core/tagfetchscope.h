@@ -52,7 +52,7 @@ public:
      *
      * @see fetchAttribute()
      */
-    Q_REQUIRED_RESULT QSet<QByteArray> attributes() const;
+    [[nodiscard]] QSet<QByteArray> attributes() const;
 
     /**
      * Sets whether to fetch tag remote ID.
@@ -64,7 +64,7 @@ public:
     /**
      * Returns whether tag remote ID should be fetched.
      */
-    Q_REQUIRED_RESULT bool fetchRemoteId() const;
+    [[nodiscard]] bool fetchRemoteId() const;
 
     /**
      * Sets whether to fetch all attributes.
@@ -74,7 +74,7 @@ public:
     /**
      * Returns whether to fetch all attributes
      */
-    Q_REQUIRED_RESULT bool fetchAllAttributes() const;
+    [[nodiscard]] bool fetchAllAttributes() const;
 
     /**
      * Sets whether the attribute of the given @p type should be fetched.
@@ -111,7 +111,7 @@ public:
      * @see tagFetchScope()
      * @since 4.15
      */
-    Q_REQUIRED_RESULT bool fetchIdOnly() const;
+    [[nodiscard]] bool fetchIdOnly() const;
 
 private:
     /// @cond PRIVATE

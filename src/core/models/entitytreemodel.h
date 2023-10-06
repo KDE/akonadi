@@ -409,14 +409,14 @@ public:
     /**
      * Returns @c true if internal system entities are shown, and @c false otherwise.
      */
-    Q_REQUIRED_RESULT bool systemEntitiesShown() const;
+    [[nodiscard]] bool systemEntitiesShown() const;
 
     /**
      * Returns the currently used listfilter.
      *
      * @since 4.14
      */
-    Q_REQUIRED_RESULT Akonadi::CollectionFetchScope::ListFilter listFilter() const;
+    [[nodiscard]] Akonadi::CollectionFetchScope::ListFilter listFilter() const;
 
     /**
      * Sets the currently used listfilter.
@@ -449,7 +449,7 @@ public:
     /**
      * Returns the item population strategy of the model.
      */
-    Q_REQUIRED_RESULT ItemPopulationStrategy itemPopulationStrategy() const;
+    [[nodiscard]] ItemPopulationStrategy itemPopulationStrategy() const;
 
     /**
      * Sets whether the root collection shall be provided by the model.
@@ -461,7 +461,7 @@ public:
     /**
      * Returns whether the root collection is provided by the model.
      */
-    Q_REQUIRED_RESULT bool includeRootCollection() const;
+    [[nodiscard]] bool includeRootCollection() const;
 
     /**
      * Sets the display @p name of the root collection of the model.
@@ -475,7 +475,7 @@ public:
     /**
      * Returns the display name of the root collection.
      */
-    Q_REQUIRED_RESULT QString rootCollectionDisplayName() const;
+    [[nodiscard]] QString rootCollectionDisplayName() const;
 
     /**
      * Describes what collections shall be fetched by and represent in the model.
@@ -496,31 +496,31 @@ public:
     /**
      * Returns the collection fetch strategy of the model.
      */
-    Q_REQUIRED_RESULT CollectionFetchStrategy collectionFetchStrategy() const;
+    [[nodiscard]] CollectionFetchStrategy collectionFetchStrategy() const;
 
-    Q_REQUIRED_RESULT QHash<int, QByteArray> roleNames() const override;
+    [[nodiscard]] QHash<int, QByteArray> roleNames() const override;
 
-    Q_REQUIRED_RESULT int columnCount(const QModelIndex &parent = QModelIndex()) const override;
-    Q_REQUIRED_RESULT int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    [[nodiscard]] int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    [[nodiscard]] int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    Q_REQUIRED_RESULT QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    Q_REQUIRED_RESULT QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+    [[nodiscard]] QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    [[nodiscard]] QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
-    Q_REQUIRED_RESULT Qt::ItemFlags flags(const QModelIndex &index) const override;
-    Q_REQUIRED_RESULT QStringList mimeTypes() const override;
+    [[nodiscard]] Qt::ItemFlags flags(const QModelIndex &index) const override;
+    [[nodiscard]] QStringList mimeTypes() const override;
 
-    Q_REQUIRED_RESULT Qt::DropActions supportedDropActions() const override;
-    Q_REQUIRED_RESULT QMimeData *mimeData(const QModelIndexList &indexes) const override;
+    [[nodiscard]] Qt::DropActions supportedDropActions() const override;
+    [[nodiscard]] QMimeData *mimeData(const QModelIndexList &indexes) const override;
     bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
-    Q_REQUIRED_RESULT QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
-    Q_REQUIRED_RESULT QModelIndex parent(const QModelIndex &index) const override;
+    [[nodiscard]] QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
+    [[nodiscard]] QModelIndex parent(const QModelIndex &index) const override;
 
     // TODO: Review the implementations of these. I think they could be better.
-    Q_REQUIRED_RESULT bool canFetchMore(const QModelIndex &parent) const override;
+    [[nodiscard]] bool canFetchMore(const QModelIndex &parent) const override;
     void fetchMore(const QModelIndex &parent) override;
-    Q_REQUIRED_RESULT bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
+    [[nodiscard]] bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
 
     /**
      * Returns whether the collection tree has been fetched at initialisation.
@@ -528,7 +528,7 @@ public:
      * @see collectionTreeFetched
      * @since 4.10
      */
-    Q_REQUIRED_RESULT bool isCollectionTreeFetched() const;
+    [[nodiscard]] bool isCollectionTreeFetched() const;
 
     /**
      * Returns whether the collection has been populated.
@@ -536,7 +536,7 @@ public:
      * @see collectionPopulated
      * @since 4.12
      */
-    Q_REQUIRED_RESULT bool isCollectionPopulated(Akonadi::Collection::Id) const;
+    [[nodiscard]] bool isCollectionPopulated(Akonadi::Collection::Id) const;
 
     /**
      * Returns whether the model is fully populated.
@@ -547,16 +547,16 @@ public:
      * @see isCollectionTreeFetched
      * @since 4.14
      */
-    Q_REQUIRED_RESULT bool isFullyPopulated() const;
+    [[nodiscard]] bool isFullyPopulated() const;
 
     /**
      * Reimplemented to handle the AmazingCompletionRole.
      */
-    Q_REQUIRED_RESULT QModelIndexList match(const QModelIndex &start,
-                                            int role,
-                                            const QVariant &value,
-                                            int hits = 1,
-                                            Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
+    [[nodiscard]] QModelIndexList match(const QModelIndex &start,
+                                        int role,
+                                        const QVariant &value,
+                                        int hits = 1,
+                                        Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
 
     /**
      * Returns a QModelIndex in @p model which points to @p collection.

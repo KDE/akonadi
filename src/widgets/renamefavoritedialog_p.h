@@ -18,7 +18,7 @@ class RenameFavoriteDialog : public QDialog
 public:
     explicit RenameFavoriteDialog(const QString &value, const QString &defaultName, QWidget *parent);
 
-    Q_REQUIRED_RESULT QString newName() const;
+    [[nodiscard]] QString newName() const;
 
 private:
     const QString m_defaultName;

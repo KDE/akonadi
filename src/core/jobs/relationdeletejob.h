@@ -33,7 +33,7 @@ public:
     /**
      * Returns the relation.
      */
-    Q_REQUIRED_RESULT Relation relation() const;
+    [[nodiscard]] Relation relation() const;
 
 protected:
     void doStart() override;

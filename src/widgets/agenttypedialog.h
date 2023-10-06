@@ -64,14 +64,14 @@ public:
      * Returns the agent type that was selected by the user,
      * or an empty agent type object if no agent type has been selected.
      */
-    Q_REQUIRED_RESULT AgentType agentType() const;
+    [[nodiscard]] AgentType agentType() const;
 
     /**
      * Returns the agent filter proxy model that can be used
      * to filter the agent types that shall be shown in the
      * dialog.
      */
-    Q_REQUIRED_RESULT AgentFilterProxyModel *agentFilterProxyModel() const;
+    [[nodiscard]] AgentFilterProxyModel *agentFilterProxyModel() const;
 
 public Q_SLOTS:
     void done(int result) override;

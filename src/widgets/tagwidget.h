@@ -35,7 +35,7 @@ public:
     ~TagWidget() override;
 
     void setSelection(const Akonadi::Tag::List &tags);
-    Q_REQUIRED_RESULT Akonadi::Tag::List selection() const;
+    [[nodiscard]] Akonadi::Tag::List selection() const;
 
     void clearTags();
     void setReadOnly(bool readOnly);

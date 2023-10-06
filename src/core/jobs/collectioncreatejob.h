@@ -59,7 +59,7 @@ public:
     /**
      * Returns the created collection if the job was executed successfully.
      */
-    Q_REQUIRED_RESULT Collection collection() const;
+    [[nodiscard]] Collection collection() const;
 
 protected:
     void doStart() override;

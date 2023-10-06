@@ -22,12 +22,12 @@ public:
 
     void start();
 
-    Q_REQUIRED_RESULT bool canStart() const;
+    [[nodiscard]] bool canStart() const;
 
-    Q_REQUIRED_RESULT QWidget *parentWidget() const;
+    [[nodiscard]] QWidget *parentWidget() const;
     void setParentWidget(QWidget *newParentWidget);
 
-    Q_REQUIRED_RESULT bool canceled() const;
+    [[nodiscard]] bool canceled() const;
     void setCanceled(bool newCanceled);
 
 Q_SIGNALS:

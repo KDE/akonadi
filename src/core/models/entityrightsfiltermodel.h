@@ -72,21 +72,21 @@ public:
     /**
      * Returns the access rights that are used for filtering.
      */
-    Q_REQUIRED_RESULT Collection::Rights accessRights() const;
+    [[nodiscard]] Collection::Rights accessRights() const;
 
     /**
      * @reimp
      */
-    Q_REQUIRED_RESULT Qt::ItemFlags flags(const QModelIndex &index) const override;
+    [[nodiscard]] Qt::ItemFlags flags(const QModelIndex &index) const override;
 
     /**
      * @reimp
      */
-    Q_REQUIRED_RESULT QModelIndexList match(const QModelIndex &start,
-                                            int role,
-                                            const QVariant &value,
-                                            int hits = 1,
-                                            Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
+    [[nodiscard]] QModelIndexList match(const QModelIndex &start,
+                                        int role,
+                                        const QVariant &value,
+                                        int hits = 1,
+                                        Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;

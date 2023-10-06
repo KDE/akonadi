@@ -41,7 +41,7 @@ public:
     ~AgentInstance() override;
 
     /** Set/get the unique identifier of this AgentInstance */
-    Q_REQUIRED_RESULT QString identifier() const
+    [[nodiscard]] QString identifier() const
     {
         return mIdentifier;
     }
@@ -51,32 +51,32 @@ public:
         mIdentifier = identifier;
     }
 
-    Q_REQUIRED_RESULT QString agentType() const
+    [[nodiscard]] QString agentType() const
     {
         return mType;
     }
 
-    Q_REQUIRED_RESULT int status() const
+    [[nodiscard]] int status() const
     {
         return mStatus;
     }
 
-    Q_REQUIRED_RESULT QString statusMessage() const
+    [[nodiscard]] QString statusMessage() const
     {
         return mStatusMessage;
     }
 
-    Q_REQUIRED_RESULT int progress() const
+    [[nodiscard]] int progress() const
     {
         return mPercent;
     }
 
-    Q_REQUIRED_RESULT bool isOnline() const
+    [[nodiscard]] bool isOnline() const
     {
         return mOnline;
     }
 
-    Q_REQUIRED_RESULT QString resourceName() const
+    [[nodiscard]] QString resourceName() const
     {
         return mResourceName;
     }
@@ -87,17 +87,17 @@ public:
     virtual void restartWhenIdle() = 0;
     virtual void configure(qlonglong windowId) = 0;
 
-    Q_REQUIRED_RESULT bool hasResourceInterface() const
+    [[nodiscard]] bool hasResourceInterface() const
     {
         return mResourceInterface != nullptr;
     }
 
-    Q_REQUIRED_RESULT bool hasAgentInterface() const
+    [[nodiscard]] bool hasAgentInterface() const
     {
         return mAgentControlInterface != nullptr && mAgentStatusInterface != nullptr;
     }
 
-    Q_REQUIRED_RESULT bool hasPreprocessorInterface() const
+    [[nodiscard]] bool hasPreprocessorInterface() const
     {
         return mPreprocessorInterface != nullptr;
     }

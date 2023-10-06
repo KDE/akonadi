@@ -74,7 +74,7 @@ public:
      * Returns the list of favorite collections.
      * @deprecated Use collectionIds instead.
      */
-    Q_REQUIRED_RESULT AKONADICORE_DEPRECATED Collection::List collections() const;
+    [[nodiscard]] AKONADICORE_DEPRECATED Collection::List collections() const;
 
     /**
      * Returns the list of ids of favorite collections set on the FavoriteCollectionsModel.
@@ -98,20 +98,20 @@ public:
      * of collections which may not be in the model yet. If you want the ids of the collections
      * that are actually in the model, use a loop similar to above with the CollectionIdRole.
      */
-    Q_REQUIRED_RESULT QList<Collection::Id> collectionIds() const;
+    [[nodiscard]] QList<Collection::Id> collectionIds() const;
 
     /**
      * Return associate label for collection
      */
-    Q_REQUIRED_RESULT QString favoriteLabel(const Akonadi::Collection &col);
-    Q_REQUIRED_RESULT QString defaultFavoriteLabel(const Akonadi::Collection &col);
+    [[nodiscard]] QString favoriteLabel(const Akonadi::Collection &col);
+    [[nodiscard]] QString defaultFavoriteLabel(const Akonadi::Collection &col);
 
-    Q_REQUIRED_RESULT QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    Q_REQUIRED_RESULT bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
-    Q_REQUIRED_RESULT QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
-    Q_REQUIRED_RESULT bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
-    Q_REQUIRED_RESULT QStringList mimeTypes() const override;
-    Q_REQUIRED_RESULT Qt::ItemFlags flags(const QModelIndex &index) const override;
+    [[nodiscard]] QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    [[nodiscard]] bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+    [[nodiscard]] QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+    [[nodiscard]] bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
+    [[nodiscard]] QStringList mimeTypes() const override;
+    [[nodiscard]] Qt::ItemFlags flags(const QModelIndex &index) const override;
 
 public Q_SLOTS:
     /**

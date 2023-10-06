@@ -201,7 +201,7 @@ public:
     void setAllMonitored(bool monitored = true);
 
     void setExclusive(bool exclusive = true);
-    Q_REQUIRED_RESULT bool exclusive() const;
+    [[nodiscard]] bool exclusive() const;
 
     /**
      * Ignores all change notifications caused by the given session. This
@@ -334,7 +334,7 @@ public:
      *
      * @since 4.3
      */
-    Q_REQUIRED_RESULT Collection::List collectionsMonitored() const;
+    [[nodiscard]] Collection::List collectionsMonitored() const;
 
     /**
      * Returns the set of items being monitored.
@@ -343,63 +343,63 @@ public:
      *
      * @since 4.6
      */
-    Q_REQUIRED_RESULT QList<Item::Id> itemsMonitoredEx() const;
+    [[nodiscard]] QList<Item::Id> itemsMonitoredEx() const;
 
     /**
      * Returns the number of items being monitored.
      * Optimization.
      * @since 4.14.3
      */
-    Q_REQUIRED_RESULT int numItemsMonitored() const;
+    [[nodiscard]] int numItemsMonitored() const;
 
     /**
      * Returns the set of mimetypes being monitored.
      *
      * @since 4.3
      */
-    Q_REQUIRED_RESULT QStringList mimeTypesMonitored() const;
+    [[nodiscard]] QStringList mimeTypesMonitored() const;
 
     /**
      * Returns the number of mimetypes being monitored.
      * Optimization.
      * @since 4.14.3
      */
-    Q_REQUIRED_RESULT int numMimeTypesMonitored() const;
+    [[nodiscard]] int numMimeTypesMonitored() const;
 
     /**
      * Returns the set of tags being monitored.
      *
      * @since 4.13
      */
-    Q_REQUIRED_RESULT QList<Tag::Id> tagsMonitored() const;
+    [[nodiscard]] QList<Tag::Id> tagsMonitored() const;
 
     /**
      * Returns the set of types being monitored.
      *
      * @since 4.13
      */
-    Q_REQUIRED_RESULT QList<Type> typesMonitored() const;
+    [[nodiscard]] QList<Type> typesMonitored() const;
 
     /**
      * Returns the set of identifiers for resources being monitored.
      *
      * @since 4.3
      */
-    Q_REQUIRED_RESULT QList<QByteArray> resourcesMonitored() const;
+    [[nodiscard]] QList<QByteArray> resourcesMonitored() const;
 
     /**
      * Returns the number of resources being monitored.
      * Optimization.
      * @since 4.14.3
      */
-    Q_REQUIRED_RESULT int numResourcesMonitored() const;
+    [[nodiscard]] int numResourcesMonitored() const;
 
     /**
      * Returns true if everything is being monitored.
      *
      * @since 4.3
      */
-    Q_REQUIRED_RESULT bool isAllMonitored() const;
+    [[nodiscard]] bool isAllMonitored() const;
 
     /**
      * Sets the session used by the Monitor to communicate with the %Akonadi server.
@@ -414,7 +414,7 @@ public:
      *
      * @since 4.4
      */
-    Q_REQUIRED_RESULT Session *session() const;
+    [[nodiscard]] Session *session() const;
 
     /**
      * Allows to enable/disable collection move translation. If enabled (the default), move

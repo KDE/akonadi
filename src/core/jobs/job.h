@@ -129,7 +129,7 @@ public:
      * Returns the error string, if there has been an error, an empty
      * string otherwise.
      */
-    Q_REQUIRED_RESULT QString errorString() const final;
+    [[nodiscard]] QString errorString() const final;
 
 Q_SIGNALS:
     /**

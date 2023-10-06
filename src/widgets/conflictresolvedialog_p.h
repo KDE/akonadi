@@ -48,7 +48,7 @@ public:
     /**
      * Returns the resolve strategy the user choose.
      */
-    Q_REQUIRED_RESULT ConflictHandler::ResolveStrategy resolveStrategy() const;
+    [[nodiscard]] ConflictHandler::ResolveStrategy resolveStrategy() const;
 
 private Q_SLOTS:
     void slotUseLocalItemChoosen();

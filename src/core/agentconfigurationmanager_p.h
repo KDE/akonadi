@@ -26,7 +26,7 @@ public:
     bool registerInstanceConfiguration(const QString &instance);
     void unregisterInstanceConfiguration(const QString &instance);
 
-    Q_REQUIRED_RESULT bool isInstanceRegistered(const QString &instance) const;
+    [[nodiscard]] bool isInstanceRegistered(const QString &instance) const;
 
     QString findConfigPlugin(const QString &type) const;
 

@@ -80,7 +80,7 @@ public:
     /**
      * Returns the session identifier.
      */
-    Q_REQUIRED_RESULT QByteArray sessionId() const;
+    [[nodiscard]] QByteArray sessionId() const;
 
     /**
      * Returns the default session for this thread.

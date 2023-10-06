@@ -30,12 +30,12 @@ public:
     explicit NotificationSubscriber(NotificationManager *manager, quintptr socketDescriptor);
     ~NotificationSubscriber() override;
 
-    Q_REQUIRED_RESULT inline QByteArray subscriber() const
+    [[nodiscard]] inline QByteArray subscriber() const
     {
         return mSubscriber;
     }
 
-    Q_REQUIRED_RESULT QLocalSocket *socket() const
+    [[nodiscard]] QLocalSocket *socket() const
     {
         return mSocket;
     }

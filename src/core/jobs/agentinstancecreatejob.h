@@ -92,7 +92,7 @@ public:
     /**
      * Returns the AgentInstance object of the newly created agent instance.
      */
-    Q_REQUIRED_RESULT AgentInstance instance() const;
+    [[nodiscard]] AgentInstance instance() const;
 
     /**
      * Starts the instance creation.

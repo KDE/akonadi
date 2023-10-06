@@ -37,15 +37,15 @@ public:
     ~TagCache();
 
     /** Returns the tag with the GID @p gid, if available. */
-    Q_REQUIRED_RESULT Akonadi::Tag tagByGid(const QByteArray &gid) const;
+    [[nodiscard]] Akonadi::Tag tagByGid(const QByteArray &gid) const;
     /** Returns the tag with the name @p name, if available. */
-    Q_REQUIRED_RESULT Akonadi::Tag tagByName(const QString &name) const;
+    [[nodiscard]] Akonadi::Tag tagByName(const QString &name) const;
 
     /** Returns the (background) color of the tag named @p tagName.
      *  If there is no such tag, or the tag has no color associated,
      *  an invalid QColor value is returned.
      */
-    Q_REQUIRED_RESULT QColor tagColor(const QString &tagName) const;
+    [[nodiscard]] QColor tagColor(const QString &tagName) const;
 
     /** Sets the (background) color of the tag named @p tagName to @p color. */
     void setTagColor(const QString &tagName, const QColor &color);

@@ -38,7 +38,7 @@ public:
     /**
      * Returns the relations.
      */
-    Q_REQUIRED_RESULT Relation::List relations() const;
+    [[nodiscard]] Relation::List relations() const;
 
 Q_SIGNALS:
     /**

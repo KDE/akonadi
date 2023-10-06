@@ -42,7 +42,7 @@ public:
      * @p intervalMinutes Minimum timeout interval in minutes.
      */
     void setMinimumInterval(int intervalMinutes);
-    Q_REQUIRED_RESULT int minimumInterval() const;
+    [[nodiscard]] int minimumInterval() const;
 
     using TimePoint = std::chrono::steady_clock::time_point;
 

@@ -49,7 +49,7 @@ public:
     /**
       Returns the resource ID of the resource being scanned.
     */
-    Q_REQUIRED_RESULT QString resourceId() const;
+    [[nodiscard]] QString resourceId() const;
 
     /**
       Sets the resource ID of the resource to scan.
@@ -61,13 +61,13 @@ public:
       This function relies on there being a single top-level collection owned
       by this resource.
     */
-    Q_REQUIRED_RESULT Akonadi::Collection rootResourceCollection() const;
+    [[nodiscard]] Akonadi::Collection rootResourceCollection() const;
 
     /**
       Returns all the collections of this resource which have a
       SpecialCollectionAttribute. These might include the root resource collection.
     */
-    Q_REQUIRED_RESULT Akonadi::Collection::List specialCollections() const;
+    [[nodiscard]] Akonadi::Collection::List specialCollections() const;
 
 protected:
     /* reimpl */

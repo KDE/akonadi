@@ -70,48 +70,48 @@ public:
     /**
      * Returns whether the agent type is valid.
      */
-    Q_REQUIRED_RESULT bool isValid() const;
+    [[nodiscard]] bool isValid() const;
 
     /**
      * Returns the unique identifier of the agent type.
      */
-    Q_REQUIRED_RESULT QString identifier() const;
+    [[nodiscard]] QString identifier() const;
 
     /**
      * Returns the i18n'ed name of the agent type.
      */
-    Q_REQUIRED_RESULT QString name() const;
+    [[nodiscard]] QString name() const;
 
     /**
      * Returns the description of the agent type.
      */
-    Q_REQUIRED_RESULT QString description() const;
+    [[nodiscard]] QString description() const;
 
     /**
      * Returns the name of the icon of the agent type.
      */
-    Q_REQUIRED_RESULT QString iconName() const;
+    [[nodiscard]] QString iconName() const;
 
     /**
      * Returns the icon of the agent type.
      */
-    Q_REQUIRED_RESULT QIcon icon() const;
+    [[nodiscard]] QIcon icon() const;
 
     /**
      * Returns the list of supported mime types of the agent type.
      */
-    Q_REQUIRED_RESULT QStringList mimeTypes() const;
+    [[nodiscard]] QStringList mimeTypes() const;
 
     /**
      * Returns the list of supported capabilities of the agent type.
      */
-    Q_REQUIRED_RESULT QStringList capabilities() const;
+    [[nodiscard]] QStringList capabilities() const;
 
     /**
      * Returns a Map of custom properties of the agent type.
      * @since 4.12
      */
-    Q_REQUIRED_RESULT QVariantMap customProperties() const;
+    [[nodiscard]] QVariantMap customProperties() const;
 
     /**
      * @internal

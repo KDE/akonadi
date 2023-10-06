@@ -52,15 +52,15 @@ public:
     QString iconName() const;
 
     void setBackgroundColor(const QColor &color);
-    Q_REQUIRED_RESULT QColor backgroundColor() const;
+    [[nodiscard]] QColor backgroundColor() const;
     void setTextColor(const QColor &color);
-    Q_REQUIRED_RESULT QColor textColor() const;
+    [[nodiscard]] QColor textColor() const;
     void setFont(const QString &fontKey);
-    Q_REQUIRED_RESULT QString font() const;
+    [[nodiscard]] QString font() const;
     void setInToolbar(bool inToolbar);
-    Q_REQUIRED_RESULT bool inToolbar() const;
+    [[nodiscard]] bool inToolbar() const;
     void setShortcut(const QString &shortcut);
-    Q_REQUIRED_RESULT QString shortcut() const;
+    [[nodiscard]] QString shortcut() const;
 
     /**
      * Sets the priority of the tag.

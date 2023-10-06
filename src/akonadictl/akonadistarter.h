@@ -14,7 +14,7 @@ class AkonadiStarter : public QObject
     Q_OBJECT
 public:
     explicit AkonadiStarter(QObject *parent = nullptr);
-    Q_REQUIRED_RESULT bool start(bool verbose);
+    [[nodiscard]] bool start(bool verbose);
 
 private:
     const QDBusServiceWatcher mWatcher;

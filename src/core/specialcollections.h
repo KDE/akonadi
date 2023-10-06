@@ -62,13 +62,13 @@ public:
      * Returns whether the given agent @p instance has a special collection of
      * the given @p type.
      */
-    Q_REQUIRED_RESULT bool hasCollection(const QByteArray &type, const AgentInstance &instance) const;
+    [[nodiscard]] bool hasCollection(const QByteArray &type, const AgentInstance &instance) const;
 
     /**
      * Returns the special collection of the given @p type in the given agent
      * @p instance, or an invalid collection if such a collection is unknown.
      */
-    Q_REQUIRED_RESULT Akonadi::Collection collection(const QByteArray &type, const AgentInstance &instance) const;
+    [[nodiscard]] Akonadi::Collection collection(const QByteArray &type, const AgentInstance &instance) const;
 
     /**
      * Registers the given @p collection as a special collection
@@ -109,13 +109,13 @@ public:
      * Returns whether the default resource has a special collection of
      * the given @p type.
      */
-    Q_REQUIRED_RESULT bool hasDefaultCollection(const QByteArray &type) const;
+    [[nodiscard]] bool hasDefaultCollection(const QByteArray &type) const;
 
     /**
      * Returns the special collection of given @p type in the default
      * resource, or an invalid collection if such a collection is unknown.
      */
-    Q_REQUIRED_RESULT Akonadi::Collection defaultCollection(const QByteArray &type) const;
+    [[nodiscard]] Akonadi::Collection defaultCollection(const QByteArray &type) const;
 
 Q_SIGNALS:
     /**

@@ -63,21 +63,21 @@ public:
     /**
      * @reimp
      */
-    Q_REQUIRED_RESULT bool lessThan(const QModelIndex &left, const QModelIndex &right) const override;
+    [[nodiscard]] bool lessThan(const QModelIndex &left, const QModelIndex &right) const override;
 
     /**
      * @reimp
      */
-    Q_REQUIRED_RESULT bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
+    [[nodiscard]] bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
 
     /**
      * @reimp
      */
-    Q_REQUIRED_RESULT QModelIndexList match(const QModelIndex &start,
-                                            int role,
-                                            const QVariant &value,
-                                            int hits = 1,
-                                            Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
+    [[nodiscard]] QModelIndexList match(const QModelIndex &start,
+                                        int role,
+                                        const QVariant &value,
+                                        int hits = 1,
+                                        Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
 
 protected:
     std::unique_ptr<EntityOrderProxyModelPrivate> const d_ptr;

@@ -76,7 +76,7 @@ public:
      * Returns the currently chosen collection, or an empty collection if none
      * none was chosen.
      */
-    Q_REQUIRED_RESULT Akonadi::Collection collection() const;
+    [[nodiscard]] Akonadi::Collection collection() const;
 
     /**
      * Sets the mime types any of which the selected collection shall support.
@@ -86,7 +86,7 @@ public:
     /**
      * Returns the mime types any of which the selected collection shall support.
      */
-    Q_REQUIRED_RESULT QStringList mimeTypeFilter() const;
+    [[nodiscard]] QStringList mimeTypeFilter() const;
 
     /**
      * Sets the access @p rights that the listed collections shall match with.
@@ -99,7 +99,7 @@ public:
      * Returns the access rights that the listed collections shall match with.
      * @since 4.4
      */
-    Q_REQUIRED_RESULT Collection::Rights accessRightsFilter() const;
+    [[nodiscard]] Collection::Rights accessRightsFilter() const;
 
     /**
      * @param options new collection dialog options

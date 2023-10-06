@@ -45,27 +45,27 @@ AKONADI_XML_EXPORT void readAttributes(const QDomElement &elem, Collection &coll
 /**
   Converts a collection element.
 */
-Q_REQUIRED_RESULT AKONADI_XML_EXPORT Collection elementToCollection(const QDomElement &elem);
+[[nodiscard]] AKONADI_XML_EXPORT Collection elementToCollection(const QDomElement &elem);
 
 /**
   Reads recursively all collections starting from the given DOM element.
 */
-Q_REQUIRED_RESULT AKONADI_XML_EXPORT Collection::List readCollections(const QDomElement &elem);
+[[nodiscard]] AKONADI_XML_EXPORT Collection::List readCollections(const QDomElement &elem);
 
 /**
   Converts a tag element.
 */
-Q_REQUIRED_RESULT AKONADI_XML_EXPORT Tag elementToTag(const QDomElement &elem);
+[[nodiscard]] AKONADI_XML_EXPORT Tag elementToTag(const QDomElement &elem);
 
 /**
   Reads recursively all tags starting from the given DOM element.
 */
-Q_REQUIRED_RESULT AKONADI_XML_EXPORT Tag::List readTags(const QDomElement &elem);
+[[nodiscard]] AKONADI_XML_EXPORT Tag::List readTags(const QDomElement &elem);
 
 /**
   Converts an item element.
 */
-Q_REQUIRED_RESULT AKONADI_XML_EXPORT Item elementToItem(const QDomElement &elem, bool includePayload = true);
+[[nodiscard]] AKONADI_XML_EXPORT Item elementToItem(const QDomElement &elem, bool includePayload = true);
 }
 
 }

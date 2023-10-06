@@ -122,7 +122,7 @@ public:
      *
      * @since 4.7
      */
-    Q_REQUIRED_RESULT bool isDropActionMenuEnabled() const;
+    [[nodiscard]] bool isDropActionMenuEnabled() const;
 
 Q_SIGNALS:
     /**

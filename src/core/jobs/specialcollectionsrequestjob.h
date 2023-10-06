@@ -61,7 +61,7 @@ public:
     /**
      * Returns the requested collection.
      */
-    Q_REQUIRED_RESULT Collection collection() const;
+    [[nodiscard]] Collection collection() const;
 
 protected:
     /**

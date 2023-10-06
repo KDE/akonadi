@@ -113,7 +113,7 @@ public:
      *
      * @since 4.7
      */
-    Q_REQUIRED_RESULT static QString defaultPageObjectName(DefaultPage page);
+    [[nodiscard]] static QString defaultPageObjectName(DefaultPage page);
 
     /**
      * Sets the page to be shown in the tab widget.

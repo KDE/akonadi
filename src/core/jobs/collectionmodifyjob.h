@@ -91,7 +91,7 @@ public:
      *
      * @since 4.4
      */
-    Q_REQUIRED_RESULT Collection collection() const;
+    [[nodiscard]] Collection collection() const;
 
 protected:
     void doStart() override;

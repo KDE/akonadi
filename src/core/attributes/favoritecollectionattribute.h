@@ -17,10 +17,10 @@ public:
     explicit FavoriteCollectionAttribute() = default;
 
     Attribute *clone() const override;
-    Q_REQUIRED_RESULT QByteArray type() const override;
+    [[nodiscard]] QByteArray type() const override;
 
     void deserialize(const QByteArray &data) override;
-    Q_REQUIRED_RESULT QByteArray serialized() const override;
+    [[nodiscard]] QByteArray serialized() const override;
 };
 
 }

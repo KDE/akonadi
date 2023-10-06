@@ -28,7 +28,7 @@ public:
     /**
      * Returns whether Accounts integration is enabled.
      */
-    Q_REQUIRED_RESULT bool isEnabled() const;
+    [[nodiscard]] bool isEnabled() const;
 
     using AuthDataCallback = std::function<void(const QVariantMap &)>;
     using ErrorCallback = std::function<void(const QString &)>;

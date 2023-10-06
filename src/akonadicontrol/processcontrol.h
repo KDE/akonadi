@@ -77,7 +77,7 @@ public:
     /**
      * Returns true if the process is currently running.
      */
-    Q_REQUIRED_RESULT bool isRunning() const;
+    [[nodiscard]] bool isRunning() const;
 
     /**
      * Sets the time (in msecs) we wait for the process to shut down before we send terminate/kill signals.

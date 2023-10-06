@@ -34,7 +34,7 @@ public:
     /**
      * Returns the created tag with the new unique id, or an invalid tag if the job failed.
      */
-    Q_REQUIRED_RESULT Tag tag() const;
+    [[nodiscard]] Tag tag() const;
 
     /**
      * Merges the tag by GID if it is already existing, and returns the merged version.

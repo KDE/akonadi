@@ -41,7 +41,7 @@ public:
     bool selectionEnabled() const;
 
     void setSelection(const Akonadi::Tag::List &tags);
-    Q_REQUIRED_RESULT Akonadi::Tag::List selection() const;
+    [[nodiscard]] Akonadi::Tag::List selection() const;
 
 protected:
     bool eventFilter(QObject *watched, QEvent *event) override;

@@ -64,7 +64,7 @@ public:
     /**
      * Return true if we display tooltips, otherwise false
      */
-    Q_REQUIRED_RESULT bool isToolTipEnabled() const;
+    [[nodiscard]] bool isToolTipEnabled() const;
 
     /**
      * @param enable Display extra statistics columns
@@ -75,17 +75,17 @@ public:
     /**
      * Return true if we display extra statistics columns, otherwise false
      */
-    Q_REQUIRED_RESULT bool isExtraColumnsEnabled() const;
+    [[nodiscard]] bool isExtraColumnsEnabled() const;
 
-    Q_REQUIRED_RESULT QVariant extraColumnData(const QModelIndex &parent, int row, int extraColumn, int role) const override;
-    Q_REQUIRED_RESULT QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    Q_REQUIRED_RESULT Qt::ItemFlags flags(const QModelIndex &index) const override;
+    [[nodiscard]] QVariant extraColumnData(const QModelIndex &parent, int row, int extraColumn, int role) const override;
+    [[nodiscard]] QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    [[nodiscard]] Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-    Q_REQUIRED_RESULT QModelIndexList match(const QModelIndex &start,
-                                            int role,
-                                            const QVariant &value,
-                                            int hits = 1,
-                                            Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
+    [[nodiscard]] QModelIndexList match(const QModelIndex &start,
+                                        int role,
+                                        const QVariant &value,
+                                        int hits = 1,
+                                        Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
 
     void setSourceModel(QAbstractItemModel *model) override;
 

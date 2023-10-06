@@ -32,13 +32,13 @@ public:
     ~TagSelectWidget() override;
 
     void setSelection(const Akonadi::Tag::List &tags);
-    Q_REQUIRED_RESULT Akonadi::Tag::List selection() const;
+    [[nodiscard]] Akonadi::Tag::List selection() const;
 
     /**
      * @brief tagToStringList
      * @return QStringList from selected tag (List of Url)
      */
-    Q_REQUIRED_RESULT QStringList tagToStringList() const;
+    [[nodiscard]] QStringList tagToStringList() const;
     /**
      * @brief setSelectionFromStringList, convert a QStringList to Tag (converted from url)
      */

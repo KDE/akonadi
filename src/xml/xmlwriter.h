@@ -26,7 +26,7 @@ namespace XmlWriter
 /**
   Creates an attribute element for the given document.
 */
-Q_REQUIRED_RESULT AKONADI_XML_EXPORT QDomElement attributeToElement(Attribute *attr, QDomDocument &document);
+[[nodiscard]] AKONADI_XML_EXPORT QDomElement attributeToElement(Attribute *attr, QDomDocument &document);
 
 /**
   Serializes all attributes of the given Akonadi object into the given parent element.
@@ -41,7 +41,7 @@ AKONADI_XML_EXPORT void writeAttributes(const Collection &entity, QDomElement &p
 /**
   Creates a collection element for the given document, not yet attached to the DOM tree.
 */
-Q_REQUIRED_RESULT AKONADI_XML_EXPORT QDomElement collectionToElement(const Collection &collection, QDomDocument &document);
+[[nodiscard]] AKONADI_XML_EXPORT QDomElement collectionToElement(const Collection &collection, QDomDocument &document);
 
 /**
   Serializes the given collection into a DOM element with the given parent.
@@ -51,7 +51,7 @@ AKONADI_XML_EXPORT QDomElement writeCollection(const Collection &collection, QDo
 /**
   Creates an item element for the given document, not yet attached to the DOM tree
 */
-Q_REQUIRED_RESULT AKONADI_XML_EXPORT QDomElement itemToElement(const Item &item, QDomDocument &document);
+[[nodiscard]] AKONADI_XML_EXPORT QDomElement itemToElement(const Item &item, QDomDocument &document);
 
 /**
   Serializes the given item into a DOM element and attaches it to the given item.

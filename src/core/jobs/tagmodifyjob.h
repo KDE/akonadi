@@ -34,7 +34,7 @@ public:
     /**
      * Returns the modified tag.
      */
-    Q_REQUIRED_RESULT Tag tag() const;
+    [[nodiscard]] Tag tag() const;
 
 protected:
     void doStart() override;

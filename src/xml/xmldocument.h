@@ -57,14 +57,14 @@ public:
       Returns true if the document could be parsed successfully.
       @see lastError()
     */
-    Q_REQUIRED_RESULT bool isValid() const;
+    [[nodiscard]] bool isValid() const;
 
     /**
       Returns the last error occurred during file loading/parsing.
       Empty if isValid() returns @c true.
       @see isValid()
     */
-    Q_REQUIRED_RESULT QString lastError() const;
+    [[nodiscard]] QString lastError() const;
 
     /**
       Returns the DOM document for this XML document.
@@ -74,47 +74,47 @@ public:
     /**
       Returns the DOM element representing @p collection.
     */
-    Q_REQUIRED_RESULT QDomElement collectionElement(const Collection &collection) const;
+    [[nodiscard]] QDomElement collectionElement(const Collection &collection) const;
 
     /**
       Returns the DOM element representing the item with the given remote id
     */
-    Q_REQUIRED_RESULT QDomElement itemElementByRemoteId(const QString &rid) const;
+    [[nodiscard]] QDomElement itemElementByRemoteId(const QString &rid) const;
 
     /**
      * Returns the DOM element representing the collection with the given remote id
      */
-    Q_REQUIRED_RESULT QDomElement collectionElementByRemoteId(const QString &rid) const;
+    [[nodiscard]] QDomElement collectionElementByRemoteId(const QString &rid) const;
 
     /**
       Returns the collection with the given remote id.
     */
-    Q_REQUIRED_RESULT Collection collectionByRemoteId(const QString &rid) const;
+    [[nodiscard]] Collection collectionByRemoteId(const QString &rid) const;
 
     /**
       Returns the item with the given remote id.
     */
-    Q_REQUIRED_RESULT Item itemByRemoteId(const QString &rid, bool includePayload = true) const;
+    [[nodiscard]] Item itemByRemoteId(const QString &rid, bool includePayload = true) const;
 
     /**
       Returns the collections defined in this document.
     */
-    Q_REQUIRED_RESULT Collection::List collections() const;
+    [[nodiscard]] Collection::List collections() const;
 
     /**
       Returns the tags defined in this document.
     */
-    Q_REQUIRED_RESULT Tag::List tags() const;
+    [[nodiscard]] Tag::List tags() const;
 
     /**
       Returns the immediate child collections of @p parentCollection.
     */
-    Q_REQUIRED_RESULT Collection::List childCollections(const Collection &parentCollection) const;
+    [[nodiscard]] Collection::List childCollections(const Collection &parentCollection) const;
 
     /**
       Returns the items in the given collection.
     */
-    Q_REQUIRED_RESULT Item::List items(const Collection &collection, bool includePayload = true) const;
+    [[nodiscard]] Item::List items(const Collection &collection, bool includePayload = true) const;
 
 private:
     Q_DISABLE_COPY(XmlDocument)

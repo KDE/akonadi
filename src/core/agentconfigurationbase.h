@@ -139,7 +139,7 @@ protected:
     /**
      * Returns identifier of the Akonadi agent instance currently being configured.
      */
-    Q_REQUIRED_RESULT QString identifier() const;
+    [[nodiscard]] QString identifier() const;
 
     /**
      * When KAboutData is provided the dialog will also contain KHelpMenu with

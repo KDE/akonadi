@@ -52,17 +52,17 @@ public:
     /**
      * Returns the original collection of an item that has been moved to trash using a TrashJob
      */
-    Q_REQUIRED_RESULT Collection restoreCollection() const;
+    [[nodiscard]] Collection restoreCollection() const;
 
     /**
      * Returns the resource of the restoreCollection
      */
-    Q_REQUIRED_RESULT QString restoreResource() const;
+    [[nodiscard]] QString restoreResource() const;
 
     /**
      * Reimplemented from Attribute
      */
-    Q_REQUIRED_RESULT QByteArray type() const override;
+    [[nodiscard]] QByteArray type() const override;
 
     /**
      * Reimplemented from Attribute
@@ -72,7 +72,7 @@ public:
     /**
      * Reimplemented from Attribute
      */
-    Q_REQUIRED_RESULT QByteArray serialized() const override;
+    [[nodiscard]] QByteArray serialized() const override;
 
     /**
      * Reimplemented from Attribute

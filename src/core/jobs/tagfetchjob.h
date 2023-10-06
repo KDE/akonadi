@@ -97,7 +97,7 @@ public:
     /**
      * Returns the fetched tags after the job has been completed.
      */
-    Q_REQUIRED_RESULT Tag::List tags() const;
+    [[nodiscard]] Tag::List tags() const;
 
 Q_SIGNALS:
     /**

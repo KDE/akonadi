@@ -53,44 +53,44 @@ public:
      * Returns the list of identifiers of all available
      * agent types.
      */
-    Q_REQUIRED_RESULT QStringList agentTypes() const;
+    [[nodiscard]] QStringList agentTypes() const;
 
     /**
      * Returns the i18n'ed name of the agent type for
      * the given @p identifier.
      */
-    Q_REQUIRED_RESULT QString agentName(const QString &identifier) const;
+    [[nodiscard]] QString agentName(const QString &identifier) const;
 
     /**
      * Returns the i18n'ed comment of the agent type for
      * the given @p identifier..
      */
-    Q_REQUIRED_RESULT QString agentComment(const QString &identifier) const;
+    [[nodiscard]] QString agentComment(const QString &identifier) const;
 
     /**
      * Returns the icon name of the agent type for the
      * given @p identifier.
      */
-    Q_REQUIRED_RESULT QString agentIcon(const QString &identifier) const;
+    [[nodiscard]] QString agentIcon(const QString &identifier) const;
 
     /**
      * Returns a list of supported mimetypes of the agent type
      * for the given @p identifier.
      */
-    Q_REQUIRED_RESULT QStringList agentMimeTypes(const QString &identifier) const;
+    [[nodiscard]] QStringList agentMimeTypes(const QString &identifier) const;
 
     /**
      * Returns a list of supported capabilities of the agent type
      * for the given @p identifier.
      */
-    Q_REQUIRED_RESULT QStringList agentCapabilities(const QString &identifier) const;
+    [[nodiscard]] QStringList agentCapabilities(const QString &identifier) const;
 
     /**
      * Returns a list of Custom added properties of the agent type
      * for the given @p identifier
      * @since 1.11
      */
-    Q_REQUIRED_RESULT QVariantMap agentCustomProperties(const QString &identifier) const;
+    [[nodiscard]] QVariantMap agentCustomProperties(const QString &identifier) const;
 
     /**
      * Creates a new agent of the given agent type @p identifier.
@@ -101,7 +101,7 @@ public:
      *         agent and an unique instance number, and looks like
      *         the following: 'file_1' or 'imap_267'.
      */
-    Q_REQUIRED_RESULT QString createAgentInstance(const QString &identifier);
+    [[nodiscard]] QString createAgentInstance(const QString &identifier);
 
     /**
      * Removes the agent with the given @p identifier.
@@ -111,12 +111,12 @@ public:
     /**
      * Returns the type of the agent instance with the given @p identifier.
      */
-    Q_REQUIRED_RESULT QString agentInstanceType(const QString &identifier);
+    [[nodiscard]] QString agentInstanceType(const QString &identifier);
 
     /**
      * Returns the list of identifiers of configured instances.
      */
-    Q_REQUIRED_RESULT QStringList agentInstances() const;
+    [[nodiscard]] QStringList agentInstances() const;
 
     /**
      * Returns the current status code of the agent with the given @p identifier.
@@ -127,13 +127,13 @@ public:
      * Returns the i18n'ed description of the current status of the agent with
      * the given @p identifier.
      */
-    Q_REQUIRED_RESULT QString agentInstanceStatusMessage(const QString &identifier) const;
+    [[nodiscard]] QString agentInstanceStatusMessage(const QString &identifier) const;
 
     /**
      * Returns the current progress of the agent with the given @p identifier
      * in percentage.
      */
-    Q_REQUIRED_RESULT uint agentInstanceProgress(const QString &identifier) const;
+    [[nodiscard]] uint agentInstanceProgress(const QString &identifier) const;
 
     /**
      * Returns the i18n'ed description of the current progress of the agent with
@@ -149,7 +149,7 @@ public:
     /**
      * Returns the name of the agent instance with the given @p identifier.
      */
-    Q_REQUIRED_RESULT QString agentInstanceName(const QString &identifier) const;
+    [[nodiscard]] QString agentInstanceName(const QString &identifier) const;
 
     /**
      * Triggers the agent instance with the given @p identifier to show

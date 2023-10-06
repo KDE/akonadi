@@ -35,20 +35,20 @@ public:
 
     void setSpecialCollectionIdentifier(const QString &identifier);
 
-    Q_REQUIRED_RESULT QStringList mimeTypeFilter() const;
+    [[nodiscard]] QStringList mimeTypeFilter() const;
     void setMimeTypeFilter(const QStringList &mimeTypeFilter);
 
-    Q_REQUIRED_RESULT QStringList capabilityFilter() const;
+    [[nodiscard]] QStringList capabilityFilter() const;
     void setCapabilityFilter(const QStringList &capabilityFilter);
 
-    Q_REQUIRED_RESULT QStringList excludeCapabilities() const;
+    [[nodiscard]] QStringList excludeCapabilities() const;
     void setExcludeCapabilities(const QStringList &excludeCapabilities);
 
     void setItemDelegate(QAbstractItemDelegate *delegate);
 
-    Q_REQUIRED_RESULT QAbstractItemView *view() const;
+    [[nodiscard]] QAbstractItemView *view() const;
 
-    Q_REQUIRED_RESULT QPushButton *addAccountButton() const;
+    [[nodiscard]] QPushButton *addAccountButton() const;
     void disconnectAddAccountButton();
 
 protected:

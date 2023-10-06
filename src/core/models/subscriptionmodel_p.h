@@ -54,19 +54,19 @@ public:
      */
     void setSourceModel(QAbstractItemModel *model) override;
 
-    Q_REQUIRED_RESULT QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    Q_REQUIRED_RESULT Qt::ItemFlags flags(const QModelIndex &index) const override;
+    [[nodiscard]] QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    [[nodiscard]] Qt::ItemFlags flags(const QModelIndex &index) const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
-    Q_REQUIRED_RESULT Collection::List subscribed() const;
-    Q_REQUIRED_RESULT Collection::List unsubscribed() const;
+    [[nodiscard]] Collection::List subscribed() const;
+    [[nodiscard]] Collection::List unsubscribed() const;
 
     /**
      * @param showHidden shows hidden collections if set as @c true
      * @since: 4.9
      */
     void setShowHiddenCollections(bool showHidden);
-    Q_REQUIRED_RESULT bool showHiddenCollections() const;
+    [[nodiscard]] bool showHiddenCollections() const;
 
 Q_SIGNALS:
     void modelLoaded();

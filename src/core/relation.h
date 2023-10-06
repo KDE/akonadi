@@ -74,7 +74,7 @@ public:
     /**
      * Returns the identifier of the left side of the relation.
      */
-    Q_REQUIRED_RESULT Item left() const;
+    [[nodiscard]] Item left() const;
 
     /**
      * Sets the @p item of the right side of the relation.
@@ -84,7 +84,7 @@ public:
     /**
      * Returns the identifier of the right side of the relation.
      */
-    Q_REQUIRED_RESULT Item right() const;
+    [[nodiscard]] Item right() const;
 
     /**
      * Sets the type of the relation.
@@ -94,7 +94,7 @@ public:
     /**
      * Returns the type of the relation.
      */
-    Q_REQUIRED_RESULT QByteArray type() const;
+    [[nodiscard]] QByteArray type() const;
 
     /**
      * Sets the remote id of the relation.
@@ -104,9 +104,9 @@ public:
     /**
      * Returns the remote id of the relation.
      */
-    Q_REQUIRED_RESULT QByteArray remoteId() const;
+    [[nodiscard]] QByteArray remoteId() const;
 
-    Q_REQUIRED_RESULT bool isValid() const;
+    [[nodiscard]] bool isValid() const;
 
 private:
     QSharedDataPointer<RelationPrivate> d;

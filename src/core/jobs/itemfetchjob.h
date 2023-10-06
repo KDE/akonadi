@@ -144,7 +144,7 @@ public:
      * @note The items are invalid before the result(KJob*)
      *       signal has been emitted or if an error occurred.
      */
-    Q_REQUIRED_RESULT Item::List items() const;
+    [[nodiscard]] Item::List items() const;
 
     /**
      * Save memory by clearing the fetched items.

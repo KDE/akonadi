@@ -48,18 +48,18 @@ public:
 
     ChangeNotification &operator=(const ChangeNotification &other);
 
-    Q_REQUIRED_RESULT bool isValid() const;
+    [[nodiscard]] bool isValid() const;
 
-    Q_REQUIRED_RESULT QDateTime timestamp() const;
+    [[nodiscard]] QDateTime timestamp() const;
     void setTimestamp(const QDateTime &timestamp);
 
-    Q_REQUIRED_RESULT QList<QByteArray> listeners() const;
+    [[nodiscard]] QList<QByteArray> listeners() const;
     void setListeners(const QList<QByteArray> &listeners);
 
-    Q_REQUIRED_RESULT Type type() const;
+    [[nodiscard]] Type type() const;
     void setType(Type type);
 
-    Q_REQUIRED_RESULT Protocol::ChangeNotificationPtr notification() const;
+    [[nodiscard]] Protocol::ChangeNotificationPtr notification() const;
     void setNotification(const Protocol::ChangeNotificationPtr &ntf);
 
 private:

@@ -32,7 +32,7 @@ public:
     void addAttribute(Attribute *attr);
     void removeAttribute(const QByteArray &type);
     bool hasAttribute(const QByteArray &type) const;
-    Q_REQUIRED_RESULT Attribute::List attributes() const;
+    [[nodiscard]] Attribute::List attributes() const;
     void clearAttributes();
     const Attribute *attribute(const QByteArray &type) const;
     Attribute *attribute(const QByteArray &type);
@@ -40,7 +40,7 @@ public:
     void resetChangeLog();
 
     QSet<QByteArray> deletedAttributes() const;
-    Q_REQUIRED_RESULT bool hasModifiedAttributes() const;
+    [[nodiscard]] bool hasModifiedAttributes() const;
     std::vector<Attribute *> modifiedAttributes() const;
 
 private:

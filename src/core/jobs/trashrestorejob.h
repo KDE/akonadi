@@ -59,7 +59,7 @@ public:
      */
     void setTargetCollection(const Collection &collection);
 
-    Q_REQUIRED_RESULT Item::List items() const;
+    [[nodiscard]] Item::List items() const;
 
 protected:
     void doStart() override;

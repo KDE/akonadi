@@ -73,25 +73,25 @@ public:
      * Returns the current agent instance or an invalid agent instance
      * if no agent instance is selected.
      */
-    Q_REQUIRED_RESULT AgentInstance currentAgentInstance() const;
+    [[nodiscard]] AgentInstance currentAgentInstance() const;
 
     /**
      * Returns the selected agent instances.
      * @since 4.5
      */
-    Q_REQUIRED_RESULT QList<AgentInstance> selectedAgentInstances() const;
+    [[nodiscard]] QList<AgentInstance> selectedAgentInstances() const;
 
     /**
      * Returns the agent filter proxy model, use this to filter by
      * agent mimetype or capabilities.
      */
-    Q_REQUIRED_RESULT AgentFilterProxyModel *agentFilterProxyModel() const;
+    [[nodiscard]] AgentFilterProxyModel *agentFilterProxyModel() const;
 
     /**
      * Returns the view used in the widget.
      * @since 4.5
      */
-    Q_REQUIRED_RESULT QAbstractItemView *view() const;
+    [[nodiscard]] QAbstractItemView *view() const;
 
 Q_SIGNALS:
     /**

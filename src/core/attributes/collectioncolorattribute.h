@@ -32,11 +32,11 @@ public:
     ~CollectionColorAttribute() override = default;
 
     void setColor(const QColor &color);
-    Q_REQUIRED_RESULT QColor color() const;
+    [[nodiscard]] QColor color() const;
 
-    Q_REQUIRED_RESULT QByteArray type() const override;
+    [[nodiscard]] QByteArray type() const override;
     CollectionColorAttribute *clone() const override;
-    Q_REQUIRED_RESULT QByteArray serialized() const override;
+    [[nodiscard]] QByteArray serialized() const override;
     void deserialize(const QByteArray &data) override;
 
 private:

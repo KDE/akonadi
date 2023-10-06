@@ -142,7 +142,7 @@ public:
     /**
      * Returns the unique identifier of the collection.
      */
-    Q_REQUIRED_RESULT Id id() const;
+    [[nodiscard]] Id id() const;
 
     /**
      * Sets the remote @p id of the collection.
@@ -152,7 +152,7 @@ public:
     /**
      * Returns the remote id of the collection.
      */
-    Q_REQUIRED_RESULT QString remoteId() const;
+    [[nodiscard]] QString remoteId() const;
 
     /**
      * Sets the remote @p revision of the collection.
@@ -171,24 +171,24 @@ public:
      * @note This method is supposed to be used by resources only.
      * @since 4.5
      */
-    Q_REQUIRED_RESULT QString remoteRevision() const;
+    [[nodiscard]] QString remoteRevision() const;
 
     /**
      * Returns whether the collection is valid.
      */
-    Q_REQUIRED_RESULT bool isValid() const;
+    [[nodiscard]] bool isValid() const;
 
     /**
      * Returns whether this collections's id equals the
      * id of the @p other collection.
      */
-    Q_REQUIRED_RESULT bool operator==(const Collection &other) const;
+    [[nodiscard]] bool operator==(const Collection &other) const;
 
     /**
      * Returns whether the collection's id does not equal the id
      * of the @p other collection.
      */
-    Q_REQUIRED_RESULT bool operator!=(const Collection &other) const;
+    [[nodiscard]] bool operator!=(const Collection &other) const;
 
     /**
      * Assigns the @p other to this collection and returns a reference to this
@@ -202,7 +202,7 @@ public:
      *
      * @since 4.8
      */
-    Q_REQUIRED_RESULT bool operator<(const Collection &other) const;
+    [[nodiscard]] bool operator<(const Collection &other) const;
 
     /**
      * Returns the parent collection of this object.
@@ -210,7 +210,7 @@ public:
      *       from the Akonadi server.
      * @since 4.4
      */
-    Q_REQUIRED_RESULT Collection parentCollection() const;
+    [[nodiscard]] Collection parentCollection() const;
 
     /**
      * Returns a reference to the parent collection of this object.
@@ -218,7 +218,7 @@ public:
      *       from the Akonadi server.
      * @since 4.4
      */
-    Q_REQUIRED_RESULT Collection &parentCollection();
+    [[nodiscard]] Collection &parentCollection();
 
     /**
      * Set the parent collection of this object.
@@ -261,7 +261,7 @@ public:
      * the change will not be reflected when updating the Collection
      * through CollectionModifyJob.
      */
-    Q_REQUIRED_RESULT Attribute::List attributes() const;
+    [[nodiscard]] Attribute::List attributes() const;
 
     /**
      * Removes and deletes all attributes of the collection.
@@ -313,7 +313,7 @@ public:
     /**
      * Returns the i18n'ed name of the collection.
      */
-    Q_REQUIRED_RESULT QString name() const;
+    [[nodiscard]] QString name() const;
 
     /**
      * Returns the display name (EntityDisplayAttribute::displayName()) if set,
@@ -322,7 +322,7 @@ public:
      *
      * @since 4.11
      */
-    Q_REQUIRED_RESULT QString displayName() const;
+    [[nodiscard]] QString displayName() const;
 
     /**
      * Sets the i18n'ed name of the collection.
@@ -334,7 +334,7 @@ public:
     /**
      * Returns the rights the user has on the collection.
      */
-    Q_REQUIRED_RESULT Rights rights() const;
+    [[nodiscard]] Rights rights() const;
 
     /**
      * Sets the @p rights the user has on the collection.
@@ -346,7 +346,7 @@ public:
      * e.g. message/rfc822, x-akonadi/collection for a mail folder that
      * supports sub-folders.
      */
-    Q_REQUIRED_RESULT QStringList contentMimeTypes() const;
+    [[nodiscard]] QStringList contentMimeTypes() const;
 
     /**
      * Sets the list of possible content mime @p types.
@@ -356,24 +356,24 @@ public:
     /**
      * Returns the root collection.
      */
-    Q_REQUIRED_RESULT static Collection root();
+    [[nodiscard]] static Collection root();
 
     /**
      * Returns the mimetype used for collections.
      */
-    Q_REQUIRED_RESULT static QString mimeType();
+    [[nodiscard]] static QString mimeType();
 
     /**
      * Returns the mimetype used for virtual collections
      *
      * @since 4.11
      */
-    Q_REQUIRED_RESULT static QString virtualMimeType();
+    [[nodiscard]] static QString virtualMimeType();
 
     /**
      * Returns the identifier of the resource owning the collection.
      */
-    Q_REQUIRED_RESULT QString resource() const;
+    [[nodiscard]] QString resource() const;
 
     /**
      * Sets the @p identifier of the resource owning the collection.
@@ -383,7 +383,7 @@ public:
     /**
      * Returns the cache policy of the collection.
      */
-    Q_REQUIRED_RESULT CachePolicy cachePolicy() const;
+    [[nodiscard]] CachePolicy cachePolicy() const;
 
     /**
      * Sets the cache @p policy of the collection.
@@ -393,7 +393,7 @@ public:
     /**
      * Returns the collection statistics of the collection.
      */
-    Q_REQUIRED_RESULT CollectionStatistics statistics() const;
+    [[nodiscard]] CollectionStatistics statistics() const;
 
     /**
      * Sets the collection @p statistics for the collection.
@@ -415,14 +415,14 @@ public:
      * @param type the type of url
      * @since 4.7
      */
-    Q_REQUIRED_RESULT QUrl url(UrlType type = UrlShort) const;
+    [[nodiscard]] QUrl url(UrlType type = UrlShort) const;
 
     /**
      * Returns whether the collection is virtual, for example a search collection.
      *
      * @since 4.6
      */
-    Q_REQUIRED_RESULT bool isVirtual() const;
+    [[nodiscard]] bool isVirtual() const;
 
     /**
      * Sets whether the collection is virtual or not.
@@ -458,7 +458,7 @@ public:
      * @since 4.14
      * @see localListPreference
      */
-    Q_REQUIRED_RESULT bool enabled() const;
+    [[nodiscard]] bool enabled() const;
 
     /**
      * Describes the list preference value
@@ -500,7 +500,7 @@ public:
      * @since 4.14
      * @see setLocalListPreference
      */
-    Q_REQUIRED_RESULT ListPreference localListPreference(ListPurpose purpose) const;
+    [[nodiscard]] ListPreference localListPreference(ListPurpose purpose) const;
 
     /**
      * Returns whether the collection should be listed or not for the specified purpose
@@ -509,7 +509,7 @@ public:
      * @since 4.14
      * @see setLocalListPreference, setEnabled
      */
-    Q_REQUIRED_RESULT bool shouldList(ListPurpose purpose) const;
+    [[nodiscard]] bool shouldList(ListPurpose purpose) const;
 
     /**
      * Sets whether the collection should be listed or not for the specified purpose.

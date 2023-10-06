@@ -93,7 +93,7 @@ public:
      * connected to its default implementation provided by this class.
      * @param type action type
      */
-    Q_REQUIRED_RESULT QAction *createAction(Type type);
+    [[nodiscard]] QAction *createAction(Type type);
 
     /**
      * Convenience method to create all standard actions.
@@ -104,7 +104,7 @@ public:
     /**
      * Returns the action of the given type, 0 if it has not been created (yet).
      */
-    Q_REQUIRED_RESULT QAction *action(Type type) const;
+    [[nodiscard]] QAction *action(Type type) const;
 
     /**
      * Sets whether the default implementation for the given action @p type
@@ -123,7 +123,7 @@ public:
      *
      * @since 4.6
      */
-    Q_REQUIRED_RESULT Akonadi::AgentInstance::List selectedAgentInstances() const;
+    [[nodiscard]] Akonadi::AgentInstance::List selectedAgentInstances() const;
 
     /**
      * Sets the @p text of the action @p type for the given @p context.

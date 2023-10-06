@@ -104,7 +104,7 @@ public:
      */
     void deleteIfInTrash(bool enable);
 
-    Q_REQUIRED_RESULT Item::List items() const;
+    [[nodiscard]] Item::List items() const;
 
 protected:
     void doStart() override;

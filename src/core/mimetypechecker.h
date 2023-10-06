@@ -126,7 +126,7 @@ public:
      *
      * @see setWantedMimeTypes(), hasWantedMimeTypes()
      */
-    Q_REQUIRED_RESULT QStringList wantedMimeTypes() const;
+    [[nodiscard]] QStringList wantedMimeTypes() const;
 
     /**
      * Checks whether any wanted MIME types are set.
@@ -135,7 +135,7 @@ public:
      *
      * @since 5.6.43
      */
-    Q_REQUIRED_RESULT bool hasWantedMimeTypes() const;
+    [[nodiscard]] bool hasWantedMimeTypes() const;
 
     /**
      * Sets the list of wanted MIME types this instance checks against.
@@ -175,7 +175,7 @@ public:
      * @see setWantedMimeTypes()
      * @see Item::mimeType()
      */
-    Q_REQUIRED_RESULT bool isWantedItem(const Item &item) const;
+    [[nodiscard]] bool isWantedItem(const Item &item) const;
 
     /**
      * Checks whether a given @p collection has one of the wanted MIME types
@@ -189,7 +189,7 @@ public:
      * @see setWantedMimeTypes()
      * @see Collection::contentMimeTypes()
      */
-    Q_REQUIRED_RESULT bool isWantedCollection(const Collection &collection) const;
+    [[nodiscard]] bool isWantedCollection(const Collection &collection) const;
 
     /**
      * Checks whether a given mime type is covered by one of the wanted MIME types.
@@ -201,7 +201,7 @@ public:
      *
      * @since 4.6
      */
-    Q_REQUIRED_RESULT bool isWantedMimeType(const QString &mimeType) const;
+    [[nodiscard]] bool isWantedMimeType(const QString &mimeType) const;
 
     /**
      * Checks whether any of the given MIME types is covered by one of the wanted MIME types.
@@ -213,7 +213,7 @@ public:
      *
      * @since 4.6
      */
-    Q_REQUIRED_RESULT bool containsWantedMimeType(const QStringList &mimeTypes) const;
+    [[nodiscard]] bool containsWantedMimeType(const QStringList &mimeTypes) const;
 
     /**
      * Checks whether a given @p item has the given wanted MIME type
@@ -227,7 +227,7 @@ public:
      * @see setWantedMimeTypes()
      * @see Item::mimeType()
      */
-    Q_REQUIRED_RESULT static bool isWantedItem(const Item &item, const QString &wantedMimeType);
+    [[nodiscard]] static bool isWantedItem(const Item &item, const QString &wantedMimeType);
 
     /**
      * Checks whether a given @p collection has the given MIME type
@@ -242,7 +242,7 @@ public:
      * @see setWantedMimeTypes()
      * @see Collection::contentMimeTypes()
      */
-    Q_REQUIRED_RESULT static bool isWantedCollection(const Collection &collection, const QString &wantedMimeType);
+    [[nodiscard]] static bool isWantedCollection(const Collection &collection, const QString &wantedMimeType);
 
 private:
     /// @cond PRIVATE

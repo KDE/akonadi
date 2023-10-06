@@ -62,18 +62,18 @@ public:
     /**
      * Returns the list of all available agent types.
      */
-    Q_REQUIRED_RESULT AgentType::List types() const;
+    [[nodiscard]] AgentType::List types() const;
 
     /**
      * Returns the agent type with the given @p identifier or
      * an invalid agent type if the identifier does not exist.
      */
-    Q_REQUIRED_RESULT AgentType type(const QString &identifier) const;
+    [[nodiscard]] AgentType type(const QString &identifier) const;
 
     /**
      * Returns the list of all available agent instances.
      */
-    Q_REQUIRED_RESULT AgentInstance::List instances() const;
+    [[nodiscard]] AgentInstance::List instances() const;
 
     /**
      * Returns the agent instance with the given @p identifier or
@@ -83,7 +83,7 @@ public:
      * identifier of a resource is the same as that of its agent instance.
      * @param identifier identifier to choose the agent instance
      */
-    Q_REQUIRED_RESULT AgentInstance instance(const QString &identifier) const;
+    [[nodiscard]] AgentInstance instance(const QString &identifier) const;
 
     /**
      * Removes the given agent @p instance.

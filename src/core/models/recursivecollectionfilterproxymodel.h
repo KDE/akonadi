@@ -69,7 +69,7 @@ public:
     /**
      * Returns the currently included mimetypes in the filter.
      */
-    Q_REQUIRED_RESULT QStringList contentMimeTypeInclusionFilters() const;
+    [[nodiscard]] QStringList contentMimeTypeInclusionFilters() const;
 
     /**
      * Add search pattern

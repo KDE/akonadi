@@ -25,7 +25,7 @@ public:
 
 public:
     AgentType();
-    Q_REQUIRED_RESULT bool load(const QString &fileName, AgentManager *manager);
+    [[nodiscard]] bool load(const QString &fileName, AgentManager *manager);
     void save(QSettings *config) const;
 
     QString identifier;

@@ -38,9 +38,9 @@ public:
     ~TagSelectionDialog() override;
 
     void setSelection(const Akonadi::Tag::List &tags);
-    Q_REQUIRED_RESULT Akonadi::Tag::List selection() const;
+    [[nodiscard]] Akonadi::Tag::List selection() const;
 
-    Q_REQUIRED_RESULT QDialogButtonBox *buttons() const;
+    [[nodiscard]] QDialogButtonBox *buttons() const;
 
 Q_SIGNALS:
     void selectionChanged(const Akonadi::Tag::List &tags);

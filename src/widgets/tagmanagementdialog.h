@@ -33,7 +33,7 @@ public:
     explicit TagManagementDialog(QWidget *parent = nullptr);
     ~TagManagementDialog() override;
 
-    Q_REQUIRED_RESULT QDialogButtonBox *buttons() const;
+    [[nodiscard]] QDialogButtonBox *buttons() const;
 
 private:
     std::unique_ptr<TagManagementDialogPrivate> const d;

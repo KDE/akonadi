@@ -75,14 +75,14 @@ public:
      *
      * @since 4.7
      */
-    Q_REQUIRED_RESULT Collection destinationCollection() const;
+    [[nodiscard]] Collection destinationCollection() const;
 
     /**
      * Returns the list of items that where passed in the constructor.
      *
      * @since 4.7
      */
-    Q_REQUIRED_RESULT Akonadi::Item::List items() const;
+    [[nodiscard]] Akonadi::Item::List items() const;
 
 protected:
     void doStart() override;

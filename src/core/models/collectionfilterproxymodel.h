@@ -74,7 +74,7 @@ public:
     /**
      * Returns the list of mime type filters.
      */
-    Q_REQUIRED_RESULT QStringList mimeTypeFilters() const;
+    [[nodiscard]] QStringList mimeTypeFilters() const;
 
     /**
      * Sets whether we want virtual collections to be filtered or not.
@@ -88,14 +88,14 @@ public:
     /*
      * @since 4.12
      */
-    Q_REQUIRED_RESULT bool excludeVirtualCollections() const;
+    [[nodiscard]] bool excludeVirtualCollections() const;
 
     /**
      * Clears all mime type filters.
      */
     void clearFilters();
 
-    Q_REQUIRED_RESULT Qt::ItemFlags flags(const QModelIndex &index) const override;
+    [[nodiscard]] Qt::ItemFlags flags(const QModelIndex &index) const override;
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;

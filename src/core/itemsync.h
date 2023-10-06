@@ -145,7 +145,7 @@ public:
      * @see setBatchSize()
      * @since 4.14
      */
-    Q_REQUIRED_RESULT int batchSize() const;
+    [[nodiscard]] int batchSize() const;
 
     /**
      * Set the batch size.
@@ -178,7 +178,7 @@ public:
      * @see setMergeMode()
      * @since 5.1
      */
-    Q_REQUIRED_RESULT MergeMode mergeMode() const;
+    [[nodiscard]] MergeMode mergeMode() const;
 
     /**
      * Set what merge method should be used for next ItemSync run
