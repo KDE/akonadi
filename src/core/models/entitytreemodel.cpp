@@ -284,7 +284,7 @@ QVariant EntityTreeModel::data(const QModelIndex &index, int role) const
             if (const auto *const attr = collection.attribute<EntityDisplayAttribute>(); attr && attr->backgroundColor().isValid()) {
                 return attr->backgroundColor();
             }
-            Q_FALLTHROUGH();
+            [[fallthrough]];
         default:
             return entityData(collection, index.column(), role);
         }
@@ -320,7 +320,7 @@ QVariant EntityTreeModel::data(const QModelIndex &index, int role) const
             if (const auto *const attr = item.attribute<EntityDisplayAttribute>(); attr && attr->backgroundColor().isValid()) {
                 return attr->backgroundColor();
             }
-            Q_FALLTHROUGH();
+            [[fallthrough]];
         default:
             return entityData(item, index.column(), role);
         }
