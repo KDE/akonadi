@@ -120,7 +120,7 @@ msgstr "S'ha produït un error en crear l'element: %1"
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
-msgstr "S'ha produït un error en actualitzar la col·lecció: %1"
+msgstr "S'ha produït un error durant l'actualització de la col·lecció: %1"
 
 #: agentbase/resourcebase.cpp:705
 #, kde-format
@@ -2507,7 +2507,7 @@ msgstr "Convertidor a XML d'Akonadi"
 #: xml/akonadi2xml.cpp:27
 #, kde-format
 msgid "Converts an Akonadi collection subtree into a XML file."
-msgstr "Convertix un subarbre de col·lecció d'Akonadi en un fitxer XML."
+msgstr "Convertix un subarbre de col·lecció d'Akonadi en un fitxer en XML."
 
 #: xml/akonadi2xml.cpp:29
 #, kde-format
