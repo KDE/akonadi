@@ -356,7 +356,8 @@ msgstr "No s'ha pogut crear l'etiqueta."
 #, kde-format
 msgid "Move to trash collection failed, aborting trash operation"
 msgstr ""
-"No s'ha pogut moure la col·lecció a la paperera, s'ha interromput l'operació"
+"No s'ha pogut moure la col·lecció cap a dins de la paperera, s'ha "
+"interromput l'operació"
 
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format
@@ -1983,11 +1984,11 @@ msgstr "Mou l'element a..."
 #: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:137
 #: widgets/standardactionmanager.cpp:167 widgets/standardactionmanager.cpp:174
 msgid "Move To"
-msgstr "Mou a"
+msgstr "Mou cap a"
 
 #: widgets/standardactionmanager.cpp:136 widgets/standardactionmanager.cpp:166
 msgid "Move Folder To..."
-msgstr "Mou la carpeta a..."
+msgstr "Mou la carpeta cap a..."
 
 #: widgets/standardactionmanager.cpp:143
 msgid "&Cut Item"
@@ -2031,11 +2032,11 @@ msgstr "Sincronitza recursivament"
 
 #: widgets/standardactionmanager.cpp:184
 msgid "&Move Folder To Trash"
-msgstr "&Mou la carpeta a la paperera"
+msgstr "&Mou la carpeta cap a dins de la paperera"
 
 #: widgets/standardactionmanager.cpp:185
 msgid "Move Folder To Trash"
-msgstr "Mou la carpeta a la paperera"
+msgstr "Mou la carpeta cap a dins de la paperera"
 
 #: widgets/standardactionmanager.cpp:192
 msgid "&Move Item To Trash"
@@ -2375,7 +2376,7 @@ msgstr "Connecta"
 #: widgets/standardactionmanager.cpp:1585
 #, kde-format
 msgid "Move to This Folder"
-msgstr "Mou a esta carpeta"
+msgstr "Mou cap a esta carpeta"
 
 #: widgets/standardactionmanager.cpp:1585
 #, kde-format
