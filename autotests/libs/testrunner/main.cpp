@@ -71,8 +71,8 @@ int main(int argc, char **argv)
     auto disableSessionManagement = [](QSessionManager &sm) {
         sm.setRestartHint(QSessionManager::RestartNever);
     };
-    QObject::connect(qApp, &QGuiApplication::commitDataRequest, disableSessionManagement);
-    QObject::connect(qApp, &QGuiApplication::saveStateRequest, disableSessionManagement);
+    QObject::connect(qApp, &QGuiApplication::commitDataRequest, qApp, disableSessionManagement);
+    QObject::connect(qApp, &QGuiApplication::saveStateRequest, qApp, disableSessionManagement);
 
     if (parser.isSet(QStringLiteral("config"))) {
         const auto backend = parser.value(QStringLiteral("backend"));

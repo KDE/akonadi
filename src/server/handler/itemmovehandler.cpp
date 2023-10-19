@@ -150,7 +150,7 @@ bool ItemMoveHandler::parseStream()
     ItemRetriever retriever(akonadi().itemRetrievalManager(), connection(), context);
     retriever.setScope(cmd.items());
     retriever.setRetrieveFullPayload(true);
-    QObject::connect(&retriever, &ItemRetriever::itemsRetrieved, [this](const QList<qint64> &ids) {
+    QObject::connect(&retriever, &ItemRetriever::itemsRetrieved, &retriever, [this](const QList<qint64> &ids) {
         itemsRetrieved(ids);
     });
     if (!retriever.exec()) {

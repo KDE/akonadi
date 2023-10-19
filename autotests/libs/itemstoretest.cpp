@@ -436,7 +436,7 @@ public:
     void addJob(ItemModifyJob *mjob)
     {
         modifyJobs.push_back(mjob);
-        QObject::connect(mjob, &KJob::result, [mjob, this]() {
+        QObject::connect(mjob, &KJob::result, mjob, [mjob, this]() {
             if (mjob->error()) {
                 errors.append(mjob->errorString());
             }

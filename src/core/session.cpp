@@ -326,7 +326,7 @@ SessionPrivate::SessionPrivate(Session *parent)
     // Shutdown the thread before QApplication event loop quits - the
     // thread()->wait() mechanism in Connection dtor crashes sometimes
     // when called from QApplication destructor
-    connThreadCleanUp = QObject::connect(qApp, &QCoreApplication::aboutToQuit, [this]() {
+    connThreadCleanUp = QObject::connect(qApp, &QCoreApplication::aboutToQuit, qApp, [this]() {
         delete mSessionThread;
         mSessionThread = nullptr;
     });
@@ -415,7 +415,7 @@ void SessionPrivate::createDefaultSession(const QByteArray &sessionId)
 void SessionPrivate::setDefaultSession(Session *session)
 {
     instances()->setLocalData({session});
-    QObject::connect(qApp, &QCoreApplication::aboutToQuit, []() {
+    QObject::connect(qApp, &QCoreApplication::aboutToQuit, qApp, []() {
         instances()->setLocalData({});
     });
 }

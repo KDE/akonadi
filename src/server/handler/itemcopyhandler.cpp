@@ -104,7 +104,7 @@ bool ItemCopyHandler::parseStream()
     ItemRetriever retriever(akonadi().itemRetrievalManager(), connection(), connection()->context());
     retriever.setItemSet(cmd.items().uidSet());
     retriever.setRetrieveFullPayload(true);
-    QObject::connect(&retriever, &ItemRetriever::itemsRetrieved, [this](const QList<qint64> &ids) {
+    QObject::connect(&retriever, &ItemRetriever::itemsRetrieved, &retriever, [this](const QList<qint64> &ids) {
         processItems(ids);
     });
     if (!retriever.exec()) {

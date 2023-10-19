@@ -120,7 +120,7 @@ void TransactionSequence::slotResult(KJob *job)
                 }
                 d->mState = TransactionSequencePrivate::Committing;
                 auto job = new TransactionCommitJob(this);
-                connect(job, &TransactionCommitJob::result, [d](KJob *job) {
+                connect(job, &TransactionCommitJob::result, this, [d](KJob *job) {
                     d->commitResult(job);
                 });
             }

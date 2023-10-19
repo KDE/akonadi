@@ -31,12 +31,12 @@ NotificationCollector::NotificationCollector(AkonadiServer &akonadi, DataStore *
     : mDb(db)
     , mAkonadi(akonadi)
 {
-    QObject::connect(db, &DataStore::transactionCommitted, [this]() {
+    QObject::connect(db, &DataStore::transactionCommitted, db, [this]() {
         if (!mIgnoreTransactions) {
             dispatchNotifications();
         }
     });
-    QObject::connect(db, &DataStore::transactionRolledBack, [this]() {
+    QObject::connect(db, &DataStore::transactionRolledBack, db, [this]() {
         if (!mIgnoreTransactions) {
             clear();
         }

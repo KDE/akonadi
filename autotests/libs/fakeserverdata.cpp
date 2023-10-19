@@ -23,7 +23,7 @@ FakeServerData::FakeServerData(EntityTreeModel *model, FakeSession *session, Fak
 {
     // can't use QueuedConnection here, because the Job might self-deleted before
     // the slot gets called
-    connect(session, &FakeSession::jobAdded, [this](Akonadi::Job *job) {
+    connect(session, &FakeSession::jobAdded, this, [this](Akonadi::Job *job) {
         Collection::Id fetchColId = job->property("FetchCollectionId").toULongLong();
         QTimer::singleShot(0s, [this, fetchColId]() {
             jobAdded(fetchColId);
@@ -40,7 +40,7 @@ FakeServerData::FakeServerData(TagModel *model, FakeSession *session, FakeMonito
     , m_nextItemId(0)
     , m_nextTagId(1)
 {
-    connect(session, &FakeSession::jobAdded, [this](Akonadi::Job * /*unused*/) {
+    connect(session, &FakeSession::jobAdded, this, [this](Akonadi::Job * /*unused*/) {
         QTimer::singleShot(0s, [this]() {
             jobAdded();
         });

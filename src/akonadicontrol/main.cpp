@@ -71,10 +71,11 @@ int main(int argc, char **argv)
     KCrash::setEmergencySaveFunction(crashHandler);
     // akonadi_control is started on-demand, no need to auto restart by session.
     auto disableSessionManagement = [](QSessionManager &sm) {
+        Q_UNUSED(sm);
         sm.setRestartHint(QSessionManager::RestartNever);
     };
-    QObject::connect(qApp, &QGuiApplication::commitDataRequest, disableSessionManagement);
-    QObject::connect(qApp, &QGuiApplication::saveStateRequest, disableSessionManagement);
+    QObject::connect(qApp, &QGuiApplication::commitDataRequest, qApp, disableSessionManagement);
+    QObject::connect(qApp, &QGuiApplication::saveStateRequest, qApp, disableSessionManagement);
 
     return app.exec();
 }

@@ -64,7 +64,7 @@ bool SearchHandler::parseStream()
     request.setMimeTypes(cmd.mimeTypes());
     request.setQuery(cmd.query());
     request.setRemoteSearch(cmd.remote());
-    QObject::connect(&request, &SearchRequest::resultsAvailable, [this](const QSet<qint64> &results) {
+    QObject::connect(&request, &SearchRequest::resultsAvailable, &request, [this](const QSet<qint64> &results) {
         processResults(results);
     });
     request.exec();

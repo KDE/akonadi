@@ -33,7 +33,7 @@ class Cache
 public:
     Cache()
     {
-        QObject::connect(&m_cleanupTimer, &QTimer::timeout, std::bind(&Cache::cleanup, this));
+        QObject::connect(&m_cleanupTimer, &QTimer::timeout, &m_cleanupTimer, std::bind(&Cache::cleanup, this));
         m_cleanupTimer.setSingleShot(true);
     }
 
