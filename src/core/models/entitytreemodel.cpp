@@ -117,6 +117,7 @@ QHash<int, QByteArray> EntityTreeModel::roleNames() const
     return {
         {Qt::DecorationRole, "decoration"},
         {Qt::DisplayRole, "display"},
+        {EntityTreeModel::DisplayNameRole, "displayName"},
 
         {EntityTreeModel::ItemIdRole, "itemId"},
         {EntityTreeModel::ItemRole, "item"},
@@ -158,6 +159,7 @@ QVariant EntityTreeModel::entityData(const Item &item, int column, int role) con
         switch (role) {
         case Qt::DisplayRole:
         case Qt::EditRole:
+        case EntityTreeModel::DisplayNameRole:
             if (const auto *attr = item.attribute<EntityDisplayAttribute>(); attr && !attr->displayName().isEmpty()) {
                 return attr->displayName();
             } else if (!item.remoteId().isEmpty()) {
@@ -187,7 +189,7 @@ QVariant EntityTreeModel::entityData(const Collection &collection, int column, i
 
     if (collection == Collection::root()) {
         // Only display the root collection. It may not be edited.
-        if (role == Qt::DisplayRole) {
+        if (role == Qt::DisplayRole || role == EntityTreeModel::DisplayNameRole) {
             return d->m_rootCollectionDisplayName;
         } else if (role == Qt::EditRole) {
             return QVariant();
@@ -197,6 +199,7 @@ QVariant EntityTreeModel::entityData(const Collection &collection, int column, i
     switch (role) {
     case Qt::DisplayRole:
     case Qt::EditRole:
+    case EntityTreeModel::DisplayNameRole:
         if (column == 0) {
             if (const QString displayName = collection.displayName(); !displayName.isEmpty()) {
                 return displayName;
@@ -661,7 +664,7 @@ QVariant EntityTreeModel::entityHeaderData(int section, Qt::Orientation orientat
     // Not needed in this model.
     Q_UNUSED(headerGroup)
 
-    if (section == 0 && orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+    if (section == 0 && orientation == Qt::Horizontal && (role == Qt::DisplayRole || role == EntityTreeModel::DisplayNameRole)) {
         if (d->m_rootCollection == Collection::root()) {
             return i18nc("@title:column Name of a thing", "Name");
         }
