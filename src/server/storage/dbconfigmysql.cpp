@@ -370,7 +370,7 @@ bool DbConfigMysql::startInternalServer()
         if (errorLog.exists()) {
             QFile logFile(errorLog.absoluteFilePath());
             QFile oldLogFile(dataDir + QDir::separator() + QLatin1String("mysql.err.old"));
-            if (logFile.open(QFile::ReadOnly) && oldLogFile.open(QFile::Append)) {
+            if (logFile.open(QFile::ReadOnly) && oldLogFile.open(QFile::WriteOnly)) {
                 oldLogFile.write(logFile.readAll());
                 oldLogFile.close();
                 logFile.close();
