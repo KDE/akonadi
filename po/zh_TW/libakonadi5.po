@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-28 01:40+0000\n"
+"POT-Creation-Date: 2023-10-20 01:38+0000\n"
 "PO-Revision-Date: 2023-06-15 04:08+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Chinese <zh-l10n@linux.org.tw>\n"
@@ -378,26 +378,26 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "名稱"
 
-#: core/models/entitytreemodel.cpp:204
+#: core/models/entitytreemodel.cpp:207
 #, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
 msgstr "載入中…"
 
-#: core/models/entitytreemodel.cpp:496
+#: core/models/entitytreemodel.cpp:499
 #, kde-format
 msgctxt "@window:title"
 msgid "Error"
 msgstr "錯誤"
 
-#: core/models/entitytreemodel.cpp:497
+#: core/models/entitytreemodel.cpp:500
 #, kde-format
 msgid ""
 "The target collection '%1' contains already\n"
 "a collection with name '%2'."
 msgstr "目標收藏 %1 已包含了名為 %2 的收藏。"
 
-#: core/models/entitytreemodel.cpp:666
+#: core/models/entitytreemodel.cpp:669
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-28 01:40+0000\n"
+"POT-Creation-Date: 2023-10-20 01:38+0000\n"
 "PO-Revision-Date: 2012-07-11 10:23+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -396,14 +396,14 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "ឈ្មោះ"
 
-#: core/models/entitytreemodel.cpp:204
+#: core/models/entitytreemodel.cpp:207
 #, fuzzy, kde-format
 #| msgid "Loading..."
 msgctxt "@info:status"
 msgid "Loading..."
 msgstr "កំពុង​ផ្ទុក..."
 
-#: core/models/entitytreemodel.cpp:496
+#: core/models/entitytreemodel.cpp:499
 #, fuzzy, kde-format
 #| msgctxt "@info:status"
 #| msgid "Error."
@@ -411,7 +411,7 @@ msgctxt "@window:title"
 msgid "Error"
 msgstr "កំហុស ។"
 
-#: core/models/entitytreemodel.cpp:497
+#: core/models/entitytreemodel.cpp:500
 #, kde-format
 msgid ""
 "The target collection '%1' contains already\n"
@@ -420,7 +420,7 @@ msgstr ""
 "មាន​កា​រជ្រើសរើស​គោលដៅ '%1' ដែល​មាន​ឈ្មោះ\n"
 " '%2' រួច​ហើយ ។"
 
-#: core/models/entitytreemodel.cpp:666
+#: core/models/entitytreemodel.cpp:669
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"

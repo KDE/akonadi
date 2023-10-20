@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-28 01:40+0000\n"
+"POT-Creation-Date: 2023-10-20 01:38+0000\n"
 "PO-Revision-Date: 2013-03-08 10:11+0530\n"
 "Last-Translator: Chetan Khona <chetan@kompkin.com>\n"
 "Language-Team: Marathi <kde-i18n-doc@kde.org>\n"
@@ -374,13 +374,13 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "नाव"
 
-#: core/models/entitytreemodel.cpp:204
+#: core/models/entitytreemodel.cpp:207
 #, fuzzy, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
 msgstr "दाखल करत आहे..."
 
-#: core/models/entitytreemodel.cpp:496
+#: core/models/entitytreemodel.cpp:499
 #, fuzzy, kde-format
 #| msgctxt "@info:status"
 #| msgid "Error."
@@ -388,14 +388,14 @@ msgctxt "@window:title"
 msgid "Error"
 msgstr "त्रुटी."
 
-#: core/models/entitytreemodel.cpp:497
+#: core/models/entitytreemodel.cpp:500
 #, kde-format
 msgid ""
 "The target collection '%1' contains already\n"
 "a collection with name '%2'."
 msgstr ""
 
-#: core/models/entitytreemodel.cpp:666
+#: core/models/entitytreemodel.cpp:669
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"

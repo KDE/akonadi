@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-28 01:40+0000\n"
+"POT-Creation-Date: 2023-10-20 01:38+0000\n"
 "PO-Revision-Date: 2023-09-28 12:54+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: Dutch <kde-i18n-nl@kde.org>\n"
@@ -389,19 +389,19 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Naam"
 
-#: core/models/entitytreemodel.cpp:204
+#: core/models/entitytreemodel.cpp:207
 #, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
 msgstr "Bezig met laden..."
 
-#: core/models/entitytreemodel.cpp:496
+#: core/models/entitytreemodel.cpp:499
 #, kde-format
 msgctxt "@window:title"
 msgid "Error"
 msgstr "Fout"
 
-#: core/models/entitytreemodel.cpp:497
+#: core/models/entitytreemodel.cpp:500
 #, kde-format
 msgid ""
 "The target collection '%1' contains already\n"
@@ -410,7 +410,7 @@ msgstr ""
 "De doelverzameling '%1' bevat al\n"
 "een verzameling met de naam '%2'."
 
-#: core/models/entitytreemodel.cpp:666
+#: core/models/entitytreemodel.cpp:669
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
