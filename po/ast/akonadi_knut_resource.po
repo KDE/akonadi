@@ -1,0 +1,84 @@
+# Copyright (C) 2023 This file is copyright:
+# This file is distributed under the same license as the akonadi package.
+#
+# SPDX-FileCopyrightText: 2023 Enol P. <enolp@softastur.org>
+msgid ""
+msgstr ""
+"Project-Id-Version: akonadi\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2023-09-21 00:45+0000\n"
+"PO-Revision-Date: 2023-10-25 12:45+0200\n"
+"Last-Translator: Enol P. <enolp@softastur.org>\n"
+"Language-Team: \n"
+"Language: ast_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 23.08.2\n"
+
+#: knutresource.cpp:60
+#, kde-format
+msgid "No data file selected."
+msgstr ""
+
+#: knutresource.cpp:77
+#, kde-format
+msgid "File '%1' loaded successfully."
+msgstr ""
+
+#: knutresource.cpp:104
+#, kde-format
+msgid "Select Data File"
+msgstr ""
+
+#: knutresource.cpp:106
+#, kde-format
+msgctxt "Filedialog filter for Akonadi data file"
+msgid "Akonadi Knut Data File"
+msgstr ""
+
+#: knutresource.cpp:148 knutresource.cpp:168 knutresource.cpp:321
+#, kde-format
+msgid "No item found for remoteid %1"
+msgstr ""
+
+#: knutresource.cpp:186
+#, kde-format
+msgid "Parent collection not found in DOM tree."
+msgstr ""
+
+#: knutresource.cpp:194
+#, kde-format
+msgid "Unable to write collection."
+msgstr ""
+
+#: knutresource.cpp:206
+#, kde-format
+msgid "Modified collection not found in DOM tree."
+msgstr ""
+
+#: knutresource.cpp:236
+#, kde-format
+msgid "Deleted collection not found in DOM tree."
+msgstr ""
+
+#: knutresource.cpp:250 knutresource.cpp:308 knutresource.cpp:315
+#, kde-format
+msgid "Parent collection '%1' not found in DOM tree."
+msgstr ""
+
+#: knutresource.cpp:258 knutresource.cpp:328
+#, kde-format
+msgid "Unable to write item."
+msgstr "Nun ye posible escribir l'elementu."
+
+#: knutresource.cpp:272
+#, kde-format
+msgid "Modified item not found in DOM tree."
+msgstr ""
+
+#: knutresource.cpp:287
+#, kde-format
+msgid "Deleted item not found in DOM tree."
+msgstr ""
