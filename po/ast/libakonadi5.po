@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-20 01:38+0000\n"
-"PO-Revision-Date: 2023-10-25 12:45+0200\n"
+"PO-Revision-Date: 2023-10-31 20:09+0100\n"
 "Last-Translator: Enol P. <enolp@softastur.org>\n"
 "Language-Team: \n"
 "Language: ast\n"
@@ -566,7 +566,7 @@ msgstr ""
 #: selftest/main.cpp:23
 #, kde-format
 msgid "(c) 2008 Volker Krause <vkrause@kde.org>"
-msgstr ""
+msgstr "© 2008 Volker Krause <vkrause@kde.org>"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
@@ -2365,7 +2365,7 @@ msgstr ""
 #: xml/akonadi2xml.cpp:29
 #, kde-format
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
-msgstr ""
+msgstr "© 2009 Volker Krause <vkrause@kde.org>"
 
 #: xml/xmldocument.cpp:83
 #, kde-format
