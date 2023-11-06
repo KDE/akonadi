@@ -104,7 +104,7 @@ void FavoriteProxyTest::testItemAdded()
 
     InspectableETM *model = createETM();
 
-    KConfigGroup configGroup(KSharedConfig::openConfig(), QLatin1String("favoritecollectionsmodeltest"));
+    KConfigGroup configGroup(KSharedConfig::openConfig(), QStringLiteral("favoritecollectionsmodeltest"));
 
     auto favoriteModel = new FavoriteCollectionsModel(model, configGroup, this);
 
@@ -169,7 +169,7 @@ void FavoriteProxyTest::testLoadConfig()
     const auto favoriteCollection = res3Index.data(EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
     QVERIFY(favoriteCollection.isValid());
 
-    KConfigGroup configGroup(KSharedConfig::openConfig(), QLatin1String("favoritecollectionsmodeltest"));
+    KConfigGroup configGroup(KSharedConfig::openConfig(), QStringLiteral("favoritecollectionsmodeltest"));
     configGroup.writeEntry("FavoriteCollectionIds", QList<Akonadi::Collection::Id>() << favoriteCollection.id());
     configGroup.writeEntry("FavoriteCollectionLabels", QStringList() << QStringLiteral("label1"));
 
@@ -209,7 +209,7 @@ void FavoriteProxyTest::testInsertAfterModelCreation()
     const auto favoriteCollection = res3Index.data(EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
     QVERIFY(favoriteCollection.isValid());
 
-    KConfigGroup configGroup(KSharedConfig::openConfig(), QLatin1String("favoritecollectionsmodeltest2"));
+    KConfigGroup configGroup(KSharedConfig::openConfig(), QStringLiteral("favoritecollectionsmodeltest2"));
 
     auto favoriteModel = new FavoriteCollectionsModel(&filter, configGroup, this);
 

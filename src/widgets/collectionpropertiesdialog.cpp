@@ -171,7 +171,7 @@ void CollectionPropertiesDialogPrivate::init()
     });
     q->connect(buttonBox->button(QDialogButtonBox::Cancel), &QAbstractButton::clicked, q, &QObject::deleteLater);
 
-    KConfigGroup group(KSharedConfig::openStateConfig(), QLatin1String("CollectionPropertiesDialog"));
+    KConfigGroup group(KSharedConfig::openStateConfig(), QStringLiteral("CollectionPropertiesDialog"));
     const QSize size = group.readEntry("Size", QSize());
     if (size.isValid()) {
         q->resize(size);
@@ -196,7 +196,7 @@ CollectionPropertiesDialog::CollectionPropertiesDialog(const Collection &collect
 
 CollectionPropertiesDialog::~CollectionPropertiesDialog()
 {
-    KConfigGroup group(KSharedConfig::openStateConfig(), QLatin1String("CollectionPropertiesDialog"));
+    KConfigGroup group(KSharedConfig::openStateConfig(), QStringLiteral("CollectionPropertiesDialog"));
     group.writeEntry("Size", size());
 }
 

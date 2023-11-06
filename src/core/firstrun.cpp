@@ -62,14 +62,14 @@ Firstrun::~Firstrun()
 
 void Firstrun::findPendingDefaults()
 {
-    const KConfigGroup cfg(mConfig, QLatin1String("ProcessedDefaults"));
+    const KConfigGroup cfg(mConfig, QStringLiteral("ProcessedDefaults"));
     const auto paths = StandardDirs::locateAllResourceDirs(QStringLiteral("akonadi/firstrun"));
     for (const QString &dirName : paths) {
         const QStringList files = QDir(dirName).entryList(QDir::Files | QDir::Readable);
         for (const QString &fileName : files) {
             const QString fullName = dirName + QLatin1Char('/') + fileName;
             KConfig c(fullName);
-            const QString id = KConfigGroup(&c, QLatin1String("Agent")).readEntry("Id", QString());
+            const QString id = KConfigGroup(&c, QStringLiteral("Agent")).readEntry("Id", QString());
             if (id.isEmpty()) {
                 qCWarning(AKONADICORE_LOG) << "Found invalid default configuration in " << fullName;
                 continue;
@@ -93,7 +93,7 @@ void Firstrun::setupNext()
     }
 
     mCurrentDefault = new KConfig(mPendingDefaults.takeFirst());
-    const KConfigGroup agentCfg = KConfigGroup(mCurrentDefault, QLatin1String("Agent"));
+    const KConfigGroup agentCfg = KConfigGroup(mCurrentDefault, QStringLiteral("Agent"));
 
     AgentType type = AgentManager::self()->type(agentCfg.readEntry("Type", QString()));
     if (!type.isValid()) {
@@ -106,7 +106,7 @@ void Firstrun::setupNext()
         for (const AgentInstance &agent : lstAgents) {
             if (agent.type() == type) {
                 // remember we set this one up already
-                KConfigGroup cfg(mConfig, QLatin1String("ProcessedDefaults"));
+                KConfigGroup cfg(mConfig, QStringLiteral("ProcessedDefaults"));
                 cfg.writeEntry(agentCfg.readEntry("Id", QString()), agent.identifier());
                 cfg.sync();
                 setupNext();
@@ -131,7 +131,7 @@ void Firstrun::instanceCreated(KJob *job)
     }
 
     AgentInstance instance = static_cast<AgentInstanceCreateJob *>(job)->instance();
-    const KConfigGroup agentCfg = KConfigGroup(mCurrentDefault, QLatin1String("Agent"));
+    const KConfigGroup agentCfg = KConfigGroup(mCurrentDefault, QStringLiteral("Agent"));
     const QString agentName = agentCfg.readEntry("Name", QString());
     if (!agentName.isEmpty()) {
         instance.setName(agentName);
@@ -146,7 +146,7 @@ void Firstrun::instanceCreated(KJob *job)
         return;
     }
     // agent specific settings, using the D-Bus <-> KConfigXT bridge
-    const KConfigGroup settings = KConfigGroup(mCurrentDefault, QLatin1String("Settings"));
+    const KConfigGroup settings = KConfigGroup(mCurrentDefault, QStringLiteral("Settings"));
 
     const QStringList lstSettings = settings.keyList();
     for (const QString &setting : lstSettings) {
@@ -180,7 +180,7 @@ void Firstrun::instanceCreated(KJob *job)
     delete iface;
 
     // remember we set this one up already
-    KConfigGroup cfg(mConfig, QLatin1String("ProcessedDefaults"));
+    KConfigGroup cfg(mConfig, QStringLiteral("ProcessedDefaults"));
     cfg.writeEntry(agentCfg.readEntry("Id", QString()), instance.identifier());
     cfg.sync();
 
