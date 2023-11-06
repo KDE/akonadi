@@ -295,7 +295,7 @@ SetupTest::SetupTest()
 
     // No kres-migrator please
     KConfig migratorConfig(basePath() + QStringLiteral("config/kres-migratorrc"));
-    KConfigGroup migrationCfg(&migratorConfig, "Migration");
+    KConfigGroup migrationCfg(&migratorConfig, QLatin1String("Migration"));
     migrationCfg.writeEntry("Enabled", false);
 
     connect(Akonadi::ServerManager::self(), &Akonadi::ServerManager::stateChanged, this, &SetupTest::serverStateChanged);

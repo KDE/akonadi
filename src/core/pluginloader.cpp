@@ -113,8 +113,8 @@ void PluginLoader::scan()
         for (const QString &file : fileNames) {
             const QString entry = dir + QLatin1Char('/') + file;
             KConfig config(entry, KConfig::SimpleConfig);
-            if (config.hasGroup("Misc") && config.hasGroup("Plugin")) {
-                KConfigGroup group(&config, "Plugin");
+            if (config.hasGroup(QLatin1String("Misc")) && config.hasGroup(QLatin1String("Plugin"))) {
+                KConfigGroup group(&config, QLatin1String("Plugin"));
 
                 const QString type = group.readEntry("Type").toLower();
                 if (type.isEmpty()) {
@@ -137,7 +137,7 @@ void PluginLoader::scan()
                     continue;
                 }
 
-                KConfigGroup group2(&config, "Misc");
+                KConfigGroup group2(&config, QLatin1String("Misc"));
 
                 QString name = group2.readEntry("Name");
                 if (name.isEmpty()) {

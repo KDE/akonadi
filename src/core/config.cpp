@@ -36,7 +36,7 @@ Config::Config()
     auto config = KSharedConfig::openConfig(getConfigName());
 
     {
-        const auto group = config->group(group_PayloadCompression);
+        const auto group = config->group(QLatin1String(group_PayloadCompression));
         payloadCompression.enabled = group.readEntry(key_PC_Enabled, payloadCompression.enabled);
     }
 }

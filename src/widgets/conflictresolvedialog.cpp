@@ -231,13 +231,13 @@ ConflictResolveDialog::ConflictResolveDialog(QWidget *parent)
     create(); // ensure a window is created
     const QSize availableSize = windowHandle()->screen()->availableSize();
     windowHandle()->resize(static_cast<int>(availableSize.width() * 0.7), static_cast<int>(availableSize.height() * 0.5));
-    KWindowConfig::restoreWindowSize(windowHandle(), KSharedConfig::openConfig()->group("ConflictResolveDialog"));
+    KWindowConfig::restoreWindowSize(windowHandle(), KSharedConfig::openConfig()->group(QLatin1String("ConflictResolveDialog")));
     resize(windowHandle()->size()); // workaround for QTBUG-40584
 }
 
 ConflictResolveDialog::~ConflictResolveDialog()
 {
-    KConfigGroup group(KSharedConfig::openConfig()->group("ConflictResolveDialog"));
+    KConfigGroup group(KSharedConfig::openConfig()->group(QLatin1String("ConflictResolveDialog")));
     KWindowConfig::saveWindowSize(windowHandle(), group);
 }
 
