@@ -1979,7 +1979,7 @@ msgstr "Copia l'element a..."
 
 #: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:174
 msgid "Move Item To..."
-msgstr "Mou l'element a..."
+msgstr "Mou l'element cap a..."
 
 #: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:137
 #: widgets/standardactionmanager.cpp:167 widgets/standardactionmanager.cpp:174
@@ -2040,11 +2040,11 @@ msgstr "Mou la carpeta cap a dins de la paperera"
 
 #: widgets/standardactionmanager.cpp:192
 msgid "&Move Item To Trash"
-msgstr "&Mou l'element a la paperera"
+msgstr "&Mou l'element cap a dins de la paperera"
 
 #: widgets/standardactionmanager.cpp:193
 msgid "Move Item To Trash"
-msgstr "Mou l'element a la paperera"
+msgstr "Mou l'element cap a dins de la paperera"
 
 #: widgets/standardactionmanager.cpp:200 widgets/standardactionmanager.cpp:216
 msgid "&Restore Folder From Trash"
