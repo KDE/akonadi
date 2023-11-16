@@ -235,7 +235,6 @@ public:
 private:
     QString m_itemName;
     QString m_parentName;
-    FakeServerData *m_serverData = nullptr;
 };
 
 class AKONADITESTFAKE_EXPORT FakeItemChangedCommand : public FakeMonitorCommand

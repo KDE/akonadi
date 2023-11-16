@@ -60,8 +60,6 @@ private:
 
 private:
     QAbstractItemModel *m_model = nullptr;
-    FakeSession *m_session = nullptr;
-    FakeMonitor *m_monitor = nullptr;
 
     QList<FakeAkonadiServerCommand *> m_commandList;
     QQueue<FakeAkonadiServerCommand *> m_communicationQueue;
