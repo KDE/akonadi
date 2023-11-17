@@ -82,7 +82,6 @@ set_package_properties(Qt6Designer PROPERTIES
 
 option(BUILD_DESIGNERPLUGIN "Build plugin for Qt Designer" ON)
 add_feature_info(DESIGNERPLUGIN ${BUILD_DESIGNERPLUGIN} "Build plugin for Qt Designer")
-find_package(Qt6Core5Compat)
 
 set(AccountsQt6_MINIMUM_VERSION "1.16")
 find_package(AccountsQt6 ${AccountsQt6_MINIMUM_VERSION})
