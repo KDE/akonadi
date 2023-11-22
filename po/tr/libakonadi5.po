@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-02 00:48+0000\n"
-"PO-Revision-Date: 2023-11-14 22:15+0300\n"
+"PO-Revision-Date: 2023-11-21 19:59+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -58,12 +58,12 @@ msgstr "%2 tipindeki %1"
 #: agentbase/agentbase.cpp:904
 #, kde-format
 msgid "Agent identifier"
-msgstr "Aracı tanımlayıcı"
+msgstr "Aracı tanımlayıcısı"
 
 #: agentbase/agentbase.cpp:910
 #, kde-format
 msgid "Akonadi Agent"
-msgstr "Akonadi Aracı"
+msgstr "Akonadi Aracısı"
 
 #: agentbase/agentbase_p.h:49 agentbase/resourcescheduler.cpp:281
 #, kde-format
@@ -156,7 +156,7 @@ msgstr "Eşleme için koleksiyon alınamadı."
 #: agentbase/resourcebase.cpp:985
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
-msgstr "Öznitelik eşlemesi için koleksiyon alınamadı."
+msgstr "Öznitelik eşzamanlaması için koleksiyon alınamadı."
 
 #: agentbase/resourcebase.cpp:1039
 #, kde-format
@@ -213,7 +213,7 @@ msgstr "Geçersiz koleksiyon örneği."
 #: core/jobs/resourcesynchronizationjob.cpp:88
 #, kde-format
 msgid "Invalid resource instance."
-msgstr "Geçersiz özkaynak isteği."
+msgstr "Geçersiz özkaynak örneği."
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:102
 #: core/jobs/resourcesynchronizationjob.cpp:113
@@ -224,7 +224,7 @@ msgstr "'%1' özkaynağı için D-Bus arayüzü edinilemedi"
 #: core/jobs/collectionattributessynchronizationjob.cpp:125
 #, kde-format
 msgid "Collection attributes synchronization timed out."
-msgstr "Nitelik eşzamanlama koleksiyonu zaman aşımına uğradı."
+msgstr "Öznitelik eşzamanlaması koleksiyonu zaman aşımına uğradı."
 
 #: core/jobs/collectioncopyjob.cpp:54
 #, kde-format
@@ -578,7 +578,7 @@ msgstr ""
 #: selftest/main.cpp:19
 #, kde-format
 msgid "Akonadi Self Test"
-msgstr "Akonadi Kendi Kendine Denetim"
+msgstr "Akonadi Öz Sınaması"
 
 #: selftest/main.cpp:21
 #, kde-format
@@ -996,7 +996,7 @@ msgstr "Bayraklar"
 #: widgets/conflictresolvedialog.cpp:174
 #, kde-format
 msgid "Attribute: %1"
-msgstr "Özellik: %1"
+msgstr "Öznitelik: %1"
 
 #: widgets/conflictresolvedialog.cpp:186
 #, kde-format
@@ -1130,7 +1130,7 @@ msgstr ""
 #, kde-format
 msgctxt "@action:button Start the Akonadi server"
 msgid "Start"
-msgstr "Başla"
+msgstr "Başlat"
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
@@ -1222,7 +1222,7 @@ msgstr "Ad:"
 #, kde-format
 msgctxt "@title:window"
 msgid "Akonadi Server Self-Test"
-msgstr "Akonadi Sunucusu Öz Sınama"
+msgstr "Akonadi Sunucusu Öz Sınaması"
 
 #: widgets/selftestdialog.cpp:71
 #, kde-format
@@ -2473,12 +2473,12 @@ msgstr "..."
 #: xml/akonadi2xml.cpp:25
 #, kde-format
 msgid "Akonadi To XML converter"
-msgstr "Akonadi 'den XML 'e dönüştürücü"
+msgstr "Akonadi'den XML'e Dönüştürücü"
 
 #: xml/akonadi2xml.cpp:27
 #, kde-format
 msgid "Converts an Akonadi collection subtree into a XML file."
-msgstr "Akonadi altağaç koleksiyonunu XML dosyasına dönüştür."
+msgstr "Akonadi alt ağaç koleksiyonunu XML dosyasına dönüştürün."
 
 #: xml/akonadi2xml.cpp:29
 #, kde-format
