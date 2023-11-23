@@ -8,6 +8,7 @@
 #pragma once
 
 #include <QDateTime>
+#include <QTimeZone>
 #include <QVariant>
 
 #include "storage/datastore.h"
@@ -64,7 +65,7 @@ static inline QDateTime variantToDateTime(const QVariant &variant)
         case DbType::MySQL:
         case DbType::Sqlite: {
             QDateTime dt = variant.toDateTime();
-            dt.setTimeSpec(Qt::UTC);
+            dt.setTimeZone(QTimeZone::utc());
             return dt;
         }
         case DbType::PostgreSQL:
