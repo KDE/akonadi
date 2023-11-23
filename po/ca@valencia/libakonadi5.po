@@ -191,7 +191,7 @@ msgstr "No s'ha pogut accedir a la interfície de D-Bus de l'agent creat."
 #: core/jobs/agentinstancecreatejob.cpp:92
 #, kde-format
 msgid "Agent instance creation timed out."
-msgstr "La creació de la instància de l'agent ha excedit el temps límit."
+msgstr "La creació de la instància de l'agent ha excedit el temps."
 
 #: core/jobs/agentinstancecreatejob.cpp:150
 #, kde-format
@@ -223,8 +223,7 @@ msgstr "No s'ha pogut obtindre la interfície de D-Bus per al recurs «%1»"
 #: core/jobs/collectionattributessynchronizationjob.cpp:125
 #, kde-format
 msgid "Collection attributes synchronization timed out."
-msgstr ""
-"La sincronització dels atributs de la col·lecció ha excedit el temps límit."
+msgstr "La sincronització dels atributs de la col·lecció ha excedit el temps."
 
 #: core/jobs/collectioncopyjob.cpp:54
 #, kde-format
@@ -314,7 +313,7 @@ msgstr "No s'ha pogut crear la relació."
 #: core/jobs/resourcesynchronizationjob.cpp:139
 #, kde-format
 msgid "Resource synchronization timed out."
-msgstr "La sincronització del recurs ha excedit el temps límit."
+msgstr "La sincronització del recurs ha excedit el temps."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:145
 #, kde-format
