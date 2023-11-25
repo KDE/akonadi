@@ -22,7 +22,7 @@ using namespace Akonadi;
 CollectionGeneralPropertiesPage::CollectionGeneralPropertiesPage(QWidget *parent)
     : CollectionPropertiesPage(parent)
 {
-    setObjectName(QStringLiteral("Akonadi::CollectionGeneralPropertiesPage"));
+    setObjectName(QLatin1StringView("Akonadi::CollectionGeneralPropertiesPage"));
 
     setPageTitle(i18nc("@title:tab general properties page", "General"));
     ui.setupUi(this);

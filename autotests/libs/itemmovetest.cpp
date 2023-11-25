@@ -64,7 +64,7 @@ private Q_SLOTS:
 
         Session monitorSession;
         Monitor monitor(&monitorSession);
-        monitor.setObjectName(QStringLiteral("itemmovetest"));
+        monitor.setObjectName(QLatin1StringView("itemmovetest"));
         monitor.setCollectionMonitored(Collection::root());
         monitor.fetchCollection(true);
         monitor.itemFetchScope().setAncestorRetrieval(ItemFetchScope::Parent);

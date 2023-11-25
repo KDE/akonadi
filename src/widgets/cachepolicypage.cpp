@@ -65,7 +65,7 @@ CachePolicyPage::CachePolicyPage(QWidget *parent, GuiMode mode)
     : CollectionPropertiesPage(parent)
     , d(new CachePolicyPagePrivate)
 {
-    setObjectName(QStringLiteral("Akonadi::CachePolicyPage"));
+    setObjectName(QLatin1StringView("Akonadi::CachePolicyPage"));
     setPageTitle(i18n("Retrieval"));
     d->mode = mode;
 

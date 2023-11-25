@@ -1573,7 +1573,7 @@ public:
                 // new level
                 auto popup = new QMenu(menu);
                 const bool moveAction = (type == StandardActionManager::MoveCollectionToMenu || type == StandardActionManager::MoveItemToMenu);
-                popup->setObjectName(QStringLiteral("subMenu"));
+                popup->setObjectName(QLatin1StringView("subMenu"));
                 popup->setTitle(label);
                 popup->setIcon(icon);
 

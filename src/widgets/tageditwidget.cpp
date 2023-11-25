@@ -184,7 +184,7 @@ TagEditWidget::TagEditWidget(QWidget *parent)
     // create the delete button, which is shown when
     // hovering the items
     d->m_deleteButton = new QPushButton(d->ui.tagsView->viewport());
-    d->m_deleteButton->setObjectName(QStringLiteral("tagDeleteButton"));
+    d->m_deleteButton->setObjectName(QLatin1StringView("tagDeleteButton"));
     d->m_deleteButton->setIcon(QIcon::fromTheme(QStringLiteral("edit-delete")));
     d->m_deleteButton->setToolTip(i18nc("@info", "Delete tag"));
     d->m_deleteButton->hide();

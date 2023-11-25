@@ -35,7 +35,7 @@ public:
             mBaseModel = customModel;
         } else {
             mMonitor = new Akonadi::Monitor(mParent);
-            mMonitor->setObjectName(QStringLiteral("CollectionComboBoxMonitor"));
+            mMonitor->setObjectName(QLatin1StringView("CollectionComboBoxMonitor"));
             mMonitor->fetchCollection(true);
             mMonitor->setCollectionMonitored(Akonadi::Collection::root());
 

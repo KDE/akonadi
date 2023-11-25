@@ -192,24 +192,24 @@ ConflictResolveDialog::ConflictResolveDialog(QWidget *parent)
     takeLeftButton->setText(i18nc("@action:button", "Take my version"));
     connect(takeLeftButton, &QPushButton::clicked, this, &ConflictResolveDialog::slotUseLocalItemChoosen);
     buttonLayout->addWidget(takeLeftButton);
-    takeLeftButton->setObjectName(QStringLiteral("takeLeftButton"));
+    takeLeftButton->setObjectName(QLatin1StringView("takeLeftButton"));
 
     auto takeRightButton = new QPushButton(this);
     takeRightButton->setText(i18nc("@action:button", "Take their version"));
-    takeRightButton->setObjectName(QStringLiteral("takeRightButton"));
+    takeRightButton->setObjectName(QLatin1StringView("takeRightButton"));
     connect(takeRightButton, &QPushButton::clicked, this, &ConflictResolveDialog::slotUseOtherItemChoosen);
     buttonLayout->addWidget(takeRightButton);
 
     auto keepBothButton = new QPushButton(this);
     keepBothButton->setText(i18nc("@action:button", "Keep both versions"));
-    keepBothButton->setObjectName(QStringLiteral("keepBothButton"));
+    keepBothButton->setObjectName(QLatin1StringView("keepBothButton"));
     buttonLayout->addWidget(keepBothButton);
     connect(keepBothButton, &QPushButton::clicked, this, &ConflictResolveDialog::slotUseBothItemsChoosen);
 
     keepBothButton->setDefault(true);
 
     mView = new QTextBrowser(this);
-    mView->setObjectName(QStringLiteral("view"));
+    mView->setObjectName(QLatin1StringView("view"));
     mView->setOpenLinks(false);
 
     auto docuLabel =
@@ -221,7 +221,7 @@ ConflictResolveDialog::ConflictResolveDialog(QWidget *parent)
     docuLabel->setContextMenuPolicy(Qt::NoContextMenu);
 
     docuLabel->setWordWrap(true);
-    docuLabel->setObjectName(QStringLiteral("doculabel"));
+    docuLabel->setObjectName(QLatin1StringView("doculabel"));
 
     mainLayout->addWidget(mView);
     mainLayout->addWidget(docuLabel);

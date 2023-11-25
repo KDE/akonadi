@@ -29,14 +29,14 @@ TagSelectWidget::TagSelectWidget(QWidget *parent)
     auto mainLayout = new QHBoxLayout(this);
 
     auto monitor = new Monitor(this);
-    monitor->setObjectName(QStringLiteral("TagSelectWidgetMonitor"));
+    monitor->setObjectName(QLatin1StringView("TagSelectWidgetMonitor"));
     monitor->setTypeMonitored(Monitor::Tags);
 
     auto model = new TagModel(monitor, this);
     d->mTagEditWidget.reset(new TagEditWidget());
     d->mTagEditWidget->setModel(model);
     d->mTagEditWidget->setSelectionEnabled(true);
-    d->mTagEditWidget->setObjectName(QStringLiteral("tageditwidget"));
+    d->mTagEditWidget->setObjectName(QLatin1StringView("tageditwidget"));
 
     mainLayout->addWidget(d->mTagEditWidget.get());
 }

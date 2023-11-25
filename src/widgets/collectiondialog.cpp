@@ -78,7 +78,7 @@ public:
             baseModel = customModel;
         } else {
             mMonitor = new Akonadi::Monitor(mParent);
-            mMonitor->setObjectName(QStringLiteral("CollectionDialogMonitor"));
+            mMonitor->setObjectName(QLatin1StringView("CollectionDialogMonitor"));
             mMonitor->fetchCollection(true);
             mMonitor->setCollectionMonitored(Akonadi::Collection::root());
 

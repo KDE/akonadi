@@ -28,7 +28,7 @@ SpecialCollectionsPrivate::SpecialCollectionsPrivate(KCoreConfigSkeleton *settin
     , mBatchMode(false)
 {
     mMonitor = new Monitor(q);
-    mMonitor->setObjectName(QStringLiteral("SpecialCollectionsMonitor"));
+    mMonitor->setObjectName(QLatin1StringView("SpecialCollectionsMonitor"));
     mMonitor->fetchCollectionStatistics(true);
 
     /// In order to know if items are added or deleted

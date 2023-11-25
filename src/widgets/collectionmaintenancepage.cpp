@@ -67,7 +67,7 @@ CollectionMaintenancePage::CollectionMaintenancePage(QWidget *parent)
     : CollectionPropertiesPage(parent)
     , d(new CollectionMaintenancePagePrivate)
 {
-    setObjectName(QStringLiteral("Akonadi::CollectionMaintenancePage"));
+    setObjectName(QLatin1StringView("Akonadi::CollectionMaintenancePage"));
     setPageTitle(i18n("Maintenance"));
 }
 
@@ -79,7 +79,7 @@ void CollectionMaintenancePage::init(const Collection &col)
 
     d->currentCollection = col;
     d->monitor = new Monitor(this);
-    d->monitor->setObjectName(QStringLiteral("CollectionMaintenancePageMonitor"));
+    d->monitor->setObjectName(QLatin1StringView("CollectionMaintenancePageMonitor"));
     d->monitor->setCollectionMonitored(col, true);
     d->monitor->fetchCollectionStatistics(true);
     connect(d->monitor, &Monitor::collectionStatisticsChanged, this, [this](Collection::Id /*unused*/, const CollectionStatistics &stats) {

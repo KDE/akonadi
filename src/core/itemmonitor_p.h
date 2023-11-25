@@ -26,7 +26,7 @@ public:
         , mParent(parent)
         , mMonitor(new Monitor())
     {
-        mMonitor->setObjectName(QStringLiteral("ItemMonitorMonitor"));
+        mMonitor->setObjectName(QLatin1StringView("ItemMonitorMonitor"));
         connect(mMonitor, &Monitor::itemChanged, this, &ItemMonitorPrivate::slotItemChanged);
         connect(mMonitor, &Monitor::itemRemoved, this, &ItemMonitorPrivate::slotItemRemoved);
     }

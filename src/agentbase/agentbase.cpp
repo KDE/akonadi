@@ -351,7 +351,7 @@ void AgentBasePrivate::init()
     mSettings = new QSettings(ServerManager::agentConfigFilePath(mId), QSettings::IniFormat);
 
     mChangeRecorder = new ChangeRecorder(q);
-    mChangeRecorder->setObjectName(QStringLiteral("AgentBaseChangeRecorder"));
+    mChangeRecorder->setObjectName(QLatin1StringView("AgentBaseChangeRecorder"));
     mChangeRecorder->ignoreSession(Session::defaultSession());
     mChangeRecorder->itemFetchScope().setCacheOnly(true);
     mChangeRecorder->setConfig(mSettings);

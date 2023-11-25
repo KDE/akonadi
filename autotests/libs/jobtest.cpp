@@ -198,19 +198,19 @@ private Q_SLOTS:
         QSignalSpy sessionReconnectSpy(&session, &Session::reconnected);
 
         auto parentJob = new FakeJob(&session);
-        parentJob->setObjectName(QStringLiteral("parentJob"));
+        parentJob->setObjectName(QLatin1StringView("parentJob"));
         QSignalSpy parentJobDoneSpy(parentJob, &KJob::result);
 
         auto subjob = new FakeJob(parentJob);
-        subjob->setObjectName(QStringLiteral("subjob"));
+        subjob->setObjectName(QLatin1StringView("subjob"));
         QSignalSpy subjobDoneSpy(subjob, &KJob::result);
 
         auto subjob2 = new FakeJob(parentJob);
-        subjob2->setObjectName(QStringLiteral("subjob2"));
+        subjob2->setObjectName(QLatin1StringView("subjob2"));
         QSignalSpy subjob2DoneSpy(subjob2, &KJob::result);
 
         auto nextJob = new FakeJob(&session);
-        nextJob->setObjectName(QStringLiteral("nextJob"));
+        nextJob->setObjectName(QLatin1StringView("nextJob"));
         QSignalSpy nextJobDoneSpy(nextJob, &KJob::result);
 
         QCOMPARE(sessionQueueSpy.size(), 2);

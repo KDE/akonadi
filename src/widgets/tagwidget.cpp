@@ -68,7 +68,7 @@ TagWidget::TagWidget(QWidget *parent)
     , d(new TagWidgetPrivate)
 {
     auto monitor = new Monitor(this);
-    monitor->setObjectName(QStringLiteral("TagWidgetMonitor"));
+    monitor->setObjectName(QLatin1StringView("TagWidgetMonitor"));
     monitor->setTypeMonitored(Monitor::Tags);
     d->mModel = new Akonadi::TagModel(monitor, this);
     connect(monitor, &Monitor::tagAdded, this, &TagWidget::updateView);

@@ -182,7 +182,7 @@ TagSelectionComboBox::TagSelectionComboBox(QWidget *parent)
     , d(new TagSelectionComboBoxPrivate(this))
 {
     auto monitor = new Monitor(this);
-    monitor->setObjectName(QStringLiteral("TagSelectionComboBoxMonitor"));
+    monitor->setObjectName(QLatin1StringView("TagSelectionComboBoxMonitor"));
     monitor->setTypeMonitored(Monitor::Tags);
 
     d->tagModel = std::make_unique<TagModel>(monitor, this);
