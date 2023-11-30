@@ -59,7 +59,7 @@ class AkRangesTest : public QObject
 private Q_SLOTS:
     void initTestCase()
     {
-        qSetGlobalQHashSeed(0);
+        QHashSeed::setDeterministicGlobalSeed();
     }
 
     void testTraits()
