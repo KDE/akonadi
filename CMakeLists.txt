@@ -281,7 +281,7 @@ include_directories(
 
 
 add_definitions(-DQT_NO_CONTEXTLESS_CONNECT)
-ecm_set_disabled_deprecation_versions(QT 5.15.2  KF 5.245.0)
+ecm_set_disabled_deprecation_versions(QT 5.15.2  KF 5.246.0)
 
 add_subdirectory(src)
 add_subdirectory(icons)
