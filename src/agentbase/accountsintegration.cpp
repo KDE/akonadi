@@ -16,8 +16,8 @@
 #if WITH_ACCOUNTS
 #include <Accounts/Account>
 #include <Accounts/Manager>
-#include <Core>
-#include <GetCredentialsJob>
+#include <KAccounts/Core>
+#include <KAccounts/GetCredentialsJob>
 #endif
 
 using namespace Akonadi;

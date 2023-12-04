@@ -91,13 +91,13 @@ set_package_properties(AccountsQt6 PROPERTIES
     TYPE OPTIONAL
 )
 set(KAccounts_MINIMUM_VERSION "19.08.0")
-find_package(KAccounts ${KAccounts_MINIMUM_VERSION})
-set_package_properties(KAccounts PROPERTIES
+find_package(KAccounts6 ${KAccounts_MINIMUM_VERSION})
+set_package_properties(KAccounts6 PROPERTIES
     DESCRIPTION "KDE library for Accounts framework integration"
     URL "https://cgit.kde.org/kaccounts-integration.git"
     TYPE OPTIONAL
 )
-if (${AccountsQt6_FOUND} AND ${KAccounts_FOUND})
+if (${AccountsQt6_FOUND} AND ${KAccounts6_FOUND})
     set(WITH_ACCOUNTS TRUE)
 endif()
 

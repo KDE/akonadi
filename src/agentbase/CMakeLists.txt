@@ -94,7 +94,7 @@ PRIVATE
 )
 
 if (WITH_ACCOUNTS)
-    target_link_libraries(KPim6AkonadiAgentBase PRIVATE KAccounts Qt::Xml)
+    target_link_libraries(KPim6AkonadiAgentBase PRIVATE KAccounts6 Qt::Xml)
     target_include_directories(KPim6AkonadiAgentBase PRIVATE ${ACCOUNTSQT_INCLUDE_DIRS})
 endif()
 
