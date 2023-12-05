@@ -1,19 +1,19 @@
 # translation of libakonadi5.po to Slovak
-# Roman Paholík <wizzardsk@gmail.com>, 2014, 2015, 2016, 2017, 2022.
+# SPDX-FileCopyrightText: 2014, 2015, 2016, 2017, 2022, 2023 Roman Paholík <wizzardsk@gmail.com>
 # Matej Mrenica <matejm98mthw@gmail.com>, 2019, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-02 00:48+0000\n"
-"PO-Revision-Date: 2022-04-07 17:43+0200\n"
+"PO-Revision-Date: 2023-12-04 09:38+0100\n"
 "Last-Translator: Roman Paholik <wizzardsk@gmail.com>\n"
 "Language-Team: Slovak <kde-sk@linux.sk>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 23.08.3\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #, kde-format
@@ -606,8 +606,7 @@ msgid "Could not create agent instance: %1"
 msgstr "Nemôžem vytvoriť inštanciu agenta: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "Vytvorenie inštancie agenta zlyhalo"
@@ -624,12 +623,10 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "Naozaj chcete vymazať vybranú inštanciu agenta?"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "%1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
-msgstr "%1 Nastavenia"
+msgstr "Nastavenie %1"
 
 #: widgets/agentconfigurationdialog.cpp:89
 #, kde-format
@@ -657,11 +654,10 @@ msgid "Failed to register %1 configuration dialog."
 msgstr "Zlyhalo registrovanie dialógového okna s nastaveniami %1"
 
 #: widgets/agenttypedialog.cpp:66
-#, fuzzy, kde-format
-#| msgid "&Configure Agent Instance"
+#, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
-msgstr "Nastaviť inštanciu agenta"
+msgstr "Nastaviť účet"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
@@ -755,6 +751,8 @@ msgstr "Navždy"
 #, kde-format
 msgid "Collection cache cleared. You should restart Akonadi now."
 msgstr ""
+"Vymazanie vyrovnávacej pamäte kolekcie. Teraz by ste mali reštartovať "
+"Akonadi."
 
 #: widgets/clearcachefoldersjob.cpp:69
 #, kde-format
@@ -763,6 +761,10 @@ msgid ""
 "likely never uploaded to the destination server, so clearing this collection "
 "means that those <b>data will be lost</b>. Are you sure you want to proceed?"
 msgstr ""
+"Kolekcia '%1' obsahuje %2 položiek bez vzdialeného ID. Tieto položky "
+"pravdepodobne nikdy neboli odoslané na cieľový server, takže vymazanie tejto "
+"kolekcie znamená, že tieto <b>údaje sa stratia</b>. Ste si istí, že chcete "
+"pokračovať?"
 
 #: widgets/collectiondialog.cpp:56
 #, kde-format
@@ -803,11 +805,10 @@ msgid "Could not create folder: %1"
 msgstr "Nie je možné vytvoriť priečinok: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
-msgstr "Nepodarilo sa vytvoriť priečinok"
+msgstr "Vytvorenie priečinka zlyhalo"
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
 #, kde-format
@@ -972,9 +973,7 @@ msgid "Open collection dialog"
 msgstr "Otvoriť dialóg kolekcií"
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select a collection"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "Vybrať kolekciu"
@@ -2216,15 +2215,13 @@ msgstr[1] "Naozaj chcete vymazať %1 priečinky a všetky ich podpriečinky?"
 msgstr[2] "Naozaj chcete vymazať %1 priečinkov a všetky ich podpriečinky?"
 
 #: widgets/standardactionmanager.cpp:359
-#, fuzzy, kde-format
-#| msgid "Delete Folder"
-#| msgid_plural "Delete %1 Folders"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "Odstrániť priečinok"
-msgstr[1] "Odstrániť %1 priečinky"
-msgstr[2] "Odstrániť %1 priečinkov"
+msgstr[0] "Vymazať priečinok?"
+msgstr[1] "Vymazať priečinky?"
+msgstr[2] "Vymazať priečinky?"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2232,8 +2229,7 @@ msgid "Could not delete folder: %1"
 msgstr "Nie je možné vymazať priečinok: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "Vymazanie priečinku zlyhalo"
@@ -2253,15 +2249,13 @@ msgstr[1] "Skutočne chcete zmazať %1 položky?"
 msgstr[2] "Skutočne chcete zmazať %1 položiek?"
 
 #: widgets/standardactionmanager.cpp:368
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "Odstrániť položku"
-msgstr[1] "Vymazať %1 položky"
-msgstr[2] "Vymazať %1 položiek"
+msgstr[0] "Vymazať položku?"
+msgstr[1] "Vymazať položky?"
+msgstr[2] "Vymazať položky?"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2269,8 +2263,7 @@ msgid "Could not delete item: %1"
 msgstr "Nemôžem vymazať položku: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, fuzzy, kde-format
-#| msgid "Item deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "Vymazanie položky zlyhalo"
@@ -2299,8 +2292,7 @@ msgid "Could not create resource: %1"
 msgstr "Nemôžem vytvoriť zdroj: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, fuzzy, kde-format
-#| msgid "Resource creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "Vytvorenie zdroja zlyhalo"
@@ -2328,8 +2320,7 @@ msgid "Could not paste data: %1"
 msgstr "Nie je možné vložiť dáta: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, fuzzy, kde-format
-#| msgid "Paste failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Vloženie sa nepodarilo"
@@ -2340,8 +2331,7 @@ msgid "We can not add \"/\" in folder name."
 msgstr "Nemôžeme pridať \"/\" do názvu priečinku."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, fuzzy, kde-format
-#| msgid "Create new folder error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Chyba vytvorenia nového priečinka"
@@ -2387,9 +2377,7 @@ msgid "Failed to update subscription: %1"
 msgstr "Zlyhala aktualizácia odoberania: %1"
 
 #: widgets/subscriptiondialog.cpp:97
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Subscription Error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Chyba prihlásenia"
@@ -2430,8 +2418,7 @@ msgid "Failed to create a new tag"
 msgstr "Zlyhalo vytvorenie novej značky"
 
 #: widgets/tageditwidget.cpp:116
-#, fuzzy, kde-format
-#| msgid "An error occurred while creating a new tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Nastala chyba počas vytvárania novej značky"
@@ -2443,12 +2430,10 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Naozaj chcete odstrániť značku <resource>%1</resource>?"
 
 #: widgets/tageditwidget.cpp:165
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Delete tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
-msgstr "Odstrániť značku"
+msgstr "Vymazať značku"
 
 #: widgets/tageditwidget.cpp:189
 #, kde-format
