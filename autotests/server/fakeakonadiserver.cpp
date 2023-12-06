@@ -93,7 +93,7 @@ FakeAkonadiServer::FakeAkonadiServer()
 
     mClient = std::make_unique<FakeClient>();
 
-    DataStore::setFactory(std::make_unique<FakeDataStoreFactory>(*this));
+    DataStore::setFactory(std::make_unique<FakeDataStoreFactory>(this));
 }
 
 FakeAkonadiServer::~FakeAkonadiServer()

@@ -26,7 +26,7 @@ Q_DECLARE_METATYPE(QList<Tag>)
 Q_DECLARE_METATYPE(MimeType)
 Q_DECLARE_METATYPE(QList<QByteArray>)
 
-FakeDataStoreFactory::FakeDataStoreFactory(FakeAkonadiServer &akonadi)
+FakeDataStoreFactory::FakeDataStoreFactory(FakeAkonadiServer *akonadi)
     : m_akonadi(akonadi)
 {
 }
@@ -36,11 +36,11 @@ DataStore *FakeDataStoreFactory::createStore()
     return new FakeDataStore(m_akonadi);
 }
 
-FakeDataStore::FakeDataStore(FakeAkonadiServer &akonadi)
-    : DataStore(akonadi)
+FakeDataStore::FakeDataStore(FakeAkonadiServer *akonadi)
+    : DataStore(akonadi, DbConfig::configuredDatabase())
     , mPopulateDb(true)
 {
-    mNotificationCollector = std::make_unique<InspectableNotificationCollector>(m_akonadi, this);
+    mNotificationCollector = std::make_unique<InspectableNotificationCollector>(*m_akonadi, this);
 }
 
 FakeDataStore::~FakeDataStore() = default;

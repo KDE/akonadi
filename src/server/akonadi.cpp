@@ -50,8 +50,8 @@ class AkonadiDataStore : public DataStore
 {
     Q_OBJECT
 public:
-    explicit AkonadiDataStore(AkonadiServer &server)
-        : DataStore(server)
+    explicit AkonadiDataStore(AkonadiServer *server)
+        : DataStore(server, DbConfig::configuredDatabase())
     {
     }
 };
@@ -59,7 +59,7 @@ public:
 class AkonadiDataStoreFactory : public DataStoreFactory
 {
 public:
-    explicit AkonadiDataStoreFactory(AkonadiServer &akonadi)
+    explicit AkonadiDataStoreFactory(AkonadiServer *akonadi)
         : m_akonadi(akonadi)
     {
     }
@@ -70,7 +70,7 @@ public:
     }
 
 private:
-    AkonadiServer &m_akonadi;
+    AkonadiServer *const m_akonadi;
 };
 
 } // namespace
@@ -83,7 +83,7 @@ AkonadiServer::AkonadiServer()
     qRegisterMetaType<Protocol::ChangeNotificationList>();
     qRegisterMetaType<quintptr>("quintptr");
 
-    DataStore::setFactory(std::make_unique<AkonadiDataStoreFactory>(*this));
+    DataStore::setFactory(std::make_unique<AkonadiDataStoreFactory>(this));
 }
 
 bool AkonadiServer::init()

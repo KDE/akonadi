@@ -17,11 +17,11 @@ class FakeAkonadiServer;
 class FakeDataStoreFactory : public DataStoreFactory
 {
 public:
-    FakeDataStoreFactory(FakeAkonadiServer &akonadi);
+    FakeDataStoreFactory(FakeAkonadiServer *akonadi);
     DataStore *createStore() override;
 
 private:
-    FakeAkonadiServer &m_akonadi;
+    FakeAkonadiServer *m_akonadi;
 };
 
 class FakeDataStore : public DataStore
@@ -105,7 +105,7 @@ public:
     void setPopulateDb(bool populate);
 
 protected:
-    FakeDataStore(FakeAkonadiServer &akonadi);
+    FakeDataStore(FakeAkonadiServer *akonadi);
 
     QMap<QString, QVariantList> mChanges;
 

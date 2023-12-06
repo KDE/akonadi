@@ -24,6 +24,7 @@ namespace Akonadi
 {
 namespace Server
 {
+class DbConfig;
 class DataStore;
 class DataStoreFactory
 {
@@ -308,7 +309,8 @@ protected:
     /**
       Creates a new DataStore object and opens it.
     */
-    DataStore(AkonadiServer &akonadi);
+    DataStore(AkonadiServer *akonadi, DbConfig *dbConfig);
+    explicit DataStore(DbConfig *config);
 
     void debugLastDbError(const char *actionDescription) const;
     void debugLastQueryError(const QSqlQuery &query, const char *actionDescription) const;
@@ -339,7 +341,8 @@ private Q_SLOTS:
 protected:
     static std::unique_ptr<DataStoreFactory> sFactory;
     std::unique_ptr<NotificationCollector> mNotificationCollector;
-    AkonadiServer &m_akonadi;
+    AkonadiServer *const m_akonadi = nullptr;
+    DbConfig *const m_dbConfig = nullptr;
 
 private:
     Q_DISABLE_COPY_MOVE(DataStore)

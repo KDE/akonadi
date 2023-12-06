@@ -67,13 +67,14 @@ void DataStore::setFactory(std::unique_ptr<DataStoreFactory> factory)
 /***************************************************************************
  *   DataStore                                                           *
  ***************************************************************************/
-DataStore::DataStore(AkonadiServer &akonadi)
+DataStore::DataStore(AkonadiServer *akonadi, DbConfig *dbConfig)
     : m_akonadi(akonadi)
+    , m_dbConfig(dbConfig)
     , m_dbOpened(false)
     , m_transactionLevel(0)
     , m_keepAliveTimer(nullptr)
 {
-    if (DbConfig::configuredDatabase()->driverName() == QLatin1String("QMYSQL")) {
+    if (dbConfig->driverName() == QLatin1String("QMYSQL")) {
         // Send a dummy query to MySQL every 1 hour to keep the connection alive,
         // otherwise MySQL just drops the connection and our subsequent queries fail
         // without properly reporting the error
@@ -81,6 +82,11 @@ DataStore::DataStore(AkonadiServer &akonadi)
         m_keepAliveTimer->setInterval(3600 * 1000);
         QObject::connect(m_keepAliveTimer, &QTimer::timeout, this, &DataStore::sendKeepAliveQuery);
     }
+}
+
+DataStore::DataStore(DbConfig *dbConfig)
+    : DataStore(nullptr, dbConfig)
+{
 }
 
 DataStore::~DataStore()
@@ -93,8 +99,8 @@ void DataStore::open()
     m_connectionName = QUuid::createUuid().toString() + QString::number(reinterpret_cast<qulonglong>(QThread::currentThread()));
     Q_ASSERT(!QSqlDatabase::contains(m_connectionName));
 
-    m_database = QSqlDatabase::addDatabase(DbConfig::configuredDatabase()->driverName(), m_connectionName);
-    DbConfig::configuredDatabase()->apply(m_database);
+    m_database = QSqlDatabase::addDatabase(m_dbConfig->driverName(), m_connectionName);
+    m_dbConfig->apply(m_database);
 
     if (!m_database.isValid()) {
         m_dbOpened = false;
@@ -118,7 +124,7 @@ void DataStore::open()
         }
     });
 
-    DbConfig::configuredDatabase()->initSession(m_database);
+    m_dbConfig->initSession(m_database);
 
     if (m_keepAliveTimer) {
         m_keepAliveTimer->start();
@@ -197,8 +203,9 @@ bool DataStore::init()
 
 NotificationCollector *DataStore::notificationCollector()
 {
+    Q_ASSERT(m_akonadi);
     if (!mNotificationCollector) {
-        mNotificationCollector = std::make_unique<NotificationCollector>(m_akonadi, this);
+        mNotificationCollector = std::make_unique<NotificationCollector>(*m_akonadi, this);
     }
 
     return mNotificationCollector.get();
@@ -1223,9 +1230,11 @@ void DataStore::debugLastDbError(const char *actionDescription) const
     qCCritical(AKONADISERVER_LOG) << "  Last driver error:" << m_database.lastError().driverText();
     qCCritical(AKONADISERVER_LOG) << "  Last database error:" << m_database.lastError().databaseText();
 
-    m_akonadi.tracer().error("DataStore (Database Error)",
-                             QStringLiteral("%1\nDriver said: %2\nDatabase said:%3")
-                                 .arg(QString::fromLatin1(actionDescription), m_database.lastError().driverText(), m_database.lastError().databaseText()));
+    if (m_akonadi) {
+        m_akonadi->tracer().error("DataStore (Database Error)",
+                                  QStringLiteral("%1\nDriver said: %2\nDatabase said:%3")
+                                      .arg(QString::fromLatin1(actionDescription), m_database.lastError().driverText(), m_database.lastError().databaseText()));
+    }
 }
 
 void DataStore::debugLastQueryError(const QSqlQuery &query, const char *actionDescription) const
@@ -1235,8 +1244,10 @@ void DataStore::debugLastQueryError(const QSqlQuery &query, const char *actionDe
     qCCritical(AKONADISERVER_LOG) << "  Last driver error:" << m_database.lastError().driverText();
     qCCritical(AKONADISERVER_LOG) << "  Last database error:" << m_database.lastError().databaseText();
 
-    m_akonadi.tracer().error("DataStore (Database Query Error)",
-                             QStringLiteral("%1: %2").arg(QString::fromLatin1(actionDescription), query.lastError().text()));
+    if (m_akonadi) {
+        m_akonadi->tracer().error("DataStore (Database Query Error)",
+                                  QStringLiteral("%1: %2").arg(QString::fromLatin1(actionDescription), query.lastError().text()));
+    }
 }
 
 // static
@@ -1393,7 +1404,9 @@ void DataStore::cleanupAfterRollback()
     Resource::invalidateCompleteCache();
     Collection::invalidateCompleteCache();
     PartType::invalidateCompleteCache();
-    m_akonadi.collectionStatistics().expireCache();
+    if (m_akonadi) {
+        m_akonadi->collectionStatistics().expireCache();
+    }
     QueryCache::clear();
 }
 
