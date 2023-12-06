@@ -111,53 +111,64 @@ public:
 
     /** Count records with value @p value in column @p column. */
     static int count(const QString &amp;column, const QVariant &amp;value);
+    static int count(DataStore *store, const QString &amp;column, const QVariant &amp;value);
 
     // check existence
     <xsl:if test="column[@name = 'id']">
     /** Checks if a record with id @p id exists. */
     static bool exists(qint64 id);
+    static bool exists(DataStore *store, qint64 id);
     </xsl:if>
     <xsl:if test="column[@name = 'name']">
     /** Checks if a record with name @name exists. */
     static bool exists(const <xsl:value-of select="column[@name = 'name']/@type"/> &amp;name);
+    static bool exists(DataStore *store, const <xsl:value-of select="column[@name = 'name']/@type"/> &amp;name);
     </xsl:if>
 
     // data retrieval
     <xsl:if test="column[@name = 'id']">
     /** Returns the record with id @p id. */
     <xsl:text>static </xsl:text><xsl:value-of select="$className"/> retrieveById(qint64 id);
+    <xsl:text>static </xsl:text><xsl:value-of select="$className"/> retrieveById(DataStore *store, qint64 id);
     </xsl:if>
 
     <xsl:if test="column[@name = 'name'] and $className != 'PartType'">
     /** Returns the record with name @p name. */
     <xsl:text>static </xsl:text><xsl:value-of select="$className"/> retrieveByName(const <xsl:value-of select="column[@name = 'name']/@type"/> &amp;name);
+    <xsl:text>static </xsl:text><xsl:value-of select="$className"/> retrieveByName(DataStore *store, const <xsl:value-of select="column[@name = 'name']/@type"/> &amp;name);
 
     /** Returns the record with name @p name. If such record does not exist,
         it will be created. This method is thread-safe, so if multiple callers
         call it on non-existent name, only one will create the new record, others
         will wait and read it from the cache. */
     <xsl:text>static </xsl:text><xsl:value-of select="$className"/> retrieveByNameOrCreate(const <xsl:value-of select="column[@name = 'name']/@type"/> &amp;name);
+    <xsl:text>static </xsl:text><xsl:value-of select="$className"/> retrieveByNameOrCreate(DataStore *store, const <xsl:value-of select="column[@name = 'name']/@type"/> &amp;name);
     </xsl:if>
 
     <xsl:if test="column[@name = 'name'] and $className = 'PartType'">
     <!-- Special case for PartTypes, which are identified by "NS:NAME" -->
     <xsl:text>static PartType retrieveByFQName(const QString &amp;ns, const QString &amp;name);</xsl:text>
+    <xsl:text>static PartType retrieveByFQName(DataStore *store, const QString &amp;ns, const QString &amp;name);</xsl:text>
     <xsl:text>static PartType retrieveByFQNameOrCreate(const QString &amp;ns, const QString &amp;name);</xsl:text>
+    <xsl:text>static PartType retrieveByFQNameOrCreate(DataStore *store, const QString &amp;ns, const QString &amp;name);</xsl:text>
     </xsl:if>
 
     /** Retrieve all records from this table. */
     static <xsl:value-of select="$className"/>::List retrieveAll();
+    static <xsl:value-of select="$className"/>::List retrieveAll(DataStore *store);
     /** Retrieve all records with value @p value in column @p key. */
     static <xsl:value-of select="$className"/>::List retrieveFiltered(const QString &amp;key, const QVariant &amp;value);
+    static <xsl:value-of select="$className"/>::List retrieveFiltered(DataStore *store, const QString &amp;key, const QVariant &amp;value);
 
     <!-- data retrieval for referenced tables (n:1) -->
     <xsl:for-each select="column[@refTable != '']">
-    <xsl:variable name="method-name"><xsl:call-template name="method-name-n1"/></xsl:variable>
+      <xsl:variable name="method-name"><xsl:call-template name="method-name-n1"><xsl:with-param name="table" select="@refTable"/></xsl:call-template></xsl:variable>
     /**
       Retrieve the <xsl:value-of select="@refTable"/> record referred to by the
       <xsl:value-of select="@name"/> column of this record.
     */
     <xsl:value-of select="@refTable"/><xsl:text> </xsl:text><xsl:value-of select="$method-name"/>() const;
+    <xsl:value-of select="@refTable"/><xsl:text> </xsl:text><xsl:value-of select="$method-name"/>(DataStore *store) const;
 
     /**
       Set the  <xsl:value-of select="@refTable"/> record referred to by the
@@ -174,11 +185,14 @@ public:
       in their column <xsl:value-of select="@key"/>.
     */
     QList&lt;<xsl:value-of select="@table"/>&gt; <xsl:value-of select="@name"/>() const;
+    QList&lt;<xsl:value-of select="@table"/>&gt; <xsl:value-of select="@name"/>(DataStore *store) const;
     </xsl:for-each>
 
     // data retrieval for n:m relations
     <xsl:for-each select="../relation[@table1 = $entityName]">
-    QList&lt;<xsl:value-of select="@table2"/>&gt; <xsl:value-of select="concat(translate(substring(@table2,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), substring(@table2,2))"/>s() const;
+      <xsl:variable name="method-name"><xsl:call-template name="method-name-n1"><xsl:with-param name="table"><xsl:value-of select="@table2"/></xsl:with-param></xsl:call-template></xsl:variable>
+      QList&lt;<xsl:value-of select="@table2"/>&gt; <xsl:value-of select="$method-name"/>s() const;
+      QList&lt;<xsl:value-of select="@table2"/>&gt; <xsl:value-of select="$method-name"/>s(DataStore *store) const;
     </xsl:for-each>
 
     /**
@@ -186,6 +200,7 @@ public:
       @param insertId pointer to an int, filled with the identifier of this record on success.
     */
     bool insert(qint64 *insertId = nullptr);
+    bool insert(DataStore *store, qint64 *insertId = nullptr);
 
     /**
       Returns @c true if this record has any pending changes.
@@ -200,13 +215,16 @@ public:
       @returns true on success, false otherwise.
     */
     bool update();
+    bool update(DataStore *store);
 
     <xsl:if test="column[@name = 'id']">
     /** Deletes this record. */
     bool remove();
+    bool remove(DataStore *store);
 
     /** Deletes the record with the given id. */
     static bool remove(qint64 id);
+    static bool remove(DataStore *store, qint64 id);
     </xsl:if>
 
     /**
@@ -234,29 +252,38 @@ public:
       Checks whether this record is in a n:m relation with the <xsl:value-of select="@table2"/> @p value.
     */
     bool relatesTo<xsl:value-of select="@table2"/>(const <xsl:value-of select="$rightSideClass"/> &amp;value) const;
+    bool relatesTo<xsl:value-of select="@table2"/>(DataStore *store, const <xsl:value-of select="$rightSideClass"/> &amp;value) const;
     static bool relatesTo<xsl:value-of select="@table2"/>(qint64 leftId, qint64 rightId);
+    static bool relatesTo<xsl:value-of select="@table2"/>(DataStore *store, qint64 leftId, qint64 rightId);
 
     /**
       Adds a n:m relation between this record and the <xsl:value-of select="@table2"/> @p value.
     */
     bool add<xsl:value-of select="@table2"/>(const <xsl:value-of select="$rightSideClass"/> &amp;value) const;
+    bool add<xsl:value-of select="@table2"/>(DataStore *store, const <xsl:value-of select="$rightSideClass"/> &amp;value) const;
     static bool add<xsl:value-of select="@table2"/>(qint64 leftId, qint64 rightId);
+    static bool add<xsl:value-of select="@table2"/>(DataStore *store, qint64 leftId, qint64 rightId);
 
     /**
       Removes a n:m relation between this record and the <xsl:value-of select="@table2"/> @p value.
     */
     bool remove<xsl:value-of select="@table2"/>(const <xsl:value-of select="$rightSideClass"/> &amp;value) const;
+    bool remove<xsl:value-of select="@table2"/>(DataStore *store, const <xsl:value-of select="$rightSideClass"/> &amp;value) const;
     static bool remove<xsl:value-of select="@table2"/>(qint64 leftId, qint64 rightId);
+    static bool remove<xsl:value-of select="@table2"/>(DataStore *store, qint64 leftId, qint64 rightId);
 
     /**
       Removes all relations between this record and any <xsl:value-of select="@table2"/>.
     */
     bool clear<xsl:value-of select="@table2"/>s() const;
+    bool clear<xsl:value-of select="@table2"/>s(DataStore *store) const;
     static bool clear<xsl:value-of select="@table2"/>s(qint64 id);
+    static bool clear<xsl:value-of select="@table2"/>s(DataStore *store, qint64 id);
     </xsl:for-each>
 
     // delete records
     static bool remove(const QString &amp;column, const QVariant &amp;value);
+    static bool remove(DataStore *store, const QString &amp;column, const QVariant &amp;value);
 
 private:
     class Private;

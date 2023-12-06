@@ -27,6 +27,11 @@ Entity::~Entity()
 {
 }
 
+DataStore *Entity::dataStore()
+{
+    return DataStore::self();
+}
+
 qint64 Entity::id() const
 {
     return m_id;
@@ -42,19 +47,14 @@ bool Entity::isValid() const
     return m_id != -1;
 }
 
-QSqlDatabase Entity::database()
+int Entity::countImpl(DataStore *store, const QString &tableName, const QString &column, const QVariant &value)
 {
-    return DataStore::self()->database();
-}
-
-int Entity::countImpl(const QString &tableName, const QString &column, const QVariant &value)
-{
-    QSqlDatabase db = database();
+    QSqlDatabase db = store->database();
     if (!db.isOpen()) {
         return -1;
     }
 
-    CountQueryBuilder builder(tableName);
+    CountQueryBuilder builder(store, tableName);
     builder.addValueCondition(column, Query::Equals, value);
 
     if (!builder.exec()) {
@@ -65,14 +65,14 @@ int Entity::countImpl(const QString &tableName, const QString &column, const QVa
     return builder.result();
 }
 
-bool Entity::removeImpl(const QString &tableName, const QString &column, const QVariant &value)
+bool Entity::removeImpl(DataStore *store, const QString &tableName, const QString &column, const QVariant &value)
 {
-    QSqlDatabase db = database();
+    QSqlDatabase db = store->database();
     if (!db.isOpen()) {
         return false;
     }
 
-    QueryBuilder builder(tableName, QueryBuilder::Delete);
+    QueryBuilder builder(store, tableName, QueryBuilder::Delete);
     builder.addValueCondition(column, Query::Equals, value);
 
     if (!builder.exec()) {
@@ -82,14 +82,14 @@ bool Entity::removeImpl(const QString &tableName, const QString &column, const Q
     return true;
 }
 
-bool Entity::relatesToImpl(const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 leftId, qint64 rightId)
+bool Entity::relatesToImpl(DataStore *store, const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 leftId, qint64 rightId)
 {
-    QSqlDatabase db = database();
+    QSqlDatabase db = store->database();
     if (!db.isOpen()) {
         return false;
     }
 
-    CountQueryBuilder builder(tableName);
+    CountQueryBuilder builder(store, tableName);
     builder.addValueCondition(leftColumn, Query::Equals, leftId);
     builder.addValueCondition(rightColumn, Query::Equals, rightId);
 
@@ -101,14 +101,14 @@ bool Entity::relatesToImpl(const QString &tableName, const QString &leftColumn, 
     return builder.result() > 0;
 }
 
-bool Entity::addToRelationImpl(const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 leftId, qint64 rightId)
+bool Entity::addToRelationImpl(DataStore *store, const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 leftId, qint64 rightId)
 {
-    QSqlDatabase db = database();
+    QSqlDatabase db = store->database();
     if (!db.isOpen()) {
         return false;
     }
 
-    QueryBuilder qb(tableName, QueryBuilder::Insert);
+    QueryBuilder qb(store, tableName, QueryBuilder::Insert);
     qb.setColumnValue(leftColumn, leftId);
     qb.setColumnValue(rightColumn, rightId);
     qb.setIdentificationColumn(QString());
@@ -121,14 +121,19 @@ bool Entity::addToRelationImpl(const QString &tableName, const QString &leftColu
     return true;
 }
 
-bool Entity::removeFromRelationImpl(const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 leftId, qint64 rightId)
+bool Entity::removeFromRelationImpl(DataStore *store,
+                                    const QString &tableName,
+                                    const QString &leftColumn,
+                                    const QString &rightColumn,
+                                    qint64 leftId,
+                                    qint64 rightId)
 {
-    QSqlDatabase db = database();
+    QSqlDatabase db = store->database();
     if (!db.isOpen()) {
         return false;
     }
 
-    QueryBuilder builder(tableName, QueryBuilder::Delete);
+    QueryBuilder builder(store, tableName, QueryBuilder::Delete);
     builder.addValueCondition(leftColumn, Query::Equals, leftId);
     builder.addValueCondition(rightColumn, Query::Equals, rightId);
 
@@ -140,14 +145,14 @@ bool Entity::removeFromRelationImpl(const QString &tableName, const QString &lef
     return true;
 }
 
-bool Entity::clearRelationImpl(const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 id, RelationSide side)
+bool Entity::clearRelationImpl(DataStore *store, const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 id, RelationSide side)
 {
-    QSqlDatabase db = database();
+    QSqlDatabase db = store->database();
     if (!db.isOpen()) {
         return false;
     }
 
-    QueryBuilder builder(tableName, QueryBuilder::Delete);
+    QueryBuilder builder(store, tableName, QueryBuilder::Delete);
     switch (side) {
     case Left:
         builder.addValueCondition(leftColumn, Query::Equals, id);

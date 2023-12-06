@@ -168,6 +168,7 @@ set<xsl:value-of select="$methodName"/>(<xsl:call-template name="argument"/>)
 
 <!-- data retrieval for a given key field -->
 <xsl:template name="data-retrieval">
+<xsl:param name="dataStore"/>
 <xsl:param name="key"/>
 <xsl:param name="key2"/>
 <xsl:param name="lookupKey" select="$key"/>
@@ -182,12 +183,12 @@ set<xsl:value-of select="$methodName"/>(<xsl:call-template name="argument"/>)
         }
     }
     </xsl:if>
-    QSqlDatabase db = DataStore::self()->database();
+    QSqlDatabase db = <xsl:value-of select="$dataStore"/>->database();
     if (!db.isOpen()) {
         return <xsl:value-of select="$className"/>();
     }
 
-    QueryBuilder qb(tableName(), QueryBuilder::Select);
+    QueryBuilder qb(<xsl:value-of select="$dataStore"/>, tableName(), QueryBuilder::Select);
     static const QStringList columns = removeEntry(columnNames(), <xsl:value-of select="$key"/>Column());
     qb.addColumns(columns);
     qb.addValueCondition(<xsl:value-of select="$key"/>Column(), Query::Equals, <xsl:value-of select="$key"/>);
@@ -248,12 +249,13 @@ set<xsl:value-of select="$methodName"/>(<xsl:call-template name="argument"/>)
 
 <!-- method name for n:1 referred records -->
 <xsl:template name="method-name-n1">
+<xsl:param name="table" />
 <xsl:choose>
 <xsl:when test="@methodName != ''">
   <xsl:value-of select="@methodName"/>
 </xsl:when>
 <xsl:otherwise>
-  <xsl:value-of select="concat(translate(substring(@refTable,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), substring(@refTable,2))"/>
+  <xsl:value-of select="concat(translate(substring($table,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), substring($table,2))"/>
 </xsl:otherwise>
 </xsl:choose>
 </xsl:template>

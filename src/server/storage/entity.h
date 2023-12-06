@@ -10,12 +10,12 @@
 #include <QStringList>
 
 class QVariant;
-class QSqlDatabase;
 
 namespace Akonadi
 {
 namespace Server
 {
+class DataStore;
 /**
   Base class for classes representing database records. It also contains
   low-level data access and manipulation template methods.
@@ -51,7 +51,13 @@ public:
     template<typename T>
     inline static int count(const QString &column, const QVariant &value)
     {
-        return Entity::countImpl(T::tableName(), column, value);
+        return count<T>(dataStore(), column, value);
+    }
+
+    template<typename T>
+    inline static int count(DataStore *store, const QString &column, const QVariant &value)
+    {
+        return Entity::countImpl(store, T::tableName(), column, value);
     }
 
     /**
@@ -60,7 +66,13 @@ public:
     template<typename T>
     inline static bool remove(const QString &column, const QVariant &value)
     {
-        return Entity::removeImpl(T::tableName(), column, value);
+        return remove<T>(dataStore(), column, value);
+    }
+
+    template<typename T>
+    inline static bool remove(DataStore *store, const QString &column, const QVariant &value)
+    {
+        return Entity::removeImpl(store, T::tableName(), column, value);
     }
 
     /**
@@ -71,7 +83,13 @@ public:
     template<typename T>
     inline static bool relatesTo(qint64 leftId, qint64 rightId)
     {
-        return Entity::relatesToImpl(T::tableName(), T::leftColumn(), T::rightColumn(), leftId, rightId);
+        return relatesTo<T>(dataStore(), leftId, rightId);
+    }
+
+    template<typename T>
+    inline static bool relatesTo(DataStore *store, qint64 leftId, qint64 rightId)
+    {
+        return Entity::relatesToImpl(store, T::tableName(), T::leftColumn(), T::rightColumn(), leftId, rightId);
     }
 
     /**
@@ -82,7 +100,13 @@ public:
     template<typename T>
     inline static bool addToRelation(qint64 leftId, qint64 rightId)
     {
-        return Entity::addToRelationImpl(T::tableName(), T::leftColumn(), T::rightColumn(), leftId, rightId);
+        return addToRelation<T>(dataStore(), leftId, rightId);
+    }
+
+    template<typename T>
+    inline static bool addToRelation(DataStore *store, qint64 leftId, qint64 rightId)
+    {
+        return Entity::addToRelationImpl(store, T::tableName(), T::leftColumn(), T::rightColumn(), leftId, rightId);
     }
 
     /**
@@ -93,7 +117,13 @@ public:
     template<typename T>
     inline static bool removeFromRelation(qint64 leftId, qint64 rightId)
     {
-        return Entity::removeFromRelationImpl(T::tableName(), T::leftColumn(), T::rightColumn(), leftId, rightId);
+        return removeFromRelation<T>(dataStore(), leftId, rightId);
+    }
+
+    template<typename T>
+    inline static bool removeFromRelation(DataStore *store, qint64 leftId, qint64 rightId)
+    {
+        return Entity::removeFromRelationImpl(store, T::tableName(), T::leftColumn(), T::rightColumn(), leftId, rightId);
     }
 
     enum RelationSide {
@@ -109,7 +139,12 @@ public:
     template<typename T>
     inline static bool clearRelation(qint64 id, RelationSide side = Left)
     {
-        return Entity::clearRelationImpl(T::tableName(), T::leftColumn(), T::rightColumn(), id, side);
+        return clearRelation<T>(dataStore(), id, side);
+    }
+    template<typename T>
+    inline static bool clearRelation(DataStore *store, qint64 id, RelationSide side = Left)
+    {
+        return Entity::clearRelationImpl(store, T::tableName(), T::leftColumn(), T::rightColumn(), id, side);
     }
 
 protected:
@@ -118,15 +153,19 @@ protected:
     ~Entity();
 
 private:
-    static int countImpl(const QString &tableName, const QString &column, const QVariant &value);
-    static bool removeImpl(const QString &tableName, const QString &column, const QVariant &value);
-    static bool relatesToImpl(const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 leftId, qint64 rightId);
-    static bool addToRelationImpl(const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 leftId, qint64 rightId);
-    static bool removeFromRelationImpl(const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 leftId, qint64 rightId);
-    static bool clearRelationImpl(const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 id, RelationSide side);
+    static DataStore *dataStore();
+
+    static int countImpl(DataStore *store, const QString &tableName, const QString &column, const QVariant &value);
+    static bool removeImpl(DataStore *store, const QString &tableName, const QString &column, const QVariant &value);
+    static bool relatesToImpl(DataStore *store, const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 leftId, qint64 rightId);
+    static bool
+    addToRelationImpl(DataStore *store, const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 leftId, qint64 rightId);
+    static bool
+    removeFromRelationImpl(DataStore *store, const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 leftId, qint64 rightId);
+    static bool
+    clearRelationImpl(DataStore *store, const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 id, RelationSide side);
 
 private:
-    static QSqlDatabase database();
     qint64 m_id;
 };
 
