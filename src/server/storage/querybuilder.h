@@ -25,6 +25,7 @@ namespace Akonadi
 {
 namespace Server
 {
+class DataStore;
 /**
   Helper class to construct arbitrary SQL queries.
 */
@@ -69,6 +70,7 @@ public:
       @param table The main table to operate on.
     */
     explicit QueryBuilder(const QString &table, QueryType type = Select);
+    QueryBuilder(DataStore *store, const QString &table, QueryType type = Select);
 
     /**
       Creates a new query builder with subquery in FROM clause for SELECT queries.
@@ -76,6 +78,7 @@ public:
       @param tableQueryAlias alias name for table query
     */
     explicit QueryBuilder(const QSqlQuery &tableQuery, const QString &tableQueryAlias);
+    QueryBuilder(DataStore *store, const QSqlQuery &tableQuery, const QString &tableQueryAlias);
 
     /**
       Sets the database which should execute the query. Unfortunately the SQL "standard"
@@ -281,6 +284,7 @@ private:
 private:
     QString mTable;
     QSqlQuery mTableSubQuery;
+    DataStore *mDataStore = nullptr;
     DbType::Type mDatabaseType;
     Query::Condition mRootCondition[NUM_CONDITIONS];
     QSqlQuery mQuery;

@@ -9,6 +9,7 @@
 #include "dbtype.h"
 
 #include <QHash>
+#include <QSqlDriver>
 #include <QSqlQuery>
 #include <QThreadStorage>
 #include <QTimer>
@@ -97,9 +98,9 @@ std::optional<QSqlQuery> QueryCache::query(const QString &queryStatement)
     return perThreadCache()->query(queryStatement);
 }
 
-void QueryCache::insert(const QString &queryStatement, const QSqlQuery &query)
+void QueryCache::insert(const QSqlDatabase &db, const QString &queryStatement, const QSqlQuery &query)
 {
-    if (DbType::type(DataStore::self()->database()) != DbType::Sqlite) {
+    if (DbType::type(db) != DbType::Sqlite) {
         perThreadCache()->insert(queryStatement, query);
     }
 }

@@ -10,6 +10,7 @@
 
 class QString;
 class QSqlQuery;
+class QSqlDatabase;
 
 namespace Akonadi
 {
@@ -25,7 +26,7 @@ namespace QueryCache
 std::optional<QSqlQuery> query(const QString &queryStatement);
 
 /// Insert @p query into the cache for @p queryStatement.
-void insert(const QString &queryStatement, const QSqlQuery &query);
+void insert(const QSqlDatabase &db, const QString &queryStatement, const QSqlQuery &query);
 
 /// Clears all queries from current thread
 void clear();

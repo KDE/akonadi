@@ -8,6 +8,7 @@
 #define AKONADI_COUNTQUERYBUILDER_H
 
 #include "akonadiserver_debug.h"
+#include "storage/datastore.h"
 #include "storage/querybuilder.h"
 
 #include <QSqlError>
@@ -31,7 +32,12 @@ public:
       Creates a new query builder that counts all entries in @p table.
     */
     explicit inline CountQueryBuilder(const QString &table)
-        : QueryBuilder(table, Select)
+        : CountQueryBuilder(DataStore::self(), table)
+    {
+    }
+
+    inline CountQueryBuilder(DataStore *store, const QString &table)
+        : QueryBuilder(store, table, Select)
     {
         addColumn(QStringLiteral("count(*)"));
     }
@@ -41,7 +47,12 @@ public:
      * If @p mode is set to @c Distinct, duplicate entries in that column are ignored.
      */
     inline CountQueryBuilder(const QString &table, const QString &column, CountMode mode)
-        : QueryBuilder(table, Select)
+        : CountQueryBuilder(DataStore::self(), table, column, mode)
+    {
+    }
+
+    inline CountQueryBuilder(DataStore *store, const QString &table, const QString &column, CountMode mode)
+        : QueryBuilder(store, table, Select)
     {
         Q_ASSERT(!table.isEmpty());
         Q_ASSERT(!column.isEmpty());

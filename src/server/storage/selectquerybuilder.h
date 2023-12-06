@@ -7,6 +7,7 @@
 #ifndef AKONADI_SELECTQUERYBUILDER_H
 #define AKONADI_SELECTQUERYBUILDER_H
 
+#include "storage/datastore.h"
 #include "storage/querybuilder.h"
 
 namespace Akonadi
@@ -23,7 +24,12 @@ public:
       Creates a new query builder.
     */
     inline SelectQueryBuilder()
-        : QueryBuilder(T::tableName(), Select)
+        : SelectQueryBuilder(DataStore::self())
+    {
+    }
+
+    explicit inline SelectQueryBuilder(DataStore *store)
+        : QueryBuilder(store, T::tableName(), Select)
     {
         addColumns(T::fullColumnNames());
     }

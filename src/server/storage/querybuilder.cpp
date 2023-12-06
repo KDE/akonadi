@@ -25,6 +25,20 @@
 
 using namespace Akonadi::Server;
 
+namespace
+{
+
+DataStore *defaultDataStore()
+{
+#ifdef QUERYBUILDER_UNITTEST
+    return nullptr;
+#else
+    return DataStore::self();
+#endif
+}
+
+} // namespace
+
 static QLatin1String compareOperatorToString(Query::CompareOperator op)
 {
     switch (op) {
@@ -90,15 +104,20 @@ static void appendJoined(QString *statement, const QStringList &strings, QLatin1
 }
 
 QueryBuilder::QueryBuilder(const QString &table, QueryBuilder::QueryType type)
+    : QueryBuilder(defaultDataStore(), table, type)
+{
+}
+
+QueryBuilder::QueryBuilder(DataStore *store, const QString &table, QueryBuilder::QueryType type)
     : mTable(table)
 #ifndef QUERYBUILDER_UNITTEST
-    , mDatabaseType(DbType::type(DataStore::self()->database()))
-    , mQuery(DataStore::self()->database())
+    , mDataStore(store)
+    , mDatabaseType(DbType::type(store->database()))
+    , mQuery(store->database())
 #else
     , mDatabaseType(DbType::Unknown)
 #endif
     , mType(type)
-    , mIdentificationColumn()
     , mLimit(-1)
     , mOffset(-1)
     , mDistinct(false)
@@ -108,16 +127,21 @@ QueryBuilder::QueryBuilder(const QString &table, QueryBuilder::QueryType type)
 }
 
 QueryBuilder::QueryBuilder(const QSqlQuery &tableQuery, const QString &tableQueryAlias)
+    : QueryBuilder(defaultDataStore(), tableQuery, tableQueryAlias)
+{
+}
+
+QueryBuilder::QueryBuilder(DataStore *store, const QSqlQuery &tableQuery, const QString &tableQueryAlias)
     : mTable(tableQueryAlias)
     , mTableSubQuery(tableQuery)
 #ifndef QUERYBUILDER_UNITTEST
-    , mDatabaseType(DbType::type(DataStore::self()->database()))
-    , mQuery(DataStore::self()->database())
+    , mDataStore(store)
+    , mDatabaseType(DbType::type(store->database()))
+    , mQuery(store->database())
 #else
     , mDatabaseType(DbType::Unknown)
 #endif
     , mType(QueryType::Select)
-    , mIdentificationColumn()
     , mLimit(-1)
     , mOffset(-1)
     , mDistinct(false)
@@ -380,7 +404,7 @@ bool QueryBuilder::exec()
             qCCritical(AKONADISERVER_LOG) << "  Query:" << statement;
             return false;
         }
-        QueryCache::insert(statement, mQuery);
+        QueryCache::insert(mDataStore->database(), statement, mQuery);
     }
 
     // too heavy debug info but worths to have from time to time
@@ -404,7 +428,7 @@ bool QueryBuilder::exec()
         } else {
             ret = mQuery.exec();
         }
-        StorageDebugger::instance()->queryExecuted(reinterpret_cast<qint64>(DataStore::self()), mQuery, t.elapsed());
+        StorageDebugger::instance()->queryExecuted(reinterpret_cast<qint64>(mDataStore), mQuery, t.elapsed());
     } else {
         StorageDebugger::instance()->incSequence();
         if (isBatch) {
@@ -443,18 +467,18 @@ bool QueryBuilder::exec()
             if (error == 6 /* SQLITE_LOCKED */) {
                 qCWarning(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction deadlock, retrying transaction";
                 qCWarning(AKONADISERVER_LOG) << mQuery.lastError().text();
-                DataStore::self()->doRollback();
+                mDataStore->doRollback();
                 needsRetry = true;
             } else if (error == 5 /* SQLITE_BUSY */) {
                 qCWarning(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction timeout, retrying transaction";
                 qCWarning(AKONADISERVER_LOG) << mQuery.lastError().text();
-                DataStore::self()->doRollback();
+                mDataStore->doRollback();
                 needsRetry = true;
             }
         }
 
         if (needsRetry) {
-            DataStore::self()->transactionKilledByDB();
+            mDataStore->transactionKilledByDB();
             throw DbDeadlockException(mQuery);
         }
 
