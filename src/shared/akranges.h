@@ -230,6 +230,43 @@ private:
     Iterator mEnd;
 };
 
+template<typename RangeLike, typename Iterator = typename RangeLike::const_iterator>
+class EnumerateIterator : public IteratorBase<EnumerateIterator<RangeLike>, RangeLike>
+{
+public:
+    using value_type = std::pair<qsizetype, typename Iterator::value_type>;
+    using pointer = value_type *; // FIXME: preserve const-ness
+    using reference = const value_type &; // FIXME: preserve const-ness
+
+    EnumerateIterator(const Iterator &iter, qsizetype start, const RangeLike &range)
+        : IteratorBase<EnumerateIterator, RangeLike>(iter, range)
+        , mCount(start)
+    {
+    }
+
+    auto &operator++()
+    {
+        ++mCount;
+        ++this->mIter;
+        return *this;
+    }
+
+    auto &operator++(int)
+    {
+        auto it = *this;
+        ++(*this);
+        return it;
+    }
+
+    QPair<qsizetype, typename Iterator::value_type> operator*() const
+    {
+        return qMakePair(mCount, *this->mIter);
+    }
+
+private:
+    qsizetype mCount = 0;
+};
+
 template<typename Container, int Pos, typename Iterator = typename Container::const_key_value_iterator>
 class AssociativeContainerIterator : public IteratorBase<AssociativeContainerIterator<Container, Pos>, Container, Iterator>
 {
@@ -349,6 +386,10 @@ struct NoneTag_ {
     UnaryPredicate mFn;
 };
 
+struct EnumerateTag_ {
+    qsizetype mStart = 0;
+};
+
 } // namespace detail
 } // namespace AkRanges
 
@@ -392,6 +433,15 @@ auto operator|(const RangeLike &range, AkRanges::detail::FilterTag_<UnaryPredica
     using namespace AkRanges::detail;
     using OutIt = FilterIterator<RangeLike, UnaryPredicate>;
     return Range<OutIt>(OutIt(std::cbegin(range), std::cend(range), p.mFn, range), OutIt(std::cend(range), std::cend(range), p.mFn, range));
+}
+
+// Generator operator| for enumerate()
+template<typename RangeLike>
+auto operator|(const RangeLike &range, AkRanges::detail::EnumerateTag_ tag)
+{
+    using namespace AkRanges::detail;
+    using OutIt = EnumerateIterator<RangeLike>;
+    return Range<OutIt>(OutIt(std::cbegin(range), tag.mStart, range), OutIt(std::cend(range), tag.mStart, range));
 }
 
 // Generic operator| for foreach()
@@ -486,7 +536,7 @@ detail::NoneTag_<UnaryPredicate> none(UnaryPredicate &&pred)
     return detail::NoneTag_<UnaryPredicate>{std::forward<UnaryPredicate>(pred)};
 }
 
-} // namespace Action
+} // namespace Actions
 
 namespace Views
 {
@@ -509,6 +559,12 @@ detail::FilterTag_<UnaryPredicate> filter(UnaryPredicate &&pred)
     return detail::FilterTag_<UnaryPredicate>{std::forward<UnaryPredicate>(pred)};
 }
 
+/// Lazily enumerate elements in input range
+inline detail::EnumerateTag_ enumerate(qsizetype start = 0)
+{
+    return detail::EnumerateTag_{start};
+}
+
 /// Create a range, a view on a container from the given pair fo iterators
 template<typename Iterator1, typename Iterator2, typename It = std::remove_reference_t<Iterator1>>
 detail::Range<It> range(Iterator1 begin, Iterator2 end)
@@ -516,6 +572,6 @@ detail::Range<It> range(Iterator1 begin, Iterator2 end)
     return detail::Range<It>(std::move(begin), std::move(end));
 }
 
-} // namespace View
+} // namespace Views
 
 } // namespace AkRanges

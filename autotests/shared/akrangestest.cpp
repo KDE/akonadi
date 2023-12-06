@@ -447,6 +447,17 @@ private Q_SLOTS:
                         return i % 2 == 0;
                     })));
     }
+
+    void testEnumerate()
+    {
+        const QList<int> vals = {2, 4, 6, 8, 10};
+        for (const auto [idx, val] : vals | Views::enumerate()) {
+            QCOMPARE(val, (idx + 1) * 2);
+        }
+        for (const auto [idx, val] : vals | Views::enumerate(1)) {
+            QCOMPARE(val, idx * 2);
+        }
+    }
 };
 
 QList<int> AkRangesTest::ForEachCallable::sOut;
