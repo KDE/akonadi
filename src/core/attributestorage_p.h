@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "akonaditests_export.h"
 #include "attribute.h"
 #include <QHash>
 #include <QSet>
@@ -20,7 +21,7 @@ namespace Akonadi
  * I.e. it knows which attributes have been added or removed
  * compared to the initial set (e.g. fetched from server).
  */
-class AttributeStorage
+class AKONADI_TESTS_EXPORT AttributeStorage
 {
 public:
     AttributeStorage();
