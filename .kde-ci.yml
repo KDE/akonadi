@@ -18,7 +18,7 @@ Dependencies:
 
 - 'on': ['Linux/Qt5', 'FreeBSD/Qt5']
   'require':
-    'network/kaccounts-integration': '@latest'
+    'network/kaccounts-integration': '@same'
 
 Options:
   cmake-options: "-DAKONADI_RUN_MYSQL_ISOLATED_TESTS=FALSE -DAKONADI_RUN_PGSQL_ISOLATED_TESTS=FALSE -DAKONADI_RUN_SQLITE_ISOLATED_TESTS=FALSE"
