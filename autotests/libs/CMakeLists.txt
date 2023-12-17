@@ -63,11 +63,10 @@ add_akonadi_test(sharedvaluepooltest.cpp)
 add_akonadi_test(jobtest.cpp)
 add_akonadi_test(tagtest_simple.cpp)
 add_akonadi_test(cachepolicytest.cpp cachepolicytest.h)
-add_akonadi_test(itemchangelogtest.cpp)
 
 # PORT FROM QJSON add_akonadi_test(searchquerytest.cpp)
 
-# qtestlib tests that need non-exported stuff from
+# qtestlib tests that need non-exported stuff from 
 #add_executable( resourceschedulertest resourceschedulertest.cpp resourceschedulertest.h ../src/agentbase/resourcescheduler.cpp )
 #add_test( resourceschedulertest resourceschedulertest )
 #ecm_mark_as_test(akonadi-resourceschedulertest)

@@ -17,20 +17,16 @@ namespace Akonadi
 class AKONADI_TESTS_EXPORT ItemChangeLog
 {
 public:
-    Q_REQUIRED_RESULT static ItemChangeLog *instance();
+    static ItemChangeLog *instance();
 
-    Q_REQUIRED_RESULT Item::Flags &addedFlags(ItemPrivate *priv);
-    Q_REQUIRED_RESULT Item::Flags addedFlags(const ItemPrivate *priv) const;
-    Q_REQUIRED_RESULT Item::Flags &deletedFlags(ItemPrivate *priv);
-    Q_REQUIRED_RESULT Item::Flags deletedFlags(const ItemPrivate *priv) const;
+    Item::Flags &addedFlags(const ItemPrivate *priv);
+    Item::Flags &deletedFlags(const ItemPrivate *priv);
 
-    Q_REQUIRED_RESULT Tag::List &addedTags(ItemPrivate *priv);
-    Q_REQUIRED_RESULT Tag::List addedTags(const ItemPrivate *priv) const;
-    Q_REQUIRED_RESULT Tag::List &deletedTags(ItemPrivate *priv);
-    Q_REQUIRED_RESULT Tag::List deletedTags(const ItemPrivate *priv) const;
+    Tag::List &addedTags(const ItemPrivate *priv);
+    Tag::List &deletedTags(const ItemPrivate *priv);
 
-    Q_REQUIRED_RESULT AttributeStorage &attributeStorage(ItemPrivate *priv);
-    Q_REQUIRED_RESULT AttributeStorage attributeStorage(const ItemPrivate *priv) const;
+    const AttributeStorage &attributeStorage(const ItemPrivate *priv);
+    AttributeStorage &attributeStorage(ItemPrivate *priv);
 
     void removeItem(const ItemPrivate *priv);
     void clearItemChangelog(const ItemPrivate *priv);
