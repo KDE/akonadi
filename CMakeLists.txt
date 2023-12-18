@@ -48,6 +48,8 @@ set(AKONADI_FULL_VERSION "${PIM_VERSION} (${RELEASE_SERVICE_VERSION})")
 
 configure_file(akonadifull-version.h.in ${CMAKE_CURRENT_BINARY_DIR}/akonadifull-version.h @ONLY)
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_OBJCXX_STANDARD_REQUIRED TRUE)
 
 ecm_setup_version(PROJECT
     VARIABLE_PREFIX AKONADI
