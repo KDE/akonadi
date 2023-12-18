@@ -11,32 +11,6 @@
 
 using namespace Akonadi::Server;
 
-ColumnDescription::ColumnDescription()
-    : size(-1)
-    , allowNull(true)
-    , isAutoIncrement(false)
-    , isPrimaryKey(false)
-    , isUnique(false)
-    , isEnum(false)
-    , onUpdate(Cascade)
-    , onDelete(Cascade)
-    , noUpdate(false)
-{
-}
-
-IndexDescription::IndexDescription()
-    : isUnique(false)
-{
-}
-
-DataDescription::DataDescription()
-{
-}
-
-TableDescription::TableDescription()
-{
-}
-
 int TableDescription::primaryKeyColumnCount() const
 {
     return std::count_if(columns.constBegin(), columns.constEnd(), [](const ColumnDescription &col) {
@@ -44,39 +18,24 @@ int TableDescription::primaryKeyColumnCount() const
     });
 }
 
-RelationDescription::RelationDescription()
-{
-}
-
 RelationTableDescription::RelationTableDescription(const RelationDescription &relation)
     : TableDescription()
 {
     name = relation.firstTable + relation.secondTable + QStringLiteral("Relation");
 
-    columns.reserve(2);
-    ColumnDescription column;
-    column.type = QStringLiteral("qint64");
-    column.allowNull = false;
-    column.isPrimaryKey = true;
-    column.onUpdate = ColumnDescription::Cascade;
-    column.onDelete = ColumnDescription::Cascade;
-    column.name = relation.firstTable + QLatin1Char('_') + relation.firstColumn;
-    column.refTable = relation.firstTable;
-    column.refColumn = relation.firstColumn;
-    columns.push_back(column);
-    IndexDescription index;
-    index.name = QStringLiteral("%1Index").arg(column.name);
-    index.columns = QStringList{column.name};
-    index.isUnique = false;
-    indexes.push_back(index);
-
-    column.name = relation.secondTable + QLatin1Char('_') + relation.secondColumn;
-    column.refTable = relation.secondTable;
-    column.refColumn = relation.secondColumn;
-    columns.push_back(column);
-    index.name = QStringLiteral("%1Index").arg(column.name);
-    index.columns = QStringList{column.name};
-    indexes.push_back(index);
-
+    columns = {ColumnDescription{.name = QStringLiteral("%1_%2").arg(relation.firstTable, relation.firstColumn),
+                                 .type = QStringLiteral("qint64"),
+                                 .allowNull = false,
+                                 .isPrimaryKey = true,
+                                 .refTable = relation.firstTable,
+                                 .refColumn = relation.firstColumn},
+               ColumnDescription{.name = QStringLiteral("%1_%2").arg(relation.secondTable, relation.secondColumn),
+                                 .type = QStringLiteral("qint64"),
+                                 .allowNull = false,
+                                 .isPrimaryKey = true,
+                                 .refTable = relation.secondTable,
+                                 .refColumn = relation.secondColumn}};
+    indexes = {IndexDescription{.name = QStringLiteral("%1Index").arg(columns[0].name), .columns = {columns[0].name}, .isUnique = false},
+               IndexDescription{.name = QStringLiteral("%1Index").arg(columns[1].name), .columns = {columns[1].name}, .isUnique = false}};
     indexes += relation.indexes;
 }

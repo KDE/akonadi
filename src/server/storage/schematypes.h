@@ -22,8 +22,6 @@ namespace Server
 class ColumnDescription
 {
 public:
-    ColumnDescription();
-
     enum ReferentialAction {
         Cascade,
         Restrict,
@@ -32,18 +30,18 @@ public:
 
     QString name;
     QString type;
-    int size;
-    bool allowNull;
-    bool isAutoIncrement;
-    bool isPrimaryKey;
-    bool isUnique;
-    bool isEnum;
+    int size = -1;
+    bool allowNull = true;
+    bool isAutoIncrement = false;
+    bool isPrimaryKey = false;
+    bool isUnique = false;
+    bool isEnum = false;
     QString refTable;
     QString refColumn;
     QString defaultValue;
-    ReferentialAction onUpdate;
-    ReferentialAction onDelete;
-    bool noUpdate;
+    ReferentialAction onUpdate = Cascade;
+    ReferentialAction onDelete = Cascade;
+    bool noUpdate = false;
 
     QMap<QString, int> enumValueMap;
 };
@@ -54,11 +52,9 @@ public:
 class IndexDescription
 {
 public:
-    IndexDescription();
-
     QString name;
     QStringList columns;
-    bool isUnique;
+    bool isUnique = false;
     QString sort;
 };
 
@@ -68,8 +64,6 @@ public:
 class DataDescription
 {
 public:
-    DataDescription();
-
     /**
      * Key contains the column name, value the data.
      */
@@ -82,7 +76,6 @@ public:
 class TableDescription
 {
 public:
-    TableDescription();
     int primaryKeyColumnCount() const;
 
     QString name;
@@ -97,8 +90,6 @@ public:
 class RelationDescription
 {
 public:
-    RelationDescription();
-
     QString firstTable;
     QString firstColumn;
     QString secondTable;
