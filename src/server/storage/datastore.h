@@ -100,6 +100,11 @@ public:
     static void setFactory(std::unique_ptr<DataStoreFactory> factory);
 
     /**
+     * Returns DataStore associated with the given database connection.
+     */
+    static DataStore *dataStoreForDatabase(const QSqlDatabase &db);
+
+    /**
       Closes the database connection and destroys the DataStore object.
     */
     ~DataStore() override;

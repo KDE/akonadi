@@ -44,11 +44,42 @@
 #include <QVariant>
 
 #include <functional>
+#include <shared_mutex>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
 static QThreadStorage<DataStore *> sInstances;
+
+class DataStoreDbMap
+{
+public:
+    void registerDataStore(DataStore *store, const QString &connectionName)
+    {
+        std::unique_lock lock{m_mutex};
+        m_table.insert(connectionName, store);
+    }
+
+    void unregisterDataStore(const QString &connectionName)
+    {
+        std::unique_lock lock{m_mutex};
+        m_table.remove(connectionName);
+    }
+
+    DataStore *lookupByConnection(const QSqlDatabase &db)
+    {
+        std::shared_lock lock{m_mutex};
+        auto *store = m_table.value(db.connectionName(), nullptr);
+        Q_ASSERT(store);
+        return store;
+    }
+
+private:
+    std::shared_mutex m_mutex;
+    QHash<QString, DataStore *> m_table;
+};
+
+static DataStoreDbMap sStoreLookup;
 
 static inline void setBoolPtr(bool *ptr, bool val)
 {
@@ -62,6 +93,11 @@ std::unique_ptr<DataStoreFactory> DataStore::sFactory;
 void DataStore::setFactory(std::unique_ptr<DataStoreFactory> factory)
 {
     sFactory = std::move(factory);
+}
+
+DataStore *DataStore::dataStoreForDatabase(const QSqlDatabase &db)
+{
+    return sStoreLookup.lookupByConnection(db);
 }
 
 /***************************************************************************
@@ -100,6 +136,7 @@ void DataStore::open()
     Q_ASSERT(!QSqlDatabase::contains(m_connectionName));
 
     m_database = QSqlDatabase::addDatabase(m_dbConfig->driverName(), m_connectionName);
+    sStoreLookup.registerDataStore(this, m_connectionName);
     m_dbConfig->apply(m_database);
 
     if (!m_database.isValid()) {
@@ -160,6 +197,7 @@ void DataStore::close()
     m_database.close();
     m_database = QSqlDatabase();
     QSqlDatabase::removeDatabase(m_connectionName);
+    sStoreLookup.unregisterDataStore(m_connectionName);
 
     StorageDebugger::instance()->removeConnection(reinterpret_cast<qint64>(this));
 
@@ -168,17 +206,17 @@ void DataStore::close()
 
 bool DataStore::init()
 {
-    Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
+    // Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
 
     AkonadiSchema schema;
-    DbInitializer::Ptr initializer = DbInitializer::createInstance(database(), &schema);
+    DbInitializer::Ptr initializer = DbInitializer::createInstance(m_database, &schema);
     if (!initializer->run()) {
         qCCritical(AKONADISERVER_LOG) << initializer->errorMsg();
         return false;
     }
 
     if (QFile::exists(QStringLiteral(":dbupdate.xml"))) {
-        DbUpdater updater(database(), QStringLiteral(":dbupdate.xml"));
+        DbUpdater updater(m_database, QStringLiteral(":dbupdate.xml"));
         if (!updater.run()) {
             return false;
         }
