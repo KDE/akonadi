@@ -35,4 +35,5 @@ bool Transaction::commit()
 void Transaction::begin()
 {
     mDb->beginTransaction(mName);
+    mCommitted = false;
 }
