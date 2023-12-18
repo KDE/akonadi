@@ -45,7 +45,8 @@ bool DbUpdater::run()
     Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
 
     // TODO error handling
-    auto currentVersion = SchemaVersion::retrieveAll().at(0);
+    auto store = DataStore::dataStoreForDatabase(m_database);
+    auto currentVersion = SchemaVersion::retrieveAll(store).at(0);
 
     UpdateSet::Map updates;
 
@@ -224,7 +225,7 @@ bool DbUpdater::complexUpdate_25()
 {
     qCDebug(AKONADISERVER_LOG) << "Starting database update to version 25";
 
-    DbType::Type dbType = DbType::type(DataStore::self()->database());
+    DbType::Type dbType = DbType::type(m_database);
 
     QElapsedTimer ttotal;
     ttotal.start();
@@ -232,18 +233,18 @@ bool DbUpdater::complexUpdate_25()
     // Recover from possibly failed or interrupted update
     {
         // We don't care if this fails, it just means that there was no failed update
-        QSqlQuery query(DataStore::self()->database());
+        QSqlQuery query(m_database);
         query.exec(QStringLiteral("ALTER TABLE PartTable_old RENAME TO PartTable"));
     }
 
     {
-        QSqlQuery query(DataStore::self()->database());
+        QSqlQuery query(m_database);
         query.exec(QStringLiteral("DROP TABLE IF EXISTS PartTable_new"));
     }
 
     {
         // Make sure the table is empty, otherwise we get duplicate key error
-        QSqlQuery query(DataStore::self()->database());
+        QSqlQuery query(m_database);
         if (dbType == DbType::Sqlite) {
             query.exec(QStringLiteral("DELETE FROM PartTypeTable"));
         } else { // MySQL, PostgreSQL
@@ -307,10 +308,10 @@ bool DbUpdater::complexUpdate_25()
         externalColumn.defaultValue = QStringLiteral("false");
         description.columns << externalColumn;
 
-        DbInitializer::Ptr initializer = DbInitializer::createInstance(DataStore::self()->database());
+        DbInitializer::Ptr initializer = DbInitializer::createInstance(m_database);
         const QString queryString = initializer->buildCreateTableStatement(description);
 
-        QSqlQuery query(DataStore::self()->database());
+        QSqlQuery query(m_database);
         if (!query.exec(queryString)) {
             qCCritical(AKONADISERVER_LOG) << query.lastError().text();
             return false;
@@ -320,7 +321,8 @@ bool DbUpdater::complexUpdate_25()
     qCDebug(AKONADISERVER_LOG) << "Migrating part types";
     {
         // Get list of all part names
-        QueryBuilder qb(QStringLiteral("PartTable"), QueryBuilder::Select);
+        auto store = DataStore::dataStoreForDatabase(m_database);
+        QueryBuilder qb(store, QStringLiteral("PartTable"), QueryBuilder::Select);
         qb.setDistinct(true);
         qb.addColumn(QStringLiteral("PartTable.name"));
 
@@ -338,7 +340,7 @@ bool DbUpdater::complexUpdate_25()
             const QString name = partName.mid(4);
 
             {
-                QueryBuilder qb(QStringLiteral("PartTypeTable"), QueryBuilder::Insert);
+                QueryBuilder qb(store, QStringLiteral("PartTypeTable"), QueryBuilder::Insert);
                 qb.setColumnValue(QStringLiteral("ns"), ns);
                 qb.setColumnValue(QStringLiteral("name"), name);
                 if (!qb.exec()) {
@@ -353,7 +355,7 @@ bool DbUpdater::complexUpdate_25()
 
     qCDebug(AKONADISERVER_LOG) << "Migrating data from PartTable to PartTable_new";
     {
-        QSqlQuery query(DataStore::self()->database());
+        QSqlQuery query(m_database);
         QString queryString;
         if (dbType == DbType::PostgreSQL) {
             queryString = QStringLiteral(
@@ -389,30 +391,28 @@ bool DbUpdater::complexUpdate_25()
     {
         // Does an atomic swap
 
-        QSqlQuery query(DataStore::self()->database());
+        QSqlQuery query(m_database);
 
         if (dbType == DbType::PostgreSQL || dbType == DbType::Sqlite) {
             if (dbType == DbType::PostgreSQL) {
-                DataStore::self()->beginTransaction(QStringLiteral("DBUPDATER (r25)"));
+                m_database.transaction();
             }
 
             if (!query.exec(QStringLiteral("ALTER TABLE PartTable RENAME TO PartTable_old"))) {
                 qCCritical(AKONADISERVER_LOG) << query.lastError().text();
-                DataStore::self()->rollbackTransaction();
+                m_database.rollback();
                 return false;
             }
 
             // If this fails in SQLite (i.e. without transaction), we can still recover on next start)
             if (!query.exec(QStringLiteral("ALTER TABLE PartTable_new RENAME TO PartTable"))) {
                 qCCritical(AKONADISERVER_LOG) << query.lastError().text();
-                if (DataStore::self()->inTransaction()) {
-                    DataStore::self()->rollbackTransaction();
-                }
+                m_database.rollback();
                 return false;
             }
 
             if (dbType == DbType::PostgreSQL) {
-                DataStore::self()->commitTransaction();
+                m_database.commit();
             }
         } else { // MySQL cannot do rename in transaction, but supports atomic renames
             if (!query.exec(QStringLiteral("RENAME TABLE PartTable TO PartTable_old,"
@@ -425,7 +425,7 @@ bool DbUpdater::complexUpdate_25()
 
     qCDebug(AKONADISERVER_LOG) << "Removing PartTable_old";
     {
-        QSqlQuery query(DataStore::self()->database());
+        QSqlQuery query(m_database);
         if (!query.exec(QStringLiteral("DROP TABLE PartTable_old;"))) {
             // It does not matter when this fails, we are successfully migrated
             qCDebug(AKONADISERVER_LOG) << query.lastError().text();
@@ -436,7 +436,7 @@ bool DbUpdater::complexUpdate_25()
     // Fine tuning for PostgreSQL
     qCDebug(AKONADISERVER_LOG) << "Final tuning of new PartTable";
     {
-        QSqlQuery query(DataStore::self()->database());
+        QSqlQuery query(m_database);
         if (dbType == DbType::PostgreSQL) {
             query.exec(QStringLiteral("ALTER TABLE PartTable RENAME CONSTRAINT parttable_new_pkey TO parttable_pkey"));
             query.exec(QStringLiteral("ALTER SEQUENCE parttable_new_id_seq RENAME TO parttable_id_seq"));
@@ -458,9 +458,9 @@ bool DbUpdater::complexUpdate_25()
 bool DbUpdater::complexUpdate_36()
 {
     qCDebug(AKONADISERVER_LOG, "Starting database update to version 36");
-    Q_ASSERT(DbType::type(DataStore::self()->database()) == DbType::Sqlite);
+    Q_ASSERT(DbType::type(m_database) == DbType::Sqlite);
 
-    QSqlQuery query(DataStore::self()->database());
+    QSqlQuery query(m_database);
     if (!query.exec(QStringLiteral("PRAGMA foreign_key_checks=OFF"))) {
         qCCritical(AKONADISERVER_LOG, "Failed to disable foreign key checks!");
         return false;
@@ -472,10 +472,10 @@ bool DbUpdater::complexUpdate_36()
         });
     };
 
-    const auto recreateTableWithForeignKeys = [](const TableDescription &table) -> QPair<bool, QSqlQuery> {
+    const auto recreateTableWithForeignKeys = [this](const TableDescription &table) -> QPair<bool, QSqlQuery> {
         qCDebug(AKONADISERVER_LOG) << "Updating foreign keys in table" << table.name;
 
-        QSqlQuery query(DataStore::self()->database());
+        QSqlQuery query(m_database);
 
         // Recover from possibly failed or interrupted update
         // We don't care if this fails, it just means that there was no failed update
@@ -484,7 +484,7 @@ bool DbUpdater::complexUpdate_36()
 
         qCDebug(AKONADISERVER_LOG, "\tCreating table %s_new with foreign keys", qUtf8Printable(table.name));
         {
-            const auto initializer = DbInitializer::createInstance(DataStore::self()->database());
+            const auto initializer = DbInitializer::createInstance(m_database);
             TableDescription copy = table;
             copy.name += QStringLiteral("_new");
             if (!query.exec(initializer->buildCreateTableStatement(copy))) {

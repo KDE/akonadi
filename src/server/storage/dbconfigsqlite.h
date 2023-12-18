@@ -15,7 +15,15 @@ namespace Server
 class DbConfigSqlite : public DbConfig
 {
 public:
+    /**
+     * Constructs a new DbConfig for SQLite reading configuration from the standard akonadiserverrc config file.
+     */
     explicit DbConfigSqlite() = default;
+
+    /**
+     * Constructs a new DbConfig for MySQL reading configuration from the @p configFile.
+     */
+    explicit DbConfigSqlite(const QString &configFile);
 
     /**
      * Returns the name of the used driver.
@@ -57,6 +65,12 @@ public:
      * Sets sqlite journal mode to WAL and synchronous mode to NORMAL
      */
     void setup() override;
+
+    /// reimpl
+    bool disableConstraintChecks(const QSqlDatabase &db) override;
+
+    /// reimpl
+    bool enableConstraintChecks(const QSqlDatabase &db) override;
 
 private:
     bool setPragma(QSqlDatabase &db, QSqlQuery &query, const QString &pragma);

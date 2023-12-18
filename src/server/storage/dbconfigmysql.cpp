@@ -28,12 +28,14 @@ using namespace Akonadi::Server;
 #define MYSQL_VERSION_CHECK(major, minor, patch) (((major) << 16) | ((minor) << 8) | (patch))
 
 static const QString s_mysqlSocketFileName = QStringLiteral("mysql.socket");
+static const QString s_initConnection = QStringLiteral("initConnectionMysql");
 
-DbConfigMysql::DbConfigMysql()
-    : mInternalServer(true)
-    , mDatabaseProcess(nullptr)
+DbConfigMysql::DbConfigMysql(const QString &configFile)
+    : DbConfig(configFile)
 {
 }
+
+DbConfigMysql::~DbConfigMysql() = default;
 
 QString DbConfigMysql::driverName() const
 {
@@ -393,7 +395,7 @@ bool DbConfigMysql::startInternalServer()
         }
 
         qCDebug(AKONADISERVER_LOG) << "Executing:" << mMysqldPath << arguments.join(QLatin1Char(' '));
-        mDatabaseProcess = new QProcess;
+        mDatabaseProcess = std::make_unique<QProcess>();
         mDatabaseProcess->start(mMysqldPath, arguments);
         if (!mDatabaseProcess->waitForStarted()) {
             qCCritical(AKONADISERVER_LOG) << "Could not start database server!";
@@ -403,7 +405,7 @@ bool DbConfigMysql::startInternalServer()
             return false;
         }
 
-        connect(mDatabaseProcess, &QProcess::finished, this, &DbConfigMysql::processFinished);
+        connect(mDatabaseProcess.get(), &QProcess::finished, this, &DbConfigMysql::processFinished);
 
         // wait until mysqld has created the socket file (workaround for QTBUG-47475 in Qt5.5.0)
         int counter = 50; // avoid an endless loop in case mysqld terminated
@@ -415,9 +417,8 @@ bool DbConfigMysql::startInternalServer()
     }
 #endif
 
-    const QLatin1String initCon("initConnection");
     {
-        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QMYSQL"), initCon);
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QMYSQL"), s_initConnection);
         apply(db);
 
         db.setDatabaseName(QString()); // might not exist yet, then connecting to the actual db will fail
@@ -547,9 +548,9 @@ void DbConfigMysql::stopInternalServer()
     }
 
     // closing initConnection this late to work around QTBUG-63108
-    QSqlDatabase::removeDatabase(QStringLiteral("initConnection"));
+    QSqlDatabase::removeDatabase(s_initConnection);
 
-    disconnect(mDatabaseProcess, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &DbConfigMysql::processFinished);
+    disconnect(mDatabaseProcess.get(), static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &DbConfigMysql::processFinished);
 
     // first, try the nicest approach
     if (!mCleanServerShutdownCommand.isEmpty()) {
@@ -639,6 +640,18 @@ bool DbConfigMysql::initializeMySQLDatabase(const QString &confFile, const QStri
         == execute(
                mMysqlInstallDbPath,
                {QStringLiteral("--defaults-file=%1").arg(confFile), QStringLiteral("--basedir=%1").arg(baseDir), QStringLiteral("--datadir=%1/").arg(dataDir)});
+}
+
+bool DbConfigMysql::disableConstraintChecks(const QSqlDatabase &db)
+{
+    QSqlQuery query(db);
+    return query.exec(QStringLiteral("SET FOREIGN_KEY_CHECKS=0"));
+}
+
+bool DbConfigMysql::enableConstraintChecks(const QSqlDatabase &db)
+{
+    QSqlQuery query(db);
+    return query.exec(QStringLiteral("SET FOREIGN_KEY_CHECKS=1"));
 }
 
 #include "moc_dbconfigmysql.cpp"

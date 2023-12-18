@@ -10,6 +10,8 @@
 #include <QObject>
 #include <QProcess>
 
+class QSqlDatabase;
+
 namespace Akonadi
 {
 namespace Server
@@ -19,7 +21,19 @@ class DbConfigMysql : public QObject, public DbConfig
     Q_OBJECT
 
 public:
-    DbConfigMysql();
+    /**
+     * Constructs a new DbConfig for MySQL reading configuration from the standard akonadiserverrc config file.
+     */
+    explicit DbConfigMysql() = default;
+    /**
+     * Constructs a new DbConfig for MySQL reading configuration from the @p configFile.
+     */
+    explicit DbConfigMysql(const QString &configFile);
+
+    /**
+     * Destructor.
+     */
+    ~DbConfigMysql() override;
 
     /**
      * Returns the name of the used driver.
@@ -70,6 +84,12 @@ public:
     /// reimpl
     void initSession(const QSqlDatabase &database) override;
 
+    /// reimpl
+    bool disableConstraintChecks(const QSqlDatabase &db) override;
+
+    /// reimpl
+    bool enableConstraintChecks(const QSqlDatabase &db) override;
+
 private Q_SLOTS:
     void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
@@ -90,8 +110,8 @@ private:
     QString mMysqlInstallDbPath;
     QString mMysqlCheckPath;
     QString mMysqlUpgradePath;
-    bool mInternalServer;
-    QProcess *mDatabaseProcess = nullptr;
+    bool mInternalServer = true;
+    std::unique_ptr<QProcess> mDatabaseProcess;
 };
 
 } // namespace Server

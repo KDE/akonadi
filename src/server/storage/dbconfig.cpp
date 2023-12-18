@@ -26,9 +26,13 @@ using namespace Akonadi::Server;
 static DbConfig *s_DbConfigInstance = nullptr;
 
 DbConfig::DbConfig()
+    : DbConfig(StandardDirs::serverConfigFile(StandardDirs::ReadWrite))
 {
-    const QString serverConfigFile = StandardDirs::serverConfigFile(StandardDirs::ReadWrite);
-    QSettings settings(serverConfigFile, QSettings::IniFormat);
+}
+
+DbConfig::DbConfig(const QString &configFile)
+{
+    QSettings settings(configFile, QSettings::IniFormat);
 
     mSizeThreshold = 4096;
     const QVariant value = settings.value(QStringLiteral("General/SizeThreshold"), mSizeThreshold);

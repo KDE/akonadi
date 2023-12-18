@@ -28,7 +28,8 @@ QString DbIntrospectorMySql::hasIndexQuery(const QString &tableName, const QStri
 
 QList<DbIntrospector::ForeignKey> DbIntrospectorMySql::foreignKeyConstraints(const QString &tableName)
 {
-    QueryBuilder qb(QStringLiteral("information_schema.REFERENTIAL_CONSTRAINTS"), QueryBuilder::Select);
+    auto store = DataStore::dataStoreForDatabase(m_database);
+    QueryBuilder qb(store, QStringLiteral("information_schema.REFERENTIAL_CONSTRAINTS"), QueryBuilder::Select);
     qb.addJoin(QueryBuilder::InnerJoin,
                QStringLiteral("information_schema.KEY_COLUMN_USAGE"),
                QStringLiteral("information_schema.REFERENTIAL_CONSTRAINTS.CONSTRAINT_NAME"),
@@ -74,7 +75,7 @@ DbIntrospectorSqlite::DbIntrospectorSqlite(const QSqlDatabase &database)
 
 QList<DbIntrospector::ForeignKey> DbIntrospectorSqlite::foreignKeyConstraints(const QString &tableName)
 {
-    QSqlQuery query(DataStore::self()->database());
+    QSqlQuery query(m_database);
     if (!query.exec(QStringLiteral("PRAGMA foreign_key_list(%1)").arg(tableName))) {
         throw DbException(query);
     }
@@ -148,7 +149,8 @@ QList<DbIntrospector::ForeignKey> DbIntrospectorPostgreSql::foreignKeyConstraint
                                                       Query::Equals,
                                                       QStringLiteral(CONSTRAINT_COLUMN_USAGE ".constraint_name"));
 
-    QueryBuilder qb(QStringLiteral(TABLE_CONSTRAINTS), QueryBuilder::Select);
+    auto store = DataStore::dataStoreForDatabase(m_database);
+    QueryBuilder qb(store, QStringLiteral(TABLE_CONSTRAINTS), QueryBuilder::Select);
     qb.addColumn(QStringLiteral(TABLE_CONSTRAINTS ".constraint_name"));
     qb.addColumn(QStringLiteral(KEY_COLUMN_USAGE ".column_name"));
     qb.addColumn(QStringLiteral(CONSTRAINT_COLUMN_USAGE ".table_name AS referenced_table"));

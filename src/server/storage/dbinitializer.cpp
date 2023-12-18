@@ -12,6 +12,7 @@
 #include "dbtype.h"
 #include "entities.h"
 #include "schema.h"
+#include "storage/datastore.h"
 
 #include <QDateTime>
 #include <QSqlQuery>
@@ -77,10 +78,11 @@ bool DbInitializer::run()
 
 #ifndef DBINITIALIZER_UNITTEST
         // Now finally check and set the generation identifier if necessary
-        SchemaVersion version = SchemaVersion::retrieveAll().at(0);
+        auto store = DataStore::dataStoreForDatabase(mDatabase);
+        SchemaVersion version = SchemaVersion::retrieveAll(store).at(0);
         if (version.generation() == 0) {
             version.setGeneration(QDateTime::currentDateTimeUtc().toSecsSinceEpoch());
-            version.update();
+            version.update(store);
 
             qCDebug(AKONADISERVER_LOG) << "Generation:" << version.generation();
         }

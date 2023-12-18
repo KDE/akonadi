@@ -17,7 +17,15 @@ namespace Server
 class DbConfigPostgresql : public DbConfig
 {
 public:
-    DbConfigPostgresql();
+    /**
+     * Constructs a new DbConfig for PostgreSQL reading configuration from the standard akonadiserverrc config file.
+     */
+    explicit DbConfigPostgresql() = default;
+
+    /**
+     * Constructs a new DbConfig for PostgreSQL reading configuration from the @p configFile.
+     */
+    explicit DbConfigPostgresql(const QString &configFile);
 
     /**
      * Returns the name of the used driver.
@@ -66,6 +74,12 @@ public:
      */
     void stopInternalServer() override;
 
+    /// reimpl
+    bool disableConstraintChecks(const QSqlDatabase &db) override;
+
+    /// reimpl
+    bool enableConstraintChecks(const QSqlDatabase &db) override;
+
 protected:
     QStringList postgresSearchPaths(const QString &versionedPath) const;
 
@@ -82,7 +96,7 @@ private:
 
     QString mDatabaseName;
     QString mHostName;
-    int mHostPort;
+    int mHostPort = 0;
     QString mUserName;
     QString mPassword;
     QString mConnectionOptions;
@@ -90,7 +104,7 @@ private:
     QString mInitDbPath;
     QString mPgData;
     QString mPgUpgradePath;
-    bool mInternalServer;
+    bool mInternalServer = true;
 };
 
 } // namespace Server

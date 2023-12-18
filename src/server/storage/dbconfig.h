@@ -98,8 +98,19 @@ public:
      */
     virtual void setup();
 
+    /**
+     * Disables foreign key constraint checks.
+     */
+    virtual bool disableConstraintChecks(const QSqlDatabase &db) = 0;
+
+    /**
+     * Re-enables foreign key constraint checks.
+     */
+    virtual bool enableConstraintChecks(const QSqlDatabase &db) = 0;
+
 protected:
-    DbConfig();
+    explicit DbConfig();
+    explicit DbConfig(const QString &configFile);
 
     /**
      * Returns the suggested default database name, if none is specified in the configuration already.

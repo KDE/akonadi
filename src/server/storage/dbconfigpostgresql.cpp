@@ -12,6 +12,7 @@
 #include <shared/akranges.h>
 
 #include <QDir>
+#include <QDirIterator>
 #include <QProcess>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
@@ -25,6 +26,7 @@
 #include <unistd.h>
 #endif
 #include <chrono>
+#include <filesystem>
 
 using namespace std::chrono_literals;
 
@@ -32,9 +34,15 @@ using namespace Akonadi;
 using namespace Akonadi::Server;
 using namespace AkRanges;
 
-DbConfigPostgresql::DbConfigPostgresql()
-    : mHostPort(0)
-    , mInternalServer(true)
+namespace
+{
+
+const QString s_initConnection = QStringLiteral("initConnectionPsql");
+
+} // namespace
+
+DbConfigPostgresql::DbConfigPostgresql(const QString &configFile)
+    : DbConfig(configFile)
 {
 }
 
@@ -529,9 +537,8 @@ bool DbConfigPostgresql::startInternalServer()
         return false;
     }
 
-    const QLatin1String initCon("initConnection");
     {
-        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QPSQL"), initCon);
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QPSQL"), s_initConnection);
         apply(db);
 
         // use the default database that is always available
@@ -584,7 +591,7 @@ bool DbConfigPostgresql::startInternalServer()
     // Make sure pg_ctl has returned
     pgCtl.waitForFinished();
 
-    QSqlDatabase::removeDatabase(initCon);
+    QSqlDatabase::removeDatabase(s_initConnection);
     return success;
 }
 
@@ -636,4 +643,33 @@ bool DbConfigPostgresql::checkServerIsRunning()
 
     // "pg_ctl status" exits with 0 when server is running and a non-zero code when not.
     return pgCtl.exitCode() == 0;
+}
+
+bool DbConfigPostgresql::disableConstraintChecks(const QSqlDatabase &db)
+{
+    for (const auto &table : db.tables()) {
+        qCDebug(AKONADISERVER_LOG) << "Disabling triggers on table" << table;
+        QSqlQuery query(db);
+        if (!query.exec(QStringLiteral("ALTER TABLE %1 DISABLE TRIGGER ALL").arg(table))) {
+            qCWarning(AKONADISERVER_LOG) << "Failed to disable triggers on table" << table << ":" << query.lastError().databaseText();
+            enableConstraintChecks(db);
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool DbConfigPostgresql::enableConstraintChecks(const QSqlDatabase &db)
+{
+    for (const auto &table : db.tables()) {
+        qCDebug(AKONADISERVER_LOG) << "Enabling triggers on table" << table;
+        QSqlQuery query(db);
+        if (!query.exec(QStringLiteral("ALTER TABLE %1 ENABLE TRIGGER ALL").arg(table))) {
+            qCWarning(AKONADISERVER_LOG) << "Failed to enable triggers on table" << table << ":" << query.lastError().databaseText();
+            // continue
+        }
+    }
+
+    return true;
 }

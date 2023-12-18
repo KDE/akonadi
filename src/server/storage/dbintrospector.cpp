@@ -7,6 +7,7 @@
 
 #include "dbintrospector.h"
 #include "akonadiserver_debug.h"
+#include "datastore.h"
 #include "dbexception.h"
 #include "dbintrospector_impl.h"
 #include "dbtype.h"
@@ -81,7 +82,8 @@ bool DbIntrospector::hasColumn(const QString &tableName, const QString &columnNa
 
 bool DbIntrospector::isTableEmpty(const QString &tableName)
 {
-    QueryBuilder queryBuilder(tableName, QueryBuilder::Select);
+    auto *store = DataStore::dataStoreForDatabase(m_database);
+    QueryBuilder queryBuilder(store, tableName, QueryBuilder::Select);
     queryBuilder.addColumn(QStringLiteral("*"));
     queryBuilder.setLimit(1);
     if (!queryBuilder.exec()) {

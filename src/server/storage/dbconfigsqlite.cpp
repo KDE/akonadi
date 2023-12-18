@@ -52,6 +52,11 @@ static QString sqliteDataFile()
     return akonadiPath;
 }
 
+DbConfigSqlite::DbConfigSqlite(const QString &configFile)
+    : DbConfig(configFile)
+{
+}
+
 QString DbConfigSqlite::driverName() const
 {
     return QStringLiteral("QSQLITE");
@@ -143,7 +148,7 @@ bool DbConfigSqlite::setPragma(QSqlDatabase &db, QSqlQuery &query, const QString
 
 void DbConfigSqlite::setup()
 {
-    const QLatin1String connectionName("initConnection");
+    const QLatin1String connectionName("initConnectionSqlite");
 
     {
         QSqlDatabase db = QSqlDatabase::addDatabase(driverName(), connectionName);
@@ -264,4 +269,16 @@ void DbConfigSqlite::setup()
     }
 
     QSqlDatabase::removeDatabase(connectionName);
+}
+
+bool DbConfigSqlite::disableConstraintChecks(const QSqlDatabase &db)
+{
+    QSqlQuery query(db);
+    return query.exec(QStringLiteral("PRAGMA ignore_check_constraints=ON"));
+}
+
+bool DbConfigSqlite::enableConstraintChecks(const QSqlDatabase &db)
+{
+    QSqlQuery query(db);
+    return query.exec(QStringLiteral("PRAGMA ignore_check_constraints=OFF"));
 }
