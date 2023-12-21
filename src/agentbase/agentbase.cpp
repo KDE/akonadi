@@ -917,7 +917,7 @@ QString AgentBase::parseArguments(int argc, char **argv)
 
 int AgentBase::init(AgentBase &r)
 {
-    KLocalizedString::setApplicationDomain(QByteArrayLiteral("libakonadi5"));
+    KLocalizedString::setApplicationDomain(QByteArrayLiteral("libakonadi6"));
     KAboutData::setApplicationData(r.aboutData());
     return qApp->exec();
 }

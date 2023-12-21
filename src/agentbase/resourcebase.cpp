@@ -550,7 +550,7 @@ QString ResourceBase::parseArguments(int argc, char **argv)
 
 int ResourceBase::init(ResourceBase &r)
 {
-    KLocalizedString::setApplicationDomain(QByteArrayLiteral("libakonadi5"));
+    KLocalizedString::setApplicationDomain(QByteArrayLiteral("libakonadi6"));
     KAboutData::setApplicationData(r.aboutData());
     return qApp->exec();
 }

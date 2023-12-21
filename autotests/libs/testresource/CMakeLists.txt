@@ -2,7 +2,7 @@ include(${CMAKE_SOURCE_DIR}/KPimAkonadiMacros.cmake)
 
 kde_enable_exceptions()
 
-remove_definitions(-DTRANSLATION_DOMAIN=\"libakonadi5\")
+remove_definitions(-DTRANSLATION_DOMAIN=\"libakonadi6\")
 add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_knut_resource\")
 
 # Disabled for now, resourcetester remained in kdepim-runtime
