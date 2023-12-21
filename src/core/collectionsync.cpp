@@ -69,13 +69,9 @@ RemoteId RemoteId::rootRid = RemoteId(QStringList() << QString::fromLatin1(ROOTP
 
 Q_DECLARE_METATYPE(RemoteId)
 
-uint qHash(const RemoteId &rid)
+size_t qHash(const RemoteId &rid, size_t seed = 0) noexcept
 {
-    uint hash = 0;
-    for (QStringList::ConstIterator iter = rid.ridChain.constBegin(), end = rid.ridChain.constEnd(); iter != end; ++iter) {
-        hash += qHash(*iter);
-    }
-    return hash;
+    return qHashRange(rid.ridChain.constBegin(), rid.ridChain.constEnd(), seed);
 }
 
 inline bool operator<(const RemoteId &r1, const RemoteId &r2)

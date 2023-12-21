@@ -7,12 +7,13 @@
 #pragma once
 
 #include "akonadicore_export.h"
+#include <stddef.h>
 
 namespace Akonadi
 {
 class Relation;
 
-AKONADICORE_EXPORT unsigned int qHash(const Akonadi::Relation &);
+AKONADICORE_EXPORT size_t qHash(const Akonadi::Relation &, size_t seed = 0) noexcept;
 }
 
 #include <QByteArray>

@@ -642,9 +642,9 @@ protected:
     friend AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, const Akonadi::Protocol::ChangeNotification &ntf);
 };
 
-inline uint qHash(const ChangeNotification::Relation &rel)
+inline size_t qHash(const ChangeNotification::Relation &rel, size_t seed = 0) noexcept
 {
-    return ::qHash(rel.leftId + rel.rightId);
+    return ::qHashMulti(seed, rel.leftId, rel.rightId);
 }
 
 // TODO: Internalize?

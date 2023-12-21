@@ -24,9 +24,9 @@ using namespace Akonadi;
 
 Q_GLOBAL_STATIC(Akonadi::Collection, s_defaultParentCollection) // NOLINT(readability-redundant-member-init)
 
-uint Akonadi::qHash(const Akonadi::Collection &collection)
+size_t Akonadi::qHash(const Akonadi::Collection &collection, size_t seed) noexcept
 {
-    return ::qHash(collection.id());
+    return ::qHash(collection.id(), seed);
 }
 
 /**

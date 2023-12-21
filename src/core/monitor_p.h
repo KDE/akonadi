@@ -55,10 +55,10 @@ struct SignalId {
     }
 };
 
-inline uint qHash(SignalId sig)
+inline size_t qHash(SignalId sig, size_t seed = 0) noexcept
 {
     // The 4 LSBs of the address should be enough to give us a good hash
-    return sig.data[SignalId::Size - 1];
+    return ::qHashBits(sig.data, SignalId::Size, seed);
 }
 
 /**

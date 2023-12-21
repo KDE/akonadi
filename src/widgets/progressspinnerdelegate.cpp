@@ -105,9 +105,9 @@ void ProgressSpinnerDelegate::initStyleOption(QStyleOptionViewItem *option, cons
     }
 }
 
-uint Akonadi::qHash(const Akonadi::DelegateAnimator::Animation &anim)
+size_t Akonadi::qHash(const Akonadi::DelegateAnimator::Animation &anim, size_t seed) noexcept
 {
-    return qHash(anim.index);
+    return qHash(anim.index, seed);
 }
 
 #include "moc_progressspinnerdelegate_p.cpp"

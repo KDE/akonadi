@@ -25,9 +25,9 @@ using namespace Akonadi;
 
 Q_GLOBAL_STATIC(Akonadi::Collection, s_defaultParentCollection) // NOLINT(readability-redundant-member-init)
 
-uint Akonadi::qHash(const Akonadi::Item &item)
+size_t Akonadi::qHash(const Akonadi::Item &item, size_t seed) noexcept
 {
-    return ::qHash(item.id());
+    return ::qHash(item.id(), seed);
 }
 
 // Change to something != RFC822 as soon as the server supports it

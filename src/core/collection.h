@@ -548,7 +548,7 @@ private:
     /// @endcond
 };
 
-AKONADICORE_EXPORT uint qHash(const Akonadi::Collection &collection);
+AKONADICORE_EXPORT size_t qHash(const Akonadi::Collection &collection, size_t seed = 0) noexcept;
 
 template<typename T>
 inline T *Akonadi::Collection::attribute(Collection::CreateOption option)

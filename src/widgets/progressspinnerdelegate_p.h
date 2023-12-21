@@ -57,7 +57,7 @@ private:
     int m_timerId = -1;
 };
 
-uint qHash(const Akonadi::DelegateAnimator::Animation &anim);
+size_t qHash(const Akonadi::DelegateAnimator::Animation &anim, size_t seed = 0) noexcept;
 
 /**
  *

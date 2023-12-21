@@ -102,9 +102,9 @@ bool Relation::isValid() const
     return (d->left.isValid() || !d->left.remoteId().isEmpty()) && (d->right.isValid() || !d->right.remoteId().isEmpty()) && !d->type.isEmpty();
 }
 
-uint Akonadi::qHash(const Relation &relation)
+size_t Akonadi::qHash(const Relation &relation, size_t seed) noexcept
 {
-    return (3 * qHash(relation.left()) + qHash(relation.right()) + qHash(relation.type()) + qHash(relation.remoteId()));
+    return ::qHashMulti(seed, relation.left(), relation.right(), relation.type(), relation.remoteId());
 }
 
 QDebug &operator<<(QDebug &debug, const Relation &relation)

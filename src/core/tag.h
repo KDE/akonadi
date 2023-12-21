@@ -200,7 +200,7 @@ private:
     /// @endcond
 };
 
-AKONADICORE_EXPORT uint qHash(const Akonadi::Tag &);
+AKONADICORE_EXPORT size_t qHash(const Akonadi::Tag &, size_t sed = 0) noexcept;
 
 template<typename T>
 inline T *Tag::attribute(CreateOption option)

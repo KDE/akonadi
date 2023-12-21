@@ -712,7 +712,7 @@ private:
     /// @endcond
 };
 
-AKONADICORE_EXPORT uint qHash(const Akonadi::Item &item);
+AKONADICORE_EXPORT size_t qHash(const Akonadi::Item &item, size_t seed = 0) noexcept;
 
 template<typename T>
 inline T *Item::attribute(Item::CreateOption option)
