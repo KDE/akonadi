@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-20 01:38+0000\n"
+"POT-Creation-Date: 2023-12-23 01:45+0000\n"
 "PO-Revision-Date: 2023-01-19 02:49+0000\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -165,7 +165,7 @@ msgstr "A tarefa foi cancelada."
 msgid "No such collection."
 msgstr "Não existe essa colecção."
 
-#: core/collectionsync.cpp:509 core/collectionsync.cpp:654
+#: core/collectionsync.cpp:505 core/collectionsync.cpp:650
 #, kde-format
 msgid "Found unresolved orphan collections"
 msgstr "Foram detectadas colecções-órfãs não resolvidas"

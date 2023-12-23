@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-20 01:38+0000\n"
+"POT-Creation-Date: 2023-12-23 01:45+0000\n"
 "PO-Revision-Date: 2023-02-19 14:32+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -168,7 +168,7 @@ msgstr "Əməliyyat ləğv edildi."
 msgid "No such collection."
 msgstr "Kolleksiyalar tapılmadı."
 
-#: core/collectionsync.cpp:509 core/collectionsync.cpp:654
+#: core/collectionsync.cpp:505 core/collectionsync.cpp:650
 #, kde-format
 msgid "Found unresolved orphan collections"
 msgstr "Həll edilməmiş, sahibsiz kolleksiyalar tapıldı"
