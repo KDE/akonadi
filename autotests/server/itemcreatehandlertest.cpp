@@ -197,7 +197,7 @@ private Q_SLOTS:
         TestScenario::List scenarios;
         auto notification = Protocol::ItemChangeNotificationPtr::create();
         qint64 uidnext = 0;
-        QDateTime datetime(QDate(2014, 05, 12), QTime(14, 46, 00), Qt::UTC);
+        QDateTime datetime(QDate(2014, 05, 12), QTime(14, 46, 00), QTimeZone::UTC);
         PimItem pimItem;
         QList<FakePart> parts;
         QList<Flag> flags;

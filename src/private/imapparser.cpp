@@ -7,6 +7,7 @@
 #include "imapparser_p.h"
 
 #include <QDateTime>
+#include <QTimeZone>
 
 #include <ctype.h>
 
@@ -539,7 +540,7 @@ int ImapParser::parseDateTime(const QByteArray &data, QDateTime &dateTime, int s
 
     const QDate date(year, month, day);
     const QTime time(hours, minutes, seconds);
-    dateTime = QDateTime(date, time, Qt::UTC);
+    dateTime = QDateTime(date, time, QTimeZone::UTC);
     if (!dateTime.isValid()) {
         return start;
     }

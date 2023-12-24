@@ -209,7 +209,7 @@ void ProtocolTest::testFetchScope()
     QVERIFY(in.fetch(ItemFetchScope::None));
 
     in.setRequestedParts(requestedParts);
-    in.setChangedSince(QDateTime(QDate(2015, 8, 10), QTime(23, 52, 20), Qt::UTC));
+    in.setChangedSince(QDateTime(QDate(2015, 8, 10), QTime(23, 52, 20), QTimeZone::UTC));
     in.setAncestorDepth(ItemFetchScope::AllAncestors);
     in.setFetch(ItemFetchScope::CacheOnly);
     in.setFetch(ItemFetchScope::CheckCachedPayloadPartsOnly);
@@ -229,7 +229,7 @@ void ProtocolTest::testFetchScope()
     const ItemFetchScope out = serializeAndDeserialize(in);
     QCOMPARE(out.requestedParts(), expectedParts);
     QCOMPARE(out.requestedPayloads(), expectedPayloads);
-    QCOMPARE(out.changedSince(), QDateTime(QDate(2015, 8, 10), QTime(23, 52, 20), Qt::UTC));
+    QCOMPARE(out.changedSince(), QDateTime(QDate(2015, 8, 10), QTime(23, 52, 20), QTimeZone::UTC));
     QCOMPARE(out.ancestorDepth(), ItemFetchScope::AllAncestors);
     QCOMPARE(out.fetch(ItemFetchScope::None), false);
     QCOMPARE(out.cacheOnly(), true);
@@ -557,7 +557,7 @@ void ProtocolTest::testCreateItemCommand()
     in.setGid(QStringLiteral("GID"));
     in.setRemoteId(QStringLiteral("RID"));
     in.setRemoteRevision(QStringLiteral("RREV"));
-    in.setDateTime(QDateTime(QDate(2015, 8, 11), QTime(14, 32, 21), Qt::UTC));
+    in.setDateTime(QDateTime(QDate(2015, 8, 11), QTime(14, 32, 21), QTimeZone::UTC));
     in.setFlags({"\\SEEN", "FLAG"});
     in.setFlagsOverwritten(true);
     in.setAddedFlags({"FLAG2"});
@@ -578,7 +578,7 @@ void ProtocolTest::testCreateItemCommand()
     QCOMPARE(out->gid(), QStringLiteral("GID"));
     QCOMPARE(out->remoteId(), QStringLiteral("RID"));
     QCOMPARE(out->remoteRevision(), QStringLiteral("RREV"));
-    QCOMPARE(out->dateTime(), QDateTime(QDate(2015, 8, 11), QTime(14, 32, 21), Qt::UTC));
+    QCOMPARE(out->dateTime(), QDateTime(QDate(2015, 8, 11), QTime(14, 32, 21), QTimeZone::UTC));
     QCOMPARE(out->flags(),
              QSet<QByteArray>() << "\\SEEN"
                                 << "FLAG");
