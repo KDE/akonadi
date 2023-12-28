@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-23 01:45+0000\n"
-"PO-Revision-Date: 2023-04-15 13:41+0300\n"
+"PO-Revision-Date: 2023-12-27 10:00+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -1182,8 +1182,7 @@ msgstr "Удалить учётную запись «%1»?"
 
 # BUGME: please remove question mark; please add ctxt @title:window --aspotashev
 #: widgets/manageaccountwidget.cpp:199
-#, fuzzy, kde-format
-#| msgid "Remove account?"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"
 msgstr "Удаление учётной записи"
