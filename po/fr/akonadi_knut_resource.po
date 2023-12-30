@@ -3,8 +3,8 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Joëlle Cornavin <jcornavi@club-internet.fr>, 2009.
 # Joëlle Cornavin <jcornavin@laposte.net>, 2010.
-# xavier <xavier.besnard@kde.org>, 2013.
-# Xavier BESNARD <xavier.besnard@kde.org>, 2023.
+# Xavier Besnard <xavier.besnard@kde.org>, 2013.
+# Xavier Besnard <xavier.besnard@kde.org>, 2023.
 #
 msgid ""
 msgstr ""
