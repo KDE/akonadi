@@ -1245,7 +1245,7 @@ msgstr "Guarda l'informe..."
 #: widgets/selftestdialog.cpp:73
 #, kde-format
 msgid "Copy Report to Clipboard"
-msgstr "Copia l'informe al porta-retalls"
+msgstr "Copia l'informe a dins del porta-retalls"
 
 #: widgets/selftestdialog.cpp:189
 #, kde-format

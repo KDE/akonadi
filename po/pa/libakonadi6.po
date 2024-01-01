@@ -3,21 +3,21 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Amanpreet Singh Alam <aalam@users.sf.net>, 2008.
-# A S Alam <aalam@users.sf.net>, 2009, 2010.
+# SPDX-FileCopyrightText: 2009, 2010, 2023 A S Alam <aalam@users.sf.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-23 01:45+0000\n"
-"PO-Revision-Date: 2010-01-16 08:17+0530\n"
-"Last-Translator: A S Alam <aalam@users.sf.net>\n"
-"Language-Team: ਪੰਜਾਬੀ <punjabi-users@lists.sf.net>\n"
+"PO-Revision-Date: 2023-12-31 09:30-0600\n"
+"Last-Translator: A S Alam <aalam@punlinux.org>\n"
+"Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
 "Language: pa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 1.0\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -27,12 +27,12 @@ msgstr "ਅਮਨਪਰੀਤ ਸਿੰਘ ਆਲਮ"
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "aalam@users.sf.net"
+msgstr "aalam@punlinux.org"
 
 #: agentbase/accountsintegration.cpp:86
 #, kde-format
 msgid "There is currently no account configured."
-msgstr ""
+msgstr "ਹਾਲੇ ਕੋਈ ਖਾਤਾ ਸੰਰਚਿਤ ਨਹੀਂ ਹੈ।"
 
 #: agentbase/accountsintegration.cpp:103
 #, kde-format
@@ -48,7 +48,7 @@ msgstr ""
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
-msgstr ""
+msgstr "%2 ਕਿਸਮ ਵਿਚੋਂ %1"
 
 #: agentbase/agentbase.cpp:883
 #, kde-format
@@ -91,17 +91,13 @@ msgid "Not configured"
 msgstr ""
 
 #: agentbase/resourcebase.cpp:517
-#, fuzzy, kde-format
-#| msgctxt "@label, commandline option"
-#| msgid "Resource identifier"
+#, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "ਸਰੋਤ ਪਛਾਣਕਰਤਾ"
 
 #: agentbase/resourcebase.cpp:523
-#, fuzzy, kde-format
-#| msgctxt "@title, application name"
-#| msgid "Akonadi Resource"
+#, kde-format
 msgid "Akonadi Resource"
 msgstr "ਅਕੌਂਡੀ ਸਰੋਤ"
 
@@ -271,16 +267,14 @@ msgid "No valid destination specified"
 msgstr "ਕੋਈ ਢੁੱਕਵਾਂ ਟਿਕਾਣਾ ਨਹੀਂ ਦਿੱਤਾ"
 
 #: core/jobs/invalidatecachejob.cpp:58
-#, fuzzy, kde-format
-#| msgid "Invalid collection"
+#, kde-format
 msgid "Invalid collection."
-msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ"
+msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ ਹੈ।"
 
 #: core/jobs/itemcreatejob.cpp:105
-#, fuzzy, kde-format
-#| msgid "Invalid collection"
+#, kde-format
 msgid "Invalid parent collection"
-msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ"
+msgstr "ਅਢੁੱਕਵਾਂ ਮੂਲ ਭੰਡਾਰ"
 
 #: core/jobs/job.cpp:335
 #, kde-format
@@ -389,20 +383,16 @@ msgid "Name"
 msgstr "ਨਾਂ"
 
 #: core/models/entitytreemodel.cpp:207
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Syncing..."
+#, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
-msgstr "ਸੈਕਰੋ..."
+msgstr "ਲੋਡ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ…"
 
 #: core/models/entitytreemodel.cpp:499
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Error."
+#, kde-format
 msgctxt "@window:title"
 msgid "Error"
-msgstr "ਗਲਤੀ।"
+msgstr "ਗਲਤੀ"
 
 #: core/models/entitytreemodel.cpp:500
 #, kde-format
@@ -418,11 +408,10 @@ msgid "Name"
 msgstr "ਨਾਂ"
 
 #: core/models/entitytreemodel_p.cpp:1331
-#, fuzzy, kde-format
-#| msgid "Could not paste data: %1"
+#, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
-msgstr "ਡਾਟਾ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ: %1"
+msgstr "ਆਈਟਮ ਨੂੰ ਕਾਪੀ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1333
 #, fuzzy, kde-format
@@ -452,12 +441,10 @@ msgid "Could not link entity: <message>%1</message>"
 msgstr ""
 
 #: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Error."
+#, kde-format
 msgctxt "@title:window"
 msgid "Error"
-msgstr "ਗਲਤੀ।"
+msgstr "ਗਲਤੀ"
 
 #: core/models/favoritecollectionsmodel.cpp:398
 #, kde-format
@@ -485,10 +472,9 @@ msgid "Storage Size"
 msgstr "ਸਟੋਰੇਜ਼ ਸਾਈਜ਼"
 
 #: core/models/statisticsproxymodel.cpp:110
-#, fuzzy, kde-format
-#| msgid "Storage Size"
+#, kde-format
 msgid "Subfolder Storage Size"
-msgstr "ਸਟੋਰੇਜ਼ ਸਾਈਜ਼"
+msgstr "ਸਬ-ਫੋਲਡਰ ਸਟੋਰੇਜ਼ ਸਾਈਜ਼"
 
 #: core/models/statisticsproxymodel.cpp:224
 #, kde-format
@@ -511,7 +497,7 @@ msgstr "ਸਾਈਜ਼"
 #: core/models/tagmodel.cpp:64
 #, kde-format
 msgid "Tag"
-msgstr ""
+msgstr "ਟੈਗ"
 
 #: core/partfetcher.cpp:49
 #, kde-format
@@ -579,10 +565,9 @@ msgid ""
 msgstr ""
 
 #: selftest/main.cpp:19
-#, fuzzy, kde-format
-#| msgid "Akonadi Server Self-Test"
+#, kde-format
 msgid "Akonadi Self Test"
-msgstr "ਅਕੌਂਡੀ ਸਰਵਰ ਸੈਲਫ਼-ਟੈਸਟ"
+msgstr "ਅਕੌਂਡੀ ਸੈਲਫ਼-ਟੈਸਟ"
 
 #: selftest/main.cpp:21
 #, fuzzy, kde-format
@@ -593,18 +578,15 @@ msgstr "ਅਕੌਂਡੀ ਸਰਵਿਸ ਨਾਲ ਕੁਨੈਕਟ ਨਹ�
 #: selftest/main.cpp:23
 #, kde-format
 msgid "(c) 2008 Volker Krause <vkrause@kde.org>"
-msgstr ""
+msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
 msgstr ""
 
 #: widgets/agentactionmanager.cpp:36
-#, fuzzy
-#| msgid "&Delete Item"
-#| msgid_plural "&Delete %1 Items"
 msgid "&Delete Agent Instance"
-msgstr "ਆਈਟਮ ਹਟਾਓ(&D)"
+msgstr "ਏਜੰਟ ਮੌਕੇ ਨੂੰ ਹਟਾਓ(&D)"
 
 #: widgets/agentactionmanager.cpp:37
 msgid "&Configure Agent Instance"
@@ -614,7 +596,7 @@ msgstr ""
 #, kde-format
 msgctxt "@title:window"
 msgid "New Agent Instance"
-msgstr ""
+msgstr "ਨਵਾਂ ਏਜੰਟ ਮੌਕਾ"
 
 #: widgets/agentactionmanager.cpp:55
 #, fuzzy, kde-format
@@ -646,17 +628,17 @@ msgstr "ਕੀ ਤੁਸੀਂ ਸਭ ਚੁਣੀਆਂ ਆਈਟਮਾਂ ਨ�
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
-msgstr ""
+msgstr "%1 ਸੰਰਚਨਾ"
 
 #: widgets/agentconfigurationdialog.cpp:81
 #, kde-format
 msgid "%1 Handbook"
-msgstr ""
+msgstr "%1 ਹੈਂਡਬੁੱਕ"
 
 #: widgets/agentconfigurationdialog.cpp:82
 #, kde-format
 msgid "About %1"
-msgstr ""
+msgstr "%1 ਬਾਰੇ"
 
 #: widgets/agentconfigurationwidget.cpp:95
 #, kde-format
@@ -677,7 +659,7 @@ msgstr ""
 #, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
-msgstr ""
+msgstr "ਖਾਤੇ ਦੀ ਸੰਰਚਨਾ"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
@@ -706,10 +688,9 @@ msgstr "ਚੁਣੇ ਫੋਲਡਰ ਲਈ ਮੈਂਬਰ ਬਣੋ"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: widgets/cachepolicypage.ui:40
-#, fuzzy, kde-format
-#| msgid "&Synchronize Folder"
+#, kde-format
 msgid "Synchronize after:"
-msgstr "ਫੋਲਡਰ ਸੈਕਰੋਨਾਈਜ਼(&S)"
+msgstr "ਇਸ ਦੇ ਬਾਅਦ ਸੈਕਰੋਨਾਈਜ਼:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, checkInterval)
 #: widgets/cachepolicypage.ui:47
@@ -727,10 +708,9 @@ msgstr "ਮਿੰਟ"
 
 #. i18n: ectx: property (text), widget (QLabel, localPartsLabel)
 #: widgets/cachepolicypage.ui:66
-#, fuzzy, kde-format
-#| msgid "Locally Cached Parts"
+#, kde-format
 msgid "Locally cached parts:"
-msgstr "ਲੋਕਲ ਕੈਸ਼ ਕੀਤੇ ਭਾਗ"
+msgstr "ਲੋਕਲ ਕੈਸ਼ ਕੀਤੇ ਭਾਗ:"
 
 #. i18n: ectx: property (title), widget (KEditListWidget, localParts)
 #: widgets/cachepolicypage.ui:87
@@ -764,9 +744,7 @@ msgstr ""
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, localCacheTimeout)
 #: widgets/cachepolicypage.ui:130
-#, fuzzy, kde-format
-#| msgctxt "no cache timeout"
-#| msgid "Never"
+#, kde-format
 msgctxt "no cache timeout"
 msgid "Forever"
 msgstr "ਕਦੇ ਨਹੀਂ"
@@ -785,12 +763,10 @@ msgid ""
 msgstr ""
 
 #: widgets/collectiondialog.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "search folder"
-#| msgid "Search:"
+#, kde-format
 msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
 msgid "Search"
-msgstr "ਖੋਜ:"
+msgstr "ਖੋਜ"
 
 #: widgets/collectiondialog.cpp:64
 #, kde-format
@@ -798,10 +774,9 @@ msgid "Use folder by default"
 msgstr ""
 
 #: widgets/collectiondialog.cpp:224
-#, fuzzy, kde-format
-#| msgid "&New Folder..."
+#, kde-format
 msgid "&New Subfolder..."
-msgstr "ਨਵਾਂ ਫੋਲਡਰ(&N)..."
+msgstr "ਨਵੇਂ ਸਬ-ਫੋਲਡਰ(&N)…"
 
 #: widgets/collectiondialog.cpp:226
 #, kde-format
@@ -826,8 +801,7 @@ msgid "Could not create folder: %1"
 msgstr "ਫੋਲਡਰ ਬਣ ਨਹੀਂ ਸਕਿਆ: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
 msgstr "ਫੋਲਡਰ ਬਣਾਉਣਾ ਫੇਲ੍ਹ"
@@ -924,10 +898,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/collectionmaintenancepage.ui:17
-#, fuzzy, kde-format
-#| msgid "Folder &Properties"
+#, kde-format
 msgid "Folder type:"
-msgstr "ਫੋਲਡਰ ਵਿਸ਼ੇਸ਼ਤਾ(&P)"
+msgstr "ਫੋਲਡਰ ਦੀ ਕਿਸਮ:"
 
 #. i18n: ectx: property (text), widget (QLabel, folderTypeLbl)
 #. i18n: ectx: property (text), widget (QLabel, folderSizeLbl)
@@ -949,17 +922,15 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: widgets/collectionmaintenancepage.ui:45
-#, fuzzy, kde-format
-#| msgid "Total Messages"
+#, kde-format
 msgid "Total items:"
-msgstr "ਕੁੱਲ ਸੁਨੇਹੇ"
+msgstr "ਕੁੱਲ ਚੀਜ਼ਾਂ:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: widgets/collectionmaintenancepage.ui:59
-#, fuzzy, kde-format
-#| msgid "Unread Messages"
+#, kde-format
 msgid "Unread items:"
-msgstr "ਨਾ-ਪੜ੍ਹੇ ਸੁਨੇਹੇ"
+msgstr "ਨਾ-ਪੜ੍ਹੀਆਂ ਚੀਜ਼ਾਂ:"
 
 #. i18n: ectx: property (text), widget (QLabel, indexingLabel)
 #: widgets/collectionmaintenancepage.ui:73
@@ -987,11 +958,9 @@ msgid "Reindex folder"
 msgstr "ਫੋਲਡਰ ਹਟਾਓ(&D)"
 
 #: widgets/collectionrequester.cpp:113
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "New Folder"
+#, kde-format
 msgid "No Folder"
-msgstr "ਨਵਾਂ ਫੋਲਡਰ"
+msgstr "ਕੋਈ ਫੋਲਡਰ ਨਹੀਂ"
 
 #: widgets/collectionrequester.cpp:122
 #, kde-format
@@ -999,27 +968,26 @@ msgid "Open collection dialog"
 msgstr ""
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgid "Invalid collection"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
-msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ"
+msgstr "ਭੰਡਾਰ ਚੁਣੋ"
 
 #: widgets/conflictresolvedialog.cpp:129
 #, kde-format
 msgid "Modification Time"
-msgstr ""
+msgstr "ਸੋਧ ਦਾ ਸਮਾਂ"
 
 #: widgets/conflictresolvedialog.cpp:141
 #, kde-format
 msgid "Flags"
-msgstr ""
+msgstr "ਫਲੈਗ"
 
 #: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
 #: widgets/conflictresolvedialog.cpp:174
 #, kde-format
 msgid "Attribute: %1"
-msgstr ""
+msgstr "ਗੁਣ: %1"
 
 #: widgets/conflictresolvedialog.cpp:186
 #, kde-format
@@ -1158,15 +1126,14 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
-#, fuzzy, kde-format
-#| msgid "Details"
+#, kde-format
 msgid "Details..."
-msgstr "ਵੇਰਵਾ"
+msgstr "ਵੇਰਵੇ…"
 
 #: widgets/manageaccountwidget.cpp:198
 #, kde-format
 msgid "Do you want to remove account '%1'?"
-msgstr ""
+msgstr "ਕੀ ਤੁਸੀਂ '%1' ਖਾਤੇ ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?"
 
 #: widgets/manageaccountwidget.cpp:199
 #, kde-format
@@ -1211,10 +1178,9 @@ msgid "Restart"
 msgstr ""
 
 #: widgets/recentcollectionaction.cpp:43
-#, fuzzy, kde-format
-#| msgid "&Delete Folder"
+#, kde-format
 msgid "Recent Folder"
-msgstr "ਫੋਲਡਰ ਹਟਾਓ(&D)"
+msgstr "ਸੱਜਰੇ ਫੋਲਡਰ"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, RenameFavoriteDialog)
 #: widgets/renamefavoritedialog.ui:26
@@ -1225,15 +1191,12 @@ msgstr "ਪਸੰਦੀਦਾ ਨਾਂ ਬਦਲੋ"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/renamefavoritedialog.ui:35
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox New name of the folder."
-#| msgid "Name:"
+#, kde-format
 msgid "Name:"
 msgstr "ਨਾਂ:"
 
 #: widgets/selftestdialog.cpp:60
-#, fuzzy, kde-format
-#| msgid "Akonadi Server Self-Test"
+#, kde-format
 msgctxt "@title:window"
 msgid "Akonadi Server Self-Test"
 msgstr "ਅਕੌਂਡੀ ਸਰਵਰ ਸੈਲਫ਼-ਟੈਸਟ"
@@ -1813,49 +1776,37 @@ msgid "New"
 msgstr ""
 
 #: widgets/standardactionmanager.cpp:80
-#, fuzzy
-#| msgid "&Delete Folder"
 msgid "&Delete Folder"
-msgstr "ਫੋਲਡਰ ਹਟਾਓ(&D)"
+msgstr "ਫੋਲਡਰ ਨੂੰ ਹਟਾਓ(&D)"
 
 #: widgets/standardactionmanager.cpp:80
-#, fuzzy
-#| msgid "Delete?"
 msgid "Delete"
-msgstr "ਹਟਾਉਣਾ?"
+msgstr "ਹਟਾਓ"
 
 #: widgets/standardactionmanager.cpp:82
-#, fuzzy
-#| msgid "&Synchronize Folder"
 msgid "&Synchronize Folder"
-msgstr "ਫੋਲਡਰ ਸੈਕਰੋਨਾਈਜ਼(&S)"
+msgstr "ਫੋਲਡਰ ਸੈਕਰੋਨਾਈਜ਼ ਕਰੋ(&S)"
 
 #: widgets/standardactionmanager.cpp:83 widgets/standardactionmanager.cpp:157
 #: widgets/standardactionmanager.cpp:243
-#, fuzzy
-#| msgid "&Synchronize Folder"
 msgid "Synchronize"
-msgstr "ਫੋਲਡਰ ਸੈਕਰੋਨਾਈਜ਼(&S)"
+msgstr "ਸੈਕਰੋਨਾਈਜ਼ ਕਰੋ"
 
 #: widgets/standardactionmanager.cpp:90
 msgid "Folder &Properties"
-msgstr "ਫੋਲਡਰ ਵਿਸ਼ੇਸ਼ਤਾ(&P)"
+msgstr "ਫੋਲਡਰ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ(&P)"
 
 #: widgets/standardactionmanager.cpp:91 widgets/standardactionmanager.cpp:149
-#, fuzzy
-#| msgid "Folder &Properties"
 msgid "Properties"
-msgstr "ਫੋਲਡਰ ਵਿਸ਼ੇਸ਼ਤਾ(&P)"
+msgstr "ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ"
 
 #: widgets/standardactionmanager.cpp:98
 msgid "&Paste"
 msgstr "ਚੇਪੋ(&P)"
 
 #: widgets/standardactionmanager.cpp:98
-#, fuzzy
-#| msgid "&Paste"
 msgid "Paste"
-msgstr "ਚੇਪੋ(&P)"
+msgstr "ਚੇਪੋ"
 
 #: widgets/standardactionmanager.cpp:101
 msgid "Manage Local &Subscriptions..."
@@ -1872,20 +1823,16 @@ msgid "Add to Favorite Folders"
 msgstr "ਪਸੰਦੀਦਾ ਫੋਲਡਰ 'ਚ ਸ਼ਾਮਲ"
 
 #: widgets/standardactionmanager.cpp:110
-#, fuzzy
-#| msgid "Add to Favorite Folders"
 msgid "Add to Favorite"
-msgstr "ਪਸੰਦੀਦਾ ਫੋਲਡਰ 'ਚ ਸ਼ਾਮਲ"
+msgstr "ਪਸੰਦ ਵਿੱਚ ਜੋੜੋ"
 
 #: widgets/standardactionmanager.cpp:117
 msgid "Remove from Favorite Folders"
-msgstr "ਪਸੰਦੀਦਾ ਫੋਲਡਰ ਤੋਂ ਹਟਾਓ"
+msgstr "ਪਸੰਦੀਦਾ ਫੋਲਡਰ ਵਿੱਚੋਂ ਹਟਾਓ"
 
 #: widgets/standardactionmanager.cpp:118
-#, fuzzy
-#| msgid "Remove from Favorite Folders"
 msgid "Remove from Favorite"
-msgstr "ਪਸੰਦੀਦਾ ਫੋਲਡਰ ਤੋਂ ਹਟਾਓ"
+msgstr "ਪਸੰਦ ਵਿਚੋਂ ਹਟਾਓ"
 
 #: widgets/standardactionmanager.cpp:124
 msgid "Rename Favorite..."
@@ -1901,11 +1848,8 @@ msgstr "ਫੋਲਡਰ ਕਾਪੀ ਕਰੋ..."
 
 #: widgets/standardactionmanager.cpp:127 widgets/standardactionmanager.cpp:133
 #: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:173
-#, fuzzy
-#| msgid "&Copy Folder"
-#| msgid_plural "&Copy %1 Folders"
 msgid "Copy To"
-msgstr "ਫੋਲਡਰ ਕਾਪੀ ਕਰੋ(&C)"
+msgstr "ਇੱਥੇ ਕਾਪੀ ਕਰੋ"
 
 #: widgets/standardactionmanager.cpp:133 widgets/standardactionmanager.cpp:173
 msgid "Copy Item To..."
@@ -1917,19 +1861,14 @@ msgstr "ਆਈਟਮ ਭੇਜੋ..."
 
 #: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:137
 #: widgets/standardactionmanager.cpp:167 widgets/standardactionmanager.cpp:174
-#, fuzzy
-#| msgid "Move Item To..."
 msgid "Move To"
-msgstr "ਆਈਟਮ ਭੇਜੋ..."
+msgstr "ਇੱਥੇ ਭੇਜੋ"
 
 #: widgets/standardactionmanager.cpp:136 widgets/standardactionmanager.cpp:166
 msgid "Move Folder To..."
 msgstr "ਫੋਲਡਰ ਭੇਜੋ..."
 
 #: widgets/standardactionmanager.cpp:143
-#, fuzzy
-#| msgid "&Cut Item"
-#| msgid_plural "&Cut %1 Items"
 msgid "&Cut Item"
 msgstr "ਆਈਟਮ ਕੱਟੋ(&C)"
 
@@ -1938,11 +1877,8 @@ msgid "Cut"
 msgstr ""
 
 #: widgets/standardactionmanager.cpp:144
-#, fuzzy
-#| msgid "&Cut Folder"
-#| msgid_plural "&Cut %1 Folders"
 msgid "&Cut Folder"
-msgstr "ਫੋਲਡਰ ਕੱਟੋ(&C)"
+msgstr "ਫੋਲਡਰ ਨੂੰ ਕੱਟੋ(&C)"
 
 #: widgets/standardactionmanager.cpp:145
 #, fuzzy
@@ -2511,7 +2447,7 @@ msgstr ""
 #: widgets/tagmanagementdialog.ui:14
 #, kde-format
 msgid "Manage Tags"
-msgstr ""
+msgstr "ਟੈਗਾਂ ਦਾ ਇੰਤਜ਼ਾਮ"
 
 #: widgets/tagselectioncombobox.cpp:126
 #, fuzzy, kde-format
@@ -2525,12 +2461,12 @@ msgstr "ਆਈਟਮ ਹਟਾਓ(&D)"
 #: widgets/tagselectiondialog.ui:14
 #, kde-format
 msgid "Select Tags"
-msgstr ""
+msgstr "ਟੈਗ ਚੁਣੋ"
 
 #: widgets/tagwidget.cpp:45
 #, kde-format
 msgid "Clear"
-msgstr ""
+msgstr "ਸਾਫ਼ ਕਰੋ"
 
 #. i18n: ectx: property (placeholderText), widget (Akonadi::TagView, tagView)
 #: widgets/tagwidget.ui:32
@@ -2542,7 +2478,7 @@ msgstr ""
 #: widgets/tagwidget.ui:39
 #, kde-format
 msgid "..."
-msgstr ""
+msgstr "..."
 
 #: xml/akonadi2xml.cpp:25
 #, kde-format
@@ -2562,7 +2498,7 @@ msgstr ""
 #: xml/xmldocument.cpp:83
 #, kde-format
 msgid "No data loaded."
-msgstr ""
+msgstr "ਕੋਈ ਡਾਟਾ ਲੋਡ ਨਹੀਂ ਕੀਤਾ।"
 
 #: xml/xmldocument.cpp:121
 #, fuzzy, kde-format
