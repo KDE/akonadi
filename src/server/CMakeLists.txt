@@ -224,16 +224,16 @@ set(libakonadiserver_SRCS
 set(akonadiserver_SRCS
     main.cpp
 )
-ecm_qt_declare_logging_category(akonadiserver_SRCS HEADER akonadiserver_debug.h IDENTIFIER AKONADISERVER_LOG CATEGORY_NAME org.kde.pim.akonadiserver
+ecm_qt_declare_logging_category(libakonadiserver_SRCS HEADER akonadiserver_debug.h IDENTIFIER AKONADISERVER_LOG CATEGORY_NAME org.kde.pim.akonadiserver
         DESCRIPTION "akonadi (Akonadi Server)"
         OLD_CATEGORY_NAMES log_akonadiserver
         EXPORT AKONADI
-    )
+)
 
-ecm_qt_declare_logging_category(akonadiserver_SRCS HEADER akonadiserver_search_debug.h IDENTIFIER AKONADISERVER_SEARCH_LOG CATEGORY_NAME org.kde.pim.akonadiserver.search
+ecm_qt_declare_logging_category(libakonadiserver_SRCS HEADER akonadiserver_search_debug.h IDENTIFIER AKONADISERVER_SEARCH_LOG CATEGORY_NAME org.kde.pim.akonadiserver.search
         DESCRIPTION "akonadi (Akonadi Server Search Functionality)"
         EXPORT AKONADI
-    )
+)
 
 qt_generate_dbus_interface(debuginterface.h org.freedesktop.Akonadi.DebugInterface.xml)
 
@@ -307,3 +307,7 @@ install(FILES
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.DebugInterface.xml
         DESTINATION ${AKONADI_DBUS_INTERFACES_INSTALL_DIR}
 )
+
+#######################################################
+
+add_subdirectory(dbmigrator)
