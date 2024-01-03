@@ -1,4 +1,4 @@
-# Translation of libakonadi5 to Northern Sami
+# Translation of libakonadi6 to Northern Sami
 #
 msgid ""
 msgstr ""

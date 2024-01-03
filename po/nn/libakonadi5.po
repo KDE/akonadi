@@ -1,4 +1,4 @@
-# Translation of libakonadi5 to Norwegian Nynorsk
+# Translation of libakonadi6 to Norwegian Nynorsk
 #
 # Karl Ove Hufthammer <karl@huftis.org>, 2007, 2008, 2010, 2016, 2018, 2021.
 # Eirik U. Birkeland <eirbir@gmail.com>, 2008, 2009, 2010.
