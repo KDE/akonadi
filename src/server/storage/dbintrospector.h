@@ -80,6 +80,16 @@ public:
      */
     virtual QList<ForeignKey> foreignKeyConstraints(const QString &tableName);
 
+    /**
+     * Returns query to retrieve the next autoincrement value for @p tableName.@p columnName.
+     */
+    virtual QString getAutoIncrementValueQuery(const QString &tableName, const QString &columnName) = 0;
+
+    /**
+     * Returns query to update the next autoincrement value for @p tableName.@p columnName to value @p value.
+     */
+    virtual QString updateAutoIncrementValueQuery(const QString &tableName, const QString &columnName, qint64 value) = 0;
+
 protected:
     /**
      * Creates a new database introspector, call from subclass.

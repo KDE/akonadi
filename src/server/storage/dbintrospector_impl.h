@@ -19,6 +19,8 @@ public:
     explicit DbIntrospectorMySql(const QSqlDatabase &database);
     QList<ForeignKey> foreignKeyConstraints(const QString &tableName) override;
     QString hasIndexQuery(const QString &tableName, const QString &indexName) override;
+    QString getAutoIncrementValueQuery(const QString &tableName, const QString &idColumn) override;
+    QString updateAutoIncrementValueQuery(const QString &tableName, const QString &idColumn, qint64 value) override;
 };
 
 class DbIntrospectorSqlite : public DbIntrospector
@@ -27,6 +29,8 @@ public:
     explicit DbIntrospectorSqlite(const QSqlDatabase &database);
     QList<ForeignKey> foreignKeyConstraints(const QString &tableName) override;
     QString hasIndexQuery(const QString &tableName, const QString &indexName) override;
+    QString getAutoIncrementValueQuery(const QString &tableName, const QString &idColumn) override;
+    QString updateAutoIncrementValueQuery(const QString &tableName, const QString &idColumn, qint64 value) override;
 };
 
 class DbIntrospectorPostgreSql : public DbIntrospector
@@ -35,6 +39,8 @@ public:
     explicit DbIntrospectorPostgreSql(const QSqlDatabase &database);
     QList<ForeignKey> foreignKeyConstraints(const QString &tableName) override;
     QString hasIndexQuery(const QString &tableName, const QString &indexName) override;
+    QString getAutoIncrementValueQuery(const QString &tableName, const QString &idColumn) override;
+    QString updateAutoIncrementValueQuery(const QString &tableName, const QString &idColumn, qint64 value) override;
 };
 
 } // namespace Server

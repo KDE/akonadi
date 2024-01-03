@@ -71,6 +71,22 @@ public:
         return m_foreignKeys;
     }
 
+    QString getAutoIncrementValueQuery(const QString &tableName, const QString &columnName) override
+    {
+        Q_UNUSED(tableName);
+        Q_UNUSED(columnName);
+        return {};
+    }
+
+    QString updateAutoIncrementValueQuery(const QString &tableName, const QString &columnName, qint64 value) override
+    {
+        Q_UNUSED(tableName);
+        Q_UNUSED(columnName);
+        Q_UNUSED(value);
+
+        return {};
+    }
+
     QList<ForeignKey> m_foreignKeys;
     bool m_hasTable;
     bool m_hasIndex;

@@ -64,6 +64,16 @@ QList<DbIntrospector::ForeignKey> DbIntrospectorMySql::foreignKeyConstraints(con
     return result;
 }
 
+QString DbIntrospectorMySql::getAutoIncrementValueQuery(const QString &tableName, const QString &)
+{
+    return QStringLiteral("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_NAME = '%1'").arg(tableName);
+}
+
+QString DbIntrospectorMySql::updateAutoIncrementValueQuery(const QString &tableName, const QString &, qint64 value)
+{
+    return QStringLiteral("ALTER TABLE %1 AUTO_INCREMENT = %2").arg(tableName).arg(value);
+}
+
 // END MySql
 
 // BEGIN Sqlite
@@ -98,6 +108,16 @@ QList<DbIntrospector::ForeignKey> DbIntrospectorSqlite::foreignKeyConstraints(co
 QString DbIntrospectorSqlite::hasIndexQuery(const QString &tableName, const QString &indexName)
 {
     return QStringLiteral("SELECT * FROM sqlite_master WHERE type='index' AND tbl_name='%1' AND name='%2';").arg(tableName, indexName);
+}
+
+QString DbIntrospectorSqlite::getAutoIncrementValueQuery(const QString &tableName, const QString &)
+{
+    return QStringLiteral("SELECT seq FROM sqlite_sequence WHERE name = '%1'").arg(tableName);
+}
+
+QString DbIntrospectorSqlite::updateAutoIncrementValueQuery(const QString &tableName, const QString &, qint64 value)
+{
+    return QStringLiteral("UPDATE sqlite_sequence SET seq = %1 WHERE name = '%2'").arg(value).arg(tableName);
 }
 
 // END Sqlite
@@ -196,6 +216,17 @@ QString DbIntrospectorPostgreSql::hasIndexQuery(const QString &tableName, const 
     query += QStringLiteral(" UNION SELECT conname FROM pg_catalog.pg_constraint ");
     query += QStringLiteral(" WHERE conname ilike '%1'").arg(indexName);
     return query;
+}
+
+QString DbIntrospectorPostgreSql::getAutoIncrementValueQuery(const QString &tableName, const QString &idColumn)
+{
+    return QStringLiteral("SELECT nextval(pg_get_serial_sequence('%1', '%2'))").arg(tableName, idColumn);
+}
+
+QString DbIntrospectorPostgreSql::updateAutoIncrementValueQuery(const QString &tableName, const QString &idColumn, qint64 value)
+{
+    // Can't use ALTER SEQUENCE, because it doesn't support expressions (like pg_get_serial_sequence())
+    return QStringLiteral("SELECT setval(pg_get_serial_sequence('%1', '%2'), %3) FROM %1").arg(tableName, idColumn).arg(value);
 }
 
 // END PostgreSql
