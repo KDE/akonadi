@@ -36,13 +36,23 @@ public:
     QString databaseName() const override;
 
     /**
+     * Returns path to the database file or directory.
+     */
+    QString databasePath() const override;
+
+    /**
+     * Sets path to the database file or directory.
+     */
+    void setDatabasePath(const QString &path, QSettings &settings) override;
+
+    /**
      * This method is called whenever the Akonadi server is started
      * and before the initial database connection is set up.
      *
      * At this point the default settings should be determined, merged
      * with the given @p settings and written back if @p storeSettings is true.
      */
-    bool init(QSettings &settings, bool storeSettings = true) override;
+    bool init(QSettings &settings, bool storeSettings = true, const QString &dbPathOverride = {}) override;
 
     /**
      * This method checks if the requirements for this database connection are met

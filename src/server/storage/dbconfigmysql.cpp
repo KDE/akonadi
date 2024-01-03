@@ -47,6 +47,20 @@ QString DbConfigMysql::databaseName() const
     return mDatabaseName;
 }
 
+QString DbConfigMysql::databasePath() const
+{
+    return mDataDir;
+}
+
+void DbConfigMysql::setDatabasePath(const QString &path, QSettings &settings)
+{
+    mDataDir = path;
+    settings.beginGroup(driverName());
+    settings.setValue(QStringLiteral("DataDir"), mDataDir);
+    settings.endGroup();
+    settings.sync();
+}
+
 static QString findExecutable(const QString &bin)
 {
     static const QStringList mysqldSearchPath = {
@@ -69,7 +83,7 @@ static QString findExecutable(const QString &bin)
     return path;
 }
 
-bool DbConfigMysql::init(QSettings &settings, bool storeSettings)
+bool DbConfigMysql::init(QSettings &settings, bool storeSettings, const QString &dbPathOverride)
 {
     // determine default settings depending on the driver
     QString defaultHostName;
@@ -101,6 +115,8 @@ bool DbConfigMysql::init(QSettings &settings, bool storeSettings)
 #endif
     }
 
+    const QString defaultDataDir = dbPathOverride.isEmpty() ? StandardDirs::saveDir("data", QStringLiteral("db_data")) : dbPathOverride;
+
     mMysqlInstallDbPath = findExecutable(QStringLiteral("mysql_install_db"));
     qCDebug(AKONADISERVER_LOG) << "Found mysql_install_db: " << mMysqlInstallDbPath;
 
@@ -124,6 +140,7 @@ bool DbConfigMysql::init(QSettings &settings, bool storeSettings)
     mUserName = settings.value(QStringLiteral("User")).toString();
     mPassword = settings.value(QStringLiteral("Password")).toString();
     mConnectionOptions = settings.value(QStringLiteral("Options"), defaultOptions).toString();
+    mDataDir = settings.value(QStringLiteral("DataDir"), defaultDataDir).toString();
     mMysqldPath = settings.value(QStringLiteral("ServerPath"), defaultServerPath).toString();
     mCleanServerShutdownCommand = settings.value(QStringLiteral("CleanServerShutdownCommand"), defaultCleanShutdownCommand).toString();
     settings.endGroup();
@@ -150,6 +167,7 @@ bool DbConfigMysql::init(QSettings &settings, bool storeSettings)
             settings.setValue(QStringLiteral("ServerPath"), mMysqldPath);
         }
         settings.setValue(QStringLiteral("StartServer"), mInternalServer);
+        settings.setValue(QStringLiteral("DataDir"), mDataDir);
         settings.endGroup();
         settings.sync();
     }
@@ -212,7 +230,6 @@ bool DbConfigMysql::startInternalServer()
     bool success = true;
 
     const QString akDir = StandardDirs::saveDir("data");
-    const QString dataDir = StandardDirs::saveDir("data", QStringLiteral("db_data"));
 #ifndef Q_OS_WIN
     const QString socketDirectory = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")), s_mysqlSocketFileName.length());
     const QString socketFile = QStringLiteral("%1/%2").arg(socketDirectory, s_mysqlSocketFileName);
@@ -233,10 +250,10 @@ bool DbConfigMysql::startInternalServer()
     // It is recommended to disable CoW feature when running on Btrfs to improve
     // database performance. Disabling CoW only has effect on empty directory (since
     // it affects only new files), so we check whether MySQL has not yet been initialized.
-    QDir dir(dataDir + QDir::separator() + QLatin1String("mysql"));
+    QDir dir(mDataDir + QDir::separator() + QLatin1String("mysql"));
     if (!dir.exists()) {
-        if (Utils::getDirectoryFileSystem(dataDir) == QLatin1String("btrfs")) {
-            Utils::disableCoW(dataDir);
+        if (Utils::getDirectoryFileSystem(mDataDir) == QLatin1String("btrfs")) {
+            Utils::disableCoW(mDataDir);
         }
     }
 #endif
@@ -293,7 +310,7 @@ bool DbConfigMysql::startInternalServer()
         actualFile.setPermissions(allowedPerms);
     }
 
-    if (dataDir.isEmpty()) {
+    if (mDataDir.isEmpty()) {
         qCCritical(AKONADISERVER_LOG) << "Akonadi server was not able to create database data directory";
         return false;
     }
@@ -355,7 +372,7 @@ bool DbConfigMysql::startInternalServer()
     // synthesize the mysqld command
     QStringList arguments;
     arguments << QStringLiteral("--defaults-file=%1/mysql.conf").arg(akDir);
-    arguments << QStringLiteral("--datadir=%1/").arg(dataDir);
+    arguments << QStringLiteral("--datadir=%1/").arg(mDataDir);
 #ifndef Q_OS_WIN
     arguments << QStringLiteral("--socket=%1").arg(socketFile);
     arguments << QStringLiteral("--pid-file=%1").arg(pidFileName);
@@ -368,10 +385,10 @@ bool DbConfigMysql::startInternalServer()
     // otherwise we reconnect to it
     if (!QFile::exists(socketFile)) {
         // move mysql error log file out of the way
-        const QFileInfo errorLog(dataDir + QDir::separator() + QLatin1String("mysql.err"));
+        const QFileInfo errorLog(mDataDir + QDir::separator() + QLatin1String("mysql.err"));
         if (errorLog.exists()) {
             QFile logFile(errorLog.absoluteFilePath());
-            QFile oldLogFile(dataDir + QDir::separator() + QLatin1String("mysql.err.old"));
+            QFile oldLogFile(mDataDir + QDir::separator() + QLatin1String("mysql.err.old"));
             if (logFile.open(QFile::ReadOnly) && oldLogFile.open(QFile::WriteOnly)) {
                 oldLogFile.write(logFile.readAll());
                 oldLogFile.close();
@@ -384,13 +401,13 @@ bool DbConfigMysql::startInternalServer()
 
         // first run, some MySQL versions need a mysql_install_db run for that
         const QString confFile = StandardDirs::locateResourceFile("config", QStringLiteral("mysql-global.conf"));
-        if (QDir(dataDir).entryList(QDir::NoDotAndDotDot | QDir::AllEntries).isEmpty()) {
+        if (QDir(mDataDir).entryList(QDir::NoDotAndDotDot | QDir::AllEntries).isEmpty()) {
             if (isMariaDB) {
-                initializeMariaDBDatabase(confFile, dataDir);
+                initializeMariaDBDatabase(confFile, mDataDir);
             } else if (localVersion >= MYSQL_VERSION_CHECK(5, 7, 6)) {
-                initializeMySQL5_7_6Database(confFile, dataDir);
+                initializeMySQL5_7_6Database(confFile, mDataDir);
             } else {
-                initializeMySQLDatabase(confFile, dataDir);
+                initializeMySQLDatabase(confFile, mDataDir);
             }
         }
 

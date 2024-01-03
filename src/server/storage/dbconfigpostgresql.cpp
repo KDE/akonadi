@@ -56,6 +56,20 @@ QString DbConfigPostgresql::databaseName() const
     return mDatabaseName;
 }
 
+QString DbConfigPostgresql::databasePath() const
+{
+    return mPgData;
+}
+
+void DbConfigPostgresql::setDatabasePath(const QString &path, QSettings &settings)
+{
+    mPgData = path;
+    settings.beginGroup(driverName());
+    settings.setValue(QStringLiteral("PgData"), mPgData);
+    settings.endGroup();
+    settings.sync();
+}
+
 namespace
 {
 struct VersionCompare {
@@ -128,7 +142,7 @@ QStringList DbConfigPostgresql::postgresSearchPaths(const QString &versionedPath
     return paths;
 }
 
-bool DbConfigPostgresql::init(QSettings &settings, bool storeSettings)
+bool DbConfigPostgresql::init(QSettings &settings, bool storeSettings, const QString &dbPathOverride)
 {
     // determine default settings depending on the driver
     QString defaultHostName;
@@ -152,7 +166,7 @@ bool DbConfigPostgresql::init(QSettings &settings, bool storeSettings)
         defaultInitDbPath = QStandardPaths::findExecutable(QStringLiteral("initdb"), paths);
         defaultHostName = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")));
         defaultPgUpgradePath = QStandardPaths::findExecutable(QStringLiteral("pg_upgrade"), paths);
-        defaultPgData = StandardDirs::saveDir("data", QStringLiteral("db_data"));
+        defaultPgData = dbPathOverride.isEmpty() ? StandardDirs::saveDir("data", QStringLiteral("db_data")) : dbPathOverride;
     }
 
     // read settings for current driver
@@ -203,6 +217,7 @@ bool DbConfigPostgresql::init(QSettings &settings, bool storeSettings)
         settings.setValue(QStringLiteral("ServerPath"), mServerPath);
         settings.setValue(QStringLiteral("InitDbPath"), mInitDbPath);
         settings.setValue(QStringLiteral("StartServer"), mInternalServer);
+        settings.setValue(QStringLiteral("PgData"), mPgData);
         settings.endGroup();
         settings.sync();
     }

@@ -18,9 +18,9 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-static QString dataDir()
+static QString dataDir(const QString &dbPathOverride = {})
 {
-    QString akonadiHomeDir = StandardDirs::saveDir("data");
+    QString akonadiHomeDir = dbPathOverride.isEmpty() ? StandardDirs::saveDir("data") : dbPathOverride;
     if (!QDir(akonadiHomeDir).exists()) {
         if (!QDir().mkpath(akonadiHomeDir)) {
             qCCritical(AKONADISERVER_LOG) << "Unable to create" << akonadiHomeDir << "during database initialization";
@@ -33,9 +33,9 @@ static QString dataDir()
     return akonadiHomeDir;
 }
 
-static QString sqliteDataFile()
+static QString sqliteDataFile(const QString &dbPathOverride = {})
 {
-    const QString dir = dataDir();
+    const QString dir = dataDir(dbPathOverride);
     if (dir.isEmpty()) {
         return QString();
     }
@@ -67,10 +67,23 @@ QString DbConfigSqlite::databaseName() const
     return mDatabaseName;
 }
 
-bool DbConfigSqlite::init(QSettings &settings, bool storeSettings)
+QString DbConfigSqlite::databasePath() const
+{
+    return mDatabaseName;
+}
+
+void DbConfigSqlite::setDatabasePath(const QString &path, QSettings &settings)
+{
+    mDatabaseName = path;
+    settings.beginGroup(driverName());
+    settings.setValue(QStringLiteral("Name"), mDatabaseName);
+    settings.endGroup();
+}
+
+bool DbConfigSqlite::init(QSettings &settings, bool storeSettings, const QString &dbPathOverride)
 {
     // determine default settings depending on the driver
-    const QString defaultDbName = sqliteDataFile();
+    const QString defaultDbName = sqliteDataFile(dbPathOverride);
     if (defaultDbName.isEmpty()) {
         return false;
     }
