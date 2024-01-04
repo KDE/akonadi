@@ -270,7 +270,7 @@ private:
         QStringList rids;
         rids.reserve(objects.size());
         std::transform(objects.cbegin(), objects.cend(), std::back_inserter(rids), [=](const T &obj) -> QString {
-            if constexpr (std::is_same_v<QString, std::remove_cvref_t<std::result_of_t<RIDFunc(const T &)>>>) {
+            if constexpr (std::is_same_v<QString, std::remove_cvref_t<std::invoke_result_t<RIDFunc, const T &>>>) {
                 return ridFunc(obj);
             } else {
                 return QString::fromLatin1(ridFunc(obj));
