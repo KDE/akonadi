@@ -232,29 +232,25 @@ public:
 
 private:
     template<typename T, template<typename> class Container>
-    inline static typename std::enable_if<!std::is_same<T, Akonadi::Collection>::value, bool>::type entitySetHasGID(const Container<T> &objects)
+    inline static bool entitySetHasGID(const Container<T> &objects)
     {
-        return entitySetHasRemoteIdentifier(objects, std::mem_fn(&T::gid));
+        if constexpr (std::is_same_v<T, Akonadi::Collection>) {
+            Q_UNUSED(objects);
+            return false;
+        } else {
+            return entitySetHasRemoteIdentifier(objects, std::mem_fn(&T::gid));
+        }
     }
 
     template<typename T, template<typename> class Container>
-    inline static typename std::enable_if<std::is_same<T, Akonadi::Collection>::value, bool>::type entitySetHasGID(const Container<T> & /*objects*/,
-                                                                                                                   int * /*dummy*/ = nullptr)
+    inline static Scope entitySetToGID(const Container<T> &objects)
     {
-        return false;
-    }
-
-    template<typename T, template<typename> class Container>
-    inline static typename std::enable_if<!std::is_same<T, Akonadi::Collection>::value, Scope>::type entitySetToGID(const Container<T> &objects)
-    {
-        return entitySetToRemoteIdentifier(Scope::Gid, objects, std::mem_fn(&T::gid));
-    }
-
-    template<typename T, template<typename> class Container>
-    inline static typename std::enable_if<std::is_same<T, Akonadi::Collection>::value, Scope>::type entitySetToGID(const Container<T> & /*objects*/,
-                                                                                                                   int * /*dummy*/ = nullptr)
-    {
-        return Scope();
+        if constexpr (std::is_same_v<T, Akonadi::Collection>) {
+            Q_UNUSED(objects);
+            return Scope();
+        } else {
+            return entitySetToRemoteIdentifier(Scope::Gid, objects, std::mem_fn(&T::gid));
+        }
     }
 
     template<typename T, template<typename> class Container, typename RIDFunc>
@@ -269,45 +265,34 @@ private:
     }
 
     template<typename T, template<typename> class Container, typename RIDFunc>
-    inline static typename std::enable_if<std::is_same<QString, typename RIDFunc::result_type>::value, Scope>::type
-    entitySetToRemoteIdentifier(Scope::SelectionScope scope, const Container<T> &objects, const RIDFunc &ridFunc)
+    inline static Scope entitySetToRemoteIdentifier(Scope::SelectionScope scope, const Container<T> &objects, RIDFunc &&ridFunc)
     {
         QStringList rids;
         rids.reserve(objects.size());
         std::transform(objects.cbegin(), objects.cend(), std::back_inserter(rids), [=](const T &obj) -> QString {
-            return ridFunc(obj);
-        });
-        return Scope(scope, rids);
-    }
-
-    template<typename T, template<typename> class Container, typename RIDFunc>
-    inline static typename std::enable_if<std::is_same<QByteArray, typename RIDFunc::result_type>::value, Scope>::type
-    entitySetToRemoteIdentifier(Scope::SelectionScope scope, const Container<T> &objects, const RIDFunc &ridFunc, int * /*dummy*/ = nullptr)
-    {
-        QStringList rids;
-        rids.reserve(objects.size());
-        std::transform(objects.cbegin(), objects.cend(), std::back_inserter(rids), [=](const T &obj) -> QString {
-            return QString::fromLatin1(ridFunc(obj));
+            if constexpr (std::is_same_v<QString, std::remove_cvref_t<std::result_of_t<RIDFunc(const T &)>>>) {
+                return ridFunc(obj);
+            } else {
+                return QString::fromLatin1(ridFunc(obj));
+            }
         });
         return Scope(scope, rids);
     }
 
     template<typename T, template<typename> class Container>
-    inline static typename std::enable_if<!std::is_same<T, Tag>::value, bool>::type entitySetHasHRID(const Container<T> &objects)
+    inline static bool entitySetHasHRID(const Container<T> &objects)
     {
-        return objects.size() == 1
-            && std::find_if(objects.constBegin(),
-                            objects.constEnd(),
-                            [](const T &obj) -> bool {
-                                return !CollectionUtils::hasValidHierarchicalRID(obj);
-                            })
-            == objects.constEnd(); // ### HRID sets are not yet specified
-    }
-
-    template<typename T, template<typename> class Container>
-    inline static typename std::enable_if<std::is_same<T, Tag>::value, bool>::type entitySetHasHRID(const Container<T> & /*objects*/, int * /*dummy*/ = nullptr)
-    {
-        return false;
+        if constexpr (std::is_same_v<T, Tag>) {
+            return false;
+        } else {
+            return objects.size() == 1
+                && std::find_if(objects.constBegin(),
+                                objects.constEnd(),
+                                [](const T &obj) -> bool {
+                                    return !CollectionUtils::hasValidHierarchicalRID(obj);
+                                })
+                == objects.constEnd(); // ### HRID sets are not yet specified
+        }
     }
 };
 
