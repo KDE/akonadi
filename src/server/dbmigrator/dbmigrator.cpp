@@ -5,11 +5,13 @@
 */
 
 #include "dbmigrator.h"
+#include "ControlManager.h"
 #include "akonadidbmigrator_debug.h"
 #include "akonadifull-version.h"
 #include "akonadischema.h"
 #include "akranges.h"
 #include "entities.h"
+#include "private/dbus_p.h"
 #include "private/standarddirs_p.h"
 #include "storage/countquerybuilder.h"
 #include "storage/datastore.h"
@@ -26,7 +28,11 @@
 #include <QCommandLineOption>
 #include <QCommandLineParser>
 #include <QCoreApplication>
+#include <QDBusConnection>
+#include <QDBusError>
+#include <QDBusInterface>
 #include <QDir>
+#include <QElapsedTimer>
 #include <QFile>
 #include <QFileInfo>
 #include <QScopeGuard>
@@ -39,12 +45,14 @@
 
 #include <KLocalizedString>
 
+#include <chrono>
 #include <memory>
 #include <stop_token>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 using namespace AkRanges;
+using namespace std::chrono_literals;
 
 Q_DECLARE_METATYPE(UIDelegate::Result);
 
@@ -347,6 +355,61 @@ std::error_code restoreDatabaseFromBackup(const QString &backupPath, const QStri
     return ec;
 }
 
+bool akonadiIsRunning()
+{
+    auto sessionIface = QDBusConnection::sessionBus().interface();
+    return sessionIface->isServiceRegistered(DBus::serviceName(DBus::ControlLock)) || sessionIface->isServiceRegistered(DBus::serviceName(DBus::Server));
+}
+
+bool stopAkonadi()
+{
+    static constexpr auto shutdownTimeout = 5s;
+
+    org::freedesktop::Akonadi::ControlManager manager(DBus::serviceName(DBus::Control), QStringLiteral("/ControlManager"), QDBusConnection::sessionBus());
+    if (!manager.isValid()) {
+        return false;
+    }
+
+    manager.shutdown();
+
+    QElapsedTimer timer;
+    timer.start();
+    while (akonadiIsRunning() && timer.durationElapsed() <= shutdownTimeout) {
+        QThread::msleep(100);
+    }
+
+    return timer.durationElapsed() <= shutdownTimeout && !akonadiIsRunning();
+}
+
+bool startAkonadi()
+{
+    QDBusConnection::sessionBus().interface()->startService(DBus::serviceName(DBus::Control));
+    return true;
+}
+
+bool acquireAkonadiLock()
+{
+    auto connIface = QDBusConnection::sessionBus().interface();
+    auto reply = connIface->registerService(DBus::serviceName(DBus::ControlLock));
+    if (!reply.isValid() || reply != QDBusConnectionInterface::ServiceRegistered) {
+        return false;
+    }
+
+    reply = connIface->registerService(DBus::serviceName(DBus::UpgradeIndicator));
+    if (!reply.isValid() || reply != QDBusConnectionInterface::ServiceRegistered) {
+        return false;
+    }
+
+    return true;
+}
+
+bool releaseAkonadiLock()
+{
+    QDBusConnection::sessionBus().interface()->unregisterService(DBus::serviceName(DBus::ControlLock));
+    QDBusConnection::sessionBus().interface()->unregisterService(DBus::serviceName(DBus::UpgradeIndicator));
+    return true;
+}
+
 } // namespace
 
 DbMigrator::DbMigrator(const QString &targetEngine, UIDelegate *delegate, QObject *parent)
@@ -367,7 +430,31 @@ DbMigrator::~DbMigrator()
 void DbMigrator::startMigration()
 {
     m_thread.reset(QThread::create([this]() {
+        bool restartAkonadi = false;
+        if (akonadiIsRunning()) {
+            emitInfo(i18nc("@info:status", "Stopping Akonadi service..."));
+            restartAkonadi = true;
+            if (!stopAkonadi()) {
+                emitError(i18nc("@info:status", "Error: timeout while waiting for Akonadi to stop."));
+                emitCompletion(false);
+                return;
+            }
+        }
+
+        if (!acquireAkonadiLock()) {
+            emitError(i18nc("@info:status", "Error: couldn't acquire DBus lock for Akonadi."));
+            emitCompletion(false);
+            return;
+        }
+
         const bool result = runMigrationThread();
+
+        releaseAkonadiLock();
+        if (restartAkonadi) {
+            emitInfo(i18nc("@info:status", "Starting Akonadi service..."));
+            startAkonadi();
+        }
+
         emitCompletion(result);
     }));
     m_thread->start();
@@ -384,7 +471,7 @@ bool DbMigrator::runMigrationThread()
 
     const auto driver = driverFromEngineName(m_targetEngine);
     if (driver.isEmpty()) {
-        emitError(i18nc("@info:shell", "Invalid database engine \"%1\" - valid values are \"sqlite\", \"mysql\" and \"postgres\".", m_targetEngine));
+        emitError(i18nc("@info:status", "Invalid database engine \"%1\" - valid values are \"sqlite\", \"mysql\" and \"postgres\".", m_targetEngine));
         return false;
     }
 
