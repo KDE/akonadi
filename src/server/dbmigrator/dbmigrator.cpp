@@ -47,7 +47,6 @@
 
 #include <chrono>
 #include <memory>
-#include <stop_token>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -460,11 +459,6 @@ void DbMigrator::startMigration()
     m_thread->start();
 }
 
-void DbMigrator::stopMigration()
-{
-    m_stop.request_stop();
-}
-
 bool DbMigrator::runMigrationThread()
 {
     Rollback rollback;
@@ -527,15 +521,13 @@ bool DbMigrator::runMigrationThread()
         return false;
     }
 
-    if (!migrateTables(sourceStore.get(), destStore.get(), destConfig.get())) {
-        m_stop.request_stop();
-    }
+    const bool migrationSuccess = migrateTables(sourceStore.get(), destStore.get(), destConfig.get());
 
     // Stop database servers and close connections. Make sure we always reach here, even if the migration failed
     cleanupDatabase(sourceStore.get(), sourceConfig.get());
     cleanupDatabase(destStore.get(), destConfig.get());
 
-    if (m_stop.stop_requested()) {
+    if (!migrationSuccess) {
         return false;
     }
 
@@ -590,27 +582,23 @@ bool DbMigrator::migrateTables(DataStore *sourceStore, DataStore *destStore, DbC
     int doneTables = 0;
 
     // Copy regular tables
-    if (!m_stop.stop_requested()) {
-        for (const auto &table : schema.tables()) {
-            ++doneTables;
-            emitProgress(table.name, doneTables, totalTables);
-            if (!copyTable(sourceStore, destStore, table)) {
-                emitError(i18nc("@info:shell", "Error has occurred while migrating table %1", table.name));
-                return false;
-            }
+    for (const auto &table : schema.tables()) {
+        ++doneTables;
+        emitProgress(table.name, doneTables, totalTables);
+        if (!copyTable(sourceStore, destStore, table)) {
+            emitError(i18nc("@info:shell", "Error has occurred while migrating table %1", table.name));
+            return false;
         }
     }
 
     // Copy relational tables
-    if (!m_stop.stop_requested()) {
-        for (const auto &relation : schema.relations()) {
-            const RelationTableDescription table{relation};
-            ++doneTables;
-            emitProgress(table.name, doneTables, totalTables);
-            if (!copyTable(sourceStore, destStore, table)) {
-                emitError(i18nc("@info:shell", "Error has occurred while migrating table %1", table.name));
-                return false;
-            }
+    for (const auto &relation : schema.relations()) {
+        const RelationTableDescription table{relation};
+        ++doneTables;
+        emitProgress(table.name, doneTables, totalTables);
+        if (!copyTable(sourceStore, destStore, table)) {
+            emitError(i18nc("@info:shell", "Error has occurred while migrating table %1", table.name));
+            return false;
         }
     }
 
@@ -732,8 +720,6 @@ bool DbMigrator::moveDatabaseToMainLocation(DbConfig *destConfig, const QString 
 
 bool DbMigrator::copyTable(DataStore *sourceStore, DataStore *destStore, const TableDescription &table)
 {
-    auto stop = m_stop.get_token();
-
     const auto columns = table.columns | Views::transform([](const auto &tbl) {
                              return tbl.name;
                          })
@@ -796,10 +782,6 @@ bool DbMigrator::copyTable(DataStore *sourceStore, DataStore *destStore, const T
             }
             trxSize = 0;
             transaction.begin();
-        }
-
-        if (stop.stop_requested()) {
-            return false;
         }
 
         emitTableProgress(table.name, ++processed, totalRows);

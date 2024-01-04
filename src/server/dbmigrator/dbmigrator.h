@@ -10,7 +10,6 @@
 
 #include <functional>
 #include <memory>
-#include <stop_token>
 #include <system_error>
 #include <variant>
 
@@ -45,7 +44,6 @@ public:
     ~DbMigrator() override;
 
     void startMigration();
-    void stopMigration();
 
 Q_SIGNALS:
     void info(const QString &message);
@@ -74,7 +72,6 @@ private:
 
     QString m_targetEngine;
     std::unique_ptr<QThread> m_thread;
-    std::stop_source m_stop;
     UIDelegate *m_uiDelegate = nullptr;
 };
 
