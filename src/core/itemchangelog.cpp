@@ -23,22 +23,42 @@ ItemChangeLog::ItemChangeLog()
 {
 }
 
-Item::Flags &ItemChangeLog::addedFlags(const ItemPrivate *priv)
+Item::Flags &ItemChangeLog::addedFlags(ItemPrivate *priv)
+{
+    return m_addedFlags[priv];
+}
+
+Item::Flags ItemChangeLog::addedFlags(const ItemPrivate *priv) const
 {
     return m_addedFlags[const_cast<ItemPrivate *>(priv)];
 }
 
-Item::Flags &ItemChangeLog::deletedFlags(const ItemPrivate *priv)
+Item::Flags &ItemChangeLog::deletedFlags(ItemPrivate *priv)
+{
+    return m_deletedFlags[priv];
+}
+
+Item::Flags ItemChangeLog::deletedFlags(const ItemPrivate *priv) const
 {
     return m_deletedFlags[const_cast<ItemPrivate *>(priv)];
 }
 
-Tag::List &ItemChangeLog::addedTags(const ItemPrivate *priv)
+Tag::List &ItemChangeLog::addedTags(ItemPrivate *priv)
+{
+    return m_addedTags[priv];
+}
+
+Tag::List ItemChangeLog::addedTags(const ItemPrivate *priv) const
 {
     return m_addedTags[const_cast<ItemPrivate *>(priv)];
 }
 
-Tag::List &ItemChangeLog::deletedTags(const ItemPrivate *priv)
+Tag::List &ItemChangeLog::deletedTags(ItemPrivate *priv)
+{
+    return m_deletedTags[priv];
+}
+
+Tag::List ItemChangeLog::deletedTags(const ItemPrivate *priv) const
 {
     return m_deletedTags[const_cast<ItemPrivate *>(priv)];
 }
@@ -48,7 +68,7 @@ AttributeStorage &ItemChangeLog::attributeStorage(ItemPrivate *priv)
     return m_attributeStorage[priv];
 }
 
-const AttributeStorage &ItemChangeLog::attributeStorage(const ItemPrivate *priv)
+AttributeStorage ItemChangeLog::attributeStorage(const ItemPrivate *priv) const
 {
     return m_attributeStorage[const_cast<ItemPrivate *>(priv)];
 }
