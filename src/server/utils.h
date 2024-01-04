@@ -52,7 +52,7 @@ static inline QByteArray variantToByteArray(const QVariant &variant)
     }
 }
 
-static inline QDateTime variantToDateTime(const QVariant &variant)
+static inline QDateTime variantToDateTime(const QVariant &variant, DataStore *dataStore = DataStore::self())
 {
     if (variant.canConvert<QDateTime>()) {
         // MySQL and SQLite backends read the datetime from the database and
@@ -61,7 +61,7 @@ static inline QDateTime variantToDateTime(const QVariant &variant)
         // PostgreSQL on the other hand reads the datetime and assumes it's
         // UTC(?) and converts it to local time via QDateTime::toLocalTime(),
         // so we need to convert it back to UTC manually.
-        switch (DbType::type(DataStore::self()->database())) {
+        switch (DbType::type(dataStore->database())) {
         case DbType::MySQL:
         case DbType::Sqlite: {
             QDateTime dt = variant.toDateTime();
