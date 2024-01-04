@@ -27,6 +27,7 @@
 
 #include <KConfig>
 #include <KConfigGroup>
+#include <KLineEditEventHandler>
 #include <KLocalizedString>
 #include <QInputDialog>
 #include <QLineEdit>
@@ -49,6 +50,7 @@ public:
         mTextLabel->hide();
 
         auto filterCollectionLineEdit = new QLineEdit(mParent);
+        KLineEditEventHandler::catchReturnKey(filterCollectionLineEdit);
         filterCollectionLineEdit->setClearButtonEnabled(true);
         filterCollectionLineEdit->setPlaceholderText(
             i18nc("@info Displayed grayed-out inside the "
