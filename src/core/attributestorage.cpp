@@ -6,92 +6,120 @@
 
 #include "attributestorage_p.h"
 
+#include <QSharedData>
+
 using namespace Akonadi;
 
+namespace Akonadi
+{
+
+class AttributeStoragePrivate : public QSharedData
+{
+public:
+    AttributeStoragePrivate() = default;
+    AttributeStoragePrivate(AttributeStoragePrivate &other)
+        : QSharedData(other)
+        , atributes(other.atributes)
+        , modifiedAttributes(other.modifiedAttributes)
+        , deletedAttributes(other.deletedAttributes)
+    {
+        for (Attribute *attr : std::as_const(atributes)) {
+            atributes.insert(attr->type(), attr->clone());
+        }
+    }
+
+    ~AttributeStoragePrivate()
+    {
+        qDeleteAll(atributes);
+    }
+
+    QHash<QByteArray, Attribute *> atributes;
+    std::set<QByteArray> modifiedAttributes;
+    QSet<QByteArray> deletedAttributes;
+};
+
+} // namespace Akonadi
+
 AttributeStorage::AttributeStorage()
+    : d(new AttributeStoragePrivate)
 {
 }
 
 AttributeStorage::AttributeStorage(const AttributeStorage &other)
-    : mModifiedAttributes(other.mModifiedAttributes)
-    , mDeletedAttributes(other.mDeletedAttributes)
+    : d(other.d)
 {
-    for (Attribute *attr : std::as_const(other.mAttributes)) {
-        mAttributes.insert(attr->type(), attr->clone());
-    }
+}
+
+AttributeStorage::AttributeStorage(AttributeStorage &&other) noexcept
+{
+    d.swap(other.d);
 }
 
 AttributeStorage &AttributeStorage::operator=(const AttributeStorage &other)
 {
-    AttributeStorage copy(other);
-    swap(copy);
+    d = other.d;
     return *this;
 }
 
-void AttributeStorage::swap(AttributeStorage &other) noexcept
+AttributeStorage &AttributeStorage::operator=(AttributeStorage &&other) noexcept
 {
-    using std::swap;
-    swap(other.mAttributes, mAttributes);
-    swap(other.mModifiedAttributes, mModifiedAttributes);
-    swap(other.mDeletedAttributes, mDeletedAttributes);
+    d.swap(other.d);
+    return *this;
 }
 
-AttributeStorage::~AttributeStorage()
-{
-    qDeleteAll(mAttributes);
-}
+AttributeStorage::~AttributeStorage() = default;
 
 void AttributeStorage::addAttribute(Attribute *attr)
 {
     Q_ASSERT(attr);
     const QByteArray type = attr->type();
-    Attribute *existing = mAttributes.value(type);
+    Attribute *existing = d->atributes.value(type);
     if (existing) {
         if (attr == existing) {
             return;
         }
-        mAttributes.remove(type);
+        d->atributes.remove(type);
         delete existing;
     }
-    mAttributes.insert(type, attr);
+    d->atributes.insert(type, attr);
     markAttributeModified(type);
 }
 
 void AttributeStorage::removeAttribute(const QByteArray &type)
 {
-    mModifiedAttributes.erase(type);
-    mDeletedAttributes.insert(type);
-    delete mAttributes.take(type);
+    d->modifiedAttributes.erase(type);
+    d->deletedAttributes.insert(type);
+    delete d->atributes.take(type);
 }
 
 bool AttributeStorage::hasAttribute(const QByteArray &type) const
 {
-    return mAttributes.contains(type);
+    return d->atributes.contains(type);
 }
 
 Attribute::List AttributeStorage::attributes() const
 {
-    return mAttributes.values();
+    return d->atributes.values();
 }
 
 void AttributeStorage::clearAttributes()
 {
-    for (Attribute *attr : std::as_const(mAttributes)) {
-        mDeletedAttributes.insert(attr->type());
+    for (Attribute *attr : std::as_const(d->atributes)) {
+        d->deletedAttributes.insert(attr->type());
         delete attr;
     }
-    mAttributes.clear();
-    mModifiedAttributes.clear();
+    d->atributes.clear();
+    d->modifiedAttributes.clear();
 }
 
 const Attribute *AttributeStorage::attribute(const QByteArray &type) const
 {
-    return mAttributes.value(type);
+    return d->atributes.value(type);
 }
 
 Attribute *AttributeStorage::attribute(const QByteArray &type)
 {
-    Attribute *attr = mAttributes.value(type);
+    Attribute *attr = d->atributes.value(type);
     if (attr) {
         markAttributeModified(type);
     }
@@ -100,34 +128,34 @@ Attribute *AttributeStorage::attribute(const QByteArray &type)
 
 void AttributeStorage::markAttributeModified(const QByteArray &type)
 {
-    if (mAttributes.contains(type)) {
-        mDeletedAttributes.remove(type);
-        mModifiedAttributes.insert(type);
+    if (d->atributes.contains(type)) {
+        d->deletedAttributes.remove(type);
+        d->modifiedAttributes.insert(type);
     }
 }
 
 void AttributeStorage::resetChangeLog()
 {
-    mModifiedAttributes.clear();
-    mDeletedAttributes.clear();
+    d->modifiedAttributes.clear();
+    d->deletedAttributes.clear();
 }
 
 QSet<QByteArray> AttributeStorage::deletedAttributes() const
 {
-    return mDeletedAttributes;
+    return d->deletedAttributes;
 }
 
 bool AttributeStorage::hasModifiedAttributes() const
 {
-    return !mModifiedAttributes.empty();
+    return !d->modifiedAttributes.empty();
 }
 
 std::vector<Attribute *> AttributeStorage::modifiedAttributes() const
 {
     std::vector<Attribute *> ret;
-    ret.reserve(mModifiedAttributes.size());
-    for (const auto &type : mModifiedAttributes) {
-        Attribute *attr = mAttributes.value(type);
+    ret.reserve(d->modifiedAttributes.size());
+    for (const auto &type : d->modifiedAttributes) {
+        Attribute *attr = d->atributes.value(type);
         Q_ASSERT(attr);
         ret.push_back(attr);
     }

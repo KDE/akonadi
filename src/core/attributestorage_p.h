@@ -8,6 +8,7 @@
 
 #include "akonaditests_export.h"
 #include "attribute.h"
+#include <QExplicitlySharedDataPointer>
 #include <QHash>
 #include <QSet>
 #include <set>
@@ -21,13 +22,16 @@ namespace Akonadi
  * I.e. it knows which attributes have been added or removed
  * compared to the initial set (e.g. fetched from server).
  */
+class AttributeStoragePrivate;
 class AKONADI_TESTS_EXPORT AttributeStorage
 {
 public:
     AttributeStorage();
     AttributeStorage(const AttributeStorage &other);
+    AttributeStorage(AttributeStorage &&other) noexcept;
     AttributeStorage &operator=(const AttributeStorage &other);
-    void swap(AttributeStorage &other) noexcept;
+    AttributeStorage &operator=(AttributeStorage &&other) noexcept;
+
     ~AttributeStorage();
 
     void addAttribute(Attribute *attr);
@@ -45,9 +49,7 @@ public:
     std::vector<Attribute *> modifiedAttributes() const;
 
 private:
-    QHash<QByteArray, Attribute *> mAttributes;
-    std::set<QByteArray> mModifiedAttributes;
-    QSet<QByteArray> mDeletedAttributes;
+    QExplicitlySharedDataPointer<AttributeStoragePrivate> d;
 };
 
-}
+} // namespace Akonadi
