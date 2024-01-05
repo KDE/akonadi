@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.3\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-23 01:45+0000\n"
+"POT-Creation-Date: 2024-01-05 01:34+0000\n"
 "PO-Revision-Date: 2024-01-03 20:45+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -767,45 +767,45 @@ msgstr ""
 "gyűjtemény törlése ezen <b>adatok elvesztését</b> jelenti. Biztosan "
 "folytatni szeretné?"
 
-#: widgets/collectiondialog.cpp:56
+#: widgets/collectiondialog.cpp:58
 #, kde-format
 msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
 msgid "Search"
 msgstr "Keresés"
 
-#: widgets/collectiondialog.cpp:64
+#: widgets/collectiondialog.cpp:66
 #, kde-format
 msgid "Use folder by default"
 msgstr "Mappa használata alapértelmezettként"
 
-#: widgets/collectiondialog.cpp:224
+#: widgets/collectiondialog.cpp:226
 #, kde-format
 msgid "&New Subfolder..."
 msgstr "Ú&j almappa…"
 
-#: widgets/collectiondialog.cpp:226
+#: widgets/collectiondialog.cpp:228
 #, kde-format
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Új almappa létrehozása a jelenleg kiválasztott mappa alá"
 
-#: widgets/collectiondialog.cpp:264 widgets/standardactionmanager.cpp:348
+#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:348
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
 msgstr "Új mappa"
 
-#: widgets/collectiondialog.cpp:264
+#: widgets/collectiondialog.cpp:266
 #, kde-format
 msgctxt "@label:textbox, name of a thing"
 msgid "Name"
 msgstr "Név"
 
-#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:350
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:350
 #, kde-format
 msgid "Could not create folder: %1"
 msgstr "Nem sikerült létrehozni ezt a mappát: %1"
 
-#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:351
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"

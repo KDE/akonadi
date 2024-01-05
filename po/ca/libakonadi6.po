@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-23 01:45+0000\n"
+"POT-Creation-Date: 2024-01-05 01:34+0000\n"
 "PO-Revision-Date: 2023-09-27 12:35+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -777,45 +777,45 @@ msgstr ""
 "aquesta col·lació vol dir que aquestes <b>dades es perdran</b>. Segur que "
 "voleu continuar?"
 
-#: widgets/collectiondialog.cpp:56
+#: widgets/collectiondialog.cpp:58
 #, kde-format
 msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
 msgid "Search"
 msgstr "Cerca"
 
-#: widgets/collectiondialog.cpp:64
+#: widgets/collectiondialog.cpp:66
 #, kde-format
 msgid "Use folder by default"
 msgstr "Usa la carpeta per omissió"
 
-#: widgets/collectiondialog.cpp:224
+#: widgets/collectiondialog.cpp:226
 #, kde-format
 msgid "&New Subfolder..."
 msgstr "Subcarpeta &nova..."
 
-#: widgets/collectiondialog.cpp:226
+#: widgets/collectiondialog.cpp:228
 #, kde-format
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Crea una subcarpeta nova sota la carpeta seleccionada"
 
-#: widgets/collectiondialog.cpp:264 widgets/standardactionmanager.cpp:348
+#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:348
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
 msgstr "Carpeta nova"
 
-#: widgets/collectiondialog.cpp:264
+#: widgets/collectiondialog.cpp:266
 #, kde-format
 msgctxt "@label:textbox, name of a thing"
 msgid "Name"
 msgstr "Nom"
 
-#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:350
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:350
 #, kde-format
 msgid "Could not create folder: %1"
 msgstr "No s'ha pogut crear la carpeta: %1"
 
-#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:351
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"

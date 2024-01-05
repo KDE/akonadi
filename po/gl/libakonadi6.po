@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-23 01:45+0000\n"
+"POT-Creation-Date: 2024-01-05 01:34+0000\n"
 "PO-Revision-Date: 2023-09-30 10:39+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -776,45 +776,45 @@ msgstr ""
 "non se enviasen nunca ao servidor de destino, así que baleirar a colección "
 "resultaría nunha <b>perda de datos</b>. Seguro que quere continuar?"
 
-#: widgets/collectiondialog.cpp:56
+#: widgets/collectiondialog.cpp:58
 #, kde-format
 msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
 msgid "Search"
 msgstr "Buscar"
 
-#: widgets/collectiondialog.cpp:64
+#: widgets/collectiondialog.cpp:66
 #, kde-format
 msgid "Use folder by default"
 msgstr "Usar o cartafol predeterminado"
 
-#: widgets/collectiondialog.cpp:224
+#: widgets/collectiondialog.cpp:226
 #, kde-format
 msgid "&New Subfolder..."
 msgstr "&Novo subcartafol…"
 
-#: widgets/collectiondialog.cpp:226
+#: widgets/collectiondialog.cpp:228
 #, kde-format
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Crear un subcartafol novo no cartafol escollido"
 
-#: widgets/collectiondialog.cpp:264 widgets/standardactionmanager.cpp:348
+#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:348
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
 msgstr "Novo cartafol"
 
-#: widgets/collectiondialog.cpp:264
+#: widgets/collectiondialog.cpp:266
 #, kde-format
 msgctxt "@label:textbox, name of a thing"
 msgid "Name"
 msgstr "Nome"
 
-#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:350
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:350
 #, kde-format
 msgid "Could not create folder: %1"
 msgstr "Non foi posíbel crear o cartafol: %1"
 
-#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:351
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-23 01:45+0000\n"
+"POT-Creation-Date: 2024-01-05 01:34+0000\n"
 "PO-Revision-Date: 2014-09-18 22:53+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -783,45 +783,45 @@ msgid ""
 "means that those <b>data will be lost</b>. Are you sure you want to proceed?"
 msgstr ""
 
-#: widgets/collectiondialog.cpp:56
+#: widgets/collectiondialog.cpp:58
 #, kde-format
 msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
 msgid "Search"
 msgstr "Söken"
 
-#: widgets/collectiondialog.cpp:64
+#: widgets/collectiondialog.cpp:66
 #, kde-format
 msgid "Use folder by default"
 msgstr "Standardwies Orner bruken"
 
-#: widgets/collectiondialog.cpp:224
+#: widgets/collectiondialog.cpp:226
 #, kde-format
 msgid "&New Subfolder..."
 msgstr "&Nieg Ünnerorner..."
 
-#: widgets/collectiondialog.cpp:226
+#: widgets/collectiondialog.cpp:228
 #, kde-format
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "En niegen Ünnerorner binnen den opstunns utsöchten Orner opstellen"
 
-#: widgets/collectiondialog.cpp:264 widgets/standardactionmanager.cpp:348
+#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:348
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
 msgstr "Nieg Orner"
 
-#: widgets/collectiondialog.cpp:264
+#: widgets/collectiondialog.cpp:266
 #, kde-format
 msgctxt "@label:textbox, name of a thing"
 msgid "Name"
 msgstr "Naam"
 
-#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:350
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:350
 #, kde-format
 msgid "Could not create folder: %1"
 msgstr "Orner \"%1\" lett sik nich opstellen"
 
-#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:351
 #, fuzzy, kde-format
 #| msgid "Folder creation failed"
 msgctxt "@title:window"

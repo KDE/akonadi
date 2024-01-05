@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-23 01:45+0000\n"
+"POT-Creation-Date: 2024-01-05 01:34+0000\n"
 "PO-Revision-Date: 2023-09-27 18:14+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -772,45 +772,45 @@ msgstr ""
 "du bilduma hori hustean <b>datu horiek galduko direla</b>. Ziur zaude "
 "jarraitu nahi duzula?"
 
-#: widgets/collectiondialog.cpp:56
+#: widgets/collectiondialog.cpp:58
 #, kde-format
 msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
 msgid "Search"
 msgstr "Bilatu"
 
-#: widgets/collectiondialog.cpp:64
+#: widgets/collectiondialog.cpp:66
 #, kde-format
 msgid "Use folder by default"
 msgstr "Erabili lehenetsitako karpeta"
 
-#: widgets/collectiondialog.cpp:224
+#: widgets/collectiondialog.cpp:226
 #, kde-format
 msgid "&New Subfolder..."
 msgstr "Azpikarpeta &berria..."
 
-#: widgets/collectiondialog.cpp:226
+#: widgets/collectiondialog.cpp:228
 #, kde-format
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Sortu azpikarpeta berri bat hautatuta dagoen karpetaren barruan"
 
-#: widgets/collectiondialog.cpp:264 widgets/standardactionmanager.cpp:348
+#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:348
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
 msgstr "Karpeta berria"
 
-#: widgets/collectiondialog.cpp:264
+#: widgets/collectiondialog.cpp:266
 #, kde-format
 msgctxt "@label:textbox, name of a thing"
 msgid "Name"
 msgstr "Izena"
 
-#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:350
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:350
 #, kde-format
 msgid "Could not create folder: %1"
 msgstr "Ezin du karpeta sortu: %1"
 
-#: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:351
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
