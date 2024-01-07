@@ -199,6 +199,9 @@ void FakeAkonadiServer::initFake()
     dbConfig->setup();
 
     mDataStore = static_cast<FakeDataStore *>(FakeDataStore::self());
+    if (!mDataStore->database().isOpen()) {
+        throw FakeAkonadiServerException("Failed to open database");
+    }
     mDataStore->setPopulateDb(mPopulateDb);
     if (!mDataStore->init()) {
         throw FakeAkonadiServerException("Failed to initialize datastore");
