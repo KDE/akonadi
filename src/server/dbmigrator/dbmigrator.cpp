@@ -810,7 +810,7 @@ bool DbMigrator::copyTable(DataStore *sourceStore, DataStore *destStore, const T
     emitInfo(i18nc("@info:status", "Optimizing table %1...", table.name));
     // Optimize the new table
     if (!analyzeTable(table.name, destStore)) {
-        emitError(i18nc("@info:status", "Error: failed to optmize table %1", table.name));
+        emitError(i18nc("@info:status", "Error: failed to optimize table %1", table.name));
         return false;
     }
 
