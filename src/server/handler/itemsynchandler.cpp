@@ -57,69 +57,25 @@ protected:
 
     virtual bool mergeItem(const Protocol::CommandPtr &cmd)
     {
-        ensureTransaction();
-
         ItemCreateHandler handler(akonadi());
         handler.setCommand(cmd);
         handler.setConnection(connection());
         handler.setTag(baseHandler()->nextTag());
 
-        if (!handler.parseStream()) {
-            return false;
-        }
-        ++mTransactionSize;
-
-        return commitTransactionIfTooLarge();
+        return handler.parseStream();
     }
 
     virtual bool finalizeSync(const Protocol::CommandPtr &cmd)
     {
         const auto &syncCmd = Protocol::cmdCast<Protocol::EndItemSyncCommand>(cmd);
         if (syncCmd.commit()) {
-            if (!commitTransaction()) {
-                return false;
-            }
+            // TODO
         } else {
-            rollbackTransaction();
+            // TODO
         }
 
         connection()->sendResponse(baseHandler()->nextTag(), Protocol::EndItemSyncResponsePtr::create());
         return true;
-    }
-
-    void ensureTransaction()
-    {
-        if (!mTransaction.has_value()) {
-            mTransaction.emplace(connection()->storageBackend(), QStringLiteral("ItemSyncer"));
-            mTransactionSize = 0;
-        }
-    }
-
-    bool commitTransactionIfTooLarge()
-    {
-        if (mTransactionSize > mMaxTransactionSize) {
-            return commitTransaction();
-        }
-
-        return true;
-    }
-
-    bool commitTransaction()
-    {
-        if (!mTransaction.has_value()) {
-            return true;
-        }
-
-        const bool success = mTransaction->commit();
-        mTransaction.reset();
-        mTransactionSize = 0;
-        return success;
-    }
-
-    void rollbackTransaction()
-    {
-        mTransaction.reset();
-        mTransactionSize = 0;
     }
 
     bool prepareCollection(const Protocol::CommandPtr &cmd)
@@ -199,19 +155,12 @@ public:
 private:
     bool deleteItems(const Protocol::CommandPtr &cmd)
     {
-        ensureTransaction();
-
         ItemDeleteHandler handler(akonadi());
         handler.setCommand(cmd);
         handler.setConnection(connection());
         handler.setTag(baseHandler()->nextTag());
 
-        if (!handler.parseStream()) {
-            return false;
-        }
-        ++mTransactionSize;
-
-        return commitTransactionIfTooLarge();
+        return handler.parseStream();
     }
 };
 
@@ -276,10 +225,6 @@ protected:
     {
         const auto &endCmd = Protocol::cmdCast<Protocol::EndItemSyncCommand>(cmd);
         if (endCmd.commit()) {
-            if (!commitTransaction()) {
-                return false;
-            }
-
             if (!mLocalRids.isEmpty()) {
                 Transaction transaction(connection()->storageBackend(), QStringLiteral("ItemSyncFinalize"));
                 // Whatever is left in mLocalRids should be removed now
