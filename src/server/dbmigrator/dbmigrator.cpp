@@ -894,3 +894,4 @@ UIDelegate::Result DbMigrator::questionYesNoSkip(const QString &question)
         Qt::BlockingQueuedConnection);
     return answer;
 }
+#include "moc_dbmigrator.cpp"
