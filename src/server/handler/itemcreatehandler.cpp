@@ -414,7 +414,7 @@ bool ItemCreateHandler::parseStream()
         return false;
     }
 
-    if (cmd.mergeModes() == Protocol::CreateItemCommand::None) {
+    if ((cmd.mergeModes() & ~Protocol::CreateItemCommand::Silent) == 0) {
         if (!insertItem(cmd, item, parentCol)) {
             return false;
         }
