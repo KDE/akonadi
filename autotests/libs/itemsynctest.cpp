@@ -24,6 +24,8 @@
 #include <QSignalSpy>
 
 #include <memory>
+#include <qscopeguard.h>
+#include <qtestcase.h>
 
 using namespace Akonadi;
 
@@ -36,11 +38,13 @@ class ItemsyncTest : public QObject
 private:
     Item::List fetchItems(const Collection &col)
     {
-        qDebug() << "fetching items from collection" << col.remoteId() << col.name();
+        qDebug() << "fetching items from collection" << col.id() << col.remoteId() << col.name();
         auto fetch = new ItemFetchJob(col, this);
         fetch->fetchScope().fetchFullPayload();
         fetch->fetchScope().fetchAllAttributes();
         fetch->fetchScope().setCacheOnly(true); // resources are switched off anyway
+        fetch->fetchScope().setFetchRemoteIdentification(true);
+        fetch->fetchScope().setFetchGid(true);
         if (!fetch->exec()) {
             []() {
                 QFAIL("Failed to fetch items!");
@@ -56,7 +60,7 @@ private:
             item.setRemoteId(QStringLiteral("rid") + QString::number(i));
             item.setGid(QStringLiteral("gid") + QString::number(i));
             item.setPayload<QByteArray>("payload1");
-            auto job = new ItemCreateJob(item, col);
+            auto job = std::make_unique<ItemCreateJob>(item, col);
             AKVERIFYEXEC(job);
         }
     }
@@ -65,8 +69,8 @@ private:
     {
         Item duplicate = item;
         duplicate.setId(-1);
-        auto job = new ItemCreateJob(duplicate, col);
-        [job]() {
+        auto job = std::make_unique<ItemCreateJob>(duplicate, col);
+        [job = job.get()]() {
             AKVERIFYEXEC(job);
         }();
         return job->item();
@@ -78,6 +82,18 @@ private:
         item.setFlag(QByteArray("\\READ") + QByteArray::number(counter));
         counter++;
         return item;
+    }
+
+    static auto pretendToBeResource()
+    {
+        auto select = std::make_unique<ResourceSelectJob>(QStringLiteral("akonadi_knut_resource_0"));
+        if (!select->exec()) {
+            QTest::qFail("Failed to switch resource context", __FILE__, __LINE__);
+        }
+        return qScopeGuard([]() {
+            auto select = std::make_unique<ResourceSelectJob>(QStringLiteral(""));
+            AKVERIFYEXEC(select);
+        });
     }
 
     std::unique_ptr<Monitor> createCollectionMonitor(const Collection &col)
@@ -96,7 +112,6 @@ private Q_SLOTS:
     void initTestCase()
     {
         AkonadiTest::checkTestIsIsolated();
-        Control::start();
         AkonadiTest::setAllResourcesOffline();
         qRegisterMetaType<KJob *>();
     }
@@ -105,7 +120,7 @@ private Q_SLOTS:
     {
         const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());
-        Item::List origItems = fetchItems(col);
+        const auto origItems = fetchItems(col);
 
         // Since the item sync affects the knut resource we ensure we actually managed to load all items
         // This needs to be adjusted should the testdataset change
@@ -120,11 +135,13 @@ private Q_SLOTS:
         QSignalSpy changedSpy(&monitor, &Monitor::itemChanged);
         QVERIFY(changedSpy.isValid());
 
-        ItemSync *syncer = new ItemSync(col);
-        syncer->setFullSyncItems(origItems);
-        AKVERIFYEXEC(syncer);
+        {
+            auto syncer = std::make_unique<ItemSync>(col);
+            syncer->setFullSyncItems(origItems);
+            AKVERIFYEXEC(syncer);
+        }
 
-        Item::List resultItems = fetchItems(col);
+        const auto resultItems = fetchItems(col);
         QCOMPARE(resultItems.count(), origItems.count());
         QTest::qWait(100);
         QCOMPARE(deletedSpy.count(), 0);
@@ -146,7 +163,7 @@ private Q_SLOTS:
 
         const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());
-        Item::List origItems = fetchItems(col);
+        const auto origItems = fetchItems(col);
         QCOMPARE(origItems.size(), 15);
 
         auto monitor = createCollectionMonitor(col);
@@ -154,37 +171,37 @@ private Q_SLOTS:
         QSignalSpy addedSpy(monitor.get(), &Monitor::itemAdded);
         QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
-        ItemSync *syncer = new ItemSync(col);
-        syncer->setAutoDelete(false);
-        syncer->setStreamingEnabled(true);
-        QSignalSpy spy(syncer, &KJob::result);
-        QVERIFY(spy.isValid());
-        syncer->setTotalItems(origItems.count());
-        QTest::qWait(0);
-        QCOMPARE(spy.count(), 0);
+        {
+            auto syncer = std::make_unique<ItemSync>(col);
+            syncer->setAutoDelete(false);
+            syncer->setStreamingEnabled(true);
+            QSignalSpy spy(syncer.get(), &KJob::result);
+            QVERIFY(spy.isValid());
+            syncer->setTotalItems(origItems.count());
+            QTest::qWait(0);
+            QCOMPARE(spy.count(), 0);
 
-        for (int i = 0; i < origItems.count(); ++i) {
-            Item::List l;
-            // Modify to trigger a changed signal
-            l << modifyItem(origItems[i]);
-            syncer->setFullSyncItems(l);
-            if (goToEventLoopAfterAddingItems) {
-                QTest::qWait(0);
+            for (int i = 0; i < origItems.count(); ++i) {
+                // Modify to trigger a changed signal
+                const auto item = modifyItem(origItems[i]);
+                syncer->setFullSyncItems({item});
+                if (goToEventLoopAfterAddingItems) {
+                    QTest::qWait(0);
+                }
+                if (i < origItems.count() - 1) {
+                    QCOMPARE(spy.count(), 0);
+                }
             }
-            if (i < origItems.count() - 1) {
-                QCOMPARE(spy.count(), 0);
-            }
+            syncer->deliveryDone();
+            QTRY_COMPARE(spy.count(), 1);
+            KJob *job = spy.at(0).at(0).value<KJob *>();
+            QCOMPARE(job, syncer.get());
+            QCOMPARE(job->error(), 0);
+
+            const auto resultItems = fetchItems(col);
+            QCOMPARE(resultItems.count(), origItems.count());
         }
-        syncer->deliveryDone();
-        QTRY_COMPARE(spy.count(), 1);
-        KJob *job = spy.at(0).at(0).value<KJob *>();
-        QCOMPARE(job, syncer);
-        QCOMPARE(job->error(), 0);
 
-        Item::List resultItems = fetchItems(col);
-        QCOMPARE(resultItems.count(), origItems.count());
-
-        delete syncer;
         QTest::qWait(100);
         QTRY_COMPARE(deletedSpy.count(), 0);
         QTRY_COMPARE(addedSpy.count(), 0);
@@ -193,10 +210,7 @@ private Q_SLOTS:
 
     void testIncrementalSync()
     {
-        {
-            auto select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
-            AKVERIFYEXEC(select);
-        }
+        const auto resourceCtxCleanup = pretendToBeResource();
 
         const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());
@@ -209,7 +223,7 @@ private Q_SLOTS:
         QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
         {
-            ItemSync *syncer = new ItemSync(col);
+            auto syncer = std::make_unique<ItemSync>(col);
             syncer->setIncrementalSyncItems(origItems, Item::List());
             AKVERIFYEXEC(syncer);
         }
@@ -239,7 +253,7 @@ private Q_SLOTS:
         delItems << itemWithRandomRemoteId;
 
         {
-            ItemSync *syncer = new ItemSync(col);
+            auto syncer = std::make_unique<ItemSync>(col);
             syncer->setIncrementalSyncItems(resultItems, delItems);
             AKVERIFYEXEC(syncer);
         }
@@ -251,15 +265,12 @@ private Q_SLOTS:
         QTRY_COMPARE(deletedSpy.count(), 2);
         QCOMPARE(addedSpy.count(), 0);
         QTRY_COMPARE(changedSpy.count(), 0);
-
-        {
-            auto select = new ResourceSelectJob(QStringLiteral(""));
-            AKVERIFYEXEC(select);
-        }
     }
 
     void testIncrementalStreamingSync()
     {
+        const auto resourceCtxCleanup = pretendToBeResource();
+
         const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());
         Item::List origItems = fetchItems(col);
@@ -269,34 +280,33 @@ private Q_SLOTS:
         QSignalSpy addedSpy(monitor.get(), &Monitor::itemAdded);
         QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
-        ItemSync *syncer = new ItemSync(col);
-        syncer->setAutoDelete(false);
-        QSignalSpy spy(syncer, &KJob::result);
-        QVERIFY(spy.isValid());
-        syncer->setStreamingEnabled(true);
-        QTest::qWait(0);
-        QCOMPARE(spy.count(), 0);
-
-        for (int i = 0; i < origItems.count(); ++i) {
-            Item::List l;
-            // Modify to trigger a changed signal
-            l << modifyItem(origItems[i]);
-            syncer->setIncrementalSyncItems(l, Item::List());
-            if (i < origItems.count() - 1) {
-                QTest::qWait(0); // enter the event loop so itemsync actually can do something
-            }
+        {
+            auto syncer = std::make_unique<ItemSync>(col);
+            syncer->setAutoDelete(false);
+            QSignalSpy spy(syncer.get(), &KJob::result);
+            QVERIFY(spy.isValid());
+            syncer->setStreamingEnabled(true);
+            QTest::qWait(0);
             QCOMPARE(spy.count(), 0);
+
+            for (int i = 0; i < origItems.count(); ++i) {
+                // Modify to trigger a changed signal
+                const auto item = modifyItem(origItems[i]);
+                syncer->setIncrementalSyncItems({item}, {});
+                if (i < origItems.count() - 1) {
+                    QTest::qWait(0); // enter the event loop so itemsync actually can do something
+                }
+                QCOMPARE(spy.count(), 0);
+            }
+            syncer->deliveryDone();
+            QTRY_COMPARE(spy.count(), 1);
+            KJob *job = spy.at(0).at(0).value<KJob *>();
+            QCOMPARE(job, syncer.get());
+            QCOMPARE(job->error(), 0);
+
+            const auto resultItems = fetchItems(col);
+            QCOMPARE(resultItems.count(), origItems.count());
         }
-        syncer->deliveryDone();
-        QTRY_COMPARE(spy.count(), 1);
-        KJob *job = spy.at(0).at(0).value<KJob *>();
-        QCOMPARE(job, syncer);
-        QCOMPARE(job->error(), 0);
-
-        Item::List resultItems = fetchItems(col);
-        QCOMPARE(resultItems.count(), origItems.count());
-
-        delete syncer;
 
         QTest::qWait(100);
         QCOMPARE(deletedSpy.count(), 0);
@@ -372,71 +382,30 @@ private Q_SLOTS:
     }
 
     /*
-     * This test verifies that ItemSync doesn't prematurely emit its result if a job inside a transaction fails.
-     * ItemSync is supposed to continue the sync but simply ignoring all delivered data.
-     */
-    void testFailingJob()
-    {
-        const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
-        QVERIFY(col.isValid());
-        Item::List origItems = fetchItems(col);
-
-        ItemSync *syncer = new ItemSync(col);
-        QSignalSpy spy(syncer, &KJob::result);
-        QVERIFY(spy.isValid());
-        syncer->setStreamingEnabled(true);
-        QTest::qWait(0);
-        QCOMPARE(spy.count(), 0);
-
-        constexpr int batchSize = 10;
-        for (int i = 0; i < batchSize; ++i) {
-            Item::List list;
-            // Modify to trigger a changed signal
-            Item item = modifyItem(origItems[i]);
-            // item.setRemoteId(QByteArray("foo"));
-            item.setRemoteId(QString());
-            item.setId(-1);
-            list << item;
-            syncer->setIncrementalSyncItems(list, Item::List());
-            if (i < (batchSize - 1)) {
-                QTest::qWait(0);   // enter the event loop so itemsync actually can do something
-            }
-            QCOMPARE(spy.count(), 0);
-        }
-        QTest::qWait(100);
-        QTRY_COMPARE(spy.count(), 0);
-
-        for (int i = batchSize; i < origItems.count(); ++i) {
-            Item::List list;
-            // Modify to trigger a changed signal
-            list << modifyItem(origItems[i]);
-            syncer->setIncrementalSyncItems(list, Item::List());
-            if (i < origItems.count() - 1) {
-                QTest::qWait(0); // enter the event loop so itemsync actually can do something
-            }
-            QCOMPARE(spy.count(), 0);
-        }
-
-        syncer->deliveryDone();
-        QTRY_COMPARE(spy.count(), 1);
-    }
-
-    /*
      * This test verifies that ItemSync doesn't prematurely emit its result if a job inside a transaction fails, due to a duplicate.
      * This case used to break the TransactionSequence.
      * ItemSync is supposed to continue the sync but simply ignoring all delivered data.
      */
-    void testFailingDueToDuplicateItem()
+    void testIncrementalSyncMultipleMergeCandidatesRecovery()
     {
+        const auto resourceCtxCleanup = pretendToBeResource();
+
         const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());
         Item::List origItems = fetchItems(col);
 
         // Create a duplicate that will trigger an error during the first batch
         Item dupe = duplicateItem(origItems.at(0), col);
+        const auto cleanup = qScopeGuard([this, dupe]() {
+            auto del = new ItemDeleteJob(dupe, this);
+            // Don't do AKVERIFYEXEC, the job should fail when the test is successful
+            del->exec();
+        });
+
         origItems = fetchItems(col);
 
         ItemSync *syncer = new ItemSync(col);
+        syncer->setMergeMode(ItemSync::RIDMerge);
         QSignalSpy spy(syncer, &KJob::result);
         QVERIFY(spy.isValid());
         syncer->setStreamingEnabled(true);
@@ -470,17 +439,25 @@ private Q_SLOTS:
         }
 
         syncer->deliveryDone();
+        QVERIFY(!syncer->exec());
         QTRY_COMPARE(spy.count(), 1);
     }
 
-    void testFullSyncFailingDueToDuplicateItem()
+    void testFullSyncMultipleMergeCandidatesRecovery()
     {
+        const auto resourceCtxCleanup = pretendToBeResource();
+
         const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());
         Item::List origItems = fetchItems(col);
+
         // Create a duplicate that will trigger an error during the first batch
         Item dupe = duplicateItem(origItems.at(0), col);
-        origItems = fetchItems(col);
+        const auto cleanup = qScopeGuard([this, dupe]() {
+            auto del = new ItemDeleteJob(dupe, this);
+            // Don't do AKVERIFYEXEC, the job should fail when the test is successful
+            del->exec();
+        });
 
         auto monitor = createCollectionMonitor(col);
         QSignalSpy deletedSpy(monitor.get(), &Monitor::itemRemoved);
@@ -488,19 +465,18 @@ private Q_SLOTS:
         QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
         ItemSync *syncer = new ItemSync(col);
+        syncer->setMergeMode(ItemSync::RIDMerge);
         syncer->setFullSyncItems(origItems);
         QVERIFY(!syncer->exec());
 
         Item::List resultItems = fetchItems(col);
-        QCOMPARE(resultItems.count(), origItems.count());
+        // The duplicate items should be removed by item sync, so the final
+        // item count should be original count minus 1
+        QCOMPARE(resultItems.count(), origItems.count() - 1);
         QTest::qWait(100);
         // QCOMPARE(deletedSpy.count(), 1); // ## is this correct?
         // QCOMPARE(addedSpy.count(), 1); // ## is this correct?
         QCOMPARE(changedSpy.count(), 0);
-
-        // cleanup
-        auto del = new ItemDeleteJob(dupe, this);
-        AKVERIFYEXEC(del);
     }
 
     void testFullSyncManyItems()
