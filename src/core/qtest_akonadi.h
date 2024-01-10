@@ -48,6 +48,7 @@
         app.setOrganizationDomain(QStringLiteral("kde.org"));                                                                                                  \
         app.setOrganizationName(QStringLiteral("KDE"));                                                                                                        \
         QGuiApplication::setQuitOnLastWindowClosed(false);                                                                                                     \
+        QCoreApplication::setQuitLockEnabled(false);                                                                                                           \
         qRegisterMetaType<QList<QUrl>>();                                                                                                                      \
         int result = 0;                                                                                                                                        \
         QTimer::singleShot(0, &app, [argc, argv, &result]() {                                                                                                  \
