@@ -9,6 +9,7 @@
 #include <QObject>
 
 #include <QTest>
+#include <qtestcase.h>
 
 using namespace Akonadi;
 
@@ -18,7 +19,7 @@ class XmlDocumentTest : public QObject
 private Q_SLOTS:
     void testDocumentLoad()
     {
-        XmlDocument doc(QStringLiteral(KDESRCDIR "/knutdemo.xml"));
+        XmlDocument doc(QFINDTESTDATA("knutdemo.xml"));
         QVERIFY(doc.isValid());
         QVERIFY(doc.lastError().isEmpty());
         QCOMPARE(doc.collections().count(), 9);
