@@ -13,6 +13,7 @@
 #include <QStringList>
 
 #include <KAboutData>
+#include <KLocalizedString>
 
 #include <shared/akapplication.h>
 
@@ -207,17 +208,17 @@ int main(int argc, char **argv)
     AkCoreApplication app(argc, argv);
 
     app.setDescription(
-        QStringLiteral("Akonadi server manipulation tool\n\n"
-                       "Commands:\n"
-                       "  start          Starts the Akonadi server with all its processes\n"
-                       "  stop           Stops the Akonadi server and all its processes cleanly\n"
-                       "  restart        Restart Akonadi server with all its processes\n"
-                       "  status         Shows a status overview of the Akonadi server\n"
-                       "  instances      List all existing Akonadi instances\n"
-                       "  vacuum         Vacuum internal storage (WARNING: needs a lot of time and disk\n"
-                       "                 space!)\n"
-                       "  fsck           Check (and attempt to fix) consistency of the internal storage\n"
-                       "                 (can take some time)"));
+        i18n("Akonadi server manipulation tool\n\n"
+             "Commands:\n"
+             "  start          Starts the Akonadi server with all its processes\n"
+             "  stop           Stops the Akonadi server and all its processes cleanly\n"
+             "  restart        Restart Akonadi server with all its processes\n"
+             "  status         Shows a status overview of the Akonadi server\n"
+             "  instances      List all existing Akonadi instances\n"
+             "  vacuum         Vacuum internal storage (WARNING: needs a lot of time and disk\n"
+             "                 space!)\n"
+             "  fsck           Check (and attempt to fix) consistency of the internal storage\n"
+             "                 (can take some time)"));
 
     KAboutData aboutData(QStringLiteral("akonadictl"),
                          QStringLiteral("akonadictl"),
@@ -227,7 +228,7 @@ int main(int argc, char **argv)
     KAboutData::setApplicationData(aboutData);
 
     app.addPositionalCommandLineOption(QStringLiteral("command"),
-                                       QStringLiteral("Command to execute"),
+                                       i18n("Command to execute"),
                                        QStringLiteral("start|stop|restart|status|vacuum|fsck|instances"));
 
     app.parseCommandLine();

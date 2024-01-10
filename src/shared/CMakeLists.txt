@@ -22,6 +22,7 @@ PUBLIC
     KPim6::AkonadiPrivate
     Qt::Core
     KF6::Crash
+    KF6::I18n
 )
 
 ecm_generate_headers(shared_CC_HEADERS
