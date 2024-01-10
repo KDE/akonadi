@@ -10,8 +10,6 @@
 #include <QObject>
 #include <QTest>
 
-#define QL1S(x) QStringLiteral(x)
-
 using namespace Akonadi;
 
 class AkStandardDirsTest : public QObject
@@ -21,23 +19,31 @@ private Q_SLOTS:
     void testCondigFile()
     {
         akTestSetInstanceIdentifier(QString());
-        QVERIFY(StandardDirs::agentsConfigFile(StandardDirs::ReadOnly).endsWith(QL1S("agentsrc")));
-        QVERIFY(StandardDirs::agentsConfigFile(StandardDirs::ReadWrite).endsWith(QL1S("agentsrc")));
-        QVERIFY(!StandardDirs::agentsConfigFile(StandardDirs::ReadWrite).endsWith(QL1S("foo/agentsrc")));
+        QVERIFY(StandardDirs::agentsConfigFile(StandardDirs::ReadOnly).endsWith(QStringLiteral("agentsrc")));
+        QVERIFY(StandardDirs::agentsConfigFile(StandardDirs::ReadWrite).endsWith(QStringLiteral("agentsrc")));
+        QVERIFY(!StandardDirs::agentsConfigFile(StandardDirs::ReadWrite).endsWith(QStringLiteral("foo/agentsrc")));
 
-        akTestSetInstanceIdentifier(QL1S("foo"));
-        QVERIFY(StandardDirs::agentsConfigFile(StandardDirs::ReadOnly).endsWith(QL1S("agentsrc")));
-        QVERIFY(StandardDirs::agentsConfigFile(StandardDirs::ReadWrite).endsWith(QL1S("instance/foo/agentsrc")));
+        akTestSetInstanceIdentifier(QStringLiteral("foo"));
+        QVERIFY(StandardDirs::agentsConfigFile(StandardDirs::ReadOnly).endsWith(QStringLiteral("agentsrc")));
+        QVERIFY(StandardDirs::agentsConfigFile(StandardDirs::ReadWrite).endsWith(QStringLiteral("instance/foo/agentsrc")));
     }
 
     void testSaveDir()
     {
         akTestSetInstanceIdentifier(QString());
-        QVERIFY(StandardDirs::saveDir("data").endsWith(QL1S("/akonadi")));
-        QVERIFY(!StandardDirs::saveDir("data").endsWith(QL1S("foo/akonadi")));
+#ifdef Q_OS_WIN // See buildFullRelPath() in standarddirs.cpp
+        QVERIFY(StandardDirs::saveDir("data").endsWith(QStringLiteral("/akonadi/data")));
+#else
+        QVERIFY(StandardDirs::saveDir("data").endsWith(QStringLiteral("/akonadi")));
+#endif
+        QVERIFY(!StandardDirs::saveDir("data").endsWith(QStringLiteral("foo/akonadi")));
 
-        akTestSetInstanceIdentifier(QL1S("foo"));
-        QVERIFY(StandardDirs::saveDir("data").endsWith(QL1S("/akonadi/instance/foo")));
+        akTestSetInstanceIdentifier(QStringLiteral("foo"));
+#ifdef Q_OS_WIN // See buildFullRelPath() in standarddirs.cpp
+        QVERIFY(StandardDirs::saveDir("data").endsWith(QStringLiteral("/akonadi/data/instance/foo")));
+#else
+        QVERIFY(StandardDirs::saveDir("data").endsWith(QStringLiteral("/akonadi/instance/foo")));
+#endif
     }
 };
 
