@@ -80,7 +80,7 @@ int main(int argc, char **argv)
     QCommandLineParser parser;
     about.setupCommandLine(&parser);
     const QCommandLineOption engineOpt{QStringLiteral("newengine"),
-                                       QStringLiteral("The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and \"postgres\""),
+                                       i18n("The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and \"postgres\""),
                                        QStringLiteral("ENGINE")};
     parser.addOption(engineOpt);
     parser.process(app);
