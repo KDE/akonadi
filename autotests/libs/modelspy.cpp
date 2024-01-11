@@ -7,6 +7,7 @@
 #include "modelspy.h"
 
 #include <QTest>
+#include <qassert.h>
 
 QVariantList extractModelColumn(const QAbstractItemModel &model, const QModelIndex &parent, const int firstRow, const int lastRow)
 {
@@ -81,6 +82,7 @@ void ModelSpy::verifySignal(SignalType type, const QModelIndex &topLeft, const Q
             QCOMPARE(parent.data(), expectedSignal.parentData);
         }
     }
+    qDebug() << type << topLeft << bottomRight;
     QCOMPARE(topLeft.row(), expectedSignal.startRow);
     QCOMPARE(bottomRight.row(), expectedSignal.endRow);
     QCOMPARE(extractModelColumn(*m_model, parent, topLeft.row(), bottomRight.row()), expectedSignal.newData);
@@ -186,6 +188,30 @@ void ModelSpy::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottom
     } else {
         append(QVariantList{DataChanged, QVariant::fromValue(topLeft), QVariant::fromValue(bottomRight)});
     }
+}
+
+QDebug operator<<(QDebug dbg, SignalType type)
+{
+    switch (type) {
+    case NoSignal:
+        return dbg << "SignalType::NoSignal";
+    case RowsAboutToBeInserted:
+        return dbg << "SignalType::RowsAboutToBeInserted";
+    case RowsInserted:
+        return dbg << "SignalType::RowsInserted";
+    case RowsAboutToBeRemoved:
+        return dbg << "SignalType::RowsAboutToBeRemoved";
+    case RowsRemoved:
+        return dbg << "SignalType::RowsRemoved";
+    case RowsAboutToBeMoved:
+        return dbg << "SignalType::RowsAboutToBeMoved";
+    case RowsMoved:
+        return dbg << "SignalType::RowsMoved";
+    case DataChanged:
+        return dbg << "SignalType::DataChanged";
+    }
+
+    Q_UNREACHABLE();
 }
 
 #include "moc_modelspy.cpp"

@@ -7,6 +7,7 @@
 #pragma once
 
 #include "akonaditestfake_export.h"
+#include <QDebug>
 #include <QModelIndex>
 #include <QObject>
 #include <QVariantList>
@@ -102,3 +103,5 @@ private:
     bool m_isSpying;
     QList<ExpectedSignal> m_expectedSignals;
 };
+
+AKONADITESTFAKE_EXPORT QDebug operator<<(QDebug dbg, SignalType type);
