@@ -113,6 +113,12 @@ DbConfig *DbConfig::configuredDatabase()
     return s_DbConfigInstance;
 }
 
+void DbConfig::destroy()
+{
+    delete s_DbConfigInstance;
+    s_DbConfigInstance = nullptr;
+}
+
 bool DbConfig::startInternalServer()
 {
     // do nothing

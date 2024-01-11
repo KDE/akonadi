@@ -34,6 +34,14 @@ public:
     static DbConfig *configuredDatabase();
 
     /**
+     * Destroys the current global DbConfig instance.
+     *
+     * The subsequent call to configuredDatabase() will create a new DbConfig
+     * from current configuration.
+     */
+    static void destroy();
+
+    /**
      * Returns the name of the used driver.
      */
     virtual QString driverName() const = 0;

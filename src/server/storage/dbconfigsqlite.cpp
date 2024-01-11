@@ -28,7 +28,7 @@ static QString dataDir(const QString &dbPathOverride = {})
         }
     }
 
-    akonadiHomeDir += QDir::separator();
+    akonadiHomeDir += QStringLiteral("/");
 
     return akonadiHomeDir;
 }

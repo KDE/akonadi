@@ -5,19 +5,22 @@
 */
 
 #include <QObject>
+#include <QScopeGuard>
 #include <QSettings>
 #include <QTemporaryDir>
 #include <QTest>
 
 #include <aktest.h>
 #include <private/standarddirs_p.h>
+#include <qtenvironmentvariables.h>
 #include <shared/akranges.h>
+
+#include <QSettings>
+#include <QStandardPaths>
 
 #include <config-akonadi.h>
 #include <storage/dbconfig.h>
 #include <storage/dbconfigpostgresql.h>
-
-#define QL1S(x) QStringLiteral(x)
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -36,26 +39,45 @@ class DbConfigTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void testDbConfig_data()
+    {
+        QTest::addColumn<QString>("driverName");
+        QTest::addColumn<QString>("dbName");
+        QTest::addColumn<bool>("useInternalServer");
+
+        QStandardPaths::setTestModeEnabled(true);
+        akTestSetInstanceIdentifier(QStringLiteral("unit-test"));
+
+        const QString sqlitedb = StandardDirs::saveDir("data") + QStringLiteral("/akonadi.db");
+        QTest::newRow("QSQLITE") << QStringLiteral("QSQLITE") << sqlitedb << false;
+        QTest::newRow("QMYSQL") << QStringLiteral("QMYSQL") << QStringLiteral("akonadi") << true;
+        QTest::newRow("QPSQL") << QStringLiteral("QPSQL") << QStringLiteral("akonadi_unit_test") << true;
+    }
     void testDbConfig()
     {
-        // doesn't work, DbConfig has an internal singleton-like cache...
-        // QFETCH( QString, driverName );
-        const QString driverName(QL1S(AKONADI_DATABASE_BACKEND));
+        QFETCH(QString, driverName);
+        QFETCH(QString, dbName);
+        QFETCH(bool, useInternalServer);
 
         // isolated config file to not conflict with a running instance
-        akTestSetInstanceIdentifier(QL1S("unit-test"));
+        QStandardPaths::setTestModeEnabled(true);
+        akTestSetInstanceIdentifier(QStringLiteral("unit-test"));
 
         {
-            QSettings s(StandardDirs::serverConfigFile(StandardDirs::WriteOnly));
-            s.setValue(QL1S("General/Driver"), driverName);
+            QSettings s(StandardDirs::serverConfigFile(StandardDirs::ReadWrite), QSettings::IniFormat);
+            s.setValue(QStringLiteral("General/Driver"), driverName);
         }
 
-        QScopedPointer<DbConfig> cfg(DbConfig::configuredDatabase());
+        const auto destroyDbConfig = qScopeGuard([] {
+            DbConfig::destroy();
+        });
+        auto *cfg = DbConfig::configuredDatabase();
 
-        QVERIFY(!cfg.isNull());
+        QVERIFY(cfg != nullptr);
+
         QCOMPARE(cfg->driverName(), driverName);
-        QCOMPARE(cfg->databaseName(), QL1S("akonadi"));
-        QCOMPARE(cfg->useInternalServer(), true);
+        QCOMPARE(cfg->databaseName(), dbName);
+        QCOMPARE(cfg->useInternalServer(), useInternalServer);
         QCOMPARE(cfg->sizeThreshold(), 4096LL);
     }
 
