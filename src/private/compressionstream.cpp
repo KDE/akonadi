@@ -107,12 +107,12 @@ public:
         mStream.avail_out = maxSize;
     }
 
-    int inputBufferAvailable() const
+    size_t inputBufferAvailable() const
     {
         return mStream.avail_in;
     }
 
-    int outputBufferAvailable() const
+    size_t outputBufferAvailable() const
     {
         return mStream.avail_out;
     }
@@ -258,7 +258,7 @@ qint64 CompressionStream::writeData(const char *data, qint64 dataSize)
         mCompressor->setInputBuffer(data, dataSize);
     }
 
-    qint64 dataWritten = 0;
+    size_t dataWritten = 0;
 
     while (dataSize > 0 || finish) {
         mResult = mCompressor->deflate(finish);

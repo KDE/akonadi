@@ -17,10 +17,9 @@
 #include <QIODevice>
 #include <QTimeZone>
 
-namespace Akonadi
+namespace Akonadi::Protocol
 {
-namespace Protocol
-{
+
 class AKONADIPRIVATE_EXPORT DataStream
 {
 public:
@@ -39,26 +38,30 @@ public:
     void flush();
 
     template<typename T>
-    inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type &operator<<(T val);
+        requires(std::is_integral_v<T>)
+    inline DataStream &operator<<(T val);
     template<typename T>
-    inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type &operator<<(T val);
+        requires(std::is_enum_v<T>)
+    inline DataStream &operator<<(T val);
 
     inline DataStream &operator<<(const QString &str);
     inline DataStream &operator<<(const QByteArray &data);
     inline DataStream &operator<<(const QDateTime &dt);
 
     template<typename T>
-    inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type &operator>>(T &val);
+        requires(std::is_integral_v<T>)
+    inline DataStream &operator>>(T &val);
     template<typename T>
-    inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type &operator>>(T &val);
+        requires(std::is_enum_v<T>)
+    inline DataStream &operator>>(T &val);
     inline DataStream &operator>>(QString &str);
     inline DataStream &operator>>(QByteArray &data);
     inline DataStream &operator>>(QDateTime &dt);
 
-    void writeRawData(const char *data, int len);
-    void writeBytes(const char *bytes, int len);
+    void writeRawData(const char *data, qsizetype len);
+    void writeBytes(const char *bytes, qsizetype len);
 
-    int readRawData(char *buffer, int len);
+    [[nodiscard]] qint64 readRawData(char *buffer, qint64 len);
 
     void waitForData(quint32 size);
 
@@ -78,7 +81,8 @@ private:
 };
 
 template<typename T>
-inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type &DataStream::operator<<(T val)
+    requires(std::is_integral_v<T>)
+inline DataStream &DataStream::operator<<(T val)
 {
     checkDevice();
     writeRawData((char *)&val, sizeof(T));
@@ -86,7 +90,8 @@ inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type &Da
 }
 
 template<typename T>
-inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type &DataStream::operator<<(T val)
+    requires(std::is_enum_v<T>)
+inline DataStream &DataStream::operator<<(T val)
 {
     return *this << (typename std::underlying_type<T>::type)val;
 }
@@ -123,7 +128,8 @@ inline DataStream &DataStream::operator<<(const QDateTime &dt)
 }
 
 template<typename T>
-inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type &DataStream::operator>>(T &val)
+    requires(std::is_integral_v<T>)
+inline DataStream &DataStream::operator>>(T &val)
 {
     checkDevice();
 
@@ -136,7 +142,8 @@ inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type &Da
 }
 
 template<typename T>
-inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type &DataStream::operator>>(T &val)
+    requires(std::is_enum_v<T>)
+inline DataStream &DataStream::operator>>(T &val)
 {
     return *this >> reinterpret_cast<typename std::underlying_type<T>::type &>(val);
 }
@@ -228,8 +235,7 @@ inline DataStream &DataStream::operator>>(QDateTime &dt)
     return *this;
 }
 
-} // namespace Protocol
-} // namespace Akonadi
+} // namespace Akonadi::Protocol
 
 // Inline functions
 
@@ -275,12 +281,9 @@ inline Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &
     return stream;
 }
 
-namespace Akonadi
+namespace Akonadi::Protocol::Private
 {
-namespace Protocol
-{
-namespace Private
-{
+
 template<typename Key, typename Value, template<typename, typename> class Container>
 inline void container_reserve(Container<Key, Value> &container, int size)
 {
@@ -292,9 +295,8 @@ inline void container_reserve(QMap<Key, Value> &, int)
 {
     // noop
 }
-} // namespace Private
-} // namespace Protocol
-} // namespace Akonadi
+
+} // namespace Akonadi::Protocol::Private
 
 // Generic streaming for all Qt dictionary-based containers
 template<typename Key, typename Value, template<typename, typename> class Container>

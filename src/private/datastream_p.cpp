@@ -110,14 +110,14 @@ void DataStream::waitForData(quint32 size)
     }
 }
 
-void DataStream::writeRawData(const char *data, int len)
+void DataStream::writeRawData(const char *data, qsizetype len)
 {
     checkDevice();
 
     mWriteBuffer += QByteArray::fromRawData(data, len);
 }
 
-void DataStream::writeBytes(const char *bytes, int len)
+void DataStream::writeBytes(const char *bytes, qsizetype len)
 {
     *this << static_cast<quint32>(len);
     if (len) {
@@ -125,7 +125,7 @@ void DataStream::writeBytes(const char *bytes, int len)
     }
 }
 
-int DataStream::readRawData(char *buffer, int len)
+qint64 DataStream::readRawData(char *buffer, qint64 len)
 {
     checkDevice();
 
