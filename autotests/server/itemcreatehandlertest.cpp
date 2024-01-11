@@ -7,6 +7,7 @@
 #include <QObject>
 #include <QSettings>
 
+#include <qhashfunctions.h>
 #include <storage/selectquerybuilder.h>
 
 #include <private/scope_p.h>
@@ -37,6 +38,8 @@ class ItemCreateHandlerTest : public QObject
 public:
     ItemCreateHandlerTest()
     {
+        QHashSeed::setDeterministicGlobalSeed();
+
         // Effectively disable external payload parts, we have a dedicated unit-test
         // for that
         const QString serverConfigFile = StandardDirs::serverConfigFile(StandardDirs::ReadWrite);
@@ -510,6 +513,16 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ClientCmd, createCommand(pimItem, datetime, {"PLD:NEWPARTTYPE1", "PLD:NEWPARTTYPE2"}))
                   << TestScenario::create(5,
                                           TestScenario::ServerCmd,
+                                          Protocol::StreamPayloadCommandPtr::create("PLD:NEWPARTTYPE1", Protocol::StreamPayloadCommand::MetaData))
+                  << TestScenario::create(5,
+                                          TestScenario::ClientCmd,
+                                          Protocol::StreamPayloadResponsePtr::create("PLD:NEWPARTTYPE1", Protocol::PartMetaData("PLD:NEWPARTTYPE1", 10)))
+                  << TestScenario::create(5,
+                                          TestScenario::ServerCmd,
+                                          Protocol::StreamPayloadCommandPtr::create("PLD:NEWPARTTYPE1", Protocol::StreamPayloadCommand::Data))
+                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:NEWPARTTYPE2", "0123456789"))
+                  << TestScenario::create(5,
+                                          TestScenario::ServerCmd,
                                           Protocol::StreamPayloadCommandPtr::create("PLD:NEWPARTTYPE2", Protocol::StreamPayloadCommand::MetaData))
                   << TestScenario::create(5,
                                           TestScenario::ClientCmd,
@@ -518,24 +531,14 @@ private Q_SLOTS:
                                           TestScenario::ServerCmd,
                                           Protocol::StreamPayloadCommandPtr::create("PLD:NEWPARTTYPE2", Protocol::StreamPayloadCommand::Data))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:NEWPARTTYPE2", "9876543210"))
-                  << TestScenario::create(5,
-                                          TestScenario::ServerCmd,
-                                          Protocol::StreamPayloadCommandPtr::create("PLD:NEWPARTTYPE1", Protocol::StreamPayloadCommand::MetaData))
-                  << TestScenario::create(5,
-                                          TestScenario::ClientCmd,
-                                          Protocol::StreamPayloadResponsePtr::create("PLD:NEWPARTTYPE1", Protocol::PartMetaData("PLD:NEWPARTTYPE1", 10)))
-                  << TestScenario::create(5,
-                                          TestScenario::ServerCmd,
-                                          Protocol::StreamPayloadCommandPtr::create("PLD:NEWPARTTYPE1", Protocol::StreamPayloadCommand::Data))
-                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:NEWPARTTYPE1", "0123456789"))
                   << TestScenario::create(
                          5,
                          TestScenario::ServerCmd,
                          createResponse(uidnext,
                                         pimItem,
                                         datetime,
-                                        {Protocol::StreamPayloadResponse("PLD:NEWPARTTYPE2", Protocol::PartMetaData("PLD:NEWPARTTYPE2", 10), "9876543210"),
-                                         Protocol::StreamPayloadResponse("PLD:NEWPARTTYPE1", Protocol::PartMetaData("PLD:NEWPARTTYPE1", 10), "0123456789")}))
+                                        {Protocol::StreamPayloadResponse("PLD:NEWPARTTYPE1", Protocol::PartMetaData("PLD:NEWPARTTYPE1", 10), "0123456789"),
+                                         Protocol::StreamPayloadResponse("PLD:NEWPARTTYPE2", Protocol::PartMetaData("PLD:NEWPARTTYPE2", 10), "9876543210")}))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
         QTest::newRow("non-existent part types") << scenarios << Notifications{notification} << pimItem << parts << flags << tags << uidnext << datetime
                                                  << false;
@@ -832,10 +835,9 @@ private Q_SLOTS:
             const auto actualFlags = actualItem.flags() | AkRanges::Actions::toQList;
             QCOMPARE(actualFlags.count(), flags.count());
             for (const Flag &flag : std::as_const(flags)) {
-                const QList<Flag>::const_iterator actualFlagIter =
-                    std::find_if(actualFlags.constBegin(), actualFlags.constEnd(), [flag](Flag const &actualFlag) {
-                        return flag.name() == actualFlag.name();
-                    });
+                const auto actualFlagIter = std::find_if(actualFlags.constBegin(), actualFlags.constEnd(), [flag](Flag const &actualFlag) {
+                    return flag.name() == actualFlag.name();
+                });
                 QVERIFY(actualFlagIter != actualFlags.constEnd());
                 const Flag actualFlag = *actualFlagIter;
                 QVERIFY(actualFlag.isValid());
@@ -844,7 +846,7 @@ private Q_SLOTS:
             const auto actualTags = actualItem.tags() | AkRanges::Actions::toQList;
             QCOMPARE(actualTags.count(), tags.count());
             for (const FakeTag &tag : std::as_const(tags)) {
-                const QList<Tag>::const_iterator actualTagIter = std::find_if(actualTags.constBegin(), actualTags.constEnd(), [tag](Tag const &actualTag) {
+                const auto actualTagIter = std::find_if(actualTags.constBegin(), actualTags.constEnd(), [tag](Tag const &actualTag) {
                     return tag.gid() == actualTag.gid();
                 });
 
@@ -866,10 +868,9 @@ private Q_SLOTS:
             const auto actualParts = actualItem.parts() | AkRanges::Actions::toQList;
             QCOMPARE(actualParts.count(), parts.count());
             for (const FakePart &part : std::as_const(parts)) {
-                const QList<Part>::const_iterator actualPartIter =
-                    std::find_if(actualParts.constBegin(), actualParts.constEnd(), [part](Part const &actualPart) {
-                        return part.partType().ns() == actualPart.partType().ns() && part.partType().name() == actualPart.partType().name();
-                    });
+                const auto actualPartIter = std::find_if(actualParts.constBegin(), actualParts.constEnd(), [part](Part const &actualPart) {
+                    return part.partType().ns() == actualPart.partType().ns() && part.partType().name() == actualPart.partType().name();
+                });
 
                 QVERIFY(actualPartIter != actualParts.constEnd());
                 const Part actualPart = *actualPartIter;
