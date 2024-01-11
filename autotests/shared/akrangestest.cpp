@@ -56,12 +56,8 @@ public:
 class AkRangesTest : public QObject
 {
     Q_OBJECT
-private Q_SLOTS:
-    void initTestCase()
-    {
-        QHashSeed::setDeterministicGlobalSeed();
-    }
 
+private Q_SLOTS:
     void testTraits()
     {
         QVERIFY(AkTraits::isAppendable<QList<int>>);
@@ -79,6 +75,7 @@ private Q_SLOTS:
 
     void testContainerConversion()
     {
+        QHashSeed::setDeterministicGlobalSeed();
         {
             QList<int> in = {1, 2, 3, 4, 5};
             QCOMPARE(in | Actions::toQList, in.toList());
@@ -91,6 +88,7 @@ private Q_SLOTS:
             QCOMPARE(in | Actions::toQVector | Actions::toQList, in);
             QCOMPARE(in | Actions::toQSet, QSet<int>(in.begin(), in.end()));
         }
+        QHashSeed::resetRandomGlobalSeed();
     }
 
     void testAssociativeContainerConversion()
@@ -392,20 +390,18 @@ private:
     {
         const Container<int, QString> in = {{1, QStringLiteral("1")}, {2, QStringLiteral("2")}, {3, QStringLiteral("3")}};
 
-        {
-            const QList<int> out = {1, 2, 3};
-            QCOMPARE(out, in | Views::keys | Actions::toQList);
-        }
-        {
-            const QStringList out = {QStringLiteral("1"), QStringLiteral("2"), QStringLiteral("3")};
-            QCOMPARE(out, in | Views::values | Actions::toQList);
-        }
+        QCOMPARE(in | Views::keys | Actions::toQList, in.keys());
+        QCOMPARE(in | Views::values | Actions::toQList, in.values());
     }
 
 private Q_SLOTS:
-    void testKeysValues()
+    void testKeysValuesQMap()
     {
         testKeysValuesHelper<QMap>();
+    }
+
+    void testKeysValuesQHash()
+    {
         testKeysValuesHelper<QHash>();
     }
 
