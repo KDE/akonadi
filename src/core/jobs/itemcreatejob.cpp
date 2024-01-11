@@ -38,7 +38,16 @@ public:
     Item mItem;
     QSet<QByteArray> mParts;
     QSet<QByteArray> mForeignParts;
-    QByteArray mPendingData;
+    struct PendingPart {
+        void clear()
+        {
+            name.clear();
+            data.clear();
+        }
+
+        QByteArray name;
+        QByteArray data;
+    } mPendingPart;
     ItemCreateJob::MergeOptions mMergeOptions = ItemCreateJob::NoMerge;
     bool mItemReceived = false;
 };
@@ -67,13 +76,14 @@ Protocol::PartMetaData ItemCreateJobPrivate::preparePart(const QByteArray &partN
 
     int version = 0;
     if (mForeignParts.contains(partLabel)) {
-        mPendingData = mItem.d_ptr->mPayloadPath.toUtf8();
+        mPendingPart = PendingPart{.name = partName, .data = mItem.d_ptr->mPayloadPath.toUtf8()};
         const auto size = QFile(mItem.d_ptr->mPayloadPath).size();
         return Protocol::PartMetaData(partName, size, version, Protocol::PartMetaData::Foreign);
     } else {
-        mPendingData.clear();
-        ItemSerializer::serialize(mItem, partLabel, mPendingData, version);
-        return Protocol::PartMetaData(partName, mPendingData.size(), version);
+        mPendingPart.clear();
+        mPendingPart.name = partName;
+        ItemSerializer::serialize(mItem, partLabel, mPendingPart.data, version);
+        return Protocol::PartMetaData(partName, mPendingPart.data.size(), version);
     }
 }
 
@@ -176,15 +186,19 @@ bool ItemCreateJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &res
         streamResp->setPayloadName(streamCmd.payloadName());
         if (streamCmd.request() == Protocol::StreamPayloadCommand::MetaData) {
             streamResp->setMetaData(d->preparePart(streamCmd.payloadName()));
-        } else {
-            if (streamCmd.destination().isEmpty()) {
-                streamResp->setData(d->mPendingData);
+        } else if (streamCmd.request() == Protocol::StreamPayloadCommand::Data) {
+            if (streamCmd.payloadName() != d->mPendingPart.name) {
+                streamResp->setError(1, QStringLiteral("Unexpected payload name"));
+            } else if (streamCmd.destination().isEmpty()) {
+                streamResp->setData(d->mPendingPart.data);
             } else {
                 QByteArray error;
-                if (!ProtocolHelper::streamPayloadToFile(streamCmd.destination(), d->mPendingData, error)) {
-                    // Error?
+                if (!ProtocolHelper::streamPayloadToFile(streamCmd.destination(), d->mPendingPart.data, error)) {
+                    streamResp->setError(1, QStringLiteral("Failed to stream payload to file: %1").arg(QString::fromUtf8(error)));
                 }
             }
+        } else {
+            streamResp->setError(1, QStringLiteral("Unknown stream payload request"));
         }
         d->sendCommand(tag, streamResp);
         return false;

@@ -35,6 +35,7 @@ void ItemAppendTest::initTestCase()
     Control::start();
     AkonadiTest::setAllResourcesOffline();
     AttributeFactory::registerAttribute<TestAttribute>();
+    AttributeFactory::registerAttribute<TestAttribute2>();
 }
 
 void ItemAppendTest::testItemAppend_data()
@@ -94,7 +95,7 @@ void ItemAppendTest::testContent_data()
     QTest::newRow("null") << QByteArray();
     QTest::newRow("empty") << QByteArray("");
     QTest::newRow("nullbyte") << QByteArray("\0", 1);
-    QTest::newRow("nullbyte2") << QByteArray("\0X", 2);
+    QTest::newRow("nullbyte3") << QByteArray("\0X", 2);
     QString utf8string = QStringLiteral("äöüß@€µøđ¢©®");
     QTest::newRow("utf8") << utf8string.toUtf8();
     QTest::newRow("newlines") << QByteArray("\nsome\n\nbreaked\ncontent\n\n");
@@ -211,6 +212,7 @@ void ItemAppendTest::testInvalidMultipartAppend()
     item.setMimeType(QStringLiteral("application/octet-stream"));
     item.setPayload<QByteArray>("body data");
     item.attribute<TestAttribute>(Item::AddIfMissing)->data = "extra data";
+    item.attribute<TestAttribute2>(Item::AddIfMissing)->data = "more extra data";
     item.setFlag("TestFlag");
     auto job = new ItemCreateJob(item, Collection(-1), this);
     QVERIFY(!job->exec());
@@ -218,6 +220,8 @@ void ItemAppendTest::testInvalidMultipartAppend()
     Item item2;
     item2.setMimeType(QStringLiteral("application/octet-stream"));
     item2.setPayload<QByteArray>("more body data");
+    // Note the inverted order - intentional, but shouldn't impact the test in any way.
+    item2.attribute<TestAttribute2>(Item::AddIfMissing)->data = "absolute horde of extra data";
     item2.attribute<TestAttribute>(Item::AddIfMissing)->data = "even more extra data";
     item2.setFlag("TestFlag");
     auto job2 = new ItemCreateJob(item2, Collection(-1), this);
