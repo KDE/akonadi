@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-09 01:33+0000\n"
-"PO-Revision-Date: 2024-01-09 16:03+0300\n"
+"POT-Creation-Date: 2024-01-11 00:37+0000\n"
+"PO-Revision-Date: 2024-01-10 15:59+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -211,9 +211,7 @@ msgid "Optimizing table %1..."
 msgstr "%1 tablosu eniyileniyor..."
 
 #: dbmigrator.cpp:813
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Error: failed to optmize table %1"
+#, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to optimize table %1"
 msgstr "Hata: %1 tablosu eniyilenemedi"
@@ -255,6 +253,19 @@ msgstr "Akonadi Veritabanı Aktarıcısı"
 #, kde-format
 msgid "(c) 2024 g10 Code GmbH"
 msgstr "(c) 2024 g10 Code GmbH"
+
+#: main.cpp:83
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid ""
+#| "Invalid database engine \"%1\" - valid values are \"sqlite\", \"mysql\" "
+#| "and \"postgres\"."
+msgid ""
+"The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and "
+"\"postgres\""
+msgstr ""
+"Geçersiz veritabanı işletkesi \"%1\" - geçerli değerler: \"sqlite\", \"mysql"
+"\" ve \"postgres\"."
 
 #: main.cpp:90
 #, kde-format

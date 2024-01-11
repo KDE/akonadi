@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-09 01:33+0000\n"
-"PO-Revision-Date: 2024-01-09 13:10+0100\n"
+"POT-Creation-Date: 2024-01-11 00:37+0000\n"
+"PO-Revision-Date: 2024-01-10 11:22+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -235,9 +235,7 @@ msgid "Optimizing table %1..."
 msgstr "S'està optimitzant la taula %1..."
 
 #: dbmigrator.cpp:813
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Error: failed to optmize table %1"
+#, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to optimize table %1"
 msgstr "Error: ha fallat en optimitzar la taula %1"
@@ -279,6 +277,19 @@ msgstr "Migrador de BD de l'Akonadi"
 #, kde-format
 msgid "(c) 2024 g10 Code GmbH"
 msgstr "(c) 2024 g10 Code GmbH"
+
+#: main.cpp:83
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid ""
+#| "Invalid database engine \"%1\" - valid values are \"sqlite\", \"mysql\" "
+#| "and \"postgres\"."
+msgid ""
+"The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and "
+"\"postgres\""
+msgstr ""
+"Motor de base de dades no vàlid «%1»: els valors vàlids són «sqlite», "
+"«mysql» i «postgres»."
 
 #: main.cpp:90
 #, kde-format

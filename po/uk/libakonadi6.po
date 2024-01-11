@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-05 01:34+0000\n"
+"POT-Creation-Date: 2024-01-11 00:37+0000\n"
 "PO-Revision-Date: 2023-09-27 08:28+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -165,6 +165,36 @@ msgstr "Потрібного елемента вже не існує"
 msgctxt "@info"
 msgid "Job canceled."
 msgstr "Виконання завдання скасовано."
+
+#: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
+#, fuzzy, kde-format
+#| msgid "Akonadi Agent"
+msgid "Akonadi Control"
+msgstr "Агент Akonadi"
+
+#: akonadictl/main.cpp:211
+#, kde-format
+msgid ""
+"Akonadi server manipulation tool\n"
+"\n"
+"Commands:\n"
+"  start          Starts the Akonadi server with all its processes\n"
+"  stop           Stops the Akonadi server and all its processes cleanly\n"
+"  restart        Restart Akonadi server with all its processes\n"
+"  status         Shows a status overview of the Akonadi server\n"
+"  instances      List all existing Akonadi instances\n"
+"  vacuum         Vacuum internal storage (WARNING: needs a lot of time and "
+"disk\n"
+"                 space!)\n"
+"  fsck           Check (and attempt to fix) consistency of the internal "
+"storage\n"
+"                 (can take some time)"
+msgstr ""
+
+#: akonadictl/main.cpp:231
+#, kde-format
+msgid "Command to execute"
+msgstr ""
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -591,6 +621,12 @@ msgstr "Перевіряє сервер Akonadi і повідомляє про �
 #, kde-format
 msgid "(c) 2008 Volker Krause <vkrause@kde.org>"
 msgstr "© Volker Krause <vkrause@kde.org>, 2008"
+
+#: shared/akapplication.cpp:70
+#, kde-format
+msgid ""
+"Namespace for starting multiple Akonadi instances in the same user session"
+msgstr ""
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."

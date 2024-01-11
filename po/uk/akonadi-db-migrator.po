@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-09 01:33+0000\n"
+"POT-Creation-Date: 2024-01-11 00:37+0000\n"
 "PO-Revision-Date: 2024-01-09 21:41+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -257,6 +257,19 @@ msgstr "Засіб перенесення бази даних Akonadi"
 #, kde-format
 msgid "(c) 2024 g10 Code GmbH"
 msgstr "© g10 Code GmbH, 2024"
+
+#: main.cpp:83
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid ""
+#| "Invalid database engine \"%1\" - valid values are \"sqlite\", \"mysql\" "
+#| "and \"postgres\"."
+msgid ""
+"The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and "
+"\"postgres\""
+msgstr ""
+"Некоректний рушій бази даних «%1» — коректними значеннями є \"sqlite\", "
+"\"mysql\" та \"postgres\"."
 
 #: main.cpp:90
 #, kde-format
