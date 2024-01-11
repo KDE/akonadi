@@ -64,6 +64,10 @@ void PartStreamer::streamPayload(Part &part, const QByteArray &partName)
     if (metaPart.name().isEmpty()) {
         throw PartStreamerException(QStringLiteral("Client sent empty metadata for part '%1'.").arg(QString::fromUtf8(partName)));
     }
+    if (metaPart.name() != partName) {
+        throw PartStreamerException(
+            QStringLiteral("Client sent metadata for part '%1' but requested part '%2'.").arg(QString::fromUtf8(metaPart.name()), QString::fromUtf8(partName)));
+    }
     part.setVersion(metaPart.version());
 
     if (part.datasize() != metaPart.size()) {
