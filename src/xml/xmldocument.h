@@ -36,7 +36,7 @@ public:
 
       @see loadFile()
     */
-    explicit XmlDocument(const QString &fileName);
+    explicit XmlDocument(const QString &fileName, const QString &xsdFile = {});
     ~XmlDocument();
 
     /**
@@ -46,7 +46,7 @@ public:
 
        @see isValid(), lastError()
     */
-    bool loadFile(const QString &fileName);
+    bool loadFile(const QString &fileName, const QString &xsdFile = {});
 
     /**
       Writes the current document into the given file.

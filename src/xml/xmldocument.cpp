@@ -104,15 +104,15 @@ XmlDocument::XmlDocument()
     d->document.appendChild(rootElem);
 }
 
-XmlDocument::XmlDocument(const QString &fileName)
+XmlDocument::XmlDocument(const QString &fileName, const QString &xsdFile)
     : d(new XmlDocumentPrivate)
 {
-    loadFile(fileName);
+    loadFile(fileName, xsdFile);
 }
 
 XmlDocument::~XmlDocument() = default;
 
-bool Akonadi::XmlDocument::loadFile(const QString &fileName)
+bool Akonadi::XmlDocument::loadFile(const QString &fileName, const QString &xsdFile)
 {
     d->valid = false;
     d->document = QDomDocument();
@@ -143,7 +143,8 @@ bool Akonadi::XmlDocument::loadFile(const QString &fileName)
         return false;
     }
 
-    const QString &schemaFileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kf6/akonadi/akonadi-xml.xsd"));
+    const QString &schemaFileName =
+        xsdFile.isEmpty() ? QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kf6/akonadi/akonadi-xml.xsd")) : xsdFile;
     const XmlPtr<xmlDocPtr, xmlFreeDoc> schemaDoc(xmlReadFile(schemaFileName.toLocal8Bit().constData(), nullptr, XML_PARSE_NONET));
     if (!schemaDoc) {
         d->lastError = i18n("Schema definition could not be loaded and parsed.");
