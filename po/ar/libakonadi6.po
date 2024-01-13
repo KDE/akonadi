@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-11 00:37+0000\n"
+"POT-Creation-Date: 2024-01-13 00:38+0000\n"
 "PO-Revision-Date: 2023-01-23 20:03+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -298,7 +298,7 @@ msgstr "لم يُضبط مقصد صالح"
 msgid "Invalid collection."
 msgstr "التجميعة غير صالحة."
 
-#: core/jobs/itemcreatejob.cpp:105
+#: core/jobs/itemcreatejob.cpp:115
 #, kde-format
 msgid "Invalid parent collection"
 msgstr "التجميعة الأم غير صالحة"
@@ -2627,37 +2627,37 @@ msgstr "الملف %1 غير موجود."
 msgid "Unable to parse data file '%1'."
 msgstr "تعذّر تحليل ملف البيانات ”%1“."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "تعذّر تحميل تعريف المخطّط وتحليله."
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "تعذّر إنشاء سياق محلّل المخطّطات."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "تعذّر إنشاء المخطّط."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr "تعذّر إنشاء سياق التحقّق من المخطّط."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "تنسيق الملف غير صالح."
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "تعذّر تحليل ملف البيانات: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "تعذّر العثور على التجميعة %1"

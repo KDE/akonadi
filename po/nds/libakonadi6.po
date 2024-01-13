@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-11 00:37+0000\n"
+"POT-Creation-Date: 2024-01-13 00:38+0000\n"
 "PO-Revision-Date: 2014-09-18 22:53+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -306,7 +306,7 @@ msgstr "Keen gellen Teel angeven"
 msgid "Invalid collection."
 msgstr "Leeg Sammeln"
 
-#: core/jobs/itemcreatejob.cpp:105
+#: core/jobs/itemcreatejob.cpp:115
 #, fuzzy, kde-format
 #| msgid "Invalid collection"
 msgid "Invalid parent collection"
@@ -2654,37 +2654,37 @@ msgstr "Dat gifft de Datei „%1“ nich."
 msgid "Unable to parse data file '%1'."
 msgstr "Datendatei „%1“ lett sik nich inlesen."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "Schemadefinitschoon lett sik nich laden un inlesen."
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "Schemainleser-Ümgeven lett sik nich opstellen."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "Schema lett sik nich opstellen."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr "Schemaprööv-Ümgeven lett sik nich opstellen."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "Leeg Dateiformaat."
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "Datendatei lett sik nich inlesen: „%1“"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Sammeln „%1“ lett sik nich finnen"

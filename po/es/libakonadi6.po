@@ -6,7 +6,7 @@
 # Enrique Matias Sanchez (aka Quique) <cronopios@gmail.com>, 2007.
 # Santi <santi@kde-es.org>, 2008.
 # Dario Andres Rodriguez <andresbajotierra@gmail.com>, 2008, 2009.
-# SPDX-FileCopyrightText: 2009, 2011, 2019, 2020, 2021, 2022, 2023 Eloy Cuadra <ecuadra@eloihr.net>
+# SPDX-FileCopyrightText: 2009, 2011, 2019, 2020, 2021, 2022, 2023, 2024 Eloy Cuadra <ecuadra@eloihr.net>
 # Cristina Yenyxe Gonzalez Garcia <the.blue.valkyrie@gmail.com>, 2009.
 # Adrián Martínez <sfxgt3@gmail.com>, 2009, 2010.
 # Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>, 2010, 2011.
@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-11 00:37+0000\n"
-"PO-Revision-Date: 2023-09-28 02:00+0200\n"
+"POT-Creation-Date: 2024-01-13 00:38+0000\n"
+"PO-Revision-Date: 2024-01-11 02:45+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "com>\n"
-"X-Generator: Lokalize 23.08.1\n"
+"X-Generator: Lokalize 23.08.4\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -177,10 +177,9 @@ msgid "Job canceled."
 msgstr "Trabajo cancelado."
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
-msgstr "Agente de Akonadi"
+msgstr "Control de Akonadi"
 
 #: akonadictl/main.cpp:211
 #, kde-format
@@ -204,7 +203,7 @@ msgstr ""
 #: akonadictl/main.cpp:231
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "Orden que se ejecutará"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -310,7 +309,7 @@ msgstr "El destino especificado no es válido"
 msgid "Invalid collection."
 msgstr "Colección no válida."
 
-#: core/jobs/itemcreatejob.cpp:105
+#: core/jobs/itemcreatejob.cpp:115
 #, kde-format
 msgid "Invalid parent collection"
 msgstr "Colección padre no válida"
@@ -2584,37 +2583,37 @@ msgstr "El archivo %1 no existe."
 msgid "Unable to parse data file '%1'."
 msgstr "No es posible analizar el archivo de datos «%1»."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "La definición del esquema no se pudo cargar y analizar."
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "No es posible crear el contexto del analizador de esquema."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "No es posible crear el esquema."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr "No es posible crear el contexto de validación del esquema."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "Formato de archivo no válido."
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "No es posible analizar el archivo de datos «%1»"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "No es posible encontrar la colección %1"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-11 00:37+0000\n"
+"POT-Creation-Date: 2024-01-13 00:38+0000\n"
 "PO-Revision-Date: 2023-09-30 11:08+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -296,7 +296,7 @@ msgstr "Cel nie został poprawnie określony"
 msgid "Invalid collection."
 msgstr "Nieprawidłowy zbiór."
 
-#: core/jobs/itemcreatejob.cpp:105
+#: core/jobs/itemcreatejob.cpp:115
 #, kde-format
 msgid "Invalid parent collection"
 msgstr "Nieprawidłowy zbiór nadrzędny"
@@ -2579,37 +2579,37 @@ msgstr "Plik %1 nie istnieje."
 msgid "Unable to parse data file '%1'."
 msgstr "Nie można przetworzyć pliku danych '%1'."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "Nie można wczytać i przetworzyć definicji schematu."
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "Nie można utworzyć kontekstu przetwarzania schematu."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "Nie można utworzyć schematu."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr "Nie można utworzyć kontekstu potwierdzenia schematu."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "Nieprawidłowy format pliku."
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "Nie można przetworzyć pliku danych: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Nie można znaleźć zbioru %1"

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-11 00:37+0000\n"
+"POT-Creation-Date: 2024-01-13 00:38+0000\n"
 "PO-Revision-Date: 2017-12-17 18:01+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -297,7 +297,7 @@ msgstr "Није наведено добро одредиште"
 msgid "Invalid collection."
 msgstr "Лоша збирка."
 
-#: core/jobs/itemcreatejob.cpp:105
+#: core/jobs/itemcreatejob.cpp:115
 #, kde-format
 msgid "Invalid parent collection"
 msgstr "Лоша родитељска збирка"
@@ -2696,37 +2696,37 @@ msgstr "Фајл „%1“ не постоји."
 msgid "Unable to parse data file '%1'."
 msgstr "Не могу рашчланим фајл са подацима „%1“."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "Дефиниција шеме не може да се учита и рашчлани."
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "Не могу да направим контекст рашчлањивача шеме."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "Не могу да направим шему."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr "Не могу да направим контекст овере шемом."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "Лош формат фајла."
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "Не могу да рашчланим фајл са подацима: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Не могу да нађем збирку „%1“."

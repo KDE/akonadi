@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-11 00:37+0000\n"
+"POT-Creation-Date: 2024-01-13 00:38+0000\n"
 "PO-Revision-Date: 2010-01-01 15:34+0200\n"
 "Last-Translator: Viesturs Zarins <viesturs.zarins@mii.lu.lv>\n"
 "Language-Team: Latvian <locale@laka.lv>\n"
@@ -320,7 +320,7 @@ msgstr "Nav norādīts derīgs mērķis"
 msgid "Invalid collection."
 msgstr "Nederīga kolekcija"
 
-#: core/jobs/itemcreatejob.cpp:105
+#: core/jobs/itemcreatejob.cpp:115
 #, fuzzy, kde-format
 #| msgid "Invalid collection"
 msgid "Invalid parent collection"
@@ -2772,42 +2772,42 @@ msgstr ""
 msgid "Unable to parse data file '%1'."
 msgstr "Neizdevās izveidot aģenta instanci."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr ""
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema parser context."
 msgstr "Neizdevās izveidot aģenta instanci."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema."
 msgstr "Neizdevās izveidot aģenta instanci."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema validation context."
 msgstr "Neizdevās izveidot aģenta instanci."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, fuzzy, kde-format
 #| msgid "Invalid parent"
 msgid "Invalid file format."
 msgstr "Nederīgs vecāks"
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, fuzzy, kde-format
 #| msgid "Could not paste data: %1"
 msgid "Unable to parse data file: %1"
 msgstr "Neizdevās ielīmēt datus: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, fuzzy, kde-format
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"

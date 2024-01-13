@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-11 00:37+0000\n"
+"POT-Creation-Date: 2024-01-13 00:38+0000\n"
 "PO-Revision-Date: 2021-09-27 23:52+0630\n"
 "Last-Translator: ဇေယျာလွင် <lw1nzayar@yandex.com>\n"
 "Language-Team: Burmese <kde-i18n-doc@kde.org>\n"
@@ -296,7 +296,7 @@ msgstr "မသတ်မှတ်ထား"
 msgid "Invalid collection."
 msgstr "မမှန်ကန်သော စုစည်းမှု။"
 
-#: core/jobs/itemcreatejob.cpp:105
+#: core/jobs/itemcreatejob.cpp:115
 #, fuzzy, kde-format
 msgid "Invalid parent collection"
 msgstr "စုစည်းမှုတပ်ဆင်ပြီး"
@@ -2431,37 +2431,37 @@ msgstr "ဖိုင်လ် %1 မရှိပါ။"
 msgid "Unable to parse data file '%1'."
 msgstr "'%1' ဒေတာဖိုင်လ်ကို အဓိပ္ပါယ်ရှိအောင် မဖတ်နိုင်ခဲ့ပါ။"
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "စခီးမား အဓိပ္ပါယ်ဖွင့်ဆိုမှုကို မတွန်းတင်နိုင်၍ မဖတ်နိုင်ခဲ့ပါ။"
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr ""
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "စခီးမားကို မဖန်တီးနိုင်ခဲ့ပါ။"
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr ""
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "မမှန်ကန်သော ဖိုင်လ်သိမ်းဆည်းပုံစံ။"
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "ဒေတာဖိုင်လ်ကို အဓိပ္ပါယ်ရှိအောင် မဖတ်နိုင်ခဲ့ပါ - %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "စုစည်းမှု %1 ကိုမရှာနိုင်ခဲ့ပါ"

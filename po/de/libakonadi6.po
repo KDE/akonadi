@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-11 00:37+0000\n"
+"POT-Creation-Date: 2024-01-13 00:38+0000\n"
 "PO-Revision-Date: 2023-12-20 21:08+0100\n"
 "Last-Translator: Johannes Obermayr <johannesobermayr@gmx.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -304,7 +304,7 @@ msgstr "Kein gültiges Ziel angegeben"
 msgid "Invalid collection."
 msgstr "Ungültige Sammlung."
 
-#: core/jobs/itemcreatejob.cpp:105
+#: core/jobs/itemcreatejob.cpp:115
 #, kde-format
 msgid "Invalid parent collection"
 msgstr "Ungültige übergeordnete Sammlung"
@@ -2585,39 +2585,39 @@ msgstr "Datei %1 existiert nicht."
 msgid "Unable to parse data file '%1'."
 msgstr "Die Datei „%1“ kann nicht verarbeitet werden."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "Die Schemadefinition kann nicht geladen und verarbeitet werden."
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "Der Kontext für die Analyse des Schemas kann nicht erstellt werden."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "Das Schema kann nicht erstellt werden."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr ""
 "Der Kontext für die Prüfung der Gültigkeit des Schemas kann nicht erstellt "
 "werden."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "Ungültiges Dateiformat."
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "Datei kann nicht verarbeitet werden: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Die Sammlung %1 wurde nicht gefunden"

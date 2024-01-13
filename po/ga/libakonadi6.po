@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdepim/libakonadi.po\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-11 00:37+0000\n"
+"POT-Creation-Date: 2024-01-13 00:38+0000\n"
 "PO-Revision-Date: 2007-07-11 08:14-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -305,7 +305,7 @@ msgstr ""
 msgid "Invalid collection."
 msgstr "Bailiúchán neamhbhailí."
 
-#: core/jobs/itemcreatejob.cpp:105
+#: core/jobs/itemcreatejob.cpp:115
 #, fuzzy, kde-format
 #| msgid "Invalid collection"
 msgid "Invalid parent collection"
@@ -2647,43 +2647,43 @@ msgstr ""
 msgid "Unable to parse data file '%1'."
 msgstr "Níorbh fhéidir cineál gníomhaire '%1' a fháil."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr ""
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema parser context."
 msgstr "Níorbh fhéidir gníomhaire a chruthú."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema."
 msgstr "Níorbh fhéidir gníomhaire a chruthú."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema validation context."
 msgstr "Níorbh fhéidir gníomhaire a chruthú."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, fuzzy, kde-format
 #| msgctxt "@info"
 #| msgid "Invalid item retrieved"
 msgid "Invalid file format."
 msgstr "Fuarthas mír neamhbhailí"
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, fuzzy, kde-format
 #| msgid "Could not paste data: %1"
 msgid "Unable to parse data file: %1"
 msgstr "Níorbh fhéidir na sonraí a ghreamú: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, fuzzy, kde-format
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"

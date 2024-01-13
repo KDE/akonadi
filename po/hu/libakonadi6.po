@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.3\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-11 00:37+0000\n"
-"PO-Revision-Date: 2024-01-03 20:45+0100\n"
+"POT-Creation-Date: 2024-01-13 00:38+0000\n"
+"PO-Revision-Date: 2024-01-11 11:29+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -166,10 +166,9 @@ msgid "Job canceled."
 msgstr "Feladat megszakítva."
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
-msgstr "Akonadi szolgáltatás"
+msgstr "Akonadi vezérlő"
 
 #: akonadictl/main.cpp:211
 #, kde-format
@@ -298,7 +297,7 @@ msgstr "Nincs megadva érvényes cél"
 msgid "Invalid collection."
 msgstr "Érvénytelen gyűjtemény."
 
-#: core/jobs/itemcreatejob.cpp:105
+#: core/jobs/itemcreatejob.cpp:115
 #, kde-format
 msgid "Invalid parent collection"
 msgstr "Érvénytelen szülőgyűjtemény"
@@ -2547,37 +2546,37 @@ msgstr "Nem létezik ez a fájl: %1."
 msgid "Unable to parse data file '%1'."
 msgstr "Nem lehet feldolgozni a(z) „%1” adatfájlt."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "A sémadefiníciót nem sikerült betölteni és feldolgozni."
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "Nem lehet létrehozni a sémafeldolgozó kontextust."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "Nem lehet létrehozni a sémát."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr "Nem lehet létrehozni a sémavalidációs kontextust."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "Érvénytelen fájlformátum."
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "Nem lehet feldolgozni a(z) adatfájlt: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Nem található gyűjtemény: %1"

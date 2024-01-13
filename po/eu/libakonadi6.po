@@ -1,16 +1,16 @@
 # Translation for libakonadi5.po to Euskara/Basque (eu).
-# Copyright (C) 2020-2023 This file is copyright:
+# Copyright (C) 2020-2024 This file is copyright:
 # This file is distributed under the same license as the akonadi package.
-# SPDX-FileCopyrightText: 2023 KDE euskaratzeko proiektuko arduraduna <xalba@ni.eus>
+# SPDX-FileCopyrightText: 2023, 2024 KDE euskaratzeko proiektuko arduraduna <xalba@ni.eus>
 #
 # Translators:
-# Iñigo Salvador Azurmendi <xalba@ni.eus>, 2020, 2021, 2022, 2023.
+# Iñigo Salvador Azurmendi <xalba@ni.eus>, 2020, 2021, 2022, 2023, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-11 00:37+0000\n"
-"PO-Revision-Date: 2023-09-27 18:14+0200\n"
+"POT-Creation-Date: 2024-01-13 00:38+0000\n"
+"PO-Revision-Date: 2024-01-11 23:29+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.08.1\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -166,10 +166,9 @@ msgid "Job canceled."
 msgstr "Lana bertan behera utzi da."
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
-msgstr "Akonadiren agentea"
+msgstr "«Akonadi»ren Agintea"
 
 #: akonadictl/main.cpp:211
 #, kde-format
@@ -189,11 +188,27 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"Akonadi zerbitzaria manipulatzeko tresna\n"
+"\n"
+"Komandoak:\n"
+"  start          Akonadi zerbitzaria haren prozesu guztiekin abiatzen du\n"
+"  stop           Akonadi zerbitzaria eta haren prozesu guztiak modu "
+"garbian                  geldiarazten ditu\n"
+"  restart        Akonadi zerbitzaria haren prozesu guztiekin berrabiatzen "
+"du\n"
+"  status         Akonadi zerbitzariaren egoeraren ikuspegi orokor bat "
+"erakusten du\n"
+"  instances      Dauden Akonadi instantzia guztiak zerrendatzen ditu\n"
+"  vacuum         Hustu barneko biltegiratzea (ABISUA: denbora eta diskoan "
+"leku                  asko behar ditu\n"
+"  fsck           Barneko biltegiratzearen koherentzia egiaztatu (eta "
+"konpontzen saiatu)\n"
+"                 (denboratxo bat har dezake)"
 
 #: akonadictl/main.cpp:231
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "Exekutatu beharreko komandoa"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -298,7 +313,7 @@ msgstr "Ez da jomuga baliodunik zehaztu"
 msgid "Invalid collection."
 msgstr "Bilduma baliogabea."
 
-#: core/jobs/itemcreatejob.cpp:105
+#: core/jobs/itemcreatejob.cpp:115
 #, kde-format
 msgid "Invalid parent collection"
 msgstr "Guraso bilduma baliogabea"
@@ -626,6 +641,8 @@ msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
+"Erabiltzaile-saio berean akonadiren instantzia anizkoitzak abiatzeko izen-"
+"esparrua"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
@@ -2565,39 +2582,39 @@ msgstr "%1 fitxategia ez da existitzen."
 msgid "Unable to parse data file '%1'."
 msgstr "Ezin izan da «%1» datu-fitxategiaren sintaxia aztertu."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr ""
 "Eskemaren definizioa ezin izan da zamatu eta sintaxi-azterketa ez du "
 "gainditu."
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "Ezin izan da sintaxi-azterketarako testuingurua sortu."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "Ezin izan da eskema sortu."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr "Ezin izan da eskema balioztatzeko testuingurua sortu."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "Fitxategi-formatu baliogabea."
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "Ezin da datu-fitxategiaren sintaxia aztertu: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Ezin izan da «%1» bilduma aurkitu"

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-11 00:37+0000\n"
-"PO-Revision-Date: 2024-01-03 14:17+0100\n"
+"POT-Creation-Date: 2024-01-13 00:38+0000\n"
+"PO-Revision-Date: 2024-01-11 07:32+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -17,7 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: pology\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -165,10 +164,9 @@ msgid "Job canceled."
 msgstr "Job nuligita."
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
-msgstr "Akonadi Agento"
+msgstr "Regado de Akonadi"
 
 #: akonadictl/main.cpp:211
 #, kde-format
@@ -188,11 +186,26 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"Servil-manipulilo de Akonadi\n"
+"\n"
+"Komandoj:\n"
+"  start          Lanĉas la Akonadi-servilon kun ĉiuj ĝiaj procesoj\n"
+"  stop           Haltigas la Akonadi-servilon kaj ĉiujn ĝiajn procesojn "
+"pure\n"
+"  restart        Rekomenci Akonadi-servilon kun ĉiuj ĝiaj procesoj\n"
+"  status         Montras statusan superrigardon de la Akonadi-servilo\n"
+"  instances      Listigag ĉiujn ekzistantajn Akonadi-instancojn\n"
+"  vacuum         Polvosuĉi internan konservejon (AVERTO: bezonas multan "
+"tempon \n"
+"kaj diskospacon!)\n"
+"  fsck           Kontroli (kaj provi ripari) konsistencon de la interna "
+"konservejo\n"
+"                 (povas preni iom da tempo)"
 
 #: akonadictl/main.cpp:231
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "Komando plenumenda"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -297,7 +310,7 @@ msgstr "Neniu valida celo specifita"
 msgid "Invalid collection."
 msgstr "Nevalida kolekto."
 
-#: core/jobs/itemcreatejob.cpp:105
+#: core/jobs/itemcreatejob.cpp:115
 #, kde-format
 msgid "Invalid parent collection"
 msgstr "Nevalida gepatra kolekto"
@@ -620,7 +633,7 @@ msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
 #, kde-format
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
-msgstr ""
+msgstr "Nomspaco por komenci plurajn Akonadi-instancojn en la sama uzantseanco"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
@@ -2547,37 +2560,37 @@ msgstr "Dosiero %1 ne ekzistas."
 msgid "Unable to parse data file '%1'."
 msgstr "Ne eblas analizi datumdosieron '%1'."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "Skema difino ne povus esti ŝargita kaj analizita."
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "Ne eblas krei skeman analizan kuntekston."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "Ne eblas krei skemon."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr "Ne eblas krei kuntekston pri validigo de skemo."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "Nevalida dosierformato."
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "Ne eblas analizi datumdosieron: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Ne eblas trovi kolekton %1"

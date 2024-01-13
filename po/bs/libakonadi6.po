@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-11 00:37+0000\n"
+"POT-Creation-Date: 2024-01-13 00:38+0000\n"
 "PO-Revision-Date: 2014-01-31 20:40+0100\n"
 "Last-Translator: Samir Ribić <megaribi@epn.ba>\n"
 "Language-Team: bosanski <bs@li.org>\n"
@@ -311,7 +311,7 @@ msgstr "Nije navedeno dobro odredište"
 msgid "Invalid collection."
 msgstr "Neispravna kolekcija."
 
-#: core/jobs/itemcreatejob.cpp:105
+#: core/jobs/itemcreatejob.cpp:115
 #, fuzzy, kde-format
 #| msgid "Invalid collection"
 msgid "Invalid parent collection"
@@ -2686,43 +2686,43 @@ msgstr "Datoteka %1 ne postoji."
 msgid "Unable to parse data file '%1'."
 msgstr "Ne mogu da dobavim tip agenta „%1“."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "Definicija sheme ne može biti učitana i raščlanjena"
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema parser context."
 msgstr "Ne mogu da stvorim primjerak agenta."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema."
 msgstr "Ne mogu da stvorim primjerak agenta."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema validation context."
 msgstr "Ne mogu da stvorim primjerak agenta."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, fuzzy, kde-format
 #| msgctxt "@info"
 #| msgid "Invalid item retrieved"
 msgid "Invalid file format."
 msgstr "Pogrešan tekst preuzet"
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, fuzzy, kde-format
 #| msgid "Could not paste data: %1"
 msgid "Unable to parse data file: %1"
 msgstr "Ne mogu da umetnem podatke: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, fuzzy, kde-format
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"

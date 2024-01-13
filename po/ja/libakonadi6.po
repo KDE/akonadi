@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-11 00:37+0000\n"
+"POT-Creation-Date: 2024-01-13 00:38+0000\n"
 "PO-Revision-Date: 2021-05-15 17:47-0700\n"
 "Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -302,7 +302,7 @@ msgstr ""
 msgid "Invalid collection."
 msgstr "無効なコレクション。"
 
-#: core/jobs/itemcreatejob.cpp:105
+#: core/jobs/itemcreatejob.cpp:115
 #, fuzzy, kde-format
 #| msgid "No such collection."
 msgid "Invalid parent collection"
@@ -2544,40 +2544,40 @@ msgstr ""
 msgid "Unable to parse data file '%1'."
 msgstr "データファイル '%1' を解析できませんでした。"
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr ""
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema parser context."
 msgstr "エージェントのインスタンスを作成できません。"
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema."
 msgstr "エージェントのインスタンスを作成できません。"
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Unable to create schema validation context."
 msgstr "エージェントのインスタンスを作成できません。"
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "無効なファイルフォーマット。"
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "データファイルを解析できませんでした: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "コレクション %1 は見つかりませんでした。"

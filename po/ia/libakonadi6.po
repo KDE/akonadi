@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# g.sora <g.sora@tiscali.it>, 2011, 2012, 2013, 2020, 2021, 2022, 2023.
+# g.sora <g.sora@tiscali.it>, 2011, 2012, 2013, 2020, 2021, 2022, 2023, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-11 00:37+0000\n"
-"PO-Revision-Date: 2023-09-27 10:26+0200\n"
+"POT-Creation-Date: 2024-01-13 00:38+0000\n"
+"PO-Revision-Date: 2024-01-11 12:17+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -163,10 +163,9 @@ msgid "Job canceled."
 msgstr "Carga cancellate."
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
-msgstr "Agente Akonadi"
+msgstr "Controlo de Akonadi"
 
 #: akonadictl/main.cpp:211
 #, kde-format
@@ -186,11 +185,25 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"Instrumento de manipolation de servitor Akonadi\n"
+"\n"
+"Commandos:\n"
+"  start          Starta le servitor Akonadi con omne su  processos\n"
+"  stop           Stoppa le servitor Akonadi e omne su processos purmente\n"
+"  restart        Restarta servitor Akonadi con omne su  processos\n"
+"  status         MOnstra un panorama de stato del servitor Akonadi\n"
+"  instances      Lista omne instantias existente de Akonadi\n"
+"  vacuum         Vacua immagazinage interne (AVISO: ilnecessita multe "
+"tempore e spatio de\n"
+"                 disco!)\n"
+"  fsck           Verifica (e essaya corriger) consistenntia del "
+"immagazinage  interne\n"
+"                 (il pote prender alcun tempore)"
 
 #: akonadictl/main.cpp:231
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "Commando que il debe exequer"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -295,7 +308,7 @@ msgstr "Non specificava ulle destination valide"
 msgid "Invalid collection."
 msgstr "Collection invalide."
 
-#: core/jobs/itemcreatejob.cpp:105
+#: core/jobs/itemcreatejob.cpp:115
 #, kde-format
 msgid "Invalid parent collection"
 msgstr "Collection genitor invalide"
@@ -622,6 +635,8 @@ msgstr "(c) 2009 Volker Krause <vkrause@kde.org>"
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
+"Spatio de nomine (namespace) per instantias multiple de Akonadi in le mesme "
+"session de usator"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
@@ -2565,37 +2580,37 @@ msgstr "File %1 non existe."
 msgid "Unable to parse data file '%1'."
 msgstr "Incapace a analysar file de datos '%1'."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "Definition de schema non poteva esser cargate e analysate."
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "Incapace a crear un contexto de analysator de schema."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "Incapace a crear schema."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr "Incapace de crear un contexto de validation de schema."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "Formato de file invalide."
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "Incapace a analysar file de datos: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Incapace a trovar collection %1"

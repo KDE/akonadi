@@ -2,7 +2,7 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# SPDX-FileCopyrightText: 2022, 2023 Emir SARI <emir_sari@icloud.com>
+# SPDX-FileCopyrightText: 2022, 2023, 2024 Emir SARI <emir_sari@icloud.com>
 # Serdar Soytetir <tulliana@gmail.com>, 2008, 2009, 2012.
 # Serhat Demirkol <serhat_demirkol@yahoo.com>, 2009.
 # H. İbrahim Güngör <ibrahim@pardus.org.tr>, 2010, 2011.
@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-11 00:37+0000\n"
-"PO-Revision-Date: 2023-11-21 19:59+0300\n"
+"POT-Creation-Date: 2024-01-13 00:38+0000\n"
+"PO-Revision-Date: 2024-01-11 16:06+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 23.11.70\n"
+"X-Generator: Lokalize 24.01.85\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -54,7 +54,7 @@ msgstr "Nesne dbus'ta kaydedilemedi: %1"
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
-msgstr "%2 tipindeki %1"
+msgstr "%2 türündeki %1"
 
 #: agentbase/agentbase.cpp:883
 #, kde-format
@@ -171,10 +171,9 @@ msgid "Job canceled."
 msgstr "Görev iptal edildi."
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
-msgstr "Akonadi Aracısı"
+msgstr "Akonadi Denetimi"
 
 #: akonadictl/main.cpp:211
 #, kde-format
@@ -194,11 +193,23 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"Akonadi sunucusu manipülasyon aracı\n"
+"\n"
+"Komutlar:\n"
+"  start          Akonadi sunucusunu tüm süreçleriyle başlatır\n"
+"  stop           Akonadi sunucusunu ve tüm süreçlerini temizce durdurur\n"
+"  restart        Akonadi sunucusunu tüm süreçleriyle yeniden başlatır\n"
+"  status         Akonadi sunucusunun bir genel durumunu gösterir\n"
+"  instances      Var olan tüm Akonadi örneklerini listeler\n"
+"  vacuum         İç depolamayı vakumlar (UYARI: Pek çok zaman ve\n"
+"                   disk alanı gerektirir!)\n"
+"  fsck           İç depolamanın tutarlılığını denetle ve gerekiyorsa onar\n"
+"                   (biraz vakit alabilir)"
 
 #: akonadictl/main.cpp:231
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "Yürütülecek komut"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -303,7 +314,7 @@ msgstr "Geçerli bir hedef belirtilmedi"
 msgid "Invalid collection."
 msgstr "Geçersiz koleksiyon."
 
-#: core/jobs/itemcreatejob.cpp:105
+#: core/jobs/itemcreatejob.cpp:115
 #, kde-format
 msgid "Invalid parent collection"
 msgstr "Geçersiz üst koleksiyon"
@@ -626,6 +637,7 @@ msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
+"Aynı kullanıcı oturumunda birden çok Akonadi örneğini başlatmak için ad alanı"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
@@ -2548,37 +2560,37 @@ msgstr "%1 dosyası yok."
 msgid "Unable to parse data file '%1'."
 msgstr "'%1' veri dosyası ayrıştırılamıyor."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "Şema tanımı yüklenemedi ve ayrıştırılamadı."
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "Şema ayrıştırıcı bağlamı oluşturulamıyor."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "Şema oluşturulamıyor."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr "Şema geçerleme bağlamı oluşturulamıyor."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "Geçersiz dosya biçimi."
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "Veri dosyası ayrıştırılamadı: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "%1 koleksiyonu bulunamıyor"

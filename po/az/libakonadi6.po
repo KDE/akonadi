@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-11 00:37+0000\n"
+"POT-Creation-Date: 2024-01-13 00:38+0000\n"
 "PO-Revision-Date: 2023-02-19 14:32+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -296,7 +296,7 @@ msgstr "Düzgün təyinat verilməyib"
 msgid "Invalid collection."
 msgstr "Xətalı kolleksiya."
 
-#: core/jobs/itemcreatejob.cpp:105
+#: core/jobs/itemcreatejob.cpp:115
 #, kde-format
 msgid "Invalid parent collection"
 msgstr "Xətalı ana kolleksiya"
@@ -2546,39 +2546,39 @@ msgstr "\"%1\" faylı mövcud deyil."
 msgid "Unable to parse data file '%1'."
 msgstr "\"%1\" verilənlər faylını tıhlil etmək mümkün olmadı."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr ""
 "XML verilənləri sxeminin müəyyən edilməsi yüklənə və təhlil edilə bilmir."
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "XML verilənləri sxemini analiz edən kontekst yaratmaq olmur."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "XML verilənləri sxemi yaradıla bilmir."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr ""
 "XML verilənləri sxemi düzgünlüyünü yoxlamaq üçün kontekst yaradıla bilmədi."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "Səhv fayl formatı."
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "Təhlil edilə bilməyən verilənlər faylı: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "%1 kolleksiyası tapmaq mümkün olmadı"

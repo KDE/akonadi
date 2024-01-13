@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-11 00:37+0000\n"
-"PO-Revision-Date: 2023-09-28 05:30+0200\n"
+"POT-Creation-Date: 2024-01-13 00:38+0000\n"
+"PO-Revision-Date: 2024-01-12 04:51+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -164,10 +164,9 @@ msgid "Job canceled."
 msgstr "დავალება გაუქმდა."
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
-msgstr "Akonadi -ის აგენტი"
+msgstr "Akonadi-ის მართვა"
 
 #: akonadictl/main.cpp:211
 #, kde-format
@@ -187,11 +186,24 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"Akonadi-ის სერვერის მართვის ხელსაწყო\n"
+"\n"
+"ბრძანებები:\n"
+"  start           გაუშვებს Akonadi-ის სერვერს ყველა მისი პროცესით\n"
+"  stop           გააჩერებს Akonadi-ის სერვერს და ყველა მის პროცესს, სუფთად\n"
+"  restart        გადატვირთავს Akonadi-ის სერვერს და ყველა მის პროცესს\n"
+"  status         გაჩვენებთ Akonadi-ის სერვერის სტატუსის მიმოხილვას\n"
+"  instances        არსებული Akonadi-ის გაშვებული ასლების ჩვენება\n"
+"  vacuum           შიდა საცავის მომტვერსასრუტება (გაფრთხილება: სჭირდება "
+"ძალიან\n"
+"                                           ბევრი დრო და ადგილი დისკზე!)\n"
+"  fsck            შიდა საცავის მთლიანობის შემოწმება (და შეკეთების მცდელობა\n"
+"                        (შეიძლება, საკმაო დრო დასჭირდეს)"
 
 #: akonadictl/main.cpp:231
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "შესასრულებელი ბრძანება"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -296,7 +308,7 @@ msgstr "სწორი სამიზნე მითითებული ა
 msgid "Invalid collection."
 msgstr "არასწორი კოლექცია."
 
-#: core/jobs/itemcreatejob.cpp:105
+#: core/jobs/itemcreatejob.cpp:115
 #, kde-format
 msgid "Invalid parent collection"
 msgstr "არასწორი მშობელი კოლექცია"
@@ -618,6 +630,8 @@ msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
+"სახელების სივრცე ერთზე მეტი Akonadi-ის გაშვებული ასლის შესაქმნელად იგივე "
+"მომხმარებლის სესიაში"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
@@ -2536,37 +2550,37 @@ msgstr "ფაილი არ არსებობს: %1."
 msgid "Unable to parse data file '%1'."
 msgstr "მონაცემების ფაილის ('%1') დამუშავების შეცდომა."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "სქემის აღწერის ჩატვირთვა და დამუშავება შეუძლებელია."
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "სქემის დამუშავების კონტექსტის შექმნის შეცდომა."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "სქემის შექმნის შეცდომა."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr "სქემის გადამოწმების კონტექსტის შექმნის შეცდომა."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "არასწორი ფაილის ფორმატი."
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "მონაცემების ფაილის დამუშავების შეცდომა: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "კოლექციის (%1) პოვნა შეუძლებელია"

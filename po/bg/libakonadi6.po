@@ -1,21 +1,21 @@
 # Copyright (C) 2023 This file is copyright:
 # This file is distributed under the same license as the akonadi package.
 #
-# SPDX-FileCopyrightText: 2022, 2023 Mincho Kondarev <mkondarev@yahoo.de>
+# SPDX-FileCopyrightText: 2022, 2023, 2024 Mincho Kondarev <mkondarev@yahoo.de>
 msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-11 00:37+0000\n"
-"PO-Revision-Date: 2023-09-30 10:19+0200\n"
+"POT-Creation-Date: 2024-01-13 00:38+0000\n"
+"PO-Revision-Date: 2024-01-11 21:40+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
-"Language-Team: \n"
+"Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.08.1\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -163,10 +163,9 @@ msgid "Job canceled."
 msgstr "Работата е отменена."
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
-msgstr "Akonadi агент"
+msgstr "Akonadi контрол"
 
 #: akonadictl/main.cpp:211
 #, kde-format
@@ -186,11 +185,25 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"Инструмент за контрол на Akonadi сървър\n"
+"\n"
+"Команди:\n"
+"  start          Стартиране на сървъра Akonadi с всички негови процеси\n"
+"  stop           Чисто спиране на сървъра Akonadi с всички негови процеси\n"
+"  restart        Рестартиране на сървъра Akonadi с всички негови процеси\n"
+"  status         Показва преглед на състоянието на сървъра Akonadi\n"
+"  instances      Списък на всички изпълняващи се копия на Akonadi\n"
+"  vacuum         Вакуумно вътрешно хранилище (ПРЕДУПРЕЖДЕНИЕ: изисква много "
+"време и дисково\n"
+"                 пространство!)\n"
+"  fsck           Проверка (и се опит за поправка) на целостта на вътрешното "
+"хранилище\n"
+"                 (може да отнеме известно време)"
 
 #: akonadictl/main.cpp:231
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "Команда за изпълнение"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -295,7 +308,7 @@ msgstr "Не е посочена валидна дестинация"
 msgid "Invalid collection."
 msgstr "Невалидна колекция."
 
-#: core/jobs/itemcreatejob.cpp:105
+#: core/jobs/itemcreatejob.cpp:115
 #, kde-format
 msgid "Invalid parent collection"
 msgstr "Невалидна родителска колекция"
@@ -620,6 +633,8 @@ msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
+"Пространство от имена за стартиране на няколко инстанции на Akonadi в една и "
+"съща потребителска сесия"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
@@ -2559,37 +2574,37 @@ msgstr "Файл %1 не съществува."
 msgid "Unable to parse data file '%1'."
 msgstr "Не може да се анализира файл с данни \"%1\"."
 
-#: xml/xmldocument.cpp:149
+#: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
 msgstr "Определението на схемата не може да бъде заредено и анализирано."
 
-#: xml/xmldocument.cpp:154
+#: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
 msgstr "Не може да се създаде контекст на анализатор на схема."
 
-#: xml/xmldocument.cpp:159
+#: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
 msgstr "Не може да се създаде схема."
 
-#: xml/xmldocument.cpp:164
+#: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
 msgstr "Не може да се създаде контекст за проверка на схемата."
 
-#: xml/xmldocument.cpp:169
+#: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
 msgstr "Невалиден файлов формат."
 
-#: xml/xmldocument.cpp:177
+#: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
 msgstr "Не може да се анализира файл с данни: %1"
 
-#: xml/xmldocument.cpp:302
+#: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Не може да се намери колекция %1"
