@@ -8,17 +8,17 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-11 00:37+0000\n"
-"PO-Revision-Date: 2023-09-27 09:44+0200\n"
+"PO-Revision-Date: 2024-01-11 09:17+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
-"%100==4 ? 3 : 0);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100>=3 && n"
+"%100<=4 ? 2 : 3);\n"
 "Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -168,10 +168,9 @@ msgid "Job canceled."
 msgstr "Posel preklican."
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
-msgstr "Akonadijev posrednik"
+msgstr "Akonadi Control"
 
 #: akonadictl/main.cpp:211
 #, kde-format
@@ -191,11 +190,25 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"Orodje za manipulacijo strežnika Akonadi\n"
+"\n"
+"Ukazi:\n"
+"   start          Zažene strežnik Akonadi z vsemi njegovimi procesi\n"
+"   stop          Čisto ustavi strežnik Akonadi in vse njegove procese\n"
+"   restart          Znova zaženi strežnik Akonadi z vsemi njegovimi procesi\n"
+"   status          Prikaže pregled stanja strežnika Akonadi\n"
+"   instances          Seznam vseh obstoječih pojavkov Akonadi\n"
+"   vakuum          Vakuumski notranji pomnilnik (OPOZORILO: potrebuje "
+"veliko\n"
+"                    časa in prostora na disku\n"
+"   fsck          Preveri (in poskusi popraviti) skladnost notranjega "
+"pomnilnika\n"
+"                  (lahko traja nekaj časa)"
 
 #: akonadictl/main.cpp:231
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "Ukaz za izvajanje"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -623,7 +636,7 @@ msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
 #, kde-format
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
-msgstr ""
+msgstr "Imenski prostor za zagon več pojavkov Akonadi v isti uporabnikovi seji"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
