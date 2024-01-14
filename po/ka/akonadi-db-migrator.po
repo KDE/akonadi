@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-11 00:37+0000\n"
-"PO-Revision-Date: 2024-01-10 05:35+0100\n"
+"PO-Revision-Date: 2024-01-13 04:44+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -262,17 +262,13 @@ msgid "(c) 2024 g10 Code GmbH"
 msgstr "(c) 2024 g10 Code GmbH"
 
 #: main.cpp:83
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid ""
-#| "Invalid database engine \"%1\" - valid values are \"sqlite\", \"mysql\" "
-#| "and \"postgres\"."
+#, kde-format
 msgid ""
 "The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and "
 "\"postgres\""
 msgstr ""
-"არასწორი ბაზის ძრავა \"%1\" - მისაღები მნიშვნელობებია \"SQLite\", \"MySQL\" "
-"და \"postgres\"."
+"ახალი ბაზის ძრავა, რომელიც გნებავთ, გამოიყენოთ. შესაძლო მნიშვნელობებია  "
+"\"sqlite\", \"mysql\" და \"postgres\"."
 
 #: main.cpp:90
 #, kde-format

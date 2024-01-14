@@ -1,0 +1,306 @@
+# Copyright (C) 2024 This file is copyright:
+# This file is distributed under the same license as the akonadi package.
+#
+# SPDX-FileCopyrightText: 2024 Kristof Kiszel <ulysses@fsf.hu>
+msgid ""
+msgstr ""
+"Project-Id-Version: akonadi\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2024-01-11 00:37+0000\n"
+"PO-Revision-Date: 2024-01-13 13:21+0100\n"
+"Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
+"Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 23.08.4\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Kiszel Kristóf"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "ulysses@fsf.hu"
+
+#: dbmigrator.cpp:435
+#, kde-format
+msgctxt "@info:status"
+msgid "Stopping Akonadi service..."
+msgstr "Akonadi szolgáltatás leállítása…"
+
+#: dbmigrator.cpp:438
+#, kde-format
+msgctxt "@info:status"
+msgid "Error: timeout while waiting for Akonadi to stop."
+msgstr "Hiba: időtúllépés az Akonadi leállására várva."
+
+#: dbmigrator.cpp:445
+#, kde-format
+msgctxt "@info:status"
+msgid "Error: couldn't acquire DBus lock for Akonadi."
+msgstr "Hiba: nem sikerült megszerezni a DBus zárat az Akonadihoz."
+
+#: dbmigrator.cpp:454
+#, kde-format
+msgctxt "@info:status"
+msgid "Starting Akonadi service..."
+msgstr "Akonadi szolgáltatás indítása…"
+
+#: dbmigrator.cpp:469
+#, kde-format
+msgctxt "@info:status"
+msgid ""
+"Invalid database engine \"%1\" - valid values are \"sqlite\", \"mysql\" and "
+"\"postgres\"."
+msgstr ""
+"Érvénytelen adatbázis-alrendszer: „%1” - az érvényes értékek a következők: "
+"„sqlite”, „mysql” és „postgres”."
+
+#: dbmigrator.cpp:491
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error: failed to configure source database server."
+msgstr "Hiba: nem sikerült beállítani a forrás adatbázis-kiszolgálót."
+
+#: dbmigrator.cpp:496
+#, kde-format
+msgctxt "@info:shell"
+msgid "Source and destination database engines are the same."
+msgstr "A forrás és a cél adatbázis-alrendszer ugyanaz."
+
+#: dbmigrator.cpp:503
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error: failed to obtain path to source database data file or directory."
+msgstr ""
+"Hiba: nem sikerült megszerezni a forrás adatbázis adatfájljának vagy "
+"mappájának elérési útját."
+
+#: dbmigrator.cpp:510
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error: failed to configure the new database server."
+msgstr "Hiba: nem sikerült beállítani az új adatbázis-kiszolgálót."
+
+#: dbmigrator.cpp:516
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error: failed to open existing database to migrate data from."
+msgstr ""
+"Hiba: nem sikerült megnyitni a meglévő adatbázist az adatok "
+"átköltöztetéséhez."
+
+#: dbmigrator.cpp:521
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error: failed to open new database to migrate data to."
+msgstr ""
+"Hiba: nem sikerült megnyitni az új adatbázist az adatok átköltöztetéséhez."
+
+#: dbmigrator.cpp:541
+#, kde-format
+msgctxt "@info:status %2 is error message"
+msgid "Error: failed to remove temporary database directory %1: %2"
+msgstr "Hiba: nem sikerült törölni a(z) %1 átmeneti adatbázismappát: %2"
+
+#: dbmigrator.cpp:548
+#, kde-format
+msgctxt "@info:shell"
+msgid "Backing up original database..."
+msgstr "Eredeti adatbázis biztonsági mentése…"
+
+#: dbmigrator.cpp:556
+#, kde-format
+msgctxt "@info:status"
+msgid "Restoring database from backup %1 to %2"
+msgstr "Adatbázis visszaállítása a(z) %1 biztonsági mentésből ide: %2"
+
+#: dbmigrator.cpp:558
+#, kde-format
+msgctxt "@info:status %1 is error message"
+msgid "Error: failed to restore database from backup: %1"
+msgstr ""
+"Hiba: nem sikerült visszaállítani az adatbázist a biztonsági mentésből: %1"
+
+#: dbmigrator.cpp:590 dbmigrator.cpp:601
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error has occurred while migrating table %1"
+msgstr "Hiba történt a(z) %1 tábla átköltöztetésekor"
+
+#: dbmigrator.cpp:620
+#, kde-format
+msgctxt "@label"
+msgid ""
+"Backup directory already exists. Do you want to overwrite the previous "
+"backup?"
+msgstr ""
+"A biztonsági mentés mappája már létezik. Szeretné felülírni az előző "
+"biztonsági mentést?"
+
+#: dbmigrator.cpp:625
+#, kde-format
+msgctxt "@info:shell"
+msgid "Cannot proceed without backup. Migration interrupted."
+msgstr "Nem lehet folytatni biztonsági mentés nélkül. Költöztetés megszakítva."
+
+#: dbmigrator.cpp:630
+#, kde-format
+msgctxt "@info:shell"
+msgid "Failed to remove previous backup directory."
+msgstr "Nem sikerült törölni az előző biztonsági mentés mappáját."
+
+#: dbmigrator.cpp:643
+#, kde-format
+msgctxt "@info:shell"
+msgid "Failed to move database to backup location: %1"
+msgstr "Nem sikerült áthelyezni az adatbázist a biztonsági mentés helyére: %1"
+
+#: dbmigrator.cpp:657
+#, kde-format
+msgctxt "@label"
+msgid "Backup file %1 already exists. Overwrite?"
+msgstr "A(z) %1 biztonsági mentés már létezik. Felülírja?"
+
+#: dbmigrator.cpp:659
+#, kde-format
+msgctxt "@info:status"
+msgid "Cannot proceed without backup. Migration interrupted."
+msgstr "Nem lehet folytatni biztonsági mentés nélkül. Költöztetés megszakítva."
+
+#: dbmigrator.cpp:665
+#, kde-format
+msgctxt "@info:status"
+msgid "Error: Failed to remove existing backup file %1: %2"
+msgstr "Hiba: nem sikerült eltávolítani a létező %1 biztonsági mentést: %2"
+
+#: dbmigrator.cpp:672
+#, kde-format
+msgctxt "@info:status"
+msgid "Failed to back up Akonadi Server configuration: %1"
+msgstr ""
+"Hiba: nem sikerült az Akonadi kiszolgáló beállításainak biztonsági mentése: "
+"%1"
+
+#: dbmigrator.cpp:689
+#, kde-format
+msgctxt "@info:status %1 is error message"
+msgid "Error: failed to move migrated database to the primary location: %1"
+msgstr ""
+"Hiba: nem sikerült áthelyezni a költöztetett adatbázist az elsődleges "
+"helyre: %1"
+
+#: dbmigrator.cpp:708
+#, kde-format
+msgctxt "@info:status %1 is error message"
+msgid "Error: failed to remove original akonadiserverrc: %1"
+msgstr "Hiba: nem sikerült eltávolítani az eredeti akonadisercerrc fájlt: %1"
+
+#: dbmigrator.cpp:714
+#, kde-format
+msgctxt "@info:status %1 is error message"
+msgid "Error: failed to move new akonadiserverrc to the primary location: %1"
+msgstr ""
+"Hiba: nem sikerült áthelyezni az új akonadiserverrc fájlt az elsődleges "
+"helyre: %1"
+
+#: dbmigrator.cpp:805
+#, kde-format
+msgctxt "@info:status"
+msgid "Error: failed to update autoincrement value for table %1"
+msgstr ""
+"Hiba: nem sikerült frissíteni a(z) %1 tábla automatikus növekményes értékét"
+
+#: dbmigrator.cpp:810
+#, kde-format
+msgctxt "@info:status"
+msgid "Optimizing table %1..."
+msgstr "A(z) %1 tábla optimalizálása…"
+
+#: dbmigrator.cpp:813
+#, kde-format
+msgctxt "@info:status"
+msgid "Error: failed to optimize table %1"
+msgstr "Hiba: nem sikerült a(z) %1 tábla optimalizálása"
+
+#: main.cpp:31
+#, kde-format
+msgctxt ""
+"Options for user to input to command line prompt, parenthesis indicate which "
+"letter to type, capitalized option is default"
+msgid " [(y)es/(N)o] "
+msgstr " [(i)gen/(N)em] "
+
+#: main.cpp:36 main.cpp:55
+#, kde-format
+msgctxt "Letter for option \"(y)es\" prompted from command line"
+msgid "y"
+msgstr "i"
+
+#: main.cpp:49
+#, kde-format
+msgctxt ""
+"Options for user to input to command line prompt, parenthesis indicate which "
+"letter to type, capitalized option is default"
+msgid " [(y)es/(N)o/(s)kip] "
+msgstr " [(i)gen/(N)em/(k)ihagyás] "
+
+#: main.cpp:56
+#, kde-format
+msgctxt "Letter for option \"(s)kip\" prompted from command line"
+msgid "s"
+msgstr "k"
+
+#: main.cpp:73 main.cpp:75
+#, kde-format
+msgid "Akonadi DB Migrator"
+msgstr "Akonadi adatbázis-költöztető"
+
+#: main.cpp:77
+#, kde-format
+msgid "(c) 2024 g10 Code GmbH"
+msgstr "(c) g10 Code GmbH, 2024."
+
+#: main.cpp:83
+#, kde-format
+msgid ""
+"The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and "
+"\"postgres\""
+msgstr ""
+"A használandó új adatbázis-alrendszer. A lehetséges értékek: „sqlite”, "
+"„mysql” és „postgres”"
+
+#: main.cpp:90
+#, kde-format
+msgctxt "@info:shell"
+msgid "Invalid target engine: %1."
+msgstr "Érvénytelen cél alrendszer: %1."
+
+#: main.cpp:104
+#, kde-format
+msgctxt "@info:status"
+msgid "Migration completed successfully."
+msgstr "A költöztetés sikeresen befejeződött."
+
+#: main.cpp:106
+#, kde-format
+msgctxt "@info:status"
+msgid "Migration failed."
+msgstr "A költöztetés nem sikerült."
+
+#: main.cpp:111
+#, kde-format
+msgctxt "@info:progress"
+msgid "Migrating table %1 (%2/%3)..."
+msgstr "A(z) %1 tábla költöztetése (%2/%3)…"
+
+#: main.cpp:125
+#, kde-format
+msgctxt "@info:progress"
+msgid "%1%..."
+msgstr "%1%…"
