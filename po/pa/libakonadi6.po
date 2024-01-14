@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-11 00:37+0000\n"
+"POT-Creation-Date: 2024-01-14 03:07+0000\n"
 "PO-Revision-Date: 2023-12-31 09:30-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -301,7 +301,7 @@ msgstr "ਕੋਈ ਢੁੱਕਵਾਂ ਟਿਕਾਣਾ ਨਹੀਂ ਦਿ�
 msgid "Invalid collection."
 msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ ਹੈ।"
 
-#: core/jobs/itemcreatejob.cpp:105
+#: core/jobs/itemcreatejob.cpp:115
 #, kde-format
 msgid "Invalid parent collection"
 msgstr "ਅਢੁੱਕਵਾਂ ਮੂਲ ਭੰਡਾਰ"
