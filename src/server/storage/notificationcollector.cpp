@@ -243,9 +243,10 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
                                              const QByteArray &resource,
                                              const QSet<QByteArray> &parts)
 {
-    PimItem::List items;
-    items << item;
-    itemNotification(op, items, collection, collectionDest, resource, parts);
+    if (!item.isValid()) {
+        return;
+    }
+    itemNotification(op, {item}, collection, collectionDest, resource, parts);
 }
 
 void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::Operation op,
@@ -261,6 +262,10 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
                                              const Relation::List &addedRelations,
                                              const Relation::List &removedRelations)
 {
+    if (items.empty()) {
+        return;
+    }
+
     QMap<Entity::Id, QList<PimItem>> vCollections;
 
     if ((op == Protocol::ItemChangeNotification::Modify) || (op == Protocol::ItemChangeNotification::ModifyFlags)
@@ -281,6 +286,7 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
     msg->setRemovedTags(removedTags);
     if (!addedRelations.isEmpty()) {
         QSet<Protocol::ItemChangeNotification::Relation> rels;
+        rels.reserve(addedRelations.size());
         for (const Relation &rel : addedRelations) {
             rels.insert(Protocol::ItemChangeNotification::Relation(rel.leftId(), rel.rightId(), rel.relationType().name()));
         }
@@ -288,6 +294,7 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
     }
     if (!removedRelations.isEmpty()) {
         QSet<Protocol::ItemChangeNotification::Relation> rels;
+        rels.reserve(removedRelations.size());
         for (const Relation &rel : removedRelations) {
             rels.insert(Protocol::ItemChangeNotification::Relation(rel.leftId(), rel.rightId(), rel.relationType().name()));
         }
@@ -303,6 +310,7 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
     msg->setParentDestCollection(collectionDest.id());
 
     QList<Protocol::FetchItemsResponse> ntfItems;
+    ntfItems.reserve(items.size());
     for (const PimItem &item : items) {
         Protocol::FetchItemsResponse i;
         i.setId(item.id());
@@ -314,6 +322,7 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
 
     /* Notify all virtual collections the items are linked to. */
     QHash<qint64, Protocol::FetchItemsResponse> virtItems;
+    virtItems.reserve(ntfItems.size());
     for (const auto &ntfItem : ntfItems) {
         virtItems.insert(ntfItem.id(), ntfItem);
     }
@@ -368,6 +377,10 @@ void NotificationCollector::collectionNotification(Protocol::CollectionChangeNot
                                                    const QSet<QByteArray> &changes,
                                                    const QByteArray &destResource)
 {
+    if (!collection.isValid()) {
+        return;
+    }
+
     auto msg = Protocol::CollectionChangeNotificationPtr::create();
     msg->setOperation(op);
     if (mConnection) {
@@ -441,6 +454,10 @@ void NotificationCollector::collectionNotification(Protocol::CollectionChangeNot
 
 void NotificationCollector::tagNotification(Protocol::TagChangeNotification::Operation op, const Tag &tag, const QByteArray &resource, const QString &remoteId)
 {
+    if (!tag.isValid()) {
+        return;
+    }
+
     auto msg = Protocol::TagChangeNotificationPtr::create();
     msg->setOperation(op);
     if (mConnection) {
@@ -550,6 +567,7 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
                 }
             } else {
                 QList<Protocol::FetchItemsResponse> fetchedItems;
+                fetchedItems.reserve(items.size());
                 for (const auto &item : items) {
                     Protocol::FetchItemsResponse resp;
                     resp.setId(item.id());
