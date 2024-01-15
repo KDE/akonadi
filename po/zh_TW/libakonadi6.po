@@ -5,20 +5,20 @@
 # Franklin Weng <franklin@goodhorse.idv.tw>, 2010, 2011, 2012, 2013, 2014, 2015.
 # Franklin Weng <franklin at goodhorse dot idv dot tw>, 2007, 2008.
 # Frank Weng (a.k.a. Franklin) <franklin at goodhorse dot idv dot tw>, 2008, 2009, 2010.
-# Kisaragi Hiu <mail@kisaragi-hiu.com>, 2023.
+# SPDX-FileCopyrightText: 2023, 2024 Kisaragi Hiu <mail@kisaragi-hiu.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-13 00:38+0000\n"
-"PO-Revision-Date: 2023-10-21 17:03+0900\n"
+"PO-Revision-Date: 2024-01-15 00:14+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.11.70\n"
+"X-Generator: Lokalize 24.01.90\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #, kde-format
@@ -167,10 +167,9 @@ msgid "Job canceled."
 msgstr "工作已取消。"
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
-msgstr "Akonadi Agent"
+msgstr "Akonadi 控制"
 
 #: akonadictl/main.cpp:211
 #, kde-format
@@ -190,11 +189,22 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"Akonadi 伺服器控制工具\n"
+"\n"
+"命令：\n"
+"  start          啟動 Akonadi 伺服器以及它的子行程\n"
+"  stop           停止 Akonadi 伺服器以及它的子行程，並確保乾淨退出\n"
+"  restart        重新啟動 Akonadi 和它的子行程\n"
+"  status         顯示 Akonadi 伺服器的狀態概覽\n"
+"  instances      列出所有現存的 Akonadi 實體\n"
+"  vacuum         清理內部儲存資料庫（警告：需要很多時間和磁碟空間！）\n"
+"  fsck           檢查內部儲存資料庫的一致性，有問題時嘗試修復（可能會花一段時"
+"間）"
 
 #: akonadictl/main.cpp:231
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "要執行的指令"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -613,7 +623,7 @@ msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
 #, kde-format
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
-msgstr ""
+msgstr "命名空間，用來在同一個使用者工作階段中啟動多個 Akonadi 實體"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
