@@ -527,20 +527,21 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
             destParent = collectionCache->retrieve(itemNtf.parentDestCollection());
         }
         const bool fetched = itemNtf.metadata().contains("FETCH_ITEM") || itemNtf.mustRetrieve();
-        // For removals this will retrieve an empty set. We'll deal with that in emitItemNotification
         Item::List items;
         if (fetched && fetchItems()) {
             items = itemCache->retrieve(Protocol::ChangeNotification::itemsToUids(itemNtf.items()));
-        } else {
+        }
+
+        // For removals we will likely retrieve an empty item set, so we just reconstruct the items from the notification.
+        if (items.empty()) {
             const auto &ntfItems = itemNtf.items();
             items.reserve(ntfItems.size());
             for (const auto &ntfItem : ntfItems) {
                 items.push_back(ProtocolHelper::parseItemFetchResult(ntfItem, &mItemFetchScope));
             }
         }
-        // It is possible that the retrieval fails also in the non-removal case (e.g. because the item was meanwhile removed while
-        // the changerecorder stored the notification or the notification was in the queue). In order to drop such invalid notifications we have to ignore them.
-        if (!items.isEmpty() || itemNtf.operation() == Protocol::ItemChangeNotification::Remove || !fetchItems()) {
+
+        if (!items.isEmpty()) {
             someoneWasListening = emitItemsNotification(itemNtf, items, parent, destParent);
         }
     } else if (msg->type() == Protocol::Command::SubscriptionChangeNotification) {
@@ -690,6 +691,9 @@ int MonitorPrivate::translateAndCompress(QQueue<Protocol::ChangeNotificationPtr>
 
     if (msg->type() == Protocol::Command::ItemChangeNotification) {
         const auto &itemNtf = Protocol::cmdCast<Protocol::ItemChangeNotification>(msg);
+        if (itemNtf.items().empty()) {
+            return 0;
+        }
         if (useRefCounting) {
             sourceWatched = isMonitored(itemNtf.parentCollection());
             destWatched = isMonitored(itemNtf.parentDestCollection());
