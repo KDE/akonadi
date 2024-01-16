@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-13 00:38+0000\n"
-"PO-Revision-Date: 2024-01-11 02:45+0100\n"
+"PO-Revision-Date: 2024-01-15 01:46+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -31,15 +31,15 @@ msgstr ""
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
-"Enrique Matías Sánchez (aka Quique),Santi,Dario Andrés Rodríguez,Adrián "
-"Martínez,Javier Viñal"
+"Eloy Cuadra,Enrique Matías Sánchez (aka Quique),Santi,Dario Andrés Rodríguez,"
+"Adrián Martínez,Javier Viñal"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
-"cronopios@gmail.com,santi@kde-es.org,andresbajotierra@gmail.com,sfxgt3@gmail."
-"com,fjvinal@gmail.com"
+"ecuadra@eloihr.net,cronopios@gmail.com,santi@kde-es.org,"
+"andresbajotierra@gmail.com,sfxgt3@gmail.com,fjvinal@gmail.com"
 
 #: agentbase/accountsintegration.cpp:86
 #, kde-format
@@ -54,7 +54,7 @@ msgstr "La integración de cuentas no está permitida"
 #: agentbase/agentbase.cpp:348 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
-msgstr "No es posible registrar objeto en dbus: %1"
+msgstr "No se puede registrar el objeto en dbus: %1"
 
 #: agentbase/agentbase.cpp:437
 #, kde-format
@@ -199,6 +199,21 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"Herramienta de manipulación del servidor Akonadi\n"
+"\n"
+"Órdenes:\n"
+"  start          Inicia el servidor Akonadi con todos sus procesos\n"
+"  stop           Detiene el servidor Akonadi y todos sus procesos de forma "
+"limpia\n"
+"  restart        Reinicia el servidor Akonadi con todos sus procesos\n"
+"  status         Muestra un resumen del estado del servidor Akonadi\n"
+"  instances      Lista todas las instancias existentes de Akonadi\n"
+"  vacuum         Limpia el almacenamiento interno (ADVERTENCIA: necesita  "
+"bastante\n"
+"                 tiempo y espacio en disco)\n"
+"  fsck           Comprueba (y trata de corregir) la consistencia del "
+"almacenamiento\n"
+"                 interno (puede tardar cierto tiempo)"
 
 #: akonadictl/main.cpp:231
 #, kde-format
@@ -584,9 +599,9 @@ msgid ""
 msgstr ""
 "La versión de protocolo del servidor Akonadi difiere de la usada por esta "
 "aplicación.\n"
-"Si usted actualizó recientemente su sistema, por favor, inicie sesión y "
-"vuelva a ingresar para asegurarse de que todas las aplicaciones usan la "
-"versión de protocolo correcta."
+"Si ha actualizado el sistema recientemente, cierre la sesión y vuelva a "
+"iniciarla para asegurarse de que todas las aplicaciones usan la versión de "
+"protocolo correcta."
 
 #: core/servermanager.cpp:280
 #, kde-format
@@ -594,8 +609,7 @@ msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
 "installation."
 msgstr ""
-"No hay agentes de Akonadi disponibles. Por favor, verifique su instalación "
-"de KDE PIM."
+"No hay agentes de Akonadi disponibles. Compruebe su instalación de KDE PIM."
 
 #: core/session.cpp:185
 #, kde-format
@@ -604,8 +618,8 @@ msgid ""
 "you updated your system recently please restart the Akonadi server."
 msgstr ""
 "Discordancia en la versión del protocolo. La versión del servidor es más "
-"antigua (%1) que la nuestra (%2). Si usted actualizó su sistema "
-"recientemente, por favor, reinicie el servidor Akonadi."
+"antigua (%1) que la nuestra (%2). Si ha actualizado el sistema "
+"recientemente, reinicie el servidor Akonadi."
 
 #: core/session.cpp:194
 #, kde-format
@@ -614,8 +628,8 @@ msgid ""
 "you updated your system recently please restart all KDE PIM applications."
 msgstr ""
 "Discordancia en la versión del protocolo. La versión del servidor es más "
-"reciente (%1) que la nuestra (%2). Si usted actualizó su sistema "
-"recientemente, por favor, reinicie todas las aplicaciones de KDE PIM."
+"reciente (%1) que la nuestra (%2). Si ha actualizado el sistema "
+"recientemente, reinicie todas las aplicaciones de KDE PIM."
 
 #: selftest/main.cpp:19
 #, kde-format
@@ -637,6 +651,8 @@ msgstr "© 2008 Volker Krause <vkrause@kde.org>"
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
+"Espacio de nombres para iniciar múltiples instancias de Akonadi en la misma "
+"sesión de usuario"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
@@ -1080,9 +1096,9 @@ msgid ""
 "correct, then re-open it and modify it again to add what's missing."
 msgstr ""
 "<qt>Sus cambios entran en conflicto con los hechos por otra persona mientras "
-"tanto.<br>Dado que solo puede aplicarse una versión, usted tendrá que "
-"integrar esos cambios manualmente.<br>Pulse sobre <a href=\"opentexteditor"
-"\">«Abrir el editor de texto»</a> para mantener una copia de los textos, a "
+"tanto.<br>Dado que solo puede aplicarse una versión, tendrá que integrar "
+"esos cambios manualmente.<br>Pulse sobre <a href=\"opentexteditor\">«Abrir "
+"el editor de texto»</a> para mantener una copia de los textos, a "
 "continuación, seleccione que versión es la más correcta, reábrala y "
 "modifíquela de nuevo para añadir lo perdido."
 
@@ -1214,7 +1230,7 @@ msgstr "Detalles..."
 #: widgets/manageaccountwidget.cpp:198
 #, kde-format
 msgid "Do you want to remove account '%1'?"
-msgstr "¿Quiere usted eliminar la cuenta «%1»?"
+msgstr "¿Desea eliminar la cuenta «%1»?"
 
 #: widgets/manageaccountwidget.cpp:199
 #, kde-format
@@ -1707,8 +1723,8 @@ msgid ""
 "and KDE PIM applications."
 msgstr ""
 "La versión del protocolo del servidor es %1, pero se necesita al menos la "
-"versión %2. Si usted actualizó recientemente KDE PIM, por favor, asegúrese "
-"de reiniciar tanto Akonadi como las aplicaciones de KDE PIM."
+"versión %2. Si ha actualizado KDE PIM recientemente, asegúrese de reiniciar "
+"tanto Akonadi como las aplicaciones de KDE PIM."
 
 #: widgets/selftestdialog.cpp:454
 #, kde-format
@@ -1913,10 +1929,9 @@ msgid ""
 "self-tests are supposed to help with tracking down and solving this problem. "
 "When requesting support or reporting bugs, please always include this report."
 msgstr ""
-"Un error ocurrió durante el inicio del servidor Akonadi. Los siguientes "
-"autopruebas se proponen ayudar a encontrar y solucionar este problema. "
-"Cuando pida apoyo técnico o comunique fallos, por favor, siempre incluya "
-"este informe."
+"Ha ocurrido un error durante el inicio del servidor Akonadi. Se supone que "
+"las siguientes pueden ayudar a encontrar y solucionar este problema. Cuando "
+"solicite asistencia técnica o notifique fallos, incluya siempre este informe."
 
 #. i18n: ectx: property (title), widget (QGroupBox, detailsGroup)
 #: widgets/selftestdialog.ui:39
@@ -1931,9 +1946,8 @@ msgid ""
 "<p>For more troubleshooting tips please refer to <a href=\"https://userbase."
 "kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
 msgstr ""
-"<p>Para obtener más consejos para la resolución de problemas por favor "
-"consulte <a href=\"https://userbase.kde.org/Akonadi\">userbase.kde.org/"
-"Akonadi</a>.</p>"
+"<p>Para obtener más consejos para la resolución de problemas, consulte <a "
+"href=\"https://userbase.kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
 
 #: widgets/standardactionmanager.cpp:78
 msgid "&New Folder..."
@@ -1990,7 +2004,7 @@ msgstr "Añadir a carpetas favoritas"
 
 #: widgets/standardactionmanager.cpp:110
 msgid "Add to Favorite"
-msgstr "Añadir a favorito"
+msgstr "Añadir a favoritas"
 
 #: widgets/standardactionmanager.cpp:117
 msgid "Remove from Favorite Folders"
@@ -1998,7 +2012,7 @@ msgstr "Eliminar de carpetas favoritas"
 
 #: widgets/standardactionmanager.cpp:118
 msgid "Remove from Favorite"
-msgstr "Eliminar de favorito"
+msgstr "Eliminar de favoritas"
 
 #: widgets/standardactionmanager.cpp:124
 msgid "Rename Favorite..."
@@ -2403,7 +2417,7 @@ msgid ""
 "you want to make it online?"
 msgstr ""
 "Antes de sincronizar la carpeta «%1» es necesario tener el recurso en línea. "
-"¿Quiere usted ponerlo en línea?"
+"¿Desea ponerlo en línea?"
 
 #: widgets/standardactionmanager.cpp:983
 #, kde-format
