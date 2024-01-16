@@ -1,16 +1,17 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
+# SPDX-FileCopyrightText: 2024 Kristof Kiszel <ulysses@fsf.hu>
 # Tamas Szanto <tszanto@interware.hu>, 2008.
 # Kristóf Kiszel <ulysses@kubuntu.org>, 2010, 2011, 2012, 2014, 2020, 2021.
 # Balázs Úr <urbalazs@gmail.com>, 2012, 2013, 2014.
-# SPDX-FileCopyrightText: 2024 Kristof Kiszel <ulysses@fsf.hu>
+# Kristof Kiszel <ulysses@fsf.hu>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.3\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-14 03:07+0000\n"
-"PO-Revision-Date: 2024-01-11 11:29+0100\n"
+"PO-Revision-Date: 2024-01-15 11:18+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 24.01.85\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -188,11 +189,26 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"Akonadi kiszolgálókezelő eszköz\n"
+"\n"
+"Parancsok:\n"
+"  start          Elindítja az Akonadi kiszolgálót, és az összes folyamatát\n"
+"  stop           Leállítja az Akonadi kiszolgálót, és az összes folyamatát\n"
+"  restart        Újraindítja az Akonadi kiszolgálót, és az összes "
+"folyamatát\n"
+"  status         Megjeleníti az Akonadi kiszolgáló állapotának áttekintését\n"
+"  instances      Listázza az összes meglévő Akonadi példányt\n"
+"  vacuum         Vacuum belső tároló (FIGYELMEZTETÉS: sok időt és "
+"lemezterületet\n"
+"                 használ!)\n"
+"  fsck           Ellenőrzi és megkísérli javítani a belső tároló  "
+"konzisztenciáját\n"
+"                 (némi időbe telhet)"
 
 #: akonadictl/main.cpp:231
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "A végrehajtandó parancs"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -620,6 +636,8 @@ msgstr "© Volker Krause, 2008. <vkrause@kde.org>"
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
+"Névtér több Akonadi példány indításához ugyanabban a felhasználói "
+"munkamenetben"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
