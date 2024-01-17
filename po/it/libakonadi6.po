@@ -4,14 +4,14 @@
 # Leonardo Finetti <finex@finex.org>, 2007.
 # Dario Panico <Dareus_Persarumrex@fastwebnet.it>, 2008.
 # Luigi Toscano <luigi.toscano@tiscali.it>, 2009, 2011, 2012, 2013, 2014, 2015.
-# SPDX-FileCopyrightText: 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023 Vincenzo Reale <smart2128vr@gmail.com>
+# SPDX-FileCopyrightText: 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Vincenzo Reale <smart2128vr@gmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-14 03:07+0000\n"
-"PO-Revision-Date: 2023-09-27 14:16+0200\n"
+"PO-Revision-Date: 2024-01-11 15:51+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.08.1\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -169,10 +169,9 @@ msgid "Job canceled."
 msgstr "Operazione annullata."
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
-msgstr "Agente Akonadi"
+msgstr "Controllo Akonadi"
 
 #: akonadictl/main.cpp:211
 #, kde-format
@@ -192,11 +191,26 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"Strumento di manipolazione del server Akonadi\n"
+"\n"
+"Comandi:\n"
+"  start          Avvia il server Akonadi con tutti i suoi processi\n"
+"  stop           Arresta il server Akonadi e tutti i suoi processi in modo "
+"pulito\n"
+"  restart        Riavvia il server Akonadi con tutti i suoi processi\n"
+"  status         Mostra una panoramica dello stato del server Akonadi\n"
+"  instances      Elenca tutte le istanze Akonadi esistenti\n"
+"  vacuum         Stoccaggio interno sottovuoto (ATTENZIONE: richiede molto "
+"tempo espazio\n"
+"                 disco!)\n"
+"   fsck           Controlla (e tenta di correggere) la coerenza "
+"dell'archiviazione interna\n"
+"                  (può richiedere del tempo)"
 
 #: akonadictl/main.cpp:231
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "Comando da eseguire"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -630,6 +644,7 @@ msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
+"Spazio dei nomi per avviare più istanze Akonadi nella stessa sessione utente"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."

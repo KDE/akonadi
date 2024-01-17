@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-11 00:37+0000\n"
-"PO-Revision-Date: 2024-01-09 22:58+0100\n"
+"PO-Revision-Date: 2024-01-15 22:52+0100\n"
 "Last-Translator: Luigi Toscano <luigi.toscano@tiscali.it>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -269,17 +269,13 @@ msgid "(c) 2024 g10 Code GmbH"
 msgstr "(c) 2024 g10 Code GmbH"
 
 #: main.cpp:83
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid ""
-#| "Invalid database engine \"%1\" - valid values are \"sqlite\", \"mysql\" "
-#| "and \"postgres\"."
+#, kde-format
 msgid ""
 "The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and "
 "\"postgres\""
 msgstr ""
-"Motore di banca dati «%1» non valido - i valori validi sono «sqlite», "
-"«mysql» e «postgres»."
+"Il nuovo motore di banca dati da usare. I valori possibili sono «sqlite», "
+"«mysql» e «postgres»"
 
 #: main.cpp:90
 #, kde-format
