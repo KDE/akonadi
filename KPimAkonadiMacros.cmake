@@ -89,8 +89,9 @@ function(add_akonadi_isolated_test)
             _defineTest(${_name} "MYSQL" ${CONFIG_BACKENDS})
         endif()
 
+        # PostgreSQL is unable to run in the containers used for the FreeBSD CI
         find_program(POSTGRES_EXECUTABLE postgres)
-        if (POSTGRES_EXECUTABLE AND NOT WIN32)
+        if (POSTGRES_EXECUTABLE AND NOT WIN32 AND NOT (CMAKE_SYSTEM_NAME MATCHES "FreeBSD" AND DEFINED ENV{KDECI_BUILD}))
             _defineTest(${_name} "PGSQL" ${CONFIG_BACKENDS})
         endif()
 
