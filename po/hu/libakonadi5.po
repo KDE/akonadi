@@ -4,30 +4,31 @@
 # Tamas Szanto <tszanto@interware.hu>, 2008.
 # Kristóf Kiszel <ulysses@kubuntu.org>, 2010, 2011, 2012, 2014, 2020, 2021.
 # Balázs Úr <urbalazs@gmail.com>, 2012, 2013, 2014.
+# SPDX-FileCopyrightText: 2024 Kristof Kiszel <ulysses@fsf.hu>
 msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.3\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-02 00:48+0000\n"
-"PO-Revision-Date: 2021-08-25 09:45+0200\n"
-"Last-Translator: Kristóf Kiszel <kiszel.kristof@gmail.com>\n"
+"PO-Revision-Date: 2024-01-25 13:50+0100\n"
+"Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 21.07.70\n"
+"X-Generator: Lokalize 24.01.90\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Kiszel Kristóf,Szántó Tamás,Úr Balázs"
+msgstr "Kiszel Kristóf"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "kiszel.kristof@gmail.com,tszanto@interware.hu,urbalazs@gmail.com"
+msgstr "ulysses@fsf.hu"
 
 #: agentbase/accountsintegration.cpp:86
 #, kde-format
@@ -609,8 +610,7 @@ msgid "Could not create agent instance: %1"
 msgstr "Nem sikerült új ügynökpéldányt létrehozni: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "Az ügynökpéldány létrehozása nem sikerült"
@@ -627,9 +627,7 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "Biztosan törölni szeretné a kijelölt ügynökpéldányt?"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "%1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "A(z) %1 beállításai"
@@ -660,11 +658,10 @@ msgid "Failed to register %1 configuration dialog."
 msgstr "A(z) %1 beállítóablak regisztrációja nem sikerült."
 
 #: widgets/agenttypedialog.cpp:66
-#, fuzzy, kde-format
-#| msgid "&Configure Agent Instance"
+#, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
-msgstr "Ügynökpéldány &beállítása"
+msgstr "Fiókbeállítás"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
@@ -756,7 +753,7 @@ msgstr "Örökre"
 #: widgets/clearcachefoldersjob.cpp:41
 #, kde-format
 msgid "Collection cache cleared. You should restart Akonadi now."
-msgstr ""
+msgstr "A gyűjtemény-gyorsítótár törölve. Indítsa újra az Akonadit."
 
 #: widgets/clearcachefoldersjob.cpp:69
 #, kde-format
@@ -765,6 +762,10 @@ msgid ""
 "likely never uploaded to the destination server, so clearing this collection "
 "means that those <b>data will be lost</b>. Are you sure you want to proceed?"
 msgstr ""
+"A(z) „%1” gyűjtemény %2 távoli azonosító nélküli elemet tartalmaz. Ezek az "
+"elemek valószínűleg soha nem lettek feltöltve a kiszolgálóra, vagyis a "
+"gyűjtemény törlése ezen <b>adatok elvesztését</b> jelenti. Biztosan "
+"folytatni szeretné?"
 
 #: widgets/collectiondialog.cpp:56
 #, kde-format
@@ -805,8 +806,7 @@ msgid "Could not create folder: %1"
 msgstr "Nem sikerült létrehozni ezt a mappát: %1"
 
 #: widgets/collectiondialog.cpp:285 widgets/standardactionmanager.cpp:351
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
 msgstr "A mappa létrehozása nem sikerült"
@@ -972,9 +972,7 @@ msgid "Open collection dialog"
 msgstr "Gyűjteményablak megnyitása"
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select a collection"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "Gyűjtemény kiválasztása"
@@ -2204,14 +2202,12 @@ msgstr[1] ""
 "Biztos, hogy törölni akarja a(z) %1 mappát és az összes almappáikat?"
 
 #: widgets/standardactionmanager.cpp:359
-#, fuzzy, kde-format
-#| msgid "Delete Folder"
-#| msgid_plural "Delete %1 Folders"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "Mappa törlése"
-msgstr[1] "%1 mappa törlése"
+msgstr[0] "Törli a mappát?"
+msgstr[1] "Törli a mappákat?"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2219,8 +2215,7 @@ msgid "Could not delete folder: %1"
 msgstr "Nem sikerült törölni ezt a mappát: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "Nem sikerült törölni a mappát"
@@ -2239,14 +2234,12 @@ msgstr[0] "Biztosan törölni szeretné a kijelölt elemet?"
 msgstr[1] "Biztosan törölni szeretne %1 elemet?"
 
 #: widgets/standardactionmanager.cpp:368
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "Elem törlése"
-msgstr[1] "%1 elem törlése"
+msgstr[0] "Törli az elemet?"
+msgstr[1] "Törli az elemeket?"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2254,8 +2247,7 @@ msgid "Could not delete item: %1"
 msgstr "Nem törölhető az elem: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, fuzzy, kde-format
-#| msgid "Item deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "Az elem törlése nem sikerült"
@@ -2284,8 +2276,7 @@ msgid "Could not create resource: %1"
 msgstr "Nem hozható létre az erőforrás: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, fuzzy, kde-format
-#| msgid "Resource creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "Az erőforrás létrehozása nem sikerült"
@@ -2311,8 +2302,7 @@ msgid "Could not paste data: %1"
 msgstr "Nem sikerült adatokat beilleszteni: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, fuzzy, kde-format
-#| msgid "Paste failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Sikertelen beillesztés"
@@ -2323,8 +2313,7 @@ msgid "We can not add \"/\" in folder name."
 msgstr "Nem lehet „/” karakter a mappa nevében."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, fuzzy, kde-format
-#| msgid "Create new folder error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Hiba az új mappa létrehozása során"
@@ -2370,9 +2359,7 @@ msgid "Failed to update subscription: %1"
 msgstr "Nem sikerült frissíteni a feliratkozást: %1"
 
 #: widgets/subscriptiondialog.cpp:97
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Subscription Error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Feliratkozási hiba"
@@ -2413,8 +2400,7 @@ msgid "Failed to create a new tag"
 msgstr "Nem sikerült létrehozni új címkét"
 
 #: widgets/tageditwidget.cpp:116
-#, fuzzy, kde-format
-#| msgid "An error occurred while creating a new tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Hiba történt az új címke létrehozása közben"
@@ -2426,9 +2412,7 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Valóban el akarja távolítani a címkét: <resource>%1</resource>?"
 
 #: widgets/tageditwidget.cpp:165
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Delete tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Címke törlése"
