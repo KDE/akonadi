@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-11 00:37+0000\n"
-"PO-Revision-Date: 2024-01-13 20:32+0100\n"
+"PO-Revision-Date: 2024-01-22 22:11+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -281,6 +281,8 @@ msgid ""
 "The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and "
 "\"postgres\""
 msgstr ""
+"Le nouveau moteur de base de données à utiliser - Les valeurs possibles sont "
+"« SQLite », « MySQL » et « Postgres »."
 
 #: main.cpp:90
 #, kde-format
