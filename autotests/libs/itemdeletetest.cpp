@@ -197,7 +197,7 @@ private Q_SLOTS:
         QTRY_COMPARE(spy.count(), 1);
         auto ntfItems = spy.at(0).at(0).value<Akonadi::Item::List>();
         QCOMPARE(ntfItems.count(), items.count());
-        if (ntfItems.count() > 0) {
+        if (!ntfItems.isEmpty()) {
             QVERIFY(ntfItems.at(0).parentCollection().isValid());
         }
 
