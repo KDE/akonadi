@@ -8,6 +8,27 @@
 #include "cpphelper.h"
 #include "typehelper.h"
 
+namespace
+{
+
+QString qualifiedName(const Node *node)
+{
+    if (node->type() == Node::Class) {
+        return static_cast<const ClassNode *>(node)->className();
+    }
+    if (node->type() == Node::Enum) {
+        auto enumNode = static_cast<const EnumNode *>(node);
+        if (enumNode->enumType() == EnumNode::TypeFlag) {
+            return QStringLiteral("%1::%2").arg(qualifiedName(node->parent()), enumNode->flagsName());
+        }
+        return QStringLiteral("%1::%2").arg(qualifiedName(node->parent()), enumNode->name());
+    }
+
+    Q_ASSERT_X(false, "qualifiedName", "Invalid node type");
+}
+
+} // namespace
+
 Node::Node(NodeType type, Node *parent)
     : mParent(parent)
     , mType(type)
@@ -174,6 +195,16 @@ EnumNode::EnumType EnumNode::enumType() const
 {
     return mEnumType;
 }
+
+QString EnumNode::flagsName() const
+{
+    if (mEnumType == TypeFlag) {
+        return mName + QStringLiteral("s");
+    }
+
+    return {};
+}
+
 EnumNode::EnumType EnumNode::elementNameToType(QStringView name)
 {
     if (name == QLatin1StringView("enum")) {
@@ -265,6 +296,21 @@ void PropertyNode::setAsReference(bool asReference)
 bool PropertyNode::isPointer() const
 {
     return TypeHelper::isPointerType(mType);
+}
+
+bool PropertyNode::isEnum() const
+{
+    auto parentClass = static_cast<ClassNode *>(parent());
+    for (const auto node : parentClass->children()) {
+        if (node->type() == Node::Enum) {
+            const auto enumNode = static_cast<const EnumNode *>(node);
+            if (qualifiedName(enumNode) == mType) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 QMultiMap<QString, QString> PropertyNode::dependencies() const

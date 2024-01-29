@@ -755,11 +755,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
                       << prop->name()
                       << "\")] = jsonObject;\n"
                          "    }\n";
-            } else if (prop->type() == QLatin1StringView("ModifySubscriptionCommand::ModifiedParts")
-                       || prop->type() == QLatin1StringView("ModifyTagCommand::ModifiedParts")
-                       || prop->type() == QLatin1StringView("ModifyCollectionCommand::ModifiedParts")
-                       || prop->type() == QLatin1StringView("ModifyItemsCommand::ModifiedParts")
-                       || prop->type() == QLatin1StringView("CreateItemCommand::MergeModes")) {
+            } else if (prop->isEnum()) {
                 mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = static_cast<int>(" << prop->mVariableName() << ");/* " << prop->type()
                       << "*/\n";
             } else {

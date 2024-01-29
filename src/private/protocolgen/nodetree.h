@@ -118,6 +118,8 @@ public:
     EnumType enumType() const;
     static EnumType elementNameToType(QStringView name);
 
+    QString flagsName() const;
+
 private:
     QString mName;
     EnumType mEnumType;
@@ -163,6 +165,7 @@ public:
     void setAsReference(bool asReference);
 
     bool isPointer() const;
+    bool isEnum() const;
 
     QMultiMap<QString, QString> dependencies() const;
     void addDependency(const QString &enumVar, const QString &enumValue);
