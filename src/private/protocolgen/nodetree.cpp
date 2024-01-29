@@ -25,6 +25,7 @@ QString qualifiedName(const Node *node)
     }
 
     Q_ASSERT_X(false, "qualifiedName", "Invalid node type");
+    return {};
 }
 
 } // namespace
