@@ -15,6 +15,7 @@
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
 #include "job_p.h"
+#include "protocol_p.h"
 #include "transactionsequence.h"
 
 #include "akonadicore_debug.h"
@@ -79,6 +80,8 @@ public:
     Akonadi::Item::List mCurrentBatchRemovedRemoteItems;
     Akonadi::Item::List mItemsToDelete;
 
+    QDateTime mItemSyncStart;
+
     // create counter
     int mPendingJobs;
     int mProgress;
@@ -105,7 +108,11 @@ void ItemSyncPrivate::createOrMerge(const Item &item)
         return;
     }
     mPendingJobs++;
-    auto create = new ItemCreateJob(item, mSyncCollection, subjobParent());
+    Item modifiedItem = item;
+    if (mItemSyncStart.isValid()) {
+        modifiedItem.setModificationTime(mItemSyncStart);
+    }
+    auto create = new ItemCreateJob(modifiedItem, mSyncCollection, subjobParent());
     ItemCreateJob::MergeOptions merge = ItemCreateJob::Silent;
     if (mMergeMode == ItemSync::GIDMerge && !item.gid().isEmpty()) {
         merge |= ItemCreateJob::GID;
@@ -173,11 +180,15 @@ void ItemSyncPrivate::checkDone()
     }
 }
 
-ItemSync::ItemSync(const Collection &collection, QObject *parent)
+ItemSync::ItemSync(const Collection &collection, const QDateTime &timestamp, QObject *parent)
     : Job(new ItemSyncPrivate(this), parent)
 {
+    qCDebug(AKONADICORE_LOG) << "Created ItemSync(colId=" << collection.id() << ", timestamp=" << timestamp << ")";
     Q_D(ItemSync);
     d->mSyncCollection = collection;
+    if (timestamp.isValid()) {
+        d->mItemSyncStart = timestamp;
+    }
 }
 
 ItemSync::~ItemSync()

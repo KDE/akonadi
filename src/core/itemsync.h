@@ -10,6 +10,8 @@
 #include "item.h"
 #include "job.h"
 
+#include <QDateTime>
+
 namespace Akonadi
 {
 class Collection;
@@ -49,9 +51,11 @@ public:
      * Creates a new item synchronizer.
      *
      * @param collection The collection we are syncing.
+     * @param timestamp Optional timestamp of itemsync start. Will be used to detect local changes that happen
+                        while the ItemSync is running.
      * @param parent The parent object.
      */
-    explicit ItemSync(const Collection &collection, QObject *parent = nullptr);
+    explicit ItemSync(const Collection &collection, const QDateTime &timestamp = {}, QObject *parent = nullptr);
 
     /**
      * Destroys the item synchronizer.

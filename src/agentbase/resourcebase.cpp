@@ -174,7 +174,7 @@ public:
                    "createItemSyncInstance",
                    "Calling items retrieval methods although no item retrieval is in progress");
         if (!mItemSyncer) {
-            mItemSyncer = new ItemSync(q->currentCollection());
+            mItemSyncer = new ItemSync(q->currentCollection(), mCollectionSyncTimestamp);
             mItemSyncer->setTransactionMode(mItemTransactionMode);
             mItemSyncer->setBatchSize(mItemSyncBatchSize);
             mItemSyncer->setMergeMode(mItemMergeMode);
@@ -440,6 +440,7 @@ public:
     QSet<QByteArray> mKeepLocalCollectionChanges;
     KJob *mCurrentCollectionFetchJob = nullptr;
     bool mScheduleAttributeSyncBeforeCollectionSync;
+    QDateTime mCollectionSyncTimestamp;
 };
 
 ResourceBase::ResourceBase(const QString &id)
@@ -937,6 +938,7 @@ void ResourceBasePrivate::slotItemRetrievalCollectionFetchDone(KJob *job)
         q->cancelTask(i18n("Failed to retrieve collection for sync."));
         return;
     }
+    mCollectionSyncTimestamp = QDateTime::currentDateTimeUtc();
     q->retrieveItems(collections.at(0));
 }
 

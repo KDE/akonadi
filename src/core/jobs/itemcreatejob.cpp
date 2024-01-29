@@ -122,6 +122,7 @@ void ItemCreateJob::doStart()
     cmd->setGid(d->mItem.gid());
     cmd->setRemoteId(d->mItem.remoteId());
     cmd->setRemoteRevision(d->mItem.remoteRevision());
+    cmd->setModificationTime(d->mItem.modificationTime());
 
     Protocol::CreateItemCommand::MergeModes mergeModes = Protocol::CreateItemCommand::None;
     if ((d->mMergeOptions & GID) && !d->mItem.gid().isEmpty()) {

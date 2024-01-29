@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<protocol version="63">
+<protocol version="64">
 
   <class name="Ancestor">
     <enum name="Depth">
@@ -152,6 +152,7 @@
     <param name="itemSize" type="qint64" />
     <param name="mimeType" type="QString" />
     <param name="gid" type="QString" />
+    <param name="modificationTime" type="QDateTime" />
     <param name="remoteId" type="QString" />
     <param name="remoteRevision" type="QString" />
     <param name="dateTime" type="QDateTime" />

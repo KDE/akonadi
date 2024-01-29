@@ -65,7 +65,8 @@ bool ItemCreateHandler::buildPimItem(const Protocol::CreateItemCommand &cmd, Pim
     }
     item.setRemoteRevision(cmd.remoteRevision());
     item.setGid(cmd.gid());
-    item.setAtime(QDateTime::currentDateTimeUtc());
+
+    item.setAtime(cmd.modificationTime().isValid() ? cmd.modificationTime() : QDateTime::currentDateTimeUtc());
 
     return true;
 }
@@ -149,7 +150,18 @@ bool ItemCreateHandler::insertItem(const Protocol::CreateItemCommand &cmd, PimIt
 bool ItemCreateHandler::mergeItem(const Protocol::CreateItemCommand &cmd, PimItem &newItem, PimItem &currentItem, const Collection &parentCol)
 {
     bool needsUpdate = false;
+    bool ignoreFlagsChanges = false;
     QSet<QByteArray> changedParts;
+
+    if (currentItem.atime() > newItem.atime()) {
+        qCDebug(AKONADISERVER_LOG) << "Akoandi has newer atime of Item " << currentItem.id() << " than the resource (local atime =" << currentItem.atime()
+                                   << ", remote atime =" << newItem.atime() << "), ignoring flags changes.";
+        // This handles a race that is rather specific to IMAP: if I change flags in KMail while the folder is syncing, the flags from sync will
+        // overwrite my local changes.
+        // Without server-side change recording we don't have any way to know what has really changed locally, so we just assume it's flags and
+        // we will assume that the flags have not changed on the server as well (and if so, we will consider the local state superior to remote).
+        ignoreFlagsChanges = true;
+    }
 
     if (!newItem.remoteId().isEmpty() && currentItem.remoteId() != newItem.remoteId()) {
         currentItem.setRemoteId(newItem.remoteId());
@@ -192,7 +204,7 @@ bool ItemCreateHandler::mergeItem(const Protocol::CreateItemCommand &cmd, PimIte
             changedParts.insert(AKONADI_PARAM_FLAGS);
             needsUpdate = true;
         }
-    } else {
+    } else if (!ignoreFlagsChanges) {
         bool flagsChanged = false;
         QSet<QByteArray> flagNames = cmd.flags();
 
