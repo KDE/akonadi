@@ -291,6 +291,9 @@ QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classNam
                 <xsl:when test="starts-with(@type, 'enum')">
                   <xsl:text>static_cast&lt;</xsl:text><xsl:value-of select="@enumType"/>&gt;(query.value(<xsl:value-of select="position() - 1"/><xsl:text>).value&lt;int&gt;())</xsl:text>
                 </xsl:when>
+                <xsl:when test="starts-with(@type, 'QDateTime')">
+                  <xsl:text>Utils::variantToDateTime(query.value(</xsl:text><xsl:value-of select="position() - 1" /><xsl:text>))</xsl:text>
+                </xsl:when>
                 <xsl:otherwise>
                   <xsl:text>query.value(</xsl:text><xsl:value-of select="position() - 1"/>).value&lt;<xsl:value-of select="@type"/>&gt;<xsl:text>()</xsl:text>
                 </xsl:otherwise>

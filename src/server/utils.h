@@ -65,7 +65,7 @@ static inline QDateTime variantToDateTime(const QVariant &variant, DataStore *da
         case DbType::MySQL:
         case DbType::Sqlite: {
             QDateTime dt = variant.toDateTime();
-            dt.setTimeZone(QTimeZone::utc());
+            dt.setTimeZone(QTimeZone::UTC);
             return dt;
         }
         case DbType::PostgreSQL:
