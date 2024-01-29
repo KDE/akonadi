@@ -317,7 +317,7 @@ protected:
     DataStore(AkonadiServer *akonadi, DbConfig *dbConfig);
     explicit DataStore(DbConfig *config);
 
-    void debugLastDbError(const char *actionDescription) const;
+    void debugLastDbError(QStringView actionDescription) const;
     void debugLastQueryError(const QSqlQuery &query, const char *actionDescription) const;
 
 private:

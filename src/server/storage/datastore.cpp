@@ -1262,7 +1262,7 @@ bool DataStore::removeCollectionAttribute(const Collection &col, const QByteArra
     return false;
 }
 
-void DataStore::debugLastDbError(const char *actionDescription) const
+void DataStore::debugLastDbError(QStringView actionDescription) const
 {
     qCCritical(AKONADISERVER_LOG) << "Database error:" << actionDescription;
     qCCritical(AKONADISERVER_LOG) << "  Last driver error:" << m_database.lastError().driverText();
@@ -1271,7 +1271,7 @@ void DataStore::debugLastDbError(const char *actionDescription) const
     if (m_akonadi) {
         m_akonadi->tracer().error("DataStore (Database Error)",
                                   QStringLiteral("%1\nDriver said: %2\nDatabase said:%3")
-                                      .arg(QString::fromLatin1(actionDescription), m_database.lastError().driverText(), m_database.lastError().databaseText()));
+                                      .arg(actionDescription, m_database.lastError().driverText(), m_database.lastError().databaseText()));
     }
 }
 
@@ -1312,7 +1312,7 @@ bool DataStore::doRollback()
     driver->rollbackTransaction();
     StorageDebugger::instance()->removeTransaction(reinterpret_cast<qint64>(this), false, timer.elapsed(), m_database.lastError().text());
     if (m_database.lastError().isValid()) {
-        debugLastDbError("DataStore::rollbackTransaction");
+        debugLastDbError(u"DataStore::rollbackTransaction");
         return false;
     }
     return true;
@@ -1339,14 +1339,14 @@ bool DataStore::beginTransaction(const QString &name)
             m_database.exec(QStringLiteral("BEGIN IMMEDIATE TRANSACTION"));
             StorageDebugger::instance()->addTransaction(reinterpret_cast<qint64>(this), name, timer.elapsed(), m_database.lastError().text());
             if (m_database.lastError().isValid()) {
-                debugLastDbError("DataStore::beginTransaction (SQLITE)");
+                debugLastDbError(QStringLiteral("DataStore::beginTransaction (SQLITE) name: %1").arg(name));
                 return false;
             }
         } else {
             m_database.driver()->beginTransaction();
             StorageDebugger::instance()->addTransaction(reinterpret_cast<qint64>(this), name, timer.elapsed(), m_database.lastError().text());
             if (m_database.lastError().isValid()) {
-                debugLastDbError("DataStore::beginTransaction");
+                debugLastDbError(u"DataStore::beginTransaction");
                 return false;
             }
         }
@@ -1409,7 +1409,7 @@ bool DataStore::commitTransaction()
         driver->commitTransaction();
         StorageDebugger::instance()->removeTransaction(reinterpret_cast<qint64>(this), true, timer.elapsed(), m_database.lastError().text());
         if (m_database.lastError().isValid()) {
-            debugLastDbError("DataStore::commitTransaction");
+            debugLastDbError(u"DataStore::commitTransaction");
             rollbackTransaction();
             return false;
         } else {
