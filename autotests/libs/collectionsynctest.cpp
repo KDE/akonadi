@@ -115,7 +115,7 @@ private:
     {
         Collection::List baseCols;
         for (const Collection &col : collections) {
-            if (col.remoteId().startsWith(QLatin1String("/baseCol")) || col.remoteId() == QLatin1String("/shared")) {
+            if (col.remoteId().startsWith(QLatin1StringView("/baseCol")) || col.remoteId() == QLatin1String("/shared")) {
                 baseCols << col;
             }
         }
@@ -217,7 +217,7 @@ private Q_SLOTS:
     {
         QFETCH(bool, hierarchicalRIDs);
         QFETCH(QString, resource);
-        if (resource == QLatin1String("akonadi_knut_resource_2")) {
+        if (resource == QLatin1StringView("akonadi_knut_resource_2")) {
             QSKIP("test requires more than one collection", SkipSingle);
         }
 
@@ -380,10 +380,10 @@ private Q_SLOTS:
             Collection resultCol = job->collections().first();
             if (keepLocalChanges) {
                 QCOMPARE(resultCol.displayName(), QString::fromLatin1("foo"));
-                QVERIFY(resultCol.contentMimeTypes().contains(QLatin1String("foo")));
+                QVERIFY(resultCol.contentMimeTypes().contains(QLatin1StringView("foo")));
             } else {
                 QCOMPARE(resultCol.displayName(), QString::fromLatin1("default"));
-                QVERIFY(resultCol.contentMimeTypes().contains(QLatin1String("default")));
+                QVERIFY(resultCol.contentMimeTypes().contains(QLatin1StringView("default")));
             }
         }
     }

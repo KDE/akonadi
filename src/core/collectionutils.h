@@ -46,12 +46,13 @@ namespace CollectionUtils
 
 [[nodiscard]] inline bool isFolder(const Collection &collection)
 {
-    return (!isRoot(collection) && !isResource(collection) && !isStructural(collection) && collection.resource() != QLatin1String("akonadi_search_resource"));
+    return (!isRoot(collection) && !isResource(collection) && !isStructural(collection)
+            && collection.resource() != QLatin1StringView("akonadi_search_resource"));
 }
 
 [[nodiscard]] inline bool isUnifiedMailbox(const Collection &collection)
 {
-    return collection.resource() == QLatin1String("akonadi_unifiedmailbox_agent");
+    return collection.resource() == QLatin1StringView("akonadi_unifiedmailbox_agent");
 }
 
 [[nodiscard]] inline QString defaultIconName(const Collection &col)
@@ -74,15 +75,15 @@ namespace CollectionUtils
 
     const QStringList content = col.contentMimeTypes();
     if ((content.size() == 1) || (content.size() == 2 && content.contains(Collection::mimeType()))) {
-        if (content.contains(QLatin1String("text/x-vcard")) || content.contains(QLatin1String("text/directory"))
-            || content.contains(QLatin1String("text/vcard"))) {
+        if (content.contains(QLatin1StringView("text/x-vcard")) || content.contains(QLatin1String("text/directory"))
+            || content.contains(QLatin1StringView("text/vcard"))) {
             return QStringLiteral("x-office-address-book");
         }
         // TODO: add all other content types and/or fix their mimetypes
-        if (content.contains(QLatin1String("akonadi/event")) || content.contains(QLatin1String("text/ical"))) {
+        if (content.contains(QLatin1StringView("akonadi/event")) || content.contains(QLatin1String("text/ical"))) {
             return QStringLiteral("view-pim-calendar");
         }
-        if (content.contains(QLatin1String("akonadi/task"))) {
+        if (content.contains(QLatin1StringView("akonadi/task"))) {
             return QStringLiteral("view-pim-tasks");
         }
     } else if (content.isEmpty()) {

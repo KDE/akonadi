@@ -390,7 +390,7 @@ QUrl Item::url(UrlType type) const
 
 Item Item::fromUrl(const QUrl &url)
 {
-    if (url.scheme() != QLatin1String("akonadi")) {
+    if (url.scheme() != QLatin1StringView("akonadi")) {
         return Item();
     }
 
@@ -443,7 +443,7 @@ bool Item::ensureMetaTypeId(int mtid) const
 
 static QString format_type(int spid, int mtid)
 {
-    return QStringLiteral("sp(%1)<%2>").arg(spid).arg(QLatin1String(QMetaType(mtid).name()));
+    return QStringLiteral("sp(%1)<%2>").arg(spid).arg(QLatin1StringView(QMetaType(mtid).name()));
 }
 
 static QString format_types(const PayloadContainer &container)
@@ -453,7 +453,7 @@ static QString format_types(const PayloadContainer &container)
     for (auto it = container.begin(), end = container.end(); it != end; ++it) {
         result.push_back(format_type(it->sharedPointerId, it->metaTypeId));
     }
-    return result.join(QLatin1String(", "));
+    return result.join(QLatin1StringView(", "));
 }
 
 static QString format_reason(bool valid, Item::Id id)

@@ -794,12 +794,12 @@ bool AgentManager::checkResourceInterface(const QString &identifier, const QStri
         return false;
     }
 
-    if (!mAgents[mAgentInstances[identifier]->agentType()].capabilities.contains(QLatin1String("Resource"))) {
+    if (!mAgents[mAgentInstances[identifier]->agentType()].capabilities.contains(QLatin1StringView("Resource"))) {
         return false;
     }
 
     if (!mAgentInstances[identifier]->hasResourceInterface()) {
-        qCWarning(AKONADICONTROL_LOG) << QLatin1String("AgentManager::") + method << " Agent instance " << identifier << " has no resource interface!";
+        qCWarning(AKONADICONTROL_LOG) << QLatin1StringView("AgentManager::") + method << " Agent instance " << identifier << " has no resource interface!";
         return false;
     }
 

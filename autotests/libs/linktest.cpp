@@ -40,7 +40,7 @@ private Q_SLOTS:
         Collection col;
         const Collection::List fetchedCollections = list->collections();
         for (const Collection &c : fetchedCollections) {
-            if (c.name() == QLatin1String("linkTestFolder")) {
+            if (c.name() == QLatin1StringView("linkTestFolder")) {
                 col = c;
             }
         }

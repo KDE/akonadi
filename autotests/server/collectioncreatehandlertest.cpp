@@ -56,8 +56,8 @@ private Q_SLOTS:
             resp->setParentId(3);
             resp->setAttributes({{"MYRANDOMATTRIBUTE", ""}});
             resp->setResource(QStringLiteral("akonadi_fake_resource_0"));
-            resp->cachePolicy().setLocalParts({QLatin1String("ALL")});
-            resp->setMimeTypes({QLatin1String("application/octet-stream"), QLatin1String("inode/directory")});
+            resp->cachePolicy().setLocalParts({QLatin1StringView("ALL")});
+            resp->setMimeTypes({QLatin1StringView("application/octet-stream"), QLatin1String("inode/directory")});
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario() << TestScenario::create(5, TestScenario::ClientCmd, cmd)
@@ -87,8 +87,8 @@ private Q_SLOTS:
             resp->setSyncPref(Tristate::True);
             resp->setIndexPref(Tristate::True);
             resp->setResource(QStringLiteral("akonadi_fake_resource_0"));
-            resp->cachePolicy().setLocalParts({QLatin1String("ALL")});
-            resp->setMimeTypes({QLatin1String("application/octet-stream"), QLatin1String("inode/directory")});
+            resp->cachePolicy().setLocalParts({QLatin1StringView("ALL")});
+            resp->setMimeTypes({QLatin1StringView("application/octet-stream"), QLatin1String("inode/directory")});
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario() << TestScenario::create(5, TestScenario::ClientCmd, cmd)
@@ -106,14 +106,14 @@ private Q_SLOTS:
             auto cmd = Protocol::CreateCollectionCommandPtr::create();
             cmd->setName(QStringLiteral("TopLevel"));
             cmd->setParent(Scope(0));
-            cmd->setMimeTypes({QLatin1String("inode/directory")});
+            cmd->setMimeTypes({QLatin1StringView("inode/directory")});
 
             auto resp = Protocol::FetchCollectionsResponsePtr::create(10);
             resp->setName(QStringLiteral("TopLevel"));
             resp->setParentId(0);
             resp->setEnabled(true);
-            resp->setMimeTypes({QLatin1String("inode/directory")});
-            resp->cachePolicy().setLocalParts({QLatin1String("ALL")});
+            resp->setMimeTypes({QLatin1StringView("inode/directory")});
+            resp->cachePolicy().setLocalParts({QLatin1StringView("ALL")});
             resp->setResource(QStringLiteral("akonadi_fake_resource_0"));
 
             TestScenario::List scenarios;

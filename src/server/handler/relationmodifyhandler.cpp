@@ -64,7 +64,7 @@ bool RelationModifyHandler::parseStream()
 
     Relation existingRelation = fetchRelation(cmd.left(), cmd.right(), relationType.id());
     if (existingRelation.isValid()) {
-        existingRelation.setRemoteId(QLatin1String(cmd.remoteId()));
+        existingRelation.setRemoteId(QLatin1StringView(cmd.remoteId()));
         if (!existingRelation.update()) {
             return failureResponse("Failed to update relation");
         }

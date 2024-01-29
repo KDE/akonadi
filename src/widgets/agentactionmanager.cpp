@@ -86,7 +86,7 @@ public:
 
         if (instances.count() == 1) {
             const AgentInstance &instance = instances.first();
-            if (instance.type().capabilities().contains(QLatin1String("NoConfig"))) {
+            if (instance.type().capabilities().contains(QLatin1StringView("NoConfig"))) {
                 configureActionEnabled = false;
             }
         }

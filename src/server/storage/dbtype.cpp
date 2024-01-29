@@ -15,13 +15,13 @@ DbType::Type DbType::type(const QSqlDatabase &db)
 
 DbType::Type DbType::typeForDriverName(const QString &driverName)
 {
-    if (driverName.startsWith(QLatin1String("QMYSQL"))) {
+    if (driverName.startsWith(QLatin1StringView("QMYSQL"))) {
         return MySQL;
     }
-    if (driverName == QLatin1String("QPSQL")) {
+    if (driverName == QLatin1StringView("QPSQL")) {
         return PostgreSQL;
     }
-    if (driverName == QLatin1String("QSQLITE") || driverName == QLatin1String("QSQLITE3")) {
+    if (driverName == QLatin1StringView("QSQLITE") || driverName == QLatin1String("QSQLITE3")) {
         return Sqlite;
     }
     return Unknown;

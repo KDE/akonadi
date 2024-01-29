@@ -110,7 +110,7 @@ DataStore::DataStore(AkonadiServer *akonadi, DbConfig *dbConfig)
     , m_transactionLevel(0)
     , m_keepAliveTimer(nullptr)
 {
-    if (dbConfig->driverName() == QLatin1String("QMYSQL")) {
+    if (dbConfig->driverName() == QLatin1StringView("QMYSQL")) {
         // Send a dummy query to MySQL every 1 hour to keep the connection alive,
         // otherwise MySQL just drops the connection and our subsequent queries fail
         // without properly reporting the error
@@ -786,7 +786,7 @@ bool DataStore::invalidateItemCache(const PimItem &item)
     qb.addJoin(QueryBuilder::InnerJoin, PartType::tableName(), Part::partTypeIdFullColumnName(), PartType::idFullColumnName());
     qb.addValueCondition(Part::pimItemIdFullColumnName(), Query::Equals, item.id());
     qb.addValueCondition(Part::dataFullColumnName(), Query::IsNot, QVariant());
-    qb.addValueCondition(PartType::nsFullColumnName(), Query::Equals, QLatin1String("PLD"));
+    qb.addValueCondition(PartType::nsFullColumnName(), Query::Equals, QLatin1StringView("PLD"));
     qb.addValueCondition(PimItem::dirtyFullColumnName(), Query::Equals, false);
 
     if (!qb.exec()) {
@@ -1118,7 +1118,7 @@ bool DataStore::appendPimItem(QList<Part> &parts,
 
     bool seen = false;
     for (const Flag &flag : flags) {
-        seen |= (flag.name() == QLatin1String(AKONADI_FLAG_SEEN) || flag.name() == QLatin1String(AKONADI_FLAG_IGNORED));
+        seen |= (flag.name() == QLatin1StringView(AKONADI_FLAG_SEEN) || flag.name() == QLatin1String(AKONADI_FLAG_IGNORED));
         if (!pimItem.addFlag(flag)) {
             qCWarning(AKONADISERVER_LOG) << "Failed to add flag" << flag.name() << "to new PimItem" << pimItem.id();
             return false;

@@ -90,7 +90,7 @@ public:
 
     static QString errorLogFileName(const QString &name)
     {
-        return Akonadi::StandardDirs::saveDir("data") + QDir::separator() + name + QLatin1String(".error");
+        return Akonadi::StandardDirs::saveDir("data") + QDir::separator() + name + QLatin1StringView(".error");
     }
 
     QString errorLogFileName() const
@@ -213,7 +213,7 @@ void akInit(const QString &appName)
 
     const QString name = QFileInfo(appName).fileName();
     const auto errorLogFile = DebugPrivate::errorLogFileName(name);
-    QFileInfo infoOld(errorLogFile + QLatin1String(".old"));
+    QFileInfo infoOld(errorLogFile + QLatin1StringView(".old"));
     if (infoOld.exists()) {
         QFile fileOld(infoOld.absoluteFilePath());
         const bool success = fileOld.remove();
@@ -225,7 +225,7 @@ void akInit(const QString &appName)
     QFileInfo info(errorLogFile);
     if (info.exists()) {
         QFile file(info.absoluteFilePath());
-        const QString oldName = errorLogFile + QLatin1String(".old");
+        const QString oldName = errorLogFile + QLatin1StringView(".old");
         const bool success = file.copy(oldName);
         if (!success) {
             qFatal("Cannot rename log file '%s' to '%s': %s", qUtf8Printable(file.fileName()), qUtf8Printable(oldName), qUtf8Printable(file.errorString()));

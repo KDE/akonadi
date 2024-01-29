@@ -331,7 +331,7 @@ void DefaultResourceJobPrivate::resourceCreateResult(KJob *job)
         QMap<QString, QVariant>::const_iterator it = mDefaultResourceOptions.cbegin();
         const QMap<QString, QVariant>::const_iterator itEnd = mDefaultResourceOptions.cend();
         for (; it != itEnd; ++it) {
-            if (it.key() == QLatin1String("Name")) {
+            if (it.key() == QLatin1StringView("Name")) {
                 continue;
             }
 

@@ -143,7 +143,7 @@ inline typename std::enable_if<std::is_base_of<Protocol::Command, T>::value>::ty
 template<typename T>
 inline typename std::enable_if<std::is_base_of<Protocol::Command, T>::value>::type Connection::sendResponse(qint64 tag, T &&response)
 {
-    if (m_akonadi.tracer().currentTracer() != QLatin1String("null")) {
+    if (m_akonadi.tracer().currentTracer() != QLatin1StringView("null")) {
         m_akonadi.tracer().connectionOutput(m_identifier, tag, response);
     }
     Protocol::DataStream stream(m_socket.get());

@@ -279,7 +279,7 @@ KDescendantsProxyModel *descProxy = new KDescendantsProxyModel(this);
 descProxy->setSourceModel(entityTree);
 
 // #### This is new
-descProxy->setDisplayAncestorData(true, QLatin1String(" / "));
+descProxy->setDisplayAncestorData(true, QLatin1StringView(" / "));
 
 view->setModel(descProxy);
 ~~~~~~~~~~~~~

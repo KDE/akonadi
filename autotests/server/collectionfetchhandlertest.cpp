@@ -189,7 +189,7 @@ private Q_SLOTS:
                                               createCommand(Scope(),
                                                             Protocol::FetchCollectionsCommand::AllCollections,
                                                             Protocol::Ancestor::NoAncestor,
-                                                            {QLatin1String("text/calendar")}))
+                                                            {QLatin1StringView("text/calendar")}))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1, false, false))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
@@ -399,7 +399,7 @@ private Q_SLOTS:
             auto cmd = createCommand(col2.id(), Protocol::FetchCollectionsCommand::BaseCollection, Protocol::Ancestor::AllAncestors);
             cmd->setAncestorsAttributes({"type"});
             scenarios << FakeAkonadiServer::loginScenario() << TestScenario::create(5, TestScenario::ClientCmd, cmd)
-                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2, true, true, {QLatin1String("type")}))
+                      << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2, true, true, {QLatin1StringView("type")}))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
             QTest::newRow("list ancestor attribute with fetch scope") << scenarios;
         }
@@ -442,7 +442,7 @@ private Q_SLOTS:
                                               createCommand(Scope(),
                                                             Protocol::FetchCollectionsCommand::AllCollections,
                                                             Protocol::Ancestor::NoAncestor,
-                                                            {QLatin1String("mimetype1")}))
+                                                            {QLatin1StringView("mimetype1")}))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col3))
@@ -458,7 +458,7 @@ private Q_SLOTS:
                                               createCommand(col1.id(),
                                                             Protocol::FetchCollectionsCommand::AllCollections,
                                                             Protocol::Ancestor::NoAncestor,
-                                                            {QLatin1String("mimetype1")}))
+                                                            {QLatin1StringView("mimetype1")}))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col3))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col4))
@@ -500,10 +500,10 @@ private Q_SLOTS:
         col5.setEnabled(false);
         col5.update();
 
-        MimeType mt1 = MimeType::retrieveByName(QLatin1String("mimetype1"));
-        MimeType mt2 = MimeType::retrieveByName(QLatin1String("mimetype2"));
-        MimeType mt3 = MimeType::retrieveByName(QLatin1String("mimetype3"));
-        MimeType mt4 = MimeType::retrieveByName(QLatin1String("mimetype4"));
+        MimeType mt1 = MimeType::retrieveByName(QLatin1StringView("mimetype1"));
+        MimeType mt2 = MimeType::retrieveByName(QLatin1StringView("mimetype2"));
+        MimeType mt3 = MimeType::retrieveByName(QLatin1StringView("mimetype3"));
+        MimeType mt4 = MimeType::retrieveByName(QLatin1StringView("mimetype4"));
 
         QTime t;
         t.start();
@@ -550,7 +550,7 @@ private Q_SLOTS:
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(toplevel.id(), Protocol::FetchCollectionsCommand::AllCollections,
-                                Protocol::Ancestor::AllAncestors, { QLatin1String("mimetype1") }, QLatin1String("testresource")))
+                                Protocol::Ancestor::AllAncestors, { QLatin1StringView("mimetype1") }, QLatin1String("testresource")))
                       << TestScenario::ignore(101005)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
             QTest::newRow("recursive list filtered by mimetype with ancestors") << scenarios;
@@ -561,7 +561,7 @@ private Q_SLOTS:
     {
         QFETCH(TestScenario::List, scenarios);
         // StorageDebugger::instance()->enableSQLDebugging(true);
-        // StorageDebugger::instance()->writeToFile(QLatin1String("sqllog.txt"));
+        // StorageDebugger::instance()->writeToFile(QLatin1StringView("sqllog.txt"));
 
         QBENCHMARK {
             mAkonadi.setScenarios(scenarios);

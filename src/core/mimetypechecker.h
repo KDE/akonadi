@@ -29,7 +29,7 @@ class MimeTypeCheckerPrivate;
  *
  * For example a check like this
  * @code
- * if ( item.mimeType() == QLatin1String( "text/directory" ) )
+ * if ( item.mimeType() == QLatin1StringView( "text/directory" ) )
  * @endcode
  * would fail to detect @c "text/x-vcard" as being the same MIME type.
  *
@@ -51,7 +51,7 @@ class MimeTypeCheckerPrivate;
  * items
  * @code
  * Akonadi::MimeTypeChecker checker;
- * checker.addWantedMimeType( QLatin1String( "text/calendar" ) );
+ * checker.addWantedMimeType( QLatin1StringView( "text/calendar" ) );
  *
  * if ( checker.isWantedCollection( collection ) ) {
  *   // collection.contentMimeTypes() contains @c "text/calendar"
@@ -64,7 +64,7 @@ class MimeTypeCheckerPrivate;
  * MIME type "subclassing" provided by Akonadi's MIME type extensions.
  * @code
  * Akonadi::MimeTypeChecker checker;
- * checker.addWantedMimeType( QLatin1String( "application/x-vnd.akonadi.calendar.event" ) );
+ * checker.addWantedMimeType( QLatin1StringView( "application/x-vnd.akonadi.calendar.event" ) );
  *
  * if ( checker.isWantedCollection( collection ) ) {
  *   // collection.contentMimeTypes() contains @c "application/x-vnd.akonadi.calendar.event"

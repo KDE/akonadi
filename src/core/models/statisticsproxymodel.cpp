@@ -150,7 +150,7 @@ public:
             tip += tipIcon + QStringLiteral("</td><td align=\"%3\" valign=\"top\">").arg(textDirection) + tipInfo;
         }
 
-        tip += QLatin1String(
+        tip += QLatin1StringView(
             "  </tr>"
             "</table>");
 

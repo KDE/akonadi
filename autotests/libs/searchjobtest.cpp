@@ -48,7 +48,7 @@ void SearchJobTest::testCreateDeleteSearch()
     const Collection::List cols = list->collections();
     Collection col;
     for (const auto &c : cols) {
-        if (c.name() == QLatin1String("search123456")) {
+        if (c.name() == QLatin1StringView("search123456")) {
             col = c;
             break;
         }

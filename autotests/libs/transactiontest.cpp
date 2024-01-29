@@ -35,7 +35,7 @@ void TransactionTest::testTransaction()
     AKVERIFYEXEC(listJob);
     const Collection::List list = listJob->collections();
     for (const Collection &col : list) {
-        if (col.name() == QLatin1String("res3")) {
+        if (col.name() == QLatin1StringView("res3")) {
             basisCollection = col;
         }
     }

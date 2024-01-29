@@ -254,7 +254,7 @@ SearchQuery SearchQuery::fromJSON(const QByteArray &jsonData)
     SearchQuery query;
     const QJsonObject obj = json.object();
     query.d->rootTerm = SearchQueryPrivate::JSONToTerm(obj.toVariantMap());
-    if (obj.contains(QLatin1String("limit"))) {
+    if (obj.contains(QLatin1StringView("limit"))) {
         query.d->limit = obj.value(QStringLiteral("limit")).toInt();
     }
     return query;

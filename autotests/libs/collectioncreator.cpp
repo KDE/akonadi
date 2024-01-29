@@ -34,7 +34,7 @@ private Q_SLOTS:
         for (int count : counts) {
             for (bool transaction : transactions) {
                 QTest::newRow(
-                    QString::fromLatin1("%1-%2").arg(count).arg(transaction ? QLatin1String("trans") : QLatin1String("notrans")).toLatin1().constData())
+                    QString::fromLatin1("%1-%2").arg(count).arg(transaction ? QLatin1StringView("trans") : QLatin1String("notrans")).toLatin1().constData())
                     << count << transaction;
             }
         }
@@ -45,7 +45,7 @@ private Q_SLOTS:
         QFETCH(int, count);
         QFETCH(bool, useTransaction);
 
-        const Collection parent(AkonadiTest::collectionIdFromPath(QLatin1String("res3")));
+        const Collection parent(AkonadiTest::collectionIdFromPath(QLatin1StringView("res3")));
         QVERIFY(parent.isValid());
 
         static int index = 0;
@@ -57,7 +57,7 @@ private Q_SLOTS:
             for (int i = 0; i < count; ++i) {
                 Collection col;
                 col.setParentCollection(parent);
-                col.setName(QLatin1String("col") + QString::number(++index));
+                col.setName(QLatin1StringView("col") + QString::number(++index));
                 lastJob = new CollectionCreateJob(col, this);
             }
             if (useTransaction) {

@@ -116,7 +116,7 @@ void CachePolicyPage::load(const Collection &collection)
     d->mUi->syncOnDemand->setChecked(policy.syncOnDemand());
     d->mUi->localParts->setItems(policy.localParts());
 
-    const bool fetchBodies = policy.localParts().contains(QLatin1String("RFC822"));
+    const bool fetchBodies = policy.localParts().contains(QLatin1StringView("RFC822"));
     d->mUi->retrieveFullMessages->setChecked(fetchBodies);
 
     // done explicitly to disable/enabled widgets
@@ -153,9 +153,9 @@ void CachePolicyPage::save(Collection &collection)
     // it otherwise. In "raw" mode we simple use the values from the list
     // view.
     if (d->mode != AdvancedMode) {
-        if (d->mUi->retrieveFullMessages->isChecked() && !localParts.contains(QLatin1String("RFC822"))) {
+        if (d->mUi->retrieveFullMessages->isChecked() && !localParts.contains(QLatin1StringView("RFC822"))) {
             localParts.append(QStringLiteral("RFC822"));
-        } else if (!d->mUi->retrieveFullMessages->isChecked() && localParts.contains(QLatin1String("RFC822"))) {
+        } else if (!d->mUi->retrieveFullMessages->isChecked() && localParts.contains(QLatin1StringView("RFC822"))) {
             localParts.removeAll(QStringLiteral("RFC822"));
         }
     }

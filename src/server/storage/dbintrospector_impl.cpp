@@ -180,7 +180,7 @@ QList<DbIntrospector::ForeignKey> DbIntrospectorPostgreSql::foreignKeyConstraint
     qb.addJoin(QueryBuilder::LeftJoin, QStringLiteral(KEY_COLUMN_USAGE), keyColumnUsageCondition);
     qb.addJoin(QueryBuilder::LeftJoin, QStringLiteral(REFERENTIAL_CONSTRAINTS), referentialConstraintsCondition);
     qb.addJoin(QueryBuilder::LeftJoin, QStringLiteral(CONSTRAINT_COLUMN_USAGE), constraintColumnUsageCondition);
-    qb.addValueCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_type"), Query::Equals, QLatin1String("FOREIGN KEY"));
+    qb.addValueCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_type"), Query::Equals, QLatin1StringView("FOREIGN KEY"));
     qb.addValueCondition(QStringLiteral(TABLE_CONSTRAINTS ".table_name"), Query::Equals, tableName.toLower());
 
 #undef TABLE_CONSTRAINTS

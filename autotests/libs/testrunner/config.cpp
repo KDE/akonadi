@@ -48,32 +48,32 @@ void Config::readConfiguration(const QString &configfile)
 
     while (!reader.atEnd()) {
         reader.readNext();
-        if (reader.name() == QLatin1String("config")) {
-            while (!reader.atEnd() && !(reader.name() == QLatin1String("config") && reader.isEndElement())) {
+        if (reader.name() == QLatin1StringView("config")) {
+            while (!reader.atEnd() && !(reader.name() == QLatin1StringView("config") && reader.isEndElement())) {
                 reader.readNext();
-                if (reader.name() == QLatin1String("backends")) {
+                if (reader.name() == QLatin1StringView("backends")) {
                     QStringList backends;
-                    while (!reader.atEnd() && !(reader.name() == QLatin1String("backends") && reader.isEndElement())) {
+                    while (!reader.atEnd() && !(reader.name() == QLatin1StringView("backends") && reader.isEndElement())) {
                         reader.readNext();
-                        if (reader.name() == QLatin1String("backend")) {
+                        if (reader.name() == QLatin1StringView("backend")) {
                             backends << reader.readElementText();
                         }
                     }
                     setBackends(backends);
-                } else if (reader.name() == QLatin1String("datahome")) {
+                } else if (reader.name() == QLatin1StringView("datahome")) {
                     setXdgDataHome(mBasePath + reader.readElementText());
-                } else if (reader.name() == QLatin1String("agent")) {
+                } else if (reader.name() == QLatin1StringView("agent")) {
                     const auto attrs = reader.attributes();
-                    insertAgent(reader.readElementText(), attrs.value(QLatin1String("synchronize")) == QLatin1String("true"));
-                } else if (reader.name() == QLatin1String("envvar")) {
+                    insertAgent(reader.readElementText(), attrs.value(QLatin1StringView("synchronize")) == QLatin1String("true"));
+                } else if (reader.name() == QLatin1StringView("envvar")) {
                     const auto attrs = reader.attributes();
-                    const auto name = attrs.value(QLatin1String("name"));
+                    const auto name = attrs.value(QLatin1StringView("name"));
                     if (name.isEmpty()) {
                         qCWarning(AKONADITEST_LOG) << "Given envvar with no name.";
                     } else {
                         mEnvVars[name.toString()] = reader.readElementText();
                     }
-                } else if (reader.name() == QLatin1String("dbbackend")) {
+                } else if (reader.name() == QLatin1StringView("dbbackend")) {
                     setDbBackend(reader.readElementText());
                 }
             }

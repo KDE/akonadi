@@ -100,7 +100,7 @@ private:
         header += QStringLiteral("<body text=\"%1\" bgcolor=\"%2\">")
                       .arg(KColorScheme(QPalette::Active, KColorScheme::View).foreground().color().name(),
                            KColorScheme(QPalette::Active, KColorScheme::View).background().color().name());
-        header += QLatin1String("<center><table>");
+        header += QLatin1StringView("<center><table>");
         header += QStringLiteral("<tr><th align=\"center\">%1</th><th align=\"center\">%2</th><td>&nbsp;</td><th align=\"center\">%3</th></tr>")
                       .arg(mNameTitle, mLeftTitle, mRightTitle);
 
@@ -139,8 +139,8 @@ static void compareItems(AbstractDifferencesReporter *reporter, const Akonadi::I
         const auto otherFlags = otherItem.flags() | Views::transform(toQString) | Actions::toQList;
         reporter->addProperty(AbstractDifferencesReporter::ConflictMode,
                               i18n("Flags"),
-                              localFlags.join(QLatin1String(", ")),
-                              otherFlags.join(QLatin1String(", ")));
+                              localFlags.join(QLatin1StringView(", ")),
+                              otherFlags.join(QLatin1StringView(", ")));
     }
 
     const auto toPair = [](Attribute *attr) {

@@ -156,7 +156,7 @@ void DbInitializer::checkForeignKeys(const TableDescription &tableDescription)
             if (!column.refTable.isEmpty() && !column.refColumn.isEmpty()) {
                 if (!existingForeignKey.column.isEmpty()) {
                     // there's a constraint on this column, check if it's the correct one
-                    if (QString::compare(existingForeignKey.refTable, column.refTable + QLatin1String("table"), Qt::CaseInsensitive) == 0
+                    if (QString::compare(existingForeignKey.refTable, column.refTable + QLatin1StringView("table"), Qt::CaseInsensitive) == 0
                         && QString::compare(existingForeignKey.refColumn, column.refColumn, Qt::CaseInsensitive) == 0
                         && QString::compare(existingForeignKey.onUpdate, referentialActionToString(column.onUpdate), Qt::CaseInsensitive) == 0
                         && QString::compare(existingForeignKey.onDelete, referentialActionToString(column.onDelete), Qt::CaseInsensitive) == 0) {
@@ -269,22 +269,22 @@ void DbInitializer::execPendingQueries(const QStringList &queries)
 QString DbInitializer::sqlType(const ColumnDescription &col, int size) const
 {
     Q_UNUSED(size)
-    if (col.type == QLatin1String("int")) {
+    if (col.type == QLatin1StringView("int")) {
         return QStringLiteral("INTEGER");
     }
-    if (col.type == QLatin1String("qint64")) {
+    if (col.type == QLatin1StringView("qint64")) {
         return QStringLiteral("BIGINT");
     }
-    if (col.type == QLatin1String("QString")) {
+    if (col.type == QLatin1StringView("QString")) {
         return QStringLiteral("TEXT");
     }
-    if (col.type == QLatin1String("QByteArray")) {
+    if (col.type == QLatin1StringView("QByteArray")) {
         return QStringLiteral("LONGBLOB");
     }
-    if (col.type == QLatin1String("QDateTime")) {
+    if (col.type == QLatin1StringView("QDateTime")) {
         return QStringLiteral("TIMESTAMP");
     }
-    if (col.type == QLatin1String("bool")) {
+    if (col.type == QLatin1StringView("bool")) {
         return QStringLiteral("BOOL");
     }
     if (col.isEnum) {
@@ -298,7 +298,7 @@ QString DbInitializer::sqlType(const ColumnDescription &col, int size) const
 
 QString DbInitializer::sqlValue(const ColumnDescription &col, const QString &value) const
 {
-    if (col.type == QLatin1String("QDateTime") && value == QLatin1String("QDateTime::currentDateTimeUtc()")) {
+    if (col.type == QLatin1StringView("QDateTime") && value == QLatin1String("QDateTime::currentDateTimeUtc()")) {
         return QStringLiteral("CURRENT_TIMESTAMP");
     } else if (col.isEnum) {
         return QString::number(col.enumValueMap[value]);
@@ -347,7 +347,7 @@ QStringList DbInitializer::buildRemoveForeignKeyConstraintStatements(const DbInt
 
 QString DbInitializer::buildReferentialAction(ColumnDescription::ReferentialAction onUpdate, ColumnDescription::ReferentialAction onDelete)
 {
-    return QLatin1String("ON UPDATE ") + referentialActionToString(onUpdate) + QLatin1String(" ON DELETE ") + referentialActionToString(onDelete);
+    return QLatin1StringView("ON UPDATE ") + referentialActionToString(onUpdate) + QLatin1String(" ON DELETE ") + referentialActionToString(onDelete);
 }
 
 QString DbInitializer::referentialActionToString(ColumnDescription::ReferentialAction action)
@@ -373,7 +373,7 @@ QString DbInitializer::buildPrimaryKeyStatement(const TableDescription &table)
             cols.push_back(column.name);
         }
     }
-    return QLatin1String("PRIMARY KEY (") + cols.join(QLatin1String(", ")) + QLatin1Char(')');
+    return QLatin1StringView("PRIMARY KEY (") + cols.join(QLatin1String(", ")) + QLatin1Char(')');
 }
 
 void DbInitializer::execQuery(const QString &queryString)

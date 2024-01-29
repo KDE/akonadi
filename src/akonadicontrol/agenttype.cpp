@@ -16,11 +16,11 @@
 
 using namespace Akonadi;
 
-const QLatin1String AgentType::CapabilityUnique = QLatin1String(AKONADI_AGENT_CAPABILITY_UNIQUE);
-const QLatin1String AgentType::CapabilityResource = QLatin1String(AKONADI_AGENT_CAPABILITY_RESOURCE);
-const QLatin1String AgentType::CapabilityAutostart = QLatin1String(AKONADI_AGENT_CAPABILITY_AUTOSTART);
-const QLatin1String AgentType::CapabilityPreprocessor = QLatin1String(AKONADI_AGENT_CAPABILITY_PREPROCESSOR);
-const QLatin1String AgentType::CapabilitySearch = QLatin1String(AKONADI_AGENT_CAPABILITY_SEARCH);
+const QLatin1StringView AgentType::CapabilityUnique = QLatin1String(AKONADI_AGENT_CAPABILITY_UNIQUE);
+const QLatin1StringView AgentType::CapabilityResource = QLatin1String(AKONADI_AGENT_CAPABILITY_RESOURCE);
+const QLatin1StringView AgentType::CapabilityAutostart = QLatin1String(AKONADI_AGENT_CAPABILITY_AUTOSTART);
+const QLatin1StringView AgentType::CapabilityPreprocessor = QLatin1String(AKONADI_AGENT_CAPABILITY_PREPROCESSOR);
+const QLatin1StringView AgentType::CapabilitySearch = QLatin1String(AKONADI_AGENT_CAPABILITY_SEARCH);
 
 AgentType::AgentType()
 {
@@ -39,7 +39,7 @@ bool AgentType::load(const QString &fileName, AgentManager *manager)
 
     const QStringList keyList(group.keyList());
     for (const QString &key : keyList) {
-        if (key.startsWith(QLatin1String("X-Akonadi-Custom-"))) {
+        if (key.startsWith(QLatin1StringView("X-Akonadi-Custom-"))) {
             const QString customKey = key.mid(17, key.length());
             const QStringList val = group.readEntry(key, QStringList());
             if (val.size() == 1) {
@@ -60,11 +60,11 @@ bool AgentType::load(const QString &fileName, AgentManager *manager)
     launchMethod = Process; // Save default
 
     const QString method = group.readEntry(QStringLiteral("X-Akonadi-LaunchMethod"));
-    if (method.compare(QLatin1String("AgentProcess"), Qt::CaseInsensitive) == 0) {
+    if (method.compare(QLatin1StringView("AgentProcess"), Qt::CaseInsensitive) == 0) {
         launchMethod = Process;
-    } else if (method.compare(QLatin1String("AgentServer"), Qt::CaseInsensitive) == 0) {
+    } else if (method.compare(QLatin1StringView("AgentServer"), Qt::CaseInsensitive) == 0) {
         launchMethod = Server;
-    } else if (method.compare(QLatin1String("AgentLauncher"), Qt::CaseInsensitive) == 0) {
+    } else if (method.compare(QLatin1StringView("AgentLauncher"), Qt::CaseInsensitive) == 0) {
         launchMethod = Launcher;
     } else if (!method.isEmpty()) {
         qCWarning(AKONADICONTROL_LOG) << "Invalid exec method:" << method << "falling back to AgentProcess";

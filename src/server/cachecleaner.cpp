@@ -96,7 +96,7 @@ bool CacheCleaner::hasChanged(const Collection &collection, const Collection &ch
 
 bool CacheCleaner::shouldScheduleCollection(const Collection &collection)
 {
-    return collection.cachePolicyLocalParts() != QLatin1String("ALL") && collection.cachePolicyCacheTimeout() >= 0
+    return collection.cachePolicyLocalParts() != QLatin1StringView("ALL") && collection.cachePolicyCacheTimeout() >= 0
         && (collection.enabled() || (collection.displayPref() == Collection::True) || (collection.syncPref() == Collection::True)
             || (collection.indexPref() == Collection::True))
         && collection.resourceId() > 0;
@@ -110,12 +110,12 @@ void CacheCleaner::collectionExpired(const Collection &collection)
     qb.addValueCondition(PimItem::collectionIdFullColumnName(), Query::Equals, collection.id());
     qb.addValueCondition(PimItem::atimeFullColumnName(), Query::Less, QDateTime::currentDateTimeUtc().addSecs(-60 * collection.cachePolicyCacheTimeout()));
     qb.addValueCondition(Part::dataFullColumnName(), Query::IsNot, QVariant());
-    qb.addValueCondition(PartType::nsFullColumnName(), Query::Equals, QLatin1String("PLD"));
+    qb.addValueCondition(PartType::nsFullColumnName(), Query::Equals, QLatin1StringView("PLD"));
     qb.addValueCondition(PimItem::dirtyFullColumnName(), Query::Equals, false);
 
     const QStringList partNames = collection.cachePolicyLocalParts().split(QLatin1Char(' '));
     for (QString partName : partNames) {
-        if (partName.startsWith(QLatin1String(AKONADI_PARAM_PLD))) {
+        if (partName.startsWith(QLatin1StringView(AKONADI_PARAM_PLD))) {
             partName.remove(0, 4);
         }
         qb.addValueCondition(PartType::nameFullColumnName(), Query::NotEquals, partName);

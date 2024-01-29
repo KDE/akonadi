@@ -47,7 +47,7 @@ bool CollectionDeleteHandler::parseStream()
     }
 
     // handle virtual folders
-    if (collection.resource().name() == QLatin1String(AKONADI_SEARCH_RESOURCE)) {
+    if (collection.resource().name() == QLatin1StringView(AKONADI_SEARCH_RESOURCE)) {
         // don't delete virtual root
         if (collection.parentId() == 0) {
             return failureResponse(QStringLiteral("Cannot delete virtual root collection"));

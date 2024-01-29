@@ -372,7 +372,7 @@ private Q_SLOTS:
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5,
                                               TestScenario::ClientCmd,
-                                              Protocol::FetchRelationsCommandPtr::create(-1, QList<QByteArray>{}, QLatin1String("testresource")))
+                                              Protocol::FetchRelationsCommandPtr::create(-1, QList<QByteArray>{}, QLatin1StringView("testresource")))
                       << TestScenario::create(5,
                                               TestScenario::ServerCmd,
                                               Protocol::FetchRelationsResponsePtr::create(item1.id(),
@@ -418,7 +418,7 @@ private Q_SLOTS:
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5,
                                               TestScenario::ClientCmd,
-                                              Protocol::FetchRelationsCommandPtr::create(-1, QList<QByteArray>{}, QLatin1String("testresource2")))
+                                              Protocol::FetchRelationsCommandPtr::create(-1, QList<QByteArray>{}, QLatin1StringView("testresource2")))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create());
 
             QTest::newRow("filter by resource with nonmatching resource") << scenarios;

@@ -65,7 +65,7 @@ Query::Condition conditionFromFqNames(const T<QByteArray> &fqNames)
     Query::Condition c;
     c.setSubQueryMode(Query::Or);
     for (const QByteArray &fqName : fqNames) {
-        c.addCondition(conditionFromFqName(QLatin1String(fqName)));
+        c.addCondition(conditionFromFqName(QLatin1StringView(fqName)));
     }
     return c;
 }

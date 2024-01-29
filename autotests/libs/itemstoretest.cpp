@@ -457,7 +457,7 @@ public:
                 QCOMPARE(mjob->error(), KJob::NoError);
             }
         }
-        QVERIFY2(errors.isEmpty(), qPrintable(errors.join(QLatin1String("; "))));
+        QVERIFY2(errors.isEmpty(), qPrintable(errors.join(QLatin1StringView("; "))));
     }
 
     const int numSessions;

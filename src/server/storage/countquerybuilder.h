@@ -58,7 +58,7 @@ public:
         Q_ASSERT(!column.isEmpty());
         QString s = QStringLiteral("count(");
         if (mode == Distinct) {
-            s += QLatin1String("DISTINCT ");
+            s += QLatin1StringView("DISTINCT ");
         }
         s += column;
         s += QLatin1Char(')');

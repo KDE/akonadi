@@ -134,7 +134,7 @@ void SelfTestDialog::runTests()
 
     const QString driver = serverSetting(QStringLiteral("General"), "Driver", QStringLiteral("QMYSQL")).toString();
     testSQLDriver();
-    if (driver == QLatin1String("QPSQL")) {
+    if (driver == QLatin1StringView("QPSQL")) {
         testPSQLServer();
     } else {
 #ifndef Q_OS_WIN
@@ -163,7 +163,7 @@ QVariant SelfTestDialog::serverSetting(const QString &group, const char *key, co
 bool SelfTestDialog::useStandaloneMysqlServer() const
 {
     const QString driver = serverSetting(QStringLiteral("General"), "Driver", QStringLiteral("QMYSQL")).toString();
-    if (driver != QLatin1String("QMYSQL")) {
+    if (driver != QLatin1StringView("QMYSQL")) {
         return false;
     }
     const bool startServer = serverSetting(driver, "StartServer", true).toBool();
@@ -192,7 +192,7 @@ void SelfTestDialog::testSQLDriver()
                                              "The following drivers are installed: %2.\n"
                                              "Make sure the required driver is installed.")
                                              .subs(driver)
-                                             .subs(availableDrivers.join(QLatin1String(", ")));
+                                             .subs(availableDrivers.join(QLatin1StringView(", ")));
     QStandardItem *item = nullptr;
     if (availableDrivers.contains(driver)) {
         item = report(Success, ki18n("Database driver found."), detailsOk);
@@ -226,7 +226,7 @@ void SelfTestDialog::testMySQLServer()
         report(Error, ki18n("MySQL server not readable."), details);
     } else if (!info.isExecutable()) {
         report(Error, ki18n("MySQL server not executable."), details);
-    } else if (!serverPath.contains(QLatin1String("mysqld"))) {
+    } else if (!serverPath.contains(QLatin1StringView("mysqld"))) {
         report(Warning, ki18n("MySQL found with unexpected name."), details);
     } else {
         report(Success, ki18n("MySQL server found."), details);
@@ -250,7 +250,7 @@ void SelfTestDialog::testMySQLServerLog()
         return;
     }
 
-    const QString logFileName = StandardDirs::saveDir("data", QStringLiteral("db_data")) + QLatin1String("/mysql.err");
+    const QString logFileName = StandardDirs::saveDir("data", QStringLiteral("db_data")) + QLatin1StringView("/mysql.err");
     const QFileInfo logFileInfo(logFileName);
     if (!logFileInfo.exists() || logFileInfo.size() == 0) {
         report(Success,
@@ -269,14 +269,14 @@ void SelfTestDialog::testMySQLServerLog()
     QStandardItem *item = nullptr;
     while (!logFile.atEnd()) {
         const QString line = QString::fromUtf8(logFile.readLine());
-        if (line.contains(QLatin1String("error"), Qt::CaseInsensitive)) {
+        if (line.contains(QLatin1StringView("error"), Qt::CaseInsensitive)) {
             item = report(Error,
                           ki18n("MySQL server log contains errors."),
                           ki18n("The MySQL server error log file '%1' contains errors.").subs(makeLink(logFileName)));
             item->setData(logFileName, FileIncludeRole);
             return;
         }
-        if (!warningsFound && line.contains(QLatin1String("warn"), Qt::CaseInsensitive)) {
+        if (!warningsFound && line.contains(QLatin1StringView("warn"), Qt::CaseInsensitive)) {
             warningsFound = true;
         }
     }
@@ -466,7 +466,7 @@ void SelfTestDialog::testResources()
     const AgentType::List agentTypes = AgentManager::self()->types();
     bool resourceFound = false;
     for (const AgentType &type : agentTypes) {
-        if (type.capabilities().contains(QLatin1String("Resource"))) {
+        if (type.capabilities().contains(QLatin1StringView("Resource"))) {
             resourceFound = true;
             break;
         }
@@ -493,7 +493,7 @@ void SelfTestDialog::testResources()
 
 void SelfTestDialog::testServerLog()
 {
-    QString serverLog = StandardDirs::saveDir("data") + QLatin1String("/akonadiserver.error");
+    QString serverLog = StandardDirs::saveDir("data") + QLatin1StringView("/akonadiserver.error");
     QFileInfo info(serverLog);
     if (!info.exists() || info.size() <= 0) {
         report(Success, ki18n("No current Akonadi server error log found."), ki18n("The Akonadi server did not report any errors during its current startup."));
@@ -522,7 +522,7 @@ void SelfTestDialog::testServerLog()
 
 void SelfTestDialog::testControlLog()
 {
-    QString controlLog = StandardDirs::saveDir("data") + QLatin1String("/akonadi_control.error");
+    QString controlLog = StandardDirs::saveDir("data") + QLatin1StringView("/akonadi_control.error");
     QFileInfo info(controlLog);
     if (!info.exists() || info.size() <= 0) {
         report(Success,

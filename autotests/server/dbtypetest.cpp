@@ -10,7 +10,7 @@
 #include <aktest.h>
 #include <storage/dbtype.h>
 
-#define QL1S(x) QLatin1String(x)
+#define QL1S(x) QLatin1StringView(x)
 
 using namespace Akonadi::Server;
 

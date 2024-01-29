@@ -51,7 +51,7 @@ static QString indexToText(const QModelIndex &index)
         return QStringLiteral("invalid");
     }
     return QString::number(index.row()) + QLatin1Char(',') + QString::number(index.column()) + QLatin1Char(',')
-        + QString::number(reinterpret_cast<qulonglong>(index.internalPointer()), 16) + QLatin1String(" in ")
+        + QString::number(reinterpret_cast<qulonglong>(index.internalPointer()), 16) + QLatin1StringView(" in ")
         + QString::number(reinterpret_cast<qulonglong>(index.model()), 16);
 }
 
@@ -165,9 +165,9 @@ void StatisticsProxyModelTest::shouldShowExtraColumns()
     QVERIFY(!secondParent.parent().isValid());
     QCOMPARE(indexToText(pm.index(0, 0, secondParent).parent()), indexToText(secondParent));
     QCOMPARE(indexToText(pm.index(0, 3, secondParent).parent()), indexToText(secondParent));
-    QVERIFY(indexToText(pm.index(0, 4)).startsWith(QLatin1String("0,4,")));
+    QVERIFY(indexToText(pm.index(0, 4)).startsWith(QLatin1StringView("0,4,")));
     QCOMPARE(indexToText(pm.index(0, 4, secondParent).parent()), indexToText(secondParent));
-    QVERIFY(indexToText(pm.index(0, 5)).startsWith(QLatin1String("0,5,")));
+    QVERIFY(indexToText(pm.index(0, 5)).startsWith(QLatin1StringView("0,5,")));
     QCOMPARE(indexToText(pm.index(0, 5, secondParent).parent()), indexToText(secondParent));
 
     QCOMPARE(pm.index(0, 0).sibling(0, 4).column(), 4);
@@ -189,10 +189,10 @@ void StatisticsProxyModelTest::shouldShowToolTip()
     // Then the tooltip should contain the expected information
     toolTip.remove(QStringLiteral("<strong>"));
     toolTip.remove(QStringLiteral("</strong>"));
-    QVERIFY2(toolTip.contains(QLatin1String("Total Messages: 6")), qPrintable(toolTip));
-    QVERIFY2(toolTip.contains(QLatin1String("Unread Messages: 2")), qPrintable(toolTip));
-    QVERIFY2(toolTip.contains(QLatin1String("Storage Size: 9 B")), qPrintable(toolTip));
-    QVERIFY2(toolTip.contains(QLatin1String("Subfolder Storage Size: 5 B")), qPrintable(toolTip));
+    QVERIFY2(toolTip.contains(QLatin1StringView("Total Messages: 6")), qPrintable(toolTip));
+    QVERIFY2(toolTip.contains(QLatin1StringView("Unread Messages: 2")), qPrintable(toolTip));
+    QVERIFY2(toolTip.contains(QLatin1StringView("Storage Size: 9 B")), qPrintable(toolTip));
+    QVERIFY2(toolTip.contains(QLatin1StringView("Subfolder Storage Size: 5 B")), qPrintable(toolTip));
 }
 
 void StatisticsProxyModelTest::shouldHandleDataChanged()

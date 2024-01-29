@@ -39,7 +39,7 @@ static QString sqliteDataFile(const QString &dbPathOverride = {})
     if (dir.isEmpty()) {
         return QString();
     }
-    const QString akonadiPath = dir + QLatin1String("akonadi.db");
+    const QString akonadiPath = dir + QLatin1StringView("akonadi.db");
     if (!QFile::exists(akonadiPath)) {
         QFile file(akonadiPath);
         if (!file.open(QIODevice::WriteOnly)) {
@@ -161,7 +161,7 @@ bool DbConfigSqlite::setPragma(QSqlDatabase &db, QSqlQuery &query, const QString
 
 void DbConfigSqlite::setup()
 {
-    const QLatin1String connectionName("initConnectionSqlite");
+    const QLatin1StringView connectionName("initConnectionSqlite");
 
     {
         QSqlDatabase db = QSqlDatabase::addDatabase(driverName(), connectionName);
@@ -183,7 +183,7 @@ void DbConfigSqlite::setup()
         // database performance. It does not have any effect on non-empty files, so
         // we check, whether the database has not yet been initialized.
         if (dbFile.size() == 0) {
-            if (Utils::getDirectoryFileSystem(mDatabaseName) == QLatin1String("btrfs")) {
+            if (Utils::getDirectoryFileSystem(mDatabaseName) == QLatin1StringView("btrfs")) {
                 Utils::disableCoW(mDatabaseName);
             }
         }

@@ -652,7 +652,7 @@ bool <xsl:value-of select="$className"/>::insert(DataStore *store, qint64* inser
 
     QueryBuilder qb(store, tableName(), QueryBuilder::Insert);
     <xsl:if test="@identificationColumn">
-    qb.setIdentificationColumn(QLatin1String("<xsl:value-of select="@identificationColumn"/>"));
+    qb.setIdentificationColumn(QLatin1StringView("<xsl:value-of select="@identificationColumn"/>"));
     </xsl:if>
     <xsl:for-each select="column[@name != 'id']">
       <xsl:variable name="refColumn"><xsl:value-of select="@refColumn"/></xsl:variable>

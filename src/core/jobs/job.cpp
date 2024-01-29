@@ -111,7 +111,7 @@ void JobPrivate::publishJob()
             }
             const QString suffix = Akonadi::Instance::identifier().isEmpty() ? QString() : QLatin1Char('-') + Akonadi::Instance::identifier();
             if (QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.akonadiconsole") + suffix)) {
-                s_jobtracker = new QDBusInterface(QLatin1String("org.kde.akonadiconsole") + suffix,
+                s_jobtracker = new QDBusInterface(QLatin1StringView("org.kde.akonadiconsole") + suffix,
                                                   QStringLiteral("/jobtracker"),
                                                   QStringLiteral("org.freedesktop.Akonadi.JobTracker"),
                                                   QDBusConnection::sessionBus(),
@@ -135,7 +135,7 @@ void JobPrivate::signalCreationToJobTracker()
         // xml interface document. Since this is purely a debugging aid, that seems preferable to
         // publishing something not intended for public consumption.
         // WARNING: for any signature change here, apply it to resourcescheduler.cpp too
-        const QList<QVariant> argumentList = QList<QVariant>() << QLatin1String(mSession->sessionId()) << QString::number(reinterpret_cast<quintptr>(q), 16)
+        const QList<QVariant> argumentList = QList<QVariant>() << QLatin1StringView(mSession->sessionId()) << QString::number(reinterpret_cast<quintptr>(q), 16)
                                                                << (mParentJob ? QString::number(reinterpret_cast<quintptr>(mParentJob), 16) : QString())
                                                                << QString::fromLatin1(q->metaObject()->className()) << jobDebuggingString();
         QDBusPendingCall call = s_jobtracker->asyncCallWithArgumentList(QStringLiteral("jobCreated"), argumentList);

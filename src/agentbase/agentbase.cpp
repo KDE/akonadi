@@ -836,7 +836,7 @@ QString AgentBasePrivate::dumpMemoryInfoToString() const
            << "Total free space (fordblks):          " << mi.fordblks << '\n'
            << "Topmost releasable block (keepcost):  " << mi.keepcost << '\n';
 #else
-    str = QLatin1String("mallinfo() not supported");
+    str = QLatin1StringView("mallinfo() not supported");
 #endif
     return str;
 }
@@ -1040,7 +1040,7 @@ void AgentBase::doSetOnline(bool online)
 KAboutData AgentBase::aboutData() const
 {
     // akonadi_google_resource_1 -> org.kde.akonadi_google_resource
-    const QString desktopEntry = QLatin1String("org.kde.") + qApp->applicationName().remove(QRegularExpression(QStringLiteral("_[0-9]+$")));
+    const QString desktopEntry = QLatin1StringView("org.kde.") + qApp->applicationName().remove(QRegularExpression(QStringLiteral("_[0-9]+$")));
 
     KAboutData data(qApp->applicationName(), agentName(), qApp->applicationVersion());
     data.setDesktopFileName(desktopEntry);

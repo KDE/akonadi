@@ -21,7 +21,7 @@ Session::Session(const QString &input, QObject *parent)
     : QObject(parent)
 {
     auto file = new QFile(this);
-    if (input != QLatin1String("-")) {
+    if (input != QLatin1StringView("-")) {
         file->setFileName(input);
         if (!file->open(QFile::ReadOnly)) {
             qFatal("Failed to open %s", qPrintable(input));

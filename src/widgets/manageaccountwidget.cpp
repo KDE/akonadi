@@ -213,7 +213,7 @@ void ManageAccountWidget::slotRemoveSelectedAccount()
 void ManageAccountWidget::slotAccountSelected(const Akonadi::AgentInstance &current)
 {
     if (current.isValid()) {
-        d->ui.mModifyAccountButton->setEnabled(!current.type().capabilities().contains(QLatin1String("NoConfig")));
+        d->ui.mModifyAccountButton->setEnabled(!current.type().capabilities().contains(QLatin1StringView("NoConfig")));
         d->ui.mRemoveAccountButton->setEnabled(d->mSpecialCollectionIdentifier != current.identifier());
         // Restarting an agent is not possible if it's in Running status... (see AgentProcessInstance::restartWhenIdle)
         d->ui.mRestartAccountButton->setEnabled((current.status() != 1));

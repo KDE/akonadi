@@ -157,7 +157,7 @@ inline DataStream &DataStream::operator>>(QString &str)
     if (bytes == 0xffffffff) {
         return *this;
     } else if (bytes == 0) {
-        str = QString(QLatin1String(""));
+        str = QString(QLatin1StringView(""));
         return *this;
     }
 

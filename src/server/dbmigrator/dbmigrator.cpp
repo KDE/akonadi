@@ -259,10 +259,10 @@ bool analyzeTable(const QString &table, DataStore *store)
     switch (dbType) {
     case DbType::Sqlite:
     case DbType::PostgreSQL:
-        queryStr = QLatin1String("ANALYZE ") + table;
+        queryStr = QLatin1StringView("ANALYZE ") + table;
         break;
     case DbType::MySQL:
-        queryStr = QLatin1String("ANALYZE TABLE ") + table;
+        queryStr = QLatin1StringView("ANALYZE TABLE ") + table;
         break;
     case DbType::Unknown:
         qCCritical(AKONADIDBMIGRATOR_LOG) << "Unknown database type";
@@ -292,13 +292,13 @@ QString createTmpAkonadiServerRc(const QString &targetEngine)
 QString driverFromEngineName(const QString &engine)
 {
     const auto enginelc = engine.toLower();
-    if (enginelc == QLatin1String("sqlite")) {
+    if (enginelc == QLatin1StringView("sqlite")) {
         return QStringLiteral("QSQLITE");
     }
-    if (enginelc == QLatin1String("mysql")) {
+    if (enginelc == QLatin1StringView("mysql")) {
         return QStringLiteral("QMYSQL");
     }
-    if (enginelc == QLatin1String("postgres")) {
+    if (enginelc == QLatin1StringView("postgres")) {
         return QStringLiteral("QPSQL");
     }
 
@@ -312,12 +312,12 @@ std::unique_ptr<DbConfig> dbConfigFromServerRc(const QString &configFile, bool o
     const auto driver = settings.value(QStringLiteral("General/Driver")).toString();
     std::unique_ptr<DbConfig> config;
     QString dbPathSuffix;
-    if (driver == QLatin1String("QSQLITE") || driver == QLatin1String("QSQLITE3")) {
+    if (driver == QLatin1StringView("QSQLITE") || driver == QLatin1String("QSQLITE3")) {
         config = std::make_unique<DbConfigSqlite>(configFile);
-    } else if (driver == QLatin1String("QMYSQL")) {
+    } else if (driver == QLatin1StringView("QMYSQL")) {
         config = std::make_unique<DbConfigMysql>(configFile);
         dbPathSuffix = QStringLiteral("/db_data");
-    } else if (driver == QLatin1String("QPSQL")) {
+    } else if (driver == QLatin1StringView("QPSQL")) {
         config = std::make_unique<DbConfigPostgresql>(configFile);
         dbPathSuffix = QStringLiteral("/db_data");
     } else {
@@ -757,13 +757,13 @@ bool DbMigrator::copyTable(DataStore *sourceStore, DataStore *destStore, const T
         destQb.setIdentificationColumn({});
         for (int col = 0; col < table.columns.size(); ++col) {
             QVariant value;
-            if (table.columns[col].type == QLatin1String("QDateTime")) {
+            if (table.columns[col].type == QLatin1StringView("QDateTime")) {
                 value = Utils::variantToDateTime(sourceQuery.value(col), sourceStore);
-            } else if (table.columns[col].type == QLatin1String("bool")) {
+            } else if (table.columns[col].type == QLatin1StringView("bool")) {
                 value = sourceQuery.value(col).toBool();
-            } else if (table.columns[col].type == QLatin1String("QByteArray")) {
+            } else if (table.columns[col].type == QLatin1StringView("QByteArray")) {
                 value = Utils::variantToByteArray(sourceQuery.value(col));
-            } else if (table.columns[col].type == QLatin1String("QString")) {
+            } else if (table.columns[col].type == QLatin1StringView("QString")) {
                 value = Utils::variantToString(sourceQuery.value(col));
             } else {
                 value = sourceQuery.value(col);

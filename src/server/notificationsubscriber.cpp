@@ -353,7 +353,7 @@ bool NotificationSubscriber::isMimeTypeMonitored(const QString &mimeType) const
     // Assumes mLock being locked by caller
 
     // KContacts::Addressee::mimeType() unfortunately uses an alias
-    if (mimeType == QLatin1String("text/directory")) {
+    if (mimeType == QLatin1StringView("text/directory")) {
         return mMonitoredMimeTypes.contains(QStringLiteral("text/vcard"));
     }
     return mMonitoredMimeTypes.contains(mimeType);

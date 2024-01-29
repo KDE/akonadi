@@ -272,7 +272,7 @@ ServerManager::State ServerManager::state()
             // besides the running server processes we also need at least one resource to be operational
             const AgentType::List agentTypes = AgentManager::self()->types();
             for (const AgentType &type : agentTypes) {
-                if (type.capabilities().contains(QLatin1String("Resource"))) {
+                if (type.capabilities().contains(QLatin1StringView("Resource"))) {
                     return Running;
                 }
             }

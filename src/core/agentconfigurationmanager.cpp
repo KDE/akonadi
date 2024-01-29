@@ -86,11 +86,11 @@ QString AgentConfigurationManager::findConfigPlugin(const QString &type) const
         for (const auto &lib : libs) {
             QPluginLoader loader(lib.absoluteFilePath());
             const auto metaData = loader.metaData().toVariantMap();
-            if (metaData.value(QStringLiteral("IID")).toString() != QLatin1String("org.freedesktop.Akonadi.AgentConfig")) {
+            if (metaData.value(QStringLiteral("IID")).toString() != QLatin1StringView("org.freedesktop.Akonadi.AgentConfig")) {
                 continue;
             }
             const auto md = metaData.value(QStringLiteral("MetaData")).toMap();
-            if (md.value(QStringLiteral("X-Akonadi-PluginType")).toString() != QLatin1String("AgentConfig")) {
+            if (md.value(QStringLiteral("X-Akonadi-PluginType")).toString() != QLatin1StringView("AgentConfig")) {
                 continue;
             }
             if (!type.startsWith(md.value(QStringLiteral("X-Akonadi-AgentConfig-Type")).toString())) {

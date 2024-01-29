@@ -368,7 +368,7 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
                     if (TypeHelper::isNumericType(prop->type()) || TypeHelper::isBoolType(prop->type())) {
                         varType = QLatin1Char('(') + prop->type() + QLatin1Char(' ');
                     } else {
-                        varType = QLatin1String("(const ") + prop->type() + QLatin1String(" &");
+                        varType = QLatin1StringView("(const ") + prop->type() + QLatin1String(" &");
                     }
                     mHeader << "    void " << prop->setterName() << varType << prop->name() << ");\n";
                 } else {
@@ -376,7 +376,7 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
                     if (TypeHelper::isNumericType(prop->type()) || TypeHelper::isBoolType(prop->type())) {
                         varType = QLatin1Char('(') + prop->type() + QLatin1Char(' ');
                     } else {
-                        varType = QLatin1String("(const ") + prop->type() + QLatin1String(" &");
+                        varType = QLatin1StringView("(const ") + prop->type() + QLatin1String(" &");
                     }
                     mHeader << "    inline void " << prop->setterName() << varType << prop->name() << ") { " << prop->mVariableName() << " = " << prop->name()
                             << "; }\n";
@@ -539,7 +539,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
                 mImpl << "    m" << setter->append[0].toUpper() << QStringView(setter->append).mid(1) << " << val;\n";
             }
             if (!setter->remove.isEmpty()) {
-                const QString mVar = QLatin1String("m") + setter->remove[0].toUpper() + QStringView(setter->remove).mid(1);
+                const QString mVar = QLatin1StringView("m") + setter->remove[0].toUpper() + QStringView(setter->remove).mid(1);
                 mImpl << "    auto it = std::find(" << mVar << ".begin(), " << mVar
                       << ".end(), val);\n"
                          "    if (it != "
@@ -674,10 +674,10 @@ void CppGenerator::writeImplClass(ClassNode const *node)
                          "            jsonArray.append(jsonObject);\n";
             } else if (TypeHelper::isNumericType(containerType) || TypeHelper::isBoolType(containerType)) {
                 mImpl << "            jsonArray.append(type); /* " << containerType << " */\n";
-            } else if (containerType == QLatin1String("QByteArray")) {
+            } else if (containerType == QLatin1StringView("QByteArray")) {
                 mImpl << "            jsonArray.append(QString::fromUtf8(type)); /* " << containerType << "*/\n";
             } else if (TypeHelper::isBuiltInType(containerType)) {
-                if (TypeHelper::containerType(prop->type()) == QLatin1String("Akonadi::Protocol::ChangeNotification::Relation")) {
+                if (TypeHelper::containerType(prop->type()) == QLatin1StringView("Akonadi::Protocol::ChangeNotification::Relation")) {
                     mImpl << "            QJsonObject jsonObject;\n"
                              "            type.toJson(jsonObject); /* "
                           << containerType
@@ -696,20 +696,20 @@ void CppGenerator::writeImplClass(ClassNode const *node)
             mImpl << "        }\n"
                   << "        json[QStringLiteral(\"" << prop->name() << "\")] = jsonArray;\n"
                   << "    }\n";
-        } else if (prop->type() == QLatin1String("uint")) {
+        } else if (prop->type() == QLatin1StringView("uint")) {
             mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = static_cast<int>(" << prop->mVariableName() << ");/* " << prop->type() << " */\n";
         } else if (TypeHelper::isNumericType(prop->type()) || TypeHelper::isBoolType(prop->type())) {
             mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = " << prop->mVariableName() << ";/* " << prop->type() << " */\n";
         } else if (TypeHelper::isBuiltInType(prop->type())) {
-            if (prop->type() == QLatin1String("QStringList")) {
+            if (prop->type() == QLatin1StringView("QStringList")) {
                 mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = QJsonArray::fromStringList(" << prop->mVariableName() << ");/* "
                       << prop->type() << " */\n";
-            } else if (prop->type() == QLatin1String("QDateTime")) {
+            } else if (prop->type() == QLatin1StringView("QDateTime")) {
                 mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = " << prop->mVariableName() << ".toString()/* " << prop->type() << " */;\n";
-            } else if (prop->type() == QLatin1String("QByteArray")) {
+            } else if (prop->type() == QLatin1StringView("QByteArray")) {
                 mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = QString::fromUtf8(" << prop->mVariableName() << ")/* " << prop->type()
                       << " */;\n";
-            } else if (prop->type() == QLatin1String("Scope")) {
+            } else if (prop->type() == QLatin1StringView("Scope")) {
                 mImpl << "    {\n"
                          "        QJsonObject jsonObject;\n"
                          "        "
@@ -719,7 +719,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
                       << prop->name() << "\")] = "
                       << "jsonObject;\n"
                          "    }\n";
-            } else if (prop->type() == QLatin1String("Tristate")) {
+            } else if (prop->type() == QLatin1StringView("Tristate")) {
                 mImpl << "    switch (" << prop->mVariableName()
                       << ") {\n;"
                          "    case Tristate::True:\n"
@@ -738,7 +738,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
                       << "\")] = QStringLiteral(\"Undefined\");\n"
                          "        break;\n"
                          "    }\n";
-            } else if (prop->type() == QLatin1String("Akonadi::Protocol::Attributes")) {
+            } else if (prop->type() == QLatin1StringView("Akonadi::Protocol::Attributes")) {
                 mImpl << "    {\n"
                          "        QJsonObject jsonObject;\n"
                          "        auto i = "
@@ -755,11 +755,11 @@ void CppGenerator::writeImplClass(ClassNode const *node)
                       << prop->name()
                       << "\")] = jsonObject;\n"
                          "    }\n";
-            } else if (prop->type() == QLatin1String("ModifySubscriptionCommand::ModifiedParts")
-                       || prop->type() == QLatin1String("ModifyTagCommand::ModifiedParts")
-                       || prop->type() == QLatin1String("ModifyCollectionCommand::ModifiedParts")
-                       || prop->type() == QLatin1String("ModifyItemsCommand::ModifiedParts")
-                       || prop->type() == QLatin1String("CreateItemCommand::MergeModes")) {
+            } else if (prop->type() == QLatin1StringView("ModifySubscriptionCommand::ModifiedParts")
+                       || prop->type() == QLatin1StringView("ModifyTagCommand::ModifiedParts")
+                       || prop->type() == QLatin1StringView("ModifyCollectionCommand::ModifiedParts")
+                       || prop->type() == QLatin1StringView("ModifyItemsCommand::ModifiedParts")
+                       || prop->type() == QLatin1StringView("CreateItemCommand::MergeModes")) {
                 mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = static_cast<int>(" << prop->mVariableName() << ");/* " << prop->type()
                       << "*/\n";
             } else {
@@ -801,7 +801,7 @@ void CppGenerator::writeImplPropertyDependencies(const PropertyNode *node)
                 }
             }
             if (!values.isEmpty()) {
-                mImpl << "    m" << key[0].toUpper() << QStringView(key).mid(1) << " |= " << enumType << "(" << values.join(QLatin1String(" | ")) << ");\n";
+                mImpl << "    m" << key[0].toUpper() << QStringView(key).mid(1) << " |= " << enumType << "(" << values.join(QLatin1StringView(" | ")) << ");\n";
                 values.clear();
             }
         }
@@ -809,7 +809,7 @@ void CppGenerator::writeImplPropertyDependencies(const PropertyNode *node)
     }
 
     if (!values.isEmpty()) {
-        mImpl << "    m" << key[0].toUpper() << QStringView(key).mid(1) << " |= " << enumType << "(" << values.join(QLatin1String(" | ")) << ");\n";
+        mImpl << "    m" << key[0].toUpper() << QStringView(key).mid(1) << " |= " << enumType << "(" << values.join(QLatin1StringView(" | ")) << ");\n";
     }
 }
 

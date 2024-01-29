@@ -30,7 +30,7 @@ MimeTypeCheckerTest::MimeTypeCheckerTest(QObject *parent)
 
 void MimeTypeCheckerTest::initTestCase()
 {
-    QVERIFY(QMimeDatabase().mimeTypeForName(QLatin1String("application/x-vnd.akonadi.calendar.event")).isValid());
+    QVERIFY(QMimeDatabase().mimeTypeForName(QLatin1StringView("application/x-vnd.akonadi.calendar.event")).isValid());
 
     MimeTypeChecker emptyChecker;
     MimeTypeChecker calendarChecker;
@@ -38,19 +38,19 @@ void MimeTypeCheckerTest::initTestCase()
     MimeTypeChecker aliasChecker;
 
     // for testing reset through assignments
-    const QLatin1String textPlain = QLatin1String("text/plain");
+    const QLatin1StringView textPlain = QLatin1String("text/plain");
     mEmptyChecker.addWantedMimeType(textPlain);
     QVERIFY(!mEmptyChecker.wantedMimeTypes().isEmpty());
     QVERIFY(mEmptyChecker.hasWantedMimeTypes());
 
-    const QLatin1String textCalendar = QLatin1String("text/calendar");
+    const QLatin1StringView textCalendar = QLatin1String("text/calendar");
     calendarChecker.addWantedMimeType(textCalendar);
     QCOMPARE(calendarChecker.wantedMimeTypes().count(), 1);
 
     subTypeChecker.setWantedMimeTypes(mCalendarSubTypes);
     QCOMPARE(subTypeChecker.wantedMimeTypes().count(), 2);
 
-    const QLatin1String textVCard = QLatin1String("text/directory");
+    const QLatin1StringView textVCard = QLatin1String("text/directory");
     aliasChecker.addWantedMimeType(textVCard);
     QCOMPARE(aliasChecker.wantedMimeTypes().count(), 1);
 
@@ -86,12 +86,12 @@ void MimeTypeCheckerTest::testCollectionCheck()
     Collection vcardCollection(5);
     Collection aliasCollection(6);
 
-    const QLatin1String textCalendar = QLatin1String("text/calendar");
+    const QLatin1StringView textCalendar = QLatin1String("text/calendar");
     calendarCollection.setContentMimeTypes(QStringList() << textCalendar);
-    const QLatin1String akonadiEvent = QLatin1String("application/x-vnd.akonadi.calendar.event");
+    const QLatin1StringView akonadiEvent = QLatin1String("application/x-vnd.akonadi.calendar.event");
     eventCollection.setContentMimeTypes(QStringList() << akonadiEvent);
     journalCollection.setContentMimeTypes(QStringList() << QStringLiteral("application/x-vnd.akonadi.calendar.journal"));
-    const QLatin1String textDirectory = QLatin1String("text/directory");
+    const QLatin1StringView textDirectory = QLatin1String("text/directory");
     vcardCollection.setContentMimeTypes(QStringList() << textDirectory);
     aliasCollection.setContentMimeTypes(QStringList() << QStringLiteral("text/x-vcard"));
 
@@ -168,12 +168,12 @@ void MimeTypeCheckerTest::testItemCheck()
     Item vcardItem(5);
     Item aliasItem(6);
 
-    const QLatin1String textCalendar = QLatin1String("text/calendar");
+    const QLatin1StringView textCalendar = QLatin1String("text/calendar");
     calendarItem.setMimeType(textCalendar);
-    const QLatin1String akonadiEvent = QLatin1String("application/x-vnd.akonadi.calendar.event");
+    const QLatin1StringView akonadiEvent = QLatin1String("application/x-vnd.akonadi.calendar.event");
     eventItem.setMimeType(akonadiEvent);
     journalItem.setMimeType(QStringLiteral("application/x-vnd.akonadi.calendar.journal"));
-    const QLatin1String textDirectory = QLatin1String("text/directory");
+    const QLatin1StringView textDirectory = QLatin1String("text/directory");
     vcardItem.setMimeType(textDirectory);
     aliasItem.setMimeType(QStringLiteral("text/x-vcard"));
 
@@ -245,8 +245,8 @@ void MimeTypeCheckerTest::testStringMatchEquivalent()
     // check that a random and thus not installed MIME type
     // can still be checked just like with direct string comparison
 
-    const QLatin1String installedMimeType("text/plain");
-    const QString randomMimeType = QLatin1String("application/x-vnd.test.") + KRandom::randomString(10);
+    const QLatin1StringView installedMimeType("text/plain");
+    const QString randomMimeType = QLatin1StringView("application/x-vnd.test.") + KRandom::randomString(10);
 
     MimeTypeChecker installedTypeChecker;
     installedTypeChecker.addWantedMimeType(installedMimeType);

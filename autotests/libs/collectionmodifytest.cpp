@@ -27,7 +27,7 @@ private Q_SLOTS:
     void testModifyCollection()
     {
         Collection col;
-        col.setName(QLatin1String("test_collection"));
+        col.setName(QLatin1StringView("test_collection"));
         col.setContentMimeTypes({Collection::mimeType()});
         col.setParentCollection(Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1"))));
         col.setRights(Collection::AllRights);

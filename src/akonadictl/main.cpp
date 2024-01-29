@@ -87,12 +87,12 @@ static bool checkSearchSupportStatus()
     } else {
         const QStringList dirs = QCoreApplication::libraryPaths();
         for (const QString &pluginDir : dirs) {
-            const QDir dir(pluginDir + QLatin1String("/akonadi/"));
+            const QDir dir(pluginDir + QLatin1StringView("/akonadi/"));
             const QStringList pluginFiles = dir.entryList(QDir::Files);
             for (const QString &pluginFileName : pluginFiles) {
                 QPluginLoader loader(dir.absolutePath() + QLatin1Char('/') + pluginFileName);
                 const QVariantMap metadata = loader.metaData().value(QStringLiteral("MetaData")).toVariant().toMap();
-                if (metadata.value(QStringLiteral("X-Akonadi-PluginType")).toString() != QLatin1String("SearchPlugin")) {
+                if (metadata.value(QStringLiteral("X-Akonadi-PluginType")).toString() != QLatin1StringView("SearchPlugin")) {
                     continue;
                 }
                 if (!metadata.value(QStringLiteral("X-Akonadi-LoadByDefault"), true).toBool()) {
@@ -104,7 +104,7 @@ static bool checkSearchSupportStatus()
     }
 
     // There's always at least server-search available
-    std::cerr << "Akonadi Server Search Support: available (" << searchMethods.join(QLatin1String(", ")).toStdString() << ")" << std::endl;
+    std::cerr << "Akonadi Server Search Support: available (" << searchMethods.join(QLatin1StringView(", ")).toStdString() << ")" << std::endl;
     return true;
 }
 
@@ -130,7 +130,7 @@ static bool checkAvailableAgentTypes()
     if (types.isEmpty()) {
         std::cerr << "No agent types found!" << std::endl;
     } else {
-        std::cerr << types.join(QLatin1String(", ")).toStdString() << std::endl;
+        std::cerr << types.join(QLatin1StringView(", ")).toStdString() << std::endl;
     }
 
     return true;
@@ -242,19 +242,19 @@ int main(int argc, char **argv)
     const bool verbose = cmdArgs.isSet(QStringLiteral("verbose"));
 
     const QString command = commands[0];
-    if (command == QLatin1String("start")) {
+    if (command == QLatin1StringView("start")) {
         if (!startServer(verbose)) {
             return 3;
         }
-    } else if (command == QLatin1String("stop")) {
+    } else if (command == QLatin1StringView("stop")) {
         if (!stopServer()) {
             return 4;
         }
-    } else if (command == QLatin1String("status")) {
+    } else if (command == QLatin1StringView("status")) {
         if (!statusServer()) {
             return 5;
         }
-    } else if (command == QLatin1String("restart")) {
+    } else if (command == QLatin1StringView("restart")) {
         if (!stopServer()) {
             return 4;
         } else {
@@ -265,11 +265,11 @@ int main(int argc, char **argv)
                 return 3;
             }
         }
-    } else if (command == QLatin1String("vacuum")) {
+    } else if (command == QLatin1StringView("vacuum")) {
         runJanitor(QStringLiteral("vacuum"));
-    } else if (command == QLatin1String("fsck")) {
+    } else if (command == QLatin1StringView("fsck")) {
         runJanitor(QStringLiteral("check"));
-    } else if (command == QLatin1String("instances")) {
+    } else if (command == QLatin1StringView("instances")) {
         listInstances();
     } else {
         app.printUsage();

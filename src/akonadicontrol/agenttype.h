@@ -39,9 +39,9 @@ public:
     uint instanceCounter = 0;
     LaunchMethod launchMethod = Process;
 
-    static const QLatin1String CapabilityUnique;
-    static const QLatin1String CapabilityResource;
-    static const QLatin1String CapabilityAutostart;
-    static const QLatin1String CapabilityPreprocessor;
-    static const QLatin1String CapabilitySearch;
+    static const QLatin1StringView CapabilityUnique;
+    static const QLatin1StringView CapabilityResource;
+    static const QLatin1StringView CapabilityAutostart;
+    static const QLatin1StringView CapabilityPreprocessor;
+    static const QLatin1StringView CapabilitySearch;
 };

@@ -32,7 +32,7 @@ private Q_SLOTS:
         // switch target resources offline to reduce interference from them
         const Akonadi::AgentInstance::List agents = Akonadi::AgentManager::self()->instances();
         for (Akonadi::AgentInstance agent : agents) {
-            if (agent.identifier() == QLatin1String("akonadi_knut_resource_2")) {
+            if (agent.identifier() == QLatin1StringView("akonadi_knut_resource_2")) {
                 agent.setIsOnline(false);
             }
         }

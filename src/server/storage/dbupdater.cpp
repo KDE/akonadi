@@ -140,7 +140,7 @@ bool DbUpdater::parseUpdateSets(int currentVersion, UpdateSet::Map &updates) con
     }
 
     const QDomElement documentElement = document.documentElement();
-    if (documentElement.tagName() != QLatin1String("updates")) {
+    if (documentElement.tagName() != QLatin1StringView("updates")) {
         qCCritical(AKONADISERVER_LOG) << "Invalid update description file format";
         return false;
     }
@@ -148,7 +148,7 @@ bool DbUpdater::parseUpdateSets(int currentVersion, UpdateSet::Map &updates) con
     // iterate over the xml document and extract update information into an UpdateSet
     QDomElement updateElement = documentElement.firstChildElement();
     while (!updateElement.isNull()) {
-        if (updateElement.tagName() == QLatin1String("update")) {
+        if (updateElement.tagName() == QLatin1StringView("update")) {
             const int version = updateElement.attribute(QStringLiteral("version"), QStringLiteral("-1")).toInt();
             if (version <= 0) {
                 qCCritical(AKONADISERVER_LOG) << "Invalid version attribute in database update description";
@@ -165,15 +165,15 @@ bool DbUpdater::parseUpdateSets(int currentVersion, UpdateSet::Map &updates) con
             } else {
                 UpdateSet updateSet;
                 updateSet.version = version;
-                updateSet.abortOnFailure = (updateElement.attribute(QStringLiteral("abortOnFailure")) == QLatin1String("true"));
+                updateSet.abortOnFailure = (updateElement.attribute(QStringLiteral("abortOnFailure")) == QLatin1StringView("true"));
 
                 QDomElement childElement = updateElement.firstChildElement();
                 while (!childElement.isNull()) {
-                    if (childElement.tagName() == QLatin1String("raw-sql")) {
+                    if (childElement.tagName() == QLatin1StringView("raw-sql")) {
                         if (updateApplicable(childElement.attribute(QStringLiteral("backends")))) {
                             updateSet.statements << buildRawSqlStatement(childElement);
                         }
-                    } else if (childElement.tagName() == QLatin1String("complex-update")) {
+                    } else if (childElement.tagName() == QLatin1StringView("complex-update")) {
                         if (updateApplicable(childElement.attribute(QStringLiteral("backends")))) {
                             updateSet.complex = true;
                         }
@@ -257,7 +257,7 @@ bool DbUpdater::complexUpdate_25()
         // PartTable, which breaks the migration below (see BKO#331867), so we apply this
         // wanna-be fix to remove the invalid part before we start the actual migration.
         QueryBuilder qb(QStringLiteral("PartTable"), QueryBuilder::Delete);
-        qb.addValueCondition(QStringLiteral("PartTable.name"), Query::Equals, QLatin1String("GID"));
+        qb.addValueCondition(QStringLiteral("PartTable.name"), Query::Equals, QLatin1StringView("GID"));
         qb.exec();
     }
 

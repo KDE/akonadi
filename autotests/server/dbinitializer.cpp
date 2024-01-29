@@ -25,7 +25,7 @@ Resource DbInitializer::createResource(const char *name)
 {
     Resource res;
     qint64 id = -1;
-    res.setName(QLatin1String(name));
+    res.setName(QLatin1StringView(name));
     const bool ret = res.insert(&id);
     Q_ASSERT(ret);
     Q_UNUSED(ret)
@@ -39,8 +39,8 @@ Collection DbInitializer::createCollection(const char *name, const Collection &p
     if (parent.isValid()) {
         col.setParent(parent);
     }
-    col.setName(QLatin1String(name));
-    col.setRemoteId(QLatin1String(name));
+    col.setName(QLatin1StringView(name));
+    col.setRemoteId(QLatin1StringView(name));
     col.setResource(mResource);
     const bool ret = col.insert();
     Q_ASSERT(ret);
@@ -60,7 +60,7 @@ PimItem DbInitializer::createItem(const char *name, const Collection &parent)
     }
     item.setMimeType(mimeType);
     item.setCollection(parent);
-    item.setRemoteId(QLatin1String(name));
+    item.setRemoteId(QLatin1StringView(name));
     const bool ret = item.insert();
     Q_ASSERT(ret);
     Q_UNUSED(ret)
@@ -120,7 +120,7 @@ DbInitializer::listResponse(const Collection &col, bool ancestors, bool mimetype
     resp->setIsVirtual(col.isVirtual());
     Akonadi::Protocol::CachePolicy cp;
     cp.setInherit(true);
-    cp.setLocalParts({QLatin1String("ALL")});
+    cp.setLocalParts({QLatin1StringView("ALL")});
     resp->setCachePolicy(cp);
     if (ancestors) {
         QList<Akonadi::Protocol::Ancestor> ancs;
@@ -187,7 +187,7 @@ Akonadi::Protocol::FetchItemsResponsePtr DbInitializer::fetchResponse(const PimI
 
 Collection DbInitializer::collection(const char *name)
 {
-    return Collection::retrieveByName(QLatin1String(name));
+    return Collection::retrieveByName(QLatin1StringView(name));
 }
 
 void DbInitializer::cleanup()

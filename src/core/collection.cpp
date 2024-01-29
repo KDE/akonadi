@@ -266,7 +266,7 @@ QUrl Collection::url(UrlType type) const
 
 Collection Collection::fromUrl(const QUrl &url)
 {
-    if (url.scheme() != QLatin1String("akonadi")) {
+    if (url.scheme() != QLatin1StringView("akonadi")) {
         return Collection();
     }
 

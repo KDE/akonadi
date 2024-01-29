@@ -163,7 +163,7 @@ void EntityTreeModelPrivate::changeFetchState(const Collection &parent)
 void EntityTreeModelPrivate::agentInstanceRemoved(const Akonadi::AgentInstance &instance)
 {
     Q_Q(EntityTreeModel);
-    if (!instance.type().capabilities().contains(QLatin1String("Resource"))) {
+    if (!instance.type().capabilities().contains(QLatin1StringView("Resource"))) {
         return;
     }
 

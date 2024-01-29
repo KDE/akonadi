@@ -79,7 +79,7 @@ ItemFetchHelper::ItemFetchHelper(Connection *connection,
     , mAkonadi(akonadi)
     , mItemsLimit(itemsLimit)
     , mItemQuery(PimItem::tableName())
-    , mPimItemQueryAlias(QLatin1String("pimItem_alias"))
+    , mPimItemQueryAlias(QLatin1StringView("pimItem_alias"))
 {
     std::fill(mItemQueryColumnMap, mItemQueryColumnMap + ItemQueryColumnCount, -1);
 }

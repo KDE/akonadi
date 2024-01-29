@@ -319,7 +319,7 @@ bool DbConfigPostgresql::runInitDb(const QString &newDbPath)
     // It is recommended to disable CoW feature when running on Btrfs to improve
     // database performance. This only has effect when done on empty directory,
     // so we only call this before calling initdb
-    if (Utils::getDirectoryFileSystem(newDbPath) == QLatin1String("btrfs")) {
+    if (Utils::getDirectoryFileSystem(newDbPath) == QLatin1StringView("btrfs")) {
         Utils::disableCoW(newDbPath);
     }
 #endif
@@ -513,7 +513,7 @@ bool DbConfigPostgresql::startInternalServer()
         // It is recommended to disable CoW feature when running on Btrfs to improve
         // database performance. This only has effect when done on an empty directory,
         // so we call this before calling initdb.
-        if (Utils::getDirectoryFileSystem(mPgData) == QLatin1String("btrfs")) {
+        if (Utils::getDirectoryFileSystem(mPgData) == QLatin1StringView("btrfs")) {
             Utils::disableCoW(mPgData);
         }
 #endif

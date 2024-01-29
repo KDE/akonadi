@@ -156,7 +156,7 @@ void ResourceScheduler::scheduleItemsFetch(const Item::List &items, const QSet<Q
     for (const auto &item : items) {
         ids.push_back(QString::number(item.id()));
     }
-    signalTaskToTracker(t, "FetchItems", ids.join(QLatin1String(", ")));
+    signalTaskToTracker(t, "FetchItems", ids.join(QLatin1StringView(", ")));
     scheduleNext();
 }
 
@@ -519,7 +519,7 @@ void ResourceScheduler::signalTaskToTracker(const Task &task, const QByteArray &
     if (!s_resourcetracker) {
         const QString suffix = Akonadi::Instance::identifier().isEmpty() ? QString() : QLatin1Char('-') + Akonadi::Instance::identifier();
         if (QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.akonadiconsole") + suffix)) {
-            s_resourcetracker = new QDBusInterface(QLatin1String("org.kde.akonadiconsole") + suffix,
+            s_resourcetracker = new QDBusInterface(QLatin1StringView("org.kde.akonadiconsole") + suffix,
                                                    QStringLiteral("/resourcesJobtracker"),
                                                    QStringLiteral("org.freedesktop.Akonadi.JobTracker"),
                                                    QDBusConnection::sessionBus(),
@@ -561,7 +561,7 @@ void ResourceScheduler::Task::sendDBusReplies(const QString &errorMsg)
         QDBusMessage reply;
         if (!errorMsg.isEmpty()) {
             reply = msg.createErrorReply(QDBusError::Failed, errorMsg);
-        } else if (msg.member() == QLatin1String("requestItemDelivery")) {
+        } else if (msg.member() == QLatin1StringView("requestItemDelivery")) {
             reply = msg.createReply();
         } else if (msg.member().isEmpty()) {
             continue; // unittest calls scheduleItemFetch with empty QDBusMessage
@@ -675,7 +675,7 @@ QTextStream &Akonadi::operator<<(QTextStream &d, const ResourceScheduler::Task &
             for (const auto &item : std::as_const(task.items)) {
                 ids.push_back(QString::number(item.id()));
             }
-            d << "items " << ids.join(QLatin1String(", ")) << " ";
+            d << "items " << ids.join(QLatin1StringView(", ")) << " ";
         }
         if (!task.methodName.isEmpty()) {
             d << task.methodName << " " << task.argument.toString();

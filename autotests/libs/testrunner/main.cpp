@@ -76,7 +76,7 @@ int main(int argc, char **argv)
 
     if (parser.isSet(QStringLiteral("config"))) {
         const auto backend = parser.value(QStringLiteral("backend"));
-        if (backend != QLatin1String("sqlite") && backend != QLatin1String("mysql") && backend != QLatin1String("pgsql")) {
+        if (backend != QLatin1StringView("sqlite") && backend != QLatin1String("mysql") && backend != QLatin1String("pgsql")) {
             qCritical("Invalid backend specified. Supported values are: sqlite,mysql,pgsql");
             return 1;
         }
@@ -109,9 +109,9 @@ int main(int argc, char **argv)
         sh.makeShellScript(parser.value(QStringLiteral("testenv")));
     } else {
 #ifdef Q_OS_WIN
-        sh.makeShellScript(setup->basePath() + QLatin1String("testenvironment.ps1"));
+        sh.makeShellScript(setup->basePath() + QLatin1StringView("testenvironment.ps1"));
 #else
-        sh.makeShellScript(setup->basePath() + QLatin1String("testenvironment.sh"));
+        sh.makeShellScript(setup->basePath() + QLatin1StringView("testenvironment.sh"));
 #endif
     }
 

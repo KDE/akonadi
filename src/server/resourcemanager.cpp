@@ -36,7 +36,7 @@ void ResourceManager::addResourceInstance(const QString &name, const QStringList
 
     // create the resource
     resource.setName(name);
-    resource.setIsVirtual(capabilities.contains(QLatin1String(AKONADI_AGENT_CAPABILITY_VIRTUAL)));
+    resource.setIsVirtual(capabilities.contains(QLatin1StringView(AKONADI_AGENT_CAPABILITY_VIRTUAL)));
     if (!resource.insert()) {
         mTracer.error("ResourceManager", QStringLiteral("Could not create resource '%1'.").arg(name));
     }

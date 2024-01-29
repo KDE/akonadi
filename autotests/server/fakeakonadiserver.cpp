@@ -86,10 +86,10 @@ TestScenario TestScenario::create(qint64 tag, TestScenario::Action action, const
 FakeAkonadiServer::FakeAkonadiServer()
 {
     qputenv("AKONADI_INSTANCE", qPrintable(instanceName()));
-    qputenv("XDG_DATA_HOME", qPrintable(QString(basePath() + QLatin1String("/local"))));
-    qputenv("XDG_CONFIG_HOME", qPrintable(QString(basePath() + QLatin1String("/config"))));
+    qputenv("XDG_DATA_HOME", qPrintable(QString(basePath() + QLatin1StringView("/local"))));
+    qputenv("XDG_CONFIG_HOME", qPrintable(QString(basePath() + QLatin1StringView("/config"))));
     qputenv("HOME", qPrintable(basePath()));
-    qputenv("KDEHOME", qPrintable(basePath() + QLatin1String("/kdehome")));
+    qputenv("KDEHOME", qPrintable(basePath() + QLatin1StringView("/kdehome")));
 
     mClient = std::make_unique<FakeClient>();
 
@@ -159,25 +159,25 @@ void FakeAkonadiServer::initFake()
 {
     qDebug() << "==== Fake Akonadi Server starting up ====";
 
-    qputenv("XDG_DATA_HOME", qPrintable(QString(basePath() + QLatin1String("/local"))));
-    qputenv("XDG_CONFIG_HOME", qPrintable(QString(basePath() + QLatin1String("/config"))));
+    qputenv("XDG_DATA_HOME", qPrintable(QString(basePath() + QLatin1StringView("/local"))));
+    qputenv("XDG_CONFIG_HOME", qPrintable(QString(basePath() + QLatin1StringView("/config"))));
     qputenv("AKONADI_INSTANCE", qPrintable(instanceName()));
     QSettings settings(StandardDirs::serverConfigFile(StandardDirs::WriteOnly), QSettings::IniFormat);
     settings.beginGroup(QStringLiteral("General"));
-    settings.setValue(QStringLiteral("Driver"), QLatin1String("QSQLITE"));
+    settings.setValue(QStringLiteral("Driver"), QLatin1StringView("QSQLITE"));
     settings.endGroup();
 
     settings.beginGroup(QStringLiteral("QSQLITE"));
-    settings.setValue(QStringLiteral("Name"), QString(basePath() + QLatin1String("/local/share/akonadi/akonadi.db")));
+    settings.setValue(QStringLiteral("Name"), QString(basePath() + QLatin1StringView("/local/share/akonadi/akonadi.db")));
     settings.endGroup();
     settings.sync();
 
     DbConfig *dbConfig = DbConfig::configuredDatabase();
-    if (dbConfig->driverName() != QLatin1String("QSQLITE")) {
-        throw FakeAkonadiServerException(QLatin1String("Unexpected driver specified. Expected QSQLITE, got ") + dbConfig->driverName());
+    if (dbConfig->driverName() != QLatin1StringView("QSQLITE")) {
+        throw FakeAkonadiServerException(QLatin1StringView("Unexpected driver specified. Expected QSQLITE, got ") + dbConfig->driverName());
     }
 
-    const QLatin1String initCon("initConnection");
+    const QLatin1StringView initCon("initConnection");
     {
         QSqlDatabase db = QSqlDatabase::addDatabase(DbConfig::configuredDatabase()->driverName(), initCon);
         DbConfig::configuredDatabase()->apply(db);

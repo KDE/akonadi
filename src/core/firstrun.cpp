@@ -41,7 +41,7 @@ Firstrun::Firstrun(QObject *parent)
         deleteLater();
         return;
     }
-    if (QDBusConnection::sessionBus().registerService(QLatin1String(FIRSTRUN_DBUSLOCK))) {
+    if (QDBusConnection::sessionBus().registerService(QLatin1StringView(FIRSTRUN_DBUSLOCK))) {
         findPendingDefaults();
         qCDebug(AKONADICORE_LOG) << "D-Bus lock acquired, pending defaults:" << mPendingDefaults;
         setupNext();
@@ -54,7 +54,7 @@ Firstrun::Firstrun(QObject *parent)
 Firstrun::~Firstrun()
 {
     if (qApp) {
-        QDBusConnection::sessionBus().unregisterService(QLatin1String(FIRSTRUN_DBUSLOCK));
+        QDBusConnection::sessionBus().unregisterService(QLatin1StringView(FIRSTRUN_DBUSLOCK));
     }
     delete mConfig;
     qCDebug(AKONADICORE_LOG) << "done";
@@ -101,7 +101,7 @@ void Firstrun::setupNext()
         setupNext();
         return;
     }
-    if (type.capabilities().contains(QLatin1String("Unique"))) {
+    if (type.capabilities().contains(QLatin1StringView("Unique"))) {
         const Akonadi::AgentInstance::List lstAgents = AgentManager::self()->instances();
         for (const AgentInstance &agent : lstAgents) {
             if (agent.type() == type) {

@@ -104,7 +104,7 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
     QFile file(changesFileName);
 
     if (!file.open(QIODevice::ReadOnly)) {
-        return QLatin1String("Error reading ") + changesFileName;
+        return QLatin1StringView("Error reading ") + changesFileName;
     }
 
     QString result;

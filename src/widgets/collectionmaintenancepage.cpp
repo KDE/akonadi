@@ -101,8 +101,8 @@ void CollectionMaintenancePage::init(const Collection &col)
     // Check if the resource caches full payloads or at least has local storage
     // (so that the indexer can retrieve the payloads on demand)
     const auto resource = Akonadi::AgentManager::self()->instance(col.resource()).type();
-    if (!col.cachePolicy().localParts().contains(QLatin1String("RFC822"))
-        && resource.customProperties().value(QStringLiteral("HasLocalStorage"), QString()) != QLatin1String("true")) {
+    if (!col.cachePolicy().localParts().contains(QLatin1StringView("RFC822"))
+        && resource.customProperties().value(QStringLiteral("HasLocalStorage"), QString()) != QLatin1StringView("true")) {
         d->ui.indexingLabel->hide();
         d->ui.enableIndexingChkBox->hide();
         d->ui.indexedCountLbl->hide();

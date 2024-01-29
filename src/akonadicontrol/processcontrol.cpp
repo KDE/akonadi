@@ -168,7 +168,7 @@ void ProcessControl::start()
         mApplication = QString::fromLocal8Bit("valgrind");
 
         const QString valgrindSkin = akGetEnv("AKONADI_VALGRIND_SKIN", QString::fromLocal8Bit("memcheck"));
-        mArguments.prepend(QLatin1String("--tool=") + valgrindSkin);
+        mArguments.prepend(QLatin1StringView("--tool=") + valgrindSkin);
 
         const QString valgrindOptions = akGetEnv("AKONADI_VALGRIND_OPTIONS");
         if (!valgrindOptions.isEmpty()) {

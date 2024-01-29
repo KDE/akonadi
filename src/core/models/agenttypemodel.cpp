@@ -146,7 +146,7 @@ Qt::ItemFlags AgentTypeModel::flags(const QModelIndex &index) const
     }
 
     const AgentType &type = d->mTypes[index.row()];
-    if (type.capabilities().contains(QLatin1String("Unique")) && AgentManager::self()->instance(type.identifier()).isValid()) {
+    if (type.capabilities().contains(QLatin1StringView("Unique")) && AgentManager::self()->instance(type.identifier()).isValid()) {
         return QAbstractItemModel::flags(index) & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
     }
     return QAbstractItemModel::flags(index);

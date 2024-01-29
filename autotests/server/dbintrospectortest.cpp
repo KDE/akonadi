@@ -12,7 +12,7 @@
 #include <storage/dbexception.h>
 #include <storage/dbintrospector.h>
 
-#define QL1S(x) QLatin1String(x)
+#define QL1S(x) QLatin1StringView(x)
 
 using namespace Akonadi::Server;
 

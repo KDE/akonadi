@@ -231,7 +231,7 @@ void Connection::handleIncomingData()
             // Tag context and collection context is not persistent.
             m_context.setTag(std::nullopt);
             m_context.setCollection({});
-            if (m_akonadi.tracer().currentTracer() != QLatin1String("null")) {
+            if (m_akonadi.tracer().currentTracer() != QLatin1StringView("null")) {
                 m_akonadi.tracer().connectionInput(m_identifier, tag, cmd);
             }
 
@@ -265,7 +265,7 @@ void Connection::handleIncomingData()
             } catch (const Akonadi::Server::Exception &e) {
                 if (m_currentHandler) {
                     try {
-                        m_currentHandler->failureResponse(QString::fromUtf8(e.type()) + QLatin1String(": ") + QString::fromUtf8(e.what()));
+                        m_currentHandler->failureResponse(QString::fromUtf8(e.type()) + QLatin1StringView(": ") + QString::fromUtf8(e.what()));
                     } catch (...) {
                         m_connectionClosing = true;
                     }
@@ -456,7 +456,7 @@ void Connection::reportTime() const
 
 void Connection::sendResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
-    if (m_akonadi.tracer().currentTracer() != QLatin1String("null")) {
+    if (m_akonadi.tracer().currentTracer() != QLatin1StringView("null")) {
         m_akonadi.tracer().connectionOutput(m_identifier, tag, response);
     }
     Protocol::DataStream stream(m_socket.get());

@@ -239,7 +239,7 @@ bool DbConfigMysql::startInternalServer()
     // generate config file
     const QString globalConfig = StandardDirs::locateResourceFile("config", QStringLiteral("mysql-global.conf"));
     const QString localConfig = StandardDirs::locateResourceFile("config", QStringLiteral("mysql-local.conf"));
-    const QString actualConfig = StandardDirs::saveDir("data") + QLatin1String("/mysql.conf");
+    const QString actualConfig = StandardDirs::saveDir("data") + QLatin1StringView("/mysql.conf");
     qCDebug(AKONADISERVER_LOG) << " globalConfig : " << globalConfig << " localConfig : " << localConfig << " actualConfig : " << actualConfig;
     if (globalConfig.isEmpty()) {
         qCCritical(AKONADISERVER_LOG) << "Did not find MySQL server default configuration (mysql-global.conf)";
@@ -250,9 +250,9 @@ bool DbConfigMysql::startInternalServer()
     // It is recommended to disable CoW feature when running on Btrfs to improve
     // database performance. Disabling CoW only has effect on empty directory (since
     // it affects only new files), so we check whether MySQL has not yet been initialized.
-    QDir dir(mDataDir + QDir::separator() + QLatin1String("mysql"));
+    QDir dir(mDataDir + QDir::separator() + QLatin1StringView("mysql"));
     if (!dir.exists()) {
-        if (Utils::getDirectoryFileSystem(mDataDir) == QLatin1String("btrfs")) {
+        if (Utils::getDirectoryFileSystem(mDataDir) == QLatin1StringView("btrfs")) {
             Utils::disableCoW(mDataDir);
         }
     }
@@ -385,10 +385,10 @@ bool DbConfigMysql::startInternalServer()
     // otherwise we reconnect to it
     if (!QFile::exists(socketFile)) {
         // move mysql error log file out of the way
-        const QFileInfo errorLog(mDataDir + QDir::separator() + QLatin1String("mysql.err"));
+        const QFileInfo errorLog(mDataDir + QDir::separator() + QLatin1StringView("mysql.err"));
         if (errorLog.exists()) {
             QFile logFile(errorLog.absoluteFilePath());
-            QFile oldLogFile(mDataDir + QDir::separator() + QLatin1String("mysql.err.old"));
+            QFile oldLogFile(mDataDir + QDir::separator() + QLatin1StringView("mysql.err.old"));
             if (logFile.open(QFile::ReadOnly) && oldLogFile.open(QFile::WriteOnly)) {
                 oldLogFile.write(logFile.readAll());
                 oldLogFile.close();

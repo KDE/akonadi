@@ -60,9 +60,9 @@ QString DbConfig::defaultAvailableDatabaseBackend(QSettings &settings)
     QString driverName = QStringLiteral(AKONADI_DATABASE_BACKEND);
 
     std::unique_ptr<DbConfig> dbConfigFallbackTest;
-    if (driverName == QLatin1String("QMYSQL")) {
+    if (driverName == QLatin1StringView("QMYSQL")) {
         dbConfigFallbackTest = std::make_unique<DbConfigMysql>();
-    } else if (driverName == QLatin1String("QPSQL")) {
+    } else if (driverName == QLatin1StringView("QPSQL")) {
         dbConfigFallbackTest = std::make_unique<DbConfigPostgresql>();
     }
 
@@ -90,13 +90,13 @@ DbConfig *DbConfig::configuredDatabase()
             settings.sync();
         }
 
-        if (driverName == QLatin1String("QMYSQL")) {
+        if (driverName == QLatin1StringView("QMYSQL")) {
             s_DbConfigInstance = new DbConfigMysql;
-        } else if (driverName == QLatin1String("QSQLITE") || driverName == QLatin1String("QSQLITE3")) {
+        } else if (driverName == QLatin1StringView("QSQLITE") || driverName == QLatin1String("QSQLITE3")) {
             // QSQLITE3 is legacy name for the Akonadi fork of the upstream QSQLITE driver.
             // It is kept here for backwards compatibility with old server config files.
             s_DbConfigInstance = new DbConfigSqlite();
-        } else if (driverName == QLatin1String("QPSQL")) {
+        } else if (driverName == QLatin1StringView("QPSQL")) {
             s_DbConfigInstance = new DbConfigPostgresql;
         } else {
             qCCritical(AKONADISERVER_LOG) << "Unknown database driver: " << driverName;
@@ -146,7 +146,7 @@ QString DbConfig::defaultDatabaseName()
         return QStringLiteral("akonadi");
     }
     // dash is not allowed in PSQL
-    return QLatin1String("akonadi_") % Instance::identifier().replace(QLatin1Char('-'), QLatin1Char('_'));
+    return QLatin1StringView("akonadi_") % Instance::identifier().replace(QLatin1Char('-'), QLatin1Char('_'));
 }
 
 void DbConfig::initSession(const QSqlDatabase &database)

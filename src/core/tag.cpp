@@ -70,7 +70,7 @@ bool Tag::operator!=(const Tag &other) const
 
 Tag Tag::fromUrl(const QUrl &url)
 {
-    if (url.scheme() != QLatin1String("akonadi")) {
+    if (url.scheme() != QLatin1StringView("akonadi")) {
         return Tag();
     }
 

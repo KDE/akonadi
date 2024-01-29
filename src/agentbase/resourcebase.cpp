@@ -845,11 +845,11 @@ namespace
 bool sortCollectionsForSync(const Collection &l, const Collection &r)
 {
     const auto lType = l.hasAttribute<SpecialCollectionAttribute>() ? l.attribute<SpecialCollectionAttribute>()->collectionType() : QByteArray();
-    const bool lInbox = (lType == "inbox") || (QStringView(l.remoteId()).mid(1).compare(QLatin1String("inbox"), Qt::CaseInsensitive) == 0);
+    const bool lInbox = (lType == "inbox") || (QStringView(l.remoteId()).mid(1).compare(QLatin1StringView("inbox"), Qt::CaseInsensitive) == 0);
     const bool lFav = l.hasAttribute<FavoriteCollectionAttribute>();
 
     const auto rType = r.hasAttribute<SpecialCollectionAttribute>() ? r.attribute<SpecialCollectionAttribute>()->collectionType() : QByteArray();
-    const bool rInbox = (rType == "inbox") || (QStringView(r.remoteId()).mid(1).compare(QLatin1String("inbox"), Qt::CaseInsensitive) == 0);
+    const bool rInbox = (rType == "inbox") || (QStringView(r.remoteId()).mid(1).compare(QLatin1StringView("inbox"), Qt::CaseInsensitive) == 0);
     const bool rFav = r.hasAttribute<FavoriteCollectionAttribute>();
 
     // inbox is always first

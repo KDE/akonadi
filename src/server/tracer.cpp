@@ -16,7 +16,7 @@
 
 #include <private/standarddirs_p.h>
 
-// #define DEFAULT_TRACER QLatin1String( "dbus" )
+// #define DEFAULT_TRACER QLatin1StringView( "dbus" )
 #define DEFAULT_TRACER QStringLiteral("null")
 
 using namespace Akonadi;
@@ -111,7 +111,7 @@ void Tracer::signal(const QString &signalName, const QString &msg)
 
 void Tracer::signal(const char *signalName, const QString &msg)
 {
-    signal(QLatin1String(signalName), msg);
+    signal(QLatin1StringView(signalName), msg);
 }
 
 void Tracer::warning(const QString &componentName, const QString &msg)
@@ -132,7 +132,7 @@ void Tracer::error(const QString &componentName, const QString &msg)
 
 void Tracer::error(const char *componentName, const QString &msg)
 {
-    error(QLatin1String(componentName), msg);
+    error(QLatin1StringView(componentName), msg);
 }
 
 QString Tracer::currentTracer() const
@@ -145,12 +145,12 @@ void Tracer::activateTracer(const QString &type)
 {
     QMutexLocker locker(&mMutex);
 
-    if (type == QLatin1String("file")) {
+    if (type == QLatin1StringView("file")) {
         const QString file = mSettings->value(QStringLiteral("Debug/File"), QStringLiteral("/dev/null")).toString();
         mTracerBackend = std::make_unique<FileTracer>(file);
-    } else if (type == QLatin1String("dbus")) {
+    } else if (type == QLatin1StringView("dbus")) {
         mTracerBackend = std::make_unique<DBusTracer>();
-    } else if (type == QLatin1String("null")) {
+    } else if (type == QLatin1StringView("null")) {
         mTracerBackend.reset();
     } else {
         qCCritical(AKONADISERVER_LOG) << "Unknown tracer type" << type;

@@ -60,11 +60,11 @@ std::optional<DBus::AgentService> DBus::parseAgentServiceName(const QString &ser
     if ((parts.size() == 2 && !Akonadi::Instance::hasIdentifier())
         || (parts.size() == 3 && Akonadi::Instance::hasIdentifier() && Akonadi::Instance::identifier() == parts.at(2))) {
         // switch on parts.at( 0 )
-        if (parts.at(0) == QLatin1String("Agent")) {
+        if (parts.at(0) == QLatin1StringView("Agent")) {
             return AgentService{parts.at(1).toString(), DBus::Agent};
-        } else if (parts.at(0) == QLatin1String("Resource")) {
+        } else if (parts.at(0) == QLatin1StringView("Resource")) {
             return AgentService{parts.at(1).toString(), DBus::Resource};
-        } else if (parts.at(0) == QLatin1String("Preprocessor")) {
+        } else if (parts.at(0) == QLatin1StringView("Preprocessor")) {
             return AgentService{parts.at(1).toString(), DBus::Preprocessor};
         } else {
             return std::nullopt;
@@ -81,13 +81,13 @@ QString DBus::agentServiceName(const QString &agentIdentifier, DBus::AgentType a
     QString serviceName = QStringLiteral(AKONADI_DBUS_SERVER_SERVICE ".");
     switch (agentType) {
     case Agent:
-        serviceName += QLatin1String("Agent.");
+        serviceName += QLatin1StringView("Agent.");
         break;
     case Resource:
-        serviceName += QLatin1String("Resource.");
+        serviceName += QLatin1StringView("Resource.");
         break;
     case Preprocessor:
-        serviceName += QLatin1String("Preprocessor.");
+        serviceName += QLatin1StringView("Preprocessor.");
         break;
     default:
         Q_ASSERT(!"WTF?");

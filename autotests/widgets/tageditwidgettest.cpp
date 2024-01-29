@@ -142,7 +142,7 @@ class TagEditWidgetTest : public QObject
             const auto windows = QApplication::topLevelWidgets();
             for (const auto *window : windows) {
                 // We are using KMessageBox, which is not a QMessageBox but rather a custom QDialog
-                if (window->objectName() == QLatin1String("questionYesNo")) {
+                if (window->objectName() == QLatin1StringView("questionYesNo")) {
                     const auto *const msgbox = qobject_cast<const QDialog *>(window);
                     AKVERIFY(msgbox);
 

@@ -31,7 +31,7 @@ PartType PartTypeHelper::fromFqName(const QString &fqName)
 
 PartType PartTypeHelper::fromFqName(const QByteArray &fqName)
 {
-    return fromFqName(QLatin1String(fqName));
+    return fromFqName(QLatin1StringView(fqName));
 }
 
 PartType PartTypeHelper::fromFqName(const QString &ns, const QString &name)
@@ -65,5 +65,5 @@ Query::Condition PartTypeHelper::conditionFromFqNames(const QStringList &fqNames
 
 QString PartTypeHelper::fullName(const PartType &type)
 {
-    return type.ns() + QLatin1String(":") + type.name();
+    return type.ns() + QLatin1StringView(":") + type.name();
 }

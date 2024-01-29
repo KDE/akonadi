@@ -131,10 +131,10 @@ void SetupTest::copyXdgDirectory(const QString &src, const QString &dst)
     const auto entries = srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot);
     for (const auto &fi : entries) {
         if (fi.isDir()) {
-            if (fi.fileName() == QLatin1String("akonadi")) {
+            if (fi.fileName() == QLatin1StringView("akonadi")) {
                 // namespace according to instance identifier
 #ifdef Q_OS_WIN
-                const bool isXdgConfig = src.contains(QLatin1String("/xdgconfig/"));
+                const bool isXdgConfig = src.contains(QLatin1StringView("/xdgconfig/"));
                 copyDirectory(fi.absoluteFilePath(),
                               dst + QStringLiteral("/akonadi/") + (isXdgConfig ? QStringLiteral("config/") : QStringLiteral("data/"))
                                   + QStringLiteral("instance/") + instanceId());
@@ -145,7 +145,7 @@ void SetupTest::copyXdgDirectory(const QString &src, const QString &dst)
                 copyDirectory(fi.absoluteFilePath(), dst + QLatin1Char('/') + fi.fileName());
             }
         } else {
-            if (fi.fileName().startsWith(QLatin1String("akonadi_")) && fi.fileName().endsWith(QLatin1String("rc"))) {
+            if (fi.fileName().startsWith(QLatin1StringView("akonadi_")) && fi.fileName().endsWith(QLatin1String("rc"))) {
                 // namespace according to instance identifier
                 const QString baseName = fi.fileName().left(fi.fileName().size() - 2);
                 const QString dstPath = dst + QLatin1Char('/') + Akonadi::ServerManager::addNamespace(baseName) + QStringLiteral("rc");
@@ -218,7 +218,7 @@ void SetupTest::createTempEnvironment()
 #endif
 
     QString backend;
-    if (Config::instance()->dbBackend() == QLatin1String("pgsql")) {
+    if (Config::instance()->dbBackend() == QLatin1StringView("pgsql")) {
         backend = QStringLiteral("postgresql");
     } else {
         backend = Config::instance()->dbBackend();
@@ -229,11 +229,11 @@ void SetupTest::createTempEnvironment()
 void SetupTest::writeAkonadiserverrc(const QString &path)
 {
     QString backend;
-    if (Config::instance()->dbBackend() == QLatin1String("sqlite")) {
+    if (Config::instance()->dbBackend() == QLatin1StringView("sqlite")) {
         backend = QStringLiteral("QSQLITE");
-    } else if (Config::instance()->dbBackend() == QLatin1String("mysql")) {
+    } else if (Config::instance()->dbBackend() == QLatin1StringView("mysql")) {
         backend = QStringLiteral("QMYSQL");
-    } else if (Config::instance()->dbBackend() == QLatin1String("pgsql")) {
+    } else if (Config::instance()->dbBackend() == QLatin1StringView("pgsql")) {
         backend = QStringLiteral("QPSQL");
     } else {
         qCCritical(AKONADITEST_LOG, "Invalid backend name %s", qPrintable(backend));

@@ -63,7 +63,7 @@ void SearchManager::init()
 
     mEngines.reserve(mEngineNames.size());
     for (const QString &engineName : std::as_const(mEngineNames)) {
-        if (engineName == QLatin1String("Agent")) {
+        if (engineName == QLatin1StringView("Agent")) {
             mEngines.append(new AgentSearchEngine);
         } else {
             qCCritical(AKONADISERVER_SEARCH_LOG) << "Unknown search engine type: " << engineName;
@@ -143,7 +143,7 @@ void SearchManager::loadSearchPlugins()
             const QString filePath = path % QLatin1Char('/') % fileName;
             std::unique_ptr<QPluginLoader> loader(new QPluginLoader(filePath));
             const QVariantMap metadata = loader->metaData().value(QStringLiteral("MetaData")).toVariant().toMap();
-            if (metadata.value(QStringLiteral("X-Akonadi-PluginType")).toString() != QLatin1String("SearchPlugin")) {
+            if (metadata.value(QStringLiteral("X-Akonadi-PluginType")).toString() != QLatin1StringView("SearchPlugin")) {
                 continue;
             }
 
@@ -256,8 +256,8 @@ void SearchManager::updateSearchImpl(const Collection &collection)
     }
 
     const QStringList queryAttributes = collection.queryAttributes().split(QLatin1Char(' '));
-    const bool remoteSearch = queryAttributes.contains(QLatin1String(AKONADI_PARAM_REMOTE));
-    bool recursive = queryAttributes.contains(QLatin1String(AKONADI_PARAM_RECURSIVE));
+    const bool remoteSearch = queryAttributes.contains(QLatin1StringView(AKONADI_PARAM_REMOTE));
+    bool recursive = queryAttributes.contains(QLatin1StringView(AKONADI_PARAM_RECURSIVE));
 
     QStringList queryMimeTypes;
     const QList<MimeType> mimeTypes = collection.mimeTypes();

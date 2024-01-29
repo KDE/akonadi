@@ -29,9 +29,9 @@ private Q_SLOTS:
         QSignalSpy spy(monitor.get(), &Monitor::collectionAdded);
 
         Collection col;
-        col.setName(QLatin1String("test_collection"));
+        col.setName(QLatin1StringView("test_collection"));
         col.setContentMimeTypes({Collection::mimeType()});
-        col.setParentCollection(Collection(AkonadiTest::collectionIdFromPath(QLatin1String("res1"))));
+        col.setParentCollection(Collection(AkonadiTest::collectionIdFromPath(QLatin1StringView("res1"))));
         col.setRights(Collection::AllRights);
 
         auto cj = new CollectionCreateJob(col, this);

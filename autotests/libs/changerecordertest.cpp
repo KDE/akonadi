@@ -70,9 +70,9 @@ private Q_SLOTS:
         QVERIFY(rec->isEmpty());
         for (const QString &action : std::as_const(actions)) {
             qDebug() << action;
-            if (action == QLatin1String("rn")) {
+            if (action == QLatin1StringView("rn")) {
                 replayNextAndExpectNothing(rec.get());
-            } else if (action == QLatin1String("reload")) {
+            } else if (action == QLatin1StringView("reload")) {
                 // Check saving and loading from disk
                 rec = createChangeRecorder();
             } else if (action.at(0) == QLatin1Char('c')) {

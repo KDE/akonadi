@@ -15,7 +15,7 @@
 
 #include <shared/aktest.h>
 
-#define QL1S(x) QLatin1String(x)
+#define QL1S(x) QLatin1StringView(x)
 
 using namespace Akonadi::Server;
 
@@ -164,8 +164,8 @@ void DbInitializerTest::testRun()
             const QString expected = readNextStatement(&file).simplified();
 
             QString normalized = statement.simplified();
-            normalized.replace(QLatin1String(" ,"), QLatin1String(","));
-            normalized.replace(QLatin1String(" )"), QLatin1String(")"));
+            normalized.replace(QLatin1StringView(" ,"), QLatin1String(","));
+            normalized.replace(QLatin1StringView(" )"), QLatin1String(")"));
             QCOMPARE(normalized, expected);
         }
 

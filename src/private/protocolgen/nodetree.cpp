@@ -108,13 +108,13 @@ QString ClassNode::parentClassName() const
 
 ClassNode::ClassType ClassNode::elementNameToType(QStringView name)
 {
-    if (name == QLatin1String("class")) {
+    if (name == QLatin1StringView("class")) {
         return Class;
-    } else if (name == QLatin1String("command")) {
+    } else if (name == QLatin1StringView("command")) {
         return Command;
-    } else if (name == QLatin1String("response")) {
+    } else if (name == QLatin1StringView("response")) {
         return Response;
-    } else if (name == QLatin1String("notification")) {
+    } else if (name == QLatin1StringView("notification")) {
         return Notification;
     } else {
         return Invalid;
@@ -176,9 +176,9 @@ EnumNode::EnumType EnumNode::enumType() const
 }
 EnumNode::EnumType EnumNode::elementNameToType(QStringView name)
 {
-    if (name == QLatin1String("enum")) {
+    if (name == QLatin1StringView("enum")) {
         return TypeEnum;
-    } else if (name == QLatin1String("flag")) {
+    } else if (name == QLatin1StringView("flag")) {
         return TypeFlag;
     } else {
         return TypeInvalid;

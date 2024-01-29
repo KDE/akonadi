@@ -239,7 +239,7 @@ public:
                                          << "name" << name << "doesn't look like mimetype@classtype";
             }
         }
-        const QString APPLICATION_OCTETSTREAM = QLatin1String(_APPLICATION_OCTETSTREAM);
+        const QString APPLICATION_OCTETSTREAM = QLatin1StringView(_APPLICATION_OCTETSTREAM);
         QMap<QString, MimeTypeEntry>::iterator it = map.find(APPLICATION_OCTETSTREAM);
         if (it == map.end()) {
             it = map.insert(APPLICATION_OCTETSTREAM, MimeTypeEntry(APPLICATION_OCTETSTREAM));
@@ -346,7 +346,7 @@ private:
                     //             qCDebug(AKONADICORE_LOG) << "    -> got " << entry->pluginClassName() << " and am happy with it.";
                     // FIXME ? in qt5 we show "application/octet-stream" first so if will use default plugin. Exclude it until we look at all mimetype and use
                     // default at the end if necessary
-                    if (allMimeTypes[*it].type() != QLatin1String("application/octet-stream")) {
+                    if (allMimeTypes[*it].type() != QLatin1StringView("application/octet-stream")) {
                         return entry->plugin();
                     }
                 } else {

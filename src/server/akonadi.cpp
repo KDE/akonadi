@@ -100,7 +100,7 @@ bool AkonadiServer::init()
 
     const QByteArray dbusAddress = qgetenv("DBUS_SESSION_BUS_ADDRESS");
     if (!dbusAddress.isEmpty()) {
-        connectionSettings.setValue(QStringLiteral("DBUS/Address"), QLatin1String(dbusAddress));
+        connectionSettings.setValue(QStringLiteral("DBUS/Address"), QLatin1StringView(dbusAddress));
     }
 
     // Setup database
@@ -284,7 +284,7 @@ bool AkonadiServer::startDatabaseProcess()
 bool AkonadiServer::createDatabase()
 {
     bool success = true;
-    const QLatin1String initCon("initConnection");
+    const QLatin1StringView initCon("initConnection");
     QSqlDatabase db = QSqlDatabase::addDatabase(DbConfig::configuredDatabase()->driverName(), initCon);
     DbConfig::configuredDatabase()->apply(db);
     db.setDatabaseName(DbConfig::configuredDatabase()->databaseName());
