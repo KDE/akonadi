@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-13 00:38+0000\n"
+"POT-Creation-Date: 2024-01-30 00:37+0000\n"
 "PO-Revision-Date: 2024-01-15 00:14+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -92,70 +92,70 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "未設定"
 
-#: agentbase/resourcebase.cpp:517
+#: agentbase/resourcebase.cpp:518
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "資源辨識器"
 
-#: agentbase/resourcebase.cpp:523
+#: agentbase/resourcebase.cpp:524
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "Akonadi 資源"
 
-#: agentbase/resourcebase.cpp:571
+#: agentbase/resourcebase.cpp:572
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "取得了無效的項目"
 
-#: agentbase/resourcebase.cpp:594
+#: agentbase/resourcebase.cpp:595
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "建立項目時發生錯誤：%1"
 
-#: agentbase/resourcebase.cpp:618
+#: agentbase/resourcebase.cpp:619
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "更新收藏時發生錯誤：%1"
 
-#: agentbase/resourcebase.cpp:705
+#: agentbase/resourcebase.cpp:706
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "更新本地收藏失敗：%1。"
 
-#: agentbase/resourcebase.cpp:710
+#: agentbase/resourcebase.cpp:711
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "更新本地項目失敗：%1。"
 
-#: agentbase/resourcebase.cpp:729
+#: agentbase/resourcebase.cpp:730
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "無法於離線模式抓取項目。"
 
-#: agentbase/resourcebase.cpp:910
+#: agentbase/resourcebase.cpp:911
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "同步資料夾 %1 中"
 
-#: agentbase/resourcebase.cpp:930 agentbase/resourcebase.cpp:937
+#: agentbase/resourcebase.cpp:931 agentbase/resourcebase.cpp:938
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "無法抓取收藏以同步。"
 
-#: agentbase/resourcebase.cpp:977
+#: agentbase/resourcebase.cpp:979
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "無法抓取收藏以同步屬性。"
 
-#: agentbase/resourcebase.cpp:1031
+#: agentbase/resourcebase.cpp:1033
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "此要求已不存在"

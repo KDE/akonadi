@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-13 00:38+0000\n"
+"POT-Creation-Date: 2024-01-30 00:37+0000\n"
 "PO-Revision-Date: 2020-05-07 13:23+0300\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -89,70 +89,70 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "Pole seadistatud"
 
-#: agentbase/resourcebase.cpp:517
+#: agentbase/resourcebase.cpp:518
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "Ressursi identifikaator"
 
-#: agentbase/resourcebase.cpp:523
+#: agentbase/resourcebase.cpp:524
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "Akonadi ressurss"
 
-#: agentbase/resourcebase.cpp:571
+#: agentbase/resourcebase.cpp:572
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Hangiti vigane element"
 
-#: agentbase/resourcebase.cpp:594
+#: agentbase/resourcebase.cpp:595
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Tõrge elemendi loomisel: %1"
 
-#: agentbase/resourcebase.cpp:618
+#: agentbase/resourcebase.cpp:619
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Tõrge kogu uuendamisel: %1"
 
-#: agentbase/resourcebase.cpp:705
+#: agentbase/resourcebase.cpp:706
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Kohaliku kogu uuendamine nurjus: %1."
 
-#: agentbase/resourcebase.cpp:710
+#: agentbase/resourcebase.cpp:711
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Kohalike elementide uuendamine nurjus: %1."
 
-#: agentbase/resourcebase.cpp:729
+#: agentbase/resourcebase.cpp:730
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Võrguta režiimis ei saa elementi tõmmata."
 
-#: agentbase/resourcebase.cpp:910
+#: agentbase/resourcebase.cpp:911
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Kausta '%1' sünkroonimine"
 
-#: agentbase/resourcebase.cpp:930 agentbase/resourcebase.cpp:937
+#: agentbase/resourcebase.cpp:931 agentbase/resourcebase.cpp:938
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Kogu hankimine sünkroonimiseks nurjus."
 
-#: agentbase/resourcebase.cpp:977
+#: agentbase/resourcebase.cpp:979
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Kogu hankimine atribuutide sünkroonimiseks nurjus."
 
-#: agentbase/resourcebase.cpp:1031
+#: agentbase/resourcebase.cpp:1033
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Soovitud elementi pole enam"

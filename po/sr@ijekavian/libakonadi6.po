@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-13 00:38+0000\n"
+"POT-Creation-Date: 2024-01-30 00:37+0000\n"
 "PO-Revision-Date: 2017-12-17 18:01+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -90,70 +90,70 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "Није подешено"
 
-#: agentbase/resourcebase.cpp:517
+#: agentbase/resourcebase.cpp:518
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "Идентификатор ресурса"
 
-#: agentbase/resourcebase.cpp:523
+#: agentbase/resourcebase.cpp:524
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "Аконадијев ресурс"
 
-#: agentbase/resourcebase.cpp:571
+#: agentbase/resourcebase.cpp:572
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Добављена лоша ставка"
 
-#: agentbase/resourcebase.cpp:594
+#: agentbase/resourcebase.cpp:595
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Грешка при стварању ставке: %1"
 
-#: agentbase/resourcebase.cpp:618
+#: agentbase/resourcebase.cpp:619
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Грешка при ажурирању збирке: %1"
 
-#: agentbase/resourcebase.cpp:705
+#: agentbase/resourcebase.cpp:706
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Пропало ажурирање локалне збирке: %1."
 
-#: agentbase/resourcebase.cpp:710
+#: agentbase/resourcebase.cpp:711
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Пропало ажурирање локалних ставки: %1."
 
-#: agentbase/resourcebase.cpp:729
+#: agentbase/resourcebase.cpp:730
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Не могу ван везе дохватити ставку."
 
-#: agentbase/resourcebase.cpp:910
+#: agentbase/resourcebase.cpp:911
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Синхронизујем фасциклу „%1“"
 
-#: agentbase/resourcebase.cpp:930 agentbase/resourcebase.cpp:937
+#: agentbase/resourcebase.cpp:931 agentbase/resourcebase.cpp:938
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Не могу да добавим збирку за синхронизовање."
 
-#: agentbase/resourcebase.cpp:977
+#: agentbase/resourcebase.cpp:979
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Не могу да добавим збирку за синхронизовање атрибута."
 
-#: agentbase/resourcebase.cpp:1031
+#: agentbase/resourcebase.cpp:1033
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Захтијевана ставка више не постоји."

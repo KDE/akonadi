@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-13 00:38+0000\n"
+"POT-Creation-Date: 2024-01-30 00:37+0000\n"
 "PO-Revision-Date: 2010-01-01 15:34+0200\n"
 "Last-Translator: Viesturs Zarins <viesturs.zarins@mii.lu.lv>\n"
 "Language-Team: Latvian <locale@laka.lv>\n"
@@ -92,7 +92,7 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr ""
 
-#: agentbase/resourcebase.cpp:517
+#: agentbase/resourcebase.cpp:518
 #, fuzzy, kde-format
 #| msgctxt "@label, commandline option"
 #| msgid "Resource identifier"
@@ -100,27 +100,27 @@ msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "Resursa iderntifikators"
 
-#: agentbase/resourcebase.cpp:523
+#: agentbase/resourcebase.cpp:524
 #, fuzzy, kde-format
 #| msgctxt "@title, application name"
 #| msgid "Akonadi Resource"
 msgid "Akonadi Resource"
 msgstr "Akonadi resurss"
 
-#: agentbase/resourcebase.cpp:571
+#: agentbase/resourcebase.cpp:572
 #, fuzzy, kde-format
 #| msgid "Invalid parent"
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Nederīgs vecāks"
 
-#: agentbase/resourcebase.cpp:594
+#: agentbase/resourcebase.cpp:595
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr ""
 
-#: agentbase/resourcebase.cpp:618
+#: agentbase/resourcebase.cpp:619
 #, fuzzy, kde-format
 #| msgctxt "@info"
 #| msgid "Updating local collection failed: %1."
@@ -128,13 +128,13 @@ msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Neizdevās atjaunināt lokālo kolekciju: %1."
 
-#: agentbase/resourcebase.cpp:705
+#: agentbase/resourcebase.cpp:706
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Neizdevās atjaunināt lokālo kolekciju: %1."
 
-#: agentbase/resourcebase.cpp:710
+#: agentbase/resourcebase.cpp:711
 #, fuzzy, kde-format
 #| msgctxt "@info"
 #| msgid "Updating local collection failed: %1."
@@ -142,13 +142,13 @@ msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Neizdevās atjaunināt lokālo kolekciju: %1."
 
-#: agentbase/resourcebase.cpp:729
+#: agentbase/resourcebase.cpp:730
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Nevar ielādēt vienību bezsaistes režīmā."
 
-#: agentbase/resourcebase.cpp:910
+#: agentbase/resourcebase.cpp:911
 #, fuzzy, kde-format
 #| msgctxt "@info:status"
 #| msgid "Syncing collection '%1'"
@@ -156,19 +156,19 @@ msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Sinhronizē kolekciju '%1'"
 
-#: agentbase/resourcebase.cpp:930 agentbase/resourcebase.cpp:937
+#: agentbase/resourcebase.cpp:931 agentbase/resourcebase.cpp:938
 #, fuzzy, kde-format
 #| msgid "Failed to fetch the resource collection."
 msgid "Failed to retrieve collection for sync."
 msgstr "Neizdevās ielādēt resursu kolekciju."
 
-#: agentbase/resourcebase.cpp:977
+#: agentbase/resourcebase.cpp:979
 #, fuzzy, kde-format
 #| msgid "Failed to fetch the resource collection."
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Neizdevās ielādēt resursu kolekciju."
 
-#: agentbase/resourcebase.cpp:1031
+#: agentbase/resourcebase.cpp:1033
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr ""
