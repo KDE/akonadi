@@ -1,0 +1,297 @@
+# Copyright (C) YEAR This file is copyright:
+# This file is distributed under the same license as the akonadi package.
+# Tommi Nieminen <translator@legisign.org>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: akonadi\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2024-01-11 00:37+0000\n"
+"PO-Revision-Date: 2024-01-29 17:35+0200\n"
+"Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
+"Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 22.12.3\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Tommi Nieminen"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "translator@legisign.org"
+
+#: dbmigrator.cpp:435
+#, kde-format
+msgctxt "@info:status"
+msgid "Stopping Akonadi service..."
+msgstr "Pysäytetään Akonadi-palvelua…"
+
+#: dbmigrator.cpp:438
+#, kde-format
+msgctxt "@info:status"
+msgid "Error: timeout while waiting for Akonadi to stop."
+msgstr "Virhe: aikakatkaisu odotettaessa Akonadin pysähtyvän."
+
+#: dbmigrator.cpp:445
+#, kde-format
+msgctxt "@info:status"
+msgid "Error: couldn't acquire DBus lock for Akonadi."
+msgstr "Virhe: ei saatu Akonadiin DBus-lukitusta."
+
+#: dbmigrator.cpp:454
+#, kde-format
+msgctxt "@info:status"
+msgid "Starting Akonadi service..."
+msgstr "Käynnistetään Akonadi-palvelua…"
+
+#: dbmigrator.cpp:469
+#, kde-format
+msgctxt "@info:status"
+msgid ""
+"Invalid database engine \"%1\" - valid values are \"sqlite\", \"mysql\" and "
+"\"postgres\"."
+msgstr ""
+"Virheellinen tietokantamoottori ”%1”: kelvolliset arvot ovat ”sqlite”, "
+"”mysql” ja ”postgres”."
+
+#: dbmigrator.cpp:491
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error: failed to configure source database server."
+msgstr "Virhe: lähdetietokantapalvelinta ei saatu määritettyä."
+
+#: dbmigrator.cpp:496
+#, kde-format
+msgctxt "@info:shell"
+msgid "Source and destination database engines are the same."
+msgstr "Lähde- ja kohdetietokantamoottorit ovat samat."
+
+#: dbmigrator.cpp:503
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error: failed to obtain path to source database data file or directory."
+msgstr ""
+"Virhe: lähdetietokantatiedoston tai -kansion sijaintia ei saatu selville."
+
+#: dbmigrator.cpp:510
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error: failed to configure the new database server."
+msgstr "Virhe: uutta tietokantapalvelinta ei saatu määritettyä."
+
+#: dbmigrator.cpp:516
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error: failed to open existing database to migrate data from."
+msgstr "Virhe: siirrettävää vanhaa tietokantaa ei saatu auki."
+
+#: dbmigrator.cpp:521
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error: failed to open new database to migrate data to."
+msgstr "Virhe: siirron kohteena olevaa uutta tietokantaa ei saatu auki."
+
+#: dbmigrator.cpp:541
+#, kde-format
+msgctxt "@info:status %2 is error message"
+msgid "Error: failed to remove temporary database directory %1: %2"
+msgstr "Virhe: väliaikaista tietokantakansiota %1 ei saatu poistettua: %2"
+
+#: dbmigrator.cpp:548
+#, kde-format
+msgctxt "@info:shell"
+msgid "Backing up original database..."
+msgstr "Varmuuskopioidaan alkuperäistä tietokantaa…"
+
+#: dbmigrator.cpp:556
+#, kde-format
+msgctxt "@info:status"
+msgid "Restoring database from backup %1 to %2"
+msgstr "Palautetaan tietokanta varmuuskopiosta %1 kohteeseen %2"
+
+#: dbmigrator.cpp:558
+#, kde-format
+msgctxt "@info:status %1 is error message"
+msgid "Error: failed to restore database from backup: %1"
+msgstr "Virhe: tietokantaa ei saatu palautettua varmuuskopiosta: %1"
+
+#: dbmigrator.cpp:590 dbmigrator.cpp:601
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error has occurred while migrating table %1"
+msgstr "Siirrettäessä taulukkoa %1 sattui virhe"
+
+#: dbmigrator.cpp:620
+#, kde-format
+msgctxt "@label"
+msgid ""
+"Backup directory already exists. Do you want to overwrite the previous "
+"backup?"
+msgstr ""
+"Varmuuskopiokansio on jo olemassa. Haluatko korvata aiemman varmuuskopion?"
+
+#: dbmigrator.cpp:625
+#, kde-format
+msgctxt "@info:shell"
+msgid "Cannot proceed without backup. Migration interrupted."
+msgstr "Varmuuskopiotta ei voi jatkaa. Siirtäminen keskeytetään."
+
+#: dbmigrator.cpp:630
+#, kde-format
+msgctxt "@info:shell"
+msgid "Failed to remove previous backup directory."
+msgstr "Edellistä varmuuskopiokansiota ei saatu poistettua."
+
+#: dbmigrator.cpp:643
+#, kde-format
+msgctxt "@info:shell"
+msgid "Failed to move database to backup location: %1"
+msgstr "Tietokantaa ei saatu siirrettyä varmuuskopiosijaintiin: %1"
+
+#: dbmigrator.cpp:657
+#, kde-format
+msgctxt "@label"
+msgid "Backup file %1 already exists. Overwrite?"
+msgstr "Varmuuskopiotiedosto %1 on jo olemassa. Korvataanko se?"
+
+#: dbmigrator.cpp:659
+#, kde-format
+msgctxt "@info:status"
+msgid "Cannot proceed without backup. Migration interrupted."
+msgstr "Varmuuskopiotta ei voi jatkaa. Siirtäminen keskeytetään."
+
+#: dbmigrator.cpp:665
+#, kde-format
+msgctxt "@info:status"
+msgid "Error: Failed to remove existing backup file %1: %2"
+msgstr "Virhe: aiempaa varmuuskopiotiedostoa %1 ei saatu poistettua: %2"
+
+#: dbmigrator.cpp:672
+#, kde-format
+msgctxt "@info:status"
+msgid "Failed to back up Akonadi Server configuration: %1"
+msgstr "Akonadi-palvelinmääritystä ei saatu varmuuskopioitua: %1"
+
+# Sekä ”migrate” että ”move” kääntyvät yleensä ”siirtää”, joten päädyin tässä puhumaan ”uudesta tietokannasta”, jottei asia menisi aivan sekaisin :)
+#: dbmigrator.cpp:689
+#, kde-format
+msgctxt "@info:status %1 is error message"
+msgid "Error: failed to move migrated database to the primary location: %1"
+msgstr ""
+"Virhe: uutta tietokantaa ei saatu siirrettyä ensisijaiseen sijaintiin: %1"
+
+#: dbmigrator.cpp:708
+#, kde-format
+msgctxt "@info:status %1 is error message"
+msgid "Error: failed to remove original akonadiserverrc: %1"
+msgstr "Virhe: alkuperäistä akonadiserverrc:tä ei saatu poistettua: %1"
+
+#: dbmigrator.cpp:714
+#, kde-format
+msgctxt "@info:status %1 is error message"
+msgid "Error: failed to move new akonadiserverrc to the primary location: %1"
+msgstr ""
+"Virhe: uutta akonadiserverrc:tä ei saatu siirrettyä ensisijaiseen "
+"sijaintiin: %1"
+
+#: dbmigrator.cpp:805
+#, kde-format
+msgctxt "@info:status"
+msgid "Error: failed to update autoincrement value for table %1"
+msgstr "Virhe: taulukon %1 automaattista juoksevaa lukua ei saatu päivitettyä"
+
+#: dbmigrator.cpp:810
+#, kde-format
+msgctxt "@info:status"
+msgid "Optimizing table %1..."
+msgstr "Optimoidaan taulukkoa %1…"
+
+#: dbmigrator.cpp:813
+#, kde-format
+msgctxt "@info:status"
+msgid "Error: failed to optimize table %1"
+msgstr "Virhe: taulukkoa %1 ei saatu optimoitua"
+
+#: main.cpp:31
+#, kde-format
+msgctxt ""
+"Options for user to input to command line prompt, parenthesis indicate which "
+"letter to type, capitalized option is default"
+msgid " [(y)es/(N)o] "
+msgstr "[k(y)llä/(E)i]"
+
+#: main.cpp:36 main.cpp:55
+#, kde-format
+msgctxt "Letter for option \"(y)es\" prompted from command line"
+msgid "y"
+msgstr "y"
+
+#: main.cpp:49
+#, kde-format
+msgctxt ""
+"Options for user to input to command line prompt, parenthesis indicate which "
+"letter to type, capitalized option is default"
+msgid " [(y)es/(N)o/(s)kip] "
+msgstr "[k(y)llä/(E)i/(o)hita]"
+
+#: main.cpp:56
+#, kde-format
+msgctxt "Letter for option \"(s)kip\" prompted from command line"
+msgid "s"
+msgstr "o"
+
+#: main.cpp:73 main.cpp:75
+#, kde-format
+msgid "Akonadi DB Migrator"
+msgstr "Akonadi-tietokantasiirtäjä"
+
+#: main.cpp:77
+#, kde-format
+msgid "(c) 2024 g10 Code GmbH"
+msgstr "© 2024 g10 Code GmbH"
+
+#: main.cpp:83
+#, kde-format
+msgid ""
+"The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and "
+"\"postgres\""
+msgstr ""
+"Käytettävä uusi tietokantamoottori. Mahdolliset arvot ovat ”sqlite”, ”mysql” "
+"ja ”postgres”"
+
+#: main.cpp:90
+#, kde-format
+msgctxt "@info:shell"
+msgid "Invalid target engine: %1."
+msgstr "Virheellinen kohdemoottori: %1"
+
+#: main.cpp:104
+#, kde-format
+msgctxt "@info:status"
+msgid "Migration completed successfully."
+msgstr "Siirtäminen onnistui."
+
+#: main.cpp:106
+#, kde-format
+msgctxt "@info:status"
+msgid "Migration failed."
+msgstr "Siirtäminen epäonnistui."
+
+#: main.cpp:111
+#, kde-format
+msgctxt "@info:progress"
+msgid "Migrating table %1 (%2/%3)..."
+msgstr "Siirretään taulukkoa %1 (%2/%3)…"
+
+#: main.cpp:125
+#, kde-format
+msgctxt "@info:progress"
+msgid "%1%..."
+msgstr "%1 %…"
