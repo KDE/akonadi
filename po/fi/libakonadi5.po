@@ -1,6 +1,6 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# Tommi Nieminen <translator@legisign.org>, 2010, 2011, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
+# Tommi Nieminen <translator@legisign.org>, 2010, 2011, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024.
 # Lasse Liehu <lasse.liehu@gmail.com>, 2011, 2012, 2013, 2014, 2015, 2016, 2018.
 #
 # KDE Finnish translation sprint participants:
@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-02 00:48+0000\n"
-"PO-Revision-Date: 2023-03-13 17:27+0200\n"
+"PO-Revision-Date: 2024-01-29 17:40+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -191,7 +191,7 @@ msgstr "Luodun agentin DBus-liittymään ei saada yhteyttä."
 #: core/jobs/agentinstancecreatejob.cpp:92
 #, kde-format
 msgid "Agent instance creation timed out."
-msgstr "Agentti-instanssin luomisen aikakatkaisu."
+msgstr "Agentti-ilmentymän luomisen aikakatkaisu."
 
 #: core/jobs/agentinstancecreatejob.cpp:150
 #, kde-format
@@ -201,18 +201,18 @@ msgstr "Agentin tyyppiä ”%1” ei voi saada."
 #: core/jobs/agentinstancecreatejob.cpp:158
 #, kde-format
 msgid "Unable to create agent instance."
-msgstr "Agentti-instanssi ei voitu luoda."
+msgstr "Agentti-ilmentymää ei voitu luoda."
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:73
 #, kde-format
 msgid "Invalid collection instance."
-msgstr "Virheellinen kokoelmainstanssi."
+msgstr "Virheellinen kokoelmailmentymä."
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:80
 #: core/jobs/resourcesynchronizationjob.cpp:88
 #, kde-format
 msgid "Invalid resource instance."
-msgstr "Virheellinen resurssin instanssi."
+msgstr "Virheellinen resurssi-ilmentymä."
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:102
 #: core/jobs/resourcesynchronizationjob.cpp:113
@@ -592,43 +592,43 @@ msgstr "© 2008 Volker Krause <vkrause@kde.org>"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
-msgstr "&Uusi agentti-instanssi…"
+msgstr "&Uusi agentti-ilmentymä…"
 
 #: widgets/agentactionmanager.cpp:36
 msgid "&Delete Agent Instance"
-msgstr "&Poista agentti-instanssi"
+msgstr "&Poista agentti-ilmentymä"
 
 #: widgets/agentactionmanager.cpp:37
 msgid "&Configure Agent Instance"
-msgstr "&Muokkaa agentti-instanssia"
+msgstr "&Muokkaa agentti-ilmentymä"
 
 #: widgets/agentactionmanager.cpp:53
 #, kde-format
 msgctxt "@title:window"
 msgid "New Agent Instance"
-msgstr "Uusi agentti-instanssi"
+msgstr "Uusi agentti-ilmentymä"
 
 #: widgets/agentactionmanager.cpp:55
 #, kde-format
 msgid "Could not create agent instance: %1"
-msgstr "Agentti-instanssia ei voitu luoda: %1"
+msgstr "Agentti-ilmentymää ei voitu luoda: %1"
 
 #: widgets/agentactionmanager.cpp:57
 #, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
-msgstr "Agentti-instanssin luominen epäonnistui"
+msgstr "Agentti-ilmentymän luominen epäonnistui"
 
 #: widgets/agentactionmanager.cpp:59
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Agent Instance?"
-msgstr "Poistetaanko agentti-instanssi?"
+msgstr "Poistetaanko agentti-ilmentymä?"
 
 #: widgets/agentactionmanager.cpp:63
 #, kde-format
 msgid "Do you really want to delete the selected agent instance?"
-msgstr "Haluatko varmasti poistaa valitun agentti-instanssin?"
+msgstr "Haluatko varmasti poistaa valitun agentti-ilmentymän?"
 
 #: widgets/agentconfigurationdialog.cpp:56
 #, kde-format
