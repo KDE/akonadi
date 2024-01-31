@@ -7,9 +7,9 @@
 #include <QObject>
 #include <QTest>
 
-#include <private/dbus_p.h>
+#include "private/dbus_p.h"
 
-#include <shared/aktest.h>
+#include "shared/aktest.h"
 
 using namespace Akonadi;
 

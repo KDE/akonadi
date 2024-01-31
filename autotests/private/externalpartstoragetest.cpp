@@ -5,9 +5,9 @@
  *
  */
 
-#include <private/externalpartstorage_p.h>
-#include <private/standarddirs_p.h>
-#include <shared/aktest.h>
+#include "private/externalpartstorage_p.h"
+#include "private/standarddirs_p.h"
+#include "shared/aktest.h"
 
 #include <QDir>
 #include <QFile>

@@ -7,10 +7,10 @@
 #include "processcontrol.h"
 #include "akonadicontrol_debug.h"
 
-#include <shared/akapplication.h>
+#include "shared/akapplication.h"
 
-#include <private/instance_p.h>
-#include <private/standarddirs_p.h>
+#include "private/instance_p.h"
+#include "private/standarddirs_p.h"
 
 #include <QTimer>
 

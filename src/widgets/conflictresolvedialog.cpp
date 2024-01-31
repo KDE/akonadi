@@ -11,7 +11,7 @@
 #include "differencesalgorithminterface.h"
 #include "typepluginloader_p.h"
 
-#include <shared/akranges.h>
+#include "shared/akranges.h"
 
 #include <QDesktopServices>
 #include <QDir>

@@ -27,7 +27,7 @@
 #include "tagfetchhelper.h"
 #include "utils.h"
 
-#include <private/dbus_p.h>
+#include "private/dbus_p.h"
 
 #include <QDateTime>
 #include <QSqlQuery>

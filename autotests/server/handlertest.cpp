@@ -7,8 +7,8 @@
 #include <QObject>
 #include <QTest>
 
-#include <aktest.h>
-#include <private/protocol_p.h>
+#include "aktest.h"
+#include "private/protocol_p.h"
 
 #include <typeinfo>
 

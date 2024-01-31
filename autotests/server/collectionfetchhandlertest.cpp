@@ -6,13 +6,13 @@
 
 #include <QObject>
 
-#include <private/scope_p.h>
+#include "private/scope_p.h"
 
 #include "aktest.h"
 #include "dbinitializer.h"
 #include "entities.h"
 #include "fakeakonadiserver.h"
-#include <storage/storagedebugger.h>
+#include "storage/storagedebugger.h"
 
 #include <QTest>
 

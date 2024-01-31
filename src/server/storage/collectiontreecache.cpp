@@ -9,7 +9,7 @@
 #include "commandcontext.h"
 #include "selectquerybuilder.h"
 
-#include <private/scope_p.h>
+#include "private/scope_p.h"
 
 #include <QStack>
 

@@ -11,7 +11,7 @@ class QObject;
 #include <QMutex>
 #include <QQueue>
 
-#include <private/protocol_p.h>
+#include "private/protocol_p.h"
 
 #include "akonadicore_debug.h"
 

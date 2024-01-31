@@ -9,7 +9,7 @@
 #include "exception.h"
 #include "global.h"
 
-#include <private/protocol_p.h>
+#include "private/protocol_p.h"
 
 namespace Akonadi
 {

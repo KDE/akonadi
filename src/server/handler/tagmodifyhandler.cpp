@@ -7,12 +7,12 @@
 #include "tagmodifyhandler.h"
 
 #include "connection.h"
+#include "shared/akranges.h"
 #include "storage/datastore.h"
 #include "storage/querybuilder.h"
 #include "tagfetchhelper.h"
-#include <shared/akranges.h>
 
-#include <private/imapset_p.h>
+#include "private/imapset_p.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

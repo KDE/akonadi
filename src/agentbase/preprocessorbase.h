@@ -11,8 +11,8 @@
 #include "agentbase.h"
 #include "akonadiagentbase_export.h"
 // AkonadiCore
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
+#include "akonadi/collection.h"
+#include "akonadi/item.h"
 
 namespace Akonadi
 {

@@ -11,7 +11,7 @@
 #include "entities.h"
 #include "storage/selectquerybuilder.h"
 
-#include <private/dbus_p.h>
+#include "private/dbus_p.h"
 
 #include <QDBusConnection>
 #include <QDeadlineTimer>

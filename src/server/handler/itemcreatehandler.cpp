@@ -11,6 +11,7 @@
 #include "handlerhelper.h"
 #include "itemfetchhelper.h"
 #include "preprocessormanager.h"
+#include "private/externalpartstorage_p.h"
 #include "storage/datastore.h"
 #include "storage/dbconfig.h"
 #include "storage/itemretrievalmanager.h"
@@ -19,7 +20,6 @@
 #include "storage/parttypehelper.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
-#include <private/externalpartstorage_p.h>
 
 #include "shared/akranges.h"
 #include "shared/akscopeguard.h"

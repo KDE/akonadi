@@ -7,8 +7,8 @@
 #include "agentthread.h"
 #include "akonadiagentserver_debug.h"
 
+#include "shared/akdebug.h"
 #include <QMetaObject>
-#include <shared/akdebug.h>
 
 using namespace Akonadi;
 

@@ -8,7 +8,7 @@
 
 #include "fakeakonadiserver.h"
 #include "fakeintervalcheck.h"
-#include <shared/aktest.h>
+#include "shared/aktest.h"
 
 #include <QTest>
 

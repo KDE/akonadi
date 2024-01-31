@@ -11,8 +11,8 @@
 #include <QMutex>
 #include <QObject>
 
+#include "private/protocol_p.h"
 #include "tracerinterface.h"
-#include <private/protocol_p.h>
 
 #include <memory>
 

@@ -14,9 +14,9 @@
 #include "parttypehelper.h"
 #include "selectquerybuilder.h"
 
-#include <private/externalpartstorage_p.h>
-#include <private/protocol_p.h>
-#include <private/standarddirs_p.h>
+#include "private/externalpartstorage_p.h"
+#include "private/protocol_p.h"
+#include "private/standarddirs_p.h"
 
 #include <config-akonadi.h>
 #if HAVE_UNISTD_H

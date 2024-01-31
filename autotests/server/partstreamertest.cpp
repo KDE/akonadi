@@ -12,17 +12,17 @@
 #include "fakeakonadiserver.h"
 #include "fakeconnection.h"
 
-#include <private/externalpartstorage_p.h>
-#include <private/standarddirs_p.h>
+#include "private/externalpartstorage_p.h"
+#include "private/standarddirs_p.h"
 
+#include "storage/parthelper.h"
 #include "storage/partstreamer.h"
-#include <storage/parthelper.h>
 
 #include <QDir>
 #include <QSettings>
 #include <QTest>
 
-#include <private/scope_p.h>
+#include "private/scope_p.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

@@ -10,7 +10,7 @@
 #include "parttypehelper.h"
 #include "selectquerybuilder.h"
 
-#include <private/externalpartstorage_p.h>
+#include "private/externalpartstorage_p.h"
 
 #include <QFile>
 

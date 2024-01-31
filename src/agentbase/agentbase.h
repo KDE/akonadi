@@ -12,7 +12,7 @@
 
 #include "akonadiagentbase_export.h"
 // AkonadiCore
-#include <akonadi/item.h>
+#include "akonadi/item.h"
 
 #include <QApplication>
 

@@ -12,9 +12,9 @@
 #include "agentbase.h"
 #include "akonadiagentbase_export.h"
 // AkonadiCore
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
-#include <akonadi/itemsync.h>
+#include "akonadi/collection.h"
+#include "akonadi/item.h"
+#include "akonadi/itemsync.h"
 
 class KJob;
 class Akonadi__ResourceAdaptor;

@@ -10,7 +10,7 @@
 
 #include "resourceinterface.h"
 
-#include <private/dbus_p.h>
+#include "private/dbus_p.h"
 
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>

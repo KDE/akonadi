@@ -12,8 +12,8 @@
 #include "storage/querybuilder.h"
 #include "storage/queryhelper.h"
 
-#include <private/imapset_p.h>
-#include <private/scope_p.h>
+#include "private/imapset_p.h"
+#include "private/scope_p.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

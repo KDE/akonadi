@@ -8,8 +8,8 @@
 #include "agentmanager.h"
 #include "akonadicontrol_debug.h"
 
-#include <private/capabilities_p.h>
-#include <private/standarddirs_p.h>
+#include "private/capabilities_p.h"
+#include "private/standarddirs_p.h"
 
 #include <KConfigGroup>
 #include <KDesktopFile>

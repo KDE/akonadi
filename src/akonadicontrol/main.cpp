@@ -14,9 +14,9 @@
 #include "accountsintegration.h"
 #endif
 
-#include <shared/akapplication.h>
+#include "shared/akapplication.h"
 
-#include <private/dbus_p.h>
+#include "private/dbus_p.h"
 
 #include <QDBusConnection>
 #include <QGuiApplication>

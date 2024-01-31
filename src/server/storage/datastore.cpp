@@ -27,9 +27,9 @@
 #include "storagedebugger.h"
 #include "tracer.h"
 #include "transaction.h"
-#include <utils.h>
+#include "utils.h"
 
-#include <private/externalpartstorage_p.h>
+#include "private/externalpartstorage_p.h"
 
 #include <QCoreApplication>
 #include <QElapsedTimer>

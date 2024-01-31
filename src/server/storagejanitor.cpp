@@ -20,11 +20,11 @@
 #include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
 
-#include <private/dbus_p.h>
-#include <private/externalpartstorage_p.h>
-#include <private/imapset_p.h>
-#include <private/protocol_p.h>
-#include <private/standarddirs_p.h>
+#include "private/dbus_p.h"
+#include "private/externalpartstorage_p.h"
+#include "private/imapset_p.h"
+#include "private/protocol_p.h"
+#include "private/standarddirs_p.h"
 
 #include <QDateTime>
 #include <QDir>

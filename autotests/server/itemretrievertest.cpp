@@ -19,7 +19,7 @@
 #include "dbinitializer.h"
 #include "fakeakonadiserver.h"
 
-#include <aktest.h>
+#include "aktest.h"
 
 using namespace Akonadi::Server;
 using namespace std::chrono_literals;

@@ -6,9 +6,9 @@
 #pragma once
 
 #include "collection.h"
+#include "standardactionmanager.h"
 #include <QModelIndex>
 #include <QStringList>
-#include <standardactionmanager.h>
 
 class QMenu;
 class QAbstractItemModel;

@@ -14,7 +14,7 @@
 #include "dbustracer.h"
 #include "filetracer.h"
 
-#include <private/standarddirs_p.h>
+#include "private/standarddirs_p.h"
 
 // #define DEFAULT_TRACER QLatin1StringView( "dbus" )
 #define DEFAULT_TRACER QStringLiteral("null")

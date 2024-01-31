@@ -7,8 +7,8 @@
 #pragma once
 
 #include "../../../src/server/search/abstractsearchplugin.h"
+#include "searchquery.h"
 #include <QStringList>
-#include <searchquery.h>
 
 class TestSearchPlugin : public QObject, public Akonadi::AbstractSearchPlugin
 {

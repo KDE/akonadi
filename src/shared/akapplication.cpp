@@ -8,8 +8,8 @@
 #include "akdebug.h"
 #include "akremotelog.h"
 
+#include "private/instance_p.h"
 #include <akonadifull-version.h>
-#include <private/instance_p.h>
 
 #include <KLocalizedString>
 

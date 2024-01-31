@@ -8,10 +8,10 @@
 
 #include "entities.h"
 #include "fakeakonadiserver.h"
-#include <shared/aktest.h>
+#include "shared/aktest.h"
 
-#include <private/imapset_p.h>
-#include <private/scope_p.h>
+#include "private/imapset_p.h"
+#include "private/scope_p.h"
 
 #include <QTest>
 

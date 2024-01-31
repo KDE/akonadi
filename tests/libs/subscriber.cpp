@@ -4,7 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include <subscriptiondialog.h>
+#include "subscriptiondialog.h"
 
 #include <KAboutData>
 #include <QApplication>

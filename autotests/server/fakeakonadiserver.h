@@ -15,7 +15,7 @@
 #include <memory>
 #include <type_traits>
 
-#include <private/protocol_p.h>
+#include "private/protocol_p.h"
 
 namespace Akonadi
 {

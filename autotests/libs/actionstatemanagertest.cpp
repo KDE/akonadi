@@ -5,7 +5,7 @@
 */
 
 #include "collection.h"
-#include <qtest_akonadi.h>
+#include "qtest_akonadi.h"
 
 #include "../src/widgets/actionstatemanager_p.h"
 #include "../src/widgets/standardactionmanager.h"

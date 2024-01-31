@@ -4,8 +4,8 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include <aktest.h>
-#include <storage/parttypehelper.h>
+#include "storage/parttypehelper.h"
+#include "aktest.h"
 
 #include <QObject>
 #include <QTest>

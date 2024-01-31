@@ -8,7 +8,7 @@
 #include "akonadiserver_debug.h"
 #include "utils.h"
 
-#include <private/standarddirs_p.h>
+#include "private/standarddirs_p.h"
 
 #include <QCoreApplication>
 #include <QDir>

@@ -39,9 +39,9 @@
 
 #include "akonadiagentbase_debug.h"
 
+#include "shared/akranges.h"
 #include <cstdlib>
 #include <iterator>
-#include <shared/akranges.h>
 
 #include <KAboutData>
 #include <KLocalizedString>

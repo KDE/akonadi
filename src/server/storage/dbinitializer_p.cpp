@@ -6,7 +6,7 @@
  ***************************************************************************/
 
 #include "storage/dbinitializer_p.h"
-#include <shared/akranges.h>
+#include "shared/akranges.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

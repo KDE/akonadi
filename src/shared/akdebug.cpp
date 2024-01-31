@@ -10,7 +10,7 @@
 
 #include "akdebug.h"
 
-#include <private/standarddirs_p.h>
+#include "private/standarddirs_p.h"
 
 #include <QDateTime>
 #include <QDir>

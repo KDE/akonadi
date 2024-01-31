@@ -5,14 +5,14 @@
 */
 #include <QObject>
 
-#include <storage/entity.h>
+#include "storage/entity.h"
 
 #include "aktest.h"
 #include "dbinitializer.h"
 #include "entities.h"
 #include "fakeakonadiserver.h"
 
-#include <private/scope_p.h>
+#include "private/scope_p.h"
 
 #include <QTest>
 

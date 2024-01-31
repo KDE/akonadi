@@ -5,8 +5,8 @@
 */
 
 #include "collectiontest.h"
-#include <xmlreader.h>
-#include <xmlwriter.h>
+#include "xmlreader.h"
+#include "xmlwriter.h"
 
 #include "entitydisplayattribute.h"
 

@@ -12,7 +12,7 @@
 #include "searchinterface.h"
 #include "statusinterface.h"
 
-#include <private/dbus_p.h>
+#include "private/dbus_p.h"
 
 #include <QDBusError>
 #include <QSharedPointer>

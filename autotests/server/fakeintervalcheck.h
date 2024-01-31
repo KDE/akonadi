@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <intervalcheck.h>
+#include "intervalcheck.h"
 
 #include <QSemaphore>
 

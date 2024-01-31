@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <servermanager.h>
+#include "servermanager.h"
 
 #include <QList>
 #include <QObject>

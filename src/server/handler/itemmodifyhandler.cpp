@@ -8,6 +8,8 @@
 
 #include "connection.h"
 #include "handlerhelper.h"
+#include "private/externalpartstorage_p.h"
+#include "shared/akranges.h"
 #include "storage/datastore.h"
 #include "storage/dbconfig.h"
 #include "storage/itemqueryhelper.h"
@@ -17,8 +19,6 @@
 #include "storage/parttypehelper.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
-#include <private/externalpartstorage_p.h>
-#include <shared/akranges.h>
 
 #include "akonadiserver_debug.h"
 

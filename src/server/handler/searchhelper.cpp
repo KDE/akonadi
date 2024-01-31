@@ -10,7 +10,7 @@
 #include "entities.h"
 #include "storage/countquerybuilder.h"
 
-#include <private/protocol_p.h>
+#include "private/protocol_p.h"
 
 using namespace Akonadi::Server;
 

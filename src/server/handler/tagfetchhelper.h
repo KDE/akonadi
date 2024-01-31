@@ -8,8 +8,8 @@
 
 #include <QSqlQuery>
 
-#include <private/protocol_p.h>
-#include <private/scope_p.h>
+#include "private/protocol_p.h"
+#include "private/scope_p.h"
 
 namespace Akonadi
 {

@@ -12,7 +12,7 @@
 #include "storage/querybuilder.h"
 #include "storage/selectquerybuilder.h"
 
-#include <private/imapset_p.h>
+#include "private/imapset_p.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

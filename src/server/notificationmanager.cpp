@@ -14,9 +14,9 @@
 #include "storage/notificationcollector.h"
 #include "tracer.h"
 
-#include <private/scope_p.h>
-#include <private/standarddirs_p.h>
-#include <shared/akranges.h>
+#include "private/scope_p.h"
+#include "private/standarddirs_p.h"
+#include "shared/akranges.h"
 
 #include <QDateTime>
 #include <QSettings>

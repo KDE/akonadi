@@ -8,7 +8,7 @@
 #pragma once
 
 #include "akapplication.h"
-#include <private/instance_p.h>
+#include "private/instance_p.h"
 
 #include <KCrash>
 
@@ -54,7 +54,7 @@ inline void akTestSetInstanceIdentifier(const QString &instanceId)
     Akonadi::Instance::setIdentifier(instanceId);
 }
 
-#include <private/protocol_p.h>
+#include "private/protocol_p.h"
 
 namespace QTest
 {

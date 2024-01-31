@@ -10,8 +10,8 @@
 #include "specialcollectionattribute.h"
 #include "subscriptionmodel_p.h"
 
+#include "shared/akranges.h"
 #include <qnamespace.h>
-#include <shared/akranges.h>
 
 #include <QFont>
 #include <QSortFilterProxyModel>

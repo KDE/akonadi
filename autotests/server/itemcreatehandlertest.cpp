@@ -10,14 +10,14 @@
 #include <qhashfunctions.h>
 #include <storage/selectquerybuilder.h>
 
-#include <private/scope_p.h>
-#include <private/standarddirs_p.h>
+#include "private/scope_p.h"
+#include "private/standarddirs_p.h"
 
 #include "fakeakonadiserver.h"
 #include "fakeentities.h"
 
-#include <shared/akranges.h>
-#include <shared/aktest.h>
+#include "shared/akranges.h"
+#include "shared/aktest.h"
 
 #include <QTest>
 

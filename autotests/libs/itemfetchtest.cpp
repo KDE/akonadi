@@ -14,7 +14,7 @@
 #include "resourceselectjob_p.h"
 #include "testattribute.h"
 
-#include <qtest_akonadi.h>
+#include "qtest_akonadi.h"
 
 using namespace Akonadi;
 

@@ -6,7 +6,7 @@
  */
 
 #include "qtest_akonadi.h"
-#include <shared/aktest.h>
+#include "shared/aktest.h"
 
 #include "monitor.h"
 #include "tag.h"

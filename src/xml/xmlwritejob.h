@@ -8,8 +8,8 @@
 
 #include "akonadi-xml_export.h"
 // AkonadiCore
-#include <akonadi/collection.h>
-#include <akonadi/job.h>
+#include "akonadi/collection.h"
+#include "akonadi/job.h"
 
 #include <memory>
 

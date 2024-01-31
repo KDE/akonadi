@@ -8,7 +8,7 @@
 #include "agentserverinterface.h"
 #include "akonadicontrol_debug.h"
 
-#include <private/dbus_p.h>
+#include "private/dbus_p.h"
 
 using namespace Akonadi;
 

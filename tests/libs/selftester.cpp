@@ -4,7 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include <../src/selftest/selftestdialog.h>
+#include "../src/selftest/selftestdialog.h"
 
 #include <KAboutData>
 #include <QApplication>

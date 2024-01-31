@@ -16,7 +16,7 @@
 #include "querybuilder.h"
 #include "selectquerybuilder.h"
 
-#include <private/dbus_p.h>
+#include "private/dbus_p.h"
 
 #include <QCoreApplication>
 #include <QDBusConnection>

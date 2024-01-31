@@ -8,7 +8,7 @@
 #include "akonadiserver_search_debug.h"
 #include "entities.h"
 
-#include <private/dbus_p.h>
+#include "private/dbus_p.h"
 
 #include <QDBusInterface>
 

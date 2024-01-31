@@ -7,8 +7,8 @@
 
 #include "qtest_akonadi.h"
 
-#include <shared/akscopeguard.h>
-#include <shared/aktest.h>
+#include "shared/akscopeguard.h"
+#include "shared/aktest.h"
 
 #include "subscriptiondialog.h"
 #include "subscriptionjob_p.h"

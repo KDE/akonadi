@@ -10,17 +10,17 @@
 #include <QTemporaryDir>
 #include <QTest>
 
-#include <aktest.h>
-#include <private/standarddirs_p.h>
+#include "aktest.h"
+#include "private/standarddirs_p.h"
+#include "shared/akranges.h"
 #include <qtenvironmentvariables.h>
-#include <shared/akranges.h>
 
 #include <QSettings>
 #include <QStandardPaths>
 
+#include "storage/dbconfig.h"
+#include "storage/dbconfigpostgresql.h"
 #include <config-akonadi.h>
-#include <storage/dbconfig.h>
-#include <storage/dbconfigpostgresql.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

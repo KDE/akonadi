@@ -10,7 +10,7 @@
 
 #include "storage/dbdeadlockcatcher.h"
 
-#include <aktest.h>
+#include "aktest.h"
 
 using namespace Akonadi::Server;
 

@@ -8,8 +8,8 @@
 
 #include <sys/types.h>
 
+#include "qtest_akonadi.h"
 #include "testattribute.h"
-#include <qtest_akonadi.h>
 
 #include "agentinstance.h"
 #include "agentmanager.h"

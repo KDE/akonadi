@@ -9,10 +9,10 @@
 #include "akonaditest_debug.h"
 #include "config.h" //krazy:exclude=includes
 
-#include <agentinstance.h>
-#include <agentinstancecreatejob.h>
-#include <private/standarddirs_p.h>
-#include <resourcesynchronizationjob.h>
+#include "agentinstance.h"
+#include "agentinstancecreatejob.h"
+#include "private/standarddirs_p.h"
+#include "resourcesynchronizationjob.h"
 
 #include <KConfig>
 #include <KConfigGroup>

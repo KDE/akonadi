@@ -6,8 +6,8 @@
 
 #include <QObject>
 
-#include <private/imapset_p.h>
-#include <private/scope_p.h>
+#include "private/imapset_p.h"
+#include "private/scope_p.h"
 
 #include "aktest.h"
 #include "dbinitializer.h"

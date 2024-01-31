@@ -8,7 +8,7 @@
 
 #include "entities.h"
 
-#include <private/scope_p.h>
+#include "private/scope_p.h"
 
 namespace Akonadi
 {

@@ -13,7 +13,7 @@
 #include "entities.h"
 #include "querybuilder.h"
 
-#include <private/protocol_p.h>
+#include "private/protocol_p.h"
 
 using namespace Akonadi::Server;
 

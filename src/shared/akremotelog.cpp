@@ -19,7 +19,7 @@
 #include <QDBusPendingReply>
 #include <QDBusServiceWatcher>
 
-#include <private/instance_p.h>
+#include "private/instance_p.h"
 
 #define AKONADICONSOLE_SERVICE "org.kde.akonadiconsole"
 #define AKONADICONSOLE_LOGGER_PATH "/logger"

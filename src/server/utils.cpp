@@ -10,7 +10,7 @@
 #include "akonadiserver_debug.h"
 #include "instance_p.h"
 
-#include <private/standarddirs_p.h>
+#include "private/standarddirs_p.h"
 
 #include <QDir>
 #include <QFileInfo>

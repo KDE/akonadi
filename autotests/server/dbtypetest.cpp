@@ -7,8 +7,8 @@
 #include <QObject>
 #include <QTest>
 
-#include <aktest.h>
-#include <storage/dbtype.h>
+#include "aktest.h"
+#include "storage/dbtype.h"
 
 #define QL1S(x) QLatin1StringView(x)
 

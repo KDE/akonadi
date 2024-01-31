@@ -13,8 +13,8 @@
 
 #include <config-akonadi.h>
 
-#include <private/instance_p.h>
-#include <private/standarddirs_p.h>
+#include "private/instance_p.h"
+#include "private/standarddirs_p.h"
 
 #include <QProcess>
 #include <memory>

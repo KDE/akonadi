@@ -6,13 +6,13 @@
 
 #include "akonadicore_debug.h"
 #include "pluginloader_p.h"
+#include "private/standarddirs_p.h"
 #include <KConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <QDir>
 #include <QPluginLoader>
 #include <QStandardPaths>
-#include <private/standarddirs_p.h>
 
 using namespace Akonadi;
 

@@ -21,7 +21,7 @@
 
 #include "tracer.h"
 
-#include <private/dbus_p.h>
+#include "private/dbus_p.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

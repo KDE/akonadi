@@ -11,7 +11,7 @@
 #include "collectionfetchscope.h"
 #include "session.h"
 
-#include <shared/akranges.h>
+#include "shared/akranges.h"
 
 #include <QMetaMethod>
 

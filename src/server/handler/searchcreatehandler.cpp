@@ -11,10 +11,10 @@
 #include "connection.h"
 #include "handlerhelper.h"
 #include "search/searchmanager.h"
+#include "shared/akranges.h"
 #include "storage/datastore.h"
 #include "storage/entity.h"
 #include "storage/transaction.h"
-#include <shared/akranges.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

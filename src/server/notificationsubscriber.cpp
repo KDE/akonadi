@@ -13,9 +13,9 @@
 #include <QLocalSocket>
 #include <QPointer>
 
-#include <private/datastream_p_p.h>
-#include <private/protocol_exception_p.h>
-#include <shared/akranges.h>
+#include "private/datastream_p_p.h"
+#include "private/protocol_exception_p.h"
+#include "shared/akranges.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

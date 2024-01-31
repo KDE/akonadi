@@ -22,7 +22,7 @@
 #include <cxxabi.h>
 #endif
 
-#include <private/standarddirs_p.h>
+#include "private/standarddirs_p.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

@@ -14,7 +14,7 @@
 #include "itemcreatejob.h"
 #include "itemdeletejob.h"
 
-#include <qtest_akonadi.h>
+#include "qtest_akonadi.h"
 
 using namespace Akonadi;
 

@@ -27,10 +27,10 @@
 #include <QStandardPaths>
 #include <QTest>
 
+#include "private/scope_p.h"
+#include "private/standarddirs_p.h"
+#include "shared/akapplication.h"
 #include <ctime>
-#include <private/scope_p.h>
-#include <private/standarddirs_p.h>
-#include <shared/akapplication.h>
 
 #include "aklocalserver.h"
 #include "preprocessormanager.h"

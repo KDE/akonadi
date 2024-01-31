@@ -6,7 +6,7 @@
 
 #include "session.h"
 
-#include <shared/akapplication.h>
+#include "shared/akapplication.h"
 
 #include <QCoreApplication>
 

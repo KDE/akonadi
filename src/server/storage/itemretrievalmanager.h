@@ -9,7 +9,7 @@
 #include "akthread.h"
 #include "itemretrievalrequest.h"
 #include "itemretriever.h"
-#include <shared/akstd.h>
+#include "shared/akstd.h"
 
 #include <QHash>
 class QObject;

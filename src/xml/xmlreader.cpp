@@ -9,7 +9,7 @@
 #include "format_p.h"
 
 #include "attributefactory.h"
-#include <tag.h>
+#include "tag.h"
 
 using namespace Akonadi;
 

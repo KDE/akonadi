@@ -8,7 +8,7 @@
 #include "commandcontext.h"
 #include "storage/selectquerybuilder.h"
 
-#include <private/protocol_p.h>
+#include "private/protocol_p.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

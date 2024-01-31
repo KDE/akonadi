@@ -5,7 +5,7 @@
  *
  */
 
-#include <qtest_akonadi.h>
+#include "qtest_akonadi.h"
 
 #include "fakemonitor.h"
 #include "fakeserverdata.h"

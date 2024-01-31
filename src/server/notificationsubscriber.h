@@ -12,7 +12,7 @@
 #include <QObject>
 
 #include "entities.h"
-#include <private/protocol_p.h>
+#include "private/protocol_p.h"
 
 class QLocalSocket;
 

@@ -7,9 +7,9 @@
 #include "agentserver.h"
 #include "akonadiagentserver_debug.h"
 
-#include <private/dbus_p.h>
+#include "private/dbus_p.h"
 
-#include <shared/akapplication.h>
+#include "shared/akapplication.h"
 
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>

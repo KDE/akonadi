@@ -8,7 +8,7 @@
 
 #include "akthread.h"
 
-#include <private/protocol_p.h>
+#include "private/protocol_p.h"
 
 #include <QPointer>
 class QTimer;

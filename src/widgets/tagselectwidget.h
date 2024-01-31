@@ -8,7 +8,7 @@
 
 #include "akonadiwidgets_export.h"
 // AkonadiCore
-#include <akonadi/tag.h>
+#include "akonadi/tag.h"
 
 #include <QWidget>
 

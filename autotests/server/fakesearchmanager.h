@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <search/searchmanager.h>
+#include "search/searchmanager.h"
 
 namespace Akonadi
 {

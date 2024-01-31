@@ -7,8 +7,8 @@
 #include <QObject>
 
 #include "monitor_p.h"
+#include "qtest_akonadi.h"
 #include <QTest>
-#include <qtest_akonadi.h>
 
 using namespace Akonadi;
 

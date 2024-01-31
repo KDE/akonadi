@@ -6,7 +6,7 @@
 
 #include "bridgeconnection.h"
 
-#include <private/standarddirs_p.h>
+#include "private/standarddirs_p.h"
 
 #include <QDebug>
 #include <QLocalSocket>

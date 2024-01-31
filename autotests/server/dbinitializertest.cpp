@@ -13,7 +13,7 @@
 #include "storage/dbinitializer.cpp"
 #undef DBINITIALIZER_UNITTEST
 
-#include <shared/aktest.h>
+#include "shared/aktest.h"
 
 #define QL1S(x) QLatin1StringView(x)
 

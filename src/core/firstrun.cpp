@@ -12,7 +12,7 @@
 #include "agentinstancecreatejob.h"
 #include "agentmanager.h"
 #include "agenttype.h"
-#include <private/standarddirs_p.h>
+#include "private/standarddirs_p.h"
 
 #include "akonadicore_debug.h"
 

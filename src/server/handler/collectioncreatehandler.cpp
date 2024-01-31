@@ -12,7 +12,7 @@
 #include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
 
-#include <private/scope_p.h>
+#include "private/scope_p.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

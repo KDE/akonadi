@@ -4,7 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include <qtest_akonadi.h>
+#include "qtest_akonadi.h"
 
 #include "searchquery.h"
 #include <qjson/parser.h>

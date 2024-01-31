@@ -9,7 +9,7 @@
 
 #include "agenttypewidget.h"
 // AkonadiCore
-#include <akonadi/agenttype.h>
+#include "akonadi/agenttype.h"
 
 #include <QDialog>
 

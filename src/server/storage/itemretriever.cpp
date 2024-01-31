@@ -19,8 +19,8 @@
 #include "storage/selectquerybuilder.h"
 #include "utils.h"
 
-#include <private/protocol_p.h>
-#include <shared/akranges.h>
+#include "private/protocol_p.h"
+#include "shared/akranges.h"
 
 #include <QEventLoop>
 

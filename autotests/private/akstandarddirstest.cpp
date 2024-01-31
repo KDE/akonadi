@@ -4,8 +4,8 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include <aktest.h>
-#include <private/standarddirs_p.h>
+#include "aktest.h"
+#include "private/standarddirs_p.h"
 
 #include <QObject>
 #include <QTest>

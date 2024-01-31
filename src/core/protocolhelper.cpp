@@ -20,7 +20,7 @@
 #include "private/externalpartstorage_p.h"
 #include "private/protocol_p.h"
 
-#include <shared/akranges.h>
+#include "shared/akranges.h"
 
 #include <QFile>
 #include <QVarLengthArray>

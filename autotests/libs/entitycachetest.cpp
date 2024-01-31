@@ -6,8 +6,8 @@
 
 #include "entitycache_p.h"
 
+#include "qtest_akonadi.h"
 #include <QSignalSpy>
-#include <qtest_akonadi.h>
 
 using namespace Akonadi;
 

@@ -10,8 +10,8 @@
 #include "storage/transaction.h"
 #include "tracer.h"
 
-#include <private/capabilities_p.h>
-#include <shared/akranges.h>
+#include "private/capabilities_p.h"
+#include "shared/akranges.h"
 
 #include <QDBusConnection>
 

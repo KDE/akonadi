@@ -20,7 +20,7 @@
 
 #include <algorithm>
 
-#include <private/tristate_p.h>
+#include "private/tristate_p.h"
 
 using namespace Akonadi::Server;
 

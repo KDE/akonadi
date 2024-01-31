@@ -20,7 +20,7 @@
 #include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
 
-#include <private/protocol_p.h>
+#include "private/protocol_p.h"
 
 #include <QDBusConnection>
 #include <QDir>

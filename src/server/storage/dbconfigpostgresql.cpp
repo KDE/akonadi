@@ -8,8 +8,8 @@
 #include "akonadiserver_debug.h"
 #include "utils.h"
 
-#include <private/standarddirs_p.h>
-#include <shared/akranges.h>
+#include "private/standarddirs_p.h"
+#include "shared/akranges.h"
 
 #include <QDir>
 #include <QDirIterator>

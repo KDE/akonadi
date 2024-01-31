@@ -5,7 +5,7 @@
  ***************************************************************************/
 #include "handler.h"
 
-#include <private/scope_p.h>
+#include "private/scope_p.h"
 
 #include "handler/collectioncopyhandler.h"
 #include "handler/collectioncreatehandler.h"

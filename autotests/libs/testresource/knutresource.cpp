@@ -11,11 +11,11 @@
 #include "xmlreader.h"
 #include "xmlwriter.h"
 
+#include "agentfactory.h"
+#include "changerecorder.h"
+#include "itemfetchscope.h"
+#include "tagcreatejob.h"
 #include <QDBusConnection>
-#include <agentfactory.h>
-#include <changerecorder.h>
-#include <itemfetchscope.h>
-#include <tagcreatejob.h>
 
 #include <KLocalizedString>
 #include <QFileDialog>

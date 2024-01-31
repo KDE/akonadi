@@ -6,7 +6,7 @@
 
 #include "session.h"
 
-#include <private/standarddirs_p.h>
+#include "private/standarddirs_p.h"
 
 #include <QCoreApplication>
 #include <QFile>

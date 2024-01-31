@@ -5,7 +5,7 @@
 */
 
 #include "notificationmessagetest.h"
-#include <private/protocol_p.h>
+#include "private/protocol_p.h"
 
 #include <QSet>
 #include <QTest>

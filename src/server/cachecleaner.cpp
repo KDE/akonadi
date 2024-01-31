@@ -13,7 +13,7 @@
 #include "storage/parthelper.h"
 #include "storage/selectquerybuilder.h"
 
-#include <private/protocol_p.h>
+#include "private/protocol_p.h"
 
 #include <QDateTime>
 

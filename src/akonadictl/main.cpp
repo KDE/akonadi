@@ -15,17 +15,17 @@
 #include <KAboutData>
 #include <KLocalizedString>
 
-#include <shared/akapplication.h>
+#include "shared/akapplication.h"
 
 #include "akonadifull-version.h"
 #include "akonadistarter.h"
 #include "controlmanagerinterface.h"
 #include "janitorinterface.h"
 
-#include <private/dbus_p.h>
-#include <private/instance_p.h>
-#include <private/protocol_p.h>
-#include <private/standarddirs_p.h>
+#include "private/dbus_p.h"
+#include "private/instance_p.h"
+#include "private/protocol_p.h"
+#include "private/standarddirs_p.h"
 
 #include <chrono>
 #include <iostream>

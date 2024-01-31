@@ -9,8 +9,8 @@
 #include "akonadi-xml_export.h"
 
 // AkonadiCore
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
+#include "akonadi/collection.h"
+#include "akonadi/item.h"
 
 #include <QDomDocument>
 

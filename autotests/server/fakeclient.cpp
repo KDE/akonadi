@@ -7,9 +7,9 @@
 
 #include "fakeclient.h"
 
-#include <private/datastream_p_p.h>
-#include <private/protocol_exception_p.h>
-#include <private/protocol_p.h>
+#include "private/datastream_p_p.h"
+#include "private/protocol_exception_p.h"
+#include "private/protocol_p.h"
 
 #include <QBuffer>
 #include <QLocalSocket>

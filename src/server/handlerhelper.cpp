@@ -17,9 +17,9 @@
 #include "storage/selectquerybuilder.h"
 #include "utils.h"
 
-#include <private/imapset_p.h>
-#include <private/protocol_p.h>
-#include <private/scope_p.h>
+#include "private/imapset_p.h"
+#include "private/protocol_p.h"
+#include "private/scope_p.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

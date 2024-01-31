@@ -6,7 +6,7 @@
 
 #include "../collectionutils.h"
 #include "collection.h"
-#include <qtest_akonadi.h>
+#include "qtest_akonadi.h"
 
 using namespace Akonadi;
 

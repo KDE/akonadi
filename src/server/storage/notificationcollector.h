@@ -8,7 +8,7 @@
 
 #include "entities.h"
 
-#include <private/protocol_p.h>
+#include "private/protocol_p.h"
 
 #include <QByteArray>
 #include <QList>

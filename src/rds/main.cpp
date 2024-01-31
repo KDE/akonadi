@@ -7,7 +7,7 @@
 #include "bridgeconnection.h"
 #include "bridgeserver.h"
 
-#include <shared/akapplication.h>
+#include "shared/akapplication.h"
 
 #include <QDebug>
 

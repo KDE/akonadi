@@ -7,7 +7,7 @@
 #include <QObject>
 #include <QTest>
 
-#include <shared/akranges.h>
+#include "shared/akranges.h"
 
 #include <iostream>
 

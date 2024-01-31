@@ -5,8 +5,8 @@
  *
  */
 
-#include <akonadicontrol/agenttype.h>
-#include <shared/aktest.h>
+#include "akonadicontrol/agenttype.h"
+#include "shared/aktest.h"
 
 #include <QTest>
 

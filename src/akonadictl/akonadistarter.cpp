@@ -7,10 +7,10 @@
 #include "akonadistarter.h"
 #include "akonadictl_debug.h"
 
-#include <shared/akapplication.h>
+#include "shared/akapplication.h"
 
-#include <private/dbus_p.h>
-#include <private/instance_p.h>
+#include "private/dbus_p.h"
+#include "private/instance_p.h"
 
 #include <QCoreApplication>
 #include <QDBusConnection>

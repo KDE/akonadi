@@ -4,7 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include <aktest.h>
+#include "aktest.h"
 
 #include "aggregatedfetchscope.h"
 #include "entities.h"

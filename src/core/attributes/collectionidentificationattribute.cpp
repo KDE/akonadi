@@ -6,7 +6,7 @@
 
 #include "collectionidentificationattribute.h"
 
-#include <private/imapparser_p.h>
+#include "private/imapparser_p.h"
 
 #include <QByteArray>
 #include <QList>

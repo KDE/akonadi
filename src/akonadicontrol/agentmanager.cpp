@@ -19,12 +19,12 @@
 #include "resource_manager.h"
 #include "serverinterface.h"
 
-#include <private/dbus_p.h>
-#include <private/instance_p.h>
-#include <private/protocol_p.h>
-#include <private/standarddirs_p.h>
+#include "private/dbus_p.h"
+#include "private/instance_p.h"
+#include "private/protocol_p.h"
+#include "private/standarddirs_p.h"
 
-#include <shared/akapplication.h>
+#include "shared/akapplication.h"
 
 #include <QCoreApplication>
 #include <QDBusConnection>

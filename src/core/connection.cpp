@@ -7,9 +7,9 @@
 #include "akonadicore_debug.h"
 #include "commandbuffer_p.h"
 #include "connection_p.h"
+#include "private/instance_p.h"
 #include "servermanager_p.h"
 #include "session_p.h"
-#include <private/instance_p.h>
 
 #include <QAbstractEventDispatcher>
 #include <QApplication>
@@ -19,9 +19,9 @@
 #include <QSettings>
 #include <QTimer>
 
-#include <private/datastream_p_p.h>
-#include <private/protocol_exception_p.h>
-#include <private/standarddirs_p.h>
+#include "private/datastream_p_p.h"
+#include "private/protocol_exception_p.h"
+#include "private/standarddirs_p.h"
 
 using namespace Akonadi;
 

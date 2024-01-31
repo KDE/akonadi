@@ -6,8 +6,8 @@
 #include "dbinitializer.h"
 #include "akonadiserver_debug.h"
 
-#include <storage/datastore.h>
-#include <storage/parttypehelper.h>
+#include "storage/datastore.h"
+#include "storage/parttypehelper.h"
 #include <storage/querybuilder.h>
 
 #include "shared/akranges.h"

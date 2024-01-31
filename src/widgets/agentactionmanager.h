@@ -8,7 +8,7 @@
 
 #include "akonadiwidgets_export.h"
 // AkonadiCore
-#include <akonadi/agentinstance.h>
+#include "akonadi/agentinstance.h"
 
 #include <QObject>
 

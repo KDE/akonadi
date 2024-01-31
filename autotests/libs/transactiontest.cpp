@@ -15,7 +15,7 @@
 #include "session.h"
 #include "transactionjobs.h"
 
-#include <qtest_akonadi.h>
+#include "qtest_akonadi.h"
 
 using namespace Akonadi;
 

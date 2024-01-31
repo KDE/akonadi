@@ -10,8 +10,8 @@
 #include <QBuffer>
 #include <QObject>
 
-#include <private/datastream_p_p.h>
-#include <private/protocol_p.h>
+#include "private/datastream_p_p.h"
+#include "private/protocol_p.h"
 
 #include <type_traits>
 

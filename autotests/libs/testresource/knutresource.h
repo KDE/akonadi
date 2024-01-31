@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include <collection.h>
-#include <item.h>
-#include <resourcebase.h>
+#include "collection.h"
+#include "item.h"
+#include "resourcebase.h"
 
-#include <agentsearchinterface.h>
-#include <searchquery.h>
-#include <xmldocument.h>
+#include "agentsearchinterface.h"
+#include "searchquery.h"
+#include "xmldocument.h"
 
 #include "settings.h"
 

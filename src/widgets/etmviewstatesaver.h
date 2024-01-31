@@ -11,8 +11,8 @@
 #include <KConfigViewStateSaver>
 
 // AkonadiCore
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
+#include "akonadi/collection.h"
+#include "akonadi/item.h"
 
 #include "akonadiwidgets_export.h"
 
