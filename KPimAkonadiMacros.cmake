@@ -87,12 +87,12 @@ function(add_akonadi_isolated_test)
             endif()
         endfunction()
 
+        # MySQL/PostgreSQL are unable to run in the containers used for the FreeBSD CI
         find_program(MYSQLD_EXECUTABLE mysqld /usr/sbin /usr/local/sbin /usr/libexec /usr/local/libexec /opt/mysql/libexec /usr/mysql/bin)
-        if (MYSQLD_EXECUTABLE AND NOT WIN32)
+        if (MYSQLD_EXECUTABLE AND NOT WIN32 AND NOT (CMAKE_SYSTEM_NAME MATCHES "FreeBSD" AND DEFINED ENV{KDECI_BUILD}))
             _defineTest(${_name} "MYSQL" ${CONFIG_BACKENDS})
         endif()
 
-        # PostgreSQL is unable to run in the containers used for the FreeBSD CI
         find_program(POSTGRES_EXECUTABLE postgres)
         if (POSTGRES_EXECUTABLE AND NOT WIN32 AND NOT (CMAKE_SYSTEM_NAME MATCHES "FreeBSD" AND DEFINED ENV{KDECI_BUILD}))
             _defineTest(${_name} "PGSQL" ${CONFIG_BACKENDS})
