@@ -54,7 +54,7 @@ void AkonadiBridgeConnection::connectLocal()
 {
     const QSettings connectionSettings(Akonadi::StandardDirs::connectionConfigFile(), QSettings::IniFormat);
 #ifdef Q_OS_WIN // krazy:exclude=cpp
-    const QString namedPipe = connectionSettings.value(QLatin1StringView("Data/NamedPipe"), QLatin1String("Akonadi")).toString();
+    const QString namedPipe = connectionSettings.value(QLatin1StringView("Data/NamedPipe"), QLatin1StringView("Akonadi")).toString();
     (static_cast<QLocalSocket *>(m_localSocket))->connectToServer(namedPipe);
 #else
     const QString defaultSocketDir = Akonadi::StandardDirs::saveDir("data");

@@ -115,7 +115,7 @@ private:
     {
         Collection::List baseCols;
         for (const Collection &col : collections) {
-            if (col.remoteId().startsWith(QLatin1StringView("/baseCol")) || col.remoteId() == QLatin1String("/shared")) {
+            if (col.remoteId().startsWith(QLatin1StringView("/baseCol")) || col.remoteId() == QLatin1StringView("/shared")) {
                 baseCols << col;
             }
         }

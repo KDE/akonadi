@@ -52,7 +52,7 @@ bool TypeHelper::isBoolType(const QString &name)
 bool TypeHelper::isBuiltInType(const QString &type)
 {
     // TODO: should be smarter than this....
-    return !type.startsWith(QLatin1StringView("Akonadi::Protocol")) || type == QLatin1String("Akonadi::Protocol::Attributes") // typedef to QMap
+    return !type.startsWith(QLatin1StringView("Akonadi::Protocol")) || type == QLatin1StringView("Akonadi::Protocol::Attributes") // typedef to QMap
         || (type.startsWith(QLatin1StringView("Akonadi::Protocol")) // enums
             && type.count(QStringLiteral("::")) > 2);
 }

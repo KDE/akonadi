@@ -550,7 +550,7 @@ private Q_SLOTS:
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(toplevel.id(), Protocol::FetchCollectionsCommand::AllCollections,
-                                Protocol::Ancestor::AllAncestors, { QLatin1StringView("mimetype1") }, QLatin1String("testresource")))
+                                Protocol::Ancestor::AllAncestors, { QLatin1StringView("mimetype1") }, QLatin1StringView("testresource")))
                       << TestScenario::ignore(101005)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
             QTest::newRow("recursive list filtered by mimetype with ancestors") << scenarios;

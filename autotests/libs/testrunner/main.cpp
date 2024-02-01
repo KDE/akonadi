@@ -76,7 +76,7 @@ int main(int argc, char **argv)
 
     if (parser.isSet(QStringLiteral("config"))) {
         const auto backend = parser.value(QStringLiteral("backend"));
-        if (backend != QLatin1StringView("sqlite") && backend != QLatin1String("mysql") && backend != QLatin1String("pgsql")) {
+        if (backend != QLatin1StringView("sqlite") && backend != QLatin1StringView("mysql") && backend != QLatin1StringView("pgsql")) {
             qCritical("Invalid backend specified. Supported values are: sqlite,mysql,pgsql");
             return 1;
         }

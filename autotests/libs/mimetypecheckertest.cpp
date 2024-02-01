@@ -38,19 +38,19 @@ void MimeTypeCheckerTest::initTestCase()
     MimeTypeChecker aliasChecker;
 
     // for testing reset through assignments
-    const QLatin1StringView textPlain = QLatin1String("text/plain");
+    const QLatin1StringView textPlain = QLatin1StringView("text/plain");
     mEmptyChecker.addWantedMimeType(textPlain);
     QVERIFY(!mEmptyChecker.wantedMimeTypes().isEmpty());
     QVERIFY(mEmptyChecker.hasWantedMimeTypes());
 
-    const QLatin1StringView textCalendar = QLatin1String("text/calendar");
+    const QLatin1StringView textCalendar = QLatin1StringView("text/calendar");
     calendarChecker.addWantedMimeType(textCalendar);
     QCOMPARE(calendarChecker.wantedMimeTypes().count(), 1);
 
     subTypeChecker.setWantedMimeTypes(mCalendarSubTypes);
     QCOMPARE(subTypeChecker.wantedMimeTypes().count(), 2);
 
-    const QLatin1StringView textVCard = QLatin1String("text/directory");
+    const QLatin1StringView textVCard = QLatin1StringView("text/directory");
     aliasChecker.addWantedMimeType(textVCard);
     QCOMPARE(aliasChecker.wantedMimeTypes().count(), 1);
 
@@ -86,12 +86,12 @@ void MimeTypeCheckerTest::testCollectionCheck()
     Collection vcardCollection(5);
     Collection aliasCollection(6);
 
-    const QLatin1StringView textCalendar = QLatin1String("text/calendar");
+    const QLatin1StringView textCalendar = QLatin1StringView("text/calendar");
     calendarCollection.setContentMimeTypes(QStringList() << textCalendar);
-    const QLatin1StringView akonadiEvent = QLatin1String("application/x-vnd.akonadi.calendar.event");
+    const QLatin1StringView akonadiEvent = QLatin1StringView("application/x-vnd.akonadi.calendar.event");
     eventCollection.setContentMimeTypes(QStringList() << akonadiEvent);
     journalCollection.setContentMimeTypes(QStringList() << QStringLiteral("application/x-vnd.akonadi.calendar.journal"));
-    const QLatin1StringView textDirectory = QLatin1String("text/directory");
+    const QLatin1StringView textDirectory = QLatin1StringView("text/directory");
     vcardCollection.setContentMimeTypes(QStringList() << textDirectory);
     aliasCollection.setContentMimeTypes(QStringList() << QStringLiteral("text/x-vcard"));
 
@@ -168,12 +168,12 @@ void MimeTypeCheckerTest::testItemCheck()
     Item vcardItem(5);
     Item aliasItem(6);
 
-    const QLatin1StringView textCalendar = QLatin1String("text/calendar");
+    const QLatin1StringView textCalendar = QLatin1StringView("text/calendar");
     calendarItem.setMimeType(textCalendar);
-    const QLatin1StringView akonadiEvent = QLatin1String("application/x-vnd.akonadi.calendar.event");
+    const QLatin1StringView akonadiEvent = QLatin1StringView("application/x-vnd.akonadi.calendar.event");
     eventItem.setMimeType(akonadiEvent);
     journalItem.setMimeType(QStringLiteral("application/x-vnd.akonadi.calendar.journal"));
-    const QLatin1StringView textDirectory = QLatin1String("text/directory");
+    const QLatin1StringView textDirectory = QLatin1StringView("text/directory");
     vcardItem.setMimeType(textDirectory);
     aliasItem.setMimeType(QStringLiteral("text/x-vcard"));
 

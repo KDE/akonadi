@@ -86,7 +86,7 @@ int main(int argc, char **argv)
     parser.process(app);
 
     const auto targetEngine = parser.value(engineOpt).toLower();
-    if (targetEngine != QLatin1StringView("sqlite") && targetEngine != QLatin1String("mysql") && targetEngine != QLatin1String("postgres")) {
+    if (targetEngine != QLatin1StringView("sqlite") && targetEngine != QLatin1StringView("mysql") && targetEngine != QLatin1StringView("postgres")) {
         std::cerr << qUtf8Printable(i18nc("@info:shell", "Invalid target engine: %1.", targetEngine)) << std::endl;
         return 1;
     }

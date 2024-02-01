@@ -63,7 +63,7 @@ bool XmlParser::parseProtocol()
         mReader.readNext();
         if (mReader.isStartElement()) {
             const auto elemName = mReader.name();
-            if (elemName == QLatin1StringView("class") || elemName == QLatin1String("command") || elemName == QLatin1String("response")
+            if (elemName == QLatin1StringView("class") || elemName == QLatin1StringView("command") || elemName == QLatin1StringView("response")
                 || elemName == QLatin1StringView("notification")) {
                 if (!parseCommand(documentNode.get())) {
                     return false;
@@ -98,7 +98,7 @@ bool XmlParser::parseCommand(DocumentNode *documentNode)
                 if (!parseCtor(classNode)) {
                     return false;
                 }
-            } else if (mReader.name() == QLatin1StringView("enum") || mReader.name() == QLatin1String("flag")) {
+            } else if (mReader.name() == QLatin1StringView("enum") || mReader.name() == QLatin1StringView("flag")) {
                 if (!parseEnum(classNode)) {
                     return false;
                 }
@@ -213,10 +213,10 @@ bool XmlParser::parseParam(ClassNode *classNode)
         paramNode->setDefaultValue(attrs.value(QLatin1StringView("default")).toString());
     }
     if (attrs.hasAttribute(QLatin1StringView("readOnly"))) {
-        paramNode->setReadOnly(attrs.value(QLatin1StringView("readOnly")) == QLatin1String("true"));
+        paramNode->setReadOnly(attrs.value(QLatin1StringView("readOnly")) == QLatin1StringView("true"));
     }
     if (attrs.hasAttribute(QLatin1StringView("asReference"))) {
-        paramNode->setAsReference(attrs.value(QLatin1StringView("asReference")) == QLatin1String("true"));
+        paramNode->setAsReference(attrs.value(QLatin1StringView("asReference")) == QLatin1StringView("true"));
     }
 
     while (!mReader.atEnd() && !(mReader.isEndElement() && mReader.name() == QLatin1StringView("param"))) {
@@ -236,7 +236,7 @@ bool XmlParser::parseParam(ClassNode *classNode)
                     printError(QStringLiteral("Missing \"value\" attribute in <depends> tag!"));
                     return false;
                 }
-                paramNode->addDependency(dependsAttrs.value(QLatin1StringView("enum")).toString(), dependsAttrs.value(QLatin1String("value")).toString());
+                paramNode->addDependency(dependsAttrs.value(QLatin1StringView("enum")).toString(), dependsAttrs.value(QLatin1StringView("value")).toString());
             } else {
                 printError(QStringLiteral("Unknown tag: ").append(mReader.name()));
                 return false;

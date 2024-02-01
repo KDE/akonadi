@@ -92,7 +92,7 @@ DbConfig *DbConfig::configuredDatabase()
 
         if (driverName == QLatin1StringView("QMYSQL")) {
             s_DbConfigInstance = new DbConfigMysql;
-        } else if (driverName == QLatin1StringView("QSQLITE") || driverName == QLatin1String("QSQLITE3")) {
+        } else if (driverName == QLatin1StringView("QSQLITE") || driverName == QLatin1StringView("QSQLITE3")) {
             // QSQLITE3 is legacy name for the Akonadi fork of the upstream QSQLITE driver.
             // It is kept here for backwards compatibility with old server config files.
             s_DbConfigInstance = new DbConfigSqlite();

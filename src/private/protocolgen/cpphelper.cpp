@@ -35,7 +35,7 @@ size_t typeSize(const QString &typeName)
     QByteArray tn;
     // Don't you just loooove hacks?
     // TODO: Extract underlying type during XML parsing
-    if (typeName.startsWith(QLatin1StringView("Akonadi::Protocol")) && typeName.endsWith(QLatin1String("Ptr"))) {
+    if (typeName.startsWith(QLatin1StringView("Akonadi::Protocol")) && typeName.endsWith(QLatin1StringView("Ptr"))) {
         tn = "QSharedPointer";
     } else {
         tn = TypeHelper::isContainer(typeName) ? TypeHelper::containerName(typeName).toUtf8() : typeName.toUtf8();

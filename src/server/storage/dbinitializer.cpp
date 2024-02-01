@@ -298,7 +298,7 @@ QString DbInitializer::sqlType(const ColumnDescription &col, int size) const
 
 QString DbInitializer::sqlValue(const ColumnDescription &col, const QString &value) const
 {
-    if (col.type == QLatin1StringView("QDateTime") && value == QLatin1String("QDateTime::currentDateTimeUtc()")) {
+    if (col.type == QLatin1StringView("QDateTime") && value == QLatin1StringView("QDateTime::currentDateTimeUtc()")) {
         return QStringLiteral("CURRENT_TIMESTAMP");
     } else if (col.isEnum) {
         return QString::number(col.enumValueMap[value]);
@@ -347,7 +347,7 @@ QStringList DbInitializer::buildRemoveForeignKeyConstraintStatements(const DbInt
 
 QString DbInitializer::buildReferentialAction(ColumnDescription::ReferentialAction onUpdate, ColumnDescription::ReferentialAction onDelete)
 {
-    return QLatin1StringView("ON UPDATE ") + referentialActionToString(onUpdate) + QLatin1String(" ON DELETE ") + referentialActionToString(onDelete);
+    return QLatin1StringView("ON UPDATE ") + referentialActionToString(onUpdate) + QLatin1StringView(" ON DELETE ") + referentialActionToString(onDelete);
 }
 
 QString DbInitializer::referentialActionToString(ColumnDescription::ReferentialAction action)
@@ -373,7 +373,7 @@ QString DbInitializer::buildPrimaryKeyStatement(const TableDescription &table)
             cols.push_back(column.name);
         }
     }
-    return QLatin1StringView("PRIMARY KEY (") + cols.join(QLatin1String(", ")) + QLatin1Char(')');
+    return QLatin1StringView("PRIMARY KEY (") + cols.join(QLatin1StringView(", ")) + QLatin1Char(')');
 }
 
 void DbInitializer::execQuery(const QString &queryString)

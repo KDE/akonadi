@@ -113,7 +113,7 @@ void PluginLoader::scan()
         for (const QString &file : fileNames) {
             const QString entry = dir + QLatin1Char('/') + file;
             KConfig config(entry, KConfig::SimpleConfig);
-            if (config.hasGroup(QLatin1StringView("Misc")) && config.hasGroup(QLatin1String("Plugin"))) {
+            if (config.hasGroup(QLatin1StringView("Misc")) && config.hasGroup(QLatin1StringView("Plugin"))) {
                 KConfigGroup group(&config, QStringLiteral("Plugin"));
 
                 const QString type = group.readEntry("Type").toLower();

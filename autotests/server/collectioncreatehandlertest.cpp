@@ -57,7 +57,7 @@ private Q_SLOTS:
             resp->setAttributes({{"MYRANDOMATTRIBUTE", ""}});
             resp->setResource(QStringLiteral("akonadi_fake_resource_0"));
             resp->cachePolicy().setLocalParts({QLatin1StringView("ALL")});
-            resp->setMimeTypes({QLatin1StringView("application/octet-stream"), QLatin1String("inode/directory")});
+            resp->setMimeTypes({QLatin1StringView("application/octet-stream"), QLatin1StringView("inode/directory")});
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario() << TestScenario::create(5, TestScenario::ClientCmd, cmd)
@@ -88,7 +88,7 @@ private Q_SLOTS:
             resp->setIndexPref(Tristate::True);
             resp->setResource(QStringLiteral("akonadi_fake_resource_0"));
             resp->cachePolicy().setLocalParts({QLatin1StringView("ALL")});
-            resp->setMimeTypes({QLatin1StringView("application/octet-stream"), QLatin1String("inode/directory")});
+            resp->setMimeTypes({QLatin1StringView("application/octet-stream"), QLatin1StringView("inode/directory")});
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario() << TestScenario::create(5, TestScenario::ClientCmd, cmd)

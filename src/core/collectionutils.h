@@ -75,12 +75,12 @@ namespace CollectionUtils
 
     const QStringList content = col.contentMimeTypes();
     if ((content.size() == 1) || (content.size() == 2 && content.contains(Collection::mimeType()))) {
-        if (content.contains(QLatin1StringView("text/x-vcard")) || content.contains(QLatin1String("text/directory"))
+        if (content.contains(QLatin1StringView("text/x-vcard")) || content.contains(QLatin1StringView("text/directory"))
             || content.contains(QLatin1StringView("text/vcard"))) {
             return QStringLiteral("x-office-address-book");
         }
         // TODO: add all other content types and/or fix their mimetypes
-        if (content.contains(QLatin1StringView("akonadi/event")) || content.contains(QLatin1String("text/ical"))) {
+        if (content.contains(QLatin1StringView("akonadi/event")) || content.contains(QLatin1StringView("text/ical"))) {
             return QStringLiteral("view-pim-calendar");
         }
         if (content.contains(QLatin1StringView("akonadi/task"))) {

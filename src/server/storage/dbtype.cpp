@@ -21,7 +21,7 @@ DbType::Type DbType::typeForDriverName(const QString &driverName)
     if (driverName == QLatin1StringView("QPSQL")) {
         return PostgreSQL;
     }
-    if (driverName == QLatin1StringView("QSQLITE") || driverName == QLatin1String("QSQLITE3")) {
+    if (driverName == QLatin1StringView("QSQLITE") || driverName == QLatin1StringView("QSQLITE3")) {
         return Sqlite;
     }
     return Unknown;

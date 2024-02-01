@@ -64,7 +64,7 @@ void Config::readConfiguration(const QString &configfile)
                     setXdgDataHome(mBasePath + reader.readElementText());
                 } else if (reader.name() == QLatin1StringView("agent")) {
                     const auto attrs = reader.attributes();
-                    insertAgent(reader.readElementText(), attrs.value(QLatin1StringView("synchronize")) == QLatin1String("true"));
+                    insertAgent(reader.readElementText(), attrs.value(QLatin1StringView("synchronize")) == QLatin1StringView("true"));
                 } else if (reader.name() == QLatin1StringView("envvar")) {
                     const auto attrs = reader.attributes();
                     const auto name = attrs.value(QLatin1StringView("name"));

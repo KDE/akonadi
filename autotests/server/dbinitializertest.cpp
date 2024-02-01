@@ -164,8 +164,8 @@ void DbInitializerTest::testRun()
             const QString expected = readNextStatement(&file).simplified();
 
             QString normalized = statement.simplified();
-            normalized.replace(QLatin1StringView(" ,"), QLatin1String(","));
-            normalized.replace(QLatin1StringView(" )"), QLatin1String(")"));
+            normalized.replace(QLatin1StringView(" ,"), QLatin1StringView(","));
+            normalized.replace(QLatin1StringView(" )"), QLatin1StringView(")"));
             QCOMPARE(normalized, expected);
         }
 

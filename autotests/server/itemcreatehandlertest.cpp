@@ -242,7 +242,7 @@ private Q_SLOTS:
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
         updatePimItem(pimItem, QStringLiteral("TEST-2"), 20);
-        updateParts(parts, {{QLatin1StringView("PLD:DATA"), "Random Data", 11}, {QLatin1String("PLD:PLDTEST"), "Test Data", 9}});
+        updateParts(parts, {{QLatin1StringView("PLD:DATA"), "Random Data", 11}, {QLatin1StringView("PLD:PLDTEST"), "Test Data", 9}});
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
         scenarios.clear();
@@ -505,7 +505,7 @@ private Q_SLOTS:
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
         updatePimItem(pimItem, QStringLiteral("TEST-13"), 20);
-        updateParts(parts, {{QLatin1StringView("PLD:NEWPARTTYPE1"), "0123456789", 10}, {QLatin1String("PLD:NEWPARTTYPE2"), "9876543210", 10}});
+        updateParts(parts, {{QLatin1StringView("PLD:NEWPARTTYPE1"), "0123456789", 10}, {QLatin1StringView("PLD:NEWPARTTYPE2"), "9876543210", 10}});
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
         scenarios.clear();
@@ -566,12 +566,12 @@ private Q_SLOTS:
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
         updatePimItem(pimItem, QStringLiteral("TEST-15"), 0);
         updateFlags(flags, {});
-        updateTags(tags, {{QLatin1StringView("PLAIN"), QLatin1String("TAG-1")}, {QLatin1String("PLAIN"), QLatin1String("TAG-2")}});
+        updateTags(tags, {{QLatin1StringView("PLAIN"), QLatin1StringView("TAG-1")}, {QLatin1StringView("PLAIN"), QLatin1StringView("TAG-2")}});
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
         {
             auto cmd = createCommand(pimItem, datetime, {});
-            cmd->setTags(Scope(Scope::Gid, {QLatin1StringView("TAG-1"), QLatin1String("TAG-2")}));
+            cmd->setTags(Scope(Scope::Gid, {QLatin1StringView("TAG-1"), QLatin1StringView("TAG-2")}));
             inScenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
 
             auto rsp = createResponse(uidnext, pimItem, datetime, {});
@@ -586,12 +586,12 @@ private Q_SLOTS:
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
         updatePimItem(pimItem, QStringLiteral("TEST-16"), 0);
-        updateTags(tags, {{QLatin1StringView("PLAIN"), QLatin1String("TAG-3")}, {QLatin1String("PLAIN"), QLatin1String("TAG-4")}});
+        updateTags(tags, {{QLatin1StringView("PLAIN"), QLatin1StringView("TAG-3")}, {QLatin1StringView("PLAIN"), QLatin1StringView("TAG-4")}});
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
         {
             auto cmd = createCommand(pimItem, datetime, {});
-            cmd->setTags(Scope(Scope::Rid, {QLatin1StringView("TAG-3"), QLatin1String("TAG-4")}));
+            cmd->setTags(Scope(Scope::Rid, {QLatin1StringView("TAG-3"), QLatin1StringView("TAG-4")}));
             inScenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
 
             auto rsp = createResponse(uidnext, pimItem, datetime, {});
@@ -607,11 +607,11 @@ private Q_SLOTS:
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
         updatePimItem(pimItem, QStringLiteral("TEST-17"), 0);
         updateNotifcationEntity(notification, pimItem);
-        updateTags(tags, {{QLatin1StringView("PLAIN"), QLatin1String("TAG-1")}, {QLatin1String("PLAIN"), QLatin1String("TAG-2")}});
+        updateTags(tags, {{QLatin1StringView("PLAIN"), QLatin1StringView("TAG-1")}, {QLatin1StringView("PLAIN"), QLatin1StringView("TAG-2")}});
         ++uidnext;
         {
             auto cmd = createCommand(pimItem, datetime, {});
-            cmd->setTags(Scope(Scope::Rid, {QLatin1StringView("TAG-1"), QLatin1String("TAG-2")}));
+            cmd->setTags(Scope(Scope::Rid, {QLatin1StringView("TAG-1"), QLatin1StringView("TAG-2")}));
             inScenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
 
             auto rsp = createResponse(uidnext, pimItem, datetime, {});
@@ -627,11 +627,11 @@ private Q_SLOTS:
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
         updatePimItem(pimItem, QStringLiteral("TEST-18"), 0);
         updateNotifcationEntity(notification, pimItem);
-        updateTags(tags, {{QLatin1StringView("PLAIN"), QLatin1String("TAG-3")}, {QLatin1String("PLAIN"), QLatin1String("TAG-4")}});
+        updateTags(tags, {{QLatin1StringView("PLAIN"), QLatin1StringView("TAG-3")}, {QLatin1StringView("PLAIN"), QLatin1StringView("TAG-4")}});
         ++uidnext;
         {
             auto cmd = createCommand(pimItem, datetime, {});
-            cmd->setTags(Scope(Scope::Gid, {QLatin1StringView("TAG-3"), QLatin1String("TAG-4")}));
+            cmd->setTags(Scope(Scope::Gid, {QLatin1StringView("TAG-3"), QLatin1StringView("TAG-4")}));
             inScenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
 
             auto rsp = createResponse(uidnext, pimItem, datetime, {});
@@ -647,12 +647,12 @@ private Q_SLOTS:
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
         updatePimItem(pimItem, QStringLiteral("TEST-19"), 0);
         updateFlags(flags, QStringList() << QStringLiteral("\\SEEN") << QStringLiteral("$FLAG"));
-        updateTags(tags, {{QLatin1StringView("PLAIN"), QLatin1String("TAG-1")}, {QLatin1String("PLAIN"), QLatin1String("TAG-2")}});
+        updateTags(tags, {{QLatin1StringView("PLAIN"), QLatin1StringView("TAG-1")}, {QLatin1StringView("PLAIN"), QLatin1StringView("TAG-2")}});
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
         {
             auto cmd = createCommand(pimItem, datetime, {});
-            cmd->setTags(Scope(Scope::Gid, {QLatin1StringView("TAG-1"), QLatin1String("TAG-2")}));
+            cmd->setTags(Scope(Scope::Gid, {QLatin1StringView("TAG-1"), QLatin1StringView("TAG-2")}));
             cmd->setFlags({"\\SEEN", "$FLAG"});
             inScenario = TestScenario::create(5, TestScenario::ClientCmd, cmd);
 

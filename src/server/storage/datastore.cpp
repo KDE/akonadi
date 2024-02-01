@@ -1118,7 +1118,7 @@ bool DataStore::appendPimItem(QList<Part> &parts,
 
     bool seen = false;
     for (const Flag &flag : flags) {
-        seen |= (flag.name() == QLatin1StringView(AKONADI_FLAG_SEEN) || flag.name() == QLatin1String(AKONADI_FLAG_IGNORED));
+        seen |= (flag.name() == QLatin1StringView(AKONADI_FLAG_SEEN) || flag.name() == QLatin1StringView(AKONADI_FLAG_IGNORED));
         if (!pimItem.addFlag(flag)) {
             qCWarning(AKONADISERVER_LOG) << "Failed to add flag" << flag.name() << "to new PimItem" << pimItem.id();
             return false;

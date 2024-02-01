@@ -312,7 +312,7 @@ std::unique_ptr<DbConfig> dbConfigFromServerRc(const QString &configFile, bool o
     const auto driver = settings.value(QStringLiteral("General/Driver")).toString();
     std::unique_ptr<DbConfig> config;
     QString dbPathSuffix;
-    if (driver == QLatin1StringView("QSQLITE") || driver == QLatin1String("QSQLITE3")) {
+    if (driver == QLatin1StringView("QSQLITE") || driver == QLatin1StringView("QSQLITE3")) {
         config = std::make_unique<DbConfigSqlite>(configFile);
     } else if (driver == QLatin1StringView("QMYSQL")) {
         config = std::make_unique<DbConfigMysql>(configFile);

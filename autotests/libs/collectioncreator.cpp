@@ -34,7 +34,7 @@ private Q_SLOTS:
         for (int count : counts) {
             for (bool transaction : transactions) {
                 QTest::newRow(
-                    QString::fromLatin1("%1-%2").arg(count).arg(transaction ? QLatin1StringView("trans") : QLatin1String("notrans")).toLatin1().constData())
+                    QString::fromLatin1("%1-%2").arg(count).arg(transaction ? QLatin1StringView("trans") : QLatin1StringView("notrans")).toLatin1().constData())
                     << count << transaction;
             }
         }

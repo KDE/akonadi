@@ -21,7 +21,7 @@ DbInitializerMySql::DbInitializerMySql(const QSqlDatabase &database)
 QString DbInitializerMySql::sqlType(const ColumnDescription &col, int size) const
 {
     if (col.type == QLatin1StringView("QString")) {
-        return QLatin1StringView("VARBINARY(") + QString::number(size <= 0 ? 255 : size) + QLatin1String(")");
+        return QLatin1StringView("VARBINARY(") + QString::number(size <= 0 ? 255 : size) + QLatin1StringView(")");
     } else {
         return DbInitializer::sqlType(col, size);
     }
@@ -96,7 +96,7 @@ QString DbInitializerMySql::buildInsertValuesStatement(const TableDescription &t
     QStringList keys;
     QStringList values;
     for (auto it = data.begin(), end = data.end(); it != end; ++it) {
-        it.value().replace(QLatin1StringView("\\"), QLatin1String("\\\\"));
+        it.value().replace(QLatin1StringView("\\"), QLatin1StringView("\\\\"));
         keys.push_back(it.key());
         values.push_back(it.value());
     }
@@ -195,8 +195,8 @@ QString DbInitializerSqlite::buildInsertValuesStatement(const TableDescription &
     QStringList keys;
     QStringList values;
     for (auto it = data.begin(), end = data.end(); it != end; ++it) {
-        it.value().replace(QLatin1StringView("true"), QLatin1String("1"));
-        it.value().replace(QLatin1StringView("false"), QLatin1String("0"));
+        it.value().replace(QLatin1StringView("true"), QLatin1StringView("1"));
+        it.value().replace(QLatin1StringView("false"), QLatin1StringView("0"));
         keys.push_back(it.key());
         values.push_back(it.value());
     }
@@ -326,7 +326,7 @@ QString DbInitializerPostgreSql::buildInsertValuesStatement(const TableDescripti
 QStringList DbInitializerPostgreSql::buildAddForeignKeyConstraintStatements(const TableDescription &table, const ColumnDescription &column) const
 {
     // constraints must have name in PostgreSQL
-    const QString constraintName = table.name + column.name + QLatin1StringView("_") + column.refTable + column.refColumn + QLatin1String("_fk");
+    const QString constraintName = table.name + column.name + QLatin1StringView("_") + column.refTable + column.refColumn + QLatin1StringView("_fk");
     return {QStringLiteral("ALTER TABLE %1 ADD CONSTRAINT %2 FOREIGN KEY (%3) REFERENCES %4Table(%5) %6 DEFERRABLE INITIALLY DEFERRED")
                 .arg(table.name, constraintName, column.name, column.refTable, column.refColumn, buildReferentialAction(column.onUpdate, column.onDelete))};
 }

@@ -16,11 +16,11 @@
 
 using namespace Akonadi;
 
-const QLatin1StringView AgentType::CapabilityUnique = QLatin1String(AKONADI_AGENT_CAPABILITY_UNIQUE);
-const QLatin1StringView AgentType::CapabilityResource = QLatin1String(AKONADI_AGENT_CAPABILITY_RESOURCE);
-const QLatin1StringView AgentType::CapabilityAutostart = QLatin1String(AKONADI_AGENT_CAPABILITY_AUTOSTART);
-const QLatin1StringView AgentType::CapabilityPreprocessor = QLatin1String(AKONADI_AGENT_CAPABILITY_PREPROCESSOR);
-const QLatin1StringView AgentType::CapabilitySearch = QLatin1String(AKONADI_AGENT_CAPABILITY_SEARCH);
+const QLatin1StringView AgentType::CapabilityUnique = QLatin1StringView(AKONADI_AGENT_CAPABILITY_UNIQUE);
+const QLatin1StringView AgentType::CapabilityResource = QLatin1StringView(AKONADI_AGENT_CAPABILITY_RESOURCE);
+const QLatin1StringView AgentType::CapabilityAutostart = QLatin1StringView(AKONADI_AGENT_CAPABILITY_AUTOSTART);
+const QLatin1StringView AgentType::CapabilityPreprocessor = QLatin1StringView(AKONADI_AGENT_CAPABILITY_PREPROCESSOR);
+const QLatin1StringView AgentType::CapabilitySearch = QLatin1StringView(AKONADI_AGENT_CAPABILITY_SEARCH);
 
 AgentType::AgentType()
 {

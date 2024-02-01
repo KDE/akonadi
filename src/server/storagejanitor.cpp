@@ -248,7 +248,7 @@ void StorageJanitor::findOrphanedCollections()
     }
     const Collection::List orphans = qb.result();
     if (!orphans.isEmpty()) {
-        inform(QLatin1StringView("Found ") + QString::number(orphans.size()) + QLatin1String(" orphan collections."));
+        inform(QLatin1StringView("Found ") + QString::number(orphans.size()) + QLatin1StringView(" orphan collections."));
         // TODO: attach to lost+found resource
     }
 }
@@ -260,14 +260,14 @@ void StorageJanitor::checkPathToRoot(const Collection &col)
     }
     const Collection parent = col.parent();
     if (!parent.isValid()) {
-        inform(QLatin1StringView("Collection \"") + col.name() + QLatin1String("\" (id: ") + QString::number(col.id())
-               + QLatin1String(") has no valid parent."));
+        inform(QLatin1StringView("Collection \"") + col.name() + QLatin1StringView("\" (id: ") + QString::number(col.id())
+               + QLatin1StringView(") has no valid parent."));
         // TODO fix that by attaching to a top-level lost+found folder
         return;
     }
 
     if (col.resourceId() != parent.resourceId()) {
-        inform(QLatin1StringView("Collection \"") + col.name() + QLatin1String("\" (id: ") + QString::number(col.id())
+        inform(QLatin1StringView("Collection \"") + col.name() + QLatin1StringView("\" (id: ") + QString::number(col.id())
                + QLatin1StringView(") belongs to a different resource than its parent."));
         // can/should we actually fix that?
     }
@@ -286,7 +286,7 @@ void StorageJanitor::findOrphanedItems()
     }
     const PimItem::List orphans = qb.result();
     if (!orphans.isEmpty()) {
-        inform(QLatin1StringView("Found ") + QString::number(orphans.size()) + QLatin1String(" orphan items."));
+        inform(QLatin1StringView("Found ") + QString::number(orphans.size()) + QLatin1StringView(" orphan items."));
         // Attach to lost+found collection
         Transaction transaction(DataStore::self(), QStringLiteral("JANITOR ORPHANS"));
         QueryBuilder qb(PimItem::tableName(), QueryBuilder::Update);
@@ -306,7 +306,8 @@ void StorageJanitor::findOrphanedItems()
         if (qb.exec() && transaction.commit()) {
             inform(QLatin1StringView("Moved orphan items to collection ") + QString::number(col));
         } else {
-            inform(QLatin1StringView("Error moving orphan items to collection ") + QString::number(col) + QLatin1String(" : ") + qb.query().lastError().text());
+            inform(QLatin1StringView("Error moving orphan items to collection ") + QString::number(col) + QLatin1StringView(" : ")
+                   + qb.query().lastError().text());
         }
     }
 }
@@ -322,7 +323,7 @@ void StorageJanitor::findOrphanedParts()
     }
     const Part::List orphans = qb.result();
     if (!orphans.isEmpty()) {
-        inform(QLatin1StringView("Found ") + QString::number(orphans.size()) + QLatin1String(" orphan parts."));
+        inform(QLatin1StringView("Found ") + QString::number(orphans.size()) + QLatin1StringView(" orphan parts."));
         // TODO: create lost+found items for those? delete?
     }
 }
@@ -354,7 +355,7 @@ void StorageJanitor::findOrphanedPimItemFlags()
             return;
         }
 
-        inform(QLatin1StringView("Found and deleted ") + QString::number(count) + QLatin1String(" orphan pim item flags."));
+        inform(QLatin1StringView("Found and deleted ") + QString::number(count) + QLatin1StringView(" orphan pim item flags."));
     }
 }
 
@@ -362,11 +363,11 @@ void StorageJanitor::findOverlappingParts()
 {
     QueryBuilder qb(Part::tableName(), QueryBuilder::Select);
     qb.addColumn(Part::dataColumn());
-    qb.addColumn(QLatin1StringView("count(") + Part::idColumn() + QLatin1String(") as cnt"));
+    qb.addColumn(QLatin1StringView("count(") + Part::idColumn() + QLatin1StringView(") as cnt"));
     qb.addValueCondition(Part::storageColumn(), Query::Equals, Part::External);
     qb.addValueCondition(Part::dataColumn(), Query::IsNot, QVariant());
     qb.addGroupColumn(Part::dataColumn());
-    qb.addValueCondition(QLatin1StringView("count(") + Part::idColumn() + QLatin1String(")"), Query::Greater, 1, QueryBuilder::HavingCondition);
+    qb.addValueCondition(QLatin1StringView("count(") + Part::idColumn() + QLatin1StringView(")"), Query::Greater, 1, QueryBuilder::HavingCondition);
     if (!qb.exec()) {
         inform("Failed to query overlapping parts, skipping test");
         return;
@@ -381,7 +382,7 @@ void StorageJanitor::findOverlappingParts()
     qb.query().finish();
 
     if (count > 0) {
-        inform(QLatin1StringView("Found ") + QString::number(count) + QLatin1String(" overlapping parts - bad."));
+        inform(QLatin1StringView("Found ") + QString::number(count) + QLatin1StringView(" overlapping parts - bad."));
     }
 }
 
@@ -398,7 +399,7 @@ void StorageJanitor::verifyExternalParts()
     }
     existingFiles.remove(dataDir + QDir::separator() + QLatin1Char('.'));
     existingFiles.remove(dataDir + QDir::separator() + QLatin1StringView(".."));
-    inform(QLatin1StringView("Found ") + QString::number(existingFiles.size()) + QLatin1String(" external files."));
+    inform(QLatin1StringView("Found ") + QString::number(existingFiles.size()) + QLatin1StringView(" external files."));
 
     // list all parts from the db which claim to have an associated file
     QueryBuilder qb(Part::tableName(), QueryBuilder::Select);
@@ -424,7 +425,7 @@ void StorageJanitor::verifyExternalParts()
         if (existingFiles.contains(partPath)) {
             usedFiles.insert(partPath);
         } else {
-            inform(QLatin1StringView("Cleaning up missing external file: ") + partPath + QLatin1String(" for item: ") + QString::number(pimItemId)
+            inform(QLatin1StringView("Cleaning up missing external file: ") + partPath + QLatin1StringView(" for item: ") + QString::number(pimItemId)
                    + QLatin1StringView(" on part: ") + QString::number(partId));
 
             Part part;
@@ -437,7 +438,7 @@ void StorageJanitor::verifyExternalParts()
         }
     }
     qb.query().finish();
-    inform(QLatin1StringView("Found ") + QString::number(usedFiles.size()) + QLatin1String(" external parts."));
+    inform(QLatin1StringView("Found ") + QString::number(usedFiles.size()) + QLatin1StringView(" external parts."));
 
     // see what's left and move it to lost+found
     const QSet<QString> unreferencedFiles = existingFiles - usedFiles;
@@ -466,9 +467,10 @@ void StorageJanitor::findDirtyObjects()
     }
     const Collection::List ridLessCols = cqb.result();
     for (const Collection &col : ridLessCols) {
-        inform(QLatin1StringView("Collection \"") + col.name() + QLatin1String("\" (id: ") + QString::number(col.id()) + QLatin1String(") has no RID."));
+        inform(QLatin1StringView("Collection \"") + col.name() + QLatin1StringView("\" (id: ") + QString::number(col.id())
+               + QLatin1StringView(") has no RID."));
     }
-    inform(QLatin1StringView("Found ") + QString::number(ridLessCols.size()) + QLatin1String(" collections without RID."));
+    inform(QLatin1StringView("Found ") + QString::number(ridLessCols.size()) + QLatin1StringView(" collections without RID."));
 
     SelectQueryBuilder<PimItem> iqb1;
     iqb1.setSubQueryMode(Query::Or);
@@ -480,10 +482,10 @@ void StorageJanitor::findDirtyObjects()
     }
     const PimItem::List ridLessItems = iqb1.result();
     for (const PimItem &item : ridLessItems) {
-        inform(QLatin1StringView("Item \"") + QString::number(item.id()) + QLatin1String("\" in collection \"") + QString::number(item.collectionId())
+        inform(QLatin1StringView("Item \"") + QString::number(item.id()) + QLatin1StringView("\" in collection \"") + QString::number(item.collectionId())
                + QLatin1StringView("\" has no RID."));
     }
-    inform(QLatin1StringView("Found ") + QString::number(ridLessItems.size()) + QLatin1String(" items without RID."));
+    inform(QLatin1StringView("Found ") + QString::number(ridLessItems.size()) + QLatin1StringView(" items without RID."));
 
     SelectQueryBuilder<PimItem> iqb2;
     iqb2.addValueCondition(PimItem::dirtyColumn(), Query::Equals, true);
@@ -495,9 +497,9 @@ void StorageJanitor::findDirtyObjects()
     }
     const PimItem::List dirtyItems = iqb2.result();
     for (const PimItem &item : dirtyItems) {
-        inform(QLatin1StringView("Item \"") + QString::number(item.id()) + QLatin1String("\" has RID and is dirty."));
+        inform(QLatin1StringView("Item \"") + QString::number(item.id()) + QLatin1StringView("\" has RID and is dirty."));
     }
-    inform(QLatin1StringView("Found ") + QString::number(dirtyItems.size()) + QLatin1String(" dirty items."));
+    inform(QLatin1StringView("Found ") + QString::number(dirtyItems.size()) + QLatin1StringView(" dirty items."));
 }
 
 void StorageJanitor::findRIDDuplicates()

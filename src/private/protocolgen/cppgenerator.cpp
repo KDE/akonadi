@@ -368,7 +368,7 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
                     if (TypeHelper::isNumericType(prop->type()) || TypeHelper::isBoolType(prop->type())) {
                         varType = QLatin1Char('(') + prop->type() + QLatin1Char(' ');
                     } else {
-                        varType = QLatin1StringView("(const ") + prop->type() + QLatin1String(" &");
+                        varType = QLatin1StringView("(const ") + prop->type() + QLatin1StringView(" &");
                     }
                     mHeader << "    void " << prop->setterName() << varType << prop->name() << ");\n";
                 } else {
@@ -376,7 +376,7 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
                     if (TypeHelper::isNumericType(prop->type()) || TypeHelper::isBoolType(prop->type())) {
                         varType = QLatin1Char('(') + prop->type() + QLatin1Char(' ');
                     } else {
-                        varType = QLatin1StringView("(const ") + prop->type() + QLatin1String(" &");
+                        varType = QLatin1StringView("(const ") + prop->type() + QLatin1StringView(" &");
                     }
                     mHeader << "    inline void " << prop->setterName() << varType << prop->name() << ") { " << prop->mVariableName() << " = " << prop->name()
                             << "; }\n";
