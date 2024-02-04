@@ -607,7 +607,7 @@ void StorageJanitor::vacuum()
         }
         inform("vacuum done");
     } else {
-        inform("Vacuum not supported for this database backend.");
+        inform("Vacuum not supported for this database backend. (Sqlite backend)");
     }
 
     Q_EMIT done();
