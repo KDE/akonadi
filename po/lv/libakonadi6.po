@@ -5,52 +5,53 @@
 # Viesturs Zarins <viesturs.zarins@mii.lu.lv>, 2008, 2010.
 # Viesturs Zariņš <viesturs.zarins@mii.lu.lv>, 2009.
 # Maris Nartiss <maris.kde@gmail.com>, 2009.
+# SPDX-FileCopyrightText: 2024 Toms Trasuns <toms.trasuns@posteo.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-30 00:37+0000\n"
-"PO-Revision-Date: 2010-01-01 15:34+0200\n"
-"Last-Translator: Viesturs Zarins <viesturs.zarins@mii.lu.lv>\n"
-"Language-Team: Latvian <locale@laka.lv>\n"
+"PO-Revision-Date: 2024-02-01 19:08+0200\n"
+"Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
+"Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
-"X-Generator: Lokalize 1.0\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Viesturs Zariņš"
+msgstr "Viesturs Zariņš, Toms Trasūns"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "viesturs.zarins@mii.lu.lv"
+msgstr "viesturs.zarins@mii.lu.lv, toms.trasuns@posteo.net"
 
 #: agentbase/accountsintegration.cpp:86
 #, kde-format
 msgid "There is currently no account configured."
-msgstr ""
+msgstr "Šobrīd nav konfigurēta konta"
 
 #: agentbase/accountsintegration.cpp:103
 #, kde-format
 msgid "Accounts integration is not supported"
-msgstr ""
+msgstr "Kontu integrācija netiek atbalstīta"
 
 #: agentbase/agentbase.cpp:348 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
-msgstr ""
+msgstr "Neizdodas reģistrēt objektu kā „dbus“: %1"
 
 #: agentbase/agentbase.cpp:437
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
-msgstr ""
+msgstr "„%1“ ar tipu „%2“"
 
 #: agentbase/agentbase.cpp:883
 #, kde-format
@@ -60,7 +61,7 @@ msgstr "Aģenta identifikators"
 #: agentbase/agentbase.cpp:889
 #, kde-format
 msgid "Akonadi Agent"
-msgstr "Akonadi aģents"
+msgstr "„Akonadi“ aģents"
 
 #: agentbase/agentbase_p.h:49 agentbase/resourcescheduler.cpp:281
 #, kde-format
@@ -90,43 +91,36 @@ msgstr "Kļūda."
 #, kde-format
 msgctxt "@info:status"
 msgid "Not configured"
-msgstr ""
+msgstr "Nav konfigurēts"
 
 #: agentbase/resourcebase.cpp:518
-#, fuzzy, kde-format
-#| msgctxt "@label, commandline option"
-#| msgid "Resource identifier"
+#, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
-msgstr "Resursa iderntifikators"
+msgstr "Resursa identifikators"
 
 #: agentbase/resourcebase.cpp:524
-#, fuzzy, kde-format
-#| msgctxt "@title, application name"
-#| msgid "Akonadi Resource"
+#, kde-format
 msgid "Akonadi Resource"
-msgstr "Akonadi resurss"
+msgstr "„Akonadi“ resurss"
 
 #: agentbase/resourcebase.cpp:572
-#, fuzzy, kde-format
-#| msgid "Invalid parent"
+#, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
-msgstr "Nederīgs vecāks"
+msgstr "Atgūts nederīgs vienums"
 
 #: agentbase/resourcebase.cpp:595
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
-msgstr ""
+msgstr "Kļūda, veidojot vienumu: %1"
 
 #: agentbase/resourcebase.cpp:619
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Updating local collection failed: %1."
+#, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
-msgstr "Neizdevās atjaunināt lokālo kolekciju: %1."
+msgstr "Kļūda, atjauninot kolekciju: %1"
 
 #: agentbase/resourcebase.cpp:706
 #, kde-format
@@ -135,12 +129,10 @@ msgid "Updating local collection failed: %1."
 msgstr "Neizdevās atjaunināt lokālo kolekciju: %1."
 
 #: agentbase/resourcebase.cpp:711
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Updating local collection failed: %1."
+#, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
-msgstr "Neizdevās atjaunināt lokālo kolekciju: %1."
+msgstr "Neizdevās atjaunināt lokālos vienumus: %1."
 
 #: agentbase/resourcebase.cpp:730
 #, kde-format
@@ -149,41 +141,36 @@ msgid "Cannot fetch item in offline mode."
 msgstr "Nevar ielādēt vienību bezsaistes režīmā."
 
 #: agentbase/resourcebase.cpp:911
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Syncing collection '%1'"
+#, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
-msgstr "Sinhronizē kolekciju '%1'"
+msgstr "Sinhronizē mapi „%1“"
 
 #: agentbase/resourcebase.cpp:931 agentbase/resourcebase.cpp:938
-#, fuzzy, kde-format
-#| msgid "Failed to fetch the resource collection."
+#, kde-format
 msgid "Failed to retrieve collection for sync."
-msgstr "Neizdevās ielādēt resursu kolekciju."
+msgstr "Neizdevās izgūt kolekciju sinhronizācijai."
 
 #: agentbase/resourcebase.cpp:979
-#, fuzzy, kde-format
-#| msgid "Failed to fetch the resource collection."
+#, kde-format
 msgid "Failed to retrieve collection for attribute sync."
-msgstr "Neizdevās ielādēt resursu kolekciju."
+msgstr "Neizdevās izgūt kolekciju atribūtu sinhronizācijai."
 
 #: agentbase/resourcebase.cpp:1033
 #, kde-format
 msgid "The requested item no longer exists"
-msgstr ""
+msgstr "Pieprasītais vienums vairs neeksistē"
 
 #: agentbase/resourcescheduler.cpp:500 agentbase/resourcescheduler.cpp:506
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."
-msgstr ""
+msgstr "Darbs ir atcelts."
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
-msgstr "Akonadi aģents"
+msgstr "„Akonadi“ kontrole"
 
 #: akonadictl/main.cpp:211
 #, kde-format
@@ -203,11 +190,24 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"„Akonadi“ servera manipulācijas rīks\n"
+"\n"
+"Komandas:\n"
+"  start          Sāk „Akonadi“ serveri ar visiem procesiem\n"
+"  stop           Tīri aptur „Akonadi“ serveri un visus tā procesus\n"
+"  restart        Pārstartē „Akonadi“ serveri un visus tā procesus\n"
+"  status         Parāda Akonadi servera statusa pārskatu\n"
+"  instances      Uzskaita visas eksistējošās „Akonadi“ instances\n"
+"  vacuum         Iztīra iekšējo krātuvi (UZMANĪBU: aizņem daudz laika un "
+"vietas\n"
+"                 diskā!)\n"
+"  fsck           Pārbauda (un mēģina salabot) iekšējās krātuves konsekvenci\n"
+"                 (var aizņemt kādu laiku)"
 
 #: akonadictl/main.cpp:231
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "Izpildāmā komanda"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -222,13 +222,12 @@ msgstr "Atrastas neatpazītas bāreņu kolekcijas"
 #: core/conflicthandler.cpp:53
 #, kde-format
 msgid "Did not find other item for conflict handling"
-msgstr ""
+msgstr "Neatrada citu vienumu konflikta apstrādei"
 
 #: core/jobs/agentinstancecreatejob.cpp:70
-#, fuzzy, kde-format
-#| msgid "Unable to access dbus interface of created agent."
+#, kde-format
 msgid "Unable to access D-Bus interface of created agent."
-msgstr "Neizdevās piekļūt izveidotā aģenta DBus saskarnei."
+msgstr "Neizdevās piekļūt izveidotā aģenta „D-Bus“ saskarnei."
 
 #: core/jobs/agentinstancecreatejob.cpp:92
 #, kde-format
@@ -236,10 +235,9 @@ msgid "Agent instance creation timed out."
 msgstr "Aģenta instances izveidošanas noildze."
 
 #: core/jobs/agentinstancecreatejob.cpp:150
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgid "Unable to obtain agent type '%1'."
-msgstr "Neizdevās izveidot aģenta instanci."
+msgstr "Neizdevās iegūt aģenta tipu „%1“."
 
 #: core/jobs/agentinstancecreatejob.cpp:158
 #, kde-format
@@ -247,10 +245,9 @@ msgid "Unable to create agent instance."
 msgstr "Neizdevās izveidot aģenta instanci."
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:73
-#, fuzzy, kde-format
-#| msgid "Invalid collection given."
+#, kde-format
 msgid "Invalid collection instance."
-msgstr "Iedota nederīga kolekcija."
+msgstr "Nederīga kolekcijas instance."
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:80
 #: core/jobs/resourcesynchronizationjob.cpp:88
@@ -262,25 +259,22 @@ msgstr "Nederīga resursa instance."
 #: core/jobs/resourcesynchronizationjob.cpp:113
 #, kde-format
 msgid "Unable to obtain D-Bus interface for resource '%1'"
-msgstr "Neizdevās iegūt D-Bus saskarni resursam '%1'"
+msgstr "Neizdevās iegūt „D-Bus“ saskarni resursam „%1“"
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:125
-#, fuzzy, kde-format
-#| msgid "Resource synchronization timed out."
+#, kde-format
 msgid "Collection attributes synchronization timed out."
-msgstr "Reursu sinhronizācijas noildze."
+msgstr "Iestājās kolekcijas atribūtu sinhronizācijas noildze."
 
 #: core/jobs/collectioncopyjob.cpp:54
-#, fuzzy, kde-format
-#| msgid "Invalid collection"
+#, kde-format
 msgid "Invalid collection to copy"
-msgstr "Nederīga kolekcija"
+msgstr "Nederīga kopējamā kolekcija"
 
 #: core/jobs/collectioncopyjob.cpp:60
-#, fuzzy, kde-format
-#| msgid "Invalid collection"
+#, kde-format
 msgid "Invalid destination collection"
-msgstr "Nederīga kolekcija"
+msgstr "Nederīgs kolekcijas galamērķis"
 
 #: core/jobs/collectioncreatejob.cpp:50
 #, kde-format
@@ -288,10 +282,9 @@ msgid "Invalid parent"
 msgstr "Nederīgs vecāks"
 
 #: core/jobs/collectioncreatejob.cpp:98
-#, fuzzy, kde-format
-#| msgid "Failed to fetch the resource collection."
+#, kde-format
 msgid "Failed to parse Collection from response"
-msgstr "Neizdevās ielādēt resursu kolekciju."
+msgstr "Neizdevās parsēt Kolekciju no atbildes"
 
 #: core/jobs/collectiondeletejob.cpp:52
 #, kde-format
@@ -301,7 +294,7 @@ msgstr "Nederīga kolekcija"
 #: core/jobs/collectionfetchjob.cpp:212
 #, kde-format
 msgid "Invalid collection given."
-msgstr "Iedota nederīga kolekcija."
+msgstr "Dota nederīga kolekcija."
 
 #: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:90
 #, kde-format
@@ -315,21 +308,19 @@ msgid "No valid destination specified"
 msgstr "Nav norādīts derīgs mērķis"
 
 #: core/jobs/invalidatecachejob.cpp:58
-#, fuzzy, kde-format
-#| msgid "Invalid collection"
+#, kde-format
 msgid "Invalid collection."
-msgstr "Nederīga kolekcija"
+msgstr "Nederīga kolekcija."
 
 #: core/jobs/itemcreatejob.cpp:115
-#, fuzzy, kde-format
-#| msgid "Invalid collection"
+#, kde-format
 msgid "Invalid parent collection"
-msgstr "Nederīga kolekcija"
+msgstr "Nederīga vecāka kolekcija"
 
 #: core/jobs/job.cpp:335
 #, kde-format
 msgid "Cannot connect to the Akonadi service."
-msgstr "Neizdevās pieslēgties Akonadi servisam."
+msgstr "Neizdevās pieslēgties „Akonadi“ servisam."
 
 #: core/jobs/job.cpp:338
 #, kde-format
@@ -337,8 +328,8 @@ msgid ""
 "The protocol version of the Akonadi server is incompatible. Make sure you "
 "have a compatible version installed."
 msgstr ""
-"Akonadi servera protokola versija nav savietojama. Pārliecinieties vai jums "
-"ir savietojama Akonadi versija."
+"„Akonadi“ servera protokola versija nav savietojama. Pārliecinieties vai "
+"jums ir instalēta savietojama versija."
 
 #: core/jobs/job.cpp:341
 #, kde-format
@@ -353,39 +344,38 @@ msgstr "Nezināma kļūda."
 #: core/jobs/job.cpp:385
 #, kde-format
 msgid "Unexpected response"
-msgstr ""
+msgstr "Negaidīta atbilde"
 
 #: core/jobs/relationcreatejob.cpp:42 core/jobs/relationdeletejob.cpp:42
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgid "Failed to create relation."
-msgstr "Neizdevās izveidot aģenta instanci."
+msgstr "Neizdevās iegūt relāciju."
 
 #: core/jobs/resourcesynchronizationjob.cpp:139
 #, kde-format
 msgid "Resource synchronization timed out."
-msgstr "Reursu sinhronizācijas noildze."
+msgstr "Resursu sinhronizācijas noildze."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:145
 #, kde-format
 msgid "Could not fetch root collection of resource %1."
-msgstr "Neizdevās ielādēt resursa %1 saknes kolekciju."
+msgstr "Neizdevās ielādēt resursa „%1“ saknes kolekciju."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:189
 #, kde-format
 msgid "No resource ID given."
-msgstr "Mav dots resursa ID."
+msgstr "Nav dots resursa ID."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:326
 #, kde-format
 msgid "Invalid resource identifier '%1'"
-msgstr "Nederīgs resursa identifikators '%1'"
+msgstr "Nederīgs resursa identifikators „%1“"
 
 #: core/jobs/specialcollectionshelperjobs.cpp:342
 #: core/jobs/specialcollectionshelperjobs.cpp:350
 #, kde-format
 msgid "Failed to configure default resource via D-Bus."
-msgstr "Neizdevās konfigurēt noklusēto resursu caur D-Bus."
+msgstr "Neizdevās konfigurēt noklusēto resursu caur „D-Bus“."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:415
 #, kde-format
@@ -395,42 +385,37 @@ msgstr "Neizdevās ielādēt resursu kolekciju."
 #: core/jobs/specialcollectionshelperjobs.cpp:599
 #, kde-format
 msgid "Timeout trying to get lock."
-msgstr "Noildze mēģinot iegūt slēgu."
+msgstr "Noildze, mēģinot iegūt slēgu."
 
 #: core/jobs/tagcreatejob.cpp:49
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgid "Failed to create tag."
-msgstr "Neizdevās izveidot aģenta instanci."
+msgstr "Neizdevās izveidot birku."
 
 #: core/jobs/trashjob.cpp:155
 #, kde-format
 msgid "Move to trash collection failed, aborting trash operation"
-msgstr ""
+msgstr "Neizdevās pārvietošana uz atkritni, izmešanas operācija tiek atcelta"
 
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
-#, fuzzy, kde-format
-#| msgid "Invalid parent"
+#, kde-format
 msgid "Invalid items passed"
-msgstr "Nederīgs vecāks"
+msgstr "Padoti nederīgi vienumi"
 
 #: core/jobs/trashjob.cpp:258 core/jobs/trashrestorejob.cpp:201
-#, fuzzy, kde-format
-#| msgid "Invalid collection"
+#, kde-format
 msgid "Invalid collection passed"
-msgstr "Nederīga kolekcija"
+msgstr "Padota nederīga kolekcija"
 
 #: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
-#, fuzzy, kde-format
-#| msgid "Invalid collection given."
+#, kde-format
 msgid "No valid collection or empty itemlist"
-msgstr "Iedota nederīga kolekcija."
+msgstr "Nav derīgas kolekcijas vai ir tukšs vienumu saraksts"
 
 #: core/jobs/trashrestorejob.cpp:86
-#, fuzzy, kde-format
-#| msgid "Could not fetch root collection of resource %1."
+#, kde-format
 msgid "Could not find restore collection and restore resource is not available"
-msgstr "Neizdevās ielādēt resursa %1 saknes kolekciju."
+msgstr "Neizdevās atjaunot kolekciju un atjaunotais resurss nav pieejams"
 
 #: core/models/agentinstancemodel.cpp:188
 #, kde-format
@@ -439,20 +424,16 @@ msgid "Name"
 msgstr "Nosaukums"
 
 #: core/models/entitytreemodel.cpp:207
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Syncing..."
+#, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
-msgstr "Sinhronizē..."
+msgstr "Ielādē..."
 
 #: core/models/entitytreemodel.cpp:499
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Error."
+#, kde-format
 msgctxt "@window:title"
 msgid "Error"
-msgstr "Kļūda."
+msgstr "Kļūda"
 
 #: core/models/entitytreemodel.cpp:500
 #, kde-format
@@ -460,6 +441,8 @@ msgid ""
 "The target collection '%1' contains already\n"
 "a collection with name '%2'."
 msgstr ""
+"Mērķa kolekcija „%1“ jau satur\n"
+"kolekciju ar šādu nosaukumu „%2“."
 
 #: core/models/entitytreemodel.cpp:669
 #, kde-format
@@ -468,46 +451,40 @@ msgid "Name"
 msgstr "Nosaukums"
 
 #: core/models/entitytreemodel_p.cpp:1331
-#, fuzzy, kde-format
-#| msgid "Could not open file '%1'"
+#, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
-msgstr "Neizdevās atvērt failu '%1'"
+msgstr "Neizdevās nokopēt vienumu: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1333
-#, fuzzy, kde-format
-#| msgid "no collection"
+#, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
-msgstr "nav kolekcijas"
+msgstr "Neizdevās nokopēt kolekciju: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1335
-#, fuzzy, kde-format
-#| msgid "Could not open file '%1'"
+#, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
-msgstr "Neizdevās atvērt failu '%1'"
+msgstr "Neizdevās pārvietot vienumu: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1337
-#, fuzzy, kde-format
-#| msgid "no collection"
+#, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
-msgstr "nav kolekcijas"
+msgstr "Neizdevās pārvietot kolekciju: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1339
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
-msgstr ""
+msgstr "Neizdevās saitēt elementu: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Error."
+#, kde-format
 msgctxt "@title:window"
 msgid "Error"
-msgstr "Kļūda."
+msgstr "Kļūda"
 
 #: core/models/favoritecollectionsmodel.cpp:398
 #, kde-format
@@ -535,16 +512,15 @@ msgid "Storage Size"
 msgstr "Glabāšanas izmērs"
 
 #: core/models/statisticsproxymodel.cpp:110
-#, fuzzy, kde-format
-#| msgid "Storage Size"
+#, kde-format
 msgid "Subfolder Storage Size"
-msgstr "Glabāšanas izmērs"
+msgstr "Apakšmapes glabāšanas izmērs"
 
 #: core/models/statisticsproxymodel.cpp:224
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
-msgstr "Nelasīti"
+msgstr "Nelasītas"
 
 #: core/models/statisticsproxymodel.cpp:225
 #, kde-format
@@ -561,7 +537,7 @@ msgstr "Izmērs"
 #: core/models/tagmodel.cpp:64
 #, kde-format
 msgid "Tag"
-msgstr ""
+msgstr "Birka"
 
 #: core/partfetcher.cpp:49
 #, kde-format
@@ -576,7 +552,7 @@ msgstr "Indekss vairs nav pieejams"
 #: core/partfetcher.cpp:114
 #, kde-format
 msgid "Payload part '%1' is not available for this index"
-msgstr "Satura daļa '%1' nav pieejama šim indeksam"
+msgstr "Satura daļa „%1“ nav pieejama šim indeksam"
 
 #: core/partfetcher.cpp:123
 #, kde-format
@@ -606,13 +582,17 @@ msgid ""
 "If you recently updated your system please log out and back in to make sure "
 "all applications use the correct protocol version."
 msgstr ""
+"„Akonadi“ servera protokola versija atšķiras no šīs programmas izmantotās "
+"protokola versijas.\n"
+"Ja nesen atjauninājāt sistēmu, izrakstieties un ierakstieties no jauna, lai "
+"pārliecinātos, ka visas programmas izmanto pareizo protokola versiju."
 
 #: core/servermanager.cpp:280
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
 "installation."
-msgstr ""
+msgstr "Nav pieejami „Akonadi“ aģenti. Pārbaudiet savu KDE PIM instalāciju."
 
 #: core/session.cpp:185
 #, kde-format
@@ -620,6 +600,8 @@ msgid ""
 "Protocol version mismatch. Server version is older (%1) than ours (%2). If "
 "you updated your system recently please restart the Akonadi server."
 msgstr ""
+"Protokola versiju neatbilstība. Servera versija ir vecāka (%1) nekā mūsējā "
+"(%2). Ja nesen atjauninājāt savu sistēmu, pārstartējiet „Akonadi“ serveri."
 
 #: core/session.cpp:194
 #, kde-format
@@ -627,114 +609,107 @@ msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
 "you updated your system recently please restart all KDE PIM applications."
 msgstr ""
+"Protokola versiju neatbilstība. Servera versija ir jaunāka (%1) nekā (%2). "
+"Ja nesen atjauninājāt savu sistēmu, pārstartējiet KDE PIM programmas."
 
 #: selftest/main.cpp:19
-#, fuzzy, kde-format
-#| msgid "Akonadi Server Self-Test"
+#, kde-format
 msgid "Akonadi Self Test"
-msgstr "Akonadi servera iekšējā pārbaude"
+msgstr "„Akonadi“ paštests"
 
 #: selftest/main.cpp:21
-#, fuzzy, kde-format
-#| msgid "Cannot connect to the Akonadi service."
+#, kde-format
 msgid "Checks and reports state of Akonadi server"
-msgstr "Neizdevās pieslēgties Akonadi servisam."
+msgstr "Pārbauda un ziņot par „Akonadi“ servera stāvokli"
 
 #: selftest/main.cpp:23
 #, kde-format
 msgid "(c) 2008 Volker Krause <vkrause@kde.org>"
-msgstr ""
+msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
 
 #: shared/akapplication.cpp:70
 #, kde-format
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
+"Nosaukumvieta, lai sāktu vairākas „Akonadi“ instances vienā lietotāja sesijā"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
-msgstr ""
+msgstr "&Jauna aģenta instance..."
 
 #: widgets/agentactionmanager.cpp:36
-#, fuzzy
-#| msgid "&Delete Item"
-#| msgid_plural "&Delete %1 Items"
 msgid "&Delete Agent Instance"
-msgstr "&Dzēst %1 vienību"
+msgstr "&Dzēst aģenta instanci"
 
 #: widgets/agentactionmanager.cpp:37
 msgid "&Configure Agent Instance"
-msgstr ""
+msgstr "&Konfigurēt aģenta instanci"
 
 #: widgets/agentactionmanager.cpp:53
 #, kde-format
 msgctxt "@title:window"
 msgid "New Agent Instance"
-msgstr ""
+msgstr "Jauna aģenta instance"
 
 #: widgets/agentactionmanager.cpp:55
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgid "Could not create agent instance: %1"
-msgstr "Neizdevās izveidot aģenta instanci."
+msgstr "Neizdevās izveidot aģenta instanci: %1"
 
 #: widgets/agentactionmanager.cpp:57
-#, fuzzy, kde-format
-#| msgid "Agent instance creation timed out."
+#, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
-msgstr "Aģenta instances izveidošanas noildze."
+msgstr "Neizdevās aģenta instances izveidošana"
 
 #: widgets/agentactionmanager.cpp:59
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Agent Instance?"
-msgstr "Neizdevās izveidot aģenta instanci."
+msgstr "Vai dzēst aģenta instanci?"
 
 #: widgets/agentactionmanager.cpp:63
-#, fuzzy, kde-format
-#| msgid "Do you really want to delete all selected items?"
+#, kde-format
 msgid "Do you really want to delete the selected agent instance?"
-msgstr "Vai tiešām vēlaties dzēst visas iezīmētās vienības?"
+msgstr "Vai tiešām vēlaties dzēst atlasīto aģenta instanci?"
 
 #: widgets/agentconfigurationdialog.cpp:56
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
-msgstr ""
+msgstr "%1 konfigurācija"
 
 #: widgets/agentconfigurationdialog.cpp:81
 #, kde-format
 msgid "%1 Handbook"
-msgstr ""
+msgstr "%1 rokasgrāmata"
 
 #: widgets/agentconfigurationdialog.cpp:82
 #, kde-format
 msgid "About %1"
-msgstr ""
+msgstr "Par %1"
 
 #: widgets/agentconfigurationwidget.cpp:95
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
-msgstr ""
+msgstr "Konfigurācijas lodziņš ir atvērts citā logā"
 
 #: widgets/agentconfigurationwidget.cpp:102
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
-msgstr ""
+msgstr "%1 konfigurācija jau ir atvērta citur."
 
 #: widgets/agentconfigurationwidget.cpp:104
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgid "Failed to register %1 configuration dialog."
-msgstr "Neizdevās izveidot aģenta instanci."
+msgstr "Neizdevās reģistrēt „%1“ konfigurācijas lodziņu."
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
-msgstr ""
+msgstr "Konfigurēt kontu"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
@@ -747,27 +722,25 @@ msgstr[2] "minūtes"
 #: widgets/cachepolicypage.cpp:69
 #, kde-format
 msgid "Retrieval"
-msgstr ""
+msgstr "Izgūšana"
 
 #. i18n: ectx: property (text), widget (QCheckBox, inherit)
 #: widgets/cachepolicypage.ui:20
 #, kde-format
 msgid "Use options from parent folder or account"
-msgstr ""
+msgstr "Izmantot pamatmapes vai konta opcijas"
 
 #. i18n: ectx: property (text), widget (QCheckBox, syncOnDemand)
 #: widgets/cachepolicypage.ui:33
-#, fuzzy, kde-format
-#| msgid "Subscribe to selected folder"
+#, kde-format
 msgid "Synchronize when selecting this folder"
-msgstr "Pierakstīties uz izvēlēto mapi"
+msgstr "Sinhronizēt, atlasot šo mapi"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: widgets/cachepolicypage.ui:40
-#, fuzzy, kde-format
-#| msgid "&Synchronize Folder"
+#, kde-format
 msgid "Synchronize after:"
-msgstr "&Sinhronizēt mapi"
+msgstr "Sinhronizēt pēc:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, checkInterval)
 #: widgets/cachepolicypage.ui:47
@@ -785,54 +758,51 @@ msgstr "minūtes"
 
 #. i18n: ectx: property (text), widget (QLabel, localPartsLabel)
 #: widgets/cachepolicypage.ui:66
-#, fuzzy, kde-format
-#| msgid "Locally Cached Parts"
+#, kde-format
 msgid "Locally cached parts:"
-msgstr "Lokāli pieglabātās daļas"
+msgstr "Lokāli pieglabāt kešatmiņā daļas:"
 
 #. i18n: ectx: property (title), widget (KEditListWidget, localParts)
 #: widgets/cachepolicypage.ui:87
 #, kde-format
 msgid "Locally Cached Parts"
-msgstr "Lokāli pieglabātās daļas"
+msgstr "Lokāli kešatmiņā pieglabātās daļas"
 
 #. i18n: ectx: property (text), widget (QLabel, retrievalOptionsLabel)
 #: widgets/cachepolicypage.ui:94
 #, kde-format
 msgid "Retrieval Options:"
-msgstr ""
+msgstr "Izgūšanas iespējas:"
 
 #. i18n: ectx: property (text), widget (QRadioButton, retrieveFullMessages)
 #: widgets/cachepolicypage.ui:101
 #, kde-format
 msgid "Always retrieve full &messages"
-msgstr ""
+msgstr "Vienmēr izgūt pilnas &vēstules"
 
 #. i18n: ectx: property (text), widget (QRadioButton, retrieveOnlyHeaders)
 #: widgets/cachepolicypage.ui:111
 #, kde-format
 msgid "&Retrieve message bodies on demand"
-msgstr ""
+msgstr "&Izgūt vēstuļu pamattekstu pēc pieprasījuma"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/cachepolicypage.ui:118
 #, kde-format
 msgid "Keep message bodies locally for:"
-msgstr ""
+msgstr "Paturēt vēstuļu pamattekstu lokāli:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, localCacheTimeout)
 #: widgets/cachepolicypage.ui:130
-#, fuzzy, kde-format
-#| msgctxt "no cache timeout"
-#| msgid "Never"
+#, kde-format
 msgctxt "no cache timeout"
 msgid "Forever"
-msgstr "Nekad"
+msgstr "Mūžīgi"
 
 #: widgets/clearcachefoldersjob.cpp:41
 #, kde-format
 msgid "Collection cache cleared. You should restart Akonadi now."
-msgstr ""
+msgstr "Kolekcijas kešatmiņa ir notīrīta. Pārstartējiet „Akonadi“."
 
 #: widgets/clearcachefoldersjob.cpp:69
 #, kde-format
@@ -841,30 +811,30 @@ msgid ""
 "likely never uploaded to the destination server, so clearing this collection "
 "means that those <b>data will be lost</b>. Are you sure you want to proceed?"
 msgstr ""
+"Kolekcijas „%1“ satur %2 vienumus bez attālinātā iD. Iespējams, šie vienumi "
+"nekad nav augšupielādēti galamērķa serverī, tāpēc šīs kolekcijas noņemšana "
+"nozīmē, ka <b>dati būs zuduši</b>. Vai tiešām vēlaties turpināt?"
 
 #: widgets/collectiondialog.cpp:58
-#, fuzzy, kde-format
-#| msgctxt "search folder"
-#| msgid "Search:"
+#, kde-format
 msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
 msgid "Search"
-msgstr "Meklēt:"
+msgstr "Meklēt"
 
 #: widgets/collectiondialog.cpp:66
 #, kde-format
 msgid "Use folder by default"
-msgstr ""
+msgstr "Lietot mapi pēc noklusējuma"
 
 #: widgets/collectiondialog.cpp:226
-#, fuzzy, kde-format
-#| msgid "&New Folder..."
+#, kde-format
 msgid "&New Subfolder..."
-msgstr "&Jauna mape..."
+msgstr "&Jauna apakšmape..."
 
 #: widgets/collectiondialog.cpp:228
 #, kde-format
 msgid "Create a new subfolder under the currently selected folder"
-msgstr ""
+msgstr "Izveidot jaunu apakšmapi zem šobrīd atlasītās mapes"
 
 #: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:348
 #, kde-format
@@ -884,11 +854,10 @@ msgid "Could not create folder: %1"
 msgstr "Neizdevās izveidot mapi: %1"
 
 #: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:351
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
-msgstr "Neveiksmīga mapes izveidošana"
+msgstr "Mapes izveidošana neizdevās"
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
 #, kde-format
@@ -957,37 +926,36 @@ msgstr "0 baitu"
 #: widgets/collectionmaintenancepage.cpp:46
 #, kde-format
 msgid "Remember that indexing can take some minutes."
-msgstr ""
+msgstr "Ievērojiet, ka indeksācija var aizņemt dažas minūtes."
 
 #: widgets/collectionmaintenancepage.cpp:71
 #, kde-format
 msgid "Maintenance"
-msgstr ""
+msgstr "Apkope"
 
 #: widgets/collectionmaintenancepage.cpp:130
 #, kde-format
 msgid "Error while retrieving indexed items count"
-msgstr ""
+msgstr "Kļūda, izgūstot indeksēto vienumu skaitu"
 
 #: widgets/collectionmaintenancepage.cpp:133
 #, kde-format
 msgid "Indexed %1 item in this folder"
 msgid_plural "Indexed %1 items in this folder"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Šajā mapē ir indeksēts %1 vienums"
+msgstr[1] "Šajā mapē ir indeksēti %1 vienumi"
+msgstr[2] "Šajā mapē ir indeksēti %1 vienumi"
 
 #: widgets/collectionmaintenancepage.cpp:137
 #, kde-format
 msgid "Calculating indexed items..."
-msgstr ""
+msgstr "Aprēķina indeksētos vienumus..."
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/collectionmaintenancepage.ui:17
-#, fuzzy, kde-format
-#| msgid "Folder &Properties"
+#, kde-format
 msgid "Folder type:"
-msgstr "Mapes ī&pašības"
+msgstr "Mapes tips:"
 
 #. i18n: ectx: property (text), widget (QLabel, folderTypeLbl)
 #. i18n: ectx: property (text), widget (QLabel, folderSizeLbl)
@@ -999,111 +967,105 @@ msgstr "Mapes ī&pašības"
 #: widgets/collectionmaintenancepage.ui:66
 #, kde-format
 msgid "unknown"
-msgstr ""
+msgstr "nezināms"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: widgets/collectionmaintenancepage.ui:38
 #, kde-format
 msgid "File size:"
-msgstr ""
+msgstr "Datnes izmērs:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: widgets/collectionmaintenancepage.ui:45
-#, fuzzy, kde-format
-#| msgid "Total Messages"
+#, kde-format
 msgid "Total items:"
-msgstr "Vēstules kopā"
+msgstr "Vienumu kopā:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: widgets/collectionmaintenancepage.ui:59
-#, fuzzy, kde-format
-#| msgid "Unread Messages"
+#, kde-format
 msgid "Unread items:"
-msgstr "Nelasītas vēstules"
+msgstr "Nelasītie vienumi:"
 
 #. i18n: ectx: property (text), widget (QLabel, indexingLabel)
 #: widgets/collectionmaintenancepage.ui:73
 #, kde-format
 msgid "Indexing:"
-msgstr ""
+msgstr "Indeksācija:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, enableIndexingChkBox)
 #: widgets/collectionmaintenancepage.ui:80
 #, kde-format
 msgid "Enable fulltext indexing"
-msgstr ""
+msgstr "Ieslēgta pilna teksta indeksācija"
 
 #. i18n: ectx: property (text), widget (QLabel, indexedCountLbl)
 #: widgets/collectionmaintenancepage.ui:87
 #, kde-format
 msgid "Retrieving indexed items count..."
-msgstr ""
+msgstr "Izgūst indeksēto vienumu skaitu..."
 
 #. i18n: ectx: property (text), widget (QPushButton, reindexButton)
 #: widgets/collectionmaintenancepage.ui:94
-#, fuzzy, kde-format
-#| msgid "&Delete Folder"
+#, kde-format
 msgid "Reindex folder"
-msgstr "&Dzēst mapi"
+msgstr "No jauna indeksēt mapi"
 
 #: widgets/collectionrequester.cpp:113
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "New Folder"
+#, kde-format
 msgid "No Folder"
-msgstr "Jauna mape"
+msgstr "Nav mapes"
 
 #: widgets/collectionrequester.cpp:122
 #, kde-format
 msgid "Open collection dialog"
-msgstr "Atvērt kolekciju logu"
+msgstr "Atvērt kolekciju lodziņu"
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgid "Invalid collection"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
-msgstr "Nederīga kolekcija"
+msgstr "Atlasīt kolekciju"
 
 #: widgets/conflictresolvedialog.cpp:129
 #, kde-format
 msgid "Modification Time"
-msgstr ""
+msgstr "Modifikācijas laiks"
 
 #: widgets/conflictresolvedialog.cpp:141
 #, kde-format
 msgid "Flags"
-msgstr ""
+msgstr "Karodziņi"
 
 #: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
 #: widgets/conflictresolvedialog.cpp:174
 #, kde-format
 msgid "Attribute: %1"
-msgstr ""
+msgstr "Atribūts: %1"
 
 #: widgets/conflictresolvedialog.cpp:186
 #, kde-format
 msgctxt "@title:window"
 msgid "Conflict Resolution"
-msgstr ""
+msgstr "Konfliktu risināšana"
 
 #: widgets/conflictresolvedialog.cpp:192
 #, kde-format
 msgctxt "@action:button"
 msgid "Take my version"
-msgstr ""
+msgstr "Ņemt manu versiju"
 
 #: widgets/conflictresolvedialog.cpp:198
 #, kde-format
 msgctxt "@action:button"
 msgid "Take their version"
-msgstr ""
+msgstr "Ņemt viņu versiju"
 
 #: widgets/conflictresolvedialog.cpp:204
 #, kde-format
 msgctxt "@action:button"
 msgid "Keep both versions"
-msgstr ""
+msgstr "Paturēt abas versijas"
 
 #: widgets/conflictresolvedialog.cpp:216
 #, kde-format
@@ -1114,36 +1076,42 @@ msgid ""
 "editor\"</a> to keep a copy of the texts, then select which version is most "
 "correct, then re-open it and modify it again to add what's missing."
 msgstr ""
+"<qt>Jūsu izmaiņas atrodas konfliktā ar kādas citas personas veiktām izmaiņām "
+"šajā laikā.<br>Izņemot gadījumu, ja vienu versiju var vienkārši noraidīt, "
+"veiktās izmaiņās būs manuāli jāintegrē.<br>Spiediet uz <a href="
+"\"opentexteditor\">„Atvērt teksta redaktoru“</a>, lai paturēt tekstu kopiju, "
+"pēc tam atlasiet, kura versija ir pareizāka, bet pēc tam no jauna to "
+"atveriet un pievienojiet trūkstošo."
 
 #: widgets/conflictresolvedialog.cpp:265
 #, kde-format
 msgid "Data"
-msgstr ""
+msgstr "Dati"
 
 #: widgets/controlgui.cpp:223
 #, kde-format
 msgid "Starting Akonadi server..."
-msgstr "Palaiž Akonadi serveri..."
+msgstr "Palaiž „Akonadi“ serveri..."
 
 #: widgets/controlgui.cpp:229
 #, kde-format
 msgid "Stopping Akonadi server..."
-msgstr "Aptur Akonadi serveri..."
+msgstr "Aptur „Akonadi“ serveri..."
 
 #: widgets/dragdropmanager.cpp:212
 #, kde-format
 msgid "&Move Here"
-msgstr "&Pārvietot šeit"
+msgstr "&Pārvietot te"
 
 #: widgets/dragdropmanager.cpp:218
 #, kde-format
 msgid "&Copy Here"
-msgstr "&Kopēt šeit"
+msgstr "&Kopēt te"
 
 #: widgets/dragdropmanager.cpp:224
 #, kde-format
 msgid "&Link Here"
-msgstr "&Saitēt šeit"
+msgstr "&Saitēt te"
 
 #: widgets/dragdropmanager.cpp:229
 #, kde-format
@@ -1151,36 +1119,33 @@ msgid "C&ancel"
 msgstr "&Atcelt"
 
 #: widgets/erroroverlay.cpp:224
-#, fuzzy, kde-format
-#| msgid "Cannot connect to the Akonadi service."
+#, kde-format
 msgctxt "%1 is a reason why"
 msgid ""
 "Cannot connect to the Personal information management service.\n"
 "\n"
 "%1"
-msgstr "Neizdevās pieslēgties Akonadi servisam."
+msgstr ""
+"Neizdevās savienoties ar Personu informācijas pārvaldības servisu.\n"
+"\n"
+"%1"
 
 #: widgets/erroroverlay.cpp:228 widgets/erroroverlay.cpp:229
 #, kde-format
 msgid "Personal information management service is starting..."
-msgstr ""
+msgstr "Personīgās informācijas pārvaldības serviss sāk darbību..."
 
 #: widgets/erroroverlay.cpp:233 widgets/erroroverlay.cpp:234
 #, kde-format
 msgid "Personal information management service is shutting down..."
-msgstr ""
+msgstr "Personīgās informācijas pārvaldības serviss izslēdzas..."
 
 #: widgets/erroroverlay.cpp:238
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management framework is not "
-#| "operational.\n"
-#| "Click on \"Details...\" to obtain detailed information on this problem."
+#, kde-format
 msgid ""
 "Personal information management service is performing a database upgrade."
 msgstr ""
-"Akonadi personīgās informācijas pārvaldības ietvars nestrādā.\n"
-"Lai iegūtu papildus informāciju, nospiediet uz \"Detaļas...\"."
+"Personīgās informācijas pārvaldības serviss veic datubāzes atjaunināšanu."
 
 #: widgets/erroroverlay.cpp:240
 #, kde-format
@@ -1191,28 +1156,28 @@ msgid ""
 "Depending on the amount of personal information, this might take a few "
 "minutes."
 msgstr ""
+"Personu informācijas pārvaldības serviss veic datubāzes atjaunināšanu.\n"
+"Tas notiek pēc programmatūras atjaunināšanas un ir nepieciešams veiktspējas "
+"optimizēšanai.\n"
+"Tas atkarībā no personu informācijas lieluma var aizņemt pāris minūtes."
 
 #. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
 #: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management framework is not "
-#| "operational.\n"
-#| "Click on \"Details...\" to obtain detailed information on this problem."
+#, kde-format
 msgid ""
 "The Akonadi personal information management service is not running. This "
 "application cannot be used without it."
 msgstr ""
-"Akonadi personīgās informācijas pārvaldības ietvars nestrādā.\n"
-"Lai iegūtu papildus informāciju, nospiediet uz \"Detaļas...\"."
+"„Akonadi“ personu informācijas pārvaldības serviss nedarbojas. Šī programma "
+"bez tā nedarbojas."
 
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #: widgets/erroroverlay.ui:116
 #, kde-format
 msgctxt "@action:button Start the Akonadi server"
 msgid "Start"
-msgstr ""
+msgstr "Sākt"
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
@@ -1222,111 +1187,99 @@ msgid ""
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
 "Akonadi personīgās informācijas pārvaldības ietvars nestrādā.\n"
-"Lai iegūtu papildus informāciju, nospiediet uz \"Detaļas...\"."
+"Lai iegūtu papildus informāciju, nospiediet uz „Informācija...“."
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management framework is not "
-#| "operational.\n"
-#| "Click on \"Details...\" to obtain detailed information on this problem."
+#, kde-format
 msgid "The Akonadi personal information management service is not operational."
-msgstr ""
-"Akonadi personīgās informācijas pārvaldības ietvars nestrādā.\n"
-"Lai iegūtu papildus informāciju, nospiediet uz \"Detaļas...\"."
+msgstr "„Akonadi“ personīgās informācijas pārvaldības serviss nestrādā."
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
-#, fuzzy, kde-format
-#| msgid "Details"
+#, kde-format
 msgid "Details..."
-msgstr "Detaļas"
+msgstr "Informācija..."
 
 #: widgets/manageaccountwidget.cpp:198
 #, kde-format
 msgid "Do you want to remove account '%1'?"
-msgstr ""
+msgstr "Vai vēlaties noņemt šo kontu — „%1“?"
 
 #: widgets/manageaccountwidget.cpp:199
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"
-msgstr ""
+msgstr "Noņemt kontu?"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/manageaccountwidget.ui:19
 #, kde-format
 msgid "Incoming accounts (add at least one):"
-msgstr ""
+msgstr "Ienākošo vēstuļu konti (pievienojiet vismaz vienu)"
 
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
 #: widgets/manageaccountwidget.ui:26
 #, kde-format
 msgid "Filter…"
-msgstr ""
+msgstr "Filtrēt..."
 
 #. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
 #: widgets/manageaccountwidget.ui:40
 #, kde-format
 msgid "A&dd..."
-msgstr ""
+msgstr "&Pievienot..."
 
 #. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
 #: widgets/manageaccountwidget.ui:50
 #, kde-format
 msgid "&Modify..."
-msgstr ""
+msgstr "&Rediģēt..."
 
 #. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
 #: widgets/manageaccountwidget.ui:60
 #, kde-format
 msgid "R&emove"
-msgstr ""
+msgstr "&Noņemt"
 
 #. i18n: ectx: property (text), widget (QPushButton, mRestartAccountButton)
 #: widgets/manageaccountwidget.ui:77
 #, kde-format
 msgid "Restart"
-msgstr ""
+msgstr "Pārstartēt"
 
 #: widgets/recentcollectionaction.cpp:43
-#, fuzzy, kde-format
-#| msgid "&Delete Folder"
+#, kde-format
 msgid "Recent Folder"
-msgstr "&Dzēst mapi"
+msgstr "Nesenā mape"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, RenameFavoriteDialog)
 #: widgets/renamefavoritedialog.ui:26
-#, fuzzy, kde-format
-#| msgid "Rename Favorite"
+#, kde-format
 msgid "Rename Favorite"
 msgstr "Pārdēvēt iecienīto"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/renamefavoritedialog.ui:35
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox New name of the folder."
-#| msgid "Name:"
+#, kde-format
 msgid "Name:"
 msgstr "Nosaukums:"
 
 #: widgets/selftestdialog.cpp:60
-#, fuzzy, kde-format
-#| msgid "Akonadi Server Self-Test"
+#, kde-format
 msgctxt "@title:window"
 msgid "Akonadi Server Self-Test"
-msgstr "Akonadi servera iekšējā pārbaude"
+msgstr "„Akonadi“ servera paštests"
 
 #: widgets/selftestdialog.cpp:71
 #, kde-format
 msgid "Save Report..."
-msgstr "Saglabāt atskaiti..."
+msgstr "Saglabāt pārskatu..."
 
 #: widgets/selftestdialog.cpp:73
 #, kde-format
 msgid "Copy Report to Clipboard"
-msgstr "Kopēt atskaiti uz starpliktuvi"
+msgstr "Kopēt pārskatu uz starpliktuvi"
 
 #: widgets/selftestdialog.cpp:189
 #, kde-format
@@ -1334,8 +1287,8 @@ msgid ""
 "The QtSQL driver '%1' is required by your current Akonadi server "
 "configuration and was found on your system."
 msgstr ""
-"Esošajai Akonadi servera konfigurācijai nepieciešams QtSQL draiveris '%1' un "
-"tas tika atrasts."
+"Esošajai „Akonadi“ servera konfigurācijai ir nepieciešams QtSQL draiveris "
+"„%1“, kas tika atrasts jūsu sistēmā."
 
 #: widgets/selftestdialog.cpp:191
 #, kde-format
@@ -1345,9 +1298,10 @@ msgid ""
 "The following drivers are installed: %2.\n"
 "Make sure the required driver is installed."
 msgstr ""
-"Esošajai Akonadi servera konfigurācijai nepieciešams QtSQL draiveris '%1'.\n"
+"Esošajai „Akonadi“ servera konfigurācijai nepieciešams QtSQL draiveris "
+"„%1“.\n"
 "Ir instalēti šādi draiveri: %2.\n"
-"Pārliecinietes, ka ir insalēts nepieciešamais draiveris."
+"Pārliecinieties, ka ir instalēts nepieciešamais draiveris."
 
 #: widgets/selftestdialog.cpp:198
 #, kde-format
@@ -1362,22 +1316,16 @@ msgstr "Nav atrasts datubāzes draiveris."
 #: widgets/selftestdialog.cpp:208
 #, kde-format
 msgid "MySQL server executable not tested."
-msgstr "MySQL servera izpildfails nav pārbaudīts."
+msgstr "„MySQL“ servera izpilddatne nav pārbaudīta."
 
 #: widgets/selftestdialog.cpp:208 widgets/selftestdialog.cpp:249
 #: widgets/selftestdialog.cpp:300
 #, kde-format
 msgid "The current configuration does not require an internal MySQL server."
-msgstr "Aktīvā konfigurācija nepieprasa iekšēju MySQL serveri."
+msgstr "Aktīvā konfigurācija nepieprasa iekšēju „MySQL“ serveri."
 
 #: widgets/selftestdialog.cpp:216
-#, fuzzy, kde-format
-#| msgid ""
-#| "You currently have configured Akonadi to use the MySQL server '%1'.\n"
-#| "Make sure you have the MySQL server installed, set the correct path and "
-#| "ensure you have the necessary read and execution rights on the server "
-#| "executable. The server executable is typically called 'mysqld', its "
-#| "locations varies depending on the distribution."
+#, kde-format
 msgid ""
 "You have currently configured Akonadi to use the MySQL server '%1'.\n"
 "Make sure you have the MySQL server installed, set the correct path and "
@@ -1385,126 +1333,126 @@ msgid ""
 "executable. The server executable is typically called 'mysqld'; its location "
 "varies depending on the distribution."
 msgstr ""
-"Šobrīd Akonari ir konfigurēts izmantot MySQL serveri '%1'.\n"
-"Pārliecinieties, ka jums ir instalēts MySQL serveris, ir iestatīts korekts "
-"ceļš un pārliecinieties ka servera izpildfailam ir nepieciešamās lasīšanas "
-"un izpildes atļaujas . Servera izpildfailu parasti sauc 'mysqld', tā "
-"atrašanās vieta ir atkarīga no jūsu distribūcijas."
+"Šobrīd Akonari ir konfigurēts, lai izmantotu „MySQL“ serveri „%1“.\n"
+"Pārliecinieties, ka sistēmā ir instalēts „MySQL“ serveris, ir iestatīts "
+"korekts ceļš un ka servera izpilddatnei ir nepieciešamās lasīšanas un "
+"izpildes atļaujas . Servera izpilddatni parasti sauc „mysqld“, tās atrašanās "
+"vieta ir atkarīga no jūsu distribūcijas."
 
 #: widgets/selftestdialog.cpp:224
 #, kde-format
 msgid "MySQL server not found."
-msgstr "MySQL serveris nav atrasts."
+msgstr "„MySQL“ serveris nav atrasts."
 
 #: widgets/selftestdialog.cpp:226
 #, kde-format
 msgid "MySQL server not readable."
-msgstr "MySQL serveris nav lasāms."
+msgstr "„MySQL“ serveris nav lasāms."
 
 #: widgets/selftestdialog.cpp:228
 #, kde-format
 msgid "MySQL server not executable."
-msgstr "MySQL serveris nav izpildāms."
+msgstr "„MySQL“ serveris nav izpildāms."
 
 #: widgets/selftestdialog.cpp:230
 #, kde-format
 msgid "MySQL found with unexpected name."
-msgstr "MySQL atrasts ar negaidītu nosaukumu."
+msgstr "„MySQL“ ir atrasts ar negaidītu nosaukumu."
 
 #: widgets/selftestdialog.cpp:232
 #, kde-format
 msgid "MySQL server found."
-msgstr "MySQL serveris atrasts."
+msgstr "„MySQL“ serveris ir atrasts."
 
 #: widgets/selftestdialog.cpp:238
 #, kde-format
 msgid "MySQL server found: %1"
-msgstr "MySQL serveris atrasts: %1"
+msgstr "„MySQL“ serveris ir atrasts: %1"
 
 #: widgets/selftestdialog.cpp:239
 #, kde-format
 msgid "MySQL server is executable."
-msgstr "MySQL serveris ir izpildāms."
+msgstr "„MySQL“ serveris ir izpildāms."
 
 #: widgets/selftestdialog.cpp:241
 #, kde-format
 msgid ""
 "Executing the MySQL server '%1' failed with the following error message: '%2'"
-msgstr "MySQL servera '%1' palaišana neveiksmīga, kļūdas ziņojums: '%2'"
+msgstr "„MySQL“ servera „%1“ palaišana neizdevās, kļūdas ziņojums: „%2“"
 
 #: widgets/selftestdialog.cpp:242
 #, kde-format
 msgid "Executing the MySQL server failed."
-msgstr "Neizdevās palaist MySQL serveri."
+msgstr "Neizdevās palaist „MySQL“ serveri."
 
 #: widgets/selftestdialog.cpp:249
 #, kde-format
 msgid "MySQL server error log not tested."
-msgstr "MySQL servera kļūdu žurnāls nav pārbaudīts."
+msgstr "„MySQL“ servera kļūdu žurnāls nav pārbaudīts."
 
 #: widgets/selftestdialog.cpp:257
 #, kde-format
 msgid "No current MySQL error log found."
-msgstr "Nav atrasts aktīvs MySQL kļūdu žurnāls."
+msgstr "Nav atrasts aktīvs „MySQL“ kļūdu žurnāls."
 
 #: widgets/selftestdialog.cpp:258
-#, fuzzy, kde-format
-#| msgid ""
-#| "The MySQL server did not report any errors during this startup into '%1'."
+#, kde-format
 msgid ""
 "The MySQL server did not report any errors during this startup. The log can "
 "be found in '%1'."
-msgstr "MySQL serveris neziņoja nevienu kļūdu veicot palaišanu failā '%1'."
+msgstr ""
+"„MySQL“ serveris palaišanas laikā neziņoja par kļūdām. Žurnāls ir atrodams "
+"„%1“."
 
 #: widgets/selftestdialog.cpp:264
 #, kde-format
 msgid "MySQL error log not readable."
-msgstr "MySQL kļūdu žurnāls nav lasāms."
+msgstr "„MySQL“ kļūdu žurnāls nav lasāms."
 
 #: widgets/selftestdialog.cpp:265
 #, kde-format
 msgid "A MySQL server error log file was found but is not readable: %1"
-msgstr "Tika atrasts MySQL servera kļūdu žurnāls, bet tas nav nolasāms: %1"
+msgstr "Tika atrasts „MySQL“ servera kļūdu žurnāls, bet tas nav nolasāms: %1"
 
 #: widgets/selftestdialog.cpp:274
 #, kde-format
 msgid "MySQL server log contains errors."
-msgstr "MySQL servera žurnāls satur kļūdas."
+msgstr "„MySQL“ servera žurnāls satur kļūdas."
 
 #: widgets/selftestdialog.cpp:275
 #, kde-format
 msgid "The MySQL server error log file '%1' contains errors."
-msgstr "MySQL servera žurnāla fails '%1' satur kļūdas."
+msgstr "„MySQL“ servera žurnāla datne „%1“ satur kļūdas."
 
 #: widgets/selftestdialog.cpp:285
 #, kde-format
 msgid "MySQL server log contains warnings."
-msgstr "MySQL servera žurnāls satur brīdinājumus."
+msgstr "„MySQL“ servera žurnāls satur brīdinājumus."
 
 #: widgets/selftestdialog.cpp:286
 #, kde-format
 msgid "The MySQL server log file '%1' contains warnings."
-msgstr "MySQL servera žurnāla fails '%1' satur brīdinājumus."
+msgstr "„MySQL“ servera žurnāla datne „%1“ satur brīdinājumus."
 
 #: widgets/selftestdialog.cpp:289
 #, kde-format
 msgid "MySQL server log contains no errors."
-msgstr "MySQL servera žurnālā nav kļūdu."
+msgstr "„MySQL“ servera žurnālā nav kļūdu."
 
 #: widgets/selftestdialog.cpp:290
 #, kde-format
 msgid "The MySQL server log file '%1' does not contain any errors or warnings."
-msgstr "MySQL servera žurnāla failā '%1' nav kļūdu vai brīdinājumu."
+msgstr "„MySQL“ servera žurnāla datnē „%1“ nav kļūdu vai brīdinājumu."
 
 #: widgets/selftestdialog.cpp:300
 #, kde-format
 msgid "MySQL server configuration not tested."
-msgstr "MySQL servera konfigurācija nav pārbaudīta."
+msgstr "„MySQL“ servera konfigurācija nav pārbaudīta."
 
 #: widgets/selftestdialog.cpp:309
 #, kde-format
 msgid "MySQL server default configuration found."
-msgstr "Atrasta noklusētā MySQL servera konfigurācija."
+msgstr "Atrasta noklusētā „MySQL“ servera konfigurācija."
 
 #: widgets/selftestdialog.cpp:310
 #, kde-format
@@ -1512,12 +1460,13 @@ msgid ""
 "The default configuration for the MySQL server was found and is readable at "
 "%1."
 msgstr ""
-"Tika atrasta noklusētā MySQL servera konfigurācija tun tā ir lasāma vietā %1."
+"Tika atrasta noklusētā „MySQL“ servera konfigurācija un tā ir lasāma vietā "
+"„%1“."
 
 #: widgets/selftestdialog.cpp:314
 #, kde-format
 msgid "MySQL server default configuration not found."
-msgstr "Nav atrasta MySQL servera noklusētā konfigurācija."
+msgstr "Nav atrasta „MySQL“ servera noklusētā konfigurācija."
 
 #: widgets/selftestdialog.cpp:315
 #, kde-format
@@ -1526,38 +1475,37 @@ msgid ""
 "readable. Check your Akonadi installation is complete and you have all "
 "required access rights."
 msgstr ""
-"Netika atrasta noklusētā MySQL servera konfigurācija vai to nevarēja "
-"nolasīt. Pārbaudiet vai Akonadi instalācija ir pabeigta un vai jums ir "
+"Netika atrasta noklusētā „MySQL“ servera konfigurācija vai to nevarēja "
+"nolasīt. Pārbaudiet vai „Akonadi“ instalācija ir pabeigta un vai jums ir "
 "nepieciešamās piekļuves atļaujas."
 
 #: widgets/selftestdialog.cpp:323
 #, kde-format
 msgid "MySQL server custom configuration not available."
-msgstr "MySQL servera pielāgotā konfigurācija nav pieejama."
+msgstr "„MySQL“ servera pielāgotā konfigurācija nav pieejama."
 
 #: widgets/selftestdialog.cpp:324
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was not found but is optional."
 msgstr ""
-"Netika atrasta pielāgotā MySQL severa konfigurācija, bet tā nav obligāta."
+"Netika atrasta pielāgotā „MySQL“ servera konfigurācija, bet tā nav obligāta."
 
 #: widgets/selftestdialog.cpp:327
 #, kde-format
 msgid "MySQL server custom configuration found."
-msgstr "Atrasta MySQL servera pielāgotā konfigurācija."
+msgstr "Atrasta „MySQL“ servera pielāgotā konfigurācija."
 
 #: widgets/selftestdialog.cpp:328
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was found and is readable at %1"
-msgstr ""
-"MySQL servera pielāgotā konfigurācija tika atrasta un ir lasāma iekš %1"
+msgstr "„MySQL“ servera pielāgotā konfigurācija tika atrasta un ir lasāma „%1“"
 
 #: widgets/selftestdialog.cpp:332
 #, kde-format
 msgid "MySQL server custom configuration not readable."
-msgstr "MySQL servera pielāgotā konfigurācija nav lasāma."
+msgstr "„MySQL“ servera pielāgotā konfigurācija nav lasāma."
 
 #: widgets/selftestdialog.cpp:333
 #, kde-format
@@ -1565,48 +1513,48 @@ msgid ""
 "The custom configuration for the MySQL server was found at %1 but is not "
 "readable. Check your access rights."
 msgstr ""
-"MySQL pielāgotā konfigurācija tika atrasta vietā %1, bet nav lasāma. "
+"„MySQL“ pielāgotā konfigurācija ir atrasta vietā „%1“, bet nav lasāma. "
 "Pārbaudiet savas piekļuves tiesības."
 
 #: widgets/selftestdialog.cpp:342
 #, kde-format
 msgid "MySQL server configuration not found or not readable."
-msgstr "MySQL servera konfigurācija nav atrasta vai nav lasāma."
+msgstr "„MySQL“ servera konfigurācija nav atrasta vai nav lasāma."
 
 #: widgets/selftestdialog.cpp:343
 #, kde-format
 msgid "The MySQL server configuration was not found or is not readable."
-msgstr "MySQL servera konfigurācija netika atrasta vai nav lasāma."
+msgstr "„MySQL“ servera konfigurācija netika atrasta vai nav lasāma."
 
 #: widgets/selftestdialog.cpp:346
 #, kde-format
 msgid "MySQL server configuration is usable."
-msgstr "MySQL servera konfigurācija ir lietojama."
+msgstr "„MySQL“ servera konfigurācija ir lietojama."
 
 #: widgets/selftestdialog.cpp:347
 #, kde-format
 msgid "The MySQL server configuration was found at %1 and is readable."
-msgstr "MySQL servera konfigurācija tika atasta iekš %1 un ir lasāma."
+msgstr "„MySQL“ servera konfigurācija tika atrasta vietā „%1“ un ir lasāma."
 
 #: widgets/selftestdialog.cpp:376
 #, kde-format
 msgid "Cannot connect to PostgreSQL server."
-msgstr "Neizdevās pieslēgties PostgreSQL serverim."
+msgstr "Neizdevās pieslēgties „PostgreSQL“ serverim."
 
 #: widgets/selftestdialog.cpp:378
 #, kde-format
 msgid "PostgreSQL server found."
-msgstr "PostgreSQL serveris atrasts."
+msgstr "„PostgreSQL“ serveris atrasts."
 
 #: widgets/selftestdialog.cpp:378
 #, kde-format
 msgid "The PostgreSQL server was found and connection is working."
-msgstr "PostgreSQL serveris atrasts un savienojums strādā."
+msgstr "„PostgreSQL“ serveris ir atrasts un savienojums strādā."
 
 #: widgets/selftestdialog.cpp:388
 #, kde-format
 msgid "akonadictl not found"
-msgstr "nav atrasta akonadictl"
+msgstr "Nav atrasts „akonadictl“"
 
 #: widgets/selftestdialog.cpp:389
 #, kde-format
@@ -1614,13 +1562,13 @@ msgid ""
 "The program 'akonadictl' needs to be accessible in $PATH. Make sure you have "
 "the Akonadi server installed."
 msgstr ""
-"Nepieciešams, lai programma 'akonadictl' ir pieejama iekš $PATH. "
-"Pārliecinieties ka ir instalēts Akonadi serveris."
+"Programmai ir nepieciešams „akonadictl“ atrast ceļā $PATH. Pārliecinieties "
+"ka ir instalēts „Akonadi“ serveris."
 
 #: widgets/selftestdialog.cpp:396
 #, kde-format
 msgid "akonadictl found and usable"
-msgstr "akonadictl atrasta un ir lietojama"
+msgstr "„akonadictl“ ir atrasts un lietojams"
 
 #: widgets/selftestdialog.cpp:397
 #, kde-format
@@ -1630,15 +1578,15 @@ msgid ""
 "Result:\n"
 "%2"
 msgstr ""
-"Programma '%1' Akonadi servera kontrolēšanai tikai atrasta un to izdevās "
-"veiksmīgi palaist.\n"
+"Programma „%1“ „Akonadi“ servera kontrolēšanai ir atrasta un to izdevās "
+"palaist.\n"
 "Rezultāts:\n"
 "%2"
 
 #: widgets/selftestdialog.cpp:403
 #, kde-format
 msgid "akonadictl found but not usable"
-msgstr "akonadictl atrasta, bet nav lietojama"
+msgstr "„akonadictl“ ir atrasts, bet nav lietojams"
 
 #: widgets/selftestdialog.cpp:404
 #, kde-format
@@ -1649,16 +1597,16 @@ msgid ""
 "%2\n"
 "Make sure the Akonadi server is installed correctly."
 msgstr ""
-"Programma '%1' Akonadi servera kontrolēšanai tikai atrasta, bet to neizdevās "
+"Programma „%1“ „Akonadi“ servera kontrolēšanai ir atrasta, bet to neizdevās "
 "palaist.\n"
 "Rezultāts:\n"
 "%2\n"
-"Pārliecinieties ka Akonadi serveris ir korekti instalēts."
+"Pārliecinieties ka „Akonadi“ serveris ir korekti instalēts."
 
 #: widgets/selftestdialog.cpp:416
 #, kde-format
 msgid "Akonadi control process registered at D-Bus."
-msgstr "Akonadi kontroles process reģistrēts pie D-Bus."
+msgstr "„Akonadi“ kontroles process ir reģistrēts „D-Bus“."
 
 #: widgets/selftestdialog.cpp:417
 #, kde-format
@@ -1666,13 +1614,13 @@ msgid ""
 "The Akonadi control process is registered at D-Bus which typically indicates "
 "it is operational."
 msgstr ""
-"Akonadi kontroles process ir reģistrēts pie D-Bus, tas parasti nozīmē ka tas "
-"darbojas."
+"„Akonadi“ kontroles process ir reģistrēts „D-Bus“. Parasti tas nozīmē, ka "
+"process darbojas."
 
 #: widgets/selftestdialog.cpp:420
 #, kde-format
 msgid "Akonadi control process not registered at D-Bus."
-msgstr "Akonadi kontroles process nav reģistrēts pie D-Bus."
+msgstr "„Akonadi“ kontroles process nav reģistrēts „D-Bus“."
 
 #: widgets/selftestdialog.cpp:421
 #, kde-format
@@ -1680,13 +1628,13 @@ msgid ""
 "The Akonadi control process is not registered at D-Bus which typically means "
 "it was not started or encountered a fatal error during startup."
 msgstr ""
-"Akonadi kontroles process nav reģistrēts pie D-Bus, tas parasti nozīmē ka "
-"tas nav palaists vai to palaižot gadījusies kļūme."
+"„Akonadi“ kontroles process nav reģistrēts „D-Bus“. Parasti tas nozīmē, ka "
+"process nav palaists vai, to palaižot, notikusi fatāla kļūda."
 
 #: widgets/selftestdialog.cpp:427
 #, kde-format
 msgid "Akonadi server process registered at D-Bus."
-msgstr "Akonadi servera process reģistrēts pie D-Bus."
+msgstr "„Akonadi“ servera process ir reģistrēts „D-Bus“."
 
 #: widgets/selftestdialog.cpp:428
 #, kde-format
@@ -1694,13 +1642,13 @@ msgid ""
 "The Akonadi server process is registered at D-Bus which typically indicates "
 "it is operational."
 msgstr ""
-"Akonadi servera process ir reģistrēts pie D-Bus, tas parasti nozīmē ka tas "
-"darbojas."
+"„Akonadi“ servera process ir reģistrēts „D-Bus“. Parasti tas nozīmē, ka "
+"process darbojas."
 
 #: widgets/selftestdialog.cpp:431
 #, kde-format
 msgid "Akonadi server process not registered at D-Bus."
-msgstr "Akonadi servera process nav reģistrēts pie D-Bus."
+msgstr "„Akonadi“ servera process nav reģistrēts „D-Bus“."
 
 #: widgets/selftestdialog.cpp:432
 #, kde-format
@@ -1708,8 +1656,8 @@ msgid ""
 "The Akonadi server process is not registered at D-Bus which typically means "
 "it was not started or encountered a fatal error during startup."
 msgstr ""
-"Akonadi servera process nav reģistrēts pie D-Bus, tas parasti nozīmē ka tas "
-"nav palaists vai to palaižot gadījusies kļūme."
+"„Akonadi“ servera process nav reģistrēts „D-Bus“. Parasti tas nozīmē, ka "
+"process nav palaists vai, to palaižot, gadījusies fatāla kļūda."
 
 #: widgets/selftestdialog.cpp:441
 #, kde-format
@@ -1722,44 +1670,39 @@ msgid ""
 "Without a connection to the server it is not possible to check if the "
 "protocol version meets the requirements."
 msgstr ""
-"Bez savienojuma ar serveri nevar pārbaudīt vai protokola versija atbilst "
+"Bez savienojuma ar serveri nevar pārbaudīt, vai protokola versija atbilst "
 "prasībām."
 
 #: widgets/selftestdialog.cpp:447
 #, kde-format
 msgid "Server protocol version is too old."
-msgstr "Servera protokola versija ir par vecu"
+msgstr "Servera protokola versija ir par vecu."
 
 #: widgets/selftestdialog.cpp:448 widgets/selftestdialog.cpp:455
-#, fuzzy, kde-format
-#| msgid ""
-#| "The server protocol version is %1, but at least version %2 is required. "
-#| "Install a newer version of the Akonadi server."
+#, kde-format
 msgid ""
 "The server protocol version is %1, but version %2 is required by the client. "
 "If you recently updated KDE PIM, please make sure to restart both Akonadi "
 "and KDE PIM applications."
 msgstr ""
-"Servera protokola versija ir %1, bet nepieciešama vismaz versija %2. Lūdzu "
-"instalējiet jaunāku Akonadi servera versiju."
+"Servera protokola versija ir %1, bet klientam ir nepieciešama vismaz versija "
+"%2. Ja nesen atjauninājāt KDE PIM, pārstartējit gan „Akonadi“, gan KDE PIM "
+"programmas."
 
 #: widgets/selftestdialog.cpp:454
-#, fuzzy, kde-format
-#| msgid "Server protocol version is too old."
+#, kde-format
 msgid "Server protocol version is too new."
-msgstr "Servera protokola versija ir par vecu"
+msgstr "Servera protokola versija ir pārāk jauna."
 
 #: widgets/selftestdialog.cpp:460
-#, fuzzy, kde-format
-#| msgid "Server protocol version is too old."
+#, kde-format
 msgid "Server protocol version matches."
-msgstr "Servera protokola versija ir par vecu"
+msgstr "Servera protokola versija atbilst."
 
 #: widgets/selftestdialog.cpp:460
-#, fuzzy, kde-format
-#| msgid "Server protocol version is too old."
+#, kde-format
 msgid "The current Protocol version is %1."
-msgstr "Servera protokola versija ir par vecu"
+msgstr "Pašreizējā protokola versija ir %1."
 
 #: widgets/selftestdialog.cpp:478
 #, kde-format
@@ -1777,13 +1720,7 @@ msgid "No resource agents found."
 msgstr "Nav atrasts neviens resursu aģents."
 
 #: widgets/selftestdialog.cpp:482
-#, fuzzy, kde-format
-#| msgid ""
-#| "No resource agents have been found, Akonadi is not usable without at "
-#| "least one. This usually means that no resource agents are installed or "
-#| "that there is a setup problem. The following paths have been searched: "
-#| "'%1'. The XDG_DATA_DIRS environment variable is set to '%2', make sure "
-#| "this includes all paths where Akonadi agents are installed to."
+#, kde-format
 msgid ""
 "No resource agents have been found, Akonadi is not usable without at least "
 "one. This usually means that no resource agents are installed or that there "
@@ -1791,94 +1728,91 @@ msgid ""
 "XDG_DATA_DIRS environment variable is set to '%2'; make sure this includes "
 "all paths where Akonadi agents are installed."
 msgstr ""
-"Neizdevās atrast nevienu resursu aģentu. Akonadi nevar lietot bez vismaz "
-"viena aģenta. Tas parasti nozīmē ka nav instalēts neviens resursu aģents vai "
-"par konfigurācijas kļūdu. Tika pārmeklētas šādas mapes: '%1'. XDG_DATA_DIRS "
-"mainīgais ir iestatīts uz '%2', pārliecinieties, ka tas satur visus ceļus, "
-"kuros instalēti Akonadi aģenti."
+"Neizdevās atrast nevienu resursu aģentu. „Akonadi“ nevar lietot bez vismaz "
+"viena aģenta. Tas parasti nozīmē, ka nav instalēts neviens resursu aģents "
+"vai liecina par konfigurācijas kļūdu. Tika pārmeklētas šādas mapes: „%1“. "
+"XDG_DATA_DIRS mainīgais ir iestatīts uz „%2“. Pārliecinieties, ka tas satur "
+"visus ceļus, kuros ir instalēti „Akonadi“ aģenti."
 
 #: widgets/selftestdialog.cpp:499
 #, kde-format
 msgid "No current Akonadi server error log found."
-msgstr "Nav pašreizēja Akonadi servera kļūdu žurnāla."
+msgstr "Nav atrasts aktīvs „Akonadi“ servera kļūdu žurnāls."
 
 #: widgets/selftestdialog.cpp:499
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its current startup."
-msgstr "Akonadi serveris neziņoja nevienu kļūdu veicot palaišanu."
+msgstr "„Akonadi“ serveris palaižoties neziņoja par kļūdām."
 
 #: widgets/selftestdialog.cpp:503
 #, kde-format
 msgid "Current Akonadi server error log found."
-msgstr "Atrasts pašreizējs Akonadi servera kļūdu žurnāls."
+msgstr "Atrasts aktīvs „Akonadi“ servera kļūdu žurnāls."
 
 #: widgets/selftestdialog.cpp:504
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi server did not report any errors during its current startup."
+#, kde-format
 msgid ""
 "The Akonadi server reported errors during its current startup. The log can "
 "be found in %1."
-msgstr "Akonadi serveris neziņoja nevienu kļūdu veicot palaišanu."
+msgstr ""
+"„Akonadi“ serveris palaižoties neziņoja par kļūdām. Žurnāls ir atrodams „%1“."
 
 #: widgets/selftestdialog.cpp:512
 #, kde-format
 msgid "No previous Akonadi server error log found."
-msgstr "Nav atrasts iepriekšējais Akonadi servera kļūdu žurnāls."
+msgstr "Nav atrasts iepriekšējais „Akonadi“ servera kļūdu žurnāls."
 
 #: widgets/selftestdialog.cpp:513
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its previous startup."
-msgstr "Akonadi serveris neziņoja nevienu kļūdu iepriekšējās palaišanas laikā."
+msgstr "„Akonadi“ serveris iepriekšējās palaišanas laikā neziņoja par kļūdām."
 
 #: widgets/selftestdialog.cpp:517
 #, kde-format
 msgid "Previous Akonadi server error log found."
-msgstr "Atrasts iepriekšējais Akonadi servera kļūdu žurnāls."
+msgstr "Atrasts iepriekšējais „Akonadi“ servera kļūdu žurnāls."
 
 #: widgets/selftestdialog.cpp:518
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi server did report error during its previous startup into %1."
+#, kde-format
 msgid ""
 "The Akonadi server reported errors during its previous startup. The log can "
 "be found in %1."
 msgstr ""
-"Akonadi serveris ziņoja par kļūdām iepriekšējās palaišanas laikā failā %1."
+"Iepriekšējās palaišanās laikā „Akonadi“ serveris ziņoja par kļūdām. Žurnāls "
+"ir atrodams „%1“."
 
 #: widgets/selftestdialog.cpp:529
 #, kde-format
 msgid "No current Akonadi control error log found."
-msgstr "Nav pašreizēja Akonadi kontroles kļūdu žurnāla."
+msgstr "Nav aktīva „Akonadi“ kontroles kļūdu žurnāla."
 
 #: widgets/selftestdialog.cpp:530
 #, kde-format
 msgid ""
 "The Akonadi control process did not report any errors during its current "
 "startup."
-msgstr "Akonadi kontroles process neziņoja nevienu kļūdu veicot palaišanu."
+msgstr "„Akonadi“ kontroles process palaižoties neziņoja par kļūdām."
 
 #: widgets/selftestdialog.cpp:534
 #, kde-format
 msgid "Current Akonadi control error log found."
-msgstr "Atrasts pašreizējs Akonadi kontroles kļūdu žurnāls."
+msgstr "Atrasts aktīvs „Akonadi“ kontroles kļūdu žurnāls."
 
 #: widgets/selftestdialog.cpp:535
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi control process did not report any errors during its current "
-#| "startup."
+#, kde-format
 msgid ""
 "The Akonadi control process reported errors during its current startup. The "
 "log can be found in %1."
-msgstr "Akonadi kontroles process neziņoja nevienu kļūdu veicot palaišanu."
+msgstr ""
+"„Akonadi“ kontroles process šīs palaišanās laikā neziņoja par kļūdām. "
+"Žurnāls ir atrodams „%1“."
 
 #: widgets/selftestdialog.cpp:543
 #, kde-format
 msgid "No previous Akonadi control error log found."
-msgstr "Nav atrasts iepriekšējais Akonadi kontroles kļūdu žurnāls."
+msgstr "Nav atrasts iepriekšējais „Akonadi“ kontroles kļūdu žurnāls."
 
 #: widgets/selftestdialog.cpp:544
 #, kde-format
@@ -1886,30 +1820,27 @@ msgid ""
 "The Akonadi control process did not report any errors during its previous "
 "startup."
 msgstr ""
-"Akonadi kontroles process neziņoja nevienu kļūdu iepriekšējās palaišanas "
+"„Akonadi“ kontroles process neziņoja par kļūdām iepriekšējās palaišanas "
 "laikā."
 
 #: widgets/selftestdialog.cpp:548
 #, kde-format
 msgid "Previous Akonadi control error log found."
-msgstr "Atrasts iepriekšējais Akonadi kontroles kļūdu žurnāls."
+msgstr "Atrasts iepriekšējais „Akonadi“ kontroles kļūdu žurnāls."
 
 #: widgets/selftestdialog.cpp:549
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi control process did report error during its previous startup "
-#| "into %1."
+#, kde-format
 msgid ""
 "The Akonadi control process reported errors during its previous startup. The "
 "log can be found in %1."
 msgstr ""
-"Akonadi kontroles process ziņoja par kļūdām iepriekšējās palaišanas laikā "
-"failā %1."
+"„Akonadi“ kontroles process ziņoja par kļūdām iepriekšējās palaišanas laikā. "
+"Žurnāls ir atrodams „%1“."
 
 #: widgets/selftestdialog.cpp:559
 #, kde-format
 msgid "Akonadi was started as root"
-msgstr ""
+msgstr "„Akonadi“ tika palaists ar saknes lietotāja privilēģijām"
 
 #: widgets/selftestdialog.cpp:560
 #, kde-format
@@ -1918,11 +1849,15 @@ msgid ""
 "many security risks. MySQL, used by this Akonadi installation, will not "
 "allow itself to run as root, to protect you from these risks."
 msgstr ""
+"Programmu, kas saskaras ar internetu, palaišana ar saknes lietotāja/"
+"administratora privilēģijām paver ceļu daudziem drošības riskiem. Ar šo "
+"„Akonadi“ instalāciju izmantotais „MySQL“ neļaus sevi palaist ar saknes "
+"lietotāja privilēģijām, lai aizsargātu no šiem riskiem."
 
 #: widgets/selftestdialog.cpp:564
 #, kde-format
 msgid "Akonadi is not running as root"
-msgstr ""
+msgstr "„Akonadi“ nav palaists ar saknes lietotāja privilēģijām"
 
 #: widgets/selftestdialog.cpp:565
 #, kde-format
@@ -1930,16 +1865,18 @@ msgid ""
 "Akonadi is not running as a root/administrator user, which is the "
 "recommended setup for a secure system."
 msgstr ""
+"„Akonadi“ nav palaists ar saknes lietotāja/administratora privilēģijām, kas "
+"ir ieteicamā uzvedība, lai nodrošinātu sistēmas drošību."
 
 #: widgets/selftestdialog.cpp:643
 #, kde-format
 msgid "Save Test Report"
-msgstr "Saglabāt pārbaudes atskaiti"
+msgstr "Saglabāt testa pārskatu"
 
 #: widgets/selftestdialog.cpp:650
 #, kde-format
 msgid "Could not open file '%1'"
-msgstr "Neizdevās atvērt failu '%1'"
+msgstr "Neizdevās atvērt datni „%1“"
 
 #. i18n: ectx: property (text), widget (QLabel, introductionLabel)
 #: widgets/selftestdialog.ui:16
@@ -1949,28 +1886,25 @@ msgid ""
 "self-tests are supposed to help with tracking down and solving this problem. "
 "When requesting support or reporting bugs, please always include this report."
 msgstr ""
-"Gadījās kļūda palaižot Akonadi serveri. Šīs iebūvētās pārbaudes ir "
-"paredzētas problēmu atrašanai un risināšanai. Lūdzot palīdzību vai nosūtot "
-"kļūdas ziņojumus, vienmēr iekļaujiet šo atskaiti."
+"Gadījās kļūda, palaižot „Akonadi“ serveri. Šie paštesti ir paredzēti "
+"problēmu atrašanai un risināšanai. Lūdzot palīdzību vai nosūtot kļūdas "
+"ziņojumus, vienmēr iekļaujiet šo atskaiti."
 
 #. i18n: ectx: property (title), widget (QGroupBox, detailsGroup)
 #: widgets/selftestdialog.ui:39
 #, kde-format
 msgid "Details"
-msgstr "Detaļas"
+msgstr "Informācija"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/selftestdialog.ui:61
-#, fuzzy, kde-format
-#| msgid ""
-#| "<p>For more troubleshooting tips please refer to <a href=\"http://"
-#| "userbase.kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
+#, kde-format
 msgid ""
 "<p>For more troubleshooting tips please refer to <a href=\"https://userbase."
 "kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
 msgstr ""
-"<p>Vairāk risināšanas padomus meklējiet <a href=\"http://userbase.kde.org/"
-"Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
+"<p>Vairāk problēmu risināšanas padomu meklējiet <a href=\"https://userbase."
+"kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
 
 #: widgets/standardactionmanager.cpp:78
 msgid "&New Folder..."
@@ -1978,82 +1912,64 @@ msgstr "&Jauna mape..."
 
 #: widgets/standardactionmanager.cpp:78
 msgid "New"
-msgstr ""
+msgstr "Jauna"
 
 #: widgets/standardactionmanager.cpp:80
-#, fuzzy
-#| msgid "&Delete Folder"
 msgid "&Delete Folder"
 msgstr "&Dzēst mapi"
 
 #: widgets/standardactionmanager.cpp:80
-#, fuzzy
-#| msgid "Delete?"
 msgid "Delete"
-msgstr "Dzēst?"
+msgstr "Dzēst"
 
 #: widgets/standardactionmanager.cpp:82
-#, fuzzy
-#| msgid "&Synchronize Folder"
 msgid "&Synchronize Folder"
 msgstr "&Sinhronizēt mapi"
 
 #: widgets/standardactionmanager.cpp:83 widgets/standardactionmanager.cpp:157
 #: widgets/standardactionmanager.cpp:243
-#, fuzzy
-#| msgid "&Synchronize Folder"
 msgid "Synchronize"
-msgstr "&Sinhronizēt mapi"
+msgstr "Sinhronizēt"
 
 #: widgets/standardactionmanager.cpp:90
 msgid "Folder &Properties"
-msgstr "Mapes ī&pašības"
+msgstr "&Mapes īpašības"
 
 #: widgets/standardactionmanager.cpp:91 widgets/standardactionmanager.cpp:149
-#, fuzzy
-#| msgid "Folder &Properties"
 msgid "Properties"
-msgstr "Mapes ī&pašības"
+msgstr "Ī&pašības"
 
 #: widgets/standardactionmanager.cpp:98
 msgid "&Paste"
 msgstr "&Ielīmēt"
 
 #: widgets/standardactionmanager.cpp:98
-#, fuzzy
-#| msgid "&Paste"
 msgid "Paste"
-msgstr "&Ielīmēt"
+msgstr "Ielīmēt"
 
 #: widgets/standardactionmanager.cpp:101
 msgid "Manage Local &Subscriptions..."
 msgstr "Pārvaldīt lokālos &pierakstus..."
 
 #: widgets/standardactionmanager.cpp:102
-#, fuzzy
-#| msgid "Manage Local &Subscriptions..."
 msgid "Manage Local Subscriptions"
-msgstr "Pārvaldīt lokālos &pierakstus..."
+msgstr "Pārvaldīt lokālos pierakstus..."
 
 #: widgets/standardactionmanager.cpp:109
 msgid "Add to Favorite Folders"
 msgstr "Pievienot iecienītajām mapēm"
 
 #: widgets/standardactionmanager.cpp:110
-#, fuzzy
-#| msgid "Add to Favorite Folders"
 msgid "Add to Favorite"
-msgstr "Pievienot iecienītajām mapēm"
+msgstr "Pievienot iecienītajām"
 
 #: widgets/standardactionmanager.cpp:117
 msgid "Remove from Favorite Folders"
 msgstr "Izņemt no iecienītajām mapēm"
 
 #: widgets/standardactionmanager.cpp:118
-#, fuzzy
-#| msgid "Remove from Favorite Folders"
 msgid "Remove from Favorite"
-msgstr "Izņemt no iecienītajām mapēm"
+msgstr "Izņemt no iecienītajām"
 
 #: widgets/standardactionmanager.cpp:124
 msgid "Rename Favorite..."
@@ -2061,7 +1977,7 @@ msgstr "Pārdēvēt iecienīto..."
 
 #: widgets/standardactionmanager.cpp:124
 msgid "Rename"
-msgstr ""
+msgstr "Pārdēvēt"
 
 #: widgets/standardactionmanager.cpp:126 widgets/standardactionmanager.cpp:164
 msgid "Copy Folder To..."
@@ -2069,160 +1985,119 @@ msgstr "Kopēt mapi uz..."
 
 #: widgets/standardactionmanager.cpp:127 widgets/standardactionmanager.cpp:133
 #: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:173
-#, fuzzy
-#| msgid "&Copy Folder"
-#| msgid_plural "&Copy %1 Folders"
 msgid "Copy To"
-msgstr "&Kopēt %1 mapi"
+msgstr "Kopēt uz"
 
 #: widgets/standardactionmanager.cpp:133 widgets/standardactionmanager.cpp:173
 msgid "Copy Item To..."
-msgstr "Kopēt vienību uz..."
+msgstr "Kopēt vienumu uz..."
 
 #: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:174
 msgid "Move Item To..."
-msgstr "Pārvietot vienību uz..."
+msgstr "Pārvietot vienumu uz..."
 
 #: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:137
 #: widgets/standardactionmanager.cpp:167 widgets/standardactionmanager.cpp:174
-#, fuzzy
-#| msgid "Move Item To..."
 msgid "Move To"
-msgstr "Pārvietot vienību uz..."
+msgstr "Pārvietot uz"
 
 #: widgets/standardactionmanager.cpp:136 widgets/standardactionmanager.cpp:166
 msgid "Move Folder To..."
 msgstr "Pārvietot mapi uz..."
 
 #: widgets/standardactionmanager.cpp:143
-#, fuzzy
-#| msgid "&Cut Item"
-#| msgid_plural "&Cut %1 Items"
 msgid "&Cut Item"
-msgstr "&Izgriezt %1 vienību"
+msgstr "&Izgriezt vienumu"
 
 #: widgets/standardactionmanager.cpp:143 widgets/standardactionmanager.cpp:144
 msgid "Cut"
-msgstr ""
+msgstr "Izgriezt"
 
 #: widgets/standardactionmanager.cpp:144
-#, fuzzy
-#| msgid "&Cut Folder"
-#| msgid_plural "&Cut %1 Folders"
 msgid "&Cut Folder"
-msgstr "&Izgriezt %1 mapi"
+msgstr "&Izgriezt mapi"
 
 #: widgets/standardactionmanager.cpp:145
-#, fuzzy
-#| msgctxt "@title, application name"
-#| msgid "Akonadi Resource"
 msgid "Create Resource"
-msgstr "Akonadi resurss"
+msgstr "Izveidot resursu"
 
 #: widgets/standardactionmanager.cpp:146
-#, fuzzy
-#| msgid "&Delete Folder"
 msgid "Delete Resource"
-msgstr "&Dzēst mapi"
+msgstr "Dzēst resursu"
 
 #: widgets/standardactionmanager.cpp:148
-#, fuzzy
-#| msgid "Folder &Properties"
 msgid "&Resource Properties"
-msgstr "Mapes ī&pašības"
+msgstr "&Resursa īpašības"
 
 #: widgets/standardactionmanager.cpp:156
-#, fuzzy
-#| msgid "&Synchronize Folder"
 msgid "Synchronize Resource"
-msgstr "&Sinhronizēt mapi"
+msgstr "Sinhronizēt resursu"
 
 #: widgets/standardactionmanager.cpp:163
-#, fuzzy
-#| msgctxt "@info:status"
-#| msgid "Offline"
 msgid "Work Offline"
-msgstr "Nesaistē"
+msgstr "Darboties nesaistē"
 
 #: widgets/standardactionmanager.cpp:176
-#, fuzzy
-#| msgid "&Synchronize Folder"
 msgid "&Synchronize Folder Recursively"
-msgstr "&Sinhronizēt mapi"
+msgstr "&Sinhronizēt mapi rekursīvi"
 
 #: widgets/standardactionmanager.cpp:177
-#, fuzzy
-#| msgid "&Synchronize Folder"
 msgid "Synchronize Recursively"
-msgstr "&Sinhronizēt mapi"
+msgstr "Sinhronizēt rekursīvi"
 
 #: widgets/standardactionmanager.cpp:184
-#, fuzzy
-#| msgid "Move Folder To..."
 msgid "&Move Folder To Trash"
-msgstr "Pārvietot mapi uz..."
+msgstr "&Pārvietot mapi uz atkritni"
 
 #: widgets/standardactionmanager.cpp:185
-#, fuzzy
-#| msgid "Move Folder To..."
 msgid "Move Folder To Trash"
-msgstr "Pārvietot mapi uz..."
+msgstr "Pārvietot mapi uz atkritni"
 
 #: widgets/standardactionmanager.cpp:192
-#, fuzzy
-#| msgid "Move Item To..."
 msgid "&Move Item To Trash"
-msgstr "Pārvietot vienību uz..."
+msgstr "&Pārvietot vienumu uz atkritni"
 
 #: widgets/standardactionmanager.cpp:193
-#, fuzzy
-#| msgid "Move Item To..."
 msgid "Move Item To Trash"
-msgstr "Pārvietot vienību uz..."
+msgstr "Pārvietot vienumu uz atkritni"
 
 #: widgets/standardactionmanager.cpp:200 widgets/standardactionmanager.cpp:216
 msgid "&Restore Folder From Trash"
-msgstr ""
+msgstr "&Atjaunot mapi no atkritnes"
 
 #: widgets/standardactionmanager.cpp:201 widgets/standardactionmanager.cpp:217
 msgid "Restore Folder From Trash"
-msgstr ""
+msgstr "Atjaunot mapi no atkritnes"
 
 #: widgets/standardactionmanager.cpp:208 widgets/standardactionmanager.cpp:225
 #: widgets/standardactionmanager.cpp:232
 msgid "&Restore Item From Trash"
-msgstr ""
+msgstr "&Atjaunot vienumu no atkritnes"
 
 #: widgets/standardactionmanager.cpp:209 widgets/standardactionmanager.cpp:226
 #: widgets/standardactionmanager.cpp:232
 msgid "Restore Item From Trash"
-msgstr ""
+msgstr "Atjaunot vienumu no atkritnes"
 
 #: widgets/standardactionmanager.cpp:223
 msgid "&Restore Collection From Trash"
-msgstr ""
+msgstr "&Atjaunot kolekciju no atkritnes"
 
 #: widgets/standardactionmanager.cpp:223
 msgid "Restore Collection From Trash"
-msgstr ""
+msgstr "Atjaunot kolekciju no atkritnes"
 
 #: widgets/standardactionmanager.cpp:234
-#, fuzzy
-#| msgid "&Synchronize Folder"
 msgid "&Synchronize Favorite Folders"
-msgstr "&Sinhronizēt mapi"
+msgstr "&Sinhronizēt iecienītās mapes"
 
 #: widgets/standardactionmanager.cpp:235
-#, fuzzy
-#| msgid "&Synchronize Folder"
 msgid "Synchronize Favorite Folders"
-msgstr "&Sinhronizēt mapi"
+msgstr "Sinhronizēt iecienītās mapes"
 
 #: widgets/standardactionmanager.cpp:242
-#, fuzzy
-#| msgid "&Synchronize Folder"
 msgid "Synchronize Folder Tree"
-msgstr "&Sinhronizēt mapi"
+msgstr "Sinhronizēt mapju koku"
 
 #: widgets/standardactionmanager.cpp:328
 #, kde-format
@@ -2230,199 +2105,173 @@ msgid "&Copy Folder"
 msgid_plural "&Copy %1 Folders"
 msgstr[0] "&Kopēt %1 mapi"
 msgstr[1] "&Kopēt %1 mapes"
-msgstr[2] "&Kopēt %1 mapes"
+msgstr[2] "&Kopēt %1 mapju"
 
 #: widgets/standardactionmanager.cpp:329
 #, kde-format
 msgid "&Copy Item"
 msgid_plural "&Copy %1 Items"
-msgstr[0] "&Kopēt %1 vienību"
-msgstr[1] "&Kopēt %1 vienības"
-msgstr[2] "&Kopēt %1 vienību"
+msgstr[0] "&Kopēt %1 vienumu"
+msgstr[1] "&Kopēt %1 vienumus"
+msgstr[2] "&Kopēt %1 vienumu"
 
 #: widgets/standardactionmanager.cpp:330
-#, fuzzy, kde-format
-#| msgid "&Cut Item"
-#| msgid_plural "&Cut %1 Items"
+#, kde-format
 msgctxt "@action"
 msgid "&Cut Item"
 msgid_plural "&Cut %1 Items"
-msgstr[0] "&Izgriezt %1 vienību"
-msgstr[1] "&Izgriezt %1 vienības"
-msgstr[2] "&Izgriezt %1 vienības"
+msgstr[0] "&Izgriezt %1 vienumu"
+msgstr[1] "&Izgriezt %1 vienumus"
+msgstr[2] "&Izgriezt %1 vienumu"
 
 #: widgets/standardactionmanager.cpp:331
-#, fuzzy, kde-format
-#| msgid "&Cut Folder"
-#| msgid_plural "&Cut %1 Folders"
+#, kde-format
 msgctxt "@action"
 msgid "&Cut Folder"
 msgid_plural "&Cut %1 Folders"
 msgstr[0] "&Izgriezt %1 mapi"
 msgstr[1] "&Izgriezt %1 mapes"
-msgstr[2] "&Izgriezt %1 mapes"
+msgstr[2] "&Izgriezt %1 mapju"
 
 #: widgets/standardactionmanager.cpp:332
 #, kde-format
 msgid "&Delete Item"
 msgid_plural "&Delete %1 Items"
-msgstr[0] "&Dzēst %1 vienību"
-msgstr[1] "&Dzēst %1 vienības"
-msgstr[2] "&Dzēst %1 vienību"
+msgstr[0] "&Dzēst %1 vienumu"
+msgstr[1] "&Dzēst %1 vienumus"
+msgstr[2] "&Dzēst %1 vienumu"
 
 #: widgets/standardactionmanager.cpp:333
-#, fuzzy, kde-format
-#| msgid "&Delete Folder"
+#, kde-format
 msgctxt "@action"
 msgid "&Delete Folder"
 msgid_plural "&Delete %1 Folders"
-msgstr[0] "&Dzēst mapi"
-msgstr[1] "&Dzēst mapi"
-msgstr[2] "&Dzēst mapi"
+msgstr[0] "&Dzēst %1 mapi"
+msgstr[1] "&Dzēst %1 mapes"
+msgstr[2] "&Dzēst %1 mapju"
 
 #: widgets/standardactionmanager.cpp:334
-#, fuzzy, kde-format
-#| msgid "&Synchronize Folder"
+#, kde-format
 msgctxt "@action"
 msgid "&Synchronize Folder"
 msgid_plural "&Synchronize %1 Folders"
-msgstr[0] "&Sinhronizēt mapi"
-msgstr[1] "&Sinhronizēt mapi"
-msgstr[2] "&Sinhronizēt mapi"
+msgstr[0] "&Sinhronizēt %1 mapi"
+msgstr[1] "&Sinhronizēt %1 mapes"
+msgstr[2] "&Sinhronizēt %1 mapju"
 
 #: widgets/standardactionmanager.cpp:335
-#, fuzzy, kde-format
-#| msgid "&Delete Folder"
+#, kde-format
 msgid "&Delete Resource"
 msgid_plural "&Delete %1 Resources"
-msgstr[0] "&Dzēst mapi"
-msgstr[1] "&Dzēst mapi"
-msgstr[2] "&Dzēst mapi"
+msgstr[0] "&Dzēst %1 resursu"
+msgstr[1] "&Dzēst %1 resursus"
+msgstr[2] "&Dzēst %1 resursu"
 
 #: widgets/standardactionmanager.cpp:336
-#, fuzzy, kde-format
-#| msgid "&Synchronize Folder"
+#, kde-format
 msgid "&Synchronize Resource"
 msgid_plural "&Synchronize %1 Resources"
-msgstr[0] "&Sinhronizēt mapi"
-msgstr[1] "&Sinhronizēt mapi"
-msgstr[2] "&Sinhronizēt mapi"
+msgstr[0] "&Sinhronizēt %1 resursu"
+msgstr[1] "&Sinhronizēt %1 resursus"
+msgstr[2] "&Sinhronizēt %1 resursu"
 
 #: widgets/standardactionmanager.cpp:338
-#, fuzzy, kde-format
-#| msgid "&Copy Folder"
-#| msgid_plural "&Copy %1 Folders"
+#, kde-format
 msgid "Copy Folder"
 msgid_plural "Copy %1 Folders"
-msgstr[0] "&Kopēt %1 mapi"
-msgstr[1] "&Kopēt %1 mapes"
-msgstr[2] "&Kopēt %1 mapes"
+msgstr[0] "Kopēt %1 mapi"
+msgstr[1] "Kopēt %1 mapes"
+msgstr[2] "Kopēt %1 mapju"
 
 #: widgets/standardactionmanager.cpp:339
-#, fuzzy, kde-format
-#| msgid "&Copy Item"
-#| msgid_plural "&Copy %1 Items"
+#, kde-format
 msgid "Copy Item"
 msgid_plural "Copy %1 Items"
-msgstr[0] "&Kopēt %1 vienību"
-msgstr[1] "&Kopēt %1 vienības"
-msgstr[2] "&Kopēt %1 vienību"
+msgstr[0] "Kopēt %1 vienumu"
+msgstr[1] "Kopēt %1 vienumus"
+msgstr[2] "Kopēt %1 vienumu"
 
 #: widgets/standardactionmanager.cpp:340
-#, fuzzy, kde-format
-#| msgid "&Cut Item"
-#| msgid_plural "&Cut %1 Items"
+#, kde-format
 msgid "Cut Item"
 msgid_plural "Cut %1 Items"
-msgstr[0] "&Izgriezt %1 vienību"
-msgstr[1] "&Izgriezt %1 vienības"
-msgstr[2] "&Izgriezt %1 vienības"
+msgstr[0] "Izgriezt %1 vienumus"
+msgstr[1] "Izgriezt %1 vienumus"
+msgstr[2] "Izgriezt %1 vienumu"
 
 #: widgets/standardactionmanager.cpp:341
-#, fuzzy, kde-format
-#| msgid "&Cut Folder"
-#| msgid_plural "&Cut %1 Folders"
+#, kde-format
 msgid "Cut Folder"
 msgid_plural "Cut %1 Folders"
-msgstr[0] "&Izgriezt %1 mapi"
-msgstr[1] "&Izgriezt %1 mapes"
-msgstr[2] "&Izgriezt %1 mapes"
+msgstr[0] "Izgriezt %1 mapi"
+msgstr[1] "Izgriezt %1 mapes"
+msgstr[2] "Izgriezt %1 mapju"
 
 #: widgets/standardactionmanager.cpp:342
-#, fuzzy, kde-format
-#| msgid "&Delete Item"
-#| msgid_plural "&Delete %1 Items"
+#, kde-format
 msgid "Delete Item"
 msgid_plural "Delete %1 Items"
-msgstr[0] "&Dzēst %1 vienību"
-msgstr[1] "&Dzēst %1 vienības"
-msgstr[2] "&Dzēst %1 vienību"
+msgstr[0] "Dzēst %1 vienumu"
+msgstr[1] "Dzēst %1 vienumus"
+msgstr[2] "Dzēst %1 vienumu"
 
 #: widgets/standardactionmanager.cpp:343
-#, fuzzy, kde-format
-#| msgid "&Delete Folder"
+#, kde-format
 msgid "Delete Folder"
 msgid_plural "Delete %1 Folders"
-msgstr[0] "&Dzēst mapi"
-msgstr[1] "&Dzēst mapi"
-msgstr[2] "&Dzēst mapi"
+msgstr[0] "Dzēst %1 mapi"
+msgstr[1] "Dzēst %1 mapes"
+msgstr[2] "Dzēst %1 mapju"
 
 #: widgets/standardactionmanager.cpp:344
-#, fuzzy, kde-format
-#| msgid "&Synchronize Folder"
+#, kde-format
 msgid "Synchronize Folder"
 msgid_plural "Synchronize %1 Folders"
-msgstr[0] "&Sinhronizēt mapi"
-msgstr[1] "&Sinhronizēt mapi"
-msgstr[2] "&Sinhronizēt mapi"
+msgstr[0] "Sinhronizēt %1 mapi"
+msgstr[1] "Sinhronizēt %1 mapes"
+msgstr[2] "Sinhronizēt %1 mapju"
 
 #: widgets/standardactionmanager.cpp:345
-#, fuzzy, kde-format
-#| msgid "&Delete Folder"
+#, kde-format
 msgctxt "@action"
 msgid "Delete Resource"
 msgid_plural "Delete %1 Resources"
-msgstr[0] "&Dzēst mapi"
-msgstr[1] "&Dzēst mapi"
-msgstr[2] "&Dzēst mapi"
+msgstr[0] "Dzēst %1 resursu"
+msgstr[1] "Dzēst %1 resursus"
+msgstr[2] "Dzēst %1 resursu"
 
 #: widgets/standardactionmanager.cpp:346
-#, fuzzy, kde-format
-#| msgid "&Synchronize Folder"
+#, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
 msgid_plural "Synchronize %1 Resources"
-msgstr[0] "&Sinhronizēt mapi"
-msgstr[1] "&Sinhronizēt mapi"
-msgstr[2] "&Sinhronizēt mapi"
+msgstr[0] "Sinhronizēt %1 resursu"
+msgstr[1] "Sinhronizēt %1 resursus"
+msgstr[2] "Sinhronizēt %1 resursu"
 
 #: widgets/standardactionmanager.cpp:349
-#, fuzzy, kde-format
-#| msgctxt "@title:column, name of a thing"
-#| msgid "Name"
+#, kde-format
 msgctxt "@label:textbox name of Akonadi folder"
 msgid "Name"
 msgstr "Nosaukums"
 
 #: widgets/standardactionmanager.cpp:356
-#, fuzzy, kde-format
-#| msgid "Do you really want to delete folder '%1' and all its sub-folders?"
+#, kde-format
 msgid "Do you really want to delete this folder and all its sub-folders?"
 msgid_plural ""
 "Do you really want to delete %1 folders and all their sub-folders?"
-msgstr[0] "Vai tiešām vēlaties dzēst mapi '%1' un visas tās apakšmapes?"
-msgstr[1] "Vai tiešām vēlaties dzēst mapi '%1' un visas tās apakšmapes?"
-msgstr[2] "Vai tiešām vēlaties dzēst mapi '%1' un visas tās apakšmapes?"
+msgstr[0] "Vai tiešām vēlaties dzēst %1 mapi un visas tās apakšmapes?"
+msgstr[1] "Vai tiešām vēlaties dzēst %1 mapes un visas tās apakšmapes?"
+msgstr[2] "Vai tiešām vēlaties dzēst %1 mapju un visas tās apakšmapes?"
 
 #: widgets/standardactionmanager.cpp:359
-#, fuzzy, kde-format
-#| msgid "&Delete Folder"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "&Dzēst mapi"
-msgstr[1] "&Dzēst mapi"
-msgstr[2] "&Dzēst mapi"
+msgstr[0] "Dzēst mapi?"
+msgstr[1] "Dzēst mapes?"
+msgstr[2] "Dzēst mapju?"
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
@@ -2430,106 +2279,90 @@ msgid "Could not delete folder: %1"
 msgstr "Neizdevās izdzēst mapi: %1"
 
 #: widgets/standardactionmanager.cpp:361
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
-msgstr "Neveiksmīga mapes dzēšana"
+msgstr "Mapes dzēšana neizdevās"
 
 #: widgets/standardactionmanager.cpp:363
-#, fuzzy, kde-format
-#| msgid "Properties of Folder %1"
+#, kde-format
 msgctxt "@title:window"
 msgid "Properties of Folder %1"
-msgstr "Mapes %1 īpašības"
+msgstr "Mapes „%1“ īpašības"
 
 #: widgets/standardactionmanager.cpp:367
-#, fuzzy, kde-format
-#| msgid "Do you really want to delete all selected items?"
+#, kde-format
 msgid "Do you really want to delete the selected item?"
 msgid_plural "Do you really want to delete %1 items?"
-msgstr[0] "Vai tiešām vēlaties dzēst visas iezīmētās vienības?"
-msgstr[1] "Vai tiešām vēlaties dzēst visas iezīmētās vienības?"
-msgstr[2] "Vai tiešām vēlaties dzēst visas iezīmētās vienības?"
+msgstr[0] "Vai tiešām vēlaties dzēst %1 atlasīto vienumu?"
+msgstr[1] "Vai tiešām vēlaties dzēst %1 atlasītos vienumus?"
+msgstr[2] "Vai tiešām vēlaties dzēst %1 atlasītos vienumu?"
 
 #: widgets/standardactionmanager.cpp:368
-#, fuzzy, kde-format
-#| msgid "&Delete Item"
-#| msgid_plural "&Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "&Dzēst %1 vienību"
-msgstr[1] "&Dzēst %1 vienības"
-msgstr[2] "&Dzēst %1 vienību"
+msgstr[0] "Dzēst vienumu?"
+msgstr[1] "Dzēst vienumus?"
+msgstr[2] "Dzēst vienumu?"
 
 #: widgets/standardactionmanager.cpp:369
-#, fuzzy, kde-format
-#| msgid "Could not delete folder: %1"
+#, kde-format
 msgid "Could not delete item: %1"
-msgstr "Neizdevās izdzēst mapi: %1"
+msgstr "Neizdevās izdzēst vienumu: %1"
 
 #: widgets/standardactionmanager.cpp:370
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
-msgstr "Neveiksmīga mapes dzēšana"
+msgstr "Vienuma dzēšana neizdevās"
 
 #: widgets/standardactionmanager.cpp:372
-#, fuzzy, kde-format
-#| msgid "Rename Favorite"
+#, kde-format
 msgctxt "@title:window"
 msgid "Rename Favorite"
 msgstr "Pārdēvēt iecienīto"
 
 #: widgets/standardactionmanager.cpp:373
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox New name of the folder."
-#| msgid "Name:"
+#, kde-format
 msgctxt "@label:textbox name of the folder"
 msgid "Name:"
 msgstr "Nosaukums:"
 
 #: widgets/standardactionmanager.cpp:375
-#, fuzzy, kde-format
-#| msgctxt "@title, application name"
-#| msgid "Akonadi Resource"
+#, kde-format
 msgctxt "@title:window"
 msgid "New Resource"
-msgstr "Akonadi resurss"
+msgstr "Jauns resurss"
 
 #: widgets/standardactionmanager.cpp:376
-#, fuzzy, kde-format
-#| msgid "Could not create folder: %1"
+#, kde-format
 msgid "Could not create resource: %1"
-msgstr "Neizdevās izveidot mapi: %1"
+msgstr "Neizdevās izveidot resursu: %1"
 
 #: widgets/standardactionmanager.cpp:377
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
-msgstr "Neveiksmīga mapes izveidošana"
+msgstr "Resursa izveidošana neizdevās"
 
 #: widgets/standardactionmanager.cpp:381
-#, fuzzy, kde-format
-#| msgid "Do you really want to delete the search view '%1'?"
+#, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
-msgstr[0] "Vai tiešām vēlaties dzēst meklēšanas skatu '%1'?"
-msgstr[1] "Vai tiešām vēlaties dzēst meklēšanas skatu '%1'?"
-msgstr[2] "Vai tiešām vēlaties dzēst meklēšanas skatu '%1'?"
+msgstr[0] "Vai tiešām vēlaties dzēst %1 resursu?"
+msgstr[1] "Vai tiešām vēlaties dzēst %1 resursus?"
+msgstr[2] "Vai tiešām vēlaties dzēst %1 resursu?"
 
 #: widgets/standardactionmanager.cpp:384
-#, fuzzy, kde-format
-#| msgid "Delete folder?"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Resource?"
 msgid_plural "Delete Resources?"
-msgstr[0] "Dzēst mapi?"
-msgstr[1] "Dzēst mapi?"
-msgstr[2] "Dzēst mapi?"
+msgstr[0] "Dzēst resursu?"
+msgstr[1] "Dzēst resursus?"
+msgstr[2] "Dzēst resursu?"
 
 #: widgets/standardactionmanager.cpp:386
 #, kde-format
@@ -2537,29 +2370,26 @@ msgid "Could not paste data: %1"
 msgstr "Neizdevās ielīmēt datus: %1"
 
 #: widgets/standardactionmanager.cpp:387
-#, fuzzy, kde-format
-#| msgid "Paste failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
-msgstr "Neizdevās ielīmēt"
+msgstr "Ielīmēšana neizdevās"
 
 #: widgets/standardactionmanager.cpp:739
 #, kde-format
 msgid "We can not add \"/\" in folder name."
-msgstr ""
+msgstr "Mapes nosaukums nevar saturēt „/“ zīmi."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "New Folder"
+#, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
-msgstr "Jauna mape"
+msgstr "Jaunas mapes izveidošanas kļūda"
 
 #: widgets/standardactionmanager.cpp:743
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
-msgstr ""
+msgstr "Mapes nosaukums nedrīkst sākties vai beigties ar punktu (.)."
 
 #: widgets/standardactionmanager.cpp:982
 #, kde-format
@@ -2567,25 +2397,24 @@ msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
 "you want to make it online?"
 msgstr ""
+"Pirms mapes „%1“ sinhronizēšanas ir svarīgi, lai resurss atrastos "
+"tiešsaistē. Vai vēlaties, lai tas ir tiešsaistē?"
 
 #: widgets/standardactionmanager.cpp:983
 #, kde-format
 msgid "Account \"%1\" is offline"
-msgstr ""
+msgstr "Konts „%1“ ir nesaistē"
 
 #: widgets/standardactionmanager.cpp:984
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Offline"
+#, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
-msgstr "Nesaistē"
+msgstr "Ieslēgt tiešsaisti"
 
 #: widgets/standardactionmanager.cpp:1585
-#, fuzzy, kde-format
-#| msgid "Copy to This Folder"
+#, kde-format
 msgid "Move to This Folder"
-msgstr "Kopēt uz šo mapi"
+msgstr "Pārvietot uz šo mapi"
 
 #: widgets/standardactionmanager.cpp:1585
 #, kde-format
@@ -2593,225 +2422,196 @@ msgid "Copy to This Folder"
 msgstr "Kopēt uz šo mapi"
 
 #: widgets/subscriptiondialog.cpp:97
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgid "Failed to update subscription: %1"
-msgstr "Neizdevās izveidot aģenta instanci."
+msgstr "Neizdevās atjaunināt pierakstu: %1"
 
 #: widgets/subscriptiondialog.cpp:97
-#, fuzzy, kde-format
-#| msgid "Manage Local &Subscriptions..."
+#, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
-msgstr "Pārvaldīt lokālos &pierakstus..."
+msgstr "Pieraksta kļūda"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, SubscriptionDialog)
 #: widgets/subscriptiondialog.ui:14
-#, fuzzy, kde-format
-#| msgid "Manage Local &Subscriptions..."
+#, kde-format
 msgid "Local Subscriptions"
-msgstr "Pārvaldīt lokālos &pierakstus..."
+msgstr "Lokālie pieraksti"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/subscriptiondialog.ui:22
-#, fuzzy, kde-format
-#| msgctxt "search folder"
-#| msgid "Search:"
+#, kde-format
 msgid "Search:"
 msgstr "Meklēt:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, subscribedOnlyCheckBox)
 #: widgets/subscriptiondialog.ui:36
-#, fuzzy, kde-format
-#| msgctxt "@title:column"
-#| msgid "Subscribe To"
+#, kde-format
 msgid "&Subscribed only"
-msgstr "Pierakstīties uz"
+msgstr "&Tikai ar pierakstu"
 
 #. i18n: ectx: property (text), widget (QPushButton, subscribeButton)
 #: widgets/subscriptiondialog.ui:62
-#, fuzzy, kde-format
-#| msgctxt "@title:column"
-#| msgid "Subscribe To"
+#, kde-format
 msgid "Su&bscribe"
-msgstr "Pierakstīties uz"
+msgstr "&Pierakstīties"
 
 #. i18n: ectx: property (text), widget (QPushButton, unsubscribeButton)
 #: widgets/subscriptiondialog.ui:69
-#, fuzzy, kde-format
-#| msgctxt "@title:column"
-#| msgid "Unsubscribe From"
+#, kde-format
 msgid "&Unsubscribe"
-msgstr "Atrakstīties no"
+msgstr "&Atrakstīties"
 
 #: widgets/tageditwidget.cpp:116
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgid "Failed to create a new tag"
-msgstr "Neizdevās izveidot aģenta instanci."
+msgstr "Neizdevās izveidot jaunu birku"
 
 #: widgets/tageditwidget.cpp:116
 #, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
-msgstr ""
+msgstr "Veidojot jaunu birku, notikusi kļūda"
 
 #: widgets/tageditwidget.cpp:164
-#, fuzzy, kde-kuit-format
-#| msgid "Do you really want to delete the search view '%1'?"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
-msgstr "Vai tiešām vēlaties dzēst meklēšanas skatu '%1'?"
+msgstr "Vai tiešām vēlaties noņemt birku <resource>%1</resource>?"
 
 #: widgets/tageditwidget.cpp:165
-#, fuzzy, kde-format
-#| msgid "&Delete Item"
-#| msgid_plural "&Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
-msgstr "&Dzēst %1 vienību"
+msgstr "Dzēst birku"
 
 #: widgets/tageditwidget.cpp:189
-#, fuzzy, kde-format
-#| msgid "&Delete Item"
-#| msgid_plural "&Delete %1 Items"
+#, kde-format
 msgctxt "@info"
 msgid "Delete tag"
-msgstr "&Dzēst %1 vienību"
+msgstr "Dzēst birku"
 
 #. i18n: ectx: property (text), widget (QLabel, selectLabel)
 #: widgets/tageditwidget.ui:29
 #, kde-format
 msgid "Select tags that should be applied."
-msgstr ""
+msgstr "Atlasiet pievienojamās birkas."
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:54
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgid "Create new tag"
-msgstr "Neizdevās izveidot aģenta instanci."
+msgstr "Izveidot jaunu birku"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: widgets/tagmanagementdialog.ui:14
 #, kde-format
 msgid "Manage Tags"
-msgstr ""
+msgstr "Pārvaldīt birkas"
 
 #: widgets/tagselectioncombobox.cpp:126
-#, fuzzy, kde-format
-#| msgid "&Delete Item"
-#| msgid_plural "&Delete %1 Items"
+#, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
-msgstr "&Dzēst %1 vienību"
+msgstr "Atlasīt birkas..."
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
 #: widgets/tagselectiondialog.ui:14
 #, kde-format
 msgid "Select Tags"
-msgstr ""
+msgstr "Atlasīt birkas"
 
 #: widgets/tagwidget.cpp:45
 #, kde-format
 msgid "Clear"
-msgstr ""
+msgstr "Notīrīt"
 
 #. i18n: ectx: property (placeholderText), widget (Akonadi::TagView, tagView)
 #: widgets/tagwidget.ui:32
 #, kde-format
 msgid "Click to add tags"
-msgstr ""
+msgstr "Klikšķiniet, lai pievienotu birkas"
 
 #. i18n: ectx: property (text), widget (QToolButton, editButton)
 #: widgets/tagwidget.ui:39
 #, kde-format
 msgid "..."
-msgstr ""
+msgstr "..."
 
 #: xml/akonadi2xml.cpp:25
 #, kde-format
 msgid "Akonadi To XML converter"
-msgstr ""
+msgstr "„Akonadi“ XML pārveidotājs"
 
 #: xml/akonadi2xml.cpp:27
 #, kde-format
 msgid "Converts an Akonadi collection subtree into a XML file."
-msgstr ""
+msgstr "Pārveido „Akonadi“ kolekcijas apakškoku par XML datni."
 
 #: xml/akonadi2xml.cpp:29
 #, kde-format
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
-msgstr ""
+msgstr "(c) 2009 Volker Krause <vkrause@kde.org>"
 
 #: xml/xmldocument.cpp:83
 #, kde-format
 msgid "No data loaded."
-msgstr ""
+msgstr "Nav ielādētu datu."
 
 #: xml/xmldocument.cpp:121
-#, fuzzy, kde-format
-#| msgid "No valid destination specified"
+#, kde-format
 msgid "No filename specified"
-msgstr "Nav norādīts derīgs mērķis"
+msgstr "Nav norādīts datnes nosaukums"
 
 #: xml/xmldocument.cpp:129
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgid "Unable to open data file '%1'."
-msgstr "Neizdevās izveidot aģenta instanci."
+msgstr "Neizdevās atvērt datni „%1“."
 
 #: xml/xmldocument.cpp:134
 #, kde-format
 msgid "File %1 does not exist."
-msgstr ""
+msgstr "Datne „%1“ neeksistē."
 
 #: xml/xmldocument.cpp:142
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgid "Unable to parse data file '%1'."
-msgstr "Neizdevās izveidot aģenta instanci."
+msgstr "Neizdevās parsēt datni „%1“."
 
 #: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
-msgstr ""
+msgstr "Shēmas definīciju neizdevās ielādēt un parsēt."
 
 #: xml/xmldocument.cpp:155
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgid "Unable to create schema parser context."
-msgstr "Neizdevās izveidot aģenta instanci."
+msgstr "Neizdevās izveidot shēmas kontekstu parsēšanai."
 
 #: xml/xmldocument.cpp:160
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgid "Unable to create schema."
-msgstr "Neizdevās izveidot aģenta instanci."
+msgstr "Neizdevās izveidot shēmu."
 
 #: xml/xmldocument.cpp:165
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgid "Unable to create schema validation context."
-msgstr "Neizdevās izveidot aģenta instanci."
+msgstr "Neizdevās izveidot shēmas validācijas kontekstu."
 
 #: xml/xmldocument.cpp:170
-#, fuzzy, kde-format
-#| msgid "Invalid parent"
+#, kde-format
 msgid "Invalid file format."
-msgstr "Nederīgs vecāks"
+msgstr "Nederīgs datnes formāts."
 
 #: xml/xmldocument.cpp:178
-#, fuzzy, kde-format
-#| msgid "Could not paste data: %1"
+#, kde-format
 msgid "Unable to parse data file: %1"
-msgstr "Neizdevās ielīmēt datus: %1"
+msgstr "Neizdevās parsēt datni: %1"
 
 #: xml/xmldocument.cpp:303
-#, fuzzy, kde-format
-#| msgid "Invalid collection"
+#, kde-format
 msgid "Unable to find collection %1"
-msgstr "Nederīga kolekcija"
+msgstr "Neizdevās atrast kolekciju „%1“"
 
 #, fuzzy
 #~| msgctxt "@info:status"
