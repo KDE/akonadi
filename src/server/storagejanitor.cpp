@@ -15,7 +15,7 @@
 #include "storage/collectionstatistics.h"
 #include "storage/datastore.h"
 #include "storage/dbconfig.h"
-#include "storage/parthelper.h"
+#include "storage/dbtype.h"
 #include "storage/query.h"
 #include "storage/queryhelper.h"
 #include "storage/selectquerybuilder.h"
@@ -24,7 +24,6 @@
 #include "private/dbus_p.h"
 #include "private/externalpartstorage_p.h"
 #include "private/imapset_p.h"
-#include "private/protocol_p.h"
 #include "private/standarddirs_p.h"
 
 #include <QDateTime>
@@ -385,6 +384,131 @@ void StorageJanitor::findOrphanedPimItemFlags()
         }
 
         inform(QLatin1StringView("Found and deleted ") + QString::number(count) + QLatin1StringView(" orphan pim item flags."));
+    }
+}
+
+struct RelationDesc {
+    QString tableName;
+    QString deduplEntityIdColumnName;
+};
+
+template<typename DeduplEntity>
+std::optional<int> findDuplicatesImpl(DataStore *dataStore, const QString &nameColumn, const RelationDesc &relation)
+{
+    QueryBuilder sqb(dataStore, DeduplEntity::tableName(), QueryBuilder::Select);
+    sqb.addColumns({DeduplEntity::idColumn(), nameColumn});
+    sqb.addSortColumn(DeduplEntity::idColumn());
+    if (!sqb.exec()) {
+        return std::nullopt;
+    }
+
+    QMap<QString, QVariantList> duplicates;
+    while (sqb.query().next()) {
+        const auto id = sqb.query().value(0).toLongLong();
+        const auto name = sqb.query().value(1).toString();
+
+        auto it = duplicates.find(name.trimmed());
+        if (it == duplicates.end()) {
+            it = duplicates.insert(name.trimmed(), QVariantList{});
+        }
+        it->push_back(id);
+    }
+
+    int removed = 0;
+    for (const auto &[duplicateName, duplicateIds] : duplicates.asKeyValueRange()) {
+        if (duplicateIds.size() <= 1) {
+            // Not duplicated
+            continue;
+        }
+
+        Transaction transaction(dataStore, QStringLiteral("StorageJanitor deduplicate %1 %2").arg(DeduplEntity::tableName(), duplicateName));
+
+        // Update all relations with duplicated entity to use the lowest entity ID, so we can remove the
+        // duplicates afterwards
+        const auto firstId = duplicateIds.takeFirst();
+
+        QueryBuilder updateQb(dataStore, relation.tableName, QueryBuilder::Update);
+        updateQb.setColumnValue(relation.deduplEntityIdColumnName, firstId);
+        updateQb.addValueCondition(relation.deduplEntityIdColumnName, Query::In, duplicateIds);
+        if (!updateQb.exec()) {
+            continue;
+        }
+
+        // Remove the duplicated entities
+        QueryBuilder removeQb(dataStore, DeduplEntity::tableName(), QueryBuilder::Delete);
+        removeQb.addValueCondition(DeduplEntity::idColumn(), Query::In, duplicateIds);
+        if (!removeQb.exec()) {
+            continue;
+        }
+
+        ++removed;
+
+        transaction.commit();
+    }
+
+    return removed;
+}
+
+void StorageJanitor::findDuplicateFlags()
+{
+    const auto removed =
+        findDuplicatesImpl<Flag>(m_dataStore.get(), Flag::nameFullColumnName(), {PimItemFlagRelation::tableName(), PimItemFlagRelation::rightFullColumnName()});
+    if (removed) {
+        inform(u"Removed " % QString::number(*removed) % u" duplicate item flags");
+    } else {
+        inform("Error while trying to remove duplicate Flags");
+    }
+}
+
+void StorageJanitor::findDuplicateMimeTypes()
+{
+    const auto removed =
+        findDuplicatesImpl<MimeType>(m_dataStore.get(), MimeType::nameFullColumnName(), {PimItem::tableName(), PimItem::mimeTypeIdFullColumnName()});
+    if (removed) {
+        inform(u"Removed " % QString::number(*removed) % u" duplicate mime types");
+    } else {
+        inform("Error while trying to remove duplicate MimeTypes");
+    }
+}
+
+void StorageJanitor::findDuplicatePartTypes()
+{
+    // Good thing that SQL is ANSI/ISO standardized...
+    QString nameColumn;
+    if (DbType::type(m_dataStore->database()) == DbType::MySQL) {
+        nameColumn = QStringLiteral("CONCAT_WS(':', %1, %2) AS name");
+    } else {
+        nameColumn = QStringLiteral("(%1 || ':' || %2) AS name");
+    }
+
+    const auto removed = findDuplicatesImpl<PartType>(m_dataStore.get(),
+                                                      nameColumn.arg(PartType::nsFullColumnName(), PartType::nameFullColumnName()),
+                                                      {Part::tableName(), Part::partTypeIdFullColumnName()});
+    if (removed) {
+        inform(u"Removed " % QString::number(*removed) % u" duplicate part types");
+    } else {
+        inform("Error while trying to remove duplicate PartTypes");
+    }
+}
+
+void StorageJanitor::findDuplicateTagTypes()
+{
+    const auto removed = findDuplicatesImpl<TagType>(m_dataStore.get(), TagType::nameFullColumnName(), {Tag::tableName(), Tag::typeIdFullColumnName()});
+    if (removed) {
+        inform(u"Removed " % QString::number(*removed) % u" duplicate tag types");
+    } else {
+        inform("Error while trying to remove duplicate TagTypes");
+    }
+}
+
+void StorageJanitor::findDuplicateRelationTypes()
+{
+    const auto removed =
+        findDuplicatesImpl<RelationType>(m_dataStore.get(), RelationType::nameFullColumnName(), {Relation::tableName(), Relation::typeIdFullColumnName()});
+    if (removed) {
+        inform(u"Removed " % QString::number(*removed) % u" duplicate relation types");
+    } else {
+        inform("Error while trying to remove duplicate RelationTypes");
     }
 }
 

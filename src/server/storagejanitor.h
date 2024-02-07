@@ -96,7 +96,27 @@ private:
     /**
      * Look for duplicate item flags and fix them.
      */
-    void findDuplicatePimItemFlags();
+    void findDuplicateFlags();
+
+    /**
+     * Look for duplicate mime type names and fix them.
+     */
+    void findDuplicateMimeTypes();
+
+    /**
+     * Look for duplicate part type names and fix them.
+     */
+    void findDuplicatePartTypes();
+
+    /**
+     * Look for duplicate tag names and fix them.
+     */
+    void findDuplicateTagTypes();
+
+    /**
+     * Look for duplicate relation type names and fix them.
+     */
+    void findDuplicateRelationTypes();
 
     /**
      * Look for parts referring to the same external file.
