@@ -67,6 +67,7 @@ void AkThread::quitThread()
     m_quitCalled = true;
 
     if (m_startMode == NoThread) {
+        quit();
         return;
     }
     qCDebug(AKONADISERVER_LOG) << "Shutting down" << objectName() << "...";

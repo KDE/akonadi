@@ -142,8 +142,6 @@ private Q_SLOTS:
         QVERIFY(!manager.itemFetchScope()->fetchTags());
         QVERIFY(!manager.itemFetchScope()->fetchRelations());
         QVERIFY(!manager.itemFetchScope()->fetchVirtualReferences());
-
-        QMetaObject::invokeMethod(&manager, "quit", Qt::DirectConnection);
     }
 };
 
