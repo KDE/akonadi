@@ -106,8 +106,7 @@ void StorageJanitor::quit()
 
 void StorageJanitor::registerTasks()
 {
-    m_tasks = {{QStringLiteral("Looking for resources in the DB not matching a configured resource..."), &StorageJanitor::findOrphanedResources},
-               {QStringLiteral("Looking for collections not belonging to a valid resource..."), &StorageJanitor::findOrphanedCollections},
+    m_tasks = {{QStringLiteral("Looking for collections not belonging to a valid resource..."), &StorageJanitor::findOrphanedCollections},
                {QStringLiteral("Checking collection tree consistency..."), &StorageJanitor::checkCollectionTreeConsistency},
                {QStringLiteral("Looking for items not belonging to a valid collection..."), &StorageJanitor::findOrphanedItems},
                {QStringLiteral("Looking for item parts not belonging to a valid item..."), &StorageJanitor::findOrphanedParts},
@@ -123,9 +122,15 @@ void StorageJanitor::registerTasks()
                {QStringLiteral("Looking for dirty objects..."), &StorageJanitor::findDirtyObjects},
                {QStringLiteral("Looking for rid-duplicates not matching the content mime-type of the parent collection"), &StorageJanitor::findRIDDuplicates},
                {QStringLiteral("Migrating parts to new cache hierarchy..."), &StorageJanitor::migrateToLevelledCacheHierarchy},
-               {QStringLiteral("Checking search index consistency..."), &StorageJanitor::findOrphanSearchIndexEntries},
-               {QStringLiteral("Flushing collection statistics memory cache..."), &StorageJanitor::expireCollectionStatisticsCache},
                {QStringLiteral("Making sure virtual search resource and collections exist"), &StorageJanitor::ensureSearchCollection}};
+
+    // Tasks that require a valid Akonadi instance
+    if (m_akonadi) {
+        m_tasks += {{QStringLiteral("Looking for resources in the DB not matching a configured resource..."), &StorageJanitor::findOrphanedResources},
+                    {QStringLiteral("Checking search index consistency..."), &StorageJanitor::findOrphanSearchIndexEntries},
+                    {QStringLiteral("Flushing collection statistics memory cache..."), &StorageJanitor::expireCollectionStatisticsCache}};
+    }
+
     /* TODO some ideas for further checks:
      * the collection tree is non-cyclic
      * content type constraints of collections are not violated
@@ -245,7 +250,7 @@ void StorageJanitor::findOrphanedResources()
         inform(QStringLiteral("Found %1 orphan resources: %2").arg(orphanResourcesSize).arg(resourceNames.join(QLatin1Char(','))));
         for (const QString &resourceName : std::as_const(resourceNames)) {
             inform(QStringLiteral("Removing resource %1").arg(resourceName));
-            m_akonadi.resourceManager().removeResourceInstance(resourceName);
+            m_akonadi->resourceManager().removeResourceInstance(resourceName);
         }
     }
 }
@@ -937,7 +942,7 @@ void StorageJanitor::findOrphanSearchIndexEntries()
         }
 
         inform(QStringLiteral("Checking Collection %1 search index...").arg(colId));
-        SearchRequest req("StorageJanitor", m_akonadi.searchManager(), m_akonadi.agentSearchManager());
+        SearchRequest req("StorageJanitor", m_akonadi->searchManager(), m_akonadi->agentSearchManager());
         req.setStoreResults(true);
         req.setCollections({colId});
         req.setRemoteSearch(false);
@@ -1012,9 +1017,7 @@ void StorageJanitor::ensureSearchCollection()
 
 void StorageJanitor::expireCollectionStatisticsCache()
 {
-    if (m_akonadi) {
-        m_akonadi->collectionStatistics().expireCache();
-    }
+    m_akonadi->collectionStatistics().expireCache();
 }
 
 void StorageJanitor::inform(const char *msg)
