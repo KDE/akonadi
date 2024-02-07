@@ -381,19 +381,36 @@ void SearchManager::searchUpdateResultsAvailable(const QSet<qint64> &results)
 
     // First query all the IDs we got from search plugin/agent against the DB.
     // This will remove IDs that no longer exist in the DB.
+    constexpr int maximumParametersSize = 1000;
     QVariantList newMatchesVariant;
-    newMatchesVariant.reserve(newMatches.count());
+    newMatchesVariant.reserve(maximumParametersSize);
+    QList<PimItem> items;
+
     for (qint64 id : std::as_const(newMatches)) {
         newMatchesVariant << id;
+        if (newMatchesVariant.size() >= maximumParametersSize) {
+            SelectQueryBuilder<PimItem> qb;
+            qb.addValueCondition(PimItem::idFullColumnName(), Query::In, newMatchesVariant);
+            if (!qb.exec()) {
+                return;
+            }
+
+            items << qb.result();
+
+            newMatchesVariant.clear();
+        }
     }
 
-    SelectQueryBuilder<PimItem> qb;
-    qb.addValueCondition(PimItem::idFullColumnName(), Query::In, newMatchesVariant);
-    if (!qb.exec()) {
-        return;
+    if (!newMatchesVariant.isEmpty()) {
+        SelectQueryBuilder<PimItem> qb;
+        qb.addValueCondition(PimItem::idFullColumnName(), Query::In, newMatchesVariant);
+        if (!qb.exec()) {
+            return;
+        }
+
+        items << qb.result();
     }
 
-    const auto items = qb.result();
     if (items.count() != newMatches.count()) {
         qCDebug(AKONADISERVER_SEARCH_LOG) << "Search backend returned" << (newMatches.count() - items.count()) << "results that no longer exist in Akonadi.";
         qCDebug(AKONADISERVER_SEARCH_LOG) << "Please reindex collection" << collection.id();
