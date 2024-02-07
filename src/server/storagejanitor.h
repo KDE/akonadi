@@ -7,6 +7,7 @@
 #pragma once
 
 #include "akthread.h"
+#include "storage/dbconfig.h"
 
 #include <QDBusConnection>
 
@@ -16,6 +17,7 @@ namespace Server
 {
 class Collection;
 class AkonadiServer;
+class DataStore;
 
 /**
  * Various database checking/maintenance features.
@@ -29,9 +31,14 @@ protected:
     /**
      * Use AkThread::create() to create and start a new StorageJanitor thread.
      */
-    explicit StorageJanitor(AkonadiServer &mAkonadi);
+    explicit StorageJanitor(AkonadiServer *mAkonadi, DbConfig *config = DbConfig::configuredDatabase());
 
 public:
+    /**
+     * Use AkThread::create() to run StorageJanitor in a separate thread. Only use this constructor
+     * if you want to run StorageJanitor in the current thread.
+     */
+    explicit StorageJanitor(DbConfig *config);
     ~StorageJanitor() override;
 
 public Q_SLOTS:
@@ -87,6 +94,11 @@ private:
     void findOrphanedPimItemFlags();
 
     /**
+     * Look for duplicate item flags and fix them.
+     */
+    void findDuplicatePimItemFlags();
+
+    /**
      * Look for parts referring to the same external file.
      */
     void findOverlappingParts();
@@ -137,7 +149,9 @@ private:
 
 private:
     qint64 m_lostFoundCollectionId;
-    AkonadiServer &m_akonadi;
+    AkonadiServer *m_akonadi = nullptr;
+    DbConfig *m_dbConfig = nullptr;
+    std::unique_ptr<DataStore> m_dataStore;
 };
 
 } // namespace Server

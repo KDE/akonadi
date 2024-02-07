@@ -128,7 +128,7 @@ bool AkonadiServer::init()
     mPreprocessorManager = std::make_unique<PreprocessorManager>(*mTracer);
     mIntervalCheck = AkThread::create<IntervalCheck>(*mItemRetrieval);
     mSearchManager = AkThread::create<SearchManager>(searchManagers, *mAgentSearchManager);
-    mStorageJanitor = AkThread::create<StorageJanitor>(*this);
+    mStorageJanitor = AkThread::create<StorageJanitor>(this);
 
     if (settings.value(QStringLiteral("General/DisablePreprocessing"), false).toBool()) {
         mPreprocessorManager->setEnabled(false);

@@ -16,6 +16,7 @@
 #include "storage/datastore.h"
 #include "storage/dbconfig.h"
 #include "storage/parthelper.h"
+#include "storage/query.h"
 #include "storage/queryhelper.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
@@ -38,11 +39,30 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-StorageJanitor::StorageJanitor(AkonadiServer &akonadi)
+class StorageJanitorDataStore : public DataStore
+{
+public:
+    StorageJanitorDataStore(AkonadiServer *server, DbConfig *config)
+        : DataStore(server, config)
+    {
+    }
+};
+
+StorageJanitor::StorageJanitor(AkonadiServer *akonadi, DbConfig *dbConfig)
     : AkThread(QStringLiteral("StorageJanitor"), QThread::IdlePriority)
     , m_lostFoundCollectionId(-1)
     , m_akonadi(akonadi)
+    , m_dbConfig(dbConfig)
 {
+}
+
+StorageJanitor::StorageJanitor(DbConfig *dbConfig)
+    : AkThread(QStringLiteral("StorageJanitor"), AkThread::NoThread)
+    , m_lostFoundCollectionId(-1)
+    , m_akonadi(nullptr)
+    , m_dbConfig(dbConfig)
+{
+    init();
 }
 
 StorageJanitor::~StorageJanitor()
@@ -53,6 +73,9 @@ StorageJanitor::~StorageJanitor()
 void StorageJanitor::init()
 {
     AkThread::init();
+
+    m_dataStore = std::make_unique<StorageJanitorDataStore>(m_akonadi, m_dbConfig);
+    m_dataStore->open();
 
     QDBusConnection conn = QDBusConnection::sessionBus();
     conn.registerService(DBus::serviceName(DBus::StorageJanitor));
@@ -70,6 +93,8 @@ void StorageJanitor::quit()
 
     // Make sure all children are deleted within context of this thread
     qDeleteAll(children());
+
+    m_dataStore->close();
 
     AkThread::quit();
 }
@@ -146,17 +171,17 @@ qint64 StorageJanitor::lostAndFoundCollection()
         return m_lostFoundCollectionId;
     }
 
-    Transaction transaction(DataStore::self(), QStringLiteral("JANITOR LOST+FOUND"));
-    Resource lfRes = Resource::retrieveByName(QStringLiteral("akonadi_lost+found_resource"));
+    Transaction transaction(m_dataStore.get(), QStringLiteral("JANITOR LOST+FOUND"));
+    Resource lfRes = Resource::retrieveByName(m_dataStore.get(), QStringLiteral("akonadi_lost+found_resource"));
     if (!lfRes.isValid()) {
         lfRes.setName(QStringLiteral("akonadi_lost+found_resource"));
-        if (!lfRes.insert()) {
+        if (!lfRes.insert(m_dataStore.get())) {
             qCCritical(AKONADISERVER_LOG) << "Failed to create lost+found resource!";
         }
     }
 
     Collection lfRoot;
-    SelectQueryBuilder<Collection> qb;
+    SelectQueryBuilder<Collection> qb(m_dataStore.get());
     qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, lfRes.id());
     qb.addValueCondition(Collection::parentIdFullColumnName(), Query::Is, QVariant());
     if (!qb.exec()) {
@@ -174,26 +199,30 @@ qint64 StorageJanitor::lostAndFoundCollection()
         lfRoot.setCachePolicyLocalParts(QStringLiteral("ALL"));
         lfRoot.setCachePolicyCacheTimeout(-1);
         lfRoot.setCachePolicyInherit(false);
-        if (!lfRoot.insert()) {
+        if (!lfRoot.insert(m_dataStore.get())) {
             qCCritical(AKONADISERVER_LOG) << "Failed to create lost+found root.";
         }
-        DataStore::self()->notificationCollector()->collectionAdded(lfRoot, lfRes.name().toUtf8());
+        if (m_akonadi) {
+            m_dataStore->notificationCollector()->collectionAdded(lfRoot, lfRes.name().toUtf8());
+        }
     }
 
     Collection lfCol;
     lfCol.setName(QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-dd hh:mm:ss")));
     lfCol.setResourceId(lfRes.id());
     lfCol.setParentId(lfRoot.id());
-    if (!lfCol.insert()) {
+    if (!lfCol.insert(m_dataStore.get())) {
         qCCritical(AKONADISERVER_LOG) << "Failed to create lost+found collection!";
     }
 
-    const auto retrieveAll = MimeType::retrieveAll();
+    const auto retrieveAll = MimeType::retrieveAll(m_dataStore.get());
     for (const MimeType &mt : retrieveAll) {
-        lfCol.addMimeType(mt);
+        lfCol.addMimeType(m_dataStore.get(), mt);
     }
 
-    DataStore::self()->notificationCollector()->collectionAdded(lfCol, lfRes.name().toUtf8());
+    if (m_akonadi) {
+        m_dataStore->notificationCollector()->collectionAdded(lfCol, lfRes.name().toUtf8());
+    }
 
     transaction.commit();
     m_lostFoundCollectionId = lfCol.id();
@@ -202,7 +231,7 @@ qint64 StorageJanitor::lostAndFoundCollection()
 
 void StorageJanitor::findOrphanedResources()
 {
-    SelectQueryBuilder<Resource> qbres;
+    SelectQueryBuilder<Resource> qbres(m_dataStore.get());
     OrgFreedesktopAkonadiAgentManagerInterface iface(DBus::serviceName(DBus::Control), QStringLiteral("/AgentManager"), QDBusConnection::sessionBus(), this);
     if (!iface.isValid()) {
         inform(QStringLiteral("ERROR: Couldn't talk to %1").arg(DBus::Control));
@@ -238,7 +267,7 @@ void StorageJanitor::findOrphanedResources()
 
 void StorageJanitor::findOrphanedCollections()
 {
-    SelectQueryBuilder<Collection> qb;
+    SelectQueryBuilder<Collection> qb(m_dataStore.get());
     qb.addJoin(QueryBuilder::LeftJoin, Resource::tableName(), Collection::resourceIdFullColumnName(), Resource::idFullColumnName());
     qb.addValueCondition(Resource::idFullColumnName(), Query::Is, QVariant());
 
@@ -258,7 +287,7 @@ void StorageJanitor::checkPathToRoot(const Collection &col)
     if (col.parentId() == 0) {
         return;
     }
-    const Collection parent = col.parent();
+    const Collection parent = col.parent(m_dataStore.get());
     if (!parent.isValid()) {
         inform(QLatin1StringView("Collection \"") + col.name() + QLatin1StringView("\" (id: ") + QString::number(col.id())
                + QLatin1StringView(") has no valid parent."));
@@ -277,7 +306,7 @@ void StorageJanitor::checkPathToRoot(const Collection &col)
 
 void StorageJanitor::findOrphanedItems()
 {
-    SelectQueryBuilder<PimItem> qb;
+    SelectQueryBuilder<PimItem> qb(m_dataStore.get());
     qb.addJoin(QueryBuilder::LeftJoin, Collection::tableName(), PimItem::collectionIdFullColumnName(), Collection::idFullColumnName());
     qb.addValueCondition(Collection::idFullColumnName(), Query::Is, QVariant());
     if (!qb.exec()) {
@@ -288,8 +317,8 @@ void StorageJanitor::findOrphanedItems()
     if (!orphans.isEmpty()) {
         inform(QLatin1StringView("Found ") + QString::number(orphans.size()) + QLatin1StringView(" orphan items."));
         // Attach to lost+found collection
-        Transaction transaction(DataStore::self(), QStringLiteral("JANITOR ORPHANS"));
-        QueryBuilder qb(PimItem::tableName(), QueryBuilder::Update);
+        Transaction transaction(m_dataStore.get(), QStringLiteral("JANITOR ORPHANS"));
+        QueryBuilder qb(m_dataStore.get(), PimItem::tableName(), QueryBuilder::Update);
         qint64 col = lostAndFoundCollection();
         if (col == -1) {
             return;
@@ -314,7 +343,7 @@ void StorageJanitor::findOrphanedItems()
 
 void StorageJanitor::findOrphanedParts()
 {
-    SelectQueryBuilder<Part> qb;
+    SelectQueryBuilder<Part> qb(m_dataStore.get());
     qb.addJoin(QueryBuilder::LeftJoin, PimItem::tableName(), Part::pimItemIdFullColumnName(), PimItem::idFullColumnName());
     qb.addValueCondition(PimItem::idFullColumnName(), Query::Is, QVariant());
     if (!qb.exec()) {
@@ -330,7 +359,7 @@ void StorageJanitor::findOrphanedParts()
 
 void StorageJanitor::findOrphanedPimItemFlags()
 {
-    QueryBuilder sqb(PimItemFlagRelation::tableName(), QueryBuilder::Select);
+    QueryBuilder sqb(m_dataStore.get(), PimItemFlagRelation::tableName(), QueryBuilder::Select);
     sqb.addColumn(PimItemFlagRelation::leftFullColumnName());
     sqb.addJoin(QueryBuilder::LeftJoin, PimItem::tableName(), PimItemFlagRelation::leftFullColumnName(), PimItem::idFullColumnName());
     sqb.addValueCondition(PimItem::idFullColumnName(), Query::Is, QVariant());
@@ -348,7 +377,7 @@ void StorageJanitor::findOrphanedPimItemFlags()
     if (count > 0) {
         ImapSet set;
         set.add(imapIds);
-        QueryBuilder qb(PimItemFlagRelation::tableName(), QueryBuilder::Delete);
+        QueryBuilder qb(m_dataStore.get(), PimItemFlagRelation::tableName(), QueryBuilder::Delete);
         QueryHelper::setToQuery(set, PimItemFlagRelation::leftFullColumnName(), qb);
         if (!qb.exec()) {
             qCCritical(AKONADISERVER_LOG) << "Error:" << qb.query().lastError().text();
@@ -361,7 +390,7 @@ void StorageJanitor::findOrphanedPimItemFlags()
 
 void StorageJanitor::findOverlappingParts()
 {
-    QueryBuilder qb(Part::tableName(), QueryBuilder::Select);
+    QueryBuilder qb(m_dataStore.get(), Part::tableName(), QueryBuilder::Select);
     qb.addColumn(Part::dataColumn());
     qb.addColumn(QLatin1StringView("count(") + Part::idColumn() + QLatin1StringView(") as cnt"));
     qb.addValueCondition(Part::storageColumn(), Query::Equals, Part::External);
@@ -402,7 +431,7 @@ void StorageJanitor::verifyExternalParts()
     inform(QLatin1StringView("Found ") + QString::number(existingFiles.size()) + QLatin1StringView(" external files."));
 
     // list all parts from the db which claim to have an associated file
-    QueryBuilder qb(Part::tableName(), QueryBuilder::Select);
+    QueryBuilder qb(m_dataStore.get(), Part::tableName(), QueryBuilder::Select);
     qb.addColumn(Part::dataColumn());
     qb.addColumn(Part::pimItemIdColumn());
     qb.addColumn(Part::idColumn());
@@ -434,7 +463,7 @@ void StorageJanitor::verifyExternalParts()
             part.setData(QByteArray());
             part.setDatasize(0);
             part.setStorage(Part::Internal);
-            part.update();
+            part.update(m_dataStore.get());
         }
     }
     qb.query().finish();
@@ -457,7 +486,7 @@ void StorageJanitor::verifyExternalParts()
 
 void StorageJanitor::findDirtyObjects()
 {
-    SelectQueryBuilder<Collection> cqb;
+    SelectQueryBuilder<Collection> cqb(m_dataStore.get());
     cqb.setSubQueryMode(Query::Or);
     cqb.addValueCondition(Collection::remoteIdColumn(), Query::Is, QVariant());
     cqb.addValueCondition(Collection::remoteIdColumn(), Query::Equals, QString());
@@ -472,7 +501,7 @@ void StorageJanitor::findDirtyObjects()
     }
     inform(QLatin1StringView("Found ") + QString::number(ridLessCols.size()) + QLatin1StringView(" collections without RID."));
 
-    SelectQueryBuilder<PimItem> iqb1;
+    SelectQueryBuilder<PimItem> iqb1(m_dataStore.get());
     iqb1.setSubQueryMode(Query::Or);
     iqb1.addValueCondition(PimItem::remoteIdColumn(), Query::Is, QVariant());
     iqb1.addValueCondition(PimItem::remoteIdColumn(), Query::Equals, QString());
@@ -487,7 +516,7 @@ void StorageJanitor::findDirtyObjects()
     }
     inform(QLatin1StringView("Found ") + QString::number(ridLessItems.size()) + QLatin1StringView(" items without RID."));
 
-    SelectQueryBuilder<PimItem> iqb2;
+    SelectQueryBuilder<PimItem> iqb2(m_dataStore.get());
     iqb2.addValueCondition(PimItem::dirtyColumn(), Query::Equals, true);
     iqb2.addValueCondition(PimItem::remoteIdColumn(), Query::IsNot, QVariant());
     iqb2.addSortColumn(PimItem::idFullColumnName());
@@ -504,7 +533,7 @@ void StorageJanitor::findDirtyObjects()
 
 void StorageJanitor::findRIDDuplicates()
 {
-    QueryBuilder qb(Collection::tableName(), QueryBuilder::Select);
+    QueryBuilder qb(m_dataStore.get(), Collection::tableName(), QueryBuilder::Select);
     qb.addColumn(Collection::idColumn());
     qb.addColumn(Collection::nameColumn());
     qb.exec();
@@ -514,7 +543,7 @@ void StorageJanitor::findRIDDuplicates()
         const QString name = qb.query().value(1).toString();
         inform(QStringLiteral("Checking ") + name);
 
-        QueryBuilder duplicates(PimItem::tableName(), QueryBuilder::Select);
+        QueryBuilder duplicates(m_dataStore.get(), PimItem::tableName(), QueryBuilder::Select);
         duplicates.addColumn(PimItem::remoteIdColumn());
         duplicates.addColumn(QStringLiteral("count(") + PimItem::idColumn() + QStringLiteral(") as cnt"));
         duplicates.addValueCondition(PimItem::remoteIdColumn(), Query::IsNot, QVariant());
@@ -523,8 +552,8 @@ void StorageJanitor::findRIDDuplicates()
         duplicates.addValueCondition(QStringLiteral("count(") + PimItem::idColumn() + QLatin1Char(')'), Query::Greater, 1, QueryBuilder::HavingCondition);
         duplicates.exec();
 
-        Akonadi::Server::Collection col = Akonadi::Server::Collection::retrieveById(colId);
-        const QList<Akonadi::Server::MimeType> contentMimeTypes = col.mimeTypes();
+        Akonadi::Server::Collection col = Akonadi::Server::Collection::retrieveById(m_dataStore.get(), colId);
+        const QList<Akonadi::Server::MimeType> contentMimeTypes = col.mimeTypes(m_dataStore.get());
         QVariantList contentMimeTypesVariantList;
         contentMimeTypesVariantList.reserve(contentMimeTypes.count());
         for (const Akonadi::Server::MimeType &mimeType : contentMimeTypes) {
@@ -538,7 +567,7 @@ void StorageJanitor::findRIDDuplicates()
             condition.addValueCondition(PimItem::mimeTypeIdColumn(), Query::NotIn, contentMimeTypesVariantList);
             condition.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, colId);
 
-            QueryBuilder items(PimItem::tableName(), QueryBuilder::Select);
+            QueryBuilder items(m_dataStore.get(), PimItem::tableName(), QueryBuilder::Select);
             items.addColumn(PimItem::idColumn());
             items.addCondition(condition);
             if (!items.exec()) {
@@ -558,7 +587,7 @@ void StorageJanitor::findRIDDuplicates()
 
             inform(QStringLiteral("Found duplicates ") + rid);
 
-            SelectQueryBuilder<Part> parts;
+            SelectQueryBuilder<Part> parts(m_dataStore.get());
             parts.addValueCondition(Part::pimItemIdFullColumnName(), Query::In, QVariant::fromValue(itemsIds));
             parts.addValueCondition(Part::storageFullColumnName(), Query::Equals, static_cast<int>(Part::External));
             if (parts.exec()) {
@@ -572,7 +601,7 @@ void StorageJanitor::findRIDDuplicates()
                 }
             }
 
-            items = QueryBuilder(PimItem::tableName(), QueryBuilder::Delete);
+            items = QueryBuilder(m_dataStore.get(), PimItem::tableName(), QueryBuilder::Delete);
             items.addCondition(condition);
             if (!items.exec()) {
                 inform(QStringLiteral("Error while deleting duplicates ") + items.query().lastError().text());
@@ -585,7 +614,7 @@ void StorageJanitor::findRIDDuplicates()
 
 void StorageJanitor::vacuum()
 {
-    const DbType::Type dbType = DbType::type(DataStore::self()->database());
+    const DbType::Type dbType = DbType::type(m_dataStore->database());
     if (dbType == DbType::MySQL || dbType == DbType::PostgreSQL) {
         inform("vacuuming database, that'll take some time and require a lot of temporary disk space...");
         const auto tables = allDatabaseTables();
@@ -600,7 +629,7 @@ void StorageJanitor::vacuum()
             } else {
                 continue;
             }
-            QSqlQuery q(DataStore::self()->database());
+            QSqlQuery q(m_dataStore->database());
             if (!q.exec(queryStr)) {
                 qCCritical(AKONADISERVER_LOG) << "failed to optimize table" << table << ":" << q.lastError().text();
             }
@@ -616,7 +645,7 @@ void StorageJanitor::vacuum()
 void StorageJanitor::checkSizeTreshold()
 {
     {
-        QueryBuilder qb(Part::tableName(), QueryBuilder::Select);
+        QueryBuilder qb(m_dataStore.get(), Part::tableName(), QueryBuilder::Select);
         qb.addColumn(Part::idFullColumnName());
         qb.addValueCondition(Part::storageFullColumnName(), Query::Equals, Part::Internal);
         qb.addValueCondition(Part::datasizeFullColumnName(), Query::Greater, DbConfig::configuredDatabase()->sizeThreshold());
@@ -629,8 +658,8 @@ void StorageJanitor::checkSizeTreshold()
         inform(QStringLiteral("Found %1 parts to be moved to external files").arg(query.size()));
 
         while (query.next()) {
-            Transaction transaction(DataStore::self(), QStringLiteral("JANITOR CHECK SIZE THRESHOLD"));
-            Part part = Part::retrieveById(query.value(0).toLongLong());
+            Transaction transaction(m_dataStore.get(), QStringLiteral("JANITOR CHECK SIZE THRESHOLD"));
+            Part part = Part::retrieveById(m_dataStore.get(), query.value(0).toLongLong());
             const QByteArray name = ExternalPartStorage::nameForPartId(part.id());
             const QString partPath = ExternalPartStorage::resolveAbsolutePath(name);
             QFile f(partPath);
@@ -651,7 +680,7 @@ void StorageJanitor::checkSizeTreshold()
 
             part.setData(name);
             part.setStorage(Part::External);
-            if (!part.update() || !transaction.commit()) {
+            if (!part.update(m_dataStore.get()) || !transaction.commit()) {
                 qCCritical(AKONADISERVER_LOG) << "Failed to update database entry of part" << part.id();
                 f.remove();
                 continue;
@@ -663,7 +692,7 @@ void StorageJanitor::checkSizeTreshold()
     }
 
     {
-        QueryBuilder qb(Part::tableName(), QueryBuilder::Select);
+        QueryBuilder qb(m_dataStore.get(), Part::tableName(), QueryBuilder::Select);
         qb.addColumn(Part::idFullColumnName());
         qb.addValueCondition(Part::storageFullColumnName(), Query::Equals, Part::External);
         qb.addValueCondition(Part::datasizeFullColumnName(), Query::Less, DbConfig::configuredDatabase()->sizeThreshold());
@@ -676,8 +705,8 @@ void StorageJanitor::checkSizeTreshold()
         inform(QStringLiteral("Found %1 parts to be moved to database").arg(query.size()));
 
         while (query.next()) {
-            Transaction transaction(DataStore::self(), QStringLiteral("JANITOR CHECK SIZE THRESHOLD 2"));
-            Part part = Part::retrieveById(query.value(0).toLongLong());
+            Transaction transaction(m_dataStore.get(), QStringLiteral("JANITOR CHECK SIZE THRESHOLD 2"));
+            Part part = Part::retrieveById(m_dataStore.get(), query.value(0).toLongLong());
             const QString partPath = ExternalPartStorage::resolveAbsolutePath(part.data());
             QFile f(partPath);
             if (!f.exists()) {
@@ -695,7 +724,7 @@ void StorageJanitor::checkSizeTreshold()
                 qCCritical(AKONADISERVER_LOG) << "Sizes of" << part.id() << "data don't match";
                 continue;
             }
-            if (!part.update() || !transaction.commit()) {
+            if (!part.update(m_dataStore.get()) || !transaction.commit()) {
                 qCCritical(AKONADISERVER_LOG) << "Failed to update database entry of part" << part.id();
                 continue;
             }
@@ -710,7 +739,7 @@ void StorageJanitor::checkSizeTreshold()
 
 void StorageJanitor::migrateToLevelledCacheHierarchy()
 {
-    QueryBuilder qb(Part::tableName(), QueryBuilder::Select);
+    QueryBuilder qb(m_dataStore.get(), Part::tableName(), QueryBuilder::Select);
     qb.addColumn(Part::idColumn());
     qb.addColumn(Part::dataColumn());
     qb.addValueCondition(Part::storageColumn(), Query::Equals, Part::External);
@@ -754,7 +783,7 @@ void StorageJanitor::migrateToLevelledCacheHierarchy()
 
 void StorageJanitor::findOrphanSearchIndexEntries()
 {
-    QueryBuilder qb(Collection::tableName(), QueryBuilder::Select);
+    QueryBuilder qb(m_dataStore.get(), Collection::tableName(), QueryBuilder::Select);
     qb.addSortColumn(Collection::idColumn(), Query::Ascending);
     qb.addColumn(Collection::idColumn());
     qb.addColumn(Collection::isVirtualColumn());
@@ -804,7 +833,7 @@ void StorageJanitor::findOrphanSearchIndexEntries()
         req.exec();
         auto searchResults = req.results();
 
-        QueryBuilder iqb(PimItem::tableName(), QueryBuilder::Select);
+        QueryBuilder iqb(m_dataStore.get(), PimItem::tableName(), QueryBuilder::Select);
         iqb.addColumn(PimItem::idColumn());
         iqb.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, colId);
         if (!iqb.exec()) {
@@ -830,17 +859,17 @@ void StorageJanitor::ensureSearchCollection()
 {
     static const auto searchResourceName = QStringLiteral("akonadi_search_resource");
 
-    auto searchResource = Resource::retrieveByName(searchResourceName);
+    auto searchResource = Resource::retrieveByName(m_dataStore.get(), searchResourceName);
     if (!searchResource.isValid()) {
         searchResource.setName(searchResourceName);
         searchResource.setIsVirtual(true);
-        if (!searchResource.insert()) {
+        if (!searchResource.insert(m_dataStore.get())) {
             inform(QStringLiteral("Failed to create Search resource."));
             return;
         }
     }
 
-    auto searchCols = Collection::retrieveFiltered(Collection::resourceIdColumn(), searchResource.id());
+    auto searchCols = Collection::retrieveFiltered(m_dataStore.get(), Collection::resourceIdColumn(), searchResource.id());
     if (searchCols.isEmpty()) {
         Collection searchCol;
         searchCol.setId(1);
@@ -848,7 +877,7 @@ void StorageJanitor::ensureSearchCollection()
         searchCol.setResource(searchResource);
         searchCol.setIndexPref(Collection::False);
         searchCol.setIsVirtual(true);
-        if (!searchCol.insert()) {
+        if (!searchCol.insert(m_dataStore.get())) {
             inform(QStringLiteral("Failed to create Search Collection"));
             return;
         }

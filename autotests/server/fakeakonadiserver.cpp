@@ -221,7 +221,7 @@ void FakeAkonadiServer::initFake()
     mPreprocessorManager->setEnabled(false);
     mIntervalCheck = AkThread::create<FakeIntervalCheck>(*mItemRetrieval);
     mSearchManager = AkThread::create<FakeSearchManager>(*mAgentSearchManager);
-    mStorageJanitor = AkThread::create<StorageJanitor>(*this);
+    mStorageJanitor = AkThread::create<StorageJanitor>(this);
 
     qDebug() << "==== Fake Akonadi Server started ====";
 }
