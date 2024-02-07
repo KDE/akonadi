@@ -36,6 +36,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <qregularexpression.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -856,6 +857,14 @@ void StorageJanitor::checkSizeTreshold()
 
 void StorageJanitor::migrateToLevelledCacheHierarchy()
 {
+    /// First, check whether that's still necessary
+    const QString db_data = StandardDirs::saveDir("data", QStringLiteral("file_db_data"));
+    const auto entries = QDir(db_data).entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
+    if (entries.isEmpty()) {
+        inform("No external parts in legacy location, skipping migration");
+        return;
+    }
+
     QueryBuilder qb(m_dataStore.get(), Part::tableName(), QueryBuilder::Select);
     qb.addColumn(Part::idColumn());
     qb.addColumn(Part::dataColumn());
