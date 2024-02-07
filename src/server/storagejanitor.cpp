@@ -8,6 +8,7 @@
 #include "agentmanagerinterface.h"
 #include "akonadi.h"
 #include "akonadiserver_debug.h"
+#include "akranges.h"
 #include "entities.h"
 #include "resourcemanager.h"
 #include "search/searchmanager.h"
@@ -34,9 +35,11 @@
 #include <QStringBuilder>
 
 #include <algorithm>
+#include <functional>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
+using namespace AkRanges;
 
 class StorageJanitorDataStore : public DataStore
 {
@@ -73,6 +76,8 @@ void StorageJanitor::init()
 {
     AkThread::init();
 
+    registerTasks();
+
     m_dataStore = std::make_unique<StorageJanitorDataStore>(m_akonadi, m_dbConfig);
     m_dataStore->open();
 
@@ -98,58 +103,28 @@ void StorageJanitor::quit()
     AkThread::quit();
 }
 
-void StorageJanitor::check() // implementation of `akonadictl fsck`
+void StorageJanitor::registerTasks()
 {
-    m_lostFoundCollectionId = -1; // start with a fresh one each time
-
-    inform("Looking for resources in the DB not matching a configured resource...");
-    findOrphanedResources();
-
-    inform("Looking for collections not belonging to a valid resource...");
-    findOrphanedCollections();
-
-    inform("Checking collection tree consistency...");
-    const Collection::List cols = Collection::retrieveAll();
-    std::for_each(cols.begin(), cols.end(), [this](const Collection &col) {
-        checkPathToRoot(col);
-    });
-
-    inform("Looking for items not belonging to a valid collection...");
-    findOrphanedItems();
-
-    inform("Looking for item parts not belonging to a valid item...");
-    findOrphanedParts();
-
-    inform("Looking for item flags not belonging to a valid item...");
-    findOrphanedPimItemFlags();
-
-    inform("Looking for overlapping external parts...");
-    findOverlappingParts();
-
-    inform("Verifying external parts...");
-    verifyExternalParts();
-
-    inform("Checking size threshold changes...");
-    checkSizeTreshold();
-
-    inform("Looking for dirty objects...");
-    findDirtyObjects();
-
-    inform("Looking for rid-duplicates not matching the content mime-type of the parent collection");
-    findRIDDuplicates();
-
-    inform("Migrating parts to new cache hierarchy...");
-    migrateToLevelledCacheHierarchy();
-
-    inform("Checking search index consistency...");
-    findOrphanSearchIndexEntries();
-
-    inform("Flushing collection statistics memory cache...");
-    m_akonadi.collectionStatistics().expireCache();
-
-    inform("Making sure virtual search resource and collections exist");
-    ensureSearchCollection();
-
+    m_tasks = {{QStringLiteral("Looking for resources in the DB not matching a configured resource..."), &StorageJanitor::findOrphanedResources},
+               {QStringLiteral("Looking for collections not belonging to a valid resource..."), &StorageJanitor::findOrphanedCollections},
+               {QStringLiteral("Checking collection tree consistency..."), &StorageJanitor::checkCollectionTreeConsistency},
+               {QStringLiteral("Looking for items not belonging to a valid collection..."), &StorageJanitor::findOrphanedItems},
+               {QStringLiteral("Looking for item parts not belonging to a valid item..."), &StorageJanitor::findOrphanedParts},
+               {QStringLiteral("Looking for item flags not belonging to a valid item..."), &StorageJanitor::findOrphanedPimItemFlags},
+               {QStringLiteral("Looking for duplicate item flags..."), &StorageJanitor::findDuplicateFlags},
+               {QStringLiteral("Looking for duplicate mime types..."), &StorageJanitor::findDuplicateMimeTypes},
+               {QStringLiteral("Looking for duplicate part types..."), &StorageJanitor::findDuplicatePartTypes},
+               {QStringLiteral("Looking for duplicate tag types..."), &StorageJanitor::findDuplicateTagTypes},
+               {QStringLiteral("Looking for duplicate relation types..."), &StorageJanitor::findDuplicateRelationTypes},
+               {QStringLiteral("Looking for overlapping external parts..."), &StorageJanitor::findOverlappingParts},
+               {QStringLiteral("Verifying external parts..."), &StorageJanitor::verifyExternalParts},
+               {QStringLiteral("Checking size threshold changes..."), &StorageJanitor::checkSizeTreshold},
+               {QStringLiteral("Looking for dirty objects..."), &StorageJanitor::findDirtyObjects},
+               {QStringLiteral("Looking for rid-duplicates not matching the content mime-type of the parent collection"), &StorageJanitor::findRIDDuplicates},
+               {QStringLiteral("Migrating parts to new cache hierarchy..."), &StorageJanitor::migrateToLevelledCacheHierarchy},
+               {QStringLiteral("Checking search index consistency..."), &StorageJanitor::findOrphanSearchIndexEntries},
+               {QStringLiteral("Flushing collection statistics memory cache..."), &StorageJanitor::expireCollectionStatisticsCache},
+               {QStringLiteral("Making sure virtual search resource and collections exist"), &StorageJanitor::ensureSearchCollection}};
     /* TODO some ideas for further checks:
      * the collection tree is non-cyclic
      * content type constraints of collections are not violated
@@ -158,6 +133,16 @@ void StorageJanitor::check() // implementation of `akonadictl fsck`
      * check for dead entries in relation tables
      * check if part size matches file size
      */
+}
+
+void StorageJanitor::check() // implementation of `akonadictl fsck`
+{
+    m_lostFoundCollectionId = -1; // start with a fresh one each time
+
+    for (const auto &[idx, task] : m_tasks | Views::enumerate(1)) {
+        inform(QStringLiteral("%1/%2 %3").arg(idx, 2).arg(m_tasks.size()).arg(task.name));
+        std::invoke(task.func, this);
+    }
 
     inform("Consistency check done.");
 
@@ -279,6 +264,14 @@ void StorageJanitor::findOrphanedCollections()
         inform(QLatin1StringView("Found ") + QString::number(orphans.size()) + QLatin1StringView(" orphan collections."));
         // TODO: attach to lost+found resource
     }
+}
+
+void StorageJanitor::checkCollectionTreeConsistency()
+{
+    const Collection::List cols = Collection::retrieveAll(m_dataStore.get());
+    std::for_each(cols.begin(), cols.end(), [this](const Collection &col) {
+        checkPathToRoot(col);
+    });
 }
 
 void StorageJanitor::checkPathToRoot(const Collection &col)
@@ -1005,6 +998,13 @@ void StorageJanitor::ensureSearchCollection()
             inform(QStringLiteral("Failed to create Search Collection"));
             return;
         }
+    }
+}
+
+void StorageJanitor::expireCollectionStatisticsCache()
+{
+    if (m_akonadi) {
+        m_akonadi->collectionStatistics().expireCache();
     }
 }
 

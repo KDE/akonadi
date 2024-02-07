@@ -57,6 +57,8 @@ protected:
     void quit() override;
 
 private:
+    void registerTasks();
+
     void inform(const char *msg);
     void inform(const QString &msg);
     /** Create a lost+found collection if necessary. */
@@ -73,9 +75,10 @@ private:
     void findOrphanedCollections();
 
     /**
-     * Verifies there is a path from @p col to the root of the collection tree
-     * and that everything along that path belongs to the same resource.
+     * Verifies that each collection in the collection tree has a path to the root
+     * and that all collections along that path belong to the same resource.
      */
+    void checkCollectionTreeConsistency();
     void checkPathToRoot(const Collection &col);
 
     /**
@@ -167,11 +170,23 @@ private:
      */
     void ensureSearchCollection();
 
+    /**
+     * Clear cache that holds pre-computed collection statistics.
+     * They will be re-computed on demand.
+     */
+    void expireCollectionStatisticsCache();
+
 private:
     qint64 m_lostFoundCollectionId;
     AkonadiServer *m_akonadi = nullptr;
     DbConfig *m_dbConfig = nullptr;
     std::unique_ptr<DataStore> m_dataStore;
+
+    struct Task {
+        QString name;
+        void (StorageJanitor::*func)();
+    };
+    QList<Task> m_tasks;
 };
 
 } // namespace Server
