@@ -15,8 +15,10 @@ using namespace Akonadi::Server;
 
 void QueryHelper::setToQuery(const ImapSet &set, const QString &column, QueryBuilder &qb)
 {
+    auto newSet = set;
+    newSet.optimize();
     Query::Condition cond(Query::Or);
-    const auto intervals = set.intervals();
+    const auto intervals = newSet.intervals();
     for (const ImapInterval &i : intervals) {
         if (i.hasDefinedBegin() && i.hasDefinedEnd()) {
             if (i.size() == 1) {

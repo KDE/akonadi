@@ -247,6 +247,37 @@ bool ImapSet::isEmpty() const
     return d->intervals.isEmpty() || (d->intervals.size() == 1 && d->intervals.at(0).size() == 0);
 }
 
+void ImapSet::optimize()
+{
+    // There's nothing to optimize if we have fewer than 2 intervals
+    if (d->intervals.size() < 2) {
+        return;
+    }
+
+    // Sort the intervals in ascending order by their beginning value
+    std::sort(d->intervals.begin(), d->intervals.end(), [](const ImapInterval &lhs, const ImapInterval &rhs) {
+        return lhs.begin() < rhs.begin();
+    });
+
+    auto it = d->intervals.begin();
+    while (it != d->intervals.end() && it != std::prev(d->intervals.end())) {
+        auto next = std::next(it);
+        // +1 so that we also merge neighbouring intervals, e.g. 1:2,3:4 -> 1:4
+        if (it->hasDefinedEnd() && it->end() + 1 >= next->begin()) {
+            next->setBegin(it->begin());
+            if (next->hasDefinedEnd() && it->end() > next->end()) {
+                next->setEnd(it->end());
+            }
+            it = d->intervals.erase(it);
+        } else if (!it->hasDefinedEnd()) {
+            // We can eat up all the remaining intervals
+            it = d->intervals.erase(next, d->intervals.end());
+        } else {
+            ++it;
+        }
+    }
+}
+
 Protocol::DataStream &operator<<(Protocol::DataStream &stream, const Akonadi::ImapInterval &interval)
 {
     return stream << interval.d->begin << interval.d->end;
