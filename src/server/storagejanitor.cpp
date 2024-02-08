@@ -65,7 +65,7 @@ StorageJanitor::StorageJanitor(DbConfig *dbConfig)
     , m_akonadi(nullptr)
     , m_dbConfig(dbConfig)
 {
-    init();
+    StorageJanitor::init();
 }
 
 StorageJanitor::~StorageJanitor()
@@ -770,7 +770,7 @@ void StorageJanitor::checkSizeTreshold()
         QueryBuilder qb(m_dataStore.get(), Part::tableName(), QueryBuilder::Select);
         qb.addColumn(Part::idFullColumnName());
         qb.addValueCondition(Part::storageFullColumnName(), Query::Equals, Part::Internal);
-        qb.addValueCondition(Part::datasizeFullColumnName(), Query::Greater, DbConfig::configuredDatabase()->sizeThreshold());
+        qb.addValueCondition(Part::datasizeFullColumnName(), Query::Greater, m_dbConfig->sizeThreshold());
         if (!qb.exec()) {
             inform("Failed to query parts larger than threshold, skipping test");
             return;
