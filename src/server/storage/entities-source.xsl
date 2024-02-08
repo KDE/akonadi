@@ -279,6 +279,8 @@ QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classNam
 
 QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$className"/>::extractResult(DataStore *store, QSqlQuery &amp;query)
 {
+    Q_UNUSED(store); // only used in specfic case when the entity has a QDateTime column (e.g. PimItem). This will suppress
+                     // "unused parameter" warning for other entities that do not have a QDateTime column.
     QList&lt;<xsl:value-of select="$className"/>&gt; rv;
     if (query.driver()->hasFeature(QSqlDriver::QuerySize)) {
         rv.reserve(query.size());
