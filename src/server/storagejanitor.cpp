@@ -94,7 +94,6 @@ void StorageJanitor::quit()
     QDBusConnection conn = QDBusConnection::sessionBus();
     conn.unregisterObject(QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH), QDBusConnection::UnregisterTree);
     conn.unregisterService(DBus::serviceName(DBus::StorageJanitor));
-    conn.disconnectFromBus(conn.name());
 
     // Make sure all children are deleted within context of this thread
     qDeleteAll(children());
