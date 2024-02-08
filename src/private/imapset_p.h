@@ -207,6 +207,11 @@ public:
     */
     bool isEmpty() const;
 
+    /**
+     * Optimize the imap set to reduce the number of intervals.
+     */
+    void optimize();
+
 private:
     QSharedDataPointer<ImapSetPrivate> d;
 
