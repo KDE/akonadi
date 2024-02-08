@@ -24,6 +24,7 @@
 #include "storage/querybuilder.h"
 #include "storage/schematypes.h"
 #include "storage/transaction.h"
+#include "storagejanitor.h"
 #include "utils.h"
 
 #include <QCommandLineOption>
@@ -48,6 +49,7 @@
 
 #include <chrono>
 #include <memory>
+#include <qdbusconnection.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -405,8 +407,9 @@ bool acquireAkonadiLock()
 
 bool releaseAkonadiLock()
 {
-    QDBusConnection::sessionBus().interface()->unregisterService(DBus::serviceName(DBus::ControlLock));
-    QDBusConnection::sessionBus().interface()->unregisterService(DBus::serviceName(DBus::UpgradeIndicator));
+    auto connIface = QDBusConnection::sessionBus().interface();
+    connIface->unregisterService(DBus::serviceName(DBus::ControlLock));
+    connIface->unregisterService(DBus::serviceName(DBus::UpgradeIndicator));
     return true;
 }
 
@@ -458,6 +461,18 @@ void DbMigrator::startMigration()
         emitCompletion(result);
     }));
     m_thread->start();
+}
+
+bool DbMigrator::runStorageJanitor(DbConfig *dbConfig)
+{
+    StorageJanitor janitor(dbConfig);
+    connect(&janitor, &StorageJanitor::done, this, [this]() {
+        emitInfo(i18nc("@info:status", "Database fsck completed"));
+    });
+    // Runs the janitor in the current thread
+    janitor.check();
+
+    return true;
 }
 
 bool DbMigrator::runMigrationThread()
@@ -521,6 +536,10 @@ bool DbMigrator::runMigrationThread()
         emitError(i18nc("@info:shell", "Error: failed to open new database to migrate data to."));
         return false;
     }
+
+    // Run StorageJanitor on the existing database to ensure it's in a consistent state
+    emitInfo(i18nc("@info:status", "Running fsck on the source database"));
+    runStorageJanitor(sourceConfig.get());
 
     const bool migrationSuccess = migrateTables(sourceStore.get(), destStore.get(), destConfig.get());
 

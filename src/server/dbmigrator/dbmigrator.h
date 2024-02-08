@@ -62,6 +62,7 @@ private:
     bool moveDatabaseToMainLocation(DbConfig *destConfig, const QString &destServerCfgFile);
     std::optional<QString> moveDatabaseToBackupLocation(DbConfig *config);
     std::optional<QString> backupAkonadiServerRc();
+    bool runStorageJanitor(DbConfig *sourceConfig);
 
     void emitInfo(const QString &message);
     void emitError(const QString &message);
