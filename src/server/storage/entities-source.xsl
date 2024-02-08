@@ -274,6 +274,11 @@ bool <xsl:value-of select="$className"/>::exists(DataStore *store, const <xsl:va
 // result extraction
 QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$className"/>::extractResult(QSqlQuery &amp;query)
 {
+    return extractResult(DataStore::self(), query);
+}
+
+QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$className"/>::extractResult(DataStore *store, QSqlQuery &amp;query)
+{
     QList&lt;<xsl:value-of select="$className"/>&gt; rv;
     if (query.driver()->hasFeature(QSqlDriver::QuerySize)) {
         rv.reserve(query.size());
@@ -292,7 +297,7 @@ QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classNam
                   <xsl:text>static_cast&lt;</xsl:text><xsl:value-of select="@enumType"/>&gt;(query.value(<xsl:value-of select="position() - 1"/><xsl:text>).value&lt;int&gt;())</xsl:text>
                 </xsl:when>
                 <xsl:when test="starts-with(@type, 'QDateTime')">
-                  <xsl:text>Utils::variantToDateTime(query.value(</xsl:text><xsl:value-of select="position() - 1" /><xsl:text>))</xsl:text>
+                  <xsl:text>Utils::variantToDateTime(query.value(</xsl:text><xsl:value-of select="position() - 1" /><xsl:text>), store)</xsl:text>
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:text>query.value(</xsl:text><xsl:value-of select="position() - 1"/>).value&lt;<xsl:value-of select="@type"/>&gt;<xsl:text>()</xsl:text>
@@ -427,7 +432,7 @@ QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classNam
                                      &lt;&lt; qb.query().lastError().text() &lt;&lt; qb.query().lastQuery();
         return {};
     }
-    return extractResult(qb.query());
+    return extractResult(store, qb.query());
 }
 
 QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$className"/>::retrieveFiltered(const QString &amp;key, const QVariant &amp;value)
@@ -532,7 +537,7 @@ QList&lt;<xsl:value-of select="$rightSideClass"/>&gt; <xsl:value-of select="$cla
         return {};
     }
 
-    return <xsl:value-of select="$rightSideClass"/>::extractResult(qb.query());
+    return <xsl:value-of select="$rightSideClass"/>::extractResult(store, qb.query());
 }
 
 // manipulate n:m relations

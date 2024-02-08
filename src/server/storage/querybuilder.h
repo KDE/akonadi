@@ -281,6 +281,12 @@ private:
      */
     void sqliteAdaptUpdateJoin(Query::Condition &cond);
 
+protected:
+    DataStore *dataStore() const
+    {
+        return mDataStore;
+    }
+
 private:
     QString mTable;
     QSqlQuery mTableSubQuery;

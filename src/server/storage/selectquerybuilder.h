@@ -39,7 +39,7 @@ public:
     */
     QList<T> result()
     {
-        return T::extractResult(query());
+        return T::extractResult(dataStore(), query());
     }
 };
 

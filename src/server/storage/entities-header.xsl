@@ -108,6 +108,7 @@ public:
       Note that the fields need to be in the correct order (same as in the constructor)!
     */
     static QList&lt;<xsl:value-of select="$className"/>&gt; extractResult(QSqlQuery &amp;query);
+    static QList&lt;<xsl:value-of select="$className"/>&gt; extractResult(DataStore *dataStore, QSqlQuery &amp;query);
 
     /** Count records with value @p value in column @p column. */
     static int count(const QString &amp;column, const QVariant &amp;value);
