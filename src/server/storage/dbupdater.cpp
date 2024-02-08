@@ -42,8 +42,6 @@ DbUpdater::DbUpdater(const QSqlDatabase &database, const QString &filename)
 
 bool DbUpdater::run()
 {
-    Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
-
     // TODO error handling
     auto store = DataStore::dataStoreForDatabase(m_database);
     auto currentVersion = SchemaVersion::retrieveAll(store).at(0);
@@ -226,6 +224,7 @@ bool DbUpdater::complexUpdate_25()
     qCDebug(AKONADISERVER_LOG) << "Starting database update to version 25";
 
     DbType::Type dbType = DbType::type(m_database);
+    auto store = DataStore::dataStoreForDatabase(m_database);
 
     QElapsedTimer ttotal;
     ttotal.start();
@@ -256,7 +255,7 @@ bool DbUpdater::complexUpdate_25()
         // It appears that more users than expected have the invalid "GID" part in their
         // PartTable, which breaks the migration below (see BKO#331867), so we apply this
         // wanna-be fix to remove the invalid part before we start the actual migration.
-        QueryBuilder qb(QStringLiteral("PartTable"), QueryBuilder::Delete);
+        QueryBuilder qb(store, QStringLiteral("PartTable"), QueryBuilder::Delete);
         qb.addValueCondition(QStringLiteral("PartTable.name"), Query::Equals, QLatin1StringView("GID"));
         qb.exec();
     }
@@ -321,7 +320,6 @@ bool DbUpdater::complexUpdate_25()
     qCDebug(AKONADISERVER_LOG) << "Migrating part types";
     {
         // Get list of all part names
-        auto store = DataStore::dataStoreForDatabase(m_database);
         QueryBuilder qb(store, QStringLiteral("PartTable"), QueryBuilder::Select);
         qb.setDistinct(true);
         qb.addColumn(QStringLiteral("PartTable.name"));

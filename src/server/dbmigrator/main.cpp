@@ -67,6 +67,8 @@ public:
 
 int main(int argc, char **argv)
 {
+    Q_INIT_RESOURCE(akonadidb);
+
     QCoreApplication app(argc, argv);
     KLocalizedString::setApplicationDomain("akonadi-db-migrator");
     KAboutData about(QStringLiteral("akonadi-db-migrator"),
