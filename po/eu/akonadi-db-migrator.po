@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-11 00:37+0000\n"
+"POT-Creation-Date: 2024-02-09 00:38+0000\n"
 "PO-Revision-Date: 2024-01-17 01:14+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -30,31 +30,37 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "xalba@ni.eus"
 
-#: dbmigrator.cpp:435
+#: dbmigrator.cpp:438
 #, kde-format
 msgctxt "@info:status"
 msgid "Stopping Akonadi service..."
 msgstr "Akonadi zerbitzuak gelditzen..."
 
-#: dbmigrator.cpp:438
+#: dbmigrator.cpp:441
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: timeout while waiting for Akonadi to stop."
 msgstr "Errorea: Akonadi gelditzeko zain denbora-muga gainditu da."
 
-#: dbmigrator.cpp:445
+#: dbmigrator.cpp:448
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: couldn't acquire DBus lock for Akonadi."
 msgstr "Errorea: ezin izan du DBus sarraila «Akonadi»rako eskuratu."
 
-#: dbmigrator.cpp:454
+#: dbmigrator.cpp:457
 #, kde-format
 msgctxt "@info:status"
 msgid "Starting Akonadi service..."
 msgstr "Akonadi zerbitzuak abiatzen..."
 
-#: dbmigrator.cpp:469
+#: dbmigrator.cpp:470
+#, kde-format
+msgctxt "@info:status"
+msgid "Database fsck completed"
+msgstr ""
+
+#: dbmigrator.cpp:484
 #, kde-format
 msgctxt "@info:status"
 msgid ""
@@ -64,19 +70,19 @@ msgstr ""
 "\"%1\" datu-base motor baliogabea - onartutako balioa \"sqlite\", \"mysql\" "
 "eta \"postgres\" dira."
 
-#: dbmigrator.cpp:491
+#: dbmigrator.cpp:506
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure source database server."
 msgstr "Errorea: jatorriko datu-base zerbitzaria konfiguratzea huts egin du."
 
-#: dbmigrator.cpp:496
+#: dbmigrator.cpp:511
 #, kde-format
 msgctxt "@info:shell"
 msgid "Source and destination database engines are the same."
 msgstr "Jatorri eta helburu datu-base motorrak bera dira."
 
-#: dbmigrator.cpp:503
+#: dbmigrator.cpp:518
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to obtain path to source database data file or directory."
@@ -84,13 +90,13 @@ msgstr ""
 "Errorea: sorburu datu-basearen datuetarako edo direktoriorako bide-izena "
 "lortzea huts egin du."
 
-#: dbmigrator.cpp:510
+#: dbmigrator.cpp:525
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure the new database server."
 msgstr "Errorea: datu-base zerbitzari berria konfiguratzea huts egin du."
 
-#: dbmigrator.cpp:516
+#: dbmigrator.cpp:531
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open existing database to migrate data from."
@@ -98,7 +104,7 @@ msgstr ""
 "Errorea: dagoen datu-basea, hartatik datuak migratzeko irekitzea huts egin "
 "du."
 
-#: dbmigrator.cpp:521
+#: dbmigrator.cpp:536
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open new database to migrate data to."
@@ -107,35 +113,41 @@ msgstr ""
 
 #: dbmigrator.cpp:541
 #, kde-format
+msgctxt "@info:status"
+msgid "Running fsck on the source database"
+msgstr ""
+
+#: dbmigrator.cpp:560
+#, kde-format
 msgctxt "@info:status %2 is error message"
 msgid "Error: failed to remove temporary database directory %1: %2"
 msgstr "Errorea: %1 aldi baterako direktorioa kentzea huts egin du: %2"
 
-#: dbmigrator.cpp:548
+#: dbmigrator.cpp:567
 #, kde-format
 msgctxt "@info:shell"
 msgid "Backing up original database..."
 msgstr "Jatorrizko datu-basearen babeskopia egiten..."
 
-#: dbmigrator.cpp:556
+#: dbmigrator.cpp:575
 #, kde-format
 msgctxt "@info:status"
 msgid "Restoring database from backup %1 to %2"
 msgstr "Datu-basea %1 babeskopiatik %2(e)ra leheneratzen"
 
-#: dbmigrator.cpp:558
+#: dbmigrator.cpp:577
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to restore database from backup: %1"
 msgstr "Errorea: babeskopiatik datu-basea berrezartzea huts egin du: %1"
 
-#: dbmigrator.cpp:590 dbmigrator.cpp:601
+#: dbmigrator.cpp:609 dbmigrator.cpp:620
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error has occurred while migrating table %1"
 msgstr "Errorea gertatu da %1 taula migratzean"
 
-#: dbmigrator.cpp:620
+#: dbmigrator.cpp:639
 #, kde-format
 msgctxt "@label"
 msgid ""
@@ -145,71 +157,71 @@ msgstr ""
 "Babes-kopia direktorioa lehendik ere badago. Aurreko babeskopia gainidatzi "
 "nahi duzu?"
 
-#: dbmigrator.cpp:625
+#: dbmigrator.cpp:644
 #, kde-format
 msgctxt "@info:shell"
 msgid "Cannot proceed without backup. Migration interrupted."
 msgstr "Babeskopiarik gabe ezin du aurrera jarraitu. Migrazioa eten da."
 
-#: dbmigrator.cpp:630
+#: dbmigrator.cpp:649
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to remove previous backup directory."
 msgstr "Aurreko babeskopia-direktorioa kentzea huts egin du."
 
-#: dbmigrator.cpp:643
+#: dbmigrator.cpp:662
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to move database to backup location: %1"
 msgstr "Datu-basea babeskopia-kokalekura eramatea huts egin du: %1"
 
-#: dbmigrator.cpp:657
+#: dbmigrator.cpp:676
 #, kde-format
 msgctxt "@label"
 msgid "Backup file %1 already exists. Overwrite?"
 msgstr "%1 babeskopia fitxategia lehendik ere badago. Gainidatzi?"
 
-#: dbmigrator.cpp:659
+#: dbmigrator.cpp:678
 #, kde-format
 msgctxt "@info:status"
 msgid "Cannot proceed without backup. Migration interrupted."
 msgstr "Babeskopiarik gabe ezin du aurrera jarraitu. Migrazioa eten da."
 
-#: dbmigrator.cpp:665
+#: dbmigrator.cpp:684
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: Failed to remove existing backup file %1: %2"
 msgstr ""
 "Errorea: Aurrez dagoen %1 babeskopia-fitxategia kentzea huts egin du: %2"
 
-#: dbmigrator.cpp:672
+#: dbmigrator.cpp:691
 #, kde-format
 msgctxt "@info:status"
 msgid "Failed to back up Akonadi Server configuration: %1"
 msgstr ""
 "Akonadi zerbitzariaren konfigurazioaren babeskopia egitea huts egin du: %1"
 
-#: dbmigrator.cpp:689
+#: dbmigrator.cpp:708
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move migrated database to the primary location: %1"
 msgstr ""
 "Errorea: migratutako datu-basea kokaleku nagusira eramatea huts egin du: %1"
 
-#: dbmigrator.cpp:708
+#: dbmigrator.cpp:727
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to remove original akonadiserverrc: %1"
 msgstr "Errorea: jatorrizko «akonadiserverrc» kentzea huts egin du: %1"
 
-#: dbmigrator.cpp:714
+#: dbmigrator.cpp:733
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move new akonadiserverrc to the primary location: %1"
 msgstr ""
 "Errorea: «akonadiserverrc» berria kokaleku nagusira eramatea huts egin du: %1"
 
-#: dbmigrator.cpp:805
+#: dbmigrator.cpp:824
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to update autoincrement value for table %1"
@@ -217,13 +229,13 @@ msgstr ""
 "Errorea: %1 taularen gehikuntza automatikoaren balioa eguneratzea huts egin "
 "du"
 
-#: dbmigrator.cpp:810
+#: dbmigrator.cpp:829
 #, kde-format
 msgctxt "@info:status"
 msgid "Optimizing table %1..."
 msgstr "%1 taula optimizatzen..."
 
-#: dbmigrator.cpp:813
+#: dbmigrator.cpp:832
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to optimize table %1"
@@ -257,17 +269,17 @@ msgctxt "Letter for option \"(s)kip\" prompted from command line"
 msgid "s"
 msgstr "j"
 
-#: main.cpp:73 main.cpp:75
+#: main.cpp:75 main.cpp:77
 #, kde-format
 msgid "Akonadi DB Migrator"
 msgstr "Akonadi DB migratzailea"
 
-#: main.cpp:77
+#: main.cpp:79
 #, kde-format
 msgid "(c) 2024 g10 Code GmbH"
 msgstr "(c) 2024 g10 Code GmbH"
 
-#: main.cpp:83
+#: main.cpp:85
 #, kde-format
 msgid ""
 "The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and "
@@ -276,31 +288,31 @@ msgstr ""
 "Erabili beharreko DB motor berria. Onartzen diren balioak, \"sqlite\", "
 "\"mysql\" eta \"postgres\" dira"
 
-#: main.cpp:90
+#: main.cpp:92
 #, kde-format
 msgctxt "@info:shell"
 msgid "Invalid target engine: %1."
 msgstr "Jomuga-motor baliogabea: %1."
 
-#: main.cpp:104
+#: main.cpp:106
 #, kde-format
 msgctxt "@info:status"
 msgid "Migration completed successfully."
 msgstr "Migrazioa ondo osatu da."
 
-#: main.cpp:106
+#: main.cpp:108
 #, kde-format
 msgctxt "@info:status"
 msgid "Migration failed."
 msgstr "Migrazioak huts egin du."
 
-#: main.cpp:111
+#: main.cpp:113
 #, kde-format
 msgctxt "@info:progress"
 msgid "Migrating table %1 (%2/%3)..."
 msgstr "%1 taula migratzen (%2/%3)..."
 
-#: main.cpp:125
+#: main.cpp:127
 #, kde-format
 msgctxt "@info:progress"
 msgid "%1%..."
