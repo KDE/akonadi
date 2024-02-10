@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-09 00:38+0000\n"
-"PO-Revision-Date: 2024-01-11 15:21+0100\n"
+"PO-Revision-Date: 2024-02-09 09:56+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -59,7 +59,7 @@ msgstr "S'està iniciant el servei de l'Akonadi..."
 #, kde-format
 msgctxt "@info:status"
 msgid "Database fsck completed"
-msgstr ""
+msgstr "S'ha completat el «fsck» de la base de dades"
 
 #: dbmigrator.cpp:484
 #, kde-format
@@ -116,7 +116,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:status"
 msgid "Running fsck on the source database"
-msgstr ""
+msgstr "S'està executant el «fsck» en la base de dades d'origen"
 
 #: dbmigrator.cpp:560
 #, kde-format

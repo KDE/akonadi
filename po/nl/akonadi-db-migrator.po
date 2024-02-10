@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-09 00:38+0000\n"
-"PO-Revision-Date: 2024-01-11 09:56+0100\n"
+"PO-Revision-Date: 2024-02-09 10:21+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -55,7 +55,7 @@ msgstr "Akonadi-service wordt gestart..."
 #, kde-format
 msgctxt "@info:status"
 msgid "Database fsck completed"
-msgstr ""
+msgstr "Fsck op database voltooid"
 
 #: dbmigrator.cpp:484
 #, kde-format
@@ -109,7 +109,7 @@ msgstr "Fout: nieuwe database openen om gegevens naar te migreren is mislukt."
 #, kde-format
 msgctxt "@info:status"
 msgid "Running fsck on the source database"
-msgstr ""
+msgstr "Fsck uitvoeren op de broncodedatabase"
 
 #: dbmigrator.cpp:560
 #, kde-format

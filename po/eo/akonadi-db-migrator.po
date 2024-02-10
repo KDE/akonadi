@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-09 00:38+0000\n"
-"PO-Revision-Date: 2024-01-11 07:32+0100\n"
+"PO-Revision-Date: 2024-02-09 22:05+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo.org>\n"
 "Language: eo\n"
@@ -56,7 +56,7 @@ msgstr "Komencante Akonadi-servon..."
 #, kde-format
 msgctxt "@info:status"
 msgid "Database fsck completed"
-msgstr ""
+msgstr "Finis datumbazan fsck"
 
 #: dbmigrator.cpp:484
 #, kde-format
@@ -109,7 +109,7 @@ msgstr "Eraro: malsukcesis malfermi novan datumbazon por migri datumojn."
 #, kde-format
 msgctxt "@info:status"
 msgid "Running fsck on the source database"
-msgstr ""
+msgstr "Rulante fsck en fonta datumbazo"
 
 #: dbmigrator.cpp:560
 #, kde-format

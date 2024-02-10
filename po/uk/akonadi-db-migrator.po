@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-09 00:38+0000\n"
-"PO-Revision-Date: 2024-01-11 09:34+0200\n"
+"PO-Revision-Date: 2024-02-09 09:56+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -56,7 +56,7 @@ msgstr "Запускаємо службу Akonadi…"
 #, kde-format
 msgctxt "@info:status"
 msgid "Database fsck completed"
-msgstr ""
+msgstr "Перевірку бази даних за допомогою fsck завершено"
 
 #: dbmigrator.cpp:484
 #, kde-format
@@ -110,7 +110,7 @@ msgstr "Помилка: не вдалося відкрити нову базу �
 #, kde-format
 msgctxt "@info:status"
 msgid "Running fsck on the source database"
-msgstr ""
+msgstr "Виконуємо перевірку fsck початкової бази даних"
 
 #: dbmigrator.cpp:560
 #, kde-format
