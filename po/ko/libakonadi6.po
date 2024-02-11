@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# Shinjo Park <kde@peremen.name>, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
+# SPDX-FileCopyrightText: 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Shinjo Park <kde@peremen.name>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-30 00:37+0000\n"
-"PO-Revision-Date: 2023-10-08 22:20+0200\n"
+"PO-Revision-Date: 2024-02-10 22:00+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -163,10 +163,9 @@ msgid "Job canceled."
 msgstr "작업이 취소되었습니다."
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
-msgstr "Akonadi 에이전트"
+msgstr "Akonadi 제어"
 
 #: akonadictl/main.cpp:211
 #, kde-format
@@ -186,11 +185,23 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"Akonadi 서버 제어 도구\n"
+"\n"
+"명령:\n"
+"  start          Akonadi 서버와 모든 프로세스 시작\n"
+"  stop           Akonadi 서버와 모든 프로세스 안전 종료\n"
+"  restart        Akonadi 서버와 모든 프로세스 다시 시작\n"
+"  status         Akonadi 서버의 상태 요약 표시\n"
+"  instances      모든 Akonadi 인스턴스 목록 표시\n"
+"  vacuum         내부 저장소 최적화(경고: 많은 시간과 디스크 공간이 필요"
+"함!)\n"
+"  fsck           내부 저장소의 일관성 검사 (및 수리 시도)\n"
+"                 (시간이 걸릴 수 있음)"
 
 #: akonadictl/main.cpp:231
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "실행할 명령"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -616,6 +627,7 @@ msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
+"같은 사용자 세션에서 여러 Akonadi 인스턴스를 시작할 때 사용할 네임스페이스"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
