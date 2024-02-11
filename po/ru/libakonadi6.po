@@ -5,13 +5,13 @@
 # Andrey Cherepanov <skull@kde.ru>, 2009.
 # Alexander Potashev <aspotashev@gmail.com>, 2010, 2011, 2014, 2015, 2016, 2017.
 # Alexander Lakhin <exclusion@gmail.com>, 2013.
-# Alexander Yavorsky <walker@mail.ru>, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
+# SPDX-FileCopyrightText: 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Alexander Yavorsky <walker@mail.ru>
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-14 03:07+0000\n"
-"PO-Revision-Date: 2023-12-27 10:00+0300\n"
+"PO-Revision-Date: 2024-02-10 14:19+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Lokalize 21.08.3\n"
+"X-Generator: Lokalize 24.01.95\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
@@ -175,10 +175,9 @@ msgid "Job canceled."
 msgstr "Операция отменена."
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
-msgstr "Агент Akonadi"
+msgstr "Управление Akonadi"
 
 #: akonadictl/main.cpp:211
 #, kde-format
@@ -198,11 +197,24 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"Инструмент для управления службой Akonadi\n"
+"\n"
+"Команды:   start          Запуск службу Akonadi и всех зависимых процессов;\n"
+"  stop          Остановка службы Akonadi и всех запущенных процессов с \n"
+"ожиданием завершения выполнения операций;\n"
+"  restart        Перезапуск службы Akonadi и всех зависимых процессов;\n"
+"  status        Просмотр состояния службы Akonadi;\n"
+"  instansces      Просмотр списка всех запущенных экземпляров Akonadi;\n"
+"  vacuum         Запуск процесса vacuum механизма хранения данных \n"
+"(ПРЕДУПРЕЖДЕНИЕ: эта операция занимает продолжительное время и \n"
+"требует значительного количества свободного дискового пространства).\n"
+"  fsck           Запуск проверки (и попытки восстановления) целостности \n"
+"данных (может занять некоторое время)."
 
 #: akonadictl/main.cpp:231
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "Команда для выполнения"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -633,6 +645,8 @@ msgstr "© Volker Krause <vkrause@kde.org>, 2008"
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
+"Пространство имён для запуска множества экземпляров службы Akonadi в одном "
+"сеансе работы пользователя"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
