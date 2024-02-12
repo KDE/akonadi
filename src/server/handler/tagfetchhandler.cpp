@@ -20,8 +20,8 @@ bool TagFetchHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::FetchTagsCommand>(m_command);
 
-    if (!checkScopeConstraints(cmd.scope(), Scope::Uid)) {
-        return failureResponse("Only UID-based TAGFETCH is supported");
+    if (!checkScopeConstraints(cmd.scope(), {Scope::Invalid, Scope::Uid})) {
+        return failureResponse("Only full-range or UID-based TAGFETCH is supported");
     }
 
     TagFetchHelper helper(connection(), cmd.scope(), cmd.fetchScope());

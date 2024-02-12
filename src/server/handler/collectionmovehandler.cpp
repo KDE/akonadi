@@ -5,18 +5,28 @@
 */
 
 #include "collectionmovehandler.h"
+#include "akonadiserver_debug.h"
 
 #include "akonadi.h"
 #include "cachecleaner.h"
 #include "connection.h"
 #include "handlerhelper.h"
-#include "storage/collectionqueryhelper.h"
 #include "storage/datastore.h"
 #include "storage/itemretriever.h"
 #include "storage/transaction.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
+
+namespace
+{
+
+bool isRootCollection(const Scope &scope)
+{
+    return scope.scope() == Scope::Uid && scope.uid() == 0;
+}
+
+}
 
 CollectionMoveHandler::CollectionMoveHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
@@ -33,12 +43,17 @@ bool CollectionMoveHandler::parseStream()
     }
 
     Collection target;
-    if (cmd.destination().isEmpty()) {
+    if (!checkScopeConstraints(cmd.destination(), {Scope::Uid, Scope::HierarchicalRid})) {
+        qCWarning(AKONADISERVER_LOG) << "Only UID and HRID-based move destination are supported.";
+        return failureResponse("Only UID and HRID-based move destination are supported");
+    }
+    if (isRootCollection(cmd.destination())) {
         target.setId(0);
     } else {
         target = HandlerHelper::collectionFromScope(cmd.destination(), connection()->context());
         if (!target.isValid()) {
-            return failureResponse(QStringLiteral("Invalid destination collection"));
+            qCWarning(AKONADISERVER_LOG) << "Invalid destination collection" << cmd.destination();
+            return failureResponse("Invalid destination collection");
         }
     }
 

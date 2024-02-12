@@ -15,7 +15,6 @@
 namespace Akonadi
 {
 class Scope;
-class ImapSet;
 
 namespace Protocol
 {
@@ -100,7 +99,7 @@ public:
       Converts a imap set of tags into tag records.
       @throws HandlerException on errors during database operations
     */
-    static Tag::List resolveTagsByUID(const ImapSet &tags);
+    static Tag::List resolveTagsByUID(const QList<qint64> &tags);
 
     static Tag::List resolveTagsByGID(const QStringList &tagsGIDs);
 

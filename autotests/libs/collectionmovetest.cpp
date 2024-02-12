@@ -73,6 +73,7 @@ private Q_SLOTS:
         QVERIFY(destination.isValid());
 
         auto fetch = new CollectionFetchJob(source, CollectionFetchJob::Base, this);
+        fetch->fetchScope().setAncestorRetrieval(CollectionFetchScope::Parent);
         AKVERIFYEXEC(fetch);
         QCOMPARE(fetch->collections().count(), 1);
         source = fetch->collections().first();

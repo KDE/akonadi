@@ -19,9 +19,6 @@ class QJsonObject;
 
 namespace Akonadi
 {
-class ImapSet;
-class ImapInterval;
-
 namespace Protocol
 {
 class DataStream;
@@ -44,16 +41,16 @@ public:
     public:
         HRID();
         explicit HRID(qint64 id, const QString &remoteId = QString());
-        HRID(const HRID &other);
-        HRID(HRID &&other) noexcept;
+        HRID(const HRID &other) = default;
+        HRID(HRID &&other) noexcept = default;
 
-        HRID &operator=(const HRID &other);
-        HRID &operator=(HRID &&other) noexcept;
+        HRID &operator=(const HRID &other) = default;
+        HRID &operator=(HRID &&other) noexcept = default;
 
         ~HRID() = default;
 
         bool isEmpty() const;
-        bool operator==(const HRID &other) const;
+        bool operator==(const HRID &other) const = default;
 
         void toJson(QJsonObject &json) const;
 
@@ -65,10 +62,9 @@ public:
     Scope(SelectionScope scope, const QStringList &ids);
 
     /* UID */
+    Scope(std::initializer_list<qint64> ids);
     Scope(qint64 id); // krazy:exclude=explicit
-    Scope(const ImapSet &uidSet); // krazy:exclude=explicit
-    Scope(const ImapInterval &interval); // krazy:exclude=explicit
-    Scope(const QList<qint64> &interval); // krazy:exclude=explicit
+    Scope(const QList<qint64> &ids); // krazy:exclude=explicit
     Scope(const QList<HRID> &hridChain); // krazy:exclude=explicit
 
     Scope(const Scope &other);
@@ -85,8 +81,8 @@ public:
 
     bool isEmpty() const;
 
-    ImapSet uidSet() const;
-    void setUidSet(const ImapSet &uidSet);
+    void setUidSet(const QList<qint64> &ids);
+    QList<qint64> uidSet() const;
 
     void setRidSet(const QStringList &ridSet);
     QStringList ridSet() const;

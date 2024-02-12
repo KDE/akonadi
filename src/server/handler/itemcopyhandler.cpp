@@ -17,8 +17,6 @@
 #include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
 
-#include "private/imapset_p.h"
-
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
@@ -55,7 +53,7 @@ bool ItemCopyHandler::copyItem(const PimItem &item, const Collection &target)
 void ItemCopyHandler::processItems(const QList<qint64> &ids)
 {
     SelectQueryBuilder<PimItem> qb;
-    ItemQueryHelper::itemSetToQuery(ImapSet(ids), qb);
+    ItemQueryHelper::itemSetToQuery(ids, qb);
     if (!qb.exec()) {
         failureResponse(QStringLiteral("Unable to retrieve items"));
         return;
@@ -83,7 +81,7 @@ bool ItemCopyHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::CopyItemsCommand>(m_command);
 
-    if (!checkScopeConstraints(cmd.items(), Scope::Uid)) {
+    if (!checkScopeConstraints(cmd.items(), {Scope::Uid})) {
         return failureResponse(QStringLiteral("Only UID copy is allowed"));
     }
 

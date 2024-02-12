@@ -11,7 +11,6 @@
 #include "storage/datastore.h"
 #include "storage/itemretriever.h"
 
-#include "private/imapset_p.h"
 #include "private/protocol_p.h"
 #include "private/scope_p.h"
 

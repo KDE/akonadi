@@ -14,8 +14,6 @@
 #include "shared/akranges.h"
 #include "storage/itemqueryhelper.h"
 #include "storage/itemretrievalmanager.h"
-#include "storage/itemretrievalrequest.h"
-#include "storage/parthelper.h"
 #include "storage/parttypehelper.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
@@ -23,8 +21,6 @@
 #include "agentmanagerinterface.h"
 #include "akonadiserver_debug.h"
 #include "intervalcheck.h"
-#include "relationfetchhandler.h"
-#include "tagfetchhelper.h"
 #include "utils.h"
 
 #include "private/dbus_p.h"

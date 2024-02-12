@@ -29,6 +29,11 @@ static bool intersect(const QList<typename T::Id> &l1, const QList<T> &l2)
     return false;
 }
 
+static bool isRootCollection(const Scope &scope)
+{
+    return scope.isEmpty() || (scope.scope() == Scope::Uid && scope.uidSet().size() == 1 && scope.uid() == 0);
+}
+
 CollectionFetchHandler::CollectionFetchHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
 {
@@ -504,7 +509,7 @@ bool CollectionFetchHandler::parseStream()
     mAncestorAttributes = cmd.ancestorsAttributes();
 
     Scope scope = cmd.collections();
-    if (!scope.isEmpty()) { // not root
+    if (!isRootCollection(scope)) {
         Collection col;
         if (scope.scope() == Scope::Uid) {
             col = Collection::retrieveById(scope.uid());

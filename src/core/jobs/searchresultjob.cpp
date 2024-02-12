@@ -8,7 +8,6 @@
 #include "searchresultjob_p.h"
 
 #include "private/protocol_p.h"
-#include "protocolhelper_p.h"
 
 namespace Akonadi
 {
@@ -18,9 +17,9 @@ public:
     explicit SearchResultJobPrivate(SearchResultJob *parent);
 
     QList<QByteArray> rid;
+    QList<qint64> uid;
     QByteArray searchId;
     Collection collection;
-    ImapSet uid;
 
     // JobPrivate interface
 public:
@@ -66,25 +65,17 @@ QByteArray SearchResultJob::searchId() const
     return d_func()->searchId;
 }
 
-void SearchResultJob::setResult(const ImapSet &set)
-{
-    Q_D(SearchResultJob);
-    d->rid.clear();
-    d->uid = set;
-}
-
 void SearchResultJob::setResult(const QList<qint64> &ids)
 {
     Q_D(SearchResultJob);
     d->rid.clear();
-    d->uid = ImapSet();
-    d->uid.add(ids);
+    d->uid = ids;
 }
 
 void SearchResultJob::setResult(const QList<QByteArray> &remoteIds)
 {
     Q_D(SearchResultJob);
-    d->uid = ImapSet();
+    d->uid.clear();
     d->rid = remoteIds;
 }
 

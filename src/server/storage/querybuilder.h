@@ -143,12 +143,25 @@ public:
     /**
       Add a WHERE or HAVING condition which compares a column with a given value.
       @param column The column that should be compared.
-      @param op The operator used for comparison
+      @param op The operator used for comparison.
       @param value The value @p column is compared to.
       @param type Defines whether this condition should be part of the WHERE or the HAVING
                   part of the query. Defaults to WHERE.
     */
     void addValueCondition(const QString &column, Query::CompareOperator op, const QVariant &value, ConditionType type = WhereCondition);
+
+    /**
+     * Add a WHERE or HAVING condition which compares a column with a given value.
+     *
+     * This is an overload specially for passing a list of IDs, which is a fairly common case in Akonadi.
+     *
+     * @param column  The column that should be compared.
+     * @param op  The operator used for comparison.
+     * @param value The value @p column is compared to.
+     * @param type Defines whether this condition should be part of the WHERE or the HAVING
+     *             part of the query. Defaults to WHERE.
+     */
+    void addValueCondition(const QString &column, Query::CompareOperator op, const QList<qint64> &value, ConditionType type = WhereCondition);
 
     /**
       Add a WHERE or HAVING condition which compares a column with another column.

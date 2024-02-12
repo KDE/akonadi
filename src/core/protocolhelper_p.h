@@ -15,10 +15,10 @@
 #include "sharedvaluepool_p.h"
 #include "tag.h"
 
-#include "private/imapparser_p.h"
 #include "private/protocol_p.h"
 #include "private/scope_p.h"
 #include "private/tristate_p.h"
+#include "shared/akranges.h"
 
 #include <QString>
 
@@ -27,6 +27,8 @@
 #include <functional>
 #include <set>
 #include <type_traits>
+
+using namespace AkRanges;
 
 namespace Akonadi
 {
@@ -137,42 +139,32 @@ public:
       @throws A Akonadi::Exception if the item set contains items with missing/invalid identifiers.
     */
     template<typename T, template<typename> class Container>
-    static Scope entitySetToScope(const Container<T> &_objects)
+    static Scope entitySetToScope(const Container<T> &objects)
     {
-        if (_objects.isEmpty()) {
+        if (objects.isEmpty()) {
             throw Exception("No objects specified");
         }
 
-        Container<T> objects(_objects);
         using namespace std::placeholders;
-        std::sort(objects.begin(), objects.end(), [](const T &a, const T &b) -> bool {
-            return a.id() < b.id();
-        });
-        if (objects.at(0).isValid()) {
-            QList<typename T::Id> uids;
-            uids.reserve(objects.size());
-            for (const T &object : objects) {
-                uids << object.id();
-            }
-            ImapSet set;
-            set.add(uids);
-            return Scope(set);
+
+        if (std::all_of(objects.cbegin(), objects.cend(), std::mem_fn(&T::isValid))) {
+            return Scope(objects | Views::transform(std::mem_fn(&T::id)) | Actions::toQList);
         }
 
-        if (entitySetHasGID(_objects)) {
-            return entitySetToGID(_objects);
+        if (entitySetHasGID(objects)) {
+            return entitySetToGID(objects);
         }
 
-        if (!entitySetHasRemoteIdentifier(_objects, std::mem_fn(&T::remoteId))) {
+        if (!entitySetHasRemoteIdentifier(objects, std::mem_fn(&T::remoteId))) {
             throw Exception("No remote identifier specified");
         }
 
         // check if we have RIDs or HRIDs
-        if (entitySetHasHRID(_objects)) {
+        if (entitySetHasHRID(objects)) {
             return hierarchicalRidToScope(objects.first());
         }
 
-        return entitySetToRemoteIdentifier(Scope::Rid, _objects, std::mem_fn(&T::remoteId));
+        return entitySetToRemoteIdentifier(Scope::Rid, objects, std::mem_fn(&T::remoteId));
     }
 
     static Protocol::ScopeContext commandContextToProtocol(const Akonadi::Collection &collection, const Akonadi::Tag &tag, const Item::List &requestedItems);
@@ -232,7 +224,7 @@ public:
 
 private:
     template<typename T, template<typename> class Container>
-    inline static bool entitySetHasGID(const Container<T> &objects)
+    static constexpr bool entitySetHasGID(const Container<T> &objects)
     {
         if constexpr (std::is_same_v<T, Akonadi::Collection>) {
             Q_UNUSED(objects);
@@ -256,12 +248,9 @@ private:
     template<typename T, template<typename> class Container, typename RIDFunc>
     inline static bool entitySetHasRemoteIdentifier(const Container<T> &objects, const RIDFunc &ridFunc)
     {
-        return std::find_if(objects.constBegin(),
-                            objects.constEnd(),
-                            [=](const T &obj) {
-                                return ridFunc(obj).isEmpty();
-                            })
-            == objects.constEnd();
+        return std::all_of(objects.constBegin(), objects.constEnd(), [&](const T &obj) {
+            return !ridFunc(obj).isEmpty();
+        });
     }
 
     template<typename T, template<typename> class Container, typename RIDFunc>
@@ -280,18 +269,12 @@ private:
     }
 
     template<typename T, template<typename> class Container>
-    inline static bool entitySetHasHRID(const Container<T> &objects)
+    constexpr static bool entitySetHasHRID(const Container<T> &objects)
     {
         if constexpr (std::is_same_v<T, Tag>) {
             return false;
         } else {
-            return objects.size() == 1
-                && std::find_if(objects.constBegin(),
-                                objects.constEnd(),
-                                [](const T &obj) -> bool {
-                                    return !CollectionUtils::hasValidHierarchicalRID(obj);
-                                })
-                == objects.constEnd(); // ### HRID sets are not yet specified
+            return objects.size() == 1 && CollectionUtils::hasValidHierarchicalRID(objects.first());
         }
     }
 };

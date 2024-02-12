@@ -47,8 +47,8 @@ private Q_SLOTS:
 
         QTest::newRow("empty") << Item::List() << Scope() << true;
         QTest::newRow("single uid") << (Item::List() << u1) << Scope(1) << false;
-        QTest::newRow("multi uid") << (Item::List() << u1 << u3) << Scope(QList<qint64>{1, 3}) << false;
-        QTest::newRow("block uid") << (Item::List() << u1 << u2 << u3) << Scope(ImapInterval(1, 3)) << false;
+        QTest::newRow("multi uid") << (Item::List() << u1 << u3) << Scope{1, 3} << false;
+        QTest::newRow("block uid") << (Item::List() << u1 << u2 << u3) << Scope{1, 2, 3} << false;
         QTest::newRow("single rid") << (Item::List() << r1) << Scope(Scope::Rid, {QStringLiteral("A")}) << false;
         QTest::newRow("multi rid") << (Item::List() << r1 << r2) << Scope(Scope::Rid, {QStringLiteral("A"), QStringLiteral("B")}) << false;
         QTest::newRow("invalid") << (Item::List() << Item()) << Scope() << true;

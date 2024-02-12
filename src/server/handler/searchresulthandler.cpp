@@ -13,7 +13,6 @@
 #include "storage/itemqueryhelper.h"
 #include "storage/querybuilder.h"
 
-#include "private/imapset_p.h"
 #include "private/scope_p.h"
 
 using namespace Akonadi;
@@ -28,7 +27,7 @@ bool SearchResultHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::SearchResultCommand>(m_command);
 
-    if (!checkScopeConstraints(cmd.result(), Scope::Uid | Scope::Rid)) {
+    if (!checkScopeConstraints(cmd.result(), {Scope::Uid, Scope::Rid})) {
         return fail(cmd.searchId(), QStringLiteral("Only UID or RID scopes are allowed in SEARECH_RESULT"));
     }
 
@@ -49,13 +48,8 @@ bool SearchResultHandler::parseStream()
         }
         query.finish();
     } else if (cmd.result().scope() == Scope::Uid && !cmd.result().isEmpty()) {
-        const ImapSet result = cmd.result().uidSet();
-        const ImapInterval::List lstInterval = result.intervals();
-        for (const ImapInterval &interval : lstInterval) {
-            for (qint64 i = interval.begin(), end = interval.end(); i <= end; ++i) {
-                ids.insert(i);
-            }
-        }
+        const auto uidSet = cmd.result().uidSet();
+        ids = QSet<qint64>(uidSet.begin(), uidSet.end());
     }
     akonadi().agentSearchManager().pushResults(cmd.searchId(), ids, connection());
 

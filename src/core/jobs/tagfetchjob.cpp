@@ -108,7 +108,7 @@ void TagFetchJob::doStart()
 
     Protocol::FetchTagsCommandPtr cmd;
     if (d->mRequestedTags.isEmpty()) {
-        cmd = Protocol::FetchTagsCommandPtr::create(Scope(ImapInterval(1, 0)));
+        cmd = Protocol::FetchTagsCommandPtr::create(Scope());
     } else {
         try {
             cmd = Protocol::FetchTagsCommandPtr::create(ProtocolHelper::entitySetToScope(d->mRequestedTags));

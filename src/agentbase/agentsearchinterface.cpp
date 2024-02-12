@@ -120,8 +120,19 @@ void AgentSearchInterface::searchFinished(const ImapSet &result, ResultScope sco
         return;
     }
 
+    QList<qint64> ids;
+    for (const auto &interval : result.intervals()) {
+        if (!interval.hasDefinedBegin() || !interval.hasDefinedEnd()) {
+            qCWarning(AKONADIAGENTBASE_LOG) << "Search results must not have an open interval! Results will be incomplete.";
+            continue;
+        }
+        for (int i = interval.begin(), end = interval.end(); i <= end; ++i) {
+            ids << i;
+        }
+    }
+
     auto resultJob = new SearchResultJob(d->mSearchId, Collection(d->mCollectionId), d.get());
-    resultJob->setResult(result);
+    resultJob->setResult(ids);
 }
 
 void AgentSearchInterface::searchFinished(const QList<QByteArray> &result)

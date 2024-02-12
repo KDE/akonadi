@@ -7,7 +7,8 @@
 #include "querybuilder.h"
 #include "akonadiserver_debug.h"
 #include "dbexception.h"
-#include <qglobal.h>
+#include "entities.h"
+#include "storage/query.h"
 
 #ifndef QUERYBUILDER_UNITTEST
 #include "storage/datastore.h"
@@ -24,6 +25,7 @@
 #include <QSqlDriver>
 
 using namespace Akonadi::Server;
+using namespace AkRanges;
 
 namespace
 {
@@ -177,6 +179,12 @@ void QueryBuilder::addJoin(JoinType joinType, const QString &table, const QStrin
 }
 
 void QueryBuilder::addValueCondition(const QString &column, Query::CompareOperator op, const QVariant &value, ConditionType type)
+{
+    Q_ASSERT(type == WhereCondition || (type == HavingCondition && mType == Select));
+    mRootCondition[type].addValueCondition(column, op, value);
+}
+
+void QueryBuilder::addValueCondition(const QString &column, Query::CompareOperator op, const QList<qint64> &value, ConditionType type)
 {
     Q_ASSERT(type == WhereCondition || (type == HavingCondition && mType == Select));
     mRootCondition[type].addValueCondition(column, op, value);
@@ -412,7 +420,7 @@ bool QueryBuilder::exec()
     bool isBatch = false;
     for (int i = 0; i < mBindValues.count(); ++i) {
         mQuery.bindValue(QLatin1Char(':') + QString::number(i), mBindValues[i]);
-        if (!isBatch && static_cast<QMetaType::Type>(mBindValues[i].type()) == QMetaType::QVariantList) {
+        if (!isBatch && static_cast<QMetaType::Type>(mBindValues[i].typeId()) == qMetaTypeId<QVariantList>()) {
             isBatch = true;
         }
         // qCDebug(AKONADISERVER_LOG) << QString::fromLatin1( ":%1" ).arg( i ) <<  mBindValues[i];
@@ -533,6 +541,30 @@ void QueryBuilder::bindValue(QString *query, const QVariant &value)
     *query += QLatin1Char(':') + QString::number(mBindValues.count() - 1);
 }
 
+namespace
+{
+
+bool isList(const QVariant &value)
+{
+    if (value.typeId() == qMetaTypeId<QVariantList>() || value.typeId() == qMetaTypeId<QStringList>() || value.typeId() == qMetaTypeId<QByteArrayList>()) {
+        return true;
+    }
+
+    if (value.typeId() >= QMetaType::User) {
+        // QVariant will do anything to convert its content into a QVariantList,
+        // so we can't rely on QVariant::canConvert<QVariantList>() here.
+        // The only reliable solution is this hack
+        const char *name = value.typeName();
+        if (qstrncmp(name, "QList<", 6) == 0) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+} // namespace
+
 void QueryBuilder::buildWhereCondition(QString *query, const Query::Condition &cond)
 {
     if (!cond.isEmpty()) {
@@ -549,28 +581,25 @@ void QueryBuilder::buildWhereCondition(QString *query, const Query::Condition &c
     } else {
         *query += cond.mColumn;
         *query += compareOperatorToString(cond.mCompareOp);
-        if (cond.mComparedColumn.isEmpty()) {
-            if (cond.mComparedValue.isValid()) {
-                if (cond.mComparedValue.canConvert<QVariantList>() && cond.mComparedValue.typeId() != QMetaType::QString
-                    && cond.mComparedValue.typeId() != QMetaType::QByteArray) {
-                    *query += QLatin1StringView("( ");
-                    const QVariantList &entries = cond.mComparedValue.toList();
-                    Q_ASSERT_X(!entries.isEmpty(), "QueryBuilder::buildWhereCondition()", "No values given for IN condition.");
-                    for (qsizetype i = 0, c = entries.size(); i < c; ++i) {
-                        bindValue(query, entries.at(i));
-                        if (i + 1 < c) {
-                            *query += QLatin1StringView(", ");
-                        }
-                    }
-                    *query += QLatin1StringView(" )");
-                } else {
-                    bindValue(query, cond.mComparedValue);
-                }
-            } else {
-                *query += QLatin1StringView("NULL");
-            }
-        } else {
+        if (!cond.mComparedColumn.isEmpty()) {
             *query += cond.mComparedColumn;
+        } else if (!cond.mComparedValue.isValid()) {
+            *query += u"NULL";
+        } else if (isList(cond.mComparedValue)) {
+            *query += u"( ";
+            const auto list = cond.mComparedValue.toList();
+            if (list.isEmpty()) {
+                qCWarning(AKONADISERVER_LOG) << "Empty list given for IN condition.";
+            }
+            for (const auto &[i, entry] : list | Views::enumerate()) {
+                if (i > 0) {
+                    *query += QLatin1StringView(", ");
+                }
+                bindValue(query, entry);
+            }
+            *query += u" )";
+        } else {
+            bindValue(query, cond.mComparedValue);
         }
     }
 }

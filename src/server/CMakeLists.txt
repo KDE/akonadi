@@ -103,7 +103,6 @@ set(libakonadiserver_SRCS
     storage/query.cpp
     storage/querybuilder.cpp
     storage/querycache.cpp
-    storage/queryhelper.cpp
     storage/schematypes.cpp
     storage/tagqueryhelper.cpp
     storage/transaction.cpp
@@ -199,7 +198,6 @@ set(libakonadiserver_SRCS
     storage/query.h
     storage/querybuilder.h
     storage/querycache.h
-    storage/queryhelper.h
     storage/schematypes.h
     storage/tagqueryhelper.h
     storage/transaction.h

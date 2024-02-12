@@ -10,18 +10,16 @@
 #include "commandcontext.h"
 #include "handler.h"
 #include "storage/querybuilder.h"
-#include "storage/queryhelper.h"
 
-#include "private/imapset_p.h"
 #include "private/scope_p.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-void ItemQueryHelper::itemSetToQuery(const ImapSet &set, QueryBuilder &qb, const Collection &collection)
+void ItemQueryHelper::itemSetToQuery(const QList<PimItem::Id> &set, QueryBuilder &qb, const Collection &collection)
 {
     if (!set.isEmpty()) {
-        QueryHelper::setToQuery(set, qb.getTableWithColumn(PimItem::idColumn()), qb);
+        qb.addValueCondition(PimItem::idFullColumnName(), Query::In, set);
     }
     if (collection.isValid()) {
         if (collection.isVirtual() || collection.resource().isVirtual()) {
@@ -36,7 +34,7 @@ void ItemQueryHelper::itemSetToQuery(const ImapSet &set, QueryBuilder &qb, const
     }
 }
 
-void ItemQueryHelper::itemSetToQuery(const ImapSet &set, const CommandContext &context, QueryBuilder &qb)
+void ItemQueryHelper::itemSetToQuery(const QList<PimItem::Id> &set, const CommandContext &context, QueryBuilder &qb)
 {
     if (context.collectionId() >= 0) {
         itemSetToQuery(set, qb, context.collection());
@@ -112,7 +110,7 @@ void ItemQueryHelper::scopeToQuery(const Scope &scope, const CommandContext &con
 {
     // Handle fetch by collection/tag
     if (scope.scope() == Scope::Invalid && !context.isEmpty()) {
-        itemSetToQuery(ImapSet(), context, qb);
+        itemSetToQuery({}, context, qb);
         return;
     }
 

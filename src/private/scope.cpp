@@ -7,19 +7,20 @@
 
 #include "datastream_p_p.h"
 #include "scope_p.h"
+#include "shared/akranges.h"
 
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QStringList>
 
-#include "imapset_p.h"
+using namespace AkRanges;
 
 namespace Akonadi
 {
 class ScopePrivate : public QSharedData
 {
 public:
-    ImapSet uidSet;
+    QList<qint64> uidSet;
     QStringList ridSet;
     QList<Scope::HRID> hridChain;
     QStringList gidSet;
@@ -37,48 +38,9 @@ Scope::HRID::HRID(qint64 id, const QString &remoteId)
 {
 }
 
-Scope::HRID::HRID(const HRID &other)
-    : id(other.id)
-    , remoteId(other.remoteId)
-{
-}
-
-Scope::HRID::HRID(HRID &&other) noexcept
-    : id(other.id)
-{
-    remoteId.swap(other.remoteId);
-}
-
-Scope::HRID &Scope::HRID::operator=(const HRID &other)
-{
-    if (*this == other) {
-        return *this;
-    }
-
-    id = other.id;
-    remoteId = other.remoteId;
-    return *this;
-}
-
-Scope::HRID &Scope::HRID::operator=(HRID &&other) noexcept
-{
-    if (*this == other) {
-        return *this;
-    }
-
-    id = other.id;
-    remoteId.swap(other.remoteId);
-    return *this;
-}
-
 bool Scope::HRID::isEmpty() const
 {
     return id <= 0 && remoteId.isEmpty();
-}
-
-bool Scope::HRID::operator==(const HRID &other) const
-{
-    return id == other.id && remoteId == other.remoteId;
 }
 
 void Scope::HRID::toJson(QJsonObject &json) const
@@ -92,28 +54,25 @@ Scope::Scope()
 {
 }
 
+Scope::Scope(const Scope &) = default;
+Scope::Scope(Scope &&) noexcept = default;
+
+Scope::Scope(std::initializer_list<qint64> ids)
+    : d(new ScopePrivate)
+{
+    setUidSet(std::move(ids));
+}
+
 Scope::Scope(qint64 id)
     : d(new ScopePrivate)
 {
-    setUidSet(id);
+    setUidSet({id});
 }
 
-Scope::Scope(const ImapSet &set)
+Scope::Scope(const QList<qint64> &uidSet)
     : d(new ScopePrivate)
 {
-    setUidSet(set);
-}
-
-Scope::Scope(const ImapInterval &interval)
-    : d(new ScopePrivate)
-{
-    setUidSet(interval);
-}
-
-Scope::Scope(const QList<qint64> &interval)
-    : d(new ScopePrivate)
-{
-    setUidSet(interval);
+    setUidSet(uidSet);
 }
 
 Scope::Scope(SelectionScope scope, const QStringList &ids)
@@ -136,31 +95,10 @@ Scope::Scope(const QList<HRID> &hrid)
     d->hridChain = hrid;
 }
 
-Scope::Scope(const Scope &other)
-    : d(other.d)
-{
-}
+Scope::~Scope() = default;
 
-Scope::Scope(Scope &&other) noexcept
-{
-    d.swap(other.d);
-}
-
-Scope::~Scope()
-{
-}
-
-Scope &Scope::operator=(const Scope &other)
-{
-    d = other.d;
-    return *this;
-}
-
-Scope &Scope::operator=(Scope &&other) noexcept
-{
-    d.swap(other.d);
-    return *this;
-}
+Scope &Scope::operator=(const Scope &) = default;
+Scope &Scope::operator=(Scope &&) noexcept = default;
 
 bool Scope::operator==(const Scope &other) const
 {
@@ -214,13 +152,13 @@ bool Scope::isEmpty() const
     return true;
 }
 
-void Scope::setUidSet(const ImapSet &uidSet)
+void Scope::setUidSet(const QList<qint64> &uidSet)
 {
     d->scope = Uid;
     d->uidSet = uidSet;
 }
 
-ImapSet Scope::uidSet() const
+QList<qint64> Scope::uidSet() const
 {
     return d->uidSet;
 }
@@ -260,12 +198,13 @@ QStringList Scope::gidSet() const
 
 qint64 Scope::uid() const
 {
-    if (d->uidSet.intervals().size() == 1 && d->uidSet.intervals().at(0).size() == 1) {
-        return d->uidSet.intervals().at(0).begin();
+    if (d->uidSet.size() != 1) {
+        // TODO: Error handling!
+        Q_ASSERT(d->uidSet.size() == 1);
+        return -1;
     }
 
-    // TODO: Error handling!
-    return -1;
+    return d->uidSet.front();
 }
 
 QString Scope::rid() const
@@ -293,7 +232,10 @@ void Scope::toJson(QJsonObject &json) const
     switch (scope()) {
     case Scope::Uid:
         json[QStringLiteral("type")] = QStringLiteral("UID");
-        json[QStringLiteral("value")] = QString::fromUtf8(uidSet().toImapSequenceSet());
+        json[QStringLiteral("value")] = QJsonArray::fromVariantList(uidSet() | Views::transform([](qint64 id) {
+                                                                        return QVariant(id);
+                                                                    })
+                                                                    | Actions::toQList);
         break;
     case Scope::Rid:
         json[QStringLiteral("type")] = QStringLiteral("RID");
@@ -355,7 +297,7 @@ Protocol::DataStream &operator>>(Protocol::DataStream &stream, Akonadi::Scope::H
 
 Protocol::DataStream &operator>>(Protocol::DataStream &stream, Akonadi::Scope &scope)
 {
-    scope.d->uidSet = ImapSet();
+    scope.d->uidSet.clear();
     scope.d->ridSet.clear();
     scope.d->hridChain.clear();
     scope.d->gidSet.clear();
@@ -394,14 +336,14 @@ QDebug operator<<(QDebug dbg, const Akonadi::Scope &scope)
 {
     switch (scope.scope()) {
     case Scope::Uid:
-        return dbg.nospace() << "UID " << scope.uidSet();
+        return dbg.nospace() << "Scope(UID, " << scope.uidSet() << ")";
     case Scope::Rid:
-        return dbg.nospace() << "RID " << scope.ridSet();
+        return dbg.nospace() << "Scope(RID, " << scope.ridSet() << ")";
     case Scope::Gid:
-        return dbg.nospace() << "GID " << scope.gidSet();
+        return dbg.nospace() << "Scope(GID, " << scope.gidSet() << ")";
     case Scope::HierarchicalRid:
-        return dbg.nospace() << "HRID " << scope.hridChain();
+        return dbg.nospace() << "Scope(HRID, " << scope.hridChain() << ")";
     default:
-        return dbg.nospace() << "Invalid scope";
+        return dbg.nospace() << "Scope(Invalid)";
     }
 }

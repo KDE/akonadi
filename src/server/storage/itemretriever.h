@@ -12,7 +12,6 @@
 #include "../exception.h"
 #include "entities.h"
 
-#include "private/imapset_p.h"
 #include "private/scope_p.h"
 
 #include <optional>
@@ -48,9 +47,8 @@ public:
     QList<QByteArray> retrieveParts() const;
     void setRetrieveFullPayload(bool fullPayload);
     void setChangedSince(const QDateTime &changedSince);
-    void setItemSet(const ImapSet &set, const Collection &collection = Collection());
-    void setItemSet(const ImapSet &set, bool isUid);
-    void setItem(Entity::Id id);
+    void setItemSet(const QList<PimItem::Id> &set, const Collection &collection = Collection());
+    void setItem(PimItem::Id id);
     /** Retrieve all items in the given collection. */
     void setCollection(const Collection &collection, bool recursive = true);
 
@@ -82,7 +80,7 @@ private:
     };
     std::optional<PreparedRequests> prepareRequests(QSqlQuery &query, const QByteArrayList &parts);
 
-    Akonadi::ImapSet mItemSet;
+    QList<PimItem::Id> mItemSet;
     Collection mCollection;
     Scope mScope;
     ItemRetrievalManager &mItemRetrievalManager;

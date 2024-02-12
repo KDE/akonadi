@@ -9,7 +9,6 @@
 #include "connection.h"
 #include "storage/datastore.h"
 #include "storage/querybuilder.h"
-#include "storage/queryhelper.h"
 #include "storage/selectquerybuilder.h"
 
 using namespace Akonadi;

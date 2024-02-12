@@ -11,7 +11,6 @@
 #include "entities.h"
 #include "fakeakonadiserver.h"
 
-#include "private/imapset_p.h"
 #include "private/scope_p.h"
 
 #include <QTest>

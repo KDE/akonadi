@@ -11,13 +11,9 @@
 #include "handler.h"
 #include "storage/collectionqueryhelper.h"
 #include "storage/collectionstatistics.h"
-#include "storage/countquerybuilder.h"
-#include "storage/datastore.h"
-#include "storage/queryhelper.h"
 #include "storage/selectquerybuilder.h"
 #include "utils.h"
 
-#include "private/imapset_p.h"
 #include "private/protocol_p.h"
 #include "private/scope_p.h"
 
@@ -284,13 +280,13 @@ Flag::List HandlerHelper::resolveFlags(const QSet<QByteArray> &flagNames)
     return flagList;
 }
 
-Tag::List HandlerHelper::resolveTagsByUID(const ImapSet &tags)
+Tag::List HandlerHelper::resolveTagsByUID(const QList<qint64> &tags)
 {
     if (tags.isEmpty()) {
         return Tag::List();
     }
     SelectQueryBuilder<Tag> qb;
-    QueryHelper::setToQuery(tags, Tag::idFullColumnName(), qb);
+    qb.addValueCondition(Tag::idFullColumnName(), Query::In, tags);
     if (!qb.exec()) {
         throw HandlerException("Unable to resolve tags");
     }

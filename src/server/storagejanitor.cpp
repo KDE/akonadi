@@ -18,13 +18,11 @@
 #include "storage/dbconfig.h"
 #include "storage/dbtype.h"
 #include "storage/query.h"
-#include "storage/queryhelper.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
 
 #include "private/dbus_p.h"
 #include "private/externalpartstorage_p.h"
-#include "private/imapset_p.h"
 #include "private/standarddirs_p.h"
 
 #include <QDateTime>
@@ -321,14 +319,11 @@ void StorageJanitor::findOrphanedItems()
             return;
         }
         qb.setColumnValue(PimItem::collectionIdColumn(), col);
-        QList<ImapSet::Id> imapIds;
-        imapIds.reserve(orphans.count());
-        for (const PimItem &item : std::as_const(orphans)) {
-            imapIds.append(item.id());
-        }
-        ImapSet set;
-        set.add(imapIds);
-        QueryHelper::setToQuery(set, PimItem::idFullColumnName(), qb);
+        qb.addValueCondition(PimItem::idFullColumnName(),
+                             Query::In,
+                             orphans | Views::transform([](const auto &item) {
+                                 return item.id();
+                             }) | Actions::toQList);
         if (qb.exec() && transaction.commit()) {
             inform(QLatin1StringView("Moved orphan items to collection ") + QString::number(col));
         } else {
@@ -364,24 +359,21 @@ void StorageJanitor::findOrphanedPimItemFlags()
         inform("Failed to query orphaned item flags, skipping test");
         return;
     }
-    QList<ImapSet::Id> imapIds;
-    int count = 0;
+
+    QList<PimItem::Id> ids;
     while (sqb.query().next()) {
-        ++count;
-        imapIds.append(sqb.query().value(0).toInt());
+        ids.append(sqb.query().value(0).toInt());
     }
     sqb.query().finish();
-    if (count > 0) {
-        ImapSet set;
-        set.add(imapIds);
+    if (!ids.empty()) {
         QueryBuilder qb(m_dataStore.get(), PimItemFlagRelation::tableName(), QueryBuilder::Delete);
-        QueryHelper::setToQuery(set, PimItemFlagRelation::leftFullColumnName(), qb);
+        qb.addValueCondition(PimItemFlagRelation::leftFullColumnName(), Query::In, ids);
         if (!qb.exec()) {
             qCCritical(AKONADISERVER_LOG) << "Error:" << qb.query().lastError().text();
             return;
         }
 
-        inform(QLatin1StringView("Found and deleted ") + QString::number(count) + QLatin1StringView(" orphan pim item flags."));
+        inform(QLatin1StringView("Found and deleted ") + QString::number(ids.size()) + QLatin1StringView(" orphan pim item flags."));
     }
 }
 

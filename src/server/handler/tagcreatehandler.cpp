@@ -13,7 +13,6 @@
 #include "storage/transaction.h"
 #include "tagfetchhelper.h"
 
-#include "private/imapset_p.h"
 #include "private/scope_p.h"
 
 using namespace Akonadi;
@@ -118,16 +117,11 @@ bool TagCreateHandler::parseStream()
 
     trx.commit();
 
-    Scope scope;
-    ImapSet set;
-    set.add(QList<qint64>() << tagId);
-    scope.setUidSet(set);
-
     Protocol::TagFetchScope fetchScope;
     fetchScope.setFetchRemoteID(true);
     fetchScope.setFetchAllAttributes(true);
 
-    TagFetchHelper helper(connection(), scope, fetchScope);
+    TagFetchHelper helper(connection(), Scope(tagId), fetchScope);
     if (!helper.fetchTags()) {
         return failureResponse("Failed to fetch the new tag");
     }

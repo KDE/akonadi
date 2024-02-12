@@ -8,10 +8,7 @@
 
 #include "connection.h"
 #include "handlerhelper.h"
-#include "search/searchmanager.h"
-#include "storage/collectionqueryhelper.h"
 #include "storage/datastore.h"
-#include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
 
 #include "private/scope_p.h"

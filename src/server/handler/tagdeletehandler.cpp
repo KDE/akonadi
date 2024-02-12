@@ -7,10 +7,9 @@
 #include "tagdeletehandler.h"
 
 #include "storage/datastore.h"
-#include "storage/queryhelper.h"
 #include "storage/selectquerybuilder.h"
+#include "storage/tagqueryhelper.h"
 
-#include "private/imapset_p.h"
 #include "private/scope_p.h"
 
 using namespace Akonadi;
@@ -25,12 +24,12 @@ bool TagDeleteHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::DeleteTagCommand>(m_command);
 
-    if (!checkScopeConstraints(cmd.tag(), Scope::Uid)) {
+    if (!checkScopeConstraints(cmd.tag(), {Scope::Uid})) {
         return failureResponse(QStringLiteral("Only UID-based TAGREMOVE is supported"));
     }
 
     SelectQueryBuilder<Tag> tagQuery;
-    QueryHelper::setToQuery(cmd.tag().uidSet(), Tag::idFullColumnName(), tagQuery);
+    TagQueryHelper::scopeToQuery(cmd.tag(), connection()->context(), tagQuery);
     if (!tagQuery.exec()) {
         return failureResponse(QStringLiteral("Failed to obtain tags"));
     }

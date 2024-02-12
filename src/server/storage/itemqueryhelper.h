@@ -10,7 +10,6 @@
 
 namespace Akonadi
 {
-class ImapSet;
 class Scope;
 
 namespace Server
@@ -28,12 +27,12 @@ namespace ItemQueryHelper
   Add conditions to @p qb for the given item set @p set. If @p collection is valid,
   only items in this collection are considered.
 */
-void itemSetToQuery(const ImapSet &set, QueryBuilder &qb, const Collection &collection = Collection());
+void itemSetToQuery(const QList<PimItem::Id> &set, QueryBuilder &qb, const Collection &collection = Collection());
 
 /**
   Convenience method, does essentially the same as the one above.
 */
-void itemSetToQuery(const ImapSet &set, const CommandContext &context, QueryBuilder &qb);
+void itemSetToQuery(const QList<PimItem::Id> &set, const CommandContext &context, QueryBuilder &qb);
 
 /**
   Add conditions to @p qb for the given remote identifier @p rid.

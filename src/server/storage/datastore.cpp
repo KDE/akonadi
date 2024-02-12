@@ -12,22 +12,17 @@
 #include "akonadiserver_debug.h"
 #include "collectionqueryhelper.h"
 #include "collectionstatistics.h"
-#include "countquerybuilder.h"
 #include "dbconfig.h"
 #include "dbinitializer.h"
 #include "dbupdater.h"
 #include "handler.h"
-#include "handlerhelper.h"
-#include "notificationmanager.h"
 #include "parthelper.h"
 #include "parttypehelper.h"
 #include "querycache.h"
-#include "queryhelper.h"
 #include "selectquerybuilder.h"
 #include "storagedebugger.h"
 #include "tracer.h"
 #include "transaction.h"
-#include "utils.h"
 
 #include "private/externalpartstorage_p.h"
 
@@ -35,6 +30,7 @@
 #include <QElapsedTimer>
 #include <QFile>
 #include <QSqlDriver>
+#include <QSqlError>
 #include <QSqlQuery>
 #include <QString>
 #include <QStringList>

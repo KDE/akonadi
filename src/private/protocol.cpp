@@ -6,7 +6,6 @@
  */
 
 #include "datastream_p_p.h"
-#include "imapset_p.h"
 #include "protocol_p.h"
 #include "scope_p.h"
 

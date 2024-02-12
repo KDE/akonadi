@@ -243,7 +243,9 @@ bool Handler::failureResponse(const QString &failureMessage)
     return false;
 }
 
-bool Handler::checkScopeConstraints(const Akonadi::Scope &scope, int permittedScopes)
+bool Handler::checkScopeConstraints(const Scope &scope, const QVector<Scope::SelectionScope> &permittedScopes) const
 {
-    return scope.scope() & permittedScopes;
+    return std::any_of(permittedScopes.cbegin(), permittedScopes.cend(), [&scope](Scope::SelectionScope permittedScope) {
+        return scope.scope() == permittedScope;
+    });
 }

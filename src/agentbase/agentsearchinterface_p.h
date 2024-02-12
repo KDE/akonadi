@@ -7,7 +7,6 @@
 #pragma once
 
 #include "agentsearchinterface.h"
-#include "collection.h"
 
 #include <QObject>
 

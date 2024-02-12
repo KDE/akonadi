@@ -10,9 +10,7 @@
 #include "commandcontext.h"
 #include "handler.h"
 #include "storage/querybuilder.h"
-#include "storage/queryhelper.h"
 
-#include "private/imapset_p.h"
 #include "private/scope_p.h"
 
 using namespace Akonadi;
@@ -49,8 +47,14 @@ void TagQueryHelper::gidToQuery(const QStringList &gids, const CommandContext &c
 
 void TagQueryHelper::scopeToQuery(const Scope &scope, const CommandContext &context, QueryBuilder &qb)
 {
+    if (scope.scope() == Scope::Invalid) {
+        return;
+    }
+
     if (scope.scope() == Scope::Uid) {
-        QueryHelper::setToQuery(scope.uidSet(), Tag::idFullColumnName(), qb);
+        if (!scope.isEmpty()) {
+            qb.addValueCondition(Tag::idFullColumnName(), Query::In, scope.uidSet());
+        }
         return;
     }
 

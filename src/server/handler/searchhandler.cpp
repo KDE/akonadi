@@ -85,11 +85,8 @@ void SearchHandler::processResults(const QSet<qint64> &results)
         return;
     }
 
-    ImapSet imapSet;
-    imapSet.add(newResults);
-
     Scope scope;
-    scope.setUidSet(imapSet);
+    scope.setUidSet({newResults.begin(), newResults.end()});
 
     ItemFetchHelper fetchHelper(connection(), scope, mItemFetchScope, mTagFetchScope, akonadi());
     fetchHelper.fetchItems();

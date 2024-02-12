@@ -10,7 +10,6 @@
 #include "fakeakonadiserver.h"
 #include "shared/aktest.h"
 
-#include "private/imapset_p.h"
 #include "private/scope_p.h"
 
 #include <QTest>
@@ -61,7 +60,7 @@ private Q_SLOTS:
         scenarios << FakeAkonadiServer::loginScenario()
                   << TestScenario::create(5,
                                           TestScenario::ClientCmd,
-                                          Protocol::LinkItemsCommandPtr::create(Protocol::LinkItemsCommand::Link, ImapInterval(1, 3), 3))
+                                          Protocol::LinkItemsCommandPtr::create(Protocol::LinkItemsCommand::Link, Scope{1, 2, 3}, 3))
                   << TestScenario::create(5, TestScenario::ServerCmd, createError(QStringLiteral("Can't link items to non-virtual collections")));
         QTest::newRow("non-virtual collection") << scenarios << Protocol::ItemChangeNotificationPtr::create() << true;
 
@@ -78,7 +77,7 @@ private Q_SLOTS:
         scenarios << FakeAkonadiServer::loginScenario()
                   << TestScenario::create(5,
                                           TestScenario::ClientCmd,
-                                          Protocol::LinkItemsCommandPtr::create(Protocol::LinkItemsCommand::Link, ImapInterval(1, 3), 6))
+                                          Protocol::LinkItemsCommandPtr::create(Protocol::LinkItemsCommand::Link, Scope{1, 2, 3}, 6))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::LinkItemsResponsePtr::create());
         QTest::newRow("normal") << scenarios << notification << false;
 
@@ -88,7 +87,7 @@ private Q_SLOTS:
         scenarios << FakeAkonadiServer::loginScenario()
                   << TestScenario::create(5,
                                           TestScenario::ClientCmd,
-                                          Protocol::LinkItemsCommandPtr::create(Protocol::LinkItemsCommand::Link, QList<qint64>{4, 123456}, 6))
+                                          Protocol::LinkItemsCommandPtr::create(Protocol::LinkItemsCommand::Link, Scope{4, 123456}, 6))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::LinkItemsResponsePtr::create());
         QTest::newRow("existent and non-existent item") << scenarios << notification << false;
 
@@ -173,7 +172,7 @@ private Q_SLOTS:
         scenarios << FakeAkonadiServer::loginScenario()
                   << TestScenario::create(5,
                                           TestScenario::ClientCmd,
-                                          Protocol::LinkItemsCommandPtr::create(Protocol::LinkItemsCommand::Unlink, ImapInterval(1, 3), 3))
+                                          Protocol::LinkItemsCommandPtr::create(Protocol::LinkItemsCommand::Unlink, Scope{1, 2, 3}, 3))
                   << TestScenario::create(5, TestScenario::ServerCmd, createError(QStringLiteral("Can't link items to non-virtual collections")));
         QTest::newRow("non-virtual collection") << scenarios << Protocol::ItemChangeNotificationPtr::create() << true;
 
@@ -189,7 +188,7 @@ private Q_SLOTS:
         scenarios << FakeAkonadiServer::loginScenario()
                   << TestScenario::create(5,
                                           TestScenario::ClientCmd,
-                                          Protocol::LinkItemsCommandPtr::create(Protocol::LinkItemsCommand::Unlink, ImapInterval(1, 3), 6))
+                                          Protocol::LinkItemsCommandPtr::create(Protocol::LinkItemsCommand::Unlink, Scope{1, 2, 3}, 6))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::LinkItemsResponsePtr::create());
         QTest::newRow("normal") << scenarios << notification << false;
 
@@ -199,7 +198,7 @@ private Q_SLOTS:
         scenarios << FakeAkonadiServer::loginScenario()
                   << TestScenario::create(5,
                                           TestScenario::ClientCmd,
-                                          Protocol::LinkItemsCommandPtr::create(Protocol::LinkItemsCommand::Unlink, QList<qint64>{4, 2048}, 6))
+                                          Protocol::LinkItemsCommandPtr::create(Protocol::LinkItemsCommand::Unlink, Scope{4, 2048}, 6))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::LinkItemsResponsePtr::create());
         QTest::newRow("existent and non-existent item") << scenarios << notification << false;
 

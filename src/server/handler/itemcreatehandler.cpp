@@ -319,12 +319,7 @@ bool ItemCreateHandler::sendResponse(const PimItem &item, Protocol::CreateItemCo
     fetchScope.setFetch(Protocol::ItemFetchScope::AllAttributes | Protocol::ItemFetchScope::FullPayload | Protocol::ItemFetchScope::CacheOnly
                         | Protocol::ItemFetchScope::Flags | Protocol::ItemFetchScope::GID | Protocol::ItemFetchScope::MTime | Protocol::ItemFetchScope::RemoteID
                         | Protocol::ItemFetchScope::RemoteRevision | Protocol::ItemFetchScope::Size | Protocol::ItemFetchScope::Tags);
-    ImapSet set;
-    set.add(QList<qint64>() << item.id());
-    Scope scope;
-    scope.setUidSet(set);
-
-    ItemFetchHelper fetchHelper(connection(), scope, fetchScope, Protocol::TagFetchScope{}, akonadi());
+    ItemFetchHelper fetchHelper(connection(), Scope{item.id()}, fetchScope, Protocol::TagFetchScope{}, akonadi());
     if (!fetchHelper.fetchItems()) {
         return failureResponse("Failed to retrieve item");
     }

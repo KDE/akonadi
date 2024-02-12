@@ -7,9 +7,7 @@
 
 #include "itemretriever.h"
 
-#include "akonadi.h"
 #include "connection.h"
-#include "storage/datastore.h"
 #include "storage/itemqueryhelper.h"
 #include "storage/itemretrievalmanager.h"
 #include "storage/itemretrievalrequest.h"
@@ -65,27 +63,15 @@ void ItemRetriever::setRetrieveParts(const QList<QByteArray> &parts)
     }
 }
 
-void ItemRetriever::setItemSet(const ImapSet &set, const Collection &collection)
+void ItemRetriever::setItemSet(const QList<PimItem::Id> &set, const Collection &collection)
 {
     mItemSet = set;
     mCollection = collection;
 }
 
-void ItemRetriever::setItemSet(const ImapSet &set, bool isUid)
+void ItemRetriever::setItem(PimItem::Id id)
 {
-    if (!isUid && mContext.collectionId() >= 0) {
-        setItemSet(set, mContext.collection());
-    } else {
-        setItemSet(set);
-    }
-}
-
-void ItemRetriever::setItem(Entity::Id id)
-{
-    ImapSet set;
-    set.add(ImapInterval(id, id));
-    mItemSet = set;
-    mCollection = Collection();
+    setItemSet({id});
 }
 
 void ItemRetriever::setRetrieveFullPayload(bool fullPayload)
@@ -100,7 +86,7 @@ void ItemRetriever::setRetrieveFullPayload(bool fullPayload)
 void ItemRetriever::setCollection(const Collection &collection, bool recursive)
 {
     mCollection = collection;
-    mItemSet = ImapSet();
+    mItemSet.clear();
     mRecursive = recursive;
 }
 
@@ -202,7 +188,7 @@ bool ItemRetriever::runItemRetrievalRequests(std::list<ItemRetrievalRequest> req
     std::vector<ItemRetrievalRequest::Id> pendingRequests;
     connect(&mItemRetrievalManager,
             &ItemRetrievalManager::requestFinished,
-            this,
+            &eventLoop,
             [this, &eventLoop, &pendingRequests](const ItemRetrievalResult &result) { // clazy:exclude=lambda-in-connect
                 const auto requestId = std::find(pendingRequests.begin(), pendingRequests.end(), result.request.id);
                 if (requestId != pendingRequests.end()) {

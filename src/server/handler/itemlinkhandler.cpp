@@ -6,10 +6,8 @@
 
 #include "itemlinkhandler.h"
 
-#include "akonadiserver_debug.h"
 #include "connection.h"
 #include "handlerhelper.h"
-#include "storage/collectionqueryhelper.h"
 #include "storage/datastore.h"
 #include "storage/itemqueryhelper.h"
 #include "storage/selectquerybuilder.h"

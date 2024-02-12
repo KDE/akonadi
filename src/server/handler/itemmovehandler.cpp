@@ -7,11 +7,9 @@
 #include "itemmovehandler.h"
 
 #include "akonadi.h"
-#include "akonadiserver_debug.h"
 #include "cachecleaner.h"
 #include "connection.h"
 #include "handlerhelper.h"
-#include "storage/collectionqueryhelper.h"
 #include "storage/datastore.h"
 #include "storage/itemqueryhelper.h"
 #include "storage/itemretrievalmanager.h"
@@ -34,7 +32,7 @@ void ItemMoveHandler::itemsRetrieved(const QList<qint64> &ids)
 
     SelectQueryBuilder<PimItem> qb;
     qb.setForUpdate();
-    ItemQueryHelper::itemSetToQuery(ImapSet(ids), qb);
+    ItemQueryHelper::itemSetToQuery(ids, qb);
     qb.addValueCondition(PimItem::collectionIdFullColumnName(), Query::NotEquals, mDestination.id());
 
     if (!qb.exec()) {
@@ -51,7 +49,8 @@ void ItemMoveHandler::itemsRetrieved(const QList<qint64> &ids)
     // Split the list by source collection
     QMultiMap<Entity::Id /* collection */, PimItem> toMove;
     QMap<Entity::Id /* collection */, Collection> sources;
-    ImapSet toMoveIds;
+    QList<PimItem::Id> toMoveIds;
+    toMoveIds.reserve(items.size());
     for (PimItem item : items) {
         if (!item.isValid()) {
             failureResponse("Invalid item in result set!?");
@@ -83,7 +82,7 @@ void ItemMoveHandler::itemsRetrieved(const QList<qint64> &ids)
         }
 
         toMove.insert(source.id(), item);
-        toMoveIds.add(QList<qint64>{item.id()});
+        toMoveIds.push_back(item.id());
     }
 
     if (!transaction.commit()) {
