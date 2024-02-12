@@ -51,6 +51,23 @@ public:
     }
 };
 
+class TestItem
+{
+public:
+    TestItem(int id)
+        : mId(id)
+    {
+    }
+
+    int id() const
+    {
+        return mId;
+    }
+
+private:
+    int mId = 0;
+};
+
 } // namespace
 
 class AkRangesTest : public QObject
@@ -131,6 +148,14 @@ private Q_SLOTS:
         QCOMPARE(in | Views::transform(transformFreeFunc) | Actions::toQList, out);
         QCOMPARE(in | Views::transform(&TransformHelper::transform) | Actions::toQList, out);
         QCOMPARE(in | Views::transform(TransformHelper()) | Actions::toQList, out);
+    }
+
+    void testTransformMemFn()
+    {
+        QList<TestItem> in = {{1}, {2}, {3}, {4}, {5}};
+        QList<int> out = {1, 2, 3, 4, 5};
+
+        QCOMPARE(in | Views::transform(std::mem_fn(&TestItem::id)) | Actions::toQList, out);
     }
 
 private:

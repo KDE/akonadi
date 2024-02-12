@@ -166,9 +166,7 @@ private:
         using type = R;
     };
 
-    template<typename... Ts>
-    using FuncHelper = decltype(std::invoke(std::declval<Ts>()...))(Ts...);
-    using IteratorValueType = typename ResultOf<FuncHelper<TransformFn, typename IteratorTrait<Iterator>::value_type>>::type;
+    using IteratorValueType = std::invoke_result_t<TransformFn, typename IteratorTrait<Iterator>::value_type>;
 
 public:
     using value_type = IteratorValueType;
@@ -183,7 +181,7 @@ public:
 
     auto operator*() const
     {
-        return std::invoke(mFn, *this->mIter);
+        return std::invoke(mFn, *(this->mIter));
     }
 
 private:
