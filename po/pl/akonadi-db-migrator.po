@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-09 00:38+0000\n"
-"PO-Revision-Date: 2024-01-20 13:54+0100\n"
+"PO-Revision-Date: 2024-02-11 11:27+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -56,7 +56,7 @@ msgstr "Uruchamianie usługi Akonadi..."
 #, kde-format
 msgctxt "@info:status"
 msgid "Database fsck completed"
-msgstr ""
+msgstr "Ukończono fsck na bazie danych"
 
 #: dbmigrator.cpp:484
 #, kde-format
@@ -113,7 +113,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:status"
 msgid "Running fsck on the source database"
-msgstr ""
+msgstr "Uruchamianie fsck na źródłowej bazie danych"
 
 #: dbmigrator.cpp:560
 #, kde-format
