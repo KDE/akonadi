@@ -441,28 +441,28 @@ void ChangeRecorderJournalWriter::saveItemNotification(QDataStream &stream, cons
 
     stream << int(msg.operation());
     const auto &items = msg.items();
-    stream << items.count();
+    stream << static_cast<int>(items.count());
     for (const auto &item : items) {
         stream << item.id() << item.revision() << item.parentId() << item.remoteId() << item.remoteRevision() << item.gid() << item.size() << item.mimeType()
                << item.mTime() << item.flags();
         const auto tags = item.tags();
-        stream << tags.count();
+        stream << static_cast<int>(tags.count());
         for (const auto &tag : tags) {
             stream << tag.id() << tag.parentId() << tag.gid() << tag.type() << tag.remoteId() << tag.attributes();
         }
         stream << item.virtualReferences();
         const auto relations = item.relations();
-        stream << relations.count();
+        stream << static_cast<int>(relations.count());
         for (const auto &relation : relations) {
             stream << relation.left() << relation.leftMimeType() << relation.right() << relation.rightMimeType() << relation.type() << relation.remoteId();
         }
         const auto ancestors = item.ancestors();
-        stream << ancestors.count();
+        stream << static_cast<int>(ancestors.count());
         for (const auto &ancestor : ancestors) {
             stream << ancestor.id() << ancestor.remoteId() << ancestor.name() << ancestor.attributes();
         }
         const auto parts = item.parts();
-        stream << parts.count();
+        stream << static_cast<int>(parts.count());
         for (const auto &part : parts) {
             const auto metaData = part.metaData();
             stream << part.payloadName() << metaData.name() << metaData.size() << metaData.version() << static_cast<int>(metaData.storageType()) << part.data();
@@ -673,7 +673,7 @@ void Akonadi::ChangeRecorderJournalWriter::saveCollectionNotification(QDataStrea
     stream << col.searchQuery();
     stream << col.searchCollections();
     const auto ancestors = col.ancestors();
-    stream << ancestors.count();
+    stream << static_cast<int>(ancestors.count());
     for (const auto &ancestor : ancestors) {
         stream << ancestor.id() << ancestor.remoteId() << ancestor.name() << ancestor.attributes();
     }
