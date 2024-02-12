@@ -327,6 +327,9 @@ SessionPrivate::SessionPrivate(Session *parent)
     // thread()->wait() mechanism in Connection dtor crashes sometimes
     // when called from QApplication destructor
     connThreadCleanUp = QObject::connect(qApp, &QCoreApplication::aboutToQuit, qApp, [this]() {
+        socketDisconnected();
+        connection = nullptr;
+
         delete mSessionThread;
         mSessionThread = nullptr;
     });
