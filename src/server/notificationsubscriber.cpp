@@ -22,7 +22,7 @@ using namespace Akonadi::Server;
 using namespace AkRanges;
 
 #define TRACE_NTF(x)
-//#define TRACE_NTF(x) qCDebug(AKONADISERVER_LOG) << mSubscriber << x
+// #define TRACE_NTF(x) qCDebug(AKONADISERVER_LOG) << mSubscriber << x
 
 NotificationSubscriber::NotificationSubscriber(NotificationManager *manager)
     : mManager(manager)

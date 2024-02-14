@@ -54,7 +54,9 @@ public:
 
         setContextText(AgentActionManager::CreateAgentInstance, AgentActionManager::ErrorMessageText, ki18n("Could not create agent instance: %1"));
 
-        setContextText(AgentActionManager::CreateAgentInstance, AgentActionManager::ErrorMessageTitle, i18nc("@title:window", "Agent Instance Creation Failed"));
+        setContextText(AgentActionManager::CreateAgentInstance,
+                       AgentActionManager::ErrorMessageTitle,
+                       i18nc("@title:window", "Agent Instance Creation Failed"));
 
         setContextText(AgentActionManager::DeleteAgentInstance, AgentActionManager::MessageBoxTitle, i18nc("@title:window", "Delete Agent Instance?"));
 

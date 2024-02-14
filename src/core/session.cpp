@@ -33,7 +33,7 @@
 // in order to work around exec() deadlocks. As a result of that Session knows to late about a finished job and still
 // sends responses for the next one to the already finished one
 #define PIPELINE_LENGTH 0
-//#define PIPELINE_LENGTH 2
+// #define PIPELINE_LENGTH 2
 
 using namespace Akonadi;
 using namespace std::chrono_literals;
