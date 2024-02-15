@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-30 00:37+0000\n"
+"POT-Creation-Date: 2024-02-15 00:37+0000\n"
 "PO-Revision-Date: 2020-05-07 13:23+0300\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -643,20 +643,20 @@ msgstr "Uus agendi isend"
 msgid "Could not create agent instance: %1"
 msgstr "Agendi isendi loomine nurjus: %1"
 
-#: widgets/agentactionmanager.cpp:57
+#: widgets/agentactionmanager.cpp:59
 #, fuzzy, kde-format
 #| msgid "Agent instance creation failed"
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "Agendi isendi loomine nurjus"
 
-#: widgets/agentactionmanager.cpp:59
+#: widgets/agentactionmanager.cpp:61
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Agent Instance?"
 msgstr "Kas kustutada agendi isend?"
 
-#: widgets/agentactionmanager.cpp:63
+#: widgets/agentactionmanager.cpp:65
 #, kde-format
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Kas tõesti kustutada kõik valitud agendi isendid?"

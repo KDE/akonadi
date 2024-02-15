@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-30 00:37+0000\n"
+"POT-Creation-Date: 2024-02-15 00:37+0000\n"
 "PO-Revision-Date: 2012-07-11 10:23+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -663,20 +663,20 @@ msgstr "ធាតុ​ភ្នាក់ងារ​ថ្មី​"
 msgid "Could not create agent instance: %1"
 msgstr "មិន​អាច​បង្កើត​ធាតុ​​ភ្នាក់ងារ​បាន​ទេ​ ៖​​ %1"
 
-#: widgets/agentactionmanager.cpp:57
+#: widgets/agentactionmanager.cpp:59
 #, fuzzy, kde-format
 #| msgid "Agent instance creation failed"
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "បាន​បរាជ័យ​ការ​បង្កើត​ធាតុ​​ភ្នាក់ងារ​"
 
-#: widgets/agentactionmanager.cpp:59
+#: widgets/agentactionmanager.cpp:61
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Agent Instance?"
 msgstr "លុប​ធាតុ​​ភ្នាក់ងារ​ឬ​ ?"
 
-#: widgets/agentactionmanager.cpp:63
+#: widgets/agentactionmanager.cpp:65
 #, kde-format
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "តើ​អ្នក​ពិតជា​ចង់​លុប​ធាតុ​ភ្នាក់ងារ​ដែល​បាន​ជ្រើស​ឬ ?"

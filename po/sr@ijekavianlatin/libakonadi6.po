@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-30 00:37+0000\n"
+"POT-Creation-Date: 2024-02-15 00:37+0000\n"
 "PO-Revision-Date: 2017-12-17 18:01+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -664,20 +664,20 @@ msgstr "Novi primjerak agenta"
 msgid "Could not create agent instance: %1"
 msgstr "Ne mogu da napravim primjerak agenta: %1"
 
-#: widgets/agentactionmanager.cpp:57
+#: widgets/agentactionmanager.cpp:59
 #, fuzzy, kde-format
 #| msgid "Agent instance creation failed"
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "Neuspjelo stvaranje primjerka agenta"
 
-#: widgets/agentactionmanager.cpp:59
+#: widgets/agentactionmanager.cpp:61
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Agent Instance?"
 msgstr "Obrisati primjerak agenta?"
 
-#: widgets/agentactionmanager.cpp:63
+#: widgets/agentactionmanager.cpp:65
 #, kde-format
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Želite li zaista da obrišete izabrani primjerak agenta?"

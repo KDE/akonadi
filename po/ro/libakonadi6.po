@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-30 00:37+0000\n"
+"POT-Creation-Date: 2024-02-15 00:37+0000\n"
 "PO-Revision-Date: 2013-01-13 00:43+0200\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -663,20 +663,20 @@ msgstr "Instanță de agent nouă"
 msgid "Could not create agent instance: %1"
 msgstr "Instanța agentului nu poate fi creată: %1"
 
-#: widgets/agentactionmanager.cpp:57
+#: widgets/agentactionmanager.cpp:59
 #, fuzzy, kde-format
 #| msgid "Agent instance creation failed"
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "Crearea instanței de agent a eșuat"
 
-#: widgets/agentactionmanager.cpp:59
+#: widgets/agentactionmanager.cpp:61
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Agent Instance?"
 msgstr "Ștergeți instanța agentului?"
 
-#: widgets/agentactionmanager.cpp:63
+#: widgets/agentactionmanager.cpp:65
 #, kde-format
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Sigur doriți să ștergeți instanța agentului aleasă?"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-30 00:37+0000\n"
+"POT-Creation-Date: 2024-02-15 00:37+0000\n"
 "PO-Revision-Date: 2021-09-27 23:52+0630\n"
 "Last-Translator: ဇေယျာလွင် <lw1nzayar@yandex.com>\n"
 "Language-Team: Burmese <kde-i18n-doc@kde.org>\n"
@@ -629,20 +629,20 @@ msgstr "အေးဂျင့်အင်းစတမ့်အသစ်"
 msgid "Could not create agent instance: %1"
 msgstr "အေးဂျင့်အင်းစတမ့်ကိုမဖန်တီးနိုင်ခဲ့ပါ - %1"
 
-#: widgets/agentactionmanager.cpp:57
+#: widgets/agentactionmanager.cpp:59
 #, fuzzy, kde-format
 #| msgid "Agent instance creation failed"
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "အေးဂျင့်အင်းစတမ့် ဖန်တီးမှု မအောင်မြင်ခဲ့ပါ"
 
-#: widgets/agentactionmanager.cpp:59
+#: widgets/agentactionmanager.cpp:61
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Agent Instance?"
 msgstr "အေးဂျင့်အင်းစတမ့်ဖျက်မှာလား။"
 
-#: widgets/agentactionmanager.cpp:63
+#: widgets/agentactionmanager.cpp:65
 #, kde-format
 msgid "Do you really want to delete the selected agent instance?"
 msgstr ""

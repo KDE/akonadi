@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-30 00:37+0000\n"
+"POT-Creation-Date: 2024-02-15 00:37+0000\n"
 "PO-Revision-Date: 2010-02-26 23:20+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -646,21 +646,21 @@ msgstr ""
 msgid "Could not create agent instance: %1"
 msgstr "ไม่สามารถวางข้อมูลต่อไปนี้ได้: %1"
 
-#: widgets/agentactionmanager.cpp:57
+#: widgets/agentactionmanager.cpp:59
 #, fuzzy, kde-format
 #| msgid "Folder creation failed"
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "ล้มเหลวในการสร้างโฟลเดอร์"
 
-#: widgets/agentactionmanager.cpp:59
+#: widgets/agentactionmanager.cpp:61
 #, fuzzy, kde-format
 #| msgid "Delete folder?"
 msgctxt "@title:window"
 msgid "Delete Agent Instance?"
 msgstr "ลบโฟลเดอร์หรือไม่ ?"
 
-#: widgets/agentactionmanager.cpp:63
+#: widgets/agentactionmanager.cpp:65
 #, fuzzy, kde-format
 #| msgid "Do you really want to delete all selected items?"
 msgid "Do you really want to delete the selected agent instance?"
