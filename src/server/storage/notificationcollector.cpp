@@ -246,7 +246,7 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
     if (!item.isValid()) {
         return;
     }
-    itemNotification(op, {item}, collection, collectionDest, resource, parts);
+    itemNotification(op, PimItem::List{item}, collection, collectionDest, resource, parts);
 }
 
 void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::Operation op,
