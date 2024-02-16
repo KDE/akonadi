@@ -35,7 +35,6 @@ protected:
 private:
     void done();
 
-private:
     friend class XmlWriteJobPrivate;
     std::unique_ptr<XmlWriteJobPrivate> const d;
 };

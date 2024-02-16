@@ -57,13 +57,11 @@ protected:
 public Q_SLOTS:
     void slotAddAccount();
 
-private Q_SLOTS:
+private:
     AKONADIWIDGETS_NO_EXPORT void slotAccountSelected(const Akonadi::AgentInstance &current);
     AKONADIWIDGETS_NO_EXPORT void slotRemoveSelectedAccount();
     AKONADIWIDGETS_NO_EXPORT void slotRestartSelectedAccount();
     AKONADIWIDGETS_NO_EXPORT void slotModifySelectedAccount();
-
-private:
     AKONADIWIDGETS_NO_EXPORT void slotSearchAgentType(const QString &str);
 
 private:

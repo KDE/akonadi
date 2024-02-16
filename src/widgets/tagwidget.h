@@ -42,11 +42,9 @@ public:
 Q_SIGNALS:
     void selectionChanged(const Akonadi::Tag::List &tags);
 
-private Q_SLOTS:
-    void editTags();
-    void updateView();
-
 private:
+    void updateView();
+    void editTags();
     std::unique_ptr<TagWidgetPrivate> const d;
 };
 

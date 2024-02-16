@@ -42,14 +42,10 @@ protected:
 
 private:
     void reposition();
-
-private Q_SLOTS:
-    void startClicked();
-    void quitClicked();
-    void selfTestClicked();
     void serverStateChanged(Akonadi::ServerManager::State state);
-
-private:
+    void selfTestClicked();
+    void quitClicked();
+    void startClicked();
     QPointer<QWidget> mBaseWidget;
     bool mPreviousState = false;
     bool mOverlayActive = false;

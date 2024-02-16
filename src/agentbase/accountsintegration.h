@@ -44,7 +44,7 @@ Q_SIGNALS:
 
 private:
     // For DBus adaptor which doesn't understand std::optional
-    quint32 getAccountId() const;
+    AKONADIAGENTBASE_NO_EXPORT quint32 getAccountId() const;
 
     std::optional<quint32> mAccountId;
 };

@@ -75,12 +75,12 @@ private:
 
     ExternalPartStorage();
 
-    bool beginTransaction();
-    bool commitTransaction();
-    bool rollbackTransaction();
+    AKONADIPRIVATE_NO_EXPORT bool beginTransaction();
+    AKONADIPRIVATE_NO_EXPORT bool commitTransaction();
+    AKONADIPRIVATE_NO_EXPORT bool rollbackTransaction();
 
-    bool replayTransaction(const QList<Operation> &trx, bool commit);
-    void addToTransaction(const QList<Operation> &ops);
+    AKONADIPRIVATE_NO_EXPORT bool replayTransaction(const QList<Operation> &trx, bool commit);
+    AKONADIPRIVATE_NO_EXPORT void addToTransaction(const QList<Operation> &ops);
 
     mutable QMutex mTransactionLock;
     QHash<QThread *, QList<Operation>> mTransactions;
