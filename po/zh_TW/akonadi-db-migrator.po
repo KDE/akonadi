@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-09 00:38+0000\n"
-"PO-Revision-Date: 2024-01-15 00:25+0900\n"
+"PO-Revision-Date: 2024-02-15 17:02+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 24.01.90\n"
+"X-Generator: Lokalize 24.01.95\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -55,7 +55,7 @@ msgstr "Akonadi 服務啟動中..."
 #, kde-format
 msgctxt "@info:status"
 msgid "Database fsck completed"
-msgstr ""
+msgstr "已完成資料庫資料檢查 (fsck)"
 
 #: dbmigrator.cpp:484
 #, kde-format
@@ -106,7 +106,7 @@ msgstr "錯誤：無法開啟要轉移資料到的新資料庫。"
 #, kde-format
 msgctxt "@info:status"
 msgid "Running fsck on the source database"
-msgstr ""
+msgstr "來源資料庫資料檢查 (fsck) 執行中"
 
 #: dbmigrator.cpp:560
 #, kde-format
