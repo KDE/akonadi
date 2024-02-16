@@ -761,9 +761,9 @@ protected:
 
 private:
     /// @cond PRIVATE
-    AKONADIAGENTBASE_NO_EXPORT static QString parseArguments(int argc, char **argv);
-    AKONADIAGENTBASE_NO_EXPORT static int init(AgentBase &r);
-    AKONADIAGENTBASE_NO_EXPORT void setOnlineInternal(bool state);
+    static QString parseArguments(int argc, char **argv);
+    static int init(AgentBase &r);
+    void setOnlineInternal(bool state);
 
     // D-Bus interface stuff
     AKONADIAGENTBASE_NO_EXPORT void abort();
