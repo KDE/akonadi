@@ -310,4 +310,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.DebugInterface
 
 #######################################################
 
-add_subdirectory(dbmigrator)
+# dbmigrator is disabled in 24.02, since it's not ready and is missing
+# some important fixes that were too big and came too late to be merged
+# into stable branch.
+#add_subdirectory(dbmigrator)
