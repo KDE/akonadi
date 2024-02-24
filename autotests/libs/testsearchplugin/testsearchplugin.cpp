@@ -6,7 +6,6 @@
 
 #include "testsearchplugin.h"
 
-#include "searchquery.h"
 #include <QDebug>
 #include <QVariant>
 

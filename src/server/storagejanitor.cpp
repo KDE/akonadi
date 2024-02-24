@@ -15,7 +15,6 @@
 #include "search/searchrequest.h"
 #include "storage/collectionstatistics.h"
 #include "storage/datastore.h"
-#include "storage/dbconfig.h"
 #include "storage/dbtype.h"
 #include "storage/query.h"
 #include "storage/selectquerybuilder.h"
