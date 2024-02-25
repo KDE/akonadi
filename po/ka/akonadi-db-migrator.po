@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-09 00:38+0000\n"
+"POT-Creation-Date: 2024-02-25 00:38+0000\n"
 "PO-Revision-Date: 2024-02-09 05:56+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -28,37 +28,37 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "Temuri.doghonadze@gmail.com"
 
-#: dbmigrator.cpp:438
+#: dbmigrator.cpp:437
 #, kde-format
 msgctxt "@info:status"
 msgid "Stopping Akonadi service..."
 msgstr "Akonadi-ის სერვისის გაჩერება..."
 
-#: dbmigrator.cpp:441
+#: dbmigrator.cpp:440
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: timeout while waiting for Akonadi to stop."
 msgstr "შეცდომა: Akonadi-ის გაჩერების მოლოდინის ვადა ამოიწურა."
 
-#: dbmigrator.cpp:448
+#: dbmigrator.cpp:447
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: couldn't acquire DBus lock for Akonadi."
 msgstr "შეცდომა: ვერ მივიღე DBus-ის ბლოკი Akonadi-სთვის."
 
-#: dbmigrator.cpp:457
+#: dbmigrator.cpp:456
 #, kde-format
 msgctxt "@info:status"
 msgid "Starting Akonadi service..."
 msgstr "Akonadi-ის სერვისის გაშვება..."
 
-#: dbmigrator.cpp:470
+#: dbmigrator.cpp:469
 #, kde-format
 msgctxt "@info:status"
 msgid "Database fsck completed"
 msgstr "მონაცემთა ბაზის ფაილური სისტემის შემოწმება დასრულდა"
 
-#: dbmigrator.cpp:484
+#: dbmigrator.cpp:483
 #, kde-format
 msgctxt "@info:status"
 msgid ""
@@ -68,19 +68,19 @@ msgstr ""
 "არასწორი ბაზის ძრავა \"%1\" - მისაღები მნიშვნელობებია \"SQLite\", \"MySQL\" "
 "და \"postgres\"."
 
-#: dbmigrator.cpp:506
+#: dbmigrator.cpp:505
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure source database server."
 msgstr "შეცდომა: წყარო ბაზის სერვერის მორგება ჩავარდა."
 
-#: dbmigrator.cpp:511
+#: dbmigrator.cpp:510
 #, kde-format
 msgctxt "@info:shell"
 msgid "Source and destination database engines are the same."
 msgstr "საწყისი და სამიზნე ბაზის ძრავები ერთი და იგივეა."
 
-#: dbmigrator.cpp:518
+#: dbmigrator.cpp:517
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to obtain path to source database data file or directory."
@@ -88,19 +88,19 @@ msgstr ""
 "შეცდომა: წყარო ბაზის მონაცემების ფაილების ან საქაღალდეების ბილიკის მიღების "
 "მცდელობა ჩავარდა."
 
-#: dbmigrator.cpp:525
+#: dbmigrator.cpp:524
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure the new database server."
 msgstr "შეცდომა: ახალი ბაზის სერვერის მორგება ჩავარდა."
 
-#: dbmigrator.cpp:531
+#: dbmigrator.cpp:530
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open existing database to migrate data from."
 msgstr "შეცდომა: ჩავარდა არსებული ბაზის გახსნა მონაცემების დასამიგრირებლად."
 
-#: dbmigrator.cpp:536
+#: dbmigrator.cpp:535
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open new database to migrate data to."
@@ -108,43 +108,43 @@ msgstr ""
 "შეცდომა: ჩავარდა ახალი ბაზის გახსნა, სადაც მონაცემების მიგრაცია უნდა "
 "მომხდარიყო."
 
-#: dbmigrator.cpp:541
+#: dbmigrator.cpp:540
 #, kde-format
 msgctxt "@info:status"
 msgid "Running fsck on the source database"
 msgstr "ფაილური სისტემის შემოწმება წყარო მონაცემთა ბაზაზე"
 
-#: dbmigrator.cpp:560
+#: dbmigrator.cpp:559
 #, kde-format
 msgctxt "@info:status %2 is error message"
 msgid "Error: failed to remove temporary database directory %1: %2"
 msgstr "შეცდომა: ჩავარდა წაშლის მცდელობა დროებითი ბაზის საქაღალდისთვის %1: %2"
 
-#: dbmigrator.cpp:567
+#: dbmigrator.cpp:566
 #, kde-format
 msgctxt "@info:shell"
 msgid "Backing up original database..."
 msgstr "მიმდინარეობს საწყისი ბაზის მარქაფი..."
 
-#: dbmigrator.cpp:575
+#: dbmigrator.cpp:574
 #, kde-format
 msgctxt "@info:status"
 msgid "Restoring database from backup %1 to %2"
 msgstr "მიმდინარეობს ბაზის აღდგენა მარქაფიდან %1 %2-ზე"
 
-#: dbmigrator.cpp:577
+#: dbmigrator.cpp:576
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to restore database from backup: %1"
 msgstr "შეცდომა: ჩავარდა ბაზის აღდგენა მარქაფიდან: %1"
 
-#: dbmigrator.cpp:609 dbmigrator.cpp:620
+#: dbmigrator.cpp:608 dbmigrator.cpp:619
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error has occurred while migrating table %1"
 msgstr "ცხრილის %1 მიგრაციისას აღმოჩენილია შეცდომა"
 
-#: dbmigrator.cpp:639
+#: dbmigrator.cpp:638
 #, kde-format
 msgctxt "@label"
 msgid ""
@@ -153,61 +153,61 @@ msgid ""
 msgstr ""
 "მარქაფის საქაღალდე უკვე არსებობს. გნებავთ წინა მარქაფს თავზე გადავაწერო?"
 
-#: dbmigrator.cpp:644
+#: dbmigrator.cpp:643
 #, kde-format
 msgctxt "@info:shell"
 msgid "Cannot proceed without backup. Migration interrupted."
 msgstr "მარქაფის გარეშე ვერ გავაგრძელებ. მიგრაცია შეწყდა."
 
-#: dbmigrator.cpp:649
+#: dbmigrator.cpp:648
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to remove previous backup directory."
 msgstr "წინა მარქაფის საქაღალდის წაშლის მცდელობა ჩავარდა."
 
-#: dbmigrator.cpp:662
+#: dbmigrator.cpp:661
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to move database to backup location: %1"
 msgstr "ბაზის მარქაფის მდებარეობაზე გადატანა ჩავარდა: %1"
 
-#: dbmigrator.cpp:676
+#: dbmigrator.cpp:675
 #, kde-format
 msgctxt "@label"
 msgid "Backup file %1 already exists. Overwrite?"
 msgstr "მარქაფის ფაილი %1 უკვე არსებობს. გადავაწერო?"
 
-#: dbmigrator.cpp:678
+#: dbmigrator.cpp:677
 #, kde-format
 msgctxt "@info:status"
 msgid "Cannot proceed without backup. Migration interrupted."
 msgstr "მარქაფის გარეშე ვერ გავაგრძელებ. მიგრაცია შეწყდა."
 
-#: dbmigrator.cpp:684
+#: dbmigrator.cpp:683
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: Failed to remove existing backup file %1: %2"
 msgstr "შეცდომა: არსებული მარქაფის ფაილის %1 წაშლის მცდელობა ჩავარდა: %2"
 
-#: dbmigrator.cpp:691
+#: dbmigrator.cpp:690
 #, kde-format
 msgctxt "@info:status"
 msgid "Failed to back up Akonadi Server configuration: %1"
 msgstr "Akonad-ის სერვერის კონფიგურაციის მარქაფი ჩავარდა: %1"
 
-#: dbmigrator.cpp:708
+#: dbmigrator.cpp:707
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move migrated database to the primary location: %1"
 msgstr "შეცდომა: მიგრირებული ბაზის ძირითად მდებარეობაზე გადატანა ჩავარდა: %1"
 
-#: dbmigrator.cpp:727
+#: dbmigrator.cpp:726
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to remove original akonadiserverrc: %1"
 msgstr "შეცდომა: ვერ წავშალე საწყისი akonadiserverrc: %1"
 
-#: dbmigrator.cpp:733
+#: dbmigrator.cpp:732
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move new akonadiserverrc to the primary location: %1"
@@ -215,7 +215,7 @@ msgstr ""
 "შეცდომა: ახალი akonadiserverrc ფაილის ძირითად მდებარეობაზე გადატანის "
 "მცდელობა ჩავარდა: %1"
 
-#: dbmigrator.cpp:824
+#: dbmigrator.cpp:823
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to update autoincrement value for table %1"
@@ -223,13 +223,13 @@ msgstr ""
 "შეცდომა: ჩავარდა ავტოინკრემენტის მნიშვნელობის განახლების მცდელობა "
 "ცხრილისთვის %1"
 
-#: dbmigrator.cpp:829
+#: dbmigrator.cpp:828
 #, kde-format
 msgctxt "@info:status"
 msgid "Optimizing table %1..."
 msgstr "მიმდინარეობს ოპტიმიზაცია ცხრილისთვის %1..."
 
-#: dbmigrator.cpp:832
+#: dbmigrator.cpp:831
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to optimize table %1"

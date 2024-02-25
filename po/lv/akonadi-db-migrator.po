@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-09 00:38+0000\n"
+"POT-Creation-Date: 2024-02-25 00:38+0000\n"
 "PO-Revision-Date: 2024-02-02 16:40+0200\n"
 "Last-Translator: Toms Trasūns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -28,37 +28,37 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "toms.trasuns@posteo.net"
 
-#: dbmigrator.cpp:438
+#: dbmigrator.cpp:437
 #, kde-format
 msgctxt "@info:status"
 msgid "Stopping Akonadi service..."
 msgstr "Aptur „Akonadi“ servisu..."
 
-#: dbmigrator.cpp:441
+#: dbmigrator.cpp:440
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: timeout while waiting for Akonadi to stop."
 msgstr "Kļūda: iestājās noildze, gaidot „Akonadi“ apturēšanu."
 
-#: dbmigrator.cpp:448
+#: dbmigrator.cpp:447
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: couldn't acquire DBus lock for Akonadi."
 msgstr "Kļūda: neizdevās iegūt „DBus“ slēgu priekš „Akonadi“."
 
-#: dbmigrator.cpp:457
+#: dbmigrator.cpp:456
 #, kde-format
 msgctxt "@info:status"
 msgid "Starting Akonadi service..."
 msgstr "Palaiž „Akonadi“ servisu..."
 
-#: dbmigrator.cpp:470
+#: dbmigrator.cpp:469
 #, kde-format
 msgctxt "@info:status"
 msgid "Database fsck completed"
 msgstr ""
 
-#: dbmigrator.cpp:484
+#: dbmigrator.cpp:483
 #, kde-format
 msgctxt "@info:status"
 msgid ""
@@ -68,81 +68,81 @@ msgstr ""
 "Nederīgs datubāzes dzinējs „%1“ — derīgās vērtības ir „sqlite“, „mysql“ un "
 "„postgres“."
 
-#: dbmigrator.cpp:506
+#: dbmigrator.cpp:505
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure source database server."
 msgstr "Kļūda: neizdevās konfigurēt avota datubāzes serveri."
 
-#: dbmigrator.cpp:511
+#: dbmigrator.cpp:510
 #, kde-format
 msgctxt "@info:shell"
 msgid "Source and destination database engines are the same."
 msgstr "Avota un galamērķa datubāzes dzinēji ir vienādi."
 
-#: dbmigrator.cpp:518
+#: dbmigrator.cpp:517
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to obtain path to source database data file or directory."
 msgstr ""
 "Kļūda: neizdevās iegūt ceļu līdz avota datubāzes datnei vai direktorijam."
 
-#: dbmigrator.cpp:525
+#: dbmigrator.cpp:524
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure the new database server."
 msgstr "Kļūda: neizdevās konfigurēt jaunu datubāzes serveri."
 
-#: dbmigrator.cpp:531
+#: dbmigrator.cpp:530
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open existing database to migrate data from."
 msgstr ""
 "Kļūda: neizdevās atvērt eksistējošo datubāzi, lai no tās migrētu datus."
 
-#: dbmigrator.cpp:536
+#: dbmigrator.cpp:535
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open new database to migrate data to."
 msgstr "Kļūda: neizdevās atvērt jauno datubāzi, uz kuru migrēt datus."
 
-#: dbmigrator.cpp:541
+#: dbmigrator.cpp:540
 #, kde-format
 msgctxt "@info:status"
 msgid "Running fsck on the source database"
 msgstr ""
 
-#: dbmigrator.cpp:560
+#: dbmigrator.cpp:559
 #, kde-format
 msgctxt "@info:status %2 is error message"
 msgid "Error: failed to remove temporary database directory %1: %2"
 msgstr "Kļūda: neizdevās noņemt pagaidu datubāzes direktoriju „%1“: %2"
 
-#: dbmigrator.cpp:567
+#: dbmigrator.cpp:566
 #, kde-format
 msgctxt "@info:shell"
 msgid "Backing up original database..."
 msgstr "Dublē oriģinālo datubāzi..."
 
-#: dbmigrator.cpp:575
+#: dbmigrator.cpp:574
 #, kde-format
 msgctxt "@info:status"
 msgid "Restoring database from backup %1 to %2"
 msgstr "Atjauno datubāzi no dublējumkopijas „%1“ uz „%2“"
 
-#: dbmigrator.cpp:577
+#: dbmigrator.cpp:576
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to restore database from backup: %1"
 msgstr "Kļūda: neizdevās atjaunot datubāzi no dublējumkopijas: %1"
 
-#: dbmigrator.cpp:609 dbmigrator.cpp:620
+#: dbmigrator.cpp:608 dbmigrator.cpp:619
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error has occurred while migrating table %1"
 msgstr "Notikusi kļūda, migrējot tabulu „%1“."
 
-#: dbmigrator.cpp:639
+#: dbmigrator.cpp:638
 #, kde-format
 msgctxt "@label"
 msgid ""
@@ -152,79 +152,79 @@ msgstr ""
 "Dublējuma direktorijs jau eksistē. Vai vēlaties pārrakstīt iepriekšējo "
 "dublējumkopiju?"
 
-#: dbmigrator.cpp:644
+#: dbmigrator.cpp:643
 #, kde-format
 msgctxt "@info:shell"
 msgid "Cannot proceed without backup. Migration interrupted."
 msgstr "Neizdodas veikt dublējumu. Migrācija ir pārtraukta."
 
-#: dbmigrator.cpp:649
+#: dbmigrator.cpp:648
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to remove previous backup directory."
 msgstr "Neizdevās noņemt iepriekšējā dublējuma direktoriju."
 
-#: dbmigrator.cpp:662
+#: dbmigrator.cpp:661
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to move database to backup location: %1"
 msgstr "Neizdevās pārvietot datubāzi, lai dublētu vietu: %1"
 
-#: dbmigrator.cpp:676
+#: dbmigrator.cpp:675
 #, kde-format
 msgctxt "@label"
 msgid "Backup file %1 already exists. Overwrite?"
 msgstr "Dublējumkopijas datne „%1“ jau eksistē. Vai pārrakstīt?"
 
-#: dbmigrator.cpp:678
+#: dbmigrator.cpp:677
 #, kde-format
 msgctxt "@info:status"
 msgid "Cannot proceed without backup. Migration interrupted."
 msgstr "Neizdodas izveidot dublējumkopiju. Migrācija ir pārtraukta."
 
-#: dbmigrator.cpp:684
+#: dbmigrator.cpp:683
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: Failed to remove existing backup file %1: %2"
 msgstr "Kļūda: neizdevās noņemt eksistējošās dublējumkopijas datni „%1“: %2"
 
-#: dbmigrator.cpp:691
+#: dbmigrator.cpp:690
 #, kde-format
 msgctxt "@info:status"
 msgid "Failed to back up Akonadi Server configuration: %1"
 msgstr "Neizdevās dublēt „Akonadi“ servera konfigurāciju: %1"
 
-#: dbmigrator.cpp:708
+#: dbmigrator.cpp:707
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move migrated database to the primary location: %1"
 msgstr "Kļūda: neizdevās pārvietot migrēto datubāzi uz primāro vietu: %1"
 
-#: dbmigrator.cpp:727
+#: dbmigrator.cpp:726
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to remove original akonadiserverrc: %1"
 msgstr "Kļūda: neizdevās noņemt oriģinālo „akonadiserverrc“: %1"
 
-#: dbmigrator.cpp:733
+#: dbmigrator.cpp:732
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move new akonadiserverrc to the primary location: %1"
 msgstr "Kļūda: neizdevās pārvietot „akonadiserverrc“ uz primāro vietu: %1"
 
-#: dbmigrator.cpp:824
+#: dbmigrator.cpp:823
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to update autoincrement value for table %1"
 msgstr "Kļūda: neizdevās atjaunināt „autoincrement“ vērtību tabulai %1"
 
-#: dbmigrator.cpp:829
+#: dbmigrator.cpp:828
 #, kde-format
 msgctxt "@info:status"
 msgid "Optimizing table %1..."
 msgstr "Optimizē tabulu %1..."
 
-#: dbmigrator.cpp:832
+#: dbmigrator.cpp:831
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to optimize table %1"

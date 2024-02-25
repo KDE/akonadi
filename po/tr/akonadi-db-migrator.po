@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-09 00:38+0000\n"
+"POT-Creation-Date: 2024-02-25 00:38+0000\n"
 "PO-Revision-Date: 2024-02-09 17:45+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -27,37 +27,37 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "emir_sari@icloud.com"
 
-#: dbmigrator.cpp:438
+#: dbmigrator.cpp:437
 #, kde-format
 msgctxt "@info:status"
 msgid "Stopping Akonadi service..."
 msgstr "Akonadi hizmeti durduruluyor..."
 
-#: dbmigrator.cpp:441
+#: dbmigrator.cpp:440
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: timeout while waiting for Akonadi to stop."
 msgstr "Hata: Akonadi’nin durması beklenirken zaman aşımı oluştu."
 
-#: dbmigrator.cpp:448
+#: dbmigrator.cpp:447
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: couldn't acquire DBus lock for Akonadi."
 msgstr "Hata: Akonadi için DBus kilidi alınamadı."
 
-#: dbmigrator.cpp:457
+#: dbmigrator.cpp:456
 #, kde-format
 msgctxt "@info:status"
 msgid "Starting Akonadi service..."
 msgstr "Akonadi hizmeti başlatılıyor..."
 
-#: dbmigrator.cpp:470
+#: dbmigrator.cpp:469
 #, kde-format
 msgctxt "@info:status"
 msgid "Database fsck completed"
 msgstr "Veritabanında fsck işlemi tamamlandı"
 
-#: dbmigrator.cpp:484
+#: dbmigrator.cpp:483
 #, kde-format
 msgctxt "@info:status"
 msgid ""
@@ -67,80 +67,80 @@ msgstr ""
 "Geçersiz veritabanı işletkesi \"%1\" - geçerli değerler: \"sqlite\", \"mysql"
 "\" ve \"postgres\"."
 
-#: dbmigrator.cpp:506
+#: dbmigrator.cpp:505
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure source database server."
 msgstr "Hata: Kaynak veritabanı sunucusu yapılandırılamadı."
 
-#: dbmigrator.cpp:511
+#: dbmigrator.cpp:510
 #, kde-format
 msgctxt "@info:shell"
 msgid "Source and destination database engines are the same."
 msgstr "Kaynak ve hedef veritabanı işletkeleri aynı."
 
-#: dbmigrator.cpp:518
+#: dbmigrator.cpp:517
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to obtain path to source database data file or directory."
 msgstr ""
 "Hata: Kaynak veritabanı veri dosyasına veya dizinine olan yol alınamadı."
 
-#: dbmigrator.cpp:525
+#: dbmigrator.cpp:524
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure the new database server."
 msgstr "Hata: Yeni veritabanı sunucusu yapılandırılamadı."
 
-#: dbmigrator.cpp:531
+#: dbmigrator.cpp:530
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open existing database to migrate data from."
 msgstr "Hata: Verisi alınmak üzere var olan veritabanı açılamadı."
 
-#: dbmigrator.cpp:536
+#: dbmigrator.cpp:535
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open new database to migrate data to."
 msgstr "Hata: Verinin yerleştirileceği yeni veritabanı açılamadı."
 
-#: dbmigrator.cpp:541
+#: dbmigrator.cpp:540
 #, kde-format
 msgctxt "@info:status"
 msgid "Running fsck on the source database"
 msgstr "Kaynak veritabanında fsck çalıştırılıyor"
 
-#: dbmigrator.cpp:560
+#: dbmigrator.cpp:559
 #, kde-format
 msgctxt "@info:status %2 is error message"
 msgid "Error: failed to remove temporary database directory %1: %2"
 msgstr "Hata: Geçici veritabanı dizini %1 kaldırılamadı: %2"
 
-#: dbmigrator.cpp:567
+#: dbmigrator.cpp:566
 #, kde-format
 msgctxt "@info:shell"
 msgid "Backing up original database..."
 msgstr "Özgün veritabanı yedekleniyor..."
 
-#: dbmigrator.cpp:575
+#: dbmigrator.cpp:574
 #, kde-format
 msgctxt "@info:status"
 msgid "Restoring database from backup %1 to %2"
 msgstr "%1 yedeğinden %2 konumuna veritabanı geri yükleniyor..."
 
-#: dbmigrator.cpp:577
+#: dbmigrator.cpp:576
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to restore database from backup: %1"
 msgstr "Hata: Yedekten veritabanı geri yüklenemedi: %1"
 
-#: dbmigrator.cpp:609 dbmigrator.cpp:620
+#: dbmigrator.cpp:608 dbmigrator.cpp:619
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error has occurred while migrating table %1"
 msgstr "%1 tablosu aktarılırken hata oluştu"
 
-#: dbmigrator.cpp:639
+#: dbmigrator.cpp:638
 #, kde-format
 msgctxt "@label"
 msgid ""
@@ -150,79 +150,79 @@ msgstr ""
 "Yedek dizini halihazırda var. Bir önceki yedeğin üzerine yazmak istiyor "
 "musunuz?"
 
-#: dbmigrator.cpp:644
+#: dbmigrator.cpp:643
 #, kde-format
 msgctxt "@info:shell"
 msgid "Cannot proceed without backup. Migration interrupted."
 msgstr "Yedek olmadan sürdürülemiyor. Aktarım yarıda kesildi."
 
-#: dbmigrator.cpp:649
+#: dbmigrator.cpp:648
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to remove previous backup directory."
 msgstr "Önceki yedek dizini kaldırılamadı."
 
-#: dbmigrator.cpp:662
+#: dbmigrator.cpp:661
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to move database to backup location: %1"
 msgstr "Veritabanı yedekleme konumuna taşınamadı: %1"
 
-#: dbmigrator.cpp:676
+#: dbmigrator.cpp:675
 #, kde-format
 msgctxt "@label"
 msgid "Backup file %1 already exists. Overwrite?"
 msgstr "Yedek dosyası %1 halihazırda var. Üzerine yazılsın mı?"
 
-#: dbmigrator.cpp:678
+#: dbmigrator.cpp:677
 #, kde-format
 msgctxt "@info:status"
 msgid "Cannot proceed without backup. Migration interrupted."
 msgstr "Yedek olmadan sürdürülemiyor. Aktarım yarıda kesildi."
 
-#: dbmigrator.cpp:684
+#: dbmigrator.cpp:683
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: Failed to remove existing backup file %1: %2"
 msgstr "Hata: Var olan yedek dosyası %1 kaldırılamadı: %2"
 
-#: dbmigrator.cpp:691
+#: dbmigrator.cpp:690
 #, kde-format
 msgctxt "@info:status"
 msgid "Failed to back up Akonadi Server configuration: %1"
 msgstr "Akonadi sunucusu yapılandırması yedeklenemedi: %1"
 
-#: dbmigrator.cpp:708
+#: dbmigrator.cpp:707
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move migrated database to the primary location: %1"
 msgstr "Hata: Aktarılan veritabanı birincil konuma taşınamadı: %1"
 
-#: dbmigrator.cpp:727
+#: dbmigrator.cpp:726
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to remove original akonadiserverrc: %1"
 msgstr "Hata: Özgün akonadiserverrc kaldırılamadı: %1"
 
-#: dbmigrator.cpp:733
+#: dbmigrator.cpp:732
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move new akonadiserverrc to the primary location: %1"
 msgstr "Hata: Yeni akonadiserverrc birincil konuma taşınamadı: %1"
 
-#: dbmigrator.cpp:824
+#: dbmigrator.cpp:823
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to update autoincrement value for table %1"
 msgstr "Hata: %1 tablosu için olan kendiliğinden artırma değeri güncellenemedi"
 
-#: dbmigrator.cpp:829
+#: dbmigrator.cpp:828
 #, kde-format
 msgctxt "@info:status"
 msgid "Optimizing table %1..."
 msgstr "%1 tablosu eniyileniyor..."
 
-#: dbmigrator.cpp:832
+#: dbmigrator.cpp:831
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to optimize table %1"

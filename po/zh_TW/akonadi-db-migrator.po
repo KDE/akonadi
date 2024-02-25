@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-09 00:38+0000\n"
+"POT-Creation-Date: 2024-02-25 00:38+0000\n"
 "PO-Revision-Date: 2024-02-15 17:02+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -27,37 +27,37 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "mail@kisaragi-hiu.com"
 
-#: dbmigrator.cpp:438
+#: dbmigrator.cpp:437
 #, kde-format
 msgctxt "@info:status"
 msgid "Stopping Akonadi service..."
 msgstr "Akonadi 服務停止中..."
 
-#: dbmigrator.cpp:441
+#: dbmigrator.cpp:440
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: timeout while waiting for Akonadi to stop."
 msgstr "錯誤：等待 Akonadi 停止時逾時"
 
-#: dbmigrator.cpp:448
+#: dbmigrator.cpp:447
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: couldn't acquire DBus lock for Akonadi."
 msgstr "錯誤：無法為 Akonadi 取得 DBus 鎖定"
 
-#: dbmigrator.cpp:457
+#: dbmigrator.cpp:456
 #, kde-format
 msgctxt "@info:status"
 msgid "Starting Akonadi service..."
 msgstr "Akonadi 服務啟動中..."
 
-#: dbmigrator.cpp:470
+#: dbmigrator.cpp:469
 #, kde-format
 msgctxt "@info:status"
 msgid "Database fsck completed"
 msgstr "已完成資料庫資料檢查 (fsck)"
 
-#: dbmigrator.cpp:484
+#: dbmigrator.cpp:483
 #, kde-format
 msgctxt "@info:status"
 msgid ""
@@ -66,79 +66,79 @@ msgid ""
 msgstr ""
 "無效的資料庫引擎 \"%1\" - 有效的值是 \"sqlite\", \"mysql\", 或 \"postgres\"。"
 
-#: dbmigrator.cpp:506
+#: dbmigrator.cpp:505
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure source database server."
 msgstr "錯誤：無法設定來源資料庫伺服器。"
 
-#: dbmigrator.cpp:511
+#: dbmigrator.cpp:510
 #, kde-format
 msgctxt "@info:shell"
 msgid "Source and destination database engines are the same."
 msgstr "來源與目標資料庫引擎是一樣的。"
 
-#: dbmigrator.cpp:518
+#: dbmigrator.cpp:517
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to obtain path to source database data file or directory."
 msgstr "錯誤：無法取得來源伺服器資料檔案或目錄的路徑。"
 
-#: dbmigrator.cpp:525
+#: dbmigrator.cpp:524
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure the new database server."
 msgstr "錯誤：無法設定新資料庫伺服器。"
 
-#: dbmigrator.cpp:531
+#: dbmigrator.cpp:530
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open existing database to migrate data from."
 msgstr "錯誤：無法開啟要轉移資料的現有資料庫。"
 
-#: dbmigrator.cpp:536
+#: dbmigrator.cpp:535
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open new database to migrate data to."
 msgstr "錯誤：無法開啟要轉移資料到的新資料庫。"
 
-#: dbmigrator.cpp:541
+#: dbmigrator.cpp:540
 #, kde-format
 msgctxt "@info:status"
 msgid "Running fsck on the source database"
 msgstr "來源資料庫資料檢查 (fsck) 執行中"
 
-#: dbmigrator.cpp:560
+#: dbmigrator.cpp:559
 #, kde-format
 msgctxt "@info:status %2 is error message"
 msgid "Error: failed to remove temporary database directory %1: %2"
 msgstr "錯誤：無法移除暫時資料庫目錄 %1：%2"
 
-#: dbmigrator.cpp:567
+#: dbmigrator.cpp:566
 #, kde-format
 msgctxt "@info:shell"
 msgid "Backing up original database..."
 msgstr "正在備份原始資料庫..."
 
-#: dbmigrator.cpp:575
+#: dbmigrator.cpp:574
 #, kde-format
 msgctxt "@info:status"
 msgid "Restoring database from backup %1 to %2"
 msgstr "正在從備份 %1 還原資料庫到 %2"
 
-#: dbmigrator.cpp:577
+#: dbmigrator.cpp:576
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to restore database from backup: %1"
 msgstr "錯誤：無法從備份還原資料庫：%1"
 
-#: dbmigrator.cpp:609 dbmigrator.cpp:620
+#: dbmigrator.cpp:608 dbmigrator.cpp:619
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error has occurred while migrating table %1"
 msgstr "轉移資料表 %1 時發生了錯誤"
 
-#: dbmigrator.cpp:639
+#: dbmigrator.cpp:638
 #, kde-format
 msgctxt "@label"
 msgid ""
@@ -146,79 +146,79 @@ msgid ""
 "backup?"
 msgstr "備份目錄已存在。您要覆寫這個先前的備份嗎？"
 
-#: dbmigrator.cpp:644
+#: dbmigrator.cpp:643
 #, kde-format
 msgctxt "@info:shell"
 msgid "Cannot proceed without backup. Migration interrupted."
 msgstr "無法不備份而直接繼續。轉移已中斷。"
 
-#: dbmigrator.cpp:649
+#: dbmigrator.cpp:648
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to remove previous backup directory."
 msgstr "無法移除先前的備份目錄。"
 
-#: dbmigrator.cpp:662
+#: dbmigrator.cpp:661
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to move database to backup location: %1"
 msgstr "無法將資料庫移動到備份位置：%1"
 
-#: dbmigrator.cpp:676
+#: dbmigrator.cpp:675
 #, kde-format
 msgctxt "@label"
 msgid "Backup file %1 already exists. Overwrite?"
 msgstr "備份檔 %1 已存在。要覆寫它嗎？"
 
-#: dbmigrator.cpp:678
+#: dbmigrator.cpp:677
 #, kde-format
 msgctxt "@info:status"
 msgid "Cannot proceed without backup. Migration interrupted."
 msgstr "無法不備份而直接繼續。轉移已中斷。"
 
-#: dbmigrator.cpp:684
+#: dbmigrator.cpp:683
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: Failed to remove existing backup file %1: %2"
 msgstr "錯誤：無法移除現有的備份檔 %1：%2"
 
-#: dbmigrator.cpp:691
+#: dbmigrator.cpp:690
 #, kde-format
 msgctxt "@info:status"
 msgid "Failed to back up Akonadi Server configuration: %1"
 msgstr "無法備份 Akonadi 伺服器設定：%1"
 
-#: dbmigrator.cpp:708
+#: dbmigrator.cpp:707
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move migrated database to the primary location: %1"
 msgstr "錯誤：無法移動轉移後的資料庫到主要位置：%1"
 
-#: dbmigrator.cpp:727
+#: dbmigrator.cpp:726
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to remove original akonadiserverrc: %1"
 msgstr "錯誤：無法移除原有的 akonadiserverrc：%1"
 
-#: dbmigrator.cpp:733
+#: dbmigrator.cpp:732
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move new akonadiserverrc to the primary location: %1"
 msgstr "錯誤：無法將新的 akonadiserverrc 移動到主要位置：%1"
 
-#: dbmigrator.cpp:824
+#: dbmigrator.cpp:823
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to update autoincrement value for table %1"
 msgstr "錯誤：無法為資料表 %1 更新 autoincrement（自動遞增）數值"
 
-#: dbmigrator.cpp:829
+#: dbmigrator.cpp:828
 #, kde-format
 msgctxt "@info:status"
 msgid "Optimizing table %1..."
 msgstr "正在最佳化資料表 %1..."
 
-#: dbmigrator.cpp:832
+#: dbmigrator.cpp:831
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to optimize table %1"
