@@ -1,15 +1,16 @@
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the akonadi package.
 #
 # Andrej Mernik <andrejm@ubuntu.si>, 2014, 2015, 2016, 2017, 2018.
 # Matjaž Jeran <matjaz.jeran@amis.net>, 2019, 2020, 2021, 2022, 2023.
+# SPDX-FileCopyrightText: 2024 Jure Repinc <jlp@holodeck1.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-14 03:07+0000\n"
-"PO-Revision-Date: 2024-01-11 09:17+0100\n"
-"Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
+"PO-Revision-Date: 2024-02-25 21:29+0100\n"
+"Last-Translator: Jure Repinc <jlp@holodeck1.com>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Lokalize 24.04.70\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -79,7 +80,7 @@ msgstr "Nepovezan"
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing..."
-msgstr "Usklajevanje..."
+msgstr "Usklajevanje …"
 
 #: agentbase/agentbase_p.h:61
 #, kde-format
@@ -144,7 +145,7 @@ msgstr "V nepovezanem načinu ni mogoče pridobiti predmeta."
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
-msgstr "Usklajevanje mape '%1'"
+msgstr "Usklajevanje mape »%1«"
 
 #: agentbase/resourcebase.cpp:930 agentbase/resourcebase.cpp:937
 #, kde-format
@@ -238,7 +239,7 @@ msgstr "Čas za ustvarjanje primerka posrednika je pretekel."
 #: core/jobs/agentinstancecreatejob.cpp:150
 #, kde-format
 msgid "Unable to obtain agent type '%1'."
-msgstr "Vrste posrednika '%1' ni mogoče pridobiti."
+msgstr "Vrste posrednika »%1« ni mogoče pridobiti."
 
 #: core/jobs/agentinstancecreatejob.cpp:158
 #, kde-format
@@ -260,7 +261,7 @@ msgstr "Neveljaven primerek vira."
 #: core/jobs/resourcesynchronizationjob.cpp:113
 #, kde-format
 msgid "Unable to obtain D-Bus interface for resource '%1'"
-msgstr "Ni mogoče pridobiti vmesnika D-Bus za vir '%1'"
+msgstr "Ni mogoče pridobiti vmesnika D-Bus za vir »%1«"
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:125
 #, kde-format
@@ -370,7 +371,7 @@ msgstr "ID vira ni bil podan."
 #: core/jobs/specialcollectionshelperjobs.cpp:326
 #, kde-format
 msgid "Invalid resource identifier '%1'"
-msgstr "Neveljaven določilnik vira '%1'"
+msgstr "Neveljaven določilnik vira »%1«"
 
 #: core/jobs/specialcollectionshelperjobs.cpp:342
 #: core/jobs/specialcollectionshelperjobs.cpp:350
@@ -429,7 +430,7 @@ msgstr "Ime"
 #, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
-msgstr "Nalaganje..."
+msgstr "Nalaganje …"
 
 #: core/models/entitytreemodel.cpp:499
 #, kde-format
@@ -443,8 +444,8 @@ msgid ""
 "The target collection '%1' contains already\n"
 "a collection with name '%2'."
 msgstr ""
-"Ciljna zbirka '%1' že vsebuje\n"
-"zbirko z imenom '%2'."
+"Ciljna zbirka »%1« že vsebuje\n"
+"zbirko z imenom »%2«."
 
 #: core/models/entitytreemodel.cpp:669
 #, kde-format
@@ -554,7 +555,7 @@ msgstr "Kazalo ni več na voljo"
 #: core/partfetcher.cpp:114
 #, kde-format
 msgid "Payload part '%1' is not available for this index"
-msgstr "Del vsebine '%1' za to kazalo ni na voljo"
+msgstr "Del vsebine »%1« za to kazalo ni na voljo"
 
 #: core/partfetcher.cpp:123
 #, kde-format
@@ -640,7 +641,7 @@ msgstr "Imenski prostor za zagon več pojavkov Akonadi v isti uporabnikovi seji"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
-msgstr "&Nov primerek posrednika ..."
+msgstr "&Nov primerek posrednika …"
 
 #: widgets/agentactionmanager.cpp:36
 msgid "&Delete Agent Instance"
@@ -719,10 +720,10 @@ msgstr "Konfiguriraj račun"
 #, kde-format
 msgid "minute"
 msgid_plural "minutes"
-msgstr[0] "minuta"
-msgstr[1] "minuti"
-msgstr[2] "minute"
-msgstr[3] "minut"
+msgstr[0] "minut"
+msgstr[1] "minuta"
+msgstr[2] "minuti"
+msgstr[3] "minute"
 
 #: widgets/cachepolicypage.cpp:69
 #, kde-format
@@ -816,7 +817,7 @@ msgid ""
 "likely never uploaded to the destination server, so clearing this collection "
 "means that those <b>data will be lost</b>. Are you sure you want to proceed?"
 msgstr ""
-"Zbirka ' %1' vsebuje %2 elementov brez oddaljenega določilnika. Ti predmeti "
+"Zbirka »%1« vsebuje %2 elementov brez oddaljenega določilnika. Ti predmeti "
 "verjetno nikoli niso bili naloženi na ciljni strežnik, zato čiščenje te "
 "zbirke pomeni, da bodo ti <b>podatki izgubljeni</b>. Ste prepričani, da "
 "želite nadaljevati?"
@@ -835,7 +836,7 @@ msgstr "Privzeto uporabi mapo"
 #: widgets/collectiondialog.cpp:226
 #, kde-format
 msgid "&New Subfolder..."
-msgstr "&Nova podmapa..."
+msgstr "&Nova podmapa …"
 
 #: widgets/collectiondialog.cpp:228
 #, kde-format
@@ -876,10 +877,10 @@ msgstr "Splošno"
 msgctxt "@label"
 msgid "One object"
 msgid_plural "%1 objects"
-msgstr[0] "%1 predmet"
-msgstr[1] "%1 predmeta"
-msgstr[2] "%1 predmete"
-msgstr[3] "%1 predmetov"
+msgstr[0] "%1 predmetov"
+msgstr[1] "%1 predmet"
+msgstr[2] "%1 predmeta"
+msgstr[3] "%1 predmeti"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/collectiongeneralpropertiespage.ui:16
@@ -949,15 +950,15 @@ msgstr "Napaka med pridobivanjem števila predmetov iz kazala"
 #, kde-format
 msgid "Indexed %1 item in this folder"
 msgid_plural "Indexed %1 items in this folder"
-msgstr[0] "%1 predmet iz te mape je bil dodan v kazalo"
-msgstr[1] "%1 predmeta iz te mape sta bila dodan v kazalo"
-msgstr[2] "%1 predmeti iz te mape so bili dodana v kazalo"
-msgstr[3] "%1 predmetov iz te mape je bilo dodanih v kazalo"
+msgstr[0] "%1 predmetov iz te mape je bilo dodanih v kazalo"
+msgstr[1] "%1 predmet iz te mape je bil dodan v kazalo"
+msgstr[2] "%1 predmeta iz te mape sta bila dodana v kazalo"
+msgstr[3] "%1 predmeti iz te mape so bili dodani v kazalo"
 
 #: widgets/collectionmaintenancepage.cpp:137
 #, kde-format
 msgid "Calculating indexed items..."
-msgstr "Preračunavanje predmetov v kazalu ..."
+msgstr "Preračunavanje predmetov v kazalu …"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/collectionmaintenancepage.ui:17
@@ -1011,7 +1012,7 @@ msgstr "Omogoči izgradnjo kazala s celotnim besedilom"
 #: widgets/collectionmaintenancepage.ui:87
 #, kde-format
 msgid "Retrieving indexed items count..."
-msgstr "Pridobivanje števila predmetov iz kazala..."
+msgstr "Pridobivanje števila predmetov v kazalu …"
 
 #. i18n: ectx: property (text), widget (QPushButton, reindexButton)
 #: widgets/collectionmaintenancepage.ui:94
@@ -1087,7 +1088,7 @@ msgstr ""
 "<qt>Vaše spremembe so v sporu s spremembami, ki jih je med vašim urejanjem "
 "opravil nekdo drug.<br>V primeru, da ene izmed različic ne morete zavreči, "
 "boste morali spremembe uveljaviti ročno.<br>Kliknite na <a href="
-"\"opentexteditor\">\"Odpri urejevalnik besedila\"</a>, da ohranite kopijo "
+"\"opentexteditor\">»Odpri urejevalnik besedila«</a>, da ohranite kopijo "
 "besedil, nato pa izberite najbolj pravilno različico. Slednjo znova odprite "
 "in dodajte manjkajočo oz. spremenjeno vsebino."
 
@@ -1099,12 +1100,12 @@ msgstr "Podatki"
 #: widgets/controlgui.cpp:223
 #, kde-format
 msgid "Starting Akonadi server..."
-msgstr "Zaganjanje strežnika Akonadi ..."
+msgstr "Zaganjanje strežnika Akonadi …"
 
 #: widgets/controlgui.cpp:229
 #, kde-format
 msgid "Stopping Akonadi server..."
-msgstr "Zaustavljanje strežnika Akonadi ..."
+msgstr "Zaustavljanje strežnika Akonadi …"
 
 #: widgets/dragdropmanager.cpp:212
 #, kde-format
@@ -1141,12 +1142,12 @@ msgstr ""
 #: widgets/erroroverlay.cpp:228 widgets/erroroverlay.cpp:229
 #, kde-format
 msgid "Personal information management service is starting..."
-msgstr "Storitev upravljanja z osebnimi podatki se zaganja ..."
+msgstr "Storitev upravljanja z osebnimi podatki se zaganja …"
 
 #: widgets/erroroverlay.cpp:233 widgets/erroroverlay.cpp:234
 #, kde-format
 msgid "Personal information management service is shutting down..."
-msgstr "Storitev upravljanja z osebnimi podatki se zaustavlja ..."
+msgstr "Storitev upravljanja z osebnimi podatki se zaustavlja …"
 
 #: widgets/erroroverlay.cpp:238
 #, kde-format
@@ -1195,7 +1196,7 @@ msgid ""
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
 "Ogrodje upravljanja z osebnimi podatki Akonadi ni delujoče.\n"
-"Kliknite na \"Podrobnosti ...\", da pridobite podrobne podatke o tej težavi."
+"Kliknite na »Podrobnosti …«, da pridobite podrobne podatke o tej težavi."
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
@@ -1207,12 +1208,12 @@ msgstr "Ogrodje upravljanja z osebnimi podatki Akonadi ni delujoče."
 #: widgets/erroroverlay.ui:259
 #, kde-format
 msgid "Details..."
-msgstr "Podrobnosti ..."
+msgstr "Podrobnosti …"
 
 #: widgets/manageaccountwidget.cpp:198
 #, kde-format
 msgid "Do you want to remove account '%1'?"
-msgstr "Ali želite odstraniti račun '%1'?"
+msgstr "Ali želite odstraniti račun »%1«?"
 
 #: widgets/manageaccountwidget.cpp:199
 #, kde-format
@@ -1230,19 +1231,19 @@ msgstr "Dohodni računi (dodajte vsaj enega):"
 #: widgets/manageaccountwidget.ui:26
 #, kde-format
 msgid "Filter…"
-msgstr "Filter…"
+msgstr "Filter …"
 
 #. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
 #: widgets/manageaccountwidget.ui:40
 #, kde-format
 msgid "A&dd..."
-msgstr "Dodaj..."
+msgstr "&Dodaj …"
 
 #. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
 #: widgets/manageaccountwidget.ui:50
 #, kde-format
 msgid "&Modify..."
-msgstr "Spre&meni..."
+msgstr "Spre&meni …"
 
 #. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
 #: widgets/manageaccountwidget.ui:60
@@ -1282,7 +1283,7 @@ msgstr "Samodejni preizkus strežnika Akonadi"
 #: widgets/selftestdialog.cpp:71
 #, kde-format
 msgid "Save Report..."
-msgstr "Shrani poročilo ..."
+msgstr "Shrani poročilo …"
 
 #: widgets/selftestdialog.cpp:73
 #, kde-format
@@ -1306,7 +1307,7 @@ msgid ""
 "The following drivers are installed: %2.\n"
 "Make sure the required driver is installed."
 msgstr ""
-"Trenutne nastavitve strežnika Akonadi zahtevajo gonilnik QtSQL '%1'.\n"
+"Trenutne nastavitve strežnika Akonadi zahtevajo gonilnik QtSQL »%1«.\n"
 "Nameščeni so naslednji gonilniki: %2.\n"
 "Prepričajte se, da je zahtevan gonilnik nameščen."
 
@@ -1340,11 +1341,11 @@ msgid ""
 "executable. The server executable is typically called 'mysqld'; its location "
 "varies depending on the distribution."
 msgstr ""
-"Akonadi je trenutno nastavljen za uporabo strežnika MySQL '%1'.\n"
+"Akonadi je trenutno nastavljen za uporabo strežnika MySQL »%1«.\n"
 "Prepričajte se, da je strežnik MySQL nameščen, nastavite pravilno pot in se "
 "prepričajte, da imate na strežniku potrebna dovoljenja za branje in "
-"izvajanje. Izvedljivi program strežnika se običajno imenuje 'mysqld', "
-"njegovo mesto pa je odvisno od distribucije."
+"izvajanje. Izvedljivi program strežnika se običajno imenuje »mysqld«, "
+"njegovo mesto pa je odvisno od distribucije operacijskega sistema."
 
 #: widgets/selftestdialog.cpp:224
 #, kde-format
@@ -1386,8 +1387,8 @@ msgstr "Strežnik MySQL je izvedljiv."
 msgid ""
 "Executing the MySQL server '%1' failed with the following error message: '%2'"
 msgstr ""
-"Izvajanje strežnika MySQL '%1' je spodletelo z naslednjim sporočilom o "
-"napaki: '%2'"
+"Izvajanje strežnika MySQL »%1« je spodletelo z naslednjim sporočilom o "
+"napaki: »%2«"
 
 #: widgets/selftestdialog.cpp:242
 #, kde-format
@@ -1411,7 +1412,7 @@ msgid ""
 "be found in '%1'."
 msgstr ""
 "Strežnik MySQL med tem zagonom ni poročal o napakah. Dnevnik lahko najdete v "
-"'%1'."
+"»%1«."
 
 #: widgets/selftestdialog.cpp:264
 #, kde-format
@@ -1433,7 +1434,7 @@ msgstr "Dnevnik strežnika MySQL vsebuje napake."
 #: widgets/selftestdialog.cpp:275
 #, kde-format
 msgid "The MySQL server error log file '%1' contains errors."
-msgstr "Datoteka dnevnika napak strežnika MySQL '%1' vsebuje napake."
+msgstr "Datoteka dnevnika napak strežnika MySQL »%1« vsebuje napake."
 
 #: widgets/selftestdialog.cpp:285
 #, kde-format
@@ -1443,7 +1444,7 @@ msgstr "Dnevnik strežnika MySQL vsebuje opozorila."
 #: widgets/selftestdialog.cpp:286
 #, kde-format
 msgid "The MySQL server log file '%1' contains warnings."
-msgstr "Datoteka dnevnika strežnika MySQL '%1' vsebuje opozorila."
+msgstr "Datoteka dnevnika strežnika MySQL »%1« vsebuje opozorila."
 
 #: widgets/selftestdialog.cpp:289
 #, kde-format
@@ -1454,7 +1455,7 @@ msgstr "Dnevnik strežnika MySQL ne vsebuje napak."
 #, kde-format
 msgid "The MySQL server log file '%1' does not contain any errors or warnings."
 msgstr ""
-"Datoteka dnevnika strežnika MySQL '%1' ne vsebuje nobene napake ali "
+"Datoteka dnevnika strežnika MySQL »%1« ne vsebuje nobene napake ali "
 "opozorila."
 
 #: widgets/selftestdialog.cpp:300
@@ -1574,7 +1575,7 @@ msgid ""
 "The program 'akonadictl' needs to be accessible in $PATH. Make sure you have "
 "the Akonadi server installed."
 msgstr ""
-"Program 'akonadictl' mora biti dostopen v eni izmed map iz spremenljivke "
+"Program »akonadictl« mora biti dostopen v eni izmed map iz spremenljivke "
 "$PATH. Prepričajte se, da je strežnik Akonadi nameščen."
 
 #: widgets/selftestdialog.cpp:396
@@ -1590,7 +1591,7 @@ msgid ""
 "Result:\n"
 "%2"
 msgstr ""
-"Program '%1' za nadzor strežnika Akonadi je bil najden in se je lahko "
+"Program »%1« za nadzor strežnika Akonadi je bil najden in se je lahko "
 "izvedel uspešno.\n"
 "Rezultat:\n"
 "%2"
@@ -1609,7 +1610,7 @@ msgid ""
 "%2\n"
 "Make sure the Akonadi server is installed correctly."
 msgstr ""
-"Program '%1' za nadzor strežnika Akonadi je bil najden, vendar se ni mogel "
+"Program »%1« za nadzor strežnika Akonadi je bil najden, vendar se ni mogel "
 "uspešno izvesti.\n"
 "Rezultat:\n"
 "%2\n"
@@ -1742,8 +1743,8 @@ msgid ""
 msgstr ""
 "Najden ni bil noben posrednik virov. Za uporabo Akonadija je potreben vsaj "
 "en. To običajno pomeni, da ni nameščen noben posrednik vira ali pa gre za "
-"težavo z namestitvijo. Preiskane so bile naslednje mape: '%1'. Okoljska "
-"spremenljivka XDG_DATA_DIRS je nastavljena na '%2'. Prepričajte se, da "
+"težavo z namestitvijo. Preiskane so bile naslednje mape: »%1«. Okoljska "
+"spremenljivka XDG_DATA_DIRS je nastavljena na »%2«. Prepričajte se, da to "
 "vsebuje vse mape, kjer so nameščeni Akonadijevi posredniki."
 
 #: widgets/selftestdialog.cpp:499
@@ -1889,7 +1890,7 @@ msgstr "Shrani poročilo o preizkusu"
 #: widgets/selftestdialog.cpp:650
 #, kde-format
 msgid "Could not open file '%1'"
-msgstr "Ni bilo mogoče odpreti datoteke '%1'"
+msgstr "Ni bilo mogoče odpreti datoteke »%1«"
 
 #. i18n: ectx: property (text), widget (QLabel, introductionLabel)
 #: widgets/selftestdialog.ui:16
@@ -1916,12 +1917,12 @@ msgid ""
 "<p>For more troubleshooting tips please refer to <a href=\"https://userbase."
 "kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
 msgstr ""
-"<p>Za več namigov pri odpravljanju napak se obrnite na  <a href=\"https://"
+"<p>Za več namigov pri odpravljanju napak se obrnite na <a href=\"https://"
 "userbase.kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
 
 #: widgets/standardactionmanager.cpp:78
 msgid "&New Folder..."
-msgstr "&Nova mapa..."
+msgstr "&Nova mapa …"
 
 #: widgets/standardactionmanager.cpp:78
 msgid "New"
@@ -1962,7 +1963,7 @@ msgstr "Prilepi"
 
 #: widgets/standardactionmanager.cpp:101
 msgid "Manage Local &Subscriptions..."
-msgstr "Upravljaj krajevne naročnine..."
+msgstr "Upravljanje &krajevnih naročnin …"
 
 #: widgets/standardactionmanager.cpp:102
 msgid "Manage Local Subscriptions"
@@ -1986,7 +1987,7 @@ msgstr "Odstrani iz priljubljenih"
 
 #: widgets/standardactionmanager.cpp:124
 msgid "Rename Favorite..."
-msgstr "Preimenuj priljubljeno ..."
+msgstr "Preimenuj priljubljeno …"
 
 #: widgets/standardactionmanager.cpp:124
 msgid "Rename"
@@ -1994,7 +1995,7 @@ msgstr "Preimenuj"
 
 #: widgets/standardactionmanager.cpp:126 widgets/standardactionmanager.cpp:164
 msgid "Copy Folder To..."
-msgstr "Kopiraj mapo v ..."
+msgstr "Kopiraj mapo v …"
 
 #: widgets/standardactionmanager.cpp:127 widgets/standardactionmanager.cpp:133
 #: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:173
@@ -2003,11 +2004,11 @@ msgstr "Kopiraj v"
 
 #: widgets/standardactionmanager.cpp:133 widgets/standardactionmanager.cpp:173
 msgid "Copy Item To..."
-msgstr "Kopiraj predmet v ..."
+msgstr "Kopiraj predmet v …"
 
 #: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:174
 msgid "Move Item To..."
-msgstr "Premakni predmet v ..."
+msgstr "Premakni predmet v …"
 
 #: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:137
 #: widgets/standardactionmanager.cpp:167 widgets/standardactionmanager.cpp:174
@@ -2016,7 +2017,7 @@ msgstr "Premakni v"
 
 #: widgets/standardactionmanager.cpp:136 widgets/standardactionmanager.cpp:166
 msgid "Move Folder To..."
-msgstr "Premakni mapo v ..."
+msgstr "Premakni mapo v …"
 
 #: widgets/standardactionmanager.cpp:143
 msgid "&Cut Item"
@@ -2116,169 +2117,169 @@ msgstr "Uskladi drevo map"
 #, kde-format
 msgid "&Copy Folder"
 msgid_plural "&Copy %1 Folders"
-msgstr[0] "Kopiraj %1 mapo"
-msgstr[1] "Kopiraj %1 mapi"
-msgstr[2] "Kopiraj %1 mape"
-msgstr[3] "Kopiraj %1 map"
+msgstr[0] "Kopiraj %1 map"
+msgstr[1] "Kopiraj %1 mapo"
+msgstr[2] "Kopiraj %1 mapi"
+msgstr[3] "Kopiraj %1 mape"
 
 #: widgets/standardactionmanager.cpp:329
 #, kde-format
 msgid "&Copy Item"
 msgid_plural "&Copy %1 Items"
-msgstr[0] "Kopiraj %1 predmet"
-msgstr[1] "Kopiraj %1 predmeta"
-msgstr[2] "Kopiraj %1 predmete"
-msgstr[3] "Kopiraj %1 predmetov"
+msgstr[0] "Kopiraj %1 predmetov"
+msgstr[1] "Kopiraj %1 predmet"
+msgstr[2] "Kopiraj %1 predmeta"
+msgstr[3] "Kopiraj %1 predmete"
 
 #: widgets/standardactionmanager.cpp:330
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Item"
 msgid_plural "&Cut %1 Items"
-msgstr[0] "Izreži %1 predmet"
-msgstr[1] "Izreži %1 predmeta"
-msgstr[2] "Izreži %1 predmete"
-msgstr[3] "Izreži %1 predmetov"
+msgstr[0] "Izreži %1 predmetov"
+msgstr[1] "Izreži %1 predmet"
+msgstr[2] "Izreži %1 predmeta"
+msgstr[3] "Izreži %1 predmete"
 
 #: widgets/standardactionmanager.cpp:331
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Folder"
 msgid_plural "&Cut %1 Folders"
-msgstr[0] "Izreži %1 mapo"
-msgstr[1] "Izreži %1 mapi"
-msgstr[2] "Izreži %1 mape"
-msgstr[3] "Izreži %1 map"
+msgstr[0] "Izreži %1 map"
+msgstr[1] "Izreži %1 mapo"
+msgstr[2] "Izreži %1 mapi"
+msgstr[3] "Izreži %1 mape"
 
 #: widgets/standardactionmanager.cpp:332
 #, kde-format
 msgid "&Delete Item"
 msgid_plural "&Delete %1 Items"
-msgstr[0] "Zbriši %1 predmet"
-msgstr[1] "Zbriši %1 predmeta"
-msgstr[2] "Zbriši %1 predmete"
-msgstr[3] "Zbriši %1 predmetov"
+msgstr[0] "Izbriši %1 predmetov"
+msgstr[1] "Izbriši %1 predmet"
+msgstr[2] "Izbriši %1 predmeta"
+msgstr[3] "Izbriši %1 predmete"
 
 #: widgets/standardactionmanager.cpp:333
 #, kde-format
 msgctxt "@action"
 msgid "&Delete Folder"
 msgid_plural "&Delete %1 Folders"
-msgstr[0] "Zbriši %1 mapo"
-msgstr[1] "Zbriši %1 mapi"
-msgstr[2] "Zbriši %1 mape"
-msgstr[3] "Zbriši %1 map"
+msgstr[0] "Izbriši %1 map"
+msgstr[1] "Izbriši %1 mapo"
+msgstr[2] "Izbriši %1 mapi"
+msgstr[3] "Izbriši %1 mape"
 
 #: widgets/standardactionmanager.cpp:334
 #, kde-format
 msgctxt "@action"
 msgid "&Synchronize Folder"
 msgid_plural "&Synchronize %1 Folders"
-msgstr[0] "Uskladi %1 mapo"
-msgstr[1] "Uskladi %1 mapi"
-msgstr[2] "Uskladi %1 mape"
-msgstr[3] "Uskladi %1 map"
+msgstr[0] "Uskladi %1 map"
+msgstr[1] "Uskladi %1 mapo"
+msgstr[2] "Uskladi %1 mapi"
+msgstr[3] "Uskladi %1 mape"
 
 #: widgets/standardactionmanager.cpp:335
 #, kde-format
 msgid "&Delete Resource"
 msgid_plural "&Delete %1 Resources"
-msgstr[0] "Izbriši %1 vir"
-msgstr[1] "Izbriši %1 vira"
-msgstr[2] "Izbriši %1 vire"
-msgstr[3] "Izbriši %1 virov"
+msgstr[0] "Izbriši %1 virov"
+msgstr[1] "Izbriši %1 vir"
+msgstr[2] "Izbriši %1 vira"
+msgstr[3] "Izbriši %1 vire"
 
 #: widgets/standardactionmanager.cpp:336
 #, kde-format
 msgid "&Synchronize Resource"
 msgid_plural "&Synchronize %1 Resources"
-msgstr[0] "U&skladi %1 vir"
-msgstr[1] "U&skladi %1 vira"
-msgstr[2] "U&skladi %1 vire"
-msgstr[3] "U&skladi %1 virov"
+msgstr[0] "U&skladi %1 virov"
+msgstr[1] "U&skladi %1 vir"
+msgstr[2] "U&skladi %1 vira"
+msgstr[3] "U&skladi %1 vire"
 
 #: widgets/standardactionmanager.cpp:338
 #, kde-format
 msgid "Copy Folder"
 msgid_plural "Copy %1 Folders"
-msgstr[0] "Kopiraj %1 mapo"
-msgstr[1] "Kopiraj %1 mapi"
-msgstr[2] "Kopiraj %1 mape"
-msgstr[3] "Kopiraj %1 map"
+msgstr[0] "Kopiraj %1 map"
+msgstr[1] "Kopiraj %1 mapo"
+msgstr[2] "Kopiraj %1 mapi"
+msgstr[3] "Kopiraj %1 mape"
 
 #: widgets/standardactionmanager.cpp:339
 #, kde-format
 msgid "Copy Item"
 msgid_plural "Copy %1 Items"
-msgstr[0] "Kopiraj %1 predmet"
-msgstr[1] "Kopiraj %1 predmeta"
-msgstr[2] "Kopiraj %1 predmete"
-msgstr[3] "Kopiraj %1 predmetov"
+msgstr[0] "Kopiraj %1 predmetov"
+msgstr[1] "Kopiraj %1 predmet"
+msgstr[2] "Kopiraj %1 predmeta"
+msgstr[3] "Kopiraj %1 predmete"
 
 #: widgets/standardactionmanager.cpp:340
 #, kde-format
 msgid "Cut Item"
 msgid_plural "Cut %1 Items"
-msgstr[0] "Izreži %1 predmet"
-msgstr[1] "Izreži %1 predmeta"
-msgstr[2] "Izreži %1 predmete"
-msgstr[3] "Izreži %1 predmetov"
+msgstr[0] "Izreži %1 predmetov"
+msgstr[1] "Izreži %1 predmet"
+msgstr[2] "Izreži %1 predmeta"
+msgstr[3] "Izreži %1 predmete"
 
 #: widgets/standardactionmanager.cpp:341
 #, kde-format
 msgid "Cut Folder"
 msgid_plural "Cut %1 Folders"
-msgstr[0] "Izreži %1 mapo"
-msgstr[1] "Izreži %1 mapi"
-msgstr[2] "Izreži %1 mape"
-msgstr[3] "Izreži %1 map"
+msgstr[0] "Izreži %1 map"
+msgstr[1] "Izreži %1 mapo"
+msgstr[2] "Izreži %1 mapi"
+msgstr[3] "Izreži %1 mape"
 
 #: widgets/standardactionmanager.cpp:342
 #, kde-format
 msgid "Delete Item"
 msgid_plural "Delete %1 Items"
-msgstr[0] "Izbriši %1 predmet"
-msgstr[1] "Izbriši %1 predmeta"
-msgstr[2] "Izbriši %1 predmete"
-msgstr[3] "Izbriši %1 predmetov"
+msgstr[0] "Izbriši %1 predmetov"
+msgstr[1] "Izbriši %1 predmet"
+msgstr[2] "Izbriši %1 predmeta"
+msgstr[3] "Izbriši %1 predmete"
 
 #: widgets/standardactionmanager.cpp:343
 #, kde-format
 msgid "Delete Folder"
 msgid_plural "Delete %1 Folders"
-msgstr[0] "Izbriši %1 mapo"
-msgstr[1] "Izbriši %1 mapi"
-msgstr[2] "Izbriši %1 mape"
-msgstr[3] "Izbriši %1 map"
+msgstr[0] "Izbriši %1 map"
+msgstr[1] "Izbriši %1 mapo"
+msgstr[2] "Izbriši %1 mapi"
+msgstr[3] "Izbriši %1 mape"
 
 #: widgets/standardactionmanager.cpp:344
 #, kde-format
 msgid "Synchronize Folder"
 msgid_plural "Synchronize %1 Folders"
-msgstr[0] "Uskladi %1 mapo"
-msgstr[1] "Uskladi %1 mapi"
-msgstr[2] "Uskladi %1 mape"
-msgstr[3] "Uskladi %1 map"
+msgstr[0] "Uskladi %1 map"
+msgstr[1] "Uskladi %1 mapo"
+msgstr[2] "Uskladi %1 mapi"
+msgstr[3] "Uskladi %1 mape"
 
 #: widgets/standardactionmanager.cpp:345
 #, kde-format
 msgctxt "@action"
 msgid "Delete Resource"
 msgid_plural "Delete %1 Resources"
-msgstr[0] "Zbriši %1 vir"
-msgstr[1] "Zbriši %1 vira"
-msgstr[2] "Zbriši %1 vire"
-msgstr[3] "Zbriši %1 virov"
+msgstr[0] "Izbriši %1 virov"
+msgstr[1] "Izbriši %1 vir"
+msgstr[2] "Izbriši %1 vira"
+msgstr[3] "Izbriši %1 vire"
 
 #: widgets/standardactionmanager.cpp:346
 #, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
 msgid_plural "Synchronize %1 Resources"
-msgstr[0] "Uskladi %1 vir"
-msgstr[1] "Uskladi %1 vira"
-msgstr[2] "Uskladi %1 vire"
-msgstr[3] "Uskladi %1 virov"
+msgstr[0] "Uskladi %1 virov"
+msgstr[1] "Uskladi %1 vir"
+msgstr[2] "Uskladi %1 vira"
+msgstr[3] "Uskladi %1 vire"
 
 #: widgets/standardactionmanager.cpp:349
 #, kde-format
@@ -2291,19 +2292,19 @@ msgstr "Ime"
 msgid "Do you really want to delete this folder and all its sub-folders?"
 msgid_plural ""
 "Do you really want to delete %1 folders and all their sub-folders?"
-msgstr[0] "Ali resnično želite izbrisati %1 mapo in vse podmape?"
-msgstr[1] "Ali resnično želite izbrisati %1 mapi in vse podmape?"
-msgstr[2] "Ali resnično želite izbrisati %1 mape in vse podmape?"
-msgstr[3] "Ali resnično želite izbrisati %1 map in vse podmape?"
+msgstr[0] "Ali resnično želite izbrisati %1 map in vse podmape?"
+msgstr[1] "Ali resnično želite izbrisati %1 mapo in vse podmape?"
+msgstr[2] "Ali resnično želite izbrisati %1 mapi in vse podmape?"
+msgstr[3] "Ali resnično želite izbrisati %1 mape in vse podmape?"
 
 #: widgets/standardactionmanager.cpp:359
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "Naj izbrišem mapo?"
-msgstr[1] "Naj izbrišem mapi?"
-msgstr[2] "Naj izbrišem mape?"
+msgstr[0] "Naj izbrišem mape?"
+msgstr[1] "Naj izbrišem mapo?"
+msgstr[2] "Naj izbrišem mapi?"
 msgstr[3] "Naj izbrišem mape?"
 
 #: widgets/standardactionmanager.cpp:360
@@ -2327,20 +2328,20 @@ msgstr "Lastnosti mape %1"
 #, kde-format
 msgid "Do you really want to delete the selected item?"
 msgid_plural "Do you really want to delete %1 items?"
-msgstr[0] "Ali resnično želite izbrisati %1 predmet?"
-msgstr[1] "Ali resnično želite izbrisati %1 predmeta?"
-msgstr[2] "Ali resnično želite izbrisati %1 predmete?"
-msgstr[3] "Ali resnično želite izbrisati %1 predmetov?"
+msgstr[0] "Ali resnično želite izbrisati %1 predmetov?"
+msgstr[1] "Ali resnično želite izbrisati %1 predmet?"
+msgstr[2] "Ali resnično želite izbrisati %1 predmeta?"
+msgstr[3] "Ali resnično želite izbrisati %1 predmete?"
 
 #: widgets/standardactionmanager.cpp:368
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "Naj izbrišem predmet?"
-msgstr[1] "Naj izbrišem predmeta?"
-msgstr[2] "Naj izbrišem predmete?"
-msgstr[3] "Naj zbrišem predmete?"
+msgstr[0] "Naj izbrišem predmete?"
+msgstr[1] "Naj izbrišem predmet?"
+msgstr[2] "Naj izbrišem predmeta?"
+msgstr[3] "Naj izbrišem predmete?"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2386,19 +2387,19 @@ msgstr "Ustvarjanje vira ni uspelo"
 #, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
-msgstr[0] "Ali resnično želite izbrisati %1 vir?"
-msgstr[1] "Ali resnično želite izbrisati %1 vira?"
-msgstr[2] "Ali resnično želite izbrisati %1 vire?"
-msgstr[3] "Ali resnično želite izbrisati %1 virov?"
+msgstr[0] "Ali resnično želite izbrisati %1 virov?"
+msgstr[1] "Ali resnično želite izbrisati %1 vir?"
+msgstr[2] "Ali resnično želite izbrisati %1 vira?"
+msgstr[3] "Ali resnično želite izbrisati %1 vire?"
 
 #: widgets/standardactionmanager.cpp:384
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Resource?"
 msgid_plural "Delete Resources?"
-msgstr[0] "Izbrišem vir?"
-msgstr[1] "Izbrišem vira?"
-msgstr[2] "Izbrišem vire?"
+msgstr[0] "Izbrišem vire?"
+msgstr[1] "Izbrišem vir?"
+msgstr[2] "Izbrišem vira?"
 msgstr[3] "Izbrišem vire?"
 
 #: widgets/standardactionmanager.cpp:386
@@ -2415,7 +2416,7 @@ msgstr "Lepljenje ni uspelo"
 #: widgets/standardactionmanager.cpp:739
 #, kde-format
 msgid "We can not add \"/\" in folder name."
-msgstr "Znaka \"/\" ni mogoče dodati v ime mape."
+msgstr "Znaka »/« ni mogoče dodati v ime mape."
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
 #, kde-format
@@ -2434,12 +2435,12 @@ msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
 "you want to make it online?"
 msgstr ""
-"Pred usklajevanjem mape \"%1\" mora biti vir povezan. Ali ga želite povezati?"
+"Pred usklajevanjem mape »%1« mora biti vir povezan. Ali ga želite povezati?"
 
 #: widgets/standardactionmanager.cpp:983
 #, kde-format
 msgid "Account \"%1\" is offline"
-msgstr "Račun \"%1\" ni povezan"
+msgstr "Račun »%1« ni povezan"
 
 #: widgets/standardactionmanager.cpp:984
 #, kde-format
@@ -2549,7 +2550,7 @@ msgstr "Upravljanje oznak"
 #, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
-msgstr "Izbriši oznake..."
+msgstr "Izbor oznak …"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
 #: widgets/tagselectiondialog.ui:14
@@ -2572,7 +2573,7 @@ msgstr "Kliknite za dodajanje oznak"
 #: widgets/tagwidget.ui:39
 #, kde-format
 msgid "..."
-msgstr "..."
+msgstr "…"
 
 #: xml/akonadi2xml.cpp:25
 #, kde-format
@@ -2602,7 +2603,7 @@ msgstr "Ime datoteke ni navedeno"
 #: xml/xmldocument.cpp:129
 #, kde-format
 msgid "Unable to open data file '%1'."
-msgstr "Ni mogoče odpreti podatkovne datoteke '%1'."
+msgstr "Ni mogoče odpreti podatkovne datoteke »%1«."
 
 #: xml/xmldocument.cpp:134
 #, kde-format
@@ -2612,7 +2613,7 @@ msgstr "Datoteka %1 ne obstaja."
 #: xml/xmldocument.cpp:142
 #, kde-format
 msgid "Unable to parse data file '%1'."
-msgstr "Ni mogoče razčleniti podatkovne datoteke '%1'."
+msgstr "Ni mogoče razčleniti podatkovne datoteke »%1«."
 
 #: xml/xmldocument.cpp:149
 #, kde-format
