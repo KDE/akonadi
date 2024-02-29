@@ -29,7 +29,7 @@ static bool intersect(const QList<typename T::Id> &l1, const QList<T> &l2)
     return false;
 }
 
-static bool isRootCollection(const Scope &scope)
+[[nodiscard]] static bool isRootCollection(const Scope &scope)
 {
     return scope.isEmpty() || (scope.scope() == Scope::Uid && scope.uidSet().size() == 1 && scope.uid() == 0);
 }

@@ -21,7 +21,7 @@ using namespace AkRanges;
 namespace
 {
 
-bool isTopLevelCollection(const Scope &scope)
+[[nodiscard]] bool isTopLevelCollection(const Scope &scope)
 {
     return scope.scope() == Scope::Uid && scope.uidSet().size() == 1 && scope.uid() == 0;
 }

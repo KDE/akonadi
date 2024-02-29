@@ -68,7 +68,7 @@ public:
     /**
      * Instance-aware server .config directory
      */
-    QString serverPath() const;
+    [[nodiscard]] QString serverPath() const;
 
     /**
      * Can return a nullptr
@@ -91,11 +91,11 @@ private Q_SLOTS:
     void connectionDisconnected();
 
 private:
-    bool startDatabaseProcess();
-    bool createDatabase();
+    [[nodiscard]] bool startDatabaseProcess();
+    [[nodiscard]] bool createDatabase();
     void stopDatabaseProcess();
     bool createServers(QSettings &settings, QSettings &connectionSettings);
-    bool setupDatabase();
+    [[nodiscard]] bool setupDatabase();
 
 protected:
     std::unique_ptr<QDBusServiceWatcher> mControlWatcher;

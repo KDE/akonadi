@@ -55,11 +55,11 @@ Q_SIGNALS:
     void migrationCompleted(bool success);
 
 private:
-    bool runMigrationThread();
+    [[nodiscard]] bool runMigrationThread();
     bool copyTable(DataStore *sourceStore, DataStore *destStore, const TableDescription &table);
 
-    bool migrateTables(DataStore *sourceStore, DataStore *destStore, DbConfig *destConfig);
-    bool moveDatabaseToMainLocation(DbConfig *destConfig, const QString &destServerCfgFile);
+    [[nodiscard]] bool migrateTables(DataStore *sourceStore, DataStore *destStore, DbConfig *destConfig);
+    [[nodiscard]] bool moveDatabaseToMainLocation(DbConfig *destConfig, const QString &destServerCfgFile);
     std::optional<QString> moveDatabaseToBackupLocation(DbConfig *config);
     std::optional<QString> backupAkonadiServerRc();
     bool runStorageJanitor(DbConfig *sourceConfig);
@@ -69,8 +69,8 @@ private:
     void emitProgress(const QString &message, int tablesDone, int tablesTotal);
     void emitTableProgress(const QString &table, int done, int total);
     void emitCompletion(bool success);
-    UIDelegate::Result questionYesNo(const QString &question);
-    UIDelegate::Result questionYesNoSkip(const QString &question);
+    [[nodiscard]] UIDelegate::Result questionYesNo(const QString &question);
+    [[nodiscard]] UIDelegate::Result questionYesNoSkip(const QString &question);
 
     QString m_targetEngine;
     std::unique_ptr<QThread> m_thread;
