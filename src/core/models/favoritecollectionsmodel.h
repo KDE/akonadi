@@ -135,10 +135,8 @@ public Q_SLOTS:
      */
     void setFavoriteLabel(const Akonadi::Collection &collection, const QString &label);
 
-private Q_SLOTS:
-    void pasteJobDone(KJob *job);
-
 private:
+    AKONADICORE_NO_EXPORT void pasteJobDone(KJob *job);
     /// @cond PRIVATE
     using KSelectionProxyModel::setSourceModel;
 
