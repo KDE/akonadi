@@ -48,9 +48,9 @@ public:
     void setIndexingEnabled(bool enable);
 
     /// @cond PRIVATE
-    QByteArray type() const override;
+    [[nodiscard]] QByteArray type() const override;
     Attribute *clone() const override;
-    QByteArray serialized() const override;
+    [[nodiscard]] QByteArray serialized() const override;
     void deserialize(const QByteArray &data) override;
     /// @endcond
 

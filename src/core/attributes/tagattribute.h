@@ -39,7 +39,7 @@ public:
      * Returns the name that should be used for display.
      * Users of this should fall back to Collection::name() if this is empty.
      */
-    QString displayName() const;
+    [[nodiscard]] QString displayName() const;
 
     /**
      * Sets the icon @p name for the default icon.
@@ -49,7 +49,7 @@ public:
     /**
      * Returns the icon name of the icon returned by icon().
      */
-    QString iconName() const;
+    [[nodiscard]] QString iconName() const;
 
     void setBackgroundColor(const QColor &color);
     [[nodiscard]] QColor backgroundColor() const;
@@ -74,12 +74,12 @@ public:
      * Returns the priority of the tag.
      * The default value is -1
      */
-    int priority() const;
+    [[nodiscard]] int priority() const;
 
     /* reimpl */
-    QByteArray type() const override;
+    [[nodiscard]] QByteArray type() const override;
     TagAttribute *clone() const override;
-    QByteArray serialized() const override;
+    [[nodiscard]] QByteArray serialized() const override;
     void deserialize(const QByteArray &data) override;
 
 private:

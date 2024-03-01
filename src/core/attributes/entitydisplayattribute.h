@@ -48,7 +48,7 @@ public:
      * Returns the name that should be used for display.
      * Users of this should fall back to Collection::name() if this is empty.
      */
-    QString displayName() const;
+    [[nodiscard]] QString displayName() const;
 
     /**
      * Sets the icon @p name for the default icon.
@@ -100,7 +100,7 @@ public:
     /* reimpl */
     [[nodiscard]] QByteArray type() const override;
     EntityDisplayAttribute *clone() const override;
-    QByteArray serialized() const override;
+    [[nodiscard]] QByteArray serialized() const override;
     void deserialize(const QByteArray &data) override;
 
 private:

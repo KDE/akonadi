@@ -50,8 +50,8 @@ public:
 
     /* reimpl */
     SpecialCollectionAttribute *clone() const override;
-    QByteArray type() const override;
-    QByteArray serialized() const override;
+    [[nodiscard]] QByteArray type() const override;
+    [[nodiscard]] QByteArray serialized() const override;
     void deserialize(const QByteArray &data) override;
 
 private:

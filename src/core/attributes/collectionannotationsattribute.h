@@ -29,11 +29,11 @@ public:
     ~CollectionAnnotationsAttribute() override = default;
 
     void setAnnotations(const QMap<QByteArray, QByteArray> &annotations);
-    QMap<QByteArray, QByteArray> annotations() const;
+    [[nodiscard]] QMap<QByteArray, QByteArray> annotations() const;
 
-    QByteArray type() const override;
+    [[nodiscard]] QByteArray type() const override;
     CollectionAnnotationsAttribute *clone() const override;
-    QByteArray serialized() const override;
+    [[nodiscard]] QByteArray serialized() const override;
     void deserialize(const QByteArray &data) override;
 
     bool operator==(const CollectionAnnotationsAttribute &other) const;
