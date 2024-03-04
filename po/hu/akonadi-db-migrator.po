@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-25 00:38+0000\n"
-"PO-Revision-Date: 2024-01-13 13:21+0100\n"
+"PO-Revision-Date: 2024-03-03 22:24+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -55,7 +55,7 @@ msgstr "Akonadi szolgáltatás indítása…"
 #, kde-format
 msgctxt "@info:status"
 msgid "Database fsck completed"
-msgstr ""
+msgstr "Az adatbázis fájlrendszer-ellenőrzése befejeződött"
 
 #: dbmigrator.cpp:483
 #, kde-format
@@ -112,7 +112,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:status"
 msgid "Running fsck on the source database"
-msgstr ""
+msgstr "Fájlrendszer-ellenőrzés fut a forrásadatbázison"
 
 #: dbmigrator.cpp:559
 #, kde-format
