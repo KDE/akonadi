@@ -10,6 +10,8 @@
 #include "agentinstance.h"
 #include "agentinstancemodel.h"
 
+#include <KLocalizedString>
+
 #include <QApplication>
 #include <QHBoxLayout>
 #include <QIcon>
@@ -235,7 +237,7 @@ void AgentInstanceWidgetDelegate::paint(QPainter *painter, const QStyleOptionVie
     }
 
     if (status == 1) {
-        statusMessage.append(QStringLiteral(" (%1%)").arg(progress));
+        statusMessage.append(QStringLiteral(" ") + i18nc("Status percent value", "(%1%)", progress));
     }
 
     const QPixmap iconPixmap = icon.pixmap(style->pixelMetric(QStyle::PM_MessageBoxIconSize));

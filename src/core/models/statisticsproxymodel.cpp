@@ -95,7 +95,7 @@ public:
 
                 if (qAbs(percentage) >= 0.01) {
                     QString percentStr = QString::number(percentage, 'f', 2);
-                    tipInfo += QStringLiteral("      <strong>%1</strong>: %2%<br>\n").arg(i18n("Quota"), percentStr);
+                    tipInfo += i18n("<strong>Quota</strong>: %1%<br>\n", percentStr);
                 }
             }
         }
