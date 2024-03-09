@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2024-01-29 17:40+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -505,8 +505,8 @@ msgstr "Viestejä lukematta"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "Tilarajoitus"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -714,6 +714,12 @@ msgid "Failed to register %1 configuration dialog."
 msgstr ""
 "%1-asetusikkunan rekisteröinti epäonnistui.|/|$[gen %1] asetusikkunan "
 "rekisteröinti epäonnistui."
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
@@ -2596,6 +2602,9 @@ msgstr "Datatiedostoa ei saada jäsennetyksi: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Kokoelmaa %1 ei löydy"
+
+#~ msgid "Quota"
+#~ msgstr "Tilarajoitus"
 
 #~ msgid "Error"
 #~ msgstr "Virhe"

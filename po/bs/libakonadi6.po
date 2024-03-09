@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2014-01-31 20:40+0100\n"
 "Last-Translator: Samir Ribić <megaribi@epn.ba>\n"
 "Language-Team: bosanski <bs@li.org>\n"
@@ -516,8 +516,8 @@ msgstr "Nepročitane poruke"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "Kvota"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -712,6 +712,12 @@ msgstr ""
 #| msgid "Unable to create agent instance."
 msgid "Failed to register %1 configuration dialog."
 msgstr "Ne mogu da stvorim primjerak agenta."
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, fuzzy, kde-format
@@ -2727,6 +2733,9 @@ msgstr "Ne mogu da umetnem podatke: %1"
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"
 msgstr "Loša zbirka"
+
+#~ msgid "Quota"
+#~ msgstr "Kvota"
 
 #, fuzzy
 #~| msgctxt "@info:status"

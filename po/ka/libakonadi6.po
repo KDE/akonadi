@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2024-01-12 04:51+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
@@ -500,8 +500,8 @@ msgstr "წაუკითხავი შეტყობინებები"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "კვოტა"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -703,6 +703,12 @@ msgstr "%1-ის მორგების ფანჯარა უკვე �
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "%1 კონფიგურაციის ფანჯრის რეგისტრაციის შეცდომა."
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
@@ -2584,6 +2590,9 @@ msgstr "მონაცემების ფაილის დამუშა�
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "კოლექციის (%1) პოვნა შეუძლებელია"
+
+#~ msgid "Quota"
+#~ msgstr "კვოტა"
 
 #~ msgid "Error"
 #~ msgstr "შეცდომა"

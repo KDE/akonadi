@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2021-05-15 17:47-0700\n"
 "Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -494,8 +494,8 @@ msgstr "未読件数"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "クォータ"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -693,6 +693,12 @@ msgstr ""
 #| msgid "Unable to create agent instance."
 msgid "Failed to register %1 configuration dialog."
 msgstr "エージェントのインスタンスを作成できません。"
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, fuzzy, kde-format
@@ -2581,3 +2587,6 @@ msgstr "データファイルを解析できませんでした: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "コレクション %1 は見つかりませんでした。"
+
+#~ msgid "Quota"
+#~ msgstr "クォータ"

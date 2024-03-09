@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2024-01-11 07:32+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -501,8 +501,8 @@ msgstr "Nelegitaj Mesaĝoj"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "Kvoto"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -705,6 +705,12 @@ msgstr "Agordo por %1 jam estas malfermita aliloke."
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Malsukcesis registri %1 agordan dialogon."
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
@@ -2594,3 +2600,6 @@ msgstr "Ne eblas analizi datumdosieron: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Ne eblas trovi kolekton %1"
+
+#~ msgid "Quota"
+#~ msgstr "Kvoto"

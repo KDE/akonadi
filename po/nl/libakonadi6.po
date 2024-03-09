@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2024-01-11 10:04+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -510,8 +510,8 @@ msgstr "Ongelezen berichten"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "Quota"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -716,6 +716,12 @@ msgstr "Configuratie voor %1 is al elders geopend."
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Registreren van %1 configuratiedialoog is mislukt."
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
@@ -2624,6 +2630,9 @@ msgstr "Gegevensbestand kon niet worden ontleden: '%1'"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Verzameling %1 kan niet gevonden worden"
+
+#~ msgid "Quota"
+#~ msgstr "Quota"
 
 #~ msgid "Error"
 #~ msgstr "Fout"

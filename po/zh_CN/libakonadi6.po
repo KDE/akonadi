@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2024-02-29 12:53\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -483,8 +483,8 @@ msgstr "未读消息"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "配额"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -681,6 +681,12 @@ msgstr "%1 的配置文件已在其他程序中打开。"
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "注册 %1 配置对话框失败。"
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
@@ -2490,3 +2496,6 @@ msgstr "无法解析数据文件：%1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "无法找到收藏 %1"
+
+#~ msgid "Quota"
+#~ msgstr "配额"

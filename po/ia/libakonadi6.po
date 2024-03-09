@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2024-01-11 12:17+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -502,8 +502,8 @@ msgstr "Messages non legite"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "Quota"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -708,6 +708,12 @@ msgstr "Configuration per %1 es ja aperite alibi."
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Il falleva a registrar dialogo de configuration %1."
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
@@ -2614,6 +2620,9 @@ msgstr "Incapace a analysar file de datos: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Incapace a trovar collection %1"
+
+#~ msgid "Quota"
+#~ msgstr "Quota"
 
 #~ msgid "Error"
 #~ msgstr "Error"

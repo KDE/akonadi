@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2013-07-14 03:20+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -510,8 +510,8 @@ msgstr "Оқылмаған хаттар"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "Квота"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -706,6 +706,12 @@ msgstr ""
 #| msgid "Unable to create agent instance."
 msgid "Failed to register %1 configuration dialog."
 msgstr "Агент данасын құруға болмайды."
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, fuzzy, kde-format
@@ -2663,6 +2669,9 @@ msgstr "Дерек орналастырылмады: %1"
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"
 msgstr "Жарамсыз жинақ"
+
+#~ msgid "Quota"
+#~ msgstr "Квота"
 
 #, fuzzy
 #~| msgctxt "@info:status"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2014-09-18 22:53+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -511,8 +511,8 @@ msgstr "Nich leest Narichten"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "Bruukgrenz"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -705,6 +705,12 @@ msgstr ""
 #| msgid "Failed to create tag."
 msgid "Failed to register %1 configuration dialog."
 msgstr "Slötelwoort lett sik nich opstellen."
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, fuzzy, kde-format
@@ -2688,6 +2694,9 @@ msgstr "Datendatei lett sik nich inlesen: „%1“"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Sammeln „%1“ lett sik nich finnen"
+
+#~ msgid "Quota"
+#~ msgstr "Bruukgrenz"
 
 #, fuzzy
 #~| msgctxt "@info:status"

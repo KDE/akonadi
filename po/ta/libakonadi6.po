@@ -1,171 +1,171 @@
-# Copyright (C) YEAR This_file_is_part_of_KDE
-# This file is distributed under the same license as the PACKAGE package.
-# SPDX-FileCopyrightText: 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Shinjo Park <kde@peremen.name>
+# Copyright (C) 2024 This file is copyright:
+# This file is distributed under the same license as the akonadi package.
 #
+# SPDX-FileCopyrightText: 2024 Kishore G <kishore96@gmail.com>
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:38+0000\n"
-"PO-Revision-Date: 2024-02-10 22:00+0100\n"
-"Last-Translator: Shinjo Park <kde@peremen.name>\n"
-"Language-Team: Korean <kde-kr@kde.org>\n"
-"Language: ko\n"
+"PO-Revision-Date: 2024-03-08 21:25+0530\n"
+"Last-Translator: Kishore G <kishore96@gmail.com>\n"
+"Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
+"Language: ta\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 23.08.1\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 24.02.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "박신조"
+msgstr ""
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "kde@peremen.name"
+msgstr ""
 
 #: agentbase/accountsintegration.cpp:86
 #, kde-format
 msgid "There is currently no account configured."
-msgstr "계정을 설정하지 않았습니다."
+msgstr ""
 
 #: agentbase/accountsintegration.cpp:103
 #, kde-format
 msgid "Accounts integration is not supported"
-msgstr "계정 통합이 지원되지 않음"
+msgstr ""
 
 #: agentbase/agentbase.cpp:348 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
-msgstr "DBus에 객체를 등록할 수 없음: %1"
+msgstr ""
 
 #: agentbase/agentbase.cpp:437
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
-msgstr "%1(%2 형식)"
+msgstr ""
 
 #: agentbase/agentbase.cpp:883
 #, kde-format
 msgid "Agent identifier"
-msgstr "에이전트 식별자"
+msgstr ""
 
 #: agentbase/agentbase.cpp:889
 #, kde-format
 msgid "Akonadi Agent"
-msgstr "Akonadi 에이전트"
+msgstr ""
 
 #: agentbase/agentbase_p.h:49 agentbase/resourcescheduler.cpp:281
 #, kde-format
 msgctxt "@info:status Application ready for work"
 msgid "Ready"
-msgstr "준비"
+msgstr "தயார்"
 
 #: agentbase/agentbase_p.h:51
 #, kde-format
 msgctxt "@info:status"
 msgid "Offline"
-msgstr "오프라인"
+msgstr "தொடர்பற்ற நிலை"
 
 #: agentbase/agentbase_p.h:56
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing..."
-msgstr "동기화 중..."
+msgstr ""
 
 #: agentbase/agentbase_p.h:61
 #, kde-format
 msgctxt "@info:status"
 msgid "Error."
-msgstr "오류."
+msgstr "சிக்கல்."
 
 #: agentbase/agentbase_p.h:66
 #, kde-format
 msgctxt "@info:status"
 msgid "Not configured"
-msgstr "설정되지 않음"
+msgstr "அமைக்கபடவில்லை"
 
 #: agentbase/resourcebase.cpp:518
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
-msgstr "리소스 식별자"
+msgstr ""
 
 #: agentbase/resourcebase.cpp:524
 #, kde-format
 msgid "Akonadi Resource"
-msgstr "Akonadi 리소스"
+msgstr ""
 
 #: agentbase/resourcebase.cpp:572
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
-msgstr "잘못된 항목 가져옴"
+msgstr ""
 
 #: agentbase/resourcebase.cpp:595
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
-msgstr "항목 생성 오류: %1"
+msgstr ""
 
 #: agentbase/resourcebase.cpp:619
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
-msgstr "모음집 갱신 오류: %1"
+msgstr ""
 
 #: agentbase/resourcebase.cpp:706
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
-msgstr "로컬 모음집 갱신 실패: %1."
+msgstr ""
 
 #: agentbase/resourcebase.cpp:711
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
-msgstr "로컬 항목 갱신 실패: %1."
+msgstr ""
 
 #: agentbase/resourcebase.cpp:730
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
-msgstr "오프라인 모드에서는 항목을 가져올 수 없습니다."
+msgstr ""
 
 #: agentbase/resourcebase.cpp:911
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
-msgstr "'%1' 폴더 동기화 중"
+msgstr ""
 
 #: agentbase/resourcebase.cpp:931 agentbase/resourcebase.cpp:938
 #, kde-format
 msgid "Failed to retrieve collection for sync."
-msgstr "동기화할 모음집을 가져올 수 없습니다."
+msgstr ""
 
 #: agentbase/resourcebase.cpp:979
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
-msgstr "속성 동기화할 모음집을 가져올 수 없습니다."
+msgstr ""
 
 #: agentbase/resourcebase.cpp:1033
 #, kde-format
 msgid "The requested item no longer exists"
-msgstr "요청한 항목이 더 이상 없음"
+msgstr ""
 
 #: agentbase/resourcescheduler.cpp:500 agentbase/resourcescheduler.cpp:506
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."
-msgstr "작업이 취소되었습니다."
+msgstr "பணி ரத்துசெய்யப்பட்டது."
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
 #, kde-format
 msgid "Akonadi Control"
-msgstr "Akonadi 제어"
+msgstr ""
 
 #: akonadictl/main.cpp:211
 #, kde-format
@@ -185,136 +185,124 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
-"Akonadi 서버 제어 도구\n"
-"\n"
-"명령:\n"
-"  start          Akonadi 서버와 모든 프로세스 시작\n"
-"  stop           Akonadi 서버와 모든 프로세스 안전 종료\n"
-"  restart        Akonadi 서버와 모든 프로세스 다시 시작\n"
-"  status         Akonadi 서버의 상태 요약 표시\n"
-"  instances      모든 Akonadi 인스턴스 목록 표시\n"
-"  vacuum         내부 저장소 최적화(경고: 많은 시간과 디스크 공간이 필요"
-"함!)\n"
-"  fsck           내부 저장소의 일관성 검사 (및 수리 시도)\n"
-"                 (시간이 걸릴 수 있음)"
 
 #: akonadictl/main.cpp:231
 #, kde-format
 msgid "Command to execute"
-msgstr "실행할 명령"
+msgstr "இயக்க வேண்டிய கட்டளை"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
 msgid "No such collection."
-msgstr "모음집이 없습니다."
+msgstr ""
 
 #: core/collectionsync.cpp:505 core/collectionsync.cpp:650
 #, kde-format
 msgid "Found unresolved orphan collections"
-msgstr "부모를 찾을 수 없는 고아 모음집 찾음"
+msgstr ""
 
 #: core/conflicthandler.cpp:53
 #, kde-format
 msgid "Did not find other item for conflict handling"
-msgstr "충돌을 해결할 다른 항목을 찾을 수 없음"
+msgstr ""
 
 #: core/jobs/agentinstancecreatejob.cpp:70
 #, kde-format
 msgid "Unable to access D-Bus interface of created agent."
-msgstr "생성한 에이전트의 DBus 인터페이스에 접근할 수 없습니다."
+msgstr ""
 
 #: core/jobs/agentinstancecreatejob.cpp:92
 #, kde-format
 msgid "Agent instance creation timed out."
-msgstr "에이전트 생성 시간이 초과되었습니다."
+msgstr ""
 
 #: core/jobs/agentinstancecreatejob.cpp:150
 #, kde-format
 msgid "Unable to obtain agent type '%1'."
-msgstr "에이전트 종류 '%1'을(를) 가져올 수 없습니다."
+msgstr ""
 
 #: core/jobs/agentinstancecreatejob.cpp:158
 #, kde-format
 msgid "Unable to create agent instance."
-msgstr "에이전트 인스턴스를 만들 수 없습니다."
+msgstr ""
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:73
 #, kde-format
 msgid "Invalid collection instance."
-msgstr "잘못된 모음집 인스턴스입니다."
+msgstr ""
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:80
 #: core/jobs/resourcesynchronizationjob.cpp:88
 #, kde-format
 msgid "Invalid resource instance."
-msgstr "잘못된 리소스 인스턴스입니다."
+msgstr ""
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:102
 #: core/jobs/resourcesynchronizationjob.cpp:113
 #, kde-format
 msgid "Unable to obtain D-Bus interface for resource '%1'"
-msgstr "리소스 '%1'의 DBus 인터페이스를 가져올 수 없음"
+msgstr ""
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:125
 #, kde-format
 msgid "Collection attributes synchronization timed out."
-msgstr "모음집 속성 동기화 시간이 초과되었습니다."
+msgstr ""
 
 #: core/jobs/collectioncopyjob.cpp:54
 #, kde-format
 msgid "Invalid collection to copy"
-msgstr "잘못된 복사할 모음집"
+msgstr ""
 
 #: core/jobs/collectioncopyjob.cpp:60
 #, kde-format
 msgid "Invalid destination collection"
-msgstr "잘못된 대상 모음집"
+msgstr ""
 
 #: core/jobs/collectioncreatejob.cpp:50
 #, kde-format
 msgid "Invalid parent"
-msgstr "잘못된 부모"
+msgstr ""
 
 #: core/jobs/collectioncreatejob.cpp:98
 #, kde-format
 msgid "Failed to parse Collection from response"
-msgstr "응답에서 모음집을 해석할 수 없음"
+msgstr ""
 
 #: core/jobs/collectiondeletejob.cpp:52
 #, kde-format
 msgid "Invalid collection"
-msgstr "잘못된 모음집"
+msgstr ""
 
 #: core/jobs/collectionfetchjob.cpp:212
 #, kde-format
 msgid "Invalid collection given."
-msgstr "잘못된 모음집이 지정되었습니다."
+msgstr ""
 
 #: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:90
 #, kde-format
 msgid "No objects specified for moving"
-msgstr "이동할 객체가 지정되지 않음"
+msgstr ""
 
 #: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
 #: core/jobs/linkjobimpl_p.h:39
 #, kde-format
 msgid "No valid destination specified"
-msgstr "올바른 대상이 지정되지 않음"
+msgstr ""
 
 #: core/jobs/invalidatecachejob.cpp:58
 #, kde-format
 msgid "Invalid collection."
-msgstr "잘못된 모음집입니다."
+msgstr ""
 
 #: core/jobs/itemcreatejob.cpp:115
 #, kde-format
 msgid "Invalid parent collection"
-msgstr "잘못된 부모 모음집"
+msgstr ""
 
 #: core/jobs/job.cpp:335
 #, kde-format
 msgid "Cannot connect to the Akonadi service."
-msgstr "Akonadi 서비스에 연결할 수 없습니다."
+msgstr ""
 
 #: core/jobs/job.cpp:338
 #, kde-format
@@ -322,112 +310,110 @@ msgid ""
 "The protocol version of the Akonadi server is incompatible. Make sure you "
 "have a compatible version installed."
 msgstr ""
-"Akonadi 서버 프로토콜 버전이 호환되지 않습니다. 호환되는 버전이 설치되어 있는"
-"지 확인하십시오."
 
 #: core/jobs/job.cpp:341
 #, kde-format
 msgid "User canceled operation."
-msgstr "사용자가 작업을 취소했습니다."
+msgstr ""
 
 #: core/jobs/job.cpp:346
 #, kde-format
 msgid "Unknown error."
-msgstr "알 수 없는 오류입니다."
+msgstr "தெரியாத சிக்கல்."
 
 #: core/jobs/job.cpp:385
 #, kde-format
 msgid "Unexpected response"
-msgstr "예상하지 못한 응답"
+msgstr ""
 
 #: core/jobs/relationcreatejob.cpp:42 core/jobs/relationdeletejob.cpp:42
 #, kde-format
 msgid "Failed to create relation."
-msgstr "관계를 만들 수 없습니다."
+msgstr ""
 
 #: core/jobs/resourcesynchronizationjob.cpp:139
 #, kde-format
 msgid "Resource synchronization timed out."
-msgstr "리소스 동기화 시간이 초과되었습니다."
+msgstr ""
 
 #: core/jobs/specialcollectionshelperjobs.cpp:145
 #, kde-format
 msgid "Could not fetch root collection of resource %1."
-msgstr "리소스 %1의 루트 모음집을 가져올 수 없습니다."
+msgstr ""
 
 #: core/jobs/specialcollectionshelperjobs.cpp:189
 #, kde-format
 msgid "No resource ID given."
-msgstr "리소스 ID가 주어지지 않았습니다."
+msgstr ""
 
 #: core/jobs/specialcollectionshelperjobs.cpp:326
 #, kde-format
 msgid "Invalid resource identifier '%1'"
-msgstr "잘못된 리소스 식별자 '%1'"
+msgstr ""
 
 #: core/jobs/specialcollectionshelperjobs.cpp:342
 #: core/jobs/specialcollectionshelperjobs.cpp:350
 #, kde-format
 msgid "Failed to configure default resource via D-Bus."
-msgstr "DBus를 통하여 기본 리소스를 설정할 수 없습니다."
+msgstr ""
 
 #: core/jobs/specialcollectionshelperjobs.cpp:415
 #, kde-format
 msgid "Failed to fetch the resource collection."
-msgstr "리소스 모음집을 가져올 수 없습니다."
+msgstr ""
 
 #: core/jobs/specialcollectionshelperjobs.cpp:599
 #, kde-format
 msgid "Timeout trying to get lock."
-msgstr "잠금을 시도하는 중 시간이 초과되었습니다."
+msgstr ""
 
 #: core/jobs/tagcreatejob.cpp:49
 #, kde-format
 msgid "Failed to create tag."
-msgstr "태그를 만들 수 없습니다."
+msgstr ""
 
 #: core/jobs/trashjob.cpp:155
 #, kde-format
 msgid "Move to trash collection failed, aborting trash operation"
-msgstr "휴지통으로 모음집을 옮길 수 없음, 휴지통 버리기를 중단함"
+msgstr ""
 
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format
 msgid "Invalid items passed"
-msgstr "잘못된 항목이 전달됨"
+msgstr ""
 
 #: core/jobs/trashjob.cpp:258 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
-msgstr "잘못된 모음집이 전달됨"
+msgstr ""
 
 #: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
 #, kde-format
 msgid "No valid collection or empty itemlist"
-msgstr "올바른 모음집이 없거나 항목 목록이 비어 있음"
+msgstr ""
 
 #: core/jobs/trashrestorejob.cpp:86
 #, kde-format
 msgid "Could not find restore collection and restore resource is not available"
-msgstr "복원 모음집을 찾을 수 없으며 복원 리소스를 사용할 수 없음"
+msgstr ""
 
 #: core/models/agentinstancemodel.cpp:188
 #, kde-format
 msgctxt "@title:column, name of a thing"
 msgid "Name"
-msgstr "이름"
+msgstr "பெயர்"
 
 #: core/models/entitytreemodel.cpp:207
 #, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
-msgstr "불러오는 중..."
+msgstr "ஏற்றப்படுகிறது..."
 
 #: core/models/entitytreemodel.cpp:499
 #, kde-format
 msgctxt "@window:title"
 msgid "Error"
-msgstr "오류"
+msgstr "சிக்கல்"
 
 #: core/models/entitytreemodel.cpp:500
 #, kde-format
@@ -435,65 +421,63 @@ msgid ""
 "The target collection '%1' contains already\n"
 "a collection with name '%2'."
 msgstr ""
-"모음집 '%1'이(가) 이미 하위 모음집\n"
-"'%2'을(를) 포함합니다."
 
 #: core/models/entitytreemodel.cpp:669
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
-msgstr "이름"
+msgstr ""
 
 #: core/models/entitytreemodel_p.cpp:1331
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
-msgstr "항목을 복사할 수 없음: <message>%1</message>"
+msgstr ""
 
 #: core/models/entitytreemodel_p.cpp:1333
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
-msgstr "모음집을 복사할 수 없음: <message>%1</message>"
+msgstr ""
 
 #: core/models/entitytreemodel_p.cpp:1335
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
-msgstr "항목을 이동할 수 없음: <message>%1</message>"
+msgstr ""
 
 #: core/models/entitytreemodel_p.cpp:1337
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
-msgstr "모음집을 이동할 수 없음: <message>%1</message>"
+msgstr ""
 
 #: core/models/entitytreemodel_p.cpp:1339
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
-msgstr "엔티티를 링크할 수 없음: <message>%1</message>"
+msgstr ""
 
 #: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
 #, kde-format
 msgctxt "@title:window"
 msgid "Error"
-msgstr "오류"
+msgstr ""
 
 #: core/models/favoritecollectionsmodel.cpp:398
 #, kde-format
 msgid "Favorite Folders"
-msgstr "즐겨찾는 폴더"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:86
 #, kde-format
 msgid "Total Messages"
-msgstr "총 메시지"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:88
 #, kde-format
 msgid "Unread Messages"
-msgstr "읽지 않은 메시지"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
@@ -503,70 +487,70 @@ msgstr ""
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
 msgid "Storage Size"
-msgstr "저장소 크기"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:110
 #, kde-format
 msgid "Subfolder Storage Size"
-msgstr "하위 폴더 저장소 크기"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:224
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
-msgstr "읽지 않음"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:225
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
-msgstr "합계"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:226
 #, kde-format
 msgctxt "collection size"
 msgid "Size"
-msgstr "크기"
+msgstr ""
 
 #: core/models/tagmodel.cpp:64
 #, kde-format
 msgid "Tag"
-msgstr "태그"
+msgstr ""
 
 #: core/partfetcher.cpp:49
 #, kde-format
 msgid "Unable to fetch item for index"
-msgstr "색인에 추가할 항목을 가져올 수 없음"
+msgstr ""
 
 #: core/partfetcher.cpp:64
 #, kde-format
 msgid "Index is no longer available"
-msgstr "인덱스를 사용할 수 없음"
+msgstr ""
 
 #: core/partfetcher.cpp:114
 #, kde-format
 msgid "Payload part '%1' is not available for this index"
-msgstr "이 인덱스의 내용 부분 '%1'을(를) 사용할 수 없음"
+msgstr ""
 
 #: core/partfetcher.cpp:123
 #, kde-format
 msgid "No session available for this index"
-msgstr "인덱스에 해당하는 세션 없음"
+msgstr ""
 
 #: core/partfetcher.cpp:132
 #, kde-format
 msgid "No item available for this index"
-msgstr "인덱스에 해당하는 항목 없음"
+msgstr ""
 
 #: core/pluginloader.cpp:145
 #, kde-format
 msgid "Unnamed plugin"
-msgstr "이름 없는 플러그인"
+msgstr ""
 
 #: core/pluginloader.cpp:151
 #, kde-format
 msgid "No description available"
-msgstr "설명 없음"
+msgstr ""
 
 #: core/servermanager.cpp:263
 #, kde-format
@@ -576,10 +560,6 @@ msgid ""
 "If you recently updated your system please log out and back in to make sure "
 "all applications use the correct protocol version."
 msgstr ""
-"Akonadi 서버의 프로토콜과 이 앱에서 사용하는 프로토콜의 버전이 서로 다릅니"
-"다.\n"
-"시스템을 최근에 업데이트했다면 모든 앱이 올바른 프로토콜 버전을 사용하도록 로"
-"그아웃한 후 다시 로그인하십시오."
 
 #: core/servermanager.cpp:280
 #, kde-format
@@ -587,7 +567,6 @@ msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
 "installation."
 msgstr ""
-"사용 가능한 Akondai 에이전트가 없습니다. KDE PIM 설치 상태를 확인하십시오."
 
 #: core/session.cpp:185
 #, kde-format
@@ -595,8 +574,6 @@ msgid ""
 "Protocol version mismatch. Server version is older (%1) than ours (%2). If "
 "you updated your system recently please restart the Akonadi server."
 msgstr ""
-"프로토콜 버전이 일치하지 않습니다. 서버 쪽 버전(%1)이 클라이언트 쪽 버전(%2)"
-"보다 낮습니다. 시스템을 업데이트했다면 Akonadi 서버를 다시 시작하십시오."
 
 #: core/session.cpp:194
 #, kde-format
@@ -604,101 +581,98 @@ msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
 "you updated your system recently please restart all KDE PIM applications."
 msgstr ""
-"프로토콜 버전이 일치하지 않습니다. 서버 쪽 버전(%1)이 클라이언트 쪽 버전(%2)"
-"보다 높습니다. 시스템을 업데이트했다면 KDE PIM 앱을 다시 시작하십시오."
 
 #: selftest/main.cpp:19
 #, kde-format
 msgid "Akonadi Self Test"
-msgstr "Akonadi 자가 진단"
+msgstr ""
 
 #: selftest/main.cpp:21
 #, kde-format
 msgid "Checks and reports state of Akonadi server"
-msgstr "Akonadi 서버 상태 점검 및 보고"
+msgstr ""
 
 #: selftest/main.cpp:23
 #, kde-format
 msgid "(c) 2008 Volker Krause <vkrause@kde.org>"
-msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
+msgstr ""
 
 #: shared/akapplication.cpp:70
 #, kde-format
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
-"같은 사용자 세션에서 여러 Akonadi 인스턴스를 시작할 때 사용할 네임스페이스"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
-msgstr "새 에이전트 인스턴스(&N)..."
+msgstr ""
 
 #: widgets/agentactionmanager.cpp:36
 msgid "&Delete Agent Instance"
-msgstr "에이전트 인스턴스 삭제(&D)"
+msgstr ""
 
 #: widgets/agentactionmanager.cpp:37
 msgid "&Configure Agent Instance"
-msgstr "에이전트 인스턴스 설정(&C)"
+msgstr ""
 
 #: widgets/agentactionmanager.cpp:53
 #, kde-format
 msgctxt "@title:window"
 msgid "New Agent Instance"
-msgstr "새 에이전트 인스턴스"
+msgstr ""
 
 #: widgets/agentactionmanager.cpp:55
 #, kde-format
 msgid "Could not create agent instance: %1"
-msgstr "에이전트 인스턴스를 만들 수 없음: %1"
+msgstr ""
 
 #: widgets/agentactionmanager.cpp:59
 #, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
-msgstr "에이전트 인스턴스 생성 실패"
+msgstr ""
 
 #: widgets/agentactionmanager.cpp:61
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Agent Instance?"
-msgstr "에이전트 인스턴스를 삭제하시겠습니까?"
+msgstr ""
 
 #: widgets/agentactionmanager.cpp:65
 #, kde-format
 msgid "Do you really want to delete the selected agent instance?"
-msgstr "선택한 에이전트 인스턴스를 삭제하시겠습니까?"
+msgstr ""
 
 #: widgets/agentconfigurationdialog.cpp:56
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
-msgstr "%1 설정"
+msgstr ""
 
 #: widgets/agentconfigurationdialog.cpp:81
 #, kde-format
 msgid "%1 Handbook"
-msgstr "%1 도움말"
+msgstr ""
 
 #: widgets/agentconfigurationdialog.cpp:82
 #, kde-format
 msgid "About %1"
-msgstr "%1 정보"
+msgstr ""
 
 #: widgets/agentconfigurationwidget.cpp:95
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
-msgstr "다른 창에서 설정 대화 상자를 열었음"
+msgstr ""
 
 #: widgets/agentconfigurationwidget.cpp:102
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
-msgstr "다른 곳에서 %1 설정을 열었습니다."
+msgstr ""
 
 #: widgets/agentconfigurationwidget.cpp:104
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
-msgstr "%1 설정 대화 상자를 등록할 수 없습니다."
+msgstr ""
 
 #: widgets/agentinstancewidget.cpp:240
 #, kde-format
@@ -710,98 +684,99 @@ msgstr ""
 #, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
-msgstr "계정 설정"
+msgstr ""
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
 msgid "minute"
 msgid_plural "minutes"
-msgstr[0] "분"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/cachepolicypage.cpp:69
 #, kde-format
 msgid "Retrieval"
-msgstr "가져오기"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, inherit)
 #: widgets/cachepolicypage.ui:20
 #, kde-format
 msgid "Use options from parent folder or account"
-msgstr "부모 폴더나 계정 설정 사용"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, syncOnDemand)
 #: widgets/cachepolicypage.ui:33
 #, kde-format
 msgid "Synchronize when selecting this folder"
-msgstr "이 폴더를 선택할 때 동기화"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: widgets/cachepolicypage.ui:40
 #, kde-format
 msgid "Synchronize after:"
-msgstr "다음 이후 동기화:"
+msgstr ""
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, checkInterval)
 #: widgets/cachepolicypage.ui:47
 #, kde-format
 msgctxt "never check the cache"
 msgid "Never"
-msgstr "하지 않음"
+msgstr ""
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, checkInterval)
 #. i18n: ectx: property (suffix), widget (QSpinBox, localCacheTimeout)
 #: widgets/cachepolicypage.ui:50 widgets/cachepolicypage.ui:133
 #, kde-format
 msgid "minutes"
-msgstr "분"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, localPartsLabel)
 #: widgets/cachepolicypage.ui:66
 #, kde-format
 msgid "Locally cached parts:"
-msgstr "로컬에 캐시된 부분:"
+msgstr ""
 
 #. i18n: ectx: property (title), widget (KEditListWidget, localParts)
 #: widgets/cachepolicypage.ui:87
 #, kde-format
 msgid "Locally Cached Parts"
-msgstr "로컬에 캐시된 부분"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, retrievalOptionsLabel)
 #: widgets/cachepolicypage.ui:94
 #, kde-format
 msgid "Retrieval Options:"
-msgstr "가져오기 옵션:"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QRadioButton, retrieveFullMessages)
 #: widgets/cachepolicypage.ui:101
 #, kde-format
 msgid "Always retrieve full &messages"
-msgstr "항상 전체 메시지 가져오기(&M)"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QRadioButton, retrieveOnlyHeaders)
 #: widgets/cachepolicypage.ui:111
 #, kde-format
 msgid "&Retrieve message bodies on demand"
-msgstr "필요한 때 메시지 본문 가져오기(&R)"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/cachepolicypage.ui:118
 #, kde-format
 msgid "Keep message bodies locally for:"
-msgstr "로컬 메시지 본문 유지 시간:"
+msgstr ""
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, localCacheTimeout)
 #: widgets/cachepolicypage.ui:130
 #, kde-format
 msgctxt "no cache timeout"
 msgid "Forever"
-msgstr "영구"
+msgstr ""
 
 #: widgets/clearcachefoldersjob.cpp:41
 #, kde-format
 msgid "Collection cache cleared. You should restart Akonadi now."
-msgstr "모음집 캐시를 비웠습니다. Akonadi를 다시 시작하십시오."
+msgstr ""
 
 #: widgets/clearcachefoldersjob.cpp:69
 #, kde-format
@@ -810,147 +785,146 @@ msgid ""
 "likely never uploaded to the destination server, so clearing this collection "
 "means that those <b>data will be lost</b>. Are you sure you want to proceed?"
 msgstr ""
-"모음집 '%1'에 원격 ID가 없는 항목이 %2개 있습니다. 해당 항목은 서버에 업로드"
-"되지 않았을 가능성이 높으므로 이 모음집을 비우면 <b>데이터가 손실될 수 있습니"
-"다</b>. 계속 진행하시겠습니까?"
 
 #: widgets/collectiondialog.cpp:58
 #, kde-format
 msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
 msgid "Search"
-msgstr "찾기"
+msgstr ""
 
 #: widgets/collectiondialog.cpp:66
 #, kde-format
 msgid "Use folder by default"
-msgstr "기본으로 사용할 폴더"
+msgstr ""
 
 #: widgets/collectiondialog.cpp:226
 #, kde-format
 msgid "&New Subfolder..."
-msgstr "새 하위 폴더(&N)..."
+msgstr ""
 
 #: widgets/collectiondialog.cpp:228
 #, kde-format
 msgid "Create a new subfolder under the currently selected folder"
-msgstr "현재 선택된 폴더 아래에 새 하위 폴더 만들기"
+msgstr ""
 
 #: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:348
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
-msgstr "새 폴더"
+msgstr ""
 
 #: widgets/collectiondialog.cpp:266
 #, kde-format
 msgctxt "@label:textbox, name of a thing"
 msgid "Name"
-msgstr "이름"
+msgstr ""
 
 #: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:350
 #, kde-format
 msgid "Could not create folder: %1"
-msgstr "폴더를 만들 수 없음: %1"
+msgstr ""
 
 #: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:351
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
-msgstr "폴더 생성 실패"
+msgstr ""
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
 #, kde-format
 msgctxt "@title:tab general properties page"
 msgid "General"
-msgstr "일반"
+msgstr ""
 
 #: widgets/collectiongeneralpropertiespage.cpp:54
 #, kde-format
 msgctxt "@label"
 msgid "One object"
 msgid_plural "%1 objects"
-msgstr[0] "객체 %1개"
+msgstr[0] ""
+msgstr[1] ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/collectiongeneralpropertiespage.ui:16
 #, kde-format
 msgid "&Name:"
-msgstr "이름(&N):"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, customIconCheckbox)
 #: widgets/collectiongeneralpropertiespage.ui:29
 #, kde-format
 msgid "&Use custom icon:"
-msgstr "사용자 정의 아이콘 사용(&U):"
+msgstr ""
 
 #. i18n: ectx: property (icon), widget (KIconButton, customIcon)
 #: widgets/collectiongeneralpropertiespage.ui:39
 #, kde-format
 msgid "folder"
-msgstr "폴더"
+msgstr ""
 
 #. i18n: ectx: property (title), widget (QGroupBox, statsBox)
 #: widgets/collectiongeneralpropertiespage.ui:62
 #, kde-format
 msgid "Statistics"
-msgstr "통계"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: widgets/collectiongeneralpropertiespage.ui:68
 #, kde-format
 msgctxt "object names"
 msgid "Content:"
-msgstr "내용:"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, countLabel)
 #: widgets/collectiongeneralpropertiespage.ui:75
 #, kde-format
 msgid "0 objects"
-msgstr "객체 0개"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: widgets/collectiongeneralpropertiespage.ui:82
 #, kde-format
 msgid "Size:"
-msgstr "크기:"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, sizeLabel)
 #: widgets/collectiongeneralpropertiespage.ui:89
 #, kde-format
 msgid "0 Byte"
-msgstr "0바이트"
+msgstr ""
 
 #: widgets/collectionmaintenancepage.cpp:46
 #, kde-format
 msgid "Remember that indexing can take some minutes."
-msgstr "색인 작업은 시간이 걸릴 수도 있습니다."
+msgstr ""
 
 #: widgets/collectionmaintenancepage.cpp:71
 #, kde-format
 msgid "Maintenance"
-msgstr "관리"
+msgstr ""
 
 #: widgets/collectionmaintenancepage.cpp:130
 #, kde-format
 msgid "Error while retrieving indexed items count"
-msgstr "색인된 항목 개수를 가져오는 중 오류 발생"
+msgstr ""
 
 #: widgets/collectionmaintenancepage.cpp:133
 #, kde-format
 msgid "Indexed %1 item in this folder"
 msgid_plural "Indexed %1 items in this folder"
-msgstr[0] "이 폴더의 항목 %1개를 색인에 추가함"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/collectionmaintenancepage.cpp:137
 #, kde-format
 msgid "Calculating indexed items..."
-msgstr "색인된 항목 계산 중..."
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/collectionmaintenancepage.ui:17
 #, kde-format
 msgid "Folder type:"
-msgstr "폴더 종류:"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, folderTypeLbl)
 #. i18n: ectx: property (text), widget (QLabel, folderSizeLbl)
@@ -962,105 +936,105 @@ msgstr "폴더 종류:"
 #: widgets/collectionmaintenancepage.ui:66
 #, kde-format
 msgid "unknown"
-msgstr "알 수 없음"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: widgets/collectionmaintenancepage.ui:38
 #, kde-format
 msgid "File size:"
-msgstr "파일 크기:"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: widgets/collectionmaintenancepage.ui:45
 #, kde-format
 msgid "Total items:"
-msgstr "총 항목:"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: widgets/collectionmaintenancepage.ui:59
 #, kde-format
 msgid "Unread items:"
-msgstr "읽지 않은 항목:"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, indexingLabel)
 #: widgets/collectionmaintenancepage.ui:73
 #, kde-format
 msgid "Indexing:"
-msgstr "색인:"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, enableIndexingChkBox)
 #: widgets/collectionmaintenancepage.ui:80
 #, kde-format
 msgid "Enable fulltext indexing"
-msgstr "전문 색인 사용"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, indexedCountLbl)
 #: widgets/collectionmaintenancepage.ui:87
 #, kde-format
 msgid "Retrieving indexed items count..."
-msgstr "색인된 항목 개수 가져오는 중..."
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, reindexButton)
 #: widgets/collectionmaintenancepage.ui:94
 #, kde-format
 msgid "Reindex folder"
-msgstr "폴더 색인 재생성"
+msgstr ""
 
 #: widgets/collectionrequester.cpp:113
 #, kde-format
 msgid "No Folder"
-msgstr "폴더 없음"
+msgstr ""
 
 #: widgets/collectionrequester.cpp:122
 #, kde-format
 msgid "Open collection dialog"
-msgstr "모음집 대화 상자 열기"
+msgstr ""
 
 #: widgets/collectionrequester.cpp:143
 #, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
-msgstr "모음집 선택"
+msgstr ""
 
 #: widgets/conflictresolvedialog.cpp:129
 #, kde-format
 msgid "Modification Time"
-msgstr "수정 시간"
+msgstr ""
 
 #: widgets/conflictresolvedialog.cpp:141
 #, kde-format
 msgid "Flags"
-msgstr "플래그"
+msgstr ""
 
 #: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
 #: widgets/conflictresolvedialog.cpp:174
 #, kde-format
 msgid "Attribute: %1"
-msgstr "속성: %1"
+msgstr ""
 
 #: widgets/conflictresolvedialog.cpp:186
 #, kde-format
 msgctxt "@title:window"
 msgid "Conflict Resolution"
-msgstr "충돌 해결"
+msgstr ""
 
 #: widgets/conflictresolvedialog.cpp:192
 #, kde-format
 msgctxt "@action:button"
 msgid "Take my version"
-msgstr "내 버전 사용"
+msgstr ""
 
 #: widgets/conflictresolvedialog.cpp:198
 #, kde-format
 msgctxt "@action:button"
 msgid "Take their version"
-msgstr "상대방 버전 사용"
+msgstr ""
 
 #: widgets/conflictresolvedialog.cpp:204
 #, kde-format
 msgctxt "@action:button"
 msgid "Keep both versions"
-msgstr "둘 다 유지"
+msgstr ""
 
 #: widgets/conflictresolvedialog.cpp:216
 #, kde-format
@@ -1071,46 +1045,41 @@ msgid ""
 "editor\"</a> to keep a copy of the texts, then select which version is most "
 "correct, then re-open it and modify it again to add what's missing."
 msgstr ""
-"<qt>다른 사람이 변경한 사항과 내 변경 사항이 충돌합니다.<br>하나의 버전을 포"
-"기하지 않는다면, 충돌하는 변경 사항을 수동으로 합쳐야 합니다.<br><a href="
-"\"opentexteditor\">\"텍스트 편집기 열기\"</a>를 클릭해서 텍스트의 복사본을 유"
-"지한 다음, 더 정확한 내용이 들어 있는 버전을 선택하고, 다시 열어서 빠진 내용"
-"을 수정하십시오."
 
 #: widgets/conflictresolvedialog.cpp:265
 #, kde-format
 msgid "Data"
-msgstr "데이터"
+msgstr ""
 
 #: widgets/controlgui.cpp:223
 #, kde-format
 msgid "Starting Akonadi server..."
-msgstr "Akonadi 서버 시작 중..."
+msgstr ""
 
 #: widgets/controlgui.cpp:229
 #, kde-format
 msgid "Stopping Akonadi server..."
-msgstr "Akonadi 서버 정지 중..."
+msgstr ""
 
 #: widgets/dragdropmanager.cpp:212
 #, kde-format
 msgid "&Move Here"
-msgstr "여기로 이동(&M)"
+msgstr ""
 
 #: widgets/dragdropmanager.cpp:218
 #, kde-format
 msgid "&Copy Here"
-msgstr "여기로 복사(&C)"
+msgstr ""
 
 #: widgets/dragdropmanager.cpp:224
 #, kde-format
 msgid "&Link Here"
-msgstr "여기로 링크(&L)"
+msgstr ""
 
 #: widgets/dragdropmanager.cpp:229
 #, kde-format
 msgid "C&ancel"
-msgstr "취소(&A)"
+msgstr ""
 
 #: widgets/erroroverlay.cpp:224
 #, kde-format
@@ -1120,25 +1089,22 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
-"개인 정보 관리 서비스에 연결할 수 없습니다.\n"
-"\n"
-"%1"
 
 #: widgets/erroroverlay.cpp:228 widgets/erroroverlay.cpp:229
 #, kde-format
 msgid "Personal information management service is starting..."
-msgstr "개인 정보 관리 서비스를 시작하는 중..."
+msgstr ""
 
 #: widgets/erroroverlay.cpp:233 widgets/erroroverlay.cpp:234
 #, kde-format
 msgid "Personal information management service is shutting down..."
-msgstr "개인 정보 관리 서비스를 종료하는 중..."
+msgstr ""
 
 #: widgets/erroroverlay.cpp:238
 #, kde-format
 msgid ""
 "Personal information management service is performing a database upgrade."
-msgstr "개인 정보 관리 서비스에서 데이터베이스를 업그레이드하고 있습니다."
+msgstr ""
 
 #: widgets/erroroverlay.cpp:240
 #, kde-format
@@ -1149,9 +1115,6 @@ msgid ""
 "Depending on the amount of personal information, this might take a few "
 "minutes."
 msgstr ""
-"개인 정보 관리 서비스에서 데이터를 업그레이드하고 있습니다.\n"
-"소프트웨어 업데이트 이후에 진행되며 성능 최적화에 필요합니다.\n"
-"저장된 개인 정보의 양에 따라 시간이 걸릴 수도 있습니다."
 
 #. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
@@ -1161,15 +1124,13 @@ msgid ""
 "The Akonadi personal information management service is not running. This "
 "application cannot be used without it."
 msgstr ""
-"Akonadi 개인 정보 관리 서비스가 실행 중이 아닙니다. 이 앱은 해당 서비스 없이 "
-"사용할 수 없습니다."
 
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #: widgets/erroroverlay.ui:116
 #, kde-format
 msgctxt "@action:button Start the Akonadi server"
 msgid "Start"
-msgstr "시작"
+msgstr ""
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
@@ -1178,100 +1139,98 @@ msgid ""
 "The Akonadi personal information management framework is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
-"Akonadi 개인 정보 관리 프레임워크가 작동하지 않습니다.\n"
-"\"자세히...\"를 클릭하면 문제의 자세한 정보를 볼 수 있습니다."
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
 #, kde-format
 msgid "The Akonadi personal information management service is not operational."
-msgstr "Akonadi 개인 정보 관리 서비스가 작동하지 않습니다."
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
 #, kde-format
 msgid "Details..."
-msgstr "자세히..."
+msgstr ""
 
 #: widgets/manageaccountwidget.cpp:198
 #, kde-format
 msgid "Do you want to remove account '%1'?"
-msgstr "'%1' 계정을 삭제하시겠습니까?"
+msgstr ""
 
 #: widgets/manageaccountwidget.cpp:199
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"
-msgstr "계정을 삭제하시겠습니까?"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/manageaccountwidget.ui:19
 #, kde-format
 msgid "Incoming accounts (add at least one):"
-msgstr "수신 계정(하나 이상 필요함):"
+msgstr ""
 
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
 #: widgets/manageaccountwidget.ui:26
 #, kde-format
 msgid "Filter…"
-msgstr "필터…"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
 #: widgets/manageaccountwidget.ui:40
 #, kde-format
 msgid "A&dd..."
-msgstr "추가(&D)..."
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
 #: widgets/manageaccountwidget.ui:50
 #, kde-format
 msgid "&Modify..."
-msgstr "수정(&M)..."
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
 #: widgets/manageaccountwidget.ui:60
 #, kde-format
 msgid "R&emove"
-msgstr "삭제(&E)"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, mRestartAccountButton)
 #: widgets/manageaccountwidget.ui:77
 #, kde-format
 msgid "Restart"
-msgstr "다시 시작"
+msgstr ""
 
 #: widgets/recentcollectionaction.cpp:43
 #, kde-format
 msgid "Recent Folder"
-msgstr "최근 폴더"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, RenameFavoriteDialog)
 #: widgets/renamefavoritedialog.ui:26
 #, kde-format
 msgid "Rename Favorite"
-msgstr "책갈피 이름 바꾸기"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/renamefavoritedialog.ui:35
 #, kde-format
 msgid "Name:"
-msgstr "이름:"
+msgstr ""
 
 #: widgets/selftestdialog.cpp:60
 #, kde-format
 msgctxt "@title:window"
 msgid "Akonadi Server Self-Test"
-msgstr "Akonadi 서버 자가 진단"
+msgstr ""
 
 #: widgets/selftestdialog.cpp:71
 #, kde-format
 msgid "Save Report..."
-msgstr "보고서 저장..."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:73
 #, kde-format
 msgid "Copy Report to Clipboard"
-msgstr "보고서를 클립보드에 복사"
+msgstr ""
 
 #: widgets/selftestdialog.cpp:189
 #, kde-format
@@ -1279,7 +1238,6 @@ msgid ""
 "The QtSQL driver '%1' is required by your current Akonadi server "
 "configuration and was found on your system."
 msgstr ""
-"Akonadi 서버 설정에 QtSQL 드라이버 '%1'이(가) 필요하며 시스템에서 찾았습니다."
 
 #: widgets/selftestdialog.cpp:191
 #, kde-format
@@ -1289,30 +1247,27 @@ msgid ""
 "The following drivers are installed: %2.\n"
 "Make sure the required driver is installed."
 msgstr ""
-"Akonadi 서버 설정에 QtSQL 드라이버 '%1'이(가) 필요합니다.\n"
-"다음 드라이버가 설치되어 있습니다: %2\n"
-"드라이버 설치 상태를 확인하십시오."
 
 #: widgets/selftestdialog.cpp:198
 #, kde-format
 msgid "Database driver found."
-msgstr "데이터베이스 드라이버를 찾았습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:200
 #, kde-format
 msgid "Database driver not found."
-msgstr "데이터베이스 드라이버를 찾지 못했습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:208
 #, kde-format
 msgid "MySQL server executable not tested."
-msgstr "MySQL 서버 실행 파일이 시험되지 않았습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:208 widgets/selftestdialog.cpp:249
 #: widgets/selftestdialog.cpp:300
 #, kde-format
 msgid "The current configuration does not require an internal MySQL server."
-msgstr "현재 설정에는 내부 MySQL 서버가 필요하지 않습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:216
 #, kde-format
@@ -1323,67 +1278,62 @@ msgid ""
 "executable. The server executable is typically called 'mysqld'; its location "
 "varies depending on the distribution."
 msgstr ""
-"Akonadi에서 MySQL 서버 '%1'을(를) 사용하도록 설정했습니다.\n"
-"MySQL 서버를 설정했고, 올바른 경로를 지정했으며 서버 실행 파일에 필요한 읽기 "
-"및 실행 권한이 있는지 확인하십시오. 서버 실행 파일은 대개 'mysqld'로 불리며 "
-"배포판에 따라서 설치 위치가 달라질 수 있습니다."
 
 #: widgets/selftestdialog.cpp:224
 #, kde-format
 msgid "MySQL server not found."
-msgstr "MySQL 서버를 찾을 수 없습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:226
 #, kde-format
 msgid "MySQL server not readable."
-msgstr "MySQL 서버를 읽을 수 없습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:228
 #, kde-format
 msgid "MySQL server not executable."
-msgstr "MySQL 서버를 실행할 수 없습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:230
 #, kde-format
 msgid "MySQL found with unexpected name."
-msgstr "MySQL 서버의 이름이 예상한 것과 다릅니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:232
 #, kde-format
 msgid "MySQL server found."
-msgstr "MySQL 서버를 찾았습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:238
 #, kde-format
 msgid "MySQL server found: %1"
-msgstr "MySQL 서버 찾음: %1"
+msgstr ""
 
 #: widgets/selftestdialog.cpp:239
 #, kde-format
 msgid "MySQL server is executable."
-msgstr "MySQL 서버를 실행할 수 있습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:241
 #, kde-format
 msgid ""
 "Executing the MySQL server '%1' failed with the following error message: '%2'"
 msgstr ""
-"MySQL 서버 '%1'을(를) 실행한 결과 다음 오류 메시지를 반환했습니다: '%2'"
 
 #: widgets/selftestdialog.cpp:242
 #, kde-format
 msgid "Executing the MySQL server failed."
-msgstr "MySQL 서버를 실행할 수 없습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:249
 #, kde-format
 msgid "MySQL server error log not tested."
-msgstr "MySQL 서버 오류 기록이 확인되지 않았습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:257
 #, kde-format
 msgid "No current MySQL error log found."
-msgstr "MySQL 오류 기록이 없습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:258
 #, kde-format
@@ -1391,69 +1341,68 @@ msgid ""
 "The MySQL server did not report any errors during this startup. The log can "
 "be found in '%1'."
 msgstr ""
-"MySQL 서버를 시작하는 중 오류가 없었습니다. '%1'에 기록이 저장되어 있습니다."
 
 #: widgets/selftestdialog.cpp:264
 #, kde-format
 msgid "MySQL error log not readable."
-msgstr "MySQL 오류 기록을 읽을 수 없습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:265
 #, kde-format
 msgid "A MySQL server error log file was found but is not readable: %1"
-msgstr "MySQL 오류 기록 파일을 찾았지만 읽을 수 없습니다: %1"
+msgstr ""
 
 #: widgets/selftestdialog.cpp:274
 #, kde-format
 msgid "MySQL server log contains errors."
-msgstr "MySQL 서버 로그에 오류가 들어 있습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:275
 #, kde-format
 msgid "The MySQL server error log file '%1' contains errors."
-msgstr "MySQL 서버 오류 로그 파일 '%1'에 오류가 들어 있습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:285
 #, kde-format
 msgid "MySQL server log contains warnings."
-msgstr "MySQL 서버 로그에 경고가 들어 있습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:286
 #, kde-format
 msgid "The MySQL server log file '%1' contains warnings."
-msgstr "MySQL 서버 로그 파일 '%1'에 경고가 들어 있습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:289
 #, kde-format
 msgid "MySQL server log contains no errors."
-msgstr "MySQL 서버 기록에 오류가 없습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:290
 #, kde-format
 msgid "The MySQL server log file '%1' does not contain any errors or warnings."
-msgstr "MySQL 서버 기록 파일 '%1'에 오류나 경고가 없습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:300
 #, kde-format
 msgid "MySQL server configuration not tested."
-msgstr "MySQL 서버 설정이 시험되지 않았습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:309
 #, kde-format
 msgid "MySQL server default configuration found."
-msgstr "MySQL 서버 기본 설정을 찾았습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:310
 #, kde-format
 msgid ""
 "The default configuration for the MySQL server was found and is readable at "
 "%1."
-msgstr "기본 MySQL 서버 설정을 찾았고 %1에 있습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:314
 #, kde-format
 msgid "MySQL server default configuration not found."
-msgstr "MySQL 서버 기본 설정을 찾을 수 없습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:315
 #, kde-format
@@ -1462,35 +1411,33 @@ msgid ""
 "readable. Check your Akonadi installation is complete and you have all "
 "required access rights."
 msgstr ""
-"MySQL 서버 기본 설정 파일을 찾거나 읽을 수 없습니다. Akonadi 설치 상태 및 필"
-"요한 권한이 모두 있는지 확인하십시오."
 
 #: widgets/selftestdialog.cpp:323
 #, kde-format
 msgid "MySQL server custom configuration not available."
-msgstr "MySQL 서버 사용자 정의 설정이 없습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:324
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was not found but is optional."
-msgstr "추가적인 MySQL 서버 사용자 정의 설정을 찾을 수 없습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:327
 #, kde-format
 msgid "MySQL server custom configuration found."
-msgstr "MySQL 서버 사용자 정의 설정을 찾았습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:328
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was found and is readable at %1"
-msgstr "사용자 정의 MySQL 서버 설정을 찾았고 %1에 있습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:332
 #, kde-format
 msgid "MySQL server custom configuration not readable."
-msgstr "MySQL 서버 사용자 정의 설정을 읽을 수 없습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:333
 #, kde-format
@@ -1498,48 +1445,46 @@ msgid ""
 "The custom configuration for the MySQL server was found at %1 but is not "
 "readable. Check your access rights."
 msgstr ""
-"사용자 정의 MySQL 서버 설정이 %1에 있지만 읽을 수 없습니다. 접근 권한을 확인"
-"하십시오."
 
 #: widgets/selftestdialog.cpp:342
 #, kde-format
 msgid "MySQL server configuration not found or not readable."
-msgstr "MySQL 서버 설정을 찾거나 읽을 수 없습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:343
 #, kde-format
 msgid "The MySQL server configuration was not found or is not readable."
-msgstr "MySQL 서버 설정을 찾거나 읽을 수 없습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:346
 #, kde-format
 msgid "MySQL server configuration is usable."
-msgstr "MySQL 서버 설정을 사용할 수 있습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:347
 #, kde-format
 msgid "The MySQL server configuration was found at %1 and is readable."
-msgstr "MySQL 서버 설정이 %1에 있으며 읽을 수 있습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:376
 #, kde-format
 msgid "Cannot connect to PostgreSQL server."
-msgstr "PostgreSQL 서버에 연결할 수 없습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:378
 #, kde-format
 msgid "PostgreSQL server found."
-msgstr "PostgreSQL 서버를 찾았습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:378
 #, kde-format
 msgid "The PostgreSQL server was found and connection is working."
-msgstr "PostgreSQL 서버를 찾았고 연결할 수 있습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:388
 #, kde-format
 msgid "akonadictl not found"
-msgstr "akonadictl을 찾을 수 없음"
+msgstr ""
 
 #: widgets/selftestdialog.cpp:389
 #, kde-format
@@ -1547,13 +1492,11 @@ msgid ""
 "The program 'akonadictl' needs to be accessible in $PATH. Make sure you have "
 "the Akonadi server installed."
 msgstr ""
-"$PATH에서 프로그램 'akonadictl'을 찾을 수 있어야 합니다. Akonadi 서버 설치 상"
-"태를 확인하십시오."
 
 #: widgets/selftestdialog.cpp:396
 #, kde-format
 msgid "akonadictl found and usable"
-msgstr "akonadictl을 찾았고 사용할 수 있음"
+msgstr ""
 
 #: widgets/selftestdialog.cpp:397
 #, kde-format
@@ -1563,14 +1506,11 @@ msgid ""
 "Result:\n"
 "%2"
 msgstr ""
-"Akonadi 서버를 제어하는 프로그램 '%1'을(를) 찾았고 실행할 수 있습니다.\n"
-"결과:\n"
-"%2"
 
 #: widgets/selftestdialog.cpp:403
 #, kde-format
 msgid "akonadictl found but not usable"
-msgstr "akonadictl을 찾았지만 사용할 수 없음"
+msgstr ""
 
 #: widgets/selftestdialog.cpp:404
 #, kde-format
@@ -1581,27 +1521,23 @@ msgid ""
 "%2\n"
 "Make sure the Akonadi server is installed correctly."
 msgstr ""
-"Akonadi 서버를 제어하는 프로그램 '%1'을(를) 찾았지만 실행할 수 없습니다.\n"
-"결과:\n"
-"%2\n"
-"Akonadi 서버 설치 상태를 확인하십시오."
 
 #: widgets/selftestdialog.cpp:416
 #, kde-format
 msgid "Akonadi control process registered at D-Bus."
-msgstr "Akonadi 제어 프로세스가 DBus에 등록되었습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:417
 #, kde-format
 msgid ""
 "The Akonadi control process is registered at D-Bus which typically indicates "
 "it is operational."
-msgstr "Akonadi 제어 서버가 DBus에 등록되었으며 작동함을 나타냅니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:420
 #, kde-format
 msgid "Akonadi control process not registered at D-Bus."
-msgstr "Akonadi 제어 프로세스가 DBus에 등록되지 않았습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:421
 #, kde-format
@@ -1609,25 +1545,23 @@ msgid ""
 "The Akonadi control process is not registered at D-Bus which typically means "
 "it was not started or encountered a fatal error during startup."
 msgstr ""
-"Akonadi 제어 서버가 DBus에 등록되지 않았으며 시작되지 않았거나 시작 중 오류"
-"가 발생했음을 나타냅니다."
 
 #: widgets/selftestdialog.cpp:427
 #, kde-format
 msgid "Akonadi server process registered at D-Bus."
-msgstr "Akonadi 서버 프로세스가 DBus에 등록되었습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:428
 #, kde-format
 msgid ""
 "The Akonadi server process is registered at D-Bus which typically indicates "
 "it is operational."
-msgstr "Akonadi 서버 프로세스가 DBus에 등록되었으며 작동함을 나타냅니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:431
 #, kde-format
 msgid "Akonadi server process not registered at D-Bus."
-msgstr "Akonadi 서버 프로세스가 DBus에 등록되지 않았습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:432
 #, kde-format
@@ -1635,25 +1569,23 @@ msgid ""
 "The Akonadi server process is not registered at D-Bus which typically means "
 "it was not started or encountered a fatal error during startup."
 msgstr ""
-"Akonadi 서버 프로세스가 DBus에 등록되지 않았으며 시작되지 않았거나 시작 중 오"
-"류가 발생했음을 나타냅니다."
 
 #: widgets/selftestdialog.cpp:441
 #, kde-format
 msgid "Protocol version check not possible."
-msgstr "프로토콜 버전을 확인할 수 없습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:442
 #, kde-format
 msgid ""
 "Without a connection to the server it is not possible to check if the "
 "protocol version meets the requirements."
-msgstr "서버에 연결할 수 없어서 프로토콜 버전이 호환되는지 확인할 수 없습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:447
 #, kde-format
 msgid "Server protocol version is too old."
-msgstr "서버 프로토콜 버전이 오래되었습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:448 widgets/selftestdialog.cpp:455
 #, kde-format
@@ -1662,39 +1594,36 @@ msgid ""
 "If you recently updated KDE PIM, please make sure to restart both Akonadi "
 "and KDE PIM applications."
 msgstr ""
-"현재 서버 프로토콜 버전이 %1이지만 최소한 버전 %2이(가) 클라이언트에서 필요합"
-"니다. KDE PIM을 업그레이드했다면 Akonadi와 KDE PIM 앱을 모두 다시 시작하십시"
-"오."
 
 #: widgets/selftestdialog.cpp:454
 #, kde-format
 msgid "Server protocol version is too new."
-msgstr "서버 프로토콜 버전이 너무 높습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:460
 #, kde-format
 msgid "Server protocol version matches."
-msgstr "서버 프로토콜 버전이 일치합니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:460
 #, kde-format
 msgid "The current Protocol version is %1."
-msgstr "현재 프로토콜 버전은 %1입니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:478
 #, kde-format
 msgid "Resource agents found."
-msgstr "리소스 에이전트를 찾았습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:478
 #, kde-format
 msgid "At least one resource agent has been found."
-msgstr "최소한 하나의 리소스 에이전트를 찾았습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:481
 #, kde-format
 msgid "No resource agents found."
-msgstr "리소스 에이전트를 찾을 수 없습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:482
 #, kde-format
@@ -1705,27 +1634,22 @@ msgid ""
 "XDG_DATA_DIRS environment variable is set to '%2'; make sure this includes "
 "all paths where Akonadi agents are installed."
 msgstr ""
-"리소스 에이전트를 찾을 수 없습니다. Akonadi가 작동하려면 최소한 하나의 리소"
-"스 에이전트가 필요합니다. 리소스 에이전트가 설치되지 않았거나 설치 상황에 문"
-"제가 있습니다. 다음 경로를 찾았습니다: '%1'. XDG_DATA_DIRS 환경 변수가 "
-"'%2'(으)로 설정되어 있으며, Akonadi 에이전트가 설치되어 있는 경로가 들어 있는"
-"지 확인하십시오."
 
 #: widgets/selftestdialog.cpp:499
 #, kde-format
 msgid "No current Akonadi server error log found."
-msgstr "현재 Akonadi 서버 오류 기록을 찾을 수 없습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:499
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its current startup."
-msgstr "현재 시작된 Akonadi 서버가 오류를 보고하지 않았습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:503
 #, kde-format
 msgid "Current Akonadi server error log found."
-msgstr "현재 Akonadi 서버 오류 기록을 찾았습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:504
 #, kde-format
@@ -1733,23 +1657,22 @@ msgid ""
 "The Akonadi server reported errors during its current startup. The log can "
 "be found in %1."
 msgstr ""
-"Akonadi 서버가 시작되는 중 오류를 보고했습니다. 오류 기록은 %1에 있습니다."
 
 #: widgets/selftestdialog.cpp:512
 #, kde-format
 msgid "No previous Akonadi server error log found."
-msgstr "이전 Akonadi 서버 오류 기록을 찾을 수 없습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:513
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its previous startup."
-msgstr "이전에 시작된 Akonadi 서버가 오류를 보고하지 않았습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:517
 #, kde-format
 msgid "Previous Akonadi server error log found."
-msgstr "이전 Akonadi 서버 오류 기록을 찾았습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:518
 #, kde-format
@@ -1757,25 +1680,23 @@ msgid ""
 "The Akonadi server reported errors during its previous startup. The log can "
 "be found in %1."
 msgstr ""
-"Akonadi 서버가 이전에 시작되는 중 오류를 보고했습니다. 오류 기록은 %1에 있습"
-"니다."
 
 #: widgets/selftestdialog.cpp:529
 #, kde-format
 msgid "No current Akonadi control error log found."
-msgstr "현재 Akonadi 제어 오류 기록을 찾을 수 없습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:530
 #, kde-format
 msgid ""
 "The Akonadi control process did not report any errors during its current "
 "startup."
-msgstr "현재 시작된 Akonadi 제어 프로세스가 오류를 보고하지 않았습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:534
 #, kde-format
 msgid "Current Akonadi control error log found."
-msgstr "현재 Akonadi 제어 오류 기록을 찾았습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:535
 #, kde-format
@@ -1783,25 +1704,23 @@ msgid ""
 "The Akonadi control process reported errors during its current startup. The "
 "log can be found in %1."
 msgstr ""
-"Akonadi 제어 프로세스가 시작되는 중 오류를 보고했습니다. 오류 기록은 %1에 있"
-"습니다."
 
 #: widgets/selftestdialog.cpp:543
 #, kde-format
 msgid "No previous Akonadi control error log found."
-msgstr "이전 Akonadi 제어 오류 기록을 찾을 수 없습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:544
 #, kde-format
 msgid ""
 "The Akonadi control process did not report any errors during its previous "
 "startup."
-msgstr "이전에 시작된 Akonadi 제어 프로세스가 오류를 보고하지 않았습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:548
 #, kde-format
 msgid "Previous Akonadi control error log found."
-msgstr "이전 Akonadi 제어 오류 기록을 찾았습니다."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:549
 #, kde-format
@@ -1809,13 +1728,11 @@ msgid ""
 "The Akonadi control process reported errors during its previous startup. The "
 "log can be found in %1."
 msgstr ""
-"Akonadi 제어 프로세스가 이전에 시작되는 중 오류를 보고했습니다. 오류 기록은 "
-"%1에 있습니다."
 
 #: widgets/selftestdialog.cpp:559
 #, kde-format
 msgid "Akonadi was started as root"
-msgstr "Akonadi가 루트로 시작됨"
+msgstr ""
 
 #: widgets/selftestdialog.cpp:560
 #, kde-format
@@ -1824,14 +1741,11 @@ msgid ""
 "many security risks. MySQL, used by this Akonadi installation, will not "
 "allow itself to run as root, to protect you from these risks."
 msgstr ""
-"인터넷에 접근할 수 있는 앱을 루트/관리자 권한으로 시작하면 보안 문제에 노출"
-"될 수 있습니다. 이 Akonadi 설치본에 사용된 MySQL은 루트로 시작되지 않으므로 "
-"이러한 위험에서 보호될 수 있습니다."
 
 #: widgets/selftestdialog.cpp:564
 #, kde-format
 msgid "Akonadi is not running as root"
-msgstr "Akonadi가 루트로 시작되지 않음"
+msgstr ""
 
 #: widgets/selftestdialog.cpp:565
 #, kde-format
@@ -1839,17 +1753,16 @@ msgid ""
 "Akonadi is not running as a root/administrator user, which is the "
 "recommended setup for a secure system."
 msgstr ""
-"Akonadi가 루트/관리자로 시작되지 않았으며, 안전한 시스템용 권장 설정입니다."
 
 #: widgets/selftestdialog.cpp:643
 #, kde-format
 msgid "Save Test Report"
-msgstr "보고서 저장"
+msgstr ""
 
 #: widgets/selftestdialog.cpp:650
 #, kde-format
 msgid "Could not open file '%1'"
-msgstr "'%1' 파일을 열 수 없음"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, introductionLabel)
 #: widgets/selftestdialog.ui:16
@@ -1859,15 +1772,12 @@ msgid ""
 "self-tests are supposed to help with tracking down and solving this problem. "
 "When requesting support or reporting bugs, please always include this report."
 msgstr ""
-"Akonadi 서버 시작 중 오류가 발생했습니다. 다음 자가 진단을 통하여 문제점을 발"
-"견하고 해결할 수 있습니다. 버그를 보고하거나 지원을 요청할 때 다음 보고서를 "
-"첨부하십시오."
 
 #. i18n: ectx: property (title), widget (QGroupBox, detailsGroup)
 #: widgets/selftestdialog.ui:39
 #, kde-format
 msgid "Details"
-msgstr "자세히"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/selftestdialog.ui:61
@@ -1876,445 +1786,467 @@ msgid ""
 "<p>For more troubleshooting tips please refer to <a href=\"https://userbase."
 "kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
 msgstr ""
-"<p>더 많은 문제 해결 정보를 보려면 <a href=\"https://userbase.kde.org/Akonadi"
-"\">userbase.kde.org/Akonadi</a>를 방문하십시오.</p>"
 
 #: widgets/standardactionmanager.cpp:78
 msgid "&New Folder..."
-msgstr "새 폴더(&N)..."
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:78
 msgid "New"
-msgstr "새로 만들기"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:80
 msgid "&Delete Folder"
-msgstr "폴더 삭제(&D)"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:80
 msgid "Delete"
-msgstr "삭제"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:82
 msgid "&Synchronize Folder"
-msgstr "폴더 동기화(&S)"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:83 widgets/standardactionmanager.cpp:157
 #: widgets/standardactionmanager.cpp:243
 msgid "Synchronize"
-msgstr "동기화"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:90
 msgid "Folder &Properties"
-msgstr "폴더 속성(&P)..."
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:91 widgets/standardactionmanager.cpp:149
 msgid "Properties"
-msgstr "속성"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:98
 msgid "&Paste"
-msgstr "붙여넣기(&P)"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:98
 msgid "Paste"
-msgstr "붙여넣기"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:101
 msgid "Manage Local &Subscriptions..."
-msgstr "로컬 구독 관리(&S)..."
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:102
 msgid "Manage Local Subscriptions"
-msgstr "로컬 구독 관리"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:109
 msgid "Add to Favorite Folders"
-msgstr "즐겨찾는 폴더에 추가"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:110
 msgid "Add to Favorite"
-msgstr "책갈피에 추가"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:117
 msgid "Remove from Favorite Folders"
-msgstr "즐겨찾는 폴더에서 삭제"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:118
 msgid "Remove from Favorite"
-msgstr "책갈피에서 삭제"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:124
 msgid "Rename Favorite..."
-msgstr "책갈피 이름 바꾸기..."
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:124
 msgid "Rename"
-msgstr "이름 바꾸기"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:126 widgets/standardactionmanager.cpp:164
 msgid "Copy Folder To..."
-msgstr "다음으로 폴더 복사..."
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:127 widgets/standardactionmanager.cpp:133
 #: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:173
 msgid "Copy To"
-msgstr "다음으로 복사"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:133 widgets/standardactionmanager.cpp:173
 msgid "Copy Item To..."
-msgstr "다음으로 항목 복사..."
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:174
 msgid "Move Item To..."
-msgstr "다음으로 항목 이동..."
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:137
 #: widgets/standardactionmanager.cpp:167 widgets/standardactionmanager.cpp:174
 msgid "Move To"
-msgstr "다음으로 이동"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:136 widgets/standardactionmanager.cpp:166
 msgid "Move Folder To..."
-msgstr "다음으로 폴더 이동..."
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:143
 msgid "&Cut Item"
-msgstr "항목 잘라내기(&C)"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:143 widgets/standardactionmanager.cpp:144
 msgid "Cut"
-msgstr "잘라내기"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:144
 msgid "&Cut Folder"
-msgstr "폴더 잘라내기(&C)"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:145
 msgid "Create Resource"
-msgstr "리소스 만들기"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:146
 msgid "Delete Resource"
-msgstr "리소스 삭제"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:148
 msgid "&Resource Properties"
-msgstr "리소스 속성(&R)"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:156
 msgid "Synchronize Resource"
-msgstr "리소스 동기화"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:163
 msgid "Work Offline"
-msgstr "오프라인으로 작업"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:176
 msgid "&Synchronize Folder Recursively"
-msgstr "하위 폴더도 동기화(&S)"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:177
 msgid "Synchronize Recursively"
-msgstr "하위 폴더도 동기화"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:184
 msgid "&Move Folder To Trash"
-msgstr "휴지통으로 폴더 이동(&M)"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:185
 msgid "Move Folder To Trash"
-msgstr "휴지통으로 폴더 이동"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:192
 msgid "&Move Item To Trash"
-msgstr "휴지통으로 항목 이동(&M)"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:193
 msgid "Move Item To Trash"
-msgstr "휴지통으로 항목 이동"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:200 widgets/standardactionmanager.cpp:216
 msgid "&Restore Folder From Trash"
-msgstr "휴지통에서 폴더 복원(&R)"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:201 widgets/standardactionmanager.cpp:217
 msgid "Restore Folder From Trash"
-msgstr "휴지통에서 폴더 복원"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:208 widgets/standardactionmanager.cpp:225
 #: widgets/standardactionmanager.cpp:232
 msgid "&Restore Item From Trash"
-msgstr "휴지통에서 항목 복원(&R)"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:209 widgets/standardactionmanager.cpp:226
 #: widgets/standardactionmanager.cpp:232
 msgid "Restore Item From Trash"
-msgstr "휴지통에서 항목 복원"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:223
 msgid "&Restore Collection From Trash"
-msgstr "휴지통에서 모음집 복원(&R)"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:223
 msgid "Restore Collection From Trash"
-msgstr "휴지통에서 모음집 복원"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:234
 msgid "&Synchronize Favorite Folders"
-msgstr "즐겨찾는 폴더 동기화(&S)"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:235
 msgid "Synchronize Favorite Folders"
-msgstr "즐겨찾는 폴더 동기화"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:242
 msgid "Synchronize Folder Tree"
-msgstr "폴더 트리 동기화"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:328
 #, kde-format
 msgid "&Copy Folder"
 msgid_plural "&Copy %1 Folders"
-msgstr[0] "폴더 %1개 복사(&C)"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:329
 #, kde-format
 msgid "&Copy Item"
 msgid_plural "&Copy %1 Items"
-msgstr[0] "항목 %1개 복사(&C)"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:330
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Item"
 msgid_plural "&Cut %1 Items"
-msgstr[0] "항목 %1개 잘라내기(&C)"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:331
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Folder"
 msgid_plural "&Cut %1 Folders"
-msgstr[0] "폴더 %1개 잘라내기(&C)"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:332
 #, kde-format
 msgid "&Delete Item"
 msgid_plural "&Delete %1 Items"
-msgstr[0] "항목 %1개 삭제(&D)"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:333
 #, kde-format
 msgctxt "@action"
 msgid "&Delete Folder"
 msgid_plural "&Delete %1 Folders"
-msgstr[0] "폴더 %1개 삭제(&D)"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:334
 #, kde-format
 msgctxt "@action"
 msgid "&Synchronize Folder"
 msgid_plural "&Synchronize %1 Folders"
-msgstr[0] "폴더 %1개 동기화(&S)"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:335
 #, kde-format
 msgid "&Delete Resource"
 msgid_plural "&Delete %1 Resources"
-msgstr[0] "리소스 %1개 삭제(&D)"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:336
 #, kde-format
 msgid "&Synchronize Resource"
 msgid_plural "&Synchronize %1 Resources"
-msgstr[0] "리소스 %1개 동기화(&S)"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:338
 #, kde-format
 msgid "Copy Folder"
 msgid_plural "Copy %1 Folders"
-msgstr[0] "폴더 %1개 복사"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:339
 #, kde-format
 msgid "Copy Item"
 msgid_plural "Copy %1 Items"
-msgstr[0] "항목 %1개 복사"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:340
 #, kde-format
 msgid "Cut Item"
 msgid_plural "Cut %1 Items"
-msgstr[0] "항목 %1개 잘라내기"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:341
 #, kde-format
 msgid "Cut Folder"
 msgid_plural "Cut %1 Folders"
-msgstr[0] "폴더 %1개 잘라내기"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:342
 #, kde-format
 msgid "Delete Item"
 msgid_plural "Delete %1 Items"
-msgstr[0] "항목 %1개 삭제"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:343
 #, kde-format
 msgid "Delete Folder"
 msgid_plural "Delete %1 Folders"
-msgstr[0] "폴더 %1개 삭제"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:344
 #, kde-format
 msgid "Synchronize Folder"
 msgid_plural "Synchronize %1 Folders"
-msgstr[0] "폴더 %1개 동기화"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:345
 #, kde-format
 msgctxt "@action"
 msgid "Delete Resource"
 msgid_plural "Delete %1 Resources"
-msgstr[0] "리소스 %1개 삭제"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:346
 #, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
 msgid_plural "Synchronize %1 Resources"
-msgstr[0] "리소스 %1개 동기화"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:349
 #, kde-format
 msgctxt "@label:textbox name of Akonadi folder"
 msgid "Name"
-msgstr "이름"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:356
 #, kde-format
 msgid "Do you really want to delete this folder and all its sub-folders?"
 msgid_plural ""
 "Do you really want to delete %1 folders and all their sub-folders?"
-msgstr[0] "폴더 %1개와 하위 폴더를 삭제하시겠습니까?"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:359
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "폴더를 삭제하시겠습니까?"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:360
 #, kde-format
 msgid "Could not delete folder: %1"
-msgstr "폴더를 삭제할 수 없음: %1"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:361
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
-msgstr "폴더 삭제 실패"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:363
 #, kde-format
 msgctxt "@title:window"
 msgid "Properties of Folder %1"
-msgstr "폴더 %1 속성"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:367
 #, kde-format
 msgid "Do you really want to delete the selected item?"
 msgid_plural "Do you really want to delete %1 items?"
-msgstr[0] "항목 %1개를 삭제하시겠습니까?"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:368
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "항목을 삭제하시겠습니까?"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
 msgid "Could not delete item: %1"
-msgstr "항목을 삭제할 수 없음: %1"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:370
 #, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
-msgstr "항목 삭제 실패"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:372
 #, kde-format
 msgctxt "@title:window"
 msgid "Rename Favorite"
-msgstr "책갈피 이름 바꾸기"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:373
 #, kde-format
 msgctxt "@label:textbox name of the folder"
 msgid "Name:"
-msgstr "이름:"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:375
 #, kde-format
 msgctxt "@title:window"
 msgid "New Resource"
-msgstr "새 리소스"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:376
 #, kde-format
 msgid "Could not create resource: %1"
-msgstr "리소스를 만들 수 없음: %1"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:377
 #, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
-msgstr "리소스 생성 실패"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:381
 #, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
-msgstr[0] "리소스 %1개를 삭제하시겠습니까?"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:384
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Resource?"
 msgid_plural "Delete Resources?"
-msgstr[0] "리소스 삭제?"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:386
 #, kde-format
 msgid "Could not paste data: %1"
-msgstr "데이터를 붙여넣을 수 없음: %1"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:387
 #, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
-msgstr "붙여넣기 실패"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:739
 #, kde-format
 msgid "We can not add \"/\" in folder name."
-msgstr "폴더 이름에 \"/\"를 추가할 수 없습니다."
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
-msgstr "새 폴더 만들기 오류"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:743
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
-msgstr "폴더 이름의 시작이나 끝에 \".\"를 추가할 수 없습니다."
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:982
 #, kde-format
@@ -2322,332 +2254,216 @@ msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
 "you want to make it online?"
 msgstr ""
-"폴더 \"%1\"을(를) 동기화하기 전 해당하는 리소스를 온라인으로 전환해야 합니"
-"다. 온라인으로 전환하시겠습니까?"
 
 #: widgets/standardactionmanager.cpp:983
 #, kde-format
 msgid "Account \"%1\" is offline"
-msgstr "계정 \"%1\"이(가) 오프라인임"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:984
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
-msgstr "온라인으로 전환"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:1585
 #, kde-format
 msgid "Move to This Folder"
-msgstr "이 폴더로 이동"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:1585
 #, kde-format
 msgid "Copy to This Folder"
-msgstr "이 폴더로 복사"
+msgstr ""
 
 #: widgets/subscriptiondialog.cpp:97
 #, kde-format
 msgid "Failed to update subscription: %1"
-msgstr "구독을 업데이트할 수 없음: %1"
+msgstr ""
 
 #: widgets/subscriptiondialog.cpp:97
 #, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
-msgstr "구독 오류"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, SubscriptionDialog)
 #: widgets/subscriptiondialog.ui:14
 #, kde-format
 msgid "Local Subscriptions"
-msgstr "로컬 구독"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/subscriptiondialog.ui:22
 #, kde-format
 msgid "Search:"
-msgstr "찾기:"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, subscribedOnlyCheckBox)
 #: widgets/subscriptiondialog.ui:36
 #, kde-format
 msgid "&Subscribed only"
-msgstr "구독 중인 항목만(&S)"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, subscribeButton)
 #: widgets/subscriptiondialog.ui:62
 #, kde-format
 msgid "Su&bscribe"
-msgstr "구독(&B)"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, unsubscribeButton)
 #: widgets/subscriptiondialog.ui:69
 #, kde-format
 msgid "&Unsubscribe"
-msgstr "구독 해제(&U)"
+msgstr ""
 
 #: widgets/tageditwidget.cpp:116
 #, kde-format
 msgid "Failed to create a new tag"
-msgstr "새 태그를 만들 수 없음"
+msgstr ""
 
 #: widgets/tageditwidget.cpp:116
 #, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
-msgstr "새 태그를 만드는 중 오류가 발생함"
+msgstr ""
 
 #: widgets/tageditwidget.cpp:164
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
-msgstr "태그 <resource>%1</resource>을(를) 삭제하시겠습니까?"
+msgstr ""
 
 #: widgets/tageditwidget.cpp:165
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
-msgstr "태그 삭제"
+msgstr ""
 
 #: widgets/tageditwidget.cpp:189
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"
-msgstr "태그 삭제"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, selectLabel)
 #: widgets/tageditwidget.ui:29
 #, kde-format
 msgid "Select tags that should be applied."
-msgstr "적용할 태그를 선택합니다."
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:54
 #, kde-format
 msgid "Create new tag"
-msgstr "새 태그 만들기"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: widgets/tagmanagementdialog.ui:14
 #, kde-format
 msgid "Manage Tags"
-msgstr "태그 관리"
+msgstr ""
 
 #: widgets/tagselectioncombobox.cpp:126
 #, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
-msgstr "태그 선택..."
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
 #: widgets/tagselectiondialog.ui:14
 #, kde-format
 msgid "Select Tags"
-msgstr "태그 선택"
+msgstr ""
 
 #: widgets/tagwidget.cpp:45
 #, kde-format
 msgid "Clear"
-msgstr "지우기"
+msgstr ""
 
 #. i18n: ectx: property (placeholderText), widget (Akonadi::TagView, tagView)
 #: widgets/tagwidget.ui:32
 #, kde-format
 msgid "Click to add tags"
-msgstr "태그를 추가하려면 클릭하십시오"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QToolButton, editButton)
 #: widgets/tagwidget.ui:39
 #, kde-format
 msgid "..."
-msgstr "..."
+msgstr ""
 
 #: xml/akonadi2xml.cpp:25
 #, kde-format
 msgid "Akonadi To XML converter"
-msgstr "Akonadi To XML 변환기"
+msgstr ""
 
 #: xml/akonadi2xml.cpp:27
 #, kde-format
 msgid "Converts an Akonadi collection subtree into a XML file."
-msgstr "Akonadi 모음집 하위 트리를 XML 파일로 변환합니다."
+msgstr ""
 
 #: xml/akonadi2xml.cpp:29
 #, kde-format
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
-msgstr "(c) 2009 Volker Krause <vkrause@kde.org>"
+msgstr ""
 
 #: xml/xmldocument.cpp:83
 #, kde-format
 msgid "No data loaded."
-msgstr "데이터를 불러오지 않았습니다."
+msgstr ""
 
 #: xml/xmldocument.cpp:121
 #, kde-format
 msgid "No filename specified"
-msgstr "파일 이름이 지정되지 않음"
+msgstr ""
 
 #: xml/xmldocument.cpp:129
 #, kde-format
 msgid "Unable to open data file '%1'."
-msgstr "데이터 파일 '%1'을(를) 열 수 없습니다."
+msgstr ""
 
 #: xml/xmldocument.cpp:134
 #, kde-format
 msgid "File %1 does not exist."
-msgstr "%1 파일이 없습니다."
+msgstr ""
 
 #: xml/xmldocument.cpp:142
 #, kde-format
 msgid "Unable to parse data file '%1'."
-msgstr "데이터 파일 '%1'을(를) 해석할 수 없습니다."
+msgstr ""
 
 #: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
-msgstr "스키마 정의를 불러와서 해석할 수 없습니다."
+msgstr ""
 
 #: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
-msgstr "스키마 파서 콘텍스트를 만들 수 없습니다."
+msgstr ""
 
 #: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
-msgstr "스키마를 만들 수 없습니다."
+msgstr ""
 
 #: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
-msgstr "스키마 검증 콘텍스트를 만들 수 없습니다."
+msgstr ""
 
 #: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
-msgstr "파일 형식이 잘못되었습니다."
+msgstr ""
 
 #: xml/xmldocument.cpp:178
 #, kde-format
 msgid "Unable to parse data file: %1"
-msgstr "데이터 파일을 해석할 수 없음: %1"
+msgstr ""
 
 #: xml/xmldocument.cpp:303
 #, kde-format
 msgid "Unable to find collection %1"
-msgstr "모음집 %1을(를) 찾을 수 없음"
-
-#~ msgid "Quota"
-#~ msgstr "할당량"
-
-#~ msgid "Error"
-#~ msgstr "오류"
-
-#~ msgctxt "@title:window"
-#~ msgid "Delete folder?"
-#~ msgid_plural "Delete folders?"
-#~ msgstr[0] "폴더 삭제?"
-
-#~ msgctxt "@title:window"
-#~ msgid "Delete item?"
-#~ msgid_plural "Delete items?"
-#~ msgstr[0] "항목 삭제?"
-
-#~ msgid "Store emails locally:"
-#~ msgstr "로컬에 이메일 저장:"
-
-#~ msgid "&Move here"
-#~ msgstr "여기로 이동(&M)"
-
-#~ msgid "&Copy here"
-#~ msgstr "여기로 복사(&C)"
-
-#~ msgid "Cancel"
-#~ msgstr "취소"
-
-#~ msgid "Automatically synchronize after:"
-#~ msgstr "다음 시간 이후 자동 동기화:"
-
-#~ msgid "Items"
-#~ msgstr "항목"
-
-#~ msgid "Id"
-#~ msgstr "ID"
-
-#~ msgid "Remote Id"
-#~ msgstr "원격 ID"
-
-#~ msgid "MimeType"
-#~ msgstr "MIME 형식"
-
-#~ msgid "Default Name"
-#~ msgstr "기본 이름"
-
-#~ msgctxt "@action:button"
-#~ msgid "Delete"
-#~ msgstr "삭제"
-
-#~ msgctxt "@action:button"
-#~ msgid "Cancel"
-#~ msgstr "취소"
-
-#~ msgid "Take left one"
-#~ msgstr "왼쪽 사용"
-
-#~ msgctxt "@label"
-#~ msgid ""
-#~ "Two updates conflict with each other.<nl/>Please choose which update(s) "
-#~ "to apply."
-#~ msgstr "두 업데이트가 서로 충돌합니다.<nl/>적용할 업데이트를 선택하십시오."
-
-#~ msgctxt "@title:column, number of unread messages"
-#~ msgid "Unread"
-#~ msgstr "읽지 않음"
-
-#~ msgctxt "@title:column, total number of messages"
-#~ msgid "Total"
-#~ msgstr "합계"
-
-#~ msgctxt "@title:column, total size (in bytes) of the collection"
-#~ msgid "Size"
-#~ msgstr "크기"
-
-#~ msgctxt "@title application description"
-#~ msgid "Akonadi Resource"
-#~ msgstr "Akonadi 자원"
-
-#~ msgctxt "@label:textbox name of a thing"
-#~ msgid "Name"
-#~ msgstr "이름"
-
-#~ msgid "Invalid collection specified"
-#~ msgstr "잘못된 모음집 지정됨"
-
-#~ msgid "Protocol version %1 found, expected at least %2"
-#~ msgstr "프로토콜 버전 %1을(를) 사용하고 있지만 최소한 %2이(가) 필요함"
-
-#~ msgid "Server protocol version is recent enough."
-#~ msgstr "서버 프로토콜 버전이 충분합니다."
-
-#~ msgid ""
-#~ "The server Protocol version is %1, which equal or newer than the required "
-#~ "version %2."
-#~ msgstr ""
-#~ "현재 서버 프로토콜 버전이 %1이며, 필요한 버전 %2보다 높거나 같습니다."
-
-#~ msgid "Inconsistent local collection tree detected."
-#~ msgstr "일관성 없는 로컬 모음집 트리를 감지하였습니다."
-
-#~ msgid ""
-#~ "Remote collection without root-terminated ancestor chain provided, "
-#~ "resource is broken."
-#~ msgstr ""
-#~ "원격 모음집의 루트에서 끝나는 부모 연결이 올바르지 않습니다. 자원이 깨졌습"
-#~ "니다."
-
-#~ msgid "KDE Test Program"
-#~ msgstr "KDE 테스트 프로그램"
-
-#~ msgid "Cannot list root collection."
-#~ msgstr "루트 모음집의 목록을 볼 수 없습니다."
+msgstr ""

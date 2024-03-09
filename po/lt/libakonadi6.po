@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2024-02-02 14:32+0200\n"
 "Last-Translator: Liudas Ališauskas <liudas@akmc.lt>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -501,8 +501,8 @@ msgstr "Neskaitytų laiškų"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "Kvota"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -695,6 +695,12 @@ msgstr ""
 #| msgid "Failed to create tag."
 msgid "Failed to register %1 configuration dialog."
 msgstr "Nepavyko sukurti žymės."
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, fuzzy, kde-format
@@ -2626,6 +2632,9 @@ msgstr ""
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Nepavyko rasti kolekcijos %1"
+
+#~ msgid "Quota"
+#~ msgstr "Kvota"
 
 #, fuzzy
 #~| msgctxt "@info:status"

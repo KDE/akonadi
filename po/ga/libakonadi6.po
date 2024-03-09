@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdepim/libakonadi.po\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2007-07-11 08:14-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -507,8 +507,8 @@ msgstr "Teachtaireachtaí Gan Léamh"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "Cuóta"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -703,6 +703,12 @@ msgstr ""
 #| msgid "Unable to create agent instance."
 msgid "Failed to register %1 configuration dialog."
 msgstr "Níorbh fhéidir gníomhaire a chruthú."
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, fuzzy, kde-format
@@ -2688,6 +2694,9 @@ msgstr "Níorbh fhéidir na sonraí a ghreamú: %1"
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"
 msgstr "Bailiúchán neamhbhailí"
+
+#~ msgid "Quota"
+#~ msgstr "Cuóta"
 
 #, fuzzy
 #~| msgctxt "@info:status"

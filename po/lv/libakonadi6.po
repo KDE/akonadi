@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2024-02-01 19:08+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -503,8 +503,8 @@ msgstr "Nelasītas vēstules"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "Kvota"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -704,6 +704,12 @@ msgstr "%1 konfigurācija jau ir atvērta citur."
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Neizdevās reģistrēt „%1“ konfigurācijas lodziņu."
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
@@ -2612,6 +2618,9 @@ msgstr "Neizdevās parsēt datni: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Neizdevās atrast kolekciju „%1“"
+
+#~ msgid "Quota"
+#~ msgstr "Kvota"
 
 #, fuzzy
 #~| msgctxt "@info:status"

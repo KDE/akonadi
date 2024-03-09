@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.3\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2024-01-13 13:26+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -506,8 +506,8 @@ msgstr "Olvasatlan üzenetek"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "Kvóta"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -708,6 +708,12 @@ msgstr "A(z) %1 beállításai máshol vannak megnyitva."
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "A(z) %1 beállítóablak regisztrációja nem sikerült."
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
@@ -2597,6 +2603,9 @@ msgstr "Nem lehet feldolgozni a(z) adatfájlt: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Nem található gyűjtemény: %1"
+
+#~ msgid "Quota"
+#~ msgstr "Kvóta"
 
 #~ msgid "Error"
 #~ msgstr "Hiba"

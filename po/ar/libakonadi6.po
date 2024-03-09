@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2023-01-23 20:03+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -489,8 +489,8 @@ msgstr "الرسائل غير المقروءة"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "الحصّة"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -691,6 +691,12 @@ msgstr "الضبط لـ%1 مفتوح في مكان أخر."
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "فشل في تسجيل حواري ضبط %1."
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
@@ -2661,6 +2667,9 @@ msgstr "تعذّر تحليل ملف البيانات: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "تعذّر العثور على التجميعة %1"
+
+#~ msgid "Quota"
+#~ msgstr "الحصّة"
 
 #~ msgid "Error"
 #~ msgstr "خطأ"

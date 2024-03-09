@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2017-12-17 18:01+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -498,12 +498,10 @@ msgstr "Ukupno poruka"
 msgid "Unread Messages"
 msgstr "Nepročitanih poruka"
 
-# >> @label
-# >! Put together: "<strong>...</strong>: %1%"
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "Kvota"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 # >> @label
 # >! Put together: "<strong>...</strong>: %1%"
@@ -713,6 +711,12 @@ msgstr ""
 #| msgid "Failed to create relation."
 msgid "Failed to register %1 configuration dialog."
 msgstr "Ne mogu da napravim relaciju."
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, fuzzy, kde-format
@@ -2731,6 +2735,11 @@ msgstr "Ne mogu da raščlanim fajl sa podacima: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Ne mogu da nađem zbirku „%1“."
+
+# >> @label
+# >! Put together: "<strong>...</strong>: %1%"
+#~ msgid "Quota"
+#~ msgstr "Kvota"
 
 #~ msgid "Automatically synchronize after:"
 #~ msgstr "Automatski sinhronizuj svakih:"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2024-01-15 19:52+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -510,8 +510,8 @@ msgstr "Mensaxes sen ler"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "Cota"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -716,6 +716,12 @@ msgstr "A configuración de %1 xa se abriu noutra parte."
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Non foi posíbel rexistrar o diálogo de configuración de %1."
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
@@ -2618,6 +2624,9 @@ msgstr "Non é posíbel procesar o ficheiro de datos: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Non é posíbel atopar a colección %1"
+
+#~ msgid "Quota"
+#~ msgstr "Cota"
 
 #~ msgid "Error"
 #~ msgstr "Erro"

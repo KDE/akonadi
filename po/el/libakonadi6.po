@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2023-07-23 21:37+0300\n"
 "Last-Translator: George Stefanakis <george.stefanakis@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-doc@kde.org>\n"
@@ -494,8 +494,8 @@ msgstr "Μη αναγνωσμένα μηνύματα"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "Ποσοστό χρήσης"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -699,6 +699,12 @@ msgstr "Η διαμόρφωση για το %1 είναι ήδη ανοιχτή 
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Αποτυχία εγγραφής %1 διαλόγου διαμόρφωσης."
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
@@ -2603,6 +2609,9 @@ msgstr "Αδυναμία ανάλυσης αρχείου δεδομένων: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Αδυναμία εύρεσης συλλογής %1"
+
+#~ msgid "Quota"
+#~ msgstr "Ποσοστό χρήσης"
 
 #~ msgid "Error"
 #~ msgstr "Σφάλμα"

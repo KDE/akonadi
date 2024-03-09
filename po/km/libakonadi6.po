@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2012-07-11 10:23+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -516,8 +516,8 @@ msgstr "សារ​មិន​ទាន់​អាន​"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "កូតា​"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -712,6 +712,12 @@ msgstr ""
 #| msgid "Unable to create agent instance."
 msgid "Failed to register %1 configuration dialog."
 msgstr "មិន​អាច​បង្កើត​ធាតុ​ភ្នាក់ងារ​បាន​ឡើយ ។"
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, fuzzy, kde-format
@@ -2651,6 +2657,9 @@ msgstr "មិនអាច​បិទភ្ជាប់​​ទិន្នន
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"
 msgstr "សម្រាំង​មិន​ត្រឹម​ត្រូវ​"
+
+#~ msgid "Quota"
+#~ msgstr "កូតា​"
 
 #, fuzzy
 #~| msgctxt "@info:status"

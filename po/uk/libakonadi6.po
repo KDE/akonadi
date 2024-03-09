@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2024-01-11 09:39+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -505,8 +505,8 @@ msgstr "Непрочитаних повідомлень"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "Квота"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -712,6 +712,12 @@ msgstr "Вікно налаштувань для %1 вже десь відкри
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Не вдалося зареєструвати вікно налаштувань %1."
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
@@ -2674,6 +2680,9 @@ msgstr "Не вдалося обробити файл даних: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Не вдалося знайти збірку %1"
+
+#~ msgid "Quota"
+#~ msgstr "Квота"
 
 #~ msgid "Error"
 #~ msgstr "Помилка"

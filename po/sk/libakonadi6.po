@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2023-10-02 18:38+0200\n"
 "Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
 "Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
@@ -486,8 +486,8 @@ msgstr "Neprečítaných správ"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "Kvóta"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -689,6 +689,12 @@ msgstr "Nastavenia pre %1 je sú už otvorené niekde inde."
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Zlyhalo registrovanie dialógového okna s nastaveniami %1"
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
@@ -2600,6 +2606,9 @@ msgstr "Nemôžem spracovať dátový súbor: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Nemôžem nájsť kolekciu %1"
+
+#~ msgid "Quota"
+#~ msgstr "Kvóta"
 
 #~ msgid "Error"
 #~ msgstr "Chyba"

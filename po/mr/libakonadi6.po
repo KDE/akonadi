@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2013-03-08 10:11+0530\n"
 "Last-Translator: Chetan Khona <chetan@kompkin.com>\n"
 "Language-Team: Marathi <kde-i18n-doc@kde.org>\n"
@@ -485,7 +485,7 @@ msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
+msgid "<strong>Quota</strong>: %1%<br>\n"
 msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
@@ -676,6 +676,12 @@ msgstr ""
 #: widgets/agentconfigurationwidget.cpp:104
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
+msgstr ""
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
 msgstr ""
 
 #: widgets/agenttypedialog.cpp:66

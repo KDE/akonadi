@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2023-12-20 21:08+0100\n"
 "Last-Translator: Johannes Obermayr <johannesobermayr@gmx.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -499,8 +499,8 @@ msgstr "Ungelesene Nachrichten"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "Speicherplatzkontingent"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -703,6 +703,12 @@ msgstr "Die Einstellungen für %1 sind bereits anderweitig geöffnet."
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Die Registrierung des Einrichtungsdialogs %1 ist fehlgeschlagen."
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
@@ -2621,6 +2627,9 @@ msgstr "Datei kann nicht verarbeitet werden: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Die Sammlung %1 wurde nicht gefunden"
+
+#~ msgid "Quota"
+#~ msgstr "Speicherplatzkontingent"
 
 #~ msgid "Error"
 #~ msgstr "Fehler"

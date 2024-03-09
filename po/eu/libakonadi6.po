@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:37+0000\n"
+"POT-Creation-Date: 2024-03-09 00:38+0000\n"
 "PO-Revision-Date: 2024-01-11 23:29+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -508,8 +508,8 @@ msgstr "Irakurri gabeko mezuak"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
-msgid "Quota"
-msgstr "Kuota"
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -714,6 +714,12 @@ msgstr "«%1» konfiguratzekoa jada beste nonbait irekita dago."
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Huts egin du «%1» konfiguratzeko elkarrizketa-koadroa erregistratzeak."
+
+#: widgets/agentinstancewidget.cpp:240
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
@@ -2618,6 +2624,9 @@ msgstr "Ezin da datu-fitxategiaren sintaxia aztertu: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Ezin izan da «%1» bilduma aurkitu"
+
+#~ msgid "Quota"
+#~ msgstr "Kuota"
 
 #~ msgid "Error"
 #~ msgstr "Errorea"
