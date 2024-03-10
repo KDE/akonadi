@@ -2563,6 +2563,3 @@ msgstr "Klarer ikke tolke datafil: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Klarer ikke finne samling %1"
-
-#~ msgid "Quota"
-#~ msgstr "Kvote"

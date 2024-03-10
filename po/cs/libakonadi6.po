@@ -2518,6 +2518,3 @@ msgstr "Datový soubor nelze zpracovat: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Nelze najít sbírku %1"
-
-#~ msgid "Quota"
-#~ msgstr "Kvóta"

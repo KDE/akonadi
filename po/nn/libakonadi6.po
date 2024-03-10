@@ -2525,6 +2525,3 @@ msgstr "Klarte ikkje lima inn data: %1"
 #, fuzzy, kde-format
 msgid "Unable to find collection %1"
 msgstr "Ugyldig samling"
-
-#~ msgid "Quota"
-#~ msgstr "Kvote"
