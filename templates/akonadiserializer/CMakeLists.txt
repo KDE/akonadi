@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(%{APPNAMELC})
 
-set(KF_MIN_VERSION "5.82.0")
+set(KF_MIN_VERSION "6.0.0")
 
 set(ECM_MIN_VERSION ${KF_MIN_VERSION})
 find_package(ECM ${ECM_MIN_VERSION} CONFIG REQUIRED)
@@ -14,12 +14,12 @@ include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings NO_POLICY_SCOPE)
 
-set(QT_MIN_VERSION "5.15.0")
+set(QT_MIN_VERSION "6.5.0")
 find_package(Qt6 ${QT_MIN_VERSION} REQUIRED Core Network Gui)
 
 find_package(KF6Config ${KF_MIN_VERSION} CONFIG REQUIRED)
 
-set(AKONADI_MIN_VERSION "5.16.0")
+set(AKONADI_MIN_VERSION "6.0.0")
 find_package(KF6Akonadi ${AKONADI_MIN_VERSION} CONFIG REQUIRED)
 
 add_subdirectory(src)
