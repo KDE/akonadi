@@ -474,7 +474,7 @@ bool ItemFetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse
             response.setSize(extractQueryResult(itemQuery, ItemQuerySizeColumn).toLongLong());
         }
         if (mItemFetchScope.fetchMTime()) {
-            response.setMTime(Utils::variantToDateTime(extractQueryResult(itemQuery, ItemQueryDatetimeColumn)));
+            response.setMTime(extractQueryResult(itemQuery, ItemQueryDatetimeColumn).toDateTime());
         }
         if (mItemFetchScope.fetchRemoteRevision()) {
             response.setRemoteRevision(extractQueryResult(itemQuery, ItemQueryRemoteRevisionColumn).toString());

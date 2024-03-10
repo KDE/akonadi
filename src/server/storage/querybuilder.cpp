@@ -9,6 +9,7 @@
 #include "dbexception.h"
 #include "entities.h"
 #include "storage/query.h"
+#include "utils.h"
 
 #ifndef QUERYBUILDER_UNITTEST
 #include "storage/datastore.h"
@@ -537,7 +538,11 @@ void QueryBuilder::addAggregation(const Query::Case &caseStmt, const QString &ag
 
 void QueryBuilder::bindValue(QString *query, const QVariant &value)
 {
-    mBindValues << value;
+    if (value.metaType().id() == qMetaTypeId<QDateTime>()) {
+        mBindValues.emplace_back(Utils::dateTimeToVariant(value.toDateTime(), mDataStore));
+    } else {
+        mBindValues.emplace_back(value);
+    }
     *query += QLatin1Char(':') + QString::number(mBindValues.count() - 1);
 }
 

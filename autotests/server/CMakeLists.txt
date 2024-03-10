@@ -107,3 +107,5 @@ add_server_test(searchtest.cpp akonadiprivate)
 add_server_test(relationhandlertest.cpp akonadiprivate)
 add_server_test(taghandlertest.cpp akonadiprivate)
 add_server_test(fetchhandlertest.cpp akonadiprivate)
+
+add_akonadi_isolated_test(SOURCE dbdatetimetest.cpp LINK_LIBRARIES libakonadiserver)

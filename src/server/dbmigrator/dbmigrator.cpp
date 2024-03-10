@@ -776,7 +776,7 @@ bool DbMigrator::copyTable(DataStore *sourceStore, DataStore *destStore, const T
         for (int col = 0; col < table.columns.size(); ++col) {
             QVariant value;
             if (table.columns[col].type == QLatin1StringView("QDateTime")) {
-                value = Utils::variantToDateTime(sourceQuery.value(col), sourceStore);
+                value = sourceQuery.value(col).toDateTime();
             } else if (table.columns[col].type == QLatin1StringView("bool")) {
                 value = sourceQuery.value(col).toBool();
             } else if (table.columns[col].type == QLatin1StringView("QByteArray")) {
