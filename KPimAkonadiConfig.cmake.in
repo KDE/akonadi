@@ -26,7 +26,6 @@ find_dependency(Qt6Xml "@QT_REQUIRED_VERSION@")
 
 if(BUILD_TESTING)
     # Link targets required by KF5AkonadiMacros.cmake
-    find_dependency(KF6KIO "@KF_MIN_VERSION@")
     find_dependency(Qt6Test "@QT_REQUIRED_VERSION@")
 endif()
 
