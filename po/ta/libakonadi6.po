@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-14 03:07+0000\n"
-"PO-Revision-Date: 2024-03-08 21:25+0530\n"
+"PO-Revision-Date: 2024-03-10 11:02+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -20,33 +20,33 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr ""
+msgstr "கோ. கிஷோர்"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ""
+msgstr "Kde-l10n-ta@kde.org"
 
 #: agentbase/accountsintegration.cpp:86
 #, kde-format
 msgid "There is currently no account configured."
-msgstr ""
+msgstr "எந்த கணக்கும் அமைக்கப்படவில்லை."
 
 #: agentbase/accountsintegration.cpp:103
 #, kde-format
 msgid "Accounts integration is not supported"
-msgstr ""
+msgstr "கணக்கு ஒருங்கிணைப்பு ஆதரிக்கப்படாது"
 
 #: agentbase/agentbase.cpp:348 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
-msgstr ""
+msgstr "dbus-இல் இதை பதிவிட முடியவில்லை: %1"
 
 #: agentbase/agentbase.cpp:437
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
-msgstr ""
+msgstr "%2 வகையான %1"
 
 #: agentbase/agentbase.cpp:883
 #, kde-format
@@ -74,7 +74,7 @@ msgstr "தொடர்பற்ற நிலை"
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing..."
-msgstr ""
+msgstr "ஒத்திசைக்கிறது..."
 
 #: agentbase/agentbase_p.h:61
 #, kde-format
@@ -103,19 +103,19 @@ msgstr ""
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
-msgstr ""
+msgstr "செல்லுபடியாகாத உருப்படி பெறப்பட்டது"
 
 #: agentbase/resourcebase.cpp:594
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
-msgstr ""
+msgstr "உருப்படியை உருவாக்குவதில் சிக்கல்: %1"
 
 #: agentbase/resourcebase.cpp:618
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
-msgstr ""
+msgstr "திரட்டை புதுப்பிப்பதில் சிக்கல்: %1"
 
 #: agentbase/resourcebase.cpp:705
 #, kde-format
@@ -426,31 +426,31 @@ msgstr ""
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
-msgstr ""
+msgstr "பெயர்"
 
 #: core/models/entitytreemodel_p.cpp:1331
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
-msgstr ""
+msgstr "ஒன்றன் நகலெடுக்க முடியவில்லை: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1333
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
-msgstr ""
+msgstr "திரட்டின் நகலெடுக்க முடியவில்லை: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1335
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
-msgstr ""
+msgstr "ஒன்றை நகர்த்த முடியவில்லை: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1337
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
-msgstr ""
+msgstr "திரட்டை நகர்த்த முடியவில்லை: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1339
 #, kde-format
@@ -462,22 +462,22 @@ msgstr ""
 #, kde-format
 msgctxt "@title:window"
 msgid "Error"
-msgstr ""
+msgstr "சிக்கல்"
 
 #: core/models/favoritecollectionsmodel.cpp:398
 #, kde-format
 msgid "Favorite Folders"
-msgstr ""
+msgstr "பிடித்த அடைவுகள்"
 
 #: core/models/statisticsproxymodel.cpp:86
 #, kde-format
 msgid "Total Messages"
-msgstr ""
+msgstr "மொத்த செய்திகள்"
 
 #: core/models/statisticsproxymodel.cpp:88
 #, kde-format
 msgid "Unread Messages"
-msgstr ""
+msgstr "படிக்காத செய்திகள்"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
