@@ -14,7 +14,7 @@
 #include "entitydisplayattribute.h"
 #include "entitytreemodel.h"
 
-#include <KIO/Global>
+#include <KFormat>
 #include <KIconLoader>
 #include <KLocalizedString>
 
@@ -101,13 +101,14 @@ public:
         }
 
         qint64 currentFolderSize(collection.statistics().size());
-        tipInfo += QStringLiteral("      <strong>%1</strong>: %2<br>\n").arg(i18n("Storage Size"), KIO::convertSize(currentFolderSize));
+        KFormat format;
+        tipInfo += QStringLiteral("      <strong>%1</strong>: %2<br>\n").arg(i18n("Storage Size"), format.formatByteSize(currentFolderSize));
 
         qint64 totalSize = 0;
         getCountRecursive(index, totalSize);
         totalSize -= currentFolderSize;
         if (totalSize > 0) {
-            tipInfo += QStringLiteral("<strong>%1</strong>: %2<br>").arg(i18n("Subfolder Storage Size"), KIO::convertSize(totalSize));
+            tipInfo += QStringLiteral("<strong>%1</strong>: %2<br>").arg(i18n("Subfolder Storage Size"), format.formatByteSize(totalSize));
         }
 
         QString iconName = CollectionUtils::defaultIconName(collection);
@@ -245,7 +246,8 @@ QVariant StatisticsProxyModel::extraColumnData(const QModelIndex &parent, int ro
         if (collection.isValid() && collection.statistics().count() >= 0) {
             const CollectionStatistics stats = collection.statistics();
             if (extraColumn == 2) {
-                return KIO::convertSize(stats.size());
+                KFormat format;
+                return format.formatByteSize(stats.size());
             } else if (extraColumn == 1) {
                 return stats.count();
             } else if (extraColumn == 0) {

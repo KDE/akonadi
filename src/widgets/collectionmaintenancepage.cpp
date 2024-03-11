@@ -18,7 +18,7 @@
 #include <QDBusPendingCallWatcher>
 #include <QDBusPendingReply>
 
-#include <KIO/Global>
+#include <KFormat>
 
 #include <KLocalizedString>
 #include <QCheckBox>
@@ -54,7 +54,8 @@ public:
     {
         ui.itemsCountLbl->setText(QString::number(qMax(0LL, nbMail)));
         ui.unreadItemsCountLbl->setText(QString::number(qMax(0LL, nbUnreadMail)));
-        ui.folderSizeLbl->setText(KIO::convertSize(qMax(0LL, size)));
+        KFormat format;
+        ui.folderSizeLbl->setText(format.formatByteSize(qMax(0LL, size)));
     }
 
     Akonadi::Collection currentCollection;
