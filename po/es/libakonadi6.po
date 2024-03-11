@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:38+0000\n"
-"PO-Revision-Date: 2024-01-15 01:46+0100\n"
+"PO-Revision-Date: 2024-03-10 17:46+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -518,7 +518,7 @@ msgstr "Mensajes no leídos"
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
 msgid "<strong>Quota</strong>: %1%<br>\n"
-msgstr ""
+msgstr "<strong>Cuota</strong>: %1 %<br>\n"
 
 #: core/models/statisticsproxymodel.cpp:104
 #, kde-format
@@ -729,7 +729,7 @@ msgstr "Ha fallado al registrar el diálogo de configuración %1."
 #, kde-format
 msgctxt "Status percent value"
 msgid "(%1%)"
-msgstr ""
+msgstr "(%1 %)"
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
