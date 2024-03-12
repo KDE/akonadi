@@ -13,10 +13,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-09 00:38+0000\n"
-"PO-Revision-Date: 2024-01-23 10:40+0100\n"
-"Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
-"Language-Team: French <kde-francophone@kde.org>\n"
+"POT-Creation-Date: 2024-03-12 00:38+0000\n"
+"PO-Revision-Date: 2024-03-10 09:30+0100\n"
+"Last-Translator: xavier <xyz@yahoo.com>\n"
+"Language-Team: French <French <kde-francophone@kde.org>>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Accelerator-Marker: &\n"
 "X-Environment: kde\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 23.08.5\n"
 "X-Text-Markup: kde4\n"
 
 #, kde-format
@@ -518,31 +518,31 @@ msgstr "Messages non lus"
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
 msgid "<strong>Quota</strong>: %1%<br>\n"
-msgstr ""
+msgstr "<strong>Quota</strong> : %1%<br>\n"
 
-#: core/models/statisticsproxymodel.cpp:104
+#: core/models/statisticsproxymodel.cpp:105
 #, kde-format
 msgid "Storage Size"
 msgstr "Taille de stockage"
 
-#: core/models/statisticsproxymodel.cpp:110
+#: core/models/statisticsproxymodel.cpp:111
 #, kde-format
 msgid "Subfolder Storage Size"
 msgstr "Taille du sous-dossier"
 
-#: core/models/statisticsproxymodel.cpp:224
+#: core/models/statisticsproxymodel.cpp:225
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "Non lus"
 
-#: core/models/statisticsproxymodel.cpp:225
+#: core/models/statisticsproxymodel.cpp:226
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "Total"
 
-#: core/models/statisticsproxymodel.cpp:226
+#: core/models/statisticsproxymodel.cpp:227
 #, kde-format
 msgctxt "collection size"
 msgid "Size"
@@ -731,7 +731,7 @@ msgstr "Impossible de déclarer la boîte de dialogue de configuration de %1."
 #, kde-format
 msgctxt "Status percent value"
 msgid "(%1%)"
-msgstr ""
+msgstr "(%1 %)"
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
@@ -957,24 +957,24 @@ msgstr "0 octet"
 msgid "Remember that indexing can take some minutes."
 msgstr "Rappelez vous que l'indexation peut prendre plusieurs minutes."
 
-#: widgets/collectionmaintenancepage.cpp:71
+#: widgets/collectionmaintenancepage.cpp:72
 #, kde-format
 msgid "Maintenance"
 msgstr "Maintenance"
 
-#: widgets/collectionmaintenancepage.cpp:130
+#: widgets/collectionmaintenancepage.cpp:131
 #, kde-format
 msgid "Error while retrieving indexed items count"
 msgstr "Erreur lors de la réception du nombre d'éléments indexés"
 
-#: widgets/collectionmaintenancepage.cpp:133
+#: widgets/collectionmaintenancepage.cpp:134
 #, kde-format
 msgid "Indexed %1 item in this folder"
 msgid_plural "Indexed %1 items in this folder"
 msgstr[0] "%1 élément indexé dans ce dossier"
 msgstr[1] "%1 éléments indexés dans ce dossier"
 
-#: widgets/collectionmaintenancepage.cpp:137
+#: widgets/collectionmaintenancepage.cpp:138
 #, kde-format
 msgid "Calculating indexed items..."
 msgstr "Calcul des éléments indexés..."

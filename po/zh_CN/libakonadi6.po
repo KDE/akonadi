@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-09 00:38+0000\n"
+"POT-Creation-Date: 2024-03-12 00:38+0000\n"
 "PO-Revision-Date: 2024-03-09 04:46\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -486,29 +486,29 @@ msgstr "未读消息"
 msgid "<strong>Quota</strong>: %1%<br>\n"
 msgstr ""
 
-#: core/models/statisticsproxymodel.cpp:104
+#: core/models/statisticsproxymodel.cpp:105
 #, kde-format
 msgid "Storage Size"
 msgstr "存储大小"
 
-#: core/models/statisticsproxymodel.cpp:110
+#: core/models/statisticsproxymodel.cpp:111
 #, kde-format
 msgid "Subfolder Storage Size"
 msgstr "子文件夹存储大小"
 
-#: core/models/statisticsproxymodel.cpp:224
+#: core/models/statisticsproxymodel.cpp:225
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "未读"
 
-#: core/models/statisticsproxymodel.cpp:225
+#: core/models/statisticsproxymodel.cpp:226
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "总共"
 
-#: core/models/statisticsproxymodel.cpp:226
+#: core/models/statisticsproxymodel.cpp:227
 #, kde-format
 msgctxt "collection size"
 msgid "Size"
@@ -904,23 +904,23 @@ msgstr "0 字节"
 msgid "Remember that indexing can take some minutes."
 msgstr "请记得，索引可能会需要几分钟。"
 
-#: widgets/collectionmaintenancepage.cpp:71
+#: widgets/collectionmaintenancepage.cpp:72
 #, kde-format
 msgid "Maintenance"
 msgstr "维护"
 
-#: widgets/collectionmaintenancepage.cpp:130
+#: widgets/collectionmaintenancepage.cpp:131
 #, kde-format
 msgid "Error while retrieving indexed items count"
 msgstr "检索索引项计数时出错"
 
-#: widgets/collectionmaintenancepage.cpp:133
+#: widgets/collectionmaintenancepage.cpp:134
 #, kde-format
 msgid "Indexed %1 item in this folder"
 msgid_plural "Indexed %1 items in this folder"
 msgstr[0] "已经索引此文件夹中的 %1 项"
 
-#: widgets/collectionmaintenancepage.cpp:137
+#: widgets/collectionmaintenancepage.cpp:138
 #, kde-format
 msgid "Calculating indexed items..."
 msgstr "正在计算索引项..."

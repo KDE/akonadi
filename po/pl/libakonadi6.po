@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-09 00:38+0000\n"
+"POT-Creation-Date: 2024-03-12 00:38+0000\n"
 "PO-Revision-Date: 2024-01-21 08:40+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -506,29 +506,29 @@ msgstr "Nieprzeczytane wiadomości"
 msgid "<strong>Quota</strong>: %1%<br>\n"
 msgstr ""
 
-#: core/models/statisticsproxymodel.cpp:104
+#: core/models/statisticsproxymodel.cpp:105
 #, kde-format
 msgid "Storage Size"
 msgstr "Rozmiar przechowalni"
 
-#: core/models/statisticsproxymodel.cpp:110
+#: core/models/statisticsproxymodel.cpp:111
 #, kde-format
 msgid "Subfolder Storage Size"
 msgstr "Rozmiar podkatalogu przechowalni"
 
-#: core/models/statisticsproxymodel.cpp:224
+#: core/models/statisticsproxymodel.cpp:225
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "Nieprzeczytane"
 
-#: core/models/statisticsproxymodel.cpp:225
+#: core/models/statisticsproxymodel.cpp:226
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "Suma"
 
-#: core/models/statisticsproxymodel.cpp:226
+#: core/models/statisticsproxymodel.cpp:227
 #, kde-format
 msgctxt "collection size"
 msgid "Size"
@@ -940,17 +940,17 @@ msgstr "0 bajtów"
 msgid "Remember that indexing can take some minutes."
 msgstr "Pamiętaj, że indeksowanie może zająć dużo czasu."
 
-#: widgets/collectionmaintenancepage.cpp:71
+#: widgets/collectionmaintenancepage.cpp:72
 #, kde-format
 msgid "Maintenance"
 msgstr "Konserwacja"
 
-#: widgets/collectionmaintenancepage.cpp:130
+#: widgets/collectionmaintenancepage.cpp:131
 #, kde-format
 msgid "Error while retrieving indexed items count"
 msgstr "Błąd podczas uzyskiwania liczby zaindeksowanych elementów"
 
-#: widgets/collectionmaintenancepage.cpp:133
+#: widgets/collectionmaintenancepage.cpp:134
 #, kde-format
 msgid "Indexed %1 item in this folder"
 msgid_plural "Indexed %1 items in this folder"
@@ -958,7 +958,7 @@ msgstr[0] "Zaindeksowano %1 element w tym katalogu"
 msgstr[1] "Zaindeksowano %1 elementy w tym katalogu"
 msgstr[2] "Zaindeksowano %1 elementów w tym katalogu"
 
-#: widgets/collectionmaintenancepage.cpp:137
+#: widgets/collectionmaintenancepage.cpp:138
 #, kde-format
 msgid "Calculating indexed items..."
 msgstr "Obliczanie zaindeksowanych elementów..."

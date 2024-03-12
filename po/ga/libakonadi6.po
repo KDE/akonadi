@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdepim/libakonadi.po\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-09 00:38+0000\n"
+"POT-Creation-Date: 2024-03-12 00:38+0000\n"
 "PO-Revision-Date: 2007-07-11 08:14-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -510,29 +510,29 @@ msgstr "Teachtaireachtaí Gan Léamh"
 msgid "<strong>Quota</strong>: %1%<br>\n"
 msgstr ""
 
-#: core/models/statisticsproxymodel.cpp:104
+#: core/models/statisticsproxymodel.cpp:105
 #, kde-format
 msgid "Storage Size"
 msgstr "Méid Stórála"
 
-#: core/models/statisticsproxymodel.cpp:110
+#: core/models/statisticsproxymodel.cpp:111
 #, kde-format
 msgid "Subfolder Storage Size"
 msgstr "Méid Stórála san Fhofhillteán"
 
-#: core/models/statisticsproxymodel.cpp:224
+#: core/models/statisticsproxymodel.cpp:225
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "Gan léamh"
 
-#: core/models/statisticsproxymodel.cpp:225
+#: core/models/statisticsproxymodel.cpp:226
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "Iomlán"
 
-#: core/models/statisticsproxymodel.cpp:226
+#: core/models/statisticsproxymodel.cpp:227
 #, kde-format
 msgctxt "collection size"
 msgid "Size"
@@ -944,19 +944,19 @@ msgstr "0 Beart"
 msgid "Remember that indexing can take some minutes."
 msgstr ""
 
-#: widgets/collectionmaintenancepage.cpp:71
+#: widgets/collectionmaintenancepage.cpp:72
 #, kde-format
 msgid "Maintenance"
 msgstr ""
 
-#: widgets/collectionmaintenancepage.cpp:130
+#: widgets/collectionmaintenancepage.cpp:131
 #, fuzzy, kde-format
 #| msgctxt "@info"
 #| msgid "Error while creating item: %1"
 msgid "Error while retrieving indexed items count"
 msgstr "Earráid agus mír á cruthú: %1"
 
-#: widgets/collectionmaintenancepage.cpp:133
+#: widgets/collectionmaintenancepage.cpp:134
 #, kde-format
 msgid "Indexed %1 item in this folder"
 msgid_plural "Indexed %1 items in this folder"
@@ -966,7 +966,7 @@ msgstr[2] ""
 msgstr[3] ""
 msgstr[4] ""
 
-#: widgets/collectionmaintenancepage.cpp:137
+#: widgets/collectionmaintenancepage.cpp:138
 #, kde-format
 msgid "Calculating indexed items..."
 msgstr ""

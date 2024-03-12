@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-09 00:38+0000\n"
+"POT-Creation-Date: 2024-03-12 00:38+0000\n"
 "PO-Revision-Date: 2007-09-11 22:44+0200\n"
 "Last-Translator: Northern Sami translation team <i18n-sme@lister.ping.uio."
 "no>\n"
@@ -487,29 +487,29 @@ msgstr ""
 msgid "<strong>Quota</strong>: %1%<br>\n"
 msgstr ""
 
-#: core/models/statisticsproxymodel.cpp:104
+#: core/models/statisticsproxymodel.cpp:105
 #, kde-format
 msgid "Storage Size"
 msgstr ""
 
-#: core/models/statisticsproxymodel.cpp:110
+#: core/models/statisticsproxymodel.cpp:111
 #, kde-format
 msgid "Subfolder Storage Size"
 msgstr ""
 
-#: core/models/statisticsproxymodel.cpp:224
+#: core/models/statisticsproxymodel.cpp:225
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr ""
 
-#: core/models/statisticsproxymodel.cpp:225
+#: core/models/statisticsproxymodel.cpp:226
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr ""
 
-#: core/models/statisticsproxymodel.cpp:226
+#: core/models/statisticsproxymodel.cpp:227
 #, kde-format
 msgctxt "collection size"
 msgid "Size"
@@ -901,24 +901,24 @@ msgstr ""
 msgid "Remember that indexing can take some minutes."
 msgstr ""
 
-#: widgets/collectionmaintenancepage.cpp:71
+#: widgets/collectionmaintenancepage.cpp:72
 #, kde-format
 msgid "Maintenance"
 msgstr ""
 
-#: widgets/collectionmaintenancepage.cpp:130
+#: widgets/collectionmaintenancepage.cpp:131
 #, kde-format
 msgid "Error while retrieving indexed items count"
 msgstr ""
 
-#: widgets/collectionmaintenancepage.cpp:133
+#: widgets/collectionmaintenancepage.cpp:134
 #, kde-format
 msgid "Indexed %1 item in this folder"
 msgid_plural "Indexed %1 items in this folder"
 msgstr[0] ""
 msgstr[1] ""
 
-#: widgets/collectionmaintenancepage.cpp:137
+#: widgets/collectionmaintenancepage.cpp:138
 #, kde-format
 msgid "Calculating indexed items..."
 msgstr ""

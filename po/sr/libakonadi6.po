@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-09 00:38+0000\n"
+"POT-Creation-Date: 2024-03-12 00:38+0000\n"
 "PO-Revision-Date: 2017-12-17 18:01+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -505,34 +505,34 @@ msgstr ""
 
 # >> @label
 # >! Put together: "<strong>...</strong>: %1%"
-#: core/models/statisticsproxymodel.cpp:104
+#: core/models/statisticsproxymodel.cpp:105
 #, kde-format
 msgid "Storage Size"
 msgstr "Складишна величина"
 
 # >> @label
 # >! Put together: "<strong>...</strong>: %1%"
-#: core/models/statisticsproxymodel.cpp:110
+#: core/models/statisticsproxymodel.cpp:111
 #, kde-format
 msgid "Subfolder Storage Size"
 msgstr "Складишна величина потфасцикле"
 
 # >> @title:column
-#: core/models/statisticsproxymodel.cpp:224
+#: core/models/statisticsproxymodel.cpp:225
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "непрочитано"
 
 # >> @title:column
-#: core/models/statisticsproxymodel.cpp:225
+#: core/models/statisticsproxymodel.cpp:226
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "укупно"
 
 # >> @title:column
-#: core/models/statisticsproxymodel.cpp:226
+#: core/models/statisticsproxymodel.cpp:227
 #, kde-format
 msgctxt "collection size"
 msgid "Size"
@@ -946,17 +946,17 @@ msgstr "0 бајтова"
 msgid "Remember that indexing can take some minutes."
 msgstr "Имајте на уму да индексирање може потрајати неколико минута."
 
-#: widgets/collectionmaintenancepage.cpp:71
+#: widgets/collectionmaintenancepage.cpp:72
 #, kde-format
 msgid "Maintenance"
 msgstr "Одржавање"
 
-#: widgets/collectionmaintenancepage.cpp:130
+#: widgets/collectionmaintenancepage.cpp:131
 #, kde-format
 msgid "Error while retrieving indexed items count"
 msgstr "Грешка при добављању броја индексираних ставки"
 
-#: widgets/collectionmaintenancepage.cpp:133
+#: widgets/collectionmaintenancepage.cpp:134
 #, kde-format
 msgid "Indexed %1 item in this folder"
 msgid_plural "Indexed %1 items in this folder"
@@ -965,7 +965,7 @@ msgstr[1] "Индексиране %1 ставке у овој фасцикли"
 msgstr[2] "Индексирано %1 ставки у овој фасцикли"
 msgstr[3] "Индексирана %1 ставка у овој фасцикли"
 
-#: widgets/collectionmaintenancepage.cpp:137
+#: widgets/collectionmaintenancepage.cpp:138
 #, kde-format
 msgid "Calculating indexed items..."
 msgstr "Рачунам индексиране ставке..."
