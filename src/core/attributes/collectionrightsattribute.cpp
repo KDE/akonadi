@@ -20,7 +20,7 @@ static Collection::Rights dataToRights(const QByteArray &data)
         return Collection::AllRights;
     }
 
-    for (int i = 0; i < data.count(); ++i) {
+    for (int i = 0; i < data.size(); ++i) {
         switch (data.at(i)) {
         case 'w':
             rights |= Collection::CanChangeItem;
