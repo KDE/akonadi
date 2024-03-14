@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-11 00:37+0000\n"
-"PO-Revision-Date: 2024-01-11 16:02+0300\n"
+"PO-Revision-Date: 2024-03-13 19:59+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.01.85\n"
+"X-Generator: Lokalize 24.02.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -31,7 +31,7 @@ msgstr "emir_sari@icloud.com"
 #, kde-format
 msgctxt "@info:status"
 msgid "Stopping Akonadi service..."
-msgstr "Akonadi hizmeti durduruluyor..."
+msgstr "Akonadi hizmeti durduruluyor…"
 
 #: dbmigrator.cpp:438
 #, kde-format
@@ -49,7 +49,7 @@ msgstr "Hata: Akonadi için DBus kilidi alınamadı."
 #, kde-format
 msgctxt "@info:status"
 msgid "Starting Akonadi service..."
-msgstr "Akonadi hizmeti başlatılıyor..."
+msgstr "Akonadi hizmeti başlatılıyor…"
 
 #: dbmigrator.cpp:469
 #, kde-format
@@ -58,8 +58,8 @@ msgid ""
 "Invalid database engine \"%1\" - valid values are \"sqlite\", \"mysql\" and "
 "\"postgres\"."
 msgstr ""
-"Geçersiz veritabanı işletkesi \"%1\" - geçerli değerler: \"sqlite\", \"mysql"
-"\" ve \"postgres\"."
+"Geçersiz veritabanı işletkesi ‘%1’ — geçerli değerler: ‘sqlite’, ‘mysql’ ve "
+"‘postgres’."
 
 #: dbmigrator.cpp:491
 #, kde-format
@@ -108,13 +108,13 @@ msgstr "Hata: Geçici veritabanı dizini %1 kaldırılamadı: %2"
 #, kde-format
 msgctxt "@info:shell"
 msgid "Backing up original database..."
-msgstr "Özgün veritabanı yedekleniyor..."
+msgstr "Özgün veritabanı yedekleniyor…"
 
 #: dbmigrator.cpp:556
 #, kde-format
 msgctxt "@info:status"
 msgid "Restoring database from backup %1 to %2"
-msgstr "%1 yedeğinden %2 konumuna veritabanı geri yükleniyor..."
+msgstr "%1 yedeğinden %2 konumuna veritabanı geri yükleniyor…"
 
 #: dbmigrator.cpp:558
 #, kde-format
@@ -208,7 +208,7 @@ msgstr "Hata: %1 tablosu için olan kendiliğinden artırma değeri güncellenem
 #, kde-format
 msgctxt "@info:status"
 msgid "Optimizing table %1..."
-msgstr "%1 tablosu eniyileniyor..."
+msgstr "%1 tablosu eniyileniyor…"
 
 #: dbmigrator.cpp:813
 #, kde-format
@@ -260,8 +260,8 @@ msgid ""
 "The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and "
 "\"postgres\""
 msgstr ""
-"Kullanılacak yeni veritabanı işletkesi. Olası değerler: \"sqlite\", \"mysql"
-"\" ve \"postgres\"."
+"Kullanılacak yeni veritabanı işletkesi. Olası değerler: ‘sqlite’, ‘mysql’ ve "
+"‘postgres’."
 
 #: main.cpp:90
 #, kde-format
@@ -285,10 +285,10 @@ msgstr "Aktarım başarısız oldu."
 #, kde-format
 msgctxt "@info:progress"
 msgid "Migrating table %1 (%2/%3)..."
-msgstr "%1 tablosu aktarılıyor (%2/%3)..."
+msgstr "%1 tablosu aktarılıyor (%2/%3)…"
 
 #: main.cpp:125
 #, kde-format
 msgctxt "@info:progress"
 msgid "%1%..."
-msgstr "%​%1..."
+msgstr "%​%1…"
