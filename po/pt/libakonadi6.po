@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-12 00:38+0000\n"
+"POT-Creation-Date: 2024-03-14 00:38+0000\n"
 "PO-Revision-Date: 2023-01-19 02:49+0000\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -831,7 +831,7 @@ msgstr "&Nova Sub-Pasta..."
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Criar uma nova sub-pasta sob a pasta seleccionada de momento"
 
-#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:348
+#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:418
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
@@ -843,12 +843,12 @@ msgctxt "@label:textbox, name of a thing"
 msgid "Name"
 msgstr "Nome"
 
-#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:350
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:420
 #, kde-format
 msgid "Could not create folder: %1"
 msgstr "Não foi possível criar a pasta: %1"
 
-#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:351
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:421
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
@@ -1944,206 +1944,206 @@ msgstr "&Nova Pasta..."
 msgid "New"
 msgstr "Nova"
 
-#: widgets/standardactionmanager.cpp:80
+#: widgets/standardactionmanager.cpp:88
 msgid "&Delete Folder"
 msgstr "Apa&gar a Pasta"
 
-#: widgets/standardactionmanager.cpp:80
+#: widgets/standardactionmanager.cpp:89
 msgid "Delete"
 msgstr "Apagar"
 
-#: widgets/standardactionmanager.cpp:82
+#: widgets/standardactionmanager.cpp:96
 msgid "&Synchronize Folder"
 msgstr "&Sincronizar a Pasta"
 
-#: widgets/standardactionmanager.cpp:83 widgets/standardactionmanager.cpp:157
-#: widgets/standardactionmanager.cpp:243
+#: widgets/standardactionmanager.cpp:97 widgets/standardactionmanager.cpp:206
+#: widgets/standardactionmanager.cpp:313
 msgid "Synchronize"
 msgstr "Sincronizar"
 
-#: widgets/standardactionmanager.cpp:90
+#: widgets/standardactionmanager.cpp:104
 msgid "Folder &Properties"
 msgstr "&Propriedades da Pasta"
 
-#: widgets/standardactionmanager.cpp:91 widgets/standardactionmanager.cpp:149
+#: widgets/standardactionmanager.cpp:105 widgets/standardactionmanager.cpp:198
 msgid "Properties"
 msgstr "Propriedades"
 
-#: widgets/standardactionmanager.cpp:98
+#: widgets/standardactionmanager.cpp:112
 msgid "&Paste"
 msgstr "Co&lar"
 
-#: widgets/standardactionmanager.cpp:98
+#: widgets/standardactionmanager.cpp:112
 msgid "Paste"
 msgstr "Colar"
 
-#: widgets/standardactionmanager.cpp:101
+#: widgets/standardactionmanager.cpp:115
 msgid "Manage Local &Subscriptions..."
 msgstr "Gerir a&s Inscrições Locais..."
 
-#: widgets/standardactionmanager.cpp:102
+#: widgets/standardactionmanager.cpp:116
 msgid "Manage Local Subscriptions"
 msgstr "Gerir as Inscrições Locais"
 
-#: widgets/standardactionmanager.cpp:109
+#: widgets/standardactionmanager.cpp:123
 msgid "Add to Favorite Folders"
 msgstr "Adicionar às Pastas de Favoritos"
 
-#: widgets/standardactionmanager.cpp:110
+#: widgets/standardactionmanager.cpp:124
 msgid "Add to Favorite"
 msgstr "Adicionar aos Favoritos"
 
-#: widgets/standardactionmanager.cpp:117
+#: widgets/standardactionmanager.cpp:131
 msgid "Remove from Favorite Folders"
 msgstr "Remover das Pastas de Favoritos"
 
-#: widgets/standardactionmanager.cpp:118
+#: widgets/standardactionmanager.cpp:132
 msgid "Remove from Favorite"
 msgstr "Remover dos Favoritos"
 
-#: widgets/standardactionmanager.cpp:124
+#: widgets/standardactionmanager.cpp:139
 msgid "Rename Favorite..."
 msgstr "Mudar o Nome do Favorito..."
 
-#: widgets/standardactionmanager.cpp:124
+#: widgets/standardactionmanager.cpp:140
 msgid "Rename"
 msgstr "Mudar o Nome"
 
-#: widgets/standardactionmanager.cpp:126 widgets/standardactionmanager.cpp:164
+#: widgets/standardactionmanager.cpp:147 widgets/standardactionmanager.cpp:221
 msgid "Copy Folder To..."
 msgstr "Copiar a Pasta Para..."
 
-#: widgets/standardactionmanager.cpp:127 widgets/standardactionmanager.cpp:133
-#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:173
+#: widgets/standardactionmanager.cpp:148 widgets/standardactionmanager.cpp:156
+#: widgets/standardactionmanager.cpp:222 widgets/standardactionmanager.cpp:236
 msgid "Copy To"
 msgstr "Copiar Para"
 
-#: widgets/standardactionmanager.cpp:133 widgets/standardactionmanager.cpp:173
+#: widgets/standardactionmanager.cpp:155 widgets/standardactionmanager.cpp:236
 msgid "Copy Item To..."
 msgstr "Copiar o Item Para..."
 
-#: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:174
+#: widgets/standardactionmanager.cpp:163 widgets/standardactionmanager.cpp:237
 msgid "Move Item To..."
 msgstr "Mover o Item Para..."
 
-#: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:137
-#: widgets/standardactionmanager.cpp:167 widgets/standardactionmanager.cpp:174
+#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:172
+#: widgets/standardactionmanager.cpp:230 widgets/standardactionmanager.cpp:237
 msgid "Move To"
 msgstr "Mover Para"
 
-#: widgets/standardactionmanager.cpp:136 widgets/standardactionmanager.cpp:166
+#: widgets/standardactionmanager.cpp:171 widgets/standardactionmanager.cpp:229
 msgid "Move Folder To..."
 msgstr "Mover a Pasta Para..."
 
-#: widgets/standardactionmanager.cpp:143
+#: widgets/standardactionmanager.cpp:178
 msgid "&Cut Item"
 msgstr "&Cortar o Item"
 
-#: widgets/standardactionmanager.cpp:143 widgets/standardactionmanager.cpp:144
+#: widgets/standardactionmanager.cpp:178 widgets/standardactionmanager.cpp:179
 msgid "Cut"
 msgstr "Cortar"
 
-#: widgets/standardactionmanager.cpp:144
+#: widgets/standardactionmanager.cpp:179
 msgid "&Cut Folder"
 msgstr "Cor&tar a Pasta"
 
-#: widgets/standardactionmanager.cpp:145
+#: widgets/standardactionmanager.cpp:181
 msgid "Create Resource"
 msgstr "Criar um Recurso"
 
-#: widgets/standardactionmanager.cpp:146
+#: widgets/standardactionmanager.cpp:189
 msgid "Delete Resource"
 msgstr "Apagar o Recurso"
 
-#: widgets/standardactionmanager.cpp:148
+#: widgets/standardactionmanager.cpp:197
 msgid "&Resource Properties"
 msgstr "Propriedades do &Recurso"
 
-#: widgets/standardactionmanager.cpp:156
+#: widgets/standardactionmanager.cpp:205
 msgid "Synchronize Resource"
 msgstr "Sincronizar o Recurso"
 
-#: widgets/standardactionmanager.cpp:163
+#: widgets/standardactionmanager.cpp:213
 msgid "Work Offline"
 msgstr "Funcionar Desligado"
 
-#: widgets/standardactionmanager.cpp:176
+#: widgets/standardactionmanager.cpp:239
 msgid "&Synchronize Folder Recursively"
 msgstr "&Sincronizar a Pasta Recursivamente"
 
-#: widgets/standardactionmanager.cpp:177
+#: widgets/standardactionmanager.cpp:240
 msgid "Synchronize Recursively"
 msgstr "Sincronizar Recursivamente"
 
-#: widgets/standardactionmanager.cpp:184
+#: widgets/standardactionmanager.cpp:247
 msgid "&Move Folder To Trash"
 msgstr "E&nviar a Pasta para o Lixo"
 
-#: widgets/standardactionmanager.cpp:185
+#: widgets/standardactionmanager.cpp:248
 msgid "Move Folder To Trash"
 msgstr "Enviar a Pasta para o Lixo"
 
-#: widgets/standardactionmanager.cpp:192
+#: widgets/standardactionmanager.cpp:255
 msgid "&Move Item To Trash"
 msgstr "E&nviar o Item para o Lixo"
 
-#: widgets/standardactionmanager.cpp:193
+#: widgets/standardactionmanager.cpp:256
 msgid "Move Item To Trash"
 msgstr "Enviar o Item para o Lixo"
 
-#: widgets/standardactionmanager.cpp:200 widgets/standardactionmanager.cpp:216
+#: widgets/standardactionmanager.cpp:263 widgets/standardactionmanager.cpp:279
 msgid "&Restore Folder From Trash"
 msgstr "&Repor a Pasta do Lixo"
 
-#: widgets/standardactionmanager.cpp:201 widgets/standardactionmanager.cpp:217
+#: widgets/standardactionmanager.cpp:264 widgets/standardactionmanager.cpp:280
 msgid "Restore Folder From Trash"
 msgstr "Repor a Pasta do Lixo"
 
-#: widgets/standardactionmanager.cpp:208 widgets/standardactionmanager.cpp:225
-#: widgets/standardactionmanager.cpp:232
+#: widgets/standardactionmanager.cpp:271 widgets/standardactionmanager.cpp:295
+#: widgets/standardactionmanager.cpp:302
 msgid "&Restore Item From Trash"
 msgstr "&Repor o Item do Lixo"
 
-#: widgets/standardactionmanager.cpp:209 widgets/standardactionmanager.cpp:226
-#: widgets/standardactionmanager.cpp:232
+#: widgets/standardactionmanager.cpp:272 widgets/standardactionmanager.cpp:296
+#: widgets/standardactionmanager.cpp:302
 msgid "Restore Item From Trash"
 msgstr "Repor o Item do Lixo"
 
-#: widgets/standardactionmanager.cpp:223
+#: widgets/standardactionmanager.cpp:287
 msgid "&Restore Collection From Trash"
 msgstr "&Repor a Colecção do Lixo"
 
-#: widgets/standardactionmanager.cpp:223
+#: widgets/standardactionmanager.cpp:288
 msgid "Restore Collection From Trash"
 msgstr "Repor a Colecção do Lixo"
 
-#: widgets/standardactionmanager.cpp:234
+#: widgets/standardactionmanager.cpp:304
 msgid "&Synchronize Favorite Folders"
 msgstr "&Sincronizar as Pastas de Favoritos"
 
-#: widgets/standardactionmanager.cpp:235
+#: widgets/standardactionmanager.cpp:305
 msgid "Synchronize Favorite Folders"
 msgstr "Sincronizar as Pastas de Favoritos"
 
-#: widgets/standardactionmanager.cpp:242
+#: widgets/standardactionmanager.cpp:312
 msgid "Synchronize Folder Tree"
 msgstr "Sincronizar a Árvore de Pastas"
 
-#: widgets/standardactionmanager.cpp:328
+#: widgets/standardactionmanager.cpp:398
 #, kde-format
 msgid "&Copy Folder"
 msgid_plural "&Copy %1 Folders"
 msgstr[0] "&Copiar a Pasta"
 msgstr[1] "&Copiar as %1 Pastas"
 
-#: widgets/standardactionmanager.cpp:329
+#: widgets/standardactionmanager.cpp:399
 #, kde-format
 msgid "&Copy Item"
 msgid_plural "&Copy %1 Items"
 msgstr[0] "&Copiar o Item"
 msgstr[1] "&Copiar os %1 Itens"
 
-#: widgets/standardactionmanager.cpp:330
+#: widgets/standardactionmanager.cpp:400
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Item"
@@ -2151,7 +2151,7 @@ msgid_plural "&Cut %1 Items"
 msgstr[0] "&Cortar o Item"
 msgstr[1] "&Cortar os %1 Itens"
 
-#: widgets/standardactionmanager.cpp:331
+#: widgets/standardactionmanager.cpp:401
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Folder"
@@ -2159,14 +2159,14 @@ msgid_plural "&Cut %1 Folders"
 msgstr[0] "Cor&tar a Pasta"
 msgstr[1] "Cor&tar as %1 Pastas"
 
-#: widgets/standardactionmanager.cpp:332
+#: widgets/standardactionmanager.cpp:402
 #, kde-format
 msgid "&Delete Item"
 msgid_plural "&Delete %1 Items"
 msgstr[0] "Apa&gar o Item"
 msgstr[1] "Apa&gar os %1 Itens"
 
-#: widgets/standardactionmanager.cpp:333
+#: widgets/standardactionmanager.cpp:403
 #, kde-format
 msgctxt "@action"
 msgid "&Delete Folder"
@@ -2174,7 +2174,7 @@ msgid_plural "&Delete %1 Folders"
 msgstr[0] "Apa&gar a Pasta"
 msgstr[1] "Apa&gar as %1 Pastas"
 
-#: widgets/standardactionmanager.cpp:334
+#: widgets/standardactionmanager.cpp:404
 #, kde-format
 msgctxt "@action"
 msgid "&Synchronize Folder"
@@ -2182,70 +2182,70 @@ msgid_plural "&Synchronize %1 Folders"
 msgstr[0] "&Sincronizar a Pasta"
 msgstr[1] "&Sincronizar as %1 Pastas"
 
-#: widgets/standardactionmanager.cpp:335
+#: widgets/standardactionmanager.cpp:405
 #, kde-format
 msgid "&Delete Resource"
 msgid_plural "&Delete %1 Resources"
 msgstr[0] "Apa&gar o Recurso"
 msgstr[1] "Apa&gar os %1 Recursos"
 
-#: widgets/standardactionmanager.cpp:336
+#: widgets/standardactionmanager.cpp:406
 #, kde-format
 msgid "&Synchronize Resource"
 msgid_plural "&Synchronize %1 Resources"
 msgstr[0] "&Sincronizar o Recurso"
 msgstr[1] "&Sincronizar os %1 Recursos"
 
-#: widgets/standardactionmanager.cpp:338
+#: widgets/standardactionmanager.cpp:408
 #, kde-format
 msgid "Copy Folder"
 msgid_plural "Copy %1 Folders"
 msgstr[0] "Copiar a Pasta"
 msgstr[1] "Copiar as %1 Pastas"
 
-#: widgets/standardactionmanager.cpp:339
+#: widgets/standardactionmanager.cpp:409
 #, kde-format
 msgid "Copy Item"
 msgid_plural "Copy %1 Items"
 msgstr[0] "Copiar o Item"
 msgstr[1] "Copiar os %1 Itens"
 
-#: widgets/standardactionmanager.cpp:340
+#: widgets/standardactionmanager.cpp:410
 #, kde-format
 msgid "Cut Item"
 msgid_plural "Cut %1 Items"
 msgstr[0] "Cortar o Item"
 msgstr[1] "Cortar os %1 Itens"
 
-#: widgets/standardactionmanager.cpp:341
+#: widgets/standardactionmanager.cpp:411
 #, kde-format
 msgid "Cut Folder"
 msgid_plural "Cut %1 Folders"
 msgstr[0] "Cortar a Pasta"
 msgstr[1] "Cortar as %1 Pastas"
 
-#: widgets/standardactionmanager.cpp:342
+#: widgets/standardactionmanager.cpp:412
 #, kde-format
 msgid "Delete Item"
 msgid_plural "Delete %1 Items"
 msgstr[0] "Apagar o Item"
 msgstr[1] "Apagar os %1 Itens"
 
-#: widgets/standardactionmanager.cpp:343
+#: widgets/standardactionmanager.cpp:413
 #, kde-format
 msgid "Delete Folder"
 msgid_plural "Delete %1 Folders"
 msgstr[0] "Apagar a Pasta"
 msgstr[1] "Apagar as %1 Pastas"
 
-#: widgets/standardactionmanager.cpp:344
+#: widgets/standardactionmanager.cpp:414
 #, kde-format
 msgid "Synchronize Folder"
 msgid_plural "Synchronize %1 Folders"
 msgstr[0] "Sincronizar a Pasta"
 msgstr[1] "Sincronizar as %1 Pastas"
 
-#: widgets/standardactionmanager.cpp:345
+#: widgets/standardactionmanager.cpp:415
 #, kde-format
 msgctxt "@action"
 msgid "Delete Resource"
@@ -2253,7 +2253,7 @@ msgid_plural "Delete %1 Resources"
 msgstr[0] "Apagar o Recurso"
 msgstr[1] "Apagar os %1 Recursos"
 
-#: widgets/standardactionmanager.cpp:346
+#: widgets/standardactionmanager.cpp:416
 #, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
@@ -2261,13 +2261,13 @@ msgid_plural "Synchronize %1 Resources"
 msgstr[0] "Sincronizar o Recurso"
 msgstr[1] "Sincronizar os %1 Recursos"
 
-#: widgets/standardactionmanager.cpp:349
+#: widgets/standardactionmanager.cpp:419
 #, kde-format
 msgctxt "@label:textbox name of Akonadi folder"
 msgid "Name"
 msgstr "Nome"
 
-#: widgets/standardactionmanager.cpp:356
+#: widgets/standardactionmanager.cpp:426
 #, kde-format
 msgid "Do you really want to delete this folder and all its sub-folders?"
 msgid_plural ""
@@ -2275,7 +2275,7 @@ msgid_plural ""
 msgstr[0] "Deseja mesmo apagar esta pasta e todas as suas sub-pastas?"
 msgstr[1] "Deseja mesmo apagar as %1 pastas e todas as suas sub-pastas?"
 
-#: widgets/standardactionmanager.cpp:359
+#: widgets/standardactionmanager.cpp:429
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
@@ -2283,31 +2283,31 @@ msgid_plural "Delete Folders?"
 msgstr[0] "Apagar a Pasta?"
 msgstr[1] "Apagar as Pastas?"
 
-#: widgets/standardactionmanager.cpp:360
+#: widgets/standardactionmanager.cpp:430
 #, kde-format
 msgid "Could not delete folder: %1"
 msgstr "Não foi possível apagar a pasta: %1"
 
-#: widgets/standardactionmanager.cpp:361
+#: widgets/standardactionmanager.cpp:431
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "Erro na Remoção da Pasta"
 
-#: widgets/standardactionmanager.cpp:363
+#: widgets/standardactionmanager.cpp:433
 #, kde-format
 msgctxt "@title:window"
 msgid "Properties of Folder %1"
 msgstr "Propriedades da Pasta %1"
 
-#: widgets/standardactionmanager.cpp:367
+#: widgets/standardactionmanager.cpp:437
 #, kde-format
 msgid "Do you really want to delete the selected item?"
 msgid_plural "Do you really want to delete %1 items?"
 msgstr[0] "Deseja mesmo apagar o item seleccionado?"
 msgstr[1] "Deseja mesmo apagar os %1 itens seleccionados?"
 
-#: widgets/standardactionmanager.cpp:368
+#: widgets/standardactionmanager.cpp:438
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
@@ -2315,54 +2315,54 @@ msgid_plural "Delete Items?"
 msgstr[0] "Apagar o Item?"
 msgstr[1] "Apagar os Itens?"
 
-#: widgets/standardactionmanager.cpp:369
+#: widgets/standardactionmanager.cpp:439
 #, kde-format
 msgid "Could not delete item: %1"
 msgstr "Não foi possível apagar o item: %1"
 
-#: widgets/standardactionmanager.cpp:370
+#: widgets/standardactionmanager.cpp:440
 #, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "Erro na Remoção do Item"
 
-#: widgets/standardactionmanager.cpp:372
+#: widgets/standardactionmanager.cpp:442
 #, kde-format
 msgctxt "@title:window"
 msgid "Rename Favorite"
 msgstr "Mudar o Nome do Favorito"
 
-#: widgets/standardactionmanager.cpp:373
+#: widgets/standardactionmanager.cpp:443
 #, kde-format
 msgctxt "@label:textbox name of the folder"
 msgid "Name:"
 msgstr "Nome:"
 
-#: widgets/standardactionmanager.cpp:375
+#: widgets/standardactionmanager.cpp:445
 #, kde-format
 msgctxt "@title:window"
 msgid "New Resource"
 msgstr "Novo Recurso"
 
-#: widgets/standardactionmanager.cpp:376
+#: widgets/standardactionmanager.cpp:446
 #, kde-format
 msgid "Could not create resource: %1"
 msgstr "Não foi possível criar o recurso: %1"
 
-#: widgets/standardactionmanager.cpp:377
+#: widgets/standardactionmanager.cpp:447
 #, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "Erro na Criação do Recurso"
 
-#: widgets/standardactionmanager.cpp:381
+#: widgets/standardactionmanager.cpp:451
 #, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
 msgstr[0] "Deseja mesmo apagar este recurso?"
 msgstr[1] "Deseja mesmo apagar os %1 recursos?"
 
-#: widgets/standardactionmanager.cpp:384
+#: widgets/standardactionmanager.cpp:454
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Resource?"
@@ -2370,35 +2370,35 @@ msgid_plural "Delete Resources?"
 msgstr[0] "Apagar o Recurso?"
 msgstr[1] "Apagar os Recursos?"
 
-#: widgets/standardactionmanager.cpp:386
+#: widgets/standardactionmanager.cpp:456
 #, kde-format
 msgid "Could not paste data: %1"
 msgstr "Não foi possível colar os dados: %1"
 
-#: widgets/standardactionmanager.cpp:387
+#: widgets/standardactionmanager.cpp:457
 #, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "A Colagem Falhou"
 
-#: widgets/standardactionmanager.cpp:739
+#: widgets/standardactionmanager.cpp:809
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "Não é possível adicionar um \"/\" ao nome da pasta."
 
-#: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
+#: widgets/standardactionmanager.cpp:809 widgets/standardactionmanager.cpp:813
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Erro na Criação da Nova Pasta"
 
-#: widgets/standardactionmanager.cpp:743
+#: widgets/standardactionmanager.cpp:813
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr ""
 "Não é possível adicionar um \".\" ao início ou ao fim do nome da pasta."
 
-#: widgets/standardactionmanager.cpp:982
+#: widgets/standardactionmanager.cpp:1052
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2407,23 +2407,23 @@ msgstr ""
 "Antes de sincronizar a pasta \"%1\", é necessário ligar-se ao recurso. "
 "Deseja ligar-se ao mesmo?"
 
-#: widgets/standardactionmanager.cpp:983
+#: widgets/standardactionmanager.cpp:1053
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "A conta \"%1\" está desligada"
 
-#: widgets/standardactionmanager.cpp:984
+#: widgets/standardactionmanager.cpp:1054
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Funcionar Ligado"
 
-#: widgets/standardactionmanager.cpp:1585
+#: widgets/standardactionmanager.cpp:1655
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Mover Para Esta Pasta"
 
-#: widgets/standardactionmanager.cpp:1585
+#: widgets/standardactionmanager.cpp:1655
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Copiar Para Esta Pasta"

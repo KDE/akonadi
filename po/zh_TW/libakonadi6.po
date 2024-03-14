@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-12 00:38+0000\n"
+"POT-Creation-Date: 2024-03-14 00:38+0000\n"
 "PO-Revision-Date: 2024-03-12 02:04+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -830,7 +830,7 @@ msgstr "新資料夾(&N)..."
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "在目前資料夾下新增子資料夾"
 
-#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:348
+#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:418
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
@@ -842,12 +842,12 @@ msgctxt "@label:textbox, name of a thing"
 msgid "Name"
 msgstr "名稱"
 
-#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:350
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:420
 #, kde-format
 msgid "Could not create folder: %1"
 msgstr "無法建立資料夾：%1"
 
-#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:351
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:421
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
@@ -1862,459 +1862,459 @@ msgstr "新增資料夾(&N)..."
 msgid "New"
 msgstr "新增"
 
-#: widgets/standardactionmanager.cpp:80
+#: widgets/standardactionmanager.cpp:88
 msgid "&Delete Folder"
 msgstr "刪除資料夾(&D)"
 
-#: widgets/standardactionmanager.cpp:80
+#: widgets/standardactionmanager.cpp:89
 msgid "Delete"
 msgstr "刪除"
 
-#: widgets/standardactionmanager.cpp:82
+#: widgets/standardactionmanager.cpp:96
 msgid "&Synchronize Folder"
 msgstr "同步資料夾(&S)"
 
-#: widgets/standardactionmanager.cpp:83 widgets/standardactionmanager.cpp:157
-#: widgets/standardactionmanager.cpp:243
+#: widgets/standardactionmanager.cpp:97 widgets/standardactionmanager.cpp:206
+#: widgets/standardactionmanager.cpp:313
 msgid "Synchronize"
 msgstr "同步"
 
-#: widgets/standardactionmanager.cpp:90
+#: widgets/standardactionmanager.cpp:104
 msgid "Folder &Properties"
 msgstr "資料夾屬性(&P)"
 
-#: widgets/standardactionmanager.cpp:91 widgets/standardactionmanager.cpp:149
+#: widgets/standardactionmanager.cpp:105 widgets/standardactionmanager.cpp:198
 msgid "Properties"
 msgstr "屬性"
 
-#: widgets/standardactionmanager.cpp:98
+#: widgets/standardactionmanager.cpp:112
 msgid "&Paste"
 msgstr "貼上(&P)"
 
-#: widgets/standardactionmanager.cpp:98
+#: widgets/standardactionmanager.cpp:112
 msgid "Paste"
 msgstr "貼上"
 
-#: widgets/standardactionmanager.cpp:101
+#: widgets/standardactionmanager.cpp:115
 msgid "Manage Local &Subscriptions..."
 msgstr "管理本地端的訂閱(&S)"
 
-#: widgets/standardactionmanager.cpp:102
+#: widgets/standardactionmanager.cpp:116
 msgid "Manage Local Subscriptions"
 msgstr "管理本地端的訂閱"
 
-#: widgets/standardactionmanager.cpp:109
+#: widgets/standardactionmanager.cpp:123
 msgid "Add to Favorite Folders"
 msgstr "新增到我的最愛資料夾"
 
-#: widgets/standardactionmanager.cpp:110
+#: widgets/standardactionmanager.cpp:124
 msgid "Add to Favorite"
 msgstr "新增到我的最愛"
 
-#: widgets/standardactionmanager.cpp:117
+#: widgets/standardactionmanager.cpp:131
 msgid "Remove from Favorite Folders"
 msgstr "從我的最愛資料夾移除"
 
-#: widgets/standardactionmanager.cpp:118
+#: widgets/standardactionmanager.cpp:132
 msgid "Remove from Favorite"
 msgstr "從我的最愛中移除"
 
-#: widgets/standardactionmanager.cpp:124
+#: widgets/standardactionmanager.cpp:139
 msgid "Rename Favorite..."
 msgstr "重新命名我的最愛..."
 
-#: widgets/standardactionmanager.cpp:124
+#: widgets/standardactionmanager.cpp:140
 msgid "Rename"
 msgstr "重新命名"
 
-#: widgets/standardactionmanager.cpp:126 widgets/standardactionmanager.cpp:164
+#: widgets/standardactionmanager.cpp:147 widgets/standardactionmanager.cpp:221
 msgid "Copy Folder To..."
 msgstr "複製資料夾到..."
 
-#: widgets/standardactionmanager.cpp:127 widgets/standardactionmanager.cpp:133
-#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:173
+#: widgets/standardactionmanager.cpp:148 widgets/standardactionmanager.cpp:156
+#: widgets/standardactionmanager.cpp:222 widgets/standardactionmanager.cpp:236
 msgid "Copy To"
 msgstr "複製到"
 
-#: widgets/standardactionmanager.cpp:133 widgets/standardactionmanager.cpp:173
+#: widgets/standardactionmanager.cpp:155 widgets/standardactionmanager.cpp:236
 msgid "Copy Item To..."
 msgstr "複製項目到..."
 
-#: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:174
+#: widgets/standardactionmanager.cpp:163 widgets/standardactionmanager.cpp:237
 msgid "Move Item To..."
 msgstr "移動項目到..."
 
-#: widgets/standardactionmanager.cpp:134 widgets/standardactionmanager.cpp:137
-#: widgets/standardactionmanager.cpp:167 widgets/standardactionmanager.cpp:174
+#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:172
+#: widgets/standardactionmanager.cpp:230 widgets/standardactionmanager.cpp:237
 msgid "Move To"
 msgstr "移動到"
 
-#: widgets/standardactionmanager.cpp:136 widgets/standardactionmanager.cpp:166
+#: widgets/standardactionmanager.cpp:171 widgets/standardactionmanager.cpp:229
 msgid "Move Folder To..."
 msgstr "移動資料夾到..."
 
-#: widgets/standardactionmanager.cpp:143
+#: widgets/standardactionmanager.cpp:178
 msgid "&Cut Item"
 msgstr "剪下項目(&C)"
 
-#: widgets/standardactionmanager.cpp:143 widgets/standardactionmanager.cpp:144
+#: widgets/standardactionmanager.cpp:178 widgets/standardactionmanager.cpp:179
 msgid "Cut"
 msgstr "剪下"
 
-#: widgets/standardactionmanager.cpp:144
+#: widgets/standardactionmanager.cpp:179
 msgid "&Cut Folder"
 msgstr "剪下資料夾(&C)"
 
-#: widgets/standardactionmanager.cpp:145
+#: widgets/standardactionmanager.cpp:181
 msgid "Create Resource"
 msgstr "建立資源"
 
-#: widgets/standardactionmanager.cpp:146
+#: widgets/standardactionmanager.cpp:189
 msgid "Delete Resource"
 msgstr "刪除資源"
 
-#: widgets/standardactionmanager.cpp:148
+#: widgets/standardactionmanager.cpp:197
 msgid "&Resource Properties"
 msgstr "資源屬性(&R)"
 
-#: widgets/standardactionmanager.cpp:156
+#: widgets/standardactionmanager.cpp:205
 msgid "Synchronize Resource"
 msgstr "同步資源"
 
-#: widgets/standardactionmanager.cpp:163
+#: widgets/standardactionmanager.cpp:213
 msgid "Work Offline"
 msgstr "離線工作"
 
-#: widgets/standardactionmanager.cpp:176
+#: widgets/standardactionmanager.cpp:239
 msgid "&Synchronize Folder Recursively"
 msgstr "遞迴地同步資料夾(&S)"
 
-#: widgets/standardactionmanager.cpp:177
+#: widgets/standardactionmanager.cpp:240
 msgid "Synchronize Recursively"
 msgstr "遞迴地同步"
 
-#: widgets/standardactionmanager.cpp:184
+#: widgets/standardactionmanager.cpp:247
 msgid "&Move Folder To Trash"
 msgstr "將資料夾移到垃圾桶(&M)"
 
-#: widgets/standardactionmanager.cpp:185
+#: widgets/standardactionmanager.cpp:248
 msgid "Move Folder To Trash"
 msgstr "將資料夾移到垃圾桶"
 
-#: widgets/standardactionmanager.cpp:192
+#: widgets/standardactionmanager.cpp:255
 msgid "&Move Item To Trash"
 msgstr "將項目移到垃圾桶(&M)"
 
-#: widgets/standardactionmanager.cpp:193
+#: widgets/standardactionmanager.cpp:256
 msgid "Move Item To Trash"
 msgstr "將項目移到垃圾桶"
 
-#: widgets/standardactionmanager.cpp:200 widgets/standardactionmanager.cpp:216
+#: widgets/standardactionmanager.cpp:263 widgets/standardactionmanager.cpp:279
 msgid "&Restore Folder From Trash"
 msgstr "從垃圾桶中回復資料夾(&R)"
 
-#: widgets/standardactionmanager.cpp:201 widgets/standardactionmanager.cpp:217
+#: widgets/standardactionmanager.cpp:264 widgets/standardactionmanager.cpp:280
 msgid "Restore Folder From Trash"
 msgstr "從垃圾桶中回復資料夾"
 
-#: widgets/standardactionmanager.cpp:208 widgets/standardactionmanager.cpp:225
-#: widgets/standardactionmanager.cpp:232
+#: widgets/standardactionmanager.cpp:271 widgets/standardactionmanager.cpp:295
+#: widgets/standardactionmanager.cpp:302
 msgid "&Restore Item From Trash"
 msgstr "從垃圾桶中回復項目(&R)"
 
-#: widgets/standardactionmanager.cpp:209 widgets/standardactionmanager.cpp:226
-#: widgets/standardactionmanager.cpp:232
+#: widgets/standardactionmanager.cpp:272 widgets/standardactionmanager.cpp:296
+#: widgets/standardactionmanager.cpp:302
 msgid "Restore Item From Trash"
 msgstr "從垃圾桶中回復項目"
 
-#: widgets/standardactionmanager.cpp:223
+#: widgets/standardactionmanager.cpp:287
 msgid "&Restore Collection From Trash"
 msgstr "從垃圾桶中回復收藏(&R)"
 
-#: widgets/standardactionmanager.cpp:223
+#: widgets/standardactionmanager.cpp:288
 msgid "Restore Collection From Trash"
 msgstr "從垃圾桶中回復收藏 "
 
-#: widgets/standardactionmanager.cpp:234
+#: widgets/standardactionmanager.cpp:304
 msgid "&Synchronize Favorite Folders"
 msgstr "同步最愛資料夾(&S)"
 
-#: widgets/standardactionmanager.cpp:235
+#: widgets/standardactionmanager.cpp:305
 msgid "Synchronize Favorite Folders"
 msgstr "同步最愛資料夾"
 
-#: widgets/standardactionmanager.cpp:242
+#: widgets/standardactionmanager.cpp:312
 msgid "Synchronize Folder Tree"
 msgstr "同步資料夾樹狀圖"
 
-#: widgets/standardactionmanager.cpp:328
+#: widgets/standardactionmanager.cpp:398
 #, kde-format
 msgid "&Copy Folder"
 msgid_plural "&Copy %1 Folders"
 msgstr[0] "複製 %1 個資料夾(&C)"
 
-#: widgets/standardactionmanager.cpp:329
+#: widgets/standardactionmanager.cpp:399
 #, kde-format
 msgid "&Copy Item"
 msgid_plural "&Copy %1 Items"
 msgstr[0] "複製 %1 個項目(&C)"
 
-#: widgets/standardactionmanager.cpp:330
+#: widgets/standardactionmanager.cpp:400
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Item"
 msgid_plural "&Cut %1 Items"
 msgstr[0] "剪下 %1 個項目(&C)"
 
-#: widgets/standardactionmanager.cpp:331
+#: widgets/standardactionmanager.cpp:401
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Folder"
 msgid_plural "&Cut %1 Folders"
 msgstr[0] "剪下 %1 個資料夾(&C)"
 
-#: widgets/standardactionmanager.cpp:332
+#: widgets/standardactionmanager.cpp:402
 #, kde-format
 msgid "&Delete Item"
 msgid_plural "&Delete %1 Items"
 msgstr[0] "刪除 %1 個項目(&D)"
 
-#: widgets/standardactionmanager.cpp:333
+#: widgets/standardactionmanager.cpp:403
 #, kde-format
 msgctxt "@action"
 msgid "&Delete Folder"
 msgid_plural "&Delete %1 Folders"
 msgstr[0] "刪除 %1 個資料夾(&D)"
 
-#: widgets/standardactionmanager.cpp:334
+#: widgets/standardactionmanager.cpp:404
 #, kde-format
 msgctxt "@action"
 msgid "&Synchronize Folder"
 msgid_plural "&Synchronize %1 Folders"
 msgstr[0] "同步 %1 個資料夾(&S)"
 
-#: widgets/standardactionmanager.cpp:335
+#: widgets/standardactionmanager.cpp:405
 #, kde-format
 msgid "&Delete Resource"
 msgid_plural "&Delete %1 Resources"
 msgstr[0] "刪除 %1 個資源(&D)"
 
-#: widgets/standardactionmanager.cpp:336
+#: widgets/standardactionmanager.cpp:406
 #, kde-format
 msgid "&Synchronize Resource"
 msgid_plural "&Synchronize %1 Resources"
 msgstr[0] "同步 %1 個資源(&S)"
 
-#: widgets/standardactionmanager.cpp:338
+#: widgets/standardactionmanager.cpp:408
 #, kde-format
 msgid "Copy Folder"
 msgid_plural "Copy %1 Folders"
 msgstr[0] "複製 %1 個資料夾"
 
-#: widgets/standardactionmanager.cpp:339
+#: widgets/standardactionmanager.cpp:409
 #, kde-format
 msgid "Copy Item"
 msgid_plural "Copy %1 Items"
 msgstr[0] "複製 %1 個項目"
 
-#: widgets/standardactionmanager.cpp:340
+#: widgets/standardactionmanager.cpp:410
 #, kde-format
 msgid "Cut Item"
 msgid_plural "Cut %1 Items"
 msgstr[0] "剪下 %1 個項目"
 
-#: widgets/standardactionmanager.cpp:341
+#: widgets/standardactionmanager.cpp:411
 #, kde-format
 msgid "Cut Folder"
 msgid_plural "Cut %1 Folders"
 msgstr[0] "剪下 %1 個資料夾"
 
-#: widgets/standardactionmanager.cpp:342
+#: widgets/standardactionmanager.cpp:412
 #, kde-format
 msgid "Delete Item"
 msgid_plural "Delete %1 Items"
 msgstr[0] "刪除 %1 個項目"
 
-#: widgets/standardactionmanager.cpp:343
+#: widgets/standardactionmanager.cpp:413
 #, kde-format
 msgid "Delete Folder"
 msgid_plural "Delete %1 Folders"
 msgstr[0] "刪除 %1 個資料夾"
 
-#: widgets/standardactionmanager.cpp:344
+#: widgets/standardactionmanager.cpp:414
 #, kde-format
 msgid "Synchronize Folder"
 msgid_plural "Synchronize %1 Folders"
 msgstr[0] "同步 %1 個資料夾"
 
-#: widgets/standardactionmanager.cpp:345
+#: widgets/standardactionmanager.cpp:415
 #, kde-format
 msgctxt "@action"
 msgid "Delete Resource"
 msgid_plural "Delete %1 Resources"
 msgstr[0] "刪除 %1 個資源"
 
-#: widgets/standardactionmanager.cpp:346
+#: widgets/standardactionmanager.cpp:416
 #, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
 msgid_plural "Synchronize %1 Resources"
 msgstr[0] "同步 %1 個資源"
 
-#: widgets/standardactionmanager.cpp:349
+#: widgets/standardactionmanager.cpp:419
 #, kde-format
 msgctxt "@label:textbox name of Akonadi folder"
 msgid "Name"
 msgstr "名稱"
 
-#: widgets/standardactionmanager.cpp:356
+#: widgets/standardactionmanager.cpp:426
 #, kde-format
 msgid "Do you really want to delete this folder and all its sub-folders?"
 msgid_plural ""
 "Do you really want to delete %1 folders and all their sub-folders?"
 msgstr[0] "您確定要刪除這 %1 個資料夾以及它所有的子資料夾嗎？"
 
-#: widgets/standardactionmanager.cpp:359
+#: widgets/standardactionmanager.cpp:429
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
 msgstr[0] "刪除資料夾？"
 
-#: widgets/standardactionmanager.cpp:360
+#: widgets/standardactionmanager.cpp:430
 #, kde-format
 msgid "Could not delete folder: %1"
 msgstr "無法刪除資料夾：%1"
 
-#: widgets/standardactionmanager.cpp:361
+#: widgets/standardactionmanager.cpp:431
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "資料夾刪除失敗"
 
-#: widgets/standardactionmanager.cpp:363
+#: widgets/standardactionmanager.cpp:433
 #, kde-format
 msgctxt "@title:window"
 msgid "Properties of Folder %1"
 msgstr "資料夾 %1 的內容"
 
-#: widgets/standardactionmanager.cpp:367
+#: widgets/standardactionmanager.cpp:437
 #, kde-format
 msgid "Do you really want to delete the selected item?"
 msgid_plural "Do you really want to delete %1 items?"
 msgstr[0] "您真的要刪除這  %1 個項目嗎？"
 
-#: widgets/standardactionmanager.cpp:368
+#: widgets/standardactionmanager.cpp:438
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
 msgstr[0] "刪除項目？"
 
-#: widgets/standardactionmanager.cpp:369
+#: widgets/standardactionmanager.cpp:439
 #, kde-format
 msgid "Could not delete item: %1"
 msgstr "無法刪除項目：%1"
 
-#: widgets/standardactionmanager.cpp:370
+#: widgets/standardactionmanager.cpp:440
 #, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "項目刪除失敗"
 
-#: widgets/standardactionmanager.cpp:372
+#: widgets/standardactionmanager.cpp:442
 #, kde-format
 msgctxt "@title:window"
 msgid "Rename Favorite"
 msgstr "重新命名我的最愛"
 
-#: widgets/standardactionmanager.cpp:373
+#: widgets/standardactionmanager.cpp:443
 #, kde-format
 msgctxt "@label:textbox name of the folder"
 msgid "Name:"
 msgstr "名稱："
 
-#: widgets/standardactionmanager.cpp:375
+#: widgets/standardactionmanager.cpp:445
 #, kde-format
 msgctxt "@title:window"
 msgid "New Resource"
 msgstr "新增資源"
 
-#: widgets/standardactionmanager.cpp:376
+#: widgets/standardactionmanager.cpp:446
 #, kde-format
 msgid "Could not create resource: %1"
 msgstr "無法建立資源：%1"
 
-#: widgets/standardactionmanager.cpp:377
+#: widgets/standardactionmanager.cpp:447
 #, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "資源建立失敗"
 
-#: widgets/standardactionmanager.cpp:381
+#: widgets/standardactionmanager.cpp:451
 #, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
 msgstr[0] "您確定要刪除這 %1 個資源嗎？"
 
-#: widgets/standardactionmanager.cpp:384
+#: widgets/standardactionmanager.cpp:454
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Resource?"
 msgid_plural "Delete Resources?"
 msgstr[0] "要刪除資源嗎？"
 
-#: widgets/standardactionmanager.cpp:386
+#: widgets/standardactionmanager.cpp:456
 #, kde-format
 msgid "Could not paste data: %1"
 msgstr "無法貼上資料：%1"
 
-#: widgets/standardactionmanager.cpp:387
+#: widgets/standardactionmanager.cpp:457
 #, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "貼上失敗"
 
-#: widgets/standardactionmanager.cpp:739
+#: widgets/standardactionmanager.cpp:809
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "不能在資料夾名稱中加入 \"/\"。"
 
-#: widgets/standardactionmanager.cpp:739 widgets/standardactionmanager.cpp:743
+#: widgets/standardactionmanager.cpp:809 widgets/standardactionmanager.cpp:813
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "建立新資料夾錯誤"
 
-#: widgets/standardactionmanager.cpp:743
+#: widgets/standardactionmanager.cpp:813
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "不能在資料夾名稱的開頭或結尾加入 \".\"。"
 
-#: widgets/standardactionmanager.cpp:982
+#: widgets/standardactionmanager.cpp:1052
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
 "you want to make it online?"
 msgstr "同步資料夾 \"%1\" 之前需要先讓資源上線。您要讓它上線嗎？"
 
-#: widgets/standardactionmanager.cpp:983
+#: widgets/standardactionmanager.cpp:1053
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "帳號 \"%1\" 已離線"
 
-#: widgets/standardactionmanager.cpp:984
+#: widgets/standardactionmanager.cpp:1054
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "上線"
 
-#: widgets/standardactionmanager.cpp:1585
+#: widgets/standardactionmanager.cpp:1655
 #, kde-format
 msgid "Move to This Folder"
 msgstr "移至此資料夾"
 
-#: widgets/standardactionmanager.cpp:1585
+#: widgets/standardactionmanager.cpp:1655
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "複製到此資料夾"
