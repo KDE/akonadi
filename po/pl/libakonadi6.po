@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-14 00:38+0000\n"
-"PO-Revision-Date: 2024-01-21 08:40+0100\n"
+"PO-Revision-Date: 2024-03-17 10:50+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -504,7 +504,7 @@ msgstr "Nieprzeczytane wiadomości"
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
 msgid "<strong>Quota</strong>: %1%<br>\n"
-msgstr ""
+msgstr "<strong>Przydział</strong>: %1%<br>\n"
 
 #: core/models/statisticsproxymodel.cpp:105
 #, kde-format
@@ -713,7 +713,7 @@ msgstr "Nie można zarejestrować okna dialogowego ustawień %1."
 #, kde-format
 msgctxt "Status percent value"
 msgid "(%1%)"
-msgstr ""
+msgstr "(%1%)"
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
