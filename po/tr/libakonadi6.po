@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-14 00:38+0000\n"
-"PO-Revision-Date: 2024-03-09 10:18+0300\n"
+"PO-Revision-Date: 2024-03-21 23:05+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.02.0\n"
+"X-Generator: Lokalize 24.02.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -239,7 +239,7 @@ msgstr "Aracı süreci oluşturma işlemi zaman aşımına uğradı."
 #: core/jobs/agentinstancecreatejob.cpp:150
 #, kde-format
 msgid "Unable to obtain agent type '%1'."
-msgstr "Aracı türü ‘%1’ alınamıyor."
+msgstr "Aracı türü “%1” alınamıyor."
 
 #: core/jobs/agentinstancecreatejob.cpp:158
 #, kde-format
@@ -261,7 +261,7 @@ msgstr "Geçersiz özkaynak örneği."
 #: core/jobs/resourcesynchronizationjob.cpp:113
 #, kde-format
 msgid "Unable to obtain D-Bus interface for resource '%1'"
-msgstr "‘%1’ özkaynağı için D-Bus arayüzü edinilemedi"
+msgstr "“%1” özkaynağı için D-Bus arayüzü edinilemedi"
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:125
 #, kde-format
@@ -371,7 +371,7 @@ msgstr "Bir özkaynak kimliği belirtilmedi."
 #: core/jobs/specialcollectionshelperjobs.cpp:326
 #, kde-format
 msgid "Invalid resource identifier '%1'"
-msgstr "Geçersiz özkaynak tanımlayıcısı ‘%1’"
+msgstr "Geçersiz özkaynak tanımlayıcısı “%1”"
 
 #: core/jobs/specialcollectionshelperjobs.cpp:342
 #: core/jobs/specialcollectionshelperjobs.cpp:350
@@ -444,7 +444,7 @@ msgid ""
 "The target collection '%1' contains already\n"
 "a collection with name '%2'."
 msgstr ""
-"‘%1’ hedef koleksiyonu\n"
+"“%1” hedef koleksiyonu\n"
 "“%2” adıyla halihazırda var."
 
 #: core/models/entitytreemodel.cpp:669
@@ -555,7 +555,7 @@ msgstr "İndeks artık kullanılabilir değil"
 #: core/partfetcher.cpp:114
 #, kde-format
 msgid "Payload part '%1' is not available for this index"
-msgstr "Bu indeks için  ‘%1’ veri kısmı kullanılabilir değil"
+msgstr "Bu indeks için  “%1” veri kısmı kullanılabilir değil"
 
 #: core/partfetcher.cpp:123
 #, kde-format
@@ -822,7 +822,7 @@ msgid ""
 "likely never uploaded to the destination server, so clearing this collection "
 "means that those <b>data will be lost</b>. Are you sure you want to proceed?"
 msgstr ""
-"‘%1’ koleksiyonu, uzak kimliksiz %2 öge içeriyor. Bu ögeler, büyük "
+"“%1” koleksiyonu, uzak kimliksiz %2 öge içeriyor. Bu ögeler, büyük "
 "olasılıkla uzak sunucuya hiçbir zaman yüklenmedi; bundan dolayı bunları "
 "temizlemek <b>bu verinin kaybolacağı</b> anlamına gelir. Sürdürmek "
 "istediğinizden emin misiniz?"
@@ -1295,7 +1295,7 @@ msgid ""
 "The QtSQL driver '%1' is required by your current Akonadi server "
 "configuration and was found on your system."
 msgstr ""
-"QtSQL sürücüsü ‘%1’, geçerli Akonadi sunucu yapılandırması için gerekiyor "
+"QtSQL sürücüsü “%1”, geçerli Akonadi sunucu yapılandırması için gerekiyor "
 "ancak sisteminizde bulunamadı."
 
 #: widgets/selftestdialog.cpp:191
@@ -1306,7 +1306,7 @@ msgid ""
 "The following drivers are installed: %2.\n"
 "Make sure the required driver is installed."
 msgstr ""
-"QtSQL sürücüsü ‘%1’, geçerli Akonadi sunucu yapılandırması için gerekiyor.\n"
+"QtSQL sürücüsü “%1”, geçerli Akonadi sunucu yapılandırması için gerekiyor.\n"
 "Şu sürücüler kurulu: %2.\n"
 "Gerekli sürücünün kurulmuş olduğundan emin olun."
 
@@ -1340,7 +1340,7 @@ msgid ""
 "executable. The server executable is typically called 'mysqld'; its location "
 "varies depending on the distribution."
 msgstr ""
-"Geçerli olarak Akonadi’yi MySQL sunucusu ‘%1’ ile yapılandırmışsınız.\n"
+"Geçerli olarak Akonadi’yi MySQL sunucusu “%1” ile yapılandırmışsınız.\n"
 "MySQL sunucusunun kurulu olduğundan, doğru yolun ayarlandığından ve sunucu "
 "yürütülebiliri üzerinde gerekli okuma ve yürütme izinlerine sahip "
 "olduğunuzdan emin olun. Sunucu yürütülebiliri genel olarak ‘mysqld’ olarak "
@@ -1385,7 +1385,7 @@ msgstr "MySQL sunucusu yürütülebilir durumda."
 #, kde-format
 msgid ""
 "Executing the MySQL server '%1' failed with the following error message: '%2'"
-msgstr "‘%1’ MySQL sunucusu şu hata iletisini vererek başarısız oldu: “%2”"
+msgstr "“%1” MySQL sunucusu şu hata iletisini vererek başarısız oldu: “%2”"
 
 #: widgets/selftestdialog.cpp:242
 #, kde-format
@@ -1408,7 +1408,7 @@ msgid ""
 "The MySQL server did not report any errors during this startup. The log can "
 "be found in '%1'."
 msgstr ""
-"MySQL sunucusu bu başlangıçta bir hata bildirmedi. Günlük, ‘%1’ içinde "
+"MySQL sunucusu bu başlangıçta bir hata bildirmedi. Günlük, “%1” içinde "
 "bulunabilir."
 
 #: widgets/selftestdialog.cpp:264
@@ -1429,7 +1429,7 @@ msgstr "MySQL sunucu hata günlük kaydı hatalar içeriyor."
 #: widgets/selftestdialog.cpp:275
 #, kde-format
 msgid "The MySQL server error log file '%1' contains errors."
-msgstr "MySQL sunucu hata günlük kaydı dosyası ‘%1’ hatalar içeriyor."
+msgstr "MySQL sunucu hata günlük kaydı dosyası “%1” hatalar içeriyor."
 
 #: widgets/selftestdialog.cpp:285
 #, kde-format
@@ -1439,7 +1439,7 @@ msgstr "MySQL sunucusu günlük kaydı içerisinde uyarılar var."
 #: widgets/selftestdialog.cpp:286
 #, kde-format
 msgid "The MySQL server log file '%1' contains warnings."
-msgstr "MySQL sunucusu günlük kaydı ‘%1’ içinde uyarılar var."
+msgstr "MySQL sunucusu günlük kaydı “%1” içinde uyarılar var."
 
 #: widgets/selftestdialog.cpp:289
 #, kde-format
@@ -1449,7 +1449,7 @@ msgstr "MySQL sunucusu günlük kaydı hiç hata içermiyor."
 #: widgets/selftestdialog.cpp:290
 #, kde-format
 msgid "The MySQL server log file '%1' does not contain any errors or warnings."
-msgstr "MySQL sunucusu günlük kaydı ‘%1’, hata veya uyarı içermiyor."
+msgstr "MySQL sunucusu günlük kaydı “%1”, hata veya uyarı içermiyor."
 
 #: widgets/selftestdialog.cpp:300
 #, kde-format
@@ -1586,7 +1586,7 @@ msgid ""
 "Result:\n"
 "%2"
 msgstr ""
-"Akonadi sunucusunu denetlemek için ‘%1’ programı bulundu ve başarılı bir "
+"Akonadi sunucusunu denetlemek için “%1” programı bulundu ve başarılı bir "
 "şekilde yürütülebildi.\n"
 "Sonuç:\n"
 "%2"
@@ -1605,7 +1605,7 @@ msgid ""
 "%2\n"
 "Make sure the Akonadi server is installed correctly."
 msgstr ""
-"Akonadi sunucusunu denetlemek için ‘%1’ programı bulundu; ancak başarılı bir "
+"Akonadi sunucusunu denetlemek için “%1” programı bulundu; ancak başarılı bir "
 "biçimde yürütülemedi.\n"
 "Sonuç:\n"
 "%2\n"
@@ -1737,8 +1737,8 @@ msgid ""
 msgstr ""
 "Özkaynak aracısı bulunamadı. Akonadi en az bir tanesi olmadan kullanılabilir "
 "değildir. Bu, hiçbir özkaynak aracısının olmadığını veya bir kurulum sorunu "
-"olduğunu belirtir. Şu yollarda arama yapıldı: ‘%1’. XDG_DATA_DIRS çevre "
-"değişkeni ‘%2’ olarak ayarlanmış, bu değişkenin Akonadi araçlarının kurulu "
+"olduğunu belirtir. Şu yollarda arama yapıldı: “%1”. XDG_DATA_DIRS çevre "
+"değişkeni “%2” olarak ayarlanmış, bu değişkenin Akonadi araçlarının kurulu "
 "olduğu tüm yolları içerdiğinden emin olun."
 
 #: widgets/selftestdialog.cpp:499
