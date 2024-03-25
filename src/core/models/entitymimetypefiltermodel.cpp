@@ -132,7 +132,10 @@ void EntityMimeTypeFilterModel::clearFilters()
 void EntityMimeTypeFilterModel::setHeaderGroup(EntityTreeModel::HeaderGroup headerGroup)
 {
     Q_D(EntityMimeTypeFilterModel);
-    d->m_headerGroup = headerGroup;
+    if (d->m_headerGroup != headerGroup) {
+        d->m_headerGroup = headerGroup; // this changes the column count
+        invalidateFilter(); // and filterAcceptsColumn depends on the column count
+    }
 }
 
 QVariant EntityMimeTypeFilterModel::headerData(int section, Qt::Orientation orientation, int role) const
