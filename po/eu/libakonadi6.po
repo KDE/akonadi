@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-14 00:38+0000\n"
-"PO-Revision-Date: 2024-01-11 23:29+0100\n"
+"PO-Revision-Date: 2024-03-24 10:57+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 24.02.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -509,7 +509,7 @@ msgstr "Irakurri gabeko mezuak"
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
 msgid "<strong>Quota</strong>: %1%<br>\n"
-msgstr ""
+msgstr "<strong>Kuota</strong>: %%1<br>\n"
 
 #: core/models/statisticsproxymodel.cpp:105
 #, kde-format
@@ -719,7 +719,7 @@ msgstr "Huts egin du «%1» konfiguratzeko elkarrizketa-koadroa erregistratzeak.
 #, kde-format
 msgctxt "Status percent value"
 msgid "(%1%)"
-msgstr ""
+msgstr "(%%1)"
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
