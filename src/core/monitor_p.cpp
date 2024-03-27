@@ -18,7 +18,6 @@
 #include "notificationsubscriber.h"
 #include "protocolhelper_p.h"
 #include "session.h"
-#include "vectorhelper.h"
 
 #include "shared/akranges.h"
 
