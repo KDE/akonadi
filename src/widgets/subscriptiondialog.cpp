@@ -17,6 +17,7 @@
 #include <KSharedConfig>
 
 #include <KConfigGroup>
+#include <KLineEditEventHandler>
 #include <KLocalizedString>
 
 #include <KMessageBox>
@@ -65,6 +66,7 @@ public:
 
         ui.collectionView->setModel(&filterRecursiveCollectionFilter);
         ui.searchLineEdit->setFocus();
+        KLineEditEventHandler::catchReturnKey(ui.searchLineEdit);
         q->connect(ui.searchLineEdit, &QLineEdit::textChanged, q, [this](const QString &str) {
             filterRecursiveCollectionFilter.setSearchPattern(str);
             ui.collectionView->expandAll();
