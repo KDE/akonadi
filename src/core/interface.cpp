@@ -21,6 +21,7 @@
 #include "storage.h"
 
 #include "collectionfetchscope.h"
+#include "collectionstatistics.h"
 #include "itemfetchscope.h"
 #include "tagfetchscope.h"
 

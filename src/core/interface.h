@@ -22,11 +22,12 @@
 
 #include "akonadicore_export.h"
 #include "collection.h"
+#include "expected.h"
 #include "item.h"
 #include "relation.h"
 #include "tag.h"
-#include "task.h"
 
+#include <QCoroTask>
 #include <QSharedPointer>
 
 namespace Akonadi
@@ -38,6 +39,9 @@ class ItemFetchScope;
 class CollectionFetchScope;
 class TagFetchScope;
 class SearchQuery;
+
+template<typename T>
+using Task = QCoro::Task<Akonadi::Expected<T>>;
 
 /**
  * Replaces the default storage implementation (Akonadi::Storage) with @p

@@ -430,7 +430,7 @@ generate_export_header(KPim6AkonadiCore BASE_NAME akonadicore)
 add_library(KPim6::AkonadiCore ALIAS KPim6AkonadiCore)
 target_include_directories(KPim6AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${AkonadiCore_INSTALL_INCLUDEDIR}>")
 target_include_directories(KPim6AkonadiCore INTERFACE "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/3rdparty>")
-target_include_directories(KPim6AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core;${Akonadi_BINARY_DIR}/src/private>")
+target_include_directories(KPim6AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core;${Akonadi_BINARY_DIR}/src/private;${Akonadi_SOURCE_DIR}/src/3rdparty>")
 target_include_directories(KPim6AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_BINARY_DIR};${Akonadi_SOURCE_DIR}/src/core/jobs;${Akonadi_SOURCE_DIR}/src/core/models;${Akonadi_SOURCE_DIR}/src/core/attributes>")
 
 kde_target_enable_exceptions(KPim6AkonadiCore PUBLIC)
@@ -440,6 +440,7 @@ PUBLIC
     KF6::CoreAddons # for KJob
     KF6::ItemModels
     Qt::Gui # for QColor
+    QCoro6::Core
 PRIVATE
     Qt::Network
     Qt::Widgets

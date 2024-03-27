@@ -51,6 +51,8 @@
 
 #include <functional>
 
+#include <QCoroSignal>
+
 using namespace Akonadi;
 
 Storage::Storage() = default;
@@ -61,35 +63,31 @@ namespace
 
 template<typename CreateFunc, typename ExtractFunc, typename... Args>
 auto asyncJob(CreateFunc createFunc, ExtractFunc extractFunc, Session *session, Args &&...args)
+    -> Akonadi::Task<std::decay_t<std::invoke_result_t<ExtractFunc, std::decay_t<decltype(createFunc(session, args...))>>>>
 {
     using Job = std::decay_t<std::remove_pointer_t<decltype(createFunc(session, args...))>>;
-    using Result = std::decay_t<std::invoke_result_t<ExtractFunc, Job *>>;
+    using Result = Expected<std::decay_t<std::invoke_result_t<ExtractFunc, Job *>>>;
 
-    Task<Result> task;
-    QObject::connect(createFunc(session, std::forward<Args>(args)...), &Job::finished, [task, extractor = std::move(extractFunc)](KJob *job) mutable {
+    co_return co_await qCoro(createFunc(session, std::forward<Args>(args)...), &Job::finished).then([extractor = std::move(extractFunc)](KJob *job) -> Result {
         if (job->error()) {
-            task.setError(job->error(), job->errorText());
-        } else {
-            task.setResult(std::invoke(extractor, static_cast<Job *>(job)));
+            return Akonadi::Unexpected<Error>(job->error(), job->errorText());
         }
+        return std::invoke(extractor, static_cast<Job *>(job));
     });
-    return task;
 }
 
 template<typename CreateFunc, typename... Args>
-auto asyncJob(CreateFunc createFunc, Session *session, Args &&...args)
+auto asyncJob(CreateFunc createFunc, Session *session, Args &&...args) -> Akonadi::Task<void>
 {
     using Job = std::decay_t<std::remove_pointer_t<decltype(createFunc(session, args...))>>;
+    using Result = Expected<void>;
 
-    Task<void> task;
-    QObject::connect(createFunc(session, std::forward<Args>(args)...), &Job::finished, [task](KJob *job) mutable {
+    co_return co_await qCoro(createFunc(session, std::forward<Args>(args)...), &Job::finished).then([](KJob *job) -> Result {
         if (job->error()) {
-            task.setError(job->error(), job->errorText());
-        } else {
-            task.setResult();
+            return Akonadi::Unexpected<Error>(job->error(), job->errorText());
         }
+        return Akonadi::makeExpected();
     });
-    return task;
 }
 
 template<typename Job>

@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "error.h"
-
 #include "tl_expected/expected.hpp"
+
+#include "error.h"
 
 namespace Akonadi
 {
@@ -17,9 +17,14 @@ template<typename T, typename E = Akonadi::Error>
 using Expected = tl::expected<T, E>;
 
 template<typename T>
-Expected<T> makeExpected(T &&t)
+inline Expected<T> makeExpected(T &&t)
 {
     return Expected<T>{std::forward<T>(t)};
+}
+
+inline Expected<void> makeExpected()
+{
+    return Expected<void>{};
 }
 
 template<typename E = Akonadi::Error>

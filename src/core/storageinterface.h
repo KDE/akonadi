@@ -20,17 +20,22 @@
 #ifndef AKONADI_STORAGEINTERFACE_H
 #define AKONADI_STORAGEINTERFACE_H
 
+#include "expected.h"
 #include "interface.h"
 #include "item.h"
 #include "searchquery.h"
 #include "tag.h"
-#include "task.h"
+
+#include <QCoroTask>
 
 class QObject;
 class QByteArray;
 
 namespace Akonadi
 {
+
+template<typename T>
+using Task = QCoro::Task<Akonadi::Expected<T>>;
 
 /**
  * StorageInterface is an interface for access to the Akonadi storage.

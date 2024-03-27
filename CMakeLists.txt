@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 set(PIM_VERSION "6.0.40")
 project(Akonadi VERSION ${PIM_VERSION})
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # ECM setup
 set(KF_MIN_VERSION "6.0.0")
@@ -111,6 +113,13 @@ set_package_properties(LibLZMA PROPERTIES
     TYPE REQUIRED
 )
 
+set(QCoro_MINIMUM_VERSION "0.9.0")
+find_package(QCoro6 ${QCoro_MINIMUM_VERSION} REQUIRED COMPONENTS Core)
+set_package_properties(QCoro6 PROPERTIES
+    DESCRIPTION "C++20 coroutines for Qt"
+    URL "https://qcoro.dvratil.cz"
+    TYPE REQUIRED
+)
 
 if(BUILD_TESTING)
     set(AKONADI_TESTS_EXPORT AKONADICORE_EXPORT)
