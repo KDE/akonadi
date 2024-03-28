@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-14 00:38+0000\n"
+"POT-Creation-Date: 2024-03-28 00:39+0000\n"
 "PO-Revision-Date: 2024-02-02 14:32+0200\n"
 "Last-Translator: Liudas Ališauskas <liudas@akmc.lt>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -2425,13 +2425,13 @@ msgstr "Perkelti į šį aplanką"
 msgid "Copy to This Folder"
 msgstr "Kopijuoti į šį aplanką"
 
-#: widgets/subscriptiondialog.cpp:97
+#: widgets/subscriptiondialog.cpp:99
 #, fuzzy, kde-format
 #| msgid "Failed to create tag."
 msgid "Failed to update subscription: %1"
 msgstr "Nepavyko sukurti žymės."
 
-#: widgets/subscriptiondialog.cpp:97
+#: widgets/subscriptiondialog.cpp:99
 #, fuzzy, kde-format
 #| msgid "Local Subscriptions"
 msgctxt "@title:window"

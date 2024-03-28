@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-14 00:38+0000\n"
+"POT-Creation-Date: 2024-03-28 00:39+0000\n"
 "PO-Revision-Date: 2024-03-10 09:30+0100\n"
 "Last-Translator: xavier <xyz@yahoo.com>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
@@ -2468,12 +2468,12 @@ msgstr "Déplacer vers ce dossier"
 msgid "Copy to This Folder"
 msgstr "Copier vers ce dossier"
 
-#: widgets/subscriptiondialog.cpp:97
+#: widgets/subscriptiondialog.cpp:99
 #, kde-format
 msgid "Failed to update subscription: %1"
 msgstr "Impossible de mettre à jour l'abonnement : %1."
 
-#: widgets/subscriptiondialog.cpp:97
+#: widgets/subscriptiondialog.cpp:99
 #, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdepim/libakonadi.po\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-14 00:38+0000\n"
+"POT-Creation-Date: 2024-03-28 00:39+0000\n"
 "PO-Revision-Date: 2007-07-11 08:14-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -2476,13 +2476,13 @@ msgstr "Bog go dtí an Fillteán Seo"
 msgid "Copy to This Folder"
 msgstr "Cóipeáil an Fillteán Seo"
 
-#: widgets/subscriptiondialog.cpp:97
+#: widgets/subscriptiondialog.cpp:99
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Failed to update subscription: %1"
 msgstr "Níorbh fhéidir gníomhaire a chruthú."
 
-#: widgets/subscriptiondialog.cpp:97
+#: widgets/subscriptiondialog.cpp:99
 #, fuzzy, kde-format
 #| msgid "Local Subscriptions"
 msgctxt "@title:window"

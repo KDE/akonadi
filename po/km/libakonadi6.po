@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-14 00:38+0000\n"
+"POT-Creation-Date: 2024-03-28 00:39+0000\n"
 "PO-Revision-Date: 2012-07-11 10:23+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -2441,13 +2441,13 @@ msgstr "ផ្លាស់​ទី​​ទៅ​​ថត​នេះ "
 msgid "Copy to This Folder"
 msgstr "ចម្លង​ទៅ​ថត​នេះ​"
 
-#: widgets/subscriptiondialog.cpp:97
+#: widgets/subscriptiondialog.cpp:99
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Failed to update subscription: %1"
 msgstr "មិន​អាច​បង្កើត​ធាតុ​ភ្នាក់ងារ​បាន​ឡើយ ។"
 
-#: widgets/subscriptiondialog.cpp:97
+#: widgets/subscriptiondialog.cpp:99
 #, fuzzy, kde-format
 #| msgid "Local Subscriptions"
 msgctxt "@title:window"

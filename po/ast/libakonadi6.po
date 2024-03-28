@@ -1,21 +1,21 @@
 # Copyright (C) 2023 This file is copyright:
 # This file is distributed under the same license as the akonadi package.
 #
-# SPDX-FileCopyrightText: 2023 Enol P. <enolp@softastur.org>
+# SPDX-FileCopyrightText: 2023, 2024 Enol P. <enolp@softastur.org>
 msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-14 00:38+0000\n"
-"PO-Revision-Date: 2023-11-07 21:26+0100\n"
+"POT-Creation-Date: 2024-03-28 00:39+0000\n"
+"PO-Revision-Date: 2024-03-27 21:45+0100\n"
 "Last-Translator: Enol P. <enolp@softastur.org>\n"
-"Language-Team: \n"
+"Language-Team: Asturian <alministradores@softastur.org>\n"
 "Language: ast\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.08.2\n"
+"X-Generator: Lokalize 24.02.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -80,7 +80,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:status"
 msgid "Error."
-msgstr ""
+msgstr "Error."
 
 #: agentbase/agentbase_p.h:66
 #, kde-format
@@ -271,12 +271,12 @@ msgstr ""
 #: core/jobs/collectiondeletejob.cpp:52
 #, kde-format
 msgid "Invalid collection"
-msgstr ""
+msgstr "La coleición ye inválida"
 
 #: core/jobs/collectionfetchjob.cpp:212
 #, kde-format
 msgid "Invalid collection given."
-msgstr ""
+msgstr "Apurrióse una coleición inválida."
 
 #: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:90
 #, kde-format
@@ -292,7 +292,7 @@ msgstr ""
 #: core/jobs/invalidatecachejob.cpp:58
 #, kde-format
 msgid "Invalid collection."
-msgstr ""
+msgstr "La coleición ye inválida."
 
 #: core/jobs/itemcreatejob.cpp:115
 #, kde-format
@@ -380,12 +380,12 @@ msgstr ""
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format
 msgid "Invalid items passed"
-msgstr ""
+msgstr "Apurriéronse elementos inválidos"
 
 #: core/jobs/trashjob.cpp:258 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
-msgstr ""
+msgstr "Apurrióse una coleición inválida"
 
 #: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
 #, kde-format
@@ -401,7 +401,7 @@ msgstr ""
 #, kde-format
 msgctxt "@title:column, name of a thing"
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #: core/models/entitytreemodel.cpp:207
 #, kde-format
@@ -413,7 +413,7 @@ msgstr ""
 #, kde-format
 msgctxt "@window:title"
 msgid "Error"
-msgstr ""
+msgstr "Error"
 
 #: core/models/entitytreemodel.cpp:500
 #, kde-format
@@ -421,42 +421,44 @@ msgid ""
 "The target collection '%1' contains already\n"
 "a collection with name '%2'."
 msgstr ""
+"La coleición de destín «%1» yá contién una\n"
+"coleición col nome «%2»."
 
 #: core/models/entitytreemodel.cpp:669
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #: core/models/entitytreemodel_p.cpp:1331
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
-msgstr ""
+msgstr "Nun se pudo copiar l'elementu: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1333
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
-msgstr ""
+msgstr "Nun se pudo copiar la coleición: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1335
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
-msgstr ""
+msgstr "Nun se pudo mover l'elementu: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1337
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
-msgstr ""
+msgstr "Nun se pudo mover la coleición: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1339
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
-msgstr ""
+msgstr "Nun se pudo enllaciar la entidá: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
 #, kde-format
@@ -477,7 +479,7 @@ msgstr ""
 #: core/models/statisticsproxymodel.cpp:88
 #, kde-format
 msgid "Unread Messages"
-msgstr ""
+msgstr "Mensaxes ensin lleer"
 
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
@@ -498,7 +500,7 @@ msgstr ""
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
-msgstr ""
+msgstr "Ensin lleer"
 
 #: core/models/statisticsproxymodel.cpp:226
 #, kde-format
@@ -510,7 +512,7 @@ msgstr ""
 #, kde-format
 msgctxt "collection size"
 msgid "Size"
-msgstr ""
+msgstr "Tamañu"
 
 #: core/models/tagmodel.cpp:64
 #, kde-format
@@ -690,8 +692,8 @@ msgstr ""
 #, kde-format
 msgid "minute"
 msgid_plural "minutes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "minutu"
+msgstr[1] "minutos"
 
 #: widgets/cachepolicypage.cpp:69
 #, kde-format
@@ -728,7 +730,7 @@ msgstr ""
 #: widgets/cachepolicypage.ui:50 widgets/cachepolicypage.ui:133
 #, kde-format
 msgid "minutes"
-msgstr ""
+msgstr "minutos"
 
 #. i18n: ectx: property (text), widget (QLabel, localPartsLabel)
 #: widgets/cachepolicypage.ui:66
@@ -811,13 +813,13 @@ msgstr ""
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
-msgstr ""
+msgstr "Carpeta nueva"
 
 #: widgets/collectiondialog.cpp:266
 #, kde-format
 msgctxt "@label:textbox, name of a thing"
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:420
 #, kde-format
@@ -860,13 +862,13 @@ msgstr ""
 #: widgets/collectiongeneralpropertiespage.ui:39
 #, kde-format
 msgid "folder"
-msgstr ""
+msgstr "carpeta"
 
 #. i18n: ectx: property (title), widget (QGroupBox, statsBox)
 #: widgets/collectiongeneralpropertiespage.ui:62
 #, kde-format
 msgid "Statistics"
-msgstr ""
+msgstr "Estadístiques"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: widgets/collectiongeneralpropertiespage.ui:68
@@ -885,7 +887,7 @@ msgstr ""
 #: widgets/collectiongeneralpropertiespage.ui:82
 #, kde-format
 msgid "Size:"
-msgstr ""
+msgstr "Tamañu:"
 
 #. i18n: ectx: property (text), widget (QLabel, sizeLabel)
 #: widgets/collectiongeneralpropertiespage.ui:89
@@ -954,7 +956,7 @@ msgstr ""
 #: widgets/collectionmaintenancepage.ui:59
 #, kde-format
 msgid "Unread items:"
-msgstr ""
+msgstr "Elementos ensin lleer:"
 
 #. i18n: ectx: property (text), widget (QLabel, indexingLabel)
 #: widgets/collectionmaintenancepage.ui:73
@@ -1214,7 +1216,7 @@ msgstr ""
 #: widgets/renamefavoritedialog.ui:35
 #, kde-format
 msgid "Name:"
-msgstr ""
+msgstr "Nome:"
 
 #: widgets/selftestdialog.cpp:60
 #, kde-format
@@ -1282,7 +1284,7 @@ msgstr ""
 #: widgets/selftestdialog.cpp:224
 #, kde-format
 msgid "MySQL server not found."
-msgstr ""
+msgstr "Nun s'atopó'l sirvidor MySQL."
 
 #: widgets/selftestdialog.cpp:226
 #, kde-format
@@ -1297,12 +1299,12 @@ msgstr ""
 #: widgets/selftestdialog.cpp:230
 #, kde-format
 msgid "MySQL found with unexpected name."
-msgstr ""
+msgstr "MySQL atopó un nome inesperáu."
 
 #: widgets/selftestdialog.cpp:232
 #, kde-format
 msgid "MySQL server found."
-msgstr ""
+msgstr "Atopóse'l sirividor MySQL"
 
 #: widgets/selftestdialog.cpp:238
 #, kde-format
@@ -1312,7 +1314,7 @@ msgstr ""
 #: widgets/selftestdialog.cpp:239
 #, kde-format
 msgid "MySQL server is executable."
-msgstr ""
+msgstr "El sirvidor MySQL ye executable."
 
 #: widgets/selftestdialog.cpp:241
 #, kde-format
@@ -1345,7 +1347,7 @@ msgstr ""
 #: widgets/selftestdialog.cpp:264
 #, kde-format
 msgid "MySQL error log not readable."
-msgstr ""
+msgstr "El rexistru d'errores de MySQL nun se pue lleer."
 
 #: widgets/selftestdialog.cpp:265
 #, kde-format
@@ -1390,7 +1392,7 @@ msgstr ""
 #: widgets/selftestdialog.cpp:309
 #, kde-format
 msgid "MySQL server default configuration found."
-msgstr ""
+msgstr "Atopóse la configuración predeterminada de MySQL."
 
 #: widgets/selftestdialog.cpp:310
 #, kde-format
@@ -1402,7 +1404,7 @@ msgstr ""
 #: widgets/selftestdialog.cpp:314
 #, kde-format
 msgid "MySQL server default configuration not found."
-msgstr ""
+msgstr "Nun s'atopó la configuración predeterminada de MySQL."
 
 #: widgets/selftestdialog.cpp:315
 #, kde-format
@@ -1459,7 +1461,7 @@ msgstr ""
 #: widgets/selftestdialog.cpp:346
 #, kde-format
 msgid "MySQL server configuration is usable."
-msgstr ""
+msgstr "La configuración del sirvidor MySQL pue usase."
 
 #: widgets/selftestdialog.cpp:347
 #, kde-format
@@ -2116,7 +2118,7 @@ msgstr[1] ""
 #, kde-format
 msgctxt "@label:textbox name of Akonadi folder"
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #: widgets/standardactionmanager.cpp:426
 #, kde-format
@@ -2187,7 +2189,7 @@ msgstr ""
 #, kde-format
 msgctxt "@label:textbox name of the folder"
 msgid "Name:"
-msgstr ""
+msgstr "Nome:"
 
 #: widgets/standardactionmanager.cpp:445
 #, kde-format
@@ -2276,12 +2278,12 @@ msgstr ""
 msgid "Copy to This Folder"
 msgstr ""
 
-#: widgets/subscriptiondialog.cpp:97
+#: widgets/subscriptiondialog.cpp:99
 #, kde-format
 msgid "Failed to update subscription: %1"
 msgstr ""
 
-#: widgets/subscriptiondialog.cpp:97
+#: widgets/subscriptiondialog.cpp:99
 #, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
@@ -2411,7 +2413,7 @@ msgstr "© 2009 Volker Krause <vkrause@kde.org>"
 #: xml/xmldocument.cpp:83
 #, kde-format
 msgid "No data loaded."
-msgstr ""
+msgstr "Nun se cargó nengún datu."
 
 #: xml/xmldocument.cpp:121
 #, kde-format
