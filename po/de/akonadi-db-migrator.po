@@ -2,6 +2,7 @@
 # German translation for akonadi.
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the akonadi package.
+# SPDX-FileCopyrightText: 2024 Johannes Obermayr <johannesobermayr@gmx.de>
 # Automatically generated, 2024.
 #
 msgid ""
@@ -9,48 +10,49 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-11 00:37+0000\n"
-"PO-Revision-Date: 2024-01-13 20:15+0100\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2024-03-26 17:22+0100\n"
+"Last-Translator: Johannes Obermayr <johannesobermayr@gmx.de>\n"
+"Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 24.02.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr ""
+msgstr "Deutsches KDE-Übersetzerteam"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ""
+msgstr "kde-i18n-de@kde.org"
 
 #: dbmigrator.cpp:435
 #, kde-format
 msgctxt "@info:status"
 msgid "Stopping Akonadi service..."
-msgstr ""
+msgstr "Akonadi-Server wird angehalten …"
 
 #: dbmigrator.cpp:438
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: timeout while waiting for Akonadi to stop."
-msgstr ""
+msgstr "Fehler: Zeitablauf während des Wartens beim Beenden von Akonadi"
 
 #: dbmigrator.cpp:445
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: couldn't acquire DBus lock for Akonadi."
-msgstr ""
+msgstr "Fehler: Die DBus-Sperre für Akonadi ist nicht möglich."
 
 #: dbmigrator.cpp:454
 #, kde-format
 msgctxt "@info:status"
 msgid "Starting Akonadi service..."
-msgstr ""
+msgstr "Akonadi-Dienst wird gestartet …"
 
 #: dbmigrator.cpp:469
 #, kde-format
@@ -59,66 +61,77 @@ msgid ""
 "Invalid database engine \"%1\" - valid values are \"sqlite\", \"mysql\" and "
 "\"postgres\"."
 msgstr ""
+"Ungültiger Datenbanktreiber „%1“ - Gültige Werte sind „sqlite“, „mysql“  und "
+"„postgres“."
 
 #: dbmigrator.cpp:491
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure source database server."
-msgstr ""
+msgstr "Fehler: Der Datenbankserver der Quelle kann nicht eingerichtet werden."
 
 #: dbmigrator.cpp:496
 #, kde-format
 msgctxt "@info:shell"
 msgid "Source and destination database engines are the same."
-msgstr ""
+msgstr "Die Datenbanktreiber der Quelle und des Ziels sind die selben."
 
 #: dbmigrator.cpp:503
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to obtain path to source database data file or directory."
 msgstr ""
+"Fehler: Der Pfad zur Datendatei oder des Ordners der Quelldatenbank kann "
+"nicht bezogen werden."
 
 #: dbmigrator.cpp:510
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure the new database server."
-msgstr ""
+msgstr "Fehler: Der neue Datenbankserver kann nicht eingerichtet werden."
 
 #: dbmigrator.cpp:516
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open existing database to migrate data from."
 msgstr ""
+"Fehler: Die vorhandene Datenbank, von der die Daten migriert werden sollen, "
+"kann nicht geöffnet werden."
 
 #: dbmigrator.cpp:521
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open new database to migrate data to."
 msgstr ""
+"Fehler: Die neue Datenbank, zu der die Daten migriert werden sollen, kann "
+"nicht geöffnet werden."
 
 #: dbmigrator.cpp:541
 #, kde-format
 msgctxt "@info:status %2 is error message"
 msgid "Error: failed to remove temporary database directory %1: %2"
 msgstr ""
+"Fehler: Der temporäre Datenbankordner %1 kann nicht entfernt werden: %2"
 
 #: dbmigrator.cpp:548
 #, kde-format
 msgctxt "@info:shell"
 msgid "Backing up original database..."
-msgstr ""
+msgstr "Sichern der ursprünglichen Datenbank …"
 
 #: dbmigrator.cpp:556
 #, kde-format
 msgctxt "@info:status"
 msgid "Restoring database from backup %1 to %2"
-msgstr ""
+msgstr "Wiederherstellen der Datenbank von der Sicherung %1 zu %2"
 
 #: dbmigrator.cpp:558
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to restore database from backup: %1"
 msgstr ""
+"Fehler: Die Datenbank kann von der Sicherung nicht wiederhergestellt werden: "
+"%1"
 
 #: dbmigrator.cpp:590 dbmigrator.cpp:601
 #, kde-format
@@ -204,13 +217,13 @@ msgstr ""
 #, kde-format
 msgctxt "@info:status"
 msgid "Optimizing table %1..."
-msgstr ""
+msgstr "Optimieren der Tabelle %1 …"
 
 #: dbmigrator.cpp:813
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to optimize table %1"
-msgstr ""
+msgstr "Fehler: Die Tabelle %1 kann nicht optimiert werden"
 
 #: main.cpp:31
 #, kde-format
@@ -218,13 +231,13 @@ msgctxt ""
 "Options for user to input to command line prompt, parenthesis indicate which "
 "letter to type, capitalized option is default"
 msgid " [(y)es/(N)o] "
-msgstr ""
+msgstr "[(ja)/(N)ein]"
 
 #: main.cpp:36 main.cpp:55
 #, kde-format
 msgctxt "Letter for option \"(y)es\" prompted from command line"
 msgid "y"
-msgstr ""
+msgstr "j"
 
 #: main.cpp:49
 #, kde-format
@@ -232,18 +245,18 @@ msgctxt ""
 "Options for user to input to command line prompt, parenthesis indicate which "
 "letter to type, capitalized option is default"
 msgid " [(y)es/(N)o/(s)kip] "
-msgstr ""
+msgstr "[(j]a|(N)ein/a(b)brechen]"
 
 #: main.cpp:56
 #, kde-format
 msgctxt "Letter for option \"(s)kip\" prompted from command line"
 msgid "s"
-msgstr ""
+msgstr "b"
 
 #: main.cpp:73 main.cpp:75
 #, kde-format
 msgid "Akonadi DB Migrator"
-msgstr ""
+msgstr "Akonadi-DB-Migrationswerkzeug"
 
 #: main.cpp:77
 #, kde-format
@@ -256,33 +269,35 @@ msgid ""
 "The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and "
 "\"postgres\""
 msgstr ""
+"Der neue zu verwendende Datenbanktreiber. Gültige Werte sind „sqlite“, "
+"„mysql“  und „postgres“"
 
 #: main.cpp:90
 #, kde-format
 msgctxt "@info:shell"
 msgid "Invalid target engine: %1."
-msgstr ""
+msgstr "Ungültiger Treiber für das Ziel: %1."
 
 #: main.cpp:104
 #, kde-format
 msgctxt "@info:status"
 msgid "Migration completed successfully."
-msgstr ""
+msgstr "Die Migration wurde erfolgreich ausgeführt."
 
 #: main.cpp:106
 #, kde-format
 msgctxt "@info:status"
 msgid "Migration failed."
-msgstr ""
+msgstr "Die Migration ist fehlgeschlagen."
 
 #: main.cpp:111
 #, kde-format
 msgctxt "@info:progress"
 msgid "Migrating table %1 (%2/%3)..."
-msgstr ""
+msgstr "Die Tabelle %1 (%2 / %3) wird migriert …"
 
 #: main.cpp:125
 #, kde-format
 msgctxt "@info:progress"
 msgid "%1%..."
-msgstr ""
+msgstr "%1 % …"
