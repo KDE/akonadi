@@ -7,6 +7,7 @@
 #include "akonadi.h"
 #include "akonadifull-version.h"
 #include "akonadiserver_debug.h"
+#include "config-akonadi.h"
 
 #include "shared/akapplication.h"
 
@@ -39,7 +40,7 @@ int main(int argc, char **argv)
                          KAboutLicense::LGPL_V2);
     KAboutData::setApplicationData(aboutData);
 
-#if !defined(NDEBUG)
+#if !WITH_SYSTEMD && !defined(NDEBUG)
     const QCommandLineOption startWithoutControlOption(QStringLiteral("start-without-control"),
                                                        QStringLiteral("Allow to start the Akonadi server without the Akonadi control process being available"));
     app.addCommandLineOptions(startWithoutControlOption);
@@ -47,6 +48,7 @@ int main(int argc, char **argv)
 
     app.parseCommandLine();
 
+#if !WITH_SYSTEMD
 #if !defined(NDEBUG)
     if (!app.commandLineArguments().isSet(QStringLiteral("start-without-control")) &&
 #else
@@ -56,6 +58,7 @@ int main(int argc, char **argv)
         qCCritical(AKONADISERVER_LOG) << "Akonadi control process not found - aborting.";
         qCCritical(AKONADISERVER_LOG) << "If you started akonadiserver manually, try 'akonadictl start' instead.";
     }
+#endif
 
     Akonadi::Server::AkonadiServer akonadi;
     // Make sure we do initialization from eventloop, otherwise
