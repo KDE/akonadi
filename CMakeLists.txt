@@ -37,12 +37,16 @@ include(KDEPackageAppTemplates)
 include(ECMMarkNonGuiExecutable)
 include(ECMAddTests)
 include(ECMSetupQtPluginMacroNames)
+include(ECMConfiguredInstall)
 
 include(AkonadiMacros)
 include(ECMAddQch)
 
 option(BUILD_QCH "Build API documentation in QCH format (for e.g. Qt Assistant, Qt Creator & KDevelop)" OFF)
 add_feature_info(QCH ${BUILD_QCH} "API documentation in QCH format (for e.g. Qt Assistant, Qt Creator & KDevelop)")
+
+option(WITH_SYSTEMD "Build with support for managing Akonadi via systemd" OFF)
+add_feature_info(SYSTEMD ${WITH_SYSTEMD} "Build with support for managing Akonadi via systemd")
 
 set(RELEASE_SERVICE_VERSION "24.04.40")
 set(AKONADI_FULL_VERSION "${PIM_VERSION} (${RELEASE_SERVICE_VERSION})")

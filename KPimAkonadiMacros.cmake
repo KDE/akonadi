@@ -137,10 +137,66 @@ function(kcfg_generate_dbus_interface _kcfg _name)
         COMMAND ${XSLTPROC_EXECUTABLE}
             --output ${_name}.xml
             --stringparam interfaceName ${_name}
-            ${xsl_relpath}
-            ${kcfg_relpath}
+            ${xsl_path}
+            ${kcfg_path}
         DEPENDS
             ${xsl_path}
             ${_kcfg}
     )
 endfunction()
+
+function(akonadi_install_systemd_unit)
+    set(options UNIQUE RESOURCE AGENT)
+    set(oneValueArgs SOURCE TARGET DESCRIPTION)
+    set(multiValueArgs)
+    cmake_parse_arguments(_resource "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    # Don't generate anything if we are not building with systemd enabled
+    if (NOT AKONADI_WITH_SYSTEMD)
+        return()
+    endif()
+
+    if (_resource_RESOURCE AND _resource_AGENT)
+        message(FATAL_ERROR "Only one of RESOURCE and AGENT options can be specified in akonadi_install_systemd_unit.")
+    endif()
+    if (NOT _resource_RESOURCE AND NOT _resource_AGENT)
+        message(FATAL_ERROR "At least one of RESOURCE and AGENT options must be specified in akonadi_install_systemd_unit.")
+    endif()
+
+    get_target_property(target_name ${_resource_TARGET} OUTPUT_NAME)
+
+    if (_resource_RESOURCE AND NOT _resource_UNIQUE)
+        set(filename "$<TARGET_FILE_BASE_NAME:${_resource_TARGET}>@.service")
+    else()
+        set(filename "$<TARGET_FILE_BASE_NAME:${_resource_TARGET}>.service")
+    endif()
+
+    if (_resource_AGENT)
+        set(type "Agent")
+    else()
+        set(type "Resource")
+    endif()
+
+    if (_resource_AGENT OR _resource_UNIQUE)
+        set(identifier "%N")
+        set(description "${_resource_DESCRIPTION}")
+    else()
+        set(description "${_resource_DESCRIPTION} (%i)")
+        set(identifier "%p_%i")
+    endif()
+
+    string(CONCAT filecontent
+        "[Unit]\n" "Description=${description}\n" "After=akonadi-server.service\n"
+        "BindsTo=akonadi.service\n"
+        "\n"
+        "[Service]\n"
+        "Type=dbus\n"
+        "BusName=org.freedesktop.Akonadi.${type}.${identifier}\n"
+        "ExecStart=${CMAKE_INSTALL_FULL_BINDIR}/$<TARGET_FILE_NAME:${_resource_TARGET}> --identifier ${identifier}\n"
+        "Slice=background.slice\n"
+    )
+
+    file(GENERATE OUTPUT ${filename} CONTENT "${filecontent}" TARGET ${_resource_TARGET})
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${filename}" DESTINATION ${KDE_INSTALL_SYSTEMDUSERUNITDIR})
+endfunction()
+

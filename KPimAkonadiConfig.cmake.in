@@ -5,6 +5,7 @@ set_and_check(AKONADI_INCLUDE_DIR          "@PACKAGE_AKONADI_INCLUDE_DIR@")
 
 # The directory where akonadi-xml.xsd and kcfg2dbus.xsl are installed
 set(KF5Akonadi_DATA_DIR "@PACKAGE_KF5Akonadi_DATA_DIR@")
+set(AKONADI_WITH_SYSTEMD "@WITH_SYSTEMD@")
 
 # set the directories
 if(NOT AKONADI_INSTALL_DIR)
