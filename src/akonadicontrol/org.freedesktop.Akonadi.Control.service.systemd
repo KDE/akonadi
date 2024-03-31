@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.freedesktop.Akonadi.Control
+Exec=/bin/false
+SystemdService=dbus-org.freedesktop.Akonadi.Control.target

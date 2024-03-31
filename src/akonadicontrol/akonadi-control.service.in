@@ -1,0 +1,13 @@
+[Unit]
+Description=Akonadi Control Daemon
+PartOf=akonadi.target
+Upholds=akonadi-server.service
+RefuseManualStart=true
+
+[Service]
+ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/akonadi_control
+ExecStop=qdbus org.freedesktop.Akonadi.Control /ControlManager org.freedesktop.Akonadi.Control.shutdown
+Type=dbus
+BusName=org.freedesktop.Akonadi.Control
+Slice=background-akonadi.slice
+Restart=on-failure

@@ -79,6 +79,16 @@ endif()
 install(TARGETS akonadi_control
         ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
-configure_file(org.freedesktop.Akonadi.Control.service.cmake ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.Control.service)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.Control.service
-        DESTINATION ${KDE_INSTALL_DBUSSERVICEDIR})
+if (WITH_SYSTEMD)
+    ecm_install_configured_files(
+        INPUT akonadi-control.service.in
+        DESTINATION ${KDE_INSTALL_SYSTEMDUSERUNITDIR}
+    )
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/org.freedesktop.Akonadi.Control.service.systemd
+            RENAME org.freedesktop.Akonadi.Control.service
+            DESTINATION ${KDE_INSTALL_DBUSSERVICEDIR})
+else()
+    configure_file(org.freedesktop.Akonadi.Control.service.cmake ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.Control.service)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.Control.service
+            DESTINATION ${KDE_INSTALL_DBUSSERVICEDIR})
+endif()
