@@ -1,0 +1,8 @@
+[Unit]
+Description=Akonadi PIM Storage Service
+Requires=akonadi-control.service akonadi-server.service
+BindsTo=graphical-session.target
+
+[Install]
+WantedBy=graphical-session.target
+Alias=dbus-org.freedesktop.Akonadi.Control.target

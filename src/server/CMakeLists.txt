@@ -306,6 +306,17 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.DebugInterface
         DESTINATION ${AKONADI_DBUS_INTERFACES_INSTALL_DIR}
 )
 
+if (WITH_SYSTEMD)
+    ecm_install_configured_files(
+        INPUT akonadi-server.service.in akonadi.target.in
+        @ONLY
+        DESTINATION ${KDE_INSTALL_SYSTEMDUSERUNITDIR}
+    )
+    install(FILES background-akonadi.slice
+            DESTINATION ${KDE_INSTALL_SYSTEMDUSERUNITDIR}
+    )
+endif()
+
 #######################################################
 
 add_subdirectory(dbmigrator)

@@ -1,0 +1,12 @@
+[Unit]
+Description=Akonadi Server
+PartOf=akonadi.target
+RefuseManualStart=true
+
+[Service]
+ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/akonadiserver
+ExecStop=qdbus org.freedesktop.Akonadi /Server org.freedesktop.Akonadi.Server.quit
+Type=dbus
+BusName=org.freedesktop.Akonadi
+Slice=background-akonadi.slice
+Restart=on-failure
