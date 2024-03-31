@@ -187,13 +187,26 @@ function(akonadi_install_systemd_unit)
 
     string(CONCAT filecontent
         "[Unit]\n" "Description=${description}\n" "After=akonadi-server.service\n"
-        "BindsTo=akonadi.service\n"
+        "After=akonadi-server.service\n"
+        "After=akonadi-control.service\n"
+        "Requires=akonadi-server.service\n"
+        "Requires=akonadi-control.service\n"
+        "PartOf=akonadi.target\n"
+        "StartLimitIntervalSec=300\n"
+        "StartLimitBurst=5\n"
         "\n"
         "[Service]\n"
         "Type=dbus\n"
         "BusName=org.freedesktop.Akonadi.${type}.${identifier}\n"
         "ExecStart=${CMAKE_INSTALL_FULL_BINDIR}/$<TARGET_FILE_NAME:${_resource_TARGET}> --identifier ${identifier}\n"
-        "Slice=background.slice\n"
+        "ExecStop=qdbus org.freedesktop.Akonadi.${type}.${identifier} / org.freedesktop.Akonadi.Agent.Control.quit\n"
+        "Slice=background-akonadi.slice\n"
+        "Restart=on-failure\n"
+        "RestartSec=1s\n"
+        ""
+        "\n"
+        "[Install]\n"
+        "WantedBy=akonadi.target\n"
     )
 
     file(GENERATE OUTPUT ${filename} CONTENT "${filecontent}" TARGET ${_resource_TARGET})
