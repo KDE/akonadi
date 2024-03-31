@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-14 03:07+0000\n"
-"PO-Revision-Date: 2024-01-06 03:32\n"
+"PO-Revision-Date: 2024-03-30 19:38\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -14,8 +14,8 @@ msgstr ""
 "X-Crowdin-Project: kdeorg\n"
 "X-Crowdin-Project-ID: 269464\n"
 "X-Crowdin-Language: zh-CN\n"
-"X-Crowdin-File: /kf6-trunk/messages/akonadi/libakonadi6.pot\n"
-"X-Crowdin-File-ID: 49004\n"
+"X-Crowdin-File: /kf6-stable/messages/akonadi/libakonadi6.pot\n"
+"X-Crowdin-File-ID: 51290\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -115,13 +115,13 @@ msgstr "创建项目时发生错误：%1"
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
-msgstr "更新收藏时发生错误：%1"
+msgstr "更新集合时发生错误：%1"
 
 #: agentbase/resourcebase.cpp:705
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
-msgstr "更新本地收藏失败：%1。"
+msgstr "更新本地集合失败：%1。"
 
 #: agentbase/resourcebase.cpp:710
 #, kde-format
@@ -144,12 +144,12 @@ msgstr "正在同步文件夹“%1”"
 #: agentbase/resourcebase.cpp:930 agentbase/resourcebase.cpp:937
 #, kde-format
 msgid "Failed to retrieve collection for sync."
-msgstr "为同步获取收藏失败。"
+msgstr "为同步获取集合失败。"
 
 #: agentbase/resourcebase.cpp:977
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
-msgstr "为属性同步获取收藏失败。"
+msgstr "为属性同步获取集合失败。"
 
 #: agentbase/resourcebase.cpp:1031
 #, kde-format
@@ -163,10 +163,9 @@ msgid "Job canceled."
 msgstr "任务已取消。"
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
-msgstr "Akonadi 代理"
+msgstr "Akonadi 控制"
 
 #: akonadictl/main.cpp:211
 #, kde-format
@@ -186,21 +185,31 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"Akonadi 服务器操作工具\n"
+"\n"
+"Commands:\n"
+"  start          启动 Akonadi 服务器和它的所有进程\n"
+"  stop           停止 Akonadi 服务器和它的所有进程\n"
+"  restart        重新启动 Akonadi 服务器和它的所有进程\n"
+"  status         显示 Akonadi 服务器的状态概览\n"
+"  instances      列出当前正在运行的所有 Akonadi 实例\n"
+"  vacuum         清理内部存储 (警告：需要很长时间和大量磁盘空间)\n"
+"  fsck           检查 (并尝试修复) 内部存储的一致性 (可能需要一些时间)"
 
 #: akonadictl/main.cpp:231
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "要执行的命令"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
 msgid "No such collection."
-msgstr "没有这个收藏。"
+msgstr "没有这个集合。"
 
 #: core/collectionsync.cpp:505 core/collectionsync.cpp:650
 #, kde-format
 msgid "Found unresolved orphan collections"
-msgstr "发现无法解析的孤立收藏"
+msgstr "发现未解决的孤立集合"
 
 #: core/conflicthandler.cpp:53
 #, kde-format
@@ -230,7 +239,7 @@ msgstr "无法创建代理实例。"
 #: core/jobs/collectionattributessynchronizationjob.cpp:73
 #, kde-format
 msgid "Invalid collection instance."
-msgstr "无效的收藏实例。"
+msgstr "无效的集合实例。"
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:80
 #: core/jobs/resourcesynchronizationjob.cpp:88
@@ -247,17 +256,17 @@ msgstr "无法为资源“%1”获得 D-Bus 接口"
 #: core/jobs/collectionattributessynchronizationjob.cpp:125
 #, kde-format
 msgid "Collection attributes synchronization timed out."
-msgstr "收藏属性同步超时。"
+msgstr "集合属性同步超时。"
 
 #: core/jobs/collectioncopyjob.cpp:54
 #, kde-format
 msgid "Invalid collection to copy"
-msgstr "复制无效的收藏"
+msgstr "要复制的是无效的集合"
 
 #: core/jobs/collectioncopyjob.cpp:60
 #, kde-format
 msgid "Invalid destination collection"
-msgstr "无效的目标收藏"
+msgstr "无效的目标集合"
 
 #: core/jobs/collectioncreatejob.cpp:50
 #, kde-format
@@ -267,17 +276,17 @@ msgstr "无效的父类"
 #: core/jobs/collectioncreatejob.cpp:98
 #, kde-format
 msgid "Failed to parse Collection from response"
-msgstr "从响应解析收藏失败"
+msgstr "从响应解析集合失败"
 
 #: core/jobs/collectiondeletejob.cpp:52
 #, kde-format
 msgid "Invalid collection"
-msgstr "无效的收藏"
+msgstr "无效的集合"
 
 #: core/jobs/collectionfetchjob.cpp:212
 #, kde-format
 msgid "Invalid collection given."
-msgstr "给出的收藏无效。"
+msgstr "给出的集合无效。"
 
 #: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:90
 #, kde-format
@@ -293,12 +302,12 @@ msgstr "未指定有效的目标"
 #: core/jobs/invalidatecachejob.cpp:58
 #, kde-format
 msgid "Invalid collection."
-msgstr "无效的收藏。"
+msgstr "无效的集合。"
 
 #: core/jobs/itemcreatejob.cpp:115
 #, kde-format
 msgid "Invalid parent collection"
-msgstr "无效的父收藏"
+msgstr "无效的父集合"
 
 #: core/jobs/job.cpp:335
 #, kde-format
@@ -340,7 +349,7 @@ msgstr "资源同步超时。"
 #: core/jobs/specialcollectionshelperjobs.cpp:145
 #, kde-format
 msgid "Could not fetch root collection of resource %1."
-msgstr "无法获取资源 %1 的收藏根路径。"
+msgstr "无法获取资源 %1 的根集合。"
 
 #: core/jobs/specialcollectionshelperjobs.cpp:189
 #, kde-format
@@ -361,7 +370,7 @@ msgstr "通过 D-Bus 配置默认资源失败。"
 #: core/jobs/specialcollectionshelperjobs.cpp:415
 #, kde-format
 msgid "Failed to fetch the resource collection."
-msgstr "获取资源收藏失败。"
+msgstr "获取资源集合失败。"
 
 #: core/jobs/specialcollectionshelperjobs.cpp:599
 #, kde-format
@@ -376,7 +385,7 @@ msgstr "无法创建标签。"
 #: core/jobs/trashjob.cpp:155
 #, kde-format
 msgid "Move to trash collection failed, aborting trash operation"
-msgstr "移动到回收站收藏失败，中止操作"
+msgstr "移动到回收站集合失败，中止操作"
 
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format
@@ -386,17 +395,17 @@ msgstr "传递了无效的项目"
 #: core/jobs/trashjob.cpp:258 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
-msgstr "传递了无效的收藏"
+msgstr "传递了无效的集合"
 
 #: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
 #, kde-format
 msgid "No valid collection or empty itemlist"
-msgstr "无效的收藏或空项目列表"
+msgstr "无效的集合或者空项目列表"
 
 #: core/jobs/trashrestorejob.cpp:86
 #, kde-format
 msgid "Could not find restore collection and restore resource is not available"
-msgstr "无法找到恢复收藏并且恢复资源不可用"
+msgstr "无法找到恢复集合且恢复资源不可用"
 
 #: core/models/agentinstancemodel.cpp:188
 #, kde-format
@@ -441,7 +450,7 @@ msgstr "无法复制项目: <message>%1</message>"
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
-msgstr "无法复制收藏集: <message>%1</message>"
+msgstr "无法复制集合：<message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1335
 #, kde-format
@@ -453,7 +462,7 @@ msgstr "无法移动项目: <message>%1</message>"
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
-msgstr "无法移动收藏集: <message>%1</message>"
+msgstr "无法移动集合：<message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1339
 #, kde-format
@@ -610,7 +619,7 @@ msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
 #, kde-format
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
-msgstr ""
+msgstr "用于在同一用户会话中启动多个 Akonadi 实例时的命名空间"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
@@ -778,7 +787,7 @@ msgstr "永远"
 #: widgets/clearcachefoldersjob.cpp:41
 #, kde-format
 msgid "Collection cache cleared. You should restart Akonadi now."
-msgstr ""
+msgstr "集合缓存已清除。请立即重启 Akonadi。"
 
 #: widgets/clearcachefoldersjob.cpp:69
 #, kde-format
@@ -787,6 +796,8 @@ msgid ""
 "likely never uploaded to the destination server, so clearing this collection "
 "means that those <b>data will be lost</b>. Are you sure you want to proceed?"
 msgstr ""
+"集合“%1”包含 %2 个没有远程 ID 的项目。这些项目很可能从未被上传到目标服务器，"
+"这意味着清空此集合<b>将使得这些数据彻底丢失</b>。您确定要继续吗？"
 
 #: widgets/collectiondialog.cpp:58
 #, kde-format
@@ -988,13 +999,13 @@ msgstr "无文件夹"
 #: widgets/collectionrequester.cpp:122
 #, kde-format
 msgid "Open collection dialog"
-msgstr "打开收藏对话框"
+msgstr "打开集合对话框"
 
 #: widgets/collectionrequester.cpp:143
 #, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
-msgstr ""
+msgstr "选择集合"
 
 #: widgets/conflictresolvedialog.cpp:129
 #, kde-format
@@ -2010,11 +2021,11 @@ msgstr "从回收站恢复项目"
 
 #: widgets/standardactionmanager.cpp:223
 msgid "&Restore Collection From Trash"
-msgstr "从回收站恢复收藏(&R)"
+msgstr "从回收站恢复集合(&R)"
 
 #: widgets/standardactionmanager.cpp:223
 msgid "Restore Collection From Trash"
-msgstr "从回收站恢复收藏"
+msgstr "从回收站恢复集合"
 
 #: widgets/standardactionmanager.cpp:234
 msgid "&Synchronize Favorite Folders"
@@ -2190,7 +2201,7 @@ msgstr[0] "您确定要删除 %1 项吗？"
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] ""
+msgstr[0] "删除项目？"
 
 #: widgets/standardactionmanager.cpp:369
 #, kde-format
@@ -2201,7 +2212,7 @@ msgstr "无法删除项目：%1"
 #, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
-msgstr ""
+msgstr "项目删除失败"
 
 #: widgets/standardactionmanager.cpp:372
 #, kde-format
@@ -2425,7 +2436,7 @@ msgstr "Akonadi XML 转换器"
 #: xml/akonadi2xml.cpp:27
 #, kde-format
 msgid "Converts an Akonadi collection subtree into a XML file."
-msgstr "转换 Akonadi 收藏子树为 XML 文件。"
+msgstr "转换 Akonadi 集合子树为 XML 文件。"
 
 #: xml/akonadi2xml.cpp:29
 #, kde-format
@@ -2490,4 +2501,4 @@ msgstr "无法解析数据文件：%1"
 #: xml/xmldocument.cpp:302
 #, kde-format
 msgid "Unable to find collection %1"
-msgstr "无法找到收藏 %1"
+msgstr "无法找到集合 %1"
