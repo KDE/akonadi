@@ -10,9 +10,14 @@
 #include "agentbrokeninstance.h"
 #include "agentmanageradaptor.h"
 #include "agentmanagerinternaladaptor.h"
+#include "config-akonadi.h"
+#if WITH_SYSTEMD
+#include "agentsystemdinstance.h"
+#else
 #include "agentprocessinstance.h"
 #include "agentserverinterface.h"
 #include "agentthreadinstance.h"
+#endif
 #include "akonadicontrol_debug.h"
 #include "preprocessor_manager.h"
 #include "processcontrol.h"
@@ -37,6 +42,7 @@ using namespace std::chrono_literals;
 
 static const bool enableAgentServerDefault = false;
 
+#if !WITH_SYSTEMD
 class StorageProcessControl : public Akonadi::ProcessControl
 {
     Q_OBJECT
@@ -82,6 +88,7 @@ public:
         agentServerIface.quit();
     }
 };
+#endif
 
 AgentManager::AgentManager(bool verbose, QObject *parent)
     : QObject(parent)
@@ -109,11 +116,13 @@ AgentManager::AgentManager(bool verbose, QObject *parent)
         serviceArgs << QStringLiteral("--verbose");
     }
 
+#if !WITH_SYSTEMD
     mStorageController = std::unique_ptr<Akonadi::ProcessControl>(new StorageProcessControl(serviceArgs));
 
     if (mAgentServerEnabled) {
         mAgentServer = std::unique_ptr<Akonadi::ProcessControl>(new AgentServerProcessControl(serviceArgs));
     }
+#endif
 }
 
 void AgentManager::continueStartup()
@@ -227,6 +236,10 @@ QVariantMap AgentManager::agentCustomProperties(const QString &identifier) const
 
 AgentInstance::Ptr AgentManager::createAgentInstance(const AgentType &info)
 {
+#ifdef WITH_SYSTEMD
+    Q_UNUSED(info);
+    return QSharedPointer<Akonadi::AgentSystemdInstance>::create(*this);
+#else
     switch (info.launchMethod) {
     case AgentType::Server:
         return QSharedPointer<Akonadi::AgentThreadInstance>::create(*this);
@@ -238,6 +251,7 @@ AgentInstance::Ptr AgentManager::createAgentInstance(const AgentType &info)
     }
 
     return AgentInstance::Ptr();
+#endif
 }
 
 QString AgentManager::createAgentInstance(const QString &identifier)
@@ -687,6 +701,10 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
             return;
         }
 
+        if (!mAgents.contains(instance->agentType())) {
+            qCWarning(AKONADICONTROL_LOG) << "Agent instance" << service->identifier << "has unknown agent type" << instance->agentType();
+            qCWarning(AKONADICONTROL_LOG) << "Known agent types are:" << mAgents.keys();
+        }
         Q_ASSERT(mAgents.contains(instance->agentType()));
         const bool isResource = mAgents.value(instance->agentType()).capabilities.contains(AgentType::CapabilityResource);
 
@@ -836,14 +854,19 @@ void AgentManager::ensureAutoStart(const AgentType &info)
         return; // no an autostart agent
     }
 
+    if (mAgentInstances.contains(info.identifier)) {
+        return; // already running
+    }
+
+#if !WITH_SYSTEMD
     org::freedesktop::Akonadi::AgentServer agentServer(Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer),
                                                        QStringLiteral("/AgentServer"),
                                                        QDBusConnection::sessionBus(),
                                                        this);
-
-    if (mAgentInstances.contains(info.identifier) || (agentServer.isValid() && agentServer.started(info.identifier))) {
+    if (agentServer.isValid() && agentServer.started(info.identifier)) {
         return; // already running
     }
+#endif
 
     const AgentInstance::Ptr instance = createAgentInstance(info);
     instance->setIdentifier(info.identifier);

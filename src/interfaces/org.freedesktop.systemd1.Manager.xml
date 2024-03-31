@@ -1,0 +1,65 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "https://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.freedesktop.systemd1.Manager">
+  <!--
+  Note: this is only subset of the overall systemd Manager interface that we use (or might use) in
+  Akonadi. qdbusxml2cpp would otherwise require me to annotate many complex types for the many many
+  methods in this interface, which I don't want to do.
+  -->
+
+  <method name="GetUnit">
+   <arg type="s" name="name" direction="in"/>
+   <arg type="o" name="unit" direction="out"/>
+  </method>
+  <method name="GetUnitByPID">
+   <arg type="u" name="pid" direction="in"/>
+   <arg type="o" name="unit" direction="out"/>
+  </method>
+  <method name="StartUnit">
+   <arg type="s" name="name" direction="in"/>
+   <arg type="s" name="mode" direction="in"/>
+   <arg type="o" name="job" direction="out"/>
+  </method>
+  <method name="StopUnit">
+   <arg type="s" name="name" direction="in"/>
+   <arg type="s" name="mode" direction="in"/>
+   <arg type="o" name="job" direction="out"/>
+  </method>
+  <method name="ReloadUnit">
+   <arg type="s" name="name" direction="in"/>
+   <arg type="s" name="mode" direction="in"/>
+   <arg type="o" name="job" direction="out"/>
+  </method>
+  <method name="RestartUnit">
+   <arg type="s" name="name" direction="in"/>
+   <arg type="s" name="mode" direction="in"/>
+   <arg type="o" name="job" direction="out"/>
+  </method>
+  <method name="KillUnit">
+   <arg type="s" name="name" direction="in"/>
+   <arg type="s" name="whom" direction="in"/>
+   <arg type="i" name="signal" direction="in"/>
+  </method>
+  <method name="ResetFailedUnit">
+   <arg type="s" name="name" direction="in"/>
+  </method>
+  <method name="EnableUnitFiles">
+   <arg type="as" name="files" direction="in"/>
+   <arg type="b" name="runtime" direction="in"/>
+   <arg type="b" name="force" direction="in"/>
+   <arg type="b" name="carries_install_info" direction="out"/>
+   <arg type="a(sss)" name="changes" direction="out"/>
+   <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QList&lt;Akonadi::UnitFileChanges&gt;" />
+  </method>
+  <method name="DisableUnitFiles">
+   <arg type="as" name="files" direction="in"/>
+   <arg type="b" name="runtime" direction="in"/>
+   <arg type="a(sss)" name="changes" direction="out"/>
+   <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QList&lt;Akonadi::UnitFileChanges&gt;" />
+  </method>
+  <method name="GetUnitFileState">
+   <arg type="s" name="name" direction="in"/>
+   <arg type="s" name="state" direction="out"/>
+  </method>
+  </interface>
+</node>

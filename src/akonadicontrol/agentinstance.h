@@ -152,6 +152,16 @@ private:
     std::unique_ptr<T> findInterface(Akonadi::DBus::AgentType agentType, const char *path = nullptr);
 
 protected:
+    AgentManager &agentManager()
+    {
+        return mManager;
+    }
+
+    const AgentManager &agentManager() const
+    {
+        return mManager;
+    }
+
     void setAgentType(const QString &agentType)
     {
         mType = agentType;

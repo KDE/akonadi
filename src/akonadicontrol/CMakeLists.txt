@@ -26,6 +26,11 @@ qt_add_dbus_interfaces(control_SRCS
 qt_add_dbus_interface(control_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.ResourceManager.xml resource_manager)
 qt_add_dbus_interface(control_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.PreprocessorManager.xml preprocessor_manager)
 
+if (WITH_SYSTEMD)
+    set_source_files_properties(${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.systemd1.Manager.xml PROPERTIES INCLUDE "agentsystemdinstance.h")
+    qt_add_dbus_interface(control_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.systemd1.Manager.xml systemd_manager)
+endif()
+
 target_sources(akonadi_control PRIVATE
     agenttype.cpp
     agentinstance.cpp
@@ -46,6 +51,9 @@ target_sources(akonadi_control PRIVATE
     controlmanager.h
     processcontrol.h
 )
+if (WITH_SYSTEMD)
+    target_sources(akonadi_control PRIVATE agentsystemdinstance.cpp agentsystemdinstance.h)
+endif()
 if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(akonadi_control PROPERTIES UNITY_BUILD ON)
 endif()
