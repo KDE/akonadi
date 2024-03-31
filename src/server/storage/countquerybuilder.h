@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_COUNTQUERYBUILDER_H
-#define AKONADI_COUNTQUERYBUILDER_H
+#pragma once
 
 #include "akonadiserver_debug.h"
 #include "storage/datastore.h"
@@ -83,5 +82,3 @@ public:
 
 } // namespace Server
 } // namespace Akonadi
-
-#endif

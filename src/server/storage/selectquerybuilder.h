@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_SELECTQUERYBUILDER_H
-#define AKONADI_SELECTQUERYBUILDER_H
+#pragma once
 
 #include "storage/datastore.h"
 #include "storage/querybuilder.h"
@@ -45,5 +44,3 @@ public:
 
 } // namespace Server
 } // namespace Akonadi
-
-#endif

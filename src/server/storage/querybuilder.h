@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef AKONADI_QUERYBUILDER_H
-#define AKONADI_QUERYBUILDER_H
+#pragma once
 
 #include "dbtype.h"
 #include "query.h"
@@ -331,5 +330,3 @@ private:
 
 } // namespace Server
 } // namespace Akonadi
-
-#endif
