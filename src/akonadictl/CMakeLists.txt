@@ -14,10 +14,16 @@ qt_add_dbus_interfaces(akonadictl_SRCS
     ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Janitor.xml
 )
 target_sources(akonadictl PRIVATE ${akonadictl_SRCS}
-    akonadistarter.cpp
+    processcontrol.cpp
     main.cpp
-    akonadistarter.h
+    processcontrol.h
 )
+
+if (WITH_SYSTEMD)
+    set_source_files_properties(${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.systemd1.Manager.xml PROPERTIES INCLUDE "shared/systemd.h")
+    qt_add_dbus_interface(akonadictl_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.systemd1.Manager.xml systemdmanagerinterface)
+    target_sources(akonadictl PRIVATE ${akonadictl_SRCS} systemdcontrol.cpp systemdcontrol.h)
+endif()
 
 if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(akonadictl PROPERTIES UNITY_BUILD ON)

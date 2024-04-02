@@ -4,8 +4,9 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "akonadistarter.h"
+#include "processcontrol.h"
 #include "akonadictl_debug.h"
+#include "controlmanagerinterface.h"
 
 #include "shared/akapplication.h"
 
@@ -20,7 +21,7 @@
 
 #include <iostream>
 
-AkonadiStarter::AkonadiStarter(QObject *parent)
+ProcessControl::ProcessControl(QObject *parent)
     : QObject(parent)
     , mWatcher(Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock), QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForRegistration)
 {
@@ -30,7 +31,7 @@ AkonadiStarter::AkonadiStarter(QObject *parent)
     });
 }
 
-bool AkonadiStarter::start(bool verbose)
+bool ProcessControl::start(bool verbose)
 {
     qCInfo(AKONADICTL_LOG) << "Starting Akonadi Server...";
 
@@ -63,4 +64,20 @@ bool AkonadiStarter::start(bool verbose)
     return true;
 }
 
-#include "moc_akonadistarter.cpp"
+bool ProcessControl::stop()
+{
+    org::freedesktop::Akonadi::ControlManager iface(Akonadi::DBus::serviceName(Akonadi::DBus::Control),
+                                                    QStringLiteral("/ControlManager"),
+                                                    QDBusConnection::sessionBus(),
+                                                    nullptr);
+    if (!iface.isValid()) {
+        std::cerr << "Akonadi is not running." << std::endl;
+        return false;
+    }
+
+    iface.shutdown();
+
+    return true;
+}
+
+#include "moc_ProcessControl.cpp"

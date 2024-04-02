@@ -9,12 +9,16 @@
 #include <QDBusServiceWatcher>
 #include <QObject>
 
-class AkonadiStarter : public QObject
+#include "control.h"
+
+class ProcessControl : public AbstractControl
 {
     Q_OBJECT
 public:
-    explicit AkonadiStarter(QObject *parent = nullptr);
-    [[nodiscard]] bool start(bool verbose);
+    explicit ProcessControl(QObject *parent = nullptr);
+    [[nodiscard]] bool start(bool verbose) override;
+    [[nodiscard]] bool stop() override;
+    [[nodiscard]] Status status() const override;
 
 private:
     const QDBusServiceWatcher mWatcher;

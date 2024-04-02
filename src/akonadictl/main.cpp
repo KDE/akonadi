@@ -19,8 +19,12 @@
 
 #include "akonadifull-version.h"
 #include "akonadistarter.h"
-#include "controlmanagerinterface.h"
 #include "janitorinterface.h"
+#if WITH_SYSTEMD
+#include "systemdcontrol.h"
+#else
+#include "processcontrol.h"
+#endif
 
 #include "private/dbus_p.h"
 #include "private/instance_p.h"
@@ -38,24 +42,25 @@ static bool startServer(bool verbose)
         std::cerr << "Akonadi is already running." << std::endl;
         return false;
     }
-    AkonadiStarter starter;
-    return starter.start(verbose);
+
+#if WITH_SYSTEMD
+    SystemdControl control;
+#else
+    ProcessControl control;
+#endif
+
+    return control.start(verbose);
 }
 
-static bool stopServer()
+static bool stopAkonadiServer()
 {
-    org::freedesktop::Akonadi::ControlManager iface(Akonadi::DBus::serviceName(Akonadi::DBus::Control),
-                                                    QStringLiteral("/ControlManager"),
-                                                    QDBusConnection::sessionBus(),
-                                                    nullptr);
-    if (!iface.isValid()) {
-        std::cerr << "Akonadi is not running." << std::endl;
-        return false;
-    }
+#if WITH_SYSTEMD
+    SystemdControl control;
+#else
+    ProcessControl control;
+#endif
 
-    iface.shutdown();
-
-    return true;
+    return contro.stop();
 }
 
 static bool isAkonadiServerRunning()
