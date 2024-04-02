@@ -8,56 +8,24 @@
 #include "agentmanager.h"
 #include "agenttype.h"
 #include "akonadicontrol_debug.h"
+#include "shared/systemd.h"
 #include "systemd_manager.h"
 
 #include <QDBusPendingReply>
-#include <qdbusargument.h>
-#include <qdbusmetatype.h>
 
 using namespace Akonadi;
-
-static const auto SystemdService = QStringLiteral("org.freedesktop.systemd1");
-static const auto SystemdPath = QStringLiteral("/org/freedesktop/systemd1");
-
-Q_DECLARE_METATYPE(Akonadi::UnitFileChanges)
-Q_DECLARE_METATYPE(QList<Akonadi::UnitFileChanges>)
-
-namespace Akonadi
-{
-
-const QDBusArgument &operator>>(const QDBusArgument &arg, UnitFileChanges &changes)
-{
-    arg.beginStructure();
-    arg >> changes.a >> changes.b >> changes.c;
-    arg.endStructure();
-    return arg;
-}
-
-QDBusArgument &operator<<(QDBusArgument &arg, const UnitFileChanges &changes)
-{
-    arg.beginStructure();
-    arg << changes.a << changes.b << changes.c;
-    arg.endStructure();
-    return arg;
-}
-
-} // namespace Akonadi
 
 AgentSystemdInstance::AgentSystemdInstance(AgentManager &manager)
     : AgentInstance(manager)
 {
-    [[maybe_unused]] static const auto init = []() {
-        qDBusRegisterMetaType<Akonadi::UnitFileChanges>();
-        qDBusRegisterMetaType<QList<Akonadi::UnitFileChanges>>();
-        return 0;
-    }();
+    Systemd::registerDBusTypes();
 }
 
 void AgentSystemdInstance::cleanup()
 {
     AgentInstance::cleanup();
 
-    org::freedesktop::systemd1::Manager manager(SystemdService, SystemdPath, QDBusConnection::sessionBus());
+    org::freedesktop::systemd1::Manager manager(Systemd::DBusService, Systemd::DBusPath, QDBusConnection::sessionBus());
     if (!manager.isValid()) {
         qCWarning(AKONADICONTROL_LOG) << "Failed to connect to systemd manager";
         return;
@@ -70,8 +38,6 @@ void AgentSystemdInstance::cleanup()
         return;
     } else {
         qCInfo(AKONADICONTROL_LOG) << "Disabled unit file" << unitFile;
-        const auto r = reply.argumentAt<0>();
-        qCDebug(AKONADICONTROL_LOG) << "Reply: " << r.first().a << r.first().b << r.first().c;
     }
 
     if (const auto reply = manager.StopUnit(unitFile, QStringLiteral("fail")); reply.isError()) {
@@ -79,8 +45,6 @@ void AgentSystemdInstance::cleanup()
         return;
     } else {
         qCInfo(AKONADICONTROL_LOG) << "Stopped unit file" << unitFile;
-        const auto r = reply.argumentAt<0>();
-        qCDebug(AKONADICONTROL_LOG) << "Reply: " << r.path();
     }
 }
 
@@ -91,7 +55,7 @@ bool AgentSystemdInstance::start(const AgentType &agentInfo)
 
     setAgentType(agentInfo.identifier);
 
-    org::freedesktop::systemd1::Manager manager(SystemdService, SystemdPath, QDBusConnection::sessionBus());
+    org::freedesktop::systemd1::Manager manager(Systemd::DBusService, Systemd::DBusPath, QDBusConnection::sessionBus());
     if (!manager.isValid()) {
         qCWarning(AKONADICONTROL_LOG) << "Failed to connect to systemd manager";
         return false;
@@ -110,8 +74,6 @@ bool AgentSystemdInstance::start(const AgentType &agentInfo)
         return false;
     } else {
         qCInfo(AKONADICONTROL_LOG) << "Enabled unit file" << unitFile;
-        const auto r = reply.argumentAt<1>();
-        qCDebug(AKONADICONTROL_LOG) << "Reply: " << reply.value() << r.first().a << r.first().b << r.first().c;
     }
 
     // We have to start it manually, since enable only enables it, but it wouldn't get auto-started by systemd
@@ -120,8 +82,6 @@ bool AgentSystemdInstance::start(const AgentType &agentInfo)
         return false;
     } else {
         qCInfo(AKONADICONTROL_LOG) << "Started unit file" << unitFile;
-        const auto r = reply.argumentAt<0>();
-        qCDebug(AKONADICONTROL_LOG) << "Reply: " << r.path();
     }
 
     return true;
@@ -134,7 +94,7 @@ void AgentSystemdInstance::quit()
 
 void AgentSystemdInstance::restartWhenIdle()
 {
-    org::freedesktop::systemd1::Manager manager(SystemdService, SystemdPath, QDBusConnection::sessionBus());
+    org::freedesktop::systemd1::Manager manager(Systemd::DBusService, Systemd::DBusPath, QDBusConnection::sessionBus());
     if (!manager.isValid()) {
         qCWarning(AKONADICONTROL_LOG) << "Failed to connect to systemd manager";
         return;
@@ -160,7 +120,6 @@ void AgentSystemdInstance::configure(qlonglong windowId)
 QString AgentSystemdInstance::unitFile(const AgentType &agentType) const
 {
     const bool isUnique = agentType.capabilities.contains(AgentType::CapabilityUnique) || !agentType.capabilities.contains(AgentType::CapabilityResource);
-    qCWarning(AKONADICONTROL_LOG) << "id=" << identifier() << " isUnique=" << isUnique << " capabilities=" << agentType.capabilities;
     QString unitFile = identifier();
     if (!isUnique) {
         // Take the identifier, which is something like "akonadi_foobar_resource_0" and turn it to "akonadi_foobar_resource@0.service"

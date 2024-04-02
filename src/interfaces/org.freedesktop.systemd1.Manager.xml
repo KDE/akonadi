@@ -49,17 +49,37 @@
    <arg type="b" name="force" direction="in"/>
    <arg type="b" name="carries_install_info" direction="out"/>
    <arg type="a(sss)" name="changes" direction="out"/>
-   <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QList&lt;Akonadi::UnitFileChanges&gt;" />
+   <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QList&lt;Akonadi::Systemd::UnitFileChanges&gt;" />
   </method>
   <method name="DisableUnitFiles">
    <arg type="as" name="files" direction="in"/>
    <arg type="b" name="runtime" direction="in"/>
    <arg type="a(sss)" name="changes" direction="out"/>
-   <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QList&lt;Akonadi::UnitFileChanges&gt;" />
+   <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QList&lt;Akonadi::Systemd::UnitFileChanges&gt;" />
   </method>
   <method name="GetUnitFileState">
    <arg type="s" name="name" direction="in"/>
    <arg type="s" name="state" direction="out"/>
+  </method>
+  <method name="ListUnits">
+    <arg type="a(ssssssouso)" name="units" direction="out"/>
+    <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QList&lt;Akonadi::Systemd::Unit&gt;" />
+  </method>
+  <method name="ListUnitsFiltered">
+    <arg type="as" name="states" direction="in"/>
+    <arg type="a(ssssssouso)" name="units" direction="out"/>
+    <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QList&lt;Akonadi::Systemd::Unit&gt;" />
+  </method>
+  <method name="ListUnitsByPatterns">
+    <arg type="as" name="states" direction="in"/>
+    <arg type="as" name="patterns" direction="in"/>
+    <arg type="a(ssssssouso)" name="units" direction="out"/>
+    <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QList&lt;Akonadi::Systemd::Unit&gt;" />
+  </method>
+  <method name="ListUnitsByNames">
+    <arg type="as" name="names" direction="in"/>
+    <arg type="a(ssssssouso)" name="units" direction="out"/>
+    <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QList&lt;Akonadi::Systemd::Unit&gt;" />
   </method>
   </interface>
 </node>

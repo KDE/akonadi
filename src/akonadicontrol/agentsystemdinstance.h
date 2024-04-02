@@ -12,15 +12,6 @@
 namespace Akonadi
 {
 
-struct UnitFileChanges {
-    QString a;
-    QString b;
-    QString c;
-};
-
-QDBusArgument &operator<<(QDBusArgument &arg, const UnitFileChanges &changes);
-const QDBusArgument &operator>>(const QDBusArgument &arg, UnitFileChanges &changes);
-
 class AgentSystemdInstance : public AgentInstance
 {
     Q_OBJECT

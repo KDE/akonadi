@@ -27,7 +27,7 @@ qt_add_dbus_interface(control_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.free
 qt_add_dbus_interface(control_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.PreprocessorManager.xml preprocessor_manager)
 
 if (WITH_SYSTEMD)
-    set_source_files_properties(${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.systemd1.Manager.xml PROPERTIES INCLUDE "agentsystemdinstance.h")
+    set_source_files_properties(${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.systemd1.Manager.xml PROPERTIES INCLUDE "shared/systemd.h")
     qt_add_dbus_interface(control_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.systemd1.Manager.xml systemd_manager)
 endif()
 

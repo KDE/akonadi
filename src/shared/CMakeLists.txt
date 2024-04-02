@@ -10,6 +10,11 @@ target_sources(akonadi_shared PRIVATE
     akdebug.h
     akremotelog.h
 )
+
+if (WITH_SYSTEMD)
+    target_sources(akonadi_shared PRIVATE systemd.cpp)
+endif()
+
 set_property(TARGET akonadi_shared PROPERTY POSITION_INDEPENDENT_CODE ON)
 if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(akonadi_shared PROPERTIES UNITY_BUILD ON)
