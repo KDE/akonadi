@@ -69,6 +69,11 @@ AttributeStorage &AttributeStorage::operator=(AttributeStorage &&other) noexcept
 
 AttributeStorage::~AttributeStorage() = default;
 
+void AttributeStorage::detach()
+{
+    d.detach();
+}
+
 void AttributeStorage::addAttribute(Attribute *attr)
 {
     Q_ASSERT(attr);

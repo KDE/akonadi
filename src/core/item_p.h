@@ -195,6 +195,7 @@ public:
         changelog->addedTags(this) = changelog->addedTags(&other);
         changelog->deletedTags(this) = changelog->deletedTags(&other);
         changelog->attributeStorage(this) = changelog->attributeStorage(&other);
+        changelog->attributeStorage(this).detach();
     }
 
     ~ItemPrivate()

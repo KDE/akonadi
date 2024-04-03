@@ -13,7 +13,7 @@
 
 #include <memory>
 
-QTEST_MAIN(ItemTest)
+QTEST_GUILESS_MAIN(ItemTest)
 
 using namespace Akonadi;
 
@@ -108,6 +108,32 @@ void ItemTest::testComparison()
         QVERIFY(itemA != itemB);
         QVERIFY(!(itemA == itemB));
     }
+}
+
+void ItemTest::testDetach()
+{
+    // Have an item
+    Item item;
+    item.setMimeType(QStringLiteral("application/octet-stream"));
+    item.setFlags({"Flag1"});
+    item.addAttribute(new TestAttribute());
+    auto origAttr = item.attribute<TestAttribute>();
+    origAttr->data = "TEST";
+
+    // Make a copy
+    Item copy = item;
+
+    // Detach by calling non-const attribute. Make sure a new copy of the attibute is returned
+    auto attr = copy.attribute<TestAttribute>(Akonadi::Item::AddIfMissing);
+    auto attr2 = copy.attribute<TestAttribute>();
+
+    // Verify that detaching returned a copy of the source attribute
+    QCOMPARE(attr, attr2);
+    // and that its content is the same as the original
+    QCOMPARE(attr->data, origAttr->data);
+
+    // Make sure the detached attribute is a new instance
+    QVERIFY(attr != origAttr);
 }
 
 #include "moc_itemtest.cpp"

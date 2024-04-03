@@ -34,6 +34,9 @@ public:
 
     ~AttributeStorage();
 
+    // Detach storage from the shared data
+    void detach();
+
     void addAttribute(Attribute *attr);
     void removeAttribute(const QByteArray &type);
     bool hasAttribute(const QByteArray &type) const;

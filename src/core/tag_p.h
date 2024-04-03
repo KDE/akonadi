@@ -27,6 +27,7 @@ public:
         if (other.parent) {
             parent.reset(new Tag(*other.parent));
         }
+        mAttributeStorage.detach();
     }
 
     ~TagPrivate() = default;

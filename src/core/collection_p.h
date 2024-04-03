@@ -63,6 +63,7 @@ public:
         if (other.mParent) {
             mParent.reset(new Collection(*(other.mParent)));
         }
+        mAttributeStorage.detach();
     }
 
     void resetChangeLog()

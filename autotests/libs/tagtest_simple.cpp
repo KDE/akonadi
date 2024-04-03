@@ -23,6 +23,7 @@ class TagTestSimple : public QObject
 private Q_SLOTS:
     void testCustomAttributes();
     void testTagAttribute();
+    void testDetach();
 };
 
 void TagTestSimple::testCustomAttributes()
@@ -56,6 +57,30 @@ void TagTestSimple::testTagAttribute()
     QCOMPARE(t2.name(), attr->displayName());
 }
 
+void TagTestSimple::testDetach()
+{
+    // Have a tag
+    Tag tag;
+    tag.setName(QStringLiteral("TAG"));
+    auto origAttr = new TestAttribute();
+    origAttr->data = "TEST";
+    tag.addAttribute(origAttr);
+
+    // Create a non-const copy so that it detaches on non-const access
+    Tag copy = tag;
+
+    // Do a non-const access to detach the copy
+    auto attr = copy.attribute<TestAttribute>(Akonadi::Tag::AddIfMissing);
+    auto attr2 = copy.attribute<TestAttribute>();
+
+    // Verify that the detached attributes are the same
+    QCOMPARE(attr, attr2);
+    QCOMPARE(attr->data, origAttr->data);
+
+    // But that their are a copy from the original attribute
+    QVERIFY(attr != origAttr);
+}
+
 #include "tagtest_simple.moc"
 
-QTEST_MAIN(TagTestSimple)
+QTEST_GUILESS_MAIN(TagTestSimple)

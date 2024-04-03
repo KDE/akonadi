@@ -240,14 +240,17 @@ void CollectionAttributeTest::testDetach()
     // GIVEN a collection with an attribute
     Collection col;
     col.attribute<TestAttribute>(Akonadi::Collection::AddIfMissing);
+    auto origAttr = col.attribute<TestAttribute>();
     Collection col2 = col; // and a copy, so that non-const access detaches
 
-    // WHEN
+    // WHEN we force a detach
     auto attr = col2.attribute<TestAttribute>(Akonadi::Collection::AddIfMissing);
     auto attr2 = col2.attribute<TestAttribute>();
 
-    // THEN
+    // THEN the returned attributes the same
     QCOMPARE(attr, attr2);
+    // But they are different from the original attribute
+    QVERIFY(origAttr != attr);
 }
 
 #include "moc_collectionattributetest.cpp"
