@@ -45,9 +45,15 @@ public:
         menu.addAction(i18n("Clear"), this, &TagView::clearTags);
         menu.exec(event->globalPos());
     }
+    void mousePressEvent(QMouseEvent *event) override
+    {
+        Q_EMIT addTags();
+        QLineEdit::mousePressEvent(event);
+    }
 
 Q_SIGNALS:
     void clearTags();
+    void addTags();
 };
 
 } // namespace Akonadi
@@ -75,6 +81,7 @@ TagWidget::TagWidget(QWidget *parent)
 
     d->ui.setupUi(this);
     connect(d->ui.tagView, &TagView::clearTags, this, &TagWidget::clearTags);
+    connect(d->ui.tagView, &TagView::addTags, this, &TagWidget::editTags);
 
     connect(d->ui.editButton, &QToolButton::clicked, this, &TagWidget::editTags);
     connect(d->mModel, &Akonadi::TagModel::populated, this, &TagWidget::updateView);
