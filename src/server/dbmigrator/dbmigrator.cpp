@@ -345,7 +345,7 @@ bool isValidDbPath(const QString &path)
 std::error_code restoreDatabaseFromBackup(const QString &backupPath, const QString &originalPath)
 {
     std::error_code ec;
-    if (QFileInfo(originalPath).exists()) {
+    if (QFileInfo::exists(originalPath)) {
         // Remove the original path, it could have been created by the new db
         std::filesystem::remove_all(originalPath.toStdString(), ec);
         return ec;
