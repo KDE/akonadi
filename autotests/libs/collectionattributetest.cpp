@@ -40,6 +40,7 @@ public:
     {
         return "TESTATTRIBUTE";
     }
+
     QByteArray serialized() const override
     {
         return mData;
@@ -251,6 +252,7 @@ void CollectionAttributeTest::testDetach()
     QCOMPARE(attr, attr2);
     // But they are different from the original attribute
     QVERIFY(origAttr != attr);
+    QCOMPARE(origAttr->serialized(), attr->serialized());
 }
 
 #include "moc_collectionattributetest.cpp"
