@@ -9,3 +9,5 @@
 using namespace Akonadi;
 
 Attribute::~Attribute() = default;
+
+#include "moc_attribute.cpp"

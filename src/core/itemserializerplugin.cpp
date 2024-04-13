@@ -63,3 +63,5 @@ QSet<QByteArray> ItemSerializerPlugin::allowedForeignParts(const Item &item) con
 
     return {Item::FullPayload};
 }
+
+#include "moc_itemserializerplugin.cpp"
