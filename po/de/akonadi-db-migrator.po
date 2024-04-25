@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-25 00:38+0000\n"
-"PO-Revision-Date: 2024-03-26 17:22+0100\n"
+"PO-Revision-Date: 2024-04-24 19:21+0200\n"
 "Last-Translator: Johannes Obermayr <johannesobermayr@gmx.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.02.0\n"
+"X-Generator: Lokalize 24.02.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -116,7 +116,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:status"
 msgid "Running fsck on the source database"
-msgstr ""
+msgstr "fsck wird auf der Quelldatenbank ausgeführt"
 
 #: dbmigrator.cpp:559
 #, kde-format
@@ -149,7 +149,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error has occurred while migrating table %1"
-msgstr ""
+msgstr "Der Fehler ist beim Migrieren der Tabelle %1 aufgetreten"
 
 #: dbmigrator.cpp:638
 #, kde-format
@@ -158,78 +158,92 @@ msgid ""
 "Backup directory already exists. Do you want to overwrite the previous "
 "backup?"
 msgstr ""
+"Der Sicherungsordner existiert bereits. Möchten Sie die vorhandene Sicherung "
+"überschreiben?"
 
 #: dbmigrator.cpp:643
 #, kde-format
 msgctxt "@info:shell"
 msgid "Cannot proceed without backup. Migration interrupted."
 msgstr ""
+"Ohne Sicherungskopie ist das Fortfahren nicht möglich. Die Migration ist "
+"unterbrochen."
 
 #: dbmigrator.cpp:648
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to remove previous backup directory."
-msgstr ""
+msgstr "Der vorhandene Sicherungsordner kann nicht entfernt werden."
 
 #: dbmigrator.cpp:661
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to move database to backup location: %1"
-msgstr ""
+msgstr "Die Datenbank kann nicht zum Sicherungsort verschoben werden: %1"
 
 #: dbmigrator.cpp:675
 #, kde-format
 msgctxt "@label"
 msgid "Backup file %1 already exists. Overwrite?"
 msgstr ""
+"Die Sicherungsdatei %1 existiert bereits. Soll sie überschrieben werden?"
 
 #: dbmigrator.cpp:677
 #, kde-format
 msgctxt "@info:status"
 msgid "Cannot proceed without backup. Migration interrupted."
 msgstr ""
+"Ohne Sicherungskopie ist das Fortfahren nicht möglich. Die Migration ist "
+"unterbrochen."
 
 #: dbmigrator.cpp:683
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: Failed to remove existing backup file %1: %2"
 msgstr ""
+"Fehler: Die vorhandene Sicherungsdatei %1 kann nicht entfernt werden: %2"
 
 #: dbmigrator.cpp:690
 #, kde-format
 msgctxt "@info:status"
 msgid "Failed to back up Akonadi Server configuration: %1"
-msgstr ""
+msgstr "Die Konfiguration des Akonadi-Servers kann nicht gesichert werden: %1"
 
 #: dbmigrator.cpp:707
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move migrated database to the primary location: %1"
 msgstr ""
+"Fehler: Die migrierte Datenbank kann nicht zum primären Ort verschoben "
+"werden: %1"
 
 #: dbmigrator.cpp:726
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to remove original akonadiserverrc: %1"
-msgstr ""
+msgstr "Fehler: Die vorhandene akonadiserverrc kann nicht entfernt werden: %1"
 
 #: dbmigrator.cpp:732
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move new akonadiserverrc to the primary location: %1"
 msgstr ""
+"Fehler: Die neue akonadiserverrc kann nicht zum primären Ort verschoben "
+"werden: %1"
 
 #: dbmigrator.cpp:823
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to update autoincrement value for table %1"
 msgstr ""
+"Fehler: Der Wert der automatischen Werterhöhung für die Tabelle %1 kann "
+"nicht aktualisiert werden"
 
 #: dbmigrator.cpp:828
 #, kde-format
 msgctxt "@info:status"
 msgid "Optimizing table %1..."
-msgstr "Optimieren der Tabelle %1 …"
+msgstr "Die Tabelle %1 wird optimiert …"
 
 #: dbmigrator.cpp:831
 #, kde-format
@@ -273,7 +287,7 @@ msgstr "Akonadi-DB-Migrationswerkzeug"
 #: main.cpp:79
 #, kde-format
 msgid "(c) 2024 g10 Code GmbH"
-msgstr ""
+msgstr "© 2024 g10 Code GmbH"
 
 #: main.cpp:85
 #, kde-format
