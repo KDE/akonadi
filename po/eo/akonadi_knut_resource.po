@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: akonadi_knut_resource\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-09-21 00:45+0000\n"
-"PO-Revision-Date: 2023-02-10 20:03+0100\n"
+"PO-Revision-Date: 2024-05-04 23:30+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -27,7 +27,7 @@ msgstr "Neniu datumdosiero elektita."
 #: knutresource.cpp:77
 #, kde-format
 msgid "File '%1' loaded successfully."
-msgstr "Dosiero '%1' ŝarĝita sukcese."
+msgstr "Dosiero '%1' ŝargita sukcese."
 
 #: knutresource.cpp:104
 #, kde-format
