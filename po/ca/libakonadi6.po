@@ -2631,6 +2631,3 @@ msgstr "No s'ha pogut analitzar el fitxer de dades: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "No s'ha pogut trobar la col·lecció %1"
-
-#~ msgid "Quota"
-#~ msgstr "Quota"
