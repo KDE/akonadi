@@ -79,7 +79,7 @@ msgstr "Desconnectat"
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing..."
-msgstr "S'està sincronitzant..."
+msgstr "S'està sincronitzant…"
 
 #: agentbase/agentbase_p.h:61
 #, kde-format
@@ -434,7 +434,7 @@ msgstr "Nom"
 #, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
-msgstr "S'està carregant..."
+msgstr "S'està carregant…"
 
 #: core/models/entitytreemodel.cpp:499
 #, kde-format
@@ -649,7 +649,7 @@ msgstr ""
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
-msgstr "Instància &nova de l'agent..."
+msgstr "Instància &nova de l'agent…"
 
 #: widgets/agentactionmanager.cpp:36
 msgid "&Delete Agent Instance"
@@ -849,7 +849,7 @@ msgstr "Utilitza la carpeta predeterminada"
 #: widgets/collectiondialog.cpp:226
 #, kde-format
 msgid "&New Subfolder..."
-msgstr "Subcarpeta &nova..."
+msgstr "Subcarpeta &nova…"
 
 #: widgets/collectiondialog.cpp:228
 #, kde-format
@@ -967,7 +967,7 @@ msgstr[1] "S'han indexat %1 elements en esta carpeta"
 #: widgets/collectionmaintenancepage.cpp:138
 #, kde-format
 msgid "Calculating indexed items..."
-msgstr "S'estan calculant els elements indexats..."
+msgstr "S'estan calculant els elements indexats…"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/collectionmaintenancepage.ui:17
@@ -1021,7 +1021,7 @@ msgstr "Activa la indexació de text complet"
 #: widgets/collectionmaintenancepage.ui:87
 #, kde-format
 msgid "Retrieving indexed items count..."
-msgstr "S'està recuperant el compte dels elements indexats..."
+msgstr "S'està recuperant el compte dels elements indexats…"
 
 #. i18n: ectx: property (text), widget (QPushButton, reindexButton)
 #: widgets/collectionmaintenancepage.ui:94
@@ -1108,12 +1108,12 @@ msgstr "Dades"
 #: widgets/controlgui.cpp:223
 #, kde-format
 msgid "Starting Akonadi server..."
-msgstr "S'està iniciant el servidor Akonadi..."
+msgstr "S'està iniciant el servidor Akonadi…"
 
 #: widgets/controlgui.cpp:229
 #, kde-format
 msgid "Stopping Akonadi server..."
-msgstr "S'està parant el servidor Akonadi..."
+msgstr "S'està parant el servidor Akonadi…"
 
 #: widgets/dragdropmanager.cpp:212
 #, kde-format
@@ -1151,12 +1151,12 @@ msgstr ""
 #: widgets/erroroverlay.cpp:228 widgets/erroroverlay.cpp:229
 #, kde-format
 msgid "Personal information management service is starting..."
-msgstr "S'està iniciant el servei per a la gestió de la informació personal..."
+msgstr "S'està iniciant el servei per a la gestió de la informació personal…"
 
 #: widgets/erroroverlay.cpp:233 widgets/erroroverlay.cpp:234
 #, kde-format
 msgid "Personal information management service is shutting down..."
-msgstr "S'està parant el servei per a la gestió de la informació personal..."
+msgstr "S'està parant el servei per a la gestió de la informació personal…"
 
 #: widgets/erroroverlay.cpp:238
 #, kde-format
@@ -1164,7 +1164,7 @@ msgid ""
 "Personal information management service is performing a database upgrade."
 msgstr ""
 "El servei per a la gestió de la informació personal està realitzant una "
-"actualització de la base de dades..."
+"actualització de la base de dades…"
 
 #: widgets/erroroverlay.cpp:240
 #, kde-format
@@ -1208,7 +1208,7 @@ msgid ""
 msgstr ""
 "El marc de treball per a la gestió de la informació personal Akonadi no es "
 "troba operatiu.\n"
-"Feu clic en «Detalls...» per a obtindre informació detallada quant a este "
+"Feu clic en «Detalls…» per a obtindre informació detallada quant a este "
 "problema."
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
@@ -1223,7 +1223,7 @@ msgstr ""
 #: widgets/erroroverlay.ui:259
 #, kde-format
 msgid "Details..."
-msgstr "Detalls..."
+msgstr "Detalls…"
 
 #: widgets/manageaccountwidget.cpp:198
 #, kde-format
@@ -1252,13 +1252,13 @@ msgstr "Filtre…"
 #: widgets/manageaccountwidget.ui:40
 #, kde-format
 msgid "A&dd..."
-msgstr "Afi&g..."
+msgstr "Afi&g…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
 #: widgets/manageaccountwidget.ui:50
 #, kde-format
 msgid "&Modify..."
-msgstr "&Modifica..."
+msgstr "&Modifica…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
 #: widgets/manageaccountwidget.ui:60
@@ -1298,7 +1298,7 @@ msgstr "Autocomprovació del servidor Akonadi"
 #: widgets/selftestdialog.cpp:71
 #, kde-format
 msgid "Save Report..."
-msgstr "Guarda l'informe..."
+msgstr "Guarda l'informe…"
 
 #: widgets/selftestdialog.cpp:73
 #, kde-format
@@ -1950,7 +1950,7 @@ msgstr ""
 
 #: widgets/standardactionmanager.cpp:78
 msgid "&New Folder..."
-msgstr "Carpeta &nova..."
+msgstr "Carpeta &nova…"
 
 #: widgets/standardactionmanager.cpp:78
 msgid "New"
@@ -1991,7 +1991,7 @@ msgstr "Apega"
 
 #: widgets/standardactionmanager.cpp:115
 msgid "Manage Local &Subscriptions..."
-msgstr "Gestiona les &subscripcions locals..."
+msgstr "Gestiona les &subscripcions locals…"
 
 #: widgets/standardactionmanager.cpp:116
 msgid "Manage Local Subscriptions"
@@ -2015,7 +2015,7 @@ msgstr "Elimina de les preferides"
 
 #: widgets/standardactionmanager.cpp:139
 msgid "Rename Favorite..."
-msgstr "Canvia el nom d'una preferida..."
+msgstr "Canvia el nom d'una preferida…"
 
 #: widgets/standardactionmanager.cpp:140
 msgid "Rename"
@@ -2023,7 +2023,7 @@ msgstr "Canvia el nom"
 
 #: widgets/standardactionmanager.cpp:147 widgets/standardactionmanager.cpp:221
 msgid "Copy Folder To..."
-msgstr "Copia la carpeta a..."
+msgstr "Copia la carpeta a…"
 
 #: widgets/standardactionmanager.cpp:148 widgets/standardactionmanager.cpp:156
 #: widgets/standardactionmanager.cpp:222 widgets/standardactionmanager.cpp:236
@@ -2032,11 +2032,11 @@ msgstr "Copia a"
 
 #: widgets/standardactionmanager.cpp:155 widgets/standardactionmanager.cpp:236
 msgid "Copy Item To..."
-msgstr "Copia l'element a..."
+msgstr "Copia l'element a…"
 
 #: widgets/standardactionmanager.cpp:163 widgets/standardactionmanager.cpp:237
 msgid "Move Item To..."
-msgstr "Mou l'element cap a..."
+msgstr "Mou l'element cap a…"
 
 #: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:172
 #: widgets/standardactionmanager.cpp:230 widgets/standardactionmanager.cpp:237
@@ -2045,7 +2045,7 @@ msgstr "Mou cap a"
 
 #: widgets/standardactionmanager.cpp:171 widgets/standardactionmanager.cpp:229
 msgid "Move Folder To..."
-msgstr "Mou la carpeta cap a..."
+msgstr "Mou la carpeta cap a…"
 
 #: widgets/standardactionmanager.cpp:178
 msgid "&Cut Item"
@@ -2532,7 +2532,7 @@ msgstr "Gestioneu les etiquetes"
 #, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
-msgstr "Seleccioneu les etiquetes..."
+msgstr "Seleccioneu les etiquetes…"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
 #: widgets/tagselectiondialog.ui:14
@@ -2555,7 +2555,7 @@ msgstr "Feu clic per a afegir les etiquetes"
 #: widgets/tagwidget.ui:39
 #, kde-format
 msgid "..."
-msgstr "..."
+msgstr "…"
 
 #: xml/akonadi2xml.cpp:25
 #, kde-format
