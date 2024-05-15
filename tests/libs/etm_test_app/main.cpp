@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
                          i18n("Test app for EntityTreeModel"),
                          KAboutLicense::GPL,
                          QStringLiteral("https://community.kde.org/KDE_PIM/Akonadi/"));
-    aboutData.addAuthor(i18n("Stephen Kelly"), i18n("Author"), QStringLiteral("steveire@gmail.com"));
+    aboutData.addAuthor(i18nc("@info:credit", "Stephen Kelly"), i18n("Author"), QStringLiteral("steveire@gmail.com"));
     KAboutData::setApplicationData(aboutData);
 
     app.setWindowIcon(QIcon::fromTheme(QStringLiteral("akonadi")));
