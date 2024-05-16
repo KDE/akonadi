@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-25 00:38+0000\n"
-"PO-Revision-Date: 2024-04-22 10:17+0200\n"
+"PO-Revision-Date: 2024-05-15 23:30+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -55,7 +55,7 @@ msgstr "Стартиране на услугата Akonadi..."
 #, kde-format
 msgctxt "@info:status"
 msgid "Database fsck completed"
-msgstr ""
+msgstr "Сканирането с fsck на базата данни е завършено"
 
 #: dbmigrator.cpp:483
 #, kde-format
@@ -112,7 +112,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:status"
 msgid "Running fsck on the source database"
-msgstr ""
+msgstr "Изпълнение на fsck на източника на базата данни"
 
 #: dbmigrator.cpp:559
 #, kde-format
