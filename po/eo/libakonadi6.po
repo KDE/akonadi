@@ -2,15 +2,15 @@
 # Copyright (C) 2007 Free Software Foundation, Inc.
 # This file is distributed under the same license as the akonadi package.
 # Axel Rousseau <axel@esperanto-jeunes.org>, 2009.
-# Oliver Kellogg <okellogg@users.sourceforge.net>, 2023.
+# Oliver Kellogg <olivermkellogg@gmail.com>, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-28 00:39+0000\n"
-"PO-Revision-Date: 2024-03-09 09:22+0100\n"
-"Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
+"PO-Revision-Date: 2024-05-04 23:30+0100\n"
+"Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
 "MIME-Version: 1.0\n"
@@ -26,7 +26,7 @@ msgstr "Axel Rousseau,Oliver Kellogg"
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "axel@esperanto-jeunes.org,okellogg@users.sourceforge.net"
+msgstr "axel@esperanto-jeunes.org,olivermkellogg@gmail.com"
 
 #: agentbase/accountsintegration.cpp:86
 #, kde-format
@@ -1260,7 +1260,7 @@ msgstr "Lastatempa Dosierujo"
 #: widgets/renamefavoritedialog.ui:26
 #, kde-format
 msgid "Rename Favorite"
-msgstr "Alinomigi Favoriton"
+msgstr "Alinomigi Favorite"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/renamefavoritedialog.ui:35
@@ -2544,7 +2544,7 @@ msgstr "(c) 2009 Volker Krause <vkrause@kde.org>"
 #: xml/xmldocument.cpp:83
 #, kde-format
 msgid "No data loaded."
-msgstr "Neniuj datumoj ŝarĝitaj."
+msgstr "Neniuj datumoj ŝargitaj."
 
 #: xml/xmldocument.cpp:121
 #, kde-format
@@ -2600,6 +2600,3 @@ msgstr "Ne eblas analizi datumdosieron: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Ne eblas trovi kolekton %1"
-
-#~ msgid "Quota"
-#~ msgstr "Kvoto"
