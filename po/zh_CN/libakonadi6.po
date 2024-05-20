@@ -819,7 +819,7 @@ msgstr "默认使用此文件夹"
 #: widgets/collectiondialog.cpp:226
 #, kde-format
 msgid "&New Subfolder..."
-msgstr "新建子文件夹(&N)..."
+msgstr ""
 
 #: widgets/collectiondialog.cpp:228
 #, kde-format
