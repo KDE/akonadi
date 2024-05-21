@@ -130,6 +130,8 @@ set(akonadicore_base_SRCS
     trashsettings.h
     typepluginloader_p.h
 
+    accountactivitiesabstract.h
+    accountactivitiesabstract.cpp
 
     )
 
@@ -173,6 +175,7 @@ ecm_generate_headers(AkonadiCore_base_CC_HEADERS
     TagFetchScope
     TrashSettings
     CollectionPathResolver
+    AccountActivitiesAbstract
     REQUIRED_HEADERS AkonadiCore_base_HEADERS
     PREFIX Akonadi
 )
