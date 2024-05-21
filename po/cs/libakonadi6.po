@@ -807,11 +807,10 @@ msgid "Use folder by default"
 msgstr "Použít složku jako výchozí"
 
 #: widgets/collectiondialog.cpp:226
-#, fuzzy, kde-format
-#| msgid "&New Subfolder..."
+#, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
-msgstr "&Nová podřízená složka..."
+msgstr ""
 
 #: widgets/collectiondialog.cpp:228
 #, kde-format

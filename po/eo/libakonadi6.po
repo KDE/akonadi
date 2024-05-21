@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-19 00:38+0000\n"
-"PO-Revision-Date: 2024-05-04 23:30+0100\n"
+"PO-Revision-Date: 2024-05-20 13:35+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -833,11 +833,10 @@ msgid "Use folder by default"
 msgstr "Uzi dosierujon defaŭlte"
 
 #: widgets/collectiondialog.cpp:226
-#, fuzzy, kde-format
-#| msgid "&New Subfolder..."
+#, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
-msgstr "&Nova subdosierujo..."
+msgstr "&Nova Subdosierujo..."
 
 #: widgets/collectiondialog.cpp:228
 #, kde-format
@@ -2602,6 +2601,3 @@ msgstr "Ne eblas analizi datumdosieron: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Ne eblas trovi kolekton %1"
-
-#~ msgid "Quota"
-#~ msgstr "Kvoto"
