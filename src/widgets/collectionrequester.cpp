@@ -119,7 +119,7 @@ void CollectionRequesterPrivate::init()
     button->setIcon(QIcon::fromTheme(QStringLiteral("document-open")));
     const int buttonSize = edit->sizeHint().height();
     button->setFixedSize(buttonSize, buttonSize);
-    button->setToolTip(i18n("Open collection dialog"));
+    button->setToolTip(i18nc("@info:tooltip", "Open collection dialog"));
     hbox->addWidget(button);
 
     hbox->setSpacing(-1);

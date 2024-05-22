@@ -225,17 +225,17 @@ void ErrorOverlay::serverStateChanged(ServerManager::State state)
             }
             break;
         case ServerManager::Starting:
-            ui->progressPage->setToolTip(i18n("Personal information management service is starting..."));
+            ui->progressPage->setToolTip(i18nc("@info:tooltip", "Personal information management service is starting..."));
             ui->progressDescription->setText(i18n("Personal information management service is starting..."));
             ui->stackWidget->setCurrentWidget(ui->progressPage);
             break;
         case ServerManager::Stopping:
-            ui->progressPage->setToolTip(i18n("Personal information management service is shutting down..."));
+            ui->progressPage->setToolTip(i18nc("@info:tooltip", "Personal information management service is shutting down..."));
             ui->progressDescription->setText(i18n("Personal information management service is shutting down..."));
             ui->stackWidget->setCurrentWidget(ui->progressPage);
             break;
         case ServerManager::Upgrading:
-            ui->progressPage->setToolTip(i18n("Personal information management service is performing a database upgrade."));
+            ui->progressPage->setToolTip(i18nc("@info:tooltip", "Personal information management service is performing a database upgrade."));
             ui->progressDescription->setText(
                 i18n("Personal information management service is performing a database upgrade.\n"
                      "This happens after a software update and is necessary to optimize performance.\n"
