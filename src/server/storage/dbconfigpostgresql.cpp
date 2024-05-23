@@ -152,7 +152,7 @@ bool DbConfigPostgresql::init(QSettings &settings, bool storeSettings, const QSt
     QString defaultPgUpgradePath;
     QString defaultPgData;
 
-#ifndef Q_WS_WIN // We assume that PostgreSQL is running as service on Windows
+#ifndef Q_OS_WINDOWS // We assume that PostgreSQL is running as service on Windows
     const bool defaultInternalServer = true;
 #else
     const bool defaultInternalServer = false;
@@ -471,7 +471,7 @@ bool DbConfigPostgresql::startInternalServer()
     }
 
 // TODO Windows support
-#ifndef Q_WS_WIN
+#ifndef Q_OS_WINDOWS
     // If postmaster.pid exists, check whether the postgres process still exists too,
     // because normally we shouldn't be able to get this far if Akonadi is already
     // running. If postgres is not running, then the pidfile was left after a system
