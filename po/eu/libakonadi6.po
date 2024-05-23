@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-19 00:38+0000\n"
+"POT-Creation-Date: 2024-05-23 00:39+0000\n"
 "PO-Revision-Date: 2024-03-24 10:57+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -850,7 +850,9 @@ msgid "&New Subfolder..."
 msgstr "Azpikarpeta &berria..."
 
 #: widgets/collectiondialog.cpp:228
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Create a new subfolder under the currently selected folder"
+msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Sortu azpikarpeta berri bat hautatuta dagoen karpetaren barruan"
 
@@ -1033,7 +1035,9 @@ msgid "No Folder"
 msgstr "Karpetarik ez"
 
 #: widgets/collectionrequester.cpp:122
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Open collection dialog"
+msgctxt "@info:tooltip"
 msgid "Open collection dialog"
 msgstr "Ireki bilduma elkarrizketa-koadroa"
 
@@ -1145,18 +1149,35 @@ msgstr ""
 "\n"
 "%1"
 
-#: widgets/erroroverlay.cpp:228 widgets/erroroverlay.cpp:229
+#: widgets/erroroverlay.cpp:228
+#, fuzzy, kde-format
+#| msgid "Personal information management service is starting..."
+msgctxt "@info:tooltip"
+msgid "Personal information management service is starting..."
+msgstr "Informazio pertsonala kudeatzeko zerbitzua abiatzen ari da..."
+
+#: widgets/erroroverlay.cpp:229
 #, kde-format
 msgid "Personal information management service is starting..."
 msgstr "Informazio pertsonala kudeatzeko zerbitzua abiatzen ari da..."
 
-#: widgets/erroroverlay.cpp:233 widgets/erroroverlay.cpp:234
+#: widgets/erroroverlay.cpp:233
+#, fuzzy, kde-format
+#| msgid "Personal information management service is shutting down..."
+msgctxt "@info:tooltip"
+msgid "Personal information management service is shutting down..."
+msgstr "Informazio pertsonala kudeatzeko zerbitzua itzaltzen ari da..."
+
+#: widgets/erroroverlay.cpp:234
 #, kde-format
 msgid "Personal information management service is shutting down..."
 msgstr "Informazio pertsonala kudeatzeko zerbitzua itzaltzen ari da..."
 
 #: widgets/erroroverlay.cpp:238
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "Personal information management service is performing a database upgrade."
+msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
 msgstr ""

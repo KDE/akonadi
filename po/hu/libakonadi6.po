@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.3\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-19 00:38+0000\n"
-"PO-Revision-Date: 2024-03-14 11:47+0100\n"
+"POT-Creation-Date: 2024-05-23 00:39+0000\n"
+"PO-Revision-Date: 2024-05-22 10:38+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.04.70\n"
+"X-Generator: Lokalize 24.07.70\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -837,14 +837,15 @@ msgid "Use folder by default"
 msgstr "Mappa használata alapértelmezettként"
 
 #: widgets/collectiondialog.cpp:226
-#, fuzzy, kde-format
-#| msgid "&New Subfolder..."
+#, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
 msgstr "Ú&j almappa…"
 
 #: widgets/collectiondialog.cpp:228
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Create a new subfolder under the currently selected folder"
+msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Új almappa létrehozása a jelenleg kiválasztott mappa alá"
 
@@ -1027,7 +1028,9 @@ msgid "No Folder"
 msgstr "Nincs mappa"
 
 #: widgets/collectionrequester.cpp:122
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Open collection dialog"
+msgctxt "@info:tooltip"
 msgid "Open collection dialog"
 msgstr "Gyűjteményablak megnyitása"
 
@@ -1139,18 +1142,35 @@ msgstr ""
 "\n"
 "%1"
 
-#: widgets/erroroverlay.cpp:228 widgets/erroroverlay.cpp:229
+#: widgets/erroroverlay.cpp:228
+#, fuzzy, kde-format
+#| msgid "Personal information management service is starting..."
+msgctxt "@info:tooltip"
+msgid "Personal information management service is starting..."
+msgstr "A személyes-információ kezelő szolgáltatás indul…"
+
+#: widgets/erroroverlay.cpp:229
 #, kde-format
 msgid "Personal information management service is starting..."
 msgstr "A személyes-információ kezelő szolgáltatás indul…"
 
-#: widgets/erroroverlay.cpp:233 widgets/erroroverlay.cpp:234
+#: widgets/erroroverlay.cpp:233
+#, fuzzy, kde-format
+#| msgid "Personal information management service is shutting down..."
+msgctxt "@info:tooltip"
+msgid "Personal information management service is shutting down..."
+msgstr "A személyes-információ kezelő szolgáltatás leáll…"
+
+#: widgets/erroroverlay.cpp:234
 #, kde-format
 msgid "Personal information management service is shutting down..."
 msgstr "A személyes-információ kezelő szolgáltatás leáll…"
 
 #: widgets/erroroverlay.cpp:238
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "Personal information management service is performing a database upgrade."
+msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
 msgstr ""

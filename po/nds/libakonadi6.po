@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-19 00:38+0000\n"
+"POT-Creation-Date: 2024-05-23 00:39+0000\n"
 "PO-Revision-Date: 2014-09-18 22:53+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -844,7 +844,9 @@ msgid "&New Subfolder..."
 msgstr "&Nieg Ünnerorner..."
 
 #: widgets/collectiondialog.cpp:228
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Create a new subfolder under the currently selected folder"
+msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "En niegen Ünnerorner binnen den opstunns utsöchten Orner opstellen"
 
@@ -1036,7 +1038,9 @@ msgid "No Folder"
 msgstr "Keen Orner"
 
 #: widgets/collectionrequester.cpp:122
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Open collection dialog"
+msgctxt "@info:tooltip"
 msgid "Open collection dialog"
 msgstr "Sammeln-Dialoog opmaken"
 
@@ -1144,19 +1148,37 @@ msgid ""
 "%1"
 msgstr "Tokoppeln na den Akonadi-Deenst nich mööglich"
 
-#: widgets/erroroverlay.cpp:228 widgets/erroroverlay.cpp:229
+#: widgets/erroroverlay.cpp:228
+#, fuzzy, kde-format
+#| msgid "Personal information management service is starting..."
+msgctxt "@info:tooltip"
+msgid "Personal information management service is starting..."
+msgstr "De Deenst för de Pleeg vun persöönlich Informatschonen warrt start..."
+
+#: widgets/erroroverlay.cpp:229
 #, kde-format
 msgid "Personal information management service is starting..."
 msgstr "De Deenst för de Pleeg vun persöönlich Informatschonen warrt start..."
 
-#: widgets/erroroverlay.cpp:233 widgets/erroroverlay.cpp:234
+#: widgets/erroroverlay.cpp:233
+#, fuzzy, kde-format
+#| msgid "Personal information management service is shutting down..."
+msgctxt "@info:tooltip"
+msgid "Personal information management service is shutting down..."
+msgstr ""
+"De Deenst för de Pleeg vun persöönlich Informatschonen warrt utmaakt..."
+
+#: widgets/erroroverlay.cpp:234
 #, kde-format
 msgid "Personal information management service is shutting down..."
 msgstr ""
 "De Deenst för de Pleeg vun persöönlich Informatschonen warrt utmaakt..."
 
 #: widgets/erroroverlay.cpp:238
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "Personal information management service is performing a database upgrade."
+msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
 msgstr ""

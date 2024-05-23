@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-19 00:38+0000\n"
+"POT-Creation-Date: 2024-05-23 00:39+0000\n"
 "PO-Revision-Date: 2024-02-02 14:32+0200\n"
 "Last-Translator: Liudas Ališauskas <liudas@akmc.lt>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -834,7 +834,9 @@ msgid "&New Subfolder..."
 msgstr "&Naujas poaplankis..."
 
 #: widgets/collectiondialog.cpp:228
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Create a new subfolder under the currently selected folder"
+msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Sukurti naują paaplankį šiuo metu pažymėtama aplanke"
 
@@ -1030,7 +1032,9 @@ msgid "No Folder"
 msgstr "Jokio aplanko"
 
 #: widgets/collectionrequester.cpp:122
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Open collection dialog"
+msgctxt "@info:tooltip"
 msgid "Open collection dialog"
 msgstr "Atverti kolekcijos dialogą"
 
@@ -1138,18 +1142,35 @@ msgid ""
 "%1"
 msgstr "Nepavyksta prisijungti prie Akonadi paslaugos."
 
-#: widgets/erroroverlay.cpp:228 widgets/erroroverlay.cpp:229
+#: widgets/erroroverlay.cpp:228
+#, fuzzy, kde-format
+#| msgid "Personal information management service is starting..."
+msgctxt "@info:tooltip"
+msgid "Personal information management service is starting..."
+msgstr "Paleidžiama asmeninės informacijos tvarkymo paslauga..."
+
+#: widgets/erroroverlay.cpp:229
 #, kde-format
 msgid "Personal information management service is starting..."
 msgstr "Paleidžiama asmeninės informacijos tvarkymo paslauga..."
 
-#: widgets/erroroverlay.cpp:233 widgets/erroroverlay.cpp:234
+#: widgets/erroroverlay.cpp:233
+#, fuzzy, kde-format
+#| msgid "Personal information management service is shutting down..."
+msgctxt "@info:tooltip"
+msgid "Personal information management service is shutting down..."
+msgstr "Stabdoma asmeninės informacijos tvarkymo paslauga..."
+
+#: widgets/erroroverlay.cpp:234
 #, kde-format
 msgid "Personal information management service is shutting down..."
 msgstr "Stabdoma asmeninės informacijos tvarkymo paslauga..."
 
 #: widgets/erroroverlay.cpp:238
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "Personal information management service is performing a database upgrade."
+msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
 msgstr ""

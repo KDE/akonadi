@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-19 00:38+0000\n"
+"POT-Creation-Date: 2024-05-23 00:39+0000\n"
 "PO-Revision-Date: 2024-05-20 05:15+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -827,7 +827,9 @@ msgid "&New Subfolder..."
 msgstr "新增子資料夾(&N)..."
 
 #: widgets/collectiondialog.cpp:228
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Create a new subfolder under the currently selected folder"
+msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "在目前資料夾下新增子資料夾"
 
@@ -1008,7 +1010,9 @@ msgid "No Folder"
 msgstr "沒有資料夾"
 
 #: widgets/collectionrequester.cpp:122
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Open collection dialog"
+msgctxt "@info:tooltip"
 msgid "Open collection dialog"
 msgstr "開啟收藏對話框"
 
@@ -1119,18 +1123,35 @@ msgstr ""
 "\n"
 "%1"
 
-#: widgets/erroroverlay.cpp:228 widgets/erroroverlay.cpp:229
+#: widgets/erroroverlay.cpp:228
+#, fuzzy, kde-format
+#| msgid "Personal information management service is starting..."
+msgctxt "@info:tooltip"
+msgid "Personal information management service is starting..."
+msgstr "正在啟動個人資訊管理服務..."
+
+#: widgets/erroroverlay.cpp:229
 #, kde-format
 msgid "Personal information management service is starting..."
 msgstr "正在啟動個人資訊管理服務..."
 
-#: widgets/erroroverlay.cpp:233 widgets/erroroverlay.cpp:234
+#: widgets/erroroverlay.cpp:233
+#, fuzzy, kde-format
+#| msgid "Personal information management service is shutting down..."
+msgctxt "@info:tooltip"
+msgid "Personal information management service is shutting down..."
+msgstr "正在關閉個人資訊管理服務..."
+
+#: widgets/erroroverlay.cpp:234
 #, kde-format
 msgid "Personal information management service is shutting down..."
 msgstr "正在關閉個人資訊管理服務..."
 
 #: widgets/erroroverlay.cpp:238
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "Personal information management service is performing a database upgrade."
+msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
 msgstr "個人資訊管理服務政在執行資料庫更新。"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-19 00:38+0000\n"
+"POT-Creation-Date: 2024-05-23 00:39+0000\n"
 "PO-Revision-Date: 2010-09-24 20:39+0530\n"
 "Last-Translator: Rajesh Ranjan <rajesh672@gmail.com>\n"
 "Language-Team: Maithili <bhashaghar@googlegroups.com>\n"
@@ -819,6 +819,7 @@ msgstr "नव फोल्डर...(&N)"
 
 #: widgets/collectiondialog.cpp:228
 #, kde-format
+msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr ""
 
@@ -1005,6 +1006,7 @@ msgstr ""
 
 #: widgets/collectionrequester.cpp:122
 #, kde-format
+msgctxt "@info:tooltip"
 msgid "Open collection dialog"
 msgstr ""
 
@@ -1108,18 +1110,31 @@ msgid ""
 "%1"
 msgstr ""
 
-#: widgets/erroroverlay.cpp:228 widgets/erroroverlay.cpp:229
+#: widgets/erroroverlay.cpp:228
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Personal information management service is starting..."
+msgstr ""
+
+#: widgets/erroroverlay.cpp:229
 #, kde-format
 msgid "Personal information management service is starting..."
 msgstr ""
 
-#: widgets/erroroverlay.cpp:233 widgets/erroroverlay.cpp:234
+#: widgets/erroroverlay.cpp:233
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Personal information management service is shutting down..."
+msgstr ""
+
+#: widgets/erroroverlay.cpp:234
 #, kde-format
 msgid "Personal information management service is shutting down..."
 msgstr ""
 
 #: widgets/erroroverlay.cpp:238
 #, kde-format
+msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
 msgstr ""
