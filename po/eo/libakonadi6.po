@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-23 00:39+0000\n"
-"PO-Revision-Date: 2024-05-20 13:35+0100\n"
+"PO-Revision-Date: 2024-05-23 05:51+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -778,7 +778,7 @@ msgstr "Loke kaŝmemoritaj Partoj"
 #: widgets/cachepolicypage.ui:94
 #, kde-format
 msgid "Retrieval Options:"
-msgstr "Rehavigaj Opcioj:"
+msgstr "Rehavigaj Elektebloj:"
 
 #. i18n: ectx: property (text), widget (QRadioButton, retrieveFullMessages)
 #: widgets/cachepolicypage.ui:101
@@ -839,8 +839,7 @@ msgid "&New Subfolder..."
 msgstr "&Nova Subdosierujo..."
 
 #: widgets/collectiondialog.cpp:228
-#, fuzzy, kde-format
-#| msgid "Create a new subfolder under the currently selected folder"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Krei novan subdosierujon sub la nuntempe elektita dosierujo"
@@ -1024,8 +1023,7 @@ msgid "No Folder"
 msgstr "Neniu Dosierujo"
 
 #: widgets/collectionrequester.cpp:122
-#, fuzzy, kde-format
-#| msgid "Open collection dialog"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
 msgstr "Malfermi kolekto-dialogon"
@@ -1139,8 +1137,7 @@ msgstr ""
 "%1"
 
 #: widgets/erroroverlay.cpp:228
-#, fuzzy, kde-format
-#| msgid "Personal information management service is starting..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr "Servo pri administrado de personaj informoj komenciĝas..."
@@ -1151,8 +1148,7 @@ msgid "Personal information management service is starting..."
 msgstr "Servo pri administrado de personaj informoj komenciĝas..."
 
 #: widgets/erroroverlay.cpp:233
-#, fuzzy, kde-format
-#| msgid "Personal information management service is shutting down..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr "Servo pri administrado de personaj informoj fermiĝas..."
@@ -1163,9 +1159,7 @@ msgid "Personal information management service is shutting down..."
 msgstr "Servo pri administrado de personaj informoj fermiĝas..."
 
 #: widgets/erroroverlay.cpp:238
-#, fuzzy, kde-format
-#| msgid ""
-#| "Personal information management service is performing a database upgrade."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."

@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-23 00:39+0000\n"
-"PO-Revision-Date: 2024-05-19 22:29+0300\n"
+"PO-Revision-Date: 2024-05-23 13:55+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -845,8 +845,7 @@ msgid "&New Subfolder..."
 msgstr "&Yeni Alt Klasör…"
 
 #: widgets/collectiondialog.cpp:228
-#, fuzzy, kde-format
-#| msgid "Create a new subfolder under the currently selected folder"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Seçili klasörün altına yeni bir alt klasör oluştur"
@@ -1030,11 +1029,10 @@ msgid "No Folder"
 msgstr "Klasör Yok"
 
 #: widgets/collectionrequester.cpp:122
-#, fuzzy, kde-format
-#| msgid "Open collection dialog"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
-msgstr "Koleksiyon penceresini aç"
+msgstr "Koleksiyon iletişim kutusunu aç"
 
 #: widgets/collectionrequester.cpp:143
 #, kde-format
@@ -1145,8 +1143,7 @@ msgstr ""
 "%1"
 
 #: widgets/erroroverlay.cpp:228
-#, fuzzy, kde-format
-#| msgid "Personal information management service is starting..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr "Kişisel bilgi yönetim hizmeti başlatılıyor…"
@@ -1157,8 +1154,7 @@ msgid "Personal information management service is starting..."
 msgstr "Kişisel bilgi yönetim hizmeti başlatılıyor…"
 
 #: widgets/erroroverlay.cpp:233
-#, fuzzy, kde-format
-#| msgid "Personal information management service is shutting down..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr "Kişisel bilgi yönetim hizmeti kapatılıyor…"
@@ -1169,9 +1165,7 @@ msgid "Personal information management service is shutting down..."
 msgstr "Kişisel bilgi yönetim hizmeti kapatılıyor…"
 
 #: widgets/erroroverlay.cpp:238
-#, fuzzy, kde-format
-#| msgid ""
-#| "Personal information management service is performing a database upgrade."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."

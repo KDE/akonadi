@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-23 00:39+0000\n"
-"PO-Revision-Date: 2024-03-09 09:52+0100\n"
+"PO-Revision-Date: 2024-05-23 08:46+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
 "Language: gl\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 24.02.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -844,18 +844,16 @@ msgid "Use folder by default"
 msgstr "Usar o cartafol predeterminado"
 
 #: widgets/collectiondialog.cpp:226
-#, fuzzy, kde-format
-#| msgid "&New Subfolder..."
+#, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
 msgstr "&Novo subcartafol…"
 
 #: widgets/collectiondialog.cpp:228
-#, fuzzy, kde-format
-#| msgid "Create a new subfolder under the currently selected folder"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
-msgstr "Crear un subcartafol novo no cartafol escollido"
+msgstr "Crear un subcartafol novo no cartafol escollido."
 
 #: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:418
 #, kde-format
@@ -1036,11 +1034,10 @@ msgid "No Folder"
 msgstr "Ningún cartafol"
 
 #: widgets/collectionrequester.cpp:122
-#, fuzzy, kde-format
-#| msgid "Open collection dialog"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
-msgstr "Diálogo para abrir coleccións"
+msgstr "Diálogo para abrir coleccións."
 
 #: widgets/collectionrequester.cpp:143
 #, kde-format
@@ -1152,11 +1149,10 @@ msgstr ""
 "%1"
 
 #: widgets/erroroverlay.cpp:228
-#, fuzzy, kde-format
-#| msgid "Personal information management service is starting..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
-msgstr "O servizo de xestión de información persoal estase a iniciar…"
+msgstr "O servizo de xestión de información persoal estase a iniciar."
 
 #: widgets/erroroverlay.cpp:229
 #, kde-format
@@ -1164,11 +1160,10 @@ msgid "Personal information management service is starting..."
 msgstr "O servizo de xestión de información persoal estase a iniciar…"
 
 #: widgets/erroroverlay.cpp:233
-#, fuzzy, kde-format
-#| msgid "Personal information management service is shutting down..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
-msgstr "O servizo de xestión de información persoal estase a apagar…"
+msgstr "O servizo de xestión de información persoal estase a apagar."
 
 #: widgets/erroroverlay.cpp:234
 #, kde-format
@@ -1176,9 +1171,7 @@ msgid "Personal information management service is shutting down..."
 msgstr "O servizo de xestión de información persoal estase a apagar…"
 
 #: widgets/erroroverlay.cpp:238
-#, fuzzy, kde-format
-#| msgid ""
-#| "Personal information management service is performing a database upgrade."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
