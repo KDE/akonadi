@@ -1,22 +1,22 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Steve Allewell <steve.allewell@gmail.com>, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
+# SPDX-FileCopyrightText: 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Steve Allewell <steve.allewell@gmail.com>
 # Jonathan Marten <jjm@keelhaul.me.uk>, 2017.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-23 00:39+0000\n"
-"PO-Revision-Date: 2023-02-26 18:23+0000\n"
+"PO-Revision-Date: 2024-05-24 16:20+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
-"Language-Team: British English <kde-l10n-en_gb@kde.org>\n"
+"Language-Team: British English\n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 24.02.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -164,10 +164,9 @@ msgid "Job canceled."
 msgstr "Job cancelled."
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
-msgstr "Akonadi Agent"
+msgstr "Akonadi Control"
 
 #: akonadictl/main.cpp:211
 #, kde-format
@@ -187,11 +186,25 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"Akonadi server manipulation tool\n"
+"\n"
+"Commands:\n"
+"  start          Starts the Akonadi server with all its processes\n"
+"  stop           Stops the Akonadi server and all its processes cleanly\n"
+"  restart        Restart Akonadi server with all its processes\n"
+"  status         Shows a status overview of the Akonadi server\n"
+"  instances      List all existing Akonadi instances\n"
+"  vacuum         Vacuum internal storage (WARNING: needs a lot of time and "
+"disk\n"
+"                 space!)\n"
+"  fsck           Check (and attempt to fix) consistency of the internal "
+"storage\n"
+"                 (can take some time)"
 
 #: akonadictl/main.cpp:231
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "Command to execute"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -489,7 +502,7 @@ msgstr "Unread Messages"
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
 msgid "<strong>Quota</strong>: %1%<br>\n"
-msgstr ""
+msgstr "<strong>Quota</strong>: %1%<br>\n"
 
 #: core/models/statisticsproxymodel.cpp:105
 #, kde-format
@@ -619,6 +632,7 @@ msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
+"Namespace for starting multiple Akonadi instances in the same user session"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
@@ -695,7 +709,7 @@ msgstr "Failed to register %1 configuration dialogue."
 #, kde-format
 msgctxt "Status percent value"
 msgid "(%1%)"
-msgstr ""
+msgstr "(%1%)"
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
@@ -818,15 +832,13 @@ msgid "Use folder by default"
 msgstr "Use folder by default"
 
 #: widgets/collectiondialog.cpp:226
-#, fuzzy, kde-format
-#| msgid "&New Subfolder..."
+#, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
 msgstr "&New Subfolder..."
 
 #: widgets/collectiondialog.cpp:228
-#, fuzzy, kde-format
-#| msgid "Create a new subfolder under the currently selected folder"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Create a new subfolder under the currently selected folder"
@@ -1010,8 +1022,7 @@ msgid "No Folder"
 msgstr "No Folder"
 
 #: widgets/collectionrequester.cpp:122
-#, fuzzy, kde-format
-#| msgid "Open collection dialog"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
 msgstr "Open collection dialogue"
@@ -1125,8 +1136,7 @@ msgstr ""
 "%1"
 
 #: widgets/erroroverlay.cpp:228
-#, fuzzy, kde-format
-#| msgid "Personal information management service is starting..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr "Personal information management service is starting..."
@@ -1137,8 +1147,7 @@ msgid "Personal information management service is starting..."
 msgstr "Personal information management service is starting..."
 
 #: widgets/erroroverlay.cpp:233
-#, fuzzy, kde-format
-#| msgid "Personal information management service is shutting down..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr "Personal information management service is shutting down..."
@@ -1149,9 +1158,7 @@ msgid "Personal information management service is shutting down..."
 msgstr "Personal information management service is shutting down..."
 
 #: widgets/erroroverlay.cpp:238
-#, fuzzy, kde-format
-#| msgid ""
-#| "Personal information management service is performing a database upgrade."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
@@ -1220,8 +1227,7 @@ msgid "Do you want to remove account '%1'?"
 msgstr "Do you want to remove account '%1'?"
 
 #: widgets/manageaccountwidget.cpp:199
-#, fuzzy, kde-format
-#| msgid "Remove account?"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"
 msgstr "Remove account?"

@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-23 00:39+0000\n"
-"PO-Revision-Date: 2024-05-19 08:51+0200\n"
+"PO-Revision-Date: 2024-05-23 11:47+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -853,8 +853,7 @@ msgid "&New Subfolder..."
 msgstr "Subcarpeta &nova…"
 
 #: widgets/collectiondialog.cpp:228
-#, fuzzy, kde-format
-#| msgid "Create a new subfolder under the currently selected folder"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Crea una subcarpeta nova davall la carpeta seleccionada"
@@ -1038,8 +1037,7 @@ msgid "No Folder"
 msgstr "Cap carpeta"
 
 #: widgets/collectionrequester.cpp:122
-#, fuzzy, kde-format
-#| msgid "Open collection dialog"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
 msgstr "Diàleg d'obertura de col·lecció"
@@ -1154,8 +1152,7 @@ msgstr ""
 "%1"
 
 #: widgets/erroroverlay.cpp:228
-#, fuzzy, kde-format
-#| msgid "Personal information management service is starting..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr "S'està iniciant el servei per a la gestió de la informació personal…"
@@ -1166,8 +1163,7 @@ msgid "Personal information management service is starting..."
 msgstr "S'està iniciant el servei per a la gestió de la informació personal…"
 
 #: widgets/erroroverlay.cpp:233
-#, fuzzy, kde-format
-#| msgid "Personal information management service is shutting down..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr "S'està parant el servei per a la gestió de la informació personal…"
@@ -1178,9 +1174,7 @@ msgid "Personal information management service is shutting down..."
 msgstr "S'està parant el servei per a la gestió de la informació personal…"
 
 #: widgets/erroroverlay.cpp:238
-#, fuzzy, kde-format
-#| msgid ""
-#| "Personal information management service is performing a database upgrade."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."

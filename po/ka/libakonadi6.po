@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-23 00:39+0000\n"
-"PO-Revision-Date: 2024-05-19 05:18+0200\n"
+"PO-Revision-Date: 2024-05-24 16:20+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -839,8 +839,7 @@ msgid "&New Subfolder..."
 msgstr "&ახალი ქვესაქაღალდე..."
 
 #: widgets/collectiondialog.cpp:228
-#, fuzzy, kde-format
-#| msgid "Create a new subfolder under the currently selected folder"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "ამჟამად არჩეულ საქაღალდეში ახალი ქვესაქაღალდის შექმნა"
@@ -1024,8 +1023,7 @@ msgid "No Folder"
 msgstr "საქაღალდის გარეშე"
 
 #: widgets/collectionrequester.cpp:122
-#, fuzzy, kde-format
-#| msgid "Open collection dialog"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
 msgstr "კოლექციის ფანჯრის გახსნა"
@@ -1140,8 +1138,7 @@ msgstr ""
 "%1"
 
 #: widgets/erroroverlay.cpp:228
-#, fuzzy, kde-format
-#| msgid "Personal information management service is starting..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr "მიმდინარეობს პერსონალური ინფორმაციის მართვის სერვისის გაშვება..."
@@ -1152,8 +1149,7 @@ msgid "Personal information management service is starting..."
 msgstr "მიმდინარეობს პერსონალური ინფორმაციის მართვის სერვისის გაშვება..."
 
 #: widgets/erroroverlay.cpp:233
-#, fuzzy, kde-format
-#| msgid "Personal information management service is shutting down..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr ""
@@ -1166,9 +1162,7 @@ msgstr ""
 "მიმდინარეობს პერსონალური ინფორმაციის მართვის სერვისის მუშაობის დასრუნება..."
 
 #: widgets/erroroverlay.cpp:238
-#, fuzzy, kde-format
-#| msgid ""
-#| "Personal information management service is performing a database upgrade."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
