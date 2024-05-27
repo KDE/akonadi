@@ -824,7 +824,7 @@ msgstr ""
 #: widgets/collectiondialog.cpp:228
 #, kde-format
 msgid "Create a new subfolder under the currently selected folder"
-msgstr "在当前所选文件夹下创建新子文件夹"
+msgstr ""
 
 #: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:418
 #, kde-format
@@ -1005,7 +1005,7 @@ msgstr "无文件夹"
 #: widgets/collectionrequester.cpp:122
 #, kde-format
 msgid "Open collection dialog"
-msgstr "打开集合对话框"
+msgstr ""
 
 #: widgets/collectionrequester.cpp:143
 #, kde-format
@@ -1127,7 +1127,7 @@ msgstr "个人信息管理服务正在关闭..."
 #, kde-format
 msgid ""
 "Personal information management service is performing a database upgrade."
-msgstr "个人信息管理服务正在进行数据库更新。"
+msgstr ""
 
 #: widgets/erroroverlay.cpp:240
 #, kde-format
