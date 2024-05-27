@@ -7,16 +7,16 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-23 00:39+0000\n"
-"PO-Revision-Date: 2024-03-17 10:50+0100\n"
+"PO-Revision-Date: 2024-05-26 11:22+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 23.08.4\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10"
+" || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -839,14 +839,14 @@ msgid "Use folder by default"
 msgstr "Użyj katalogu domyślnie"
 
 #: widgets/collectiondialog.cpp:226
-#, fuzzy, kde-format
+#, kde-format
 #| msgid "&New Subfolder..."
 msgctxt "@action:button"
 msgid "&New Subfolder..."
 msgstr "&Nowy podkatalog..."
 
 #: widgets/collectiondialog.cpp:228
-#, fuzzy, kde-format
+#, kde-format
 #| msgid "Create a new subfolder under the currently selected folder"
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
@@ -1033,7 +1033,7 @@ msgid "No Folder"
 msgstr "Brak katalogu"
 
 #: widgets/collectionrequester.cpp:122
-#, fuzzy, kde-format
+#, kde-format
 #| msgid "Open collection dialog"
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
@@ -1149,7 +1149,7 @@ msgstr ""
 "%1"
 
 #: widgets/erroroverlay.cpp:228
-#, fuzzy, kde-format
+#, kde-format
 #| msgid "Personal information management service is starting..."
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
@@ -1161,7 +1161,7 @@ msgid "Personal information management service is starting..."
 msgstr "Uruchamianie modułu zarządzania informacjami osobistymi..."
 
 #: widgets/erroroverlay.cpp:233
-#, fuzzy, kde-format
+#, kde-format
 #| msgid "Personal information management service is shutting down..."
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
@@ -1173,7 +1173,7 @@ msgid "Personal information management service is shutting down..."
 msgstr "Zatrzymywanie modułu zarządzania informacjami osobistymi..."
 
 #: widgets/erroroverlay.cpp:238
-#, fuzzy, kde-format
+#, kde-format
 #| msgid ""
 #| "Personal information management service is performing a database upgrade."
 msgctxt "@info:tooltip"
@@ -2773,3 +2773,4 @@ msgstr "Nie można znaleźć zbioru %1"
 
 #~ msgid "KDE Test Program"
 #~ msgstr "Program próbny KDE"
+
