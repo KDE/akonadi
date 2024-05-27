@@ -213,10 +213,11 @@ ConflictResolveDialog::ConflictResolveDialog(QWidget *parent)
     mView->setOpenLinks(false);
 
     auto docuLabel =
-        new QLabel(i18n("<qt>Your changes conflict with those made by someone else meanwhile.<br>"
-                        "Unless one version can just be thrown away, you will have to integrate those changes manually.<br>"
-                        "Click on <a href=\"opentexteditor\">\"Open text editor\"</a> to keep a copy of the texts, then select which version is most correct, "
-                        "then re-open it and modify it again to add what's missing."));
+        new QLabel(i18nc("@label:textbox",
+                         "<qt>Your changes conflict with those made by someone else meanwhile.<br>"
+                         "Unless one version can just be thrown away, you will have to integrate those changes manually.<br>"
+                         "Click on <a href=\"opentexteditor\">\"Open text editor\"</a> to keep a copy of the texts, then select which version is most correct, "
+                         "then re-open it and modify it again to add what's missing."));
     connect(docuLabel, &QLabel::linkActivated, this, &ConflictResolveDialog::slotOpenEditor);
     docuLabel->setContextMenuPolicy(Qt::NoContextMenu);
 
