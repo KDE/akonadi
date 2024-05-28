@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-23 00:39+0000\n"
-"PO-Revision-Date: 2024-05-19 09:51+0200\n"
+"POT-Creation-Date: 2024-05-28 00:38+0000\n"
+"PO-Revision-Date: 2024-05-27 14:16+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -841,8 +841,7 @@ msgid "&New Subfolder..."
 msgstr "&Нова подпапка…"
 
 #: widgets/collectiondialog.cpp:228
-#, fuzzy, kde-format
-#| msgid "Create a new subfolder under the currently selected folder"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Създаване на нова подпапка под текущо избраната папка"
@@ -1026,8 +1025,7 @@ msgid "No Folder"
 msgstr "Няма папка"
 
 #: widgets/collectionrequester.cpp:122
-#, fuzzy, kde-format
-#| msgid "Open collection dialog"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
 msgstr "Отваряне на диалоговия прозорец за колекции"
@@ -1078,8 +1076,16 @@ msgctxt "@action:button"
 msgid "Keep both versions"
 msgstr "Запазване и на двете версии"
 
-#: widgets/conflictresolvedialog.cpp:216
-#, kde-format
+#: widgets/conflictresolvedialog.cpp:217
+#, fuzzy, kde-format
+#| msgid ""
+#| "<qt>Your changes conflict with those made by someone else meanwhile."
+#| "<br>Unless one version can just be thrown away, you will have to "
+#| "integrate those changes manually.<br>Click on <a href=\"opentexteditor\">"
+#| "\"Open text editor\"</a> to keep a copy of the texts, then select which "
+#| "version is most correct, then re-open it and modify it again to add "
+#| "what's missing."
+msgctxt "@label:textbox"
 msgid ""
 "<qt>Your changes conflict with those made by someone else meanwhile."
 "<br>Unless one version can just be thrown away, you will have to integrate "
@@ -1094,7 +1100,7 @@ msgstr ""
 "запазите копие на текстовете,изберете коя версия е най-правилна и след това "
 "я отворете отново и добавете липсващото."
 
-#: widgets/conflictresolvedialog.cpp:265
+#: widgets/conflictresolvedialog.cpp:266
 #, kde-format
 msgid "Data"
 msgstr "Данни"
@@ -1142,8 +1148,7 @@ msgstr ""
 "%1"
 
 #: widgets/erroroverlay.cpp:228
-#, fuzzy, kde-format
-#| msgid "Personal information management service is starting..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr "Стартира се услугата за управление на лична информация…"
@@ -1154,8 +1159,7 @@ msgid "Personal information management service is starting..."
 msgstr "Стартира се услугата за управление на лична информация…"
 
 #: widgets/erroroverlay.cpp:233
-#, fuzzy, kde-format
-#| msgid "Personal information management service is shutting down..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr "Услугата за управление на лична информация се изключва…"
@@ -1166,9 +1170,7 @@ msgid "Personal information management service is shutting down..."
 msgstr "Услугата за управление на лична информация се изключва…"
 
 #: widgets/erroroverlay.cpp:238
-#, fuzzy, kde-format
-#| msgid ""
-#| "Personal information management service is performing a database upgrade."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."

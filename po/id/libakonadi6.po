@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-23 00:39+0000\n"
+"POT-Creation-Date: 2024-05-28 00:38+0000\n"
 "PO-Revision-Date: 2022-09-27 17:54+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -1066,8 +1066,16 @@ msgctxt "@action:button"
 msgid "Keep both versions"
 msgstr "Jaga kedua versi"
 
-#: widgets/conflictresolvedialog.cpp:216
-#, kde-format
+#: widgets/conflictresolvedialog.cpp:217
+#, fuzzy, kde-format
+#| msgid ""
+#| "<qt>Your changes conflict with those made by someone else meanwhile."
+#| "<br>Unless one version can just be thrown away, you will have to "
+#| "integrate those changes manually.<br>Click on <a href=\"opentexteditor\">"
+#| "\"Open text editor\"</a> to keep a copy of the texts, then select which "
+#| "version is most correct, then re-open it and modify it again to add "
+#| "what's missing."
+msgctxt "@label:textbox"
 msgid ""
 "<qt>Your changes conflict with those made by someone else meanwhile."
 "<br>Unless one version can just be thrown away, you will have to integrate "
@@ -1082,7 +1090,7 @@ msgstr ""
 "kemudian membukanya ulang dan memodifikasinya lagi untuk menambahkan apa "
 "yang hilang."
 
-#: widgets/conflictresolvedialog.cpp:265
+#: widgets/conflictresolvedialog.cpp:266
 #, kde-format
 msgid "Data"
 msgstr "Data"
