@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-23 00:39+0000\n"
+"POT-Creation-Date: 2024-05-28 00:38+0000\n"
 "PO-Revision-Date: 2024-05-26 11:22+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -14,9 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10"
-" || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 23.08.5\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -840,14 +839,12 @@ msgstr "Użyj katalogu domyślnie"
 
 #: widgets/collectiondialog.cpp:226
 #, kde-format
-#| msgid "&New Subfolder..."
 msgctxt "@action:button"
 msgid "&New Subfolder..."
 msgstr "&Nowy podkatalog..."
 
 #: widgets/collectiondialog.cpp:228
 #, kde-format
-#| msgid "Create a new subfolder under the currently selected folder"
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Utwórz nowy podkatalog w obecnie wybranym katalogu"
@@ -1034,7 +1031,6 @@ msgstr "Brak katalogu"
 
 #: widgets/collectionrequester.cpp:122
 #, kde-format
-#| msgid "Open collection dialog"
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
 msgstr "Otwórz okno zbioru"
@@ -1085,8 +1081,16 @@ msgctxt "@action:button"
 msgid "Keep both versions"
 msgstr "Zachowaj obie wersje"
 
-#: widgets/conflictresolvedialog.cpp:216
-#, kde-format
+#: widgets/conflictresolvedialog.cpp:217
+#, fuzzy, kde-format
+#| msgid ""
+#| "<qt>Your changes conflict with those made by someone else meanwhile."
+#| "<br>Unless one version can just be thrown away, you will have to "
+#| "integrate those changes manually.<br>Click on <a href=\"opentexteditor\">"
+#| "\"Open text editor\"</a> to keep a copy of the texts, then select which "
+#| "version is most correct, then re-open it and modify it again to add "
+#| "what's missing."
+msgctxt "@label:textbox"
 msgid ""
 "<qt>Your changes conflict with those made by someone else meanwhile."
 "<br>Unless one version can just be thrown away, you will have to integrate "
@@ -1101,7 +1105,7 @@ msgstr ""
 "najbardziej poprawna, następnie otwórz ją ponownie i zmień, tak aby dodać, "
 "to czego brakuje."
 
-#: widgets/conflictresolvedialog.cpp:265
+#: widgets/conflictresolvedialog.cpp:266
 #, kde-format
 msgid "Data"
 msgstr "Dane"
@@ -1150,7 +1154,6 @@ msgstr ""
 
 #: widgets/erroroverlay.cpp:228
 #, kde-format
-#| msgid "Personal information management service is starting..."
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr "Uruchamianie modułu zarządzania informacjami osobistymi..."
@@ -1162,7 +1165,6 @@ msgstr "Uruchamianie modułu zarządzania informacjami osobistymi..."
 
 #: widgets/erroroverlay.cpp:233
 #, kde-format
-#| msgid "Personal information management service is shutting down..."
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr "Zatrzymywanie modułu zarządzania informacjami osobistymi..."
@@ -1174,8 +1176,6 @@ msgstr "Zatrzymywanie modułu zarządzania informacjami osobistymi..."
 
 #: widgets/erroroverlay.cpp:238
 #, kde-format
-#| msgid ""
-#| "Personal information management service is performing a database upgrade."
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
@@ -2773,4 +2773,3 @@ msgstr "Nie można znaleźć zbioru %1"
 
 #~ msgid "KDE Test Program"
 #~ msgstr "Program próbny KDE"
-
