@@ -1062,9 +1062,6 @@ msgid ""
 "editor\"</a> to keep a copy of the texts, then select which version is most "
 "correct, then re-open it and modify it again to add what's missing."
 msgstr ""
-"<qt>您的更改会与其他人的更改发生冲突。<br> 除非丢弃一个版本，否则您必须手动合"
-"并这些更改。<br>单击<a href=\"opentexteditor\">“打开文本编辑器”</a>以保留文本"
-"副本，然后选择哪个版本是最正确的，之后重新打开并再次修改它以添加缺少的内容。"
 
 #: widgets/conflictresolvedialog.cpp:265
 #, kde-format
