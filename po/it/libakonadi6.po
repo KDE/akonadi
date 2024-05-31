@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-28 00:38+0000\n"
-"PO-Revision-Date: 2024-03-09 21:08+0100\n"
+"PO-Revision-Date: 2024-05-28 15:08+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.02.0\n"
+"X-Generator: Lokalize 24.05.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -845,18 +845,16 @@ msgid "Use folder by default"
 msgstr "Usa cartella in modo predefinito"
 
 #: widgets/collectiondialog.cpp:226
-#, fuzzy, kde-format
-#| msgid "&New Subfolder..."
+#, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
 msgstr "&Nuova sottocartella..."
 
 #: widgets/collectiondialog.cpp:228
-#, fuzzy, kde-format
-#| msgid "Create a new subfolder under the currently selected folder"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
-msgstr "Crea una nuova sotto-cartella nella cartella selezionata"
+msgstr "Crea una nuova sottocartella sotto la cartella attualmente selezionata"
 
 #: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:418
 #, kde-format
@@ -1037,11 +1035,10 @@ msgid "No Folder"
 msgstr "Nessuna cartella"
 
 #: widgets/collectionrequester.cpp:122
-#, fuzzy, kde-format
-#| msgid "Open collection dialog"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
-msgstr "Apri la finestra di dialogo delle collezioni"
+msgstr "Apri la finestra delle collezioni"
 
 #: widgets/collectionrequester.cpp:143
 #, kde-format
@@ -1090,14 +1087,7 @@ msgid "Keep both versions"
 msgstr "Mantieni entrambi le versioni"
 
 #: widgets/conflictresolvedialog.cpp:217
-#, fuzzy, kde-format
-#| msgid ""
-#| "<qt>Your changes conflict with those made by someone else meanwhile."
-#| "<br>Unless one version can just be thrown away, you will have to "
-#| "integrate those changes manually.<br>Click on <a href=\"opentexteditor\">"
-#| "\"Open text editor\"</a> to keep a copy of the texts, then select which "
-#| "version is most correct, then re-open it and modify it again to add "
-#| "what's missing."
+#, kde-format
 msgctxt "@label:textbox"
 msgid ""
 "<qt>Your changes conflict with those made by someone else meanwhile."
@@ -1106,12 +1096,12 @@ msgid ""
 "editor\"</a> to keep a copy of the texts, then select which version is most "
 "correct, then re-open it and modify it again to add what's missing."
 msgstr ""
-"<qt>Le tue modifiche sono in conflitto con quelle generate da qualcun altro."
-"<br>A meno che una versione non possa essere eliminata, dovrai integrare "
-"tali modifiche manualmente.<br>Fai clic su <a href=\"opentexteditor\">\"Apri "
-"editor di testo\"</a> per mantenere una copia dei testi, poi seleziona quale "
-"versione è la più corretta, quindi aprila nuovamente e modificala per "
-"aggiungere cosa manca."
+"<qt>Le tue modifiche sono in conflitto con quelle generate da qualcun altro "
+"nel frattempo.<br>A meno che una versione non possa essere eliminata, dovrai "
+"integrare tali modifiche manualmente.<br>Fai clic su <a href=\"opentexteditor"
+"\">\"Apri editor di testo\"</a> per mantenere una copia dei testi, poi "
+"seleziona quale versione è la più corretta, quindi aprila nuovamente e "
+"modificala per aggiungere ciò che manca."
 
 #: widgets/conflictresolvedialog.cpp:266
 #, kde-format
@@ -1162,12 +1152,11 @@ msgstr ""
 "%1"
 
 #: widgets/erroroverlay.cpp:228
-#, fuzzy, kde-format
-#| msgid "Personal information management service is starting..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr ""
-"Avvio del servizio per la gestione delle informazioni personali in corso..."
+"Il servizio di gestione delle informazioni personali si sta avviando..."
 
 #: widgets/erroroverlay.cpp:229
 #, kde-format
@@ -1176,13 +1165,12 @@ msgstr ""
 "Avvio del servizio per la gestione delle informazioni personali in corso..."
 
 #: widgets/erroroverlay.cpp:233
-#, fuzzy, kde-format
-#| msgid "Personal information management service is shutting down..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr ""
-"Chiusura del servizio per la gestione delle informazioni personali in "
-"corso..."
+"Il servizio di gestione delle informazioni personali sta per essere "
+"interrotto..."
 
 #: widgets/erroroverlay.cpp:234
 #, kde-format
@@ -1192,15 +1180,13 @@ msgstr ""
 "corso..."
 
 #: widgets/erroroverlay.cpp:238
-#, fuzzy, kde-format
-#| msgid ""
-#| "Personal information management service is performing a database upgrade."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
 msgstr ""
-"Il servizio per la gestione delle informazioni personali sta eseguendo un "
-"aggiornamento della banca dati."
+"Il servizio di gestione delle informazioni personali sta eseguendo un "
+"aggiornamento del database."
 
 #: widgets/erroroverlay.cpp:240
 #, kde-format
@@ -2333,9 +2319,9 @@ msgid "Do you really want to delete this folder and all its sub-folders?"
 msgid_plural ""
 "Do you really want to delete %1 folders and all their sub-folders?"
 msgstr[0] ""
-"Vuoi davvero eliminare questa cartella e tutte le sue sotto-cartelle?"
+"Vuoi davvero eliminare questa cartella e tutte le sue sottocartelle?"
 msgstr[1] ""
-"Vuoi davvero eliminare %1 cartelle e tutte le relative sotto-cartelle?"
+"Vuoi davvero eliminare %1 cartelle e tutte le relative sottocartelle?"
 
 #: widgets/standardactionmanager.cpp:429
 #, kde-format
