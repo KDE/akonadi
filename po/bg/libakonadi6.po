@@ -2614,6 +2614,3 @@ msgstr "Не може да се анализира файл с данни: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Не може да се намери колекция %1"
-
-#~ msgid "Quota"
-#~ msgstr "Квота"
