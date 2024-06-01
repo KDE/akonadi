@@ -105,8 +105,12 @@ Control::~Control() = default;
 
 bool Control::start()
 {
-    if (ServerManager::state() == ServerManager::Stopping) {
+    switch (ServerManager::state()) {
+    case ServerManager::Stopping:
         qCDebug(AKONADICORE_LOG) << "Server is currently being stopped, won't try to start it now";
+        return false;
+    case ServerManager::Broken:
+        qCDebug(AKONADICORE_LOG) << "Server is already broken: " << ServerManager::brokenReason();
         return false;
     }
     if (ServerManager::isRunning() || s_instance->d->mEventLoop) {
