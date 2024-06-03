@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-25 00:38+0000\n"
-"PO-Revision-Date: 2024-05-30 19:31+0100\n"
+"PO-Revision-Date: 2024-06-02 11:43+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
 "Language: en_GB\n"
@@ -248,7 +248,7 @@ msgctxt ""
 "Options for user to input to command line prompt, parenthesis indicate which "
 "letter to type, capitalized option is default"
 msgid " [(y)es/(N)o/(s)kip] "
-msgstr ""
+msgstr " [(y)es/(N)o/(s)kip] "
 
 #: main.cpp:56
 #, kde-format
@@ -303,4 +303,4 @@ msgstr "Migrating table %1 (%2/%3)..."
 #, kde-format
 msgctxt "@info:progress"
 msgid "%1%..."
-msgstr ""
+msgstr "%1%..."
