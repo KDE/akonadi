@@ -880,7 +880,7 @@ QString AgentBase::parseArguments(int argc, char **argv)
 {
     Q_UNUSED(argc)
 
-    QCommandLineOption identifierOption(QStringLiteral("identifier"), i18n("Agent identifier"), QStringLiteral("argument"));
+    QCommandLineOption identifierOption(QStringLiteral("identifier"), i18nc("@info:shell", "Agent identifier"), QStringLiteral("argument"));
     QCommandLineParser parser;
     parser.addOption(identifierOption);
     parser.addHelpOption();
