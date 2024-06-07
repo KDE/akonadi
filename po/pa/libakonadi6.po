@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-28 00:38+0000\n"
+"POT-Creation-Date: 2024-06-07 00:39+0000\n"
 "PO-Revision-Date: 2023-12-31 09:30-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -51,7 +51,9 @@ msgid "%1 of type %2"
 msgstr "%2 ਕਿਸਮ ਵਿਚੋਂ %1"
 
 #: agentbase/agentbase.cpp:883
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Agent identifier"
+msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "ਏਜੰਟ ਪਛਾਣ"
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-28 00:38+0000\n"
+"POT-Creation-Date: 2024-06-07 00:39+0000\n"
 "PO-Revision-Date: 2024-03-10 11:02+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -50,6 +50,7 @@ msgstr "%2 வகையான %1"
 
 #: agentbase/agentbase.cpp:883
 #, kde-format
+msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr ""
 

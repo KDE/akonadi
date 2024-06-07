@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-28 00:38+0000\n"
+"POT-Creation-Date: 2024-06-07 00:39+0000\n"
 "PO-Revision-Date: 2024-05-25 16:42+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: \n"
@@ -52,7 +52,9 @@ msgid "%1 of type %2"
 msgstr "مورد %1 نوعه %2"
 
 #: agentbase/agentbase.cpp:883
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Agent identifier"
+msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "معرّف الوسيط"
 

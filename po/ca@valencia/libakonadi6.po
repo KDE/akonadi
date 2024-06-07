@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-28 00:38+0000\n"
+"POT-Creation-Date: 2024-06-07 00:39+0000\n"
 "PO-Revision-Date: 2024-05-28 13:01+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -55,7 +55,9 @@ msgid "%1 of type %2"
 msgstr "%1 del tipus %2"
 
 #: agentbase/agentbase.cpp:883
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Agent identifier"
+msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Identificador de l'agent"
 

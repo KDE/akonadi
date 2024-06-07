@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-28 00:38+0000\n"
+"POT-Creation-Date: 2024-06-07 00:39+0000\n"
 "PO-Revision-Date: 2010-02-26 23:20+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -50,9 +50,11 @@ msgid "%1 of type %2"
 msgstr ""
 
 #: agentbase/agentbase.cpp:883
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Folder creation failed"
+msgctxt "@info:shell"
 msgid "Agent identifier"
-msgstr ""
+msgstr "ล้มเหลวในการสร้างโฟลเดอร์"
 
 #: agentbase/agentbase.cpp:889
 #, kde-format

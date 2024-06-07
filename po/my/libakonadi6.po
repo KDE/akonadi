@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-28 00:38+0000\n"
+"POT-Creation-Date: 2024-06-07 00:39+0000\n"
 "PO-Revision-Date: 2021-09-27 23:52+0630\n"
 "Last-Translator: ဇေယျာလွင် <lw1nzayar@yandex.com>\n"
 "Language-Team: Burmese <kde-i18n-doc@kde.org>\n"
@@ -50,7 +50,9 @@ msgid "%1 of type %2"
 msgstr "%2 အမျိုးအစားဖြစ်သော %1"
 
 #: agentbase/agentbase.cpp:883
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Agent identifier"
+msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "အေးဂျင့်ခွဲခြားသတ်မှတ်အတည်ပြုချက်"
 
