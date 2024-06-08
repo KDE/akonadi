@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-25 00:38+0000\n"
-"PO-Revision-Date: 2024-01-29 17:35+0200\n"
+"PO-Revision-Date: 2024-03-10 10:54+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -55,7 +55,7 @@ msgstr "Käynnistetään Akonadi-palvelua…"
 #, kde-format
 msgctxt "@info:status"
 msgid "Database fsck completed"
-msgstr ""
+msgstr "Tietokannan fsck valmis"
 
 #: dbmigrator.cpp:483
 #, kde-format
@@ -108,7 +108,7 @@ msgstr "Virhe: siirron kohteena olevaa uutta tietokantaa ei saatu auki."
 #, kde-format
 msgctxt "@info:status"
 msgid "Running fsck on the source database"
-msgstr ""
+msgstr "Suoritetaan lähdetietokannalle fsck"
 
 #: dbmigrator.cpp:559
 #, kde-format
