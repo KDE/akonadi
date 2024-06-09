@@ -49,11 +49,10 @@ msgid "%1 of type %2"
 msgstr "类型 %2 的 %1"
 
 #: agentbase/agentbase.cpp:883
-#, fuzzy, kde-format
-#| msgid "Agent identifier"
+#, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
-msgstr "代理标识符"
+msgstr ""
 
 #: agentbase/agentbase.cpp:889
 #, kde-format
