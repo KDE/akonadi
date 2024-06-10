@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-28 00:39+0000\n"
-"PO-Revision-Date: 2024-03-20 18:09+0900\n"
+"PO-Revision-Date: 2024-06-09 19:07+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -96,7 +96,7 @@ msgstr "未設定"
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
-msgstr "資源辨識器"
+msgstr "資源識別子"
 
 #: agentbase/resourcebase.cpp:524
 #, kde-format
@@ -364,7 +364,7 @@ msgstr "沒有給定資源代碼。"
 #: core/jobs/specialcollectionshelperjobs.cpp:326
 #, kde-format
 msgid "Invalid resource identifier '%1'"
-msgstr "無效的資源辨識 %1。"
+msgstr "無效的資源識別子 %1。"
 
 #: core/jobs/specialcollectionshelperjobs.cpp:342
 #: core/jobs/specialcollectionshelperjobs.cpp:350
