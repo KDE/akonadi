@@ -563,7 +563,7 @@ msgstr "未命名插件"
 #: core/pluginloader.cpp:151
 #, kde-format
 msgid "No description available"
-msgstr "无可用的描述"
+msgstr "没有可用的描述"
 
 #: core/servermanager.cpp:263
 #, kde-format
