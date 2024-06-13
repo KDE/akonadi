@@ -15,6 +15,7 @@
 #include "ui_tageditwidget.h"
 
 #include <KCheckableProxyModel>
+#include <KLineEditEventHandler>
 #include <KLocalizedString>
 #include <KMessageBox>
 
@@ -173,6 +174,7 @@ TagEditWidget::TagEditWidget(QWidget *parent)
     , d(new TagEditWidgetPrivate(this))
 {
     d->ui.setupUi(this);
+    KLineEditEventHandler::catchReturnKey(d->ui.newTagEdit);
 
     d->ui.tagsView->installEventFilter(this);
     connect(d->ui.tagsView, &QAbstractItemView::entered, d.get(), &TagEditWidgetPrivate::slotItemEntered);
