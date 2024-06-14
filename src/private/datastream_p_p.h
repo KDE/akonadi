@@ -8,6 +8,7 @@
 #pragma once
 
 #include <chrono>
+#include <qnamespace.h>
 #include <type_traits>
 
 #include "akonadiprivate_export.h"
@@ -214,24 +215,33 @@ inline DataStream &DataStream::operator>>(QDateTime &dt)
     QDate date;
     QTime time;
     qint64 jd;
-    int mds;
     Qt::TimeSpec spec;
+    int mds;
+    QTimeZone timezone(QTimeZone::LocalTime);
 
     *this >> jd >> mds >> spec;
     date = QDate::fromJulianDay(jd);
     time = QTime::fromMSecsSinceStartOfDay(mds);
-    if (spec == Qt::OffsetFromUTC) {
+    switch (spec) {
+    case Qt::UTC:
+        timezone = QTimeZone::utc();
+        break;
+    case Qt::OffsetFromUTC: {
         int offset = 0;
         *this >> offset;
-        dt = QDateTime(date, time, spec, offset);
-    } else if (spec == Qt::TimeZone) {
+        timezone = QTimeZone::fromSecondsAheadOfUtc(offset);
+        break;
+    }
+    case Qt::LocalTime:
+        break;
+    case Qt::TimeZone: {
         QByteArray id;
         *this >> id;
-        dt = QDateTime(date, time, QTimeZone(id));
-    } else {
-        dt = QDateTime(date, time, spec);
+        timezone = QTimeZone(id);
+    }
     }
 
+    dt = QDateTime(date, time, timezone);
     return *this;
 }
 
