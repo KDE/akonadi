@@ -314,9 +314,7 @@ template<typename Key, typename Value, template<typename, typename> class Contai
 inline Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream, const Container<Key, Value> &map)
 {
     stream << (quint32)map.size();
-    auto iter = map.cend(), begin = map.cbegin();
-    while (iter != begin) {
-        --iter;
+    for (auto iter = map.cbegin(), end = map.cend(); iter != end; ++iter) {
         stream << iter.key() << iter.value();
     }
     return stream;

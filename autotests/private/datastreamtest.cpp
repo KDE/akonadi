@@ -194,6 +194,45 @@ private Q_SLOTS:
     {
         testTypeStreaming<QDateTime>();
     }
+
+    void testQList_data()
+    {
+        QTest::addColumn<QList<qint32>>("input");
+        QTest::newRow("empty") << QList<qint32>();
+        QTest::newRow("single") << QList<qint32>{42};
+        QTest::newRow("multiple") << QList<qint32>{42, 1337, -42};
+    }
+
+    void testQList()
+    {
+        testTypeStreaming<QList<qint32>>();
+    }
+
+    void testQMap_data()
+    {
+        QTest::addColumn<QMap<QString, qint32>>("input");
+        QTest::newRow("empty") << QMap<QString, qint32>();
+        QTest::newRow("single") << QMap<QString, qint32>{{QStringLiteral("foo"), 42}};
+        QTest::newRow("multiple") << QMap<QString, qint32>{{QStringLiteral("foo"), 42}, {QStringLiteral("bar"), 1337}, {QStringLiteral("baz"), -42}};
+    }
+
+    void testQMap()
+    {
+        testTypeStreaming<QMap<QString, qint32>>();
+    }
+
+    void testQHash_data()
+    {
+        QTest::addColumn<QHash<QString, qint32>>("input");
+        QTest::newRow("empty") << QHash<QString, qint32>();
+        QTest::newRow("single") << QHash<QString, qint32>{{QStringLiteral("foo"), 42}};
+        QTest::newRow("multiple") << QHash<QString, qint32>{{QStringLiteral("foo"), 42}, {QStringLiteral("bar"), 1337}, {QStringLiteral("baz"), -42}};
+    }
+
+    void testQHash()
+    {
+        testTypeStreaming<QHash<QString, qint32>>();
+    }
 };
 
 QTEST_GUILESS_MAIN(DataStreamTest)
