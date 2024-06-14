@@ -60,7 +60,7 @@ public:
             m_queries.pop_back();
         }
 
-        m_queries.emplace_front(Node{queryStatement, query});
+        m_queries.emplace_front(queryStatement, query);
         m_keys.insert(queryStatement, m_queries.begin());
     }
 
