@@ -42,7 +42,7 @@ bool SearchResultHandler::parseStream()
             return fail(cmd.searchId(), QStringLiteral("Failed to convert RID to UID"));
         }
 
-        QSqlQuery query = qb.query();
+        QSqlQuery query = qb.takeQuery();
         while (query.next()) {
             ids << query.value(0).toLongLong();
         }

@@ -87,10 +87,10 @@ bool DbIntrospector::isTableEmpty(const QString &tableName)
     queryBuilder.addColumn(QStringLiteral("*"));
     queryBuilder.setLimit(1);
     if (!queryBuilder.exec()) {
-        throw DbException(queryBuilder.query(), "Unable to retrieve data from table.");
+        throw DbException(queryBuilder.takeQuery(), "Unable to retrieve data from table.");
     }
 
-    QSqlQuery query = queryBuilder.query();
+    QSqlQuery query = queryBuilder.takeQuery();
     return (query.size() == 0 || !query.first());
 }
 

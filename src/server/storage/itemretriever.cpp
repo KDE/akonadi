@@ -167,9 +167,10 @@ QSqlQuery ItemRetriever::buildQuery() const
         throw ItemRetrieverException(mLastError);
     }
 
-    qb.query().next();
+    auto query = qb.takeQuery();
+    query.next();
 
-    return qb.query();
+    return query;
 }
 
 namespace

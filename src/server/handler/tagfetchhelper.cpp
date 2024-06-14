@@ -35,8 +35,9 @@ QSqlQuery TagFetchHelper::buildAttributeQuery() const
         throw HandlerException("Unable to list tag attributes");
     }
 
-    qb.query().next();
-    return qb.query();
+    auto query = qb.takeQuery();
+    query.next();
+    return query;
 }
 
 QSqlQuery TagFetchHelper::buildAttributeQuery(qint64 id, const Protocol::TagFetchScope &fetchScope)
@@ -61,8 +62,9 @@ QSqlQuery TagFetchHelper::buildAttributeQuery(qint64 id, const Protocol::TagFetc
         throw HandlerException("Unable to list tag attributes");
     }
 
-    qb.query().next();
-    return qb.query();
+    auto query = qb.takeQuery();
+    query.next();
+    return query;
 }
 
 QSqlQuery TagFetchHelper::buildTagQuery()
@@ -90,8 +92,9 @@ QSqlQuery TagFetchHelper::buildTagQuery()
         throw HandlerException("Unable to list tags");
     }
 
-    qb.query().next();
-    return qb.query();
+    auto query = qb.takeQuery();
+    query.next();
+    return query;
 }
 
 QMap<QByteArray, QByteArray> TagFetchHelper::fetchTagAttributes(qint64 tagId, const Protocol::TagFetchScope &fetchScope)

@@ -217,7 +217,7 @@ Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag, con
             if (!qb.exec()) {
                 throw HandlerException("Unable to query Tag Remote ID");
             }
-            QSqlQuery query = qb.query();
+            QSqlQuery query = qb.takeQuery();
             // RID may not be available
             if (query.next()) {
                 response.setRemoteId(Utils::variantToByteArray(query.value(0)));
@@ -243,7 +243,7 @@ Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag, con
         if (!qb.exec()) {
             throw HandlerException("Unable to query Tag Attributes");
         }
-        QSqlQuery query = qb.query();
+        QSqlQuery query = qb.takeQuery();
         Protocol::Attributes attributes;
         while (query.next()) {
             attributes.insert(Utils::variantToByteArray(query.value(0)), Utils::variantToByteArray(query.value(1)));

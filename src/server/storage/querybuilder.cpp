@@ -10,6 +10,7 @@
 #include "entities.h"
 #include "storage/query.h"
 #include "utils.h"
+#include <qsqldatabase.h>
 
 #ifndef QUERYBUILDER_UNITTEST
 #include "storage/datastore.h"
@@ -136,7 +137,7 @@ QueryBuilder::QueryBuilder(const QSqlQuery &tableQuery, const QString &tableQuer
 
 QueryBuilder::QueryBuilder(DataStore *store, const QSqlQuery &tableQuery, const QString &tableQueryAlias)
     : mTable(tableQueryAlias)
-    , mTableSubQuery(tableQuery)
+    , mTableSubQuery(std::ref(tableQuery))
 #ifndef QUERYBUILDER_UNITTEST
     , mDataStore(store)
     , mDatabaseType(DbType::type(store->database()))
@@ -202,6 +203,11 @@ QSqlQuery &QueryBuilder::query()
     return mQuery;
 }
 
+QSqlQuery QueryBuilder::takeQuery()
+{
+    return std::move(mQuery);
+}
+
 void QueryBuilder::sqliteAdaptUpdateJoin(Query::Condition &condition)
 {
     // FIXME: This does not cover all cases by far. It however can handle most
@@ -258,8 +264,7 @@ void QueryBuilder::buildQuery(QString *statement)
         Q_ASSERT_X(mColumns.count() > 0, "QueryBuilder::exec()", "No columns specified");
         appendJoined(statement, mColumns);
         *statement += QLatin1StringView(" FROM ");
-        *statement += mTableSubQuery.isValid()
-                    ? getTableQuery(mTableSubQuery, mTable) : mTable;
+        *statement += mTableSubQuery.has_value() ? getTableQuery(mTableSubQuery->get(), mTable) : mTable;
         for (const QString &joinedTable : std::as_const(mJoinedTables)) {
             const auto &[joinType, joinCond] = mJoins.value(joinedTable);
             switch (joinType) {

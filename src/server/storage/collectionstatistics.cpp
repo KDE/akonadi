@@ -22,31 +22,35 @@ CollectionStatistics::CollectionStatistics(bool prefetch)
     if (prefetch) {
         QMutexLocker lock(&mCacheLock);
 
-        QList<QueryBuilder> builders;
+        std::vector<QueryBuilder> builders;
         // This single query will give us statistics for all non-empty non-virtual
         // Collections at much better speed than individual queries.
-        auto qb = prepareGenericQuery();
-        qb.addColumn(PimItem::collectionIdFullColumnName());
-        qb.addGroupColumn(PimItem::collectionIdFullColumnName());
-        builders << qb;
+        {
+            auto qb = prepareGenericQuery();
+            qb.addColumn(PimItem::collectionIdFullColumnName());
+            qb.addGroupColumn(PimItem::collectionIdFullColumnName());
+            builders.emplace_back(std::move(qb));
+        }
 
         // This single query will give us statistics for all non-empty virtual
         // Collections
-        qb = prepareGenericQuery();
-        qb.addColumn(CollectionPimItemRelation::leftFullColumnName());
-        qb.addJoin(QueryBuilder::InnerJoin,
-                   CollectionPimItemRelation::tableName(),
-                   CollectionPimItemRelation::rightFullColumnName(),
-                   PimItem::idFullColumnName());
-        qb.addGroupColumn(CollectionPimItemRelation::leftFullColumnName());
-        builders << qb;
+        {
+            auto qb = prepareGenericQuery();
+            qb.addColumn(CollectionPimItemRelation::leftFullColumnName());
+            qb.addJoin(QueryBuilder::InnerJoin,
+                       CollectionPimItemRelation::tableName(),
+                       CollectionPimItemRelation::rightFullColumnName(),
+                       PimItem::idFullColumnName());
+            qb.addGroupColumn(CollectionPimItemRelation::leftFullColumnName());
+            builders.emplace_back(std::move(qb));
+        }
 
         for (auto &qb : builders) {
             if (!qb.exec()) {
                 return;
             }
 
-            auto query = qb.query();
+            auto query = qb.takeQuery();
             while (query.next()) {
                 mCache.insert(query.value(3).toLongLong(), {query.value(0).toLongLong(), query.value(1).toLongLong(), query.value(2).toLongLong()});
             }
@@ -54,7 +58,7 @@ CollectionStatistics::CollectionStatistics(bool prefetch)
 
         // Now quickly get all non-virtual enabled Collections and if they are
         // not in mCache yet, insert them with empty statistics.
-        qb = QueryBuilder(Collection::tableName());
+        auto qb = QueryBuilder(Collection::tableName());
         qb.addColumn(Collection::idColumn());
         qb.addValueCondition(Collection::enabledColumn(), Query::Equals, true);
         qb.addValueCondition(Collection::isVirtualColumn(), Query::Equals, false);
@@ -62,7 +66,7 @@ CollectionStatistics::CollectionStatistics(bool prefetch)
             return;
         }
 
-        auto query = qb.query();
+        auto query = qb.takeQuery();
         while (query.next()) {
             const auto colId = query.value(0).toLongLong();
             if (!mCache.contains(colId)) {

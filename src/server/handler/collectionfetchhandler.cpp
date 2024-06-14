@@ -162,7 +162,7 @@ static QSqlQuery getAttributeQuery(const QVariantList &ids, const QSet<QByteArra
     if (!qb.exec()) {
         throw HandlerException("Unable to retrieve attributes for listing");
     }
-    return qb.query();
+    return qb.takeQuery();
 }
 
 void CollectionFetchHandler::retrieveAttributes(const QVariantList &collectionIds)
@@ -200,7 +200,7 @@ static QSqlQuery getMimeTypeQuery(const QVariantList &ids)
     if (!qb.exec()) {
         throw HandlerException("Unable to retrieve mimetypes for listing");
     }
-    return qb.query();
+    return qb.takeQuery();
 }
 
 void CollectionFetchHandler::retrieveCollections(const Collection &topParent, int depth)

@@ -330,7 +330,7 @@ bool DbUpdater::complexUpdate_25()
         }
 
         // Process them one by one
-        QSqlQuery query = qb.query();
+        QSqlQuery query = qb.takeQuery();
         while (query.next()) {
             // Split the part name to namespace and name and insert it to PartTypeTable
             const QString partName = query.value(0).toString();

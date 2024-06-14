@@ -95,7 +95,7 @@ void SearchTaskManager::addTask(SearchTask *task)
         throw SearchException(qb.query().lastError().text());
     }
 
-    QSqlQuery query = qb.query();
+    QSqlQuery query = qb.takeQuery();
     if (!query.next()) {
         return;
     }

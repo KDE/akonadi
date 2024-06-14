@@ -410,7 +410,7 @@ bool DataStore::appendItemsFlags(const PimItem::List &items,
                 return false;
             }
 
-            QSqlQuery query = qb.query();
+            QSqlQuery query = qb.takeQuery();
             if (query.driver()->hasFeature(QSqlDriver::QuerySize)) {
                 // The query size feature is not supported by the sqllite driver
                 if (query.size() == items.count()) {
@@ -613,7 +613,7 @@ bool DataStore::appendItemsTags(const PimItem::List &items, const Tag::List &tag
                 return false;
             }
 
-            QSqlQuery query = qb.query();
+            QSqlQuery query = qb.takeQuery();
             if (query.driver()->hasFeature(QSqlDriver::QuerySize)) {
                 if (query.size() == items.count()) {
                     continue;
@@ -723,7 +723,7 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
         }
 
         // Emit specialized notifications for each resource
-        QSqlQuery query = qb.query();
+        QSqlQuery query = qb.takeQuery();
         while (query.next()) {
             const QString rid = query.value(0).toString();
             const QByteArray resource = query.value(1).toByteArray();
@@ -1042,7 +1042,7 @@ QMap<Entity::Id, QList<PimItem>> DataStore::virtualCollections(const PimItem::Li
         return QMap<Entity::Id, QList<PimItem>>();
     }
 
-    QSqlQuery query = qb.query();
+    QSqlQuery query = qb.takeQuery();
     QMap<Entity::Id, QList<PimItem>> map;
     query.next();
     while (query.isValid()) {
@@ -1332,7 +1332,7 @@ bool DataStore::beginTransaction(const QString &name)
         QElapsedTimer timer;
         timer.start();
         if (DbType::type(m_database) == DbType::Sqlite) {
-            m_database.exec(QStringLiteral("BEGIN IMMEDIATE TRANSACTION"));
+            QSqlQuery query(QStringLiteral("BEGIN IMMEDIATE TRANSACTION"), m_database);
             StorageDebugger::instance()->addTransaction(reinterpret_cast<qint64>(this), name, timer.elapsed(), m_database.lastError().text());
             if (m_database.lastError().isValid()) {
                 debugLastDbError(QStringLiteral("DataStore::beginTransaction (SQLITE) name: %1").arg(name));
@@ -1352,7 +1352,7 @@ bool DataStore::beginTransaction(const QString &name)
             // INSERT INTO mimetypetable (name) VALUES ('foo') RETURNING id;
             // INSERT INTO collectionmimetyperelation (collection_id, mimetype_id) VALUES (x, y)
             // where "y" refers to the newly inserted mimetype
-            m_database.exec(QStringLiteral("SET CONSTRAINTS ALL DEFERRED"));
+            QSqlQuery(QStringLiteral("SET CONSTRAINTS ALL DEFERRED"), m_database);
         }
     }
 

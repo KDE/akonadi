@@ -767,7 +767,7 @@ void StorageJanitor::checkSizeTreshold()
             return;
         }
 
-        QSqlQuery query = qb.query();
+        QSqlQuery query = qb.takeQuery();
         inform(QStringLiteral("Found %1 parts to be moved to external files").arg(query.size()));
 
         while (query.next()) {
@@ -814,7 +814,7 @@ void StorageJanitor::checkSizeTreshold()
             return;
         }
 
-        QSqlQuery query = qb.query();
+        QSqlQuery query = qb.takeQuery();
         inform(QStringLiteral("Found %1 parts to be moved to database").arg(query.size()));
 
         while (query.next()) {
@@ -869,7 +869,7 @@ void StorageJanitor::migrateToLevelledCacheHierarchy()
         return;
     }
 
-    QSqlQuery query = qb.query();
+    QSqlQuery query = qb.takeQuery();
     while (query.next()) {
         const qint64 id = query.value(0).toLongLong();
         const QByteArray data = query.value(1).toByteArray();
@@ -922,7 +922,7 @@ void StorageJanitor::findOrphanSearchIndexEntries()
         return;
     }
 
-    QSqlQuery query = qb.query();
+    QSqlQuery query = qb.takeQuery();
     while (query.next()) {
         const qint64 colId = query.value(0).toLongLong();
         // Skip virtual collections, they are not indexed
@@ -962,7 +962,7 @@ void StorageJanitor::findOrphanSearchIndexEntries()
             continue;
         }
 
-        QSqlQuery itemQuery = iqb.query();
+        QSqlQuery itemQuery = iqb.takeQuery();
         while (itemQuery.next()) {
             searchResults.remove(itemQuery.value(0).toLongLong());
         }

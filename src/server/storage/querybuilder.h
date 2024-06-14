@@ -15,6 +15,7 @@
 #include <QString>
 #include <QStringList>
 #include <QVariant>
+#include <qurlquery.h>
 
 #ifdef QUERYBUILDER_UNITTEST
 class QueryBuilderTest;
@@ -78,6 +79,12 @@ public:
     */
     explicit QueryBuilder(const QSqlQuery &tableQuery, const QString &tableQueryAlias);
     QueryBuilder(DataStore *store, const QSqlQuery &tableQuery, const QString &tableQueryAlias);
+
+    QueryBuilder(const QueryBuilder &) = delete;
+    QueryBuilder &operator=(const QueryBuilder &) = delete;
+
+    QueryBuilder(QueryBuilder &&) noexcept = default;
+    QueryBuilder &operator=(QueryBuilder &&) noexcept = default;
 
     /**
       Sets the database which should execute the query. Unfortunately the SQL "standard"
@@ -248,6 +255,12 @@ public:
     QSqlQuery &query();
 
     /**
+       Moves the query out of the QueryBuilder. The query will only be valid after exec()
+       After moving the query, this QueryBuilder cannot be used again.
+     */
+    QSqlQuery takeQuery();
+
+    /**
       Executes the query, returns true on success.
     */
     bool exec();
@@ -301,7 +314,7 @@ protected:
 
 private:
     QString mTable;
-    QSqlQuery mTableSubQuery;
+    std::optional<std::reference_wrapper<const QSqlQuery>> mTableSubQuery;
     DataStore *mDataStore = nullptr;
     DbType::Type mDatabaseType;
     Query::Condition mRootCondition[NUM_CONDITIONS];

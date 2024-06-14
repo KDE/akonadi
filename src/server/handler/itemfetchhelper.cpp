@@ -97,10 +97,7 @@ enum PartQueryColumns {
 QSqlQuery ItemFetchHelper::buildPartQuery(const QList<QByteArray> &partList, bool allPayload, bool allAttrs)
 {
     /// TODO: merge with ItemQuery
-    QueryBuilder partQuery(PimItem::tableName());
-    if (mItemsLimit.limit() > 0) {
-        partQuery = QueryBuilder(mItemQuery.query(), mPimItemQueryAlias);
-    }
+    QueryBuilder partQuery = mItemsLimit.limit() <= 0 ? QueryBuilder(PimItem::tableName()) : QueryBuilder(mItemQuery.query(), mPimItemQueryAlias);
 
     if (!partList.isEmpty() || allPayload || allAttrs) {
         partQuery.addJoin(QueryBuilder::InnerJoin, Part::tableName(), partQuery.getTableWithColumn(PimItem::idColumn()), Part::pimItemIdFullColumnName());
@@ -141,7 +138,7 @@ QSqlQuery ItemFetchHelper::buildPartQuery(const QList<QByteArray> &partList, boo
         partQuery.query().next();
     }
 
-    return partQuery.query();
+    return partQuery.takeQuery();
 }
 
 QSqlQuery ItemFetchHelper::buildItemQuery()
@@ -190,7 +187,7 @@ QSqlQuery ItemFetchHelper::buildItemQuery()
 
     mItemQuery.query().next();
 
-    return mItemQuery.query();
+    return mItemQuery.takeQuery();
 }
 
 enum FlagQueryColumns {
@@ -200,10 +197,7 @@ enum FlagQueryColumns {
 
 QSqlQuery ItemFetchHelper::buildFlagQuery()
 {
-    QueryBuilder flagQuery(PimItem::tableName());
-    if (mItemsLimit.limit() > 0) {
-        flagQuery = QueryBuilder(mItemQuery.query(), mPimItemQueryAlias);
-    }
+    QueryBuilder flagQuery = mItemsLimit.limit() <= 0 ? QueryBuilder(PimItem::tableName()) : QueryBuilder(mItemQuery.query(), mPimItemQueryAlias);
 
     flagQuery.addJoin(QueryBuilder::InnerJoin,
                       PimItemFlagRelation::tableName(),
@@ -220,9 +214,10 @@ QSqlQuery ItemFetchHelper::buildFlagQuery()
         throw HandlerException("Unable to retrieve item flags");
     }
 
-    flagQuery.query().next();
+    auto query = flagQuery.takeQuery();
+    query.next();
 
-    return flagQuery.query();
+    return query;
 }
 
 enum TagQueryColumns {
@@ -232,10 +227,7 @@ enum TagQueryColumns {
 
 QSqlQuery ItemFetchHelper::buildTagQuery()
 {
-    QueryBuilder tagQuery(PimItem::tableName());
-    if (mItemsLimit.limit() > 0) {
-        tagQuery = QueryBuilder(mItemQuery.query(), mPimItemQueryAlias);
-    }
+    QueryBuilder tagQuery = mItemsLimit.limit() <= 0 ? QueryBuilder(PimItem::tableName()) : QueryBuilder(mItemQuery.query(), mPimItemQueryAlias);
 
     tagQuery.addJoin(QueryBuilder::InnerJoin,
                      PimItemTagRelation::tableName(),
@@ -252,9 +244,10 @@ QSqlQuery ItemFetchHelper::buildTagQuery()
         throw HandlerException("Unable to retrieve item tags");
     }
 
-    tagQuery.query().next();
+    auto query = tagQuery.takeQuery();
+    query.next();
 
-    return tagQuery.query();
+    return query;
 }
 
 enum VRefQueryColumns {
@@ -264,10 +257,7 @@ enum VRefQueryColumns {
 
 QSqlQuery ItemFetchHelper::buildVRefQuery()
 {
-    QueryBuilder vRefQuery(PimItem::tableName());
-    if (mItemsLimit.limit() > 0) {
-        vRefQuery = QueryBuilder(mItemQuery.query(), mPimItemQueryAlias);
-    }
+    QueryBuilder vRefQuery = mItemsLimit.limit() <= 0 ? QueryBuilder(PimItem::tableName()) : QueryBuilder(mItemQuery.query(), mPimItemQueryAlias);
 
     vRefQuery.addJoin(QueryBuilder::LeftJoin,
                       CollectionPimItemRelation::tableName(),
@@ -282,9 +272,10 @@ QSqlQuery ItemFetchHelper::buildVRefQuery()
         throw HandlerException("Unable to retrieve virtual references");
     }
 
-    vRefQuery.query().next();
+    auto query = vRefQuery.takeQuery();
+    query.next();
 
-    return vRefQuery.query();
+    return query;
 }
 
 bool ItemFetchHelper::isScopeLocal(const Scope &scope)
@@ -314,7 +305,7 @@ bool ItemFetchHelper::isScopeLocal(const Scope &scope)
     // collections, then don't bother and just return FALSE. This case is aimed
     // specifically on Baloo, which fetches items from each collection independently,
     // so it will pass this check.
-    QSqlQuery query = qb.query();
+    QSqlQuery query = qb.takeQuery();
     if (query.size() != 1) {
         return false;
     }
