@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-07 00:39+0000\n"
+"POT-Creation-Date: 2024-06-14 00:39+0000\n"
 "PO-Revision-Date: 2013-01-13 00:43+0200\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -2603,13 +2603,13 @@ msgstr "Abonează"
 msgid "&Unsubscribe"
 msgstr "Dezabonează"
 
-#: widgets/tageditwidget.cpp:116
+#: widgets/tageditwidget.cpp:117
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Failed to create a new tag"
 msgstr "Nu se poate crea instanța de agent."
 
-#: widgets/tageditwidget.cpp:116
+#: widgets/tageditwidget.cpp:117
 #, fuzzy, kde-format
 #| msgctxt "@info"
 #| msgid "Error while creating item: %1"
@@ -2617,7 +2617,7 @@ msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Eroare la crearea elementului: %1"
 
-#: widgets/tageditwidget.cpp:164
+#: widgets/tageditwidget.cpp:165
 #, fuzzy, kde-kuit-format
 #| msgid "Do you really want to delete this resource?"
 #| msgid_plural "Do you really want to delete %1 resources?"
@@ -2625,7 +2625,7 @@ msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Sigur doriți să ștergeți această resursă?"
 
-#: widgets/tageditwidget.cpp:165
+#: widgets/tageditwidget.cpp:166
 #, fuzzy, kde-format
 #| msgid "Delete Item"
 #| msgid_plural "Delete %1 Items"
@@ -2633,7 +2633,7 @@ msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Șterge elementul"
 
-#: widgets/tageditwidget.cpp:189
+#: widgets/tageditwidget.cpp:191
 #, fuzzy, kde-format
 #| msgid "Delete Item"
 #| msgid_plural "Delete %1 Items"

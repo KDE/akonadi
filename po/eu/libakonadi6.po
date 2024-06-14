@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-07 00:39+0000\n"
+"POT-Creation-Date: 2024-06-14 00:39+0000\n"
 "PO-Revision-Date: 2024-03-24 10:57+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -2505,30 +2505,30 @@ msgstr "&Harpidetzea"
 msgid "&Unsubscribe"
 msgstr "Harpidetza &kentzea"
 
-#: widgets/tageditwidget.cpp:116
+#: widgets/tageditwidget.cpp:117
 #, kde-format
 msgid "Failed to create a new tag"
 msgstr "Huts egin du etiketa berri bat sortzeak"
 
-#: widgets/tageditwidget.cpp:116
+#: widgets/tageditwidget.cpp:117
 #, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Errore bat gertatu da etiketa berri bat sortzean"
 
-#: widgets/tageditwidget.cpp:164
+#: widgets/tageditwidget.cpp:165
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Benetan kendu nahi duzu <resource>%1</resource> etiketa?"
 
-#: widgets/tageditwidget.cpp:165
+#: widgets/tageditwidget.cpp:166
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Ezabatu etiketa"
 
-#: widgets/tageditwidget.cpp:189
+#: widgets/tageditwidget.cpp:191
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"

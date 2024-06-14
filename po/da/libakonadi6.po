@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-07 00:39+0000\n"
+"POT-Creation-Date: 2024-06-14 00:39+0000\n"
 "PO-Revision-Date: 2020-11-17 19:45+0100\n"
 "Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -2525,25 +2525,25 @@ msgstr "A&bonnér"
 msgid "&Unsubscribe"
 msgstr "Af&meld"
 
-#: widgets/tageditwidget.cpp:116
+#: widgets/tageditwidget.cpp:117
 #, kde-format
 msgid "Failed to create a new tag"
 msgstr "Kunne ikke oprette et nyt mærke"
 
-#: widgets/tageditwidget.cpp:116
+#: widgets/tageditwidget.cpp:117
 #, fuzzy, kde-format
 #| msgid "An error occurred while creating a new tag"
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Der opstod en fejl under oprettelse af nyt mærke"
 
-#: widgets/tageditwidget.cpp:164
+#: widgets/tageditwidget.cpp:165
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Vil du virkelig fjerne mærket <resource>%1</resource>?"
 
-#: widgets/tageditwidget.cpp:165
+#: widgets/tageditwidget.cpp:166
 #, fuzzy, kde-format
 #| msgctxt "@title"
 #| msgid "Delete tag"
@@ -2551,7 +2551,7 @@ msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Slet mærke"
 
-#: widgets/tageditwidget.cpp:189
+#: widgets/tageditwidget.cpp:191
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"

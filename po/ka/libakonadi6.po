@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-07 00:39+0000\n"
+"POT-Creation-Date: 2024-06-14 00:39+0000\n"
 "PO-Revision-Date: 2024-06-07 05:27+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
@@ -2459,30 +2459,30 @@ msgstr "&გამოწერა"
 msgid "&Unsubscribe"
 msgstr "&გამოწერის გაუქმება"
 
-#: widgets/tageditwidget.cpp:116
+#: widgets/tageditwidget.cpp:117
 #, kde-format
 msgid "Failed to create a new tag"
 msgstr "ახალი ჭდის შექმნის შეცდომა"
 
-#: widgets/tageditwidget.cpp:116
+#: widgets/tageditwidget.cpp:117
 #, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "შეცდომა ახალი ჭდის შექმნისას"
 
-#: widgets/tageditwidget.cpp:164
+#: widgets/tageditwidget.cpp:165
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "მართლა გნებავთ წაშალოთ ჭდე:<resource>%1</resource>?"
 
-#: widgets/tageditwidget.cpp:165
+#: widgets/tageditwidget.cpp:166
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "ჭდის წაშლა"
 
-#: widgets/tageditwidget.cpp:189
+#: widgets/tageditwidget.cpp:191
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"

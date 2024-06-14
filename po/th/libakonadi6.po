@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-07 00:39+0000\n"
+"POT-Creation-Date: 2024-06-14 00:39+0000\n"
 "PO-Revision-Date: 2010-02-26 23:20+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -2469,25 +2469,25 @@ msgstr ""
 msgid "&Unsubscribe"
 msgstr ""
 
-#: widgets/tageditwidget.cpp:116
+#: widgets/tageditwidget.cpp:117
 #, kde-format
 msgid "Failed to create a new tag"
 msgstr ""
 
-#: widgets/tageditwidget.cpp:116
+#: widgets/tageditwidget.cpp:117
 #, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr ""
 
-#: widgets/tageditwidget.cpp:164
+#: widgets/tageditwidget.cpp:165
 #, fuzzy, kde-kuit-format
 #| msgid "Do you really want to delete all selected items?"
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "คุณต้องการจะลบรายการทั้งหมดที่เลือกไว้จริงหรือไม่ ?"
 
-#: widgets/tageditwidget.cpp:165
+#: widgets/tageditwidget.cpp:166
 #, fuzzy, kde-format
 #| msgid "&Delete Item"
 #| msgid_plural "&Delete %1 Items"
@@ -2495,7 +2495,7 @@ msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "&ลบ %1 รายการ"
 
-#: widgets/tageditwidget.cpp:189
+#: widgets/tageditwidget.cpp:191
 #, fuzzy, kde-format
 #| msgid "&Delete Item"
 #| msgid_plural "&Delete %1 Items"
