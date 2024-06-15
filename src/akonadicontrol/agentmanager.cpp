@@ -37,6 +37,20 @@ using namespace std::chrono_literals;
 
 static const bool enableAgentServerDefault = false;
 
+// Here lie the once mighty resources, now deprecated and voided. They battled
+// valiantly against crashes and segfaults, and now, they can finally enjoy
+// their eternal null pointers. We'll miss you (not), but let's face it,
+// your stacks have overflown a long time ago. Farewell, old code comrades and
+// may your functions forever return void!
+//
+// Those are agent types that akonadicontrol can safely remove if it finds any leftover
+// instances of them configured in the agentsrc file or on Akonadi Server.
+static const QStringView retiredAgentTypes[] = {
+    u"akonadi_kolab_resource",
+    u"akonadi_akonotes_resources",
+    u"akonadi_notes_resource",
+};
+
 class StorageProcessControl : public Akonadi::ProcessControl
 {
     Q_OBJECT
@@ -585,6 +599,16 @@ void AgentManager::load()
         const QString agentType = file.value(QStringLiteral("AgentType")).toString();
         const auto typeIter = mAgents.constFind(agentType);
         if (typeIter == mAgents.cend() || typeIter->exec.isEmpty()) {
+            // Check whether this is one of the obsolete agent types and just remove it.
+            if (std::find(std::begin(retiredAgentTypes), std::end(retiredAgentTypes), agentType) != std::end(retiredAgentTypes)) {
+                qCInfo(AKONADICONTROL_LOG) << agentType << "has been retired in a previous version, cleaning up " << entries[i];
+                file.endGroup();
+                file.remove(entries[i]);
+                // This will take care of removing all related data from Akonadi database
+                resmanager.removeResourceInstance(entries[i]);
+                continue;
+            }
+
             qCWarning(AKONADICONTROL_LOG) << "Reference to unknown agent type" << agentType << "in agentsrc, creating a fake entry.";
             if (typeIter == mAgents.cend()) {
                 AgentType type;
