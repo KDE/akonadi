@@ -10,6 +10,7 @@
 #include "control.h"
 #include "item.h"
 #include "itemcreatejob.h"
+#include "itemdeletejob.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
 #include "itemmodifyjob.h"
@@ -753,7 +754,8 @@ void TagTest::testModifyItemWithTagByRID()
 void TagTest::testMonitor()
 {
     Akonadi::Monitor monitor;
-    monitor.setTypeMonitored(Akonadi::Monitor::Tags);
+    monitor.setAllMonitored(true);
+    monitor.itemFetchScope().setFetchTags(true);
     monitor.tagFetchScope().fetchAttribute<Akonadi::TagAttribute>();
     QVERIFY(AkonadiTest::akWaitForSignal(&monitor, &Monitor::monitorReady));
 
@@ -810,6 +812,46 @@ void TagTest::testMonitor()
         QCOMPARE(notifiedTag.gid(), createdTag.gid());
         QVERIFY(notifiedTag.hasAttribute<Akonadi::TagAttribute>());
         QCOMPARE(notifiedTag.name(), createdTag.name()); // requires the TagAttribute
+    }
+
+    {
+        QSignalSpy itemsTagsChanged(&monitor, &Monitor::itemsTagsChanged);
+        // create a tag
+        Tag tag(QStringLiteral("name4"));
+        auto tagCreateJob = new TagCreateJob(tag);
+        AKVERIFYEXEC(tagCreateJob);
+        tag = tagCreateJob->tag();
+        // create item
+        const Collection res3 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
+        Item item;
+        item.setParentCollection(res3);
+        item.setMimeType(QStringLiteral("application/octet-stream"));
+        auto itemCreateJob = new ItemCreateJob(item, res3);
+        AKVERIFYEXEC(itemCreateJob);
+        item = itemCreateJob->item();
+
+        // add tag to item
+        item.setTag(tag);
+        auto itemModifyJob = new ItemModifyJob(item);
+        AKVERIFYEXEC(itemModifyJob);
+
+        QTRY_VERIFY(itemsTagsChanged.count() >= 1);
+        QTRY_COMPARE(itemsTagsChanged.last().first().value<Akonadi::Item::List>().size(), 1);
+        qDebug() << itemsTagsChanged.last().first().value<Akonadi::Item::List>().first().tags();
+        QTRY_COMPARE(itemsTagsChanged.last().at(1).value<QSet<Tag>>().size(), 1); // 1 added tag
+        QTRY_COMPARE(itemsTagsChanged.last().at(2).value<QSet<Tag>>().size(), 0); // no tags removed
+
+        const auto notifiedItem = itemsTagsChanged.last().first().value<Akonadi::Item::List>().first();
+        const auto notifiedTag = *itemsTagsChanged.last().at(1).value<QSet<Tag>>().begin();
+        QCOMPARE(notifiedItem.id(), item.id());
+        QCOMPARE(notifiedItem.tags(), QList{notifiedTag});
+        QCOMPARE(notifiedTag, tag);
+
+        // Cleanup
+        auto tagDeleteJob = new TagDeleteJob(tag, this);
+        AKVERIFYEXEC(tagDeleteJob);
+        auto itemDeleteJob = new ItemDeleteJob(item);
+        AKVERIFYEXEC(itemDeleteJob);
     }
 }
 
