@@ -357,7 +357,7 @@ public:
      *
      * @since 4.13
      */
-    class AKONADIAGENTBASE_EXPORT ObserverV4 : public ObserverV3 // krazy:exclude=dpointer
+    class AKONADIAGENTBASE_DEPRECATED_EXPORT ObserverV4 : public ObserverV3 // krazy:exclude=dpointer
     {
     public:
         /**
@@ -365,6 +365,7 @@ public:
          *
          * @param tag Newly added tag
          */
+        Q_DECL_DEPRECATED_X("ObserverV4 is deprecated, implement TagObserver instead")
         virtual void tagAdded(const Akonadi::Tag &tag);
 
         /**
@@ -372,6 +373,7 @@ public:
          *
          * @param tag Tag that has been changed
          */
+        Q_DECL_DEPRECATED_X("ObserverV4 is deprecated, implement TagObserver instead")
         virtual void tagChanged(const Akonadi::Tag &tag);
 
         /**
@@ -383,6 +385,7 @@ public:
          *
          * @param tag Tag that has been removed.
          */
+        Q_DECL_DEPRECATED_X("ObserverV4 is deprecated, implement TagObserver instead")
         virtual void tagRemoved(const Akonadi::Tag &tag);
 
         /**
@@ -392,16 +395,19 @@ public:
          * @param addedTags Set of tags that were added to all @p items
          * @param removedTags Set of tags that were removed from all @p items
          */
+        Q_DECL_DEPRECATED_X("ObserverV4 is deprecated, implement TagObserver instead")
         virtual void itemsTagsChanged(const Akonadi::Item::List &items, const QSet<Akonadi::Tag> &addedTags, const QSet<Akonadi::Tag> &removedTags);
 
         /**
          * Reimplement to handle relations being added
          */
+        Q_DECL_DEPRECATED_X("Relations support is deprecated")
         virtual void relationAdded(const Akonadi::Relation &relation);
 
         /**
          * Reimplement to handle relations being removed
          */
+        Q_DECL_DEPRECATED_X("Relations support is deprecated")
         virtual void relationRemoved(const Akonadi::Relation &relation);
 
         /**
@@ -410,6 +416,7 @@ public:
          * @param addedRelations the list of relations that were added to all @p items
          * @param removedRelations the list of relations that were removed from all @p items
          */
+        Q_DECL_DEPRECATED_X("Relations support is deprecated")
         virtual void
         itemsRelationsChanged(const Akonadi::Item::List &items, const Akonadi::Relation::List &addedRelations, const Akonadi::Relation::List &removedRelations);
     };
