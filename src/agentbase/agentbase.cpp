@@ -38,6 +38,7 @@
 #include <QStandardPaths>
 #include <signal.h>
 #include <stdlib.h>
+#include <strstream>
 #if defined __GLIBC__
 #include <malloc.h> // for dumping memory information
 #endif
@@ -304,6 +305,48 @@ void AgentBase::ObserverV4::itemsRelationsChanged(const Akonadi::Item::List &ite
     }
 }
 
+AgentBase::TagObserver::TagObserver() = default;
+
+AgentBase::TagObserver::~TagObserver() = default;
+
+void AgentBase::TagObserver::tagAdded(const Akonadi::Tag &tag)
+{
+    Q_UNUSED(tag)
+    if (sAgentBase) {
+        QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::tagAdded, sAgentBase->d_ptr.get(), &AgentBasePrivate::tagAdded);
+        sAgentBase->d_ptr->changeProcessed();
+    }
+}
+
+void AgentBase::TagObserver::tagChanged(const Akonadi::Tag &tag)
+{
+    Q_UNUSED(tag)
+    if (sAgentBase) {
+        QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::tagChanged, sAgentBase->d_ptr.get(), &AgentBasePrivate::tagChanged);
+        sAgentBase->d_ptr->changeProcessed();
+    }
+}
+
+void AgentBase::TagObserver::tagRemoved(const Akonadi::Tag &tag)
+{
+    Q_UNUSED(tag)
+    if (sAgentBase) {
+        QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::tagRemoved, sAgentBase->d_ptr.get(), &AgentBasePrivate::tagRemoved);
+        sAgentBase->d_ptr->changeProcessed();
+    }
+}
+
+void AgentBase::TagObserver::itemsTagsChanged(const Akonadi::Item::List &items, const QSet<Akonadi::Tag> &addedTags, const QSet<Akonadi::Tag> &removedTags)
+{
+    Q_UNUSED(items)
+    Q_UNUSED(addedTags)
+    Q_UNUSED(removedTags)
+
+    if (sAgentBase) {
+        QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::itemsTagsChanged, sAgentBase->d_ptr.get(), &AgentBasePrivate::itemsTagsChanged);
+        sAgentBase->d_ptr->changeProcessed();
+    }
+}
 /// @cond PRIVATE
 
 AgentBasePrivate::AgentBasePrivate(AgentBase *parent)
@@ -584,9 +627,10 @@ void AgentBasePrivate::itemsUnlinked(const Akonadi::Item::List &items, const Ako
 
 void AgentBasePrivate::tagAdded(const Akonadi::Tag &tag)
 {
-    auto observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
-    if (observer4) {
+    if (auto observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver); observer4) {
         observer4->tagAdded(tag);
+    } else if (auto tagObserver = dynamic_cast<AgentBase::TagObserver *>(mObserver); tagObserver) {
+        tagObserver->tagAdded(tag);
     } else {
         changeProcessed();
     }
@@ -594,9 +638,10 @@ void AgentBasePrivate::tagAdded(const Akonadi::Tag &tag)
 
 void AgentBasePrivate::tagChanged(const Akonadi::Tag &tag)
 {
-    auto observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
-    if (observer4) {
+    if (auto observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver); observer4) {
         observer4->tagChanged(tag);
+    } else if (auto tagObserver = dynamic_cast<AgentBase::TagObserver *>(mObserver); tagObserver) {
+        tagObserver->tagChanged(tag);
     } else {
         changeProcessed();
     }
@@ -604,9 +649,10 @@ void AgentBasePrivate::tagChanged(const Akonadi::Tag &tag)
 
 void AgentBasePrivate::tagRemoved(const Akonadi::Tag &tag)
 {
-    auto observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
-    if (observer4) {
+    if (auto observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver); observer4) {
         observer4->tagRemoved(tag);
+    } else if (auto tagObserver = dynamic_cast<AgentBase::TagObserver *>(mObserver); tagObserver) {
+        tagObserver->tagRemoved(tag);
     } else {
         changeProcessed();
     }
@@ -614,9 +660,10 @@ void AgentBasePrivate::tagRemoved(const Akonadi::Tag &tag)
 
 void AgentBasePrivate::itemsTagsChanged(const Akonadi::Item::List &items, const QSet<Akonadi::Tag> &addedTags, const QSet<Akonadi::Tag> &removedTags)
 {
-    auto observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
-    if (observer4) {
+    if (auto observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver); observer4) {
         observer4->itemsTagsChanged(items, addedTags, removedTags);
+    } else if (auto tagObserver = dynamic_cast<AgentBase::TagObserver *>(mObserver); tagObserver) {
+        tagObserver->itemsTagsChanged(items, addedTags, removedTags);
     } else {
         changeProcessed();
     }
@@ -1165,6 +1212,7 @@ void AgentBase::registerObserver(Observer *observer)
 
     const bool hasObserverV3 = (dynamic_cast<AgentBase::ObserverV3 *>(d->mObserver) != nullptr);
     const bool hasObserverV4 = (dynamic_cast<AgentBase::ObserverV4 *>(d->mObserver) != nullptr);
+    const bool hasTagObserver = (dynamic_cast<AgentBase::TagObserver *>(d->mObserver) != nullptr);
 
     disconnect(d->mChangeRecorder, &Monitor::tagAdded, d, &AgentBasePrivate::tagAdded);
     disconnect(d->mChangeRecorder, &Monitor::tagChanged, d, &AgentBasePrivate::tagChanged);
@@ -1180,7 +1228,7 @@ void AgentBase::registerObserver(Observer *observer)
     disconnect(d->mChangeRecorder, &Monitor::itemLinked, d, &AgentBasePrivate::itemLinked);
     disconnect(d->mChangeRecorder, &Monitor::itemUnlinked, d, &AgentBasePrivate::itemUnlinked);
 
-    if (hasObserverV4) {
+    if (hasObserverV4 || hasTagObserver) {
         connect(d->mChangeRecorder, &Monitor::tagAdded, d, &AgentBasePrivate::tagAdded);
         connect(d->mChangeRecorder, &Monitor::tagChanged, d, &AgentBasePrivate::tagChanged);
         connect(d->mChangeRecorder, &Monitor::tagRemoved, d, &AgentBasePrivate::tagRemoved);
