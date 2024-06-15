@@ -81,9 +81,9 @@ ErrorOverlay::ErrorOverlay(QWidget *baseWidget, QWidget *parent)
     mPreviousState = !mBaseWidget->testAttribute(Qt::WA_ForceDisabled);
 
     ui->setupUi(this);
-    ui->notRunningIcon->setPixmap(QIcon::fromTheme(QStringLiteral("akonadi")).pixmap(64));
+    ui->notRunningIcon->setPixmap(qApp->windowIcon().pixmap(64));
     ui->brokenIcon->setPixmap(QIcon::fromTheme(QStringLiteral("dialog-error")).pixmap(64));
-    ui->progressIcon->setPixmap(QIcon::fromTheme(QStringLiteral("akonadi")).pixmap(32));
+    ui->progressIcon->setPixmap(qApp->windowIcon().pixmap(32));
     ui->quitButton->setText(KStandardGuiItem::quit().text());
     ui->detailsQuitButton->setText(KStandardGuiItem::quit().text());
 

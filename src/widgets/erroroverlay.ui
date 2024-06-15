@@ -18,7 +18,7 @@
      </property>
      <widget class="QWidget" name="notRunningPage">
       <property name="toolTip">
-       <string>The Akonadi personal information management service is not running. This application cannot be used without it.</string>
+       <string>A required background service is not running. This application cannot be used without it.</string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
@@ -68,7 +68,7 @@
             </size>
            </property>
            <property name="text">
-            <string>The Akonadi personal information management service is not running. This application cannot be used without it.</string>
+            <string>A required background service is not running. This application cannot be used without it.</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -154,7 +154,7 @@
      </widget>
      <widget class="QWidget" name="brokenPage">
       <property name="toolTip">
-       <string>The Akonadi personal information management framework is not operational.
+       <string>A required background service is not operational.
 Click on &quot;Details...&quot; to obtain detailed information on this problem.</string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -205,7 +205,7 @@ Click on &quot;Details...&quot; to obtain detailed information on this problem.<
             </size>
            </property>
            <property name="text">
-            <string>The Akonadi personal information management service is not operational.</string>
+            <string>A required background service is not operational.</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
