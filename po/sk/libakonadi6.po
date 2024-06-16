@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-14 00:39+0000\n"
+"POT-Creation-Date: 2024-06-16 00:39+0000\n"
 "PO-Revision-Date: 2023-10-02 18:38+0200\n"
 "Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
 "Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
@@ -37,25 +37,25 @@ msgstr "Momentálne nie je nakonfigurovaný žiadny účet."
 msgid "Accounts integration is not supported"
 msgstr "Integrácia účtov nie je podporovaná"
 
-#: agentbase/agentbase.cpp:348 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:391 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Nemôžem registrovať objekt na dbus: %1"
 
-#: agentbase/agentbase.cpp:437
+#: agentbase/agentbase.cpp:480
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 typu %2"
 
-#: agentbase/agentbase.cpp:883
+#: agentbase/agentbase.cpp:930
 #, fuzzy, kde-format
 #| msgid "Agent identifier"
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Identifikátor agenta"
 
-#: agentbase/agentbase.cpp:889
+#: agentbase/agentbase.cpp:936
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi Agent"

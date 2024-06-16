@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-14 00:39+0000\n"
+"POT-Creation-Date: 2024-06-16 00:39+0000\n"
 "PO-Revision-Date: 2024-06-07 05:27+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
@@ -38,24 +38,24 @@ msgstr "ამჟამად არც ერთი ანგარიშ მ�
 msgid "Accounts integration is not supported"
 msgstr "ანგარიშების ინტეგრაცია მხარდაჭერილი არაა"
 
-#: agentbase/agentbase.cpp:348 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:391 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "შეცდომა DBus-ში ობიექტის რეგისტრაციისას: %1"
 
-#: agentbase/agentbase.cpp:437
+#: agentbase/agentbase.cpp:480
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 %2 ტიპით"
 
-#: agentbase/agentbase.cpp:883
+#: agentbase/agentbase.cpp:930
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "აგენტის იდენტიფიკატორი"
 
-#: agentbase/agentbase.cpp:889
+#: agentbase/agentbase.cpp:936
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi -ის აგენტი"

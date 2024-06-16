@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-14 00:39+0000\n"
+"POT-Creation-Date: 2024-06-16 00:39+0000\n"
 "PO-Revision-Date: 2024-06-07 06:44+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -43,24 +43,24 @@ msgstr "Trenutno ni nastavljenega računa."
 msgid "Accounts integration is not supported"
 msgstr "Integracija računov ni podprta"
 
-#: agentbase/agentbase.cpp:348 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:391 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Registracija predmeta na D-Busu ni uspela: %1"
 
-#: agentbase/agentbase.cpp:437
+#: agentbase/agentbase.cpp:480
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 vrste %2"
 
-#: agentbase/agentbase.cpp:883
+#: agentbase/agentbase.cpp:930
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Določilnik posrednika"
 
-#: agentbase/agentbase.cpp:889
+#: agentbase/agentbase.cpp:936
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadijev posrednik"

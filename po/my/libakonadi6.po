@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-14 00:39+0000\n"
+"POT-Creation-Date: 2024-06-16 00:39+0000\n"
 "PO-Revision-Date: 2021-09-27 23:52+0630\n"
 "Last-Translator: ဇေယျာလွင် <lw1nzayar@yandex.com>\n"
 "Language-Team: Burmese <kde-i18n-doc@kde.org>\n"
@@ -38,25 +38,25 @@ msgstr "လောလောဆယ် မည်သည်အကောင့်မ�
 msgid "Accounts integration is not supported"
 msgstr "အကောင့်များပေါင်းစပ်လုပ်ဆောင်မှု လုပ်မရပါ"
 
-#: agentbase/agentbase.cpp:348 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:391 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr ""
 
-#: agentbase/agentbase.cpp:437
+#: agentbase/agentbase.cpp:480
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%2 အမျိုးအစားဖြစ်သော %1"
 
-#: agentbase/agentbase.cpp:883
+#: agentbase/agentbase.cpp:930
 #, fuzzy, kde-format
 #| msgid "Agent identifier"
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "အေးဂျင့်ခွဲခြားသတ်မှတ်အတည်ပြုချက်"
 
-#: agentbase/agentbase.cpp:889
+#: agentbase/agentbase.cpp:936
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "အကွန်နဒီအေးဂျင့်"
