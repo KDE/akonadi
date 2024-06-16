@@ -187,7 +187,6 @@ set(akonadicore_attributes_SRCS
     attributes/collectionquotaattribute.cpp attributes/collectionquotaattribute.h
     attributes/collectionidentificationattribute.cpp attributes/collectionidentificationattribute.h
     attributes/collectionrightsattribute.cpp
-    attributes/entityannotationsattribute.cpp attributes/entityannotationsattribute.h
     attributes/entitydeletedattribute.cpp attributes/entitydeletedattribute.h
     attributes/entitydeletedattribute.cpp attributes/entitydeletedattribute.h
     attributes/entitydisplayattribute.cpp attributes/entitydisplayattribute.h
@@ -206,7 +205,6 @@ ecm_generate_headers(AkonadiCore_attributes_CC_HEADERS
     CollectionColorAttribute
     CollectionIdentificationAttribute
     CollectionQuotaAttribute
-    EntityAnnotationsAttribute
     EntityDeletedAttribute
     EntityDisplayAttribute
     EntityHiddenAttribute

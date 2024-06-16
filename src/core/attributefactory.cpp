@@ -10,7 +10,6 @@
 #include "collectionidentificationattribute.h"
 #include "collectionquotaattribute.h"
 #include "collectionrightsattribute_p.h"
-#include "entityannotationsattribute.h"
 #include "entitydeletedattribute.h"
 #include "entitydisplayattribute.h"
 #include "entityhiddenattribute.h"
@@ -87,7 +86,6 @@ public:
             AttributeFactory::registerAttribute<IndexPolicyAttribute>();
             AttributeFactory::registerAttribute<PersistentSearchAttribute>();
             AttributeFactory::registerAttribute<EntityDeletedAttribute>();
-            AttributeFactory::registerAttribute<EntityAnnotationsAttribute>();
             AttributeFactory::registerAttribute<TagAttribute>();
             AttributeFactory::registerAttribute<FavoriteCollectionAttribute>();
             AttributeFactory::registerAttribute<CollectionIdentificationAttribute>();
