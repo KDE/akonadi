@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-16 00:39+0000\n"
+"POT-Creation-Date: 2024-06-17 00:39+0000\n"
 "PO-Revision-Date: 2012-07-11 10:23+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -1199,10 +1199,13 @@ msgstr ""
 #. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
 #: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "The Akonadi personal information management service is not running. This "
+#| "application cannot be used without it."
 msgid ""
-"The Akonadi personal information management service is not running. This "
-"application cannot be used without it."
+"A required background service is not running. This application cannot be "
+"used without it."
 msgstr ""
 "សេវា​​គ្រប់គ្រង​ព័ត៌មាន​ផ្ទាល់ខ្លួនរបស់ Akonadi មិនកំពុង​​ដំណើរការ​ឡើយ​ ។ កម្ម​វិធី​នេះ​អាច​មិនត្រូវបាន​ប្រើ​ដោយ​"
 "គ្មានវា​។"
@@ -1216,9 +1219,13 @@ msgstr "ចាប់​ផ្តើម​ "
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "The Akonadi personal information management framework is not "
+#| "operational.\n"
+#| "Click on \"Details...\" to obtain detailed information on this problem."
 msgid ""
-"The Akonadi personal information management framework is not operational.\n"
+"A required background service is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
 "គ្រោងការណ៍​គ្រប់គ្រង​ព័ត៌មាន​ផ្ទាល់ខ្លួន​របស់ Akonadi មិន​អាច​ប្រតិបត្តិ​បានទេ ។\n"
@@ -1226,8 +1233,10 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, kde-format
-msgid "The Akonadi personal information management service is not operational."
+#, fuzzy, kde-format
+#| msgid ""
+#| "The Akonadi personal information management service is not operational."
+msgid "A required background service is not operational."
 msgstr "សេវា​​គ្រប់គ្រង​ព័ត៌មាន​ផ្ទាល់ខ្លួន​របស់ Akonadi មិន​អាច​ប្រតិបត្តិ​បាន​ឡើយ​ ។"
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)

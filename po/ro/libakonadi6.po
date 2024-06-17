@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-16 00:39+0000\n"
+"POT-Creation-Date: 2024-06-17 00:39+0000\n"
 "PO-Revision-Date: 2013-01-13 00:43+0200\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -1221,10 +1221,13 @@ msgstr ""
 #. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
 #: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "The Akonadi personal information management service is not running. This "
+#| "application cannot be used without it."
 msgid ""
-"The Akonadi personal information management service is not running. This "
-"application cannot be used without it."
+"A required background service is not running. This application cannot be "
+"used without it."
 msgstr ""
 "Serviciul de gestiune a informațiilor personale Akonadi nu rulează. Această "
 "aplicație nu poate fi folosită fără el."
@@ -1238,9 +1241,13 @@ msgstr "Pornește"
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "The Akonadi personal information management framework is not "
+#| "operational.\n"
+#| "Click on \"Details...\" to obtain detailed information on this problem."
 msgid ""
-"The Akonadi personal information management framework is not operational.\n"
+"A required background service is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
 "Platforma de gestiune a informațiilor personale Akonadi nu este "
@@ -1249,8 +1256,10 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, kde-format
-msgid "The Akonadi personal information management service is not operational."
+#, fuzzy, kde-format
+#| msgid ""
+#| "The Akonadi personal information management service is not operational."
+msgid "A required background service is not operational."
 msgstr ""
 "Serviciul de gestiune a informațiilor personale Akonadi nu este operațional."
 

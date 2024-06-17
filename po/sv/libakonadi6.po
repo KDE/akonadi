@@ -2,21 +2,21 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Stefan Asserhäll <stefan.asserhall@gmail.com>, 2007, 2008, 2009, 2010.
+# SPDX-FileCopyrightText: 2007, 2008, 2009, 2010, 2024 Stefan Asserhäll <stefan.asserhall@gmail.com>
 # Stefan Asserhall <stefan.asserhall@gmail.com>, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-16 00:39+0000\n"
-"PO-Revision-Date: 2023-07-24 11:05+0200\n"
-"Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
+"POT-Creation-Date: 2024-06-17 00:39+0000\n"
+"PO-Revision-Date: 2024-06-16 17:43+0200\n"
+"Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 20.08.1\n"
+"X-Generator: Lokalize 23.08.5\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -51,8 +51,7 @@ msgid "%1 of type %2"
 msgstr "%1 av typ %2"
 
 #: agentbase/agentbase.cpp:930
-#, fuzzy, kde-format
-#| msgid "Agent identifier"
+#, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Agent-identifierare"
@@ -167,8 +166,7 @@ msgid "Job canceled."
 msgstr "Jobb avbrutet."
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
 msgstr "Akonadi-agent"
 
@@ -190,11 +188,24 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"Hanteringsverktyg för Akonadi-server\n"
+"\n"
+"Kommandon:\n"
+"  start          Startar Akonadi-servern med alla dess processer\n"
+"  stop           Stoppar Akonadi-servern och alla dess processer snyggt\n"
+"  restart        Startar om Akonadi-servern med alla dess processer\n"
+"  status         Visar en statusöversikt av Akonadi-servern\n"
+"  instances      Listar alla befintliga Akonadi-instanser\n"
+"  vacuum         Dammsug intern lagring (WARNING: kräver mycket tid och\n"
+"                 diskutrymme!)\n"
+"  fsck           Kontrollera (och försök rätta) den interna lagringens "
+"konsistens\n"
+"                 (kan ta en viss tid)"
 
 #: akonadictl/main.cpp:231
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "Kommando att köra"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -495,7 +506,7 @@ msgstr "Olästa brev"
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
 msgid "<strong>Quota</strong>: %1%<br>\n"
-msgstr ""
+msgstr "<strong>Kvot</strong>: %1 %<br>\n"
 
 #: core/models/statisticsproxymodel.cpp:105
 #, kde-format
@@ -626,6 +637,7 @@ msgstr "© 2008 Volker Krause <vkrause@kde.org>"
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
+"Namnrymd för att starta flera instanser av Akonadi i samma användarsession"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
@@ -702,7 +714,7 @@ msgstr "Misslyckades registrera inställningsdialog %1."
 #, kde-format
 msgctxt "Status percent value"
 msgid "(%1%)"
-msgstr ""
+msgstr "(%1 %)"
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
@@ -825,15 +837,13 @@ msgid "Use folder by default"
 msgstr "Använd normalt korg"
 
 #: widgets/collectiondialog.cpp:226
-#, fuzzy, kde-format
-#| msgid "&New Subfolder..."
+#, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
 msgstr "&Ny delkatalog..."
 
 #: widgets/collectiondialog.cpp:228
-#, fuzzy, kde-format
-#| msgid "Create a new subfolder under the currently selected folder"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Skapa en ny delkatalog i katalogen som för närvarande är markerad"
@@ -1017,8 +1027,7 @@ msgid "No Folder"
 msgstr "Ingen korg"
 
 #: widgets/collectionrequester.cpp:122
-#, fuzzy, kde-format
-#| msgid "Open collection dialog"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
 msgstr "Öppna samlingsdialogruta"
@@ -1070,14 +1079,7 @@ msgid "Keep both versions"
 msgstr "Behåll båda versioner"
 
 #: widgets/conflictresolvedialog.cpp:217
-#, fuzzy, kde-format
-#| msgid ""
-#| "<qt>Your changes conflict with those made by someone else meanwhile."
-#| "<br>Unless one version can just be thrown away, you will have to "
-#| "integrate those changes manually.<br>Click on <a href=\"opentexteditor\">"
-#| "\"Open text editor\"</a> to keep a copy of the texts, then select which "
-#| "version is most correct, then re-open it and modify it again to add "
-#| "what's missing."
+#, kde-format
 msgctxt "@label:textbox"
 msgid ""
 "<qt>Your changes conflict with those made by someone else meanwhile."
@@ -1141,8 +1143,7 @@ msgstr ""
 "%1"
 
 #: widgets/erroroverlay.cpp:228
-#, fuzzy, kde-format
-#| msgid "Personal information management service is starting..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr "Tjänst för personlig informationshantering startas..."
@@ -1153,8 +1154,7 @@ msgid "Personal information management service is starting..."
 msgstr "Tjänst för personlig informationshantering startas..."
 
 #: widgets/erroroverlay.cpp:233
-#, fuzzy, kde-format
-#| msgid "Personal information management service is shutting down..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr "Tjänst för personlig informationshantering stängs av..."
@@ -1165,9 +1165,7 @@ msgid "Personal information management service is shutting down..."
 msgstr "Tjänst för personlig informationshantering stängs av..."
 
 #: widgets/erroroverlay.cpp:238
-#, fuzzy, kde-format
-#| msgid ""
-#| "Personal information management service is performing a database upgrade."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
@@ -1193,10 +1191,13 @@ msgstr ""
 #. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
 #: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "The Akonadi personal information management service is not running. This "
+#| "application cannot be used without it."
 msgid ""
-"The Akonadi personal information management service is not running. This "
-"application cannot be used without it."
+"A required background service is not running. This application cannot be "
+"used without it."
 msgstr ""
 "Akonadi-tjänsten för personlig informationshantering kör inte. Detta program "
 "kan inte användas utan den."
@@ -1210,9 +1211,13 @@ msgstr "Starta"
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "The Akonadi personal information management framework is not "
+#| "operational.\n"
+#| "Click on \"Details...\" to obtain detailed information on this problem."
 msgid ""
-"The Akonadi personal information management framework is not operational.\n"
+"A required background service is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
 "Akonadi-ramverket för personlig informationshantering är inte "
@@ -1222,8 +1227,10 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, kde-format
-msgid "The Akonadi personal information management service is not operational."
+#, fuzzy, kde-format
+#| msgid ""
+#| "The Akonadi personal information management service is not operational."
+msgid "A required background service is not operational."
 msgstr ""
 "Akonadi-tjänsten för personlig informationshantering är inte funktionsduglig."
 
@@ -1239,8 +1246,7 @@ msgid "Do you want to remove account '%1'?"
 msgstr "Vill du ta bort kontot '%1'?"
 
 #: widgets/manageaccountwidget.cpp:199
-#, fuzzy, kde-format
-#| msgid "Remove account?"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"
 msgstr "Ta bort konto?"

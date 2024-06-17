@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-16 00:39+0000\n"
-"PO-Revision-Date: 2024-05-30 10:52+0200\n"
+"POT-Creation-Date: 2024-06-17 00:39+0000\n"
+"PO-Revision-Date: 2024-06-16 09:59+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -50,8 +50,7 @@ msgid "%1 of type %2"
 msgstr "%1 typu %2"
 
 #: agentbase/agentbase.cpp:930
-#, fuzzy, kde-format
-#| msgid "Agent identifier"
+#, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Identyfikator usługi"
@@ -1197,10 +1196,13 @@ msgstr ""
 #. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
 #: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "The Akonadi personal information management service is not running. This "
+#| "application cannot be used without it."
 msgid ""
-"The Akonadi personal information management service is not running. This "
-"application cannot be used without it."
+"A required background service is not running. This application cannot be "
+"used without it."
 msgstr ""
 "Usługa zarządzania informacjami osobistymi Akonadi nie została uruchomiona. "
 "Ta aplikacja nie może bez niej pracować."
@@ -1214,9 +1216,13 @@ msgstr "Uruchom"
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "The Akonadi personal information management framework is not "
+#| "operational.\n"
+#| "Click on \"Details...\" to obtain detailed information on this problem."
 msgid ""
-"The Akonadi personal information management framework is not operational.\n"
+"A required background service is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
 "Moduł zarządzania informacjami osobistymi Akonadi nie został uruchomiony.\n"
@@ -1225,8 +1231,10 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, kde-format
-msgid "The Akonadi personal information management service is not operational."
+#, fuzzy, kde-format
+#| msgid ""
+#| "The Akonadi personal information management service is not operational."
+msgid "A required background service is not operational."
 msgstr ""
 "Moduł zarządzanie informacjami osobistymi Akonadi nie jest gotowy do pracy."
 

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-16 00:39+0000\n"
-"PO-Revision-Date: 2024-03-10 11:02+0530\n"
+"POT-Creation-Date: 2024-06-17 00:39+0000\n"
+"PO-Revision-Date: 2024-06-16 17:41+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.02.0\n"
+"X-Generator: Lokalize 24.05.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -488,35 +488,35 @@ msgstr ""
 #: core/models/statisticsproxymodel.cpp:105
 #, kde-format
 msgid "Storage Size"
-msgstr ""
+msgstr "சேமிப்பக அளவு"
 
 #: core/models/statisticsproxymodel.cpp:111
 #, kde-format
 msgid "Subfolder Storage Size"
-msgstr ""
+msgstr "சாரடைவின் சேமிப்பக அளவு"
 
 #: core/models/statisticsproxymodel.cpp:225
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
-msgstr ""
+msgstr "படிக்காத‍வை"
 
 #: core/models/statisticsproxymodel.cpp:226
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
-msgstr ""
+msgstr "மொத்தம்"
 
 #: core/models/statisticsproxymodel.cpp:227
 #, kde-format
 msgctxt "collection size"
 msgid "Size"
-msgstr ""
+msgstr "அளவு"
 
 #: core/models/tagmodel.cpp:64
 #, kde-format
 msgid "Tag"
-msgstr ""
+msgstr "குறிச்சொல்"
 
 #: core/partfetcher.cpp:49
 #, kde-format
@@ -1139,8 +1139,8 @@ msgstr ""
 #: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
 #, kde-format
 msgid ""
-"The Akonadi personal information management service is not running. This "
-"application cannot be used without it."
+"A required background service is not running. This application cannot be "
+"used without it."
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
@@ -1154,14 +1154,14 @@ msgstr ""
 #: widgets/erroroverlay.ui:158
 #, kde-format
 msgid ""
-"The Akonadi personal information management framework is not operational.\n"
+"A required background service is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
 #, kde-format
-msgid "The Akonadi personal information management service is not operational."
+msgid "A required background service is not operational."
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
