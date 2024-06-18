@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-06-17 00:39+0000\n"
-"PO-Revision-Date: 2024-06-07 05:27+0200\n"
+"PO-Revision-Date: 2024-06-17 05:11+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -1187,16 +1187,12 @@ msgstr ""
 #. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
 #: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not running. This "
-#| "application cannot be used without it."
+#, kde-format
 msgid ""
 "A required background service is not running. This application cannot be "
 "used without it."
 msgstr ""
-"Akonadi-ის პირადი ინფორმაციის მართვის სერვისი გაშვებული არაა. ამ აპლიკაციას "
-"მის გარეშე ვერ გამოიყენებთ."
+"აუცილებელი ფონური სერვისი არ მუშაობს. აპლიკაციას მის გარეშე ვერ გამოიყენებთ."
 
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #: widgets/erroroverlay.ui:116
@@ -1207,25 +1203,19 @@ msgstr "გაშვება"
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management framework is not "
-#| "operational.\n"
-#| "Click on \"Details...\" to obtain detailed information on this problem."
+#, kde-format
 msgid ""
 "A required background service is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
-"Akonadi-ის პირადი ინფორმაციის მართვის სერვისი არ მუშაობს.\n"
+"აუცილებელი ფონური სერვისი არ მუშაობს.\n"
 "პრობლემის შესახებ დეტალური ინფორმაციის მისაღებად დააწექით \"დეტალები...\"."
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not operational."
+#, kde-format
 msgid "A required background service is not operational."
-msgstr "Akonadi-ის პირადი ინფორმაციის მართვის სერვისი არ ფუნქციონირებს."
+msgstr "აუცილებელი ფონური სერვისი არ მუშაობს."
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
