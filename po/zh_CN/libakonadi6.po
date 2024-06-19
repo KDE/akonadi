@@ -52,7 +52,7 @@ msgstr "类型 %2 的 %1"
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
-msgstr ""
+msgstr "代理标识符"
 
 #: agentbase/agentbase.cpp:936
 #, kde-format
@@ -821,13 +821,13 @@ msgstr "默认使用此文件夹"
 #, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
-msgstr ""
+msgstr "新建子文件夹(&N)..."
 
 #: widgets/collectiondialog.cpp:228
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
-msgstr ""
+msgstr "在当前选定的文件夹下创建一个新的子文件夹"
 
 #: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:418
 #, kde-format
@@ -1009,7 +1009,7 @@ msgstr "无文件夹"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
-msgstr ""
+msgstr "打开集合对话框"
 
 #: widgets/collectionrequester.cpp:143
 #, kde-format
@@ -1067,6 +1067,9 @@ msgid ""
 "editor\"</a> to keep a copy of the texts, then select which version is most "
 "correct, then re-open it and modify it again to add what's missing."
 msgstr ""
+"<qt>您的更改会与其他人的更改发生冲突。<br> 除非丢弃一个版本，否则您必须手动合"
+"并这些更改。<br>单击<a href=\"opentexteditor\">“打开文本编辑器”</a>以保留文本"
+"副本，然后选择哪个版本是最正确的，之后重新打开并再次修改它以添加缺少的内容。"
 
 #: widgets/conflictresolvedialog.cpp:266
 #, kde-format
@@ -1119,7 +1122,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
-msgstr ""
+msgstr "个人信息管理服务正在启动..."
 
 #: widgets/erroroverlay.cpp:229
 #, kde-format
@@ -1130,7 +1133,7 @@ msgstr "个人信息管理服务正在启动..."
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
-msgstr ""
+msgstr "个人信息管理服务正在关闭..."
 
 #: widgets/erroroverlay.cpp:234
 #, kde-format
@@ -1142,7 +1145,7 @@ msgstr "个人信息管理服务正在关闭..."
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
-msgstr ""
+msgstr "个人信息管理服务正在进行数据库更新。"
 
 #: widgets/erroroverlay.cpp:240
 #, kde-format
@@ -1164,7 +1167,7 @@ msgstr ""
 msgid ""
 "A required background service is not running. This application cannot be "
 "used without it."
-msgstr ""
+msgstr "所需的后台服务没有运行。此应用程序无法使用。"
 
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #: widgets/erroroverlay.ui:116
@@ -1180,12 +1183,14 @@ msgid ""
 "A required background service is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
+"所需的后台服务没有工作。\n"
+"点击“详情...”以获取关于此问题的详细信息。"
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
 #, kde-format
 msgid "A required background service is not operational."
-msgstr ""
+msgstr "所需的后台服务没有工作。"
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
