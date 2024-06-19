@@ -51,7 +51,7 @@ msgstr "类型 %2 的 %1"
 #: agentbase/agentbase.cpp:883
 #, kde-format
 msgid "Agent identifier"
-msgstr ""
+msgstr "代理标识符"
 
 #: agentbase/agentbase.cpp:889
 #, kde-format
@@ -819,12 +819,12 @@ msgstr "默认使用此文件夹"
 #: widgets/collectiondialog.cpp:226
 #, kde-format
 msgid "&New Subfolder..."
-msgstr ""
+msgstr "新建子文件夹(&N)..."
 
 #: widgets/collectiondialog.cpp:228
 #, kde-format
 msgid "Create a new subfolder under the currently selected folder"
-msgstr ""
+msgstr "在当前选定的文件夹下创建一个新的子文件夹"
 
 #: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:418
 #, kde-format
@@ -1005,7 +1005,7 @@ msgstr "无文件夹"
 #: widgets/collectionrequester.cpp:122
 #, kde-format
 msgid "Open collection dialog"
-msgstr ""
+msgstr "打开集合对话框"
 
 #: widgets/collectionrequester.cpp:143
 #, kde-format
@@ -1062,6 +1062,9 @@ msgid ""
 "editor\"</a> to keep a copy of the texts, then select which version is most "
 "correct, then re-open it and modify it again to add what's missing."
 msgstr ""
+"<qt>您的更改会与其他人的更改发生冲突。<br> 除非丢弃一个版本，否则您必须手动合"
+"并这些更改。<br>单击<a href=\"opentexteditor\">“打开文本编辑器”</a>以保留文本"
+"副本，然后选择哪个版本是最正确的，之后重新打开并再次修改它以添加缺少的内容。"
 
 #: widgets/conflictresolvedialog.cpp:265
 #, kde-format
@@ -1124,7 +1127,7 @@ msgstr "个人信息管理服务正在关闭..."
 #, kde-format
 msgid ""
 "Personal information management service is performing a database upgrade."
-msgstr ""
+msgstr "个人信息管理服务正在进行数据库更新。"
 
 #: widgets/erroroverlay.cpp:240
 #, kde-format
