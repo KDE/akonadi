@@ -1,7 +1,7 @@
 # akonadi test fake library
 set(akonaditestfake_xml ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.NotificationSource.xml)
 set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "protocol_p.h")
-qt_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationsourceinterface )
+qt_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationsourceinterface)
 
 add_library(akonaditestfake SHARED
   ${akonaditestfake_srcs}
@@ -40,7 +40,7 @@ add_executable(akonadi-firstrun
     firstrunner.cpp
     ${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp
 )
-target_link_libraries( akonadi-firstrun  Qt::Test Qt::Core KPim6::AkonadiCore KPim6::AkonadiPrivate KF6::ConfigCore Qt::Widgets)
+target_link_libraries(akonadi-firstrun  Qt::Test Qt::Core KPim6::AkonadiCore KPim6::AkonadiPrivate KF6::ConfigCore Qt::Widgets)
 
 add_akonadi_test(itemhydratest.cpp itemhydratest.h)
 add_akonadi_test(itemtest.cpp itemtest.h)
@@ -68,8 +68,8 @@ add_akonadi_test(itemchangelogtest.cpp)
 # PORT FROM QJSON add_akonadi_test(searchquerytest.cpp)
 
 # qtestlib tests that need non-exported stuff from
-#add_executable( resourceschedulertest resourceschedulertest.cpp resourceschedulertest.h ../src/agentbase/resourcescheduler.cpp )
-#add_test( resourceschedulertest resourceschedulertest )
+#add_executable(resourceschedulertest resourceschedulertest.cpp resourceschedulertest.h ../src/agentbase/resourcescheduler.cpp)
+#add_test( resourceschedulertest resourceschedulertest)
 #ecm_mark_as_test(akonadi-resourceschedulertest)
 #target_link_libraries(resourceschedulertest  Qt::Test KPim6::AkonadiAgentBase)
 

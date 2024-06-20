@@ -87,13 +87,13 @@ target_sources(KPim6AkonadiWidgets PRIVATE
 
     dbaccess.cpp
     dbaccess.h
-    )
+   )
 
 ecm_qt_declare_logging_category(KPim6AkonadiWidgets HEADER akonadiwidgets_debug.h IDENTIFIER AKONADIWIDGETS_LOG CATEGORY_NAME org.kde.pim.akonadiwidgets
         DESCRIPTION "akonadi (Akonadi Widget Library)"
         OLD_CATEGORY_NAMES akonadiwidgets_log
         EXPORT AKONADI
-    )
+   )
 
 
 set(akonadiwidgets_UI
@@ -147,7 +147,7 @@ ecm_generate_headers(AkonadiWidgets_CC_HEADERS
 )
 
 ki18n_wrap_ui(KPim6AkonadiWidgets ${akonadiwidgets_UI})
-if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
+if(COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(KPim6AkonadiWidgets PROPERTIES UNITY_BUILD ON)
 endif()
 
@@ -203,25 +203,25 @@ if(BUILD_DESIGNERPLUGIN)
         TOOLTIP "Akonadi Agent Instance Settings (Akonadi)"
         WHATSTHIS "A widget to configure akonadi instance."
         GROUP "Input (KDE-PIM)"
-    )
+   )
     ecm_qtdesignerplugin_widget(Akonadi::EntityTreeView
 	    INCLUDE_FILE "Akonadi/EntityTreeView"
         TOOLTIP "A view to show an item/collection tree provided by an EntityTreeModel (Akonadi)"
         WHATSTHIS "A view to show an item/collection tree provided by an EntityTreeModel."
         GROUP "Input (KDE-PIM)"
-    )
+   )
     ecm_qtdesignerplugin_widget(Akonadi::TagSelectWidget
 	    INCLUDE_FILE "Akonadi/TagSelectWidget"
         TOOLTIP "A Widget to select tag (Akonadi)"
         WHATSTHIS "A Widget to select tag."
         GROUP "Input (KDE-PIM)"
-    )
+   )
     ecm_qtdesignerplugin_widget(Akonadi::ManageAccountWidget
 	    INCLUDE_FILE "Akonadi/ManageAccountWidget"
         TOOLTIP "A Widget to Manage Akonadi Account (KDE-PIM)"
         WHATSTHIS "A Widget to Manage Akonadi Account."
         GROUP "Input (KDE-PIM)"
-    )
+   )
 
     ecm_add_qtdesignerplugin(akonadiwidgets
         NAME AkonadiWidgets
@@ -236,10 +236,10 @@ if(BUILD_DESIGNERPLUGIN)
         KPim6::AkonadiWidgets
         INSTALL_DESTINATION "${KDE_INSTALL_QTPLUGINDIR}/designer"
         COMPONENT Devel
-    )
+   )
 endif()
 
-if (BUILD_QCH)
+if(BUILD_QCH)
     ecm_add_qch(
         KPim6AkonadiWidgets_QCH
         NAME KPim6AkonadiWidgets
@@ -261,5 +261,5 @@ if (BUILD_QCH)
         TAGFILE_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
         QCH_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
         COMPONENT Devel
-    )
+   )
 endif()

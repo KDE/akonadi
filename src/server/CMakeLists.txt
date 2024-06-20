@@ -217,7 +217,7 @@ set(libakonadiserver_SRCS
     preprocessormanager.h
     storagejanitor.h
 
-    )
+   )
 
 set(akonadiserver_SRCS
     main.cpp
@@ -249,7 +249,7 @@ qt_add_dbus_interface(libakonadiserver_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces
 qt_add_dbus_interface(libakonadiserver_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Agent.Search.xml agentsearchinterface)
 
 add_library(libakonadiserver STATIC ${libakonadiserver_SRCS})
-#if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
+#if(COMPILE_WITH_UNITY_CMAKE_SUPPORT)
 #    set_target_properties(libakonadiserver PROPERTIES UNITY_BUILD ON)
 #    set_source_files_properties(storage/itemretrievalmanager.cpp PROPERTIES SKIP_UNITY_BUILD_INCLUSION ON)
 #endif()

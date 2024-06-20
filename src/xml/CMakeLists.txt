@@ -6,11 +6,11 @@ set_package_properties(LibXml2 PROPERTIES
     TYPE OPTIONAL
 )
 
-if (LIBXML2_FOUND)
+if(LIBXML2_FOUND)
     add_definitions(-DHAVE_LIBXML2)
-endif ()
+endif()
 
-if (BUILD_TESTING)
+if(BUILD_TESTING)
    add_subdirectory(autotests)
 endif()
 set(akonadixml_SRCS
@@ -34,7 +34,7 @@ ecm_generate_headers(AkonadiXml_CC_HEADERS
 )
 
 add_executable(akonadi2xml akonadi2xml.cpp)
-if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
+if(COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(akonadi2xml PROPERTIES UNITY_BUILD ON)
 endif()
 
@@ -62,7 +62,7 @@ PUBLIC
 PRIVATE
     KF6::I18n
 )
-if (LIBXML2_FOUND)
+if(LIBXML2_FOUND)
     target_link_libraries(KPim6AkonadiXml PRIVATE LibXml2::LibXml2)
 endif()
 

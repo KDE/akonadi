@@ -24,7 +24,7 @@ set(AKONADI_MIN_VERSION "6.0.0")
 find_package(KF6Akonadi ${AKONADI_MIN_VERSION} CONFIG REQUIRED)
 
 find_program(XSLTPROC_EXECUTABLE xsltproc DOC "Path to the xsltproc executable")
-if (NOT XSLTPROC_EXECUTABLE)
+if(NOT XSLTPROC_EXECUTABLE)
     message(FATAL_ERROR "\nThe command line XSLT processor program 'xsltproc'  could not be found.\nPlease install xsltproc.\n")
 endif()
 

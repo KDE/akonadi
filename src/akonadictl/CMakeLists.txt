@@ -6,7 +6,7 @@ ecm_qt_declare_logging_category(akonadictl HEADER akonadictl_debug.h IDENTIFIER 
         DESCRIPTION "akonadi (Akonadi Control)"
         OLD_CATEGORY_NAMES log_akonadictl
         EXPORT AKONADI
-    )
+   )
 
 
 qt_add_dbus_interfaces(akonadictl_SRCS
@@ -19,7 +19,7 @@ target_sources(akonadictl PRIVATE ${akonadictl_SRCS}
     akonadistarter.h
 )
 
-if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
+if(COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(akonadictl PROPERTIES UNITY_BUILD ON)
 endif()
 

@@ -99,7 +99,7 @@ set_package_properties(KAccounts6 PROPERTIES
     URL "https://invent.kde.org/network/kaccounts-integration"
     TYPE OPTIONAL
 )
-if (${AccountsQt6_FOUND} AND ${KAccounts6_FOUND})
+if(${AccountsQt6_FOUND} AND ${KAccounts6_FOUND})
     set(WITH_ACCOUNTS TRUE)
 endif()
 
@@ -127,7 +127,7 @@ ecm_setup_qtplugin_macro_names(
 
 # Make sure the KF6Akonadi_DATA_DIR is absolute before passing it to KF6AkonadiConfig.cmake.in
 # otherwise build fails either on OSX CI, or for normal users
-if (IS_ABSOLUTE "${KDE_INSTALL_DATADIR_KF}")
+if(IS_ABSOLUTE "${KDE_INSTALL_DATADIR_KF}")
     set(KF5Akonadi_DATA_DIR "${KDE_INSTALL_DATADIR_KF}/akonadi")
 else()
     set(KF5Akonadi_DATA_DIR "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_DATADIR_KF}/akonadi")
@@ -146,7 +146,7 @@ endif()
 option(USE_UNITY_CMAKE_SUPPORT "Use UNITY cmake support (speedup compile time)" OFF)
 
 set(COMPILE_WITH_UNITY_CMAKE_SUPPORT OFF)
-if (USE_UNITY_CMAKE_SUPPORT)
+if(USE_UNITY_CMAKE_SUPPORT)
     set(COMPILE_WITH_UNITY_CMAKE_SUPPORT ON)
     add_definitions(-DCOMPILE_WITH_UNITY_CMAKE_SUPPORT)
 endif()
@@ -199,13 +199,13 @@ endif()
 
 check_include_files(unistd.h HAVE_UNISTD_H)
 
-if (IS_ABSOLUTE "${KDE_INSTALL_DBUSINTERFACEDIR}")
+if(IS_ABSOLUTE "${KDE_INSTALL_DBUSINTERFACEDIR}")
     set(AKONADI_DBUS_INTERFACES_INSTALL_DIR "${KDE_INSTALL_DBUSINTERFACEDIR}")
 else()
     set(AKONADI_DBUS_INTERFACES_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_DBUSINTERFACEDIR}")
 endif()
 
-if (IS_ABSOLUTE "${KDE_INSTALL_INCLUDEDIR}/KPim6")
+if(IS_ABSOLUTE "${KDE_INSTALL_INCLUDEDIR}/KPim6")
     set(AKONADI_INCLUDE_DIR "${KDE_INSTALL_INCLUDEDIR}/KPim6")
 else()
     set(AKONADI_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_INCLUDEDIR}/KPim6")
@@ -245,14 +245,14 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc" OR (CMAKE_CXX_COMP
     set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -Wextra -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wundef -Wcast-align -Wchar-subscripts -Wall -Wextra -Wpointer-arith -Wformat-security -fno-common -pedantic")
     CHECK_CXX_COMPILER_FLAG(-Wno-deprecated-copy NO_DEPRECATED_COPY)
-    if (NO_DEPRECATED_COPY)
+    if(NO_DEPRECATED_COPY)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-copy")
     endif()
 
     set(CMAKE_CXX_FLAGS_DEBUGFULL "-g3 -fno-inline" CACHE STRING "Flags used by the C++ compiler during debugfull builds." FORCE)
     set(CMAKE_C_FLAGS_DEBUGFULL   "-g3 -fno-inline" CACHE STRING "Flags used by the C compiler during debugfull builds." FORCE)
     mark_as_advanced(CMAKE_CXX_FLAGS_DEBUGFULL CMAKE_C_FLAGS_DEBUGFULL)
-elseif (MSVC)
+elseif(MSVC)
     # This sets the __cplusplus macro to a real value based on the version of C++ specified by
     # the /std switch. Without it MSVC keeps reporting C++98, so feature detection doesn't work.
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:__cplusplus")
@@ -313,7 +313,7 @@ install(FILES akonadi-mime.xml DESTINATION ${KDE_INSTALL_MIMEDIR})
 update_xdg_mimetypes(${KDE_INSTALL_MIMEDIR})
 
 ############### CMake Config Files ###############
-if (BUILD_QCH)
+if(BUILD_QCH)
     ecm_install_qch_export(
         TARGETS KPim6AkonadiCore_QCH
         KPim6AkonadiWidgets_QCH
@@ -321,7 +321,7 @@ if (BUILD_QCH)
         FILE KPim6AkonadiQchTargets.cmake
         DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
         COMPONENT Devel
-    )
+   )
     set(PACKAGE_INCLUDE_QCHTARGETS "include(\"\${CMAKE_CURRENT_LIST_DIR}/KPim6AkonadiQchTargets.cmake\")")
 endif()
 
@@ -352,7 +352,7 @@ ecm_qt_install_logging_categories(
         EXPORT AKONADI
         FILE akonadi.categories
         DESTINATION ${KDE_INSTALL_LOGGINGCATEGORIESDIR}
-        )
+       )
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadi_version.h

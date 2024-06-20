@@ -133,7 +133,7 @@ set(akonadicore_base_SRCS
     accountactivitiesabstract.h
     accountactivitiesabstract.cpp
 
-    )
+   )
 
 ecm_generate_headers(AkonadiCore_base_CC_HEADERS
     HEADER_NAMES
@@ -344,7 +344,7 @@ set(akonadicore_jobs_SRCS
     jobs/trashrestorejob.h
     jobs/unlinkjob.h
 
-    )
+   )
 
 ecm_generate_headers(AkonadiCore_jobs_CC_HEADERS
     HEADER_NAMES
@@ -392,7 +392,7 @@ set(akonadicore_dbus_xml ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Ak
 qt_add_dbus_interface(akonadicore_dbus_SRCS ${akonadicore_dbus_xml} notificationmanagerinterface)
 
 set(akonadicore_dbus_xml ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.NotificationSource.xml)
-set_source_files_properties(${akonadicore_dbus_xml} PROPERTIES INCLUDE "${Akonadi_SOURCE_DIR}/src/private/protocol_p.h" )
+set_source_files_properties(${akonadicore_dbus_xml} PROPERTIES INCLUDE "${Akonadi_SOURCE_DIR}/src/private/protocol_p.h")
 qt_add_dbus_interface(akonadicore_dbus_SRCS ${akonadicore_dbus_xml} notificationsourceinterface)
 
 qt_add_dbus_interfaces(akonadicore_dbus_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.AgentManager.xml)
@@ -413,11 +413,11 @@ ecm_qt_declare_logging_category(akonadicore_SRCS HEADER akonadicore_debug.h IDEN
         DESCRIPTION "akonadi (Akonadi Core Library)"
         OLD_CATEGORY_NAMES log_akonadicore
         EXPORT AKONADI
-    )
+   )
 
 
 add_library(KPim6AkonadiCore ${akonadicore_SRCS})
-#if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
+#if(COMPILE_WITH_UNITY_CMAKE_SUPPORT)
 #    set_target_properties(KPim6AkonadiCore PROPERTIES UNITY_BUILD ON)
 #endif()
 
@@ -480,13 +480,13 @@ install(FILES
     COMPONENT Devel
 )
 
-install( FILES
+install(FILES
     kcfg2dbus.xsl
     DESTINATION ${KDE_INSTALL_DATADIR_KF}/akonadi
 )
 
 
-if (BUILD_QCH)
+if(BUILD_QCH)
     ecm_add_qch(
         KPim6AkonadiCore_QCH
         NAME KPim6AkonadiCore
@@ -512,5 +512,5 @@ if (BUILD_QCH)
         TAGFILE_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
         QCH_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
         COMPONENT Devel
-    )
+   )
 endif()

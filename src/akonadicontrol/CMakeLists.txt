@@ -1,14 +1,14 @@
 ########### next target ###############
-add_executable(akonadi_control )
+add_executable(akonadi_control)
 
-if (WITH_ACCOUNTS)
+if(WITH_ACCOUNTS)
     target_sources(akonadi_control PRIVATE accountsintegration.cpp accountsintegration.h)
 endif()
 
 ecm_qt_declare_logging_category(akonadi_control HEADER akonadicontrol_debug.h IDENTIFIER AKONADICONTROL_LOG CATEGORY_NAME org.kde.pim.akonadicontrol
         DESCRIPTION "akonadi (Akonadi Control)"
         EXPORT AKONADI
-    )
+   )
 
 qt_add_dbus_adaptor(control_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.AgentManager.xml agentmanager.h AgentManager)
 qt_add_dbus_adaptor(control_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.ControlManager.xml controlmanager.h ControlManager)
@@ -46,7 +46,7 @@ target_sources(akonadi_control PRIVATE
     controlmanager.h
     processcontrol.h
 )
-if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
+if(COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(akonadi_control PROPERTIES UNITY_BUILD ON)
 endif()
 
@@ -55,7 +55,7 @@ target_include_directories(akonadi_control BEFORE PUBLIC $<BUILD_INTERFACE:${CMA
 set_target_properties(akonadi_control PROPERTIES MACOSX_BUNDLE FALSE)
 set_target_properties(akonadi_control PROPERTIES OUTPUT_NAME akonadi_control)
 
-if (WIN32)
+if(WIN32)
     set_target_properties(akonadi_control PROPERTIES WIN32_EXECUTABLE TRUE)
     target_link_libraries(akonadi_control ${QT_QTMAIN_LIBRARY})
 endif()
@@ -70,7 +70,7 @@ target_link_libraries(akonadi_control
     Qt::Gui
 )
 
-if (WITH_ACCOUNTS)
+if(WITH_ACCOUNTS)
     target_include_directories(akonadi_control PRIVATE ${ACCOUNTSQT_INCLUDE_DIRS})
     # We need Qt::Xml because the Accounts framework leaks QDocument includes into public interface
     target_link_libraries(akonadi_control ${ACCOUNTSQT_LIBRARIES} Qt::Xml)

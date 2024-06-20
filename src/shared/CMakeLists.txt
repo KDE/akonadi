@@ -11,7 +11,7 @@ target_sources(akonadi_shared PRIVATE
     akremotelog.h
 )
 set_property(TARGET akonadi_shared PROPERTY POSITION_INDEPENDENT_CODE ON)
-if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
+if(COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(akonadi_shared PROPERTIES UNITY_BUILD ON)
 endif()
 

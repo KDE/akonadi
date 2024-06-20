@@ -31,7 +31,7 @@ macro(add_akonadi_test_widgets _source)
     ${_source}
     ${CMAKE_BINARY_DIR}/src/widgets/akonadiwidgets_debug.cpp
     ${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp
-  )
+ )
   get_filename_component(_name ${_source} NAME_WE)
   ecm_add_test(TEST_NAME ${_name} ${_test})
   set_tests_properties(${_name} PROPERTIES ENVIRONMENT "QT_HASH_SEED=0;QT_NO_CPU_FEATURE=sse4.2")

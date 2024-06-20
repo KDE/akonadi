@@ -1,12 +1,12 @@
 find_package(Qt6Test ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
 
 if(${EXECUTABLE_OUTPUT_PATH})
-    set( PREVIOUS_EXEC_OUTPUT_PATH ${EXECUTABLE_OUTPUT_PATH} )
+    set(PREVIOUS_EXEC_OUTPUT_PATH ${EXECUTABLE_OUTPUT_PATH})
 else()
-    set( PREVIOUS_EXEC_OUTPUT_PATH . )
+    set(PREVIOUS_EXEC_OUTPUT_PATH .)
 endif()
-set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
-set( TEST_RESULT_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/testresults )
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
+set(TEST_RESULT_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/testresults)
 file(MAKE_DIRECTORY ${TEST_RESULT_OUTPUT_PATH})
 
 kde_enable_exceptions()
@@ -20,7 +20,7 @@ macro(add_akonadi_demo _source)
         KPim6::AkonadiCore
         KPim6::AkonadiWidgets
         KF6::I18n
-  )
+ )
 endmacro()
 
 # demo applications

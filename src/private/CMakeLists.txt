@@ -42,10 +42,10 @@ ecm_qt_declare_logging_category(akonadiprivate_SRCS HEADER akonadiprivate_debug.
         DESCRIPTION "akonadi (Akonadi Private Library)"
         OLD_CATEGORY_NAMES akonadiprivate_log
         EXPORT AKONADI
-    )
+   )
 
 add_library(KPim6AkonadiPrivate SHARED ${akonadiprivate_SRCS})
-if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
+if(COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(KPim6AkonadiPrivate PROPERTIES UNITY_BUILD ON)
 endif()
 

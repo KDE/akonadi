@@ -8,7 +8,7 @@ ecm_qt_declare_logging_category(KPim6AkonadiAgentBase HEADER akonadiagentbase_de
         DESCRIPTION "akonadi (Akonadi AgentBase Library)"
         OLD_CATEGORY_NAMES akonadiagentbase_log
         EXPORT AKONADI
-    )
+   )
 
 ecm_generate_headers(AkonadiAgentBase_CC_HEADERS
     HEADER_NAMES
@@ -26,7 +26,7 @@ ecm_generate_headers(AkonadiAgentBase_CC_HEADERS
 
 KCONFIG_ADD_KCFG_FILES(KPim6AkonadiAgentBase resourcebasesettings.kcfgc)
 
-qt_add_dbus_interfaces(akonadiagentbase_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Tracer.xml )
+qt_add_dbus_interfaces(akonadiagentbase_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Tracer.xml)
 
 qt_add_dbus_adaptor(akonadiagentbase_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Resource.xml
     resourcebase.h Akonadi::ResourceBase resourceadaptor Akonadi__ResourceAdaptor)
@@ -39,7 +39,7 @@ qt_add_dbus_adaptor(akonadiagentbase_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/o
 qt_add_dbus_adaptor(akonadiagentbase_SRCS ../interfaces/org.freedesktop.Akonadi.Resource.Transport.xml
     transportresourcebase_p.h Akonadi::TransportResourceBasePrivate transportadaptor Akonadi__TransportAdaptor)
 qt_add_dbus_adaptor(akonadiagentbase_SRCS ../interfaces/org.freedesktop.Akonadi.Agent.Search.xml
-                     agentsearchinterface_p.h Akonadi::AgentSearchInterfacePrivate searchadaptor Akonadi__SearchAdaptor )
+                     agentsearchinterface_p.h Akonadi::AgentSearchInterfacePrivate searchadaptor Akonadi__SearchAdaptor)
 qt_add_dbus_adaptor(akonadiagentbase_SRCS ../interfaces/org.kde.Akonadi.Accounts.xml
     accountsintegration.h Akonadi::AccountsIntegration accountsadaptor Akonadi__AccountsAdaptor)
 
@@ -69,7 +69,7 @@ target_sources(KPim6AkonadiAgentBase PRIVATE
 
 
 
-if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
+if(COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(KPim6AkonadiAgentBase PROPERTIES UNITY_BUILD ON)
 endif()
 
@@ -93,7 +93,7 @@ PRIVATE
     akonadi_shared
 )
 
-if (WITH_ACCOUNTS)
+if(WITH_ACCOUNTS)
     target_link_libraries(KPim6AkonadiAgentBase PRIVATE KAccounts6 Qt::Xml)
     target_include_directories(KPim6AkonadiAgentBase PRIVATE ${ACCOUNTSQT_INCLUDE_DIRS})
 endif()
@@ -129,7 +129,7 @@ install(FILES
     DESTINATION ${KDE_INSTALL_KCFGDIR}
 )
 
-if (BUILD_QCH)
+if(BUILD_QCH)
     ecm_add_qch(
         KPim6AkonadiAgent_QCH
         NAME KPim6AkonadiAgent
@@ -151,5 +151,5 @@ if (BUILD_QCH)
         TAGFILE_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
         QCH_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
         COMPONENT Devel
-    )
+   )
 endif()

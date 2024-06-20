@@ -6,9 +6,9 @@ remove_definitions(-DTRANSLATION_DOMAIN=\"libakonadi6\")
 add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_knut_resource\")
 
 # Disabled for now, resourcetester remained in kdepim-runtime
-#add_subdirectory( tests )
+#add_subdirectory(tests)
 
-set( knutresource_SRCS knutresource.cpp knutresource.h)
+set(knutresource_SRCS knutresource.cpp knutresource.h)
 
 ecm_qt_declare_logging_category(knutresource_SRCS HEADER knutresource_debug.h IDENTIFIER KNUTRESOURCE_LOG CATEGORY_NAME org.kde.pim.knut)
 
@@ -32,6 +32,6 @@ target_link_libraries(akonadi_knut_resource
   KF6::I18n
 )
 
-install( TARGETS akonadi_knut_resource ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-install( FILES knutresource.desktop DESTINATION "${KDE_INSTALL_DATAROOTDIR}/akonadi/agents" )
-install( FILES knut-template.xml DESTINATION ${KDE_INSTALL_DATADIR_KF}/akonadi_knut_resource/ )
+install(TARGETS akonadi_knut_resource ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(FILES knutresource.desktop DESTINATION "${KDE_INSTALL_DATAROOTDIR}/akonadi/agents")
+install(FILES knut-template.xml DESTINATION ${KDE_INSTALL_DATADIR_KF}/akonadi_knut_resource/)
