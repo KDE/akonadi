@@ -246,6 +246,51 @@ void QueryBuilder::sqliteAdaptUpdateJoin(Query::Condition &condition)
     condition.mColumn += QLatin1StringView(" )");
 }
 
+void QueryBuilder::buildInsertColumns(QString *statement)
+{
+    const auto &vals = mColumnMultiValues.empty() ? mColumnValues : mColumnMultiValues;
+    *statement += u'(';
+    for (qsizetype i = 0; i < vals.size(); ++i) {
+        *statement += vals.at(i).first;
+        if (i + 1 < vals.size()) {
+            *statement += u", ";
+        }
+    }
+    *statement += u')';
+}
+
+void QueryBuilder::buildInsertValues(QString *statement)
+{
+    if (mColumnMultiValues.empty()) {
+        *statement += u'(';
+        for (int col = 0, columnCount = mColumnValues.size(); col < columnCount; ++col) {
+            bindValue(statement, mColumnValues.at(col).second);
+            if (col + 1 < columnCount) {
+                *statement += u", ";
+            }
+        }
+        *statement += u')';
+    } else {
+        const auto rows = mColumnMultiValues.front().second.toList().size();
+        for (qsizetype row = 0; row < rows; ++row) {
+            *statement += u'(';
+            for (int col = 0, columnCount = mColumnMultiValues.size(); col < columnCount; ++col) {
+                const auto &[_, values] = mColumnMultiValues.at(col);
+                // FIXME: We perform tons of throw-away .toList() conversions here: figure out a better system
+                // to store the multi-values or transpose the data before building the query.
+                bindValue(statement, values.toList().at(row));
+                if (col + 1 < columnCount) {
+                    *statement += u", ";
+                }
+            }
+            *statement += u')';
+            if (row + 1 < rows) {
+                *statement += u", ";
+            }
+        }
+    }
+}
+
 void QueryBuilder::buildQuery(QString *statement)
 {
     // we add the ON conditions of Inner Joins in a Update query here
@@ -283,22 +328,10 @@ void QueryBuilder::buildQuery(QString *statement)
         break;
     case Insert: {
         *statement += QLatin1StringView("INSERT INTO ");
-        *statement += mTable;
-        *statement += QLatin1StringView(" (");
-        for (int i = 0, c = mColumnValues.size(); i < c; ++i) {
-            *statement += mColumnValues.at(i).first;
-            if (i + 1 < c) {
-                *statement += QLatin1StringView(", ");
-            }
-        }
-        *statement += QLatin1StringView(") VALUES (");
-        for (int i = 0, c = mColumnValues.size(); i < c; ++i) {
-            bindValue(statement, mColumnValues.at(i).second);
-            if (i + 1 < c) {
-                *statement += QLatin1StringView(", ");
-            }
-        }
-        *statement += QLatin1Char(')');
+        *statement += mTable + u" ";
+        buildInsertColumns(statement);
+        *statement += u" VALUES ";
+        buildInsertValues(statement);
         if (mDatabaseType == DbType::PostgreSQL && !mIdentificationColumn.isEmpty()) {
             *statement += QLatin1StringView(" RETURNING ") + mIdentificationColumn;
         }
@@ -677,7 +710,16 @@ void QueryBuilder::addGroupColumns(const QStringList &columns)
 
 void QueryBuilder::setColumnValue(const QString &column, const QVariant &value)
 {
-    mColumnValues << qMakePair(column, value);
+    mColumnMultiValues.clear();
+    mColumnValues.push_back(qMakePair(column, value));
+}
+
+void QueryBuilder::setColumnValues(const QString &column, const QVariant &values)
+{
+    Q_ASSERT(mType == Insert);
+
+    mColumnValues.clear();
+    mColumnMultiValues.push_back(qMakePair(column, values));
 }
 
 void QueryBuilder::setDistinct(bool distinct)

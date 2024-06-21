@@ -164,6 +164,14 @@ void QueryBuilderTest::testQueryBuilder_data()
     mBuilders << qb;
     QTest::newRow("insert multi column PSQL without id") << mBuilders.count() << QStringLiteral("INSERT INTO table (col1, col2) VALUES (:0, :1)") << bindVals;
 
+    qb = QueryBuilder(QStringLiteral("table"), QueryBuilder::Insert);
+    qb.setColumnValues(QStringLiteral("col1"), QVariantList{QStringLiteral("bla"), QStringLiteral("ble"), QStringLiteral("blo")});
+    qb.setColumnValues(QStringLiteral("col2"), QVariantList{1, 2, 3});
+    bindVals = QVariantList() << QStringLiteral("bla") << 1 << QStringLiteral("ble") << 2 << QStringLiteral("blo") << 3;
+    mBuilders << qb;
+    QTest::newRow("insert multiple rows") << mBuilders.count() << QStringLiteral("INSERT INTO table (col1, col2) VALUES (:0, :1), (:2, :3), (:4, :5)")
+                                          << bindVals;
+
     // test GROUP BY foo
     bindVals.clear();
     qb = QueryBuilder(QStringLiteral("table"), QueryBuilder::Select);

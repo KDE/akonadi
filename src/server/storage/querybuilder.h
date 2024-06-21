@@ -225,10 +225,30 @@ public:
 
     /**
       Sets a column to the given value (only valid for INSERT and UPDATE queries).
+
+      Calling this function resets any values set by setColumnValues().
+
       @param column Column to change.
       @param value The value @p column should be set to.
     */
     void setColumnValue(const QString &column, const QVariant &value);
+
+    /**
+     * @brief Set column to given values (only valid for INSERT query).
+     *
+     * This will result in the query inserting multiple rows. The values must contain
+     * the same number of elements for each column otherwise the query will fail.
+     *
+     * Calling this function resets any values set by setColumnValue().
+     *
+     * @param column Column to insert into.
+     * @param values Values to be set for the @p column.
+     */
+    template<typename T>
+    void setColumnValues(const QString &column, const QList<T> &values)
+    {
+        setColumnValues(column, QVariant::fromValue(values));
+    }
 
     /**
      * Specify whether duplicates should be included in the result.
@@ -294,10 +314,14 @@ public:
     QString getTableWithColumn(const QString &column) const;
 
 private:
+    void setColumnValues(const QString &column, const QVariant &values);
+
     void buildQuery(QString *query);
     void bindValue(QString *query, const QVariant &value);
     void buildWhereCondition(QString *query, const Query::Condition &cond);
     void buildCaseStatement(QString *query, const Query::Case &caseStmt);
+    void buildInsertColumns(QString *query);
+    void buildInsertValues(QString *query);
     QString getTableQuery(const QSqlQuery &query, const QString &alias);
 
     /**
@@ -325,6 +349,7 @@ private:
     QList<QPair<QString, Query::SortOrder>> mSortColumns;
     QStringList mGroupColumns;
     QList<QPair<QString, QVariant>> mColumnValues;
+    QList<QPair<QString, QVariant>> mColumnMultiValues;
     QString mIdentificationColumn;
 
     // we must make sure that the tables are joined in the correct order
