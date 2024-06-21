@@ -191,6 +191,12 @@ void QueryBuilder::addValueCondition(const QString &column, Query::CompareOperat
     mRootCondition[type].addValueCondition(column, op, value);
 }
 
+void QueryBuilder::addValueCondition(const QString &column, Query::CompareOperator op, const QSet<qint64> &value, ConditionType type)
+{
+    Q_ASSERT(type == WhereCondition || (type == HavingCondition && mType == Select));
+    mRootCondition[type].addValueCondition(column, op, value);
+}
+
 void QueryBuilder::addColumnCondition(const QString &column, Query::CompareOperator op, const QString &column2, ConditionType type)
 {
     Q_ASSERT(type == WhereCondition || (type == HavingCondition && mType == Select));
@@ -549,18 +555,14 @@ void QueryBuilder::bindValue(QString *query, const QVariant &value)
 namespace
 {
 
-bool isList(const QVariant &value)
+bool isType(const QVariant &value, QByteArrayView typeName)
 {
-    if (value.typeId() == qMetaTypeId<QVariantList>() || value.typeId() == qMetaTypeId<QStringList>() || value.typeId() == qMetaTypeId<QByteArrayList>()) {
-        return true;
-    }
-
     if (value.typeId() >= QMetaType::User) {
         // QVariant will do anything to convert its content into a QVariantList,
         // so we can't rely on QVariant::canConvert<QVariantList>() here.
         // The only reliable solution is this hack
         const char *name = value.typeName();
-        if (qstrncmp(name, "QList<", 6) == 0) {
+        if (qstrncmp(name, typeName.data(), typeName.size()) == 0) {
             return true;
         }
     }
@@ -568,10 +570,38 @@ bool isList(const QVariant &value)
     return false;
 }
 
+bool isList(const QVariant &value)
+{
+    if (value.typeId() == qMetaTypeId<QVariantList>() || value.typeId() == qMetaTypeId<QStringList>() || value.typeId() == qMetaTypeId<QByteArrayList>()) {
+        return true;
+    }
+
+    return isType(value, "QList<");
+}
+
+bool isSet(const QVariant &value)
+{
+    return isType(value, "QSet<qlonglong>");
+}
+
 } // namespace
 
 void QueryBuilder::buildWhereCondition(QString *query, const Query::Condition &cond)
 {
+    constexpr auto buildWhereInContainerCondition = [](QueryBuilder *self, QString *query, const auto &values) {
+        *query += u"( ";
+        if (values.empty()) {
+            qCWarning(AKONADISERVER_LOG) << "Empty list given for IN condition.";
+        }
+        for (const auto &[i, entry] : values | Views::enumerate()) {
+            if (i > 0) {
+                *query += QLatin1StringView(", ");
+            }
+            self->bindValue(query, entry);
+        }
+        *query += u" )";
+    };
+
     if (!cond.isEmpty()) {
         *query += QLatin1StringView("( ");
         const QLatin1StringView glue = logicOperatorToString(cond.mCombineOp);
@@ -591,18 +621,11 @@ void QueryBuilder::buildWhereCondition(QString *query, const Query::Condition &c
         } else if (!cond.mComparedValue.isValid()) {
             *query += u"NULL";
         } else if (isList(cond.mComparedValue)) {
-            *query += u"( ";
-            const auto list = cond.mComparedValue.toList();
-            if (list.isEmpty()) {
-                qCWarning(AKONADISERVER_LOG) << "Empty list given for IN condition.";
-            }
-            for (const auto &[i, entry] : list | Views::enumerate()) {
-                if (i > 0) {
-                    *query += QLatin1StringView(", ");
-                }
-                bindValue(query, entry);
-            }
-            *query += u" )";
+            // FIXME: Ideally we would explicitly convert to QList<T> instead of doing the potentially costly
+            // conversion to QVariantList, but that would require much larger refactor...
+            buildWhereInContainerCondition(this, query, cond.mComparedValue.toList());
+        } else if (isSet(cond.mComparedValue)) {
+            buildWhereInContainerCondition(this, query, cond.mComparedValue.value<QSet<qint64>>());
         } else {
             bindValue(query, cond.mComparedValue);
         }

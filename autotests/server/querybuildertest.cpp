@@ -86,6 +86,24 @@ void QueryBuilderTest::testQueryBuilder_data()
     mBuilders << qb;
     QTest::newRow("where in") << mBuilders.count() << QStringLiteral("SELECT col1 FROM table WHERE ( col1 IN ( :0, :1, :2 ) )") << bindVals;
 
+    qb = QueryBuilder(QStringLiteral("table"));
+    qb.addColumn(QStringLiteral("col1"));
+    qb.addValueCondition(QStringLiteral("col1"), Query::In, QList<qint64>{1, 2, 3, 4});
+    mBuilders << qb;
+    bindVals.clear();
+    bindVals << QVariant(1) << QVariant(2) << QVariant(3) << QVariant(4);
+    QTest::newRow("where in QList") << mBuilders.count() << QStringLiteral("SELECT col1 FROM table WHERE ( col1 IN ( :0, :1, :2, :3 ) )") << bindVals;
+
+    qb = QueryBuilder(QStringLiteral("table"));
+    qb.addColumn(QStringLiteral("col1"));
+    qb.addValueCondition(QStringLiteral("col1"), Query::In, QSet<qint64>{1, 2, 3, 4});
+    mBuilders << qb;
+    bindVals = QSet<qint64>{1, 2, 3, 4} | Views::transform([](auto i) {
+                   return QVariant{i};
+               })
+        | Actions::toQList;
+    QTest::newRow("where in QSet") << mBuilders.count() << QStringLiteral("SELECT col1 FROM table WHERE ( col1 IN ( :0, :1, :2, :3 ) )") << bindVals;
+
     qb = QueryBuilder(QStringLiteral("table"), QueryBuilder::Select);
     qb.setDatabaseType(DbType::MySQL);
     qb.addColumn(QStringLiteral("col1"));

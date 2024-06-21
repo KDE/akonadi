@@ -94,6 +94,20 @@ public:
     }
 
     /**
+     * Add a WHERE condition which compares a column with a given value.
+     *
+     * This is an overload specially for passing a list of IDs, which is a fairly common case in Akonadi.
+     *
+     * @param column The column that should be compared.
+     * @param op The operator used for comparison.
+     * @param value The value @p column is compared to.
+     */
+    void addValueCondition(const QString &column, CompareOperator op, const QSet<qint64> &value)
+    {
+        addValueCondition(column, op, QVariant::fromValue(value));
+    }
+
+    /**
       Add a WHERE condition which compares a column with another column.
       @param column The column that should be compared.
       @param op The operator used for comparison.
