@@ -47,7 +47,9 @@ public:
         /// NOTE: only supported for UPDATE and SELECT queries.
         InnerJoin,
         /// NOTE: only supported for SELECT queries
-        LeftJoin
+        LeftJoin,
+        /// NOTE: only supported for SELECT queries
+        LeftOuterJoin
     };
 
     /**

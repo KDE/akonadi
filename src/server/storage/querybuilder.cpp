@@ -160,7 +160,8 @@ void QueryBuilder::setDatabaseType(DbType::Type type)
 
 void QueryBuilder::addJoin(JoinType joinType, const QString &table, const Query::Condition &condition)
 {
-    Q_ASSERT((joinType == InnerJoin && (mType == Select || mType == Update)) || (joinType == LeftJoin && mType == Select));
+    Q_ASSERT((joinType == InnerJoin && (mType == Select || mType == Update)) || (joinType == LeftJoin && mType == Select)
+             || (joinType == LeftOuterJoin && mType == Select));
 
     if (mJoinedTables.contains(table)) {
         // InnerJoin is more restrictive than a LeftJoin, hence use that in doubt
@@ -316,6 +317,9 @@ void QueryBuilder::buildQuery(QString *statement)
             switch (joinType) {
             case LeftJoin:
                 *statement += QLatin1StringView(" LEFT JOIN ");
+                break;
+            case LeftOuterJoin:
+                *statement += QLatin1StringView(" LEFT OUTER JOIN ");
                 break;
             case InnerJoin:
                 *statement += QLatin1StringView(" INNER JOIN ");

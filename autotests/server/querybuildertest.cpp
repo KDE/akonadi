@@ -244,6 +244,12 @@ void QueryBuilderTest::testQueryBuilder_data()
             << mBuilders.count()
             << QStringLiteral("SELECT col FROM table1 INNER JOIN b_table ON ( b_table.t1_id = table1.id ) INNER JOIN a_table ON ( a_table.b_id = b_table.id )")
             << bindVals;
+
+        qb = qbTpl;
+        qb.addJoin(QueryBuilder::LeftOuterJoin, QStringLiteral("table2"), QStringLiteral("table2.t1_id"), QStringLiteral("table1.id"));
+        mBuilders << qb;
+        QTest::newRow("select left outer join") << mBuilders.count()
+                                                << QStringLiteral("SELECT col FROM table1 LEFT OUTER JOIN table2 ON ( table2.t1_id = table1.id )") << bindVals;
     }
 
     {
