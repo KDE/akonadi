@@ -73,7 +73,6 @@ public:
     void synchronize(const AgentInstance &instance);
     void synchronizeCollectionTree(const AgentInstance &instance);
     void synchronizeTags(const AgentInstance &instance);
-    void synchronizeRelations(const AgentInstance &instance);
 
     void createDBusInterface();
 

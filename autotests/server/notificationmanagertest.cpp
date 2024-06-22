@@ -74,7 +74,6 @@ private Q_SLOTS:
             itemFetchScope.setFetch(Protocol::ItemFetchScope::RemoteID);
             itemFetchScope.setFetch(Protocol::ItemFetchScope::GID);
             itemFetchScope.setFetch(Protocol::ItemFetchScope::Tags);
-            itemFetchScope.setFetch(Protocol::ItemFetchScope::Relations);
             itemFetchScope.setFetch(Protocol::ItemFetchScope::VirtReferences);
             modifyCmd.setItemFetchScope(itemFetchScope);
         }
@@ -102,7 +101,6 @@ private Q_SLOTS:
         QVERIFY(manager.itemFetchScope()->fetchRemoteId());
         QVERIFY(manager.itemFetchScope()->fetchGID());
         QVERIFY(manager.itemFetchScope()->fetchTags());
-        QVERIFY(manager.itemFetchScope()->fetchRelations());
         QVERIFY(manager.itemFetchScope()->fetchVirtualReferences());
 
         // give it the same settings
@@ -140,7 +138,6 @@ private Q_SLOTS:
         QVERIFY(!manager.itemFetchScope()->fetchRemoteId());
         QVERIFY(!manager.itemFetchScope()->fetchGID());
         QVERIFY(!manager.itemFetchScope()->fetchTags());
-        QVERIFY(!manager.itemFetchScope()->fetchRelations());
         QVERIFY(!manager.itemFetchScope()->fetchVirtualReferences());
     }
 };

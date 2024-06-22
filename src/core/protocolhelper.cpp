@@ -373,7 +373,6 @@ Protocol::ItemFetchScope ProtocolHelper::itemFetchScopeToProtocol(const ItemFetc
     fs.setFetch(Protocol::ItemFetchScope::Tags, fetchScope.fetchTags());
     fs.setFetch(Protocol::ItemFetchScope::VirtReferences, fetchScope.fetchVirtualReferences());
     fs.setFetch(Protocol::ItemFetchScope::MTime, fetchScope.fetchModificationTime());
-    fs.setFetch(Protocol::ItemFetchScope::Relations, fetchScope.fetchRelations());
 
     return fs;
 }
@@ -433,9 +432,6 @@ ItemFetchScope ProtocolHelper::parseItemFetchScope(const Protocol::ItemFetchScop
     }
     if (fetchScope.fetch(Protocol::ItemFetchScope::MTime)) {
         ifs.setFetchModificationTime(true);
-    }
-    if (fetchScope.fetch(Protocol::ItemFetchScope::Relations)) {
-        ifs.setFetchRelations(true);
     }
 
     return ifs;
@@ -620,16 +616,6 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
         item.setTags(tags);
     }
 
-    const auto fetchedRelations = data.relations();
-    if ((!fetchScope || fetchScope->fetchRelations()) && !fetchedRelations.isEmpty()) {
-        Relation::List relations;
-        relations.reserve(fetchedRelations.size());
-        for (const Protocol::FetchRelationsResponse &rel : fetchedRelations) {
-            relations.append(parseRelationFetchResult(rel));
-        }
-        item.d_ptr->mRelations = relations;
-    }
-
     const auto virtualReferences = data.virtualReferences();
     if ((!fetchScope || fetchScope->fetchVirtualReferences()) && !virtualReferences.isEmpty()) {
         Collection::List virtRefs;
@@ -714,16 +700,6 @@ Tag ProtocolHelper::parseTagFetchResult(const Protocol::FetchTagsResponse &data)
     parseAttributes(data.attributes(), &tag);
     tag.d_ptr->resetChangeLog();
     return tag;
-}
-
-Relation ProtocolHelper::parseRelationFetchResult(const Protocol::FetchRelationsResponse &data)
-{
-    Relation relation;
-    relation.setLeft(Item(data.left()));
-    relation.setRight(Item(data.right()));
-    relation.setRemoteId(data.remoteId());
-    relation.setType(data.type());
-    return relation;
 }
 
 bool ProtocolHelper::streamPayloadToFile(const QString &fileName, const QByteArray &data, QByteArray &error)

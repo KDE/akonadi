@@ -171,7 +171,6 @@ public:
         , mPayloads(other.mPayloads)
         , mFlags(other.mFlags)
         , mTags(other.mTags)
-        , mRelations(other.mRelations)
         , mCollectionId(other.mCollectionId)
         , mVirtualReferences(other.mVirtualReferences)
         , mSize(other.mSize)
@@ -269,7 +268,6 @@ public:
     mutable PayloadContainer mPayloads;
     Item::Flags mFlags;
     Tag::List mTags;
-    Relation::List mRelations;
     Item::Id mCollectionId;
     Collection::List mVirtualReferences;
     // TODO: Maybe just use uint? Would save us another 8 bytes after reordering

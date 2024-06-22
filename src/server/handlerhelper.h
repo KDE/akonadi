@@ -24,8 +24,6 @@ class FetchCollectionsResponse;
 class TagFetchScope;
 class FetchTagsResponse;
 using FetchTagsResponsePtr = QSharedPointer<FetchTagsResponse>;
-class FetchRelationsResponse;
-using FetchRelationsResponsePtr = QSharedPointer<FetchRelationsResponse>;
 }
 
 namespace Server
@@ -86,8 +84,6 @@ public:
                                                        const QStack<CollectionAttribute::List> &_ancestorsAttributes = QStack<CollectionAttribute::List>());
 
     static Protocol::FetchTagsResponse fetchTagsResponse(const Tag &tag, const Protocol::TagFetchScope &tagFetchScope, Connection *connection = nullptr);
-
-    static Protocol::FetchRelationsResponse fetchRelationsResponse(const Relation &relation);
 
     /**
       Converts a bytearray list of flag names into flag records.

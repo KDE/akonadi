@@ -61,7 +61,6 @@ private:
     bool acceptsItemNotification(const Protocol::ItemChangeNotification &notification) const;
     bool acceptsCollectionNotification(const Protocol::CollectionChangeNotification &notification) const;
     bool acceptsTagNotification(const Protocol::TagChangeNotification &notification) const;
-    bool acceptsRelationNotification(const Protocol::RelationChangeNotification &notification) const;
     bool acceptsSubscriptionNotification(const Protocol::SubscriptionChangeNotification &notification) const;
     bool acceptsDebugChangeNotification(const Protocol::DebugChangeNotification &notification) const;
 

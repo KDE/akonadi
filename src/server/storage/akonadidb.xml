@@ -54,7 +54,7 @@
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" allowNull="false"/>
     <column name="generation" type="int" default="0" allowNull="false" />
-    <data columns="version" values="41"/>
+    <data columns="version" values="42"/>
   </table>
 
   <table name="Resource">
@@ -210,23 +210,6 @@
     <index name="TagAndResourceIndex" columns="tagId,resourceId" unique="true"/>
     <index name="tagIndex" columns="tagId" unique="false"/>
     <index name="resourceIndex" columns="resourceId" unique="false"/>
-  </table>
-
-  <table name="RelationType">
-    <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
-    <column name="name" type="QString" allowNull="false" isUnique="true"/>
-    <data columns="name" values="'GENERIC'"/>
-  </table>
-
-  <table name="Relation" identificationColumn="">
-    <column name="leftId" type="qint64" allowNull="false" refTable="PimItem" refColumn="id" onDelete="Cascade" methodName="left" />
-    <column name="rightId"  type="qint64" allowNull="false" refTable="PimItem" refColumn="id" onDelete="Cascade" methodName="right" />
-    <column name="typeId" type="qint64" refTable="RelationType" refColumn="id" onDelete="Restrict" default="1"/>
-    <column name="remoteId" type="QString" />
-    <index name="RelationIndex" columns="leftId,rightId,typeId" unique="true"/>
-    <index name="leftIndex" columns="leftId" unique="false"/>
-    <index name="rightIndex" columns="rightId" unique="false"/>
-    <index name="typeIndex" columns="typeId" unique="false"/>
   </table>
 
   <relation table1="PimItem" column1="id" table2="Flag" column2="id">

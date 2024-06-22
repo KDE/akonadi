@@ -114,7 +114,6 @@ void NotificationManager::slotNotify(const Protocol::ChangeNotificationList &msg
             continue;
         case Protocol::Command::ItemChangeNotification:
         case Protocol::Command::TagChangeNotification:
-        case Protocol::Command::RelationChangeNotification:
         case Protocol::Command::SubscriptionChangeNotification:
         case Protocol::Command::DebugChangeNotification:
             mNotifications.push_back(msg);

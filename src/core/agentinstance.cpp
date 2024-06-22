@@ -109,11 +109,6 @@ void AgentInstance::synchronizeTags()
     AgentManager::self()->d->synchronizeTags(*this);
 }
 
-void AgentInstance::synchronizeRelations()
-{
-    AgentManager::self()->d->synchronizeRelations(*this);
-}
-
 AgentInstance &AgentInstance::operator=(const AgentInstance &other)
 {
     if (this != &other) {

@@ -216,7 +216,6 @@ public:
     static Item
     parseItemFetchResult(const Protocol::FetchItemsResponse &data, const ItemFetchScope *fetchScope = nullptr, ProtocolHelperValuePool *valuePool = nullptr);
     static Tag parseTagFetchResult(const Protocol::FetchTagsResponse &data);
-    static Relation parseRelationFetchResult(const Protocol::FetchRelationsResponse &data);
 
     static bool streamPayloadToFile(const QString &file, const QByteArray &data, QByteArray &error);
 

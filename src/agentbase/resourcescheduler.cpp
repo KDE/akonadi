@@ -67,19 +67,6 @@ void ResourceScheduler::scheduleTagSync()
     scheduleNext();
 }
 
-void ResourceScheduler::scheduleRelationSync()
-{
-    Task t;
-    t.type = SyncRelations;
-    TaskList &queue = queueForTaskType(t.type);
-    if (queue.contains(t) || mCurrentTask == t) {
-        return;
-    }
-    queue << t;
-    signalTaskToTracker(t, "SyncRelations");
-    scheduleNext();
-}
-
 void ResourceScheduler::scheduleSync(const Collection &col)
 {
     Task t;
@@ -428,9 +415,6 @@ void ResourceScheduler::executeNext()
     case SyncCollectionTreeDone:
         Q_EMIT collectionTreeSyncComplete();
         break;
-    case SyncRelations:
-        Q_EMIT executeRelationSync();
-        break;
     case Custom: {
         const QByteArray methodSig = mCurrentTask.methodName + QByteArray("(QVariant)");
         const bool hasSlotWithVariant = mCurrentTask.receiver->metaObject()->indexOfMethod(methodSig.constData()) != -1;
@@ -659,7 +643,6 @@ static const char s_taskTypes[][27] = {"Invalid (no task)",
                                        "InvalideCacheForCollection",
                                        "SyncAllDone",
                                        "SyncCollectionTreeDone",
-                                       "SyncRelations",
                                        "Custom"};
 
 QTextStream &Akonadi::operator<<(QTextStream &d, const ResourceScheduler::Task &task)

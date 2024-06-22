@@ -59,9 +59,6 @@ private:
     static Protocol::ItemChangeNotification::Operation mapItemOperation(LegacyOp op);
     static Protocol::CollectionChangeNotification::Operation mapCollectionOperation(LegacyOp op);
     static Protocol::TagChangeNotification::Operation mapTagOperation(LegacyOp op);
-    static Protocol::RelationChangeNotification::Operation mapRelationOperation(LegacyOp op);
-
-    static QSet<Protocol::ItemChangeNotification::Relation> extractRelations(QSet<QByteArray> &flags);
 };
 
 class AKONADI_TESTS_EXPORT ChangeRecorderJournalWriter
@@ -75,9 +72,6 @@ private:
     static void saveItemNotification(QDataStream &stream, const Protocol::ItemChangeNotification &ntf);
     static void saveCollectionNotification(QDataStream &stream, const Protocol::CollectionChangeNotification &ntf);
     static void saveTagNotification(QDataStream &stream, const Protocol::TagChangeNotification &ntf);
-    static void saveRelationNotification(QDataStream &stream, const Protocol::RelationChangeNotification &ntf);
-
-    static QSet<QByteArray> encodeRelations(const QSet<Protocol::ItemChangeNotification::Relation> &relations);
 };
 
 } // namespace

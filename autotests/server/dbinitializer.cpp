@@ -202,10 +202,6 @@ void DbInitializer::cleanup()
 
     if (DataStore::self()->database().isOpen()) {
         {
-            QueryBuilder qb(Relation::tableName(), QueryBuilder::Delete);
-            qb.exec();
-        }
-        {
             QueryBuilder qb(Tag::tableName(), QueryBuilder::Delete);
             qb.exec();
         }

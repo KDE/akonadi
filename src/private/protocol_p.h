@@ -100,11 +100,6 @@ public:
         FetchTags,
         ModifyTag,
 
-        // Relation
-        FetchRelations = 80,
-        ModifyRelation,
-        RemoveRelations,
-
         // Resources
         SelectResource = 90,
 
@@ -113,13 +108,12 @@ public:
 
         // Notifications
         ItemChangeNotification = 110,
-        CollectionChangeNotification,
-        TagChangeNotification,
-        RelationChangeNotification,
-        SubscriptionChangeNotification,
-        DebugChangeNotification,
-        CreateSubscription,
-        ModifySubscription,
+        CollectionChangeNotification = 111,
+        TagChangeNotification = 112,
+        SubscriptionChangeNotification = 114,
+        DebugChangeNotification = 115,
+        CreateSubscription = 116,
+        ModifySubscription = 117,
 
         // _MaxValue = 127
         _ResponseBit = 0x80U // reserved
@@ -302,7 +296,6 @@ public:
         RemoteID = 1 << 9,
         GID = 1 << 10,
         Tags = 1 << 11,
-        Relations = 1 << 12,
         VirtReferences = 1 << 13
     };
     Q_DECLARE_FLAGS(FetchFlags, FetchFlag)
@@ -402,10 +395,6 @@ public:
     inline bool fetchTags() const
     {
         return mFlags & Tags;
-    }
-    inline bool fetchRelations() const
-    {
-        return mFlags & Relations;
     }
     inline bool fetchVirtualReferences() const
     {
@@ -552,39 +541,6 @@ class AKONADIPRIVATE_EXPORT ChangeNotification : public Command
 public:
     static QList<qint64> itemsToUids(const QList<Akonadi::Protocol::FetchItemsResponse> &items);
 
-    class Relation
-    {
-    public:
-        Relation() = default;
-        Relation(const Relation &) = default;
-        Relation(Relation &&) = default;
-        inline Relation(qint64 leftId, qint64 rightId, const QString &type)
-            : leftId(leftId)
-            , rightId(rightId)
-            , type(type)
-        {
-        }
-
-        Relation &operator=(const Relation &) = default;
-        Relation &operator=(Relation &&) = default;
-
-        inline bool operator==(const Relation &other) const
-        {
-            return leftId == other.leftId && rightId == other.rightId && type == other.type;
-        }
-
-        void toJson(QJsonObject &json) const
-        {
-            json[QStringLiteral("leftId")] = leftId;
-            json[QStringLiteral("rightId")] = rightId;
-            json[QStringLiteral("type")] = type;
-        }
-
-        qint64 leftId = -1;
-        qint64 rightId = -1;
-        QString type;
-    };
-
     ChangeNotification &operator=(const ChangeNotification &) = default;
     ChangeNotification &operator=(ChangeNotification &&) = default;
 
@@ -642,23 +598,11 @@ protected:
     friend AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, const Akonadi::Protocol::ChangeNotification &ntf);
 };
 
-inline size_t qHash(const ChangeNotification::Relation &rel, size_t seed = 0) noexcept
-{
-    return ::qHashMulti(seed, rel.leftId, rel.rightId);
-}
-
-// TODO: Internalize?
-AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream,
-                                                                const Akonadi::Protocol::ChangeNotification::Relation &relation);
-AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream,
-                                                                Akonadi::Protocol::ChangeNotification::Relation &relation);
-
 } // namespace Protocol
 } // namespace Akonadi
 
 Q_DECLARE_METATYPE(Akonadi::Protocol::ChangeNotificationPtr)
 Q_DECLARE_METATYPE(Akonadi::Protocol::ChangeNotificationList)
-Q_DECLARE_TYPEINFO(Akonadi::Protocol::ChangeNotification::Relation, Q_RELOCATABLE_TYPE);
 
 /******************************************************************************/
 

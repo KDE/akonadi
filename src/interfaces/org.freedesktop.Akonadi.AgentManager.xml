@@ -135,9 +135,6 @@
     <method name="agentInstanceSynchronizeTags">
       <arg name="identifier" type="s" direction="in"/>
     </method>
-    <method name="agentInstanceSynchronizeRelations">
-      <arg name="identifier" type="s" direction="in"/>
-    </method>
     <method name="agentInstanceOnline">
       <arg type="b" direction="out"/>
       <arg name="identifier" type="s" direction="in"/>

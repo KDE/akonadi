@@ -48,7 +48,6 @@ public:
         InvalideCacheForCollection,
         SyncAllDone,
         SyncCollectionTreeDone,
-        SyncRelations,
         Custom
     };
 

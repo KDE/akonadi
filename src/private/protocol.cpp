@@ -99,13 +99,6 @@ QDebug operator<<(QDebug _dbg, Command::Type type)
     case Command::ModifyTag:
         return dbg << "ModifyTag";
 
-    case Command::FetchRelations:
-        return dbg << "FetchRelations";
-    case Command::ModifyRelation:
-        return dbg << "ModifyRelation";
-    case Command::RemoveRelations:
-        return dbg << "RemoveRelations";
-
     case Command::SelectResource:
         return dbg << "SelectResource";
 
@@ -117,8 +110,6 @@ QDebug operator<<(QDebug _dbg, Command::Type type)
         return dbg << "CollectionChangeNotification";
     case Command::TagChangeNotification:
         return dbg << "TagChangeNotification";
-    case Command::RelationChangeNotification:
-        return dbg << "RelationChangeNotification";
     case Command::SubscriptionChangeNotification:
         return dbg << "SubscriptionChangeNotification";
     case Command::DebugChangeNotification:
@@ -172,33 +163,53 @@ void Command::toJson(QJsonObject &json) const
         json[QStringLiteral("type")] = QStringLiteral(#x);                                                                                                     \
     } break;
 
+    // clang-format off
     switch (mType & ~Command::_ResponseBit) {
-        case_label(Invalid) case_label(Hello)
+        case_label(Invalid)
+        case_label(Hello)
+        case_label(Login)
+        case_label(Logout)
 
-            case_label(Login) case_label(Logout)
+        case_label(Transaction)
 
-                case_label(Transaction)
+        case_label(CreateItem)
+        case_label(CopyItems)
+        case_label(DeleteItems)
+        case_label(FetchItems)
+        case_label(LinkItems)
+        case_label(ModifyItems)
+        case_label(MoveItems)
 
-                    case_label(CreateItem) case_label(CopyItems) case_label(DeleteItems) case_label(FetchItems) case_label(LinkItems) case_label(ModifyItems)
-                        case_label(MoveItems)
+        case_label(CreateCollection)
+        case_label(CopyCollection)
+        case_label(DeleteCollection)
+        case_label(FetchCollections)
+        case_label(FetchCollectionStats)
+        case_label(ModifyCollection)
+        case_label(MoveCollection)
 
-                            case_label(CreateCollection) case_label(CopyCollection) case_label(DeleteCollection) case_label(FetchCollections)
-                                case_label(FetchCollectionStats) case_label(ModifyCollection) case_label(MoveCollection)
+        case_label(Search)
+        case_label(SearchResult)
+        case_label(StoreSearch)
 
-                                    case_label(Search) case_label(SearchResult) case_label(StoreSearch)
+        case_label(CreateTag)
+        case_label(DeleteTag)
+        case_label(FetchTags)
+        case_label(ModifyTag)
 
-                                        case_label(CreateTag) case_label(DeleteTag) case_label(FetchTags) case_label(ModifyTag)
+        case_label(SelectResource)
 
-                                            case_label(FetchRelations) case_label(ModifyRelation) case_label(RemoveRelations)
+        case_label(StreamPayload)
+        case_label(CreateSubscription)
+        case_label(ModifySubscription)
 
-                                                case_label(SelectResource)
-
-                                                    case_label(StreamPayload) case_label(CreateSubscription) case_label(ModifySubscription)
-
-                                                        case_label(DebugChangeNotification) case_label(ItemChangeNotification)
-                                                            case_label(CollectionChangeNotification) case_label(TagChangeNotification)
-                                                                case_label(RelationChangeNotification) case_label(SubscriptionChangeNotification)
+        case_label(DebugChangeNotification)
+        case_label(ItemChangeNotification)
+        case_label(CollectionChangeNotification)
+        case_label(TagChangeNotification)
+        case_label(SubscriptionChangeNotification)
     }
+    // clang-format on
 #undef case_label
 }
 
@@ -236,65 +247,54 @@ void toJson(const Akonadi::Protocol::Command *command, QJsonObject &json)
     case Command::Invalid:
         break;
 
+        // clang-format off
     case Command::Hello | Command::_ResponseBit: {
         static_cast<const Akonadi::Protocol::HelloResponse *>(command)->toJson(json);
     } break;
-        case_commandlabel(Login, LoginCommand, LoginResponse) case_commandlabel(Logout, LogoutCommand, LogoutResponse)
+    case_commandlabel(Login, LoginCommand, LoginResponse)
+    case_commandlabel(Logout, LogoutCommand, LogoutResponse)
 
-            case_commandlabel(Transaction, TransactionCommand, TransactionResponse)
+    case_commandlabel(Transaction, TransactionCommand, TransactionResponse)
 
-                case_commandlabel(CreateItem, CreateItemCommand, CreateItemResponse) case_commandlabel(CopyItems, CopyItemsCommand, CopyItemsResponse)
-                    case_commandlabel(DeleteItems, DeleteItemsCommand, DeleteItemsResponse) case_commandlabel(FetchItems, FetchItemsCommand, FetchItemsResponse)
-                        case_commandlabel(LinkItems, LinkItemsCommand, LinkItemsResponse) case_commandlabel(
-                            ModifyItems,
-                            ModifyItemsCommand,
-                            ModifyItemsResponse) case_commandlabel(MoveItems, MoveItemsCommand, MoveItemsResponse)
+    case_commandlabel(CreateItem, CreateItemCommand, CreateItemResponse)
+    case_commandlabel(CopyItems, CopyItemsCommand, CopyItemsResponse)
+    case_commandlabel(DeleteItems, DeleteItemsCommand, DeleteItemsResponse)
+    case_commandlabel(FetchItems, FetchItemsCommand, FetchItemsResponse)
+    case_commandlabel(LinkItems, LinkItemsCommand, LinkItemsResponse)
+    case_commandlabel(ModifyItems, ModifyItemsCommand, ModifyItemsResponse)
+    case_commandlabel(MoveItems, MoveItemsCommand, MoveItemsResponse)
 
-                            case_commandlabel(CreateCollection, CreateCollectionCommand, CreateCollectionResponse) case_commandlabel(
-                                CopyCollection,
-                                CopyCollectionCommand,
-                                CopyCollectionResponse) case_commandlabel(DeleteCollection, DeleteCollectionCommand, DeleteCollectionResponse)
-                                case_commandlabel(FetchCollections, FetchCollectionsCommand, FetchCollectionsResponse) case_commandlabel(
-                                    FetchCollectionStats,
-                                    FetchCollectionStatsCommand,
-                                    FetchCollectionStatsResponse) case_commandlabel(ModifyCollection, ModifyCollectionCommand, ModifyCollectionResponse)
-                                    case_commandlabel(MoveCollection, MoveCollectionCommand, MoveCollectionResponse)
+   case_commandlabel(CreateCollection, CreateCollectionCommand, CreateCollectionResponse)
+   case_commandlabel(CopyCollection, CopyCollectionCommand, CopyCollectionResponse)
+   case_commandlabel(DeleteCollection, DeleteCollectionCommand, DeleteCollectionResponse)
+   case_commandlabel(FetchCollections, FetchCollectionsCommand, FetchCollectionsResponse)
+   case_commandlabel(FetchCollectionStats, FetchCollectionStatsCommand, FetchCollectionStatsResponse)
+   case_commandlabel(ModifyCollection, ModifyCollectionCommand, ModifyCollectionResponse)
+   case_commandlabel(MoveCollection, MoveCollectionCommand, MoveCollectionResponse)
 
-                                        case_commandlabel(Search, SearchCommand, SearchResponse) case_commandlabel(
-                                            SearchResult,
-                                            SearchResultCommand,
-                                            SearchResultResponse) case_commandlabel(StoreSearch, StoreSearchCommand, StoreSearchResponse)
+   case_commandlabel(Search, SearchCommand, SearchResponse)
+   case_commandlabel(SearchResult, SearchResultCommand, SearchResultResponse)
+   case_commandlabel(StoreSearch, StoreSearchCommand, StoreSearchResponse)
 
-                                            case_commandlabel(CreateTag, CreateTagCommand, CreateTagResponse)
-                                                case_commandlabel(DeleteTag, DeleteTagCommand, DeleteTagResponse)
-                                                    case_commandlabel(FetchTags, FetchTagsCommand, FetchTagsResponse)
-                                                        case_commandlabel(ModifyTag, ModifyTagCommand, ModifyTagResponse)
+   case_commandlabel(CreateTag, CreateTagCommand, CreateTagResponse)
+   case_commandlabel(DeleteTag, DeleteTagCommand, DeleteTagResponse)
+   case_commandlabel(FetchTags, FetchTagsCommand, FetchTagsResponse)
+   case_commandlabel(ModifyTag, ModifyTagCommand, ModifyTagResponse)
 
-                                                            case_commandlabel(FetchRelations, FetchRelationsCommand, FetchRelationsResponse)
-                                                                case_commandlabel(ModifyRelation, ModifyRelationCommand, ModifyRelationResponse)
-                                                                    case_commandlabel(RemoveRelations, RemoveRelationsCommand, RemoveRelationsResponse)
+    case_commandlabel(SelectResource, SelectResourceCommand, SelectResourceResponse)
 
-                                                                        case_commandlabel(SelectResource, SelectResourceCommand, SelectResourceResponse)
+    case_commandlabel(StreamPayload, StreamPayloadCommand, StreamPayloadResponse)
 
-                                                                            case_commandlabel(StreamPayload, StreamPayloadCommand, StreamPayloadResponse)
-                                                                                case_commandlabel(
-                                                                                    CreateSubscription,
-                                                                                    CreateSubscriptionCommand,
-                                                                                    CreateSubscriptionResponse) case_commandlabel(ModifySubscription,
-                                                                                                                                  ModifySubscriptionCommand,
-                                                                                                                                  ModifySubscriptionResponse)
+    case_commandlabel(CreateSubscription, CreateSubscriptionCommand, CreateSubscriptionResponse)
+    case_commandlabel(ModifySubscription, ModifySubscriptionCommand, ModifySubscriptionResponse)
 
-                                                                                    case_notificationlabel(DebugChangeNotification, DebugChangeNotification)
-                                                                                        case_notificationlabel(ItemChangeNotification, ItemChangeNotification)
-                                                                                            case_notificationlabel(CollectionChangeNotification,
-                                                                                                                   CollectionChangeNotification)
-                                                                                                case_notificationlabel(TagChangeNotification,
-                                                                                                                       TagChangeNotification)
-                                                                                                    case_notificationlabel(RelationChangeNotification,
-                                                                                                                           RelationChangeNotification)
-                                                                                                        case_notificationlabel(SubscriptionChangeNotification,
-                                                                                                                               SubscriptionChangeNotification)
+    case_notificationlabel(DebugChangeNotification, DebugChangeNotification)
+    case_notificationlabel(ItemChangeNotification, ItemChangeNotification)
+    case_notificationlabel(CollectionChangeNotification, CollectionChangeNotification)
+    case_notificationlabel(TagChangeNotification, TagChangeNotification)
+    case_notificationlabel(SubscriptionChangeNotification, SubscriptionChangeNotification)
     }
+    // clang-format on
 #undef case_notificationlabel
 #undef case_commandlabel
 }
@@ -394,11 +394,6 @@ public:
         registerType<Command::FetchTags, FetchTagsCommand, FetchTagsResponse>();
         registerType<Command::ModifyTag, ModifyTagCommand, ModifyTagResponse>();
 
-        // Relation
-        registerType<Command::FetchRelations, FetchRelationsCommand, FetchRelationsResponse>();
-        registerType<Command::ModifyRelation, ModifyRelationCommand, ModifyRelationResponse>();
-        registerType<Command::RemoveRelations, RemoveRelationsCommand, RemoveRelationsResponse>();
-
         // Resources
         registerType<Command::SelectResource, SelectResourceCommand, SelectResourceResponse>();
 
@@ -407,7 +402,6 @@ public:
         registerType<Command::ItemChangeNotification, ItemChangeNotification, Response /* invalid */>();
         registerType<Command::CollectionChangeNotification, CollectionChangeNotification, Response /* invalid */>();
         registerType<Command::TagChangeNotification, TagChangeNotification, Response /* invalid */>();
-        registerType<Command::RelationChangeNotification, RelationChangeNotification, Response /* invalid */>();
         registerType<Command::SubscriptionChangeNotification, SubscriptionChangeNotification, Response /* invalid */>();
         registerType<Command::DebugChangeNotification, DebugChangeNotification, Response /* invalid */>();
         registerType<Command::CreateSubscription, CreateSubscriptionCommand, CreateSubscriptionResponse>();
@@ -685,8 +679,6 @@ bool ChangeNotification::isRemove() const
         return static_cast<const class CollectionChangeNotification *>(this)->operation() == CollectionChangeNotification::Remove;
     case Command::TagChangeNotification:
         return static_cast<const class TagChangeNotification *>(this)->operation() == TagChangeNotification::Remove;
-    case Command::RelationChangeNotification:
-        return static_cast<const class RelationChangeNotification *>(this)->operation() == RelationChangeNotification::Remove;
     case Command::SubscriptionChangeNotification:
         return static_cast<const class SubscriptionChangeNotification *>(this)->operation() == SubscriptionChangeNotification::Remove;
     case Command::DebugChangeNotification:
@@ -708,7 +700,6 @@ bool ChangeNotification::isMove() const
     case Command::CollectionChangeNotification:
         return static_cast<const class CollectionChangeNotification *>(this)->operation() == CollectionChangeNotification::Move;
     case Command::TagChangeNotification:
-    case Command::RelationChangeNotification:
     case Command::SubscriptionChangeNotification:
     case Command::DebugChangeNotification:
         return false;
@@ -793,22 +784,6 @@ QDebug operator<<(QDebug dbg, const ChangeNotification &ntf)
 {
     return dbg.noquote() << static_cast<const Command &>(ntf) << "Session:" << ntf.mSessionId << "\n"
                          << "MetaData:" << ntf.mMetaData << "\n";
-}
-
-DataStream &operator>>(DataStream &stream, ChangeNotification::Relation &relation)
-{
-    return stream >> relation.type >> relation.leftId >> relation.rightId;
-}
-
-DataStream &operator<<(DataStream &stream, const ChangeNotification::Relation &relation)
-{
-    return stream << relation.type << relation.leftId << relation.rightId;
-}
-
-QDebug operator<<(QDebug _dbg, const ChangeNotification::Relation &rel)
-{
-    QDebug dbg(_dbg.noquote());
-    return dbg << "Left: " << rel.leftId << ", Right:" << rel.rightId << ", Type: " << rel.type;
 }
 
 } // namespace Protocol

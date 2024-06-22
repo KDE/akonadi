@@ -111,7 +111,6 @@ void StorageJanitor::registerTasks()
                {QStringLiteral("Looking for duplicate mime types..."), &StorageJanitor::findDuplicateMimeTypes},
                {QStringLiteral("Looking for duplicate part types..."), &StorageJanitor::findDuplicatePartTypes},
                {QStringLiteral("Looking for duplicate tag types..."), &StorageJanitor::findDuplicateTagTypes},
-               {QStringLiteral("Looking for duplicate relation types..."), &StorageJanitor::findDuplicateRelationTypes},
                {QStringLiteral("Looking for overlapping external parts..."), &StorageJanitor::findOverlappingParts},
                {QStringLiteral("Verifying external parts..."), &StorageJanitor::verifyExternalParts},
                {QStringLiteral("Checking size threshold changes..."), &StorageJanitor::checkSizeTreshold},
@@ -487,17 +486,6 @@ void StorageJanitor::findDuplicateTagTypes()
         inform(u"Removed " % QString::number(*removed) % u" duplicate tag types");
     } else {
         inform("Error while trying to remove duplicate TagTypes");
-    }
-}
-
-void StorageJanitor::findDuplicateRelationTypes()
-{
-    const auto removed =
-        findDuplicatesImpl<RelationType>(m_dataStore.get(), RelationType::nameFullColumnName(), {Relation::tableName(), Relation::typeIdFullColumnName()});
-    if (removed) {
-        inform(u"Removed " % QString::number(*removed) % u" duplicate relation types");
-    } else {
-        inform("Error while trying to remove duplicate RelationTypes");
     }
 }
 

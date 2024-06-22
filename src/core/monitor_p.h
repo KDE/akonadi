@@ -188,8 +188,6 @@ public:
 
     bool emitTagNotification(const Protocol::TagChangeNotification &msg, const Tag &tags);
 
-    bool emitRelationNotification(const Protocol::RelationChangeNotification &msg, const Relation &relation);
-
     bool emitSubscriptionChangeNotification(const Protocol::SubscriptionChangeNotification &msg, const NotificationSubscriber &subscriber);
 
     bool emitDebugChangeNotification(const Protocol::DebugChangeNotification &msg, const ChangeNotification &ntf);

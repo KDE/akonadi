@@ -114,7 +114,6 @@ public:
     int fetchRID = 0;
     int fetchGID = 0;
     int fetchTags = 0;
-    int fetchRelations = 0;
     int fetchVRefs = 0;
 };
 
@@ -232,9 +231,6 @@ void AggregatedItemFetchScope::apply(const Protocol::ItemFetchScope &oldScope, c
     if (newScope.fetchTags() != oldScope.fetchTags()) {
         d->updateBool(newScope.fetchTags(), d->fetchTags);
     }
-    if (newScope.fetchRelations() != oldScope.fetchRelations()) {
-        d->updateBool(newScope.fetchRelations(), d->fetchRelations);
-    }
     if (newScope.fetchVirtualReferences() != oldScope.fetchVirtualReferences()) {
         d->updateBool(newScope.fetchVirtualReferences(), d->fetchVRefs);
     }
@@ -264,7 +260,6 @@ ItemFetchScope AggregatedItemFetchScope::toFetchScope() const
     d->mCachedScope.setFetch(ItemFetchScope::RemoteID, fetchRemoteId());
     d->mCachedScope.setFetch(ItemFetchScope::GID, fetchGID());
     d->mCachedScope.setFetch(ItemFetchScope::Tags, fetchTags());
-    d->mCachedScope.setFetch(ItemFetchScope::Relations, fetchRelations());
     d->mCachedScope.setFetch(ItemFetchScope::VirtReferences, fetchVirtualReferences());
     d->mCachedScopeValid = true;
     return d->mCachedScope;
@@ -377,13 +372,6 @@ bool AggregatedItemFetchScope::fetchTags() const
     LOCKED_D(const AggregatedItemFetchScope)
     // Aggregation: return true if there's at least one subscriber who wants tags
     return d->fetchTags > 0;
-}
-
-bool AggregatedItemFetchScope::fetchRelations() const
-{
-    LOCKED_D(const AggregatedItemFetchScope)
-    // Aggregation: return true if there's at least one subscriber who wants relations
-    return d->fetchRelations > 0;
 }
 
 bool AggregatedItemFetchScope::fetchVirtualReferences() const

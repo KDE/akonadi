@@ -1159,21 +1159,6 @@ bool DataStore::cleanupPimItems(const PimItem::List &items, bool silent)
 {
     // generate relation removed notifications
     if (!silent) {
-        for (const PimItem &item : items) {
-            SelectQueryBuilder<Relation> relationQuery;
-            relationQuery.addValueCondition(Relation::leftIdFullColumnName(), Query::Equals, item.id());
-            relationQuery.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, item.id());
-            relationQuery.setSubQueryMode(Query::Or);
-
-            if (!relationQuery.exec()) {
-                throw HandlerException("Failed to obtain relations");
-            }
-            const Relation::List relations = relationQuery.result();
-            for (const Relation &relation : relations) {
-                notificationCollector()->relationRemoved(relation);
-            }
-        }
-
         // generate the notification before actually removing the data
         notificationCollector()->itemsRemoved(items);
     }

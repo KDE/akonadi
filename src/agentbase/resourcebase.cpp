@@ -11,7 +11,6 @@
 #include "akonadifull-version.h"
 #include "collectiondeletejob.h"
 #include "collectionsync_p.h"
-#include "relationsync.h"
 #include "resourceadaptor.h"
 #include "resourcescheduler_p.h"
 #include "tagsync.h"
@@ -67,7 +66,6 @@ public:
         , mItemMergeMode(ItemSync::RIDMerge)
         , mCollectionSyncer(nullptr)
         , mTagSyncer(nullptr)
-        , mRelationSyncer(nullptr)
         , mHierarchicalRid(false)
         , mUnemittedProgress(0)
         , mAutomaticProgressReporting(true)
@@ -133,7 +131,6 @@ public:
     void slotCollectionListForAttributesDone(KJob *job);
     void slotCollectionAttributesSyncDone(KJob *job);
     void slotSynchronizeTags();
-    void slotSynchronizeRelations();
     void slotAttributeRetrievalCollectionFetchDone(KJob *job);
 
     void slotItemSyncDone(KJob *job);
@@ -158,7 +155,6 @@ public:
     void slotRecursiveMoveReplayResult(KJob *job);
 
     void slotTagSyncDone(KJob *job);
-    void slotRelationSyncDone(KJob *job);
 
     void slotSessionReconnected()
     {
@@ -428,7 +424,6 @@ public:
     ItemSync::MergeMode mItemMergeMode;
     CollectionSync *mCollectionSyncer = nullptr;
     TagSync *mTagSyncer = nullptr;
-    RelationSync *mRelationSyncer = nullptr;
     bool mHierarchicalRid;
     QTimer mProgressEmissionCompressor;
     int mUnemittedProgress;
@@ -466,7 +461,6 @@ ResourceBase::ResourceBase(const QString &id)
     connect(d->scheduler, &ResourceScheduler::executeCollectionSync, d, &ResourceBasePrivate::slotSynchronizeCollection);
     connect(d->scheduler, &ResourceScheduler::executeCollectionAttributesSync, d, &ResourceBasePrivate::slotSynchronizeCollectionAttributes);
     connect(d->scheduler, &ResourceScheduler::executeTagSync, d, &ResourceBasePrivate::slotSynchronizeTags);
-    connect(d->scheduler, &ResourceScheduler::executeRelationSync, d, &ResourceBasePrivate::slotSynchronizeRelations);
     connect(d->scheduler, &ResourceScheduler::executeItemFetch, d, &ResourceBasePrivate::slotPrepareItemRetrieval);
     connect(d->scheduler, &ResourceScheduler::executeItemsFetch, d, &ResourceBasePrivate::slotPrepareItemsRetrieval);
     connect(d->scheduler, &ResourceScheduler::executeResourceCollectionDeletion, d, &ResourceBasePrivate::slotDeleteResourceCollection);
@@ -992,14 +986,6 @@ void ResourceBasePrivate::slotSynchronizeTags()
     });
 }
 
-void ResourceBasePrivate::slotSynchronizeRelations()
-{
-    Q_Q(ResourceBase);
-    QMetaObject::invokeMethod(this, [q] {
-        q->retrieveRelations();
-    });
-}
-
 void ResourceBasePrivate::slotPrepareItemRetrieval(const Item &item)
 {
     Q_Q(ResourceBase);
@@ -1168,11 +1154,6 @@ void ResourceBase::synchronizeCollectionTree()
 void ResourceBase::synchronizeTags()
 {
     d_func()->scheduler->scheduleTagSync();
-}
-
-void ResourceBase::synchronizeRelations()
-{
-    d_func()->scheduler->scheduleRelationSync();
 }
 
 void ResourceBase::cancelTask()
@@ -1436,12 +1417,6 @@ void ResourceBase::retrieveTags()
     d->scheduler->taskDone();
 }
 
-void ResourceBase::retrieveRelations()
-{
-    Q_D(ResourceBase);
-    d->scheduler->taskDone();
-}
-
 bool ResourceBase::retrieveItem(const Akonadi::Item &item, const QSet<QByteArray> &parts)
 {
     Q_UNUSED(item)
@@ -1546,36 +1521,6 @@ void ResourceBasePrivate::slotTagSyncDone(KJob *job)
     if (job->error()) {
         if (job->error() != Job::UserCanceled) {
             qCWarning(AKONADIAGENTBASE_LOG) << "TagSync failed: " << job->errorString();
-            Q_EMIT q->error(job->errorString());
-        }
-    }
-
-    scheduler->taskDone();
-}
-
-void ResourceBase::relationsRetrieved(const Relation::List &relations)
-{
-    Q_D(ResourceBase);
-    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncRelations || d->scheduler->currentTask().type == ResourceScheduler::SyncAll
-                   || d->scheduler->currentTask().type == ResourceScheduler::Custom,
-               "ResourceBase::relationsRetrieved()",
-               "Calling relationsRetrieved() although no relation retrieval is in progress");
-    if (!d->mRelationSyncer) {
-        d->mRelationSyncer = new RelationSync(this);
-        connect(d->mRelationSyncer, &KJob::percentChanged, d,
-                &ResourceBasePrivate::slotPercent); // NOLINT(google-runtime-int): ulong comes from KJob
-        connect(d->mRelationSyncer, &KJob::result, d, &ResourceBasePrivate::slotRelationSyncDone);
-    }
-    d->mRelationSyncer->setRemoteRelations(relations);
-}
-
-void ResourceBasePrivate::slotRelationSyncDone(KJob *job)
-{
-    Q_Q(ResourceBase);
-    mRelationSyncer = nullptr;
-    if (job->error()) {
-        if (job->error() != Job::UserCanceled) {
-            qCWarning(AKONADIAGENTBASE_LOG) << "RelationSync failed: " << job->errorString();
             Q_EMIT q->error(job->errorString());
         }
     }

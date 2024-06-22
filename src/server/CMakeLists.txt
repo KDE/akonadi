@@ -55,9 +55,6 @@ set(libakonadiserver_SRCS
     handler/itemmovehandler.cpp
     handler/loginhandler.cpp
     handler/logouthandler.cpp
-    handler/relationfetchhandler.cpp
-    handler/relationmodifyhandler.cpp
-    handler/relationremovehandler.cpp
     handler/resourceselecthandler.cpp
     handler/searchhandler.cpp
     handler/searchhelper.cpp
@@ -151,9 +148,6 @@ set(libakonadiserver_SRCS
     handler/itemmovehandler.h
     handler/loginhandler.h
     handler/logouthandler.h
-    handler/relationfetchhandler.h
-    handler/relationmodifyhandler.h
-    handler/relationremovehandler.h
     handler/resourceselecthandler.h
     handler/searchhandler.h
     handler/searchhelper.h

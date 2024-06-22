@@ -87,26 +87,6 @@ void NotificationCollector::itemsTagsChanged(const PimItem::List &items,
                      removedTags);
 }
 
-void NotificationCollector::itemsRelationsChanged(const PimItem::List &items,
-                                                  const Relation::List &addedRelations,
-                                                  const Relation::List &removedRelations,
-                                                  const Collection &collection,
-                                                  const QByteArray &resource)
-{
-    itemNotification(Protocol::ItemChangeNotification::ModifyRelations,
-                     items,
-                     collection,
-                     Collection(),
-                     resource,
-                     QSet<QByteArray>(),
-                     QSet<QByteArray>(),
-                     QSet<QByteArray>(),
-                     QSet<qint64>(),
-                     QSet<qint64>(),
-                     addedRelations,
-                     removedRelations);
-}
-
 void NotificationCollector::itemsMoved(const PimItem::List &items,
                                        const Collection &collectionSrc,
                                        const Collection &collectionDest,
@@ -216,16 +196,6 @@ void NotificationCollector::tagRemoved(const Tag &tag, const QByteArray &resourc
     tagNotification(Protocol::TagChangeNotification::Remove, tag, resource, remoteId);
 }
 
-void NotificationCollector::relationAdded(const Relation &relation)
-{
-    relationNotification(Protocol::RelationChangeNotification::Add, relation);
-}
-
-void NotificationCollector::relationRemoved(const Relation &relation)
-{
-    relationNotification(Protocol::RelationChangeNotification::Remove, relation);
-}
-
 void NotificationCollector::clear()
 {
     mNotifications.clear();
@@ -258,9 +228,7 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
                                              const QSet<QByteArray> &addedFlags,
                                              const QSet<QByteArray> &removedFlags,
                                              const QSet<qint64> &addedTags,
-                                             const QSet<qint64> &removedTags,
-                                             const Relation::List &addedRelations,
-                                             const Relation::List &removedRelations)
+                                             const QSet<qint64> &removedTags)
 {
     if (items.empty()) {
         return;
@@ -269,7 +237,7 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
     QMap<Entity::Id, QList<PimItem>> vCollections;
 
     if ((op == Protocol::ItemChangeNotification::Modify) || (op == Protocol::ItemChangeNotification::ModifyFlags)
-        || (op == Protocol::ItemChangeNotification::ModifyTags) || (op == Protocol::ItemChangeNotification::ModifyRelations)) {
+        || (op == Protocol::ItemChangeNotification::ModifyTags)) {
         vCollections = DataStore::self()->virtualCollections(items);
     }
 
@@ -284,22 +252,6 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
     msg->setRemovedFlags(removedFlags);
     msg->setAddedTags(addedTags);
     msg->setRemovedTags(removedTags);
-    if (!addedRelations.isEmpty()) {
-        QSet<Protocol::ItemChangeNotification::Relation> rels;
-        rels.reserve(addedRelations.size());
-        for (const Relation &rel : addedRelations) {
-            rels.insert(Protocol::ItemChangeNotification::Relation(rel.leftId(), rel.rightId(), rel.relationType().name()));
-        }
-        msg->setAddedRelations(rels);
-    }
-    if (!removedRelations.isEmpty()) {
-        QSet<Protocol::ItemChangeNotification::Relation> rels;
-        rels.reserve(removedRelations.size());
-        for (const Relation &rel : removedRelations) {
-            rels.insert(Protocol::ItemChangeNotification::Relation(rel.leftId(), rel.rightId(), rel.relationType().name()));
-        }
-        msg->setRemovedRelations(rels);
-    }
 
     if (collectionDest.isValid()) {
         QByteArray destResourceName;
@@ -497,18 +449,6 @@ void NotificationCollector::tagNotification(Protocol::TagChangeNotification::Ope
         }
     }
     msg->setTag(std::move(msgTag));
-
-    dispatchNotification(msg);
-}
-
-void NotificationCollector::relationNotification(Protocol::RelationChangeNotification::Operation op, const Relation &relation)
-{
-    auto msg = Protocol::RelationChangeNotificationPtr::create();
-    msg->setOperation(op);
-    if (mConnection) {
-        msg->setSessionId(mConnection->sessionId());
-    }
-    msg->setRelation(HandlerHelper::fetchRelationsResponse(relation));
 
     dispatchNotification(msg);
 }

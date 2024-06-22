@@ -52,8 +52,6 @@ set(akonadicore_base_SRCS
     pluginloader.cpp
     protocolhelper.cpp
     remotelog.cpp
-    relation.cpp
-    relationsync.cpp
     searchquery.cpp
     servermanager.cpp
     session.cpp
@@ -113,8 +111,6 @@ set(akonadicore_base_SRCS
     pastehelper_p.h
     pluginloader_p.h
     protocolhelper_p.h
-    relation.h
-    relationsync.h
     searchquery.h
     servermanager.h
     servermanager_p.h
@@ -164,7 +160,6 @@ ecm_generate_headers(AkonadiCore_base_CC_HEADERS
     NotificationSubscriber
     Monitor
     PartFetcher
-    Relation
     SearchQuery
     ServerManager
     Session
@@ -285,9 +280,6 @@ set(akonadicore_jobs_SRCS
     jobs/recursiveitemfetchjob.cpp
     jobs/resourceselectjob.cpp
     jobs/resourcesynchronizationjob.cpp
-    jobs/relationfetchjob.cpp
-    jobs/relationcreatejob.cpp
-    jobs/relationdeletejob.cpp
     jobs/searchcreatejob.cpp
     jobs/searchresultjob.cpp
     jobs/specialcollectionsdiscoveryjob.cpp jobs/specialcollectionsdiscoveryjob.h
@@ -326,9 +318,6 @@ set(akonadicore_jobs_SRCS
     jobs/recursiveitemfetchjob.h
     jobs/resourceselectjob_p.h
     jobs/resourcesynchronizationjob.h
-    jobs/relationfetchjob.h
-    jobs/relationcreatejob.h
-    jobs/relationdeletejob.h
     jobs/searchcreatejob.h
     jobs/searchresultjob_p.h
     jobs/specialcollectionshelperjobs_p.h
@@ -368,9 +357,6 @@ ecm_generate_headers(AkonadiCore_jobs_CC_HEADERS
     LinkJob
     RecursiveItemFetchJob
     ResourceSynchronizationJob
-    RelationFetchJob
-    RelationCreateJob
-    RelationDeleteJob
     SearchCreateJob
     SpecialCollectionsDiscoveryJob
     SpecialCollectionsRequestJob

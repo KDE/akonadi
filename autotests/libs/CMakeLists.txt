@@ -128,5 +128,4 @@ add_akonadi_isolated_test(SOURCE favoriteproxytest.cpp LINK_LIBRARIES KF6::Confi
 #    ADDITIONAL_SOURCES testsearchplugin/testsearchplugin.cpp)
 add_akonadi_isolated_test(SOURCE tagtest.cpp ADDITIONAL_SOURCES ${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp)
 add_akonadi_isolated_test(SOURCE tagsynctest.cpp)
-add_akonadi_isolated_test(SOURCE relationtest.cpp)
 add_akonadi_isolated_test(SOURCE etmpopulationtest.cpp)

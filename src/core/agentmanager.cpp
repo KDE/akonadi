@@ -257,11 +257,6 @@ void AgentManagerPrivate::synchronizeTags(const AgentInstance &instance)
     mManager->agentInstanceSynchronizeTags(instance.identifier());
 }
 
-void AgentManagerPrivate::synchronizeRelations(const AgentInstance &instance)
-{
-    mManager->agentInstanceSynchronizeRelations(instance.identifier());
-}
-
 AgentInstance AgentManagerPrivate::fillAgentInstance(const QString &identifier) const
 {
     AgentInstance instance;

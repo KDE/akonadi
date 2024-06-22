@@ -104,7 +104,6 @@ add_server_test(collectioncreatehandlertest.cpp)
 add_server_test(collectionfetchhandlertest.cpp)
 add_server_test(collectionmodifyhandlertest.cpp)
 add_server_test(searchtest.cpp akonadiprivate)
-add_server_test(relationhandlertest.cpp akonadiprivate)
 add_server_test(taghandlertest.cpp akonadiprivate)
 add_server_test(fetchhandlertest.cpp akonadiprivate)
 

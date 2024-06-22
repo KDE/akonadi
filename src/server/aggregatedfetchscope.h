@@ -66,7 +66,6 @@ public:
     bool fetchRemoteId() const;
     bool fetchGID() const;
     bool fetchTags() const;
-    bool fetchRelations() const;
     bool fetchVirtualReferences() const;
 
     void addSubscriber();

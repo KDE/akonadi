@@ -86,7 +86,7 @@ bool ItemFetchScope::isEmpty() const
     return d->mPayloadParts.isEmpty() && d->mAttributes.isEmpty() && !d->mFullPayload && !d->mAllAttributes && !d->mCacheOnly
         && !d->mCheckCachedPayloadPartsOnly && d->mFetchMtime // true by default -> false = non-empty
         && !d->mIgnoreRetrievalErrors && d->mFetchRid // true by default
-        && !d->mFetchGid && !d->mFetchTags && !d->mFetchVRefs && !d->mFetchRelations && d->mAncestorDepth == AncestorRetrieval::None;
+        && !d->mFetchGid && !d->mFetchTags && !d->mFetchVRefs && d->mAncestorDepth == AncestorRetrieval::None;
 }
 
 bool ItemFetchScope::cacheOnly() const
@@ -205,14 +205,4 @@ void ItemFetchScope::setFetchVirtualReferences(bool fetchVRefs)
 bool ItemFetchScope::fetchVirtualReferences() const
 {
     return d->mFetchVRefs;
-}
-
-void ItemFetchScope::setFetchRelations(bool fetchRelations)
-{
-    d->mFetchRelations = fetchRelations;
-}
-
-bool ItemFetchScope::fetchRelations() const
-{
-    return d->mFetchRelations;
 }

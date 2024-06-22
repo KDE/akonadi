@@ -481,15 +481,6 @@ void AgentManager::agentInstanceSynchronizeTags(const QString &identifier)
     mAgentInstances.value(identifier)->resourceInterface()->synchronizeTags();
 }
 
-void AgentManager::agentInstanceSynchronizeRelations(const QString &identifier)
-{
-    if (!checkResourceInterface(identifier, QStringLiteral("agentInstanceSynchronizeRelations"))) {
-        return;
-    }
-
-    mAgentInstances.value(identifier)->resourceInterface()->synchronizeRelations();
-}
-
 void AgentManager::restartAgentInstance(const QString &identifier)
 {
     if (!checkInstance(identifier)) {

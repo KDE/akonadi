@@ -280,11 +280,6 @@ Tag::List Item::tags() const
     return d_ptr->mTags;
 }
 
-Relation::List Item::relations() const
-{
-    return d_ptr->mRelations;
-}
-
 QSet<QByteArray> Item::loadedPayloadParts() const
 {
     return ItemSerializer::parts(*this);

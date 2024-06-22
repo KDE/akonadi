@@ -72,12 +72,6 @@ void ProtocolTest::testFactory_data()
     QTest::newRow("fetchTags resp") << Command::FetchTags << true << true;
     QTest::newRow("modifyTag cmd") << Command::ModifyTag << false << true;
     QTest::newRow("modifyTag resp") << Command::ModifyTag << true << true;
-    QTest::newRow("fetchRelations cmd") << Command::FetchRelations << false << true;
-    QTest::newRow("fetchRelations resp") << Command::FetchRelations << true << true;
-    QTest::newRow("modifyRelation cmd") << Command::ModifyRelation << false << true;
-    QTest::newRow("modifyRelation resp") << Command::ModifyRelation << true << true;
-    QTest::newRow("removeRelations cmd") << Command::RemoveRelations << false << true;
-    QTest::newRow("removeRelations resp") << Command::RemoveRelations << true << true;
     QTest::newRow("selectResource cmd") << Command::SelectResource << false << true;
     QTest::newRow("selectResource resp") << Command::SelectResource << true << true;
     QTest::newRow("streamPayload cmd") << Command::StreamPayload << false << true;
@@ -88,8 +82,6 @@ void ProtocolTest::testFactory_data()
     QTest::newRow("collectionChangeNotification resp") << Command::CollectionChangeNotification << true << false;
     QTest::newRow("tagChangeNotification cmd") << Command::TagChangeNotification << false << true;
     QTest::newRow("tagChangENotification resp") << Command::TagChangeNotification << true << false;
-    QTest::newRow("relationChangeNotification cmd") << Command::RelationChangeNotification << false << true;
-    QTest::newRow("relationChangeNotification resp") << Command::RelationChangeNotification << true << false;
     QTest::newRow("_responseBit cmd") << Command::_ResponseBit << false << false;
     QTest::newRow("_responseBit resp") << Command::_ResponseBit << true << false;
 }
@@ -223,7 +215,6 @@ void ProtocolTest::testFetchScope()
     in.setFetch(ItemFetchScope::RemoteID);
     in.setFetch(ItemFetchScope::GID);
     in.setFetch(ItemFetchScope::Tags);
-    in.setFetch(ItemFetchScope::Relations);
     in.setFetch(ItemFetchScope::VirtReferences);
 
     const ItemFetchScope out = serializeAndDeserialize(in);
@@ -243,7 +234,6 @@ void ProtocolTest::testFetchScope()
     QCOMPARE(out.fetchFlags(), true);
     QCOMPARE(out.fetchRemoteId(), true);
     QCOMPARE(out.fetchGID(), true);
-    QCOMPARE(out.fetchRelations(), true);
     QCOMPARE(out.fetchVirtualReferences(), true);
 }
 

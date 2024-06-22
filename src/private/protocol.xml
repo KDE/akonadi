@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<protocol version="65">
+<protocol version="66">
 
   <class name="Ancestor">
     <enum name="Depth">
@@ -196,47 +196,6 @@
 
   <response name="DeleteItems" />
 
-
-  <!-- Fetch Relations //-->
-  <command name="FetchRelations">
-    <ctor>
-      <arg name="left" />
-      <arg name="right" />
-      <arg name="types" default="QList&lt;QByteArray&gt;()" />
-      <arg name="resource" default="QString()" />
-    </ctor>
-    <ctor>
-      <arg name="side" />
-      <arg name="types" default="QList&lt;QByteArray&gt;()" />
-      <arg name="resource" default="QString()" />
-    </ctor>
-
-    <param name="left" type="qint64" default="-1" />
-    <param name="right" type="qint64" default="-1" />
-    <param name="side" type="qint64" default="-1" />
-    <param name="types" type="QList&lt;QByteArray&gt;" />
-    <param name="resource" type="QString" />
-  </command>
-
-  <response name="FetchRelations">
-    <ctor>
-      <arg name="left"/>
-      <arg name="leftMimeType" />
-      <arg name="right" />
-      <arg name="rightMimeType" />
-      <arg name="type" />
-      <arg name="remoteId" default="QByteArray()" />
-    </ctor>
-
-    <param name="left" type="qint64" default="-1" />
-    <param name="leftMimeType" type="QByteArray" />
-    <param name="right" type="qint64" default="-1" />
-    <param name="rightMimeType" type="QByteArray" />
-    <param name="type" type="QByteArray" />
-    <param name="remoteId" type="QByteArray" />
-  </response>
-
-
   <!-- Fetch Tags //-->
   <command name="FetchTags">
     <ctor>
@@ -303,7 +262,6 @@
     <param name="flags" type="QList&lt;QByteArray&gt;" />
     <param name="tags" type="QList&lt;Akonadi::Protocol::FetchTagsResponse&gt;" />
     <param name="virtualReferences" type="QList&lt;qint64&gt;" />
-    <param name="relations" type="QList&lt;Akonadi::Protocol::FetchRelationsResponse&gt;" />
     <param name="ancestors" type="QList&lt;Akonadi::Protocol::Ancestor&gt;" />
     <param name="parts" type="QList&lt;Akonadi::Protocol::StreamPayloadResponse&gt;"/>
     <param name="cachedParts" type="QList&lt;QByteArray&gt;" />
@@ -747,41 +705,6 @@
 
   <response name="ModifyTag" />
 
-
-  <!-- Modify Relation //-->
-  <command name="ModifyRelation">
-    <ctor>
-      <arg name="left" />
-      <arg name="right" />
-      <arg name="type" />
-      <arg name="remoteId" default="QByteArray()" />
-    </ctor>
-
-    <param name="left" type="qint64" default="-1" />
-    <param name="right" type="qint64" default="-1" />
-    <param name="type" type="QByteArray" />
-    <param name="remoteId" type="QByteArray" />
-  </command>
-
-  <response name="ModifyRelation" />
-
-
-  <!-- Remove Relations //-->
-  <command name="RemoveRelations">
-    <ctor>
-      <arg name="left" />
-      <arg name="right" />
-      <arg name="type" default="QByteArray()" />
-    </ctor>
-
-    <param name="left" type="qint64" default="-1" />
-    <param name="right" type="qint64" default="-1" />
-    <param name="type" type="QByteArray" />
-  </command>
-
-  <response name="RemoveRelations" />
-
-
   <!-- Select Resource //-->
   <command name="SelectResource">
     <ctor>
@@ -845,7 +768,6 @@
       <value name="Unlink" />
       <value name="ModifyFlags" />
       <value name="ModifyTags" />
-      <value name="ModifyRelations" />
     </enum>
 
     <param name="operation" type="ItemChangeNotification::Operation" default="InvalidOp" />
@@ -858,8 +780,6 @@
     <param name="removedFlags" type="QSet&lt;QByteArray&gt;" />
     <param name="addedTags" type="QSet&lt;qint64&gt;" />
     <param name="removedTags" type="QSet&lt;qint64&gt;" />
-    <param name="addedRelations" type="QSet&lt;Akonadi::Protocol::ChangeNotification::Relation&gt;" />
-    <param name="removedRelations" type="QSet&lt;Akonadi::Protocol::ChangeNotification::Relation&gt;" />
 
     <param name="mustRetrieve" type="bool" default="false" />
 
@@ -903,19 +823,6 @@
     <param name="tag" type="Akonadi::Protocol::FetchTagsResponse" asReference="true" />
   </notification>
 
-  <!-- Relation Change Notification //-->
-  <notification name="RelationChange">
-    <enum name="Operation">
-      <value name="InvalidOp" />
-      <value name="Add" />
-      <value name="Remove" />
-    </enum>
-
-    <param name="operation" type="RelationChangeNotification::Operation" default="InvalidOp" />
-
-    <param name="relation" type="Akonadi::Protocol::FetchRelationsResponse" asReference="true" />
-  </notification>
-
   <!--Create Subscription //-->
   <command name="CreateSubscription">
     <ctor>
@@ -954,7 +861,6 @@
       <value name="ItemChanges" />
       <value name="CollectionChanges" />
       <value name="TagChanges" />
-      <value name="RelationChanges" />
       <value name="SubscriptionChanges" />
       <value name="ChangeNotifications" />
     </enum>

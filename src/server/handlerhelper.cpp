@@ -255,17 +255,6 @@ Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag, con
     return response;
 }
 
-Protocol::FetchRelationsResponse HandlerHelper::fetchRelationsResponse(const Relation &relation)
-{
-    Protocol::FetchRelationsResponse resp;
-    resp.setLeft(relation.leftId());
-    resp.setLeftMimeType(relation.left().mimeType().name().toUtf8());
-    resp.setRight(relation.rightId());
-    resp.setRightMimeType(relation.right().mimeType().name().toUtf8());
-    resp.setType(relation.relationType().name().toUtf8());
-    return resp;
-}
-
 Flag::List HandlerHelper::resolveFlags(const QSet<QByteArray> &flagNames)
 {
     Flag::List flagList;

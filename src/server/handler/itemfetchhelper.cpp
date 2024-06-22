@@ -553,28 +553,6 @@ bool ItemFetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse
             response.setVirtualReferences(vRefs);
         }
 
-        if (mItemFetchScope.fetchRelations()) {
-            SelectQueryBuilder<Relation> qb;
-            Query::Condition condition;
-            condition.setSubQueryMode(Query::Or);
-            condition.addValueCondition(Relation::leftIdFullColumnName(), Query::Equals, pimItemId);
-            condition.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, pimItemId);
-            qb.addCondition(condition);
-            qb.addGroupColumns(QStringList() << Relation::leftIdColumn() << Relation::rightIdColumn() << Relation::typeIdColumn()
-                                             << Relation::remoteIdColumn());
-            if (!qb.exec()) {
-                throw HandlerException("Unable to list item relations");
-            }
-            QList<Protocol::FetchRelationsResponse> relations;
-            const auto result = qb.result();
-            relations.reserve(result.size());
-            for (const Relation &rel : result) {
-                relations.push_back(HandlerHelper::fetchRelationsResponse(rel));
-                ;
-            }
-            response.setRelations(relations);
-        }
-
         if (mItemFetchScope.ancestorDepth() != Protocol::ItemFetchScope::NoAncestor) {
             response.setAncestors(ancestorsForItem(response.parentId()));
         }

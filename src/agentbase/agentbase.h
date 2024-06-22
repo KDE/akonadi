@@ -397,28 +397,6 @@ public:
          */
         Q_DECL_DEPRECATED_X("ObserverV4 is deprecated, implement TagObserver instead")
         virtual void itemsTagsChanged(const Akonadi::Item::List &items, const QSet<Akonadi::Tag> &addedTags, const QSet<Akonadi::Tag> &removedTags);
-
-        /**
-         * Reimplement to handle relations being added
-         */
-        Q_DECL_DEPRECATED_X("Relations support is deprecated")
-        virtual void relationAdded(const Akonadi::Relation &relation);
-
-        /**
-         * Reimplement to handle relations being removed
-         */
-        Q_DECL_DEPRECATED_X("Relations support is deprecated")
-        virtual void relationRemoved(const Akonadi::Relation &relation);
-
-        /**
-         * Reimplement to handled relations changing on items
-         * @param items Items that had relations added/removed from them
-         * @param addedRelations the list of relations that were added to all @p items
-         * @param removedRelations the list of relations that were removed from all @p items
-         */
-        Q_DECL_DEPRECATED_X("Relations support is deprecated")
-        virtual void
-        itemsRelationsChanged(const Akonadi::Item::List &items, const Akonadi::Relation::List &addedRelations, const Akonadi::Relation::List &removedRelations);
     };
 
     class AKONADIAGENTBASE_EXPORT TagObserver

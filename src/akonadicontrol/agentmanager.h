@@ -188,12 +188,6 @@ public:
     void agentInstanceSynchronizeTags(const QString &identifier);
 
     /**
-     * Trigger a synchronization of relations by the given resource agent.
-     * @param identifier The resource agent identifier.
-     */
-    void agentInstanceSynchronizeRelations(const QString &identifier);
-
-    /**
       Returns if the agent instance @p identifier is in online mode.
     */
     bool agentInstanceOnline(const QString &identifier);
