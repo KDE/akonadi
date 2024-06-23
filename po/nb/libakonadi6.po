@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-17 00:39+0000\n"
+"POT-Creation-Date: 2024-06-23 00:39+0000\n"
 "PO-Revision-Date: 2014-09-23 21:56+0200\n"
 "Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -39,30 +39,30 @@ msgstr ""
 msgid "Accounts integration is not supported"
 msgstr ""
 
-#: agentbase/agentbase.cpp:391 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:354 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Klarte ikke å registrere objeket ved dbus: %1"
 
-#: agentbase/agentbase.cpp:480
+#: agentbase/agentbase.cpp:443
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 av type %2"
 
-#: agentbase/agentbase.cpp:930
+#: agentbase/agentbase.cpp:861
 #, fuzzy, kde-format
 #| msgid "Agent identifier"
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Agentidentifikasjon"
 
-#: agentbase/agentbase.cpp:936
+#: agentbase/agentbase.cpp:867
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi Agent"
 
-#: agentbase/agentbase_p.h:49 agentbase/resourcescheduler.cpp:281
+#: agentbase/agentbase_p.h:49 agentbase/resourcescheduler.cpp:268
 #, kde-format
 msgctxt "@info:status Application ready for work"
 msgid "Ready"
@@ -92,75 +92,75 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "Ikke satt opp"
 
-#: agentbase/resourcebase.cpp:518
+#: agentbase/resourcebase.cpp:512
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr ""
 
-#: agentbase/resourcebase.cpp:524
+#: agentbase/resourcebase.cpp:518
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "Akonadiressurs"
 
-#: agentbase/resourcebase.cpp:572
+#: agentbase/resourcebase.cpp:566
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Ugyldig element hentet"
 
-#: agentbase/resourcebase.cpp:595
+#: agentbase/resourcebase.cpp:589
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Feil ved oppretting av element: %1"
 
-#: agentbase/resourcebase.cpp:619
+#: agentbase/resourcebase.cpp:613
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Feil mens samling blir oppdatert: %1"
 
-#: agentbase/resourcebase.cpp:706
+#: agentbase/resourcebase.cpp:700
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Klarte ikke å oppdatere lokal samling: %1."
 
-#: agentbase/resourcebase.cpp:711
+#: agentbase/resourcebase.cpp:705
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Klarte ikke å oppdatere lokale elementer: %1."
 
-#: agentbase/resourcebase.cpp:730
+#: agentbase/resourcebase.cpp:724
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Kan ikke hente element når frakoblet"
 
-#: agentbase/resourcebase.cpp:911
+#: agentbase/resourcebase.cpp:905
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Synkroniserer mappe «%1»"
 
-#: agentbase/resourcebase.cpp:931 agentbase/resourcebase.cpp:938
+#: agentbase/resourcebase.cpp:925 agentbase/resourcebase.cpp:932
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr ""
 
-#: agentbase/resourcebase.cpp:979
+#: agentbase/resourcebase.cpp:973
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr ""
 
-#: agentbase/resourcebase.cpp:1033
+#: agentbase/resourcebase.cpp:1019
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Forespurte element finnes ikke lenger"
 
-#: agentbase/resourcescheduler.cpp:500 agentbase/resourcescheduler.cpp:506
+#: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."
@@ -331,11 +331,6 @@ msgstr "Ukjent feil."
 #: core/jobs/job.cpp:385
 #, kde-format
 msgid "Unexpected response"
-msgstr ""
-
-#: core/jobs/relationcreatejob.cpp:42 core/jobs/relationdeletejob.cpp:42
-#, kde-format
-msgid "Failed to create relation."
 msgstr ""
 
 #: core/jobs/resourcesynchronizationjob.cpp:139

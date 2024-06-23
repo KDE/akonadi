@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-17 00:39+0000\n"
+"POT-Creation-Date: 2024-06-23 00:39+0000\n"
 "PO-Revision-Date: 2024-06-07 11:35+0200\n"
 "Last-Translator: Vit Pelcak <vpelcak@suse.cz>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -40,29 +40,29 @@ msgstr "Nyní není nastaven žádný účet."
 msgid "Accounts integration is not supported"
 msgstr "Integrace účtů není podporována"
 
-#: agentbase/agentbase.cpp:391 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:354 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Nelze registrovat objekt na dbus: %1"
 
-#: agentbase/agentbase.cpp:480
+#: agentbase/agentbase.cpp:443
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 typu %2"
 
-#: agentbase/agentbase.cpp:930
+#: agentbase/agentbase.cpp:861
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Identifikátor agenta"
 
-#: agentbase/agentbase.cpp:936
+#: agentbase/agentbase.cpp:867
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Agent Akonadi"
 
-#: agentbase/agentbase_p.h:49 agentbase/resourcescheduler.cpp:281
+#: agentbase/agentbase_p.h:49 agentbase/resourcescheduler.cpp:268
 #, kde-format
 msgctxt "@info:status Application ready for work"
 msgid "Ready"
@@ -92,75 +92,75 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "Nenastaveno"
 
-#: agentbase/resourcebase.cpp:518
+#: agentbase/resourcebase.cpp:512
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "Identifikátor zdroje"
 
-#: agentbase/resourcebase.cpp:524
+#: agentbase/resourcebase.cpp:518
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "Zdroj Akonadi"
 
-#: agentbase/resourcebase.cpp:572
+#: agentbase/resourcebase.cpp:566
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Stažena neplatná položka"
 
-#: agentbase/resourcebase.cpp:595
+#: agentbase/resourcebase.cpp:589
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Chyba při vytváření položky: %1"
 
-#: agentbase/resourcebase.cpp:619
+#: agentbase/resourcebase.cpp:613
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Chyba při aktualizaci místní sbírky: %1."
 
-#: agentbase/resourcebase.cpp:706
+#: agentbase/resourcebase.cpp:700
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Aktualizace místní sbírky selhala: %1."
 
-#: agentbase/resourcebase.cpp:711
+#: agentbase/resourcebase.cpp:705
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Aktualizace místních položek selhala: %1."
 
-#: agentbase/resourcebase.cpp:730
+#: agentbase/resourcebase.cpp:724
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Nelze stahovat položky v odpojeném režimu."
 
-#: agentbase/resourcebase.cpp:911
+#: agentbase/resourcebase.cpp:905
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Synchronizuje se složka '%1'"
 
-#: agentbase/resourcebase.cpp:931 agentbase/resourcebase.cpp:938
+#: agentbase/resourcebase.cpp:925 agentbase/resourcebase.cpp:932
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Získání sbírky pro synchronizaci selhalo."
 
-#: agentbase/resourcebase.cpp:979
+#: agentbase/resourcebase.cpp:973
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Získání sbírky pro synchronizaci atributů selhalo."
 
-#: agentbase/resourcebase.cpp:1033
+#: agentbase/resourcebase.cpp:1019
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Požadovaná položka už neexistuje"
 
-#: agentbase/resourcescheduler.cpp:500 agentbase/resourcescheduler.cpp:506
+#: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."
@@ -331,11 +331,6 @@ msgstr "Neznámá chyba."
 #, kde-format
 msgid "Unexpected response"
 msgstr "Neočekávaná odpověď"
-
-#: core/jobs/relationcreatejob.cpp:42 core/jobs/relationdeletejob.cpp:42
-#, kde-format
-msgid "Failed to create relation."
-msgstr "Nelze vytvořit vztah."
 
 #: core/jobs/resourcesynchronizationjob.cpp:139
 #, kde-format
@@ -2532,3 +2527,6 @@ msgstr "Datový soubor nelze zpracovat: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Nelze najít sbírku %1"
+
+#~ msgid "Failed to create relation."
+#~ msgstr "Nelze vytvořit vztah."

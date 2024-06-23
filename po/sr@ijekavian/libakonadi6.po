@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-17 00:39+0000\n"
+"POT-Creation-Date: 2024-06-23 00:39+0000\n"
 "PO-Revision-Date: 2017-12-17 18:01+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -39,30 +39,30 @@ msgstr ""
 msgid "Accounts integration is not supported"
 msgstr ""
 
-#: agentbase/agentbase.cpp:391 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:354 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Не могу да региструјем објекат на д‑бусу: %1"
 
-#: agentbase/agentbase.cpp:480
+#: agentbase/agentbase.cpp:443
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 типа %2"
 
-#: agentbase/agentbase.cpp:930
+#: agentbase/agentbase.cpp:861
 #, fuzzy, kde-format
 #| msgid "Agent identifier"
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Идентификатор агента"
 
-#: agentbase/agentbase.cpp:936
+#: agentbase/agentbase.cpp:867
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Аконадијев агент"
 
-#: agentbase/agentbase_p.h:49 agentbase/resourcescheduler.cpp:281
+#: agentbase/agentbase_p.h:49 agentbase/resourcescheduler.cpp:268
 #, kde-format
 msgctxt "@info:status Application ready for work"
 msgid "Ready"
@@ -92,75 +92,75 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "Није подешено"
 
-#: agentbase/resourcebase.cpp:518
+#: agentbase/resourcebase.cpp:512
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "Идентификатор ресурса"
 
-#: agentbase/resourcebase.cpp:524
+#: agentbase/resourcebase.cpp:518
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "Аконадијев ресурс"
 
-#: agentbase/resourcebase.cpp:572
+#: agentbase/resourcebase.cpp:566
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Добављена лоша ставка"
 
-#: agentbase/resourcebase.cpp:595
+#: agentbase/resourcebase.cpp:589
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Грешка при стварању ставке: %1"
 
-#: agentbase/resourcebase.cpp:619
+#: agentbase/resourcebase.cpp:613
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Грешка при ажурирању збирке: %1"
 
-#: agentbase/resourcebase.cpp:706
+#: agentbase/resourcebase.cpp:700
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Пропало ажурирање локалне збирке: %1."
 
-#: agentbase/resourcebase.cpp:711
+#: agentbase/resourcebase.cpp:705
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Пропало ажурирање локалних ставки: %1."
 
-#: agentbase/resourcebase.cpp:730
+#: agentbase/resourcebase.cpp:724
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Не могу ван везе дохватити ставку."
 
-#: agentbase/resourcebase.cpp:911
+#: agentbase/resourcebase.cpp:905
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Синхронизујем фасциклу „%1“"
 
-#: agentbase/resourcebase.cpp:931 agentbase/resourcebase.cpp:938
+#: agentbase/resourcebase.cpp:925 agentbase/resourcebase.cpp:932
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Не могу да добавим збирку за синхронизовање."
 
-#: agentbase/resourcebase.cpp:979
+#: agentbase/resourcebase.cpp:973
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Не могу да добавим збирку за синхронизовање атрибута."
 
-#: agentbase/resourcebase.cpp:1033
+#: agentbase/resourcebase.cpp:1019
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Захтијевана ставка више не постоји."
 
-#: agentbase/resourcescheduler.cpp:500 agentbase/resourcescheduler.cpp:506
+#: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."
@@ -332,11 +332,6 @@ msgstr "Непозната грешка."
 #, kde-format
 msgid "Unexpected response"
 msgstr "Неочекиван одзив."
-
-#: core/jobs/relationcreatejob.cpp:42 core/jobs/relationdeletejob.cpp:42
-#, kde-format
-msgid "Failed to create relation."
-msgstr "Не могу да направим релацију."
 
 #: core/jobs/resourcesynchronizationjob.cpp:139
 #, kde-format
@@ -2776,6 +2771,9 @@ msgstr "Не могу да рашчланим фајл са подацима: %1
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Не могу да нађем збирку „%1“."
+
+#~ msgid "Failed to create relation."
+#~ msgstr "Не могу да направим релацију."
 
 # >> @label
 # >! Put together: "<strong>...</strong>: %1%"

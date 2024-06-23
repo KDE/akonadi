@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-17 00:39+0000\n"
+"POT-Creation-Date: 2024-06-23 00:39+0000\n"
 "PO-Revision-Date: 2024-06-17 05:11+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
@@ -38,29 +38,29 @@ msgstr "ამჟამად არც ერთი ანგარიშ მ�
 msgid "Accounts integration is not supported"
 msgstr "ანგარიშების ინტეგრაცია მხარდაჭერილი არაა"
 
-#: agentbase/agentbase.cpp:391 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:354 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "შეცდომა DBus-ში ობიექტის რეგისტრაციისას: %1"
 
-#: agentbase/agentbase.cpp:480
+#: agentbase/agentbase.cpp:443
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 %2 ტიპით"
 
-#: agentbase/agentbase.cpp:930
+#: agentbase/agentbase.cpp:861
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "აგენტის იდენტიფიკატორი"
 
-#: agentbase/agentbase.cpp:936
+#: agentbase/agentbase.cpp:867
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi -ის აგენტი"
 
-#: agentbase/agentbase_p.h:49 agentbase/resourcescheduler.cpp:281
+#: agentbase/agentbase_p.h:49 agentbase/resourcescheduler.cpp:268
 #, kde-format
 msgctxt "@info:status Application ready for work"
 msgid "Ready"
@@ -90,75 +90,75 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "მორგებული არაა"
 
-#: agentbase/resourcebase.cpp:518
+#: agentbase/resourcebase.cpp:512
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "რესურსის იდენტიფიკატორი"
 
-#: agentbase/resourcebase.cpp:524
+#: agentbase/resourcebase.cpp:518
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "Akonadi -ის რესურსი"
 
-#: agentbase/resourcebase.cpp:572
+#: agentbase/resourcebase.cpp:566
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "მიღებული ჩანაწერი არასწორია"
 
-#: agentbase/resourcebase.cpp:595
+#: agentbase/resourcebase.cpp:589
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "შეცდომა ჩანაწერის შექმნისას: %1"
 
-#: agentbase/resourcebase.cpp:619
+#: agentbase/resourcebase.cpp:613
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "შეცდომა კოლექციის განახლებისას: %1"
 
-#: agentbase/resourcebase.cpp:706
+#: agentbase/resourcebase.cpp:700
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "ლოკალური კოლექციის განახლების შეცდომა: %1."
 
-#: agentbase/resourcebase.cpp:711
+#: agentbase/resourcebase.cpp:705
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "ლოკალური ჩანაწერების განახლების შეცდომა: %1."
 
-#: agentbase/resourcebase.cpp:730
+#: agentbase/resourcebase.cpp:724
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "ჩანაწერის მიღება გათიშულ რეჟიმში შეუძლებელია."
 
-#: agentbase/resourcebase.cpp:911
+#: agentbase/resourcebase.cpp:905
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "საქაღალდის სინქრონზაცია %1"
 
-#: agentbase/resourcebase.cpp:931 agentbase/resourcebase.cpp:938
+#: agentbase/resourcebase.cpp:925 agentbase/resourcebase.cpp:932
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "სინქრონიზაციისთვის კოლექციის მიღების შეცდომა."
 
-#: agentbase/resourcebase.cpp:979
+#: agentbase/resourcebase.cpp:973
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "ატრიბუტის სინქრონიზაციისთვის კოლექციის მიღების შეცდომა."
 
-#: agentbase/resourcebase.cpp:1033
+#: agentbase/resourcebase.cpp:1019
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "მოთხოვნილი ჩანაწერი აღარ არსებობს"
 
-#: agentbase/resourcescheduler.cpp:500 agentbase/resourcescheduler.cpp:506
+#: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."
@@ -342,11 +342,6 @@ msgstr "უცნობი შეცდომა."
 #, kde-format
 msgid "Unexpected response"
 msgstr "მოულოდნელი პასუხი"
-
-#: core/jobs/relationcreatejob.cpp:42 core/jobs/relationdeletejob.cpp:42
-#, kde-format
-msgid "Failed to create relation."
-msgstr "რელაციის შექმნის შეცდომა."
 
 #: core/jobs/resourcesynchronizationjob.cpp:139
 #, kde-format
@@ -2608,6 +2603,9 @@ msgstr "მონაცემების ფაილის დამუშა�
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "კოლექციის (%1) პოვნა შეუძლებელია"
+
+#~ msgid "Failed to create relation."
+#~ msgstr "რელაციის შექმნის შეცდომა."
 
 #~ msgid "Quota"
 #~ msgstr "კვოტა"
