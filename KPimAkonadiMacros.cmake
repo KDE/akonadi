@@ -11,6 +11,8 @@
 # copy the unittestenv directory to your unit test directory and update the files
 # as necessary
 
+include(ECMMarkAsTest)
+
 function(add_akonadi_isolated_test)
 
     function(add_akonadi_isolated_test_impl)
