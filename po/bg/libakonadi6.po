@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-06-23 00:39+0000\n"
-"PO-Revision-Date: 2024-06-07 09:57+0200\n"
+"PO-Revision-Date: 2024-06-25 17:20+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.05.0\n"
+"X-Generator: Lokalize 24.05.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1185,10 +1185,7 @@ msgstr ""
 #. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
 #: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not running. This "
-#| "application cannot be used without it."
+#, kde-format
 msgid ""
 "A required background service is not running. This application cannot be "
 "used without it."
@@ -1205,11 +1202,7 @@ msgstr "Стартиране"
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management framework is not "
-#| "operational.\n"
-#| "Click on \"Details...\" to obtain detailed information on this problem."
+#, kde-format
 msgid ""
 "A required background service is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
@@ -1220,9 +1213,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not operational."
+#, kde-format
 msgid "A required background service is not operational."
 msgstr "Услугата за управление на лична информация Akonadi не работи."
 

@@ -2521,6 +2521,3 @@ msgstr "无法解析数据文件：%1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "无法找到集合 %1"
-
-#~ msgid "Failed to create relation."
-#~ msgstr "创建关系失败。"
