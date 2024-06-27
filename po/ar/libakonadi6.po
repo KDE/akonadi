@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-06-23 00:39+0000\n"
-"PO-Revision-Date: 2024-06-08 11:31+0400\n"
+"PO-Revision-Date: 2024-06-26 22:37+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -1188,16 +1188,11 @@ msgstr ""
 #. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
 #: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not running. This "
-#| "application cannot be used without it."
+#, kde-format
 msgid ""
 "A required background service is not running. This application cannot be "
 "used without it."
-msgstr ""
-"خدمة «أكونادي» لإدارة المعلومات الشخصية لا تعمل. لا يمكن استخدام هذا التطبيق "
-"دونها."
+msgstr "خدمة الخلفية المطلوبة لا تعمل. لا يمكن استخدام هذا التطبيق دونها."
 
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #: widgets/erroroverlay.ui:116
@@ -1208,25 +1203,19 @@ msgstr "ابدأ"
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management framework is not "
-#| "operational.\n"
-#| "Click on \"Details...\" to obtain detailed information on this problem."
+#, kde-format
 msgid ""
 "A required background service is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
-"إطار عمل «أكونادي» لإدارة المعلومات الشخصية لا يعمل.\n"
-"انقر ”التفاصيل…“ لتجد معلومات مفصّلة عن هذه المشكلة."
+"خدمة الخلفية المطلوبة لا تعمل.\n"
+"انقر فوق \"التفاصيل...\" للحصول على معلومات مفصلة حول هذه المشكلة."
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not operational."
+#, kde-format
 msgid "A required background service is not operational."
-msgstr "إطار عمل «أكونادي» لإدارة المعلومات الشخصية لا يعمل."
+msgstr "خدمة الخلفية المطلوبة لا تعمل."
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
