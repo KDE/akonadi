@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-06-23 00:39+0000\n"
-"PO-Revision-Date: 2024-06-08 08:14+0200\n"
+"PO-Revision-Date: 2024-06-26 10:58+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
 "Language: fr\n"
@@ -1218,16 +1218,13 @@ msgstr ""
 #. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
 #: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not running. This "
-#| "application cannot be used without it."
+#, kde-format
 msgid ""
 "A required background service is not running. This application cannot be "
 "used without it."
 msgstr ""
-"Le service de gestion des informations personnelles n'est pas opérationnel. "
-"Il est impossible d'utiliser cette application sans ce service."
+"Un service en tâche de fonds requis n'est pas en cours d'exécution. Il est "
+"impossible d'utiliser cette application sans ce service."
 
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #: widgets/erroroverlay.ui:116
@@ -1238,28 +1235,20 @@ msgstr "Démarrer"
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management framework is not "
-#| "operational.\n"
-#| "Click on \"Details...\" to obtain detailed information on this problem."
+#, kde-format
 msgid ""
 "A required background service is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
-"L'environnement Akonadi de gestion des informations personnelles n'est pas "
-"opérationnel.\n"
+"Un service en tâche de fonds requis n'est pas en cours d'exécution.\n"
 "Veuillez cliquer sur « Détails... » pour obtenir des informations détaillées "
 "sur ce problème."
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not operational."
+#, kde-format
 msgid "A required background service is not operational."
-msgstr ""
-"Le service de gestion des informations personnelles n'est pas opérationnel."
+msgstr "Un service en tâche de fonds requis n'est pas en cours d'exécution."
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
