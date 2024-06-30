@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-06-23 00:39+0000\n"
-"PO-Revision-Date: 2024-03-24 10:57+0100\n"
+"PO-Revision-Date: 2024-06-29 13:23+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.02.1\n"
+"X-Generator: Lokalize 24.05.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -52,8 +52,7 @@ msgid "%1 of type %2"
 msgstr "%2 motako %1"
 
 #: agentbase/agentbase.cpp:861
-#, fuzzy, kde-format
-#| msgid "Agent identifier"
+#, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Agentearen identifikatzailea"
@@ -840,15 +839,13 @@ msgid "Use folder by default"
 msgstr "Erabili lehenetsitako karpeta"
 
 #: widgets/collectiondialog.cpp:226
-#, fuzzy, kde-format
-#| msgid "&New Subfolder..."
+#, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
 msgstr "Azpikarpeta &berria..."
 
 #: widgets/collectiondialog.cpp:228
-#, fuzzy, kde-format
-#| msgid "Create a new subfolder under the currently selected folder"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Sortu azpikarpeta berri bat hautatuta dagoen karpetaren barruan"
@@ -1032,8 +1029,7 @@ msgid "No Folder"
 msgstr "Karpetarik ez"
 
 #: widgets/collectionrequester.cpp:122
-#, fuzzy, kde-format
-#| msgid "Open collection dialog"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
 msgstr "Ireki bilduma elkarrizketa-koadroa"
@@ -1085,14 +1081,7 @@ msgid "Keep both versions"
 msgstr "Mantendu bi bertsioak"
 
 #: widgets/conflictresolvedialog.cpp:217
-#, fuzzy, kde-format
-#| msgid ""
-#| "<qt>Your changes conflict with those made by someone else meanwhile."
-#| "<br>Unless one version can just be thrown away, you will have to "
-#| "integrate those changes manually.<br>Click on <a href=\"opentexteditor\">"
-#| "\"Open text editor\"</a> to keep a copy of the texts, then select which "
-#| "version is most correct, then re-open it and modify it again to add "
-#| "what's missing."
+#, kde-format
 msgctxt "@label:textbox"
 msgid ""
 "<qt>Your changes conflict with those made by someone else meanwhile."
@@ -1103,7 +1092,7 @@ msgid ""
 msgstr ""
 "<qt>Zure aldaketek gatazka dute beste norbaitek bitartean egindako "
 "aldaketekin. <br>Bertsioetako bat bota ezean, biak eskuz bateratu beharko "
-"dituzu.<br>Egin klik <a href=\"opentexteditor\">«Ireki testu editorea»</a> "
+"dituzu.<br>Egin klik <a href=\"opentexteditor\">\"Ireki testu editorea\"</a> "
 "aukeran testuen kopia bat gordetzeko, ondoren hautatu zein bertsio den "
 "zuzenagoa, hura berriz ireki eta berriz aldatu falta dena gehitzeko."
 
@@ -1155,8 +1144,7 @@ msgstr ""
 "%1"
 
 #: widgets/erroroverlay.cpp:228
-#, fuzzy, kde-format
-#| msgid "Personal information management service is starting..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr "Informazio pertsonala kudeatzeko zerbitzua abiatzen ari da..."
@@ -1167,8 +1155,7 @@ msgid "Personal information management service is starting..."
 msgstr "Informazio pertsonala kudeatzeko zerbitzua abiatzen ari da..."
 
 #: widgets/erroroverlay.cpp:233
-#, fuzzy, kde-format
-#| msgid "Personal information management service is shutting down..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr "Informazio pertsonala kudeatzeko zerbitzua itzaltzen ari da..."
@@ -1179,9 +1166,7 @@ msgid "Personal information management service is shutting down..."
 msgstr "Informazio pertsonala kudeatzeko zerbitzua itzaltzen ari da..."
 
 #: widgets/erroroverlay.cpp:238
-#, fuzzy, kde-format
-#| msgid ""
-#| "Personal information management service is performing a database upgrade."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
@@ -1207,16 +1192,13 @@ msgstr ""
 #. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
 #: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not running. This "
-#| "application cannot be used without it."
+#, kde-format
 msgid ""
 "A required background service is not running. This application cannot be "
 "used without it."
 msgstr ""
-"Akonadi, informazio pertsonala kudeatzeko zerbitzua ez dago martxan. "
-"Aplikazio hau ezin da erabili hura gabe."
+"Beharrezkoa den hondoko zerbitzu bat ez dago martxan. Aplikazio hau ezin da "
+"hura gabe erabili."
 
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #: widgets/erroroverlay.ui:116
@@ -1227,26 +1209,20 @@ msgstr "Hasi"
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management framework is not "
-#| "operational.\n"
-#| "Click on \"Details...\" to obtain detailed information on this problem."
+#, kde-format
 msgid ""
 "A required background service is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
-"Akonadi, informazio pertsonala kudeatzeko azpiegitura ez dabil.\n"
+"Beharrezkoa den hondoko zerbitzu bat ez dago operatibo.\n"
 "Egin klik «Xehetasunak...» aukeran, arazo honi buruzko informazio zehatza "
 "eskuratzeko."
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not operational."
+#, kde-format
 msgid "A required background service is not operational."
-msgstr "Akonadi, informazio pertsonala kudeatzeko zerbitzua ez dabil."
+msgstr "Beharrezkoa den hondoko zerbitzu bat ez dago operatibo."
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
