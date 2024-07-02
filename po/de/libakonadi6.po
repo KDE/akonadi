@@ -6,22 +6,22 @@
 # Torbjörn Klatt <opensource@torbjoern-klatt.de>, 2011.
 # Rolf Eike Beer <kde@opensource.sf-tec.de>, 2012.
 # Markus Slopianka <markus.s@kdemail.net>, 2013.
-# Alois Spitzbart <spitz234@hotmail.com>, 2022.
+# SPDX-FileCopyrightText: 2022, 2024 Alois Spitzbart <spitz234@hotmail.com>
 # Intevation GmbH, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-06-23 00:39+0000\n"
-"PO-Revision-Date: 2024-04-23 17:23+0200\n"
-"Last-Translator: Johannes Obermayr <johannesobermayr@gmx.de>\n"
+"PO-Revision-Date: 2024-06-12 22:23+0200\n"
+"Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.02.2\n"
+"X-Generator: Lokalize 24.05.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -510,7 +510,7 @@ msgstr "Ungelesene Nachrichten"
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
 msgid "<strong>Quota</strong>: %1%<br>\n"
-msgstr "<strong>Kontingent>/strong>: %1 %<br>\n"
+msgstr "<strong>Kontingent</strong>: %1 %<br>\n"
 
 #: core/models/statisticsproxymodel.cpp:105
 #, kde-format
