@@ -110,7 +110,7 @@ void CollectionRequesterPrivate::init()
 
     edit = new QLineEdit(q);
     edit->setReadOnly(true);
-    edit->setPlaceholderText(i18n("No Folder"));
+    edit->setPlaceholderText(i18nc("@info:placeholder", "No Folder"));
     edit->setClearButtonEnabled(false);
     edit->setFocusPolicy(Qt::NoFocus);
     hbox->addWidget(edit);
