@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-23 00:39+0000\n"
+"POT-Creation-Date: 2024-07-04 00:39+0000\n"
 "PO-Revision-Date: 2023-10-02 18:38+0200\n"
 "Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
 "Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
@@ -1007,7 +1007,9 @@ msgid "Reindex folder"
 msgstr "Preindexovať priečinok"
 
 #: widgets/collectionrequester.cpp:113
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "No Folder"
+msgctxt "@info:placeholder"
 msgid "No Folder"
 msgstr "Žiaden priečinok"
 

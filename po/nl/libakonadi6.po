@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-23 00:39+0000\n"
+"POT-Creation-Date: 2024-07-04 00:39+0000\n"
 "PO-Revision-Date: 2024-06-17 10:36+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -1026,7 +1026,9 @@ msgid "Reindex folder"
 msgstr "Map opnieuw indexeren"
 
 #: widgets/collectionrequester.cpp:113
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "No Folder"
+msgctxt "@info:placeholder"
 msgid "No Folder"
 msgstr "Geen map"
 

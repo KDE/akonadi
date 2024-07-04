@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-23 00:39+0000\n"
+"POT-Creation-Date: 2024-07-04 00:39+0000\n"
 "PO-Revision-Date: 2023-10-05 18:24-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -1013,7 +1013,9 @@ msgid "Reindex folder"
 msgstr "Indexar a pasta novamente"
 
 #: widgets/collectionrequester.cpp:113
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "No Folder"
+msgctxt "@info:placeholder"
 msgid "No Folder"
 msgstr "Nenhuma pasta"
 

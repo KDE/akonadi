@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-23 00:39+0000\n"
+"POT-Creation-Date: 2024-07-04 00:39+0000\n"
 "PO-Revision-Date: 2023-12-31 09:30-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -1000,7 +1000,9 @@ msgid "Reindex folder"
 msgstr "ਫੋਲਡਰ ਹਟਾਓ(&D)"
 
 #: widgets/collectionrequester.cpp:113
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "No Folder"
+msgctxt "@info:placeholder"
 msgid "No Folder"
 msgstr "ਕੋਈ ਫੋਲਡਰ ਨਹੀਂ"
 

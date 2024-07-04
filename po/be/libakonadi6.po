@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-23 00:39+0000\n"
+"POT-Creation-Date: 2024-07-04 00:39+0000\n"
 "PO-Revision-Date: 2007-07-27 15:55+0300\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian <i18n@mova.org>\n"
@@ -1008,6 +1008,7 @@ msgstr "Выдаліць тэчку"
 #: widgets/collectionrequester.cpp:113
 #, fuzzy, kde-format
 #| msgid "New Folder"
+msgctxt "@info:placeholder"
 msgid "No Folder"
 msgstr "Новая тэчка"
 
