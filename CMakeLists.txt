@@ -150,7 +150,7 @@ if(USE_UNITY_CMAKE_SUPPORT)
     set(COMPILE_WITH_UNITY_CMAKE_SUPPORT ON)
     add_definitions(-DCOMPILE_WITH_UNITY_CMAKE_SUPPORT)
 endif()
-set(SharedMimeInfo_MINIMUM_VERSION "1.3")
+set(SharedMimeInfo_MINIMUM_VERSION "1.8")
 find_package(SharedMimeInfo ${SharedMimeInfo_MINIMUM_VERSION} REQUIRED)
 
 find_program(XSLTPROC_EXECUTABLE xsltproc)
