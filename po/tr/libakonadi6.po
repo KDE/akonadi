@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-04 00:39+0000\n"
-"PO-Revision-Date: 2024-06-17 11:32+0300\n"
+"PO-Revision-Date: 2024-07-04 13:50+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -1020,11 +1020,10 @@ msgid "Reindex folder"
 msgstr "Klasörü yeniden indeksle"
 
 #: widgets/collectionrequester.cpp:113
-#, fuzzy, kde-format
-#| msgid "No Folder"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No Folder"
-msgstr "Klasör Yok"
+msgstr "Klasör yok"
 
 #: widgets/collectionrequester.cpp:122
 #, kde-format

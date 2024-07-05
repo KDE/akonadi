@@ -996,11 +996,10 @@ msgid "Reindex folder"
 msgstr "重新索引文件夹"
 
 #: widgets/collectionrequester.cpp:113
-#, fuzzy, kde-format
-#| msgid "No Folder"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No Folder"
-msgstr "无文件夹"
+msgstr ""
 
 #: widgets/collectionrequester.cpp:122
 #, kde-format
