@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-04 00:39+0000\n"
-"PO-Revision-Date: 2024-06-20 02:24+0900\n"
+"PO-Revision-Date: 2024-07-05 15:37+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -61,7 +61,7 @@ msgstr "代理程式識別子"
 #: agentbase/agentbase.cpp:867
 #, kde-format
 msgid "Akonadi Agent"
-msgstr "Akonadi Agent"
+msgstr "Akonadi 代理程式"
 
 #: agentbase/agentbase_p.h:49 agentbase/resourcescheduler.cpp:268
 #, kde-format
@@ -1000,8 +1000,7 @@ msgid "Reindex folder"
 msgstr "重新索引資料夾"
 
 #: widgets/collectionrequester.cpp:113
-#, fuzzy, kde-format
-#| msgid "No Folder"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No Folder"
 msgstr "沒有資料夾"
