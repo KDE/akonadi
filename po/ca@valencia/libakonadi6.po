@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-04 00:39+0000\n"
-"PO-Revision-Date: 2024-06-17 13:59+0200\n"
+"PO-Revision-Date: 2024-07-04 09:42+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -1029,8 +1029,7 @@ msgid "Reindex folder"
 msgstr "Torna a indexar la carpeta"
 
 #: widgets/collectionrequester.cpp:113
-#, fuzzy, kde-format
-#| msgid "No Folder"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No Folder"
 msgstr "Cap carpeta"
@@ -2644,6 +2643,3 @@ msgstr "No s'ha pogut analitzar el fitxer de dades: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "No s'ha pogut trobar la col·lecció %1"
-
-#~ msgid "Failed to create relation."
-#~ msgstr "No s'ha pogut crear la relació."
