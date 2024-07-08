@@ -5,8 +5,42 @@
 */
 
 #include "itemfetchscope.h"
+#include "tagfetchscope.h"
 
-#include "itemfetchscope_p.h"
+namespace Akonadi
+{
+/**
+ * @internal
+ */
+class ItemFetchScopePrivate : public QSharedData
+{
+public:
+    ItemFetchScopePrivate()
+    {
+        mTagFetchScope.setFetchIdOnly(true);
+    }
+
+    ItemFetchScopePrivate(const ItemFetchScopePrivate &other) = default;
+
+public:
+    QSet<QByteArray> mPayloadParts;
+    QSet<QByteArray> mAttributes;
+    ItemFetchScope::AncestorRetrieval mAncestorDepth = ItemFetchScope::None;
+    bool mFullPayload = false;
+    bool mAllAttributes = false;
+    bool mCacheOnly = false;
+    bool mCheckCachedPayloadPartsOnly = false;
+    bool mFetchMtime = true;
+    bool mIgnoreRetrievalErrors = false;
+    QDateTime mChangedSince;
+    bool mFetchRid = true;
+    bool mFetchGid = false;
+    bool mFetchTags = false;
+    TagFetchScope mTagFetchScope;
+    bool mFetchVRefs = false;
+};
+
+} // namespace Akonadi
 
 using namespace Akonadi;
 
@@ -15,14 +49,9 @@ ItemFetchScope::ItemFetchScope()
 {
 }
 
-ItemFetchScope::ItemFetchScope(const ItemFetchScope &other)
-    : d(other.d)
-{
-}
+ItemFetchScope::ItemFetchScope(const ItemFetchScope &other) = default;
 
-ItemFetchScope::~ItemFetchScope()
-{
-}
+ItemFetchScope::~ItemFetchScope() = default;
 
 ItemFetchScope &ItemFetchScope::operator=(const ItemFetchScope &other)
 {

@@ -95,7 +95,6 @@ set(akonadicore_base_SRCS
     item.h
     itemchangelog_p.h
     itemfetchscope.h
-    itemfetchscope_p.h
     itemmonitor.h
     itemmonitor_p.h
     itemserializer_p.h
