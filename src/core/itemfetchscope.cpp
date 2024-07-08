@@ -15,10 +15,7 @@ namespace Akonadi
 class ItemFetchScopePrivate : public QSharedData
 {
 public:
-    ItemFetchScopePrivate()
-    {
-        mTagFetchScope.setFetchIdOnly(true);
-    }
+    ItemFetchScopePrivate() = default;
 
     ItemFetchScopePrivate(const ItemFetchScopePrivate &other) = default;
 
