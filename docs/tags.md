@@ -149,15 +149,15 @@ If the storage backend supports some form of labels it should implement support 
 so that tags from the backend are synchronized into Akonadi and vice versa.
 
 To be notified about changes in Tags, Resource implementation must inherit from
-Akonadi::AgentBase::ObserverV4 (or later). 
+Akonadi::AgentBase::TagObserver.
 
-Akonadi::AgentBase::ObserverV4::tagAdded(), tagChanged() and tagRemoved() may be
+Akonadi::AgentBase::TagObserver::tagAdded(), tagChanged() and tagRemoved() may be
 optionally reimplemented by Resource implementation if it wants to synchronize
 all local Tags with the remote storage so they can be presented to the user, even
 if no Items belonging to the Resource are tagged with it.
 
 The most important method to reimplement by Resource implementations is
-Akonadi::AgentBase::ObserverV4::itemsTagsChanged(), which gives a list of changed
+Akonadi::AgentBase::TagObserver::itemsTagsChanged(), which gives a list of changed
 Items belonging to the Resource, a set of Tags added to all those Items and a set
 of Tags removed from those Items.
 
