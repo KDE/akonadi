@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: KDE 4.3\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-04 00:39+0000\n"
-"PO-Revision-Date: 2024-05-22 10:38+0200\n"
+"PO-Revision-Date: 2024-07-07 14:24+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.07.70\n"
+"X-Generator: Lokalize 24.05.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -52,8 +52,7 @@ msgid "%1 of type %2"
 msgstr "%2 típusú %1"
 
 #: agentbase/agentbase.cpp:861
-#, fuzzy, kde-format
-#| msgid "Agent identifier"
+#, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Azonosító"
@@ -840,8 +839,7 @@ msgid "&New Subfolder..."
 msgstr "Ú&j almappa…"
 
 #: widgets/collectiondialog.cpp:228
-#, fuzzy, kde-format
-#| msgid "Create a new subfolder under the currently selected folder"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Új almappa létrehozása a jelenleg kiválasztott mappa alá"
@@ -1020,15 +1018,13 @@ msgid "Reindex folder"
 msgstr "Mappa újraindexelése"
 
 #: widgets/collectionrequester.cpp:113
-#, fuzzy, kde-format
-#| msgid "No Folder"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No Folder"
 msgstr "Nincs mappa"
 
 #: widgets/collectionrequester.cpp:122
-#, fuzzy, kde-format
-#| msgid "Open collection dialog"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
 msgstr "Gyűjteményablak megnyitása"
@@ -1080,14 +1076,7 @@ msgid "Keep both versions"
 msgstr "Mindkettő megtartása"
 
 #: widgets/conflictresolvedialog.cpp:217
-#, fuzzy, kde-format
-#| msgid ""
-#| "<qt>Your changes conflict with those made by someone else meanwhile."
-#| "<br>Unless one version can just be thrown away, you will have to "
-#| "integrate those changes manually.<br>Click on <a href=\"opentexteditor\">"
-#| "\"Open text editor\"</a> to keep a copy of the texts, then select which "
-#| "version is most correct, then re-open it and modify it again to add "
-#| "what's missing."
+#, kde-format
 msgctxt "@label:textbox"
 msgid ""
 "<qt>Your changes conflict with those made by someone else meanwhile."
@@ -1150,11 +1139,10 @@ msgstr ""
 "%1"
 
 #: widgets/erroroverlay.cpp:228
-#, fuzzy, kde-format
-#| msgid "Personal information management service is starting..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
-msgstr "A személyes-információ kezelő szolgáltatás indul…"
+msgstr "A személyi információkezelő szolgáltatás indul…"
 
 #: widgets/erroroverlay.cpp:229
 #, kde-format
@@ -1162,11 +1150,10 @@ msgid "Personal information management service is starting..."
 msgstr "A személyes-információ kezelő szolgáltatás indul…"
 
 #: widgets/erroroverlay.cpp:233
-#, fuzzy, kde-format
-#| msgid "Personal information management service is shutting down..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
-msgstr "A személyes-információ kezelő szolgáltatás leáll…"
+msgstr "A személyi információkezelő szolgáltatás leáll…"
 
 #: widgets/erroroverlay.cpp:234
 #, kde-format
@@ -1174,14 +1161,12 @@ msgid "Personal information management service is shutting down..."
 msgstr "A személyes-információ kezelő szolgáltatás leáll…"
 
 #: widgets/erroroverlay.cpp:238
-#, fuzzy, kde-format
-#| msgid ""
-#| "Personal information management service is performing a database upgrade."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
 msgstr ""
-"A személyes-információ kezelő szolgáltatás adatbázis frissítést hajt végre."
+"A személyi információkezelő szolgáltatás adatbázis-frissítést hajt végre."
 
 #: widgets/erroroverlay.cpp:240
 #, kde-format
@@ -1192,7 +1177,7 @@ msgid ""
 "Depending on the amount of personal information, this might take a few "
 "minutes."
 msgstr ""
-"A személyes információ-kezelő szolgáltatás adatbázis-frissítést hajt végre.\n"
+"A személyi információkezelő szolgáltatás adatbázis-frissítést hajt végre.\n"
 "Ez egy szoftverfrissítés után történik és szükséges a teljesítmény "
 "optimalizálásához.\n"
 "A személyes információk mennyiségétől függően ez eltarthat néhány percig."
@@ -1200,16 +1185,13 @@ msgstr ""
 #. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
 #: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not running. This "
-#| "application cannot be used without it."
+#, kde-format
 msgid ""
 "A required background service is not running. This application cannot be "
 "used without it."
 msgstr ""
-"Az Akonadi személyes-információ kezelő szolgáltatás nem fut. Ez az "
-"alkalmazás nem használható anélkül."
+"Egy kötelező háttérszolgáltatás nem fut. Ez az alkalmazás nem használható "
+"anélkül."
 
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #: widgets/erroroverlay.ui:116
@@ -1220,27 +1202,20 @@ msgstr "Indítás"
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management framework is not "
-#| "operational.\n"
-#| "Click on \"Details...\" to obtain detailed information on this problem."
+#, kde-format
 msgid ""
 "A required background service is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
-"Az Akonadi személyes-információ kezelő szolgáltatás keretrendszer nem "
-"üzemképes.\n"
+"Egy kötelező háttérszolgáltatás nem üzemképes.\n"
 "Kattintson a „Részletek…” gombra, ha részletes leírást szeretne kapni a "
 "hibáról."
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not operational."
+#, kde-format
 msgid "A required background service is not operational."
-msgstr "Az Akonadi személyes-információ kezelő szolgáltatás nem üzemképes."
+msgstr "Egy kötelező háttérszolgáltatás nem üzemképes."
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
