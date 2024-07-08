@@ -1164,6 +1164,11 @@ void AgentBase::registerObserver(Observer *observer)
         connect(d->mChangeRecorder, &Monitor::tagChanged, d, &AgentBasePrivate::tagChanged);
         connect(d->mChangeRecorder, &Monitor::tagRemoved, d, &AgentBasePrivate::tagRemoved);
         connect(d->mChangeRecorder, &Monitor::itemsTagsChanged, d, &AgentBasePrivate::itemsTagsChanged);
+
+        // If the agent has a TagObserver, we assume it wants to receive everything tag-related.
+        d->mChangeRecorder->itemFetchScope().setFetchTags(true);
+        d->mChangeRecorder->tagFetchScope().setFetchAllAttributes(true);
+        d->mChangeRecorder->tagFetchScope().setFetchRemoteId(true);
     }
 
     if (hasObserverV3) {
