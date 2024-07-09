@@ -176,33 +176,10 @@ void StorageDebugger::queryExecuted(qint64 connectionId, const QSqlQuery &query,
         return;
     }
 
-    QSqlQuery q(query);
-    QList<QVariantList> result;
-
-    if (q.first()) {
-        const QSqlRecord record = q.record();
-        QVariantList row;
-        const int numRecords = record.count();
-        row.reserve(numRecords);
-        for (int i = 0; i < numRecords; ++i) {
-            row << record.fieldName(i);
-        }
-        result << row;
-
-        int cnt = 0;
-        do {
-            const QSqlRecord record = q.record();
-            QVariantList row;
-            const int numRecords = record.count();
-            row.reserve(numRecords);
-            for (int i = 0; i < numRecords; ++i) {
-                row << record.value(i);
-            }
-            result << row;
-        } while (q.next() && ++cnt < 1000);
-    }
-
     const int querySize = query.isSelect() ? query.size() : query.numRowsAffected();
+    // We cannot extract actual results from the query since QSqlQuery is no longer copyable
+    // and looping over the reference we got from caller would consume the results for the
+    // caller. Therefor we just pass an empty list for a result.
     Q_EMIT queryExecuted(seq,
                          connectionId,
                          QDateTime::currentMSecsSinceEpoch(),
@@ -210,16 +187,13 @@ void StorageDebugger::queryExecuted(qint64 connectionId, const QSqlQuery &query,
                          query.executedQuery(),
                          query.boundValues(),
                          querySize,
-                         result,
+                         QList<QList<QVariant>>(),
                          QString());
 
     if (mFile && mFile->isOpen()) {
         QTextStream out(mFile.get());
         out << query.executedQuery() << " " << duration << "ms\n";
     }
-
-    // Reset the query
-    q.seek(-1, false);
 }
 
 #include "moc_storagedebugger.cpp"

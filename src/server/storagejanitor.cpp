@@ -755,7 +755,7 @@ void StorageJanitor::checkSizeTreshold()
             return;
         }
 
-        QSqlQuery query = qb.query();
+        auto &query = qb.query();
         inform(QStringLiteral("Found %1 parts to be moved to external files").arg(query.size()));
 
         while (query.next()) {
@@ -789,7 +789,6 @@ void StorageJanitor::checkSizeTreshold()
 
             inform(QStringLiteral("Moved part %1 from database into external file %2").arg(part.id()).arg(QString::fromLatin1(name)));
         }
-        query.finish();
     }
 
     {
@@ -802,7 +801,7 @@ void StorageJanitor::checkSizeTreshold()
             return;
         }
 
-        QSqlQuery query = qb.query();
+        auto &query = qb.query();
         inform(QStringLiteral("Found %1 parts to be moved to database").arg(query.size()));
 
         while (query.next()) {
@@ -834,7 +833,6 @@ void StorageJanitor::checkSizeTreshold()
             f.remove();
             inform(QStringLiteral("Moved part %1 from external file into database").arg(part.id()));
         }
-        query.finish();
     }
 }
 
@@ -857,7 +855,7 @@ void StorageJanitor::migrateToLevelledCacheHierarchy()
         return;
     }
 
-    QSqlQuery query = qb.query();
+    auto &query = qb.query();
     while (query.next()) {
         const qint64 id = query.value(0).toLongLong();
         const QByteArray data = query.value(1).toByteArray();
@@ -887,7 +885,6 @@ void StorageJanitor::migrateToLevelledCacheHierarchy()
             inform(QStringLiteral("Migrated part %1 to new levelled cache").arg(id));
         }
     }
-    query.finish();
 }
 
 void StorageJanitor::findOrphanSearchIndexEntries()
@@ -910,7 +907,7 @@ void StorageJanitor::findOrphanSearchIndexEntries()
         return;
     }
 
-    QSqlQuery query = qb.query();
+    auto &query = qb.query();
     while (query.next()) {
         const qint64 colId = query.value(0).toLongLong();
         // Skip virtual collections, they are not indexed
@@ -950,18 +947,16 @@ void StorageJanitor::findOrphanSearchIndexEntries()
             continue;
         }
 
-        QSqlQuery itemQuery = iqb.query();
+        auto &itemQuery = iqb.query();
         while (itemQuery.next()) {
             searchResults.remove(itemQuery.value(0).toLongLong());
         }
-        itemQuery.finish();
 
         if (!searchResults.isEmpty()) {
             inform(QStringLiteral("Collection %1 search index contains %2 orphan items. Scheduling reindexing").arg(colId).arg(searchResults.count()));
             iface.call(QDBus::NoBlock, QStringLiteral("reindexCollection"), colId);
         }
     }
-    query.finish();
 }
 
 void StorageJanitor::ensureSearchCollection()

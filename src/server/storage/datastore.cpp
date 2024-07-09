@@ -364,13 +364,15 @@ bool DataStore::doAppendItemsFlag(const PimItem::List &items, const Flag &flag, 
         return true; // all items have the desired flags already
     }
 
-    QueryBuilder qb2(PimItemFlagRelation::tableName(), QueryBuilder::Insert);
-    qb2.setColumnValue(PimItemFlagRelation::leftColumn(), appendIds);
-    qb2.setColumnValue(PimItemFlagRelation::rightColumn(), flagIds);
-    qb2.setIdentificationColumn(QString());
-    if (!qb2.exec()) {
-        qCWarning(AKONADISERVER_LOG) << "Failed to append flag" << flag.name() << "to Items" << appendIds;
-        return false;
+    {
+        QueryBuilder qb2(PimItemFlagRelation::tableName(), QueryBuilder::Insert);
+        qb2.setColumnValue(PimItemFlagRelation::leftColumn(), appendIds);
+        qb2.setColumnValue(PimItemFlagRelation::rightColumn(), flagIds);
+        qb2.setIdentificationColumn(QString());
+        if (!qb2.exec()) {
+            qCWarning(AKONADISERVER_LOG) << "Failed to append flag" << flag.name() << "to Items" << appendIds;
+            return false;
+        }
     }
 
     if (!silent) {
@@ -410,7 +412,7 @@ bool DataStore::appendItemsFlags(const PimItem::List &items,
                 return false;
             }
 
-            QSqlQuery query = qb.query();
+            auto &query = qb.query();
             if (query.driver()->hasFeature(QSqlDriver::QuerySize)) {
                 // The query size feature is not supported by the sqllite driver
                 if (query.size() == items.count()) {
@@ -427,7 +429,6 @@ bool DataStore::appendItemsFlags(const PimItem::List &items,
                     setBoolPtr(flagsChanged, true);
                 }
             }
-            query.finish();
         }
 
         if (!doAppendItemsFlag(items, flag, existing, col, silent)) {
@@ -476,6 +477,7 @@ bool DataStore::removeItemsFlags(const PimItem::List &items, const QList<Flag> &
     }
 
     if (qb.query().numRowsAffected() != 0) {
+        qb.query().finish();
         setBoolPtr(flagsChanged, true);
         if (!silent) {
             QSet<QByteArray> removedFlagsBa;
@@ -572,13 +574,15 @@ bool DataStore::doAppendItemsTag(const PimItem::List &items, const Tag &tag, con
         return true; // all items have the desired tags already
     }
 
-    QueryBuilder qb2(PimItemTagRelation::tableName(), QueryBuilder::Insert);
-    qb2.setColumnValue(PimItemTagRelation::leftColumn(), appendIds);
-    qb2.setColumnValue(PimItemTagRelation::rightColumn(), tagIds);
-    qb2.setIdentificationColumn(QString());
-    if (!qb2.exec()) {
-        qCWarning(AKONADISERVER_LOG) << "Failed to append tag" << tag << "to Items" << appendItems;
-        return false;
+    {
+        QueryBuilder qb2(PimItemTagRelation::tableName(), QueryBuilder::Insert);
+        qb2.setColumnValue(PimItemTagRelation::leftColumn(), appendIds);
+        qb2.setColumnValue(PimItemTagRelation::rightColumn(), tagIds);
+        qb2.setIdentificationColumn(QString());
+        if (!qb2.exec()) {
+            qCWarning(AKONADISERVER_LOG) << "Failed to append tag" << tag << "to Items" << appendItems;
+            return false;
+        }
     }
 
     if (!silent) {
@@ -613,7 +617,7 @@ bool DataStore::appendItemsTags(const PimItem::List &items, const Tag::List &tag
                 return false;
             }
 
-            QSqlQuery query = qb.query();
+            auto &query = qb.query();
             if (query.driver()->hasFeature(QSqlDriver::QuerySize)) {
                 if (query.size() == items.count()) {
                     continue;
@@ -629,7 +633,6 @@ bool DataStore::appendItemsTags(const PimItem::List &items, const Tag::List &tag
                     setBoolPtr(tagsChanged, true);
                 }
             }
-            query.finish();
         }
 
         if (!doAppendItemsTag(items, tag, existing, col, silent)) {
@@ -672,6 +675,7 @@ bool DataStore::removeItemsTags(const PimItem::List &items, const Tag::List &tag
     }
 
     if (qb.query().numRowsAffected() != 0) {
+        qb.query().finish();
         setBoolPtr(tagsChanged, true);
         if (!silent) {
             notificationCollector()->itemsTagsChanged(items, QSet<qint64>(), removedTags);
@@ -723,7 +727,7 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
         }
 
         // Emit specialized notifications for each resource
-        QSqlQuery query = qb.query();
+        auto &query = qb.query();
         while (query.next()) {
             const QString rid = query.value(0).toString();
             const QByteArray resource = query.value(1).toByteArray();
@@ -769,6 +773,7 @@ bool DataStore::removeItemParts(const PimItem &item, const QSet<QByteArray> &par
             return false;
         }
     }
+    qb.query().finish(); // finish before dispatching notification
 
     notificationCollector()->itemChanged(item, parts);
     return true;
@@ -1042,7 +1047,7 @@ QMap<Entity::Id, QList<PimItem>> DataStore::virtualCollections(const PimItem::Li
         return QMap<Entity::Id, QList<PimItem>>();
     }
 
-    QSqlQuery query = qb.query();
+    auto &query = qb.query();
     QMap<Entity::Id, QList<PimItem>> map;
     query.next();
     while (query.isValid()) {
@@ -1317,9 +1322,9 @@ bool DataStore::beginTransaction(const QString &name)
         QElapsedTimer timer;
         timer.start();
         if (DbType::type(m_database) == DbType::Sqlite) {
-            m_database.exec(QStringLiteral("BEGIN IMMEDIATE TRANSACTION"));
-            StorageDebugger::instance()->addTransaction(reinterpret_cast<qint64>(this), name, timer.elapsed(), m_database.lastError().text());
-            if (m_database.lastError().isValid()) {
+            QSqlQuery query(QStringLiteral("BEGIN IMMEDIATE TRANSACTION"), m_database);
+            StorageDebugger::instance()->addTransaction(reinterpret_cast<qint64>(this), name, timer.elapsed(), query.lastError().text());
+            if (query.lastError().isValid()) {
                 debugLastDbError(QStringLiteral("DataStore::beginTransaction (SQLITE) name: %1").arg(name));
                 return false;
             }
@@ -1337,7 +1342,7 @@ bool DataStore::beginTransaction(const QString &name)
             // INSERT INTO mimetypetable (name) VALUES ('foo') RETURNING id;
             // INSERT INTO collectionmimetyperelation (collection_id, mimetype_id) VALUES (x, y)
             // where "y" refers to the newly inserted mimetype
-            m_database.exec(QStringLiteral("SET CONSTRAINTS ALL DEFERRED"));
+            QSqlQuery query(QStringLiteral("SET CONSTRAINTS ALL DEFERRED"), m_database);
         }
     }
 

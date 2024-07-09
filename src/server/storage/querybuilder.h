@@ -15,6 +15,7 @@
 #include <QString>
 #include <QStringList>
 #include <QVariant>
+#include <optional>
 
 #ifdef QUERYBUILDER_UNITTEST
 class QueryBuilderTest;
@@ -30,6 +31,8 @@ class DataStore;
 */
 class QueryBuilder
 {
+    Q_DISABLE_COPY(QueryBuilder)
+
 public:
     enum QueryType {
         Select,
@@ -80,6 +83,11 @@ public:
     */
     explicit QueryBuilder(const QSqlQuery &tableQuery, const QString &tableQueryAlias);
     QueryBuilder(DataStore *store, const QSqlQuery &tableQuery, const QString &tableQueryAlias);
+
+    QueryBuilder(QueryBuilder &&) noexcept;
+    QueryBuilder &operator=(QueryBuilder &&) noexcept;
+
+    ~QueryBuilder();
 
     /**
       Sets the database which should execute the query. Unfortunately the SQL "standard"
@@ -280,7 +288,10 @@ public:
     /**
       Returns the query, only valid after exec().
     */
-    QSqlQuery &query();
+    inline QSqlQuery &query()
+    {
+        return mQuery;
+    }
 
     /**
       Executes the query, returns true on success.
@@ -340,7 +351,7 @@ protected:
 
 private:
     QString mTable;
-    QSqlQuery mTableSubQuery;
+    std::optional<std::reference_wrapper<const QSqlQuery>> mTableSubQuery;
     DataStore *mDataStore = nullptr;
     DbType::Type mDatabaseType;
     Query::Condition mRootCondition[NUM_CONDITIONS];

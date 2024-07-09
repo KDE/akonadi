@@ -26,6 +26,7 @@ class Connection;
 class CommandContext;
 class ItemRetrievalManager;
 class ItemRetrievalRequest;
+class QueryBuilder;
 
 /**
   Helper class for retrieving missing items parts from remote resources.
@@ -64,7 +65,7 @@ Q_SIGNALS:
     void itemsRetrieved(const QList<qint64> &ids);
 
 private:
-    QSqlQuery buildQuery() const;
+    QueryBuilder buildQuery() const;
 
     /**
      * Checks if external files are still present

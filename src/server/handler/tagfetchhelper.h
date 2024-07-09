@@ -16,6 +16,7 @@ namespace Akonadi
 namespace Server
 {
 class Connection;
+class QueryBuilder;
 
 class TagFetchHelper
 {
@@ -28,9 +29,9 @@ public:
     static QMap<QByteArray, QByteArray> fetchTagAttributes(qint64 tagId, const Protocol::TagFetchScope &fetchScope);
 
 private:
-    QSqlQuery buildTagQuery();
-    QSqlQuery buildAttributeQuery() const;
-    static QSqlQuery buildAttributeQuery(qint64 id, const Protocol::TagFetchScope &fetchScope);
+    QueryBuilder buildTagQuery();
+    QueryBuilder buildAttributeQuery() const;
+    static QueryBuilder buildAttributeQuery(qint64 id, const Protocol::TagFetchScope &fetchScope);
 
 private:
     Connection *mConnection = nullptr;

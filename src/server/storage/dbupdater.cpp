@@ -330,7 +330,7 @@ bool DbUpdater::complexUpdate_25()
         }
 
         // Process them one by one
-        QSqlQuery query = qb.query();
+        auto &query = qb.query();
         while (query.next()) {
             // Split the part name to namespace and name and insert it to PartTypeTable
             const QString partName = query.value(0).toString();
@@ -348,7 +348,6 @@ bool DbUpdater::complexUpdate_25()
             }
             qCDebug(AKONADISERVER_LOG) << "\t Moved part type" << partName << "to PartTypeTable";
         }
-        query.finish();
     }
 
     qCDebug(AKONADISERVER_LOG) << "Migrating data from PartTable to PartTable_new";
@@ -487,7 +486,7 @@ bool DbUpdater::complexUpdate_36()
             copy.name += QStringLiteral("_new");
             if (!query.exec(initializer->buildCreateTableStatement(copy))) {
                 // If this fails we will recover on next start
-                return {false, query};
+                return {false, std::move(query)};
             }
         }
 
@@ -497,18 +496,18 @@ bool DbUpdater::complexUpdate_36()
                 qUtf8Printable(table.name));
         if (!query.exec(QStringLiteral("INSERT INTO %1_new SELECT * FROM %1").arg(table.name))) {
             // If this fails, we will recover on next start
-            return {false, query};
+            return {false, std::move(query)};
         }
 
         qCDebug(AKONADISERVER_LOG, "\tSwapping %s_new for %s", qUtf8Printable(table.name), qUtf8Printable(table.name));
         if (!query.exec(QStringLiteral("ALTER TABLE %1 RENAME TO %1_old").arg(table.name))) {
             // If this fails we will recover on next start
-            return {false, query};
+            return {false, std::move(query)};
         }
 
         if (!query.exec(QStringLiteral("ALTER TABLE %1_new RENAME TO %1").arg(table.name))) {
             // If this fails we will recover on next start
-            return {false, query};
+            return {false, std::move(query)};
         }
 
         qCDebug(AKONADISERVER_LOG, "\tRemoving table %s_old", qUtf8Printable(table.name));

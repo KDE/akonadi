@@ -120,7 +120,7 @@ enum QueryColumns {
     PartDatasizeColumn
 };
 
-QSqlQuery ItemRetriever::buildQuery() const
+QueryBuilder ItemRetriever::buildQuery() const
 {
     QueryBuilder qb(PimItem::tableName());
 
@@ -169,7 +169,7 @@ QSqlQuery ItemRetriever::buildQuery() const
 
     qb.query().next();
 
-    return qb.query();
+    return qb;
 }
 
 namespace
@@ -352,7 +352,8 @@ bool ItemRetriever::exec()
 
     verifyCache();
 
-    QSqlQuery query = buildQuery();
+    auto qb = buildQuery();
+    auto &query = qb.query();
     const auto parts = mParts | Views::filter([](const auto &part) {
                            return part.startsWith(AKONADI_PARAM_PLD);
                        })

@@ -138,7 +138,7 @@ bool CollectionFetchHandler::checkFilterCondition(const Collection &col) const
     return true;
 }
 
-static QSqlQuery getAttributeQuery(const QVariantList &ids, const QSet<QByteArray> &requestedAttributes)
+static QueryBuilder getAttributeQuery(const QVariantList &ids, const QSet<QByteArray> &requestedAttributes)
 {
     QueryBuilder qb(CollectionAttribute::tableName());
 
@@ -162,7 +162,7 @@ static QSqlQuery getAttributeQuery(const QVariantList &ids, const QSet<QByteArra
     if (!qb.exec()) {
         throw HandlerException("Unable to retrieve attributes for listing");
     }
-    return qb.query();
+    return qb;
 }
 
 void CollectionFetchHandler::retrieveAttributes(const QVariantList &collectionIds)
@@ -172,7 +172,8 @@ void CollectionFetchHandler::retrieveAttributes(const QVariantList &collectionId
     const int size = 999;
     while (start < collectionIds.size()) {
         const QVariantList ids = collectionIds.mid(start, size);
-        QSqlQuery attributeQuery = getAttributeQuery(ids, mAncestorAttributes);
+        auto attributeQb = getAttributeQuery(ids, mAncestorAttributes);
+        auto &attributeQuery = attributeQb.query();
         while (attributeQuery.next()) {
             CollectionAttribute attr;
             attr.setType(attributeQuery.value(1).toByteArray());
@@ -180,12 +181,11 @@ void CollectionFetchHandler::retrieveAttributes(const QVariantList &collectionId
             // qCDebug(AKONADISERVER_LOG) << "found attribute " << attr.type() << attr.value();
             mCollectionAttributes.insert(attributeQuery.value(0).toLongLong(), attr);
         }
-        attributeQuery.finish();
         start += size;
     }
 }
 
-static QSqlQuery getMimeTypeQuery(const QVariantList &ids)
+static QueryBuilder getMimeTypeQuery(const QVariantList &ids)
 {
     QueryBuilder qb(CollectionMimeTypeRelation::tableName());
 
@@ -200,7 +200,7 @@ static QSqlQuery getMimeTypeQuery(const QVariantList &ids)
     if (!qb.exec()) {
         throw HandlerException("Unable to retrieve mimetypes for listing");
     }
-    return qb.query();
+    return qb;
 }
 
 void CollectionFetchHandler::retrieveCollections(const Collection &topParent, int depth)
@@ -392,8 +392,8 @@ void CollectionFetchHandler::retrieveCollections(const Collection &topParent, in
     const int querySizeLimit = 999;
     int mimetypeQueryStart = 0;
     int attributeQueryStart = 0;
-    QSqlQuery mimeTypeQuery(storageBackend()->database());
-    QSqlQuery attributeQuery(storageBackend()->database());
+    std::optional<QueryBuilder> mimeTypeQb;
+    std::optional<QueryBuilder> attributeQb;
     auto it = mCollections.begin();
     while (it != mCollections.end()) {
         const Collection col = it.value();
@@ -401,22 +401,22 @@ void CollectionFetchHandler::retrieveCollections(const Collection &topParent, in
         QStringList mimeTypes;
         {
             // Get new query if necessary
-            if (!mimeTypeQuery.isValid() && mimetypeQueryStart < mimeTypeIds.size()) {
+            if (!mimeTypeQb && mimetypeQueryStart < mimeTypeIds.size()) {
                 const QVariantList ids = mimeTypeIds.mid(mimetypeQueryStart, querySizeLimit);
                 mimetypeQueryStart += querySizeLimit;
-                mimeTypeQuery = getMimeTypeQuery(ids);
-                mimeTypeQuery.next(); // place at first record
+                mimeTypeQb = getMimeTypeQuery(ids);
+                mimeTypeQb->query().next(); // place at first record
             }
 
-            while (mimeTypeQuery.isValid() && mimeTypeQuery.value(0).toLongLong() < col.id()) {
-                if (!mimeTypeQuery.next()) {
+            while (mimeTypeQb && mimeTypeQb->query().isValid() && mimeTypeQb->query().value(0).toLongLong() < col.id()) {
+                if (!mimeTypeQb->query().next()) {
                     break;
                 }
             }
             // Advance query while a mimetype for this collection is returned
-            while (mimeTypeQuery.isValid() && mimeTypeQuery.value(0).toLongLong() == col.id()) {
-                mimeTypes << mimeTypeQuery.value(2).toString();
-                if (!mimeTypeQuery.next()) {
+            while (mimeTypeQb && mimeTypeQb->query().isValid() && mimeTypeQb->query().value(0).toLongLong() == col.id()) {
+                mimeTypes << mimeTypeQb->query().value(2).toString();
+                if (!mimeTypeQb->query().next()) {
                     break;
                 }
             }
@@ -425,20 +425,21 @@ void CollectionFetchHandler::retrieveCollections(const Collection &topParent, in
         CollectionAttribute::List attributes;
         {
             // Get new query if necessary
-            if (!attributeQuery.isValid() && attributeQueryStart < attributeIds.size()) {
+            if (!attributeQb && attributeQueryStart < attributeIds.size()) {
                 const QVariantList ids = attributeIds.mid(attributeQueryStart, querySizeLimit);
                 attributeQueryStart += querySizeLimit;
-                attributeQuery = getAttributeQuery(ids, QSet<QByteArray>());
-                attributeQuery.next(); // place at first record
+                attributeQb = getAttributeQuery(ids, QSet<QByteArray>());
+                attributeQb->query().next(); // place at first record
             }
 
-            while (attributeQuery.isValid() && attributeQuery.value(0).toLongLong() < col.id()) {
-                if (!attributeQuery.next()) {
+            while (attributeQb && attributeQb->query().isValid() && attributeQb->query().value(0).toLongLong() < col.id()) {
+                if (!attributeQb->query().next()) {
                     break;
                 }
             }
             // Advance query while a mimetype for this collection is returned
-            while (attributeQuery.isValid() && attributeQuery.value(0).toLongLong() == col.id()) {
+            while (attributeQb && attributeQb->query().isValid() && attributeQb->query().value(0).toLongLong() == col.id()) {
+                auto &attributeQuery = attributeQb->query();
                 CollectionAttribute attr;
                 attr.setType(attributeQuery.value(1).toByteArray());
                 attr.setValue(attributeQuery.value(2).toByteArray());
@@ -453,8 +454,6 @@ void CollectionFetchHandler::retrieveCollections(const Collection &topParent, in
         listCollection(col, ancestorsForCollection(col), mimeTypes, attributes);
         it++;
     }
-    attributeQuery.finish();
-    mimeTypeQuery.finish();
 }
 
 bool CollectionFetchHandler::parseStream()

@@ -90,7 +90,7 @@ bool DbIntrospector::isTableEmpty(const QString &tableName)
         throw DbException(queryBuilder.query(), "Unable to retrieve data from table.");
     }
 
-    QSqlQuery query = queryBuilder.query();
+    auto &query = queryBuilder.query();
     return (query.size() == 0 || !query.first());
 }
 

@@ -27,5 +27,5 @@ private Q_SLOTS:
     void benchQueryBuilder();
 
 private:
-    QList<Akonadi::Server::QueryBuilder> mBuilders;
+    std::vector<Akonadi::Server::QueryBuilder> mBuilders;
 };

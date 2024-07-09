@@ -62,11 +62,11 @@ private:
 
     void updateItemAccessTime();
     void triggerOnDemandFetch();
-    QSqlQuery buildItemQuery();
-    QSqlQuery buildPartQuery(const QList<QByteArray> &partList, bool allPayload, bool allAttrs);
-    QSqlQuery buildFlagQuery();
-    QSqlQuery buildTagQuery();
-    QSqlQuery buildVRefQuery();
+    QueryBuilder buildItemQuery();
+    QueryBuilder buildPartQuery(QSqlQuery &itemQuery, const QList<QByteArray> &partList, bool allPayload, bool allAttrs);
+    QueryBuilder buildFlagQuery(QSqlQuery &itemQuery);
+    QueryBuilder buildTagQuery(QSqlQuery &itemQuery);
+    QueryBuilder buildVRefQuery(QSqlQuery &itemQuery);
 
     QList<Protocol::Ancestor> ancestorsForItem(Collection::Id parentColId);
     static bool needsAccessTimeUpdate(const QList<QByteArray> &parts);
@@ -85,7 +85,6 @@ private:
     bool mUpdateATimeEnabled = true;
     AkonadiServer &mAkonadi;
     Protocol::FetchLimit mItemsLimit;
-    QueryBuilder mItemQuery;
     QString mPimItemQueryAlias;
 
     friend class ::ItemFetchHelperTest;

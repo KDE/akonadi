@@ -755,7 +755,7 @@ bool DbMigrator::copyTable(DataStore *sourceStore, DataStore *destStore, const T
     QueryBuilder sourceQb(sourceStore, table.name);
     sourceQb.addColumns(columns);
     sourceQb.exec();
-    auto sourceQuery = sourceQb.query();
+    auto &sourceQuery = sourceQb.query();
 
     // Clean the destination table (from data pre-inserted by DbInitializer)
     {

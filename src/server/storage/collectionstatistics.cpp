@@ -22,13 +22,13 @@ CollectionStatistics::CollectionStatistics(bool prefetch)
     if (prefetch) {
         QMutexLocker lock(&mCacheLock);
 
-        QList<QueryBuilder> builders;
+        std::vector<QueryBuilder> builders;
         // This single query will give us statistics for all non-empty non-virtual
         // Collections at much better speed than individual queries.
         auto qb = prepareGenericQuery();
         qb.addColumn(PimItem::collectionIdFullColumnName());
         qb.addGroupColumn(PimItem::collectionIdFullColumnName());
-        builders << qb;
+        builders.emplace_back(std::move(qb));
 
         // This single query will give us statistics for all non-empty virtual
         // Collections
@@ -39,14 +39,14 @@ CollectionStatistics::CollectionStatistics(bool prefetch)
                    CollectionPimItemRelation::rightFullColumnName(),
                    PimItem::idFullColumnName());
         qb.addGroupColumn(CollectionPimItemRelation::leftFullColumnName());
-        builders << qb;
+        builders.emplace_back(std::move(qb));
 
         for (auto &qb : builders) {
             if (!qb.exec()) {
                 return;
             }
 
-            auto query = qb.query();
+            auto &query = qb.query();
             while (query.next()) {
                 mCache.insert(query.value(3).toLongLong(), {query.value(0).toLongLong(), query.value(1).toLongLong(), query.value(2).toLongLong()});
             }
@@ -62,7 +62,7 @@ CollectionStatistics::CollectionStatistics(bool prefetch)
             return;
         }
 
-        auto query = qb.query();
+        auto &query = qb.query();
         while (query.next()) {
             const auto colId = query.value(0).toLongLong();
             if (!mCache.contains(colId)) {

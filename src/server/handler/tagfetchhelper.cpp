@@ -21,7 +21,7 @@ TagFetchHelper::TagFetchHelper(Connection *connection, const Scope &scope, const
 {
 }
 
-QSqlQuery TagFetchHelper::buildAttributeQuery() const
+QueryBuilder TagFetchHelper::buildAttributeQuery() const
 {
     QueryBuilder qb(TagAttribute::tableName());
     qb.addColumn(TagAttribute::tagIdFullColumnName());
@@ -36,10 +36,10 @@ QSqlQuery TagFetchHelper::buildAttributeQuery() const
     }
 
     qb.query().next();
-    return qb.query();
+    return qb;
 }
 
-QSqlQuery TagFetchHelper::buildAttributeQuery(qint64 id, const Protocol::TagFetchScope &fetchScope)
+QueryBuilder TagFetchHelper::buildAttributeQuery(qint64 id, const Protocol::TagFetchScope &fetchScope)
 {
     QueryBuilder qb(TagAttribute::tableName());
     qb.addColumn(TagAttribute::tagIdColumn());
@@ -62,10 +62,10 @@ QSqlQuery TagFetchHelper::buildAttributeQuery(qint64 id, const Protocol::TagFetc
     }
 
     qb.query().next();
-    return qb.query();
+    return qb;
 }
 
-QSqlQuery TagFetchHelper::buildTagQuery()
+QueryBuilder TagFetchHelper::buildTagQuery()
 {
     QueryBuilder qb(Tag::tableName());
     qb.addColumn(Tag::idFullColumnName());
@@ -91,14 +91,15 @@ QSqlQuery TagFetchHelper::buildTagQuery()
     }
 
     qb.query().next();
-    return qb.query();
+    return qb;
 }
 
 QMap<QByteArray, QByteArray> TagFetchHelper::fetchTagAttributes(qint64 tagId, const Protocol::TagFetchScope &fetchScope)
 {
     QMap<QByteArray, QByteArray> attributes;
 
-    QSqlQuery attributeQuery = buildAttributeQuery(tagId, fetchScope);
+    auto attributeQb = buildAttributeQuery(tagId, fetchScope);
+    auto &attributeQuery = attributeQb.query();
     while (attributeQuery.isValid()) {
         attributes.insert(Utils::variantToByteArray(attributeQuery.value(1)), Utils::variantToByteArray(attributeQuery.value(2)));
         attributeQuery.next();
@@ -109,10 +110,12 @@ QMap<QByteArray, QByteArray> TagFetchHelper::fetchTagAttributes(qint64 tagId, co
 
 bool TagFetchHelper::fetchTags()
 {
-    QSqlQuery tagQuery = buildTagQuery();
-    QSqlQuery attributeQuery;
+    auto tagQb = buildTagQuery();
+    auto &tagQuery = tagQb.query();
+
+    std::optional<QueryBuilder> attributeQb;
     if (!mFetchScope.fetchIdOnly()) {
-        attributeQuery = buildAttributeQuery();
+        attributeQb = buildAttributeQuery();
     }
 
     while (tagQuery.isValid()) {
@@ -132,29 +135,30 @@ bool TagFetchHelper::fetchTags()
                 response.setRemoteId(Utils::variantToByteArray(tagQuery.value(4)));
             }
 
-            QMap<QByteArray, QByteArray> tagAttributes;
-            while (attributeQuery.isValid()) {
-                const qint64 id = attributeQuery.value(0).toLongLong();
-                if (id > tagId) {
+            if (attributeQb.has_value()) {
+                QMap<QByteArray, QByteArray> tagAttributes;
+                auto &attributeQuery = attributeQb->query();
+                while (attributeQuery.isValid()) {
+                    const qint64 id = attributeQuery.value(0).toLongLong();
+                    if (id > tagId) {
+                        attributeQuery.next();
+                        continue;
+                    } else if (id < tagId) {
+                        break;
+                    }
+
+                    tagAttributes.insert(Utils::variantToByteArray(attributeQuery.value(1)), Utils::variantToByteArray(attributeQuery.value(2)));
                     attributeQuery.next();
-                    continue;
-                } else if (id < tagId) {
-                    break;
                 }
 
-                tagAttributes.insert(Utils::variantToByteArray(attributeQuery.value(1)), Utils::variantToByteArray(attributeQuery.value(2)));
-                attributeQuery.next();
+                response.setAttributes(tagAttributes);
             }
-
-            response.setAttributes(tagAttributes);
         }
 
         mConnection->sendResponse(std::move(response));
 
         tagQuery.next();
     }
-    attributeQuery.finish();
-    tagQuery.finish();
 
     return true;
 }

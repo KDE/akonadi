@@ -10,6 +10,8 @@
 #include "entities.h"
 #include "storage/query.h"
 #include "utils.h"
+#include <memory>
+#include <qsqldatabase.h>
 
 #ifndef QUERYBUILDER_UNITTEST
 #include "storage/datastore.h"
@@ -116,7 +118,6 @@ QueryBuilder::QueryBuilder(DataStore *store, const QString &table, QueryBuilder:
 #ifndef QUERYBUILDER_UNITTEST
     , mDataStore(store)
     , mDatabaseType(DbType::type(store->database()))
-    , mQuery(store->database())
 #else
     , mDatabaseType(DbType::Unknown)
 #endif
@@ -125,6 +126,9 @@ QueryBuilder::QueryBuilder(DataStore *store, const QString &table, QueryBuilder:
     , mOffset(-1)
     , mDistinct(false)
 {
+#ifdef QUERYBUILDER_UNITTEST
+    Q_UNUSED(store);
+#endif
     static const QString defaultIdColumn = QStringLiteral("id");
     mIdentificationColumn = defaultIdColumn;
 }
@@ -136,11 +140,10 @@ QueryBuilder::QueryBuilder(const QSqlQuery &tableQuery, const QString &tableQuer
 
 QueryBuilder::QueryBuilder(DataStore *store, const QSqlQuery &tableQuery, const QString &tableQueryAlias)
     : mTable(tableQueryAlias)
-    , mTableSubQuery(tableQuery)
+    , mTableSubQuery(std::ref(tableQuery))
 #ifndef QUERYBUILDER_UNITTEST
     , mDataStore(store)
     , mDatabaseType(DbType::type(store->database()))
-    , mQuery(store->database())
 #else
     , mDatabaseType(DbType::Unknown)
 #endif
@@ -149,8 +152,79 @@ QueryBuilder::QueryBuilder(DataStore *store, const QSqlQuery &tableQuery, const 
     , mOffset(-1)
     , mDistinct(false)
 {
+#ifdef QUERYBUILDER_UNITTEST
+    Q_UNUSED(store);
+#endif
     static const QString defaultIdColumn = QStringLiteral("id");
     mIdentificationColumn = defaultIdColumn;
+}
+
+QueryBuilder::QueryBuilder(QueryBuilder &&other) noexcept
+    : mTable(other.mTable)
+    , mTableSubQuery(std::move(other.mTableSubQuery))
+    , mDataStore(other.mDataStore)
+    , mDatabaseType(other.mDatabaseType)
+    , mRootCondition{std::move(other.mRootCondition[0]), std::move(other.mRootCondition[1])}
+    , mQuery(std::move(other.mQuery))
+    , mType(other.mType)
+    , mColumns(std::move(other.mColumns))
+    , mBindValues(std::move(other.mBindValues))
+    , mSortColumns(std::move(other.mSortColumns))
+    , mGroupColumns(std::move(other.mGroupColumns))
+    , mColumnValues(std::move(other.mColumnValues))
+    , mColumnMultiValues(std::move(other.mColumnMultiValues))
+    , mIdentificationColumn(std::move(other.mIdentificationColumn))
+    , mJoinedTables(std::move(other.mJoinedTables))
+    , mJoins(std::move(other.mJoins))
+    , mLimit(other.mLimit)
+    , mOffset(other.mOffset)
+    , mDistinct(other.mDistinct)
+    , mForUpdate(other.mForUpdate)
+{
+    // a moved-from QSqlQuery has null d-pointer, so calling any method on it results
+    // in a crash. As a workaround, we re-initialize the moved-from QSqlQuery to an invalid one.
+    other.mQuery = QSqlQuery();
+}
+
+QueryBuilder &QueryBuilder::operator=(QueryBuilder &&other) noexcept
+{
+    if (this != &other) {
+        mTable = other.mTable;
+        mTableSubQuery = std::move(other.mTableSubQuery);
+        mDataStore = other.mDataStore;
+        mDatabaseType = other.mDatabaseType;
+        mRootCondition[0] = std::move(other.mRootCondition[0]);
+        mRootCondition[1] = std::move(other.mRootCondition[1]);
+        mQuery = std::move(other.mQuery);
+        mType = other.mType;
+        mColumns = std::move(other.mColumns);
+        mBindValues = std::move(other.mBindValues);
+        mSortColumns = std::move(other.mSortColumns);
+        mGroupColumns = std::move(other.mGroupColumns);
+        mColumnValues = std::move(other.mColumnValues);
+        mColumnMultiValues = std::move(other.mColumnMultiValues);
+        mIdentificationColumn = std::move(other.mIdentificationColumn);
+        mJoinedTables = std::move(other.mJoinedTables);
+        mJoins = std::move(other.mJoins);
+        mLimit = other.mLimit;
+        mOffset = other.mOffset;
+        mDistinct = other.mDistinct;
+        mForUpdate = other.mForUpdate;
+
+        other.mQuery = QSqlQuery(); // see the comment in move constructor
+    }
+    return *this;
+}
+
+QueryBuilder::~QueryBuilder()
+{
+    if (mQuery.isActive()) {
+        mQuery.finish();
+#ifndef QUERYBUILDER_UNITTEST
+        // Cache the query now that we won't need it.
+        QueryCache::insert(mDataStore->database(), mQuery.executedQuery(), std::move(mQuery));
+#endif
+    }
 }
 
 void QueryBuilder::setDatabaseType(DbType::Type type)
@@ -202,11 +276,6 @@ void QueryBuilder::addColumnCondition(const QString &column, Query::CompareOpera
 {
     Q_ASSERT(type == WhereCondition || (type == HavingCondition && mType == Select));
     mRootCondition[type].addColumnCondition(column, op, column2);
-}
-
-QSqlQuery &QueryBuilder::query()
-{
-    return mQuery;
 }
 
 void QueryBuilder::sqliteAdaptUpdateJoin(Query::Condition &condition)
@@ -310,8 +379,7 @@ void QueryBuilder::buildQuery(QString *statement)
         Q_ASSERT_X(mColumns.count() > 0, "QueryBuilder::exec()", "No columns specified");
         appendJoined(statement, mColumns);
         *statement += QLatin1StringView(" FROM ");
-        *statement += mTableSubQuery.isValid()
-                    ? getTableQuery(mTableSubQuery, mTable) : mTable;
+        *statement += mTableSubQuery.has_value() ? getTableQuery(*mTableSubQuery, mTable) : mTable;
         for (const QString &joinedTable : std::as_const(mJoinedTables)) {
             const auto &[joinType, joinCond] = mJoins.value(joinedTable);
             switch (joinType) {
@@ -444,10 +512,10 @@ bool QueryBuilder::exec()
 
 #ifndef QUERYBUILDER_UNITTEST
     auto query = QueryCache::query(statement);
-    if (query.has_value()) {
-        mQuery = *query;
+    if (query) {
+        mQuery = std::move(*query);
     } else {
-        mQuery.clear();
+        mQuery = QSqlQuery(mDataStore->database());
         if (!mQuery.prepare(statement)) {
             qCCritical(AKONADISERVER_LOG) << "DATABASE ERROR while PREPARING QUERY:";
             qCCritical(AKONADISERVER_LOG) << "  Error code:" << mQuery.lastError().nativeErrorCode();
@@ -456,7 +524,6 @@ bool QueryBuilder::exec()
             qCCritical(AKONADISERVER_LOG) << "  Query:" << statement;
             return false;
         }
-        QueryCache::insert(mDataStore->database(), statement, mQuery);
     }
 
     // too heavy debug info but worths to have from time to time

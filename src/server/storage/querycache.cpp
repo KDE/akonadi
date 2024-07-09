@@ -43,24 +43,24 @@ public:
         m_cleanupTimer.start(CleanupTimeout);
         auto it = m_keys.find(queryStatement);
         if (it == m_keys.end()) {
-            return std::nullopt;
+            return {};
         }
 
-        auto node = **it;
+        auto query = std::move((*it)->query);
         m_queries.erase(*it);
-        m_queries.push_front(node);
-        *it = m_queries.begin();
-        return node.query;
+        m_keys.erase(it);
+
+        return query;
     }
 
-    void insert(const QString &queryStatement, const QSqlQuery &query)
+    void insert(const QString &queryStatement, QSqlQuery query)
     {
         if (m_queries.size() >= MaxCacheSize) {
-            m_keys.remove(m_queries.back().queryStatement);
+            m_keys.remove(queryStatement);
             m_queries.pop_back();
         }
 
-        m_queries.emplace_front(queryStatement, query);
+        m_queries.emplace_front(std::move(query));
         m_keys.insert(queryStatement, m_queries.begin());
     }
 
@@ -72,7 +72,6 @@ public:
 
 public: // public, this is just a helper class
     struct Node {
-        QString queryStatement;
         QSqlQuery query;
     };
     std::list<Node> m_queries;
@@ -98,10 +97,10 @@ std::optional<QSqlQuery> QueryCache::query(const QString &queryStatement)
     return perThreadCache()->query(queryStatement);
 }
 
-void QueryCache::insert(const QSqlDatabase &db, const QString &queryStatement, const QSqlQuery &query)
+void QueryCache::insert(const QSqlDatabase &db, const QString &queryStatement, QSqlQuery query)
 {
     if (DbType::type(db) != DbType::Sqlite) {
-        perThreadCache()->insert(queryStatement, query);
+        perThreadCache()->insert(queryStatement, std::move(query));
     }
 }
 

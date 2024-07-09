@@ -42,11 +42,10 @@ bool SearchResultHandler::parseStream()
             return fail(cmd.searchId(), QStringLiteral("Failed to convert RID to UID"));
         }
 
-        QSqlQuery query = qb.query();
+        QSqlQuery &query = qb.query();
         while (query.next()) {
             ids << query.value(0).toLongLong();
         }
-        query.finish();
     } else if (cmd.result().scope() == Scope::Uid && !cmd.result().isEmpty()) {
         const auto uidSet = cmd.result().uidSet();
         ids = QSet<qint64>(uidSet.begin(), uidSet.end());
