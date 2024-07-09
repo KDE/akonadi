@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-04 00:39+0000\n"
+"POT-Creation-Date: 2024-07-09 00:39+0000\n"
 "PO-Revision-Date: 2024-07-04 17:32+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -43,24 +43,24 @@ msgstr "Er is nu geen account geconfigureerd."
 msgid "Accounts integration is not supported"
 msgstr "Integratie van accounts wordt niet ondersteund"
 
-#: agentbase/agentbase.cpp:354 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:308 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Kan object niet registreren in dbus: %1"
 
-#: agentbase/agentbase.cpp:443
+#: agentbase/agentbase.cpp:397
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 van type %2"
 
-#: agentbase/agentbase.cpp:861
+#: agentbase/agentbase.cpp:807
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Agent-ID"
 
-#: agentbase/agentbase.cpp:867
+#: agentbase/agentbase.cpp:813
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi-agent"

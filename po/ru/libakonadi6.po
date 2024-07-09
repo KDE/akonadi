@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-04 00:39+0000\n"
+"POT-Creation-Date: 2024-07-09 00:39+0000\n"
 "PO-Revision-Date: 2024-05-12 11:40+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -49,25 +49,25 @@ msgstr "Отсутствуют настроенные учётные запис�
 msgid "Accounts integration is not supported"
 msgstr "Встраивание учётных записей не поддерживается"
 
-#: agentbase/agentbase.cpp:354 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:308 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Зарегистрировать объект в dbus не удалось: %1"
 
-#: agentbase/agentbase.cpp:443
+#: agentbase/agentbase.cpp:397
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 типа %2"
 
-#: agentbase/agentbase.cpp:861
+#: agentbase/agentbase.cpp:807
 #, fuzzy, kde-format
 #| msgid "Agent identifier"
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Идентификатор агента"
 
-#: agentbase/agentbase.cpp:867
+#: agentbase/agentbase.cpp:813
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Агент Akonadi"

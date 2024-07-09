@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-04 00:39+0000\n"
+"POT-Creation-Date: 2024-07-09 00:39+0000\n"
 "PO-Revision-Date: 2024-07-06 11:17+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -38,24 +38,24 @@ msgstr "Obecnie żadne konto nie ma ustawionego żadnego konta."
 msgid "Accounts integration is not supported"
 msgstr "Integracja kont nie jest obsługiwana"
 
-#: agentbase/agentbase.cpp:354 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:308 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Nie można zarejestrować obiektu na dbus: %1"
 
-#: agentbase/agentbase.cpp:443
+#: agentbase/agentbase.cpp:397
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 typu %2"
 
-#: agentbase/agentbase.cpp:861
+#: agentbase/agentbase.cpp:807
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Identyfikator usługi"
 
-#: agentbase/agentbase.cpp:867
+#: agentbase/agentbase.cpp:813
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Usługa Akonadi"

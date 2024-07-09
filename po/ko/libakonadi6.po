@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-04 00:39+0000\n"
+"POT-Creation-Date: 2024-07-09 00:39+0000\n"
 "PO-Revision-Date: 2024-02-10 22:00+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -37,25 +37,25 @@ msgstr "계정을 설정하지 않았습니다."
 msgid "Accounts integration is not supported"
 msgstr "계정 통합이 지원되지 않음"
 
-#: agentbase/agentbase.cpp:354 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:308 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "DBus에 객체를 등록할 수 없음: %1"
 
-#: agentbase/agentbase.cpp:443
+#: agentbase/agentbase.cpp:397
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1(%2 형식)"
 
-#: agentbase/agentbase.cpp:861
+#: agentbase/agentbase.cpp:807
 #, fuzzy, kde-format
 #| msgid "Agent identifier"
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "에이전트 식별자"
 
-#: agentbase/agentbase.cpp:867
+#: agentbase/agentbase.cpp:813
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi 에이전트"
