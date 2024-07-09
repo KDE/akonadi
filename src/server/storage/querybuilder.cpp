@@ -222,7 +222,8 @@ QueryBuilder::~QueryBuilder()
         mQuery.finish();
 #ifndef QUERYBUILDER_UNITTEST
         // Cache the query now that we won't need it.
-        QueryCache::insert(mDataStore->database(), mQuery.executedQuery(), std::move(mQuery));
+        const auto stmt = mQuery.executedQuery();
+        QueryCache::insert(mDataStore->database(), stmt, std::move(mQuery));
 #endif
     }
 }
