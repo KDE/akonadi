@@ -77,17 +77,17 @@ class AkRangesTest : public QObject
 private Q_SLOTS:
     void testTraits()
     {
-        QVERIFY(AkTraits::isAppendable<QList<int>>);
-        QVERIFY(!AkTraits::isInsertable<QList<int>>);
-        QVERIFY(AkTraits::isReservable<QList<int>>);
+        QVERIFY(AkTraits::AppendableContainer<QList<int>>);
+        QVERIFY(!AkTraits::InsertableContainer<QList<int>>);
+        QVERIFY(AkTraits::ReservableContainer<QList<int>>);
 
-        QVERIFY(!AkTraits::isAppendable<QSet<int>>);
-        QVERIFY(AkTraits::isInsertable<QSet<int>>);
-        QVERIFY(AkTraits::isReservable<QSet<int>>);
+        QVERIFY(!AkTraits::AppendableContainer<QSet<int>>);
+        QVERIFY(AkTraits::InsertableContainer<QSet<int>>);
+        QVERIFY(AkTraits::ReservableContainer<QSet<int>>);
 
-        QVERIFY(!AkTraits::isAppendable<QString>);
-        QVERIFY(!AkTraits::isInsertable<QString>);
-        QVERIFY(AkTraits::isReservable<QString>);
+        QVERIFY(!AkTraits::AppendableContainer<QString>);
+        QVERIFY(!AkTraits::InsertableContainer<QString>);
+        QVERIFY(AkTraits::ReservableContainer<QString>);
     }
 
     void testContainerConversion()

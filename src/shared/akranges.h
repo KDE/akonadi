@@ -23,32 +23,19 @@ namespace AkRanges
 {
 namespace detail
 {
-template<typename RangeLike, typename OutContainer, AK_REQUIRES(AkTraits::isAppendable<OutContainer>)>
+template<typename RangeLike, AkTraits::Container OutContainer>
 OutContainer copyContainer(const RangeLike &range)
 {
-    OutContainer rv;
-    rv.reserve(range.size());
-    for (auto &&v : range) {
-        rv.push_back(std::move(v));
-    }
-    return rv;
-}
-
-template<typename RangeLike, typename OutContainer, AK_REQUIRES(AkTraits::isInsertable<OutContainer>)>
-OutContainer copyContainer(const RangeLike &range)
-{
-    OutContainer rv;
-    rv.reserve(range.size());
-    for (const auto &v : range) {
-        rv.insert(v); // Qt containers lack move-enabled insert() overload
-    }
-    return rv;
+    return OutContainer(range.begin(), range.end());
 }
 
 template<typename RangeList, typename OutContainer>
 OutContainer copyAssocContainer(const RangeList &range)
 {
     OutContainer rv;
+    if constexpr (AkTraits::ReservableContainer<OutContainer>) {
+        rv.reserve(range.size());
+    }
     for (const auto &v : range) {
         rv.insert(v.first, v.second); // Qt containers lack move-enabled insert() overload
     }
