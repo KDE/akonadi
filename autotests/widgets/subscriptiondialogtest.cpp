@@ -7,7 +7,6 @@
 
 #include "qtest_akonadi.h"
 
-#include "shared/akscopeguard.h"
 #include "shared/aktest.h"
 
 #include "subscriptiondialog.h"
@@ -19,6 +18,7 @@
 #include <QDialogButtonBox>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QScopeGuard>
 #include <QSignalSpy>
 #include <QTest>
 #include <QTreeView>
@@ -190,7 +190,7 @@ private Q_SLOTS:
     void testSubscribedOnlyCheckbox()
     {
         const auto col = Collection{AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo/bla"))};
-        const AkScopeGuard guard([col]() {
+        const auto guard = qScopeGuard([col]() {
             TestSetup::subscribeCollection(col);
         });
 
@@ -211,7 +211,7 @@ private Q_SLOTS:
     void testSubscribeButton()
     {
         const auto col = Collection{AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo/bla"))};
-        const AkScopeGuard guard([col]() {
+        const auto guard = qScopeGuard([col]() {
             TestSetup::subscribeCollection(col);
         });
 
