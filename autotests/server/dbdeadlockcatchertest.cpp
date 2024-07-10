@@ -50,10 +50,9 @@ private Q_SLOTS:
     void testHitRecursionLimit()
     {
         m_myFuncCalled = 0;
-        QVERIFY_EXCEPTION_THROWN(DbDeadlockCatcher catcher([this]() {
+        QVERIFY_THROWS_EXCEPTION(DbDeadlockException, DbDeadlockCatcher catcher([this]() {
                                      myFunc(10);
-                                 }),
-                                 DbDeadlockException);
+                                 }));
         QCOMPARE(m_myFuncCalled, 6);
     }
 };
