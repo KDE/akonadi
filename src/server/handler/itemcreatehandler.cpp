@@ -22,7 +22,8 @@
 #include "storage/transaction.h"
 
 #include "shared/akranges.h"
-#include "shared/akscopeguard.h"
+
+#include <QScopeGuard>
 
 #include <numeric> //std::accumulate
 
@@ -359,7 +360,7 @@ void ItemCreateHandler::recoverFromMultipleMergeCandidates(const PimItem::List &
         ++transactionDepth;
         storageBackend()->commitTransaction();
     }
-    const AkScopeGuard restoreTransaction([&]() {
+    const auto restoreTransaction = qScopeGuard([&]() {
         for (int i = 0; i < transactionDepth; ++i) {
             storageBackend()->beginTransaction(QStringLiteral("RestoredTransactionAfterMMCRecovery"));
         }
