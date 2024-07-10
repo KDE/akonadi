@@ -131,3 +131,130 @@ qint64 DataStream::readRawData(char *buffer, qint64 len)
 
     return mDev->read(buffer, len);
 }
+
+DataStream &DataStream::operator<<(const QString &str)
+{
+    if (str.isNull()) {
+        *this << (quint32)0xffffffff;
+    } else {
+        writeBytes(reinterpret_cast<const char *>(str.unicode()), sizeof(QChar) * str.length());
+    }
+    return *this;
+}
+
+DataStream &DataStream::operator>>(QString &str)
+{
+    str.clear();
+
+    quint32 bytes = 0;
+    *this >> bytes;
+    if (bytes == 0xffffffff) {
+        return *this;
+    } else if (bytes == 0) {
+        str = QString(QLatin1StringView(""));
+        return *this;
+    }
+
+    if (bytes & 0x1) {
+        str.clear();
+        throw Akonadi::ProtocolException("Read corrupt data");
+    }
+
+    const quint32 step = 1024 * 1024;
+    const quint32 len = bytes / 2;
+    quint32 allocated = 0;
+
+    while (allocated < len) {
+        const int blockSize = qMin(step, len - allocated);
+        waitForData(blockSize * sizeof(QChar));
+        str.resize(allocated + blockSize);
+        if (readRawData(reinterpret_cast<char *>(str.data()) + allocated * sizeof(QChar), blockSize * sizeof(QChar)) != int(blockSize * sizeof(QChar))) {
+            throw Akonadi::ProtocolException("Failed to read enough data from stream");
+        }
+        allocated += blockSize;
+    }
+
+    return *this;
+}
+
+DataStream &DataStream::operator<<(const QByteArray &data)
+{
+    if (data.isNull()) {
+        *this << (quint32)0xffffffff;
+    } else {
+        writeBytes(data.constData(), data.size());
+    }
+    return *this;
+}
+
+DataStream &DataStream::operator>>(QByteArray &data)
+{
+    data.clear();
+
+    quint32 len = 0;
+    *this >> len;
+    if (len == 0xffffffff) {
+        return *this;
+    }
+
+    const quint32 step = 1024 * 1024;
+    quint32 allocated = 0;
+
+    while (allocated < len) {
+        const int blockSize = qMin(step, len - allocated);
+        waitForData(blockSize);
+        data.resize(allocated + blockSize);
+        if (readRawData(data.data() + allocated, blockSize) != blockSize) {
+            throw Akonadi::ProtocolException("Failed to read enough data from stream");
+        }
+        allocated += blockSize;
+    }
+
+    return *this;
+}
+
+DataStream &DataStream::operator<<(const QDateTime &dt)
+{
+    *this << dt.date().toJulianDay() << dt.time().msecsSinceStartOfDay() << dt.timeSpec();
+    if (dt.timeSpec() == Qt::OffsetFromUTC) {
+        *this << dt.offsetFromUtc();
+    } else if (dt.timeSpec() == Qt::TimeZone) {
+        *this << dt.timeZone().id();
+    }
+    return *this;
+}
+
+DataStream &DataStream::operator>>(QDateTime &dt)
+{
+    QDate date;
+    QTime time;
+    qint64 jd;
+    Qt::TimeSpec spec;
+    int mds;
+    QTimeZone timezone(QTimeZone::LocalTime);
+
+    *this >> jd >> mds >> spec;
+    date = QDate::fromJulianDay(jd);
+    time = QTime::fromMSecsSinceStartOfDay(mds);
+    switch (spec) {
+    case Qt::UTC:
+        timezone = QTimeZone::utc();
+        break;
+    case Qt::OffsetFromUTC: {
+        int offset = 0;
+        *this >> offset;
+        timezone = QTimeZone::fromSecondsAheadOfUtc(offset);
+        break;
+    }
+    case Qt::LocalTime:
+        break;
+    case Qt::TimeZone: {
+        QByteArray id;
+        *this >> id;
+        timezone = QTimeZone(id);
+    }
+    }
+
+    dt = QDateTime(date, time, timezone);
+    return *this;
+}
