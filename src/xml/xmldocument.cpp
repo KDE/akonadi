@@ -173,9 +173,8 @@ bool Akonadi::XmlDocument::loadFile(const QString &fileName, const QString &xsdF
 #endif
 
     // DOM loading
-    QString errMsg;
-    if (!d->document.setContent(data, true, &errMsg)) {
-        d->lastError = i18n("Unable to parse data file: %1", errMsg);
+    if (const auto result = d->document.setContent(data, QDomDocument::ParseOption::UseNamespaceProcessing); !result) {
+        d->lastError = i18n("Unable to parse data file: %1", result.errorMessage);
         return false;
     }
 
