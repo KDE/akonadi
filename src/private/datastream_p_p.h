@@ -8,7 +8,7 @@
 #pragma once
 
 #include <chrono>
-#include <qnamespace.h>
+#include <shared/aktraits.h>
 #include <type_traits>
 
 #include "akonadiprivate_export.h"
@@ -164,23 +164,6 @@ inline Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &
     return stream;
 }
 
-namespace Akonadi::Protocol::Private
-{
-
-template<typename Key, typename Value, template<typename, typename> class Container>
-inline void container_reserve(Container<Key, Value> &container, int size)
-{
-    container.reserve(size);
-}
-
-template<typename Key, typename Value>
-inline void container_reserve(QMap<Key, Value> &, int)
-{
-    // noop
-}
-
-} // namespace Akonadi::Protocol::Private
-
 // Generic streaming for all Qt dictionary-based containers
 template<typename Key, typename Value, template<typename, typename> class Container>
 // typename std::enable_if<is_compatible_dictionary_container<Container>::value, Akonadi::Protocol::DataStream>::type
@@ -200,7 +183,9 @@ inline Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &
     map.clear();
     quint32 size = 0;
     stream >> size;
-    Akonadi::Protocol::Private::container_reserve(map, size);
+    if constexpr (AkTraits::ReservableContainer<Container<Key, Value>>) {
+        map.reserve(size);
+    }
     for (quint32 i = 0; i < size; ++i) {
         Key key;
         Value value;

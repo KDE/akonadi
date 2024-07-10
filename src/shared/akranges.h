@@ -23,32 +23,19 @@ namespace AkRanges
 {
 namespace detail
 {
-template<typename RangeLike, typename OutContainer, AK_REQUIRES(AkTraits::isAppendable<OutContainer>)>
+template<typename RangeLike, AkTraits::Container OutContainer>
 OutContainer copyContainer(const RangeLike &range)
 {
-    OutContainer rv;
-    rv.reserve(range.size());
-    for (auto &&v : range) {
-        rv.push_back(std::move(v));
-    }
-    return rv;
-}
-
-template<typename RangeLike, typename OutContainer, AK_REQUIRES(AkTraits::isInsertable<OutContainer>)>
-OutContainer copyContainer(const RangeLike &range)
-{
-    OutContainer rv;
-    rv.reserve(range.size());
-    for (const auto &v : range) {
-        rv.insert(v); // Qt containers lack move-enabled insert() overload
-    }
-    return rv;
+    return OutContainer(range.begin(), range.end());
 }
 
 template<typename RangeList, typename OutContainer>
 OutContainer copyAssocContainer(const RangeList &range)
 {
     OutContainer rv;
+    if constexpr (AkTraits::ReservableContainer<OutContainer>) {
+        rv.reserve(range.size());
+    }
     for (const auto &v : range) {
         rv.insert(v.first, v.second); // Qt containers lack move-enabled insert() overload
     }
@@ -87,15 +74,15 @@ struct IteratorTrait<const Iterator *> {
 };
 
 template<typename IterImpl, typename RangeLike, typename Iterator = typename RangeLike::const_iterator>
-struct IteratorBase {
+struct BidiIteratorBase {
 public:
-    using iterator_category = typename IteratorTrait<Iterator>::iterator_category;
+    using iterator_category = std::bidirectional_iterator_tag;
     using value_type = typename IteratorTrait<Iterator>::value_type;
     using difference_type = typename IteratorTrait<Iterator>::difference_type;
     using pointer = typename IteratorTrait<Iterator>::pointer;
     using reference = typename IteratorTrait<Iterator>::reference;
 
-    IteratorBase(const IteratorBase<IterImpl, RangeLike> &other)
+    BidiIteratorBase(const BidiIteratorBase<IterImpl, RangeLike> &other)
         : mIter(other.mIter)
         , mRange(other.mRange)
     {
@@ -124,28 +111,18 @@ public:
         return !(*static_cast<const IterImpl *>(this) == other);
     }
 
-    bool operator<(const IterImpl &other) const
-    {
-        return mIter < other.mIter;
-    }
-
-    auto operator-(const IterImpl &other) const
-    {
-        return mIter - other.mIter;
-    }
-
     auto operator*() const
     {
         return *mIter;
     }
 
 protected:
-    IteratorBase(const Iterator &iter, const RangeLike &range)
+    BidiIteratorBase(const Iterator &iter, const RangeLike &range)
         : mIter(iter)
         , mRange(range)
     {
     }
-    IteratorBase(const Iterator &iter, RangeLike &&range)
+    BidiIteratorBase(const Iterator &iter, RangeLike &&range)
         : mIter(iter)
         , mRange(std::move(range))
     {
@@ -154,6 +131,24 @@ protected:
     Iterator mIter;
     RangeLike mRange;
 };
+
+template<typename IterImpl, typename RangeLike, typename Iterator = typename RangeLike::const_iterator>
+struct RandomAccessIteratorBase : public BidiIteratorBase<IterImpl, RangeLike, Iterator> {
+public:
+    using iterator_category = std::random_access_iterator_tag;
+
+    using BidiIteratorBase<IterImpl, RangeLike, Iterator>::BidiIteratorBase;
+
+    auto operator-(const IterImpl &other) const
+    {
+        return this->mIter - other.mIter;
+    }
+};
+
+template<typename IterImpl, typename RangeLike, typename Iterator = typename RangeLike::const_iterator>
+using IteratorBase = std::conditional_t<std::random_access_iterator<Iterator>,
+                                        RandomAccessIteratorBase<IterImpl, RangeLike, Iterator>,
+                                        BidiIteratorBase<IterImpl, RangeLike, Iterator>>;
 
 template<typename RangeLike, typename TransformFn, typename Iterator = typename RangeLike::const_iterator>
 struct TransformIterator : public IteratorBase<TransformIterator<RangeLike, TransformFn>, RangeLike> {
