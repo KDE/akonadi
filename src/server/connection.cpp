@@ -17,6 +17,7 @@
 #include "storage/dbdeadlockcatcher.h"
 
 #include <cassert>
+#include <chrono>
 
 #ifndef Q_OS_WIN
 #include <cxxabi.h>
@@ -473,10 +474,10 @@ void Connection::sendResponse(qint64 tag, const Protocol::CommandPtr &response)
     }
 }
 
-Protocol::CommandPtr Connection::readCommand()
+Protocol::CommandPtr Connection::readCommand(std::chrono::milliseconds timeout)
 {
     while (m_socket->bytesAvailable() < static_cast<int>(sizeof(qint64))) {
-        Protocol::DataStream::waitForData(m_socket.get(), 30000); // 30 seconds, just in case client is busy
+        Protocol::DataStream::waitForData(m_socket.get(), timeout);
     }
 
     Protocol::DataStream stream(m_socket.get());

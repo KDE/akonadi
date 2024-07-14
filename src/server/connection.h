@@ -21,6 +21,7 @@
 #include "private/datastream_p_p.h"
 #include "private/protocol_p.h"
 
+#include <chrono>
 #include <memory>
 
 namespace Akonadi
@@ -69,7 +70,7 @@ public:
     /** Returns @c true if permanent cache verification is enabled. */
     bool verifyCacheOnRetrieval() const;
 
-    Protocol::CommandPtr readCommand();
+    Protocol::CommandPtr readCommand(std::chrono::milliseconds timeout = std::chrono::seconds(30));
 
     void setState(ConnectionState state);
 
