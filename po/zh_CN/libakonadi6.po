@@ -999,7 +999,7 @@ msgstr "重新索引文件夹"
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No Folder"
-msgstr ""
+msgstr "无文件"
 
 #: widgets/collectionrequester.cpp:122
 #, kde-format
