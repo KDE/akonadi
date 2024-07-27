@@ -1,5 +1,15 @@
 [General]
 Name=Akonadi Resource
+Name[ca]=Recurs de l'Akonadi
+Name[es]=Recurso de Akonadi
+Name[ia]=Ressource de Akonadi
+Name[ka]=Akonadi-ის რესურსი
+Name[nl]=Akonadi-hulpbron
+Name[sl]=Vir Akonadi
+Name[sv]=Akonadi-resurs
+Name[tr]=Akonadi Özkaynağı
+Name[uk]=Ресурс Akonadi
+Name[x-test]=xxAkonadi Resourcexx
 Comment=Akonadi Resource Template. A template for an Akonadi PIM data resource
 Comment[ar]=قالب موارد «أكونادي». قالب لمورد بيانات «أكونادي PIM»
 Comment[az]=Akonadi Məlumatlar Mənbəyi Şablonu. Akonadi PİM verilənlər mənbəyi üçün şablon.
@@ -41,7 +51,7 @@ Comment[sr@ijekavianlatin]=Šablon za Akonadijev resurs PIM podataka
 Comment[sr@latin]=Šablon za Akonadijev resurs PIM podataka
 Comment[sv]=Akonadi-resursmall. En mall för en Akonadi PIM-dataresurs
 Comment[tg]=Қолаби манъбаи Akonadi. Қолаб барои манбаи иттилоотии Akonadi PIM
-Comment[tr]=Akonadi Özkaynak Şablonu. Bir Akonadi PIM veri özkaynağı için bir şablon
+Comment[tr]=Akonadi özkaynağı şablonu. Bir Akonadi PIM veri özkaynağı için bir şablon
 Comment[uk]=Шаблон ресурсу Akonadi. Шаблон для ресурсу даних PIM Akonadi
 Comment[x-test]=xxAkonadi Resource Template. A template for an Akonadi PIM data resourcexx
 Comment[zh_CN]=Akonadi 资源模板。Akonadi 个人信息管理数据资源的模板
