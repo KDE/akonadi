@@ -1,10 +1,14 @@
 [General]
 Name=Akonadi Resource
+Name[bg]=Akonadi ресурс
 Name[ca]=Recurs de l'Akonadi
+Name[eo]=Akonadi Resource
 Name[es]=Recurso de Akonadi
 Name[ia]=Ressource de Akonadi
+Name[it]=Risorsa di Akonadi
 Name[ka]=Akonadi-ის რესურსი
 Name[nl]=Akonadi-hulpbron
+Name[pl]=Zasób Akonadi
 Name[sl]=Vir Akonadi
 Name[sv]=Akonadi-resurs
 Name[tr]=Akonadi Özkaynağı
@@ -39,7 +43,7 @@ Comment[ko]=Akonadi 리소스 템플릿. Akonadi PIM 데이터 리소스용 템�
 Comment[lv]=„Akonadi“ resursu veidne. Veidne „Akonadi“ PIM datu resursam
 Comment[my]=အကွန်နဒီ ရင်းမြစ်တန်းပလိတ်။ အကွန်နဒီ ပီအိုင်အမ် ဒေတာ ရင်းမြစ်အတွက် တန်းပလိတ်တစ်ခု
 Comment[nl]=Akonadi sjabloon voor hulpbron. Een sjabloon voor een Akonadi PIM gegevenshulpbron
-Comment[pl]=Szablon zasobu Akonadi. Szablon dla zasobu danych PIM Akonadi
+Comment[pl]=Wzorzec zasobu Akonadi. Wzorzec dla zasobu danych PIM Akonadi
 Comment[pt]=Modelo de Recursos do Akonadi. Um modelo para um recurso de dados PIM do Akonadi
 Comment[pt_BR]=Modelo de recurso do Akonadi. Um modelo para um recurso de dados PIM do Akonadi
 Comment[ru]=Шаблон источника данных Akonadi. Шаблон для источника данных PIM Akonadi.
