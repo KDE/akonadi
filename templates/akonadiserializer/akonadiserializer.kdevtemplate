@@ -2,6 +2,7 @@
 Name=Akonadi Serializer
 Name[bg]=Akonadi сериализатор
 Name[ca]=Serialitzador de l'Akonadi
+Name[ca@valencia]=Serialitzador d'Akonadi
 Name[eo]=Akonadi Serializer
 Name[es]=Serializador de Akonadi
 Name[ia]=Akonadi Serializer (Serializator de Akonadi)
@@ -14,6 +15,7 @@ Name[sv]=Akonadi-serialisering
 Name[tr]=Akonadi Sıralandırıcı
 Name[uk]=Серіалізатор Akonadi
 Name[x-test]=xxAkonadi Serializerxx
+Name[zh_CN]=Akonadi 数据转换器
 Comment=Akonadi Serializer Template. A template for an Akonadi data serializer plugin
 Comment[ar]=قالب سَلسَلة «أكونادي». قالب لملحقة سَلسَلة بيانات «أكونادي»
 Comment[az]=Akonadi əlaqələri məlumatlarının saxlanılması şablonu. Akonadi əlaqələrinın məlumatları saxlama modulu üçün şablon
