@@ -63,7 +63,7 @@ public:
         mView->header()->hide();
         layout->addWidget(mView);
 
-        mUseByDefault = new QCheckBox(i18n("Use folder by default"), mParent);
+        mUseByDefault = new QCheckBox(i18nc("@option:check", "Use folder by default"), mParent);
         mUseByDefault->hide();
         layout->addWidget(mUseByDefault);
 
