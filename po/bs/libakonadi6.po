@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-15 00:39+0000\n"
+"POT-Creation-Date: 2024-07-30 00:41+0000\n"
 "PO-Revision-Date: 2014-01-31 20:40+0100\n"
 "Last-Translator: Samir Ribić <megaribi@epn.ba>\n"
 "Language-Team: bosanski <bs@li.org>\n"
@@ -839,7 +839,9 @@ msgid "Search"
 msgstr "Traži"
 
 #: widgets/collectiondialog.cpp:66
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Use folder by default"
+msgctxt "@option:check"
 msgid "Use folder by default"
 msgstr "U normalnoj situaciji koristi fasciklu"
 

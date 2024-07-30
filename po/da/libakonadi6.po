@@ -4,30 +4,31 @@
 #
 # Martin Schlander <mschlander@opensuse.org>, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2020.
 # Jan Madsen <jan.madsen.pt@gmail.com>, 2008.
+# SPDX-FileCopyrightText: 2024 rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-15 00:39+0000\n"
-"PO-Revision-Date: 2020-11-17 19:45+0100\n"
-"Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
+"POT-Creation-Date: 2024-07-30 00:41+0000\n"
+"PO-Revision-Date: 2024-07-29 12:41+0200\n"
+"Last-Translator: rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 20.04.2\n"
+"X-Generator: Lokalize 24.05.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Martin Schlander"
+msgstr "Martin Schlander,Rasmus Rosendahl-Kaa,"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "mschlander@opensuse.org"
+msgstr "mschlander@opensuse.org,rasmus@rosendahl-kaa.name"
 
 #: agentbase/accountsintegration.cpp:86
 #, kde-format
@@ -51,8 +52,7 @@ msgid "%1 of type %2"
 msgstr "%1 af typen %2"
 
 #: agentbase/agentbase.cpp:807
-#, fuzzy, kde-format
-#| msgid "Agent identifier"
+#, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Agent-identifikator"
@@ -167,10 +167,9 @@ msgid "Job canceled."
 msgstr "Job annulleret."
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
-msgstr "Akonadi-agent"
+msgstr "Akonadi-kontrol"
 
 #: akonadictl/main.cpp:211
 #, kde-format
@@ -190,11 +189,23 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"Akonadi servermanipulationsværktøj\n"
+"\n"
+"Kommandoer:\n"
+"  start          Starter Akonadi-serveren med alle dens processer\n"
+"  stop           Stopper Akonadi-serveren og alle dens processer rent\n"
+"  restart        Genstarter Akonadi-serveren og alle dens processer\n"
+"  status         Viser en statusoversigt over Akonadi-serveren\n"
+"  instances      Viesr alle eksisterende Akonadi-instanser\n"
+"  vacuum         Rens intern lagring (ADVARSEL: kræver meget tid og "
+"diskplads!)\n"
+"  fsck            Tjek (og prøv at fiks) sammenhængen af det interne lagrer\n"
+"                 (kan tage noget tid)"
 
 #: akonadictl/main.cpp:231
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "Kommando, der skal eksekveres"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -488,7 +499,7 @@ msgstr "Ulæste breve"
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
 msgid "<strong>Quota</strong>: %1%<br>\n"
-msgstr ""
+msgstr "<strong>Kvote</strong>:%1%<br>\n"
 
 #: core/models/statisticsproxymodel.cpp:105
 #, kde-format
@@ -620,6 +631,7 @@ msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
+"Navnerum, når der startes flere Akonadi-instanser i den samme brugersession"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
@@ -645,8 +657,7 @@ msgid "Could not create agent instance: %1"
 msgstr "Kunne ikke oprette agentinstans: %1"
 
 #: widgets/agentactionmanager.cpp:59
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "Oprettelse af agentinstans mislykkedes"
@@ -663,12 +674,10 @@ msgid "Do you really want to delete the selected agent instance?"
 msgstr "Vil du virkelig slette den markerede agentinstans?"
 
 #: widgets/agentconfigurationdialog.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "%1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
-msgstr "Konfiguration af %1"
+msgstr "%1-konfiguration"
 
 #: widgets/agentconfigurationdialog.cpp:81
 #, kde-format
@@ -699,14 +708,13 @@ msgstr "Kunne ikke registrere konfigurationsdialogen til %1."
 #, kde-format
 msgctxt "Status percent value"
 msgid "(%1%)"
-msgstr ""
+msgstr "(%1%)"
 
 #: widgets/agenttypedialog.cpp:66
-#, fuzzy, kde-format
-#| msgid "&Configure Agent Instance"
+#, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
-msgstr "&Indstil agentinstans"
+msgstr "Indstil konto"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
@@ -734,11 +742,9 @@ msgstr "Synkronisér når denne mappe markeres"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: widgets/cachepolicypage.ui:40
-#, fuzzy, kde-format
-#| msgid "Synchronize Folder"
-#| msgid_plural "Synchronize %1 Folders"
+#, kde-format
 msgid "Synchronize after:"
-msgstr "Synkronisér mappe"
+msgstr "Synkronisér efter:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, checkInterval)
 #: widgets/cachepolicypage.ui:47
@@ -756,10 +762,9 @@ msgstr "minutter"
 
 #. i18n: ectx: property (text), widget (QLabel, localPartsLabel)
 #: widgets/cachepolicypage.ui:66
-#, fuzzy, kde-format
-#| msgid "Locally Cached Parts"
+#, kde-format
 msgid "Locally cached parts:"
-msgstr "Lokalt cachede dele"
+msgstr "Lokalt cachede dele:"
 
 #. i18n: ectx: property (title), widget (KEditListWidget, localParts)
 #: widgets/cachepolicypage.ui:87
@@ -769,10 +774,9 @@ msgstr "Lokalt cachede dele"
 
 #. i18n: ectx: property (text), widget (QLabel, retrievalOptionsLabel)
 #: widgets/cachepolicypage.ui:94
-#, fuzzy, kde-format
-#| msgid "Retrieval Options"
+#, kde-format
 msgid "Retrieval Options:"
-msgstr "Indstillinger for hentning"
+msgstr "Indstillinger for hentning:"
 
 #. i18n: ectx: property (text), widget (QRadioButton, retrieveFullMessages)
 #: widgets/cachepolicypage.ui:101
@@ -802,7 +806,7 @@ msgstr "For evigt"
 #: widgets/clearcachefoldersjob.cpp:41
 #, kde-format
 msgid "Collection cache cleared. You should restart Akonadi now."
-msgstr ""
+msgstr "Samlingscache rydet. Du skal genstarte Akonadi nu."
 
 #: widgets/clearcachefoldersjob.cpp:69
 #, kde-format
@@ -811,6 +815,9 @@ msgid ""
 "likely never uploaded to the destination server, so clearing this collection "
 "means that those <b>data will be lost</b>. Are you sure you want to proceed?"
 msgstr ""
+"Samlingen '%1' indeholder %2 elementer uden Remote-ID. Disse elementer blev "
+"nok aldrig uploaded til destinationsserveren, så ved at ryde denne samling, "
+"vil disse<b>data gå tabt</b>. Er du sikker på, at du vil fortsætte?"
 
 #: widgets/collectiondialog.cpp:58
 #, kde-format
@@ -819,20 +826,20 @@ msgid "Search"
 msgstr "Søg"
 
 #: widgets/collectiondialog.cpp:66
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Use folder by default"
+msgctxt "@option:check"
 msgid "Use folder by default"
 msgstr "Brug mappe som standard"
 
 #: widgets/collectiondialog.cpp:226
-#, fuzzy, kde-format
-#| msgid "&New Subfolder..."
+#, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
 msgstr "&Ny undermappe..."
 
 #: widgets/collectiondialog.cpp:228
-#, fuzzy, kde-format
-#| msgid "Create a new subfolder under the currently selected folder"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Opret en ny undermappe i den valgte mappe"
@@ -855,8 +862,7 @@ msgid "Could not create folder: %1"
 msgstr "Kunne ikke oprette mappe: %1"
 
 #: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:421
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
 msgstr "Oprettelse af mappe fejlede"
@@ -971,10 +977,9 @@ msgstr "ukendt"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: widgets/collectionmaintenancepage.ui:38
-#, fuzzy, kde-format
-#| msgid "Files"
+#, kde-format
 msgid "File size:"
-msgstr "Filer"
+msgstr "Filstørrelse:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: widgets/collectionmaintenancepage.ui:45
@@ -990,10 +995,9 @@ msgstr "Ulæste elementer:"
 
 #. i18n: ectx: property (text), widget (QLabel, indexingLabel)
 #: widgets/collectionmaintenancepage.ui:73
-#, fuzzy, kde-format
-#| msgid "Indexing"
+#, kde-format
 msgid "Indexing:"
-msgstr "Indeksering"
+msgstr "Indeksering:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, enableIndexingChkBox)
 #: widgets/collectionmaintenancepage.ui:80
@@ -1003,8 +1007,7 @@ msgstr "Aktivér fuldtekstindeksering"
 
 #. i18n: ectx: property (text), widget (QLabel, indexedCountLbl)
 #: widgets/collectionmaintenancepage.ui:87
-#, fuzzy, kde-format
-#| msgid "Retrieving indexed items count ..."
+#, kde-format
 msgid "Retrieving indexed items count..."
 msgstr "Henter antal indekserede elementer..."
 
@@ -1015,23 +1018,19 @@ msgid "Reindex folder"
 msgstr "Genindeksér mappe"
 
 #: widgets/collectionrequester.cpp:113
-#, fuzzy, kde-format
-#| msgid "No Folder"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No Folder"
 msgstr "Ingen mappe"
 
 #: widgets/collectionrequester.cpp:122
-#, fuzzy, kde-format
-#| msgid "Open collection dialog"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
 msgstr "Åbn samlingsdialog"
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select a collection"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "Vælg en samling"
@@ -1077,14 +1076,7 @@ msgid "Keep both versions"
 msgstr "Behold begge versioner"
 
 #: widgets/conflictresolvedialog.cpp:217
-#, fuzzy, kde-format
-#| msgid ""
-#| "<qt>Your changes conflict with those made by someone else meanwhile."
-#| "<br>Unless one version can just be thrown away, you will have to "
-#| "integrate those changes manually.<br>Click on <a href=\"opentexteditor\">"
-#| "\"Open text editor\"</a> to keep a copy of the texts, then select which "
-#| "version is most correct, then re-open it and modify it again to add "
-#| "what's missing."
+#, kde-format
 msgctxt "@label:textbox"
 msgid ""
 "<qt>Your changes conflict with those made by someone else meanwhile."
@@ -1148,8 +1140,7 @@ msgstr ""
 "%1"
 
 #: widgets/erroroverlay.cpp:228
-#, fuzzy, kde-format
-#| msgid "Personal information management service is starting..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr "Tjeneste til håndtering af personlig information starter..."
@@ -1160,8 +1151,7 @@ msgid "Personal information management service is starting..."
 msgstr "Tjeneste til håndtering af personlig information starter..."
 
 #: widgets/erroroverlay.cpp:233
-#, fuzzy, kde-format
-#| msgid "Personal information management service is shutting down..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr "Tjeneste til håndtering af personlig information lukkes ned..."
@@ -1172,9 +1162,7 @@ msgid "Personal information management service is shutting down..."
 msgstr "Tjeneste til håndtering af personlig information lukkes ned..."
 
 #: widgets/erroroverlay.cpp:238
-#, fuzzy, kde-format
-#| msgid ""
-#| "Personal information management service is performing a database upgrade."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
@@ -1200,16 +1188,13 @@ msgstr ""
 #. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
 #: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not running. This "
-#| "application cannot be used without it."
+#, kde-format
 msgid ""
 "A required background service is not running. This application cannot be "
 "used without it."
 msgstr ""
-"Tjenesten til håndtering af personlig information, Akonadi, kører ikke. "
-"Dette program kan ikke bruges uden den."
+"En nødvendig baggrundstjeneste kører ikke. Dette program kan ikke bruges "
+"uden den."
 
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #: widgets/erroroverlay.ui:116
@@ -1220,28 +1205,19 @@ msgstr "Start"
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management framework is not "
-#| "operational.\n"
-#| "Click on \"Details...\" to obtain detailed information on this problem."
+#, kde-format
 msgid ""
 "A required background service is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
-"Akonadi, systemet til håndtering af personlig information (PIM), er ikke "
-"funktionsdygtigt.\n"
+"En nødvendig baggrundstjeneste er ikke funktionsdygtigt.\n"
 "Tryk på \"Detaljer...\" for at få detaljeret information om dette problem."
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not operational."
+#, kde-format
 msgid "A required background service is not operational."
-msgstr ""
-"Tjenesten til håndtering af personlig information, Akonadi, er ikke klar til "
-"brug."
+msgstr "En nødvendig baggrundstjeneste er ikke funktionsdygtig"
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
@@ -1255,8 +1231,7 @@ msgid "Do you want to remove account '%1'?"
 msgstr "Vil du virkelig fjerne kontoen \"%1\"?"
 
 #: widgets/manageaccountwidget.cpp:199
-#, fuzzy, kde-format
-#| msgid "Remove account?"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"
 msgstr "Fjern konto?"
@@ -1271,7 +1246,7 @@ msgstr "Indkommende konti (tilføj mindst en):"
 #: widgets/manageaccountwidget.ui:26
 #, kde-format
 msgid "Filter…"
-msgstr ""
+msgstr "Filtrér..."
 
 #. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
 #: widgets/manageaccountwidget.ui:40
@@ -1966,9 +1941,6 @@ msgid "New"
 msgstr "Ny"
 
 #: widgets/standardactionmanager.cpp:88
-#, fuzzy
-#| msgid "&Delete Folder"
-#| msgid_plural "&Delete %1 Folders"
 msgid "&Delete Folder"
 msgstr "&Slet mappe"
 
@@ -1977,9 +1949,6 @@ msgid "Delete"
 msgstr "Slet"
 
 #: widgets/standardactionmanager.cpp:96
-#, fuzzy
-#| msgid "&Synchronize Folder"
-#| msgid_plural "&Synchronize %1 Folders"
 msgid "&Synchronize Folder"
 msgstr "&Synkronisér mappe"
 
@@ -2063,9 +2032,6 @@ msgid "Move Folder To..."
 msgstr "Flyt mappe til..."
 
 #: widgets/standardactionmanager.cpp:178
-#, fuzzy
-#| msgid "&Cut Item"
-#| msgid_plural "&Cut %1 Items"
 msgid "&Cut Item"
 msgstr "&Klip element"
 
@@ -2074,9 +2040,6 @@ msgid "Cut"
 msgstr "Klip"
 
 #: widgets/standardactionmanager.cpp:179
-#, fuzzy
-#| msgid "&Cut Folder"
-#| msgid_plural "&Cut %1 Folders"
 msgid "&Cut Folder"
 msgstr "&Klip mappe"
 
@@ -2085,9 +2048,6 @@ msgid "Create Resource"
 msgstr "Opret ressource"
 
 #: widgets/standardactionmanager.cpp:189
-#, fuzzy
-#| msgid "Delete Resource"
-#| msgid_plural "Delete %1 Resources"
 msgid "Delete Resource"
 msgstr "Slet ressource"
 
@@ -2096,9 +2056,6 @@ msgid "&Resource Properties"
 msgstr "&Ressourceegenskaber"
 
 #: widgets/standardactionmanager.cpp:205
-#, fuzzy
-#| msgid "Synchronize Resource"
-#| msgid_plural "Synchronize %1 Resources"
 msgid "Synchronize Resource"
 msgstr "Synkronisér ressource"
 
@@ -2183,19 +2140,15 @@ msgstr[0] "&Kopiér element"
 msgstr[1] "&Kopiér %1 elementer"
 
 #: widgets/standardactionmanager.cpp:400
-#, fuzzy, kde-format
-#| msgid "&Cut Item"
-#| msgid_plural "&Cut %1 Items"
+#, kde-format
 msgctxt "@action"
 msgid "&Cut Item"
 msgid_plural "&Cut %1 Items"
-msgstr[0] "&Klip element"
-msgstr[1] "&Klip %1 elementer"
+msgstr[0] "&Klip elementu"
+msgstr[1] "u&Klip %1 elementer"
 
 #: widgets/standardactionmanager.cpp:401
-#, fuzzy, kde-format
-#| msgid "&Cut Folder"
-#| msgid_plural "&Cut %1 Folders"
+#, kde-format
 msgctxt "@action"
 msgid "&Cut Folder"
 msgid_plural "&Cut %1 Folders"
@@ -2210,9 +2163,7 @@ msgstr[0] "&Slet element"
 msgstr[1] "&Slet %1 elementer"
 
 #: widgets/standardactionmanager.cpp:403
-#, fuzzy, kde-format
-#| msgid "&Delete Folder"
-#| msgid_plural "&Delete %1 Folders"
+#, kde-format
 msgctxt "@action"
 msgid "&Delete Folder"
 msgid_plural "&Delete %1 Folders"
@@ -2220,9 +2171,7 @@ msgstr[0] "&Slet mappe"
 msgstr[1] "&Slet %1 mapper"
 
 #: widgets/standardactionmanager.cpp:404
-#, fuzzy, kde-format
-#| msgid "&Synchronize Folder"
-#| msgid_plural "&Synchronize %1 Folders"
+#, kde-format
 msgctxt "@action"
 msgid "&Synchronize Folder"
 msgid_plural "&Synchronize %1 Folders"
@@ -2293,9 +2242,7 @@ msgstr[0] "Synkronisér mappe"
 msgstr[1] "Synkronisér %1 mapper"
 
 #: widgets/standardactionmanager.cpp:415
-#, fuzzy, kde-format
-#| msgid "Delete Resource"
-#| msgid_plural "Delete %1 Resources"
+#, kde-format
 msgctxt "@action"
 msgid "Delete Resource"
 msgid_plural "Delete %1 Resources"
@@ -2303,9 +2250,7 @@ msgstr[0] "Slet ressource"
 msgstr[1] "Slet %1 ressourcer"
 
 #: widgets/standardactionmanager.cpp:416
-#, fuzzy, kde-format
-#| msgid "Synchronize Resource"
-#| msgid_plural "Synchronize %1 Resources"
+#, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
 msgid_plural "Synchronize %1 Resources"
@@ -2327,14 +2272,12 @@ msgstr[0] "Vil du virkelig slette denne mappe og alle dens undermapper?"
 msgstr[1] "Vil du virkelig slette %1 mapper og alle deres undermapper?"
 
 #: widgets/standardactionmanager.cpp:429
-#, fuzzy, kde-format
-#| msgid "Delete Folder"
-#| msgid_plural "Delete %1 Folders"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "Slet mappe"
-msgstr[1] "Slet %1 mapper"
+msgstr[0] "Slet mappe?"
+msgstr[1] "Slet mapper?"
 
 #: widgets/standardactionmanager.cpp:430
 #, kde-format
@@ -2342,8 +2285,7 @@ msgid "Could not delete folder: %1"
 msgstr "Kunne ikke slette mappe: %1"
 
 #: widgets/standardactionmanager.cpp:431
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "Sletning af mappe fejlede"
@@ -2362,14 +2304,12 @@ msgstr[0] "Vil du virkelig slette det markerede element?"
 msgstr[1] "Vil du virkelig slette %1 markerede elementer?"
 
 #: widgets/standardactionmanager.cpp:438
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "Slet element"
-msgstr[1] "Slet %1 elementer"
+msgstr[0] "Slet element?"
+msgstr[1] "Slet elementer?"
 
 #: widgets/standardactionmanager.cpp:439
 #, kde-format
@@ -2377,8 +2317,7 @@ msgid "Could not delete item: %1"
 msgstr "Kunne ikke slette element: %1"
 
 #: widgets/standardactionmanager.cpp:440
-#, fuzzy, kde-format
-#| msgid "Item deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "Sletning af element mislykkedes"
@@ -2407,8 +2346,7 @@ msgid "Could not create resource: %1"
 msgstr "Kunne ikke oprette ressource: %1"
 
 #: widgets/standardactionmanager.cpp:447
-#, fuzzy, kde-format
-#| msgid "Resource creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "Oprettelse af ressource mislykkedes"
@@ -2434,8 +2372,7 @@ msgid "Could not paste data: %1"
 msgstr "Kunne ikke sætte data ind: %1"
 
 #: widgets/standardactionmanager.cpp:457
-#, fuzzy, kde-format
-#| msgid "Paste failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Indsættelse fejlede"
@@ -2446,8 +2383,7 @@ msgid "We can not add \"/\" in folder name."
 msgstr "Vi kan ikke tilføje \"/\" i et mappenavn."
 
 #: widgets/standardactionmanager.cpp:809 widgets/standardactionmanager.cpp:813
-#, fuzzy, kde-format
-#| msgid "Create new folder error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Fejl ved oprettelse af ny mappe"
@@ -2494,9 +2430,7 @@ msgid "Failed to update subscription: %1"
 msgstr "Kunne ikke opdatere abonnement: %1"
 
 #: widgets/subscriptiondialog.cpp:99
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Subscription Error"
+#, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
 msgstr "Abonnementsfejl"
@@ -2537,8 +2471,7 @@ msgid "Failed to create a new tag"
 msgstr "Kunne ikke oprette et nyt mærke"
 
 #: widgets/tageditwidget.cpp:117
-#, fuzzy, kde-format
-#| msgid "An error occurred while creating a new tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Der opstod en fejl under oprettelse af nyt mærke"
@@ -2550,9 +2483,7 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Vil du virkelig fjerne mærket <resource>%1</resource>?"
 
 #: widgets/tageditwidget.cpp:166
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Delete tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Slet mærke"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-15 00:39+0000\n"
+"POT-Creation-Date: 2024-07-30 00:41+0000\n"
 "PO-Revision-Date: 2024-07-04 08:14+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -834,7 +834,9 @@ msgid "Search"
 msgstr "Bilatu"
 
 #: widgets/collectiondialog.cpp:66
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Use folder by default"
+msgctxt "@option:check"
 msgid "Use folder by default"
 msgstr "Erabili lehenetsitako karpeta"
 

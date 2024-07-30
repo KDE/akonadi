@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-15 00:39+0000\n"
+"POT-Creation-Date: 2024-07-30 00:41+0000\n"
 "PO-Revision-Date: 2024-07-04 09:42+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -839,7 +839,9 @@ msgid "Search"
 msgstr "Busca"
 
 #: widgets/collectiondialog.cpp:66
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Use folder by default"
+msgctxt "@option:check"
 msgid "Use folder by default"
 msgstr "Utilitza la carpeta predeterminada"
 

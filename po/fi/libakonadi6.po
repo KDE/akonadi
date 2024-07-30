@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-15 00:39+0000\n"
+"POT-Creation-Date: 2024-07-30 00:41+0000\n"
 "PO-Revision-Date: 2024-04-18 16:00+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -836,7 +836,9 @@ msgid "Search"
 msgstr "Etsi"
 
 #: widgets/collectiondialog.cpp:66
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Use folder by default"
+msgctxt "@option:check"
 msgid "Use folder by default"
 msgstr "Käytä kansiota oletusarvoisesti"
 
