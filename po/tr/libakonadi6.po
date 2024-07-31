@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-30 00:41+0000\n"
-"PO-Revision-Date: 2024-07-04 13:50+0300\n"
+"PO-Revision-Date: 2024-07-30 17:17+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -830,11 +830,10 @@ msgid "Search"
 msgstr "Ara"
 
 #: widgets/collectiondialog.cpp:66
-#, fuzzy, kde-format
-#| msgid "Use folder by default"
+#, kde-format
 msgctxt "@option:check"
 msgid "Use folder by default"
-msgstr "Klasörü öntanımlı olarak kullan"
+msgstr "Öntanımlı olarak klasör kullan"
 
 #: widgets/collectiondialog.cpp:226
 #, kde-format

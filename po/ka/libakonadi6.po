@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-30 00:41+0000\n"
-"PO-Revision-Date: 2024-07-04 04:53+0200\n"
+"PO-Revision-Date: 2024-07-30 08:57+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -367,7 +367,7 @@ msgstr "არასწორი რესურსის იდენტიფ�
 #: core/jobs/specialcollectionshelperjobs.cpp:350
 #, kde-format
 msgid "Failed to configure default resource via D-Bus."
-msgstr "D-Bus-ით ნაგულისხმები რესურსის მორგების შეცდომა."
+msgstr "D-Bus-ით ნაგულისხმევი რესურსის მორგების შეცდომა."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:415
 #, kde-format
@@ -824,11 +824,10 @@ msgid "Search"
 msgstr "ძებნა"
 
 #: widgets/collectiondialog.cpp:66
-#, fuzzy, kde-format
-#| msgid "Use folder by default"
+#, kde-format
 msgctxt "@option:check"
 msgid "Use folder by default"
-msgstr "საქაღალდის ნაგულისხმებად გამოყენება"
+msgstr "საქაღალდის ნაგულისხმევად გამოყენება"
 
 #: widgets/collectiondialog.cpp:226
 #, kde-format
@@ -1473,19 +1472,19 @@ msgstr "MySQL სერვერის კონფიგურაცია ა�
 #: widgets/selftestdialog.cpp:309
 #, kde-format
 msgid "MySQL server default configuration found."
-msgstr "MySQL -ის ნაგულისხმები კონფიგურაცია აღმოჩენილია."
+msgstr "MySQL -ის ნაგულისხმევი კონფიგურაცია აღმოჩენილია."
 
 #: widgets/selftestdialog.cpp:310
 #, kde-format
 msgid ""
 "The default configuration for the MySQL server was found and is readable at "
 "%1."
-msgstr "MySQL სერვერის ნაგულისხმები კონფიგურაცია ნაპოვნია და კითხვადია %1."
+msgstr "MySQL სერვერის ნაგულისხმევი კონფიგურაცია ნაპოვნია და კითხვადია %1."
 
 #: widgets/selftestdialog.cpp:314
 #, kde-format
 msgid "MySQL server default configuration not found."
-msgstr "MySQL სერვერის ნაგულისხმები კონფიგურაცია ვერ ვიპოვე."
+msgstr "MySQL სერვერის ნაგულისხმევი კონფიგურაცია ვერ ვიპოვე."
 
 #: widgets/selftestdialog.cpp:315
 #, kde-format
@@ -1494,7 +1493,7 @@ msgid ""
 "readable. Check your Akonadi installation is complete and you have all "
 "required access rights."
 msgstr ""
-"MySQL სერვერის ნაგულისხმები კონფიგურაცია ვერ ვიპოვე ან წაკითხვადი არაა. "
+"MySQL სერვერის ნაგულისხმევი კონფიგურაცია ვერ ვიპოვე ან წაკითხვადი არაა. "
 "შეამოწმეთ თქვენი Akonadi-ის კონფიგურაციის სისრულე და წვდომის უფლებები."
 
 #: widgets/selftestdialog.cpp:323
