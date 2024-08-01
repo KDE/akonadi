@@ -1,10 +1,10 @@
 # Translation of akonadi_knut_resource.po to Catalan
-# Copyright (C) 2009-2014 This_file_is_part_of_KDE
+# Copyright (C) 2009-2024 This_file_is_part_of_KDE
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
 # Manuel Tortosa Moreno <manutortosa@gmail.com>, 2009, 2010.
-# Josep M. Ferrer <txemaq@gmail.com>, 2010.
+# SPDX-FileCopyrightText: 2010, 2024 Josep M. Ferrer <txemaq@gmail.com>
 # Manuel Tortosa <manutortosa@chakra-project.org>, 2010.
 # Antoni Bella Pérez <antonibella5@yahoo.com>, 2014.
 msgid ""
@@ -12,14 +12,14 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-09-21 00:45+0000\n"
-"PO-Revision-Date: 2014-03-04 19:43+0100\n"
-"Last-Translator: Antoni Bella Pérez <antonibella5@yahoo.com>\n"
+"PO-Revision-Date: 2024-07-31 11:34+0200\n"
+"Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Lokalize 24.05.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
 
@@ -67,7 +67,7 @@ msgstr "No s'ha trobat la col·lecció modificada a l'arbre DOM."
 #: knutresource.cpp:236
 #, kde-format
 msgid "Deleted collection not found in DOM tree."
-msgstr "No s'ha trobat la col·lecció eliminada a l'arbre DOM."
+msgstr "No s'ha trobat la col·lecció suprimida a l'arbre DOM."
 
 #: knutresource.cpp:250 knutresource.cpp:308 knutresource.cpp:315
 #, kde-format
@@ -87,4 +87,4 @@ msgstr "No s'ha trobat l'element modificat a l'arbre DOM."
 #: knutresource.cpp:287
 #, kde-format
 msgid "Deleted item not found in DOM tree."
-msgstr "No s'ha trobat l'element eliminat a l'arbre DOM."
+msgstr "No s'ha trobat l'element suprimit a l'arbre DOM."
