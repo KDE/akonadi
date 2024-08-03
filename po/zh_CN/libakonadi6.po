@@ -810,7 +810,7 @@ msgstr "搜索"
 #: widgets/collectiondialog.cpp:66
 #, kde-format
 msgid "Use folder by default"
-msgstr "默认使用此文件夹"
+msgstr ""
 
 #: widgets/collectiondialog.cpp:226
 #, kde-format
