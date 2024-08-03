@@ -808,11 +808,10 @@ msgid "Search"
 msgstr "搜索"
 
 #: widgets/collectiondialog.cpp:66
-#, fuzzy, kde-format
-#| msgid "Use folder by default"
+#, kde-format
 msgctxt "@option:check"
 msgid "Use folder by default"
-msgstr "默认使用此文件夹"
+msgstr ""
 
 #: widgets/collectiondialog.cpp:226
 #, kde-format
