@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-30 00:41+0000\n"
-"PO-Revision-Date: 2024-07-05 15:48+0200\n"
+"PO-Revision-Date: 2024-08-07 09:18+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.05.1\n"
+"X-Generator: Lokalize 24.07.70\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -826,8 +826,7 @@ msgid "Search"
 msgstr "Търсене"
 
 #: widgets/collectiondialog.cpp:66
-#, fuzzy, kde-format
-#| msgid "Use folder by default"
+#, kde-format
 msgctxt "@option:check"
 msgid "Use folder by default"
 msgstr "Използване на папката по подразбиране"
