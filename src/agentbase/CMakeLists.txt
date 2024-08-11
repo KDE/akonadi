@@ -56,6 +56,7 @@ target_sources(KPim6AkonadiAgentBase PRIVATE
     transportresourcebase.cpp
     accountsintegration.h
     agentbase.h
+    agentbase_p.h
     agentsearchinterface.h
     preprocessorbase.h
     preprocessorbase_p.h
