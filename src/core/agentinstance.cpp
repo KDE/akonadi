@@ -153,7 +153,7 @@ void AgentInstance::reconfigure() const
     }
 }
 
-void Akonadi::AgentInstance::restart() const
+void AgentInstance::restart() const
 {
     QDBusInterface iface(ServerManager::serviceName(Akonadi::ServerManager::Control),
                          QStringLiteral("/AgentManager"),
