@@ -69,6 +69,7 @@ set(akonadicore_base_SRCS
     agentconfigurationmanager_p.h
     agentinstance_p.h
     agentmanager.h
+    agentmanager_p.h
     agenttype.h
     asyncselectionhandler_p.h
     attributefactory.h
