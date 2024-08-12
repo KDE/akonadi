@@ -316,18 +316,18 @@ void AgentBasePrivate::init()
     mChangeRecorder->itemFetchScope().setCacheOnly(true);
     mChangeRecorder->setConfig(mSettings);
 
-    mDesiredOnlineState = mSettings->value(QStringLiteral("Agent/DesiredOnlineState"), true).toBool();
+    mDesiredOnlineState = mSettings->value(QLatin1StringView("Agent/DesiredOnlineState"), true).toBool();
     mOnline = mDesiredOnlineState;
 
     // reinitialize the status message now that online state is available
     mStatusMessage = defaultReadyMessage();
 
-    mName = mSettings->value(QStringLiteral("Agent/Name")).toString();
+    mName = mSettings->value(QLatin1StringView("Agent/Name")).toString();
     if (mName.isEmpty()) {
-        mName = mSettings->value(QStringLiteral("Resource/Name")).toString();
+        mName = mSettings->value(QLatin1StringView("Resource/Name")).toString();
         if (!mName.isEmpty()) {
-            mSettings->remove(QStringLiteral("Resource/Name"));
-            mSettings->setValue(QStringLiteral("Agent/Name"), mName);
+            mSettings->remove(QLatin1StringView("Resource/Name"));
+            mSettings->setValue(QLatin1StringView("Agent/Name"), mName);
         }
     }
 
@@ -906,9 +906,9 @@ void AgentBase::setOnline(bool state)
     d->mDesiredOnlineState = state;
     if (!d->mSettings) {
         d->mSettings = new QSettings(ServerManager::agentConfigFilePath(identifier()), QSettings::IniFormat);
-        d->mSettings->setValue(QStringLiteral("Agent/Name"), agentName());
+        d->mSettings->setValue(QLatin1StringView("Agent/Name"), agentName());
     }
-    d->mSettings->setValue(QStringLiteral("Agent/DesiredOnlineState"), state);
+    d->mSettings->setValue(QLatin1StringView("Agent/DesiredOnlineState"), state);
     setOnlineInternal(state);
 }
 
@@ -1147,10 +1147,10 @@ void AgentBase::setAgentName(const QString &name)
     d->mName = name;
 
     if (d->mName.isEmpty() || d->mName == d->mId) {
-        d->mSettings->remove(QStringLiteral("Resource/Name"));
-        d->mSettings->remove(QStringLiteral("Agent/Name"));
+        d->mSettings->remove(QLatin1StringView("Resource/Name"));
+        d->mSettings->remove(QLatin1StringView("Agent/Name"));
     } else {
-        d->mSettings->setValue(QStringLiteral("Agent/Name"), d->mName);
+        d->mSettings->setValue(QLatin1StringView("Agent/Name"), d->mName);
     }
 
     d->mSettings->sync();
