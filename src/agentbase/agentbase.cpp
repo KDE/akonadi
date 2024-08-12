@@ -890,7 +890,7 @@ void AgentBase::setNeedsNetwork(bool needsNetwork)
 
     d->mNeedsNetwork = needsNetwork;
     QNetworkInformation::loadBackendByFeatures(QNetworkInformation::Feature::Reachability);
-    connect(QNetworkInformation::instance(), &QNetworkInformation::reachabilityChanged, this, [this, d](auto reachability) {
+    connect(QNetworkInformation::instance(), &QNetworkInformation::reachabilityChanged, this, [d](auto reachability) {
         d->slotNetworkStatusChange(reachability == QNetworkInformation::Reachability::Online);
     });
 }
