@@ -43,7 +43,8 @@ public Q_SLOTS:
 
     virtual void changeProcessed();
 
-    QString defaultReadyMessage() const
+public:
+    [[nodiscard]] QString defaultReadyMessage() const
     {
         if (mOnline) {
             return i18nc("@info:status Application ready for work", "Ready");
@@ -51,17 +52,17 @@ public Q_SLOTS:
         return i18nc("@info:status", "Offline");
     }
 
-    QString defaultSyncingMessage() const
+    [[nodiscard]] QString defaultSyncingMessage() const
     {
         return i18nc("@info:status", "Syncing...");
     }
 
-    QString defaultErrorMessage() const
+    [[nodiscard]] QString defaultErrorMessage() const
     {
         return i18nc("@info:status", "Error.");
     }
 
-    QString defaultUnconfiguredMessage() const
+    [[nodiscard]] QString defaultUnconfiguredMessage() const
     {
         return i18nc("@info:status", "Not configured");
     }
