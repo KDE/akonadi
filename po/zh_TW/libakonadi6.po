@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-30 00:41+0000\n"
+"POT-Creation-Date: 2024-08-14 00:39+0000\n"
 "PO-Revision-Date: 2024-08-06 05:27+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -63,31 +63,31 @@ msgstr "代理程式識別子"
 msgid "Akonadi Agent"
 msgstr "Akonadi 代理程式"
 
-#: agentbase/agentbase_p.h:49 agentbase/resourcescheduler.cpp:268
+#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:268
 #, kde-format
 msgctxt "@info:status Application ready for work"
 msgid "Ready"
 msgstr "已就緒"
 
-#: agentbase/agentbase_p.h:51
+#: agentbase/agentbase_p.h:52
 #, kde-format
 msgctxt "@info:status"
 msgid "Offline"
 msgstr "離線"
 
-#: agentbase/agentbase_p.h:56
+#: agentbase/agentbase_p.h:57
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing..."
 msgstr "同步中..."
 
-#: agentbase/agentbase_p.h:61
+#: agentbase/agentbase_p.h:62
 #, kde-format
 msgctxt "@info:status"
 msgid "Error."
 msgstr "錯誤："
 
-#: agentbase/agentbase_p.h:66
+#: agentbase/agentbase_p.h:67
 #, kde-format
 msgctxt "@info:status"
 msgid "Not configured"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-30 00:41+0000\n"
+"POT-Creation-Date: 2024-08-14 00:39+0000\n"
 "PO-Revision-Date: 2021-09-05 23:20-0700\n"
 "Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
 "Language-Team: Tajik Language Support\n"
@@ -59,31 +59,31 @@ msgstr ""
 msgid "Akonadi Agent"
 msgstr ""
 
-#: agentbase/agentbase_p.h:49 agentbase/resourcescheduler.cpp:268
+#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:268
 #, kde-format
 msgctxt "@info:status Application ready for work"
 msgid "Ready"
 msgstr ""
 
-#: agentbase/agentbase_p.h:51
+#: agentbase/agentbase_p.h:52
 #, kde-format
 msgctxt "@info:status"
 msgid "Offline"
 msgstr ""
 
-#: agentbase/agentbase_p.h:56
+#: agentbase/agentbase_p.h:57
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing..."
 msgstr ""
 
-#: agentbase/agentbase_p.h:61
+#: agentbase/agentbase_p.h:62
 #, kde-format
 msgctxt "@info:status"
 msgid "Error."
 msgstr ""
 
-#: agentbase/agentbase_p.h:66
+#: agentbase/agentbase_p.h:67
 #, kde-format
 msgctxt "@info:status"
 msgid "Not configured"

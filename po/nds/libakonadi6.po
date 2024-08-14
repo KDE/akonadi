@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-30 00:41+0000\n"
+"POT-Creation-Date: 2024-08-14 00:39+0000\n"
 "PO-Revision-Date: 2014-09-18 22:53+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -62,31 +62,31 @@ msgstr "Hölperkennen"
 msgid "Akonadi Agent"
 msgstr "Akonadi-Hölper"
 
-#: agentbase/agentbase_p.h:49 agentbase/resourcescheduler.cpp:268
+#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:268
 #, kde-format
 msgctxt "@info:status Application ready for work"
 msgid "Ready"
 msgstr "Praat"
 
-#: agentbase/agentbase_p.h:51
+#: agentbase/agentbase_p.h:52
 #, kde-format
 msgctxt "@info:status"
 msgid "Offline"
 msgstr "Afkoppelt"
 
-#: agentbase/agentbase_p.h:56
+#: agentbase/agentbase_p.h:57
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing..."
 msgstr "Bi to synkroniseren..."
 
-#: agentbase/agentbase_p.h:61
+#: agentbase/agentbase_p.h:62
 #, kde-format
 msgctxt "@info:status"
 msgid "Error."
 msgstr "Fehler."
 
-#: agentbase/agentbase_p.h:66
+#: agentbase/agentbase_p.h:67
 #, kde-format
 msgctxt "@info:status"
 msgid "Not configured"
