@@ -34,7 +34,7 @@ class AKONADICORE_EXPORT TagCache : public QObject
     Q_OBJECT
 public:
     explicit TagCache(QObject *parent = nullptr);
-    ~TagCache();
+    ~TagCache() override;
 
     /** Returns the tag with the GID @p gid, if available. */
     [[nodiscard]] Akonadi::Tag tagByGid(const QByteArray &gid) const;
