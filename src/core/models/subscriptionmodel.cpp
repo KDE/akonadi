@@ -159,7 +159,7 @@ QVariant SubscriptionModel::data(const QModelIndex &index, int role) const
 
 Qt::ItemFlags SubscriptionModel::flags(const QModelIndex &index) const
 {
-    Qt::ItemFlags flags = QIdentityProxyModel::flags(index);
+    const Qt::ItemFlags flags = QIdentityProxyModel::flags(index);
     const auto col = index.data(EntityTreeModel::CollectionRole).value<Collection>();
     if (d->isSubscribable(col)) {
         return flags | Qt::ItemIsUserCheckable;

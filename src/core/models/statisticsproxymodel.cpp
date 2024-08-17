@@ -137,13 +137,13 @@ public:
             iconPath = KIconLoader::global()->iconPath(QStringLiteral("folder"), -32, false);
         }
 
-        QString tipIcon = QStringLiteral(
-                              "      <table border=\"0\"><tr><td width=\"32\" height=\"32\" align=\"center\" valign=\"middle\">\n"
-                              "      <img src=\"%1\" width=\"%2\" height=\"32\">\n"
-                              "      </td></tr></table>\n"
-                              "    </td>\n")
-                              .arg(iconPath)
-                              .arg(icon_size_found);
+        const QString tipIcon = QStringLiteral(
+                                    "      <table border=\"0\"><tr><td width=\"32\" height=\"32\" align=\"center\" valign=\"middle\">\n"
+                                    "      <img src=\"%1\" width=\"%2\" height=\"32\">\n"
+                                    "      </td></tr></table>\n"
+                                    "    </td>\n")
+                                    .arg(iconPath)
+                                    .arg(icon_size_found);
 
         if (QApplication::layoutDirection() == Qt::LeftToRight) {
             tip += tipInfo + QStringLiteral("</td><td align=\"%3\" valign=\"top\">").arg(textDirection) + tipIcon;
