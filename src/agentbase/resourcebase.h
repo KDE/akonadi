@@ -322,7 +322,7 @@ protected Q_SLOTS:
      * @see retrieveNextItemSyncBatch(int), retrieveItems(Akonadi::Collection)
      * @since 4.14
      */
-    int itemSyncBatchSize() const;
+    [[nodiscard]] int itemSyncBatchSize() const;
 
     /**
      * Set the batch size used during the item sync.
@@ -646,7 +646,7 @@ protected:
      * @note Calling this method is only allowed during a collection synchronization task, that
      * is directly or indirectly from retrieveItems().
      */
-    Collection currentCollection() const;
+    [[nodiscard]] Collection currentCollection() const;
 
     /**
      * Returns the item that is currently retrieved.
@@ -660,7 +660,7 @@ protected:
      * @note Calling this method is only allowed during item fetch, that is
      * directly or indirectly from retrieveItems(Akonadi::Item::List,QSet<QByteArray>)
      */
-    Item::List currentItems() const;
+    [[nodiscard]] Item::List currentItems() const;
 
     /**
      * This method is called whenever the resource should start synchronize all data.
@@ -798,7 +798,7 @@ protected:
      * Dump the contents of the current ChangeReplay
      * @since 4.8.1
      */
-    QString dumpNotificationListToString() const;
+    [[nodiscard]] QString dumpNotificationListToString() const;
 
     /**
      *  Dumps memory usage information to stdout.
@@ -816,13 +816,13 @@ protected:
      *
      *  @since 4.11
      */
-    QString dumpMemoryInfoToString() const;
+    [[nodiscard]] QString dumpMemoryInfoToString() const;
 
     /**
      * Dump the state of the scheduler
      * @since 4.8.1
      */
-    QString dumpSchedulerToString() const;
+    [[nodiscard]] QString dumpSchedulerToString() const;
 
 private:
     static QString parseArguments(int argc, char **argv);

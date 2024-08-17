@@ -28,7 +28,7 @@ public:
 
     [[nodiscard]] bool isInstanceRegistered(const QString &instance) const;
 
-    QString findConfigPlugin(const QString &type) const;
+    [[nodiscard]] QString findConfigPlugin(const QString &type) const;
 
 private:
     AgentConfigurationManager(QObject *parent = nullptr);

@@ -190,7 +190,7 @@ public:
     /**
        Print debug output showing the state of the scheduler.
     */
-    QString dumpToString() const;
+    [[nodiscard]] QString dumpToString() const;
 
     /**
        Clear the state of the scheduler. Warning: this is intended to be
