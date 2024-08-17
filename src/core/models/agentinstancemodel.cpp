@@ -100,12 +100,12 @@ AgentInstanceModel::~AgentInstanceModel() = default;
 QHash<int, QByteArray> AgentInstanceModel::roleNames() const
 {
     QHash<int, QByteArray> roles = QAbstractItemModel::roleNames();
-    roles.insert(NameRole, "name");
-    roles.insert(StatusRole, "status");
-    roles.insert(StatusMessageRole, "statusMessage");
-    roles.insert(ProgressRole, "progress");
-    roles.insert(OnlineRole, "online");
-    roles.insert(IconNameRole, "iconName");
+    roles.insert(NameRole, QByteArrayLiteral("name"));
+    roles.insert(StatusRole, QByteArrayLiteral("status"));
+    roles.insert(StatusMessageRole, QByteArrayLiteral("statusMessage"));
+    roles.insert(ProgressRole, QByteArrayLiteral("progress"));
+    roles.insert(OnlineRole, QByteArrayLiteral("online"));
+    roles.insert(IconNameRole, QByteArrayLiteral("iconName"));
     return roles;
 }
 
