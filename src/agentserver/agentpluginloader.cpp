@@ -6,8 +6,6 @@
 #include "agentpluginloader.h"
 #include "akonadiagentserver_debug.h"
 
-#include "shared/akdebug.h"
-
 #include <QPluginLoader>
 
 AgentPluginLoader::AgentPluginLoader()
