@@ -17,7 +17,7 @@
 #include <QTimer>
 
 #include <KAboutData>
-
+#include <KCrash>
 #include <cstdlib>
 
 #ifdef QT_STATICPLUGIN
@@ -38,7 +38,7 @@ int main(int argc, char **argv)
                          QStringLiteral("Akonadi Server"), // we don't have any localization in the server
                          KAboutLicense::LGPL_V2);
     KAboutData::setApplicationData(aboutData);
-
+    KCrash::initialize();
 #if !defined(NDEBUG)
     const QCommandLineOption startWithoutControlOption(QStringLiteral("start-without-control"),
                                                        QStringLiteral("Allow to start the Akonadi server without the Akonadi control process being available"));
