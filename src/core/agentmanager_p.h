@@ -73,6 +73,8 @@ public:
     void synchronize(const AgentInstance &instance);
     void synchronizeCollectionTree(const AgentInstance &instance);
     void synchronizeTags(const AgentInstance &instance);
+    void setActivities(const AgentInstance &instance, const QStringList &activities);
+    void setActivitiesEnabled(const AgentInstance &instance, bool enabled);
 
     void createDBusInterface();
 

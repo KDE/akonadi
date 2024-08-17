@@ -232,6 +232,16 @@ void AgentManagerPrivate::setOnline(const AgentInstance &instance, bool state)
     mManager->setAgentInstanceOnline(instance.identifier(), state);
 }
 
+void AgentManagerPrivate::setActivities(const AgentInstance &instance, const QStringList &activities)
+{
+    mManager->setAgentInstanceActivities(instance.identifier(), activities);
+}
+
+void AgentManagerPrivate::setActivitiesEnabled(const AgentInstance &instance, bool enabled)
+{
+    mManager->setAgentInstanceActivitiesEnabled(instance.identifier(), enabled);
+}
+
 void AgentManagerPrivate::configure(const AgentInstance &instance, QWidget *parent)
 {
     qlonglong winId = 0;

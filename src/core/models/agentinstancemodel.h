@@ -59,6 +59,8 @@ public:
         StatusMessageRole, ///< A textual presentation of the current status
         ProgressRole, ///< The current progress (numerical in percent) of an operation
         OnlineRole, ///< The current online/offline status
+        ActivitiesRole, ///< A list of activities
+        ActivitiesEnabledRole, ///< Return true if activities is enabled on agent
         UserRole = Qt::UserRole + 42 ///< Role for user extensions
     };
 

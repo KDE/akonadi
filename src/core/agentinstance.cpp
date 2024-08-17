@@ -167,3 +167,23 @@ void AgentInstance::restart() const
         qCWarning(AKONADICORE_LOG) << "Unable to obtain control interface" << iface.lastError().message();
     }
 }
+
+QStringList AgentInstance::activities() const
+{
+    return d->mActivities;
+}
+
+void AgentInstance::setActivities(const QStringList &activities)
+{
+    AgentManager::self()->d->setActivities(*this, activities);
+}
+
+bool AgentInstance::activitiesEnabled() const
+{
+    return d->mActivitiesEnabled;
+}
+
+void AgentInstance::setActivitiesEnabled(bool enabled)
+{
+    AgentManager::self()->d->setActivitiesEnabled(*this, enabled);
+}

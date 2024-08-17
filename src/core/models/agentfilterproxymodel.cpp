@@ -30,7 +30,7 @@ public:
     QStringList mimeTypes;
     QStringList capabilities;
     QStringList excludeCapabilities;
-    bool filterAcceptRegExp(const QModelIndex &index, const QRegularExpression &filterRegExpStr);
+    [[nodiscard]] bool filterAcceptRegExp(const QModelIndex &index, const QRegularExpression &filterRegExpStr);
 };
 
 AgentFilterProxyModel::AgentFilterProxyModel(QObject *parent)

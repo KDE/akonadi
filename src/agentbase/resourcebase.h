@@ -195,6 +195,26 @@ public:
     [[nodiscard]] QString name() const;
 
     /**
+     * This method sets list of activities.
+     */
+    void setActivities(const QStringList &activities);
+
+    /**
+     * return list of activities.
+     */
+    [[nodiscard]] QStringList activities() const;
+
+    /**
+     * This method enables or not activities support.
+     */
+    void setActivitiesEnabled(bool enable);
+
+    /**
+     * Returns true if activities is enabled.
+     */
+    [[nodiscard]] bool activitiesEnabled() const;
+
+    /**
      * Enable or disable automatic progress reporting. By default, it is enabled.
      * When enabled, the resource will automatically emit the signals percent() and status()
      * while syncing items or collections.

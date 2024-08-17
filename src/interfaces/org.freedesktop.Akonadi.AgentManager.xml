@@ -143,7 +143,23 @@
       <arg name="identifier" type="s" direction="in"/>
       <arg name="state" type="b" direction="in"/>
     </method>
+    <method name="agentInstanceActivities">
+      <arg type="as" direction="out"/>
+      <arg name="identifier" type="s" direction="in"/>
+    </method>
+    <method name="setAgentInstanceActivities">
+      <arg name="identifier" type="s" direction="in"/>
+      <arg name="activities" type="as" direction="in"/>
+    </method>
     <method name="restartAgentInstance">
+      <arg name="identifier" type="s" direction="in"/>
+    </method>
+    <method name="setAgentInstanceActivitiesEnabled">
+      <arg name="identifier" type="s" direction="in"/>	    
+      <arg name="en" type="b" direction="in"/>
+    </method>
+    <method name="agentInstanceActivitiesEnabled">
+      <arg type="b" direction="out"/>
       <arg name="identifier" type="s" direction="in"/>
     </method>
   </interface>

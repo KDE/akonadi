@@ -537,6 +537,34 @@ public:
      */
     [[nodiscard]] QString agentName() const;
 
+    /**
+     * This method is used to set the activities of the agent.
+     *
+     * @since 6.3
+     */
+    void setActivities(const QStringList &activities);
+
+    /**
+     * Returns the activities of the agent.
+     *
+     * @since 6.3
+     */
+    [[nodiscard]] QStringList activities() const;
+
+    /**
+     * This method is used to enabled the activities of the agent.
+     *
+     * @since 6.3
+     */
+    void setActivitiesEnabled(bool enabled);
+
+    /**
+     * Returns the activities status of the agent.
+     *
+     * @since 6.3
+     */
+    [[nodiscard]] bool activitiesEnabled() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted whenever the name of the agent has changed.
@@ -628,6 +656,20 @@ Q_SIGNALS:
      * @since 4.4
      */
     void configurationDialogRejected();
+
+    /**
+     * This signal is emitted whenever the user has changed activities.
+     *
+     * @since 6.3
+     */
+    void agentActivitiesChanged(const QStringList &activities);
+
+    /**
+     * This signal is emitted whenever the user has changed enabled activities.
+     *
+     * @since 6.3
+     */
+    void agentActivitiesEnabledChanged(bool enabled);
 
 protected:
     /**

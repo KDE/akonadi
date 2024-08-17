@@ -505,6 +505,26 @@ QString ResourceBase::name() const
     return AgentBase::agentName();
 }
 
+void ResourceBase::setActivities(const QStringList &activities)
+{
+    AgentBase::setActivities(activities);
+}
+
+QStringList ResourceBase::activities() const
+{
+    return AgentBase::activities();
+}
+
+void ResourceBase::setActivitiesEnabled(bool enabled)
+{
+    AgentBase::setActivitiesEnabled(enabled);
+}
+
+bool ResourceBase::activitiesEnabled() const
+{
+    return AgentBase::activitiesEnabled();
+}
+
 QString ResourceBase::parseArguments(int argc, char **argv)
 {
     Q_UNUSED(argc)

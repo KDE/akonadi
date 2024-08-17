@@ -156,6 +156,10 @@ QVariant AgentInstanceModel::data(const QModelIndex &index, int role) const
         return instance.progress();
     case OnlineRole:
         return instance.isOnline();
+    case ActivitiesRole:
+        return instance.activities();
+    case ActivitiesEnabledRole:
+        return instance.activitiesEnabled();
     case TypeRole: {
         QVariant var;
         var.setValue(instance.type());

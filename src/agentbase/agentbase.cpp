@@ -331,6 +331,8 @@ void AgentBasePrivate::init()
         }
     }
 
+    mActivities = mSettings->value(QLatin1StringView("Agent/Activities")).toStringList();
+    mActivitiesEnabled = mSettings->value(QLatin1StringView("Agent/ActivitiesEnabled"), false).toBool();
     connect(mChangeRecorder, &Monitor::itemAdded, this, &AgentBasePrivate::itemAdded);
     connect(mChangeRecorder, &Monitor::itemChanged, this, &AgentBasePrivate::itemChanged);
     connect(mChangeRecorder, &Monitor::collectionAdded, this, &AgentBasePrivate::collectionAdded);
@@ -1168,6 +1170,46 @@ QString AgentBase::agentName() const
     } else {
         return d->mName;
     }
+}
+
+void AgentBase::setActivities(const QStringList &activities)
+{
+    Q_D(AgentBase);
+    if (activities == d->mActivities) {
+        return;
+    }
+
+    d->mActivities = activities;
+    if (d->mActivities.isEmpty()) {
+        d->mSettings->remove(QStringLiteral("Agent/Activities"));
+    } else {
+        d->mSettings->setValue(QStringLiteral("Agent/Activities"), d->mActivities);
+    }
+    Q_EMIT agentActivitiesChanged(d->mActivities);
+}
+
+QStringList AgentBase::activities() const
+{
+    Q_D(const AgentBase);
+    return d->mActivities;
+}
+
+bool AgentBase::activitiesEnabled() const
+{
+    Q_D(const AgentBase);
+    return d->mActivitiesEnabled;
+}
+
+void AgentBase::setActivitiesEnabled(bool enabled)
+{
+    Q_D(AgentBase);
+    if (enabled == d->mActivitiesEnabled) {
+        return;
+    }
+
+    d->mActivitiesEnabled = enabled;
+    d->mSettings->setValue(QStringLiteral("Agent/ActivitiesEnabled"), enabled);
+    Q_EMIT agentActivitiesEnabledChanged(d->mActivitiesEnabled);
 }
 
 void AgentBase::changeProcessed()

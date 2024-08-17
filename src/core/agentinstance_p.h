@@ -30,8 +30,10 @@ public:
         , mName(other.mName)
         , mStatus(other.mStatus)
         , mStatusMessage(other.mStatusMessage)
+        , mActivities(other.mActivities)
         , mProgress(other.mProgress)
         , mIsOnline(other.mIsOnline)
+        , mActivitiesEnabled(other.mActivitiesEnabled)
     {
     }
 
@@ -40,8 +42,10 @@ public:
     QString mName;
     int mStatus = 0;
     QString mStatusMessage;
+    QStringList mActivities;
     int mProgress = 0;
     bool mIsOnline = false;
+    bool mActivitiesEnabled = false;
 };
 
 }

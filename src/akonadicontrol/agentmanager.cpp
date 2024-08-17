@@ -412,6 +412,42 @@ void AgentManager::setAgentInstanceOnline(const QString &identifier, bool state)
     mAgentInstances.value(identifier)->statusInterface()->setOnline(state);
 }
 
+void AgentManager::setAgentInstanceActivities(const QString &identifier, const QStringList &activities)
+{
+    if (!checkAgentInterfaces(identifier, QStringLiteral("setAgentInstanceActivities"))) {
+        return;
+    }
+
+    mAgentInstances.value(identifier)->resourceInterface()->setActivities(activities);
+}
+
+QStringList AgentManager::agentInstanceActivities(const QString &identifier)
+{
+    if (!checkInstance(identifier)) {
+        return {};
+    }
+
+    return mAgentInstances.value(identifier)->resourceInterface()->activities();
+}
+
+void AgentManager::setAgentInstanceActivitiesEnabled(const QString &identifier, bool enabled)
+{
+    if (!checkAgentInterfaces(identifier, QStringLiteral("setAgentInstanceActivitiesEnabled"))) {
+        return;
+    }
+
+    mAgentInstances.value(identifier)->resourceInterface()->setActivitiesEnabled(enabled);
+}
+
+bool AgentManager::agentInstanceActivitiesEnabled(const QString &identifier)
+{
+    if (!checkInstance(identifier)) {
+        return {};
+    }
+
+    return mAgentInstances.value(identifier)->resourceInterface()->activitiesEnabled();
+}
+
 // resource specific methods //
 void AgentManager::setAgentInstanceName(const QString &identifier, const QString &name)
 {

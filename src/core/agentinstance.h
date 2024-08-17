@@ -184,6 +184,26 @@ public:
      */
     void restart() const;
 
+    /**
+     * Returns a list of activities of the agent instance.
+     */
+    [[nodiscard]] QStringList activities() const;
+
+    /**
+     * Sets list of activities of the agent instance
+     */
+    void setActivities(const QStringList &online);
+
+    /**
+     * Returns true if agent instance has activities support enabled.
+     */
+    [[nodiscard]] bool activitiesEnabled() const;
+
+    /**
+     * Sets activities support enabled
+     */
+    void setActivitiesEnabled(bool enabled);
+
 private:
     /// @cond PRIVATE
     QSharedDataPointer<AgentInstancePrivate> d;

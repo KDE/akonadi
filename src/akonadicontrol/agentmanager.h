@@ -213,6 +213,12 @@ public:
      */
     void removeSearch(quint64 resultCollectionId);
 
+    void setAgentInstanceActivities(const QString &identifier, const QStringList &activities);
+    [[nodiscard]] QStringList agentInstanceActivities(const QString &identifier);
+
+    void setAgentInstanceActivitiesEnabled(const QString &identifier, bool enabled);
+    [[nodiscard]] bool agentInstanceActivitiesEnabled(const QString &identifier);
+
 Q_SIGNALS:
     /**
      * This signal is emitted whenever a new agent type was installed on the system.

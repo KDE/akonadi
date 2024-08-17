@@ -76,6 +76,7 @@ public:
     QString mId;
     QString mName;
     QString mResourceTypeName;
+    QStringList mActivities;
 
     int mStatusCode;
     QString mStatusMessage;
@@ -88,6 +89,7 @@ public:
     bool mDesiredOnlineState;
 
     bool mPendingQuit;
+    bool mActivitiesEnabled = false;
 
     QSettings *mSettings = nullptr;
 

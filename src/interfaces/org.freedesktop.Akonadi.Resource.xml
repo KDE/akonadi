@@ -43,5 +43,17 @@
     <method name="name">
       <arg type="s" direction="out"/>
     </method>
+    <method name="setActivities">
+      <arg name="name" type="as" direction="in"/>
+    </method>
+    <method name="activities">
+      <arg type="as" direction="out"/>
+    </method>
+    <method name="setActivitiesEnabled">
+      <arg name="en" type="b" direction="in"/>
+    </method>
+    <method name="activitiesEnabled">
+      <arg type="b" direction="out"/>
+    </method>
   </interface>
 </node>
