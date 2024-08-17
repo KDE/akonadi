@@ -15,8 +15,8 @@ namespace Akonadi
 {
 namespace Instance
 {
-AKONADIPRIVATE_EXPORT bool hasIdentifier();
+[[nodiscard]] AKONADIPRIVATE_EXPORT bool hasIdentifier();
 AKONADIPRIVATE_EXPORT void setIdentifier(const QString &identifier);
-AKONADIPRIVATE_EXPORT QString identifier();
+[[nodiscard]] AKONADIPRIVATE_EXPORT QString identifier();
 }
 }
