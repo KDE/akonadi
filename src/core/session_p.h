@@ -97,7 +97,7 @@ public:
     /**
       Returns the next IMAP tag.
     */
-    qint64 nextTag();
+    [[nodiscard]] qint64 nextTag();
 
     /**
       Sends the given command to server
