@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-14 00:39+0000\n"
+"POT-Creation-Date: 2024-08-18 00:39+0000\n"
 "PO-Revision-Date: 2013-01-13 00:43+0200\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -44,20 +44,20 @@ msgstr ""
 msgid "Unable to register object at dbus: %1"
 msgstr "Ofiectul nu poate fi înregistrat la dbus: %1"
 
-#: agentbase/agentbase.cpp:397
+#: agentbase/agentbase.cpp:399
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 de tip %2"
 
-#: agentbase/agentbase.cpp:807
+#: agentbase/agentbase.cpp:809
 #, fuzzy, kde-format
 #| msgid "Agent identifier"
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Identificator agent"
 
-#: agentbase/agentbase.cpp:813
+#: agentbase/agentbase.cpp:815
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Agent Akonadi"
@@ -92,7 +92,7 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr ""
 
-#: agentbase/resourcebase.cpp:512
+#: agentbase/resourcebase.cpp:532
 #, fuzzy, kde-format
 #| msgctxt "@label commandline option"
 #| msgid "Resource identifier"
@@ -100,38 +100,38 @@ msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "Identificator de resursă"
 
-#: agentbase/resourcebase.cpp:518
+#: agentbase/resourcebase.cpp:538
 #, fuzzy, kde-format
 #| msgctxt "@title application name"
 #| msgid "Akonadi Resource"
 msgid "Akonadi Resource"
 msgstr "Resursă Akonadi"
 
-#: agentbase/resourcebase.cpp:566
+#: agentbase/resourcebase.cpp:586
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "S-a preluat un element nevalid"
 
-#: agentbase/resourcebase.cpp:589
+#: agentbase/resourcebase.cpp:609
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Eroare la crearea elementului: %1"
 
-#: agentbase/resourcebase.cpp:613
+#: agentbase/resourcebase.cpp:633
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Eroare la actualizarea colecției: %1"
 
-#: agentbase/resourcebase.cpp:700
+#: agentbase/resourcebase.cpp:720
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Actualizarea colecției locale a eșuat: %1."
 
-#: agentbase/resourcebase.cpp:705
+#: agentbase/resourcebase.cpp:725
 #, fuzzy, kde-format
 #| msgctxt "@info"
 #| msgid "Updating local collection failed: %1."
@@ -139,31 +139,31 @@ msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Actualizarea colecției locale a eșuat: %1."
 
-#: agentbase/resourcebase.cpp:724
+#: agentbase/resourcebase.cpp:744
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Elementul nu poate fi obținut în regim deconectat."
 
-#: agentbase/resourcebase.cpp:905
+#: agentbase/resourcebase.cpp:925
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Se sincronizează dosarul „%1”"
 
-#: agentbase/resourcebase.cpp:925 agentbase/resourcebase.cpp:932
+#: agentbase/resourcebase.cpp:945 agentbase/resourcebase.cpp:952
 #, fuzzy, kde-format
 #| msgid "Failed to fetch the resource collection."
 msgid "Failed to retrieve collection for sync."
 msgstr "Preluarea colecției de resurse a eșuat."
 
-#: agentbase/resourcebase.cpp:973
+#: agentbase/resourcebase.cpp:993
 #, fuzzy, kde-format
 #| msgid "Failed to fetch the resource collection."
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Preluarea colecției de resurse a eșuat."
 
-#: agentbase/resourcebase.cpp:1019
+#: agentbase/resourcebase.cpp:1039
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Elementul cerut nu mai există"
@@ -416,7 +416,7 @@ msgstr ""
 "Colecția de restabilire nu a putut fi găsită și resursa de restabilire nu "
 "este disponibilă"
 
-#: core/models/agentinstancemodel.cpp:188
+#: core/models/agentinstancemodel.cpp:192
 #, kde-format
 msgctxt "@title:column, name of a thing"
 msgid "Name"

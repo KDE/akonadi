@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-14 00:39+0000\n"
+"POT-Creation-Date: 2024-08-18 00:39+0000\n"
 "PO-Revision-Date: 2024-07-30 12:58+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -48,19 +48,19 @@ msgstr "Integratie van accounts wordt niet ondersteund"
 msgid "Unable to register object at dbus: %1"
 msgstr "Kan object niet registreren in dbus: %1"
 
-#: agentbase/agentbase.cpp:397
+#: agentbase/agentbase.cpp:399
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 van type %2"
 
-#: agentbase/agentbase.cpp:807
+#: agentbase/agentbase.cpp:809
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Agent-ID"
 
-#: agentbase/agentbase.cpp:813
+#: agentbase/agentbase.cpp:815
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi-agent"
@@ -95,71 +95,71 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "Niet ingesteld"
 
-#: agentbase/resourcebase.cpp:512
+#: agentbase/resourcebase.cpp:532
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "Hulpbronidentificatie"
 
-#: agentbase/resourcebase.cpp:518
+#: agentbase/resourcebase.cpp:538
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "Akonadi-hulpbron"
 
-#: agentbase/resourcebase.cpp:566
+#: agentbase/resourcebase.cpp:586
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Ongeldig item opgehaald"
 
-#: agentbase/resourcebase.cpp:589
+#: agentbase/resourcebase.cpp:609
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Fout bij aanmaken van item: %1"
 
-#: agentbase/resourcebase.cpp:613
+#: agentbase/resourcebase.cpp:633
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Fout bij bijwerken van verzameling: %1."
 
-#: agentbase/resourcebase.cpp:700
+#: agentbase/resourcebase.cpp:720
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Bijwerken van lokale verzameling is mislukt: %1."
 
-#: agentbase/resourcebase.cpp:705
+#: agentbase/resourcebase.cpp:725
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Bijwerken van lokale items is mislukt: %1."
 
-#: agentbase/resourcebase.cpp:724
+#: agentbase/resourcebase.cpp:744
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Kan het item niet ophalen in offline-modus."
 
-#: agentbase/resourcebase.cpp:905
+#: agentbase/resourcebase.cpp:925
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Map '%1' wordt gesynchroniseerd"
 
-#: agentbase/resourcebase.cpp:925 agentbase/resourcebase.cpp:932
+#: agentbase/resourcebase.cpp:945 agentbase/resourcebase.cpp:952
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Het ophalen van de verzameling voor synchronisatie is mislukt."
 
-#: agentbase/resourcebase.cpp:973
+#: agentbase/resourcebase.cpp:993
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr ""
 "Het ophalen van de verzameling voor synchronisatie van attributen is mislukt."
 
-#: agentbase/resourcebase.cpp:1019
+#: agentbase/resourcebase.cpp:1039
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Het gevraagde item bestaat niet langer"
@@ -420,7 +420,7 @@ msgstr ""
 "Kon de te herstellen verzameling niet vinden en herstelhulpbron is niet "
 "beschikbaar"
 
-#: core/models/agentinstancemodel.cpp:188
+#: core/models/agentinstancemodel.cpp:192
 #, kde-format
 msgctxt "@title:column, name of a thing"
 msgid "Name"

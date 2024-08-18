@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-14 00:39+0000\n"
+"POT-Creation-Date: 2024-08-18 00:39+0000\n"
 "PO-Revision-Date: 2024-08-05 22:48+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -45,19 +45,19 @@ msgstr "Kontuen integrazioa ez da onartzen"
 msgid "Unable to register object at dbus: %1"
 msgstr "Ezin da objektua dbus-en erregistratu: %1"
 
-#: agentbase/agentbase.cpp:397
+#: agentbase/agentbase.cpp:399
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%2 motako %1"
 
-#: agentbase/agentbase.cpp:807
+#: agentbase/agentbase.cpp:809
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Agentearen identifikatzailea"
 
-#: agentbase/agentbase.cpp:813
+#: agentbase/agentbase.cpp:815
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadiren agentea"
@@ -92,70 +92,70 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "Konfiguratu gabe"
 
-#: agentbase/resourcebase.cpp:512
+#: agentbase/resourcebase.cpp:532
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "Baliabide-identifikatzailea"
 
-#: agentbase/resourcebase.cpp:518
+#: agentbase/resourcebase.cpp:538
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "Akonadi baliabidea"
 
-#: agentbase/resourcebase.cpp:566
+#: agentbase/resourcebase.cpp:586
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Baliogabeko elementu bat eskuratu da"
 
-#: agentbase/resourcebase.cpp:589
+#: agentbase/resourcebase.cpp:609
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Errorea elementua sortzean: %1"
 
-#: agentbase/resourcebase.cpp:613
+#: agentbase/resourcebase.cpp:633
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Errorea bilduma eguneratzean: %1"
 
-#: agentbase/resourcebase.cpp:700
+#: agentbase/resourcebase.cpp:720
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Bilduma lokala eguneratzea huts egin du: %1."
 
-#: agentbase/resourcebase.cpp:705
+#: agentbase/resourcebase.cpp:725
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Elementu lokalak eguneratzea huts egin du: %1."
 
-#: agentbase/resourcebase.cpp:724
+#: agentbase/resourcebase.cpp:744
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Ezin duzu elementurik ekarri lerroz kanpoko moduan."
 
-#: agentbase/resourcebase.cpp:905
+#: agentbase/resourcebase.cpp:925
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "«%1» karpeta sinkronizatzea"
 
-#: agentbase/resourcebase.cpp:925 agentbase/resourcebase.cpp:932
+#: agentbase/resourcebase.cpp:945 agentbase/resourcebase.cpp:952
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Huts egin du bilduma sinkronizatzeko eskuratzeak."
 
-#: agentbase/resourcebase.cpp:973
+#: agentbase/resourcebase.cpp:993
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Huts egin du atributuak sinkronizatzeko bilduma eskuratzeak."
 
-#: agentbase/resourcebase.cpp:1019
+#: agentbase/resourcebase.cpp:1039
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Eskatutako elementua ez existitzen dagoeneko"
@@ -418,7 +418,7 @@ msgstr ""
 "Ezin izan da aurkitu bilduma lehengoratzea eta baliabidea lehengoratzea ez "
 "dago erabilgarri"
 
-#: core/models/agentinstancemodel.cpp:188
+#: core/models/agentinstancemodel.cpp:192
 #, kde-format
 msgctxt "@title:column, name of a thing"
 msgid "Name"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-14 00:39+0000\n"
+"POT-Creation-Date: 2024-08-18 00:39+0000\n"
 "PO-Revision-Date: 2012-07-11 10:23+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -46,20 +46,20 @@ msgstr ""
 msgid "Unable to register object at dbus: %1"
 msgstr ""
 
-#: agentbase/agentbase.cpp:397
+#: agentbase/agentbase.cpp:399
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 នៃ​ប្រភេទ %2"
 
-#: agentbase/agentbase.cpp:807
+#: agentbase/agentbase.cpp:809
 #, fuzzy, kde-format
 #| msgid "Agent identifier"
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "គ្រឿង​សម្គាល់​ភ្នាក់​ងារ"
 
-#: agentbase/agentbase.cpp:813
+#: agentbase/agentbase.cpp:815
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "ភ្នាក់ងារ​របស់ Akonadi"
@@ -94,7 +94,7 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr ""
 
-#: agentbase/resourcebase.cpp:512
+#: agentbase/resourcebase.cpp:532
 #, fuzzy, kde-format
 #| msgctxt "@label commandline option"
 #| msgid "Resource identifier"
@@ -102,27 +102,27 @@ msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "គ្រឿង​សម្គាល់​​ធនធាន​"
 
-#: agentbase/resourcebase.cpp:518
+#: agentbase/resourcebase.cpp:538
 #, fuzzy, kde-format
 #| msgctxt "@title application name"
 #| msgid "Akonadi Resource"
 msgid "Akonadi Resource"
 msgstr "ធនធាន​របស់ Akonadi​"
 
-#: agentbase/resourcebase.cpp:566
+#: agentbase/resourcebase.cpp:586
 #, fuzzy, kde-format
 #| msgid "Invalid items passed"
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "បាន​ហុច​ធាតុ​ដែល​មិន​ត្រឹមត្រូវ"
 
-#: agentbase/resourcebase.cpp:589
+#: agentbase/resourcebase.cpp:609
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr ""
 
-#: agentbase/resourcebase.cpp:613
+#: agentbase/resourcebase.cpp:633
 #, fuzzy, kde-format
 #| msgctxt "@info"
 #| msgid "Updating local collection failed: %1."
@@ -130,13 +130,13 @@ msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "បាន​បរាជ័យ​ក្នុង​ការ​ធ្វើ​បច្ចុប្បន្នភាព​​សម្រាំង​មូលដ្ឋាន​ ​៖ %1 ។"
 
-#: agentbase/resourcebase.cpp:700
+#: agentbase/resourcebase.cpp:720
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "បាន​បរាជ័យ​ក្នុង​ការ​ធ្វើ​បច្ចុប្បន្នភាព​​សម្រាំង​មូលដ្ឋាន​ ​៖ %1 ។"
 
-#: agentbase/resourcebase.cpp:705
+#: agentbase/resourcebase.cpp:725
 #, fuzzy, kde-format
 #| msgctxt "@info"
 #| msgid "Updating local collection failed: %1."
@@ -144,31 +144,31 @@ msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "បាន​បរាជ័យ​ក្នុង​ការ​ធ្វើ​បច្ចុប្បន្នភាព​​សម្រាំង​មូលដ្ឋាន​ ​៖ %1 ។"
 
-#: agentbase/resourcebase.cpp:724
+#: agentbase/resourcebase.cpp:744
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "មិនអាច​ទៅ​យក​ធាតុ​នៅ​ក្នុង​របៀប​ក្រៅបណ្ដាញ​បាន​ទេ ។"
 
-#: agentbase/resourcebase.cpp:905
+#: agentbase/resourcebase.cpp:925
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "ធ្វើ​សមកាលកម្ម​ថត '%1'"
 
-#: agentbase/resourcebase.cpp:925 agentbase/resourcebase.cpp:932
+#: agentbase/resourcebase.cpp:945 agentbase/resourcebase.cpp:952
 #, fuzzy, kde-format
 #| msgid "Failed to fetch the resource collection."
 msgid "Failed to retrieve collection for sync."
 msgstr "បាន​បរាជ័យ​ក្នុង​ការ​ទៅ​ប្រមូល​យក​​​សម្រាំង​ធនធាន ។"
 
-#: agentbase/resourcebase.cpp:973
+#: agentbase/resourcebase.cpp:993
 #, fuzzy, kde-format
 #| msgid "Failed to fetch the resource collection."
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "បាន​បរាជ័យ​ក្នុង​ការ​ទៅ​ប្រមូល​យក​​​សម្រាំង​ធនធាន ។"
 
-#: agentbase/resourcebase.cpp:1019
+#: agentbase/resourcebase.cpp:1039
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "គ្មាន​ធាតុ​ដែល​បាន​ទាមទារ​ទៀត​ឡើយ​​"
@@ -416,7 +416,7 @@ msgstr "គ្មាន​សម្រាំង​ត្រឹមត្រូវ
 msgid "Could not find restore collection and restore resource is not available"
 msgstr "រក​មិន​ឃើញ​សម្រាំង​ដែល​បាន​ស្ដារ ឬ​មិន​មាន​ធនធាន​ដែល​បាន​ស្ដារ"
 
-#: core/models/agentinstancemodel.cpp:188
+#: core/models/agentinstancemodel.cpp:192
 #, kde-format
 msgctxt "@title:column, name of a thing"
 msgid "Name"
