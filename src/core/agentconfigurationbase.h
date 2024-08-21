@@ -128,6 +128,24 @@ public:
 
     virtual QDialogButtonBox::StandardButtons standardButtons() const;
 
+    struct ActivitySettings {
+        bool enabled = false;
+        QStringList activities;
+    };
+
+    /**
+     * @brief saveActivitiesSettings
+     * @param activities
+     * save activities settings
+     */
+    void saveActivitiesSettings(const ActivitySettings &activities);
+
+    /**
+     * @brief restoreActivitiesSettings
+     * @return activities settings
+     */
+    [[nodiscard]] ActivitySettings restoreActivitiesSettings() const;
+
 protected:
     QWidget *parentWidget() const;
 
