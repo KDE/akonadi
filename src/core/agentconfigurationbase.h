@@ -138,7 +138,7 @@ public:
      * @param activities
      * save activities settings
      */
-    void saveActivitiesSettings(const ActivitySettings &activities);
+    void saveActivitiesSettings(const ActivitySettings &activities) const;
 
     /**
      * @brief restoreActivitiesSettings

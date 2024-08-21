@@ -98,7 +98,7 @@ QDialogButtonBox::StandardButtons AgentConfigurationBase::standardButtons() cons
     return QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel;
 }
 
-void AgentConfigurationBase::saveActivitiesSettings(const ActivitySettings &activities)
+void AgentConfigurationBase::saveActivitiesSettings(const ActivitySettings &activities) const
 {
     KConfigGroup activitiesGroup = d->config->group(QStringLiteral("Agent"));
     activitiesGroup.writeEntry(QStringLiteral("ActivitiesEnabled"), activities.enabled);
