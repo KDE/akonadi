@@ -31,9 +31,8 @@ class CollectionAttributesSynchronizationJobPrivate;
  *
  * const Collection collection = ...;
  *
- * CollectionAttributesSynchronizationJob *job = new CollectionAttributesSynchronizationJob( collection );
- * connect( job, SIGNAL(result(KJob*)), SLOT(synchronizationFinished(KJob*)) );
- *
+ * auto job = new CollectionAttributesSynchronizationJob(collection);
+ * connect(job, &KJob::result, this, &MyClass::synchronizationFinished);
  * @endcode
  *
  * @note This is a KJob not an Akonadi::Job, so it won't auto-start!

@@ -21,17 +21,19 @@ class CollectionCreateJobPrivate;
  * You have to use setParentCollection() to define the collection the
  * new collection shall be located in.
  *
+ * Example:
+ *
  * @code
+ * using namespace Qt::StringLiterals;
  *
  * // create a new top-level collection
  * Akonadi::Collection collection;
- * collection.setParentCollection( Collection::root() );
- * collection.setName( "Events" );
- * collection.setContentMimeTypes( QStringList( "text/calendar" ) );
+ * collection.setParentCollection(Collection::root());
+ * collection.setName(u"Events"_s);
+ * collection.setContentMimeTypes({ u""text/calendar"_s });
  *
- * Akonadi::CollectionCreateJob *job = new Akonadi::CollectionCreateJob( collection );
- * connect( job, SIGNAL(result(KJob*)), this, SLOT(createResult(KJob*)) );
- *
+ * auto job = new Akonadi::CollectionCreateJob(collection);
+ * connect(job, &KJob::result, this, &MyClass::createResult);
  * @endcode
  *
  * @author Volker Krause <vkrause@kde.org>

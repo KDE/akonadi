@@ -19,22 +19,25 @@ class CollectionCopyJobPrivate;
  *
  * This job copies a single collection into a specified target collection.
  *
+ * Example:
+ *
  * @code
  *
  * Akonadi::Collection source = ...
  * Akonadi::Collection target = ...
  *
- * Akonadi::CollectionCopyJob *job = new Akonadi::CollectionCopyJob( source, target );
- * connect( job, SIGNAL(result(KJob*)), SLOT(copyFinished(KJob*)) );
+ * auto job = new Akonadi::CollectionCopyJob(source, target);
+ * connect(job, &KJob::result, this, &MyClass::copyFinished);
  *
  * ...
  *
- * MyClass::copyFinished( KJob *job )
+ * MyClass::copyFinished(KJob *job)
  * {
- *   if ( job->error() )
- *     qDebug() << "Error occurred";
- *   else
- *     qDebug() << "Copied successfully";
+ *     if (job->error()) {
+ *         qDebug() << "Error occurred";
+ *     } else {
+ *         qDebug() << "Copied successfully";
+ *     }
  * }
  *
  * @endcode

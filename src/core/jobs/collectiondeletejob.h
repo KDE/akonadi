@@ -20,29 +20,25 @@ class CollectionDeleteJobPrivate;
  * This job deletes a collection and all its sub-collections as well as all associated content.
  *
  * @code
- *
  * Akonadi::Collection collection = ...
  *
- * Akonadi::CollectionDeleteJob *job = new Akonadi::CollectionDeleteJob( collection );
- * connect( job, SIGNAL(result(KJob*)), this, SLOT(deletionResult(KJob*)) );
+ * auto job = new Akonadi::CollectionDeleteJob(collection);
+ * connect(job, &KJob::result, this, &MyClass::deletionResult);
  *
  * @endcode
  *
  * @note This job deletes the data from the backend storage. To delete the collection
  * from the Akonadi storage only, leaving the backend storage unchanged, delete
- * the Agent instead, as follows. (Note that if it's a sub-collection, deleting
+ * the Agent instead, as follows. Note that if it's a sub-collection, deleting
  * the agent will also delete its parent collection; in this case the only
  * option is to delete the sub-collection data in both Akonadi and backend
- * storage.)
+ * storage.
  *
  * @code
- *
- * const Akonadi::AgentInstance instance =
- *                   Akonadi::AgentManager::self()->instance( collection.resource() );
- * if ( instance.isValid() ) {
- *   Akonadi::AgentManager::self()->removeInstance( instance );
+ * const auto instance = Akonadi::AgentManager::self()->instance(collection.resource());
+ * if (instance.isValid()) {
+ *     Akonadi::AgentManager::self()->removeInstance(instance);
  * }
- *
  * @endcode
  *
  * @author Volker Krause <vkrause@kde.org>

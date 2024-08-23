@@ -21,12 +21,10 @@ class CollectionModifyJobPrivate;
  * This job modifies the properties of an existing collection.
  *
  * @code
- *
  * Akonadi::Collection collection = ...
  *
- * Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( collection );
- * connect( job, SIGNAL(result(KJob*)), this, SLOT(modifyResult(KJob*)) );
- *
+ * auto job = new Akonadi::CollectionModifyJob(collection);
+ * connect(job, &KJob::result, this, &MyClass::modifyResult);
  * @endcode
  *
  * If the collection has attributes, it is recommended only to supply values for
@@ -37,29 +35,25 @@ class CollectionModifyJobPrivate;
  * attributes to be updated, e.g.
  *
  * @code
- *
  * // Update the 'MyAttribute' attribute of 'collection'.
- * Akonadi::Collection c( collection.id() );
- * MyAttribute *attribute = c.attribute<MyAttribute>( Collection::AddIfMissing );
- * if ( collection.hasAttribute<MyAttribute>() ) {
+ * Akonadi::Collection c(collection.id());
+ * auto attribute = c.attribute<MyAttribute>(Collection::AddIfMissing);
+ * if (collection.hasAttribute<MyAttribute>()) {
  *     *attribute = *collection.attribute<MyAttribute>();
  * }
  * // Update the value of 'attribute' ...
- * Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( c );
- * connect( job, SIGNAL(result(KJob*)), this, SLOT(modifyResult(KJob*)) );
- *
+ * auto job = new Akonadi::CollectionModifyJob(c);
+ * connect(job, &KJob::result, this, &MyClass::modifyResult);
  * @endcode
  *
  * To update only the collection, and not change any attributes:
  *
  * @code
- *
  * // Update the cache policy for 'collection' to 'newPolicy'.
- * Akonadi::Collection c( collection.id() );
- * c.setCachePolicy( newPolicy );
- * Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( c );
- * connect( job, SIGNAL(result(KJob*)), this, SLOT(modifyResult(KJob*)) );
- *
+ * Akonadi::Collection c(collection.id());
+ * c.setCachePolicy(newPolicy);
+ * auto job = new Akonadi::CollectionModifyJob(c);
+ * connect(job, &KJob::result, this, &MyClass::modifyResult);
  * @endcode
  *
  * @author Volker Krause <vkrause@kde.org>

@@ -24,34 +24,37 @@ class AgentInstanceCreateJobPrivate;
  * This class encapsulates the procedure of creating a new agent instance
  * and optionally configuring it immediately.
  *
+ * Example:
+ *
  * @code
+ * using namespace Qt::StringLiterals;
  *
- * MyClass::MyClass( QWidget *parent )
- *   : QWidget( parent )
+ * MyClass::MyClass(QWidget *parent)
+ *   : QWidget(parent)
  * {
- *   // Get agent type object
- *   Akonadi::AgentType type = Akonadi::AgentManager::self()->type( "akonadi_vcard_resource" );
+ *     // Get agent type object
+ *     Akonadi::AgentType type = Akonadi::AgentManager::self()->type(u"akonadi_vcard_resource"_s);
  *
- *   Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob( type );
- *   connect( job, SIGNAL(result(KJob*)),
- *            this, SLOT(slotCreated(KJob*)) );
+ *     auto job = new Akonadi::AgentInstanceCreateJob(type);
+ *     connect(job, &KJob::result, this, &MyClass::slotCreated);
  *
- *   // use this widget as parent for the config dialog
- *   job->configure( this );
+ *     // use this widget as parent for the config dialog
+ *     job->configure(this);
  *
- *   job->start();
+ *     job->start();
  * }
  *
  * ...
  *
- * void MyClass::slotCreated( KJob *job )
+ * void MyClass::slotCreated(KJob *job)
  * {
- *   Akonadi::AgentInstanceCreateJob *createJob = static_cast<Akonadi::AgentInstanceCreateJob*>( job );
+ *     auto createJob = static_cast<Akonadi::AgentInstanceCreateJob*>(job);
  *
- *   qDebug() << "Created agent instance:" << createJob->instance().identifier();
+ *     qDebug() << "Created agent instance:" << createJob->instance().identifier();
  * }
- *
  * @endcode
+ *
+ * @note This is a KJob not an Akonadi::Job, so it won't auto-start!
  *
  * @author Volker Krause <vkrause@kde.org>
  */
