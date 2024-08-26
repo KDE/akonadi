@@ -167,7 +167,6 @@ msgstr ""
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
 #, fuzzy, kde-format
-#| msgid "Akonadi Resource"
 msgid "Akonadi Control"
 msgstr "KPilot-heivehus"
 

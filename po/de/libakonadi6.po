@@ -13,15 +13,15 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-18 00:39+0000\n"
-"PO-Revision-Date: 2024-06-12 22:23+0200\n"
-"Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
+"PO-Revision-Date: 2024-08-20 18:19+0200\n"
+"Last-Translator: Johannes Obermayr <johannesobermayr@gmx.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.05.0\n"
+"X-Generator: Lokalize 24.05.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -55,8 +55,7 @@ msgid "%1 of type %2"
 msgstr "%1 vom Typ %2"
 
 #: agentbase/agentbase.cpp:809
-#, fuzzy, kde-format
-#| msgid "Agent identifier"
+#, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Agent-Bezeichner"
@@ -841,22 +840,19 @@ msgid "Search"
 msgstr "Suchen"
 
 #: widgets/collectiondialog.cpp:66
-#, fuzzy, kde-format
-#| msgid "Use folder by default"
+#, kde-format
 msgctxt "@option:check"
 msgid "Use folder by default"
 msgstr "Ordner als Standard verwenden"
 
 #: widgets/collectiondialog.cpp:226
-#, fuzzy, kde-format
-#| msgid "&New Subfolder..."
+#, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
-msgstr "&Neuer Unterordner ..."
+msgstr "&Neuer Unterordner …"
 
 #: widgets/collectiondialog.cpp:228
-#, fuzzy, kde-format
-#| msgid "Create a new subfolder under the currently selected folder"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Neuen Unterordner im aktuell ausgewählten Ordner erstellen"
@@ -1035,15 +1031,13 @@ msgid "Reindex folder"
 msgstr "Ordner erneut indizieren"
 
 #: widgets/collectionrequester.cpp:113
-#, fuzzy, kde-format
-#| msgid "No Folder"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No Folder"
 msgstr "Kein Ordner"
 
 #: widgets/collectionrequester.cpp:122
-#, fuzzy, kde-format
-#| msgid "Open collection dialog"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
 msgstr "Sammlungs-Dialog öffnen"
@@ -1095,14 +1089,7 @@ msgid "Keep both versions"
 msgstr "Beide Versionen behalten"
 
 #: widgets/conflictresolvedialog.cpp:217
-#, fuzzy, kde-format
-#| msgid ""
-#| "<qt>Your changes conflict with those made by someone else meanwhile."
-#| "<br>Unless one version can just be thrown away, you will have to "
-#| "integrate those changes manually.<br>Click on <a href=\"opentexteditor\">"
-#| "\"Open text editor\"</a> to keep a copy of the texts, then select which "
-#| "version is most correct, then re-open it and modify it again to add "
-#| "what's missing."
+#, kde-format
 msgctxt "@label:textbox"
 msgid ""
 "<qt>Your changes conflict with those made by someone else meanwhile."
@@ -1168,11 +1155,10 @@ msgstr ""
 "%1"
 
 #: widgets/erroroverlay.cpp:228
-#, fuzzy, kde-format
-#| msgid "Personal information management service is starting..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
-msgstr "Der Dienst zur persönlichen Informationsverwaltung wird gestartet ..."
+msgstr "Der Dienst zur persönlichen Informationsverwaltung wird gestartet …"
 
 #: widgets/erroroverlay.cpp:229
 #, kde-format
@@ -1180,12 +1166,11 @@ msgid "Personal information management service is starting..."
 msgstr "Der Dienst zur persönlichen Informationsverwaltung wird gestartet ..."
 
 #: widgets/erroroverlay.cpp:233
-#, fuzzy, kde-format
-#| msgid "Personal information management service is shutting down..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr ""
-"Der Dienst zur persönlichen Informationsverwaltung wird heruntergefahren ..."
+"Der Dienst zur persönlichen Informationsverwaltung wird heruntergefahren …"
 
 #: widgets/erroroverlay.cpp:234
 #, kde-format
@@ -1194,9 +1179,7 @@ msgstr ""
 "Der Dienst zur persönlichen Informationsverwaltung wird heruntergefahren ..."
 
 #: widgets/erroroverlay.cpp:238
-#, fuzzy, kde-format
-#| msgid ""
-#| "Personal information management service is performing a database upgrade."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
@@ -1223,16 +1206,13 @@ msgstr ""
 #. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
 #: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not running. This "
-#| "application cannot be used without it."
+#, kde-format
 msgid ""
 "A required background service is not running. This application cannot be "
 "used without it."
 msgstr ""
-"Der Akonadi-Dienst zur persönlichen Informationsverwaltung läuft nicht. "
-"Diese Anwendung kann ohne ihn nicht verwendet werden."
+"Ein notwendiger Hintergrunddienst läuft nicht. Diese Anwendung kann ohne ihn "
+"nicht verwendet werden."
 
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #: widgets/erroroverlay.ui:116
@@ -1243,29 +1223,20 @@ msgstr "Starten"
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management framework is not "
-#| "operational.\n"
-#| "Click on \"Details...\" to obtain detailed information on this problem."
+#, kde-format
 msgid ""
 "A required background service is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
-"Das Akonadi-Framework zur persönlichen Informationsverwaltung arbeitet nicht "
-"richtig.\n"
-"Klicken Sie auf „Details ...“, um ausführliche Informationen zu dem Problem "
-"zu erhalten."
+"Ein notwendiger Hintergrunddienst arbeitet nicht richtig.\n"
+"Klicken Sie auf „Details …“, um ausführliche Informationen zu dem Problem zu "
+"erhalten."
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not operational."
+#, kde-format
 msgid "A required background service is not operational."
-msgstr ""
-"Der Akonadi-Dienst zur persönlichen Informationsverwaltung arbeitet nicht "
-"richtig."
+msgstr "Ein notwendiger Hintergrunddienst arbeitet nicht richtig."
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
