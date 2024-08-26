@@ -52,7 +52,6 @@ msgstr "%1 av type %2"
 
 #: agentbase/agentbase.cpp:807
 #, fuzzy, kde-format
-#| msgid "Agent identifier"
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Agentidentifikasjon"
@@ -168,7 +167,6 @@ msgstr "Jobb avbrutt."
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
 #, fuzzy, kde-format
-#| msgid "Akonadi Agent"
 msgid "Akonadi Control"
 msgstr "Akonadi Agent"
 
@@ -805,14 +803,12 @@ msgstr "Bruk mappe som standard"
 
 #: widgets/collectiondialog.cpp:226
 #, fuzzy, kde-format
-#| msgid "&New Subfolder..."
 msgctxt "@action:button"
 msgid "&New Subfolder..."
 msgstr "&Ny undermappe …"
 
 #: widgets/collectiondialog.cpp:228
 #, fuzzy, kde-format
-#| msgid "Create a new subfolder under the currently selected folder"
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Lag ny undermappe under den valgte mappa"
@@ -992,14 +988,12 @@ msgstr ""
 
 #: widgets/collectionrequester.cpp:113
 #, fuzzy, kde-format
-#| msgid "No Folder"
 msgctxt "@info:placeholder"
 msgid "No Folder"
 msgstr "Ingen mappe"
 
 #: widgets/collectionrequester.cpp:122
 #, fuzzy, kde-format
-#| msgid "Open collection dialog"
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
 msgstr "Åpne samlingsdialog"
@@ -1107,7 +1101,6 @@ msgstr ""
 
 #: widgets/erroroverlay.cpp:228
 #, fuzzy, kde-format
-#| msgid "Personal information management service is starting..."
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr "Tjenesten for håndtering av personlig informasjon starter …"
@@ -1119,7 +1112,6 @@ msgstr "Tjenesten for håndtering av personlig informasjon starter …"
 
 #: widgets/erroroverlay.cpp:233
 #, fuzzy, kde-format
-#| msgid "Personal information management service is shutting down..."
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr "Tjenesten for personlig informasjonsbehandling avslutter …"
@@ -1131,8 +1123,6 @@ msgstr "Tjenesten for personlig informasjonsbehandling avslutter …"
 
 #: widgets/erroroverlay.cpp:238
 #, fuzzy, kde-format
-#| msgid ""
-#| "Personal information management service is performing a database upgrade."
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
@@ -1159,9 +1149,6 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
 #: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
 #, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not running. This "
-#| "application cannot be used without it."
 msgid ""
 "A required background service is not running. This application cannot be "
 "used without it."
@@ -1179,10 +1166,6 @@ msgstr "Start"
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
 #, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management framework is not "
-#| "operational.\n"
-#| "Click on \"Details...\" to obtain detailed information on this problem."
 msgid ""
 "A required background service is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
@@ -1193,8 +1176,6 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
 #, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not operational."
 msgid "A required background service is not operational."
 msgstr ""
 "Akonadi-tjenesten for håndtering av personlig informasjon er ikke i drift."
@@ -1212,7 +1193,6 @@ msgstr "Vil du fjerne kontoen «%1»?"
 
 #: widgets/manageaccountwidget.cpp:199
 #, fuzzy, kde-format
-#| msgid "Remove account?"
 msgctxt "@title:window"
 msgid "Remove account?"
 msgstr "Fjern konto?"
