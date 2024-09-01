@@ -380,12 +380,13 @@ bool DbConfigMysql::startInternalServer()
     arguments << QString::fromLatin1("--shared-memory");
 #endif
 
+    const QString errorLogFile = mDataDir + QDir::separator() + QLatin1StringView("mysql.err");
 #ifndef Q_OS_WIN
     // If mysql socket file does not exists, then we must start the server,
     // otherwise we reconnect to it
     if (!QFile::exists(socketFile)) {
         // move mysql error log file out of the way
-        const QFileInfo errorLog(mDataDir + QDir::separator() + QLatin1StringView("mysql.err"));
+        const QFileInfo errorLog(errorLogFile);
         if (errorLog.exists()) {
             QFile logFile(errorLog.absoluteFilePath());
             QFile oldLogFile(mDataDir + QDir::separator() + QLatin1StringView("mysql.err.old"));
@@ -458,6 +459,7 @@ bool DbConfigMysql::startInternalServer()
                 qCCritical(AKONADISERVER_LOG) << "stderr:" << mDatabaseProcess->readAllStandardError();
                 qCCritical(AKONADISERVER_LOG) << "exit code:" << mDatabaseProcess->exitCode();
                 qCCritical(AKONADISERVER_LOG) << "process error:" << mDatabaseProcess->errorString();
+                qCCritical(AKONADISERVER_LOG) << "See" << errorLogFile << "for more details";
                 return false;
             }
         }
