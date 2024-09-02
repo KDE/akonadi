@@ -273,7 +273,7 @@ public:
      * The default value for @p offset is -1, indicating no offset.
      * @note This has no effect on anything but SELECT queries.
      */
-    void setLimit(int limit, int offset=-1);
+    void setLimit(int limit, int offset = -1);
 
     /**
      * Sets the column used for identification in an INSERT statement.
@@ -323,7 +323,7 @@ public:
      * Returns concatenated table name with column name.
      * @param column Column name.
      * @note Pass only @p column that are not prefixed by table name.
-    */
+     */
     QString getTableWithColumn(const QString &column) const;
 
 private:

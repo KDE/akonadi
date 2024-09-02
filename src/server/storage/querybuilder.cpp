@@ -22,10 +22,10 @@
 #include "shared/akranges.h"
 
 #include <QElapsedTimer>
-#include <QSqlError>
-#include <QSqlRecord>
-#include <QSqlField>
 #include <QSqlDriver>
+#include <QSqlError>
+#include <QSqlField>
+#include <QSqlRecord>
 
 using namespace Akonadi::Server;
 using namespace AkRanges;
@@ -848,7 +848,7 @@ QString QueryBuilder::getTableWithColumn(const QString &column) const
     return mTable + QLatin1Char('.') + column;
 }
 
-QString QueryBuilder::getTableQuery(const QSqlQuery& query, const QString &alias)
+QString QueryBuilder::getTableQuery(const QSqlQuery &query, const QString &alias)
 {
     Q_ASSERT_X(query.isValid() && query.isSelect(), "QueryBuilder::getTableQuery", "Table subquery use only for valid SELECT queries");
 
@@ -867,8 +867,7 @@ QString QueryBuilder::getTableQuery(const QSqlQuery& query, const QString &alias
         QSqlField field(QLatin1StringView(""), value.metaType());
         if (value.isNull()) {
             field.clear();
-        }
-        else {
+        } else {
             field.setValue(value);
         }
 

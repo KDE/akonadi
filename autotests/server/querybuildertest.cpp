@@ -348,7 +348,7 @@ void QueryBuilderTest::testQueryBuilder_data()
                                                 << QList<QVariant>{};
     }
 
-        /// SELECT with CASE
+    /// SELECT with CASE
     {
         QueryBuilder qb(QStringLiteral("table1"), QueryBuilder::Select);
         qb.addColumn(QStringLiteral("col"));
