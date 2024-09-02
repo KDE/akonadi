@@ -6,8 +6,8 @@
 
 #include <QObject>
 
-#include "server/storage/dbconfig.h"
 #include "server/storage/datastore.h"
+#include "server/storage/dbconfig.h"
 #include "shared/aktest.h"
 
 #include "qtest_akonadi.h"
