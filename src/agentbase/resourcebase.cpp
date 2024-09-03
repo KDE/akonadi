@@ -43,6 +43,7 @@
 #include <iterator>
 
 #include <KAboutData>
+#include <KCrash>
 #include <KLocalizedString>
 
 #include <QApplication>
@@ -547,6 +548,9 @@ int ResourceBase::init(ResourceBase &r)
 {
     KLocalizedString::setApplicationDomain(QByteArrayLiteral("libakonadi6"));
     KAboutData::setApplicationData(r.aboutData());
+
+    KCrash::initialize();
+
     return qApp->exec();
 }
 
