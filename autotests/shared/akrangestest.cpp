@@ -78,14 +78,14 @@ private Q_SLOTS:
     void testTraits()
     {
         QVERIFY(AkTraits::AppendableContainer<QList<int>>);
-        QVERIFY(!AkTraits::InsertableContainer<QList<int>>);
+        QVERIFY(AkTraits::InsertableContainer<QList<int>>);
         QVERIFY(AkTraits::ReservableContainer<QList<int>>);
 
         QVERIFY(!AkTraits::AppendableContainer<QSet<int>>);
         QVERIFY(AkTraits::InsertableContainer<QSet<int>>);
         QVERIFY(AkTraits::ReservableContainer<QSet<int>>);
 
-        QVERIFY(!AkTraits::AppendableContainer<QString>);
+        QVERIFY(AkTraits::AppendableContainer<QString>);
         QVERIFY(!AkTraits::InsertableContainer<QString>);
         QVERIFY(AkTraits::ReservableContainer<QString>);
     }
