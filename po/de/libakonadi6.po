@@ -10,7 +10,7 @@
 # Intevation GmbH, 2010.
 msgid ""
 msgstr ""
-"Project-Id-Version: libakonadi\n"
+"Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-18 00:39+0000\n"
 "PO-Revision-Date: 2024-08-20 18:19+0200\n"
