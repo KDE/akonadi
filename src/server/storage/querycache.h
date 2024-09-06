@@ -38,6 +38,9 @@ void insert(const QSqlDatabase &db, const QString &queryStatement, QSqlQuery que
 /// Clears all queries from current thread
 void clear();
 
+/// Returns the per-thread capacityof the query cache
+size_t capacity();
+
 } // namespace QueryCache
 
 } // namespace Server

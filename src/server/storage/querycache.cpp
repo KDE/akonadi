@@ -46,8 +46,8 @@ public:
             return {};
         }
 
-        auto query = std::move((*it)->query);
-        m_queries.erase(*it);
+        auto query = std::move(it->second->query);
+        m_queries.erase(it->second);
         m_keys.erase(it);
 
         return query;
@@ -56,12 +56,18 @@ public:
     void insert(const QString &queryStatement, QSqlQuery query)
     {
         if (m_queries.size() >= MaxCacheSize) {
-            m_keys.remove(queryStatement);
+            // Get the last entry in m_queries
+            auto query_it = std::prev(m_queries.end());
+            // Find and erase corresponding entry in m_keys
+            std::erase_if(m_keys, [&](const auto &node) {
+                return node.second == query_it;
+            });
+            // Remove the last entry from m_queries, making room for a new one.
             m_queries.pop_back();
         }
 
         m_queries.emplace_front(std::move(query));
-        m_keys.insert(queryStatement, m_queries.begin());
+        m_keys.emplace(queryStatement, m_queries.begin());
     }
 
     void cleanup()
@@ -75,7 +81,7 @@ public: // public, this is just a helper class
         QSqlQuery query;
     };
     std::list<Node> m_queries;
-    QHash<QString, std::list<Node>::iterator> m_keys;
+    std::unordered_map<QString, std::list<Node>::iterator> m_keys;
     QTimer m_cleanupTimer;
 };
 
@@ -111,4 +117,9 @@ void QueryCache::clear()
     }
 
     g_queryCache.localData()->cleanup();
+}
+
+size_t QueryCache::capacity()
+{
+    return MaxCacheSize;
 }
