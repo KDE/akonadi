@@ -74,8 +74,7 @@ AgentConfigurationWidget::AgentConfigurationWidget(const AgentInstance &instance
     if (AgentConfigurationManager::self()->registerInstanceConfiguration(instance.identifier())) {
         const auto pluginPath = AgentConfigurationManager::self()->findConfigPlugin(instance.type().identifier());
         if (d->loadPlugin(pluginPath)) {
-            QString configName = instance.identifier() + QStringLiteral("rc");
-            configName = Akonadi::ServerManager::addNamespace(configName);
+            const QString configName = Akonadi::ServerManager::addNamespace(instance.identifier()) + QStringLiteral("rc");
             KSharedConfigPtr config = KSharedConfig::openConfig(configName);
             auto layout = new QVBoxLayout(this);
             layout->setContentsMargins({});
