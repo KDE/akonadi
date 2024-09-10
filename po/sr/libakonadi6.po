@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-18 00:39+0000\n"
+"POT-Creation-Date: 2024-09-10 00:39+0000\n"
 "PO-Revision-Date: 2017-12-17 18:01+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -693,17 +693,17 @@ msgstr ""
 msgid "About %1"
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:95
+#: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:102
+#: widgets/agentconfigurationwidget.cpp:101
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:104
+#: widgets/agentconfigurationwidget.cpp:103
 #, fuzzy, kde-format
 #| msgid "Failed to create relation."
 msgid "Failed to register %1 configuration dialog."

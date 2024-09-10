@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-18 00:39+0000\n"
+"POT-Creation-Date: 2024-09-10 00:39+0000\n"
 "PO-Revision-Date: 2024-08-03 13:12+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
@@ -686,17 +686,17 @@ msgstr "%1 Handbook"
 msgid "About %1"
 msgstr "About %1"
 
-#: widgets/agentconfigurationwidget.cpp:95
+#: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "The configuration dialogue has been opened in another window"
 
-#: widgets/agentconfigurationwidget.cpp:102
+#: widgets/agentconfigurationwidget.cpp:101
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "Configuration for %1 is already opened elsewhere."
 
-#: widgets/agentconfigurationwidget.cpp:104
+#: widgets/agentconfigurationwidget.cpp:103
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Failed to register %1 configuration dialogue."

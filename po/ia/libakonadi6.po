@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-18 00:39+0000\n"
-"PO-Revision-Date: 2024-07-31 10:09+0200\n"
+"POT-Creation-Date: 2024-09-10 00:39+0000\n"
+"PO-Revision-Date: 2024-09-09 12:26+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -35,7 +35,7 @@ msgstr "Currentemente il non ha alcun conto configurate."
 #: agentbase/accountsintegration.cpp:103
 #, kde-format
 msgid "Accounts integration is not supported"
-msgstr "Integration de contos nonn es supportate"
+msgstr "Integration de contos non es supportate"
 
 #: agentbase/agentbase.cpp:308 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
@@ -690,17 +690,17 @@ msgstr "%1 Manual"
 msgid "About %1"
 msgstr "A proposito de %1"
 
-#: widgets/agentconfigurationwidget.cpp:95
+#: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "Le dialogo de configuratin ha essite aperite in un altere fenestra"
 
-#: widgets/agentconfigurationwidget.cpp:102
+#: widgets/agentconfigurationwidget.cpp:101
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "Configuration per %1 es ja aperite alibi."
 
-#: widgets/agentconfigurationwidget.cpp:104
+#: widgets/agentconfigurationwidget.cpp:103
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Il falleva a registrar dialogo de configuration %1."

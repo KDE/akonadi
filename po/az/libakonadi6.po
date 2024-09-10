@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-18 00:39+0000\n"
+"POT-Creation-Date: 2024-09-10 00:39+0000\n"
 "PO-Revision-Date: 2023-02-19 14:32+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -676,17 +676,17 @@ msgstr "%1 İstifadəçi Təlimatı"
 msgid "About %1"
 msgstr "%1 haqqında"
 
-#: widgets/agentconfigurationwidget.cpp:95
+#: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "Tənzimləmə dialoqu pəncərəsi başqa pəncərədə açılıb"
 
-#: widgets/agentconfigurationwidget.cpp:102
+#: widgets/agentconfigurationwidget.cpp:101
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "%1 üçün tənzimləmə artıq başqa bir yerdə açılıb."
 
-#: widgets/agentconfigurationwidget.cpp:104
+#: widgets/agentconfigurationwidget.cpp:103
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "%1 tənzimləmə dialoqunun qeydiyyatı baş tutmadı."

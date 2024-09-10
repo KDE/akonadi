@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-18 00:39+0000\n"
+"POT-Creation-Date: 2024-09-10 00:39+0000\n"
 "PO-Revision-Date: 2022-09-27 17:54+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -676,17 +676,17 @@ msgstr "Buku Catatan %1"
 msgid "About %1"
 msgstr "Tentang %1"
 
-#: widgets/agentconfigurationwidget.cpp:95
+#: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "Dialog konfigurasi sedang dibuka di jendela lainnya"
 
-#: widgets/agentconfigurationwidget.cpp:102
+#: widgets/agentconfigurationwidget.cpp:101
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "Konfigurasi %1 sudah dibuka di tempat lain. "
 
-#: widgets/agentconfigurationwidget.cpp:104
+#: widgets/agentconfigurationwidget.cpp:103
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Gagal meregister dialog konfigurasi %1."

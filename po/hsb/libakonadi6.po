@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-18 00:39+0000\n"
+"POT-Creation-Date: 2024-09-10 00:39+0000\n"
 "PO-Revision-Date: 2021-11-13 21:43+0100\n"
 "Last-Translator: Edward Wornar <edi.werner@gmx.de>\n"
 "Language-Team: Upper Sorbian <kde-i18n-doc@kde.org>\n"
@@ -660,17 +660,17 @@ msgstr "Přiručka za %1"
 msgid "About %1"
 msgstr "Wo %1"
 
-#: widgets/agentconfigurationwidget.cpp:95
+#: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "Připrawjenski dialog je so w hinašim woknje wočinił"
 
-#: widgets/agentconfigurationwidget.cpp:102
+#: widgets/agentconfigurationwidget.cpp:101
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "Připrawjenje za %1 je hižo druhdźe wočinjene."
 
-#: widgets/agentconfigurationwidget.cpp:104
+#: widgets/agentconfigurationwidget.cpp:103
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Njemóžach připrawjenski dialog za %1 registrować."
