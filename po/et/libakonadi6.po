@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-10 00:39+0000\n"
+"POT-Creation-Date: 2024-09-11 00:39+0000\n"
 "PO-Revision-Date: 2020-05-07 13:23+0300\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -497,19 +497,19 @@ msgstr "Salvesti suurus"
 msgid "Subfolder Storage Size"
 msgstr "Alamkausta salvesti suurus"
 
-#: core/models/statisticsproxymodel.cpp:225
+#: core/models/statisticsproxymodel.cpp:231
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "Lugemata"
 
-#: core/models/statisticsproxymodel.cpp:226
+#: core/models/statisticsproxymodel.cpp:232
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "Kokku"
 
-#: core/models/statisticsproxymodel.cpp:227
+#: core/models/statisticsproxymodel.cpp:233
 #, kde-format
 msgctxt "collection size"
 msgid "Size"

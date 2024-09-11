@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-10 00:39+0000\n"
+"POT-Creation-Date: 2024-09-11 00:39+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -502,19 +502,19 @@ msgstr "存储大小"
 msgid "Subfolder Storage Size"
 msgstr "子文件夹存储大小"
 
-#: core/models/statisticsproxymodel.cpp:225
+#: core/models/statisticsproxymodel.cpp:231
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "未读"
 
-#: core/models/statisticsproxymodel.cpp:226
+#: core/models/statisticsproxymodel.cpp:232
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "总共"
 
-#: core/models/statisticsproxymodel.cpp:227
+#: core/models/statisticsproxymodel.cpp:233
 #, kde-format
 msgctxt "collection size"
 msgid "Size"

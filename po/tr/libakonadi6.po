@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-10 00:39+0000\n"
+"POT-Creation-Date: 2024-09-11 00:39+0000\n"
 "PO-Revision-Date: 2024-07-30 17:17+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -515,19 +515,19 @@ msgstr "Depolama boyutu"
 msgid "Subfolder Storage Size"
 msgstr "Alt klasör depolama boyutu"
 
-#: core/models/statisticsproxymodel.cpp:225
+#: core/models/statisticsproxymodel.cpp:231
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "Okunmamış"
 
-#: core/models/statisticsproxymodel.cpp:226
+#: core/models/statisticsproxymodel.cpp:232
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "Toplam"
 
-#: core/models/statisticsproxymodel.cpp:227
+#: core/models/statisticsproxymodel.cpp:233
 #, kde-format
 msgctxt "collection size"
 msgid "Size"

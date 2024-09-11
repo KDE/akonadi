@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-10 00:39+0000\n"
+"POT-Creation-Date: 2024-09-11 00:39+0000\n"
 "PO-Revision-Date: 2021-05-15 17:47-0700\n"
 "Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -503,19 +503,19 @@ msgstr "保存サイズ"
 msgid "Subfolder Storage Size"
 msgstr "サブフォルダの保存サイズ"
 
-#: core/models/statisticsproxymodel.cpp:225
+#: core/models/statisticsproxymodel.cpp:231
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "未読"
 
-#: core/models/statisticsproxymodel.cpp:226
+#: core/models/statisticsproxymodel.cpp:232
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "合計"
 
-#: core/models/statisticsproxymodel.cpp:227
+#: core/models/statisticsproxymodel.cpp:233
 #, kde-format
 msgctxt "collection size"
 msgid "Size"

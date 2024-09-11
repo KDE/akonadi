@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-10 00:39+0000\n"
+"POT-Creation-Date: 2024-09-11 00:39+0000\n"
 "PO-Revision-Date: 2024-08-20 18:19+0200\n"
 "Last-Translator: Johannes Obermayr <johannesobermayr@gmx.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -521,19 +521,19 @@ msgstr "Speicherplatz"
 msgid "Subfolder Storage Size"
 msgstr "Speicherplatz der Unterordner"
 
-#: core/models/statisticsproxymodel.cpp:225
+#: core/models/statisticsproxymodel.cpp:231
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "Ungelesen"
 
-#: core/models/statisticsproxymodel.cpp:226
+#: core/models/statisticsproxymodel.cpp:232
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "Gesamt"
 
-#: core/models/statisticsproxymodel.cpp:227
+#: core/models/statisticsproxymodel.cpp:233
 #, kde-format
 msgctxt "collection size"
 msgid "Size"
