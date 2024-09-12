@@ -1,0 +1,10 @@
+version = 1
+SPDX-PackageName = "akonadi"
+SPDX-PackageSupplier = "Montel Laurent <montel@kde.org>"
+SPDX-PackageDownloadLocation = "https://invent.kde.org/pim/akonadi"
+
+[[annotations]]
+path = ["autotests/widgets/unittestenv/**", "autotests/libs/unittestenv/**", "NEWS", "INSTALL", "AUTHORS", "Info.plist.template", "README.sqlite", ".kateconfig", "ExtraDesktop.sh"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "none"
+SPDX-License-Identifier = "CC0-1.0"
