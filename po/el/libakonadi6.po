@@ -55,8 +55,7 @@ msgid "%1 of type %2"
 msgstr "%1 τύπου %2"
 
 #: agentbase/agentbase.cpp:809
-#, fuzzy, kde-format
-#| msgid "Agent identifier"
+#, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Αναγνωριστικό πράκτορα"
@@ -171,10 +170,9 @@ msgid "Job canceled."
 msgstr "Η εργασία ακυρώθηκε."
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
-msgstr "Πράκτορας του Akonadi"
+msgstr "Έλεγχος Akonadi"
 
 #: akonadictl/main.cpp:211
 #, kde-format
@@ -194,11 +192,29 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"Εργαλείο χειρισμού διακομιστή Akonadi\n"
+"\n"
+"Εντολές:\n"
+"  start          Εκκινεί τον διακομιστή Akonadi με όλες τις διεργασίες του\n"
+"  stop           Διακόπτει καθαρά τον διακομιστή Akonadi και όλες τις \n"
+"διεργασίες του\n"
+"  restart        Επανεκκίνηση του διακομιστή Akonadi με όλες τις "
+"διεργασίες \n"
+"του\n"
+"  status         Εμφανίζει μια επισκόπηση της κατάστασης του διακομιστή "
+"Akonadi\n"
+"  instances      Λίστα με όλες τις υπάρχουσες διεργασίες Akonadi\n"
+"  vacuum         Εσωτερική αποθήκευση κενού (ΠΡΟΣΟΧΗ: χρειάζεται πολύ "
+"χρόνο \n"
+"και χώρο στο δίσκο!)\n"
+"  fsck           Έλεγχος (και προσπάθεια διόρθωσης) της συνέπειας του \n"
+"εσωτερικού αποθηκευτικού χώρου μπορεί να διαρκέσει κάποιο \n"
+"χρονικό διάστημα)"
 
 #: akonadictl/main.cpp:231
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "Εντολή προς εκτέλεση"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -371,7 +387,7 @@ msgstr "Αποτυχία προσκόμισης της συλλογής πόρω
 #: core/jobs/specialcollectionshelperjobs.cpp:599
 #, kde-format
 msgid "Timeout trying to get lock."
-msgstr "Τέλος χρόνου στην προσπάθεια αντησης κλειδώματος."
+msgstr "Τέλος χρόνου στην προσπάθεια ανάκτησης κλειδώματος."
 
 #: core/jobs/tagcreatejob.cpp:49
 #, kde-format
@@ -492,7 +508,7 @@ msgstr "Μη αναγνωσμένα μηνύματα"
 #: core/models/statisticsproxymodel.cpp:98
 #, kde-format
 msgid "<strong>Quota</strong>: %1%<br>\n"
-msgstr ""
+msgstr "<strong>Ποσόστωση</strong>: %1%<br>\n"
 
 #: core/models/statisticsproxymodel.cpp:105
 #, kde-format
@@ -582,8 +598,8 @@ msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
 "installation."
 msgstr ""
-"Δεν υπάρχουν διαθέσιμοι πράκτορες Akonadi. Επιβεβαιώστε ότι το KDE PIM έχει "
-"εγκατασταθεί."
+"Δεν υπάρχουν διαθέσιμοι πράκτορες Akonadi. Επιβεβαιώστε ότι το KDE PIM "
+"έχειεγκατασταθεί."
 
 #: core/session.cpp:185
 #, kde-format
@@ -625,6 +641,8 @@ msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
+"Χώρος ονομάτων για την εκκίνηση πολλαπλών διεργασιών Akonadi στην ίδια "
+"συνεδρία χρήστη"
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
@@ -701,7 +719,7 @@ msgstr "Αποτυχία εγγραφής %1 διαλόγου διαμόρφωσ
 #, kde-format
 msgctxt "Status percent value"
 msgid "(%1%)"
-msgstr ""
+msgstr "(%1%)"
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
@@ -822,22 +840,19 @@ msgid "Search"
 msgstr "Αναζήτηση"
 
 #: widgets/collectiondialog.cpp:66
-#, fuzzy, kde-format
-#| msgid "Use folder by default"
+#, kde-format
 msgctxt "@option:check"
 msgid "Use folder by default"
 msgstr "Προκαθορισμένη χρήση φακέλου"
 
 #: widgets/collectiondialog.cpp:226
-#, fuzzy, kde-format
-#| msgid "&New Subfolder..."
+#, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
 msgstr "&Νέος υποφάκελος..."
 
 #: widgets/collectiondialog.cpp:228
-#, fuzzy, kde-format
-#| msgid "Create a new subfolder under the currently selected folder"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Δημιουργία νέου υποφακέλου κάτω από τον τρέχοντα επιλεγμένο φάκελο"
@@ -1016,15 +1031,13 @@ msgid "Reindex folder"
 msgstr "Αναδεικτοδότηση φακέλου"
 
 #: widgets/collectionrequester.cpp:113
-#, fuzzy, kde-format
-#| msgid "No Folder"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No Folder"
 msgstr "Κανείς φάκελος"
 
 #: widgets/collectionrequester.cpp:122
-#, fuzzy, kde-format
-#| msgid "Open collection dialog"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
 msgstr "Άνοιγμα διαλόγου συλλογής"
@@ -1076,14 +1089,7 @@ msgid "Keep both versions"
 msgstr "Να διατηρηθούν και οι δύο εκδόσεις"
 
 #: widgets/conflictresolvedialog.cpp:217
-#, fuzzy, kde-format
-#| msgid ""
-#| "<qt>Your changes conflict with those made by someone else meanwhile."
-#| "<br>Unless one version can just be thrown away, you will have to "
-#| "integrate those changes manually.<br>Click on <a href=\"opentexteditor\">"
-#| "\"Open text editor\"</a> to keep a copy of the texts, then select which "
-#| "version is most correct, then re-open it and modify it again to add "
-#| "what's missing."
+#, kde-format
 msgctxt "@label:textbox"
 msgid ""
 "<qt>Your changes conflict with those made by someone else meanwhile."
@@ -1148,8 +1154,7 @@ msgstr ""
 "%1"
 
 #: widgets/erroroverlay.cpp:228
-#, fuzzy, kde-format
-#| msgid "Personal information management service is starting..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr "Η υπηρεσία διαχείρισης προσωπικών πληροφοριών ξεκινά..."
@@ -1160,8 +1165,7 @@ msgid "Personal information management service is starting..."
 msgstr "Η υπηρεσία διαχείρισης προσωπικών πληροφοριών ξεκινά..."
 
 #: widgets/erroroverlay.cpp:233
-#, fuzzy, kde-format
-#| msgid "Personal information management service is shutting down..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr "Η υπηρεσία διαχείρισης προσωπικών πληροφοριών τερματίζεται..."
@@ -1172,9 +1176,7 @@ msgid "Personal information management service is shutting down..."
 msgstr "Η υπηρεσία διαχείρισης προσωπικών πληροφοριών τερματίζεται..."
 
 #: widgets/erroroverlay.cpp:238
-#, fuzzy, kde-format
-#| msgid ""
-#| "Personal information management service is performing a database upgrade."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
@@ -1200,16 +1202,13 @@ msgstr ""
 #. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
 #: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not running. This "
-#| "application cannot be used without it."
+#, kde-format
 msgid ""
 "A required background service is not running. This application cannot be "
 "used without it."
 msgstr ""
-"Η υπηρεσία διαχείρισης προσωπικών πληροφοριών Akonadi δεν εκτελείται και "
-"έτσι η εφαρμογή αυτή δεν θα μπορεί να χρησιμοποιηθεί."
+"Μια απαιτούμενη υπηρεσία υποβάθρου δεν εκτελείται. Η εφαρμογή δεν μπορεί να "
+"χρησιμοποιηθεί χωρίς αυτήν."
 
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #: widgets/erroroverlay.ui:116
@@ -1220,26 +1219,19 @@ msgstr "Εκκίνηση"
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management framework is not "
-#| "operational.\n"
-#| "Click on \"Details...\" to obtain detailed information on this problem."
+#, kde-format
 msgid ""
 "A required background service is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
-"Το σύστημα διαχείρισης προσωπικών πληροφοριών Akonadi δε λειτουργεί.\n"
-" Κάντε κλικ στις \"Λεπτομέρειες...\" για πληροφορίες σχετικά με αυτό το "
-"πρόβλημα."
+"Μια απαιτούμενη υπηρεσία παρασκηνίου δεν είναι λειτουργική. \n"
+"Κάντε κλικ στο «Λεπτομέρειες...» για πληροφορίες σχετικά με αυτό το πρόβλημα."
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not operational."
+#, kde-format
 msgid "A required background service is not operational."
-msgstr "Η υπηρεσία διαχείρισης προσωπικών πληροφοριών Akonadi δε λειτουργεί."
+msgstr "Μια απαιτούμενη υπηρεσία παρασκηνίου δεν είναι λειτουργική."
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
@@ -1880,7 +1872,8 @@ msgid ""
 "The Akonadi control process did not report any errors during its previous "
 "startup."
 msgstr ""
-"Η διεργασία ελέγχου του Akonadi δεν ανέφερε σφάλματα κατά την προηγούμενη  εκκίνησή της."
+"Η διεργασία ελέγχου του Akonadi δεν ανέφερε σφάλματα κατά την προηγούμενη "
+"εκκίνησή της."
 
 #: widgets/selftestdialog.cpp:548
 #, kde-format
@@ -2067,7 +2060,7 @@ msgstr "Μετακίνηση φακέλου δακέλου στο..."
 
 #: widgets/standardactionmanager.cpp:178
 msgid "&Cut Item"
-msgstr "Αποκοπή αντικειμένου"
+msgstr "Αποκ&οπή αντικειμένου"
 
 #: widgets/standardactionmanager.cpp:178 widgets/standardactionmanager.cpp:179
 msgid "Cut"
@@ -2075,7 +2068,7 @@ msgstr "Αποκοπή"
 
 #: widgets/standardactionmanager.cpp:179
 msgid "&Cut Folder"
-msgstr "Αποκοπή φακέλου"
+msgstr "Αποκ&οπή φακέλου"
 
 #: widgets/standardactionmanager.cpp:181
 msgid "Create Resource"
@@ -2103,7 +2096,7 @@ msgstr "Αναδρομικός &συγχρονισμός φακέλου"
 
 #: widgets/standardactionmanager.cpp:240
 msgid "Synchronize Recursively"
-msgstr "αναδρομικός συγχρονισμός"
+msgstr "Αναδρομικός συγχρονισμός"
 
 #: widgets/standardactionmanager.cpp:247
 msgid "&Move Folder To Trash"
@@ -2446,7 +2439,7 @@ msgstr "Ο λογαριασμός «%1» είναι εκτός σύνδεσης"
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
-msgstr "Να γίνει επιγραμμικός"
+msgstr "Μετάβαση στο διαδίκτυο"
 
 #: widgets/standardactionmanager.cpp:1655
 #, kde-format
@@ -2497,7 +2490,7 @@ msgstr "Εγγ&ραφή"
 #: widgets/subscriptiondialog.ui:69
 #, kde-format
 msgid "&Unsubscribe"
-msgstr "&Διαγραφή"
+msgstr "&Απεγγραφή"
 
 #: widgets/tageditwidget.cpp:117
 #, kde-format
