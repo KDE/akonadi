@@ -1,8 +1,7 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the akonadi package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# SPDX-FileCopyrightText: 2024 Dimitrys Meliates <demetresmeliates+i18n@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
@@ -11,52 +10,52 @@ msgstr ""
 "PO-Revision-Date: 2024-09-13 18:18+0300\n"
 "Last-Translator: Antonis G. <capoiosct@gmail.com>\n"
 "Language-Team: el <kde-i18n-el@kde.org>\n"
-"Language: Greek\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 1.4\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 24.08.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr ""
+msgstr "Δημήτρης Μηλιάτης"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ""
+msgstr "demetresmeliates+i18n@gmail.com"
 
 #: dbmigrator.cpp:437
 #, kde-format
 msgctxt "@info:status"
 msgid "Stopping Akonadi service..."
-msgstr ""
+msgstr "Διακοπή υπηρεσίας Akonadi..."
 
 #: dbmigrator.cpp:440
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: timeout while waiting for Akonadi to stop."
-msgstr ""
+msgstr "Σφάλμα: Χρονική διακοπή κατά την αναμονή του Akonadi να σταματήσει."
 
 #: dbmigrator.cpp:447
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: couldn't acquire DBus lock for Akonadi."
-msgstr ""
+msgstr "Σφάλμα: Αδυναμία απόκτησης κλειδώματος DBus για το Akonadi."
 
 #: dbmigrator.cpp:456
 #, kde-format
 msgctxt "@info:status"
 msgid "Starting Akonadi service..."
-msgstr ""
+msgstr "Εκκίνηση υπηρεσίας Akonadi..."
 
 #: dbmigrator.cpp:469
 #, kde-format
 msgctxt "@info:status"
 msgid "Database fsck completed"
-msgstr ""
+msgstr "Το fsck στην βάση δεδομένων ολοκληρώθηκε"
 
 #: dbmigrator.cpp:483
 #, kde-format
@@ -65,78 +64,89 @@ msgid ""
 "Invalid database engine \"%1\" - valid values are \"sqlite\", \"mysql\" and "
 "\"postgres\"."
 msgstr ""
+"Μη έγκυρη μηχανή βάσης δεδομένων «%1» - έγκυρες τιμές είναι «sqlite», "
+"«mysql» και «postgres»."
 
 #: dbmigrator.cpp:505
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure source database server."
-msgstr ""
+msgstr "Σφάλμα: Αποτυχία διαμόρφωσης διακομιστή της βάσης δεδομένων πηγής."
 
 #: dbmigrator.cpp:510
 #, kde-format
 msgctxt "@info:shell"
 msgid "Source and destination database engines are the same."
 msgstr ""
+"Οι μηχανές των βάσεων δεδομένων προέλευσης και προορισμού είναι οι ίδιες."
 
 #: dbmigrator.cpp:517
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to obtain path to source database data file or directory."
 msgstr ""
+"Σφάλμα: Αποτυχία λήψης της διαδρομής προς το αρχείο ή κατάλογο δεδομένων της "
+"βάσης δεδομένων πηγής."
 
 #: dbmigrator.cpp:524
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure the new database server."
-msgstr ""
+msgstr "Σφάλμα: Αποτυχία διαμόρφωσης του νέου διακομιστή βάσης δεδομένων."
 
 #: dbmigrator.cpp:530
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open existing database to migrate data from."
 msgstr ""
+"Σφάλμα: Αποτυχία ανοίγματος της υπάρχουσας βάσης δεδομένων για τη μεταφορά "
+"δεδομένων."
 
 #: dbmigrator.cpp:535
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open new database to migrate data to."
 msgstr ""
+"Σφάλμα: Αποτυχία ανοίγματος της νέας βάσης δεδομένων για τη μεταφορά "
+"δεδομένων."
 
 #: dbmigrator.cpp:540
 #, kde-format
 msgctxt "@info:status"
 msgid "Running fsck on the source database"
-msgstr ""
+msgstr "Εκτέλεση fsck στην αρχική βάση δεδομένων"
 
 #: dbmigrator.cpp:559
 #, kde-format
 msgctxt "@info:status %2 is error message"
 msgid "Error: failed to remove temporary database directory %1: %2"
 msgstr ""
+"Σφάλμα: Αποτυχία κατάργησης προσωρινού καταλόγου βάσης δεδομένων %1: %2"
 
 #: dbmigrator.cpp:566
 #, kde-format
 msgctxt "@info:shell"
 msgid "Backing up original database..."
-msgstr ""
+msgstr "Δημιουργία αντιγράφων ασφαλείας της αρχικής βάσης δεδομένων..."
 
 #: dbmigrator.cpp:574
 #, kde-format
 msgctxt "@info:status"
 msgid "Restoring database from backup %1 to %2"
-msgstr ""
+msgstr "Επαναφορά βάσης δεδομένων από το αντίγραφο ασφαλείας %1 στο %2"
 
 #: dbmigrator.cpp:576
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to restore database from backup: %1"
 msgstr ""
+"Σφάλμα: Αποτυχία επαναφοράς της βάσης δεδομένων από αντίγραφο ασφαλείας: %1"
 
 #: dbmigrator.cpp:608 dbmigrator.cpp:619
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error has occurred while migrating table %1"
-msgstr ""
+msgstr "Εμφανίστηκε σφάλμα κατά τη μετεγκατάσταση του πίνακα %1"
 
 #: dbmigrator.cpp:638
 #, kde-format
@@ -145,84 +155,96 @@ msgid ""
 "Backup directory already exists. Do you want to overwrite the previous "
 "backup?"
 msgstr ""
+"Ο κατάλογος αντιγράφων ασφαλείας υπάρχει ήδη. Θέλετε να αντικαταστήσετε το "
+"προηγούμενο αντίγραφο ασφαλείας;"
 
 #: dbmigrator.cpp:643
 #, kde-format
 msgctxt "@info:shell"
 msgid "Cannot proceed without backup. Migration interrupted."
 msgstr ""
+"Αδυναμία συνέχισης χωρίς αντίγραφο ασφαλείας. Η μετεγκατάσταση διακόπηκε."
 
 #: dbmigrator.cpp:648
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to remove previous backup directory."
-msgstr ""
+msgstr "Αποτυχία αφαίρεσης προηγούμενου καταλόγου αντιγράφων ασφαλείας."
 
 #: dbmigrator.cpp:661
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to move database to backup location: %1"
 msgstr ""
+"Αποτυχία μετακίνησης της βάσης δεδομένων στη θέση δημιουργίας αντιγράφων "
+"ασφαλείας: %1"
 
 #: dbmigrator.cpp:675
 #, kde-format
 msgctxt "@label"
 msgid "Backup file %1 already exists. Overwrite?"
-msgstr ""
+msgstr "Το αρχείο αντιγράφων ασφαλείας %1 υπάρχει ήδη. Αντικατάσταση;"
 
 #: dbmigrator.cpp:677
 #, kde-format
 msgctxt "@info:status"
 msgid "Cannot proceed without backup. Migration interrupted."
 msgstr ""
+"Αδυναμία συνέχισης χωρίς αντίγραφο ασφαλείας. Η μετεγκατάσταση διακόπηκε."
 
 #: dbmigrator.cpp:683
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: Failed to remove existing backup file %1: %2"
 msgstr ""
+"Σφάλμα: Αποτυχία αφαίρεσης υπάρχοντος αρχείου αντιγράφων ασφαλείας %1: %2"
 
 #: dbmigrator.cpp:690
 #, kde-format
 msgctxt "@info:status"
 msgid "Failed to back up Akonadi Server configuration: %1"
 msgstr ""
+"Αποτυχία δημιουργίας αντιγράφων ασφαλείας ρυθμίσεων του διακομιστή Akonadi: "
+"%1"
 
 #: dbmigrator.cpp:707
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move migrated database to the primary location: %1"
 msgstr ""
+"Σφάλμα: Αποτυχία μετακίνησης της μετεγκατεστημένης βάσης δεδομένων στην "
+"κύρια τοποθεσία: %1"
 
 #: dbmigrator.cpp:726
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to remove original akonadiserverrc: %1"
-msgstr ""
+msgstr "Σφάλμα: Αποτυχία αφαίρεσης αρχικού αρχείου akonadiserverrc: %1"
 
 #: dbmigrator.cpp:732
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move new akonadiserverrc to the primary location: %1"
 msgstr ""
+"Σφάλμα: Αποτυχία μετακίνησης νέου akonadiserverrc στην κύρια τοποθεσία: %1"
 
 #: dbmigrator.cpp:823
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to update autoincrement value for table %1"
-msgstr ""
+msgstr "Σφάλμα: Αποτυχία ενημέρωσης της τιμής αυτόματης αύξησης του πίνακα %1"
 
 #: dbmigrator.cpp:828
 #, kde-format
 msgctxt "@info:status"
 msgid "Optimizing table %1..."
-msgstr ""
+msgstr "Βελτιστοποίηση πίνακα %1..."
 
 #: dbmigrator.cpp:831
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to optimize table %1"
-msgstr ""
+msgstr "Σφάλμα: Αποτυχία βελτιστοποίησης πίνακα %1"
 
 #: main.cpp:31
 #, kde-format
@@ -230,13 +252,13 @@ msgctxt ""
 "Options for user to input to command line prompt, parenthesis indicate which "
 "letter to type, capitalized option is default"
 msgid " [(y)es/(N)o] "
-msgstr ""
+msgstr " [(ν)αι/(Ο)χι] "
 
 #: main.cpp:36 main.cpp:55
 #, kde-format
 msgctxt "Letter for option \"(y)es\" prompted from command line"
 msgid "y"
-msgstr ""
+msgstr "ν"
 
 #: main.cpp:49
 #, kde-format
@@ -244,23 +266,23 @@ msgctxt ""
 "Options for user to input to command line prompt, parenthesis indicate which "
 "letter to type, capitalized option is default"
 msgid " [(y)es/(N)o/(s)kip] "
-msgstr ""
+msgstr " [(ν)αι/(Ο)χι/(π)αράλειψη] "
 
 #: main.cpp:56
 #, kde-format
 msgctxt "Letter for option \"(s)kip\" prompted from command line"
 msgid "s"
-msgstr ""
+msgstr "π"
 
 #: main.cpp:75 main.cpp:77
 #, kde-format
 msgid "Akonadi DB Migrator"
-msgstr ""
+msgstr "Akonadi μετεγκαταστατής ΒΔ"
 
 #: main.cpp:79
 #, kde-format
 msgid "(c) 2024 g10 Code GmbH"
-msgstr ""
+msgstr "(c) 2024 g10 Κώδικας GmbH"
 
 #: main.cpp:85
 #, kde-format
@@ -268,33 +290,35 @@ msgid ""
 "The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and "
 "\"postgres\""
 msgstr ""
+"Η νέα μηχανή ΒΔ που θα χρησιμοποιηθεί. Οι πιθανές τιμές είναι «sqlite», "
+"«mysql» και «postgres»."
 
 #: main.cpp:92
 #, kde-format
 msgctxt "@info:shell"
 msgid "Invalid target engine: %1."
-msgstr ""
+msgstr "Μη έγκυρος στόχος κινητήρα: %1."
 
 #: main.cpp:106
 #, kde-format
 msgctxt "@info:status"
 msgid "Migration completed successfully."
-msgstr ""
+msgstr "Η μετεγκατάσταση ολοκληρώθηκε με επιτυχία."
 
 #: main.cpp:108
 #, kde-format
 msgctxt "@info:status"
 msgid "Migration failed."
-msgstr ""
+msgstr "Η μετεγκατάσταση απέτυχε."
 
 #: main.cpp:113
 #, kde-format
 msgctxt "@info:progress"
 msgid "Migrating table %1 (%2/%3)..."
-msgstr ""
+msgstr "Μετεγκατάσταση πίνακα %1 (%2/%3)..."
 
 #: main.cpp:127
 #, kde-format
 msgctxt "@info:progress"
 msgid "%1%..."
-msgstr ""
+msgstr "%1%..."
