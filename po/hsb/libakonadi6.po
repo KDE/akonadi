@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-11 00:39+0000\n"
+"POT-Creation-Date: 2024-09-19 00:40+0000\n"
 "PO-Revision-Date: 2021-11-13 21:43+0100\n"
 "Last-Translator: Edward Wornar <edi.werner@gmx.de>\n"
 "Language-Team: Upper Sorbian <kde-i18n-doc@kde.org>\n"
@@ -90,70 +90,70 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "Njepřiprawjene"
 
-#: agentbase/resourcebase.cpp:532
+#: agentbase/resourcebase.cpp:533
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "Indentifikator resursow"
 
-#: agentbase/resourcebase.cpp:538
+#: agentbase/resourcebase.cpp:539
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "Akonadi-resursa"
 
-#: agentbase/resourcebase.cpp:586
+#: agentbase/resourcebase.cpp:590
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Njekorektny element dóstał"
 
-#: agentbase/resourcebase.cpp:609
+#: agentbase/resourcebase.cpp:613
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Zmylk při wutworjenju elementa: %1"
 
-#: agentbase/resourcebase.cpp:633
+#: agentbase/resourcebase.cpp:637
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Zmylk při aktualizowanju zběrki: %1"
 
-#: agentbase/resourcebase.cpp:720
+#: agentbase/resourcebase.cpp:724
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Aktualizowanje lokalneje zběrki zwrěšćene: %1."
 
-#: agentbase/resourcebase.cpp:725
+#: agentbase/resourcebase.cpp:729
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Aktualizowanje lokalnych elementow zwrěšćene: %1."
 
-#: agentbase/resourcebase.cpp:744
+#: agentbase/resourcebase.cpp:748
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Njemóžu element wobstarać, hdyž sym offline."
 
-#: agentbase/resourcebase.cpp:925
+#: agentbase/resourcebase.cpp:929
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Synchronizuju zapisk '%1'"
 
-#: agentbase/resourcebase.cpp:945 agentbase/resourcebase.cpp:952
+#: agentbase/resourcebase.cpp:949 agentbase/resourcebase.cpp:956
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Njemóžach zběrku wobstarać za synchronizowanje."
 
-#: agentbase/resourcebase.cpp:993
+#: agentbase/resourcebase.cpp:997
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Njemóžach zběrku wobstarać za synchronizowanje atributow."
 
-#: agentbase/resourcebase.cpp:1039
+#: agentbase/resourcebase.cpp:1043
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Pominany element hižo njeeksistuje"
