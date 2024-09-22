@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-19 00:40+0000\n"
-"PO-Revision-Date: 2024-07-30 17:25+0200\n"
+"PO-Revision-Date: 2024-09-22 00:23+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
 "Language: gl\n"
@@ -204,7 +204,8 @@ msgstr ""
 "Akonadi con todos os seus procesos.\n"
 "  status         Amosa un resumo do estado do servidor de Akonadi.\n"
 "  instances      Listar todas as instancias existentes de Akonadi.\n"
-"  vacuum         Limpar o almacenamento interno. ADVERTENCIA: require moito\n"
+"  vacuum         Baleirar o almacenamento interno. ADVERTENCIA: require "
+"moito\n"
 "                 tempo e moito espazo en disco!\n"
 "  fsck           Comprobar (e intentar corrixir) a consistencia do\n"
 "                 almacenamento interno (pode levar un tempo)."
@@ -407,6 +408,7 @@ msgstr "Pasáronse elementos incorrectos."
 msgid "Invalid collection passed"
 msgstr "Pasouse unha colección incorrecta."
 
+# skip-rule: trasno-list_reverse
 #: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
 #, kde-format
 msgid "No valid collection or empty itemlist"
@@ -951,7 +953,7 @@ msgstr "Mantemento"
 #: widgets/collectionmaintenancepage.cpp:131
 #, kde-format
 msgid "Error while retrieving indexed items count"
-msgstr "Erro ao obter a lista de elementos indexados."
+msgstr "Erro ao obter o número de elementos indexados."
 
 #: widgets/collectionmaintenancepage.cpp:134
 #, kde-format
@@ -1200,8 +1202,8 @@ msgid ""
 "A required background service is not running. This application cannot be "
 "used without it."
 msgstr ""
-"Un servizo en segundo plano necesario non se está executando. Esta "
-"aplicación non se pode usar sen el."
+"Un servizo en segundo plano necesario non se está executando. Non é posíbel "
+"usar esta aplicación sen el."
 
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #: widgets/erroroverlay.ui:116
@@ -1637,7 +1639,7 @@ msgid ""
 "%2\n"
 "Make sure the Akonadi server is installed correctly."
 msgstr ""
-"Atopouse o programa «%1» de control do servidor Akonadi pero non se puido "
+"Atopouse o programa «%1» de control do servidor Akonadi pero non foi posíbel "
 "executar correctamente.\n"
 "Resultado:\n"
 "%2\n"

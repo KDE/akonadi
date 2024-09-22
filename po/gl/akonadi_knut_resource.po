@@ -1,21 +1,22 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-#
 # Xosé <xosecalvo@gmail.com>, 2009, 2010.
-# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2018, 2019.
+# SPDX-FileCopyrightText: 2024 Adrián Chaves (Gallaecio)
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: akonadi_knut_resource\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-09-21 00:45+0000\n"
-"PO-Revision-Date: 2019-01-01 14:02+0100\n"
+"PO-Revision-Date: 2024-09-22 00:21+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
-"Language-Team: Galician <kde-i18n-doc@kde.org>\n"
+"Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
 "Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 24.05.2\n"
 
 #: knutresource.cpp:60
 #, kde-format
@@ -38,6 +39,7 @@ msgctxt "Filedialog filter for Akonadi data file"
 msgid "Akonadi Knut Data File"
 msgstr "Ficheiro de datos Knut de Akonadi"
 
+# skip-rule: trasno-login2_reverse
 #: knutresource.cpp:148 knutresource.cpp:168 knutresource.cpp:321
 #, kde-format
 msgid "No item found for remoteid %1"
