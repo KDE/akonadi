@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-19 00:40+0000\n"
-"PO-Revision-Date: 2024-09-22 00:23+0200\n"
+"PO-Revision-Date: 2024-09-22 12:08+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
 "Language: gl\n"
@@ -557,7 +557,7 @@ msgstr "O índice non está dispoñíbel máis"
 #: core/partfetcher.cpp:114
 #, kde-format
 msgid "Payload part '%1' is not available for this index"
-msgstr "A parte de carga útil «%1» non está dispoñíbel para este índice"
+msgstr "A parte do corpo «%1» non está dispoñíbel para este índice."
 
 #: core/partfetcher.cpp:123
 #, kde-format
