@@ -2629,6 +2629,3 @@ msgstr "Не може да се анализира файл с данни: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Не може да се намери колекция %1"
-
-#~ msgid "Failed to create relation."
-#~ msgstr "Неуспешно създаване на връзка."
