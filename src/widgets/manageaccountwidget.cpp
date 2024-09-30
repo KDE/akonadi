@@ -56,6 +56,7 @@ ManageAccountWidget::ManageAccountWidget(QWidget *parent)
     connect(d->ui.mFilterAccount, &QLineEdit::textChanged, this, &ManageAccountWidget::slotSearchAgentType);
 
     d->ui.mFilterAccount->installEventFilter(this);
+    d->ui.accountOnCurrentActivity->setVisible(false);
     slotAccountSelected(d->ui.mAccountList->currentAgentInstance());
 }
 
