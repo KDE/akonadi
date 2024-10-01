@@ -37,7 +37,6 @@ AgentFilterProxyModel::AgentFilterProxyModel(QObject *parent)
     : QSortFilterProxyModel(parent)
     , d(new AgentFilterProxyModelPrivate)
 {
-    setDynamicSortFilter(true);
 }
 
 AgentFilterProxyModel::~AgentFilterProxyModel() = default;

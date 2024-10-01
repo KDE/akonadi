@@ -140,7 +140,6 @@ AgentInstanceWidget::AgentInstanceWidget(QWidget *parent)
     d->mModel = new AgentInstanceModel(this);
 
     d->proxy = new AgentFilterProxyModel(this);
-    d->proxy->setDynamicSortFilter(true);
     d->proxy->sort(0);
     d->proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
     d->proxy->setSourceModel(d->mModel);

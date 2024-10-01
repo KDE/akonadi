@@ -28,7 +28,6 @@ class FilterProxyModel : public QSortFilterProxyModel
 public:
     FilterProxyModel()
     {
-        setDynamicSortFilter(true);
     }
 
     void setShowHidden(bool showHidden)

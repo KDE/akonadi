@@ -43,7 +43,7 @@ EntityOrderProxyModel::EntityOrderProxyModel(QObject *parent)
     , d_ptr(new EntityOrderProxyModelPrivate(this))
 {
     setRecursiveFilteringEnabled(true);
-    setDynamicSortFilter(true);
+
     // setSortCaseSensitivity( Qt::CaseInsensitive );
 }
 
