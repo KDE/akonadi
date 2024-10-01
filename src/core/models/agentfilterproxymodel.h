@@ -14,7 +14,7 @@
 namespace Akonadi
 {
 class AgentFilterProxyModelPrivate;
-
+class AccountActivitiesAbstract;
 /**
  * @short A proxy model for filtering AgentType or AgentInstance
  *
@@ -79,6 +79,9 @@ public:
 
     [[nodiscard]] bool enablePlasmaActivities() const;
     void setEnablePlasmaActivities(bool newEnablePlasmaActivities);
+
+    [[nodiscard]] AccountActivitiesAbstract *accountActivitiesAbstract() const;
+    void setAccountActivitiesAbstract(AccountActivitiesAbstract *abstract);
 
 protected:
     bool filterAcceptsRow(int row, const QModelIndex &parent) const override;
