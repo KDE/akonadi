@@ -51,6 +51,9 @@ public:
     [[nodiscard]] QPushButton *addAccountButton() const;
     void disconnectAddAccountButton();
 
+    [[nodiscard]] bool enablePlasmaActivities() const;
+    void setEnablePlasmaActivities(bool newEnablePlasmaActivities);
+
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
 

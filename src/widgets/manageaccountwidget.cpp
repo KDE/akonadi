@@ -72,6 +72,17 @@ void ManageAccountWidget::disconnectAddAccountButton()
     disconnect(d->ui.mAddAccountButton, &QPushButton::clicked, this, &ManageAccountWidget::slotAddAccount);
 }
 
+bool ManageAccountWidget::enablePlasmaActivities() const
+{
+    return d->ui.mAccountList->enablePlasmaActivities();
+}
+
+void ManageAccountWidget::setEnablePlasmaActivities(bool newEnablePlasmaActivities)
+{
+    d->ui.accountOnCurrentActivity->setVisible(newEnablePlasmaActivities);
+    d->ui.mAccountList->setEnablePlasmaActivities(newEnablePlasmaActivities);
+}
+
 QPushButton *ManageAccountWidget::addAccountButton() const
 {
     return d->ui.mAddAccountButton;

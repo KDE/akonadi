@@ -30,6 +30,7 @@ public:
     QStringList mimeTypes;
     QStringList capabilities;
     QStringList excludeCapabilities;
+    bool enablePlasmaActivities = false;
     [[nodiscard]] bool filterAcceptRegExp(const QModelIndex &index, const QRegularExpression &filterRegExpStr);
 };
 
@@ -56,6 +57,17 @@ void AgentFilterProxyModel::addCapabilityFilter(const QString &capability)
 void AgentFilterProxyModel::excludeCapabilities(const QString &capability)
 {
     d->excludeCapabilities << capability;
+    invalidateFilter();
+}
+
+bool AgentFilterProxyModel::enablePlasmaActivities() const
+{
+    return d->enablePlasmaActivities;
+}
+
+void AgentFilterProxyModel::setEnablePlasmaActivities(bool newEnablePlasmaActivities)
+{
+    d->enablePlasmaActivities = newEnablePlasmaActivities;
     invalidateFilter();
 }
 

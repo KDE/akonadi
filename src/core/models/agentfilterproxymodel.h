@@ -77,6 +77,9 @@ public:
      */
     void excludeCapabilities(const QString &capability);
 
+    [[nodiscard]] bool enablePlasmaActivities() const;
+    void setEnablePlasmaActivities(bool newEnablePlasmaActivities);
+
 protected:
     bool filterAcceptsRow(int row, const QModelIndex &parent) const override;
 

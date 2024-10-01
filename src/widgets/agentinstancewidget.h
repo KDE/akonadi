@@ -93,6 +93,8 @@ public:
      */
     [[nodiscard]] QAbstractItemView *view() const;
 
+    [[nodiscard]] bool enablePlasmaActivities() const;
+    void setEnablePlasmaActivities(bool newEnablePlasmaActivities);
 Q_SIGNALS:
     /**
      * This signal is emitted whenever the current agent instance changes.

@@ -203,6 +203,16 @@ AgentFilterProxyModel *AgentInstanceWidget::agentFilterProxyModel() const
     return d->proxy;
 }
 
+bool AgentInstanceWidget::enablePlasmaActivities() const
+{
+    return d->proxy->enablePlasmaActivities();
+}
+
+void AgentInstanceWidget::setEnablePlasmaActivities(bool newEnablePlasmaActivities)
+{
+    d->proxy->setEnablePlasmaActivities(newEnablePlasmaActivities);
+}
+
 AgentInstanceWidgetDelegate::AgentInstanceWidgetDelegate(QObject *parent)
     : QAbstractItemDelegate(parent)
 {
