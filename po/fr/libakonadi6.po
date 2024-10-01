@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-19 00:40+0000\n"
+"POT-Creation-Date: 2024-10-01 00:39+0000\n"
 "PO-Revision-Date: 2024-07-31 08:55+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
@@ -1258,12 +1258,12 @@ msgstr "Un service en tâche de fonds requis n'est pas en cours d'exécution."
 msgid "Details..."
 msgstr "Détails..."
 
-#: widgets/manageaccountwidget.cpp:198
+#: widgets/manageaccountwidget.cpp:199
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr "Voulez-vous supprimer le compte « %1 » ?"
 
-#: widgets/manageaccountwidget.cpp:199
+#: widgets/manageaccountwidget.cpp:200
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"
@@ -1275,32 +1275,38 @@ msgstr "Supprimer le compte ?"
 msgid "Incoming accounts (add at least one):"
 msgstr "Comptes de réception (ajoutez au moins un compte) :"
 
-#. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
+#. i18n: ectx: property (text), widget (QCheckBox, accountOnCurrentActivity)
 #: widgets/manageaccountwidget.ui:26
+#, kde-format
+msgid "Show only account on current activity"
+msgstr ""
+
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
+#: widgets/manageaccountwidget.ui:33
 #, kde-format
 msgid "Filter…"
 msgstr "Filtrer…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
-#: widgets/manageaccountwidget.ui:40
+#: widgets/manageaccountwidget.ui:47
 #, kde-format
 msgid "A&dd..."
 msgstr "&Ajouter…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
-#: widgets/manageaccountwidget.ui:50
+#: widgets/manageaccountwidget.ui:57
 #, kde-format
 msgid "&Modify..."
 msgstr "&Modifier..."
 
 #. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
-#: widgets/manageaccountwidget.ui:60
+#: widgets/manageaccountwidget.ui:67
 #, kde-format
 msgid "R&emove"
 msgstr "Supprim&er"
 
 #. i18n: ectx: property (text), widget (QPushButton, mRestartAccountButton)
-#: widgets/manageaccountwidget.ui:77
+#: widgets/manageaccountwidget.ui:84
 #, kde-format
 msgid "Restart"
 msgstr "Redémarrer"

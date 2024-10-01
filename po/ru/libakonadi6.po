@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-19 00:40+0000\n"
+"POT-Creation-Date: 2024-10-01 00:39+0000\n"
 "PO-Revision-Date: 2024-05-12 11:40+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -1272,13 +1272,13 @@ msgstr "Инфраструктура управления личной инфо�
 msgid "Details..."
 msgstr "Подробности…"
 
-#: widgets/manageaccountwidget.cpp:198
+#: widgets/manageaccountwidget.cpp:199
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr "Удалить учётную запись «%1»?"
 
 # BUGME: please remove question mark; please add ctxt @title:window --aspotashev
-#: widgets/manageaccountwidget.cpp:199
+#: widgets/manageaccountwidget.cpp:200
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"
@@ -1290,32 +1290,38 @@ msgstr "Удаление учётной записи"
 msgid "Incoming accounts (add at least one):"
 msgstr "Входящие (должна быть хотя бы одна учётная запись):"
 
-#. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
+#. i18n: ectx: property (text), widget (QCheckBox, accountOnCurrentActivity)
 #: widgets/manageaccountwidget.ui:26
+#, kde-format
+msgid "Show only account on current activity"
+msgstr ""
+
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
+#: widgets/manageaccountwidget.ui:33
 #, kde-format
 msgid "Filter…"
 msgstr "Фильтр…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
-#: widgets/manageaccountwidget.ui:40
+#: widgets/manageaccountwidget.ui:47
 #, kde-format
 msgid "A&dd..."
 msgstr "&Добавить…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
-#: widgets/manageaccountwidget.ui:50
+#: widgets/manageaccountwidget.ui:57
 #, kde-format
 msgid "&Modify..."
 msgstr "&Изменить…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
-#: widgets/manageaccountwidget.ui:60
+#: widgets/manageaccountwidget.ui:67
 #, kde-format
 msgid "R&emove"
 msgstr "&Удалить"
 
 #. i18n: ectx: property (text), widget (QPushButton, mRestartAccountButton)
-#: widgets/manageaccountwidget.ui:77
+#: widgets/manageaccountwidget.ui:84
 #, kde-format
 msgid "Restart"
 msgstr "Перезапустить"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-19 00:40+0000\n"
+"POT-Creation-Date: 2024-10-01 00:39+0000\n"
 "PO-Revision-Date: 2024-09-23 15:20+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -1224,12 +1224,12 @@ msgstr "Gerekli bir arka plan hizmeti kullanılamıyor."
 msgid "Details..."
 msgstr "Ayrıntılar…"
 
-#: widgets/manageaccountwidget.cpp:198
+#: widgets/manageaccountwidget.cpp:199
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr "“%1” hesabını kaldırmak istiyor musunuz?"
 
-#: widgets/manageaccountwidget.cpp:199
+#: widgets/manageaccountwidget.cpp:200
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"
@@ -1241,32 +1241,38 @@ msgstr "Hesabı Kaldır?"
 msgid "Incoming accounts (add at least one):"
 msgstr "Gelen hesaplar (en az bir tane ekleyin):"
 
-#. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
+#. i18n: ectx: property (text), widget (QCheckBox, accountOnCurrentActivity)
 #: widgets/manageaccountwidget.ui:26
+#, kde-format
+msgid "Show only account on current activity"
+msgstr ""
+
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
+#: widgets/manageaccountwidget.ui:33
 #, kde-format
 msgid "Filter…"
 msgstr "Süz…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
-#: widgets/manageaccountwidget.ui:40
+#: widgets/manageaccountwidget.ui:47
 #, kde-format
 msgid "A&dd..."
 msgstr "E&kle…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
-#: widgets/manageaccountwidget.ui:50
+#: widgets/manageaccountwidget.ui:57
 #, kde-format
 msgid "&Modify..."
 msgstr "&Değiştir…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
-#: widgets/manageaccountwidget.ui:60
+#: widgets/manageaccountwidget.ui:67
 #, kde-format
 msgid "R&emove"
 msgstr "K&aldır"
 
 #. i18n: ectx: property (text), widget (QPushButton, mRestartAccountButton)
-#: widgets/manageaccountwidget.ui:77
+#: widgets/manageaccountwidget.ui:84
 #, kde-format
 msgid "Restart"
 msgstr "Yeniden Başlat"
