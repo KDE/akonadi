@@ -83,6 +83,16 @@ void ManageAccountWidget::setEnablePlasmaActivities(bool newEnablePlasmaActiviti
     d->ui.mAccountList->setEnablePlasmaActivities(newEnablePlasmaActivities);
 }
 
+AccountActivitiesAbstract *ManageAccountWidget::accountActivitiesAbstract() const
+{
+    return d->ui.mAccountList->accountActivitiesAbstract();
+}
+
+void ManageAccountWidget::setAccountActivitiesAbstract(AccountActivitiesAbstract *abstract)
+{
+    d->ui.mAccountList->setAccountActivitiesAbstract(abstract);
+}
+
 QPushButton *ManageAccountWidget::addAccountButton() const
 {
     return d->ui.mAddAccountButton;

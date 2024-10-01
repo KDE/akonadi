@@ -19,6 +19,7 @@ namespace Akonadi
 class AgentInstance;
 class AgentFilterProxyModel;
 class AgentInstanceWidgetPrivate;
+class AccountActivitiesAbstract;
 
 /**
  * @short Provides a widget that lists all available agent instances.
@@ -95,6 +96,10 @@ public:
 
     [[nodiscard]] bool enablePlasmaActivities() const;
     void setEnablePlasmaActivities(bool newEnablePlasmaActivities);
+
+    [[nodiscard]] AccountActivitiesAbstract *accountActivitiesAbstract() const;
+    void setAccountActivitiesAbstract(AccountActivitiesAbstract *abstract);
+
 Q_SIGNALS:
     /**
      * This signal is emitted whenever the current agent instance changes.

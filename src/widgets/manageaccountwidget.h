@@ -19,6 +19,7 @@ namespace Akonadi
 {
 class AgentInstance;
 class ManageAccountWidgetPrivate;
+class AccountActivitiesAbstract;
 
 class AKONADIWIDGETS_EXPORT ManageAccountWidget : public QWidget
 {
@@ -53,6 +54,9 @@ public:
 
     [[nodiscard]] bool enablePlasmaActivities() const;
     void setEnablePlasmaActivities(bool newEnablePlasmaActivities);
+
+    [[nodiscard]] AccountActivitiesAbstract *accountActivitiesAbstract() const;
+    void setAccountActivitiesAbstract(AccountActivitiesAbstract *abstract);
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;

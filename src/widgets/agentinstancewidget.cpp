@@ -213,6 +213,16 @@ void AgentInstanceWidget::setEnablePlasmaActivities(bool newEnablePlasmaActiviti
     d->proxy->setEnablePlasmaActivities(newEnablePlasmaActivities);
 }
 
+AccountActivitiesAbstract *AgentInstanceWidget::accountActivitiesAbstract() const
+{
+    return d->proxy->accountActivitiesAbstract();
+}
+
+void AgentInstanceWidget::setAccountActivitiesAbstract(AccountActivitiesAbstract *abstract)
+{
+    d->proxy->setAccountActivitiesAbstract(abstract);
+}
+
 AgentInstanceWidgetDelegate::AgentInstanceWidgetDelegate(QObject *parent)
     : QAbstractItemDelegate(parent)
 {
