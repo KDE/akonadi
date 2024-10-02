@@ -12,7 +12,6 @@
 #include <QSharedDataPointer>
 
 class QIcon;
-class QString;
 #include <QStringList>
 class QVariant;
 using QVariantMap = QMap<QString, QVariant>;
