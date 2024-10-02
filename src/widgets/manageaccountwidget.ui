@@ -14,16 +14,16 @@
    <item>
     <layout class="QVBoxLayout" name="vlay">
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QCheckBox" name="accountOnCurrentActivity">
        <property name="text">
-        <string>Incoming accounts (add at least one):</string>
+        <string>Show only account on current activity</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QCheckBox" name="accountOnCurrentActivity">
+      <widget class="QLabel" name="label">
        <property name="text">
-        <string>Show only account on current activity</string>
+        <string>Incoming accounts (add at least one):</string>
        </property>
       </widget>
      </item>
