@@ -151,8 +151,10 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex & /*sour
             }
         }
     }
+    const bool result = d->filterAcceptRegExp(index, filterRegularExpression());
+    if (result) {
+        if (d->accountActivitiesAbstract && d->enablePlasmaActivities) {
 #if 0
-    if (d->accountActivitiesAbstract && mEnablePlasmaActivities) {
         const bool enableActivities = sourceModel()->index(source_row, AgentTypeModel::EnabledActivitiesRole).data().toBool();
         if (enableActivities) {
             const auto activities = sourceModel()->index(source_row, AgentTypeModel::ActivitiesRole).data().toStringList();
@@ -161,9 +163,10 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex & /*sour
             // IdentityTreeModel::IdentityNameRole).data().toString();
             return result;
         }
-    }
 #endif
-    return d->filterAcceptRegExp(index, filterRegularExpression());
+        }
+    }
+    return result;
 }
 
 AccountActivitiesAbstract *AgentFilterProxyModel::accountActivitiesAbstract() const
