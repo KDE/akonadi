@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-01 00:39+0000\n"
+"POT-Creation-Date: 2024-10-02 00:39+0000\n"
 "PO-Revision-Date: 2024-05-12 11:40+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -716,7 +716,7 @@ msgstr "Окно настройки %1 уже открыто."
 msgid "Failed to register %1 configuration dialog."
 msgstr "Не удалось зарегистрировать диалог настройки %1."
 
-#: widgets/agentinstancewidget.cpp:240
+#: widgets/agentinstancewidget.cpp:259
 #, kde-format
 msgctxt "Status percent value"
 msgid "(%1%)"
@@ -1272,13 +1272,13 @@ msgstr "Инфраструктура управления личной инфо�
 msgid "Details..."
 msgstr "Подробности…"
 
-#: widgets/manageaccountwidget.cpp:199
+#: widgets/manageaccountwidget.cpp:220
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr "Удалить учётную запись «%1»?"
 
 # BUGME: please remove question mark; please add ctxt @title:window --aspotashev
-#: widgets/manageaccountwidget.cpp:200
+#: widgets/manageaccountwidget.cpp:221
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"

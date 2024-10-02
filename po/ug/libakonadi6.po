@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-01 00:39+0000\n"
+"POT-Creation-Date: 2024-10-02 00:39+0000\n"
 "PO-Revision-Date: 2013-09-08 07:05+0900\n"
 "Last-Translator: Gheyret Kenji <gheyret@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -680,7 +680,7 @@ msgstr ""
 msgid "Failed to register %1 configuration dialog."
 msgstr ""
 
-#: widgets/agentinstancewidget.cpp:240
+#: widgets/agentinstancewidget.cpp:259
 #, kde-format
 msgctxt "Status percent value"
 msgid "(%1%)"
@@ -1189,12 +1189,12 @@ msgstr ""
 msgid "Details..."
 msgstr "تەپسىلاتلار…"
 
-#: widgets/manageaccountwidget.cpp:199
+#: widgets/manageaccountwidget.cpp:220
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr ""
 
-#: widgets/manageaccountwidget.cpp:200
+#: widgets/manageaccountwidget.cpp:221
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"

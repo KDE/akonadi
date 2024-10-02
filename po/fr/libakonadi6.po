@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-01 00:39+0000\n"
+"POT-Creation-Date: 2024-10-02 00:39+0000\n"
 "PO-Revision-Date: 2024-07-31 08:55+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
@@ -723,7 +723,7 @@ msgstr "La configuration de %1 est déjà ouverte ailleurs."
 msgid "Failed to register %1 configuration dialog."
 msgstr "Impossible de déclarer la boîte de dialogue de configuration de %1."
 
-#: widgets/agentinstancewidget.cpp:240
+#: widgets/agentinstancewidget.cpp:259
 #, kde-format
 msgctxt "Status percent value"
 msgid "(%1%)"
@@ -1258,12 +1258,12 @@ msgstr "Un service en tâche de fonds requis n'est pas en cours d'exécution."
 msgid "Details..."
 msgstr "Détails..."
 
-#: widgets/manageaccountwidget.cpp:199
+#: widgets/manageaccountwidget.cpp:220
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr "Voulez-vous supprimer le compte « %1 » ?"
 
-#: widgets/manageaccountwidget.cpp:200
+#: widgets/manageaccountwidget.cpp:221
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"

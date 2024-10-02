@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-01 00:39+0000\n"
-"PO-Revision-Date: 2024-07-30 08:47+0200\n"
+"POT-Creation-Date: 2024-10-02 00:39+0000\n"
+"PO-Revision-Date: 2024-10-01 07:22+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
-"X-Generator: Poedit 3.4.4\n"
+"X-Generator: Poedit 3.5\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -706,7 +706,7 @@ msgstr "Nastavitev %1 je že odprta drugje."
 msgid "Failed to register %1 configuration dialog."
 msgstr "Ni bilo mogoče registrirati nastavitve %1."
 
-#: widgets/agentinstancewidget.cpp:240
+#: widgets/agentinstancewidget.cpp:259
 #, kde-format
 msgctxt "Status percent value"
 msgid "(%1%)"
@@ -1232,12 +1232,12 @@ msgstr "Zahtevana storitev v zaledju ne deluje."
 msgid "Details..."
 msgstr "Podrobnosti …"
 
-#: widgets/manageaccountwidget.cpp:199
+#: widgets/manageaccountwidget.cpp:220
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr "Ali želite odstraniti račun »%1«?"
 
-#: widgets/manageaccountwidget.cpp:200
+#: widgets/manageaccountwidget.cpp:221
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"
@@ -1253,7 +1253,7 @@ msgstr "Dohodni računi (dodajte vsaj enega):"
 #: widgets/manageaccountwidget.ui:26
 #, kde-format
 msgid "Show only account on current activity"
-msgstr ""
+msgstr "Prikaži samo račun za trenutno dejavnost"
 
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
 #: widgets/manageaccountwidget.ui:33
