@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-02 00:39+0000\n"
+"POT-Creation-Date: 2024-10-03 00:40+0000\n"
 "PO-Revision-Date: 2024-05-12 11:40+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -1284,17 +1284,17 @@ msgctxt "@title:window"
 msgid "Remove account?"
 msgstr "Удаление учётной записи"
 
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: widgets/manageaccountwidget.ui:19
-#, kde-format
-msgid "Incoming accounts (add at least one):"
-msgstr "Входящие (должна быть хотя бы одна учётная запись):"
-
 #. i18n: ectx: property (text), widget (QCheckBox, accountOnCurrentActivity)
-#: widgets/manageaccountwidget.ui:26
+#: widgets/manageaccountwidget.ui:19
 #, kde-format
 msgid "Show only account on current activity"
 msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/manageaccountwidget.ui:26
+#, kde-format
+msgid "Incoming accounts (add at least one):"
+msgstr "Входящие (должна быть хотя бы одна учётная запись):"
 
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
 #: widgets/manageaccountwidget.ui:33

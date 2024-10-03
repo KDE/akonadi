@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-02 00:39+0000\n"
-"PO-Revision-Date: 2024-08-06 05:27+0900\n"
+"POT-Creation-Date: 2024-10-03 00:40+0000\n"
+"PO-Revision-Date: 2024-10-02 17:21+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -1210,17 +1210,17 @@ msgctxt "@title:window"
 msgid "Remove account?"
 msgstr "移除帳號？"
 
-#. i18n: ectx: property (text), widget (QLabel, label)
+#. i18n: ectx: property (text), widget (QCheckBox, accountOnCurrentActivity)
 #: widgets/manageaccountwidget.ui:19
+#, kde-format
+msgid "Show only account on current activity"
+msgstr "只顯示目前活動裡的帳號"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/manageaccountwidget.ui:26
 #, kde-format
 msgid "Incoming accounts (add at least one):"
 msgstr "接收帳號（至少新增一個）："
-
-#. i18n: ectx: property (text), widget (QCheckBox, accountOnCurrentActivity)
-#: widgets/manageaccountwidget.ui:26
-#, kde-format
-msgid "Show only account on current activity"
-msgstr ""
 
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
 #: widgets/manageaccountwidget.ui:33

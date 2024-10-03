@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-02 00:39+0000\n"
+"POT-Creation-Date: 2024-10-03 00:40+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -1206,17 +1206,17 @@ msgctxt "@title:window"
 msgid "Remove account?"
 msgstr "是否删除账户？"
 
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: widgets/manageaccountwidget.ui:19
-#, kde-format
-msgid "Incoming accounts (add at least one):"
-msgstr "接收账户(至少添加一个)："
-
 #. i18n: ectx: property (text), widget (QCheckBox, accountOnCurrentActivity)
-#: widgets/manageaccountwidget.ui:26
+#: widgets/manageaccountwidget.ui:19
 #, kde-format
 msgid "Show only account on current activity"
 msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/manageaccountwidget.ui:26
+#, kde-format
+msgid "Incoming accounts (add at least one):"
+msgstr "接收账户(至少添加一个)："
 
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
 #: widgets/manageaccountwidget.ui:33

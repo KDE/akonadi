@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-02 00:39+0000\n"
+"POT-Creation-Date: 2024-10-03 00:40+0000\n"
 "PO-Revision-Date: 2024-10-01 07:22+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -1243,17 +1243,17 @@ msgctxt "@title:window"
 msgid "Remove account?"
 msgstr "Naj odstranim račun?"
 
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: widgets/manageaccountwidget.ui:19
-#, kde-format
-msgid "Incoming accounts (add at least one):"
-msgstr "Dohodni računi (dodajte vsaj enega):"
-
 #. i18n: ectx: property (text), widget (QCheckBox, accountOnCurrentActivity)
-#: widgets/manageaccountwidget.ui:26
+#: widgets/manageaccountwidget.ui:19
 #, kde-format
 msgid "Show only account on current activity"
 msgstr "Prikaži samo račun za trenutno dejavnost"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/manageaccountwidget.ui:26
+#, kde-format
+msgid "Incoming accounts (add at least one):"
+msgstr "Dohodni računi (dodajte vsaj enega):"
 
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
 #: widgets/manageaccountwidget.ui:33

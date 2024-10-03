@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-02 00:39+0000\n"
-"PO-Revision-Date: 2024-07-30 06:45+0200\n"
+"POT-Creation-Date: 2024-10-03 00:40+0000\n"
+"PO-Revision-Date: 2024-10-02 21:44+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
@@ -1237,17 +1237,17 @@ msgctxt "@title:window"
 msgid "Remove account?"
 msgstr "Ta bort konto?"
 
-#. i18n: ectx: property (text), widget (QLabel, label)
+#. i18n: ectx: property (text), widget (QCheckBox, accountOnCurrentActivity)
 #: widgets/manageaccountwidget.ui:19
+#, kde-format
+msgid "Show only account on current activity"
+msgstr "Visa bara konto på nuvarande aktivitet"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/manageaccountwidget.ui:26
 #, kde-format
 msgid "Incoming accounts (add at least one):"
 msgstr "Inkommande konton (lägg till minst ett):"
-
-#. i18n: ectx: property (text), widget (QCheckBox, accountOnCurrentActivity)
-#: widgets/manageaccountwidget.ui:26
-#, kde-format
-msgid "Show only account on current activity"
-msgstr ""
 
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
 #: widgets/manageaccountwidget.ui:33
