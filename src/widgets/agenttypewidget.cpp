@@ -118,7 +118,7 @@ AgentType AgentTypeWidget::currentAgentType() const
         return AgentType();
     }
 
-    QModelIndex index = selectionModel->currentIndex();
+    const QModelIndex index = selectionModel->currentIndex();
     if (!index.isValid()) {
         return AgentType();
     }
@@ -215,7 +215,7 @@ QSize AgentTypeWidgetDelegate::sizeHint(const QStyleOptionViewItem &option, cons
     const QString name = index.model()->data(index, Qt::DisplayRole).toString();
     const QString comment = index.model()->data(index, AgentTypeModel::DescriptionRole).toString();
 
-    QFontMetrics fm = option.fontMetrics;
+    const QFontMetrics fm = option.fontMetrics;
     int hn = fm.boundingRect(0, 0, 0, 0, Qt::AlignLeft, name).height();
     int wn = fm.boundingRect(0, 0, 0, 0, Qt::AlignLeft, name).width();
     int hc = fm.boundingRect(0, 0, 0, 0, Qt::AlignLeft, comment).height();
