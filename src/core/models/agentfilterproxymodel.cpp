@@ -155,9 +155,9 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex & /*sour
     if (result) {
         if (d->accountActivitiesAbstract && d->enablePlasmaActivities) {
 #if 0
-        const bool enableActivities = sourceModel()->index(source_row, AgentTypeModel::EnabledActivitiesRole).data().toBool();
+        const bool enableActivities = index.data(AgentInstanceModel::ActivitiesEnabledRole).toBool();
         if (enableActivities) {
-            const auto activities = sourceModel()->index(source_row, AgentTypeModel::ActivitiesRole).data().toStringList();
+            const auto activities = index.data(AgentInstanceModel::ActivitiesRole).toStringList();
             const bool result = d->accountActivitiesAbstract->filterAcceptsRow(activities);
             // qDebug() << " result " << result << " identity name : " << sourceModel()->index(source_row,
             // IdentityTreeModel::IdentityNameRole).data().toString();
