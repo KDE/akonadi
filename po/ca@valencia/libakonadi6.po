@@ -12,14 +12,14 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-10-03 00:40+0000\n"
-"PO-Revision-Date: 2024-07-30 09:54+0200\n"
+"PO-Revision-Date: 2024-10-01 10:03+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.05.2\n"
+"X-Generator: Lokalize 24.08.1\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
 
@@ -1253,7 +1253,7 @@ msgstr "Voleu eliminar el compte?"
 #: widgets/manageaccountwidget.ui:19
 #, kde-format
 msgid "Show only account on current activity"
-msgstr ""
+msgstr "Mostra només el compte en l'activitat actual"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/manageaccountwidget.ui:26
