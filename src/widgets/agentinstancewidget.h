@@ -17,7 +17,7 @@ class QAbstractItemView;
 namespace Akonadi
 {
 class AgentInstance;
-class AgentFilterProxyModel;
+class AgentInstanceFilterProxyModel;
 class AgentInstanceWidgetPrivate;
 class AccountActivitiesAbstract;
 
@@ -86,7 +86,7 @@ public:
      * Returns the agent filter proxy model, use this to filter by
      * agent mimetype or capabilities.
      */
-    [[nodiscard]] AgentFilterProxyModel *agentFilterProxyModel() const;
+    [[nodiscard]] Akonadi::AgentInstanceFilterProxyModel *agentFilterProxyModel() const;
 
     /**
      * Returns the view used in the widget.

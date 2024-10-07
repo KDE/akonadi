@@ -10,6 +10,7 @@
 #include "agentfilterproxymodel.h"
 #include "agentinstance.h"
 #include "agentinstancecreatejob.h"
+#include "agentinstancefilterproxymodel.h"
 #include "agentmanager.h"
 #include "agenttypedialog.h"
 

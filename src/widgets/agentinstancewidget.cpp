@@ -6,8 +6,8 @@
 
 #include "agentinstancewidget.h"
 
-#include "agentfilterproxymodel.h"
 #include "agentinstance.h"
+#include "agentinstancefilterproxymodel.h"
 #include "agentinstancemodel.h"
 
 #include <KLocalizedString>
@@ -84,7 +84,7 @@ public:
     AgentInstanceWidget *const mParent;
     QListView *mView = nullptr;
     AgentInstanceModel *mModel = nullptr;
-    AgentFilterProxyModel *proxy = nullptr;
+    AgentInstanceFilterProxyModel *proxy = nullptr;
 };
 
 void AgentInstanceWidgetPrivate::currentAgentInstanceChanged(const QModelIndex &currentIndex, const QModelIndex &previousIndex)
@@ -139,7 +139,7 @@ AgentInstanceWidget::AgentInstanceWidget(QWidget *parent)
 
     d->mModel = new AgentInstanceModel(this);
 
-    d->proxy = new AgentFilterProxyModel(this);
+    d->proxy = new AgentInstanceFilterProxyModel(this);
     d->proxy->sort(0);
     d->proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
     d->proxy->setSourceModel(d->mModel);
@@ -198,7 +198,7 @@ QAbstractItemView *AgentInstanceWidget::view() const
     return d->mView;
 }
 
-AgentFilterProxyModel *AgentInstanceWidget::agentFilterProxyModel() const
+AgentInstanceFilterProxyModel *AgentInstanceWidget::agentFilterProxyModel() const
 {
     return d->proxy;
 }
