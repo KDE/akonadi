@@ -233,12 +233,14 @@ set(akonadicore_models_SRCS
     models/tagmodel.cpp models/tagmodel.h
     models/tagmodel_p.cpp models/tagmodel_p.h
     models/trashfilterproxymodel.cpp models/trashfilterproxymodel.h
+    models/agentinstancefilterproxymodel.cpp models/agentinstancefilterproxymodel.h
 )
 
 ecm_generate_headers(AkonadiCore_models_CC_HEADERS
     HEADER_NAMES
     AgentFilterProxyModel
     AgentInstanceModel
+    AgentInstanceFilterProxyModel
     AgentTypeModel
     CollectionFilterProxyModel
     EntityMimeTypeFilterModel
