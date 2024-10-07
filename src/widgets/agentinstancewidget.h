@@ -86,7 +86,7 @@ public:
      * Returns the agent filter proxy model, use this to filter by
      * agent mimetype or capabilities.
      */
-    [[nodiscard]] Akonadi::AgentInstanceFilterProxyModel *agentFilterProxyModel() const;
+    [[nodiscard]] Akonadi::AgentInstanceFilterProxyModel *agentInstanceFilterProxyModel() const;
 
     /**
      * Returns the view used in the widget.

@@ -65,7 +65,7 @@ ManageAccountWidget::~ManageAccountWidget() = default;
 
 void ManageAccountWidget::slotSearchAgentType(const QString &str)
 {
-    d->ui.mAccountList->agentFilterProxyModel()->setFilterRegularExpression(str);
+    d->ui.mAccountList->agentInstanceFilterProxyModel()->setFilterRegularExpression(str);
 }
 
 void ManageAccountWidget::disconnectAddAccountButton()
@@ -160,7 +160,7 @@ void ManageAccountWidget::setExcludeCapabilities(const QStringList &excludeCapab
 {
     d->mExcludeCapabilities = excludeCapabilities;
     for (const QString &capability : std::as_const(d->mExcludeCapabilities)) {
-        d->ui.mAccountList->agentFilterProxyModel()->excludeCapabilities(capability);
+        d->ui.mAccountList->agentInstanceFilterProxyModel()->excludeCapabilities(capability);
     }
 }
 
@@ -178,7 +178,7 @@ void ManageAccountWidget::setCapabilityFilter(const QStringList &capabilityFilte
 {
     d->mCapabilityFilter = capabilityFilter;
     for (const QString &capability : std::as_const(d->mCapabilityFilter)) {
-        d->ui.mAccountList->agentFilterProxyModel()->addCapabilityFilter(capability);
+        d->ui.mAccountList->agentInstanceFilterProxyModel()->addCapabilityFilter(capability);
     }
 }
 
@@ -191,7 +191,7 @@ void ManageAccountWidget::setMimeTypeFilter(const QStringList &mimeTypeFilter)
 {
     d->mMimeTypeFilter = mimeTypeFilter;
     for (const QString &mimeType : std::as_const(d->mMimeTypeFilter)) {
-        d->ui.mAccountList->agentFilterProxyModel()->addMimeTypeFilter(mimeType);
+        d->ui.mAccountList->agentInstanceFilterProxyModel()->addMimeTypeFilter(mimeType);
     }
 }
 
