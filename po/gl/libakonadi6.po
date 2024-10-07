@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-10-03 00:40+0000\n"
-"PO-Revision-Date: 2024-09-22 12:08+0200\n"
+"PO-Revision-Date: 2024-10-07 01:37+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
 "Language: gl\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.05.2\n"
+"X-Generator: Lokalize 24.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1249,7 +1249,7 @@ msgstr "Retirar a conta?"
 #: widgets/manageaccountwidget.ui:19
 #, kde-format
 msgid "Show only account on current activity"
-msgstr ""
+msgstr "Amosar só a conta da actividade actual."
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/manageaccountwidget.ui:26
