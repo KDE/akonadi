@@ -6,7 +6,6 @@
 
 #include "agentfilterproxymodel.h"
 
-#include "accountactivitiesabstract.h"
 #include "agentinstancemodel.h"
 #include "agenttypemodel.h"
 
@@ -31,8 +30,6 @@ public:
     QStringList mimeTypes;
     QStringList capabilities;
     QStringList excludeCapabilities;
-    bool enablePlasmaActivities = false;
-    AccountActivitiesAbstract *accountActivitiesAbstract = nullptr;
     [[nodiscard]] bool filterAcceptRegExp(const QModelIndex &index, const QRegularExpression &filterRegExpStr);
 };
 
@@ -59,17 +56,6 @@ void AgentFilterProxyModel::addCapabilityFilter(const QString &capability)
 void AgentFilterProxyModel::excludeCapabilities(const QString &capability)
 {
     d->excludeCapabilities << capability;
-    invalidateFilter();
-}
-
-bool AgentFilterProxyModel::enablePlasmaActivities() const
-{
-    return d->enablePlasmaActivities;
-}
-
-void AgentFilterProxyModel::setEnablePlasmaActivities(bool newEnablePlasmaActivities)
-{
-    d->enablePlasmaActivities = newEnablePlasmaActivities;
     invalidateFilter();
 }
 
@@ -152,35 +138,7 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex & /*sour
         }
     }
     const bool result = d->filterAcceptRegExp(index, filterRegularExpression());
-    if (result) {
-        if (d->accountActivitiesAbstract && d->enablePlasmaActivities) {
-#if 0
-        const bool enableActivities = index.data(AgentInstanceModel::ActivitiesEnabledRole).toBool();
-        if (enableActivities) {
-            const auto activities = index.data(AgentInstanceModel::ActivitiesRole).toStringList();
-            const bool result = d->accountActivitiesAbstract->filterAcceptsRow(activities);
-            // qDebug() << " result " << result << " identity name : " << sourceModel()->index(source_row,
-            // IdentityTreeModel::IdentityNameRole).data().toString();
-            return result;
-        }
-#endif
-        }
-    }
     return result;
-}
-
-AccountActivitiesAbstract *AgentFilterProxyModel::accountActivitiesAbstract() const
-{
-    return d->accountActivitiesAbstract;
-}
-
-void AgentFilterProxyModel::setAccountActivitiesAbstract(AccountActivitiesAbstract *abstract)
-{
-    if (d->accountActivitiesAbstract != abstract) {
-        d->accountActivitiesAbstract = abstract;
-        connect(d->accountActivitiesAbstract, &AccountActivitiesAbstract::activitiesChanged, this, &AgentFilterProxyModel::invalidateFilter);
-        invalidateFilter();
-    }
 }
 
 #include "moc_agentfilterproxymodel.cpp"
