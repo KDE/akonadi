@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-03 00:40+0000\n"
+"POT-Creation-Date: 2024-10-08 00:40+0000\n"
 "PO-Revision-Date: 2024-10-01 06:06+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
@@ -1220,12 +1220,12 @@ msgstr "აუცილებელი ფონური სერვისი 
 msgid "Details..."
 msgstr "დეტალები..."
 
-#: widgets/manageaccountwidget.cpp:220
+#: widgets/manageaccountwidget.cpp:221
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr "მართლა გნებავთ %1 -ის წაშლა?"
 
-#: widgets/manageaccountwidget.cpp:221
+#: widgets/manageaccountwidget.cpp:222
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"

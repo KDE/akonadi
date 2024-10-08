@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-03 00:40+0000\n"
+"POT-Creation-Date: 2024-10-08 00:40+0000\n"
 "PO-Revision-Date: 2024-10-02 12:57+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -1225,12 +1225,12 @@ msgstr "Услугата за управление на лична информ�
 msgid "Details..."
 msgstr "Подробности…"
 
-#: widgets/manageaccountwidget.cpp:220
+#: widgets/manageaccountwidget.cpp:221
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr "Искате ли да премахнете профил \"%1\" ?"
 
-#: widgets/manageaccountwidget.cpp:221
+#: widgets/manageaccountwidget.cpp:222
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"

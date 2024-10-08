@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-03 00:40+0000\n"
+"POT-Creation-Date: 2024-10-08 00:40+0000\n"
 "PO-Revision-Date: 2014-09-18 22:53+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -1253,12 +1253,12 @@ msgstr ""
 msgid "Details..."
 msgstr "Enkelheiten..."
 
-#: widgets/manageaccountwidget.cpp:220
+#: widgets/manageaccountwidget.cpp:221
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr ""
 
-#: widgets/manageaccountwidget.cpp:221
+#: widgets/manageaccountwidget.cpp:222
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"
