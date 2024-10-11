@@ -283,6 +283,8 @@ AgentInstance AgentManagerPrivate::fillAgentInstance(const QString &identifier) 
     instance.d->mStatusMessage = mManager->agentInstanceStatusMessage(identifier);
     instance.d->mProgress = mManager->agentInstanceProgress(identifier);
     instance.d->mIsOnline = mManager->agentInstanceOnline(identifier);
+    // instance.d->mActivities = mManager->agentInstanceActivities(identifier);
+    // instance.d->mActivitiesEnabled = mManager->agentInstanceActivitiesEnabled(identifier);
 
     return instance;
 }
