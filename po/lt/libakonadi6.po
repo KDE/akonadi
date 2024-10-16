@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-19 02:31+0000\n"
-"PO-Revision-Date: 2024-02-02 14:32+0200\n"
+"PO-Revision-Date: 2024-10-16 01:39+0300\n"
 "Last-Translator: Liudas Ališauskas <liudas@akmc.lt>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2272,10 +2272,10 @@ msgstr "Pavadinimas"
 msgid "Do you really want to delete this folder and all its sub-folders?"
 msgid_plural ""
 "Do you really want to delete %1 folders and all their sub-folders?"
-msgstr[0] "Ar tikrai norite šalinti šį aplanką ir visus jo poaplankius?"
-msgstr[1] "Ar tikrai norite šalinti %1 aplankus ir visus jų poaplankius?"
-msgstr[2] "Ar tikrai norite šalinti %1 aplankų ir visus jų poaplankius?"
-msgstr[3] "Ar tikrai norite šalinti %1 aplanką ir visus jų poaplankius?"
+msgstr[0] "Ar tikrai norite ištrinti šį aplanką ir visus jo poaplankius?"
+msgstr[1] "Ar tikrai norite ištrinti %1 aplankus ir visus jų poaplankius?"
+msgstr[2] "Ar tikrai norite ištrinti %1 aplankų ir visus jų poaplankius?"
+msgstr[3] "Ar tikrai norite ištrinti %1 aplanką ir visus jų poaplankius?"
 
 #: widgets/standardactionmanager.cpp:429
 #, fuzzy, kde-format
@@ -2292,7 +2292,7 @@ msgstr[3] "Trinti %1 aplanką"
 #: widgets/standardactionmanager.cpp:430
 #, kde-format
 msgid "Could not delete folder: %1"
-msgstr "Nepavyksta pašalinti aplanko %1"
+msgstr "Nepavyko ištrinti aplanko: %1"
 
 #: widgets/standardactionmanager.cpp:431
 #, fuzzy, kde-format
@@ -2331,7 +2331,7 @@ msgstr[3] "Trinti %1 elementą"
 #: widgets/standardactionmanager.cpp:439
 #, kde-format
 msgid "Could not delete item: %1"
-msgstr "Nepavyksta pašalinti: %1"
+msgstr "Nepavyko ištrinti elemento: %1"
 
 #: widgets/standardactionmanager.cpp:440
 #, fuzzy, kde-format
@@ -2344,7 +2344,7 @@ msgstr "Aplanko pašalinti nepavyko"
 #, kde-format
 msgctxt "@title:window"
 msgid "Rename Favorite"
-msgstr "Pervadinti mėgstamąjį"
+msgstr "Pervadinti mėgstamą"
 
 #: widgets/standardactionmanager.cpp:443
 #, kde-format
@@ -2514,7 +2514,7 @@ msgstr "Klaida kuriant elementą: %1"
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
-msgstr "Ar tikrai norite pašalinti žymė <resource>%1</resource>?"
+msgstr "Ar tikrai norite pašalinti žymę <resource>%1</resource>?"
 
 #: widgets/tageditwidget.cpp:166
 #, fuzzy, kde-format
@@ -2528,7 +2528,7 @@ msgstr "Trinti žymę"
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"
-msgstr "Trinti žymę"
+msgstr "Ištrinti žymę"
 
 #. i18n: ectx: property (text), widget (QLabel, selectLabel)
 #: widgets/tageditwidget.ui:29
@@ -2616,7 +2616,7 @@ msgstr "Nepavyko atverti duomenų failo „%1“."
 #: xml/xmldocument.cpp:134
 #, kde-format
 msgid "File %1 does not exist."
-msgstr "Failas %1 neegzistuoja."
+msgstr "Failo %1 nėra."
 
 #: xml/xmldocument.cpp:142
 #, kde-format
