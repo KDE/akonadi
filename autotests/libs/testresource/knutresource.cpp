@@ -219,7 +219,7 @@ void KnutResource::collectionChanged(const Akonadi::Collection &collection)
         if (child.isNull()) {
             continue;
         }
-        if (child.tagName() == QLatin1StringView("item") || child.tagName() == QStringLiteral("collection")) {
+        if (child.tagName() == QLatin1StringView("item") || child.tagName() == QLatin1StringView("collection")) {
             newElem.appendChild(child); // reparents
             --i; // children, despite being const is modified by the reparenting
         }
