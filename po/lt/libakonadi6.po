@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-10-08 00:40+0000\n"
-"PO-Revision-Date: 2024-10-16 01:39+0300\n"
+"PO-Revision-Date: 2024-10-19 01:43+0300\n"
 "Last-Translator: Liudas Ališauskas <liudas@akmc.lt>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -25,22 +25,22 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Mindaugas Baranauskas"
+msgstr "Mindaugas Baranauskas, Moo"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "embar@users.berlios.de"
+msgstr "embar@users.berlios.de, <>"
 
 #: agentbase/accountsintegration.cpp:86
 #, kde-format
 msgid "There is currently no account configured."
-msgstr ""
+msgstr "Šiuo metu nėra sukonfigūruotų paskyrų."
 
 #: agentbase/accountsintegration.cpp:103
 #, kde-format
 msgid "Accounts integration is not supported"
-msgstr ""
+msgstr "Paskyrų integracija yra nepalaikoma"
 
 #: agentbase/agentbase.cpp:308 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
@@ -51,11 +51,10 @@ msgstr "Nepavyko registruoti objekto dbus sistemoje: %1"
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
-msgstr "%1 su tipu %2"
+msgstr "%1 išteklius, kuris yra %2 tipo"
 
 #: agentbase/agentbase.cpp:809
-#, fuzzy, kde-format
-#| msgid "Agent identifier"
+#, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Agento identifikatorius"
@@ -75,7 +74,7 @@ msgstr "Pasiruošęs"
 #, kde-format
 msgctxt "@info:status"
 msgid "Offline"
-msgstr "Atjungtas"
+msgstr "Atsijungęs"
 
 #: agentbase/agentbase_p.h:57
 #, kde-format
@@ -104,7 +103,7 @@ msgstr "Ištekliaus identifikatorius"
 #: agentbase/resourcebase.cpp:539
 #, kde-format
 msgid "Akonadi Resource"
-msgstr "Akonodi išteklius"
+msgstr "Akonadi išteklius"
 
 #: agentbase/resourcebase.cpp:590
 #, kde-format
@@ -122,25 +121,25 @@ msgstr "Klaida kuriant elementą: %1"
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
-msgstr "Klaida atnaujinant kolekciją: %1"
+msgstr "Klaida atnaujinant rinkinį: %1"
 
 #: agentbase/resourcebase.cpp:724
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
-msgstr "Atnaujinimas vietinės kolekcijos nepavyko: %1."
+msgstr "Nepavyko atnaujinti vietinio rinkinio: %1."
 
 #: agentbase/resourcebase.cpp:729
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
-msgstr "Atnaujinimas vietinių elementų nepavyko: %1."
+msgstr "Nepavyko atnaujinti vietinių elementų: %1."
 
 #: agentbase/resourcebase.cpp:748
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
-msgstr "Nepavyko gauti elemento veiksenoje „Nepsisijungus“."
+msgstr "Nepavyko gauti elemento veiksenoje „Atsijungęs“."
 
 #: agentbase/resourcebase.cpp:929
 #, kde-format
@@ -151,29 +150,28 @@ msgstr "Sinchronizuojamas aplankas „%1“"
 #: agentbase/resourcebase.cpp:949 agentbase/resourcebase.cpp:956
 #, kde-format
 msgid "Failed to retrieve collection for sync."
-msgstr ""
+msgstr "Nepavyko gauti rinkinio sinchronizavimui."
 
 #: agentbase/resourcebase.cpp:997
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
-msgstr ""
+msgstr "Nepavyko gauti rinkinio atributo sinchronizavimui."
 
 #: agentbase/resourcebase.cpp:1043
 #, kde-format
 msgid "The requested item no longer exists"
-msgstr ""
+msgstr "Užklausto elemento daugiau nebėra"
 
 #: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."
-msgstr ""
+msgstr "Užduoties atsisakyta."
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
-msgstr "Akonadi agentas"
+msgstr "Akonadi valdymas"
 
 #: akonadictl/main.cpp:211
 #, kde-format
@@ -197,70 +195,69 @@ msgstr ""
 #: akonadictl/main.cpp:231
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "Komanda, kurią vykdyti"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
 msgid "No such collection."
-msgstr "Nėra tokios kolekcijos."
+msgstr "Nėra tokio rinkinio."
 
 #: core/collectionsync.cpp:505 core/collectionsync.cpp:650
 #, kde-format
 msgid "Found unresolved orphan collections"
-msgstr ""
+msgstr "Rasti neišspręsti liekamieji rinkiniai"
 
 #: core/conflicthandler.cpp:53
 #, kde-format
 msgid "Did not find other item for conflict handling"
-msgstr ""
+msgstr "Nerasta kitų elementų, skirtų konflikto sprendimui"
 
 #: core/jobs/agentinstancecreatejob.cpp:70
 #, kde-format
 msgid "Unable to access D-Bus interface of created agent."
-msgstr "Nepavyksta pasiekti sukurto agento D-Bus sąsajos."
+msgstr "Nepavyksta gauti prieigos prie sukurto agento D-Bus sąsajos."
 
 #: core/jobs/agentinstancecreatejob.cpp:92
 #, kde-format
 msgid "Agent instance creation timed out."
-msgstr ""
+msgstr "Pasibaigė agento egzemplioriaus kūrimui skirtas laikas."
 
 #: core/jobs/agentinstancecreatejob.cpp:150
 #, kde-format
 msgid "Unable to obtain agent type '%1'."
-msgstr ""
+msgstr "Nepavyko gauti agento tipo „%1“."
 
 #: core/jobs/agentinstancecreatejob.cpp:158
 #, kde-format
 msgid "Unable to create agent instance."
-msgstr ""
+msgstr "Nepavyko sukurti agento egzemplioriaus."
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:73
 #, kde-format
 msgid "Invalid collection instance."
-msgstr ""
+msgstr "Neteisingas rinkinio egzempliorius."
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:80
 #: core/jobs/resourcesynchronizationjob.cpp:88
 #, kde-format
 msgid "Invalid resource instance."
-msgstr ""
+msgstr "Neteisingas ištekliaus egzempliorius."
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:102
 #: core/jobs/resourcesynchronizationjob.cpp:113
 #, kde-format
 msgid "Unable to obtain D-Bus interface for resource '%1'"
-msgstr ""
+msgstr "Nepavyko gauti D-Bus sąsajos, skirtos ištekliui „%1“"
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:125
 #, kde-format
 msgid "Collection attributes synchronization timed out."
-msgstr ""
+msgstr "Pasibaigė rinkinio atributų sinchronizavimui skirtas laikas."
 
 #: core/jobs/collectioncopyjob.cpp:54
-#, fuzzy, kde-format
-#| msgid "Invalid collection"
+#, kde-format
 msgid "Invalid collection to copy"
-msgstr "Netinkanti kolekcija"
+msgstr ""
 
 #: core/jobs/collectioncopyjob.cpp:60
 #, fuzzy, kde-format
@@ -282,28 +279,28 @@ msgstr "Atkurti rinkinį iš šiukšlinės"
 #: core/jobs/collectiondeletejob.cpp:52
 #, kde-format
 msgid "Invalid collection"
-msgstr "Netinkanti kolekcija"
+msgstr "Neteisingas rinkinys"
 
 #: core/jobs/collectionfetchjob.cpp:212
 #, kde-format
 msgid "Invalid collection given."
-msgstr "Pateikta netinkanti kolekcija."
+msgstr "Nurodytas neteisingas rinkinys."
 
 #: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:90
 #, kde-format
 msgid "No objects specified for moving"
-msgstr ""
+msgstr "Nenurodyta objektų, skirtų perkėlimui"
 
 #: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
 #: core/jobs/linkjobimpl_p.h:39
 #, kde-format
 msgid "No valid destination specified"
-msgstr ""
+msgstr "Nenurodyta teisinga paskirtis"
 
 #: core/jobs/invalidatecachejob.cpp:58
 #, kde-format
 msgid "Invalid collection."
-msgstr "Nėra tokios kolekcijos."
+msgstr "Neteisingas rinkinys."
 
 #: core/jobs/itemcreatejob.cpp:115
 #, fuzzy, kde-format
@@ -314,7 +311,7 @@ msgstr "Netinkanti kolekcija"
 #: core/jobs/job.cpp:335
 #, kde-format
 msgid "Cannot connect to the Akonadi service."
-msgstr "Nepavyksta prisijungti prie Akonadi paslaugos."
+msgstr "Nepavyksta prisijungti prie Akonadi tarnybos."
 
 #: core/jobs/job.cpp:338
 #, kde-format
@@ -322,11 +319,13 @@ msgid ""
 "The protocol version of the Akonadi server is incompatible. Make sure you "
 "have a compatible version installed."
 msgstr ""
+"Akonadi serverio protokolo versija yra nesuderinama. Įsitikinkite, kad "
+"turite įdiegtą suderinamą versiją."
 
 #: core/jobs/job.cpp:341
 #, kde-format
 msgid "User canceled operation."
-msgstr "Naudotojas nutraukė veiksmą."
+msgstr "Naudotojas atsisakė operacijos."
 
 #: core/jobs/job.cpp:346
 #, kde-format
@@ -336,43 +335,43 @@ msgstr "Nežinoma klaida."
 #: core/jobs/job.cpp:385
 #, kde-format
 msgid "Unexpected response"
-msgstr ""
+msgstr "Netikėtas atsakas"
 
 #: core/jobs/resourcesynchronizationjob.cpp:139
 #, kde-format
 msgid "Resource synchronization timed out."
-msgstr ""
+msgstr "Pasibaigė ištekliaus sinchronizavimui skirtas laikas."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:145
 #, kde-format
 msgid "Could not fetch root collection of resource %1."
-msgstr ""
+msgstr "Nepavyko gauti šakninio ištekliaus rinkinio %1."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:189
 #, kde-format
 msgid "No resource ID given."
-msgstr ""
+msgstr "Nenurodytas ištekliaus ID."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:326
 #, kde-format
 msgid "Invalid resource identifier '%1'"
-msgstr ""
+msgstr "Neteisingas ištekliaus identifikatorius „%1“"
 
 #: core/jobs/specialcollectionshelperjobs.cpp:342
 #: core/jobs/specialcollectionshelperjobs.cpp:350
 #, kde-format
 msgid "Failed to configure default resource via D-Bus."
-msgstr ""
+msgstr "Nepavyko sukonfigūruoti numatytojo ištekliaus per D-Bus."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:415
 #, kde-format
 msgid "Failed to fetch the resource collection."
-msgstr ""
+msgstr "Nepavyko gauti ištekliaus rinkinio."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:599
 #, kde-format
 msgid "Timeout trying to get lock."
-msgstr ""
+msgstr "Pasibaigė laikas bandant gauti užraktą."
 
 #: core/jobs/tagcreatejob.cpp:49
 #, kde-format
@@ -383,26 +382,28 @@ msgstr "Nepavyko sukurti žymės."
 #, kde-format
 msgid "Move to trash collection failed, aborting trash operation"
 msgstr ""
+"Nepavyko perkelti rinkinio į šiukšlinę, nutraukiama perkėlimo į šiukšlinę "
+"operacija"
 
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format
 msgid "Invalid items passed"
-msgstr ""
+msgstr "Perduoti neteisingi elementai"
 
 #: core/jobs/trashjob.cpp:258 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
-msgstr ""
+msgstr "Perduotas neteisingas rinkinys"
 
 #: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
 #, kde-format
 msgid "No valid collection or empty itemlist"
-msgstr ""
+msgstr "Nėra teisingo rinkinio arba tuščias elementų sąrašas"
 
 #: core/jobs/trashrestorejob.cpp:86
 #, kde-format
 msgid "Could not find restore collection and restore resource is not available"
-msgstr ""
+msgstr "Nepavyko rasti atkūrimo rinkinio ir atkūrimo išteklius neprieinamas"
 
 #: core/models/agentinstancemodel.cpp:192
 #, kde-format
@@ -411,19 +412,16 @@ msgid "Name"
 msgstr "Pavadinimas"
 
 #: core/models/entitytreemodel.cpp:207
-#, fuzzy, kde-format
-#| msgid "Loading..."
+#, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
 msgstr "Įkeliama..."
 
 #: core/models/entitytreemodel.cpp:499
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Error."
+#, kde-format
 msgctxt "@window:title"
 msgid "Error"
-msgstr "Klaida."
+msgstr "Klaida"
 
 #: core/models/entitytreemodel.cpp:500
 #, kde-format
@@ -431,6 +429,8 @@ msgid ""
 "The target collection '%1' contains already\n"
 "a collection with name '%2'."
 msgstr ""
+"Paskirties rinkinyje „%1“ jau yra\n"
+"rinkinys, pavadinimu „%2“."
 
 #: core/models/entitytreemodel.cpp:669
 #, kde-format
@@ -439,46 +439,40 @@ msgid "Name"
 msgstr "Pavadinimas"
 
 #: core/models/entitytreemodel_p.cpp:1331
-#, fuzzy, kde-format
-#| msgid "Could not copy item:"
+#, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
-msgstr "Nepavyko nukopijuoti elemento:"
+msgstr "Nepavyko nukopijuoti elemento: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1333
-#, fuzzy, kde-format
-#| msgid "Could not copy collection:"
+#, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
-msgstr "Nepavyko nukopijuoti kolekcijos:"
+msgstr "Nepavyko nukopijuoti rinkinio: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1335
-#, fuzzy, kde-format
-#| msgid "Could not move item:"
+#, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
-msgstr "Nepavyko perkelti elemento:"
+msgstr "Nepavyko perkelti elemento: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1337
-#, fuzzy, kde-format
-#| msgid "Could not move collection:"
+#, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
-msgstr "Nepavyko perkelti kolekcijos:"
+msgstr "Nepavyko perkelti rinkinio: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1339
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
-msgstr ""
+msgstr "Nepavyko susieti esybės: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Error."
+#, kde-format
 msgctxt "@title:window"
 msgid "Error"
-msgstr "Klaida."
+msgstr "Klaida"
 
 #: core/models/favoritecollectionsmodel.cpp:398
 #, kde-format
@@ -486,12 +480,12 @@ msgid "Favorite Folders"
 msgstr "Mėgstami aplankai"
 
 #: core/models/statisticsproxymodel.cpp:86
-#, kde-format
+#, fuzzy, kde-format
 msgid "Total Messages"
 msgstr "Viso laiškų"
 
 #: core/models/statisticsproxymodel.cpp:88
-#, kde-format
+#, fuzzy, kde-format
 msgid "Unread Messages"
 msgstr "Neskaitytų laiškų"
 
@@ -503,15 +497,15 @@ msgstr ""
 #: core/models/statisticsproxymodel.cpp:105
 #, kde-format
 msgid "Storage Size"
-msgstr "Atmintinės dydis"
+msgstr "Saugyklos dydis"
 
 #: core/models/statisticsproxymodel.cpp:111
 #, kde-format
 msgid "Subfolder Storage Size"
-msgstr "Sub aplanko saugyklos dydis"
+msgstr "Poaplankio saugyklos dydis"
 
 #: core/models/statisticsproxymodel.cpp:231
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "Neskaityta"
@@ -566,7 +560,7 @@ msgstr "Bevardis įskiepis"
 #: core/pluginloader.cpp:151
 #, kde-format
 msgid "No description available"
-msgstr "Aprašo nėra"
+msgstr "Aprašas neprieinamas"
 
 #: core/servermanager.cpp:263
 #, kde-format
@@ -601,17 +595,17 @@ msgstr ""
 #: selftest/main.cpp:19
 #, kde-format
 msgid "Akonadi Self Test"
-msgstr "Akonadi savi testas"
+msgstr "Akonadi savikontrolė"
 
 #: selftest/main.cpp:21
 #, kde-format
 msgid "Checks and reports state of Akonadi server"
-msgstr "Patikrina ir praneša apie Akonadi serverio būseną"
+msgstr "Tikrina ir praneša apie Akonadi serverio būseną"
 
 #: selftest/main.cpp:23
 #, kde-format
 msgid "(c) 2008 Volker Krause <vkrause@kde.org>"
-msgstr ""
+msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
 
 #: shared/akapplication.cpp:70
 #, kde-format
@@ -621,50 +615,49 @@ msgstr ""
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
-msgstr "&Naujas agento objektas"
+msgstr "&Naujas agento egzempliorius..."
 
 #: widgets/agentactionmanager.cpp:36
 msgid "&Delete Agent Instance"
-msgstr "Ša&linti agento objektą"
+msgstr "Iš&trinti agento egzempliorių"
 
 #: widgets/agentactionmanager.cpp:37
 msgid "&Configure Agent Instance"
-msgstr "&konfigūruoti agento objektą"
+msgstr "&Konfigūruoti agento egzempliorių"
 
 #: widgets/agentactionmanager.cpp:53
 #, kde-format
 msgctxt "@title:window"
 msgid "New Agent Instance"
-msgstr "Naujas agento objektas"
+msgstr "Naujas agento egzempliorius"
 
 #: widgets/agentactionmanager.cpp:55
 #, kde-format
 msgid "Could not create agent instance: %1"
-msgstr "Nepavyksta sukurti agento objekto: %1"
+msgstr "Nepavyko sukurti agento egzemplioriaus: %1"
 
 #: widgets/agentactionmanager.cpp:59
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
-msgstr "Nepavyksta sukurti agento objekto"
+msgstr "Nepavyko sukurti agento egzemplioriaus"
 
 #: widgets/agentactionmanager.cpp:61
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Agent Instance?"
-msgstr "Šalinti agento objektą?"
+msgstr "Ištrinti agento egzempliorių?"
 
 #: widgets/agentactionmanager.cpp:65
 #, kde-format
 msgid "Do you really want to delete the selected agent instance?"
-msgstr "Ar iš tikro pašalintį pažymėtą agento objektą?"
+msgstr "Ar tikrai norite ištrinti pažymėtą agento egzempliorių?"
 
 #: widgets/agentconfigurationdialog.cpp:56
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
-msgstr ""
+msgstr "%1 konfigūracija"
 
 #: widgets/agentconfigurationdialog.cpp:81
 #, kde-format
@@ -674,36 +667,34 @@ msgstr ""
 #: widgets/agentconfigurationdialog.cpp:82
 #, kde-format
 msgid "About %1"
-msgstr ""
+msgstr "Apie %1"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
-msgstr ""
+msgstr "Konfigūracijos dialogas atvertas kitame lange"
 
 #: widgets/agentconfigurationwidget.cpp:101
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
-msgstr ""
+msgstr "%1 konfigūracija jau atverta kitur."
 
 #: widgets/agentconfigurationwidget.cpp:103
-#, fuzzy, kde-format
-#| msgid "Failed to create tag."
+#, kde-format
 msgid "Failed to register %1 configuration dialog."
-msgstr "Nepavyko sukurti žymės."
+msgstr "Nepavyko užregistruoti %1 konfigūracijos dialogo."
 
 #: widgets/agentinstancewidget.cpp:259
 #, kde-format
 msgctxt "Status percent value"
 msgid "(%1%)"
-msgstr ""
+msgstr "(%1%)"
 
 #: widgets/agenttypedialog.cpp:66
-#, fuzzy, kde-format
-#| msgid "&Configure Agent Instance"
+#, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
-msgstr "&konfigūruoti agento objektą"
+msgstr "Konfigūruoti paskyrą"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
@@ -715,7 +706,7 @@ msgstr[2] "minučių"
 msgstr[3] "minutė"
 
 #: widgets/cachepolicypage.cpp:69
-#, kde-format
+#, fuzzy, kde-format
 msgid "Retrieval"
 msgstr "Atsiuntimas"
 
@@ -723,20 +714,19 @@ msgstr "Atsiuntimas"
 #: widgets/cachepolicypage.ui:20
 #, kde-format
 msgid "Use options from parent folder or account"
-msgstr "Naudoti pasirinktis iš aukštesnio lygmens aplanko ar sąskaitos"
+msgstr "Naudoti parinktis iš viršesnio aplanko ar paskyros"
 
 #. i18n: ectx: property (text), widget (QCheckBox, syncOnDemand)
 #: widgets/cachepolicypage.ui:33
 #, kde-format
 msgid "Synchronize when selecting this folder"
-msgstr "Sinchronizuoti kai pasirenkamas šis aplankas"
+msgstr "Sinchronizuoti, kai pasirenkamas šis aplankas"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: widgets/cachepolicypage.ui:40
-#, fuzzy, kde-format
-#| msgid "Synchronize"
+#, kde-format
 msgid "Synchronize after:"
-msgstr "Sinchronizuoti"
+msgstr "Sinchronizuoti po:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, checkInterval)
 #: widgets/cachepolicypage.ui:47
@@ -750,7 +740,7 @@ msgstr "Niekada"
 #: widgets/cachepolicypage.ui:50 widgets/cachepolicypage.ui:133
 #, kde-format
 msgid "minutes"
-msgstr "min"
+msgstr "min."
 
 #. i18n: ectx: property (text), widget (QLabel, localPartsLabel)
 #: widgets/cachepolicypage.ui:66
@@ -787,7 +777,7 @@ msgstr "Gauti laiško turinį pareikalavus"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/cachepolicypage.ui:118
-#, kde-format
+#, fuzzy, kde-format
 msgid "Keep message bodies locally for:"
 msgstr "Laikyti laiško turinį vietoje:"
 
@@ -796,12 +786,13 @@ msgstr "Laikyti laiško turinį vietoje:"
 #, kde-format
 msgctxt "no cache timeout"
 msgid "Forever"
-msgstr "Nuolatos"
+msgstr "Amžinai"
 
 #: widgets/clearcachefoldersjob.cpp:41
 #, kde-format
 msgid "Collection cache cleared. You should restart Akonadi now."
 msgstr ""
+"Rinkinio podėlis išvalytas. Dabar turėtumėte paleisti Akonadi iš naujo."
 
 #: widgets/clearcachefoldersjob.cpp:69
 #, kde-format
@@ -821,11 +812,10 @@ msgstr "Ieškoti"
 #, kde-format
 msgctxt "@option:check"
 msgid "Use folder by default"
-msgstr ""
+msgstr "Naudoti aplanką pagal numatymą"
 
 #: widgets/collectiondialog.cpp:226
-#, fuzzy, kde-format
-#| msgid "&New Subfolder..."
+#, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
 msgstr "&Naujas poaplankis..."
@@ -855,8 +845,7 @@ msgid "Could not create folder: %1"
 msgstr "Nepavyko sukurti aplanko: %1"
 
 #: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:421
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
 msgstr "Nepavyko sukurti aplanko"
@@ -865,7 +854,7 @@ msgstr "Nepavyko sukurti aplanko"
 #, kde-format
 msgctxt "@title:tab general properties page"
 msgid "General"
-msgstr "Bendri"
+msgstr "Bendra"
 
 #: widgets/collectiongeneralpropertiespage.cpp:54
 #, kde-format
@@ -881,13 +870,13 @@ msgstr[3] "%1 objektas"
 #: widgets/collectiongeneralpropertiespage.ui:16
 #, kde-format
 msgid "&Name:"
-msgstr "&Pavadinimas:"
+msgstr "Pavadi&nimas:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, customIconCheckbox)
 #: widgets/collectiongeneralpropertiespage.ui:29
 #, kde-format
 msgid "&Use custom icon:"
-msgstr "&Naudoti savitą ženkliuką:"
+msgstr "&Naudoti tinkintą piktogramą:"
 
 #. i18n: ectx: property (icon), widget (KIconButton, customIcon)
 #: widgets/collectiongeneralpropertiespage.ui:39
@@ -912,7 +901,7 @@ msgstr "Turinys:"
 #: widgets/collectiongeneralpropertiespage.ui:75
 #, kde-format
 msgid "0 objects"
-msgstr "Nėra objektų"
+msgstr "0 objektų"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: widgets/collectiongeneralpropertiespage.ui:82
@@ -929,19 +918,17 @@ msgstr "0 baitų"
 #: widgets/collectionmaintenancepage.cpp:46
 #, kde-format
 msgid "Remember that indexing can take some minutes."
-msgstr ""
+msgstr "Atminkite, kad indeksavimas gali užtrukti keletą minučių."
 
 #: widgets/collectionmaintenancepage.cpp:72
 #, kde-format
 msgid "Maintenance"
-msgstr ""
+msgstr "Priežiūra"
 
 #: widgets/collectionmaintenancepage.cpp:131
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Error while creating item: %1"
+#, kde-format
 msgid "Error while retrieving indexed items count"
-msgstr "Klaida kuriant elementą: %1"
+msgstr "Klaida gaunant indeksuojamų elementų skaičių"
 
 #: widgets/collectionmaintenancepage.cpp:134
 #, kde-format
@@ -959,10 +946,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/collectionmaintenancepage.ui:17
-#, fuzzy, kde-format
-#| msgid "Folder &Properties"
+#, kde-format
 msgid "Folder type:"
-msgstr "Aplanko sa&vybės"
+msgstr "Aplanko tipas:"
 
 #. i18n: ectx: property (text), widget (QLabel, folderTypeLbl)
 #. i18n: ectx: property (text), widget (QLabel, folderSizeLbl)
@@ -984,17 +970,15 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: widgets/collectionmaintenancepage.ui:45
-#, fuzzy, kde-format
-#| msgid "Total Messages"
+#, kde-format
 msgid "Total items:"
-msgstr "Viso laiškų"
+msgstr "Iš viso elementų:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: widgets/collectionmaintenancepage.ui:59
-#, fuzzy, kde-format
-#| msgid "Unread Messages"
+#, kde-format
 msgid "Unread items:"
-msgstr "Neskaitytų laiškų"
+msgstr "Neskaitytų elementų:"
 
 #. i18n: ectx: property (text), widget (QLabel, indexingLabel)
 #: widgets/collectionmaintenancepage.ui:73
@@ -1010,18 +994,15 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, indexedCountLbl)
 #: widgets/collectionmaintenancepage.ui:87
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Error while creating item: %1"
+#, kde-format
 msgid "Retrieving indexed items count..."
-msgstr "Klaida kuriant elementą: %1"
+msgstr "Gaunamas indeksuojamų elementų skaičius..."
 
 #. i18n: ectx: property (text), widget (QPushButton, reindexButton)
 #: widgets/collectionmaintenancepage.ui:94
-#, fuzzy, kde-format
-#| msgid "Recent Folder"
+#, kde-format
 msgid "Reindex folder"
-msgstr "Dabartinis aplankas"
+msgstr "Indeksuoti aplanką iš naujo"
 
 #: widgets/collectionrequester.cpp:113
 #, fuzzy, kde-format
@@ -1031,28 +1012,26 @@ msgid "No Folder"
 msgstr "Jokio aplanko"
 
 #: widgets/collectionrequester.cpp:122
-#, fuzzy, kde-format
-#| msgid "Open collection dialog"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
-msgstr "Atverti kolekcijos dialogą"
+msgstr "Atverti rinkinio dialogą"
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgid "Select a collection"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
-msgstr "Parinkite kolekciją"
+msgstr "Pasirinkti rinkinį"
 
 #: widgets/conflictresolvedialog.cpp:129
 #, kde-format
 msgid "Modification Time"
-msgstr "Pakeitimo laikas"
+msgstr "Modifikavimo laikas"
 
 #: widgets/conflictresolvedialog.cpp:141
 #, kde-format
 msgid "Flags"
-msgstr "Žymės"
+msgstr "Vėliavėlės"
 
 #: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
 #: widgets/conflictresolvedialog.cpp:174
@@ -1125,12 +1104,12 @@ msgstr "&Kopijuoti čia"
 #: widgets/dragdropmanager.cpp:224
 #, kde-format
 msgid "&Link Here"
-msgstr "Padaryti &nuorodą čia"
+msgstr "Sukurti čia &nuorodą"
 
 #: widgets/dragdropmanager.cpp:229
 #, kde-format
 msgid "C&ancel"
-msgstr "&Atšaukti"
+msgstr "A&tsisakyti"
 
 #: widgets/erroroverlay.cpp:224
 #, fuzzy, kde-format
@@ -1282,30 +1261,24 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, mRestartAccountButton)
 #: widgets/manageaccountwidget.ui:84
-#, fuzzy, kde-format
-#| msgctxt "@action:button Start the Akonadi server"
-#| msgid "Start"
+#, kde-format
 msgid "Restart"
-msgstr "Paleisti"
+msgstr "Paleisti iš naujo"
 
 #: widgets/recentcollectionaction.cpp:43
 #, kde-format
 msgid "Recent Folder"
-msgstr "Dabartinis aplankas"
+msgstr "Paskiausias aplankas"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, RenameFavoriteDialog)
 #: widgets/renamefavoritedialog.ui:26
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Rename Favorite"
+#, kde-format
 msgid "Rename Favorite"
-msgstr "Pervadinti mėgstamąjį"
+msgstr "Pervadinti mėgstamą"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/renamefavoritedialog.ui:35
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox name of the folder"
-#| msgid "Name:"
+#, kde-format
 msgid "Name:"
 msgstr "Pavadinimas:"
 
@@ -1345,17 +1318,17 @@ msgstr ""
 #: widgets/selftestdialog.cpp:198
 #, kde-format
 msgid "Database driver found."
-msgstr "Duombazės tvarkyklė rasta."
+msgstr "Duomenų bazės tvarkyklė rasta."
 
 #: widgets/selftestdialog.cpp:200
 #, kde-format
 msgid "Database driver not found."
-msgstr "Duombazės tvarkyklė nerasta."
+msgstr "Duomenų bazės tvarkyklė nerasta."
 
 #: widgets/selftestdialog.cpp:208
 #, kde-format
 msgid "MySQL server executable not tested."
-msgstr "MySQL serverio vykdomasis failas ne testuotas."
+msgstr "MySQL serverio vykdomasis netestuotas."
 
 #: widgets/selftestdialog.cpp:208 widgets/selftestdialog.cpp:249
 #: widgets/selftestdialog.cpp:300
@@ -1386,12 +1359,12 @@ msgstr "MySQL serveris neskaitomas."
 #: widgets/selftestdialog.cpp:228
 #, kde-format
 msgid "MySQL server not executable."
-msgstr "MySQL serveris nevykdomas."
+msgstr "MySQL serveris nevykdomasis."
 
 #: widgets/selftestdialog.cpp:230
 #, kde-format
 msgid "MySQL found with unexpected name."
-msgstr "MySQL rastas su netikėtu pavadinimu."
+msgstr "MySQL rastas netikėtu pavadinimu."
 
 #: widgets/selftestdialog.cpp:232
 #, kde-format
@@ -1406,7 +1379,7 @@ msgstr "MySQL serveris rastas: %1"
 #: widgets/selftestdialog.cpp:239
 #, kde-format
 msgid "MySQL server is executable."
-msgstr "MySQL serveris yra vykdomas."
+msgstr "MySQL serveris yra vykdomasis."
 
 #: widgets/selftestdialog.cpp:241
 #, kde-format
@@ -1839,7 +1812,7 @@ msgstr ""
 #: widgets/selftestdialog.cpp:564
 #, kde-format
 msgid "Akonadi is not running as root"
-msgstr "Akonadi nepaleistas naudotojo „root“ teisėmis"
+msgstr "Akonadi nepaleista pagrindinio naudotojo (root) teisėmis"
 
 #: widgets/selftestdialog.cpp:565
 #, kde-format
@@ -1890,15 +1863,12 @@ msgid "New"
 msgstr "Naujas"
 
 #: widgets/standardactionmanager.cpp:88
-#, fuzzy
-#| msgid "&Delete Folder"
-#| msgid_plural "&Delete %1 Folders"
 msgid "&Delete Folder"
-msgstr "&Trinti aplanką"
+msgstr "Iš&trinti aplanką"
 
 #: widgets/standardactionmanager.cpp:89
 msgid "Delete"
-msgstr "Šalint?"
+msgstr "Ištrinti"
 
 #: widgets/standardactionmanager.cpp:96
 msgid "&Synchronize Folder"
@@ -1919,11 +1889,11 @@ msgstr "Savybės"
 
 #: widgets/standardactionmanager.cpp:112
 msgid "&Paste"
-msgstr "&Padėti"
+msgstr "Į&dėti"
 
 #: widgets/standardactionmanager.cpp:112
 msgid "Paste"
-msgstr "Padėti"
+msgstr "Įdėti"
 
 #: widgets/standardactionmanager.cpp:115
 msgid "Manage Local &Subscriptions..."
@@ -1939,19 +1909,19 @@ msgstr "Pridėti prie mėgstamų aplankų"
 
 #: widgets/standardactionmanager.cpp:124
 msgid "Add to Favorite"
-msgstr "Pridėti prie mėgstamų aplankų"
+msgstr "Pridėti prie mėgstamų"
 
 #: widgets/standardactionmanager.cpp:131
 msgid "Remove from Favorite Folders"
-msgstr "Pašalinti iš mėgstamųjų aplankų"
+msgstr "Pašalinti iš mėgstamų aplankų"
 
 #: widgets/standardactionmanager.cpp:132
 msgid "Remove from Favorite"
-msgstr "Pašalinti iš mėgstamųjų aplankų"
+msgstr "Pašalinti iš mėgstamų"
 
 #: widgets/standardactionmanager.cpp:139
 msgid "Rename Favorite..."
-msgstr "Pervadinti mėgstamąjį"
+msgstr "Pervadinti mėgstamą..."
 
 #: widgets/standardactionmanager.cpp:140
 msgid "Rename"
@@ -1984,33 +1954,24 @@ msgid "Move Folder To..."
 msgstr "Perkelti aplanką į..."
 
 #: widgets/standardactionmanager.cpp:178
-#, fuzzy
-#| msgid "&Cut Item"
-#| msgid_plural "&Cut %1 Items"
 msgid "&Cut Item"
-msgstr "&Iškirpti elementą"
+msgstr "Iš&kirpti elementą"
 
 #: widgets/standardactionmanager.cpp:178 widgets/standardactionmanager.cpp:179
 msgid "Cut"
 msgstr "Iškirpti"
 
 #: widgets/standardactionmanager.cpp:179
-#, fuzzy
-#| msgid "&Cut Folder"
-#| msgid_plural "&Cut %1 Folders"
 msgid "&Cut Folder"
-msgstr "&Iškirpti aplanką"
+msgstr "Iš&kirpti aplanką"
 
 #: widgets/standardactionmanager.cpp:181
 msgid "Create Resource"
 msgstr "Sukurti išteklių"
 
 #: widgets/standardactionmanager.cpp:189
-#, fuzzy
-#| msgid "Delete Resource"
-#| msgid_plural "Delete %1 Resources"
 msgid "Delete Resource"
-msgstr "Šalinti išteklį"
+msgstr "Ištrinti išteklių"
 
 #: widgets/standardactionmanager.cpp:197
 msgid "&Resource Properties"
@@ -2134,10 +2095,10 @@ msgstr[3] "&Iškirpti %1 aplanką"
 #, kde-format
 msgid "&Delete Item"
 msgid_plural "&Delete %1 Items"
-msgstr[0] "Ša&linti elementą"
-msgstr[1] "Ša&linti %1 elementus"
-msgstr[2] "Ša&linti %1 elementų"
-msgstr[3] "Ša&linti %1 elementą"
+msgstr[0] "Iš&trinti elementą"
+msgstr[1] "Iš&trinti %1 elementus"
+msgstr[2] "Iš&trinti %1 elementų"
+msgstr[3] "Iš&trinti %1 elementą"
 
 #: widgets/standardactionmanager.cpp:403
 #, fuzzy, kde-format
@@ -2166,10 +2127,10 @@ msgstr[3] "Sinchronizuoti"
 #, kde-format
 msgid "&Delete Resource"
 msgid_plural "&Delete %1 Resources"
-msgstr[0] "&Šalinti išteklį"
-msgstr[1] "&Šalinti %1 išteklius"
-msgstr[2] "&Šalinti %1 išteklių"
-msgstr[3] "&Šalinti %1 išteklį"
+msgstr[0] "Iš&trinti išteklių"
+msgstr[1] "Iš&trinti %1 išteklius"
+msgstr[2] "Iš&trinti %1 išteklių"
+msgstr[3] "Iš&trinti %1 išteklių"
 
 #: widgets/standardactionmanager.cpp:406
 #, kde-format
@@ -2194,9 +2155,9 @@ msgstr[3] "Kopijuoti %1 aplanką"
 msgid "Copy Item"
 msgid_plural "Copy %1 Items"
 msgstr[0] "Kopijuoti elementą"
-msgstr[1] "&Kopijuoti %1 elementus"
-msgstr[2] "&Kopijuoti %1 elementų"
-msgstr[3] "&Kopijuoti %1 elementą"
+msgstr[1] "Kopijuoti %1 elementus"
+msgstr[2] "Kopijuoti %1 elementų"
+msgstr[3] "Kopijuoti %1 elementą"
 
 #: widgets/standardactionmanager.cpp:410
 #, kde-format
@@ -2220,19 +2181,19 @@ msgstr[3] "Iškirpti %1 aplanką"
 #, kde-format
 msgid "Delete Item"
 msgid_plural "Delete %1 Items"
-msgstr[0] "Trinti elementą"
-msgstr[1] "Trinti %1 elementus"
-msgstr[2] "Trinti %1 elementų"
-msgstr[3] "Trinti %1 elementą"
+msgstr[0] "Ištrinti elementą"
+msgstr[1] "Ištrinti %1 elementus"
+msgstr[2] "Ištrinti %1 elementų"
+msgstr[3] "Ištrinti %1 elementą"
 
 #: widgets/standardactionmanager.cpp:413
 #, kde-format
 msgid "Delete Folder"
 msgid_plural "Delete %1 Folders"
-msgstr[0] "Trinti aplanką"
-msgstr[1] "Trinti %1 aplankus"
-msgstr[2] "Trinti %1 aplankų"
-msgstr[3] "Trinti %1 aplanką"
+msgstr[0] "Ištrinti aplanką"
+msgstr[1] "Ištrinti %1 aplankus"
+msgstr[2] "Ištrinti %1 aplankų"
+msgstr[3] "Ištrinti %1 aplanką"
 
 #: widgets/standardactionmanager.cpp:414
 #, kde-format
@@ -2464,16 +2425,14 @@ msgid "Failed to update subscription: %1"
 msgstr "Nepavyko sukurti žymės."
 
 #: widgets/subscriptiondialog.cpp:99
-#, fuzzy, kde-format
-#| msgid "Local Subscriptions"
+#, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
-msgstr "Vietinės prenumeratos"
+msgstr "Prenumeratos klaida"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, SubscriptionDialog)
 #: widgets/subscriptiondialog.ui:14
-#, fuzzy, kde-format
-#| msgid "Local Subscriptions"
+#, kde-format
 msgid "Local Subscriptions"
 msgstr "Vietinės prenumeratos"
 
@@ -2499,10 +2458,9 @@ msgstr "Prenumeruoti"
 
 #. i18n: ectx: property (text), widget (QPushButton, unsubscribeButton)
 #: widgets/subscriptiondialog.ui:69
-#, fuzzy, kde-format
-#| msgid "Unsubscribe"
+#, kde-format
 msgid "&Unsubscribe"
-msgstr "Nebeprenumeruoti"
+msgstr "Atsisakyti pren&umeratos"
 
 #: widgets/tageditwidget.cpp:117
 #, kde-format
@@ -2510,12 +2468,10 @@ msgid "Failed to create a new tag"
 msgstr ""
 
 #: widgets/tageditwidget.cpp:117
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Error while creating item: %1"
+#, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
-msgstr "Klaida kuriant elementą: %1"
+msgstr "Kuriant naują žymę įvyko klaida"
 
 #: widgets/tageditwidget.cpp:165
 #, kde-kuit-format
@@ -2524,12 +2480,10 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Ar tikrai norite pašalinti žymę <resource>%1</resource>?"
 
 #: widgets/tageditwidget.cpp:166
-#, fuzzy, kde-format
-#| msgctxt "@title"
-#| msgid "Delete tag"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
-msgstr "Trinti žymę"
+msgstr "Ištrinti žymę"
 
 #: widgets/tageditwidget.cpp:191
 #, kde-format
@@ -2547,9 +2501,7 @@ msgstr "Nustatyti kurias žymas pritaikyti."
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:54
-#, fuzzy, kde-format
-#| msgctxt "@label"
-#| msgid "Create new tag"
+#, kde-format
 msgid "Create new tag"
 msgstr "Sukurti naują žymę"
 
