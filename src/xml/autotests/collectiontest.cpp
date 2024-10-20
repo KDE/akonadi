@@ -46,14 +46,23 @@ void CollectionTest::testBuildCollection()
 {
     QDomDocument mDocument;
 
-    mDocument.setContent(collection1, true, nullptr);
+    QDomDocument::ParseResult parseResult = mDocument.setContent(collection1, QDomDocument::ParseOption::UseNamespaceProcessing);
+    if (!parseResult) {
+        qDebug() << "Unable to load document.Parse error in line " << parseResult.errorLine << ", col " << parseResult.errorColumn << ": "
+                 << qPrintable(parseResult.errorMessage);
+    }
+
     Collection::List colist = XmlReader::readCollections(mDocument.documentElement());
 
     const QStringList mimeType{QStringLiteral("inode/directory"), QStringLiteral("message/rfc822")};
     QCOMPARE(colist.size(), 1);
     verifyCollection(colist, 0, QStringLiteral("c11"), QStringLiteral("Inbox"), mimeType);
 
-    mDocument.setContent(collection2, true, nullptr);
+    parseResult = mDocument.setContent(collection2, QDomDocument::ParseOption::UseNamespaceProcessing);
+    if (!parseResult) {
+        qDebug() << "Unable to load document.Parse error in line " << parseResult.errorLine << ", col " << parseResult.errorColumn << ": "
+                 << qPrintable(parseResult.errorMessage);
+    }
     colist = XmlReader::readCollections(mDocument.documentElement());
 
     QCOMPARE(colist.size(), 3);
