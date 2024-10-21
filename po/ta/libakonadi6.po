@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-10-08 00:40+0000\n"
-"PO-Revision-Date: 2024-06-16 17:41+0530\n"
+"PO-Revision-Date: 2024-10-20 15:58+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.05.1\n"
+"X-Generator: Lokalize 24.08.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -134,13 +134,13 @@ msgstr ""
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
-msgstr ""
+msgstr "தொடர்பற்ற பயன்முறையிலுள்ளபோது எதையும் பதிவிறக்க முடியாது"
 
 #: agentbase/resourcebase.cpp:929
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
-msgstr ""
+msgstr "'%1' எனும் அடைவு ஒத்திசையப்படுகிறது"
 
 #: agentbase/resourcebase.cpp:949 agentbase/resourcebase.cpp:956
 #, kde-format
@@ -155,7 +155,7 @@ msgstr ""
 #: agentbase/resourcebase.cpp:1043
 #, kde-format
 msgid "The requested item no longer exists"
-msgstr ""
+msgstr "கோரியது தற்போது இருப்பில் இல்லை"
 
 #: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
 #, kde-format
@@ -195,7 +195,7 @@ msgstr "இயக்க வேண்டிய கட்டளை"
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
 msgid "No such collection."
-msgstr ""
+msgstr "அப்படிப்பட்ட தொகுப்பு இல்லை."
 
 #: core/collectionsync.cpp:505 core/collectionsync.cpp:650
 #, kde-format
@@ -643,17 +643,17 @@ msgstr ""
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
-msgstr ""
+msgstr "%1 அமைப்புகள்"
 
 #: widgets/agentconfigurationdialog.cpp:81
 #, kde-format
 msgid "%1 Handbook"
-msgstr ""
+msgstr "%1 கையேடு"
 
 #: widgets/agentconfigurationdialog.cpp:82
 #, kde-format
 msgid "About %1"
-msgstr ""
+msgstr "%1 பற்றி"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
