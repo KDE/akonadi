@@ -811,7 +811,7 @@ msgstr "搜索"
 #, kde-format
 msgctxt "@option:check"
 msgid "Use folder by default"
-msgstr ""
+msgstr "默认使用文件夹"
 
 #: widgets/collectiondialog.cpp:226
 #, kde-format
@@ -1210,7 +1210,7 @@ msgstr "是否删除账户？"
 #: widgets/manageaccountwidget.ui:19
 #, kde-format
 msgid "Show only account on current activity"
-msgstr ""
+msgstr "仅显示当前活动的账户"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/manageaccountwidget.ui:26
