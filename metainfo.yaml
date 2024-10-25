@@ -9,7 +9,7 @@ public_lib: true
 libraries:
     - cmake: KPim6::AkonadiCore
     - cmake: KPim6::AkonadiWidgets
-cmakename: KPim6AkonadiCore
+cmakename: KPim6Akonadi
 # TODO: kapidox currently assumes: one product == one metainfo.yaml == one cmake config file
 # listing KPim6AkonadiAgentBase, KPim6AkonadiAgentBase, KPim6AkonadiWidgets, KPim6AkonadiXml as separate
 # packages in CMake's worldview needs changing kapidox first -> https://bugs.kde.org/show_bug.cgi?id=410452
