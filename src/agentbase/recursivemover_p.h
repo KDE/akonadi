@@ -60,7 +60,11 @@ private:
     Collection m_currentCollection;
     Item m_currentItem;
 
-    enum CurrentAction { None, AddCollection, AddItem } m_currentAction;
+    enum CurrentAction {
+        None,
+        AddCollection,
+        AddItem
+    } m_currentAction;
 
     int m_runningJobs = 0;
     bool m_pendingReplay = false;

@@ -13,9 +13,17 @@
 
 #include "datastream_p_p.h"
 
-enum TestEnum { Value1 = 1, Value2 = 2, Value3 = 3 };
+enum TestEnum {
+    Value1 = 1,
+    Value2 = 2,
+    Value3 = 3
+};
 
-enum class TestEnumClass : qint64 { Value1 = 1, Value2 = 2, Value3 = 3 };
+enum class TestEnumClass : qint64 {
+    Value1 = 1,
+    Value2 = 2,
+    Value3 = 3
+};
 
 class DataStreamTest : public QObject
 {
