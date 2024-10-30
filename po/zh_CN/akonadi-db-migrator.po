@@ -20,42 +20,42 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr ""
+msgstr "KDE China, Kevin Li"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ""
+msgstr "kde-china@kde.org, qingtian805@qq.com"
 
 #: dbmigrator.cpp:437
 #, kde-format
 msgctxt "@info:status"
 msgid "Stopping Akonadi service..."
-msgstr ""
+msgstr "正在停止 Akonadi 服务..."
 
 #: dbmigrator.cpp:440
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: timeout while waiting for Akonadi to stop."
-msgstr ""
+msgstr "错误：等待 Akonadi 停止时超时。"
 
 #: dbmigrator.cpp:447
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: couldn't acquire DBus lock for Akonadi."
-msgstr ""
+msgstr "错误：无法为 Akonadi 获取 DBus 锁。"
 
 #: dbmigrator.cpp:456
 #, kde-format
 msgctxt "@info:status"
 msgid "Starting Akonadi service..."
-msgstr ""
+msgstr "正在启动 Akonadi 服务..."
 
 #: dbmigrator.cpp:469
 #, kde-format
 msgctxt "@info:status"
 msgid "Database fsck completed"
-msgstr ""
+msgstr "数据库文件系统检查完成"
 
 #: dbmigrator.cpp:483
 #, kde-format
@@ -63,79 +63,79 @@ msgctxt "@info:status"
 msgid ""
 "Invalid database engine \"%1\" - valid values are \"sqlite\", \"mysql\" and "
 "\"postgres\"."
-msgstr ""
+msgstr "无效的数据库引擎“%1” - 有效的值有“sqlite”，“mysql”和“postgres”。"
 
 #: dbmigrator.cpp:505
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure source database server."
-msgstr ""
+msgstr "错误：无法配置源数据库服务器。"
 
 #: dbmigrator.cpp:510
 #, kde-format
 msgctxt "@info:shell"
 msgid "Source and destination database engines are the same."
-msgstr ""
+msgstr "源数据库引擎与目标数据库引擎相同。"
 
 #: dbmigrator.cpp:517
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to obtain path to source database data file or directory."
-msgstr ""
+msgstr "错误：获取源数据库文件或目录的路径失败"
 
 #: dbmigrator.cpp:524
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure the new database server."
-msgstr ""
+msgstr "错误：无法配置新的数据库服务器"
 
 #: dbmigrator.cpp:530
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open existing database to migrate data from."
-msgstr ""
+msgstr "错误：打开存在的迁移来源数据库失败"
 
 #: dbmigrator.cpp:535
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open new database to migrate data to."
-msgstr ""
+msgstr "错误：打开新建的迁移目标数据库失败"
 
 #: dbmigrator.cpp:540
 #, kde-format
 msgctxt "@info:status"
 msgid "Running fsck on the source database"
-msgstr ""
+msgstr "正在检查源数据库文件系统"
 
 #: dbmigrator.cpp:559
 #, kde-format
 msgctxt "@info:status %2 is error message"
 msgid "Error: failed to remove temporary database directory %1: %2"
-msgstr ""
+msgstr "错误：移动临时数据库目录 %1：%2 失败"
 
 #: dbmigrator.cpp:566
 #, kde-format
 msgctxt "@info:shell"
 msgid "Backing up original database..."
-msgstr ""
+msgstr "正在备份原始数据库..."
 
 #: dbmigrator.cpp:574
 #, kde-format
 msgctxt "@info:status"
 msgid "Restoring database from backup %1 to %2"
-msgstr ""
+msgstr "正在从备份 %1 中恢复数据库 %2"
 
 #: dbmigrator.cpp:576
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to restore database from backup: %1"
-msgstr ""
+msgstr "错误：从备份中恢复数据库失败：%1"
 
 #: dbmigrator.cpp:608 dbmigrator.cpp:619
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error has occurred while migrating table %1"
-msgstr ""
+msgstr "迁移表 %1 时发生错误"
 
 #: dbmigrator.cpp:638
 #, kde-format
@@ -143,85 +143,85 @@ msgctxt "@label"
 msgid ""
 "Backup directory already exists. Do you want to overwrite the previous "
 "backup?"
-msgstr ""
+msgstr "备份目录已存在。您想要覆盖以前的备份吗？"
 
 #: dbmigrator.cpp:643
 #, kde-format
 msgctxt "@info:shell"
 msgid "Cannot proceed without backup. Migration interrupted."
-msgstr ""
+msgstr "无法在没有备份的情况下继续。迁移中断。"
 
 #: dbmigrator.cpp:648
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to remove previous backup directory."
-msgstr ""
+msgstr "无法移除上次的备份目录"
 
 #: dbmigrator.cpp:661
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to move database to backup location: %1"
-msgstr ""
+msgstr "无法将数据库移动到备份位置：%1"
 
 #: dbmigrator.cpp:675
 #, kde-format
 msgctxt "@label"
 msgid "Backup file %1 already exists. Overwrite?"
-msgstr ""
+msgstr "备份文件 %1 已存在。您想要覆盖它吗?"
 
 #: dbmigrator.cpp:677
 #, kde-format
 msgctxt "@info:status"
 msgid "Cannot proceed without backup. Migration interrupted."
-msgstr ""
+msgstr "无法在没有备份的情况下继续。迁移中断。"
 
 #: dbmigrator.cpp:683
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: Failed to remove existing backup file %1: %2"
-msgstr ""
+msgstr "错误：无法删除现有备份文件 %1：%2"
 
 #: dbmigrator.cpp:690
 #, kde-format
 msgctxt "@info:status"
 msgid "Failed to back up Akonadi Server configuration: %1"
-msgstr ""
+msgstr "备份 Akonadi 服务器配置失败：%1"
 
 #: dbmigrator.cpp:707
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move migrated database to the primary location: %1"
-msgstr ""
+msgstr "错误：移动迁移的数据库到主位置失败：%1"
 
 #: dbmigrator.cpp:726
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to remove original akonadiserverrc: %1"
-msgstr ""
+msgstr "错误：删除原始 akonadiserverrc 文件失败：%1"
 
 #: dbmigrator.cpp:732
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move new akonadiserverrc to the primary location: %1"
-msgstr ""
+msgstr "错误：移动新 akonadiserverrc 文件到主位置失败：%1"
 
 #: dbmigrator.cpp:823
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to update autoincrement value for table %1"
-msgstr ""
+msgstr "错误：更新表 %1 自动增量值失败"
 
 #: dbmigrator.cpp:828
 #, kde-format
 msgctxt "@info:status"
 msgid "Optimizing table %1..."
-msgstr ""
+msgstr "正在优化表 %1 ..."
 
 #: dbmigrator.cpp:831
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to optimize table %1"
-msgstr ""
+msgstr "错误：优化表 %1 失败"
 
 #: main.cpp:31
 #, kde-format
@@ -229,13 +229,13 @@ msgctxt ""
 "Options for user to input to command line prompt, parenthesis indicate which "
 "letter to type, capitalized option is default"
 msgid " [(y)es/(N)o] "
-msgstr ""
+msgstr " [(y)es/(N)o] "
 
 #: main.cpp:36 main.cpp:55
 #, kde-format
 msgctxt "Letter for option \"(y)es\" prompted from command line"
 msgid "y"
-msgstr ""
+msgstr "y"
 
 #: main.cpp:49
 #, kde-format
@@ -243,57 +243,57 @@ msgctxt ""
 "Options for user to input to command line prompt, parenthesis indicate which "
 "letter to type, capitalized option is default"
 msgid " [(y)es/(N)o/(s)kip] "
-msgstr ""
+msgstr " [(y)es/(N)o/(s)kip] "
 
 #: main.cpp:56
 #, kde-format
 msgctxt "Letter for option \"(s)kip\" prompted from command line"
 msgid "s"
-msgstr ""
+msgstr "s"
 
 #: main.cpp:75 main.cpp:77
 #, kde-format
 msgid "Akonadi DB Migrator"
-msgstr ""
+msgstr "Akonadi 数据库迁移工具"
 
 #: main.cpp:79
 #, kde-format
 msgid "(c) 2024 g10 Code GmbH"
-msgstr ""
+msgstr "(c) 2024 g10 Code GmbH"
 
 #: main.cpp:85
 #, kde-format
 msgid ""
 "The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and "
 "\"postgres\""
-msgstr ""
+msgstr "要使用的新数据库引擎。可能的值是“sqlite”、“mysql”和“postgres”"
 
 #: main.cpp:92
 #, kde-format
 msgctxt "@info:shell"
 msgid "Invalid target engine: %1."
-msgstr ""
+msgstr "无效的目标引擎：%1"
 
 #: main.cpp:106
 #, kde-format
 msgctxt "@info:status"
 msgid "Migration completed successfully."
-msgstr ""
+msgstr "迁移成功完成。"
 
 #: main.cpp:108
 #, kde-format
 msgctxt "@info:status"
 msgid "Migration failed."
-msgstr ""
+msgstr "迁移失败。"
 
 #: main.cpp:113
 #, kde-format
 msgctxt "@info:progress"
 msgid "Migrating table %1 (%2/%3)..."
-msgstr ""
+msgstr "正在迁移表 %1 (%2/%3)"
 
 #: main.cpp:127
 #, kde-format
 msgctxt "@info:progress"
 msgid "%1%..."
-msgstr ""
+msgstr "%1%..."
