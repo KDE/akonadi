@@ -35,8 +35,8 @@ public:
     {
     }
 
-    Exception(const Exception &) = delete;
-    Exception &operator=(const Exception &) = delete;
+    Exception(const Exception &) = default;
+    Exception &operator=(const Exception &) = default;
 
     ~Exception() override = default;
 
