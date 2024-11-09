@@ -27,8 +27,8 @@ public:
         std::cerr << "ProtocolException thrown:" << what << std::endl;
     }
 
-    ProtocolException(const ProtocolException &) = delete;
-    ProtocolException &operator=(const ProtocolException &) = delete;
+    ProtocolException(const ProtocolException &) = default;
+    ProtocolException &operator=(const ProtocolException &) = default;
 
     const char *what() const throw() override
     {
