@@ -11,6 +11,7 @@
 #include "storage/tagqueryhelper.h"
 
 #include "private/scope_p.h"
+#include "storage/transaction.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -36,8 +37,14 @@ bool TagDeleteHandler::parseStream()
 
     const Tag::List tags = tagQuery.result();
 
+    Transaction transaction(storageBackend(), QStringLiteral("TagDeleteHandler"));
+
     if (!storageBackend()->removeTags(tags)) {
         return failureResponse(QStringLiteral("Failed to remove tags"));
+    }
+
+    if (!transaction.commit()) {
+        return failureResponse(QStringLiteral("Failed to commit transaction"));
     }
 
     return successResponse<Protocol::DeleteTagResponse>();
