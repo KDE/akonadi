@@ -31,6 +31,8 @@
 #include <iostream>
 #include <thread>
 
+using namespace Qt::Literals;
+
 static bool startServer(bool verbose)
 {
     if (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Control))
@@ -203,6 +205,13 @@ static void runJanitor(const QString &operation)
     qApp->exec();
 }
 
+static void waitForShutdown()
+{
+    do {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    } while (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Control)));
+}
+
 int main(int argc, char **argv)
 {
     AkCoreApplication app(argc, argv);
@@ -227,6 +236,7 @@ int main(int argc, char **argv)
                          KAboutLicense::LGPL_V2);
     KAboutData::setApplicationData(aboutData);
 
+    app.addCommandLineOptions({u"wait"_s, i18n("Wait for server shutdown to complete.")});
     app.addPositionalCommandLineOption(QStringLiteral("command"),
                                        i18n("Command to execute"),
                                        QStringLiteral("start|stop|restart|status|vacuum|fsck|instances"));
@@ -250,6 +260,9 @@ int main(int argc, char **argv)
         if (!stopServer()) {
             return 4;
         }
+        if (cmdArgs.isSet(u"wait"_s)) {
+            waitForShutdown();
+        }
     } else if (command == QLatin1StringView("status")) {
         if (!statusServer()) {
             return 5;
@@ -258,9 +271,7 @@ int main(int argc, char **argv)
         if (!stopServer()) {
             return 4;
         } else {
-            do {
-                std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            } while (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Control)));
+            waitForShutdown();
             if (!startServer(verbose)) {
                 return 3;
             }
