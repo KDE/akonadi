@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-10-08 00:40+0000\n"
-"PO-Revision-Date: 2024-11-09 20:06+0100\n"
+"PO-Revision-Date: 2024-11-10 20:12+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.08.2\n"
+"X-Generator: Lokalize 24.11.70\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -140,7 +140,7 @@ msgstr "Не може да се извлече елемент в офлайн р
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
-msgstr "Синхронизиране на папка '%1'"
+msgstr "Синхронизиране на папка „%1“"
 
 #: agentbase/resourcebase.cpp:949 agentbase/resourcebase.cpp:956
 #, kde-format
@@ -256,7 +256,7 @@ msgstr "Невалиден инстанция на ресурс."
 #: core/jobs/resourcesynchronizationjob.cpp:113
 #, kde-format
 msgid "Unable to obtain D-Bus interface for resource '%1'"
-msgstr "Не може да се получи интерфейс D-Bus за ресурс '%1'"
+msgstr "Не може да се получи интерфейс D-Bus за ресурс „%1“"
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:125
 #, kde-format
@@ -361,7 +361,7 @@ msgstr "Не е даден идентификатор на ресурс."
 #: core/jobs/specialcollectionshelperjobs.cpp:326
 #, kde-format
 msgid "Invalid resource identifier '%1'"
-msgstr "Невалиден идентификатор на ресурс '%1'"
+msgstr "Невалиден идентификатор на ресурс „%1“"
 
 #: core/jobs/specialcollectionshelperjobs.cpp:342
 #: core/jobs/specialcollectionshelperjobs.cpp:350
@@ -435,8 +435,8 @@ msgid ""
 "The target collection '%1' contains already\n"
 "a collection with name '%2'."
 msgstr ""
-"Целевата колекция '%1' вече съдържа \n"
-"колекция с име '%2'."
+"Целевата колекция „%1“ вече съдържа \n"
+"колекция с име „%2“."
 
 #: core/models/entitytreemodel.cpp:669
 #, kde-format
@@ -578,8 +578,9 @@ msgid ""
 msgstr ""
 "Версията на протокола на сървъра Akonadi се различава от версията на "
 "протокола, използвана от това приложение. \n"
-"Ако наскоро сте актуализирали системата си, моля, излезте и се върнете, зада "
-"сте сигурни, че всички приложения използват правилната версия на протокола."
+"Ако наскоро сте актуализирали системата си, моля, излезте и се върнете, за "
+"да сте сигурни, че всички приложения използват правилната версия на "
+"протокола."
 
 #: core/servermanager.cpp:280
 #, kde-format
@@ -1328,7 +1329,7 @@ msgid ""
 "The following drivers are installed: %2.\n"
 "Make sure the required driver is installed."
 msgstr ""
-"Драйверът QtSQL '%1' се изисква от текущата ви конфигурация на сървъра "
+"Драйверът QtSQL „%1“ се изисква от текущата ви конфигурация на сървъра "
 "Akonadi. \n"
 "Инсталирани са следните драйвери:%2. \n"
 "Уверете се, че необходимият драйвер е инсталиран."
@@ -1363,7 +1364,7 @@ msgid ""
 "executable. The server executable is typically called 'mysqld'; its location "
 "varies depending on the distribution."
 msgstr ""
-"В момента сте конфигурирали Akonadi да използва сървъра MySQL '%1'. \n"
+"В момента сте конфигурирали Akonadi да използва сървъра MySQL „%1“. \n"
 "Уверете се, че сте инсталирали сървъра MySQL, задайте правилния път и се "
 "уверете, че имате необходимите права за четене и изпълнение на изпълнимия "
 "сървър. Изпълнимият файл на сървъра обикновено се нарича\" mysqld \"; "
@@ -1409,8 +1410,8 @@ msgstr "MySQL сървърът е изпълним."
 msgid ""
 "Executing the MySQL server '%1' failed with the following error message: '%2'"
 msgstr ""
-"Изпълнението на сървъра MySQL '%1' е неуспешно със следното съобщение за "
-"грешка: '%2'"
+"Изпълнението на сървъра MySQL „%1“ е неуспешно със следното съобщение за "
+"грешка: „%2“"
 
 #: widgets/selftestdialog.cpp:242
 #, kde-format
@@ -1617,7 +1618,7 @@ msgid ""
 "Result:\n"
 "%2"
 msgstr ""
-"Програмата '%1' за управление на сървъра Akonadi беше намерена и може да "
+"Програмата „%1“ за управление на сървъра Akonadi беше намерена и може да "
 "бъде изпълнена успешно. \n"
 "Резултат: \n"
 "%2"
@@ -1772,7 +1773,7 @@ msgstr ""
 "Не са намерени агенти за ресурси, Akonadi не може да се използва без поне "
 "един. Това обикновено означава, че не са инсталирани агенти за ресурси или "
 "че има проблем с настройката. Търсени са следните пътища: „%1“ . "
-"Променливата на средата XDG_DATA_DIRS е зададена на '%2'; уверете се, че "
+"Променливата на средата XDG_DATA_DIRS е зададена на „%2“; уверете се, че "
 "това включва всички пътища, където са инсталирани агенти Akonadi."
 
 #: widgets/selftestdialog.cpp:499
