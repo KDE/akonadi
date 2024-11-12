@@ -5,6 +5,7 @@
 */
 
 #include "collection.h"
+#include "collectioncreatejob.h"
 #include "collectionfetchscope.h"
 #include "control.h"
 #include "itemcreatejob.h"
@@ -167,6 +168,50 @@ private Q_SLOTS:
         ntfItem = ntfItems.at(0);
         QCOMPARE(ntfItem.id(), item.id());
         QCOMPARE(ntfItem.flags(), item.flags());
+    }
+
+    void testMoveLargeBatch()
+    {
+        static constexpr size_t ItemCount = 20'010; // batch size is 10,000, so we should need two full and one partial batch
+
+        Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
+        QVERIFY(col.isValid());
+
+        // Create a few thousand items to force batching
+        QList<Item> items;
+        items.reserve(ItemCount);
+        qDebug() << "Creating" << ItemCount << "items";
+        ItemCreateJob *job = nullptr;
+        for (size_t i = 0; i < ItemCount; ++i) {
+            Item item;
+            item.setMimeType(QStringLiteral("application/octet-stream"));
+            item.setPayload<QByteArray>("body data");
+            job = new ItemCreateJob(item, col, this);
+            connect(job, &ItemCreateJob::result, this, [job, &items]() {
+                QCOMPARE(job->error(), KJob::NoError);
+                items.push_back(job->item());
+                if (items.size() % 1000 == 0) {
+                    qDebug() << "Created" << items.size() << "items";
+                }
+            });
+        }
+        // Wait for the last one synchronously
+        AKVERIFYEXEC(job);
+
+        Collection dest;
+        dest.setName(QStringLiteral("bar2"));
+        dest.setParentCollection(col);
+        auto newCol = new CollectionCreateJob(dest, this);
+        AKVERIFYEXEC(newCol);
+        dest = newCol->collection();
+
+        auto move = new ItemMoveJob(items, dest, this);
+        AKVERIFYEXEC(move);
+
+        auto fetch = new ItemFetchJob(dest, this);
+        AKVERIFYEXEC(fetch);
+
+        QCOMPARE(fetch->items().count(), items.count());
     }
 };
 

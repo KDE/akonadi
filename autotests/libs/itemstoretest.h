@@ -26,4 +26,5 @@ private Q_SLOTS:
     void testRemoteIdRace();
     void itemModifyJobShouldOnlySendModifiedAttributes();
     void testParallelJobsAddingAttributes();
+    void testModifyLargeBatch();
 };

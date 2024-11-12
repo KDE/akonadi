@@ -9,14 +9,15 @@
 #include "collection.h"
 #include "job_p.h"
 #include "linkjobimpl_p.h"
+#include "protocol_p.h"
 
 using namespace Akonadi;
 
-class Akonadi::UnlinkJobPrivate : public LinkJobImpl<UnlinkJob>
+class Akonadi::UnlinkJobPrivate : public LinkJobImpl<UnlinkJob, Protocol::LinkItemsCommand::Unlink>
 {
 public:
     explicit UnlinkJobPrivate(UnlinkJob *parent)
-        : LinkJobImpl<UnlinkJob>(parent)
+        : LinkJobImpl(parent)
     {
     }
 };
@@ -29,14 +30,12 @@ UnlinkJob::UnlinkJob(const Collection &collection, const Item::List &items, QObj
     d->objectsToLink = items;
 }
 
-UnlinkJob::~UnlinkJob()
-{
-}
+UnlinkJob::~UnlinkJob() = default;
 
 void UnlinkJob::doStart()
 {
     Q_D(UnlinkJob);
-    d->sendCommand(Protocol::LinkItemsCommand::Unlink);
+    d->doStart();
 }
 
 bool UnlinkJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)

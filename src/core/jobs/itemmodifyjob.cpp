@@ -22,6 +22,8 @@
 
 #include <QFile>
 
+#include <span>
+
 using namespace Akonadi;
 
 ItemModifyJobPrivate::ItemModifyJobPrivate(ItemModifyJob *parent)
@@ -97,6 +99,33 @@ void ItemModifyJobPrivate::setSilent(bool silent)
     mSilent = silent;
 }
 
+bool ItemModifyJobPrivate::nextBatch()
+{
+    Q_Q(ItemModifyJob);
+
+    if (mRemainingItems.empty()) {
+        return true;
+    }
+
+    Protocol::ModifyItemsCommandPtr command;
+    try {
+        command = fullCommand();
+    } catch (const Exception &e) {
+        q->setError(Job::Unknown);
+        q->setErrorText(QString::fromUtf8(e.what()));
+        q->emitResult();
+        return true;
+    }
+
+    if (command->modifiedParts() == Protocol::ModifyItemsCommand::None) {
+        q->emitResult();
+        return true;
+    }
+
+    sendCommand(command);
+    return false;
+}
+
 ItemModifyJob::ItemModifyJob(const Item &item, QObject *parent)
     : Job(new ItemModifyJobPrivate(this), parent)
 {
@@ -131,15 +160,13 @@ ItemModifyJob::ItemModifyJob(const Akonadi::Item::List &items, QObject *parent)
     }
 }
 
-ItemModifyJob::~ItemModifyJob()
-{
-}
+ItemModifyJob::~ItemModifyJob() = default;
 
 Protocol::ModifyItemsCommandPtr ItemModifyJobPrivate::fullCommand() const
 {
     auto cmd = Protocol::ModifyItemsCommandPtr::create();
 
-    const Akonadi::Item item = mItems.first();
+    const Akonadi::Item &item = mRemainingItems.front();
     for (int op : std::as_const(mOperations)) {
         switch (op) {
         case ItemModifyJobPrivate::RemoteId:
@@ -229,7 +256,11 @@ Protocol::ModifyItemsCommandPtr ItemModifyJobPrivate::fullCommand() const
         return cmd;
     }
 
-    cmd->setItems(ProtocolHelper::entitySetToScope(mItems));
+    const auto batchSize = qMin(MaxBatchSize, mRemainingItems.size());
+    const auto batch = mRemainingItems.subspan(0, batchSize);
+    mRemainingItems = mRemainingItems.subspan(batch.size());
+
+    cmd->setItems(ProtocolHelper::entitySetToScope(QList(batch.begin(), batch.end())));
     if (mRevCheck && item.revision() >= 0) {
         cmd->setOldRevision(item.revision());
     }
@@ -245,22 +276,8 @@ void ItemModifyJob::doStart()
 {
     Q_D(ItemModifyJob);
 
-    Protocol::ModifyItemsCommandPtr command;
-    try {
-        command = d->fullCommand();
-    } catch (const Exception &e) {
-        setError(Job::Unknown);
-        setErrorText(QString::fromUtf8(e.what()));
-        emitResult();
-        return;
-    }
-
-    if (command->modifiedParts() == Protocol::ModifyItemsCommand::None) {
-        emitResult();
-        return;
-    }
-
-    d->sendCommand(command);
+    d->mRemainingItems = std::span(d->mItems);
+    d->nextBatch();
 }
 
 bool ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
@@ -331,6 +348,12 @@ bool ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &res
             // There will be more responses, either for other modified items,
             // or the final response with invalid ID, but with modification datetime
             return false;
+        }
+
+        if (!d->mRemainingItems.empty()) {
+            if (!d->nextBatch()) {
+                return false;
+            }
         }
 
         for (const Item &item : std::as_const(d->mItems)) {

@@ -13,10 +13,14 @@
 
 #include <KLocalizedString>
 
+#include <span>
+
 using namespace Akonadi;
 
 class Akonadi::ItemMoveJobPrivate : public Akonadi::JobPrivate
 {
+    static constexpr size_t MaxBatchSize = 10'000;
+
 public:
     explicit ItemMoveJobPrivate(ItemMoveJob *parent)
         : JobPrivate(parent)
@@ -45,9 +49,35 @@ public:
         return str;
     }
 
+    bool nextBatch()
+    {
+        Q_Q(ItemMoveJob);
+
+        if (remainingItems.empty()) {
+            return true;
+        }
+
+        try {
+            const auto batchSize = qMin(MaxBatchSize, remainingItems.size());
+            const auto batch = remainingItems.subspan(0, batchSize);
+            remainingItems = remainingItems.subspan(batchSize);
+            const auto batchItems = QList(batch.begin(), batch.end());
+            sendCommand(Protocol::MoveItemsCommandPtr::create(ProtocolHelper::entitySetToScope(batchItems),
+                                                              ProtocolHelper::commandContextToProtocol(source, Tag(), batchItems),
+                                                              ProtocolHelper::entityToScope(destination)));
+            return false;
+        } catch (const Akonadi::Exception &e) {
+            q->setError(Job::Unknown);
+            q->setErrorText(QString::fromUtf8(e.what()));
+            q->emitResult();
+            return true;
+        }
+    }
+
     Item::List items;
     Collection destination;
     Collection source;
+    std::span<Item> remainingItems;
 
     Q_DECLARE_PUBLIC(ItemMoveJob)
 };
@@ -77,9 +107,7 @@ ItemMoveJob::ItemMoveJob(const Item::List &items, const Collection &source, cons
     d->items = items;
 }
 
-ItemMoveJob::~ItemMoveJob()
-{
-}
+ItemMoveJob::~ItemMoveJob() = default;
 
 void ItemMoveJob::doStart()
 {
@@ -99,25 +127,19 @@ void ItemMoveJob::doStart()
         return;
     }
 
-    try {
-        d->sendCommand(Protocol::MoveItemsCommandPtr::create(ProtocolHelper::entitySetToScope(d->items),
-                                                             ProtocolHelper::commandContextToProtocol(d->source, Tag(), d->items),
-                                                             ProtocolHelper::entityToScope(d->destination)));
-    } catch (const Akonadi::Exception &e) {
-        setError(Job::Unknown);
-        setErrorText(QString::fromUtf8(e.what()));
-        emitResult();
-        return;
-    }
+    d->remainingItems = std::span<Item>(d->items);
+    d->nextBatch();
 }
 
 bool ItemMoveJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
+    Q_D(ItemMoveJob);
+
     if (!response->isResponse() || response->type() != Protocol::Command::MoveItems) {
         return Job::doHandleResponse(tag, response);
     }
 
-    return true;
+    return d->nextBatch();
 }
 
 Collection ItemMoveJob::destinationCollection() const

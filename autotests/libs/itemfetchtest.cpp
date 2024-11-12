@@ -263,4 +263,56 @@ void ItemFetchTest::testAncestorRetrieval()
     QCOMPARE(c3, Collection::root());
 }
 
+void ItemFetchTest::testFetchBatching()
+{
+    static constexpr size_t ItemCount = 20'010; // batch size is 10000, so we should need two full and one partial batch
+
+    auto resolver = new CollectionPathResolver(QStringLiteral("res1/foo"), this);
+    AKVERIFYEXEC(resolver);
+    int colId = resolver->collection();
+
+    auto *itemCountJob = new ItemFetchJob(Collection(colId));
+    AKVERIFYEXEC(itemCountJob);
+    const auto origItemsCount = itemCountJob->items().size();
+
+    QList<Item> items;
+    items.reserve(ItemCount);
+    qDebug() << "Creating" << ItemCount << "items";
+    ItemCreateJob *job = nullptr;
+    for (size_t i = 0; i < ItemCount; ++i) {
+        Item item;
+        item.setMimeType(QStringLiteral("application/octet-stream"));
+        item.setPayload<QByteArray>("body data");
+        job = new ItemCreateJob(item, Collection(colId), this);
+        connect(job, &ItemCreateJob::result, this, [job, &items]() {
+            QCOMPARE(job->error(), KJob::NoError);
+            items.push_back(job->item());
+            if (items.size() % 1000 == 0) {
+                qDebug() << "Created" << items.size() << "items";
+            }
+        });
+    }
+    // Wait for the last one synchronously
+    AKVERIFYEXEC(job);
+
+    // Now try to fetch all the 20'010 items by explicitly listing them all
+    qDebug() << "Fetching" << items.size() << "items";
+    auto *fetchJob = new ItemFetchJob(items, this);
+    AKVERIFYEXEC(fetchJob);
+    qDebug() << "Done";
+
+    QCOMPARE(fetchJob->items().size(), ItemCount);
+
+    // And now try to delete all of them by listing them explicitly
+    qDebug() << "Deleting" << items.size() << "items";
+    auto *deleteJob = new ItemDeleteJob(items, this);
+    AKVERIFYEXEC(deleteJob);
+    qDebug() << "Done";
+
+    // Finally, confirm that all the items are gone
+    itemCountJob = new ItemFetchJob(Collection(colId));
+    AKVERIFYEXEC(itemCountJob);
+    QCOMPARE(origItemsCount, itemCountJob->items().size());
+}
+
 #include "moc_itemfetchtest.cpp"
