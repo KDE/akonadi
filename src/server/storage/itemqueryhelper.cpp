@@ -11,6 +11,7 @@
 #include "handler.h"
 #include "storage/querybuilder.h"
 
+#include "akonadiserver_debug.h"
 #include "private/scope_p.h"
 
 using namespace Akonadi;

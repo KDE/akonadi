@@ -24,6 +24,8 @@ using ModifyItemsCommandPtr = QSharedPointer<ModifyItemsCommand>;
  */
 class AKONADICORE_EXPORT ItemModifyJobPrivate : public JobPrivate
 {
+    static constexpr std::size_t MaxBatchSize = 10'000UL;
+
 public:
     enum Operation {
         RemoteId,
@@ -44,6 +46,7 @@ public:
 
     QString jobDebuggingString() const override;
     Protocol::ModifyItemsCommandPtr fullCommand() const;
+    bool nextBatch();
 
     void setSilent(bool silent);
 
@@ -52,6 +55,7 @@ public:
     QSet<int> mOperations;
     QByteArray mTag;
     Item::List mItems;
+    mutable std::span<Item> mRemainingItems;
     bool mRevCheck = true;
     QSet<QByteArray> mParts;
     QSet<QByteArray> mForeignParts;
