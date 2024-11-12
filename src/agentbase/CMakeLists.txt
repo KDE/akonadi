@@ -91,6 +91,7 @@ PRIVATE
     KPim6::AkonadiWidgets
     KF6::I18n
     Qt::Network
+    KF6::IconThemes
     akonadi_shared
 )
 

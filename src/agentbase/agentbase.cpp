@@ -35,6 +35,16 @@
 #include <QSettings>
 #include <QTimer>
 
+#define HAVE_KICONTHEME __has_include(<KIconTheme>)
+#if HAVE_KICONTHEME
+#include <KIconTheme>
+#endif
+
+#define HAVE_STYLE_MANAGER __has_include(<KStyleManager>)
+#if HAVE_STYLE_MANAGER
+#include <KStyleManager>
+#endif
+
 #include <QStandardPaths>
 #include <signal.h>
 #include <stdlib.h>
@@ -843,6 +853,16 @@ QString AgentBase::parseArguments(int argc, char **argv)
 
 int AgentBase::init(AgentBase &r)
 {
+#if HAVE_KICONTHEME
+    KIconTheme::initTheme();
+#endif
+#if HAVE_STYLE_MANAGER
+    KStyleManager::initStyle();
+#else // !HAVE_STYLE_MANAGER
+#if defined(Q_OS_MACOS) || defined(Q_OS_WIN)
+    QApplication::setStyle(QStringLiteral("breeze"));
+#endif // defined(Q_OS_MACOS) || defined(Q_OS_WIN)
+#endif // HAVE_STYLE_MANAGER
     KLocalizedString::setApplicationDomain(QByteArrayLiteral("libakonadi6"));
     KAboutData::setApplicationData(r.aboutData());
     return qApp->exec();
