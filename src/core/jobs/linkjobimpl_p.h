@@ -15,41 +15,61 @@
 
 #include <KLocalizedString>
 
+#include <span>
+
 namespace Akonadi
 {
 /** Shared implementation details between item and collection move jobs. */
-template<typename LinkJob>
+template<typename LinkJob, Protocol::LinkItemsCommand::Action Action>
 class LinkJobImpl : public JobPrivate
 {
+    static constexpr size_t MaxBatchSize = 10'000;
+
 public:
     LinkJobImpl(Job *parent)
         : JobPrivate(parent)
     {
     }
 
-    inline void sendCommand(Protocol::LinkItemsCommand::Action action)
+    void doStart()
+    {
+        remainingObjects = std::span<Item>(objectsToLink);
+        nextBatch();
+    }
+
+    bool nextBatch()
     {
         auto q = static_cast<LinkJob *>(q_func()); // Job would be enough already, but then we don't have access to the non-public stuff...
-        if (objectsToLink.isEmpty()) {
-            q->emitResult();
-            return;
-        }
         if (!destination.isValid() && destination.remoteId().isEmpty()) {
             q->setError(Job::Unknown);
             q->setErrorText(i18n("No valid destination specified"));
             q->emitResult();
-            return;
+            return true;
         }
+
+        if (remainingObjects.empty()) {
+            return true;
+        }
+
+        const auto batchSize = std::min(MaxBatchSize, remainingObjects.size());
+        if (batchSize == 0) {
+            return true;
+        }
+        const auto batch = remainingObjects.subspan(0, batchSize);
+        remainingObjects = remainingObjects.subspan(batchSize);
+        const auto batchToLink = Item::List(batch.begin(), batch.end());
 
         try {
             JobPrivate::sendCommand(
-                Protocol::LinkItemsCommandPtr::create(action, ProtocolHelper::entitySetToScope(objectsToLink), ProtocolHelper::entityToScope(destination)));
+                Protocol::LinkItemsCommandPtr::create(Action, ProtocolHelper::entitySetToScope(batchToLink), ProtocolHelper::entityToScope(destination)));
         } catch (const std::exception &e) {
             q->setError(Job::Unknown);
             q->setErrorText(QString::fromUtf8(e.what()));
             q->emitResult();
-            return;
+            return true;
         }
+
+        return false;
     }
 
     inline bool handleResponse(qint64 tag, const Protocol::CommandPtr &response)
@@ -59,10 +79,11 @@ public:
             return q->Job::doHandleResponse(tag, response);
         }
 
-        return true;
+        return nextBatch();
     }
 
     Item::List objectsToLink;
+    std::span<Item> remainingObjects;
     Collection destination;
 };
 

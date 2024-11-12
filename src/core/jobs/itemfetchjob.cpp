@@ -6,6 +6,7 @@
 
 #include "itemfetchjob.h"
 
+#include "akonadicore_debug.h"
 #include "attributefactory.h"
 #include "collection.h"
 #include "itemfetchscope.h"
@@ -17,10 +18,14 @@
 
 #include <QTimer>
 
+#include <span>
+
 using namespace Akonadi;
 
 class Akonadi::ItemFetchJobPrivate : public JobPrivate
 {
+    static constexpr std::size_t MaxBatchSize = 10'000UL;
+
 public:
     explicit ItemFetchJobPrivate(ItemFetchJob *parent)
         : JobPrivate(parent)
@@ -41,6 +46,7 @@ public:
             timeout();
         });
     }
+
     void aboutToFinish() override
     {
         timeout();
@@ -57,6 +63,42 @@ public:
             }
             mPendingItems.clear();
         }
+    }
+
+    bool requestBatch()
+    {
+        if (!mRequestedItems.empty()) {
+            // If there are more items to fetch, but we already received the LIMIT number of items,
+            // we are technically done...
+            if (mItemsLimit.limit() > -1 && mCount >= mItemsLimit.limit()) {
+                return true;
+            }
+
+            const auto batchSize = qMin(MaxBatchSize, mRemainingItems.size());
+            if (batchSize == 0) {
+                // If we would fetch an empty batch, we are done.
+                return true;
+            }
+
+            const auto batch = mRemainingItems.subspan(0, batchSize);
+            mRemainingItems = mRemainingItems.subspan(batch.size());
+            const auto batchItems = QList(batch.begin(), batch.end());
+            sendCommand(Protocol::FetchItemsCommandPtr::create(ProtocolHelper::entitySetToScope(batchItems),
+                                                               ProtocolHelper::commandContextToProtocol(mCollection, mCurrentTag, batchItems),
+                                                               ProtocolHelper::itemFetchScopeToProtocol(mFetchScope),
+                                                               ProtocolHelper::tagFetchScopeToProtocol(mFetchScope.tagFetchScope()),
+                                                               mItemsLimit));
+
+        } else { // collection- or tag-based fetch (unbatched)
+            Q_ASSERT(mCount == 0); // can only be called once
+            sendCommand(Protocol::FetchItemsCommandPtr::create(Scope(),
+                                                               ProtocolHelper::commandContextToProtocol(mCollection, mCurrentTag, mRequestedItems),
+                                                               ProtocolHelper::itemFetchScopeToProtocol(mFetchScope),
+                                                               ProtocolHelper::tagFetchScopeToProtocol(mFetchScope.tagFetchScope()),
+                                                               mItemsLimit));
+        }
+
+        return false;
     }
 
     QString jobDebuggingString() const override
@@ -105,6 +147,7 @@ public:
     ItemFetchJob::DeliveryOptions mDeliveryOptions = ItemFetchJob::Default;
     int mCount = 0;
     Protocol::FetchLimit mItemsLimit;
+    std::span<Item> mRemainingItems;
 };
 
 ItemFetchJob::ItemFetchJob(const Collection &collection, QObject *parent)
@@ -163,11 +206,8 @@ void ItemFetchJob::doStart()
     Q_D(ItemFetchJob);
 
     try {
-        d->sendCommand(Protocol::FetchItemsCommandPtr::create(d->mRequestedItems.isEmpty() ? Scope() : ProtocolHelper::entitySetToScope(d->mRequestedItems),
-                                                              ProtocolHelper::commandContextToProtocol(d->mCollection, d->mCurrentTag, d->mRequestedItems),
-                                                              ProtocolHelper::itemFetchScopeToProtocol(d->mFetchScope),
-                                                              ProtocolHelper::tagFetchScopeToProtocol(d->mFetchScope.tagFetchScope()),
-                                                              d->mItemsLimit));
+        d->mRemainingItems = std::span(d->mRequestedItems.begin(), d->mRequestedItems.size());
+        d->requestBatch();
     } catch (const Akonadi::Exception &e) {
         setError(Job::Unknown);
         setErrorText(QString::fromUtf8(e.what()));
@@ -187,7 +227,10 @@ bool ItemFetchJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &resp
     const auto &resp = Protocol::cmdCast<Protocol::FetchItemsResponse>(response);
     // Invalid ID marks the last part of the response
     if (resp.id() < 0) {
-        return true;
+        if (d->mRemainingItems.empty()) {
+            return true;
+        }
+        return d->requestBatch();
     }
 
     const Item item = ProtocolHelper::parseItemFetchResult(resp, nullptr, d->mValuePool);

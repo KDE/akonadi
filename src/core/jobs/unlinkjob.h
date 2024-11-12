@@ -9,6 +9,7 @@
 #include "akonadicore_export.h"
 #include "item.h"
 #include "job.h"
+#include "protocol_p.h"
 
 namespace Akonadi
 {
@@ -74,7 +75,7 @@ protected:
 
 private:
     Q_DECLARE_PRIVATE(UnlinkJob)
-    template<typename T>
+    template<typename T, Protocol::LinkItemsCommand::Action>
     friend class LinkJobImpl;
 };
 

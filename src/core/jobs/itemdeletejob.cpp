@@ -11,14 +11,39 @@
 #include "private/protocol_p.h"
 #include "protocolhelper_p.h"
 
+#include <span>
+
 using namespace Akonadi;
 
 class Akonadi::ItemDeleteJobPrivate : public JobPrivate
 {
+    static constexpr std::size_t MaxBatchSize = 10'000UL;
+
 public:
     explicit ItemDeleteJobPrivate(ItemDeleteJob *parent)
         : JobPrivate(parent)
     {
+    }
+
+    bool requestBatch()
+    {
+        if (!mItems.empty()) { // item-based removal
+            const auto batchSize = qMin(MaxBatchSize, mRemainingItems.size());
+            if (batchSize == 0) {
+                return true;
+            }
+
+            const auto batch = mRemainingItems.subspan(0, batchSize);
+            mRemainingItems = mRemainingItems.subspan(batch.size());
+            const auto batchItems = QList(batch.begin(), batch.end());
+
+            sendCommand(Protocol::DeleteItemsCommandPtr::create(ProtocolHelper::entitySetToScope(batchItems),
+                                                                ProtocolHelper::commandContextToProtocol(mCollection, mCurrentTag, batchItems)));
+        } else { // collection- or tag-based removal
+            sendCommand(Protocol::DeleteItemsCommandPtr::create(Scope(), ProtocolHelper::commandContextToProtocol(mCollection, mCurrentTag, {})));
+        }
+
+        return false;
     }
 
     Q_DECLARE_PUBLIC(ItemDeleteJob)
@@ -27,6 +52,7 @@ public:
     Item::List mItems;
     Collection mCollection;
     Tag mCurrentTag;
+    std::span<Item> mRemainingItems;
 };
 
 QString Akonadi::ItemDeleteJobPrivate::jobDebuggingString() const
@@ -51,6 +77,7 @@ ItemDeleteJob::ItemDeleteJob(const Item &item, QObject *parent)
     Q_D(ItemDeleteJob);
 
     d->mItems << item;
+    d->mRemainingItems = std::span(d->mItems);
 }
 
 ItemDeleteJob::ItemDeleteJob(const Item::List &items, QObject *parent)
@@ -59,6 +86,7 @@ ItemDeleteJob::ItemDeleteJob(const Item::List &items, QObject *parent)
     Q_D(ItemDeleteJob);
 
     d->mItems = items;
+    d->mRemainingItems = std::span(d->mItems);
 }
 
 ItemDeleteJob::ItemDeleteJob(const Collection &collection, QObject *parent)
@@ -77,9 +105,7 @@ ItemDeleteJob::ItemDeleteJob(const Tag &tag, QObject *parent)
     d->mCurrentTag = tag;
 }
 
-ItemDeleteJob::~ItemDeleteJob()
-{
-}
+ItemDeleteJob::~ItemDeleteJob() = default;
 
 Item::List ItemDeleteJob::deletedItems() const
 {
@@ -93,8 +119,7 @@ void ItemDeleteJob::doStart()
     Q_D(ItemDeleteJob);
 
     try {
-        d->sendCommand(Protocol::DeleteItemsCommandPtr::create(d->mItems.isEmpty() ? Scope() : ProtocolHelper::entitySetToScope(d->mItems),
-                                                               ProtocolHelper::commandContextToProtocol(d->mCollection, d->mCurrentTag, d->mItems)));
+        d->requestBatch();
     } catch (const Akonadi::Exception &e) {
         setError(Job::Unknown);
         setErrorText(QString::fromUtf8(e.what()));
@@ -105,8 +130,14 @@ void ItemDeleteJob::doStart()
 
 bool ItemDeleteJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
+    Q_D(ItemDeleteJob);
+
     if (!response->isResponse() || response->type() != Protocol::Command::DeleteItems) {
         return Job::doHandleResponse(tag, response);
+    }
+
+    if (!d->mRemainingItems.empty()) {
+        return d->requestBatch();
     }
 
     return true;

@@ -414,6 +414,58 @@ void ItemStoreTest::itemModifyJobShouldOnlySendModifiedAttributes()
     }
 }
 
+void ItemStoreTest::testModifyLargeBatch()
+{
+    static constexpr size_t ItemCount = 20'010; // batch size is 10,000, so we should need two full and one partial batch
+
+    auto resolver = new CollectionPathResolver(QStringLiteral("res1"), this);
+    AKVERIFYEXEC(resolver);
+    int colId = resolver->collection();
+
+    // Create a few thousand items to force batching
+    QList<Item> items;
+    items.reserve(ItemCount);
+    qDebug() << "Creating" << ItemCount << "items";
+    ItemCreateJob *job = nullptr;
+    for (size_t i = 0; i < ItemCount; ++i) {
+        Item item;
+        item.setMimeType(QStringLiteral("application/octet-stream"));
+        item.setPayload<QByteArray>("body data");
+        job = new ItemCreateJob(item, Collection(colId), this);
+        connect(job, &ItemCreateJob::result, this, [job, &items]() {
+            QCOMPARE(job->error(), KJob::NoError);
+            items.push_back(job->item());
+            if (items.size() % 1000 == 0) {
+                qDebug() << "Created" << items.size() << "items";
+            }
+        });
+    }
+    // Wait for the last one synchronously
+    AKVERIFYEXEC(job);
+
+    // Now mark all items as "read"
+    QCOMPARE(items.size(), ItemCount);
+    std::for_each(items.begin(), items.end(), [](Item &item) {
+        item.setFlag(Item::Flag("\\SEEN"));
+    });
+
+    qDebug() << "Updating items";
+    // And update them all
+    auto *modifyJob = new ItemModifyJob(items, this);
+    AKVERIFYEXEC(modifyJob);
+    qDebug() << "Done";
+
+    // Fetch everything again, verify they all have the flag
+    qDebug() << "Verifying flags";
+    auto *fetchJob = new ItemFetchJob(items, this);
+    AKVERIFYEXEC(fetchJob);
+    const auto fetchedItems = fetchJob->items();
+    QCOMPARE(fetchedItems.size(), ItemCount);
+    QVERIFY(std::all_of(fetchedItems.begin(), fetchedItems.end(), [](const Item &item) {
+        return item.hasFlag("\\SEEN");
+    }));
+}
+
 class ParallelJobsRunner
 {
 public:

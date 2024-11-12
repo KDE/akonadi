@@ -20,4 +20,5 @@ private Q_SLOTS:
     void testMultipartFetch();
     void testRidFetch();
     void testAncestorRetrieval();
+    void testFetchBatching();
 };
