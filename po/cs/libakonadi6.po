@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-08 00:40+0000\n"
+"POT-Creation-Date: 2024-11-13 00:40+0000\n"
 "PO-Revision-Date: 2024-10-01 16:40+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -40,24 +40,24 @@ msgstr "Nyní není nastaven žádný účet."
 msgid "Accounts integration is not supported"
 msgstr "Integrace účtů není podporována"
 
-#: agentbase/agentbase.cpp:308 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:318 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Nelze registrovat objekt na dbus: %1"
 
-#: agentbase/agentbase.cpp:399
+#: agentbase/agentbase.cpp:409
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 typu %2"
 
-#: agentbase/agentbase.cpp:809
+#: agentbase/agentbase.cpp:819
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Identifikátor agenta"
 
-#: agentbase/agentbase.cpp:815
+#: agentbase/agentbase.cpp:825
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Agent Akonadi"
@@ -171,7 +171,7 @@ msgstr "Úloha byla zrušena."
 msgid "Akonadi Control"
 msgstr "Ovládání Akonadi"
 
-#: akonadictl/main.cpp:211
+#: akonadictl/main.cpp:220
 #, kde-format
 msgid ""
 "Akonadi server manipulation tool\n"
@@ -190,7 +190,12 @@ msgid ""
 "                 (can take some time)"
 msgstr ""
 
-#: akonadictl/main.cpp:231
+#: akonadictl/main.cpp:239
+#, kde-format
+msgid "Wait for server shutdown to complete."
+msgstr ""
+
+#: akonadictl/main.cpp:241
 #, kde-format
 msgid "Command to execute"
 msgstr "Příkaz ke spuštění"

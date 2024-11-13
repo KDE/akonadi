@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-08 00:40+0000\n"
+"POT-Creation-Date: 2024-11-13 00:40+0000\n"
 "PO-Revision-Date: 2024-10-01 06:06+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
@@ -38,24 +38,24 @@ msgstr "ამჟამად არც ერთი ანგარიშ მ�
 msgid "Accounts integration is not supported"
 msgstr "ანგარიშების ინტეგრაცია მხარდაჭერილი არაა"
 
-#: agentbase/agentbase.cpp:308 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:318 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "შეცდომა DBus-ში ობიექტის რეგისტრაციისას: %1"
 
-#: agentbase/agentbase.cpp:399
+#: agentbase/agentbase.cpp:409
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 %2 ტიპით"
 
-#: agentbase/agentbase.cpp:809
+#: agentbase/agentbase.cpp:819
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "აგენტის იდენტიფიკატორი"
 
-#: agentbase/agentbase.cpp:815
+#: agentbase/agentbase.cpp:825
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi -ის აგენტი"
@@ -169,7 +169,7 @@ msgstr "დავალება გაუქმდა."
 msgid "Akonadi Control"
 msgstr "Akonadi-ის მართვა"
 
-#: akonadictl/main.cpp:211
+#: akonadictl/main.cpp:220
 #, kde-format
 msgid ""
 "Akonadi server manipulation tool\n"
@@ -201,7 +201,12 @@ msgstr ""
 "  fsck            შიდა საცავის მთლიანობის შემოწმება (და შეკეთების მცდელობა\n"
 "                        (შეიძლება, საკმაო დრო დასჭირდეს)"
 
-#: akonadictl/main.cpp:231
+#: akonadictl/main.cpp:239
+#, kde-format
+msgid "Wait for server shutdown to complete."
+msgstr ""
+
+#: akonadictl/main.cpp:241
 #, kde-format
 msgid "Command to execute"
 msgstr "შესასრულებელი ბრძანება"

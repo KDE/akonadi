@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-08 00:40+0000\n"
+"POT-Creation-Date: 2024-11-13 00:40+0000\n"
 "PO-Revision-Date: 2023-10-05 18:24-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -42,25 +42,25 @@ msgstr "Não existe atualmente nenhuma conta configurada."
 msgid "Accounts integration is not supported"
 msgstr "A integração de contas não é suportada"
 
-#: agentbase/agentbase.cpp:308 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:318 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Não foi possível registrar o objeto no dbus: %1"
 
-#: agentbase/agentbase.cpp:399
+#: agentbase/agentbase.cpp:409
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 do tipo %2"
 
-#: agentbase/agentbase.cpp:809
+#: agentbase/agentbase.cpp:819
 #, fuzzy, kde-format
 #| msgid "Agent identifier"
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Identificado do agente"
 
-#: agentbase/agentbase.cpp:815
+#: agentbase/agentbase.cpp:825
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Agente do Akonadi"
@@ -175,7 +175,7 @@ msgstr "Tarefa cancelada."
 msgid "Akonadi Control"
 msgstr "Agente do Akonadi"
 
-#: akonadictl/main.cpp:211
+#: akonadictl/main.cpp:220
 #, kde-format
 msgid ""
 "Akonadi server manipulation tool\n"
@@ -194,7 +194,12 @@ msgid ""
 "                 (can take some time)"
 msgstr ""
 
-#: akonadictl/main.cpp:231
+#: akonadictl/main.cpp:239
+#, kde-format
+msgid "Wait for server shutdown to complete."
+msgstr ""
+
+#: akonadictl/main.cpp:241
 #, kde-format
 msgid "Command to execute"
 msgstr ""

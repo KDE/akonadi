@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-08 00:40+0000\n"
+"POT-Creation-Date: 2024-11-13 00:40+0000\n"
 "PO-Revision-Date: 2024-11-10 20:12+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -37,24 +37,24 @@ msgstr "Понастоящем няма конфигуриран профил."
 msgid "Accounts integration is not supported"
 msgstr "Интегрирането на профили не се поддържа"
 
-#: agentbase/agentbase.cpp:308 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:318 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Не може да се регистрира обект в dbus: %1"
 
-#: agentbase/agentbase.cpp:399
+#: agentbase/agentbase.cpp:409
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 от тип %2"
 
-#: agentbase/agentbase.cpp:809
+#: agentbase/agentbase.cpp:819
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Идентификатор на агент"
 
-#: agentbase/agentbase.cpp:815
+#: agentbase/agentbase.cpp:825
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi агент"
@@ -168,7 +168,7 @@ msgstr "Работата е отменена."
 msgid "Akonadi Control"
 msgstr "Akonadi контрол"
 
-#: akonadictl/main.cpp:211
+#: akonadictl/main.cpp:220
 #, kde-format
 msgid ""
 "Akonadi server manipulation tool\n"
@@ -201,7 +201,12 @@ msgstr ""
 "хранилище\n"
 "                 (може да отнеме известно време)"
 
-#: akonadictl/main.cpp:231
+#: akonadictl/main.cpp:239
+#, kde-format
+msgid "Wait for server shutdown to complete."
+msgstr ""
+
+#: akonadictl/main.cpp:241
 #, kde-format
 msgid "Command to execute"
 msgstr "Команда за изпълнение"
