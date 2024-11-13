@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-10-08 00:40+0000\n"
-"PO-Revision-Date: 2024-10-19 01:43+0300\n"
+"PO-Revision-Date: 2024-11-13 01:45+0200\n"
 "Last-Translator: Liudas Ališauskas <liudas@akmc.lt>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -966,7 +966,7 @@ msgstr ""
 #: widgets/collectionmaintenancepage.ui:38
 #, kde-format
 msgid "File size:"
-msgstr ""
+msgstr "Failo dydis:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: widgets/collectionmaintenancepage.ui:45
@@ -1215,13 +1215,13 @@ msgstr "Išsamiau..."
 #: widgets/manageaccountwidget.cpp:221
 #, kde-format
 msgid "Do you want to remove account '%1'?"
-msgstr ""
+msgstr "Ar norite pašalinti paskyrą „%1“?"
 
 #: widgets/manageaccountwidget.cpp:222
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"
-msgstr ""
+msgstr "Šalinti paskyrą?"
 
 #. i18n: ectx: property (text), widget (QCheckBox, accountOnCurrentActivity)
 #: widgets/manageaccountwidget.ui:19
@@ -1245,19 +1245,19 @@ msgstr ""
 #: widgets/manageaccountwidget.ui:47
 #, kde-format
 msgid "A&dd..."
-msgstr ""
+msgstr "&Pridėti..."
 
 #. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
 #: widgets/manageaccountwidget.ui:57
 #, kde-format
 msgid "&Modify..."
-msgstr ""
+msgstr "&Modifikuoti..."
 
 #. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
 #: widgets/manageaccountwidget.ui:67
 #, kde-format
 msgid "R&emove"
-msgstr ""
+msgstr "Ša&linti"
 
 #. i18n: ectx: property (text), widget (QPushButton, mRestartAccountButton)
 #: widgets/manageaccountwidget.ui:84
@@ -1536,12 +1536,12 @@ msgstr ""
 #: widgets/selftestdialog.cpp:376
 #, kde-format
 msgid "Cannot connect to PostgreSQL server."
-msgstr ""
+msgstr "Nepavyksta prisijungti prie PostgreSQL serverio."
 
 #: widgets/selftestdialog.cpp:378
 #, kde-format
 msgid "PostgreSQL server found."
-msgstr ""
+msgstr "PostgreSQL serveris rastas."
 
 #: widgets/selftestdialog.cpp:378
 #, kde-format
@@ -1551,7 +1551,7 @@ msgstr ""
 #: widgets/selftestdialog.cpp:388
 #, kde-format
 msgid "akonadictl not found"
-msgstr ""
+msgstr "akonadictl nerastas"
 
 #: widgets/selftestdialog.cpp:389
 #, kde-format
@@ -1563,7 +1563,7 @@ msgstr ""
 #: widgets/selftestdialog.cpp:396
 #, kde-format
 msgid "akonadictl found and usable"
-msgstr ""
+msgstr "akonadictl rastas ir tinkamas naudoti"
 
 #: widgets/selftestdialog.cpp:397
 #, kde-format
@@ -1577,7 +1577,7 @@ msgstr ""
 #: widgets/selftestdialog.cpp:403
 #, kde-format
 msgid "akonadictl found but not usable"
-msgstr ""
+msgstr "akonadictl rastas, bet netinkamas naudoti"
 
 #: widgets/selftestdialog.cpp:404
 #, kde-format
@@ -1640,7 +1640,7 @@ msgstr ""
 #: widgets/selftestdialog.cpp:441
 #, kde-format
 msgid "Protocol version check not possible."
-msgstr ""
+msgstr "Protokolo versijos tikrinimas neįmanomas."
 
 #: widgets/selftestdialog.cpp:442
 #, kde-format
@@ -1652,7 +1652,7 @@ msgstr ""
 #: widgets/selftestdialog.cpp:447
 #, kde-format
 msgid "Server protocol version is too old."
-msgstr ""
+msgstr "Serverio protokolo versija yra per sena."
 
 #: widgets/selftestdialog.cpp:448 widgets/selftestdialog.cpp:455
 #, kde-format
@@ -1665,7 +1665,7 @@ msgstr ""
 #: widgets/selftestdialog.cpp:454
 #, kde-format
 msgid "Server protocol version is too new."
-msgstr ""
+msgstr "Serverio protokolo versija yra per nauja."
 
 #: widgets/selftestdialog.cpp:460
 #, kde-format
@@ -1872,7 +1872,7 @@ msgstr "Ištrinti"
 
 #: widgets/standardactionmanager.cpp:96
 msgid "&Synchronize Folder"
-msgstr ""
+msgstr "&Sinchronizuoti aplanką"
 
 #: widgets/standardactionmanager.cpp:97 widgets/standardactionmanager.cpp:206
 #: widgets/standardactionmanager.cpp:313
@@ -2363,14 +2363,13 @@ msgstr[3] "Trinti %1 išteklį?"
 #: widgets/standardactionmanager.cpp:456
 #, kde-format
 msgid "Could not paste data: %1"
-msgstr ""
+msgstr "Nepavyko įdėti duomenų: %1"
 
 #: widgets/standardactionmanager.cpp:457
-#, fuzzy, kde-format
-#| msgid "Paste failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
-msgstr "Įdėti nepavyko"
+msgstr "Nepavyko įdėti"
 
 #: widgets/standardactionmanager.cpp:809
 #, kde-format
@@ -2378,12 +2377,10 @@ msgid "We can not add \"/\" in folder name."
 msgstr ""
 
 #: widgets/standardactionmanager.cpp:809 widgets/standardactionmanager.cpp:813
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "New Folder"
+#, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
-msgstr "Naujas aplankas"
+msgstr "Naujo aplanko sukūrimo klaida"
 
 #: widgets/standardactionmanager.cpp:813
 #, kde-format
@@ -2419,10 +2416,9 @@ msgid "Copy to This Folder"
 msgstr "Kopijuoti į šį aplanką"
 
 #: widgets/subscriptiondialog.cpp:99
-#, fuzzy, kde-format
-#| msgid "Failed to create tag."
+#, kde-format
 msgid "Failed to update subscription: %1"
-msgstr "Nepavyko sukurti žymės."
+msgstr "Nepavyko atnaujinti prenumeratos: %1"
 
 #: widgets/subscriptiondialog.cpp:99
 #, kde-format
@@ -2465,7 +2461,7 @@ msgstr "Atsisakyti pren&umeratos"
 #: widgets/tageditwidget.cpp:117
 #, kde-format
 msgid "Failed to create a new tag"
-msgstr ""
+msgstr "Nepavyko sukurti naujos žymės"
 
 #: widgets/tageditwidget.cpp:117
 #, kde-format
@@ -2509,7 +2505,7 @@ msgstr "Sukurti naują žymę"
 #: widgets/tagmanagementdialog.ui:14
 #, kde-format
 msgid "Manage Tags"
-msgstr ""
+msgstr "Tvarkyti žymes"
 
 #: widgets/tagselectioncombobox.cpp:126
 #, fuzzy, kde-format
@@ -2523,24 +2519,24 @@ msgstr "Trinti žymę"
 #: widgets/tagselectiondialog.ui:14
 #, kde-format
 msgid "Select Tags"
-msgstr ""
+msgstr "Pasirinkti žymes"
 
 #: widgets/tagwidget.cpp:45
 #, kde-format
 msgid "Clear"
-msgstr ""
+msgstr "Išvalyti"
 
 #. i18n: ectx: property (placeholderText), widget (Akonadi::TagView, tagView)
 #: widgets/tagwidget.ui:32
 #, kde-format
 msgid "Click to add tags"
-msgstr ""
+msgstr "Spustelėkite norėdami pridėti žymes"
 
 #. i18n: ectx: property (text), widget (QToolButton, editButton)
 #: widgets/tagwidget.ui:39
 #, kde-format
 msgid "..."
-msgstr ""
+msgstr "..."
 
 #: xml/akonadi2xml.cpp:25
 #, kde-format
@@ -2560,7 +2556,7 @@ msgstr ""
 #: xml/xmldocument.cpp:83
 #, kde-format
 msgid "No data loaded."
-msgstr ""
+msgstr "Neįkelti jokie duomenys."
 
 #: xml/xmldocument.cpp:121
 #, kde-format
@@ -2580,7 +2576,7 @@ msgstr "Failo %1 nėra."
 #: xml/xmldocument.cpp:142
 #, kde-format
 msgid "Unable to parse data file '%1'."
-msgstr ""
+msgstr "Nepavyko išnagrinėti duomenų failo „%1“."
 
 #: xml/xmldocument.cpp:150
 #, kde-format
