@@ -78,6 +78,10 @@ public:
 
 public: // public, this is just a helper class
     struct Node {
+        explicit Node(QSqlQuery query)
+            : query(std::move(query))
+        {
+        }
         QSqlQuery query;
     };
     std::list<Node> m_queries;
