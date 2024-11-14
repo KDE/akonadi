@@ -58,9 +58,9 @@ void CollectionAnnotationsAttribute::deserialize(const QByteArray &data)
     const QList<QByteArray> lines = data.split('%');
 
     for (int i = 0; i < lines.size(); ++i) {
-        QByteArray line = lines[i];
+        QByteArrayView line(lines[i]);
         if (i != 0 && line.startsWith(' ')) {
-            line.remove(0, 1);
+            line = line.mid(1);
         }
         if (i != lines.size() - 1 && line.endsWith(' ')) {
             line.chop(1);
@@ -68,13 +68,13 @@ void CollectionAnnotationsAttribute::deserialize(const QByteArray &data)
         if (line.trimmed().isEmpty()) {
             continue;
         }
-        int wsIndex = line.indexOf(' ');
+        const auto wsIndex = line.indexOf(' ');
         if (wsIndex > 0) {
-            const QByteArray key = line.mid(0, wsIndex);
-            const QByteArray value = line.mid(wsIndex + 1);
+            const QByteArray key = line.mid(0, wsIndex).toByteArray();
+            const QByteArray value = line.mid(wsIndex + 1).toByteArray();
             mAnnotations[key] = value;
         } else {
-            mAnnotations.insert(line, QByteArray());
+            mAnnotations.insert(line.toByteArray(), QByteArray());
         }
     }
 }
