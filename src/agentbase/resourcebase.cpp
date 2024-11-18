@@ -50,6 +50,16 @@
 #include <QHash>
 #include <QTimer>
 
+#define HAVE_KICONTHEME __has_include(<KIconTheme>)
+#if HAVE_KICONTHEME
+#include <KIconTheme>
+#endif
+
+#define HAVE_STYLE_MANAGER __has_include(<KStyleManager>)
+#if HAVE_STYLE_MANAGER
+#include <KStyleManager>
+#endif
+
 using namespace Akonadi;
 using namespace AkRanges;
 using namespace std::chrono_literals;
@@ -566,6 +576,16 @@ QString ResourceBase::parseArguments(int argc, char **argv)
 
 int ResourceBase::init(ResourceBase &r)
 {
+#if HAVE_KICONTHEME
+    KIconTheme::initTheme();
+#endif
+#if HAVE_STYLE_MANAGER
+    KStyleManager::initStyle();
+#else // !HAVE_STYLE_MANAGER
+#if defined(Q_OS_MACOS) || defined(Q_OS_WIN)
+    QApplication::setStyle(QStringLiteral("breeze"));
+#endif // defined(Q_OS_MACOS) || defined(Q_OS_WIN)
+#endif // HAVE_STYLE_MANAGER
     KLocalizedString::setApplicationDomain(QByteArrayLiteral("libakonadi6"));
     KAboutData::setApplicationData(r.aboutData());
 
