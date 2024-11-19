@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-13 00:40+0000\n"
+"POT-Creation-Date: 2024-11-19 00:40+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -89,70 +89,70 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "未配置"
 
-#: agentbase/resourcebase.cpp:533
+#: agentbase/resourcebase.cpp:543
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "资源标识符"
 
-#: agentbase/resourcebase.cpp:539
+#: agentbase/resourcebase.cpp:549
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "Akonadi 资源"
 
-#: agentbase/resourcebase.cpp:590
+#: agentbase/resourcebase.cpp:610
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "获得了无效的项目"
 
-#: agentbase/resourcebase.cpp:613
+#: agentbase/resourcebase.cpp:633
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "创建项目时发生错误：%1"
 
-#: agentbase/resourcebase.cpp:637
+#: agentbase/resourcebase.cpp:657
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "更新集合时发生错误：%1"
 
-#: agentbase/resourcebase.cpp:724
+#: agentbase/resourcebase.cpp:744
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "更新本地集合失败：%1。"
 
-#: agentbase/resourcebase.cpp:729
+#: agentbase/resourcebase.cpp:749
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "更新本地项目失败：%1。"
 
-#: agentbase/resourcebase.cpp:748
+#: agentbase/resourcebase.cpp:768
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "无法在离线模式下获取项目。"
 
-#: agentbase/resourcebase.cpp:929
+#: agentbase/resourcebase.cpp:949
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "正在同步文件夹“%1”"
 
-#: agentbase/resourcebase.cpp:949 agentbase/resourcebase.cpp:956
+#: agentbase/resourcebase.cpp:969 agentbase/resourcebase.cpp:976
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "为同步获取集合失败。"
 
-#: agentbase/resourcebase.cpp:997
+#: agentbase/resourcebase.cpp:1017
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "为属性同步获取集合失败。"
 
-#: agentbase/resourcebase.cpp:1043
+#: agentbase/resourcebase.cpp:1063
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "请求的项目不存在"
