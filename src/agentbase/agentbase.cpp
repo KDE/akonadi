@@ -28,6 +28,7 @@
 #include <KLocalizedString>
 
 #include <KAboutData>
+#include <KCrash>
 
 #include <QCommandLineParser>
 #include <QNetworkInformation>
@@ -865,6 +866,9 @@ int AgentBase::init(AgentBase &r)
 #endif // HAVE_STYLE_MANAGER
     KLocalizedString::setApplicationDomain(QByteArrayLiteral("libakonadi6"));
     KAboutData::setApplicationData(r.aboutData());
+
+    KCrash::initialize();
+
     return qApp->exec();
 }
 
