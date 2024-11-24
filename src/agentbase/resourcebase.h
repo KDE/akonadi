@@ -137,54 +137,6 @@ class AKONADIAGENTBASE_EXPORT ResourceBase : public AgentBase
 
 public:
     /**
-     * Use this method in the main function of your resource
-     * application to initialize your resource subclass.
-     * This method also takes care of creating a KApplication
-     * object and parsing command line arguments.
-     *
-     * @note In case the given class is also derived from AgentBase::Observer
-     *       it gets registered as its own observer (see AgentBase::Observer), e.g.
-     *       <tt>resourceInstance->registerObserver( resourceInstance );</tt>
-     *
-     * @code
-     *
-     *   class MyResource : public ResourceBase
-     *   {
-     *     ...
-     *   };
-     *
-     *   int main( int argc, char **argv )
-     *   {
-     *     return ResourceBase::init<MyResource>( argc, argv );
-     *   }
-     *
-     * @endcode
-     *
-     * @param argc number of arguments
-     * @param argv string arguments
-     */
-    template<typename T>
-    static int init(int argc, char **argv)
-    {
-        // Disable session management
-        qunsetenv("SESSION_MANAGER");
-
-        QApplication app(argc, argv);
-        debugAgent(argc, argv);
-        const QString id = parseArguments(argc, argv);
-        T r(id);
-
-        // check if T also inherits AgentBase::Observer and
-        // if it does, automatically register it on itself
-        auto observer = dynamic_cast<Observer *>(&r);
-        if (observer != nullptr) {
-            r.registerObserver(observer);
-        }
-
-        return init(r);
-    }
-
-    /**
      * This method is used to set the name of the resource.
      */
     void setName(const QString &name);
@@ -826,7 +778,6 @@ protected:
 
 private:
     static QString parseArguments(int argc, char **argv);
-    static int init(ResourceBase &r);
 
     // dbus resource interface
     friend class ::Akonadi__ResourceAdaptor;
