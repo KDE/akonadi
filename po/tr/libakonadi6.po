@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-19 00:40+0000\n"
+"POT-Creation-Date: 2024-11-25 00:40+0000\n"
 "PO-Revision-Date: 2024-11-15 21:33+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -45,24 +45,24 @@ msgstr "Şu anda yapılandırılmış bir hesap yok."
 msgid "Accounts integration is not supported"
 msgstr "Hesap tümleştirmesi desteklenmiyor"
 
-#: agentbase/agentbase.cpp:318 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:319 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Nesne D-Bus’ta kaydedilemedi: %1"
 
-#: agentbase/agentbase.cpp:409
+#: agentbase/agentbase.cpp:410
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%2 türündeki %1"
 
-#: agentbase/agentbase.cpp:819
+#: agentbase/agentbase.cpp:820
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Aracı tanımlayıcısı"
 
-#: agentbase/agentbase.cpp:825
+#: agentbase/agentbase.cpp:826
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi Aracısı"

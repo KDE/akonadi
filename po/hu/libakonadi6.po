@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.3\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-19 00:40+0000\n"
+"POT-Creation-Date: 2024-11-25 00:40+0000\n"
 "PO-Revision-Date: 2024-11-15 20:20+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -40,24 +40,24 @@ msgstr "Nincs beállítva fiók."
 msgid "Accounts integration is not supported"
 msgstr "A fiókintegráció nem támogatott"
 
-#: agentbase/agentbase.cpp:318 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:319 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Nem sikerült regisztrálni az objektumot a dbus-on: %1"
 
-#: agentbase/agentbase.cpp:409
+#: agentbase/agentbase.cpp:410
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%2 típusú %1"
 
-#: agentbase/agentbase.cpp:819
+#: agentbase/agentbase.cpp:820
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Azonosító"
 
-#: agentbase/agentbase.cpp:825
+#: agentbase/agentbase.cpp:826
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi szolgáltatás"

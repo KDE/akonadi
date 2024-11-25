@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-19 00:40+0000\n"
+"POT-Creation-Date: 2024-11-25 00:40+0000\n"
 "PO-Revision-Date: 2012-07-11 10:23+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -41,25 +41,25 @@ msgstr ""
 msgid "Accounts integration is not supported"
 msgstr ""
 
-#: agentbase/agentbase.cpp:318 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:319 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr ""
 
-#: agentbase/agentbase.cpp:409
+#: agentbase/agentbase.cpp:410
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 នៃ​ប្រភេទ %2"
 
-#: agentbase/agentbase.cpp:819
+#: agentbase/agentbase.cpp:820
 #, fuzzy, kde-format
 #| msgid "Agent identifier"
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "គ្រឿង​សម្គាល់​ភ្នាក់​ងារ"
 
-#: agentbase/agentbase.cpp:825
+#: agentbase/agentbase.cpp:826
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "ភ្នាក់ងារ​របស់ Akonadi"

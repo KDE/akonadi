@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-19 00:40+0000\n"
+"POT-Creation-Date: 2024-11-25 00:40+0000\n"
 "PO-Revision-Date: 2024-10-02 17:21+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -41,24 +41,24 @@ msgstr "目前尚未設定帳號。"
 msgid "Accounts integration is not supported"
 msgstr "帳號整合不受支援"
 
-#: agentbase/agentbase.cpp:318 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:319 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "無法在 dbus 註冊物件：%1"
 
-#: agentbase/agentbase.cpp:409
+#: agentbase/agentbase.cpp:410
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "型態為 %2 的 %1"
 
-#: agentbase/agentbase.cpp:819
+#: agentbase/agentbase.cpp:820
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "代理程式識別子"
 
-#: agentbase/agentbase.cpp:825
+#: agentbase/agentbase.cpp:826
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi 代理程式"
