@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-25 00:40+0000\n"
+"POT-Creation-Date: 2024-11-26 00:40+0000\n"
 "PO-Revision-Date: 2024-10-03 13:10+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -104,59 +104,59 @@ msgstr "معرّف المورد"
 msgid "Akonadi Resource"
 msgstr "مورد «أكونادي»"
 
-#: agentbase/resourcebase.cpp:610
+#: agentbase/resourcebase.cpp:590
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "جُلب عنصر غير صالح"
 
-#: agentbase/resourcebase.cpp:633
+#: agentbase/resourcebase.cpp:613
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "خطأ أثناء إنشاء العنصر: %1"
 
-#: agentbase/resourcebase.cpp:657
+#: agentbase/resourcebase.cpp:637
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "خطأ أثناء تحديث التجميعة: %1"
 
-#: agentbase/resourcebase.cpp:744
+#: agentbase/resourcebase.cpp:724
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "فشل تحديث التجميعة المحلية: %1."
 
-#: agentbase/resourcebase.cpp:749
+#: agentbase/resourcebase.cpp:729
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "فشل تحديث العناصر المحلية: %1."
 
-#: agentbase/resourcebase.cpp:768
+#: agentbase/resourcebase.cpp:748
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "لا يمكن جلب العناصر بوضع عدم الاتّصال."
 
-#: agentbase/resourcebase.cpp:949
+#: agentbase/resourcebase.cpp:929
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "يُزامن المجلد ”%1“"
 
-#: agentbase/resourcebase.cpp:969 agentbase/resourcebase.cpp:976
+#: agentbase/resourcebase.cpp:949 agentbase/resourcebase.cpp:956
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "فشل جلب التجميعة للمزامنة."
 
-#: agentbase/resourcebase.cpp:1017
+#: agentbase/resourcebase.cpp:997
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "فشل جلب التجميعة لمزامنة الصفات."
 
-#: agentbase/resourcebase.cpp:1063
+#: agentbase/resourcebase.cpp:1043
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "لم يعد العنصر المطلوب موجودًا"

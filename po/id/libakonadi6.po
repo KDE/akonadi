@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-25 00:40+0000\n"
+"POT-Creation-Date: 2024-11-26 00:40+0000\n"
 "PO-Revision-Date: 2024-09-30 18:09+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: https://t.me/Localizations_KDE_Indonesia\n"
@@ -100,59 +100,59 @@ msgstr "Pengenal sumberdaya"
 msgid "Akonadi Resource"
 msgstr "Sumberdaya Akonadi"
 
-#: agentbase/resourcebase.cpp:610
+#: agentbase/resourcebase.cpp:590
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Item yang diterima tidak valid"
 
-#: agentbase/resourcebase.cpp:633
+#: agentbase/resourcebase.cpp:613
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Galat selagi membuat item: %1"
 
-#: agentbase/resourcebase.cpp:657
+#: agentbase/resourcebase.cpp:637
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Galat selagi memperbarui koleksi: %1"
 
-#: agentbase/resourcebase.cpp:744
+#: agentbase/resourcebase.cpp:724
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Gagal memperbarui koleksi lokal: %1."
 
-#: agentbase/resourcebase.cpp:749
+#: agentbase/resourcebase.cpp:729
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Gagal memperbarui item lokal: %1."
 
-#: agentbase/resourcebase.cpp:768
+#: agentbase/resourcebase.cpp:748
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Tidak bisa mengambil item dalam mode luring."
 
-#: agentbase/resourcebase.cpp:949
+#: agentbase/resourcebase.cpp:929
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Menyinkronkan folder '%1'"
 
-#: agentbase/resourcebase.cpp:969 agentbase/resourcebase.cpp:976
+#: agentbase/resourcebase.cpp:949 agentbase/resourcebase.cpp:956
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Gagal menerima koleksi untuk sinkronisasi."
 
-#: agentbase/resourcebase.cpp:1017
+#: agentbase/resourcebase.cpp:997
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Gagal menerima koleksi untuk sinkronisasi atribut."
 
-#: agentbase/resourcebase.cpp:1063
+#: agentbase/resourcebase.cpp:1043
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Item yang diminta tidak ada lagi"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-25 00:40+0000\n"
+"POT-Creation-Date: 2024-11-26 00:40+0000\n"
 "PO-Revision-Date: 2021-09-27 23:52+0630\n"
 "Last-Translator: ဇေယျာလွင် <lw1nzayar@yandex.com>\n"
 "Language-Team: Burmese <kde-i18n-doc@kde.org>\n"
@@ -102,59 +102,59 @@ msgstr "ရင်းမြစ် ခွဲခြားသတ်မှတ်အ�
 msgid "Akonadi Resource"
 msgstr "အကွန်နဒီ ရင်းမြစ်"
 
-#: agentbase/resourcebase.cpp:610
+#: agentbase/resourcebase.cpp:590
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "မမှန်ကန်သော အိုင်တမ် ပြန်ရရှိခဲ့သည်"
 
-#: agentbase/resourcebase.cpp:633
+#: agentbase/resourcebase.cpp:613
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "အိုင်တမ်ဖန်တီးနေစဥ်အမှားဖြစ်ပေါ်ခဲ့သည်- %1"
 
-#: agentbase/resourcebase.cpp:657
+#: agentbase/resourcebase.cpp:637
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "စုစည်းမှုအပ်ဒိတ်တင်ရာတွင် အမှားဖြစ်ပေါ်ခဲ့သည်- %1"
 
-#: agentbase/resourcebase.cpp:744
+#: agentbase/resourcebase.cpp:724
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr ""
 
-#: agentbase/resourcebase.cpp:749
+#: agentbase/resourcebase.cpp:729
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr ""
 
-#: agentbase/resourcebase.cpp:768
+#: agentbase/resourcebase.cpp:748
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "အော့ဖ်လိုင်းထုံးနည်းတွင် အိုင်တမ်မရယူနိုင်ပါ။"
 
-#: agentbase/resourcebase.cpp:949
+#: agentbase/resourcebase.cpp:929
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "ဖိုလ်ဒါ '%1' ကိုဒေတာတူအောင်တိုက်နေသည်။"
 
-#: agentbase/resourcebase.cpp:969 agentbase/resourcebase.cpp:976
+#: agentbase/resourcebase.cpp:949 agentbase/resourcebase.cpp:956
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr ""
 
-#: agentbase/resourcebase.cpp:1017
+#: agentbase/resourcebase.cpp:997
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr ""
 
-#: agentbase/resourcebase.cpp:1063
+#: agentbase/resourcebase.cpp:1043
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "တောင်းခံထားသော အိုင်တမ် မရှိတော့ပါ"
