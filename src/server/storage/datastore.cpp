@@ -20,6 +20,7 @@
 #include "parttypehelper.h"
 #include "querycache.h"
 #include "selectquerybuilder.h"
+#include "storage/query.h"
 #include "storagedebugger.h"
 #include "tracer.h"
 #include "transaction.h"
@@ -32,6 +33,7 @@
 #include <QSqlDriver>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QSqlRecord>
 #include <QString>
 #include <QStringList>
 #include <QThread>
@@ -701,17 +703,36 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
 
     // Get all PIM items that we will untag
     SelectQueryBuilder<PimItem> itemsQuery;
+    itemsQuery.addColumn(Collection::idFullColumnName());
     itemsQuery.addJoin(QueryBuilder::LeftJoin, PimItemTagRelation::tableName(), PimItemTagRelation::leftFullColumnName(), PimItem::idFullColumnName());
     itemsQuery.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::In, removedTagsIds);
+    itemsQuery.addSortColumn(Collection::idFullColumnName(), Query::Ascending);
 
     if (!itemsQuery.exec()) {
         qCWarning(AKONADISERVER_LOG) << "Removing tags failed: failed to query Items for given tags" << removedTagsIds;
         return false;
     }
-    const PimItem::List items = itemsQuery.result();
 
-    if (!items.isEmpty()) {
-        notificationCollector()->itemsTagsChanged(items, QSet<qint64>(), removedTags);
+    // Emit itemsTagsChanged for all items that have the removed tags.
+    // We group them by collection, since that's what the notification collector as well as
+    // resources expect.
+    PimItem::List items;
+    auto &query = itemsQuery.query();
+    Collection::Id lastCollectionId = -1;
+    const auto collectionIdColumn = query.record().count() - 1;
+    while (query.next()) {
+        const auto collectionId = query.value(collectionIdColumn).value<Collection::Id>();
+        if (!items.empty() && collectionId != lastCollectionId) {
+            notificationCollector()->itemsTagsChanged(items, QSet<qint64>(), removedTags, Collection::retrieveById(lastCollectionId));
+            items.clear();
+        }
+
+        items.push_back(PimItem::extractEntity(query));
+        lastCollectionId = collectionId;
+    }
+
+    if (!items.empty()) {
+        notificationCollector()->itemsTagsChanged(items, QSet<qint64>(), removedTags, Collection::retrieveById(lastCollectionId));
     }
 
     for (const Tag &tag : tags) {
@@ -855,8 +876,8 @@ bool DataStore::cleanupCollection(Collection &collection)
     qb.addValueCondition(Part::storageFullColumnName(), Query::Equals, Part::External);
     qb.addValueCondition(Part::dataFullColumnName(), Query::IsNot, QVariant());
     if (!qb.exec()) {
-        qCWarning(AKONADISERVER_LOG) << "Failed to cleanup collection" << collection.name() << "(ID" << collection.id() << "):"
-                                     << "Failed to query existing payload parts";
+        qCWarning(AKONADISERVER_LOG) << "Failed to cleanup collection" << collection.name() << "(ID" << collection.id()
+                                     << "):" << "Failed to query existing payload parts";
         return false;
     }
 
@@ -953,8 +974,8 @@ bool DataStore::moveCollection(Collection &collection, const Collection &newPare
     }
 
     if (!collection.update()) {
-        qCWarning(AKONADISERVER_LOG) << "Failed to move Collection" << collection.name() << "(ID" << collection.id() << ")"
-                                     << "into Collection" << collection.name() << "(ID" << collection.id() << ")";
+        qCWarning(AKONADISERVER_LOG) << "Failed to move Collection" << collection.name() << "(ID" << collection.id() << ")" << "into Collection"
+                                     << collection.name() << "(ID" << collection.id() << ")";
         return false;
     }
 

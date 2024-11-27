@@ -103,6 +103,13 @@ public:
     </xsl:for-each>
 
     /**
+      Extracts single entity from the current query result.
+      Note that the fields need to be in the correct order (same as in the constructor)!
+    */
+    static <xsl:value-of select="$className"/> extractEntity(const QSqlQuery &amp;query);
+    static <xsl:value-of select="$className"/> extractEntity(DataStore *dataStore, const QSqlQuery &amp;query);
+  
+    /**
       Extracts the query result.
       @param query A executed query containing a list of <xsl:value-of select="$entityName"/> records.
       Note that the fields need to be in the correct order (same as in the constructor)!

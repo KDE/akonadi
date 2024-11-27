@@ -272,6 +272,35 @@ bool <xsl:value-of select="$className"/>::exists(DataStore *store, const <xsl:va
 
 
 // result extraction
+<xsl:value-of select="$className"/><xsl:text> </xsl:text><xsl:value-of select="$className"/>::extractEntity(const QSqlQuery &amp;query)
+{
+    return extractEntity(DataStore::self(), query);
+}
+
+<xsl:value-of select="$className"/><xsl:text> </xsl:text><xsl:value-of select="$className"/>::extractEntity(DataStore *store, const QSqlQuery &amp;query)
+{
+    return <xsl:value-of select="$className"/>(
+        <xsl:for-each select="column">
+        (query.isNull(<xsl:value-of select="position() - 1"/>)
+            ? <xsl:call-template name="data-type"/>()
+            <xsl:text>: </xsl:text>
+            <xsl:choose>
+              <xsl:when test="starts-with(@type,'QString')">
+                <xsl:text>Utils::variantToString(query.value(</xsl:text><xsl:value-of select="position() - 1"/><xsl:text>))</xsl:text>
+              </xsl:when>
+              <xsl:when test="starts-with(@type, 'enum')">
+                <xsl:text>static_cast&lt;</xsl:text><xsl:value-of select="@enumType"/>&gt;(query.value(<xsl:value-of select="position() - 1"/><xsl:text>).value&lt;int&gt;())</xsl:text>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:text>query.value(</xsl:text><xsl:value-of select="position() - 1"/>).value&lt;<xsl:value-of select="@type"/>&gt;<xsl:text>()</xsl:text>
+              </xsl:otherwise>
+            </xsl:choose>
+            <xsl:text>)</xsl:text><xsl:if test="position() != last()"><xsl:text>,</xsl:text></xsl:if>
+          </xsl:for-each>
+    );
+}
+
+
 QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$className"/>::extractResult(QSqlQuery &amp;query)
 {
     return extractResult(DataStore::self(), query);
@@ -286,25 +315,7 @@ QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classNam
         rv.reserve(query.size());
     }
     while (query.next()) {
-        rv.append(<xsl:value-of select="$className"/>(
-        <xsl:for-each select="column">
-              (query.isNull(<xsl:value-of select="position() - 1"/>)
-                ? <xsl:call-template name="data-type"/>()
-                <xsl:text>: </xsl:text>
-                <xsl:choose>
-                <xsl:when test="starts-with(@type,'QString')">
-                  <xsl:text>Utils::variantToString(query.value(</xsl:text><xsl:value-of select="position() - 1"/><xsl:text>))</xsl:text>
-                </xsl:when>
-                <xsl:when test="starts-with(@type, 'enum')">
-                  <xsl:text>static_cast&lt;</xsl:text><xsl:value-of select="@enumType"/>&gt;(query.value(<xsl:value-of select="position() - 1"/><xsl:text>).value&lt;int&gt;())</xsl:text>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:text>query.value(</xsl:text><xsl:value-of select="position() - 1"/>).value&lt;<xsl:value-of select="@type"/>&gt;<xsl:text>()</xsl:text>
-                </xsl:otherwise>
-              </xsl:choose>
-              <xsl:text>)</xsl:text><xsl:if test="position() != last()"><xsl:text>,</xsl:text></xsl:if>
-            </xsl:for-each>
-            ));
+        rv.append(extractEntity(store, query));
     }
     query.finish();
     return rv;
