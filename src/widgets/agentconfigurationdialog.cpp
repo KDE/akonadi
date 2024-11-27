@@ -74,7 +74,12 @@ AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance
 
     if (auto plugin = d->widget->d->plugin) {
         if (auto aboutData = plugin->aboutData()) {
+#if KXMLGUI_VERSION >= QT_VERSION_CHECK(6, 9, 0)
+            auto helpMenu = new KHelpMenu(this, *aboutData);
+            helpMenu->setShowWhatsThis(true);
+#else
             auto helpMenu = new KHelpMenu(this, *aboutData, true);
+#endif
             helpMenu->action(KHelpMenu::menuDonate);
             // Initialize menu
             QMenu *menu = helpMenu->menu();
