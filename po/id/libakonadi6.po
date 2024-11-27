@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-26 00:40+0000\n"
+"POT-Creation-Date: 2024-11-27 00:40+0000\n"
 "PO-Revision-Date: 2024-09-30 18:09+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: https://t.me/Localizations_KDE_Indonesia\n"
@@ -37,24 +37,24 @@ msgstr "Saat ini belum ada akun yang dikonfigurasi."
 msgid "Accounts integration is not supported"
 msgstr "Integrasi akun belumlah didukung"
 
-#: agentbase/agentbase.cpp:319 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:310 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Tidak dapat meregister obyek di dbus: %1"
 
-#: agentbase/agentbase.cpp:410
+#: agentbase/agentbase.cpp:401
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 tipenya %2"
 
-#: agentbase/agentbase.cpp:820
+#: agentbase/agentbase.cpp:811
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Pengenal agen"
 
-#: agentbase/agentbase.cpp:826
+#: agentbase/agentbase.cpp:817
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Agen Akonadi"
@@ -89,70 +89,70 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "Tidak dikonfigurasi"
 
-#: agentbase/resourcebase.cpp:543
+#: agentbase/resourcebase.cpp:533
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "Pengenal sumberdaya"
 
-#: agentbase/resourcebase.cpp:549
+#: agentbase/resourcebase.cpp:539
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "Sumberdaya Akonadi"
 
-#: agentbase/resourcebase.cpp:590
+#: agentbase/resourcebase.cpp:580
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Item yang diterima tidak valid"
 
-#: agentbase/resourcebase.cpp:613
+#: agentbase/resourcebase.cpp:603
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Galat selagi membuat item: %1"
 
-#: agentbase/resourcebase.cpp:637
+#: agentbase/resourcebase.cpp:627
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Galat selagi memperbarui koleksi: %1"
 
-#: agentbase/resourcebase.cpp:724
+#: agentbase/resourcebase.cpp:714
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Gagal memperbarui koleksi lokal: %1."
 
-#: agentbase/resourcebase.cpp:729
+#: agentbase/resourcebase.cpp:719
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Gagal memperbarui item lokal: %1."
 
-#: agentbase/resourcebase.cpp:748
+#: agentbase/resourcebase.cpp:738
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Tidak bisa mengambil item dalam mode luring."
 
-#: agentbase/resourcebase.cpp:929
+#: agentbase/resourcebase.cpp:919
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Menyinkronkan folder '%1'"
 
-#: agentbase/resourcebase.cpp:949 agentbase/resourcebase.cpp:956
+#: agentbase/resourcebase.cpp:939 agentbase/resourcebase.cpp:946
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Gagal menerima koleksi untuk sinkronisasi."
 
-#: agentbase/resourcebase.cpp:997
+#: agentbase/resourcebase.cpp:987
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Gagal menerima koleksi untuk sinkronisasi atribut."
 
-#: agentbase/resourcebase.cpp:1043
+#: agentbase/resourcebase.cpp:1033
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Item yang diminta tidak ada lagi"
