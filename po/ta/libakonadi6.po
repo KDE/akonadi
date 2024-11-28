@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-27 00:40+0000\n"
+"POT-Creation-Date: 2024-11-28 00:40+0000\n"
 "PO-Revision-Date: 2024-11-17 21:57+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -650,12 +650,12 @@ msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 அமைப்புகள்"
 
-#: widgets/agentconfigurationdialog.cpp:81
+#: widgets/agentconfigurationdialog.cpp:86
 #, kde-format
 msgid "%1 Handbook"
 msgstr "%1 கையேடு"
 
-#: widgets/agentconfigurationdialog.cpp:82
+#: widgets/agentconfigurationdialog.cpp:87
 #, kde-format
 msgid "About %1"
 msgstr "%1 பற்றி"
