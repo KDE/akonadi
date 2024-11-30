@@ -10,9 +10,11 @@
 #include "cachecleaner.h"
 #include "connection.h"
 #include "handler/itemfetchhelper.h"
+#include "handler/tagfetchhelper.h"
 #include "handlerhelper.h"
 #include "intervalcheck.h"
 #include "notificationmanager.h"
+#include "protocol_p.h"
 #include "search/searchmanager.h"
 #include "selectquerybuilder.h"
 #include "shared/akranges.h"
@@ -26,6 +28,7 @@
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
+using namespace AkRanges;
 
 NotificationCollector::NotificationCollector(AkonadiServer &akonadi, DataStore *db)
     : mDb(db)
@@ -70,8 +73,8 @@ void NotificationCollector::itemsFlagsChanged(const PimItem::List &items,
 }
 
 void NotificationCollector::itemsTagsChanged(const PimItem::List &items,
-                                             const QSet<qint64> &addedTags,
-                                             const QSet<qint64> &removedTags,
+                                             const QList<Tag> &addedTags,
+                                             const QList<Tag> &removedTags,
                                              const Collection &collection,
                                              const QByteArray &resource)
 {
@@ -129,12 +132,7 @@ void NotificationCollector::collectionChanged(const Collection &collection, cons
     if (changes.contains(AKONADI_PARAM_ENABLED)) {
         mAkonadi.collectionStatistics().invalidateCollection(collection);
     }
-    collectionNotification(Protocol::CollectionChangeNotification::Modify,
-                           collection,
-                           collection.parentId(),
-                           -1,
-                           resource,
-                           changes | AkRanges::Actions::toQSet);
+    collectionNotification(Protocol::CollectionChangeNotification::Modify, collection, collection.parentId(), -1, resource, changes | Actions::toQSet);
 }
 
 void NotificationCollector::collectionMoved(const Collection &collection, const Collection &source, const QByteArray &resource, const QByteArray &destResource)
@@ -219,6 +217,16 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
     itemNotification(op, PimItem::List{item}, collection, collectionDest, resource, parts);
 }
 
+static Protocol::FetchTagsResponse tagToResponse(const Tag &tag)
+{
+    Protocol::FetchTagsResponse response;
+    response.setId(tag.id());
+    response.setGid(tag.gid().toLatin1());
+    response.setParentId(tag.parentId());
+    response.setType(tag.tagType().name().toLatin1());
+    return response;
+}
+
 void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::Operation op,
                                              const PimItem::List &items,
                                              const Collection &collection,
@@ -227,8 +235,8 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
                                              const QSet<QByteArray> &parts,
                                              const QSet<QByteArray> &addedFlags,
                                              const QSet<QByteArray> &removedFlags,
-                                             const QSet<qint64> &addedTags,
-                                             const QSet<qint64> &removedTags)
+                                             const QList<Tag> &addedTags,
+                                             const QList<Tag> &removedTags)
 {
     if (items.empty()) {
         return;
@@ -250,8 +258,8 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
     msg->setItemParts(parts);
     msg->setAddedFlags(addedFlags);
     msg->setRemovedFlags(removedFlags);
-    msg->setAddedTags(addedTags);
-    msg->setRemovedTags(removedTags);
+    msg->setAddedTags(addedTags | Views::transform(tagToResponse) | Actions::toQList);
+    msg->setRemovedTags(removedTags | Views::transform(tagToResponse) | Actions::toQList);
 
     if (collectionDest.isValid()) {
         QByteArray destResourceName;
@@ -453,6 +461,17 @@ void NotificationCollector::tagNotification(Protocol::TagChangeNotification::Ope
     dispatchNotification(msg);
 }
 
+bool needsTagFetch(const Protocol::ItemChangeNotificationPtr &msg)
+{
+    const auto addedTags = msg->addedTags();
+    const auto removedTags = msg->removedTags();
+    const auto needsFetch = [](const Protocol::FetchTagsResponse &tag) {
+        return tag.gid().isEmpty() || tag.type().isNull();
+    };
+
+    return std::any_of(addedTags.cbegin(), addedTags.cend(), needsFetch) || std::any_of(removedTags.cbegin(), removedTags.cend(), needsFetch);
+}
+
 void NotificationCollector::completeNotification(const Protocol::ChangeNotificationPtr &changeMsg)
 {
     if (changeMsg->type() == Protocol::Command::ItemChangeNotification) {
@@ -503,7 +522,7 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
                 if (helper.fetchItems(std::move(callback))) {
                     msg->setItems(fetchedItems);
                 } else {
-                    qCWarning(AKONADISERVER_LOG) << "NotificationCollector railed to retrieve Items for notification!";
+                    qCWarning(AKONADISERVER_LOG) << "NotificationCollector failed to retrieve Items for notification!";
                 }
             } else {
                 QList<Protocol::FetchItemsResponse> fetchedItems;
@@ -522,6 +541,35 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
                 }
                 msg->setItems(fetchedItems);
                 msg->setMustRetrieve(true);
+            }
+        } else if (mgr && msg->operation() == Protocol::ItemChangeNotification::ModifyTags) {
+            const auto tagScope = mgr->tagFetchScope();
+            if (needsTagFetch(msg) || tagScope->fetchAllAttributes() || tagScope->fetchRemoteId()) {
+                QSet<Tag::Id> addedIds;
+                for (const auto &tag : msg->addedTags()) {
+                    addedIds.insert(tag.id());
+                }
+                QSet<Tag::Id> removedIds;
+                for (const auto &tag : msg->removedTags()) {
+                    removedIds.insert(tag.id());
+                }
+                QList<Protocol::FetchTagsResponse> addedTags;
+                QList<Protocol::FetchTagsResponse> removedTags;
+                TagFetchHelper helper(mConnection, Scope((addedIds + removedIds) | Actions::toQList), tagScope->toFetchScope());
+                auto callback = [&](Protocol::FetchTagsResponse &&cmd) {
+                    if (addedIds.contains(cmd.id())) {
+                        addedTags.push_back(std::move(cmd));
+                    } else {
+                        Q_ASSERT(removedIds.contains(cmd.id()));
+                        removedTags.push_back(std::move(cmd));
+                    }
+                };
+                if (helper.fetchTags(std::move(callback))) {
+                    msg->setAddedTags(addedTags);
+                    msg->setRemovedTags(removedTags);
+                } else {
+                    qCWarning(AKONADISERVER_LOG) << "NotificationCollector failed to retrieve Tags for notification!";
+                }
             }
         }
     }

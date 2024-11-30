@@ -78,8 +78,8 @@ public:
      Notify about changed items tags
     **/
     void itemsTagsChanged(const PimItem::List &items,
-                          const QSet<qint64> &addedTags,
-                          const QSet<qint64> &removedTags,
+                          const QList<Tag> &addedTags,
+                          const QList<Tag> &removedTags,
                           const Collection &collection = Collection(),
                           const QByteArray &resource = QByteArray());
 
@@ -182,8 +182,8 @@ private:
                           const QSet<QByteArray> &parts = QSet<QByteArray>(),
                           const QSet<QByteArray> &addedFlags = QSet<QByteArray>(),
                           const QSet<QByteArray> &removedFlags = QSet<QByteArray>(),
-                          const QSet<qint64> &addedTags = QSet<qint64>(),
-                          const QSet<qint64> &removedTags = QSet<qint64>());
+                          const QList<Tag> &addedTags = {},
+                          const QList<Tag> &removedTags = {});
     void itemNotification(Protocol::ItemChangeNotification::Operation op,
                           const PimItem &item,
                           const Collection &collection,

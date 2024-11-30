@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<protocol version="66">
+<protocol version="67">
 
   <class name="Ancestor">
     <enum name="Depth">
@@ -778,8 +778,8 @@
     <param name="itemParts" type="QSet&lt;QByteArray&gt;" />
     <param name="addedFlags" type="QSet&lt;QByteArray&gt;" />
     <param name="removedFlags" type="QSet&lt;QByteArray&gt;" />
-    <param name="addedTags" type="QSet&lt;qint64&gt;" />
-    <param name="removedTags" type="QSet&lt;qint64&gt;" />
+    <param name="addedTags" type="QList&lt;Akonadi::Protocol::FetchTagsResponse&gt;" />
+    <param name="removedTags" type="QList&lt;Akonadi::Protocol::FetchTagsResponse&gt;" />
 
     <param name="mustRetrieve" type="bool" default="false" />
 
