@@ -7,6 +7,7 @@
 
 #include "akonadicore_debug.h"
 #include "changerecorderjournal_p.h"
+#include "protocol_p.h"
 
 #include <QDataStream>
 #include <QFile>
@@ -17,7 +18,7 @@ using namespace Akonadi;
 
 namespace
 {
-constexpr quint64 s_currentVersion = Q_UINT64_C(0x000900000000);
+constexpr quint64 s_currentVersion = Q_UINT64_C(0x000A00000000);
 constexpr quint64 s_versionMask = Q_UINT64_C(0xFFFF00000000);
 constexpr quint64 s_sizeMask = Q_UINT64_C(0x0000FFFFFFFF);
 }
@@ -190,6 +191,31 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadQSettingsCollec
     return msg;
 }
 
+QList<Protocol::FetchTagsResponse> loadTags(QDataStream &stream)
+{
+    QList<Protocol::FetchTagsResponse> tags;
+    int cnt = 0;
+    stream >> cnt;
+    for (int i = 0; i < cnt; ++i) {
+        qint64 id;
+        qint64 parentId;
+        QByteArray gid;
+        QByteArray type;
+        QByteArray remoteId;
+        QMap<QByteArray, QByteArray> attributes;
+        stream >> id >> parentId >> gid >> type >> remoteId >> attributes;
+        Protocol::FetchTagsResponse tag;
+        tag.setId(id);
+        tag.setParentId(parentId);
+        tag.setGid(gid);
+        tag.setType(type);
+        tag.setRemoteId(remoteId);
+        tag.setAttributes(attributes);
+        tags.emplace_back(std::move(tag));
+    }
+    return tags;
+}
+
 Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadItemNotification(QDataStream &stream, quint64 version)
 {
     QByteArray resource;
@@ -205,8 +231,8 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadItemNotificatio
     QSet<QByteArray> itemParts;
     QSet<QByteArray> addedFlags;
     QSet<QByteArray> removedFlags;
-    QSet<qint64> addedTags;
-    QSet<qint64> removedTags;
+    QList<Protocol::FetchTagsResponse> addedTags;
+    QList<Protocol::FetchTagsResponse> removedTags;
     QList<Protocol::FetchItemsResponse> items;
 
     auto msg = Protocol::ItemChangeNotificationPtr::create();
@@ -263,25 +289,7 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadItemNotificatio
                 stream >> bav;
                 item.setFlags(bav);
                 stream >> cnt;
-                QList<Protocol::FetchTagsResponse> tags;
-                tags.reserve(cnt);
-                for (int k = 0; k < cnt; ++k) {
-                    Protocol::FetchTagsResponse tag;
-                    stream >> i64;
-                    tag.setId(i64);
-                    stream >> i64;
-                    tag.setParentId(i64);
-                    stream >> ba;
-                    tag.setGid(ba);
-                    stream >> ba;
-                    tag.setType(ba);
-                    stream >> ba;
-                    tag.setRemoteId(ba);
-                    stream >> babaMap;
-                    tag.setAttributes(babaMap);
-                    tags << tag;
-                }
-                item.setTags(tags);
+                item.setTags(loadTags(stream));
                 stream >> i64v;
                 item.setVirtualReferences(i64v);
                 stream >> cnt;
@@ -359,9 +367,20 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadItemNotificatio
         stream >> itemParts;
         stream >> addedFlags;
         stream >> removedFlags;
-        if (version >= 3) {
-            stream >> addedTags;
-            stream >> removedTags;
+        if (version >= 0xA) {
+            addedTags = loadTags(stream);
+            removedTags = loadTags(stream);
+        } else if (version >= 3) {
+            QSet<qint64> tagIds;
+            stream >> tagIds;
+            for (const auto &tagId : tagIds) {
+                addedTags.emplace_back(tagId);
+            }
+            tagIds.clear();
+            stream >> tagIds;
+            for (const auto &tagId : tagIds) {
+                removedTags.emplace_back(tagId);
+            }
         }
         if (version >= 8) {
             bool boolean;
@@ -390,9 +409,17 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadItemNotificatio
     return msg;
 }
 
+void saveTags(QDataStream &stream, const QList<Protocol::FetchTagsResponse> &tags)
+{
+    stream << static_cast<int>(tags.count());
+    for (const auto &tag : tags) {
+        stream << tag.id() << tag.parentId() << tag.gid() << tag.type() << tag.remoteId() << tag.attributes();
+    }
+}
+
 void ChangeRecorderJournalWriter::saveItemNotification(QDataStream &stream, const Protocol::ItemChangeNotification &msg)
 {
-    // Version 8
+    // Version 10
 
     stream << int(msg.operation());
     const auto &items = msg.items();
@@ -400,11 +427,7 @@ void ChangeRecorderJournalWriter::saveItemNotification(QDataStream &stream, cons
     for (const auto &item : items) {
         stream << item.id() << item.revision() << item.parentId() << item.remoteId() << item.remoteRevision() << item.gid() << item.size() << item.mimeType()
                << item.mTime() << item.flags();
-        const auto tags = item.tags();
-        stream << static_cast<int>(tags.count());
-        for (const auto &tag : tags) {
-            stream << tag.id() << tag.parentId() << tag.gid() << tag.type() << tag.remoteId() << tag.attributes();
-        }
+        saveTags(stream, item.tags());
         stream << item.virtualReferences();
         const auto ancestors = item.ancestors();
         stream << static_cast<int>(ancestors.count());
@@ -426,8 +449,8 @@ void ChangeRecorderJournalWriter::saveItemNotification(QDataStream &stream, cons
     stream << msg.itemParts();
     stream << msg.addedFlags();
     stream << msg.removedFlags();
-    stream << msg.addedTags();
-    stream << msg.removedTags();
+    saveTags(stream, msg.addedTags());
+    saveTags(stream, msg.removedTags());
     stream << msg.mustRetrieve();
 }
 

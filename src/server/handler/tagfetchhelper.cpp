@@ -7,6 +7,7 @@
 #include "tagfetchhelper.h"
 #include "connection.h"
 #include "handler.h"
+#include "protocol_p.h"
 #include "storage/querybuilder.h"
 #include "storage/tagqueryhelper.h"
 #include "utils.h"
@@ -108,7 +109,7 @@ QMap<QByteArray, QByteArray> TagFetchHelper::fetchTagAttributes(qint64 tagId, co
     return attributes;
 }
 
-bool TagFetchHelper::fetchTags()
+bool TagFetchHelper::fetchTags(std::function<void(Protocol::FetchTagsResponse &&)> &&callback)
 {
     auto tagQb = buildTagQuery();
     auto &tagQuery = tagQb.query();
@@ -155,7 +156,11 @@ bool TagFetchHelper::fetchTags()
             }
         }
 
-        mConnection->sendResponse(std::move(response));
+        if (callback) {
+            callback(std::move(response));
+        } else {
+            mConnection->sendResponse(std::move(response));
+        }
 
         tagQuery.next();
     }

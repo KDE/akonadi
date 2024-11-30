@@ -279,6 +279,7 @@ bool <xsl:value-of select="$className"/>::exists(DataStore *store, const <xsl:va
 
 <xsl:value-of select="$className"/><xsl:text> </xsl:text><xsl:value-of select="$className"/>::extractEntity(DataStore *store, const QSqlQuery &amp;query)
 {
+    Q_UNUSED(store);
     return <xsl:value-of select="$className"/>(
         <xsl:for-each select="column">
         (query.isNull(<xsl:value-of select="position() - 1"/>)

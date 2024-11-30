@@ -450,13 +450,6 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotificationPtr &
             return allCached;
         }
 
-        // Make sure all tags for ModifyTags operation are in cache too
-        if (itemNtf.operation() == Protocol::ItemChangeNotification::ModifyTags) {
-            if (!tagCache->ensureCached((itemNtf.addedTags() + itemNtf.removedTags()) | Actions::toQList, mTagFetchScope)) {
-                return false;
-            }
-        }
-
         if (itemNtf.metadata().contains("FETCH_ITEM") || itemNtf.mustRetrieve()) {
             if (!itemCache->ensureCached(Protocol::ChangeNotification::itemsToUids(itemNtf.items()), mItemFetchScope)) {
                 return false;
@@ -1000,11 +993,17 @@ bool MonitorPrivate::emitItemsNotification(const Protocol::ItemChangeNotificatio
         }
     }
 
-    Tag::List addedTags;
-    Tag::List removedTags;
+    QSet<Tag> addedTags;
+    QSet<Tag> removedTags;
     if (msg.operation() == Protocol::ItemChangeNotification::ModifyTags) {
-        addedTags = tagCache->retrieve(msg.addedTags() | Actions::toQList);
-        removedTags = tagCache->retrieve(msg.removedTags() | Actions::toQList);
+        addedTags.reserve(msg.addedTags().size());
+        for (const auto &tagProto : msg.addedTags()) {
+            addedTags.insert(ProtocolHelper::parseTag(tagProto));
+        }
+        removedTags.reserve(msg.removedTags().size());
+        for (const auto &tagProto : msg.removedTags()) {
+            removedTags.insert(ProtocolHelper::parseTag(tagProto));
+        }
     }
 
     Item::List its = items;
@@ -1040,7 +1039,7 @@ bool MonitorPrivate::emitItemsNotification(const Protocol::ItemChangeNotificatio
         handled |= emitToListeners(&Monitor::itemsUnlinked, its, col);
         return handled;
     case Protocol::ItemChangeNotification::ModifyTags:
-        return emitToListeners(&Monitor::itemsTagsChanged, its, addedTags | Actions::toQSet, removedTags | Actions::toQSet);
+        return emitToListeners(&Monitor::itemsTagsChanged, its, addedTags, removedTags);
     default:
         qCDebug(AKONADICORE_LOG) << "Unknown operation type" << msg.operation() << "in item change notification";
         return false;
