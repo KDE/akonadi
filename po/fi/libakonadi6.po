@@ -1,6 +1,6 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# Tommi Nieminen <translator@legisign.org>, 2010, 2011, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024.
+# SPDX-FileCopyrightText: 2010, 2011, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Tommi Nieminen <translator@legisign.org>
 # Lasse Liehu <lasse.liehu@gmail.com>, 2011, 2012, 2013, 2014, 2015, 2016, 2018.
 #
 # KDE Finnish translation sprint participants:
@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-10-08 00:40+0000\n"
-"PO-Revision-Date: 2024-04-18 16:00+0300\n"
+"PO-Revision-Date: 2024-10-16 18:24+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -19,8 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-POT-Import-Date: 2012-12-01 22:25:18+0000\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 24.08.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -55,8 +54,7 @@ msgid "%1 of type %2"
 msgstr "%2 %1"
 
 #: agentbase/agentbase.cpp:809
-#, fuzzy, kde-format
-#| msgid "Agent identifier"
+#, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Agentin tunniste"
@@ -836,25 +834,22 @@ msgid "Search"
 msgstr "Etsi"
 
 #: widgets/collectiondialog.cpp:66
-#, fuzzy, kde-format
-#| msgid "Use folder by default"
+#, kde-format
 msgctxt "@option:check"
 msgid "Use folder by default"
 msgstr "Käytä kansiota oletusarvoisesti"
 
 #: widgets/collectiondialog.cpp:226
-#, fuzzy, kde-format
-#| msgid "&New Subfolder..."
+#, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
-msgstr "&Uusi alikansio…"
+msgstr "Uusi &alikansio…"
 
 #: widgets/collectiondialog.cpp:228
-#, fuzzy, kde-format
-#| msgid "Create a new subfolder under the currently selected folder"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
-msgstr "Luo uusi alikansio valitun kansion alle"
+msgstr "Luo valitun kansion alle uusi alikansio"
 
 #: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:418
 #, kde-format
@@ -1030,15 +1025,13 @@ msgid "Reindex folder"
 msgstr "Indeksoi kansio uudelleen"
 
 #: widgets/collectionrequester.cpp:113
-#, fuzzy, kde-format
-#| msgid "No Folder"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No Folder"
 msgstr "Ei kansioita"
 
 #: widgets/collectionrequester.cpp:122
-#, fuzzy, kde-format
-#| msgid "Open collection dialog"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
 msgstr "Avaa kokoelmaikkuna"
@@ -1090,14 +1083,7 @@ msgid "Keep both versions"
 msgstr "Säilytä kumpikin versio"
 
 #: widgets/conflictresolvedialog.cpp:217
-#, fuzzy, kde-format
-#| msgid ""
-#| "<qt>Your changes conflict with those made by someone else meanwhile."
-#| "<br>Unless one version can just be thrown away, you will have to "
-#| "integrate those changes manually.<br>Click on <a href=\"opentexteditor\">"
-#| "\"Open text editor\"</a> to keep a copy of the texts, then select which "
-#| "version is most correct, then re-open it and modify it again to add "
-#| "what's missing."
+#, kde-format
 msgctxt "@label:textbox"
 msgid ""
 "<qt>Your changes conflict with those made by someone else meanwhile."
@@ -1160,8 +1146,7 @@ msgstr ""
 "%1"
 
 #: widgets/erroroverlay.cpp:228
-#, fuzzy, kde-format
-#| msgid "Personal information management service is starting..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr "Henkilökohtaisten tietojen hallintapalvelu käynnistyy…"
@@ -1172,8 +1157,7 @@ msgid "Personal information management service is starting..."
 msgstr "Henkilökohtaisten tietojen hallintapalvelu käynnistyy…"
 
 #: widgets/erroroverlay.cpp:233
-#, fuzzy, kde-format
-#| msgid "Personal information management service is shutting down..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr "Henkilökohtaisten tietojen hallintapalvelu sulkeutuu…"
@@ -1184,9 +1168,7 @@ msgid "Personal information management service is shutting down..."
 msgstr "Henkilökohtaisten tietojen hallintapalvelu sulkeutuu…"
 
 #: widgets/erroroverlay.cpp:238
-#, fuzzy, kde-format
-#| msgid ""
-#| "Personal information management service is performing a database upgrade."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
@@ -1209,16 +1191,13 @@ msgstr ""
 #. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
 #: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not running. This "
-#| "application cannot be used without it."
+#, kde-format
 msgid ""
 "A required background service is not running. This application cannot be "
 "used without it."
 msgstr ""
-"Akonadi, henkilökohtaisten tietojen hallintapalvelu, ei ole käynnissä.\n"
-"Tätä sovellusta ei voi käyttää ilman sitä."
+"Vaadittu taustapalvelu ei ole käynnissä. Sovellusta ei voi käyttää ilman "
+"sitä."
 
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #: widgets/erroroverlay.ui:116
@@ -1229,25 +1208,19 @@ msgstr "Käynnistä"
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management framework is not "
-#| "operational.\n"
-#| "Click on \"Details...\" to obtain detailed information on this problem."
+#, kde-format
 msgid ""
 "A required background service is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
-"Akonadi, henkilökohtaisten tietojen hallintakehys, ei ole toiminnassa.\n"
-"Saat ongelmasta lisätietoa napsauttamalla ”Yksityiskohdat”."
+"Vaadittu taustapalvelu ei ole toimintakunnossa.\n"
+"Ongelmasta saa lisätietoa napsauttamalla ”Lisätietoa…”."
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not operational."
+#, kde-format
 msgid "A required background service is not operational."
-msgstr "Akonadi, henkilökohtaisten tietojen hallintakehys, ei ole toiminnassa."
+msgstr "Vaadittu taustapalvelu ei ole toimintakunnossa."
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
@@ -1270,7 +1243,7 @@ msgstr "Poistetaanko tili?"
 #: widgets/manageaccountwidget.ui:19
 #, kde-format
 msgid "Show only account on current activity"
-msgstr ""
+msgstr "Näytä tili vain nykyisessä aktiviteetissa"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/manageaccountwidget.ui:26
