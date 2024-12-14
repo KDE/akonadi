@@ -1,0 +1,2594 @@
+# Sanskrit translations for akonadi package.
+# Copyright (C) 2024 This file is copyright:
+# This file is distributed under the same license as the akonadi package.
+# Kali <EMAIL@ADDRESS>, 2024.
+#
+# SPDX-FileCopyrightText: 2024 kali <skkalwar999@gmail.com>
+msgid ""
+msgstr ""
+"Project-Id-Version: akonadi\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2024-11-28 00:40+0000\n"
+"PO-Revision-Date: 2024-12-14 01:48+0530\n"
+"Last-Translator: kali <skkalwar999@gmail.com>\n"
+"Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
+"Language: sa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 24.08.2\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "भवतः नामानि"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "भवतः ईमेलपत्राणि"
+
+#: agentbase/accountsintegration.cpp:86
+#, kde-format
+msgid "There is currently no account configured."
+msgstr "सम्प्रति कोऽपि खातं विन्यस्तं नास्ति ।"
+
+#: agentbase/accountsintegration.cpp:103
+#, kde-format
+msgid "Accounts integration is not supported"
+msgstr "लेखानां एकीकरणं समर्थितं नास्ति"
+
+#: agentbase/agentbase.cpp:310 agentbase/preprocessorbase_p.cpp:26
+#, kde-format
+msgid "Unable to register object at dbus: %1"
+msgstr "dbus इत्यत्र वस्तु पञ्जीकरणं कर्तुं असमर्थः: %1"
+
+#: agentbase/agentbase.cpp:401
+#, kde-format
+msgctxt "Name and type of Akonadi resource"
+msgid "%1 of type %2"
+msgstr "%2 प्रकारस्य %1"
+
+#: agentbase/agentbase.cpp:811
+#, kde-format
+msgctxt "@info:shell"
+msgid "Agent identifier"
+msgstr "एजेण्ट् परिचयकः"
+
+#: agentbase/agentbase.cpp:817
+#, kde-format
+msgid "Akonadi Agent"
+msgstr "अकोनाडी एजेण्ट"
+
+#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:268
+#, kde-format
+msgctxt "@info:status Application ready for work"
+msgid "Ready"
+msgstr "आत्त"
+
+#: agentbase/agentbase_p.h:52
+#, kde-format
+msgctxt "@info:status"
+msgid "Offline"
+msgstr "अफलाइन"
+
+#: agentbase/agentbase_p.h:57
+#, kde-format
+msgctxt "@info:status"
+msgid "Syncing..."
+msgstr "समन्वयनम्..."
+
+#: agentbase/agentbase_p.h:62
+#, kde-format
+msgctxt "@info:status"
+msgid "Error."
+msgstr "त्रुटि।"
+
+#: agentbase/agentbase_p.h:67
+#, kde-format
+msgctxt "@info:status"
+msgid "Not configured"
+msgstr "न विन्यस्तम्"
+
+#: agentbase/resourcebase.cpp:533
+#, kde-format
+msgctxt "@label command line option"
+msgid "Resource identifier"
+msgstr "संसाधनपरिचयः"
+
+#: agentbase/resourcebase.cpp:539
+#, kde-format
+msgid "Akonadi Resource"
+msgstr "अकोनाडी संसाधन"
+
+#: agentbase/resourcebase.cpp:580
+#, kde-format
+msgctxt "@info"
+msgid "Invalid item retrieved"
+msgstr "अमान्य मदं पुनः प्राप्तम्"
+
+#: agentbase/resourcebase.cpp:603
+#, kde-format
+msgctxt "@info"
+msgid "Error while creating item: %1"
+msgstr "मदं निर्माय त्रुटिः: %1"
+
+#: agentbase/resourcebase.cpp:627
+#, kde-format
+msgctxt "@info"
+msgid "Error while updating collection: %1"
+msgstr "संग्रहस्य अद्यतनीकरणकाले त्रुटिः: %1"
+
+#: agentbase/resourcebase.cpp:714
+#, kde-format
+msgctxt "@info"
+msgid "Updating local collection failed: %1."
+msgstr "स्थानीयसङ्ग्रहस्य अद्यतनीकरणं विफलम्: %1."
+
+#: agentbase/resourcebase.cpp:719
+#, kde-format
+msgctxt "@info"
+msgid "Updating local items failed: %1."
+msgstr "स्थानीयवस्तूनाम् अद्यतनीकरणं विफलम्: %1."
+
+#: agentbase/resourcebase.cpp:738
+#, kde-format
+msgctxt "@info"
+msgid "Cannot fetch item in offline mode."
+msgstr "अफलाइन मोड् मध्ये द्रव्यं आनेतुं न शक्यते ।"
+
+#: agentbase/resourcebase.cpp:919
+#, kde-format
+msgctxt "@info:status"
+msgid "Syncing folder '%1'"
+msgstr "'%1' पुटस्य समन्वयनम् ।"
+
+#: agentbase/resourcebase.cpp:939 agentbase/resourcebase.cpp:946
+#, kde-format
+msgid "Failed to retrieve collection for sync."
+msgstr "समन्वयनार्थं संग्रहं पुनः प्राप्तुं असफलम् ।"
+
+#: agentbase/resourcebase.cpp:987
+#, kde-format
+msgid "Failed to retrieve collection for attribute sync."
+msgstr "विशेषतासमन्वयनार्थं संग्रहं पुनः प्राप्तुं असफलम् ।"
+
+#: agentbase/resourcebase.cpp:1033
+#, kde-format
+msgid "The requested item no longer exists"
+msgstr "अनुरोधितं द्रव्यं पुनः नास्ति"
+
+#: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
+#, kde-format
+msgctxt "@info"
+msgid "Job canceled."
+msgstr "नौकरी रद्दीकृता।"
+
+#: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
+#, kde-format
+msgid "Akonadi Control"
+msgstr "अकोनाडी नियन्त्रण"
+
+#: akonadictl/main.cpp:220
+#, kde-format
+msgid ""
+"Akonadi server manipulation tool\n"
+"\n"
+"Commands:\n"
+"  start          Starts the Akonadi server with all its processes\n"
+"  stop           Stops the Akonadi server and all its processes cleanly\n"
+"  restart        Restart Akonadi server with all its processes\n"
+"  status         Shows a status overview of the Akonadi server\n"
+"  instances      List all existing Akonadi instances\n"
+"  vacuum         Vacuum internal storage (WARNING: needs a lot of time and "
+"disk\n"
+"                 space!)\n"
+"  fsck           Check (and attempt to fix) consistency of the internal "
+"storage\n"
+"                 (can take some time)"
+msgstr ""
+"अकोनाडी सर्वर हेरफेर साधन\n"
+"\n"
+"आदेशाः : १.\n"
+"  start अकोनाडी सर्वरं सर्वैः प्रक्रियाभिः सह आरभते\n"
+"  stop अकोनाडी सर्वरं तस्य सर्वाणि प्रक्रियाश्च स्वच्छतया स्थगयति\n"
+"  restart अकोनाडी सर्वरं तस्य सर्वैः प्रक्रियाभिः सह पुनः आरभत\n"
+"  status अकोनाडी सर्वरस्य स्थितिविवरणं दर्शयति\n"
+"  instances सर्वाणि विद्यमानाः अकोनाडी उदाहरणानि सूचीबद्धानि कुर्वन्तु\n"
+"  vacuum आन्तरिकभण्डारणं वैक्यूम कुर्वन्तु (चेतावनी: बहुकालस्य डिस्कस्य च आवश्यकता वर्तते\n"
+"                 स्थानं!)\n"
+"  fsck आन्तरिकभण्डारणस्य स्थिरतां परीक्ष्यताम् (तथा निश्चयं कर्तुं प्रयतस्व)\n"
+"                 (किञ्चित् समयं ग्रहीतुं शक्नोति)"
+
+#: akonadictl/main.cpp:239
+#, kde-format
+msgid "Wait for server shutdown to complete."
+msgstr "सर्वर-बन्दीकरणस्य पूर्णतां प्रतीक्ष्यताम् ।"
+
+#: akonadictl/main.cpp:241
+#, kde-format
+msgid "Command to execute"
+msgstr "निष्पादयितुं आदेशः"
+
+#: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
+#, kde-format
+msgid "No such collection."
+msgstr "न तादृशः संग्रहः।"
+
+#: core/collectionsync.cpp:505 core/collectionsync.cpp:650
+#, kde-format
+msgid "Found unresolved orphan collections"
+msgstr "अनवधान अनाथ संग्रह प्राप्त"
+
+#: core/conflicthandler.cpp:53
+#, kde-format
+msgid "Did not find other item for conflict handling"
+msgstr "विग्रहनिबन्धनार्थं अन्यत् द्रव्यं न प्राप्नोत्"
+
+#: core/jobs/agentinstancecreatejob.cpp:70
+#, kde-format
+msgid "Unable to access D-Bus interface of created agent."
+msgstr "निर्मितस्य एजेण्टस्य D-Bus अन्तरफलकं प्राप्तुं असमर्थः।"
+
+#: core/jobs/agentinstancecreatejob.cpp:92
+#, kde-format
+msgid "Agent instance creation timed out."
+msgstr "एजेण्ट् उदाहरणनिर्माणस्य समयः समाप्तः।"
+
+#: core/jobs/agentinstancecreatejob.cpp:150
+#, kde-format
+msgid "Unable to obtain agent type '%1'."
+msgstr "'%1' एजेण्ट् प्रकारं प्राप्तुं असमर्थः ।"
+
+#: core/jobs/agentinstancecreatejob.cpp:158
+#, kde-format
+msgid "Unable to create agent instance."
+msgstr "एजेण्ट् उदाहरणं निर्मातुं असमर्थः।"
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:73
+#, kde-format
+msgid "Invalid collection instance."
+msgstr "अमान्य संग्रहदृष्टान्तः।"
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:80
+#: core/jobs/resourcesynchronizationjob.cpp:88
+#, kde-format
+msgid "Invalid resource instance."
+msgstr "अमान्यसंसाधनदृष्टान्तः।"
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:102
+#: core/jobs/resourcesynchronizationjob.cpp:113
+#, kde-format
+msgid "Unable to obtain D-Bus interface for resource '%1'"
+msgstr "'%1' संसाधनस्य कृते D-Bus अन्तरफलकं प्राप्तुं असमर्थः ।"
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:125
+#, kde-format
+msgid "Collection attributes synchronization timed out."
+msgstr "संग्रह विशेषता समन्वयन समय समाप्त।"
+
+#: core/jobs/collectioncopyjob.cpp:54
+#, kde-format
+msgid "Invalid collection to copy"
+msgstr "प्रतिलिपिं कर्तुं अमान्यः संग्रहः"
+
+#: core/jobs/collectioncopyjob.cpp:60
+#, kde-format
+msgid "Invalid destination collection"
+msgstr "अमान्य गन्तव्यसङ्ग्रह"
+
+#: core/jobs/collectioncreatejob.cpp:50
+#, kde-format
+msgid "Invalid parent"
+msgstr "अमान्य मातापिता"
+
+#: core/jobs/collectioncreatejob.cpp:98
+#, kde-format
+msgid "Failed to parse Collection from response"
+msgstr "प्रतिक्रियातः संग्रहस्य विश्लेषणं कर्तुं असफलम्"
+
+#: core/jobs/collectiondeletejob.cpp:52
+#, kde-format
+msgid "Invalid collection"
+msgstr "अमान्य संग्रह"
+
+#: core/jobs/collectionfetchjob.cpp:212
+#, kde-format
+msgid "Invalid collection given."
+msgstr "अमान्यः संग्रहः दत्तः।"
+
+#: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:90
+#, kde-format
+msgid "No objects specified for moving"
+msgstr "चालनार्थं निर्दिष्टानि वस्तुनि नास्ति"
+
+#: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
+#: core/jobs/linkjobimpl_p.h:39
+#, kde-format
+msgid "No valid destination specified"
+msgstr "वैधं गन्तव्यं निर्दिष्टं नास्ति"
+
+#: core/jobs/invalidatecachejob.cpp:58
+#, kde-format
+msgid "Invalid collection."
+msgstr "अमान्य संग्रह।"
+
+#: core/jobs/itemcreatejob.cpp:115
+#, kde-format
+msgid "Invalid parent collection"
+msgstr "अमान्य मातापितृसङ्ग्रह"
+
+#: core/jobs/job.cpp:335
+#, kde-format
+msgid "Cannot connect to the Akonadi service."
+msgstr "अकोनाडी सेवायाः सह सम्बद्धं कर्तुं न शक्नोति।"
+
+#: core/jobs/job.cpp:338
+#, kde-format
+msgid ""
+"The protocol version of the Akonadi server is incompatible. Make sure you "
+"have a compatible version installed."
+msgstr ""
+"अकोनाडी सर्वरस्य प्रोटोकॉलसंस्करणं असङ्गतम् अस्ति । भवतः सङ्गतसंस्करणं संस्थापितम् अस्ति इति "
+"सुनिश्चितं कुर्वन्तु ।"
+
+#: core/jobs/job.cpp:341
+#, kde-format
+msgid "User canceled operation."
+msgstr "उपयोक्ता रद्दीकृतं संचालनम्।"
+
+#: core/jobs/job.cpp:346
+#, kde-format
+msgid "Unknown error."
+msgstr "अज्ञातदोषः ।"
+
+#: core/jobs/job.cpp:385
+#, kde-format
+msgid "Unexpected response"
+msgstr "अप्रत्याशित प्रतिक्रिया"
+
+#: core/jobs/resourcesynchronizationjob.cpp:139
+#, kde-format
+msgid "Resource synchronization timed out."
+msgstr "संसाधनसमन्वयनस्य समयः समाप्तः।"
+
+#: core/jobs/specialcollectionshelperjobs.cpp:145
+#, kde-format
+msgid "Could not fetch root collection of resource %1."
+msgstr "संसाधनस्य %1 मूलसङ्ग्रहं आनेतुं न शक्तम् ।"
+
+#: core/jobs/specialcollectionshelperjobs.cpp:189
+#, kde-format
+msgid "No resource ID given."
+msgstr "संसाधन-परिचयः न दत्तः ।"
+
+#: core/jobs/specialcollectionshelperjobs.cpp:326
+#, kde-format
+msgid "Invalid resource identifier '%1'"
+msgstr "अमान्यसंसाधनपरिचयः '%1'."
+
+#: core/jobs/specialcollectionshelperjobs.cpp:342
+#: core/jobs/specialcollectionshelperjobs.cpp:350
+#, kde-format
+msgid "Failed to configure default resource via D-Bus."
+msgstr "D-Bus मार्गेण पूर्वनिर्धारितसंसाधनं विन्यस्तुं असफलम् ।"
+
+#: core/jobs/specialcollectionshelperjobs.cpp:415
+#, kde-format
+msgid "Failed to fetch the resource collection."
+msgstr "संसाधनसङ्ग्रहं आनेतुं असफलम्।"
+
+#: core/jobs/specialcollectionshelperjobs.cpp:599
+#, kde-format
+msgid "Timeout trying to get lock."
+msgstr "तालं प्राप्तुं प्रयतमानो समयसमाप्तिः।"
+
+#: core/jobs/tagcreatejob.cpp:49
+#, kde-format
+msgid "Failed to create tag."
+msgstr "टैग् निर्मातुं असफलम्।"
+
+#: core/jobs/trashjob.cpp:155
+#, kde-format
+msgid "Move to trash collection failed, aborting trash operation"
+msgstr "कचरासंग्रहणं प्रति गमनम् विफलम्, कचरासञ्चालनं निरस्तम्"
+
+#: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
+#, kde-format
+msgid "Invalid items passed"
+msgstr "अमान्यवस्तूनि पारितानि"
+
+#: core/jobs/trashjob.cpp:258 core/jobs/trashrestorejob.cpp:201
+#, kde-format
+msgid "Invalid collection passed"
+msgstr "अमान्य संग्रह उत्तीर्ण"
+
+#: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
+#, kde-format
+msgid "No valid collection or empty itemlist"
+msgstr "वैधः संग्रहः वा रिक्तः द्रव्यसूची वा नास्ति"
+
+#: core/jobs/trashrestorejob.cpp:86
+#, kde-format
+msgid "Could not find restore collection and restore resource is not available"
+msgstr "पुनर्स्थापनसङ्ग्रहं न प्राप्नोत् तथा च पुनर्स्थापनसंसाधनं उपलब्धं नास्ति"
+
+#: core/models/agentinstancemodel.cpp:192
+#, kde-format
+msgctxt "@title:column, name of a thing"
+msgid "Name"
+msgstr "नामः"
+
+#: core/models/entitytreemodel.cpp:207
+#, kde-format
+msgctxt "@info:status"
+msgid "Loading..."
+msgstr "लोडिंग..."
+
+#: core/models/entitytreemodel.cpp:499
+#, kde-format
+msgctxt "@window:title"
+msgid "Error"
+msgstr "त्रुटि"
+
+#: core/models/entitytreemodel.cpp:500
+#, kde-format
+msgid ""
+"The target collection '%1' contains already\n"
+"a collection with name '%2'."
+msgstr ""
+"लक्ष्यसङ्ग्रहे '%1' पूर्वमेव अस्ति\n"
+"'%2' इति नाम्ना संग्रहः ।"
+
+#: core/models/entitytreemodel.cpp:669
+#, kde-format
+msgctxt "@title:column Name of a thing"
+msgid "Name"
+msgstr "नामः"
+
+#: core/models/entitytreemodel_p.cpp:1331
+#, kde-format
+msgctxt "@info"
+msgid "Could not copy item: <message>%1</message>"
+msgstr "द्रव्यस्य प्रतिलिपिं कर्तुं न शक्यते: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1333
+#, kde-format
+msgctxt "@info"
+msgid "Could not copy collection: <message>%1</message>"
+msgstr "संग्रहस्य प्रतिलिपिं कर्तुं न शक्यते: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1335
+#, kde-format
+msgctxt "@info"
+msgid "Could not move item: <message>%1</message>"
+msgstr "द्रव्यं स्थानान्तरयितुं न शक्तम्: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1337
+#, kde-format
+msgctxt "@info"
+msgid "Could not move collection: <message>%1</message>"
+msgstr "संग्रहं स्थानान्तरयितुं न शक्तम्: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1339
+#, kde-format
+msgctxt "@info"
+msgid "Could not link entity: <message>%1</message>"
+msgstr "सत्तां लिङ्क् कर्तुं न शक्तवान्: <message>%1</message>"
+
+#: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
+#, kde-format
+msgctxt "@title:window"
+msgid "Error"
+msgstr "त्रुटि"
+
+#: core/models/favoritecollectionsmodel.cpp:398
+#, kde-format
+msgid "Favorite Folders"
+msgstr "प्रियपुटम्"
+
+#: core/models/statisticsproxymodel.cpp:86
+#, kde-format
+msgid "Total Messages"
+msgstr "कुल सन्देशाः"
+
+#: core/models/statisticsproxymodel.cpp:88
+#, kde-format
+msgid "Unread Messages"
+msgstr "अपठित सन्देश"
+
+#: core/models/statisticsproxymodel.cpp:98
+#, kde-format
+msgid "<strong>Quota</strong>: %1%<br>\n"
+msgstr "<strong>कोटा</strong> : %1% .<br>\n"
+
+#: core/models/statisticsproxymodel.cpp:105
+#, kde-format
+msgid "Storage Size"
+msgstr "भण्डारण आकार"
+
+#: core/models/statisticsproxymodel.cpp:111
+#, kde-format
+msgid "Subfolder Storage Size"
+msgstr "उपपुटस्य भण्डारणस्य आकारः"
+
+#: core/models/statisticsproxymodel.cpp:231
+#, kde-format
+msgctxt "number of unread entities in the collection"
+msgid "Unread"
+msgstr "अपठित"
+
+#: core/models/statisticsproxymodel.cpp:232
+#, kde-format
+msgctxt "number of entities in the collection"
+msgid "Total"
+msgstr "कुल"
+
+#: core/models/statisticsproxymodel.cpp:233
+#, kde-format
+msgctxt "collection size"
+msgid "Size"
+msgstr "आकृति"
+
+#: core/models/tagmodel.cpp:64
+#, kde-format
+msgid "Tag"
+msgstr "सूचकपत्त्र"
+
+#: core/partfetcher.cpp:49
+#, kde-format
+msgid "Unable to fetch item for index"
+msgstr "अनुक्रमणिकायाः कृते द्रव्यं आनेतुं असमर्थः"
+
+#: core/partfetcher.cpp:64
+#, kde-format
+msgid "Index is no longer available"
+msgstr "अनुक्रमणिका अधुना उपलब्धा नास्ति"
+
+#: core/partfetcher.cpp:114
+#, kde-format
+msgid "Payload part '%1' is not available for this index"
+msgstr "अस्य अनुक्रमणिकायाः कृते पेलोड् भागः '%1' उपलब्धः नास्ति"
+
+#: core/partfetcher.cpp:123
+#, kde-format
+msgid "No session available for this index"
+msgstr "अस्य अनुक्रमणिकायाः कृते कोऽपि सत्रः उपलब्धः नास्ति"
+
+#: core/partfetcher.cpp:132
+#, kde-format
+msgid "No item available for this index"
+msgstr "अस्य अनुक्रमणिकायाः कृते कोऽपि द्रव्यः उपलब्धः नास्ति"
+
+#: core/pluginloader.cpp:145
+#, kde-format
+msgid "Unnamed plugin"
+msgstr "अनाम प्लगिन्"
+
+#: core/pluginloader.cpp:151
+#, kde-format
+msgid "No description available"
+msgstr "न वर्णनं लभ्यते"
+
+#: core/servermanager.cpp:263
+#, kde-format
+msgid ""
+"The Akonadi server protocol version differs from the protocol version used "
+"by this application.\n"
+"If you recently updated your system please log out and back in to make sure "
+"all applications use the correct protocol version."
+msgstr ""
+"अकोनाडी सर्वर प्रोटोकॉल संस्करणम् अस्मिन् अनुप्रयोगेन प्रयुक्तात् प्रोटोकॉल संस्करणात् भिन्नम् "
+"अस्ति ।\n"
+"यदि भवान् अद्यैव स्वतन्त्रं अद्यतनं कृतवान् तर्हि सर्वे अनुप्रयोगाः समीचीनप्रोटोकॉलसंस्करणस्य "
+"उपयोगं कुर्वन्ति इति सुनिश्चित्य बहिः गत्वा पुनः प्रवेशं कुर्वन्तु ।"
+
+#: core/servermanager.cpp:280
+#, kde-format
+msgid ""
+"There are no Akonadi Agents available. Please verify your KDE PIM "
+"installation."
+msgstr "अकोनाडी एजेण्ट् उपलभ्यन्ते । कृपया स्वस्य KDE PIM संस्थापनं सत्यापयन्तु ।"
+
+#: core/session.cpp:185
+#, kde-format
+msgid ""
+"Protocol version mismatch. Server version is older (%1) than ours (%2). If "
+"you updated your system recently please restart the Akonadi server."
+msgstr ""
+"प्रोटोकॉल संस्करणस्य असङ्गतिः । अस्माकं (%2) अपेक्षया सर्वरसंस्करणं प्राचीनम् (%1) अस्ति । "
+"यदि भवान् अद्यैव स्वस्य प्रणालीं अद्यतनं कृतवान् तर्हि कृपया Akonadi सर्वरं पुनः आरभत ।"
+
+#: core/session.cpp:194
+#, kde-format
+msgid ""
+"Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
+"you updated your system recently please restart all KDE PIM applications."
+msgstr ""
+"प्रोटोकॉल संस्करणस्य असङ्गतिः । अस्माकं (%2) अपेक्षया सर्वरसंस्करणं नूतनतरं (%1) अस्ति । यदि "
+"भवान् स्वस्य प्रणालीं अद्यतने अद्यतनं कृतवान् तर्हि कृपया सर्वाणि KDE PIM अनुप्रयोगाः पुनः "
+"आरभत ।"
+
+#: selftest/main.cpp:19
+#, kde-format
+msgid "Akonadi Self Test"
+msgstr "अकोनाडी आत्म परीक्षण"
+
+#: selftest/main.cpp:21
+#, kde-format
+msgid "Checks and reports state of Akonadi server"
+msgstr "अकोनाडी सर्वरस्य स्थितिं जाँचयति, प्रतिवेदनं च करोति"
+
+#: selftest/main.cpp:23
+#, kde-format
+msgid "(c) 2008 Volker Krause <vkrause@kde.org>"
+msgstr "(ग) 2008 वोल्कर क्राउस <vkrause@kde.org>"
+
+#: shared/akapplication.cpp:70
+#, kde-format
+msgid ""
+"Namespace for starting multiple Akonadi instances in the same user session"
+msgstr "एकस्मिन् उपयोक्तृसत्रे बहुविध-अकोनाडी-दृष्टान्तानां आरम्भार्थं नामस्थानम्"
+
+#: widgets/agentactionmanager.cpp:35
+msgid "&New Agent Instance..."
+msgstr "&नव एजेण्ट् उदाहरणम्..."
+
+#: widgets/agentactionmanager.cpp:36
+msgid "&Delete Agent Instance"
+msgstr "&एजेण्ट् उदाहरणं विलोपयन्तु"
+
+#: widgets/agentactionmanager.cpp:37
+msgid "&Configure Agent Instance"
+msgstr "&एजेण्ट् उदाहरणं विन्यस्तं कुर्वन्तु"
+
+#: widgets/agentactionmanager.cpp:53
+#, kde-format
+msgctxt "@title:window"
+msgid "New Agent Instance"
+msgstr "नवीन एजेण्ट् उदाहरणम्"
+
+#: widgets/agentactionmanager.cpp:55
+#, kde-format
+msgid "Could not create agent instance: %1"
+msgstr "एजेण्ट् उदाहरणं निर्मातुं न शक्तम्: %1"
+
+#: widgets/agentactionmanager.cpp:59
+#, kde-format
+msgctxt "@title:window"
+msgid "Agent Instance Creation Failed"
+msgstr "एजेण्ट् उदाहरणनिर्माणं विफलम्"
+
+#: widgets/agentactionmanager.cpp:61
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete Agent Instance?"
+msgstr "एजेण्ट् उदाहरणं विलोपयन्तु?"
+
+#: widgets/agentactionmanager.cpp:65
+#, kde-format
+msgid "Do you really want to delete the selected agent instance?"
+msgstr "किं भवान् वास्तवमेव चयनितं एजेण्ट्-दृष्टान्तं विलोपयितुम् इच्छति?"
+
+#: widgets/agentconfigurationdialog.cpp:56
+#, kde-format
+msgctxt "@title:window, %1 = agent name"
+msgid "%1 Configuration"
+msgstr "%1 विन्यासः"
+
+#: widgets/agentconfigurationdialog.cpp:86
+#, kde-format
+msgid "%1 Handbook"
+msgstr "%1 हस्तपुस्तिका"
+
+#: widgets/agentconfigurationdialog.cpp:87
+#, kde-format
+msgid "About %1"
+msgstr "%1 इत्यस्य विषये"
+
+#: widgets/agentconfigurationwidget.cpp:94
+#, kde-format
+msgid "The configuration dialog has been opened in another window"
+msgstr "अन्यस्मिन् विण्डो मध्ये विन्याससंवादः उद्घाटितः अस्ति"
+
+#: widgets/agentconfigurationwidget.cpp:101
+#, kde-format
+msgid "Configuration for %1 is already opened elsewhere."
+msgstr "%1 कृते विन्यासः अन्यत्र पूर्वमेव उद्घाटितः अस्ति ।"
+
+#: widgets/agentconfigurationwidget.cpp:103
+#, kde-format
+msgid "Failed to register %1 configuration dialog."
+msgstr "%1 विन्याससंवादस्य पञ्जीकरणं कर्तुं असफलम् ।"
+
+#: widgets/agentinstancewidget.cpp:259
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr "(%1%) २."
+
+#: widgets/agenttypedialog.cpp:66
+#, kde-format
+msgctxt "@title:window"
+msgid "Configure Account"
+msgstr "खाता विन्यस्तं कुर्वन्तु"
+
+#: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
+#, kde-format
+msgid "minute"
+msgid_plural "minutes"
+msgstr[0] "क्षणं"
+msgstr[1] "पन्चनिमेषः"
+
+#: widgets/cachepolicypage.cpp:69
+#, kde-format
+msgid "Retrieval"
+msgstr "पुनर्प्राप्ति"
+
+#. i18n: ectx: property (text), widget (QCheckBox, inherit)
+#: widgets/cachepolicypage.ui:20
+#, kde-format
+msgid "Use options from parent folder or account"
+msgstr "मातापितृपुटतः अथवा खातेः विकल्पानां उपयोगं कुर्वन्तु"
+
+#. i18n: ectx: property (text), widget (QCheckBox, syncOnDemand)
+#: widgets/cachepolicypage.ui:33
+#, kde-format
+msgid "Synchronize when selecting this folder"
+msgstr "एतत् पुटं चयनं कुर्वन् समन्वयं कुर्वन्तु"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: widgets/cachepolicypage.ui:40
+#, kde-format
+msgid "Synchronize after:"
+msgstr "पश्चात् समन्वयनम् : १."
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, checkInterval)
+#: widgets/cachepolicypage.ui:47
+#, kde-format
+msgctxt "never check the cache"
+msgid "Never"
+msgstr "कदापि न"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, checkInterval)
+#. i18n: ectx: property (suffix), widget (QSpinBox, localCacheTimeout)
+#: widgets/cachepolicypage.ui:50 widgets/cachepolicypage.ui:133
+#, kde-format
+msgid "minutes"
+msgstr "पन्चनिमेषः"
+
+#. i18n: ectx: property (text), widget (QLabel, localPartsLabel)
+#: widgets/cachepolicypage.ui:66
+#, kde-format
+msgid "Locally cached parts:"
+msgstr "स्थानीयतया संग्रहीताः भागाः : १."
+
+#. i18n: ectx: property (title), widget (KEditListWidget, localParts)
+#: widgets/cachepolicypage.ui:87
+#, kde-format
+msgid "Locally Cached Parts"
+msgstr "स्थानीयरूपेण संग्रहीताः भागाः"
+
+#. i18n: ectx: property (text), widget (QLabel, retrievalOptionsLabel)
+#: widgets/cachepolicypage.ui:94
+#, kde-format
+msgid "Retrieval Options:"
+msgstr "पुनर्प्राप्तिविकल्पाः : १."
+
+#. i18n: ectx: property (text), widget (QRadioButton, retrieveFullMessages)
+#: widgets/cachepolicypage.ui:101
+#, kde-format
+msgid "Always retrieve full &messages"
+msgstr "सर्वदा पूर्णं &सन्देशान् पुनः प्राप्नुवन्तु"
+
+#. i18n: ectx: property (text), widget (QRadioButton, retrieveOnlyHeaders)
+#: widgets/cachepolicypage.ui:111
+#, kde-format
+msgid "&Retrieve message bodies on demand"
+msgstr "&माङ्गल्यां सन्देशशरीराणि पुनः प्राप्तुम्"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/cachepolicypage.ui:118
+#, kde-format
+msgid "Keep message bodies locally for:"
+msgstr "सन्देशशरीराणि स्थानीयरूपेण स्थापयन्तु :"
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, localCacheTimeout)
+#: widgets/cachepolicypage.ui:130
+#, kde-format
+msgctxt "no cache timeout"
+msgid "Forever"
+msgstr "सदा"
+
+#: widgets/clearcachefoldersjob.cpp:41
+#, kde-format
+msgid "Collection cache cleared. You should restart Akonadi now."
+msgstr "संग्रहसञ्चयः स्वच्छः अभवत् । भवद्भिः इदानीं अकोनाडी पुनः आरभणीयम् ।"
+
+#: widgets/clearcachefoldersjob.cpp:69
+#, kde-format
+msgid ""
+"The collection '%1' contains %2 items without Remote ID. Those items were "
+"likely never uploaded to the destination server, so clearing this collection "
+"means that those <b>data will be lost</b>. Are you sure you want to proceed?"
+msgstr ""
+"&#39;%1&#39; संग्रहे दूरस्थ-ID विना %2 वस्तूनि सन्ति । तानि वस्तूनि सम्भवतः कदापि "
+"गन्तव्यसर्वरमध्ये अपलोड् न कृताः आसन्, अतः एतत् संग्रहं स्वच्छं कृत्वा तानि <b>दत्तांशकानि "
+"नष्टानि भविष्यन्ति</b> इति अर्थः । किं भवन्तः निश्चयेन अग्रे गन्तुम् इच्छन्ति ?"
+
+#: widgets/collectiondialog.cpp:58
+#, kde-format
+msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
+msgid "Search"
+msgstr "अन्वेषण"
+
+#: widgets/collectiondialog.cpp:66
+#, kde-format
+msgctxt "@option:check"
+msgid "Use folder by default"
+msgstr "पूर्वनिर्धारितरूपेण पुटस्य उपयोगं कुर्वन्तु"
+
+#: widgets/collectiondialog.cpp:226
+#, kde-format
+msgctxt "@action:button"
+msgid "&New Subfolder..."
+msgstr "&नव उपपुट..."
+
+#: widgets/collectiondialog.cpp:228
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Create a new subfolder under the currently selected folder"
+msgstr "वर्तमान चयनितपुटस्य अधः नूतनं उपपुटं रचयन्तु"
+
+#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:418
+#, kde-format
+msgctxt "@title:window"
+msgid "New Folder"
+msgstr "नवीनं पुटम्"
+
+#: widgets/collectiondialog.cpp:266
+#, kde-format
+msgctxt "@label:textbox, name of a thing"
+msgid "Name"
+msgstr "नामः"
+
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:420
+#, kde-format
+msgid "Could not create folder: %1"
+msgstr "पुटं निर्मातुं न शक्तम्: %1"
+
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:421
+#, kde-format
+msgctxt "@title:window"
+msgid "Folder Creation Failed"
+msgstr "पुटस्य निर्माणं विफलम्"
+
+#: widgets/collectiongeneralpropertiespage.cpp:27
+#, kde-format
+msgctxt "@title:tab general properties page"
+msgid "General"
+msgstr "सामान्य"
+
+#: widgets/collectiongeneralpropertiespage.cpp:54
+#, kde-format
+msgctxt "@label"
+msgid "One object"
+msgid_plural "%1 objects"
+msgstr[0] "एकं वस्तु"
+msgstr[1] "%1 वस्तुनि"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/collectiongeneralpropertiespage.ui:16
+#, kde-format
+msgid "&Name:"
+msgstr "&नामः:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, customIconCheckbox)
+#: widgets/collectiongeneralpropertiespage.ui:29
+#, kde-format
+msgid "&Use custom icon:"
+msgstr "&अनुकूलितचिह्नस्य उपयोगं कुर्वन्तु:"
+
+#. i18n: ectx: property (icon), widget (KIconButton, customIcon)
+#: widgets/collectiongeneralpropertiespage.ui:39
+#, kde-format
+msgid "folder"
+msgstr "पुटम्"
+
+#. i18n: ectx: property (title), widget (QGroupBox, statsBox)
+#: widgets/collectiongeneralpropertiespage.ui:62
+#, kde-format
+msgid "Statistics"
+msgstr "सांख्यिकी"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: widgets/collectiongeneralpropertiespage.ui:68
+#, kde-format
+msgctxt "object names"
+msgid "Content:"
+msgstr "विषयः:"
+
+#. i18n: ectx: property (text), widget (QLabel, countLabel)
+#: widgets/collectiongeneralpropertiespage.ui:75
+#, kde-format
+msgid "0 objects"
+msgstr "० वस्तुनि"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: widgets/collectiongeneralpropertiespage.ui:82
+#, kde-format
+msgid "Size:"
+msgstr "आकृति:"
+
+#. i18n: ectx: property (text), widget (QLabel, sizeLabel)
+#: widgets/collectiongeneralpropertiespage.ui:89
+#, kde-format
+msgid "0 Byte"
+msgstr "० बाइट्"
+
+#: widgets/collectionmaintenancepage.cpp:46
+#, kde-format
+msgid "Remember that indexing can take some minutes."
+msgstr "स्मर्यतां यत् अनुक्रमणिकायां केचन निमेषाः भवितुं शक्नुवन्ति ।"
+
+#: widgets/collectionmaintenancepage.cpp:72
+#, kde-format
+msgid "Maintenance"
+msgstr "अनुरक्षणम्‌"
+
+#: widgets/collectionmaintenancepage.cpp:131
+#, kde-format
+msgid "Error while retrieving indexed items count"
+msgstr "अनुक्रमितवस्तूनाम् गणनां पुनः प्राप्तुं त्रुटिः"
+
+#: widgets/collectionmaintenancepage.cpp:134
+#, kde-format
+msgid "Indexed %1 item in this folder"
+msgid_plural "Indexed %1 items in this folder"
+msgstr[0] "अस्मिन् पुटे %1 द्रव्यं अनुक्रमितम्"
+msgstr[1] "Indexed %1 items in this folder"
+
+#: widgets/collectionmaintenancepage.cpp:138
+#, kde-format
+msgid "Calculating indexed items..."
+msgstr "अनुक्रमितवस्तूनाम् गणना..."
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/collectionmaintenancepage.ui:17
+#, kde-format
+msgid "Folder type:"
+msgstr "पुटस्य प्रकारः : १."
+
+#. i18n: ectx: property (text), widget (QLabel, folderTypeLbl)
+#. i18n: ectx: property (text), widget (QLabel, folderSizeLbl)
+#. i18n: ectx: property (text), widget (QLabel, itemsCountLbl)
+#. i18n: ectx: property (text), widget (QLabel, unreadItemsCountLbl)
+#: widgets/collectionmaintenancepage.ui:24
+#: widgets/collectionmaintenancepage.ui:31
+#: widgets/collectionmaintenancepage.ui:52
+#: widgets/collectionmaintenancepage.ui:66
+#, kde-format
+msgid "unknown"
+msgstr "अज्ञात"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: widgets/collectionmaintenancepage.ui:38
+#, kde-format
+msgid "File size:"
+msgstr "सञ्चिकायाः आकारः : १."
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: widgets/collectionmaintenancepage.ui:45
+#, kde-format
+msgid "Total items:"
+msgstr "कुलवस्तूनि : १."
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: widgets/collectionmaintenancepage.ui:59
+#, kde-format
+msgid "Unread items:"
+msgstr "अपठितवस्तूनि : १."
+
+#. i18n: ectx: property (text), widget (QLabel, indexingLabel)
+#: widgets/collectionmaintenancepage.ui:73
+#, kde-format
+msgid "Indexing:"
+msgstr "अनुक्रमणिका : १."
+
+#. i18n: ectx: property (text), widget (QCheckBox, enableIndexingChkBox)
+#: widgets/collectionmaintenancepage.ui:80
+#, kde-format
+msgid "Enable fulltext indexing"
+msgstr "पूर्णपाठसूचीकरणं सक्षमं कुर्वन्तु"
+
+#. i18n: ectx: property (text), widget (QLabel, indexedCountLbl)
+#: widgets/collectionmaintenancepage.ui:87
+#, kde-format
+msgid "Retrieving indexed items count..."
+msgstr "अनुक्रमितवस्तूनि पुनः प्राप्तुं गणना..."
+
+#. i18n: ectx: property (text), widget (QPushButton, reindexButton)
+#: widgets/collectionmaintenancepage.ui:94
+#, kde-format
+msgid "Reindex folder"
+msgstr "पुनः अनुक्रमणिका पुटम्"
+
+#: widgets/collectionrequester.cpp:113
+#, kde-format
+msgctxt "@info:placeholder"
+msgid "No Folder"
+msgstr "न फोल्डर्"
+
+#: widgets/collectionrequester.cpp:122
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Open collection dialog"
+msgstr "संग्रहसंवादं उद्घाटयन्तु"
+
+#: widgets/collectionrequester.cpp:143
+#, kde-format
+msgctxt "@title:window"
+msgid "Select a Collection"
+msgstr "एकं संग्रहं चिनोतु"
+
+#: widgets/conflictresolvedialog.cpp:129
+#, kde-format
+msgid "Modification Time"
+msgstr "परिवर्तन समय"
+
+#: widgets/conflictresolvedialog.cpp:141
+#, kde-format
+msgid "Flags"
+msgstr "ध्वजाः"
+
+#: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
+#: widgets/conflictresolvedialog.cpp:174
+#, kde-format
+msgid "Attribute: %1"
+msgstr "विशेषताः %1"
+
+#: widgets/conflictresolvedialog.cpp:186
+#, kde-format
+msgctxt "@title:window"
+msgid "Conflict Resolution"
+msgstr "द्वन्द्वनिराकरणम्"
+
+#: widgets/conflictresolvedialog.cpp:192
+#, kde-format
+msgctxt "@action:button"
+msgid "Take my version"
+msgstr "मम संस्करणं गृहाण"
+
+#: widgets/conflictresolvedialog.cpp:198
+#, kde-format
+msgctxt "@action:button"
+msgid "Take their version"
+msgstr "तेषां संस्करणं गृह्यताम्"
+
+#: widgets/conflictresolvedialog.cpp:204
+#, kde-format
+msgctxt "@action:button"
+msgid "Keep both versions"
+msgstr "उभयसंस्करणं स्थापयन्तु"
+
+#: widgets/conflictresolvedialog.cpp:217
+#, kde-format
+msgctxt "@label:textbox"
+msgid ""
+"<qt>Your changes conflict with those made by someone else meanwhile."
+"<br>Unless one version can just be thrown away, you will have to integrate "
+"those changes manually.<br>Click on <a href=\"opentexteditor\">\"Open text "
+"editor\"</a> to keep a copy of the texts, then select which version is most "
+"correct, then re-open it and modify it again to add what's missing."
+msgstr ""
+"<qt>भवतः परिवर्तनं तावत्पर्यन्तं अन्येन कृतैः सह विग्रहं करोति ।<br> यावत् एकं संस्करणं केवलं "
+"क्षिप्तुं न शक्यते तावत् भवद्भिः तानि परिवर्तनानि हस्तचलितरूपेण एकीकृतानि भविष्यन्ति ।<br> "
+"पाठानाम् प्रतिलिपिं स्थापयितुं <a href=\"opentexteditor\">&quot;Open text "
+"editor&quot;</a> इत्यत्र क्लिक् कुर्वन्तु, ततः कः संस्करणः अधिकतया सम्यक् इति चिनोतु, ततः "
+"पुनः उद्घाट्य पुनः परिवर्त्य किं लुप्तं तत् योजयन्तु ।"
+
+#: widgets/conflictresolvedialog.cpp:266
+#, kde-format
+msgid "Data"
+msgstr "दत्तांश"
+
+#: widgets/controlgui.cpp:223
+#, kde-format
+msgid "Starting Akonadi server..."
+msgstr "अकोनाडी सर्वरं आरभ्य..."
+
+#: widgets/controlgui.cpp:229
+#, kde-format
+msgid "Stopping Akonadi server..."
+msgstr "अकोनाडी सर्वरं स्थगयति..."
+
+#: widgets/dragdropmanager.cpp:212
+#, kde-format
+msgid "&Move Here"
+msgstr "&अत्र गच्छतु"
+
+#: widgets/dragdropmanager.cpp:218
+#, kde-format
+msgid "&Copy Here"
+msgstr "&अत्र प्रतिलिपि कुरुत"
+
+#: widgets/dragdropmanager.cpp:224
+#, kde-format
+msgid "&Link Here"
+msgstr "&Link अत्र"
+
+#: widgets/dragdropmanager.cpp:229
+#, kde-format
+msgid "C&ancel"
+msgstr "निरसयतु"
+
+#: widgets/erroroverlay.cpp:224
+#, kde-format
+msgctxt "%1 is a reason why"
+msgid ""
+"Cannot connect to the Personal information management service.\n"
+"\n"
+"%1"
+msgstr ""
+"व्यक्तिगतसूचनाप्रबन्धनसेवायां सम्बद्धं कर्तुं न शक्नोति।\n"
+"\n"
+"%1"
+
+#: widgets/erroroverlay.cpp:228
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Personal information management service is starting..."
+msgstr "व्यक्तिगतसूचनाप्रबन्धनसेवा आरब्धा अस्ति..."
+
+#: widgets/erroroverlay.cpp:229
+#, kde-format
+msgid "Personal information management service is starting..."
+msgstr "व्यक्तिगतसूचनाप्रबन्धनसेवा आरब्धा अस्ति..."
+
+#: widgets/erroroverlay.cpp:233
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Personal information management service is shutting down..."
+msgstr "व्यक्तिगतसूचनाप्रबन्धनसेवा निरुद्धा भवति..."
+
+#: widgets/erroroverlay.cpp:234
+#, kde-format
+msgid "Personal information management service is shutting down..."
+msgstr "व्यक्तिगतसूचनाप्रबन्धनसेवा निरुद्धा भवति..."
+
+#: widgets/erroroverlay.cpp:238
+#, kde-format
+msgctxt "@info:tooltip"
+msgid ""
+"Personal information management service is performing a database upgrade."
+msgstr "व्यक्तिगतसूचनाप्रबन्धनसेवा दत्तांशकोशस्य उन्नयनं कुर्वती अस्ति।"
+
+#: widgets/erroroverlay.cpp:240
+#, kde-format
+msgid ""
+"Personal information management service is performing a database upgrade.\n"
+"This happens after a software update and is necessary to optimize "
+"performance.\n"
+"Depending on the amount of personal information, this might take a few "
+"minutes."
+msgstr ""
+"व्यक्तिगतसूचनाप्रबन्धनसेवा दत्तांशकोशस्य उन्नयनं कुर्वती अस्ति।\n"
+"एतत् सॉफ्टवेयर-अद्यतनस्य अनन्तरं भवति, कार्यक्षमतायाः अनुकूलनार्थं च आवश्यकम् अस्ति ।\n"
+"व्यक्तिगतसूचनायाः परिमाणानुसारं एतत् कतिपयानि निमेषाणि यावत् भवितुं शक्नोति ।"
+
+#. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
+#. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
+#: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
+#, kde-format
+msgid ""
+"A required background service is not running. This application cannot be "
+"used without it."
+msgstr "आवश्यकी पृष्ठभूमिसेवा न प्रचलति । एतत् अनुप्रयोगं तद्विना उपयोक्तुं न शक्यते ।"
+
+#. i18n: ectx: property (text), widget (QPushButton, startButton)
+#: widgets/erroroverlay.ui:116
+#, kde-format
+msgctxt "@action:button Start the Akonadi server"
+msgid "Start"
+msgstr "प्रारंभः"
+
+#. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
+#: widgets/erroroverlay.ui:158
+#, kde-format
+msgid ""
+"A required background service is not operational.\n"
+"Click on \"Details...\" to obtain detailed information on this problem."
+msgstr ""
+"आवश्यका पृष्ठभूमिसेवा कार्यरतं नास्ति ।\n"
+"अस्याः समस्यायाः विस्तृतसूचनाः प्राप्तुं \"Details...\" इत्यत्र क्लिक् कुर्वन्तु ।"
+
+#. i18n: ectx: property (text), widget (QLabel, brokenDescription)
+#: widgets/erroroverlay.ui:208
+#, kde-format
+msgid "A required background service is not operational."
+msgstr "आवश्यका पृष्ठभूमिसेवा कार्यरतं नास्ति ।"
+
+#. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
+#: widgets/erroroverlay.ui:259
+#, kde-format
+msgid "Details..."
+msgstr "वर्णन..."
+
+#: widgets/manageaccountwidget.cpp:221
+#, kde-format
+msgid "Do you want to remove account '%1'?"
+msgstr "किं भवान् '%1' खातं हर्तुं इच्छति?"
+
+#: widgets/manageaccountwidget.cpp:222
+#, kde-format
+msgctxt "@title:window"
+msgid "Remove account?"
+msgstr "खातं निष्कासयन्तु ?"
+
+#. i18n: ectx: property (text), widget (QCheckBox, accountOnCurrentActivity)
+#: widgets/manageaccountwidget.ui:19
+#, kde-format
+msgid "Show only account on current activity"
+msgstr "केवलं वर्तमानक्रियाकलापस्य लेखा दर्शयतु"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/manageaccountwidget.ui:26
+#, kde-format
+msgid "Incoming accounts (add at least one):"
+msgstr "आगच्छन्तः खाताः (कमपि एकं योजयन्तु):"
+
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
+#: widgets/manageaccountwidget.ui:33
+#, kde-format
+msgid "Filter…"
+msgstr "फ़िल्टर…"
+
+#. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
+#: widgets/manageaccountwidget.ui:47
+#, kde-format
+msgid "A&dd..."
+msgstr "संयोजयति..."
+
+#. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
+#: widgets/manageaccountwidget.ui:57
+#, kde-format
+msgid "&Modify..."
+msgstr "&संशोधन..."
+
+#. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
+#: widgets/manageaccountwidget.ui:67
+#, kde-format
+msgid "R&emove"
+msgstr "अपाकरोति"
+
+#. i18n: ectx: property (text), widget (QPushButton, mRestartAccountButton)
+#: widgets/manageaccountwidget.ui:84
+#, kde-format
+msgid "Restart"
+msgstr "पुनः आरभत"
+
+#: widgets/recentcollectionaction.cpp:43
+#, kde-format
+msgid "Recent Folder"
+msgstr "हाले पुटम्"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, RenameFavoriteDialog)
+#: widgets/renamefavoritedialog.ui:26
+#, kde-format
+msgid "Rename Favorite"
+msgstr "प्रियं नाम परिवर्तयतु"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/renamefavoritedialog.ui:35
+#, kde-format
+msgid "Name:"
+msgstr "नामः:"
+
+#: widgets/selftestdialog.cpp:60
+#, kde-format
+msgctxt "@title:window"
+msgid "Akonadi Server Self-Test"
+msgstr "अकोनाडी सर्वर स्वपरीक्षण"
+
+#: widgets/selftestdialog.cpp:71
+#, kde-format
+msgid "Save Report..."
+msgstr "रिपोर्ट् रक्षतु..."
+
+#: widgets/selftestdialog.cpp:73
+#, kde-format
+msgid "Copy Report to Clipboard"
+msgstr "रिपोर्ट् प्रतिलिपिं क्लिप्बोर्ड् मध्ये कुर्वन्तु"
+
+#: widgets/selftestdialog.cpp:189
+#, kde-format
+msgid ""
+"The QtSQL driver '%1' is required by your current Akonadi server "
+"configuration and was found on your system."
+msgstr ""
+"QtSQL चालकः '%1' भवतः वर्तमान Akonadi सर्वर विन्यासेन आवश्यकः अस्ति तथा च भवतः "
+"प्रणाल्यां प्राप्तः ।"
+
+#: widgets/selftestdialog.cpp:191
+#, kde-format
+msgid ""
+"The QtSQL driver '%1' is required by your current Akonadi server "
+"configuration.\n"
+"The following drivers are installed: %2.\n"
+"Make sure the required driver is installed."
+msgstr ""
+"QtSQL चालकः '%1' भवतः वर्तमान Akonadi सर्वर विन्यासेन आवश्यकः अस्ति ।\n"
+"निम्नलिखित चालकाः संस्थापिताः सन्ति: %2.\n"
+"आवश्यकः चालकः संस्थापितः इति सुनिश्चितं कुर्वन्तु ।"
+
+#: widgets/selftestdialog.cpp:198
+#, kde-format
+msgid "Database driver found."
+msgstr "दत्तांशकोश चालकः प्राप्तः।"
+
+#: widgets/selftestdialog.cpp:200
+#, kde-format
+msgid "Database driver not found."
+msgstr "दत्तांशकोशचालकः न प्राप्तः।"
+
+#: widgets/selftestdialog.cpp:208
+#, kde-format
+msgid "MySQL server executable not tested."
+msgstr "MySQL सर्वर एक्जीक्यूटिव परीक्षणं न कृतम्।"
+
+#: widgets/selftestdialog.cpp:208 widgets/selftestdialog.cpp:249
+#: widgets/selftestdialog.cpp:300
+#, kde-format
+msgid "The current configuration does not require an internal MySQL server."
+msgstr "वर्तमानविन्यासस्य आन्तरिक MySQL सर्वरस्य आवश्यकता नास्ति ।"
+
+#: widgets/selftestdialog.cpp:216
+#, kde-format
+msgid ""
+"You have currently configured Akonadi to use the MySQL server '%1'.\n"
+"Make sure you have the MySQL server installed, set the correct path and "
+"ensure you have the necessary read and execution rights on the server "
+"executable. The server executable is typically called 'mysqld'; its location "
+"varies depending on the distribution."
+msgstr ""
+"भवान् सम्प्रति Akonadi इत्येतत् MySQL सर्वर '%1' इत्यस्य उपयोगाय विन्यस्तवान् ।\n"
+"सुनिश्चितं कुर्वन्तु यत् भवतां MySQL सर्वरः संस्थापितः अस्ति, समीचीनः मार्गः सेट् कुर्वन्तु तथा "
+"च सुनिश्चितं कुर्वन्तु यत् भवतः सर्वर-निष्पादन-योग्ये आवश्यकाः पठन-निष्पादन-अधिकारः सन्ति । "
+"सर्वर एक्जीक्यूटिव् सामान्यतया 'mysqld' इति उच्यते; वितरणस्य आधारेण तस्य स्थानं भिन्नं भवति "
+"।"
+
+#: widgets/selftestdialog.cpp:224
+#, kde-format
+msgid "MySQL server not found."
+msgstr "MySQL सर्वरः न प्राप्तः।"
+
+#: widgets/selftestdialog.cpp:226
+#, kde-format
+msgid "MySQL server not readable."
+msgstr "MySQL सर्वर पठनीयः नास्ति।"
+
+#: widgets/selftestdialog.cpp:228
+#, kde-format
+msgid "MySQL server not executable."
+msgstr "MySQL सर्वरः कार्यान्वयनीयः नास्ति ।"
+
+#: widgets/selftestdialog.cpp:230
+#, kde-format
+msgid "MySQL found with unexpected name."
+msgstr "MySQL अप्रत्याशितनाम्ना सह प्राप्तम्।"
+
+#: widgets/selftestdialog.cpp:232
+#, kde-format
+msgid "MySQL server found."
+msgstr "MySQL सर्वरः प्राप्तः।"
+
+#: widgets/selftestdialog.cpp:238
+#, kde-format
+msgid "MySQL server found: %1"
+msgstr "MySQL सर्वरः प्राप्तः: %1"
+
+#: widgets/selftestdialog.cpp:239
+#, kde-format
+msgid "MySQL server is executable."
+msgstr "MySQL सर्वरः कार्यान्वयनीयः अस्ति ।"
+
+#: widgets/selftestdialog.cpp:241
+#, kde-format
+msgid ""
+"Executing the MySQL server '%1' failed with the following error message: '%2'"
+msgstr "MySQL सर्वरस्य '%1' निष्पादनं निम्नलिखितदोषसन्देशेन सह विफलम् अभवत्: '%2'."
+
+#: widgets/selftestdialog.cpp:242
+#, kde-format
+msgid "Executing the MySQL server failed."
+msgstr "MySQL सर्वरस्य निष्पादनं विफलम् अभवत् ।"
+
+#: widgets/selftestdialog.cpp:249
+#, kde-format
+msgid "MySQL server error log not tested."
+msgstr "MySQL सर्वर त्रुटिवृत्तलेखः परीक्षितः नास्ति।"
+
+#: widgets/selftestdialog.cpp:257
+#, kde-format
+msgid "No current MySQL error log found."
+msgstr "वर्तमान MySQL त्रुटिवृत्तलेखः न प्राप्तः ।"
+
+#: widgets/selftestdialog.cpp:258
+#, kde-format
+msgid ""
+"The MySQL server did not report any errors during this startup. The log can "
+"be found in '%1'."
+msgstr ""
+"अस्मिन् प्रारम्भकाले MySQL सर्वरः किमपि त्रुटिं न निवेदितवान् । '%1' इत्यत्र लॉग् द्रष्टुं "
+"शक्यते ।"
+
+#: widgets/selftestdialog.cpp:264
+#, kde-format
+msgid "MySQL error log not readable."
+msgstr "MySQL त्रुटिवृत्तलेखः पठनीयः नास्ति ।"
+
+#: widgets/selftestdialog.cpp:265
+#, kde-format
+msgid "A MySQL server error log file was found but is not readable: %1"
+msgstr "MySQL सर्वर त्रुटिवृत्तसञ्चिका प्राप्ता परन्तु पठनीया नास्ति: %1"
+
+#: widgets/selftestdialog.cpp:274
+#, kde-format
+msgid "MySQL server log contains errors."
+msgstr "MySQL सर्वर लॉग् मध्ये त्रुटयः सन्ति ।"
+
+#: widgets/selftestdialog.cpp:275
+#, kde-format
+msgid "The MySQL server error log file '%1' contains errors."
+msgstr "MySQL सर्वर त्रुटिवृत्तसञ्चिका '%1' त्रुटयः सन्ति ।"
+
+#: widgets/selftestdialog.cpp:285
+#, kde-format
+msgid "MySQL server log contains warnings."
+msgstr "MySQL सर्वर लॉग् मध्ये चेतावनीः सन्ति ।"
+
+#: widgets/selftestdialog.cpp:286
+#, kde-format
+msgid "The MySQL server log file '%1' contains warnings."
+msgstr "MySQL सर्वर लॉग् सञ्चिकायां '%1' चेतावनीः सन्ति ।"
+
+#: widgets/selftestdialog.cpp:289
+#, kde-format
+msgid "MySQL server log contains no errors."
+msgstr "MySQL सर्वर लॉग् मध्ये कोऽपि त्रुटिः नास्ति ।"
+
+#: widgets/selftestdialog.cpp:290
+#, kde-format
+msgid "The MySQL server log file '%1' does not contain any errors or warnings."
+msgstr "MySQL सर्वर लॉग् सञ्चिका '%1' इत्यत्र किमपि त्रुटिः चेतावनी वा नास्ति ।"
+
+#: widgets/selftestdialog.cpp:300
+#, kde-format
+msgid "MySQL server configuration not tested."
+msgstr "MySQL सर्वर विन्यासः परीक्षितः नास्ति।"
+
+#: widgets/selftestdialog.cpp:309
+#, kde-format
+msgid "MySQL server default configuration found."
+msgstr "MySQL सर्वर पूर्वनिर्धारितविन्यासः प्राप्तः ।"
+
+#: widgets/selftestdialog.cpp:310
+#, kde-format
+msgid ""
+"The default configuration for the MySQL server was found and is readable at "
+"%1."
+msgstr ""
+"MySQL सर्वरस्य पूर्वनिर्धारितं विन्यासः प्राप्तः अस्ति तथा च %1 इत्यत्र पठनीयः अस्ति ।"
+
+#: widgets/selftestdialog.cpp:314
+#, kde-format
+msgid "MySQL server default configuration not found."
+msgstr "MySQL सर्वर पूर्वनिर्धारितविन्यासः न प्राप्तः ।"
+
+#: widgets/selftestdialog.cpp:315
+#, kde-format
+msgid ""
+"The default configuration for the MySQL server was not found or was not "
+"readable. Check your Akonadi installation is complete and you have all "
+"required access rights."
+msgstr ""
+"MySQL सर्वरस्य पूर्वनिर्धारितं विन्यासः न प्राप्तः अथवा पठनीयः नासीत् । अकोनाडी संस्थापनं "
+"सम्पूर्णं भवति इति पश्यन्तु तथा च भवतः सर्वे आवश्यकाः अभिगमाधिकाराः सन्ति ।"
+
+#: widgets/selftestdialog.cpp:323
+#, kde-format
+msgid "MySQL server custom configuration not available."
+msgstr "MySQL सर्वर कस्टम् विन्यासः उपलब्धः नास्ति ।"
+
+#: widgets/selftestdialog.cpp:324
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was not found but is optional."
+msgstr "MySQL सर्वरस्य कस्टम् विन्यासः न प्राप्तः किन्तु वैकल्पिकः अस्ति ।"
+
+#: widgets/selftestdialog.cpp:327
+#, kde-format
+msgid "MySQL server custom configuration found."
+msgstr "MySQL सर्वर कस्टम् विन्यासः प्राप्तः।"
+
+#: widgets/selftestdialog.cpp:328
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was found and is readable at %1"
+msgstr "MySQL सर्वरस्य इष्टविन्यासः प्राप्तः %1 इत्यत्र पठनीयः च"
+
+#: widgets/selftestdialog.cpp:332
+#, kde-format
+msgid "MySQL server custom configuration not readable."
+msgstr "MySQL सर्वर कस्टम् विन्यासः पठनीयः नास्ति ।"
+
+#: widgets/selftestdialog.cpp:333
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was found at %1 but is not "
+"readable. Check your access rights."
+msgstr ""
+"MySQL सर्वरस्य इष्टविन्यासः %1 इत्यत्र प्राप्तः परन्तु पठनीयः नास्ति । स्वस्य प्रवेशाधिकारं "
+"पश्यन्तु।"
+
+#: widgets/selftestdialog.cpp:342
+#, kde-format
+msgid "MySQL server configuration not found or not readable."
+msgstr "MySQL सर्वर विन्यासः न प्राप्तः अथवा पठनीयः नास्ति ।"
+
+#: widgets/selftestdialog.cpp:343
+#, kde-format
+msgid "The MySQL server configuration was not found or is not readable."
+msgstr "MySQL सर्वर विन्यासः न प्राप्तः अथवा पठनीयः नास्ति ।"
+
+#: widgets/selftestdialog.cpp:346
+#, kde-format
+msgid "MySQL server configuration is usable."
+msgstr "MySQL सर्वर विन्यासः उपयोगी अस्ति ।"
+
+#: widgets/selftestdialog.cpp:347
+#, kde-format
+msgid "The MySQL server configuration was found at %1 and is readable."
+msgstr "MySQL सर्वर विन्यासः %1 इत्यत्र प्राप्तः पठनीयः च अस्ति ।"
+
+#: widgets/selftestdialog.cpp:376
+#, kde-format
+msgid "Cannot connect to PostgreSQL server."
+msgstr "PostgreSQL सर्वरेण सह सम्बद्धं कर्तुं न शक्यते ।"
+
+#: widgets/selftestdialog.cpp:378
+#, kde-format
+msgid "PostgreSQL server found."
+msgstr "PostgreSQL सर्वरः प्राप्तः।"
+
+#: widgets/selftestdialog.cpp:378
+#, kde-format
+msgid "The PostgreSQL server was found and connection is working."
+msgstr "PostgreSQL सर्वरः प्राप्तः, संयोजनं च कार्यं कुर्वन् अस्ति ।"
+
+#: widgets/selftestdialog.cpp:388
+#, kde-format
+msgid "akonadictl not found"
+msgstr "अकोनाडिक्ट्ल् न लब्धम्"
+
+#: widgets/selftestdialog.cpp:389
+#, kde-format
+msgid ""
+"The program 'akonadictl' needs to be accessible in $PATH. Make sure you have "
+"the Akonadi server installed."
+msgstr ""
+"'akonadictl' इति कार्यक्रमः $PATH मध्ये सुलभः भवितुम् आवश्यकः । भवता अकोनाडी सर्वरः "
+"संस्थापितः अस्ति इति सुनिश्चितं कुर्वन्तु ।"
+
+#: widgets/selftestdialog.cpp:396
+#, kde-format
+msgid "akonadictl found and usable"
+msgstr "akonadictl लब्धं प्रयोज्यम् च"
+
+#: widgets/selftestdialog.cpp:397
+#, kde-format
+msgid ""
+"The program '%1' to control the Akonadi server was found and could be "
+"executed successfully.\n"
+"Result:\n"
+"%2"
+msgstr ""
+"अकोनाडी सर्वरं नियन्त्रयितुं '%1' इति कार्यक्रमः प्राप्तः, सफलतया निष्पादितः च अभवत् ।\n"
+"परिणाम:\n"
+"%2"
+
+#: widgets/selftestdialog.cpp:403
+#, kde-format
+msgid "akonadictl found but not usable"
+msgstr "akonadictl प्राप्तं किन्तु उपयोगी न"
+
+#: widgets/selftestdialog.cpp:404
+#, kde-format
+msgid ""
+"The program '%1' to control the Akonadi server was found but could not be "
+"executed successfully.\n"
+"Result:\n"
+"%2\n"
+"Make sure the Akonadi server is installed correctly."
+msgstr ""
+"अकोनाडी सर्वरं नियन्त्रयितुं '%1' इति कार्यक्रमः प्राप्तः परन्तु सफलतया निष्पादितः न अभवत् "
+"।\n"
+"परिणाम:\n"
+"%2\n"
+"अकोनाडी सर्वरः सम्यक् संस्थापितः इति सुनिश्चितं कुर्वन्तु ।"
+
+#: widgets/selftestdialog.cpp:416
+#, kde-format
+msgid "Akonadi control process registered at D-Bus."
+msgstr "D-Bus इत्यत्र पञ्जीकृता अकोनाडी नियन्त्रणप्रक्रिया।"
+
+#: widgets/selftestdialog.cpp:417
+#, kde-format
+msgid ""
+"The Akonadi control process is registered at D-Bus which typically indicates "
+"it is operational."
+msgstr ""
+"अकोनाडी नियन्त्रणप्रक्रिया D-Bus इत्यत्र पञ्जीकृता भवति यत् सामान्यतया कार्यरतं सूचयति ।"
+
+#: widgets/selftestdialog.cpp:420
+#, kde-format
+msgid "Akonadi control process not registered at D-Bus."
+msgstr "अकोनाडी नियन्त्रण प्रक्रिया डी-बस् इत्यत्र पञ्जीकृता नास्ति।"
+
+#: widgets/selftestdialog.cpp:421
+#, kde-format
+msgid ""
+"The Akonadi control process is not registered at D-Bus which typically means "
+"it was not started or encountered a fatal error during startup."
+msgstr ""
+"अकोनाडी नियन्त्रणप्रक्रिया D-Bus इत्यत्र पञ्जीकृता नास्ति यस्य सामान्यतया अर्थः अस्ति यत् "
+"सा आरब्धा नासीत् अथवा स्टार्टअपस्य समये घातकदोषः अभवत् ।"
+
+#: widgets/selftestdialog.cpp:427
+#, kde-format
+msgid "Akonadi server process registered at D-Bus."
+msgstr "D-Bus इत्यत्र पञ्जीकृता अकोनाडी सर्वर प्रक्रिया।"
+
+#: widgets/selftestdialog.cpp:428
+#, kde-format
+msgid ""
+"The Akonadi server process is registered at D-Bus which typically indicates "
+"it is operational."
+msgstr ""
+"अकोनाडी सर्वर प्रक्रिया D-Bus इत्यत्र पञ्जीकृता भवति यत् सामान्यतया कार्यरतं सूचयति ।"
+
+#: widgets/selftestdialog.cpp:431
+#, kde-format
+msgid "Akonadi server process not registered at D-Bus."
+msgstr "अकोनाडी सर्वर प्रक्रिया D-Bus इत्यत्र पञ्जीकृता नास्ति।"
+
+#: widgets/selftestdialog.cpp:432
+#, kde-format
+msgid ""
+"The Akonadi server process is not registered at D-Bus which typically means "
+"it was not started or encountered a fatal error during startup."
+msgstr ""
+"अकोनाडी सर्वर प्रक्रिया D-Bus इत्यत्र पञ्जीकृता नास्ति यस्य सामान्यतया अर्थः अस्ति यत् सा "
+"आरब्धा नासीत् अथवा स्टार्टअपस्य समये घातकदोषः अभवत् ।"
+
+#: widgets/selftestdialog.cpp:441
+#, kde-format
+msgid "Protocol version check not possible."
+msgstr "प्रोटोकॉल संस्करणपरीक्षा सम्भवः नास्ति।"
+
+#: widgets/selftestdialog.cpp:442
+#, kde-format
+msgid ""
+"Without a connection to the server it is not possible to check if the "
+"protocol version meets the requirements."
+msgstr ""
+"सर्वरेण सह संयोजनं विना प्रोटोकॉलसंस्करणं आवश्यकतां पूरयति वा इति परीक्षितुं न शक्यते ।"
+
+#: widgets/selftestdialog.cpp:447
+#, kde-format
+msgid "Server protocol version is too old."
+msgstr "सर्वर प्रोटोकॉल संस्करणम् अतीव पुरातनम् अस्ति ।"
+
+#: widgets/selftestdialog.cpp:448 widgets/selftestdialog.cpp:455
+#, kde-format
+msgid ""
+"The server protocol version is %1, but version %2 is required by the client. "
+"If you recently updated KDE PIM, please make sure to restart both Akonadi "
+"and KDE PIM applications."
+msgstr ""
+"सर्वर-प्रोटोकॉल-संस्करणं %1 अस्ति, परन्तु %2 संस्करणं क्लायन्ट्-द्वारा आवश्यकम् अस्ति । यदि "
+"भवान् अद्यतनतया KDE PIM अद्यतनं कृतवान् तर्हि कृपया Akonadi तथा KDE PIM अनुप्रयोगयोः "
+"पुनः आरम्भं सुनिश्चितं कुर्वन्तु ।"
+
+#: widgets/selftestdialog.cpp:454
+#, kde-format
+msgid "Server protocol version is too new."
+msgstr "सर्वर प्रोटोकॉल संस्करणम् अतीव नवीनम् अस्ति ।"
+
+#: widgets/selftestdialog.cpp:460
+#, kde-format
+msgid "Server protocol version matches."
+msgstr "सर्वर प्रोटोकॉल संस्करणं मेलनं करोति।"
+
+#: widgets/selftestdialog.cpp:460
+#, kde-format
+msgid "The current Protocol version is %1."
+msgstr "वर्तमानं Protocol संस्करणं %1 अस्ति ।"
+
+#: widgets/selftestdialog.cpp:478
+#, kde-format
+msgid "Resource agents found."
+msgstr "संसाधन एजेण्ट् प्राप्ताः।"
+
+#: widgets/selftestdialog.cpp:478
+#, kde-format
+msgid "At least one resource agent has been found."
+msgstr "न्यूनातिन्यूनम् एकः संसाधनकारकः प्राप्तः अस्ति ।"
+
+#: widgets/selftestdialog.cpp:481
+#, kde-format
+msgid "No resource agents found."
+msgstr "न संसाधन एजेण्ट् लब्धम्।"
+
+#: widgets/selftestdialog.cpp:482
+#, kde-format
+msgid ""
+"No resource agents have been found, Akonadi is not usable without at least "
+"one. This usually means that no resource agents are installed or that there "
+"is a setup problem. The following paths have been searched: '%1'. The "
+"XDG_DATA_DIRS environment variable is set to '%2'; make sure this includes "
+"all paths where Akonadi agents are installed."
+msgstr ""
+"कोऽपि संसाधन-एजेण्ट् न लब्धः, अकोनाडी न्यूनातिन्यूनम् एकं विना उपयोगी न भवति । प्रायः "
+"अस्य अर्थः अस्ति यत् कोऽपि संसाधन-एजेण्ट् संस्थापितः नास्ति अथवा सेटअप-समस्या अस्ति । "
+"निम्नलिखितमार्गाः अन्वेषिताः सन्ति: '%1' । XDG_DATA_DIRS वातावरणचरं '%2' इति सेट् "
+"कृतम् अस्ति; सुनिश्चितं कुर्वन्तु यत् अस्मिन् सर्वे मार्गाः समाविष्टाः सन्ति यत्र अकोनाडी एजेण्ट् "
+"संस्थापिताः सन्ति ।"
+
+#: widgets/selftestdialog.cpp:499
+#, kde-format
+msgid "No current Akonadi server error log found."
+msgstr "वर्तमान अकोनाडी सर्वर त्रुटिवृत्तलेखः न प्राप्तः ।"
+
+#: widgets/selftestdialog.cpp:499
+#, kde-format
+msgid ""
+"The Akonadi server did not report any errors during its current startup."
+msgstr "अकोनाडी सर्वरः वर्तमानप्रारम्भकाले किमपि त्रुटिं न निवेदितवान् ।"
+
+#: widgets/selftestdialog.cpp:503
+#, kde-format
+msgid "Current Akonadi server error log found."
+msgstr "वर्तमान अकोनाडी सर्वर त्रुटिवृत्तलेखः प्राप्तः ।"
+
+#: widgets/selftestdialog.cpp:504
+#, kde-format
+msgid ""
+"The Akonadi server reported errors during its current startup. The log can "
+"be found in %1."
+msgstr "अकोनाडी सर्वरः वर्तमानप्रारम्भकाले त्रुटयः निवेदितवान् । लॉग् %1 मध्ये द्रष्टुं शक्यते ।"
+
+#: widgets/selftestdialog.cpp:512
+#, kde-format
+msgid "No previous Akonadi server error log found."
+msgstr "पूर्ववर्ती अकोनाडी सर्वर त्रुटिवृत्तलेखः न प्राप्तः ।"
+
+#: widgets/selftestdialog.cpp:513
+#, kde-format
+msgid ""
+"The Akonadi server did not report any errors during its previous startup."
+msgstr "अकोनाडी सर्वरः पूर्वप्रारम्भकाले किमपि त्रुटिं न निवेदितवान् ।"
+
+#: widgets/selftestdialog.cpp:517
+#, kde-format
+msgid "Previous Akonadi server error log found."
+msgstr "पूर्वः अकोनाडी सर्वर त्रुटिवृत्तलेखः प्राप्तः ।"
+
+#: widgets/selftestdialog.cpp:518
+#, kde-format
+msgid ""
+"The Akonadi server reported errors during its previous startup. The log can "
+"be found in %1."
+msgstr "अकोनाडी सर्वरः पूर्वप्रारम्भकाले त्रुटयः निवेदितवान् । लॉग् %1 मध्ये द्रष्टुं शक्यते ।"
+
+#: widgets/selftestdialog.cpp:529
+#, kde-format
+msgid "No current Akonadi control error log found."
+msgstr "वर्तमानः अकोनाडी नियन्त्रणदोषवृत्तलेखः न प्राप्तः ।"
+
+#: widgets/selftestdialog.cpp:530
+#, kde-format
+msgid ""
+"The Akonadi control process did not report any errors during its current "
+"startup."
+msgstr "अकोनाडी नियन्त्रणप्रक्रिया वर्तमानप्रारम्भकाले किमपि त्रुटिं न निवेदितवती ।"
+
+#: widgets/selftestdialog.cpp:534
+#, kde-format
+msgid "Current Akonadi control error log found."
+msgstr "वर्तमान अकोनाडी नियन्त्रणदोषवृत्तलेखः प्राप्तः ।"
+
+#: widgets/selftestdialog.cpp:535
+#, kde-format
+msgid ""
+"The Akonadi control process reported errors during its current startup. The "
+"log can be found in %1."
+msgstr ""
+"अकोनाडी नियन्त्रणप्रक्रिया वर्तमानप्रारम्भकाले त्रुटयः निवेदितवती । लॉग् %1 मध्ये द्रष्टुं "
+"शक्यते ।"
+
+#: widgets/selftestdialog.cpp:543
+#, kde-format
+msgid "No previous Akonadi control error log found."
+msgstr "पूर्वं अकोनाडी नियन्त्रणदोषवृत्तलेखः न प्राप्तः ।"
+
+#: widgets/selftestdialog.cpp:544
+#, kde-format
+msgid ""
+"The Akonadi control process did not report any errors during its previous "
+"startup."
+msgstr "अकोनाडी नियन्त्रणप्रक्रिया पूर्वप्रारम्भकाले किमपि त्रुटिं न निवेदितवती ।"
+
+#: widgets/selftestdialog.cpp:548
+#, kde-format
+msgid "Previous Akonadi control error log found."
+msgstr "पूर्वः अकोनाडी नियन्त्रणदोषवृत्तलेखः प्राप्तः ।"
+
+#: widgets/selftestdialog.cpp:549
+#, kde-format
+msgid ""
+"The Akonadi control process reported errors during its previous startup. The "
+"log can be found in %1."
+msgstr ""
+"अकोनाडी नियन्त्रणप्रक्रिया पूर्वप्रारम्भकाले त्रुटयः निवेदितवती । लॉग् %1 मध्ये द्रष्टुं शक्यते ।"
+
+#: widgets/selftestdialog.cpp:559
+#, kde-format
+msgid "Akonadi was started as root"
+msgstr "अकोनाडी मूलरूपेण आरब्धा आसीत्"
+
+#: widgets/selftestdialog.cpp:560
+#, kde-format
+msgid ""
+"Running Internet-facing applications as root/administrator exposes you to "
+"many security risks. MySQL, used by this Akonadi installation, will not "
+"allow itself to run as root, to protect you from these risks."
+msgstr ""
+"अन्तर्जाल-मुखी-अनुप्रयोगाः रूट्/प्रशासकरूपेण चालयितुं भवन्तं बहुषु सुरक्षा-जोखिमेषु सम्मुखीभवति । "
+"एतेन Akonadi संस्थापनेन उपयुज्यमानः MySQL, एतेभ्यः जोखिमेभ्यः भवन्तं रक्षितुं, मूलरूपेण चालयितुं "
+"न अनुमन्यते ।"
+
+#: widgets/selftestdialog.cpp:564
+#, kde-format
+msgid "Akonadi is not running as root"
+msgstr "अकोनादि मूलरूपेण न धावति"
+
+#: widgets/selftestdialog.cpp:565
+#, kde-format
+msgid ""
+"Akonadi is not running as a root/administrator user, which is the "
+"recommended setup for a secure system."
+msgstr ""
+"अकोनाडी मूल/प्रशासकप्रयोक्तृरूपेण न चाल्यते, यत् सुरक्षितप्रणाल्याः अनुशंसितं सेटअपम् अस्ति ।"
+
+#: widgets/selftestdialog.cpp:643
+#, kde-format
+msgid "Save Test Report"
+msgstr "परीक्षणप्रतिवेदनं रक्षतु"
+
+#: widgets/selftestdialog.cpp:650
+#, kde-format
+msgid "Could not open file '%1'"
+msgstr "'%1' सञ्चिकां उद्घाटयितुं न शक्यते ।"
+
+#. i18n: ectx: property (text), widget (QLabel, introductionLabel)
+#: widgets/selftestdialog.ui:16
+#, kde-format
+msgid ""
+"An error occurred during the startup of the Akonadi server. The following "
+"self-tests are supposed to help with tracking down and solving this problem. "
+"When requesting support or reporting bugs, please always include this report."
+msgstr ""
+"अकोनाडी सर्वरस्य आरम्भकाले त्रुटिः अभवत् । अस्याः समस्यायाः अन्वेषणं समाधानं च कर्तुं "
+"निम्नलिखितस्वपरीक्षाः सहायकाः भवितुम् अर्हन्ति । समर्थनस्य अनुरोधं कुर्वन् अथवा दोषान् "
+"प्रतिवेदयन्ते सति कृपया सर्वदा एतत् प्रतिवेदनं समावेशयन्तु ।"
+
+#. i18n: ectx: property (title), widget (QGroupBox, detailsGroup)
+#: widgets/selftestdialog.ui:39
+#, kde-format
+msgid "Details"
+msgstr "वर्णन"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/selftestdialog.ui:61
+#, kde-format
+msgid ""
+"<p>For more troubleshooting tips please refer to <a href=\"https://userbase."
+"kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
+msgstr ""
+"<p>अधिकसमस्यानिवारणयुक्तीनां कृते कृपया <a href=\"https://userbase.kde.org/Akonadi"
+"\">userbase.kde.org/Akonadi</a> पश्यन्तु ।</p>"
+
+#: widgets/standardactionmanager.cpp:78
+msgid "&New Folder..."
+msgstr "&नवीन फोल्डर..."
+
+#: widgets/standardactionmanager.cpp:78
+msgid "New"
+msgstr "नूतनम्‌"
+
+#: widgets/standardactionmanager.cpp:88
+msgid "&Delete Folder"
+msgstr "&पुटं विलोपयन्तु"
+
+#: widgets/standardactionmanager.cpp:89
+msgid "Delete"
+msgstr "लुप्"
+
+#: widgets/standardactionmanager.cpp:96
+msgid "&Synchronize Folder"
+msgstr "&Synchronize Folder"
+
+#: widgets/standardactionmanager.cpp:97 widgets/standardactionmanager.cpp:206
+#: widgets/standardactionmanager.cpp:313
+msgid "Synchronize"
+msgstr "समन्वयनम्"
+
+#: widgets/standardactionmanager.cpp:104
+msgid "Folder &Properties"
+msgstr "फोल्डर &गुण"
+
+#: widgets/standardactionmanager.cpp:105 widgets/standardactionmanager.cpp:198
+msgid "Properties"
+msgstr "गुणाः"
+
+#: widgets/standardactionmanager.cpp:112
+msgid "&Paste"
+msgstr "&पेस्ट"
+
+#: widgets/standardactionmanager.cpp:112
+msgid "Paste"
+msgstr "चिनोतु"
+
+#: widgets/standardactionmanager.cpp:115
+msgid "Manage Local &Subscriptions..."
+msgstr "स्थानीय &सदस्यता प्रबन्ध..."
+
+#: widgets/standardactionmanager.cpp:116
+msgid "Manage Local Subscriptions"
+msgstr "स्थानीयसदस्यतां प्रबन्धयन्तु"
+
+#: widgets/standardactionmanager.cpp:123
+msgid "Add to Favorite Folders"
+msgstr "प्रियपुटेषु योजयतु"
+
+#: widgets/standardactionmanager.cpp:124
+msgid "Add to Favorite"
+msgstr "प्रियं योजयतु"
+
+#: widgets/standardactionmanager.cpp:131
+msgid "Remove from Favorite Folders"
+msgstr "प्रियपुटतः निष्कासयन्तु"
+
+#: widgets/standardactionmanager.cpp:132
+msgid "Remove from Favorite"
+msgstr "प्रियतः निष्कासयन्तु"
+
+#: widgets/standardactionmanager.cpp:139
+msgid "Rename Favorite..."
+msgstr "प्रियं नाम परिवर्तयतु..."
+
+#: widgets/standardactionmanager.cpp:140
+msgid "Rename"
+msgstr "पुनर्नाम"
+
+#: widgets/standardactionmanager.cpp:147 widgets/standardactionmanager.cpp:221
+msgid "Copy Folder To..."
+msgstr "Copy Folder To..."
+
+#: widgets/standardactionmanager.cpp:148 widgets/standardactionmanager.cpp:156
+#: widgets/standardactionmanager.cpp:222 widgets/standardactionmanager.cpp:236
+msgid "Copy To"
+msgstr "प्रतिलिपि To"
+
+#: widgets/standardactionmanager.cpp:155 widgets/standardactionmanager.cpp:236
+msgid "Copy Item To..."
+msgstr "Copy Item To..."
+
+#: widgets/standardactionmanager.cpp:163 widgets/standardactionmanager.cpp:237
+msgid "Move Item To..."
+msgstr "Move Item To..."
+
+#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:172
+#: widgets/standardactionmanager.cpp:230 widgets/standardactionmanager.cpp:237
+msgid "Move To"
+msgstr "Move To इति"
+
+#: widgets/standardactionmanager.cpp:171 widgets/standardactionmanager.cpp:229
+msgid "Move Folder To..."
+msgstr "पुटं स्थानान्तरयन्तु..."
+
+#: widgets/standardactionmanager.cpp:178
+msgid "&Cut Item"
+msgstr "&कट आइटम"
+
+#: widgets/standardactionmanager.cpp:178 widgets/standardactionmanager.cpp:179
+msgid "Cut"
+msgstr "छिन्न"
+
+#: widgets/standardactionmanager.cpp:179
+msgid "&Cut Folder"
+msgstr "&कट फोल्डर"
+
+#: widgets/standardactionmanager.cpp:181
+msgid "Create Resource"
+msgstr "संसाधनं रचयन्तु"
+
+#: widgets/standardactionmanager.cpp:189
+msgid "Delete Resource"
+msgstr "संसाधनं विलोपयन्तु"
+
+#: widgets/standardactionmanager.cpp:197
+msgid "&Resource Properties"
+msgstr "&संसाधन गुण"
+
+#: widgets/standardactionmanager.cpp:205
+msgid "Synchronize Resource"
+msgstr "संसाधनं समन्वययन्तु"
+
+#: widgets/standardactionmanager.cpp:213
+msgid "Work Offline"
+msgstr "अफलाइन कार्यं कुर्वन्तु"
+
+#: widgets/standardactionmanager.cpp:239
+msgid "&Synchronize Folder Recursively"
+msgstr "&पुटं पुनरावर्तनीयरूपेण समन्वययन्तु"
+
+#: widgets/standardactionmanager.cpp:240
+msgid "Synchronize Recursively"
+msgstr "पुनरावर्तनीयरूपेण समन्वयनम्"
+
+#: widgets/standardactionmanager.cpp:247
+msgid "&Move Folder To Trash"
+msgstr "&पुटं कचरे स्थानान्तरयन्तु"
+
+#: widgets/standardactionmanager.cpp:248
+msgid "Move Folder To Trash"
+msgstr "Folder To Trash इति स्थानान्तरयन्तु"
+
+#: widgets/standardactionmanager.cpp:255
+msgid "&Move Item To Trash"
+msgstr "&Move Item To Trash"
+
+#: widgets/standardactionmanager.cpp:256
+msgid "Move Item To Trash"
+msgstr "Item To Trash इति स्थानान्तरयन्तु"
+
+#: widgets/standardactionmanager.cpp:263 widgets/standardactionmanager.cpp:279
+msgid "&Restore Folder From Trash"
+msgstr "&Restore Folder From Trash"
+
+#: widgets/standardactionmanager.cpp:264 widgets/standardactionmanager.cpp:280
+msgid "Restore Folder From Trash"
+msgstr "Restore Folder From Trash इति"
+
+#: widgets/standardactionmanager.cpp:271 widgets/standardactionmanager.cpp:295
+#: widgets/standardactionmanager.cpp:302
+msgid "&Restore Item From Trash"
+msgstr "&Restore Item From Trash"
+
+#: widgets/standardactionmanager.cpp:272 widgets/standardactionmanager.cpp:296
+#: widgets/standardactionmanager.cpp:302
+msgid "Restore Item From Trash"
+msgstr "Restore Item From Trash इति"
+
+#: widgets/standardactionmanager.cpp:287
+msgid "&Restore Collection From Trash"
+msgstr "&कचरातः संग्रहं पुनर्स्थापयन्तु"
+
+#: widgets/standardactionmanager.cpp:288
+msgid "Restore Collection From Trash"
+msgstr "कचरातः संग्रहं पुनर्स्थापयन्तु"
+
+#: widgets/standardactionmanager.cpp:304
+msgid "&Synchronize Favorite Folders"
+msgstr "&प्रिय फोल्डर् समन्वयनम्"
+
+#: widgets/standardactionmanager.cpp:305
+msgid "Synchronize Favorite Folders"
+msgstr "प्रियपुटस्य समन्वयनम्"
+
+#: widgets/standardactionmanager.cpp:312
+msgid "Synchronize Folder Tree"
+msgstr "Folder Tree इत्यस्य समन्वयनम्"
+
+#: widgets/standardactionmanager.cpp:398
+#, kde-format
+msgid "&Copy Folder"
+msgid_plural "&Copy %1 Folders"
+msgstr[0] "&कॉपी फोल्डर"
+msgstr[1] "&कॉपी %1 फोल्डर"
+
+#: widgets/standardactionmanager.cpp:399
+#, kde-format
+msgid "&Copy Item"
+msgid_plural "&Copy %1 Items"
+msgstr[0] "&प्रतिलिपि मद"
+msgstr[1] "&प्रतिलिपि %1 मद"
+
+#: widgets/standardactionmanager.cpp:400
+#, kde-format
+msgctxt "@action"
+msgid "&Cut Item"
+msgid_plural "&Cut %1 Items"
+msgstr[0] "&कट आइटम"
+msgstr[1] "&Cut %1 द्रव्यम्"
+
+#: widgets/standardactionmanager.cpp:401
+#, kde-format
+msgctxt "@action"
+msgid "&Cut Folder"
+msgid_plural "&Cut %1 Folders"
+msgstr[0] "&कट फोल्डर"
+msgstr[1] "&%1 फोल्डर्स् कटयन्तु"
+
+#: widgets/standardactionmanager.cpp:402
+#, kde-format
+msgid "&Delete Item"
+msgid_plural "&Delete %1 Items"
+msgstr[0] "&मद विलोपयन्तु"
+msgstr[1] "&%1 मद विलोपयन्तु"
+
+#: widgets/standardactionmanager.cpp:403
+#, kde-format
+msgctxt "@action"
+msgid "&Delete Folder"
+msgid_plural "&Delete %1 Folders"
+msgstr[0] "&पुटं विलोपयन्तु"
+msgstr[1] "&%1 पुटं विलोपयन्तु"
+
+#: widgets/standardactionmanager.cpp:404
+#, kde-format
+msgctxt "@action"
+msgid "&Synchronize Folder"
+msgid_plural "&Synchronize %1 Folders"
+msgstr[0] "&Synchronize Folder"
+msgstr[1] "&%1 पुटं समन्वययन्तु"
+
+#: widgets/standardactionmanager.cpp:405
+#, kde-format
+msgid "&Delete Resource"
+msgid_plural "&Delete %1 Resources"
+msgstr[0] "&संसाधनं विलोपयन्तु"
+msgstr[1] "&%1 संसाधनं विलोपयन्तु"
+
+#: widgets/standardactionmanager.cpp:406
+#, kde-format
+msgid "&Synchronize Resource"
+msgid_plural "&Synchronize %1 Resources"
+msgstr[0] "&संसाधन समन्वयन"
+msgstr[1] "&%1 संसाधनानाम् समन्वयनम्"
+
+#: widgets/standardactionmanager.cpp:408
+#, kde-format
+msgid "Copy Folder"
+msgid_plural "Copy %1 Folders"
+msgstr[0] "प्रतिलिपि पुटम्"
+msgstr[1] "%1 पुटं प्रतिलिख्यताम्"
+
+#: widgets/standardactionmanager.cpp:409
+#, kde-format
+msgid "Copy Item"
+msgid_plural "Copy %1 Items"
+msgstr[0] "प्रतिलिपि मद"
+msgstr[1] "%1 वस्तूनि प्रतिलिख्यताम्"
+
+#: widgets/standardactionmanager.cpp:410
+#, kde-format
+msgid "Cut Item"
+msgid_plural "Cut %1 Items"
+msgstr[0] "कट आइटम"
+msgstr[1] "%1 वस्तूनि कटयतु"
+
+#: widgets/standardactionmanager.cpp:411
+#, kde-format
+msgid "Cut Folder"
+msgid_plural "Cut %1 Folders"
+msgstr[0] "कट फोल्डर"
+msgstr[1] "%1 पुटं कटयन्तु"
+
+#: widgets/standardactionmanager.cpp:412
+#, kde-format
+msgid "Delete Item"
+msgid_plural "Delete %1 Items"
+msgstr[0] "Delete Item"
+msgstr[1] "%1 वस्तूनि विलोपयन्तु"
+
+#: widgets/standardactionmanager.cpp:413
+#, kde-format
+msgid "Delete Folder"
+msgid_plural "Delete %1 Folders"
+msgstr[0] "पुटं विलोपयन्तु"
+msgstr[1] "%1 पुटं विलोपयन्तु"
+
+#: widgets/standardactionmanager.cpp:414
+#, kde-format
+msgid "Synchronize Folder"
+msgid_plural "Synchronize %1 Folders"
+msgstr[0] "पुटस्य समन्वयनम्"
+msgstr[1] "%1 पुटं समन्वययन्तु"
+
+#: widgets/standardactionmanager.cpp:415
+#, kde-format
+msgctxt "@action"
+msgid "Delete Resource"
+msgid_plural "Delete %1 Resources"
+msgstr[0] "संसाधनं विलोपयन्तु"
+msgstr[1] "%1 संसाधनं विलोपयन्तु"
+
+#: widgets/standardactionmanager.cpp:416
+#, kde-format
+msgctxt "@action"
+msgid "Synchronize Resource"
+msgid_plural "Synchronize %1 Resources"
+msgstr[0] "संसाधनं समन्वययन्तु"
+msgstr[1] "%1 संसाधनानाम् समन्वयनम्"
+
+#: widgets/standardactionmanager.cpp:419
+#, kde-format
+msgctxt "@label:textbox name of Akonadi folder"
+msgid "Name"
+msgstr "नामः"
+
+#: widgets/standardactionmanager.cpp:426
+#, kde-format
+msgid "Do you really want to delete this folder and all its sub-folders?"
+msgid_plural ""
+"Do you really want to delete %1 folders and all their sub-folders?"
+msgstr[0] "किं भवान् वास्तवमेव एतत् पुटं तस्य सर्वाणि उपपुटं च विलोपयितुम् इच्छति?"
+msgstr[1] "किं भवान् वास्तवमेव %1 पुटं तेषां सर्वाणि उपपुटं च विलोपयितुम् इच्छति?"
+
+#: widgets/standardactionmanager.cpp:429
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete Folder?"
+msgid_plural "Delete Folders?"
+msgstr[0] "फोल्डरं विलोपयन्तु?"
+msgstr[1] "फोल्डर् विलोपयन्तु?"
+
+#: widgets/standardactionmanager.cpp:430
+#, kde-format
+msgid "Could not delete folder: %1"
+msgstr "पुटं विलोपयितुं न शक्तम्: %1"
+
+#: widgets/standardactionmanager.cpp:431
+#, kde-format
+msgctxt "@title:window"
+msgid "Folder Deletion Failed"
+msgstr "पुटस्य विलोपनं विफलम्"
+
+#: widgets/standardactionmanager.cpp:433
+#, kde-format
+msgctxt "@title:window"
+msgid "Properties of Folder %1"
+msgstr "%1 पुटस्य गुणाः"
+
+#: widgets/standardactionmanager.cpp:437
+#, kde-format
+msgid "Do you really want to delete the selected item?"
+msgid_plural "Do you really want to delete %1 items?"
+msgstr[0] "किं भवान् वास्तवमेव चयनितं द्रव्यं विलोपयितुम् इच्छति?"
+msgstr[1] "किं भवान् वास्तवमेव %1 वस्तूनि विलोपयितुम् इच्छति?"
+
+#: widgets/standardactionmanager.cpp:438
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete Item?"
+msgid_plural "Delete Items?"
+msgstr[0] "मदं विलोपयन्तु?"
+msgstr[1] "वस्तूनि विलोपयन्तु?"
+
+#: widgets/standardactionmanager.cpp:439
+#, kde-format
+msgid "Could not delete item: %1"
+msgstr "द्रव्यं विलोपयितुं न शक्तम्: %1"
+
+#: widgets/standardactionmanager.cpp:440
+#, kde-format
+msgctxt "@title:window"
+msgid "Item Deletion Failed"
+msgstr "मदविलोपनं विफलम्"
+
+#: widgets/standardactionmanager.cpp:442
+#, kde-format
+msgctxt "@title:window"
+msgid "Rename Favorite"
+msgstr "प्रियं नाम परिवर्तयतु"
+
+#: widgets/standardactionmanager.cpp:443
+#, kde-format
+msgctxt "@label:textbox name of the folder"
+msgid "Name:"
+msgstr "नामः:"
+
+#: widgets/standardactionmanager.cpp:445
+#, kde-format
+msgctxt "@title:window"
+msgid "New Resource"
+msgstr "नवीन संसाधन"
+
+#: widgets/standardactionmanager.cpp:446
+#, kde-format
+msgid "Could not create resource: %1"
+msgstr "संसाधनं निर्मातुं न शक्तम्: %1"
+
+#: widgets/standardactionmanager.cpp:447
+#, kde-format
+msgctxt "@title:window"
+msgid "Resource Creation Failed"
+msgstr "संसाधननिर्माणं विफलम्"
+
+#: widgets/standardactionmanager.cpp:451
+#, kde-format
+msgid "Do you really want to delete this resource?"
+msgid_plural "Do you really want to delete %1 resources?"
+msgstr[0] "किं भवान् वास्तवमेव एतत् संसाधनं विलोपयितुम् इच्छति ?"
+msgstr[1] "किं भवान् वास्तवमेव %1 संसाधनं विलोपयितुम् इच्छति?"
+
+#: widgets/standardactionmanager.cpp:454
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete Resource?"
+msgid_plural "Delete Resources?"
+msgstr[0] "संसाधनं विलोपयन्तु ?"
+msgstr[1] "संसाधनं विलोपयन्तु ?"
+
+#: widgets/standardactionmanager.cpp:456
+#, kde-format
+msgid "Could not paste data: %1"
+msgstr "दत्तांशं चिनोतुम् न शक्तम्: %1"
+
+#: widgets/standardactionmanager.cpp:457
+#, kde-format
+msgctxt "@title:window"
+msgid "Paste Failed"
+msgstr "पेस्ट् विफलम्"
+
+#: widgets/standardactionmanager.cpp:809
+#, kde-format
+msgid "We can not add \"/\" in folder name."
+msgstr "वयं फोल्डर् नाम्ने \"/\" योजयितुं न शक्नुमः ।"
+
+#: widgets/standardactionmanager.cpp:809 widgets/standardactionmanager.cpp:813
+#, kde-format
+msgctxt "@title:window"
+msgid "Create New Folder Error"
+msgstr "New Folder Error रचयन्तु"
+
+#: widgets/standardactionmanager.cpp:813
+#, kde-format
+msgid "We can not add \".\" at begin or end of folder name."
+msgstr "\"\" इति योजयितुं न शक्नुमः । पुटनामस्य आरम्भे अथवा अन्ते ।"
+
+#: widgets/standardactionmanager.cpp:1052
+#, kde-format
+msgid ""
+"Before syncing folder \"%1\" it is necessary to have the resource online. Do "
+"you want to make it online?"
+msgstr ""
+"\"%1\" पुटस्य समन्वयनात् पूर्वं संसाधनं ऑनलाइन भवितुं आवश्यकम् । किं भवन्तः तत् ऑनलाइन कर्तुम् "
+"इच्छन्ति ?"
+
+#: widgets/standardactionmanager.cpp:1053
+#, kde-format
+msgid "Account \"%1\" is offline"
+msgstr "खाता \"%1\" अफलाइन अस्ति"
+
+#: widgets/standardactionmanager.cpp:1054
+#, kde-format
+msgctxt "@action:button"
+msgid "Go Online"
+msgstr "Online गच्छतु"
+
+#: widgets/standardactionmanager.cpp:1655
+#, kde-format
+msgid "Move to This Folder"
+msgstr "This Folder इत्यत्र गच्छन्तु"
+
+#: widgets/standardactionmanager.cpp:1655
+#, kde-format
+msgid "Copy to This Folder"
+msgstr "This Folder इत्यत्र प्रतिलिख्यताम्"
+
+#: widgets/subscriptiondialog.cpp:99
+#, kde-format
+msgid "Failed to update subscription: %1"
+msgstr "सदस्यतां अद्यतनीकर्तुं असफलम्: %1"
+
+#: widgets/subscriptiondialog.cpp:99
+#, kde-format
+msgctxt "@title:window"
+msgid "Subscription Error"
+msgstr "सदस्यता त्रुटि"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, SubscriptionDialog)
+#: widgets/subscriptiondialog.ui:14
+#, kde-format
+msgid "Local Subscriptions"
+msgstr "स्थानीय सदस्यता"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/subscriptiondialog.ui:22
+#, kde-format
+msgid "Search:"
+msgstr "अन्वेषण:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, subscribedOnlyCheckBox)
+#: widgets/subscriptiondialog.ui:36
+#, kde-format
+msgid "&Subscribed only"
+msgstr "&सदस्यता एव"
+
+#. i18n: ectx: property (text), widget (QPushButton, subscribeButton)
+#: widgets/subscriptiondialog.ui:62
+#, kde-format
+msgid "Su&bscribe"
+msgstr "सु&ब्स्क्राइब"
+
+#. i18n: ectx: property (text), widget (QPushButton, unsubscribeButton)
+#: widgets/subscriptiondialog.ui:69
+#, kde-format
+msgid "&Unsubscribe"
+msgstr "&सदस्यतां रद्दं कुर्वन्तु"
+
+#: widgets/tageditwidget.cpp:117
+#, kde-format
+msgid "Failed to create a new tag"
+msgstr "नूतनं टैग् निर्मातुं असफलम्"
+
+#: widgets/tageditwidget.cpp:117
+#, kde-format
+msgctxt "@title:window"
+msgid "An Error Occurred while Creating a New Tag"
+msgstr "नूतनं टैग् निर्माय त्रुटिः अभवत्"
+
+#: widgets/tageditwidget.cpp:165
+#, kde-kuit-format
+msgctxt "@info"
+msgid "Do you really want to remove the tag <resource>%1</resource>?"
+msgstr "किं भवान् वास्तवमेव <resource>%1</resource> इति टैग् अपसारयितुम् इच्छति?"
+
+#: widgets/tageditwidget.cpp:166
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete Tag"
+msgstr "टैगं विलोपयन्तु"
+
+#: widgets/tageditwidget.cpp:191
+#, kde-format
+msgctxt "@info"
+msgid "Delete tag"
+msgstr "टैगं विलोपयन्तु"
+
+#. i18n: ectx: property (text), widget (QLabel, selectLabel)
+#: widgets/tageditwidget.ui:29
+#, kde-format
+msgid "Select tags that should be applied."
+msgstr "ये टैग् प्रयोक्तव्याः तेषां चयनं कुर्वन्तु।"
+
+#. i18n: ectx: property (text), widget (QPushButton, newTagButton)
+#: widgets/tageditwidget.ui:54
+#, kde-format
+msgid "Create new tag"
+msgstr "नूतनं टैगं रचयन्तु"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
+#: widgets/tagmanagementdialog.ui:14
+#, kde-format
+msgid "Manage Tags"
+msgstr "टैग्स् प्रबन्धयन्तु"
+
+#: widgets/tagselectioncombobox.cpp:126
+#, kde-format
+msgctxt "@label Placeholder text in tag selection combobox"
+msgid "Select tags..."
+msgstr "टैग्स् चयनं कुर्वन्तु..."
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
+#: widgets/tagselectiondialog.ui:14
+#, kde-format
+msgid "Select Tags"
+msgstr "टैग्स् चयनं कुर्वन्तु"
+
+#: widgets/tagwidget.cpp:45
+#, kde-format
+msgid "Clear"
+msgstr "स्पष्टः"
+
+#. i18n: ectx: property (placeholderText), widget (Akonadi::TagView, tagView)
+#: widgets/tagwidget.ui:32
+#, kde-format
+msgid "Click to add tags"
+msgstr "टैग्स् योजयितुं क्लिक् कुर्वन्तु"
+
+#. i18n: ectx: property (text), widget (QToolButton, editButton)
+#: widgets/tagwidget.ui:39
+#, kde-format
+msgid "..."
+msgstr "..."
+
+#: xml/akonadi2xml.cpp:25
+#, kde-format
+msgid "Akonadi To XML converter"
+msgstr "अकोनाडी To XML परिवर्तक"
+
+#: xml/akonadi2xml.cpp:27
+#, kde-format
+msgid "Converts an Akonadi collection subtree into a XML file."
+msgstr "अकोनाडी संग्रह उपवृक्षं XML सञ्चिकायां परिवर्तयति ।"
+
+#: xml/akonadi2xml.cpp:29
+#, kde-format
+msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
+msgstr "(ग) 2009 वोल्कर क्राउस <vkrause@kde.org>"
+
+#: xml/xmldocument.cpp:83
+#, kde-format
+msgid "No data loaded."
+msgstr "न दत्तांशः लोड् कृतः।"
+
+#: xml/xmldocument.cpp:121
+#, kde-format
+msgid "No filename specified"
+msgstr "सञ्चिकानाम निर्दिष्टं नास्ति"
+
+#: xml/xmldocument.cpp:129
+#, kde-format
+msgid "Unable to open data file '%1'."
+msgstr "'%1' दत्तांशसञ्चिकां उद्घाटयितुं असमर्थः ।"
+
+#: xml/xmldocument.cpp:134
+#, kde-format
+msgid "File %1 does not exist."
+msgstr "%1 सञ्चिका नास्ति ।"
+
+#: xml/xmldocument.cpp:142
+#, kde-format
+msgid "Unable to parse data file '%1'."
+msgstr "'%1' दत्तांशसञ्चिकां विश्लेषणं कर्तुं असमर्थम् ।"
+
+#: xml/xmldocument.cpp:150
+#, kde-format
+msgid "Schema definition could not be loaded and parsed."
+msgstr "योजनापरिभाषा लोड् कृत्वा पार्स् कर्तुं न शक्यते स्म ।"
+
+#: xml/xmldocument.cpp:155
+#, kde-format
+msgid "Unable to create schema parser context."
+msgstr "स्कीमा पार्सर् सन्दर्भं निर्मातुं असमर्थः ।"
+
+#: xml/xmldocument.cpp:160
+#, kde-format
+msgid "Unable to create schema."
+msgstr "योजना निर्मातुं असमर्थः।"
+
+#: xml/xmldocument.cpp:165
+#, kde-format
+msgid "Unable to create schema validation context."
+msgstr "स्कीमा प्रमाणीकरणसन्दर्भं निर्मातुं असमर्थः ।"
+
+#: xml/xmldocument.cpp:170
+#, kde-format
+msgid "Invalid file format."
+msgstr "अमान्य सञ्चिकास्वरूपम् ।"
+
+#: xml/xmldocument.cpp:177
+#, kde-format
+msgid "Unable to parse data file: %1"
+msgstr "दत्तांशसञ्चिकां विश्लेषणं कर्तुं असमर्थः: %1"
+
+#: xml/xmldocument.cpp:302
+#, kde-format
+msgid "Unable to find collection %1"
+msgstr "संग्रहं %1 अन्वेष्टुं असमर्थः"

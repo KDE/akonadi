@@ -1,0 +1,83 @@
+# Sanskrit translations for akonadi package.
+# Copyright (C) 2024 This file is copyright:
+# This file is distributed under the same license as the akonadi package.
+# Kali <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: akonadi\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2023-09-21 00:45+0000\n"
+"PO-Revision-Date: 2024-12-13 19:10+0530\n"
+"Last-Translator: Kali <EMAIL@ADDRESS>\n"
+"Language-Team: Sanskrit\n"
+"Language: sa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: knutresource.cpp:60
+#, kde-format
+msgid "No data file selected."
+msgstr "कोऽपि दत्तांशसञ्चिका न चयनिता।"
+
+#: knutresource.cpp:77
+#, kde-format
+msgid "File '%1' loaded successfully."
+msgstr "'%1' सञ्चिका सफलतया लोड् अभवत् ।"
+
+#: knutresource.cpp:104
+#, kde-format
+msgid "Select Data File"
+msgstr "Data File इति चिनोतु"
+
+#: knutresource.cpp:106
+#, kde-format
+msgctxt "Filedialog filter for Akonadi data file"
+msgid "Akonadi Knut Data File"
+msgstr "अकोनाडी क्नुट् डाटा फाइल"
+
+#: knutresource.cpp:148 knutresource.cpp:168 knutresource.cpp:321
+#, kde-format
+msgid "No item found for remoteid %1"
+msgstr "remoteid %1 कृते कोऽपि द्रव्यः न प्राप्तः"
+
+#: knutresource.cpp:186
+#, kde-format
+msgid "Parent collection not found in DOM tree."
+msgstr "DOM वृक्षे मातापितृसङ्ग्रहः न प्राप्यते ।"
+
+#: knutresource.cpp:194
+#, kde-format
+msgid "Unable to write collection."
+msgstr "संग्रहं लिखितुं असमर्थः।"
+
+#: knutresource.cpp:206
+#, kde-format
+msgid "Modified collection not found in DOM tree."
+msgstr "परिवर्तितः संग्रहः DOM वृक्षे न प्राप्तः ।"
+
+#: knutresource.cpp:236
+#, kde-format
+msgid "Deleted collection not found in DOM tree."
+msgstr "DOM वृक्षे विलोपितः संग्रहः न प्राप्तः ।"
+
+#: knutresource.cpp:250 knutresource.cpp:308 knutresource.cpp:315
+#, kde-format
+msgid "Parent collection '%1' not found in DOM tree."
+msgstr "मातापितृसङ्ग्रहः '%1' DOM वृक्षे न प्राप्तः ।"
+
+#: knutresource.cpp:258 knutresource.cpp:328
+#, kde-format
+msgid "Unable to write item."
+msgstr "मदं लिखितुं असमर्थः।"
+
+#: knutresource.cpp:272
+#, kde-format
+msgid "Modified item not found in DOM tree."
+msgstr "DOM वृक्षे परिवर्तितं वस्तु न प्राप्तम्।"
+
+#: knutresource.cpp:287
+#, kde-format
+msgid "Deleted item not found in DOM tree."
+msgstr "DOM वृक्षे विलोपितं द्रव्यं न लब्धम्।"
