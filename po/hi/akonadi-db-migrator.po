@@ -1,0 +1,301 @@
+# Hindi translations for akonadi package.
+# Copyright (C) 2024 This file is copyright:
+# This file is distributed under the same license as the akonadi package.
+# Kali <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: akonadi\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2024-02-25 00:38+0000\n"
+"PO-Revision-Date: 2024-12-15 17:36+0530\n"
+"Last-Translator: Kali <EMAIL@ADDRESS>\n"
+"Language-Team: Hindi <fedora-trans-hi@redhat.com>\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "तुम्हारे नाम"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "आपके ईमेल"
+
+#: dbmigrator.cpp:437
+#, kde-format
+msgctxt "@info:status"
+msgid "Stopping Akonadi service..."
+msgstr "अकोनाडी सेवा बंद की जा रही है..."
+
+#: dbmigrator.cpp:440
+#, kde-format
+msgctxt "@info:status"
+msgid "Error: timeout while waiting for Akonadi to stop."
+msgstr "त्रुटि: अकोनाडी के रुकने की प्रतीक्षा करते समय समय समाप्त हो गया।"
+
+#: dbmigrator.cpp:447
+#, kde-format
+msgctxt "@info:status"
+msgid "Error: couldn't acquire DBus lock for Akonadi."
+msgstr "त्रुटि: Akonadi के लिए DBus लॉक प्राप्त नहीं किया जा सका।"
+
+#: dbmigrator.cpp:456
+#, kde-format
+msgctxt "@info:status"
+msgid "Starting Akonadi service..."
+msgstr "अकोनाडी सेवा शुरू..."
+
+#: dbmigrator.cpp:469
+#, kde-format
+msgctxt "@info:status"
+msgid "Database fsck completed"
+msgstr "डेटाबेस fsck पूरा हुआ"
+
+#: dbmigrator.cpp:483
+#, kde-format
+msgctxt "@info:status"
+msgid ""
+"Invalid database engine \"%1\" - valid values are \"sqlite\", \"mysql\" and "
+"\"postgres\"."
+msgstr ""
+"अमान्य डेटाबेस इंजन \"%1\" - मान्य मान \"sqlite\", \"mysql\" और \"postgres\" हैं।"
+
+#: dbmigrator.cpp:505
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error: failed to configure source database server."
+msgstr "त्रुटि: स्रोत डेटाबेस सर्वर कॉन्फ़िगर करने में विफल."
+
+#: dbmigrator.cpp:510
+#, kde-format
+msgctxt "@info:shell"
+msgid "Source and destination database engines are the same."
+msgstr "स्रोत और गंतव्य डेटाबेस इंजन एक ही हैं।"
+
+#: dbmigrator.cpp:517
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error: failed to obtain path to source database data file or directory."
+msgstr "त्रुटि: स्रोत डेटाबेस डेटा फ़ाइल या निर्देशिका का पथ प्राप्त करने में विफल।"
+
+#: dbmigrator.cpp:524
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error: failed to configure the new database server."
+msgstr "त्रुटि: नया डेटाबेस सर्वर कॉन्फ़िगर करने में विफल."
+
+#: dbmigrator.cpp:530
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error: failed to open existing database to migrate data from."
+msgstr "त्रुटि: डेटा माइग्रेट करने के लिए मौजूदा डेटाबेस को खोलने में विफल।"
+
+#: dbmigrator.cpp:535
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error: failed to open new database to migrate data to."
+msgstr "त्रुटि: डेटा माइग्रेट करने के लिए नया डेटाबेस खोलने में विफल।"
+
+#: dbmigrator.cpp:540
+#, kde-format
+msgctxt "@info:status"
+msgid "Running fsck on the source database"
+msgstr "स्रोत डेटाबेस पर fsck चलाना"
+
+#: dbmigrator.cpp:559
+#, kde-format
+msgctxt "@info:status %2 is error message"
+msgid "Error: failed to remove temporary database directory %1: %2"
+msgstr "त्रुटि: अस्थायी डेटाबेस निर्देशिका %1 को हटाने में विफल: %2"
+
+#: dbmigrator.cpp:566
+#, kde-format
+msgctxt "@info:shell"
+msgid "Backing up original database..."
+msgstr "मूल डाटाबेस का बैकअप लिया जा रहा है..."
+
+#: dbmigrator.cpp:574
+#, kde-format
+msgctxt "@info:status"
+msgid "Restoring database from backup %1 to %2"
+msgstr "बैकअप %1 से %2 तक डाटाबेस पुनर्स्थापित किया जा रहा है"
+
+#: dbmigrator.cpp:576
+#, kde-format
+msgctxt "@info:status %1 is error message"
+msgid "Error: failed to restore database from backup: %1"
+msgstr "त्रुटि: बैकअप से डेटाबेस को पुनर्स्थापित करने में विफल: %1"
+
+#: dbmigrator.cpp:608 dbmigrator.cpp:619
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error has occurred while migrating table %1"
+msgstr "तालिका %1 को माइग्रेट करते समय त्रुटि हुई है"
+
+#: dbmigrator.cpp:638
+#, kde-format
+msgctxt "@label"
+msgid ""
+"Backup directory already exists. Do you want to overwrite the previous "
+"backup?"
+msgstr "बैकअप निर्देशिका पहले से मौजूद है। क्या आप पिछले बैकअप को अधिलेखित करना चाहते हैं?"
+
+#: dbmigrator.cpp:643
+#, kde-format
+msgctxt "@info:shell"
+msgid "Cannot proceed without backup. Migration interrupted."
+msgstr "बैकअप के बिना आगे नहीं बढ़ा जा सकता। माइग्रेशन बाधित हुआ।"
+
+#: dbmigrator.cpp:648
+#, kde-format
+msgctxt "@info:shell"
+msgid "Failed to remove previous backup directory."
+msgstr "पिछली बैकअप निर्देशिका को हटाने में विफल."
+
+#: dbmigrator.cpp:661
+#, kde-format
+msgctxt "@info:shell"
+msgid "Failed to move database to backup location: %1"
+msgstr "डेटाबेस को बैकअप स्थान पर ले जाने में विफल: %1"
+
+#: dbmigrator.cpp:675
+#, kde-format
+msgctxt "@label"
+msgid "Backup file %1 already exists. Overwrite?"
+msgstr "बैकअप फ़ाइल %1 पहले से मौजूद है। ओवरराइट करें?"
+
+#: dbmigrator.cpp:677
+#, kde-format
+msgctxt "@info:status"
+msgid "Cannot proceed without backup. Migration interrupted."
+msgstr "बैकअप के बिना आगे नहीं बढ़ा जा सकता। माइग्रेशन बाधित हुआ।"
+
+#: dbmigrator.cpp:683
+#, kde-format
+msgctxt "@info:status"
+msgid "Error: Failed to remove existing backup file %1: %2"
+msgstr "त्रुटि: मौजूदा बैकअप फ़ाइल %1 को हटाने में विफल: %2"
+
+#: dbmigrator.cpp:690
+#, kde-format
+msgctxt "@info:status"
+msgid "Failed to back up Akonadi Server configuration: %1"
+msgstr "Akonadi सर्वर कॉन्फ़िगरेशन का बैकअप लेने में विफल: %1"
+
+#: dbmigrator.cpp:707
+#, kde-format
+msgctxt "@info:status %1 is error message"
+msgid "Error: failed to move migrated database to the primary location: %1"
+msgstr "त्रुटि: माइग्रेटेड डेटाबेस को प्राथमिक स्थान पर ले जाने में विफल: %1"
+
+#: dbmigrator.cpp:726
+#, kde-format
+msgctxt "@info:status %1 is error message"
+msgid "Error: failed to remove original akonadiserverrc: %1"
+msgstr "त्रुटि: मूल akonadiserverrc: %1 को हटाने में विफल"
+
+#: dbmigrator.cpp:732
+#, kde-format
+msgctxt "@info:status %1 is error message"
+msgid "Error: failed to move new akonadiserverrc to the primary location: %1"
+msgstr "त्रुटि: नए akonadiserverrc को प्राथमिक स्थान पर ले जाने में विफल: %1"
+
+#: dbmigrator.cpp:823
+#, kde-format
+msgctxt "@info:status"
+msgid "Error: failed to update autoincrement value for table %1"
+msgstr "त्रुटि: तालिका %1 के लिए ऑटोइन्क्रीमेंट मान अद्यतन करने में विफल"
+
+#: dbmigrator.cpp:828
+#, kde-format
+msgctxt "@info:status"
+msgid "Optimizing table %1..."
+msgstr "तालिका %1 को अनुकूलित किया जा रहा है..."
+
+#: dbmigrator.cpp:831
+#, kde-format
+msgctxt "@info:status"
+msgid "Error: failed to optimize table %1"
+msgstr "त्रुटि: तालिका %1 को अनुकूलित करने में विफल"
+
+#: main.cpp:31
+#, kde-format
+msgctxt ""
+"Options for user to input to command line prompt, parenthesis indicate which "
+"letter to type, capitalized option is default"
+msgid " [(y)es/(N)o] "
+msgstr " [(हां नहीं] "
+
+#: main.cpp:36 main.cpp:55
+#, kde-format
+msgctxt "Letter for option \"(y)es\" prompted from command line"
+msgid "y"
+msgstr "और"
+
+#: main.cpp:49
+#, kde-format
+msgctxt ""
+"Options for user to input to command line prompt, parenthesis indicate which "
+"letter to type, capitalized option is default"
+msgid " [(y)es/(N)o/(s)kip] "
+msgstr " [(y)es/(N)o/(s)kip] "
+
+#: main.cpp:56
+#, kde-format
+msgctxt "Letter for option \"(s)kip\" prompted from command line"
+msgid "s"
+msgstr "एस"
+
+#: main.cpp:75 main.cpp:77
+#, kde-format
+msgid "Akonadi DB Migrator"
+msgstr "अकोनाडी डीबी माइग्रेटर"
+
+#: main.cpp:79
+#, kde-format
+msgid "(c) 2024 g10 Code GmbH"
+msgstr "(सी) 2024 जी10 कोड जीएमबीएच"
+
+#: main.cpp:85
+#, kde-format
+msgid ""
+"The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and "
+"\"postgres\""
+msgstr ""
+"उपयोग करने के लिए नया DB इंजन। संभावित मान \"sqlite\", \"mysql\" और \"postgres\" "
+"हैं"
+
+#: main.cpp:92
+#, kde-format
+msgctxt "@info:shell"
+msgid "Invalid target engine: %1."
+msgstr "अमान्य लक्ष्य इंजन: %1."
+
+#: main.cpp:106
+#, kde-format
+msgctxt "@info:status"
+msgid "Migration completed successfully."
+msgstr "स्थानांतरण सफलतापूर्वक पूर्ण हुआ."
+
+#: main.cpp:108
+#, kde-format
+msgctxt "@info:status"
+msgid "Migration failed."
+msgstr "स्थानांतरण विफल हुआ."
+
+#: main.cpp:113
+#, kde-format
+msgctxt "@info:progress"
+msgid "Migrating table %1 (%2/%3)..."
+msgstr "तालिका %1 (%2/%3) माइग्रेट की जा रही है..."
+
+#: main.cpp:127
+#, kde-format
+msgctxt "@info:progress"
+msgid "%1%..."
+msgstr "%1%..."
