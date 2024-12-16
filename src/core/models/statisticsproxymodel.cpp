@@ -80,6 +80,7 @@ public:
                    "    <td align=\"%1\" valign=\"top\">\n")
                    .arg(textDirection);
 
+        KFormat format;
         QString tipInfo = QStringLiteral(
                               "      <strong>%1</strong>: %2<br>\n"
                               "      <strong>%3</strong>: %4<br><br>\n")
@@ -93,12 +94,15 @@ public:
             if (quota->currentValue() > -1 && quota->maximumValue() > 0) {
                 qreal percentage = (100.0 * quota->currentValue()) / quota->maximumValue();
                 QString percentStr = QString::number(percentage, 'f', 2);
-                tipInfo += i18n("<strong>Quota</strong>: %1%<br>\n", percentStr);
+                tipInfo += i18nc("@info:tooltip Quota: 10% (300 MiB/3 GiB)",
+                                 "<strong>Quota</strong>: %1% (%2/%3)<br>\n",
+                                 percentStr,
+                                 format.formatByteSize(quota->currentValue()),
+                                 format.formatByteSize(quota->maximumValue()));
             }
         }
 
         qint64 currentFolderSize(collection.statistics().size());
-        KFormat format;
         tipInfo += QStringLiteral("      <strong>%1</strong>: %2<br>\n").arg(i18n("Storage Size"), format.formatByteSize(currentFolderSize));
 
         qint64 totalSize = 0;
