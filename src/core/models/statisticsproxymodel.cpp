@@ -92,11 +92,8 @@ public:
             const auto quota = collection.attribute<CollectionQuotaAttribute>();
             if (quota->currentValue() > -1 && quota->maximumValue() > 0) {
                 qreal percentage = (100.0 * quota->currentValue()) / quota->maximumValue();
-
-                if (qAbs(percentage) >= 0.01) {
-                    QString percentStr = QString::number(percentage, 'f', 2);
-                    tipInfo += i18n("<strong>Quota</strong>: %1%<br>\n", percentStr);
-                }
+                QString percentStr = QString::number(percentage, 'f', 2);
+                tipInfo += i18n("<strong>Quota</strong>: %1%<br>\n", percentStr);
             }
         }
 
