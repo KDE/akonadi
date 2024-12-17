@@ -100,6 +100,7 @@ private Q_SLOTS:
             }
             lastAction = action;
         }
+        QVERIFY(rec);
         QVERIFY(rec->isEmpty());
     }
 
