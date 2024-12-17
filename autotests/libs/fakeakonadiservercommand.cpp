@@ -195,7 +195,7 @@ void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResp
         }
 
         collection.setId(fakeServerData->nextCollectionId());
-        collection.setName(QStringLiteral("Collection %1").arg(collection.id()));
+        collection.setName(QStringLiteral("Col %1").arg(collection.id()));
         collection.setRemoteId(QStringLiteral("remoteId %1").arg(collection.id()));
 
         if (depth == 0) {
@@ -361,7 +361,7 @@ void FakeCollectionAddedCommand::doCommand()
 
     Collection collection;
     collection.setId(m_serverData->nextCollectionId());
-    collection.setName(QStringLiteral("Collection %1").arg(collection.id()));
+    collection.setName(QStringLiteral("Col %1").arg(collection.id()));
     collection.setRemoteId(QStringLiteral("remoteId %1").arg(collection.id()));
     collection.setParentCollection(parent);
 

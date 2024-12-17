@@ -82,7 +82,6 @@ void ModelSpy::verifySignal(SignalType type, const QModelIndex &topLeft, const Q
             QCOMPARE(parent.data(), expectedSignal.parentData);
         }
     }
-    qDebug() << type << topLeft << bottomRight;
     QCOMPARE(topLeft.row(), expectedSignal.startRow);
     QCOMPARE(bottomRight.row(), expectedSignal.endRow);
     QCOMPARE(extractModelColumn(*m_model, parent, topLeft.row(), bottomRight.row()), expectedSignal.newData);

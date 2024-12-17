@@ -391,7 +391,6 @@ void EntityTreeModelTest::testCollectionChanged()
 
     const auto changedIndex = firstMatchedIndex(*model, collectionName);
     const auto parentCollection = changedIndex.parent().data().toString();
-    qDebug() << parentCollection;
     const auto changedRow = changedIndex.row();
 
     auto const changeCommand = new FakeCollectionChangedCommand(collectionName, parentCollection, serverData);
