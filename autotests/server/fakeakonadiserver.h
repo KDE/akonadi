@@ -89,7 +89,6 @@ public:
     QSharedPointer<QSignalSpy> notificationSpy() const;
 
     void setPopulateDb(bool populate);
-    void disableItemRetrievalManager();
 
 protected:
     void newCmdConnection(quintptr socketDescriptor) override;
@@ -106,7 +105,6 @@ private:
     QSharedPointer<QSignalSpy> mNotificationSpy;
 
     bool mPopulateDb = true;
-    bool mDisableItemRetrievalManager = false;
 };
 
 AKONADI_EXCEPTION_MAKE_INSTANCE(FakeAkonadiServerException);

@@ -139,11 +139,6 @@ TestScenario::List FakeAkonadiServer::selectResourceScenario(const QString &name
             TestScenario::create(3, TestScenario::ServerCmd, Protocol::SelectResourceResponsePtr::create())};
 }
 
-void FakeAkonadiServer::disableItemRetrievalManager()
-{
-    mDisableItemRetrievalManager = true;
-}
-
 bool FakeAkonadiServer::init()
 {
     try {
@@ -210,9 +205,7 @@ void FakeAkonadiServer::initFake()
     mTracer = std::make_unique<Tracer>();
     mCollectionStats = std::make_unique<CollectionStatistics>();
     mCacheCleaner = AkThread::create<CacheCleaner>();
-    if (!mDisableItemRetrievalManager) {
-        mItemRetrieval = AkThread::create<FakeItemRetrievalManager>();
-    }
+    mItemRetrieval = AkThread::create<FakeItemRetrievalManager>();
     mAgentSearchManager = AkThread::create<SearchTaskManager>();
 
     mDebugInterface = std::make_unique<DebugInterface>(*mTracer);

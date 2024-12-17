@@ -197,7 +197,6 @@ public:
     ItemRetrieverTest()
     {
         mAkonadi.setPopulateDb(false);
-        mAkonadi.disableItemRetrievalManager();
         mAkonadi.init();
     }
 
