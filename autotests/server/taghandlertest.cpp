@@ -14,6 +14,7 @@
 #include "fakeakonadiserver.h"
 
 #include "private/scope_p.h"
+#include "protocol_p.h"
 
 #include <QTest>
 
@@ -320,7 +321,7 @@ private Q_SLOTS:
             itemUntaggedNtf->setItems({*initializer->fetchResponse(pimItem)});
             itemUntaggedNtf->setResource(res2.name().toLatin1());
             itemUntaggedNtf->setParentCollection(col.id());
-            itemUntaggedNtf->setRemovedTags(QSet<qint64>() << tag.id());
+            itemUntaggedNtf->setRemovedTags({Protocol::FetchTagsResponse(tag.id())});
 
             auto tagRemoveNtf = Protocol::TagChangeNotificationPtr::create();
             tagRemoveNtf->setOperation(Protocol::TagChangeNotification::Remove);

@@ -24,7 +24,7 @@ public:
     TagFetchHelper(Connection *connection, const Scope &scope, const Protocol::TagFetchScope &fetchScope);
     ~TagFetchHelper() = default;
 
-    bool fetchTags();
+    bool fetchTags(std::function<void(Protocol::FetchTagsResponse &&)> &&callback = {});
 
     static QMap<QByteArray, QByteArray> fetchTagAttributes(qint64 tagId, const Protocol::TagFetchScope &fetchScope);
 

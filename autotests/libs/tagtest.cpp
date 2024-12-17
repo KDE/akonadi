@@ -5,6 +5,7 @@
 */
 
 #include <QObject>
+#include <qsignalspy.h>
 
 #include "attributefactory.h"
 #include "control.h"
@@ -54,6 +55,7 @@ private Q_SLOTS:
     void testTagAttributeConfusionBug();
     void testFetchItemsByTag();
     void tagModifyJobShouldOnlySendModifiedAttributes();
+    void testItemNotificationOnTagDeletion();
 };
 
 void TagTest::initTestCase()
@@ -1000,6 +1002,57 @@ void TagTest::tagModifyJobShouldOnlySendModifiedAttributes()
         QCOMPARE(fetchedTag.type(), Tag::GENERIC);
         QVERIFY(fetchedTag.attribute("SecondType"));
     }
+}
+
+void TagTest::testItemNotificationOnTagDeletion()
+{
+    Akonadi::Monitor monitor;
+    monitor.setAllMonitored(true);
+    monitor.itemFetchScope().setFetchTags(true);
+    monitor.tagFetchScope().fetchAttribute<Akonadi::TagAttribute>();
+    QVERIFY(AkonadiTest::akWaitForSignal(&monitor, &Monitor::monitorReady));
+
+    // Create item
+    Item item;
+    {
+        const Collection res3 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
+        item.setMimeType(QStringLiteral("application/octet-stream"));
+        auto append = new ItemCreateJob(item, res3, this);
+        AKVERIFYEXEC(append);
+        item = append->item();
+    }
+
+    // Create tag
+    Tag tag(QStringLiteral("tag"));
+    {
+        auto createjob = new TagCreateJob(tag, this);
+        AKVERIFYEXEC(createjob);
+        tag = createjob->tag();
+    }
+
+    // Add tag to item
+    {
+        item.setTag(tag);
+        auto modJob = new ItemModifyJob(item, this);
+        AKVERIFYEXEC(modJob);
+    }
+
+    QSignalSpy itemsTagsChanged(&monitor, &Monitor::itemsTagsChanged);
+
+    // Delete the tag
+    {
+        auto deleteJob = new TagDeleteJob(tag, this);
+        AKVERIFYEXEC(deleteJob);
+    }
+
+    QTRY_VERIFY(itemsTagsChanged.count() >= 1);
+    const auto notifiedItem = itemsTagsChanged.last().first().value<Akonadi::Item::List>().first();
+    QCOMPARE(notifiedItem.id(), item.id());
+    const auto addedTags = itemsTagsChanged.last().at(1).value<QSet<Tag>>();
+    QVERIFY(addedTags.isEmpty());
+    const auto removedTags = itemsTagsChanged.last().at(2).value<QSet<Tag>>();
+    QCOMPARE(removedTags.size(), 1);
+    QCOMPARE(*removedTags.begin(), tag);
 }
 
 #include "tagtest.moc"

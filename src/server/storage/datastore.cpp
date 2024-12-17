@@ -20,11 +20,13 @@
 #include "parttypehelper.h"
 #include "querycache.h"
 #include "selectquerybuilder.h"
+#include "storage/query.h"
 #include "storagedebugger.h"
 #include "tracer.h"
 #include "transaction.h"
 
 #include "private/externalpartstorage_p.h"
+#include <shared/akranges.h>
 
 #include <QCoreApplication>
 #include <QElapsedTimer>
@@ -32,6 +34,7 @@
 #include <QSqlDriver>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QSqlRecord>
 #include <QString>
 #include <QStringList>
 #include <QThread>
@@ -44,6 +47,7 @@
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
+using namespace AkRanges;
 
 static QThreadStorage<DataStore *> sInstances;
 
@@ -495,8 +499,8 @@ bool DataStore::removeItemsFlags(const PimItem::List &items, const QList<Flag> &
 
 bool DataStore::setItemsTags(const PimItem::List &items, const Tag::List &tags, bool *tagsChanged, bool silent)
 {
-    QSet<qint64> removedTags;
-    QSet<qint64> addedTags;
+    QList<Tag> removedTags;
+    QList<Tag> addedTags;
     QVariantList insIds;
     QVariantList insTags;
     Query::Condition delConds(Query::Or);
@@ -508,7 +512,7 @@ bool DataStore::setItemsTags(const PimItem::List &items, const Tag::List &tags, 
         for (const Tag &tag : itemTags) {
             if (!tags.contains(tag)) {
                 // Remove tags from items that had it set
-                removedTags << tag.id();
+                removedTags.push_back(tag);
                 Query::Condition cond;
                 cond.addValueCondition(PimItemTagRelation::leftFullColumnName(), Query::Equals, item.id());
                 cond.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::Equals, tag.id());
@@ -519,7 +523,7 @@ bool DataStore::setItemsTags(const PimItem::List &items, const Tag::List &tags, 
         for (const Tag &tag : tags) {
             if (!itemTags.contains(tag)) {
                 // Add tags to items that did not have the tag
-                addedTags << tag.id();
+                addedTags.push_back(tag);
                 insIds << item.id();
                 insTags << tag.id();
             }
@@ -586,7 +590,7 @@ bool DataStore::doAppendItemsTag(const PimItem::List &items, const Tag &tag, con
     }
 
     if (!silent) {
-        notificationCollector()->itemsTagsChanged(appendItems, {tag.id()}, {}, col);
+        notificationCollector()->itemsTagsChanged(appendItems, {tag}, {}, col);
     }
 
     return true;
@@ -643,25 +647,18 @@ bool DataStore::appendItemsTags(const PimItem::List &items, const Tag::List &tag
     return true;
 }
 
-bool DataStore::removeItemsTags(const PimItem::List &items, const Tag::List &tags, bool *tagsChanged, bool silent)
+bool DataStore::removeItemsTags(const PimItem::List &items, const Tag::List &removedTags, bool *tagsChanged, bool silent)
 {
-    QSet<qint64> removedTags;
-    QVariantList itemsIds;
-    QVariantList tagsIds;
-
     setBoolPtr(tagsChanged, false);
-    itemsIds.reserve(items.count());
 
-    for (const PimItem &item : items) {
-        itemsIds << item.id();
-        for (int i = 0; i < tags.count(); ++i) {
-            const qint64 tagId = tags[i].id();
-            if (!removedTags.contains(tagId)) {
-                tagsIds << tagId;
-                removedTags << tagId;
-            }
-        }
-    }
+    const auto itemsIds = items | Views::transform([](const auto &item) -> QVariant {
+                              return item.id();
+                          })
+        | Actions::toQList;
+    const auto tagsIds = removedTags | Views::transform([](const auto &tag) -> QVariant {
+                             return tag.id();
+                         })
+        | Actions::toQList;
 
     // Delete all given tags from all given items in one go
     QueryBuilder qb(PimItemTagRelation::tableName(), QueryBuilder::Delete);
@@ -678,43 +675,58 @@ bool DataStore::removeItemsTags(const PimItem::List &items, const Tag::List &tag
         qb.query().finish();
         setBoolPtr(tagsChanged, true);
         if (!silent) {
-            notificationCollector()->itemsTagsChanged(items, QSet<qint64>(), removedTags);
+            notificationCollector()->itemsTagsChanged(items, {}, removedTags);
         }
     }
 
     return true;
 }
 
-bool DataStore::removeTags(const Tag::List &tags, bool silent)
+bool DataStore::removeTags(const Tag::List &removedTags, bool silent)
 {
     // Currently the "silent" argument is only for API symmetry
     Q_UNUSED(silent)
 
-    QVariantList removedTagsIds;
-    QSet<qint64> removedTags;
-    removedTagsIds.reserve(tags.count());
-    removedTags.reserve(tags.count());
-    for (const Tag &tag : tags) {
-        removedTagsIds << tag.id();
-        removedTags << tag.id();
-    }
+    const auto removedTagsIds = removedTags | Views::transform([](const auto &tag) -> QVariant {
+                                    return tag.id();
+                                })
+        | Actions::toQList;
 
     // Get all PIM items that we will untag
     SelectQueryBuilder<PimItem> itemsQuery;
+    itemsQuery.addColumn(PimItem::collectionIdFullColumnName());
     itemsQuery.addJoin(QueryBuilder::LeftJoin, PimItemTagRelation::tableName(), PimItemTagRelation::leftFullColumnName(), PimItem::idFullColumnName());
     itemsQuery.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::In, removedTagsIds);
+    itemsQuery.addSortColumn(PimItem::collectionIdFullColumnName(), Query::Ascending);
 
     if (!itemsQuery.exec()) {
         qCWarning(AKONADISERVER_LOG) << "Removing tags failed: failed to query Items for given tags" << removedTagsIds;
         return false;
     }
-    const PimItem::List items = itemsQuery.result();
 
-    if (!items.isEmpty()) {
-        notificationCollector()->itemsTagsChanged(items, QSet<qint64>(), removedTags);
+    // Emit itemsTagsChanged for all items that have the removed tags.
+    // We group them by collection, since that's what the notification collector as well as
+    // resources expect.
+    PimItem::List items;
+    auto &query = itemsQuery.query();
+    Collection::Id lastCollectionId = -1;
+    const auto collectionIdColumn = query.record().count() - 1;
+    while (query.next()) {
+        const auto collectionId = query.value(collectionIdColumn).value<Collection::Id>();
+        if (!items.empty() && collectionId != lastCollectionId) {
+            notificationCollector()->itemsTagsChanged(items, {}, removedTags, Collection::retrieveById(lastCollectionId));
+            items.clear();
+        }
+
+        items.push_back(PimItem::extractEntity(query));
+        lastCollectionId = collectionId;
     }
 
-    for (const Tag &tag : tags) {
+    if (!items.empty()) {
+        notificationCollector()->itemsTagsChanged(items, {}, removedTags, Collection::retrieveById(lastCollectionId));
+    }
+
+    for (const Tag &tag : removedTags) {
         // Emit special tagRemoved notification for each resource that owns the tag
         QueryBuilder qb(TagRemoteIdResourceRelation::tableName(), QueryBuilder::Select);
         qb.addColumn(TagRemoteIdResourceRelation::remoteIdFullColumnName());
@@ -855,8 +867,8 @@ bool DataStore::cleanupCollection(Collection &collection)
     qb.addValueCondition(Part::storageFullColumnName(), Query::Equals, Part::External);
     qb.addValueCondition(Part::dataFullColumnName(), Query::IsNot, QVariant());
     if (!qb.exec()) {
-        qCWarning(AKONADISERVER_LOG) << "Failed to cleanup collection" << collection.name() << "(ID" << collection.id() << "):"
-                                     << "Failed to query existing payload parts";
+        qCWarning(AKONADISERVER_LOG) << "Failed to cleanup collection" << collection.name() << "(ID" << collection.id()
+                                     << "):" << "Failed to query existing payload parts";
         return false;
     }
 
@@ -953,8 +965,8 @@ bool DataStore::moveCollection(Collection &collection, const Collection &newPare
     }
 
     if (!collection.update()) {
-        qCWarning(AKONADISERVER_LOG) << "Failed to move Collection" << collection.name() << "(ID" << collection.id() << ")"
-                                     << "into Collection" << collection.name() << "(ID" << collection.id() << ")";
+        qCWarning(AKONADISERVER_LOG) << "Failed to move Collection" << collection.name() << "(ID" << collection.id() << ")" << "into Collection"
+                                     << collection.name() << "(ID" << collection.id() << ")";
         return false;
     }
 
