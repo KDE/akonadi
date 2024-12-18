@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-28 00:40+0000\n"
+"POT-Creation-Date: 2024-12-18 00:41+0000\n"
 "PO-Revision-Date: 2024-09-19 14:56+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -501,44 +501,46 @@ msgstr "Σφάλμα"
 msgid "Favorite Folders"
 msgstr "Προτιμώμενοι φάκελοι"
 
-#: core/models/statisticsproxymodel.cpp:86
+#: core/models/statisticsproxymodel.cpp:87
 #, kde-format
 msgid "Total Messages"
 msgstr "Σύνολο μηνυμάτων"
 
-#: core/models/statisticsproxymodel.cpp:88
+#: core/models/statisticsproxymodel.cpp:89
 #, kde-format
 msgid "Unread Messages"
 msgstr "Μη αναγνωσμένα μηνύματα"
 
 #: core/models/statisticsproxymodel.cpp:98
-#, kde-format
-msgid "<strong>Quota</strong>: %1%<br>\n"
+#, fuzzy, kde-format
+#| msgid "<strong>Quota</strong>: %1%<br>\n"
+msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
+msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
 msgstr "<strong>Ποσόστωση</strong>: %1%<br>\n"
 
-#: core/models/statisticsproxymodel.cpp:105
+#: core/models/statisticsproxymodel.cpp:106
 #, kde-format
 msgid "Storage Size"
 msgstr "Μέγεθος αποθηκευτικού χώρου"
 
-#: core/models/statisticsproxymodel.cpp:111
+#: core/models/statisticsproxymodel.cpp:112
 #, kde-format
 msgid "Subfolder Storage Size"
 msgstr "Μέγεθος αποθηκευτικού χώρου υποφακέλου"
 
-#: core/models/statisticsproxymodel.cpp:231
+#: core/models/statisticsproxymodel.cpp:232
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "Μη αναγνωσμένα"
 
-#: core/models/statisticsproxymodel.cpp:232
+#: core/models/statisticsproxymodel.cpp:233
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "Σύνολο"
 
-#: core/models/statisticsproxymodel.cpp:233
+#: core/models/statisticsproxymodel.cpp:234
 #, kde-format
 msgctxt "collection size"
 msgid "Size"

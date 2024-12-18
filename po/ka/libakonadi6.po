@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-28 00:40+0000\n"
+"POT-Creation-Date: 2024-12-18 00:41+0000\n"
 "PO-Revision-Date: 2024-11-14 02:56+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
@@ -489,44 +489,46 @@ msgstr "შეცდომა"
 msgid "Favorite Folders"
 msgstr "რჩეული საქაღალდეები"
 
-#: core/models/statisticsproxymodel.cpp:86
+#: core/models/statisticsproxymodel.cpp:87
 #, kde-format
 msgid "Total Messages"
 msgstr "შეტყობინებები სულ"
 
-#: core/models/statisticsproxymodel.cpp:88
+#: core/models/statisticsproxymodel.cpp:89
 #, kde-format
 msgid "Unread Messages"
 msgstr "წაუკითხავი შეტყობინებები"
 
 #: core/models/statisticsproxymodel.cpp:98
-#, kde-format
-msgid "<strong>Quota</strong>: %1%<br>\n"
+#, fuzzy, kde-format
+#| msgid "<strong>Quota</strong>: %1%<br>\n"
+msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
+msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
 msgstr "<strong>კვოტა</strong>: %1%<br>\n"
 
-#: core/models/statisticsproxymodel.cpp:105
+#: core/models/statisticsproxymodel.cpp:106
 #, kde-format
 msgid "Storage Size"
 msgstr "საცავის ზომა"
 
-#: core/models/statisticsproxymodel.cpp:111
+#: core/models/statisticsproxymodel.cpp:112
 #, kde-format
 msgid "Subfolder Storage Size"
 msgstr "ქვესაქაღალდის საცავის ზომა"
 
-#: core/models/statisticsproxymodel.cpp:231
+#: core/models/statisticsproxymodel.cpp:232
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "წაუკითხავი"
 
-#: core/models/statisticsproxymodel.cpp:232
+#: core/models/statisticsproxymodel.cpp:233
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "ჯამში"
 
-#: core/models/statisticsproxymodel.cpp:233
+#: core/models/statisticsproxymodel.cpp:234
 #, kde-format
 msgctxt "collection size"
 msgid "Size"

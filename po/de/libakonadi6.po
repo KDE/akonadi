@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-28 00:40+0000\n"
+"POT-Creation-Date: 2024-12-18 00:41+0000\n"
 "PO-Revision-Date: 2024-10-06 12:54+0200\n"
 "Last-Translator: Johannes Obermayr <johannesobermayr@gmx.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -501,44 +501,46 @@ msgstr "Fehler"
 msgid "Favorite Folders"
 msgstr "Bevorzugte Ordner"
 
-#: core/models/statisticsproxymodel.cpp:86
+#: core/models/statisticsproxymodel.cpp:87
 #, kde-format
 msgid "Total Messages"
 msgstr "Gesamtzahl Nachrichten"
 
-#: core/models/statisticsproxymodel.cpp:88
+#: core/models/statisticsproxymodel.cpp:89
 #, kde-format
 msgid "Unread Messages"
 msgstr "Ungelesene Nachrichten"
 
 #: core/models/statisticsproxymodel.cpp:98
-#, kde-format
-msgid "<strong>Quota</strong>: %1%<br>\n"
+#, fuzzy, kde-format
+#| msgid "<strong>Quota</strong>: %1%<br>\n"
+msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
+msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
 msgstr "<strong>Kontingent</strong>: %1 %<br>\n"
 
-#: core/models/statisticsproxymodel.cpp:105
+#: core/models/statisticsproxymodel.cpp:106
 #, kde-format
 msgid "Storage Size"
 msgstr "Speicherplatz"
 
-#: core/models/statisticsproxymodel.cpp:111
+#: core/models/statisticsproxymodel.cpp:112
 #, kde-format
 msgid "Subfolder Storage Size"
 msgstr "Speicherplatz der Unterordner"
 
-#: core/models/statisticsproxymodel.cpp:231
+#: core/models/statisticsproxymodel.cpp:232
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "Ungelesen"
 
-#: core/models/statisticsproxymodel.cpp:232
+#: core/models/statisticsproxymodel.cpp:233
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "Gesamt"
 
-#: core/models/statisticsproxymodel.cpp:233
+#: core/models/statisticsproxymodel.cpp:234
 #, kde-format
 msgctxt "collection size"
 msgid "Size"

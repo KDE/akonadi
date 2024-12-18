@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-28 00:40+0000\n"
+"POT-Creation-Date: 2024-12-18 00:41+0000\n"
 "PO-Revision-Date: 2024-12-14 01:48+0530\n"
 "Last-Translator: kali <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -488,44 +488,46 @@ msgstr "त्रुटि"
 msgid "Favorite Folders"
 msgstr "प्रियपुटम्"
 
-#: core/models/statisticsproxymodel.cpp:86
+#: core/models/statisticsproxymodel.cpp:87
 #, kde-format
 msgid "Total Messages"
 msgstr "कुल सन्देशाः"
 
-#: core/models/statisticsproxymodel.cpp:88
+#: core/models/statisticsproxymodel.cpp:89
 #, kde-format
 msgid "Unread Messages"
 msgstr "अपठित सन्देश"
 
 #: core/models/statisticsproxymodel.cpp:98
-#, kde-format
-msgid "<strong>Quota</strong>: %1%<br>\n"
+#, fuzzy, kde-format
+#| msgid "<strong>Quota</strong>: %1%<br>\n"
+msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
+msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
 msgstr "<strong>कोटा</strong> : %1% .<br>\n"
 
-#: core/models/statisticsproxymodel.cpp:105
+#: core/models/statisticsproxymodel.cpp:106
 #, kde-format
 msgid "Storage Size"
 msgstr "भण्डारण आकार"
 
-#: core/models/statisticsproxymodel.cpp:111
+#: core/models/statisticsproxymodel.cpp:112
 #, kde-format
 msgid "Subfolder Storage Size"
 msgstr "उपपुटस्य भण्डारणस्य आकारः"
 
-#: core/models/statisticsproxymodel.cpp:231
+#: core/models/statisticsproxymodel.cpp:232
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "अपठित"
 
-#: core/models/statisticsproxymodel.cpp:232
+#: core/models/statisticsproxymodel.cpp:233
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "कुल"
 
-#: core/models/statisticsproxymodel.cpp:233
+#: core/models/statisticsproxymodel.cpp:234
 #, kde-format
 msgctxt "collection size"
 msgid "Size"
