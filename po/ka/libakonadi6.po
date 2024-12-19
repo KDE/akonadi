@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-18 00:41+0000\n"
-"PO-Revision-Date: 2024-11-14 02:56+0100\n"
+"PO-Revision-Date: 2024-12-18 03:19+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -500,11 +500,10 @@ msgid "Unread Messages"
 msgstr "წაუკითხავი შეტყობინებები"
 
 #: core/models/statisticsproxymodel.cpp:98
-#, fuzzy, kde-format
-#| msgid "<strong>Quota</strong>: %1%<br>\n"
+#, kde-format
 msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
 msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
-msgstr "<strong>კვოტა</strong>: %1%<br>\n"
+msgstr "<strong>კვოტა</strong>: %1% (%2/%3)<br>\n"
 
 #: core/models/statisticsproxymodel.cpp:106
 #, kde-format

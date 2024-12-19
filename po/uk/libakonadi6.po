@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-18 00:41+0000\n"
-"PO-Revision-Date: 2024-11-13 16:46+0200\n"
+"PO-Revision-Date: 2024-12-18 09:25+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -505,11 +505,10 @@ msgid "Unread Messages"
 msgstr "Непрочитаних повідомлень"
 
 #: core/models/statisticsproxymodel.cpp:98
-#, fuzzy, kde-format
-#| msgid "<strong>Quota</strong>: %1%<br>\n"
+#, kde-format
 msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
 msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
-msgstr "<strong>Квота</strong>: %1%<br>\n"
+msgstr "<strong>Квота</strong>: %1% (%2 з %3)<br>\n"
 
 #: core/models/statisticsproxymodel.cpp:106
 #, kde-format
