@@ -11,6 +11,7 @@
 #include "akonadiprivate_export.h"
 
 #include <QByteArray>
+#include <QDBusArgument>
 #include <QDateTime>
 #include <QDebug>
 #include <QJsonObject>
@@ -166,6 +167,14 @@ AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, Command::Type type);
 
 } // namespace Protocol
 } // namespace Akonadi
+
+inline const QDBusArgument &operator>>(const QDBusArgument &arg, Akonadi::Protocol::Command::Type &type)
+{
+    quint8 typeInt;
+    arg >> typeInt;
+    type = static_cast<Akonadi::Protocol::Command::Type>(typeInt);
+    return arg;
+}
 
 Q_DECLARE_METATYPE(Akonadi::Protocol::Command::Type)
 Q_DECLARE_METATYPE(Akonadi::Protocol::CommandPtr)
