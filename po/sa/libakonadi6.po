@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-18 00:41+0000\n"
-"PO-Revision-Date: 2024-12-14 01:48+0530\n"
+"PO-Revision-Date: 2024-12-19 22:18+0530\n"
 "Last-Translator: kali <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
 "Language: sa\n"
@@ -499,11 +499,10 @@ msgid "Unread Messages"
 msgstr "अपठित सन्देश"
 
 #: core/models/statisticsproxymodel.cpp:98
-#, fuzzy, kde-format
-#| msgid "<strong>Quota</strong>: %1%<br>\n"
+#, kde-format
 msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
 msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
-msgstr "<strong>कोटा</strong> : %1% .<br>\n"
+msgstr "<strong>कोटा</strong> : %1% (%2/%3)<br>\n"
 
 #: core/models/statisticsproxymodel.cpp:106
 #, kde-format
