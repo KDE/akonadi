@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-18 00:41+0000\n"
-"PO-Revision-Date: 2024-11-14 13:00+0100\n"
+"PO-Revision-Date: 2024-12-19 09:03+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
 "Language: fr\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Accelerator-Marker: &\n"
 "X-Environment: kde\n"
-"X-Generator: Lokalize 24.08.3\n"
+"X-Generator: Lokalize 24.12.0\n"
 "X-Text-Markup: kde4\n"
 
 #, kde-format
@@ -517,11 +517,10 @@ msgid "Unread Messages"
 msgstr "Messages non lus"
 
 #: core/models/statisticsproxymodel.cpp:98
-#, fuzzy, kde-format
-#| msgid "<strong>Quota</strong>: %1%<br>\n"
+#, kde-format
 msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
 msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
-msgstr "<strong>Quota</strong> : %1%<br>\n"
+msgstr "<strong>Quota</strong> : %1 % (%2 / %3)<br>\n"
 
 #: core/models/statisticsproxymodel.cpp:106
 #, kde-format

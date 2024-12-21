@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-18 00:41+0000\n"
-"PO-Revision-Date: 2024-12-19 22:18+0530\n"
+"PO-Revision-Date: 2024-12-20 21:51+0530\n"
 "Last-Translator: kali <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
 "Language: sa\n"
@@ -707,7 +707,7 @@ msgstr "%1 विन्याससंवादस्य पञ्जीकर�
 #, kde-format
 msgctxt "Status percent value"
 msgid "(%1%)"
-msgstr "(%1%) २."
+msgstr "(%1%)"
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
@@ -743,7 +743,7 @@ msgstr "एतत् पुटं चयनं कुर्वन् समन�
 #: widgets/cachepolicypage.ui:40
 #, kde-format
 msgid "Synchronize after:"
-msgstr "पश्चात् समन्वयनम् : १."
+msgstr "पश्चात् समन्वयनम् :"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, checkInterval)
 #: widgets/cachepolicypage.ui:47
@@ -763,7 +763,7 @@ msgstr "पन्चनिमेषः"
 #: widgets/cachepolicypage.ui:66
 #, kde-format
 msgid "Locally cached parts:"
-msgstr "स्थानीयतया संग्रहीताः भागाः : १."
+msgstr "स्थानीयतया संग्रहीताः भागाः :"
 
 #. i18n: ectx: property (title), widget (KEditListWidget, localParts)
 #: widgets/cachepolicypage.ui:87
@@ -775,7 +775,7 @@ msgstr "स्थानीयरूपेण संग्रहीताः भ�
 #: widgets/cachepolicypage.ui:94
 #, kde-format
 msgid "Retrieval Options:"
-msgstr "पुनर्प्राप्तिविकल्पाः : १."
+msgstr "पुनर्प्राप्तिविकल्पाः :"
 
 #. i18n: ectx: property (text), widget (QRadioButton, retrieveFullMessages)
 #: widgets/cachepolicypage.ui:101
@@ -959,7 +959,7 @@ msgstr "अनुक्रमितवस्तूनाम् गणना..."
 #: widgets/collectionmaintenancepage.ui:17
 #, kde-format
 msgid "Folder type:"
-msgstr "पुटस्य प्रकारः : १."
+msgstr "पुटस्य प्रकारः :"
 
 #. i18n: ectx: property (text), widget (QLabel, folderTypeLbl)
 #. i18n: ectx: property (text), widget (QLabel, folderSizeLbl)
@@ -977,25 +977,25 @@ msgstr "अज्ञात"
 #: widgets/collectionmaintenancepage.ui:38
 #, kde-format
 msgid "File size:"
-msgstr "सञ्चिकायाः आकारः : १."
+msgstr "सञ्चिकायाः आकारः :"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: widgets/collectionmaintenancepage.ui:45
 #, kde-format
 msgid "Total items:"
-msgstr "कुलवस्तूनि : १."
+msgstr "कुलवस्तूनि :"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: widgets/collectionmaintenancepage.ui:59
 #, kde-format
 msgid "Unread items:"
-msgstr "अपठितवस्तूनि : १."
+msgstr "अपठितवस्तूनि :"
 
 #. i18n: ectx: property (text), widget (QLabel, indexingLabel)
 #: widgets/collectionmaintenancepage.ui:73
 #, kde-format
 msgid "Indexing:"
-msgstr "अनुक्रमणिका : १."
+msgstr "अनुक्रमणिका :"
 
 #. i18n: ectx: property (text), widget (QCheckBox, enableIndexingChkBox)
 #: widgets/collectionmaintenancepage.ui:80
