@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-18 00:41+0000\n"
-"PO-Revision-Date: 2024-12-24 20:39+0530\n"
+"PO-Revision-Date: 2024-12-25 19:45+0530\n"
 "Last-Translator: kali <shreekantkalwar@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
 "Language: sa\n"
@@ -895,7 +895,7 @@ msgstr "&अनुकूलितचिह्नस्य उपयोगं क
 #: widgets/collectiongeneralpropertiespage.ui:39
 #, kde-format
 msgid "folder"
-msgstr "पुटम्"
+msgstr "समुच्चय"
 
 #. i18n: ectx: property (title), widget (QGroupBox, statsBox)
 #: widgets/collectiongeneralpropertiespage.ui:62
@@ -1019,7 +1019,7 @@ msgstr "पुनः अनुक्रमणिका पुटम्"
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No Folder"
-msgstr "न फोल्डर्"
+msgstr "न समुच्चय"
 
 #: widgets/collectionrequester.cpp:122
 #, kde-format
@@ -2094,7 +2094,7 @@ msgstr "कचरातः संग्रहं पुनर्स्थाप�
 
 #: widgets/standardactionmanager.cpp:304
 msgid "&Synchronize Favorite Folders"
-msgstr "&प्रिय फोल्डर् समन्वयनम्"
+msgstr "&प्रिय समुच्चय समन्वयनम्"
 
 #: widgets/standardactionmanager.cpp:305
 msgid "Synchronize Favorite Folders"
@@ -2132,7 +2132,7 @@ msgctxt "@action"
 msgid "&Cut Folder"
 msgid_plural "&Cut %1 Folders"
 msgstr[0] "&कट फोल्डर"
-msgstr[1] "&%1 फोल्डर्स् कटयन्तु"
+msgstr[1] "&%1 समुच्चयस् कटयन्तु"
 
 #: widgets/standardactionmanager.cpp:402
 #, kde-format
@@ -2256,7 +2256,7 @@ msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
 msgstr[0] "फोल्डरं विलोपयन्तु?"
-msgstr[1] "फोल्डर् विलोपयन्तु?"
+msgstr[1] "समुच्चय विलोपयन्तु?"
 
 #: widgets/standardactionmanager.cpp:430
 #, kde-format
@@ -2359,7 +2359,7 @@ msgstr "पेस्ट् विफलम्"
 #: widgets/standardactionmanager.cpp:809
 #, kde-format
 msgid "We can not add \"/\" in folder name."
-msgstr "वयं फोल्डर् नाम्ने \"/\" योजयितुं न शक्नुमः ।"
+msgstr "वयं समुच्चय नाम्ने \"/\" योजयितुं न शक्नुमः ।"
 
 #: widgets/standardactionmanager.cpp:809 widgets/standardactionmanager.cpp:813
 #, kde-format
