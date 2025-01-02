@@ -1,6 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2009 Stephen Kelly <steveire@gmail.com>
-    SPDX-FileCopyrightText: 2012-2024 Laurent Montel <montel@kde.org>
+    SPDX-FileCopyrightText: 2012-2025 Laurent Montel <montel@kde.org>
 
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
