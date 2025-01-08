@@ -1,0 +1,306 @@
+# Copyright (C) 2025 This file is copyright:
+# This file is distributed under the same license as the akonadi package.
+# SPDX-FileCopyrightText: 2025 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: akonadi\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2024-02-25 00:38+0000\n"
+"PO-Revision-Date: 2025-01-07 18:26+0400\n"
+"Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
+"Language-Team: ar\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"X-Generator: Lokalize 23.08.5\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "زايد السعيدي"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "zayed.alsaidi@gmail.com"
+
+#: dbmigrator.cpp:437
+#, kde-format
+msgctxt "@info:status"
+msgid "Stopping Akonadi service..."
+msgstr "إيقاف خدمة أكونادي..."
+
+#: dbmigrator.cpp:440
+#, kde-format
+msgctxt "@info:status"
+msgid "Error: timeout while waiting for Akonadi to stop."
+msgstr "خطأ: أنتهت المهلة أثناء انتظار توقف أكونادي."
+
+#: dbmigrator.cpp:447
+#, kde-format
+msgctxt "@info:status"
+msgid "Error: couldn't acquire DBus lock for Akonadi."
+msgstr "خطأ: تعذر الحصول على قفل DBus لأكونادي."
+
+#: dbmigrator.cpp:456
+#, kde-format
+msgctxt "@info:status"
+msgid "Starting Akonadi service..."
+msgstr "بدء خدمة أكونادي..."
+
+#: dbmigrator.cpp:469
+#, kde-format
+msgctxt "@info:status"
+msgid "Database fsck completed"
+msgstr "اكتمل التحقق من اتساق نظام الملفات fsck لقاعدة البيانات"
+
+#: dbmigrator.cpp:483
+#, kde-format
+msgctxt "@info:status"
+msgid ""
+"Invalid database engine \"%1\" - valid values are \"sqlite\", \"mysql\" and "
+"\"postgres\"."
+msgstr ""
+"محرك قاعدة البيانات \"%1\" غير صالح - القيم الصالحة هي \"sqlite\" و \"mysql"
+"\" و \"postgres\"."
+
+#: dbmigrator.cpp:505
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error: failed to configure source database server."
+msgstr "خطأ: فشل في ضبط خادم قاعدة البيانات المصدر."
+
+#: dbmigrator.cpp:510
+#, kde-format
+msgctxt "@info:shell"
+msgid "Source and destination database engines are the same."
+msgstr "محركات قاعدة البيانات المصدر والوجهة هي نفسها."
+
+#: dbmigrator.cpp:517
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error: failed to obtain path to source database data file or directory."
+msgstr ""
+"خطأ: فشل في الحصول على المسار إلى ملف أو دليل بيانات قاعدة البيانات المصدر."
+
+#: dbmigrator.cpp:524
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error: failed to configure the new database server."
+msgstr "خطأ: فشل في تكوين خادم قاعدة البيانات الجديد."
+
+#: dbmigrator.cpp:530
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error: failed to open existing database to migrate data from."
+msgstr "خطأ: فشل في فتح قاعدة البيانات الموجودة لترحيل البيانات منها."
+
+#: dbmigrator.cpp:535
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error: failed to open new database to migrate data to."
+msgstr "خطأ: فشل في فتح قاعدة بيانات جديدة لترحيل البيانات إليها."
+
+#: dbmigrator.cpp:540
+#, kde-format
+msgctxt "@info:status"
+msgid "Running fsck on the source database"
+msgstr "تشغيل أمر التحقق من اتساق نظام الملفات fsck على قاعدة البيانات المصدر"
+
+#: dbmigrator.cpp:559
+#, kde-format
+msgctxt "@info:status %2 is error message"
+msgid "Error: failed to remove temporary database directory %1: %2"
+msgstr "خطأ: فشل في إزالة دليل قاعدة البيانات المؤقتة %1: %2"
+
+#: dbmigrator.cpp:566
+#, kde-format
+msgctxt "@info:shell"
+msgid "Backing up original database..."
+msgstr "أخذ نسخة احتياطية لقاعدة البيانات الأصلية..."
+
+#: dbmigrator.cpp:574
+#, kde-format
+msgctxt "@info:status"
+msgid "Restoring database from backup %1 to %2"
+msgstr "استعادة قاعدة البيانات من النسخة الاحتياطية %1 إلى %2"
+
+#: dbmigrator.cpp:576
+#, kde-format
+msgctxt "@info:status %1 is error message"
+msgid "Error: failed to restore database from backup: %1"
+msgstr "خطأ: فشل في استعادة قاعدة البيانات من النسخة الاحتياطية: %1"
+
+#: dbmigrator.cpp:608 dbmigrator.cpp:619
+#, kde-format
+msgctxt "@info:shell"
+msgid "Error has occurred while migrating table %1"
+msgstr "حدث خطأ أثناء ترحيل الجدول %1"
+
+#: dbmigrator.cpp:638
+#, kde-format
+msgctxt "@label"
+msgid ""
+"Backup directory already exists. Do you want to overwrite the previous "
+"backup?"
+msgstr ""
+"دليل النسخ الاحتياطي موجود بالفعل. هل تريد استبدال النسخة الاحتياطية السابقة؟"
+
+#: dbmigrator.cpp:643
+#, kde-format
+msgctxt "@info:shell"
+msgid "Cannot proceed without backup. Migration interrupted."
+msgstr "لا يمكن المتابعة بدون النسخ الاحتياطي. قطعت عملية الترحيل."
+
+#: dbmigrator.cpp:648
+#, kde-format
+msgctxt "@info:shell"
+msgid "Failed to remove previous backup directory."
+msgstr "فشل في إزالة دليل النسخ الاحتياطي السابق."
+
+#: dbmigrator.cpp:661
+#, kde-format
+msgctxt "@info:shell"
+msgid "Failed to move database to backup location: %1"
+msgstr "فشل في نقل قاعدة البيانات إلى موقع النسخ الاحتياطي: %1"
+
+#: dbmigrator.cpp:675
+#, kde-format
+msgctxt "@label"
+msgid "Backup file %1 already exists. Overwrite?"
+msgstr "ملف النسخ الاحتياطي %1 موجود بالفعل. هل أكتب فوقها؟"
+
+#: dbmigrator.cpp:677
+#, kde-format
+msgctxt "@info:status"
+msgid "Cannot proceed without backup. Migration interrupted."
+msgstr "لا يمكن المتابعة بدون النسخ الاحتياطي. قطعت عملية الترحيل."
+
+#: dbmigrator.cpp:683
+#, kde-format
+msgctxt "@info:status"
+msgid "Error: Failed to remove existing backup file %1: %2"
+msgstr "خطأ: فشل في إزالة ملف النسخ الاحتياطي الموجود %1: %2"
+
+#: dbmigrator.cpp:690
+#, kde-format
+msgctxt "@info:status"
+msgid "Failed to back up Akonadi Server configuration: %1"
+msgstr "فشل في عمل نسخة احتياطية لتكوين خادم أكونادي: %1"
+
+#: dbmigrator.cpp:707
+#, kde-format
+msgctxt "@info:status %1 is error message"
+msgid "Error: failed to move migrated database to the primary location: %1"
+msgstr "خطأ: فشل في نقل قاعدة البيانات التي تم ترحيلها إلى الموقع الأساسي: %1"
+
+#: dbmigrator.cpp:726
+#, kde-format
+msgctxt "@info:status %1 is error message"
+msgid "Error: failed to remove original akonadiserverrc: %1"
+msgstr "خطأ: فشل في إزالة akonadiserverrc الأصلي: %1"
+
+#: dbmigrator.cpp:732
+#, kde-format
+msgctxt "@info:status %1 is error message"
+msgid "Error: failed to move new akonadiserverrc to the primary location: %1"
+msgstr "خطأ: فشل في نقل akonadiserverrc الجديد إلى الموقع الأساسي: %1"
+
+#: dbmigrator.cpp:823
+#, kde-format
+msgctxt "@info:status"
+msgid "Error: failed to update autoincrement value for table %1"
+msgstr "خطأ: فشل في تحديث قيمة الإضافة التلقائية للجدول %1"
+
+#: dbmigrator.cpp:828
+#, kde-format
+msgctxt "@info:status"
+msgid "Optimizing table %1..."
+msgstr "تحسين الجدول %1..."
+
+#: dbmigrator.cpp:831
+#, kde-format
+msgctxt "@info:status"
+msgid "Error: failed to optimize table %1"
+msgstr "خطأ: فشل في تحسين الجدول %1"
+
+#: main.cpp:31
+#, kde-format
+msgctxt ""
+"Options for user to input to command line prompt, parenthesis indicate which "
+"letter to type, capitalized option is default"
+msgid " [(y)es/(N)o] "
+msgstr " [(y)نعم/(N)لا] "
+
+#: main.cpp:36 main.cpp:55
+#, kde-format
+msgctxt "Letter for option \"(y)es\" prompted from command line"
+msgid "y"
+msgstr "y"
+
+#: main.cpp:49
+#, kde-format
+msgctxt ""
+"Options for user to input to command line prompt, parenthesis indicate which "
+"letter to type, capitalized option is default"
+msgid " [(y)es/(N)o/(s)kip] "
+msgstr " [(y)نعم/(N)لا/(s)تخطى] "
+
+#: main.cpp:56
+#, kde-format
+msgctxt "Letter for option \"(s)kip\" prompted from command line"
+msgid "s"
+msgstr "s"
+
+#: main.cpp:75 main.cpp:77
+#, kde-format
+msgid "Akonadi DB Migrator"
+msgstr "مرحل قاعدة بيانات أكونادي"
+
+#: main.cpp:79
+#, kde-format
+msgid "(c) 2024 g10 Code GmbH"
+msgstr "(ج) 2024 g10 Code GmbH"
+
+#: main.cpp:85
+#, kde-format
+msgid ""
+"The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and "
+"\"postgres\""
+msgstr ""
+"محرك قاعدة البيانات الجديد الذي سيتم استخدامه. القيم الممكنة هي \"sqlite\" و"
+"\"mysql\" و\"postgres\""
+
+#: main.cpp:92
+#, kde-format
+msgctxt "@info:shell"
+msgid "Invalid target engine: %1."
+msgstr "المحرك الهدف غير صالح: %1."
+
+#: main.cpp:106
+#, kde-format
+msgctxt "@info:status"
+msgid "Migration completed successfully."
+msgstr "انتهى الترحيل بنجاح."
+
+#: main.cpp:108
+#, kde-format
+msgctxt "@info:status"
+msgid "Migration failed."
+msgstr "فشل الترحيل."
+
+#: main.cpp:113
+#, kde-format
+msgctxt "@info:progress"
+msgid "Migrating table %1 (%2/%3)..."
+msgstr "ترحيل الجدول %1 (%2/%3)..."
+
+#: main.cpp:127
+#, kde-format
+msgctxt "@info:progress"
+msgid "%1%..."
+msgstr "%1%..."
