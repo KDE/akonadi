@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-18 00:41+0000\n"
-"PO-Revision-Date: 2024-10-01 16:40+0200\n"
+"PO-Revision-Date: 2024-11-14 14:03+0100\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 24.08.1\n"
+"X-Generator: Lokalize 24.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -193,7 +193,7 @@ msgstr ""
 #: akonadictl/main.cpp:239
 #, kde-format
 msgid "Wait for server shutdown to complete."
-msgstr ""
+msgstr "Počkejte na dokončení vypínání serveru."
 
 #: akonadictl/main.cpp:241
 #, kde-format

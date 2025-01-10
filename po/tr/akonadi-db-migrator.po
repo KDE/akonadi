@@ -1,13 +1,13 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the akonadi package.
 #
-# SPDX-FileCopyrightText: 2024 Emir SARI <emir_sari@icloud.com>
+# SPDX-FileCopyrightText: 2024, 2025 Emir SARI <emir_sari@icloud.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-25 00:38+0000\n"
-"PO-Revision-Date: 2024-10-25 18:08+0300\n"
+"PO-Revision-Date: 2025-01-09 16:17+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.08.2\n"
+"X-Generator: Lokalize 25.03.70\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -272,8 +272,8 @@ msgid ""
 "The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and "
 "\"postgres\""
 msgstr ""
-"Kullanılacak yeni veritabanı işletkesi. Olası değerler: ‘sqlite’, ‘mysql’ ve "
-"‘postgres’."
+"Kullanılacak yeni veritabanı işletkesi. Olası değerler: “sqlite”, “mysql” ve "
+"“postgres”."
 
 #: main.cpp:92
 #, kde-format
