@@ -104,7 +104,7 @@ msgstr "Akonadi 资源"
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
-msgstr "获得了无效的项目"
+msgstr "获得的项目无效"
 
 #: agentbase/resourcebase.cpp:613
 #, kde-format
