@@ -104,7 +104,7 @@ msgstr "Akonadi 资源"
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
-msgstr "获得了无效的项目"
+msgstr "获得的项目无效"
 
 #: agentbase/resourcebase.cpp:603
 #, kde-format
@@ -200,7 +200,7 @@ msgstr ""
 #: akonadictl/main.cpp:239
 #, kde-format
 msgid "Wait for server shutdown to complete."
-msgstr ""
+msgstr "等待服务器关机完成。"
 
 #: akonadictl/main.cpp:241
 #, kde-format
@@ -496,7 +496,7 @@ msgstr "未读消息"
 #, kde-format
 msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
 msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
-msgstr ""
+msgstr "<strong>配额</strong>： %1% (%2/%3)<br>\n"
 
 #: core/models/statisticsproxymodel.cpp:106
 #, kde-format
