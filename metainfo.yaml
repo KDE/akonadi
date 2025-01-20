@@ -5,6 +5,9 @@ group: kdepim
 type: solution
 platforms:
     - name: Linux
+    - name: FreeBSD
+    - name: macOS
+    - name: Windows    
 public_lib: true
 libraries:
     - cmake: KPim6::AkonadiCore
