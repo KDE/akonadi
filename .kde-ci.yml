@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: CC0-1.0
 
 Dependencies:
-- 'on': ['Linux', 'FreeBSD', 'Windows']
-  'require':
+ - 'on': ['Linux', 'FreeBSD', 'Windows']
+   'require':
     'frameworks/extra-cmake-modules': '@latest-kf6'
     'frameworks/kconfig': '@latest-kf6'
     'frameworks/kconfigwidgets': '@latest-kf6'
@@ -16,4 +16,4 @@ Dependencies:
     'frameworks/kcrash': '@latest-kf6'
 
 Options:
-  cmake-options: "-DAKONADI_RUN_MYSQL_ISOLATED_TESTS=FALSE -DAKONADI_RUN_PGSQL_ISOLATED_TESTS=FALSE -DAKONADI_RUN_SQLITE_ISOLATED_TESTS=FALSE"
+ cmake-options: "-DAKONADI_RUN_MYSQL_ISOLATED_TESTS=FALSE -DAKONADI_RUN_PGSQL_ISOLATED_TESTS=FALSE -DAKONADI_RUN_SQLITE_ISOLATED_TESTS=FALSE"
