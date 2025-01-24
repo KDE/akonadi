@@ -5,13 +5,13 @@
 # Viesturs Zarins <viesturs.zarins@mii.lu.lv>, 2008, 2010.
 # Viesturs Zariņš <viesturs.zarins@mii.lu.lv>, 2009.
 # Maris Nartiss <maris.kde@gmail.com>, 2009.
-# SPDX-FileCopyrightText: 2024 Toms Trasuns <toms.trasuns@posteo.net>
+# SPDX-FileCopyrightText: 2024, 2025 Toms Trasuns <toms.trasuns@posteo.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-18 00:41+0000\n"
-"PO-Revision-Date: 2024-12-02 18:31+0200\n"
+"PO-Revision-Date: 2025-01-20 11:15+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
-"X-Generator: Lokalize 24.08.3\n"
+"X-Generator: Lokalize 24.12.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -503,11 +503,10 @@ msgid "Unread Messages"
 msgstr "Nelasītas vēstules"
 
 #: core/models/statisticsproxymodel.cpp:98
-#, fuzzy, kde-format
-#| msgid "<strong>Quota</strong>: %1%<br>\n"
+#, kde-format
 msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
 msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
-msgstr "<strong>Kvota</strong>: %1 %<br>\n"
+msgstr "<strong>Kvota</strong>: %1% (%2/%3)<br>\n"
 
 #: core/models/statisticsproxymodel.cpp:106
 #, kde-format
