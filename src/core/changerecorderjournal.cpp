@@ -196,6 +196,7 @@ QList<Protocol::FetchTagsResponse> loadTags(QDataStream &stream)
     QList<Protocol::FetchTagsResponse> tags;
     int cnt = 0;
     stream >> cnt;
+    tags.reserve(cnt);
     for (int i = 0; i < cnt; ++i) {
         qint64 id;
         qint64 parentId;
