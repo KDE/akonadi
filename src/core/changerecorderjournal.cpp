@@ -289,7 +289,6 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadItemNotificatio
                 item.setMTime(dt);
                 stream >> bav;
                 item.setFlags(bav);
-                stream >> cnt;
                 item.setTags(loadTags(stream));
                 stream >> i64v;
                 item.setVirtualReferences(i64v);
