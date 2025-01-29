@@ -283,8 +283,9 @@ AgentInstance AgentManagerPrivate::fillAgentInstance(const QString &identifier) 
     instance.d->mStatusMessage = mManager->agentInstanceStatusMessage(identifier);
     instance.d->mProgress = mManager->agentInstanceProgress(identifier);
     instance.d->mIsOnline = mManager->agentInstanceOnline(identifier);
-    // instance.d->mActivities = mManager->agentInstanceActivities(identifier);
-    // instance.d->mActivitiesEnabled = mManager->agentInstanceActivitiesEnabled(identifier);
+    // FIXME need to reactivate it
+    // FIXME activities instance.d->mActivities = mManager->agentInstanceActivities(identifier);
+    // FIXME activities instance.d->mActivitiesEnabled = mManager->agentInstanceActivitiesEnabled(identifier);
 
     return instance;
 }
