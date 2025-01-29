@@ -426,6 +426,9 @@ QStringList AgentManager::agentInstanceActivities(const QString &identifier)
     if (!checkAgentInterfaces(identifier, QStringLiteral("agentInstanceActivities"))) {
         return {};
     }
+    if (!mAgentInstances.value(identifier)->resourceInterface()) {
+        return {};
+    }
 
     return mAgentInstances.value(identifier)->resourceInterface()->activities();
 }
@@ -442,6 +445,9 @@ void AgentManager::setAgentInstanceActivitiesEnabled(const QString &identifier, 
 bool AgentManager::agentInstanceActivitiesEnabled(const QString &identifier)
 {
     if (!checkAgentInterfaces(identifier, QStringLiteral("agentInstanceActivitiesEnabled"))) {
+        return false;
+    }
+    if (!mAgentInstances.value(identifier)->resourceInterface()) {
         return false;
     }
 
