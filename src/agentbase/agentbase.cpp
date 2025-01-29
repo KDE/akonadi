@@ -835,8 +835,11 @@ QString AgentBase::parseArguments(int argc, char **argv)
     const QString catalog = fi.baseName();
 
     auto translator = new QTranslator(qApp);
-    translator->load(catalog);
-    QCoreApplication::installTranslator(translator);
+    if (translator->load(catalog)) {
+        QCoreApplication::installTranslator(translator);
+    } else {
+        delete translator;
+    }
 
     return identifier;
 }
