@@ -112,6 +112,11 @@ bool Control::start()
     case ServerManager::Broken:
         qCDebug(AKONADICORE_LOG) << "Server is already broken: " << ServerManager::brokenReason();
         return false;
+    case ServerManager::Starting:
+    case ServerManager::NotRunning:
+    case ServerManager::Running:
+    case ServerManager::Upgrading:
+        break;
     }
     if (ServerManager::isRunning() || s_instance->d->mEventLoop) {
         qCDebug(AKONADICORE_LOG) << "Server is already running";
