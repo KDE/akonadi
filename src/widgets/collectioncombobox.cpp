@@ -9,11 +9,9 @@
 #include "collectioncombobox.h"
 
 #include "asyncselectionhandler_p.h"
-#include "collectiondialog.h"
 
 #include "collectionfetchscope.h"
 #include "collectionfilterproxymodel.h"
-#include "collectionutils.h"
 #include "entityrightsfiltermodel.h"
 #include "entitytreemodel.h"
 #include "monitor.h"
