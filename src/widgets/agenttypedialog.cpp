@@ -34,7 +34,7 @@ public:
     void readConfig();
     void writeConfig() const;
     void slotSearchAgentType(const QString &str);
-    AgentTypeWidget *Widget = nullptr;
+    AgentTypeWidget *widget = nullptr;
     AgentType agentType;
     AgentTypeDialog *const q;
 };
@@ -56,7 +56,7 @@ void AgentTypeDialogPrivate::readConfig()
 
 void AgentTypeDialogPrivate::slotSearchAgentType(const QString &str)
 {
-    Widget->agentFilterProxyModel()->setFilterRegularExpression(str);
+    widget->agentFilterProxyModel()->setFilterRegularExpression(str);
 }
 
 AgentTypeDialog::AgentTypeDialog(QWidget *parent)
@@ -66,8 +66,8 @@ AgentTypeDialog::AgentTypeDialog(QWidget *parent)
     setWindowTitle(i18nc("@title:window", "Configure Account"));
     auto layout = new QVBoxLayout(this);
 
-    d->Widget = new Akonadi::AgentTypeWidget(this);
-    connect(d->Widget, &AgentTypeWidget::activated, this, &AgentTypeDialog::accept);
+    d->widget = new Akonadi::AgentTypeWidget(this);
+    connect(d->widget, &AgentTypeWidget::activated, this, &AgentTypeDialog::accept);
 
     auto searchLine = new QLineEdit(this);
     layout->addWidget(searchLine);
@@ -76,7 +76,7 @@ AgentTypeDialog::AgentTypeDialog(QWidget *parent)
         d->slotSearchAgentType(str);
     });
 
-    layout->addWidget(d->Widget);
+    layout->addWidget(d->widget);
 
     auto buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &AgentTypeDialog::accept);
@@ -98,7 +98,7 @@ AgentTypeDialog::~AgentTypeDialog()
 void AgentTypeDialog::done(int result)
 {
     if (result == Accepted) {
-        d->agentType = d->Widget->currentAgentType();
+        d->agentType = d->widget->currentAgentType();
     } else {
         d->agentType = AgentType();
     }
@@ -113,7 +113,7 @@ AgentType AgentTypeDialog::agentType() const
 
 AgentFilterProxyModel *AgentTypeDialog::agentFilterProxyModel() const
 {
-    return d->Widget->agentFilterProxyModel();
+    return d->widget->agentFilterProxyModel();
 }
 
 #include "moc_agenttypedialog.cpp"
