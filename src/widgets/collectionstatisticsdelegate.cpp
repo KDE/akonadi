@@ -38,8 +38,8 @@ public:
     QAbstractItemView *const parent;
     bool drawUnreadAfterFolder = false;
     DelegateAnimator *animator = nullptr;
-    QColor mSelectedUnreadColor;
-    QColor mDeselectedUnreadColor;
+    std::array<QColor, 3> mSelectedUnreadColor;
+    std::array<QColor, 3> mDeselectedUnreadColor;
 
     explicit CollectionStatisticsDelegatePrivate(QAbstractItemView *treeView)
         : parent(treeView)
@@ -69,8 +69,11 @@ public:
 
     void updateColor()
     {
-        mSelectedUnreadColor = KColorScheme(QPalette::Active, KColorScheme::Selection).foreground(KColorScheme::PositiveText).color();
-        mDeselectedUnreadColor = KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::PositiveText).color();
+        static constexpr std::array states = {QPalette::Active, QPalette::Disabled, QPalette::Inactive};
+        for (const auto state : states) {
+            mSelectedUnreadColor[state] = KColorScheme(state, KColorScheme::Selection).foreground(KColorScheme::ActiveText).color();
+            mDeselectedUnreadColor[state] = KColorScheme(state, KColorScheme::View).foreground(KColorScheme::ActiveText).color();
+        }
     }
 };
 
@@ -255,7 +258,9 @@ void CollectionStatisticsDelegate::paint(QPainter *painter, const QStyleOptionVi
             painter->setFont(font);
         }
 
-        const QColor unreadColor = (option.state & QStyle::State_Selected) ? d->mSelectedUnreadColor : d->mDeselectedUnreadColor;
+        const QPalette::ColorGroup group =
+            !(option.state & QStyle::State_Enabled) ? QPalette::Disabled : (option.state & QStyle::State_Active ? QPalette::Active : QPalette::Inactive);
+        const QColor unreadColor = (option.state & QStyle::State_Selected) ? d->mSelectedUnreadColor[group] : d->mDeselectedUnreadColor[group];
         const QRect iconRect = s->subElementRect(QStyle::SE_ItemViewItemDecoration, &option4, widget);
 
         if (option.decorationPosition == QStyleOptionViewItem::Left || option.decorationPosition == QStyleOptionViewItem::Right) {
