@@ -69,8 +69,8 @@ public:
 
     void updateColor()
     {
-        mSelectedUnreadColor = KColorScheme(QPalette::Active, KColorScheme::Selection).foreground(KColorScheme::PositiveText).color();
-        mDeselectedUnreadColor = KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::PositiveText).color();
+        mSelectedUnreadColor = KColorScheme(QPalette::Active, KColorScheme::Selection).foreground(KColorScheme::ActiveText).color();
+        mDeselectedUnreadColor = KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::ActiveText).color();
     }
 };
 
