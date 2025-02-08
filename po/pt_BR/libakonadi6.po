@@ -7,13 +7,13 @@
 # Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2010, 2011, 2012, 2019, 2020, 2021, 2022, 2023.
 # Marcus Vinícius de Andrade Gama <marcus.gama@gmail.com>, 2010, 2011, 2012.
 # Aracele Torres <araceletorres@gmail.com>, 2010.
-# SPDX-FileCopyrightText: 2024 Geraldo Simiao <geraldosimiao@fedoraproject.org>
+# SPDX-FileCopyrightText: 2024, 2025 Geraldo Simiao <geraldosimiao@fedoraproject.org>
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-18 00:41+0000\n"
-"PO-Revision-Date: 2024-12-04 11:51-0300\n"
+"PO-Revision-Date: 2025-02-07 20:33-0300\n"
 "Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -21,17 +21,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.08.3\n"
+"X-Generator: Lokalize 24.12.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "André Marcelo Alvarenga"
+msgstr "André Marcelo Alvarenga, Geraldo Simião"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "alvarenga@kde.org"
+msgstr "alvarenga@kde.org, geraldosimiao@fedoraproject.org"
 
 #: agentbase/accountsintegration.cpp:86
 #, kde-format
@@ -192,6 +192,18 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"Ferramenta de manipulação do servidor Akonadi\n"
+"\n"
+"Comandos:\n"
+"start Inicia o servidor Akonadi com todos os seus processos\n"
+"stop Para o servidor Akonadi e todos os seus processos de forma limpa\n"
+"restart Reinicia o servidor Akonadi com todos os seus processos\n"
+"status Mostra uma visão geral do status do servidor Akonadi\n"
+"instances Lista todas as instâncias Akonadi existentes\n"
+"vacuum Limpa o armazenamento interno (AVISO: precisa de muito tempo\n"
+"e espaço em disco!)\n"
+"fsck Verifica (e tenta corrigir) a consistência do armazenamento interno\n"
+"(pode levar algum tempo)"
 
 #: akonadictl/main.cpp:239
 #, kde-format
@@ -841,8 +853,7 @@ msgid "&New Subfolder..."
 msgstr "&Nova subpasta..."
 
 #: widgets/collectiondialog.cpp:228
-#, fuzzy, kde-format
-#| msgid "Create a new subfolder under the currently selected folder"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Criar uma nova subpasta sob a pasta atualmente selecionada"
@@ -1021,15 +1032,13 @@ msgid "Reindex folder"
 msgstr "Indexar a pasta novamente"
 
 #: widgets/collectionrequester.cpp:113
-#, fuzzy, kde-format
-#| msgid "No Folder"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No Folder"
 msgstr "Nenhuma pasta"
 
 #: widgets/collectionrequester.cpp:122
-#, fuzzy, kde-format
-#| msgid "Open collection dialog"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
 msgstr "Abrir o diálogo da coleção"
@@ -1146,8 +1155,7 @@ msgstr ""
 "%1"
 
 #: widgets/erroroverlay.cpp:228
-#, fuzzy, kde-format
-#| msgid "Personal information management service is starting..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr "Iniciando o serviço de gerenciamento de informações pessoais..."
@@ -1158,8 +1166,7 @@ msgid "Personal information management service is starting..."
 msgstr "Iniciando o serviço de gerenciamento de informações pessoais..."
 
 #: widgets/erroroverlay.cpp:233
-#, fuzzy, kde-format
-#| msgid "Personal information management service is shutting down..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr "Encerrando o serviço de gerenciamento de informações pessoais..."
@@ -1170,9 +1177,7 @@ msgid "Personal information management service is shutting down..."
 msgstr "Encerrando o serviço de gerenciamento de informações pessoais..."
 
 #: widgets/erroroverlay.cpp:238
-#, fuzzy, kde-format
-#| msgid ""
-#| "Personal information management service is performing a database upgrade."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
@@ -1199,16 +1204,13 @@ msgstr ""
 #. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
 #: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not running. This "
-#| "application cannot be used without it."
+#, kde-format
 msgid ""
 "A required background service is not running. This application cannot be "
 "used without it."
 msgstr ""
-"O serviço de gerenciamento de informações pessoais do Akonadi não está em "
-"execução. Este aplicativo não pode ser usado sem ele."
+"Um serviço de segundo plano necessário não está em execução. Este aplicativo "
+"não pode ser usado sem ele."
 
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #: widgets/erroroverlay.ui:116
@@ -1219,29 +1221,20 @@ msgstr "Iniciar"
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management framework is not "
-#| "operational.\n"
-#| "Click on \"Details...\" to obtain detailed information on this problem."
+#, kde-format
 msgid ""
 "A required background service is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
-"O framework de gerenciamento de informações pessoais do Akonadi não está "
-"disponível.\n"
+"Um serviço de segundo plano necessário não está operacional.\n"
 "Clique em \"Detalhes...\" para obter informações detalhadas sobre este "
 "problema."
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not operational."
+#, kde-format
 msgid "A required background service is not operational."
-msgstr ""
-"O serviço de gerenciamento de informações pessoais do Akonadi não está "
-"disponível."
+msgstr "Um serviço de segundo plano necessário não está operacional."
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
