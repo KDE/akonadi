@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-18 00:41+0000\n"
-"PO-Revision-Date: 2025-02-07 20:33-0300\n"
+"PO-Revision-Date: 2025-02-08 10:55-0300\n"
 "Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -208,7 +208,7 @@ msgstr ""
 #: akonadictl/main.cpp:239
 #, kde-format
 msgid "Wait for server shutdown to complete."
-msgstr ""
+msgstr "Aguarde a conclusão do desligamento do servidor."
 
 #: akonadictl/main.cpp:241
 #, kde-format
@@ -507,11 +507,10 @@ msgid "Unread Messages"
 msgstr "Mensagens não lidas"
 
 #: core/models/statisticsproxymodel.cpp:98
-#, fuzzy, kde-format
-#| msgid "<strong>Quota</strong>: %1%<br>\n"
+#, kde-format
 msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
 msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
-msgstr "<strong>Cota</strong>: %1%<br>\n"
+msgstr "<strong>Cota</strong>: %1% (%2/%3)<br>\n"
 
 #: core/models/statisticsproxymodel.cpp:106
 #, kde-format
