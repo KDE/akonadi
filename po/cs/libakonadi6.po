@@ -488,11 +488,10 @@ msgid "Unread Messages"
 msgstr "Nepřečtené zprávy"
 
 #: core/models/statisticsproxymodel.cpp:98
-#, fuzzy, kde-format
-#| msgid "<strong>Quota</strong>: %1%<br>\n"
+#, kde-format
 msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
 msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
-msgstr "<strong>Kvóta</strong>: %1%<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:106
 #, kde-format
