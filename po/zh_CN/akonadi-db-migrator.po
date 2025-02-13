@@ -20,12 +20,12 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "KDE China, Kevin Li"
+msgstr "KDE China, Kevin Li, Eric Zhao"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "kde-china@kde.org, qingtian805@qq.com"
+msgstr "kde-china@kde.org, qingtian805@qq.com, zxybbb7892020@outlook.com"
 
 #: dbmigrator.cpp:437
 #, kde-format
@@ -111,7 +111,7 @@ msgstr "正在检查源数据库文件系统"
 #, kde-format
 msgctxt "@info:status %2 is error message"
 msgid "Error: failed to remove temporary database directory %1: %2"
-msgstr "错误：移动临时数据库目录 %1：%2 失败"
+msgstr "错误：无法移除临时数据库目录 %1 ，原因：%2 "
 
 #: dbmigrator.cpp:566
 #, kde-format
@@ -129,7 +129,7 @@ msgstr "正在从备份 %1 中恢复数据库 %2"
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to restore database from backup: %1"
-msgstr "错误：从备份中恢复数据库失败：%1"
+msgstr "错误：从备份中恢复数据库失败，原因：%1"
 
 #: dbmigrator.cpp:608 dbmigrator.cpp:619
 #, kde-format
@@ -161,7 +161,7 @@ msgstr "无法移除上次的备份目录"
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to move database to backup location: %1"
-msgstr "无法将数据库移动到备份位置：%1"
+msgstr "无法将数据库移动到备份位置，原因：%1"
 
 #: dbmigrator.cpp:675
 #, kde-format
@@ -179,31 +179,31 @@ msgstr "无法在没有备份的情况下继续。迁移中断。"
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: Failed to remove existing backup file %1: %2"
-msgstr "错误：无法删除现有备份文件 %1：%2"
+msgstr "错误：无法删除现有的备份文件 %1 ，原因：%2 。"
 
 #: dbmigrator.cpp:690
 #, kde-format
 msgctxt "@info:status"
 msgid "Failed to back up Akonadi Server configuration: %1"
-msgstr "备份 Akonadi 服务器配置失败：%1"
+msgstr "备份 Akonadi 服务器配置失败，原因：%1"
 
 #: dbmigrator.cpp:707
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move migrated database to the primary location: %1"
-msgstr "错误：移动迁移的数据库到主位置失败：%1"
+msgstr "错误：移动迁移的数据库到主位置失败，原因：%1"
 
 #: dbmigrator.cpp:726
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to remove original akonadiserverrc: %1"
-msgstr "错误：删除原始 akonadiserverrc 文件失败：%1"
+msgstr "错误：删除原始 akonadiserverrc 文件失败，原因：%1"
 
 #: dbmigrator.cpp:732
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move new akonadiserverrc to the primary location: %1"
-msgstr "错误：移动新 akonadiserverrc 文件到主位置失败：%1"
+msgstr "错误：移动新 akonadiserverrc 文件到主位置失败，原因：%1"
 
 #: dbmigrator.cpp:823
 #, kde-format
@@ -290,7 +290,7 @@ msgstr "迁移失败。"
 #, kde-format
 msgctxt "@info:progress"
 msgid "Migrating table %1 (%2/%3)..."
-msgstr "正在迁移表 %1 (%2/%3)"
+msgstr "正在迁移表 %1 (第 %2 个/共 %3 个)"
 
 #: main.cpp:127
 #, kde-format
