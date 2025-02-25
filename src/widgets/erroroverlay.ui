@@ -205,7 +205,7 @@ Click on &quot;Details...&quot; to obtain detailed information on this problem.<
             </size>
            </property>
            <property name="text">
-            <string>A required background service is not operational.</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A required background service is not operational.&lt;/p&gt;&lt;p&gt;See &lt;a href=&quot;https://userbase.kde.org/Akonadi#If_Akonadi_Reports_Broken_or_Non-operational&quot;&gt;FAQ&lt;/a&gt; for troubleshooting tips.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
