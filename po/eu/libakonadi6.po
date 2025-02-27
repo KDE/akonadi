@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-18 00:41+0000\n"
+"POT-Creation-Date: 2025-02-27 00:41+0000\n"
 "PO-Revision-Date: 2024-12-21 07:59+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -1229,8 +1229,12 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
 #, kde-format
-msgid "A required background service is not operational."
-msgstr "Beharrezkoa den hondoko zerbitzu bat ez dago operatibo."
+msgid ""
+"<html><head/><body><p>A required background service is not operational.</"
+"p><p>See <a href=\"https://userbase.kde.org/"
+"Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> for "
+"troubleshooting tips.</p></body></html>"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
@@ -2651,6 +2655,9 @@ msgstr "Ezin da datu-fitxategiaren sintaxia aztertu: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Ezin izan da «%1» bilduma aurkitu"
+
+#~ msgid "A required background service is not operational."
+#~ msgstr "Beharrezkoa den hondoko zerbitzu bat ez dago operatibo."
 
 #~ msgid "Failed to create relation."
 #~ msgstr "Huts egin du harremana sortzeak."

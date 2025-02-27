@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-18 00:41+0000\n"
+"POT-Creation-Date: 2025-02-27 00:41+0000\n"
 "PO-Revision-Date: 2014-01-31 20:40+0100\n"
 "Last-Translator: Samir Ribić <megaribi@epn.ba>\n"
 "Language-Team: bosanski <bs@li.org>\n"
@@ -1254,11 +1254,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not operational."
-msgid "A required background service is not operational."
-msgstr "Akonadi, servis za upravljanje ličnim podacima, nije operativan."
+#, kde-format
+msgid ""
+"<html><head/><body><p>A required background service is not operational.</"
+"p><p>See <a href=\"https://userbase.kde.org/"
+"Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> for "
+"troubleshooting tips.</p></body></html>"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
@@ -2778,6 +2780,12 @@ msgstr "Ne mogu da umetnem podatke: %1"
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"
 msgstr "Loša zbirka"
+
+#, fuzzy
+#~| msgid ""
+#~| "The Akonadi personal information management service is not operational."
+#~ msgid "A required background service is not operational."
+#~ msgstr "Akonadi, servis za upravljanje ličnim podacima, nije operativan."
 
 #, fuzzy
 #~| msgid "Unable to create agent instance."

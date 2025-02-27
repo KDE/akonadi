@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-18 00:41+0000\n"
+"POT-Creation-Date: 2025-02-27 00:41+0000\n"
 "PO-Revision-Date: 2020-05-07 13:23+0300\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -1234,11 +1234,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not operational."
-msgid "A required background service is not operational."
-msgstr "Akonadi personaalse teabe halduse teenus ei tööta."
+#, kde-format
+msgid ""
+"<html><head/><body><p>A required background service is not operational.</"
+"p><p>See <a href=\"https://userbase.kde.org/"
+"Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> for "
+"troubleshooting tips.</p></body></html>"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
@@ -2680,6 +2682,12 @@ msgstr "Andmefaili parsimine nurjus: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Kogu %1 ei leitud"
+
+#, fuzzy
+#~| msgid ""
+#~| "The Akonadi personal information management service is not operational."
+#~ msgid "A required background service is not operational."
+#~ msgstr "Akonadi personaalse teabe halduse teenus ei tööta."
 
 #~ msgid "Failed to create relation."
 #~ msgstr "Seose loomine nurjus."

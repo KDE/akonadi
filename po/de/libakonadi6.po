@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-18 00:41+0000\n"
+"POT-Creation-Date: 2025-02-27 00:41+0000\n"
 "PO-Revision-Date: 2024-12-23 15:56+0100\n"
 "Last-Translator: Johannes Obermayr <johannesobermayr@gmx.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -1241,8 +1241,12 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
 #, kde-format
-msgid "A required background service is not operational."
-msgstr "Ein notwendiger Hintergrunddienst arbeitet nicht richtig."
+msgid ""
+"<html><head/><body><p>A required background service is not operational.</"
+"p><p>See <a href=\"https://userbase.kde.org/"
+"Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> for "
+"troubleshooting tips.</p></body></html>"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
@@ -2667,6 +2671,9 @@ msgstr "Datei kann nicht verarbeitet werden: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Die Sammlung %1 wurde nicht gefunden"
+
+#~ msgid "A required background service is not operational."
+#~ msgstr "Ein notwendiger Hintergrunddienst arbeitet nicht richtig."
 
 #~ msgid "Failed to create relation."
 #~ msgstr "Erstellung der Beziehung ist fehlgeschlagen."

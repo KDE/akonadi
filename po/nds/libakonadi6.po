@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-18 00:41+0000\n"
+"POT-Creation-Date: 2025-02-27 00:41+0000\n"
 "PO-Revision-Date: 2014-09-18 22:53+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -1245,13 +1245,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not operational."
-msgid "A required background service is not operational."
+#, kde-format
+msgid ""
+"<html><head/><body><p>A required background service is not operational.</"
+"p><p>See <a href=\"https://userbase.kde.org/"
+"Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> for "
+"troubleshooting tips.</p></body></html>"
 msgstr ""
-"De Akonadi-Deenst för de Pleeg vun persöönlich Informatschonen löppt nich "
-"propper"
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
@@ -2740,6 +2740,14 @@ msgstr "Datendatei lett sik nich inlesen: „%1“"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Sammeln „%1“ lett sik nich finnen"
+
+#, fuzzy
+#~| msgid ""
+#~| "The Akonadi personal information management service is not operational."
+#~ msgid "A required background service is not operational."
+#~ msgstr ""
+#~ "De Akonadi-Deenst för de Pleeg vun persöönlich Informatschonen löppt nich "
+#~ "propper"
 
 #, fuzzy
 #~| msgid "Failed to create tag."

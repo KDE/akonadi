@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-18 00:41+0000\n"
+"POT-Creation-Date: 2025-02-27 00:41+0000\n"
 "PO-Revision-Date: 2021-05-15 17:47-0700\n"
 "Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -1242,16 +1242,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management framework is not "
-#| "operational.\n"
-#| "Click on \"Details...\" to obtain detailed information on this problem."
-msgid "A required background service is not operational."
+#, kde-format
+msgid ""
+"<html><head/><body><p>A required background service is not operational.</"
+"p><p>See <a href=\"https://userbase.kde.org/"
+"Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> for "
+"troubleshooting tips.</p></body></html>"
 msgstr ""
-"Akonadi PIM フレームワークは使用できません。\n"
-"<interface>詳細...</interface>をクリックすると問題点を確認することができま"
-"す。"
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
@@ -2635,6 +2632,17 @@ msgstr "データファイルを解析できませんでした: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "コレクション %1 は見つかりませんでした。"
+
+#, fuzzy
+#~| msgid ""
+#~| "The Akonadi personal information management framework is not "
+#~| "operational.\n"
+#~| "Click on \"Details...\" to obtain detailed information on this problem."
+#~ msgid "A required background service is not operational."
+#~ msgstr ""
+#~ "Akonadi PIM フレームワークは使用できません。\n"
+#~ "<interface>詳細...</interface>をクリックすると問題点を確認することができま"
+#~ "す。"
 
 #, fuzzy
 #~| msgid "Unable to create agent instance."

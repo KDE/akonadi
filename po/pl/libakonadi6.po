@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-18 00:41+0000\n"
+"POT-Creation-Date: 2025-02-27 00:41+0000\n"
 "PO-Revision-Date: 2024-12-21 10:55+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -1227,8 +1227,12 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
 #, kde-format
-msgid "A required background service is not operational."
-msgstr "Wymagana usługa w tle nie została uruchomiona."
+msgid ""
+"<html><head/><body><p>A required background service is not operational.</"
+"p><p>See <a href=\"https://userbase.kde.org/"
+"Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> for "
+"troubleshooting tips.</p></body></html>"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
@@ -2660,6 +2664,9 @@ msgstr "Nie można przetworzyć pliku danych: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Nie można znaleźć zbioru %1"
+
+#~ msgid "A required background service is not operational."
+#~ msgstr "Wymagana usługa w tle nie została uruchomiona."
 
 #~ msgid "Failed to create relation."
 #~ msgstr "Nie można utworzyć powiązania."

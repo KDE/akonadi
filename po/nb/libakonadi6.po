@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-18 00:41+0000\n"
+"POT-Creation-Date: 2025-02-27 00:41+0000\n"
 "PO-Revision-Date: 2014-09-23 21:56+0200\n"
 "Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -1182,10 +1182,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, fuzzy, kde-format
-msgid "A required background service is not operational."
+#, kde-format
+msgid ""
+"<html><head/><body><p>A required background service is not operational.</"
+"p><p>See <a href=\"https://userbase.kde.org/"
+"Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> for "
+"troubleshooting tips.</p></body></html>"
 msgstr ""
-"Akonadi-tjenesten for håndtering av personlig informasjon er ikke i drift."
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
@@ -2588,3 +2591,8 @@ msgstr "Klarer ikke tolke datafil: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Klarer ikke finne samling %1"
+
+#, fuzzy
+#~ msgid "A required background service is not operational."
+#~ msgstr ""
+#~ "Akonadi-tjenesten for håndtering av personlig informasjon er ikke i drift."

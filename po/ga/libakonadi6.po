@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdepim/libakonadi.po\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-18 00:41+0000\n"
+"POT-Creation-Date: 2025-02-27 00:41+0000\n"
 "PO-Revision-Date: 2007-07-11 08:14-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -1228,10 +1228,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, fuzzy, kde-format
-#| msgid "Personal information management service is starting..."
-msgid "A required background service is not operational."
-msgstr "Bainisteoir faisnéise phearsanta á thosú..."
+#, kde-format
+msgid ""
+"<html><head/><body><p>A required background service is not operational.</"
+"p><p>See <a href=\"https://userbase.kde.org/"
+"Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> for "
+"troubleshooting tips.</p></body></html>"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
@@ -2727,6 +2730,11 @@ msgstr "Níorbh fhéidir na sonraí a ghreamú: %1"
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"
 msgstr "Bailiúchán neamhbhailí"
+
+#, fuzzy
+#~| msgid "Personal information management service is starting..."
+#~ msgid "A required background service is not operational."
+#~ msgstr "Bainisteoir faisnéise phearsanta á thosú..."
 
 #, fuzzy
 #~| msgid "Unable to create agent instance."

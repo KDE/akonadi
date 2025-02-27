@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-18 00:41+0000\n"
+"POT-Creation-Date: 2025-02-27 00:41+0000\n"
 "PO-Revision-Date: 2024-12-24 15:34+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -1205,8 +1205,12 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
 #, kde-format
-msgid "A required background service is not operational."
-msgstr "필요한 백그라운드 서비스가 작동하지 않습니다."
+msgid ""
+"<html><head/><body><p>A required background service is not operational.</"
+"p><p>See <a href=\"https://userbase.kde.org/"
+"Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> for "
+"troubleshooting tips.</p></body></html>"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
@@ -2564,6 +2568,9 @@ msgstr "데이터 파일을 해석할 수 없음: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "모음집 %1을(를) 찾을 수 없음"
+
+#~ msgid "A required background service is not operational."
+#~ msgstr "필요한 백그라운드 서비스가 작동하지 않습니다."
 
 #~ msgid "Failed to create relation."
 #~ msgstr "관계를 만들 수 없습니다."

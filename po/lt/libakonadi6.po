@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-18 00:41+0000\n"
+"POT-Creation-Date: 2025-02-27 00:41+0000\n"
 "PO-Revision-Date: 2024-11-13 01:45+0200\n"
 "Last-Translator: Liudas Ališauskas <liudas@akmc.lt>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -1207,10 +1207,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
-#, fuzzy, kde-format
-#| msgid "Personal information management service is starting..."
-msgid "A required background service is not operational."
-msgstr "Paleidžiama asmeninės informacijos tvarkymo paslauga..."
+#, kde-format
+msgid ""
+"<html><head/><body><p>A required background service is not operational.</"
+"p><p>See <a href=\"https://userbase.kde.org/"
+"Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> for "
+"troubleshooting tips.</p></body></html>"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
@@ -2618,6 +2621,11 @@ msgstr ""
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Nepavyko rasti kolekcijos %1"
+
+#, fuzzy
+#~| msgid "Personal information management service is starting..."
+#~ msgid "A required background service is not operational."
+#~ msgstr "Paleidžiama asmeninės informacijos tvarkymo paslauga..."
 
 #, fuzzy
 #~| msgid "Failed to create tag."
