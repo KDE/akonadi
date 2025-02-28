@@ -1,29 +1,28 @@
-# Translation of libakonadi to Spanish
-# Copyright (C) YEAR This_file_is_part_of_KDE
+# Translation of libakonadi6.po to Spanish
+# Copyright (C) 2007-2025 This_file_is_part_of_KDE
 # This file is distributed under the same license as the akonadi package.
 #
 # SPDX-FileCopyrightText: 2007 Enrique Matias Sanchez (aka Quique) <cronopios@gmail.com>
 # SPDX-FileCopyrightText: 2008 Santi <santi@kde-es.org>
 # SPDX-FileCopyrightText: 2008, 2009 Dario Andres Rodriguez <andresbajotierra@gmail.com>
-# SPDX-FileCopyrightText: 2009, 2011, 2019, 2020, 2021, 2022, 2023, 2024 Eloy Cuadra <ecuadra@eloihr.net>
+# SPDX-FileCopyrightText: 2009, 2011, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Eloy Cuadra <ecuadra@eloihr.net>
 # SPDX-FileCopyrightText: 2009 Cristina Yenyxe Gonzalez Garcia <the.blue.valkyrie@gmail.com>
 # SPDX-FileCopyrightText: 2009, 2010 Adrián Martínez <sfxgt3@gmail.com>
 # SPDX-FileCopyrightText: 2010, 2011 Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019 Javier Vinal <fjvinal@gmail.com>
 msgid ""
 msgstr ""
-"Project-Id-Version: libakonadi\n"
+"Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-02-27 00:41+0000\n"
-"PO-Revision-Date: 2024-12-19 01:07+0100\n"
+"PO-Revision-Date: 2025-02-27 12:02+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"com>\n"
-"X-Generator: Lokalize 24.12.0\n"
+"X-Generator: Lokalize 24.12.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -88,7 +87,7 @@ msgstr "Desconectado"
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing..."
-msgstr "Sincronizando..."
+msgstr "Sincronizando…"
 
 #: agentbase/agentbase_p.h:62
 #, kde-format
@@ -441,7 +440,7 @@ msgstr "Nombre"
 #, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
-msgstr "Cargando..."
+msgstr "Cargando…"
 
 #: core/models/entitytreemodel.cpp:499
 #, kde-format
@@ -657,7 +656,7 @@ msgstr ""
 
 #: widgets/agentactionmanager.cpp:35
 msgid "&New Agent Instance..."
-msgstr "&Nueva instancia de agente..."
+msgstr "&Nueva instancia de agente…"
 
 #: widgets/agentactionmanager.cpp:36
 msgid "&Delete Agent Instance"
@@ -859,7 +858,7 @@ msgstr "Usar carpeta por omisión"
 #, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
-msgstr "&Nueva subcarpeta..."
+msgstr "&Nueva subcarpeta…"
 
 #: widgets/collectiondialog.cpp:228
 #, kde-format
@@ -978,7 +977,7 @@ msgstr[1] "Indexados %1 elementos en esta carpeta"
 #: widgets/collectionmaintenancepage.cpp:138
 #, kde-format
 msgid "Calculating indexed items..."
-msgstr "Calculando elementos indexados..."
+msgstr "Calculando elementos indexados…"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/collectionmaintenancepage.ui:17
@@ -1032,7 +1031,7 @@ msgstr "Activar indexado de texto completo"
 #: widgets/collectionmaintenancepage.ui:87
 #, kde-format
 msgid "Retrieving indexed items count..."
-msgstr "Recuperando el total de elementos indexados..."
+msgstr "Recuperando el total de elementos indexados…"
 
 #. i18n: ectx: property (text), widget (QPushButton, reindexButton)
 #: widgets/collectionmaintenancepage.ui:94
@@ -1123,12 +1122,12 @@ msgstr "Datos"
 #: widgets/controlgui.cpp:223
 #, kde-format
 msgid "Starting Akonadi server..."
-msgstr "Iniciando servidor Akonadi..."
+msgstr "Iniciando servidor Akonadi…"
 
 #: widgets/controlgui.cpp:229
 #, kde-format
 msgid "Stopping Akonadi server..."
-msgstr "Deteniendo servidor Akonadi..."
+msgstr "Deteniendo servidor Akonadi…"
 
 #: widgets/dragdropmanager.cpp:212
 #, kde-format
@@ -1167,23 +1166,23 @@ msgstr ""
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
-msgstr "El servicio de gestión de información personal se está iniciando..."
+msgstr "El servicio de gestión de información personal se está iniciando…"
 
 #: widgets/erroroverlay.cpp:229
 #, kde-format
 msgid "Personal information management service is starting..."
-msgstr "El servicio de gestión de información personal se está iniciando..."
+msgstr "El servicio de gestión de información personal se está iniciando…"
 
 #: widgets/erroroverlay.cpp:233
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
-msgstr "El servicio de gestión de información personal se está deteniendo..."
+msgstr "El servicio de gestión de información personal se está deteniendo…"
 
 #: widgets/erroroverlay.cpp:234
 #, kde-format
 msgid "Personal information management service is shutting down..."
-msgstr "El servicio de gestión de información personal se está deteniendo..."
+msgstr "El servicio de gestión de información personal se está deteniendo…"
 
 #: widgets/erroroverlay.cpp:238
 #, kde-format
@@ -1236,7 +1235,7 @@ msgid ""
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
 "Un servicio en segundo plano necesario no está funcionando.\n"
-"Pulse «Detalles...» para obtener información detallada sobre este problema."
+"Pulse «Detalles…» para obtener información detallada sobre este problema."
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
@@ -1247,12 +1246,16 @@ msgid ""
 "Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> for "
 "troubleshooting tips.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Un servicio en segundo plano necesario no está "
+"operativo.</p><p>Consulte las <a href=\"https://userbase.kde.org/"
+"Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">preguntas frecuentes</"
+"a> para tratar de solucionarlo.</p></body></html>"
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
 #, kde-format
 msgid "Details..."
-msgstr "Detalles..."
+msgstr "Detalles…"
 
 #: widgets/manageaccountwidget.cpp:221
 #, kde-format
@@ -1281,19 +1284,19 @@ msgstr "Cuentas entrantes (añada al menos una):"
 #: widgets/manageaccountwidget.ui:33
 #, kde-format
 msgid "Filter…"
-msgstr "Filtro..."
+msgstr "Filtro…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
 #: widgets/manageaccountwidget.ui:47
 #, kde-format
 msgid "A&dd..."
-msgstr "Aña&dir..."
+msgstr "Aña&dir…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
 #: widgets/manageaccountwidget.ui:57
 #, kde-format
 msgid "&Modify..."
-msgstr "&Modificar..."
+msgstr "&Modificar…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
 #: widgets/manageaccountwidget.ui:67
@@ -1333,7 +1336,7 @@ msgstr "Autoprueba de servidor de Akonadi"
 #: widgets/selftestdialog.cpp:71
 #, kde-format
 msgid "Save Report..."
-msgstr "Guardar informe..."
+msgstr "Guardar informe…"
 
 #: widgets/selftestdialog.cpp:73
 #, kde-format
@@ -1984,7 +1987,7 @@ msgstr ""
 
 #: widgets/standardactionmanager.cpp:78
 msgid "&New Folder..."
-msgstr "&Nueva carpeta..."
+msgstr "&Nueva carpeta…"
 
 #: widgets/standardactionmanager.cpp:78
 msgid "New"
@@ -2025,7 +2028,7 @@ msgstr "Pegar"
 
 #: widgets/standardactionmanager.cpp:115
 msgid "Manage Local &Subscriptions..."
-msgstr "Gestionar &suscripciones locales..."
+msgstr "Gestionar &suscripciones locales…"
 
 #: widgets/standardactionmanager.cpp:116
 msgid "Manage Local Subscriptions"
@@ -2049,7 +2052,7 @@ msgstr "Eliminar de favoritas"
 
 #: widgets/standardactionmanager.cpp:139
 msgid "Rename Favorite..."
-msgstr "Cambiar el nombre del favorito..."
+msgstr "Cambiar el nombre del favorito…"
 
 #: widgets/standardactionmanager.cpp:140
 msgid "Rename"
@@ -2057,7 +2060,7 @@ msgstr "Cambiar de nombre"
 
 #: widgets/standardactionmanager.cpp:147 widgets/standardactionmanager.cpp:221
 msgid "Copy Folder To..."
-msgstr "Copiar carpeta a..."
+msgstr "Copiar carpeta a…"
 
 #: widgets/standardactionmanager.cpp:148 widgets/standardactionmanager.cpp:156
 #: widgets/standardactionmanager.cpp:222 widgets/standardactionmanager.cpp:236
@@ -2066,11 +2069,11 @@ msgstr "Copiar en"
 
 #: widgets/standardactionmanager.cpp:155 widgets/standardactionmanager.cpp:236
 msgid "Copy Item To..."
-msgstr "Copiar elemento a..."
+msgstr "Copiar elemento a…"
 
 #: widgets/standardactionmanager.cpp:163 widgets/standardactionmanager.cpp:237
 msgid "Move Item To..."
-msgstr "Mover elemento a..."
+msgstr "Mover elemento a…"
 
 #: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:172
 #: widgets/standardactionmanager.cpp:230 widgets/standardactionmanager.cpp:237
@@ -2079,7 +2082,7 @@ msgstr "Mover a"
 
 #: widgets/standardactionmanager.cpp:171 widgets/standardactionmanager.cpp:229
 msgid "Move Folder To..."
-msgstr "Mover carpeta a..."
+msgstr "Mover carpeta a…"
 
 #: widgets/standardactionmanager.cpp:178
 msgid "&Cut Item"
@@ -2565,7 +2568,7 @@ msgstr "Gestionar etiquetas"
 #, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
-msgstr "Seleccionar etiquetas..."
+msgstr "Seleccionar etiquetas…"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
 #: widgets/tagselectiondialog.ui:14
@@ -2588,7 +2591,7 @@ msgstr "Pulse para añadir etiquetas"
 #: widgets/tagwidget.ui:39
 #, kde-format
 msgid "..."
-msgstr "..."
+msgstr "…"
 
 #: xml/akonadi2xml.cpp:25
 #, kde-format
@@ -2664,60 +2667,3 @@ msgstr "No es posible analizar el archivo de datos «%1»"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "No es posible encontrar la colección %1"
-
-#~ msgid "A required background service is not operational."
-#~ msgstr "Un servicio en segundo plano necesario no está funcionando."
-
-#~ msgid "Failed to create relation."
-#~ msgstr "Ha fallado al crear la relación."
-
-#~ msgid "Quota"
-#~ msgstr "Cuota"
-
-#~ msgid "Error"
-#~ msgstr "Error"
-
-#~ msgctxt "@title:window"
-#~ msgid "Delete folder?"
-#~ msgid_plural "Delete folders?"
-#~ msgstr[0] "¿Borrar carpeta?"
-#~ msgstr[1] "¿Borrar carpetas?"
-
-#~ msgctxt "@title:window"
-#~ msgid "Delete item?"
-#~ msgid_plural "Delete items?"
-#~ msgstr[0] "¿Borrar elemento?"
-#~ msgstr[1] "¿Borrar elementos?"
-
-#~ msgid "Store emails locally:"
-#~ msgstr "Almacenar correo localmente:"
-
-#~ msgid "&Move here"
-#~ msgstr "&Mover aquí"
-
-#~ msgid "&Copy here"
-#~ msgstr "&Copiar aquí"
-
-#~ msgid "Cancel"
-#~ msgstr "Cancelar"
-
-#~ msgid "Automatically synchronize after:"
-#~ msgstr "Sincronizar automáticamente después de"
-
-#~ msgid "Items"
-#~ msgstr "Elementos"
-
-#~ msgid "Id"
-#~ msgstr "ID"
-
-#~ msgid "Remote Id"
-#~ msgstr "ID remoto"
-
-#~ msgid "MimeType"
-#~ msgstr "Tipo MIME"
-
-#~ msgid "Form"
-#~ msgstr "Formulario"
-
-#~ msgid "Default Name"
-#~ msgstr "Nombre predeterminado"
