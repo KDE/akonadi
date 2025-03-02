@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-10-08 00:40+0000\n"
-"PO-Revision-Date: 2024-12-28 17:41+0100\n"
+"PO-Revision-Date: 2025-01-01 09:06+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -2333,7 +2333,7 @@ msgstr "Ero Forigo Malsukcesis"
 #, kde-format
 msgctxt "@title:window"
 msgid "Rename Favorite"
-msgstr "Alinomigi Favorite"
+msgstr "Alinomigi Favoriton"
 
 #: widgets/standardactionmanager.cpp:443
 #, kde-format
