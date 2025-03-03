@@ -2554,8 +2554,3 @@ msgstr "Klarte ikkje lima inn data: %1"
 #, fuzzy, kde-format
 msgid "Unable to find collection %1"
 msgstr "Ugyldig samling"
-
-#, fuzzy
-#~ msgid "A required background service is not operational."
-#~ msgstr ""
-#~ "Akonadi-tenesta for handtering av personleg informasjon verkar ikkje."
