@@ -130,6 +130,7 @@ private:
     /// @endcond
 };
 
+AKONADICORE_EXPORT size_t qHash(const Akonadi::AgentType &type, size_t seed = 0) noexcept;
 }
 
 Q_DECLARE_TYPEINFO(Akonadi::AgentType, Q_RELOCATABLE_TYPE);

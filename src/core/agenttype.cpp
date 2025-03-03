@@ -83,3 +83,8 @@ bool AgentType::operator==(const AgentType &other) const
 {
     return (d->mIdentifier == other.d->mIdentifier);
 }
+
+size_t Akonadi::qHash(const Akonadi::AgentType &type, size_t seed) noexcept
+{
+    return ::qHash(type.identifier(), seed);
+}
