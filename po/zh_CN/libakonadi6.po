@@ -2539,6 +2539,3 @@ msgstr "无法解析数据文件：%1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "无法找到集合 %1"
-
-#~ msgid "A required background service is not operational."
-#~ msgstr "所需的后台服务没有工作。"
