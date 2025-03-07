@@ -71,6 +71,7 @@ AgentTypeDialog::AgentTypeDialog(QWidget *parent)
 
     auto searchLine = new QLineEdit(this);
     layout->addWidget(searchLine);
+    searchLine->setPlaceholderText(i18nc("@item:textbox", "Search types"));
     searchLine->setClearButtonEnabled(true);
     connect(searchLine, &QLineEdit::textChanged, this, [this](const QString &str) {
         d->slotSearchAgentType(str);
@@ -83,7 +84,12 @@ AgentTypeDialog::AgentTypeDialog(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::rejected, this, &AgentTypeDialog::reject);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
+    okButton->setEnabled(false);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return); // NOLINT(bugprone-suspicious-enum-usage)
+    connect(d->widget, &Akonadi::AgentTypeWidget::currentChanged, this, [okButton](const Akonadi::AgentType &current, const Akonadi::AgentType &previous) {
+        Q_UNUSED(previous);
+        okButton->setEnabled(current.isValid());
+    });
     layout->addWidget(buttonBox);
     d->readConfig();
 
