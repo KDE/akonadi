@@ -69,6 +69,9 @@ public:
         mParent->connect(mSelectionHandler, &AsyncSelectionHandler::collectionAvailable, mParent, [this](const auto &mi) {
             activated(mi);
         });
+        mParent->connect(mParent, &QComboBox::currentIndexChanged, mParent, [this](const auto &mi) {
+            activated(mi);
+        });
     }
 
     ~CollectionComboBoxPrivate() = default;
