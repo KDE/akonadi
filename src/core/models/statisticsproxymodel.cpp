@@ -186,13 +186,6 @@ void StatisticsProxyModel::setSourceModel(QAbstractItemModel *model)
     }
     KExtraColumnsProxyModel::setSourceModel(model);
     if (model) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 8, 0)
-        // Disconnect the default handling of dataChanged in QIdentityProxyModel, so we can extend it to the whole row
-        disconnect(model,
-                   SIGNAL(dataChanged(QModelIndex, QModelIndex, QList<int>)), // clazy:exclude=old-style-connect
-                   this,
-                   SLOT(_q_sourceDataChanged(QModelIndex, QModelIndex, QList<int>)));
-#endif
         connect(model, &QAbstractItemModel::dataChanged, this, [this](const auto &tl, const auto &br, const auto &roles) {
             d->_k_sourceDataChanged(tl, br, roles);
         });
@@ -204,10 +197,8 @@ StatisticsProxyModel::StatisticsProxyModel(QObject *parent)
     , d(new StatisticsProxyModelPrivate(this))
 {
     setExtraColumnsEnabled(true);
-#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
     // Disable the default handling of dataChanged in QIdentityProxyModel, so we can extend it to the whole row
     setHandleSourceDataChanges(false);
-#endif
 }
 
 StatisticsProxyModel::~StatisticsProxyModel() = default;
