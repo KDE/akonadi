@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-27 00:41+0000\n"
+"POT-Creation-Date: 2025-03-09 00:41+0000\n"
 "PO-Revision-Date: 2007-09-11 22:44+0200\n"
 "Last-Translator: Northern Sami translation team <i18n-sme@lister.ping.uio."
 "no>\n"
@@ -689,6 +689,12 @@ msgstr ""
 msgctxt "@title:window"
 msgid "Configure Account"
 msgstr ""
+
+#: widgets/agenttypedialog.cpp:74
+#, fuzzy, kde-format
+msgctxt "@item:textbox"
+msgid "Search types"
+msgstr "Oza"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format

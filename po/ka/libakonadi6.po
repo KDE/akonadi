@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-27 00:41+0000\n"
+"POT-Creation-Date: 2025-03-09 00:41+0000\n"
 "PO-Revision-Date: 2025-02-27 08:44+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
@@ -717,6 +717,14 @@ msgstr "(%1%)"
 msgctxt "@title:window"
 msgid "Configure Account"
 msgstr "ანგარიშის მორგება"
+
+#: widgets/agenttypedialog.cpp:74
+#, fuzzy, kde-format
+#| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
+#| msgid "Search"
+msgctxt "@item:textbox"
+msgid "Search types"
+msgstr "ძებნა"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-27 00:41+0000\n"
+"POT-Creation-Date: 2025-03-09 00:41+0000\n"
 "PO-Revision-Date: 2014-01-31 20:40+0100\n"
 "Last-Translator: Samir Ribić <megaribi@epn.ba>\n"
 "Language-Team: bosanski <bs@li.org>\n"
@@ -727,6 +727,15 @@ msgstr ""
 msgctxt "@title:window"
 msgid "Configure Account"
 msgstr "&Podesi primjerak agenta"
+
+#: widgets/agenttypedialog.cpp:74
+#, fuzzy, kde-format
+#| msgctxt ""
+#| "@info/plain Displayed grayed-out inside the textbox, verb to search"
+#| msgid "Search"
+msgctxt "@item:textbox"
+msgid "Search types"
+msgstr "Traži"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
