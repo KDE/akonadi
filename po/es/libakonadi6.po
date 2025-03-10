@@ -1,4 +1,4 @@
-# Translation of libakonadi6.po to Spanish
+# Spanish translations for libakonadi6.po package.
 # Copyright (C) 2007-2025 This_file_is_part_of_KDE
 # This file is distributed under the same license as the akonadi package.
 #
@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-09 02:31+0000\n"
-"PO-Revision-Date: 2025-02-27 12:02+0100\n"
+"PO-Revision-Date: 2025-03-09 12:39+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -738,12 +738,10 @@ msgid "Configure Account"
 msgstr "Configurar cuenta"
 
 #: widgets/agenttypedialog.cpp:74
-#, fuzzy, kde-format
-#| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
+#, kde-format
 msgctxt "@item:textbox"
 msgid "Search types"
-msgstr "Buscar"
+msgstr "Buscar tipos"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
