@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-09 00:41+0000\n"
-"PO-Revision-Date: 2025-02-28 12:01+0100\n"
+"POT-Creation-Date: 2025-03-10 00:42+0000\n"
+"PO-Revision-Date: 2025-03-09 17:24+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.12.2\n"
+"X-Generator: Lokalize 24.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -526,19 +526,19 @@ msgstr "Spazio impiegato"
 msgid "Subfolder Storage Size"
 msgstr "Spazio impiegato dalla sottocartella"
 
-#: core/models/statisticsproxymodel.cpp:232
+#: core/models/statisticsproxymodel.cpp:223
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "Non letti"
 
-#: core/models/statisticsproxymodel.cpp:233
+#: core/models/statisticsproxymodel.cpp:224
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "Totale"
 
-#: core/models/statisticsproxymodel.cpp:234
+#: core/models/statisticsproxymodel.cpp:225
 #, kde-format
 msgctxt "collection size"
 msgid "Size"
@@ -732,12 +732,10 @@ msgid "Configure Account"
 msgstr "Configura account"
 
 #: widgets/agenttypedialog.cpp:74
-#, fuzzy, kde-format
-#| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
+#, kde-format
 msgctxt "@item:textbox"
 msgid "Search types"
-msgstr "Cerca"
+msgstr "Tipi di ricerca"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
@@ -984,7 +982,7 @@ msgstr "Calcolo degli elementi indicizzati..."
 #: widgets/collectionmaintenancepage.ui:17
 #, kde-format
 msgid "Folder type:"
-msgstr "Tipo cartella:"
+msgstr "Tipo di cartella:"
 
 #. i18n: ectx: property (text), widget (QLabel, folderTypeLbl)
 #. i18n: ectx: property (text), widget (QLabel, folderSizeLbl)

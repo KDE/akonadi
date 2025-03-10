@@ -10,15 +10,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-09 00:41+0000\n"
-"PO-Revision-Date: 2025-02-27 22:50+0100\n"
+"POT-Creation-Date: 2025-03-10 00:42+0000\n"
+"PO-Revision-Date: 2025-03-09 23:19+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.12.2\n"
+"X-Generator: Lokalize 24.12.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -525,19 +525,19 @@ msgstr "Grootte van de opslag"
 msgid "Subfolder Storage Size"
 msgstr "Grootte van de opslag in de submap"
 
-#: core/models/statisticsproxymodel.cpp:232
+#: core/models/statisticsproxymodel.cpp:223
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "Ongelezen"
 
-#: core/models/statisticsproxymodel.cpp:233
+#: core/models/statisticsproxymodel.cpp:224
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "Totaal"
 
-#: core/models/statisticsproxymodel.cpp:234
+#: core/models/statisticsproxymodel.cpp:225
 #, kde-format
 msgctxt "collection size"
 msgid "Size"
@@ -732,12 +732,10 @@ msgid "Configure Account"
 msgstr "Account configureren"
 
 #: widgets/agenttypedialog.cpp:74
-#, fuzzy, kde-format
-#| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
+#, kde-format
 msgctxt "@item:textbox"
 msgid "Search types"
-msgstr "Zoeken"
+msgstr "Typen zoeken"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format

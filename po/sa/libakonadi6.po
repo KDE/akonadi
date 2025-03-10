@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-09 00:41+0000\n"
+"POT-Creation-Date: 2025-03-10 00:42+0000\n"
 "PO-Revision-Date: 2024-12-25 19:45+0530\n"
 "Last-Translator: kali <shreekantkalwar@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -514,19 +514,19 @@ msgstr "भण्डारण आकार"
 msgid "Subfolder Storage Size"
 msgstr "उपपुटस्य भण्डारणस्य आकारः"
 
-#: core/models/statisticsproxymodel.cpp:232
+#: core/models/statisticsproxymodel.cpp:223
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "अपठित"
 
-#: core/models/statisticsproxymodel.cpp:233
+#: core/models/statisticsproxymodel.cpp:224
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "कुल"
 
-#: core/models/statisticsproxymodel.cpp:234
+#: core/models/statisticsproxymodel.cpp:225
 #, kde-format
 msgctxt "collection size"
 msgid "Size"

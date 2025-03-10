@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-09 00:41+0000\n"
+"POT-Creation-Date: 2025-03-10 00:42+0000\n"
 "PO-Revision-Date: 2025-03-02 10:40+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -517,19 +517,19 @@ msgstr "حجم التخزين"
 msgid "Subfolder Storage Size"
 msgstr "حجم تخزين المجلد الفرعي"
 
-#: core/models/statisticsproxymodel.cpp:232
+#: core/models/statisticsproxymodel.cpp:223
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "غير المقروء"
 
-#: core/models/statisticsproxymodel.cpp:233
+#: core/models/statisticsproxymodel.cpp:224
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "المجموع"
 
-#: core/models/statisticsproxymodel.cpp:234
+#: core/models/statisticsproxymodel.cpp:225
 #, kde-format
 msgctxt "collection size"
 msgid "Size"
