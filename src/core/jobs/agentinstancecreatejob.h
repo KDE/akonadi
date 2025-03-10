@@ -89,6 +89,9 @@ public:
      * Setup the job to show agent configuration dialog once the agent instance
      * has been successfully started.
      * @param parent The parent window for the configuration dialog.
+     * @deprecated Use the new Akonadi::AgentConfigurationWidget and
+     * Akonadi::AgentConfigurationDialog to display configuration dialogs
+     * in-process
      */
     void configure(QWidget *parent = nullptr);
 
