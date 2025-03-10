@@ -36,10 +36,19 @@ class AgentInstanceCreateJobPrivate;
  *     Akonadi::AgentType type = Akonadi::AgentManager::self()->type(u"akonadi_vcard_resource"_s);
  *
  *     auto job = new Akonadi::AgentInstanceCreateJob(type);
- *     connect(job, &KJob::result, this, &MyClass::slotCreated);
  *
- *     // use this widget as parent for the config dialog
- *     job->configure(this);
+ *     // Open configuration dialog once created
+ *     connect(job, &Akonadi::AgentInstanceCreateJob::result, this, [this, job](KJob *) {
+ *         if (job->error()) {
+ *             return;
+ *         }
+ *         auto configureDialog = new Akonadi::AgentConfigurationDialog(job->instance(), this);
+ *         configureDialog->setAttribute(Qt::WA_DeleteOnClose);
+ *         connect(configureDialog, &QDialog::rejected, this, [job] {
+ *             Akonadi::AgentManager::self()->removeInstance(job->instance());
+ *         });
+ *         configureDialog->show();
+ *     });
  *
  *     job->start();
  * }
@@ -84,16 +93,6 @@ public:
      * Destroys the agent instance create job.
      */
     ~AgentInstanceCreateJob() override;
-
-    /**
-     * Setup the job to show agent configuration dialog once the agent instance
-     * has been successfully started.
-     * @param parent The parent window for the configuration dialog.
-     * @deprecated Use the new Akonadi::AgentConfigurationWidget and
-     * Akonadi::AgentConfigurationDialog to display configuration dialogs
-     * in-process
-     */
-    void configure(QWidget *parent = nullptr);
 
     /**
      * Returns the AgentInstance object of the newly created agent instance.

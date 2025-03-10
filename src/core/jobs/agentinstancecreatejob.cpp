@@ -47,42 +47,8 @@ public:
     {
         if (agentInstance == instance && !tooLate) {
             safetyTimer->stop();
-            if (doConfig) {
-                // return from dbus call first before doing the next one
-                QTimer::singleShot(0, this, &AgentInstanceCreateJobPrivate::doConfigure);
-            } else {
-                q->emitResult();
-            }
+            q->emitResult();
         }
-    }
-
-    void doConfigure()
-    {
-        auto agentControlIface =
-            new org::freedesktop::Akonadi::Agent::Control(ServerManager::agentServiceName(ServerManager::Agent, agentInstance.identifier()),
-                                                          QStringLiteral("/"),
-                                                          QDBusConnection::sessionBus(),
-                                                          q);
-        if (!agentControlIface || !agentControlIface->isValid()) {
-            delete agentControlIface;
-
-            q->setError(KJob::UserDefinedError);
-            q->setErrorText(i18n("Unable to access D-Bus interface of created agent."));
-            q->emitResult();
-            return;
-        }
-
-        connect(agentControlIface, &org::freedesktop::Akonadi::Agent::Control::configurationDialogAccepted, this, [agentControlIface, this]() {
-            agentControlIface->deleteLater();
-            q->emitResult();
-        });
-        connect(agentControlIface, &org::freedesktop::Akonadi::Agent::Control::configurationDialogRejected, this, [agentControlIface, this]() {
-            agentControlIface->deleteLater();
-            AgentManager::self()->removeInstance(agentInstance);
-            q->emitResult();
-        });
-
-        agentInstance.configure(parentWidget);
     }
 
     void timeout()
@@ -99,9 +65,7 @@ public:
     AgentType agentType;
     QString agentTypeId;
     AgentInstance agentInstance;
-    QWidget *parentWidget = nullptr;
     QTimer *const safetyTimer;
-    bool doConfig = false;
     bool tooLate = false;
 };
 
@@ -122,12 +86,6 @@ AgentInstanceCreateJob::AgentInstanceCreateJob(const QString &typeId, QObject *p
 }
 
 AgentInstanceCreateJob::~AgentInstanceCreateJob() = default;
-
-void AgentInstanceCreateJob::configure(QWidget *parent)
-{
-    d->parentWidget = parent;
-    d->doConfig = true;
-}
 
 AgentInstance AgentInstanceCreateJob::instance() const
 {
