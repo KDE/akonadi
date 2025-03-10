@@ -6,6 +6,7 @@
 
 #include "agentactionmanager.h"
 
+#include "agentconfigurationdialog.h"
 #include "agentfilterproxymodel.h"
 #include "agentinstancecreatejob.h"
 #include "agentinstancemodel.h"
@@ -137,10 +138,23 @@ public:
 
             if (agentType.isValid()) {
                 auto job = new AgentInstanceCreateJob(agentType, q);
-                q->connect(job, &KJob::result, q, [this](KJob *job) {
-                    slotAgentInstanceCreationResult(job);
+                q->connect(job, &KJob::result, q, [this, job](KJob *) {
+                    if (job->error()) {
+                        slotAgentInstanceCreationResult(job);
+                        return;
+                    }
+
+                    auto configureDialog = new Akonadi::AgentConfigurationDialog(job->instance(), mParentWidget);
+                    configureDialog->setAttribute(Qt::WA_DeleteOnClose);
+                    q->connect(configureDialog, &QDialog::rejected, q, [this, job] {
+                        Akonadi::AgentManager::self()->removeInstance(job->instance());
+                        slotAgentInstanceCreationResult(job);
+                    });
+                    q->connect(configureDialog, &QDialog::accepted, q, [this, job] {
+                        slotAgentInstanceCreationResult(job);
+                    });
+                    configureDialog->show();
                 });
-                job->configure(mParentWidget);
                 job->start();
             }
         }
@@ -173,7 +187,9 @@ public:
             return;
         }
 
-        instances.first().configure(mParentWidget);
+        auto configureDialog = new Akonadi::AgentConfigurationDialog(instances.first(), mParentWidget);
+        configureDialog->setAttribute(Qt::WA_DeleteOnClose);
+        configureDialog->show();
     }
 
     void slotAgentInstanceCreationResult(KJob *job)

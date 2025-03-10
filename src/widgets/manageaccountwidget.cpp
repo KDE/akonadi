@@ -145,7 +145,18 @@ void ManageAccountWidget::slotAddAccount()
 
         if (agentType.isValid()) {
             auto job = new Akonadi::AgentInstanceCreateJob(agentType, this);
-            job->configure(this);
+            connect(job, &KJob::result, this, [this, job](KJob *) {
+                if (job->error()) {
+                    return;
+                }
+
+                auto configureDialog = new Akonadi::AgentConfigurationDialog(job->instance(), this);
+                configureDialog->setAttribute(Qt::WA_DeleteOnClose);
+                connect(configureDialog, &QDialog::rejected, this, [job] {
+                    Akonadi::AgentManager::self()->removeInstance(job->instance());
+                });
+                configureDialog->show();
+            });
             job->start();
         }
     }

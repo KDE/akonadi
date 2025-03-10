@@ -7,6 +7,7 @@
 #include "standardactionmanager.h"
 
 #include "actionstatemanager_p.h"
+#include "agentconfigurationdialog.h"
 #include "agentfilterproxymodel.h"
 #include "agentinstancecreatejob.h"
 #include "agentmanager.h"
@@ -1352,10 +1353,23 @@ public:
 
             if (agentType.isValid()) {
                 auto job = new AgentInstanceCreateJob(agentType, q);
-                q->connect(job, &KJob::result, q, [this](KJob *job) {
-                    resourceCreationResult(job);
+                q->connect(job, &KJob::result, q, [this, job](KJob *) {
+                    if (job->error()) {
+                        resourceCreationResult(job);
+                        return;
+                    }
+
+                    auto configureDialog = new Akonadi::AgentConfigurationDialog(job->instance(), parentWidget);
+                    configureDialog->setAttribute(Qt::WA_DeleteOnClose);
+                    q->connect(configureDialog, &QDialog::rejected, q, [this, job] {
+                        Akonadi::AgentManager::self()->removeInstance(job->instance());
+                        resourceCreationResult(job);
+                    });
+                    q->connect(configureDialog, &QDialog::accepted, q, [this, job] {
+                        resourceCreationResult(job);
+                    });
+                    configureDialog->show();
                 });
-                job->configure(parentWidget);
                 job->start();
             }
         }
