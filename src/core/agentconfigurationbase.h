@@ -10,7 +10,6 @@
 #include "akonadicore_export.h"
 
 #include <KSharedConfig>
-#include <QDialogButtonBox>
 #include <QObject>
 
 #include <memory>
@@ -75,6 +74,26 @@ class AKONADICORE_EXPORT AgentConfigurationBase : public QObject
     Q_OBJECT
 public:
     /**
+     * An enumeration type for the buttons used by this module.
+     * You should only use Help, Default and Apply. The rest is obsolete.
+     * NoAdditionalButton can be used when we do not want have other button that Ok Cancel
+     *
+     * @see ConfigModule::buttons @see ConfigModule::setButtons
+     */
+    enum Button {
+        NoAdditionalButton = 0,
+        Help = 1,
+        Default = 2,
+        Apply = 4,
+        Export = 8,
+        Ok = 16,
+        Cancel = 32,
+    };
+    Q_ENUM(Button)
+    Q_DECLARE_FLAGS(Buttons, Button)
+    Q_FLAG(Buttons)
+
+    /**
      * Creates a new AgentConfigurationBase objects.
      *
      * The @p parentWidget should be used as a parent widget for the configuration
@@ -126,7 +145,7 @@ public:
      */
     virtual void saveDialogSize(const QSize &size);
 
-    virtual QDialogButtonBox::StandardButtons standardButtons() const;
+    virtual Buttons standardButtons() const;
 
     struct ActivitySettings {
         bool enabled = false;
@@ -174,3 +193,5 @@ private:
 };
 
 } // namespace
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(Akonadi::AgentConfigurationBase::Buttons)

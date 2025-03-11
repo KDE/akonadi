@@ -93,9 +93,9 @@ void AgentConfigurationBase::saveDialogSize(const QSize & /*unused*/) // clazy:e
 {
 }
 
-QDialogButtonBox::StandardButtons AgentConfigurationBase::standardButtons() const
+AgentConfigurationBase::Buttons AgentConfigurationBase::standardButtons() const
 {
-    return QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel;
+    return AgentConfigurationBase::Ok | AgentConfigurationBase::Apply | AgentConfigurationBase::Cancel;
 }
 
 void AgentConfigurationBase::saveActivitiesSettings(const ActivitySettings &activities) const

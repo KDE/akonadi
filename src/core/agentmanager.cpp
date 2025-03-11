@@ -16,7 +16,6 @@
 #include "shared/akranges.h"
 
 #include <QDBusServiceWatcher>
-#include <QWidget>
 
 using namespace Akonadi;
 using namespace AkRanges;
@@ -242,13 +241,8 @@ void AgentManagerPrivate::setActivitiesEnabled(const AgentInstance &instance, bo
     mManager->setAgentInstanceActivitiesEnabled(instance.identifier(), enabled);
 }
 
-void AgentManagerPrivate::configure(const AgentInstance &instance, QWidget *parent)
+void AgentManagerPrivate::configure(const AgentInstance &instance, qlonglong winId)
 {
-    qlonglong winId = 0;
-    if (parent) {
-        winId = static_cast<qlonglong>(parent->window()->winId());
-    }
-
     mManager->agentInstanceConfigure(instance.identifier(), winId);
 }
 

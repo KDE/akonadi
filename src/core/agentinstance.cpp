@@ -89,9 +89,9 @@ void AgentInstance::setIsOnline(bool online)
     AgentManager::self()->d->setOnline(*this, online);
 }
 
-void AgentInstance::configure(QWidget *parent)
+void AgentInstance::configure(qlonglong winId)
 {
-    AgentManager::self()->d->configure(*this, parent);
+    AgentManager::self()->d->configure(*this, winId);
 }
 
 void AgentInstance::synchronize()

@@ -167,7 +167,18 @@ void AgentConfigurationWidget::saveDialogSize(QSize size)
 QDialogButtonBox::StandardButtons AgentConfigurationWidget::standardButtons() const
 {
     if (d->plugin) {
-        return d->plugin->standardButtons();
+        auto buttons = d->plugin->standardButtons();
+        QDialogButtonBox::StandardButtons standardButtons;
+        if (buttons & AgentConfigurationBase::Ok) {
+            standardButtons |= QDialogButtonBox::Ok;
+        }
+        if (buttons & AgentConfigurationBase::Cancel) {
+            standardButtons |= QDialogButtonBox::Cancel;
+        }
+        if (buttons & AgentConfigurationBase::Apply) {
+            standardButtons |= QDialogButtonBox::Apply;
+        }
+        return standardButtons;
     }
     return QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel;
 }

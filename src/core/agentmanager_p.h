@@ -69,7 +69,7 @@ public:
 
     void setName(const AgentInstance &instance, const QString &name);
     void setOnline(const AgentInstance &instance, bool state);
-    void configure(const AgentInstance &instance, QWidget *parent);
+    void configure(const AgentInstance &instance, qlonglong winId);
     void synchronize(const AgentInstance &instance);
     void synchronizeCollectionTree(const AgentInstance &instance);
     void synchronizeTags(const AgentInstance &instance);
