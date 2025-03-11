@@ -127,7 +127,6 @@ public:
                     }
                 }
                 return itemStr;
-                // return QString(); //QString::fromLatin1(ProtocolHelper::entitySetToScope(mRequestedItems));
             } catch (const Exception &e) {
                 return QString::fromUtf8(e.what());
             }

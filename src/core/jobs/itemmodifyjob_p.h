@@ -9,6 +9,7 @@
 #include "akonadicore_export.h"
 #include "itemmodifyjob.h"
 #include "job_p.h"
+#include <span>
 
 namespace Akonadi
 {
