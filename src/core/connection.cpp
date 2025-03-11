@@ -12,7 +12,7 @@
 #include "session_p.h"
 
 #include <QAbstractEventDispatcher>
-#include <QApplication>
+#include <QCoreApplication>
 #include <QDateTime>
 #include <QFile>
 #include <QFileInfo>
@@ -38,7 +38,7 @@ Connection::Connection(ConnectionType connType, const QByteArray &sessionId, Com
     if (!sessionLogFile.isEmpty()) {
         mLogFile = new QFile(QStringLiteral("%1.%2.%3.%4-%5")
                                  .arg(QString::fromLatin1(sessionLogFile))
-                                 .arg(QApplication::applicationPid())
+                                 .arg(QCoreApplication::applicationPid())
                                  .arg(QString::number(reinterpret_cast<qulonglong>(this), 16),
                                       QString::fromLatin1(mSessionId.replace('/', '_')),
                                       connType == CommandConnection ? QStringLiteral("Cmd") : QStringLiteral("Ntf")));

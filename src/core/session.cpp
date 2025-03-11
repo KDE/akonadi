@@ -26,7 +26,7 @@
 #include <QThreadStorage>
 #include <QTimer>
 
-#include <QApplication>
+#include <QCoreApplication>
 #include <QHostAddress>
 
 // ### FIXME pipelining got broken by switching result emission in JobPrivate::handleResponse to delayed emission
@@ -323,9 +323,9 @@ SessionPrivate::SessionPrivate(Session *parent)
     , mCommandBuffer(parent, "handleCommands")
     , currentJob(nullptr)
 {
-    // Shutdown the thread before QApplication event loop quits - the
+    // Shutdown the thread before QCoreApplication event loop quits - the
     // thread()->wait() mechanism in Connection dtor crashes sometimes
-    // when called from QApplication destructor
+    // when called from QCoreApplication destructor
     connThreadCleanUp = QObject::connect(qApp, &QCoreApplication::aboutToQuit, qApp, [this]() {
         socketDisconnected();
         connection = nullptr;
