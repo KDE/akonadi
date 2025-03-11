@@ -5,20 +5,20 @@
 # Franklin Weng <franklin@goodhorse.idv.tw>, 2010, 2011, 2012, 2013, 2014, 2015.
 # Franklin Weng <franklin at goodhorse dot idv dot tw>, 2007, 2008.
 # Frank Weng (a.k.a. Franklin) <franklin at goodhorse dot idv dot tw>, 2008, 2009, 2010.
-# SPDX-FileCopyrightText: 2023, 2024 Kisaragi Hiu <mail@kisaragi-hiu.com>
+# SPDX-FileCopyrightText: 2023, 2024, 2025 Kisaragi Hiu <mail@kisaragi-hiu.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-10 00:42+0000\n"
-"PO-Revision-Date: 2024-12-19 17:33+0900\n"
+"PO-Revision-Date: 2025-03-10 20:24+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.12.0\n"
+"X-Generator: Lokalize 24.12.3\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #, kde-format
@@ -711,12 +711,10 @@ msgid "Configure Account"
 msgstr "設定帳號"
 
 #: widgets/agenttypedialog.cpp:74
-#, fuzzy, kde-format
-#| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
+#, kde-format
 msgctxt "@item:textbox"
 msgid "Search types"
-msgstr "搜尋"
+msgstr "搜尋類型"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
@@ -1210,6 +1208,10 @@ msgid ""
 "Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> for "
 "troubleshooting tips.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>一個必要的背景服務並非運行中。</p><p>關於問題排除的提示"
+"請見<a href=\"https://userbase.kde.org/"
+"Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">常見問題</a>。</p></"
+"body></html>"
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259

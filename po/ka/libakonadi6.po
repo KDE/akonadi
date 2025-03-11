@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-09 00:41+0000\n"
+"POT-Creation-Date: 2025-03-10 00:42+0000\n"
 "PO-Revision-Date: 2025-03-09 05:08+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
@@ -515,19 +515,19 @@ msgstr "საცავის ზომა"
 msgid "Subfolder Storage Size"
 msgstr "ქვესაქაღალდის საცავის ზომა"
 
-#: core/models/statisticsproxymodel.cpp:232
+#: core/models/statisticsproxymodel.cpp:223
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "წაუკითხავი"
 
-#: core/models/statisticsproxymodel.cpp:233
+#: core/models/statisticsproxymodel.cpp:224
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "ჯამში"
 
-#: core/models/statisticsproxymodel.cpp:234
+#: core/models/statisticsproxymodel.cpp:225
 #, kde-format
 msgctxt "collection size"
 msgid "Size"
@@ -1096,10 +1096,10 @@ msgid ""
 msgstr ""
 "<qt>თქვენი ცვლილებები კონფლიქტშია ვიღაც სხვის მიერ შეტანილ ცვლილებებთან."
 "<br>იმ შემთხვევაში, თუ ერთ-ერთი ვერსიის წაშლა არ გნებავთ, ცვლილებების ხელით "
-"შეტანა მოგიწევთ. დააწკაპუნეთ <br>Click on <a "
-"href=\"opentexteditor\">\"ტექსტური რედაქტორის გახსნაზე\"</a>, რათა ტექსტის "
-"ასლი შეინარჩუნოთ, შემდეგ აირჩიეთ, რომელი ვერსია უფრო სწორია, თავიდან "
-"გახსენით ის და შეცვალეთ, როგორც გნებავთ."
+"შეტანა მოგიწევთ. დააწკაპუნეთ <br>Click on <a href=\"opentexteditor\">"
+"\"ტექსტური რედაქტორის გახსნაზე\"</a>, რათა ტექსტის ასლი შეინარჩუნოთ, შემდეგ "
+"აირჩიეთ, რომელი ვერსია უფრო სწორია, თავიდან გახსენით ის და შეცვალეთ, როგორც "
+"გნებავთ."
 
 #: widgets/conflictresolvedialog.cpp:266
 #, kde-format
