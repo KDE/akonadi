@@ -18,7 +18,7 @@
 #include <KIconLoader>
 #include <KLocalizedString>
 
-#include <QApplication>
+#include <QGuiApplication>
 #include <QMetaMethod>
 #include <QPalette>
 
@@ -60,20 +60,17 @@ public:
 
     QString toolTipForCollection(const QModelIndex &index, const Collection &collection) const
     {
-        const QString bckColor = QApplication::palette().color(QPalette::ToolTipBase).name();
-        const QString txtColor = QApplication::palette().color(QPalette::ToolTipText).name();
-
         QString tip = QStringLiteral("<table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">\n");
-        const QString textDirection = (QApplication::layoutDirection() == Qt::LeftToRight) ? QStringLiteral("left") : QStringLiteral("right");
+        const QString textDirection = (QGuiApplication::layoutDirection() == Qt::LeftToRight) ? QStringLiteral("left") : QStringLiteral("right");
         tip += QStringLiteral(
                    "  <tr>\n"
-                   "    <td bgcolor=\"%1\" colspan=\"2\" align=\"%4\" valign=\"middle\">\n"
-                   "      <div style=\"color: %2; font-weight: bold;\">\n"
-                   "      %3\n"
+                   "    <td colspan=\"2\" align=\"%2\" valign=\"middle\">\n"
+                   "      <div style=\"font-weight: bold;\">\n"
+                   "      %1\n"
                    "      </div>\n"
                    "    </td>\n"
                    "  </tr>\n")
-                   .arg(txtColor, bckColor, index.data(Qt::DisplayRole).toString(), textDirection);
+                   .arg(index.data(Qt::DisplayRole).toString(), textDirection);
 
         tip += QStringLiteral(
                    "  <tr>\n"
@@ -146,10 +143,10 @@ public:
                                     .arg(iconPath)
                                     .arg(icon_size_found);
 
-        if (QApplication::layoutDirection() == Qt::LeftToRight) {
-            tip += tipInfo + QStringLiteral("</td><td align=\"%3\" valign=\"top\">").arg(textDirection) + tipIcon;
+        if (QGuiApplication::layoutDirection() == Qt::LeftToRight) {
+            tip += tipInfo + QStringLiteral("</td><td align=\"%1\" valign=\"top\">").arg(textDirection) + tipIcon;
         } else {
-            tip += tipIcon + QStringLiteral("</td><td align=\"%3\" valign=\"top\">").arg(textDirection) + tipInfo;
+            tip += tipIcon + QStringLiteral("</td><td align=\"%1\" valign=\"top\">").arg(textDirection) + tipInfo;
         }
 
         tip += QLatin1StringView(
