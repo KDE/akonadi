@@ -638,6 +638,12 @@ Q_SIGNALS:
      */
     void collectionFetched(int collectionId);
 
+    /**
+     * Emitted when an error occurred.
+     * @since 6.4.0
+     */
+    void errorOccurred(const QString &message);
+
 protected:
     /**
      * Clears and resets the model. Always call this instead of the reset method in the superclass.
