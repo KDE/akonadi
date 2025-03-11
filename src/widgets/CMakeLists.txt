@@ -6,6 +6,7 @@ set(AkonadiWidgets_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR}/KPim6/AkonadiWi
 add_library(KPim6AkonadiWidgets)
 add_library(KPim6::AkonadiWidgets ALIAS KPim6AkonadiWidgets)
 
+qt_add_dbus_interfaces(akonadiwidget_dbus_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Agent.Control.xml)
 
 target_sources(KPim6AkonadiWidgets PRIVATE
     actionstatemanager.cpp
@@ -87,7 +88,9 @@ target_sources(KPim6AkonadiWidgets PRIVATE
 
     dbaccess.cpp
     dbaccess.h
-   )
+
+    ${akonadiwidget_dbus_SRCS}
+)
 
 ecm_qt_declare_logging_category(KPim6AkonadiWidgets HEADER akonadiwidgets_debug.h IDENTIFIER AKONADIWIDGETS_LOG CATEGORY_NAME org.kde.pim.akonadiwidgets
         DESCRIPTION "akonadi (Akonadi Widget Library)"

@@ -8,10 +8,11 @@
 #include "agentconfigurationdialog.h"
 #include "agentconfigurationwidget_p.h"
 #include "akonadiwidgets_debug.h"
+#include "controlinterface.h"
 #include "core/agentconfigurationbase.h"
 #include "core/agentconfigurationfactorybase.h"
 #include "core/agentconfigurationmanager_p.h"
-#include "core/agentmanager.h"
+#include "core/agenttype.h"
 #include "core/servermanager.h"
 
 #include <QChildEvent>
@@ -83,10 +84,30 @@ AgentConfigurationWidget::AgentConfigurationWidget(const AgentInstance &instance
         } else {
             // Hide this dialog and fallback to calling the out-of-process configuration
             if (auto dlg = qobject_cast<AgentConfigurationDialog *>(parent)) {
+                auto agentControlIface =
+                    new org::freedesktop::Akonadi::Agent::Control(ServerManager::agentServiceName(ServerManager::Agent, instance.identifier()),
+                                                                  QStringLiteral("/"),
+                                                                  QDBusConnection::sessionBus(),
+                                                                  this);
+                if (!agentControlIface || !agentControlIface->isValid()) {
+                    delete agentControlIface;
+                    d->setupErrorWidget(this, i18n("Unable to access D-Bus interface of created agent."));
+                    return;
+                }
+
+                connect(agentControlIface, &org::freedesktop::Akonadi::Agent::Control::configurationDialogAccepted, this, [agentControlIface, dlg]() {
+                    agentControlIface->deleteLater();
+                    dlg->accept();
+                });
+                connect(agentControlIface, &org::freedesktop::Akonadi::Agent::Control::configurationDialogRejected, this, [agentControlIface, dlg]() {
+                    agentControlIface->deleteLater();
+                    dlg->reject();
+                });
+
                 const_cast<AgentInstance &>(instance).configure(topLevelWidget()->parentWidget());
                 // If we are inside the AgentConfigurationDialog, hide the dialog
                 QTimer::singleShot(0s, this, [dlg]() {
-                    dlg->reject();
+                    dlg->hide();
                 });
             } else {
                 const_cast<AgentInstance &>(instance).configure();
