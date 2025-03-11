@@ -1423,7 +1423,9 @@ public:
             return;
         }
 
-        instance.configure(parentWidget);
+        auto configureDialog = new Akonadi::AgentConfigurationDialog(instance, parentWidget);
+        configureDialog->setAttribute(Qt::WA_DeleteOnClose);
+        configureDialog->show();
     }
 
     void slotToggleWorkOffline(bool offline)
