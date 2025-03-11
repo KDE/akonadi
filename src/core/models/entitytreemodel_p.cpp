@@ -33,7 +33,6 @@
 
 #include <QElapsedTimer>
 #include <QIcon>
-#include <QMessageBox>
 #include <unordered_map>
 
 // clazy:excludeall=old-style-connect
@@ -1338,7 +1337,7 @@ void EntityTreeModelPrivate::pasteJobDone(KJob *job)
         } else if (qobject_cast<LinkJob *>(job)) {
             errorMsg = i18nc("@info", "Could not link entity: <message>%1</message>", job->errorString());
         }
-        QMessageBox::critical(nullptr, i18nc("@title:window", "Error"), errorMsg);
+        Q_EMIT q_ptr->errorOccurred(errorMsg);
     }
 }
 
