@@ -68,9 +68,6 @@ public:
             }
             return str;
 
-        } else if (mRequestedItems.size() > 10) {
-            return QStringLiteral("%1 items from collection %2").arg(mRequestedItems.size()).arg(mCollection.id());
-
         } else {
             try {
                 QString itemStr = QStringLiteral("items id: ");
@@ -88,7 +85,7 @@ public:
                     }
                 }
                 return itemStr;
-
+                // return QString(); //QString::fromLatin1(ProtocolHelper::entitySetToScope(mRequestedItems));
             } catch (const Exception &e) {
                 return QString::fromUtf8(e.what());
             }
@@ -106,7 +103,6 @@ public:
     QTimer mEmitTimer;
     ProtocolHelperValuePool *mValuePool = nullptr;
     ItemFetchJob::DeliveryOptions mDeliveryOptions = ItemFetchJob::Default;
-    int mChunkStart = 0; // index into mRequestedItems
     int mCount = 0;
     Protocol::FetchLimit mItemsLimit;
 };
@@ -166,13 +162,9 @@ void ItemFetchJob::doStart()
 {
     Q_D(ItemFetchJob);
 
-    constexpr int maximumParametersSize = 1000;
-    const auto items = d->mRequestedItems.mid(d->mChunkStart, maximumParametersSize);
-    d->mChunkStart += maximumParametersSize;
-
     try {
-        d->sendCommand(Protocol::FetchItemsCommandPtr::create(items.isEmpty() ? Scope() : ProtocolHelper::entitySetToScope(items),
-                                                              ProtocolHelper::commandContextToProtocol(d->mCollection, d->mCurrentTag, items),
+        d->sendCommand(Protocol::FetchItemsCommandPtr::create(d->mRequestedItems.isEmpty() ? Scope() : ProtocolHelper::entitySetToScope(d->mRequestedItems),
+                                                              ProtocolHelper::commandContextToProtocol(d->mCollection, d->mCurrentTag, d->mRequestedItems),
                                                               ProtocolHelper::itemFetchScopeToProtocol(d->mFetchScope),
                                                               ProtocolHelper::tagFetchScopeToProtocol(d->mFetchScope.tagFetchScope()),
                                                               d->mItemsLimit));
@@ -195,13 +187,6 @@ bool ItemFetchJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &resp
     const auto &resp = Protocol::cmdCast<Protocol::FetchItemsResponse>(response);
     // Invalid ID marks the last part of the response
     if (resp.id() < 0) {
-        // Do we have more chunks to fetch?
-        if (d->mChunkStart < d->mRequestedItems.size()) {
-            doStart();
-            return false;
-        }
-
-        // all done
         return true;
     }
 
