@@ -1361,12 +1361,8 @@ public:
 
                     auto configureDialog = new Akonadi::AgentConfigurationDialog(job->instance(), parentWidget);
                     configureDialog->setAttribute(Qt::WA_DeleteOnClose);
-                    q->connect(configureDialog, &QDialog::rejected, q, [this, job] {
-                        Akonadi::AgentManager::self()->removeInstance(job->instance());
-                        resourceCreationResult(job);
-                    });
-                    q->connect(configureDialog, &QDialog::accepted, q, [this, job] {
-                        resourceCreationResult(job);
+                    q->connect(configureDialog, &QDialog::rejected, q, [instance = job->instance()] {
+                        Akonadi::AgentManager::self()->removeInstance(instance);
                     });
                     configureDialog->show();
                 });

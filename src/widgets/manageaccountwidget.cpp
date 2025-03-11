@@ -152,8 +152,8 @@ void ManageAccountWidget::slotAddAccount()
 
                 auto configureDialog = new Akonadi::AgentConfigurationDialog(job->instance(), this);
                 configureDialog->setAttribute(Qt::WA_DeleteOnClose);
-                connect(configureDialog, &QDialog::rejected, this, [job] {
-                    Akonadi::AgentManager::self()->removeInstance(job->instance());
+                connect(configureDialog, &QDialog::rejected, this, [instance = job->instance()] {
+                    Akonadi::AgentManager::self()->removeInstance(instance);
                 });
                 configureDialog->show();
             });
