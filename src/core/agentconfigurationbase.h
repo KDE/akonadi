@@ -10,7 +10,6 @@
 #include "akonadicore_export.h"
 
 #include <KSharedConfig>
-#include <QDialogButtonBox>
 #include <QObject>
 
 #include <memory>
@@ -74,6 +73,17 @@ class AKONADICORE_EXPORT AgentConfigurationBase : public QObject
 {
     Q_OBJECT
 public:
+    enum StandardButton {
+        None = 0,
+        Ok = 1,
+        Cancel = 2,
+        Apply = 4,
+        Help = 8,
+    };
+    Q_ENUM(StandardButton)
+    Q_DECLARE_FLAGS(StandardButtons, StandardButton)
+    Q_FLAG(StandardButtons)
+
     /**
      * Creates a new AgentConfigurationBase objects.
      *
@@ -126,7 +136,7 @@ public:
      */
     virtual void saveDialogSize(const QSize &size);
 
-    virtual QDialogButtonBox::StandardButtons standardButtons() const;
+    virtual StandardButtons standardButtons() const;
 
     struct ActivitySettings {
         bool enabled = false;
@@ -174,3 +184,5 @@ private:
 };
 
 } // namespace
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(Akonadi::AgentConfigurationBase::StandardButtons)
