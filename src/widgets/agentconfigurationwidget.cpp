@@ -104,7 +104,8 @@ AgentConfigurationWidget::AgentConfigurationWidget(const AgentInstance &instance
                     dlg->reject();
                 });
 
-                const_cast<AgentInstance &>(instance).configure(topLevelWidget()->parentWidget());
+                const auto parentWidget = topLevelWidget()->parentWidget();
+                const_cast<AgentInstance &>(instance).configure(parentWidget ? parentWidget->window()->winId() : 0);
                 // If we are inside the AgentConfigurationDialog, hide the dialog
                 QTimer::singleShot(0s, this, [dlg]() {
                     dlg->hide();

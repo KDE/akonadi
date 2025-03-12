@@ -149,7 +149,7 @@ public:
      *
      * @param parent Parent window for the configuration dialog.
      */
-    AKONADICORE_DEPRECATED void configure(QWidget *parent = nullptr);
+    AKONADICORE_DEPRECATED void configure(qlonglong winId = 0);
 
     /**
      * Triggers the agent instance to start synchronization.
