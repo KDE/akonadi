@@ -9,7 +9,7 @@
 #include "akonadicore_export.h"
 #include "item.h"
 #include "job.h"
-#include "protocol_p.h"
+#include "private/protocol_p.h"
 
 namespace Akonadi
 {
