@@ -45,6 +45,15 @@ class AgentInstancePrivate;
  */
 class AKONADICORE_EXPORT AgentInstance
 {
+    Q_GADGET
+    Q_PROPERTY(bool isValid READ isValid CONSTANT)
+    Q_PROPERTY(QString identifier READ identifier CONSTANT)
+    Q_PROPERTY(QString name READ name WRITE setName)
+    Q_PROPERTY(Akonadi::AgentInstance::Status status READ status)
+    Q_PROPERTY(QString statusMessage READ statusMessage)
+    Q_PROPERTY(int progress READ progress)
+    Q_PROPERTY(bool isOnline READ isOnline WRITE setIsOnline)
+
     friend class AgentManager;
     friend class AgentManagerPrivate;
 
@@ -63,6 +72,7 @@ public:
         Broken, ///< The agent instance encountered an error state.
         NotConfigured ///< The agent is lacking required configuration
     };
+    Q_ENUM(Status);
 
     /**
      * Creates a new agent instance object.
