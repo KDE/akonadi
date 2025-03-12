@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-10 00:42+0000\n"
+"POT-Creation-Date: 2025-03-12 00:42+0000\n"
 "PO-Revision-Date: 2014-09-18 22:53+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -222,22 +222,17 @@ msgstr "Nich oplööst \"verlaten\" Sammeln opdeckt"
 msgid "Did not find other item for conflict handling"
 msgstr "Keen anner Indrag för Konfliktenbedoon funnen."
 
-#: core/jobs/agentinstancecreatejob.cpp:70
-#, kde-format
-msgid "Unable to access D-Bus interface of created agent."
-msgstr "D-Bus-Koppelsteed vun opstellt Hölper lett sik nich faatkriegen."
-
-#: core/jobs/agentinstancecreatejob.cpp:92
+#: core/jobs/agentinstancecreatejob.cpp:58
 #, kde-format
 msgid "Agent instance creation timed out."
 msgstr "Tietafloop bi't Opstellen vun den Hölper"
 
-#: core/jobs/agentinstancecreatejob.cpp:150
+#: core/jobs/agentinstancecreatejob.cpp:108
 #, kde-format
 msgid "Unable to obtain agent type '%1'."
 msgstr "Hölper-Typ \"%1\" lett sik nich halen."
 
-#: core/jobs/agentinstancecreatejob.cpp:158
+#: core/jobs/agentinstancecreatejob.cpp:116
 #, kde-format
 msgid "Unable to create agent instance."
 msgstr "Hölper lett sik nich opstellen."
@@ -297,13 +292,13 @@ msgstr "Leeg Sammeln"
 msgid "Invalid collection given."
 msgstr "Leeg Sammeln angeven"
 
-#: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:90
+#: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:118
 #, kde-format
 msgid "No objects specified for moving"
 msgstr "Keen Objekten för't Verschuven angeven"
 
-#: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
-#: core/jobs/linkjobimpl_p.h:39
+#: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:125
+#: core/jobs/linkjobimpl_p.h:45
 #, kde-format
 msgid "No valid destination specified"
 msgstr "Keen gellen Teel angeven"
@@ -500,45 +495,45 @@ msgstr "Fehler."
 msgid "Favorite Folders"
 msgstr "Vörtrocken Ornern"
 
-#: core/models/statisticsproxymodel.cpp:87
+#: core/models/statisticsproxymodel.cpp:84
 #, kde-format
 msgid "Total Messages"
 msgstr "Narichten tosamen"
 
-#: core/models/statisticsproxymodel.cpp:89
+#: core/models/statisticsproxymodel.cpp:86
 #, kde-format
 msgid "Unread Messages"
 msgstr "Nich leest Narichten"
 
-#: core/models/statisticsproxymodel.cpp:98
+#: core/models/statisticsproxymodel.cpp:95
 #, kde-format
 msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
 msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
 msgstr ""
 
-#: core/models/statisticsproxymodel.cpp:106
+#: core/models/statisticsproxymodel.cpp:103
 #, kde-format
 msgid "Storage Size"
 msgstr "Spiekergrött"
 
-#: core/models/statisticsproxymodel.cpp:112
+#: core/models/statisticsproxymodel.cpp:109
 #, kde-format
 msgid "Subfolder Storage Size"
 msgstr "Ünnerorner-Spiekergrött"
 
-#: core/models/statisticsproxymodel.cpp:223
+#: core/models/statisticsproxymodel.cpp:220
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "Nich leest"
 
-#: core/models/statisticsproxymodel.cpp:224
+#: core/models/statisticsproxymodel.cpp:221
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "Tosamen"
 
-#: core/models/statisticsproxymodel.cpp:225
+#: core/models/statisticsproxymodel.cpp:222
 #, kde-format
 msgctxt "collection size"
 msgid "Size"
@@ -635,43 +630,43 @@ msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
 
-#: widgets/agentactionmanager.cpp:35
+#: widgets/agentactionmanager.cpp:36
 msgid "&New Agent Instance..."
 msgstr "&Nieg Hölper..."
 
-#: widgets/agentactionmanager.cpp:36
+#: widgets/agentactionmanager.cpp:37
 msgid "&Delete Agent Instance"
 msgstr "Indrag &wegdoon"
 
-#: widgets/agentactionmanager.cpp:37
+#: widgets/agentactionmanager.cpp:38
 msgid "&Configure Agent Instance"
 msgstr "Hölper &inrichten"
 
-#: widgets/agentactionmanager.cpp:53
+#: widgets/agentactionmanager.cpp:54
 #, kde-format
 msgctxt "@title:window"
 msgid "New Agent Instance"
 msgstr "Nieg Hölper"
 
-#: widgets/agentactionmanager.cpp:55
+#: widgets/agentactionmanager.cpp:56
 #, kde-format
 msgid "Could not create agent instance: %1"
 msgstr "Hölper lett sik nich opstellen: %1"
 
-#: widgets/agentactionmanager.cpp:59
+#: widgets/agentactionmanager.cpp:60
 #, fuzzy, kde-format
 #| msgid "Agent instance creation failed"
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "Opstellen vun den Hölper fehlslaan"
 
-#: widgets/agentactionmanager.cpp:61
+#: widgets/agentactionmanager.cpp:62
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Agent Instance?"
 msgstr "Hölper wegdoon?"
 
-#: widgets/agentactionmanager.cpp:65
+#: widgets/agentactionmanager.cpp:66
 #, kde-format
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Wullt Du den utsöchten Hölper redig wegdoon?"
@@ -694,15 +689,20 @@ msgstr ""
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
+msgid "Unable to access D-Bus interface of created agent."
+msgstr "D-Bus-Koppelsteed vun opstellt Hölper lett sik nich faatkriegen."
+
+#: widgets/agentconfigurationwidget.cpp:115
+#, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:101
+#: widgets/agentconfigurationwidget.cpp:122
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:103
+#: widgets/agentconfigurationwidget.cpp:124
 #, fuzzy, kde-format
 #| msgid "Failed to create tag."
 msgid "Failed to register %1 configuration dialog."
@@ -862,7 +862,7 @@ msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "En niegen Ünnerorner binnen den opstunns utsöchten Orner opstellen"
 
-#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:418
+#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:419
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
@@ -874,12 +874,12 @@ msgctxt "@label:textbox, name of a thing"
 msgid "Name"
 msgstr "Naam"
 
-#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:420
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:421
 #, kde-format
 msgid "Could not create folder: %1"
 msgstr "Orner \"%1\" lett sik nich opstellen"
 
-#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:421
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:422
 #, fuzzy, kde-format
 #| msgid "Folder creation failed"
 msgctxt "@title:window"
@@ -1267,12 +1267,12 @@ msgstr ""
 msgid "Details..."
 msgstr "Enkelheiten..."
 
-#: widgets/manageaccountwidget.cpp:221
+#: widgets/manageaccountwidget.cpp:232
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr ""
 
-#: widgets/manageaccountwidget.cpp:222
+#: widgets/manageaccountwidget.cpp:233
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"
@@ -2003,235 +2003,235 @@ msgstr ""
 "<p>Mehr Tipps för't Problemlösen gifft dat op <a href=\"http://userbase.kde."
 "org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
 
-#: widgets/standardactionmanager.cpp:78
+#: widgets/standardactionmanager.cpp:79
 msgid "&New Folder..."
 msgstr "&Nieg Orner..."
 
-#: widgets/standardactionmanager.cpp:78
+#: widgets/standardactionmanager.cpp:79
 msgid "New"
 msgstr "Nieg"
 
-#: widgets/standardactionmanager.cpp:88
+#: widgets/standardactionmanager.cpp:89
 #, fuzzy
 #| msgid "&Delete Folder"
 #| msgid_plural "&Delete %1 Folders"
 msgid "&Delete Folder"
 msgstr "Orner &wegmaken"
 
-#: widgets/standardactionmanager.cpp:89
+#: widgets/standardactionmanager.cpp:90
 msgid "Delete"
 msgstr "Wegmaken"
 
-#: widgets/standardactionmanager.cpp:96
+#: widgets/standardactionmanager.cpp:97
 #, fuzzy
 #| msgid "&Synchronize Folder"
 #| msgid_plural "&Synchronize %1 Folders"
 msgid "&Synchronize Folder"
 msgstr "Orner &synkroniseren"
 
-#: widgets/standardactionmanager.cpp:97 widgets/standardactionmanager.cpp:206
-#: widgets/standardactionmanager.cpp:313
+#: widgets/standardactionmanager.cpp:98 widgets/standardactionmanager.cpp:207
+#: widgets/standardactionmanager.cpp:314
 msgid "Synchronize"
 msgstr "Synkroniseren"
 
-#: widgets/standardactionmanager.cpp:104
+#: widgets/standardactionmanager.cpp:105
 msgid "Folder &Properties"
 msgstr "Orner-&Egenschappen"
 
-#: widgets/standardactionmanager.cpp:105 widgets/standardactionmanager.cpp:198
+#: widgets/standardactionmanager.cpp:106 widgets/standardactionmanager.cpp:199
 msgid "Properties"
 msgstr "Egenschappen"
 
-#: widgets/standardactionmanager.cpp:112
+#: widgets/standardactionmanager.cpp:113
 msgid "&Paste"
 msgstr "&Infögen"
 
-#: widgets/standardactionmanager.cpp:112
+#: widgets/standardactionmanager.cpp:113
 msgid "Paste"
 msgstr "Infögen"
 
-#: widgets/standardactionmanager.cpp:115
+#: widgets/standardactionmanager.cpp:116
 msgid "Manage Local &Subscriptions..."
 msgstr "&Lokale Bestellen plegen"
 
-#: widgets/standardactionmanager.cpp:116
+#: widgets/standardactionmanager.cpp:117
 msgid "Manage Local Subscriptions"
 msgstr "Lokale Bestellen plegen"
 
-#: widgets/standardactionmanager.cpp:123
+#: widgets/standardactionmanager.cpp:124
 msgid "Add to Favorite Folders"
 msgstr "Na Leestekenornern tofögen"
 
-#: widgets/standardactionmanager.cpp:124
+#: widgets/standardactionmanager.cpp:125
 msgid "Add to Favorite"
 msgstr "Na Leestekens tofögen"
 
-#: widgets/standardactionmanager.cpp:131
+#: widgets/standardactionmanager.cpp:132
 msgid "Remove from Favorite Folders"
 msgstr "Ut Leestekenornern wegmaken"
 
-#: widgets/standardactionmanager.cpp:132
+#: widgets/standardactionmanager.cpp:133
 msgid "Remove from Favorite"
 msgstr "Ut Leestekens wegmaken"
 
-#: widgets/standardactionmanager.cpp:139
+#: widgets/standardactionmanager.cpp:140
 msgid "Rename Favorite..."
 msgstr "Vörtrocken Orner ümnömen..."
 
-#: widgets/standardactionmanager.cpp:140
+#: widgets/standardactionmanager.cpp:141
 msgid "Rename"
 msgstr "Ümnömen"
 
-#: widgets/standardactionmanager.cpp:147 widgets/standardactionmanager.cpp:221
+#: widgets/standardactionmanager.cpp:148 widgets/standardactionmanager.cpp:222
 msgid "Copy Folder To..."
 msgstr "Orner koperen na..."
 
-#: widgets/standardactionmanager.cpp:148 widgets/standardactionmanager.cpp:156
-#: widgets/standardactionmanager.cpp:222 widgets/standardactionmanager.cpp:236
+#: widgets/standardactionmanager.cpp:149 widgets/standardactionmanager.cpp:157
+#: widgets/standardactionmanager.cpp:223 widgets/standardactionmanager.cpp:237
 msgid "Copy To"
 msgstr "Koperen na"
 
-#: widgets/standardactionmanager.cpp:155 widgets/standardactionmanager.cpp:236
+#: widgets/standardactionmanager.cpp:156 widgets/standardactionmanager.cpp:237
 msgid "Copy Item To..."
 msgstr "Indrag koperen na..."
 
-#: widgets/standardactionmanager.cpp:163 widgets/standardactionmanager.cpp:237
+#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:238
 msgid "Move Item To..."
 msgstr "Indrag verschuven na..."
 
-#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:172
-#: widgets/standardactionmanager.cpp:230 widgets/standardactionmanager.cpp:237
+#: widgets/standardactionmanager.cpp:165 widgets/standardactionmanager.cpp:173
+#: widgets/standardactionmanager.cpp:231 widgets/standardactionmanager.cpp:238
 msgid "Move To"
 msgstr "Verschuven na"
 
-#: widgets/standardactionmanager.cpp:171 widgets/standardactionmanager.cpp:229
+#: widgets/standardactionmanager.cpp:172 widgets/standardactionmanager.cpp:230
 msgid "Move Folder To..."
 msgstr "Orner verschuven na..."
 
-#: widgets/standardactionmanager.cpp:178
+#: widgets/standardactionmanager.cpp:179
 #, fuzzy
 #| msgid "&Cut Item"
 #| msgid_plural "&Cut %1 Items"
 msgid "&Cut Item"
 msgstr "Indrag &knippen"
 
-#: widgets/standardactionmanager.cpp:178 widgets/standardactionmanager.cpp:179
+#: widgets/standardactionmanager.cpp:179 widgets/standardactionmanager.cpp:180
 msgid "Cut"
 msgstr "Knippen"
 
-#: widgets/standardactionmanager.cpp:179
+#: widgets/standardactionmanager.cpp:180
 #, fuzzy
 #| msgid "&Cut Folder"
 #| msgid_plural "&Cut %1 Folders"
 msgid "&Cut Folder"
 msgstr "Orner &knippen"
 
-#: widgets/standardactionmanager.cpp:181
+#: widgets/standardactionmanager.cpp:182
 msgid "Create Resource"
 msgstr "Ressource opstellen"
 
-#: widgets/standardactionmanager.cpp:189
+#: widgets/standardactionmanager.cpp:190
 #, fuzzy
 #| msgid "Delete Resource"
 #| msgid_plural "Delete %1 Resources"
 msgid "Delete Resource"
 msgstr "Ressource wegdoon"
 
-#: widgets/standardactionmanager.cpp:197
+#: widgets/standardactionmanager.cpp:198
 msgid "&Resource Properties"
 msgstr "&Ressource-Egenschappen"
 
-#: widgets/standardactionmanager.cpp:205
+#: widgets/standardactionmanager.cpp:206
 #, fuzzy
 #| msgid "Synchronize Resource"
 #| msgid_plural "Synchronize %1 Resources"
 msgid "Synchronize Resource"
 msgstr "Ressource synkroniseren"
 
-#: widgets/standardactionmanager.cpp:213
+#: widgets/standardactionmanager.cpp:214
 msgid "Work Offline"
 msgstr "Afkoppelt arbeiden"
 
-#: widgets/standardactionmanager.cpp:239
+#: widgets/standardactionmanager.cpp:240
 msgid "&Synchronize Folder Recursively"
 msgstr "Ok Ünnerornern &synkroniseren"
 
-#: widgets/standardactionmanager.cpp:240
+#: widgets/standardactionmanager.cpp:241
 msgid "Synchronize Recursively"
 msgstr "Rekursiev synkroniseren"
 
-#: widgets/standardactionmanager.cpp:247
+#: widgets/standardactionmanager.cpp:248
 msgid "&Move Folder To Trash"
 msgstr "Orner na &Affalltünn verschuven"
 
-#: widgets/standardactionmanager.cpp:248
+#: widgets/standardactionmanager.cpp:249
 msgid "Move Folder To Trash"
 msgstr "Orner na Affalltünn verschuven"
 
-#: widgets/standardactionmanager.cpp:255
+#: widgets/standardactionmanager.cpp:256
 msgid "&Move Item To Trash"
 msgstr "Indrag na &Affalltünn verschuven"
 
-#: widgets/standardactionmanager.cpp:256
+#: widgets/standardactionmanager.cpp:257
 msgid "Move Item To Trash"
 msgstr "Indrag na Affalltünn verschuven"
 
-#: widgets/standardactionmanager.cpp:263 widgets/standardactionmanager.cpp:279
+#: widgets/standardactionmanager.cpp:264 widgets/standardactionmanager.cpp:280
 msgid "&Restore Folder From Trash"
 msgstr "Orner ut Affall &wedderherstellen"
 
-#: widgets/standardactionmanager.cpp:264 widgets/standardactionmanager.cpp:280
+#: widgets/standardactionmanager.cpp:265 widgets/standardactionmanager.cpp:281
 msgid "Restore Folder From Trash"
 msgstr "Orner ut Affall wedderherstellen"
 
-#: widgets/standardactionmanager.cpp:271 widgets/standardactionmanager.cpp:295
-#: widgets/standardactionmanager.cpp:302
+#: widgets/standardactionmanager.cpp:272 widgets/standardactionmanager.cpp:296
+#: widgets/standardactionmanager.cpp:303
 msgid "&Restore Item From Trash"
 msgstr "Indrag ut Affall &wedderherstellen"
 
-#: widgets/standardactionmanager.cpp:272 widgets/standardactionmanager.cpp:296
-#: widgets/standardactionmanager.cpp:302
+#: widgets/standardactionmanager.cpp:273 widgets/standardactionmanager.cpp:297
+#: widgets/standardactionmanager.cpp:303
 msgid "Restore Item From Trash"
 msgstr "Indrag ut Affall wedderherstellen"
 
-#: widgets/standardactionmanager.cpp:287
+#: widgets/standardactionmanager.cpp:288
 msgid "&Restore Collection From Trash"
 msgstr "Sammeln ut Affall &wedderherstellen"
 
-#: widgets/standardactionmanager.cpp:288
+#: widgets/standardactionmanager.cpp:289
 msgid "Restore Collection From Trash"
 msgstr "Sammeln ut Affall wedderherstellen"
 
-#: widgets/standardactionmanager.cpp:304
+#: widgets/standardactionmanager.cpp:305
 msgid "&Synchronize Favorite Folders"
 msgstr "Vörtrocken Ornern &synkroniseren"
 
-#: widgets/standardactionmanager.cpp:305
+#: widgets/standardactionmanager.cpp:306
 msgid "Synchronize Favorite Folders"
 msgstr "Vörtrocken Ornern synkroniseren"
 
-#: widgets/standardactionmanager.cpp:312
+#: widgets/standardactionmanager.cpp:313
 #, fuzzy
 #| msgid "Synchronize Folder"
 #| msgid_plural "Synchronize %1 Folders"
 msgid "Synchronize Folder Tree"
 msgstr "Orner synkroniseren"
 
-#: widgets/standardactionmanager.cpp:398
+#: widgets/standardactionmanager.cpp:399
 #, kde-format
 msgid "&Copy Folder"
 msgid_plural "&Copy %1 Folders"
 msgstr[0] "Orner &koperen"
 msgstr[1] "%1 Ornern &koperen"
 
-#: widgets/standardactionmanager.cpp:399
+#: widgets/standardactionmanager.cpp:400
 #, kde-format
 msgid "&Copy Item"
 msgid_plural "&Copy %1 Items"
 msgstr[0] "Indrag &koperen"
 msgstr[1] "%1 Indrääg &koperen"
 
-#: widgets/standardactionmanager.cpp:400
+#: widgets/standardactionmanager.cpp:401
 #, fuzzy, kde-format
 #| msgid "&Cut Item"
 #| msgid_plural "&Cut %1 Items"
@@ -2241,7 +2241,7 @@ msgid_plural "&Cut %1 Items"
 msgstr[0] "Indrag &knippen"
 msgstr[1] "%1 Indrääg &knippen"
 
-#: widgets/standardactionmanager.cpp:401
+#: widgets/standardactionmanager.cpp:402
 #, fuzzy, kde-format
 #| msgid "&Cut Folder"
 #| msgid_plural "&Cut %1 Folders"
@@ -2251,14 +2251,14 @@ msgid_plural "&Cut %1 Folders"
 msgstr[0] "Orner &knippen"
 msgstr[1] "%1 Ornern &knippen"
 
-#: widgets/standardactionmanager.cpp:402
+#: widgets/standardactionmanager.cpp:403
 #, kde-format
 msgid "&Delete Item"
 msgid_plural "&Delete %1 Items"
 msgstr[0] "Indrag &wegdoon"
 msgstr[1] "%1 Indrääg &wegdoon"
 
-#: widgets/standardactionmanager.cpp:403
+#: widgets/standardactionmanager.cpp:404
 #, fuzzy, kde-format
 #| msgid "&Delete Folder"
 #| msgid_plural "&Delete %1 Folders"
@@ -2268,7 +2268,7 @@ msgid_plural "&Delete %1 Folders"
 msgstr[0] "Orner &wegmaken"
 msgstr[1] "%1 Ornern &wegmaken"
 
-#: widgets/standardactionmanager.cpp:404
+#: widgets/standardactionmanager.cpp:405
 #, fuzzy, kde-format
 #| msgid "&Synchronize Folder"
 #| msgid_plural "&Synchronize %1 Folders"
@@ -2278,70 +2278,70 @@ msgid_plural "&Synchronize %1 Folders"
 msgstr[0] "Orner &synkroniseren"
 msgstr[1] "%1 Ornern &synkroniseren"
 
-#: widgets/standardactionmanager.cpp:405
+#: widgets/standardactionmanager.cpp:406
 #, kde-format
 msgid "&Delete Resource"
 msgid_plural "&Delete %1 Resources"
 msgstr[0] "Ressource &wegmaken"
 msgstr[1] "%1 Ressourcen &wegmaken"
 
-#: widgets/standardactionmanager.cpp:406
+#: widgets/standardactionmanager.cpp:407
 #, kde-format
 msgid "&Synchronize Resource"
 msgid_plural "&Synchronize %1 Resources"
 msgstr[0] "Ressource &synkroniseren"
 msgstr[1] "%1 Ressourcen &synkroniseren"
 
-#: widgets/standardactionmanager.cpp:408
+#: widgets/standardactionmanager.cpp:409
 #, kde-format
 msgid "Copy Folder"
 msgid_plural "Copy %1 Folders"
 msgstr[0] "Orner koperen"
 msgstr[1] "%1 Ornern koperen"
 
-#: widgets/standardactionmanager.cpp:409
+#: widgets/standardactionmanager.cpp:410
 #, kde-format
 msgid "Copy Item"
 msgid_plural "Copy %1 Items"
 msgstr[0] "Indrag koperen"
 msgstr[1] "%1 Indrääg koperen"
 
-#: widgets/standardactionmanager.cpp:410
+#: widgets/standardactionmanager.cpp:411
 #, kde-format
 msgid "Cut Item"
 msgid_plural "Cut %1 Items"
 msgstr[0] "Indrag knippen"
 msgstr[1] "%1 Indrääg knippen"
 
-#: widgets/standardactionmanager.cpp:411
+#: widgets/standardactionmanager.cpp:412
 #, kde-format
 msgid "Cut Folder"
 msgid_plural "Cut %1 Folders"
 msgstr[0] "Orner knippen"
 msgstr[1] "%1 Ornern knippen"
 
-#: widgets/standardactionmanager.cpp:412
+#: widgets/standardactionmanager.cpp:413
 #, kde-format
 msgid "Delete Item"
 msgid_plural "Delete %1 Items"
 msgstr[0] "Indrag wegdoon"
 msgstr[1] "%1 Indrääg wegdoon"
 
-#: widgets/standardactionmanager.cpp:413
+#: widgets/standardactionmanager.cpp:414
 #, kde-format
 msgid "Delete Folder"
 msgid_plural "Delete %1 Folders"
 msgstr[0] "Orner wegdoon"
 msgstr[1] "%1 Ornern wegdoon"
 
-#: widgets/standardactionmanager.cpp:414
+#: widgets/standardactionmanager.cpp:415
 #, kde-format
 msgid "Synchronize Folder"
 msgid_plural "Synchronize %1 Folders"
 msgstr[0] "Orner synkroniseren"
 msgstr[1] "%1 Ornern synkroniseren"
 
-#: widgets/standardactionmanager.cpp:415
+#: widgets/standardactionmanager.cpp:416
 #, fuzzy, kde-format
 #| msgid "Delete Resource"
 #| msgid_plural "Delete %1 Resources"
@@ -2351,7 +2351,7 @@ msgid_plural "Delete %1 Resources"
 msgstr[0] "Ressource wegdoon"
 msgstr[1] "%1 Ressourcen wegdoon"
 
-#: widgets/standardactionmanager.cpp:416
+#: widgets/standardactionmanager.cpp:417
 #, fuzzy, kde-format
 #| msgid "Synchronize Resource"
 #| msgid_plural "Synchronize %1 Resources"
@@ -2361,7 +2361,7 @@ msgid_plural "Synchronize %1 Resources"
 msgstr[0] "Ressource synkroniseren"
 msgstr[1] "%1 Ressourcen synkroniseren"
 
-#: widgets/standardactionmanager.cpp:419
+#: widgets/standardactionmanager.cpp:420
 #, fuzzy, kde-format
 #| msgctxt "@title:column, name of a thing"
 #| msgid "Name"
@@ -2369,7 +2369,7 @@ msgctxt "@label:textbox name of Akonadi folder"
 msgid "Name"
 msgstr "Naam"
 
-#: widgets/standardactionmanager.cpp:426
+#: widgets/standardactionmanager.cpp:427
 #, kde-format
 msgid "Do you really want to delete this folder and all its sub-folders?"
 msgid_plural ""
@@ -2377,7 +2377,7 @@ msgid_plural ""
 msgstr[0] "Wullt Du dissen Orner un all sien Ünnerornern redig wegdoon?"
 msgstr[1] "Wullt Du disse %1 Ornern un all ehr Ünnerornern redig wegdoon?"
 
-#: widgets/standardactionmanager.cpp:429
+#: widgets/standardactionmanager.cpp:430
 #, fuzzy, kde-format
 #| msgid "Delete Folder"
 #| msgid_plural "Delete %1 Folders"
@@ -2387,32 +2387,32 @@ msgid_plural "Delete Folders?"
 msgstr[0] "Orner wegdoon"
 msgstr[1] "%1 Ornern wegdoon"
 
-#: widgets/standardactionmanager.cpp:430
+#: widgets/standardactionmanager.cpp:431
 #, kde-format
 msgid "Could not delete folder: %1"
 msgstr "Orner \"%1\" lett sik nich wegdoon"
 
-#: widgets/standardactionmanager.cpp:431
+#: widgets/standardactionmanager.cpp:432
 #, fuzzy, kde-format
 #| msgid "Folder deletion failed"
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "Wegdoon vun den Orner fehlslaan"
 
-#: widgets/standardactionmanager.cpp:433
+#: widgets/standardactionmanager.cpp:434
 #, kde-format
 msgctxt "@title:window"
 msgid "Properties of Folder %1"
 msgstr "Egenschappen vun Orner \"%1\""
 
-#: widgets/standardactionmanager.cpp:437
+#: widgets/standardactionmanager.cpp:438
 #, kde-format
 msgid "Do you really want to delete the selected item?"
 msgid_plural "Do you really want to delete %1 items?"
 msgstr[0] "Wullt Du den utsöchten Indrag redig wegdoon?"
 msgstr[1] "Wullt Du redig %1 Indrääg wegdoon?"
 
-#: widgets/standardactionmanager.cpp:438
+#: widgets/standardactionmanager.cpp:439
 #, fuzzy, kde-format
 #| msgid "Delete Item"
 #| msgid_plural "Delete %1 Items"
@@ -2422,56 +2422,56 @@ msgid_plural "Delete Items?"
 msgstr[0] "Indrag wegdoon"
 msgstr[1] "%1 Indrääg wegdoon"
 
-#: widgets/standardactionmanager.cpp:439
+#: widgets/standardactionmanager.cpp:440
 #, kde-format
 msgid "Could not delete item: %1"
 msgstr "Indrag \"%1\" lett sik nich wegdoon"
 
-#: widgets/standardactionmanager.cpp:440
+#: widgets/standardactionmanager.cpp:441
 #, fuzzy, kde-format
 #| msgid "Item deletion failed"
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "Wegdoon vun den Indrag fehlslaan"
 
-#: widgets/standardactionmanager.cpp:442
+#: widgets/standardactionmanager.cpp:443
 #, kde-format
 msgctxt "@title:window"
 msgid "Rename Favorite"
 msgstr "Leesteken ümnömen"
 
-#: widgets/standardactionmanager.cpp:443
+#: widgets/standardactionmanager.cpp:444
 #, kde-format
 msgctxt "@label:textbox name of the folder"
 msgid "Name:"
 msgstr "Naam:"
 
-#: widgets/standardactionmanager.cpp:445
+#: widgets/standardactionmanager.cpp:446
 #, kde-format
 msgctxt "@title:window"
 msgid "New Resource"
 msgstr "Nieg Ressource"
 
-#: widgets/standardactionmanager.cpp:446
+#: widgets/standardactionmanager.cpp:447
 #, kde-format
 msgid "Could not create resource: %1"
 msgstr "Ressource \"%1\" lett sik nich opstellen."
 
-#: widgets/standardactionmanager.cpp:447
+#: widgets/standardactionmanager.cpp:448
 #, fuzzy, kde-format
 #| msgid "Resource creation failed"
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "Opstellen vun de Ressource fehlslaan"
 
-#: widgets/standardactionmanager.cpp:451
+#: widgets/standardactionmanager.cpp:452
 #, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
 msgstr[0] "Wullt Du disse Ressource redig wegdoon?"
 msgstr[1] "Wullt Du redig %1 Ressourcen wegdoon?"
 
-#: widgets/standardactionmanager.cpp:454
+#: widgets/standardactionmanager.cpp:455
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Resource?"
@@ -2479,36 +2479,36 @@ msgid_plural "Delete Resources?"
 msgstr[0] "Ressource wegmaken?"
 msgstr[1] "Ressourcen wegmaken?"
 
-#: widgets/standardactionmanager.cpp:456
+#: widgets/standardactionmanager.cpp:457
 #, kde-format
 msgid "Could not paste data: %1"
 msgstr "Daten laat sik nich infögen: %1"
 
-#: widgets/standardactionmanager.cpp:457
+#: widgets/standardactionmanager.cpp:458
 #, fuzzy, kde-format
 #| msgid "Paste failed"
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Infögen fehlslaan"
 
-#: widgets/standardactionmanager.cpp:809
+#: widgets/standardactionmanager.cpp:810
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "En Ornernaam lett keen Dwarsstreek (\"/\") to."
 
-#: widgets/standardactionmanager.cpp:809 widgets/standardactionmanager.cpp:813
+#: widgets/standardactionmanager.cpp:810 widgets/standardactionmanager.cpp:814
 #, fuzzy, kde-format
 #| msgid "Create new folder error"
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Fehler bi't Opstellen vun en niegen Orner"
 
-#: widgets/standardactionmanager.cpp:813
+#: widgets/standardactionmanager.cpp:814
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "En Ornernaam lett sik keen \".\" vör- oder achteranstellen."
 
-#: widgets/standardactionmanager.cpp:1052
+#: widgets/standardactionmanager.cpp:1053
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2517,23 +2517,23 @@ msgstr ""
 "Ehr Du den Orner \"%1\" synkroniseren kannst, muttst Du de Ressource "
 "tokoppeln. Wullt Du ehr nu tokoppeln?"
 
-#: widgets/standardactionmanager.cpp:1053
+#: widgets/standardactionmanager.cpp:1054
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "Konto \"%1\" is afkoppelt"
 
-#: widgets/standardactionmanager.cpp:1054
+#: widgets/standardactionmanager.cpp:1055
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Tokoppeln"
 
-#: widgets/standardactionmanager.cpp:1655
+#: widgets/standardactionmanager.cpp:1667
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Na dissen Orner verschuven"
 
-#: widgets/standardactionmanager.cpp:1655
+#: widgets/standardactionmanager.cpp:1667
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Na dissen Orner koperen"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-10 00:42+0000\n"
+"POT-Creation-Date: 2025-03-12 00:42+0000\n"
 "PO-Revision-Date: 2025-03-09 11:10+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -233,22 +233,17 @@ msgstr "S'han trobat col·leccions òrfenes sense resoldre"
 msgid "Did not find other item for conflict handling"
 msgstr "No s'ha trobat cap element per a gestionar el conflicte"
 
-#: core/jobs/agentinstancecreatejob.cpp:70
-#, kde-format
-msgid "Unable to access D-Bus interface of created agent."
-msgstr "No s'ha pogut accedir a la interfície de D-Bus de l'agent creat."
-
-#: core/jobs/agentinstancecreatejob.cpp:92
+#: core/jobs/agentinstancecreatejob.cpp:58
 #, kde-format
 msgid "Agent instance creation timed out."
 msgstr "La creació de la instància de l'agent ha excedit el temps."
 
-#: core/jobs/agentinstancecreatejob.cpp:150
+#: core/jobs/agentinstancecreatejob.cpp:108
 #, kde-format
 msgid "Unable to obtain agent type '%1'."
 msgstr "No s'ha pogut obtenir el tipus de l'agent «%1»."
 
-#: core/jobs/agentinstancecreatejob.cpp:158
+#: core/jobs/agentinstancecreatejob.cpp:116
 #, kde-format
 msgid "Unable to create agent instance."
 msgstr "No s'ha pogut crear la instància de l'agent."
@@ -305,13 +300,13 @@ msgstr "Col·lecció no vàlida"
 msgid "Invalid collection given."
 msgstr "Col·lecció proporcionada no vàlida."
 
-#: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:90
+#: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:118
 #, kde-format
 msgid "No objects specified for moving"
 msgstr "No s'ha especificat cap objecte per a moure"
 
-#: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
-#: core/jobs/linkjobimpl_p.h:39
+#: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:125
+#: core/jobs/linkjobimpl_p.h:45
 #, kde-format
 msgid "No valid destination specified"
 msgstr "No s'ha especificat cap destinació vàlida"
@@ -498,45 +493,45 @@ msgstr "Error"
 msgid "Favorite Folders"
 msgstr "Carpetes preferides"
 
-#: core/models/statisticsproxymodel.cpp:87
+#: core/models/statisticsproxymodel.cpp:84
 #, kde-format
 msgid "Total Messages"
 msgstr "Total de missatges"
 
-#: core/models/statisticsproxymodel.cpp:89
+#: core/models/statisticsproxymodel.cpp:86
 #, kde-format
 msgid "Unread Messages"
 msgstr "Missatges sense llegir"
 
-#: core/models/statisticsproxymodel.cpp:98
+#: core/models/statisticsproxymodel.cpp:95
 #, kde-format
 msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
 msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
 msgstr "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
 
-#: core/models/statisticsproxymodel.cpp:106
+#: core/models/statisticsproxymodel.cpp:103
 #, kde-format
 msgid "Storage Size"
 msgstr "Mida d'emmagatzematge"
 
-#: core/models/statisticsproxymodel.cpp:112
+#: core/models/statisticsproxymodel.cpp:109
 #, kde-format
 msgid "Subfolder Storage Size"
 msgstr "Mida d'emmagatzematge de la subcarpeta"
 
-#: core/models/statisticsproxymodel.cpp:223
+#: core/models/statisticsproxymodel.cpp:220
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "Sense llegir"
 
-#: core/models/statisticsproxymodel.cpp:224
+#: core/models/statisticsproxymodel.cpp:221
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "Total"
 
-#: core/models/statisticsproxymodel.cpp:225
+#: core/models/statisticsproxymodel.cpp:222
 #, kde-format
 msgctxt "collection size"
 msgid "Size"
@@ -648,42 +643,42 @@ msgstr ""
 "Espai de nom per a iniciar diverses instàncies de l'Akonadi en la mateixa "
 "sessió d'usuari"
 
-#: widgets/agentactionmanager.cpp:35
+#: widgets/agentactionmanager.cpp:36
 msgid "&New Agent Instance..."
 msgstr "Instància &nova de l'agent..."
 
-#: widgets/agentactionmanager.cpp:36
+#: widgets/agentactionmanager.cpp:37
 msgid "&Delete Agent Instance"
 msgstr "Su&primeix la instància de l'agent"
 
-#: widgets/agentactionmanager.cpp:37
+#: widgets/agentactionmanager.cpp:38
 msgid "&Configure Agent Instance"
 msgstr "&Configura la instància de l'agent"
 
-#: widgets/agentactionmanager.cpp:53
+#: widgets/agentactionmanager.cpp:54
 #, kde-format
 msgctxt "@title:window"
 msgid "New Agent Instance"
 msgstr "Instància nova de l'agent"
 
-#: widgets/agentactionmanager.cpp:55
+#: widgets/agentactionmanager.cpp:56
 #, kde-format
 msgid "Could not create agent instance: %1"
 msgstr "No s'ha pogut crear la instància de l'agent: %1"
 
-#: widgets/agentactionmanager.cpp:59
+#: widgets/agentactionmanager.cpp:60
 #, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "La creació de la instància de l'agent ha fallat"
 
-#: widgets/agentactionmanager.cpp:61
+#: widgets/agentactionmanager.cpp:62
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Agent Instance?"
 msgstr "Suprimeixo la instància de l'agent?"
 
-#: widgets/agentactionmanager.cpp:65
+#: widgets/agentactionmanager.cpp:66
 #, kde-format
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Realment voleu suprimir la instància seleccionada de l'agent?"
@@ -706,15 +701,20 @@ msgstr "Quant al %1"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
+msgid "Unable to access D-Bus interface of created agent."
+msgstr "No s'ha pogut accedir a la interfície de D-Bus de l'agent creat."
+
+#: widgets/agentconfigurationwidget.cpp:115
+#, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "El diàleg de configuració s'ha obert en una altra finestra"
 
-#: widgets/agentconfigurationwidget.cpp:101
+#: widgets/agentconfigurationwidget.cpp:122
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "La configuració per a %1 ja es troba oberta en un altre lloc."
 
-#: widgets/agentconfigurationwidget.cpp:103
+#: widgets/agentconfigurationwidget.cpp:124
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Ha fallat en registrar el diàleg de configuració %1."
@@ -867,7 +867,7 @@ msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Crea una subcarpeta nova sota la carpeta seleccionada"
 
-#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:418
+#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:419
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
@@ -879,12 +879,12 @@ msgctxt "@label:textbox, name of a thing"
 msgid "Name"
 msgstr "Nom"
 
-#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:420
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:421
 #, kde-format
 msgid "Could not create folder: %1"
 msgstr "No s'ha pogut crear la carpeta: %1"
 
-#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:421
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:422
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
@@ -1257,12 +1257,12 @@ msgstr ""
 msgid "Details..."
 msgstr "Detalls..."
 
-#: widgets/manageaccountwidget.cpp:221
+#: widgets/manageaccountwidget.cpp:232
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr "Voleu eliminar el compte «%1»?"
 
-#: widgets/manageaccountwidget.cpp:222
+#: widgets/manageaccountwidget.cpp:233
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"
@@ -1986,214 +1986,214 @@ msgstr ""
 "<p>Per a més consells sobre la resolució de problemes, vegeu <a href="
 "\"https://userbase.kde.org/Akonadi/ca\">userbase.kde.org/Akonadi</a>.</p>"
 
-#: widgets/standardactionmanager.cpp:78
+#: widgets/standardactionmanager.cpp:79
 msgid "&New Folder..."
 msgstr "Carpeta &nova..."
 
-#: widgets/standardactionmanager.cpp:78
+#: widgets/standardactionmanager.cpp:79
 msgid "New"
 msgstr "Nou"
 
-#: widgets/standardactionmanager.cpp:88
+#: widgets/standardactionmanager.cpp:89
 msgid "&Delete Folder"
 msgstr "Su&primeix la carpeta"
 
-#: widgets/standardactionmanager.cpp:89
+#: widgets/standardactionmanager.cpp:90
 msgid "Delete"
 msgstr "Suprimeix"
 
-#: widgets/standardactionmanager.cpp:96
+#: widgets/standardactionmanager.cpp:97
 msgid "&Synchronize Folder"
 msgstr "&Sincronitza la carpeta"
 
-#: widgets/standardactionmanager.cpp:97 widgets/standardactionmanager.cpp:206
-#: widgets/standardactionmanager.cpp:313
+#: widgets/standardactionmanager.cpp:98 widgets/standardactionmanager.cpp:207
+#: widgets/standardactionmanager.cpp:314
 msgid "Synchronize"
 msgstr "Sincronitza"
 
-#: widgets/standardactionmanager.cpp:104
+#: widgets/standardactionmanager.cpp:105
 msgid "Folder &Properties"
 msgstr "&Propietats de la carpeta"
 
-#: widgets/standardactionmanager.cpp:105 widgets/standardactionmanager.cpp:198
+#: widgets/standardactionmanager.cpp:106 widgets/standardactionmanager.cpp:199
 msgid "Properties"
 msgstr "Propietats"
 
-#: widgets/standardactionmanager.cpp:112
+#: widgets/standardactionmanager.cpp:113
 msgid "&Paste"
 msgstr "&Enganxa"
 
-#: widgets/standardactionmanager.cpp:112
+#: widgets/standardactionmanager.cpp:113
 msgid "Paste"
 msgstr "Enganxa"
 
-#: widgets/standardactionmanager.cpp:115
+#: widgets/standardactionmanager.cpp:116
 msgid "Manage Local &Subscriptions..."
 msgstr "Gestiona les &subscripcions locals..."
 
-#: widgets/standardactionmanager.cpp:116
+#: widgets/standardactionmanager.cpp:117
 msgid "Manage Local Subscriptions"
 msgstr "Gestió de les subscripcions locals"
 
-#: widgets/standardactionmanager.cpp:123
+#: widgets/standardactionmanager.cpp:124
 msgid "Add to Favorite Folders"
 msgstr "Afegeix a les carpetes preferides"
 
-#: widgets/standardactionmanager.cpp:124
+#: widgets/standardactionmanager.cpp:125
 msgid "Add to Favorite"
 msgstr "Afegeix a les preferides"
 
-#: widgets/standardactionmanager.cpp:131
+#: widgets/standardactionmanager.cpp:132
 msgid "Remove from Favorite Folders"
 msgstr "Elimina de les carpetes preferides"
 
-#: widgets/standardactionmanager.cpp:132
+#: widgets/standardactionmanager.cpp:133
 msgid "Remove from Favorite"
 msgstr "Elimina de les preferides"
 
-#: widgets/standardactionmanager.cpp:139
+#: widgets/standardactionmanager.cpp:140
 msgid "Rename Favorite..."
 msgstr "Reanomena una preferida..."
 
-#: widgets/standardactionmanager.cpp:140
+#: widgets/standardactionmanager.cpp:141
 msgid "Rename"
 msgstr "Reanomena"
 
-#: widgets/standardactionmanager.cpp:147 widgets/standardactionmanager.cpp:221
+#: widgets/standardactionmanager.cpp:148 widgets/standardactionmanager.cpp:222
 msgid "Copy Folder To..."
 msgstr "Copia la carpeta a..."
 
-#: widgets/standardactionmanager.cpp:148 widgets/standardactionmanager.cpp:156
-#: widgets/standardactionmanager.cpp:222 widgets/standardactionmanager.cpp:236
+#: widgets/standardactionmanager.cpp:149 widgets/standardactionmanager.cpp:157
+#: widgets/standardactionmanager.cpp:223 widgets/standardactionmanager.cpp:237
 msgid "Copy To"
 msgstr "Copia a"
 
-#: widgets/standardactionmanager.cpp:155 widgets/standardactionmanager.cpp:236
+#: widgets/standardactionmanager.cpp:156 widgets/standardactionmanager.cpp:237
 msgid "Copy Item To..."
 msgstr "Copia l'element a..."
 
-#: widgets/standardactionmanager.cpp:163 widgets/standardactionmanager.cpp:237
+#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:238
 msgid "Move Item To..."
 msgstr "Mou l'element a..."
 
-#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:172
-#: widgets/standardactionmanager.cpp:230 widgets/standardactionmanager.cpp:237
+#: widgets/standardactionmanager.cpp:165 widgets/standardactionmanager.cpp:173
+#: widgets/standardactionmanager.cpp:231 widgets/standardactionmanager.cpp:238
 msgid "Move To"
 msgstr "Mou a"
 
-#: widgets/standardactionmanager.cpp:171 widgets/standardactionmanager.cpp:229
+#: widgets/standardactionmanager.cpp:172 widgets/standardactionmanager.cpp:230
 msgid "Move Folder To..."
 msgstr "Mou la carpeta a..."
 
-#: widgets/standardactionmanager.cpp:178
+#: widgets/standardactionmanager.cpp:179
 msgid "&Cut Item"
 msgstr "&Retalla l'element"
 
-#: widgets/standardactionmanager.cpp:178 widgets/standardactionmanager.cpp:179
+#: widgets/standardactionmanager.cpp:179 widgets/standardactionmanager.cpp:180
 msgid "Cut"
 msgstr "Retalla"
 
-#: widgets/standardactionmanager.cpp:179
+#: widgets/standardactionmanager.cpp:180
 msgid "&Cut Folder"
 msgstr "&Retalla la carpeta"
 
-#: widgets/standardactionmanager.cpp:181
+#: widgets/standardactionmanager.cpp:182
 msgid "Create Resource"
 msgstr "Crea un recurs"
 
-#: widgets/standardactionmanager.cpp:189
+#: widgets/standardactionmanager.cpp:190
 msgid "Delete Resource"
 msgstr "Suprimeix el recurs"
 
-#: widgets/standardactionmanager.cpp:197
+#: widgets/standardactionmanager.cpp:198
 msgid "&Resource Properties"
 msgstr "&Propietats del recurs"
 
-#: widgets/standardactionmanager.cpp:205
+#: widgets/standardactionmanager.cpp:206
 msgid "Synchronize Resource"
 msgstr "Sincronitza el recurs"
 
-#: widgets/standardactionmanager.cpp:213
+#: widgets/standardactionmanager.cpp:214
 msgid "Work Offline"
 msgstr "Treballa desconnectat"
 
-#: widgets/standardactionmanager.cpp:239
+#: widgets/standardactionmanager.cpp:240
 msgid "&Synchronize Folder Recursively"
 msgstr "&Sincronitza les carpetes recursivament"
 
-#: widgets/standardactionmanager.cpp:240
+#: widgets/standardactionmanager.cpp:241
 msgid "Synchronize Recursively"
 msgstr "Sincronitza recursivament"
 
-#: widgets/standardactionmanager.cpp:247
+#: widgets/standardactionmanager.cpp:248
 msgid "&Move Folder To Trash"
 msgstr "&Mou la carpeta a la paperera"
 
-#: widgets/standardactionmanager.cpp:248
+#: widgets/standardactionmanager.cpp:249
 msgid "Move Folder To Trash"
 msgstr "Mou la carpeta a la paperera"
 
-#: widgets/standardactionmanager.cpp:255
+#: widgets/standardactionmanager.cpp:256
 msgid "&Move Item To Trash"
 msgstr "&Mou l'element a la paperera"
 
-#: widgets/standardactionmanager.cpp:256
+#: widgets/standardactionmanager.cpp:257
 msgid "Move Item To Trash"
 msgstr "Mou l'element a la paperera"
 
-#: widgets/standardactionmanager.cpp:263 widgets/standardactionmanager.cpp:279
+#: widgets/standardactionmanager.cpp:264 widgets/standardactionmanager.cpp:280
 msgid "&Restore Folder From Trash"
 msgstr "&Restaura la carpeta des de la paperera"
 
-#: widgets/standardactionmanager.cpp:264 widgets/standardactionmanager.cpp:280
+#: widgets/standardactionmanager.cpp:265 widgets/standardactionmanager.cpp:281
 msgid "Restore Folder From Trash"
 msgstr "Restaura la carpeta des de la paperera"
 
-#: widgets/standardactionmanager.cpp:271 widgets/standardactionmanager.cpp:295
-#: widgets/standardactionmanager.cpp:302
+#: widgets/standardactionmanager.cpp:272 widgets/standardactionmanager.cpp:296
+#: widgets/standardactionmanager.cpp:303
 msgid "&Restore Item From Trash"
 msgstr "&Restaura l'element des de la paperera"
 
-#: widgets/standardactionmanager.cpp:272 widgets/standardactionmanager.cpp:296
-#: widgets/standardactionmanager.cpp:302
+#: widgets/standardactionmanager.cpp:273 widgets/standardactionmanager.cpp:297
+#: widgets/standardactionmanager.cpp:303
 msgid "Restore Item From Trash"
 msgstr "Restaura l'element des de la paperera"
 
-#: widgets/standardactionmanager.cpp:287
+#: widgets/standardactionmanager.cpp:288
 msgid "&Restore Collection From Trash"
 msgstr "&Restaura la col·lecció des de la paperera"
 
-#: widgets/standardactionmanager.cpp:288
+#: widgets/standardactionmanager.cpp:289
 msgid "Restore Collection From Trash"
 msgstr "Restaura la col·lecció des de la paperera"
 
-#: widgets/standardactionmanager.cpp:304
+#: widgets/standardactionmanager.cpp:305
 msgid "&Synchronize Favorite Folders"
 msgstr "&Sincronitza les carpetes preferides"
 
-#: widgets/standardactionmanager.cpp:305
+#: widgets/standardactionmanager.cpp:306
 msgid "Synchronize Favorite Folders"
 msgstr "Sincronitza les carpetes preferides"
 
-#: widgets/standardactionmanager.cpp:312
+#: widgets/standardactionmanager.cpp:313
 msgid "Synchronize Folder Tree"
 msgstr "Sincronitza l'arbre de carpetes"
 
-#: widgets/standardactionmanager.cpp:398
+#: widgets/standardactionmanager.cpp:399
 #, kde-format
 msgid "&Copy Folder"
 msgid_plural "&Copy %1 Folders"
 msgstr[0] "&Copia la carpeta"
 msgstr[1] "&Copia %1 carpetes"
 
-#: widgets/standardactionmanager.cpp:399
+#: widgets/standardactionmanager.cpp:400
 #, kde-format
 msgid "&Copy Item"
 msgid_plural "&Copy %1 Items"
 msgstr[0] "&Copia l'element"
 msgstr[1] "&Copia %1 elements"
 
-#: widgets/standardactionmanager.cpp:400
+#: widgets/standardactionmanager.cpp:401
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Item"
@@ -2201,7 +2201,7 @@ msgid_plural "&Cut %1 Items"
 msgstr[0] "&Retalla l'element"
 msgstr[1] "&Retalla %1 elements"
 
-#: widgets/standardactionmanager.cpp:401
+#: widgets/standardactionmanager.cpp:402
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Folder"
@@ -2209,14 +2209,14 @@ msgid_plural "&Cut %1 Folders"
 msgstr[0] "&Retalla la carpeta"
 msgstr[1] "&Retalla %1 carpetes"
 
-#: widgets/standardactionmanager.cpp:402
+#: widgets/standardactionmanager.cpp:403
 #, kde-format
 msgid "&Delete Item"
 msgid_plural "&Delete %1 Items"
 msgstr[0] "Su&primeix l'element"
 msgstr[1] "Su&primeix %1 elements"
 
-#: widgets/standardactionmanager.cpp:403
+#: widgets/standardactionmanager.cpp:404
 #, kde-format
 msgctxt "@action"
 msgid "&Delete Folder"
@@ -2224,7 +2224,7 @@ msgid_plural "&Delete %1 Folders"
 msgstr[0] "Su&primeix la carpeta"
 msgstr[1] "Su&primeix %1 carpetes"
 
-#: widgets/standardactionmanager.cpp:404
+#: widgets/standardactionmanager.cpp:405
 #, kde-format
 msgctxt "@action"
 msgid "&Synchronize Folder"
@@ -2232,70 +2232,70 @@ msgid_plural "&Synchronize %1 Folders"
 msgstr[0] "&Sincronitza la carpeta"
 msgstr[1] "&Sincronitza %1 carpetes"
 
-#: widgets/standardactionmanager.cpp:405
+#: widgets/standardactionmanager.cpp:406
 #, kde-format
 msgid "&Delete Resource"
 msgid_plural "&Delete %1 Resources"
 msgstr[0] "Su&primeix el recurs"
 msgstr[1] "Su&primeix %1 recursos"
 
-#: widgets/standardactionmanager.cpp:406
+#: widgets/standardactionmanager.cpp:407
 #, kde-format
 msgid "&Synchronize Resource"
 msgid_plural "&Synchronize %1 Resources"
 msgstr[0] "&Sincronitza el recurs"
 msgstr[1] "&Sincronitza %1 recursos"
 
-#: widgets/standardactionmanager.cpp:408
+#: widgets/standardactionmanager.cpp:409
 #, kde-format
 msgid "Copy Folder"
 msgid_plural "Copy %1 Folders"
 msgstr[0] "Copia la carpeta"
 msgstr[1] "Copia %1 carpetes"
 
-#: widgets/standardactionmanager.cpp:409
+#: widgets/standardactionmanager.cpp:410
 #, kde-format
 msgid "Copy Item"
 msgid_plural "Copy %1 Items"
 msgstr[0] "Copia l'element"
 msgstr[1] "Copia %1 elements"
 
-#: widgets/standardactionmanager.cpp:410
+#: widgets/standardactionmanager.cpp:411
 #, kde-format
 msgid "Cut Item"
 msgid_plural "Cut %1 Items"
 msgstr[0] "Retalla l'element"
 msgstr[1] "Retalla %1 elements"
 
-#: widgets/standardactionmanager.cpp:411
+#: widgets/standardactionmanager.cpp:412
 #, kde-format
 msgid "Cut Folder"
 msgid_plural "Cut %1 Folders"
 msgstr[0] "Retalla la carpeta"
 msgstr[1] "Retalla %1 carpetes"
 
-#: widgets/standardactionmanager.cpp:412
+#: widgets/standardactionmanager.cpp:413
 #, kde-format
 msgid "Delete Item"
 msgid_plural "Delete %1 Items"
 msgstr[0] "Suprimeix element"
 msgstr[1] "Suprimeix %1 elements"
 
-#: widgets/standardactionmanager.cpp:413
+#: widgets/standardactionmanager.cpp:414
 #, kde-format
 msgid "Delete Folder"
 msgid_plural "Delete %1 Folders"
 msgstr[0] "Suprimeix la carpeta"
 msgstr[1] "Suprimeix %1 carpetes"
 
-#: widgets/standardactionmanager.cpp:414
+#: widgets/standardactionmanager.cpp:415
 #, kde-format
 msgid "Synchronize Folder"
 msgid_plural "Synchronize %1 Folders"
 msgstr[0] "Sincronitza la carpeta"
 msgstr[1] "Sincronitza %1 carpetes"
 
-#: widgets/standardactionmanager.cpp:415
+#: widgets/standardactionmanager.cpp:416
 #, kde-format
 msgctxt "@action"
 msgid "Delete Resource"
@@ -2303,7 +2303,7 @@ msgid_plural "Delete %1 Resources"
 msgstr[0] "Suprimeix el recurs"
 msgstr[1] "Suprimeix %1 recursos"
 
-#: widgets/standardactionmanager.cpp:416
+#: widgets/standardactionmanager.cpp:417
 #, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
@@ -2311,13 +2311,13 @@ msgid_plural "Synchronize %1 Resources"
 msgstr[0] "Sincronitza el recurs"
 msgstr[1] "Sincronitza %1 recursos"
 
-#: widgets/standardactionmanager.cpp:419
+#: widgets/standardactionmanager.cpp:420
 #, kde-format
 msgctxt "@label:textbox name of Akonadi folder"
 msgid "Name"
 msgstr "Nom"
 
-#: widgets/standardactionmanager.cpp:426
+#: widgets/standardactionmanager.cpp:427
 #, kde-format
 msgid "Do you really want to delete this folder and all its sub-folders?"
 msgid_plural ""
@@ -2326,7 +2326,7 @@ msgstr[0] ""
 "Realment voleu suprimir aquesta carpeta i totes les seves subcarpetes?"
 msgstr[1] "Realment voleu suprimir %1 carpetes i totes les seves subcarpetes?"
 
-#: widgets/standardactionmanager.cpp:429
+#: widgets/standardactionmanager.cpp:430
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
@@ -2334,31 +2334,31 @@ msgid_plural "Delete Folders?"
 msgstr[0] "Suprimeixo la carpeta?"
 msgstr[1] "Suprimeixo les carpetes?"
 
-#: widgets/standardactionmanager.cpp:430
+#: widgets/standardactionmanager.cpp:431
 #, kde-format
 msgid "Could not delete folder: %1"
 msgstr "No s'ha pogut suprimir la carpeta: %1"
 
-#: widgets/standardactionmanager.cpp:431
+#: widgets/standardactionmanager.cpp:432
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "Ha fallat la supressió de la carpeta"
 
-#: widgets/standardactionmanager.cpp:433
+#: widgets/standardactionmanager.cpp:434
 #, kde-format
 msgctxt "@title:window"
 msgid "Properties of Folder %1"
 msgstr "Propietats de la carpeta %1"
 
-#: widgets/standardactionmanager.cpp:437
+#: widgets/standardactionmanager.cpp:438
 #, kde-format
 msgid "Do you really want to delete the selected item?"
 msgid_plural "Do you really want to delete %1 items?"
 msgstr[0] "Realment voleu suprimir l'element seleccionat?"
 msgstr[1] "Realment voleu suprimir %1 elements?"
 
-#: widgets/standardactionmanager.cpp:438
+#: widgets/standardactionmanager.cpp:439
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
@@ -2366,54 +2366,54 @@ msgid_plural "Delete Items?"
 msgstr[0] "Suprimeixo l'element?"
 msgstr[1] "Suprimeixo els elements?"
 
-#: widgets/standardactionmanager.cpp:439
+#: widgets/standardactionmanager.cpp:440
 #, kde-format
 msgid "Could not delete item: %1"
 msgstr "No s'ha pogut suprimir l'element: %1"
 
-#: widgets/standardactionmanager.cpp:440
+#: widgets/standardactionmanager.cpp:441
 #, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "Ha fallat la supressió de l'element"
 
-#: widgets/standardactionmanager.cpp:442
+#: widgets/standardactionmanager.cpp:443
 #, kde-format
 msgctxt "@title:window"
 msgid "Rename Favorite"
 msgstr "Reanomena una preferida"
 
-#: widgets/standardactionmanager.cpp:443
+#: widgets/standardactionmanager.cpp:444
 #, kde-format
 msgctxt "@label:textbox name of the folder"
 msgid "Name:"
 msgstr "Nom:"
 
-#: widgets/standardactionmanager.cpp:445
+#: widgets/standardactionmanager.cpp:446
 #, kde-format
 msgctxt "@title:window"
 msgid "New Resource"
 msgstr "Recurs nou"
 
-#: widgets/standardactionmanager.cpp:446
+#: widgets/standardactionmanager.cpp:447
 #, kde-format
 msgid "Could not create resource: %1"
 msgstr "No s'ha pogut crear el recurs: %1"
 
-#: widgets/standardactionmanager.cpp:447
+#: widgets/standardactionmanager.cpp:448
 #, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "Ha fallat la creació del recurs"
 
-#: widgets/standardactionmanager.cpp:451
+#: widgets/standardactionmanager.cpp:452
 #, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
 msgstr[0] "Realment voleu suprimir aquest recurs?"
 msgstr[1] "Realment voleu suprimir %1 recursos?"
 
-#: widgets/standardactionmanager.cpp:454
+#: widgets/standardactionmanager.cpp:455
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Resource?"
@@ -2421,34 +2421,34 @@ msgid_plural "Delete Resources?"
 msgstr[0] "Suprimeixo el recurs?"
 msgstr[1] "Suprimeixo els recursos?"
 
-#: widgets/standardactionmanager.cpp:456
+#: widgets/standardactionmanager.cpp:457
 #, kde-format
 msgid "Could not paste data: %1"
 msgstr "No s'ha pogut enganxar les dades: %1"
 
-#: widgets/standardactionmanager.cpp:457
+#: widgets/standardactionmanager.cpp:458
 #, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Ha fallat en enganxar"
 
-#: widgets/standardactionmanager.cpp:809
+#: widgets/standardactionmanager.cpp:810
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "No es pot afegir «/» en el nom de la carpeta."
 
-#: widgets/standardactionmanager.cpp:809 widgets/standardactionmanager.cpp:813
+#: widgets/standardactionmanager.cpp:810 widgets/standardactionmanager.cpp:814
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Error en crear una carpeta nova"
 
-#: widgets/standardactionmanager.cpp:813
+#: widgets/standardactionmanager.cpp:814
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "No es pot afegir «.» a l'inici o al final del nom de la carpeta."
 
-#: widgets/standardactionmanager.cpp:1052
+#: widgets/standardactionmanager.cpp:1053
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2457,23 +2457,23 @@ msgstr ""
 "Abans de sincronitzar la carpeta «%1» cal tenir el recurs en línia. El voleu "
 "posar en línia?"
 
-#: widgets/standardactionmanager.cpp:1053
+#: widgets/standardactionmanager.cpp:1054
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "El compte «%1» està desconnectat"
 
-#: widgets/standardactionmanager.cpp:1054
+#: widgets/standardactionmanager.cpp:1055
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Connecta"
 
-#: widgets/standardactionmanager.cpp:1655
+#: widgets/standardactionmanager.cpp:1667
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Mou a aquesta carpeta"
 
-#: widgets/standardactionmanager.cpp:1655
+#: widgets/standardactionmanager.cpp:1667
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Copia a aquesta carpeta"

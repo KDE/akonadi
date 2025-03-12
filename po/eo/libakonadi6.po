@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-10 00:42+0000\n"
+"POT-Creation-Date: 2025-03-12 00:42+0000\n"
 "PO-Revision-Date: 2025-01-01 09:06+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -228,22 +228,17 @@ msgstr "Trovis nesolvitajn orfajn kolektojn"
 msgid "Did not find other item for conflict handling"
 msgstr "Ne trovis alian objekton por konflikttraktado"
 
-#: core/jobs/agentinstancecreatejob.cpp:70
-#, kde-format
-msgid "Unable to access D-Bus interface of created agent."
-msgstr "Ne eblas aliri D-Bus-interfacon de kreita agento."
-
-#: core/jobs/agentinstancecreatejob.cpp:92
+#: core/jobs/agentinstancecreatejob.cpp:58
 #, kde-format
 msgid "Agent instance creation timed out."
 msgstr "La kreado de agentejo elĉerpiĝis."
 
-#: core/jobs/agentinstancecreatejob.cpp:150
+#: core/jobs/agentinstancecreatejob.cpp:108
 #, kde-format
 msgid "Unable to obtain agent type '%1'."
 msgstr "Ne eblas akiri agentan tipon '%1'."
 
-#: core/jobs/agentinstancecreatejob.cpp:158
+#: core/jobs/agentinstancecreatejob.cpp:116
 #, kde-format
 msgid "Unable to create agent instance."
 msgstr "Ne eblas krei agentan ekzemplon."
@@ -300,13 +295,13 @@ msgstr "Nevalida kolekto"
 msgid "Invalid collection given."
 msgstr "Nevalida kolekto donita."
 
-#: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:90
+#: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:118
 #, kde-format
 msgid "No objects specified for moving"
 msgstr "Neniuj objektoj specifitaj por moviĝado"
 
-#: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
-#: core/jobs/linkjobimpl_p.h:39
+#: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:125
+#: core/jobs/linkjobimpl_p.h:45
 #, kde-format
 msgid "No valid destination specified"
 msgstr "Neniu valida celo specifita"
@@ -490,45 +485,45 @@ msgstr "Eraro"
 msgid "Favorite Folders"
 msgstr "Plej ŝatataj Dosierujoj"
 
-#: core/models/statisticsproxymodel.cpp:87
+#: core/models/statisticsproxymodel.cpp:84
 #, kde-format
 msgid "Total Messages"
 msgstr "Tutaj Mesaĝoj"
 
-#: core/models/statisticsproxymodel.cpp:89
+#: core/models/statisticsproxymodel.cpp:86
 #, kde-format
 msgid "Unread Messages"
 msgstr "Nelegitaj Mesaĝoj"
 
-#: core/models/statisticsproxymodel.cpp:98
+#: core/models/statisticsproxymodel.cpp:95
 #, kde-format
 msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
 msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
 msgstr "<strong>Kvoto</strong>: %1% (%2/%3)<br>\n"
 
-#: core/models/statisticsproxymodel.cpp:106
+#: core/models/statisticsproxymodel.cpp:103
 #, kde-format
 msgid "Storage Size"
 msgstr "Grandeco de Konservejo"
 
-#: core/models/statisticsproxymodel.cpp:112
+#: core/models/statisticsproxymodel.cpp:109
 #, kde-format
 msgid "Subfolder Storage Size"
 msgstr "Grandeco de Subdosieruja Konservejo"
 
-#: core/models/statisticsproxymodel.cpp:223
+#: core/models/statisticsproxymodel.cpp:220
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "Nelegita"
 
-#: core/models/statisticsproxymodel.cpp:224
+#: core/models/statisticsproxymodel.cpp:221
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "Entute"
 
-#: core/models/statisticsproxymodel.cpp:225
+#: core/models/statisticsproxymodel.cpp:222
 #, kde-format
 msgctxt "collection size"
 msgid "Size"
@@ -637,42 +632,42 @@ msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr "Nomspaco por komenci plurajn Akonadi-instancojn en la sama uzantseanco"
 
-#: widgets/agentactionmanager.cpp:35
+#: widgets/agentactionmanager.cpp:36
 msgid "&New Agent Instance..."
 msgstr "&Nova Agenta Instanco..."
 
-#: widgets/agentactionmanager.cpp:36
+#: widgets/agentactionmanager.cpp:37
 msgid "&Delete Agent Instance"
 msgstr "&Forigi Agentan Instancon"
 
-#: widgets/agentactionmanager.cpp:37
+#: widgets/agentactionmanager.cpp:38
 msgid "&Configure Agent Instance"
 msgstr "&Agordi Agentan Instancon"
 
-#: widgets/agentactionmanager.cpp:53
+#: widgets/agentactionmanager.cpp:54
 #, kde-format
 msgctxt "@title:window"
 msgid "New Agent Instance"
 msgstr "Nova Agenta Instanco"
 
-#: widgets/agentactionmanager.cpp:55
+#: widgets/agentactionmanager.cpp:56
 #, kde-format
 msgid "Could not create agent instance: %1"
 msgstr "Ne eblis krei agentan instancon: %1"
 
-#: widgets/agentactionmanager.cpp:59
+#: widgets/agentactionmanager.cpp:60
 #, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
 msgstr "Agentinstanckreado Malsukcesis"
 
-#: widgets/agentactionmanager.cpp:61
+#: widgets/agentactionmanager.cpp:62
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Agent Instance?"
 msgstr "Ĉu forigi agentan petskribon?"
 
-#: widgets/agentactionmanager.cpp:65
+#: widgets/agentactionmanager.cpp:66
 #, kde-format
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Ĉu vi vere volas forigi la elektitan agentejon?"
@@ -695,15 +690,20 @@ msgstr "Pri %1"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
+msgid "Unable to access D-Bus interface of created agent."
+msgstr "Ne eblas aliri D-Bus-interfacon de kreita agento."
+
+#: widgets/agentconfigurationwidget.cpp:115
+#, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "La agorda dialogo estis malfermita en alia fenestro"
 
-#: widgets/agentconfigurationwidget.cpp:101
+#: widgets/agentconfigurationwidget.cpp:122
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "Agordo por %1 jam estas malfermita aliloke."
 
-#: widgets/agentconfigurationwidget.cpp:103
+#: widgets/agentconfigurationwidget.cpp:124
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Malsukcesis registri %1 agordan dialogon."
@@ -855,7 +855,7 @@ msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Krei novan subdosierujon sub la nuntempe elektita dosierujo"
 
-#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:418
+#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:419
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
@@ -867,12 +867,12 @@ msgctxt "@label:textbox, name of a thing"
 msgid "Name"
 msgstr "Nomo"
 
-#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:420
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:421
 #, kde-format
 msgid "Could not create folder: %1"
 msgstr "Ne eblis krei dosierujon: %1"
 
-#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:421
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:422
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
@@ -1237,12 +1237,12 @@ msgstr ""
 msgid "Details..."
 msgstr "Detaloj..."
 
-#: widgets/manageaccountwidget.cpp:221
+#: widgets/manageaccountwidget.cpp:232
 #, kde-format
 msgid "Do you want to remove account '%1'?"
 msgstr "Ĉu vi volas forigi konton '%1'?"
 
-#: widgets/manageaccountwidget.cpp:222
+#: widgets/manageaccountwidget.cpp:233
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"
@@ -1955,214 +1955,214 @@ msgstr ""
 "<p>Por pliaj konsiloj pri solvo de problemoj bonvolu raporti al <a href="
 "\"https://userbase.kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
 
-#: widgets/standardactionmanager.cpp:78
+#: widgets/standardactionmanager.cpp:79
 msgid "&New Folder..."
 msgstr "&Nova dosierujo..."
 
-#: widgets/standardactionmanager.cpp:78
+#: widgets/standardactionmanager.cpp:79
 msgid "New"
 msgstr "Nova"
 
-#: widgets/standardactionmanager.cpp:88
+#: widgets/standardactionmanager.cpp:89
 msgid "&Delete Folder"
 msgstr "Forigi &Dosierujon"
 
-#: widgets/standardactionmanager.cpp:89
+#: widgets/standardactionmanager.cpp:90
 msgid "Delete"
 msgstr "Forigi"
 
-#: widgets/standardactionmanager.cpp:96
+#: widgets/standardactionmanager.cpp:97
 msgid "&Synchronize Folder"
 msgstr "&Sinkronigi Dosierujon"
 
-#: widgets/standardactionmanager.cpp:97 widgets/standardactionmanager.cpp:206
-#: widgets/standardactionmanager.cpp:313
+#: widgets/standardactionmanager.cpp:98 widgets/standardactionmanager.cpp:207
+#: widgets/standardactionmanager.cpp:314
 msgid "Synchronize"
 msgstr "Sinkronigi"
 
-#: widgets/standardactionmanager.cpp:104
+#: widgets/standardactionmanager.cpp:105
 msgid "Folder &Properties"
 msgstr "Dosierujaj &Proprecoj"
 
-#: widgets/standardactionmanager.cpp:105 widgets/standardactionmanager.cpp:198
+#: widgets/standardactionmanager.cpp:106 widgets/standardactionmanager.cpp:199
 msgid "Properties"
 msgstr "Proprecoj"
 
-#: widgets/standardactionmanager.cpp:112
+#: widgets/standardactionmanager.cpp:113
 msgid "&Paste"
 msgstr "Al&glui"
 
-#: widgets/standardactionmanager.cpp:112
+#: widgets/standardactionmanager.cpp:113
 msgid "Paste"
 msgstr "Alglui"
 
-#: widgets/standardactionmanager.cpp:115
+#: widgets/standardactionmanager.cpp:116
 msgid "Manage Local &Subscriptions..."
 msgstr "Admini&stri Lokajn Abonojn..."
 
-#: widgets/standardactionmanager.cpp:116
+#: widgets/standardactionmanager.cpp:117
 msgid "Manage Local Subscriptions"
 msgstr "Administri Lokajn Abonojn"
 
-#: widgets/standardactionmanager.cpp:123
+#: widgets/standardactionmanager.cpp:124
 msgid "Add to Favorite Folders"
 msgstr "Aldoni al Plej ŝatataj Dosierujoj"
 
-#: widgets/standardactionmanager.cpp:124
+#: widgets/standardactionmanager.cpp:125
 msgid "Add to Favorite"
 msgstr "Aldoni al Favorito"
 
-#: widgets/standardactionmanager.cpp:131
+#: widgets/standardactionmanager.cpp:132
 msgid "Remove from Favorite Folders"
 msgstr "Forigi el Plej ŝatataj Dosierujoj"
 
-#: widgets/standardactionmanager.cpp:132
+#: widgets/standardactionmanager.cpp:133
 msgid "Remove from Favorite"
 msgstr "Forigi el la plej ŝatataj"
 
-#: widgets/standardactionmanager.cpp:139
+#: widgets/standardactionmanager.cpp:140
 msgid "Rename Favorite..."
 msgstr "Alinomi ŝatatan..."
 
-#: widgets/standardactionmanager.cpp:140
+#: widgets/standardactionmanager.cpp:141
 msgid "Rename"
 msgstr "Alinomi"
 
-#: widgets/standardactionmanager.cpp:147 widgets/standardactionmanager.cpp:221
+#: widgets/standardactionmanager.cpp:148 widgets/standardactionmanager.cpp:222
 msgid "Copy Folder To..."
 msgstr "Kopii dosierujon al..."
 
-#: widgets/standardactionmanager.cpp:148 widgets/standardactionmanager.cpp:156
-#: widgets/standardactionmanager.cpp:222 widgets/standardactionmanager.cpp:236
+#: widgets/standardactionmanager.cpp:149 widgets/standardactionmanager.cpp:157
+#: widgets/standardactionmanager.cpp:223 widgets/standardactionmanager.cpp:237
 msgid "Copy To"
 msgstr "Kopii Al"
 
-#: widgets/standardactionmanager.cpp:155 widgets/standardactionmanager.cpp:236
+#: widgets/standardactionmanager.cpp:156 widgets/standardactionmanager.cpp:237
 msgid "Copy Item To..."
 msgstr "Kopii eron al..."
 
-#: widgets/standardactionmanager.cpp:163 widgets/standardactionmanager.cpp:237
+#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:238
 msgid "Move Item To..."
 msgstr "Movi eron al..."
 
-#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:172
-#: widgets/standardactionmanager.cpp:230 widgets/standardactionmanager.cpp:237
+#: widgets/standardactionmanager.cpp:165 widgets/standardactionmanager.cpp:173
+#: widgets/standardactionmanager.cpp:231 widgets/standardactionmanager.cpp:238
 msgid "Move To"
 msgstr "Movi al"
 
-#: widgets/standardactionmanager.cpp:171 widgets/standardactionmanager.cpp:229
+#: widgets/standardactionmanager.cpp:172 widgets/standardactionmanager.cpp:230
 msgid "Move Folder To..."
 msgstr "Movi dosierujon al..."
 
-#: widgets/standardactionmanager.cpp:178
+#: widgets/standardactionmanager.cpp:179
 msgid "&Cut Item"
 msgstr "&Tondi Eron"
 
-#: widgets/standardactionmanager.cpp:178 widgets/standardactionmanager.cpp:179
+#: widgets/standardactionmanager.cpp:179 widgets/standardactionmanager.cpp:180
 msgid "Cut"
 msgstr "Tondi"
 
-#: widgets/standardactionmanager.cpp:179
+#: widgets/standardactionmanager.cpp:180
 msgid "&Cut Folder"
 msgstr "&Tondi dosierujon"
 
-#: widgets/standardactionmanager.cpp:181
+#: widgets/standardactionmanager.cpp:182
 msgid "Create Resource"
 msgstr "Krei Rimedon"
 
-#: widgets/standardactionmanager.cpp:189
+#: widgets/standardactionmanager.cpp:190
 msgid "Delete Resource"
 msgstr "Forigi Rimedon"
 
-#: widgets/standardactionmanager.cpp:197
+#: widgets/standardactionmanager.cpp:198
 msgid "&Resource Properties"
 msgstr "&Rimedaj Trajtoj"
 
-#: widgets/standardactionmanager.cpp:205
+#: widgets/standardactionmanager.cpp:206
 msgid "Synchronize Resource"
 msgstr "Sinkronigi Rimedon"
 
-#: widgets/standardactionmanager.cpp:213
+#: widgets/standardactionmanager.cpp:214
 msgid "Work Offline"
 msgstr "Labori Senrete"
 
-#: widgets/standardactionmanager.cpp:239
+#: widgets/standardactionmanager.cpp:240
 msgid "&Synchronize Folder Recursively"
 msgstr "&Sinkronigi Dosierujon Rekursie"
 
-#: widgets/standardactionmanager.cpp:240
+#: widgets/standardactionmanager.cpp:241
 msgid "Synchronize Recursively"
 msgstr "Sinkronigi Rekursie"
 
-#: widgets/standardactionmanager.cpp:247
+#: widgets/standardactionmanager.cpp:248
 msgid "&Move Folder To Trash"
 msgstr "&Movi Dosierujon al Rubujo"
 
-#: widgets/standardactionmanager.cpp:248
+#: widgets/standardactionmanager.cpp:249
 msgid "Move Folder To Trash"
 msgstr "Movi Dosierujon al Rubujo"
 
-#: widgets/standardactionmanager.cpp:255
+#: widgets/standardactionmanager.cpp:256
 msgid "&Move Item To Trash"
 msgstr "&Movi Eron al Rubujo"
 
-#: widgets/standardactionmanager.cpp:256
+#: widgets/standardactionmanager.cpp:257
 msgid "Move Item To Trash"
 msgstr "Movi Eron al Rubujo"
 
-#: widgets/standardactionmanager.cpp:263 widgets/standardactionmanager.cpp:279
+#: widgets/standardactionmanager.cpp:264 widgets/standardactionmanager.cpp:280
 msgid "&Restore Folder From Trash"
 msgstr "&Restarigi Dosierujon El Rubujo"
 
-#: widgets/standardactionmanager.cpp:264 widgets/standardactionmanager.cpp:280
+#: widgets/standardactionmanager.cpp:265 widgets/standardactionmanager.cpp:281
 msgid "Restore Folder From Trash"
 msgstr "Restarigi Dosierujon El Rubujo"
 
-#: widgets/standardactionmanager.cpp:271 widgets/standardactionmanager.cpp:295
-#: widgets/standardactionmanager.cpp:302
+#: widgets/standardactionmanager.cpp:272 widgets/standardactionmanager.cpp:296
+#: widgets/standardactionmanager.cpp:303
 msgid "&Restore Item From Trash"
 msgstr "&Restarigi Eron El Rubujo"
 
-#: widgets/standardactionmanager.cpp:272 widgets/standardactionmanager.cpp:296
-#: widgets/standardactionmanager.cpp:302
+#: widgets/standardactionmanager.cpp:273 widgets/standardactionmanager.cpp:297
+#: widgets/standardactionmanager.cpp:303
 msgid "Restore Item From Trash"
 msgstr "Restarigi Eron El Rubujo"
 
-#: widgets/standardactionmanager.cpp:287
+#: widgets/standardactionmanager.cpp:288
 msgid "&Restore Collection From Trash"
 msgstr "&Restarigi Kolekton El Rubujo"
 
-#: widgets/standardactionmanager.cpp:288
+#: widgets/standardactionmanager.cpp:289
 msgid "Restore Collection From Trash"
 msgstr "Restarigi Kolekton El Rubujo"
 
-#: widgets/standardactionmanager.cpp:304
+#: widgets/standardactionmanager.cpp:305
 msgid "&Synchronize Favorite Folders"
 msgstr "&Sinkronigi Favoritajn Dosierujojn"
 
-#: widgets/standardactionmanager.cpp:305
+#: widgets/standardactionmanager.cpp:306
 msgid "Synchronize Favorite Folders"
 msgstr "Sinkronigi Ŝatatajn Dosierujojn"
 
-#: widgets/standardactionmanager.cpp:312
+#: widgets/standardactionmanager.cpp:313
 msgid "Synchronize Folder Tree"
 msgstr "Sinkronigi Dosierujon Arbon"
 
-#: widgets/standardactionmanager.cpp:398
+#: widgets/standardactionmanager.cpp:399
 #, kde-format
 msgid "&Copy Folder"
 msgid_plural "&Copy %1 Folders"
 msgstr[0] "&Kopii Dosierujon"
 msgstr[1] "&Kopii %1 Dosierujojn"
 
-#: widgets/standardactionmanager.cpp:399
+#: widgets/standardactionmanager.cpp:400
 #, kde-format
 msgid "&Copy Item"
 msgid_plural "&Copy %1 Items"
 msgstr[0] "&Kopii Elementon"
 msgstr[1] "&Kopii %1 Elementojn"
 
-#: widgets/standardactionmanager.cpp:400
+#: widgets/standardactionmanager.cpp:401
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Item"
@@ -2170,7 +2170,7 @@ msgid_plural "&Cut %1 Items"
 msgstr[0] "&Tondi Elementon"
 msgstr[1] "&Tondi %1 Elementojn"
 
-#: widgets/standardactionmanager.cpp:401
+#: widgets/standardactionmanager.cpp:402
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Folder"
@@ -2178,14 +2178,14 @@ msgid_plural "&Cut %1 Folders"
 msgstr[0] "&Tondi Dosierujon"
 msgstr[1] "&Tondi %1 Dosierujojn"
 
-#: widgets/standardactionmanager.cpp:402
+#: widgets/standardactionmanager.cpp:403
 #, kde-format
 msgid "&Delete Item"
 msgid_plural "&Delete %1 Items"
 msgstr[0] "&Forigi Elementon"
 msgstr[1] "&Forigi %1 Elementojn"
 
-#: widgets/standardactionmanager.cpp:403
+#: widgets/standardactionmanager.cpp:404
 #, kde-format
 msgctxt "@action"
 msgid "&Delete Folder"
@@ -2193,7 +2193,7 @@ msgid_plural "&Delete %1 Folders"
 msgstr[0] "&Forigi Dosierujon"
 msgstr[1] "&Forigi %1 Dosierujojn"
 
-#: widgets/standardactionmanager.cpp:404
+#: widgets/standardactionmanager.cpp:405
 #, kde-format
 msgctxt "@action"
 msgid "&Synchronize Folder"
@@ -2201,70 +2201,70 @@ msgid_plural "&Synchronize %1 Folders"
 msgstr[0] "&Sinkronigi Dosierujon"
 msgstr[1] "&Sinkronigi %1 Dosierujojn"
 
-#: widgets/standardactionmanager.cpp:405
+#: widgets/standardactionmanager.cpp:406
 #, kde-format
 msgid "&Delete Resource"
 msgid_plural "&Delete %1 Resources"
 msgstr[0] "&Forigi Rimedon"
 msgstr[1] "&Forigi %1 Rimedojn"
 
-#: widgets/standardactionmanager.cpp:406
+#: widgets/standardactionmanager.cpp:407
 #, kde-format
 msgid "&Synchronize Resource"
 msgid_plural "&Synchronize %1 Resources"
 msgstr[0] "&Sinkronigi Rimedon"
 msgstr[1] "&Sinkronigi %1 Rimedojn"
 
-#: widgets/standardactionmanager.cpp:408
+#: widgets/standardactionmanager.cpp:409
 #, kde-format
 msgid "Copy Folder"
 msgid_plural "Copy %1 Folders"
 msgstr[0] "Kopii Dosierujon"
 msgstr[1] "Kopii %1 Dosierujojn"
 
-#: widgets/standardactionmanager.cpp:409
+#: widgets/standardactionmanager.cpp:410
 #, kde-format
 msgid "Copy Item"
 msgid_plural "Copy %1 Items"
 msgstr[0] "Kopii Elementon"
 msgstr[1] "Kopii %1 Elementojn"
 
-#: widgets/standardactionmanager.cpp:410
+#: widgets/standardactionmanager.cpp:411
 #, kde-format
 msgid "Cut Item"
 msgid_plural "Cut %1 Items"
 msgstr[0] "Tondi Elementon"
 msgstr[1] "Tondi %1 Elementojn"
 
-#: widgets/standardactionmanager.cpp:411
+#: widgets/standardactionmanager.cpp:412
 #, kde-format
 msgid "Cut Folder"
 msgid_plural "Cut %1 Folders"
 msgstr[0] "Tondi Dosierujon"
 msgstr[1] "Tondi %1 Dosierujojn"
 
-#: widgets/standardactionmanager.cpp:412
+#: widgets/standardactionmanager.cpp:413
 #, kde-format
 msgid "Delete Item"
 msgid_plural "Delete %1 Items"
 msgstr[0] "Forigi Elementon"
 msgstr[1] "Forigi %1 Elementojn"
 
-#: widgets/standardactionmanager.cpp:413
+#: widgets/standardactionmanager.cpp:414
 #, kde-format
 msgid "Delete Folder"
 msgid_plural "Delete %1 Folders"
 msgstr[0] "Forigi Dosierujon"
 msgstr[1] "Forigi %1 Dosierujojn"
 
-#: widgets/standardactionmanager.cpp:414
+#: widgets/standardactionmanager.cpp:415
 #, kde-format
 msgid "Synchronize Folder"
 msgid_plural "Synchronize %1 Folders"
 msgstr[0] "Sinkronigi Dosierujon"
 msgstr[1] "Sinkronigi %1 Dosierujojn"
 
-#: widgets/standardactionmanager.cpp:415
+#: widgets/standardactionmanager.cpp:416
 #, kde-format
 msgctxt "@action"
 msgid "Delete Resource"
@@ -2272,7 +2272,7 @@ msgid_plural "Delete %1 Resources"
 msgstr[0] "Forigi Rimedon"
 msgstr[1] "Forigi %1 Rimedojn"
 
-#: widgets/standardactionmanager.cpp:416
+#: widgets/standardactionmanager.cpp:417
 #, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
@@ -2280,13 +2280,13 @@ msgid_plural "Synchronize %1 Resources"
 msgstr[0] "Sinkronigi Rimedon"
 msgstr[1] "Sinkronigi %1 Rimedojn"
 
-#: widgets/standardactionmanager.cpp:419
+#: widgets/standardactionmanager.cpp:420
 #, kde-format
 msgctxt "@label:textbox name of Akonadi folder"
 msgid "Name"
 msgstr "Nomo"
 
-#: widgets/standardactionmanager.cpp:426
+#: widgets/standardactionmanager.cpp:427
 #, kde-format
 msgid "Do you really want to delete this folder and all its sub-folders?"
 msgid_plural ""
@@ -2296,7 +2296,7 @@ msgstr[0] ""
 msgstr[1] ""
 "Ĉu vi vere volas forigi %1 dosierujojn kaj ĉiujn siajn subdosierujojn?"
 
-#: widgets/standardactionmanager.cpp:429
+#: widgets/standardactionmanager.cpp:430
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
@@ -2304,31 +2304,31 @@ msgid_plural "Delete Folders?"
 msgstr[0] "Ĉu Forigi Dosierujon?"
 msgstr[1] "Ĉu Forigi Dosierujojn?"
 
-#: widgets/standardactionmanager.cpp:430
+#: widgets/standardactionmanager.cpp:431
 #, kde-format
 msgid "Could not delete folder: %1"
 msgstr "Ne eblis forigi dosierujon: %1"
 
-#: widgets/standardactionmanager.cpp:431
+#: widgets/standardactionmanager.cpp:432
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "Forigo de dosierujo malsukcesis"
 
-#: widgets/standardactionmanager.cpp:433
+#: widgets/standardactionmanager.cpp:434
 #, kde-format
 msgctxt "@title:window"
 msgid "Properties of Folder %1"
 msgstr "Ecoj de leterujo %1"
 
-#: widgets/standardactionmanager.cpp:437
+#: widgets/standardactionmanager.cpp:438
 #, kde-format
 msgid "Do you really want to delete the selected item?"
 msgid_plural "Do you really want to delete %1 items?"
 msgstr[0] "Ĉu vi vere volas forigi la elektitan eron?"
 msgstr[1] "Ĉu vi vere volas forigi %1 erojn?"
 
-#: widgets/standardactionmanager.cpp:438
+#: widgets/standardactionmanager.cpp:439
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
@@ -2336,54 +2336,54 @@ msgid_plural "Delete Items?"
 msgstr[0] "Ĉu Forigi Elementon?"
 msgstr[1] "Ĉu Forigi Elementojn?"
 
-#: widgets/standardactionmanager.cpp:439
+#: widgets/standardactionmanager.cpp:440
 #, kde-format
 msgid "Could not delete item: %1"
 msgstr "Ne eblis forigi eron: %1"
 
-#: widgets/standardactionmanager.cpp:440
+#: widgets/standardactionmanager.cpp:441
 #, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "Ero Forigo Malsukcesis"
 
-#: widgets/standardactionmanager.cpp:442
+#: widgets/standardactionmanager.cpp:443
 #, kde-format
 msgctxt "@title:window"
 msgid "Rename Favorite"
 msgstr "Alinomigi Favoriton"
 
-#: widgets/standardactionmanager.cpp:443
+#: widgets/standardactionmanager.cpp:444
 #, kde-format
 msgctxt "@label:textbox name of the folder"
 msgid "Name:"
 msgstr "Nomo:"
 
-#: widgets/standardactionmanager.cpp:445
+#: widgets/standardactionmanager.cpp:446
 #, kde-format
 msgctxt "@title:window"
 msgid "New Resource"
 msgstr "Nova Rimedo"
 
-#: widgets/standardactionmanager.cpp:446
+#: widgets/standardactionmanager.cpp:447
 #, kde-format
 msgid "Could not create resource: %1"
 msgstr "Ne eblis krei rimedon: %1"
 
-#: widgets/standardactionmanager.cpp:447
+#: widgets/standardactionmanager.cpp:448
 #, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "Kreado de Rimedo Malsukcesis"
 
-#: widgets/standardactionmanager.cpp:451
+#: widgets/standardactionmanager.cpp:452
 #, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
 msgstr[0] "Ĉu vi vere volas forigi ĉi rimedon?"
 msgstr[1] "Ĉu vi vere volas forigi %1 rimedojn?"
 
-#: widgets/standardactionmanager.cpp:454
+#: widgets/standardactionmanager.cpp:455
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Resource?"
@@ -2391,34 +2391,34 @@ msgid_plural "Delete Resources?"
 msgstr[0] "Ĉu Forigi Rimedon?"
 msgstr[1] "Ĉu Forigi Rimedojn?"
 
-#: widgets/standardactionmanager.cpp:456
+#: widgets/standardactionmanager.cpp:457
 #, kde-format
 msgid "Could not paste data: %1"
 msgstr "Ne eblis alglui datumojn: %1"
 
-#: widgets/standardactionmanager.cpp:457
+#: widgets/standardactionmanager.cpp:458
 #, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Algluo Fiaskis"
 
-#: widgets/standardactionmanager.cpp:809
+#: widgets/standardactionmanager.cpp:810
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "Ni ne povas aldoni \"/\" en la dosierujon."
 
-#: widgets/standardactionmanager.cpp:809 widgets/standardactionmanager.cpp:813
+#: widgets/standardactionmanager.cpp:810 widgets/standardactionmanager.cpp:814
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Krei Novan Dosierujon Eraro"
 
-#: widgets/standardactionmanager.cpp:813
+#: widgets/standardactionmanager.cpp:814
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "Ni ne povas aldoni \".\" ĉe la komenco aŭ fino de la dosierujo nomo."
 
-#: widgets/standardactionmanager.cpp:1052
+#: widgets/standardactionmanager.cpp:1053
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2427,23 +2427,23 @@ msgstr ""
 "Antaŭ sinkronigi dosierujon \"%1\" necesas havi la rimedon interrete. Ĉu vi "
 "volas fari ĝin interrete?"
 
-#: widgets/standardactionmanager.cpp:1053
+#: widgets/standardactionmanager.cpp:1054
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "Konto \"%1\" estas eksterreta"
 
-#: widgets/standardactionmanager.cpp:1054
+#: widgets/standardactionmanager.cpp:1055
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Iru Interrete"
 
-#: widgets/standardactionmanager.cpp:1655
+#: widgets/standardactionmanager.cpp:1667
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Movu al Ĉi tiu Dosierujo"
 
-#: widgets/standardactionmanager.cpp:1655
+#: widgets/standardactionmanager.cpp:1667
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Kopii al tiu leterujo"
