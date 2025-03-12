@@ -423,13 +423,13 @@ PUBLIC
     KF6::CoreAddons # for KJob
     KF6::ItemModels
     Qt::Gui # for QColor
+    KPim6::AkonadiPrivate
 PRIVATE
     Qt::Network
     Qt::Widgets
     KF6::I18n
     KF6::IconThemes
     KF6::ConfigCore
-    KPim6::AkonadiPrivate
     akonadi_shared
 )
 
