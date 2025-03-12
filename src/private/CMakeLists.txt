@@ -69,7 +69,7 @@ set_target_properties(KPim6AkonadiPrivate PROPERTIES
     EXPORT_NAME AkonadiPrivate
 )
 
-target_include_directories(KPim6AkonadiPrivate INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/KPim6/Akonadi>")
+target_include_directories(KPim6AkonadiPrivate INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/KPim6/Akonadi/akonadi>")
 
 
 install(TARGETS
