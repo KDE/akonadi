@@ -83,6 +83,7 @@ public:
 
     int mProgress;
     QString mProgressMessage;
+    QString mProgramName;
 
     bool mNeedsNetwork;
     bool mOnline;

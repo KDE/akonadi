@@ -23,7 +23,6 @@ ecm_generate_headers(AkonadiAgentBase_CC_HEADERS
     PREFIX Akonadi
 )
 
-
 KCONFIG_ADD_KCFG_FILES(KPim6AkonadiAgentBase resourcebasesettings.kcfgc)
 
 qt_add_dbus_interfaces(akonadiagentbase_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Tracer.xml)
@@ -68,30 +67,24 @@ target_sources(KPim6AkonadiAgentBase PRIVATE
     ${akonadiagentbase_SRCS}
 )
 
-
-
 if(COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(KPim6AkonadiAgentBase PROPERTIES UNITY_BUILD ON)
 endif()
 
 generate_export_header(KPim6AkonadiAgentBase BASE_NAME akonadiagentbase)
 
-
 target_include_directories(KPim6AkonadiAgentBase INTERFACE "$<INSTALL_INTERFACE:${AkonadiAgentBase_INSTALL_INCLUDEDIR}>")
 
 target_link_libraries(KPim6AkonadiAgentBase
 PUBLIC
     Qt::DBus
-    Qt::Widgets # for QApplication
     KPim6::AkonadiCore
     KF6::ConfigCore
     KF6::ConfigGui # for KConfigSkeleton
 PRIVATE
     KPim6::AkonadiPrivate
-    KPim6::AkonadiWidgets
     KF6::I18n
     Qt::Network
-    KF6::IconThemes
     akonadi_shared
 )
 
@@ -140,6 +133,96 @@ if(BUILD_QCH)
         ORG_DOMAIN org.kde
         SOURCES # using only public headers, to cover only public API
         ${AkonadiAgentBase_HEADERS}
+        #MD_MAINPAGE "${CMAKE_SOURCE_DIR}/README.md"
+        #IMAGE_DIRS "${CMAKE_SOURCE_DIR}/docs/pics"
+        LINK_QCHS
+            Qt6Core_QCH
+            Qt6Gui_QCH
+            Qt6Widgets_QCH
+        INCLUDE_DIRS
+            ${CMAKE_CURRENT_BINARY_DIR}
+        BLANK_MACROS
+            AKONADICORE_EXPORT
+        TAGFILE_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
+        QCH_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
+        COMPONENT Devel
+   )
+endif()
+
+## Widgets
+
+set(AkonadiAgentWidgetBase_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR}/KPim6/AkonadiAgentWidgetBase")
+
+add_library(KPim6AkonadiAgentWidgetBase)
+add_library(KPim6::AkonadiAgentWidgetBase ALIAS KPim6AkonadiAgentWidgetBase)
+
+ecm_generate_headers(AkonadiAgentWidgetBase_CC_HEADERS
+    HEADER_NAMES
+    AgentWidgetBase
+    ResourceWidgetBase
+    REQUIRED_HEADERS AkonadiAgentWidgetBase_HEADERS
+    PREFIX Akonadi
+)
+
+target_sources(KPim6AkonadiAgentWidgetBase PRIVATE
+    agentwidgetbase.cpp
+    resourcewidgetbase.cpp
+
+    agentwidgetbase.h
+    resourcewidgetbase.h
+)
+
+if(COMPILE_WITH_UNITY_CMAKE_SUPPORT)
+    set_target_properties(KPim6AkonadiAgentWidgetBase PROPERTIES UNITY_BUILD ON)
+endif()
+
+generate_export_header(KPim6AkonadiAgentWidgetBase BASE_NAME akonadiagentwidgetbase)
+
+target_include_directories(KPim6AkonadiAgentWidgetBase INTERFACE "$<INSTALL_INTERFACE:${AkonadiAgentWidgetBase_INSTALL_INCLUDEDIR}>")
+
+target_link_libraries(KPim6AkonadiAgentWidgetBase
+PUBLIC
+    Qt::Widgets # for QApplication
+    KPim6AkonadiAgentBase
+PRIVATE
+    KPim6::AkonadiWidgets
+    KF6::IconThemes
+)
+
+set_target_properties(KPim6AkonadiAgentWidgetBase PROPERTIES
+    VERSION ${AKONADI_VERSION}
+    SOVERSION ${AKONADI_SOVERSION}
+    EXPORT_NAME AkonadiAgentWidgetBase
+)
+
+install(TARGETS
+    KPim6AkonadiAgentWidgetBase
+    EXPORT KPim6AkonadiTargets
+    ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/akonadiagentwidgetbase_export.h
+    ${AkonadiAgentWidgetBase_HEADERS}
+    DESTINATION ${AkonadiAgentWidgetBase_INSTALL_INCLUDEDIR}/akonadi
+    COMPONENT Devel
+)
+
+install(FILES
+    ${AkonadiAgentWidgetBase_CC_HEADERS}
+    DESTINATION ${AkonadiAgentWidgetBase_INSTALL_INCLUDEDIR}/Akonadi
+    COMPONENT Devel
+)
+
+if(BUILD_QCH)
+    ecm_add_qch(
+        KPim6AkonadiWidgetAgent_QCH
+        NAME KPim6AkonadiWidgetAgent
+        BASE_NAME KPim6AkonadiWidgetAgent
+        VERSION ${PIM_VERSION}
+        ORG_DOMAIN org.kde
+        SOURCES # using only public headers, to cover only public API
+        ${AkonadiAgentWidgetBase_HEADERS}
         #MD_MAINPAGE "${CMAKE_SOURCE_DIR}/README.md"
         #IMAGE_DIRS "${CMAKE_SOURCE_DIR}/docs/pics"
         LINK_QCHS

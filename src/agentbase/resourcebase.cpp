@@ -46,7 +46,7 @@
 #include <KCrash>
 #include <KLocalizedString>
 
-#include <QApplication>
+#include <QCoreApplication>
 #include <QHash>
 #include <QTimer>
 
@@ -535,7 +535,7 @@ QString ResourceBase::parseArguments(int argc, char **argv)
     parser.addOption(identifierOption);
     parser.addHelpOption();
     parser.addVersionOption();
-    parser.process(*qApp);
+    parser.process(*QCoreApplication::instance());
     parser.setApplicationDescription(i18n("Akonadi Resource"));
 
     if (!parser.isSet(identifierOption)) {
@@ -557,7 +557,7 @@ QString ResourceBase::parseArguments(int argc, char **argv)
     // strip off full path and possible .exe suffix
     const QString catalog = fi.baseName();
 
-    auto translator = new QTranslator(qApp);
+    auto translator = new QTranslator(QCoreApplication::instance());
     translator->load(catalog);
     QCoreApplication::installTranslator(translator);
 

@@ -9,7 +9,7 @@
 
 #include "collection.h"
 #include "item.h"
-#include "resourcebase.h"
+#include "resourcewidgetbase.h"
 
 #include "agentsearchinterface.h"
 #include "searchquery.h"
@@ -19,7 +19,7 @@
 
 class QFileSystemWatcher;
 
-class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::ObserverV2, public Akonadi::AgentSearchInterface
+class KnutResource : public Akonadi::ResourceWidgetBase, public Akonadi::AgentBase::ObserverV2, public Akonadi::AgentSearchInterface
 {
     Q_OBJECT
 

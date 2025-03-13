@@ -10,7 +10,6 @@
 #include "agentbase.h"
 #include "agentbase_p.h"
 
-#include "agentconfigurationdialog.h"
 #include "agentmanager.h"
 #include "akonadifull-version.h"
 #include "changerecorder.h"
@@ -27,9 +26,7 @@
 
 #include <KAboutData>
 #include <KCrash>
-#include <KIconTheme>
 #include <KLocalizedString>
-#include <KStyleManager>
 
 #include <QCommandLineParser>
 #include <QNetworkInformation>
@@ -396,12 +393,15 @@ void AgentBasePrivate::delayedInit()
 void AgentBasePrivate::setProgramName()
 {
     // ugly, really ugly, if you find another solution, change it and blame me for this code (Andras)
-    QString programName = mResourceTypeName;
+    mProgramName = mResourceTypeName;
     if (!mName.isEmpty()) {
-        programName = i18nc("Name and type of Akonadi resource", "%1 of type %2", mName, mResourceTypeName);
+        mProgramName = i18nc("Name and type of Akonadi resource", "%1 of type %2", mName, mResourceTypeName);
     }
+}
 
-    QGuiApplication::setApplicationDisplayName(programName);
+QString AgentBase::programName() const
+{
+    return d_ptr->mProgramName;
 }
 
 void AgentBasePrivate::itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection)
@@ -848,8 +848,6 @@ QString AgentBase::parseArguments(int argc, char **argv)
 
 int AgentBase::init(AgentBase &r)
 {
-    KIconTheme::initTheme();
-    KStyleManager::initStyle();
     KLocalizedString::setApplicationDomain(QByteArrayLiteral("libakonadi6"));
     KAboutData::setApplicationData(r.aboutData());
 
@@ -986,17 +984,7 @@ KAboutData AgentBase::aboutData() const
 void AgentBase::configure(WId windowId)
 {
     Q_UNUSED(windowId)
-
-    // Fallback if the agent implements the new plugin-based configuration,
-    // but someone calls the deprecated configure() method
-    auto instance = Akonadi::AgentManager::self()->instance(identifier());
-    QPointer<AgentConfigurationDialog> dialog = new AgentConfigurationDialog(instance, nullptr);
-    if (dialog->exec()) {
-        Q_EMIT configurationDialogAccepted();
-    } else {
-        Q_EMIT configurationDialogRejected();
-    }
-    delete dialog;
+    qCWarning(AKONADIAGENTBASE_LOG) << "Calling AgentBase::configure instead of using an AgentConfigurationDialog is not supported anymore.";
 }
 
 #ifdef Q_OS_WIN // krazy:exclude=cpp

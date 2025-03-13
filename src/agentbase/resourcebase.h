@@ -785,6 +785,8 @@ private:
     void requestItemDelivery(const QList<qint64> &uids, const QByteArrayList &parts);
 
 private:
+    friend class ResourceWidgetBase;
+
     Q_DECLARE_PRIVATE(ResourceBase)
 
     Q_PRIVATE_SLOT(d_func(), void slotAbortRequested())
@@ -819,13 +821,13 @@ private:
 
 }
 
-#ifndef AKONADI_RESOURCE_MAIN
+#ifndef AKONADI_RESOURCE_CORE_MAIN
 /**
  * Convenience Macro for the most common main() function for Akonadi resources.
  */
-#define AKONADI_RESOURCE_MAIN(resourceClass)                                                                                                                   \
+#define AKONADI_RESOURCE_CORE_MAIN(resourceClass)                                                                                                              \
     int main(int argc, char **argv)                                                                                                                            \
     {                                                                                                                                                          \
-        return Akonadi::ResourceBase::init<resourceClass>(argc, argv);                                                                                         \
+        return Akonadi::ResourceBase::initCore<resourceClass>(argc, argv);                                                                                     \
     }
 #endif

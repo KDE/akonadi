@@ -29,7 +29,7 @@
 using namespace Akonadi;
 
 KnutResource::KnutResource(const QString &id)
-    : ResourceBase(id)
+    : ResourceWidgetBase(id)
     , mWatcher(new QFileSystemWatcher(this))
     , mSettings(new KnutSettings())
 {

@@ -11,15 +11,16 @@
 #pragma once
 
 #include "akonadiagentbase_export.h"
+
 // AkonadiCore
 #include "akonadi/item.h"
 
-#include <QApplication>
-
-#include <KSharedConfig>
-
+#include <QCoreApplication>
 #include <QDBusConnection>
 #include <QDBusContext>
+#include <qwindowdefs.h>
+
+#include <KSharedConfig>
 
 #include <memory>
 
@@ -403,7 +404,7 @@ public:
     /**
      * Use this method in the main function of your agent
      * application to initialize your agent subclass.
-     * This method also takes care of creating a KApplication
+     * This method also takes care of creating a QCoreApplication
      * object and parsing command line arguments.
      *
      * @note In case the given class is also derived from AgentBase::Observer
@@ -417,7 +418,7 @@ public:
      *     ...
      *   };
      *
-     *   AKONADI_AGENT_MAIN( MyAgent )
+     *   AKONADI_AGENT_CORE_MAIN( MyAgent )
      *
      * @endcode
      *
@@ -425,12 +426,16 @@ public:
      * @param argv arguments for the function
      */
     template<typename T>
-    static int init(int argc, char **argv)
+    static int initCore(int argc, char **argv)
     {
         // Disable session management
         qunsetenv("SESSION_MANAGER");
 
-        QApplication app(argc, argv);
+#if __has_include(<QApplication>)
+        static_assert(false, "This links to QWidgets");
+#endif
+
+        QCoreApplication app(argc, argv);
         debugAgent(argc, argv);
         const QString id = parseArguments(argc, argv);
         T r(id);
@@ -733,7 +738,11 @@ protected:
      */
     void setOnline(bool state);
 
-protected:
+    /**
+     * Get the application display name
+     */
+    [[nodiscard]] QString programName() const;
+
     /**
      * Sets the agent offline but will make it online again after a given time
      *
@@ -791,6 +800,9 @@ private:
     friend class ::Akonadi__StatusAdaptor;
     friend class ::Akonadi__ControlAdaptor;
 
+    friend class AgentWidgetBase;
+    friend class ResourceWidgetBase;
+
     Q_DECLARE_PRIVATE(AgentBase)
     Q_PRIVATE_SLOT(d_func(), void delayedInit())
     Q_PRIVATE_SLOT(d_func(), void slotStatus(int, const QString &))
@@ -806,13 +818,13 @@ private:
 
 }
 
-#ifndef AKONADI_AGENT_MAIN
+#ifndef AKONADI_AGENT_CORE_MAIN
 /**
  * Convenience Macro for the most common main() function for Akonadi agents.
  */
-#define AKONADI_AGENT_MAIN(agentClass)                                                                                                                         \
+#define AKONADI_AGENT_CORE_MAIN(agentClass)                                                                                                                    \
     int main(int argc, char **argv)                                                                                                                            \
     {                                                                                                                                                          \
-        return Akonadi::AgentBase::init<agentClass>(argc, argv);                                                                                               \
+        return Akonadi::AgentBase::initCore<agentClass>(argc, argv);                                                                                           \
     }
 #endif

@@ -27,7 +27,7 @@ set_target_properties(akonadi_knut_resource PROPERTIES MACOSX_BUNDLE FALSE)
 target_link_libraries(akonadi_knut_resource
   KPim6::AkonadiXml
   KPim6::AkonadiCore
-  KPim6::AkonadiAgentBase
+  KPim6::AkonadiAgentWidgetBase
   Qt::Xml
   KF6::I18n
 )
