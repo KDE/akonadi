@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-12 00:42+0000\n"
+"POT-Creation-Date: 2025-03-13 00:42+0000\n"
 "PO-Revision-Date: 2025-03-06 19:38+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -417,19 +417,13 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Име"
 
-#: core/models/entitytreemodel.cpp:207
+#: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
 msgstr "Зареждане…"
 
-#: core/models/entitytreemodel.cpp:499
-#, kde-format
-msgctxt "@window:title"
-msgid "Error"
-msgstr "Грешка"
-
-#: core/models/entitytreemodel.cpp:500
+#: core/models/entitytreemodel.cpp:497
 #, kde-format
 msgid ""
 "The target collection '%1' contains already\n"
@@ -438,47 +432,41 @@ msgstr ""
 "Целевата колекция „%1“ вече съдържа \n"
 "колекция с име „%2“."
 
-#: core/models/entitytreemodel.cpp:669
+#: core/models/entitytreemodel.cpp:666
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Име"
 
-#: core/models/entitytreemodel_p.cpp:1331
+#: core/models/entitytreemodel_p.cpp:1330
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Не може да се копира елемент: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1333
+#: core/models/entitytreemodel_p.cpp:1332
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Не можа да се копира колекция: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1335
+#: core/models/entitytreemodel_p.cpp:1334
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Не можа да се премести елемент: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1337
+#: core/models/entitytreemodel_p.cpp:1336
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Не можа да се премести колекция: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1339
+#: core/models/entitytreemodel_p.cpp:1338
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "Не може да се свърже обект: <message>%1</message>"
-
-#: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
-#, kde-format
-msgctxt "@title:window"
-msgid "Error"
-msgstr "Грешка"
 
 #: core/models/favoritecollectionsmodel.cpp:398
 #, kde-format
@@ -1944,6 +1932,12 @@ msgstr "Запазване на протокола от теста"
 
 #: widgets/selftestdialog.cpp:650
 #, kde-format
+msgctxt "@title:window"
+msgid "Error"
+msgstr "Грешка"
+
+#: widgets/selftestdialog.cpp:650
+#, kde-format
 msgid "Could not open file '%1'"
 msgstr "Грешка при отваряне на файла „%1“"
 
@@ -2658,6 +2652,10 @@ msgstr "Не може да се анализира файл с данни: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Не може да се намери колекция %1"
+
+#~ msgctxt "@window:title"
+#~ msgid "Error"
+#~ msgstr "Грешка"
 
 #~ msgid "A required background service is not operational."
 #~ msgstr "Услугата за управление на лична информация Akonadi не работи."

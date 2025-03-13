@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-12 00:42+0000\n"
+"POT-Creation-Date: 2025-03-13 00:42+0000\n"
 "PO-Revision-Date: 2025-02-08 10:55-0300\n"
 "Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -423,19 +423,13 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Nome"
 
-#: core/models/entitytreemodel.cpp:207
+#: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
 msgstr "Carregando..."
 
-#: core/models/entitytreemodel.cpp:499
-#, kde-format
-msgctxt "@window:title"
-msgid "Error"
-msgstr "Erro"
-
-#: core/models/entitytreemodel.cpp:500
+#: core/models/entitytreemodel.cpp:497
 #, kde-format
 msgid ""
 "The target collection '%1' contains already\n"
@@ -444,47 +438,41 @@ msgstr ""
 "A coleção de destino '%1' já contém\n"
 "uma coleção chamada '%2'."
 
-#: core/models/entitytreemodel.cpp:669
+#: core/models/entitytreemodel.cpp:666
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Nome"
 
-#: core/models/entitytreemodel_p.cpp:1331
+#: core/models/entitytreemodel_p.cpp:1330
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Não foi possível copiar o item: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1333
+#: core/models/entitytreemodel_p.cpp:1332
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Não foi possível copiar a coleção: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1335
+#: core/models/entitytreemodel_p.cpp:1334
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Não foi possível mover o item: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1337
+#: core/models/entitytreemodel_p.cpp:1336
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Não foi possível mover a coleção: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1339
+#: core/models/entitytreemodel_p.cpp:1338
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "Não foi possível associar a entidade: <message>%1</message>"
-
-#: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
-#, kde-format
-msgctxt "@title:window"
-msgid "Error"
-msgstr "Erro"
 
 #: core/models/favoritecollectionsmodel.cpp:398
 #, kde-format
@@ -1952,6 +1940,12 @@ msgstr "Salvar o relatório de teste"
 
 #: widgets/selftestdialog.cpp:650
 #, kde-format
+msgctxt "@title:window"
+msgid "Error"
+msgstr "Erro"
+
+#: widgets/selftestdialog.cpp:650
+#, kde-format
 msgid "Could not open file '%1'"
 msgstr "Não foi possível abrir o arquivo '%1'"
 
@@ -2667,6 +2661,10 @@ msgstr "Não foi possível analisar o arquivo de dados: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Não foi possível encontrar a coleção %1"
+
+#~ msgctxt "@window:title"
+#~ msgid "Error"
+#~ msgstr "Erro"
 
 #~ msgid "A required background service is not operational."
 #~ msgstr "Um serviço de segundo plano necessário não está operacional."

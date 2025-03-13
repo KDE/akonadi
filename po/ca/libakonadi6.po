@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-12 00:42+0000\n"
+"POT-Creation-Date: 2025-03-13 00:42+0000\n"
 "PO-Revision-Date: 2025-03-09 11:10+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -425,19 +425,13 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Nom"
 
-#: core/models/entitytreemodel.cpp:207
+#: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
 msgstr "S'està carregant..."
 
-#: core/models/entitytreemodel.cpp:499
-#, kde-format
-msgctxt "@window:title"
-msgid "Error"
-msgstr "Error"
-
-#: core/models/entitytreemodel.cpp:500
+#: core/models/entitytreemodel.cpp:497
 #, kde-format
 msgid ""
 "The target collection '%1' contains already\n"
@@ -446,47 +440,41 @@ msgstr ""
 "La col·lecció de destinació «%1» ja conté\n"
 "una col·lecció amb el nom «%2»."
 
-#: core/models/entitytreemodel.cpp:669
+#: core/models/entitytreemodel.cpp:666
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Nom"
 
-#: core/models/entitytreemodel_p.cpp:1331
+#: core/models/entitytreemodel_p.cpp:1330
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "No s'ha pogut copiar l'element: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1333
+#: core/models/entitytreemodel_p.cpp:1332
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "No s'ha pogut copiar la col·lecció: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1335
+#: core/models/entitytreemodel_p.cpp:1334
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "No s'ha pogut moure l'element: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1337
+#: core/models/entitytreemodel_p.cpp:1336
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "No s'ha pogut moure la col·lecció: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1339
+#: core/models/entitytreemodel_p.cpp:1338
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "No s'ha pogut enllaçar l'entitat: <message>%1</message>"
-
-#: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
-#, kde-format
-msgctxt "@title:window"
-msgid "Error"
-msgstr "Error"
 
 #: core/models/favoritecollectionsmodel.cpp:398
 #, kde-format
@@ -1954,6 +1942,12 @@ msgstr "Desa l'informe de la prova"
 
 #: widgets/selftestdialog.cpp:650
 #, kde-format
+msgctxt "@title:window"
+msgid "Error"
+msgstr "Error"
+
+#: widgets/selftestdialog.cpp:650
+#, kde-format
 msgid "Could not open file '%1'"
 msgstr "No s'ha pogut obrir el fitxer «%1»"
 
@@ -2669,6 +2663,10 @@ msgstr "No s'ha pogut analitzar el fitxer de dades: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "No s'ha pogut trobar la col·lecció %1"
+
+#~ msgctxt "@window:title"
+#~ msgid "Error"
+#~ msgstr "Error"
 
 #~ msgid "A required background service is not operational."
 #~ msgstr "Un servei necessari en segon pla no és operatiu."

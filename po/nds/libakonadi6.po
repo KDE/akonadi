@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-12 00:42+0000\n"
+"POT-Creation-Date: 2025-03-13 00:42+0000\n"
 "PO-Revision-Date: 2014-09-18 22:53+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -417,22 +417,14 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Naam"
 
-#: core/models/entitytreemodel.cpp:207
+#: core/models/entitytreemodel.cpp:206
 #, fuzzy, kde-format
 #| msgid "Loading..."
 msgctxt "@info:status"
 msgid "Loading..."
 msgstr "An't Laden…"
 
-#: core/models/entitytreemodel.cpp:499
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Error."
-msgctxt "@window:title"
-msgid "Error"
-msgstr "Fehler."
-
-#: core/models/entitytreemodel.cpp:500
+#: core/models/entitytreemodel.cpp:497
 #, kde-format
 msgid ""
 "The target collection '%1' contains already\n"
@@ -441,54 +433,46 @@ msgstr ""
 "De Teelsammeln \"%1\" bargt al\n"
 "en Sammeln mit den Naam \"%2\"."
 
-#: core/models/entitytreemodel.cpp:669
+#: core/models/entitytreemodel.cpp:666
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Naam"
 
-#: core/models/entitytreemodel_p.cpp:1331
+#: core/models/entitytreemodel_p.cpp:1330
 #, fuzzy, kde-format
 #| msgid "Could not copy item:"
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Indrag lett sik nich koperen:"
 
-#: core/models/entitytreemodel_p.cpp:1333
+#: core/models/entitytreemodel_p.cpp:1332
 #, fuzzy, kde-format
 #| msgid "Could not copy collection:"
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Sammeln lett sik nich koperen:"
 
-#: core/models/entitytreemodel_p.cpp:1335
+#: core/models/entitytreemodel_p.cpp:1334
 #, fuzzy, kde-format
 #| msgid "Could not move item:"
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Indrag lett sik nich verschuven:"
 
-#: core/models/entitytreemodel_p.cpp:1337
+#: core/models/entitytreemodel_p.cpp:1336
 #, fuzzy, kde-format
 #| msgid "Could not move collection:"
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Sammeln lett sik nich verschuven:"
 
-#: core/models/entitytreemodel_p.cpp:1339
+#: core/models/entitytreemodel_p.cpp:1338
 #, fuzzy, kde-format
 #| msgid "Could not link entity:"
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "Link na Entiteet lett sik nich opstellen:"
-
-#: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Error."
-msgctxt "@title:window"
-msgid "Error"
-msgstr "Fehler."
 
 #: core/models/favoritecollectionsmodel.cpp:398
 #, kde-format
@@ -1967,6 +1951,14 @@ msgid "Save Test Report"
 msgstr "Pröövbericht sekern"
 
 #: widgets/selftestdialog.cpp:650
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid "Error."
+msgctxt "@title:window"
+msgid "Error"
+msgstr "Fehler."
+
+#: widgets/selftestdialog.cpp:650
 #, kde-format
 msgid "Could not open file '%1'"
 msgstr "Datei \"%1\" lett sik nich opmaken."
@@ -2748,6 +2740,13 @@ msgstr "Datendatei lett sik nich inlesen: „%1“"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Sammeln „%1“ lett sik nich finnen"
+
+#, fuzzy
+#~| msgctxt "@info:status"
+#~| msgid "Error."
+#~ msgctxt "@window:title"
+#~ msgid "Error"
+#~ msgstr "Fehler."
 
 #, fuzzy
 #~| msgid ""

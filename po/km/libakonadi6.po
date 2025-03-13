@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-12 00:42+0000\n"
+"POT-Creation-Date: 2025-03-13 00:42+0000\n"
 "PO-Revision-Date: 2012-07-11 10:23+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -422,22 +422,14 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "ឈ្មោះ"
 
-#: core/models/entitytreemodel.cpp:207
+#: core/models/entitytreemodel.cpp:206
 #, fuzzy, kde-format
 #| msgid "Loading..."
 msgctxt "@info:status"
 msgid "Loading..."
 msgstr "កំពុង​ផ្ទុក..."
 
-#: core/models/entitytreemodel.cpp:499
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Error."
-msgctxt "@window:title"
-msgid "Error"
-msgstr "កំហុស ។"
-
-#: core/models/entitytreemodel.cpp:500
+#: core/models/entitytreemodel.cpp:497
 #, kde-format
 msgid ""
 "The target collection '%1' contains already\n"
@@ -446,54 +438,46 @@ msgstr ""
 "មាន​កា​រជ្រើសរើស​គោលដៅ '%1' ដែល​មាន​ឈ្មោះ\n"
 " '%2' រួច​ហើយ ។"
 
-#: core/models/entitytreemodel.cpp:669
+#: core/models/entitytreemodel.cpp:666
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "ឈ្មោះ​"
 
-#: core/models/entitytreemodel_p.cpp:1331
+#: core/models/entitytreemodel_p.cpp:1330
 #, fuzzy, kde-format
 #| msgid "Could not copy item:"
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "មិន​អាច​ចម្លង​​ធាតុ​បាន​ឡើយ​ ៖​"
 
-#: core/models/entitytreemodel_p.cpp:1333
+#: core/models/entitytreemodel_p.cpp:1332
 #, fuzzy, kde-format
 #| msgid "Could not copy collection:"
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "មិន​អាច​ចម្លង​សម្រាំង​បាន​ឡើយ​ ៖"
 
-#: core/models/entitytreemodel_p.cpp:1335
+#: core/models/entitytreemodel_p.cpp:1334
 #, fuzzy, kde-format
 #| msgid "Could not move item:"
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "មិន​អាច​ផ្លាស់ទី​ធាតុ​បាន​ឡើយ​ ៖"
 
-#: core/models/entitytreemodel_p.cpp:1337
+#: core/models/entitytreemodel_p.cpp:1336
 #, fuzzy, kde-format
 #| msgid "Could not move collection:"
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "មិន​អាច​ផ្លាស់​ទី​សម្រាំង​បាន​ឡើយ​ ៖"
 
-#: core/models/entitytreemodel_p.cpp:1339
+#: core/models/entitytreemodel_p.cpp:1338
 #, fuzzy, kde-format
 #| msgid "Could not link entity:"
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "មិន​អាច​ភ្ជាប់​អង្គភាព​បាន​ឡើយ​ ៖​"
-
-#: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Error."
-msgctxt "@title:window"
-msgid "Error"
-msgstr "កំហុស ។"
 
 #: core/models/favoritecollectionsmodel.cpp:398
 #, kde-format
@@ -1943,6 +1927,14 @@ msgid "Save Test Report"
 msgstr "រក្សា​ទុក​របាយការណ៍​សាកល្បង​"
 
 #: widgets/selftestdialog.cpp:650
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid "Error."
+msgctxt "@title:window"
+msgid "Error"
+msgstr "កំហុស ។"
+
+#: widgets/selftestdialog.cpp:650
 #, kde-format
 msgid "Could not open file '%1'"
 msgstr "មិនអាច​បើក​ឯកសារ '%1'"
@@ -2710,6 +2702,13 @@ msgstr "មិនអាច​បិទភ្ជាប់​​ទិន្នន
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"
 msgstr "សម្រាំង​មិន​ត្រឹម​ត្រូវ​"
+
+#, fuzzy
+#~| msgctxt "@info:status"
+#~| msgid "Error."
+#~ msgctxt "@window:title"
+#~ msgid "Error"
+#~ msgstr "កំហុស ។"
 
 #, fuzzy
 #~| msgid ""
