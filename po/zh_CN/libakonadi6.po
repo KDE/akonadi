@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-12 00:42+0000\n"
+"POT-Creation-Date: 2025-03-14 00:43+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -37,12 +37,12 @@ msgstr "目前没有配置账户。"
 msgid "Accounts integration is not supported"
 msgstr "暂不支持账户集成"
 
-#: agentbase/agentbase.cpp:310 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "无法在 dbus 上注册对象：%1"
 
-#: agentbase/agentbase.cpp:401
+#: agentbase/agentbase.cpp:398
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
@@ -409,19 +409,13 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "名称"
 
-#: core/models/entitytreemodel.cpp:207
+#: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
 msgstr "正在加载..."
 
-#: core/models/entitytreemodel.cpp:499
-#, kde-format
-msgctxt "@window:title"
-msgid "Error"
-msgstr "错误"
-
-#: core/models/entitytreemodel.cpp:500
+#: core/models/entitytreemodel.cpp:497
 #, kde-format
 msgid ""
 "The target collection '%1' contains already\n"
@@ -430,47 +424,41 @@ msgstr ""
 "目标集合“%1”已包含\n"
 "名为“%2”的集合。"
 
-#: core/models/entitytreemodel.cpp:669
+#: core/models/entitytreemodel.cpp:666
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "名称"
 
-#: core/models/entitytreemodel_p.cpp:1331
+#: core/models/entitytreemodel_p.cpp:1330
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "无法复制项目: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1333
+#: core/models/entitytreemodel_p.cpp:1332
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "无法复制集合：<message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1335
+#: core/models/entitytreemodel_p.cpp:1334
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "无法移动项目: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1337
+#: core/models/entitytreemodel_p.cpp:1336
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "无法移动集合：<message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1339
+#: core/models/entitytreemodel_p.cpp:1338
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "无法链接实体：<message>%1</message>"
-
-#: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
-#, kde-format
-msgctxt "@title:window"
-msgid "Error"
-msgstr "错误"
 
 #: core/models/favoritecollectionsmodel.cpp:398
 #, kde-format
@@ -679,17 +667,17 @@ msgstr "关于 %1"
 msgid "Unable to access D-Bus interface of created agent."
 msgstr "无法访问 D-Bus 接口来创建代理。"
 
-#: widgets/agentconfigurationwidget.cpp:115
+#: widgets/agentconfigurationwidget.cpp:116
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "配置对话框已在另一个窗口打开"
 
-#: widgets/agentconfigurationwidget.cpp:122
+#: widgets/agentconfigurationwidget.cpp:123
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "%1 的配置文件已在其他程序中打开。"
 
-#: widgets/agentconfigurationwidget.cpp:124
+#: widgets/agentconfigurationwidget.cpp:125
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "注册 %1 配置对话框失败。"
@@ -1856,6 +1844,12 @@ msgstr ""
 #, kde-format
 msgid "Save Test Report"
 msgstr "保存检测报告"
+
+#: widgets/selftestdialog.cpp:650
+#, kde-format
+msgctxt "@title:window"
+msgid "Error"
+msgstr "错误"
 
 #: widgets/selftestdialog.cpp:650
 #, kde-format

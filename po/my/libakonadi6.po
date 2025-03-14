@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-13 00:42+0000\n"
+"POT-Creation-Date: 2025-03-14 00:43+0000\n"
 "PO-Revision-Date: 2021-09-27 23:52+0630\n"
 "Last-Translator: ဇေယျာလွင် <lw1nzayar@yandex.com>\n"
 "Language-Team: Burmese <kde-i18n-doc@kde.org>\n"
@@ -38,12 +38,12 @@ msgstr "လောလောဆယ် မည်သည်အကောင့်မ�
 msgid "Accounts integration is not supported"
 msgstr "အကောင့်များပေါင်းစပ်လုပ်ဆောင်မှု လုပ်မရပါ"
 
-#: agentbase/agentbase.cpp:310 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr ""
 
-#: agentbase/agentbase.cpp:401
+#: agentbase/agentbase.cpp:398
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
@@ -656,17 +656,17 @@ msgstr "%1 အကြောင်း"
 msgid "Unable to access D-Bus interface of created agent."
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:115
+#: widgets/agentconfigurationwidget.cpp:116
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:122
+#: widgets/agentconfigurationwidget.cpp:123
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr ""
 
-#: widgets/agentconfigurationwidget.cpp:124
+#: widgets/agentconfigurationwidget.cpp:125
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr ""

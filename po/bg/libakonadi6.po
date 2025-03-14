@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-13 00:42+0000\n"
+"POT-Creation-Date: 2025-03-14 00:43+0000\n"
 "PO-Revision-Date: 2025-03-06 19:38+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -37,12 +37,12 @@ msgstr "Понастоящем няма конфигуриран профил."
 msgid "Accounts integration is not supported"
 msgstr "Интегрирането на профили не се поддържа"
 
-#: agentbase/agentbase.cpp:310 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Не може да се регистрира обект в dbus: %1"
 
-#: agentbase/agentbase.cpp:401
+#: agentbase/agentbase.cpp:398
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
@@ -683,17 +683,17 @@ msgstr "Относно %1"
 msgid "Unable to access D-Bus interface of created agent."
 msgstr "Няма достъп до интерфейса на D-Bus на създадения агент."
 
-#: widgets/agentconfigurationwidget.cpp:115
+#: widgets/agentconfigurationwidget.cpp:116
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "Диалоговият прозорец за конфигуриране е отворен в друг прозорец"
 
-#: widgets/agentconfigurationwidget.cpp:122
+#: widgets/agentconfigurationwidget.cpp:123
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "Конфигурацията за %1 вече е отворена другаде."
 
-#: widgets/agentconfigurationwidget.cpp:124
+#: widgets/agentconfigurationwidget.cpp:125
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Неуспешно регистриране на %1 диалогов прозорец за конфигуриране."

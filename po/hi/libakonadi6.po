@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-13 00:42+0000\n"
+"POT-Creation-Date: 2025-03-14 00:43+0000\n"
 "PO-Revision-Date: 2024-12-15 18:58+0530\n"
 "Last-Translator: Kali <EMAIL@ADDRESS>\n"
 "Language-Team: Hindi <fedora-trans-hi@redhat.com>\n"
@@ -38,12 +38,12 @@ msgstr "वर्तमान में कोई खाता कॉन्फ�
 msgid "Accounts integration is not supported"
 msgstr "खाता एकीकरण समर्थित नहीं है"
 
-#: agentbase/agentbase.cpp:310 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "dbus पर ऑब्जेक्ट पंजीकृत करने में असमर्थ: %1"
 
-#: agentbase/agentbase.cpp:401
+#: agentbase/agentbase.cpp:398
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
@@ -673,17 +673,17 @@ msgstr "लगभग %1"
 msgid "Unable to access D-Bus interface of created agent."
 msgstr "निर्मित एजेंट के D-Bus इंटरफ़ेस तक पहुँचने में असमर्थ."
 
-#: widgets/agentconfigurationwidget.cpp:115
+#: widgets/agentconfigurationwidget.cpp:116
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "कॉन्फ़िगरेशन संवाद किसी अन्य विंडो में खोला गया है"
 
-#: widgets/agentconfigurationwidget.cpp:122
+#: widgets/agentconfigurationwidget.cpp:123
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "%1 के लिए कॉन्फ़िगरेशन पहले से ही अन्यत्र खोला गया है।"
 
-#: widgets/agentconfigurationwidget.cpp:124
+#: widgets/agentconfigurationwidget.cpp:125
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "%1 कॉन्फ़िगरेशन संवाद पंजीकृत करने में विफल."

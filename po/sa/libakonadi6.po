@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-13 00:42+0000\n"
+"POT-Creation-Date: 2025-03-14 00:43+0000\n"
 "PO-Revision-Date: 2024-12-25 19:45+0530\n"
 "Last-Translator: kali <shreekantkalwar@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -39,12 +39,12 @@ msgstr "सम्प्रति कोऽपि खातं विन्यस
 msgid "Accounts integration is not supported"
 msgstr "लेखानां एकीकरणं समर्थितं नास्ति"
 
-#: agentbase/agentbase.cpp:310 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "dbus इत्यत्र वस्तु पञ्जीकरणं कर्तुं असमर्थः: %1"
 
-#: agentbase/agentbase.cpp:401
+#: agentbase/agentbase.cpp:398
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
@@ -676,17 +676,17 @@ msgstr "%1 इत्यस्य विषये"
 msgid "Unable to access D-Bus interface of created agent."
 msgstr "निर्मितस्य एजेण्टस्य D-Bus अन्तरफलकं प्राप्तुं असमर्थः।"
 
-#: widgets/agentconfigurationwidget.cpp:115
+#: widgets/agentconfigurationwidget.cpp:116
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "अन्यस्मिन् विण्डो मध्ये विन्याससंवादः उद्घाटितः अस्ति"
 
-#: widgets/agentconfigurationwidget.cpp:122
+#: widgets/agentconfigurationwidget.cpp:123
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "%1 कृते विन्यासः अन्यत्र पूर्वमेव उद्घाटितः अस्ति ।"
 
-#: widgets/agentconfigurationwidget.cpp:124
+#: widgets/agentconfigurationwidget.cpp:125
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "%1 विन्याससंवादस्य पञ्जीकरणं कर्तुं असफलम् ।"
