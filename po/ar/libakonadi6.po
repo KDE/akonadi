@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-09 02:31+0000\n"
-"PO-Revision-Date: 2025-03-02 10:40+0400\n"
+"PO-Revision-Date: 2025-03-13 11:38+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -720,12 +720,10 @@ msgid "Configure Account"
 msgstr "اضبط الحساب"
 
 #: widgets/agenttypedialog.cpp:74
-#, fuzzy, kde-format
-#| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
+#, kde-format
 msgctxt "@item:textbox"
 msgid "Search types"
-msgstr "ابحث عن"
+msgstr "ابحث الأنواع"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
