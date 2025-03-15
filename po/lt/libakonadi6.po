@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-14 00:43+0000\n"
+"POT-Creation-Date: 2025-03-15 00:42+0000\n"
 "PO-Revision-Date: 2024-11-13 01:45+0200\n"
 "Last-Translator: Liudas Ališauskas <liudas@akmc.lt>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -201,6 +201,40 @@ msgstr ""
 #, kde-format
 msgid "Command to execute"
 msgstr "Komanda, kurią vykdyti"
+
+#: configdialog/main.cpp:23
+#, fuzzy, kde-format
+#| msgctxt "@title:window, %1 = agent name"
+#| msgid "%1 Configuration"
+msgid "Configuration Dialog"
+msgstr "%1 konfigūracija"
+
+#: configdialog/main.cpp:25
+#, kde-format
+msgid "Allows to configure an agent or resource"
+msgstr ""
+
+#: configdialog/main.cpp:27
+#, kde-format
+msgid "© 2025 Carl Schwan <carl@carlschwan.eu>"
+msgstr ""
+
+#: configdialog/main.cpp:30
+#, fuzzy, kde-format
+#| msgctxt "@info:shell"
+#| msgid "Agent identifier"
+msgid "The agent identifier"
+msgstr "Agento identifikatorius"
+
+#: configdialog/main.cpp:36
+#, kde-format
+msgid "Required identifier argument missing."
+msgstr ""
+
+#: configdialog/main.cpp:51
+#, kde-format
+msgid "No such agent found \"%1\""
+msgstr ""
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format

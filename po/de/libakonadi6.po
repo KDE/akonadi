@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-14 00:43+0000\n"
+"POT-Creation-Date: 2025-03-15 00:42+0000\n"
 "PO-Revision-Date: 2024-12-23 15:56+0100\n"
 "Last-Translator: Johannes Obermayr <johannesobermayr@gmx.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -217,6 +217,41 @@ msgstr "Erst nach Herunterfahren des Servers beenden."
 #, kde-format
 msgid "Command to execute"
 msgstr "Auszuführender Befehl"
+
+#: configdialog/main.cpp:23
+#, fuzzy, kde-format
+#| msgctxt "@title:window, %1 = agent name"
+#| msgid "%1 Configuration"
+msgid "Configuration Dialog"
+msgstr "Einstellungen für %1"
+
+#: configdialog/main.cpp:25
+#, kde-format
+msgid "Allows to configure an agent or resource"
+msgstr ""
+
+#: configdialog/main.cpp:27
+#, kde-format
+msgid "© 2025 Carl Schwan <carl@carlschwan.eu>"
+msgstr ""
+
+#: configdialog/main.cpp:30
+#, fuzzy, kde-format
+#| msgctxt "@info:shell"
+#| msgid "Agent identifier"
+msgid "The agent identifier"
+msgstr "Agent-Bezeichner"
+
+#: configdialog/main.cpp:36
+#, kde-format
+msgid "Required identifier argument missing."
+msgstr ""
+
+#: configdialog/main.cpp:51
+#, fuzzy, kde-format
+#| msgid "No resource agents found."
+msgid "No such agent found \"%1\""
+msgstr "Keine Ressourcen-Vermittler gefunden."
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format

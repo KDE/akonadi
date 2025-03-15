@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-14 00:43+0000\n"
+"POT-Creation-Date: 2025-03-15 00:42+0000\n"
 "PO-Revision-Date: 2017-12-17 18:01+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -200,6 +200,38 @@ msgstr ""
 #, kde-format
 msgid "Command to execute"
 msgstr ""
+
+#: configdialog/main.cpp:23
+#, kde-format
+msgid "Configuration Dialog"
+msgstr ""
+
+#: configdialog/main.cpp:25
+#, kde-format
+msgid "Allows to configure an agent or resource"
+msgstr ""
+
+#: configdialog/main.cpp:27
+#, kde-format
+msgid "© 2025 Carl Schwan <carl@carlschwan.eu>"
+msgstr ""
+
+#: configdialog/main.cpp:30
+#, fuzzy, kde-format
+#| msgid "Agent identifier"
+msgid "The agent identifier"
+msgstr "Identifikator agenta"
+
+#: configdialog/main.cpp:36
+#, kde-format
+msgid "Required identifier argument missing."
+msgstr ""
+
+#: configdialog/main.cpp:51
+#, fuzzy, kde-format
+#| msgid "No resource agents found."
+msgid "No such agent found \"%1\""
+msgstr "Agenti resursa nisu nađeni."
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format

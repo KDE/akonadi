@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-14 00:43+0000\n"
+"POT-Creation-Date: 2025-03-15 00:42+0000\n"
 "PO-Revision-Date: 2010-02-26 23:20+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -202,6 +202,37 @@ msgstr ""
 #: akonadictl/main.cpp:241
 #, kde-format
 msgid "Command to execute"
+msgstr ""
+
+#: configdialog/main.cpp:23
+#, kde-format
+msgid "Configuration Dialog"
+msgstr ""
+
+#: configdialog/main.cpp:25
+#, kde-format
+msgid "Allows to configure an agent or resource"
+msgstr ""
+
+#: configdialog/main.cpp:27
+#, kde-format
+msgid "© 2025 Carl Schwan <carl@carlschwan.eu>"
+msgstr ""
+
+#: configdialog/main.cpp:30
+#, fuzzy, kde-format
+#| msgid "Folder creation failed"
+msgid "The agent identifier"
+msgstr "ล้มเหลวในการสร้างโฟลเดอร์"
+
+#: configdialog/main.cpp:36
+#, kde-format
+msgid "Required identifier argument missing."
+msgstr ""
+
+#: configdialog/main.cpp:51
+#, kde-format
+msgid "No such agent found \"%1\""
 msgstr ""
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-14 00:43+0000\n"
+"POT-Creation-Date: 2025-03-15 00:42+0000\n"
 "PO-Revision-Date: 2024-12-25 19:45+0530\n"
 "Last-Translator: kali <shreekantkalwar@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -210,6 +210,41 @@ msgstr "सर्वर-बन्दीकरणस्य पूर्णता�
 #, kde-format
 msgid "Command to execute"
 msgstr "निष्पादयितुं आदेशः"
+
+#: configdialog/main.cpp:23
+#, fuzzy, kde-format
+#| msgctxt "@title:window, %1 = agent name"
+#| msgid "%1 Configuration"
+msgid "Configuration Dialog"
+msgstr "%1 विन्यासः"
+
+#: configdialog/main.cpp:25
+#, kde-format
+msgid "Allows to configure an agent or resource"
+msgstr ""
+
+#: configdialog/main.cpp:27
+#, kde-format
+msgid "© 2025 Carl Schwan <carl@carlschwan.eu>"
+msgstr ""
+
+#: configdialog/main.cpp:30
+#, fuzzy, kde-format
+#| msgctxt "@info:shell"
+#| msgid "Agent identifier"
+msgid "The agent identifier"
+msgstr "एजेण्ट् परिचयकः"
+
+#: configdialog/main.cpp:36
+#, kde-format
+msgid "Required identifier argument missing."
+msgstr ""
+
+#: configdialog/main.cpp:51
+#, fuzzy, kde-format
+#| msgid "No resource agents found."
+msgid "No such agent found \"%1\""
+msgstr "न संसाधन एजेण्ट् लब्धम्।"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format

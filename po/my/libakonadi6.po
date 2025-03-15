@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-14 00:43+0000\n"
+"POT-Creation-Date: 2025-03-15 00:42+0000\n"
 "PO-Revision-Date: 2021-09-27 23:52+0630\n"
 "Last-Translator: ဇေယျာလွင် <lw1nzayar@yandex.com>\n"
 "Language-Team: Burmese <kde-i18n-doc@kde.org>\n"
@@ -199,6 +199,39 @@ msgstr ""
 #, kde-format
 msgid "Command to execute"
 msgstr ""
+
+#: configdialog/main.cpp:23
+#, fuzzy, kde-format
+#| msgctxt "%1 = agent name"
+#| msgid "%1 Configuration"
+msgid "Configuration Dialog"
+msgstr "%1 ပြင်ဆင်မှု"
+
+#: configdialog/main.cpp:25
+#, kde-format
+msgid "Allows to configure an agent or resource"
+msgstr ""
+
+#: configdialog/main.cpp:27
+#, kde-format
+msgid "© 2025 Carl Schwan <carl@carlschwan.eu>"
+msgstr ""
+
+#: configdialog/main.cpp:30
+#, fuzzy, kde-format
+#| msgid "Agent identifier"
+msgid "The agent identifier"
+msgstr "အေးဂျင့်ခွဲခြားသတ်မှတ်အတည်ပြုချက်"
+
+#: configdialog/main.cpp:36
+#, kde-format
+msgid "Required identifier argument missing."
+msgstr ""
+
+#: configdialog/main.cpp:51
+#, fuzzy, kde-format
+msgid "No such agent found \"%1\""
+msgstr "ရင်းမြစ်ဖန်တီးမည်"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, fuzzy, kde-format

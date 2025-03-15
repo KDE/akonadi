@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.3\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-14 00:43+0000\n"
+"POT-Creation-Date: 2025-03-15 00:42+0000\n"
 "PO-Revision-Date: 2025-02-02 10:40+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -214,6 +214,41 @@ msgstr "Várja meg a kiszolgáló leállításának befejezését."
 #, kde-format
 msgid "Command to execute"
 msgstr "A végrehajtandó parancs"
+
+#: configdialog/main.cpp:23
+#, fuzzy, kde-format
+#| msgctxt "@title:window, %1 = agent name"
+#| msgid "%1 Configuration"
+msgid "Configuration Dialog"
+msgstr "A(z) %1 beállításai"
+
+#: configdialog/main.cpp:25
+#, kde-format
+msgid "Allows to configure an agent or resource"
+msgstr ""
+
+#: configdialog/main.cpp:27
+#, kde-format
+msgid "© 2025 Carl Schwan <carl@carlschwan.eu>"
+msgstr ""
+
+#: configdialog/main.cpp:30
+#, fuzzy, kde-format
+#| msgctxt "@info:shell"
+#| msgid "Agent identifier"
+msgid "The agent identifier"
+msgstr "Azonosító"
+
+#: configdialog/main.cpp:36
+#, kde-format
+msgid "Required identifier argument missing."
+msgstr ""
+
+#: configdialog/main.cpp:51
+#, fuzzy, kde-format
+#| msgid "No resource agents found."
+msgid "No such agent found \"%1\""
+msgstr "Erőforrás ügynökök nem találhatók."
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
