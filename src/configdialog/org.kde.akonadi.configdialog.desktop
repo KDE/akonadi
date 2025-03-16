@@ -3,6 +3,13 @@
 
 [Desktop Entry]
 Name=Agent Configuration Dialog
+Name[ca]=Diàleg de configuració d'agent
+Name[ka]=აგენტის მორგების დიალოგი
+Name[nl]=Configuratiedialoog van agent
+Name[sl]=Pogovorno okno za konfiguracijo agenta
+Name[tr]=Aracı Yapılandırması İletişim Kutusu
+Name[uk]=Вікно налаштовування агента
+Name[x-test]=xxAgent Configuration Dialogxx
 Exec=akonadiagentconfigdialog %u
 Terminal=false
 Icon=org.kde.kontact
