@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-15 00:42+0000\n"
-"PO-Revision-Date: 2025-03-09 13:43+0300\n"
+"PO-Revision-Date: 2025-03-15 13:35+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 25.03.70\n"
+"X-Generator: Lokalize 25.07.70\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -218,39 +218,34 @@ msgid "Command to execute"
 msgstr "Yürütülecek komut"
 
 #: configdialog/main.cpp:23
-#, fuzzy, kde-format
-#| msgctxt "@title:window, %1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgid "Configuration Dialog"
-msgstr "%1 Yapılandırması"
+msgstr "Yapılandırma İletişim Kutusu"
 
 #: configdialog/main.cpp:25
 #, kde-format
 msgid "Allows to configure an agent or resource"
-msgstr ""
+msgstr "Bir aracıyı veya özkaynağı yapılandırmaya izin verir"
 
 #: configdialog/main.cpp:27
 #, kde-format
 msgid "© 2025 Carl Schwan <carl@carlschwan.eu>"
-msgstr ""
+msgstr "© 2025 Carl Schwan <carl@carlschwan.eu>"
 
 #: configdialog/main.cpp:30
-#, fuzzy, kde-format
-#| msgctxt "@info:shell"
-#| msgid "Agent identifier"
+#, kde-format
 msgid "The agent identifier"
 msgstr "Aracı tanımlayıcısı"
 
 #: configdialog/main.cpp:36
 #, kde-format
 msgid "Required identifier argument missing."
-msgstr ""
+msgstr "Gerekli tanımlayıcı argümanı eksik."
 
 #: configdialog/main.cpp:51
-#, fuzzy, kde-format
-#| msgid "No resource agents found."
+#, kde-format
 msgid "No such agent found \"%1\""
-msgstr "Bir özkaynak aracısı bulunamadı."
+msgstr "“%1” adında bir aracı bulunamadı."
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format

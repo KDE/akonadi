@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-15 00:42+0000\n"
-"PO-Revision-Date: 2025-03-09 16:34+0200\n"
+"PO-Revision-Date: 2025-03-15 08:37+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -215,39 +215,34 @@ msgid "Command to execute"
 msgstr "Команда, яку слід виконати"
 
 #: configdialog/main.cpp:23
-#, fuzzy, kde-format
-#| msgctxt "@title:window, %1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgid "Configuration Dialog"
-msgstr "Налаштування %1"
+msgstr "Вікно налаштовування"
 
 #: configdialog/main.cpp:25
 #, kde-format
 msgid "Allows to configure an agent or resource"
-msgstr ""
+msgstr "Надає змогу налаштувати агент або ресурс"
 
 #: configdialog/main.cpp:27
 #, kde-format
 msgid "© 2025 Carl Schwan <carl@carlschwan.eu>"
-msgstr ""
+msgstr "© Carl Schwan <carl@carlschwan.eu>, 2025"
 
 #: configdialog/main.cpp:30
-#, fuzzy, kde-format
-#| msgctxt "@info:shell"
-#| msgid "Agent identifier"
+#, kde-format
 msgid "The agent identifier"
 msgstr "Ідентифікатор агента"
 
 #: configdialog/main.cpp:36
 #, kde-format
 msgid "Required identifier argument missing."
-msgstr ""
+msgstr "Пропущено обов'язковий аргумент ідентифікатора."
 
 #: configdialog/main.cpp:51
-#, fuzzy, kde-format
-#| msgid "No resource agents found."
+#, kde-format
 msgid "No such agent found \"%1\""
-msgstr "Не знайдено жодного агента ресурсів."
+msgstr "Не знайдено агента «%1»"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format

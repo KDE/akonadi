@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-15 00:42+0000\n"
-"PO-Revision-Date: 2025-03-09 11:10+0100\n"
+"PO-Revision-Date: 2025-03-15 10:52+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -219,39 +219,34 @@ msgid "Command to execute"
 msgstr "Ordre a executar"
 
 #: configdialog/main.cpp:23
-#, fuzzy, kde-format
-#| msgctxt "@title:window, %1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgid "Configuration Dialog"
-msgstr "Configuració de %1"
+msgstr "Diàleg de configuració"
 
 #: configdialog/main.cpp:25
 #, kde-format
 msgid "Allows to configure an agent or resource"
-msgstr ""
+msgstr "Permet configurar un agent o recurs"
 
 #: configdialog/main.cpp:27
 #, kde-format
 msgid "© 2025 Carl Schwan <carl@carlschwan.eu>"
-msgstr ""
+msgstr "© 2025 Carl Schwan <carl@carlschwan.eu>"
 
 #: configdialog/main.cpp:30
-#, fuzzy, kde-format
-#| msgctxt "@info:shell"
-#| msgid "Agent identifier"
+#, kde-format
 msgid "The agent identifier"
-msgstr "Identificador de l'agent"
+msgstr "L'identificador d'agent"
 
 #: configdialog/main.cpp:36
 #, kde-format
 msgid "Required identifier argument missing."
-msgstr ""
+msgstr "Manca l'argument d'identificador requerit."
 
 #: configdialog/main.cpp:51
-#, fuzzy, kde-format
-#| msgid "No resource agents found."
+#, kde-format
 msgid "No such agent found \"%1\""
-msgstr "No s'ha trobat cap agent de recursos."
+msgstr "No s'ha trobat cap agent «%1»"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -2698,16 +2693,3 @@ msgstr "No s'ha pogut analitzar el fitxer de dades: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "No s'ha pogut trobar la col·lecció %1"
-
-#~ msgctxt "@window:title"
-#~ msgid "Error"
-#~ msgstr "Error"
-
-#~ msgid "A required background service is not operational."
-#~ msgstr "Un servei necessari en segon pla no és operatiu."
-
-#~ msgid "Failed to create relation."
-#~ msgstr "Ha fallat en crear la relació."
-
-#~ msgid "Quota"
-#~ msgstr "Quota"

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-15 00:42+0000\n"
-"PO-Revision-Date: 2025-01-01 09:06+0100\n"
+"PO-Revision-Date: 2025-03-15 22:36+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -214,44 +214,39 @@ msgid "Command to execute"
 msgstr "Komando plenumenda"
 
 #: configdialog/main.cpp:23
-#, fuzzy, kde-format
-#| msgctxt "@title:window, %1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgid "Configuration Dialog"
-msgstr "%1 Agordo"
+msgstr "Agorddialogo"
 
 #: configdialog/main.cpp:25
 #, kde-format
 msgid "Allows to configure an agent or resource"
-msgstr ""
+msgstr "Permesas agordi agenton aŭ rimedon"
 
 #: configdialog/main.cpp:27
 #, kde-format
 msgid "© 2025 Carl Schwan <carl@carlschwan.eu>"
-msgstr ""
+msgstr "© 2025 Carl Schwan <carl@carlschwan.eu>"
 
 #: configdialog/main.cpp:30
-#, fuzzy, kde-format
-#| msgctxt "@info:shell"
-#| msgid "Agent identifier"
+#, kde-format
 msgid "The agent identifier"
-msgstr "Agentidentigilo"
+msgstr "La agentidentigilo"
 
 #: configdialog/main.cpp:36
 #, kde-format
 msgid "Required identifier argument missing."
-msgstr ""
+msgstr "Mankas postulata identigil-argumento."
 
 #: configdialog/main.cpp:51
-#, fuzzy, kde-format
-#| msgid "No resource agents found."
+#, kde-format
 msgid "No such agent found \"%1\""
-msgstr "Neniuj rimedoj trovitaj."
+msgstr "Neniu tia agento trovita \"%1\""
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
 msgid "No such collection."
-msgstr "Ne tia kolekto."
+msgstr "Neniu tia kolekto."
 
 #: core/collectionsync.cpp:505 core/collectionsync.cpp:650
 #, kde-format
@@ -744,12 +739,10 @@ msgid "Configure Account"
 msgstr "Agordi Konton"
 
 #: widgets/agenttypedialog.cpp:74
-#, fuzzy, kde-format
-#| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
+#, kde-format
 msgctxt "@item:textbox"
 msgid "Search types"
-msgstr "Serĉi"
+msgstr "Serĉtipoj"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
@@ -2668,10 +2661,3 @@ msgstr "Ne eblas analizi datumdosieron: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Ne eblas trovi kolekton %1"
-
-#~ msgctxt "@window:title"
-#~ msgid "Error"
-#~ msgstr "Eraro"
-
-#~ msgid "A required background service is not operational."
-#~ msgstr "Iu postulita fonservo ne funkcias."

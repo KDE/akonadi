@@ -208,11 +208,9 @@ msgid "Command to execute"
 msgstr "要执行的命令"
 
 #: configdialog/main.cpp:23
-#, fuzzy, kde-format
-#| msgctxt "@title:window, %1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgid "Configuration Dialog"
-msgstr "%1 设置"
+msgstr ""
 
 #: configdialog/main.cpp:25
 #, kde-format
@@ -225,11 +223,9 @@ msgid "© 2025 Carl Schwan <carl@carlschwan.eu>"
 msgstr ""
 
 #: configdialog/main.cpp:30
-#, fuzzy, kde-format
-#| msgctxt "@info:shell"
-#| msgid "Agent identifier"
+#, kde-format
 msgid "The agent identifier"
-msgstr "代理标识符"
+msgstr ""
 
 #: configdialog/main.cpp:36
 #, kde-format
@@ -237,10 +233,9 @@ msgid "Required identifier argument missing."
 msgstr ""
 
 #: configdialog/main.cpp:51
-#, fuzzy, kde-format
-#| msgid "No resource agents found."
+#, kde-format
 msgid "No such agent found \"%1\""
-msgstr "找不到资源代理。"
+msgstr ""
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
