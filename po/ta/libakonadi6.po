@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-09 02:31+0000\n"
-"PO-Revision-Date: 2025-03-09 17:08+0530\n"
+"PO-Revision-Date: 2025-03-16 14:31+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -257,17 +257,17 @@ msgstr ""
 #: core/jobs/collectioncopyjob.cpp:54
 #, kde-format
 msgid "Invalid collection to copy"
-msgstr ""
+msgstr "நகலுக்கு செல்லுபடியாகாத திரட்டு"
 
 #: core/jobs/collectioncopyjob.cpp:60
 #, kde-format
 msgid "Invalid destination collection"
-msgstr ""
+msgstr "செல்லுபடியாகாத சேருமிட திரட்டு"
 
 #: core/jobs/collectioncreatejob.cpp:50
 #, kde-format
 msgid "Invalid parent"
-msgstr ""
+msgstr "செல்லுபடியாகாத தாய்"
 
 #: core/jobs/collectioncreatejob.cpp:98
 #, kde-format
@@ -371,7 +371,7 @@ msgstr ""
 #: core/jobs/tagcreatejob.cpp:49
 #, kde-format
 msgid "Failed to create tag."
-msgstr ""
+msgstr "குறிச்சொல்லை உருவாக்க முடியவில்லை"
 
 #: core/jobs/trashjob.cpp:155
 #, kde-format
@@ -381,12 +381,12 @@ msgstr ""
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format
 msgid "Invalid items passed"
-msgstr ""
+msgstr "செல்லுபடியாகாத உருப்படிகள் தரப்பட்டன"
 
 #: core/jobs/trashjob.cpp:258 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
-msgstr ""
+msgstr "செல்லுபடியாகாத திரட்டு தரப்பட்டது"
 
 #: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
 #, kde-format
@@ -484,7 +484,7 @@ msgstr "படிக்காத செய்திகள்"
 #, kde-format
 msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
 msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
-msgstr ""
+msgstr "<strong>வரம்பில் எவ்வளவு பயனிலுள்ளது</strong>: %1% (%2/%3)<br>\n"
 
 #: core/models/statisticsproxymodel.cpp:106
 #, kde-format
@@ -686,57 +686,57 @@ msgstr ""
 #, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
-msgstr ""
+msgstr "கணக்கை அமைப்பது"
 
 #: widgets/agenttypedialog.cpp:74
 #, kde-format
 msgctxt "@item:textbox"
 msgid "Search types"
-msgstr ""
+msgstr "தேடல் வகைகள்"
 
 #: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
 msgid "minute"
 msgid_plural "minutes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "நிமிடம்"
+msgstr[1] "நிமிடம்"
 
 #: widgets/cachepolicypage.cpp:69
 #, kde-format
 msgid "Retrieval"
-msgstr ""
+msgstr "மீட்பு"
 
 #. i18n: ectx: property (text), widget (QCheckBox, inherit)
 #: widgets/cachepolicypage.ui:20
 #, kde-format
 msgid "Use options from parent folder or account"
-msgstr ""
+msgstr "தாய் அடைவின் அல்லது கணக்கின் அமைப்புகளைப் பயன்படுத்து"
 
 #. i18n: ectx: property (text), widget (QCheckBox, syncOnDemand)
 #: widgets/cachepolicypage.ui:33
 #, kde-format
 msgid "Synchronize when selecting this folder"
-msgstr ""
+msgstr "இவ்வடைவைத் திறக்கும்போது ஒத்திசையச்செய்"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: widgets/cachepolicypage.ui:40
 #, kde-format
 msgid "Synchronize after:"
-msgstr ""
+msgstr "இதன்பின் ஒத்திசையசெய்:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, checkInterval)
 #: widgets/cachepolicypage.ui:47
 #, kde-format
 msgctxt "never check the cache"
 msgid "Never"
-msgstr ""
+msgstr "ஒருபோதும் வேண்டாம்"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, checkInterval)
 #. i18n: ectx: property (suffix), widget (QSpinBox, localCacheTimeout)
 #: widgets/cachepolicypage.ui:50 widgets/cachepolicypage.ui:133
 #, kde-format
 msgid "minutes"
-msgstr ""
+msgstr "நிமிடம்"
 
 #. i18n: ectx: property (text), widget (QLabel, localPartsLabel)
 #: widgets/cachepolicypage.ui:66
@@ -754,32 +754,32 @@ msgstr ""
 #: widgets/cachepolicypage.ui:94
 #, kde-format
 msgid "Retrieval Options:"
-msgstr ""
+msgstr "மீட்பு விருப்பங்கள்:"
 
 #. i18n: ectx: property (text), widget (QRadioButton, retrieveFullMessages)
 #: widgets/cachepolicypage.ui:101
 #, kde-format
 msgid "Always retrieve full &messages"
-msgstr ""
+msgstr "முழு அஞ்சல்களையே மீள்"
 
 #. i18n: ectx: property (text), widget (QRadioButton, retrieveOnlyHeaders)
 #: widgets/cachepolicypage.ui:111
 #, kde-format
 msgid "&Retrieve message bodies on demand"
-msgstr ""
+msgstr "அஞ்சலின் உரையை தேவைப்படும்போதே மீட்டெடு"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/cachepolicypage.ui:118
 #, kde-format
 msgid "Keep message bodies locally for:"
-msgstr ""
+msgstr "பதிவிறக்கிய அஞ்சலின் உரையை இவ்வளவு நேரம் சேமித்து வை:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, localCacheTimeout)
 #: widgets/cachepolicypage.ui:130
 #, kde-format
 msgctxt "no cache timeout"
 msgid "Forever"
-msgstr ""
+msgstr "என்றென்றும்"
 
 #: widgets/clearcachefoldersjob.cpp:41
 #, kde-format
@@ -798,7 +798,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
 msgid "Search"
-msgstr ""
+msgstr "தேடு"
 
 #: widgets/collectiondialog.cpp:66
 #, kde-format
@@ -810,109 +810,109 @@ msgstr ""
 #, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
-msgstr ""
+msgstr "புதிய சாரடைவு..."
 
 #: widgets/collectiondialog.cpp:228
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
-msgstr ""
+msgstr "தற்போதைய அடைவில் சார்ந்த புதிய அடைவை உருவாக்கு"
 
 #: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:418
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
-msgstr ""
+msgstr "புதிய அடைவு"
 
 #: widgets/collectiondialog.cpp:266
 #, kde-format
 msgctxt "@label:textbox, name of a thing"
 msgid "Name"
-msgstr ""
+msgstr "பெயர்"
 
 #: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:420
 #, kde-format
 msgid "Could not create folder: %1"
-msgstr ""
+msgstr "அடைவை உருவாக்க முடியவில்லை: %1"
 
 #: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:421
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
-msgstr ""
+msgstr "அடைவை உருவாக்குவது தோல்வியடைந்த‍து"
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
 #, kde-format
 msgctxt "@title:tab general properties page"
 msgid "General"
-msgstr ""
+msgstr "பொதுவானவை"
 
 #: widgets/collectiongeneralpropertiespage.cpp:54
 #, kde-format
 msgctxt "@label"
 msgid "One object"
 msgid_plural "%1 objects"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "ஒரு உருப்படி"
+msgstr[1] "%1 உருப்படிகள்"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/collectiongeneralpropertiespage.ui:16
 #, kde-format
 msgid "&Name:"
-msgstr ""
+msgstr "பெயர்:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, customIconCheckbox)
 #: widgets/collectiongeneralpropertiespage.ui:29
 #, kde-format
 msgid "&Use custom icon:"
-msgstr ""
+msgstr "தனிப்பட்ட சின்னத்தை பயன்படுத்து:"
 
 #. i18n: ectx: property (icon), widget (KIconButton, customIcon)
 #: widgets/collectiongeneralpropertiespage.ui:39
 #, kde-format
 msgid "folder"
-msgstr ""
+msgstr "folder"
 
 #. i18n: ectx: property (title), widget (QGroupBox, statsBox)
 #: widgets/collectiongeneralpropertiespage.ui:62
 #, kde-format
 msgid "Statistics"
-msgstr ""
+msgstr "புள்ளிவிவரங்கள்"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: widgets/collectiongeneralpropertiespage.ui:68
 #, kde-format
 msgctxt "object names"
 msgid "Content:"
-msgstr ""
+msgstr "உள்ளடக்கம்:"
 
 #. i18n: ectx: property (text), widget (QLabel, countLabel)
 #: widgets/collectiongeneralpropertiespage.ui:75
 #, kde-format
 msgid "0 objects"
-msgstr ""
+msgstr "0 உருப்படிகள்"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: widgets/collectiongeneralpropertiespage.ui:82
 #, kde-format
 msgid "Size:"
-msgstr ""
+msgstr "அளவு:"
 
 #. i18n: ectx: property (text), widget (QLabel, sizeLabel)
 #: widgets/collectiongeneralpropertiespage.ui:89
 #, kde-format
 msgid "0 Byte"
-msgstr ""
+msgstr "0 பைட்டு"
 
 #: widgets/collectionmaintenancepage.cpp:46
 #, kde-format
 msgid "Remember that indexing can take some minutes."
-msgstr ""
+msgstr "அட்டவணையாக்கத்திற்கு நேரமாகலாம்."
 
 #: widgets/collectionmaintenancepage.cpp:72
 #, kde-format
 msgid "Maintenance"
-msgstr ""
+msgstr "பராமரிப்பு"
 
 #: widgets/collectionmaintenancepage.cpp:131
 #, kde-format
@@ -935,7 +935,7 @@ msgstr ""
 #: widgets/collectionmaintenancepage.ui:17
 #, kde-format
 msgid "Folder type:"
-msgstr ""
+msgstr "அடைவின் வகை:"
 
 #. i18n: ectx: property (text), widget (QLabel, folderTypeLbl)
 #. i18n: ectx: property (text), widget (QLabel, folderSizeLbl)
@@ -947,37 +947,37 @@ msgstr ""
 #: widgets/collectionmaintenancepage.ui:66
 #, kde-format
 msgid "unknown"
-msgstr ""
+msgstr "தெரியாதது"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: widgets/collectionmaintenancepage.ui:38
 #, kde-format
 msgid "File size:"
-msgstr ""
+msgstr "கோப்பின் அளவு:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: widgets/collectionmaintenancepage.ui:45
 #, kde-format
 msgid "Total items:"
-msgstr ""
+msgstr "மொத்த உருப்படிகள்:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: widgets/collectionmaintenancepage.ui:59
 #, kde-format
 msgid "Unread items:"
-msgstr ""
+msgstr "படிக்காதவை:"
 
 #. i18n: ectx: property (text), widget (QLabel, indexingLabel)
 #: widgets/collectionmaintenancepage.ui:73
 #, kde-format
 msgid "Indexing:"
-msgstr ""
+msgstr "அட்டவணையாக்கம்:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, enableIndexingChkBox)
 #: widgets/collectionmaintenancepage.ui:80
 #, kde-format
 msgid "Enable fulltext indexing"
-msgstr ""
+msgstr "முழு உரையையும் அட்டவணையாக்கு"
 
 #. i18n: ectx: property (text), widget (QLabel, indexedCountLbl)
 #: widgets/collectionmaintenancepage.ui:87
@@ -989,14 +989,13 @@ msgstr ""
 #: widgets/collectionmaintenancepage.ui:94
 #, kde-format
 msgid "Reindex folder"
-msgstr ""
+msgstr "அடைவை மீண்டும் அட்டவணையாக்கு"
 
 #: widgets/collectionrequester.cpp:113
-#, fuzzy, kde-format
-#| msgid "Favorite Folders"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No Folder"
-msgstr "பிடித்த அடைவுகள்"
+msgstr ""
 
 #: widgets/collectionrequester.cpp:122
 #, kde-format
@@ -1008,12 +1007,12 @@ msgstr ""
 #, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
-msgstr ""
+msgstr "திரட்டைத் தேர்ந்தெடுக்கவும்"
 
 #: widgets/conflictresolvedialog.cpp:129
 #, kde-format
 msgid "Modification Time"
-msgstr ""
+msgstr "மாற்ற நேரம்"
 
 #: widgets/conflictresolvedialog.cpp:141
 #, kde-format
@@ -1024,7 +1023,7 @@ msgstr ""
 #: widgets/conflictresolvedialog.cpp:174
 #, kde-format
 msgid "Attribute: %1"
-msgstr ""
+msgstr "பண்பு: %1"
 
 #: widgets/conflictresolvedialog.cpp:186
 #, kde-format
@@ -1064,7 +1063,7 @@ msgstr ""
 #: widgets/conflictresolvedialog.cpp:266
 #, kde-format
 msgid "Data"
-msgstr ""
+msgstr "தரவு"
 
 #: widgets/controlgui.cpp:223
 #, kde-format
@@ -1079,22 +1078,22 @@ msgstr ""
 #: widgets/dragdropmanager.cpp:212
 #, kde-format
 msgid "&Move Here"
-msgstr ""
+msgstr "இங்கு நகர்த்து"
 
 #: widgets/dragdropmanager.cpp:218
 #, kde-format
 msgid "&Copy Here"
-msgstr ""
+msgstr "இங்கு நகலெடு"
 
 #: widgets/dragdropmanager.cpp:224
 #, kde-format
 msgid "&Link Here"
-msgstr ""
+msgstr "இங்கு இணை"
 
 #: widgets/dragdropmanager.cpp:229
 #, kde-format
 msgid "C&ancel"
-msgstr ""
+msgstr "ரத்து செய்"
 
 #: widgets/erroroverlay.cpp:224
 #, kde-format
@@ -1158,7 +1157,7 @@ msgstr ""
 #, kde-format
 msgctxt "@action:button Start the Akonadi server"
 msgid "Start"
-msgstr ""
+msgstr "துவக்கு"
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
@@ -1182,77 +1181,77 @@ msgstr ""
 #: widgets/erroroverlay.ui:259
 #, kde-format
 msgid "Details..."
-msgstr ""
+msgstr "விவரங்கள்..."
 
 #: widgets/manageaccountwidget.cpp:221
 #, kde-format
 msgid "Do you want to remove account '%1'?"
-msgstr ""
+msgstr "'%1ய எனும் கணக்கை உறுதியாக நீக்க வேண்டுமா?"
 
 #: widgets/manageaccountwidget.cpp:222
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"
-msgstr ""
+msgstr "கணக்கை நீக்கலாமா?"
 
 #. i18n: ectx: property (text), widget (QCheckBox, accountOnCurrentActivity)
 #: widgets/manageaccountwidget.ui:19
 #, kde-format
 msgid "Show only account on current activity"
-msgstr ""
+msgstr "தற்போதைய செயல்பாட்டில் மட்டும் கணக்கைக் காட்டு"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/manageaccountwidget.ui:26
 #, kde-format
 msgid "Incoming accounts (add at least one):"
-msgstr ""
+msgstr "அஞ்சல் பெறுவதற்கான கணக்குகள் (ஒன்றையாவது சேர்க்கவும்):"
 
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
 #: widgets/manageaccountwidget.ui:33
 #, kde-format
 msgid "Filter…"
-msgstr ""
+msgstr "வடிகட்டு…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
 #: widgets/manageaccountwidget.ui:47
 #, kde-format
 msgid "A&dd..."
-msgstr ""
+msgstr "சேர்..."
 
 #. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
 #: widgets/manageaccountwidget.ui:57
 #, kde-format
 msgid "&Modify..."
-msgstr ""
+msgstr "திருத்து…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
 #: widgets/manageaccountwidget.ui:67
 #, kde-format
 msgid "R&emove"
-msgstr ""
+msgstr "நீக்கு"
 
 #. i18n: ectx: property (text), widget (QPushButton, mRestartAccountButton)
 #: widgets/manageaccountwidget.ui:84
 #, kde-format
 msgid "Restart"
-msgstr ""
+msgstr "மீள்துவக்கு"
 
 #: widgets/recentcollectionaction.cpp:43
 #, kde-format
 msgid "Recent Folder"
-msgstr ""
+msgstr "சமீப அடைவு"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, RenameFavoriteDialog)
 #: widgets/renamefavoritedialog.ui:26
 #, kde-format
 msgid "Rename Favorite"
-msgstr ""
+msgstr "பிடித்ததற்கு மறுபெயரிடுவது"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/renamefavoritedialog.ui:35
 #, kde-format
 msgid "Name:"
-msgstr ""
+msgstr "பெயர்:"
 
 #: widgets/selftestdialog.cpp:60
 #, kde-format
