@@ -15,6 +15,7 @@
 #include <KLocalizedString>
 
 using namespace Akonadi;
+using namespace Qt::StringLiterals;
 
 class Akonadi::CachePolicyPagePrivate
 {
@@ -126,6 +127,13 @@ void CachePolicyPage::load(const Collection &collection)
     // last code otherwise it will call slotRetrievalOptionsGroupBoxDisabled before
     // calling d->mUi->label->setEnabled(!fetchBodies);
     d->mUi->inherit->setChecked(policy.inheritFromParent());
+
+    const auto containsEmails = collection.contentMimeTypes().contains(u"message/rfc822"_s);
+    d->mUi->retrievalOptionsLabel->setVisible(containsEmails);
+    d->mUi->retrieveFullMessages->setVisible(containsEmails);
+    d->mUi->retrieveOnlyHeaders->setVisible(containsEmails);
+    d->mUi->label->setVisible(containsEmails);
+    d->mUi->localCacheTimeout->setVisible(containsEmails);
 }
 
 void CachePolicyPage::save(Collection &collection)
