@@ -8,6 +8,7 @@
 
 #include "akonadicore_export.h"
 
+#include <QObject>
 #include <QSharedDataPointer>
 #include <QStringList>
 
@@ -58,6 +59,13 @@ class CachePolicyPrivate;
  */
 class AKONADICORE_EXPORT CachePolicy
 {
+    Q_GADGET
+    Q_PROPERTY(bool inheritFromParent READ inheritFromParent WRITE setInheritFromParent)
+    Q_PROPERTY(QStringList localParts READ localParts WRITE setLocalParts)
+    Q_PROPERTY(int cacheTimeout READ cacheTimeout WRITE setCacheTimeout)
+    Q_PROPERTY(int intervalCheckTime READ intervalCheckTime WRITE setIntervalCheckTime)
+    Q_PROPERTY(bool syncOnDemand READ syncOnDemand WRITE setSyncOnDemand)
+
 public:
     /**
      * Creates an empty cache policy.
