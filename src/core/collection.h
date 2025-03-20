@@ -72,6 +72,9 @@ class AKONADICORE_EXPORT Collection
     Q_PROPERTY(Rights rights READ rights WRITE setRights)
     Q_PROPERTY(QStringList contentMimeTypes READ contentMimeTypes WRITE setContentMimeTypes)
     Q_PROPERTY(QString resource READ resource WRITE setResource)
+    Q_PROPERTY(CollectionStatistics statistics READ statistics)
+    Q_PROPERTY(CachePolicy cachePolicy READ cachePolicy)
+
 public:
     /**
      * Describes the unique id type.
