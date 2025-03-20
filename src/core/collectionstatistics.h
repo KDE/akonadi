@@ -57,6 +57,10 @@ class CollectionStatisticsPrivate;
  */
 class AKONADICORE_EXPORT CollectionStatistics
 {
+    Q_GADGET
+    Q_PROPERTY(int count READ count)
+    Q_PROPERTY(int size READ size)
+
 public:
     /**
      * Creates a new collection statistics object.
