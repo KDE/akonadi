@@ -342,6 +342,7 @@ public:
         TerminalUserRole = 2000, ///< Last role for user extensions. Don't use a role beyond this or headerData will break.
         EndRole = 65535
     };
+    Q_ENUM(Roles);
 
     /**
      * Describes the state of fetch jobs related to particular collections.
