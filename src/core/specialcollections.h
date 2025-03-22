@@ -117,6 +117,11 @@ public:
      */
     [[nodiscard]] Akonadi::Collection defaultCollection(const QByteArray &type) const;
 
+    /**
+     * Returns whether the instanceIdentifier is a special agent that should not be deleted.
+     */
+    [[nodiscard]] bool isSpecialAgent(const QString &instanceIdentifier) const;
+
 Q_SIGNALS:
     /**
      * Emitted when the special collections for a resource have been changed
