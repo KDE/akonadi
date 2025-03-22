@@ -263,4 +263,11 @@ Akonadi::Collection SpecialCollections::defaultCollection(const QByteArray &type
     return collection(type, d->defaultResource());
 }
 
+bool SpecialCollections::isSpecialAgent(const QString &instanceIdentifier) const
+{
+    const KConfigSkeletonItem *item = d->mSettings->findItem(QStringLiteral("DefaultResourceId"));
+    Q_ASSERT(item);
+    return item->property().toString() == instanceIdentifier;
+}
+
 #include "moc_specialcollections.cpp"
