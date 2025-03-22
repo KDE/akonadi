@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-09 02:31+0000\n"
+"POT-Creation-Date: 2025-03-22 02:31+0000\n"
 "PO-Revision-Date: 2025-03-09 11:10+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -737,14 +737,14 @@ msgctxt "@item:textbox"
 msgid "Search types"
 msgstr "Tipus a cercar"
 
-#: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
+#: widgets/cachepolicypage.cpp:43 widgets/cachepolicypage.cpp:48
 #, kde-format
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "minut"
 msgstr[1] "minuts"
 
-#: widgets/cachepolicypage.cpp:69
+#: widgets/cachepolicypage.cpp:70
 #, kde-format
 msgid "Retrieval"
 msgstr "Recuperació"

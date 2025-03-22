@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-09 02:31+0000\n"
+"POT-Creation-Date: 2025-03-22 02:31+0000\n"
 "PO-Revision-Date: 2013-01-13 00:43+0200\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -737,7 +737,7 @@ msgctxt "@item:textbox"
 msgid "Search types"
 msgstr "Caută"
 
-#: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
+#: widgets/cachepolicypage.cpp:43 widgets/cachepolicypage.cpp:48
 #, kde-format
 msgid "minute"
 msgid_plural "minutes"
@@ -745,7 +745,7 @@ msgstr[0] "minut"
 msgstr[1] "minute"
 msgstr[2] "de minute"
 
-#: widgets/cachepolicypage.cpp:69
+#: widgets/cachepolicypage.cpp:70
 #, kde-format
 msgid "Retrieval"
 msgstr "Preluare"

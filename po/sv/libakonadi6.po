@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-09 02:31+0000\n"
+"POT-Creation-Date: 2025-03-22 02:31+0000\n"
 "PO-Revision-Date: 2025-02-28 19:28+0100\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -731,14 +731,14 @@ msgctxt "@item:textbox"
 msgid "Search types"
 msgstr "Sök"
 
-#: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
+#: widgets/cachepolicypage.cpp:43 widgets/cachepolicypage.cpp:48
 #, kde-format
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "minut"
 msgstr[1] "minuter"
 
-#: widgets/cachepolicypage.cpp:69
+#: widgets/cachepolicypage.cpp:70
 #, kde-format
 msgid "Retrieval"
 msgstr "Hämtning"
