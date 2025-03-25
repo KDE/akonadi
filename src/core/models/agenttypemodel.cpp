@@ -64,8 +64,10 @@ int AgentTypeModel::columnCount(const QModelIndex & /*parent*/) const
     return 1;
 }
 
-int AgentTypeModel::rowCount(const QModelIndex & /*parent*/) const
+int AgentTypeModel::rowCount(const QModelIndex &parent) const
 {
+    if (parent.isValid()) // flat model
+        return 0;
     return d->mTypes.count();
 }
 
