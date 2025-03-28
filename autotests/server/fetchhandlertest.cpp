@@ -13,6 +13,7 @@
 #include "entities.h"
 #include "fakeakonadiserver.h"
 
+#include <QElapsedTimer>
 #include <QTest>
 
 using namespace Akonadi;
