@@ -187,3 +187,5 @@ void AgentInstance::setActivitiesEnabled(bool enabled)
 {
     AgentManager::self()->d->setActivitiesEnabled(*this, enabled);
 }
+
+#include "moc_agentinstance.cpp"

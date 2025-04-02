@@ -77,3 +77,5 @@ QDebug operator<<(QDebug d, const CollectionStatistics &s)
              << "      unread count:" << s.unreadCount() << '\n'
              << "      size:" << s.size();
 }
+
+#include "moc_collectionstatistics.cpp"

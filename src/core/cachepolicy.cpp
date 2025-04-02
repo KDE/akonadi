@@ -111,3 +111,5 @@ QDebug operator<<(QDebug d, const CachePolicy &c)
              << "   sync on demand:" << c.syncOnDemand() << '\n'
              << "   local parts:" << c.localParts();
 }
+
+#include "moc_cachepolicy.cpp"
