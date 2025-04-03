@@ -77,7 +77,7 @@ public:
     Item::List items;
     Collection destination;
     Collection source;
-    std::span<Item> remainingItems;
+    std::span<const Item> remainingItems;
 
     Q_DECLARE_PUBLIC(ItemMoveJob)
 };

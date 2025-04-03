@@ -57,7 +57,7 @@ public:
     QSet<int> mOperations;
     QByteArray mTag;
     Item::List mItems;
-    mutable std::span<Item> mRemainingItems;
+    mutable std::span<const Item> mRemainingItems;
     bool mRevCheck = true;
     QSet<QByteArray> mParts;
     QSet<QByteArray> mForeignParts;

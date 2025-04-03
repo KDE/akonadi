@@ -83,7 +83,7 @@ public:
     }
 
     Item::List objectsToLink;
-    std::span<Item> remainingObjects;
+    std::span<const Item> remainingObjects;
     Collection destination;
 };
 

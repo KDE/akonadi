@@ -52,7 +52,7 @@ public:
     Item::List mItems;
     Collection mCollection;
     Tag mCurrentTag;
-    std::span<Item> mRemainingItems;
+    std::span<const Item> mRemainingItems;
 };
 
 QString Akonadi::ItemDeleteJobPrivate::jobDebuggingString() const

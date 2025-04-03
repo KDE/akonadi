@@ -146,7 +146,7 @@ public:
     ItemFetchJob::DeliveryOptions mDeliveryOptions = ItemFetchJob::Default;
     int mCount = 0;
     Protocol::FetchLimit mItemsLimit;
-    std::span<Item> mRemainingItems;
+    std::span<const Item> mRemainingItems;
 };
 
 ItemFetchJob::ItemFetchJob(const Collection &collection, QObject *parent)
