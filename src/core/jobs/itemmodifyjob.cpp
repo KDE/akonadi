@@ -88,6 +88,7 @@ void ItemModifyJobPrivate::doUpdateItemRevision(Akonadi::Item::Id itemId, int ol
 QString ItemModifyJobPrivate::jobDebuggingString() const
 {
     try {
+        mRemainingItems = std::span(mItems);
         return Protocol::debugString(fullCommand());
     } catch (const Exception &e) {
         return QString::fromUtf8(e.what());
