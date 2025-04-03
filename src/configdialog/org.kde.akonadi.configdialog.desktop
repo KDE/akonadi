@@ -20,6 +20,7 @@ Name[sl]=Pogovorno okno za konfiguracijo agenta
 Name[tr]=Aracı Yapılandırması İletişim Kutusu
 Name[uk]=Вікно налаштовування агента
 Name[x-test]=xxAgent Configuration Dialogxx
+Name[zh_CN]=代理配置对话框
 Name[zh_TW]=代理程式設定對話框
 Exec=akonadiagentconfigdialog %u
 Terminal=false
