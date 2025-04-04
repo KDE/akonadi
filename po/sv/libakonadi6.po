@@ -9,14 +9,14 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-20 00:42+0000\n"
-"PO-Revision-Date: 2025-02-28 19:28+0100\n"
+"PO-Revision-Date: 2025-04-03 22:29+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.12.0\n"
+"X-Generator: Lokalize 24.12.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -54,7 +54,7 @@ msgstr "%1 av typ %2"
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
-msgstr "Agent-identifierare"
+msgstr "Agentidentifierare"
 
 #: agentbase/agentbase.cpp:817
 #, kde-format
@@ -213,39 +213,34 @@ msgid "Command to execute"
 msgstr "Kommando att köra"
 
 #: configdialog/main.cpp:23
-#, fuzzy, kde-format
-#| msgctxt "@title:window, %1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgid "Configuration Dialog"
-msgstr "Inställning av %1"
+msgstr "Inställningsdialogruta"
 
 #: configdialog/main.cpp:25
 #, kde-format
 msgid "Allows to configure an agent or resource"
-msgstr ""
+msgstr "Tillåter anpassning av en agent eller resurs"
 
 #: configdialog/main.cpp:27
 #, kde-format
 msgid "© 2025 Carl Schwan <carl@carlschwan.eu>"
-msgstr ""
+msgstr "© 2025 Carl Schwan <carl@carlschwan.eu>"
 
 #: configdialog/main.cpp:30
-#, fuzzy, kde-format
-#| msgctxt "@info:shell"
-#| msgid "Agent identifier"
+#, kde-format
 msgid "The agent identifier"
-msgstr "Agent-identifierare"
+msgstr "Agentidentifieraren"
 
 #: configdialog/main.cpp:36
 #, kde-format
 msgid "Required identifier argument missing."
-msgstr ""
+msgstr "Nödvändig identifierarväljare saknas."
 
 #: configdialog/main.cpp:51
-#, fuzzy, kde-format
-#| msgid "No resource agents found."
+#, kde-format
 msgid "No such agent found \"%1\""
-msgstr "Några resursagenter hittades inte."
+msgstr "Agenten \"%1\" hittades inte"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -747,12 +742,10 @@ msgid "Configure Account"
 msgstr "Anpassa konto"
 
 #: widgets/agenttypedialog.cpp:74
-#, fuzzy, kde-format
-#| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
+#, kde-format
 msgctxt "@item:textbox"
 msgid "Search types"
-msgstr "Sök"
+msgstr "Söktyper"
 
 #: widgets/cachepolicypage.cpp:43 widgets/cachepolicypage.cpp:48
 #, kde-format
