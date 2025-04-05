@@ -227,7 +227,6 @@ msgstr ""
 
 #: configdialog/main.cpp:51
 #, fuzzy, kde-format
-#| msgid "No resource agents found."
 msgid "No such agent found \"%1\""
 msgstr "Fann ingen ressursagentar"
 
@@ -714,8 +713,6 @@ msgstr ""
 
 #: widgets/agenttypedialog.cpp:74
 #, fuzzy, kde-format
-#| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
 msgctxt "@item:textbox"
 msgid "Search types"
 msgstr "Søk"
