@@ -695,8 +695,6 @@ msgstr ""
 
 #: widgets/agenttypedialog.cpp:74
 #, fuzzy, kde-format
-#| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
 msgctxt "@item:textbox"
 msgid "Search types"
 msgstr "Søk"
