@@ -728,7 +728,7 @@ msgstr "配置账户"
 #, kde-format
 msgctxt "@item:textbox"
 msgid "Search types"
-msgstr ""
+msgstr "搜索类型"
 
 #: widgets/cachepolicypage.cpp:43 widgets/cachepolicypage.cpp:48
 #, kde-format
