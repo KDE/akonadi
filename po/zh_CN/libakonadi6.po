@@ -1204,6 +1204,9 @@ msgid ""
 "Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> for "
 "troubleshooting tips.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>请求的后台服务不是一个可选服务.</p><p>另见 <a href="
+"\"https://userbase.kde.org/Akonadi#If_Akonadi_Reports_Broken_or_Non-"
+"operational\">FAQ</a> for troubleshooting tips.</p></body></html>"
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
