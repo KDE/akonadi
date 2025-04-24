@@ -67,6 +67,7 @@ AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance
     connect(btnBox, &QDialogButtonBox::rejected, this, &AgentConfigurationDialog::reject);
     if (QPushButton *applyButton = btnBox->button(QDialogButtonBox::Apply)) {
         connect(applyButton, &QPushButton::clicked, d->widget.data(), &AgentConfigurationWidget::save);
+        connect(d->widget.data(), &AgentConfigurationWidget::enableOkButton, applyButton, &QPushButton::setEnabled);
     }
     if ((d->okButton = btnBox->button(QDialogButtonBox::Ok))) {
         connect(d->widget.data(), &AgentConfigurationWidget::enableOkButton, d->okButton, &QPushButton::setEnabled);
