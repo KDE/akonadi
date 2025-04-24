@@ -15,6 +15,8 @@
 #include "agenttype.h"
 #include "agenttypemodel.h"
 
+constexpr int iconSize = 32; // use a standard icon size, like 64, 48, 32, ...
+
 namespace Akonadi
 {
 namespace Internal
@@ -155,7 +157,7 @@ void AgentTypeWidgetDelegate::paint(QPainter *painter, const QStyleOptionViewIte
 
     QPixmap pixmap;
     if (data.isValid() && data.typeId() == QMetaType::QIcon) {
-        pixmap = qvariant_cast<QIcon>(data).pixmap(64, 64);
+        pixmap = qvariant_cast<QIcon>(data).pixmap(iconSize, iconSize);
     }
 
     const QFont oldFont = painter->font();
@@ -234,8 +236,8 @@ QSize AgentTypeWidgetDelegate::sizeHint(const QStyleOptionViewItem &option, cons
         width = qMax(width, wc);
     }
 
-    height = qMax(height, 64) + 10;
-    width += 64 + 15;
+    height = qMax(height, iconSize) + 10;
+    width += iconSize + (iconSize / 4) - 1;
 
     return QSize(width, height);
 }
