@@ -36,8 +36,8 @@
 
 #include <QStandardPaths>
 #include <signal.h>
+#include <sstream>
 #include <stdlib.h>
-#include <strstream>
 #if defined __GLIBC__
 #include <malloc.h> // for dumping memory information
 #endif
