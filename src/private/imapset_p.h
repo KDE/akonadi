@@ -145,11 +145,11 @@ public:
     */
     ImapSet();
 
-    ImapSet(qint64 Id); // krazy:exclude=explicit
+    ImapSet(qint64 Id);
 
-    ImapSet(const QList<qint64> &ids); // krazy:exclude=explicit
+    ImapSet(const QList<qint64> &ids);
 
-    ImapSet(const ImapInterval &interval); // krazy:exclude=explicit
+    ImapSet(const ImapInterval &interval);
 
     /**
       Copy constructor.

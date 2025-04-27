@@ -18,7 +18,7 @@
 
 namespace Akonadi
 {
-class AKONADIWIDGETS_EXPORT ETMViewStateSaver : public KConfigViewStateSaver // krazy:exclude=dpointer
+class AKONADIWIDGETS_EXPORT ETMViewStateSaver : public KConfigViewStateSaver
 {
     Q_OBJECT
 public:

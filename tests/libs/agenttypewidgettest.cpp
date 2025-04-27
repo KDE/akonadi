@@ -18,8 +18,6 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-// krazy:excludeall=qclasses
-
 Dialog::Dialog(QWidget *parent)
     : QDialog(parent)
 {

@@ -992,7 +992,7 @@ void AgentBase::configure(WId windowId)
     qCWarning(AKONADIAGENTBASE_LOG) << "Calling AgentBase::configure instead of using an AgentConfigurationDialog is not supported anymore.";
 }
 
-#ifdef Q_OS_WIN // krazy:exclude=cpp
+#ifdef Q_OS_WIN
 void AgentBase::configure(qlonglong windowId)
 {
     configure(static_cast<WId>(windowId));

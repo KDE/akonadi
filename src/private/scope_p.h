@@ -5,8 +5,6 @@
  *  SPDX-License-Identifier: LGPL-2.0-or-later
  */
 
-// krazy:excludeall=dpointer
-
 #pragma once
 
 #include "akonadiprivate_export.h"
@@ -63,9 +61,9 @@ public:
 
     /* UID */
     Scope(std::initializer_list<qint64> ids);
-    Scope(qint64 id); // krazy:exclude=explicit
-    Scope(const QList<qint64> &ids); // krazy:exclude=explicit
-    Scope(const QList<HRID> &hridChain); // krazy:exclude=explicit
+    Scope(qint64 id);
+    Scope(const QList<qint64> &ids);
+    Scope(const QList<HRID> &hridChain);
 
     Scope(const Scope &other);
     Scope(Scope &&other) noexcept;

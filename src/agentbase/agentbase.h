@@ -176,7 +176,7 @@ public:
      *
      * @deprecated Use ObserverV2 instead
      */
-    class AKONADIAGENTBASE_DEPRECATED AKONADIAGENTBASE_EXPORT Observer // krazy:exclude=dpointer
+    class AKONADIAGENTBASE_DEPRECATED AKONADIAGENTBASE_EXPORT Observer
     {
     public:
         /**
@@ -235,7 +235,7 @@ public:
      *
      * @since 4.4
      */
-    class AKONADIAGENTBASE_EXPORT ObserverV2 : public Observer // krazy:exclude=dpointer
+    class AKONADIAGENTBASE_EXPORT ObserverV2 : public Observer
     {
     public:
         using Observer::collectionChanged;
@@ -299,7 +299,7 @@ public:
      *
      * @since 4.11
      */
-    class AKONADIAGENTBASE_EXPORT ObserverV3 : public ObserverV2 // krazy:exclude=dpointer
+    class AKONADIAGENTBASE_EXPORT ObserverV3 : public ObserverV2
     {
     public:
         /**

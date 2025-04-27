@@ -115,7 +115,7 @@ QByteArray PersistentSearchAttribute::serialized() const
     if (d->recursive) {
         l.append("RECURSIVE");
     }
-    return "(" + ImapParser::join(l, " ") + ')'; // krazy:exclude=doublequote_chars
+    return "(" + ImapParser::join(l, " ") + ')';
 }
 
 void PersistentSearchAttribute::deserialize(const QByteArray &data)

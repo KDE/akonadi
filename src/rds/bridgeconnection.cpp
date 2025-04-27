@@ -53,7 +53,7 @@ AkonadiBridgeConnection::AkonadiBridgeConnection(QTcpSocket *remoteSocket, QObje
 void AkonadiBridgeConnection::connectLocal()
 {
     const QSettings connectionSettings(Akonadi::StandardDirs::connectionConfigFile(), QSettings::IniFormat);
-#ifdef Q_OS_WIN // krazy:exclude=cpp
+#ifdef Q_OS_WIN
     const QString namedPipe = connectionSettings.value(QLatin1StringView("Data/NamedPipe"), QLatin1StringView("Akonadi")).toString();
     (static_cast<QLocalSocket *>(m_localSocket))->connectToServer(namedPipe);
 #else

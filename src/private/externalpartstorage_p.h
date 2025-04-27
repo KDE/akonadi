@@ -5,8 +5,6 @@
  *
  */
 
-// krazy:excludeall=dpointer
-
 #pragma once
 
 #include "akonadiprivate_export.h"

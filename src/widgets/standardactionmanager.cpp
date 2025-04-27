@@ -1720,7 +1720,7 @@ public:
             return;
         }
 
-        const QByteArray cutSelectionData = "1"; // krazy:exclude=doublequote_chars
+        const QByteArray cutSelectionData = "1";
         mimeData->setData(QStringLiteral("application/x-kde.akonadi-cutselection"), cutSelectionData);
     }
 

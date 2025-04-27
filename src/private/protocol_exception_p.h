@@ -4,8 +4,6 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-// krazy:excludeall=dpointer,inline
-
 #pragma once
 
 #include "akonadiprivate_export.h"

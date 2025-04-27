@@ -417,11 +417,9 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotificationPtr &
             QSet<QByteArray> missingAttributes;
             for (const QByteArray &part : changedParts) {
                 const auto partName = part.mid(4);
-                if (part.startsWith("PLD:") && // krazy:exclude=strings since QByteArray
-                    (!mItemFetchScope.fullPayload() || !requestedParts.contains(partName))) {
+                if (part.startsWith("PLD:") && (!mItemFetchScope.fullPayload() || !requestedParts.contains(partName))) {
                     missingParts.insert(partName);
-                } else if (part.startsWith("ATR:") && // krazy:exclude=strings since QByteArray
-                           (!mItemFetchScope.allAttributes() || !requestedAttrs.contains(partName))) {
+                } else if (part.startsWith("ATR:") && (!mItemFetchScope.allAttributes() || !requestedAttrs.contains(partName))) {
                     missingAttributes.insert(partName);
                 }
             }
