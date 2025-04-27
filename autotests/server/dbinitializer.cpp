@@ -6,11 +6,11 @@
 #include "dbinitializer.h"
 #include "akonadiserver_debug.h"
 
+#include "shared/akranges.h"
+
 #include "storage/datastore.h"
 #include "storage/parttypehelper.h"
-#include <storage/querybuilder.h>
-
-#include "shared/akranges.h"
+#include "storage/querybuilder.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

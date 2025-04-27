@@ -4,14 +4,13 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
+#include "datastream_p_p.h"
+
 #include <QBuffer>
 #include <QByteArray>
 #include <QObject>
 #include <QTest>
 #include <qcontainerfwd.h>
-#include <qtestcase.h>
-
-#include "datastream_p_p.h"
 
 enum TestEnum {
     Value1 = 1,

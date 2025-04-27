@@ -4,12 +4,6 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include <QObject>
-#include <QSettings>
-
-#include <qhashfunctions.h>
-#include <storage/selectquerybuilder.h>
-
 #include "private/scope_p.h"
 #include "private/standarddirs_p.h"
 
@@ -19,6 +13,10 @@
 #include "shared/akranges.h"
 #include "shared/aktest.h"
 
+#include "storage/selectquerybuilder.h"
+
+#include <QHashFunctions>
+#include <QSettings>
 #include <QTest>
 
 using namespace Akonadi;

@@ -15,7 +15,7 @@
 #include <QTimer>
 
 #ifdef Q_OS_UNIX
-#include <signal.h>
+#include <csignal>
 #include <sys/types.h>
 #endif
 

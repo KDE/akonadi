@@ -48,7 +48,6 @@
 #include <KLocalizedString>
 
 #include <chrono>
-#include <qdbusconnection.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

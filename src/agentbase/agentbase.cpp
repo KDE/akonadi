@@ -32,11 +32,9 @@
 #include <QNetworkInformation>
 #include <QPointer>
 #include <QSettings>
+#include <QStandardPaths>
 #include <QTimer>
 
-#include <QStandardPaths>
-#include <signal.h>
-#include <sstream>
 #include <stdlib.h>
 #if defined __GLIBC__
 #include <malloc.h> // for dumping memory information
@@ -47,6 +45,8 @@
 #endif
 
 #include <chrono>
+#include <csignal>
+#include <sstream>
 #include <thread>
 
 using namespace Akonadi;

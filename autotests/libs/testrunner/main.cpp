@@ -18,7 +18,8 @@
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QSessionManager>
-#include <signal.h>
+
+#include <csignal>
 
 static SetupTest *setup = nullptr;
 static TestRunner *runner = nullptr;

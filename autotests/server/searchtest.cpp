@@ -6,10 +6,9 @@
  */
 
 #include "aktest.h"
+#include "entities.h"
 #include "fakeakonadiserver.h"
 #include "handler/searchhelper.h"
-
-#include <entities.h>
 
 #include <QTest>
 

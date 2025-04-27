@@ -10,8 +10,8 @@
 
 #include <KLocalizedString>
 
+#include <QDomElement>
 #include <QFile>
-#include <qdom.h>
 
 #ifdef HAVE_LIBXML2
 #include <QStandardPaths>

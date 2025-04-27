@@ -7,7 +7,6 @@
 #include "modelspy.h"
 
 #include <QTest>
-#include <qassert.h>
 
 QVariantList extractModelColumn(const QAbstractItemModel &model, const QModelIndex &parent, const int firstRow, const int lastRow)
 {

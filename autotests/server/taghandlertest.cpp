@@ -4,17 +4,13 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include <QObject>
-
-#include <storage/selectquerybuilder.h>
-
 #include "aktest.h"
 #include "dbinitializer.h"
 #include "entities.h"
 #include "fakeakonadiserver.h"
-
 #include "private/scope_p.h"
 #include "protocol_p.h"
+#include "storage/selectquerybuilder.h"
 
 #include <QTest>
 

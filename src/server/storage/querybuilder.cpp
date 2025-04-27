@@ -11,7 +11,6 @@
 #include "storage/query.h"
 #include "utils.h"
 #include <memory>
-#include <qsqldatabase.h>
 
 #ifndef QUERYBUILDER_UNITTEST
 #include "storage/datastore.h"
@@ -22,6 +21,7 @@
 #include "shared/akranges.h"
 
 #include <QElapsedTimer>
+#include <QSqlDatabase>
 #include <QSqlDriver>
 #include <QSqlError>
 #include <QSqlField>

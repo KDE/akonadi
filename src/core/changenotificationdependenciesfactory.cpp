@@ -11,8 +11,6 @@
 #include "session_p.h"
 #include "sessionthread_p.h"
 
-#include <qdbusextratypes.h>
-
 using namespace Akonadi;
 
 Connection *ChangeNotificationDependenciesFactory::createNotificationConnection(Session *session, CommandBuffer *commandBuffer)

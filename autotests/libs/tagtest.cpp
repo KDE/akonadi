@@ -4,9 +4,6 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include <QObject>
-#include <qsignalspy.h>
-
 #include "attributefactory.h"
 #include "control.h"
 #include "item.h"
@@ -24,6 +21,8 @@
 #include "tagfetchjob.h"
 #include "tagfetchscope.h"
 #include "tagmodifyjob.h"
+
+#include <QSignalSpy>
 
 using namespace Akonadi;
 

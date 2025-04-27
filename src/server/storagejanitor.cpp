@@ -27,13 +27,13 @@
 #include <QDateTime>
 #include <QDir>
 #include <QDirIterator>
+#include <QRegularExpression>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QStringBuilder>
 
 #include <algorithm>
 #include <functional>
-#include <qregularexpression.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

@@ -4,23 +4,20 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include <QObject>
-#include <QScopeGuard>
-#include <QSettings>
-#include <QTemporaryDir>
-#include <QTest>
-
 #include "aktest.h"
+#include "config-akonadi.h"
+
 #include "private/standarddirs_p.h"
 #include "shared/akranges.h"
-#include <qtenvironmentvariables.h>
-
-#include <QSettings>
-#include <QStandardPaths>
-
 #include "storage/dbconfig.h"
 #include "storage/dbconfigpostgresql.h"
-#include <config-akonadi.h>
+
+#include <QScopeGuard>
+#include <QSettings>
+#include <QStandardPaths>
+#include <QTemporaryDir>
+#include <QTest>
+#include <QtEnvironmentVariables>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
