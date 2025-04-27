@@ -750,8 +750,13 @@ QString AgentBasePrivate::dumpMemoryInfoToString() const
     // man mallinfo for more info
     QString str;
 #if defined __GLIBC__
+#if defined(__GLIBC_PREREQ) && __GNUC_PREREQ(2, 33)
+    struct mallinfo2 mi;
+    mi = mallinfo2();
+#else
     struct mallinfo mi;
     mi = mallinfo();
+#endif
     QTextStream stream(&str);
     stream << "Total non-mmapped bytes (arena):      " << mi.arena << '\n'
            << "# of free chunks (ordblks):           " << mi.ordblks << '\n'
