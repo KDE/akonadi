@@ -10,10 +10,10 @@
 
 #pragma once
 
-#include "agentbase.h"
 #include "akonadiagentwidgetbase_export.h"
 
 #include <QApplication>
+#include <akonadi/agentbase.h>
 
 namespace Akonadi
 {
