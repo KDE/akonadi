@@ -11,9 +11,9 @@
 #pragma once
 
 #include "akonadiagentwidgetbase_export.h"
-#include "resourcebase.h"
 
 #include <QApplication>
+#include <akonadi/resourcebase.h>
 
 namespace Akonadi
 {
