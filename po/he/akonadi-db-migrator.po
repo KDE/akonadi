@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-25 00:38+0000\n"
+"POT-Creation-Date: 2025-04-29 00:41+0000\n"
 "PO-Revision-Date: 2024-07-13 15:55+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -28,37 +28,37 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "kde-l10n-he@kde.org"
 
-#: dbmigrator.cpp:437
+#: dbmigrator.cpp:436
 #, kde-format
 msgctxt "@info:status"
 msgid "Stopping Akonadi service..."
 msgstr "שירות Akonadi נעצר…"
 
-#: dbmigrator.cpp:440
+#: dbmigrator.cpp:439
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: timeout while waiting for Akonadi to stop."
 msgstr "שגיאה: נגמר זמן ההמתנה לעצירה של Akonadi."
 
-#: dbmigrator.cpp:447
+#: dbmigrator.cpp:446
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: couldn't acquire DBus lock for Akonadi."
 msgstr "שגיאה: לא ניתן לתפוס נעילת DBus ל־Akonadi."
 
-#: dbmigrator.cpp:456
+#: dbmigrator.cpp:455
 #, kde-format
 msgctxt "@info:status"
 msgid "Starting Akonadi service..."
 msgstr "שירות Akonadi מופעל…"
 
-#: dbmigrator.cpp:469
+#: dbmigrator.cpp:468
 #, kde-format
 msgctxt "@info:status"
 msgid "Database fsck completed"
 msgstr "בדיקה ותיקון (fsck) של מסד הנתונים הושלמו"
 
-#: dbmigrator.cpp:483
+#: dbmigrator.cpp:482
 #, kde-format
 msgctxt "@info:status"
 msgid ""
@@ -67,79 +67,79 @@ msgid ""
 msgstr ""
 "מנוע מסד נתונים „%1” שגוי - הערכים התקפים הם „sqlite”,‏ „mysql” ו־„postgres”."
 
-#: dbmigrator.cpp:505
+#: dbmigrator.cpp:504
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure source database server."
 msgstr "שגיאה: הגדרת שרת מסד נתוני המקור נכשלה."
 
-#: dbmigrator.cpp:510
+#: dbmigrator.cpp:509
 #, kde-format
 msgctxt "@info:shell"
 msgid "Source and destination database engines are the same."
 msgstr "מנגנוני מסדי הנתונים של המקור והיעד זהים."
 
-#: dbmigrator.cpp:517
+#: dbmigrator.cpp:516
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to obtain path to source database data file or directory."
 msgstr "שגיאה: משיכת הנתיב לקובץ או תיקיית נתוני מסד נתוני המקור נכשלה."
 
-#: dbmigrator.cpp:524
+#: dbmigrator.cpp:523
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure the new database server."
 msgstr "שגיאה: הגדרת שרת מסד הנתונים החדש נכשלה."
 
-#: dbmigrator.cpp:530
+#: dbmigrator.cpp:529
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open existing database to migrate data from."
 msgstr "שגיאה: פתיחת מסד נתונים קיים להסבת נתונים ממנו נכשלה."
 
-#: dbmigrator.cpp:535
+#: dbmigrator.cpp:534
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open new database to migrate data to."
 msgstr "שגיאה: פתיחת מסד נתונים חדש להסבת נתונים אליו נכשלה."
 
-#: dbmigrator.cpp:540
+#: dbmigrator.cpp:539
 #, kde-format
 msgctxt "@info:status"
 msgid "Running fsck on the source database"
 msgstr "בדיקה ותיקון (fsck) פועלים על מסד נתוני המקור"
 
-#: dbmigrator.cpp:559
+#: dbmigrator.cpp:558
 #, kde-format
 msgctxt "@info:status %2 is error message"
 msgid "Error: failed to remove temporary database directory %1: %2"
 msgstr "שגיאה: הסרת תיקיית מסד הנתונים הזמנית %1 נכשלה: %2"
 
-#: dbmigrator.cpp:566
+#: dbmigrator.cpp:565
 #, kde-format
 msgctxt "@info:shell"
 msgid "Backing up original database..."
 msgstr "מסד הנתונים המקורי מגובה…"
 
-#: dbmigrator.cpp:574
+#: dbmigrator.cpp:573
 #, kde-format
 msgctxt "@info:status"
 msgid "Restoring database from backup %1 to %2"
 msgstr "מסד הנתונים משוחזר מהגיבוי %1 אל %2"
 
-#: dbmigrator.cpp:576
+#: dbmigrator.cpp:575
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to restore database from backup: %1"
 msgstr "שגיאה: שחזור מסד הנתונים מגיבוי נכשל: %1"
 
-#: dbmigrator.cpp:608 dbmigrator.cpp:619
+#: dbmigrator.cpp:607 dbmigrator.cpp:618
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error has occurred while migrating table %1"
 msgstr "שגיאה בהסבת הטבלה %1"
 
-#: dbmigrator.cpp:638
+#: dbmigrator.cpp:637
 #, kde-format
 msgctxt "@label"
 msgid ""
@@ -147,79 +147,79 @@ msgid ""
 "backup?"
 msgstr "תיקיית הגיבוי כבר קיימת. לדרוס את הגיבוי הקודם?"
 
-#: dbmigrator.cpp:643
+#: dbmigrator.cpp:642
 #, kde-format
 msgctxt "@info:shell"
 msgid "Cannot proceed without backup. Migration interrupted."
 msgstr "לא ניתן להמשיך בגיבוי. ההסבה נקטעה."
 
-#: dbmigrator.cpp:648
+#: dbmigrator.cpp:647
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to remove previous backup directory."
 msgstr "הסרת תיקיית הגיבוי הקודמת נכשלה."
 
-#: dbmigrator.cpp:661
+#: dbmigrator.cpp:660
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to move database to backup location: %1"
 msgstr "העברת מסד הנתונים למקום גיבוי נכשלה: %1"
 
-#: dbmigrator.cpp:675
+#: dbmigrator.cpp:674
 #, kde-format
 msgctxt "@label"
 msgid "Backup file %1 already exists. Overwrite?"
 msgstr "קובץ הגיבוי %1 כבר קיים. לדרוס?"
 
-#: dbmigrator.cpp:677
+#: dbmigrator.cpp:676
 #, kde-format
 msgctxt "@info:status"
 msgid "Cannot proceed without backup. Migration interrupted."
 msgstr "לא ניתן להמשיך בלי גיבוי. ההסבה נקטעה."
 
-#: dbmigrator.cpp:683
+#: dbmigrator.cpp:682
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: Failed to remove existing backup file %1: %2"
 msgstr "שגיאה: הסרת קובץ גיבוי קיים %1 נכשל: %2"
 
-#: dbmigrator.cpp:690
+#: dbmigrator.cpp:689
 #, kde-format
 msgctxt "@info:status"
 msgid "Failed to back up Akonadi Server configuration: %1"
 msgstr "גיבוי הגדרות שרת Akonadi נכשל: %1"
 
-#: dbmigrator.cpp:707
+#: dbmigrator.cpp:706
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move migrated database to the primary location: %1"
 msgstr "שגיאה: העברת מסד הנתונים שהוסב למקום העיקרי נכשלה: %1"
 
-#: dbmigrator.cpp:726
+#: dbmigrator.cpp:725
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to remove original akonadiserverrc: %1"
 msgstr "שגיאה: הסרת ה־akonadiserverrc המקורי נכשלה: %1"
 
-#: dbmigrator.cpp:732
+#: dbmigrator.cpp:731
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move new akonadiserverrc to the primary location: %1"
 msgstr "שגיאה: העברת ה־akonadiserverrc החדש למקום העיקרי נכשלה: %1"
 
-#: dbmigrator.cpp:823
+#: dbmigrator.cpp:822
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to update autoincrement value for table %1"
 msgstr "שגיאה: עדכון ערך ההגדלה האוטומטית לטבלה %1 נכשל"
 
-#: dbmigrator.cpp:828
+#: dbmigrator.cpp:827
 #, kde-format
 msgctxt "@info:status"
 msgid "Optimizing table %1..."
 msgstr "הטבלה %1 ממוטבת…"
 
-#: dbmigrator.cpp:831
+#: dbmigrator.cpp:830
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to optimize table %1"
