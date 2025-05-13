@@ -210,32 +210,32 @@ msgstr "要执行的命令"
 #: configdialog/main.cpp:23
 #, kde-format
 msgid "Configuration Dialog"
-msgstr ""
+msgstr "配置对话框"
 
 #: configdialog/main.cpp:25
 #, kde-format
 msgid "Allows to configure an agent or resource"
-msgstr ""
+msgstr "允许配置代理或资源"
 
 #: configdialog/main.cpp:27
 #, kde-format
 msgid "© 2025 Carl Schwan <carl@carlschwan.eu>"
-msgstr ""
+msgstr "© 2025 Carl Schwan <carl@carlschwan.eu>"
 
 #: configdialog/main.cpp:30
 #, kde-format
 msgid "The agent identifier"
-msgstr ""
+msgstr "代理标识符"
 
 #: configdialog/main.cpp:36
 #, kde-format
 msgid "Required identifier argument missing."
-msgstr ""
+msgstr "缺少所需标识符参数。"
 
 #: configdialog/main.cpp:51
 #, kde-format
 msgid "No such agent found \"%1\""
-msgstr ""
+msgstr "没有找到代理 \"%1\""
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -1222,6 +1222,9 @@ msgid ""
 "Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> for "
 "troubleshooting tips.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>请求的后台服务不是一个可选服务.</p><p>另见 <a href="
+"\"https://userbase.kde.org/Akonadi#If_Akonadi_Reports_Broken_or_Non-"
+"operational\">FAQ</a> for troubleshooting tips.</p></body></html>"
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259

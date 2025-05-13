@@ -216,11 +216,9 @@ msgid "© 2025 Carl Schwan <carl@carlschwan.eu>"
 msgstr ""
 
 #: configdialog/main.cpp:30
-#, fuzzy, kde-format
-#| msgctxt "@info:shell"
-#| msgid "Agent identifier"
+#, kde-format
 msgid "The agent identifier"
-msgstr "Identifikátor agenta"
+msgstr ""
 
 #: configdialog/main.cpp:36
 #, kde-format
@@ -228,10 +226,9 @@ msgid "Required identifier argument missing."
 msgstr ""
 
 #: configdialog/main.cpp:51
-#, fuzzy, kde-format
-#| msgid "No resource agents found."
+#, kde-format
 msgid "No such agent found \"%1\""
-msgstr "Nenalezen žádný agent zdroje."
+msgstr ""
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -718,12 +715,10 @@ msgid "Configure Account"
 msgstr "Nastavení účtu"
 
 #: widgets/agenttypedialog.cpp:74
-#, fuzzy, kde-format
-#| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
+#, kde-format
 msgctxt "@item:textbox"
 msgid "Search types"
-msgstr "Hledat"
+msgstr ""
 
 #: widgets/cachepolicypage.cpp:43 widgets/cachepolicypage.cpp:48
 #, kde-format
@@ -2580,7 +2575,3 @@ msgstr "Datový soubor nelze zpracovat: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Nelze najít sbírku %1"
-
-#~ msgctxt "@window:title"
-#~ msgid "Error"
-#~ msgstr "Chyba"
