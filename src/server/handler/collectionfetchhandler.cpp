@@ -401,7 +401,7 @@ void CollectionFetchHandler::retrieveCollections(const Collection &topParent, in
         QStringList mimeTypes;
         {
             // Get new query if necessary
-            if (!mimeTypeQb && mimetypeQueryStart < mimeTypeIds.size()) {
+            if ((!mimeTypeQb || !mimeTypeQb->query().isValid()) && mimetypeQueryStart < mimeTypeIds.size()) {
                 const QVariantList ids = mimeTypeIds.mid(mimetypeQueryStart, querySizeLimit);
                 mimetypeQueryStart += querySizeLimit;
                 mimeTypeQb = getMimeTypeQuery(ids);
@@ -425,7 +425,7 @@ void CollectionFetchHandler::retrieveCollections(const Collection &topParent, in
         CollectionAttribute::List attributes;
         {
             // Get new query if necessary
-            if (!attributeQb && attributeQueryStart < attributeIds.size()) {
+            if ((!attributeQb || !attributeQb->query().isValid()) && attributeQueryStart < attributeIds.size()) {
                 const QVariantList ids = attributeIds.mid(attributeQueryStart, querySizeLimit);
                 attributeQueryStart += querySizeLimit;
                 attributeQb = getAttributeQuery(ids, QSet<QByteArray>());
