@@ -63,13 +63,15 @@ void AgentManagerPrivate::agentTypeAdded(const QString &identifier)
     }
 }
 
-void AgentManagerPrivate::agentTypeRemoved(const QString &identifier)
+void AgentManagerPrivate::agentTypeRemoved(const QString &typeName)
 {
-    if (!mTypes.contains(identifier)) {
+    auto it = mTypes.find(typeName);
+    if (it == mTypes.cend()) {
         return;
     }
 
-    const AgentType type = mTypes.take(identifier);
+    const AgentType type = it.value();
+    mTypes.erase(it);
     Q_EMIT mParent->typeRemoved(type);
 }
 
@@ -98,21 +100,24 @@ void AgentManagerPrivate::agentInstanceAdded(const QString &identifier)
 
 void AgentManagerPrivate::agentInstanceRemoved(const QString &identifier)
 {
-    if (!mInstances.contains(identifier)) {
+    auto it = mInstances.find(identifier);
+    if (it == mInstances.cend()) {
         return;
     }
 
-    const AgentInstance instance = mInstances.take(identifier);
+    const AgentInstance instance = it.value();
+    mInstances.erase(it);
     Q_EMIT mParent->instanceRemoved(instance);
 }
 
 void AgentManagerPrivate::agentInstanceStatusChanged(const QString &identifier, int status, const QString &msg)
 {
-    if (!mInstances.contains(identifier)) {
+    auto it = mInstances.find(identifier);
+    if (it == mInstances.cend()) {
         return;
     }
 
-    AgentInstance &instance = mInstances[identifier];
+    AgentInstance &instance = it.value();
     instance.d->mStatus = status;
     instance.d->mStatusMessage = msg;
 
@@ -121,11 +126,12 @@ void AgentManagerPrivate::agentInstanceStatusChanged(const QString &identifier, 
 
 void AgentManagerPrivate::agentInstanceProgressChanged(const QString &identifier, uint progress, const QString &msg)
 {
-    if (!mInstances.contains(identifier)) {
+    auto it = mInstances.find(identifier);
+    if (it == mInstances.cend()) {
         return;
     }
 
-    AgentInstance &instance = mInstances[identifier];
+    AgentInstance &instance = it.value();
     instance.d->mProgress = progress;
     if (!msg.isEmpty()) {
         instance.d->mStatusMessage = msg;
@@ -136,42 +142,44 @@ void AgentManagerPrivate::agentInstanceProgressChanged(const QString &identifier
 
 void AgentManagerPrivate::agentInstanceWarning(const QString &identifier, const QString &msg)
 {
-    if (!mInstances.contains(identifier)) {
+    auto it = mInstances.find(identifier);
+    if (it == mInstances.cend()) {
         return;
     }
 
-    AgentInstance &instance = mInstances[identifier];
-    Q_EMIT mParent->instanceWarning(instance, msg);
+    Q_EMIT mParent->instanceWarning(it.value(), msg);
 }
 
 void AgentManagerPrivate::agentInstanceError(const QString &identifier, const QString &msg)
 {
-    if (!mInstances.contains(identifier)) {
+    auto it = mInstances.find(identifier);
+    if (it == mInstances.cend()) {
         return;
     }
 
-    AgentInstance &instance = mInstances[identifier];
-    Q_EMIT mParent->instanceError(instance, msg);
+    Q_EMIT mParent->instanceError(it.value(), msg);
 }
 
 void AgentManagerPrivate::agentInstanceOnlineChanged(const QString &identifier, bool state)
 {
-    if (!mInstances.contains(identifier)) {
+    auto it = mInstances.find(identifier);
+    if (it == mInstances.cend()) {
         return;
     }
 
-    AgentInstance &instance = mInstances[identifier];
+    AgentInstance &instance = it.value();
     instance.d->mIsOnline = state;
     Q_EMIT mParent->instanceOnline(instance, state);
 }
 
 void AgentManagerPrivate::agentInstanceNameChanged(const QString &identifier, const QString &name)
 {
-    if (!mInstances.contains(identifier)) {
+    auto it = mInstances.find(identifier);
+    if (it == mInstances.cend()) {
         return;
     }
 
-    AgentInstance &instance = mInstances[identifier];
+    AgentInstance &instance = it.value();
     instance.d->mName = name;
 
     Q_EMIT mParent->instanceNameChanged(instance);
@@ -266,11 +274,12 @@ AgentInstance AgentManagerPrivate::fillAgentInstance(const QString &identifier) 
     AgentInstance instance;
 
     const QString agentTypeIdentifier = mManager->agentInstanceType(identifier);
-    if (!mTypes.contains(agentTypeIdentifier)) {
+    auto typeIt = mTypes.find(agentTypeIdentifier);
+    if (typeIt == mTypes.cend()) {
         return instance;
     }
 
-    instance.d->mType = mTypes.value(agentTypeIdentifier);
+    instance.d->mType = typeIt.value();
     instance.d->mIdentifier = identifier;
     instance.d->mName = mManager->agentInstanceName(identifier);
     instance.d->mStatus = mManager->agentInstanceStatus(identifier);
