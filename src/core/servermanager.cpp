@@ -182,13 +182,14 @@ ServerManager *Akonadi::ServerManager::self()
 
 bool ServerManager::start()
 {
-    const bool controlRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::Control));
-    const bool serverRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::Server));
+    QDBusConnectionInterface *const busIface = QDBusConnection::sessionBus().interface();
+    const bool controlRegistered = busIface->isServiceRegistered(ServerManager::serviceName(ServerManager::Control));
+    const bool serverRegistered = busIface->isServiceRegistered(ServerManager::serviceName(ServerManager::Server));
     if (controlRegistered && serverRegistered) {
         return true;
     }
 
-    const bool controlLockRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::ControlLock));
+    const bool controlLockRegistered = busIface->isServiceRegistered(ServerManager::serviceName(ServerManager::ControlLock));
     if (controlLockRegistered || controlRegistered) {
         qCDebug(AKONADICORE_LOG) << "Akonadi server is already starting up";
         sInstance->setState(Starting);
@@ -203,7 +204,7 @@ bool ServerManager::start()
     const QString exec = QStandardPaths::findExecutable(QStringLiteral("akonadi_control"));
     if (exec.isEmpty() || !QProcess::startDetached(exec, args)) {
         qCWarning(AKONADICORE_LOG) << "Unable to execute akonadi_control, falling back to D-Bus auto-launch";
-        QDBusReply<void> reply = QDBusConnection::sessionBus().interface()->startService(ServerManager::serviceName(ServerManager::Control));
+        QDBusReply<void> reply = busIface->startService(ServerManager::serviceName(ServerManager::Control));
         if (!reply.isValid()) {
             qCDebug(AKONADICORE_LOG) << "Akonadi server could not be started via D-Bus either: " << reply.error().message();
             return false;
@@ -248,13 +249,14 @@ ServerManager::State ServerManager::state()
         sInstance->mBrokenReason.clear();
     }
 
-    const bool serverUpgrading = QDBusConnection::sessionBus().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::UpgradeIndicator));
+    QDBusConnectionInterface *const busIface = QDBusConnection::sessionBus().interface();
+    const bool serverUpgrading = busIface->isServiceRegistered(ServerManager::serviceName(ServerManager::UpgradeIndicator));
     if (serverUpgrading) {
         return Upgrading;
     }
 
-    const bool controlRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::Control));
-    const bool serverRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::Server));
+    const bool controlRegistered = busIface->isServiceRegistered(ServerManager::serviceName(ServerManager::Control));
+    const bool serverRegistered = busIface->isServiceRegistered(ServerManager::serviceName(ServerManager::Server));
     if (controlRegistered && serverRegistered) {
         // check if the server protocol is recent enough
         if (sInstance.exists()) {
@@ -285,7 +287,7 @@ ServerManager::State ServerManager::state()
         }
     }
 
-    const bool controlLockRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::ControlLock));
+    const bool controlLockRegistered = busIface->isServiceRegistered(ServerManager::serviceName(ServerManager::ControlLock));
     if (controlLockRegistered || controlRegistered) {
         qCDebug(AKONADICORE_LOG) << "Akonadi server is only partially running. Server:" << serverRegistered << "ControlLock:" << controlLockRegistered
                                  << "Control:" << controlRegistered;
