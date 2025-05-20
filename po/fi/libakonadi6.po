@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-28 00:41+0000\n"
+"POT-Creation-Date: 2025-05-20 00:42+0000\n"
 "PO-Revision-Date: 2025-04-07 18:27+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -591,7 +591,7 @@ msgstr "Nimetön liitännäinen"
 msgid "No description available"
 msgstr "Ei kuvausta saatavilla"
 
-#: core/servermanager.cpp:263
+#: core/servermanager.cpp:265
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -605,7 +605,7 @@ msgstr ""
 "takaisin sisään, että kaikki sovellukset käyttävät oikeaa "
 "yhteyskäytäntöversiota."
 
-#: core/servermanager.cpp:280
+#: core/servermanager.cpp:282
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "

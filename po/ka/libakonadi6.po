@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-28 00:41+0000\n"
+"POT-Creation-Date: 2025-05-20 00:42+0000\n"
 "PO-Revision-Date: 2025-03-15 03:44+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
@@ -586,7 +586,7 @@ msgstr "უსახელო დამატება"
 msgid "No description available"
 msgstr "აღწერის გარეშე"
 
-#: core/servermanager.cpp:263
+#: core/servermanager.cpp:265
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -599,7 +599,7 @@ msgstr ""
 "თუ თქვენი სისტემა ახლახანს განაახლეთ, რომ დარწმუნდეთ, რომ ყველა აპლიკაცია "
 "პროტოკოლის სწორ ვერსიას იყენებს, გადით სესიიდან და თავიდან შემოდით."
 
-#: core/servermanager.cpp:280
+#: core/servermanager.cpp:282
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "

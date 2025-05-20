@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-28 00:41+0000\n"
+"POT-Creation-Date: 2025-05-20 00:42+0000\n"
 "PO-Revision-Date: 2024-12-15 18:58+0530\n"
 "Last-Translator: Kali <EMAIL@ADDRESS>\n"
 "Language-Team: Hindi <fedora-trans-hi@redhat.com>\n"
@@ -588,7 +588,7 @@ msgstr "अनाम प्लगइन"
 msgid "No description available"
 msgstr "कोई विवरण उपलब्ध नहीं"
 
-#: core/servermanager.cpp:263
+#: core/servermanager.cpp:265
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -601,7 +601,7 @@ msgstr ""
 "यदि आपने हाल ही में अपना सिस्टम अपडेट किया है तो कृपया लॉग आउट करें और वापस लॉग इन करें "
 "ताकि यह सुनिश्चित हो सके कि सभी एप्लिकेशन सही प्रोटोकॉल संस्करण का उपयोग करते हैं।"
 
-#: core/servermanager.cpp:280
+#: core/servermanager.cpp:282
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
