@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:42+0000\n"
+"POT-Creation-Date: 2025-05-23 00:42+0000\n"
 "PO-Revision-Date: 2024-07-29 12:41+0200\n"
 "Last-Translator: rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -139,23 +139,23 @@ msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Kan ikke hente element i offline-tilstand."
 
-#: agentbase/resourcebase.cpp:919
+#: agentbase/resourcebase.cpp:920
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Synkroniserer mappen \"%1\""
 
-#: agentbase/resourcebase.cpp:939 agentbase/resourcebase.cpp:946
+#: agentbase/resourcebase.cpp:940 agentbase/resourcebase.cpp:947
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Kunne ikke hente samlingen til synkronisering."
 
-#: agentbase/resourcebase.cpp:987
+#: agentbase/resourcebase.cpp:988
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Kunne ikke hente samlingen til attributsynkronisering."
 
-#: agentbase/resourcebase.cpp:1033
+#: agentbase/resourcebase.cpp:1034
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Det anmodede element findes ikke længere"

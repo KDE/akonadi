@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:42+0000\n"
+"POT-Creation-Date: 2025-05-23 00:42+0000\n"
 "PO-Revision-Date: 2024-09-30 18:09+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: https://t.me/Localizations_KDE_Indonesia\n"
@@ -136,23 +136,23 @@ msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Tidak bisa mengambil item dalam mode luring."
 
-#: agentbase/resourcebase.cpp:919
+#: agentbase/resourcebase.cpp:920
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Menyinkronkan folder '%1'"
 
-#: agentbase/resourcebase.cpp:939 agentbase/resourcebase.cpp:946
+#: agentbase/resourcebase.cpp:940 agentbase/resourcebase.cpp:947
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Gagal menerima koleksi untuk sinkronisasi."
 
-#: agentbase/resourcebase.cpp:987
+#: agentbase/resourcebase.cpp:988
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Gagal menerima koleksi untuk sinkronisasi atribut."
 
-#: agentbase/resourcebase.cpp:1033
+#: agentbase/resourcebase.cpp:1034
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Item yang diminta tidak ada lagi"

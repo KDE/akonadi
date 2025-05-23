@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:42+0000\n"
+"POT-Creation-Date: 2025-05-23 00:42+0000\n"
 "PO-Revision-Date: 2020-05-07 13:23+0300\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -138,23 +138,23 @@ msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Võrguta režiimis ei saa elementi tõmmata."
 
-#: agentbase/resourcebase.cpp:919
+#: agentbase/resourcebase.cpp:920
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Kausta '%1' sünkroonimine"
 
-#: agentbase/resourcebase.cpp:939 agentbase/resourcebase.cpp:946
+#: agentbase/resourcebase.cpp:940 agentbase/resourcebase.cpp:947
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Kogu hankimine sünkroonimiseks nurjus."
 
-#: agentbase/resourcebase.cpp:987
+#: agentbase/resourcebase.cpp:988
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Kogu hankimine atribuutide sünkroonimiseks nurjus."
 
-#: agentbase/resourcebase.cpp:1033
+#: agentbase/resourcebase.cpp:1034
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Soovitud elementi pole enam"

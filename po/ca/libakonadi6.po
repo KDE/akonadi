@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:42+0000\n"
+"POT-Creation-Date: 2025-05-23 00:42+0000\n"
 "PO-Revision-Date: 2025-03-15 10:52+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -141,24 +141,24 @@ msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "No es pot recuperar l'element en el mode desconnectat."
 
-#: agentbase/resourcebase.cpp:919
+#: agentbase/resourcebase.cpp:920
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "S'està sincronitzant la carpeta «%1»"
 
-#: agentbase/resourcebase.cpp:939 agentbase/resourcebase.cpp:946
+#: agentbase/resourcebase.cpp:940 agentbase/resourcebase.cpp:947
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Ha fallat en recuperar la col·lecció per a sincronitzar-la."
 
-#: agentbase/resourcebase.cpp:987
+#: agentbase/resourcebase.cpp:988
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr ""
 "Ha fallat en recuperar la col·lecció per a la sincronització dels atributs."
 
-#: agentbase/resourcebase.cpp:1033
+#: agentbase/resourcebase.cpp:1034
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "L'element sol·licitat ja no existeix"
