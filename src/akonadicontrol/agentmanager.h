@@ -369,6 +369,8 @@ private:
     std::unique_ptr<Akonadi::ProcessControl> mStorageController;
     bool mAgentServerEnabled = false;
     bool mVerbose = false;
+    bool mAllAgentsStarted = false;
+    bool mAllAgentsRegisteredOnDBus = false;
 
     friend class AgentInstance;
 };
