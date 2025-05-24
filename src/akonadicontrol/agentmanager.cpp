@@ -715,9 +715,11 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
 
     qCDebug(AKONADICONTROL_LOG) << "Service" << name << "owner changed from" << oldOwner << "to" << newOwner;
 
-    if ((name == Akonadi::DBus::serviceName(Akonadi::DBus::Server) || name == Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer)) && !newOwner.isEmpty()) {
-        if (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Server))
-            && (!mAgentServer || QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer)))) {
+    const QString akServerName = Akonadi::DBus::serviceName(Akonadi::DBus::Server);
+    const QString akAgentServerName = Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer);
+    if ((name == akServerName || name == akAgentServerName) && !newOwner.isEmpty()) {
+        if (QDBusConnection::sessionBus().interface()->isServiceRegistered(akServerName)
+            && (!mAgentServer || QDBusConnection::sessionBus().interface()->isServiceRegistered(akAgentServerName))) {
             // server is operational, start agents
             continueStartup();
         }
