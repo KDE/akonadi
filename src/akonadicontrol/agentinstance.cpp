@@ -58,6 +58,7 @@ bool AgentInstance::obtainAgentInterface()
     connect(mAgentStatusInterface.get(), &OrgFreedesktopAkonadiAgentStatusInterface::error, this, &AgentInstance::error);
     connect(mAgentStatusInterface.get(), &OrgFreedesktopAkonadiAgentStatusInterface::onlineChanged, this, &AgentInstance::onlineChanged);
 
+    mDBusServiceRegistered = true;
     refreshAgentStatus();
     return true;
 }
@@ -71,6 +72,7 @@ bool AgentInstance::obtainResourceInterface()
     }
 
     connect(mResourceInterface.get(), &OrgFreedesktopAkonadiResourceInterface::nameChanged, this, &AgentInstance::resourceNameChanged);
+    mDBusServiceRegistered = true;
     refreshResourceStatus();
     return true;
 }
@@ -78,6 +80,9 @@ bool AgentInstance::obtainResourceInterface()
 bool AgentInstance::obtainPreprocessorInterface()
 {
     mPreprocessorInterface = findInterface<org::freedesktop::Akonadi::Preprocessor>(Akonadi::DBus::Preprocessor, "/");
+    if (mPreprocessorInterface != nullptr) {
+        mDBusServiceRegistered = true;
+    }
     return mPreprocessorInterface != nullptr;
 }
 

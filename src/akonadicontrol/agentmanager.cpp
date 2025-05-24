@@ -149,15 +149,7 @@ void AgentManager::continueStartup()
     for (const AgentType &info : std::as_const(mAgents)) {
         ensureAutoStart(info);
     }
-
-    // register the real service name once everything is up an running
-    if (!QDBusConnection::sessionBus().registerService(Akonadi::DBus::serviceName(Akonadi::DBus::Control))) {
-        // besides a race with an older Akonadi server I have no idea how we could possibly get here...
-        qFatal("Unable to register service as %s despite having the lock. Error was: %s",
-               qPrintable(Akonadi::DBus::serviceName(Akonadi::DBus::Control)),
-               qPrintable(QDBusConnection::sessionBus().lastError().message()));
-    }
-    qCInfo(AKONADICONTROL_LOG) << "Akonadi server is now operational.";
+    mAllAgentsStarted = true;
 }
 
 AgentManager::~AgentManager()
@@ -834,6 +826,28 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
     }
     default:
         break;
+    }
+
+    if (mAllAgentsStarted && !mAllAgentsRegisteredOnDBus) {
+        bool allRegistered = true;
+        for (const AgentInstance::Ptr &agent : mAgentInstances) {
+            if (!agent->dbusServiceRegistered()) {
+                allRegistered = false;
+                break;
+            }
+        }
+
+        mAllAgentsRegisteredOnDBus = allRegistered;
+        if (allRegistered) {
+            // register the real service name once everything is up and running
+            if (!QDBusConnection::sessionBus().registerService(Akonadi::DBus::serviceName(Akonadi::DBus::Control))) {
+                // besides a race with an older Akonadi server I have no idea how we could possibly get here...
+                qFatal("Unable to register service as %s despite having the lock. Error was: %s",
+                       qPrintable(Akonadi::DBus::serviceName(Akonadi::DBus::Control)),
+                       qPrintable(QDBusConnection::sessionBus().lastError().message()));
+            }
+            qCInfo(AKONADICONTROL_LOG) << "Akonadi server is now operational.";
+        }
     }
 }
 

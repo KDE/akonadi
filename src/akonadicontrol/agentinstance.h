@@ -81,6 +81,11 @@ public:
         return mResourceName;
     }
 
+    [[nodiscard]] bool dbusServiceRegistered() const
+    {
+        return mDBusServiceRegistered;
+    }
+
     virtual bool start(const AgentType &agentInfo) = 0;
     virtual void quit();
     virtual void cleanup();
@@ -171,6 +176,7 @@ private:
     QString mStatusMessage;
     int mStatus = 0;
     int mPercent = 0;
+    bool mDBusServiceRegistered = false;
     bool mOnline = false;
     bool mPendingQuit = false;
 };
