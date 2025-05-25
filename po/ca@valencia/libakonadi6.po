@@ -1109,10 +1109,10 @@ msgid ""
 "correct, then re-open it and modify it again to add what's missing."
 msgstr ""
 "<qt>Els vostres canvis entren en conflicte amb els d'algú altre.<br> A menys "
-"que es puga llençar alguna versió, els haureu d'integrar manualment.<br>Feu "
-"clic en «<a href=\"opentexteditor\">Obri l'editor de text</a>» per a "
-"mantindre una còpia dels textos, seleccioneu la versió més correcta, torneu-"
-"la a obrir i modifiqueu-la de nou per a afegir-hi el que falta."
+"que es puga llençar alguna versió, els haureu d'integrar manualment."
+"<br>Cliqueu damunt «<a href=\"opentexteditor\">Obri l'editor de text</a>» "
+"per a mantindre una còpia dels textos, seleccioneu la versió més correcta, "
+"torneu-la a obrir i modifiqueu-la de nou per a afegir-hi el que falta."
 
 #: widgets/conflictresolvedialog.cpp:266
 #, kde-format
@@ -1234,7 +1234,7 @@ msgid ""
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
 "Un servei necessari en segon pla no està operatiu.\n"
-"Feu clic en «Detalls…» per a obtindre informació detallada quant a este "
+"Cliqueu damunt «Detalls…» per a obtindre informació detallada quant a este "
 "problema."
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
@@ -2587,7 +2587,7 @@ msgstr "Neteja"
 #: widgets/tagwidget.ui:32
 #, kde-format
 msgid "Click to add tags"
-msgstr "Feu clic per a afegir les etiquetes"
+msgstr "Cliqueu per a afegir les etiquetes"
 
 #. i18n: ectx: property (text), widget (QToolButton, editButton)
 #: widgets/tagwidget.ui:39
