@@ -318,6 +318,7 @@ public:
         ItemIdRole = Qt::UserRole + 1, ///< The item id
         ItemRole = Qt::UserRole + 2, ///< The Item
         MimeTypeRole = Qt::UserRole + 3, ///< The mimetype of the entity
+        CollectionColorRole = Qt::BackgroundRole, ///< The color of the collection
 
         CollectionIdRole = Qt::UserRole + 10, ///< The collection id.
         CollectionRole = Qt::UserRole + 11, ///< The collection.
