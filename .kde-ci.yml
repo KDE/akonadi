@@ -12,6 +12,7 @@ Dependencies:
     'frameworks/kiconthemes': '@latest-kf6'
     'frameworks/kitemmodels': '@latest-kf6'
     'frameworks/kwidgetsaddons': '@latest-kf6'
+    'frameworks/kwindowsystem': '@latest-kf6'
     'frameworks/kxmlgui': '@latest-kf6'
     'frameworks/kcrash': '@latest-kf6'
 
