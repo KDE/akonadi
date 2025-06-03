@@ -756,7 +756,7 @@ void ResourceBase::collectionsRetrieved(const Collection::List &collections)
 {
     Q_D(ResourceBase);
     // Return if there is no collection retrieval is in progress
-    if (!d->scheduler->currentTask().type == ResourceScheduler::SyncCollectionTree && !d->scheduler->currentTask().type == ResourceScheduler::SyncAll) {
+    if (d->scheduler->currentTask().type != ResourceScheduler::SyncCollectionTree && d->scheduler->currentTask().type != ResourceScheduler::SyncAll) {
         return;
     }
     if (!d->mCollectionSyncer) {
