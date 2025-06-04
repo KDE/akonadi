@@ -831,7 +831,11 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
     if (mAllAgentsStarted && !mAllAgentsRegisteredOnDBus) {
         bool allRegistered = true;
         for (const AgentInstance::Ptr &agent : mAgentInstances) {
-            if (!agent->dbusServiceRegistered()) {
+            // Also consider "statically broken" agents as registered, which really means: don't wait for them.
+            // Looking at agent status() would open a can of worms because that one can theoretically change at any time.
+            // I think such agents would also report their broken status via DBus, so they'd be registered and therefore
+            // be covered by the first condition anyway?
+            if (!agent->dbusServiceRegistered() && !qobject_cast<Akonadi::AgentBrokenInstance *>(agent)) {
                 allRegistered = false;
                 break;
             }
