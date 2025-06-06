@@ -47,7 +47,7 @@ static const bool enableAgentServerDefault = false;
 // instances of them configured in the agentsrc file or on Akonadi Server.
 static const QStringView retiredAgentTypes[] = {
     u"akonadi_kolab_resource",
-    u"akonadi_akonotes_resources",
+    u"akonadi_akonotes_resource",
     u"akonadi_notes_resource",
 };
 
