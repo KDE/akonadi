@@ -835,7 +835,9 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
             // Looking at agent status() would open a can of worms because that one can theoretically change at any time.
             // I think such agents would also report their broken status via DBus, so they'd be registered and therefore
             // be covered by the first condition anyway?
-            if (!agent->dbusServiceRegistered() && !qobject_cast<Akonadi::AgentBrokenInstance *>(agent)) {
+            // Also don't expect non-autostarting agents to start.
+            if (!agent->dbusServiceRegistered() && !qobject_cast<Akonadi::AgentBrokenInstance *>(agent)
+                && mAgents.value(agent->agentType()).capabilities.contains(AgentType::CapabilityAutostart)) {
                 allRegistered = false;
                 break;
             }
