@@ -348,6 +348,7 @@ private:
     void ensureAutoStart(const AgentType &info);
     void continueStartup();
     void registerAgentAtServer(const QString &agentIdentifier, const AgentType &type);
+    void registerServiceIfDoneWaitingForAgents();
 
 private:
     /**

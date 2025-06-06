@@ -150,6 +150,9 @@ void AgentManager::continueStartup()
         ensureAutoStart(info);
     }
     mAllAgentsStarted = true;
+
+    // we might already have autostarted zero out of zero agents, in which case we'd possibly get no calls to this, so call it now
+    registerServiceIfDoneWaitingForAgents();
 }
 
 AgentManager::~AgentManager()
@@ -828,6 +831,11 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
         break;
     }
 
+    registerServiceIfDoneWaitingForAgents();
+}
+
+void AgentManager::registerServiceIfDoneWaitingForAgents()
+{
     if (mAllAgentsStarted && !mAllAgentsRegisteredOnDBus) {
         bool allRegistered = true;
         for (const AgentInstance::Ptr &agent : mAgentInstances) {
