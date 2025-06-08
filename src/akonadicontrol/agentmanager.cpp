@@ -49,6 +49,7 @@ static const QStringView retiredAgentTypes[] = {
     u"akonadi_kolab_resource",
     u"akonadi_akonotes_resource",
     u"akonadi_notes_resource",
+    u"akonadi_notes_agent",
 };
 
 class StorageProcessControl : public Akonadi::ProcessControl
