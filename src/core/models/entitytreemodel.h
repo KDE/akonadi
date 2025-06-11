@@ -29,12 +29,12 @@ class EntityTreeModelPrivate;
 /**
  * @short A model for collections and items together.
  *
- * Akonadi models and views provide a high level way to interact with the akonadi server.
+ * Akonadi models and views provide a high level way to interact with the Akonadi server.
  * Most applications will use these classes.
  *
  * Models provide an interface for viewing, updating, deleting and moving Items and Collections.
  * Additionally, the models are updated automatically if another application changes the
- * data or inserts of deletes items etc.
+ * data or inserts or deletes items etc.
  *
  * @note The EntityTreeModel should be used with the EntityTreeView or the EntityListView class
  * either directly or indirectly via proxy models.
