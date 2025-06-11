@@ -1,0 +1,2507 @@
+# Copyright (C) 2025 This file is copyright:
+# This file is distributed under the same license as the akonadi package.
+#
+# SPDX-FileCopyrightText: 2025 Yaron Shahrabani <sh.yaron@gmail.com>
+msgid ""
+msgstr ""
+"Project-Id-Version: akonadi\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2025-05-23 02:38+0000\n"
+"PO-Revision-Date: 2025-06-09 21:37+0300\n"
+"Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
+"Language-Team: צוות התרגום של KDE ישראל\n"
+"Language: he\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
+"n % 10 == 0) ? 2 : 3));\n"
+"X-Generator: Lokalize 25.04.1\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "צוות התרגום של KDE ישראל"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "kde-l10n-he@kde.org"
+
+#: agentbase/accountsintegration.cpp:86
+#, kde-format
+msgid "There is currently no account configured."
+msgstr "לא מוגדר אף חשבון כרגע."
+
+#: agentbase/accountsintegration.cpp:103
+#, kde-format
+msgid "Accounts integration is not supported"
+msgstr "אין תמיכה בשילוב חשבונות"
+
+#: agentbase/agentbase.cpp:310 agentbase/preprocessorbase_p.cpp:26
+#, kde-format
+msgid "Unable to register object at dbus: %1"
+msgstr "לא ניתן לרשום פריט ב־dbus:‏ %1"
+
+#: agentbase/agentbase.cpp:401
+#, kde-format
+msgctxt "Name and type of Akonadi resource"
+msgid "%1 of type %2"
+msgstr "%1 מסוג %2"
+
+#: agentbase/agentbase.cpp:811
+#, kde-format
+msgctxt "@info:shell"
+msgid "Agent identifier"
+msgstr "מזהה סוכן"
+
+#: agentbase/agentbase.cpp:817
+#, kde-format
+msgid "Akonadi Agent"
+msgstr "סוכן Akonadi"
+
+#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:268
+#, kde-format
+msgctxt "@info:status Application ready for work"
+msgid "Ready"
+msgstr "מוכן"
+
+#: agentbase/agentbase_p.h:52
+#, kde-format
+msgctxt "@info:status"
+msgid "Offline"
+msgstr "מנותק"
+
+#: agentbase/agentbase_p.h:57
+#, kde-format
+msgctxt "@info:status"
+msgid "Syncing..."
+msgstr "מסתנכרן…"
+
+#: agentbase/agentbase_p.h:62
+#, kde-format
+msgctxt "@info:status"
+msgid "Error."
+msgstr "שגיאה."
+
+#: agentbase/agentbase_p.h:67
+#, kde-format
+msgctxt "@info:status"
+msgid "Not configured"
+msgstr "לא מוגדר"
+
+#: agentbase/resourcebase.cpp:533
+#, kde-format
+msgctxt "@label command line option"
+msgid "Resource identifier"
+msgstr "מזהה משאב"
+
+#: agentbase/resourcebase.cpp:539
+#, kde-format
+msgid "Akonadi Resource"
+msgstr "משאב Akonadi"
+
+#: agentbase/resourcebase.cpp:580
+#, kde-format
+msgctxt "@info"
+msgid "Invalid item retrieved"
+msgstr "הפריט שנמשך שגוי"
+
+#: agentbase/resourcebase.cpp:603
+#, kde-format
+msgctxt "@info"
+msgid "Error while creating item: %1"
+msgstr "שגיאה ביצירת פריט: %1"
+
+#: agentbase/resourcebase.cpp:627
+#, kde-format
+msgctxt "@info"
+msgid "Error while updating collection: %1"
+msgstr "שגיאה בעדכון אוסף: %1"
+
+#: agentbase/resourcebase.cpp:714
+#, kde-format
+msgctxt "@info"
+msgid "Updating local collection failed: %1."
+msgstr "עדכון אוסף מקומי נכשל: %1."
+
+#: agentbase/resourcebase.cpp:719
+#, kde-format
+msgctxt "@info"
+msgid "Updating local items failed: %1."
+msgstr "עדכון פריטים מקומיים נכשל: %1."
+
+#: agentbase/resourcebase.cpp:738
+#, kde-format
+msgctxt "@info"
+msgid "Cannot fetch item in offline mode."
+msgstr "לא ניתן למשוך פריט במצב מנותק."
+
+#: agentbase/resourcebase.cpp:920
+#, kde-format
+msgctxt "@info:status"
+msgid "Syncing folder '%1'"
+msgstr "התיקייה ‚%1’ מסונכרנת"
+
+#: agentbase/resourcebase.cpp:940 agentbase/resourcebase.cpp:947
+#, kde-format
+msgid "Failed to retrieve collection for sync."
+msgstr ""
+
+#: agentbase/resourcebase.cpp:988
+#, kde-format
+msgid "Failed to retrieve collection for attribute sync."
+msgstr ""
+
+#: agentbase/resourcebase.cpp:1034
+#, kde-format
+msgid "The requested item no longer exists"
+msgstr ""
+
+#: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
+#, kde-format
+msgctxt "@info"
+msgid "Job canceled."
+msgstr ""
+
+#: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
+#, kde-format
+msgid "Akonadi Control"
+msgstr ""
+
+#: akonadictl/main.cpp:220
+#, kde-format
+msgid ""
+"Akonadi server manipulation tool\n"
+"\n"
+"Commands:\n"
+"  start          Starts the Akonadi server with all its processes\n"
+"  stop           Stops the Akonadi server and all its processes cleanly\n"
+"  restart        Restart Akonadi server with all its processes\n"
+"  status         Shows a status overview of the Akonadi server\n"
+"  instances      List all existing Akonadi instances\n"
+"  vacuum         Vacuum internal storage (WARNING: needs a lot of time and "
+"disk\n"
+"                 space!)\n"
+"  fsck           Check (and attempt to fix) consistency of the internal "
+"storage\n"
+"                 (can take some time)"
+msgstr ""
+
+#: akonadictl/main.cpp:239
+#, kde-format
+msgid "Wait for server shutdown to complete."
+msgstr ""
+
+#: akonadictl/main.cpp:241
+#, kde-format
+msgid "Command to execute"
+msgstr ""
+
+#: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
+#, kde-format
+msgid "No such collection."
+msgstr ""
+
+#: core/collectionsync.cpp:505 core/collectionsync.cpp:650
+#, kde-format
+msgid "Found unresolved orphan collections"
+msgstr ""
+
+#: core/conflicthandler.cpp:53
+#, kde-format
+msgid "Did not find other item for conflict handling"
+msgstr ""
+
+#: core/jobs/agentinstancecreatejob.cpp:70
+#, kde-format
+msgid "Unable to access D-Bus interface of created agent."
+msgstr ""
+
+#: core/jobs/agentinstancecreatejob.cpp:92
+#, kde-format
+msgid "Agent instance creation timed out."
+msgstr ""
+
+#: core/jobs/agentinstancecreatejob.cpp:150
+#, kde-format
+msgid "Unable to obtain agent type '%1'."
+msgstr ""
+
+#: core/jobs/agentinstancecreatejob.cpp:158
+#, kde-format
+msgid "Unable to create agent instance."
+msgstr ""
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:73
+#, kde-format
+msgid "Invalid collection instance."
+msgstr ""
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:80
+#: core/jobs/resourcesynchronizationjob.cpp:88
+#, kde-format
+msgid "Invalid resource instance."
+msgstr ""
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:102
+#: core/jobs/resourcesynchronizationjob.cpp:113
+#, kde-format
+msgid "Unable to obtain D-Bus interface for resource '%1'"
+msgstr ""
+
+#: core/jobs/collectionattributessynchronizationjob.cpp:125
+#, kde-format
+msgid "Collection attributes synchronization timed out."
+msgstr ""
+
+#: core/jobs/collectioncopyjob.cpp:54
+#, kde-format
+msgid "Invalid collection to copy"
+msgstr ""
+
+#: core/jobs/collectioncopyjob.cpp:60
+#, kde-format
+msgid "Invalid destination collection"
+msgstr ""
+
+#: core/jobs/collectioncreatejob.cpp:50
+#, kde-format
+msgid "Invalid parent"
+msgstr ""
+
+#: core/jobs/collectioncreatejob.cpp:98
+#, kde-format
+msgid "Failed to parse Collection from response"
+msgstr ""
+
+#: core/jobs/collectiondeletejob.cpp:52
+#, kde-format
+msgid "Invalid collection"
+msgstr ""
+
+#: core/jobs/collectionfetchjob.cpp:212
+#, kde-format
+msgid "Invalid collection given."
+msgstr ""
+
+#: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:90
+#, kde-format
+msgid "No objects specified for moving"
+msgstr ""
+
+#: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:97
+#: core/jobs/linkjobimpl_p.h:39
+#, kde-format
+msgid "No valid destination specified"
+msgstr ""
+
+#: core/jobs/invalidatecachejob.cpp:58
+#, kde-format
+msgid "Invalid collection."
+msgstr ""
+
+#: core/jobs/itemcreatejob.cpp:115
+#, kde-format
+msgid "Invalid parent collection"
+msgstr ""
+
+#: core/jobs/job.cpp:335
+#, kde-format
+msgid "Cannot connect to the Akonadi service."
+msgstr ""
+
+#: core/jobs/job.cpp:338
+#, kde-format
+msgid ""
+"The protocol version of the Akonadi server is incompatible. Make sure you "
+"have a compatible version installed."
+msgstr ""
+
+#: core/jobs/job.cpp:341
+#, kde-format
+msgid "User canceled operation."
+msgstr ""
+
+#: core/jobs/job.cpp:346
+#, kde-format
+msgid "Unknown error."
+msgstr ""
+
+#: core/jobs/job.cpp:385
+#, kde-format
+msgid "Unexpected response"
+msgstr ""
+
+#: core/jobs/resourcesynchronizationjob.cpp:139
+#, kde-format
+msgid "Resource synchronization timed out."
+msgstr ""
+
+#: core/jobs/specialcollectionshelperjobs.cpp:145
+#, kde-format
+msgid "Could not fetch root collection of resource %1."
+msgstr ""
+
+#: core/jobs/specialcollectionshelperjobs.cpp:189
+#, kde-format
+msgid "No resource ID given."
+msgstr ""
+
+#: core/jobs/specialcollectionshelperjobs.cpp:326
+#, kde-format
+msgid "Invalid resource identifier '%1'"
+msgstr ""
+
+#: core/jobs/specialcollectionshelperjobs.cpp:342
+#: core/jobs/specialcollectionshelperjobs.cpp:350
+#, kde-format
+msgid "Failed to configure default resource via D-Bus."
+msgstr ""
+
+#: core/jobs/specialcollectionshelperjobs.cpp:415
+#, kde-format
+msgid "Failed to fetch the resource collection."
+msgstr ""
+
+#: core/jobs/specialcollectionshelperjobs.cpp:599
+#, kde-format
+msgid "Timeout trying to get lock."
+msgstr ""
+
+#: core/jobs/tagcreatejob.cpp:49
+#, kde-format
+msgid "Failed to create tag."
+msgstr ""
+
+#: core/jobs/trashjob.cpp:155
+#, kde-format
+msgid "Move to trash collection failed, aborting trash operation"
+msgstr ""
+
+#: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
+#, kde-format
+msgid "Invalid items passed"
+msgstr ""
+
+#: core/jobs/trashjob.cpp:258 core/jobs/trashrestorejob.cpp:201
+#, kde-format
+msgid "Invalid collection passed"
+msgstr ""
+
+#: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
+#, kde-format
+msgid "No valid collection or empty itemlist"
+msgstr ""
+
+#: core/jobs/trashrestorejob.cpp:86
+#, kde-format
+msgid "Could not find restore collection and restore resource is not available"
+msgstr ""
+
+#: core/models/agentinstancemodel.cpp:192
+#, kde-format
+msgctxt "@title:column, name of a thing"
+msgid "Name"
+msgstr ""
+
+#: core/models/entitytreemodel.cpp:207
+#, kde-format
+msgctxt "@info:status"
+msgid "Loading..."
+msgstr ""
+
+#: core/models/entitytreemodel.cpp:499
+#, kde-format
+msgctxt "@window:title"
+msgid "Error"
+msgstr ""
+
+#: core/models/entitytreemodel.cpp:500
+#, kde-format
+msgid ""
+"The target collection '%1' contains already\n"
+"a collection with name '%2'."
+msgstr ""
+
+#: core/models/entitytreemodel.cpp:669
+#, kde-format
+msgctxt "@title:column Name of a thing"
+msgid "Name"
+msgstr ""
+
+#: core/models/entitytreemodel_p.cpp:1331
+#, kde-format
+msgctxt "@info"
+msgid "Could not copy item: <message>%1</message>"
+msgstr ""
+
+#: core/models/entitytreemodel_p.cpp:1333
+#, kde-format
+msgctxt "@info"
+msgid "Could not copy collection: <message>%1</message>"
+msgstr ""
+
+#: core/models/entitytreemodel_p.cpp:1335
+#, kde-format
+msgctxt "@info"
+msgid "Could not move item: <message>%1</message>"
+msgstr ""
+
+#: core/models/entitytreemodel_p.cpp:1337
+#, kde-format
+msgctxt "@info"
+msgid "Could not move collection: <message>%1</message>"
+msgstr ""
+
+#: core/models/entitytreemodel_p.cpp:1339
+#, kde-format
+msgctxt "@info"
+msgid "Could not link entity: <message>%1</message>"
+msgstr ""
+
+#: core/models/entitytreemodel_p.cpp:1341 widgets/selftestdialog.cpp:650
+#, kde-format
+msgctxt "@title:window"
+msgid "Error"
+msgstr ""
+
+#: core/models/favoritecollectionsmodel.cpp:398
+#, kde-format
+msgid "Favorite Folders"
+msgstr ""
+
+#: core/models/statisticsproxymodel.cpp:87
+#, kde-format
+msgid "Total Messages"
+msgstr ""
+
+#: core/models/statisticsproxymodel.cpp:89
+#, kde-format
+msgid "Unread Messages"
+msgstr ""
+
+#: core/models/statisticsproxymodel.cpp:98
+#, kde-format
+msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
+msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
+msgstr ""
+
+#: core/models/statisticsproxymodel.cpp:106
+#, kde-format
+msgid "Storage Size"
+msgstr ""
+
+#: core/models/statisticsproxymodel.cpp:112
+#, kde-format
+msgid "Subfolder Storage Size"
+msgstr ""
+
+#: core/models/statisticsproxymodel.cpp:232
+#, kde-format
+msgctxt "number of unread entities in the collection"
+msgid "Unread"
+msgstr ""
+
+#: core/models/statisticsproxymodel.cpp:233
+#, kde-format
+msgctxt "number of entities in the collection"
+msgid "Total"
+msgstr ""
+
+#: core/models/statisticsproxymodel.cpp:234
+#, kde-format
+msgctxt "collection size"
+msgid "Size"
+msgstr ""
+
+#: core/models/tagmodel.cpp:64
+#, kde-format
+msgid "Tag"
+msgstr ""
+
+#: core/partfetcher.cpp:49
+#, kde-format
+msgid "Unable to fetch item for index"
+msgstr ""
+
+#: core/partfetcher.cpp:64
+#, kde-format
+msgid "Index is no longer available"
+msgstr ""
+
+#: core/partfetcher.cpp:114
+#, kde-format
+msgid "Payload part '%1' is not available for this index"
+msgstr ""
+
+#: core/partfetcher.cpp:123
+#, kde-format
+msgid "No session available for this index"
+msgstr ""
+
+#: core/partfetcher.cpp:132
+#, kde-format
+msgid "No item available for this index"
+msgstr ""
+
+#: core/pluginloader.cpp:145
+#, kde-format
+msgid "Unnamed plugin"
+msgstr ""
+
+#: core/pluginloader.cpp:151
+#, kde-format
+msgid "No description available"
+msgstr ""
+
+#: core/servermanager.cpp:263
+#, kde-format
+msgid ""
+"The Akonadi server protocol version differs from the protocol version used "
+"by this application.\n"
+"If you recently updated your system please log out and back in to make sure "
+"all applications use the correct protocol version."
+msgstr ""
+
+#: core/servermanager.cpp:280
+#, kde-format
+msgid ""
+"There are no Akonadi Agents available. Please verify your KDE PIM "
+"installation."
+msgstr ""
+
+#: core/session.cpp:185
+#, kde-format
+msgid ""
+"Protocol version mismatch. Server version is older (%1) than ours (%2). If "
+"you updated your system recently please restart the Akonadi server."
+msgstr ""
+
+#: core/session.cpp:194
+#, kde-format
+msgid ""
+"Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
+"you updated your system recently please restart all KDE PIM applications."
+msgstr ""
+
+#: selftest/main.cpp:19
+#, kde-format
+msgid "Akonadi Self Test"
+msgstr ""
+
+#: selftest/main.cpp:21
+#, kde-format
+msgid "Checks and reports state of Akonadi server"
+msgstr ""
+
+#: selftest/main.cpp:23
+#, kde-format
+msgid "(c) 2008 Volker Krause <vkrause@kde.org>"
+msgstr ""
+
+#: shared/akapplication.cpp:70
+#, kde-format
+msgid ""
+"Namespace for starting multiple Akonadi instances in the same user session"
+msgstr ""
+
+#: widgets/agentactionmanager.cpp:35
+msgid "&New Agent Instance..."
+msgstr ""
+
+#: widgets/agentactionmanager.cpp:36
+msgid "&Delete Agent Instance"
+msgstr ""
+
+#: widgets/agentactionmanager.cpp:37
+msgid "&Configure Agent Instance"
+msgstr ""
+
+#: widgets/agentactionmanager.cpp:53
+#, kde-format
+msgctxt "@title:window"
+msgid "New Agent Instance"
+msgstr ""
+
+#: widgets/agentactionmanager.cpp:55
+#, kde-format
+msgid "Could not create agent instance: %1"
+msgstr ""
+
+#: widgets/agentactionmanager.cpp:59
+#, kde-format
+msgctxt "@title:window"
+msgid "Agent Instance Creation Failed"
+msgstr ""
+
+#: widgets/agentactionmanager.cpp:61
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete Agent Instance?"
+msgstr ""
+
+#: widgets/agentactionmanager.cpp:65
+#, kde-format
+msgid "Do you really want to delete the selected agent instance?"
+msgstr ""
+
+#: widgets/agentconfigurationdialog.cpp:56
+#, kde-format
+msgctxt "@title:window, %1 = agent name"
+msgid "%1 Configuration"
+msgstr ""
+
+#: widgets/agentconfigurationdialog.cpp:86
+#, kde-format
+msgid "%1 Handbook"
+msgstr ""
+
+#: widgets/agentconfigurationdialog.cpp:87
+#, kde-format
+msgid "About %1"
+msgstr ""
+
+#: widgets/agentconfigurationwidget.cpp:94
+#, kde-format
+msgid "The configuration dialog has been opened in another window"
+msgstr ""
+
+#: widgets/agentconfigurationwidget.cpp:101
+#, kde-format
+msgid "Configuration for %1 is already opened elsewhere."
+msgstr ""
+
+#: widgets/agentconfigurationwidget.cpp:103
+#, kde-format
+msgid "Failed to register %1 configuration dialog."
+msgstr ""
+
+#: widgets/agentinstancewidget.cpp:259
+#, kde-format
+msgctxt "Status percent value"
+msgid "(%1%)"
+msgstr ""
+
+#: widgets/agenttypedialog.cpp:66
+#, kde-format
+msgctxt "@title:window"
+msgid "Configure Account"
+msgstr ""
+
+#: widgets/agenttypedialog.cpp:74
+#, kde-format
+msgctxt "@item:textbox"
+msgid "Search types"
+msgstr ""
+
+#: widgets/cachepolicypage.cpp:43 widgets/cachepolicypage.cpp:48
+#, kde-format
+msgid "minute"
+msgid_plural "minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/cachepolicypage.cpp:70
+#, kde-format
+msgid "Retrieval"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, inherit)
+#: widgets/cachepolicypage.ui:20
+#, kde-format
+msgid "Use options from parent folder or account"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, syncOnDemand)
+#: widgets/cachepolicypage.ui:33
+#, kde-format
+msgid "Synchronize when selecting this folder"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: widgets/cachepolicypage.ui:40
+#, kde-format
+msgid "Synchronize after:"
+msgstr ""
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, checkInterval)
+#: widgets/cachepolicypage.ui:47
+#, kde-format
+msgctxt "never check the cache"
+msgid "Never"
+msgstr ""
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, checkInterval)
+#. i18n: ectx: property (suffix), widget (QSpinBox, localCacheTimeout)
+#: widgets/cachepolicypage.ui:50 widgets/cachepolicypage.ui:133
+#, kde-format
+msgid "minutes"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, localPartsLabel)
+#: widgets/cachepolicypage.ui:66
+#, kde-format
+msgid "Locally cached parts:"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (KEditListWidget, localParts)
+#: widgets/cachepolicypage.ui:87
+#, kde-format
+msgid "Locally Cached Parts"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, retrievalOptionsLabel)
+#: widgets/cachepolicypage.ui:94
+#, kde-format
+msgid "Retrieval Options:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QRadioButton, retrieveFullMessages)
+#: widgets/cachepolicypage.ui:101
+#, kde-format
+msgid "Always retrieve full &messages"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QRadioButton, retrieveOnlyHeaders)
+#: widgets/cachepolicypage.ui:111
+#, kde-format
+msgid "&Retrieve message bodies on demand"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/cachepolicypage.ui:118
+#, kde-format
+msgid "Keep message bodies locally for:"
+msgstr ""
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, localCacheTimeout)
+#: widgets/cachepolicypage.ui:130
+#, kde-format
+msgctxt "no cache timeout"
+msgid "Forever"
+msgstr ""
+
+#: widgets/clearcachefoldersjob.cpp:41
+#, kde-format
+msgid "Collection cache cleared. You should restart Akonadi now."
+msgstr ""
+
+#: widgets/clearcachefoldersjob.cpp:69
+#, kde-format
+msgid ""
+"The collection '%1' contains %2 items without Remote ID. Those items were "
+"likely never uploaded to the destination server, so clearing this collection "
+"means that those <b>data will be lost</b>. Are you sure you want to proceed?"
+msgstr ""
+
+#: widgets/collectiondialog.cpp:58
+#, kde-format
+msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
+msgid "Search"
+msgstr ""
+
+#: widgets/collectiondialog.cpp:66
+#, kde-format
+msgctxt "@option:check"
+msgid "Use folder by default"
+msgstr ""
+
+#: widgets/collectiondialog.cpp:226
+#, kde-format
+msgctxt "@action:button"
+msgid "&New Subfolder..."
+msgstr ""
+
+#: widgets/collectiondialog.cpp:228
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Create a new subfolder under the currently selected folder"
+msgstr ""
+
+#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:418
+#, kde-format
+msgctxt "@title:window"
+msgid "New Folder"
+msgstr ""
+
+#: widgets/collectiondialog.cpp:266
+#, kde-format
+msgctxt "@label:textbox, name of a thing"
+msgid "Name"
+msgstr ""
+
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:420
+#, kde-format
+msgid "Could not create folder: %1"
+msgstr ""
+
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:421
+#, kde-format
+msgctxt "@title:window"
+msgid "Folder Creation Failed"
+msgstr ""
+
+#: widgets/collectiongeneralpropertiespage.cpp:27
+#, kde-format
+msgctxt "@title:tab general properties page"
+msgid "General"
+msgstr ""
+
+#: widgets/collectiongeneralpropertiespage.cpp:54
+#, kde-format
+msgctxt "@label"
+msgid "One object"
+msgid_plural "%1 objects"
+msgstr[0] ""
+msgstr[1] ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/collectiongeneralpropertiespage.ui:16
+#, kde-format
+msgid "&Name:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, customIconCheckbox)
+#: widgets/collectiongeneralpropertiespage.ui:29
+#, kde-format
+msgid "&Use custom icon:"
+msgstr ""
+
+#. i18n: ectx: property (icon), widget (KIconButton, customIcon)
+#: widgets/collectiongeneralpropertiespage.ui:39
+#, kde-format
+msgid "folder"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, statsBox)
+#: widgets/collectiongeneralpropertiespage.ui:62
+#, kde-format
+msgid "Statistics"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: widgets/collectiongeneralpropertiespage.ui:68
+#, kde-format
+msgctxt "object names"
+msgid "Content:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, countLabel)
+#: widgets/collectiongeneralpropertiespage.ui:75
+#, kde-format
+msgid "0 objects"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: widgets/collectiongeneralpropertiespage.ui:82
+#, kde-format
+msgid "Size:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, sizeLabel)
+#: widgets/collectiongeneralpropertiespage.ui:89
+#, kde-format
+msgid "0 Byte"
+msgstr ""
+
+#: widgets/collectionmaintenancepage.cpp:46
+#, kde-format
+msgid "Remember that indexing can take some minutes."
+msgstr ""
+
+#: widgets/collectionmaintenancepage.cpp:72
+#, kde-format
+msgid "Maintenance"
+msgstr ""
+
+#: widgets/collectionmaintenancepage.cpp:131
+#, kde-format
+msgid "Error while retrieving indexed items count"
+msgstr ""
+
+#: widgets/collectionmaintenancepage.cpp:134
+#, kde-format
+msgid "Indexed %1 item in this folder"
+msgid_plural "Indexed %1 items in this folder"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/collectionmaintenancepage.cpp:138
+#, kde-format
+msgid "Calculating indexed items..."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/collectionmaintenancepage.ui:17
+#, kde-format
+msgid "Folder type:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, folderTypeLbl)
+#. i18n: ectx: property (text), widget (QLabel, folderSizeLbl)
+#. i18n: ectx: property (text), widget (QLabel, itemsCountLbl)
+#. i18n: ectx: property (text), widget (QLabel, unreadItemsCountLbl)
+#: widgets/collectionmaintenancepage.ui:24
+#: widgets/collectionmaintenancepage.ui:31
+#: widgets/collectionmaintenancepage.ui:52
+#: widgets/collectionmaintenancepage.ui:66
+#, kde-format
+msgid "unknown"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: widgets/collectionmaintenancepage.ui:38
+#, kde-format
+msgid "File size:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: widgets/collectionmaintenancepage.ui:45
+#, kde-format
+msgid "Total items:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: widgets/collectionmaintenancepage.ui:59
+#, kde-format
+msgid "Unread items:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, indexingLabel)
+#: widgets/collectionmaintenancepage.ui:73
+#, kde-format
+msgid "Indexing:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, enableIndexingChkBox)
+#: widgets/collectionmaintenancepage.ui:80
+#, kde-format
+msgid "Enable fulltext indexing"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, indexedCountLbl)
+#: widgets/collectionmaintenancepage.ui:87
+#, kde-format
+msgid "Retrieving indexed items count..."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QPushButton, reindexButton)
+#: widgets/collectionmaintenancepage.ui:94
+#, kde-format
+msgid "Reindex folder"
+msgstr ""
+
+#: widgets/collectionrequester.cpp:113
+#, kde-format
+msgctxt "@info:placeholder"
+msgid "No Folder"
+msgstr ""
+
+#: widgets/collectionrequester.cpp:122
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Open collection dialog"
+msgstr ""
+
+#: widgets/collectionrequester.cpp:143
+#, kde-format
+msgctxt "@title:window"
+msgid "Select a Collection"
+msgstr ""
+
+#: widgets/conflictresolvedialog.cpp:129
+#, kde-format
+msgid "Modification Time"
+msgstr ""
+
+#: widgets/conflictresolvedialog.cpp:141
+#, kde-format
+msgid "Flags"
+msgstr ""
+
+#: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
+#: widgets/conflictresolvedialog.cpp:174
+#, kde-format
+msgid "Attribute: %1"
+msgstr ""
+
+#: widgets/conflictresolvedialog.cpp:186
+#, kde-format
+msgctxt "@title:window"
+msgid "Conflict Resolution"
+msgstr ""
+
+#: widgets/conflictresolvedialog.cpp:192
+#, kde-format
+msgctxt "@action:button"
+msgid "Take my version"
+msgstr ""
+
+#: widgets/conflictresolvedialog.cpp:198
+#, kde-format
+msgctxt "@action:button"
+msgid "Take their version"
+msgstr ""
+
+#: widgets/conflictresolvedialog.cpp:204
+#, kde-format
+msgctxt "@action:button"
+msgid "Keep both versions"
+msgstr ""
+
+#: widgets/conflictresolvedialog.cpp:217
+#, kde-format
+msgctxt "@label:textbox"
+msgid ""
+"<qt>Your changes conflict with those made by someone else meanwhile."
+"<br>Unless one version can just be thrown away, you will have to integrate "
+"those changes manually.<br>Click on <a href=\"opentexteditor\">\"Open text "
+"editor\"</a> to keep a copy of the texts, then select which version is most "
+"correct, then re-open it and modify it again to add what's missing."
+msgstr ""
+
+#: widgets/conflictresolvedialog.cpp:266
+#, kde-format
+msgid "Data"
+msgstr ""
+
+#: widgets/controlgui.cpp:223
+#, kde-format
+msgid "Starting Akonadi server..."
+msgstr ""
+
+#: widgets/controlgui.cpp:229
+#, kde-format
+msgid "Stopping Akonadi server..."
+msgstr ""
+
+#: widgets/dragdropmanager.cpp:212
+#, kde-format
+msgid "&Move Here"
+msgstr ""
+
+#: widgets/dragdropmanager.cpp:218
+#, kde-format
+msgid "&Copy Here"
+msgstr ""
+
+#: widgets/dragdropmanager.cpp:224
+#, kde-format
+msgid "&Link Here"
+msgstr ""
+
+#: widgets/dragdropmanager.cpp:229
+#, kde-format
+msgid "C&ancel"
+msgstr ""
+
+#: widgets/erroroverlay.cpp:224
+#, kde-format
+msgctxt "%1 is a reason why"
+msgid ""
+"Cannot connect to the Personal information management service.\n"
+"\n"
+"%1"
+msgstr ""
+
+#: widgets/erroroverlay.cpp:228
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Personal information management service is starting..."
+msgstr ""
+
+#: widgets/erroroverlay.cpp:229
+#, kde-format
+msgid "Personal information management service is starting..."
+msgstr ""
+
+#: widgets/erroroverlay.cpp:233
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Personal information management service is shutting down..."
+msgstr ""
+
+#: widgets/erroroverlay.cpp:234
+#, kde-format
+msgid "Personal information management service is shutting down..."
+msgstr ""
+
+#: widgets/erroroverlay.cpp:238
+#, kde-format
+msgctxt "@info:tooltip"
+msgid ""
+"Personal information management service is performing a database upgrade."
+msgstr ""
+
+#: widgets/erroroverlay.cpp:240
+#, kde-format
+msgid ""
+"Personal information management service is performing a database upgrade.\n"
+"This happens after a software update and is necessary to optimize "
+"performance.\n"
+"Depending on the amount of personal information, this might take a few "
+"minutes."
+msgstr ""
+
+#. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
+#. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
+#: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
+#, kde-format
+msgid ""
+"A required background service is not running. This application cannot be "
+"used without it."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QPushButton, startButton)
+#: widgets/erroroverlay.ui:116
+#, kde-format
+msgctxt "@action:button Start the Akonadi server"
+msgid "Start"
+msgstr ""
+
+#. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
+#: widgets/erroroverlay.ui:158
+#, kde-format
+msgid ""
+"A required background service is not operational.\n"
+"Click on \"Details...\" to obtain detailed information on this problem."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, brokenDescription)
+#: widgets/erroroverlay.ui:208
+#, kde-format
+msgid ""
+"<html><head/><body><p>A required background service is not operational.</"
+"p><p>See <a href=\"https://userbase.kde.org/"
+"Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> for "
+"troubleshooting tips.</p></body></html>"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
+#: widgets/erroroverlay.ui:259
+#, kde-format
+msgid "Details..."
+msgstr ""
+
+#: widgets/manageaccountwidget.cpp:221
+#, kde-format
+msgid "Do you want to remove account '%1'?"
+msgstr ""
+
+#: widgets/manageaccountwidget.cpp:222
+#, kde-format
+msgctxt "@title:window"
+msgid "Remove account?"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, accountOnCurrentActivity)
+#: widgets/manageaccountwidget.ui:19
+#, kde-format
+msgid "Show only account on current activity"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/manageaccountwidget.ui:26
+#, kde-format
+msgid "Incoming accounts (add at least one):"
+msgstr ""
+
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
+#: widgets/manageaccountwidget.ui:33
+#, kde-format
+msgid "Filter…"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
+#: widgets/manageaccountwidget.ui:47
+#, kde-format
+msgid "A&dd..."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
+#: widgets/manageaccountwidget.ui:57
+#, kde-format
+msgid "&Modify..."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
+#: widgets/manageaccountwidget.ui:67
+#, kde-format
+msgid "R&emove"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QPushButton, mRestartAccountButton)
+#: widgets/manageaccountwidget.ui:84
+#, kde-format
+msgid "Restart"
+msgstr ""
+
+#: widgets/recentcollectionaction.cpp:43
+#, kde-format
+msgid "Recent Folder"
+msgstr ""
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, RenameFavoriteDialog)
+#: widgets/renamefavoritedialog.ui:26
+#, kde-format
+msgid "Rename Favorite"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/renamefavoritedialog.ui:35
+#, kde-format
+msgid "Name:"
+msgstr ""
+
+#: widgets/selftestdialog.cpp:60
+#, kde-format
+msgctxt "@title:window"
+msgid "Akonadi Server Self-Test"
+msgstr ""
+
+#: widgets/selftestdialog.cpp:71
+#, kde-format
+msgid "Save Report..."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:73
+#, kde-format
+msgid "Copy Report to Clipboard"
+msgstr ""
+
+#: widgets/selftestdialog.cpp:189
+#, kde-format
+msgid ""
+"The QtSQL driver '%1' is required by your current Akonadi server "
+"configuration and was found on your system."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:191
+#, kde-format
+msgid ""
+"The QtSQL driver '%1' is required by your current Akonadi server "
+"configuration.\n"
+"The following drivers are installed: %2.\n"
+"Make sure the required driver is installed."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:198
+#, kde-format
+msgid "Database driver found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:200
+#, kde-format
+msgid "Database driver not found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:208
+#, kde-format
+msgid "MySQL server executable not tested."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:208 widgets/selftestdialog.cpp:249
+#: widgets/selftestdialog.cpp:300
+#, kde-format
+msgid "The current configuration does not require an internal MySQL server."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:216
+#, kde-format
+msgid ""
+"You have currently configured Akonadi to use the MySQL server '%1'.\n"
+"Make sure you have the MySQL server installed, set the correct path and "
+"ensure you have the necessary read and execution rights on the server "
+"executable. The server executable is typically called 'mysqld'; its location "
+"varies depending on the distribution."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:224
+#, kde-format
+msgid "MySQL server not found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:226
+#, kde-format
+msgid "MySQL server not readable."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:228
+#, kde-format
+msgid "MySQL server not executable."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:230
+#, kde-format
+msgid "MySQL found with unexpected name."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:232
+#, kde-format
+msgid "MySQL server found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:238
+#, kde-format
+msgid "MySQL server found: %1"
+msgstr ""
+
+#: widgets/selftestdialog.cpp:239
+#, kde-format
+msgid "MySQL server is executable."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:241
+#, kde-format
+msgid ""
+"Executing the MySQL server '%1' failed with the following error message: '%2'"
+msgstr ""
+
+#: widgets/selftestdialog.cpp:242
+#, kde-format
+msgid "Executing the MySQL server failed."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:249
+#, kde-format
+msgid "MySQL server error log not tested."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:257
+#, kde-format
+msgid "No current MySQL error log found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:258
+#, kde-format
+msgid ""
+"The MySQL server did not report any errors during this startup. The log can "
+"be found in '%1'."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:264
+#, kde-format
+msgid "MySQL error log not readable."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:265
+#, kde-format
+msgid "A MySQL server error log file was found but is not readable: %1"
+msgstr ""
+
+#: widgets/selftestdialog.cpp:274
+#, kde-format
+msgid "MySQL server log contains errors."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:275
+#, kde-format
+msgid "The MySQL server error log file '%1' contains errors."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:285
+#, kde-format
+msgid "MySQL server log contains warnings."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:286
+#, kde-format
+msgid "The MySQL server log file '%1' contains warnings."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:289
+#, kde-format
+msgid "MySQL server log contains no errors."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:290
+#, kde-format
+msgid "The MySQL server log file '%1' does not contain any errors or warnings."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:300
+#, kde-format
+msgid "MySQL server configuration not tested."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:309
+#, kde-format
+msgid "MySQL server default configuration found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:310
+#, kde-format
+msgid ""
+"The default configuration for the MySQL server was found and is readable at "
+"%1."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:314
+#, kde-format
+msgid "MySQL server default configuration not found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:315
+#, kde-format
+msgid ""
+"The default configuration for the MySQL server was not found or was not "
+"readable. Check your Akonadi installation is complete and you have all "
+"required access rights."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:323
+#, kde-format
+msgid "MySQL server custom configuration not available."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:324
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was not found but is optional."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:327
+#, kde-format
+msgid "MySQL server custom configuration found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:328
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was found and is readable at %1"
+msgstr ""
+
+#: widgets/selftestdialog.cpp:332
+#, kde-format
+msgid "MySQL server custom configuration not readable."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:333
+#, kde-format
+msgid ""
+"The custom configuration for the MySQL server was found at %1 but is not "
+"readable. Check your access rights."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:342
+#, kde-format
+msgid "MySQL server configuration not found or not readable."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:343
+#, kde-format
+msgid "The MySQL server configuration was not found or is not readable."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:346
+#, kde-format
+msgid "MySQL server configuration is usable."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:347
+#, kde-format
+msgid "The MySQL server configuration was found at %1 and is readable."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:376
+#, kde-format
+msgid "Cannot connect to PostgreSQL server."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:378
+#, kde-format
+msgid "PostgreSQL server found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:378
+#, kde-format
+msgid "The PostgreSQL server was found and connection is working."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:388
+#, kde-format
+msgid "akonadictl not found"
+msgstr ""
+
+#: widgets/selftestdialog.cpp:389
+#, kde-format
+msgid ""
+"The program 'akonadictl' needs to be accessible in $PATH. Make sure you have "
+"the Akonadi server installed."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:396
+#, kde-format
+msgid "akonadictl found and usable"
+msgstr ""
+
+#: widgets/selftestdialog.cpp:397
+#, kde-format
+msgid ""
+"The program '%1' to control the Akonadi server was found and could be "
+"executed successfully.\n"
+"Result:\n"
+"%2"
+msgstr ""
+
+#: widgets/selftestdialog.cpp:403
+#, kde-format
+msgid "akonadictl found but not usable"
+msgstr ""
+
+#: widgets/selftestdialog.cpp:404
+#, kde-format
+msgid ""
+"The program '%1' to control the Akonadi server was found but could not be "
+"executed successfully.\n"
+"Result:\n"
+"%2\n"
+"Make sure the Akonadi server is installed correctly."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:416
+#, kde-format
+msgid "Akonadi control process registered at D-Bus."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:417
+#, kde-format
+msgid ""
+"The Akonadi control process is registered at D-Bus which typically indicates "
+"it is operational."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:420
+#, kde-format
+msgid "Akonadi control process not registered at D-Bus."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:421
+#, kde-format
+msgid ""
+"The Akonadi control process is not registered at D-Bus which typically means "
+"it was not started or encountered a fatal error during startup."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:427
+#, kde-format
+msgid "Akonadi server process registered at D-Bus."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:428
+#, kde-format
+msgid ""
+"The Akonadi server process is registered at D-Bus which typically indicates "
+"it is operational."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:431
+#, kde-format
+msgid "Akonadi server process not registered at D-Bus."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:432
+#, kde-format
+msgid ""
+"The Akonadi server process is not registered at D-Bus which typically means "
+"it was not started or encountered a fatal error during startup."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:441
+#, kde-format
+msgid "Protocol version check not possible."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:442
+#, kde-format
+msgid ""
+"Without a connection to the server it is not possible to check if the "
+"protocol version meets the requirements."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:447
+#, kde-format
+msgid "Server protocol version is too old."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:448 widgets/selftestdialog.cpp:455
+#, kde-format
+msgid ""
+"The server protocol version is %1, but version %2 is required by the client. "
+"If you recently updated KDE PIM, please make sure to restart both Akonadi "
+"and KDE PIM applications."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:454
+#, kde-format
+msgid "Server protocol version is too new."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:460
+#, kde-format
+msgid "Server protocol version matches."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:460
+#, kde-format
+msgid "The current Protocol version is %1."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:478
+#, kde-format
+msgid "Resource agents found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:478
+#, kde-format
+msgid "At least one resource agent has been found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:481
+#, kde-format
+msgid "No resource agents found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:482
+#, kde-format
+msgid ""
+"No resource agents have been found, Akonadi is not usable without at least "
+"one. This usually means that no resource agents are installed or that there "
+"is a setup problem. The following paths have been searched: '%1'. The "
+"XDG_DATA_DIRS environment variable is set to '%2'; make sure this includes "
+"all paths where Akonadi agents are installed."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:499
+#, kde-format
+msgid "No current Akonadi server error log found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:499
+#, kde-format
+msgid ""
+"The Akonadi server did not report any errors during its current startup."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:503
+#, kde-format
+msgid "Current Akonadi server error log found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:504
+#, kde-format
+msgid ""
+"The Akonadi server reported errors during its current startup. The log can "
+"be found in %1."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:512
+#, kde-format
+msgid "No previous Akonadi server error log found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:513
+#, kde-format
+msgid ""
+"The Akonadi server did not report any errors during its previous startup."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:517
+#, kde-format
+msgid "Previous Akonadi server error log found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:518
+#, kde-format
+msgid ""
+"The Akonadi server reported errors during its previous startup. The log can "
+"be found in %1."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:529
+#, kde-format
+msgid "No current Akonadi control error log found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:530
+#, kde-format
+msgid ""
+"The Akonadi control process did not report any errors during its current "
+"startup."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:534
+#, kde-format
+msgid "Current Akonadi control error log found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:535
+#, kde-format
+msgid ""
+"The Akonadi control process reported errors during its current startup. The "
+"log can be found in %1."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:543
+#, kde-format
+msgid "No previous Akonadi control error log found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:544
+#, kde-format
+msgid ""
+"The Akonadi control process did not report any errors during its previous "
+"startup."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:548
+#, kde-format
+msgid "Previous Akonadi control error log found."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:549
+#, kde-format
+msgid ""
+"The Akonadi control process reported errors during its previous startup. The "
+"log can be found in %1."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:559
+#, kde-format
+msgid "Akonadi was started as root"
+msgstr ""
+
+#: widgets/selftestdialog.cpp:560
+#, kde-format
+msgid ""
+"Running Internet-facing applications as root/administrator exposes you to "
+"many security risks. MySQL, used by this Akonadi installation, will not "
+"allow itself to run as root, to protect you from these risks."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:564
+#, kde-format
+msgid "Akonadi is not running as root"
+msgstr ""
+
+#: widgets/selftestdialog.cpp:565
+#, kde-format
+msgid ""
+"Akonadi is not running as a root/administrator user, which is the "
+"recommended setup for a secure system."
+msgstr ""
+
+#: widgets/selftestdialog.cpp:643
+#, kde-format
+msgid "Save Test Report"
+msgstr ""
+
+#: widgets/selftestdialog.cpp:650
+#, kde-format
+msgid "Could not open file '%1'"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, introductionLabel)
+#: widgets/selftestdialog.ui:16
+#, kde-format
+msgid ""
+"An error occurred during the startup of the Akonadi server. The following "
+"self-tests are supposed to help with tracking down and solving this problem. "
+"When requesting support or reporting bugs, please always include this report."
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, detailsGroup)
+#: widgets/selftestdialog.ui:39
+#, kde-format
+msgid "Details"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/selftestdialog.ui:61
+#, kde-format
+msgid ""
+"<p>For more troubleshooting tips please refer to <a href=\"https://userbase."
+"kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:78
+msgid "&New Folder..."
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:78
+msgid "New"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:88
+msgid "&Delete Folder"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:89
+msgid "Delete"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:96
+msgid "&Synchronize Folder"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:97 widgets/standardactionmanager.cpp:206
+#: widgets/standardactionmanager.cpp:313
+msgid "Synchronize"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:104
+msgid "Folder &Properties"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:105 widgets/standardactionmanager.cpp:198
+msgid "Properties"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:112
+msgid "&Paste"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:112
+msgid "Paste"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:115
+msgid "Manage Local &Subscriptions..."
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:116
+msgid "Manage Local Subscriptions"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:123
+msgid "Add to Favorite Folders"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:124
+msgid "Add to Favorite"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:131
+msgid "Remove from Favorite Folders"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:132
+msgid "Remove from Favorite"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:139
+msgid "Rename Favorite..."
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:140
+msgid "Rename"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:147 widgets/standardactionmanager.cpp:221
+msgid "Copy Folder To..."
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:148 widgets/standardactionmanager.cpp:156
+#: widgets/standardactionmanager.cpp:222 widgets/standardactionmanager.cpp:236
+msgid "Copy To"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:155 widgets/standardactionmanager.cpp:236
+msgid "Copy Item To..."
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:163 widgets/standardactionmanager.cpp:237
+msgid "Move Item To..."
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:172
+#: widgets/standardactionmanager.cpp:230 widgets/standardactionmanager.cpp:237
+msgid "Move To"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:171 widgets/standardactionmanager.cpp:229
+msgid "Move Folder To..."
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:178
+msgid "&Cut Item"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:178 widgets/standardactionmanager.cpp:179
+msgid "Cut"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:179
+msgid "&Cut Folder"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:181
+msgid "Create Resource"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:189
+msgid "Delete Resource"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:197
+msgid "&Resource Properties"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:205
+msgid "Synchronize Resource"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:213
+msgid "Work Offline"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:239
+msgid "&Synchronize Folder Recursively"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:240
+msgid "Synchronize Recursively"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:247
+msgid "&Move Folder To Trash"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:248
+msgid "Move Folder To Trash"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:255
+msgid "&Move Item To Trash"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:256
+msgid "Move Item To Trash"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:263 widgets/standardactionmanager.cpp:279
+msgid "&Restore Folder From Trash"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:264 widgets/standardactionmanager.cpp:280
+msgid "Restore Folder From Trash"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:271 widgets/standardactionmanager.cpp:295
+#: widgets/standardactionmanager.cpp:302
+msgid "&Restore Item From Trash"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:272 widgets/standardactionmanager.cpp:296
+#: widgets/standardactionmanager.cpp:302
+msgid "Restore Item From Trash"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:287
+msgid "&Restore Collection From Trash"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:288
+msgid "Restore Collection From Trash"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:304
+msgid "&Synchronize Favorite Folders"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:305
+msgid "Synchronize Favorite Folders"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:312
+msgid "Synchronize Folder Tree"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:398
+#, kde-format
+msgid "&Copy Folder"
+msgid_plural "&Copy %1 Folders"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:399
+#, kde-format
+msgid "&Copy Item"
+msgid_plural "&Copy %1 Items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:400
+#, kde-format
+msgctxt "@action"
+msgid "&Cut Item"
+msgid_plural "&Cut %1 Items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:401
+#, kde-format
+msgctxt "@action"
+msgid "&Cut Folder"
+msgid_plural "&Cut %1 Folders"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:402
+#, kde-format
+msgid "&Delete Item"
+msgid_plural "&Delete %1 Items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:403
+#, kde-format
+msgctxt "@action"
+msgid "&Delete Folder"
+msgid_plural "&Delete %1 Folders"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:404
+#, kde-format
+msgctxt "@action"
+msgid "&Synchronize Folder"
+msgid_plural "&Synchronize %1 Folders"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:405
+#, kde-format
+msgid "&Delete Resource"
+msgid_plural "&Delete %1 Resources"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:406
+#, kde-format
+msgid "&Synchronize Resource"
+msgid_plural "&Synchronize %1 Resources"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:408
+#, kde-format
+msgid "Copy Folder"
+msgid_plural "Copy %1 Folders"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:409
+#, kde-format
+msgid "Copy Item"
+msgid_plural "Copy %1 Items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:410
+#, kde-format
+msgid "Cut Item"
+msgid_plural "Cut %1 Items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:411
+#, kde-format
+msgid "Cut Folder"
+msgid_plural "Cut %1 Folders"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:412
+#, kde-format
+msgid "Delete Item"
+msgid_plural "Delete %1 Items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:413
+#, kde-format
+msgid "Delete Folder"
+msgid_plural "Delete %1 Folders"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:414
+#, kde-format
+msgid "Synchronize Folder"
+msgid_plural "Synchronize %1 Folders"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:415
+#, kde-format
+msgctxt "@action"
+msgid "Delete Resource"
+msgid_plural "Delete %1 Resources"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:416
+#, kde-format
+msgctxt "@action"
+msgid "Synchronize Resource"
+msgid_plural "Synchronize %1 Resources"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:419
+#, kde-format
+msgctxt "@label:textbox name of Akonadi folder"
+msgid "Name"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:426
+#, kde-format
+msgid "Do you really want to delete this folder and all its sub-folders?"
+msgid_plural ""
+"Do you really want to delete %1 folders and all their sub-folders?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:429
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete Folder?"
+msgid_plural "Delete Folders?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:430
+#, kde-format
+msgid "Could not delete folder: %1"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:431
+#, kde-format
+msgctxt "@title:window"
+msgid "Folder Deletion Failed"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:433
+#, kde-format
+msgctxt "@title:window"
+msgid "Properties of Folder %1"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:437
+#, kde-format
+msgid "Do you really want to delete the selected item?"
+msgid_plural "Do you really want to delete %1 items?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:438
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete Item?"
+msgid_plural "Delete Items?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:439
+#, kde-format
+msgid "Could not delete item: %1"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:440
+#, kde-format
+msgctxt "@title:window"
+msgid "Item Deletion Failed"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:442
+#, kde-format
+msgctxt "@title:window"
+msgid "Rename Favorite"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:443
+#, kde-format
+msgctxt "@label:textbox name of the folder"
+msgid "Name:"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:445
+#, kde-format
+msgctxt "@title:window"
+msgid "New Resource"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:446
+#, kde-format
+msgid "Could not create resource: %1"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:447
+#, kde-format
+msgctxt "@title:window"
+msgid "Resource Creation Failed"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:451
+#, kde-format
+msgid "Do you really want to delete this resource?"
+msgid_plural "Do you really want to delete %1 resources?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:454
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete Resource?"
+msgid_plural "Delete Resources?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: widgets/standardactionmanager.cpp:456
+#, kde-format
+msgid "Could not paste data: %1"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:457
+#, kde-format
+msgctxt "@title:window"
+msgid "Paste Failed"
+msgstr "ההדבקה נכשלה"
+
+#: widgets/standardactionmanager.cpp:809
+#, kde-format
+msgid "We can not add \"/\" in folder name."
+msgstr "איננו יכולים להוסיף „/” לשם תיקייה."
+
+#: widgets/standardactionmanager.cpp:809 widgets/standardactionmanager.cpp:813
+#, kde-format
+msgctxt "@title:window"
+msgid "Create New Folder Error"
+msgstr "שגיאת יצירת תיקייה חדשה"
+
+#: widgets/standardactionmanager.cpp:813
+#, kde-format
+msgid "We can not add \".\" at begin or end of folder name."
+msgstr "איננו יכולים להוסיף „.” בתחילת או בסוף שם תיקייה."
+
+#: widgets/standardactionmanager.cpp:1052
+#, kde-format
+msgid ""
+"Before syncing folder \"%1\" it is necessary to have the resource online. Do "
+"you want to make it online?"
+msgstr ""
+
+#: widgets/standardactionmanager.cpp:1053
+#, kde-format
+msgid "Account \"%1\" is offline"
+msgstr "החשבון „%1” מנותק"
+
+#: widgets/standardactionmanager.cpp:1054
+#, kde-format
+msgctxt "@action:button"
+msgid "Go Online"
+msgstr "התחברות"
+
+#: widgets/standardactionmanager.cpp:1655
+#, kde-format
+msgid "Move to This Folder"
+msgstr "העברה לתיקייה הזאת"
+
+#: widgets/standardactionmanager.cpp:1655
+#, kde-format
+msgid "Copy to This Folder"
+msgstr "העתקה לתיקייה הזאת"
+
+#: widgets/subscriptiondialog.cpp:99
+#, kde-format
+msgid "Failed to update subscription: %1"
+msgstr "עדכון המינוי נכשל: %1"
+
+#: widgets/subscriptiondialog.cpp:99
+#, kde-format
+msgctxt "@title:window"
+msgid "Subscription Error"
+msgstr "שגיאת מינוי"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, SubscriptionDialog)
+#: widgets/subscriptiondialog.ui:14
+#, kde-format
+msgid "Local Subscriptions"
+msgstr "מינויים מקומיים"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: widgets/subscriptiondialog.ui:22
+#, kde-format
+msgid "Search:"
+msgstr "חיפוש:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, subscribedOnlyCheckBox)
+#: widgets/subscriptiondialog.ui:36
+#, kde-format
+msgid "&Subscribed only"
+msgstr "&עם מינוי בלבד"
+
+#. i18n: ectx: property (text), widget (QPushButton, subscribeButton)
+#: widgets/subscriptiondialog.ui:62
+#, kde-format
+msgid "Su&bscribe"
+msgstr "&רישום למינוי"
+
+#. i18n: ectx: property (text), widget (QPushButton, unsubscribeButton)
+#: widgets/subscriptiondialog.ui:69
+#, kde-format
+msgid "&Unsubscribe"
+msgstr "&גריעה ממינוי"
+
+#: widgets/tageditwidget.cpp:117
+#, kde-format
+msgid "Failed to create a new tag"
+msgstr "יצירת תגית חדשה נכשלה"
+
+#: widgets/tageditwidget.cpp:117
+#, kde-format
+msgctxt "@title:window"
+msgid "An Error Occurred while Creating a New Tag"
+msgstr "אירעה שגיאה ביצירת תגית חדשה"
+
+#: widgets/tageditwidget.cpp:165
+#, kde-kuit-format
+msgctxt "@info"
+msgid "Do you really want to remove the tag <resource>%1</resource>?"
+msgstr "להסיר את התגית <resource>%1</resource>?"
+
+#: widgets/tageditwidget.cpp:166
+#, kde-format
+msgctxt "@title:window"
+msgid "Delete Tag"
+msgstr "מחיקת התגית"
+
+#: widgets/tageditwidget.cpp:191
+#, kde-format
+msgctxt "@info"
+msgid "Delete tag"
+msgstr "למחוק את התגית"
+
+#. i18n: ectx: property (text), widget (QLabel, selectLabel)
+#: widgets/tageditwidget.ui:29
+#, kde-format
+msgid "Select tags that should be applied."
+msgstr "נא לבחור תגיות להחלה."
+
+#. i18n: ectx: property (text), widget (QPushButton, newTagButton)
+#: widgets/tageditwidget.ui:54
+#, kde-format
+msgid "Create new tag"
+msgstr "יצירת תגית חדשה"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
+#: widgets/tagmanagementdialog.ui:14
+#, kde-format
+msgid "Manage Tags"
+msgstr "ניהול תגיות"
+
+#: widgets/tagselectioncombobox.cpp:126
+#, kde-format
+msgctxt "@label Placeholder text in tag selection combobox"
+msgid "Select tags..."
+msgstr "בחירת תגיות…"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
+#: widgets/tagselectiondialog.ui:14
+#, kde-format
+msgid "Select Tags"
+msgstr "בחירת תגיות"
+
+#: widgets/tagwidget.cpp:45
+#, kde-format
+msgid "Clear"
+msgstr "פינוי"
+
+#. i18n: ectx: property (placeholderText), widget (Akonadi::TagView, tagView)
+#: widgets/tagwidget.ui:32
+#, kde-format
+msgid "Click to add tags"
+msgstr "נא ללחוץ כדי להוסיף תגיות"
+
+#. i18n: ectx: property (text), widget (QToolButton, editButton)
+#: widgets/tagwidget.ui:39
+#, kde-format
+msgid "..."
+msgstr "…"
+
+#: xml/akonadi2xml.cpp:25
+#, kde-format
+msgid "Akonadi To XML converter"
+msgstr "ממיר Akonadi ל־XML"
+
+#: xml/akonadi2xml.cpp:27
+#, kde-format
+msgid "Converts an Akonadi collection subtree into a XML file."
+msgstr "ממיר תת־עץ אוסף Akonadi לקובץ XML."
+
+#: xml/akonadi2xml.cpp:29
+#, kde-format
+msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
+msgstr "‏(c) 2009 וולקר קראוזה <vkrause@kde.org>"
+
+#: xml/xmldocument.cpp:83
+#, kde-format
+msgid "No data loaded."
+msgstr "לא נטענו נתונים."
+
+#: xml/xmldocument.cpp:121
+#, kde-format
+msgid "No filename specified"
+msgstr "לא צוין שם קובץ"
+
+#: xml/xmldocument.cpp:129
+#, kde-format
+msgid "Unable to open data file '%1'."
+msgstr "לא ניתן לפתוח את קובץ הנתונים ‚%1’."
+
+#: xml/xmldocument.cpp:134
+#, kde-format
+msgid "File %1 does not exist."
+msgstr "הקובץ %1 לא קיים."
+
+#: xml/xmldocument.cpp:142
+#, kde-format
+msgid "Unable to parse data file '%1'."
+msgstr "לא ניתן לפענח את קובץ הנתונים ‚%1’."
+
+#: xml/xmldocument.cpp:150
+#, kde-format
+msgid "Schema definition could not be loaded and parsed."
+msgstr "לא ניתן לטעון ולפענח את סכמת ההגדרות."
+
+#: xml/xmldocument.cpp:155
+#, kde-format
+msgid "Unable to create schema parser context."
+msgstr "לא ניתן ליצור הקשר מפענח סכמה."
+
+#: xml/xmldocument.cpp:160
+#, kde-format
+msgid "Unable to create schema."
+msgstr "לא ניתן ליצור סכמה."
+
+#: xml/xmldocument.cpp:165
+#, kde-format
+msgid "Unable to create schema validation context."
+msgstr "לא ניתן ליצור הקשר תיקוף סכמה."
+
+#: xml/xmldocument.cpp:170
+#, kde-format
+msgid "Invalid file format."
+msgstr "סוג הקובץ שגוי."
+
+#: xml/xmldocument.cpp:177
+#, kde-format
+msgid "Unable to parse data file: %1"
+msgstr "לא ניתן לפענח את קובץ הנתונים: %1"
+
+#: xml/xmldocument.cpp:302
+#, kde-format
+msgid "Unable to find collection %1"
+msgstr "לא ניתן למצוא את האוסף %1"
