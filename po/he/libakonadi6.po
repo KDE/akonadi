@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-23 02:38+0000\n"
-"PO-Revision-Date: 2025-06-09 21:37+0300\n"
+"PO-Revision-Date: 2025-06-11 11:34+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -156,13 +156,13 @@ msgstr ""
 #: agentbase/resourcebase.cpp:1034
 #, kde-format
 msgid "The requested item no longer exists"
-msgstr ""
+msgstr "הפריט המבוקש לא קיים עוד"
 
 #: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."
-msgstr ""
+msgstr "המשימה בוטלה."
 
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
 #, kde-format
@@ -464,7 +464,7 @@ msgstr ""
 #, kde-format
 msgctxt "@title:window"
 msgid "Error"
-msgstr ""
+msgstr "שגיאה"
 
 #: core/models/favoritecollectionsmodel.cpp:398
 #, kde-format
@@ -701,6 +701,8 @@ msgid "minute"
 msgid_plural "minutes"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: widgets/cachepolicypage.cpp:70
 #, kde-format
@@ -855,6 +857,8 @@ msgid "One object"
 msgid_plural "%1 objects"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/collectiongeneralpropertiespage.ui:16
@@ -926,6 +930,8 @@ msgid "Indexed %1 item in this folder"
 msgid_plural "Indexed %1 items in this folder"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: widgets/collectionmaintenancepage.cpp:138
 #, kde-format
@@ -1512,17 +1518,17 @@ msgstr ""
 #: widgets/selftestdialog.cpp:378
 #, kde-format
 msgid "PostgreSQL server found."
-msgstr ""
+msgstr "נמצא שרת PostgreSQL."
 
 #: widgets/selftestdialog.cpp:378
 #, kde-format
 msgid "The PostgreSQL server was found and connection is working."
-msgstr ""
+msgstr "שרת ה־PostgreSQL נמצא והחיבור עובד."
 
 #: widgets/selftestdialog.cpp:388
 #, kde-format
 msgid "akonadictl not found"
-msgstr ""
+msgstr "‏akonadictl לא נמצא"
 
 #: widgets/selftestdialog.cpp:389
 #, kde-format
@@ -1530,11 +1536,13 @@ msgid ""
 "The program 'akonadictl' needs to be accessible in $PATH. Make sure you have "
 "the Akonadi server installed."
 msgstr ""
+"התוכנית ‚akonadictl’ צריכה להיות נגישה דרך ה־‎$PATH. נא לוודא ששרת Akonadi "
+"מותקן."
 
 #: widgets/selftestdialog.cpp:396
 #, kde-format
 msgid "akonadictl found and usable"
-msgstr ""
+msgstr "‏akonadictl נמצא ושמיש"
 
 #: widgets/selftestdialog.cpp:397
 #, kde-format
@@ -1544,11 +1552,14 @@ msgid ""
 "Result:\n"
 "%2"
 msgstr ""
+"התוכנית ‚%1’ לשליטה בשרת ה־Akonadi נמצאה ואפשר להפעיל אותה בהצלחה.\n"
+"תוצאה:\n"
+"%2"
 
 #: widgets/selftestdialog.cpp:403
 #, kde-format
 msgid "akonadictl found but not usable"
-msgstr ""
+msgstr "‏akonadictl נמצא אבל לא שמיש"
 
 #: widgets/selftestdialog.cpp:404
 #, kde-format
@@ -1559,23 +1570,27 @@ msgid ""
 "%2\n"
 "Make sure the Akonadi server is installed correctly."
 msgstr ""
+"התוכנית ‚%1’ לשליטה בשרת ה־Akonadi נמצאה אבל אי אפשר להפעיל אותה בהצלחה.\n"
+"תוצאה:\n"
+"%2\n"
+"נא לוודא ששרת Akonadi מותקן כראוי."
 
 #: widgets/selftestdialog.cpp:416
 #, kde-format
 msgid "Akonadi control process registered at D-Bus."
-msgstr ""
+msgstr "תהליך השליטה ב־Akonadi נרשם ב־D-Bus."
 
 #: widgets/selftestdialog.cpp:417
 #, kde-format
 msgid ""
 "The Akonadi control process is registered at D-Bus which typically indicates "
 "it is operational."
-msgstr ""
+msgstr "תהליך השליטה ב־Akonadi נרשם ב־D-Bus מה שבדרך כלל מעיד שהוא מתפקד."
 
 #: widgets/selftestdialog.cpp:420
 #, kde-format
 msgid "Akonadi control process not registered at D-Bus."
-msgstr ""
+msgstr "תהליך השליטה ב־Akonadi לא נרשם ב־D-Bus."
 
 #: widgets/selftestdialog.cpp:421
 #, kde-format
@@ -1583,23 +1598,25 @@ msgid ""
 "The Akonadi control process is not registered at D-Bus which typically means "
 "it was not started or encountered a fatal error during startup."
 msgstr ""
+"תהליך השליטה ב־Akonadi לא נרשם ב־D-Bus מה שבדרך כלל מעיד שהוא לא הופעל או "
+"שנתקל בשגיאות חמורות במהלך העלייה."
 
 #: widgets/selftestdialog.cpp:427
 #, kde-format
 msgid "Akonadi server process registered at D-Bus."
-msgstr ""
+msgstr "תהליך שרת Akonadi נרשם ב־D-Bus."
 
 #: widgets/selftestdialog.cpp:428
 #, kde-format
 msgid ""
 "The Akonadi server process is registered at D-Bus which typically indicates "
 "it is operational."
-msgstr ""
+msgstr "תהליך שרת Akonadi נרשם ב־D-Bus מה שבדרך כלל מעיד שהוא מתפקד."
 
 #: widgets/selftestdialog.cpp:431
 #, kde-format
 msgid "Akonadi server process not registered at D-Bus."
-msgstr ""
+msgstr "תהליך שרת Akonadi לא נרשם ב־D-Bus."
 
 #: widgets/selftestdialog.cpp:432
 #, kde-format
@@ -1607,23 +1624,25 @@ msgid ""
 "The Akonadi server process is not registered at D-Bus which typically means "
 "it was not started or encountered a fatal error during startup."
 msgstr ""
+"תהליך שרת Akonadi לא נרשם ב־D-Bus מה שבדרך כלל מעיד שהוא לא הופעל או שנתקל "
+"בשגיאות חמורות במהלך העלייה."
 
 #: widgets/selftestdialog.cpp:441
 #, kde-format
 msgid "Protocol version check not possible."
-msgstr ""
+msgstr "בדיקת גרסת פרוטוקול אינה אפשרית."
 
 #: widgets/selftestdialog.cpp:442
 #, kde-format
 msgid ""
 "Without a connection to the server it is not possible to check if the "
 "protocol version meets the requirements."
-msgstr ""
+msgstr "בלי חיבור לשרת אי אפשר לבדוק אם גרסת הפרוטוקול עומדת בדרישות."
 
 #: widgets/selftestdialog.cpp:447
 #, kde-format
 msgid "Server protocol version is too old."
-msgstr ""
+msgstr "גרסת פרוטוקול השרת ישנה מדי."
 
 #: widgets/selftestdialog.cpp:448 widgets/selftestdialog.cpp:455
 #, kde-format
@@ -1632,36 +1651,38 @@ msgid ""
 "If you recently updated KDE PIM, please make sure to restart both Akonadi "
 "and KDE PIM applications."
 msgstr ""
+"גרסת פרוטוקול השרת היא %1, אבל ללקוח דרושה גרסה %2. אם עדכנת את KDE PIM "
+"לאחרונה, נא לוודא שגם Akonadi וגם יישומי KDE PIM הופעלו מחדש."
 
 #: widgets/selftestdialog.cpp:454
 #, kde-format
 msgid "Server protocol version is too new."
-msgstr ""
+msgstr "גרסת פרוטוקול השרת חדשה מדי."
 
 #: widgets/selftestdialog.cpp:460
 #, kde-format
 msgid "Server protocol version matches."
-msgstr ""
+msgstr "גרסת פרוטוקול השרת תואמת."
 
 #: widgets/selftestdialog.cpp:460
 #, kde-format
 msgid "The current Protocol version is %1."
-msgstr ""
+msgstr "גרסת הפרוטוקול הנוכחית היא %1."
 
 #: widgets/selftestdialog.cpp:478
 #, kde-format
 msgid "Resource agents found."
-msgstr ""
+msgstr "נמצאו סוכני משאבים."
 
 #: widgets/selftestdialog.cpp:478
 #, kde-format
 msgid "At least one resource agent has been found."
-msgstr ""
+msgstr "נמצא לפחות סוכן משאב אחד."
 
 #: widgets/selftestdialog.cpp:481
 #, kde-format
 msgid "No resource agents found."
-msgstr ""
+msgstr "לא נמצאו סוכני משאבים."
 
 #: widgets/selftestdialog.cpp:482
 #, kde-format
@@ -1753,7 +1774,7 @@ msgstr ""
 msgid ""
 "The Akonadi control process did not report any errors during its previous "
 "startup."
-msgstr ""
+msgstr "תהליך השליטה על Akonadi לא דיווח על תקלות כלשהן במהלך העלייה הקודמת."
 
 #: widgets/selftestdialog.cpp:548
 #, kde-format
@@ -1766,11 +1787,13 @@ msgid ""
 "The Akonadi control process reported errors during its previous startup. The "
 "log can be found in %1."
 msgstr ""
+"תהליך השליטה ב־Akonadi דיווח על שגיאות במהלך העלייה הקודמת. אפשר למצוא את "
+"היומן תחת %1."
 
 #: widgets/selftestdialog.cpp:559
 #, kde-format
 msgid "Akonadi was started as root"
-msgstr ""
+msgstr "Akonadi הופעל תחת משתמש על (root)"
 
 #: widgets/selftestdialog.cpp:560
 #, kde-format
@@ -1779,11 +1802,14 @@ msgid ""
 "many security risks. MySQL, used by this Akonadi installation, will not "
 "allow itself to run as root, to protect you from these risks."
 msgstr ""
+"הרצת יישומים שחשופים לאינטרנט תחת משתמש על/ניהול (root/administrator) חושפים "
+"אותך למגוון רחב של סכנות אבטחה. MySQL, בו משתמשת ההתקנה הזאת של Akonadi, לא "
+"יאפשר לעצמו לרוץ תחת משתמש על, כדי להגן עליך מפני הסכנות האלו."
 
 #: widgets/selftestdialog.cpp:564
 #, kde-format
 msgid "Akonadi is not running as root"
-msgstr ""
+msgstr "Akonadi לא רץ תחת משתמש על (root)"
 
 #: widgets/selftestdialog.cpp:565
 #, kde-format
@@ -1791,16 +1817,18 @@ msgid ""
 "Akonadi is not running as a root/administrator user, which is the "
 "recommended setup for a secure system."
 msgstr ""
+"Akonadi אינו רץ תחת משתמש על/ניהול (root/administrator), שזאת התצורה המומלצת "
+"למערכת מאובטחת."
 
 #: widgets/selftestdialog.cpp:643
 #, kde-format
 msgid "Save Test Report"
-msgstr ""
+msgstr "שמירת דוח בדיקה"
 
 #: widgets/selftestdialog.cpp:650
 #, kde-format
 msgid "Could not open file '%1'"
-msgstr ""
+msgstr "לא ניתן לפתוח את הקובץ ‚%1’"
 
 #. i18n: ectx: property (text), widget (QLabel, introductionLabel)
 #: widgets/selftestdialog.ui:16
@@ -1810,12 +1838,15 @@ msgid ""
 "self-tests are supposed to help with tracking down and solving this problem. "
 "When requesting support or reporting bugs, please always include this report."
 msgstr ""
+"אירעה שגיאה בהפעלת שרת ה־Akonadi. הבדיקות העצמיות הבאות אמורות לסייע באיתור "
+"ופתרון הבעיה. בצירוף לבקשת תמיכה או דיווח על תקלות, אנא תמיד להוסיף את הדוח "
+"הזה."
 
 #. i18n: ectx: property (title), widget (QGroupBox, detailsGroup)
 #: widgets/selftestdialog.ui:39
 #, kde-format
 msgid "Details"
-msgstr ""
+msgstr "פרטים"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/selftestdialog.ui:61
@@ -1824,199 +1855,201 @@ msgid ""
 "<p>For more troubleshooting tips please refer to <a href=\"https://userbase."
 "kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
 msgstr ""
+"<p>לפרטים נוספים על פתרון בעיות נא לפנות אל <a href=\"https://userbase.kde."
+"org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
 
 #: widgets/standardactionmanager.cpp:78
 msgid "&New Folder..."
-msgstr ""
+msgstr "&תיקייה חדשה…"
 
 #: widgets/standardactionmanager.cpp:78
 msgid "New"
-msgstr ""
+msgstr "חדש"
 
 #: widgets/standardactionmanager.cpp:88
 msgid "&Delete Folder"
-msgstr ""
+msgstr "מ&חיקת תיקייה"
 
 #: widgets/standardactionmanager.cpp:89
 msgid "Delete"
-msgstr ""
+msgstr "מחיקה"
 
 #: widgets/standardactionmanager.cpp:96
 msgid "&Synchronize Folder"
-msgstr ""
+msgstr "&סנכרון תיקיה"
 
 #: widgets/standardactionmanager.cpp:97 widgets/standardactionmanager.cpp:206
 #: widgets/standardactionmanager.cpp:313
 msgid "Synchronize"
-msgstr ""
+msgstr "סנכרון"
 
 #: widgets/standardactionmanager.cpp:104
 msgid "Folder &Properties"
-msgstr ""
+msgstr "מ&אפייני תיקייה"
 
 #: widgets/standardactionmanager.cpp:105 widgets/standardactionmanager.cpp:198
 msgid "Properties"
-msgstr ""
+msgstr "מאפיינים"
 
 #: widgets/standardactionmanager.cpp:112
 msgid "&Paste"
-msgstr ""
+msgstr "ה&דבקה"
 
 #: widgets/standardactionmanager.cpp:112
 msgid "Paste"
-msgstr ""
+msgstr "הדבקה"
 
 #: widgets/standardactionmanager.cpp:115
 msgid "Manage Local &Subscriptions..."
-msgstr ""
+msgstr "&ניהול מינויים מקומיים…"
 
 #: widgets/standardactionmanager.cpp:116
 msgid "Manage Local Subscriptions"
-msgstr ""
+msgstr "ניהול מינויים מקומיים"
 
 #: widgets/standardactionmanager.cpp:123
 msgid "Add to Favorite Folders"
-msgstr ""
+msgstr "הוספה לתיקיות המועדפים"
 
 #: widgets/standardactionmanager.cpp:124
 msgid "Add to Favorite"
-msgstr ""
+msgstr "הוספה למועדפים"
 
 #: widgets/standardactionmanager.cpp:131
 msgid "Remove from Favorite Folders"
-msgstr ""
+msgstr "הסרה מתיקיות מועדפים"
 
 #: widgets/standardactionmanager.cpp:132
 msgid "Remove from Favorite"
-msgstr ""
+msgstr "הסרה מהמועדפים"
 
 #: widgets/standardactionmanager.cpp:139
 msgid "Rename Favorite..."
-msgstr ""
+msgstr "שינוי שם מועדף…"
 
 #: widgets/standardactionmanager.cpp:140
 msgid "Rename"
-msgstr ""
+msgstr "שינוי שם"
 
 #: widgets/standardactionmanager.cpp:147 widgets/standardactionmanager.cpp:221
 msgid "Copy Folder To..."
-msgstr ""
+msgstr "העתקת תיקייה אל…"
 
 #: widgets/standardactionmanager.cpp:148 widgets/standardactionmanager.cpp:156
 #: widgets/standardactionmanager.cpp:222 widgets/standardactionmanager.cpp:236
 msgid "Copy To"
-msgstr ""
+msgstr "העתקה אל"
 
 #: widgets/standardactionmanager.cpp:155 widgets/standardactionmanager.cpp:236
 msgid "Copy Item To..."
-msgstr ""
+msgstr "העתקת פריט אל…"
 
 #: widgets/standardactionmanager.cpp:163 widgets/standardactionmanager.cpp:237
 msgid "Move Item To..."
-msgstr ""
+msgstr "העברת פריט אל…"
 
 #: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:172
 #: widgets/standardactionmanager.cpp:230 widgets/standardactionmanager.cpp:237
 msgid "Move To"
-msgstr ""
+msgstr "העברה אל"
 
 #: widgets/standardactionmanager.cpp:171 widgets/standardactionmanager.cpp:229
 msgid "Move Folder To..."
-msgstr ""
+msgstr "העברת תיקייה אל…"
 
 #: widgets/standardactionmanager.cpp:178
 msgid "&Cut Item"
-msgstr ""
+msgstr "גזירת &פריט"
 
 #: widgets/standardactionmanager.cpp:178 widgets/standardactionmanager.cpp:179
 msgid "Cut"
-msgstr ""
+msgstr "גזירה"
 
 #: widgets/standardactionmanager.cpp:179
 msgid "&Cut Folder"
-msgstr ""
+msgstr "ג&זירת תיקייה"
 
 #: widgets/standardactionmanager.cpp:181
 msgid "Create Resource"
-msgstr ""
+msgstr "יצירת משאב"
 
 #: widgets/standardactionmanager.cpp:189
 msgid "Delete Resource"
-msgstr ""
+msgstr "מחיקת משאב"
 
 #: widgets/standardactionmanager.cpp:197
 msgid "&Resource Properties"
-msgstr ""
+msgstr "מאפייני מ&שאב"
 
 #: widgets/standardactionmanager.cpp:205
 msgid "Synchronize Resource"
-msgstr ""
+msgstr "סנכרון משאב"
 
 #: widgets/standardactionmanager.cpp:213
 msgid "Work Offline"
-msgstr ""
+msgstr "עבודה לא מקוונת"
 
 #: widgets/standardactionmanager.cpp:239
 msgid "&Synchronize Folder Recursively"
-msgstr ""
+msgstr "סנכרון התיקייה רקורסיבית"
 
 #: widgets/standardactionmanager.cpp:240
 msgid "Synchronize Recursively"
-msgstr ""
+msgstr "סנכרון רקורסיבי"
 
 #: widgets/standardactionmanager.cpp:247
 msgid "&Move Folder To Trash"
-msgstr ""
+msgstr "העברת &תיקייה לאשפה"
 
 #: widgets/standardactionmanager.cpp:248
 msgid "Move Folder To Trash"
-msgstr ""
+msgstr "העברת תיקייה לאשפה"
 
 #: widgets/standardactionmanager.cpp:255
 msgid "&Move Item To Trash"
-msgstr ""
+msgstr "העברת &פריט לאשפה"
 
 #: widgets/standardactionmanager.cpp:256
 msgid "Move Item To Trash"
-msgstr ""
+msgstr "העברת פריט לאשפה"
 
 #: widgets/standardactionmanager.cpp:263 widgets/standardactionmanager.cpp:279
 msgid "&Restore Folder From Trash"
-msgstr ""
+msgstr "שחזור &תיקייה מהאשפה"
 
 #: widgets/standardactionmanager.cpp:264 widgets/standardactionmanager.cpp:280
 msgid "Restore Folder From Trash"
-msgstr ""
+msgstr "שחזור תיקייה מהאשפה"
 
 #: widgets/standardactionmanager.cpp:271 widgets/standardactionmanager.cpp:295
 #: widgets/standardactionmanager.cpp:302
 msgid "&Restore Item From Trash"
-msgstr ""
+msgstr "שחזור &פריט מהאשפה"
 
 #: widgets/standardactionmanager.cpp:272 widgets/standardactionmanager.cpp:296
 #: widgets/standardactionmanager.cpp:302
 msgid "Restore Item From Trash"
-msgstr ""
+msgstr "שחזור פריט מהאשפה"
 
 #: widgets/standardactionmanager.cpp:287
 msgid "&Restore Collection From Trash"
-msgstr ""
+msgstr "שחזור &אוסף מהאשפה"
 
 #: widgets/standardactionmanager.cpp:288
 msgid "Restore Collection From Trash"
-msgstr ""
+msgstr "שחזור אוסף מהאשפה"
 
 #: widgets/standardactionmanager.cpp:304
 msgid "&Synchronize Favorite Folders"
-msgstr ""
+msgstr "סנכרון &תיקיות מועדפות"
 
 #: widgets/standardactionmanager.cpp:305
 msgid "Synchronize Favorite Folders"
-msgstr ""
+msgstr "סנכרון תיקיות מועדפות"
 
 #: widgets/standardactionmanager.cpp:312
 msgid "Synchronize Folder Tree"
-msgstr ""
+msgstr "סנכרון עץ תיקיות"
 
 #: widgets/standardactionmanager.cpp:398
 #, kde-format
@@ -2024,6 +2057,8 @@ msgid "&Copy Folder"
 msgid_plural "&Copy %1 Folders"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: widgets/standardactionmanager.cpp:399
 #, kde-format
@@ -2031,6 +2066,8 @@ msgid "&Copy Item"
 msgid_plural "&Copy %1 Items"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: widgets/standardactionmanager.cpp:400
 #, kde-format
@@ -2039,6 +2076,8 @@ msgid "&Cut Item"
 msgid_plural "&Cut %1 Items"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: widgets/standardactionmanager.cpp:401
 #, kde-format
@@ -2047,6 +2086,8 @@ msgid "&Cut Folder"
 msgid_plural "&Cut %1 Folders"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: widgets/standardactionmanager.cpp:402
 #, kde-format
@@ -2054,6 +2095,8 @@ msgid "&Delete Item"
 msgid_plural "&Delete %1 Items"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: widgets/standardactionmanager.cpp:403
 #, kde-format
@@ -2062,6 +2105,8 @@ msgid "&Delete Folder"
 msgid_plural "&Delete %1 Folders"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: widgets/standardactionmanager.cpp:404
 #, kde-format
@@ -2070,6 +2115,8 @@ msgid "&Synchronize Folder"
 msgid_plural "&Synchronize %1 Folders"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: widgets/standardactionmanager.cpp:405
 #, kde-format
@@ -2077,6 +2124,8 @@ msgid "&Delete Resource"
 msgid_plural "&Delete %1 Resources"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: widgets/standardactionmanager.cpp:406
 #, kde-format
@@ -2084,6 +2133,8 @@ msgid "&Synchronize Resource"
 msgid_plural "&Synchronize %1 Resources"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: widgets/standardactionmanager.cpp:408
 #, kde-format
@@ -2091,6 +2142,8 @@ msgid "Copy Folder"
 msgid_plural "Copy %1 Folders"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: widgets/standardactionmanager.cpp:409
 #, kde-format
@@ -2098,6 +2151,8 @@ msgid "Copy Item"
 msgid_plural "Copy %1 Items"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: widgets/standardactionmanager.cpp:410
 #, kde-format
@@ -2105,6 +2160,8 @@ msgid "Cut Item"
 msgid_plural "Cut %1 Items"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: widgets/standardactionmanager.cpp:411
 #, kde-format
@@ -2112,6 +2169,8 @@ msgid "Cut Folder"
 msgid_plural "Cut %1 Folders"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: widgets/standardactionmanager.cpp:412
 #, kde-format
@@ -2119,6 +2178,8 @@ msgid "Delete Item"
 msgid_plural "Delete %1 Items"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: widgets/standardactionmanager.cpp:413
 #, kde-format
@@ -2126,6 +2187,8 @@ msgid "Delete Folder"
 msgid_plural "Delete %1 Folders"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: widgets/standardactionmanager.cpp:414
 #, kde-format
@@ -2133,6 +2196,8 @@ msgid "Synchronize Folder"
 msgid_plural "Synchronize %1 Folders"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: widgets/standardactionmanager.cpp:415
 #, kde-format
@@ -2141,6 +2206,8 @@ msgid "Delete Resource"
 msgid_plural "Delete %1 Resources"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: widgets/standardactionmanager.cpp:416
 #, kde-format
@@ -2149,12 +2216,14 @@ msgid "Synchronize Resource"
 msgid_plural "Synchronize %1 Resources"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: widgets/standardactionmanager.cpp:419
 #, kde-format
 msgctxt "@label:textbox name of Akonadi folder"
 msgid "Name"
-msgstr ""
+msgstr "שם"
 
 #: widgets/standardactionmanager.cpp:426
 #, kde-format
@@ -2163,6 +2232,8 @@ msgid_plural ""
 "Do you really want to delete %1 folders and all their sub-folders?"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: widgets/standardactionmanager.cpp:429
 #, kde-format
@@ -2171,98 +2242,108 @@ msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: widgets/standardactionmanager.cpp:430
 #, kde-format
 msgid "Could not delete folder: %1"
-msgstr ""
+msgstr "לא ניתן למחוק את התיקייה: %1"
 
 #: widgets/standardactionmanager.cpp:431
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
-msgstr ""
+msgstr "מחיקת התיקייה נכשלה"
 
 #: widgets/standardactionmanager.cpp:433
 #, kde-format
 msgctxt "@title:window"
 msgid "Properties of Folder %1"
-msgstr ""
+msgstr "מאפיינים לתיקייה %1"
 
 #: widgets/standardactionmanager.cpp:437
 #, kde-format
 msgid "Do you really want to delete the selected item?"
 msgid_plural "Do you really want to delete %1 items?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "למחוק את הפריט הנבחר?"
+msgstr[1] "למחוק את שני הפריטים הנבחרים?"
+msgstr[2] "למחוק את %1 הפריטים הנבחרים?"
+msgstr[3] "למחוק את %1 הפריטים הנבחרים?"
 
 #: widgets/standardactionmanager.cpp:438
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "למחוק את הפריט?"
+msgstr[1] "למחוק את הפריטים?"
+msgstr[2] "למחוק את הפריטים?"
+msgstr[3] "למחוק את הפריטים?"
 
 #: widgets/standardactionmanager.cpp:439
 #, kde-format
 msgid "Could not delete item: %1"
-msgstr ""
+msgstr "לא ניתן למחוק פריט: %1"
 
 #: widgets/standardactionmanager.cpp:440
 #, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
-msgstr ""
+msgstr "מחיקת פריט נכשלה"
 
 #: widgets/standardactionmanager.cpp:442
 #, kde-format
 msgctxt "@title:window"
 msgid "Rename Favorite"
-msgstr ""
+msgstr "שינוי שם מועדף"
 
 #: widgets/standardactionmanager.cpp:443
 #, kde-format
 msgctxt "@label:textbox name of the folder"
 msgid "Name:"
-msgstr ""
+msgstr "שם:"
 
 #: widgets/standardactionmanager.cpp:445
 #, kde-format
 msgctxt "@title:window"
 msgid "New Resource"
-msgstr ""
+msgstr "משאב חדש"
 
 #: widgets/standardactionmanager.cpp:446
 #, kde-format
 msgid "Could not create resource: %1"
-msgstr ""
+msgstr "לא ניתן ליצור משאב: %1"
 
 #: widgets/standardactionmanager.cpp:447
 #, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
-msgstr ""
+msgstr "יצירת משאב נכשלה"
 
 #: widgets/standardactionmanager.cpp:451
 #, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "למחוק את המשאב הזה?"
+msgstr[1] "למחוק את שני המשאבים האלה?"
+msgstr[2] "למחוק את %1 המשאבים האלה?"
+msgstr[3] "למחוק את %1 המשאבים האלה?"
 
 #: widgets/standardactionmanager.cpp:454
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Resource?"
 msgid_plural "Delete Resources?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "למחוק משאב?"
+msgstr[1] "למחוק את המשאבים?"
+msgstr[2] "למחוק את המשאבים?"
+msgstr[3] "למחוק את המשאבים?"
 
 #: widgets/standardactionmanager.cpp:456
 #, kde-format
 msgid "Could not paste data: %1"
-msgstr ""
+msgstr "לא ניתן להדביק נתונים: %1"
 
 #: widgets/standardactionmanager.cpp:457
 #, kde-format
@@ -2291,7 +2372,7 @@ msgstr "איננו יכולים להוסיף „.” בתחילת או בסוף 
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
 "you want to make it online?"
-msgstr ""
+msgstr "לפני סנכרון התיקייה „%1” המשאב צריך להיות מקוון. להפוך אותו למקוון?"
 
 #: widgets/standardactionmanager.cpp:1053
 #, kde-format
