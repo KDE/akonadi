@@ -7,15 +7,15 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-23 00:42+0000\n"
-"PO-Revision-Date: 2025-06-10 06:51+0300\n"
+"PO-Revision-Date: 2025-06-11 11:34+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n==2 ? 1 : n>10 && n%10==0 ? "
-"2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
+"n % 10 == 0) ? 2 : 3));\n"
 "X-Generator: Lokalize 25.04.1\n"
 
 #, kde-format
@@ -1792,7 +1792,7 @@ msgstr ""
 msgid ""
 "The Akonadi control process did not report any errors during its previous "
 "startup."
-msgstr ""
+msgstr "תהליך השליטה על Akonadi לא דיווח על תקלות כלשהן במהלך העלייה הקודמת."
 
 #: widgets/selftestdialog.cpp:548
 #, kde-format
@@ -1805,11 +1805,13 @@ msgid ""
 "The Akonadi control process reported errors during its previous startup. The "
 "log can be found in %1."
 msgstr ""
+"תהליך השליטה ב־Akonadi דיווח על שגיאות במהלך העלייה הקודמת. אפשר למצוא את "
+"היומן תחת %1."
 
 #: widgets/selftestdialog.cpp:559
 #, kde-format
 msgid "Akonadi was started as root"
-msgstr ""
+msgstr "Akonadi הופעל תחת משתמש על (root)"
 
 #: widgets/selftestdialog.cpp:560
 #, kde-format
@@ -1818,11 +1820,14 @@ msgid ""
 "many security risks. MySQL, used by this Akonadi installation, will not "
 "allow itself to run as root, to protect you from these risks."
 msgstr ""
+"הרצת יישומים שחשופים לאינטרנט תחת משתמש על/ניהול (root/administrator) חושפים "
+"אותך למגוון רחב של סכנות אבטחה. MySQL, בו משתמשת ההתקנה הזאת של Akonadi, לא "
+"יאפשר לעצמו לרוץ תחת משתמש על, כדי להגן עליך מפני הסכנות האלו."
 
 #: widgets/selftestdialog.cpp:564
 #, kde-format
 msgid "Akonadi is not running as root"
-msgstr ""
+msgstr "Akonadi לא רץ תחת משתמש על (root)"
 
 #: widgets/selftestdialog.cpp:565
 #, kde-format
@@ -1830,6 +1835,8 @@ msgid ""
 "Akonadi is not running as a root/administrator user, which is the "
 "recommended setup for a secure system."
 msgstr ""
+"Akonadi אינו רץ תחת משתמש על/ניהול (root/administrator), שזאת התצורה המומלצת "
+"למערכת מאובטחת."
 
 #: widgets/selftestdialog.cpp:643
 #, kde-format
@@ -1855,6 +1862,9 @@ msgid ""
 "self-tests are supposed to help with tracking down and solving this problem. "
 "When requesting support or reporting bugs, please always include this report."
 msgstr ""
+"אירעה שגיאה בהפעלת שרת ה־Akonadi. הבדיקות העצמיות הבאות אמורות לסייע באיתור "
+"ופתרון הבעיה. בצירוף לבקשת תמיכה או דיווח על תקלות, אנא תמיד להוסיף את הדוח "
+"הזה."
 
 #. i18n: ectx: property (title), widget (QGroupBox, detailsGroup)
 #: widgets/selftestdialog.ui:39
@@ -1869,6 +1879,8 @@ msgid ""
 "<p>For more troubleshooting tips please refer to <a href=\"https://userbase."
 "kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
 msgstr ""
+"<p>לפרטים נוספים על פתרון בעיות נא לפנות אל <a href=\"https://userbase.kde."
+"org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
 
 #: widgets/standardactionmanager.cpp:79
 msgid "&New Folder..."
