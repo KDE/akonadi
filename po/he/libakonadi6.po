@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-23 02:38+0000\n"
-"PO-Revision-Date: 2025-06-11 11:34+0300\n"
+"PO-Revision-Date: 2025-06-11 17:31+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -187,21 +187,33 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"כלי לתפעול שרת Akonadi\n"
+"\n"
+"פקודות:\n"
+"  start          הפעלת שרת Akonadi עם כל התהליכים שלו\n"
+"  stop           עצירת שרת Akonadi עם כל התהליכים שלו באופן נקי\n"
+"  restart        הפעלת שרת Akonadi מחדש עם כל התהליכםי שלו\n"
+"  status         הצגת סקירת מצב שרת Akonadi\n"
+"  instances      הצגת כל מופעי Akonadi הקיימים\n"
+"  vacuum         ניקוי האחסון הפנימי (אזהרה: דורש המון זמן ומקום פנוי\n"
+"                 בכונן!)\n"
+"  fsck           לבדוק (ולנסות לתקן) את רציפות האחסון הפנימי\n"
+"                 (עלול לארוך זמן מה)"
 
 #: akonadictl/main.cpp:239
 #, kde-format
 msgid "Wait for server shutdown to complete."
-msgstr ""
+msgstr "להמתין לסיום כיבוי השרת."
 
 #: akonadictl/main.cpp:241
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "פקודה להרצה"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
 msgid "No such collection."
-msgstr ""
+msgstr "אין כזה אוסף."
 
 #: core/collectionsync.cpp:505 core/collectionsync.cpp:650
 #, kde-format
@@ -268,7 +280,7 @@ msgstr ""
 #: core/jobs/collectioncreatejob.cpp:50
 #, kde-format
 msgid "Invalid parent"
-msgstr ""
+msgstr "הורה שגוי"
 
 #: core/jobs/collectioncreatejob.cpp:98
 #, kde-format
@@ -278,12 +290,12 @@ msgstr ""
 #: core/jobs/collectiondeletejob.cpp:52
 #, kde-format
 msgid "Invalid collection"
-msgstr ""
+msgstr "אוסף שגוי"
 
 #: core/jobs/collectionfetchjob.cpp:212
 #, kde-format
 msgid "Invalid collection given."
-msgstr ""
+msgstr "סופק אוסף שגוי."
 
 #: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:90
 #, kde-format
@@ -294,22 +306,22 @@ msgstr ""
 #: core/jobs/linkjobimpl_p.h:39
 #, kde-format
 msgid "No valid destination specified"
-msgstr ""
+msgstr "לא צוין יעד תקף"
 
 #: core/jobs/invalidatecachejob.cpp:58
 #, kde-format
 msgid "Invalid collection."
-msgstr ""
+msgstr "אוסף שגוי."
 
 #: core/jobs/itemcreatejob.cpp:115
 #, kde-format
 msgid "Invalid parent collection"
-msgstr ""
+msgstr "אוסף הורה שגוי"
 
 #: core/jobs/job.cpp:335
 #, kde-format
 msgid "Cannot connect to the Akonadi service."
-msgstr ""
+msgstr "לא ניתן להתחבר לשירות ה־Akonadi."
 
 #: core/jobs/job.cpp:338
 #, kde-format
@@ -321,22 +333,22 @@ msgstr ""
 #: core/jobs/job.cpp:341
 #, kde-format
 msgid "User canceled operation."
-msgstr ""
+msgstr "המשתמש ביטל את הפעולה."
 
 #: core/jobs/job.cpp:346
 #, kde-format
 msgid "Unknown error."
-msgstr ""
+msgstr "שגיאה לא ידועה."
 
 #: core/jobs/job.cpp:385
 #, kde-format
 msgid "Unexpected response"
-msgstr ""
+msgstr "תגובה מפתיעה"
 
 #: core/jobs/resourcesynchronizationjob.cpp:139
 #, kde-format
 msgid "Resource synchronization timed out."
-msgstr ""
+msgstr "תם הזמן לסנכרון המשאב."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:145
 #, kde-format
@@ -1164,7 +1176,7 @@ msgstr ""
 #, kde-format
 msgctxt "@action:button Start the Akonadi server"
 msgid "Start"
-msgstr ""
+msgstr "התחלה"
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
@@ -1173,6 +1185,8 @@ msgid ""
 "A required background service is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
+"שירות רקע הכרחי לא פעיל.\n"
+"יש ללחוץ על „פרטים…” כדי לקבל מידע מפורט על הבעיה הזאת."
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
@@ -1188,77 +1202,77 @@ msgstr ""
 #: widgets/erroroverlay.ui:259
 #, kde-format
 msgid "Details..."
-msgstr ""
+msgstr "פרטים…"
 
 #: widgets/manageaccountwidget.cpp:221
 #, kde-format
 msgid "Do you want to remove account '%1'?"
-msgstr ""
+msgstr "להסיר את החשבון ‚%1’?"
 
 #: widgets/manageaccountwidget.cpp:222
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"
-msgstr ""
+msgstr "להסיר את החשבון?"
 
 #. i18n: ectx: property (text), widget (QCheckBox, accountOnCurrentActivity)
 #: widgets/manageaccountwidget.ui:19
 #, kde-format
 msgid "Show only account on current activity"
-msgstr ""
+msgstr "להציג רק את החשבון בפעילות הנוכחית"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/manageaccountwidget.ui:26
 #, kde-format
 msgid "Incoming accounts (add at least one):"
-msgstr ""
+msgstr "חשבונות נכנסים (יש להוסיף לפחות אחד):"
 
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
 #: widgets/manageaccountwidget.ui:33
 #, kde-format
 msgid "Filter…"
-msgstr ""
+msgstr "סינון…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
 #: widgets/manageaccountwidget.ui:47
 #, kde-format
 msgid "A&dd..."
-msgstr ""
+msgstr "הו&ספה…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
 #: widgets/manageaccountwidget.ui:57
 #, kde-format
 msgid "&Modify..."
-msgstr ""
+msgstr "&שינוי…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
 #: widgets/manageaccountwidget.ui:67
 #, kde-format
 msgid "R&emove"
-msgstr ""
+msgstr "ה&סרה"
 
 #. i18n: ectx: property (text), widget (QPushButton, mRestartAccountButton)
 #: widgets/manageaccountwidget.ui:84
 #, kde-format
 msgid "Restart"
-msgstr ""
+msgstr "הפעלה מחדש"
 
 #: widgets/recentcollectionaction.cpp:43
 #, kde-format
 msgid "Recent Folder"
-msgstr ""
+msgstr "תיקייה אחרונה"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, RenameFavoriteDialog)
 #: widgets/renamefavoritedialog.ui:26
 #, kde-format
 msgid "Rename Favorite"
-msgstr ""
+msgstr "שינוי שם מועדף"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/renamefavoritedialog.ui:35
 #, kde-format
 msgid "Name:"
-msgstr ""
+msgstr "שם:"
 
 #: widgets/selftestdialog.cpp:60
 #, kde-format
@@ -2176,28 +2190,28 @@ msgstr[3] ""
 #, kde-format
 msgid "Delete Item"
 msgid_plural "Delete %1 Items"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "מחיקת פריט"
+msgstr[1] "מחיקת שני פריטים"
+msgstr[2] "מחיקת %1 פריטים"
+msgstr[3] "מחיקת %1 פריטים"
 
 #: widgets/standardactionmanager.cpp:413
 #, kde-format
 msgid "Delete Folder"
 msgid_plural "Delete %1 Folders"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "מחיקת תיקייה"
+msgstr[1] "מחיקת שתי תיקיות"
+msgstr[2] "מחיקת %1 תיקיות"
+msgstr[3] "מחיקת %1 תיקיות"
 
 #: widgets/standardactionmanager.cpp:414
 #, kde-format
 msgid "Synchronize Folder"
 msgid_plural "Synchronize %1 Folders"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "סנכרון תיקייה"
+msgstr[1] "סנכרון שתי תיקיות"
+msgstr[2] "סנכרון %1 תיקיות"
+msgstr[3] "סנכרון %1 תיקיות"
 
 #: widgets/standardactionmanager.cpp:415
 #, kde-format
@@ -2230,10 +2244,10 @@ msgstr "שם"
 msgid "Do you really want to delete this folder and all its sub-folders?"
 msgid_plural ""
 "Do you really want to delete %1 folders and all their sub-folders?"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "למחוק את התיקייה על תת־תיקיותיה?"
+msgstr[1] "למחוק את שתי התיקיות על תת־תיקיותיהן?"
+msgstr[2] "למחוק את %1 התיקיות על תת־תיקיותיהן?"
+msgstr[3] "למחוק את %1 התיקיות על תת־תיקיותיהן?"
 
 #: widgets/standardactionmanager.cpp:429
 #, kde-format
