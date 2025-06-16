@@ -3,12 +3,13 @@
 
 #pragma once
 
-#include <qqmlregistration.h>
+#include <qqmlintegration.h>
 
 #include <Akonadi/AgentInstance>
 #include <Akonadi/Collection>
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/Item>
+#include <Akonadi/SpecialCollections>
 
 #define FOREIGN_ENUM_GADGET(Class, ValueType)                                                                                                                  \
     struct Class##Foreign {                                                                                                                                    \
@@ -42,4 +43,12 @@ class AgentInstanceForeign
     Q_GADGET
     QML_VALUE_TYPE(agentInstance)
     QML_FOREIGN(Akonadi::AgentInstance)
+};
+
+class SpecialCollections : public QObject
+{
+    Q_OBJECT
+    QML_NAMED_ELEMENT(SpecialCollections)
+    QML_FOREIGN(Akonadi::SpecialCollections)
+    QML_UNCREATABLE("Abstract class")
 };

@@ -5,6 +5,7 @@
 
 #include <Akonadi/AgentFilterProxyModel>
 #include <Akonadi/AgentInstance>
+#include <Akonadi/SpecialCollections>
 #include <qqmlregistration.h>
 
 struct AgentDataChange {
@@ -24,6 +25,8 @@ class AgentConfiguration : public QObject
     Q_PROPERTY(Akonadi::AgentFilterProxyModel *availableAgents READ availableAgents NOTIFY availableAgentsChanged)
     Q_PROPERTY(Akonadi::AgentFilterProxyModel *runningAgents READ runningAgents NOTIFY runningAgentsChanged)
     Q_PROPERTY(QStringList mimetypes READ mimetypes WRITE setMimetypes NOTIFY mimetypesChanged)
+    Q_PROPERTY(Akonadi::SpecialCollections *specialCollections READ specialCollections WRITE setSpecialCollections NOTIFY specialCollectionsChanged)
+
 public:
     enum AgentStatuses {
         Idle = Akonadi::AgentInstance::Idle,
@@ -36,19 +39,24 @@ public:
     explicit AgentConfiguration(QObject *parent = nullptr);
     ~AgentConfiguration() override;
 
-    Akonadi::AgentFilterProxyModel *availableAgents();
-    Akonadi::AgentFilterProxyModel *runningAgents();
+    [[nodiscard]] Akonadi::AgentFilterProxyModel *availableAgents();
+    [[nodiscard]] Akonadi::AgentFilterProxyModel *runningAgents();
     [[nodiscard]] QStringList mimetypes() const;
     void setMimetypes(const QStringList &mimetypes);
 
-    Q_INVOKABLE void createNew(int index);
-    Q_INVOKABLE void edit(int index);
-    Q_INVOKABLE void editIdentifier(const QString &resourceIdentifier);
-    Q_INVOKABLE void remove(int index);
-    Q_INVOKABLE void removeIdentifier(const QString &resourceIdentifier);
-    Q_INVOKABLE void restart(int index);
-    Q_INVOKABLE void restartIdentifier(const QString &resourceIdentifier);
-    Q_INVOKABLE bool isRemovable(int index);
+    [[nodiscard]] Akonadi::SpecialCollections *specialCollections() const;
+    void setSpecialCollections(Akonadi::SpecialCollections *specialCollections);
+
+    Q_INVOKABLE [[nodiscard]] bool isRemovable(int index);
+
+public Q_SLOTS:
+    void createNew(int index);
+    void edit(int index);
+    void editIdentifier(const QString &resourceIdentifier);
+    void remove(int index);
+    void removeIdentifier(const QString &resourceIdentifier);
+    void restart(int index);
+    void restartIdentifier(const QString &resourceIdentifier);
 
 Q_SIGNALS:
     void agentProgressChanged(const Akonadi::AgentInstance &instance);
@@ -56,12 +64,14 @@ Q_SIGNALS:
     void runningAgentsChanged();
     void availableAgentsChanged();
     void errorOccurred(const QString &error);
+    void specialCollectionsChanged();
 
 private:
     void setupEdit(Akonadi::AgentInstance instance);
     void setupRemove(const Akonadi::AgentInstance &instance);
     void setupRestart(Akonadi::AgentInstance instance);
 
+    Akonadi::SpecialCollections *m_specialCollections = nullptr;
     Akonadi::AgentFilterProxyModel *m_runningAgents = nullptr;
     Akonadi::AgentFilterProxyModel *m_availableAgents = nullptr;
     QStringList m_mimetypes;

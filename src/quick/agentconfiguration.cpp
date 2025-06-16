@@ -170,10 +170,26 @@ void AgentConfiguration::setMimetypes(const QStringList &mimetypes)
     }
 }
 
+Akonadi::SpecialCollections *AgentConfiguration::specialCollections() const
+{
+    return m_specialCollections;
+}
+
+void AgentConfiguration::setSpecialCollections(Akonadi::SpecialCollections *specialCollections)
+{
+    if (m_specialCollections == specialCollections) {
+        return;
+    }
+    m_specialCollections = specialCollections;
+    Q_EMIT specialCollectionsChanged();
+}
+
 bool AgentConfiguration::isRemovable(int index)
 {
-    const auto instance = m_runningAgents->data(m_runningAgents->index(index, 0), AgentInstanceModel::InstanceRole).value<AgentInstance>();
-    // return !Akonadi::SpecialMailCollections::self()->isSpecialAgent(instance.identifier());
+    if (m_specialCollections) {
+        const auto instance = m_runningAgents->data(m_runningAgents->index(index, 0), AgentInstanceModel::InstanceRole).value<AgentInstance>();
+        return !m_specialCollections->isSpecialAgent(instance.identifier());
+    }
     return true;
 }
 
