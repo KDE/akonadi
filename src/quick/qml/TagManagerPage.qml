@@ -24,11 +24,11 @@ Kirigami.ScrollablePage {
 
         parent: root
 
-        title: i18nc("@title:dialog", "Confirm Tag Deletion")
+        title: i18ncd("libakonadi6", "@title:dialog",  "Confirm Tag Deletion")
         dialogType: Components.MessageDialog.Warning
 
         contentItem: QQC2.Label {
-            text: i18n("Are you sure you want to delete tag <b>%1</b>?", deleteConfirmSheet.tagName) + " " + i18n("You won't be able to revert this action.")
+            text: i18ncd("libakonadi6", "@info", "Are you sure you want to delete tag <b>%1</b>?", deleteConfirmSheet.tagName) + " " + i18n("You won't be able to revert this action.")
             wrapMode: Text.Wrap
         }
 
@@ -65,13 +65,13 @@ Kirigami.ScrollablePage {
                 }
 
                 QQC2.ToolButton {
-                    icon.name: "edit-rename"
+                    icon.name: "edit-entry-symbolic"
                     onClicked: tagDelegate.editMode = true
                     visible: !tagDelegate.editMode
                 }
 
                 QQC2.ToolButton {
-                    icon.name: "delete"
+                    icon.name: "delete-symbolic"
                     onClicked: {
                         deleteConfirmSheet.tag = tagDelegate.tag;
                         deleteConfirmSheet.tagName = tagDelegate.name;
@@ -89,7 +89,7 @@ Kirigami.ScrollablePage {
                 }
 
                 QQC2.ToolButton {
-                    icon.name: "gtk-apply"
+                    icon.name: "dialog-ok-apply-symbolic"
                     visible: tagDelegate.editMode
                     onClicked: {
                         Akonadi.TagManager.renameTag(tagDelegate.tag, tagNameField.text)
@@ -98,7 +98,7 @@ Kirigami.ScrollablePage {
                 }
 
                 QQC2.ToolButton {
-                    icon.name: "gtk-cancel"
+                    icon.name: "dialog-cancel-symbolic"
                     onClicked: {
                         tagDelegate.editMode = false;
                         tagNameField.text = tagDelegate.name
@@ -129,7 +129,7 @@ Kirigami.ScrollablePage {
             QQC2.TextField {
                 id: newTagField
 
-                placeholderText: i18n("Create a New Tag…")
+                placeholderText: i18ncd("libakonadi6", "@info:placeholder", "Create a New Tag…")
                 maximumLength: 50
                 onAccepted: addTagButton.click()
                 background: null
@@ -139,8 +139,8 @@ Kirigami.ScrollablePage {
 
             QQC2.ToolButton {
                 id: addTagButton
-                icon.name: "tag-new"
-                text: i18nc("@action:button", "Add Tag")
+                icon.name: "tag-new-symbolic"
+                text: i18ncd("libakonadi6", "@action:button", "Add Tag")
                 display: QQC2.ToolButton.IconOnly
 
                 onClicked: if (newTagField.text.length > 0) {
