@@ -94,7 +94,6 @@ bool CollectionComboBoxModelPrivate::scanSubTree()
 {
     for (int row = 0; row < mRightsFilterModel->rowCount(); ++row) {
         const Akonadi::Collection::Id id = mRightsFilterModel->index(row, 0).data(EntityTreeModel::CollectionIdRole).toLongLong();
-        qWarning() << mRightsFilterModel->index(row, 0) << mRightsFilterModel->index(row, 0).data(Qt::DisplayRole).toString();
 
         if (mDefaultCollectionId == id && id > 0) {
             mParent->setCurrentIndex(row);
