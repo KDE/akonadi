@@ -19,7 +19,6 @@ target_link_libraries(akonaditest
   KF6::ConfigCore
   Qt::Xml
   Qt::DBus
-  Qt::Widgets
 )
 
 install(TARGETS akonaditest ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
