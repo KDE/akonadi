@@ -143,6 +143,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_AKONADIMAIN(SearchQueryTest, NoGUI)
+QTEST_AKONADI_CORE_MAIN(SearchQueryTest, NoGUI)
 
 #include "searchquerytest.moc"

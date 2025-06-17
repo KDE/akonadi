@@ -241,6 +241,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_AKONADIMAIN(JobTest)
+QTEST_AKONADI_CORE_MAIN(JobTest)
 
 #include "jobtest.moc"

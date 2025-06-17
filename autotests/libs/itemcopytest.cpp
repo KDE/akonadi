@@ -117,6 +117,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_AKONADIMAIN(ItemCopyTest)
+QTEST_AKONADI_CORE_MAIN(ItemCopyTest)
 
 #include "itemcopytest.moc"

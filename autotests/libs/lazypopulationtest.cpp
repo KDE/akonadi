@@ -355,4 +355,4 @@ void LazyPopulationTest::testPurgeEmptyCollection()
 
 #include "lazypopulationtest.moc"
 
-QTEST_AKONADIMAIN(LazyPopulationTest)
+QTEST_AKONADI_CORE_MAIN(LazyPopulationTest)

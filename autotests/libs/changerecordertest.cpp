@@ -180,6 +180,6 @@ private:
     std::vector<std::unique_ptr<QSignalSpy>> spies;
 };
 
-QTEST_AKONADIMAIN(ChangeRecorderTest)
+QTEST_AKONADI_CORE_MAIN(ChangeRecorderTest)
 
 #include "changerecordertest.moc"

@@ -30,7 +30,7 @@
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN(CollectionJobTest)
+QTEST_AKONADI_CORE_MAIN(CollectionJobTest)
 
 void CollectionJobTest::initTestCase()
 {

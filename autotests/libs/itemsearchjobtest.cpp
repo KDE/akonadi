@@ -85,6 +85,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_AKONADIMAIN(ItemSearchJobTest)
+QTEST_AKONADI_CORE_MAIN(ItemSearchJobTest)
 
 #include "itemsearchjobtest.moc"

@@ -47,6 +47,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_AKONADIMAIN(TestEnvironmentTest)
+QTEST_AKONADI_CORE_MAIN(TestEnvironmentTest)
 
 #include "testenvironmenttest.moc"

@@ -29,7 +29,6 @@ target_link_libraries(akonaditestfake
         Qt::DBus
         KPim6::AkonadiCore
         Qt::Test
-        Qt::Widgets
         Qt::Network
         KPim6::AkonadiPrivate
         akonadi_shared

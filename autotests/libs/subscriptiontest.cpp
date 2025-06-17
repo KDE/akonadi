@@ -73,6 +73,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_AKONADIMAIN(SubscriptionTest)
+QTEST_AKONADI_CORE_MAIN(SubscriptionTest)
 
 #include "subscriptiontest.moc"

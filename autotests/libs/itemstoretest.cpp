@@ -25,7 +25,7 @@
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN(ItemStoreTest)
+QTEST_AKONADI_CORE_MAIN(ItemStoreTest)
 
 static Collection res1_foo;
 static Collection res2;

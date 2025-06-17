@@ -134,6 +134,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_AKONADIMAIN(DbDateTimeTest)
+QTEST_AKONADI_CORE_MAIN(DbDateTimeTest)
 
 #include "dbdatetimetest.moc"

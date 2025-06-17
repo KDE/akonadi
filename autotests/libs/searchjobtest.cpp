@@ -18,7 +18,7 @@
 #include "searchcreatejob.h"
 #include "searchquery.h"
 
-QTEST_AKONADIMAIN(SearchJobTest)
+QTEST_AKONADI_CORE_MAIN(SearchJobTest)
 
 using namespace Akonadi;
 

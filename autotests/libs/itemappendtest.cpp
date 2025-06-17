@@ -24,7 +24,7 @@
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN(ItemAppendTest)
+QTEST_AKONADI_CORE_MAIN(ItemAppendTest)
 
 void ItemAppendTest::initTestCase()
 {

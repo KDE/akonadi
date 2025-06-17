@@ -621,6 +621,6 @@ bool UnitActionStateManager::hasResourceCapability(const Collection &collection,
     return mReceiver->hasResourceCapability(collection, capability);
 }
 
-QTEST_AKONADIMAIN(ActionStateManagerTest)
+QTEST_AKONADI_CORE_MAIN(ActionStateManagerTest)
 
 #include "actionstatemanagertest.moc"

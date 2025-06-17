@@ -70,6 +70,6 @@ void InvalidateCacheJobTest::shouldClearPayload()
     QCOMPARE(fetchAgainJob->items().first().payload<QByteArray>(), "testmailbody2");
 }
 
-QTEST_AKONADIMAIN(InvalidateCacheJobTest)
+QTEST_AKONADI_CORE_MAIN(InvalidateCacheJobTest)
 
 #include "invalidatecachejobtest.moc"

@@ -12,7 +12,7 @@
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN(CollectionPathResolverTest)
+QTEST_AKONADI_CORE_MAIN(CollectionPathResolverTest)
 
 void CollectionPathResolverTest::initTestCase()
 {

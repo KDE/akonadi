@@ -215,6 +215,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_AKONADIMAIN(ItemDeleteTest)
+QTEST_AKONADI_CORE_MAIN(ItemDeleteTest)
 
 #include "itemdeletetest.moc"

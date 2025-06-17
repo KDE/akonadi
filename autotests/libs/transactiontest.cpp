@@ -19,7 +19,7 @@
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN(TransactionTest)
+QTEST_AKONADI_CORE_MAIN(TransactionTest)
 
 void TransactionTest::initTestCase()
 {

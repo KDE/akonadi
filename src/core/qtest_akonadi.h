@@ -60,6 +60,33 @@
         return result;                                                                                                                                         \
     }
 
+/**
+ * \short Akonadi Replacement for QTEST_MAIN from QTestLib
+ *
+ * Same as QTEST_AKONADIMAIN but guiless.
+ */
+#define QTEST_AKONADI_CORE_MAIN(TestObject)                                                                                                                    \
+    int main(int argc, char *argv[])                                                                                                                           \
+    {                                                                                                                                                          \
+        qputenv("LC_ALL", "C");                                                                                                                                \
+        qunsetenv("KDE_COLOR_DEBUG");                                                                                                                          \
+        QCoreApplication app(argc, argv);                                                                                                                      \
+        app.setApplicationName(QStringLiteral("qttest"));                                                                                                      \
+        app.setOrganizationDomain(QStringLiteral("kde.org"));                                                                                                  \
+        app.setOrganizationName(QStringLiteral("KDE"));                                                                                                        \
+        QGuiApplication::setQuitOnLastWindowClosed(false);                                                                                                     \
+        QCoreApplication::setQuitLockEnabled(false);                                                                                                           \
+        qRegisterMetaType<QList<QUrl>>();                                                                                                                      \
+        int result = 0;                                                                                                                                        \
+        QTimer::singleShot(0, &app, [argc, argv, &result]() {                                                                                                  \
+            TestObject tc;                                                                                                                                     \
+            result = QTest::qExec(&tc, argc, argv);                                                                                                            \
+            qApp->quit();                                                                                                                                      \
+        });                                                                                                                                                    \
+        app.exec();                                                                                                                                            \
+        return result;                                                                                                                                         \
+    }
+
 namespace AkonadiTest
 {
 /**
