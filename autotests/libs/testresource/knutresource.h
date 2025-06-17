@@ -9,16 +9,17 @@
 
 #include "collection.h"
 #include "item.h"
-#include "resourcebase.h"
+#include "resourcewidgetbase.h"
 
 #include "agentsearchinterface.h"
+#include "searchquery.h"
 #include "xmldocument.h"
 
 #include "settings.h"
 
 class QFileSystemWatcher;
 
-class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::ObserverV2, public Akonadi::AgentSearchInterface
+class KnutResource : public Akonadi::ResourceWidgetBase, public Akonadi::AgentBase::ObserverV2, public Akonadi::AgentSearchInterface
 {
     Q_OBJECT
 
@@ -26,6 +27,9 @@ public:
     using Akonadi::AgentBase::ObserverV2::collectionChanged; // So we don't trigger -Woverloaded-virtual
     explicit KnutResource(const QString &id);
     ~KnutResource() override;
+
+public Q_SLOTS:
+    void configure(WId windowId) override;
 
 protected:
     void retrieveCollections() override;

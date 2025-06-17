@@ -6,19 +6,20 @@
 */
 
 #include "knutresource.h"
-
-#include "changerecorder.h"
-#include "itemfetchscope.h"
 #include "knutresource_debug.h"
-#include "searchquery.h"
 #include "settingsadaptor.h"
-#include "tagcreatejob.h"
 #include "xmlreader.h"
 #include "xmlwriter.h"
 
-#include <KLocalizedString>
-
+#include "agentfactory.h"
+#include "changerecorder.h"
+#include "itemfetchscope.h"
+#include "tagcreatejob.h"
 #include <QDBusConnection>
+
+#include <KLocalizedString>
+#include <QFileDialog>
+
 #include <QDir>
 #include <QFile>
 #include <QFileSystemWatcher>
@@ -28,7 +29,7 @@
 using namespace Akonadi;
 
 KnutResource::KnutResource(const QString &id)
-    : ResourceBase(id)
+    : ResourceWidgetBase(id)
     , mWatcher(new QFileSystemWatcher(this))
     , mSettings(new KnutSettings())
 {
@@ -49,7 +50,6 @@ KnutResource::~KnutResource()
 
 void KnutResource::load()
 {
-    mSettings->load();
     if (!mWatcher->files().isEmpty()) {
         mWatcher->removePaths(mWatcher->files());
     }
@@ -88,6 +88,32 @@ void KnutResource::save()
         Q_EMIT error(mDocument.lastError());
         return;
     }
+}
+
+void KnutResource::configure(WId windowId)
+{
+    QString oldFile = mSettings->dataFile();
+    if (oldFile.isEmpty()) {
+        oldFile = QDir::homePath();
+    }
+
+    // TODO: Use windowId
+    Q_UNUSED(windowId)
+    const QString newFile =
+        QFileDialog::getSaveFileName(nullptr,
+                                     i18n("Select Data File"),
+                                     QString(),
+                                     QStringLiteral("*.xml |") + i18nc("Filedialog filter for Akonadi data file", "Akonadi Knut Data File"));
+
+    if (newFile.isEmpty() || oldFile == newFile) {
+        return;
+    }
+
+    mSettings->setDataFile(newFile);
+    mSettings->save();
+    load();
+
+    Q_EMIT configurationDialogAccepted();
 }
 
 void KnutResource::retrieveCollections()
@@ -342,6 +368,6 @@ void KnutResource::removeSearch(const Collection &resultCollection)
     qCDebug(KNUTRESOURCE_LOG) << "removeSearch:" << resultCollection.id();
 }
 
-AKONADI_RESOURCE_CORE_MAIN(KnutResource)
+AKONADI_RESOURCE_MAIN(KnutResource)
 
 #include "moc_knutresource.cpp"
