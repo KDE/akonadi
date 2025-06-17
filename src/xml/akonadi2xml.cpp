@@ -11,15 +11,15 @@
 
 #include <KAboutData>
 #include <KLocalizedString>
-#include <QApplication>
 #include <QCommandLineParser>
+#include <QCoreApplication>
 #include <QDebug>
 
 using namespace Akonadi;
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+    QCoreApplication app(argc, argv);
 
     KAboutData aboutData(QStringLiteral("akonadi2xml"),
                          i18n("Akonadi To XML converter"),

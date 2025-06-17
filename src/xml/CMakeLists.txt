@@ -43,7 +43,7 @@ set_target_properties(akonadi2xml PROPERTIES MACOSX_BUNDLE FALSE)
 target_link_libraries(akonadi2xml
     KPim6::AkonadiXml
     KF6::I18n
-    Qt::Widgets # for QApplication
+    Qt::Core
 )
 
 add_library(KPim6AkonadiXml ${akonadixml_SRCS})
