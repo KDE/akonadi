@@ -15,14 +15,14 @@
 
 #include <KLocalizedString>
 
-#include <QApplication>
 #include <QCommandLineParser>
+#include <QCoreApplication>
 #include <QSessionManager>
 
 #include <csignal>
 
-static SetupTest *setup = nullptr;
-static TestRunner *runner = nullptr;
+static std::unique_ptr<SetupTest> setup;
+static std::unique_ptr<TestRunner> runner;
 
 void sigHandler(int signal)
 {
@@ -47,7 +47,7 @@ void sigHandler(int signal)
 
 int main(int argc, char **argv)
 {
-    QApplication app(argc, argv);
+    QCoreApplication app(argc, argv);
     app.setQuitLockEnabled(false);
 
     KAboutData aboutdata(QStringLiteral("akonadi-TES"),
@@ -69,12 +69,6 @@ int main(int argc, char **argv)
     parser.process(app);
     aboutdata.processCommandLine(&parser);
 
-    auto disableSessionManagement = [](QSessionManager &sm) {
-        sm.setRestartHint(QSessionManager::RestartNever);
-    };
-    QObject::connect(qApp, &QGuiApplication::commitDataRequest, qApp, disableSessionManagement);
-    QObject::connect(qApp, &QGuiApplication::saveStateRequest, qApp, disableSessionManagement);
-
     if (parser.isSet(QStringLiteral("config"))) {
         const auto backend = parser.value(QStringLiteral("backend"));
         if (backend != QLatin1StringView("sqlite") && backend != QLatin1StringView("mysql") && backend != QLatin1StringView("pgsql")) {
@@ -95,10 +89,9 @@ int main(int argc, char **argv)
     signal(SIGQUIT, sigHandler);
 #endif
 
-    setup = new SetupTest();
+    setup = std::make_unique<SetupTest>();
 
     if (!setup->startAkonadiDaemon()) {
-        delete setup;
         qCCritical(AKONADITEST_LOG, "Failed to start Akonadi server!");
         return 1;
     }
@@ -121,20 +114,16 @@ int main(int argc, char **argv)
         for (int i = 0; i < parser.positionalArguments().count(); ++i) {
             testArgs << parser.positionalArguments().at(i);
         }
-        runner = new TestRunner(testArgs);
-        QObject::connect(setup, &SetupTest::setupDone, runner, &TestRunner::run);
-        QObject::connect(setup, &SetupTest::serverExited, runner, &TestRunner::triggerTermination);
-        QObject::connect(runner, &TestRunner::finished, setup, &SetupTest::shutdown);
+        runner = std::make_unique<TestRunner>(testArgs);
+        QObject::connect(setup.get(), &SetupTest::setupDone, runner.get(), &TestRunner::run);
+        QObject::connect(setup.get(), &SetupTest::serverExited, runner.get(), &TestRunner::triggerTermination);
+        QObject::connect(runner.get(), &TestRunner::finished, setup.get(), &SetupTest::shutdown);
     }
 
     int exitCode = app.exec();
     if (runner) {
         exitCode += runner->exitCode();
-        delete runner;
     }
-
-    delete setup;
-    setup = nullptr;
 
     return exitCode;
 }
