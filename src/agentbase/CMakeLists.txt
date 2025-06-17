@@ -138,7 +138,6 @@ if(BUILD_QCH)
         LINK_QCHS
             Qt6Core_QCH
             Qt6Gui_QCH
-            Qt6Widgets_QCH
         INCLUDE_DIRS
             ${CMAKE_CURRENT_BINARY_DIR}
         BLANK_MACROS
