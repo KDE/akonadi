@@ -215,6 +215,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_AKONADIMAIN(ItemMoveTest)
+QTEST_AKONADI_CORE_MAIN(ItemMoveTest)
 
 #include "itemmovetest.moc"

@@ -441,6 +441,6 @@ private Q_SLOTS:
 #endif
 };
 
-QTEST_AKONADIMAIN(CollectionSyncTest)
+QTEST_AKONADI_CORE_MAIN(CollectionSyncTest)
 
 #include "collectionsynctest.moc"

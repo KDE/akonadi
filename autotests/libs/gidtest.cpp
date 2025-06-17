@@ -20,7 +20,7 @@
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN(GidTest)
+QTEST_AKONADI_CORE_MAIN(GidTest)
 
 bool TestSerializer::deserialize(Akonadi::Item &item, const QByteArray &label, QIODevice &data, int version)
 {

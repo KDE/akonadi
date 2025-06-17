@@ -116,6 +116,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_AKONADIMAIN(CollectionCopyTest)
+QTEST_AKONADI_CORE_MAIN(CollectionCopyTest)
 
 #include "collectioncopytest.moc"

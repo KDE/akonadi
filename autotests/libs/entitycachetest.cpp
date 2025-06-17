@@ -153,6 +153,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_AKONADIMAIN(EntityCacheTest)
+QTEST_AKONADI_CORE_MAIN(EntityCacheTest)
 
 #include "entitycachetest.moc"

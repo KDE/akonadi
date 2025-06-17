@@ -74,6 +74,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_AKONADIMAIN(ServerManagerTest)
+QTEST_AKONADI_CORE_MAIN(ServerManagerTest)
 
 #include "servermanagertest.moc"

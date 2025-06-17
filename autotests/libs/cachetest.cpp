@@ -137,6 +137,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_AKONADIMAIN(CacheTest)
+QTEST_AKONADI_CORE_MAIN(CacheTest)
 
 #include "cachetest.moc"

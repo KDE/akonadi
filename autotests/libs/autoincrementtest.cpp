@@ -18,7 +18,7 @@
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN(AutoIncrementTest)
+QTEST_AKONADI_CORE_MAIN(AutoIncrementTest)
 
 void AutoIncrementTest::initTestCase()
 {

@@ -133,6 +133,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_AKONADIMAIN(CollectionMoveTest)
+QTEST_AKONADI_CORE_MAIN(CollectionMoveTest)
 
 #include "collectionmovetest.moc"

@@ -174,6 +174,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_AKONADIMAIN(ItemBenchmark)
+QTEST_AKONADI_CORE_MAIN(ItemBenchmark)
 
 #include "itembenchmark.moc"

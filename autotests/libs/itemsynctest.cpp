@@ -691,6 +691,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_AKONADIMAIN(ItemsyncTest)
+QTEST_AKONADI_CORE_MAIN(ItemsyncTest)
 
 #include "itemsynctest.moc"

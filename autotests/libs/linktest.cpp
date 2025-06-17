@@ -105,6 +105,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_AKONADIMAIN(LinkTest)
+QTEST_AKONADI_CORE_MAIN(LinkTest)
 
 #include "linktest.moc"

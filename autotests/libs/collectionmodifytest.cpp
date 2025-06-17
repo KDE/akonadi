@@ -61,6 +61,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_AKONADIMAIN(CollectionModifyTest)
+QTEST_AKONADI_CORE_MAIN(CollectionModifyTest)
 
 #include "collectionmodifytest.moc"

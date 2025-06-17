@@ -79,6 +79,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_AKONADIMAIN(ResourceTest)
+QTEST_AKONADI_CORE_MAIN(ResourceTest)
 
 #include "resourcetest.moc"

@@ -1056,4 +1056,4 @@ void TagTest::testItemNotificationOnTagDeletion()
 
 #include "tagtest.moc"
 
-QTEST_AKONADIMAIN(TagTest)
+QTEST_AKONADI_CORE_MAIN(TagTest)

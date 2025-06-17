@@ -13,7 +13,6 @@ macro(add_unit_test _source)
         akonadi_shared
         KPim6::AkonadiPrivate
         Qt::Network
-        Qt::Widgets
         Qt::Test
         ${CMAKE_EXE_LINKER_FLAGS_ASAN}
    )

@@ -18,7 +18,7 @@
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN(AttributeFactoryTest)
+QTEST_AKONADI_CORE_MAIN(AttributeFactoryTest)
 
 static Collection res1;
 

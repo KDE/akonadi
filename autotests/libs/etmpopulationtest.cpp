@@ -334,4 +334,4 @@ void EtmPopulationTest::testLoadingOfHiddenCollection()
 
 #include "etmpopulationtest.moc"
 
-QTEST_AKONADIMAIN(EtmPopulationTest)
+QTEST_AKONADI_CORE_MAIN(EtmPopulationTest)

@@ -18,7 +18,7 @@
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN(ItemFetchTest)
+QTEST_AKONADI_CORE_MAIN(ItemFetchTest)
 
 void ItemFetchTest::initTestCase()
 {

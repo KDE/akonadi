@@ -31,7 +31,7 @@
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN(MonitorTest)
+QTEST_AKONADI_CORE_MAIN(MonitorTest)
 
 static Collection res3;
 

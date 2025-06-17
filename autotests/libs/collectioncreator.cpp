@@ -68,6 +68,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_AKONADIMAIN(CollectionCreator)
+QTEST_AKONADI_CORE_MAIN(CollectionCreator)
 
 #include "collectioncreator.moc"

@@ -248,6 +248,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_AKONADIMAIN(TagSyncTest)
+QTEST_AKONADI_CORE_MAIN(TagSyncTest)
 
 #include "tagsynctest.moc"

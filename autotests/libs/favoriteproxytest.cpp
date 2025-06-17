@@ -233,4 +233,4 @@ void FavoriteProxyTest::testInsertAfterModelCreation()
 
 #include "favoriteproxytest.moc"
 
-QTEST_AKONADIMAIN(FavoriteProxyTest)
+QTEST_AKONADI_CORE_MAIN(FavoriteProxyTest)

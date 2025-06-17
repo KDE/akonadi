@@ -21,7 +21,7 @@
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN(CollectionAttributeTest)
+QTEST_AKONADI_CORE_MAIN(CollectionAttributeTest)
 
 class TestAttribute : public Attribute
 {
