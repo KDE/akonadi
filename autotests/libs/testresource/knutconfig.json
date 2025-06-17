@@ -1,0 +1,5 @@
+{
+    "X-Akonadi-PluginType": "AgentConfig",
+    "X-Akonadi-Library": "knutconfig",
+    "X-Akonadi-AgentConfig-Type": "akonadi_knut_resource"
+}
