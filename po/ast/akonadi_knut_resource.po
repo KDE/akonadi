@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-21 00:45+0000\n"
+"POT-Creation-Date: 2025-06-18 00:43+0000\n"
 "PO-Revision-Date: 2024-03-27 21:23+0100\n"
 "Last-Translator: Enol P. <enolp@softastur.org>\n"
 "Language-Team: Asturian <alministradores@softastur.org>\n"
@@ -16,6 +16,29 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 24.02.1\n"
+
+#: accountwidget.cpp:38
+#, kde-format
+msgid "Select Data File"
+msgstr ""
+
+#: accountwidget.cpp:40
+#, kde-format
+msgctxt "Filedialog filter for Akonadi data file"
+msgid "Akonadi Knut Data File"
+msgstr "Ficheru de datos Knut d'Akonadi"
+
+#: accountwidget.cpp:50
+#, kde-format
+msgctxt "@label"
+msgid "Data Files:"
+msgstr ""
+
+#: accountwidget.cpp:52
+#, kde-format
+msgctxt "@option:check"
+msgid "File watching enabled"
+msgstr ""
 
 #: knutresource.cpp:60
 #, kde-format
@@ -27,58 +50,47 @@ msgstr "Nun se seleicionó nengún ficheru de datos"
 msgid "File '%1' loaded successfully."
 msgstr "El ficheru «%1» cargóse correutamente."
 
-#: knutresource.cpp:104
-#, kde-format
-msgid "Select Data File"
-msgstr ""
-
-#: knutresource.cpp:106
-#, kde-format
-msgctxt "Filedialog filter for Akonadi data file"
-msgid "Akonadi Knut Data File"
-msgstr "Ficheru de datos Knut d'Akonadi"
-
-#: knutresource.cpp:148 knutresource.cpp:168 knutresource.cpp:321
+#: knutresource.cpp:122 knutresource.cpp:142 knutresource.cpp:295
 #, kde-format
 msgid "No item found for remoteid %1"
 msgstr ""
 
-#: knutresource.cpp:186
+#: knutresource.cpp:160
 #, kde-format
 msgid "Parent collection not found in DOM tree."
 msgstr ""
 
-#: knutresource.cpp:194
+#: knutresource.cpp:168
 #, kde-format
 msgid "Unable to write collection."
 msgstr "Nun ye posible escribi la coleición."
 
-#: knutresource.cpp:206
+#: knutresource.cpp:180
 #, kde-format
 msgid "Modified collection not found in DOM tree."
 msgstr "La coleición modificada nun s'atopó nel árbole DOM."
 
-#: knutresource.cpp:236
+#: knutresource.cpp:210
 #, kde-format
 msgid "Deleted collection not found in DOM tree."
 msgstr "La coleición desaniciada nun s'atopó nel árbole DOM."
 
-#: knutresource.cpp:250 knutresource.cpp:308 knutresource.cpp:315
+#: knutresource.cpp:224 knutresource.cpp:282 knutresource.cpp:289
 #, kde-format
 msgid "Parent collection '%1' not found in DOM tree."
 msgstr ""
 
-#: knutresource.cpp:258 knutresource.cpp:328
+#: knutresource.cpp:232 knutresource.cpp:302
 #, kde-format
 msgid "Unable to write item."
 msgstr "Nun ye posible escribir l'elementu."
 
-#: knutresource.cpp:272
+#: knutresource.cpp:246
 #, kde-format
 msgid "Modified item not found in DOM tree."
 msgstr "L'elementu modificáu nun s'atopó nel árbole DOM."
 
-#: knutresource.cpp:287
+#: knutresource.cpp:261
 #, kde-format
 msgid "Deleted item not found in DOM tree."
 msgstr "L'elementu desaniciáu nun s'atopó nel árbole DOM."

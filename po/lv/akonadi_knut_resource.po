@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi_knut_resource\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-21 00:45+0000\n"
+"POT-Creation-Date: 2025-06-18 00:43+0000\n"
 "PO-Revision-Date: 2024-02-01 16:59+0200\n"
 "Last-Translator: Toms Trasūns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -23,6 +23,30 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
 
+#: accountwidget.cpp:38
+#, kde-format
+msgid "Select Data File"
+msgstr "Izvēlieties datni"
+
+#: accountwidget.cpp:40
+#, kde-format
+msgctxt "Filedialog filter for Akonadi data file"
+msgid "Akonadi Knut Data File"
+msgstr "„Akonadi Knut“ datne"
+
+#: accountwidget.cpp:50
+#, fuzzy, kde-format
+#| msgid "Select Data File"
+msgctxt "@label"
+msgid "Data Files:"
+msgstr "Izvēlieties datni"
+
+#: accountwidget.cpp:52
+#, kde-format
+msgctxt "@option:check"
+msgid "File watching enabled"
+msgstr ""
+
 #: knutresource.cpp:60
 #, kde-format
 msgid "No data file selected."
@@ -33,58 +57,47 @@ msgstr "Nav izvēlēta datne."
 msgid "File '%1' loaded successfully."
 msgstr "Datne „%1“ ir veiksmīgi ielādēta."
 
-#: knutresource.cpp:104
-#, kde-format
-msgid "Select Data File"
-msgstr "Izvēlieties datni"
-
-#: knutresource.cpp:106
-#, kde-format
-msgctxt "Filedialog filter for Akonadi data file"
-msgid "Akonadi Knut Data File"
-msgstr "„Akonadi Knut“ datne"
-
-#: knutresource.cpp:148 knutresource.cpp:168 knutresource.cpp:321
+#: knutresource.cpp:122 knutresource.cpp:142 knutresource.cpp:295
 #, kde-format
 msgid "No item found for remoteid %1"
 msgstr "Nav atrasti „remoteid“ %1 vienumi"
 
-#: knutresource.cpp:186
+#: knutresource.cpp:160
 #, kde-format
 msgid "Parent collection not found in DOM tree."
 msgstr "Vecākkolekcija DOM kokā nav atrasta."
 
-#: knutresource.cpp:194
+#: knutresource.cpp:168
 #, kde-format
 msgid "Unable to write collection."
 msgstr "Neizdevās ierakstīt kolekciju."
 
-#: knutresource.cpp:206
+#: knutresource.cpp:180
 #, kde-format
 msgid "Modified collection not found in DOM tree."
 msgstr "Izmainītā kolekcija DOM kokā netika atrasta."
 
-#: knutresource.cpp:236
+#: knutresource.cpp:210
 #, kde-format
 msgid "Deleted collection not found in DOM tree."
 msgstr "Dzēstā kolekcija DOM kokā netika atrasta."
 
-#: knutresource.cpp:250 knutresource.cpp:308 knutresource.cpp:315
+#: knutresource.cpp:224 knutresource.cpp:282 knutresource.cpp:289
 #, kde-format
 msgid "Parent collection '%1' not found in DOM tree."
 msgstr "Vecākkolekcija „%1“ DOM kokā netika atrasta."
 
-#: knutresource.cpp:258 knutresource.cpp:328
+#: knutresource.cpp:232 knutresource.cpp:302
 #, kde-format
 msgid "Unable to write item."
 msgstr "Neizdevās ierakstīt vienību."
 
-#: knutresource.cpp:272
+#: knutresource.cpp:246
 #, kde-format
 msgid "Modified item not found in DOM tree."
 msgstr "Izmainītā vienība DOM kokā nav atrasta."
 
-#: knutresource.cpp:287
+#: knutresource.cpp:261
 #, kde-format
 msgid "Deleted item not found in DOM tree."
 msgstr "Dzēstā vienība DOM kokā nav atrasta."

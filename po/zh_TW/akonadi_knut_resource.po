@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi_knut_resource\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-21 00:45+0000\n"
+"POT-Creation-Date: 2025-06-18 00:43+0000\n"
 "PO-Revision-Date: 2010-07-08 16:24+0800\n"
 "Last-Translator: Frank Weng (a.k.a. Franklin) <franklin at goodhorse dot idv "
 "dot tw>\n"
@@ -18,6 +18,30 @@ msgstr ""
 "X-Generator: Lokalize 1.0\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+#: accountwidget.cpp:38
+#, kde-format
+msgid "Select Data File"
+msgstr "選取資料檔"
+
+#: accountwidget.cpp:40
+#, kde-format
+msgctxt "Filedialog filter for Akonadi data file"
+msgid "Akonadi Knut Data File"
+msgstr "Akonadi Knut 資料檔"
+
+#: accountwidget.cpp:50
+#, fuzzy, kde-format
+#| msgid "Select Data File"
+msgctxt "@label"
+msgid "Data Files:"
+msgstr "選取資料檔"
+
+#: accountwidget.cpp:52
+#, kde-format
+msgctxt "@option:check"
+msgid "File watching enabled"
+msgstr ""
+
 #: knutresource.cpp:60
 #, kde-format
 msgid "No data file selected."
@@ -28,58 +52,47 @@ msgstr "沒有選取資料檔案。"
 msgid "File '%1' loaded successfully."
 msgstr "檔案 %1 已成功載入。"
 
-#: knutresource.cpp:104
-#, kde-format
-msgid "Select Data File"
-msgstr "選取資料檔"
-
-#: knutresource.cpp:106
-#, kde-format
-msgctxt "Filedialog filter for Akonadi data file"
-msgid "Akonadi Knut Data File"
-msgstr "Akonadi Knut 資料檔"
-
-#: knutresource.cpp:148 knutresource.cpp:168 knutresource.cpp:321
+#: knutresource.cpp:122 knutresource.cpp:142 knutresource.cpp:295
 #, kde-format
 msgid "No item found for remoteid %1"
 msgstr "找不到遠端代碼 %1 的項目"
 
-#: knutresource.cpp:186
+#: knutresource.cpp:160
 #, kde-format
 msgid "Parent collection not found in DOM tree."
 msgstr "在 DOM 樹中沒有找到父收藏。"
 
-#: knutresource.cpp:194
+#: knutresource.cpp:168
 #, kde-format
 msgid "Unable to write collection."
 msgstr "無法寫入收藏。"
 
-#: knutresource.cpp:206
+#: knutresource.cpp:180
 #, kde-format
 msgid "Modified collection not found in DOM tree."
 msgstr "在 DOM 樹中沒有找到變更的收藏。"
 
-#: knutresource.cpp:236
+#: knutresource.cpp:210
 #, kde-format
 msgid "Deleted collection not found in DOM tree."
 msgstr "在 DOM 樹中沒有找到刪除的收藏。"
 
-#: knutresource.cpp:250 knutresource.cpp:308 knutresource.cpp:315
+#: knutresource.cpp:224 knutresource.cpp:282 knutresource.cpp:289
 #, kde-format
 msgid "Parent collection '%1' not found in DOM tree."
 msgstr "在 DOM 樹中沒有找到父收藏 %1。"
 
-#: knutresource.cpp:258 knutresource.cpp:328
+#: knutresource.cpp:232 knutresource.cpp:302
 #, kde-format
 msgid "Unable to write item."
 msgstr "無法寫入項目。"
 
-#: knutresource.cpp:272
+#: knutresource.cpp:246
 #, kde-format
 msgid "Modified item not found in DOM tree."
 msgstr "在 DOM 樹中沒有找到變更的項目。"
 
-#: knutresource.cpp:287
+#: knutresource.cpp:261
 #, kde-format
 msgid "Deleted item not found in DOM tree."
 msgstr "在 DOM 樹中沒有找到刪除的項目。"
