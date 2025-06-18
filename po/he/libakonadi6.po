@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-23 02:38+0000\n"
-"PO-Revision-Date: 2025-06-11 17:31+0300\n"
+"PO-Revision-Date: 2025-06-17 14:32+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -1527,7 +1527,7 @@ msgstr ""
 #: widgets/selftestdialog.cpp:376
 #, kde-format
 msgid "Cannot connect to PostgreSQL server."
-msgstr ""
+msgstr "לא ניתן להתחבר לשרת לשרת PostgreSQL."
 
 #: widgets/selftestdialog.cpp:378
 #, kde-format
@@ -1711,18 +1711,18 @@ msgstr ""
 #: widgets/selftestdialog.cpp:499
 #, kde-format
 msgid "No current Akonadi server error log found."
-msgstr ""
+msgstr "לא נמצא יומן שגיאות נוכחי של שרת ה־Akonadi."
 
 #: widgets/selftestdialog.cpp:499
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its current startup."
-msgstr ""
+msgstr "שרת ה־Akonadi לא דיווח על שגיאות כלשהן במהלך העלייה הנוכחית שלו."
 
 #: widgets/selftestdialog.cpp:503
 #, kde-format
 msgid "Current Akonadi server error log found."
-msgstr ""
+msgstr "נמצא יומן שגיאות נוכחי של שרת ה־Akonadi."
 
 #: widgets/selftestdialog.cpp:504
 #, kde-format
@@ -1730,6 +1730,8 @@ msgid ""
 "The Akonadi server reported errors during its current startup. The log can "
 "be found in %1."
 msgstr ""
+"שרת ה־Akonadi דיווח על שגיאות במהלך העלייה הנוכחית. אפשר למצוא את היומן תחת "
+"%1."
 
 #: widgets/selftestdialog.cpp:512
 #, kde-format
@@ -1740,7 +1742,7 @@ msgstr ""
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its previous startup."
-msgstr ""
+msgstr "שרת ה־Akonadi לא דיווח על שגיאות כלשהן במהלך העלייה הקודמת שלו."
 
 #: widgets/selftestdialog.cpp:517
 #, kde-format
@@ -1753,23 +1755,25 @@ msgid ""
 "The Akonadi server reported errors during its previous startup. The log can "
 "be found in %1."
 msgstr ""
+"שרת ה־Akonadi דיווח על שגיאות במהלך העלייה הקודמת. אפשר למצוא את היומן תחת "
+"%1."
 
 #: widgets/selftestdialog.cpp:529
 #, kde-format
 msgid "No current Akonadi control error log found."
-msgstr ""
+msgstr "לא נמצא יומן שגיאות נוכחי של השליטה ב־Akonadi."
 
 #: widgets/selftestdialog.cpp:530
 #, kde-format
 msgid ""
 "The Akonadi control process did not report any errors during its current "
 "startup."
-msgstr ""
+msgstr "תהליך השליטה על Akonadi לא דיווח על תקלות כלשהן במהלך העלייה הנוכחית."
 
 #: widgets/selftestdialog.cpp:534
 #, kde-format
 msgid "Current Akonadi control error log found."
-msgstr ""
+msgstr "נמצא יומן שגיאות נוכחי של השליטה ב־Akonadi."
 
 #: widgets/selftestdialog.cpp:535
 #, kde-format
@@ -1777,6 +1781,8 @@ msgid ""
 "The Akonadi control process reported errors during its current startup. The "
 "log can be found in %1."
 msgstr ""
+"תהליך השליטה ב־Akonadi דיווח על שגיאות במהלך העלייה הנוכחית. אפשר למצוא את "
+"היומן תחת %1."
 
 #: widgets/selftestdialog.cpp:543
 #, kde-format
