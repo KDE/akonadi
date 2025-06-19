@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-23 00:42+0000\n"
-"PO-Revision-Date: 2025-06-11 17:31+0300\n"
+"PO-Revision-Date: 2025-06-18 16:41+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -504,18 +504,18 @@ msgstr ""
 #: core/models/statisticsproxymodel.cpp:86
 #, kde-format
 msgid "Unread Messages"
-msgstr ""
+msgstr "הודעות שלא נקראו"
 
 #: core/models/statisticsproxymodel.cpp:95
 #, kde-format
 msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
 msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
-msgstr ""
+msgstr "<strong>מכסה</strong>: %1% (%2/%3)<br>\n"
 
 #: core/models/statisticsproxymodel.cpp:103
 #, kde-format
 msgid "Storage Size"
-msgstr ""
+msgstr "גודל אחסון"
 
 #: core/models/statisticsproxymodel.cpp:109
 #, kde-format
@@ -526,13 +526,13 @@ msgstr ""
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
-msgstr ""
+msgstr "לא נקראו"
 
 #: core/models/statisticsproxymodel.cpp:221
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
-msgstr ""
+msgstr "סך הכול"
 
 #: core/models/statisticsproxymodel.cpp:222
 #, kde-format
@@ -548,12 +548,12 @@ msgstr "תגית"
 #: core/partfetcher.cpp:49
 #, kde-format
 msgid "Unable to fetch item for index"
-msgstr ""
+msgstr "לא ניתן למשוך פריט למפתח"
 
 #: core/partfetcher.cpp:64
 #, kde-format
 msgid "Index is no longer available"
-msgstr ""
+msgstr "המפתח לא זמין עוד"
 
 #: core/partfetcher.cpp:114
 #, kde-format
@@ -613,7 +613,7 @@ msgstr ""
 #: selftest/main.cpp:19
 #, kde-format
 msgid "Akonadi Self Test"
-msgstr ""
+msgstr "בדיקה עצמית של Akonadi"
 
 #: selftest/main.cpp:21
 #, kde-format
@@ -623,7 +623,7 @@ msgstr ""
 #: selftest/main.cpp:23
 #, kde-format
 msgid "(c) 2008 Volker Krause <vkrause@kde.org>"
-msgstr ""
+msgstr "‏(c) 2008 וולקר קראוזה <vkrause@kde.org>"
 
 #: shared/akapplication.cpp:70
 #, kde-format
@@ -717,7 +717,7 @@ msgstr ""
 #, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
-msgstr ""
+msgstr "הגדרת חשבון"
 
 #: widgets/agenttypedialog.cpp:74
 #, kde-format
@@ -743,81 +743,81 @@ msgstr "משיכה"
 #: widgets/cachepolicypage.ui:20
 #, kde-format
 msgid "Use options from parent folder or account"
-msgstr ""
+msgstr "להשתמש באפשרויות מתיקיית או חשבון ההורה"
 
 #. i18n: ectx: property (text), widget (QCheckBox, syncOnDemand)
 #: widgets/cachepolicypage.ui:33
 #, kde-format
 msgid "Synchronize when selecting this folder"
-msgstr ""
+msgstr "לסנכרן בעת בחירת התיקייה הזאת"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: widgets/cachepolicypage.ui:40
 #, kde-format
 msgid "Synchronize after:"
-msgstr ""
+msgstr "לסנכרן לאחר:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, checkInterval)
 #: widgets/cachepolicypage.ui:47
 #, kde-format
 msgctxt "never check the cache"
 msgid "Never"
-msgstr ""
+msgstr "אף פעם"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, checkInterval)
 #. i18n: ectx: property (suffix), widget (QSpinBox, localCacheTimeout)
 #: widgets/cachepolicypage.ui:50 widgets/cachepolicypage.ui:133
 #, kde-format
 msgid "minutes"
-msgstr ""
+msgstr "דקות"
 
 #. i18n: ectx: property (text), widget (QLabel, localPartsLabel)
 #: widgets/cachepolicypage.ui:66
 #, kde-format
 msgid "Locally cached parts:"
-msgstr ""
+msgstr "חלקים שמאוחסנים במטמון המקומי:"
 
 #. i18n: ectx: property (title), widget (KEditListWidget, localParts)
 #: widgets/cachepolicypage.ui:87
 #, kde-format
 msgid "Locally Cached Parts"
-msgstr ""
+msgstr "חלקים שמאוחסנים במטמון המקומי"
 
 #. i18n: ectx: property (text), widget (QLabel, retrievalOptionsLabel)
 #: widgets/cachepolicypage.ui:94
 #, kde-format
 msgid "Retrieval Options:"
-msgstr ""
+msgstr "אפשרויות משיכה:"
 
 #. i18n: ectx: property (text), widget (QRadioButton, retrieveFullMessages)
 #: widgets/cachepolicypage.ui:101
 #, kde-format
 msgid "Always retrieve full &messages"
-msgstr ""
+msgstr "תמיד למשוך את ההודעות במ&לואן"
 
 #. i18n: ectx: property (text), widget (QRadioButton, retrieveOnlyHeaders)
 #: widgets/cachepolicypage.ui:111
 #, kde-format
 msgid "&Retrieve message bodies on demand"
-msgstr ""
+msgstr "למשוך את תוכן ההודעות לפי &דרישה"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/cachepolicypage.ui:118
 #, kde-format
 msgid "Keep message bodies locally for:"
-msgstr ""
+msgstr "להשאיר את תוכן ההודעות מקומית למשך:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, localCacheTimeout)
 #: widgets/cachepolicypage.ui:130
 #, kde-format
 msgctxt "no cache timeout"
 msgid "Forever"
-msgstr ""
+msgstr "לעד"
 
 #: widgets/clearcachefoldersjob.cpp:41
 #, kde-format
 msgid "Collection cache cleared. You should restart Akonadi now."
-msgstr ""
+msgstr "מטמון האוסף התפנה. יש להפעיל את Akonadi מחדש עכשיו."
 
 #: widgets/clearcachefoldersjob.cpp:69
 #, kde-format
@@ -831,128 +831,128 @@ msgstr ""
 #, kde-format
 msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
 msgid "Search"
-msgstr ""
+msgstr "חיפוש"
 
 #: widgets/collectiondialog.cpp:66
 #, kde-format
 msgctxt "@option:check"
 msgid "Use folder by default"
-msgstr ""
+msgstr "להשתמש בתיקייה כברירת מחדל"
 
 #: widgets/collectiondialog.cpp:226
 #, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
-msgstr ""
+msgstr "&תת־תיקייה חדשה…"
 
 #: widgets/collectiondialog.cpp:228
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
-msgstr ""
+msgstr "ליצור תת־תיקייה תחת התיקייה הנבחרת"
 
 #: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:419
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
-msgstr ""
+msgstr "תיקייה חדשה"
 
 #: widgets/collectiondialog.cpp:266
 #, kde-format
 msgctxt "@label:textbox, name of a thing"
 msgid "Name"
-msgstr ""
+msgstr "שם"
 
 #: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:421
 #, kde-format
 msgid "Could not create folder: %1"
-msgstr ""
+msgstr "לא ניתן ליצור תיקייה: %1"
 
 #: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:422
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
-msgstr ""
+msgstr "יצירת תיקייה נכשלה"
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
 #, kde-format
 msgctxt "@title:tab general properties page"
 msgid "General"
-msgstr ""
+msgstr "כללי"
 
 #: widgets/collectiongeneralpropertiespage.cpp:54
 #, kde-format
 msgctxt "@label"
 msgid "One object"
 msgid_plural "%1 objects"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "פריט אחד"
+msgstr[1] "שני פריטים"
+msgstr[2] "%1 פריטים"
+msgstr[3] "%1 פריטים"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/collectiongeneralpropertiespage.ui:16
 #, kde-format
 msgid "&Name:"
-msgstr ""
+msgstr "&שם:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, customIconCheckbox)
 #: widgets/collectiongeneralpropertiespage.ui:29
 #, kde-format
 msgid "&Use custom icon:"
-msgstr ""
+msgstr "להשתמש בסמל מותאם &אישית:"
 
 #. i18n: ectx: property (icon), widget (KIconButton, customIcon)
 #: widgets/collectiongeneralpropertiespage.ui:39
 #, kde-format
 msgid "folder"
-msgstr ""
+msgstr "תיקייה"
 
 #. i18n: ectx: property (title), widget (QGroupBox, statsBox)
 #: widgets/collectiongeneralpropertiespage.ui:62
 #, kde-format
 msgid "Statistics"
-msgstr ""
+msgstr "סטטיסטיקה"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: widgets/collectiongeneralpropertiespage.ui:68
 #, kde-format
 msgctxt "object names"
 msgid "Content:"
-msgstr ""
+msgstr "תוכן:"
 
 #. i18n: ectx: property (text), widget (QLabel, countLabel)
 #: widgets/collectiongeneralpropertiespage.ui:75
 #, kde-format
 msgid "0 objects"
-msgstr ""
+msgstr "0 פריטים"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: widgets/collectiongeneralpropertiespage.ui:82
 #, kde-format
 msgid "Size:"
-msgstr ""
+msgstr "גודל:"
 
 #. i18n: ectx: property (text), widget (QLabel, sizeLabel)
 #: widgets/collectiongeneralpropertiespage.ui:89
 #, kde-format
 msgid "0 Byte"
-msgstr ""
+msgstr "0 בתים"
 
 #: widgets/collectionmaintenancepage.cpp:46
 #, kde-format
 msgid "Remember that indexing can take some minutes."
-msgstr ""
+msgstr "חשוב לזכור שסידור במפתח יכול לארוך מספר דקות."
 
 #: widgets/collectionmaintenancepage.cpp:72
 #, kde-format
 msgid "Maintenance"
-msgstr ""
+msgstr "תחזוקה"
 
 #: widgets/collectionmaintenancepage.cpp:131
 #, kde-format
 msgid "Error while retrieving indexed items count"
-msgstr ""
+msgstr "שגיאה במשיכת כמות הפריטים שמסודרים במפתח"
 
 #: widgets/collectionmaintenancepage.cpp:134
 #, kde-format
@@ -972,7 +972,7 @@ msgstr ""
 #: widgets/collectionmaintenancepage.ui:17
 #, kde-format
 msgid "Folder type:"
-msgstr ""
+msgstr "סוג תיקייה:"
 
 #. i18n: ectx: property (text), widget (QLabel, folderTypeLbl)
 #. i18n: ectx: property (text), widget (QLabel, folderSizeLbl)
@@ -984,31 +984,31 @@ msgstr ""
 #: widgets/collectionmaintenancepage.ui:66
 #, kde-format
 msgid "unknown"
-msgstr ""
+msgstr "לא ידוע"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: widgets/collectionmaintenancepage.ui:38
 #, kde-format
 msgid "File size:"
-msgstr ""
+msgstr "גודל קובץ:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: widgets/collectionmaintenancepage.ui:45
 #, kde-format
 msgid "Total items:"
-msgstr ""
+msgstr "סך כל הפריטים:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: widgets/collectionmaintenancepage.ui:59
 #, kde-format
 msgid "Unread items:"
-msgstr ""
+msgstr "פריטים שלא נקראו:"
 
 #. i18n: ectx: property (text), widget (QLabel, indexingLabel)
 #: widgets/collectionmaintenancepage.ui:73
 #, kde-format
 msgid "Indexing:"
-msgstr ""
+msgstr "מתבצע סידור במפתח:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, enableIndexingChkBox)
 #: widgets/collectionmaintenancepage.ui:80
@@ -1020,71 +1020,71 @@ msgstr ""
 #: widgets/collectionmaintenancepage.ui:87
 #, kde-format
 msgid "Retrieving indexed items count..."
-msgstr ""
+msgstr "כמות הפריטים שמסודרים מחושבת…"
 
 #. i18n: ectx: property (text), widget (QPushButton, reindexButton)
 #: widgets/collectionmaintenancepage.ui:94
 #, kde-format
 msgid "Reindex folder"
-msgstr ""
+msgstr "סידור תיקייה במפתח מחדש"
 
 #: widgets/collectionrequester.cpp:113
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No Folder"
-msgstr ""
+msgstr "אין תיקייה"
 
 #: widgets/collectionrequester.cpp:122
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
-msgstr ""
+msgstr "פתיחת חלונית אוסף"
 
 #: widgets/collectionrequester.cpp:143
 #, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
-msgstr ""
+msgstr "בחירת אוסף"
 
 #: widgets/conflictresolvedialog.cpp:129
 #, kde-format
 msgid "Modification Time"
-msgstr ""
+msgstr "מועד שינוי"
 
 #: widgets/conflictresolvedialog.cpp:141
 #, kde-format
 msgid "Flags"
-msgstr ""
+msgstr "דגלונים"
 
 #: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
 #: widgets/conflictresolvedialog.cpp:174
 #, kde-format
 msgid "Attribute: %1"
-msgstr ""
+msgstr "מאפיין: %1"
 
 #: widgets/conflictresolvedialog.cpp:186
 #, kde-format
 msgctxt "@title:window"
 msgid "Conflict Resolution"
-msgstr ""
+msgstr "פתרון סתירות"
 
 #: widgets/conflictresolvedialog.cpp:192
 #, kde-format
 msgctxt "@action:button"
 msgid "Take my version"
-msgstr ""
+msgstr "לשמר את הגרסה שלי"
 
 #: widgets/conflictresolvedialog.cpp:198
 #, kde-format
 msgctxt "@action:button"
 msgid "Take their version"
-msgstr ""
+msgstr "לאמץ את הגרסה המרוחקת"
 
 #: widgets/conflictresolvedialog.cpp:204
 #, kde-format
 msgctxt "@action:button"
 msgid "Keep both versions"
-msgstr ""
+msgstr "להשאיר את שתי הגרסאות"
 
 #: widgets/conflictresolvedialog.cpp:217
 #, kde-format
@@ -1100,37 +1100,37 @@ msgstr ""
 #: widgets/conflictresolvedialog.cpp:266
 #, kde-format
 msgid "Data"
-msgstr ""
+msgstr "נתונים"
 
 #: widgets/controlgui.cpp:223
 #, kde-format
 msgid "Starting Akonadi server..."
-msgstr ""
+msgstr "שירות Akonadi מופעל…"
 
 #: widgets/controlgui.cpp:229
 #, kde-format
 msgid "Stopping Akonadi server..."
-msgstr ""
+msgstr "שרת Akonadi נעצר…"
 
 #: widgets/dragdropmanager.cpp:212
 #, kde-format
 msgid "&Move Here"
-msgstr ""
+msgstr "ה&עברה לכאן"
 
 #: widgets/dragdropmanager.cpp:218
 #, kde-format
 msgid "&Copy Here"
-msgstr ""
+msgstr "הע&תקה לכאן"
 
 #: widgets/dragdropmanager.cpp:224
 #, kde-format
 msgid "&Link Here"
-msgstr ""
+msgstr "&קישור לכאן"
 
 #: widgets/dragdropmanager.cpp:229
 #, kde-format
 msgid "C&ancel"
-msgstr ""
+msgstr "&ביטול"
 
 #: widgets/erroroverlay.cpp:224
 #, kde-format
@@ -1140,35 +1140,38 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"לא ניתן להתחבר לשירות ניהול הפרטים האישיים.\n"
+"\n"
+"%1"
 
 #: widgets/erroroverlay.cpp:228
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
-msgstr ""
+msgstr "שירות ניהול פרטים אישיים מופעל…"
 
 #: widgets/erroroverlay.cpp:229
 #, kde-format
 msgid "Personal information management service is starting..."
-msgstr ""
+msgstr "שירות ניהול פרטים אישיים מופעל…"
 
 #: widgets/erroroverlay.cpp:233
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
-msgstr ""
+msgstr "שירות ניהול פרטים אישיים נכבה…"
 
 #: widgets/erroroverlay.cpp:234
 #, kde-format
 msgid "Personal information management service is shutting down..."
-msgstr ""
+msgstr "שירות ניהול פרטים אישיים נכבה…"
 
 #: widgets/erroroverlay.cpp:238
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
-msgstr ""
+msgstr "שירות ניהול פרטים אישיים מבצע שדרוג מסד נתונים."
 
 #: widgets/erroroverlay.cpp:240
 #, kde-format
@@ -1187,7 +1190,7 @@ msgstr ""
 msgid ""
 "A required background service is not running. This application cannot be "
 "used without it."
-msgstr ""
+msgstr "שירות רקע נחוץ לא פעיל. אי אפשר להשתמש ביישום הזה בלעדיו."
 
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #: widgets/erroroverlay.ui:116
@@ -1215,6 +1218,9 @@ msgid ""
 "Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> for "
 "troubleshooting tips.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>שירות רקע הכרחי אינו פעיל.</p><p>יש לפנות ל<a href="
+"\"https://userbase.kde.org/Akonadi#If_Akonadi_Reports_Broken_or_Non-"
+"operational\">שו״ת</a> לעצות איך לפתור תקלות.</p></body></html>"
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
@@ -1296,17 +1302,17 @@ msgstr "שם:"
 #, kde-format
 msgctxt "@title:window"
 msgid "Akonadi Server Self-Test"
-msgstr ""
+msgstr "בדיקה עצמית של שרת ה־Akonadi"
 
 #: widgets/selftestdialog.cpp:71
 #, kde-format
 msgid "Save Report..."
-msgstr ""
+msgstr "שמירת דוח…"
 
 #: widgets/selftestdialog.cpp:73
 #, kde-format
 msgid "Copy Report to Clipboard"
-msgstr ""
+msgstr "העתקת דוח ללוח הגזירים"
 
 #: widgets/selftestdialog.cpp:189
 #, kde-format
@@ -1327,23 +1333,23 @@ msgstr ""
 #: widgets/selftestdialog.cpp:198
 #, kde-format
 msgid "Database driver found."
-msgstr ""
+msgstr "מנהל מסד נתונים נמצא."
 
 #: widgets/selftestdialog.cpp:200
 #, kde-format
 msgid "Database driver not found."
-msgstr ""
+msgstr "מנהל מסד נתונים לא נמצא."
 
 #: widgets/selftestdialog.cpp:208
 #, kde-format
 msgid "MySQL server executable not tested."
-msgstr ""
+msgstr "קובץ ההפעלה של שרת ה־MySQL לא נבדק."
 
 #: widgets/selftestdialog.cpp:208 widgets/selftestdialog.cpp:249
 #: widgets/selftestdialog.cpp:300
 #, kde-format
 msgid "The current configuration does not require an internal MySQL server."
-msgstr ""
+msgstr "ההגדרות הנוכחית לא דורשת שרת MySQL פנימי."
 
 #: widgets/selftestdialog.cpp:216
 #, kde-format
@@ -1358,58 +1364,58 @@ msgstr ""
 #: widgets/selftestdialog.cpp:224
 #, kde-format
 msgid "MySQL server not found."
-msgstr ""
+msgstr "לא נמצא שרת MySQL."
 
 #: widgets/selftestdialog.cpp:226
 #, kde-format
 msgid "MySQL server not readable."
-msgstr ""
+msgstr "שרת ה־MySQL אינו קריא."
 
 #: widgets/selftestdialog.cpp:228
 #, kde-format
 msgid "MySQL server not executable."
-msgstr ""
+msgstr "שרת ה־MySQL לא ניתן להפעלה."
 
 #: widgets/selftestdialog.cpp:230
 #, kde-format
 msgid "MySQL found with unexpected name."
-msgstr ""
+msgstr "שרת MySQL נמצא עם שם לא צפוי."
 
 #: widgets/selftestdialog.cpp:232
 #, kde-format
 msgid "MySQL server found."
-msgstr ""
+msgstr "שרת MySQL נמצא."
 
 #: widgets/selftestdialog.cpp:238
 #, kde-format
 msgid "MySQL server found: %1"
-msgstr ""
+msgstr "שרת MySQL נמצא: %1"
 
 #: widgets/selftestdialog.cpp:239
 #, kde-format
 msgid "MySQL server is executable."
-msgstr ""
+msgstr "שרת ה־MySQL ניתן להפעלה."
 
 #: widgets/selftestdialog.cpp:241
 #, kde-format
 msgid ""
 "Executing the MySQL server '%1' failed with the following error message: '%2'"
-msgstr ""
+msgstr "הרצת שרת ה־MySQL‏ ‚%1’ נכשלה עם הודעת השגיאה הבאה: ‚%2’"
 
 #: widgets/selftestdialog.cpp:242
 #, kde-format
 msgid "Executing the MySQL server failed."
-msgstr ""
+msgstr "הרצת שרת ה־MySQL נכשלה."
 
 #: widgets/selftestdialog.cpp:249
 #, kde-format
 msgid "MySQL server error log not tested."
-msgstr ""
+msgstr "יומן השגיאות של שרת ה־MySQL לא נבדק."
 
 #: widgets/selftestdialog.cpp:257
 #, kde-format
 msgid "No current MySQL error log found."
-msgstr ""
+msgstr "לא נמצא יומן שגיאות נוכחי של MySQL."
 
 #: widgets/selftestdialog.cpp:258
 #, kde-format
@@ -1417,68 +1423,69 @@ msgid ""
 "The MySQL server did not report any errors during this startup. The log can "
 "be found in '%1'."
 msgstr ""
+"שרת ה־MySQL לא דיווח על תקלות כלשהן במהלך עלייתו. אפשר למצוא את היומן ב־‚%1’."
 
 #: widgets/selftestdialog.cpp:264
 #, kde-format
 msgid "MySQL error log not readable."
-msgstr ""
+msgstr "יומן שגיאות ה־MySQL אינו קריא."
 
 #: widgets/selftestdialog.cpp:265
 #, kde-format
 msgid "A MySQL server error log file was found but is not readable: %1"
-msgstr ""
+msgstr "קובץ יומן שגיאות שרת MySQL נמצא אך אינו קריא: %1"
 
 #: widgets/selftestdialog.cpp:274
 #, kde-format
 msgid "MySQL server log contains errors."
-msgstr ""
+msgstr "יומן שרת ה־MySQL מכיל שגיאות."
 
 #: widgets/selftestdialog.cpp:275
 #, kde-format
 msgid "The MySQL server error log file '%1' contains errors."
-msgstr ""
+msgstr "קובץ יומן השגיאות של שרת ה־MySQL ‏‚%1’ מכיל שגיאות."
 
 #: widgets/selftestdialog.cpp:285
 #, kde-format
 msgid "MySQL server log contains warnings."
-msgstr ""
+msgstr "יומן שרת ה־MySQL מכיל אזהרות."
 
 #: widgets/selftestdialog.cpp:286
 #, kde-format
 msgid "The MySQL server log file '%1' contains warnings."
-msgstr ""
+msgstr "קובץ יומן שרת ה־MySQL ‏‚%1’ מכיל אזהרות."
 
 #: widgets/selftestdialog.cpp:289
 #, kde-format
 msgid "MySQL server log contains no errors."
-msgstr ""
+msgstr "יומן שרת ה־MySQL לא מכיל שגיאות."
 
 #: widgets/selftestdialog.cpp:290
 #, kde-format
 msgid "The MySQL server log file '%1' does not contain any errors or warnings."
-msgstr ""
+msgstr "קובץ יומן שרת ה־MySQL ‏‚%1’ לא מכיל שגיאות או אזהרות כלשהן."
 
 #: widgets/selftestdialog.cpp:300
 #, kde-format
 msgid "MySQL server configuration not tested."
-msgstr ""
+msgstr "הגדרות שרת ה־MySQL לא נבדקו."
 
 #: widgets/selftestdialog.cpp:309
 #, kde-format
 msgid "MySQL server default configuration found."
-msgstr ""
+msgstr "נמצאו הגדרות ברירת מחדל לשרת ה־MySQL."
 
 #: widgets/selftestdialog.cpp:310
 #, kde-format
 msgid ""
 "The default configuration for the MySQL server was found and is readable at "
 "%1."
-msgstr ""
+msgstr "הגדרות ברירת המחדל לשרת ה־MySQL נמצאו וניתן לקרוא אותן מתוך %1."
 
 #: widgets/selftestdialog.cpp:314
 #, kde-format
 msgid "MySQL server default configuration not found."
-msgstr ""
+msgstr "לא נמצאו הגדרות ברירת מחדל לשרת ה־MySQL."
 
 #: widgets/selftestdialog.cpp:315
 #, kde-format
@@ -1487,33 +1494,35 @@ msgid ""
 "readable. Check your Akonadi installation is complete and you have all "
 "required access rights."
 msgstr ""
+"לא נמצאו הגדרות ברירת מחדל לשרת ה־MySQL או שלא היו קריאות. נא לבדוק שהתקנת ה־"
+"Akonadi שלך שלמה ושיש לך את הרשאות הגישה הנחוצות."
 
 #: widgets/selftestdialog.cpp:323
 #, kde-format
 msgid "MySQL server custom configuration not available."
-msgstr ""
+msgstr "הגדרות מותאמות של MySQL לא זמינות."
 
 #: widgets/selftestdialog.cpp:324
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was not found but is optional."
-msgstr ""
+msgstr "הגדרות מותאמות לשרת ה־MySQL לא נמצאו אך הן בגדר רשות בכל אופן."
 
 #: widgets/selftestdialog.cpp:327
 #, kde-format
 msgid "MySQL server custom configuration found."
-msgstr ""
+msgstr "הגדרות מותאמות של MySQL נמצאו."
 
 #: widgets/selftestdialog.cpp:328
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was found and is readable at %1"
-msgstr ""
+msgstr "ההגדרות המותאמות לשרת ה־MySQL נמצאו וניתן לקרוא אותן מתוך %1"
 
 #: widgets/selftestdialog.cpp:332
 #, kde-format
 msgid "MySQL server custom configuration not readable."
-msgstr ""
+msgstr "הגדרות שרת ה־MySQL המותאמות אינן קריאות."
 
 #: widgets/selftestdialog.cpp:333
 #, kde-format
@@ -1525,27 +1534,27 @@ msgstr ""
 #: widgets/selftestdialog.cpp:342
 #, kde-format
 msgid "MySQL server configuration not found or not readable."
-msgstr ""
+msgstr "הגדרות שרת MySQL לא נמצאו או שאינן זמינות לקריאה."
 
 #: widgets/selftestdialog.cpp:343
 #, kde-format
 msgid "The MySQL server configuration was not found or is not readable."
-msgstr ""
+msgstr "הגדרות שרת ה־MySQL לא נמצאו או שאינן זמינות לקריאה."
 
 #: widgets/selftestdialog.cpp:346
 #, kde-format
 msgid "MySQL server configuration is usable."
-msgstr ""
+msgstr "הגדרות שרת ה־MySQL שמישות."
 
 #: widgets/selftestdialog.cpp:347
 #, kde-format
 msgid "The MySQL server configuration was found at %1 and is readable."
-msgstr ""
+msgstr "הגדרות שרת ה־MySQL נמצאו תחת %1 וניתן לקרוא אותן."
 
 #: widgets/selftestdialog.cpp:376
 #, kde-format
 msgid "Cannot connect to PostgreSQL server."
-msgstr ""
+msgstr "לא ניתן להתחבר לשרת לשרת PostgreSQL."
 
 #: widgets/selftestdialog.cpp:378
 #, kde-format
@@ -1729,18 +1738,18 @@ msgstr ""
 #: widgets/selftestdialog.cpp:499
 #, kde-format
 msgid "No current Akonadi server error log found."
-msgstr ""
+msgstr "לא נמצא יומן שגיאות נוכחי של שרת ה־Akonadi."
 
 #: widgets/selftestdialog.cpp:499
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its current startup."
-msgstr ""
+msgstr "שרת ה־Akonadi לא דיווח על שגיאות כלשהן במהלך העלייה הנוכחית שלו."
 
 #: widgets/selftestdialog.cpp:503
 #, kde-format
 msgid "Current Akonadi server error log found."
-msgstr ""
+msgstr "נמצא יומן שגיאות נוכחי של שרת ה־Akonadi."
 
 #: widgets/selftestdialog.cpp:504
 #, kde-format
@@ -1748,22 +1757,24 @@ msgid ""
 "The Akonadi server reported errors during its current startup. The log can "
 "be found in %1."
 msgstr ""
+"שרת ה־Akonadi דיווח על שגיאות במהלך העלייה הנוכחית. אפשר למצוא את היומן תחת "
+"%1."
 
 #: widgets/selftestdialog.cpp:512
 #, kde-format
 msgid "No previous Akonadi server error log found."
-msgstr ""
+msgstr "לא נמצא יומן שגיאות קודם של שרת ה־Akonadi."
 
 #: widgets/selftestdialog.cpp:513
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its previous startup."
-msgstr ""
+msgstr "שרת ה־Akonadi לא דיווח על שגיאות כלשהן במהלך העלייה הקודמת שלו."
 
 #: widgets/selftestdialog.cpp:517
 #, kde-format
 msgid "Previous Akonadi server error log found."
-msgstr ""
+msgstr "נמצא יומן שגיאות קודם של שרת ה־Akonadi."
 
 #: widgets/selftestdialog.cpp:518
 #, kde-format
@@ -1771,23 +1782,25 @@ msgid ""
 "The Akonadi server reported errors during its previous startup. The log can "
 "be found in %1."
 msgstr ""
+"שרת ה־Akonadi דיווח על שגיאות במהלך העלייה הקודמת. אפשר למצוא את היומן תחת "
+"%1."
 
 #: widgets/selftestdialog.cpp:529
 #, kde-format
 msgid "No current Akonadi control error log found."
-msgstr ""
+msgstr "לא נמצא יומן שגיאות נוכחי של השליטה ב־Akonadi."
 
 #: widgets/selftestdialog.cpp:530
 #, kde-format
 msgid ""
 "The Akonadi control process did not report any errors during its current "
 "startup."
-msgstr ""
+msgstr "תהליך השליטה על Akonadi לא דיווח על תקלות כלשהן במהלך העלייה הנוכחית."
 
 #: widgets/selftestdialog.cpp:534
 #, kde-format
 msgid "Current Akonadi control error log found."
-msgstr ""
+msgstr "נמצא יומן שגיאות נוכחי של השליטה ב־Akonadi."
 
 #: widgets/selftestdialog.cpp:535
 #, kde-format
@@ -1795,11 +1808,13 @@ msgid ""
 "The Akonadi control process reported errors during its current startup. The "
 "log can be found in %1."
 msgstr ""
+"תהליך השליטה ב־Akonadi דיווח על שגיאות במהלך העלייה הנוכחית. אפשר למצוא את "
+"היומן תחת %1."
 
 #: widgets/selftestdialog.cpp:543
 #, kde-format
 msgid "No previous Akonadi control error log found."
-msgstr ""
+msgstr "לא נמצא יומן שגיאות קודם של השליטה ב־Akonadi."
 
 #: widgets/selftestdialog.cpp:544
 #, kde-format
@@ -1811,7 +1826,7 @@ msgstr "תהליך השליטה על Akonadi לא דיווח על תקלות כ�
 #: widgets/selftestdialog.cpp:548
 #, kde-format
 msgid "Previous Akonadi control error log found."
-msgstr ""
+msgstr "נמצא יומן שגיאות קודם של השליטה ב־Akonadi."
 
 #: widgets/selftestdialog.cpp:549
 #, kde-format
@@ -2093,113 +2108,113 @@ msgstr "סנכרון עץ תיקיות"
 #, kde-format
 msgid "&Copy Folder"
 msgid_plural "&Copy %1 Folders"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "הע&תקת תיקייה"
+msgstr[1] "ה&עתקת שתי תיקיות"
+msgstr[2] "ה&עתקת %1 תיקיות"
+msgstr[3] "ה&עתקת %1 תיקיות"
 
 #: widgets/standardactionmanager.cpp:400
 #, kde-format
 msgid "&Copy Item"
 msgid_plural "&Copy %1 Items"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "הע&תקת פריט"
+msgstr[1] "הע&תקת שני פריטים"
+msgstr[2] "הע&תקת %1 פריטים"
+msgstr[3] "הע&תקת %1 פריטים"
 
 #: widgets/standardactionmanager.cpp:401
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Item"
 msgid_plural "&Cut %1 Items"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "גזירת &פריט"
+msgstr[1] "&גזירת שני פריטים"
+msgstr[2] "&גזירת %1 פריטים"
+msgstr[3] "&גזירת %1 פריטים"
 
 #: widgets/standardactionmanager.cpp:402
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Folder"
 msgid_plural "&Cut %1 Folders"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "ג&זירת תיקייה"
+msgstr[1] "&גזירת שתי תיקיות"
+msgstr[2] "&גזירת %1 תיקיות"
+msgstr[3] "&גזירת %1 תיקיות"
 
 #: widgets/standardactionmanager.cpp:403
 #, kde-format
 msgid "&Delete Item"
 msgid_plural "&Delete %1 Items"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "מ&חיקת פריט"
+msgstr[1] "מ&חיקת שני פריטים"
+msgstr[2] "מ&חיקת %1 פריטים"
+msgstr[3] "מ&חיקת %1 פריטים"
 
 #: widgets/standardactionmanager.cpp:404
 #, kde-format
 msgctxt "@action"
 msgid "&Delete Folder"
 msgid_plural "&Delete %1 Folders"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "מ&חיקת תיקייה"
+msgstr[1] "מ&חיקת שתי תיקיות"
+msgstr[2] "מ&חיקת %1 תיקיות"
+msgstr[3] "מ&חיקת %1 תיקיות"
 
 #: widgets/standardactionmanager.cpp:405
 #, kde-format
 msgctxt "@action"
 msgid "&Synchronize Folder"
 msgid_plural "&Synchronize %1 Folders"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "&סנכרון תיקיה"
+msgstr[1] "&סנכרון שתי תיקיות"
+msgstr[2] "&סנכרון %1 תיקיות"
+msgstr[3] "&סנכרון %1 תיקיות"
 
 #: widgets/standardactionmanager.cpp:406
 #, kde-format
 msgid "&Delete Resource"
 msgid_plural "&Delete %1 Resources"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "מחיקת מ&שאב"
+msgstr[1] "מחיקת שני מ&שאבים"
+msgstr[2] "מחיקת %1 מ&שאבים"
+msgstr[3] "מחיקת %1 מ&שאבים"
 
 #: widgets/standardactionmanager.cpp:407
 #, kde-format
 msgid "&Synchronize Resource"
 msgid_plural "&Synchronize %1 Resources"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "&סנכרון משאב"
+msgstr[1] "&סנכרון שני משאבים"
+msgstr[2] "&סנכרון %1 משאבים"
+msgstr[3] "&סנכרון %1 משאבים"
 
 #: widgets/standardactionmanager.cpp:409
 #, kde-format
 msgid "Copy Folder"
 msgid_plural "Copy %1 Folders"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "העתקת תיקייה"
+msgstr[1] "העתקת שתי תיקיות"
+msgstr[2] "העתקת %1 תיקיות"
+msgstr[3] "העתקת %1 תיקיות"
 
 #: widgets/standardactionmanager.cpp:410
 #, kde-format
 msgid "Copy Item"
 msgid_plural "Copy %1 Items"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "העתקת פריט"
+msgstr[1] "העתקת שני פריטים"
+msgstr[2] "העתקת %1 פריטים"
+msgstr[3] "העתקת %1 פריטים"
 
 #: widgets/standardactionmanager.cpp:411
 #, kde-format
 msgid "Cut Item"
 msgid_plural "Cut %1 Items"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "גזירת פריט"
+msgstr[1] "גזירת שני פריטים"
+msgstr[2] "גזירת %1 פריטים"
+msgstr[3] "גזירת %1 פריטים"
 
 #: widgets/standardactionmanager.cpp:412
 #, kde-format

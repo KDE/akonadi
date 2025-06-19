@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-06-18 00:43+0000\n"
-"PO-Revision-Date: 2022-10-11 06:51+0200\n"
+"PO-Revision-Date: 2025-06-18 04:39+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.6\n"
 
 #: accountwidget.cpp:38
 #, kde-format
@@ -30,17 +30,16 @@ msgid "Akonadi Knut Data File"
 msgstr "Akonadi Knut -ის"
 
 #: accountwidget.cpp:50
-#, fuzzy, kde-format
-#| msgid "Select Data File"
+#, kde-format
 msgctxt "@label"
 msgid "Data Files:"
-msgstr "აირჩიეთ მონაცემების ფაილი"
+msgstr "მონაცემთა ფაილები:"
 
 #: accountwidget.cpp:52
 #, kde-format
 msgctxt "@option:check"
 msgid "File watching enabled"
-msgstr ""
+msgstr "ფაილების ტრეკინგი ჩართულია"
 
 #: knutresource.cpp:60
 #, kde-format
