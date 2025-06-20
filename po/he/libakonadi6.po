@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-23 00:42+0000\n"
-"PO-Revision-Date: 2025-06-18 16:41+0300\n"
+"PO-Revision-Date: 2025-06-19 15:04+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -248,59 +248,59 @@ msgstr "אין כזה אוסף."
 #: core/collectionsync.cpp:505 core/collectionsync.cpp:650
 #, kde-format
 msgid "Found unresolved orphan collections"
-msgstr ""
+msgstr "נמצאו אוספים יתומים שלא נפתרו"
 
 #: core/conflicthandler.cpp:53
 #, kde-format
 msgid "Did not find other item for conflict handling"
-msgstr ""
+msgstr "לא נמצא פריט אחר לטיפול בסתירות"
 
 #: core/jobs/agentinstancecreatejob.cpp:58
 #, kde-format
 msgid "Agent instance creation timed out."
-msgstr ""
+msgstr "הזמן שהוקצה ליצירת מופע סוכן הסתיים."
 
 #: core/jobs/agentinstancecreatejob.cpp:108
 #, kde-format
 msgid "Unable to obtain agent type '%1'."
-msgstr ""
+msgstr "לא ניתן לקבל את סוג הסוכן ‚%1’."
 
 #: core/jobs/agentinstancecreatejob.cpp:116
 #, kde-format
 msgid "Unable to create agent instance."
-msgstr ""
+msgstr "לא ניתן ליצור מופע סוכן."
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:73
 #, kde-format
 msgid "Invalid collection instance."
-msgstr ""
+msgstr "מופע אוסף שגוי."
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:80
 #: core/jobs/resourcesynchronizationjob.cpp:88
 #, kde-format
 msgid "Invalid resource instance."
-msgstr ""
+msgstr "מופע משאב שגוי."
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:102
 #: core/jobs/resourcesynchronizationjob.cpp:113
 #, kde-format
 msgid "Unable to obtain D-Bus interface for resource '%1'"
-msgstr ""
+msgstr "לא ניתן לקבל ממשק D-Bus למשאב ‚%1’"
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:125
 #, kde-format
 msgid "Collection attributes synchronization timed out."
-msgstr ""
+msgstr "הזמן שהוקצה לסנכרון מאפייני האוסף הסתיים."
 
 #: core/jobs/collectioncopyjob.cpp:54
 #, kde-format
 msgid "Invalid collection to copy"
-msgstr ""
+msgstr "אוסף שגוי להעתקה"
 
 #: core/jobs/collectioncopyjob.cpp:60
 #, kde-format
 msgid "Invalid destination collection"
-msgstr ""
+msgstr "אוסף יעד שגוי"
 
 #: core/jobs/collectioncreatejob.cpp:50
 #, kde-format
@@ -310,7 +310,7 @@ msgstr "הורה שגוי"
 #: core/jobs/collectioncreatejob.cpp:98
 #, kde-format
 msgid "Failed to parse Collection from response"
-msgstr ""
+msgstr "פענוח האוסף מהתגובה נכשל"
 
 #: core/jobs/collectiondeletejob.cpp:52
 #, kde-format
@@ -325,7 +325,7 @@ msgstr "סופק אוסף שגוי."
 #: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:118
 #, kde-format
 msgid "No objects specified for moving"
-msgstr ""
+msgstr "לא צוינו פריטים להעברה"
 
 #: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:125
 #: core/jobs/linkjobimpl_p.h:45
@@ -354,6 +354,7 @@ msgid ""
 "The protocol version of the Akonadi server is incompatible. Make sure you "
 "have a compatible version installed."
 msgstr ""
+"גרסת הפרוטוקול של שרת ה־Akonadi אינה תואמת. נא לוודא שמותקנת גרסה תואמת."
 
 #: core/jobs/job.cpp:341
 #, kde-format
@@ -378,75 +379,75 @@ msgstr "תם הזמן לסנכרון המשאב."
 #: core/jobs/specialcollectionshelperjobs.cpp:145
 #, kde-format
 msgid "Could not fetch root collection of resource %1."
-msgstr ""
+msgstr "לא ניתן למשוך את אוסף העל של המשאב %1."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:189
 #, kde-format
 msgid "No resource ID given."
-msgstr ""
+msgstr "לא סופק מזהה משאב."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:326
 #, kde-format
 msgid "Invalid resource identifier '%1'"
-msgstr ""
+msgstr "מזהה המשאב ‚%1’ שגוי"
 
 #: core/jobs/specialcollectionshelperjobs.cpp:342
 #: core/jobs/specialcollectionshelperjobs.cpp:350
 #, kde-format
 msgid "Failed to configure default resource via D-Bus."
-msgstr ""
+msgstr "הגדרת משאב ברירת המחדל דרך D-Bus נכשלה."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:415
 #, kde-format
 msgid "Failed to fetch the resource collection."
-msgstr ""
+msgstr "משיכת אוסף המשאבים נכשלה."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:599
 #, kde-format
 msgid "Timeout trying to get lock."
-msgstr ""
+msgstr "קבלת הנעילה ארכה זמן רב מדי"
 
 #: core/jobs/tagcreatejob.cpp:49
 #, kde-format
 msgid "Failed to create tag."
-msgstr ""
+msgstr "יצירת תגית נכשלה"
 
 #: core/jobs/trashjob.cpp:155
 #, kde-format
 msgid "Move to trash collection failed, aborting trash operation"
-msgstr ""
+msgstr "העברה לאוסף אשפה נכשלה, פעולת ההשלכה לאשפה בוטלה"
 
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format
 msgid "Invalid items passed"
-msgstr ""
+msgstr "הועברו פריטים שגויים"
 
 #: core/jobs/trashjob.cpp:258 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
-msgstr ""
+msgstr "הועבר אוסף שגוי"
 
 #: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
 #, kde-format
 msgid "No valid collection or empty itemlist"
-msgstr ""
+msgstr "אין אוסף תקף או שרשימת הפריטים ריקה"
 
 #: core/jobs/trashrestorejob.cpp:86
 #, kde-format
 msgid "Could not find restore collection and restore resource is not available"
-msgstr ""
+msgstr "לא ניתן למצוא אוסף שחזור והמשאב לשחזור לא זמין"
 
 #: core/models/agentinstancemodel.cpp:192
 #, kde-format
 msgctxt "@title:column, name of a thing"
 msgid "Name"
-msgstr ""
+msgstr "שם"
 
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
-msgstr ""
+msgstr "בטעינה…"
 
 #: core/models/entitytreemodel.cpp:497
 #, kde-format
@@ -454,52 +455,54 @@ msgid ""
 "The target collection '%1' contains already\n"
 "a collection with name '%2'."
 msgstr ""
+"אוסף היעד ‚%1’ כבר מכיל\n"
+"אוסף בשם ‚%2’."
 
 #: core/models/entitytreemodel.cpp:666
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
-msgstr ""
+msgstr "שם"
 
 #: core/models/entitytreemodel_p.cpp:1330
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
-msgstr ""
+msgstr "לא ניתן להעתיק את הפריט: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1332
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
-msgstr ""
+msgstr "לא ניתן להעתיק את האוסף: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1334
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
-msgstr ""
+msgstr "לא ניתן להעביר את הפריט: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1336
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
-msgstr ""
+msgstr "לא ניתן להעביר את האוסף: <message>%1</message>"
 
 #: core/models/entitytreemodel_p.cpp:1338
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
-msgstr ""
+msgstr "לא ניתן לקשר ישות: <message>%1</message>"
 
 #: core/models/favoritecollectionsmodel.cpp:398
 #, kde-format
 msgid "Favorite Folders"
-msgstr ""
+msgstr "תיקיות מועדפות"
 
 #: core/models/statisticsproxymodel.cpp:84
 #, kde-format
 msgid "Total Messages"
-msgstr ""
+msgstr "סך כל ההודעות"
 
 #: core/models/statisticsproxymodel.cpp:86
 #, kde-format
@@ -520,7 +523,7 @@ msgstr "גודל אחסון"
 #: core/models/statisticsproxymodel.cpp:109
 #, kde-format
 msgid "Subfolder Storage Size"
-msgstr ""
+msgstr "גודל אחסון תת־תיקיות"
 
 #: core/models/statisticsproxymodel.cpp:220
 #, kde-format
@@ -558,27 +561,27 @@ msgstr "המפתח לא זמין עוד"
 #: core/partfetcher.cpp:114
 #, kde-format
 msgid "Payload part '%1' is not available for this index"
-msgstr ""
+msgstr "החלק ‚%1’ במטען אינו זמין למפתח הזה"
 
 #: core/partfetcher.cpp:123
 #, kde-format
 msgid "No session available for this index"
-msgstr ""
+msgstr "אין הפעלה זמינה למפתח הזה"
 
 #: core/partfetcher.cpp:132
 #, kde-format
 msgid "No item available for this index"
-msgstr ""
+msgstr "אין פריטים זמינים למפתח הזה"
 
 #: core/pluginloader.cpp:145
 #, kde-format
 msgid "Unnamed plugin"
-msgstr ""
+msgstr "תוסף ללא שם"
 
 #: core/pluginloader.cpp:151
 #, kde-format
 msgid "No description available"
-msgstr ""
+msgstr "אין תיאור זמין"
 
 #: core/servermanager.cpp:265
 #, kde-format
@@ -588,13 +591,16 @@ msgid ""
 "If you recently updated your system please log out and back in to make sure "
 "all applications use the correct protocol version."
 msgstr ""
+"גרסת פרוטוקול שרת ה־Akonadi שונה מהגרסה בה נעשה שימוש ביישום הזה.\n"
+"אם עדכנת את המערכת שלך לאחרונה נא לצאת מהמערכת ולהיכנס בחזרה כדי לוודא שכל "
+"היישומים משתמשים בגרסת הפרוטוקול הנכונה."
 
 #: core/servermanager.cpp:282
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
 "installation."
-msgstr ""
+msgstr "אין סוכנים זמינים של Akonadi. נא לוודא שהתקנת ה־PIM ב־KDE שלך תקינה."
 
 #: core/session.cpp:185
 #, kde-format
@@ -602,6 +608,8 @@ msgid ""
 "Protocol version mismatch. Server version is older (%1) than ours (%2). If "
 "you updated your system recently please restart the Akonadi server."
 msgstr ""
+"גרסאות פרוטוקול שונות. גרסת השרת (%1) ישנה משלנו (%2). אם עדכנת את המערכת "
+"שלך לאחרונה נא להפעיל מחדש את שרת ה־Akonadi."
 
 #: core/session.cpp:194
 #, kde-format
@@ -609,6 +617,8 @@ msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
 "you updated your system recently please restart all KDE PIM applications."
 msgstr ""
+"גרסאות פרוטוקול שונות. גרסת השרת (%1) חדשה משלנו (%2). אם עדכנת את המערכת "
+"שלך לאחרונה נא להפעיל מחדש את כל יישומי ניהול הפרטים האישיים של KDE."
 
 #: selftest/main.cpp:19
 #, kde-format
@@ -618,7 +628,7 @@ msgstr "בדיקה עצמית של Akonadi"
 #: selftest/main.cpp:21
 #, kde-format
 msgid "Checks and reports state of Akonadi server"
-msgstr ""
+msgstr "בבדיקה ודיווח על מצב שרת ה־Akonadi"
 
 #: selftest/main.cpp:23
 #, kde-format
@@ -629,53 +639,53 @@ msgstr "‏(c) 2008 וולקר קראוזה <vkrause@kde.org>"
 #, kde-format
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
-msgstr ""
+msgstr "מתחם שם להפעלת מגוון מופעים של Akonadi באותה הפעלת משתמש"
 
 #: widgets/agentactionmanager.cpp:36
 msgid "&New Agent Instance..."
-msgstr ""
+msgstr "מופע סוכן &חדש..."
 
 #: widgets/agentactionmanager.cpp:37
 msgid "&Delete Agent Instance"
-msgstr ""
+msgstr "מ&חיקת מופע סוכן"
 
 #: widgets/agentactionmanager.cpp:38
 msgid "&Configure Agent Instance"
-msgstr ""
+msgstr "ה&גדרת מופע סוכן"
 
 #: widgets/agentactionmanager.cpp:54
 #, kde-format
 msgctxt "@title:window"
 msgid "New Agent Instance"
-msgstr ""
+msgstr "מופע סוכן חדש"
 
 #: widgets/agentactionmanager.cpp:56
 #, kde-format
 msgid "Could not create agent instance: %1"
-msgstr ""
+msgstr "לא ניתן ליצור מופע סוכן: %1"
 
 #: widgets/agentactionmanager.cpp:60
 #, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
-msgstr ""
+msgstr "יצירת מופע סוכן נכשלה"
 
 #: widgets/agentactionmanager.cpp:62
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Agent Instance?"
-msgstr ""
+msgstr "למחוק מופע סוכן?"
 
 #: widgets/agentactionmanager.cpp:66
 #, kde-format
 msgid "Do you really want to delete the selected agent instance?"
-msgstr ""
+msgstr "למחוק את מופע הסוכן הנבחר?"
 
 #: widgets/agentconfigurationdialog.cpp:56
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
-msgstr ""
+msgstr "הגדרות %1"
 
 #: widgets/agentconfigurationdialog.cpp:87
 #, kde-format
@@ -690,28 +700,28 @@ msgstr "על %1"
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
 msgid "Unable to access D-Bus interface of created agent."
-msgstr ""
+msgstr "לא ניתן לגשת לממשק ה־D-Bus של הסוכן שנוצר."
 
 #: widgets/agentconfigurationwidget.cpp:116
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
-msgstr ""
+msgstr "חלונית ההגדרות נפתחה בחלון אחר"
 
 #: widgets/agentconfigurationwidget.cpp:123
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
-msgstr ""
+msgstr "ההגדרה עבור %1 כבר פתוחה במקום אחר."
 
 #: widgets/agentconfigurationwidget.cpp:125
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
-msgstr ""
+msgstr "רישום חלונית ההגדרות %1 נכשל."
 
 #: widgets/agentinstancewidget.cpp:259
 #, kde-format
 msgctxt "Status percent value"
 msgid "(%1%)"
-msgstr ""
+msgstr "(%1%)"
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
@@ -723,7 +733,7 @@ msgstr "הגדרת חשבון"
 #, kde-format
 msgctxt "@item:textbox"
 msgid "Search types"
-msgstr ""
+msgstr "חיפוש סוגים"
 
 #: widgets/cachepolicypage.cpp:43 widgets/cachepolicypage.cpp:48
 #, kde-format
@@ -826,6 +836,8 @@ msgid ""
 "likely never uploaded to the destination server, so clearing this collection "
 "means that those <b>data will be lost</b>. Are you sure you want to proceed?"
 msgstr ""
+"האוסף ‚%1’ מכיל %2 פריטים בלי מזהה מרוחק. הפריטים האלו כנראה מעולם לא הועלו "
+"לשרת היעד, לכן פינוי האוסף הזה אומר ש<b>הנתונים ילכו לאיבוד</b>. להמשיך?"
 
 #: widgets/collectiondialog.cpp:58
 #, kde-format
@@ -958,15 +970,15 @@ msgstr "שגיאה במשיכת כמות הפריטים שמסודרים במפ�
 #, kde-format
 msgid "Indexed %1 item in this folder"
 msgid_plural "Indexed %1 items in this folder"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "פריט אחד מהתיקייה הזאת סודר במפתח"
+msgstr[1] "שני פריטים מהתיקייה הזאת סודר במפתח"
+msgstr[2] "%1 פריטים מהתיקייה הזאת סודר במפתח"
+msgstr[3] "%1 פריטים מהתיקייה הזאת סודר במפתח"
 
 #: widgets/collectionmaintenancepage.cpp:138
 #, kde-format
 msgid "Calculating indexed items..."
-msgstr ""
+msgstr "הפריטים שסודרו במפתח מחושבים…"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/collectionmaintenancepage.ui:17
@@ -1014,7 +1026,7 @@ msgstr "מתבצע סידור במפתח:"
 #: widgets/collectionmaintenancepage.ui:80
 #, kde-format
 msgid "Enable fulltext indexing"
-msgstr ""
+msgstr "הפעלת סידור טקסט מלא במפתח"
 
 #. i18n: ectx: property (text), widget (QLabel, indexedCountLbl)
 #: widgets/collectionmaintenancepage.ui:87
@@ -1096,6 +1108,11 @@ msgid ""
 "editor\"</a> to keep a copy of the texts, then select which version is most "
 "correct, then re-open it and modify it again to add what's missing."
 msgstr ""
+"<qt>השינויים שלך סותרים את אלו שבוצעו על ידי אחרים בזמן הזה.<br>אלא אם כן "
+"אפשר פשוט לוותר על אחת הגרסאות, יש לשלב בין השינויים האלה ידנית.<br>יש ללחוץ "
+"על <a href=\"opentexteditor\">„פתיחת עורך טקסט”</a> כדי לשמור על עותק של "
+"הטקסטים, ואז לבחור איזו גרסה הכי נכונה, לאחר מכן לפתוח מחדש ולערוך שוב כדי "
+"להוסיף מה שחסר."
 
 #: widgets/conflictresolvedialog.cpp:266
 #, kde-format
@@ -1182,6 +1199,9 @@ msgid ""
 "Depending on the amount of personal information, this might take a few "
 "minutes."
 msgstr ""
+"שירות ניהול פרטים אישיים מבצע שדרוג מסד נתונים.\n"
+"זה קורה לאחר עדכון תוכנה והוא הכרחי כדי למטב את הביצועים.\n"
+"כתלות בכמות הפרטים האישיים, זה עלול לארוך מספר דקות."
 
 #. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
@@ -1320,6 +1340,8 @@ msgid ""
 "The QtSQL driver '%1' is required by your current Akonadi server "
 "configuration and was found on your system."
 msgstr ""
+"מנהל חיבור QtSQL‏ ‚%1’ הכרחי להגדרות שרת ה־Akonadi הנוכחיות שלך ונמצא במערכת "
+"שלך."
 
 #: widgets/selftestdialog.cpp:191
 #, kde-format
@@ -1329,6 +1351,10 @@ msgid ""
 "The following drivers are installed: %2.\n"
 "Make sure the required driver is installed."
 msgstr ""
+"מנהל חיבור QtSQL‏ ‚%1’ הכרחי להגדרות שרת ה־Akonadi הנוכחיות שלך ונמצא במערכת "
+"שלך.\n"
+"מנהלי החיבור הבאים מותקנים: %2.\n"
+"נא לוודא שמנהל החיבור הנחוץ מותקן."
 
 #: widgets/selftestdialog.cpp:198
 #, kde-format
@@ -1360,6 +1386,10 @@ msgid ""
 "executable. The server executable is typically called 'mysqld'; its location "
 "varies depending on the distribution."
 msgstr ""
+"הרגע הגדרת את Akonadi להשתמש בשרת ה־MySQL‏ ‚%1’.\n"
+"נא לוודא שמותקן במכונה שרת MySQL, להגדיר את הנתיב הנכון ולוודא שיש לך את "
+"הרשאות הכתיבה וההרצה ההכרחיים לקובץ ההפעלה של השרת. קובץ ההפעלה של השרת בדרך "
+"כלל נקרא ‚mysqld’, המקום שלו משתנה כתלות בהפצה."
 
 #: widgets/selftestdialog.cpp:224
 #, kde-format
@@ -1530,6 +1560,8 @@ msgid ""
 "The custom configuration for the MySQL server was found at %1 but is not "
 "readable. Check your access rights."
 msgstr ""
+"ההגדרות המותאמות לשרת ה־MySQL נמצאו ב־%1 אבל לא ניתן לקרוא אותן. נא לבדוק את "
+"הרשאות הגישה שלך."
 
 #: widgets/selftestdialog.cpp:342
 #, kde-format
@@ -1734,6 +1766,10 @@ msgid ""
 "XDG_DATA_DIRS environment variable is set to '%2'; make sure this includes "
 "all paths where Akonadi agents are installed."
 msgstr ""
+"לא נמצאו סוכני משאבים, Akonadi בלתי שמיש בלי לפחות אחד מאלה. בדרך כלל "
+"המשמעות היא שלא מותקנים סוכני משאבים או שיש בעיית התקנה. החיפוש בוצע בנתיבים "
+"הבאים: ‚%1’. משתנה הסביבה XDG_DATA_DIRS מוגדר בתור ‚%2’, חשוב לוודא שהוא "
+"כולל את כל הנתונים בהם מותקנים סוכני Akonadi."
 
 #: widgets/selftestdialog.cpp:499
 #, kde-format
