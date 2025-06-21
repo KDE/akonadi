@@ -29,11 +29,10 @@ msgid "Akonadi Knut Data File"
 msgstr "Akonadi Knut 数据文件"
 
 #: accountwidget.cpp:50
-#, fuzzy, kde-format
-#| msgid "Select Data File"
+#, kde-format
 msgctxt "@label"
 msgid "Data Files:"
-msgstr "选择数据文件"
+msgstr ""
 
 #: accountwidget.cpp:52
 #, kde-format
