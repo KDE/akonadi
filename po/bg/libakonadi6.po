@@ -2680,10 +2680,3 @@ msgstr "Не може да се анализира файл с данни: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Не може да се намери колекция %1"
-
-#~ msgctxt "@window:title"
-#~ msgid "Error"
-#~ msgstr "Грешка"
-
-#~ msgid "A required background service is not operational."
-#~ msgstr "Услугата за управление на лична информация Akonadi не работи."
