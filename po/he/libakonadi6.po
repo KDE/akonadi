@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-23 02:38+0000\n"
-"PO-Revision-Date: 2025-06-19 15:04+0300\n"
+"PO-Revision-Date: 2025-06-21 15:53+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -146,12 +146,12 @@ msgstr "התיקייה ‚%1’ מסונכרנת"
 #: agentbase/resourcebase.cpp:940 agentbase/resourcebase.cpp:947
 #, kde-format
 msgid "Failed to retrieve collection for sync."
-msgstr ""
+msgstr "משיכת האוסף לסנכרון נכשל."
 
 #: agentbase/resourcebase.cpp:988
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
-msgstr ""
+msgstr "משיכת האוסף לסנכרון מאפיינים נכשל."
 
 #: agentbase/resourcebase.cpp:1034
 #, kde-format
@@ -167,7 +167,7 @@ msgstr "המשימה בוטלה."
 #: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
 #, kde-format
 msgid "Akonadi Control"
-msgstr ""
+msgstr "שליטה ב־Akonadi"
 
 #: akonadictl/main.cpp:220
 #, kde-format
@@ -428,7 +428,7 @@ msgstr "בטעינה…"
 #, kde-format
 msgctxt "@window:title"
 msgid "Error"
-msgstr ""
+msgstr "שגיאה"
 
 #: core/models/entitytreemodel.cpp:500
 #, kde-format
@@ -528,12 +528,12 @@ msgstr "סך הכול"
 #, kde-format
 msgctxt "collection size"
 msgid "Size"
-msgstr ""
+msgstr "גודל"
 
 #: core/models/tagmodel.cpp:64
 #, kde-format
 msgid "Tag"
-msgstr ""
+msgstr "תגית"
 
 #: core/partfetcher.cpp:49
 #, kde-format
@@ -677,12 +677,12 @@ msgstr "הגדרות %1"
 #: widgets/agentconfigurationdialog.cpp:86
 #, kde-format
 msgid "%1 Handbook"
-msgstr ""
+msgstr "ספרון ההדרכה של %1"
 
 #: widgets/agentconfigurationdialog.cpp:87
 #, kde-format
 msgid "About %1"
-msgstr ""
+msgstr "על %1"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -721,15 +721,15 @@ msgstr "חיפוש סוגים"
 #, kde-format
 msgid "minute"
 msgid_plural "minutes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "דקה"
+msgstr[1] "דקות"
+msgstr[2] "דקות"
+msgstr[3] "דקות"
 
 #: widgets/cachepolicypage.cpp:70
 #, kde-format
 msgid "Retrieval"
-msgstr ""
+msgstr "משיכה"
 
 #. i18n: ectx: property (text), widget (QCheckBox, inherit)
 #: widgets/cachepolicypage.ui:20
@@ -2232,10 +2232,10 @@ msgstr[3] "גזירת %1 פריטים"
 #, kde-format
 msgid "Cut Folder"
 msgid_plural "Cut %1 Folders"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "גזירת תיקייה"
+msgstr[1] "גזירת שתי תיקיות"
+msgstr[2] "גזירת %1 תיקיות"
+msgstr[3] "גזירת %1 תיקיות"
 
 #: widgets/standardactionmanager.cpp:412
 #, kde-format
@@ -2269,20 +2269,20 @@ msgstr[3] "סנכרון %1 תיקיות"
 msgctxt "@action"
 msgid "Delete Resource"
 msgid_plural "Delete %1 Resources"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "מחיקת משאב"
+msgstr[1] "מחיקת שני משאבים"
+msgstr[2] "מחיקת %1 משאבים"
+msgstr[3] "מחיקת %1 משאבים"
 
 #: widgets/standardactionmanager.cpp:416
 #, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
 msgid_plural "Synchronize %1 Resources"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "סנכרון משאב"
+msgstr[1] "סנכרון שני משאבים"
+msgstr[2] "סנכרון %1 משאבים"
+msgstr[3] "סנכרון %1 משאבים"
 
 #: widgets/standardactionmanager.cpp:419
 #, kde-format
@@ -2305,10 +2305,10 @@ msgstr[3] "למחוק את %1 התיקיות על תת־תיקיותיהן?"
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "למחוק את התיקייה?"
+msgstr[1] "למחוק את התיקיות?"
+msgstr[2] "למחוק את התיקיות?"
+msgstr[3] "למחוק את התיקיות?"
 
 #: widgets/standardactionmanager.cpp:430
 #, kde-format
