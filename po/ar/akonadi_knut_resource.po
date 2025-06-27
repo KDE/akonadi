@@ -1,23 +1,24 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-#
 # Seif Abaza <abazuos@gmail.com>, 2009.
-# Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2009.
+# SPDX-FileCopyrightText: 2009, 2025 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
 # Safa Alfulaij <safa1996alfulaij@gmail.com>, 2015, 2018.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: akonadi_knut_resource\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-06-18 00:43+0000\n"
-"PO-Revision-Date: 2018-01-23 14:30+0300\n"
-"Last-Translator: Safa Alfulaij <safa1996alfulaij@gmail.com>\n"
-"Language-Team: Arabic <doc@arabeyes.org>\n"
+"PO-Revision-Date: 2025-06-26 10:22+0400\n"
+"Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
+"Language-Team: ar\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #: accountwidget.cpp:38
 #, kde-format
@@ -31,17 +32,16 @@ msgid "Akonadi Knut Data File"
 msgstr "ملفّ بيانات أكونادي Knut"
 
 #: accountwidget.cpp:50
-#, fuzzy, kde-format
-#| msgid "Select Data File"
+#, kde-format
 msgctxt "@label"
 msgid "Data Files:"
-msgstr "حدد ملف البيانات"
+msgstr "ملفات البيانات:"
 
 #: accountwidget.cpp:52
 #, kde-format
 msgctxt "@option:check"
 msgid "File watching enabled"
-msgstr ""
+msgstr "مراقبة الملفات مفعلة"
 
 #: knutresource.cpp:60
 #, kde-format
