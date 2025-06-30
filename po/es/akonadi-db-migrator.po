@@ -1,15 +1,15 @@
 # Spanish translations for akonadi-db-migrator.po package.
-# Copyright (C) 2024 This file is copyright:
+# Copyright (C) 2024-2025 This file is copyright:
 # This file is distributed under the same license as the akonadi package.
 # Automatically generated, 2024.
 #
-# SPDX-FileCopyrightText: 2024 Eloy Cuadra <ecuadra@eloihr.net>
+# SPDX-FileCopyrightText: 2024, 2025 Eloy Cuadra <ecuadra@eloihr.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: akonadi-db-migrator\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-29 00:41+0000\n"
-"PO-Revision-Date: 2024-02-09 12:40+0100\n"
+"PO-Revision-Date: 2025-06-29 13:33+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -33,7 +33,7 @@ msgstr "ecuadra@eloihr.net"
 #, kde-format
 msgctxt "@info:status"
 msgid "Stopping Akonadi service..."
-msgstr "Deteniendo el servicio Akonadi..."
+msgstr "Deteniendo el servicio Akonadi…"
 
 #: dbmigrator.cpp:439
 #, kde-format
@@ -51,7 +51,7 @@ msgstr "Error: No no puede adquirir el bloqueo DBus para Akonadi."
 #, kde-format
 msgctxt "@info:status"
 msgid "Starting Akonadi service..."
-msgstr "Iniciando el servicio Akonadi..."
+msgstr "Iniciando el servicio Akonadi…"
 
 #: dbmigrator.cpp:468
 #, kde-format
@@ -130,7 +130,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:shell"
 msgid "Backing up original database..."
-msgstr "Creando copia de seguridad de la base de datos original..."
+msgstr "Creando copia de seguridad de la base de datos original…"
 
 #: dbmigrator.cpp:573
 #, kde-format
@@ -249,7 +249,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:status"
 msgid "Optimizing table %1..."
-msgstr "Optimizando tabla %1..."
+msgstr "Optimizando tabla %1…"
 
 #: dbmigrator.cpp:830
 #, kde-format
@@ -326,10 +326,10 @@ msgstr "La migración ha fallado."
 #, kde-format
 msgctxt "@info:progress"
 msgid "Migrating table %1 (%2/%3)..."
-msgstr "Migrando tabla %1 (%2/%3)..."
+msgstr "Migrando tabla %1 (%2/%3)…"
 
 #: main.cpp:127
 #, kde-format
 msgctxt "@info:progress"
 msgid "%1%..."
-msgstr "%1 %..."
+msgstr "%1 %…"

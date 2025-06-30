@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-23 00:42+0000\n"
+"POT-Creation-Date: 2025-06-30 00:42+0000\n"
 "PO-Revision-Date: 2025-03-25 21:57+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -635,6 +635,31 @@ msgstr ""
 "Protokoloen bertsioak ez datoz bat. Zerbitzariaren bertsioa berriagoa da "
 "(%1) gurea baino (%2). Zure sistema azkenaldian eguneratu baduzu, "
 "berrabiarazi zure KDE PIMeko aplikazio guztiak."
+
+#: quick/colorproxymodel.cpp:83
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid "Offline"
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "Lerroz-kanpo"
+
+#: quick/colorproxymodel.cpp:86
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr ""
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
+#: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
+#, kde-format
+msgid "Manage Tags"
+msgstr "Kudeatu etiketak"
+
+#: quick/qml/TagManagerPage.qml:31
+#, kde-format
+msgid "You won't be able to revert this action."
+msgstr ""
 
 #: selftest/main.cpp:19
 #, kde-format
@@ -2577,12 +2602,6 @@ msgstr "Hautatu aplikatu beharreko etiketak."
 #, kde-format
 msgid "Create new tag"
 msgstr "Sortu etiketa berria"
-
-#. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
-#: widgets/tagmanagementdialog.ui:14
-#, kde-format
-msgid "Manage Tags"
-msgstr "Kudeatu etiketak"
 
 #: widgets/tagselectioncombobox.cpp:126
 #, kde-format

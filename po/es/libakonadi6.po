@@ -1,21 +1,20 @@
 # Spanish translations for libakonadi6.po package.
-# Copyright (C) 2007-2025 This_file_is_part_of_KDE
+# Copyright (C) 2007-2025 This file is copyright:
 # This file is distributed under the same license as the akonadi package.
 #
 # SPDX-FileCopyrightText: 2007 Enrique Matias Sanchez (aka Quique) <cronopios@gmail.com>
 # SPDX-FileCopyrightText: 2008 Santi <santi@kde-es.org>
 # SPDX-FileCopyrightText: 2008, 2009 Dario Andres Rodriguez <andresbajotierra@gmail.com>
 # SPDX-FileCopyrightText: 2009, 2011, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Eloy Cuadra <ecuadra@eloihr.net>
-# SPDX-FileCopyrightText: 2009 Cristina Yenyxe Gonzalez Garcia <the.blue.valkyrie@gmail.com>
+# SPDX-FileCopyrightText: 2009, 2010, 2011 Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>
 # SPDX-FileCopyrightText: 2009, 2010 Adrián Martínez <sfxgt3@gmail.com>
-# SPDX-FileCopyrightText: 2010, 2011 Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019 Javier Vinal <fjvinal@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-23 00:42+0000\n"
-"PO-Revision-Date: 2025-03-16 01:42+0100\n"
+"POT-Creation-Date: 2025-06-30 00:42+0000\n"
+"PO-Revision-Date: 2025-06-29 13:35+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -643,6 +642,31 @@ msgstr ""
 "Discordancia en la versión del protocolo. La versión del servidor es más "
 "reciente (%1) que la nuestra (%2). Si ha actualizado el sistema "
 "recientemente, reinicie todas las aplicaciones de KDE PIM."
+
+#: quick/colorproxymodel.cpp:83
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid "Offline"
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "Desconectado"
+
+#: quick/colorproxymodel.cpp:86
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr ""
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
+#: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
+#, kde-format
+msgid "Manage Tags"
+msgstr "Gestionar etiquetas"
+
+#: quick/qml/TagManagerPage.qml:31
+#, kde-format
+msgid "You won't be able to revert this action."
+msgstr ""
 
 #: selftest/main.cpp:19
 #, kde-format
@@ -2587,12 +2611,6 @@ msgstr "Seleccione las etiquetas que se deben aplicar."
 #, kde-format
 msgid "Create new tag"
 msgstr "Crear nueva etiqueta"
-
-#. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
-#: widgets/tagmanagementdialog.ui:14
-#, kde-format
-msgid "Manage Tags"
-msgstr "Gestionar etiquetas"
 
 #: widgets/tagselectioncombobox.cpp:126
 #, kde-format

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-23 00:42+0000\n"
+"POT-Creation-Date: 2025-06-30 00:42+0000\n"
 "PO-Revision-Date: 2023-10-02 18:38+0200\n"
 "Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
 "Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
@@ -617,6 +617,31 @@ msgstr ""
 "Verzia protokolu sa nezhoduje. Verzia servera je novšia (%1) ako naša (%2). "
 "Ak ste nedávno aktualizovali systém, prosím reštartujte všetky KDE PIM "
 "aplikácie."
+
+#: quick/colorproxymodel.cpp:83
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid "Offline"
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "Offline"
+
+#: quick/colorproxymodel.cpp:86
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr ""
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
+#: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
+#, kde-format
+msgid "Manage Tags"
+msgstr "Spravovať značky"
+
+#: quick/qml/TagManagerPage.qml:31
+#, kde-format
+msgid "You won't be able to revert this action."
+msgstr ""
 
 #: selftest/main.cpp:19
 #, kde-format
@@ -2587,12 +2612,6 @@ msgstr "Vyberte, ktoré značky majú byť použité."
 #, kde-format
 msgid "Create new tag"
 msgstr "Vytvoriť novú značku"
-
-#. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
-#: widgets/tagmanagementdialog.ui:14
-#, kde-format
-msgid "Manage Tags"
-msgstr "Spravovať značky"
 
 #: widgets/tagselectioncombobox.cpp:126
 #, kde-format

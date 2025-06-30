@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-23 00:42+0000\n"
+"POT-Creation-Date: 2025-06-30 00:42+0000\n"
 "PO-Revision-Date: 2025-02-08 10:55-0300\n"
 "Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -640,6 +640,31 @@ msgstr ""
 "As versões do protocolo não correspondem. A versão do servidor é mais nova "
 "(%1) que a nossa (%2). Se atualizou seu sistema recentemente, reinicie todos "
 "os aplicativos do KDE PIM."
+
+#: quick/colorproxymodel.cpp:83
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid "Offline"
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "Offline"
+
+#: quick/colorproxymodel.cpp:86
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr ""
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
+#: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
+#, kde-format
+msgid "Manage Tags"
+msgstr "Gerenciar etiquetas"
+
+#: quick/qml/TagManagerPage.qml:31
+#, kde-format
+msgid "You won't be able to revert this action."
+msgstr ""
 
 #: selftest/main.cpp:19
 #, kde-format
@@ -2586,12 +2611,6 @@ msgstr "Selecionar as etiquetas que devem ser aplicadas."
 #, kde-format
 msgid "Create new tag"
 msgstr "Criar nova etiqueta"
-
-#. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
-#: widgets/tagmanagementdialog.ui:14
-#, kde-format
-msgid "Manage Tags"
-msgstr "Gerenciar etiquetas"
 
 #: widgets/tagselectioncombobox.cpp:126
 #, kde-format

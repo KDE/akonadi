@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-23 00:42+0000\n"
+"POT-Creation-Date: 2025-06-30 00:42+0000\n"
 "PO-Revision-Date: 2017-12-17 18:01+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -632,6 +632,33 @@ msgstr ""
 "Несагласне верзије протокола. Верзија на серверу (%1) новија је од наше "
 "(%2). Ако сте недавно ажурирали систем, поново покрените све програме из "
 "КДЕ‑ПИМ‑а."
+
+#: quick/colorproxymodel.cpp:83
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid "Offline"
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "Ван везе."
+
+#: quick/colorproxymodel.cpp:86
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr ""
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
+#: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Manage Tags"
+msgid "Manage Tags"
+msgstr "Управљање ознакама"
+
+#: quick/qml/TagManagerPage.qml:31
+#, kde-format
+msgid "You won't be able to revert this action."
+msgstr ""
 
 #: selftest/main.cpp:19
 #, kde-format
@@ -2706,14 +2733,6 @@ msgstr "Подесите које ознаке треба применити."
 #| msgid "Create new tag"
 msgid "Create new tag"
 msgstr "Направи нову ознаку"
-
-#. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
-#: widgets/tagmanagementdialog.ui:14
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Manage Tags"
-msgid "Manage Tags"
-msgstr "Управљање ознакама"
 
 #: widgets/tagselectioncombobox.cpp:126
 #, fuzzy, kde-format
