@@ -7,7 +7,6 @@
 #include <Akonadi/CollectionFilterProxyModel>
 #include <Akonadi/EntityTreeModel>
 #include <QColor>
-#include <QSortFilterProxyModel>
 
 /// Despite the name, this handles the presentation of collections including display text and icons, not just colors.
 class ColorProxyModel : public Akonadi::CollectionFilterProxyModel
