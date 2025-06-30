@@ -558,8 +558,9 @@ QString ResourceBase::parseArguments(int argc, char **argv)
     const QString catalog = fi.baseName();
 
     auto translator = new QTranslator(QCoreApplication::instance());
-    translator->load(catalog);
-    QCoreApplication::installTranslator(translator);
+    if (translator->load(catalog)) {
+        QCoreApplication::installTranslator(translator);
+    }
 
     return identifier;
 }
