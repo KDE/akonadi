@@ -10,15 +10,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-30 00:42+0000\n"
-"PO-Revision-Date: 2025-03-15 13:30+0100\n"
+"POT-Creation-Date: 2025-07-01 00:42+0000\n"
+"PO-Revision-Date: 2025-06-30 18:11+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.12.3\n"
+"X-Generator: Lokalize 25.04.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -106,60 +106,60 @@ msgstr "Hulpbronidentificatie"
 msgid "Akonadi Resource"
 msgstr "Akonadi-hulpbron"
 
-#: agentbase/resourcebase.cpp:580
+#: agentbase/resourcebase.cpp:581
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Ongeldig item opgehaald"
 
-#: agentbase/resourcebase.cpp:603
+#: agentbase/resourcebase.cpp:604
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Fout bij aanmaken van item: %1"
 
-#: agentbase/resourcebase.cpp:627
+#: agentbase/resourcebase.cpp:628
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Fout bij bijwerken van verzameling: %1."
 
-#: agentbase/resourcebase.cpp:714
+#: agentbase/resourcebase.cpp:715
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Bijwerken van lokale verzameling is mislukt: %1."
 
-#: agentbase/resourcebase.cpp:719
+#: agentbase/resourcebase.cpp:720
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Bijwerken van lokale items is mislukt: %1."
 
-#: agentbase/resourcebase.cpp:738
+#: agentbase/resourcebase.cpp:739
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Kan het item niet ophalen in offline-modus."
 
-#: agentbase/resourcebase.cpp:920
+#: agentbase/resourcebase.cpp:921
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Map '%1' wordt gesynchroniseerd"
 
-#: agentbase/resourcebase.cpp:940 agentbase/resourcebase.cpp:947
+#: agentbase/resourcebase.cpp:941 agentbase/resourcebase.cpp:948
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Het ophalen van de verzameling voor synchronisatie is mislukt."
 
-#: agentbase/resourcebase.cpp:988
+#: agentbase/resourcebase.cpp:989
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr ""
 "Het ophalen van de verzameling voor synchronisatie van attributen is mislukt."
 
-#: agentbase/resourcebase.cpp:1034
+#: agentbase/resourcebase.cpp:1035
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Het gevraagde item bestaat niet langer"
@@ -637,18 +637,16 @@ msgstr ""
 "toepassingen opnieuw."
 
 #: quick/colorproxymodel.cpp:83
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Offline"
+#, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Offline)"
-msgstr "Offline"
+msgstr "%1 (offline)"
 
 #: quick/colorproxymodel.cpp:86
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
-msgstr ""
+msgstr "%1 (Standaard)"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
@@ -659,7 +657,7 @@ msgstr "Tags beheren"
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
 msgid "You won't be able to revert this action."
-msgstr ""
+msgstr "U kunt deze actie niet terugdraaien."
 
 #: selftest/main.cpp:19
 #, kde-format

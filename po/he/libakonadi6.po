@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-30 00:42+0000\n"
-"PO-Revision-Date: 2025-06-19 15:04+0300\n"
+"POT-Creation-Date: 2025-07-01 00:42+0000\n"
+"PO-Revision-Date: 2025-06-30 09:11+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Lokalize 25.04.1\n"
+"X-Generator: Lokalize 25.04.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -101,59 +101,59 @@ msgstr "מזהה משאב"
 msgid "Akonadi Resource"
 msgstr "משאב Akonadi"
 
-#: agentbase/resourcebase.cpp:580
+#: agentbase/resourcebase.cpp:581
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "הפריט שנמשך שגוי"
 
-#: agentbase/resourcebase.cpp:603
+#: agentbase/resourcebase.cpp:604
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "שגיאה ביצירת פריט: %1"
 
-#: agentbase/resourcebase.cpp:627
+#: agentbase/resourcebase.cpp:628
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "שגיאה בעדכון אוסף: %1"
 
-#: agentbase/resourcebase.cpp:714
+#: agentbase/resourcebase.cpp:715
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "עדכון אוסף מקומי נכשל: %1."
 
-#: agentbase/resourcebase.cpp:719
+#: agentbase/resourcebase.cpp:720
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "עדכון פריטים מקומיים נכשל: %1."
 
-#: agentbase/resourcebase.cpp:738
+#: agentbase/resourcebase.cpp:739
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "לא ניתן למשוך פריט במצב מנותק."
 
-#: agentbase/resourcebase.cpp:920
+#: agentbase/resourcebase.cpp:921
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "התיקייה ‚%1’ מסונכרנת"
 
-#: agentbase/resourcebase.cpp:940 agentbase/resourcebase.cpp:947
+#: agentbase/resourcebase.cpp:941 agentbase/resourcebase.cpp:948
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "משיכת האוסף לסנכרון נכשל."
 
-#: agentbase/resourcebase.cpp:988
+#: agentbase/resourcebase.cpp:989
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "משיכת האוסף לסנכרון מאפיינים נכשל."
 
-#: agentbase/resourcebase.cpp:1034
+#: agentbase/resourcebase.cpp:1035
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "הפריט המבוקש לא קיים יותר"
@@ -621,18 +621,16 @@ msgstr ""
 "שלך לאחרונה נא להפעיל מחדש את כל יישומי ניהול הפרטים האישיים של KDE."
 
 #: quick/colorproxymodel.cpp:83
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Offline"
+#, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Offline)"
-msgstr "מנותק"
+msgstr "%1 (מנותק)"
 
 #: quick/colorproxymodel.cpp:86
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
-msgstr ""
+msgstr "%1 (ברירת מחדל)"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
@@ -643,7 +641,7 @@ msgstr "ניהול תגיות"
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
 msgid "You won't be able to revert this action."
-msgstr ""
+msgstr "זאת פעולה בלתי הפיכה."
 
 #: selftest/main.cpp:19
 #, kde-format

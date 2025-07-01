@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.3\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-30 00:42+0000\n"
+"POT-Creation-Date: 2025-07-01 00:42+0000\n"
 "PO-Revision-Date: 2025-05-30 23:19+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -103,59 +103,59 @@ msgstr "Erőforrás-azonosító"
 msgid "Akonadi Resource"
 msgstr "Akonadi-erőforrás"
 
-#: agentbase/resourcebase.cpp:580
+#: agentbase/resourcebase.cpp:581
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Érvénytelen elem lett fogadva"
 
-#: agentbase/resourcebase.cpp:603
+#: agentbase/resourcebase.cpp:604
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Hiba az elem létrehozása közben: %1"
 
-#: agentbase/resourcebase.cpp:627
+#: agentbase/resourcebase.cpp:628
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Hiba a gyűjtemény frissítése közben: %1"
 
-#: agentbase/resourcebase.cpp:714
+#: agentbase/resourcebase.cpp:715
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "A helyi gyűjtemény frissítése nem sikerült: %1."
 
-#: agentbase/resourcebase.cpp:719
+#: agentbase/resourcebase.cpp:720
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "A helyi elemek frissítése nem sikerült: %1."
 
-#: agentbase/resourcebase.cpp:738
+#: agentbase/resourcebase.cpp:739
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Nem lehet elemet letölteni kapcsolat nélküli módban."
 
-#: agentbase/resourcebase.cpp:920
+#: agentbase/resourcebase.cpp:921
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "„%1” mappa szinkronizálása"
 
-#: agentbase/resourcebase.cpp:940 agentbase/resourcebase.cpp:947
+#: agentbase/resourcebase.cpp:941 agentbase/resourcebase.cpp:948
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Nem sikerült letölteni az erőforrás gyűjteményt szinkronizáláshoz."
 
-#: agentbase/resourcebase.cpp:988
+#: agentbase/resourcebase.cpp:989
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Nem sikerült letölteni a gyűjteményt attribútumszinkronizáláshoz."
 
-#: agentbase/resourcebase.cpp:1034
+#: agentbase/resourcebase.cpp:1035
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "A kért elem már nem létezik"

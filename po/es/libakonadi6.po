@@ -13,15 +13,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-30 00:42+0000\n"
-"PO-Revision-Date: 2025-06-29 13:35+0100\n"
+"POT-Creation-Date: 2025-07-01 00:42+0000\n"
+"PO-Revision-Date: 2025-06-30 12:23+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.12.3\n"
+"X-Generator: Lokalize 25.04.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -111,59 +111,59 @@ msgstr "Identificador del recurso"
 msgid "Akonadi Resource"
 msgstr "Recurso de Akonadi"
 
-#: agentbase/resourcebase.cpp:580
+#: agentbase/resourcebase.cpp:581
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Recuperado elemento no válido"
 
-#: agentbase/resourcebase.cpp:603
+#: agentbase/resourcebase.cpp:604
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Error al crear el elemento: %1"
 
-#: agentbase/resourcebase.cpp:627
+#: agentbase/resourcebase.cpp:628
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Error al actualizar la colección: %1"
 
-#: agentbase/resourcebase.cpp:714
+#: agentbase/resourcebase.cpp:715
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Falló al actualizar la colección local: %1."
 
-#: agentbase/resourcebase.cpp:719
+#: agentbase/resourcebase.cpp:720
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Falló al actualizar los elementos locales: %1."
 
-#: agentbase/resourcebase.cpp:738
+#: agentbase/resourcebase.cpp:739
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "No es posible obtener el elemento en modo desconectado."
 
-#: agentbase/resourcebase.cpp:920
+#: agentbase/resourcebase.cpp:921
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Sincronizando carpeta «%1»"
 
-#: agentbase/resourcebase.cpp:940 agentbase/resourcebase.cpp:947
+#: agentbase/resourcebase.cpp:941 agentbase/resourcebase.cpp:948
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Ha fallado al recuperar la colección para sincronizar."
 
-#: agentbase/resourcebase.cpp:988
+#: agentbase/resourcebase.cpp:989
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Ha fallado al recuperar la colección para sincronización de atributos."
 
-#: agentbase/resourcebase.cpp:1034
+#: agentbase/resourcebase.cpp:1035
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "El elemento solicitado no existe"
@@ -644,18 +644,16 @@ msgstr ""
 "recientemente, reinicie todas las aplicaciones de KDE PIM."
 
 #: quick/colorproxymodel.cpp:83
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Offline"
+#, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Offline)"
-msgstr "Desconectado"
+msgstr "%1 (sin conexión)"
 
 #: quick/colorproxymodel.cpp:86
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
-msgstr ""
+msgstr "%1 (predeterminado)"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
@@ -666,7 +664,7 @@ msgstr "Gestionar etiquetas"
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
 msgid "You won't be able to revert this action."
-msgstr ""
+msgstr "No se podrá revertir esta acción."
 
 #: selftest/main.cpp:19
 #, kde-format
