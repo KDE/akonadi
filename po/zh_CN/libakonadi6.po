@@ -616,12 +616,10 @@ msgstr ""
 "所有 KDE PIM 应用程序。"
 
 #: quick/colorproxymodel.cpp:83
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Offline"
+#, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Offline)"
-msgstr "离线"
+msgstr ""
 
 #: quick/colorproxymodel.cpp:86
 #, kde-format
