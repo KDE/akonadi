@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-01 00:42+0000\n"
-"PO-Revision-Date: 2025-03-15 10:52+0100\n"
+"PO-Revision-Date: 2025-06-30 09:14+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -640,18 +640,16 @@ msgstr ""
 "reinicieu totes les aplicacions PIM de KDE."
 
 #: quick/colorproxymodel.cpp:83
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Offline"
+#, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Offline)"
-msgstr "Desconnectat"
+msgstr "%1 (desconnectat)"
 
 #: quick/colorproxymodel.cpp:86
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
-msgstr ""
+msgstr "%1 (predeterminat)"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
@@ -662,7 +660,7 @@ msgstr "Gestioneu les etiquetes"
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
 msgid "You won't be able to revert this action."
-msgstr ""
+msgstr "No podreu desfer esta acció."
 
 #: selftest/main.cpp:19
 #, kde-format
