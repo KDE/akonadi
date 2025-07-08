@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-01 00:42+0000\n"
-"PO-Revision-Date: 2025-03-20 18:15+0100\n"
+"PO-Revision-Date: 2025-07-07 12:29+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -631,18 +631,16 @@ msgstr ""
 "restarta le servitor Akonadi."
 
 #: quick/colorproxymodel.cpp:83
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Offline"
+#, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Offline)"
-msgstr "Foras de linea"
+msgstr "%1 (foras de linea)"
 
 #: quick/colorproxymodel.cpp:86
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
-msgstr ""
+msgstr "%1 (Predefinite)"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
@@ -653,7 +651,7 @@ msgstr "Gere etiquettas"
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
 msgid "You won't be able to revert this action."
-msgstr ""
+msgstr "Tu non poterea revenir iste action."
 
 #: selftest/main.cpp:19
 #, kde-format
