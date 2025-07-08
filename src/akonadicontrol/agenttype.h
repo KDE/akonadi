@@ -44,4 +44,5 @@ public:
     static const QLatin1StringView CapabilityAutostart;
     static const QLatin1StringView CapabilityPreprocessor;
     static const QLatin1StringView CapabilitySearch;
+    static const QLatin1StringView CapabilitySingleShot;
 };

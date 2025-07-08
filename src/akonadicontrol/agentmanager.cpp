@@ -691,6 +691,20 @@ void AgentManager::save()
     file.endGroup();
 }
 
+void AgentManager::setupSingleShotConnection(const AgentInstance::Ptr &instance)
+{
+    auto iface = instance->controlInterface();
+    if (!iface) {
+        qCWarning(AKONADICONTROL_LOG) << "SingleShot agent" << instance->identifier() << "has no status interface.";
+        return;
+    }
+
+    QObject::connect(iface, &org::freedesktop::Akonadi::Agent::Control::finished, instance.data(), [=]() {
+        qCDebug(AKONADICONTROL_LOG) << "SingleShot agent" << instance->identifier() << "signaled finished(), shutting down.";
+        instance->quit();
+    });
+}
+
 void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner)
 {
     Q_UNUSED(oldOwner)
@@ -747,6 +761,10 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
 
         if (!restarting && (!isResource || instance->hasResourceInterface())) {
             Q_EMIT agentInstanceAdded(service->identifier);
+        }
+
+        if (mAgents.value(instance->agentType()).capabilities.contains(AgentType::CapabilitySingleShot)) {
+            setupSingleShotConnection(instance);
         }
 
         break;
@@ -924,6 +942,13 @@ void AgentManager::ensureAutoStart(const AgentType &info)
         return; // no an autostart agent
     }
 
+    if (info.capabilities.contains(AgentType::CapabilitySingleShot)) {
+        if (mRanSingleShotAgents.contains(info.identifier)) {
+            qCDebug(AKONADICONTROL_LOG) << "Skipping SingleShot agent" << info.identifier << "because it already ran.";
+            return;
+        }
+    }
+
     org::freedesktop::Akonadi::AgentServer agentServer(Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer),
                                                        QStringLiteral("/AgentServer"),
                                                        QDBusConnection::sessionBus(),
@@ -939,6 +964,11 @@ void AgentManager::ensureAutoStart(const AgentType &info)
         mAgentInstances.insert(instance->identifier(), instance);
         registerAgentAtServer(instance->identifier(), info);
         save();
+
+        if (info.capabilities.contains(AgentType::CapabilitySingleShot)) {
+            setupSingleShotConnection(instance);
+            mRanSingleShotAgents.insert(info.identifier);
+        }
     }
 }
 

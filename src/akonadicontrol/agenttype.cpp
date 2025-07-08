@@ -21,6 +21,7 @@ const QLatin1StringView AgentType::CapabilityResource = QLatin1StringView(AKONAD
 const QLatin1StringView AgentType::CapabilityAutostart = QLatin1StringView(AKONADI_AGENT_CAPABILITY_AUTOSTART);
 const QLatin1StringView AgentType::CapabilityPreprocessor = QLatin1StringView(AKONADI_AGENT_CAPABILITY_PREPROCESSOR);
 const QLatin1StringView AgentType::CapabilitySearch = QLatin1StringView(AKONADI_AGENT_CAPABILITY_SEARCH);
+const QLatin1StringView AgentType::CapabilitySingleShot = QLatin1StringView(AKONADI_AGENT_CAPABILITY_SINGLESHOT);
 
 AgentType::AgentType()
 {
@@ -77,6 +78,11 @@ bool AgentType::load(const QString &fileName, AgentManager *manager)
     if (exec.isEmpty()) {
         qCWarning(AKONADICONTROL_LOG) << "Agent desktop file" << fileName << "contains empty Exec entry";
         return false;
+    }
+
+    // singleshot implies autostart
+    if (capabilities.contains(CapabilitySingleShot) && !capabilities.contains(CapabilityAutostart)) {
+        capabilities << CapabilityAutostart;
     }
 
     // autostart implies unique

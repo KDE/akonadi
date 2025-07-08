@@ -366,6 +366,20 @@ private:
      */
     QHash<QString, AgentInstance::Ptr> mAgentInstances;
 
+    /**
+     * Tracks which SingleShot agents have already run once during this Akonadi session.
+     * Ensures that they are not autostarted again until the Akonadi server is restarted.
+     *
+     * Key is the agent identifier.
+     */
+    QSet<QString> mRanSingleShotAgents;
+
+    /**
+     * Sets up shutdown behavior for agents with the SingleShot capability.
+     * Connects to the agentFinished() signal and shuts the agent down once it completes its task.
+     */
+    void setupSingleShotConnection(const AgentInstance::Ptr &instance);
+
     std::unique_ptr<Akonadi::ProcessControl> mAgentServer;
     std::unique_ptr<Akonadi::ProcessControl> mStorageController;
     bool mAgentServerEnabled = false;

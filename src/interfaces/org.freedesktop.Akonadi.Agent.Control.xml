@@ -11,6 +11,7 @@
     </method>
     <signal name="configurationDialogAccepted"/>
     <signal name="configurationDialogRejected"/>
+    <signal name="finished"/>
     <method name="reconfigure">
     </method>
     <method name="abort">
