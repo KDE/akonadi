@@ -619,13 +619,13 @@ msgstr ""
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Offline)"
-msgstr ""
+msgstr "%1 (离线)"
 
 #: quick/colorproxymodel.cpp:86
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
-msgstr ""
+msgstr "%1 (默认)"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
@@ -636,7 +636,7 @@ msgstr "管理标签"
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
 msgid "You won't be able to revert this action."
-msgstr ""
+msgstr "你将无法撤销此操作。"
 
 #: selftest/main.cpp:19
 #, kde-format
