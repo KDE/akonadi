@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-01 00:42+0000\n"
-"PO-Revision-Date: 2025-03-22 16:50+0100\n"
+"PO-Revision-Date: 2025-07-11 23:35+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 25.03.70\n"
+"X-Generator: Lokalize 25.07.70\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -630,18 +630,16 @@ msgstr ""
 "рестартирайте всички KDE PIM приложения."
 
 #: quick/colorproxymodel.cpp:83
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Offline"
+#, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Offline)"
-msgstr "Извън линия"
+msgstr "%1 (офлайн)"
 
 #: quick/colorproxymodel.cpp:86
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
-msgstr ""
+msgstr "%1 (по подразбиране)"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
@@ -652,7 +650,7 @@ msgstr "Управление на етикети"
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
 msgid "You won't be able to revert this action."
-msgstr ""
+msgstr "Няма да можете да отмените това действие."
 
 #: selftest/main.cpp:19
 #, kde-format
