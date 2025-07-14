@@ -32,13 +32,13 @@ msgstr "Akonadi Knut 数据文件"
 #, kde-format
 msgctxt "@label"
 msgid "Data Files:"
-msgstr ""
+msgstr "数据文件："
 
 #: accountwidget.cpp:52
 #, kde-format
 msgctxt "@option:check"
 msgid "File watching enabled"
-msgstr ""
+msgstr "文件监视已启用"
 
 #: knutresource.cpp:60
 #, kde-format
