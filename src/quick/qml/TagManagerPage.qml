@@ -24,11 +24,11 @@ Kirigami.ScrollablePage {
 
         parent: root
 
-        title: i18ncd("libakonadi6", "@title:dialog",  "Confirm Tag Deletion")
+        title: i18ndc("libakonadi6", "@title:dialog",  "Confirm Tag Deletion")
         dialogType: Components.MessageDialog.Warning
 
         contentItem: QQC2.Label {
-            text: i18ncd("libakonadi6", "@info", "Are you sure you want to delete tag <b>%1</b>?", deleteConfirmSheet.tagName) + " " + i18n("You won't be able to revert this action.")
+            text: i18ndc("libakonadi6", "@info", "Are you sure you want to delete tag <b>%1</b>?", deleteConfirmSheet.tagName) + " " + i18n("You won't be able to revert this action.")
             wrapMode: Text.Wrap
         }
 
@@ -129,7 +129,7 @@ Kirigami.ScrollablePage {
             QQC2.TextField {
                 id: newTagField
 
-                placeholderText: i18ncd("libakonadi6", "@info:placeholder", "Create a New Tag…")
+                placeholderText: i18ndc("libakonadi6", "@info:placeholder", "Create a New Tag…")
                 maximumLength: 50
                 onAccepted: addTagButton.click()
                 background: null
@@ -140,7 +140,7 @@ Kirigami.ScrollablePage {
             QQC2.ToolButton {
                 id: addTagButton
                 icon.name: "tag-new-symbolic"
-                text: i18ncd("libakonadi6", "@action:button", "Add Tag")
+                text: i18ndc("libakonadi6", "@action:button", "Add Tag")
                 display: QQC2.ToolButton.IconOnly
 
                 onClicked: if (newTagField.text.length > 0) {

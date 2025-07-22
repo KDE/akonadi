@@ -27,13 +27,13 @@ FormCard.FormCard {
 
         property Item agentDelegate
 
-        title: i18ncd("libakonadi6", "@title:dialog", "Configure %1", agentDelegate?.name)
+        title: i18ndc("libakonadi6", "@title:dialog", "Configure %1", agentDelegate?.name)
         parent: root.QQC2.Overlay.overlay
         standardButtons: Kirigami.Dialog.NoButton
         iconName: ''
 
         QQC2.Label {
-            text: i18ncd("libakonadi6", "@info", "Modify or delete this account agent.")
+            text: i18ndc("libakonadi6", "@info", "Modify or delete this account agent.")
             wrapMode: Text.WordWrap
             Layout.fillWidth: true
         }
@@ -49,7 +49,7 @@ FormCard.FormCard {
             onRejected: dialog.close()
 
             QQC2.Button {
-                text: i18ncd("libakonadi6", "@action:button", "Modify")
+                text: i18ndc("libakonadi6", "@action:button", "Modify")
                 icon.name: "edit-entry-symbolic"
                 onClicked: {
                     root._configuration.edit(dialog.agentDelegate.index);
@@ -58,7 +58,7 @@ FormCard.FormCard {
             }
 
             QQC2.Button {
-                text: i18ncd("libakonadi6", "@action:button", "Delete")
+                text: i18ndc("libakonadi6", "@action:button", "Delete")
                 icon.name: "delete-symbolic"
                 onClicked: {
                     root._configuration.remove(dialog.agentDelegate.index);
@@ -102,7 +102,7 @@ FormCard.FormCard {
 
     FormCard.FormButtonDelegate {
         id: addAccountDelegate
-        text: i18ncd("libakonadi6", "@action:button", "Add Account")
+        text: i18ndc("libakonadi6", "@action:button", "Add Account")
         icon.name: "list-add-symbolic"
         onClicked: pageStack.pushDialogLayer(addAccountPage)
     }
