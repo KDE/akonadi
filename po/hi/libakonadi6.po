@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-01 00:42+0000\n"
+"POT-Creation-Date: 2025-07-23 00:43+0000\n"
 "PO-Revision-Date: 2024-12-15 18:58+0530\n"
 "Last-Translator: Kali <EMAIL@ADDRESS>\n"
 "Language-Team: Hindi <fedora-trans-hi@redhat.com>\n"
@@ -640,15 +640,78 @@ msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
 msgstr ""
 
+#: quick/qml/AgentConfigurationForm.qml:30
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Configure Account"
+msgctxt "@title:dialog"
+msgid "Configure %1"
+msgstr "खाता कॉन्फ़िगर करें"
+
+#: quick/qml/AgentConfigurationForm.qml:36
+#, kde-format
+msgctxt "@info"
+msgid "Modify or delete this account agent."
+msgstr ""
+
+#: quick/qml/AgentConfigurationForm.qml:52
+#, fuzzy, kde-format
+#| msgid "&Modify..."
+msgctxt "@action:button"
+msgid "Modify"
+msgstr "&संशोधित करें..."
+
+#: quick/qml/AgentConfigurationForm.qml:61
+#, fuzzy, kde-format
+#| msgid "Delete"
+msgctxt "@action:button"
+msgid "Delete"
+msgstr "मिटाना"
+
+#: quick/qml/AgentConfigurationForm.qml:105
+#, kde-format
+msgctxt "@action:button"
+msgid "Add Account"
+msgstr ""
+
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
 #, kde-format
 msgid "Manage Tags"
 msgstr "टैग प्रबंधित करें"
 
+#: quick/qml/TagManagerPage.qml:27
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Conflict Resolution"
+msgctxt "@title:dialog"
+msgid "Confirm Tag Deletion"
+msgstr "युद्ध वियोजन"
+
+#: quick/qml/TagManagerPage.qml:31
+#, fuzzy, kde-format
+#| msgctxt "@info"
+#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+msgctxt "@info"
+msgid "Are you sure you want to delete tag <b>%1</b>?"
+msgstr "क्या आप सचमुच <resource>%1</resource> टैग हटाना चाहते हैं?"
+
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
 msgid "You won't be able to revert this action."
+msgstr ""
+
+#: quick/qml/TagManagerPage.qml:132
+#, fuzzy, kde-format
+#| msgid "Create new tag"
+msgctxt "@info:placeholder"
+msgid "Create a New Tag…"
+msgstr "नया टैग बनाएं"
+
+#: quick/qml/TagManagerPage.qml:143
+#, kde-format
+msgctxt "@action:button"
+msgid "Add Tag"
 msgstr ""
 
 #: selftest/main.cpp:19

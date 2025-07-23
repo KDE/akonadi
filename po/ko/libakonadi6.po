@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-01 00:42+0000\n"
+"POT-Creation-Date: 2025-07-23 00:43+0000\n"
 "PO-Revision-Date: 2025-07-20 00:44+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -634,16 +634,78 @@ msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
 msgstr "%1(기본값)"
 
+#: quick/qml/AgentConfigurationForm.qml:30
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Configure Account"
+msgctxt "@title:dialog"
+msgid "Configure %1"
+msgstr "계정 설정"
+
+#: quick/qml/AgentConfigurationForm.qml:36
+#, kde-format
+msgctxt "@info"
+msgid "Modify or delete this account agent."
+msgstr ""
+
+#: quick/qml/AgentConfigurationForm.qml:52
+#, fuzzy, kde-format
+#| msgid "&Modify..."
+msgctxt "@action:button"
+msgid "Modify"
+msgstr "수정(&M)..."
+
+#: quick/qml/AgentConfigurationForm.qml:61
+#, kde-format
+msgctxt "@action:button"
+msgid "Delete"
+msgstr "삭제"
+
+#: quick/qml/AgentConfigurationForm.qml:105
+#, kde-format
+msgctxt "@action:button"
+msgid "Add Account"
+msgstr ""
+
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
 #, kde-format
 msgid "Manage Tags"
 msgstr "태그 관리"
 
+#: quick/qml/TagManagerPage.qml:27
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Conflict Resolution"
+msgctxt "@title:dialog"
+msgid "Confirm Tag Deletion"
+msgstr "충돌 해결"
+
+#: quick/qml/TagManagerPage.qml:31
+#, fuzzy, kde-format
+#| msgctxt "@info"
+#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+msgctxt "@info"
+msgid "Are you sure you want to delete tag <b>%1</b>?"
+msgstr "태그 <resource>%1</resource>을(를) 삭제하시겠습니까?"
+
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
 msgid "You won't be able to revert this action."
 msgstr "이 작업은 되돌릴 수 없습니다."
+
+#: quick/qml/TagManagerPage.qml:132
+#, fuzzy, kde-format
+#| msgid "Create new tag"
+msgctxt "@info:placeholder"
+msgid "Create a New Tag…"
+msgstr "새 태그 만들기"
+
+#: quick/qml/TagManagerPage.qml:143
+#, kde-format
+msgctxt "@action:button"
+msgid "Add Tag"
+msgstr ""
 
 #: selftest/main.cpp:19
 #, kde-format
@@ -2675,10 +2737,6 @@ msgstr "모음집 %1을(를) 찾을 수 없음"
 
 #~ msgid "Default Name"
 #~ msgstr "기본 이름"
-
-#~ msgctxt "@action:button"
-#~ msgid "Delete"
-#~ msgstr "삭제"
 
 #~ msgctxt "@action:button"
 #~ msgid "Cancel"
