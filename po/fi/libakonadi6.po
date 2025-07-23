@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-01 00:42+0000\n"
+"POT-Creation-Date: 2025-07-23 02:37+0000\n"
 "PO-Revision-Date: 2025-04-07 18:27+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -646,15 +646,77 @@ msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
 msgstr ""
 
+#: quick/qml/AgentConfigurationForm.qml:30
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Configure Account"
+msgctxt "@title:dialog"
+msgid "Configure %1"
+msgstr "Tilin asetukset"
+
+#: quick/qml/AgentConfigurationForm.qml:36
+#, kde-format
+msgctxt "@info"
+msgid "Modify or delete this account agent."
+msgstr ""
+
+#: quick/qml/AgentConfigurationForm.qml:52
+#, fuzzy, kde-format
+#| msgid "&Modify..."
+msgctxt "@action:button"
+msgid "Modify"
+msgstr "&Muuta…"
+
+#: quick/qml/AgentConfigurationForm.qml:61
+#, kde-format
+msgctxt "@action:button"
+msgid "Delete"
+msgstr "Poista"
+
+#: quick/qml/AgentConfigurationForm.qml:105
+#, kde-format
+msgctxt "@action:button"
+msgid "Add Account"
+msgstr ""
+
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
 #, kde-format
 msgid "Manage Tags"
 msgstr "Hallitse luokituksia"
 
+#: quick/qml/TagManagerPage.qml:27
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Conflict Resolution"
+msgctxt "@title:dialog"
+msgid "Confirm Tag Deletion"
+msgstr "Ristiriidan ratkaisu"
+
+#: quick/qml/TagManagerPage.qml:31
+#, fuzzy, kde-format
+#| msgctxt "@info"
+#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+msgctxt "@info"
+msgid "Are you sure you want to delete tag <b>%1</b>?"
+msgstr "Haluatko varmasti poistaa luokituksen <resource>%1</resource>?"
+
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
 msgid "You won't be able to revert this action."
+msgstr ""
+
+#: quick/qml/TagManagerPage.qml:132
+#, fuzzy, kde-format
+#| msgid "Create new tag"
+msgctxt "@info:placeholder"
+msgid "Create a New Tag…"
+msgstr "Luo uusi luokitus"
+
+#: quick/qml/TagManagerPage.qml:143
+#, kde-format
+msgctxt "@action:button"
+msgid "Add Tag"
 msgstr ""
 
 #: selftest/main.cpp:19
@@ -2744,10 +2806,6 @@ msgstr "Kokoelmaa %1 ei löydy"
 
 #~ msgid "Default Name"
 #~ msgstr "Oletusnimi"
-
-#~ msgctxt "@action:button"
-#~ msgid "Delete"
-#~ msgstr "Poista"
 
 #~ msgctxt "@action:button"
 #~ msgid "Cancel"
