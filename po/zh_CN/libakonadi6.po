@@ -628,12 +628,10 @@ msgid "%1 (Default)"
 msgstr "%1 (默认)"
 
 #: quick/qml/AgentConfigurationForm.qml:30
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Configure Account"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
-msgstr "配置账户"
+msgstr ""
 
 #: quick/qml/AgentConfigurationForm.qml:36
 #, kde-format
@@ -642,18 +640,16 @@ msgid "Modify or delete this account agent."
 msgstr ""
 
 #: quick/qml/AgentConfigurationForm.qml:52
-#, fuzzy, kde-format
-#| msgid "&Modify..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Modify"
-msgstr "修改(&M)..."
+msgstr ""
 
 #: quick/qml/AgentConfigurationForm.qml:61
-#, fuzzy, kde-format
-#| msgid "Delete"
+#, kde-format
 msgctxt "@action:button"
 msgid "Delete"
-msgstr "删除"
+msgstr ""
 
 #: quick/qml/AgentConfigurationForm.qml:105
 #, kde-format
@@ -668,20 +664,16 @@ msgid "Manage Tags"
 msgstr "管理标签"
 
 #: quick/qml/TagManagerPage.qml:27
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Conflict Resolution"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Confirm Tag Deletion"
-msgstr "冲突解决"
+msgstr ""
 
 #: quick/qml/TagManagerPage.qml:31
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-format
 msgctxt "@info"
 msgid "Are you sure you want to delete tag <b>%1</b>?"
-msgstr "您确定要删除标签 <resource>%1</resource>吗？"
+msgstr ""
 
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
@@ -689,11 +681,10 @@ msgid "You won't be able to revert this action."
 msgstr "你将无法撤销此操作。"
 
 #: quick/qml/TagManagerPage.qml:132
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
-msgstr "新建标签"
+msgstr ""
 
 #: quick/qml/TagManagerPage.qml:143
 #, kde-format
