@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-23 02:37+0000\n"
-"PO-Revision-Date: 2025-06-30 06:42+0200\n"
+"PO-Revision-Date: 2025-07-23 07:06+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -648,29 +648,25 @@ msgid "%1 (Default)"
 msgstr "%1 (Privzeto)"
 
 #: quick/qml/AgentConfigurationForm.qml:30
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Configure Account"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
-msgstr "Konfiguriraj račun"
+msgstr "Konfiguriraj %1"
 
 #: quick/qml/AgentConfigurationForm.qml:36
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
-msgstr ""
+msgstr "Spremeni ali izbriši tega agenta računa."
 
 #: quick/qml/AgentConfigurationForm.qml:52
-#, fuzzy, kde-format
-#| msgid "&Modify..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Modify"
-msgstr "Spre&meni …"
+msgstr "Spremeni"
 
 #: quick/qml/AgentConfigurationForm.qml:61
-#, fuzzy, kde-format
-#| msgid "Delete"
+#, kde-format
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "Izbriši"
@@ -679,7 +675,7 @@ msgstr "Izbriši"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
-msgstr ""
+msgstr "Dodaj račun"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
@@ -688,20 +684,16 @@ msgid "Manage Tags"
 msgstr "Upravljanje oznak"
 
 #: quick/qml/TagManagerPage.qml:27
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Conflict Resolution"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Confirm Tag Deletion"
-msgstr "Razreševanje sporov"
+msgstr "Potrdi brisanje oznake"
 
 #: quick/qml/TagManagerPage.qml:31
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-format
 msgctxt "@info"
 msgid "Are you sure you want to delete tag <b>%1</b>?"
-msgstr "Ali resnično želite odstraniti oznako <resource>%1</resource>?"
+msgstr "Ali resnično želite odstraniti oznako <b>%1</b>?"
 
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
@@ -709,17 +701,16 @@ msgid "You won't be able to revert this action."
 msgstr "Tega dejanja ne boste mogli razveljaviti."
 
 #: quick/qml/TagManagerPage.qml:132
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
-msgstr "Ustvari novo oznako"
+msgstr "Ustvari novo oznako…"
 
 #: quick/qml/TagManagerPage.qml:143
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Tag"
-msgstr ""
+msgstr "Dodaj oznako"
 
 #: selftest/main.cpp:19
 #, kde-format

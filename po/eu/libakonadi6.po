@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-23 02:37+0000\n"
-"PO-Revision-Date: 2025-07-07 22:13+0200\n"
+"PO-Revision-Date: 2025-07-23 13:07+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.04.2\n"
+"X-Generator: Lokalize 25.04.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -649,29 +649,25 @@ msgid "%1 (Default)"
 msgstr "%1 (Lehenetsia)"
 
 #: quick/qml/AgentConfigurationForm.qml:30
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Configure Account"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
-msgstr "Konfiguratu kontua"
+msgstr "Konfiguratu %1"
 
 #: quick/qml/AgentConfigurationForm.qml:36
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
-msgstr ""
+msgstr "Aldatu edo ezabatu kontuaren agente hau."
 
 #: quick/qml/AgentConfigurationForm.qml:52
-#, fuzzy, kde-format
-#| msgid "&Modify..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Modify"
-msgstr "Al&datu..."
+msgstr "Aldatu"
 
 #: quick/qml/AgentConfigurationForm.qml:61
-#, fuzzy, kde-format
-#| msgid "Delete"
+#, kde-format
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "Ezabatu"
@@ -680,7 +676,7 @@ msgstr "Ezabatu"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
-msgstr ""
+msgstr "Gehitu kontua"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
@@ -689,20 +685,16 @@ msgid "Manage Tags"
 msgstr "Kudeatu etiketak"
 
 #: quick/qml/TagManagerPage.qml:27
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Conflict Resolution"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Confirm Tag Deletion"
-msgstr "Gatazkak ebaztea"
+msgstr "Baieztatu etiketa ezabatzea"
 
 #: quick/qml/TagManagerPage.qml:31
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-format
 msgctxt "@info"
 msgid "Are you sure you want to delete tag <b>%1</b>?"
-msgstr "Benetan kendu nahi duzu <resource>%1</resource> etiketa?"
+msgstr "Ziur zaude <b>%1</b> etiketa ezabatu nahi duzula?"
 
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
@@ -710,17 +702,16 @@ msgid "You won't be able to revert this action."
 msgstr "Ezingo duzu ekintza hau atzera bota."
 
 #: quick/qml/TagManagerPage.qml:132
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
-msgstr "Sortu etiketa berria"
+msgstr "Sortu etiketa berri bat…"
 
 #: quick/qml/TagManagerPage.qml:143
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Tag"
-msgstr ""
+msgstr "Gehitu etiketa"
 
 #: selftest/main.cpp:19
 #, kde-format
@@ -1383,7 +1374,7 @@ msgstr "Sarrerako kontuak (gehitu bat gutxienez):"
 #: widgets/manageaccountwidget.ui:33
 #, kde-format
 msgid "Filter…"
-msgstr "Iragazi..."
+msgstr "Iragazi…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
 #: widgets/manageaccountwidget.ui:47
