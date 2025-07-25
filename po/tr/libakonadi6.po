@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-23 02:37+0000\n"
-"PO-Revision-Date: 2025-07-02 16:49+0300\n"
+"PO-Revision-Date: 2025-07-24 20:11+0300\n"
 "Last-Translator: Emir SARI <emir_sari@îcloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -418,7 +418,7 @@ msgstr "Kilitleme işlemi zaman aşımına uğradı."
 #: core/jobs/tagcreatejob.cpp:49
 #, kde-format
 msgid "Failed to create tag."
-msgstr "Etiket oluşturma başarısız."
+msgstr "Künye oluşturulamadı."
 
 #: core/jobs/trashjob.cpp:155
 #, kde-format
@@ -555,7 +555,7 @@ msgstr "Boyut"
 #: core/models/tagmodel.cpp:64
 #, kde-format
 msgid "Tag"
-msgstr "Etiket"
+msgstr "Künye"
 
 #: core/partfetcher.cpp:49
 #, kde-format
@@ -645,29 +645,25 @@ msgid "%1 (Default)"
 msgstr "%1 (Öntanımlı)"
 
 #: quick/qml/AgentConfigurationForm.qml:30
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Configure Account"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
-msgstr "Hesabı Yapılandır"
+msgstr "Yapılandır: %1"
 
 #: quick/qml/AgentConfigurationForm.qml:36
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
-msgstr ""
+msgstr "Bu hesap aracısında değişiklik yapın veya onu silin."
 
 #: quick/qml/AgentConfigurationForm.qml:52
-#, fuzzy, kde-format
-#| msgid "&Modify..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Modify"
-msgstr "&Değiştir…"
+msgstr "Değişiklik Yap"
 
 #: quick/qml/AgentConfigurationForm.qml:61
-#, fuzzy, kde-format
-#| msgid "Delete"
+#, kde-format
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "Sil"
@@ -676,31 +672,25 @@ msgstr "Sil"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
-msgstr ""
+msgstr "Hesap Ekle"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
 #, kde-format
 msgid "Manage Tags"
-msgstr "Etiketleri Yönet"
+msgstr "Künyeleri Yönet"
 
 #: quick/qml/TagManagerPage.qml:27
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Conflict Resolution"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Confirm Tag Deletion"
-msgstr "Çakışma Çözümü"
+msgstr "Künye Silmeyi Onayla"
 
 #: quick/qml/TagManagerPage.qml:31
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-format
 msgctxt "@info"
 msgid "Are you sure you want to delete tag <b>%1</b>?"
-msgstr ""
-"<resource>%1</resource> etiketini gerçekten silmek istediğinizden emin "
-"misiniz?"
+msgstr "<b>%1</b> künyesini silmeyi gerçekten istediğinizden emin misiniz?"
 
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
@@ -708,17 +698,16 @@ msgid "You won't be able to revert this action."
 msgstr "Bu eylemi geri alamazsınız."
 
 #: quick/qml/TagManagerPage.qml:132
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
-msgstr "Yeni Etiket Oluştur"
+msgstr "Yeni Künye Oluştur…"
 
 #: quick/qml/TagManagerPage.qml:143
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Tag"
-msgstr ""
+msgstr "Künye Ekle"
 
 #: selftest/main.cpp:19
 #, kde-format
@@ -2603,57 +2592,55 @@ msgstr "Abonelik&ten Ayrıl"
 #: widgets/tageditwidget.cpp:117
 #, kde-format
 msgid "Failed to create a new tag"
-msgstr "Yeni etiket oluşturma başarısız"
+msgstr "Yeni künye oluşturulamadı"
 
 #: widgets/tageditwidget.cpp:117
 #, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
-msgstr "Etiket Oluşturulurken Bir Hata Oluştu"
+msgstr "Yeni Künye Oluşturulurken Hata"
 
 #: widgets/tageditwidget.cpp:165
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
-msgstr ""
-"<resource>%1</resource> etiketini gerçekten silmek istediğinizden emin "
-"misiniz?"
+msgstr "<resource>%1</resource> künyesini silmeyi gerçekten istiyor musunuz?"
 
 #: widgets/tageditwidget.cpp:166
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
-msgstr "Etiketi Sil"
+msgstr "Künyeyi Sil"
 
 #: widgets/tageditwidget.cpp:191
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"
-msgstr "Etiketi sil"
+msgstr "Künyeyi sil"
 
 #. i18n: ectx: property (text), widget (QLabel, selectLabel)
 #: widgets/tageditwidget.ui:29
 #, kde-format
 msgid "Select tags that should be applied."
-msgstr "Uygulanacak etiketleri seçin."
+msgstr "Uygulanacak künyeleri seçin."
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:54
 #, kde-format
 msgid "Create new tag"
-msgstr "Yeni Etiket Oluştur"
+msgstr "Yeni Künye Oluştur"
 
 #: widgets/tagselectioncombobox.cpp:126
 #, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
-msgstr "Etiketler seç…"
+msgstr "Künyeler seç…"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
 #: widgets/tagselectiondialog.ui:14
 #, kde-format
 msgid "Select Tags"
-msgstr "Etiketleri Seç"
+msgstr "Künyeler Seç"
 
 #: widgets/tagwidget.cpp:45
 #, kde-format
@@ -2664,7 +2651,7 @@ msgstr "Temizle"
 #: widgets/tagwidget.ui:32
 #, kde-format
 msgid "Click to add tags"
-msgstr "Etiket eklemek için tıkla"
+msgstr "Künye eklemek için tıkla…"
 
 #. i18n: ectx: property (text), widget (QToolButton, editButton)
 #: widgets/tagwidget.ui:39
