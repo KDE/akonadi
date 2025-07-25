@@ -25,7 +25,7 @@ FormCard.FormCard {
     Components.MessageDialog {
         id: dialog
 
-        property Item agentDelegate
+        property var agentDelegate
 
         title: i18ndc("libakonadi6", "@title:dialog", "Configure %1", agentDelegate?.name)
         parent: root.QQC2.Overlay.overlay
