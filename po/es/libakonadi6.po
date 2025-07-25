@@ -14,14 +14,14 @@ msgstr ""
 "Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-23 00:43+0000\n"
-"PO-Revision-Date: 2025-06-30 12:23+0100\n"
+"PO-Revision-Date: 2025-07-24 19:52+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 25.04.2\n"
+"X-Generator: Lokalize 25.04.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -656,29 +656,25 @@ msgid "%1 (Default)"
 msgstr "%1 (predeterminado)"
 
 #: quick/qml/AgentConfigurationForm.qml:30
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Configure Account"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
-msgstr "Configurar cuenta"
+msgstr "Configurar %1"
 
 #: quick/qml/AgentConfigurationForm.qml:36
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
-msgstr ""
+msgstr "Modificar o borrar el agente de esta cuenta."
 
 #: quick/qml/AgentConfigurationForm.qml:52
-#, fuzzy, kde-format
-#| msgid "&Modify..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Modify"
-msgstr "&Modificar…"
+msgstr "Modificar"
 
 #: quick/qml/AgentConfigurationForm.qml:61
-#, fuzzy, kde-format
-#| msgid "Delete"
+#, kde-format
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "Borrar"
@@ -687,7 +683,7 @@ msgstr "Borrar"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
-msgstr ""
+msgstr "Añadir cuenta"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
@@ -696,20 +692,16 @@ msgid "Manage Tags"
 msgstr "Gestionar etiquetas"
 
 #: quick/qml/TagManagerPage.qml:27
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Conflict Resolution"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Confirm Tag Deletion"
-msgstr "Resolución de conflictos"
+msgstr "Confirmar borrado de etiqueta"
 
 #: quick/qml/TagManagerPage.qml:31
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-format
 msgctxt "@info"
 msgid "Are you sure you want to delete tag <b>%1</b>?"
-msgstr "¿Seguro qué desea eliminar la etiqueta <resource>%1</resource>?"
+msgstr "¿Seguro que quiere borrar la etiqueta <b>%1</b>?"
 
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
@@ -717,17 +709,16 @@ msgid "You won't be able to revert this action."
 msgstr "No se podrá revertir esta acción."
 
 #: quick/qml/TagManagerPage.qml:132
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
-msgstr "Crear nueva etiqueta"
+msgstr "Crear una nueva etiqueta…"
 
 #: quick/qml/TagManagerPage.qml:143
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Tag"
-msgstr ""
+msgstr "Añadir etiqueta"
 
 #: selftest/main.cpp:19
 #, kde-format
