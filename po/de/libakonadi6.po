@@ -6,22 +6,22 @@
 # Torbjörn Klatt <opensource@torbjoern-klatt.de>, 2011.
 # Rolf Eike Beer <kde@opensource.sf-tec.de>, 2012.
 # Markus Slopianka <markus.s@kdemail.net>, 2013.
-# SPDX-FileCopyrightText: 2022, 2024 Alois Spitzbart <spitz234@hotmail.com>
+# SPDX-FileCopyrightText: 2022, 2024, 2025 Alois Spitzbart <spitz234@hotmail.com>
 # Intevation GmbH, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-23 02:37+0000\n"
-"PO-Revision-Date: 2024-12-23 15:56+0100\n"
-"Last-Translator: Johannes Obermayr <johannesobermayr@gmx.de>\n"
+"PO-Revision-Date: 2025-07-23 13:58+0200\n"
+"Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.03.70\n"
+"X-Generator: Lokalize 25.04.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -219,39 +219,34 @@ msgid "Command to execute"
 msgstr "Auszuführender Befehl"
 
 #: configdialog/main.cpp:23
-#, fuzzy, kde-format
-#| msgctxt "@title:window, %1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgid "Configuration Dialog"
-msgstr "Einstellungen für %1"
+msgstr "Einrichtungsdialog"
 
 #: configdialog/main.cpp:25
 #, kde-format
 msgid "Allows to configure an agent or resource"
-msgstr ""
+msgstr "Ermöglicht das Einrichten eines Agenten oder einer Ressource"
 
 #: configdialog/main.cpp:27
 #, kde-format
 msgid "© 2025 Carl Schwan <carl@carlschwan.eu>"
-msgstr ""
+msgstr "© 2025 Carl Schwan <carl@carlschwan.eu>"
 
 #: configdialog/main.cpp:30
-#, fuzzy, kde-format
-#| msgctxt "@info:shell"
-#| msgid "Agent identifier"
+#, kde-format
 msgid "The agent identifier"
-msgstr "Agent-Bezeichner"
+msgstr "Der Agent-Bezeichner"
 
 #: configdialog/main.cpp:36
 #, kde-format
 msgid "Required identifier argument missing."
-msgstr ""
+msgstr "Erforderliches Bezeichnerargument fehlt."
 
 #: configdialog/main.cpp:51
-#, fuzzy, kde-format
-#| msgid "No resource agents found."
+#, kde-format
 msgid "No such agent found \"%1\""
-msgstr "Keine Ressourcen-Vermittler gefunden."
+msgstr "Kein solcher Agent gefunden „%1“"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -644,18 +639,16 @@ msgstr ""
 "starten Sie bitte alle KDE-PIM-Anwendungen neu."
 
 #: quick/colorproxymodel.cpp:83
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Offline"
+#, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Offline)"
-msgstr "Offline"
+msgstr "%1 (Offline)"
 
 #: quick/colorproxymodel.cpp:86
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
-msgstr ""
+msgstr "%1 (Standard)"
 
 #: quick/qml/AgentConfigurationForm.qml:30
 #, fuzzy, kde-format
@@ -679,7 +672,9 @@ msgid "Modify"
 msgstr "&Bearbeiten ..."
 
 #: quick/qml/AgentConfigurationForm.qml:61
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@action:button"
+#| msgid "Delete"
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "Löschen"
@@ -715,7 +710,7 @@ msgstr "Möchten Sie das Stichwort <resource>%1</resource> wirklich entfernen?"
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
 msgid "You won't be able to revert this action."
-msgstr ""
+msgstr "Diese Aktion kann nicht rückgängig gemacht werden."
 
 #: quick/qml/TagManagerPage.qml:132
 #, fuzzy, kde-format
@@ -743,7 +738,7 @@ msgstr "Überprüft und berichtet den Status des Akonadi-Servers"
 #: selftest/main.cpp:23
 #, kde-format
 msgid "(c) 2008 Volker Krause <vkrause@kde.org>"
-msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
+msgstr "© 2008 Volker Krause <vkrause@kde.org>"
 
 #: shared/akapplication.cpp:70
 #, kde-format
@@ -844,12 +839,10 @@ msgid "Configure Account"
 msgstr "Zugang einrichten"
 
 #: widgets/agenttypedialog.cpp:74
-#, fuzzy, kde-format
-#| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
+#, kde-format
 msgctxt "@item:textbox"
 msgid "Search types"
-msgstr "Suchen"
+msgstr "Typen suchen"
 
 #: widgets/cachepolicypage.cpp:43 widgets/cachepolicypage.cpp:48
 #, kde-format
@@ -1224,7 +1217,7 @@ msgid ""
 msgstr ""
 "<qt>Ihre Änderungen stehen im Konflikt mit denen, die in der Zwischenzeit "
 "von jemand anderem vorgenommen wurden.<br>Wenn eine Version nicht einfach "
-"verworfen werden kann, müssen Sie die  Änderungen manuell zusammenführen."
+"verworfen werden kann, müssen Sie die Änderungen manuell zusammenführen."
 "<br>Klicken Sie auf <a href=\"opentexteditor\">Texteditor öffnen</a>, um "
 "eine Kopie der Texte zu behalten. Wählen Sie dann die Version, die zum "
 "größeren Teil richtig ist, öffnen sie erneut und fügen den fehlenden Text "
@@ -1365,6 +1358,10 @@ msgid ""
 "Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> for "
 "troubleshooting tips.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Ein notwendiger Hintergrunddienst funktioniert nicht.</"
+"p><p>Siehe <a href=\"https://userbase.kde.org/"
+"Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> für Hinweise "
+"zur Problembehebung</p></body></html>"
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
@@ -1875,10 +1872,10 @@ msgid ""
 "If you recently updated KDE PIM, please make sure to restart both Akonadi "
 "and KDE PIM applications."
 msgstr ""
-"Die Version des Server-Protokolls ist %1, es ist aber mindestens Version %2 "
-"durch das Anwendungsprogrammerforderlich. Haben Sie KDE-PIM gerade "
-"aktualisiert, starten Sie bitte sowohl den Akonadi-Server als auch die KDE-"
-"PIM-Anwendungen neu.."
+"Die Version des Server-Protokolls ist %1, vom Anwendungsprogramm wird aber "
+"mindestens Version %2 gefordert. Haben Sie KDE-PIM gerade aktualisiert, "
+"starten Sie bitte sowohl den Akonadi-Server als auch die KDE-PIM-Anwendungen "
+"neu."
 
 #: widgets/selftestdialog.cpp:454
 #, kde-format
@@ -2726,7 +2723,7 @@ msgstr "Wandelt den Unterbaum einer Akonadi-Sammlung in eine XML-Datei um."
 #: xml/akonadi2xml.cpp:29
 #, kde-format
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
-msgstr "(c) 2009 Volker Krause <vkrause@kde.org>"
+msgstr "© 2009 Volker Krause <vkrause@kde.org>"
 
 #: xml/xmldocument.cpp:83
 #, kde-format
