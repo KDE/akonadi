@@ -117,11 +117,6 @@ private:
     void findDuplicateTagTypes();
 
     /**
-     * Look for duplicate relation type names and fix them.
-     */
-    void findDuplicateRelationTypes();
-
-    /**
      * Look for parts referring to the same external file.
      */
     void findOverlappingParts();
