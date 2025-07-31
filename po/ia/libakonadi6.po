@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-23 02:37+0000\n"
-"PO-Revision-Date: 2025-07-07 12:29+0200\n"
+"PO-Revision-Date: 2025-07-30 17:22+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -643,29 +643,25 @@ msgid "%1 (Default)"
 msgstr "%1 (Predefinite)"
 
 #: quick/qml/AgentConfigurationForm.qml:30
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Configure Account"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
-msgstr "Configura conto"
+msgstr "Configura %1"
 
 #: quick/qml/AgentConfigurationForm.qml:36
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
-msgstr ""
+msgstr "Modifica o dele le agente de conto."
 
 #: quick/qml/AgentConfigurationForm.qml:52
-#, fuzzy, kde-format
-#| msgid "&Modify..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Modify"
-msgstr "&Modifica..."
+msgstr "Modifica"
 
 #: quick/qml/AgentConfigurationForm.qml:61
-#, fuzzy, kde-format
-#| msgid "Delete"
+#, kde-format
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "Dele"
@@ -674,7 +670,7 @@ msgstr "Dele"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
-msgstr ""
+msgstr "Adde conto"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
@@ -683,20 +679,16 @@ msgid "Manage Tags"
 msgstr "Gere etiquettas"
 
 #: quick/qml/TagManagerPage.qml:27
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Conflict Resolution"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Confirm Tag Deletion"
-msgstr "Resolution de conflicto"
+msgstr "Confirma deletion de etiquetta"
 
 #: quick/qml/TagManagerPage.qml:31
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-format
 msgctxt "@info"
 msgid "Are you sure you want to delete tag <b>%1</b>?"
-msgstr "Tu vermente vole remover le etiquetta <resource>%1</resource>?"
+msgstr "Tu es secur que tu vole deler etiquetta <b>%1</b>?"
 
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
@@ -704,17 +696,16 @@ msgid "You won't be able to revert this action."
 msgstr "Tu non poterea revenir iste action."
 
 #: quick/qml/TagManagerPage.qml:132
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
-msgstr "Crea nove etiquetta"
+msgstr "Crea un nove  etiquetta..."
 
 #: quick/qml/TagManagerPage.qml:143
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Tag"
-msgstr ""
+msgstr "Adde etiquetta"
 
 #: selftest/main.cpp:19
 #, kde-format
