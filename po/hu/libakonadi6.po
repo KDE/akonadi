@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: KDE 4.3\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-23 02:37+0000\n"
-"PO-Revision-Date: 2025-07-07 22:22+0200\n"
+"PO-Revision-Date: 2025-07-31 22:29+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -643,25 +643,22 @@ msgid "%1 (Default)"
 msgstr "%1 (alapértelmezett)"
 
 #: quick/qml/AgentConfigurationForm.qml:30
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Configure Account"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
-msgstr "Fiókbeállítás"
+msgstr "%1 beállítása"
 
 #: quick/qml/AgentConfigurationForm.qml:36
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
-msgstr ""
+msgstr "Fiókügynök módosítása vagy törlése."
 
 #: quick/qml/AgentConfigurationForm.qml:52
-#, fuzzy, kde-format
-#| msgid "&Modify..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Modify"
-msgstr "&Módosítás…"
+msgstr "Módosítás"
 
 #: quick/qml/AgentConfigurationForm.qml:61
 #, kde-format
@@ -673,7 +670,7 @@ msgstr "Törlés"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
-msgstr ""
+msgstr "Fiók hozzáadása"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
@@ -682,20 +679,16 @@ msgid "Manage Tags"
 msgstr "Címkék kezelése"
 
 #: quick/qml/TagManagerPage.qml:27
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Conflict Resolution"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Confirm Tag Deletion"
-msgstr "Az ütközés feloldása"
+msgstr "Címke törlésének megerősítése"
 
 #: quick/qml/TagManagerPage.qml:31
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-format
 msgctxt "@info"
 msgid "Are you sure you want to delete tag <b>%1</b>?"
-msgstr "Valóban el akarja távolítani a címkét: <resource>%1</resource>?"
+msgstr "Biztosan törölni szeretné a(z) <b>%1</b> címkét?"
 
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
@@ -703,17 +696,16 @@ msgid "You won't be able to revert this action."
 msgstr "Ez a művelet nem vonható vissza."
 
 #: quick/qml/TagManagerPage.qml:132
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
-msgstr "Új címke létrehozása"
+msgstr "Új címke létrehozása…"
 
 #: quick/qml/TagManagerPage.qml:143
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Tag"
-msgstr ""
+msgstr "Címke hozzáadása"
 
 #: selftest/main.cpp:19
 #, kde-format

@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-23 02:37+0000\n"
-"PO-Revision-Date: 2025-04-07 18:27+0300\n"
+"PO-Revision-Date: 2025-07-13 17:41+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -633,18 +633,16 @@ msgstr ""
 "KDE:n PIM-sovellukset uudelleen."
 
 #: quick/colorproxymodel.cpp:83
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Offline"
+#, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Offline)"
-msgstr "Ei verkossa"
+msgstr "%1 (ei verkossa)"
 
 #: quick/colorproxymodel.cpp:86
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
-msgstr ""
+msgstr "%1 (oletus)"
 
 #: quick/qml/AgentConfigurationForm.qml:30
 #, fuzzy, kde-format
@@ -668,7 +666,9 @@ msgid "Modify"
 msgstr "&Muuta…"
 
 #: quick/qml/AgentConfigurationForm.qml:61
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@action:button"
+#| msgid "Delete"
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "Poista"
@@ -704,7 +704,7 @@ msgstr "Haluatko varmasti poistaa luokituksen <resource>%1</resource>?"
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
 msgid "You won't be able to revert this action."
-msgstr ""
+msgstr "Tätä toimenpidettä ei voi kumota."
 
 #: quick/qml/TagManagerPage.qml:132
 #, fuzzy, kde-format
