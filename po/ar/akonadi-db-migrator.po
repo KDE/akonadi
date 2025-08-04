@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-29 00:41+0000\n"
-"PO-Revision-Date: 2025-01-07 18:26+0400\n"
+"PO-Revision-Date: 2025-08-03 12:17+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -154,7 +154,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:shell"
 msgid "Cannot proceed without backup. Migration interrupted."
-msgstr "لا يمكن المتابعة بدون النسخ الاحتياطي. قطعت عملية الترحيل."
+msgstr "لا يمكن المتابعة دون النسخ الاحتياطي. قطعت عملية الترحيل."
 
 #: dbmigrator.cpp:647
 #, kde-format
@@ -178,7 +178,7 @@ msgstr "ملف النسخ الاحتياطي %1 موجود بالفعل. هل أ
 #, kde-format
 msgctxt "@info:status"
 msgid "Cannot proceed without backup. Migration interrupted."
-msgstr "لا يمكن المتابعة بدون النسخ الاحتياطي. قطعت عملية الترحيل."
+msgstr "لا يمكن المتابعة دون النسخ الاحتياطي. قطعت عملية الترحيل."
 
 #: dbmigrator.cpp:682
 #, kde-format
