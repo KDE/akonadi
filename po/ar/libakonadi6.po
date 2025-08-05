@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-23 02:37+0000\n"
-"PO-Revision-Date: 2025-08-03 08:11+0400\n"
+"PO-Revision-Date: 2025-08-04 14:42+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -708,7 +708,7 @@ msgstr "أضف وسمًا"
 #: selftest/main.cpp:19
 #, kde-format
 msgid "Akonadi Self Test"
-msgstr "الاختبار الآلي لِ‍«أكونادي»"
+msgstr "الاختبار الآليّ لِ‍«أكونادي»"
 
 #: selftest/main.cpp:21
 #, kde-format
@@ -1118,7 +1118,7 @@ msgstr "فهرسة:"
 #: widgets/collectionmaintenancepage.ui:80
 #, kde-format
 msgid "Enable fulltext indexing"
-msgstr "فعّل فهرسة النص كاملًا"
+msgstr "مكّن فهرسة النص كاملًا"
 
 #. i18n: ectx: property (text), widget (QLabel, indexedCountLbl)
 #: widgets/collectionmaintenancepage.ui:87
@@ -1414,7 +1414,7 @@ msgstr "الاسم:"
 #, kde-format
 msgctxt "@title:window"
 msgid "Akonadi Server Self-Test"
-msgstr "اختبار خادوم «أكونادي» الآلي"
+msgstr "اختبار خادوم «أكونادي» الآليّ"
 
 #: widgets/selftestdialog.cpp:71
 #, kde-format
@@ -2725,7 +2725,7 @@ msgstr "حدد الوسوم"
 #: widgets/tagwidget.cpp:45
 #, kde-format
 msgid "Clear"
-msgstr "امسح"
+msgstr "امحُ"
 
 #. i18n: ectx: property (placeholderText), widget (Akonadi::TagView, tagView)
 #: widgets/tagwidget.ui:32

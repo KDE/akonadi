@@ -214,7 +214,7 @@ msgstr "خطأ: فشل في نقل akonadiserverrc الجديد إلى المو�
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to update autoincrement value for table %1"
-msgstr "خطأ: فشل في تحديث قيمة الإضافة التلقائية للجدول %1"
+msgstr "خطأ: فشل في تحديث قيمة الإضافة الآليّة للجدول %1"
 
 #: dbmigrator.cpp:827
 #, kde-format
