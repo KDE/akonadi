@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-29 00:41+0000\n"
-"PO-Revision-Date: 2025-08-03 12:17+0400\n"
+"PO-Revision-Date: 2025-08-06 14:17+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -38,7 +38,7 @@ msgstr "إيقاف خدمة أكونادي..."
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: timeout while waiting for Akonadi to stop."
-msgstr "خطأ: أنتهت المهلة أثناء انتظار توقف أكونادي."
+msgstr "خطأ: انتهت المهلة أثناء انتظار توقف أكونادي."
 
 #: dbmigrator.cpp:446
 #, kde-format
@@ -196,7 +196,7 @@ msgstr "فشل في عمل نسخة احتياطية لتكوين خادم أك�
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move migrated database to the primary location: %1"
-msgstr "خطأ: فشل في نقل قاعدة البيانات التي تم ترحيلها إلى الموقع الأساسي: %1"
+msgstr "خطأ: فشل في نقل قاعدة البيانات المُرحلة إلى الموقع الأساسي: %1"
 
 #: dbmigrator.cpp:725
 #, kde-format
@@ -272,8 +272,8 @@ msgid ""
 "The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and "
 "\"postgres\""
 msgstr ""
-"محرك قاعدة البيانات الجديد الذي سيتم استخدامه. القيم الممكنة هي \"sqlite\" و"
-"\"mysql\" و\"postgres\""
+"محرك قاعدة البيانات الجديد الذي سيستخدم. القيم الممكنة هي \"sqlite\" و\"mysql"
+"\" و\"postgres\""
 
 #: main.cpp:92
 #, kde-format
