@@ -197,7 +197,7 @@ msgstr ""
 "   stop           يوقف خادم أكونادي وجميع عملياته بشكل نظيف\n"
 "   restart       أعد تشغيل خادم أكونادي بكل عملياته\n"
 "   status        تعرض نظرة عامة على حالة خادم أكونادي\n"
-"   instances   سرد كافة مثيلات أكونادي الموجودة التي تعمل حاليا\n"
+"   instances   سرد كافة نسخ أكونادي الموجودة التي تعمل حاليا\n"
 "   vacuum     تزيل فراغات مساحة تخزين الداخلية (تحذير: تحتاج إلى الكثير من "
 "الوقت\n"
 " والمساحة !)\n"
@@ -262,7 +262,7 @@ msgstr "لم أجد العنصر الآخر للتعامل مع التضارب"
 #: core/jobs/agentinstancecreatejob.cpp:58
 #, kde-format
 msgid "Agent instance creation timed out."
-msgstr "انتهت مهلة إنشاء سيرورة الوسيط."
+msgstr "انتهت مهلة إنشاء نسخة الوسيط."
 
 #: core/jobs/agentinstancecreatejob.cpp:108
 #, kde-format
@@ -272,12 +272,12 @@ msgstr "تعذّر جلب نوع الوسيط ”%1“."
 #: core/jobs/agentinstancecreatejob.cpp:116
 #, kde-format
 msgid "Unable to create agent instance."
-msgstr "تعذّر إنشاء سيرورة الوسيط."
+msgstr "تعذّر إنشاء نسخة الوسيط."
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:73
 #, kde-format
 msgid "Invalid collection instance."
-msgstr "سيرورة التجميعة غير صالحة."
+msgstr "نسخة التجميعة غير صالحة."
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:80
 #: core/jobs/resourcesynchronizationjob.cpp:88
@@ -724,47 +724,47 @@ msgstr "‏© 2008 Volker Krause ‏<vkrause@kde.org>"
 #, kde-format
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
-msgstr "فضاء لبدء مثيلات أكونادي المتعددة في نفس جلسة المستخدم"
+msgstr "فضاء لبدء نسخ أكونادي المتعددة في نفس جلسة المستخدم"
 
 #: widgets/agentactionmanager.cpp:36
 msgid "&New Agent Instance..."
-msgstr "&سيرورة وسيط جديدة…"
+msgstr "&نسخة وسيط جديدة…"
 
 #: widgets/agentactionmanager.cpp:37
 msgid "&Delete Agent Instance"
-msgstr "ا&حذف سيرورة الوسيط"
+msgstr "ا&حذف نسخة الوسيط"
 
 #: widgets/agentactionmanager.cpp:38
 msgid "&Configure Agent Instance"
-msgstr "ا&ضبط سيرورة الوسيط"
+msgstr "ا&ضبط نسخة الوسيط"
 
 #: widgets/agentactionmanager.cpp:54
 #, kde-format
 msgctxt "@title:window"
 msgid "New Agent Instance"
-msgstr "سيرورة وسيط جديدة"
+msgstr "نسخة وسيط جديدة"
 
 #: widgets/agentactionmanager.cpp:56
 #, kde-format
 msgid "Could not create agent instance: %1"
-msgstr "تعذّر إنشاء سيرورة الوسيط: %1"
+msgstr "تعذّر إنشاء نسخة الوسيط: %1"
 
 #: widgets/agentactionmanager.cpp:60
 #, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
-msgstr "فشل إنشاء سيرورة الوسيط"
+msgstr "فشل إنشاء نسخة الوسيط"
 
 #: widgets/agentactionmanager.cpp:62
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Agent Instance?"
-msgstr "أأحذف سيرورة الوسيط؟"
+msgstr "أأحذف نسخة الوسيط؟"
 
 #: widgets/agentactionmanager.cpp:66
 #, kde-format
 msgid "Do you really want to delete the selected agent instance?"
-msgstr "أمتأكّد من حذف سيرورة الوسيط المنتقاة؟"
+msgstr "أمتأكّد من حذف نسخة الوسيط المنتقاة؟"
 
 #: widgets/agentconfigurationdialog.cpp:56
 #, kde-format
@@ -1477,7 +1477,7 @@ msgid ""
 msgstr ""
 "لقد ضبطت «أكونادي» ليستخدم خادوم MySQL ‏”%1“.\n"
 "تحقّق من أن خادوم MySQL مثبّت، واضبط المسار الصحيح وتحقّق أيضًا من امتلاكك "
-"تصاريح القراءة والتنفيذ المطلوبة لتنفيذي الخادوم. يفترض أن يكون اسم تنفيذي "
+"أذونات القراءة والتنفيذ المطلوبة لتنفيذي الخادوم. يفترض أن يكون اسم تنفيذي "
 "الخادوم ”mysqld“. مكان التنفيذي يختلف حسب التوزيعة لديك."
 
 #: widgets/selftestdialog.cpp:224
@@ -1615,7 +1615,7 @@ msgid ""
 "required access rights."
 msgstr ""
 "إما أنه لم يُعثر على ضبط خادوم MySQL المبدئي أو أن قراءته غير ممكنة. تحقّق من "
-"أن تثبيت «أكونادي» لديك مكتمل وأن لديك تصاريح الوصول."
+"أن تثبيت «أكونادي» لديك مكتمل وأن لديك أذونات الوصول."
 
 #: widgets/selftestdialog.cpp:323
 #, kde-format
@@ -1650,7 +1650,7 @@ msgid ""
 "The custom configuration for the MySQL server was found at %1 but is not "
 "readable. Check your access rights."
 msgstr ""
-"عُثر على ضبط خادوم MySQL المخصّص في %1 إلا أن قراءته غير ممكنة. تحقّق من تصاريح "
+"عُثر على ضبط خادوم MySQL المخصّص في %1 إلا أن قراءته غير ممكنة. تحقّق من أذونات "
 "الوصول لديك."
 
 #: widgets/selftestdialog.cpp:342
