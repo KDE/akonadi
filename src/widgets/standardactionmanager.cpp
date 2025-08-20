@@ -1053,7 +1053,8 @@ public:
                     i18n("Before syncing folder \"%1\" it is necessary to have the resource online. Do you want to make it online?", collection.displayName()),
                     i18n("Account \"%1\" is offline", instance.name()),
                     KGuiItem(i18nc("@action:button", "Go Online"), QIcon::fromTheme(QStringLiteral("user-online"))),
-                    KStandardGuiItem::cancel())
+                    KStandardGuiItem::cancel(),
+                    QStringLiteral("askGoOnline"))
                 != KMessageBox::ButtonCode::PrimaryAction) {
                 return false;
             }
