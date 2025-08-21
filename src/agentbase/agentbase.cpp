@@ -750,7 +750,7 @@ QString AgentBasePrivate::dumpMemoryInfoToString() const
     // man mallinfo for more info
     QString str;
 #if defined __GLIBC__
-#if defined(__GLIBC_PREREQ) && __GNUC_PREREQ(2, 33)
+#if defined(__GLIBC_PREREQ) && __GLIBC_PREREQ(2, 33)
     struct mallinfo2 mi;
     mi = mallinfo2();
 #else
