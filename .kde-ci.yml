@@ -19,3 +19,4 @@ Dependencies:
 Options:
  cmake-options: "-DAKONADI_RUN_MYSQL_ISOLATED_TESTS=FALSE -DAKONADI_RUN_PGSQL_ISOLATED_TESTS=FALSE -DAKONADI_RUN_SQLITE_ISOLATED_TESTS=FALSE"
  run-gcovr: "--gcov-ignore-parse-errors=negative_hits.warn"
+ run-qmllint: true
