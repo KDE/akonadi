@@ -15,6 +15,8 @@ Dependencies:
     'frameworks/kwindowsystem': '@latest-kf6'
     'frameworks/kxmlgui': '@latest-kf6'
     'frameworks/kcrash': '@latest-kf6'
+    'frameworks/kirigami': '@latest-kf6'
+    'libraries/kirigami-addons': '@latest-kf6'
 
 Options:
  cmake-options: "-DAKONADI_RUN_MYSQL_ISOLATED_TESTS=FALSE -DAKONADI_RUN_PGSQL_ISOLATED_TESTS=FALSE -DAKONADI_RUN_SQLITE_ISOLATED_TESTS=FALSE"
