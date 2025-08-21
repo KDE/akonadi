@@ -358,7 +358,7 @@ msgid ""
 "The protocol version of the Akonadi server is incompatible. Make sure you "
 "have a compatible version installed."
 msgstr ""
-"إصدارة ميفاق خادوم «أكونادي» غير متوافقة. تحقّق من تثبيت إحدى الإصدارات "
+"إصدارة ميفاق خادم «أكونادي» غير متوافقة. تحقّق من تثبيت إحدى الإصدارات "
 "المتوافقة."
 
 #: core/jobs/job.cpp:341
@@ -596,7 +596,7 @@ msgid ""
 "If you recently updated your system please log out and back in to make sure "
 "all applications use the correct protocol version."
 msgstr ""
-"تختلف إصدارة ميفاق خادوم «أكونادي» من إصدارة الميفاق التي يستخدمها هذا "
+"تختلف إصدارة ميفاق خادم «أكونادي» من إصدارة الميفاق التي يستخدمها هذا "
 "التطبيق.\n"
 "إن كنت قد حدّثت نظامك حديثًا فرجاءً اخرج منه وثمّ عُد وتحقّق من أن كل التطبيقات "
 "تستخدم إصدارة الميفاق الصحيحة."
@@ -616,8 +616,8 @@ msgid ""
 "Protocol version mismatch. Server version is older (%1) than ours (%2). If "
 "you updated your system recently please restart the Akonadi server."
 msgstr ""
-"إصدارة الميفاق لا تتطابق. إصدارة الخادوم أقدم (%1) من إصدارتنا (%2). إن كنت "
-"قد حدّثت نظامك حديثًا فرجاءً أعِد تشغيل خادوم «أكونادي»."
+"إصدارة الميفاق لا تتطابق. إصدارة الخادم أقدم (%1) من إصدارتنا (%2). إن كنت "
+"قد حدّثت نظامك حديثًا فرجاءً أعِد تشغيل خادم «أكونادي»."
 
 #: core/session.cpp:194
 #, kde-format
@@ -625,7 +625,7 @@ msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
 "you updated your system recently please restart all KDE PIM applications."
 msgstr ""
-"إصدارة الميفاق لا تتطابق. إصدارة الخادوم أحدث (%1) من إصدارتنا (%2). إن كنت "
+"إصدارة الميفاق لا تتطابق. إصدارة الخادم أحدث (%1) من إصدارتنا (%2). إن كنت "
 "قد حدّثت نظامك حديثًا فرجاءً أعِد كل تطبيقات «إدارة كِيدِي للمعلومات الشخصية»."
 
 #: quick/colorproxymodel.cpp:83
@@ -713,7 +713,7 @@ msgstr "الاختبار الآليّ لِ‍«أكونادي»"
 #: selftest/main.cpp:21
 #, kde-format
 msgid "Checks and reports state of Akonadi server"
-msgstr "يتحقّق ويُبلغ عن حالة خادوم «أكونادي»"
+msgstr "يتحقّق ويُبلغ عن حالة خادم «أكونادي»"
 
 #: selftest/main.cpp:23
 #, kde-format
@@ -1213,12 +1213,12 @@ msgstr "البيانات"
 #: widgets/controlgui.cpp:223
 #, kde-format
 msgid "Starting Akonadi server..."
-msgstr "يبدأ خادوم «أكونادي»…"
+msgstr "يبدأ خادم «أكونادي»…"
 
 #: widgets/controlgui.cpp:229
 #, kde-format
 msgid "Stopping Akonadi server..."
-msgstr "يُوقف خادوم «أكونادي»…"
+msgstr "يُوقف خادم «أكونادي»…"
 
 #: widgets/dragdropmanager.cpp:212
 #, kde-format
@@ -1414,7 +1414,7 @@ msgstr "الاسم:"
 #, kde-format
 msgctxt "@title:window"
 msgid "Akonadi Server Self-Test"
-msgstr "اختبار خادوم «أكونادي» الآليّ"
+msgstr "اختبار خادم «أكونادي» الآليّ"
 
 #: widgets/selftestdialog.cpp:71
 #, kde-format
@@ -1431,7 +1431,7 @@ msgstr "انسخ التقرير إلى الحافظة"
 msgid ""
 "The QtSQL driver '%1' is required by your current Akonadi server "
 "configuration and was found on your system."
-msgstr "يطلب ضبط خادوم «أكونادي» لديك مشغّل QtSQL ‏”%1“ وقد عُثر عليه في النظام."
+msgstr "يطلب ضبط خادم «أكونادي» لديك مشغّل QtSQL ‏”%1“ وقد عُثر عليه في النظام."
 
 #: widgets/selftestdialog.cpp:191
 #, kde-format
@@ -1441,7 +1441,7 @@ msgid ""
 "The following drivers are installed: %2.\n"
 "Make sure the required driver is installed."
 msgstr ""
-"يطلب ضبط خادوم «أكونادي» لديك مشغّل QtSQL ‏”%1“.\n"
+"يطلب ضبط خادم «أكونادي» لديك مشغّل QtSQL ‏”%1“.\n"
 "المشغّلات الآتية مثبّتة: %2.\n"
 "تحقّق من أن المشغّل المطلوب مثبّت."
 
@@ -1458,13 +1458,13 @@ msgstr "لم يُعثر على مشغّل قاعدة البيانات."
 #: widgets/selftestdialog.cpp:208
 #, kde-format
 msgid "MySQL server executable not tested."
-msgstr "لم يُختبر تنفيذي خادوم MySQL."
+msgstr "لم يُختبر تنفيذي خادم MySQL."
 
 #: widgets/selftestdialog.cpp:208 widgets/selftestdialog.cpp:249
 #: widgets/selftestdialog.cpp:300
 #, kde-format
 msgid "The current configuration does not require an internal MySQL server."
-msgstr "لا يطلب الضبط الحالي خادوم MySQL داخلي."
+msgstr "لا يطلب الضبط الحالي خادم MySQL داخلي."
 
 #: widgets/selftestdialog.cpp:216
 #, kde-format
@@ -1475,25 +1475,25 @@ msgid ""
 "executable. The server executable is typically called 'mysqld'; its location "
 "varies depending on the distribution."
 msgstr ""
-"لقد ضبطت «أكونادي» ليستخدم خادوم MySQL ‏”%1“.\n"
-"تحقّق من أن خادوم MySQL مثبّت، واضبط المسار الصحيح وتحقّق أيضًا من امتلاكك "
-"أذونات القراءة والتنفيذ المطلوبة لتنفيذي الخادوم. يفترض أن يكون اسم تنفيذي "
-"الخادوم ”mysqld“. مكان التنفيذي يختلف حسب التوزيعة لديك."
+"لقد ضبطت «أكونادي» ليستخدم خادم MySQL ‏”%1“.\n"
+"تحقّق من أن خادم MySQL مثبّت، واضبط المسار الصحيح وتحقّق أيضًا من امتلاكك أذونات "
+"القراءة والتنفيذ المطلوبة لتنفيذي الخادم. يفترض أن يكون اسم تنفيذي الخادم "
+"”mysqld“. مكان التنفيذي يختلف حسب التوزيعة لديك."
 
 #: widgets/selftestdialog.cpp:224
 #, kde-format
 msgid "MySQL server not found."
-msgstr "لم يُعثر على خادوم MySQL."
+msgstr "لم يُعثر على خادم MySQL."
 
 #: widgets/selftestdialog.cpp:226
 #, kde-format
 msgid "MySQL server not readable."
-msgstr "لا يمكن قراءة خادوم MySQL."
+msgstr "لا يمكن قراءة خادم MySQL."
 
 #: widgets/selftestdialog.cpp:228
 #, kde-format
 msgid "MySQL server not executable."
-msgstr "لا يمكن تنفيذ خادوم MySQL."
+msgstr "لا يمكن تنفيذ خادم MySQL."
 
 #: widgets/selftestdialog.cpp:230
 #, kde-format
@@ -1503,33 +1503,33 @@ msgstr "عُثر على MySQL باسم غير متوقّع."
 #: widgets/selftestdialog.cpp:232
 #, kde-format
 msgid "MySQL server found."
-msgstr "عُثر على خادوم MySQL."
+msgstr "عُثر على خادم MySQL."
 
 #: widgets/selftestdialog.cpp:238
 #, kde-format
 msgid "MySQL server found: %1"
-msgstr "عُثر على خادوم MySQL: ‏%1"
+msgstr "عُثر على خادم MySQL: ‏%1"
 
 #: widgets/selftestdialog.cpp:239
 #, kde-format
 msgid "MySQL server is executable."
-msgstr "يمكن تنفيذ خادوم MySQL."
+msgstr "يمكن تنفيذ خادم MySQL."
 
 #: widgets/selftestdialog.cpp:241
 #, kde-format
 msgid ""
 "Executing the MySQL server '%1' failed with the following error message: '%2'"
-msgstr "فشل تنفيذ خادوم MySQL ‏”%1“ برسالة الخطأ الآتية: ”%2“"
+msgstr "فشل تنفيذ خادم MySQL ‏”%1“ برسالة الخطأ الآتية: ”%2“"
 
 #: widgets/selftestdialog.cpp:242
 #, kde-format
 msgid "Executing the MySQL server failed."
-msgstr "فشل تنفيذ خادوم MySQL."
+msgstr "فشل تنفيذ خادم MySQL."
 
 #: widgets/selftestdialog.cpp:249
 #, kde-format
 msgid "MySQL server error log not tested."
-msgstr "لم يُختبر سجل أخطاء خادوم MySQL."
+msgstr "لم يُختبر سجل أخطاء خادم MySQL."
 
 #: widgets/selftestdialog.cpp:257
 #, kde-format
@@ -1542,7 +1542,7 @@ msgid ""
 "The MySQL server did not report any errors during this startup. The log can "
 "be found in '%1'."
 msgstr ""
-"لم يُبلغ خادوم MySQL عن أية أخطاء وهو يبدأ التشغيل. يمكن العثور على السجل في "
+"لم يُبلغ خادم MySQL عن أية أخطاء وهو يبدأ التشغيل. يمكن العثور على السجل في "
 "”%1“."
 
 #: widgets/selftestdialog.cpp:264
@@ -1553,59 +1553,59 @@ msgstr "لا يمكن قراءة سجل أخطاء MySQL."
 #: widgets/selftestdialog.cpp:265
 #, kde-format
 msgid "A MySQL server error log file was found but is not readable: %1"
-msgstr "عُثر على ملف سجل أخطاء خادوم MySQL إلا أنه لا يمكن قراءته: %1"
+msgstr "عُثر على ملف سجل أخطاء خادم MySQL إلا أنه لا يمكن قراءته: %1"
 
 #: widgets/selftestdialog.cpp:274
 #, kde-format
 msgid "MySQL server log contains errors."
-msgstr "يحتوي سجل خادوم MySQL على أخطاء."
+msgstr "يحتوي سجل خادم MySQL على أخطاء."
 
 #: widgets/selftestdialog.cpp:275
 #, kde-format
 msgid "The MySQL server error log file '%1' contains errors."
-msgstr "يحتوي ملف سجل أخطاء خادوم MySQL ‏”%1“ على أخطاء."
+msgstr "يحتوي ملف سجل أخطاء خادم MySQL ‏”%1“ على أخطاء."
 
 #: widgets/selftestdialog.cpp:285
 #, kde-format
 msgid "MySQL server log contains warnings."
-msgstr "يحتوي سجل خادوم MySQL على تحذيرات."
+msgstr "يحتوي سجل خادم MySQL على تحذيرات."
 
 #: widgets/selftestdialog.cpp:286
 #, kde-format
 msgid "The MySQL server log file '%1' contains warnings."
-msgstr "يحتوي ملف سجل أخطاء خادوم MySQL ‏”%1“ على تحذيرات."
+msgstr "يحتوي ملف سجل أخطاء خادم MySQL ‏”%1“ على تحذيرات."
 
 #: widgets/selftestdialog.cpp:289
 #, kde-format
 msgid "MySQL server log contains no errors."
-msgstr "لا يحتوي ملف سجل خادوم MySQL على أي أخطاء."
+msgstr "لا يحتوي ملف سجل خادم MySQL على أي أخطاء."
 
 #: widgets/selftestdialog.cpp:290
 #, kde-format
 msgid "The MySQL server log file '%1' does not contain any errors or warnings."
-msgstr "لا يحتوي ملف سجل خادوم MySQL ‏”%1“ على أي أخطاء أو تحذيرات."
+msgstr "لا يحتوي ملف سجل خادم MySQL ‏”%1“ على أي أخطاء أو تحذيرات."
 
 #: widgets/selftestdialog.cpp:300
 #, kde-format
 msgid "MySQL server configuration not tested."
-msgstr "لم يُختبر ضبط خادوم MySQL."
+msgstr "لم يُختبر ضبط خادم MySQL."
 
 #: widgets/selftestdialog.cpp:309
 #, kde-format
 msgid "MySQL server default configuration found."
-msgstr "عُثر على ضبط خادوم MySQL المبدئي."
+msgstr "عُثر على ضبط خادم MySQL المبدئي."
 
 #: widgets/selftestdialog.cpp:310
 #, kde-format
 msgid ""
 "The default configuration for the MySQL server was found and is readable at "
 "%1."
-msgstr "عُثر على ضبط خادوم MySQL المبدئي وقراءته ممكنة من %1"
+msgstr "عُثر على ضبط خادم MySQL المبدئي وقراءته ممكنة من %1"
 
 #: widgets/selftestdialog.cpp:314
 #, kde-format
 msgid "MySQL server default configuration not found."
-msgstr "لم يُعثر على ضبط خادوم MySQL المبدئي."
+msgstr "لم يُعثر على ضبط خادم MySQL المبدئي."
 
 #: widgets/selftestdialog.cpp:315
 #, kde-format
@@ -1614,35 +1614,35 @@ msgid ""
 "readable. Check your Akonadi installation is complete and you have all "
 "required access rights."
 msgstr ""
-"إما أنه لم يُعثر على ضبط خادوم MySQL المبدئي أو أن قراءته غير ممكنة. تحقّق من "
+"إما أنه لم يُعثر على ضبط خادم MySQL المبدئي أو أن قراءته غير ممكنة. تحقّق من "
 "أن تثبيت «أكونادي» لديك مكتمل وأن لديك أذونات الوصول."
 
 #: widgets/selftestdialog.cpp:323
 #, kde-format
 msgid "MySQL server custom configuration not available."
-msgstr "ضبط خادوم MySQL المخصّص غير متوفّر."
+msgstr "ضبط خادم MySQL المخصّص غير متوفّر."
 
 #: widgets/selftestdialog.cpp:324
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was not found but is optional."
-msgstr "لم يُعثر ضبط خادوم MySQL المخصّص، إلا أنه اختياري."
+msgstr "لم يُعثر ضبط خادم MySQL المخصّص، إلا أنه اختياري."
 
 #: widgets/selftestdialog.cpp:327
 #, kde-format
 msgid "MySQL server custom configuration found."
-msgstr "عُثر على ضبط خادوم MySQL المخصّص."
+msgstr "عُثر على ضبط خادم MySQL المخصّص."
 
 #: widgets/selftestdialog.cpp:328
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was found and is readable at %1"
-msgstr "عُثر على ضبط خادوم MySQL المخصّص وقراءته ممكنة من %1"
+msgstr "عُثر على ضبط خادم MySQL المخصّص وقراءته ممكنة من %1"
 
 #: widgets/selftestdialog.cpp:332
 #, kde-format
 msgid "MySQL server custom configuration not readable."
-msgstr "لا يمكن قراءة ضبط خادوم MySQL المخصّص."
+msgstr "لا يمكن قراءة ضبط خادم MySQL المخصّص."
 
 #: widgets/selftestdialog.cpp:333
 #, kde-format
@@ -1650,43 +1650,43 @@ msgid ""
 "The custom configuration for the MySQL server was found at %1 but is not "
 "readable. Check your access rights."
 msgstr ""
-"عُثر على ضبط خادوم MySQL المخصّص في %1 إلا أن قراءته غير ممكنة. تحقّق من أذونات "
+"عُثر على ضبط خادم MySQL المخصّص في %1 إلا أن قراءته غير ممكنة. تحقّق من أذونات "
 "الوصول لديك."
 
 #: widgets/selftestdialog.cpp:342
 #, kde-format
 msgid "MySQL server configuration not found or not readable."
-msgstr "إما أنه لم يُعثر على ضبط خادوم MySQL المخصّص أو أن قراءته غير ممكنة."
+msgstr "إما أنه لم يُعثر على ضبط خادم MySQL المخصّص أو أن قراءته غير ممكنة."
 
 #: widgets/selftestdialog.cpp:343
 #, kde-format
 msgid "The MySQL server configuration was not found or is not readable."
-msgstr "إما أنه لم يُعثر على ضبط خادوم MySQL أو أن قراءته غير ممكنة."
+msgstr "إما أنه لم يُعثر على ضبط خادم MySQL أو أن قراءته غير ممكنة."
 
 #: widgets/selftestdialog.cpp:346
 #, kde-format
 msgid "MySQL server configuration is usable."
-msgstr "يمكن استخدام ضبط خادوم MySQL."
+msgstr "يمكن استخدام ضبط خادم MySQL."
 
 #: widgets/selftestdialog.cpp:347
 #, kde-format
 msgid "The MySQL server configuration was found at %1 and is readable."
-msgstr "عُثر على ضبط خادوم MySQL في %1 وقراءته ممكنة."
+msgstr "عُثر على ضبط خادم MySQL في %1 وقراءته ممكنة."
 
 #: widgets/selftestdialog.cpp:376
 #, kde-format
 msgid "Cannot connect to PostgreSQL server."
-msgstr "تعذّر الاتصال بخادوم PostgreSQL."
+msgstr "تعذّر الاتصال بخادم PostgreSQL."
 
 #: widgets/selftestdialog.cpp:378
 #, kde-format
 msgid "PostgreSQL server found."
-msgstr "عُثر على خادوم PostgreSQL."
+msgstr "عُثر على خادم PostgreSQL."
 
 #: widgets/selftestdialog.cpp:378
 #, kde-format
 msgid "The PostgreSQL server was found and connection is working."
-msgstr "عُثر على خادوم PostgreSQL والاتصال يعمل."
+msgstr "عُثر على خادم PostgreSQL والاتصال يعمل."
 
 #: widgets/selftestdialog.cpp:388
 #, kde-format
@@ -1700,7 +1700,7 @@ msgid ""
 "the Akonadi server installed."
 msgstr ""
 "يجب أن يكون الوصول إلى البرنامج ”akonadictl“ ممكنًا في ‎$PATH. تحقّق من تثبيتك "
-"لخادوم «أكونادي»."
+"لخادم «أكونادي»."
 
 #: widgets/selftestdialog.cpp:396
 #, kde-format
@@ -1715,7 +1715,7 @@ msgid ""
 "Result:\n"
 "%2"
 msgstr ""
-"عُثر على البرنامج ”%1“ للتحكم بخادوم «أكونادي» وقد نُفّذ بنجاح.\n"
+"عُثر على البرنامج ”%1“ للتحكم بخادم «أكونادي» وقد نُفّذ بنجاح.\n"
 "النتيجة:\n"
 "%2"
 
@@ -1733,27 +1733,27 @@ msgid ""
 "%2\n"
 "Make sure the Akonadi server is installed correctly."
 msgstr ""
-"عُثر على البرنامج ”%1“ للتحكم بخادوم «أكونادي» إلا أنه لم يُنفّذ بنجاح.\n"
+"عُثر على البرنامج ”%1“ للتحكم بخادم «أكونادي» إلا أنه لم يُنفّذ بنجاح.\n"
 "النتيجة:\n"
 "%2\n"
-"تحقّق من أن خادوم «أكونادي» مثبّت كما ينبغي."
+"تحقّق من أن خادم «أكونادي» مثبّت كما ينبغي."
 
 #: widgets/selftestdialog.cpp:416
 #, kde-format
 msgid "Akonadi control process registered at D-Bus."
-msgstr "عمليّة التحكّم بخادوم «أكونادي» مسجّلة في D-Bus."
+msgstr "عمليّة التحكّم بخادم «أكونادي» مسجّلة في D-Bus."
 
 #: widgets/selftestdialog.cpp:417
 #, kde-format
 msgid ""
 "The Akonadi control process is registered at D-Bus which typically indicates "
 "it is operational."
-msgstr "عمليّة التحكّم بخادوم «أكونادي» مسجّلة في D-Bus ما يعني أن الخادوم يعمل."
+msgstr "عمليّة التحكّم بخادم «أكونادي» مسجّلة في D-Bus ما يعني أن الخادم يعمل."
 
 #: widgets/selftestdialog.cpp:420
 #, kde-format
 msgid "Akonadi control process not registered at D-Bus."
-msgstr "لم تُسجّل عمليّة التحكّم بخادوم «أكونادي» في D-Bus."
+msgstr "لم تُسجّل عمليّة التحكّم بخادم «أكونادي» في D-Bus."
 
 #: widgets/selftestdialog.cpp:421
 #, kde-format
@@ -1761,25 +1761,25 @@ msgid ""
 "The Akonadi control process is not registered at D-Bus which typically means "
 "it was not started or encountered a fatal error during startup."
 msgstr ""
-"لم تُسجّل عمليّة التحكّم بخادوم «أكونادي» في D-Bus ما يعني غالبًا بأنه الخادوم لم "
+"لم تُسجّل عمليّة التحكّم بخادم «أكونادي» في D-Bus ما يعني غالبًا بأنه الخادم لم "
 "يبدأ أو أنه واجه خطأ فادحًا وهو يبدأ التشغيل."
 
 #: widgets/selftestdialog.cpp:427
 #, kde-format
 msgid "Akonadi server process registered at D-Bus."
-msgstr "عمليّة خادوم «أكونادي» مسجّلة في D-Bus."
+msgstr "عمليّة خادم «أكونادي» مسجّلة في D-Bus."
 
 #: widgets/selftestdialog.cpp:428
 #, kde-format
 msgid ""
 "The Akonadi server process is registered at D-Bus which typically indicates "
 "it is operational."
-msgstr "عمليّة خادوم «أكونادي» مسجّلة في D-Bus ما يعني أن الخادوم يعمل."
+msgstr "عمليّة خادم «أكونادي» مسجّلة في D-Bus ما يعني أن الخادم يعمل."
 
 #: widgets/selftestdialog.cpp:431
 #, kde-format
 msgid "Akonadi server process not registered at D-Bus."
-msgstr "لم تُسجّل عمليّة خادوم «أكونادي» في D-Bus."
+msgstr "لم تُسجّل عمليّة خادم «أكونادي» في D-Bus."
 
 #: widgets/selftestdialog.cpp:432
 #, kde-format
@@ -1787,13 +1787,13 @@ msgid ""
 "The Akonadi server process is not registered at D-Bus which typically means "
 "it was not started or encountered a fatal error during startup."
 msgstr ""
-"لم تُسجّل عمليّة خادوم «أكونادي» في D-Bus ما يعني غالبًا بأنه الخادوم لم يبدأ أو "
+"لم تُسجّل عمليّة خادم «أكونادي» في D-Bus ما يعني غالبًا بأنه الخادم لم يبدأ أو "
 "أنه واجه خطأ فادحًا وهو يبدأ التشغيل."
 
 #: widgets/selftestdialog.cpp:441
 #, kde-format
 msgid "Protocol version check not possible."
-msgstr "فحص إصدارة الخادوم غير ممكن."
+msgstr "فحص إصدارة الخادم غير ممكن."
 
 #: widgets/selftestdialog.cpp:442
 #, kde-format
@@ -1801,13 +1801,13 @@ msgid ""
 "Without a connection to the server it is not possible to check if the "
 "protocol version meets the requirements."
 msgstr ""
-"دون وجود اتصال بالخادوم فالتحقّق من إن كانت إصدارة الميفاق تطابق المتطلبات "
-"ليس ممكنًا."
+"دون وجود اتصال بالخادم فالتحقّق من إن كانت إصدارة الميفاق تطابق المتطلبات ليس "
+"ممكنًا."
 
 #: widgets/selftestdialog.cpp:447
 #, kde-format
 msgid "Server protocol version is too old."
-msgstr "إصدارة ميفاق الخادوم قديمة للغاية."
+msgstr "إصدارة ميفاق الخادم قديمة للغاية."
 
 #: widgets/selftestdialog.cpp:448 widgets/selftestdialog.cpp:455
 #, kde-format
@@ -1816,19 +1816,19 @@ msgid ""
 "If you recently updated KDE PIM, please make sure to restart both Akonadi "
 "and KDE PIM applications."
 msgstr ""
-"إصدارة ميفاق الخادوم هي %1، بينما الإصدارة %2 هي التي يطلبها العميل. إن كنت "
+"إصدارة ميفاق الخادم هي %1، بينما الإصدارة %2 هي التي يطلبها العميل. إن كنت "
 "قد حدّثت تطبيقات «إدارة كِيدِي للمعلومات الشخصية» حديثًا فرجاءً أعِد تشغيل "
 "«أكونادي» والتطبيقات سابقة الذكر."
 
 #: widgets/selftestdialog.cpp:454
 #, kde-format
 msgid "Server protocol version is too new."
-msgstr "إصدارة ميفاق الخادوم حديثة للغاية."
+msgstr "إصدارة ميفاق الخادم حديثة للغاية."
 
 #: widgets/selftestdialog.cpp:460
 #, kde-format
 msgid "Server protocol version matches."
-msgstr "إصدارة ميفاق الخادوم تتطابق."
+msgstr "إصدارة ميفاق الخادم تتطابق."
 
 #: widgets/selftestdialog.cpp:460
 #, kde-format
@@ -1867,18 +1867,18 @@ msgstr ""
 #: widgets/selftestdialog.cpp:499
 #, kde-format
 msgid "No current Akonadi server error log found."
-msgstr "لم يُعثر على سجل أخطاء حالي لخادوم «أكونادي»."
+msgstr "لم يُعثر على سجل أخطاء حالي لخادم «أكونادي»."
 
 #: widgets/selftestdialog.cpp:499
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its current startup."
-msgstr "لم يُبلغ خادوم «أكونادي» عن أية أخطاء وهو يبدأ التشغيل."
+msgstr "لم يُبلغ خادم «أكونادي» عن أية أخطاء وهو يبدأ التشغيل."
 
 #: widgets/selftestdialog.cpp:503
 #, kde-format
 msgid "Current Akonadi server error log found."
-msgstr "عُثر على سجل أخطاء حالي لخادوم «أكونادي»."
+msgstr "عُثر على سجل أخطاء حالي لخادم «أكونادي»."
 
 #: widgets/selftestdialog.cpp:504
 #, kde-format
@@ -1886,23 +1886,23 @@ msgid ""
 "The Akonadi server reported errors during its current startup. The log can "
 "be found in %1."
 msgstr ""
-"أبلغ خادوم «أكونادي» عن أخطاء وهو يبدأ التشغيل. يمكن العثور على السجل في %1."
+"أبلغ خادم «أكونادي» عن أخطاء وهو يبدأ التشغيل. يمكن العثور على السجل في %1."
 
 #: widgets/selftestdialog.cpp:512
 #, kde-format
 msgid "No previous Akonadi server error log found."
-msgstr "لم يُعثر على سجل أخطاء سابق لخادوم «أكونادي»."
+msgstr "لم يُعثر على سجل أخطاء سابق لخادم «أكونادي»."
 
 #: widgets/selftestdialog.cpp:513
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its previous startup."
-msgstr "لم يُبلغ خادوم «أكونادي» عن أية أخطاء في آخر مرة بدأ فيها التشغيل."
+msgstr "لم يُبلغ خادم «أكونادي» عن أية أخطاء في آخر مرة بدأ فيها التشغيل."
 
 #: widgets/selftestdialog.cpp:517
 #, kde-format
 msgid "Previous Akonadi server error log found."
-msgstr "عُثر على سجل أخطاء سابق لخادوم «أكونادي»."
+msgstr "عُثر على سجل أخطاء سابق لخادم «أكونادي»."
 
 #: widgets/selftestdialog.cpp:518
 #, kde-format
@@ -1910,13 +1910,13 @@ msgid ""
 "The Akonadi server reported errors during its previous startup. The log can "
 "be found in %1."
 msgstr ""
-"أبلغ خادوم «أكونادي» عن أخطاء حدثت في آخر مرة بدأ فيها التشغيل. يمكن العثور "
+"أبلغ خادم «أكونادي» عن أخطاء حدثت في آخر مرة بدأ فيها التشغيل. يمكن العثور "
 "على السجل في %1."
 
 #: widgets/selftestdialog.cpp:529
 #, kde-format
 msgid "No current Akonadi control error log found."
-msgstr "لم يُعثر على سجل أخطاء حالي لعمليّة التحكّم بخادوم «أكونادي»."
+msgstr "لم يُعثر على سجل أخطاء حالي لعمليّة التحكّم بخادم «أكونادي»."
 
 #: widgets/selftestdialog.cpp:530
 #, kde-format
@@ -1924,12 +1924,12 @@ msgid ""
 "The Akonadi control process did not report any errors during its current "
 "startup."
 msgstr ""
-"لم تُبلغ عمليّة التحكّم بخادوم «أكونادي» عن أية أخطاء وهو يبدأ التشغيل الآن."
+"لم تُبلغ عمليّة التحكّم بخادم «أكونادي» عن أية أخطاء وهو يبدأ التشغيل الآن."
 
 #: widgets/selftestdialog.cpp:534
 #, kde-format
 msgid "Current Akonadi control error log found."
-msgstr "عُثر على سجل أخطاء حالي لعمليّة التحكّم بخادوم «أكونادي»."
+msgstr "عُثر على سجل أخطاء حالي لعمليّة التحكّم بخادم «أكونادي»."
 
 #: widgets/selftestdialog.cpp:535
 #, kde-format
@@ -1937,13 +1937,13 @@ msgid ""
 "The Akonadi control process reported errors during its current startup. The "
 "log can be found in %1."
 msgstr ""
-"أبلغ خادوم «أكونادي» عن أخطاء حدثت في آخر مرة بدأ فيها التشغيل.. يمكن العثور "
+"أبلغ خادم «أكونادي» عن أخطاء حدثت في آخر مرة بدأ فيها التشغيل.. يمكن العثور "
 "على السجل في %1."
 
 #: widgets/selftestdialog.cpp:543
 #, kde-format
 msgid "No previous Akonadi control error log found."
-msgstr "لم يُعثر على سجل أخطاء سابق لعمليّة التحكّم بخادوم «أكونادي»."
+msgstr "لم يُعثر على سجل أخطاء سابق لعمليّة التحكّم بخادم «أكونادي»."
 
 #: widgets/selftestdialog.cpp:544
 #, kde-format
@@ -1951,13 +1951,13 @@ msgid ""
 "The Akonadi control process did not report any errors during its previous "
 "startup."
 msgstr ""
-"لم تُبلغ عمليّة التحكّم بخادوم «أكونادي» عن أية أخطاء في آخر مرة بدأ فيها "
+"لم تُبلغ عمليّة التحكّم بخادم «أكونادي» عن أية أخطاء في آخر مرة بدأ فيها "
 "التشغيل."
 
 #: widgets/selftestdialog.cpp:548
 #, kde-format
 msgid "Previous Akonadi control error log found."
-msgstr "عُثر على سجل أخطاء سابق لعمليّة التحكّم بخادوم «أكونادي»."
+msgstr "عُثر على سجل أخطاء سابق لعمليّة التحكّم بخادم «أكونادي»."
 
 #: widgets/selftestdialog.cpp:549
 #, kde-format
@@ -1965,7 +1965,7 @@ msgid ""
 "The Akonadi control process reported errors during its previous startup. The "
 "log can be found in %1."
 msgstr ""
-"أبلغ خادوم «أكونادي» عن أخطاء حدثت وهو يبدأ التشغيل الآن. يمكن العثور على "
+"أبلغ خادم «أكونادي» عن أخطاء حدثت وهو يبدأ التشغيل الآن. يمكن العثور على "
 "السجل في %1."
 
 #: widgets/selftestdialog.cpp:559
@@ -2021,7 +2021,7 @@ msgid ""
 "self-tests are supposed to help with tracking down and solving this problem. "
 "When requesting support or reporting bugs, please always include this report."
 msgstr ""
-"حدث خطأ أثناء بدء تشغيل خادوم «أكونادي». على الاختبارات الذاتية الآتية "
+"حدث خطأ أثناء بدء تشغيل خادم «أكونادي». على الاختبارات الذاتية الآتية "
 "مساعدتك في تعقّب المشكلة وحلّها. عندما تطلب الدعم أو تُبلغ عن العلل، رجاءً اشمل "
 "هذا التقرير مع الطلب/العلة."
 
