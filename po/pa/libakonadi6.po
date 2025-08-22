@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-23 00:43+0000\n"
+"POT-Creation-Date: 2025-08-22 00:42+0000\n"
 "PO-Revision-Date: 2023-12-31 09:30-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -2535,13 +2535,13 @@ msgctxt "@action:button"
 msgid "Go Online"
 msgstr "ਆਫਲਾਈਨ"
 
-#: widgets/standardactionmanager.cpp:1667
+#: widgets/standardactionmanager.cpp:1668
 #, fuzzy, kde-format
 #| msgid "Copy to This Folder"
 msgid "Move to This Folder"
 msgstr "ਇਹ ਫੋਲਡਰ ਕਾਪੀ ਕਰੋ"
 
-#: widgets/standardactionmanager.cpp:1667
+#: widgets/standardactionmanager.cpp:1668
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "ਇਹ ਫੋਲਡਰ ਕਾਪੀ ਕਰੋ"

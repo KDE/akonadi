@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-23 00:43+0000\n"
+"POT-Creation-Date: 2025-08-22 00:42+0000\n"
 "PO-Revision-Date: 2025-07-24 09:56+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -2551,12 +2551,12 @@ msgctxt "@action:button"
 msgid "Go Online"
 msgstr "התחברות"
 
-#: widgets/standardactionmanager.cpp:1667
+#: widgets/standardactionmanager.cpp:1668
 #, kde-format
 msgid "Move to This Folder"
 msgstr "העברה לתיקייה הזאת"
 
-#: widgets/standardactionmanager.cpp:1667
+#: widgets/standardactionmanager.cpp:1668
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "העתקה לתיקייה הזאת"
