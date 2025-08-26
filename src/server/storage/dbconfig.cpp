@@ -146,7 +146,7 @@ QString DbConfig::defaultDatabaseName()
         return QStringLiteral("akonadi");
     }
     // dash is not allowed in PSQL
-    return QLatin1StringView("akonadi_") % Instance::identifier().replace(QLatin1Char('-'), QLatin1Char('_'));
+    return QLatin1StringView("akonadi_") % Instance::identifier().replace(QLatin1Char('-'), u'_');
 }
 
 void DbConfig::initSession(const QSqlDatabase &database)
@@ -156,6 +156,6 @@ void DbConfig::initSession(const QSqlDatabase &database)
 
 int DbConfig::execute(const QString &cmd, const QStringList &args) const
 {
-    qCDebug(AKONADISERVER_LOG) << "Executing: " << cmd << args.join(QLatin1Char(' '));
+    qCDebug(AKONADISERVER_LOG) << "Executing: " << cmd << args.join(u' ');
     return QProcess::execute(cmd, args);
 }

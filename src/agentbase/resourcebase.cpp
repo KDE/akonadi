@@ -191,7 +191,7 @@ public Q_SLOTS:
     Q_SCRIPTABLE QString dumpToString() const
     {
         Q_Q(const ResourceBase);
-        return scheduler->dumpToString() + QLatin1Char('\n') + q->dumpResourceToString();
+        return scheduler->dumpToString() + u'\n' + q->dumpResourceToString();
     }
 
     Q_SCRIPTABLE void dump()

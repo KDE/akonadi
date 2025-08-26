@@ -24,7 +24,7 @@ public:
     {
         QString service = QStringLiteral("org.freedesktop.Akonadi.AgentConfig.%1").arg(instance);
         if (ServerManager::self()->hasInstanceIdentifier()) {
-            service += QLatin1Char('.') + ServerManager::self()->instanceIdentifier();
+            service += u'.' + ServerManager::self()->instanceIdentifier();
         }
         return service;
     }

@@ -111,7 +111,7 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
     bool dummy;
     const auto notifications = ChangeRecorderJournalReader::loadFrom(&file, dummy);
     for (const auto &n : notifications) {
-        result += Protocol::debugString(n) + QLatin1Char('\n');
+        result += Protocol::debugString(n) + u'\n';
     }
     return result;
 }

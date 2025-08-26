@@ -806,11 +806,11 @@ public:
             return;
         }
 
-        if (name.contains(QLatin1Char('/'))) {
+        if (name.contains(u'/')) {
             KMessageBox::error(parentWidget, i18n("We can not add \"/\" in folder name."), i18nc("@title:window", "Create New Folder Error"));
             return;
         }
-        if (name.startsWith(QLatin1Char('.')) || name.endsWith(QLatin1Char('.'))) {
+        if (name.startsWith(QLatin1Char('.')) || name.endsWith(u'.')) {
             KMessageBox::error(parentWidget, i18n("We can not add \".\" at begin or end of folder name."), i18nc("@title:window", "Create New Folder Error"));
             return;
         }
@@ -1648,7 +1648,7 @@ public:
             }
 
             QString label = model->data(index).toString();
-            label.replace(QLatin1Char('&'), QStringLiteral("&&"));
+            label.replace(u'&', QStringLiteral("&&"));
 
             const auto icon = model->data(index, Qt::DecorationRole).value<QIcon>();
 

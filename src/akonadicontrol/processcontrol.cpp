@@ -172,7 +172,7 @@ void ProcessControl::start()
 
         const QString valgrindOptions = akGetEnv("AKONADI_VALGRIND_OPTIONS");
         if (!valgrindOptions.isEmpty()) {
-            mArguments = valgrindOptions.split(QLatin1Char(' '), Qt::SkipEmptyParts) << mArguments;
+            mArguments = valgrindOptions.split(u' ', Qt::SkipEmptyParts) << mArguments;
         }
 
         qCDebug(AKONADICONTROL_LOG);
@@ -191,7 +191,7 @@ void ProcessControl::start()
     const QString agentHeaptrack = akGetEnv("AKONADI_HEAPTRACK");
     if (!agentHeaptrack.isEmpty() && (mApplication.contains(agentHeaptrack) || listContains(mArguments, agentHeaptrack))) {
         mArguments.prepend(mApplication);
-        const QString originalArguments = mArguments.join(QLatin1Char(' '));
+        const QString originalArguments = mArguments.join(u' ');
         mApplication = QStringLiteral("heaptrack");
 
         qCDebug(AKONADICONTROL_LOG);
@@ -204,7 +204,7 @@ void ProcessControl::start()
     const QString agentPerf = akGetEnv("AKONADI_PERF");
     if (!agentPerf.isEmpty() && (mApplication.contains(agentPerf) || listContains(mArguments, agentPerf))) {
         mArguments.prepend(mApplication);
-        const QString originalArguments = mArguments.join(QLatin1Char(' '));
+        const QString originalArguments = mArguments.join(u' ');
         mApplication = QStringLiteral("perf");
 
         mArguments = QStringList{QStringLiteral("record"), QStringLiteral("--call-graph"), QStringLiteral("dwarf"), QStringLiteral("--")} + mArguments;

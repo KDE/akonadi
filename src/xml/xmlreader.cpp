@@ -59,7 +59,7 @@ Collection XmlReader::elementToCollection(const QDomElement &elem)
     Collection c;
     c.setRemoteId(elem.attribute(Format::Attr::remoteId()));
     c.setName(elem.attribute(Format::Attr::collectionName()));
-    c.setContentMimeTypes(elem.attribute(Format::Attr::collectionContentTypes()).split(QLatin1Char(',')));
+    c.setContentMimeTypes(elem.attribute(Format::Attr::collectionContentTypes()).split(u','));
     XmlReader::readAttributes(elem, c);
 
     const QDomElement parentElem = elem.parentNode().toElement();

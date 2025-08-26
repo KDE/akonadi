@@ -100,7 +100,7 @@ void CollectionRequesterPrivate::_k_collectionsNamesReceived(KJob *job)
         namesList.prepend(currentCollection.displayName());
         currentCollection = names.take(currentCollection.parentCollection().id());
     }
-    edit->setText(namesList.join(QLatin1Char('/')));
+    edit->setText(namesList.join(u'/'));
 }
 
 void CollectionRequesterPrivate::init()

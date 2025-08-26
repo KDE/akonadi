@@ -61,7 +61,7 @@ QString DbInitializerMySql::buildColumnStatement(const ColumnDescription &column
 {
     QString column = columnDescription.name;
 
-    column += QLatin1Char(' ') + sqlType(columnDescription, columnDescription.size);
+    column += u' ' + sqlType(columnDescription, columnDescription.size);
 
     if (!columnDescription.allowNull) {
         column += QLatin1StringView(" NOT NULL");
@@ -101,7 +101,7 @@ QString DbInitializerMySql::buildInsertValuesStatement(const TableDescription &t
         values.push_back(it.value());
     }
 
-    return QStringLiteral("INSERT INTO %1 (%2) VALUES (%3)").arg(tableDescription.name, keys.join(QLatin1Char(',')), values.join(QLatin1Char(',')));
+    return QStringLiteral("INSERT INTO %1 (%2) VALUES (%3)").arg(tableDescription.name, keys.join(QLatin1Char(',')), values.join(u','));
 }
 
 QStringList DbInitializerMySql::buildAddForeignKeyConstraintStatements(const TableDescription &table, const ColumnDescription &column) const
@@ -156,7 +156,7 @@ QString DbInitializerSqlite::buildCreateTableStatement(const TableDescription &t
 
 QString DbInitializerSqlite::buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const
 {
-    QString column = columnDescription.name + QLatin1Char(' ');
+    QString column = columnDescription.name + u' ';
 
     if (columnDescription.isAutoIncrement) {
         column += QLatin1StringView("INTEGER");
@@ -201,7 +201,7 @@ QString DbInitializerSqlite::buildInsertValuesStatement(const TableDescription &
         values.push_back(it.value());
     }
 
-    return QStringLiteral("INSERT INTO %1 (%2) VALUES (%3)").arg(tableDescription.name, keys.join(QLatin1Char(',')), values.join(QLatin1Char(',')));
+    return QStringLiteral("INSERT INTO %1 (%2) VALUES (%3)").arg(tableDescription.name, keys.join(QLatin1Char(',')), values.join(u','));
 }
 
 QString DbInitializerSqlite::sqlValue(const ColumnDescription &col, const QString &value) const
@@ -282,7 +282,7 @@ QString DbInitializerPostgreSql::buildCreateTableStatement(const TableDescriptio
 
 QString DbInitializerPostgreSql::buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const
 {
-    QString column = columnDescription.name + QLatin1Char(' ');
+    QString column = columnDescription.name + u' ';
 
     if (columnDescription.isAutoIncrement) {
         column += QLatin1StringView("SERIAL");
@@ -320,7 +320,7 @@ QString DbInitializerPostgreSql::buildInsertValuesStatement(const TableDescripti
         values.push_back(it.value());
     }
 
-    return QStringLiteral("INSERT INTO %1 (%2) VALUES (%3)").arg(tableDescription.name, keys.join(QLatin1Char(',')), values.join(QLatin1Char(',')));
+    return QStringLiteral("INSERT INTO %1 (%2) VALUES (%3)").arg(tableDescription.name, keys.join(QLatin1Char(',')), values.join(u','));
 }
 
 QStringList DbInitializerPostgreSql::buildAddForeignKeyConstraintStatements(const TableDescription &table, const ColumnDescription &column) const

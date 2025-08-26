@@ -140,7 +140,7 @@ void SearchManager::loadSearchPlugins()
         const QStringList fileNames = dir.entryList(QDir::Files);
         qCDebug(AKONADISERVER_SEARCH_LOG) << "SEARCH MANAGER: searching in " << path << ":" << fileNames;
         for (const QString &fileName : fileNames) {
-            const QString filePath = path % QLatin1Char('/') % fileName;
+            const QString filePath = path % u'/' % fileName;
             std::unique_ptr<QPluginLoader> loader(new QPluginLoader(filePath));
             const QVariantMap metadata = loader->metaData().value(QStringLiteral("MetaData")).toVariant().toMap();
             if (metadata.value(QStringLiteral("X-Akonadi-PluginType")).toString() != QLatin1StringView("SearchPlugin")) {
@@ -255,7 +255,7 @@ void SearchManager::updateSearchImpl(const Collection &collection)
         return;
     }
 
-    const QStringList queryAttributes = collection.queryAttributes().split(QLatin1Char(' '));
+    const QStringList queryAttributes = collection.queryAttributes().split(u' ');
     const bool remoteSearch = queryAttributes.contains(QLatin1StringView(AKONADI_PARAM_REMOTE));
     bool recursive = queryAttributes.contains(QLatin1StringView(AKONADI_PARAM_RECURSIVE));
 
@@ -272,7 +272,7 @@ void SearchManager::updateSearchImpl(const Collection &collection)
         queryAncestors << 0;
         recursive = true;
     } else {
-        const QStringList collectionIds = collection.queryCollections().split(QLatin1Char(' '));
+        const QStringList collectionIds = collection.queryCollections().split(u' ');
         queryAncestors.reserve(collectionIds.count());
         for (const QString &colId : collectionIds) {
             queryAncestors << colId.toLongLong();

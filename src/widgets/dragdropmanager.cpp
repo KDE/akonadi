@@ -208,25 +208,25 @@ bool DragDropManager::processDropEvent(QDropEvent *event, bool &menuCanceled, bo
     if (moveAllowed) {
         sequence = QKeySequence(Qt::ShiftModifier).toString();
         sequence.chop(1); // chop superfluous '+'
-        moveDropAction = popup.addAction(QIcon::fromTheme(QStringLiteral("edit-move"), QIcon::fromTheme(QStringLiteral("go-jump"))),
-                                         i18n("&Move Here") + QLatin1Char('\t') + sequence);
+        moveDropAction =
+            popup.addAction(QIcon::fromTheme(QStringLiteral("edit-move"), QIcon::fromTheme(QStringLiteral("go-jump"))), i18n("&Move Here") + u'\t' + sequence);
     }
 
     if (copyAllowed) {
         sequence = QKeySequence(Qt::ControlModifier).toString();
         sequence.chop(1); // chop superfluous '+'
-        copyDropAction = popup.addAction(QIcon::fromTheme(QStringLiteral("edit-copy")), i18n("&Copy Here") + QLatin1Char('\t') + sequence);
+        copyDropAction = popup.addAction(QIcon::fromTheme(QStringLiteral("edit-copy")), i18n("&Copy Here") + u'\t' + sequence);
     }
 
     if (linkAllowed) {
         sequence = QKeySequence(Qt::ControlModifier | Qt::ShiftModifier).toString();
         sequence.chop(1); // chop superfluous '+'
-        linkAction = popup.addAction(QIcon::fromTheme(QStringLiteral("edit-link")), i18n("&Link Here") + QLatin1Char('\t') + sequence);
+        linkAction = popup.addAction(QIcon::fromTheme(QStringLiteral("edit-link")), i18n("&Link Here") + u'\t' + sequence);
     }
 
     popup.addSeparator();
     QAction *cancelAction =
-        popup.addAction(QIcon::fromTheme(QStringLiteral("process-stop")), i18n("C&ancel") + QLatin1Char('\t') + QKeySequence(Qt::Key_Escape).toString());
+        popup.addAction(QIcon::fromTheme(QStringLiteral("process-stop")), i18n("C&ancel") + u'\t' + QKeySequence(Qt::Key_Escape).toString());
 
     QAction *activatedAction = popup.exec(m_view->viewport()->mapToGlobal(event->position().toPoint()));
     if (!activatedAction || (activatedAction == cancelAction)) {

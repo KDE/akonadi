@@ -712,7 +712,7 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
     // and this is where we "hook up" our different Agent interfaces.
 
     // Ignore DBus address name (e.g. :1.310)
-    if (name.startsWith(QLatin1Char(':'))) {
+    if (name.startsWith(u':')) {
         return;
     }
 

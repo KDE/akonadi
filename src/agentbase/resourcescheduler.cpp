@@ -501,7 +501,7 @@ void ResourceScheduler::signalTaskToTracker(const Task &task, const QByteArray &
 {
     // if there's a job tracer running, tell it about the new job
     if (!s_resourcetracker) {
-        const QString suffix = Akonadi::Instance::identifier().isEmpty() ? QString() : QLatin1Char('-') + Akonadi::Instance::identifier();
+        const QString suffix = Akonadi::Instance::identifier().isEmpty() ? QString() : u'-' + Akonadi::Instance::identifier();
         if (QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.akonadiconsole") + suffix)) {
             s_resourcetracker = new QDBusInterface(QLatin1StringView("org.kde.akonadiconsole") + suffix,
                                                    QStringLiteral("/resourcesJobtracker"),

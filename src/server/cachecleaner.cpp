@@ -113,7 +113,7 @@ void CacheCleaner::collectionExpired(const Collection &collection)
     qb.addValueCondition(PartType::nsFullColumnName(), Query::Equals, QLatin1StringView("PLD"));
     qb.addValueCondition(PimItem::dirtyFullColumnName(), Query::Equals, false);
 
-    const QStringList partNames = collection.cachePolicyLocalParts().split(QLatin1Char(' '));
+    const QStringList partNames = collection.cachePolicyLocalParts().split(u' ');
     for (QString partName : partNames) {
         if (partName.startsWith(QLatin1StringView(AKONADI_PARAM_PLD))) {
             partName.remove(0, 4);

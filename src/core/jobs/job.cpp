@@ -109,7 +109,7 @@ void JobPrivate::publishJob()
             if (!s_lastTime.isValid()) {
                 s_lastTime.start();
             }
-            const QString suffix = Akonadi::Instance::identifier().isEmpty() ? QString() : QLatin1Char('-') + Akonadi::Instance::identifier();
+            const QString suffix = Akonadi::Instance::identifier().isEmpty() ? QString() : u'-' + Akonadi::Instance::identifier();
             if (QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.akonadiconsole") + suffix)) {
                 s_jobtracker = new QDBusInterface(QLatin1StringView("org.kde.akonadiconsole") + suffix,
                                                   QStringLiteral("/jobtracker"),

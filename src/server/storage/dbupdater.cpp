@@ -194,7 +194,7 @@ bool DbUpdater::parseUpdateSets(int currentVersion, UpdateSet::Map &updates) con
 
 bool DbUpdater::updateApplicable(const QString &backends) const
 {
-    const QStringList matchingBackends = backends.split(QLatin1Char(','));
+    const QStringList matchingBackends = backends.split(u',');
 
     QString currentBackend;
     switch (DbType::type(m_database)) {

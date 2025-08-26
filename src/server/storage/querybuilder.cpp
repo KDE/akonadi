@@ -293,8 +293,8 @@ void QueryBuilder::sqliteAdaptUpdateJoin(Query::Condition &condition)
     }
 
     QString table;
-    if (condition.mColumn.contains(QLatin1Char('.'))) {
-        table = condition.mColumn.left(condition.mColumn.indexOf(QLatin1Char('.')));
+    if (condition.mColumn.contains(u'.')) {
+        table = condition.mColumn.left(condition.mColumn.indexOf(u'.'));
     } else {
         return;
     }
@@ -531,7 +531,7 @@ bool QueryBuilder::exec()
     // qCDebug(AKONADISERVER_LOG) << "Executing query" << statement;
     bool isBatch = false;
     for (int i = 0; i < mBindValues.count(); ++i) {
-        mQuery.bindValue(QLatin1Char(':') + QString::number(i), mBindValues[i]);
+        mQuery.bindValue(u':' + QString::number(i), mBindValues[i]);
         if (!isBatch && static_cast<QMetaType::Type>(mBindValues[i].typeId()) == qMetaTypeId<QVariantList>()) {
             isBatch = true;
         }
@@ -635,14 +635,14 @@ void QueryBuilder::addColumn(const Query::Case &caseStmt)
 
 void QueryBuilder::addAggregation(const QString &col, const QString &aggregate)
 {
-    mColumns.append(aggregate + QLatin1Char('(') + col + QLatin1Char(')'));
+    mColumns.append(aggregate + QLatin1Char('(') + col + u')');
 }
 
 void QueryBuilder::addAggregation(const Query::Case &caseStmt, const QString &aggregate)
 {
-    QString query(aggregate + QLatin1Char('('));
+    QString query(aggregate + u'(');
     buildCaseStatement(&query, caseStmt);
-    query += QLatin1Char(')');
+    query += u')';
 
     mColumns.append(query);
 }
@@ -654,7 +654,7 @@ void QueryBuilder::bindValue(QString *query, const QVariant &value)
     } else {
         mBindValues.emplace_back(value);
     }
-    *query += QLatin1Char(':') + QString::number(mBindValues.count() - 1);
+    *query += u':' + QString::number(mBindValues.count() - 1);
 }
 
 namespace
@@ -845,7 +845,7 @@ QString QueryBuilder::getTable() const
 
 QString QueryBuilder::getTableWithColumn(const QString &column) const
 {
-    return mTable + QLatin1Char('.') + column;
+    return mTable + u'.' + column;
 }
 
 QString QueryBuilder::getTableQuery(const QSqlQuery &query, const QString &alias)
@@ -863,7 +863,7 @@ QString QueryBuilder::getTableQuery(const QSqlQuery &query, const QString &alias
     const QList<QVariant> boundValues = query.boundValues();
     for (qsizetype pos = boundValues.size() - 1; pos >= 0; --pos) {
         const QVariant &value = boundValues.at(pos);
-        const QString key(QLatin1Char(':') + QString::number(pos));
+        const QString key(u':' + QString::number(pos));
         QSqlField field(QLatin1StringView(""), value.metaType());
         if (value.isNull()) {
             field.clear();

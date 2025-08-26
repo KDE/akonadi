@@ -242,7 +242,7 @@ void StorageJanitor::findOrphanedResources()
         for (const Resource &resource : orphanResources) {
             resourceNames.append(resource.name());
         }
-        inform(QStringLiteral("Found %1 orphan resources: %2").arg(orphanResourcesSize).arg(resourceNames.join(QLatin1Char(','))));
+        inform(QStringLiteral("Found %1 orphan resources: %2").arg(orphanResourcesSize).arg(resourceNames.join(u',')));
         for (const QString &resourceName : std::as_const(resourceNames)) {
             inform(QStringLiteral("Removing resource %1").arg(resourceName));
             m_akonadi->resourceManager().removeResourceInstance(resourceName);
@@ -527,7 +527,7 @@ void StorageJanitor::verifyExternalParts()
     while (it.hasNext()) {
         existingFiles.insert(it.next());
     }
-    existingFiles.remove(dataDir + QDir::separator() + QLatin1Char('.'));
+    existingFiles.remove(dataDir + QDir::separator() + u'.');
     existingFiles.remove(dataDir + QDir::separator() + QLatin1StringView(".."));
     inform(QLatin1StringView("Found ") + QString::number(existingFiles.size()) + QLatin1StringView(" external files."));
 
@@ -650,7 +650,7 @@ void StorageJanitor::findRIDDuplicates()
         duplicates.addValueCondition(PimItem::remoteIdColumn(), Query::IsNot, QVariant());
         duplicates.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, colId);
         duplicates.addGroupColumn(PimItem::remoteIdColumn());
-        duplicates.addValueCondition(QStringLiteral("count(") + PimItem::idColumn() + QLatin1Char(')'), Query::Greater, 1, QueryBuilder::HavingCondition);
+        duplicates.addValueCondition(QStringLiteral("count(") + PimItem::idColumn() + u')', Query::Greater, 1, QueryBuilder::HavingCondition);
         duplicates.exec();
 
         Akonadi::Server::Collection col = Akonadi::Server::Collection::retrieveById(m_dataStore.get(), colId);

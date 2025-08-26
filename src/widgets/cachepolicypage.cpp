@@ -40,12 +40,12 @@ public:
 
 void CachePolicyPagePrivate::slotIntervalValueChanged(int interval)
 {
-    mUi->checkInterval->setSuffix(QLatin1Char(' ') + i18np("minute", "minutes", interval));
+    mUi->checkInterval->setSuffix(u' ' + i18np("minute", "minutes", interval));
 }
 
 void CachePolicyPagePrivate::slotCacheValueChanged(int interval)
 {
-    mUi->localCacheTimeout->setSuffix(QLatin1Char(' ') + i18np("minute", "minutes", interval));
+    mUi->localCacheTimeout->setSuffix(u' ' + i18np("minute", "minutes", interval));
 }
 
 void CachePolicyPagePrivate::slotRetrievalOptionsGroupBoxDisabled(bool disable)

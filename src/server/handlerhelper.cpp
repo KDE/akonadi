@@ -32,7 +32,7 @@ Collection HandlerHelper::collectionFromIdOrName(const QByteArray &id)
     // id is a path
     QString path = QString::fromUtf8(id); // ### should be UTF-7 for real IMAP compatibility
 
-    const QStringList pathParts = path.split(QLatin1Char('/'), Qt::SkipEmptyParts);
+    const QStringList pathParts = path.split(u'/', Qt::SkipEmptyParts);
 
     Collection col;
     for (const QString &part : pathParts) {
@@ -63,7 +63,7 @@ QString HandlerHelper::pathForCollection(const Collection &col)
         parts.prepend(current.name());
         current = current.parent();
     }
-    return parts.join(QLatin1Char('/'));
+    return parts.join(u'/');
 }
 
 Protocol::CachePolicy HandlerHelper::cachePolicyResponse(const Collection &col)
@@ -73,7 +73,7 @@ Protocol::CachePolicy HandlerHelper::cachePolicyResponse(const Collection &col)
     cachePolicy.setCacheTimeout(col.cachePolicyCacheTimeout());
     cachePolicy.setCheckInterval(col.cachePolicyCheckInterval());
     if (!col.cachePolicyLocalParts().isEmpty()) {
-        cachePolicy.setLocalParts(col.cachePolicyLocalParts().split(QLatin1Char(' ')));
+        cachePolicy.setLocalParts(col.cachePolicyLocalParts().split(u' '));
     }
     cachePolicy.setSyncOnDemand(col.cachePolicySyncOnDemand());
     return cachePolicy;
@@ -124,7 +124,7 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(Akona
     if (!col.queryString().isEmpty()) {
         response.setSearchQuery(col.queryString());
         QList<qint64> searchCols;
-        const QStringList searchColIds = col.queryCollections().split(QLatin1Char(' '));
+        const QStringList searchColIds = col.queryCollections().split(u' ');
         searchCols.reserve(searchColIds.size());
         for (const QString &searchColId : searchColIds) {
             searchCols << searchColId.toLongLong();

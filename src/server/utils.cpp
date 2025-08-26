@@ -66,9 +66,9 @@ QString Utils::preferredSocketDirectory(const QString &defaultDirectory, int fnL
         }
     }
 
-    if (socketDir[0] != QLatin1Char('/')) {
+    if (socketDir[0] != u'/') {
         QDir::home().mkdir(socketDir);
-        socketDir = QDir::homePath() + QLatin1Char('/') + socketDir;
+        socketDir = QDir::homePath() + u'/' + socketDir;
     }
 
     QFileInfo dirInfo(socketDir);

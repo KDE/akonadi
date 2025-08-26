@@ -412,7 +412,7 @@ bool DbConfigMysql::startInternalServer()
             }
         }
 
-        qCDebug(AKONADISERVER_LOG) << "Executing:" << mMysqldPath << arguments.join(QLatin1Char(' '));
+        qCDebug(AKONADISERVER_LOG) << "Executing:" << mMysqldPath << arguments.join(u' ');
         mDatabaseProcess = std::make_unique<QProcess>();
         mDatabaseProcess->start(mMysqldPath, arguments);
         if (!mDatabaseProcess->waitForStarted()) {
@@ -497,7 +497,7 @@ bool DbConfigMysql::startInternalServer()
                 }
 
                 const QString version = query.value(0).toString();
-                const QStringList versions = version.split(QLatin1Char('.'), Qt::SkipEmptyParts);
+                const QStringList versions = version.split(u'.', Qt::SkipEmptyParts);
                 if (versions.count() < 3) {
                     qCCritical(AKONADISERVER_LOG) << "Invalid database server version: " << version;
                     return false;

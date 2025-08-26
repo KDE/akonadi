@@ -97,7 +97,7 @@ bool CollectionModifyHandler::parseStream()
 
         QStringList parts = newCp.localParts();
         std::sort(parts.begin(), parts.end());
-        const QString localParts = parts.join(QLatin1Char(' '));
+        const QString localParts = parts.join(u' ');
         if (collection.cachePolicyLocalParts() != localParts) {
             collection.setCachePolicyLocalParts(localParts);
             changed = true;
@@ -183,7 +183,7 @@ bool CollectionModifyHandler::parseStream()
                               return QString::number(col);
                           })
             | Actions::toQList;
-        const QString colStr = cols.join(QLatin1Char(' '));
+        const QString colStr = cols.join(u' ');
         if (colStr != collection.queryCollections()) {
             collection.setQueryCollections(colStr);
             changed = true;

@@ -101,7 +101,7 @@ bool CollectionCreateHandler::parseStream()
     collection.setCachePolicyCacheTimeout(cp.cacheTimeout());
     collection.setCachePolicyCheckInterval(cp.checkInterval());
     collection.setCachePolicyInherit(cp.inherit());
-    collection.setCachePolicyLocalParts(cp.localParts().join(QLatin1Char(' ')));
+    collection.setCachePolicyLocalParts(cp.localParts().join(u' '));
     collection.setCachePolicySyncOnDemand(cp.syncOnDemand());
 
     DataStore *db = connection()->storageBackend();

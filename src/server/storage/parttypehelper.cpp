@@ -17,7 +17,7 @@ using namespace Akonadi::Server;
 
 std::pair<QString, QString> PartTypeHelper::parseFqName(const QString &fqName)
 {
-    const QStringList name = fqName.split(QLatin1Char(':'), Qt::SkipEmptyParts);
+    const QStringList name = fqName.split(u':', Qt::SkipEmptyParts);
     if (name.size() != 2) {
         throw PartTypeException("Invalid part type name.");
     }

@@ -26,7 +26,7 @@ QString buildFullRelPath(const char *resource, const QString &relPath)
 #ifdef Q_OS_WIN
     // On Windows all Generic*Location fall into ~/AppData/Local so we need to disambiguate
     // inside the "akonadi" folder whether it's data or config.
-    fullRelPath += QLatin1Char('/') + QString::fromLocal8Bit(resource);
+    fullRelPath += u'/' + QString::fromLocal8Bit(resource);
 #else
     Q_UNUSED(resource)
 #endif
@@ -35,7 +35,7 @@ QString buildFullRelPath(const char *resource, const QString &relPath)
         fullRelPath += QLatin1StringView("/instance/") + Akonadi::Instance::identifier();
     }
     if (!relPath.isEmpty()) {
-        fullRelPath += QLatin1Char('/') + relPath;
+        fullRelPath += u'/' + relPath;
     }
     return fullRelPath;
 }
@@ -44,7 +44,7 @@ QString buildFullRelPath(const char *resource, const QString &relPath)
 
 QString StandardDirs::configFile(const QString &configFile, FileAccessMode openMode)
 {
-    const QString savePath = StandardDirs::saveDir("config") + QLatin1Char('/') + configFile;
+    const QString savePath = StandardDirs::saveDir("config") + u'/' + configFile;
     if (openMode == WriteOnly) {
         return savePath;
     }

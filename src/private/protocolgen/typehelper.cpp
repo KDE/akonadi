@@ -59,21 +59,21 @@ bool TypeHelper::isBuiltInType(const QString &type)
 
 bool TypeHelper::isContainer(const QString &type)
 {
-    const int tplB = type.indexOf(QLatin1Char('<'));
-    const int tplE = type.lastIndexOf(QLatin1Char('>'));
+    const int tplB = type.indexOf(u'<');
+    const int tplE = type.lastIndexOf(u'>');
     return tplB > -1 && tplE > -1 && tplB < tplE;
 }
 
 QString TypeHelper::containerType(const QString &type)
 {
-    const int tplB = type.indexOf(QLatin1Char('<'));
-    const int tplE = type.indexOf(QLatin1Char('>'));
+    const int tplB = type.indexOf(u'<');
+    const int tplE = type.indexOf(u'>');
     return type.mid(tplB + 1, tplE - tplB - 1);
 }
 
 QString TypeHelper::containerName(const QString &type)
 {
-    const int tplB = type.indexOf(QLatin1Char('<'));
+    const int tplB = type.indexOf(u'<');
     return type.left(tplB);
 }
 

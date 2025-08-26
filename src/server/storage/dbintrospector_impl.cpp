@@ -98,7 +98,7 @@ QList<DbIntrospector::ForeignKey> DbIntrospectorSqlite::foreignKeyConstraints(co
         fk.refColumn = query.value(4).toString();
         fk.onUpdate = query.value(5).toString();
         fk.onDelete = query.value(6).toString();
-        fk.name = tableName + fk.column + QLatin1Char('_') + fk.refTable + fk.refColumn + QStringLiteral("_fk");
+        fk.name = tableName + fk.column + u'_' + fk.refTable + fk.refColumn + QStringLiteral("_fk");
         result.push_back(fk);
     }
 

@@ -388,7 +388,7 @@ QString Akonadi::FavoriteCollectionsModel::defaultFavoriteLabel(const Akonadi::C
     if (accountName.isEmpty()) {
         return nameOfCollection;
     } else {
-        return nameOfCollection + QStringLiteral(" (") + accountName + QLatin1Char(')');
+        return nameOfCollection + QStringLiteral(" (") + accountName + u')';
     }
 }
 

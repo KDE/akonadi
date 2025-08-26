@@ -94,7 +94,7 @@ private:
     };
     std::optional<Version> parseVersion(const QString &name) const
     {
-        const auto dotIdx = name.indexOf(QLatin1Char('.'));
+        const auto dotIdx = name.indexOf(u'.');
         if (dotIdx == -1) {
             return {};
         }
@@ -541,7 +541,7 @@ bool DbConfigPostgresql::startInternalServer()
               //  -h - disable listening for TCP/IP
               << QStringLiteral("-o \"-k%1\" -h ''").arg(socketDir);
 
-    qCDebug(AKONADISERVER_LOG) << "Executing:" << mServerPath << arguments.join(QLatin1Char(' '));
+    qCDebug(AKONADISERVER_LOG) << "Executing:" << mServerPath << arguments.join(u' ');
     QProcess pgCtl;
     pgCtl.start(mServerPath, arguments);
     if (!pgCtl.waitForStarted()) {

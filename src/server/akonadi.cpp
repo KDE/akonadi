@@ -376,14 +376,14 @@ bool AkonadiServer::createServers(QSettings &settings, QSettings &connectionSett
     const QString cmdSocketName = QStringLiteral("akonadiserver-cmd.socket");
     const QString ntfSocketName = QStringLiteral("akonadiserver-ntf.socket");
     const QString socketDir = Utils::preferredSocketDirectory(StandardDirs::saveDir("data"), qMax(cmdSocketName.length(), ntfSocketName.length()));
-    const QString cmdSocketFile = socketDir % QLatin1Char('/') % cmdSocketName;
+    const QString cmdSocketFile = socketDir % u'/' % cmdSocketName;
     QFile::remove(cmdSocketFile);
     if (!mCmdServer->listen(cmdSocketFile)) {
         qCCritical(AKONADISERVER_LOG) << "Unable to listen on Unix socket" << cmdSocketFile << ":" << mCmdServer->errorString();
         return false;
     }
 
-    const QString ntfSocketFile = socketDir % QLatin1Char('/') % ntfSocketName;
+    const QString ntfSocketFile = socketDir % u'/' % ntfSocketName;
     QFile::remove(ntfSocketFile);
     if (!mNtfServer->listen(ntfSocketFile)) {
         qCCritical(AKONADISERVER_LOG) << "Unable to listen on Unix socket" << ntfSocketFile << ":" << mNtfServer->errorString();

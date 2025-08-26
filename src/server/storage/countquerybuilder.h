@@ -60,7 +60,7 @@ public:
             s += QLatin1StringView("DISTINCT ");
         }
         s += column;
-        s += QLatin1Char(')');
+        s += u')';
         addColumn(s);
     }
 

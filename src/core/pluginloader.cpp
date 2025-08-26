@@ -111,7 +111,7 @@ void PluginLoader::scan()
     for (const QString &dir : dirs) {
         const QStringList fileNames = QDir(dir).entryList(QStringList() << QStringLiteral("*.desktop"));
         for (const QString &file : fileNames) {
-            const QString entry = dir + QLatin1Char('/') + file;
+            const QString entry = dir + u'/' + file;
             KConfig config(entry, KConfig::SimpleConfig);
             if (config.hasGroup(QLatin1StringView("Misc")) && config.hasGroup(QLatin1StringView("Plugin"))) {
                 KConfigGroup group(&config, QStringLiteral("Plugin"));
@@ -156,12 +156,12 @@ void PluginLoader::scan()
                     qCWarning(AKONADICORE_LOG) << "missing or empty X-KDE-ClassName value in \"" << entry << "\"";
                 }
 
-                const QStringList mimeTypes = type.split(QLatin1Char(','), Qt::SkipEmptyParts);
+                const QStringList mimeTypes = type.split(u',', Qt::SkipEmptyParts);
 
                 qCDebug(AKONADICORE_LOG) << "registering Desktop file" << entry << "for" << mimeTypes << '@' << classes;
                 for (const QString &mimeType : mimeTypes) {
                     for (const QString &classType : classes) {
-                        mPluginInfos.insert(mimeType + QLatin1Char('@') + classType, PluginMetaData(library, name, comment, cname));
+                        mPluginInfos.insert(mimeType + u'@' + classType, PluginMetaData(library, name, comment, cname));
                     }
                 }
 

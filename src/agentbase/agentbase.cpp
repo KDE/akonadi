@@ -1076,7 +1076,7 @@ void AgentBase::cleanup()
     /*
      * ... and also remove the agent configuration file if there is one.
      */
-    const QString configFile = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + config()->name();
+    const QString configFile = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + u'/' + config()->name();
     if (!QFile::remove(configFile)) {
         qCWarning(AKONADIAGENTBASE_LOG) << "Impossible to remove config file " << configFile;
     }

@@ -92,7 +92,7 @@ static bool checkSearchSupportStatus()
             const QDir dir(pluginDir + QLatin1StringView("/akonadi/"));
             const QStringList pluginFiles = dir.entryList(QDir::Files);
             for (const QString &pluginFileName : pluginFiles) {
-                QPluginLoader loader(dir.absolutePath() + QLatin1Char('/') + pluginFileName);
+                QPluginLoader loader(dir.absolutePath() + u'/' + pluginFileName);
                 const QVariantMap metadata = loader.metaData().value(QStringLiteral("MetaData")).toVariant().toMap();
                 if (metadata.value(QStringLiteral("X-Akonadi-PluginType")).toString() != QLatin1StringView("SearchPlugin")) {
                     continue;
@@ -118,7 +118,7 @@ static bool checkAvailableAgentTypes()
         const QDir dir(pluginDir);
         const QStringList plugins = dir.entryList(QStringList() << QStringLiteral("*.desktop"), QDir::Files);
         for (const QString &plugin : plugins) {
-            QSettings pluginInfo(pluginDir + QLatin1Char('/') + plugin, QSettings::IniFormat);
+            QSettings pluginInfo(pluginDir + u'/' + plugin, QSettings::IniFormat);
             pluginInfo.beginGroup(QStringLiteral("Desktop Entry"));
             types << pluginInfo.value(QStringLiteral("X-Akonadi-Identifier")).toString();
         }

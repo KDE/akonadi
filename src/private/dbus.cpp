@@ -28,7 +28,7 @@ static QString makeServiceName(QStringView base)
     if (!Instance::hasIdentifier()) {
         return base.toString();
     }
-    return base + QLatin1Char('.') + Instance::identifier();
+    return base + u'.' + Instance::identifier();
 }
 
 QString DBus::serviceName(DBus::ServiceType serviceType)
@@ -56,7 +56,7 @@ std::optional<DBus::AgentService> DBus::parseAgentServiceName(const QString &ser
     if (!serviceName.startsWith(AKONADI_DBUS_SERVER_SERVICE ".")) {
         return std::nullopt;
     }
-    const auto parts = QStringView(serviceName).mid(QStringView(AKONADI_DBUS_SERVER_SERVICE ".").length()).split(QLatin1Char('.'));
+    const auto parts = QStringView(serviceName).mid(QStringView(AKONADI_DBUS_SERVER_SERVICE ".").length()).split(u'.');
     if ((parts.size() == 2 && !Akonadi::Instance::hasIdentifier())
         || (parts.size() == 3 && Akonadi::Instance::hasIdentifier() && Akonadi::Instance::identifier() == parts.at(2))) {
         // switch on parts.at( 0 )
@@ -94,7 +94,7 @@ QString DBus::agentServiceName(const QString &agentIdentifier, DBus::AgentType a
     }
     serviceName += agentIdentifier;
     if (Akonadi::Instance::hasIdentifier()) {
-        serviceName += QLatin1Char('.') % Akonadi::Instance::identifier();
+        serviceName += u'.' % Akonadi::Instance::identifier();
     }
     return serviceName;
 }
@@ -116,7 +116,7 @@ std::optional<QString> DBus::parseInstanceIdentifier(const QString &serviceName)
     }
 
     if (serviceName.startsWith(QStringView{AKONADI_DBUS_SERVER_SERVICE})) {
-        const auto split = QStringView(serviceName).split(QLatin1Char('.'));
+        const auto split = QStringView(serviceName).split(u'.');
         if (split.size() <= 3) {
             return std::nullopt;
         }

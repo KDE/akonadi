@@ -58,8 +58,8 @@ bool SearchCreateHandler::parseStream()
 
     Collection col;
     col.setQueryString(cmd.query());
-    col.setQueryAttributes(queryAttributes.join(QLatin1Char(' ')));
-    col.setQueryCollections(queryCollections.join(QLatin1Char(' ')));
+    col.setQueryAttributes(queryAttributes.join(u' '));
+    col.setQueryCollections(queryCollections.join(u' '));
     col.setParentId(1); // search root
     col.setResourceId(1); // search resource
     col.setName(cmd.name());

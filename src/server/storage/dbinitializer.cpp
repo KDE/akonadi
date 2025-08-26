@@ -328,7 +328,7 @@ QString DbInitializer::buildCreateIndexStatement(const TableDescription &tableDe
     }
 
     return QStringLiteral("CREATE %1 INDEX %2 ON %3 (%4)")
-        .arg(indexDescription.isUnique ? QStringLiteral("UNIQUE") : QString(), indexName, tableDescription.name, columns.join(QLatin1Char(',')));
+        .arg(indexDescription.isUnique ? QStringLiteral("UNIQUE") : QString(), indexName, tableDescription.name, columns.join(u','));
 }
 
 QStringList DbInitializer::buildAddForeignKeyConstraintStatements(const TableDescription &table, const ColumnDescription &column) const
@@ -373,7 +373,7 @@ QString DbInitializer::buildPrimaryKeyStatement(const TableDescription &table)
             cols.push_back(column.name);
         }
     }
-    return QLatin1StringView("PRIMARY KEY (") + cols.join(QLatin1StringView(", ")) + QLatin1Char(')');
+    return QLatin1StringView("PRIMARY KEY (") + cols.join(QLatin1StringView(", ")) + u')';
 }
 
 void DbInitializer::execQuery(const QString &queryString)

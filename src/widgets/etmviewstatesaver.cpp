@@ -21,7 +21,7 @@ ETMViewStateSaver::ETMViewStateSaver(QObject *parent)
 
 QModelIndex ETMViewStateSaver::indexFromConfigString(const QAbstractItemModel *model, const QString &key) const
 {
-    if (key.startsWith(QLatin1Char('x'))) {
+    if (key.startsWith(u'x')) {
         return QModelIndex();
     }
 
@@ -30,13 +30,13 @@ QModelIndex ETMViewStateSaver::indexFromConfigString(const QAbstractItemModel *m
         return QModelIndex();
     }
 
-    if (key.startsWith(QLatin1Char('c'))) {
+    if (key.startsWith(u'c')) {
         const QModelIndex idx = EntityTreeModel::modelIndexForCollection(model, Collection(id));
         if (!idx.isValid()) {
             return QModelIndex();
         }
         return idx;
-    } else if (key.startsWith(QLatin1Char('i'))) {
+    } else if (key.startsWith(u'i')) {
         const QModelIndexList list = EntityTreeModel::modelIndexesForItem(model, Item(id));
         if (list.isEmpty()) {
             return QModelIndex();

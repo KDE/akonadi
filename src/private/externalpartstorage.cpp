@@ -73,9 +73,9 @@ QString ExternalPartStorage::resolveAbsolutePath(const QString &filename, bool *
     // Part files are stored in levelled cache. We use modulo 100 of the partID
     // to ensure even distribution of the part files into the subfolders.
     // PartID is encoded in filename as "PARTID_rX".
-    const int revPos = filename.indexOf(QLatin1Char('_'));
-    const QString path = basePath + QDir::separator() + (revPos > 1 ? filename[revPos - 2] : QLatin1Char('0'))
-        + (revPos > 0 ? filename[revPos - 1] : QLatin1Char('0')) + QDir::separator() + filename;
+    const int revPos = filename.indexOf(u'_');
+    const QString path =
+        basePath + QDir::separator() + (revPos > 1 ? filename[revPos - 2] : u'0') + (revPos > 0 ? filename[revPos - 1] : u'0') + QDir::separator() + filename;
     // If legacy fallback is disabled, return it in any case
     if (!legacyFallback) {
         QFileInfo finfo(path);

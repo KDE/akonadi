@@ -369,7 +369,7 @@ QString ServerManager::agentConfigFilePath(const QString &identifier)
 QString ServerManager::addNamespace(const QString &string)
 {
     if (Instance::hasIdentifier()) {
-        return string % QLatin1Char('_') % Instance::identifier();
+        return string % u'_' % Instance::identifier();
     }
     return string;
 }

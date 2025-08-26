@@ -68,7 +68,7 @@ public:
         } else {
             flags.append(QStringLiteral("%1 collections").arg(mCollections.count()));
         }
-        return QStringLiteral("%1,json=%2").arg(flags.join(QLatin1Char(',')), QString::fromUtf8(mQuery.toJSON()));
+        return QStringLiteral("%1,json=%2").arg(flags.join(u','), QString::fromUtf8(mQuery.toJSON()));
     }
 
     Q_DECLARE_PUBLIC(ItemSearchJob)

@@ -56,13 +56,13 @@ public:
         int begin = 0;
         const int pathSize(path.size());
         for (int i = 0; i < pathSize; ++i) {
-            if (path[i] == QLatin1Char('/')) {
+            if (path[i] == u'/') {
                 QString pathElement = path.mid(begin, i - begin);
                 pathElement.replace(QLatin1StringView("\\/"), QLatin1StringView("/"));
                 rv.append(pathElement);
                 begin = i + 1;
             }
-            if (i < path.size() - 2 && path[i] == QLatin1Char('\\') && path[i + 1] == QLatin1Char('/')) {
+            if (i < path.size() - 2 && path[i] == QLatin1Char('\\') && path[i + 1] == u'/') {
                 ++i;
             }
         }

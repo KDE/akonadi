@@ -220,7 +220,7 @@ void DbConfigSqlite::setup()
         const QString sqliteVersion = query.value(0).toString();
         qCDebug(AKONADISERVER_LOG) << "sqlite version is " << sqliteVersion;
 
-        const QStringList list = sqliteVersion.split(QLatin1Char('.'));
+        const QStringList list = sqliteVersion.split(u'.');
         const int sqliteVersionMajor = list[0].toInt();
         const int sqliteVersionMinor = list[1].toInt();
 

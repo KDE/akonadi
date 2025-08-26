@@ -32,7 +32,7 @@ QString Akonadi::ItemCopyJobPrivate::jobDebuggingString() const
     const int nbItems = mItems.count();
     for (int i = 0; i < nbItems; ++i) {
         if (i != 0) {
-            str += QLatin1Char(',');
+            str += u',';
         }
         str += QString::number(mItems.at(i).id());
     }
