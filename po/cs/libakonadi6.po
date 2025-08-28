@@ -618,12 +618,10 @@ msgid "%1 (Default)"
 msgstr "%1 (Výchozí)"
 
 #: quick/qml/AgentConfigurationForm.qml:30
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Configure Account"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
-msgstr "Nastavení účtu"
+msgstr ""
 
 #: quick/qml/AgentConfigurationForm.qml:36
 #, kde-format
@@ -662,12 +660,10 @@ msgid "Confirm Tag Deletion"
 msgstr "Potvrdit smazání značky"
 
 #: quick/qml/TagManagerPage.qml:31
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-format
 msgctxt "@info"
 msgid "Are you sure you want to delete tag <b>%1</b>?"
-msgstr "Opravdu si přejete odstranit značku <resource>%1</resource>?"
+msgstr ""
 
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
@@ -675,11 +671,10 @@ msgid "You won't be able to revert this action."
 msgstr "Tento krok nelze vrátit."
 
 #: quick/qml/TagManagerPage.qml:132
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
-msgstr "Vytvořit novou značku"
+msgstr ""
 
 #: quick/qml/TagManagerPage.qml:143
 #, kde-format
