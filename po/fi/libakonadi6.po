@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-23 02:37+0000\n"
-"PO-Revision-Date: 2025-07-13 17:41+0300\n"
+"PO-Revision-Date: 2025-08-22 17:02+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 25.04.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -645,30 +645,25 @@ msgid "%1 (Default)"
 msgstr "%1 (oletus)"
 
 #: quick/qml/AgentConfigurationForm.qml:30
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Configure Account"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
-msgstr "Tilin asetukset"
+msgstr "%1 – asetukset"
 
 #: quick/qml/AgentConfigurationForm.qml:36
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
-msgstr ""
+msgstr "Muuta tätä tiliagenttia tai poista se."
 
 #: quick/qml/AgentConfigurationForm.qml:52
-#, fuzzy, kde-format
-#| msgid "&Modify..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Modify"
-msgstr "&Muuta…"
+msgstr "Muuta"
 
 #: quick/qml/AgentConfigurationForm.qml:61
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Delete"
+#, kde-format
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "Poista"
@@ -677,7 +672,7 @@ msgstr "Poista"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
-msgstr ""
+msgstr "Lisää tili"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
@@ -686,20 +681,16 @@ msgid "Manage Tags"
 msgstr "Hallitse luokituksia"
 
 #: quick/qml/TagManagerPage.qml:27
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Conflict Resolution"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Confirm Tag Deletion"
-msgstr "Ristiriidan ratkaisu"
+msgstr "Vahvista luokituksen poistaminen"
 
 #: quick/qml/TagManagerPage.qml:31
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-format
 msgctxt "@info"
 msgid "Are you sure you want to delete tag <b>%1</b>?"
-msgstr "Haluatko varmasti poistaa luokituksen <resource>%1</resource>?"
+msgstr "Haluatko varmasti poistaa luokituksen <b>%1</b>?"
 
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
@@ -707,17 +698,16 @@ msgid "You won't be able to revert this action."
 msgstr "Tätä toimenpidettä ei voi kumota."
 
 #: quick/qml/TagManagerPage.qml:132
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
-msgstr "Luo uusi luokitus"
+msgstr "Luo uusi luokitus…"
 
 #: quick/qml/TagManagerPage.qml:143
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Tag"
-msgstr ""
+msgstr "Lisää luokitus"
 
 #: selftest/main.cpp:19
 #, kde-format
