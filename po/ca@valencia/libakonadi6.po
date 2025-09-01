@@ -1151,7 +1151,7 @@ msgstr "Diàleg d'obertura de col·lecció"
 #, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
-msgstr "Seleccioneu una col·lecció"
+msgstr "Trieu una col·lecció"
 
 #: widgets/conflictresolvedialog.cpp:129
 #, kde-format
@@ -1206,8 +1206,8 @@ msgstr ""
 "<qt>Els vostres canvis entren en conflicte amb els d'algú altre.<br> A menys "
 "que es puga llençar alguna versió, els haureu d'integrar manualment."
 "<br>Cliqueu damunt «<a href=\"opentexteditor\">Obri l'editor de text</a>» "
-"per a mantindre una còpia dels textos, seleccioneu la versió més correcta, "
-"torneu-la a obrir i modifiqueu-la de nou per a afegir-hi el que falta."
+"per a mantindre una còpia dels textos, trieu la versió més correcta, torneu-"
+"la a obrir i modifiqueu-la de nou per a afegir-hi el que falta."
 
 #: widgets/conflictresolvedialog.cpp:266
 #, kde-format
@@ -2653,7 +2653,7 @@ msgstr "Suprimix l'etiqueta"
 #: widgets/tageditwidget.ui:29
 #, kde-format
 msgid "Select tags that should be applied."
-msgstr "Selecciona les etiquetes que s'hauran d'aplicar."
+msgstr "Tria les etiquetes que s'hauran d'aplicar."
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:54
@@ -2665,13 +2665,13 @@ msgstr "Crea una etiqueta nova"
 #, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
-msgstr "Seleccioneu les etiquetes…"
+msgstr "Tria les etiquetes…"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
 #: widgets/tagselectiondialog.ui:14
 #, kde-format
 msgid "Select Tags"
-msgstr "Seleccioneu les etiquetes"
+msgstr "Trieu les etiquetes"
 
 #: widgets/tagwidget.cpp:45
 #, kde-format
