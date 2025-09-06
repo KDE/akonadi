@@ -26,6 +26,14 @@ class Session;
 namespace PasteHelper
 {
 /**
+  Check whether the given URL list obtained from clipboard can be pasted into the given collection.
+  @param clipboardUrls The pasted/dropped data (URL list).
+  @param collection The collection to paste/drop into.
+  @param action Indicate whether this is a copy, a move or link.
+*/
+AKONADICORE_EXPORT bool canPaste(const QList<QUrl> &clipboardUrls, const Collection &collection, Qt::DropAction action);
+
+/**
   Check whether the given mime data can be pasted into the given collection.
   @param mimeData The pasted/dropped data.
   @param collection The collection to paste/drop into.

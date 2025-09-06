@@ -33,8 +33,10 @@ public:
      * @param collections selected collections (from the folder tree)
      * @param favoriteCollections selected collections (among the ones marked as favorites)
      * @param items selected items
+     * @param clipboardUrls content of the clipboard (list of URLs)
      */
-    void updateState(const Collection::List &collections, const Collection::List &favoriteCollections, const Item::List &items);
+    void
+    updateState(const Collection::List &collections, const Collection::List &favoriteCollections, const Item::List &items, const QList<QUrl> &clipboardUrls);
 
     /**
      * Sets the @p receiver object that will actually update the states.

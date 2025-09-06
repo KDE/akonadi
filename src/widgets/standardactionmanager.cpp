@@ -677,7 +677,7 @@ public:
             }
         }
 
-        mActionStateManager.updateState(selectedCollectionsList, selectedFavoriteCollectionsList, selectedItems);
+        mActionStateManager.updateState(selectedCollectionsList, selectedFavoriteCollectionsList, selectedItems, clipboardUrls);
         if (favoritesModel) {
             enableAction(StandardActionManager::SynchronizeFavoriteCollections, (favoritesModel->rowCount() > 0));
         }
@@ -686,11 +686,23 @@ public:
     }
 
 #ifndef QT_NO_CLIPBOARD
-    void clipboardChanged(QClipboard::Mode mode)
+    void clipboardChanged()
     {
-        if (mode == QClipboard::Clipboard) {
-            updateActions();
+        const QMimeData *mimeData = QApplication::clipboard()->mimeData();
+        if ((mimeData == nullptr) || (!mimeData->hasUrls())) {
+            if (!clipboardUrls.empty()) {
+                clipboardUrls.clear();
+                updateActions();
+            }
+            return;
         }
+
+        QList<QUrl> urls = mimeData->urls();
+        if (clipboardUrls == urls)
+            return;
+
+        clipboardUrls = std::move(urls);
+        updateActions();
     }
 #endif
 
@@ -1131,6 +1143,7 @@ public:
         model->dropMimeData(mimeData, isCutAction(mimeData) ? Qt::MoveAction : Qt::CopyAction, -1, -1, index);
         model->setData(QModelIndex(), false, EntityTreeModel::PendingCutRole);
         QApplication::clipboard()->clear();
+        clipboardUrls.clear();
 #endif
     }
 
@@ -1810,6 +1823,7 @@ public:
     QStringList mCapabilityFilter;
     QStringList mCollectionPropertiesPageNames;
     QMap<StandardActionManager::Type, QPointer<RecentCollectionAction>> mRecentCollectionsMenu;
+    QList<QUrl> clipboardUrls;
 };
 
 /// @endcond
@@ -1822,8 +1836,8 @@ StandardActionManager::StandardActionManager(KActionCollection *actionCollection
     d->actionCollection = actionCollection;
     d->mActionStateManager.setReceiver(this);
 #ifndef QT_NO_CLIPBOARD
-    connect(QApplication::clipboard(), &QClipboard::changed, this, [this](auto mode) {
-        d->clipboardChanged(mode);
+    connect(QApplication::clipboard(), &QClipboard::dataChanged, this, [this]() {
+        d->clipboardChanged();
     });
 #endif
 }

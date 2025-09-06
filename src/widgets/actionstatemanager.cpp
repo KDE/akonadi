@@ -50,7 +50,10 @@ void ActionStateManager::setReceiver(QObject *object)
     mReceiver = object;
 }
 
-void ActionStateManager::updateState(const Collection::List &collections, const Collection::List &favoriteCollections, const Item::List &items)
+void ActionStateManager::updateState(const Collection::List &collections,
+                                     const Collection::List &favoriteCollections,
+                                     const Item::List &items,
+                                     const QList<QUrl> &clipboardUrls)
 {
     const int collectionCount = collections.count();
     const bool singleCollectionSelected = (collectionCount == 1);
@@ -205,7 +208,7 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
 #ifndef QT_NO_CLIPBOARD
     enableAction(StandardActionManager::Paste,
                  singleCollectionSelected && // we can paste only into a single collection
-                     PasteHelper::canPaste(QApplication::clipboard()->mimeData(), collection, Qt::CopyAction)); // there must be data on the clipboard
+                     PasteHelper::canPaste(clipboardUrls, collection, Qt::CopyAction)); // there must be data on the clipboard
 #else
     enableAction(StandardActionManager::Paste, false); // no support for clipboard -> no paste
 #endif
