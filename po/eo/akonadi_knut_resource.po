@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: akonadi_knut_resource\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-06-18 00:43+0000\n"
-"PO-Revision-Date: 2024-05-04 23:30+0100\n"
+"PO-Revision-Date: 2025-09-07 23:34+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -31,17 +31,16 @@ msgid "Akonadi Knut Data File"
 msgstr "Akonadi Knut Datuma Dosiero"
 
 #: accountwidget.cpp:50
-#, fuzzy, kde-format
-#| msgid "Select Data File"
+#, kde-format
 msgctxt "@label"
 msgid "Data Files:"
-msgstr "Elektu Datuman Dosieron"
+msgstr "Datumdosieroj:"
 
 #: accountwidget.cpp:52
 #, kde-format
 msgctxt "@option:check"
 msgid "File watching enabled"
-msgstr ""
+msgstr "Dosier-observado ŝaltita"
 
 #: knutresource.cpp:60
 #, kde-format
