@@ -559,7 +559,7 @@ private Q_SLOTS:
             favoriteCollections << folderCollectionThree;
         }
 
-        manager.updateState(collections, favoriteCollections, Item::List());
+        manager.updateState(collections, favoriteCollections, Item::List(), QList<QUrl>());
 
         QCOMPARE(stateMap.count(), mStateMap.count());
 

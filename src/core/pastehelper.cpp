@@ -200,52 +200,61 @@ void PasteHelperJob::runCollectionsActions()
     }
 }
 
-bool PasteHelper::canPaste(const QMimeData *mimeData, const Collection &collection, Qt::DropAction action)
+bool PasteHelper::canPaste(const QList<QUrl> &clipboardUrls, const Collection &collection, Qt::DropAction action)
 {
-    if (!mimeData || !collection.isValid()) {
+    if (clipboardUrls.empty() || !collection.isValid()) {
         return false;
     }
 
     // check that the target collection has the rights to
     // create the pasted items resp. collections
     Collection::Rights neededRights = Collection::ReadOnly;
+
+    for (const QUrl &url : clipboardUrls) {
+        const QUrlQuery query(url);
+        if (query.hasQueryItem(QStringLiteral("item"))) {
+            if (action == Qt::LinkAction) {
+                neededRights |= Collection::CanLinkItem;
+            } else {
+                neededRights |= Collection::CanCreateItem;
+            }
+        } else if (query.hasQueryItem(QStringLiteral("collection"))) {
+            neededRights |= Collection::CanCreateCollection;
+        }
+    }
+
+    if ((collection.rights() & neededRights) == 0) {
+        return false;
+    }
+
+    // check that the target collection supports the mime types of the
+    // items/collections that shall be pasted
+    bool supportsMimeTypes = true;
+    for (const QUrl &url : std::as_const(clipboardUrls)) {
+        const QUrlQuery query(url);
+        // collections do not provide mimetype information, so ignore this check
+        if (query.hasQueryItem(QStringLiteral("collection"))) {
+            continue;
+        }
+
+        const QString mimeType = query.queryItemValue(QStringLiteral("type"));
+        if (!collection.contentMimeTypes().contains(mimeType)) {
+            supportsMimeTypes = false;
+            break;
+        }
+    }
+
+    return supportsMimeTypes;
+}
+
+bool PasteHelper::canPaste(const QMimeData *mimeData, const Collection &collection, Qt::DropAction action)
+{
+    if (!mimeData || !collection.isValid()) {
+        return false;
+    }
+
     if (mimeData->hasUrls()) {
-        const QList<QUrl> urls = mimeData->urls();
-        for (const QUrl &url : urls) {
-            const QUrlQuery query(url);
-            if (query.hasQueryItem(QStringLiteral("item"))) {
-                if (action == Qt::LinkAction) {
-                    neededRights |= Collection::CanLinkItem;
-                } else {
-                    neededRights |= Collection::CanCreateItem;
-                }
-            } else if (query.hasQueryItem(QStringLiteral("collection"))) {
-                neededRights |= Collection::CanCreateCollection;
-            }
-        }
-
-        if ((collection.rights() & neededRights) == 0) {
-            return false;
-        }
-
-        // check that the target collection supports the mime types of the
-        // items/collections that shall be pasted
-        bool supportsMimeTypes = true;
-        for (const QUrl &url : std::as_const(urls)) {
-            const QUrlQuery query(url);
-            // collections do not provide mimetype information, so ignore this check
-            if (query.hasQueryItem(QStringLiteral("collection"))) {
-                continue;
-            }
-
-            const QString mimeType = query.queryItemValue(QStringLiteral("type"));
-            if (!collection.contentMimeTypes().contains(mimeType)) {
-                supportsMimeTypes = false;
-                break;
-            }
-        }
-
-        return supportsMimeTypes;
+        return canPaste(mimeData->urls(), collection, action);
     }
 
     return false;
