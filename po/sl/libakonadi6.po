@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-23 02:37+0000\n"
+"POT-Creation-Date: 2025-09-13 02:45+0000\n"
 "PO-Revision-Date: 2025-07-23 07:06+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -2564,23 +2564,23 @@ msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Lepljenje ni uspelo"
 
-#: widgets/standardactionmanager.cpp:810
+#: widgets/standardactionmanager.cpp:822
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "Znaka »/« ni mogoče dodati v ime mape."
 
-#: widgets/standardactionmanager.cpp:810 widgets/standardactionmanager.cpp:814
+#: widgets/standardactionmanager.cpp:822 widgets/standardactionmanager.cpp:826
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Napaka pri ustvarjanju nove mape"
 
-#: widgets/standardactionmanager.cpp:814
+#: widgets/standardactionmanager.cpp:826
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "Pike ni mogoče dodati na začetek ali konec imena mape."
 
-#: widgets/standardactionmanager.cpp:1053
+#: widgets/standardactionmanager.cpp:1065
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2588,23 +2588,23 @@ msgid ""
 msgstr ""
 "Pred usklajevanjem mape »%1« mora biti vir povezan. Ali ga želite povezati?"
 
-#: widgets/standardactionmanager.cpp:1054
+#: widgets/standardactionmanager.cpp:1066
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "Račun »%1« ni povezan"
 
-#: widgets/standardactionmanager.cpp:1055
+#: widgets/standardactionmanager.cpp:1067
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Postani povezan"
 
-#: widgets/standardactionmanager.cpp:1667
+#: widgets/standardactionmanager.cpp:1680
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Premakni v to mapo"
 
-#: widgets/standardactionmanager.cpp:1667
+#: widgets/standardactionmanager.cpp:1680
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Kopiraj v to mapo"

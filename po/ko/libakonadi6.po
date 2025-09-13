@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-23 02:37+0000\n"
+"POT-Creation-Date: 2025-09-13 02:45+0000\n"
 "PO-Revision-Date: 2025-07-20 00:44+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -2450,23 +2450,23 @@ msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "붙여넣기 실패"
 
-#: widgets/standardactionmanager.cpp:810
+#: widgets/standardactionmanager.cpp:822
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "폴더 이름에 \"/\"를 추가할 수 없습니다."
 
-#: widgets/standardactionmanager.cpp:810 widgets/standardactionmanager.cpp:814
+#: widgets/standardactionmanager.cpp:822 widgets/standardactionmanager.cpp:826
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "새 폴더 만들기 오류"
 
-#: widgets/standardactionmanager.cpp:814
+#: widgets/standardactionmanager.cpp:826
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "폴더 이름의 시작이나 끝에 \".\"를 추가할 수 없습니다."
 
-#: widgets/standardactionmanager.cpp:1053
+#: widgets/standardactionmanager.cpp:1065
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2475,23 +2475,23 @@ msgstr ""
 "폴더 \"%1\"을(를) 동기화하기 전 해당하는 리소스를 온라인으로 전환해야 합니"
 "다. 온라인으로 전환하시겠습니까?"
 
-#: widgets/standardactionmanager.cpp:1054
+#: widgets/standardactionmanager.cpp:1066
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "계정 \"%1\"이(가) 오프라인임"
 
-#: widgets/standardactionmanager.cpp:1055
+#: widgets/standardactionmanager.cpp:1067
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "온라인으로 전환"
 
-#: widgets/standardactionmanager.cpp:1667
+#: widgets/standardactionmanager.cpp:1680
 #, kde-format
 msgid "Move to This Folder"
 msgstr "이 폴더로 이동"
 
-#: widgets/standardactionmanager.cpp:1667
+#: widgets/standardactionmanager.cpp:1680
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "이 폴더로 복사"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-23 02:37+0000\n"
+"POT-Creation-Date: 2025-09-13 02:45+0000\n"
 "PO-Revision-Date: 2025-08-04 14:42+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -2582,23 +2582,23 @@ msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "فشل اللصق"
 
-#: widgets/standardactionmanager.cpp:810
+#: widgets/standardactionmanager.cpp:822
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "لا يمكننا إضافة ”/“ في اسم المجلد."
 
-#: widgets/standardactionmanager.cpp:810 widgets/standardactionmanager.cpp:814
+#: widgets/standardactionmanager.cpp:822 widgets/standardactionmanager.cpp:826
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "خطأ أثناء إنشاء مجلد جديد"
 
-#: widgets/standardactionmanager.cpp:814
+#: widgets/standardactionmanager.cpp:826
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "لا يمكننا إضافة ”.“ في بداية اسم المجلد أو نهايته."
 
-#: widgets/standardactionmanager.cpp:1053
+#: widgets/standardactionmanager.cpp:1065
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2607,23 +2607,23 @@ msgstr ""
 "من الضروري وقبل مزامنة المجلد ”%1“ ربط المورد بالشابكة. أتريد الاتصال "
 "بالشابكة الآن؟"
 
-#: widgets/standardactionmanager.cpp:1054
+#: widgets/standardactionmanager.cpp:1066
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "الحساب ”%1“ غير متّصل"
 
-#: widgets/standardactionmanager.cpp:1055
+#: widgets/standardactionmanager.cpp:1067
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "اتّصل بالشابكة"
 
-#: widgets/standardactionmanager.cpp:1667
+#: widgets/standardactionmanager.cpp:1680
 #, kde-format
 msgid "Move to This Folder"
 msgstr "انقل إلى هذا المجلد"
 
-#: widgets/standardactionmanager.cpp:1667
+#: widgets/standardactionmanager.cpp:1680
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "انسخ في هذا المجلد"

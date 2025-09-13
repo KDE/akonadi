@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-23 02:37+0000\n"
+"POT-Creation-Date: 2025-09-13 02:45+0000\n"
 "PO-Revision-Date: 2023-10-02 18:38+0200\n"
 "Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
 "Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
@@ -2547,23 +2547,23 @@ msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Vloženie zlyhalo"
 
-#: widgets/standardactionmanager.cpp:810
+#: widgets/standardactionmanager.cpp:822
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "Nemôžeme pridať \"/\" do názvu priečinku."
 
-#: widgets/standardactionmanager.cpp:810 widgets/standardactionmanager.cpp:814
+#: widgets/standardactionmanager.cpp:822 widgets/standardactionmanager.cpp:826
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Chyba vytvorenia nového priečinka"
 
-#: widgets/standardactionmanager.cpp:814
+#: widgets/standardactionmanager.cpp:826
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "Nemôžeme pridať \".\" na začiatok alebo koniec názvu priečinka."
 
-#: widgets/standardactionmanager.cpp:1053
+#: widgets/standardactionmanager.cpp:1065
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2572,23 +2572,23 @@ msgstr ""
 "Pred synchronizáciou priečinka \"%1\" je potrebné mať prostriedok online. "
 "Chcete ho mať online?"
 
-#: widgets/standardactionmanager.cpp:1054
+#: widgets/standardactionmanager.cpp:1066
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "Účet \"%1\" je offline"
 
-#: widgets/standardactionmanager.cpp:1055
+#: widgets/standardactionmanager.cpp:1067
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Prejsť online"
 
-#: widgets/standardactionmanager.cpp:1667
+#: widgets/standardactionmanager.cpp:1680
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Presunúť do tohto priečinka"
 
-#: widgets/standardactionmanager.cpp:1667
+#: widgets/standardactionmanager.cpp:1680
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Kopírovať do tohto priečinka"

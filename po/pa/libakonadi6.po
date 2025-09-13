@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-23 02:37+0000\n"
+"POT-Creation-Date: 2025-09-13 02:45+0000\n"
 "PO-Revision-Date: 2023-12-31 09:30-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -2497,12 +2497,12 @@ msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "ਚੇਪਣਾ ਫੇਲ੍ਹ"
 
-#: widgets/standardactionmanager.cpp:810
+#: widgets/standardactionmanager.cpp:822
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:810 widgets/standardactionmanager.cpp:814
+#: widgets/standardactionmanager.cpp:822 widgets/standardactionmanager.cpp:826
 #, fuzzy, kde-format
 #| msgctxt "@title:window"
 #| msgid "New Folder"
@@ -2510,24 +2510,24 @@ msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "ਨਵਾਂ ਫੋਲਡਰ"
 
-#: widgets/standardactionmanager.cpp:814
+#: widgets/standardactionmanager.cpp:826
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:1053
+#: widgets/standardactionmanager.cpp:1065
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
 "you want to make it online?"
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:1054
+#: widgets/standardactionmanager.cpp:1066
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:1055
+#: widgets/standardactionmanager.cpp:1067
 #, fuzzy, kde-format
 #| msgctxt "@info:status"
 #| msgid "Offline"
@@ -2535,13 +2535,13 @@ msgctxt "@action:button"
 msgid "Go Online"
 msgstr "ਆਫਲਾਈਨ"
 
-#: widgets/standardactionmanager.cpp:1667
+#: widgets/standardactionmanager.cpp:1680
 #, fuzzy, kde-format
 #| msgid "Copy to This Folder"
 msgid "Move to This Folder"
 msgstr "ਇਹ ਫੋਲਡਰ ਕਾਪੀ ਕਰੋ"
 
-#: widgets/standardactionmanager.cpp:1667
+#: widgets/standardactionmanager.cpp:1680
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "ਇਹ ਫੋਲਡਰ ਕਾਪੀ ਕਰੋ"
