@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-22 00:42+0000\n"
+"POT-Creation-Date: 2025-09-13 00:49+0000\n"
 "PO-Revision-Date: 2017-12-17 18:01+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -2656,24 +2656,24 @@ msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Неуспело налепљивање"
 
-#: widgets/standardactionmanager.cpp:810
+#: widgets/standardactionmanager.cpp:822
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "Име фасцикле не може да садржи „/“."
 
-#: widgets/standardactionmanager.cpp:810 widgets/standardactionmanager.cpp:814
+#: widgets/standardactionmanager.cpp:822 widgets/standardactionmanager.cpp:826
 #, fuzzy, kde-format
 #| msgid "Create new folder error"
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Грешка у стварању нове фасцикле"
 
-#: widgets/standardactionmanager.cpp:814
+#: widgets/standardactionmanager.cpp:826
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "Име фасцикле не може да почиње нити да се завршава тачком."
 
-#: widgets/standardactionmanager.cpp:1053
+#: widgets/standardactionmanager.cpp:1065
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2682,23 +2682,23 @@ msgstr ""
 "Пре синхронизовања фасцикле „%1“ неопходно је да ресурс буде на вези. Желите "
 "ли да га ставите на везу?"
 
-#: widgets/standardactionmanager.cpp:1054
+#: widgets/standardactionmanager.cpp:1066
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "Налог „%1“ је ван везе"
 
-#: widgets/standardactionmanager.cpp:1055
+#: widgets/standardactionmanager.cpp:1067
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "На везу"
 
-#: widgets/standardactionmanager.cpp:1668
+#: widgets/standardactionmanager.cpp:1681
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Премести у ову фасциклу"
 
-#: widgets/standardactionmanager.cpp:1668
+#: widgets/standardactionmanager.cpp:1681
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Копирај у ову фасциклу"

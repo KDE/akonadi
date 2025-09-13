@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-22 00:42+0000\n"
+"POT-Creation-Date: 2025-09-13 00:49+0000\n"
 "PO-Revision-Date: 2025-08-20 15:41+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -2527,23 +2527,23 @@ msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Itsastea huts egin du"
 
-#: widgets/standardactionmanager.cpp:810
+#: widgets/standardactionmanager.cpp:822
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "Ezin da «/» gehitu karpeta baten izenean."
 
-#: widgets/standardactionmanager.cpp:810 widgets/standardactionmanager.cpp:814
+#: widgets/standardactionmanager.cpp:822 widgets/standardactionmanager.cpp:826
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Karpeta berria sortzeko errorea"
 
-#: widgets/standardactionmanager.cpp:814
+#: widgets/standardactionmanager.cpp:826
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "Ezin da «.» gehitu karpeta-izen baten hasieran edo bukaeran."
 
-#: widgets/standardactionmanager.cpp:1053
+#: widgets/standardactionmanager.cpp:1065
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2552,23 +2552,23 @@ msgstr ""
 "«%1» karpeta sinkronizatu aurretik, baliabidea lerron egon behar da. Lerroan "
 "ipini nahi duzu?"
 
-#: widgets/standardactionmanager.cpp:1054
+#: widgets/standardactionmanager.cpp:1066
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "«%1» kontua lerroz kanpo dago"
 
-#: widgets/standardactionmanager.cpp:1055
+#: widgets/standardactionmanager.cpp:1067
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Konektatu"
 
-#: widgets/standardactionmanager.cpp:1668
+#: widgets/standardactionmanager.cpp:1681
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Mugitu karpeta honetara"
 
-#: widgets/standardactionmanager.cpp:1668
+#: widgets/standardactionmanager.cpp:1681
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Kopiatu karpeta honetara"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-22 00:42+0000\n"
+"POT-Creation-Date: 2025-09-13 00:49+0000\n"
 "PO-Revision-Date: 2024-07-29 12:41+0200\n"
 "Last-Translator: rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -2518,24 +2518,24 @@ msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Indsættelse fejlede"
 
-#: widgets/standardactionmanager.cpp:810
+#: widgets/standardactionmanager.cpp:822
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "Vi kan ikke tilføje \"/\" i et mappenavn."
 
-#: widgets/standardactionmanager.cpp:810 widgets/standardactionmanager.cpp:814
+#: widgets/standardactionmanager.cpp:822 widgets/standardactionmanager.cpp:826
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Fejl ved oprettelse af ny mappe"
 
-#: widgets/standardactionmanager.cpp:814
+#: widgets/standardactionmanager.cpp:826
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr ""
 "Vi kan ikke tilføje \".\" ved begyndelsen eller slutningen af et mappenavn."
 
-#: widgets/standardactionmanager.cpp:1053
+#: widgets/standardactionmanager.cpp:1065
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2544,23 +2544,23 @@ msgstr ""
 "Før du synkroniserer mappen \"%1\" er det nødvendigt at have ressourcen "
 "online. Vil du bringe den online?"
 
-#: widgets/standardactionmanager.cpp:1054
+#: widgets/standardactionmanager.cpp:1066
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "Kontoen \"%1\" er offline"
 
-#: widgets/standardactionmanager.cpp:1055
+#: widgets/standardactionmanager.cpp:1067
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Gå online"
 
-#: widgets/standardactionmanager.cpp:1668
+#: widgets/standardactionmanager.cpp:1681
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Flyt til denne mappe"
 
-#: widgets/standardactionmanager.cpp:1668
+#: widgets/standardactionmanager.cpp:1681
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Kopiér til denne mappe"

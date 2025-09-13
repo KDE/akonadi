@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-22 00:42+0000\n"
-"PO-Revision-Date: 2025-03-20 18:15+0100\n"
+"POT-Creation-Date: 2025-09-13 00:49+0000\n"
+"PO-Revision-Date: 2025-09-12 12:44+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -631,43 +631,37 @@ msgstr ""
 "restarta le servitor Akonadi."
 
 #: quick/colorproxymodel.cpp:83
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Offline"
+#, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Offline)"
-msgstr "Foras de linea"
+msgstr "%1 (foras de linea)"
 
 #: quick/colorproxymodel.cpp:86
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
-msgstr ""
+msgstr "%1 (Predefinite)"
 
 #: quick/qml/AgentConfigurationForm.qml:30
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Configure Account"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
-msgstr "Configura conto"
+msgstr "Configura %1"
 
 #: quick/qml/AgentConfigurationForm.qml:36
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
-msgstr ""
+msgstr "Modifica o dele le agente de conto."
 
 #: quick/qml/AgentConfigurationForm.qml:52
-#, fuzzy, kde-format
-#| msgid "&Modify..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Modify"
-msgstr "&Modifica..."
+msgstr "Modifica"
 
 #: quick/qml/AgentConfigurationForm.qml:61
-#, fuzzy, kde-format
-#| msgid "Delete"
+#, kde-format
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "Dele"
@@ -676,7 +670,7 @@ msgstr "Dele"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
-msgstr ""
+msgstr "Adde conto"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
@@ -685,38 +679,33 @@ msgid "Manage Tags"
 msgstr "Gere etiquettas"
 
 #: quick/qml/TagManagerPage.qml:27
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Conflict Resolution"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Confirm Tag Deletion"
-msgstr "Resolution de conflicto"
+msgstr "Confirma deletion de etiquetta"
 
 #: quick/qml/TagManagerPage.qml:31
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-format
 msgctxt "@info"
 msgid "Are you sure you want to delete tag <b>%1</b>?"
-msgstr "Tu vermente vole remover le etiquetta <resource>%1</resource>?"
+msgstr "Tu es secur que tu vole deler etiquetta <b>%1</b>?"
 
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
 msgid "You won't be able to revert this action."
-msgstr ""
+msgstr "Tu non poterea revenir iste action."
 
 #: quick/qml/TagManagerPage.qml:132
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
-msgstr "Crea nove etiquetta"
+msgstr "Crea un nove  etiquetta..."
 
 #: quick/qml/TagManagerPage.qml:143
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Tag"
-msgstr ""
+msgstr "Adde etiquetta"
 
 #: selftest/main.cpp:19
 #, kde-format
@@ -2534,23 +2523,23 @@ msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Il falleva collar"
 
-#: widgets/standardactionmanager.cpp:810
+#: widgets/standardactionmanager.cpp:822
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "Nos non pote adder \"/\" al nomine de dossier."
 
-#: widgets/standardactionmanager.cpp:810 widgets/standardactionmanager.cpp:814
+#: widgets/standardactionmanager.cpp:822 widgets/standardactionmanager.cpp:826
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Crea Error de Nove Dossier"
 
-#: widgets/standardactionmanager.cpp:814
+#: widgets/standardactionmanager.cpp:826
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "Nos non pote adder \".\" al initio o fin de nomine de dossier."
 
-#: widgets/standardactionmanager.cpp:1053
+#: widgets/standardactionmanager.cpp:1065
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2559,23 +2548,23 @@ msgstr ""
 "Ante synchronisar dossier \"%1\" il es necessari haber le ressource in "
 "linea. Tu vole poner lo in linea?"
 
-#: widgets/standardactionmanager.cpp:1054
+#: widgets/standardactionmanager.cpp:1066
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "Conto\"%1\" es  foras de linea"
 
-#: widgets/standardactionmanager.cpp:1055
+#: widgets/standardactionmanager.cpp:1067
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Vade in linea"
 
-#: widgets/standardactionmanager.cpp:1668
+#: widgets/standardactionmanager.cpp:1681
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Move a iste dossier"
 
-#: widgets/standardactionmanager.cpp:1668
+#: widgets/standardactionmanager.cpp:1681
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Copia a iste dossier"

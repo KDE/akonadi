@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-22 00:42+0000\n"
+"POT-Creation-Date: 2025-09-13 00:49+0000\n"
 "PO-Revision-Date: 2020-05-07 13:23+0300\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -2562,24 +2562,24 @@ msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Asetamine nurjus"
 
-#: widgets/standardactionmanager.cpp:810
+#: widgets/standardactionmanager.cpp:822
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "Kausta nimesse ei saa lisada \"/\"."
 
-#: widgets/standardactionmanager.cpp:810 widgets/standardactionmanager.cpp:814
+#: widgets/standardactionmanager.cpp:822 widgets/standardactionmanager.cpp:826
 #, fuzzy, kde-format
 #| msgid "Create new folder error"
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Tõrge uue kausta loomisel"
 
-#: widgets/standardactionmanager.cpp:814
+#: widgets/standardactionmanager.cpp:826
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "Kausta nime algusse või lõppu ei saa lisada \".\"."
 
-#: widgets/standardactionmanager.cpp:1053
+#: widgets/standardactionmanager.cpp:1065
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2587,23 +2587,23 @@ msgid ""
 msgstr ""
 "Enne kausta \"%1\" sünkroonimist peab ressurss olema võrgus. Kas minna võrku?"
 
-#: widgets/standardactionmanager.cpp:1054
+#: widgets/standardactionmanager.cpp:1066
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "Konto \"%1\" ei ole võrgus"
 
-#: widgets/standardactionmanager.cpp:1055
+#: widgets/standardactionmanager.cpp:1067
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Mine võrku"
 
-#: widgets/standardactionmanager.cpp:1668
+#: widgets/standardactionmanager.cpp:1681
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Liiguta sellesse kausta"
 
-#: widgets/standardactionmanager.cpp:1668
+#: widgets/standardactionmanager.cpp:1681
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Kopeeri sellesse kausta"
