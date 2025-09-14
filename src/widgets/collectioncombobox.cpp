@@ -15,7 +15,6 @@
 #include "entityrightsfiltermodel.h"
 #include "entitytreemodel.h"
 #include "monitor.h"
-#include "session.h"
 
 #include <KDescendantsProxyModel>
 
