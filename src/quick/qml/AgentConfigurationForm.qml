@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Devin Lin <devin@kde.org>
 // SPDX-License-Identifier: GPL-2.0-or-later
 
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls as QQC2
@@ -19,7 +21,7 @@ FormCard.FormCard {
 
     readonly property AgentConfiguration _configuration: AgentConfiguration {
         mimetypes: root.mimetypes
-        onErrorOccurred: (error) => root.QQC2.ApplicationWindow.window.showPassiveNotification(error)
+        onErrorOccurred: (error) => (root.QQC2.ApplicationWindow.window as Kirigami.ApplicationWindow).showPassiveNotification(error)
     }
 
     Components.MessageDialog {
@@ -104,7 +106,7 @@ FormCard.FormCard {
         id: addAccountDelegate
         text: i18ndc("libakonadi6", "@action:button", "Add Account")
         icon.name: "list-add-symbolic"
-        onClicked: pageStack.pushDialogLayer(addAccountPage)
+        onClicked: (root.QQC2.ApplicationWindow.window as Kirigami.ApplicationWindow).pageStack.pushDialogLayer(addAccountPage)
     }
 
     data: Component {
@@ -127,7 +129,7 @@ FormCard.FormCard {
                 implicitWidth: Kirigami.Units.gridUnit * 20
                 model: root._configuration.availableAgents
                 delegate: Delegates.RoundedItemDelegate {
-                    id: agentDelegate
+                    id: agentTypeDelegate
 
                     required property int index
                     required property string name
@@ -138,8 +140,8 @@ FormCard.FormCard {
                     icon.name: iconName
 
                     contentItem: Delegates.SubtitleContentItem {
-                        itemDelegate: agentDelegate
-                        subtitle: agentDelegate.description
+                        itemDelegate: agentTypeDelegate
+                        subtitle: agentTypeDelegate.description
                         subtitleItem.wrapMode: Text.Wrap
                     }
 

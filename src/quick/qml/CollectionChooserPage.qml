@@ -51,6 +51,40 @@ Kirigami.ScrollablePage {
     signal selected(var collection)
     signal rejected
 
+    component CollectionDelegate : Delegates.RoundedTreeDelegate {
+        id: delegate
+
+        required property string displayName
+        required property var model
+        required property var collection
+
+        text: displayName
+
+        onClicked: if (kDescendantExpandable) {
+            treeModel.toggleChildren(model.index);
+        } else {
+            list.currentIndex = model.index;
+            dialogButtonBox.standardButton(Controls.Dialog.Ok).enabled = true;
+        }
+
+        contentItem: RowLayout {
+            spacing: Kirigami.Units.smallSpacing
+
+            Kirigami.Icon {
+                implicitWidth: Kirigami.Units.iconSizes.smallMedium
+                implicitHeight: Kirigami.Units.iconSizes.smallMedium
+                source: delegate.model.decoration
+            }
+
+            Controls.Label {
+                color: Kirigami.Theme.textColor
+                text: delegate.text
+                Layout.fillWidth: true
+                Accessible.ignored: true
+            }
+        }
+    }
+
     ListView {
         id: list
 
@@ -72,43 +106,11 @@ Kirigami.ScrollablePage {
             model: list.model
             configGroup: root.configGroup
             onCurrentIndexChanged: {
-                list.currentIndex = currentIndex;
+                list.currentIndex = stateSaver.currentIndex;
             }
         }
 
-        delegate: Delegates.RoundedTreeDelegate {
-            id: delegate
-
-            required property string displayName
-            required property var model
-            required property var collection
-
-            text: displayName
-
-            onClicked: if (kDescendantExpandable) {
-                treeModel.toggleChildren(model.index);
-            } else {
-                list.currentIndex = model.index;
-                dialogButtonBox.standardButton(Controls.Dialog.Ok).enabled = true;
-            }
-
-            contentItem: RowLayout {
-                spacing: Kirigami.Units.smallSpacing
-
-                Kirigami.Icon {
-                    implicitWidth: Kirigami.Units.iconSizes.smallMedium
-                    implicitHeight: Kirigami.Units.iconSizes.smallMedium
-                    source: delegate.model.decoration
-                }
-
-                Controls.Label {
-                    color: Kirigami.Theme.textColor
-                    text: delegate.text
-                    Layout.fillWidth: true
-                    Accessible.ignored: true
-                }
-            }
-        }
+        delegate: CollectionDelegate {}
     }
 
     footer: Controls.ToolBar {
@@ -116,7 +118,7 @@ Kirigami.ScrollablePage {
             id: dialogButtonBox
             standardButtons: Controls.Dialog.Ok | Controls.Dialog.Cancel
             onRejected: root.rejected();
-            onAccepted: root.selected(list.currentItem.collection);
+            onAccepted: root.selected((list.currentItem as CollectionDelegate).collection);
             Component.onCompleted: dialogButtonBox.standardButton(Controls.Dialog.Ok).enabled = false;
         }
     }

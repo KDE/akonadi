@@ -2,17 +2,18 @@
 # SPDX-License-Identifier: BSD-2-Clause
 
 ecm_add_qml_module(akonadi_quick_plugin
-    URI "org.kde.akonadi"
+    URI org.kde.akonadi
     GENERATE_PLUGIN_SOURCE
+    OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/src/org/kde/akonadi
     DEPENDENCIES
+        QtQuick
+        QtCore
         org.kde.kirigami
         org.kde.kirigamiaddons.delegates
         org.kde.kirigamiaddons.formcard
         org.kde.kirigamiaddons.components
         org.kde.kitemmodels
 )
-
-qt_extract_metatypes(akonadi_quick_plugin)
 
 target_sources(
     akonadi_quick_plugin
@@ -27,6 +28,8 @@ target_sources(
         collectionpickermodel.h
         collectioneditorcontroller.cpp
         collectioneditorcontroller.h
+        etmtreeviewstatesaver.cpp
+        etmtreeviewstatesaver.h
         mimetypes.cpp
         mimetypes.h
         tagmanager.h

@@ -5,6 +5,7 @@
 
 #include <qqmlintegration.h>
 
+#include <Akonadi/AgentFilterProxyModel>
 #include <Akonadi/AgentInstance>
 #include <Akonadi/Collection>
 #include <Akonadi/EntityTreeModel>
@@ -33,8 +34,8 @@ FOREIGN_ENUM_GADGET(Item, item)
 class EntityTreeModelForeign : public QObject
 {
     Q_OBJECT
-    QML_FOREIGN(Akonadi::EntityTreeModel)
     QML_NAMED_ELEMENT(EntityTreeModel)
+    QML_FOREIGN(Akonadi::EntityTreeModel)
     QML_UNCREATABLE("Only enums")
 };
 
@@ -51,4 +52,12 @@ class SpecialCollections : public QObject
     QML_NAMED_ELEMENT(SpecialCollections)
     QML_FOREIGN(Akonadi::SpecialCollections)
     QML_UNCREATABLE("Abstract class")
+};
+
+class AgentFilterProxyModelForeign : public QObject
+{
+    Q_OBJECT
+    QML_NAMED_ELEMENT(AgentFilterProxyModel)
+    QML_FOREIGN(Akonadi::AgentFilterProxyModel)
+    QML_UNCREATABLE("C++ only")
 };
