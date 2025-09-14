@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: LGPL-2.0-or-later
 
 import QtQuick
-import QtQuick.Controls as QQC2
 import org.kde.akonadi as Akonadi
 import org.kde.kirigami as Kirigami
 import org.kde.kirigamiaddons.formcard as FormCard
@@ -98,13 +97,20 @@ FormCard.FormComboBoxDelegate {
     }
 
     comboBoxDelegate: Delegates.RoundedItemDelegate {
-        text: model.display
+        id: delegate
+
+        required property string displayName
+        required property var decoration
+        required property var collectionColor
+
+        text: display
         icon.source: decoration
+
         Rectangle {
             anchors.margins: Kirigami.Units.smallSpacing
             width: height
             radius: width * 0.5
-            color: model.collectionColor
+            color: delegate.collectionColor
         }
     }
 }

@@ -437,6 +437,8 @@ ecm_qt_declare_logging_category(akonadicore_SRCS HEADER akonadicore_debug.h IDEN
 )
 
 add_library(KPim6AkonadiCore ${akonadicore_SRCS})
+qt_extract_metatypes(KPim6AkonadiCore)
+
 #if(COMPILE_WITH_UNITY_CMAKE_SUPPORT)
 #    set_target_properties(KPim6AkonadiCore PROPERTIES UNITY_BUILD ON)
 #endif()
