@@ -72,7 +72,7 @@ public:
         Broken, ///< The agent instance encountered an error state.
         NotConfigured ///< The agent is lacking required configuration
     };
-    Q_ENUM(Status);
+    Q_ENUM(Status)
 
     /**
      * Creates a new agent instance object.
