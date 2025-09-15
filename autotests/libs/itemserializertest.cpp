@@ -40,7 +40,7 @@ void ItemSerializerTest::testDefaultSerializer_data()
 void ItemSerializerTest::testDefaultSerializer()
 {
     // Avoid ItemSerializer from picking config from user's config, which affects how/whether
-    // compresion is enabled or not.
+    // compression is enabled or not.
     QStandardPaths::setTestModeEnabled(true);
 
     QFETCH(QByteArray, serialized);

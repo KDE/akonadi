@@ -1208,7 +1208,7 @@ void EntityTreeModelPrivate::monitoredItemLinked(const Akonadi::Item &item, cons
         return;
     }
 
-    // Adding items to not yet populated collections would block fetchMore, resullting in only new items showing up in the collection
+    // Adding items to not yet populated collections would block fetchMore, resulting in only new items showing up in the collection
     // This is only a problem with lazy population, otherwise fetchMore is not used at all
     if ((m_itemPopulation == EntityTreeModel::LazyPopulation) && !m_populatedCols.contains(collectionId)) {
         return;

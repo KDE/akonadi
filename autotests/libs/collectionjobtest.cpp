@@ -470,7 +470,7 @@ void CollectionJobTest::testModify()
     col = ljob->collections().first();
     QVERIFY(col.contentMimeTypes().isEmpty());
 
-    // test setting contnet types
+    // test setting content types
     RESET_COLLECTION_ID;
     col.setContentMimeTypes(reference);
     mod = new CollectionModifyJob(col, this);

@@ -418,7 +418,7 @@ bool DataStore::appendItemsFlags(const PimItem::List &items,
 
             auto &query = qb.query();
             if (query.driver()->hasFeature(QSqlDriver::QuerySize)) {
-                // The query size feature is not supported by the sqllite driver
+                // The query size feature is not supported by the sqlite driver
                 if (query.size() == items.count()) {
                     continue;
                 }

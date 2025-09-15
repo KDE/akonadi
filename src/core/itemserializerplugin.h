@@ -132,7 +132,7 @@ public:
     virtual bool deserialize(Item &item, const QByteArray &label, QIODevice &data, int version) = 0;
 
     /**
-     * Convert the payload object provided in @p item into its serialzed form into @p data.
+     * Convert the payload object provided in @p item into its serialized form into @p data.
      *
      * @param item The item which contains the payload.
      *             It is guaranteed to have a mimetype matching one of the supported

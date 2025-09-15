@@ -91,7 +91,7 @@ public:
     void setExcludeVirtualCollections(bool b);
 
     /**
-     * Returns if the virual exollections are excluded
+     * Returns if the virtual collections are excluded
      */
     [[nodiscard]] bool excludeVirtualCollections() const;
 

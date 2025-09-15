@@ -170,7 +170,7 @@ void PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
         }
     } else {
         if (!part.insert()) {
-            throw PartStreamerException(QStringLiteral("Failed to insert new part fo PimItem %1 into database.").arg(part.pimItemId()));
+            throw PartStreamerException(QStringLiteral("Failed to insert new part of PimItem %1 into database.").arg(part.pimItemId()));
         }
 
         filename = ExternalPartStorage::nameForPartId(part.id());

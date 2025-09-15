@@ -35,7 +35,7 @@ public:
         QString refTable;
         QString refColumn;
         QString onUpdate; // TODO use same enum as DbInitializer
-        QString onDelete; // dito
+        QString onDelete; // ditto
     };
 
     /**

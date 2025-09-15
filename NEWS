@@ -340,7 +340,7 @@
 - Support MySQL backend on Maemo.
 - Allow RID changes only to the owning resource.
 - Add Akonadi remote debugging server.
-- Add support for marking chaced payloads as invalid.
+- Add support for marking cached payloads as invalid.
 - Add support for remove revision property.
 - Fix MySQL connection loss after 8 hours of inactivity.
 - Fix D-Bus race on server startup.

@@ -543,7 +543,7 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadCollectionNotif
                 ancestors.push_back(ancestor);
 
                 if (stream.status() != QDataStream::Ok) {
-                    qCWarning(AKONADICORE_LOG) << "Erorr reading saved notifications! Aborting";
+                    qCWarning(AKONADICORE_LOG) << "Error reading saved notifications! Aborting";
                     return msg;
                 }
             }

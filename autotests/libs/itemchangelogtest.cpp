@@ -29,7 +29,7 @@ void ItemChangelogTest::testDoesntCrashWhenReassigning()
     // rehashing
     for (int i = 1; i < 50; i += 2) {
         // Previously this would crash because addedFlags() would return a reference
-        // to a valud stored in the hash table, which would be invalidated by rehashing
+        // to a value stored in the hash table, which would be invalidated by rehashing
         // caused by the call to left-hand-side addedFlags().
         log->addedFlags(reinterpret_cast<ItemPrivate *>(i)) = log->addedFlags(reinterpret_cast<const ItemPrivate *>(i - 1));
     }

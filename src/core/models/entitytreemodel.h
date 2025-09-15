@@ -268,7 +268,7 @@ class EntityTreeModelPrivate;
  * - `int entityColumnCount( HeaderGroup headerGroup ) const;`
  * -- Implement to return the number of columns for a HeaderGroup. If the HeaderGroup is CollectionTreeHeaders, return the number of columns to display for the
  *    Collection tree, and if it is ItemListHeaders, return the number of columns to display for the item. In the case of addressee, this could be for example,
- *    two (for given name and family name) or for emails it could be three (for subject, sender, date). This is a decision of the subclass implementor.
+ *    two (for given name and family name) or for emails it could be three (for subject, sender, date). This is a decision of the subclass implementer.
  * - `QVariant entityHeaderData( int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup ) const;`
  * -- Implement to return the data for each section for a HeaderGroup. For example, if the header group is CollectionTreeHeaders in a contacts model,
  *    the string "Address books" might be returned for column 0, whereas if the headerGroup is ItemListHeaders, the strings "Given Name", "Family Name",

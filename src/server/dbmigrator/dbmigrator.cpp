@@ -59,7 +59,7 @@ Q_DECLARE_METATYPE(UIDelegate::Result);
 namespace
 {
 
-constexpr size_t maxTransactionSize = 1000; // Arbitary guess
+constexpr size_t maxTransactionSize = 1000; // Arbitrary guess
 
 class MigratorDataStoreFactory : public DataStoreFactory
 {
@@ -510,7 +510,7 @@ bool DbMigrator::runMigrationThread()
         return false;
     }
 
-    // Check that we actually have valid source datbase path
+    // Check that we actually have valid source database path
     const auto sourceDbPath = sourceConfig->databasePath();
     if (!isValidDbPath(sourceDbPath)) {
         emitError(i18nc("@info:shell", "Error: failed to obtain path to source database data file or directory."));
@@ -718,7 +718,7 @@ bool DbMigrator::moveDatabaseToMainLocation(DbConfig *destConfig, const QString 
     // We don't concern ourselves too much with this failing.
     std::filesystem::remove(dbSrcPath.parent_path(), ec);
 
-    // Turn the new temporary akonadiserverrc int othe main one so that
+    // Turn the new temporary akonadiserverrc in to the main one so that
     // Akonadi starts with the new DB configuration.
     std::filesystem::remove(StandardDirs::serverConfigFile(StandardDirs::ReadWrite).toStdString(), ec);
     if (ec) {
@@ -767,7 +767,7 @@ bool DbMigrator::copyTable(DataStore *sourceStore, DataStore *destStore, const T
     size_t trxSize = 0;
     size_t processed = 0;
 
-    // Loop over source resluts
+    // Loop over source results
     while (sourceQuery.next()) {
         // Insert the current row into the new database
         QueryBuilder destQb(destStore, table.name, QueryBuilder::Insert);

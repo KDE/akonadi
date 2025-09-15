@@ -181,7 +181,7 @@ private Q_SLOTS:
         QTest::addColumn<QByteArray>("input");
         QTest::newRow("null array") << QByteArray();
         QTest::newRow("empty array") << QByteArray();
-        QTest::newRow("short acii data") << QByteArray("Hello World");
+        QTest::newRow("short ascii data") << QByteArray("Hello World");
         QTest::newRow("binary data") << QByteArray("\x02\xA0\x05\x01\xA7\x1B");
         QTest::newRow("null character") << QByteArray("\0", 1);
     }

@@ -645,7 +645,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted whenever the user has accepted the configuration dialog.
      *
-     * @note Implementors of agents/resources are responsible to emit this signal if
+     * @note Implementers of agents/resources are responsible to emit this signal if
      *       the agent/resource reimplements configure().
      *
      * @since 4.4
@@ -655,7 +655,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted whenever the user has rejected the configuration dialog.
      *
-     * @note Implementors of agents/resources are responsible to emit this signal if
+     * @note Implementers of agents/resources are responsible to emit this signal if
      *       the agent/resource reimplements configure().
      *
      * @since 4.4

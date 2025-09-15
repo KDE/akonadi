@@ -1945,7 +1945,7 @@ QAction *StandardActionManager::createAction(Type type)
     }
 
     if (type == ToggleWorkOffline) {
-        // inititalize the action state with information from config file
+        // initialize the action state with information from config file
         disconnect(action, SIGNAL(triggered(bool)), this, standardActionData[type].slot); // clazy:exclude=old-style-connect
         action->setChecked(workOffline());
         connect(action, SIGNAL(triggered(bool)), this, standardActionData[type].slot); // clazy:exclude=old-style-connect

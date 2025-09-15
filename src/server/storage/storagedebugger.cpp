@@ -179,7 +179,7 @@ void StorageDebugger::queryExecuted(qint64 connectionId, const QSqlQuery &query,
     const int querySize = query.isSelect() ? query.size() : query.numRowsAffected();
     // We cannot extract actual results from the query since QSqlQuery is no longer copyable
     // and looping over the reference we got from caller would consume the results for the
-    // caller. Therefor we just pass an empty list for a result.
+    // caller. Therefore we just pass an empty list for a result.
     Q_EMIT queryExecuted(seq,
                          connectionId,
                          QDateTime::currentMSecsSinceEpoch(),

@@ -196,7 +196,7 @@ public:
      *
      * @param mimeType The mime type to check.
      *
-     * @return @c true if the mime type @p mimeType is coverd by one of the
+     * @return @c true if the mime type @p mimeType is covered by one of the
      *         wanted MIME types, @c false otherwise.
      *
      * @since 4.6
@@ -208,7 +208,7 @@ public:
      *
      * @param mimeTypes The MIME types to check.
      *
-     * @return @c true if any of the MIME types in @p mimeTypes is coverd by one of the
+     * @return @c true if any of the MIME types in @p mimeTypes is covered by one of the
      *         wanted MIME types, @c false otherwise.
      *
      * @since 4.6

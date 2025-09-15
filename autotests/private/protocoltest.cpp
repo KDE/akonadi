@@ -127,7 +127,7 @@ void ProtocolTest::testResponse_data()
     QTest::addColumn<QString>("errorString");
 
     QTest::newRow("no error") << false << 0 << QString();
-    QTest::newRow("error") << true << 10 << QStringLiteral("Oh noes, there was an error!");
+    QTest::newRow("error") << true << 10 << QStringLiteral("Oh no, there was an error!");
 }
 
 void ProtocolTest::testResponse()

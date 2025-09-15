@@ -123,7 +123,7 @@ void ItemTest::testDetach()
     // Make a copy
     Item copy = item;
 
-    // Detach by calling non-const attribute. Make sure a new copy of the attibute is returned
+    // Detach by calling non-const attribute. Make sure a new copy of the attribute is returned
     auto attr = copy.attribute<TestAttribute>(Akonadi::Item::AddIfMissing);
     auto attr2 = copy.attribute<TestAttribute>();
 

@@ -101,7 +101,7 @@ add_akonadi_isolated_test(SOURCE itemdeletetest.cpp)
 add_akonadi_isolated_test(SOURCE entitycachetest.cpp)
 add_akonadi_isolated_test(SOURCE monitortest.cpp monitortest.h)
 #add_akonadi_isolated_test_advanced(monitorfiltertest.cpp "" "KPim6::AkonadiPrivate")
-# FIXME: this is constantly failling due to broken search: re-enable once the new search code is merged
+# FIXME: this is constantly failing due to broken search: re-enable once the new search code is merged
 #add_akonadi_isolated_test(SOURCE searchjobtest.cpp searchjobtest.h)
 add_akonadi_isolated_test(SOURCE changerecordertest.cpp)
 add_akonadi_isolated_test(SOURCE resourcetest.cpp)

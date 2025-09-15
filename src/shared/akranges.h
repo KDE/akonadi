@@ -558,7 +558,7 @@ inline detail::EnumerateTag_ enumerate(qsizetype start = 0)
     return detail::EnumerateTag_{start};
 }
 
-/// Create a range, a view on a container from the given pair fo iterators
+/// Create a range, a view on a container from the given pair of iterators
 template<typename Iterator1, typename Iterator2, typename It = std::remove_reference_t<Iterator1>>
 detail::Range<It> range(Iterator1 begin, Iterator2 end)
 {
