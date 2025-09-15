@@ -3,14 +3,16 @@ cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 set(PIM_VERSION "6.5.40")
 project(Akonadi VERSION ${PIM_VERSION})
 
-
 # ECM setup
 set(KF_MIN_VERSION "6.16.0")
 set(QT_REQUIRED_VERSION "6.8.0")
 
 find_package(ECM ${KF_MIN_VERSION} CONFIG REQUIRED)
 
-set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
+set(CMAKE_MODULE_PATH
+    ${ECM_MODULE_PATH}
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules
+)
 
 include(KDEInstallDirs)
 include(KDECMakeSettings)
@@ -22,7 +24,12 @@ include(ECMGenerateHeaders)
 include(ECMSetupVersion)
 include(KDEGitCommitHooks)
 include(KDEClangFormat)
-file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h *.c)
+file(
+    GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES
+    *.cpp
+    *.h
+    *.c
+)
 kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
 
 include(CheckAtomic)
@@ -42,7 +49,11 @@ include(AkonadiMacros)
 include(ECMAddQch)
 
 option(BUILD_QCH "Build API documentation in QCH format (for e.g. Qt Assistant, Qt Creator & KDevelop)" OFF)
-add_feature_info(QCH ${BUILD_QCH} "API documentation in QCH format (for e.g. Qt Assistant, Qt Creator & KDevelop)")
+add_feature_info(
+    QCH
+    ${BUILD_QCH}
+    "API documentation in QCH format (for e.g. Qt Assistant, Qt Creator & KDevelop)"
+)
 
 set(RELEASE_SERVICE_VERSION "25.11.70")
 set(AKONADI_FULL_VERSION "${PIM_VERSION} (${RELEASE_SERVICE_VERSION})")
@@ -57,7 +68,8 @@ ecm_setup_version(PROJECT
     VARIABLE_PREFIX AKONADI
     VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi_version.h"
     PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KPim6AkonadiConfigVersion.cmake"
-    SOVERSION 6)
+    SOVERSION 6
+)
 
 # Find packages
 find_package(Qt6Core ${QT_REQUIRED_VERSION} REQUIRED COMPONENTS Private)
@@ -81,27 +93,45 @@ find_package(KF6Crash ${KF_MIN_VERSION} CONFIG REQUIRED)
 find_package(KF6WindowSystem ${KF_MIN_VERSION} CONFIG REQUIRED)
 find_package(KF6ColorScheme ${KF_MIN_VERSION} CONFIG REQUIRED)
 find_package(Qt6Designer NO_MODULE)
-set_package_properties(Qt6Designer PROPERTIES
-   PURPOSE "Required to build the Qt Designer plugins"
-   TYPE OPTIONAL
+set_package_properties(
+    Qt6Designer
+    PROPERTIES
+        PURPOSE
+            "Required to build the Qt Designer plugins"
+        TYPE
+            OPTIONAL
 )
 
 option(BUILD_DESIGNERPLUGIN "Build plugin for Qt Designer" ON)
-add_feature_info(DESIGNERPLUGIN ${BUILD_DESIGNERPLUGIN} "Build plugin for Qt Designer")
+add_feature_info(
+    DESIGNERPLUGIN
+    ${BUILD_DESIGNERPLUGIN}
+    "Build plugin for Qt Designer"
+)
 
 set(AccountsQt6_MINIMUM_VERSION "1.16")
 find_package(AccountsQt6 ${AccountsQt6_MINIMUM_VERSION})
-set_package_properties(AccountsQt6 PROPERTIES
-    DESCRIPTION "Qt bindings for the Accounts framework"
-    URL "https://gitlab.com/accounts-sso/libaccounts-qt"
-    TYPE OPTIONAL
+set_package_properties(
+    AccountsQt6
+    PROPERTIES
+        DESCRIPTION
+            "Qt bindings for the Accounts framework"
+        URL
+            "https://gitlab.com/accounts-sso/libaccounts-qt"
+        TYPE
+            OPTIONAL
 )
 set(KAccounts_MINIMUM_VERSION "19.08.0")
 find_package(KAccounts6 ${KAccounts_MINIMUM_VERSION})
-set_package_properties(KAccounts6 PROPERTIES
-    DESCRIPTION "KDE library for Accounts framework integration"
-    URL "https://invent.kde.org/network/kaccounts-integration"
-    TYPE OPTIONAL
+set_package_properties(
+    KAccounts6
+    PROPERTIES
+        DESCRIPTION
+            "KDE library for Accounts framework integration"
+        URL
+            "https://invent.kde.org/network/kaccounts-integration"
+        TYPE
+            OPTIONAL
 )
 if(${AccountsQt6_FOUND} AND ${KAccounts6_FOUND})
     set(WITH_ACCOUNTS TRUE)
@@ -109,12 +139,16 @@ endif()
 
 set(LibLZMA_MINIMUM_VERSION "5.0.0")
 find_package(LibLZMA ${LibLZMA_MINIMUM_VERSION})
-set_package_properties(LibLZMA PROPERTIES
-    DESCRIPTION "LZMA compression library"
-    URL "https://tukaani.org/xz/"
-    TYPE REQUIRED
+set_package_properties(
+    LibLZMA
+    PROPERTIES
+        DESCRIPTION
+            "LZMA compression library"
+        URL
+            "https://tukaani.org/xz/"
+        TYPE
+            REQUIRED
 )
-
 
 if(BUILD_TESTING)
     set(AKONADI_TESTS_EXPORT AKONADICORE_EXPORT)
@@ -137,14 +171,18 @@ else()
     set(KF5Akonadi_DATA_DIR "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_DATADIR_KF}/akonadi")
 endif()
 
-check_symbol_exists(malloc_trim "malloc.h" HAVE_MALLOC_TRIM)
+check_symbol_exists(
+    malloc_trim
+    "malloc.h"
+    HAVE_MALLOC_TRIM
+)
 
 ############### Build Options ###############
 option(BUILD_TOOLS "Build and install tools for development and testing purposes." TRUE)
 option(INSTALL_APPARMOR "Install AppArmor profiles" TRUE)
 
 if(BUILD_TESTING)
-   set(BUILD_TOOLS TRUE)
+    set(BUILD_TOOLS TRUE)
 endif()
 
 option(USE_UNITY_CMAKE_SUPPORT "Use UNITY cmake support (speedup compile time)" OFF)
@@ -159,15 +197,31 @@ find_package(SharedMimeInfo ${SharedMimeInfo_MINIMUM_VERSION} REQUIRED)
 
 find_program(XSLTPROC_EXECUTABLE xsltproc)
 if(NOT XSLTPROC_EXECUTABLE)
-    message(FATAL_ERROR "\nThe command line XSLT processor program 'xsltproc'  could not be found.\nPlease install xsltproc.\n")
+    message(
+        FATAL_ERROR
+        "\nThe command line XSLT processor program 'xsltproc'  could not be found.\nPlease install xsltproc.\n"
+    )
 endif()
 
-find_program(MYSQLD_EXECUTABLE NAMES mysqld
-    PATHS /usr/sbin /usr/local/sbin /usr/libexec /usr/local/libexec /opt/mysql/libexec /usr/mysql/bin /opt/mysql/sbin
+find_program(
+    MYSQLD_EXECUTABLE
+    NAMES
+        mysqld
+    PATHS
+        /usr/sbin
+        /usr/local/sbin
+        /usr/libexec
+        /usr/local/libexec
+        /opt/mysql/libexec
+        /usr/mysql/bin
+        /opt/mysql/sbin
     DOC "The mysqld executable path. ONLY needed at runtime"
 )
 
-find_path(MYSQLD_SCRIPTS_PATH NAMES mysql_install_db
+find_path(
+    MYSQLD_SCRIPTS_PATH
+    NAMES
+        mysql_install_db
     DOC "Path to the mysql or mariadb installation scripts (mysql_install_db, mysql_upgrade...)"
 )
 
@@ -183,11 +237,15 @@ else()
     message(STATUS "MySQL scripts location was not found. Use -DMYSQLD_SCRIPTS_PATH to point to the install location.")
 endif()
 
-find_path(POSTGRES_PATH NAMES pg_ctl
-    HINTS /usr/lib${LIB_SUFFIX}/postgresql/8.4/bin
-          /usr/lib${LIB_SUFFIX}/postgresql/9.0/bin
-          /usr/lib${LIB_SUFFIX}/postgresql/9.1/bin
-          DOC "The pg_ctl executable path. ONLY needed at runtime by the PostgreSQL backend"
+find_path(
+    POSTGRES_PATH
+    NAMES
+        pg_ctl
+    HINTS
+        /usr/lib${LIB_SUFFIX}/postgresql/8.4/bin
+        /usr/lib${LIB_SUFFIX}/postgresql/9.0/bin
+        /usr/lib${LIB_SUFFIX}/postgresql/9.1/bin
+    DOC "The pg_ctl executable path. ONLY needed at runtime by the PostgreSQL backend"
 )
 
 if(POSTGRES_PATH)
@@ -201,7 +259,10 @@ if(NOT XMLLINT_EXECUTABLE)
     message(STATUS "xmllint not found, skipping akonadidb.xml schema validation")
 endif()
 
-check_include_files(unistd.h HAVE_UNISTD_H)
+check_include_files(
+    unistd.h
+    HAVE_UNISTD_H
+)
 
 if(IS_ABSOLUTE "${KDE_INSTALL_DBUSINTERFACEDIR}")
     set(AKONADI_DBUS_INTERFACES_INSTALL_DIR "${KDE_INSTALL_DBUSINTERFACEDIR}")
@@ -217,10 +278,14 @@ endif()
 
 ############### Build Options ###############
 
-include(CTest)  # Calls enable_testing().
+include(CTest) # Calls enable_testing().
 
 if(NOT DEFINED DATABASE_BACKEND)
-    set(DATABASE_BACKEND "MYSQL" CACHE STRING "The default database backend to use for Akonadi. Can be either MYSQL, POSTGRES or SQLITE")
+    set(DATABASE_BACKEND
+        "MYSQL"
+        CACHE STRING
+        "The default database backend to use for Akonadi. Can be either MYSQL, POSTGRES or SQLITE"
+    )
 endif()
 
 ############### Macros ###############
@@ -234,7 +299,10 @@ macro(SET_DEFAULT_DB_BACKEND)
     elseif("${_backend}" STREQUAL "MYSQL")
         set(AKONADI_DATABASE_BACKEND QMYSQL)
     else()
-        message(FATAL_ERROR "Invalid database backend \"${_backend}\". Supported values are MYSQL, POSTGRES and SQLITE.")
+        message(
+            FATAL_ERROR
+            "Invalid database backend \"${_backend}\". Supported values are MYSQL, POSTGRES and SQLITE."
+        )
     endif()
 
     message(STATUS "Using default db backend ${AKONADI_DATABASE_BACKEND}")
@@ -246,22 +314,41 @@ set_default_db_backend(${DATABASE_BACKEND})
 ############### Compilers flags ###############
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc" OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
-    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -Wextra -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wundef -Wcast-align -Wchar-subscripts -Wall -Wextra -Wpointer-arith -Wformat-security -fno-common -pedantic")
-    CHECK_CXX_COMPILER_FLAG(-Wno-deprecated-copy NO_DEPRECATED_COPY)
+    set(CMAKE_C_FLAGS
+        "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -Wextra -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common"
+    )
+    set(CMAKE_CXX_FLAGS
+        "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wundef -Wcast-align -Wchar-subscripts -Wall -Wextra -Wpointer-arith -Wformat-security -fno-common -pedantic"
+    )
+    check_cxx_compiler_flag(
+        -Wno-deprecated-copy
+        NO_DEPRECATED_COPY
+    )
     if(NO_DEPRECATED_COPY)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-copy")
     endif()
 
-    set(CMAKE_CXX_FLAGS_DEBUGFULL "-g3 -fno-inline" CACHE STRING "Flags used by the C++ compiler during debugfull builds." FORCE)
-    set(CMAKE_C_FLAGS_DEBUGFULL   "-g3 -fno-inline" CACHE STRING "Flags used by the C compiler during debugfull builds." FORCE)
-    mark_as_advanced(CMAKE_CXX_FLAGS_DEBUGFULL CMAKE_C_FLAGS_DEBUGFULL)
+    set(CMAKE_CXX_FLAGS_DEBUGFULL
+        "-g3 -fno-inline"
+        CACHE STRING
+        "Flags used by the C++ compiler during debugfull builds."
+        FORCE
+    )
+    set(CMAKE_C_FLAGS_DEBUGFULL
+        "-g3 -fno-inline"
+        CACHE STRING
+        "Flags used by the C compiler during debugfull builds."
+        FORCE
+    )
+    mark_as_advanced(
+        CMAKE_CXX_FLAGS_DEBUGFULL
+        CMAKE_C_FLAGS_DEBUGFULL
+    )
 elseif(MSVC)
     # This sets the __cplusplus macro to a real value based on the version of C++ specified by
     # the /std switch. Without it MSVC keeps reporting C++98, so feature detection doesn't work.
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:__cplusplus")
 endif()
-
 
 if(MSVC)
     set(_ENABLE_EXCEPTIONS -EHsc)
@@ -285,7 +372,6 @@ include_directories(
     src
 )
 
-
 add_definitions(-DQT_NO_CONTEXTLESS_CONNECT)
 ecm_set_disabled_deprecation_versions(QT 6.10.0  KF 6.18.0)
 
@@ -308,7 +394,7 @@ if(BUILD_TESTING)
 endif()
 
 if(INSTALL_APPARMOR)
-   add_subdirectory(apparmor)
+    add_subdirectory(apparmor)
 endif()
 
 ############### install stuff ###############
@@ -325,7 +411,7 @@ if(BUILD_QCH)
         FILE KPim6AkonadiQchTargets.cmake
         DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
         COMPONENT Devel
-   )
+    )
     set(PACKAGE_INCLUDE_QCHTARGETS "include(\"\${CMAKE_CURRENT_LIST_DIR}/KPim6AkonadiQchTargets.cmake\")")
 endif()
 
@@ -333,34 +419,39 @@ configure_package_config_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/KPimAkonadiConfig.cmake.in"
     "${CMAKE_CURRENT_BINARY_DIR}/KPim6AkonadiConfig.cmake"
     INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
-    PATH_VARS AKONADI_DBUS_INTERFACES_INSTALL_DIR
-              AKONADI_INCLUDE_DIR
-              KF5Akonadi_DATA_DIR
+    PATH_VARS
+        AKONADI_DBUS_INTERFACES_INSTALL_DIR
+        AKONADI_INCLUDE_DIR
+        KF5Akonadi_DATA_DIR
 )
 
-install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/KPim6AkonadiConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/KPim6AkonadiConfigVersion.cmake"
-    "${CMAKE_CURRENT_SOURCE_DIR}/KPimAkonadiMacros.cmake"
+install(
+    FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/KPim6AkonadiConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/KPim6AkonadiConfigVersion.cmake"
+        "${CMAKE_CURRENT_SOURCE_DIR}/KPimAkonadiMacros.cmake"
     DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
     COMPONENT Devel
 )
 
-install(EXPORT
-    KPim6AkonadiTargets
+install(
+    EXPORT KPim6AkonadiTargets
     DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
     FILE KPim6AkonadiTargets.cmake
-    NAMESPACE KPim6::)
+    NAMESPACE KPim6::
+)
 
 ecm_qt_install_logging_categories(
         EXPORT AKONADI
         FILE akonadi.categories
         DESTINATION ${KDE_INSTALL_LOGGINGCATEGORIESDIR}
-       )
+)
 
-install(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/akonadi_version.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/KPim6/AkonadiCore COMPONENT Devel
+install(
+    FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/akonadi_version.h
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/KPim6/AkonadiCore
+    COMPONENT Devel
 )
 
 kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)

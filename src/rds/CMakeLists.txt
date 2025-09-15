@@ -1,23 +1,33 @@
 ########### next target ###############
 
 add_executable(akonadi_rds)
-target_sources(akonadi_rds PRIVATE
-    bridgeserver.cpp
-    bridgeconnection.cpp
-    bridgeserver.h
-    bridgeconnection.h
-    main.cpp
+target_sources(
+    akonadi_rds
+    PRIVATE
+        bridgeserver.cpp
+        bridgeconnection.cpp
+        bridgeserver.h
+        bridgeconnection.h
+        main.cpp
 )
 
-set_target_properties(akonadi_rds PROPERTIES MACOSX_BUNDLE FALSE)
+set_target_properties(
+    akonadi_rds
+    PROPERTIES
+        MACOSX_BUNDLE
+            FALSE
+)
 
-target_link_libraries(akonadi_rds
+target_link_libraries(
+    akonadi_rds
     akonadi_shared
     KPim6::AkonadiPrivate
     Qt::Core
     Qt::Network
 )
 
-install(TARGETS akonadi_rds
+install(
+    TARGETS
+        akonadi_rds
         ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )

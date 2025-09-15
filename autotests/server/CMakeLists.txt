@@ -17,34 +17,42 @@ akonadi_run_xsltproc(
     BASENAME dbpopulator
 )
 
-set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp PROPERTY SKIP_AUTOMOC TRUE)
-
-add_library(akonadi_unittest_common STATIC)
-target_sources(akonadi_unittest_common PRIVATE
-    unittestschema.cpp
-    fakeconnection.cpp
-    fakeintervalcheck.cpp
-    fakedatastore.cpp
-    fakeclient.cpp
-    fakeakonadiserver.cpp
-    fakesearchmanager.cpp
-    fakeitemretrievalmanager.cpp
-    dbinitializer.cpp
-    inspectablenotificationcollector.cpp
-    ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp
-    fakeconnection.h
-    fakeintervalcheck.h
-    fakedatastore.h
-    fakeclient.h
-    fakeakonadiserver.h
-    fakesearchmanager.h
-    fakeitemretrievalmanager.h
-    dbinitializer.h
-    inspectablenotificationcollector.h
+set_property(
+    SOURCE
+        ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp
+    PROPERTY
+        SKIP_AUTOMOC
+            TRUE
 )
 
+add_library(akonadi_unittest_common STATIC)
+target_sources(
+    akonadi_unittest_common
+    PRIVATE
+        unittestschema.cpp
+        fakeconnection.cpp
+        fakeintervalcheck.cpp
+        fakedatastore.cpp
+        fakeclient.cpp
+        fakeakonadiserver.cpp
+        fakesearchmanager.cpp
+        fakeitemretrievalmanager.cpp
+        dbinitializer.cpp
+        inspectablenotificationcollector.cpp
+        ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp
+        fakeconnection.h
+        fakeintervalcheck.h
+        fakedatastore.h
+        fakeclient.h
+        fakeakonadiserver.h
+        fakesearchmanager.h
+        fakeitemretrievalmanager.h
+        dbinitializer.h
+        inspectablenotificationcollector.h
+)
 
-target_link_libraries(akonadi_unittest_common
+target_link_libraries(
+    akonadi_unittest_common
     KPim6::AkonadiPrivate
     libakonadiserver
     Qt::Core
@@ -55,18 +63,30 @@ target_link_libraries(akonadi_unittest_common
 )
 
 macro(add_server_test _source)
-    set(_test ${_source} ../../src/server/akonadiserver_debug.cpp ../../src/server/akonadiserver_search_debug.cpp dbtest_data/dbtest_data.qrc)
+    set(_test
+        ${_source}
+        ../../src/server/akonadiserver_debug.cpp
+        ../../src/server/akonadiserver_search_debug.cpp
+        dbtest_data/dbtest_data.qrc
+    )
     get_filename_component(_name ${_source} NAME_WE)
     ecm_add_test(TEST_NAME ${_name} NAME_PREFIX "AkonadiServer-" ${_test})
     if(ENABLE_ASAN)
-        set_tests_properties(AkonadiServer-${_name} PROPERTIES
-                             ENVIRONMENT ASAN_OPTIONS=symbolize=1
-       )
+        set_tests_properties(
+            AkonadiServer-${_name}
+            PROPERTIES
+                ENVIRONMENT
+                    ASAN_OPTIONS=symbolize=1
+        )
     endif()
-    set_tests_properties(AkonadiServer-${_name} PROPERTIES
-                         ENVIRONMENT "QT_HASH_SEED=0;QT_NO_CPU_FEATURE=sse4.2"
-   )
-    target_link_libraries(${_name}
+    set_tests_properties(
+        AkonadiServer-${_name}
+        PROPERTIES
+            ENVIRONMENT
+                "QT_HASH_SEED=0;QT_NO_CPU_FEATURE=sse4.2"
+    )
+    target_link_libraries(
+        ${_name}
         akonadi_shared
         akonadi_unittest_common
         libakonadiserver
@@ -77,7 +97,7 @@ macro(add_server_test _source)
         Qt::Sql
         Qt::Network
         ${CMAKE_SHARED_LINKER_FLAGS_ASAN}
-   )
+    )
 endmacro()
 
 add_server_test(dbdeadlockcatchertest.cpp)

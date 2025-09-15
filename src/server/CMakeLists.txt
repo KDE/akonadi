@@ -71,7 +71,6 @@ set(libakonadiserver_SRCS
     search/searchtaskmanager.cpp
     search/searchrequest.cpp
     search/searchmanager.cpp
-
     storage/collectionqueryhelper.cpp
     storage/collectionstatistics.cpp
     storage/entity.cpp
@@ -119,8 +118,6 @@ set(libakonadiserver_SRCS
     preprocessormanager.cpp
     storagejanitor.cpp
     storage/akonadidb.qrc
-
-
     akonadi.h
     aggregatedfetchscope.h
     aklocalserver.h
@@ -165,7 +162,6 @@ set(libakonadiserver_SRCS
     search/searchrequest.h
     search/searchmanager.h
     search/abstractsearchplugin.h
-
     storage/collectionqueryhelper.h
     storage/collectionstatistics.h
     storage/entity.h
@@ -210,12 +206,9 @@ set(libakonadiserver_SRCS
     preprocessorinstance.h
     preprocessormanager.h
     storagejanitor.h
-
-   )
-
-set(akonadiserver_SRCS
-    main.cpp
 )
+
+set(akonadiserver_SRCS main.cpp)
 ecm_qt_declare_logging_category(libakonadiserver_SRCS HEADER akonadiserver_debug.h IDENTIFIER AKONADISERVER_LOG CATEGORY_NAME org.kde.pim.akonadiserver
         DESCRIPTION "akonadi (Akonadi Server)"
         OLD_CATEGORY_NAMES log_akonadiserver
@@ -248,21 +241,27 @@ add_library(libakonadiserver STATIC ${libakonadiserver_SRCS})
 #    set_source_files_properties(storage/itemretrievalmanager.cpp PROPERTIES SKIP_UNITY_BUILD_INCLUSION ON)
 #endif()
 
-set_target_properties(libakonadiserver PROPERTIES OUTPUT_NAME akonadiserver)
+set_target_properties(
+    libakonadiserver
+    PROPERTIES
+        OUTPUT_NAME
+            akonadiserver
+)
 
 if(MYSQLD_EXECUTABLE)
-  target_compile_definitions(libakonadiserver PRIVATE MYSQLD_EXECUTABLE="${MYSQLD_EXECUTABLE}")
+    target_compile_definitions(libakonadiserver PRIVATE MYSQLD_EXECUTABLE="${MYSQLD_EXECUTABLE}")
 endif()
 
 if(MYSQLD_SCRIPTS_PATH)
-  target_compile_definitions(libakonadiserver PRIVATE MYSQLD_SCRIPTS_PATH="${MYSQLD_SCRIPTS_PATH}")
+    target_compile_definitions(libakonadiserver PRIVATE MYSQLD_SCRIPTS_PATH="${MYSQLD_SCRIPTS_PATH}")
 endif()
 
 if(POSTGRES_PATH)
-  target_compile_definitions(libakonadiserver PRIVATE POSTGRES_PATH="${POSTGRES_PATH}")
+    target_compile_definitions(libakonadiserver PRIVATE POSTGRES_PATH="${POSTGRES_PATH}")
 endif()
 
-target_link_libraries(libakonadiserver
+target_link_libraries(
+    libakonadiserver
     akonadi_shared
     KPim6::AkonadiPrivate
     Qt::Core
@@ -273,31 +272,44 @@ target_link_libraries(libakonadiserver
 )
 
 add_executable(akonadiserver ${akonadiserver_SRCS})
-set_target_properties(akonadiserver PROPERTIES MACOSX_BUNDLE FALSE)
-set_target_properties(akonadiserver PROPERTIES OUTPUT_NAME akonadiserver)
-target_link_libraries(akonadiserver
+set_target_properties(
+    akonadiserver
+    PROPERTIES
+        MACOSX_BUNDLE
+            FALSE
+)
+set_target_properties(
+    akonadiserver
+    PROPERTIES
+        OUTPUT_NAME
+            akonadiserver
+)
+target_link_libraries(
+    akonadiserver
     libakonadiserver
     KF6::CoreAddons
 )
 
-install(TARGETS akonadiserver
+install(
+    TARGETS
+        akonadiserver
         ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
-install(FILES
-  storage/mysql-global.conf
-  storage/mysql-global-mobile.conf
-  DESTINATION ${KDE_INSTALL_CONFDIR}/akonadi
+install(
+    FILES
+        storage/mysql-global.conf
+        storage/mysql-global-mobile.conf
+    DESTINATION ${KDE_INSTALL_CONFDIR}/akonadi
 )
 
-install(FILES
-  search/abstractsearchplugin.h
-  DESTINATION ${KDE_INSTALL_INCLUDEDIR}/KPim6/AkonadiCore/akonadi
-)
+install(FILES search/abstractsearchplugin.h DESTINATION ${KDE_INSTALL_INCLUDEDIR}/KPim6/AkonadiCore/akonadi)
 
 ## DBus XML files
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.DebugInterface.xml
-        DESTINATION ${AKONADI_DBUS_INTERFACES_INSTALL_DIR}
+install(
+    FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.DebugInterface.xml
+    DESTINATION ${AKONADI_DBUS_INTERFACES_INSTALL_DIR}
 )
 
 #######################################################

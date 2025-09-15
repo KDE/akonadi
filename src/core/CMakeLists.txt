@@ -28,7 +28,8 @@ set(akonadicore_base_SRCS
     collectionpathresolver.cpp
     collectionstatistics.cpp
     collectionsync.cpp
-    collectionutils.cpp collectionutils.h
+    collectionutils.cpp
+    collectionutils.h
     conflicthandler.cpp
     control.cpp
     entitycache.cpp
@@ -63,7 +64,6 @@ set(akonadicore_base_SRCS
     tagsync.cpp
     trashsettings.cpp
     typepluginloader.cpp
-
     agentconfigurationbase.h
     agentconfigurationfactorybase.h
     agentconfigurationmanager_p.h
@@ -125,11 +125,9 @@ set(akonadicore_base_SRCS
     tagsync.h
     trashsettings.h
     typepluginloader_p.h
-
     accountactivitiesabstract.h
     accountactivitiesabstract.cpp
-
-   )
+)
 
 ecm_generate_headers(AkonadiCore_base_CC_HEADERS
     HEADER_NAMES
@@ -177,21 +175,35 @@ ecm_generate_headers(AkonadiCore_base_CC_HEADERS
 
 set(akonadicore_attributes_SRCS
     attributes/attribute.cpp
-    attributes/collectionannotationsattribute.cpp attributes/collectionannotationsattribute.h
-    attributes/collectioncolorattribute.cpp attributes/collectioncolorattribute.h
-    attributes/collectionquotaattribute.cpp attributes/collectionquotaattribute.h
-    attributes/collectionidentificationattribute.cpp attributes/collectionidentificationattribute.h
+    attributes/collectionannotationsattribute.cpp
+    attributes/collectionannotationsattribute.h
+    attributes/collectioncolorattribute.cpp
+    attributes/collectioncolorattribute.h
+    attributes/collectionquotaattribute.cpp
+    attributes/collectionquotaattribute.h
+    attributes/collectionidentificationattribute.cpp
+    attributes/collectionidentificationattribute.h
     attributes/collectionrightsattribute.cpp
-    attributes/entityannotationsattribute.cpp attributes/entityannotationsattribute.h
-    attributes/entitydeletedattribute.cpp attributes/entitydeletedattribute.h
-    attributes/entitydeletedattribute.cpp attributes/entitydeletedattribute.h
-    attributes/entitydisplayattribute.cpp attributes/entitydisplayattribute.h
-    attributes/entityhiddenattribute.cpp attributes/entityhiddenattribute.h
-    attributes/favoritecollectionattribute.cpp attributes/favoritecollectionattribute.h
-    attributes/indexpolicyattribute.cpp attributes/indexpolicyattribute.h
-    attributes/persistentsearchattribute.cpp attributes/persistentsearchattribute.h
-    attributes/specialcollectionattribute.cpp attributes/specialcollectionattribute.h
-    attributes/tagattribute.cpp attributes/tagattribute.h
+    attributes/entityannotationsattribute.cpp
+    attributes/entityannotationsattribute.h
+    attributes/entitydeletedattribute.cpp
+    attributes/entitydeletedattribute.h
+    attributes/entitydeletedattribute.cpp
+    attributes/entitydeletedattribute.h
+    attributes/entitydisplayattribute.cpp
+    attributes/entitydisplayattribute.h
+    attributes/entityhiddenattribute.cpp
+    attributes/entityhiddenattribute.h
+    attributes/favoritecollectionattribute.cpp
+    attributes/favoritecollectionattribute.h
+    attributes/indexpolicyattribute.cpp
+    attributes/indexpolicyattribute.h
+    attributes/persistentsearchattribute.cpp
+    attributes/persistentsearchattribute.h
+    attributes/specialcollectionattribute.cpp
+    attributes/specialcollectionattribute.h
+    attributes/tagattribute.cpp
+    attributes/tagattribute.h
 )
 
 ecm_generate_headers(AkonadiCore_attributes_CC_HEADERS
@@ -216,24 +228,40 @@ ecm_generate_headers(AkonadiCore_attributes_CC_HEADERS
 )
 
 set(akonadicore_models_SRCS
-    models/agentfilterproxymodel.cpp models/agentfilterproxymodel.h
-    models/agentinstancemodel.cpp models/agentinstancemodel.h
-    models/agenttypemodel.cpp models/agenttypemodel.h
+    models/agentfilterproxymodel.cpp
+    models/agentfilterproxymodel.h
+    models/agentinstancemodel.cpp
+    models/agentinstancemodel.h
+    models/agenttypemodel.cpp
+    models/agenttypemodel.h
     models/collectionfilterproxymodel.cpp
-    models/entitymimetypefiltermodel.cpp models/entitymimetypefiltermodel.h
-    models/entityorderproxymodel.cpp models/entityorderproxymodel.h
-    models/entityrightsfiltermodel.cpp models/entityrightsfiltermodel.h
-    models/entitytreemodel.cpp models/entitytreemodel.h
-    models/entitytreemodel_p.cpp models/entitytreemodel_p.h
-    models/favoritecollectionsmodel.cpp models/favoritecollectionsmodel.h
-    models/recursivecollectionfilterproxymodel.cpp models/recursivecollectionfilterproxymodel.h
-    models/selectionproxymodel.cpp models/selectionproxymodel.h
-    models/statisticsproxymodel.cpp models/statisticsproxymodel.h
+    models/entitymimetypefiltermodel.cpp
+    models/entitymimetypefiltermodel.h
+    models/entityorderproxymodel.cpp
+    models/entityorderproxymodel.h
+    models/entityrightsfiltermodel.cpp
+    models/entityrightsfiltermodel.h
+    models/entitytreemodel.cpp
+    models/entitytreemodel.h
+    models/entitytreemodel_p.cpp
+    models/entitytreemodel_p.h
+    models/favoritecollectionsmodel.cpp
+    models/favoritecollectionsmodel.h
+    models/recursivecollectionfilterproxymodel.cpp
+    models/recursivecollectionfilterproxymodel.h
+    models/selectionproxymodel.cpp
+    models/selectionproxymodel.h
+    models/statisticsproxymodel.cpp
+    models/statisticsproxymodel.h
     models/subscriptionmodel.cpp
-    models/tagmodel.cpp models/tagmodel.h
-    models/tagmodel_p.cpp models/tagmodel_p.h
-    models/trashfilterproxymodel.cpp models/trashfilterproxymodel.h
-    models/agentinstancefilterproxymodel.cpp models/agentinstancefilterproxymodel.h
+    models/tagmodel.cpp
+    models/tagmodel.h
+    models/tagmodel_p.cpp
+    models/tagmodel_p.h
+    models/trashfilterproxymodel.cpp
+    models/trashfilterproxymodel.h
+    models/agentinstancefilterproxymodel.cpp
+    models/agentinstancefilterproxymodel.h
 )
 
 ecm_generate_headers(AkonadiCore_models_CC_HEADERS
@@ -284,7 +312,8 @@ set(akonadicore_jobs_SRCS
     jobs/resourcesynchronizationjob.cpp
     jobs/searchcreatejob.cpp
     jobs/searchresultjob.cpp
-    jobs/specialcollectionsdiscoveryjob.cpp jobs/specialcollectionsdiscoveryjob.h
+    jobs/specialcollectionsdiscoveryjob.cpp
+    jobs/specialcollectionsdiscoveryjob.h
     jobs/specialcollectionshelperjobs.cpp
     jobs/specialcollectionsrequestjob.cpp
     jobs/subscriptionjob.cpp
@@ -297,7 +326,6 @@ set(akonadicore_jobs_SRCS
     jobs/trashjob.cpp
     jobs/trashrestorejob.cpp
     jobs/unlinkjob.cpp
-
     jobs/agentinstancecreatejob.h
     jobs/collectionattributessynchronizationjob.h
     jobs/collectioncopyjob.h
@@ -334,8 +362,7 @@ set(akonadicore_jobs_SRCS
     jobs/trashjob.h
     jobs/trashrestorejob.h
     jobs/unlinkjob.h
-
-   )
+)
 
 ecm_generate_headers(AkonadiCore_jobs_CC_HEADERS
     HEADER_NAMES
@@ -380,14 +407,20 @@ set(akonadicore_dbus_xml ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Ak
 qt_add_dbus_interface(akonadicore_dbus_SRCS ${akonadicore_dbus_xml} notificationmanagerinterface)
 
 set(akonadicore_dbus_xml ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.NotificationSource.xml)
-set_source_files_properties(${akonadicore_dbus_xml} PROPERTIES INCLUDE "${Akonadi_SOURCE_DIR}/src/private/protocol_p.h")
+set_source_files_properties(
+    ${akonadicore_dbus_xml}
+    PROPERTIES
+        INCLUDE
+            "${Akonadi_SOURCE_DIR}/src/private/protocol_p.h"
+)
 qt_add_dbus_interface(akonadicore_dbus_SRCS ${akonadicore_dbus_xml} notificationsourceinterface)
 
 qt_add_dbus_interfaces(akonadicore_dbus_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.AgentManager.xml)
 qt_add_dbus_interfaces(akonadicore_dbus_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Tracer.xml)
 qt_add_dbus_interfaces(akonadicore_dbus_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Agent.Control.xml)
 qt_add_dbus_interfaces(akonadicore_dbus_SRCS
-    ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Resource.xml)
+    ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Resource.xml
+)
 
 set(akonadicore_SRCS
     ${akonadicore_base_SRCS}
@@ -401,8 +434,7 @@ ecm_qt_declare_logging_category(akonadicore_SRCS HEADER akonadicore_debug.h IDEN
         DESCRIPTION "akonadi (Akonadi Core Library)"
         OLD_CATEGORY_NAMES log_akonadicore
         EXPORT AKONADI
-   )
-
+)
 
 add_library(KPim6AkonadiCore ${akonadicore_SRCS})
 #if(COMPILE_WITH_UNITY_CMAKE_SUPPORT)
@@ -413,65 +445,74 @@ generate_export_header(KPim6AkonadiCore BASE_NAME akonadicore)
 
 add_library(KPim6::AkonadiCore ALIAS KPim6AkonadiCore)
 target_include_directories(KPim6AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${AkonadiCore_INSTALL_INCLUDEDIR}>")
-target_include_directories(KPim6AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core;${Akonadi_BINARY_DIR}/src/private>")
-target_include_directories(KPim6AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_BINARY_DIR};${Akonadi_SOURCE_DIR}/src/core/jobs;${Akonadi_SOURCE_DIR}/src/core/models;${Akonadi_SOURCE_DIR}/src/core/attributes>")
+target_include_directories(
+    KPim6AkonadiCore
+    PUBLIC
+        "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core;${Akonadi_BINARY_DIR}/src/private>"
+)
+target_include_directories(
+    KPim6AkonadiCore
+    PUBLIC
+        "$<BUILD_INTERFACE:${Akonadi_BINARY_DIR};${Akonadi_SOURCE_DIR}/src/core/jobs;${Akonadi_SOURCE_DIR}/src/core/models;${Akonadi_SOURCE_DIR}/src/core/attributes>"
+)
 
 kde_target_enable_exceptions(KPim6AkonadiCore PUBLIC)
 
-target_link_libraries(KPim6AkonadiCore
-PUBLIC
-    KF6::CoreAddons # for KJob
-    KF6::ItemModels
-    Qt::Gui # for QColor
-    KPim6::AkonadiPrivate
-PRIVATE
-    Qt::Network
-    KF6::I18n
-    KF6::IconThemes
-    KF6::ConfigCore
-    akonadi_shared
-)
-
-set_target_properties(KPim6AkonadiCore PROPERTIES
-    VERSION ${AKONADI_VERSION}
-    SOVERSION ${AKONADI_SOVERSION}
-    EXPORT_NAME AkonadiCore
-)
-
-install(TARGETS
+target_link_libraries(
     KPim6AkonadiCore
-    EXPORT KPim6AkonadiTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
+    PUBLIC
+        KF6::CoreAddons # for KJob
+        KF6::ItemModels
+        Qt::Gui # for QColor
+        KPim6::AkonadiPrivate
+    PRIVATE
+        Qt::Network
+        KF6::I18n
+        KF6::IconThemes
+        KF6::ConfigCore
+        akonadi_shared
 )
 
-install(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/akonadicore_export.h
-    ${AkonadiCore_base_HEADERS}
-    ${AkonadiCore_attributes_HEADERS}
-    ${AkonadiCore_models_HEADERS}
-    ${AkonadiCore_jobs_HEADERS}
-    ${AkonadiCore_HEADERS}
-    qtest_akonadi.h
-    itempayloadinternals_p.h
-    ${Akonadi_BINARY_DIR}/config-akonadi.h
+set_target_properties(
+    KPim6AkonadiCore
+    PROPERTIES
+        VERSION
+            ${AKONADI_VERSION}
+        SOVERSION
+            ${AKONADI_SOVERSION}
+        EXPORT_NAME
+            AkonadiCore
+)
+
+install(TARGETS KPim6AkonadiCore EXPORT KPim6AkonadiTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+
+install(
+    FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/akonadicore_export.h
+        ${AkonadiCore_base_HEADERS}
+        ${AkonadiCore_attributes_HEADERS}
+        ${AkonadiCore_models_HEADERS}
+        ${AkonadiCore_jobs_HEADERS}
+        ${AkonadiCore_HEADERS}
+        qtest_akonadi.h
+        itempayloadinternals_p.h
+        ${Akonadi_BINARY_DIR}/config-akonadi.h
     DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}/akonadi
     COMPONENT Devel
 )
 
-install(FILES
-    ${AkonadiCore_base_CC_HEADERS}
-    ${AkonadiCore_attributes_CC_HEADERS}
-    ${AkonadiCore_models_CC_HEADERS}
-    ${AkonadiCore_jobs_CC_HEADERS}
-    ${AkonadiCore_CC_HEADERS}
+install(
+    FILES
+        ${AkonadiCore_base_CC_HEADERS}
+        ${AkonadiCore_attributes_CC_HEADERS}
+        ${AkonadiCore_models_CC_HEADERS}
+        ${AkonadiCore_jobs_CC_HEADERS}
+        ${AkonadiCore_CC_HEADERS}
     DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}/Akonadi
     COMPONENT Devel
 )
 
-install(FILES
-    kcfg2dbus.xsl
-    DESTINATION ${KDE_INSTALL_DATADIR_KF}/akonadi
-)
-
+install(FILES kcfg2dbus.xsl DESTINATION ${KDE_INSTALL_DATADIR_KF}/akonadi)
 
 if(BUILD_QCH)
     ecm_add_qch(
@@ -499,5 +540,5 @@ if(BUILD_QCH)
         TAGFILE_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
         QCH_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
         COMPONENT Devel
-   )
+    )
 endif()

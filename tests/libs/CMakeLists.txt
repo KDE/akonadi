@@ -13,14 +13,15 @@ kde_enable_exceptions()
 
 # convenience macro to add akonadi demo application
 macro(add_akonadi_demo _source)
-  set(_test ${_source})
-  get_filename_component(_name ${_source} NAME_WE)
-  add_executable(${_name} ${_test})
-  target_link_libraries(${_name}
+    set(_test ${_source})
+    get_filename_component(_name ${_source} NAME_WE)
+    add_executable(${_name} ${_test})
+    target_link_libraries(
+        ${_name}
         KPim6::AkonadiCore
         KPim6::AkonadiWidgets
         KF6::I18n
- )
+    )
 endmacro()
 
 # demo applications

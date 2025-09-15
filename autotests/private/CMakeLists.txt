@@ -5,17 +5,21 @@ macro(add_unit_test _source)
     get_filename_component(_name ${_source} NAME_WE)
     ecm_add_test(TEST_NAME ${_name} NAME_PREFIX "AkonadiPrivate-" ${_source})
     if(ENABLE_ASAN)
-        set_tests_properties(AkonadiPrivate-${_name} PROPERTIES
-                             ENVIRONMENT ASAN_OPTIONS=symbolize=1
-       )
+        set_tests_properties(
+            AkonadiPrivate-${_name}
+            PROPERTIES
+                ENVIRONMENT
+                    ASAN_OPTIONS=symbolize=1
+        )
     endif()
-    target_link_libraries(${_name}
+    target_link_libraries(
+        ${_name}
         akonadi_shared
         KPim6::AkonadiPrivate
         Qt::Network
         Qt::Test
         ${CMAKE_EXE_LINKER_FLAGS_ASAN}
-   )
+    )
 endmacro()
 
 add_unit_test(akstandarddirstest.cpp)

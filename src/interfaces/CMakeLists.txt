@@ -1,4 +1,4 @@
-SET(DBUS_INTERFACE_XMLS
+set(DBUS_INTERFACE_XMLS
     org.freedesktop.Akonadi.AgentManager.xml
     org.freedesktop.Akonadi.NotificationManager.xml
     org.freedesktop.Akonadi.Preprocessor.xml
@@ -14,6 +14,4 @@ SET(DBUS_INTERFACE_XMLS
     org.freedesktop.Akonadi.TracerNotification.xml
 )
 
-install(FILES ${DBUS_INTERFACE_XMLS}
-        DESTINATION ${AKONADI_DBUS_INTERFACES_INSTALL_DIR}
-)
+install(FILES ${DBUS_INTERFACE_XMLS} DESTINATION ${AKONADI_DBUS_INTERFACES_INSTALL_DIR})

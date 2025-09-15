@@ -25,22 +25,34 @@ ecm_qt_declare_logging_category(knut_common_SRCS
 
 ################################# Resource ####################################
 
-add_executable(akonadi_knut_resource
+add_executable(
+    akonadi_knut_resource
     knutresource.cpp
     knutresource.h
     ${knut_common_SRCS}
 )
-set_target_properties(akonadi_knut_resource PROPERTIES MACOSX_BUNDLE FALSE)
-
-target_link_libraries(akonadi_knut_resource PUBLIC
-  KPim6::AkonadiXml
-  KPim6::AkonadiCore
-  KPim6::AkonadiAgentBase
-  Qt::Xml
-  KF6::I18n
+set_target_properties(
+    akonadi_knut_resource
+    PROPERTIES
+        MACOSX_BUNDLE
+            FALSE
 )
 
-install(TARGETS akonadi_knut_resource ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+target_link_libraries(
+    akonadi_knut_resource
+    PUBLIC
+        KPim6::AkonadiXml
+        KPim6::AkonadiCore
+        KPim6::AkonadiAgentBase
+        Qt::Xml
+        KF6::I18n
+)
+
+install(
+    TARGETS
+        akonadi_knut_resource
+        ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
+)
 install(FILES knutresource.desktop DESTINATION "${KDE_INSTALL_DATAROOTDIR}/akonadi/agents")
 install(FILES knut-template.xml DESTINATION ${KDE_INSTALL_DATADIR_KF}/akonadi_knut_resource/)
 
@@ -50,14 +62,17 @@ kcoreaddons_add_plugin(knutconfig
     INSTALL_NAMESPACE "pim6/akonadi/config"
 )
 
-target_sources(knutconfig PRIVATE
-    knutconfig.cpp
-    accountwidget.cpp
-    accountwidget.h
-    ${knut_common_SRCS}
+target_sources(
+    knutconfig
+    PRIVATE
+        knutconfig.cpp
+        accountwidget.cpp
+        accountwidget.h
+        ${knut_common_SRCS}
 )
 
-target_link_libraries(knutconfig
+target_link_libraries(
+    knutconfig
     Qt::Widgets
     KF6::I18n
     KPim6::AkonadiCore

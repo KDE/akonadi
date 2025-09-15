@@ -1,45 +1,61 @@
 # akonadi test fake library
 set(akonaditestfake_xml ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.NotificationSource.xml)
-set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "protocol_p.h")
+set_source_files_properties(
+    ${akonaditestfake_xml}
+    PROPERTIES
+        INCLUDE
+            "protocol_p.h"
+)
 qt_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationsourceinterface)
 
-add_library(akonaditestfake SHARED
-  ${akonaditestfake_srcs}
-  fakeakonadiservercommand.cpp
-  fakesession.cpp
-  fakemonitor.cpp
-  fakeserverdata.cpp
-  modelspy.cpp
-  fakeentitycache.cpp
-  inspectablemonitor.cpp
-  inspectablechangerecorder.cpp
-  fakeakonadiservercommand.h
-  fakesession.h
-  fakemonitor.h
-  fakeserverdata.h
-  modelspy.h
-  fakeentitycache.h
-  inspectablemonitor.h
-  inspectablechangerecorder.h
+add_library(
+    akonaditestfake
+    SHARED
+    ${akonaditestfake_srcs}
+    fakeakonadiservercommand.cpp
+    fakesession.cpp
+    fakemonitor.cpp
+    fakeserverdata.cpp
+    modelspy.cpp
+    fakeentitycache.cpp
+    inspectablemonitor.cpp
+    inspectablechangerecorder.cpp
+    fakeakonadiservercommand.h
+    fakesession.h
+    fakemonitor.h
+    fakeserverdata.h
+    modelspy.h
+    fakeentitycache.h
+    inspectablemonitor.h
+    inspectablechangerecorder.h
 )
 
 generate_export_header(akonaditestfake BASE_NAME akonaditestfake)
 
-target_link_libraries(akonaditestfake
-        Qt::DBus
-        KPim6::AkonadiCore
-        Qt::Test
-        Qt::Network
-        KPim6::AkonadiPrivate
-        akonadi_shared
+target_link_libraries(
+    akonaditestfake
+    Qt::DBus
+    KPim6::AkonadiCore
+    Qt::Test
+    Qt::Network
+    KPim6::AkonadiPrivate
+    akonadi_shared
 )
 
-add_executable(akonadi-firstrun
+add_executable(
+    akonadi-firstrun
     ../../src/core/firstrun.cpp
     firstrunner.cpp
     ${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp
 )
-target_link_libraries(akonadi-firstrun Qt::Test Qt::Core KPim6::AkonadiCore KPim6::AkonadiPrivate KF6::ConfigCore)
+target_link_libraries(
+    akonadi-firstrun
+    Qt::Test
+    Qt::Core
+    KPim6::AkonadiCore
+    KPim6::AkonadiPrivate
+    KF6::ConfigCore
+)
 
 add_akonadi_test(itemhydratest.cpp itemhydratest.h)
 add_akonadi_test(itemtest.cpp itemtest.h)
@@ -71,7 +87,6 @@ add_akonadi_test(itemchangelogtest.cpp)
 #add_test( resourceschedulertest resourceschedulertest)
 #ecm_mark_as_test(akonadi-resourceschedulertest)
 #target_link_libraries(resourceschedulertest  Qt::Test KPim6::AkonadiAgentBase)
-
 
 # testrunner tests
 add_akonadi_isolated_test(SOURCE testenvironmenttest.cpp)

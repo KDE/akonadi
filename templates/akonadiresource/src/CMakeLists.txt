@@ -1,5 +1,6 @@
 set(%{APPNAMELC}resource_SRCS
-    %{APPNAMELC}resource.cpp %{APPNAMELC}resource.h
+    %{APPNAMELC}resource.cpp
+    %{APPNAMELC}resource.h
 )
 
 ecm_qt_declare_logging_category(%{APPNAMELC}resource_SRCS
@@ -24,16 +25,24 @@ qt_add_dbus_adaptor(%{APPNAMELC}resource_SRCS
 )
 
 add_executable(akonadi_%{APPNAMELC}_resource ${%{APPNAMELC}resource_SRCS})
-set_target_properties(akonadi_%{APPNAMELC}_resource PROPERTIES MACOSX_BUNDLE FALSE)
+set_target_properties(
+    akonadi_%{APPNAMELC}_resource
+    PROPERTIES
+        MACOSX_BUNDLE
+            FALSE
+)
 
-target_link_libraries(akonadi_%{APPNAMELC}_resource
+target_link_libraries(
+    akonadi_%{APPNAMELC}_resource
     Qt::DBus
     KF6::AkonadiAgentBase
     KF6::ConfigCore
 )
 
-install(TARGETS akonadi_%{APPNAMELC}_resource ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-
-install(FILES %{APPNAMELC}resource.desktop
-    DESTINATION ${KDE_INSTALL_DATAROOTDIR}/akonadi/agents
+install(
+    TARGETS
+        akonadi_%{APPNAMELC}_resource
+        ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
+
+install(FILES %{APPNAMELC}resource.desktop DESTINATION ${KDE_INSTALL_DATAROOTDIR}/akonadi/agents)
