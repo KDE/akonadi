@@ -95,17 +95,30 @@ bool DbConfigMysql::init(QSettings &settings, bool storeSettings, const QString 
     const QString socketDirectory = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")), s_mysqlSocketFileName.length());
 #endif
 
+    bool isMariaDB = false;
     const bool defaultInternalServer = true;
 #ifdef MYSQLD_EXECUTABLE
     if (QFile::exists(QStringLiteral(MYSQLD_EXECUTABLE))) {
         defaultServerPath = QStringLiteral(MYSQLD_EXECUTABLE);
     }
 #endif
+    /* cppcheck-suppress knownConditionTrueFalse */
     if (defaultServerPath.isEmpty()) {
+        defaultServerPath = findExecutable(QStringLiteral("mariadb"));
+    }
+    if (defaultServerPath.contains(QStringLiteral("mariadb"))) {
+        isMariaDB = true;
+    }
+    if (!isMariaDB) {
         defaultServerPath = findExecutable(QStringLiteral("mysqld"));
     }
 
-    const QString mysqladminPath = findExecutable(QStringLiteral("mysqladmin"));
+    QString mysqladminPath;
+    if (isMariaDB) {
+        mysqladminPath = findExecutable(QStringLiteral("mariadb-admin"));
+    } else {
+        mysqladminPath = findExecutable(QStringLiteral("mysqladmin"));
+    }
     if (!mysqladminPath.isEmpty()) {
 #ifndef Q_OS_WIN
         defaultCleanShutdownCommand = QStringLiteral("%1 --defaults-file=%2/mysql.conf --socket=%3/%4 shutdown")
@@ -117,13 +130,25 @@ bool DbConfigMysql::init(QSettings &settings, bool storeSettings, const QString 
 
     const QString defaultDataDir = dbPathOverride.isEmpty() ? StandardDirs::saveDir("data", QStringLiteral("db_data")) : dbPathOverride;
 
-    mMysqlInstallDbPath = findExecutable(QStringLiteral("mysql_install_db"));
+    if (isMariaDB) {
+        mMysqlInstallDbPath = findExecutable(QStringLiteral("mariadb-install-db"));
+    } else {
+        mMysqlInstallDbPath = findExecutable(QStringLiteral("mysql_install_db"));
+    }
     qCDebug(AKONADISERVER_LOG) << "Found mysql_install_db: " << mMysqlInstallDbPath;
 
-    mMysqlCheckPath = findExecutable(QStringLiteral("mysqlcheck"));
+    if (isMariaDB) {
+        mMysqlCheckPath = findExecutable(QStringLiteral("mariadb-check"));
+    } else {
+        mMysqlCheckPath = findExecutable(QStringLiteral("mysqlcheck"));
+    }
     qCDebug(AKONADISERVER_LOG) << "Found mysqlcheck: " << mMysqlCheckPath;
 
-    mMysqlUpgradePath = findExecutable(QStringLiteral("mysql_upgrade"));
+    if (isMariaDB) {
+        mMysqlUpgradePath = findExecutable(QStringLiteral("mariadb-upgrade"));
+    } else {
+        mMysqlUpgradePath = findExecutable(QStringLiteral("mysql_upgrade"));
+    }
     qCDebug(AKONADISERVER_LOG) << "Found mysql_upgrade: " << mMysqlUpgradePath;
 
     mInternalServer = settings.value(QStringLiteral("QMYSQL/StartServer"), defaultInternalServer).toBool();
@@ -242,7 +267,7 @@ bool DbConfigMysql::startInternalServer()
     const QString actualConfig = StandardDirs::saveDir("data") + QLatin1StringView("/mysql.conf");
     qCDebug(AKONADISERVER_LOG) << " globalConfig : " << globalConfig << " localConfig : " << localConfig << " actualConfig : " << actualConfig;
     if (globalConfig.isEmpty()) {
-        qCCritical(AKONADISERVER_LOG) << "Did not find MySQL server default configuration (mysql-global.conf)";
+        qCCritical(AKONADISERVER_LOG) << "Did not find server default configuration (mysql-global.conf)";
         return false;
     }
 
@@ -259,7 +284,7 @@ bool DbConfigMysql::startInternalServer()
 #endif
 
     if (mMysqldPath.isEmpty()) {
-        qCCritical(AKONADISERVER_LOG) << "mysqld not found. Please verify your installation";
+        qCCritical(AKONADISERVER_LOG) << "mariadb or mysqld not found. Please verify your installation";
         return false;
     }
 
@@ -274,7 +299,11 @@ bool DbConfigMysql::startInternalServer()
     // TODO: Parse "MariaDB" or "MySQL" from the version string instead of relying
     // on the version numbers
     const bool isMariaDB = localVersion >= MYSQL_VERSION_CHECK(10, 0, 0);
-    qCDebug(AKONADISERVER_LOG).nospace() << "mysqld reports version " << (localVersion >> 16) << "." << ((localVersion >> 8) & 0x0000FF) << "."
+    QString sqlExecName = QStringLiteral("mariadb");
+    if (!isMariaDB) {
+        sqlExecName = QStringLiteral("mysqld");
+    }
+    qCDebug(AKONADISERVER_LOG).nospace() << sqlExecName << " reports version " << (localVersion >> 16) << "." << ((localVersion >> 8) & 0x0000FF) << "."
                                          << (localVersion & 0x0000FF) << " (" << (isMariaDB ? "MariaDB" : "Oracle MySQL") << ")";
 
     QFile actualFile(actualConfig);
@@ -328,7 +357,7 @@ bool DbConfigMysql::startInternalServer()
 
     // the socket path must not exceed 103 characters, so check for max dir length right away
     if (socketDirectory.length() >= 90) {
-        qCCritical(AKONADISERVER_LOG) << "MySQL cannot deal with a socket path this long. Path was: " << socketDirectory;
+        qCCritical(AKONADISERVER_LOG) << sqlExecName << " cannot deal with a socket path this long. Path was: " << socketDirectory;
         return false;
     }
 
@@ -353,7 +382,7 @@ bool DbConfigMysql::startInternalServer()
                 if (QString::fromLatin1(stats[1]) == QStringLiteral("(%1)").arg(expectedProcName)) {
                     // Yup, our mysqld is actually running, so pretend we started the server
                     // and try to connect to it
-                    qCWarning(AKONADISERVER_LOG) << "mysqld for Akonadi is already running, trying to connect to it.";
+                    qCWarning(AKONADISERVER_LOG) << sqlExecName << " for Akonadi is already running, trying to connect to it.";
                     serverIsRunning = true;
                 }
             }
@@ -510,7 +539,7 @@ bool DbConfigMysql::startInternalServer()
                     qCCritical(AKONADISERVER_LOG) << "Please update your MySQL database server";
                     return false;
                 } else {
-                    qCDebug(AKONADISERVER_LOG) << "MySQL version OK"
+                    qCDebug(AKONADISERVER_LOG) << sqlExecName << " version OK"
                                                << "(required" << QStringLiteral("%1.%2").arg(MYSQL_MIN_MAJOR).arg(MYSQL_MIN_MINOR) << ", available"
                                                << QStringLiteral("%1.%2").arg(versions[0], versions[1]) << ")";
                 }
