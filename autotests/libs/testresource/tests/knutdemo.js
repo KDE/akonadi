@@ -62,4 +62,3 @@ Resource.recreate();
 XmlOperations.setXmlFile( "knut-empty.xml" );
 XmlOperations.setRootCollections( Resource.identifier() );
 XmlOperations.assertEqual();
-

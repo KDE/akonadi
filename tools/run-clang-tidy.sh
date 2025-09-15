@@ -43,4 +43,3 @@ sanitize_compile_commands
 
 run-clang-tidy -p ${build_dir} -j$(nproc) -q $@ | tee ${build_dir}/clang-tidy.log
 cat ${build_dir}/clang-tidy.log | ${source_dir}/tools/clang-tidy-to-junit.py ${source_dir} > ${build_dir}/clang-tidy-report.xml
-

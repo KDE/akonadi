@@ -21,4 +21,3 @@ target_link_libraries(akonadi_rds
 install(TARGETS akonadi_rds
         ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
-

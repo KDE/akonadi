@@ -207,4 +207,3 @@ ALTER TABLE CollectionMimeTypeRelation ADD CONSTRAINT CollectionMimeTypeRelation
 ALTER TABLE CollectionPimItemRelation ADD CONSTRAINT CollectionPimItemRelationCollection_id_Collectionid_fk FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
 
 ALTER TABLE CollectionPimItemRelation ADD CONSTRAINT CollectionPimItemRelationPimItem_id_PimItemid_fk FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
-

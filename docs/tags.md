@@ -29,7 +29,7 @@ Akonadi Tags have an ID, type, GID, RemoteID and a parent.
   hierarchy.
 * Attributes - same as Item or Collection attributes
 
-# Tag type # {#tag_types} 
+# Tag type # {#tag_types}
 
 Akonadi Tags have types to differentiate between different usecases of Tags.
 Applications can define their own types of Tags - for example an email client
@@ -160,4 +160,3 @@ The most important method to reimplement by Resource implementations is
 Akonadi::AgentBase::TagObserver::itemsTagsChanged(), which gives a list of changed
 Items belonging to the Resource, a set of Tags added to all those Items and a set
 of Tags removed from those Items.
-

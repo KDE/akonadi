@@ -85,4 +85,3 @@ function(akonadi_add_xmllint_test)
     file(RELATIVE_PATH xml_relpath ${CMAKE_CURRENT_BINARY_DIR} ${TEST_XML})
     add_test(${TEST_UNPARSED_ARGUMENTS} ${XMLLINT_EXECUTABLE} --noout --schema ${xsd_relpath} ${xml_relpath})
 endfunction()
-

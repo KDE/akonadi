@@ -13,4 +13,3 @@ fi
 	--defaults-file=$akonadihome/mysql.conf \
 	--datadir=$akonadihome/db_data/ \
 	"--socket=$akonadihome/socket-`hostname`/mysql.socket"
-

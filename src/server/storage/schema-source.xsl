@@ -146,4 +146,3 @@ QList&lt;RelationDescription&gt; <xsl:value-of select="$className"/>::relations(
 
 </xsl:template>
 </xsl:stylesheet>
-

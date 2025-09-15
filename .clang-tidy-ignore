@@ -10,4 +10,3 @@ mocs_[a-z_]+.cpp
 # Ignore autotests and tests, it halves the run time
 autotests/
 tests/
-

@@ -59,4 +59,3 @@ WarningsAsErrors: bugprone-*,
                   -readability-magic-numbers,
                   -readability-make-member-function-const
 IgnoredVariableNames: db
-

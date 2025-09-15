@@ -34,4 +34,3 @@ For this example, I used a queue length of just two Collections, so that if a Co
 This feature should be totally invisible to users and even developers using Akonadi, but it should offset the main disadvantage of using a cache of Items in the EntityTreeModel.
 
 */
-

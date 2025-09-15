@@ -19,8 +19,8 @@ or the resource hangs during syncing. The first seems to happen randomly
 if syncing is extremely fast.
 
 
- M  +40 -0     resourcesynchronizationjob.cpp  
- M  +1 -1      resourcesynchronizationjob.h  
+ M  +40 -0     resourcesynchronizationjob.cpp
+ M  +1 -1      resourcesynchronizationjob.h
 </payload>
       </item>
     </collection>

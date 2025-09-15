@@ -62,4 +62,3 @@ when creating SQL queries that handle the n:m relations manually.
 </xsl:template>
 
 </xsl:stylesheet>
-

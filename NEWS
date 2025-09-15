@@ -430,7 +430,7 @@
 - Improved CMake scripts so it is possible to detect
   the Akonadi version in projects that depend on it.
 - Simplified the check for existence of tables.
-- Add a dedicated item deletion command, to get rid of 
+- Add a dedicated item deletion command, to get rid of
   the old STORE/EXPUNGE which was extremely inefficient.
 - Some fixes to support sqlite in the future.
 - Soprano is required now.
@@ -524,6 +524,6 @@
 - Fixed foreach misusage.
 - Depend on external automoc package instead of a copy.
 
-0.80.0                            24-Apr-2008 
+0.80.0                            24-Apr-2008
 ---------------------------------------------
 - Initial release

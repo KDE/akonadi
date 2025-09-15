@@ -30,7 +30,7 @@ FormCard.FormComboBoxDelegate {
      * @property list<string> mimeTypeFilter
      * @code{.qml}
      * import org.kde.akonadi as Akonadi
-     * 
+     *
      * Akonadi.CollectionComboBoxModel {
      *     mimeTypeFilter: [Akonadi.MimeTypes.address, Akonadi.MimeTypes.contactGroup]
      * }
@@ -45,7 +45,7 @@ FormCard.FormComboBoxDelegate {
      * @property Akonadi::Collection::Rights rights
      * @code{.qml}
      * import org.kde.akonadi as Akonadi
-     * 
+     *
      * Akonadi.CollectionComboBoxModel {
      *     accessRightsFilter: Akonadi.Collection.CanCreateItem
      * }

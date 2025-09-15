@@ -21,7 +21,7 @@ Kirigami.ScrollablePage {
      * @property list<string> mimeTypeFilter
      * @code{.qml}
      * import org.kde.akonadi as Akonadi
-     * 
+     *
      * Akonadi.CollectionChooserPage {
      *     mimeTypeFilter: [Akonadi.MimeTypes.address, Akonadi.MimeTypes.contactGroup]
      * }
@@ -36,7 +36,7 @@ Kirigami.ScrollablePage {
      * @property Akonadi::Collection::Rights rights
      * @code{.qml}
      * import org.kde.akonadi as Akonadi
-     * 
+     *
      * Akonadi.CollectionChooserPage {
      *     accessRightsFilter: Akonadi.Collection.CanCreateItem
      * }

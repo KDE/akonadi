@@ -56,4 +56,3 @@ Optional:
 * SQLite if you plan to use the SQLite backend
 * MySQL server >= 5.1.3 (or compatible replacements such as MariaDB) if you plan to use the MySQL backend
 * a Postgresql server if you plan to use the Postgres backend
-

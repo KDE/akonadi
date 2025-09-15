@@ -115,4 +115,3 @@ endif()
 
 # show the SQLITE_INCLUDE_DIR and SQLITE_LIBRARIES variables only in the advanced view
 mark_as_advanced( SQLITE_INCLUDE_DIR SQLITE_LIBRARIES )
-

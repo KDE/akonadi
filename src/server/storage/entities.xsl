@@ -258,4 +258,3 @@ set<xsl:value-of select="$methodName"/>(<xsl:call-template name="argument"/>)
 </xsl:template>
 
 </xsl:stylesheet>
-

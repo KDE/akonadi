@@ -108,7 +108,7 @@ public:
     */
     static <xsl:value-of select="$className"/> extractEntity(const QSqlQuery &amp;query);
     static <xsl:value-of select="$className"/> extractEntity(DataStore *dataStore, const QSqlQuery &amp;query);
-  
+
     /**
       Extracts the query result.
       @param query A executed query containing a list of <xsl:value-of select="$entityName"/> records.

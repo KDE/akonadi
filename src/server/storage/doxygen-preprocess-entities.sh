@@ -1,3 +1,4 @@
+#! /bin/sh
 if test -z "`which xsltproc`"; then
 	echo "No xlstproc found!"
 	exit 1;
@@ -14,4 +15,3 @@ cleanup)
 	rm -f Database.dox
 ;;
 esac
-
