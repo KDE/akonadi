@@ -206,6 +206,7 @@ endif()
 find_program(
     MYSQLD_EXECUTABLE
     NAMES
+        mariadbd
         mysqld
     PATHS
         /usr/sbin
@@ -215,20 +216,26 @@ find_program(
         /opt/mysql/libexec
         /usr/mysql/bin
         /opt/mysql/sbin
-    DOC "The mysqld executable path. ONLY needed at runtime"
+    DOC "The mariadbd or mysqld executable path. ONLY needed at runtime"
 )
+
+string(FIND ${MYSQLD_EXECUTABLE} "mariadb" _Position)
+set(MYSQLDB_INSTALL_EXEC "mariadb-install-db")
+if(${_Position} LESS 0)
+    set(MYSQLDB_INSTALL_EXEC "mysql_install_db")
+endif()
 
 find_path(
     MYSQLD_SCRIPTS_PATH
     NAMES
-        mysql_install_db
-    DOC "Path to the mysql or mariadb installation scripts (mysql_install_db, mysql_upgrade...)"
+        ${MYSQLDB_INSTALL_EXEC}
+    DOC "Path to the mariadb or mysql installation scripts (mariadb-install-db, mariadb-upgrade...)"
 )
 
 if(MYSQLD_EXECUTABLE)
     message(STATUS "MySQL Server found: ${MYSQLD_EXECUTABLE}")
 else()
-    message(STATUS "MySQL Server wasn't found. it is required to use the MySQL backend.")
+    message(STATUS "MySQL Server wasn't found. it is required to use an MySQL backend (like mariadb or mysqld.")
 endif()
 
 if(MYSQLD_SCRIPTS_PATH)
