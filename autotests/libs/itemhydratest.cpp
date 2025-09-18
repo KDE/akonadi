@@ -302,8 +302,11 @@ void ItemHydra::testQSharedPointerPayload()
     i.setPayload(p);
     QVERIFY(i.hasPayload());
     QVERIFY(i.hasPayload<VolkerQPtr>());
+    QVERIFY(i.hasPayload<QSharedPointer<const Volker>>());
     QVERIFY(i.hasPayload<RudiQPtr>());
+    QVERIFY(i.hasPayload<QSharedPointer<const Rudi>>());
     QVERIFY(!i.hasPayload<GerdQPtr>());
+    QVERIFY(!i.hasPayload<QSharedPointer<const Gerd>>());
 
     {
         auto p2 = i.payload<VolkerQPtr>();
@@ -315,9 +318,27 @@ void ItemHydra::testQSharedPointerPayload()
         QCOMPARE(p2->who, QStringLiteral("Rudi"));
     }
 
+    {
+        auto p2 = i.payload<QSharedPointer<const Volker>>();
+        QCOMPARE(p2->who, QStringLiteral("Rudi"));
+    }
+
+    {
+        auto p2 = i.payload<QSharedPointer<const Rudi>>();
+        QCOMPARE(p2->who, QStringLiteral("Rudi"));
+    }
+
     bool caughtException = false;
     try {
         auto p3 = i.payload<GerdQPtr>();
+    } catch (const Akonadi::PayloadException &e) {
+        qDebug() << e.what();
+        caughtException = true;
+    }
+    QVERIFY(caughtException);
+    caughtException = false;
+    try {
+        auto p3 = i.payload<QSharedPointer<const Gerd>>();
     } catch (const Akonadi::PayloadException &e) {
         qDebug() << e.what();
         caughtException = true;
@@ -345,11 +366,16 @@ void ItemHydra::testSharedPointerConversions()
     // only the root base classes should show up with their metatype ids:
     QVERIFY(a.availablePayloadMetaTypeIds().contains(qMetaTypeId<Volker *>()));
     QVERIFY(a.hasPayload<RudiQPtr>());
+    QVERIFY(a.hasPayload<std::shared_ptr<const Rudi>>());
     QVERIFY(a.hasPayload<VolkerPtr>());
+    QVERIFY(a.hasPayload<std::shared_ptr<const Volker>>());
     QVERIFY(a.hasPayload<RudiPtr>());
     QVERIFY(!a.hasPayload<GerdPtr>());
+    QVERIFY(!a.hasPayload<std::shared_ptr<const Gerd>>());
     QVERIFY(a.payload<RudiPtr>().get());
+    QVERIFY(a.payload<std::shared_ptr<const Rudi>>().get());
     QVERIFY(a.payload<VolkerPtr>().get());
+    QVERIFY(a.payload<std::shared_ptr<const Volker>>().get());
     bool thrown = false;
 
     bool thrownCorrectly = true;

@@ -207,12 +207,12 @@ struct PayloadTrait {
 */
 template<typename T>
 struct PayloadTrait<QSharedPointer<T>> {
-    using ElementType = T;
+    using ElementType = std::remove_cv_t<T>;
     static int elementMetaTypeId()
     {
-        return qMetaTypeId<T *>();
+        return qMetaTypeId<ElementType *>();
     }
-    using SuperElementType = typename Akonadi::SuperClass<T>::Type;
+    using SuperElementType = typename Akonadi::SuperClass<ElementType>::Type;
     using Type = QSharedPointer<ElementType>;
     using SuperType = QSharedPointer<SuperElementType>;
     static const bool isPolymorphic = !std::is_same<ElementType, SuperElementType>::value;
@@ -223,7 +223,7 @@ struct PayloadTrait<QSharedPointer<T>> {
     template<typename U>
     static inline Type castFrom(const QSharedPointer<U> &p)
     {
-        const Type sp = qSharedPointerDynamicCast<T, U>(p);
+        const Type sp = qSharedPointerDynamicCast<ElementType, U>(p);
         if (!sp.isNull() || p.isNull()) {
             return sp;
         }
@@ -232,13 +232,13 @@ struct PayloadTrait<QSharedPointer<T>> {
     template<typename U>
     static inline bool canCastFrom(const QSharedPointer<U> &p)
     {
-        const Type sp = qSharedPointerDynamicCast<T, U>(p);
+        const Type sp = qSharedPointerDynamicCast<ElementType, U>(p);
         return !sp.isNull() || p.isNull();
     }
     template<typename U>
     static inline QSharedPointer<U> castTo(const Type &p)
     {
-        const QSharedPointer<U> sp = qSharedPointerDynamicCast<U, T>(p);
+        const QSharedPointer<U> sp = qSharedPointerDynamicCast<U, ElementType>(p);
         return sp;
     }
     static QSharedPointer<T> clone(const std::shared_ptr<T> &t)
@@ -259,12 +259,12 @@ struct PayloadTrait<QSharedPointer<T>> {
 */
 template<typename T>
 struct PayloadTrait<std::shared_ptr<T>> {
-    using ElementType = T;
+    using ElementType = std::remove_cv_t<T>;
     static int elementMetaTypeId()
     {
-        return qMetaTypeId<T *>();
+        return qMetaTypeId<ElementType *>();
     }
-    using SuperElementType = typename Akonadi::SuperClass<T>::Type;
+    using SuperElementType = typename Akonadi::SuperClass<ElementType>::Type;
     using Type = std::shared_ptr<ElementType>;
     using SuperType = std::shared_ptr<SuperElementType>;
     static const bool isPolymorphic = !std::is_same<ElementType, SuperElementType>::value;
@@ -275,7 +275,7 @@ struct PayloadTrait<std::shared_ptr<T>> {
     template<typename U>
     static inline Type castFrom(const std::shared_ptr<U> &p)
     {
-        const Type sp = std::dynamic_pointer_cast<T, U>(p);
+        const Type sp = std::dynamic_pointer_cast<ElementType, U>(p);
         if (sp.get() != nullptr || p.get() == nullptr) {
             return sp;
         }
@@ -284,13 +284,13 @@ struct PayloadTrait<std::shared_ptr<T>> {
     template<typename U>
     static inline bool canCastFrom(const std::shared_ptr<U> &p)
     {
-        const Type sp = std::dynamic_pointer_cast<T, U>(p);
+        const Type sp = std::dynamic_pointer_cast<ElementType, U>(p);
         return sp.get() != nullptr || p.get() == nullptr;
     }
     template<typename U>
     static inline std::shared_ptr<U> castTo(const Type &p)
     {
-        const std::shared_ptr<U> sp = std::dynamic_pointer_cast<U, T>(p);
+        const std::shared_ptr<U> sp = std::dynamic_pointer_cast<U, ElementType>(p);
         return sp;
     }
     static std::shared_ptr<T> clone(const QSharedPointer<T> &t)

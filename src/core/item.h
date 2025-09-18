@@ -768,7 +768,7 @@ typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, T>::type Item:
     using PayloadType = Internal::PayloadTrait<T>;
     static_assert(PayloadType::isPolymorphic, "Non-polymorphic payload type in polymorphic implementation is not allowed");
 
-    using Root_T = typename Internal::get_hierarchy_root<T>::type;
+    using Root_T = typename Internal::get_hierarchy_root<typename PayloadType::Type>::type;
     using RootType = Internal::PayloadTrait<Root_T>;
     static_assert(!RootType::isPolymorphic,
                   "Root type of payload type must not be polymorphic"); // prevent endless recursion
@@ -791,12 +791,13 @@ typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic, T>::type Item
 
     // Check whether we have the exact payload
     // (metatype id and shared pointer type match)
-    if (const Internal::Payload<T> *const p = Internal::payload_cast<T>(payloadBaseV2(PayloadType::sharedPointerId, metaTypeId))) {
+    if (const Internal::Payload<typename PayloadType::Type> *const p =
+            Internal::payload_cast<typename PayloadType::Type>(payloadBaseV2(PayloadType::sharedPointerId, metaTypeId))) {
         return p->payload;
     }
 
-    T ret;
-    if (!tryToClone<T>(&ret)) {
+    typename PayloadType::Type ret;
+    if (!tryToClone<typename PayloadType::Type>(&ret)) {
         throwPayloadException(PayloadType::sharedPointerId, metaTypeId);
     }
     return ret;
@@ -865,7 +866,7 @@ typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, bool>::type It
     using PayloadType = Internal::PayloadTrait<T>;
     static_assert(PayloadType::isPolymorphic, "Non-polymorphic payload type in polymorphic implementation is no allowed");
 
-    using Root_T = typename Internal::get_hierarchy_root<T>::type;
+    using Root_T = typename Internal::get_hierarchy_root<typename PayloadType::Type>::type;
     using RootType = Internal::PayloadTrait<Root_T>;
     static_assert(!RootType::isPolymorphic,
                   "Root type of payload type must not be polymorphic"); // prevent endless recursion
@@ -894,11 +895,12 @@ typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic, bool>::type I
 
     // Check whether we have the exact payload
     // (metatype id and shared pointer type match)
-    if (const Internal::Payload<T> *const p = Internal::payload_cast<T>(payloadBaseV2(PayloadType::sharedPointerId, metaTypeId))) {
+    if (const Internal::Payload<typename PayloadType::Type> *const p =
+            Internal::payload_cast<typename PayloadType::Type>(payloadBaseV2(PayloadType::sharedPointerId, metaTypeId))) {
         return true;
     }
 
-    return tryToClone<T>(nullptr);
+    return tryToClone<typename PayloadType::Type>(nullptr);
 }
 
 template<typename T>
