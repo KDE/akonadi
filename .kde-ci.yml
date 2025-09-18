@@ -21,5 +21,8 @@ Dependencies:
 Options:
  cmake-options: "-DAKONADI_RUN_MYSQL_ISOLATED_TESTS=FALSE -DAKONADI_RUN_PGSQL_ISOLATED_TESTS=FALSE -DAKONADI_RUN_SQLITE_ISOLATED_TESTS=FALSE"
  cppcheck-arguments: '--enable=warning,performance,portability,style --suppress-xml=cppcheck-suppressions.xml -DQTEST_AKONADIMAIN\(X\)= -DQTEST_AKONADI_CORE_MAIN\(X\)= -D__GLIBC_PREREQ\(X,Y\)=1'
+ cppcheck-ignore-files:
+   - templates
+   - autotests/libs/searchquerytest.cpp
  run-gcovr: "--gcov-ignore-parse-errors=negative_hits.warn"
  run-qmllint: true
