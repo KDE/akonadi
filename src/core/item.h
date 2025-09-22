@@ -935,6 +935,7 @@ typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic>::type Item::s
 template<typename T>
 void Item::setPayload(T *p)
 {
+    /* cppcheck-suppress constStatement */
     p->You_MUST_NOT_use_a_pointer_as_payload;
 }
 
