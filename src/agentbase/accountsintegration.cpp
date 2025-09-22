@@ -52,7 +52,7 @@ quint32 AccountsIntegration::getAccountId() const
 
 void AccountsIntegration::setAccountId(quint32 accountId)
 {
-    if (accountId <= 0) {
+    if (accountId == 0) {
         mAccountId = std::nullopt;
     } else {
         mAccountId = accountId;
