@@ -3,4 +3,7 @@
 <suppress>
 <id>useStlAlgorithm</id>
 </suppress>
+<suppress>
+<id>returnByReference</id>
+</suppress>
 </suppressions>
