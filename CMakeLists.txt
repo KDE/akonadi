@@ -72,8 +72,8 @@ ecm_setup_version(PROJECT
 )
 
 # Find packages
-find_package(Qt6Core ${QT_REQUIRED_VERSION} REQUIRED COMPONENTS Private)
-find_package(Qt6Sql ${QT_REQUIRED_VERSION} REQUIRED COMPONENTS Private)
+find_package(Qt6Core ${QT_REQUIRED_VERSION} REQUIRED)
+find_package(Qt6Sql ${QT_REQUIRED_VERSION} REQUIRED)
 find_package(Qt6DBus ${QT_REQUIRED_VERSION} REQUIRED)
 find_package(Qt6Network ${QT_REQUIRED_VERSION} REQUIRED)
 find_package(Qt6Test ${QT_REQUIRED_VERSION} REQUIRED)
