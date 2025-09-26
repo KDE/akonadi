@@ -352,7 +352,8 @@ private Q_SLOTS:
     {
         QFETCH(bool, keepLocalChanges);
         const QString resource(QStringLiteral("akonadi_knut_resource_0"));
-        Collection col = fetchCollections(resource).first();
+        const auto collections = fetchCollections(resource);
+        Collection col = collections.first();
         col.attribute<EntityDisplayAttribute>(Akonadi::Collection::AddIfMissing)->setDisplayName(QStringLiteral("foo"));
         col.setContentMimeTypes(QStringList() << Akonadi::Collection::mimeType() << QStringLiteral("foo"));
         {
@@ -377,7 +378,8 @@ private Q_SLOTS:
         {
             auto job = new CollectionFetchJob(col, Akonadi::CollectionFetchJob::Base);
             AKVERIFYEXEC(job);
-            Collection resultCol = job->collections().first();
+            const auto collections = job->collections();
+            Collection resultCol = collections.first();
             if (keepLocalChanges) {
                 QCOMPARE(resultCol.displayName(), QString::fromLatin1("foo"));
                 QVERIFY(resultCol.contentMimeTypes().contains(QLatin1StringView("foo")));
@@ -391,7 +393,8 @@ private Q_SLOTS:
     void testCancelation()
     {
         const QString resource(QStringLiteral("akonadi_knut_resource_0"));
-        Collection col = fetchCollections(resource).first();
+        const auto collections = fetchCollections(resource);
+        Collection col = collections.first();
 
         auto syncer = new CollectionSync(resource, this);
         syncer->setStreamingEnabled(true);

@@ -51,7 +51,8 @@ void InvalidateCacheJobTest::shouldClearPayload()
     auto fetchJob = new ItemFetchJob(Item(itemId), this);
     fetchJob->fetchScope().fetchFullPayload();
     AKVERIFYEXEC(fetchJob);
-    QCOMPARE(fetchJob->items().first().payload<QByteArray>(), "testmailbody2");
+    auto fitems = fetchJob->items();
+    QCOMPARE(fitems.first().payload<QByteArray>(), "testmailbody2");
 
     auto invCacheJob = new InvalidateCacheJob(Collection(colId), this);
     AKVERIFYEXEC(invCacheJob);
@@ -61,13 +62,15 @@ void InvalidateCacheJobTest::shouldClearPayload()
     fetchFromCacheJob->fetchScope().fetchFullPayload();
     fetchFromCacheJob->fetchScope().setCacheOnly(true);
     AKVERIFYEXEC(fetchFromCacheJob);
-    QVERIFY(fetchFromCacheJob->items().first().payload<QByteArray>().isEmpty());
+    fitems = fetchFromCacheJob->items();
+    QVERIFY(fitems.first().payload<QByteArray>().isEmpty());
 
     // Fetch item from resource again
     auto fetchAgainJob = new ItemFetchJob(Item(itemId), this);
     fetchAgainJob->fetchScope().fetchFullPayload();
     AKVERIFYEXEC(fetchAgainJob);
-    QCOMPARE(fetchAgainJob->items().first().payload<QByteArray>(), "testmailbody2");
+    fitems = fetchAgainJob->items();
+    QCOMPARE(fitems.first().payload<QByteArray>(), "testmailbody2");
 }
 
 QTEST_AKONADI_CORE_MAIN(InvalidateCacheJobTest)

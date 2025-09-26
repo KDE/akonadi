@@ -104,8 +104,9 @@ void ItemFetchTest::testResourceRetrieval()
     job->fetchScope().fetchAllAttributes(true);
     job->fetchScope().setCacheOnly(true);
     AKVERIFYEXEC(job);
-    QCOMPARE(job->items().count(), 1);
-    item = job->items().first();
+    auto items = job->items();
+    QCOMPARE(items.count(), 1);
+    item = items.first();
     QCOMPARE(item.id(), 1LL);
     QVERIFY(!item.remoteId().isEmpty());
     QVERIFY(!item.hasPayload()); // not yet in cache
@@ -116,8 +117,9 @@ void ItemFetchTest::testResourceRetrieval()
     job->fetchScope().fetchAllAttributes(true);
     job->fetchScope().setCacheOnly(false);
     AKVERIFYEXEC(job);
-    QCOMPARE(job->items().count(), 1);
-    item = job->items().first();
+    items = job->items();
+    QCOMPARE(items.count(), 1);
+    item = items.first();
     QCOMPARE(item.id(), 1LL);
     QVERIFY(!item.remoteId().isEmpty());
     QVERIFY(item.hasPayload());
@@ -200,8 +202,9 @@ void ItemFetchTest::testMultipartFetch()
     }
 
     AKVERIFYEXEC(fjob);
-    QCOMPARE(fjob->items().count(), 1);
-    item = fjob->items().first();
+    const auto items = fjob->items();
+    QCOMPARE(items.count(), 1);
+    item = items.first();
 
     if (fetchFullPayload || fetchSinglePayload) {
         QCOMPARE(item.loadedPayloadParts().count(), 1);
@@ -238,8 +241,9 @@ void ItemFetchTest::testRidFetch()
     auto job = new ItemFetchJob(item, this);
     job->setCollection(col);
     AKVERIFYEXEC(job);
-    QCOMPARE(job->items().count(), 1);
-    item = job->items().first();
+    const auto items = job->items();
+    QCOMPARE(items.count(), 1);
+    item = items.first();
     QVERIFY(item.isValid());
     QCOMPARE(item.remoteId(), QString::fromLatin1("A"));
     QCOMPARE(item.mimeType(), QString::fromLatin1("application/octet-stream"));
@@ -251,7 +255,8 @@ void ItemFetchTest::testAncestorRetrieval()
     job->fetchScope().setAncestorRetrieval(ItemFetchScope::All);
     AKVERIFYEXEC(job);
     QCOMPARE(job->items().count(), 1);
-    const Item item = job->items().first();
+    const auto items = job->items();
+    const Item item = items.first();
     QVERIFY(item.isValid());
     QCOMPARE(item.remoteId(), QString::fromLatin1("A"));
     QCOMPARE(item.mimeType(), QString::fromLatin1("application/octet-stream"));

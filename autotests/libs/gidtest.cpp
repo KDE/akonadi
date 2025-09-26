@@ -85,7 +85,8 @@ static void fetchAndSetGid(const Item &item)
     auto prefetchjob = new ItemFetchJob(item);
     prefetchjob->fetchScope().fetchFullPayload();
     AKVERIFYEXEC(prefetchjob);
-    Item fetchedItem = prefetchjob->items()[0];
+    const auto items = prefetchjob->items();
+    Item fetchedItem = items[0];
 
     // Write the gid to the db
     fetchedItem.setGid(item.gid());
@@ -138,7 +139,8 @@ void GidTest::testSetWithIgnorePayload()
     auto prefetchjob = new ItemFetchJob(item);
     prefetchjob->fetchScope().fetchFullPayload();
     AKVERIFYEXEC(prefetchjob);
-    Item fetchedItem = prefetchjob->items()[0];
+    const auto items = prefetchjob->items();
+    Item fetchedItem = items[0];
     QVERIFY(fetchedItem.gid().isEmpty());
 
     // Write the gid to the db

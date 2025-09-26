@@ -118,8 +118,9 @@ private Q_SLOTS:
 
         auto prefetchjob = new ItemFetchJob(Item(1));
         AKVERIFYEXEC(prefetchjob);
-        QCOMPARE(prefetchjob->items().count(), 1);
-        Item item = prefetchjob->items()[0];
+        const auto items = prefetchjob->items();
+        QCOMPARE(items.count(), 1);
+        Item item = items[0];
 
         // move into invalid collection
         auto store = new ItemMoveJob(item, Collection(INT_MAX), this);

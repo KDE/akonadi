@@ -157,9 +157,10 @@ private Q_SLOTS:
         auto fjob = new ItemFetchJob(i, this);
         fjob->setCollection(col);
         AKVERIFYEXEC(fjob);
-        QCOMPARE(fjob->items().count(), 1);
+        const auto items = fjob->items();
+        QCOMPARE(items.count(), 1);
 
-        i = fjob->items().first();
+        i = items.first();
         i.setTag(tag);
         auto mjob = new ItemModifyJob(i, this);
         AKVERIFYEXEC(mjob);

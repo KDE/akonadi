@@ -75,14 +75,15 @@ private Q_SLOTS:
         auto fetch = new CollectionFetchJob(source, CollectionFetchJob::Base, this);
         fetch->fetchScope().setAncestorRetrieval(CollectionFetchScope::Parent);
         AKVERIFYEXEC(fetch);
-        QCOMPARE(fetch->collections().count(), 1);
-        source = fetch->collections().first();
+        auto collections = fetch->collections();
+        QCOMPARE(collections.count(), 1);
+        source = collections.first();
 
         // obtain reference listing
         fetch = new CollectionFetchJob(source, CollectionFetchJob::Recursive);
         AKVERIFYEXEC(fetch);
         QHash<Collection, Item::List> referenceData;
-        const Collection::List collections = fetch->collections();
+        collections = fetch->collections();
         for (const Collection &c : collections) {
             auto job = new ItemFetchJob(c, this);
             AKVERIFYEXEC(job);

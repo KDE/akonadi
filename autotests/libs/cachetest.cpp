@@ -68,7 +68,8 @@ private Q_SLOTS:
         fetch->fetchScope().setCacheOnly(true);
         AKVERIFYEXEC(fetch);
         QCOMPARE(fetch->items().count(), 1);
-        item = fetch->items().first();
+        const auto items = fetch->items();
+        item = items.first();
         QVERIFY(item.isValid());
         QVERIFY(!item.hasPayload());
 
@@ -78,8 +79,9 @@ private Q_SLOTS:
         fetch->fetchScope().fetchFullPayload();
         QCOMPARE(fetch->exec(), resourceEnabled);
         if (resourceEnabled) {
-            QCOMPARE(fetch->items().count(), 1);
-            item = fetch->items().first();
+            const auto items = fetch->items();
+            QCOMPARE(items.count(), 1);
+            item = items.first();
             QVERIFY(item.isValid());
             QVERIFY(item.hasPayload());
             QVERIFY(item.revision() > 0); // was changed by the resource delivering the payload
@@ -89,8 +91,9 @@ private Q_SLOTS:
         fetch->fetchScope().fetchFullPayload();
         fetch->fetchScope().setCacheOnly(true);
         AKVERIFYEXEC(fetch);
-        QCOMPARE(fetch->items().count(), 1);
-        item = fetch->items().first();
+        const auto fitems = fetch->items();
+        QCOMPARE(fitems.count(), 1);
+        item = fitems.first();
         QVERIFY(item.isValid());
         QCOMPARE(item.hasPayload(), resourceEnabled);
     }
@@ -113,8 +116,9 @@ private Q_SLOTS:
         fetch->fetchScope().fetchFullPayload();
         fetch->fetchScope().setCacheOnly(true);
         AKVERIFYEXEC(fetch);
-        QCOMPARE(fetch->items().count(), 1);
-        item = fetch->items().first();
+        const auto items = fetch->items();
+        QCOMPARE(items.count(), 1);
+        item = items.first();
         QVERIFY(item.isValid());
         QVERIFY(!item.hasPayload());
 
@@ -130,8 +134,9 @@ private Q_SLOTS:
         fetch->fetchScope().fetchFullPayload();
         fetch->fetchScope().setCacheOnly(true);
         AKVERIFYEXEC(fetch);
-        QCOMPARE(fetch->items().count(), 1);
-        item = fetch->items().first();
+        const auto fitems = fetch->items();
+        QCOMPARE(fitems.count(), 1);
+        item = fitems.first();
         QVERIFY(item.isValid());
         QCOMPARE(item.hasPayload(), resourceEnabled);
     }

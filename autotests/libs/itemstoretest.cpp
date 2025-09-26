@@ -177,7 +177,8 @@ void ItemStoreTest::testRemoteId()
 
     auto prefetchjob = new ItemFetchJob(Item(1));
     AKVERIFYEXEC(prefetchjob);
-    Item item = prefetchjob->items()[0];
+    const auto items = prefetchjob->items();
+    Item item = items[0];
 
     item.setRemoteId(rid);
     auto store = new ItemModifyJob(item, this);
@@ -201,8 +202,9 @@ void ItemStoreTest::testMultiPart()
 {
     auto prefetchjob = new ItemFetchJob(Item(1));
     AKVERIFYEXEC(prefetchjob);
-    QCOMPARE(prefetchjob->items().count(), 1);
-    Item item = prefetchjob->items()[0];
+    auto items = prefetchjob->items();
+    QCOMPARE(items.count(), 1);
+    Item item = items[0];
     item.setMimeType(QStringLiteral("application/octet-stream"));
     item.setPayload<QByteArray>("testmailbody");
     item.attribute<TestAttribute>(Item::AddIfMissing)->data = "extra";
@@ -215,8 +217,9 @@ void ItemStoreTest::testMultiPart()
     fjob->fetchScope().fetchAttribute<TestAttribute>();
     fjob->fetchScope().fetchFullPayload();
     AKVERIFYEXEC(fjob);
-    QCOMPARE(fjob->items().count(), 1);
-    item = fjob->items()[0];
+    items = fjob->items();
+    QCOMPARE(items.count(), 1);
+    item = items[0];
     QVERIFY(item.hasPayload<QByteArray>());
     QCOMPARE(item.payload<QByteArray>(), QByteArray("testmailbody"));
     QVERIFY(item.hasAttribute<TestAttribute>());
@@ -232,7 +235,8 @@ void ItemStoreTest::testPartRemove()
 {
     auto prefetchjob = new ItemFetchJob(Item(2));
     AKVERIFYEXEC(prefetchjob);
-    Item item = prefetchjob->items()[0];
+    auto items = prefetchjob->items();
+    Item item = items[0];
     item.setMimeType(QStringLiteral("application/octet-stream"));
     item.attribute<TestAttribute>(Item::AddIfMissing)->data = "extra";
 
@@ -246,8 +250,9 @@ void ItemStoreTest::testPartRemove()
     fjob->fetchScope().fetchAllAttributes();
     fjob->fetchScope().setCacheOnly(true);
     AKVERIFYEXEC(fjob);
-    QCOMPARE(fjob->items().count(), 1);
-    item = fjob->items()[0];
+    items = fjob->items();
+    QCOMPARE(items.count(), 1);
+    item = items[0];
     QCOMPARE(item.attributes().count(), 2);
     QVERIFY(item.hasAttribute<TestAttribute>());
 
@@ -262,8 +267,9 @@ void ItemStoreTest::testPartRemove()
     fjob2->fetchScope().fetchAllAttributes();
     fjob2->fetchScope().setCacheOnly(true);
     AKVERIFYEXEC(fjob2);
-    QCOMPARE(fjob2->items().count(), 1);
-    item = fjob2->items()[0];
+    items = fjob2->items();
+    QCOMPARE(items.count(), 1);
+    item = items[0];
     QCOMPARE(item.attributes().count(), 1);
     QVERIFY(!item.hasAttribute<TestAttribute>());
 }
@@ -275,8 +281,9 @@ void ItemStoreTest::testRevisionCheck()
     auto prefetchjob = new ItemFetchJob(ref);
     AKVERIFYEXEC(prefetchjob);
     QCOMPARE(prefetchjob->items().count(), 1);
-    Item item1 = prefetchjob->items()[0];
-    Item item2 = prefetchjob->items()[0];
+    auto items = prefetchjob->items();
+    Item item1 = items[0];
+    Item item2 = items[0];
 
     // store first item unmodified
     auto sjob = new ItemModifyJob(item1);
@@ -296,7 +303,8 @@ void ItemStoreTest::testRevisionCheck()
     // fetch same again
     prefetchjob = new ItemFetchJob(ref);
     AKVERIFYEXEC(prefetchjob);
-    item1 = prefetchjob->items()[0];
+    items = prefetchjob->items();
+    item1 = items[0];
 
     // delete item
     auto djob = new ItemDeleteJob(ref, this);
@@ -325,7 +333,8 @@ void ItemStoreTest::testModificationTime()
     Item item2(item.id());
     auto fjob = new ItemFetchJob(item2, this);
     AKVERIFYEXEC(fjob);
-    item2 = fjob->items().first();
+    auto items = fjob->items();
+    item2 = items.first();
     QCOMPARE(initialDateTime, item2.modificationTime());
 
     // Lets wait at least a second, which is the resolution of mtime
@@ -348,7 +357,8 @@ void ItemStoreTest::testModificationTime()
     AKVERIFYEXEC(fjob2);
 
     // item3 should have the same modification time as item.
-    item3 = fjob2->items().first();
+    items = fjob2->items();
+    item3 = items.first();
     QCOMPARE(item3.modificationTime(), item.modificationTime());
 
     // Clean up
@@ -371,8 +381,9 @@ void ItemStoreTest::testRemoteIdRace()
     Item item2(job->item().id());
     auto fetchJob = new ItemFetchJob(item2);
     AKVERIFYEXEC(fetchJob);
-    QCOMPARE(fetchJob->items().size(), 1);
-    QVERIFY(fetchJob->items().first().remoteId().isEmpty());
+    const auto items = fetchJob->items();
+    QCOMPARE(items.size(), 1);
+    QVERIFY(items.first().remoteId().isEmpty());
 }
 
 void ItemStoreTest::itemModifyJobShouldOnlySendModifiedAttributes()
@@ -406,8 +417,9 @@ void ItemStoreTest::itemModifyJobShouldOnlySendModifiedAttributes()
         fetchScope.fetchAllAttributes(true);
         fetchJob->setFetchScope(fetchScope);
         AKVERIFYEXEC(fetchJob);
-        QCOMPARE(fetchJob->items().size(), 1);
-        const Item fetchedItem = fetchJob->items().first();
+        const auto items = fetchJob->items();
+        QCOMPARE(items.size(), 1);
+        const Item fetchedItem = items.first();
         QCOMPARE(fetchedItem.flags().count(), 1);
         QCOMPARE(fetchedItem.attributes().count(), 1);
         QCOMPARE(fetchedItem.attribute<TestAttribute>()->data, "modified");
@@ -550,8 +562,9 @@ void ItemStoreTest::testParallelJobsAddingAttributes()
     fetchScope.fetchAllAttributes(true);
     fetchJob->setFetchScope(fetchScope);
     AKVERIFYEXEC(fetchJob);
-    QCOMPARE(fetchJob->items().size(), 1);
-    const Item fetchedItem = fetchJob->items().first();
+    const auto items = fetchJob->items();
+    QCOMPARE(items.size(), 1);
+    const Item fetchedItem = items.first();
     QCOMPARE(fetchedItem.attributes().count(), runner.numSessions);
 }
 

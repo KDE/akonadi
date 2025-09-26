@@ -46,8 +46,9 @@ private Q_SLOTS:
         // obtain reference listing
         auto fetch = new CollectionFetchJob(source, CollectionFetchJob::Base);
         AKVERIFYEXEC(fetch);
-        QCOMPARE(fetch->collections().count(), 1);
-        source = fetch->collections().first();
+        const auto collections = fetch->collections();
+        QCOMPARE(collections.count(), 1);
+        source = collections.first();
         QVERIFY(source.isValid());
 
         fetch = new CollectionFetchJob(source, CollectionFetchJob::Recursive);

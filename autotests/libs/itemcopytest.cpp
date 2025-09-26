@@ -49,16 +49,18 @@ private Q_SLOTS:
         Item source(1);
         auto sourceFetch = new ItemFetchJob(source);
         AKVERIFYEXEC(sourceFetch);
-        source = sourceFetch->items().first();
+        auto items = sourceFetch->items();
+        source = items.first();
 
         auto fetch = new ItemFetchJob(target);
         fetch->fetchScope().fetchFullPayload();
         fetch->fetchScope().fetchAllAttributes();
         fetch->fetchScope().setCacheOnly(true);
         AKVERIFYEXEC(fetch);
-        QCOMPARE(fetch->items().count(), 1);
+        items = fetch->items();
+        QCOMPARE(items.count(), 1);
 
-        Item item = fetch->items().first();
+        Item item = items.first();
         QVERIFY(item.hasPayload());
         QVERIFY(source.size() > 0);
         QVERIFY(item.size() > 0);
@@ -107,8 +109,9 @@ private Q_SLOTS:
         auto fetch = new ItemFetchJob(target, this);
         fetch->fetchScope().fetchFullPayload(true);
         AKVERIFYEXEC(fetch);
-        QCOMPARE(fetch->items().size(), 1);
-        auto copiedItem = fetch->items().at(0);
+        const auto items = fetch->items();
+        QCOMPARE(items.size(), 1);
+        auto copiedItem = items.at(0);
 
         // Copied payload should be completely stored inside Akonadi
         QVERIFY(copiedItem.payloadPath().isEmpty());

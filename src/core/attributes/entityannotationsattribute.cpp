@@ -34,7 +34,8 @@ void EntityAnnotationsAttribute::insert(const QByteArray &key, const QString &va
 
 QString EntityAnnotationsAttribute::value(const QByteArray &key) const
 {
-    return QString::fromUtf8(mAnnotations.value(key).data());
+    const auto val = mAnnotations.value(key);
+    return QString::fromUtf8(val.data());
 }
 
 bool EntityAnnotationsAttribute::contains(const QByteArray &key) const

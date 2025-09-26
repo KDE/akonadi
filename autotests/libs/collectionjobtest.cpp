@@ -359,8 +359,9 @@ void CollectionJobTest::testCreateDeleteFolder()
     if (collection.parentCollection().isValid()) {
         auto newListJob = new CollectionFetchJob(collection.parentCollection(), CollectionFetchJob::Base, this);
         AKVERIFYEXEC(newListJob);
-        QCOMPARE(newListJob->collections().count(), 1);
-        parentCol = newListJob->collections().first();
+        const auto collections = newListJob->collections();
+        QCOMPARE(collections.count(), 1);
+        parentCol = collections.first();
     }
 
     if (collection.contentMimeTypes().isEmpty()) {
@@ -454,8 +455,9 @@ void CollectionJobTest::testModify()
 
     auto ljob = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
     AKVERIFYEXEC(ljob);
-    QCOMPARE(ljob->collections().count(), 1);
-    col = ljob->collections().first();
+    auto collections = ljob->collections();
+    QCOMPARE(collections.count(), 1);
+    col = collections.first();
     compareLists(col.contentMimeTypes(), reference);
 
     // test clearing content types
@@ -466,8 +468,9 @@ void CollectionJobTest::testModify()
 
     ljob = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
     AKVERIFYEXEC(ljob);
-    QCOMPARE(ljob->collections().count(), 1);
-    col = ljob->collections().first();
+    collections = ljob->collections();
+    QCOMPARE(collections.count(), 1);
+    col = collections.first();
     QVERIFY(col.contentMimeTypes().isEmpty());
 
     // test setting content types
@@ -478,8 +481,9 @@ void CollectionJobTest::testModify()
 
     ljob = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
     AKVERIFYEXEC(ljob);
-    QCOMPARE(ljob->collections().count(), 1);
-    col = ljob->collections().first();
+    collections = ljob->collections();
+    QCOMPARE(collections.count(), 1);
+    col = collections.first();
     compareLists(col.contentMimeTypes(), reference);
 
     // add attribute
@@ -490,8 +494,9 @@ void CollectionJobTest::testModify()
 
     ljob = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
     AKVERIFYEXEC(ljob);
-    QVERIFY(ljob->collections().first().hasAttribute<TestAttribute>());
-    QCOMPARE(ljob->collections().first().attribute<TestAttribute>()->data, QByteArray("new"));
+    collections = ljob->collections();
+    QVERIFY(collections.first().hasAttribute<TestAttribute>());
+    QCOMPARE(collections.first().attribute<TestAttribute>()->data, QByteArray("new"));
 
     // modify existing attribute
     RESET_COLLECTION_ID;
@@ -501,8 +506,9 @@ void CollectionJobTest::testModify()
 
     ljob = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
     AKVERIFYEXEC(ljob);
-    QVERIFY(ljob->collections().first().hasAttribute<TestAttribute>());
-    QCOMPARE(ljob->collections().first().attribute<TestAttribute>()->data, QByteArray("modified"));
+    collections = ljob->collections();
+    QVERIFY(collections.first().hasAttribute<TestAttribute>());
+    QCOMPARE(collections.first().attribute<TestAttribute>()->data, QByteArray("modified"));
 
     // renaming
     RESET_COLLECTION_ID;
@@ -512,8 +518,9 @@ void CollectionJobTest::testModify()
 
     ljob = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
     AKVERIFYEXEC(ljob);
-    QCOMPARE(ljob->collections().count(), 1);
-    col = ljob->collections().first();
+    collections = ljob->collections();
+    QCOMPARE(collections.count(), 1);
+    col = collections.first();
     QCOMPARE(col.name(), QStringLiteral("foo (renamed)"));
 
     RESET_COLLECTION_ID;
@@ -565,9 +572,10 @@ void CollectionJobTest::testUtf8CollectionName()
     // list parent
     auto list = new CollectionFetchJob(Collection(res3ColId), CollectionFetchJob::Recursive, this);
     AKVERIFYEXEC(list);
-    QCOMPARE(list->collections().count(), 1);
-    QCOMPARE(list->collections().first(), col);
-    QCOMPARE(list->collections().first().name(), col.name());
+    const auto collections = list->collections();
+    QCOMPARE(collections.count(), 1);
+    QCOMPARE(collections.first(), col);
+    QCOMPARE(collections.first().name(), col.name());
 
     // modify collection
     col.setContentMimeTypes({QStringLiteral("message/rfc822")});
@@ -685,8 +693,9 @@ void CollectionJobTest::testRidFetch()
     auto job = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
     job->fetchScope().setResource(QStringLiteral("akonadi_knut_resource_0"));
     AKVERIFYEXEC(job);
-    QCOMPARE(job->collections().count(), 1);
-    col = job->collections().first();
+    const auto collections = job->collections();
+    QCOMPARE(collections.count(), 1);
+    col = collections.first();
     QVERIFY(col.isValid());
     QCOMPARE(col.remoteId(), QString::fromLatin1("10"));
 }
@@ -741,8 +750,9 @@ void CollectionJobTest::testAncestorRetrieval()
     job->fetchScope().setResource(QStringLiteral("akonadi_knut_resource_0"));
     job->fetchScope().setAncestorRetrieval(CollectionFetchScope::All);
     AKVERIFYEXEC(job);
-    QCOMPARE(job->collections().count(), 1);
-    col = job->collections().first();
+    auto collections = job->collections();
+    QCOMPARE(collections.count(), 1);
+    col = collections.first();
     QVERIFY(col.isValid());
     QVERIFY(col.parentCollection().isValid());
     QCOMPARE(col.parentCollection().remoteId(), QStringLiteral("6"));
@@ -754,8 +764,9 @@ void CollectionJobTest::testAncestorRetrieval()
     col2.setId(-1); // make it invalid but keep the ancestor chain
     job = new CollectionFetchJob(col2, CollectionFetchJob::Base, this);
     AKVERIFYEXEC(job);
-    QCOMPARE(job->collections().count(), 1);
-    col2 = job->collections().first();
+    collections = job->collections();
+    QCOMPARE(collections.count(), 1);
+    col2 = collections.first();
     QVERIFY(col2.isValid());
     QCOMPARE(col, col2);
 }
@@ -783,7 +794,8 @@ void CollectionJobTest::testAncestorAttributeRetrieval()
         job->fetchScope().ancestorFetchScope().setFetchIdOnly(false);
         job->fetchScope().ancestorFetchScope().fetchAttribute<TestAttribute>();
         AKVERIFYEXEC(job);
-        Akonadi::Collection result = job->collections().first();
+        const auto collections = job->collections();
+        Akonadi::Collection result = collections.first();
         QCOMPARE(result.parentCollection().hasAttribute<TestAttribute>(), true);
     }
 
@@ -812,7 +824,8 @@ void CollectionJobTest::testListPreference()
 
         auto job = new CollectionFetchJob(create->collection(), CollectionFetchJob::Base);
         AKVERIFYEXEC(job);
-        Akonadi::Collection result = job->collections().first();
+        const auto collections = job->collections();
+        Akonadi::Collection result = collections.first();
         QCOMPARE(result.enabled(), true);
         QCOMPARE(result.localListPreference(Collection::ListDisplay), Collection::ListDefault);
         QCOMPARE(result.localListPreference(Collection::ListSync), Collection::ListDefault);
@@ -830,7 +843,8 @@ void CollectionJobTest::testListPreference()
         AKVERIFYEXEC(create);
         auto job = new CollectionFetchJob(create->collection(), CollectionFetchJob::Base);
         AKVERIFYEXEC(job);
-        Akonadi::Collection result = job->collections().first();
+        const auto collections = job->collections();
+        Akonadi::Collection result = collections.first();
         QCOMPARE(result.enabled(), true);
         QCOMPARE(result.localListPreference(Collection::ListDisplay), Collection::ListDisabled);
         QCOMPARE(result.localListPreference(Collection::ListSync), Collection::ListDisabled);
@@ -848,7 +862,8 @@ void CollectionJobTest::testListPreference()
         AKVERIFYEXEC(create);
         auto job = new CollectionFetchJob(create->collection(), CollectionFetchJob::Base);
         AKVERIFYEXEC(job);
-        Akonadi::Collection result = job->collections().first();
+        const auto collections = job->collections();
+        Akonadi::Collection result = collections.first();
         QCOMPARE(result.enabled(), false);
         QCOMPARE(result.localListPreference(Collection::ListDisplay), Collection::ListEnabled);
         QCOMPARE(result.localListPreference(Collection::ListSync), Collection::ListEnabled);

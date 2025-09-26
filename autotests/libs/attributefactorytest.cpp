@@ -53,7 +53,8 @@ void AttributeFactoryTest::testUnknownAttribute()
     fjob->fetchScope().fetchAllAttributes();
     AKVERIFYEXEC(fjob);
     QCOMPARE(fjob->items().count(), 1);
-    item = fjob->items().first();
+    const auto items = fjob->items();
+    item = items.first();
     QVERIFY(item.hasAttribute<TestAttribute>()); // has DefaultAttribute
     ta = item.attribute<TestAttribute>();
     QVERIFY(!ta); // but can't cast it to TestAttribute
@@ -82,8 +83,9 @@ void AttributeFactoryTest::testRegisteredAttribute()
     fjob->fetchScope().fetchFullPayload();
     fjob->fetchScope().fetchAllAttributes();
     AKVERIFYEXEC(fjob);
-    QCOMPARE(fjob->items().count(), 1);
-    item = fjob->items().first();
+    const auto items = fjob->items();
+    QCOMPARE(items.count(), 1);
+    item = items.first();
     QVERIFY(item.hasAttribute<TestAttribute>());
     ta = item.attribute<TestAttribute>();
     QVERIFY(ta);

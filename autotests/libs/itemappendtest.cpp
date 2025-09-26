@@ -71,14 +71,15 @@ void ItemAppendTest::testItemAppend()
     auto fjob = new ItemFetchJob(testFolder1, this);
     fjob->fetchScope().setAncestorRetrieval(ItemFetchScope::Parent);
     AKVERIFYEXEC(fjob);
-    QCOMPARE(fjob->items().count(), 1);
-    QCOMPARE(fjob->items()[0], ref);
-    QCOMPARE(fjob->items()[0].remoteId(), remoteId);
-    QVERIFY(fjob->items()[0].flags().contains("TestFlag"));
-    QCOMPARE(fjob->items()[0].parentCollection(), ref.parentCollection());
+    const auto items = fjob->items();
+    QCOMPARE(items.count(), 1);
+    QCOMPARE(items[0], ref);
+    QCOMPARE(items[0].remoteId(), remoteId);
+    QVERIFY(items[0].flags().contains("TestFlag"));
+    QCOMPARE(items[0].parentCollection(), ref.parentCollection());
 
     qint64 size = 3456;
-    QCOMPARE(fjob->items()[0].size(), size);
+    QCOMPARE(items[0].size(), size);
 
     auto djob = new ItemDeleteJob(ref, this);
     AKVERIFYEXEC(djob);
@@ -127,8 +128,9 @@ void ItemAppendTest::testContent()
     fjob->fetchScope().setCacheOnly(true);
     fjob->fetchScope().fetchFullPayload();
     AKVERIFYEXEC(fjob);
-    QCOMPARE(fjob->items().count(), 1);
-    Item item2 = fjob->items().first();
+    const auto items = fjob->items();
+    QCOMPARE(items.count(), 1);
+    Item item2 = items.first();
     QCOMPARE(item2.hasPayload(), !data.isNull());
     if (item2.hasPayload()) {
         QCOMPARE(item2.payload<QByteArray>(), data);
@@ -153,8 +155,9 @@ void ItemAppendTest::testNewMimetype()
 
     auto fetch = new ItemFetchJob(item, this);
     AKVERIFYEXEC(fetch);
-    QCOMPARE(fetch->items().count(), 1);
-    QCOMPARE(fetch->items().first().mimeType(), item.mimeType());
+    const auto items = fetch->items();
+    QCOMPARE(items.count(), 1);
+    QCOMPARE(items.first().mimeType(), item.mimeType());
 }
 
 void ItemAppendTest::testIllegalAppend()
@@ -195,8 +198,9 @@ void ItemAppendTest::testMultipartAppend()
     fjob->fetchScope().fetchFullPayload();
     fjob->fetchScope().fetchAttribute<TestAttribute>();
     AKVERIFYEXEC(fjob);
-    QCOMPARE(fjob->items().count(), 1);
-    item = fjob->items().first();
+    const auto items = fjob->items();
+    QCOMPARE(items.count(), 1);
+    item = items.first();
     QCOMPARE(item.payload<QByteArray>(), QByteArray("body data"));
     QVERIFY(item.hasAttribute<TestAttribute>());
     QCOMPARE(item.attribute<TestAttribute>()->data, QByteArray("extra data"));
@@ -257,9 +261,10 @@ void ItemAppendTest::testItemSize()
 
     auto fetch = new ItemFetchJob(newItem, this);
     AKVERIFYEXEC(fetch);
-    QCOMPARE(fetch->items().count(), 1);
+    const auto items = fetch->items();
+    QCOMPARE(items.count(), 1);
 
-    QCOMPARE(fetch->items().first().size(), size);
+    QCOMPARE(items.first().size(), size);
 }
 
 void ItemAppendTest::testItemMerge_data()
