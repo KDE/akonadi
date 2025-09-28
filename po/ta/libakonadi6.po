@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-13 00:49+0000\n"
+"POT-Creation-Date: 2025-09-28 00:44+0000\n"
 "PO-Revision-Date: 2025-09-14 14:02+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
@@ -609,31 +609,31 @@ msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
 msgstr "%1 (இயல்பிருப்பு)"
 
-#: quick/qml/AgentConfigurationForm.qml:30
+#: quick/qml/AgentConfigurationForm.qml:32
 #, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
 msgstr "%1 தனை அமை"
 
-#: quick/qml/AgentConfigurationForm.qml:36
+#: quick/qml/AgentConfigurationForm.qml:38
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
 msgstr "இந்த கணக்கிற்கான பின்னணி சேவையை மாற்றியமை அல்லது நீக்கு."
 
-#: quick/qml/AgentConfigurationForm.qml:52
+#: quick/qml/AgentConfigurationForm.qml:54
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify"
 msgstr "திருத்து"
 
-#: quick/qml/AgentConfigurationForm.qml:61
+#: quick/qml/AgentConfigurationForm.qml:63
 #, kde-format
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "நீக்கு"
 
-#: quick/qml/AgentConfigurationForm.qml:105
+#: quick/qml/AgentConfigurationForm.qml:107
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"

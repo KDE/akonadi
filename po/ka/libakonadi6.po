@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-13 00:49+0000\n"
+"POT-Creation-Date: 2025-09-28 00:44+0000\n"
 "PO-Revision-Date: 2025-07-23 03:48+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
@@ -637,31 +637,31 @@ msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
 msgstr "%1 (ნაგულისხმევი)"
 
-#: quick/qml/AgentConfigurationForm.qml:30
+#: quick/qml/AgentConfigurationForm.qml:32
 #, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
 msgstr "%1-ის მორგება"
 
-#: quick/qml/AgentConfigurationForm.qml:36
+#: quick/qml/AgentConfigurationForm.qml:38
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
 msgstr "ამ ანგარიშის აგენტის შეცვლა ან წაშლა."
 
-#: quick/qml/AgentConfigurationForm.qml:52
+#: quick/qml/AgentConfigurationForm.qml:54
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify"
 msgstr "ჩასწორება"
 
-#: quick/qml/AgentConfigurationForm.qml:61
+#: quick/qml/AgentConfigurationForm.qml:63
 #, kde-format
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "წაშლა"
 
-#: quick/qml/AgentConfigurationForm.qml:105
+#: quick/qml/AgentConfigurationForm.qml:107
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"

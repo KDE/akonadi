@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-13 00:49+0000\n"
+"POT-Creation-Date: 2025-09-28 00:44+0000\n"
 "PO-Revision-Date: 2013-07-14 03:20+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -638,33 +638,33 @@ msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
 msgstr ""
 
-#: quick/qml/AgentConfigurationForm.qml:30
+#: quick/qml/AgentConfigurationForm.qml:32
 #, fuzzy, kde-format
 #| msgid "&Configure Agent Instance"
 msgctxt "@title:dialog"
 msgid "Configure %1"
 msgstr "Агент данасын &баптау"
 
-#: quick/qml/AgentConfigurationForm.qml:36
+#: quick/qml/AgentConfigurationForm.qml:38
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
 msgstr ""
 
-#: quick/qml/AgentConfigurationForm.qml:52
+#: quick/qml/AgentConfigurationForm.qml:54
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify"
 msgstr ""
 
-#: quick/qml/AgentConfigurationForm.qml:61
+#: quick/qml/AgentConfigurationForm.qml:63
 #, fuzzy, kde-format
 #| msgid "Delete"
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "Өшіру"
 
-#: quick/qml/AgentConfigurationForm.qml:105
+#: quick/qml/AgentConfigurationForm.qml:107
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
