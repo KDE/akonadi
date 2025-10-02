@@ -714,11 +714,11 @@ bool ChangeNotification::appendAndCompress(ChangeNotificationList &list, const C
 {
     // It is likely that compressible notifications are within the last few notifications, so avoid searching a list that is potentially huge
     static const int maxCompressionSearchLength = 10;
-    int searchCounter = 0;
     // There are often multiple Collection Modify notifications in the queue,
     // so we optimize for this case.
 
     if (msg->type() == Command::CollectionChangeNotification) {
+        int searchCounter = 0;
         const auto &cmsg = Protocol::cmdCast<class CollectionChangeNotification>(msg);
         if (cmsg.operation() == CollectionChangeNotification::Modify) {
             // We are iterating from end, since there's higher probability of finding

@@ -21,8 +21,8 @@ ClearCacheFoldersJob::ClearCacheFoldersJob(const Akonadi::Collection &folder, QO
 
 ClearCacheFoldersJob::ClearCacheFoldersJob(const Akonadi::Collection::List &folders, QObject *parent)
     : QObject{parent}
+    , mCollections(folders)
 {
-    mCollections = folders;
     mNumberJob = folders.length();
     connect(this, &ClearCacheFoldersJob::clearNextFolder, this, &ClearCacheFoldersJob::slotClearNextFolder);
 }

@@ -118,7 +118,7 @@ public:
             }
         }
 
-        int iconSizes[] = {32, 22};
+        const int iconSizes[] = {32, 22};
         int icon_size_found = 32;
 
         QString iconPath;

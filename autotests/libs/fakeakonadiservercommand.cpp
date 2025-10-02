@@ -294,12 +294,11 @@ void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResp
         tag.setType(type.toLatin1());
 
         if (iFirstSpace > 0 && !entityString.isEmpty()) {
-            QString displayName;
             QString optionalSection = entityString;
             if (optionalSection.startsWith(QLatin1Char('\''))) {
                 optionalSection.remove(0, 1);
                 QStringList optionalParts = optionalSection.split(QLatin1Char('\''));
-                displayName = optionalParts.takeFirst();
+                const QString displayName = optionalParts.takeFirst();
                 auto ta = new TagAttribute();
                 ta->setDisplayName(displayName);
                 tag.addAttribute(ta);
