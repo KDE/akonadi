@@ -223,9 +223,7 @@ bool XmlParser::parseParam(ClassNode *classNode)
         mReader.readNext();
         if (mReader.isStartElement()) {
             if (mReader.name() == QLatin1StringView("setter")) {
-                if (!parseSetter(paramNode)) {
-                    return false;
-                }
+                parseSetter(paramNode);
             } else if (mReader.name() == QLatin1StringView("depends")) {
                 auto dependsAttrs = mReader.attributes();
                 if (!dependsAttrs.hasAttribute(QLatin1StringView("enum"))) {
