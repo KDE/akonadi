@@ -682,7 +682,7 @@ protected:
      *
      * @param id The instance id of the agent.
      */
-    AgentBase(const QString &id);
+    explicit AgentBase(const QString &id);
 
     /**
      * Destroys the agent base.

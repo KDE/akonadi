@@ -23,7 +23,7 @@ using namespace Akonadi::Quick;
 class Akonadi::Quick::CollectionPickerModelPrivate
 {
 public:
-    CollectionPickerModelPrivate(CollectionPickerModel *parent)
+    explicit CollectionPickerModelPrivate(CollectionPickerModel *parent)
         : mParent(parent)
     {
         mMonitor = new Akonadi::Monitor(mParent);

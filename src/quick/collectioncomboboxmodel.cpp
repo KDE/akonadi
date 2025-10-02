@@ -27,7 +27,7 @@ using namespace Qt::StringLiterals;
 class Akonadi::Quick::CollectionComboBoxModelPrivate
 {
 public:
-    CollectionComboBoxModelPrivate(CollectionComboBoxModel *parent)
+    explicit CollectionComboBoxModelPrivate(CollectionComboBoxModel *parent)
         : mParent(parent)
     {
         mMonitor = new Akonadi::Monitor(mParent);
