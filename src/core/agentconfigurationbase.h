@@ -14,8 +14,6 @@
 
 #include <memory>
 
-class KAboutData;
-
 namespace Akonadi
 {
 class AgentConfigurationBasePrivate;
@@ -120,13 +118,6 @@ public:
     virtual bool save() const;
 
     /**
-     * Returns about data for the currently configured component.
-     *
-     * May return a null pointer.
-     */
-    KAboutData *aboutData() const;
-
-    /**
      * Reimplement to restore dialog size.
      */
     virtual QSize restoreDialogSize() const;
@@ -168,12 +159,6 @@ protected:
      * Returns identifier of the Akonadi agent instance currently being configured.
      */
     [[nodiscard]] QString identifier() const;
-
-    /**
-     * When KAboutData is provided the dialog will also contain KHelpMenu with
-     * access to user help etc.
-     */
-    void setKAboutData(const KAboutData &aboutData);
 
 Q_SIGNALS:
     void enableOkButton(bool enabled);

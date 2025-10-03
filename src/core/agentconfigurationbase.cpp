@@ -7,7 +7,6 @@
 #include "agentconfigurationbase.h"
 #include "akonadicore_debug.h"
 
-#include <KAboutData>
 #include <KConfigGroup>
 #include <QSize>
 
@@ -30,7 +29,6 @@ public:
 
     KSharedConfigPtr config;
     QString identifier;
-    QScopedPointer<KAboutData> aboutData;
     QWidget *const parentWidget;
 };
 } // namespace Akonadi
@@ -72,16 +70,6 @@ bool AgentConfigurationBase::save() const
 QWidget *AgentConfigurationBase::parentWidget() const
 {
     return d->parentWidget;
-}
-
-void AgentConfigurationBase::setKAboutData(const KAboutData &aboutData)
-{
-    d->aboutData.reset(new KAboutData(aboutData));
-}
-
-KAboutData *AgentConfigurationBase::aboutData() const
-{
-    return d->aboutData.data();
 }
 
 QSize AgentConfigurationBase::restoreDialogSize() const

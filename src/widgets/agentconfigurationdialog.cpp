@@ -73,22 +73,6 @@ AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance
         connect(d->widget.data(), &AgentConfigurationWidget::enableOkButton, d->okButton, &QPushButton::setEnabled);
     }
 
-    if (auto plugin = d->widget->d->plugin) {
-        if (auto aboutData = plugin->aboutData()) {
-#if KXMLGUI_VERSION >= QT_VERSION_CHECK(6, 9, 0)
-            auto helpMenu = new KHelpMenu(this, *aboutData);
-            helpMenu->setShowWhatsThis(true);
-#else
-            auto helpMenu = new KHelpMenu(this, *aboutData, true);
-#endif
-            helpMenu->action(KHelpMenu::menuDonate);
-            // Initialize menu
-            QMenu *menu = helpMenu->menu();
-            helpMenu->action(KHelpMenu::menuHelpContents)->setText(i18n("%1 Handbook", aboutData->displayName()));
-            helpMenu->action(KHelpMenu::menuAboutApp)->setText(i18n("About %1", aboutData->displayName()));
-            btnBox->addButton(QDialogButtonBox::Help)->setMenu(menu);
-        }
-    }
     d->restoreDialogSize();
 }
 
