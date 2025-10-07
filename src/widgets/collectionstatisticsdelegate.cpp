@@ -53,7 +53,7 @@ public:
         // Do not assert on invalid collections, since a collection may be deleted
         // in the meantime and deleted collections are invalid.
         if (collection.isValid()) {
-            CollectionStatistics statistics = collection.statistics();
+            const CollectionStatistics statistics = collection.statistics();
             totalCount += qMax(0LL, statistics.count());
             unreadCount += qMax(0LL, statistics.unreadCount());
             totalSize += qMax(0LL, statistics.size());
@@ -216,7 +216,7 @@ void CollectionStatisticsDelegate::paint(QPainter *painter, const QStyleOptionVi
         return;
     }
 
-    CollectionStatistics statistics = collection.statistics();
+    const CollectionStatistics statistics = collection.statistics();
 
     qint64 unreadCount = qMax(0LL, statistics.unreadCount());
     qint64 totalRecursiveCount = 0;
