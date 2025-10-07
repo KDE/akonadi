@@ -240,7 +240,7 @@ QVariant StatisticsProxyModel::extraColumnData(const QModelIndex &parent, int ro
         const auto collection = data(firstColumn, EntityTreeModel::CollectionRole).value<Collection>();
         if (collection.isValid() && collection.statistics().count() >= 0) {
             const CollectionStatistics stats = collection.statistics();
-            if (extraColumn == 2) {
+            if (extraColumn == 2) { // Size
                 KFormat format;
                 return format.formatByteSize(stats.size());
             } else if (extraColumn == 1) {
