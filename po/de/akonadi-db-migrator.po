@@ -4,7 +4,6 @@
 # This file is distributed under the same license as the akonadi package.
 # SPDX-FileCopyrightText: 2024 Johannes Obermayr <johannesobermayr@gmx.de>
 # SPDX-FileCopyrightText: 2025 Alois Spitzbart <spitz234@hotmail.com>
-# Automatically generated, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: akonadi-db-migrator\n"

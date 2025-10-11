@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2025 Alois Spitzbart <spitz234@hotmail.com>
-# Burkhard Lück <lueck@hube-lueck.de>, 2009.
-# Thomas Reitelbach <tr@erdfunkstelle.de>, 2009.
-# Frederik Schwarzer <schwarzer@kde.org>, 2010, 2016.
+# SPDX-FileCopyrightText: 2009 Burkhard Lück <lueck@hube-lueck.de>
+# SPDX-FileCopyrightText: 2009 Thomas Reitelbach <tr@erdfunkstelle.de>
+# SPDX-FileCopyrightText: 2010, 2016 Frederik Schwarzer <schwarzer@kde.org>
 msgid ""
 msgstr ""
 "Project-Id-Version: akonadi_knut_resource\n"
