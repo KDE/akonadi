@@ -294,7 +294,7 @@ void SearchManager::updateSearchImpl(const Collection &collection)
     }
 
     // Query all plugins for search results
-    const QByteArray id = "searchUpdate-" + QByteArray::number(QDateTime::currentDateTimeUtc().toSecsSinceEpoch());
+    const QByteArray id = "searchUpdate-" + QByteArray::number(QDateTime::currentSecsSinceEpoch());
     SearchRequest request(id, *this, mAgentSearchManager);
     request.setCollections(queryCollections);
     request.setMimeTypes(queryMimeTypes);

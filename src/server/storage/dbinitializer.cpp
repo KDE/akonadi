@@ -83,7 +83,7 @@ bool DbInitializer::run()
         } else {
             auto version = schemaVersions.at(0);
             if (version.generation() == 0) {
-                version.setGeneration(QDateTime::currentDateTimeUtc().toSecsSinceEpoch());
+                version.setGeneration(QDateTime::currentSecsSinceEpoch());
                 version.update(store);
 
                 qCDebug(AKONADISERVER_LOG) << "Generation:" << version.generation();
