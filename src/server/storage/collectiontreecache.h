@@ -9,8 +9,6 @@
 #include "akthread.h"
 #include "entities.h"
 
-#include "private/tristate_p.h"
-
 #include <QHash>
 #include <QList>
 #include <QReadWriteLock>
