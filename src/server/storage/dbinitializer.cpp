@@ -79,12 +79,17 @@ bool DbInitializer::run()
 #ifndef DBINITIALIZER_UNITTEST
         // Now finally check and set the generation identifier if necessary
         auto store = DataStore::dataStoreForDatabase(mDatabase);
-        SchemaVersion version = SchemaVersion::retrieveAll(store).at(0);
-        if (version.generation() == 0) {
-            version.setGeneration(QDateTime::currentDateTimeUtc().toSecsSinceEpoch());
-            version.update(store);
+        const auto schemaVersions = SchemaVersion::retrieveAll(store);
+        if (schemaVersions.empty()) {
+            qCDebug(AKONADISERVER_LOG) << "DbInitializer: SchemaVersion not found; skipping generation update";
+        } else {
+            auto version = schemaVersions.at(0);
+            if (version.generation() == 0) {
+                version.setGeneration(QDateTime::currentDateTimeUtc().toSecsSinceEpoch());
+                version.update(store);
 
-            qCDebug(AKONADISERVER_LOG) << "Generation:" << version.generation();
+                qCDebug(AKONADISERVER_LOG) << "Generation:" << version.generation();
+            }
         }
 #endif
 
