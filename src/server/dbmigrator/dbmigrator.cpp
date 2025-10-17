@@ -326,6 +326,19 @@ std::unique_ptr<DbConfig> dbConfigFromServerRc(const QString &configFile, bool o
     }
 
     const auto dbPath = overrideDbPath ? StandardDirs::saveDir("data", QStringLiteral("db_migration%1").arg(dbPathSuffix)) : QString{};
+
+    if (overrideDbPath) {
+        // Remove any directory entries left over from a previous run
+        try {
+            for (const auto &dirEntry : std::filesystem::directory_iterator(dbPath.toStdString())) {
+                std::filesystem::remove_all(dirEntry.path());
+            }
+        } catch (const std::filesystem::filesystem_error &e) {
+            qCCritical(AKONADIDBMIGRATOR_LOG) << "Error: failed to clear migration directory " << dbPath << ": " << e.what();
+            return {};
+        }
+    }
+
     config->init(settings, true, dbPath);
 
     return config;
