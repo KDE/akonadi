@@ -3,14 +3,14 @@
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# Manuel Tortosa Moreno <manutortosa@gmail.com>, 2009, 2010.
-# Antoni Bella Pérez <antonibella5@yahoo.com>, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021.
+# SPDX-FileCopyrightText: 2009, 2010 Manuel Tortosa Moreno <manutortosa@gmail.com>
+# SPDX-FileCopyrightText: 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021 Antoni Bella Pérez <antonibella5@yahoo.com>
 # SPDX-FileCopyrightText: 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Josep M. Ferrer <txemaq@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-28 00:44+0000\n"
+"POT-Creation-Date: 2025-10-18 00:42+0000\n"
 "PO-Revision-Date: 2025-07-23 11:07+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -785,12 +785,12 @@ msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Configuració de %1"
 
-#: widgets/agentconfigurationdialog.cpp:87
+#: widgets/agentconfigurationdialog.cpp:83
 #, kde-format
 msgid "%1 Handbook"
 msgstr "Manual de %1"
 
-#: widgets/agentconfigurationdialog.cpp:88
+#: widgets/agentconfigurationdialog.cpp:84
 #, kde-format
 msgid "About %1"
 msgstr "Quant a %1"

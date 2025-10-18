@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-28 00:44+0000\n"
+"POT-Creation-Date: 2025-10-18 00:42+0000\n"
 "PO-Revision-Date: 2023-10-02 18:38+0200\n"
 "Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
 "Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
@@ -772,12 +772,12 @@ msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Nastavenie %1"
 
-#: widgets/agentconfigurationdialog.cpp:87
+#: widgets/agentconfigurationdialog.cpp:83
 #, kde-format
 msgid "%1 Handbook"
 msgstr "%1 Príručka"
 
-#: widgets/agentconfigurationdialog.cpp:88
+#: widgets/agentconfigurationdialog.cpp:84
 #, kde-format
 msgid "About %1"
 msgstr "O %1"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-28 00:44+0000\n"
+"POT-Creation-Date: 2025-10-18 00:42+0000\n"
 "PO-Revision-Date: 2025-08-19 05:03+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -763,12 +763,12 @@ msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 設定"
 
-#: widgets/agentconfigurationdialog.cpp:87
+#: widgets/agentconfigurationdialog.cpp:83
 #, kde-format
 msgid "%1 Handbook"
 msgstr "%1 手冊"
 
-#: widgets/agentconfigurationdialog.cpp:88
+#: widgets/agentconfigurationdialog.cpp:84
 #, kde-format
 msgid "About %1"
 msgstr "關於 %1"

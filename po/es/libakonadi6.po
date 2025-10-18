@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-28 00:44+0000\n"
+"POT-Creation-Date: 2025-10-18 00:42+0000\n"
 "PO-Revision-Date: 2025-07-24 19:52+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -789,12 +789,12 @@ msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Configuración de %1"
 
-#: widgets/agentconfigurationdialog.cpp:87
+#: widgets/agentconfigurationdialog.cpp:83
 #, kde-format
 msgid "%1 Handbook"
 msgstr "Manual %1"
 
-#: widgets/agentconfigurationdialog.cpp:88
+#: widgets/agentconfigurationdialog.cpp:84
 #, kde-format
 msgid "About %1"
 msgstr "Acerca de %1"
