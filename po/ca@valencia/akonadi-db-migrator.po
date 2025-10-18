@@ -3,7 +3,7 @@
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# Josep M. Ferrer <txemaq@gmail.com>, 2024.
+# SPDX-FileCopyrightText: 2024 Josep M. Ferrer <txemaq@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
@@ -33,7 +33,7 @@ msgstr "txemaq@gmail.com"
 #, kde-format
 msgctxt "@info:status"
 msgid "Stopping Akonadi service..."
-msgstr "S'està parant el servei d'Akonadi..."
+msgstr "S'està parant el servei d'Akonadi…"
 
 #: dbmigrator.cpp:439
 #, kde-format
@@ -55,7 +55,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:status"
 msgid "Starting Akonadi service..."
-msgstr "S'està iniciant el servei d'Akonadi..."
+msgstr "S'està iniciant el servei d'Akonadi…"
 
 #: dbmigrator.cpp:468
 #, kde-format
@@ -137,7 +137,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:shell"
 msgid "Backing up original database..."
-msgstr "S'està fent una còpia de seguretat de la base de dades original..."
+msgstr "S'està fent una còpia de seguretat de la base de dades original…"
 
 #: dbmigrator.cpp:573
 #, kde-format
@@ -255,7 +255,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:status"
 msgid "Optimizing table %1..."
-msgstr "S'està optimitzant la taula %1..."
+msgstr "S'està optimitzant la taula %1…"
 
 #: dbmigrator.cpp:830
 #, kde-format
@@ -332,10 +332,10 @@ msgstr "No s'ha pogut migrar."
 #, kde-format
 msgctxt "@info:progress"
 msgid "Migrating table %1 (%2/%3)..."
-msgstr "S'està migrant la taula %1 (%2/%3)..."
+msgstr "S'està migrant la taula %1 (%2/%3)…"
 
 #: main.cpp:127
 #, kde-format
 msgctxt "@info:progress"
 msgid "%1%..."
-msgstr "%1%..."
+msgstr "%1%…"
