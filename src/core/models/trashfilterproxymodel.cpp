@@ -31,8 +31,15 @@ TrashFilterProxyModel::~TrashFilterProxyModel() = default;
 void TrashFilterProxyModel::showTrash(bool enable)
 {
     Q_D(TrashFilterProxyModel);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->mTrashIsShown = enable;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 bool TrashFilterProxyModel::trashIsShown() const

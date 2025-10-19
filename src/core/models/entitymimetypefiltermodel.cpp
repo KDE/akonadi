@@ -51,29 +51,57 @@ EntityMimeTypeFilterModel::~EntityMimeTypeFilterModel() = default;
 void EntityMimeTypeFilterModel::addMimeTypeInclusionFilters(const QStringList &typeList)
 {
     Q_D(EntityMimeTypeFilterModel);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->includedMimeTypes << typeList;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 void EntityMimeTypeFilterModel::addMimeTypeExclusionFilters(const QStringList &typeList)
 {
     Q_D(EntityMimeTypeFilterModel);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->excludedMimeTypes << typeList;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 void EntityMimeTypeFilterModel::addMimeTypeInclusionFilter(const QString &type)
 {
     Q_D(EntityMimeTypeFilterModel);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->includedMimeTypes << type;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 void EntityMimeTypeFilterModel::addMimeTypeExclusionFilter(const QString &type)
 {
     Q_D(EntityMimeTypeFilterModel);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->excludedMimeTypes << type;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 bool EntityMimeTypeFilterModel::filterAcceptsColumn(int sourceColumn, const QModelIndex &sourceParent) const
@@ -124,9 +152,16 @@ QStringList EntityMimeTypeFilterModel::mimeTypeExclusionFilters() const
 void EntityMimeTypeFilterModel::clearFilters()
 {
     Q_D(EntityMimeTypeFilterModel);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->includedMimeTypes.clear();
     d->excludedMimeTypes.clear();
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 void EntityMimeTypeFilterModel::setHeaderGroup(EntityTreeModel::HeaderGroup headerGroup)

@@ -75,33 +75,62 @@ bool RecursiveCollectionFilterProxyModel::filterAcceptsRow(int sourceRow, const 
 void RecursiveCollectionFilterProxyModel::addContentMimeTypeInclusionFilter(const QString &mimeType)
 {
     Q_D(RecursiveCollectionFilterProxyModel);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->includedMimeTypes << mimeType;
     d->checker.setWantedMimeTypes(d->includedMimeTypes.values());
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 void RecursiveCollectionFilterProxyModel::addContentMimeTypeInclusionFilters(const QStringList &mimeTypes)
 {
     Q_D(RecursiveCollectionFilterProxyModel);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->includedMimeTypes.unite(QSet<QString>(mimeTypes.begin(), mimeTypes.end()));
     d->checker.setWantedMimeTypes(d->includedMimeTypes.values());
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 void RecursiveCollectionFilterProxyModel::clearFilters()
 {
     Q_D(RecursiveCollectionFilterProxyModel);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->includedMimeTypes.clear();
     d->checker.setWantedMimeTypes(QStringList());
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 void RecursiveCollectionFilterProxyModel::setContentMimeTypeInclusionFilters(const QStringList &mimeTypes)
 {
     Q_D(RecursiveCollectionFilterProxyModel);
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->includedMimeTypes = QSet<QString>(mimeTypes.begin(), mimeTypes.end());
     d->checker.setWantedMimeTypes(d->includedMimeTypes.values());
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 QStringList RecursiveCollectionFilterProxyModel::contentMimeTypeInclusionFilters() const

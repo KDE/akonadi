@@ -43,28 +43,56 @@ AgentFilterProxyModel::~AgentFilterProxyModel() = default;
 
 void AgentFilterProxyModel::addMimeTypeFilter(const QString &mimeType)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->mimeTypes << mimeType;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 void AgentFilterProxyModel::addCapabilityFilter(const QString &capability)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->capabilities << capability;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 void AgentFilterProxyModel::excludeCapabilities(const QString &capability)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->excludeCapabilities << capability;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 void AgentFilterProxyModel::clearFilters()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->capabilities.clear();
     d->mimeTypes.clear();
     d->excludeCapabilities.clear();
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 bool AgentFilterProxyModelPrivate::filterAcceptRegExp(const QModelIndex &index, const QRegularExpression &filterRegExpStr)

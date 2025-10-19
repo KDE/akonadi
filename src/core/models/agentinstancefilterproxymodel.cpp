@@ -38,20 +38,41 @@ AgentInstanceFilterProxyModel::~AgentInstanceFilterProxyModel() = default;
 
 void AgentInstanceFilterProxyModel::addMimeTypeFilter(const QString &mimeType)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->mimeTypes << mimeType;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 void AgentInstanceFilterProxyModel::addCapabilityFilter(const QString &capability)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->capabilities << capability;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 void AgentInstanceFilterProxyModel::excludeCapabilities(const QString &capability)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->excludeCapabilities << capability;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 bool AgentInstanceFilterProxyModel::enablePlasmaActivities() const
@@ -61,16 +82,30 @@ bool AgentInstanceFilterProxyModel::enablePlasmaActivities() const
 
 void AgentInstanceFilterProxyModel::setEnablePlasmaActivities(bool newEnablePlasmaActivities)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->enablePlasmaActivities = newEnablePlasmaActivities;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 void AgentInstanceFilterProxyModel::clearFilters()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->capabilities.clear();
     d->mimeTypes.clear();
     d->excludeCapabilities.clear();
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 bool AgentInstanceFilterProxyModelPrivate::filterAcceptRegExp(const QModelIndex &index, const QRegularExpression &filterRegExpStr)

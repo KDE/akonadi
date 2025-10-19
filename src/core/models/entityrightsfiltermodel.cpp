@@ -72,8 +72,15 @@ bool EntityRightsFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 void EntityRightsFilterModel::setAccessRights(Collection::Rights rights)
 {
     Q_D(EntityRightsFilterModel);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->mAccessRights = rights;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 Collection::Rights EntityRightsFilterModel::accessRights() const
