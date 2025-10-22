@@ -10,9 +10,7 @@
 #include "config-akonadi.h"
 #include "controlmanager.h"
 
-#if WITH_ACCOUNTS
-#include "accountsintegration.h"
-#endif
+#include "onlineaccountsintegration.h"
 
 #include "shared/akapplication.h"
 
@@ -69,9 +67,7 @@ int main(int argc, char **argv)
     ControlManager controlManager;
 
     AgentManager agentManager(app.commandLineArguments().isSet(QStringLiteral("verbose")));
-#if WITH_ACCOUNTS
-    AccountsIntegration accountsIntegration(agentManager);
-#endif
+    OnlineAccountsIntegration accountsIntegration(agentManager);
     KCrash::setEmergencySaveFunction(crashHandler);
 
     return app.exec();
