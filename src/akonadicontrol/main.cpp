@@ -67,7 +67,7 @@ int main(int argc, char **argv)
 
     AgentManager agentManager(app.commandLineArguments().isSet(QStringLiteral("verbose")));
 #if WITH_ACCOUNTS
-    AccountsIntegration accountsIntegration(agentManager);
+    // AccountsIntegration accountsIntegration(agentManager);
 #endif
     KCrash::setEmergencySaveFunction(crashHandler);
     // akonadi_control is started on-demand, no need to auto restart by session.
