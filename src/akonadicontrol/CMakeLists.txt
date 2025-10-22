@@ -42,6 +42,8 @@ target_sources(
         agentmanager.h
         controlmanager.h
         processcontrol.h
+
+        onlineaccountsintegration.cpp
 )
 if(COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(

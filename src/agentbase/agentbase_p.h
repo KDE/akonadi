@@ -91,6 +91,7 @@ public:
 
     bool mPendingQuit;
     bool mActivitiesEnabled = false;
+    QString mAccountId;
 
     QSettings *mSettings = nullptr;
 

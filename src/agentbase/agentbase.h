@@ -567,6 +567,17 @@ public:
      */
     [[nodiscard]] bool activitiesEnabled() const;
 
+    /**
+     * Returns the accountId for the associated online account,
+     * if any
+     */
+    [[nodiscard]] QString accountId() const;
+
+    /**
+     * Set the accountId for the associated online account
+     */
+    void setAccountId(const QString &accountId);
+
 Q_SIGNALS:
     /**
      * This signal is emitted whenever the name of the agent has changed.

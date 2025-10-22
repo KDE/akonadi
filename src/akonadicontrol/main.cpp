@@ -9,6 +9,7 @@
 #include "akonadicontrol_debug.h"
 #include "config-akonadi.h"
 #include "controlmanager.h"
+#include "onlineaccountsintegration.h"
 
 #include "shared/akapplication.h"
 
@@ -26,6 +27,8 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+
+using namespace Qt::Literals;
 
 static AgentManager *sAgentManager = nullptr;
 
@@ -63,8 +66,11 @@ int main(int argc, char **argv)
     }
 
     ControlManager controlManager;
-
     AgentManager agentManager(app.commandLineArguments().isSet(QStringLiteral("verbose")));
+
+    if (QDBusConnection::sessionBus().interface()->isServiceRegistered(u"org.kde.konlineaccounts"_s)) {
+        OnlineAccountsIntegration onlineAccountsIntegration(agentManager);
+    }
 
     KCrash::setEmergencySaveFunction(crashHandler);
 

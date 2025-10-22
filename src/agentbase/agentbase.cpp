@@ -330,6 +330,8 @@ void AgentBasePrivate::init()
         }
     }
 
+    mAccountId = mSettings->value(QLatin1StringView("Agent/AccountId")).toString();
+
     mActivities = mSettings->value(QLatin1StringView("Agent/Activities")).toStringList();
     mActivitiesEnabled = mSettings->value(QLatin1StringView("Agent/ActivitiesEnabled"), false).toBool();
     connect(mChangeRecorder, &Monitor::itemAdded, this, &AgentBasePrivate::itemAdded);
@@ -1213,6 +1215,24 @@ void AgentBase::setActivitiesEnabled(bool enabled)
     d->mActivitiesEnabled = enabled;
     d->mSettings->setValue(QStringLiteral("Agent/ActivitiesEnabled"), enabled);
     Q_EMIT agentActivitiesEnabledChanged(d->mActivitiesEnabled);
+}
+
+QString AgentBase::accountId() const
+{
+    Q_D(const AgentBase);
+
+    return d->mAccountId;
+}
+
+void AgentBase::setAccountId(const QString &accountId)
+{
+    Q_D(AgentBase);
+    if (accountId == d->mAccountId) {
+        return;
+    }
+
+    d->mAccountId = accountId;
+    d->mSettings->setValue(QStringLiteral("Agent/AccountId"), accountId);
 }
 
 void AgentBase::changeProcessed()
