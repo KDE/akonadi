@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-10-18 00:42+0000\n"
-"PO-Revision-Date: 2025-07-28 17:17+0200\n"
+"PO-Revision-Date: 2025-10-24 22:17+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -1318,8 +1318,8 @@ msgid ""
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
 "Програмният пакет Akonadi за управление на личната информация не работи. \n"
-"Щракнете върху \" Подробности… \", за да получите подробна информация по "
-"този проблем."
+"Щракнете върху „Подробности…“, за да получите подробна информация по този "
+"проблем."
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
@@ -2523,7 +2523,7 @@ msgstr "Поставянето е неуспешно"
 #: widgets/standardactionmanager.cpp:822
 #, kde-format
 msgid "We can not add \"/\" in folder name."
-msgstr "Не можем да добавим \" / \"в името на папката."
+msgstr "Не може да се добави „/“ в името на папката."
 
 #: widgets/standardactionmanager.cpp:822 widgets/standardactionmanager.cpp:826
 #, kde-format
