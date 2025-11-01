@@ -64,8 +64,8 @@ void DataStream::waitForData(QIODevice *device, std::chrono::milliseconds timeou
             QObject::connect(ls, &QLocalSocket::stateChanged, &loop, &QEventLoop::quit);
         }
         bool timeout = false;
-        if (timeoutMs > 0) {
-            QTimer::singleShot(timeoutMs, &loop, [&]() {
+        if (timeout > 0) {
+            QTimer::singleShot(timeout, &loop, [&]() {
                 timeout = true;
                 loop.quit();
             });
