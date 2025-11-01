@@ -113,8 +113,7 @@ public:
      * @param changedItems A list of items added or changed by the client.
      * @param removedItems A list of items deleted by the client.
      */
-    void setIncrementalSyncItems(const Item::List &changedItems,
-                                 const Item::List &removedItems);
+    void setIncrementalSyncItems(const Item::List &changedItems, const Item::List &removedItems);
 
     /**
      * Sets the item fetch scope.
@@ -158,9 +157,15 @@ public:
      * @since 4.6
      */
     enum TransactionMode {
-        SingleTransaction Q_DECL_ENUMERATOR_DEPRECATED_X("The enumerator has no meaning anymore."), ///< Use a single transaction for the entire sync process (default), provides maximum consistency ("all or nothing") and best performance
-        MultipleTransactions Q_DECL_ENUMERATOR_DEPRECATED_X("The enumerator has no meaning anymore."), ///< Use one transaction per chunk of delivered items, good compromise between the other two when using streaming
-        NoTransaction Q_DECL_ENUMERATOR_DEPRECATED_X("The enumerator has no meaning anymore.") ///< Use no transaction at all, provides highest responsiveness (might therefore feel faster even when actually taking slightly longer), no consistency guaranteed (can fail anywhere in the sync process)
+        SingleTransaction
+            Q_DECL_ENUMERATOR_DEPRECATED_X("The enumerator has no meaning anymore."), ///< Use a single transaction for the entire sync process (default),
+                                                                                      ///< provides maximum consistency ("all or nothing") and best performance
+        MultipleTransactions
+            Q_DECL_ENUMERATOR_DEPRECATED_X("The enumerator has no meaning anymore."), ///< Use one transaction per chunk of delivered items, good compromise
+                                                                                      ///< between the other two when using streaming
+        NoTransaction Q_DECL_ENUMERATOR_DEPRECATED_X(
+            "The enumerator has no meaning anymore.") ///< Use no transaction at all, provides highest responsiveness (might therefore feel faster even when
+                                                      ///< actually taking slightly longer), no consistency guaranteed (can fail anywhere in the sync process)
     };
 
     /**

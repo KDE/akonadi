@@ -1466,7 +1466,7 @@ void ResourceBase::setItemTransactionMode(ItemSync::TransactionMode /*mode*/)
 {
 }
 
-void ResourceBase::setItemSynchronizationFetchScope(const ItemFetchScope &/*fetchScope*/)
+void ResourceBase::setItemSynchronizationFetchScope(const ItemFetchScope & /*fetchScope*/)
 {
 }
 

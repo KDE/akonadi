@@ -5,13 +5,13 @@
  ***************************************************************************/
 
 #include "itemsynchandler.h"
+#include "akonadiserver_debug.h"
 #include "itemcreatehandler.h"
 #include "itemdeletehandler.h"
-#include "storage/transaction.h"
+#include "storage/datastore.h"
 #include "storage/querybuilder.h"
 #include "storage/selectquerybuilder.h"
-#include "storage/datastore.h"
-#include "akonadiserver_debug.h"
+#include "storage/transaction.h"
 
 #include <chrono>
 #include <optional>
@@ -54,9 +54,18 @@ public:
     }
 
 protected:
-    AkonadiServer &akonadi() { return mAkonadi; }
-    Connection *connection() { return mConnection; }
-    ItemSyncHandler *baseHandler() { return mBaseHandler; }
+    AkonadiServer &akonadi()
+    {
+        return mAkonadi;
+    }
+    Connection *connection()
+    {
+        return mConnection;
+    }
+    ItemSyncHandler *baseHandler()
+    {
+        return mBaseHandler;
+    }
 
     virtual bool mergeItem(const Protocol::CommandPtr &cmd)
     {
@@ -87,8 +96,7 @@ protected:
 
         mCollection = Collection::retrieveById(beginCmd.collectionId());
         if (!mCollection.isValid()) {
-            return failureResponse<Protocol::BeginItemSyncResponse>(QStringLiteral("ItemSync failed: invalid collection ID %1")
-                    .arg(beginCmd.collectionId()));
+            return failureResponse<Protocol::BeginItemSyncResponse>(QStringLiteral("ItemSync failed: invalid collection ID %1").arg(beginCmd.collectionId()));
         }
 
         return true;
@@ -315,10 +323,10 @@ private:
 
 } // namespace Akonadi::Server
 
-
-ItemSyncHandler::ItemSyncHandler(AkonadiServer &server):
-    Handler(server)
-{}
+ItemSyncHandler::ItemSyncHandler(AkonadiServer &server)
+    : Handler(server)
+{
+}
 
 std::unique_ptr<ItemSyncer> ItemSyncHandler::createSyncer(ItemSyncHandler *handler, bool incremental) const
 {

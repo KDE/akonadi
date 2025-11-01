@@ -132,8 +132,7 @@ std::unique_ptr<Handler> Handler::findHandlerForCommandAuthenticated(Protocol::C
     case Protocol::Command::BeginItemSync:
         return std::make_unique<ItemSyncHandler>(akonadi);
     case Protocol::Command::EndItemSync:
-        Q_ASSERT_X(cmd != Protocol::Command::EndItemSync, __FUNCTION__,
-                   "EndItemSync command is not allowed in this context");
+        Q_ASSERT_X(cmd != Protocol::Command::EndItemSync, __FUNCTION__, "EndItemSync command is not allowed in this context");
         return {};
 
     case Protocol::Command::ItemChangeNotification:
