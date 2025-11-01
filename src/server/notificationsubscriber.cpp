@@ -8,9 +8,9 @@
 #include "aggregatedfetchscope.h"
 #include "akonadiserver_debug.h"
 #include "notificationmanager.h"
-#include "utils.h"
 
 #include <QLocalSocket>
+#include <QMimeDatabase>
 #include <QPointer>
 
 #include "private/datastream_p_p.h"

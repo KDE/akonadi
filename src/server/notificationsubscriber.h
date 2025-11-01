@@ -7,7 +7,6 @@
 #pragma once
 
 #include <QByteArray>
-#include <QMimeDatabase>
 #include <QMutex>
 #include <QObject>
 
