@@ -236,7 +236,7 @@ Q_SIGNALS:
      *
      * @since 4.14
      */
-    QT_DEPRECATED_X("This signal is no longer used. It's only emitted once for backwards compatiblity.")
+    QT_DEPRECATED_X("This signal is no longer used. It's only emitted once for backwards compatibility.")
     void readyForNextBatch(int remainingBatchSize);
 
     /**
@@ -259,4 +259,3 @@ private:
 };
 
 } // namespace Akonadi
-
