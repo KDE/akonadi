@@ -45,8 +45,6 @@ public:
     void closeConnection();
     void sendCommand(qint64 tag, const Protocol::CommandPtr &command);
 
-    void handleIncomingData();
-
 Q_SIGNALS:
     void connected();
     void reconnected();
@@ -61,6 +59,7 @@ private Q_SLOTS:
     void doSendCommand(qint64 tag, const Akonadi::Protocol::CommandPtr &command);
 
 private:
+    void handleIncomingData();
     QString defaultAddressForTypeAndMethod(ConnectionType type, const QString &method);
     bool handleCommand(qint64 tag, const Protocol::CommandPtr &cmd);
 
@@ -69,6 +68,7 @@ private:
     QFile *mLogFile = nullptr;
     QByteArray mSessionId;
     CommandBuffer *mCommandBuffer;
+    bool mIncomingDataRecursing = false;
 
     friend class Akonadi::SessionThread;
 };
