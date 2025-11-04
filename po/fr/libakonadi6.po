@@ -812,7 +812,7 @@ msgstr "Impossible d'accéder à l'interface « D-Bus » de l'agent créé."
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr ""
-"La boîte de dialogue de configuration est ouverte dans une autre fenêtre"
+"La boite de dialogue de configuration est ouverte dans une autre fenêtre"
 
 #: widgets/agentconfigurationwidget.cpp:123
 #, kde-format
@@ -822,7 +822,7 @@ msgstr "La configuration de %1 est déjà ouverte ailleurs."
 #: widgets/agentconfigurationwidget.cpp:125
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
-msgstr "Impossible de déclarer la boîte de dialogue de configuration de %1."
+msgstr "Impossible de déclarer la boite de dialogue de configuration de %1."
 
 #: widgets/agentinstancewidget.cpp:259
 #, kde-format
@@ -1156,7 +1156,7 @@ msgstr "Aucun dossier"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
-msgstr "Ouvrir la boîte de dialogue de collection"
+msgstr "Ouvrir la boite de dialogue de collection"
 
 #: widgets/collectionrequester.cpp:143
 #, kde-format
