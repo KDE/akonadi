@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-18 00:42+0000\n"
+"POT-Creation-Date: 2025-11-04 00:42+0000\n"
 "PO-Revision-Date: 2025-07-23 07:01+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -95,70 +95,70 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "Ni nastavljeno"
 
-#: agentbase/resourcebase.cpp:533
+#: agentbase/resourcebase.cpp:527
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "Določilnik vira"
 
-#: agentbase/resourcebase.cpp:539
+#: agentbase/resourcebase.cpp:533
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "Vir Akonadi"
 
-#: agentbase/resourcebase.cpp:581
+#: agentbase/resourcebase.cpp:575
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Pridobljen neveljaven predmet"
 
-#: agentbase/resourcebase.cpp:604
+#: agentbase/resourcebase.cpp:598
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Napaka med ustvarjanjem predmeta: %1"
 
-#: agentbase/resourcebase.cpp:628
+#: agentbase/resourcebase.cpp:622
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Napaka med posodabljanjem zbirke: %1"
 
-#: agentbase/resourcebase.cpp:715
+#: agentbase/resourcebase.cpp:709
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Posodabljanje krajevne zbirke ni uspelo: %1."
 
-#: agentbase/resourcebase.cpp:720
+#: agentbase/resourcebase.cpp:714
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Posodabljanje krajevnih predmetov ni uspelo: %1."
 
-#: agentbase/resourcebase.cpp:739
+#: agentbase/resourcebase.cpp:733
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "V nepovezanem načinu ni mogoče pridobiti predmeta."
 
-#: agentbase/resourcebase.cpp:921
+#: agentbase/resourcebase.cpp:915
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Usklajevanje mape »%1«"
 
-#: agentbase/resourcebase.cpp:941 agentbase/resourcebase.cpp:948
+#: agentbase/resourcebase.cpp:935 agentbase/resourcebase.cpp:942
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Pridobivanje zbirke za uskladitev ni uspelo."
 
-#: agentbase/resourcebase.cpp:989
+#: agentbase/resourcebase.cpp:980
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Pridobivanje zbirke za uskladitev atributov ni uspelo."
 
-#: agentbase/resourcebase.cpp:1035
+#: agentbase/resourcebase.cpp:1026
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Zahtevan predmet ne obstaja več"
