@@ -34,7 +34,6 @@ public:
     void save();
     [[nodiscard]] QSize restoreDialogSize() const;
     void saveDialogSize(QSize size);
-    [[nodiscard]] QDialogButtonBox::StandardButtons standardButtons() const;
 
 Q_SIGNALS:
     void enableOkButton(bool enabled);

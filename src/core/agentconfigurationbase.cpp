@@ -81,11 +81,6 @@ void AgentConfigurationBase::saveDialogSize(const QSize & /*unused*/) // clazy:e
 {
 }
 
-AgentConfigurationBase::StandardButtons AgentConfigurationBase::standardButtons() const
-{
-    return AgentConfigurationBase::Ok | AgentConfigurationBase::Apply | AgentConfigurationBase::Cancel;
-}
-
 void AgentConfigurationBase::saveActivitiesSettings(const ActivitySettings &activities) const
 {
     KConfigGroup activitiesGroup = d->config->group(QStringLiteral("Agent"));

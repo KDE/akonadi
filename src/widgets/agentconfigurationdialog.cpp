@@ -59,7 +59,7 @@ AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance
     d->widget.reset(new AgentConfigurationWidget(instance, this));
     l->addWidget(d->widget.data());
 
-    auto btnBox = new QDialogButtonBox(d->widget->standardButtons(), this);
+    auto btnBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel, this);
     l->addWidget(btnBox);
     connect(btnBox, &QDialogButtonBox::accepted, this, &AgentConfigurationDialog::accept);
     connect(btnBox, &QDialogButtonBox::rejected, this, &AgentConfigurationDialog::reject);

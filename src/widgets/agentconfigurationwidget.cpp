@@ -165,28 +165,6 @@ void AgentConfigurationWidget::saveDialogSize(QSize size)
     }
 }
 
-QDialogButtonBox::StandardButtons AgentConfigurationWidget::standardButtons() const
-{
-    if (d->plugin) {
-        auto buttons = d->plugin->standardButtons();
-        QDialogButtonBox::StandardButtons standardButtons;
-        if (buttons & AgentConfigurationBase::Ok) {
-            standardButtons |= QDialogButtonBox::Ok;
-        }
-        if (buttons & AgentConfigurationBase::Cancel) {
-            standardButtons |= QDialogButtonBox::Cancel;
-        }
-        if (buttons & AgentConfigurationBase::Apply) {
-            standardButtons |= QDialogButtonBox::Apply;
-        }
-        if (buttons & AgentConfigurationBase::Help) {
-            standardButtons |= QDialogButtonBox::Help;
-        }
-        return standardButtons;
-    }
-    return QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel;
-}
-
 void AgentConfigurationWidget::childEvent(QChildEvent *event)
 {
     if (event->added()) {
