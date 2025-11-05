@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2025-07-23 12:15+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: Dutch <kde-i18n-nl@kde.org>\n"
@@ -776,21 +776,11 @@ msgstr "Agentinstantie verwijderen?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Wilt u de geselecteerde exemplaar van agent verwijderen?"
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 configuratie"
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "%1 Handboek"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "Info over %1"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2765,6 +2755,12 @@ msgstr "Gegevensbestand kon niet worden ontleden: '%1'"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Verzameling %1 kan niet gevonden worden"
+
+#~ msgid "%1 Handbook"
+#~ msgstr "%1 Handboek"
+
+#~ msgid "About %1"
+#~ msgstr "Info over %1"
 
 #~ msgctxt "@window:title"
 #~ msgid "Error"

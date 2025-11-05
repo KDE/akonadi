@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2025-10-09 00:06+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -761,21 +761,11 @@ msgstr "에이전트 인스턴스를 삭제하시겠습니까?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "선택한 에이전트 인스턴스를 삭제하시겠습니까?"
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 설정"
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "%1 도움말"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "%1 정보"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2673,6 +2663,12 @@ msgstr "데이터 파일을 해석할 수 없음: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "모음집 %1을(를) 찾을 수 없음"
+
+#~ msgid "%1 Handbook"
+#~ msgstr "%1 도움말"
+
+#~ msgid "About %1"
+#~ msgstr "%1 정보"
 
 #~ msgctxt "@window:title"
 #~ msgid "Error"

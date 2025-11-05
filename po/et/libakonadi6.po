@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2020-05-07 13:23+0300\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -767,23 +767,13 @@ msgstr "Kas kustutada agendi isend?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Kas tõesti kustutada kõik valitud agendi isendid?"
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, fuzzy, kde-format
 #| msgctxt "%1 = agent name"
 #| msgid "%1 Configuration"
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 seadistamine"
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "%1 käsiraamat"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "%1 teave"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2798,6 +2788,12 @@ msgstr "Andmefaili parsimine nurjus: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Kogu %1 ei leitud"
+
+#~ msgid "%1 Handbook"
+#~ msgstr "%1 käsiraamat"
+
+#~ msgid "About %1"
+#~ msgstr "%1 teave"
 
 #~ msgctxt "@window:title"
 #~ msgid "Error"

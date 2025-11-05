@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2025-07-28 16:37+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -770,21 +770,11 @@ msgstr "Ta bort agentinstans?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Vill du verkligen ta bort den markerade instansen av agenten?"
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Inställning av %1"
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "Handbok %1"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "Om %1"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2733,6 +2723,12 @@ msgstr "Kan inte tolka datafilen: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Kan inte hitta samlingen %1"
+
+#~ msgid "%1 Handbook"
+#~ msgstr "Handbok %1"
+
+#~ msgid "About %1"
+#~ msgstr "Om %1"
 
 #~ msgctxt "@window:title"
 #~ msgid "Error"

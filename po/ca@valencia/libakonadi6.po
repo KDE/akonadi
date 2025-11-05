@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2025-07-23 11:07+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -779,21 +779,11 @@ msgstr "Voleu suprimir la instància de l'agent?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Segur que voleu suprimir la instància seleccionada de l'agent?"
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Configuració de %1"
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "Manual de %1"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "Quant a %1"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2764,3 +2754,9 @@ msgstr "No s'ha pogut analitzar el fitxer de dades: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "No s'ha pogut trobar la col·lecció %1"
+
+#~ msgid "%1 Handbook"
+#~ msgstr "Manual de %1"
+
+#~ msgid "About %1"
+#~ msgstr "Quant a %1"

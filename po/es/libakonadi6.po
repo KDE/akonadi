@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2025-07-24 19:52+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -783,21 +783,11 @@ msgstr "¿Borrar instancia de agente?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "¿Seguro qué desea borrar la instancia de agente seleccionada?"
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Configuración de %1"
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "Manual %1"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "Acerca de %1"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2767,3 +2757,9 @@ msgstr "No es posible analizar el archivo de datos «%1»"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "No es posible encontrar la colección %1"
+
+#~ msgid "%1 Handbook"
+#~ msgstr "Manual %1"
+
+#~ msgid "About %1"
+#~ msgstr "Acerca de %1"

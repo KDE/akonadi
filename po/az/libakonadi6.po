@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2023-02-19 14:32+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -771,21 +771,11 @@ msgstr "Təmsilçi nümunəsi silinsin?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Seçilmiş təmsilçi nümunəsini silmək istədiyinizə əminsiniz?"
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 tənzimləməsi"
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "%1 İstifadəçi Təlimatı"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "%1 haqqında"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2761,6 +2751,12 @@ msgstr "Təhlil edilə bilməyən verilənlər faylı: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "%1 kolleksiyası tapmaq mümkün olmadı"
+
+#~ msgid "%1 Handbook"
+#~ msgstr "%1 İstifadəçi Təlimatı"
+
+#~ msgid "About %1"
+#~ msgstr "%1 haqqında"
 
 #~ msgctxt "@window:title"
 #~ msgid "Error"

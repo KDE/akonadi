@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2025-08-22 17:32+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -782,21 +782,11 @@ msgstr "Удаление экземпляра агента"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Удалить выбранный экземпляр агента?"
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Настройка %1"
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "Руководство пользователя %1"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "О программе %1"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2801,6 +2791,12 @@ msgstr "Не удалось интерпретировать содержимо�
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Не удалось найти коллекцию %1"
+
+#~ msgid "%1 Handbook"
+#~ msgstr "Руководство пользователя %1"
+
+#~ msgid "About %1"
+#~ msgstr "О программе %1"
 
 #~ msgctxt "@window:title"
 #~ msgid "Error"

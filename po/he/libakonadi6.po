@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2025-10-05 08:51+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -758,21 +758,11 @@ msgstr "למחוק מופע סוכן?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "למחוק את מופע הסוכן הנבחר?"
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "הגדרות %1"
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "ספרון ההדרכה של %1"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "על %1"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2746,3 +2736,9 @@ msgstr "לא ניתן לפענח את קובץ הנתונים: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "לא ניתן למצוא את האוסף %1"
+
+#~ msgid "%1 Handbook"
+#~ msgstr "ספרון ההדרכה של %1"
+
+#~ msgid "About %1"
+#~ msgstr "על %1"

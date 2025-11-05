@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2024-11-14 14:03+0100\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -743,21 +743,11 @@ msgstr "Smazat instanci agenta?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Opravdu si přejete smazat vybranou instanci agenta?"
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 Nastavení"
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "Příručka %1"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "O aplikaci %1"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2646,3 +2636,9 @@ msgstr "Datový soubor nelze zpracovat: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Nelze najít sbírku %1"
+
+#~ msgid "%1 Handbook"
+#~ msgstr "Příručka %1"
+
+#~ msgid "About %1"
+#~ msgstr "O aplikaci %1"

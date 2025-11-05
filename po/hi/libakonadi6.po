@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2024-12-15 18:58+0530\n"
 "Last-Translator: Kali <EMAIL@ADDRESS>\n"
 "Language-Team: Hindi <fedora-trans-hi@redhat.com>\n"
@@ -775,21 +775,11 @@ msgstr "एजेंट इंस्टेंस हटाएँ?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "क्या आप सचमुच चयनित एजेंट इंस्टेंस को हटाना चाहते हैं?"
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 कॉन्फ़िगरेशन"
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "%1 हैंडबुक"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "लगभग %1"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2723,6 +2713,12 @@ msgstr "डेटा फ़ाइल पार्स करने में अ�
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "संग्रह %1 ढूँढने में असमर्थ"
+
+#~ msgid "%1 Handbook"
+#~ msgstr "%1 हैंडबुक"
+
+#~ msgid "About %1"
+#~ msgstr "लगभग %1"
 
 #~ msgctxt "@window:title"
 #~ msgid "Error"

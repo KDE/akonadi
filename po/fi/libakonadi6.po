@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2025-08-22 17:02+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -772,21 +772,11 @@ msgstr "Poistetaanko agentti-ilmentymä?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Haluatko varmasti poistaa valitun agentti-ilmentymän?"
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 – asetukset"
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "%1-käyttöohje|/|$[gen %1] käyttöohje"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "Tietoa: %1|/|Tietoa $[yleisnimi_pienellä $[elat %1] ]"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2738,6 +2728,12 @@ msgstr "Datatiedostoa ei saada jäsennetyksi: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Kokoelmaa %1 ei löydy"
+
+#~ msgid "%1 Handbook"
+#~ msgstr "%1-käyttöohje|/|$[gen %1] käyttöohje"
+
+#~ msgid "About %1"
+#~ msgstr "Tietoa: %1|/|Tietoa $[yleisnimi_pienellä $[elat %1] ]"
 
 #~ msgctxt "@window:title"
 #~ msgid "Error"

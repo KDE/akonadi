@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.3\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2025-07-31 22:29+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -770,21 +770,11 @@ msgstr "Ügynökpéldány törlése?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Biztosan törölni szeretné a kijelölt ügynökpéldányt?"
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "A(z) %1 beállításai"
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "A(z) %1 kézikönyve"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "A(z) %1 névjegye"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2738,6 +2728,12 @@ msgstr "Nem lehet feldolgozni a(z) adatfájlt: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Nem található gyűjtemény: %1"
+
+#~ msgid "%1 Handbook"
+#~ msgstr "A(z) %1 kézikönyve"
+
+#~ msgid "About %1"
+#~ msgstr "A(z) %1 névjegye"
 
 #~ msgctxt "@window:title"
 #~ msgid "Error"

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2024-09-19 14:56+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -798,21 +798,11 @@ msgstr "Να διαγραφεί η διεργασία πράκτορα;"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Θέλετε πράγματι να διαγραφεί η επιλεγμένη διεργασία πράκτορα;"
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 Διαμόρφωση"
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "%1 εγχειρίδιο"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "Σχετικά %1"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2779,6 +2769,12 @@ msgstr "Αδυναμία ανάλυσης αρχείου δεδομένων: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Αδυναμία εύρεσης συλλογής %1"
+
+#~ msgid "%1 Handbook"
+#~ msgstr "%1 εγχειρίδιο"
+
+#~ msgid "About %1"
+#~ msgstr "Σχετικά %1"
 
 #~ msgctxt "@window:title"
 #~ msgid "Error"

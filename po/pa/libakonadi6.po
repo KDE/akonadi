@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2023-12-31 09:30-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -765,21 +765,11 @@ msgstr "ਫੋਲਡਰ ਹਟਾਉਣਾ ਹੈ?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "ਕੀ ਤੁਸੀਂ ਸਭ ਚੁਣੀਆਂ ਆਈਟਮਾਂ ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?"
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 ਸੰਰਚਨਾ"
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "%1 ਹੈਂਡਬੁੱਕ"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "%1 ਬਾਰੇ"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2753,6 +2743,12 @@ msgstr "ਡਾਟਾ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ:
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"
 msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ"
+
+#~ msgid "%1 Handbook"
+#~ msgstr "%1 ਹੈਂਡਬੁੱਕ"
+
+#~ msgid "About %1"
+#~ msgstr "%1 ਬਾਰੇ"
 
 #~ msgctxt "@window:title"
 #~ msgid "Error"

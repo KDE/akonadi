@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2025-08-20 15:41+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -776,21 +776,11 @@ msgstr "Agentearen instantzia ezabatu?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Benetan ezabatu nahi duzu hautatutako agentearen instantzia?"
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1(e)ren konfigurazioa"
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "%1 eskuliburua"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "%1-(r)i buruz"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2760,6 +2750,12 @@ msgstr "Ezin da datu-fitxategiaren sintaxia aztertu: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Ezin izan da «%1» bilduma aurkitu"
+
+#~ msgid "%1 Handbook"
+#~ msgstr "%1 eskuliburua"
+
+#~ msgid "About %1"
+#~ msgstr "%1-(r)i buruz"
 
 #~ msgctxt "@window:title"
 #~ msgid "Error"

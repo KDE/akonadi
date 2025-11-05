@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2025-09-14 14:02+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
@@ -735,21 +735,11 @@ msgstr ""
 msgid "Do you really want to delete the selected agent instance?"
 msgstr ""
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 அமைப்புகள்"
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "%1 கையேடு"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "%1 பற்றி"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2600,6 +2590,12 @@ msgstr ""
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr ""
+
+#~ msgid "%1 Handbook"
+#~ msgstr "%1 கையேடு"
+
+#~ msgid "About %1"
+#~ msgstr "%1 பற்றி"
 
 #~ msgctxt "@window:title"
 #~ msgid "Error"

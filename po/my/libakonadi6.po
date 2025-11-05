@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2021-09-27 23:52+0630\n"
 "Last-Translator: ဇေယျာလွင် <lw1nzayar@yandex.com>\n"
 "Language-Team: Burmese <kde-i18n-doc@kde.org>\n"
@@ -753,23 +753,13 @@ msgstr "အေးဂျင့်အင်းစတမ့်ဖျက်မှာ
 msgid "Do you really want to delete the selected agent instance?"
 msgstr ""
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, fuzzy, kde-format
 #| msgctxt "%1 = agent name"
 #| msgid "%1 Configuration"
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 ပြင်ဆင်မှု"
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "လက်ကိုင်စာအုပ် %1"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "%1 အကြောင်း"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2621,6 +2611,12 @@ msgstr "ဒေတာဖိုင်လ်ကို အဓိပ္ပါယ်�
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "စုစည်းမှု %1 ကိုမရှာနိုင်ခဲ့ပါ"
+
+#~ msgid "%1 Handbook"
+#~ msgstr "လက်ကိုင်စာအုပ် %1"
+
+#~ msgid "About %1"
+#~ msgstr "%1 အကြောင်း"
 
 #~ msgctxt "@window:title"
 #~ msgid "Error"

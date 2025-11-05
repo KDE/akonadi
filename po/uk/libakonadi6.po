@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2025-07-23 16:05+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -774,21 +774,11 @@ msgstr "Вилучити екземпляр агента?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Ви справді бажаєте вилучити позначений екземпляр агента?"
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Налаштування %1"
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "Підручник з %1"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "Про %1"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2816,6 +2806,12 @@ msgstr "Не вдалося обробити файл даних: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Не вдалося знайти збірку %1"
+
+#~ msgid "%1 Handbook"
+#~ msgstr "Підручник з %1"
+
+#~ msgid "About %1"
+#~ msgstr "Про %1"
 
 #~ msgctxt "@window:title"
 #~ msgid "Error"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2024-12-25 19:45+0530\n"
 "Last-Translator: kali <shreekantkalwar@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -778,21 +778,11 @@ msgstr "एजेण्ट् उदाहरणं विलोपयन्त�
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "किं भवान् वास्तवमेव चयनितं एजेण्ट्-दृष्टान्तं विलोपयितुम् इच्छति?"
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 विन्यासः"
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "%1 हस्तपुस्तिका"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "%1 इत्यस्य विषये"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2716,6 +2706,12 @@ msgstr "दत्तांशसञ्चिकां विश्लेषण�
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "संग्रहं %1 अन्वेष्टुं असमर्थः"
+
+#~ msgid "%1 Handbook"
+#~ msgstr "%1 हस्तपुस्तिका"
+
+#~ msgid "About %1"
+#~ msgstr "%1 इत्यस्य विषये"
 
 #~ msgctxt "@window:title"
 #~ msgid "Error"

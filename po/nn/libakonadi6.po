@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2021-02-13 12:56+0100\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -746,21 +746,11 @@ msgstr ""
 msgid "Do you really want to delete the selected agent instance?"
 msgstr ""
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr ""
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "%1-handbok"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "Om %1"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2661,3 +2651,9 @@ msgstr "Klarte ikkje lima inn data: %1"
 #, fuzzy, kde-format
 msgid "Unable to find collection %1"
 msgstr "Ugyldig samling"
+
+#~ msgid "%1 Handbook"
+#~ msgstr "%1-handbok"
+
+#~ msgid "About %1"
+#~ msgstr "Om %1"

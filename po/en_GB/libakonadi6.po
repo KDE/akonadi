@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2024-11-16 12:58+0000\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
@@ -782,21 +782,11 @@ msgstr "Delete Agent Instance?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Do you really want to delete the selected agent instance?"
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 Configuration"
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "%1 Handbook"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "About %1"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2748,6 +2738,12 @@ msgstr "Unable to parse data file: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Unable to find collection %1"
+
+#~ msgid "%1 Handbook"
+#~ msgstr "%1 Handbook"
+
+#~ msgid "About %1"
+#~ msgstr "About %1"
 
 #~ msgctxt "@window:title"
 #~ msgid "Error"

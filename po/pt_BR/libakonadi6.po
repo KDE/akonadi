@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:42+0000\n"
+"POT-Creation-Date: 2025-11-05 00:44+0000\n"
 "PO-Revision-Date: 2025-07-26 14:00-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -776,21 +776,11 @@ msgstr "Excluir a instância do agente?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Deseja realmente excluir a instância do agente selecionada?"
 
-#: widgets/agentconfigurationdialog.cpp:56
+#: widgets/agentconfigurationdialog.cpp:54
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "Configuração de %1"
-
-#: widgets/agentconfigurationdialog.cpp:83
-#, kde-format
-msgid "%1 Handbook"
-msgstr "Manual do %1"
-
-#: widgets/agentconfigurationdialog.cpp:84
-#, kde-format
-msgid "About %1"
-msgstr "Sobre o %1"
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
@@ -2764,6 +2754,12 @@ msgstr "Não foi possível analisar o arquivo de dados: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Não foi possível encontrar a coleção %1"
+
+#~ msgid "%1 Handbook"
+#~ msgstr "Manual do %1"
+
+#~ msgid "About %1"
+#~ msgstr "Sobre o %1"
 
 #~ msgctxt "@window:title"
 #~ msgid "Error"
