@@ -49,7 +49,7 @@ public:
     static int init(int argc, char **argv)
     {
         // Disable session management
-        qunsetenv("SESSION_MANAGER");
+        QCoreApplication::setAttribute(Qt::AA_DisableSessionManager);
 
         QApplication app(argc, argv);
         debugAgent(argc, argv);

@@ -44,6 +44,9 @@ void crashHandler(int /*unused*/)
 
 int main(int argc, char **argv)
 {
+    // akonadi_control is started on-demand, no need to auto restart by session.
+    QCoreApplication::setAttribute(Qt::AA_DisableSessionManager);
+
     AkUniqueGuiApplication app(argc, argv, Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock), AKONADICONTROL_LOG());
     app.setDescription(QStringLiteral("Akonadi Control Process\nDo not run this manually, use 'akonadictl' instead to start/stop Akonadi."));
 
@@ -70,13 +73,6 @@ int main(int argc, char **argv)
     AccountsIntegration accountsIntegration(agentManager);
 #endif
     KCrash::setEmergencySaveFunction(crashHandler);
-    // akonadi_control is started on-demand, no need to auto restart by session.
-    auto disableSessionManagement = [](QSessionManager &sm) {
-        Q_UNUSED(sm);
-        sm.setRestartHint(QSessionManager::RestartNever);
-    };
-    QObject::connect(qApp, &QGuiApplication::commitDataRequest, qApp, disableSessionManagement);
-    QObject::connect(qApp, &QGuiApplication::saveStateRequest, qApp, disableSessionManagement);
 
     return app.exec();
 }
