@@ -428,9 +428,6 @@ public:
     template<typename T>
     static int initCore(int argc, char **argv)
     {
-        // Disable session management
-        qunsetenv("SESSION_MANAGER");
-
 #if __has_include(<QApplication>)
         static_assert(false, "This links to QWidgets");
 #endif
