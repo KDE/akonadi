@@ -28,8 +28,8 @@
 using namespace Akonadi;
 
 Q_DECLARE_METATYPE(KJob *)
-Q_DECLARE_METATYPE(ItemSync::TransactionMode)
 using namespace std::chrono_literals;
+
 class ItemsyncTest : public QObject
 {
     Q_OBJECT
@@ -99,7 +99,6 @@ private Q_SLOTS:
         Control::start();
         AkonadiTest::setAllResourcesOffline();
         qRegisterMetaType<KJob *>();
-        qRegisterMetaType<ItemSync::TransactionMode>();
     }
 
     void testFullSync()
@@ -121,13 +120,9 @@ private Q_SLOTS:
         QSignalSpy changedSpy(&monitor, &Monitor::itemChanged);
         QVERIFY(changedSpy.isValid());
 
-        auto syncer = new ItemSync(col);
-        syncer->setTransactionMode(ItemSync::SingleTransaction);
-        QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
-        QVERIFY(transactionSpy.isValid());
+        ItemSync *syncer = new ItemSync(col);
         syncer->setFullSyncItems(origItems);
         AKVERIFYEXEC(syncer);
-        QCOMPARE(transactionSpy.count(), 1);
 
         Item::List resultItems = fetchItems(col);
         QCOMPARE(resultItems.count(), origItems.count());
@@ -139,18 +134,14 @@ private Q_SLOTS:
 
     void testFullStreamingSync_data()
     {
-        QTest::addColumn<ItemSync::TransactionMode>("transactionMode");
         QTest::addColumn<bool>("goToEventLoopAfterAddingItems");
 
-        QTest::newRow("single transaction, no eventloop") << ItemSync::SingleTransaction << false;
-        QTest::newRow("multi transaction, no eventloop") << ItemSync::MultipleTransactions << false;
-        QTest::newRow("single transaction, with eventloop") << ItemSync::SingleTransaction << true;
-        QTest::newRow("multi transaction, with eventloop") << ItemSync::MultipleTransactions << true;
+        QTest::newRow("no eventloop") << false;
+        QTest::newRow("with eventloop") << true;
     }
 
     void testFullStreamingSync()
     {
-        QFETCH(ItemSync::TransactionMode, transactionMode);
         QFETCH(bool, goToEventLoopAfterAddingItems);
 
         const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
@@ -163,11 +154,7 @@ private Q_SLOTS:
         QSignalSpy addedSpy(monitor.get(), &Monitor::itemAdded);
         QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
-        auto syncer = new ItemSync(col);
-        QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
-        QVERIFY(transactionSpy.isValid());
-        syncer->setTransactionMode(transactionMode);
-        syncer->setBatchSize(1);
+        ItemSync *syncer = new ItemSync(col);
         syncer->setAutoDelete(false);
         syncer->setStreamingEnabled(true);
         QSignalSpy spy(syncer, &KJob::result);
@@ -193,12 +180,6 @@ private Q_SLOTS:
         KJob *job = spy.at(0).at(0).value<KJob *>();
         QCOMPARE(job, syncer);
         QCOMPARE(job->error(), 0);
-        if (transactionMode == ItemSync::SingleTransaction) {
-            QCOMPARE(transactionSpy.count(), 1);
-        }
-        if (transactionMode == ItemSync::MultipleTransactions) {
-            QCOMPARE(transactionSpy.count(), origItems.count());
-        }
 
         Item::List resultItems = fetchItems(col);
         QCOMPARE(resultItems.count(), origItems.count());
@@ -228,13 +209,9 @@ private Q_SLOTS:
         QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
         {
-            auto syncer = new ItemSync(col);
-            QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
-            QVERIFY(transactionSpy.isValid());
-            syncer->setTransactionMode(ItemSync::SingleTransaction);
+            ItemSync *syncer = new ItemSync(col);
             syncer->setIncrementalSyncItems(origItems, Item::List());
             AKVERIFYEXEC(syncer);
-            QCOMPARE(transactionSpy.count(), 1);
         }
 
         QTest::qWait(100);
@@ -262,13 +239,9 @@ private Q_SLOTS:
         delItems << itemWithRandomRemoteId;
 
         {
-            auto syncer = new ItemSync(col);
-            syncer->setTransactionMode(ItemSync::SingleTransaction);
-            QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
-            QVERIFY(transactionSpy.isValid());
+            ItemSync *syncer = new ItemSync(col);
             syncer->setIncrementalSyncItems(resultItems, delItems);
             AKVERIFYEXEC(syncer);
-            QCOMPARE(transactionSpy.count(), 1);
         }
 
         Item::List resultItems2 = fetchItems(col);
@@ -296,10 +269,7 @@ private Q_SLOTS:
         QSignalSpy addedSpy(monitor.get(), &Monitor::itemAdded);
         QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
-        auto syncer = new ItemSync(col);
-        syncer->setTransactionMode(ItemSync::SingleTransaction);
-        QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
-        QVERIFY(transactionSpy.isValid());
+        ItemSync *syncer = new ItemSync(col);
         syncer->setAutoDelete(false);
         QSignalSpy spy(syncer, &KJob::result);
         QVERIFY(spy.isValid());
@@ -322,7 +292,6 @@ private Q_SLOTS:
         KJob *job = spy.at(0).at(0).value<KJob *>();
         QCOMPARE(job, syncer);
         QCOMPARE(job->error(), 0);
-        QCOMPARE(transactionSpy.count(), 1);
 
         Item::List resultItems = fetchItems(col);
         QCOMPARE(resultItems.count(), origItems.count());
@@ -346,14 +315,9 @@ private Q_SLOTS:
         QSignalSpy addedSpy(monitor.get(), &Monitor::itemAdded);
         QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
-        auto syncer = new ItemSync(col);
-        syncer->setTransactionMode(ItemSync::SingleTransaction);
-        QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
-        QVERIFY(transactionSpy.isValid());
+        ItemSync *syncer = new ItemSync(col);
         syncer->setIncrementalSyncItems(Item::List(), Item::List());
         AKVERIFYEXEC(syncer);
-        // It would be better if we didn't have a transaction at all, but so far the transaction is still created
-        QCOMPARE(transactionSpy.count(), 1);
 
         Item::List resultItems = fetchItems(col);
         QCOMPARE(resultItems.count(), origItems.count());
@@ -362,67 +326,6 @@ private Q_SLOTS:
         QCOMPARE(deletedSpy.count(), 0);
         QCOMPARE(addedSpy.count(), 0);
         QCOMPARE(changedSpy.count(), 0);
-    }
-
-    void testIncrementalStreamingSyncBatchProcessing()
-    {
-        const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
-        QVERIFY(col.isValid());
-        Item::List origItems = fetchItems(col);
-
-        auto monitor = createCollectionMonitor(col);
-        QSignalSpy deletedSpy(monitor.get(), &Monitor::itemRemoved);
-        QSignalSpy addedSpy(monitor.get(), &Monitor::itemAdded);
-        QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
-
-        auto syncer = new ItemSync(col);
-        QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
-        QVERIFY(transactionSpy.isValid());
-        QSignalSpy spy(syncer, &KJob::result);
-        QVERIFY(spy.isValid());
-        syncer->setStreamingEnabled(true);
-        syncer->setTransactionMode(ItemSync::MultipleTransactions);
-        QTest::qWait(0);
-        QCOMPARE(spy.count(), 0);
-
-        for (int i = 0; i < syncer->batchSize(); ++i) {
-            Item::List l;
-            // Modify to trigger a changed signal
-            l << modifyItem(origItems[i]);
-            syncer->setIncrementalSyncItems(l, Item::List());
-            if (i < (syncer->batchSize() - 1)) {
-                QTest::qWait(0); // enter the event loop so itemsync actually can do something
-            }
-            QCOMPARE(spy.count(), 0);
-        }
-        QTest::qWait(100);
-        // this should process one batch of batchSize() items
-        QTRY_COMPARE(changedSpy.count(), syncer->batchSize());
-        QCOMPARE(transactionSpy.count(), 1); // one per batch
-
-        for (int i = syncer->batchSize(); i < origItems.count(); ++i) {
-            Item::List l;
-            // Modify to trigger a changed signal
-            l << modifyItem(origItems[i]);
-            syncer->setIncrementalSyncItems(l, Item::List());
-            if (i < origItems.count() - 1) {
-                QTest::qWait(0); // enter the event loop so itemsync actually can do something
-            }
-            QCOMPARE(spy.count(), 0);
-        }
-
-        syncer->deliveryDone();
-        QTRY_COMPARE(spy.count(), 1);
-        QCOMPARE(transactionSpy.count(), 2); // one per batch
-        QTest::qWait(100);
-
-        Item::List resultItems = fetchItems(col);
-        QCOMPARE(resultItems.count(), origItems.count());
-
-        QTest::qWait(100);
-        QCOMPARE(deletedSpy.count(), 0);
-        QCOMPARE(addedSpy.count(), 0);
-        QTRY_COMPARE(changedSpy.count(), resultItems.count());
     }
 
     void testGidMerge()
@@ -449,8 +352,7 @@ private Q_SLOTS:
         modifiedItem.setGid(QStringLiteral("gid2"));
         modifiedItem.setPayload<QByteArray>("payload2");
 
-        auto syncer = new ItemSync(col);
-        syncer->setTransactionMode(ItemSync::MultipleTransactions);
+        ItemSync *syncer = new ItemSync(col);
         syncer->setIncrementalSyncItems(Item::List() << modifiedItem, Item::List());
         AKVERIFYEXEC(syncer);
 
@@ -479,38 +381,36 @@ private Q_SLOTS:
         QVERIFY(col.isValid());
         Item::List origItems = fetchItems(col);
 
-        auto syncer = new ItemSync(col);
-        QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
-        QVERIFY(transactionSpy.isValid());
+        ItemSync *syncer = new ItemSync(col);
         QSignalSpy spy(syncer, &KJob::result);
         QVERIFY(spy.isValid());
         syncer->setStreamingEnabled(true);
-        syncer->setTransactionMode(ItemSync::MultipleTransactions);
         QTest::qWait(0);
         QCOMPARE(spy.count(), 0);
 
-        for (int i = 0; i < syncer->batchSize(); ++i) {
-            Item::List l;
+        constexpr int batchSize = 10;
+        for (int i = 0; i < batchSize; ++i) {
+            Item::List list;
             // Modify to trigger a changed signal
             Item item = modifyItem(origItems[i]);
             // item.setRemoteId(QByteArray("foo"));
             item.setRemoteId(QString());
             item.setId(-1);
-            l << item;
-            syncer->setIncrementalSyncItems(l, Item::List());
-            if (i < (syncer->batchSize() - 1)) {
-                QTest::qWait(0); // enter the event loop so itemsync actually can do something
+            list << item;
+            syncer->setIncrementalSyncItems(list, Item::List());
+            if (i < (batchSize - 1)) {
+                QTest::qWait(0);   // enter the event loop so itemsync actually can do something
             }
             QCOMPARE(spy.count(), 0);
         }
         QTest::qWait(100);
         QTRY_COMPARE(spy.count(), 0);
 
-        for (int i = syncer->batchSize(); i < origItems.count(); ++i) {
-            Item::List l;
+        for (int i = batchSize; i < origItems.count(); ++i) {
+            Item::List list;
             // Modify to trigger a changed signal
-            l << modifyItem(origItems[i]);
-            syncer->setIncrementalSyncItems(l, Item::List());
+            list << modifyItem(origItems[i]);
+            syncer->setIncrementalSyncItems(list, Item::List());
             if (i < origItems.count() - 1) {
                 QTest::qWait(0); // enter the event loop so itemsync actually can do something
             }
@@ -536,22 +436,20 @@ private Q_SLOTS:
         Item dupe = duplicateItem(origItems.at(0), col);
         origItems = fetchItems(col);
 
-        auto syncer = new ItemSync(col);
-        QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
-        QVERIFY(transactionSpy.isValid());
+        ItemSync *syncer = new ItemSync(col);
         QSignalSpy spy(syncer, &KJob::result);
         QVERIFY(spy.isValid());
         syncer->setStreamingEnabled(true);
-        syncer->setTransactionMode(ItemSync::MultipleTransactions);
         QTest::qWait(0);
         QCOMPARE(spy.count(), 0);
 
-        for (int i = 0; i < syncer->batchSize(); ++i) {
+        constexpr int batchSize = 10;
+        for (int i = 0; i < batchSize; ++i) {
             Item::List l;
             // Modify to trigger a changed signal
             l << modifyItem(origItems[i]);
             syncer->setIncrementalSyncItems(l, Item::List());
-            if (i < (syncer->batchSize() - 1)) {
+            if (i < (batchSize - 1)) {
                 QTest::qWait(0); // enter the event loop so itemsync actually can do something
             }
             QCOMPARE(spy.count(), 0);
@@ -560,7 +458,7 @@ private Q_SLOTS:
         // Ensure the job hasn't finished yet due to the errors
         QTRY_COMPARE(spy.count(), 0);
 
-        for (int i = syncer->batchSize(); i < origItems.count(); ++i) {
+        for (int i = batchSize; i < origItems.count(); ++i) {
             Item::List l;
             // Modify to trigger a changed signal
             l << modifyItem(origItems[i]);
@@ -593,13 +491,9 @@ private Q_SLOTS:
         QSignalSpy addedSpy(monitor.get(), &Monitor::itemAdded);
         QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
-        auto syncer = new ItemSync(col);
-        syncer->setTransactionMode(ItemSync::SingleTransaction);
-        QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
-        QVERIFY(transactionSpy.isValid());
+        ItemSync *syncer = new ItemSync(col);
         syncer->setFullSyncItems(origItems);
         QVERIFY(!syncer->exec());
-        QCOMPARE(transactionSpy.count(), 1);
 
         Item::List resultItems = fetchItems(col);
         QCOMPARE(resultItems.count(), origItems.count());
@@ -634,14 +528,10 @@ private Q_SLOTS:
         QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
         QBENCHMARK {
-            auto syncer = new ItemSync(col);
-            syncer->setTransactionMode(ItemSync::SingleTransaction);
-            QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
-            QVERIFY(transactionSpy.isValid());
+            ItemSync *syncer = new ItemSync(col);
             syncer->setFullSyncItems(origItems);
 
             AKVERIFYEXEC(syncer);
-            QCOMPARE(transactionSpy.count(), 1);
         }
 
         const Item::List resultItems = fetchItems(col);
@@ -674,8 +564,7 @@ private Q_SLOTS:
         QCOMPARE(origItems.size(), itemCount);
 
         // and an ItemSync running
-        auto syncer = new ItemSync(col);
-        syncer->setTransactionMode(ItemSync::SingleTransaction);
+        ItemSync *syncer = new ItemSync(col);
         syncer->setFullSyncItems(origItems);
 
         // When the user cancels the ItemSync
