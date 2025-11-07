@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
-set(PIM_VERSION "6.5.80")
+set(PIM_VERSION "6.6.40")
 project(Akonadi VERSION ${PIM_VERSION})
 
 # ECM setup
@@ -55,7 +55,7 @@ add_feature_info(
     "API documentation in QCH format (for e.g. Qt Assistant, Qt Creator & KDevelop)"
 )
 
-set(RELEASE_SERVICE_VERSION "25.11.80")
+set(RELEASE_SERVICE_VERSION "26.03.40")
 set(AKONADI_FULL_VERSION "${PIM_VERSION} (${RELEASE_SERVICE_VERSION})")
 
 configure_file(akonadifull-version.h.in ${CMAKE_CURRENT_BINARY_DIR}/akonadifull-version.h @ONLY)
