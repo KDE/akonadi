@@ -14,8 +14,8 @@
 #include "itemdeletejob.h"
 #include "itemfetchscope.h"
 #include "itemmodifyjob.h"
-#include "private/protocol_p.h"
 #include "job_p.h"
+#include "private/protocol_p.h"
 #include "protocol_p.h"
 
 #include "akonadicore_debug.h"
@@ -34,7 +34,8 @@ public:
     explicit BeginItemSyncJob(const Collection &col, QObject *parent)
         : Job(new JobPrivate(this), parent)
         , mCollection(col)
-    {}
+    {
+    }
 
     void setIncremental(bool incremental)
     {
@@ -87,7 +88,8 @@ class EndItemSyncJob : public Job
 public:
     explicit EndItemSyncJob(QObject *parent)
         : Job(new JobPrivate(this), parent)
-    {}
+    {
+    }
 
     void rollback()
     {
@@ -231,7 +233,6 @@ void ItemSyncPrivate::checkDone()
         qCDebug(AKONADICORE_LOG) << "ItemSync of collection" << mSyncCollection.id() << "finished";
         finalizeItemSync(Transaction::Commit);
         mFinished = true;
-
     }
 }
 
@@ -248,7 +249,9 @@ void ItemSyncPrivate::finalizeItemSync(Transaction transaction)
     if (transaction == Transaction::Rollback) {
         job->rollback();
     }
-    q->connect(job, &Job::result, q, [q]() { q->emitResult(); });
+    q->connect(job, &Job::result, q, [q]() {
+        q->emitResult();
+    });
 }
 
 ItemSync::ItemSync(const Collection &collection, const QDateTime &timestamp, QObject *parent)
@@ -392,7 +395,8 @@ void ItemSync::slotResult(KJob *job)
             setErrorText(job->errorText());
         }
     } else {
-        //qCDebug(AKONADICORE_LOG) << "ItemSync of collection" << d->mSyncCollection.id() << ", job" << job << "finished," << subjobs().size() << "subjobs pending";
+        // qCDebug(AKONADICORE_LOG) << "ItemSync of collection" << d->mSyncCollection.id() << ", job" << job << "finished," << subjobs().size() << "subjobs
+        // pending";
         Akonadi::Job::slotResult(job);
     }
 
@@ -427,7 +431,7 @@ void ItemSync::setMergeMode(MergeMode mergeMode)
     d->mMergeMode = mergeMode;
 }
 
-void ItemSync::setFetchScope(ItemFetchScope &/*scope*/)
+void ItemSync::setFetchScope(ItemFetchScope & /*scope*/)
 {
 }
 
