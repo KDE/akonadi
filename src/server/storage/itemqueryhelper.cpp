@@ -142,5 +142,5 @@ void ItemQueryHelper::scopeToQuery(const Scope &scope, const CommandContext &con
         return;
     }
 
-    throw HandlerException("ItemQueryHelper received invalid item scope to fetch");
+    throw HandlerException("Dude, WTF?!?");
 }
