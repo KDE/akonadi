@@ -9,6 +9,7 @@
 
 #include "handler.h"
 
+
 namespace Akonadi::Server
 {
 
@@ -33,5 +34,6 @@ protected:
 };
 
 } // namespace Akonadi::Server
+
 
 #endif

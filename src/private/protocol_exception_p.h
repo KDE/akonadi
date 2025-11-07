@@ -40,10 +40,9 @@ private:
 class AKONADIPRIVATE_EXPORT ProtocolTimeoutException : public ProtocolException
 {
 public:
-    explicit ProtocolTimeoutException()
-        : ProtocolException("Timeout while waiting for more data.")
-    {
-    }
+    explicit ProtocolTimeoutException():
+        ProtocolException("Timeout while waiting for more data.")
+    {}
 };
 
 } // namespace Akonadi

@@ -49,7 +49,7 @@ void DataStream::flush()
 
 void DataStream::waitForData(QIODevice *device, std::chrono::milliseconds timeout)
 {
-    auto ls = qobject_cast<QLocalSocket *>(device);
+    auto ls = qobject_cast<QLocalSocket*>(device);
 #ifdef Q_OS_WIN
     // Apparently readyRead() gets emitted sometimes even if there are no data
     // so we will re-enter the wait again immediately
