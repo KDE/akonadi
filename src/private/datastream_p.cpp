@@ -8,6 +8,7 @@
 #include "datastream_p_p.h"
 
 #include <QLocalSocket>
+#include <chrono>
 
 #ifdef Q_OS_WIN
 #include <QEventLoop>
@@ -46,7 +47,7 @@ void DataStream::flush()
     }
 }
 
-void DataStream::waitForData(QIODevice *device, int timeoutMs)
+void DataStream::waitForData(QIODevice *device, std::chrono::milliseconds timeout)
 {
     auto ls = qobject_cast<QLocalSocket*>(device);
 #ifdef Q_OS_WIN
@@ -79,7 +80,7 @@ void DataStream::waitForData(QIODevice *device, int timeoutMs)
     }
 #else
 
-    if (!device->waitForReadyRead(timeoutMs)) {
+    if (!device->waitForReadyRead(timeout.count())) {
         if (ls && ls->state() != QLocalSocket::ConnectedState) {
             throw ProtocolException("Socket not connected to server");
         } else {
@@ -113,7 +114,7 @@ void DataStream::waitForData(quint32 size)
     checkDevice();
 
     while (mDev->bytesAvailable() < size) {
-        waitForData(mDev, mWaitTimeout.count());
+        waitForData(mDev, mWaitTimeout);
     }
 }
 
