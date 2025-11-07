@@ -13,11 +13,8 @@
 #include "storage/datastore.h"
 #include "akonadiserver_debug.h"
 
-#include <chrono>
 #include <optional>
-#include <ratio>
 
-using namespace std::chrono_literals;
 using namespace Akonadi::Server;
 
 namespace Akonadi::Server
@@ -94,48 +91,18 @@ protected:
         return true;
     }
 
-    void checkTransactionTimeout()
-    {
-        if (!mTransaction) {
-            return;
-        }
-
-        if ((std::chrono::steady_clock::now() - mTransactionStart) > maxTransactionDuration) {
-            mTransaction->commit();
-        }
-    }
-
-    void ensureTransaction()
-    {
-        if (mTransaction) {
-            return;
-        }
-
-        mTransaction.emplace(connection()->storageBackend(), QStringLiteral("IncrementalItemSync"), true);
-        mTransactionStart = std::chrono::steady_clock::now();
-    }
-
-    void commitTransaction()
-    {
-        if (!mTransaction) {
-            return;
-        }
-
-        mTransaction->commit();
-        mTransaction.reset();
-    }
-
 private:
     ItemSyncHandler *mBaseHandler;
     AkonadiServer &mAkonadi;
     Connection *mConnection;
-    static constexpr std::chrono::milliseconds maxTransactionDuration = 300ms;
 
 protected:
     Collection mCollection;
     std::optional<Transaction> mTransaction;
-    std::chrono::steady_clock::time_point mTransactionStart;
+    int mTransactionSize = 0;
+    constexpr static int mMaxTransactionSize = 100;
     quint64 mTag = 0;
+
 };
 
 class IncrementalItemSyncer final : public ItemSyncer
@@ -157,9 +124,8 @@ public:
         Q_FOREVER {
             Protocol::CommandPtr cmd;
             while (!cmd) {
-                checkTransactionTimeout();
                 try {
-                    cmd = connection()->readCommand(50ms);
+                    cmd = connection()->readCommand();
                 } catch (const ProtocolTimeoutException &e) {
                     continue;
                 }
@@ -167,23 +133,19 @@ public:
 
             switch (cmd->type()) {
             case Protocol::Command::CreateItem:
-                ensureTransaction();
                 if (!mergeItem(cmd)) {
                     // The failure was reported to the client, now wait for EndItemSync command.
                 }
                 break;
             case Protocol::Command::DeleteItems:
-                ensureTransaction();
                 if (!deleteItems(cmd)) {
                     // The failure was reported to the client, now wait for EndItemSync command.
                 }
                 break;
             case Protocol::Command::EndItemSync:
                 qCDebug(AKONADISERVER_LOG) << "Finalizing item sync for collection" << mCollection.id();
-                commitTransaction();
                 return finalizeSync(cmd);
             default:
-                commitTransaction();
                 qCWarning(AKONADISERVER_LOG) << "Invalid command" << cmd->type() << "received during incremental item sync of collection" << mCollection.id();
                 throw HandlerException("Invalid command during received by IncrementalItemSyncer");
             }
@@ -225,9 +187,8 @@ public:
         Q_FOREVER {
             Protocol::CommandPtr cmd;
             while (!cmd) {
-                checkTransactionTimeout();
                 try {
-                    cmd = connection()->readCommand(50ms);
+                    cmd = connection()->readCommand();
                 } catch (const ProtocolTimeoutException &e) {
                     continue;
                 }
@@ -235,17 +196,14 @@ public:
 
             switch (cmd->type()) {
             case Protocol::Command::CreateItem:
-                ensureTransaction();
                 if (!mergeItem(cmd)) {
                     // The failure was reported to the client, now wait for EndItemSync command.
                 }
                 break;
             case Protocol::Command::EndItemSync:
-                commitTransaction();
                 qCDebug(AKONADISERVER_LOG) << "Finalizing item sync for collection" << mCollection.id();
                 return finalizeSync(cmd);
             default:
-                commitTransaction();
                 qCWarning(AKONADISERVER_LOG) << "Invalid command" << cmd->type() << "received during full item sync of collection" << mCollection.id();
                 throw HandlerException("Invalid command received during ItemSync.");
             }
@@ -271,8 +229,14 @@ protected:
                 Transaction transaction(connection()->storageBackend(), QStringLiteral("ItemSyncFinalize"));
                 // Whatever is left in mLocalRids should be removed now
                 SelectQueryBuilder<PimItem> qb;
-                qb.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, mCollection.id());
-                qb.addValueCondition(PimItem::remoteIdColumn(), Query::In, QStringList(mLocalRids.begin(), mLocalRids.end()));
+                Query::Condition cond;
+                cond.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, mCollection.id());
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+                cond.addValueCondition(PimItem::remoteIdColumn(), Query::In, QVariant::fromValue(mLocalRids.toList()));
+#else
+                cond.addValueCondition(PimItem::remoteIdColumn(), Query::In, QStringList(mLocalRids.begin(), mLocalRids.end()));
+#endif
+                qb.addCondition(cond);
                 if (!qb.exec()) {
                     return failureResponse<Protocol::EndItemSyncResponse>(QStringLiteral("ItemSync failed to query local items to delete after sync."));
                 }
