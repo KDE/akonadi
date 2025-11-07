@@ -223,7 +223,6 @@ Q_SIGNALS:
      *
      * @since 4.14
      */
-    QT_DEPRECATED_X("This signal is deprecated and currently only emitted once for compatibility.")
     void retrieveNextItemSyncBatch(int remainingBatchSize);
 
 protected Q_SLOTS:
@@ -275,7 +274,6 @@ protected Q_SLOTS:
      * @see retrieveNextItemSyncBatch(int), retrieveItems(Akonadi::Collection)
      * @since 4.14
      */
-    QT_DEPRECATED_X("ItemSync batches are deprecated, don't use them.")
     [[nodiscard]] int itemSyncBatchSize() const;
 
     /**
@@ -285,7 +283,6 @@ protected Q_SLOTS:
      * @see retrieveNextItemSyncBatch(int)
      * @since 4.14
      */
-    QT_DEPRECATED_X("ItemSync batches are deprecated, don't use them.")
     void setItemSyncBatchSize(int batchSize);
 
     /**
@@ -539,7 +536,6 @@ protected:
      * @see Akonadi::ItemSync::TransactionMode
      * @since 4.6
      */
-    QT_DEPRECATED_X("Changing ItemSync transaction mode is deprecated and calling this method has no effect.")
     void setItemTransactionMode(ItemSync::TransactionMode mode);
 
     /**
@@ -555,20 +551,6 @@ protected:
      * @since 4.14.11
      */
     void setItemMergingMode(ItemSync::MergeMode mode);
-
-    /**
-     * Set the fetch scope applied for item synchronization.
-     * By default, the one set on the changeRecorder() is used. However, it can make sense
-     * to specify a specialized fetch scope for synchronization to improve performance.
-     * The rule of thumb is to remove anything from this fetch scope that does not provide
-     * additional information regarding whether and item has changed or not. This is primarily
-     * relevant for backends not supporting incremental retrieval.
-     * @param fetchScope The fetch scope to use by the internal Akonadi::ItemSync instance.
-     * @see Akonadi::ItemSync
-     * @since 4.6
-     */
-    QT_DEPRECATED_X("Changing ItemSync fetch scope is deprecated and calling this method has no effect.")
-    void setItemSynchronizationFetchScope(const ItemFetchScope &fetchScope);
 
     /**
      * Call this method to supply incrementally retrieved items from the remote server.
