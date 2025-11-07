@@ -16,8 +16,6 @@
 #include <QMutexLocker>
 #include <QTest>
 
-using namespace std::chrono_literals;
-
 #define CLIENT_COMPARE(actual, expected, ...)                                                                                                                  \
     do {                                                                                                                                                       \
         if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__)) {                                                                      \
@@ -96,7 +94,7 @@ void FakeClient::readServerPart()
             const auto expectedCommand = Protocol::deserialize(expectedStream.device());
             try {
                 while (static_cast<size_t>(mSocket->bytesAvailable()) < sizeof(qint64)) {
-                    Protocol::DataStream::waitForData(mSocket, 5s);
+                    Protocol::DataStream::waitForData(mSocket, 5000);
                 }
             } catch (const ProtocolException &e) {
                 qDebug() << "ProtocolException:" << e.what();
