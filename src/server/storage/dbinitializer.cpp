@@ -20,8 +20,6 @@
 
 #include <algorithm>
 
-#include "private/tristate_p.h"
-
 using namespace Akonadi::Server;
 
 DbInitializer::Ptr DbInitializer::createInstance(const QSqlDatabase &database, Schema *schema)
