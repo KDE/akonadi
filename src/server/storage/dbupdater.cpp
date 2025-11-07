@@ -42,9 +42,13 @@ DbUpdater::DbUpdater(const QSqlDatabase &database, const QString &filename)
 
 bool DbUpdater::run()
 {
-    // TODO error handling
     auto store = DataStore::dataStoreForDatabase(m_database);
-    auto currentVersion = SchemaVersion::retrieveAll(store).at(0);
+    const auto schemaVersions = SchemaVersion::retrieveAll(store);
+    if (schemaVersions.empty()) {
+        qCDebug(AKONADISERVER_LOG) << "DbUpdater: SchemaVersion not found; skipping schema update";
+        return true;
+    }
+    auto currentVersion = schemaVersions.at(0);
 
     UpdateSet::Map updates;
 
