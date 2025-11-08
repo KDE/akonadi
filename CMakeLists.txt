@@ -4,8 +4,8 @@ set(PIM_VERSION "6.6.40")
 project(Akonadi VERSION ${PIM_VERSION})
 
 # ECM setup
-set(KF_MIN_VERSION "6.18.0")
-set(QT_REQUIRED_VERSION "6.8.0")
+set(KF_MIN_VERSION "6.19.0")
+set(QT_REQUIRED_VERSION "6.9.0")
 
 find_package(ECM ${KF_MIN_VERSION} CONFIG REQUIRED)
 
