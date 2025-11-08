@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-05 00:44+0000\n"
+"POT-Creation-Date: 2025-11-08 00:42+0000\n"
 "PO-Revision-Date: 2014-09-23 21:56+0200\n"
 "Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -91,70 +91,70 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "Ikke satt opp"
 
-#: agentbase/resourcebase.cpp:527
+#: agentbase/resourcebase.cpp:533
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr ""
 
-#: agentbase/resourcebase.cpp:533
+#: agentbase/resourcebase.cpp:539
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "Akonadiressurs"
 
-#: agentbase/resourcebase.cpp:575
+#: agentbase/resourcebase.cpp:581
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Ugyldig element hentet"
 
-#: agentbase/resourcebase.cpp:598
+#: agentbase/resourcebase.cpp:604
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Feil ved oppretting av element: %1"
 
-#: agentbase/resourcebase.cpp:622
+#: agentbase/resourcebase.cpp:628
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Feil mens samling blir oppdatert: %1"
 
-#: agentbase/resourcebase.cpp:709
+#: agentbase/resourcebase.cpp:715
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Klarte ikke å oppdatere lokal samling: %1."
 
-#: agentbase/resourcebase.cpp:714
+#: agentbase/resourcebase.cpp:720
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Klarte ikke å oppdatere lokale elementer: %1."
 
-#: agentbase/resourcebase.cpp:733
+#: agentbase/resourcebase.cpp:739
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Kan ikke hente element når frakoblet"
 
-#: agentbase/resourcebase.cpp:915
+#: agentbase/resourcebase.cpp:921
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Synkroniserer mappe «%1»"
 
-#: agentbase/resourcebase.cpp:935 agentbase/resourcebase.cpp:942
+#: agentbase/resourcebase.cpp:941 agentbase/resourcebase.cpp:948
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr ""
 
-#: agentbase/resourcebase.cpp:980
+#: agentbase/resourcebase.cpp:989
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr ""
 
-#: agentbase/resourcebase.cpp:1026
+#: agentbase/resourcebase.cpp:1035
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Forespurte element finnes ikke lenger"
@@ -165,7 +165,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "Jobb avbrutt."
 
-#: akonadicontrol/main.cpp:51 akonadicontrol/main.cpp:53
+#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
 #, fuzzy, kde-format
 msgid "Akonadi Control"
 msgstr "Akonadi Agent"
