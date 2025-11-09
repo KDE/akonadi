@@ -2633,9 +2633,3 @@ msgstr "无法解析数据文件：%1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "无法找到集合 %1"
-
-#~ msgid "%1 Handbook"
-#~ msgstr "%1 手册"
-
-#~ msgid "About %1"
-#~ msgstr "关于 %1"
