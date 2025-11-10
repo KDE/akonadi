@@ -2651,9 +2651,3 @@ msgstr "Klarte ikkje lima inn data: %1"
 #, fuzzy, kde-format
 msgid "Unable to find collection %1"
 msgstr "Ugyldig samling"
-
-#~ msgid "%1 Handbook"
-#~ msgstr "%1-handbok"
-
-#~ msgid "About %1"
-#~ msgstr "Om %1"
