@@ -21,6 +21,7 @@
 
 #include <QEvent>
 #include <QPushButton>
+#include <qsortfilterproxymodel.h>
 
 using namespace Akonadi;
 
@@ -61,6 +62,7 @@ public:
     Akonadi::TagModel *m_model = nullptr;
     QScopedPointer<KCheckableProxyModel> m_checkableProxy;
     QModelIndex m_deleteCandidate;
+    QSortFilterProxyModel *m_filterProxyModel = nullptr;
 
     QPushButton *m_deleteButton = nullptr;
 };
@@ -213,10 +215,17 @@ void TagEditWidget::setSelectionEnabled(bool enabled)
         if (d->m_model) {
             d->initCheckableProxy(d->m_model);
         }
-        d->ui.tagsView->setModel(d->m_checkableProxy.get());
+        if (!d->m_filterProxyModel) {
+            d->m_filterProxyModel = new QSortFilterProxyModel(this);
+        }
+        d->m_filterProxyModel->setSourceModel(d->m_checkableProxy.get());
+        d->ui.tagsView->setModel(d->m_filterProxyModel);
     } else {
         d->m_checkableProxy.reset();
         d->ui.tagsView->setModel(d->m_model);
+    }
+    if (d->m_filterProxyModel) {
+        d->m_filterProxyModel->sort(0, Qt::AscendingOrder);
     }
     d->ui.selectLabel->setVisible(enabled);
 }
@@ -233,10 +242,19 @@ void TagEditWidget::setModel(TagModel *model)
         connect(d->m_model, &QAbstractItemModel::rowsInserted, d.get(), &TagEditWidgetPrivate::onRowsInserted);
         if (d->m_checkableProxy) {
             d->initCheckableProxy(d->m_model);
-            d->ui.tagsView->setModel(d->m_checkableProxy.get());
+            if (!d->m_filterProxyModel) {
+                d->m_filterProxyModel = new QSortFilterProxyModel(this);
+            }
+            d->m_filterProxyModel->setSourceModel(d->m_checkableProxy.get());
+            d->ui.tagsView->setModel(d->m_filterProxyModel);
         } else {
-            d->ui.tagsView->setModel(d->m_model);
+            if (!d->m_filterProxyModel) {
+                d->m_filterProxyModel = new QSortFilterProxyModel(this);
+            }
+            d->m_filterProxyModel->setSourceModel(d->m_model);
+            d->ui.tagsView->setModel(d->m_filterProxyModel);
         }
+        d->m_filterProxyModel->sort(0, Qt::AscendingOrder);
         connect(d->m_model, &TagModel::populated, d.get(), &TagEditWidgetPrivate::onModelPopulated);
     }
 }
