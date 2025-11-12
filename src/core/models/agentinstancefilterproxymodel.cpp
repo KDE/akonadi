@@ -203,9 +203,19 @@ void AgentInstanceFilterProxyModel::setAccountActivitiesAbstract(AccountActiviti
 {
     if (d->accountActivitiesAbstract != abstract) {
         d->accountActivitiesAbstract = abstract;
-        connect(d->accountActivitiesAbstract, &AccountActivitiesAbstract::activitiesChanged, this, &AgentInstanceFilterProxyModel::invalidateFilter);
-        invalidateFilter();
+        connect(d->accountActivitiesAbstract, &AccountActivitiesAbstract::activitiesChanged, this, &AgentInstanceFilterProxyModel::slotInvalidateFilter);
+        slotInvalidateFilter();
     }
+}
+
+void AgentInstanceFilterProxyModel::slotInvalidateFilter()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
+    invalidateFilter();
+#endif
 }
 
 #include "moc_agentinstancefilterproxymodel.cpp"
