@@ -87,6 +87,7 @@ protected:
     bool filterAcceptsRow(int row, const QModelIndex &parent) const override;
 
 private:
+    AKONADICORE_NO_EXPORT void slotInvalidateFilter();
     /// @cond PRIVATE
     std::unique_ptr<AgentInstanceFilterProxyModelPrivate> const d;
     /// @endcond
