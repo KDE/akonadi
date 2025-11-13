@@ -21,7 +21,7 @@
 
 #include <QEvent>
 #include <QPushButton>
-#include <qsortfilterproxymodel.h>
+#include <QSortFilterProxyModel>
 
 using namespace Akonadi;
 
