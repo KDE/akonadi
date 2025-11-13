@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-05 00:44+0000\n"
+"POT-Creation-Date: 2025-11-13 02:38+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -2489,30 +2489,30 @@ msgstr "订阅(&B)"
 msgid "&Unsubscribe"
 msgstr "退订(&U)"
 
-#: widgets/tageditwidget.cpp:117
+#: widgets/tageditwidget.cpp:119
 #, kde-format
 msgid "Failed to create a new tag"
 msgstr "新建标签失败"
 
-#: widgets/tageditwidget.cpp:117
+#: widgets/tageditwidget.cpp:119
 #, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "新建标签时发生错误"
 
-#: widgets/tageditwidget.cpp:165
+#: widgets/tageditwidget.cpp:167
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "您确定要删除标签 <resource>%1</resource>吗？"
 
-#: widgets/tageditwidget.cpp:166
+#: widgets/tageditwidget.cpp:168
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "删除标签"
 
-#: widgets/tageditwidget.cpp:191
+#: widgets/tageditwidget.cpp:193
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"

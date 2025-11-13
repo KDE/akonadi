@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-05 00:44+0000\n"
+"POT-Creation-Date: 2025-11-13 02:38+0000\n"
 "PO-Revision-Date: 2017-12-17 18:01+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -2742,25 +2742,25 @@ msgstr "Pretplati se"
 msgid "&Unsubscribe"
 msgstr "Otkaži pretplatu"
 
-#: widgets/tageditwidget.cpp:117
+#: widgets/tageditwidget.cpp:119
 #, kde-format
 msgid "Failed to create a new tag"
 msgstr "Ne mogu da napravim novu oznaku."
 
-#: widgets/tageditwidget.cpp:117
+#: widgets/tageditwidget.cpp:119
 #, fuzzy, kde-format
 #| msgid "An error occurred while creating a new tag"
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Greška pri stvaranju nove oznake"
 
-#: widgets/tageditwidget.cpp:165
+#: widgets/tageditwidget.cpp:167
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Želite li zaista da uklonite oznaku <resource>%1</resource>?"
 
-#: widgets/tageditwidget.cpp:166
+#: widgets/tageditwidget.cpp:168
 #, fuzzy, kde-format
 #| msgctxt "@title"
 #| msgid "Delete tag"
@@ -2768,7 +2768,7 @@ msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Brisanje oznake"
 
-#: widgets/tageditwidget.cpp:191
+#: widgets/tageditwidget.cpp:193
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"
