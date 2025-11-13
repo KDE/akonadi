@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-08 00:42+0000\n"
+"POT-Creation-Date: 2025-11-13 00:42+0000\n"
 "PO-Revision-Date: 2024-03-27 21:45+0100\n"
 "Last-Translator: Enol P. <enolp@softastur.org>\n"
 "Language-Team: Asturian <alministradores@softastur.org>\n"
@@ -2452,30 +2452,30 @@ msgstr ""
 msgid "&Unsubscribe"
 msgstr ""
 
-#: widgets/tageditwidget.cpp:117
+#: widgets/tageditwidget.cpp:119
 #, kde-format
 msgid "Failed to create a new tag"
 msgstr ""
 
-#: widgets/tageditwidget.cpp:117
+#: widgets/tageditwidget.cpp:119
 #, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr ""
 
-#: widgets/tageditwidget.cpp:165
+#: widgets/tageditwidget.cpp:167
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr ""
 
-#: widgets/tageditwidget.cpp:166
+#: widgets/tageditwidget.cpp:168
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr ""
 
-#: widgets/tageditwidget.cpp:191
+#: widgets/tageditwidget.cpp:193
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"

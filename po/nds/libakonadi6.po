@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-08 00:42+0000\n"
+"POT-Creation-Date: 2025-11-13 00:42+0000\n"
 "PO-Revision-Date: 2014-09-18 22:53+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -2687,19 +2687,19 @@ msgstr "Bestellen"
 msgid "&Unsubscribe"
 msgstr "Afbestellen"
 
-#: widgets/tageditwidget.cpp:117
+#: widgets/tageditwidget.cpp:119
 #, kde-format
 msgid "Failed to create a new tag"
 msgstr "Slötelwoort lett sik nich opstellen"
 
-#: widgets/tageditwidget.cpp:117
+#: widgets/tageditwidget.cpp:119
 #, fuzzy, kde-format
 #| msgid "An error occurred while creating a new tag"
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Dat geev en Fehler bi't Opstellen vun en nieg Slötelwoort"
 
-#: widgets/tageditwidget.cpp:165
+#: widgets/tageditwidget.cpp:167
 #, fuzzy, kde-kuit-format
 #| msgid "Do you really want to delete this resource?"
 #| msgid_plural "Do you really want to delete %1 resources?"
@@ -2707,7 +2707,7 @@ msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Wullt Du disse Ressource redig wegdoon?"
 
-#: widgets/tageditwidget.cpp:166
+#: widgets/tageditwidget.cpp:168
 #, fuzzy, kde-format
 #| msgctxt "@title"
 #| msgid "Delete tag"
@@ -2715,7 +2715,7 @@ msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Slötelwoort wegdoon"
 
-#: widgets/tageditwidget.cpp:191
+#: widgets/tageditwidget.cpp:193
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"
