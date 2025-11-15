@@ -1215,6 +1215,24 @@ void AgentBase::setActivitiesEnabled(bool enabled)
     Q_EMIT agentActivitiesEnabledChanged(d->mActivitiesEnabled);
 }
 
+QString AgentBase::accountId() const
+{
+    Q_D(const AgentBase);
+
+    return d->mAccountId;
+}
+
+void AgentBase::setAccountId(const QString &accountId)
+{
+    Q_D(AgentBase);
+    if (accountId == d->mAccountId) {
+        return;
+    }
+
+    d->mAccountId = accountId;
+    d->mSettings->setValue(QStringLiteral("Agent/AccountId"), accountId);
+}
+
 void AgentBase::changeProcessed()
 {
     Q_D(AgentBase);
