@@ -330,6 +330,8 @@ void AgentBasePrivate::init()
         }
     }
 
+    mAccountId = mSettings->value(QLatin1StringView("Agent/AccountId")).toString();
+
     mActivities = mSettings->value(QLatin1StringView("Agent/Activities")).toStringList();
     mActivitiesEnabled = mSettings->value(QLatin1StringView("Agent/ActivitiesEnabled"), false).toBool();
     connect(mChangeRecorder, &Monitor::itemAdded, this, &AgentBasePrivate::itemAdded);
