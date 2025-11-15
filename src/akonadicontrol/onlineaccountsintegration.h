@@ -19,6 +19,7 @@ public:
     OnlineAccountsIntegration(AgentManager &manager);
 
     Q_SLOT void slotAccountCreationFinished(const QDBusObjectPath &path, const QString &xdgActivationToken);
+    Q_SLOT void slotAccountRemoved(const QDBusObjectPath &path);
 
 private:
     AgentManager &mAgentManager;

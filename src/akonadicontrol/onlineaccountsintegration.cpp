@@ -35,6 +35,14 @@ OnlineAccountsIntegration::OnlineAccountsIntegration(AgentManager &manager)
                                                      SLOT(slotAccountCreationFinished(const QDBusObjectPath &, const QString &)));
     Q_ASSERT(ret);
 
+    ret = QDBusConnection::sessionBus().connect(u"org.kde.KOnlineAccounts"_s,
+                                                u"/org/kde/KOnlineAccounts"_s,
+                                                u"org.kde.KOnlineAccounts.Manager"_s,
+                                                u"accountRemoved"_s,
+                                                this,
+                                                SLOT(slotAccountRemoved(const QDBusObjectPath &)));
+    Q_ASSERT(ret);
+
     // list accounts
     QDBusMessage msg =
         QDBusMessage::createMethodCall(u"org.kde.KOnlineAccounts"_s, u"/org/kde/KOnlineAccounts"_s, u"org.freedesktop.DBus.Properties"_s, u"Get"_s);
@@ -98,5 +106,21 @@ void OnlineAccountsIntegration::slotAccountCreationFinished(const QDBusObjectPat
 
             qWarning() << "reply" << reply.error();
         });
+    }
+}
+
+void OnlineAccountsIntegration::slotAccountRemoved(const QDBusObjectPath &path)
+{
+    const QStringList agents = mAgentManager.agentInstances();
+
+    for (const QString &agentId : agents) {
+        const auto serviceName = Akonadi::DBus::agentServiceName(agentId, Akonadi::DBus::Resource);
+        QDBusMessage msg = QDBusMessage::createMethodCall(serviceName, u"/Accounts"_s, u"org.kde.Akonadi.Accounts"_s, u"account"_s);
+        QDBusReply<QDBusObjectPath> reply = QDBusConnection::sessionBus().call(msg);
+
+        if (reply.value() == path) {
+            qWarning() << "remove agent" << agentId;
+            mAgentManager.removeAgentInstance(agentId);
+        }
     }
 }
