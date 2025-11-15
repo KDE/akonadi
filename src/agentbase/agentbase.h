@@ -567,6 +567,10 @@ public:
      */
     [[nodiscard]] bool activitiesEnabled() const;
 
+    QString accountId() const;
+
+    void setAccountId(const QString &accountId);
+
 Q_SIGNALS:
     /**
      * This signal is emitted whenever the name of the agent has changed.
