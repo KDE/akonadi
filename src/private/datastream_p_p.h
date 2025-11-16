@@ -28,7 +28,7 @@ public:
     explicit DataStream(QIODevice *device);
     ~DataStream();
 
-    static void waitForData(QIODevice *device, std::chrono::milliseconds timeout);
+    static void waitForData(QIODevice *device, int timeoutMs);
 
     QIODevice *device() const;
     void setDevice(QIODevice *device);
