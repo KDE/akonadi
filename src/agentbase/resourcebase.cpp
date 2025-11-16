@@ -948,7 +948,7 @@ void ResourceBasePrivate::slotItemRetrievalCollectionFetchDone(KJob *job)
 
 int ResourceBase::itemSyncBatchSize() const
 {
-    return std::numeric_limits<int>::max() / 10; // still huge number enough
+    return std::numeric_limits<int>::max();
 }
 
 void ResourceBase::setItemSyncBatchSize(int /*batchSize*/)
