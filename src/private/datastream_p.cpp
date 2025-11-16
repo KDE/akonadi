@@ -63,15 +63,15 @@ void DataStream::waitForData(QIODevice *device, std::chrono::milliseconds timeou
         if (ls) {
             QObject::connect(ls, &QLocalSocket::stateChanged, &loop, &QEventLoop::quit);
         }
-        bool timedOut = false;
-        if (timeout > std::chrono::milliseconds::zero()) {
-            QTimer::singleShot(timeout, &loop, [&]() {
-                timedOut = true;
+        bool timeout = false;
+        if (timeoutMs > 0) {
+            QTimer::singleShot(timeoutMs, &loop, [&]() {
+                timeout = true;
                 loop.quit();
             });
         }
         loop.exec();
-        if (timedOut) {
+        if (timeout) {
             throw ProtocolTimeoutException();
         }
         if (ls && ls->state() != QLocalSocket::ConnectedState) {
