@@ -175,7 +175,6 @@ void ItemSyncPrivate::beginItemSyncIfNeeded()
 
     Q_Q(ItemSync);
     auto *job = new BeginItemSyncJob(mSyncCollection, q);
-    job->setMergeMode(mMergeMode);
     job->setIncremental(mIncremental);
     q->connect(job, &BeginItemSyncJob::result, q, [q]() {
         Q_EMIT q->readyForNextBatch(std::numeric_limits<int>::max());
