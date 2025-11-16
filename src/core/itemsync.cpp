@@ -208,7 +208,7 @@ void ItemSyncPrivate::checkDone()
 {
     Q_Q(ItemSync);
     q->setProcessedAmount(KJob::Bytes, mProgress);
-    if (!allProcessed()) {
+    if (q->hasSubjobs()) {
         return;
     }
 
@@ -356,8 +356,6 @@ void ItemSync::deliveryDone()
     Q_D(ItemSync);
     Q_ASSERT(d->mStreaming);
     d->mDeliveryDone = true;
-
-    d->checkDone();
 }
 
 void ItemSync::slotResult(KJob *job)

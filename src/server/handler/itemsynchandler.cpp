@@ -178,12 +178,12 @@ public:
             switch (cmd->type()) {
             case Protocol::Command::CreateItem:
                 if (!mergeItem(cmd)) {
-                    // The failure was reported to the client, now wait for EndItemSync command.
+                    return false;
                 }
                 break;
             case Protocol::Command::DeleteItems:
                 if (!deleteItems(cmd)) {
-                    // The failure was reported to the client, now wait for EndItemSync command.
+                    return false;
                 }
                 break;
             case Protocol::Command::EndItemSync:
@@ -250,7 +250,7 @@ public:
             switch (cmd->type()) {
             case Protocol::Command::CreateItem:
                 if (!mergeItem(cmd)) {
-                    // The failure was reported to the client, now wait for EndItemSync command.
+                    return false;
                 }
                 break;
             case Protocol::Command::EndItemSync:
