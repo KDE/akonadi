@@ -34,6 +34,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <ranges>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -309,24 +310,27 @@ void StorageJanitor::findOrphanedItems()
     const PimItem::List orphans = qb.result();
     if (!orphans.isEmpty()) {
         inform(QLatin1StringView("Found ") + QString::number(orphans.size()) + QLatin1StringView(" orphan items."));
-        // Attach to lost+found collection
-        Transaction transaction(m_dataStore.get(), QStringLiteral("JANITOR ORPHANS"));
-        QueryBuilder qb(m_dataStore.get(), PimItem::tableName(), QueryBuilder::Update);
-        qint64 col = lostAndFoundCollection();
-        if (col == -1) {
-            return;
-        }
-        qb.setColumnValue(PimItem::collectionIdColumn(), col);
-        qb.addValueCondition(PimItem::idFullColumnName(),
-                             Query::In,
-                             orphans | Views::transform([](const auto &item) {
-                                 return item.id();
-                             }) | Actions::toQList);
-        if (qb.exec() && transaction.commit()) {
-            inform(QLatin1StringView("Moved orphan items to collection ") + QString::number(col));
-        } else {
-            inform(QLatin1StringView("Error moving orphan items to collection ") + QString::number(col) + QLatin1StringView(" : ")
-                   + qb.query().lastError().text());
+
+        for (auto chunk : orphans | std::views::chunk(500)) {
+            // Attach to lost+found collection
+            Transaction transaction(m_dataStore.get(), QStringLiteral("JANITOR ORPHANS"));
+            QueryBuilder qb(m_dataStore.get(), PimItem::tableName(), QueryBuilder::Update);
+            qint64 col = lostAndFoundCollection();
+            if (col == -1) {
+                return;
+            }
+            qb.setColumnValue(PimItem::collectionIdColumn(), col);
+            qb.addValueCondition(PimItem::idFullColumnName(),
+                                 Query::In,
+                                 chunk | std::views::transform([](const auto &item) {
+                                     return item.id();
+                                 }) | std::ranges::to<QVector<qint64>>());
+            if (qb.exec() && transaction.commit()) {
+                inform(QLatin1StringView("Moved orphan items to collection ") + QString::number(col));
+            } else {
+                inform(QLatin1StringView("Error moving orphan items to collection ") + QString::number(col) + QLatin1StringView(" : ")
+                       + qb.query().lastError().text());
+            }
         }
     }
 }
