@@ -755,28 +755,6 @@
     <param name="data" type="QByteArray" />
   </response>
 
-  <!-- ItemSync //-->
-  <command name="BeginItemSync">
-    <enum name="MergeMode">
-        <value name="RIDMerge" />
-        <value name="GIDMerge" />
-    </enum>
-
-    <param name="collectionId" type="qint64" />
-    <param name="incremental" type="bool" />
-    <param name="mergeMode" type="BeginItemSyncCommand::MergeMode" />
-
-    <param name="totalItems" type="int" />
-  </command>
-
-  <response name="BeginItemSync" />
-
-
-  <command name="EndItemSync">
-    <param name="commit" type="bool" default="true" />
-  </command>
-
-  <response name="EndItemSync" />
 
   <!-- Item Change Notification //-->
   <notification name="ItemChange">
