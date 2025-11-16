@@ -63,6 +63,7 @@ public:
         : AgentBasePrivate(parent)
         , scheduler(nullptr)
         , mItemSyncer(nullptr)
+        , mItemTransactionMode(ItemSync::SingleTransaction)
         , mItemMergeMode(ItemSync::RIDMerge)
         , mCollectionSyncer(nullptr)
         , mTagSyncer(nullptr)
@@ -70,6 +71,7 @@ public:
         , mUnemittedProgress(0)
         , mAutomaticProgressReporting(true)
         , mDisableAutomaticItemDeliveryDone(false)
+        , mItemSyncBatchSize(10)
         , mCurrentCollectionFetchJob(nullptr)
         , mScheduleAttributeSyncBeforeCollectionSync(false)
     {
@@ -170,6 +172,8 @@ public:
                    "Calling items retrieval methods although no item retrieval is in progress");
         if (!mItemSyncer) {
             mItemSyncer = new ItemSync(q->currentCollection(), mCollectionSyncTimestamp);
+            mItemSyncer->setTransactionMode(mItemTransactionMode);
+            mItemSyncer->setBatchSize(mItemSyncBatchSize);
             mItemSyncer->setMergeMode(mItemMergeMode);
             mItemSyncer->setDisableAutomaticDeliveryDone(mDisableAutomaticItemDeliveryDone);
             mItemSyncer->setProperty("collection", QVariant::fromValue(q->currentCollection()));
@@ -417,6 +421,7 @@ public:
 
     ResourceScheduler *scheduler = nullptr;
     ItemSync *mItemSyncer = nullptr;
+    ItemSync::TransactionMode mItemTransactionMode;
     ItemSync::MergeMode mItemMergeMode;
     CollectionSync *mCollectionSyncer = nullptr;
     TagSync *mTagSyncer = nullptr;
@@ -427,6 +432,7 @@ public:
     bool mAutomaticProgressReporting;
     bool mDisableAutomaticItemDeliveryDone;
     QPointer<RecursiveMover> m_recursiveMover;
+    int mItemSyncBatchSize;
     QSet<QByteArray> mKeepLocalCollectionChanges;
     KJob *mCurrentCollectionFetchJob = nullptr;
     bool mScheduleAttributeSyncBeforeCollectionSync;
@@ -948,11 +954,14 @@ void ResourceBasePrivate::slotItemRetrievalCollectionFetchDone(KJob *job)
 
 int ResourceBase::itemSyncBatchSize() const
 {
-    return std::numeric_limits<int>::max();
+    Q_D(const ResourceBase);
+    return d->mItemSyncBatchSize;
 }
 
-void ResourceBase::setItemSyncBatchSize(int /*batchSize*/)
+void ResourceBase::setItemSyncBatchSize(int batchSize)
 {
+    Q_D(ResourceBase);
+    d->mItemSyncBatchSize = batchSize;
 }
 
 void ResourceBase::setScheduleAttributeSyncBeforeItemSync(bool enable)
@@ -1462,12 +1471,10 @@ void Akonadi::ResourceBase::abortActivity()
 {
 }
 
-void ResourceBase::setItemTransactionMode(ItemSync::TransactionMode /*mode*/)
+void ResourceBase::setItemTransactionMode(ItemSync::TransactionMode mode)
 {
-}
-
-void ResourceBase::setItemSynchronizationFetchScope(const ItemFetchScope &/*fetchScope*/)
-{
+    Q_D(ResourceBase);
+    d->mItemTransactionMode = mode;
 }
 
 void ResourceBase::setItemMergingMode(ItemSync::MergeMode mode)
