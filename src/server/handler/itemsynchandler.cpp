@@ -287,7 +287,7 @@ protected:
                 Query::Condition cond;
                 cond.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, mCollection.id());
 #if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
-                cond.addValueCondition(PimItem::remoteIdColumn(), Query::In, QVariant::fromValue(mLocalRids.toList()));
+                cond.addValueCondition(PimItem::remoteIdColumn(), Query::In, mLocalRids.toList());
 #else
                 cond.addValueCondition(PimItem::remoteIdColumn(), Query::In, QStringList(mLocalRids.begin(), mLocalRids.end()));
 #endif
