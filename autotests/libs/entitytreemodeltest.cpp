@@ -365,6 +365,8 @@ void EntityTreeModelTest::testCollectionRemoved()
 void EntityTreeModelTest::testCollectionChanged_data()
 {
     QTest::addColumn<QString>("serverContent");
+    QTest::addColumn<QString>("collectionName");
+    QTest::addColumn<QString>("monitoredMimeType");
 
     QTest::newRow("change-collection01") << serverContent1 << "Col 1" << QString();
     QTest::newRow("change-collection02") << serverContent1 << "Col 2" << QString();
