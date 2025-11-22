@@ -56,7 +56,6 @@ private Q_SLOTS:
 
     void testEmptySubscribe()
     {
-        Collection::List l;
         auto sjob = new SubscriptionJob(this);
         AKVERIFYEXEC(sjob);
     }

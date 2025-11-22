@@ -235,7 +235,6 @@ private Q_SLOTS:
     void testStreamer()
     {
         QFETCH(TestScenario::List, scenarios);
-        QFETCH(QByteArray, expectedPartName);
         QFETCH(QByteArray, expectedPartData);
         QFETCH(QByteArray, expectedFileData);
         QFETCH(qint64, expectedPartSize);

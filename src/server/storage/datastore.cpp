@@ -1355,6 +1355,7 @@ bool DataStore::beginTransaction(const QString &name)
             // INSERT INTO collectionmimetyperelation (collection_id, mimetype_id) VALUES (x, y)
             // where "y" refers to the newly inserted mimetype
             QSqlQuery query(QStringLiteral("SET CONSTRAINTS ALL DEFERRED"), m_database);
+            Q_UNUSED(query);
         }
     }
 

@@ -131,7 +131,6 @@ private Q_SLOTS:
     void testFindAuthenticatedCommandNegative()
     {
         QFETCH(Protocol::Command::Type, command);
-        QFETCH(QByteArray, className);
 
         const auto handler = Handler::findHandlerForCommandAuthenticated(command, mAkonadi);
         QVERIFY(!handler);
@@ -180,7 +179,6 @@ private Q_SLOTS:
     void testFindAlwaysCommandNegative()
     {
         QFETCH(Protocol::Command::Type, command);
-        QFETCH(QByteArray, className);
 
         const auto handler = Handler::findHandlerForCommandAlwaysAllowed(command, mAkonadi);
         QVERIFY(!handler);
