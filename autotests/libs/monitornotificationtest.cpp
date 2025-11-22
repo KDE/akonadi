@@ -91,8 +91,6 @@ void MonitorNotificationTest::testSingleMessage_impl(MonitorImpl *monitor, FakeC
     monitor->setSession(m_fakeSession);
     monitor->fetchCollection(true);
 
-    Protocol::ChangeNotificationList list;
-
     Collection parent(1);
     Collection added(2);
 

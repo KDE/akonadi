@@ -420,7 +420,6 @@ private Q_SLOTS:
     void testRemoveTag()
     {
         QFETCH(TestScenario::List, scenarios);
-        QFETCH(Tag::List, expectedTags);
         QFETCH(Protocol::ChangeNotificationList, expectedNotifications);
 
         mAkonadi.setScenarios(scenarios);

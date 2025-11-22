@@ -383,7 +383,6 @@ void EntityTreeModelTest::testCollectionChanged()
 {
     QFETCH(QString, serverContent);
     QFETCH(QString, collectionName);
-    QFETCH(QString, monitoredMimeType); // ##### TODO: this is unused. Is this test correct?
 
     const auto testDrivers = populateModel(serverContent);
     auto const serverData = testDrivers.first;
