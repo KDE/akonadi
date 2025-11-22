@@ -105,7 +105,7 @@ QVariant ColorProxyModel::data(const QModelIndex &index, int role) const
 
 Qt::ItemFlags ColorProxyModel::flags(const QModelIndex &index) const
 {
-    return Qt::ItemIsSelectable | QSortFilterProxyModel::flags(index);
+    return Qt::ItemIsSelectable | CollectionFilterProxyModel::flags(index);
 }
 
 QHash<int, QByteArray> ColorProxyModel::roleNames() const
