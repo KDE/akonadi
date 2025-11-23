@@ -35,8 +35,8 @@ public:
     void requestAuthData(const QString &serviceType, AuthDataCallback &&cb, ErrorCallback &&err);
 
     std::optional<QString> accountName() const;
-public Q_SLOTS:
     std::optional<quint32> accountId() const;
+public Q_SLOTS:
     void setAccountId(quint32 accountId);
 
 Q_SIGNALS:

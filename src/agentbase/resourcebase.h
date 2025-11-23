@@ -267,16 +267,6 @@ protected Q_SLOTS:
     virtual void retrieveItems(const Akonadi::Collection &collection) = 0;
 
     /**
-     * Returns the batch size used during the item sync.
-     *
-     * This can be used to throttle the item delivery.
-     *
-     * @see retrieveNextItemSyncBatch(int), retrieveItems(Akonadi::Collection)
-     * @since 4.14
-     */
-    [[nodiscard]] int itemSyncBatchSize() const;
-
-    /**
      * Set the batch size used during the item sync.
      * The default is 10.
      *
@@ -334,15 +324,6 @@ protected Q_SLOTS:
      * @since 4.6
      */
     virtual void abortActivity();
-
-    /**
-     * Dump resource internals, for debugging.
-     * @since 4.9
-     */
-    virtual QString dumpResourceToString() const
-    {
-        return QString();
-    }
 
 protected:
     /**
@@ -477,6 +458,16 @@ protected:
      * @see itemsRetrievedIncremental().
      */
     void itemsRetrieved(const Item::List &items);
+
+    /**
+     * Returns the batch size used during the item sync.
+     *
+     * This can be used to throttle the item delivery.
+     *
+     * @see retrieveNextItemSyncBatch(int), retrieveItems(Akonadi::Collection)
+     * @since 4.14
+     */
+    [[nodiscard]] int itemSyncBatchSize() const;
 
     /**
      * Call this method when you want to use the itemsRetrieved() method
@@ -775,6 +766,15 @@ protected:
      * @since 4.8.1
      */
     [[nodiscard]] QString dumpSchedulerToString() const;
+
+    /**
+     * Dump resource internals, for debugging.
+     * @since 4.9
+     */
+    virtual QString dumpResourceToString() const
+    {
+        return QString();
+    }
 
 private:
     static QString parseArguments(int argc, char **argv);
