@@ -212,7 +212,7 @@ public:
                     }
                     // Remove the matched removed collection from the list so that
                     // we don't have to iterate over it again next time.
-                    removedIter = removedChildren.erase(removedIter);
+                    removedIter = removedChildren.erase(removedIter); /* cppcheck-suppress unreadVariable */
                     removedEnd = removedChildren.end();
                     break;
                 } else {
@@ -277,7 +277,7 @@ public:
                     // Remove the matched remote collection from the list so that
                     // in the end we are left with list of collections that don't
                     // exist locally (i.e. new collections)
-                    remoteIter = remoteChildren.erase(remoteIter);
+                    remoteIter = remoteChildren.erase(remoteIter); /* cppcheck-suppress unreadVariable */
                     remoteEnd = remoteChildren.end();
                     break;
                 } else {

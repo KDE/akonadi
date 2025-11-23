@@ -144,11 +144,12 @@ QueryBuilder ItemFetchHelper::buildItemQuery()
 {
     int column = 0;
     QueryBuilder itemQuery(PimItem::tableName());
-#define ADD_COLUMN(colName, colId)                                                                                                                             \
-    {                                                                                                                                                          \
-        itemQuery.addColumn(colName);                                                                                                                          \
-        mItemQueryColumnMap[colId] = column++;                                                                                                                 \
-    }
+    // clang-format off
+#define ADD_COLUMN(colName, colId) {       \
+    itemQuery.addColumn(colName);          \
+    mItemQueryColumnMap[colId] = column++; \
+}
+    // clang-format on
     ADD_COLUMN(PimItem::idFullColumnName(), ItemQueryPimItemIdColumn);
     if (mItemFetchScope.fetchRemoteId()) {
         ADD_COLUMN(PimItem::remoteIdFullColumnName(), ItemQueryPimItemRidColumn)
@@ -168,6 +169,7 @@ QueryBuilder ItemFetchHelper::buildItemQuery()
     if (mItemFetchScope.fetchGID()) {
         ADD_COLUMN(PimItem::gidFullColumnName(), ItemQueryPimItemGidColumn)
     }
+    Q_UNUSED(column); // to suppress cppcheck unreadVariable false positive
 #undef ADD_COLUMN
 
     itemQuery.addSortColumn(PimItem::idFullColumnName(), static_cast<Query::SortOrder>(mItemsLimit.sortOrder()));

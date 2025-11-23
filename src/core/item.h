@@ -895,8 +895,7 @@ typename std::enable_if<!Internal::PayloadTrait<T>::isPolymorphic, bool>::type I
 
     // Check whether we have the exact payload
     // (metatype id and shared pointer type match)
-    if (const Internal::Payload<typename PayloadType::Type> *const p =
-            Internal::payload_cast<typename PayloadType::Type>(payloadBaseV2(PayloadType::sharedPointerId, metaTypeId))) {
+    if (Internal::payload_cast<typename PayloadType::Type>(payloadBaseV2(PayloadType::sharedPointerId, metaTypeId))) {
         return true;
     }
 
