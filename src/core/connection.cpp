@@ -311,7 +311,7 @@ void Connection::doSendCommand(qint64 tag, const Protocol::CommandPtr &cmd)
             reconnect();
             return;
         }
-        if (!mSocket->waitForBytesWritten()) {
+        if (!mSocket->flush()) {
             qCWarning(AKONADICORE_LOG) << "Socket write timeout";
             mSocket->close();
             reconnect();

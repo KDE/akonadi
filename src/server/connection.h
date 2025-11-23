@@ -150,7 +150,7 @@ inline typename std::enable_if<std::is_base_of<Protocol::Command, T>::value>::ty
     stream << tag;
     stream << std::move(response);
     stream.flush();
-    if (!m_socket->waitForBytesWritten()) {
+    if (!m_socket->flush()) {
         if (m_socket->state() == QLocalSocket::ConnectedState) {
             throw ProtocolException("Server write timeout");
         } else {

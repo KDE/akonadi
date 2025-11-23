@@ -640,9 +640,9 @@ void NotificationSubscriber::writeCommand(qint64 tag, const Protocol::CommandPtr
     try {
         Protocol::serialize(stream, cmd);
         stream.flush();
-        if (!mSocket->waitForBytesWritten()) {
+        if (!mSocket->flush()) {
             if (mSocket->state() == QLocalSocket::ConnectedState) {
-                qCWarning(AKONADISERVER_LOG) << "NotificationSubscriber for" << mSubscriber << ": timeout writing into stream";
+                qCWarning(AKONADISERVER_LOG) << "NotificationSubscriber for" << mSubscriber << ": error writing into stream";
             } else {
                 // client has disconnected, just discard the message
             }

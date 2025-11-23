@@ -463,7 +463,7 @@ void Connection::sendResponse(qint64 tag, const Protocol::CommandPtr &response)
     stream << tag;
     Protocol::serialize(stream, response);
     stream.flush();
-    if (!m_socket->waitForBytesWritten()) {
+    if (!m_socket->flush()) {
         if (m_socket->state() == QLocalSocket::ConnectedState) {
             throw ProtocolException("Server write timeout");
         } else {

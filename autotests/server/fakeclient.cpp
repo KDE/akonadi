@@ -145,7 +145,7 @@ void FakeClient::writeClientPart()
 
         if (rule.action == TestScenario::ClientCmd) {
             mSocket->write(rule.data);
-            CLIENT_VERIFY(mSocket->waitForBytesWritten());
+            CLIENT_VERIFY(mSocket->flush());
         } else {
             const int timeout = rule.data.toInt();
             QTest::qWait(timeout);
