@@ -773,7 +773,9 @@ bool EntityTreeModel::setData(const QModelIndex &index, const QVariant &value, i
             }
 
             auto job = new CollectionModifyJob(collection, d->m_session);
-            connect(job, SIGNAL(result(KJob *)), SLOT(updateJobDone(KJob *)));
+            connect(job, &CollectionModifyJob::result, this, [d](KJob *j) {
+                d->updateJobDone(j);
+            });
 
             return false;
         } else if (Node::Item == node->type) {
@@ -801,7 +803,9 @@ bool EntityTreeModel::setData(const QModelIndex &index, const QVariant &value, i
             }
 
             auto itemModifyJob = new ItemModifyJob(item, d->m_session);
-            connect(itemModifyJob, SIGNAL(result(KJob *)), SLOT(updateJobDone(KJob *)));
+            connect(itemModifyJob, &CollectionModifyJob::result, this, [d](KJob *j) {
+                d->updateJobDone(j);
+            });
 
             return false;
         }
