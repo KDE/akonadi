@@ -63,8 +63,12 @@ SelectionProxyModel::SelectionProxyModel(QItemSelectionModel *selectionModel, QO
     : KSelectionProxyModel(selectionModel, parent)
     , d_ptr(new SelectionProxyModelPrivate(this))
 {
-    connect(this, SIGNAL(rootIndexAdded(QModelIndex)), SLOT(rootIndexAdded(QModelIndex))); // clazy:exclude=old-style-connect
-    connect(this, SIGNAL(rootIndexAboutToBeRemoved(QModelIndex)), SLOT(rootIndexAboutToBeRemoved(QModelIndex))); // clazy:exclude=old-style-connect
+    connect(this, &SelectionProxyModel::rootIndexAdded, this, [this](const QModelIndex &idx) {
+        d_ptr->rootIndexAdded(idx);
+    });
+    connect(this, &SelectionProxyModel::rootIndexAboutToBeRemoved, this, [this](const QModelIndex &idx) {
+        d_ptr->rootIndexAboutToBeRemoved(idx);
+    });
 }
 
 SelectionProxyModel::~SelectionProxyModel() = default;
