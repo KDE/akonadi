@@ -49,7 +49,7 @@ void ExternalPartStorageTest::testResolveAbsolutePath_data()
     QTest::newRow("1_r0") << QStringLiteral("1_r0") << QStringLiteral("01") << false;
     QTest::newRow("23_r0") << QStringLiteral("23_r0") << QStringLiteral("23") << false;
     QTest::newRow("567_r0") << QStringLiteral("567_r0") << QStringLiteral("67") << false;
-    QTest::newRow("123456_r0") << QStringLiteral("123456_r0") << QStringLiteral("56") << false;
+    QTest::newRow("123456_r0") << QStringLiteral("1234567890_r0") << QStringLiteral("90") << false;
     QTest::newRow("absolute path") << QStringLiteral("/tmp/akonadi/file_db_data/99_r3") << QString() << true;
 }
 
