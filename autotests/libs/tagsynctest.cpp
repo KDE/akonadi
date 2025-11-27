@@ -36,7 +36,7 @@ private Q_SLOTS:
         cleanTags();
     }
 
-    Tag::List getTags()
+    Akonadi::Tag::List getTags()
     {
         auto fetchJob = new TagFetchJob();
         fetchJob->fetchScope().setFetchRemoteId(true);
@@ -45,7 +45,7 @@ private Q_SLOTS:
         return fetchJob->tags();
     }
 
-    Tag::List getTagsWithRid()
+    Akonadi::Tag::List getTagsWithRid()
     {
         Tag::List tags;
         const auto allTags = getTags();

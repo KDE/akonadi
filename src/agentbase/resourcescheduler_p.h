@@ -244,7 +244,7 @@ Q_SIGNALS:
     void executeResourceCollectionDeletion();
     void executeCacheInvalidation(const Akonadi::Collection &collection);
     void executeChangeReplay();
-    void executeRecursiveMoveReplay(RecursiveMover *mover);
+    void executeRecursiveMoveReplay(Akonadi::RecursiveMover *mover);
     void collectionTreeSyncComplete();
     void fullSyncComplete();
     void status(int status, const QString &message = QString());

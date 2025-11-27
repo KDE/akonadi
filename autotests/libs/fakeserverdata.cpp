@@ -23,7 +23,7 @@ FakeServerData::FakeServerData(EntityTreeModel *model, FakeSession *session, Fak
     // the slot gets called
     connect(session, &FakeSession::jobAdded, this, [this](Akonadi::Job *job) {
         Collection::Id fetchColId = job->property("FetchCollectionId").toULongLong();
-        QTimer::singleShot(0s, [this, fetchColId]() {
+        QTimer::singleShot(0s, this, [this, fetchColId]() {
             jobAdded(fetchColId);
         });
     });
@@ -37,7 +37,7 @@ FakeServerData::FakeServerData(TagModel *model, FakeSession *session, FakeMonito
     , m_nextTagId(1)
 {
     connect(session, &FakeSession::jobAdded, this, [this](Akonadi::Job * /*unused*/) {
-        QTimer::singleShot(0s, [this]() {
+        QTimer::singleShot(0s, this, [this]() {
             jobAdded();
         });
     });

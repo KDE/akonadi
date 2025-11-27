@@ -361,9 +361,9 @@ Q_SIGNALS:
      * This allows other action managers to update their actions accordingly
      * (see e.g. StandardMailActionManager)
      */
-    void selectionsChanged(const Collection::List &selectedCollectionsList,
-                           const Collection::List &selectedFavoriteCollectionsList,
-                           const Item::List &selectedItems);
+    void selectionsChanged(const Akonadi::Collection::List &selectedCollectionsList,
+                           const Akonadi::Collection::List &selectedFavoriteCollectionsList,
+                           const Akonadi::Item::List &selectedItems);
 
     /**
      * This signal is emitted whenever the action state has been updated.

@@ -373,12 +373,12 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadItemNotificatio
         } else if (version >= 3) {
             QSet<qint64> tagIds;
             stream >> tagIds;
-            for (const auto &tagId : tagIds) {
+            for (const auto &tagId : std::as_const(tagIds)) {
                 addedTags.emplace_back(tagId);
             }
             tagIds.clear();
             stream >> tagIds;
-            for (const auto &tagId : tagIds) {
+            for (const auto &tagId : std::as_const(tagIds)) {
                 removedTags.emplace_back(tagId);
             }
         }

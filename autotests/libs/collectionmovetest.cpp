@@ -84,7 +84,7 @@ private Q_SLOTS:
         AKVERIFYEXEC(fetch);
         QHash<Collection, Item::List> referenceData;
         collections = fetch->collections();
-        for (const Collection &c : collections) {
+        for (const Collection &c : std::as_const(collections)) {
             auto job = new ItemFetchJob(c, this);
             AKVERIFYEXEC(job);
             referenceData.insert(c, job->items());

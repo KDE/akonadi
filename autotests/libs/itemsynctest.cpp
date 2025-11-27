@@ -463,8 +463,8 @@ private Q_SLOTS:
         fetchJob->fetchScope().fetchFullPayload();
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->items().size(), 2);
-        QCOMPARE(fetchJob->items().first().payload<QByteArray>(), QByteArray("payload2"));
-        QCOMPARE(fetchJob->items().first().remoteId(), QString::fromLatin1("rid3"));
+        QCOMPARE(fetchJob->items().constFirst().payload<QByteArray>(), QByteArray("payload2"));
+        QCOMPARE(fetchJob->items().constFirst().remoteId(), QString::fromLatin1("rid3"));
         QCOMPARE(fetchJob->items().at(1).payload<QByteArray>(), QByteArray("payload1"));
         QCOMPARE(fetchJob->items().at(1).remoteId(), QStringLiteral("rid2"));
     }

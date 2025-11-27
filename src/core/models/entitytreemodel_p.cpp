@@ -1711,7 +1711,7 @@ void EntityTreeModelPrivate::beginResetModel()
 void EntityTreeModelPrivate::endResetModel()
 {
     Q_Q(EntityTreeModel);
-    auto subjobs = m_session->findChildren<Akonadi::Job *>();
+    const auto subjobs = m_session->findChildren<Akonadi::Job *>();
     for (auto job : subjobs) {
         job->disconnect(q);
     }
@@ -1748,7 +1748,7 @@ void EntityTreeModelPrivate::monitoredItemsRetrieved(KJob *job)
 
     auto fetchJob = qobject_cast<ItemFetchJob *>(job);
     Q_ASSERT(fetchJob);
-    Item::List list = fetchJob->items();
+    const Item::List list = fetchJob->items();
 
     q->beginResetModel();
     for (const Item &item : list) {

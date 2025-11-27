@@ -857,7 +857,7 @@ void AgentManager::registerServiceIfDoneWaitingForAgents()
 {
     if (mAllAgentsStarted && !mAllAgentsRegisteredOnDBus) {
         bool allRegistered = true;
-        for (const AgentInstance::Ptr &agent : mAgentInstances) {
+        for (const AgentInstance::Ptr &agent : std::as_const(mAgentInstances)) {
             // Also consider "statically broken" agents as registered, which really means: don't wait for them.
             // Looking at agent status() would open a can of worms because that one can theoretically change at any time.
             // I think such agents would also report their broken status via DBus, so they'd be registered and therefore

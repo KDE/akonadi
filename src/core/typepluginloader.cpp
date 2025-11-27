@@ -312,7 +312,7 @@ private:
             matchingIndexes.append(i); // We found a match! This mimetype is supported by one of our plugins
         }
 
-        auto parentTypes = mimeType.parentMimeTypes();
+        const auto parentTypes = mimeType.parentMimeTypes();
 
         // Recursively move up the mimetype tree (checking less specific mimetypes)
         for (const auto &parent : parentTypes) {
