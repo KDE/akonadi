@@ -13,12 +13,11 @@
 #include "entities.h"
 #include "private/protocol_p.h"
 
-class QLocalSocket;
-
 namespace Akonadi
 {
 namespace Server
 {
+class LocalSocket;
 class NotificationManager;
 
 class NotificationSubscriber : public QObject
@@ -75,7 +74,7 @@ protected:
 
     mutable QMutex mLock;
     NotificationManager *mManager = nullptr;
-    QLocalSocket *mSocket = nullptr;
+    LocalSocket *mSocket = nullptr;
     QByteArray mSubscriber;
     QSet<Entity::Id> mMonitoredCollections;
     QSet<Entity::Id> mMonitoredItems;

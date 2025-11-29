@@ -66,6 +66,7 @@ set(libakonadiserver_SRCS
     handler/tagfetchhelper.cpp
     handler/tagmodifyhandler.cpp
     handler/transactionhandler.cpp
+    localsocket.cpp
     search/agentsearchengine.cpp
     search/agentsearchinstance.cpp
     search/searchtaskmanager.cpp
@@ -156,6 +157,7 @@ set(libakonadiserver_SRCS
     handler/tagfetchhelper.h
     handler/tagmodifyhandler.h
     handler/transactionhandler.h
+    localsocket_p.h
     search/agentsearchengine.h
     search/agentsearchinstance.h
     search/searchtaskmanager.h

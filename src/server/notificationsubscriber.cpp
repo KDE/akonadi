@@ -7,9 +7,9 @@
 #include "notificationsubscriber.h"
 #include "aggregatedfetchscope.h"
 #include "akonadiserver_debug.h"
+#include "localsocket_p.h"
 #include "notificationmanager.h"
 
-#include <QLocalSocket>
 #include <QMimeDatabase>
 #include <QPointer>
 
@@ -41,7 +41,7 @@ NotificationSubscriber::NotificationSubscriber(NotificationManager *manager)
 NotificationSubscriber::NotificationSubscriber(NotificationManager *manager, quintptr socketDescriptor)
     : NotificationSubscriber(manager)
 {
-    mSocket = new QLocalSocket(this);
+    mSocket = new LocalSocket(this);
     connect(mSocket, &QLocalSocket::readyRead, this, &NotificationSubscriber::handleIncomingData);
     connect(mSocket, &QLocalSocket::disconnected, this, &NotificationSubscriber::socketDisconnected);
     mSocket->setSocketDescriptor(socketDescriptor);
