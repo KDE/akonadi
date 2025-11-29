@@ -12,9 +12,10 @@ LocalSocket::LocalSocket(QObject *parent)
     : QLocalSocket(parent)
 {
 #ifdef AKONADI_LOCALSOCKET_WORKAROUND
-    connect(this, &QIODevice::channelBytesWritten, this, [this]() {
-        // There should be just one channel in a network socket-type QIODevice anyway
-        Q_ASSERT(currentReadChannel() == 0);
+    // channelBytesWritten() would be better because it can also be emitted recursively, but
+    // bytesWritten() is probably good enough for this workaround. The "channel signals" of
+    // QLocalSocket (at least on Unix) are currently not emitted due to another bug.
+    connect(this, &QIODevice::bytesWritten, this, [this]() {
         mWriteCount++;
     });
 }
