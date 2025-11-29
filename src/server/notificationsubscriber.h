@@ -34,11 +34,6 @@ public:
         return mSubscriber;
     }
 
-    [[nodiscard]] QLocalSocket *socket() const
-    {
-        return mSocket;
-    }
-
     void handleIncomingData();
 
 public Q_SLOTS:
