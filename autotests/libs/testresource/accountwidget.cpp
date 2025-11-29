@@ -72,3 +72,5 @@ void AccountWidget::saveSettings()
     mSettings.setFileWatchingEnabled(mFileWatchingCheckBox->isChecked());
     mSettings.save();
 }
+
+#include "moc_accountwidget.cpp"
