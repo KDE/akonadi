@@ -24,6 +24,6 @@ bool LocalSocket::waitForBytesWritten(int msecs)
 {
     const quint32 writeCountBefore = mWriteCount;
     const bool ok = QLocalSocket::waitForBytesWritten(msecs);
-    return ok || mWriteCount != writeCountBefore;
+    return ok || mWriteCount != writeCountBefore; // cppcheck-suppress constStatement
 #endif
 }
