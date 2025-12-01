@@ -576,7 +576,8 @@ QModelIndex EntityTreeModel::parent(const QModelIndex &index) const
         return QModelIndex();
     }
 
-    if (d->m_collectionFetchStrategy == InvisibleCollectionFetch || d->m_collectionFetchStrategy == FetchNoCollections) {
+    if (d->m_collectionFetchStrategy == FetchCollectionsMerged || //
+        d->m_collectionFetchStrategy == FetchNoCollections) {
         return QModelIndex();
     }
 
@@ -613,7 +614,8 @@ int EntityTreeModel::rowCount(const QModelIndex &parent) const
 {
     Q_D(const EntityTreeModel);
 
-    if (d->m_collectionFetchStrategy == InvisibleCollectionFetch || d->m_collectionFetchStrategy == FetchNoCollections) {
+    if (d->m_collectionFetchStrategy == FetchCollectionsMerged || //
+        d->m_collectionFetchStrategy == FetchNoCollections) {
         if (parent.isValid()) {
             return 0;
         } else {
@@ -828,7 +830,7 @@ void EntityTreeModel::fetchMore(const QModelIndex &parent)
         return;
     }
 
-    if (d->m_collectionFetchStrategy == InvisibleCollectionFetch) {
+    if (d->m_collectionFetchStrategy == FetchCollectionsMerged) {
         return;
     }
 
@@ -850,8 +852,9 @@ bool EntityTreeModel::hasChildren(const QModelIndex &parent) const
 {
     Q_D(const EntityTreeModel);
 
-    if (d->m_collectionFetchStrategy == InvisibleCollectionFetch || d->m_collectionFetchStrategy == FetchNoCollections) {
-        return parent.isValid() ? false : !d->m_items.isEmpty();
+    if (d->m_collectionFetchStrategy == FetchCollectionsMerged || //
+        d->m_collectionFetchStrategy == FetchNoCollections) {
+        return !parent.isValid() && !d->m_items.isEmpty();
     }
 
     // TODO: Empty collections right now will return true and get a little + to expand.
@@ -1018,7 +1021,7 @@ void EntityTreeModel::setCollectionFetchStrategy(CollectionFetchStrategy strateg
     d->beginResetModel();
     d->m_collectionFetchStrategy = strategy;
 
-    if (strategy == FetchNoCollections || strategy == InvisibleCollectionFetch) {
+    if (strategy == FetchNoCollections || strategy == FetchCollectionsMerged) {
         disconnect(d->m_monitor, SIGNAL(collectionChanged(Akonadi::Collection)), this, SLOT(monitoredCollectionChanged(Akonadi::Collection)));
         disconnect(d->m_monitor,
                    SIGNAL(collectionAdded(Akonadi::Collection, Akonadi::Collection)),
