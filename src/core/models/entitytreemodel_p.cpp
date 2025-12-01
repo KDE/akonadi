@@ -49,7 +49,7 @@ static CollectionFetchJob::Type getFetchType(EntityTreeModel::CollectionFetchStr
     switch (strategy) {
     case EntityTreeModel::FetchFirstLevelChildCollections:
         return CollectionFetchJob::FirstLevel;
-    case EntityTreeModel::InvisibleCollectionFetch:
+    case EntityTreeModel::FetchCollectionsMerged:
     case EntityTreeModel::FetchCollectionsRecursive:
     default:
         break;
@@ -205,7 +205,8 @@ void EntityTreeModelPrivate::fetchItems(const Collection &parent)
         m_pendingCollectionRetrieveJobs.insert(parent.id());
 
         // If collections are not in the model, there will be no valid index for them.
-        if ((m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch) && (m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections)) {
+        if (m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged && //
+            m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections) {
             // We need to invoke this delayed because we would otherwise be emitting a sequence like
             // - beginInsertRows
             // - dataChanged
@@ -233,8 +234,8 @@ void EntityTreeModelPrivate::fetchCollections(Akonadi::CollectionFetchJob *job)
     job->fetchScope().setContentMimeTypes(m_monitor->mimeTypesMonitored());
     m_pendingCollectionFetchJobs.insert(static_cast<KJob *>(job));
 
-    if (m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch) {
-        // This is invisible fetch, so no model signals are emitted
+    if (m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsMerged) {
+        // This doesn't display items's collections, so no model signals are emitted about the collections themselves
         q->connect(job, &CollectionFetchJob::collectionsReceived, q, [this](const Collection::List &collections) {
             for (const auto &collection : collections) {
                 if (isHidden(collection)) {
@@ -507,9 +508,10 @@ void EntityTreeModelPrivate::itemsFetched(const Collection::Id collectionId, con
     }
 
     if (!itemsToInsert.isEmpty()) {
-        const Collection::Id colId = m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch ? m_rootCollection.id()
-            : m_collectionFetchStrategy == EntityTreeModel::FetchNoCollections                              ? m_rootCollection.id()
-                                                                                                            : collectionId;
+        const bool useRootCollection = //
+            m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsMerged || //
+            m_collectionFetchStrategy == EntityTreeModel::FetchNoCollections;
+        const Collection::Id colId = useRootCollection ? m_rootCollection.id() : collectionId;
         const int startRow = m_childEntities.value(colId).size();
 
         Q_ASSERT(m_collections.contains(colId));
@@ -1005,7 +1007,8 @@ void EntityTreeModelPrivate::monitoredItemAdded(const Akonadi::Item &item, const
         return;
     }
 
-    if (m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch && !m_collections.contains(collection.id())) {
+    if (m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged && //
+        !m_collections.contains(collection.id())) {
         qCWarning(AKONADICORE_LOG) << "Got a stale 'added' notification for an item whose collection was already removed." << item.id() << item.remoteId();
         return;
     }
@@ -1014,7 +1017,7 @@ void EntityTreeModelPrivate::monitoredItemAdded(const Akonadi::Item &item, const
         return;
     }
 
-    Q_ASSERT(m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch ? m_collections.contains(collection.id()) : true);
+    Q_ASSERT(m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged ? m_collections.contains(collection.id()) : true);
 
     if (m_mimeChecker.hasWantedMimeTypes() && !m_mimeChecker.isWantedItem(item)) {
         return;
@@ -1028,7 +1031,7 @@ void EntityTreeModelPrivate::monitoredItemAdded(const Akonadi::Item &item, const
 
     int row;
     QModelIndex parentIndex;
-    if (m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch) {
+    if (m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged) {
         row = m_childEntities.value(collection.id()).size();
         parentIndex = indexForCollection(m_collections.value(collection.id()));
     } else {
@@ -1037,7 +1040,7 @@ void EntityTreeModelPrivate::monitoredItemAdded(const Akonadi::Item &item, const
     q->beginInsertRows(parentIndex, row, row);
     m_items.ref(item.id(), item);
     Node *node = new Node{Node::Item, item.id(), collection.id()};
-    if (m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch) {
+    if (m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged) {
         m_childEntities[collection.id()].append(node);
     } else {
         m_childEntities[m_rootCollection.id()].append(node);
@@ -1197,12 +1200,12 @@ void EntityTreeModelPrivate::monitoredItemLinked(const Akonadi::Item &item, cons
     const Collection::Id collectionId = collection.id();
     const Item::Id itemId = item.id();
 
-    if (m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch && !m_collections.contains(collection.id())) {
+    if (m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged && !m_collections.contains(collection.id())) {
         qCWarning(AKONADICORE_LOG) << "Got a stale 'linked' notification for an item whose collection was already removed." << item.id() << item.remoteId();
         return;
     }
 
-    Q_ASSERT(m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch ? m_collections.contains(collectionId) : true);
+    Q_ASSERT(m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged ? m_collections.contains(collectionId) : true);
 
     if (m_mimeChecker.hasWantedMimeTypes() && !m_mimeChecker.isWantedItem(item)) {
         return;
@@ -1250,7 +1253,7 @@ void EntityTreeModelPrivate::monitoredItemUnlinked(const Akonadi::Item &item, co
         return;
     }
 
-    Q_ASSERT(m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch ? m_collections.contains(collection.id()) : true);
+    Q_ASSERT(m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged ? m_collections.contains(collection.id()) : true);
     const int row = indexOf<Node::Item>(m_childEntities.value(collection.id()), item.id());
     if (row < 0 || row >= m_childEntities[collection.id()].size()) {
         qCWarning(AKONADICORE_LOG) << "couldn't find index of unlinked item " << item.id() << collection.id() << row;
@@ -1313,8 +1316,9 @@ void EntityTreeModelPrivate::itemFetchJobDone(Collection::Id collectionId, KJob 
     Q_EMIT q_ptr->collectionPopulated(collectionId);
 
     // If collections are not in the model, there will be no valid index for them.
-    if ((m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch) && (m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections)
-        && (m_showRootCollection || collectionId != m_rootCollection.id())) {
+    if (m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged && //
+        m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections && //
+        (m_showRootCollection || collectionId != m_rootCollection.id())) {
         const QModelIndex index = indexForCollection(Collection(collectionId));
         Q_ASSERT(index.isValid());
         // To notify about the changed fetch and population state
@@ -1625,7 +1629,7 @@ QModelIndex EntityTreeModelPrivate::indexForCollection(const Collection &collect
         return QModelIndex();
     }
 
-    if (m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch) {
+    if (m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsMerged) {
         return QModelIndex();
     }
 
@@ -1805,7 +1809,7 @@ bool EntityTreeModelPrivate::canFetchMore(const QModelIndex &parent) const
 {
     const Item item = parent.data(EntityTreeModel::ItemRole).value<Item>();
 
-    if (m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch) {
+    if (m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsMerged) {
         return false;
     }
 

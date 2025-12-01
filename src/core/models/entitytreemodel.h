@@ -487,8 +487,8 @@ public:
         FetchNoCollections, ///< Fetches nothing. This creates an empty model.
         FetchFirstLevelChildCollections, ///< Fetches first level collections in the root collection.
         FetchCollectionsRecursive, ///< Fetches collections in the root collection recursively. This is the default.
-        InvisibleCollectionFetch ///< Fetches collections, but does not put them in the model. This can be used to create a list of items in all collections.
-                                 ///< The ParentCollectionRole can still be used to retrieve the parent collection of an Item. @since 4.5
+        FetchCollectionsMerged ///< Fetches items from collections, but merges them into a flat list as direct child items of the model.
+                               ///< The ParentCollectionRole can still be used to retrieve the parent collection of an Item. @since 4.5
     };
 
     /**
