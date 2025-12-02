@@ -511,18 +511,20 @@ void EntityTreeModelPrivate::itemsFetched(const Collection::Id collectionId, con
         const bool useRootCollection = //
             m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsMerged || //
             m_collectionFetchStrategy == EntityTreeModel::FetchNoCollections;
-        const Collection::Id colId = useRootCollection ? m_rootCollection.id() : collectionId;
-        const int startRow = m_childEntities.value(colId).size();
+        const Collection::Id destCollectionId = useRootCollection ? m_rootCollection.id() : collectionId;
 
-        Q_ASSERT(m_collections.contains(colId));
+        QList<Node *> &collectionEntities = m_childEntities[destCollectionId];
+        const int startRow = collectionEntities.size();
 
-        const QModelIndex parentIndex = indexForCollection(m_collections.value(colId));
+        Q_ASSERT(m_collections.contains(destCollectionId));
+        const QModelIndex parentIndex = indexForCollection(m_collections.value(destCollectionId));
+
         q->beginInsertRows(parentIndex, startRow, startRow + itemsToInsert.size() - 1);
         for (const Item &item : std::as_const(itemsToInsert)) {
             const Item::Id itemId = item.id();
             m_items.ref(itemId, item);
 
-            m_childEntities[colId].append(new Node{Node::Item, itemId, collectionId});
+            collectionEntities.append(new Node{Node::Item, itemId, collectionId /* yes, original ID here */});
         }
         q->endInsertRows();
     }
