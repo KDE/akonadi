@@ -861,7 +861,7 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved(const Akonadi::Collectio
 
     Q_ASSERT(m_childEntities.contains(parentId));
 
-    const int row = indexOf<Node::Collection>(m_childEntities.value(parentId), collection.id());
+    const int row = indexOf(m_childEntities.value(parentId), Node::Collection, collection.id());
     Q_ASSERT(row >= 0);
 
     Q_ASSERT(m_collections.contains(parentId));
@@ -927,7 +927,7 @@ void EntityTreeModelPrivate::monitoredCollectionMoved(const Akonadi::Collection 
     Q_ASSERT(destCollection.isValid());
     Q_ASSERT(collection.parentCollection() == destCollection);
 
-    const int srcRow = indexOf<Node::Collection>(m_childEntities.value(sourceCollection.id()), collection.id());
+    const int srcRow = indexOf(m_childEntities.value(sourceCollection.id()), Node::Collection, collection.id());
     const int destRow = 0; // Prepend collections
 
     if (!q->beginMoveRows(srcParentIndex, srcRow, srcRow, destParentIndex, destRow)) {
@@ -1075,7 +1075,7 @@ void EntityTreeModelPrivate::monitoredItemRemoved(const Akonadi::Item &item, con
         Q_ASSERT(m_collections.contains(collection.id()));
         Q_ASSERT(m_childEntities.contains(collection.id()));
 
-        const int row = indexOf<Node::Item>(m_childEntities.value(collection.id()), item.id());
+        const int row = indexOf(m_childEntities.value(collection.id()), Node::Item, item.id());
         Q_ASSERT(row >= 0);
 
         const QModelIndex parentIndex = indexForCollection(m_collections.value(collection.id()));
@@ -1168,7 +1168,7 @@ void EntityTreeModelPrivate::monitoredItemMoved(const Akonadi::Item &item,
 
     const Item::Id itemId = item.id();
 
-    const int srcRow = indexOf<Node::Item>(m_childEntities.value(sourceCollection.id()), itemId);
+    const int srcRow = indexOf(m_childEntities.value(sourceCollection.id()), Node::Item, itemId);
     const int destRow = q->rowCount(destIndex);
 
     Q_ASSERT(srcRow >= 0);
@@ -1220,7 +1220,7 @@ void EntityTreeModelPrivate::monitoredItemLinked(const Akonadi::Item &item, cons
 
     QList<Node *> &collectionEntities = m_childEntities[collectionId];
 
-    const int existingPosition = indexOf<Node::Item>(collectionEntities, itemId);
+    const int existingPosition = indexOf(collectionEntities, Node::Item, itemId);
 
     if (existingPosition > 0) {
         qCWarning(AKONADICORE_LOG) << "Item with id " << itemId << " already in virtual collection with id " << collectionId;
@@ -1256,7 +1256,7 @@ void EntityTreeModelPrivate::monitoredItemUnlinked(const Akonadi::Item &item, co
 
     Q_ASSERT(m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsMerged || m_collections.contains(collection.id()));
 
-    const int row = indexOf<Node::Item>(m_childEntities.value(collection.id()), item.id());
+    const int row = indexOf(m_childEntities.value(collection.id()), Node::Item, item.id());
     if (row < 0 || row >= m_childEntities[collection.id()].size()) {
         qCWarning(AKONADICORE_LOG) << "couldn't find index of unlinked item " << item.id() << collection.id() << row;
         Q_ASSERT(false);
@@ -1478,7 +1478,7 @@ Akonadi::Collection::List EntityTreeModelPrivate::getParentCollections(const Ite
     Collection::List list;
     for (auto it = m_childEntities.constKeyValueBegin(), end = m_childEntities.constKeyValueEnd(); it != end; ++it) {
         const auto &[parentId, childNodes] = *it;
-        int nodeIndex = indexOf<Node::Item>(childNodes, item.id());
+        int nodeIndex = indexOf(childNodes, Node::Item, item.id());
         if (nodeIndex != -1 && childNodes.at(nodeIndex)->type == Node::Item) {
             list.push_back(m_collections.value(parentId));
         }
@@ -1652,7 +1652,7 @@ QModelIndex EntityTreeModelPrivate::indexForCollection(const Collection &collect
         parentId = collection.parentCollection().id();
     } else {
         for (const auto &children : m_childEntities) {
-            const int row = indexOf<Node::Collection>(children, collection.id());
+            const int row = indexOf(children, Node::Collection, collection.id());
             if (row < 0) {
                 continue;
             }
@@ -1663,7 +1663,7 @@ QModelIndex EntityTreeModelPrivate::indexForCollection(const Collection &collect
         return QModelIndex();
     }
 
-    const int row = indexOf<Node::Collection>(m_childEntities.value(parentId), collection.id());
+    const int row = indexOf(m_childEntities.value(parentId), Node::Collection, collection.id());
 
     if (row < 0) {
         return QModelIndex();
@@ -1682,7 +1682,7 @@ QModelIndexList EntityTreeModelPrivate::indexesForItem(const Item &item) const
     if (m_collectionFetchStrategy == EntityTreeModel::FetchNoCollections) {
         Q_ASSERT(m_childEntities.contains(m_rootCollection.id()));
         QList<Node *> nodeList = m_childEntities.value(m_rootCollection.id());
-        const int row = indexOf<Node::Item>(nodeList, item.id());
+        const int row = indexOf(nodeList, Node::Item, item.id());
         Q_ASSERT(row >= 0);
         Q_ASSERT(row < nodeList.size());
         Node *node = nodeList.at(row);
@@ -1695,7 +1695,7 @@ QModelIndexList EntityTreeModelPrivate::indexesForItem(const Item &item) const
 
     indexes.reserve(collections.size());
     for (const Collection &collection : collections) {
-        const int row = indexOf<Node::Item>(m_childEntities.value(collection.id()), item.id());
+        const int row = indexOf(m_childEntities.value(collection.id()), Node::Item, item.id());
         Q_ASSERT(row >= 0);
         Q_ASSERT(m_childEntities.contains(collection.id()));
         QList<Node *> nodeList = m_childEntities.value(collection.id());

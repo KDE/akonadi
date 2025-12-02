@@ -602,7 +602,7 @@ QModelIndex EntityTreeModel::parent(const QModelIndex &index) const
     }
 
     Q_ASSERT(collection.parentCollection().isValid());
-    const int row = d->indexOf<Node::Collection>(d->m_childEntities.value(collection.parentCollection().id()), collection.id());
+    const int row = d->indexOf(d->m_childEntities.value(collection.parentCollection().id()), Node::Collection, collection.id());
 
     Q_ASSERT(row >= 0);
     Node *parentNode = d->m_childEntities.value(collection.parentCollection().id()).at(row);
