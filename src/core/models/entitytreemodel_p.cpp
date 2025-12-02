@@ -1009,9 +1009,9 @@ void EntityTreeModelPrivate::monitoredItemAdded(const Akonadi::Item &item, const
 
     const Collection::Id collectionId = collection.id();
     const Item::Id itemId = item.id();
+    const bool isMergedFetch = m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsMerged;
 
-    if (m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged && //
-        !m_collections.contains(collectionId)) {
+    if (!isMergedFetch && !m_collections.contains(collectionId)) {
         qCWarning(AKONADICORE_LOG) << "Got a stale 'added' notification for an item whose collection was already removed." << itemId << item.remoteId();
         return;
     }
@@ -1020,7 +1020,7 @@ void EntityTreeModelPrivate::monitoredItemAdded(const Akonadi::Item &item, const
         return;
     }
 
-    Q_ASSERT(m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsMerged || m_collections.contains(collectionId));
+    Q_ASSERT(isMergedFetch || m_collections.contains(collectionId));
 
     if (m_mimeChecker.hasWantedMimeTypes() && !m_mimeChecker.isWantedItem(item)) {
         return;
@@ -1032,22 +1032,17 @@ void EntityTreeModelPrivate::monitoredItemAdded(const Akonadi::Item &item, const
         return;
     }
 
-    int row;
+    QList<Node *> &collectionEntities = m_childEntities[!isMergedFetch ? collectionId : m_rootCollection.id()];
+    const int row = collectionEntities.size();
+
     QModelIndex parentIndex;
-    if (m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged) {
-        row = m_childEntities.value(collectionId).size();
+    if (!isMergedFetch) {
         parentIndex = indexForCollection(m_collections.value(collectionId));
-    } else {
-        row = q->rowCount();
     }
+
     q->beginInsertRows(parentIndex, row, row);
     m_items.ref(itemId, item);
-    Node *node = new Node{Node::Item, itemId, collectionId};
-    if (m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged) {
-        m_childEntities[collectionId].append(node);
-    } else {
-        m_childEntities[m_rootCollection.id()].append(node);
-    }
+    collectionEntities.append(new Node{Node::Item, itemId, collectionId});
     q->endInsertRows();
 }
 
@@ -1202,13 +1197,14 @@ void EntityTreeModelPrivate::monitoredItemLinked(const Akonadi::Item &item, cons
 
     const Collection::Id collectionId = collection.id();
     const Item::Id itemId = item.id();
+    const bool isMergedFetch = m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsMerged;
 
-    if (m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged && !m_collections.contains(collectionId)) {
+    if (!isMergedFetch && !m_collections.contains(collectionId)) {
         qCWarning(AKONADICORE_LOG) << "Got a stale 'linked' notification for an item whose collection was already removed." << itemId << item.remoteId();
         return;
     }
 
-    Q_ASSERT(m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsMerged || m_collections.contains(collectionId));
+    Q_ASSERT(isMergedFetch || m_collections.contains(collectionId));
 
     if (m_mimeChecker.hasWantedMimeTypes() && !m_mimeChecker.isWantedItem(item)) {
         return;
