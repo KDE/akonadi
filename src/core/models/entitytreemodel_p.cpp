@@ -1218,10 +1218,9 @@ void EntityTreeModelPrivate::monitoredItemLinked(const Akonadi::Item &item, cons
         return;
     }
 
-    QList<Node *> &collectionEntities = m_childEntities[collectionId];
+    QList<Node *> &collectionEntities = m_childEntities[!isMergedFetch ? collectionId : m_rootCollection.id()];
 
     const int existingPosition = indexOf(collectionEntities, Node::Item, itemId);
-
     if (existingPosition > 0) {
         qCWarning(AKONADICORE_LOG) << "Item with id " << itemId << " already in virtual collection with id " << collectionId;
         return;
@@ -1229,7 +1228,10 @@ void EntityTreeModelPrivate::monitoredItemLinked(const Akonadi::Item &item, cons
 
     const int row = collectionEntities.size();
 
-    const QModelIndex parentIndex = indexForCollection(m_collections.value(collectionId));
+    QModelIndex parentIndex;
+    if (!isMergedFetch) {
+        parentIndex = indexForCollection(m_collections.value(collectionId));
+    }
 
     q->beginInsertRows(parentIndex, row, row);
     m_items.ref(itemId, item);
