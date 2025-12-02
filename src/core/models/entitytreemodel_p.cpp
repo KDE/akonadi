@@ -1020,7 +1020,7 @@ void EntityTreeModelPrivate::monitoredItemAdded(const Akonadi::Item &item, const
         return;
     }
 
-    Q_ASSERT(m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged ? m_collections.contains(collectionId) : true);
+    Q_ASSERT(m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsMerged || m_collections.contains(collectionId));
 
     if (m_mimeChecker.hasWantedMimeTypes() && !m_mimeChecker.isWantedItem(item)) {
         return;
@@ -1208,7 +1208,7 @@ void EntityTreeModelPrivate::monitoredItemLinked(const Akonadi::Item &item, cons
         return;
     }
 
-    Q_ASSERT(m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged ? m_collections.contains(collectionId) : true);
+    Q_ASSERT(m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsMerged || m_collections.contains(collectionId));
 
     if (m_mimeChecker.hasWantedMimeTypes() && !m_mimeChecker.isWantedItem(item)) {
         return;
@@ -1256,7 +1256,8 @@ void EntityTreeModelPrivate::monitoredItemUnlinked(const Akonadi::Item &item, co
         return;
     }
 
-    Q_ASSERT(m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged ? m_collections.contains(collection.id()) : true);
+    Q_ASSERT(m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsMerged || m_collections.contains(collection.id()));
+
     const int row = indexOf<Node::Item>(m_childEntities.value(collection.id()), item.id());
     if (row < 0 || row >= m_childEntities[collection.id()].size()) {
         qCWarning(AKONADICORE_LOG) << "couldn't find index of unlinked item " << item.id() << collection.id() << row;
