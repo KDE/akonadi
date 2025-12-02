@@ -1821,31 +1821,31 @@ bool EntityTreeModelPrivate::canFetchMore(const QModelIndex &parent) const
         return false;
     } else {
         // but collections can...
-        const Collection::Id colId = parent.data(EntityTreeModel::CollectionIdRole).toULongLong();
+        const Collection::Id collectionId = parent.data(EntityTreeModel::CollectionIdRole).toULongLong();
 
         // But the root collection can't...
-        if (Collection::root().id() == colId) {
+        if (Collection::root().id() == collectionId) {
             return false;
         }
 
         // Collections which contain no items at all can't contain more
-        if (m_collectionsWithoutItems.contains(colId)) {
+        if (m_collectionsWithoutItems.contains(collectionId)) {
             return false;
         }
 
         // Don't start the same job multiple times.
-        if (m_pendingCollectionRetrieveJobs.contains(colId)) {
+        if (m_pendingCollectionRetrieveJobs.contains(collectionId)) {
             return false;
         }
 
         // Can't fetch more if the collection's items have already been fetched
-        if (m_populatedCols.contains(colId)) {
+        if (m_populatedCols.contains(collectionId)) {
             return false;
         }
 
         // Only try to fetch more from a collection if we don't already have items in it.
         // Otherwise we'd spend all the time listing items in collections.
-        return m_childEntities.value(colId) | Actions::none(Node::isItem);
+        return m_childEntities.value(collectionId) | Actions::none(Node::isItem);
     }
 }
 
