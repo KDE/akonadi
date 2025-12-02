@@ -294,12 +294,11 @@ public:
     /**
      * Returns the index of the node in @p list with the id @p id. Returns -1 if not found.
      */
-    template<Node::Type Type>
-    int indexOf(const QList<Node *> &nodes, Node::Id id) const
+    inline int indexOf(const QList<Node *> &nodes, Node::Type nodeType, Node::Id id) const
     {
         int i = 0;
         for (const Node *node : nodes) {
-            if (node->id == id && node->type == Type) {
+            if (node->id == id && node->type == nodeType) {
                 return i;
             }
             i++;
