@@ -1007,17 +1007,20 @@ void EntityTreeModelPrivate::monitoredItemAdded(const Akonadi::Item &item, const
         return;
     }
 
+    const Collection::Id collectionId = collection.id();
+    const Item::Id itemId = item.id();
+
     if (m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged && //
-        !m_collections.contains(collection.id())) {
-        qCWarning(AKONADICORE_LOG) << "Got a stale 'added' notification for an item whose collection was already removed." << item.id() << item.remoteId();
+        !m_collections.contains(collectionId)) {
+        qCWarning(AKONADICORE_LOG) << "Got a stale 'added' notification for an item whose collection was already removed." << itemId << item.remoteId();
         return;
     }
 
-    if (m_items.contains(item.id())) {
+    if (m_items.contains(itemId)) {
         return;
     }
 
-    Q_ASSERT(m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged ? m_collections.contains(collection.id()) : true);
+    Q_ASSERT(m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged ? m_collections.contains(collectionId) : true);
 
     if (m_mimeChecker.hasWantedMimeTypes() && !m_mimeChecker.isWantedItem(item)) {
         return;
@@ -1025,23 +1028,23 @@ void EntityTreeModelPrivate::monitoredItemAdded(const Akonadi::Item &item, const
 
     // Adding items to not yet populated collections would block fetchMore, resulting in only new items showing up in the collection
     // This is only a problem with lazy population, otherwise fetchMore is not used at all
-    if ((m_itemPopulation == EntityTreeModel::LazyPopulation) && !m_populatedCols.contains(collection.id())) {
+    if ((m_itemPopulation == EntityTreeModel::LazyPopulation) && !m_populatedCols.contains(collectionId)) {
         return;
     }
 
     int row;
     QModelIndex parentIndex;
     if (m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged) {
-        row = m_childEntities.value(collection.id()).size();
-        parentIndex = indexForCollection(m_collections.value(collection.id()));
+        row = m_childEntities.value(collectionId).size();
+        parentIndex = indexForCollection(m_collections.value(collectionId));
     } else {
         row = q->rowCount();
     }
     q->beginInsertRows(parentIndex, row, row);
-    m_items.ref(item.id(), item);
-    Node *node = new Node{Node::Item, item.id(), collection.id()};
+    m_items.ref(itemId, item);
+    Node *node = new Node{Node::Item, itemId, collectionId};
     if (m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged) {
-        m_childEntities[collection.id()].append(node);
+        m_childEntities[collectionId].append(node);
     } else {
         m_childEntities[m_rootCollection.id()].append(node);
     }
@@ -1200,8 +1203,8 @@ void EntityTreeModelPrivate::monitoredItemLinked(const Akonadi::Item &item, cons
     const Collection::Id collectionId = collection.id();
     const Item::Id itemId = item.id();
 
-    if (m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged && !m_collections.contains(collection.id())) {
-        qCWarning(AKONADICORE_LOG) << "Got a stale 'linked' notification for an item whose collection was already removed." << item.id() << item.remoteId();
+    if (m_collectionFetchStrategy != EntityTreeModel::FetchCollectionsMerged && !m_collections.contains(collectionId)) {
+        qCWarning(AKONADICORE_LOG) << "Got a stale 'linked' notification for an item whose collection was already removed." << itemId << item.remoteId();
         return;
     }
 
