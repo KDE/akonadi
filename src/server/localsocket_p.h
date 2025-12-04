@@ -25,8 +25,8 @@ namespace Akonadi::Server
 // Note that the logic "not Windows -> Unix" matches the logic in qlocalsocket_p.h.
 // Platforms that use TCP for local sockets seem to be rather exotic, but they also need the
 // workaround because of the internal use of QAbstractSocket, and they are (usually) not Windows...
-#ifndef Q_OS_WIN
-#define AKONADI_LOCALSOCKET_WORKAROUND // TODO QT_VERSION_CHECK(...)
+#if !defined(Q_OS_WIN) && QT_VERSION < QT_VERSION_CHECK(6, 11, 0)
+#define AKONADI_LOCALSOCKET_WORKAROUND
 #endif
 
 class LocalSocket : public QLocalSocket
