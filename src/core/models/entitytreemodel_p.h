@@ -103,7 +103,7 @@ public:
         return mHash.find(key);
     }
 
-    inline bool size() const
+    inline auto size() const
     {
         return mHash.size();
     }
