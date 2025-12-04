@@ -74,9 +74,17 @@ public:
     {
         return mHash.begin();
     }
+    inline auto cbegin() const
+    {
+        return mHash.cbegin();
+    }
     inline auto end()
     {
         return mHash.end();
+    }
+    inline auto cend() const
+    {
+        return mHash.cend();
     }
     inline auto begin() const
     {
