@@ -158,9 +158,9 @@ ALTER TABLE CollectionPimItemRelation ADD COLUMN Collection_id BIGINT NOT NULL
 
 ALTER TABLE CollectionPimItemRelation ADD COLUMN PimItem_id BIGINT NOT NULL
 
-ALTER TABLE PimItemTable DROP FOREIGN KEY myForeignKeyIdentifier
+ALTER TABLE PimItemTable DROP FOREIGN KEY `myForeignKeyIdentifier`
 
-ALTER TABLE CollectionAttributeTable DROP FOREIGN KEY myForeignKeyIdentifier
+ALTER TABLE CollectionAttributeTable DROP FOREIGN KEY `myForeignKeyIdentifier`
 
 ALTER TABLE CollectionTable ADD FOREIGN KEY (parentId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
 
