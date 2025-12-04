@@ -112,7 +112,7 @@ QStringList DbInitializerMySql::buildAddForeignKeyConstraintStatements(const Tab
 
 QStringList DbInitializerMySql::buildRemoveForeignKeyConstraintStatements(const DbIntrospector::ForeignKey &fk, const TableDescription &table) const
 {
-    return {QStringLiteral("ALTER TABLE %1 DROP FOREIGN KEY %2").arg(table.name, fk.name)};
+    return {QStringLiteral("ALTER TABLE %1 DROP FOREIGN KEY `%2`").arg(table.name, fk.name)};
 }
 
 // END MySQL
