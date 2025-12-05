@@ -291,7 +291,7 @@ include(CTest) # Calls enable_testing().
 
 if(NOT DEFINED DATABASE_BACKEND)
     set(DATABASE_BACKEND
-        "MYSQL"
+        "SQLITE"
         CACHE STRING
         "The default database backend to use for Akonadi. Can be either MYSQL, POSTGRES or SQLITE"
     )
