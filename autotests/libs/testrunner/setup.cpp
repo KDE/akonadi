@@ -370,13 +370,14 @@ QString SetupTest::basePath() const
     // This means that on Windows we rely on Instances providing us the necessary isolation
     return QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation);
 #else
-    QString sysTempDirPath = QDir::tempPath();
+// QDir::tempPath() makes sure to use the fully sym-link exploded
+// absolute path to the temp dir. That is nice, but on OSX it makes
+// that path really long. MySQL chokes on this, for it's socket path,
+// so work around that
 #ifdef Q_OS_UNIX
-    // QDir::tempPath() makes sure to use the fully sym-link exploded
-    // absolute path to the temp dir. That is nice, but on OSX it makes
-    // that path really long. MySQL chokes on this, for it's socket path,
-    // so work around that
-    sysTempDirPath = QStringLiteral("/tmp");
+    QString sysTempDirPath = QStringLiteral("/tmp");
+#else
+    QString sysTempDirPath = QDir::tempPath();
 #endif
 
     const QDir sysTempDir(sysTempDirPath);

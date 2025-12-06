@@ -47,7 +47,7 @@ QString Utils::preferredSocketDirectory(const QString &defaultDirectory, int fnL
 #if defined(Q_OS_WIN)
     const QString socketDir = serverSettings.value(QLatin1StringView("Connection/SocketDirectory"), defaultDirectory).toString();
 #else
-    QString socketDir = defaultDirectory;
+    QString socketDir;
     if (!serverSettings.contains(QStringLiteral("Connection/SocketDirectory"))) {
         // if no socket directory is defined, use the symlinked from /tmp
         socketDir = akonadiSocketDirectory();
