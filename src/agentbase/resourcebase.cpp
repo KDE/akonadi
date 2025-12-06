@@ -874,7 +874,7 @@ bool sortCollectionsForSync(const Collection &l, const Collection &r)
     if (lFav) {
         return !rInbox;
     } else if (rFav) {
-        return lInbox;
+        return false; // if lInbox was true we would have returned above
     }
 
     // trash is always last (unless it's favorite)
