@@ -184,8 +184,6 @@ void FakeClient::do_connectToServer()
     });
     if (!mSocket->waitForConnected()) {
         qFatal("Failed to connect to FakeAkonadiServer");
-        QVERIFY(false);
-        return;
     }
     mStream.setDevice(mSocket);
 }
