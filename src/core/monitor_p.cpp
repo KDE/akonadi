@@ -270,9 +270,6 @@ void MonitorPrivate::checkBatchSupport(const Protocol::ChangeNotificationPtr &ms
         needsSplit = isBatch;
         batchSupported = false;
         return;
-        needsSplit = isBatch;
-        batchSupported = false;
-        return;
     case Protocol::ItemChangeNotification::ModifyFlags:
         batchSupported = hasListeners(&Monitor::itemsFlagsChanged);
         needsSplit = isBatch && !batchSupported && hasListeners(&Monitor::itemChanged);
