@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:52+0000\n"
+"POT-Creation-Date: 2025-12-06 00:43+0000\n"
 "PO-Revision-Date: 2013-07-14 03:20+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -464,41 +464,41 @@ msgstr ""
 "Көздеген '%1' жинақта\n"
 "'%2'. деген жинақ бар екен."
 
-#: core/models/entitytreemodel.cpp:666
+#: core/models/entitytreemodel.cpp:668
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Атауы"
 
-#: core/models/entitytreemodel_p.cpp:1330
+#: core/models/entitytreemodel_p.cpp:1338
 #, fuzzy, kde-format
 #| msgid "Could not copy item:"
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Көшірілінбегені:"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1340
 #, fuzzy, kde-format
 #| msgid "Could not copy collection:"
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Мынау жинақ алынбады:"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1342
 #, fuzzy, kde-format
 #| msgid "Could not move item:"
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Жылжытылмағаны:"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1344
 #, fuzzy, kde-format
 #| msgid "Could not move collection:"
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Мынау жинақ жылжытылмады:"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1346
 #, fuzzy, kde-format
 #| msgid "Could not link entity:"
 msgctxt "@info"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:52+0000\n"
+"POT-Creation-Date: 2025-12-06 00:43+0000\n"
 "PO-Revision-Date: 2021-11-13 21:43+0100\n"
 "Last-Translator: Edward Wornar <edi.werner@gmx.de>\n"
 "Language-Team: Upper Sorbian <kde-i18n-doc@kde.org>\n"
@@ -447,37 +447,37 @@ msgstr ""
 "Cilowa zběrka '%1' wobsahuje hižo\n"
 "zběrku z mjenom '%2´."
 
-#: core/models/entitytreemodel.cpp:666
+#: core/models/entitytreemodel.cpp:668
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Mjeno"
 
-#: core/models/entitytreemodel_p.cpp:1330
+#: core/models/entitytreemodel_p.cpp:1338
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Njemóžach element kopěrować:<message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1340
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Njemóžach zběrku kopěrować: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1342
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Njemóžach element přesunyć:<message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1344
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Njemóžach zběrku přesunyć: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1346
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"

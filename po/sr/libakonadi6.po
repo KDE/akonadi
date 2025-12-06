@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:52+0000\n"
+"POT-Creation-Date: 2025-12-06 00:43+0000\n"
 "PO-Revision-Date: 2017-12-17 18:01+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -453,41 +453,41 @@ msgstr ""
 "Циљна збирка „%1“ већ садржи\n"
 "збирку по имену „%2“."
 
-#: core/models/entitytreemodel.cpp:666
+#: core/models/entitytreemodel.cpp:668
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "име"
 
-#: core/models/entitytreemodel_p.cpp:1330
+#: core/models/entitytreemodel_p.cpp:1338
 #, fuzzy, kde-format
 #| msgid "Could not copy item:"
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Не могу да копирам ставку:"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1340
 #, fuzzy, kde-format
 #| msgid "Could not copy collection:"
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Не могу да копирам збирку:"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1342
 #, fuzzy, kde-format
 #| msgid "Could not move item:"
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Не могу да преместим ставку:"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1344
 #, fuzzy, kde-format
 #| msgid "Could not move collection:"
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Не могу да преместим збирку:"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1346
 #, fuzzy, kde-format
 #| msgid "Could not link entity:"
 msgctxt "@info"

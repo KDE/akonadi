@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:52+0000\n"
+"POT-Creation-Date: 2025-12-06 00:43+0000\n"
 "PO-Revision-Date: 2025-07-23 11:07+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -470,37 +470,37 @@ msgstr ""
 "La col·lecció de destinació «%1» ja conté\n"
 "una col·lecció amb el nom «%2»."
 
-#: core/models/entitytreemodel.cpp:666
+#: core/models/entitytreemodel.cpp:668
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Nom"
 
-#: core/models/entitytreemodel_p.cpp:1330
+#: core/models/entitytreemodel_p.cpp:1338
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "No s'ha pogut copiar l'element: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1340
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "No s'ha pogut copiar la col·lecció: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1342
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "No s'ha pogut moure l'element: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1344
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "No s'ha pogut moure la col·lecció: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1346
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"

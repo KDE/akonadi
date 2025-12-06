@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:52+0000\n"
+"POT-Creation-Date: 2025-12-06 00:43+0000\n"
 "PO-Revision-Date: 2023-12-31 09:30-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -456,40 +456,40 @@ msgid ""
 "a collection with name '%2'."
 msgstr ""
 
-#: core/models/entitytreemodel.cpp:666
+#: core/models/entitytreemodel.cpp:668
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "ਨਾਂ"
 
-#: core/models/entitytreemodel_p.cpp:1330
+#: core/models/entitytreemodel_p.cpp:1338
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "ਆਈਟਮ ਨੂੰ ਕਾਪੀ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1340
 #, fuzzy, kde-format
 #| msgid "Could not paste data: %1"
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "ਡਾਟਾ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ: %1"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1342
 #, fuzzy, kde-format
 #| msgid "Could not open file '%1'"
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "ਫਾਇਲ '%1' ਖੋਲ੍ਹੀ ਨਹੀਂ ਜਾ ਸਕੀ"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1344
 #, fuzzy, kde-format
 #| msgid "no collection"
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "ਕੋਈ ਭੰਡਾਰ ਨਹੀਂ"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1346
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"

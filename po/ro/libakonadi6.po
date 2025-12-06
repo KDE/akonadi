@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:52+0000\n"
+"POT-Creation-Date: 2025-12-06 00:43+0000\n"
 "PO-Revision-Date: 2013-01-13 00:43+0200\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -470,41 +470,41 @@ msgstr ""
 "Colecția-țintă „%1” conține deja\n"
 "o colecție cu denumirea „%2”."
 
-#: core/models/entitytreemodel.cpp:666
+#: core/models/entitytreemodel.cpp:668
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Denumire"
 
-#: core/models/entitytreemodel_p.cpp:1330
+#: core/models/entitytreemodel_p.cpp:1338
 #, fuzzy, kde-format
 #| msgid "Could not copy item:"
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Elementul nu poate fi copiat:"
 
-#: core/models/entitytreemodel_p.cpp:1332
+#: core/models/entitytreemodel_p.cpp:1340
 #, fuzzy, kde-format
 #| msgid "Could not copy collection:"
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Colecția nu poate fi copiată:"
 
-#: core/models/entitytreemodel_p.cpp:1334
+#: core/models/entitytreemodel_p.cpp:1342
 #, fuzzy, kde-format
 #| msgid "Could not move item:"
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Elementul nu poate fi mutat:"
 
-#: core/models/entitytreemodel_p.cpp:1336
+#: core/models/entitytreemodel_p.cpp:1344
 #, fuzzy, kde-format
 #| msgid "Could not move collection:"
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Colecția nu poate fi mutată:"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1346
 #, fuzzy, kde-format
 #| msgid "Could not link entity:"
 msgctxt "@info"
