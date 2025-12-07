@@ -78,16 +78,16 @@ public:
     /**
      * @short The interface for reacting on monitored or replayed changes.
      *
-     * The Observer provides an interface to react on monitored or replayed changes.
+     * The ObserverV2 provides an interface to react on monitored or replayed changes.
      *
      * Since the this base class does only tell the change recorder that the change
      * has been processed, an AgentBase subclass which wants to actually process
-     * the change needs to subclass Observer and reimplement the methods it is
+     * the change needs to subclass ObserverV2 and reimplement the methods it is
      * interested in.
      *
-     * Such an agent specific Observer implementation can either be done
+     * Such an agent specific ObserverV2 implementation can either be done
      * stand-alone, i.e. as a separate object, or by inheriting both AgentBase
-     * and AgentBase::Observer.
+     * and AgentBase::ObserverV2.
      *
      * The observer implementation then has registered with the agent, so it
      * can forward the incoming changes to the observer.
@@ -109,10 +109,10 @@ public:
      *     ~ExampleAgent();
      *
      *   private:
-     *     AgentBase::Observer *mObserver;
+     *     AgentBase::ObserverV2 *mObserver;
      * };
      *
-     * class ExampleObserver : public AgentBase::Observer
+     * class ExampleObserver : public AgentBase::ObserverV2
      * {
      *   protected:
      *     void itemChanged( const Item &item );
@@ -138,13 +138,13 @@ public:
      *
      *   // let base implementation tell the change recorder that we
      *   // have processed the change
-     *   AgentBase::Observer::itemChanged( item );
+     *   AgentBase::ObserverV2::itemChanged( item );
      * }
      * @endcode
      *
      * Example for observer through multiple inheritance:
      * @code
-     * class ExampleAgent : public AgentBase, public AgentBase::Observer
+     * class ExampleAgent : public AgentBase, public AgentBase::ObserverV2
      * {
      *   public:
      *     ExampleAgent( const QString &id );
@@ -168,26 +168,24 @@ public:
      *
      *   // let base implementation tell the change recorder that we
      *   // have processed the change
-     *   AgentBase::Observer::itemChanged( item );
+     *   AgentBase::ObserverV2::itemChanged( item );
      * }
      * @endcode
      *
      * @author Kevin Krammer <kevin.krammer@gmx.at>
-     *
-     * @deprecated Use ObserverV2 instead
      */
-    class AKONADIAGENTBASE_DEPRECATED AKONADIAGENTBASE_EXPORT Observer
+    class AKONADIAGENTBASE_EXPORT ObserverV2
     {
     public:
         /**
          * Creates an observer instance.
          */
-        Observer();
+        ObserverV2();
 
         /**
          * Destroys the observer instance.
          */
-        virtual ~Observer();
+        virtual ~ObserverV2();
 
         /**
          * Reimplement to handle adding of new items.
@@ -227,18 +225,6 @@ public:
          * @param collection The deleted collection.
          */
         virtual void collectionRemoved(const Akonadi::Collection &collection);
-    };
-
-    /**
-     * BC extension of Observer with support for monitoring item and collection moves.
-     * Use this one instead of Observer.
-     *
-     * @since 4.4
-     */
-    class AKONADIAGENTBASE_EXPORT ObserverV2 : public Observer
-    {
-    public:
-        using Observer::collectionChanged;
 
         /**
          * Reimplement to handle item moves.
@@ -439,7 +425,7 @@ public:
 
         // check if T also inherits AgentBase::Observer and
         // if it does, automatically register it on itself
-        auto observer = dynamic_cast<Observer *>(&r);
+        auto observer = dynamic_cast<ObserverV2 *>(&r);
         if (observer != nullptr) {
             r.registerObserver(observer);
         }
@@ -521,7 +507,7 @@ public:
      *                 the caller stays owner of the pointer and can reset
      *                 the registration by calling this method with @c 0
      */
-    void registerObserver(Observer *observer);
+    void registerObserver(ObserverV2 *observer);
 
     /**
      * This method is used to set the name of the agent.

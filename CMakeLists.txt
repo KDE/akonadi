@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
-set(PIM_VERSION "6.6.40")
+set(PIM_VERSION "6.6.41")
 project(Akonadi VERSION "6.6.41")
 
 # ECM setup

@@ -53,15 +53,15 @@ using namespace Akonadi;
 using namespace std::chrono_literals;
 static AgentBase *sAgentBase = nullptr;
 
-AgentBase::Observer::Observer()
+AgentBase::ObserverV2::ObserverV2()
 {
 }
 
-AgentBase::Observer::~Observer()
+AgentBase::ObserverV2::~ObserverV2()
 {
 }
 
-void AgentBase::Observer::itemAdded(const Item &item, const Collection &collection)
+void AgentBase::ObserverV2::itemAdded(const Item &item, const Collection &collection)
 {
     Q_UNUSED(item)
     Q_UNUSED(collection)
@@ -70,7 +70,7 @@ void AgentBase::Observer::itemAdded(const Item &item, const Collection &collecti
     }
 }
 
-void AgentBase::Observer::itemChanged(const Item &item, const QSet<QByteArray> &partIdentifiers)
+void AgentBase::ObserverV2::itemChanged(const Item &item, const QSet<QByteArray> &partIdentifiers)
 {
     Q_UNUSED(item)
     Q_UNUSED(partIdentifiers)
@@ -79,7 +79,7 @@ void AgentBase::Observer::itemChanged(const Item &item, const QSet<QByteArray> &
     }
 }
 
-void AgentBase::Observer::itemRemoved(const Item &item)
+void AgentBase::ObserverV2::itemRemoved(const Item &item)
 {
     Q_UNUSED(item)
     if (sAgentBase) {
@@ -87,7 +87,7 @@ void AgentBase::Observer::itemRemoved(const Item &item)
     }
 }
 
-void AgentBase::Observer::collectionAdded(const Akonadi::Collection &collection, const Akonadi::Collection &parent)
+void AgentBase::ObserverV2::collectionAdded(const Akonadi::Collection &collection, const Akonadi::Collection &parent)
 {
     Q_UNUSED(collection)
     Q_UNUSED(parent)
@@ -96,7 +96,7 @@ void AgentBase::Observer::collectionAdded(const Akonadi::Collection &collection,
     }
 }
 
-void AgentBase::Observer::collectionChanged(const Collection &collection)
+void AgentBase::ObserverV2::collectionChanged(const Collection &collection)
 {
     Q_UNUSED(collection)
     if (sAgentBase) {
@@ -104,7 +104,7 @@ void AgentBase::Observer::collectionChanged(const Collection &collection)
     }
 }
 
-void AgentBase::Observer::collectionRemoved(const Collection &collection)
+void AgentBase::ObserverV2::collectionRemoved(const Collection &collection)
 {
     Q_UNUSED(collection)
     if (sAgentBase) {
@@ -1085,7 +1085,7 @@ void AgentBase::cleanup()
     d->mEventLoopLocker = nullptr;
 }
 
-void AgentBase::registerObserver(Observer *observer)
+void AgentBase::registerObserver(ObserverV2 *observer)
 {
     Q_D(AgentBase);
 
