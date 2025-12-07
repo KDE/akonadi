@@ -1085,7 +1085,7 @@ void AgentBase::cleanup()
     d->mEventLoopLocker = nullptr;
 }
 
-void AgentBase::registerObserver(Observer *observer)
+void AgentBase::registerObserver(ObserverV2 *observer)
 {
     Q_D(AgentBase);
 

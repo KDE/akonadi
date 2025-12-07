@@ -98,7 +98,7 @@ public:
 
     org::freedesktop::Akonadi::Tracer *mTracer = nullptr;
 
-    AgentBase::Observer *mObserver = nullptr;
+    AgentBase::ObserverV2 *mObserver = nullptr;
     QDBusInterface *mPowerInterface = nullptr;
 
     QTimer *mTemporaryOfflineTimer = nullptr;

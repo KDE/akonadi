@@ -235,6 +235,10 @@ public:
      *
      * @since 4.4
      */
+    QT_WARNING_PUSH
+    QT_WARNING_DISABLE_GCC("-Wdeprecated-declarations")
+    QT_WARNING_DISABLE_CLANG("-Wdeprecated-declarations")
+    // TODO fold in and remove the Observer class */
     class AKONADIAGENTBASE_EXPORT ObserverV2 : public Observer
     {
     public:
@@ -439,7 +443,7 @@ public:
 
         // check if T also inherits AgentBase::Observer and
         // if it does, automatically register it on itself
-        auto observer = dynamic_cast<Observer *>(&r);
+        auto observer = dynamic_cast<ObserverV2 *>(&r);
         if (observer != nullptr) {
             r.registerObserver(observer);
         }
@@ -521,7 +525,7 @@ public:
      *                 the caller stays owner of the pointer and can reset
      *                 the registration by calling this method with @c 0
      */
-    void registerObserver(Observer *observer);
+    void registerObserver(ObserverV2 *observer);
 
     /**
      * This method is used to set the name of the agent.
