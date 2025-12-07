@@ -168,8 +168,15 @@ void EntityMimeTypeFilterModel::setHeaderGroup(EntityTreeModel::HeaderGroup head
 {
     Q_D(EntityMimeTypeFilterModel);
     if (d->m_headerGroup != headerGroup) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+        beginFilterChange();
+#endif
         d->m_headerGroup = headerGroup; // this changes the column count
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+        endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
         invalidateFilter(); // and filterAcceptsColumn depends on the column count
+#endif
     }
 }
 

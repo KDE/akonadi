@@ -63,7 +63,11 @@ bool CollectionFilterProxyModelPrivate::collectionAccepted(const QModelIndex &in
                                          << "but the resource is not visible:" << mParent->sourceModel()->data(resource).toString();
                 acceptedResources.clear();
                 // defer reset, the model might still be supplying new items at this point which crashes
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+                mParent->invalidate();
+#else
                 mParent->invalidateFilter();
+#endif
                 return true;
             }
         }
@@ -105,14 +109,28 @@ CollectionFilterProxyModel::~CollectionFilterProxyModel() = default;
 void CollectionFilterProxyModel::addMimeTypeFilters(const QStringList &typeList)
 {
     const QStringList mimeTypes = d->mimeChecker.wantedMimeTypes() + typeList;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->mimeChecker.setWantedMimeTypes(mimeTypes);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 void CollectionFilterProxyModel::addMimeTypeFilter(const QString &type)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->mimeChecker.addWantedMimeType(type);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 bool CollectionFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
@@ -127,15 +145,29 @@ QStringList CollectionFilterProxyModel::mimeTypeFilters() const
 
 void CollectionFilterProxyModel::clearFilters()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
     d->mimeChecker = MimeTypeChecker();
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
     invalidateFilter();
+#endif
 }
 
 void CollectionFilterProxyModel::setExcludeVirtualCollections(bool exclude)
 {
     if (exclude != d->mExcludeVirtualCollections) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+        beginFilterChange();
+#endif
         d->mExcludeVirtualCollections = exclude;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+        endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
         invalidateFilter();
+#endif
     }
 }
 
