@@ -601,6 +601,7 @@ public:
 
     void encodeToClipboard(QItemSelectionModel *selectionModel, bool cut = false)
     {
+        Q_UNUSED(cut);
         Q_ASSERT(selectionModel);
         if (safeSelectedRows(selectionModel).isEmpty()) {
             return;
@@ -677,7 +678,9 @@ public:
             }
         }
 
+#ifndef QT_NO_CLIPBOARD
         mActionStateManager.updateState(selectedCollectionsList, selectedFavoriteCollectionsList, selectedItems, clipboardUrls);
+#endif
         if (favoritesModel) {
             enableAction(StandardActionManager::SynchronizeFavoriteCollections, (favoritesModel->rowCount() > 0));
         }
@@ -1823,7 +1826,9 @@ public:
     QStringList mCapabilityFilter;
     QStringList mCollectionPropertiesPageNames;
     QMap<StandardActionManager::Type, QPointer<RecentCollectionAction>> mRecentCollectionsMenu;
+#ifndef QT_NO_CLIPBOARD
     QList<QUrl> clipboardUrls;
+#endif
 };
 
 /// @endcond

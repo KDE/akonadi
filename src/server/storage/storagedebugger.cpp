@@ -77,10 +77,10 @@ void StorageDebugger::enableSQLDebugging(bool enable)
     mEnabled = enable;
 }
 
-void StorageDebugger::writeToFile(const QString &file)
+bool StorageDebugger::writeToFile(const QString &file)
 {
     mFile = std::make_unique<QFile>(file);
-    mFile->open(QIODevice::WriteOnly);
+    return mFile->open(QIODevice::WriteOnly);
 }
 
 void StorageDebugger::addConnection(qint64 id, const QString &name)

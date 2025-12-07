@@ -55,6 +55,10 @@ void ActionStateManager::updateState(const Collection::List &collections,
                                      const Item::List &items,
                                      const QList<QUrl> &clipboardUrls)
 {
+#ifdef QT_NO_CLIPBOARD
+    Q_UNUSED(clipboardUrls);
+#endif
+
     const int collectionCount = collections.count();
     const bool singleCollectionSelected = (collectionCount == 1);
     const bool multipleCollectionsSelected = (collectionCount > 1);

@@ -50,10 +50,13 @@ public:
     {
         if (!mFileName.isEmpty()) {
             QFile outputFile(mFileName);
-            outputFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Unbuffered);
-            outputFile.write(data, len);
-            outputFile.putChar('\n');
-            outputFile.close();
+            if (outputFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Unbuffered)) {
+                outputFile.write(data, len);
+                outputFile.putChar('\n');
+                outputFile.close();
+            } else {
+                return -1;
+            }
         }
 
         return len;
@@ -155,7 +158,7 @@ public:
             QDir().mkpath(finfo.absolutePath());
         }
         file.setFileName(errorLogFileName());
-        file.open(QIODevice::WriteOnly | QIODevice::Unbuffered);
+        std::ignore = file.open(QIODevice::WriteOnly | QIODevice::Unbuffered);
     }
 
     void setOrigHandler(QtMessageHandler origHandler_)

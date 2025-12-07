@@ -77,14 +77,14 @@ void ExternalPartStorageTest::testResolveAbsolutePath()
     QCOMPARE(path, expectedFilePath);
 
     // Create the file in the old flat hierarchy
-    QFile(expectedBasePath + filename).open(QIODevice::WriteOnly);
+    QVERIFY(QFile(expectedBasePath + filename).open(QIODevice::WriteOnly));
     QCOMPARE(ExternalPartStorage::resolveAbsolutePath(filename, &exists), QString(expectedBasePath + filename));
     QVERIFY(exists);
     QVERIFY(QFile::remove(expectedBasePath + filename));
 
     // Create the file in the new hierarchy - will return the same as the first
     QDir().mkpath(expectedPath);
-    QFile(expectedFilePath).open(QIODevice::WriteOnly);
+    QVERIFY(QFile(expectedFilePath).open(QIODevice::WriteOnly));
     exists = false;
     // Check that this time we got the new path and exists flag is correctly set
     path = ExternalPartStorage::resolveAbsolutePath(filename, &exists);

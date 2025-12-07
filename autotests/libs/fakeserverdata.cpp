@@ -19,6 +19,7 @@ FakeServerData::FakeServerData(EntityTreeModel *model, FakeSession *session, Fak
     , m_nextItemId(0)
     , m_nextTagId(1)
 {
+    Q_UNUSED(monitor);
     // can't use QueuedConnection here, because the Job might self-deleted before
     // the slot gets called
     connect(session, &FakeSession::jobAdded, this, [this](Akonadi::Job *job) {
@@ -36,6 +37,7 @@ FakeServerData::FakeServerData(TagModel *model, FakeSession *session, FakeMonito
     , m_nextItemId(0)
     , m_nextTagId(1)
 {
+    Q_UNUSED(monitor);
     connect(session, &FakeSession::jobAdded, this, [this](Akonadi::Job * /*unused*/) {
         QTimer::singleShot(0s, this, [this]() {
             jobAdded();

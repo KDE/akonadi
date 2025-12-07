@@ -22,7 +22,9 @@ RelationTableDescription::RelationTableDescription(const RelationDescription &re
     : TableDescription()
 {
     name = relation.firstTable + relation.secondTable + QStringLiteral("Relation");
-
+    QT_WARNING_PUSH
+    QT_WARNING_DISABLE_GCC("-Wmissing-designated-field-initializers")
+    QT_WARNING_DISABLE_CLANG("-Wmissing-designated-field-initializers")
     columns = {ColumnDescription{.name = QStringLiteral("%1_%2").arg(relation.firstTable, relation.firstColumn),
                                  .type = QStringLiteral("qint64"),
                                  .allowNull = false,
@@ -38,4 +40,5 @@ RelationTableDescription::RelationTableDescription(const RelationDescription &re
     indexes = {IndexDescription{.name = QStringLiteral("%1Index").arg(columns[0].name), .columns = {columns[0].name}, .isUnique = false},
                IndexDescription{.name = QStringLiteral("%1Index").arg(columns[1].name), .columns = {columns[1].name}, .isUnique = false}};
     indexes += relation.indexes;
+    QT_WARNING_POP
 }

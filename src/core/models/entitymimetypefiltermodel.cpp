@@ -180,7 +180,7 @@ QVariant EntityMimeTypeFilterModel::headerData(int section, Qt::Orientation orie
     }
 
     Q_D(const EntityMimeTypeFilterModel);
-    role += (EntityTreeModel::TerminalUserRole * d->m_headerGroup);
+    role += (EntityTreeModel::TerminalUserRole * static_cast<EntityTreeModel::Roles>(d->m_headerGroup));
     return sourceModel()->headerData(section, orientation, role);
 }
 
@@ -215,7 +215,9 @@ int EntityMimeTypeFilterModel::columnCount(const QModelIndex &parent) const
         return 0;
     }
 
-    const QVariant value = sourceModel()->data(mapToSource(parent), EntityTreeModel::ColumnCountRole + (EntityTreeModel::TerminalUserRole * d->m_headerGroup));
+    const QVariant value =
+        sourceModel()->data(mapToSource(parent),
+                            EntityTreeModel::ColumnCountRole + (EntityTreeModel::TerminalUserRole * static_cast<EntityTreeModel::Roles>(d->m_headerGroup)));
     if (!value.isValid()) {
         return 0;
     }

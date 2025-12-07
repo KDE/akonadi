@@ -12,7 +12,7 @@ using namespace Akonadi::Server;
 FileTracer::FileTracer(const QString &fileName)
     : m_file(fileName)
 {
-    m_file.open(QIODevice::WriteOnly | QIODevice::Unbuffered);
+    std::ignore = m_file.open(QIODevice::WriteOnly | QIODevice::Unbuffered);
 }
 
 FileTracer::~FileTracer() = default;

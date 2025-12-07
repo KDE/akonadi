@@ -245,14 +245,14 @@ private Q_SLOTS:
             // Create the payload file now, since don't have means to react
             // directly to the streaming command
             QFile file(ExternalPartStorage::resolveAbsolutePath(expectedPartData));
-            file.open(QIODevice::WriteOnly);
+            QVERIFY(file.open(QIODevice::WriteOnly));
             file.write(expectedFileData);
             file.close();
         } else if (storage == Part::Foreign) {
             // Create the foreign payload file
             QDir().mkpath(FakeAkonadiServer::basePath() + QStringLiteral("/tmp"));
             QFile file(QString::fromUtf8(expectedPartData));
-            file.open(QIODevice::WriteOnly);
+            QVERIFY(file.open(QIODevice::WriteOnly));
             file.write(expectedFileData);
             file.close();
         }

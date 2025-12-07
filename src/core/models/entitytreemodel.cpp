@@ -749,7 +749,7 @@ bool EntityTreeModel::setData(const QModelIndex &index, const QVariant &value, i
         return true;
     }
 
-    if (index.column() == 0 && (role & (Qt::EditRole | ItemRole | CollectionRole))) {
+    if (index.column() == 0 && (role & (static_cast<EntityTreeModel::Roles>(Qt::EditRole) | EntityTreeModel::ItemRole | EntityTreeModel::CollectionRole))) {
         if (Node::Collection == node->type) {
             Collection collection = d->m_collections.value(node->id);
             if (!collection.isValid() || !value.isValid()) {

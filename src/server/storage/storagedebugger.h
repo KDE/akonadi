@@ -63,7 +63,7 @@ public:
         ++mSequence;
     }
 
-    void writeToFile(const QString &file);
+    bool writeToFile(const QString &file);
 
     Q_SCRIPTABLE QList<DbConnection> connections() const;
 

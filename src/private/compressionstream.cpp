@@ -51,6 +51,8 @@ public:
             return "No progress is possible";
         case LZMA_PROG_ERROR:
             return "Programming error";
+        default:
+            return "internal lzma error encountered";
         }
 
         Q_UNREACHABLE();
@@ -282,8 +284,8 @@ qint64 CompressionStream::writeData(const char *data, qint64 dataSize)
         if (mCompressor->outputBufferAvailable() == 0 || (mResult == LZMA_STREAM_END) || finish) {
             const auto toWrite = mBuffer.size() - mCompressor->outputBufferAvailable();
             if (toWrite > 0) {
-                const auto writtenSize = mStream->write(mBuffer.constData(), toWrite);
-                if (writtenSize != toWrite) {
+                const qint64 writtenSize = mStream->write(mBuffer.constData(), toWrite);
+                if (writtenSize != static_cast<qint64>(toWrite)) {
                     qCWarning(AKONADIPRIVATE_LOG) << "Failed to write compressed data to output device:" << mStream->errorString();
                     setErrorString(QStringLiteral("Failed to write compressed data to output device."));
                     return 0;
