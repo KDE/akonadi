@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-06 00:43+0000\n"
+"POT-Creation-Date: 2025-12-08 00:44+0000\n"
 "PO-Revision-Date: 2025-08-19 05:03+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -2407,46 +2407,46 @@ msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "貼上失敗"
 
-#: widgets/standardactionmanager.cpp:822
+#: widgets/standardactionmanager.cpp:825
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "不能在資料夾名稱中加入 \"/\"。"
 
-#: widgets/standardactionmanager.cpp:822 widgets/standardactionmanager.cpp:826
+#: widgets/standardactionmanager.cpp:825 widgets/standardactionmanager.cpp:829
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "建立新資料夾錯誤"
 
-#: widgets/standardactionmanager.cpp:826
+#: widgets/standardactionmanager.cpp:829
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "不能在資料夾名稱的開頭或結尾加入 \".\"。"
 
-#: widgets/standardactionmanager.cpp:1065
+#: widgets/standardactionmanager.cpp:1068
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
 "you want to make it online?"
 msgstr "同步資料夾 \"%1\" 之前需要先讓資源上線。您要讓它上線嗎？"
 
-#: widgets/standardactionmanager.cpp:1066
+#: widgets/standardactionmanager.cpp:1069
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "帳號 \"%1\" 已離線"
 
-#: widgets/standardactionmanager.cpp:1067
+#: widgets/standardactionmanager.cpp:1070
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "上線"
 
-#: widgets/standardactionmanager.cpp:1681
+#: widgets/standardactionmanager.cpp:1684
 #, kde-format
 msgid "Move to This Folder"
 msgstr "移至此資料夾"
 
-#: widgets/standardactionmanager.cpp:1681
+#: widgets/standardactionmanager.cpp:1684
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "複製到此資料夾"

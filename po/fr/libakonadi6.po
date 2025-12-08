@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-06 00:43+0000\n"
+"POT-Creation-Date: 2025-12-08 00:44+0000\n"
 "PO-Revision-Date: 2025-07-24 08:22+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
@@ -2558,23 +2558,23 @@ msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Le collage a échoué"
 
-#: widgets/standardactionmanager.cpp:822
+#: widgets/standardactionmanager.cpp:825
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "Impossible d'ajouter « / » dans le nom de dossier."
 
-#: widgets/standardactionmanager.cpp:822 widgets/standardactionmanager.cpp:826
+#: widgets/standardactionmanager.cpp:825 widgets/standardactionmanager.cpp:829
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Erreur à la création d'un nouveau dossier"
 
-#: widgets/standardactionmanager.cpp:826
+#: widgets/standardactionmanager.cpp:829
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "Impossible d'ajouter « . » au début ou à la fin du nom d'un dossier."
 
-#: widgets/standardactionmanager.cpp:1065
+#: widgets/standardactionmanager.cpp:1068
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2583,23 +2583,23 @@ msgstr ""
 "Avant de pouvoir synchroniser le dossier « %1 », il est nécessaire que la "
 "ressource soit en ligne. Voulez-vous la mettre en ligne ?"
 
-#: widgets/standardactionmanager.cpp:1066
+#: widgets/standardactionmanager.cpp:1069
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "Le compte « %1 » est hors ligne"
 
-#: widgets/standardactionmanager.cpp:1067
+#: widgets/standardactionmanager.cpp:1070
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Se connecter"
 
-#: widgets/standardactionmanager.cpp:1681
+#: widgets/standardactionmanager.cpp:1684
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Déplacer vers ce dossier"
 
-#: widgets/standardactionmanager.cpp:1681
+#: widgets/standardactionmanager.cpp:1684
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Copier vers ce dossier"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-06 00:43+0000\n"
+"POT-Creation-Date: 2025-12-08 00:44+0000\n"
 "PO-Revision-Date: 2013-01-13 00:43+0200\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -2636,24 +2636,24 @@ msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Lipirea a eșuat"
 
-#: widgets/standardactionmanager.cpp:822
+#: widgets/standardactionmanager.cpp:825
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "Nu se poate adăuga „/” în denumirea dosarului."
 
-#: widgets/standardactionmanager.cpp:822 widgets/standardactionmanager.cpp:826
+#: widgets/standardactionmanager.cpp:825 widgets/standardactionmanager.cpp:829
 #, fuzzy, kde-format
 #| msgid "Create new folder error"
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Eroare la crearea noului dosar"
 
-#: widgets/standardactionmanager.cpp:826
+#: widgets/standardactionmanager.cpp:829
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "Nu se poate adăuga „.” la începutul sau sfârșitul denumirii dosarului."
 
-#: widgets/standardactionmanager.cpp:1065
+#: widgets/standardactionmanager.cpp:1068
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2662,24 +2662,24 @@ msgstr ""
 "Înainte de a sincroniza dosarul „%1” trebuie să conectați resursa. Doriți s-"
 "o conectați?"
 
-#: widgets/standardactionmanager.cpp:1066
+#: widgets/standardactionmanager.cpp:1069
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "Contul „%1” este deconectat"
 
-#: widgets/standardactionmanager.cpp:1067
+#: widgets/standardactionmanager.cpp:1070
 #, fuzzy, kde-format
 #| msgid "Work Offline"
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Lucrează deconectat"
 
-#: widgets/standardactionmanager.cpp:1681
+#: widgets/standardactionmanager.cpp:1684
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Mută în acest dosar"
 
-#: widgets/standardactionmanager.cpp:1681
+#: widgets/standardactionmanager.cpp:1684
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Copiază în acest dosar"
