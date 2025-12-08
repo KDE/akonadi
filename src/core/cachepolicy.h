@@ -8,7 +8,7 @@
 
 #include "akonadicore_export.h"
 
-#include <QObject>
+#include <QMetaType>
 #include <QSharedDataPointer>
 #include <QStringList>
 
