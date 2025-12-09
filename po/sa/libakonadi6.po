@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-08 00:44+0000\n"
+"POT-Creation-Date: 2025-12-09 00:43+0000\n"
 "PO-Revision-Date: 2024-12-25 19:45+0530\n"
 "Last-Translator: kali <shreekantkalwar@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -2511,12 +2511,12 @@ msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Online गच्छतु"
 
-#: widgets/standardactionmanager.cpp:1684
+#: widgets/standardactionmanager.cpp:1685
 #, kde-format
 msgid "Move to This Folder"
 msgstr "This Folder इत्यत्र गच्छन्तु"
 
-#: widgets/standardactionmanager.cpp:1684
+#: widgets/standardactionmanager.cpp:1685
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "This Folder इत्यत्र प्रतिलिख्यताम्"

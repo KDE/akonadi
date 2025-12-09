@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-08 00:44+0000\n"
+"POT-Creation-Date: 2025-12-09 00:43+0000\n"
 "PO-Revision-Date: 2014-09-18 22:53+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -2630,12 +2630,12 @@ msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Tokoppeln"
 
-#: widgets/standardactionmanager.cpp:1684
+#: widgets/standardactionmanager.cpp:1685
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Na dissen Orner verschuven"
 
-#: widgets/standardactionmanager.cpp:1684
+#: widgets/standardactionmanager.cpp:1685
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Na dissen Orner koperen"

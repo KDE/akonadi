@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-08 00:44+0000\n"
+"POT-Creation-Date: 2025-12-09 00:43+0000\n"
 "PO-Revision-Date: 2024-09-19 14:56+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -2574,12 +2574,12 @@ msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Μετάβαση στο διαδίκτυο"
 
-#: widgets/standardactionmanager.cpp:1684
+#: widgets/standardactionmanager.cpp:1685
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Μετακίνηση σε αυτόν το φάκελο"
 
-#: widgets/standardactionmanager.cpp:1684
+#: widgets/standardactionmanager.cpp:1685
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Αντιγραφή σε αυτόν το φάκελο"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-08 00:44+0000\n"
+"POT-Creation-Date: 2025-12-09 00:43+0000\n"
 "PO-Revision-Date: 2025-08-20 15:41+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -2553,12 +2553,12 @@ msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Konektatu"
 
-#: widgets/standardactionmanager.cpp:1684
+#: widgets/standardactionmanager.cpp:1685
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Mugitu karpeta honetara"
 
-#: widgets/standardactionmanager.cpp:1684
+#: widgets/standardactionmanager.cpp:1685
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Kopiatu karpeta honetara"

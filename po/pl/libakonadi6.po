@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-08 00:44+0000\n"
+"POT-Creation-Date: 2025-12-09 00:43+0000\n"
 "PO-Revision-Date: 2025-07-26 19:24+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -2564,12 +2564,12 @@ msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Przejdź do trybu z siecią"
 
-#: widgets/standardactionmanager.cpp:1684
+#: widgets/standardactionmanager.cpp:1685
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Przenieś do tego katalogu"
 
-#: widgets/standardactionmanager.cpp:1684
+#: widgets/standardactionmanager.cpp:1685
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Skopiuj do tego katalogu"
