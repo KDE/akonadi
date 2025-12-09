@@ -9,11 +9,12 @@
 #include "akonadicore_export.h"
 #include "attribute.h"
 
-#include <QDebug>
+#include <QMetaType>
+#include <QSet>
 #include <QSharedPointer>
 #include <QString>
 #include <QUrl>
-
+class QDebug;
 namespace Akonadi
 {
 class TagModifyJob;

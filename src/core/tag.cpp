@@ -9,6 +9,7 @@
 #include "tag_p.h"
 
 #include "tagattribute.h"
+#include <QDebug>
 #include <QUrlQuery>
 #include <QUuid>
 
