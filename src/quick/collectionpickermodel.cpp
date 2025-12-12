@@ -35,12 +35,12 @@ public:
         mModel = new Akonadi::EntityTreeModel(mMonitor, mParent);
         mModel->setItemPopulationStrategy(Akonadi::EntityTreeModel::NoItemPopulation);
         mModel->setListFilter(Akonadi::CollectionFetchScope::Display);
-
-        mBaseModel = mModel;
+        mModel->setObjectName(QLatin1StringView("Base ETM for CollectionPickerModel"));
 
         // Filter by access rights. TODO: maybe this functionality could be provided by CollectionFilterProxyModel, to save one proxy?
         mRightsFilterModel = new Akonadi::EntityRightsFilterModel(parent);
-        mRightsFilterModel->setSourceModel(mBaseModel);
+        mRightsFilterModel->setObjectName(QLatin1StringView("Filter by access right"));
+        mRightsFilterModel->setSourceModel(mModel);
 
         // Display color
         mMimeTypeFilterModel = new ColorProxyModel(mParent);
@@ -49,7 +49,7 @@ public:
         mMimeTypeFilterModel->setSortCaseSensitivity(Qt::CaseInsensitive);
         mMimeTypeFilterModel->sort(0, Qt::AscendingOrder);
 
-        mParent->setSourceModel(mRightsFilterModel);
+        mParent->setSourceModel(mMimeTypeFilterModel);
     }
 
     ~CollectionPickerModelPrivate() = default;
@@ -61,7 +61,6 @@ public:
 
     Akonadi::Monitor *mMonitor = nullptr;
     Akonadi::EntityTreeModel *mModel = nullptr;
-    QAbstractItemModel *mBaseModel = nullptr;
     ColorProxyModel *mMimeTypeFilterModel = nullptr;
     Akonadi::EntityRightsFilterModel *mRightsFilterModel = nullptr;
 };

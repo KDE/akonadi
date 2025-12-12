@@ -63,7 +63,8 @@ QVariant ColorProxyModel::data(const QModelIndex &index, int role) const
                 return collection.attribute<Akonadi::EntityDisplayAttribute>()->iconName();
             }
         }
-        break;
+
+        return QLatin1StringView("document-open-folder");
     }
     case Qt::FontRole: {
         const Akonadi::Collection collection = Akonadi::CollectionUtils::fromIndex(index);
@@ -93,7 +94,7 @@ QVariant ColorProxyModel::data(const QModelIndex &index, int role) const
         if (color.isValid()) {
             return color;
         } else {
-            return QVariant{};
+            return QColor(0, 0, 0, 0);
         }
     }
     case IsResourceRole:
