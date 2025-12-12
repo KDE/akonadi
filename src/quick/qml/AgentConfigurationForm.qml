@@ -104,7 +104,7 @@ FormCard.FormCard {
 
     FormCard.FormDelegateSeparator {
         below: addAccountDelegate
-	visible: runningAgentsRepeater.count > 0
+        visible: runningAgentsRepeater.count > 0
     }
 
     FormCard.FormButtonDelegate {
