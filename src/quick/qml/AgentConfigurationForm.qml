@@ -73,6 +73,8 @@ FormCard.FormCard {
 
 
     Repeater {
+        id: runningAgentsRepeater
+
         model: root._configuration.runningAgents
         delegate: FormCard.FormButtonDelegate {
             id: agentDelegate
@@ -100,7 +102,10 @@ FormCard.FormCard {
         }
     }
 
-    FormCard.FormDelegateSeparator { below: addAccountDelegate }
+    FormCard.FormDelegateSeparator {
+        below: addAccountDelegate
+	visible: runningAgentsRepeater.count > 0
+    }
 
     FormCard.FormButtonDelegate {
         id: addAccountDelegate
