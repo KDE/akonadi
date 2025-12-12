@@ -106,16 +106,6 @@ public:
      */
     virtual bool save() const;
 
-    /**
-     * Reimplement to restore dialog size.
-     */
-    virtual QSize restoreDialogSize() const;
-
-    /**
-     * Reimplement to save dialog size.
-     */
-    virtual void saveDialogSize(const QSize &size);
-
     struct ActivitySettings {
         bool enabled = false;
         QStringList activities;
