@@ -63,11 +63,7 @@ bool CollectionFilterProxyModelPrivate::collectionAccepted(const QModelIndex &in
                                          << "but the resource is not visible:" << mParent->sourceModel()->data(resource).toString();
                 acceptedResources.clear();
                 // defer reset, the model might still be supplying new items at this point which crashes
-#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
-                mParent->invalidate();
-#else
                 mParent->invalidateFilter();
-#endif
                 return true;
             }
         }
