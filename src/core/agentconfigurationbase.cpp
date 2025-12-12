@@ -72,15 +72,6 @@ QWidget *AgentConfigurationBase::parentWidget() const
     return d->parentWidget;
 }
 
-QSize AgentConfigurationBase::restoreDialogSize() const
-{
-    return {};
-}
-
-void AgentConfigurationBase::saveDialogSize(const QSize & /*unused*/) // clazy:exclude=function-args-by-value
-{
-}
-
 void AgentConfigurationBase::saveActivitiesSettings(const ActivitySettings &activities) const
 {
     KConfigGroup activitiesGroup = d->config->group(QStringLiteral("Agent"));

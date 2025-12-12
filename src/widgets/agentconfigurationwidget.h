@@ -32,8 +32,6 @@ public:
 
     void load();
     void save();
-    [[nodiscard]] QSize restoreDialogSize() const;
-    void saveDialogSize(QSize size);
 
 Q_SIGNALS:
     void enableOkButton(bool enabled);

@@ -15,8 +15,10 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QWindow>
 
 #include <KLocalizedString>
+#include <KWindowConfig>
 
 namespace Akonadi
 {
@@ -27,21 +29,11 @@ public:
         : q(qq)
     {
     }
-    void restoreDialogSize();
     AgentConfigurationDialog *const q;
     QPushButton *okButton = nullptr;
     QScopedPointer<AgentConfigurationWidget> widget;
+    AgentInstance instance;
 };
-
-void AgentConfigurationDialogPrivate::restoreDialogSize()
-{
-    if (widget) {
-        const QSize size = widget->restoreDialogSize();
-        if (size.isValid()) {
-            q->resize(size);
-        }
-    }
-}
 
 } // namespace Akonadi
 
@@ -56,6 +48,7 @@ AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance
 
     auto l = new QVBoxLayout(this);
 
+    d->instance = instance;
     d->widget.reset(new AgentConfigurationWidget(instance, this));
     l->addWidget(d->widget.data());
 
@@ -71,14 +64,19 @@ AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance
         connect(d->widget.data(), &AgentConfigurationWidget::enableOkButton, d->okButton, &QPushButton::setEnabled);
     }
 
-    d->restoreDialogSize();
+    create(); // ensure there's a window created
+    const auto config = KSharedConfig::openStateConfig();
+    const KConfigGroup group = config->group(d->instance.identifier() + u"_config");
+    KWindowConfig::restoreWindowSize(windowHandle(), group);
+    resize(windowHandle()->size()); // workaround for QTBUG-40584
 }
 
 AgentConfigurationDialog::~AgentConfigurationDialog()
 {
-    if (d->widget) {
-        d->widget->saveDialogSize(size());
-    }
+    auto config = KSharedConfig::openStateConfig();
+    KConfigGroup group = config->group(d->instance.identifier() + u"_config");
+    KWindowConfig::saveWindowSize(windowHandle(), group);
+    config->sync();
 }
 
 void AgentConfigurationDialog::accept()
