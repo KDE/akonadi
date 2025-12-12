@@ -42,8 +42,17 @@ Kirigami.ScrollablePage {
     }
 
     ListView {
+        id: tagList
+
         currentIndex: -1
         model: Akonadi.TagManager.tagModel
+
+        Kirigami.PlaceholderMessage {
+            anchors.centerIn: parent
+            width: parent.width - Kirigami.Units.largeSpacing * 4
+            text: i18nc("@info:placeholder", "There are no tags")
+            visible: tagList.count === 0
+        }
 
         delegate: Delegates.RoundedItemDelegate {
             id: tagDelegate
