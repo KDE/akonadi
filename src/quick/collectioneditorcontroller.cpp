@@ -44,7 +44,9 @@ void CollectionEditorController::fetchCollection()
         }
         mCollection = collections.at(0);
         setDisplayName(mCollection.displayName());
-        setIconName(mCollection.attribute<Akonadi::EntityDisplayAttribute>()->iconName());
+        if (auto attribute = mCollection.attribute<Akonadi::EntityDisplayAttribute>()) {
+            setIconName(attribute->iconName());
+        }
         setCachePolicy(mCollection.cachePolicy());
     });
 }
