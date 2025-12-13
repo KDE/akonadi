@@ -114,12 +114,15 @@ install(
         ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
-configure_file(
-    org.freedesktop.Akonadi.Control.service.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.Control.service
-)
-install(
-    FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.Control.service
+ecm_generate_dbus_service_file(
+    NAME org.freedesktop.Akonadi.Control
+    EXECUTABLE "${KDE_INSTALL_FULL_BINDIR}/akonadi_control"
+    SYSTEMD_SERVICE akonadi_control.service
     DESTINATION ${KDE_INSTALL_DBUSSERVICEDIR}
+)
+
+ecm_install_configured_files(
+    INPUT akonadi_control.service.in
+    @ONLY
+    DESTINATION ${KDE_INSTALL_SYSTEMDUSERUNITDIR}
 )
