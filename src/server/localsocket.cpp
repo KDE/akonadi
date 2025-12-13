@@ -33,3 +33,5 @@ bool LocalSocket::waitForBytesWritten(int msecs)
     return ok || mWriteCount != writeCountBefore; // cppcheck-suppress constStatement
 #endif
 }
+
+#include "moc_localsocket_p.cpp"
