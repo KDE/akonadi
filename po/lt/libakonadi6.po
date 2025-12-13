@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-09 00:43+0000\n"
+"POT-Creation-Date: 2025-12-13 00:44+0000\n"
 "PO-Revision-Date: 2024-11-13 01:45+0200\n"
 "Last-Translator: Liudas Ališauskas <liudas@akmc.lt>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -656,7 +656,7 @@ msgctxt "@action:button"
 msgid "Delete"
 msgstr "Trinti"
 
-#: quick/qml/AgentConfigurationForm.qml:107
+#: quick/qml/AgentConfigurationForm.qml:112
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
@@ -689,14 +689,21 @@ msgstr "Ar tikrai norite pašalinti žymę <resource>%1</resource>?"
 msgid "You won't be able to revert this action."
 msgstr ""
 
-#: quick/qml/TagManagerPage.qml:132
+#: quick/qml/TagManagerPage.qml:53
+#, fuzzy, kde-format
+#| msgid "Create new tag"
+msgctxt "@info:placeholder"
+msgid "There are no tags"
+msgstr "Sukurti naują žymę"
+
+#: quick/qml/TagManagerPage.qml:141
 #, fuzzy, kde-format
 #| msgid "Create new tag"
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
 msgstr "Sukurti naują žymę"
 
-#: quick/qml/TagManagerPage.qml:143
+#: quick/qml/TagManagerPage.qml:152
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Tag"

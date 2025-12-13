@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-09 00:43+0000\n"
+"POT-Creation-Date: 2025-12-13 00:44+0000\n"
 "PO-Revision-Date: 2024-11-14 14:03+0100\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -641,7 +641,7 @@ msgctxt "@action:button"
 msgid "Delete"
 msgstr "Smazat"
 
-#: quick/qml/AgentConfigurationForm.qml:107
+#: quick/qml/AgentConfigurationForm.qml:112
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
@@ -670,13 +670,20 @@ msgstr ""
 msgid "You won't be able to revert this action."
 msgstr "Tento krok nelze vrátit."
 
-#: quick/qml/TagManagerPage.qml:132
+#: quick/qml/TagManagerPage.qml:53
+#, fuzzy, kde-format
+#| msgid "Create new tag"
+msgctxt "@info:placeholder"
+msgid "There are no tags"
+msgstr "Vytvořit novou značku"
+
+#: quick/qml/TagManagerPage.qml:141
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
 msgstr ""
 
-#: quick/qml/TagManagerPage.qml:143
+#: quick/qml/TagManagerPage.qml:152
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Tag"

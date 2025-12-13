@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-09 00:43+0000\n"
+"POT-Creation-Date: 2025-12-13 00:44+0000\n"
 "PO-Revision-Date: 2017-12-17 18:01+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -674,7 +674,7 @@ msgctxt "@action:button"
 msgid "Delete"
 msgstr "Obriši"
 
-#: quick/qml/AgentConfigurationForm.qml:107
+#: quick/qml/AgentConfigurationForm.qml:112
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
@@ -710,7 +710,16 @@ msgid "You won't be able to revert this action."
 msgstr ""
 
 # >> @action:button
-#: quick/qml/TagManagerPage.qml:132
+#: quick/qml/TagManagerPage.qml:53
+#, fuzzy, kde-format
+#| msgctxt "@label"
+#| msgid "Create new tag"
+msgctxt "@info:placeholder"
+msgid "There are no tags"
+msgstr "Napravi novu oznaku"
+
+# >> @action:button
+#: quick/qml/TagManagerPage.qml:141
 #, fuzzy, kde-format
 #| msgctxt "@label"
 #| msgid "Create new tag"
@@ -718,7 +727,7 @@ msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
 msgstr "Napravi novu oznaku"
 
-#: quick/qml/TagManagerPage.qml:143
+#: quick/qml/TagManagerPage.qml:152
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Tag"

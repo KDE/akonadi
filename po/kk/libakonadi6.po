@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-09 00:43+0000\n"
+"POT-Creation-Date: 2025-12-13 00:44+0000\n"
 "PO-Revision-Date: 2013-07-14 03:20+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -664,7 +664,7 @@ msgctxt "@action:button"
 msgid "Delete"
 msgstr "Өшіру"
 
-#: quick/qml/AgentConfigurationForm.qml:107
+#: quick/qml/AgentConfigurationForm.qml:112
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
@@ -697,14 +697,21 @@ msgstr "Шынымен %1 ресурсты өшірмексіз бе?"
 msgid "You won't be able to revert this action."
 msgstr ""
 
-#: quick/qml/TagManagerPage.qml:132
+#: quick/qml/TagManagerPage.qml:53
+#, fuzzy, kde-format
+#| msgid "Unable to create agent instance."
+msgctxt "@info:placeholder"
+msgid "There are no tags"
+msgstr "Агент данасын құруға болмайды."
+
+#: quick/qml/TagManagerPage.qml:141
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
 msgstr "Агент данасын құруға болмайды."
 
-#: quick/qml/TagManagerPage.qml:143
+#: quick/qml/TagManagerPage.qml:152
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Tag"

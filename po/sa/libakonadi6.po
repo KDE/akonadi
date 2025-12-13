@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-09 00:43+0000\n"
+"POT-Creation-Date: 2025-12-13 00:44+0000\n"
 "PO-Revision-Date: 2024-12-25 19:45+0530\n"
 "Last-Translator: kali <shreekantkalwar@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -671,7 +671,7 @@ msgctxt "@action:button"
 msgid "Delete"
 msgstr "लुप्"
 
-#: quick/qml/AgentConfigurationForm.qml:107
+#: quick/qml/AgentConfigurationForm.qml:112
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
@@ -704,14 +704,21 @@ msgstr "किं भवान् वास्तवमेव <resource>%1</reso
 msgid "You won't be able to revert this action."
 msgstr ""
 
-#: quick/qml/TagManagerPage.qml:132
+#: quick/qml/TagManagerPage.qml:53
+#, fuzzy, kde-format
+#| msgid "Create new tag"
+msgctxt "@info:placeholder"
+msgid "There are no tags"
+msgstr "नूतनं टैगं रचयन्तु"
+
+#: quick/qml/TagManagerPage.qml:141
 #, fuzzy, kde-format
 #| msgid "Create new tag"
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
 msgstr "नूतनं टैगं रचयन्तु"
 
-#: quick/qml/TagManagerPage.qml:143
+#: quick/qml/TagManagerPage.qml:152
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Tag"

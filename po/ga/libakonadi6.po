@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdepim/libakonadi.po\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-09 00:43+0000\n"
+"POT-Creation-Date: 2025-12-13 00:44+0000\n"
 "PO-Revision-Date: 2007-07-11 08:14-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -661,7 +661,7 @@ msgctxt "@action:button"
 msgid "Delete"
 msgstr "Scrios"
 
-#: quick/qml/AgentConfigurationForm.qml:107
+#: quick/qml/AgentConfigurationForm.qml:112
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
@@ -692,14 +692,21 @@ msgstr "An bhfuil tú cinnte gur mian leat an acmhainn seo a scriosadh?"
 msgid "You won't be able to revert this action."
 msgstr ""
 
-#: quick/qml/TagManagerPage.qml:132
+#: quick/qml/TagManagerPage.qml:53
+#, fuzzy, kde-format
+#| msgid "Unable to create agent instance."
+msgctxt "@info:placeholder"
+msgid "There are no tags"
+msgstr "Níorbh fhéidir gníomhaire a chruthú."
+
+#: quick/qml/TagManagerPage.qml:141
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
 msgstr "Níorbh fhéidir gníomhaire a chruthú."
 
-#: quick/qml/TagManagerPage.qml:143
+#: quick/qml/TagManagerPage.qml:152
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Tag"
