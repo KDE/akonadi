@@ -18,8 +18,11 @@ FormCard.FormCard {
 
     required property var mimetypes
     required property string addPageTitle
+    property alias specialCollections: _configuration.specialCollections
 
     readonly property AgentConfiguration _configuration: AgentConfiguration {
+        id: _configuration
+
         mimetypes: root.mimetypes
         onErrorOccurred: (error) => (root.QQC2.ApplicationWindow.window as Kirigami.ApplicationWindow).showPassiveNotification(error)
     }
