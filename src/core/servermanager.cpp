@@ -201,15 +201,21 @@ bool ServerManager::start()
     if (hasInstanceIdentifier()) {
         args << QStringLiteral("--instance") << instanceIdentifier();
     }
-    const QString exec = QStandardPaths::findExecutable(QStringLiteral("akonadi_control"));
-    if (exec.isEmpty() || !QProcess::startDetached(exec, args)) {
-        qCWarning(AKONADICORE_LOG) << "Unable to execute akonadi_control, falling back to D-Bus auto-launch";
-        QDBusReply<void> reply = busIface->startService(ServerManager::serviceName(ServerManager::Control));
-        if (!reply.isValid()) {
-            qCDebug(AKONADICORE_LOG) << "Akonadi server could not be started via D-Bus either: " << reply.error().message();
+
+    QDBusReply<void> reply = busIface->startService(ServerManager::serviceName(ServerManager::Control));
+    if (!reply.isValid()) {
+        qCDebug(AKONADICORE_LOG) << "Akonadi server could not be started via D-Bus: " << reply.error().message();
+        qCDebug(AKONADICORE_LOG) << "Falling back to running akonadi_control via QProcess";
+        const QString exec = QStandardPaths::findExecutable(QStringLiteral("akonadi_control"));
+
+        if (exec.isEmpty() || !QProcess::startDetached(exec, args)) {
+            qCDebug(AKONADICORE_LOG) << "Could not run akonadi_control via QProcess either";
             return false;
         }
+
+        return true;
     }
+
     sInstance->setState(Starting);
     return true;
 }
