@@ -1,0 +1,15 @@
+# SPDX-FileCopyrightText: None
+# SPDX-License-Identifier: CC0-1.0
+
+[Unit]
+Description=Akonadi Control
+PartOf=graphical-session.target
+
+[Service]
+ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/akonadi_control
+Type=dbus
+BusName=org.freedesktop.Akonadi.Control
+TimeoutSec=5sec
+Slice=background.slice
+# Disable restart as we're dbus activated anyway
+Restart=no

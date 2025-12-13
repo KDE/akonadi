@@ -44,6 +44,8 @@ include(ECMMarkNonGuiExecutable)
 include(ECMAddTests)
 include(ECMSetupQtPluginMacroNames)
 include(ECMQmlModule)
+include(ECMConfiguredInstall)
+include(ECMGenerateDBusServiceFile)
 
 include(AkonadiMacros)
 include(ECMAddQch)
