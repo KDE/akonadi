@@ -235,6 +235,8 @@ set(akonadicore_models_SRCS
     models/agenttypemodel.cpp
     models/agenttypemodel.h
     models/collectionfilterproxymodel.cpp
+    models/colorproxymodel.cpp
+    models/colorproxymodel.h
     models/entitymimetypefiltermodel.cpp
     models/entitymimetypefiltermodel.h
     models/entityorderproxymodel.cpp
@@ -271,6 +273,7 @@ ecm_generate_headers(AkonadiCore_models_CC_HEADERS
     AgentInstanceFilterProxyModel
     AgentTypeModel
     CollectionFilterProxyModel
+    ColorProxyModel
     EntityMimeTypeFilterModel
     EntityOrderProxyModel
     EntityRightsFilterModel

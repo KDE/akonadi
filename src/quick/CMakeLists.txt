@@ -20,8 +20,6 @@ target_sources(
     PRIVATE
         agentconfiguration.cpp
         agentconfiguration.h
-        colorproxymodel.cpp
-        colorproxymodel.h
         collectioncomboboxmodel.cpp
         collectioncomboboxmodel.h
         collectionpickermodel.cpp

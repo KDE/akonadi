@@ -11,6 +11,7 @@
 #include <Akonadi/CollectionFetchScope>
 #include <Akonadi/CollectionFilterProxyModel>
 #include <Akonadi/CollectionUtils>
+#include <Akonadi/ColorProxyModel>
 #include <Akonadi/EntityRightsFilterModel>
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/Monitor>
@@ -18,7 +19,6 @@
 
 #include <KDescendantsProxyModel>
 
-#include "colorproxymodel.h"
 #include <QAbstractItemModel>
 
 using namespace Akonadi::Quick;

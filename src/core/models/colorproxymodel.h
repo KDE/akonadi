@@ -9,7 +9,7 @@
 #include <QColor>
 
 /// Despite the name, this handles the presentation of collections including display text and icons, not just colors.
-class ColorProxyModel : public Akonadi::CollectionFilterProxyModel
+class AKONADICORE_EXPORT ColorProxyModel : public Akonadi::CollectionFilterProxyModel
 {
     Q_OBJECT
 
