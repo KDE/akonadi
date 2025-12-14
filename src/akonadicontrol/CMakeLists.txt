@@ -44,6 +44,7 @@ target_sources(
         processcontrol.h
 
         onlineaccountsintegration.cpp
+	onlineaccountsintegration.h
 )
 if(COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(
