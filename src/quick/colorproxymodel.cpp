@@ -23,11 +23,12 @@ namespace
 {
 bool hasCompatibleMimeTypes(const Akonadi::Collection &collection)
 {
-    static constexpr std::array<QLatin1StringView, 6> goodMimeTypes = {
+    static constexpr std::array<QLatin1StringView, 7> goodMimeTypes = {
         "text/calendar"_L1,
         "application/x-vnd.akonadi.calendar.event"_L1,
         "application/x-vnd.akonadi.calendar.todo"_L1,
         "text/directory"_L1,
+        "inode/directory"_L1,
         "application/x-vnd.kde.contactgroup"_L1,
         "application/x-vnd.akonadi.calendar.journal"_L1,
     };
