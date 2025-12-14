@@ -110,34 +110,6 @@ add_feature_info(
     "Build plugin for Qt Designer"
 )
 
-set(AccountsQt6_MINIMUM_VERSION "1.16")
-find_package(AccountsQt6 ${AccountsQt6_MINIMUM_VERSION})
-set_package_properties(
-    AccountsQt6
-    PROPERTIES
-        DESCRIPTION
-            "Qt bindings for the Accounts framework"
-        URL
-            "https://gitlab.com/accounts-sso/libaccounts-qt"
-        TYPE
-            OPTIONAL
-)
-set(KAccounts_MINIMUM_VERSION "19.08.0")
-find_package(KAccounts6 ${KAccounts_MINIMUM_VERSION})
-set_package_properties(
-    KAccounts6
-    PROPERTIES
-        DESCRIPTION
-            "KDE library for Accounts framework integration"
-        URL
-            "https://invent.kde.org/network/kaccounts-integration"
-        TYPE
-            OPTIONAL
-)
-if(${AccountsQt6_FOUND} AND ${KAccounts6_FOUND})
-    set(WITH_ACCOUNTS TRUE)
-endif()
-
 set(LibLZMA_MINIMUM_VERSION "5.0.0")
 find_package(LibLZMA ${LibLZMA_MINIMUM_VERSION})
 set_package_properties(

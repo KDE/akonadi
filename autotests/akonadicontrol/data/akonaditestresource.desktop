@@ -89,7 +89,6 @@ Exec=akonadi_googlecontacts_resource
 X-Akonadi-MimeTypes=text/directory,
 X-Akonadi-Capabilities=Resource
 X-Akonadi-Identifier=akonadi_googlecontacts_resource
-X-Akonadi-Custom-KAccounts=google-contacts,google-calendar
 X-Akonadi-Custom-HasLocalStorage=true
 Icon=im-google
 

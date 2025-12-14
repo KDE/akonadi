@@ -1,15 +1,6 @@
 ########### next target ###############
 add_executable(akonadi_control)
 
-if(WITH_ACCOUNTS)
-    target_sources(
-        akonadi_control
-        PRIVATE
-            accountsintegration.cpp
-            accountsintegration.h
-    )
-endif()
-
 ecm_qt_declare_logging_category(akonadi_control HEADER akonadicontrol_debug.h IDENTIFIER AKONADICONTROL_LOG CATEGORY_NAME org.kde.pim.akonadicontrol
         DESCRIPTION "akonadi (Akonadi Control)"
         EXPORT AKONADI
@@ -26,7 +17,6 @@ qt_add_dbus_interfaces(control_SRCS
     ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Resource.xml
     ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Preprocessor.xml
     ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Server.xml
-    ${Akonadi_SOURCE_DIR}/src/interfaces/org.kde.Akonadi.Accounts.xml
 )
 qt_add_dbus_interface(control_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.ResourceManager.xml resource_manager)
 qt_add_dbus_interface(control_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.PreprocessorManager.xml preprocessor_manager)
@@ -97,16 +87,6 @@ target_link_libraries(
     Qt::DBus
     Qt::Gui
 )
-
-if(WITH_ACCOUNTS)
-    target_include_directories(akonadi_control PRIVATE ${ACCOUNTSQT_INCLUDE_DIRS})
-    # We need Qt::Xml because the Accounts framework leaks QDocument includes into public interface
-    target_link_libraries(
-        akonadi_control
-        ${ACCOUNTSQT_LIBRARIES}
-        Qt::Xml
-    )
-endif()
 
 install(
     TARGETS

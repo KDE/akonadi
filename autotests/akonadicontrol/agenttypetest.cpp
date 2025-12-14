@@ -30,9 +30,7 @@ void AgentTypeTest::testLoad_data()
     googleContactsResource.capabilities = QStringList{AgentType::CapabilityResource};
     googleContactsResource.instanceCounter = 0;
     googleContactsResource.identifier = QStringLiteral("akonadi_googlecontacts_resource");
-    googleContactsResource.custom =
-        QVariantMap{{QStringLiteral("KAccounts"), QStringList{QStringLiteral("google-contacts"), QStringLiteral("google-calendar")}},
-                    {QStringLiteral("HasLocalStorage"), true}};
+    googleContactsResource.custom = QVariantMap{{QStringLiteral("HasLocalStorage"), true}};
     googleContactsResource.launchMethod = AgentType::Process;
     // We test an UTF-8 name within quotes.
     googleContactsResource.name = QStringLiteral("\"Контакти Google\"");
