@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-13 00:44+0000\n"
+"POT-Creation-Date: 2025-12-14 00:42+0000\n"
 "PO-Revision-Date: 2013-01-13 00:43+0200\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -630,7 +630,7 @@ msgid ""
 "you updated your system recently please restart all KDE PIM applications."
 msgstr ""
 
-#: quick/colorproxymodel.cpp:83
+#: quick/colorproxymodel.cpp:84
 #, fuzzy, kde-format
 #| msgctxt "@info:status"
 #| msgid "Offline"
@@ -638,39 +638,39 @@ msgctxt "@item this is the default calendar"
 msgid "%1 (Offline)"
 msgstr "Deconectat"
 
-#: quick/colorproxymodel.cpp:86
+#: quick/colorproxymodel.cpp:87
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
 msgstr ""
 
-#: quick/qml/AgentConfigurationForm.qml:32
+#: quick/qml/AgentConfigurationForm.qml:35
 #, fuzzy, kde-format
 #| msgid "&Configure Agent Instance"
 msgctxt "@title:dialog"
 msgid "Configure %1"
 msgstr "&Configurează instanța agentului"
 
-#: quick/qml/AgentConfigurationForm.qml:38
+#: quick/qml/AgentConfigurationForm.qml:41
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
 msgstr ""
 
-#: quick/qml/AgentConfigurationForm.qml:54
+#: quick/qml/AgentConfigurationForm.qml:57
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify"
 msgstr ""
 
-#: quick/qml/AgentConfigurationForm.qml:63
+#: quick/qml/AgentConfigurationForm.qml:66
 #, fuzzy, kde-format
 #| msgid "Delete"
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "Șterge"
 
-#: quick/qml/AgentConfigurationForm.qml:112
+#: quick/qml/AgentConfigurationForm.qml:115
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"

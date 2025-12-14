@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-13 00:44+0000\n"
+"POT-Creation-Date: 2025-12-14 00:42+0000\n"
 "PO-Revision-Date: 2025-07-24 08:29+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -639,43 +639,43 @@ msgstr ""
 "è più recente (%1) della nostra (%2). Se hai aggiornato il tuo sistema di "
 "recente, riavvia tutte le applicazioni KDE PIM."
 
-#: quick/colorproxymodel.cpp:83
+#: quick/colorproxymodel.cpp:84
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Offline)"
 msgstr "%1 (Non in linea)"
 
-#: quick/colorproxymodel.cpp:86
+#: quick/colorproxymodel.cpp:87
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
 msgstr "%1 (Predefinito)"
 
-#: quick/qml/AgentConfigurationForm.qml:32
+#: quick/qml/AgentConfigurationForm.qml:35
 #, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
 msgstr "Configura %1"
 
-#: quick/qml/AgentConfigurationForm.qml:38
+#: quick/qml/AgentConfigurationForm.qml:41
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
 msgstr "Modifica o elimina questo agent degli account."
 
-#: quick/qml/AgentConfigurationForm.qml:54
+#: quick/qml/AgentConfigurationForm.qml:57
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify"
 msgstr "Modifica"
 
-#: quick/qml/AgentConfigurationForm.qml:63
+#: quick/qml/AgentConfigurationForm.qml:66
 #, kde-format
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "Elimina"
 
-#: quick/qml/AgentConfigurationForm.qml:112
+#: quick/qml/AgentConfigurationForm.qml:115
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"

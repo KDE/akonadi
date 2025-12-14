@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-13 00:44+0000\n"
-"PO-Revision-Date: 2025-07-23 03:48+0200\n"
+"POT-Creation-Date: 2025-12-14 00:42+0000\n"
+"PO-Revision-Date: 2025-12-13 05:07+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.8\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -625,43 +625,43 @@ msgstr ""
 "პროტოკოლის ვერსია არ ემთხვევა. სერვერის ვერსია (%1) უფრო ახალია, ვიდრე ჩვენი "
 "(%2). თუ სისტემა ახლახანს განაახლეთ, გადატვირთეთ ყველა KDE PIM აპლიკაცია."
 
-#: quick/colorproxymodel.cpp:83
+#: quick/colorproxymodel.cpp:84
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Offline)"
 msgstr "%1 (გათიშულია)"
 
-#: quick/colorproxymodel.cpp:86
+#: quick/colorproxymodel.cpp:87
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
 msgstr "%1 (ნაგულისხმევი)"
 
-#: quick/qml/AgentConfigurationForm.qml:32
+#: quick/qml/AgentConfigurationForm.qml:35
 #, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
 msgstr "%1-ის მორგება"
 
-#: quick/qml/AgentConfigurationForm.qml:38
+#: quick/qml/AgentConfigurationForm.qml:41
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
 msgstr "ამ ანგარიშის აგენტის შეცვლა ან წაშლა."
 
-#: quick/qml/AgentConfigurationForm.qml:54
+#: quick/qml/AgentConfigurationForm.qml:57
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify"
 msgstr "ჩასწორება"
 
-#: quick/qml/AgentConfigurationForm.qml:63
+#: quick/qml/AgentConfigurationForm.qml:66
 #, kde-format
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "წაშლა"
 
-#: quick/qml/AgentConfigurationForm.qml:112
+#: quick/qml/AgentConfigurationForm.qml:115
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
@@ -691,11 +691,10 @@ msgid "You won't be able to revert this action."
 msgstr "ეს ქმედება შეუქცევადია."
 
 #: quick/qml/TagManagerPage.qml:53
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "There are no tags"
-msgstr "ახალი ჭდის შექმნა"
+msgstr "ჭდეები არ არსებობს"
 
 #: quick/qml/TagManagerPage.qml:141
 #, kde-format

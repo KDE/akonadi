@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-13 00:44+0000\n"
+"POT-Creation-Date: 2025-12-14 00:42+0000\n"
 "PO-Revision-Date: 2024-12-15 18:58+0530\n"
 "Last-Translator: Kali <EMAIL@ADDRESS>\n"
 "Language-Team: Hindi <fedora-trans-hi@redhat.com>\n"
@@ -626,7 +626,7 @@ msgstr ""
 "प्रोटोकॉल संस्करण बेमेल है। सर्वर संस्करण हमारे (%2) से नया (%1) है। यदि आपने हाल ही में "
 "अपना सिस्टम अपडेट किया है तो कृपया सभी KDE PIM अनुप्रयोगों को पुनः आरंभ करें।"
 
-#: quick/colorproxymodel.cpp:83
+#: quick/colorproxymodel.cpp:84
 #, fuzzy, kde-format
 #| msgctxt "@info:status"
 #| msgid "Offline"
@@ -634,13 +634,13 @@ msgctxt "@item this is the default calendar"
 msgid "%1 (Offline)"
 msgstr "ऑफलाइन"
 
-#: quick/colorproxymodel.cpp:86
+#: quick/colorproxymodel.cpp:87
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
 msgstr ""
 
-#: quick/qml/AgentConfigurationForm.qml:32
+#: quick/qml/AgentConfigurationForm.qml:35
 #, fuzzy, kde-format
 #| msgctxt "@title:window"
 #| msgid "Configure Account"
@@ -648,27 +648,27 @@ msgctxt "@title:dialog"
 msgid "Configure %1"
 msgstr "खाता कॉन्फ़िगर करें"
 
-#: quick/qml/AgentConfigurationForm.qml:38
+#: quick/qml/AgentConfigurationForm.qml:41
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
 msgstr ""
 
-#: quick/qml/AgentConfigurationForm.qml:54
+#: quick/qml/AgentConfigurationForm.qml:57
 #, fuzzy, kde-format
 #| msgid "&Modify..."
 msgctxt "@action:button"
 msgid "Modify"
 msgstr "&संशोधित करें..."
 
-#: quick/qml/AgentConfigurationForm.qml:63
+#: quick/qml/AgentConfigurationForm.qml:66
 #, fuzzy, kde-format
 #| msgid "Delete"
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "मिटाना"
 
-#: quick/qml/AgentConfigurationForm.qml:112
+#: quick/qml/AgentConfigurationForm.qml:115
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
