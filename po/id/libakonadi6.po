@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 14:40+0000\n"
+"POT-Creation-Date: 2025-12-14 02:32+0000\n"
 "PO-Revision-Date: 2024-09-30 18:09+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: https://t.me/Localizations_KDE_Indonesia\n"
@@ -647,7 +647,7 @@ msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
 msgstr ""
 
-#: quick/qml/AgentConfigurationForm.qml:32
+#: quick/qml/AgentConfigurationForm.qml:35
 #, fuzzy, kde-format
 #| msgctxt "@title:window"
 #| msgid "Configure Account"
@@ -655,27 +655,27 @@ msgctxt "@title:dialog"
 msgid "Configure %1"
 msgstr "Konfigurasi Akun"
 
-#: quick/qml/AgentConfigurationForm.qml:38
+#: quick/qml/AgentConfigurationForm.qml:41
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
 msgstr ""
 
-#: quick/qml/AgentConfigurationForm.qml:54
+#: quick/qml/AgentConfigurationForm.qml:57
 #, fuzzy, kde-format
 #| msgid "&Modify..."
 msgctxt "@action:button"
 msgid "Modify"
 msgstr "&Modifikasi..."
 
-#: quick/qml/AgentConfigurationForm.qml:63
+#: quick/qml/AgentConfigurationForm.qml:66
 #, fuzzy, kde-format
 #| msgid "Delete"
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "Hapus"
 
-#: quick/qml/AgentConfigurationForm.qml:107
+#: quick/qml/AgentConfigurationForm.qml:110
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"

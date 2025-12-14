@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 14:40+0000\n"
+"POT-Creation-Date: 2025-12-14 02:32+0000\n"
 "PO-Revision-Date: 2025-08-25 09:08+0300\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -639,31 +639,31 @@ msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
 msgstr "%1 (noklusējuma)"
 
-#: quick/qml/AgentConfigurationForm.qml:32
+#: quick/qml/AgentConfigurationForm.qml:35
 #, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
 msgstr "Konfigurēt „%1“"
 
-#: quick/qml/AgentConfigurationForm.qml:38
+#: quick/qml/AgentConfigurationForm.qml:41
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
 msgstr "Mainīt vai dzēst šo konta aģentu."
 
-#: quick/qml/AgentConfigurationForm.qml:54
+#: quick/qml/AgentConfigurationForm.qml:57
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify"
 msgstr "Mainīt"
 
-#: quick/qml/AgentConfigurationForm.qml:63
+#: quick/qml/AgentConfigurationForm.qml:66
 #, kde-format
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "Dzēst"
 
-#: quick/qml/AgentConfigurationForm.qml:107
+#: quick/qml/AgentConfigurationForm.qml:110
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
