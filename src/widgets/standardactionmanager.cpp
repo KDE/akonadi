@@ -1268,12 +1268,11 @@ public:
     void slotSynchronizeFavoriteCollections()
     {
         Q_ASSERT(favoritesModel);
-        const auto collectionIds = favoritesModel->collectionIds();
-        for (const auto &id : collectionIds) {
+        const auto collections = favoritesModel->collections();
+        for (const auto &collection : collections) {
             // there might be virtual collections in favorites which cannot be checked
             // so let's be safe here, agentmanager asserts otherwise
-            const auto collection = Collection(id);
-            if (!collection.isValid()) {
+            if (!collection.resource().isEmpty()) {
                 AgentManager::self()->synchronizeCollection(collection, false);
             }
         }

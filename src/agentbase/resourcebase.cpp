@@ -1036,7 +1036,7 @@ void ResourceBasePrivate::slotPrepareItemRetrievalResult(KJob *job)
         return;
     }
     const QSet<QByteArray> parts = scheduler->currentTask().itemParts;
-    if (!q->retrieveItems(fetch->items(), parts)) {
+    if (!q->retrieveItem(fetch->items().at(0), parts)) {
         q->cancelTask();
     }
 }
