@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-14 00:42+0000\n"
+"POT-Creation-Date: 2025-12-15 00:42+0000\n"
 "PO-Revision-Date: 2025-09-12 12:44+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -27,34 +27,24 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "g.sora@tiscali.it"
 
-#: agentbase/accountsintegration.cpp:86
-#, kde-format
-msgid "There is currently no account configured."
-msgstr "Currentemente il non ha alcun conto configurate."
-
-#: agentbase/accountsintegration.cpp:103
-#, kde-format
-msgid "Accounts integration is not supported"
-msgstr "Integration de contos non es supportate"
-
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Incapace de registrar objecto a dbus: %1"
 
-#: agentbase/agentbase.cpp:398
+#: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 de typo %2"
 
-#: agentbase/agentbase.cpp:816
+#: agentbase/agentbase.cpp:818
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Identificator de agente"
 
-#: agentbase/agentbase.cpp:822
+#: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Agente Akonadi"
@@ -163,7 +153,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "Carga cancellate."
 
-#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
+#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, kde-format
 msgid "Akonadi Control"
 msgstr "Controlo de Akonadi"
@@ -448,6 +438,18 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Nomine"
 
+#: core/models/colorproxymodel.cpp:85
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "%1 (foras de linea)"
+
+#: core/models/colorproxymodel.cpp:88
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr "%1 (Predefinite)"
+
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
@@ -588,7 +590,7 @@ msgstr "Plugin sin nomine"
 msgid "No description available"
 msgstr "Nulle description disponibile"
 
-#: core/servermanager.cpp:265
+#: core/servermanager.cpp:271
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -601,7 +603,7 @@ msgstr ""
 "Si tu recentemente actualisava tu systema pro favor exi e face secure omne "
 "le applicationes que usa le version de protocollo correcte."
 
-#: core/servermanager.cpp:282
+#: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -629,18 +631,6 @@ msgstr ""
 "Version de protocollo in disaccordo. Vesion de servitor es plus nove ()%1 "
 "del nostre (%2). Si tu actualisava recentemente tu systema pro favor "
 "restarta le servitor Akonadi."
-
-#: quick/colorproxymodel.cpp:84
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Offline)"
-msgstr "%1 (foras de linea)"
-
-#: quick/colorproxymodel.cpp:87
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Default)"
-msgstr "%1 (Predefinite)"
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, kde-format
@@ -777,7 +767,7 @@ msgstr "Dele instantia de agente?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Tu vermente vole deler le instantia de agente selectionate?"
 
-#: widgets/agentconfigurationdialog.cpp:54
+#: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
@@ -2751,6 +2741,12 @@ msgstr "Incapace a analysar file de datos: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Incapace a trovar collection %1"
+
+#~ msgid "There is currently no account configured."
+#~ msgstr "Currentemente il non ha alcun conto configurate."
+
+#~ msgid "Accounts integration is not supported"
+#~ msgstr "Integration de contos non es supportate"
 
 #~ msgid "%1 Handbook"
 #~ msgstr "%1 Manual"

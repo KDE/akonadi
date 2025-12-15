@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-14 00:42+0000\n"
+"POT-Creation-Date: 2025-12-15 00:42+0000\n"
 "PO-Revision-Date: 2024-07-29 12:41+0200\n"
 "Last-Translator: rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -30,34 +30,24 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "mschlander@opensuse.org,rasmus@rosendahl-kaa.name"
 
-#: agentbase/accountsintegration.cpp:86
-#, kde-format
-msgid "There is currently no account configured."
-msgstr "Der er i øjeblikket ikke konfigureret nogen konto."
-
-#: agentbase/accountsintegration.cpp:103
-#, kde-format
-msgid "Accounts integration is not supported"
-msgstr "Konto-integration er ikke understøttet"
-
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Kan ikke registrere objekt hos dbus: %1"
 
-#: agentbase/agentbase.cpp:398
+#: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 af typen %2"
 
-#: agentbase/agentbase.cpp:816
+#: agentbase/agentbase.cpp:818
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Agent-identifikator"
 
-#: agentbase/agentbase.cpp:822
+#: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi-agent"
@@ -166,7 +156,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "Job annulleret."
 
-#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
+#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, kde-format
 msgid "Akonadi Control"
 msgstr "Akonadi-kontrol"
@@ -453,6 +443,20 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Navn"
 
+#: core/models/colorproxymodel.cpp:85
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid "Offline"
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "Offline"
+
+#: core/models/colorproxymodel.cpp:88
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr ""
+
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
@@ -594,7 +598,7 @@ msgstr "Unavngivet plugin"
 msgid "No description available"
 msgstr "Ingen beskrivelse tilgængelig"
 
-#: core/servermanager.cpp:265
+#: core/servermanager.cpp:271
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -607,7 +611,7 @@ msgstr ""
 "Hvis du for nyligt har opdateret dit system, så log venligst ud og ind igen "
 "for at sikre at alle programmer bruger den korrekte protokolversion."
 
-#: core/servermanager.cpp:282
+#: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -635,20 +639,6 @@ msgstr ""
 "Uoverensstemmelse i protokolversion. Serverversionen er nyere (%1) end din "
 "(%2). Hvis du har opdateret dit system for nyligt, så genstart venligst alle "
 "KDE PIM-programmer."
-
-#: quick/colorproxymodel.cpp:84
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Offline"
-msgctxt "@item this is the default calendar"
-msgid "%1 (Offline)"
-msgstr "Offline"
-
-#: quick/colorproxymodel.cpp:87
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Default)"
-msgstr ""
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, fuzzy, kde-format
@@ -792,7 +782,7 @@ msgstr "Vil du slette agentinstansen?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Vil du virkelig slette den markerede agentinstans?"
 
-#: widgets/agentconfigurationdialog.cpp:54
+#: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
@@ -2747,6 +2737,12 @@ msgstr "Kan ikke fortolke datafilen: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Kan ikke finde samlingen %1"
+
+#~ msgid "There is currently no account configured."
+#~ msgstr "Der er i øjeblikket ikke konfigureret nogen konto."
+
+#~ msgid "Accounts integration is not supported"
+#~ msgstr "Konto-integration er ikke understøttet"
 
 #~ msgid "%1 Handbook"
 #~ msgstr "Håndbog til %1"

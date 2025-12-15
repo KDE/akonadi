@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-14 00:42+0000\n"
+"POT-Creation-Date: 2025-12-15 00:42+0000\n"
 "PO-Revision-Date: 2024-12-15 18:58+0530\n"
 "Last-Translator: Kali <EMAIL@ADDRESS>\n"
 "Language-Team: Hindi <fedora-trans-hi@redhat.com>\n"
@@ -28,34 +28,24 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "आपके ईमेल"
 
-#: agentbase/accountsintegration.cpp:86
-#, kde-format
-msgid "There is currently no account configured."
-msgstr "वर्तमान में कोई खाता कॉन्फ़िगर नहीं किया गया है."
-
-#: agentbase/accountsintegration.cpp:103
-#, kde-format
-msgid "Accounts integration is not supported"
-msgstr "खाता एकीकरण समर्थित नहीं है"
-
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "dbus पर ऑब्जेक्ट पंजीकृत करने में असमर्थ: %1"
 
-#: agentbase/agentbase.cpp:398
+#: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 प्रकार %2"
 
-#: agentbase/agentbase.cpp:816
+#: agentbase/agentbase.cpp:818
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "एजेंट पहचानकर्ता"
 
-#: agentbase/agentbase.cpp:822
+#: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "अकोनाडी एजेंट"
@@ -164,7 +154,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "नौकरी रद्द कर दी गई."
 
-#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
+#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, kde-format
 msgid "Akonadi Control"
 msgstr "अकोनाडी नियंत्रण"
@@ -449,6 +439,20 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "नाम"
 
+#: core/models/colorproxymodel.cpp:85
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid "Offline"
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "ऑफलाइन"
+
+#: core/models/colorproxymodel.cpp:88
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr ""
+
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
@@ -588,7 +592,7 @@ msgstr "अनाम प्लगइन"
 msgid "No description available"
 msgstr "कोई विवरण उपलब्ध नहीं"
 
-#: core/servermanager.cpp:265
+#: core/servermanager.cpp:271
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -601,7 +605,7 @@ msgstr ""
 "यदि आपने हाल ही में अपना सिस्टम अपडेट किया है तो कृपया लॉग आउट करें और वापस लॉग इन करें "
 "ताकि यह सुनिश्चित हो सके कि सभी एप्लिकेशन सही प्रोटोकॉल संस्करण का उपयोग करते हैं।"
 
-#: core/servermanager.cpp:282
+#: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -625,20 +629,6 @@ msgid ""
 msgstr ""
 "प्रोटोकॉल संस्करण बेमेल है। सर्वर संस्करण हमारे (%2) से नया (%1) है। यदि आपने हाल ही में "
 "अपना सिस्टम अपडेट किया है तो कृपया सभी KDE PIM अनुप्रयोगों को पुनः आरंभ करें।"
-
-#: quick/colorproxymodel.cpp:84
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Offline"
-msgctxt "@item this is the default calendar"
-msgid "%1 (Offline)"
-msgstr "ऑफलाइन"
-
-#: quick/colorproxymodel.cpp:87
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Default)"
-msgstr ""
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, fuzzy, kde-format
@@ -782,7 +772,7 @@ msgstr "एजेंट इंस्टेंस हटाएँ?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "क्या आप सचमुच चयनित एजेंट इंस्टेंस को हटाना चाहते हैं?"
 
-#: widgets/agentconfigurationdialog.cpp:54
+#: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
@@ -2720,6 +2710,12 @@ msgstr "डेटा फ़ाइल पार्स करने में अ�
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "संग्रह %1 ढूँढने में असमर्थ"
+
+#~ msgid "There is currently no account configured."
+#~ msgstr "वर्तमान में कोई खाता कॉन्फ़िगर नहीं किया गया है."
+
+#~ msgid "Accounts integration is not supported"
+#~ msgstr "खाता एकीकरण समर्थित नहीं है"
 
 #~ msgid "%1 Handbook"
 #~ msgstr "%1 हैंडबुक"

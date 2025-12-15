@@ -10,15 +10,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-14 00:42+0000\n"
-"PO-Revision-Date: 2025-07-23 11:07+0200\n"
+"POT-Creation-Date: 2025-12-15 00:42+0000\n"
+"PO-Revision-Date: 2025-12-14 12:14+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 25.04.3\n"
+"X-Generator: Lokalize 25.04.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
 
@@ -32,34 +32,24 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "txemaq@gmail.com,antonibella5@yahoo.com"
 
-#: agentbase/accountsintegration.cpp:86
-#, kde-format
-msgid "There is currently no account configured."
-msgstr "Actualment no hi ha cap compte configurat."
-
-#: agentbase/accountsintegration.cpp:103
-#, kde-format
-msgid "Accounts integration is not supported"
-msgstr "La integració dels comptes no està admesa"
-
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "No s'ha pogut registrar l'objecte en «dbus»: %1"
 
-#: agentbase/agentbase.cpp:398
+#: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 del tipus %2"
 
-#: agentbase/agentbase.cpp:816
+#: agentbase/agentbase.cpp:818
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Identificador de l'agent"
 
-#: agentbase/agentbase.cpp:822
+#: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Agent d'Akonadi"
@@ -115,13 +105,13 @@ msgstr "S'ha recuperat un element no vàlid"
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
-msgstr "S'ha produït un error en crear l'element: %1"
+msgstr "S'ha produït un error mentre es creava l'element: %1"
 
 #: agentbase/resourcebase.cpp:628
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
-msgstr "S'ha produït un error durant l'actualització de la col·lecció: %1"
+msgstr "S'ha produït un error mentre s'actualitzava la col·lecció: %1"
 
 #: agentbase/resourcebase.cpp:715
 #, kde-format
@@ -150,13 +140,14 @@ msgstr "S'està sincronitzant la carpeta «%1»"
 #: agentbase/resourcebase.cpp:941 agentbase/resourcebase.cpp:948
 #, kde-format
 msgid "Failed to retrieve collection for sync."
-msgstr "No s'ha pogut recuperar la col·lecció per a sincronitzar-la."
+msgstr "Ha fallat mentre es recuperava la col·lecció per a sincronitzar-la."
 
 #: agentbase/resourcebase.cpp:989
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr ""
-"No s'ha pogut recuperar la col·lecció per a la sincronització dels atributs."
+"Ha fallat mentre es recuperava la col·lecció per a la sincronització dels "
+"atributs."
 
 #: agentbase/resourcebase.cpp:1035
 #, kde-format
@@ -169,7 +160,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "Treball cancel·lat."
 
-#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
+#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, kde-format
 msgid "Akonadi Control"
 msgstr "Control d'Akonadi"
@@ -318,7 +309,7 @@ msgstr "Pare no vàlid"
 #: core/jobs/collectioncreatejob.cpp:98
 #, kde-format
 msgid "Failed to parse Collection from response"
-msgstr "No s'ha pogut analitzar la col·lecció de la resposta"
+msgstr "Ha fallat durant l'anàlisi de la col·lecció de la resposta"
 
 #: core/jobs/collectiondeletejob.cpp:52
 #, kde-format
@@ -404,12 +395,12 @@ msgstr "Identificador del recurs «%1» no vàlid"
 #: core/jobs/specialcollectionshelperjobs.cpp:350
 #, kde-format
 msgid "Failed to configure default resource via D-Bus."
-msgstr "No s'ha pogut configurar el recurs predeterminat via D-Bus."
+msgstr "Ha fallat mentre es configurava el recurs predeterminat via D-Bus."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:415
 #, kde-format
 msgid "Failed to fetch the resource collection."
-msgstr "No s'ha pogut recuperar la col·lecció de recursos."
+msgstr "Ha fallat mentre es recuperava la col·lecció de recursos."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:599
 #, kde-format
@@ -419,13 +410,13 @@ msgstr "Ha caducat el temps en provar d'obtindre el bloqueig."
 #: core/jobs/tagcreatejob.cpp:49
 #, kde-format
 msgid "Failed to create tag."
-msgstr "No s'ha pogut crear l'etiqueta."
+msgstr "Ha fallat mentre es creava l'etiqueta."
 
 #: core/jobs/trashjob.cpp:155
 #, kde-format
 msgid "Move to trash collection failed, aborting trash operation"
 msgstr ""
-"No s'ha pogut moure la col·lecció cap a dins de la paperera, s'ha "
+"Ha fallat mentre es movia la col·lecció cap a dins de la paperera, s'ha "
 "interromput l'operació"
 
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
@@ -455,6 +446,18 @@ msgstr ""
 msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Nom"
+
+#: core/models/colorproxymodel.cpp:85
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "%1 (desconnectat)"
+
+#: core/models/colorproxymodel.cpp:88
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr "%1 (predeterminat)"
 
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
@@ -596,7 +599,7 @@ msgstr "Connector sense nom"
 msgid "No description available"
 msgstr "No hi ha disponible cap descripció"
 
-#: core/servermanager.cpp:265
+#: core/servermanager.cpp:271
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -610,7 +613,7 @@ msgstr ""
 "connectar per a assegurar-vos que totes les aplicacions empren la versió "
 "correcta del protocol."
 
-#: core/servermanager.cpp:282
+#: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -638,18 +641,6 @@ msgstr ""
 "Les versions del protocol no coincidixen. La versió del servidor és més nova "
 "(%1) que la nostra (%2). Si heu actualitzat el vostre sistema recentment, "
 "reinicieu totes les aplicacions PIM de KDE."
-
-#: quick/colorproxymodel.cpp:84
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Offline)"
-msgstr "%1 (desconnectat)"
-
-#: quick/colorproxymodel.cpp:87
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Default)"
-msgstr "%1 (predeterminat)"
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, kde-format
@@ -705,11 +696,10 @@ msgid "You won't be able to revert this action."
 msgstr "No podreu desfer esta acció."
 
 #: quick/qml/TagManagerPage.qml:53
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "There are no tags"
-msgstr "Crea una etiqueta nova"
+msgstr "No hi ha etiquetes"
 
 #: quick/qml/TagManagerPage.qml:141
 #, kde-format
@@ -786,7 +776,7 @@ msgstr "Voleu suprimir la instància de l'agent?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Segur que voleu suprimir la instància seleccionada de l'agent?"
 
-#: widgets/agentconfigurationdialog.cpp:54
+#: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
@@ -1058,7 +1048,8 @@ msgstr "Manteniment"
 #: widgets/collectionmaintenancepage.cpp:131
 #, kde-format
 msgid "Error while retrieving indexed items count"
-msgstr "S'ha produït un error en recuperar el compte dels elements indexats"
+msgstr ""
+"S'ha produït un error mentre es recuperava el compte dels elements indexats"
 
 #: widgets/collectionmaintenancepage.cpp:134
 #, kde-format
@@ -1534,13 +1525,13 @@ msgstr "El servidor MySQL és executable."
 msgid ""
 "Executing the MySQL server '%1' failed with the following error message: '%2'"
 msgstr ""
-"No s'ha pogut executar el servidor «%1» de MySQL amb el missatge d'error "
-"següent: «%2»"
+"Ha fallat mentre s'executava el servidor «%1» de MySQL amb el missatge "
+"d'error següent: «%2»"
 
 #: widgets/selftestdialog.cpp:242
 #, kde-format
 msgid "Executing the MySQL server failed."
-msgstr "No s'ha pogut executar el servidor MySQL."
+msgstr "Ha fallat mentre s'executava el servidor MySQL."
 
 #: widgets/selftestdialog.cpp:249
 #, kde-format
@@ -2528,7 +2519,7 @@ msgstr "No s'ha pogut apegar les dades: %1"
 #, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
-msgstr "No s'ha pogut apegar"
+msgstr "Ha fallat mentre s'apegava"
 
 #: widgets/standardactionmanager.cpp:825
 #, kde-format
@@ -2539,7 +2530,7 @@ msgstr "No es pot afegir «/» en el nom de la carpeta."
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
-msgstr "S'ha produït un error en crear una carpeta nova"
+msgstr "S'ha produït un error mentre es creava una carpeta nova"
 
 #: widgets/standardactionmanager.cpp:829
 #, kde-format
@@ -2579,7 +2570,7 @@ msgstr "Copia a esta carpeta"
 #: widgets/subscriptiondialog.cpp:99
 #, kde-format
 msgid "Failed to update subscription: %1"
-msgstr "No s'ha pogut actualitzar la subscripció: %1"
+msgstr "Ha fallat mentre s'actualitzava la subscripció: %1"
 
 #: widgets/subscriptiondialog.cpp:99
 #, kde-format
@@ -2620,13 +2611,13 @@ msgstr "Cancel·la la s&ubscripció"
 #: widgets/tageditwidget.cpp:119
 #, kde-format
 msgid "Failed to create a new tag"
-msgstr "No s'ha pogut crear una etiqueta nova"
+msgstr "Ha fallat mentre es creava una etiqueta nova"
 
 #: widgets/tageditwidget.cpp:119
 #, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
-msgstr "S'ha produït un error en crear una etiqueta nova"
+msgstr "S'ha produït un error mentre es creava una etiqueta nova"
 
 #: widgets/tageditwidget.cpp:167
 #, kde-kuit-format
@@ -2762,8 +2753,8 @@ msgstr "No s'ha pogut analitzar el fitxer de dades: %1"
 msgid "Unable to find collection %1"
 msgstr "No s'ha pogut trobar la col·lecció %1"
 
-#~ msgid "%1 Handbook"
-#~ msgstr "Manual de %1"
+#~ msgid "There is currently no account configured."
+#~ msgstr "Actualment no hi ha cap compte configurat."
 
-#~ msgid "About %1"
-#~ msgstr "Quant a %1"
+#~ msgid "Accounts integration is not supported"
+#~ msgstr "La integració dels comptes no està admesa"

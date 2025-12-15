@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-14 00:42+0000\n"
+"POT-Creation-Date: 2025-12-15 00:42+0000\n"
 "PO-Revision-Date: 2024-09-19 14:56+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -34,34 +34,24 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "manolis@koppermind.homelinux.org"
 
-#: agentbase/accountsintegration.cpp:86
-#, kde-format
-msgid "There is currently no account configured."
-msgstr "Προς το παρόν δεν υπάρχει διαμορφωμένος λογαριασμός"
-
-#: agentbase/accountsintegration.cpp:103
-#, kde-format
-msgid "Accounts integration is not supported"
-msgstr "Η ενσωμάτωση λογαριασμών δεν υποστηρίζεται"
-
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Αδυναμία εγγραφής αντικειμένου στο dbus: %1"
 
-#: agentbase/agentbase.cpp:398
+#: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 τύπου %2"
 
-#: agentbase/agentbase.cpp:816
+#: agentbase/agentbase.cpp:818
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Αναγνωριστικό πράκτορα"
 
-#: agentbase/agentbase.cpp:822
+#: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Πράκτορας του Akonadi"
@@ -170,7 +160,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "Η εργασία ακυρώθηκε."
 
-#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
+#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, kde-format
 msgid "Akonadi Control"
 msgstr "Έλεγχος Akonadi"
@@ -463,6 +453,20 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Όνομα"
 
+#: core/models/colorproxymodel.cpp:85
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid "Offline"
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "Χωρίς σύνδεση"
+
+#: core/models/colorproxymodel.cpp:88
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr ""
+
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
@@ -604,7 +608,7 @@ msgstr "Πρόσθετο χωρίς όνομα"
 msgid "No description available"
 msgstr "Μη διαθέσιμη περιγραφή"
 
-#: core/servermanager.cpp:265
+#: core/servermanager.cpp:271
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -618,7 +622,7 @@ msgstr ""
 "πάλι για να βεβαιωθείτε ότι όλες οι εφαρμογές χρησιμοποιούν τη σωστή έκδοση "
 "του πρωτοκόλλου."
 
-#: core/servermanager.cpp:282
+#: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -646,20 +650,6 @@ msgstr ""
 "Ασυμφωνία εκδόσεων πρωτοκόλλου. Η έκδοση του εξυπηρετητή είναι νεότερη (%1) "
 "από τη δική μας (%2). Αν έχετε ενημερώσει το σύστημά σας πρόσφατα "
 "επανεκκινήστε όλες τις KDE PIM εφαρμογές."
-
-#: quick/colorproxymodel.cpp:84
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Offline"
-msgctxt "@item this is the default calendar"
-msgid "%1 (Offline)"
-msgstr "Χωρίς σύνδεση"
-
-#: quick/colorproxymodel.cpp:87
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Default)"
-msgstr ""
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, fuzzy, kde-format
@@ -805,7 +795,7 @@ msgstr "Να διαγραφεί η διεργασία πράκτορα;"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Θέλετε πράγματι να διαγραφεί η επιλεγμένη διεργασία πράκτορα;"
 
-#: widgets/agentconfigurationdialog.cpp:54
+#: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
@@ -2776,6 +2766,12 @@ msgstr "Αδυναμία ανάλυσης αρχείου δεδομένων: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Αδυναμία εύρεσης συλλογής %1"
+
+#~ msgid "There is currently no account configured."
+#~ msgstr "Προς το παρόν δεν υπάρχει διαμορφωμένος λογαριασμός"
+
+#~ msgid "Accounts integration is not supported"
+#~ msgstr "Η ενσωμάτωση λογαριασμών δεν υποστηρίζεται"
 
 #~ msgid "%1 Handbook"
 #~ msgstr "%1 εγχειρίδιο"

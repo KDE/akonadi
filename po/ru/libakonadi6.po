@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-14 00:42+0000\n"
+"POT-Creation-Date: 2025-12-15 00:42+0000\n"
 "PO-Revision-Date: 2025-08-22 17:32+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -41,34 +41,24 @@ msgstr ""
 "shaforostoff@kde.ru,skull@kde.ru,aspotashev@gmail.com,kekcuha@gmail.com,"
 "gammaray@basealt.ru"
 
-#: agentbase/accountsintegration.cpp:86
-#, kde-format
-msgid "There is currently no account configured."
-msgstr "Отсутствуют настроенные учётные записи."
-
-#: agentbase/accountsintegration.cpp:103
-#, kde-format
-msgid "Accounts integration is not supported"
-msgstr "Встраивание учётных записей не поддерживается"
-
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Зарегистрировать объект в dbus не удалось: %1"
 
-#: agentbase/agentbase.cpp:398
+#: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 типа %2"
 
-#: agentbase/agentbase.cpp:816
+#: agentbase/agentbase.cpp:818
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Идентификатор агента"
 
-#: agentbase/agentbase.cpp:822
+#: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Агент Akonadi"
@@ -177,7 +167,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "Операция отменена."
 
-#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
+#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, kde-format
 msgid "Akonadi Control"
 msgstr "Управление Akonadi"
@@ -459,6 +449,18 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Название"
 
+#: core/models/colorproxymodel.cpp:85
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "%1 (автономный режим)"
+
+#: core/models/colorproxymodel.cpp:88
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr "%1 (по умолчанию)"
+
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
@@ -601,7 +603,7 @@ msgstr "Неизвестный модуль"
 msgid "No description available"
 msgstr "Описание недоступно"
 
-#: core/servermanager.cpp:265
+#: core/servermanager.cpp:271
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -615,7 +617,7 @@ msgstr ""
 "в систему, чтобы удостовериться, что все приложения используют "
 "соответствующую версию протокола."
 
-#: core/servermanager.cpp:282
+#: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -641,18 +643,6 @@ msgstr ""
 "Версии протокола не совпадают. Версия на стороне сервера (%1) новее, чем на "
 "стороне клиента (%2). Если вы обновляли программное обеспечение, "
 "перезапустите все приложения KDE PIM."
-
-#: quick/colorproxymodel.cpp:84
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Offline)"
-msgstr "%1 (автономный режим)"
-
-#: quick/colorproxymodel.cpp:87
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Default)"
-msgstr "%1 (по умолчанию)"
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, kde-format
@@ -789,7 +779,7 @@ msgstr "Удаление экземпляра агента"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Удалить выбранный экземпляр агента?"
 
-#: widgets/agentconfigurationdialog.cpp:54
+#: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
@@ -2798,6 +2788,12 @@ msgstr "Не удалось интерпретировать содержимо�
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Не удалось найти коллекцию %1"
+
+#~ msgid "There is currently no account configured."
+#~ msgstr "Отсутствуют настроенные учётные записи."
+
+#~ msgid "Accounts integration is not supported"
+#~ msgstr "Встраивание учётных записей не поддерживается"
 
 #~ msgid "%1 Handbook"
 #~ msgstr "Руководство пользователя %1"

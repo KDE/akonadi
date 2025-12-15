@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-14 00:42+0000\n"
+"POT-Creation-Date: 2025-12-15 00:42+0000\n"
 "PO-Revision-Date: 2025-07-24 20:11+0300\n"
 "Last-Translator: Emir SARI <emir_sari@îcloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -35,34 +35,24 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "tulliana@gmail.com, volkangezer@gmail.com, emir_sari@icloud.com"
 
-#: agentbase/accountsintegration.cpp:86
-#, kde-format
-msgid "There is currently no account configured."
-msgstr "Şu anda yapılandırılmış bir hesap yok."
-
-#: agentbase/accountsintegration.cpp:103
-#, kde-format
-msgid "Accounts integration is not supported"
-msgstr "Hesap tümleştirmesi desteklenmiyor"
-
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Nesne D-Bus’ta kaydedilemedi: %1"
 
-#: agentbase/agentbase.cpp:398
+#: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%2 türündeki %1"
 
-#: agentbase/agentbase.cpp:816
+#: agentbase/agentbase.cpp:818
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Aracı tanımlayıcısı"
 
-#: agentbase/agentbase.cpp:822
+#: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi Aracısı"
@@ -171,7 +161,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "Görev iptal edildi."
 
-#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
+#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, kde-format
 msgid "Akonadi Control"
 msgstr "Akonadi Denetimi"
@@ -452,6 +442,18 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Ad"
 
+#: core/models/colorproxymodel.cpp:85
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "%1 (Çevrimdışı)"
+
+#: core/models/colorproxymodel.cpp:88
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr "%1 (Öntanımlı)"
+
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
@@ -592,7 +594,7 @@ msgstr "Adsız eklenti"
 msgid "No description available"
 msgstr "Açıklama yok"
 
-#: core/servermanager.cpp:265
+#: core/servermanager.cpp:271
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -605,7 +607,7 @@ msgstr ""
 "Sisteminizi yeni güncellediyseniz tüm uygulamaların doğru protokol sürümünü "
 "kullandığından emin olmak için oturumunuzu kapatıp yeniden açın."
 
-#: core/servermanager.cpp:282
+#: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -631,18 +633,6 @@ msgstr ""
 "Protokol sürümü eşleşmiyor. Sunucu sürümü (%1) bizimkinden (%2) daha yeni. "
 "Sisteminizi yeni güncellediyseniz tüm KDE PIM uygulamalarını yeniden "
 "başlatın."
-
-#: quick/colorproxymodel.cpp:84
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Offline)"
-msgstr "%1 (Çevrimdışı)"
-
-#: quick/colorproxymodel.cpp:87
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Default)"
-msgstr "%1 (Öntanımlı)"
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, kde-format
@@ -778,7 +768,7 @@ msgstr "Aracı Örneği Silinsin mi?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Seçili aracı örneğini silmeyi gerçekten istiyor musunuz?"
 
-#: widgets/agentconfigurationdialog.cpp:54
+#: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
@@ -2730,6 +2720,12 @@ msgstr "Veri dosyası ayrıştırılamadı: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "%1 koleksiyonu bulunamıyor"
+
+#~ msgid "There is currently no account configured."
+#~ msgstr "Şu anda yapılandırılmış bir hesap yok."
+
+#~ msgid "Accounts integration is not supported"
+#~ msgstr "Hesap tümleştirmesi desteklenmiyor"
 
 #~ msgid "%1 Handbook"
 #~ msgstr "%1 El Kitabı"

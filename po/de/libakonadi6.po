@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-14 00:42+0000\n"
+"POT-Creation-Date: 2025-12-15 00:42+0000\n"
 "PO-Revision-Date: 2025-07-23 13:58+0200\n"
 "Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -33,34 +33,24 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "kde-i18n-de@kde.org"
 
-#: agentbase/accountsintegration.cpp:86
-#, kde-format
-msgid "There is currently no account configured."
-msgstr "Es ist zur Zeit kein Zugang eingerichtet."
-
-#: agentbase/accountsintegration.cpp:103
-#, kde-format
-msgid "Accounts integration is not supported"
-msgstr "Integration des Zugangs wird nicht unterstützt"
-
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Das Objekt kann nicht am D-Bus registriert werden: %1"
 
-#: agentbase/agentbase.cpp:398
+#: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 vom Typ %2"
 
-#: agentbase/agentbase.cpp:816
+#: agentbase/agentbase.cpp:818
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Agent-Bezeichner"
 
-#: agentbase/agentbase.cpp:822
+#: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi-Agent"
@@ -170,7 +160,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "Der Auftrag wurde abgebrochen"
 
-#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
+#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, kde-format
 msgid "Akonadi Control"
 msgstr "Akonadi-Agent"
@@ -456,6 +446,18 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Name"
 
+#: core/models/colorproxymodel.cpp:85
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "%1 (Offline)"
+
+#: core/models/colorproxymodel.cpp:88
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr "%1 (Standard)"
+
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
@@ -596,7 +598,7 @@ msgstr "Unbenanntes Modul"
 msgid "No description available"
 msgstr "Keine Beschreibung verfügbar"
 
-#: core/servermanager.cpp:265
+#: core/servermanager.cpp:271
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -609,7 +611,7 @@ msgstr ""
 "aktualisiert haben, melden Sie sich bitte ab- und wieder an, damit alle "
 "Anwendungen die richtige Protokollversion verwenden."
 
-#: core/servermanager.cpp:282
+#: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -637,18 +639,6 @@ msgstr ""
 "Die Protokollversionen stimmen nicht überein. Die Serverversion (%1) ist "
 "neuer als Ihre Version (%2). Haben Sie Ihr System gerade aktualisiert, "
 "starten Sie bitte alle KDE-PIM-Anwendungen neu."
-
-#: quick/colorproxymodel.cpp:84
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Offline)"
-msgstr "%1 (Offline)"
-
-#: quick/colorproxymodel.cpp:87
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Default)"
-msgstr "%1 (Standard)"
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, fuzzy, kde-format
@@ -795,7 +785,7 @@ msgstr "Agent-Instanz löschen?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Möchten Sie die ausgewählte Agent-Instanz wirklich löschen?"
 
-#: widgets/agentconfigurationdialog.cpp:54
+#: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
@@ -2783,6 +2773,12 @@ msgstr "Datei kann nicht verarbeitet werden: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Die Sammlung %1 wurde nicht gefunden"
+
+#~ msgid "There is currently no account configured."
+#~ msgstr "Es ist zur Zeit kein Zugang eingerichtet."
+
+#~ msgid "Accounts integration is not supported"
+#~ msgstr "Integration des Zugangs wird nicht unterstützt"
 
 #~ msgid "%1 Handbook"
 #~ msgstr "Handbuch zu %1"

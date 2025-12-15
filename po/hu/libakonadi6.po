@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.3\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-14 00:42+0000\n"
+"POT-Creation-Date: 2025-12-15 00:42+0000\n"
 "PO-Revision-Date: 2025-07-31 22:29+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -30,34 +30,24 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "ulysses@fsf.hu"
 
-#: agentbase/accountsintegration.cpp:86
-#, kde-format
-msgid "There is currently no account configured."
-msgstr "Nincs beállítva fiók."
-
-#: agentbase/accountsintegration.cpp:103
-#, kde-format
-msgid "Accounts integration is not supported"
-msgstr "A fiókintegráció nem támogatott"
-
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Nem sikerült regisztrálni az objektumot a dbus-on: %1"
 
-#: agentbase/agentbase.cpp:398
+#: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%2 típusú %1"
 
-#: agentbase/agentbase.cpp:816
+#: agentbase/agentbase.cpp:818
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Azonosító"
 
-#: agentbase/agentbase.cpp:822
+#: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi szolgáltatás"
@@ -166,7 +156,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "Feladat megszakítva."
 
-#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
+#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, kde-format
 msgid "Akonadi Control"
 msgstr "Akonadi vezérlő"
@@ -452,6 +442,18 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Név"
 
+#: core/models/colorproxymodel.cpp:85
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "%1 (offline)"
+
+#: core/models/colorproxymodel.cpp:88
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr "%1 (alapértelmezett)"
+
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
@@ -592,7 +594,7 @@ msgstr "Névtelen bővítmény"
 msgid "No description available"
 msgstr "Nincs elérhető leírás"
 
-#: core/servermanager.cpp:265
+#: core/servermanager.cpp:271
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -605,7 +607,7 @@ msgstr ""
 "Ha nemrég frissítette a rendszert, jelentkezzen ki és be, hogy az "
 "alkalmazások biztosan a megfelelő protokollverziót használják."
 
-#: core/servermanager.cpp:282
+#: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -629,18 +631,6 @@ msgid ""
 msgstr ""
 "A protokollverziók eltérnek. A kiszolgálóé újabb (%1), mint az Öné (%2). Ha "
 "nemrég frissítette a rendszert, indítsa újra az összes KDE PIM alkalmazást."
-
-#: quick/colorproxymodel.cpp:84
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Offline)"
-msgstr "%1 (offline)"
-
-#: quick/colorproxymodel.cpp:87
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Default)"
-msgstr "%1 (alapértelmezett)"
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, kde-format
@@ -777,7 +767,7 @@ msgstr "Ügynökpéldány törlése?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Biztosan törölni szeretné a kijelölt ügynökpéldányt?"
 
-#: widgets/agentconfigurationdialog.cpp:54
+#: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
@@ -2735,6 +2725,12 @@ msgstr "Nem lehet feldolgozni a(z) adatfájlt: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Nem található gyűjtemény: %1"
+
+#~ msgid "There is currently no account configured."
+#~ msgstr "Nincs beállítva fiók."
+
+#~ msgid "Accounts integration is not supported"
+#~ msgstr "A fiókintegráció nem támogatott"
 
 #~ msgid "%1 Handbook"
 #~ msgstr "A(z) %1 kézikönyve"

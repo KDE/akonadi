@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-14 00:42+0000\n"
+"POT-Creation-Date: 2025-12-15 00:42+0000\n"
 "PO-Revision-Date: 2025-08-19 05:03+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -31,34 +31,24 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "franklin@goodhorse.idv.tw, mail@kisaragi-hiu.com"
 
-#: agentbase/accountsintegration.cpp:86
-#, kde-format
-msgid "There is currently no account configured."
-msgstr "目前尚未設定帳號。"
-
-#: agentbase/accountsintegration.cpp:103
-#, kde-format
-msgid "Accounts integration is not supported"
-msgstr "帳號整合不受支援"
-
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "無法在 dbus 註冊物件：%1"
 
-#: agentbase/agentbase.cpp:398
+#: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "型態為 %2 的 %1"
 
-#: agentbase/agentbase.cpp:816
+#: agentbase/agentbase.cpp:818
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "代理程式識別子"
 
-#: agentbase/agentbase.cpp:822
+#: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi 代理程式"
@@ -167,7 +157,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "工作已取消。"
 
-#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
+#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, kde-format
 msgid "Akonadi Control"
 msgstr "Akonadi 控制"
@@ -444,6 +434,18 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "名稱"
 
+#: core/models/colorproxymodel.cpp:85
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "%1（離線）"
+
+#: core/models/colorproxymodel.cpp:88
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr "%1（預設）"
+
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
@@ -582,7 +584,7 @@ msgstr "未命名的外掛程式"
 msgid "No description available"
 msgstr "沒有可用的描述"
 
-#: core/servermanager.cpp:265
+#: core/servermanager.cpp:271
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -594,7 +596,7 @@ msgstr ""
 "如果您最近剛更新您的系統，請登出後再重新登入來確保所有應用程式都使用正確的協"
 "定版本。"
 
-#: core/servermanager.cpp:282
+#: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -618,18 +620,6 @@ msgid ""
 msgstr ""
 "協定版本不相符。伺服器版本 (%1) 比我們的 (%2) 新。如果您最近剛更新系統請重新"
 "啟動所有 KDE PIM 應用程式。"
-
-#: quick/colorproxymodel.cpp:84
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Offline)"
-msgstr "%1（離線）"
-
-#: quick/colorproxymodel.cpp:87
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Default)"
-msgstr "%1（預設）"
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, kde-format
@@ -764,7 +754,7 @@ msgstr "要刪除代理程式實體嗎？"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "您確定要刪除所有選取的代理程式實體嗎？"
 
-#: widgets/agentconfigurationdialog.cpp:54
+#: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
@@ -2643,6 +2633,12 @@ msgstr "無法剖析資料檔：%1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "無法找到收藏 %1"
+
+#~ msgid "There is currently no account configured."
+#~ msgstr "目前尚未設定帳號。"
+
+#~ msgid "Accounts integration is not supported"
+#~ msgstr "帳號整合不受支援"
 
 #~ msgid "%1 Handbook"
 #~ msgstr "%1 手冊"

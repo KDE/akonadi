@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-14 00:42+0000\n"
-"PO-Revision-Date: 2025-08-20 15:41+0200\n"
+"POT-Creation-Date: 2025-12-15 00:42+0000\n"
+"PO-Revision-Date: 2025-12-14 18:46+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.08.0\n"
+"X-Generator: Lokalize 25.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -30,34 +30,24 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "xalba@ni.eus"
 
-#: agentbase/accountsintegration.cpp:86
-#, kde-format
-msgid "There is currently no account configured."
-msgstr "Une honetan ez dago konfiguratutako konturik."
-
-#: agentbase/accountsintegration.cpp:103
-#, kde-format
-msgid "Accounts integration is not supported"
-msgstr "Kontuen integrazioa ez da onartzen"
-
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Ezin da objektua dbus-en erregistratu: %1"
 
-#: agentbase/agentbase.cpp:398
+#: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%2 motako %1"
 
-#: agentbase/agentbase.cpp:816
+#: agentbase/agentbase.cpp:818
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Agentearen identifikatzailea"
 
-#: agentbase/agentbase.cpp:822
+#: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadiren agentea"
@@ -166,7 +156,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "Lana bertan behera utzi da."
 
-#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
+#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, kde-format
 msgid "Akonadi Control"
 msgstr "«Akonadi»ren Agintea"
@@ -454,6 +444,18 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Izena"
 
+#: core/models/colorproxymodel.cpp:85
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "%1 (Lerroz-kanpo)"
+
+#: core/models/colorproxymodel.cpp:88
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr "%1 (Lehenetsia)"
+
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
@@ -594,7 +596,7 @@ msgstr "Izengabeko plugina"
 msgid "No description available"
 msgstr "Ez dago azalpen erabilgarririk"
 
-#: core/servermanager.cpp:265
+#: core/servermanager.cpp:271
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -607,7 +609,7 @@ msgstr ""
 "Zure sistema berriki eguneratu baduzu, saio-itxi eta atzera saio-hasi "
 "aplikazio guztiek bertsio zuzena erabiltzen dutela ziurtatzeko."
 
-#: core/servermanager.cpp:282
+#: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -635,18 +637,6 @@ msgstr ""
 "Protokoloen bertsioak ez datoz bat. Zerbitzariaren bertsioa berriagoa da "
 "(%1) gurea baino (%2). Zure sistema azkenaldian eguneratu baduzu, "
 "berrabiarazi zure KDE PIMeko aplikazio guztiak."
-
-#: quick/colorproxymodel.cpp:84
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Offline)"
-msgstr "%1 (Lerroz-kanpo)"
-
-#: quick/colorproxymodel.cpp:87
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Default)"
-msgstr "%1 (Lehenetsia)"
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, kde-format
@@ -702,11 +692,10 @@ msgid "You won't be able to revert this action."
 msgstr "Ezingo duzu ekintza hau atzera bota."
 
 #: quick/qml/TagManagerPage.qml:53
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "There are no tags"
-msgstr "Sortu etiketa berria"
+msgstr "Ez dago etiketarik"
 
 #: quick/qml/TagManagerPage.qml:141
 #, kde-format
@@ -783,7 +772,7 @@ msgstr "Agentearen instantzia ezabatu?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Benetan ezabatu nahi duzu hautatutako agentearen instantzia?"
 
-#: widgets/agentconfigurationdialog.cpp:54
+#: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
@@ -2757,6 +2746,12 @@ msgstr "Ezin da datu-fitxategiaren sintaxia aztertu: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Ezin izan da «%1» bilduma aurkitu"
+
+#~ msgid "There is currently no account configured."
+#~ msgstr "Une honetan ez dago konfiguratutako konturik."
+
+#~ msgid "Accounts integration is not supported"
+#~ msgstr "Kontuen integrazioa ez da onartzen"
 
 #~ msgid "%1 Handbook"
 #~ msgstr "%1 eskuliburua"

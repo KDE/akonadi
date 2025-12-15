@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-14 00:42+0000\n"
+"POT-Creation-Date: 2025-12-15 00:42+0000\n"
 "PO-Revision-Date: 2025-08-04 14:42+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -31,34 +31,24 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "safa1996alfulaij@gmail.com"
 
-#: agentbase/accountsintegration.cpp:86
-#, kde-format
-msgid "There is currently no account configured."
-msgstr "لا يوجد حاليا أي حساب معد"
-
-#: agentbase/accountsintegration.cpp:103
-#, kde-format
-msgid "Accounts integration is not supported"
-msgstr "تكامل الحسابات غير مدعوم"
-
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "تعذّر تسجيل الكائن في D-Bus: ‏%1"
 
-#: agentbase/agentbase.cpp:398
+#: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "مورد %1 نوعه %2"
 
-#: agentbase/agentbase.cpp:816
+#: agentbase/agentbase.cpp:818
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "معرّف الوسيط"
 
-#: agentbase/agentbase.cpp:822
+#: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "وسيط «أكونادي»"
@@ -167,7 +157,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "أُلغيت المهمّة."
 
-#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
+#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, kde-format
 msgid "Akonadi Control"
 msgstr "تحكم أكونادي"
@@ -448,6 +438,18 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "الاسم"
 
+#: core/models/colorproxymodel.cpp:85
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "‏%1 (غير متّصل)"
+
+#: core/models/colorproxymodel.cpp:88
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr "%1 (المبدئيّ)"
+
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
@@ -588,7 +590,7 @@ msgstr "ملحقة غير مسمّاة"
 msgid "No description available"
 msgstr "لا يتوفّر وصف"
 
-#: core/servermanager.cpp:265
+#: core/servermanager.cpp:271
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -601,7 +603,7 @@ msgstr ""
 "إن كنت قد حدّثت نظامك حديثًا فرجاءً اخرج منه وثمّ عُد وتحقّق من أن كل التطبيقات "
 "تستخدم إصدارة الميفاق الصحيحة."
 
-#: core/servermanager.cpp:282
+#: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -627,18 +629,6 @@ msgid ""
 msgstr ""
 "إصدارة الميفاق لا تتطابق. إصدارة الخادم أحدث (%1) من إصدارتنا (%2). إن كنت "
 "قد حدّثت نظامك حديثًا فرجاءً أعِد كل تطبيقات «إدارة كِيدِي للمعلومات الشخصية»."
-
-#: quick/colorproxymodel.cpp:84
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Offline)"
-msgstr "‏%1 (غير متّصل)"
-
-#: quick/colorproxymodel.cpp:87
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Default)"
-msgstr "%1 (المبدئيّ)"
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, kde-format
@@ -773,7 +763,7 @@ msgstr "أأحذف نسخة الوسيط؟"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "أمتأكّد من حذف نسخة الوسيط المنتقاة؟"
 
-#: widgets/agentconfigurationdialog.cpp:54
+#: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
@@ -2810,6 +2800,12 @@ msgstr "تعذّر تحليل ملف البيانات: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "تعذّر العثور على التجميعة %1"
+
+#~ msgid "There is currently no account configured."
+#~ msgstr "لا يوجد حاليا أي حساب معد"
+
+#~ msgid "Accounts integration is not supported"
+#~ msgstr "تكامل الحسابات غير مدعوم"
 
 #~ msgid "%1 Handbook"
 #~ msgstr "كتيّب %1"

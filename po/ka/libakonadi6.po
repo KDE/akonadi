@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-14 00:42+0000\n"
+"POT-Creation-Date: 2025-12-15 00:42+0000\n"
 "PO-Revision-Date: 2025-12-13 05:07+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
@@ -28,34 +28,24 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "Temuri.doghonadze@gmail.com"
 
-#: agentbase/accountsintegration.cpp:86
-#, kde-format
-msgid "There is currently no account configured."
-msgstr "ამჟამად არც ერთი ანგარიშ მორგებული არაა."
-
-#: agentbase/accountsintegration.cpp:103
-#, kde-format
-msgid "Accounts integration is not supported"
-msgstr "ანგარიშების ინტეგრაცია მხარდაჭერილი არაა"
-
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "შეცდომა DBus-ში ობიექტის რეგისტრაციისას: %1"
 
-#: agentbase/agentbase.cpp:398
+#: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 %2 ტიპით"
 
-#: agentbase/agentbase.cpp:816
+#: agentbase/agentbase.cpp:818
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "აგენტის იდენტიფიკატორი"
 
-#: agentbase/agentbase.cpp:822
+#: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi -ის აგენტი"
@@ -164,7 +154,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "დავალება გაუქმდა."
 
-#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
+#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, kde-format
 msgid "Akonadi Control"
 msgstr "Akonadi-ის მართვა"
@@ -446,6 +436,18 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "სახელი"
 
+#: core/models/colorproxymodel.cpp:85
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "%1 (გათიშულია)"
+
+#: core/models/colorproxymodel.cpp:88
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr "%1 (ნაგულისხმევი)"
+
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
@@ -586,7 +588,7 @@ msgstr "უსახელო დამატება"
 msgid "No description available"
 msgstr "აღწერის გარეშე"
 
-#: core/servermanager.cpp:265
+#: core/servermanager.cpp:271
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -599,7 +601,7 @@ msgstr ""
 "თუ თქვენი სისტემა ახლახანს განაახლეთ, რომ დარწმუნდეთ, რომ ყველა აპლიკაცია "
 "პროტოკოლის სწორ ვერსიას იყენებს, გადით სესიიდან და თავიდან შემოდით."
 
-#: core/servermanager.cpp:282
+#: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -624,18 +626,6 @@ msgid ""
 msgstr ""
 "პროტოკოლის ვერსია არ ემთხვევა. სერვერის ვერსია (%1) უფრო ახალია, ვიდრე ჩვენი "
 "(%2). თუ სისტემა ახლახანს განაახლეთ, გადატვირთეთ ყველა KDE PIM აპლიკაცია."
-
-#: quick/colorproxymodel.cpp:84
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Offline)"
-msgstr "%1 (გათიშულია)"
-
-#: quick/colorproxymodel.cpp:87
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Default)"
-msgstr "%1 (ნაგულისხმევი)"
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, kde-format
@@ -771,7 +761,7 @@ msgstr "წავშალო აგენტის ინტერფეის�
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "მართლა გნებავთ აგენტის ამ გაშვებული ასლის წაშლა?"
 
-#: widgets/agentconfigurationdialog.cpp:54
+#: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
@@ -2722,6 +2712,12 @@ msgstr "მონაცემების ფაილის დამუშა�
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "კოლექციის (%1) პოვნა შეუძლებელია"
+
+#~ msgid "There is currently no account configured."
+#~ msgstr "ამჟამად არც ერთი ანგარიშ მორგებული არაა."
+
+#~ msgid "Accounts integration is not supported"
+#~ msgstr "ანგარიშების ინტეგრაცია მხარდაჭერილი არაა"
 
 #~ msgid "%1 Handbook"
 #~ msgstr "%1 სახელმძღვანელო"

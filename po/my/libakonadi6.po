@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-14 00:42+0000\n"
+"POT-Creation-Date: 2025-12-15 00:42+0000\n"
 "PO-Revision-Date: 2021-09-27 23:52+0630\n"
 "Last-Translator: ဇေယျာလွင် <lw1nzayar@yandex.com>\n"
 "Language-Team: Burmese <kde-i18n-doc@kde.org>\n"
@@ -28,35 +28,25 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "lw1nzayar@yandex.com"
 
-#: agentbase/accountsintegration.cpp:86
-#, kde-format
-msgid "There is currently no account configured."
-msgstr "လောလောဆယ် မည်သည်အကောင့်မှပြင်ဆင်ထားခြင်းမရှိပါ။"
-
-#: agentbase/accountsintegration.cpp:103
-#, kde-format
-msgid "Accounts integration is not supported"
-msgstr "အကောင့်များပေါင်းစပ်လုပ်ဆောင်မှု လုပ်မရပါ"
-
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr ""
 
-#: agentbase/agentbase.cpp:398
+#: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%2 အမျိုးအစားဖြစ်သော %1"
 
-#: agentbase/agentbase.cpp:816
+#: agentbase/agentbase.cpp:818
 #, fuzzy, kde-format
 #| msgid "Agent identifier"
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "အေးဂျင့်ခွဲခြားသတ်မှတ်အတည်ပြုချက်"
 
-#: agentbase/agentbase.cpp:822
+#: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "အကွန်နဒီအေးဂျင့်"
@@ -165,7 +155,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "အလုပ်ပယ်ဖျက်ခဲ့သည်"
 
-#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
+#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, fuzzy, kde-format
 #| msgid "Akonadi Agent"
 msgid "Akonadi Control"
@@ -435,6 +425,20 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "အမည်"
 
+#: core/models/colorproxymodel.cpp:85
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid "Offline"
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "အော့ဖ်လိုင်း"
+
+#: core/models/colorproxymodel.cpp:88
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr ""
+
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
@@ -573,7 +577,7 @@ msgstr "အမည်မဲ့ပလပ်ဂင်"
 msgid "No description available"
 msgstr "ဖော်ပြချက်မရရှိနိုင်ပါ"
 
-#: core/servermanager.cpp:265
+#: core/servermanager.cpp:271
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -582,7 +586,7 @@ msgid ""
 "all applications use the correct protocol version."
 msgstr ""
 
-#: core/servermanager.cpp:282
+#: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -601,20 +605,6 @@ msgstr ""
 msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
 "you updated your system recently please restart all KDE PIM applications."
-msgstr ""
-
-#: quick/colorproxymodel.cpp:84
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Offline"
-msgctxt "@item this is the default calendar"
-msgid "%1 (Offline)"
-msgstr "အော့ဖ်လိုင်း"
-
-#: quick/colorproxymodel.cpp:87
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Default)"
 msgstr ""
 
 #: quick/qml/AgentConfigurationForm.qml:35
@@ -760,7 +750,7 @@ msgstr "အေးဂျင့်အင်းစတမ့်ဖျက်မှာ
 msgid "Do you really want to delete the selected agent instance?"
 msgstr ""
 
-#: widgets/agentconfigurationdialog.cpp:54
+#: widgets/agentconfigurationdialog.cpp:46
 #, fuzzy, kde-format
 #| msgctxt "%1 = agent name"
 #| msgid "%1 Configuration"
@@ -2618,6 +2608,12 @@ msgstr "ဒေတာဖိုင်လ်ကို အဓိပ္ပါယ်�
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "စုစည်းမှု %1 ကိုမရှာနိုင်ခဲ့ပါ"
+
+#~ msgid "There is currently no account configured."
+#~ msgstr "လောလောဆယ် မည်သည်အကောင့်မှပြင်ဆင်ထားခြင်းမရှိပါ။"
+
+#~ msgid "Accounts integration is not supported"
+#~ msgstr "အကောင့်များပေါင်းစပ်လုပ်ဆောင်မှု လုပ်မရပါ"
 
 #~ msgid "%1 Handbook"
 #~ msgstr "လက်ကိုင်စာအုပ် %1"

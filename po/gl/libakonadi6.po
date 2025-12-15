@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-14 00:42+0000\n"
+"POT-Creation-Date: 2025-12-15 00:42+0000\n"
 "PO-Revision-Date: 2025-03-20 08:01+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.gal>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -36,34 +36,24 @@ msgid "Your emails"
 msgstr ""
 "mvillarino@users.sourceforge.net, xosecalvo@gmail.com, adrian@chaves.gal"
 
-#: agentbase/accountsintegration.cpp:86
-#, kde-format
-msgid "There is currently no account configured."
-msgstr "Actualmente non hai ningunha conta configurada."
-
-#: agentbase/accountsintegration.cpp:103
-#, kde-format
-msgid "Accounts integration is not supported"
-msgstr "Non se permite a integración de contas"
-
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Non é posíbel rexistrar o obxecto en D-Bus: %1"
 
-#: agentbase/agentbase.cpp:398
+#: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 de tipo %2"
 
-#: agentbase/agentbase.cpp:816
+#: agentbase/agentbase.cpp:818
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Identificador do axente"
 
-#: agentbase/agentbase.cpp:822
+#: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Axente de Akonadi"
@@ -172,7 +162,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "Cancelouse a tarefa."
 
-#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
+#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, kde-format
 msgid "Akonadi Control"
 msgstr "Control de Akonadi"
@@ -458,6 +448,20 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Nome"
 
+#: core/models/colorproxymodel.cpp:85
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid "Offline"
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "Desconectado."
+
+#: core/models/colorproxymodel.cpp:88
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr ""
+
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
@@ -598,7 +602,7 @@ msgstr "Complemento sen nome"
 msgid "No description available"
 msgstr "Non se dispón de descrición"
 
-#: core/servermanager.cpp:265
+#: core/servermanager.cpp:271
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -611,7 +615,7 @@ msgstr ""
 "Se actualizou o sistema recentemente, saia e volva entrar para asegurarse de "
 "que todas as aplicacións usan a versión correcta do protocolo."
 
-#: core/servermanager.cpp:282
+#: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -639,20 +643,6 @@ msgstr ""
 "As versións do protocolo non coinciden. A versión do servidor (%1) é máis "
 "nova que a versión local (%2). Se actualizou o sistema recentemente reinicie "
 "todas as aplicacións de KDE PIM."
-
-#: quick/colorproxymodel.cpp:84
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Offline"
-msgctxt "@item this is the default calendar"
-msgid "%1 (Offline)"
-msgstr "Desconectado."
-
-#: quick/colorproxymodel.cpp:87
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Default)"
-msgstr ""
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, fuzzy, kde-format
@@ -797,7 +787,7 @@ msgstr "Eliminar esta instancia do axente?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Seguro que quere eliminar todas as instancias do axente escollidas?"
 
-#: widgets/agentconfigurationdialog.cpp:54
+#: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
@@ -2767,6 +2757,12 @@ msgstr "Non é posíbel procesar o ficheiro de datos: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Non é posíbel atopar a colección %1"
+
+#~ msgid "There is currently no account configured."
+#~ msgstr "Actualmente non hai ningunha conta configurada."
+
+#~ msgid "Accounts integration is not supported"
+#~ msgstr "Non se permite a integración de contas"
 
 #~ msgid "%1 Handbook"
 #~ msgstr "Manual de %1"

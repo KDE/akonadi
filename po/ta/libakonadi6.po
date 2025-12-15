@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-14 00:42+0000\n"
+"POT-Creation-Date: 2025-12-15 00:42+0000\n"
 "PO-Revision-Date: 2025-09-14 14:02+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
@@ -27,34 +27,24 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "Kde-l10n-ta@kde.org"
 
-#: agentbase/accountsintegration.cpp:86
-#, kde-format
-msgid "There is currently no account configured."
-msgstr "எந்த கணக்கும் அமைக்கப்படவில்லை."
-
-#: agentbase/accountsintegration.cpp:103
-#, kde-format
-msgid "Accounts integration is not supported"
-msgstr "கணக்கு ஒருங்கிணைப்பு ஆதரிக்கப்படாது"
-
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "dbus-இல் இதை பதிவிட முடியவில்லை: %1"
 
-#: agentbase/agentbase.cpp:398
+#: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%2 வகையான %1"
 
-#: agentbase/agentbase.cpp:816
+#: agentbase/agentbase.cpp:818
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr ""
 
-#: agentbase/agentbase.cpp:822
+#: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
 msgstr ""
@@ -163,7 +153,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "பணி ரத்துசெய்யப்பட்டது."
 
-#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
+#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, kde-format
 msgid "Akonadi Control"
 msgstr ""
@@ -429,6 +419,18 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "பெயர்"
 
+#: core/models/colorproxymodel.cpp:85
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "%1 (தொடர்பற்று உள்ளது)"
+
+#: core/models/colorproxymodel.cpp:88
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr "%1 (இயல்பிருப்பு)"
+
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
@@ -567,7 +569,7 @@ msgstr "பெயரிடப்படாத செருகுநிரல்"
 msgid "No description available"
 msgstr "விவரணம் இல்லை"
 
-#: core/servermanager.cpp:265
+#: core/servermanager.cpp:271
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -576,7 +578,7 @@ msgid ""
 "all applications use the correct protocol version."
 msgstr ""
 
-#: core/servermanager.cpp:282
+#: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -596,18 +598,6 @@ msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
 "you updated your system recently please restart all KDE PIM applications."
 msgstr ""
-
-#: quick/colorproxymodel.cpp:84
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Offline)"
-msgstr "%1 (தொடர்பற்று உள்ளது)"
-
-#: quick/colorproxymodel.cpp:87
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Default)"
-msgstr "%1 (இயல்பிருப்பு)"
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, kde-format
@@ -741,7 +731,7 @@ msgstr ""
 msgid "Do you really want to delete the selected agent instance?"
 msgstr ""
 
-#: widgets/agentconfigurationdialog.cpp:54
+#: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
@@ -2596,6 +2586,12 @@ msgstr ""
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr ""
+
+#~ msgid "There is currently no account configured."
+#~ msgstr "எந்த கணக்கும் அமைக்கப்படவில்லை."
+
+#~ msgid "Accounts integration is not supported"
+#~ msgstr "கணக்கு ஒருங்கிணைப்பு ஆதரிக்கப்படாது"
 
 #~ msgid "%1 Handbook"
 #~ msgstr "%1 கையேடு"

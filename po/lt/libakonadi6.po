@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-14 00:42+0000\n"
+"POT-Creation-Date: 2025-12-15 00:42+0000\n"
 "PO-Revision-Date: 2024-11-13 01:45+0200\n"
 "Last-Translator: Liudas Ališauskas <liudas@akmc.lt>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -32,34 +32,24 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "embar@users.berlios.de, <>"
 
-#: agentbase/accountsintegration.cpp:86
-#, kde-format
-msgid "There is currently no account configured."
-msgstr "Šiuo metu nėra sukonfigūruotų paskyrų."
-
-#: agentbase/accountsintegration.cpp:103
-#, kde-format
-msgid "Accounts integration is not supported"
-msgstr "Paskyrų integracija yra nepalaikoma"
-
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Nepavyko registruoti objekto dbus sistemoje: %1"
 
-#: agentbase/agentbase.cpp:398
+#: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 išteklius, kuris yra %2 tipo"
 
-#: agentbase/agentbase.cpp:816
+#: agentbase/agentbase.cpp:818
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Agento identifikatorius"
 
-#: agentbase/agentbase.cpp:822
+#: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi agentas"
@@ -168,7 +158,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "Užduoties atsisakyta."
 
-#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
+#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, kde-format
 msgid "Akonadi Control"
 msgstr "Akonadi valdymas"
@@ -445,6 +435,20 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Pavadinimas"
 
+#: core/models/colorproxymodel.cpp:85
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid "Offline"
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "Atsijungęs"
+
+#: core/models/colorproxymodel.cpp:88
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr ""
+
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
@@ -585,7 +589,7 @@ msgstr "Bevardis įskiepis"
 msgid "No description available"
 msgstr "Aprašas neprieinamas"
 
-#: core/servermanager.cpp:265
+#: core/servermanager.cpp:271
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -594,7 +598,7 @@ msgid ""
 "all applications use the correct protocol version."
 msgstr ""
 
-#: core/servermanager.cpp:282
+#: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -613,20 +617,6 @@ msgstr ""
 msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
 "you updated your system recently please restart all KDE PIM applications."
-msgstr ""
-
-#: quick/colorproxymodel.cpp:84
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Offline"
-msgctxt "@item this is the default calendar"
-msgid "%1 (Offline)"
-msgstr "Atsijungęs"
-
-#: quick/colorproxymodel.cpp:87
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Default)"
 msgstr ""
 
 #: quick/qml/AgentConfigurationForm.qml:35
@@ -770,7 +760,7 @@ msgstr "Ištrinti agento egzempliorių?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Ar tikrai norite ištrinti pažymėtą agento egzempliorių?"
 
-#: widgets/agentconfigurationdialog.cpp:54
+#: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
@@ -2735,6 +2725,12 @@ msgstr ""
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Nepavyko rasti kolekcijos %1"
+
+#~ msgid "There is currently no account configured."
+#~ msgstr "Šiuo metu nėra sukonfigūruotų paskyrų."
+
+#~ msgid "Accounts integration is not supported"
+#~ msgstr "Paskyrų integracija yra nepalaikoma"
 
 #~ msgid "About %1"
 #~ msgstr "Apie %1"

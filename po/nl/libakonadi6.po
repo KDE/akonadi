@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-14 00:42+0000\n"
+"POT-Creation-Date: 2025-12-15 00:42+0000\n"
 "PO-Revision-Date: 2025-12-13 13:15+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -33,34 +33,24 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ",rinsedevries@kde.nl,,freekdekruijf@kde.nl"
 
-#: agentbase/accountsintegration.cpp:86
-#, kde-format
-msgid "There is currently no account configured."
-msgstr "Er is nu geen account geconfigureerd."
-
-#: agentbase/accountsintegration.cpp:103
-#, kde-format
-msgid "Accounts integration is not supported"
-msgstr "Integratie van accounts wordt niet ondersteund"
-
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Kan object niet registreren in dbus: %1"
 
-#: agentbase/agentbase.cpp:398
+#: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 van type %2"
 
-#: agentbase/agentbase.cpp:816
+#: agentbase/agentbase.cpp:818
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Agent-ID"
 
-#: agentbase/agentbase.cpp:822
+#: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi-agent"
@@ -170,7 +160,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "Taak geannuleerd."
 
-#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
+#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, kde-format
 msgid "Akonadi Control"
 msgstr "Akonadi-besturing"
@@ -454,6 +444,18 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Naam"
 
+#: core/models/colorproxymodel.cpp:85
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "%1 (offline)"
+
+#: core/models/colorproxymodel.cpp:88
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr "%1 (Standaard)"
+
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
@@ -594,7 +596,7 @@ msgstr "Naamloze plug-in"
 msgid "No description available"
 msgstr "Geen beschrijving beschikbaar"
 
-#: core/servermanager.cpp:265
+#: core/servermanager.cpp:271
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -608,7 +610,7 @@ msgstr ""
 "zeker van te zijn dat alle toepassingen de juiste versie van het protocol "
 "gebruiken."
 
-#: core/servermanager.cpp:282
+#: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -635,18 +637,6 @@ msgstr ""
 "Geen overeenkomende protocolversie. Serverversie is nieuwer (%1) dan onze "
 "(%2). Als u uw systeem recent hebt bijgewerkt start dan alle KDE-PIM-"
 "toepassingen opnieuw."
-
-#: quick/colorproxymodel.cpp:84
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Offline)"
-msgstr "%1 (offline)"
-
-#: quick/colorproxymodel.cpp:87
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Default)"
-msgstr "%1 (Standaard)"
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, kde-format
@@ -782,7 +772,7 @@ msgstr "Agentinstantie verwijderen?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Wilt u de geselecteerde exemplaar van agent verwijderen?"
 
-#: widgets/agentconfigurationdialog.cpp:54
+#: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
@@ -2761,6 +2751,12 @@ msgstr "Gegevensbestand kon niet worden ontleden: '%1'"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Verzameling %1 kan niet gevonden worden"
+
+#~ msgid "There is currently no account configured."
+#~ msgstr "Er is nu geen account geconfigureerd."
+
+#~ msgid "Accounts integration is not supported"
+#~ msgstr "Integratie van accounts wordt niet ondersteund"
 
 #~ msgid "%1 Handbook"
 #~ msgstr "%1 Handboek"

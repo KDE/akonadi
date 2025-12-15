@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-14 00:42+0000\n"
+"POT-Creation-Date: 2025-12-15 00:42+0000\n"
 "PO-Revision-Date: 2020-05-07 13:23+0300\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -28,35 +28,25 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "qiilaq69@gmail.com"
 
-#: agentbase/accountsintegration.cpp:86
-#, kde-format
-msgid "There is currently no account configured."
-msgstr "Praegu ei ole ühtegi kontot seadistatud."
-
-#: agentbase/accountsintegration.cpp:103
-#, kde-format
-msgid "Accounts integration is not supported"
-msgstr "Kontode lõimimine ei ole toetatud"
-
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Objekti registreerimine D-Busis nurjus: %1"
 
-#: agentbase/agentbase.cpp:398
+#: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1, tüüp %2"
 
-#: agentbase/agentbase.cpp:816
+#: agentbase/agentbase.cpp:818
 #, fuzzy, kde-format
 #| msgid "Agent identifier"
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Agendi identifikaator"
 
-#: agentbase/agentbase.cpp:822
+#: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi agent"
@@ -165,7 +155,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "Töö katkestati"
 
-#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
+#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, fuzzy, kde-format
 #| msgid "Akonadi Agent"
 msgid "Akonadi Control"
@@ -438,6 +428,20 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Nimi"
 
+#: core/models/colorproxymodel.cpp:85
+#, fuzzy, kde-format
+#| msgctxt "@info:status"
+#| msgid "Offline"
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "Pole võrgus"
+
+#: core/models/colorproxymodel.cpp:88
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr ""
+
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
@@ -578,7 +582,7 @@ msgstr "Nimetu plugin"
 msgid "No description available"
 msgstr "Kirjeldus puudub"
 
-#: core/servermanager.cpp:265
+#: core/servermanager.cpp:271
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -591,7 +595,7 @@ msgstr ""
 "Kui uuendasid hiljuti oma süsteemi, siis logi palun välja ja uuesti sisse "
 "tagamaks, et kõik rakendused kasutavad õiget protokolli versiooni."
 
-#: core/servermanager.cpp:282
+#: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -618,20 +622,6 @@ msgstr ""
 "Protokolli versioonid ei sobi. Serveri versioon on uuem (%1) kui meie oma "
 "(%2). Kui oled süsteemi hiljaaegu uuendanud, käivita palun kõik KDE PIM-i "
 "rakendused uuesti."
-
-#: quick/colorproxymodel.cpp:84
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Offline"
-msgctxt "@item this is the default calendar"
-msgid "%1 (Offline)"
-msgstr "Pole võrgus"
-
-#: quick/colorproxymodel.cpp:87
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Default)"
-msgstr ""
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, fuzzy, kde-format
@@ -774,7 +764,7 @@ msgstr "Kas kustutada agendi isend?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Kas tõesti kustutada kõik valitud agendi isendid?"
 
-#: widgets/agentconfigurationdialog.cpp:54
+#: widgets/agentconfigurationdialog.cpp:46
 #, fuzzy, kde-format
 #| msgctxt "%1 = agent name"
 #| msgid "%1 Configuration"
@@ -2795,6 +2785,12 @@ msgstr "Andmefaili parsimine nurjus: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Kogu %1 ei leitud"
+
+#~ msgid "There is currently no account configured."
+#~ msgstr "Praegu ei ole ühtegi kontot seadistatud."
+
+#~ msgid "Accounts integration is not supported"
+#~ msgstr "Kontode lõimimine ei ole toetatud"
 
 #~ msgid "%1 Handbook"
 #~ msgstr "%1 käsiraamat"

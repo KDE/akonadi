@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-14 00:42+0000\n"
+"POT-Creation-Date: 2025-12-15 00:42+0000\n"
 "PO-Revision-Date: 2025-10-05 08:51+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -28,34 +28,24 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "kde-l10n-he@kde.org"
 
-#: agentbase/accountsintegration.cpp:86
-#, kde-format
-msgid "There is currently no account configured."
-msgstr "לא מוגדר אף חשבון כרגע."
-
-#: agentbase/accountsintegration.cpp:103
-#, kde-format
-msgid "Accounts integration is not supported"
-msgstr "אין תמיכה בשילוב חשבונות"
-
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "לא ניתן לרשום פריט ב־dbus:‏ %1"
 
-#: agentbase/agentbase.cpp:398
+#: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 מסוג %2"
 
-#: agentbase/agentbase.cpp:816
+#: agentbase/agentbase.cpp:818
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "מזהה סוכן"
 
-#: agentbase/agentbase.cpp:822
+#: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "סוכן Akonadi"
@@ -164,7 +154,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "המשימה בוטלה."
 
-#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
+#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, kde-format
 msgid "Akonadi Control"
 msgstr "שליטה ב־Akonadi"
@@ -443,6 +433,18 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "שם"
 
+#: core/models/colorproxymodel.cpp:85
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "%1 (מנותק)"
+
+#: core/models/colorproxymodel.cpp:88
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr "%1 (ברירת מחדל)"
+
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
@@ -583,7 +585,7 @@ msgstr "תוסף ללא שם"
 msgid "No description available"
 msgstr "אין תיאור זמין"
 
-#: core/servermanager.cpp:265
+#: core/servermanager.cpp:271
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -595,7 +597,7 @@ msgstr ""
 "אם עדכנת את המערכת שלך לאחרונה נא לצאת מהמערכת ולהיכנס בחזרה כדי לוודא שכל "
 "היישומים משתמשים בגרסת הפרוטוקול הנכונה."
 
-#: core/servermanager.cpp:282
+#: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -619,18 +621,6 @@ msgid ""
 msgstr ""
 "גרסאות פרוטוקול שונות. גרסת השרת (%1) חדשה משלנו (%2). אם עדכנת את המערכת "
 "שלך לאחרונה נא להפעיל מחדש את כל יישומי ניהול הפרטים האישיים של KDE."
-
-#: quick/colorproxymodel.cpp:84
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Offline)"
-msgstr "%1 (מנותק)"
-
-#: quick/colorproxymodel.cpp:87
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Default)"
-msgstr "%1 (ברירת מחדל)"
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, kde-format
@@ -765,7 +755,7 @@ msgstr "למחוק מופע סוכן?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "למחוק את מופע הסוכן הנבחר?"
 
-#: widgets/agentconfigurationdialog.cpp:54
+#: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
@@ -2743,6 +2733,12 @@ msgstr "לא ניתן לפענח את קובץ הנתונים: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "לא ניתן למצוא את האוסף %1"
+
+#~ msgid "There is currently no account configured."
+#~ msgstr "לא מוגדר אף חשבון כרגע."
+
+#~ msgid "Accounts integration is not supported"
+#~ msgstr "אין תמיכה בשילוב חשבונות"
 
 #~ msgid "%1 Handbook"
 #~ msgstr "ספרון ההדרכה של %1"

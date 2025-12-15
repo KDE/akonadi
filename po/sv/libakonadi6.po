@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-14 00:42+0000\n"
+"POT-Creation-Date: 2025-12-15 00:42+0000\n"
 "PO-Revision-Date: 2025-07-28 16:37+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -29,34 +29,24 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "stefan.asserhall@gmail.com"
 
-#: agentbase/accountsintegration.cpp:86
-#, kde-format
-msgid "There is currently no account configured."
-msgstr "För närvarande finns inget konto inställt."
-
-#: agentbase/accountsintegration.cpp:103
-#, kde-format
-msgid "Accounts integration is not supported"
-msgstr "Kontointegrering stöds inte"
-
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Kan inte registrera objektet via D-bus: %1"
 
-#: agentbase/agentbase.cpp:398
+#: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1 av typ %2"
 
-#: agentbase/agentbase.cpp:816
+#: agentbase/agentbase.cpp:818
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Agentidentifierare"
 
-#: agentbase/agentbase.cpp:822
+#: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi-agent"
@@ -165,7 +155,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "Jobb avbrutet."
 
-#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
+#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, kde-format
 msgid "Akonadi Control"
 msgstr "Akonadi-agent"
@@ -450,6 +440,18 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Namn"
 
+#: core/models/colorproxymodel.cpp:85
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "%1 (nerkopplad)"
+
+#: core/models/colorproxymodel.cpp:88
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr "%1 (standard)"
+
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
@@ -590,7 +592,7 @@ msgstr "Namnlöst insticksprogram"
 msgid "No description available"
 msgstr "Ingen beskrivning tillgänglig"
 
-#: core/servermanager.cpp:265
+#: core/servermanager.cpp:271
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -603,7 +605,7 @@ msgstr ""
 "Om du nyligen har uppdaterat systemet, logga ut och tillbaka igen för att "
 "försäkra dig om att alla program använder korrekt protokollversion."
 
-#: core/servermanager.cpp:282
+#: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -630,18 +632,6 @@ msgstr ""
 "Protokollversioner motsvarar inte varandra. Serverversionen är nyare (%1) än "
 "vår (%2). Om du nyligen uppdaterat systemet, starta då om alla KDE PIM-"
 "programmen."
-
-#: quick/colorproxymodel.cpp:84
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Offline)"
-msgstr "%1 (nerkopplad)"
-
-#: quick/colorproxymodel.cpp:87
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Default)"
-msgstr "%1 (standard)"
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, kde-format
@@ -777,7 +767,7 @@ msgstr "Ta bort agentinstans?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "Vill du verkligen ta bort den markerade instansen av agenten?"
 
-#: widgets/agentconfigurationdialog.cpp:54
+#: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
@@ -2730,6 +2720,12 @@ msgstr "Kan inte tolka datafilen: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Kan inte hitta samlingen %1"
+
+#~ msgid "There is currently no account configured."
+#~ msgstr "För närvarande finns inget konto inställt."
+
+#~ msgid "Accounts integration is not supported"
+#~ msgstr "Kontointegrering stöds inte"
 
 #~ msgid "%1 Handbook"
 #~ msgstr "Handbok %1"

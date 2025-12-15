@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-14 00:42+0000\n"
+"POT-Creation-Date: 2025-12-15 00:42+0000\n"
 "PO-Revision-Date: 2025-10-09 00:06+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -27,34 +27,24 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "kde@peremen.name"
 
-#: agentbase/accountsintegration.cpp:86
-#, kde-format
-msgid "There is currently no account configured."
-msgstr "계정을 설정하지 않았습니다."
-
-#: agentbase/accountsintegration.cpp:103
-#, kde-format
-msgid "Accounts integration is not supported"
-msgstr "계정 통합이 지원되지 않음"
-
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "DBus에 객체를 등록할 수 없음: %1"
 
-#: agentbase/agentbase.cpp:398
+#: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%1(%2 형식)"
 
-#: agentbase/agentbase.cpp:816
+#: agentbase/agentbase.cpp:818
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "에이전트 식별자"
 
-#: agentbase/agentbase.cpp:822
+#: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi 에이전트"
@@ -163,7 +153,7 @@ msgctxt "@info"
 msgid "Job canceled."
 msgstr "작업이 취소되었습니다."
 
-#: akonadicontrol/main.cpp:54 akonadicontrol/main.cpp:56
+#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, kde-format
 msgid "Akonadi Control"
 msgstr "Akonadi 제어"
@@ -443,6 +433,18 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "이름"
 
+#: core/models/colorproxymodel.cpp:85
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Offline)"
+msgstr "%1(오프라인)"
+
+#: core/models/colorproxymodel.cpp:88
+#, kde-format
+msgctxt "@item this is the default calendar"
+msgid "%1 (Default)"
+msgstr "%1(기본값)"
+
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
@@ -583,7 +585,7 @@ msgstr "이름 없는 플러그인"
 msgid "No description available"
 msgstr "설명 없음"
 
-#: core/servermanager.cpp:265
+#: core/servermanager.cpp:271
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -596,7 +598,7 @@ msgstr ""
 "시스템을 최근에 업데이트했다면 모든 앱이 올바른 프로토콜 버전을 사용하도록 로"
 "그아웃한 후 다시 로그인하십시오."
 
-#: core/servermanager.cpp:282
+#: core/servermanager.cpp:288
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
@@ -621,18 +623,6 @@ msgid ""
 msgstr ""
 "프로토콜 버전이 일치하지 않습니다. 서버 쪽 버전(%1)이 클라이언트 쪽 버전(%2)"
 "보다 높습니다. 시스템을 업데이트했다면 KDE PIM 앱을 다시 시작하십시오."
-
-#: quick/colorproxymodel.cpp:84
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Offline)"
-msgstr "%1(오프라인)"
-
-#: quick/colorproxymodel.cpp:87
-#, kde-format
-msgctxt "@item this is the default calendar"
-msgid "%1 (Default)"
-msgstr "%1(기본값)"
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, kde-format
@@ -768,7 +758,7 @@ msgstr "에이전트 인스턴스를 삭제하시겠습니까?"
 msgid "Do you really want to delete the selected agent instance?"
 msgstr "선택한 에이전트 인스턴스를 삭제하시겠습니까?"
 
-#: widgets/agentconfigurationdialog.cpp:54
+#: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
@@ -2670,6 +2660,12 @@ msgstr "데이터 파일을 해석할 수 없음: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "모음집 %1을(를) 찾을 수 없음"
+
+#~ msgid "There is currently no account configured."
+#~ msgstr "계정을 설정하지 않았습니다."
+
+#~ msgid "Accounts integration is not supported"
+#~ msgstr "계정 통합이 지원되지 않음"
 
 #~ msgid "%1 Handbook"
 #~ msgstr "%1 도움말"
