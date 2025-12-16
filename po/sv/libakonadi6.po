@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-16 06:51+0000\n"
+"POT-Creation-Date: 2025-12-16 13:25+0000\n"
 "PO-Revision-Date: 2025-07-28 16:37+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -614,7 +614,7 @@ msgstr ""
 "Det finns inte några Akonadi-agenter tillgängliga. Verifiera installationen "
 "av KDE PIM."
 
-#: core/session.cpp:185
+#: core/session.cpp:184
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is older (%1) than ours (%2). If "
@@ -623,7 +623,7 @@ msgstr ""
 "Protokollversioner motsvarar inte varandra. Serverversionen är äldre (%1) än "
 "vår (%2). Om du nyligen uppdaterat systemet, starta då om Akonadi-servern."
 
-#: core/session.cpp:194
+#: core/session.cpp:193
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "

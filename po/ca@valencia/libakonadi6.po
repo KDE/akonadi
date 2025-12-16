@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-16 06:51+0000\n"
+"POT-Creation-Date: 2025-12-16 13:25+0000\n"
 "PO-Revision-Date: 2025-12-14 12:14+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -622,7 +622,7 @@ msgstr ""
 "No hi ha disponible cap agent d'Akonadi. Verifiqueu la vostra instal·lació "
 "PIM de KDE."
 
-#: core/session.cpp:185
+#: core/session.cpp:184
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is older (%1) than ours (%2). If "
@@ -632,7 +632,7 @@ msgstr ""
 "antiga (%1) que la nostra (%2). Si heu actualitzat el vostre sistema "
 "recentment, reinicieu el servidor Akonadi."
 
-#: core/session.cpp:194
+#: core/session.cpp:193
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "

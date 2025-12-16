@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-16 06:51+0000\n"
+"POT-Creation-Date: 2025-12-16 13:25+0000\n"
 "PO-Revision-Date: 2024-12-15 18:58+0530\n"
 "Last-Translator: Kali <EMAIL@ADDRESS>\n"
 "Language-Team: Hindi <fedora-trans-hi@redhat.com>\n"
@@ -612,7 +612,7 @@ msgid ""
 "installation."
 msgstr "कोई भी Akonadi एजेंट उपलब्ध नहीं है। कृपया अपना KDE PIM इंस्टॉलेशन सत्यापित करें।"
 
-#: core/session.cpp:185
+#: core/session.cpp:184
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is older (%1) than ours (%2). If "
@@ -621,7 +621,7 @@ msgstr ""
 "प्रोटोकॉल संस्करण बेमेल है। सर्वर संस्करण हमारे (%2) से पुराना (%1) है। यदि आपने हाल ही में "
 "अपना सिस्टम अपडेट किया है तो कृपया Akonadi सर्वर को पुनः आरंभ करें।"
 
-#: core/session.cpp:194
+#: core/session.cpp:193
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "

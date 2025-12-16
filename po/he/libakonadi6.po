@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-16 06:51+0000\n"
+"POT-Creation-Date: 2025-12-16 13:25+0000\n"
 "PO-Revision-Date: 2025-12-14 10:13+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -604,7 +604,7 @@ msgid ""
 "installation."
 msgstr "אין סוכנים זמינים של Akonadi. נא לוודא שהתקנת ה־PIM ב־KDE שלך תקינה."
 
-#: core/session.cpp:185
+#: core/session.cpp:184
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is older (%1) than ours (%2). If "
@@ -613,7 +613,7 @@ msgstr ""
 "גרסאות פרוטוקול שונות. גרסת השרת (%1) ישנה משלנו (%2). אם עדכנת את המערכת "
 "שלך לאחרונה נא להפעיל מחדש את שרת ה־Akonadi."
 
-#: core/session.cpp:194
+#: core/session.cpp:193
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "

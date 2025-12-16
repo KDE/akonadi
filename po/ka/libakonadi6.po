@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-16 06:51+0000\n"
+"POT-Creation-Date: 2025-12-16 13:25+0000\n"
 "PO-Revision-Date: 2025-12-13 05:07+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
@@ -609,7 +609,7 @@ msgid ""
 msgstr ""
 "Akonadi-ის აგენტები ხელმიუწვდომელია. შეამოწმეთ თქვენი KDE PIM-ის ფაილები."
 
-#: core/session.cpp:185
+#: core/session.cpp:184
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is older (%1) than ours (%2). If "
@@ -618,7 +618,7 @@ msgstr ""
 "პროტოკოლის ვერსია არ ემთხვევა. სერვერის ვერსია (%1) უფრო ძველია, ვიდრე ჩვენი "
 "(%2). თუ სისტემა ახლახანს განაახლეთ, Akonadi-ის სერვერი გადატვირთეთ."
 
-#: core/session.cpp:194
+#: core/session.cpp:193
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "

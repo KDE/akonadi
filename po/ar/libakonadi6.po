@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-16 06:51+0000\n"
+"POT-Creation-Date: 2025-12-16 13:25+0000\n"
 "PO-Revision-Date: 2025-08-04 14:42+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -612,7 +612,7 @@ msgstr ""
 "لا يتوفّر أي وسيط «أكونادي». رجاءً تحقّق من تثبيت «إدارة كِيدِي للمعلومات "
 "الشخصية» لديك."
 
-#: core/session.cpp:185
+#: core/session.cpp:184
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is older (%1) than ours (%2). If "
@@ -621,7 +621,7 @@ msgstr ""
 "إصدارة الميفاق لا تتطابق. إصدارة الخادم أقدم (%1) من إصدارتنا (%2). إن كنت "
 "قد حدّثت نظامك حديثًا فرجاءً أعِد تشغيل خادم «أكونادي»."
 
-#: core/session.cpp:194
+#: core/session.cpp:193
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "

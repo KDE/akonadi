@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-16 06:51+0000\n"
+"POT-Creation-Date: 2025-12-16 13:25+0000\n"
 "PO-Revision-Date: 2024-09-19 14:56+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -631,7 +631,7 @@ msgstr ""
 "Δεν υπάρχουν διαθέσιμοι πράκτορες Akonadi. Επιβεβαιώστε ότι το KDE PIM έχει "
 "εγκατασταθεί."
 
-#: core/session.cpp:185
+#: core/session.cpp:184
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is older (%1) than ours (%2). If "
@@ -641,7 +641,7 @@ msgstr ""
 "(%1) από τη δική μας (%2). Αν έχετε ενημερώσει το σύστημά σας πρόσφατα "
 "επανεκκινήστε τον εξυπηρετητή Akonadi."
 
-#: core/session.cpp:194
+#: core/session.cpp:193
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
