@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-15 00:42+0000\n"
+"POT-Creation-Date: 2025-12-16 06:51+0000\n"
 "PO-Revision-Date: 2025-08-22 17:02+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -2530,12 +2530,12 @@ msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Yhdistä verkkoon"
 
-#: widgets/standardactionmanager.cpp:1685
+#: widgets/standardactionmanager.cpp:1684
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Siirrä tähän kansioon"
 
-#: widgets/standardactionmanager.cpp:1685
+#: widgets/standardactionmanager.cpp:1684
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Kopioi tähän kansioon"

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-15 00:42+0000\n"
-"PO-Revision-Date: 2025-10-05 08:51+0300\n"
+"POT-Creation-Date: 2025-12-16 06:51+0000\n"
+"PO-Revision-Date: 2025-12-14 10:13+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Lokalize 25.08.1\n"
+"X-Generator: Lokalize 25.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -676,11 +676,10 @@ msgid "You won't be able to revert this action."
 msgstr "זאת פעולה בלתי הפיכה."
 
 #: quick/qml/TagManagerPage.qml:53
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "There are no tags"
-msgstr "יצירת תגית חדשה"
+msgstr "אין תגיות"
 
 #: quick/qml/TagManagerPage.qml:141
 #, kde-format
@@ -2538,12 +2537,12 @@ msgctxt "@action:button"
 msgid "Go Online"
 msgstr "התחברות"
 
-#: widgets/standardactionmanager.cpp:1685
+#: widgets/standardactionmanager.cpp:1684
 #, kde-format
 msgid "Move to This Folder"
 msgstr "העברה לתיקייה הזאת"
 
-#: widgets/standardactionmanager.cpp:1685
+#: widgets/standardactionmanager.cpp:1684
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "העתקה לתיקייה הזאת"
