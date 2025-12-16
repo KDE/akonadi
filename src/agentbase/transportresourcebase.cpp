@@ -8,7 +8,6 @@
 #include "transportresourcebase_p.h"
 
 #include "transportadaptor.h"
-#include <QDBusConnection>
 
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"

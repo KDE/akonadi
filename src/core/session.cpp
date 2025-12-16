@@ -19,7 +19,6 @@
 
 #include <KLocalizedString>
 
-#include <QCoreApplication>
 #include <QPointer>
 #include <QRandomGenerator>
 #include <QThread>
