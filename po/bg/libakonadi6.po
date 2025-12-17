@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-12-16 13:25+0000\n"
-"PO-Revision-Date: 2025-10-24 22:17+0200\n"
+"PO-Revision-Date: 2025-12-16 21:45+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -685,11 +685,10 @@ msgid "You won't be able to revert this action."
 msgstr "Няма да можете да отмените това действие."
 
 #: quick/qml/TagManagerPage.qml:53
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "There are no tags"
-msgstr "Създаване на нов етикет"
+msgstr "Няма етикети"
 
 #: quick/qml/TagManagerPage.qml:141
 #, kde-format
