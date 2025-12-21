@@ -674,7 +674,7 @@ msgstr "你将无法撤销此操作。"
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "There are no tags"
-msgstr ""
+msgstr "没有标签"
 
 #: quick/qml/TagManagerPage.qml:141
 #, kde-format
@@ -2629,9 +2629,3 @@ msgstr "无法解析数据文件：%1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "无法找到集合 %1"
-
-#~ msgid "There is currently no account configured."
-#~ msgstr "目前没有配置账户。"
-
-#~ msgid "Accounts integration is not supported"
-#~ msgstr "暂不支持账户集成"
