@@ -20,6 +20,8 @@
 #include <QUrl>
 #include <QUrlQuery>
 
+#include <KLocalizedString>
+
 using namespace Akonadi;
 
 Q_GLOBAL_STATIC(Akonadi::Collection, s_defaultParentCollection) // NOLINT(readability-redundant-member-init)
@@ -214,7 +216,10 @@ QString Collection::name() const
 QString Collection::displayName() const
 {
     const auto *const attr = attribute<EntityDisplayAttribute>();
-    const QString displayName = attr ? attr->displayName() : QString();
+    const QString displayName = attr
+        ? attr->displayName()
+        : (d_ptr->mId == 1 && d_ptr->resource == QLatin1StringView("akonadi_search_resource") ? i18nc("Name for the folder containing searches", "Search")
+                                                                                              : QString());
     return !displayName.isEmpty() ? displayName : d_ptr->name;
 }
 
