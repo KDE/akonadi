@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:52+0000\n"
-"PO-Revision-Date: 2025-01-09 16:17+0300\n"
+"PO-Revision-Date: 2025-12-23 11:54+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 25.03.70\n"
+"X-Generator: Lokalize 25.12.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -55,7 +55,7 @@ msgstr "Akonadi hizmeti başlatılıyor…"
 #, kde-format
 msgctxt "@info:status"
 msgid "Database fsck completed"
-msgstr "Veritabanında fsck işlemi tamamlandı"
+msgstr "Veri tabanında fsck işlemi tamamlandı"
 
 #: dbmigrator.cpp:495
 #, kde-format
@@ -64,75 +64,75 @@ msgid ""
 "Invalid database engine \"%1\" - valid values are \"sqlite\", \"mysql\" and "
 "\"postgres\"."
 msgstr ""
-"Geçersiz veritabanı işletkesi “%1” — geçerli değerler: “sqlite”, “mysql” ve "
+"Geçersiz veri tabanı işletkesi “%1” — geçerli değerler: “sqlite”, “mysql” ve "
 "“postgres”."
 
 #: dbmigrator.cpp:517
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure source database server."
-msgstr "Hata: Kaynak veritabanı sunucusu yapılandırılamadı."
+msgstr "Hata: Kaynak veri tabanı sunucusu yapılandırılamadı."
 
 #: dbmigrator.cpp:522
 #, kde-format
 msgctxt "@info:shell"
 msgid "Source and destination database engines are the same."
-msgstr "Kaynak ve hedef veritabanı işletkeleri aynı."
+msgstr "Kaynak ve hedef veri tabanı işletkeleri aynı."
 
 #: dbmigrator.cpp:529
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to obtain path to source database data file or directory."
 msgstr ""
-"Hata: Kaynak veritabanı veri dosyasına veya dizinine olan yol alınamadı."
+"Hata: Kaynak veri tabanı veri dosyasına veya dizinine olan yol alınamadı."
 
 #: dbmigrator.cpp:536
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure the new database server."
-msgstr "Hata: Yeni veritabanı sunucusu yapılandırılamadı."
+msgstr "Hata: Yeni veri tabanı sunucusu yapılandırılamadı."
 
 #: dbmigrator.cpp:542
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open existing database to migrate data from."
-msgstr "Hata: Verisi alınmak üzere var olan veritabanı açılamadı."
+msgstr "Hata: Verisi alınmak üzere var olan veri tabanı açılamadı."
 
 #: dbmigrator.cpp:547
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open new database to migrate data to."
-msgstr "Hata: Verinin yerleştirileceği yeni veritabanı açılamadı."
+msgstr "Hata: Verinin yerleştirileceği yeni veri tabanı açılamadı."
 
 #: dbmigrator.cpp:552
 #, kde-format
 msgctxt "@info:status"
 msgid "Running fsck on the source database"
-msgstr "Kaynak veritabanında fsck çalıştırılıyor"
+msgstr "Kaynak veri tabanında fsck çalıştırılıyor"
 
 #: dbmigrator.cpp:571
 #, kde-format
 msgctxt "@info:status %2 is error message"
 msgid "Error: failed to remove temporary database directory %1: %2"
-msgstr "Hata: Geçici veritabanı dizini %1 kaldırılamadı: %2"
+msgstr "Hata: Geçici veri tabanı dizini %1 kaldırılamadı: %2"
 
 #: dbmigrator.cpp:578
 #, kde-format
 msgctxt "@info:shell"
 msgid "Backing up original database..."
-msgstr "Özgün veritabanı yedekleniyor…"
+msgstr "Özgün veri tabanı yedekleniyor…"
 
 #: dbmigrator.cpp:586
 #, kde-format
 msgctxt "@info:status"
 msgid "Restoring database from backup %1 to %2"
-msgstr "%1 yedeğinden %2 konumuna veritabanı geri yükleniyor…"
+msgstr "%1 yedeğinden %2 konumuna veri tabanı geri yükleniyor…"
 
 #: dbmigrator.cpp:588
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to restore database from backup: %1"
-msgstr "Hata: Yedekten veritabanı geri yüklenemedi: %1"
+msgstr "Hata: Yedekten veri tabanı geri yüklenemedi: %1"
 
 #: dbmigrator.cpp:620 dbmigrator.cpp:631
 #, kde-format
@@ -166,7 +166,7 @@ msgstr "Önceki yedek dizini kaldırılamadı."
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to move database to backup location: %1"
-msgstr "Veritabanı yedekleme konumuna taşınamadı: %1"
+msgstr "Veri tabanı yedekleme konumuna taşınamadı: %1"
 
 #: dbmigrator.cpp:687
 #, kde-format
@@ -196,7 +196,7 @@ msgstr "Akonadi sunucusu yapılandırması yedeklenemedi: %1"
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move migrated database to the primary location: %1"
-msgstr "Hata: Aktarılan veritabanı birincil konuma taşınamadı: %1"
+msgstr "Hata: Aktarılan veri tabanı birincil konuma taşınamadı: %1"
 
 #: dbmigrator.cpp:738
 #, kde-format
@@ -259,7 +259,7 @@ msgstr "a"
 #: main.cpp:75 main.cpp:77
 #, kde-format
 msgid "Akonadi DB Migrator"
-msgstr "Akonadi Veritabanı Aktarıcısı"
+msgstr "Akonadi Veri Tabanı Aktarıcısı"
 
 #: main.cpp:79
 #, kde-format
@@ -272,8 +272,8 @@ msgid ""
 "The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and "
 "\"postgres\""
 msgstr ""
-"Kullanılacak yeni veritabanı işletkesi. Olası değerler: “sqlite”, “mysql” ve "
-"“postgres”."
+"Kullanılacak yeni veri tabanı işletkesi. Olası değerler: “sqlite”, “mysql” "
+"ve “postgres”."
 
 #: main.cpp:92
 #, kde-format

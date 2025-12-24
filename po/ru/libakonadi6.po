@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-12-16 13:25+0000\n"
-"PO-Revision-Date: 2025-08-22 17:32+0300\n"
+"PO-Revision-Date: 2025-12-23 18:41+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Lokalize 25.08.0\n"
+"X-Generator: Lokalize 25.12.0\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
@@ -698,11 +698,10 @@ msgid "You won't be able to revert this action."
 msgstr "Это действие будет нельзя отменить."
 
 #: quick/qml/TagManagerPage.qml:53
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "There are no tags"
-msgstr "Создать метку"
+msgstr "Нет ни одной метки"
 
 #: quick/qml/TagManagerPage.qml:141
 #, kde-format
