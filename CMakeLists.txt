@@ -130,7 +130,7 @@ if(BUILD_TESTING)
 endif()
 
 ecm_setup_qtplugin_macro_names(
-    JSON_ARG2
+    MACRO_NAMES
         "AKONADI_AGENTCONFIG_FACTORY"
     CONFIG_CODE_VARIABLE
         PACKAGE_SETUP_AUTOMOC_VARIABLES
