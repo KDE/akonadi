@@ -48,14 +48,6 @@ include(ECMConfiguredInstall)
 include(ECMGenerateDBusServiceFile)
 
 include(AkonadiMacros)
-include(ECMAddQch)
-
-option(BUILD_QCH "Build API documentation in QCH format (for e.g. Qt Assistant, Qt Creator & KDevelop)" OFF)
-add_feature_info(
-    QCH
-    ${BUILD_QCH}
-    "API documentation in QCH format (for e.g. Qt Assistant, Qt Creator & KDevelop)"
-)
 
 set(RELEASE_SERVICE_VERSION "26.03.40")
 set(AKONADI_FULL_VERSION "${PIM_VERSION} (${RELEASE_SERVICE_VERSION})")
@@ -383,18 +375,6 @@ install(FILES akonadi-mime.xml DESTINATION ${KDE_INSTALL_MIMEDIR})
 update_xdg_mimetypes(${KDE_INSTALL_MIMEDIR})
 
 ############### CMake Config Files ###############
-if(BUILD_QCH)
-    ecm_install_qch_export(
-        TARGETS KPim6AkonadiCore_QCH
-        KPim6AkonadiWidgets_QCH
-        KPim6AkonadiAgent_QCH
-        FILE KPim6AkonadiQchTargets.cmake
-        DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
-        COMPONENT Devel
-    )
-    set(PACKAGE_INCLUDE_QCHTARGETS "include(\"\${CMAKE_CURRENT_LIST_DIR}/KPim6AkonadiQchTargets.cmake\")")
-endif()
-
 configure_package_config_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/KPimAkonadiConfig.cmake.in"
     "${CMAKE_CURRENT_BINARY_DIR}/KPim6AkonadiConfig.cmake"

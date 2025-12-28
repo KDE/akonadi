@@ -518,32 +518,3 @@ install(
 )
 
 install(FILES kcfg2dbus.xsl DESTINATION ${KDE_INSTALL_DATADIR_KF}/akonadi)
-
-if(BUILD_QCH)
-    ecm_add_qch(
-        KPim6AkonadiCore_QCH
-        NAME KPim6AkonadiCore
-        BASE_NAME KPim6AkonadiCore
-        VERSION ${PIM_VERSION}
-        ORG_DOMAIN org.kde
-        SOURCES # using only public headers, to cover only public API
-        ${AkonadiCore_base_HEADERS}
-        ${AkonadiCore_attributes_HEADERS}
-        ${AkonadiCore_models_HEADERS}
-        ${AkonadiCore_jobs_HEADERS}
-        ${AkonadiCore_HEADERS}
-        #MD_MAINPAGE "${CMAKE_SOURCE_DIR}/README.md"
-        #IMAGE_DIRS "${CMAKE_SOURCE_DIR}/docs/pics"
-        LINK_QCHS
-            Qt6Core_QCH
-            Qt6Gui_QCH
-            Qt6Widgets_QCH
-        INCLUDE_DIRS
-            ${CMAKE_CURRENT_BINARY_DIR}
-        BLANK_MACROS
-            AKONADICORE_EXPORT
-        TAGFILE_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
-        QCH_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
-        COMPONENT Devel
-    )
-endif()

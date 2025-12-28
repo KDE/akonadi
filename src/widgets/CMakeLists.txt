@@ -243,28 +243,3 @@ if(BUILD_DESIGNERPLUGIN)
         COMPONENT Devel
     )
 endif()
-
-if(BUILD_QCH)
-    ecm_add_qch(
-        KPim6AkonadiWidgets_QCH
-        NAME KPim6AkonadiWidgets
-        BASE_NAME KPim6AkonadiWidgets
-        VERSION ${PIM_VERSION}
-        ORG_DOMAIN org.kde
-        SOURCES # using only public headers, to cover only public API
-            ${AkonadiWidgets_HEADERS}
-        #MD_MAINPAGE "${CMAKE_SOURCE_DIR}/README.md"
-        #IMAGE_DIRS "${CMAKE_SOURCE_DIR}/docs/pics"
-        LINK_QCHS
-            Qt6Core_QCH
-            Qt6Gui_QCH
-            Qt6Widgets_QCH
-        INCLUDE_DIRS
-            ${CMAKE_CURRENT_BINARY_DIR}
-        BLANK_MACROS
-            AKONADIWIDGETS_EXPORT
-        TAGFILE_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
-        QCH_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
-        COMPONENT Devel
-    )
-endif()

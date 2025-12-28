@@ -7,10 +7,17 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build-${presetName}",
             "installDir": "$env{KF6}",
-            "hidden": true,
+            "hidden": true
+        },
+        {
+            "name": "generate-doc",
+            "displayName": "Build as debug + using mold linker + generate doc",
             "cacheVariables": {
-                "BUILD_QCH": "ON"
-            }
+                "DOC_DESTDIR": "$env{GENERATE_DOCDIR}"
+            },
+            "inherits": [
+                "dev-mold"
+            ]
         },
         {
             "name": "dev-mold",
@@ -130,6 +137,14 @@
         }
     ],
     "buildPresets": [
+        {
+            "name": "generate-doc",
+            "configurePreset": "generate-doc",
+            "targets": [
+                "prepare_docs",
+                "generate_docs"
+            ]
+        },
         {
             "name": "dev",
             "configurePreset": "dev"

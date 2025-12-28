@@ -127,30 +127,6 @@ install(FILES ${AkonadiAgentBase_CC_HEADERS} DESTINATION ${AkonadiAgentBase_INST
 
 install(FILES resourcebase.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR})
 
-if(BUILD_QCH)
-    ecm_add_qch(
-        KPim6AkonadiAgent_QCH
-        NAME KPim6AkonadiAgent
-        BASE_NAME KPim6AkonadiAgent
-        VERSION ${PIM_VERSION}
-        ORG_DOMAIN org.kde
-        SOURCES # using only public headers, to cover only public API
-        ${AkonadiAgentBase_HEADERS}
-        #MD_MAINPAGE "${CMAKE_SOURCE_DIR}/README.md"
-        #IMAGE_DIRS "${CMAKE_SOURCE_DIR}/docs/pics"
-        LINK_QCHS
-            Qt6Core_QCH
-            Qt6Gui_QCH
-        INCLUDE_DIRS
-            ${CMAKE_CURRENT_BINARY_DIR}
-        BLANK_MACROS
-            AKONADICORE_EXPORT
-        TAGFILE_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
-        QCH_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
-        COMPONENT Devel
-    )
-endif()
-
 ## Widgets
 
 set(AkonadiAgentWidgetBase_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR}/KPim6/AkonadiAgentWidgetBase")
@@ -230,27 +206,3 @@ install(
     COMPONENT Devel
 )
 
-if(BUILD_QCH)
-    ecm_add_qch(
-        KPim6AkonadiWidgetAgent_QCH
-        NAME KPim6AkonadiWidgetAgent
-        BASE_NAME KPim6AkonadiWidgetAgent
-        VERSION ${PIM_VERSION}
-        ORG_DOMAIN org.kde
-        SOURCES # using only public headers, to cover only public API
-        ${AkonadiAgentWidgetBase_HEADERS}
-        #MD_MAINPAGE "${CMAKE_SOURCE_DIR}/README.md"
-        #IMAGE_DIRS "${CMAKE_SOURCE_DIR}/docs/pics"
-        LINK_QCHS
-            Qt6Core_QCH
-            Qt6Gui_QCH
-            Qt6Widgets_QCH
-        INCLUDE_DIRS
-            ${CMAKE_CURRENT_BINARY_DIR}
-        BLANK_MACROS
-            AKONADICORE_EXPORT
-        TAGFILE_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
-        QCH_INSTALL_DESTINATION ${KDE_INSTALL_QTQCHDIR}
-        COMPONENT Devel
-    )
-endif()
