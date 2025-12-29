@@ -205,4 +205,3 @@ install(
     DESTINATION ${AkonadiAgentWidgetBase_INSTALL_INCLUDEDIR}/Akonadi
     COMPONENT Devel
 )
-
