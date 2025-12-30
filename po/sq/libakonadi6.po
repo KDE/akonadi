@@ -1,166 +1,162 @@
-# Translation of libakonadi5.po to Ukrainian
-# Copyright (C) 2018-2021 This_file_is_part_of_KDE
-# This file is distributed under the license LGPL version 2.1 or
-# version 3 or later versions approved by the membership of KDE e.V.
+# Copyright (C) 2025 This file is copyright:
+# This file is distributed under the same license as the akonadi package.
 #
-# Ivan Petrouchtchak <fr.ivan@ukrainian-orthodox.org>, 2007, 2008.
-# Yuri Chornoivan <yurchor@ukr.net>, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025.
+# SPDX-FileCopyrightText: 2025 Agron Selimaj <as9902613@gmail.com>
 msgid ""
 msgstr ""
-"Project-Id-Version: libakonadi5\n"
+"Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-12-30 00:41+0000\n"
-"PO-Revision-Date: 2025-12-13 23:05+0200\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
-"Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
-"Language: uk\n"
+"PO-Revision-Date: 2025-12-29 13:13-0500\n"
+"Last-Translator: Agron Selimaj <as9902613@gmail.com>\n"
+"Language-Team: sq\n"
+"Language: sq\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.04.3\n"
-"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
-"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 25.12.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Юрій Чорноіван"
+msgstr "KDE Shqip"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "yurchor@ukr.net"
+msgstr "kde-i18n-sq@kde.org,as9902613@gmail.com"
 
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
-msgstr "Не вдалося зареєструвати об’єкт у D-Bus: %1"
+msgstr ""
 
 #: agentbase/agentbase.cpp:400
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
-msgstr "%1 типу %2"
+msgstr ""
 
 #: agentbase/agentbase.cpp:818
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
-msgstr "Ідентифікатор агента"
+msgstr ""
 
 #: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
-msgstr "Агент Akonadi"
+msgstr ""
 
 #: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:268
 #, kde-format
 msgctxt "@info:status Application ready for work"
 msgid "Ready"
-msgstr "Готовий до обробки запитів"
+msgstr "Gati"
 
 #: agentbase/agentbase_p.h:52
 #, kde-format
 msgctxt "@info:status"
 msgid "Offline"
-msgstr "Поза мережею"
+msgstr ""
 
 #: agentbase/agentbase_p.h:57
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing..."
-msgstr "Синхронізація..."
+msgstr ""
 
 #: agentbase/agentbase_p.h:62
 #, kde-format
 msgctxt "@info:status"
 msgid "Error."
-msgstr "Помилка."
+msgstr ""
 
 #: agentbase/agentbase_p.h:67
 #, kde-format
 msgctxt "@info:status"
 msgid "Not configured"
-msgstr "Не налаштовано"
+msgstr ""
 
 #: agentbase/resourcebase.cpp:533
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
-msgstr "Ідентифікатор ресурсу"
+msgstr ""
 
 #: agentbase/resourcebase.cpp:539
 #, kde-format
 msgid "Akonadi Resource"
-msgstr "Ресурс Akonadi"
+msgstr ""
 
 #: agentbase/resourcebase.cpp:581
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
-msgstr "Отримано некоректний запис"
+msgstr ""
 
 #: agentbase/resourcebase.cpp:604
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
-msgstr "Помилка під час створення запису: %1"
+msgstr ""
 
 #: agentbase/resourcebase.cpp:628
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
-msgstr "Помилка під час спроби оновлення збірки: %1"
+msgstr ""
 
 #: agentbase/resourcebase.cpp:715
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
-msgstr "Спроба оновлення локальної збірки зазнала невдачі: %1."
+msgstr ""
 
 #: agentbase/resourcebase.cpp:720
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
-msgstr "Спроба оновлення локальних записів зазнала невдачі: %1."
+msgstr ""
 
 #: agentbase/resourcebase.cpp:739
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
-msgstr "Неможливо отримати елемент в автономному режимі."
+msgstr ""
 
 #: agentbase/resourcebase.cpp:921
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
-msgstr "Синхронізація теки «%1»"
+msgstr ""
 
 #: agentbase/resourcebase.cpp:941 agentbase/resourcebase.cpp:948
 #, kde-format
 msgid "Failed to retrieve collection for sync."
-msgstr "Не вдалося отримати збірку для синхронізації."
+msgstr ""
 
 #: agentbase/resourcebase.cpp:989
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
-msgstr "Не вдалося отримати збірку для синхронізації атрибутів."
+msgstr ""
 
 #: agentbase/resourcebase.cpp:1035
 #, kde-format
 msgid "The requested item no longer exists"
-msgstr "Потрібного елемента вже не існує"
+msgstr ""
 
 #: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."
-msgstr "Виконання завдання скасовано."
+msgstr ""
 
 #: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, kde-format
 msgid "Akonadi Control"
-msgstr "Керування Akonadi"
+msgstr ""
 
 #: akonadictl/main.cpp:220
 #, kde-format
@@ -180,175 +176,160 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
-"Інструмент для керування сервером Akonadi\n"
-"\n"
-"Команди:\n"
-"  start          запускає сервер Akonadi з усіма його процесами\n"
-"  stop           штатно зупиняє сервер Akonadi і усі його процеси\n"
-"  restart        перезапускає сервер Akonadi із усіма його процесами\n"
-"  status         показує огляд стану сервера Akonadi\n"
-"  instances      вивести список усіх наявних екземплярів Akonadi\n"
-"  vacuum         очистити внутрішнє сховище (УВАГА! Потребує багато\n"
-"                 часу та місця на диску!)\n"
-"  fsck           перевірити (і спробувати виправити) сумісність внутрішнього "
-"сховища\n"
-"                 (процедура може бути доволі тривалою)"
 
 #: akonadictl/main.cpp:239
 #, kde-format
 msgid "Wait for server shutdown to complete."
-msgstr "Зачекати на завершення роботи сервера."
+msgstr ""
 
 #: akonadictl/main.cpp:241
 #, kde-format
 msgid "Command to execute"
-msgstr "Команда, яку слід виконати"
+msgstr ""
 
 #: configdialog/main.cpp:23
 #, kde-format
 msgid "Configuration Dialog"
-msgstr "Вікно налаштовування"
+msgstr ""
 
 #: configdialog/main.cpp:25
 #, kde-format
 msgid "Allows to configure an agent or resource"
-msgstr "Надає змогу налаштувати агент або ресурс"
+msgstr ""
 
 #: configdialog/main.cpp:27
 #, kde-format
 msgid "© 2025 Carl Schwan <carl@carlschwan.eu>"
-msgstr "© Carl Schwan <carl@carlschwan.eu>, 2025"
+msgstr "© 2025 Carl Schwan <carl@carlschwan.eu>"
 
 #: configdialog/main.cpp:30
 #, kde-format
 msgid "The agent identifier"
-msgstr "Ідентифікатор агента"
+msgstr ""
 
 #: configdialog/main.cpp:36
 #, kde-format
 msgid "Required identifier argument missing."
-msgstr "Пропущено обов'язковий аргумент ідентифікатора."
+msgstr ""
 
 #: configdialog/main.cpp:51
 #, kde-format
 msgid "No such agent found \"%1\""
-msgstr "Не знайдено агента «%1»"
+msgstr ""
 
 #: core/collection.cpp:221
-#, fuzzy, kde-format
-#| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
+#, kde-format
 msgctxt "Name for the folder containing searches"
 msgid "Search"
-msgstr "Шукати"
+msgstr ""
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
 msgid "No such collection."
-msgstr "Немає такої збірки."
+msgstr ""
 
 #: core/collectionsync.cpp:505 core/collectionsync.cpp:650
 #, kde-format
 msgid "Found unresolved orphan collections"
-msgstr "Знайдено непов’язані збірки"
+msgstr ""
 
 #: core/conflicthandler.cpp:53
 #, kde-format
 msgid "Did not find other item for conflict handling"
-msgstr "Не вдалося знайти інший запис для усування конфлікту"
+msgstr ""
 
 #: core/jobs/agentinstancecreatejob.cpp:58
 #, kde-format
 msgid "Agent instance creation timed out."
-msgstr "Створення агента прострочено."
+msgstr ""
 
 #: core/jobs/agentinstancecreatejob.cpp:108
 #, kde-format
 msgid "Unable to obtain agent type '%1'."
-msgstr "Не вдалося отримати дані щодо типу агента «%1»."
+msgstr ""
 
 #: core/jobs/agentinstancecreatejob.cpp:116
 #, kde-format
 msgid "Unable to create agent instance."
-msgstr "Не вдалося створити екземпляр агента."
+msgstr ""
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:73
 #, kde-format
 msgid "Invalid collection instance."
-msgstr "Некоректний екземпляр збірки."
+msgstr ""
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:80
 #: core/jobs/resourcesynchronizationjob.cpp:88
 #, kde-format
 msgid "Invalid resource instance."
-msgstr "Некоректний екземпляр ресурсу."
+msgstr ""
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:102
 #: core/jobs/resourcesynchronizationjob.cpp:113
 #, kde-format
 msgid "Unable to obtain D-Bus interface for resource '%1'"
-msgstr "Не вдалося отримати інтерфейс D-Bus для ресурсу «%1»"
+msgstr ""
 
 #: core/jobs/collectionattributessynchronizationjob.cpp:125
 #, kde-format
 msgid "Collection attributes synchronization timed out."
-msgstr "Час очікування синхронізації атрибутів збірки перевищено."
+msgstr ""
 
 #: core/jobs/collectioncopyjob.cpp:54
 #, kde-format
 msgid "Invalid collection to copy"
-msgstr "Некоректна збірка для копіювання"
+msgstr ""
 
 #: core/jobs/collectioncopyjob.cpp:60
 #, kde-format
 msgid "Invalid destination collection"
-msgstr "Некоректна збірка призначення"
+msgstr ""
 
 #: core/jobs/collectioncreatejob.cpp:50
 #, kde-format
 msgid "Invalid parent"
-msgstr "Некоректний кореневий елемент"
+msgstr ""
 
 #: core/jobs/collectioncreatejob.cpp:98
 #, kde-format
 msgid "Failed to parse Collection from response"
-msgstr "Не вдалося визначити збірку за відповіддю"
+msgstr ""
 
 #: core/jobs/collectiondeletejob.cpp:52
 #, kde-format
 msgid "Invalid collection"
-msgstr "Некоректна збірка"
+msgstr ""
 
 #: core/jobs/collectionfetchjob.cpp:212
 #, kde-format
 msgid "Invalid collection given."
-msgstr "Вказано некоректну збірку."
+msgstr ""
 
 #: core/jobs/collectionmovejob.cpp:52 core/jobs/itemmovejob.cpp:118
 #, kde-format
 msgid "No objects specified for moving"
-msgstr "Не вказано об’єктів для пересування"
+msgstr ""
 
 #: core/jobs/collectionmovejob.cpp:59 core/jobs/itemmovejob.cpp:125
 #: core/jobs/linkjobimpl_p.h:45
 #, kde-format
 msgid "No valid destination specified"
-msgstr "Не вказано коректного призначення"
+msgstr ""
 
 #: core/jobs/invalidatecachejob.cpp:58
 #, kde-format
 msgid "Invalid collection."
-msgstr "Некоректна збірка."
+msgstr ""
 
 #: core/jobs/itemcreatejob.cpp:115
 #, kde-format
 msgid "Invalid parent collection"
-msgstr "Некоректна батьківська збірка"
+msgstr ""
 
 #: core/jobs/job.cpp:335
 #, kde-format
 msgid "Cannot connect to the Akonadi service."
-msgstr "Не вдалося зв’язатися зі службою Akonadi."
+msgstr ""
 
 #: core/jobs/job.cpp:338
 #, kde-format
@@ -356,116 +337,111 @@ msgid ""
 "The protocol version of the Akonadi server is incompatible. Make sure you "
 "have a compatible version installed."
 msgstr ""
-"Версія протоколу сервера Akonadi не сумісна з вашою. Переконайтеся, що ви "
-"встановили сумісну версію."
 
 #: core/jobs/job.cpp:341
 #, kde-format
 msgid "User canceled operation."
-msgstr "Користувач скасував дію."
+msgstr ""
 
 #: core/jobs/job.cpp:346
 #, kde-format
 msgid "Unknown error."
-msgstr "Невідома помилка."
+msgstr ""
 
 #: core/jobs/job.cpp:385
 #, kde-format
 msgid "Unexpected response"
-msgstr "Неочікувана відповідь"
+msgstr ""
 
 #: core/jobs/resourcesynchronizationjob.cpp:139
 #, kde-format
 msgid "Resource synchronization timed out."
-msgstr "Час очікування синхронізації ресурсу перевищено."
+msgstr ""
 
 #: core/jobs/specialcollectionshelperjobs.cpp:145
 #, kde-format
 msgid "Could not fetch root collection of resource %1."
-msgstr "Не вдалося отримати кореневу збірку ресурсу %1."
+msgstr ""
 
 #: core/jobs/specialcollectionshelperjobs.cpp:189
 #, kde-format
 msgid "No resource ID given."
-msgstr "Не вказано ідентифікатора ресурсу."
+msgstr ""
 
 #: core/jobs/specialcollectionshelperjobs.cpp:326
 #, kde-format
 msgid "Invalid resource identifier '%1'"
-msgstr "Некоректний ідентифікатор ресурсу «%1»"
+msgstr ""
 
 #: core/jobs/specialcollectionshelperjobs.cpp:342
 #: core/jobs/specialcollectionshelperjobs.cpp:350
 #, kde-format
 msgid "Failed to configure default resource via D-Bus."
-msgstr "Не вдалося налаштувати типовий ресурс за допомогою D-Bus."
+msgstr ""
 
 #: core/jobs/specialcollectionshelperjobs.cpp:415
 #, kde-format
 msgid "Failed to fetch the resource collection."
-msgstr "Не вдалося отримати збірку ресурсів."
+msgstr ""
 
 #: core/jobs/specialcollectionshelperjobs.cpp:599
 #, kde-format
 msgid "Timeout trying to get lock."
-msgstr "Перевищення часу очікування блокування."
+msgstr ""
 
 #: core/jobs/tagcreatejob.cpp:49
 #, kde-format
 msgid "Failed to create tag."
-msgstr "Не вдалося створити мітку."
+msgstr ""
 
 #: core/jobs/trashjob.cpp:155
 #, kde-format
 msgid "Move to trash collection failed, aborting trash operation"
 msgstr ""
-"Спроба пересунути збірку до смітника зазнала невдачі, дію з пересування "
-"перервано"
 
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format
 msgid "Invalid items passed"
-msgstr "Передано некоректні об’єкти"
+msgstr ""
 
 #: core/jobs/trashjob.cpp:258 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
-msgstr "Передано некоректну збірку"
+msgstr ""
 
 #: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
 #, kde-format
 msgid "No valid collection or empty itemlist"
-msgstr "Не виявлено коректної збірки або порожній список об’єктів"
+msgstr ""
 
 #: core/jobs/trashrestorejob.cpp:86
 #, kde-format
 msgid "Could not find restore collection and restore resource is not available"
 msgstr ""
-"Не вдалося знайти збірку для відновлення, ресурс відновлення недоступний."
 
 #: core/models/agentinstancemodel.cpp:192
 #, kde-format
 msgctxt "@title:column, name of a thing"
 msgid "Name"
-msgstr "Назва"
+msgstr "Emri"
 
 #: core/models/colorproxymodel.cpp:85
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Offline)"
-msgstr "%1 (поза мережею)"
+msgstr ""
 
 #: core/models/colorproxymodel.cpp:88
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
-msgstr "%1 (типовий)"
+msgstr ""
 
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
-msgstr "Завантаження…"
+msgstr ""
 
 #: core/models/entitytreemodel.cpp:497
 #, kde-format
@@ -473,133 +449,131 @@ msgid ""
 "The target collection '%1' contains already\n"
 "a collection with name '%2'."
 msgstr ""
-"У збірці призначення, «%1», вже міститься\n"
-"збірка з назвою «%2»."
 
 #: core/models/entitytreemodel.cpp:668
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
-msgstr "Назва"
+msgstr "Emri"
 
 #: core/models/entitytreemodel_p.cpp:1338
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
-msgstr "Не вдалося скопіювати запис: <message>%1</message>"
+msgstr ""
 
 #: core/models/entitytreemodel_p.cpp:1340
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
-msgstr "Не вдалося скопіювати збірку: <message>%1</message>"
+msgstr ""
 
 #: core/models/entitytreemodel_p.cpp:1342
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
-msgstr "Не вдалося пересунути запис: <message>%1</message>"
+msgstr ""
 
 #: core/models/entitytreemodel_p.cpp:1344
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
-msgstr "Не вдалося пересунути збірку: <message>%1</message>"
+msgstr ""
 
 #: core/models/entitytreemodel_p.cpp:1346
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
-msgstr "Не вдалося пов'язати елемент: <message>%1</message>"
+msgstr ""
 
 #: core/models/favoritecollectionsmodel.cpp:398
 #, kde-format
 msgid "Favorite Folders"
-msgstr "Теки улюблених"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:84
 #, kde-format
 msgid "Total Messages"
-msgstr "Загалом повідомлень"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:86
 #, kde-format
 msgid "Unread Messages"
-msgstr "Непрочитаних повідомлень"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:95
 #, kde-format
 msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
 msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
-msgstr "<strong>Квота</strong>: %1% (%2 з %3)<br>\n"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:103
 #, kde-format
 msgid "Storage Size"
-msgstr "Об’єм сховища"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:109
 #, kde-format
 msgid "Subfolder Storage Size"
-msgstr "Об’єм сховища підтек"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:220
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
-msgstr "Непрочитаних"
+msgstr ""
 
 #: core/models/statisticsproxymodel.cpp:221
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
-msgstr "Всього"
+msgstr "Gjithsej"
 
 #: core/models/statisticsproxymodel.cpp:222
 #, kde-format
 msgctxt "collection size"
 msgid "Size"
-msgstr "Розмір"
+msgstr "Madhësia"
 
 #: core/models/tagmodel.cpp:64
 #, kde-format
 msgid "Tag"
-msgstr "Мітка"
+msgstr "Etiketë"
 
 #: core/partfetcher.cpp:49
 #, kde-format
 msgid "Unable to fetch item for index"
-msgstr "Не вдалося отримати запис для індексування"
+msgstr ""
 
 #: core/partfetcher.cpp:64
 #, kde-format
 msgid "Index is no longer available"
-msgstr "Покажчик недоступний"
+msgstr ""
 
 #: core/partfetcher.cpp:114
 #, kde-format
 msgid "Payload part '%1' is not available for this index"
-msgstr "Не вдалося отримати доступ до змістовної частини «%1» цього покажчика"
+msgstr ""
 
 #: core/partfetcher.cpp:123
 #, kde-format
 msgid "No session available for this index"
-msgstr "Не вдалося встановити сеансу для цього покажчика"
+msgstr ""
 
 #: core/partfetcher.cpp:132
 #, kde-format
 msgid "No item available for this index"
-msgstr "У цьому покажчику немає пунктів"
+msgstr ""
 
 #: core/pluginloader.cpp:145
 #, kde-format
 msgid "Unnamed plugin"
-msgstr "Додаток без назви"
+msgstr ""
 
 #: core/pluginloader.cpp:151
 #, kde-format
 msgid "No description available"
-msgstr "Опис відсутній"
+msgstr ""
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -609,11 +583,6 @@ msgid ""
 "If you recently updated your system please log out and back in to make sure "
 "all applications use the correct protocol version."
 msgstr ""
-"Версія протоколу сервера Akonadi відрізняється від версію протоколу, яка "
-"використовується цією програмою.\n"
-"Якщо вашу систему було нещодавно оновлено, будь ласка, вийдіть із облікового "
-"запису і увійдіть до нього знову, щоб усі програми могли скористатися "
-"належною версією протоколу."
 
 #: core/servermanager.cpp:288
 #, kde-format
@@ -621,8 +590,6 @@ msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
 "installation."
 msgstr ""
-"Немає доступних агентів Akonadi. Будь ласка, перевірте, чи правильно "
-"встановлено KDE PIM у вашій системі."
 
 #: core/session.cpp:184
 #, kde-format
@@ -630,9 +597,6 @@ msgid ""
 "Protocol version mismatch. Server version is older (%1) than ours (%2). If "
 "you updated your system recently please restart the Akonadi server."
 msgstr ""
-"Не збігаються версії протоколів. Версія на сервері є старішою (%1) за "
-"клієнтську (%2). Якщо вашу систему було нещодавно оновлено, будь ласка, "
-"перезапустіть сервер Akonadi."
 
 #: core/session.cpp:193
 #, kde-format
@@ -640,169 +604,164 @@ msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
 "you updated your system recently please restart all KDE PIM applications."
 msgstr ""
-"Не збігаються версії протоколів. Версія на сервері є новішою (%1) за "
-"клієнтську (%2). Якщо вашу систему було нещодавно оновлено, будь ласка, "
-"перезапустіть усі програми KDE PIM."
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
-msgstr "Налаштовування %1"
+msgstr ""
 
 #: quick/qml/AgentConfigurationForm.qml:41
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
-msgstr "Змінити або вилучити агент цього облікового запису."
+msgstr ""
 
 #: quick/qml/AgentConfigurationForm.qml:57
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify"
-msgstr "Змінити"
+msgstr ""
 
 #: quick/qml/AgentConfigurationForm.qml:66
 #, kde-format
 msgctxt "@action:button"
 msgid "Delete"
-msgstr "Вилучити"
+msgstr ""
 
 #: quick/qml/AgentConfigurationForm.qml:115
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
-msgstr "Додати обліковий запис"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
 #, kde-format
 msgid "Manage Tags"
-msgstr "Керування мітками"
+msgstr ""
 
 #: quick/qml/TagManagerPage.qml:27
 #, kde-format
 msgctxt "@title:dialog"
 msgid "Confirm Tag Deletion"
-msgstr "Підтвердження вилучення мітки"
+msgstr ""
 
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
 msgctxt "@info"
 msgid "Are you sure you want to delete tag <b>%1</b>?"
-msgstr "Ви справді хочете вилучити мітку <b>%1</b>?"
+msgstr ""
 
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
 msgid "You won't be able to revert this action."
-msgstr "Ви не зможете скасувати наслідки цієї дії."
+msgstr ""
 
 #: quick/qml/TagManagerPage.qml:53
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "There are no tags"
-msgstr "Немає міток"
+msgstr ""
 
 #: quick/qml/TagManagerPage.qml:141
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
-msgstr "Створити мітку…"
+msgstr ""
 
 #: quick/qml/TagManagerPage.qml:152
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Tag"
-msgstr "Додати мітку"
+msgstr ""
 
 #: selftest/main.cpp:19
 #, kde-format
 msgid "Akonadi Self Test"
-msgstr "Самоперевірка Akonadi"
+msgstr ""
 
 #: selftest/main.cpp:21
 #, kde-format
 msgid "Checks and reports state of Akonadi server"
-msgstr "Перевіряє сервер Akonadi і повідомляє про його стан"
+msgstr ""
 
 #: selftest/main.cpp:23
 #, kde-format
 msgid "(c) 2008 Volker Krause <vkrause@kde.org>"
-msgstr "© Volker Krause <vkrause@kde.org>, 2008"
+msgstr ""
 
 #: shared/akapplication.cpp:70
 #, kde-format
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
-"Простір назв для запуску декількох екземплярів Akonadi у тому самому сеансі "
-"користувача"
 
 #: widgets/agentactionmanager.cpp:36
 msgid "&New Agent Instance..."
-msgstr "С&творити екземпляр агента…"
+msgstr ""
 
 #: widgets/agentactionmanager.cpp:37
 msgid "&Delete Agent Instance"
-msgstr "Ви&лучити екземпляр агента"
+msgstr ""
 
 #: widgets/agentactionmanager.cpp:38
 msgid "&Configure Agent Instance"
-msgstr "&Налаштувати екземпляр агента"
+msgstr ""
 
 #: widgets/agentactionmanager.cpp:54
 #, kde-format
 msgctxt "@title:window"
 msgid "New Agent Instance"
-msgstr "Новий екземпляр агента"
+msgstr ""
 
 #: widgets/agentactionmanager.cpp:56
 #, kde-format
 msgid "Could not create agent instance: %1"
-msgstr "Не вдалося створити екземпляр агента: %1"
+msgstr ""
 
 #: widgets/agentactionmanager.cpp:60
 #, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
-msgstr "Спроба створення агента зазнала невдачі"
+msgstr ""
 
 #: widgets/agentactionmanager.cpp:62
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Agent Instance?"
-msgstr "Вилучити екземпляр агента?"
+msgstr ""
 
 #: widgets/agentactionmanager.cpp:66
 #, kde-format
 msgid "Do you really want to delete the selected agent instance?"
-msgstr "Ви справді бажаєте вилучити позначений екземпляр агента?"
+msgstr ""
 
 #: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
-msgstr "Налаштування %1"
+msgstr ""
 
 #: widgets/agentconfigurationwidget.cpp:94
 #, kde-format
 msgid "Unable to access D-Bus interface of created agent."
-msgstr "Не вдалося отримати доступ до інтерфейсу D-Bus створеного агента."
+msgstr ""
 
 #: widgets/agentconfigurationwidget.cpp:116
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
-msgstr "Вікно налаштувань вже відкрито у іншому вікні програми"
+msgstr ""
 
 #: widgets/agentconfigurationwidget.cpp:123
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
-msgstr "Вікно налаштувань для %1 вже десь відкрито."
+msgstr ""
 
 #: widgets/agentconfigurationwidget.cpp:125
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
-msgstr "Не вдалося зареєструвати вікно налаштувань %1."
+msgstr ""
 
 #: widgets/agentinstancewidget.cpp:259
 #, kde-format
@@ -814,107 +773,105 @@ msgstr "(%1%)"
 #, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
-msgstr "Налаштувати обліковий запис"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:74
 #, kde-format
 msgctxt "@item:textbox"
 msgid "Search types"
-msgstr "Типи пошуку"
+msgstr ""
 
 #: widgets/cachepolicypage.cpp:43 widgets/cachepolicypage.cpp:48
 #, kde-format
 msgid "minute"
 msgid_plural "minutes"
-msgstr[0] "хвилина"
-msgstr[1] "хвилини"
-msgstr[2] "хвилин"
-msgstr[3] "хвилина"
+msgstr[0] "minutë"
+msgstr[1] "minuta"
 
 #: widgets/cachepolicypage.cpp:70
 #, kde-format
 msgid "Retrieval"
-msgstr "Отримання"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, inherit)
 #: widgets/cachepolicypage.ui:20
 #, kde-format
 msgid "Use options from parent folder or account"
-msgstr "Використовувати параметри батьківської теки або облікового запису"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, syncOnDemand)
 #: widgets/cachepolicypage.ui:33
 #, kde-format
 msgid "Synchronize when selecting this folder"
-msgstr "Виконувати синхронізацію у разі позначення цієї теки"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: widgets/cachepolicypage.ui:40
 #, kde-format
 msgid "Synchronize after:"
-msgstr "Синхронізувати після:"
+msgstr ""
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, checkInterval)
 #: widgets/cachepolicypage.ui:47
 #, kde-format
 msgctxt "never check the cache"
 msgid "Never"
-msgstr "Ніколи"
+msgstr "Kurrë"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, checkInterval)
 #. i18n: ectx: property (suffix), widget (QSpinBox, localCacheTimeout)
 #: widgets/cachepolicypage.ui:50 widgets/cachepolicypage.ui:133
 #, kde-format
 msgid "minutes"
-msgstr "хв."
+msgstr "minuta"
 
 #. i18n: ectx: property (text), widget (QLabel, localPartsLabel)
 #: widgets/cachepolicypage.ui:66
 #, kde-format
 msgid "Locally cached parts:"
-msgstr "Локально кешовані частини:"
+msgstr ""
 
 #. i18n: ectx: property (title), widget (KEditListWidget, localParts)
 #: widgets/cachepolicypage.ui:87
 #, kde-format
 msgid "Locally Cached Parts"
-msgstr "Локально кешовані частини"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, retrievalOptionsLabel)
 #: widgets/cachepolicypage.ui:94
 #, kde-format
 msgid "Retrieval Options:"
-msgstr "Параметри отримання:"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QRadioButton, retrieveFullMessages)
 #: widgets/cachepolicypage.ui:101
 #, kde-format
 msgid "Always retrieve full &messages"
-msgstr "Завжди &отримувати повідомлення повністю"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QRadioButton, retrieveOnlyHeaders)
 #: widgets/cachepolicypage.ui:111
 #, kde-format
 msgid "&Retrieve message bodies on demand"
-msgstr "О&тримувати вміст повідомлень на вимогу"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/cachepolicypage.ui:118
 #, kde-format
 msgid "Keep message bodies locally for:"
-msgstr "Зберігати вміст повідомлень локально протягом:"
+msgstr ""
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, localCacheTimeout)
 #: widgets/cachepolicypage.ui:130
 #, kde-format
 msgctxt "no cache timeout"
 msgid "Forever"
-msgstr "Нескінченний"
+msgstr ""
 
 #: widgets/clearcachefoldersjob.cpp:41
 #, kde-format
 msgid "Collection cache cleared. You should restart Akonadi now."
-msgstr "Кеш збірок спорожнено. Тепер вам слід перезапустити Akonadi."
+msgstr ""
 
 #: widgets/clearcachefoldersjob.cpp:69
 #, kde-format
@@ -923,157 +880,149 @@ msgid ""
 "likely never uploaded to the destination server, so clearing this collection "
 "means that those <b>data will be lost</b>. Are you sure you want to proceed?"
 msgstr ""
-"У збірці «%1» міститься %2 записів без віддаленого ідентифікатора. Ці "
-"записи, ймовірно, ніколи не було вивантажено на сервер призначення, тому "
-"спорожнення цієї збірки означатиме, що ці <b>дані буде втрачено</b>. Ви "
-"справді хочете спорожнити збірку?"
 
 #: widgets/collectiondialog.cpp:58
 #, kde-format
 msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
 msgid "Search"
-msgstr "Шукати"
+msgstr ""
 
 #: widgets/collectiondialog.cpp:66
 #, kde-format
 msgctxt "@option:check"
 msgid "Use folder by default"
-msgstr "Зробити теку типовою"
+msgstr ""
 
 #: widgets/collectiondialog.cpp:226
 #, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
-msgstr "&Нова підтека…"
+msgstr ""
 
 #: widgets/collectiondialog.cpp:228
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
-msgstr "Створити нову підтеку у вибраній теці"
+msgstr ""
 
 #: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:419
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
-msgstr "Нова тека"
+msgstr ""
 
 #: widgets/collectiondialog.cpp:266
 #, kde-format
 msgctxt "@label:textbox, name of a thing"
 msgid "Name"
-msgstr "Назва"
+msgstr "Emri"
 
 #: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:421
 #, kde-format
 msgid "Could not create folder: %1"
-msgstr "Не вдалося створити теку: %1"
+msgstr ""
 
 #: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:422
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
-msgstr "Помилка створення теки"
+msgstr ""
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
 #, kde-format
 msgctxt "@title:tab general properties page"
 msgid "General"
-msgstr "Загальні"
+msgstr ""
 
 #: widgets/collectiongeneralpropertiespage.cpp:54
 #, kde-format
 msgctxt "@label"
 msgid "One object"
 msgid_plural "%1 objects"
-msgstr[0] "%1 об'єкт"
-msgstr[1] "%1 об'єкти"
-msgstr[2] "%1 об'єктів"
-msgstr[3] "%1 об'єкт"
+msgstr[0] ""
+msgstr[1] ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/collectiongeneralpropertiespage.ui:16
 #, kde-format
 msgid "&Name:"
-msgstr "&Назва:"
+msgstr "&Emri:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, customIconCheckbox)
 #: widgets/collectiongeneralpropertiespage.ui:29
 #, kde-format
 msgid "&Use custom icon:"
-msgstr "В&икористовувати нетипову теку:"
+msgstr ""
 
 #. i18n: ectx: property (icon), widget (KIconButton, customIcon)
 #: widgets/collectiongeneralpropertiespage.ui:39
 #, kde-format
 msgid "folder"
-msgstr "тека"
+msgstr "skedar"
 
 #. i18n: ectx: property (title), widget (QGroupBox, statsBox)
 #: widgets/collectiongeneralpropertiespage.ui:62
 #, kde-format
 msgid "Statistics"
-msgstr "Статистика"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: widgets/collectiongeneralpropertiespage.ui:68
 #, kde-format
 msgctxt "object names"
 msgid "Content:"
-msgstr "Вміст:"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, countLabel)
 #: widgets/collectiongeneralpropertiespage.ui:75
 #, kde-format
 msgid "0 objects"
-msgstr "0 об’єктів"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: widgets/collectiongeneralpropertiespage.ui:82
 #, kde-format
 msgid "Size:"
-msgstr "Розмір:"
+msgstr "Madhësia:"
 
 #. i18n: ectx: property (text), widget (QLabel, sizeLabel)
 #: widgets/collectiongeneralpropertiespage.ui:89
 #, kde-format
 msgid "0 Byte"
-msgstr "0 бутів"
+msgstr ""
 
 #: widgets/collectionmaintenancepage.cpp:46
 #, kde-format
 msgid "Remember that indexing can take some minutes."
-msgstr "Зважте на те, що індексування може тривати декілька хвилин."
+msgstr ""
 
 #: widgets/collectionmaintenancepage.cpp:72
 #, kde-format
 msgid "Maintenance"
-msgstr "Обслуговування"
+msgstr ""
 
 #: widgets/collectionmaintenancepage.cpp:131
 #, kde-format
 msgid "Error while retrieving indexed items count"
-msgstr "Помилка під час спроби отримати кількість індексованих записів"
+msgstr ""
 
 #: widgets/collectionmaintenancepage.cpp:134
 #, kde-format
 msgid "Indexed %1 item in this folder"
 msgid_plural "Indexed %1 items in this folder"
-msgstr[0] "Індексовано %1 запис у цій теці"
-msgstr[1] "Індексовано %1 записи у цій теці"
-msgstr[2] "Індексовано %1 записів у цій теці"
-msgstr[3] "Індексовано один запис у цій теці"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/collectionmaintenancepage.cpp:138
 #, kde-format
 msgid "Calculating indexed items..."
-msgstr "Обчислюємо кількість індексованих записів…"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/collectionmaintenancepage.ui:17
 #, kde-format
 msgid "Folder type:"
-msgstr "Тип теки:"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, folderTypeLbl)
 #. i18n: ectx: property (text), widget (QLabel, folderSizeLbl)
@@ -1085,107 +1034,107 @@ msgstr "Тип теки:"
 #: widgets/collectionmaintenancepage.ui:66
 #, kde-format
 msgid "unknown"
-msgstr "невідомо"
+msgstr "i/e panjohur"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: widgets/collectionmaintenancepage.ui:38
 #, kde-format
 msgid "File size:"
-msgstr "Розмір файла:"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: widgets/collectionmaintenancepage.ui:45
 #, kde-format
 msgid "Total items:"
-msgstr "Загалом записів:"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: widgets/collectionmaintenancepage.ui:59
 #, kde-format
 msgid "Unread items:"
-msgstr "Непрочитаних записів:"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, indexingLabel)
 #: widgets/collectionmaintenancepage.ui:73
 #, kde-format
 msgid "Indexing:"
-msgstr "Індексування:"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, enableIndexingChkBox)
 #: widgets/collectionmaintenancepage.ui:80
 #, kde-format
 msgid "Enable fulltext indexing"
-msgstr "Увімкнути повнотекстове індексування"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, indexedCountLbl)
 #: widgets/collectionmaintenancepage.ui:87
 #, kde-format
 msgid "Retrieving indexed items count..."
-msgstr "Отримуємо кількість індексованих записів…"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, reindexButton)
 #: widgets/collectionmaintenancepage.ui:94
 #, kde-format
 msgid "Reindex folder"
-msgstr "Повторно індексувати теку"
+msgstr ""
 
 #: widgets/collectionrequester.cpp:113
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No Folder"
-msgstr "Без теки"
+msgstr ""
 
 #: widgets/collectionrequester.cpp:122
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
-msgstr "Відкрити діалогове вікно збірки"
+msgstr ""
 
 #: widgets/collectionrequester.cpp:143
 #, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
-msgstr "Виберіть збірку"
+msgstr ""
 
 #: widgets/conflictresolvedialog.cpp:129
 #, kde-format
 msgid "Modification Time"
-msgstr "Час внесення змін"
+msgstr ""
 
 #: widgets/conflictresolvedialog.cpp:141
 #, kde-format
 msgid "Flags"
-msgstr "Прапорці"
+msgstr "Flamuj"
 
 #: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
 #: widgets/conflictresolvedialog.cpp:174
 #, kde-format
 msgid "Attribute: %1"
-msgstr "Атрибут: %1"
+msgstr ""
 
 #: widgets/conflictresolvedialog.cpp:186
 #, kde-format
 msgctxt "@title:window"
 msgid "Conflict Resolution"
-msgstr "Розв'язання конфліктів"
+msgstr ""
 
 #: widgets/conflictresolvedialog.cpp:192
 #, kde-format
 msgctxt "@action:button"
 msgid "Take my version"
-msgstr "Використати вашу версію"
+msgstr ""
 
 #: widgets/conflictresolvedialog.cpp:198
 #, kde-format
 msgctxt "@action:button"
 msgid "Take their version"
-msgstr "Використати сторонню версію"
+msgstr ""
 
 #: widgets/conflictresolvedialog.cpp:204
 #, kde-format
 msgctxt "@action:button"
 msgid "Keep both versions"
-msgstr "Зберегти обидві версії"
+msgstr ""
 
 #: widgets/conflictresolvedialog.cpp:217
 #, kde-format
@@ -1197,47 +1146,41 @@ msgid ""
 "editor\"</a> to keep a copy of the texts, then select which version is most "
 "correct, then re-open it and modify it again to add what's missing."
 msgstr ""
-"<qt>Внесені вами зміни суперечать змінам, які було внесено кимось іншим."
-"<br>Якщо одну з цих версій не буде відкинуто, вам доведеться здійснити "
-"узгодження внесених змін вручну.<br>Натисніть кнопку <a href=\"opentexteditor"
-"\">«Відкрити текстовий редактор»</a> для створення копії тексту, потім "
-"виберіть найпридатнішу з версій, повторно відкрийте її і додайте пропущені "
-"фрагменти."
 
 #: widgets/conflictresolvedialog.cpp:266
 #, kde-format
 msgid "Data"
-msgstr "Дані"
+msgstr "Të Dhënat"
 
 #: widgets/controlgui.cpp:223
 #, kde-format
 msgid "Starting Akonadi server..."
-msgstr "Запуск сервера Akonadi..."
+msgstr ""
 
 #: widgets/controlgui.cpp:229
 #, kde-format
 msgid "Stopping Akonadi server..."
-msgstr "Зупинка сервера Akonadi..."
+msgstr ""
 
 #: widgets/dragdropmanager.cpp:212
 #, kde-format
 msgid "&Move Here"
-msgstr "&Пересунути сюди"
+msgstr ""
 
 #: widgets/dragdropmanager.cpp:218
 #, kde-format
 msgid "&Copy Here"
-msgstr "&Скопіювати сюди"
+msgstr ""
 
 #: widgets/dragdropmanager.cpp:224
 #, kde-format
 msgid "&Link Here"
-msgstr "С&творити посилання"
+msgstr ""
 
 #: widgets/dragdropmanager.cpp:229
 #, kde-format
 msgid "C&ancel"
-msgstr "&Скасувати"
+msgstr ""
 
 #: widgets/erroroverlay.cpp:224
 #, kde-format
@@ -1247,38 +1190,35 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
-"Не вдалося зв’язатися зі службою керування особистими даними.\n"
-"\n"
-"%1"
 
 #: widgets/erroroverlay.cpp:228
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
-msgstr "Запуск служби керування особистою інформацією…"
+msgstr ""
 
 #: widgets/erroroverlay.cpp:229
 #, kde-format
 msgid "Personal information management service is starting..."
-msgstr "Запуск служби керування особистою інформацією…"
+msgstr ""
 
 #: widgets/erroroverlay.cpp:233
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
-msgstr "Завершення роботи служби керування особистою інформацією…"
+msgstr ""
 
 #: widgets/erroroverlay.cpp:234
 #, kde-format
 msgid "Personal information management service is shutting down..."
-msgstr "Завершення роботи служби керування особистою інформацією…"
+msgstr ""
 
 #: widgets/erroroverlay.cpp:238
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
-msgstr "Служба керування особистими даними виконує оновлення бази даних."
+msgstr ""
 
 #: widgets/erroroverlay.cpp:240
 #, kde-format
@@ -1289,10 +1229,6 @@ msgid ""
 "Depending on the amount of personal information, this might take a few "
 "minutes."
 msgstr ""
-"Служба керування особистих даних виконує оновлення бази даних.\n"
-"Таке оновлення виконується після оновлення програмного забезпечення, "
-"оновлення потрібне для оптимізації швидкодії роботи з базою даних.\n"
-"Оновлення може тривати декілька хвилин."
 
 #. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
@@ -1302,15 +1238,13 @@ msgid ""
 "A required background service is not running. This application cannot be "
 "used without it."
 msgstr ""
-"Потрібну для роботи фонову службу не запущено. Ця програма не зможе "
-"працювати без відповідної служби."
 
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #: widgets/erroroverlay.ui:116
 #, kde-format
 msgctxt "@action:button Start the Akonadi server"
 msgid "Start"
-msgstr "Запустити"
+msgstr "Fillo"
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
@@ -1319,9 +1253,6 @@ msgid ""
 "A required background service is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
-"Потрібна для роботи фонова служба є недієздатною.\n"
-"Натисніть кнопку «Подробиці...», щоб побачити докладніші відомості щодо цієї "
-"проблеми."
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
@@ -1332,102 +1263,98 @@ msgid ""
 "Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> for "
 "troubleshooting tips.</p></body></html>"
 msgstr ""
-"<html><head/><body><p>Потрібна для роботи фонова служба є непрацездатною.</"
-"p><p>Див. <a href=\"https://userbase.kde.org/"
-"Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">Поширені питання</a>, "
-"що дізнатися більше.</p></body></html>"
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
 #, kde-format
 msgid "Details..."
-msgstr "Подробиці…"
+msgstr ""
 
 #: widgets/manageaccountwidget.cpp:232
 #, kde-format
 msgid "Do you want to remove account '%1'?"
-msgstr "Хочете вилучити обліковий запис «%1»?"
+msgstr ""
 
 #: widgets/manageaccountwidget.cpp:233
 #, kde-format
 msgctxt "@title:window"
 msgid "Remove account?"
-msgstr "Вилучити обліковий запис?"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, accountOnCurrentActivity)
 #: widgets/manageaccountwidget.ui:19
 #, kde-format
 msgid "Show only account on current activity"
-msgstr "Показувати лише обліковий запис у поточному просторі дій"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/manageaccountwidget.ui:26
 #, kde-format
 msgid "Incoming accounts (add at least one):"
-msgstr "Вхідні облікові записи (додайте хоча б один):"
+msgstr ""
 
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, mFilterAccount)
 #: widgets/manageaccountwidget.ui:33
 #, kde-format
 msgid "Filter…"
-msgstr "Фільтрувати…"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
 #: widgets/manageaccountwidget.ui:47
 #, kde-format
 msgid "A&dd..."
-msgstr "&Додати…"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
 #: widgets/manageaccountwidget.ui:57
 #, kde-format
 msgid "&Modify..."
-msgstr "&Змінити…"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
 #: widgets/manageaccountwidget.ui:67
 #, kde-format
 msgid "R&emove"
-msgstr "Ви&лучити"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, mRestartAccountButton)
 #: widgets/manageaccountwidget.ui:84
 #, kde-format
 msgid "Restart"
-msgstr "Перезапустити"
+msgstr ""
 
 #: widgets/recentcollectionaction.cpp:43
 #, kde-format
 msgid "Recent Folder"
-msgstr "Нещодавня тека"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, RenameFavoriteDialog)
 #: widgets/renamefavoritedialog.ui:26
 #, kde-format
 msgid "Rename Favorite"
-msgstr "Перейменування улюбленого"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/renamefavoritedialog.ui:35
 #, kde-format
 msgid "Name:"
-msgstr "Назва:"
+msgstr "Emri:"
 
 #: widgets/selftestdialog.cpp:60
 #, kde-format
 msgctxt "@title:window"
 msgid "Akonadi Server Self-Test"
-msgstr "Самоперевірка сервера Akonadi"
+msgstr ""
 
 #: widgets/selftestdialog.cpp:71
 #, kde-format
 msgid "Save Report..."
-msgstr "Зберегти звіт..."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:73
 #, kde-format
 msgid "Copy Report to Clipboard"
-msgstr "Копіювати звіт до буфера"
+msgstr ""
 
 #: widgets/selftestdialog.cpp:189
 #, kde-format
@@ -1435,8 +1362,6 @@ msgid ""
 "The QtSQL driver '%1' is required by your current Akonadi server "
 "configuration and was found on your system."
 msgstr ""
-"Ваші поточні налаштування Akonadi вимагають встановлення драйвера QtSQL "
-"«%1». Цього драйвера не було знайдено у системі."
 
 #: widgets/selftestdialog.cpp:191
 #, kde-format
@@ -1446,31 +1371,27 @@ msgid ""
 "The following drivers are installed: %2.\n"
 "Make sure the required driver is installed."
 msgstr ""
-"Ваші поточні налаштування Akonadi вимагають встановлення драйвера QtSQL "
-"«%1».\n"
-"Встановлено такі драйвери: %2.\n"
-"Переконайтеся, що встановлено потрібний драйвер."
 
 #: widgets/selftestdialog.cpp:198
 #, kde-format
 msgid "Database driver found."
-msgstr "Знайдено драйвер бази даних."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:200
 #, kde-format
 msgid "Database driver not found."
-msgstr "Не знайдено драйвера бази даних."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:208
 #, kde-format
 msgid "MySQL server executable not tested."
-msgstr "Виконуваний файл сервера MySQL не було перевірено."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:208 widgets/selftestdialog.cpp:249
 #: widgets/selftestdialog.cpp:300
 #, kde-format
 msgid "The current configuration does not require an internal MySQL server."
-msgstr "За поточних налаштувань внутрішній сервер MySQL не потрібен."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:216
 #, kde-format
@@ -1481,69 +1402,62 @@ msgid ""
 "executable. The server executable is typically called 'mysqld'; its location "
 "varies depending on the distribution."
 msgstr ""
-"Зараз Akonadi налаштовано на використання сервера MySQL «%1».\n"
-"Переконайтеся, що ви встановили сервер MySQL, вкажіть правильний шлях і "
-"переконайтеся, що у вас є потрібні права на читання і виконання файла "
-"програми сервера. Типовим виконуваним файлом є «mysqld», його розташування "
-"може бути різним у різних дистрибутивах."
 
 #: widgets/selftestdialog.cpp:224
 #, kde-format
 msgid "MySQL server not found."
-msgstr "Не знайдено сервера MySQL."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:226
 #, kde-format
 msgid "MySQL server not readable."
-msgstr "Сервер MySQL неможливо прочитати."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:228
 #, kde-format
 msgid "MySQL server not executable."
-msgstr "Сервер MySQL неможливо виконати."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:230
 #, kde-format
 msgid "MySQL found with unexpected name."
-msgstr "Знайдено MySQL з неочікуваною назвою."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:232
 #, kde-format
 msgid "MySQL server found."
-msgstr "Знайдено сервер MySQL."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:238
 #, kde-format
 msgid "MySQL server found: %1"
-msgstr "Знайдено сервер MySQL: %1"
+msgstr ""
 
 #: widgets/selftestdialog.cpp:239
 #, kde-format
 msgid "MySQL server is executable."
-msgstr "Сервер MySQL можна виконувати."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:241
 #, kde-format
 msgid ""
 "Executing the MySQL server '%1' failed with the following error message: '%2'"
 msgstr ""
-"Спроба виконання сервера MySQL «%1» завершилася невдало, було повідомлено "
-"про помилку: «%2»"
 
 #: widgets/selftestdialog.cpp:242
 #, kde-format
 msgid "Executing the MySQL server failed."
-msgstr "Спроба виконання сервера MySQL зазнала невдачі."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:249
 #, kde-format
 msgid "MySQL server error log not tested."
-msgstr "Журнал помилок сервера MySQL не було перевірено."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:257
 #, kde-format
 msgid "No current MySQL error log found."
-msgstr "Не знайдено поточного журналу помилок сервера MySQL."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:258
 #, kde-format
@@ -1551,62 +1465,56 @@ msgid ""
 "The MySQL server did not report any errors during this startup. The log can "
 "be found in '%1'."
 msgstr ""
-"Сервер MySQL не повідомляв про помилки під час запуску. Журнал збережено до "
-"«%1»."
 
 #: widgets/selftestdialog.cpp:264
 #, kde-format
 msgid "MySQL error log not readable."
-msgstr "Журнал помилок сервера MySQL неможливо прочитати."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:265
 #, kde-format
 msgid "A MySQL server error log file was found but is not readable: %1"
 msgstr ""
-"Було знайдено файл журналу помилок MySQL, але він не придатний для читання: "
-"%1"
 
 #: widgets/selftestdialog.cpp:274
 #, kde-format
 msgid "MySQL server log contains errors."
-msgstr "У журналі помилок сервера MySQL є записи про помилки."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:275
 #, kde-format
 msgid "The MySQL server error log file '%1' contains errors."
-msgstr "У файлі журналу помилок сервера MySQL «%1» містяться помилки."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:285
 #, kde-format
 msgid "MySQL server log contains warnings."
-msgstr "У журналі помилок сервера MySQL містяться попередження."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:286
 #, kde-format
 msgid "The MySQL server log file '%1' contains warnings."
-msgstr "У файлі журналу помилок сервера MySQL «%1» містяться попередження."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:289
 #, kde-format
 msgid "MySQL server log contains no errors."
-msgstr "У журналі помилок сервера MySQL немає записів про помилки."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:290
 #, kde-format
 msgid "The MySQL server log file '%1' does not contain any errors or warnings."
 msgstr ""
-"У файлі журналу помилок сервера MySQL «%1» немає записів про помилки або "
-"попередження."
 
 #: widgets/selftestdialog.cpp:300
 #, kde-format
 msgid "MySQL server configuration not tested."
-msgstr "Налаштування сервера MySQL не було перевірено."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:309
 #, kde-format
 msgid "MySQL server default configuration found."
-msgstr "Було знайдено типові налаштування сервера MySQL."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:310
 #, kde-format
@@ -1614,13 +1522,11 @@ msgid ""
 "The default configuration for the MySQL server was found and is readable at "
 "%1."
 msgstr ""
-"Типові налаштування сервера MySQL було знайдено, вони придатні для читання і "
-"знаходяться у %1."
 
 #: widgets/selftestdialog.cpp:314
 #, kde-format
 msgid "MySQL server default configuration not found."
-msgstr "Типових налаштувань сервера MySQL не знайдено."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:315
 #, kde-format
@@ -1629,40 +1535,33 @@ msgid ""
 "readable. Check your Akonadi installation is complete and you have all "
 "required access rights."
 msgstr ""
-"Типових налаштувань сервера MySQL не було знайдено, або ці налаштування не "
-"придатні для читання. Перевірте, чи було завершено встановлення Akonadi, і "
-"чи маєте ви всі потрібні права доступу."
 
 #: widgets/selftestdialog.cpp:323
 #, kde-format
 msgid "MySQL server custom configuration not available."
-msgstr "Нетипових налаштувань сервера MySQL не знайдено."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:324
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was not found but is optional."
 msgstr ""
-"Нетипових налаштувань сервера MySQL не було знайдено, але вони і не є "
-"обов’язковими."
 
 #: widgets/selftestdialog.cpp:327
 #, kde-format
 msgid "MySQL server custom configuration found."
-msgstr "Знайдено нетипові налаштування сервера MySQL."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:328
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was found and is readable at %1"
 msgstr ""
-"Було знайдено нетипові налаштування сервера MySQL, вони придатні для читання "
-"і знаходяться у %1"
 
 #: widgets/selftestdialog.cpp:332
 #, kde-format
 msgid "MySQL server custom configuration not readable."
-msgstr "Нетипові налаштування сервера MySQL неможливо прочитати."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:333
 #, kde-format
@@ -1670,54 +1569,46 @@ msgid ""
 "The custom configuration for the MySQL server was found at %1 but is not "
 "readable. Check your access rights."
 msgstr ""
-"Було знайдено нетипові налаштування сервера MySQL у %1, але ці налаштування "
-"не придатні для читання. Перевірте ваші права на доступ до налаштувань."
 
 #: widgets/selftestdialog.cpp:342
 #, kde-format
 msgid "MySQL server configuration not found or not readable."
 msgstr ""
-"Налаштування сервера MySQL не було знайдено, або ці налаштування не придатні "
-"для читання."
 
 #: widgets/selftestdialog.cpp:343
 #, kde-format
 msgid "The MySQL server configuration was not found or is not readable."
 msgstr ""
-"Налаштування сервера MySQL не було знайдено, або ці налаштування не придатні "
-"для читання."
 
 #: widgets/selftestdialog.cpp:346
 #, kde-format
 msgid "MySQL server configuration is usable."
-msgstr "Налаштування сервера MySQL придатні для використання."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:347
 #, kde-format
 msgid "The MySQL server configuration was found at %1 and is readable."
 msgstr ""
-"Було знайдено налаштування сервера MySQL, вони знаходяться у %1 і придатні "
-"для читання."
 
 #: widgets/selftestdialog.cpp:376
 #, kde-format
 msgid "Cannot connect to PostgreSQL server."
-msgstr "Не вдалося зв’язатися з сервером PostgreSQL."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:378
 #, kde-format
 msgid "PostgreSQL server found."
-msgstr "Знайдено сервер PostgreSQL."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:378
 #, kde-format
 msgid "The PostgreSQL server was found and connection is working."
-msgstr "Було знайдено сервер PostgreSQL, з’єднання є працездатним."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:388
 #, kde-format
 msgid "akonadictl not found"
-msgstr "akonadictl не знайдено"
+msgstr "akonadictl nuk u gjet"
 
 #: widgets/selftestdialog.cpp:389
 #, kde-format
@@ -1725,13 +1616,11 @@ msgid ""
 "The program 'akonadictl' needs to be accessible in $PATH. Make sure you have "
 "the Akonadi server installed."
 msgstr ""
-"Програма «akonadictl» має знаходитися у одному з каталогів, описаних у "
-"змінній $PATH. Переконайтеся, що встановлено сервер Akonadi."
 
 #: widgets/selftestdialog.cpp:396
 #, kde-format
 msgid "akonadictl found and usable"
-msgstr "akonadictl знайдено, програма придатна до використання"
+msgstr ""
 
 #: widgets/selftestdialog.cpp:397
 #, kde-format
@@ -1741,15 +1630,11 @@ msgid ""
 "Result:\n"
 "%2"
 msgstr ""
-"Було знайдено і встановлено можливість успішного виконання програми «%1», "
-"яка керує сервером Akonadi.\n"
-"Результат:\n"
-"%2"
 
 #: widgets/selftestdialog.cpp:403
 #, kde-format
 msgid "akonadictl found but not usable"
-msgstr "akonadictl знайдено, але програма непридатна до використання"
+msgstr ""
 
 #: widgets/selftestdialog.cpp:404
 #, kde-format
@@ -1760,16 +1645,11 @@ msgid ""
 "%2\n"
 "Make sure the Akonadi server is installed correctly."
 msgstr ""
-"Було знайдено програму «%1», яка керує сервером Akonadi, але цю програму "
-"неможливо успішно виконати.\n"
-"Результат:\n"
-"%2\n"
-"Переконайтеся, що сервер Akonadi встановлено належним чином."
 
 #: widgets/selftestdialog.cpp:416
 #, kde-format
 msgid "Akonadi control process registered at D-Bus."
-msgstr "Процес керування Akonadi зареєстровано у D-Bus."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:417
 #, kde-format
@@ -1777,13 +1657,11 @@ msgid ""
 "The Akonadi control process is registered at D-Bus which typically indicates "
 "it is operational."
 msgstr ""
-"Процес керування Akonadi зареєстровано у D-Bus, це зазвичай означає, що він "
-"є працездатним."
 
 #: widgets/selftestdialog.cpp:420
 #, kde-format
 msgid "Akonadi control process not registered at D-Bus."
-msgstr "Процес керування Akonadi не зареєстровано у D-Bus."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:421
 #, kde-format
@@ -1791,14 +1669,11 @@ msgid ""
 "The Akonadi control process is not registered at D-Bus which typically means "
 "it was not started or encountered a fatal error during startup."
 msgstr ""
-"Процес керування Akonadi не зареєстровано у D-Bus, що зазвичай означає, що "
-"його не було запущено або під час запуску цей процес завершився у аварійному "
-"режимі."
 
 #: widgets/selftestdialog.cpp:427
 #, kde-format
 msgid "Akonadi server process registered at D-Bus."
-msgstr "Процес сервера Akonadi зареєстровано у D-Bus."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:428
 #, kde-format
@@ -1806,13 +1681,11 @@ msgid ""
 "The Akonadi server process is registered at D-Bus which typically indicates "
 "it is operational."
 msgstr ""
-"Процес сервера Akonadi зареєстровано у D-Bus, що зазвичай означає, що він "
-"працездатний."
 
 #: widgets/selftestdialog.cpp:431
 #, kde-format
 msgid "Akonadi server process not registered at D-Bus."
-msgstr "Процес сервера Akonadi не зареєстровано у D-Bus."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:432
 #, kde-format
@@ -1820,14 +1693,11 @@ msgid ""
 "The Akonadi server process is not registered at D-Bus which typically means "
 "it was not started or encountered a fatal error during startup."
 msgstr ""
-"Процес сервера Akonadi не зареєстровано у D-Bus, що зазвичай означає, що "
-"його не було запущено або під час запуску цей процес завершився у аварійному "
-"режимі."
 
 #: widgets/selftestdialog.cpp:441
 #, kde-format
 msgid "Protocol version check not possible."
-msgstr "Перевірка версії протоколу є неможливою."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:442
 #, kde-format
@@ -1835,13 +1705,11 @@ msgid ""
 "Without a connection to the server it is not possible to check if the "
 "protocol version meets the requirements."
 msgstr ""
-"Без з’єднання з сервером неможливо визначити, чи задовольняє версія "
-"протоколу вимогам."
 
 #: widgets/selftestdialog.cpp:447
 #, kde-format
 msgid "Server protocol version is too old."
-msgstr "Версія протоколу сервера є застарілою."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:448 widgets/selftestdialog.cpp:455
 #, kde-format
@@ -1850,39 +1718,36 @@ msgid ""
 "If you recently updated KDE PIM, please make sure to restart both Akonadi "
 "and KDE PIM applications."
 msgstr ""
-"Номер версії протоколу сервера — %1, для роботи клієнта потрібен протокол "
-"версії %2. Якщо нещодавно виконувалося оновлення системи, переконайтеся, що "
-"програми KDE PIM та Akonadi було перезапущено після оновлення."
 
 #: widgets/selftestdialog.cpp:454
 #, kde-format
 msgid "Server protocol version is too new."
-msgstr "Версія протоколу сервера є надто новою."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:460
 #, kde-format
 msgid "Server protocol version matches."
-msgstr "Версії протоколу збігаються."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:460
 #, kde-format
 msgid "The current Protocol version is %1."
-msgstr "Поточною версією протоколу є %1."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:478
 #, kde-format
 msgid "Resource agents found."
-msgstr "Знайдено агенти ресурсу."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:478
 #, kde-format
 msgid "At least one resource agent has been found."
-msgstr "Знайдено принаймні один агент ресурсів."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:481
 #, kde-format
 msgid "No resource agents found."
-msgstr "Не знайдено жодного агента ресурсів."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:482
 #, kde-format
@@ -1893,29 +1758,22 @@ msgid ""
 "XDG_DATA_DIRS environment variable is set to '%2'; make sure this includes "
 "all paths where Akonadi agents are installed."
 msgstr ""
-"Не знайдено жодного агента ресурсів, Akonadi не придатний до використання "
-"без принаймні одного. Це, зазвичай, означає, що не було встановлено жодного "
-"агента ресурсів або під час встановлення виникли проблеми. Пошук було "
-"проведено у таких теках: %1. Змінну середовища XDG_DATA_DIRS встановлено у "
-"значення «%2», перевірте чи є там всі шляхи, за якими встановлено агентів "
-"Akonadi."
 
 #: widgets/selftestdialog.cpp:499
 #, kde-format
 msgid "No current Akonadi server error log found."
-msgstr "Не знайдено поточного журналу помилок сервера Akonadi."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:499
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its current startup."
 msgstr ""
-"Під час поточного запуску сервер Akonadi не повідомляв про будь-які помилки."
 
 #: widgets/selftestdialog.cpp:503
 #, kde-format
 msgid "Current Akonadi server error log found."
-msgstr "Знайдено поточний журнал помилок сервера Akonadi."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:504
 #, kde-format
@@ -1923,26 +1781,22 @@ msgid ""
 "The Akonadi server reported errors during its current startup. The log can "
 "be found in %1."
 msgstr ""
-"Під час поточного запуску сервер Akonadi повідомляв помилки. Журнал помилок "
-"записано до %1."
 
 #: widgets/selftestdialog.cpp:512
 #, kde-format
 msgid "No previous Akonadi server error log found."
-msgstr "Не знайдено попереднього журналу помилок сервера Akonadi."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:513
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its previous startup."
 msgstr ""
-"Під час попереднього запуску сервер Akonadi не повідомляв про будь-які "
-"помилки."
 
 #: widgets/selftestdialog.cpp:517
 #, kde-format
 msgid "Previous Akonadi server error log found."
-msgstr "Знайдено попередній журнал помилок сервера Akonadi."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:518
 #, kde-format
@@ -1950,13 +1804,11 @@ msgid ""
 "The Akonadi server reported errors during its previous startup. The log can "
 "be found in %1."
 msgstr ""
-"Під час попереднього запуску сервер Akonadi повідомляв помилки. Журнал "
-"помилок записано до %1."
 
 #: widgets/selftestdialog.cpp:529
 #, kde-format
 msgid "No current Akonadi control error log found."
-msgstr "Не знайдено поточного журналу помилок керування Akonadi."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:530
 #, kde-format
@@ -1964,13 +1816,11 @@ msgid ""
 "The Akonadi control process did not report any errors during its current "
 "startup."
 msgstr ""
-"Під час поточного запуску процес керування Akonadi не повідомляв про будь-"
-"які помилки."
 
 #: widgets/selftestdialog.cpp:534
 #, kde-format
 msgid "Current Akonadi control error log found."
-msgstr "Знайдено поточний журнал помилок керування Akonadi."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:535
 #, kde-format
@@ -1978,13 +1828,11 @@ msgid ""
 "The Akonadi control process reported errors during its current startup. The "
 "log can be found in %1."
 msgstr ""
-"Під час поточного запуску процес керування Akonadi повідомляв помилки. "
-"Журнал помилок записано до %1."
 
 #: widgets/selftestdialog.cpp:543
 #, kde-format
 msgid "No previous Akonadi control error log found."
-msgstr "Не знайдено попереднього журналу помилок керування Akonadi."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:544
 #, kde-format
@@ -1992,13 +1840,11 @@ msgid ""
 "The Akonadi control process did not report any errors during its previous "
 "startup."
 msgstr ""
-"Під час попереднього запуску процес керування Akonadi не повідомляв про будь-"
-"які помилки."
 
 #: widgets/selftestdialog.cpp:548
 #, kde-format
 msgid "Previous Akonadi control error log found."
-msgstr "Знайдено попередній журнал помилок керування Akonadi."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:549
 #, kde-format
@@ -2006,13 +1852,11 @@ msgid ""
 "The Akonadi control process reported errors during its previous startup. The "
 "log can be found in %1."
 msgstr ""
-"Під час попереднього запуску процес керування Akonadi повідомляв помилки. "
-"Журнал помилок записано до %1."
 
 #: widgets/selftestdialog.cpp:559
 #, kde-format
 msgid "Akonadi was started as root"
-msgstr "Akonadi було запущено від імені root"
+msgstr ""
 
 #: widgets/selftestdialog.cpp:560
 #, kde-format
@@ -2021,15 +1865,11 @@ msgid ""
 "many security risks. MySQL, used by this Akonadi installation, will not "
 "allow itself to run as root, to protect you from these risks."
 msgstr ""
-"Запуск програм, які працюють з інтернетом від імені користувача root або "
-"адміністратора системи призводить до вразливості системи. Щоб запобігти "
-"можливим негативним наслідкам, MySQL, сервер, який використовує ця версія "
-"Akonadi, не дозволяє запускати себе від імені користувача root."
 
 #: widgets/selftestdialog.cpp:564
 #, kde-format
 msgid "Akonadi is not running as root"
-msgstr "Akonadi не запущено від імені root"
+msgstr ""
 
 #: widgets/selftestdialog.cpp:565
 #, kde-format
@@ -2037,24 +1877,22 @@ msgid ""
 "Akonadi is not running as a root/administrator user, which is the "
 "recommended setup for a secure system."
 msgstr ""
-"Akonadi не запущено від імені користувача root або адміністратора системи. "
-"Це рекомендовані налаштування, які забезпечують безпеку системи."
 
 #: widgets/selftestdialog.cpp:643
 #, kde-format
 msgid "Save Test Report"
-msgstr "Збереження звіту про перевірку"
+msgstr ""
 
 #: widgets/selftestdialog.cpp:650
 #, kde-format
 msgctxt "@title:window"
 msgid "Error"
-msgstr "Помилка"
+msgstr "Gabim"
 
 #: widgets/selftestdialog.cpp:650
 #, kde-format
 msgid "Could not open file '%1'"
-msgstr "Не вдалося відкрити файл «%1»"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, introductionLabel)
 #: widgets/selftestdialog.ui:16
@@ -2064,16 +1902,12 @@ msgid ""
 "self-tests are supposed to help with tracking down and solving this problem. "
 "When requesting support or reporting bugs, please always include this report."
 msgstr ""
-"Під час спроби запуску сервера Akonadi сталася помилка. Наступні внутрішні "
-"перевірки можуть допомогти виявити і розв’язати цю проблему. Якщо ви маєте "
-"намір звернутися по підтримку або повідомити про ваду, будь ласка, завжди "
-"долучайте до свого повідомлення цей звіт."
 
 #. i18n: ectx: property (title), widget (QGroupBox, detailsGroup)
 #: widgets/selftestdialog.ui:39
 #, kde-format
 msgid "Details"
-msgstr "Подробиці"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/selftestdialog.ui:61
@@ -2082,518 +1916,467 @@ msgid ""
 "<p>For more troubleshooting tips please refer to <a href=\"https://userbase."
 "kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
 msgstr ""
-"<p>Додаткові поради з усунення негараздів можна знайти за адресою <a href="
-"\"https://userbase.kde.org/Akonadi_(uk)\">userbase.kde.org/Akonadi_(uk)</a>."
-"</p>"
 
 #: widgets/standardactionmanager.cpp:79
 msgid "&New Folder..."
-msgstr "&Нова тека..."
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:79
 msgid "New"
-msgstr "Створити"
+msgstr "E re"
 
 #: widgets/standardactionmanager.cpp:89
 msgid "&Delete Folder"
-msgstr "&Вилучити теку"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:90
 msgid "Delete"
-msgstr "Вилучити"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:97
 msgid "&Synchronize Folder"
-msgstr "&Синхронізувати теку"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:98 widgets/standardactionmanager.cpp:207
 #: widgets/standardactionmanager.cpp:314
 msgid "Synchronize"
-msgstr "Синхронізувати"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:105
 msgid "Folder &Properties"
-msgstr "В&ластивості теки"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:106 widgets/standardactionmanager.cpp:199
 msgid "Properties"
-msgstr "Властивості"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:113
 msgid "&Paste"
-msgstr "&Вставити"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:113
 msgid "Paste"
-msgstr "Вставити"
+msgstr "Ngjit"
 
 #: widgets/standardactionmanager.cpp:116
 msgid "Manage Local &Subscriptions..."
-msgstr "Керування локальними &підписками..."
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:117
 msgid "Manage Local Subscriptions"
-msgstr "Керування локальними підписками"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:124
 msgid "Add to Favorite Folders"
-msgstr "Додати до тек улюблених"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:125
 msgid "Add to Favorite"
-msgstr "Додати до улюблених"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:132
 msgid "Remove from Favorite Folders"
-msgstr "Вилучити з тек улюблених"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:133
 msgid "Remove from Favorite"
-msgstr "Вилучити з улюблених"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:140
 msgid "Rename Favorite..."
-msgstr "Перейменувати улюблене..."
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:141
 msgid "Rename"
-msgstr "Перейменувати"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:148 widgets/standardactionmanager.cpp:222
 msgid "Copy Folder To..."
-msgstr "Скопіювати теку до..."
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:149 widgets/standardactionmanager.cpp:157
 #: widgets/standardactionmanager.cpp:223 widgets/standardactionmanager.cpp:237
 msgid "Copy To"
-msgstr "Скопіювати до"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:156 widgets/standardactionmanager.cpp:237
 msgid "Copy Item To..."
-msgstr "Скопіювати запис до..."
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:238
 msgid "Move Item To..."
-msgstr "Пересунути запис до..."
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:165 widgets/standardactionmanager.cpp:173
 #: widgets/standardactionmanager.cpp:231 widgets/standardactionmanager.cpp:238
 msgid "Move To"
-msgstr "Пересунути до"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:172 widgets/standardactionmanager.cpp:230
 msgid "Move Folder To..."
-msgstr "Пересунути теку до..."
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:179
 msgid "&Cut Item"
-msgstr "Ви&різати запис"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:179 widgets/standardactionmanager.cpp:180
 msgid "Cut"
-msgstr "Вирізати"
+msgstr "Prije"
 
 #: widgets/standardactionmanager.cpp:180
 msgid "&Cut Folder"
-msgstr "Ви&різати теку"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:182
 msgid "Create Resource"
-msgstr "Створити ресурс"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:190
 msgid "Delete Resource"
-msgstr "Вилучити ресурс"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:198
 msgid "&Resource Properties"
-msgstr "В&ластивості ресурсу"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:206
 msgid "Synchronize Resource"
-msgstr "Синхронізувати ресурс"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:214
 msgid "Work Offline"
-msgstr "Працювати автономно"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:240
 msgid "&Synchronize Folder Recursively"
-msgstr "&Синхронізувати теку рекурсивно"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:241
 msgid "Synchronize Recursively"
-msgstr "Синхронізувати рекурсивно"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:248
 msgid "&Move Folder To Trash"
-msgstr "&Пересунути теку до смітника"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:249
 msgid "Move Folder To Trash"
-msgstr "Пересунути теку до смітника"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:256
 msgid "&Move Item To Trash"
-msgstr "&Пересунути об’єкт до смітника"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:257
 msgid "Move Item To Trash"
-msgstr "Пересунути об’єкт до смітника"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:264 widgets/standardactionmanager.cpp:280
 msgid "&Restore Folder From Trash"
-msgstr "Ві&дновити теку зі смітника"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:265 widgets/standardactionmanager.cpp:281
 msgid "Restore Folder From Trash"
-msgstr "Відновити теку зі смітника"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:272 widgets/standardactionmanager.cpp:296
 #: widgets/standardactionmanager.cpp:303
 msgid "&Restore Item From Trash"
-msgstr "Ві&дновити об’єкт зі смітника"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:273 widgets/standardactionmanager.cpp:297
 #: widgets/standardactionmanager.cpp:303
 msgid "Restore Item From Trash"
-msgstr "Відновити об’єкт зі смітника"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:288
 msgid "&Restore Collection From Trash"
-msgstr "Ві&дновити збірку зі смітника"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:289
 msgid "Restore Collection From Trash"
-msgstr "Відновити збірку зі смітника"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:305
 msgid "&Synchronize Favorite Folders"
-msgstr "&Синхронізувати теки улюблених"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:306
 msgid "Synchronize Favorite Folders"
-msgstr "Синхронізація тек улюблених"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:313
 msgid "Synchronize Folder Tree"
-msgstr "Синхронізувати ієрархію тек"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:399
 #, kde-format
 msgid "&Copy Folder"
 msgid_plural "&Copy %1 Folders"
-msgstr[0] "&Скопіювати %1 теку"
-msgstr[1] "&Скопіювати %1 теки"
-msgstr[2] "&Скопіювати %1 тек"
-msgstr[3] "&Скопіювати %1 теку"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:400
 #, kde-format
 msgid "&Copy Item"
 msgid_plural "&Copy %1 Items"
-msgstr[0] "&Скопіювати %1 елемент"
-msgstr[1] "&Скопіювати %1 елементи"
-msgstr[2] "&Скопіювати %1 елементів"
-msgstr[3] "&Скопіювати %1 елемент"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:401
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Item"
 msgid_plural "&Cut %1 Items"
-msgstr[0] "Ви&різати %1 запис"
-msgstr[1] "Ви&різати %1 записи"
-msgstr[2] "Ви&різати %1 записів"
-msgstr[3] "Ви&різати запис"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:402
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Folder"
 msgid_plural "&Cut %1 Folders"
-msgstr[0] "Ви&різати %1 теку"
-msgstr[1] "Ви&різати %1 теки"
-msgstr[2] "Ви&різати %1 тек"
-msgstr[3] "Ви&різати теку"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:403
 #, kde-format
 msgid "&Delete Item"
 msgid_plural "&Delete %1 Items"
-msgstr[0] "&Вилучити %1 елемент"
-msgstr[1] "&Вилучити %1 елементи"
-msgstr[2] "&Вилучити %1 елементів"
-msgstr[3] "&Вилучити %1 елемент"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:404
 #, kde-format
 msgctxt "@action"
 msgid "&Delete Folder"
 msgid_plural "&Delete %1 Folders"
-msgstr[0] "&Вилучити %1 теку"
-msgstr[1] "&Вилучити %1 теки"
-msgstr[2] "&Вилучити %1 тек"
-msgstr[3] "&Вилучити теку"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:405
 #, kde-format
 msgctxt "@action"
 msgid "&Synchronize Folder"
 msgid_plural "&Synchronize %1 Folders"
-msgstr[0] "&Синхронізувати %1 теку"
-msgstr[1] "&Синхронізувати %1 теки"
-msgstr[2] "&Синхронізувати %1 тек"
-msgstr[3] "&Синхронізувати теку"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:406
 #, kde-format
 msgid "&Delete Resource"
 msgid_plural "&Delete %1 Resources"
-msgstr[0] "Ви&лучити %1 ресурс"
-msgstr[1] "Ви&лучити %1 ресурси"
-msgstr[2] "Ви&лучити %1 ресурсів"
-msgstr[3] "Ви&лучити ресурс"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:407
 #, kde-format
 msgid "&Synchronize Resource"
 msgid_plural "&Synchronize %1 Resources"
-msgstr[0] "Син&хронізувати %1 ресурс"
-msgstr[1] "Син&хронізувати %1 ресурси"
-msgstr[2] "Син&хронізувати %1 ресурсів"
-msgstr[3] "Син&хронізувати ресурс"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:409
 #, kde-format
 msgid "Copy Folder"
 msgid_plural "Copy %1 Folders"
-msgstr[0] "Копіювати %1 теку"
-msgstr[1] "Копіювати %1 теки"
-msgstr[2] "Копіювати %1 тек"
-msgstr[3] "Копіювати теку"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:410
 #, kde-format
 msgid "Copy Item"
 msgid_plural "Copy %1 Items"
-msgstr[0] "Копіювати %1 елемент"
-msgstr[1] "Копіювати %1 елементи"
-msgstr[2] "Копіювати %1 елементів"
-msgstr[3] "Копіювати елемент"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:411
 #, kde-format
 msgid "Cut Item"
 msgid_plural "Cut %1 Items"
-msgstr[0] "Вирізати %1 елемент"
-msgstr[1] "Вирізати %1 елементи"
-msgstr[2] "Вирізати %1 елементів"
-msgstr[3] "Вирізати елемент"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:412
 #, kde-format
 msgid "Cut Folder"
 msgid_plural "Cut %1 Folders"
-msgstr[0] "Вирізати %1 теку"
-msgstr[1] "Вирізати %1 теки"
-msgstr[2] "Вирізати %1 тек"
-msgstr[3] "Вирізати теку"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:413
 #, kde-format
 msgid "Delete Item"
 msgid_plural "Delete %1 Items"
-msgstr[0] "Вилучити %1 елемент"
-msgstr[1] "Вилучити %1 елементи"
-msgstr[2] "Вилучити %1 елементів"
-msgstr[3] "Вилучити елемент"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:414
 #, kde-format
 msgid "Delete Folder"
 msgid_plural "Delete %1 Folders"
-msgstr[0] "Вилучити %1 теку"
-msgstr[1] "Вилучити %1 теки"
-msgstr[2] "Вилучити %1 тек"
-msgstr[3] "Вилучити теку"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:415
 #, kde-format
 msgid "Synchronize Folder"
 msgid_plural "Synchronize %1 Folders"
-msgstr[0] "Синхронізувати %1 теку"
-msgstr[1] "Синхронізувати %1 теки"
-msgstr[2] "Синхронізувати %1 тек"
-msgstr[3] "Синхронізувати теку"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:416
 #, kde-format
 msgctxt "@action"
 msgid "Delete Resource"
 msgid_plural "Delete %1 Resources"
-msgstr[0] "Вилучити %1 ресурс"
-msgstr[1] "Вилучити %1 ресурси"
-msgstr[2] "Вилучити %1 ресурсів"
-msgstr[3] "Вилучити ресурс"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:417
 #, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
 msgid_plural "Synchronize %1 Resources"
-msgstr[0] "Синхронізувати %1 ресурс"
-msgstr[1] "Синхронізувати %1 ресурси"
-msgstr[2] "Синхронізувати %1 ресурсів"
-msgstr[3] "Синхронізувати ресурс"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:420
 #, kde-format
 msgctxt "@label:textbox name of Akonadi folder"
 msgid "Name"
-msgstr "Назва"
+msgstr "Emri"
 
 #: widgets/standardactionmanager.cpp:427
 #, kde-format
 msgid "Do you really want to delete this folder and all its sub-folders?"
 msgid_plural ""
 "Do you really want to delete %1 folders and all their sub-folders?"
-msgstr[0] "Ви справді бажаєте вилучити %1 теку і всі їхні підтеки?"
-msgstr[1] "Ви справді бажаєте вилучити %1 теки і всі їхні підтеки?"
-msgstr[2] "Ви справді бажаєте вилучити %1 тек і всі їхні підтеки?"
-msgstr[3] "Ви справді бажаєте вилучити цю теку і всі її підтеки?"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:430
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "Вилучити теки?"
-msgstr[1] "Вилучити теки?"
-msgstr[2] "Вилучити теки?"
-msgstr[3] "Вилучити теку?"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:431
 #, kde-format
 msgid "Could not delete folder: %1"
-msgstr "Не вдалося вилучити теку: %1"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:432
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
-msgstr "Помилка вилучення теки"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:434
 #, kde-format
 msgctxt "@title:window"
 msgid "Properties of Folder %1"
-msgstr "Властивості теки %1"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:438
 #, kde-format
 msgid "Do you really want to delete the selected item?"
 msgid_plural "Do you really want to delete %1 items?"
-msgstr[0] "Ви справді бажаєте вилучити %1 позначений пункт?"
-msgstr[1] "Ви справді бажаєте вилучити %1 позначені пункти?"
-msgstr[2] "Ви справді бажаєте вилучити %1 позначених пунктів?"
-msgstr[3] "Ви справді бажаєте вилучити позначений пункт?"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:439
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "Вилучити записи?"
-msgstr[1] "Вилучити записи?"
-msgstr[2] "Вилучити записи?"
-msgstr[3] "Вилучити запис?"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:440
 #, kde-format
 msgid "Could not delete item: %1"
-msgstr "Не вдалося вилучити пункт: %1"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:441
 #, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
-msgstr "Помилка вилучення запису"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:443
 #, kde-format
 msgctxt "@title:window"
 msgid "Rename Favorite"
-msgstr "Перейменування улюбленого"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:444
 #, kde-format
 msgctxt "@label:textbox name of the folder"
 msgid "Name:"
-msgstr "Назва:"
+msgstr "Emri:"
 
 #: widgets/standardactionmanager.cpp:446
 #, kde-format
 msgctxt "@title:window"
 msgid "New Resource"
-msgstr "Новий ресурс"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:447
 #, kde-format
 msgid "Could not create resource: %1"
-msgstr "Не вдалося створити ресурс: %1"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:448
 #, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
-msgstr "Спроба створення ресурсу зазнала невдачі"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:452
 #, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
-msgstr[0] "Ви справді бажаєте вилучити %1 ресурс?"
-msgstr[1] "Ви справді бажаєте вилучити %1 ресурси?"
-msgstr[2] "Ви справді бажаєте вилучити %1 ресурсів?"
-msgstr[3] "Ви справді бажаєте вилучити цей ресурс?"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:455
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Resource?"
 msgid_plural "Delete Resources?"
-msgstr[0] "Вилучити ресурси?"
-msgstr[1] "Вилучити ресурси?"
-msgstr[2] "Вилучити ресурси?"
-msgstr[3] "Вилучити ресурс?"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:457
 #, kde-format
 msgid "Could not paste data: %1"
-msgstr "Не вдалося вставити дані: %1"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:458
 #, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
-msgstr "Спроба вставлення зазнала невдачі"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:825
 #, kde-format
 msgid "We can not add \"/\" in folder name."
-msgstr "Не можна додавати «/» до назви теки."
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:825 widgets/standardactionmanager.cpp:829
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
-msgstr "Помилка створення теки"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:829
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
-msgstr "Не можна додавати «.» на початку або в кінці назви теки."
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:1068
 #, kde-format
@@ -2601,274 +2384,210 @@ msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
 "you want to make it online?"
 msgstr ""
-"Для того, щоб розпочати синхронізацію теки «%1», ресурс має бути переведено "
-"у режим роботи у мережі. Бажаєте перевести його у такий режим?"
 
 #: widgets/standardactionmanager.cpp:1069
 #, kde-format
 msgid "Account \"%1\" is offline"
-msgstr "Обліковий запис «%1» перебуває поза мережею"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:1070
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
-msgstr "Увійти в мережу"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:1684
 #, kde-format
 msgid "Move to This Folder"
-msgstr "Пересунути до цієї теки"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:1684
 #, kde-format
 msgid "Copy to This Folder"
-msgstr "Скопіювати в цю теку"
+msgstr ""
 
 #: widgets/subscriptiondialog.cpp:99
 #, kde-format
 msgid "Failed to update subscription: %1"
-msgstr "Не вдалося оновити підписку: %1"
+msgstr ""
 
 #: widgets/subscriptiondialog.cpp:99
 #, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
-msgstr "Помилка, пов'язана із підпискою"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, SubscriptionDialog)
 #: widgets/subscriptiondialog.ui:14
 #, kde-format
 msgid "Local Subscriptions"
-msgstr "Локальні підписки"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/subscriptiondialog.ui:22
 #, kde-format
 msgid "Search:"
-msgstr "Пошук:"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, subscribedOnlyCheckBox)
 #: widgets/subscriptiondialog.ui:36
 #, kde-format
 msgid "&Subscribed only"
-msgstr "&Лише підписані"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, subscribeButton)
 #: widgets/subscriptiondialog.ui:62
 #, kde-format
 msgid "Su&bscribe"
-msgstr "П&ідписатися"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, unsubscribeButton)
 #: widgets/subscriptiondialog.ui:69
 #, kde-format
 msgid "&Unsubscribe"
-msgstr "&Відписатися"
+msgstr ""
 
 #: widgets/tageditwidget.cpp:119
 #, kde-format
 msgid "Failed to create a new tag"
-msgstr "Не вдалося створити мітку"
+msgstr ""
 
 #: widgets/tageditwidget.cpp:119
 #, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
-msgstr "Під час спроби створення мітки сталася помилка"
+msgstr ""
 
 #: widgets/tageditwidget.cpp:167
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
-msgstr "Ви справді хочете вилучити мітку <resource>%1</resource>?"
+msgstr ""
 
 #: widgets/tageditwidget.cpp:168
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
-msgstr "Вилучення мітки"
+msgstr ""
 
 #: widgets/tageditwidget.cpp:193
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"
-msgstr "Вилучити мітку"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, selectLabel)
 #: widgets/tageditwidget.ui:29
 #, kde-format
 msgid "Select tags that should be applied."
-msgstr "Виберіть мітки, які слід застосувати."
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:54
 #, kde-format
 msgid "Create new tag"
-msgstr "Створити мітку"
+msgstr ""
 
 #: widgets/tagselectioncombobox.cpp:126
 #, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
-msgstr "Виберіть мітки…"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
 #: widgets/tagselectiondialog.ui:14
 #, kde-format
 msgid "Select Tags"
-msgstr "Вибір міток"
+msgstr ""
 
 #: widgets/tagwidget.cpp:45
 #, kde-format
 msgid "Clear"
-msgstr "Спорожнити"
+msgstr "Pastro"
 
 #. i18n: ectx: property (placeholderText), widget (Akonadi::TagView, tagView)
 #: widgets/tagwidget.ui:32
 #, kde-format
 msgid "Click to add tags"
-msgstr "Клацніть, щоб додати мітки"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QToolButton, editButton)
 #: widgets/tagwidget.ui:39
 #, kde-format
 msgid "..."
-msgstr "…"
+msgstr "..."
 
 #: xml/akonadi2xml.cpp:25
 #, kde-format
 msgid "Akonadi To XML converter"
-msgstr "Засіб перетворення даних Akonadi на XML"
+msgstr ""
 
 #: xml/akonadi2xml.cpp:27
 #, kde-format
 msgid "Converts an Akonadi collection subtree into a XML file."
-msgstr "Перетворює ієрархію збірки Akonadi на файл XML."
+msgstr ""
 
 #: xml/akonadi2xml.cpp:29
 #, kde-format
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
-msgstr "© Volker Krause <vkrause@kde.org>, 2009"
+msgstr ""
 
 #: xml/xmldocument.cpp:83
 #, kde-format
 msgid "No data loaded."
-msgstr "Дані не завантажено."
+msgstr ""
 
 #: xml/xmldocument.cpp:121
 #, kde-format
 msgid "No filename specified"
-msgstr "Не вказано назви файла"
+msgstr ""
 
 #: xml/xmldocument.cpp:129
 #, kde-format
 msgid "Unable to open data file '%1'."
-msgstr "Не вдалося відкрити файл даних «%1»."
+msgstr ""
 
 #: xml/xmldocument.cpp:134
 #, kde-format
 msgid "File %1 does not exist."
-msgstr "Файла %1 не існує."
+msgstr ""
 
 #: xml/xmldocument.cpp:142
 #, kde-format
 msgid "Unable to parse data file '%1'."
-msgstr "Не вдалося обробити файл даних «%1»."
+msgstr ""
 
 #: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
-msgstr "Не вдалося завантажити і обробити визначення схеми."
+msgstr ""
 
 #: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
-msgstr "Не вдалося створити контекст обробки схеми."
+msgstr ""
 
 #: xml/xmldocument.cpp:160
 #, kde-format
 msgid "Unable to create schema."
-msgstr "Не вдалося створити схему."
+msgstr ""
 
 #: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
-msgstr "Не вдалося створити контекст перевірки чинності схеми."
+msgstr ""
 
 #: xml/xmldocument.cpp:170
 #, kde-format
 msgid "Invalid file format."
-msgstr "Некоректний формат файла."
+msgstr ""
 
 #: xml/xmldocument.cpp:177
 #, kde-format
 msgid "Unable to parse data file: %1"
-msgstr "Не вдалося обробити файл даних: %1"
+msgstr ""
 
 #: xml/xmldocument.cpp:302
 #, kde-format
 msgid "Unable to find collection %1"
-msgstr "Не вдалося знайти збірку %1"
-
-#~ msgid "There is currently no account configured."
-#~ msgstr "Зараз не налаштовано жодного облікового запису."
-
-#~ msgid "Accounts integration is not supported"
-#~ msgstr "Підтримки інтеграції облікових записів не передбачено"
-
-#~ msgid "%1 Handbook"
-#~ msgstr "Підручник з %1"
-
-#~ msgid "About %1"
-#~ msgstr "Про %1"
-
-#~ msgctxt "@window:title"
-#~ msgid "Error"
-#~ msgstr "Помилка"
-
-#~ msgid "A required background service is not operational."
-#~ msgstr "Потрібна для роботи фонова служба є недієздатною."
-
-#~ msgid "Failed to create relation."
-#~ msgstr "Не вдалося створити зв’язок."
-
-#~ msgid "Quota"
-#~ msgstr "Квота"
-
-#~ msgid "Error"
-#~ msgstr "Помилка"
-
-#~ msgctxt "@title:window"
-#~ msgid "Delete folder?"
-#~ msgid_plural "Delete folders?"
-#~ msgstr[0] "Вилучити теки?"
-#~ msgstr[1] "Вилучити теки?"
-#~ msgstr[2] "Вилучити теки?"
-#~ msgstr[3] "Вилучити теку?"
-
-#~ msgctxt "@title:window"
-#~ msgid "Delete item?"
-#~ msgid_plural "Delete items?"
-#~ msgstr[0] "Вилучити пункти?"
-#~ msgstr[1] "Вилучити пункти?"
-#~ msgstr[2] "Вилучити пункти?"
-#~ msgstr[3] "Вилучити пункт?"
-
-#~ msgid "Store emails locally:"
-#~ msgstr "Локальне зберігання повідомлень:"
-
-#~ msgid "&Move here"
-#~ msgstr "&Пересунути сюди"
-
-#~ msgid "&Copy here"
-#~ msgstr "&Скопіювати сюди"
-
-#~ msgid "Cancel"
-#~ msgstr "Скасувати"
-
-#~ msgid "Automatically synchronize after:"
-#~ msgstr "Автоматично синхронізувати кожні:"
-
-#~ msgid "Items"
-#~ msgstr "Записи"
+msgstr ""

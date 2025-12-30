@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-16 13:25+0000\n"
+"POT-Creation-Date: 2025-12-30 00:41+0000\n"
 "PO-Revision-Date: 2021-09-27 23:52+0630\n"
 "Last-Translator: ဇေယျာလွင် <lw1nzayar@yandex.com>\n"
 "Language-Team: Burmese <kde-i18n-doc@kde.org>\n"
@@ -222,6 +222,14 @@ msgstr ""
 #, fuzzy, kde-format
 msgid "No such agent found \"%1\""
 msgstr "ရင်းမြစ်ဖန်တီးမည်"
+
+#: core/collection.cpp:221
+#, fuzzy, kde-format
+#| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
+#| msgid "Search"
+msgctxt "Name for the folder containing searches"
+msgid "Search"
+msgstr "ရှာရန်"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, fuzzy, kde-format

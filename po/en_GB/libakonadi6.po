@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-16 13:25+0000\n"
+"POT-Creation-Date: 2025-12-30 00:41+0000\n"
 "PO-Revision-Date: 2024-11-16 12:58+0000\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
@@ -236,6 +236,14 @@ msgstr ""
 #| msgid "No resource agents found."
 msgid "No such agent found \"%1\""
 msgstr "No resource agents found."
+
+#: core/collection.cpp:221
+#, fuzzy, kde-format
+#| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
+#| msgid "Search"
+msgctxt "Name for the folder containing searches"
+msgid "Search"
+msgstr "Search"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format

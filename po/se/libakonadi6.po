@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-16 13:25+0000\n"
+"POT-Creation-Date: 2025-12-30 00:41+0000\n"
 "PO-Revision-Date: 2007-09-11 22:44+0200\n"
 "Last-Translator: Northern Sami translation team <l10n-no@lister.huftis.org>\n"
 "Language-Team: Northern Sami <l10n-no@lister.huftis.org>\n"
@@ -217,6 +217,12 @@ msgstr ""
 #, kde-format
 msgid "No such agent found \"%1\""
 msgstr ""
+
+#: core/collection.cpp:221
+#, fuzzy, kde-format
+msgctxt "Name for the folder containing searches"
+msgid "Search"
+msgstr "Oza"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format

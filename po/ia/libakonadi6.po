@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-16 13:25+0000\n"
-"PO-Revision-Date: 2025-09-12 12:44+0200\n"
+"POT-Creation-Date: 2025-12-30 00:41+0000\n"
+"PO-Revision-Date: 2025-12-29 16:34+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -230,6 +230,14 @@ msgstr "Argumento de identificator requirite mancante."
 #, kde-format
 msgid "No such agent found \"%1\""
 msgstr "Necun tal agente trovate \"%1\""
+
+#: core/collection.cpp:221
+#, fuzzy, kde-format
+#| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
+#| msgid "Search"
+msgctxt "Name for the folder containing searches"
+msgid "Search"
+msgstr "Cerca"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -686,11 +694,10 @@ msgid "You won't be able to revert this action."
 msgstr "Tu non poterea revenir iste action."
 
 #: quick/qml/TagManagerPage.qml:53
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "There are no tags"
-msgstr "Crea nove etiquetta"
+msgstr "Il non ha alcun etiquettas"
 
 #: quick/qml/TagManagerPage.qml:141
 #, kde-format
