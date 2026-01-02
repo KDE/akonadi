@@ -1,16 +1,16 @@
 # Translation for libakonadi5.po to Euskara/Basque (eu).
-# Copyright (C) 2020-2025 This file is copyright:
+# Copyright (C) 2020-2026 This file is copyright:
 # This file is distributed under the same license as the akonadi package.
-# SPDX-FileCopyrightText: 2023, 2024, 2025 KDE euskaratzeko proiektuaren arduraduna <xalba@ni.eus>
+# SPDX-FileCopyrightText: 2023, 2024, 2025, 2026 KDE euskaratzeko proiektuaren arduraduna <xalba@ni.eus>
 #
 # Translators:
-# Iñigo Salvador Azurmendi <xalba@ni.eus>, 2020, 2021, 2022, 2023, 2024, 2025.
+# Iñigo Salvador Azurmendi <xalba@ni.eus>, 2020, 2021, 2022, 2023, 2024, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-12-30 00:41+0000\n"
-"PO-Revision-Date: 2025-12-14 18:46+0100\n"
+"PO-Revision-Date: 2026-01-01 20:50+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.08.3\n"
+"X-Generator: Lokalize 25.12.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -237,9 +237,7 @@ msgid "No such agent found \"%1\""
 msgstr "Ez da horrelako agenterik aurkitu \"%1\""
 
 #: core/collection.cpp:221
-#, fuzzy, kde-format
-#| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
+#, kde-format
 msgctxt "Name for the folder containing searches"
 msgid "Search"
 msgstr "Bilatu"
