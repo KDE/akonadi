@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-12-30 00:41+0000\n"
-"PO-Revision-Date: 2025-12-14 08:31+0100\n"
+"PO-Revision-Date: 2025-12-30 09:12+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -239,9 +239,7 @@ msgid "No such agent found \"%1\""
 msgstr "Nessun agente trovato «%1»"
 
 #: core/collection.cpp:221
-#, fuzzy, kde-format
-#| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
+#, kde-format
 msgctxt "Name for the folder containing searches"
 msgid "Search"
 msgstr "Cerca"
