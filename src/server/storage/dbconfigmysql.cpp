@@ -104,7 +104,7 @@ bool DbConfigMysql::init(QSettings &settings, bool storeSettings, const QString 
 #endif
     /* cppcheck-suppress knownConditionTrueFalse */
     if (defaultServerPath.isEmpty()) {
-        defaultServerPath = findExecutable(QStringLiteral("mariadb"));
+        defaultServerPath = findExecutable(QStringLiteral("mariadbd"));
     }
     if (defaultServerPath.contains(QStringLiteral("mariadb"))) {
         isMariaDB = true;
