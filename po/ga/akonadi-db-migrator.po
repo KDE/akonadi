@@ -1,67 +1,61 @@
-# Translation of akonadi-db-migrator.po to Catalan (Valencian)
-# Copyright (C) 2024 This_file_is_part_of_KDE
-# This file is distributed under the license LGPL version 2.1 or
-# version 3 or later versions approved by the membership of KDE e.V.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR This file is copyright:
+# This file is distributed under the same license as the akonadi package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-# SPDX-FileCopyrightText: 2024 Josep M. Ferrer <txemaq@gmail.com>
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 14:40+0000\n"
-"PO-Revision-Date: 2024-02-09 09:56+0100\n"
-"Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
-"Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
-"Language: ca@valencia\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <kde-i18n-doc@kde.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Josep M. Ferrer"
+msgstr ""
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "txemaq@gmail.com"
+msgstr ""
 
 #: dbmigrator.cpp:449
 #, kde-format
 msgctxt "@info:status"
 msgid "Stopping Akonadi service..."
-msgstr "S'està parant el servei d'Akonadi…"
+msgstr ""
 
 #: dbmigrator.cpp:452
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: timeout while waiting for Akonadi to stop."
 msgstr ""
-"S'ha produït un error: s'ha excedit el temps d'espera mentre s'esperava que "
-"Akonadi es parara."
 
 #: dbmigrator.cpp:459
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: couldn't acquire DBus lock for Akonadi."
 msgstr ""
-"S'ha produït un error: no s'ha pogut adquirir el bloqueig de D-Bus per a "
-"Akonadi."
 
 #: dbmigrator.cpp:468
 #, kde-format
 msgctxt "@info:status"
 msgid "Starting Akonadi service..."
-msgstr "S'està iniciant el servei d'Akonadi…"
+msgstr ""
 
 #: dbmigrator.cpp:481
 #, kde-format
 msgctxt "@info:status"
 msgid "Database fsck completed"
-msgstr "S'ha completat «fsck» de la base de dades"
+msgstr ""
 
 #: dbmigrator.cpp:495
 #, kde-format
@@ -70,95 +64,78 @@ msgid ""
 "Invalid database engine \"%1\" - valid values are \"sqlite\", \"mysql\" and "
 "\"postgres\"."
 msgstr ""
-"Motor de base de dades no vàlid «%1»: els valors vàlids són «sqlite», "
-"«mysql» i «postgres»."
 
 #: dbmigrator.cpp:517
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure source database server."
 msgstr ""
-"S'ha produït un error: ha fallat mentre es configurava el servidor de la "
-"base de dades d'origen."
 
 #: dbmigrator.cpp:522
 #, kde-format
 msgctxt "@info:shell"
 msgid "Source and destination database engines are the same."
-msgstr "Els motors de bases de dades d'origen i destinació són els mateixos."
+msgstr ""
 
 #: dbmigrator.cpp:529
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to obtain path to source database data file or directory."
 msgstr ""
-"S'ha produït un error: ha fallat mentre s'obtenia el camí cap al fitxer o "
-"directori de dades de la base de dades d'origen."
 
 #: dbmigrator.cpp:536
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure the new database server."
 msgstr ""
-"S'ha produït un error: ha fallat mentre es configurava el servidor nou de "
-"base de dades."
 
 #: dbmigrator.cpp:542
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open existing database to migrate data from."
 msgstr ""
-"S'ha produït un error: ha fallat mentre s'obria la base de dades existent "
-"per a migrar les dades."
 
 #: dbmigrator.cpp:547
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open new database to migrate data to."
 msgstr ""
-"S'ha produït un error: ha fallat mentre s'obria la base de dades nova per a "
-"migrar-hi les dades."
 
 #: dbmigrator.cpp:552
 #, kde-format
 msgctxt "@info:status"
 msgid "Running fsck on the source database"
-msgstr "S'està executant «fsck» en la base de dades d'origen"
+msgstr ""
 
 #: dbmigrator.cpp:571
 #, kde-format
 msgctxt "@info:status %2 is error message"
 msgid "Error: failed to remove temporary database directory %1: %2"
 msgstr ""
-"S'ha produït un error: ha fallat mentre s'eliminava el directori temporal de "
-"la base de dades %1: %2"
 
 #: dbmigrator.cpp:578
 #, kde-format
 msgctxt "@info:shell"
 msgid "Backing up original database..."
-msgstr "S'està fent una còpia de seguretat de la base de dades original…"
+msgstr ""
 
 #: dbmigrator.cpp:586
 #, kde-format
 msgctxt "@info:status"
 msgid "Restoring database from backup %1 to %2"
 msgstr ""
-"S'està restaurant la base de dades des de la còpia de seguretat %1 a %2"
 
 #: dbmigrator.cpp:588
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to restore database from backup: %1"
 msgstr ""
-"S'ha produït un error: ha fallat mentre es restaurava la base de dades a "
-"partir de la còpia de seguretat: %1"
 
 #: dbmigrator.cpp:620 dbmigrator.cpp:631
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error has occurred while migrating table %1"
-msgstr "S'ha produït un error mentre es migrava la taula %1"
+msgstr ""
 
 #: dbmigrator.cpp:650
 #, kde-format
@@ -167,103 +144,84 @@ msgid ""
 "Backup directory already exists. Do you want to overwrite the previous "
 "backup?"
 msgstr ""
-"El directori de còpia de seguretat ja existix. Voleu sobreescriure la còpia "
-"de seguretat anterior?"
 
 #: dbmigrator.cpp:655
 #, kde-format
 msgctxt "@info:shell"
 msgid "Cannot proceed without backup. Migration interrupted."
 msgstr ""
-"No es pot procedir sense còpia de seguretat. S'ha interromput la migració."
 
 #: dbmigrator.cpp:660
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to remove previous backup directory."
 msgstr ""
-"Ha fallat mentre s'eliminava el directori anterior de còpia de seguretat."
 
 #: dbmigrator.cpp:673
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to move database to backup location: %1"
 msgstr ""
-"Ha fallat mentre es movia la base de dades cap a la ubicació de la còpia de "
-"seguretat: %1"
 
 #: dbmigrator.cpp:687
 #, kde-format
 msgctxt "@label"
 msgid "Backup file %1 already exists. Overwrite?"
-msgstr "El fitxer de còpia de seguretat %1 ja existix. Voleu sobreescriure'l?"
+msgstr ""
 
 #: dbmigrator.cpp:689
 #, kde-format
 msgctxt "@info:status"
 msgid "Cannot proceed without backup. Migration interrupted."
 msgstr ""
-"No es pot procedir sense còpia de seguretat. S'ha interromput la migració."
 
 #: dbmigrator.cpp:695
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: Failed to remove existing backup file %1: %2"
 msgstr ""
-"S'ha produït un error: ha fallat mentre s'eliminava el fitxer existent de "
-"còpia de seguretat %1: %2"
 
 #: dbmigrator.cpp:702
 #, kde-format
 msgctxt "@info:status"
 msgid "Failed to back up Akonadi Server configuration: %1"
 msgstr ""
-"Ha fallat mentre es feia una còpia de seguretat de la configuració del "
-"servidor d'Akonadi: %1"
 
 #: dbmigrator.cpp:719
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move migrated database to the primary location: %1"
 msgstr ""
-"S'ha produït un error: ha fallat mentre es movia la base de dades migrada "
-"cap a la ubicació principal: %1"
 
 #: dbmigrator.cpp:738
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to remove original akonadiserverrc: %1"
 msgstr ""
-"S'ha produït un error: ha fallat mentre s'eliminava «akonadiserverrc» "
-"original: %1"
 
 #: dbmigrator.cpp:744
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move new akonadiserverrc to the primary location: %1"
 msgstr ""
-"S'ha produït un error: ha fallat mentre es movia «akonadiserverrc» nou cap a "
-"la ubicació principal: %1"
 
 #: dbmigrator.cpp:835
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to update autoincrement value for table %1"
 msgstr ""
-"S'ha produït un error: ha fallat mentre s'actualitzava el valor d'increment "
-"automàtic per a la taula %1"
 
 #: dbmigrator.cpp:840
 #, kde-format
 msgctxt "@info:status"
 msgid "Optimizing table %1..."
-msgstr "S'està optimitzant la taula %1…"
+msgstr ""
 
 #: dbmigrator.cpp:843
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to optimize table %1"
-msgstr "S'ha produït un error: ha fallat mentre s'optimitzava la taula %1"
+msgstr ""
 
 #: main.cpp:31
 #, kde-format
@@ -271,13 +229,13 @@ msgctxt ""
 "Options for user to input to command line prompt, parenthesis indicate which "
 "letter to type, capitalized option is default"
 msgid " [(y)es/(N)o] "
-msgstr " [(s)í o (N)o] "
+msgstr ""
 
 #: main.cpp:36 main.cpp:55
 #, kde-format
 msgctxt "Letter for option \"(y)es\" prompted from command line"
 msgid "y"
-msgstr "s"
+msgstr ""
 
 #: main.cpp:49
 #, kde-format
@@ -285,23 +243,23 @@ msgctxt ""
 "Options for user to input to command line prompt, parenthesis indicate which "
 "letter to type, capitalized option is default"
 msgid " [(y)es/(N)o/(s)kip] "
-msgstr " [(s)í, (N)o o (o)met] "
+msgstr ""
 
 #: main.cpp:56
 #, kde-format
 msgctxt "Letter for option \"(s)kip\" prompted from command line"
 msgid "s"
-msgstr "o"
+msgstr ""
 
 #: main.cpp:75 main.cpp:77
 #, kde-format
 msgid "Akonadi DB Migrator"
-msgstr "Migrador de BD d'Akonadi"
+msgstr ""
 
 #: main.cpp:79
 #, kde-format
 msgid "(c) 2024 g10 Code GmbH"
-msgstr "(c) 2024 g10 Code GmbH"
+msgstr ""
 
 #: main.cpp:85
 #, kde-format
@@ -309,35 +267,33 @@ msgid ""
 "The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and "
 "\"postgres\""
 msgstr ""
-"Motor nou de base de dades que s'utilitzarà. Els valors vàlids són «sqlite», "
-"«mysql» i «postgres»"
 
 #: main.cpp:92
 #, kde-format
 msgctxt "@info:shell"
 msgid "Invalid target engine: %1."
-msgstr "Motor de destinació no vàlid: %1."
+msgstr ""
 
 #: main.cpp:106
 #, kde-format
 msgctxt "@info:status"
 msgid "Migration completed successfully."
-msgstr "La migració s'ha completat correctament."
+msgstr ""
 
 #: main.cpp:108
 #, kde-format
 msgctxt "@info:status"
 msgid "Migration failed."
-msgstr "No s'ha pogut migrar."
+msgstr ""
 
 #: main.cpp:113
 #, kde-format
 msgctxt "@info:progress"
 msgid "Migrating table %1 (%2/%3)..."
-msgstr "S'està migrant la taula %1 (%2/%3)…"
+msgstr ""
 
 #: main.cpp:127
 #, kde-format
 msgctxt "@info:progress"
 msgid "%1%..."
-msgstr "%1%…"
+msgstr ""

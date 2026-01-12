@@ -319,7 +319,7 @@ msgstr "Pare no vàlid"
 #: core/jobs/collectioncreatejob.cpp:98
 #, kde-format
 msgid "Failed to parse Collection from response"
-msgstr "Ha fallat durant l'anàlisi la col·lecció de la resposta"
+msgstr "Ha fallat durant l'anàlisi de la col·lecció de la resposta"
 
 #: core/jobs/collectiondeletejob.cpp:52
 #, kde-format
@@ -426,8 +426,8 @@ msgstr "Ha fallat mentre es creava l'etiqueta."
 #, kde-format
 msgid "Move to trash collection failed, aborting trash operation"
 msgstr ""
-"Ha fallat mentre es movia la col·lecció a la paperera, s'ha interromput "
-"l'operació"
+"Ha fallat mentre es movia la col·lecció cap a dins de la paperera, s'ha "
+"interromput l'operació"
 
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format
