@@ -12,27 +12,54 @@
 #include <QObject>
 namespace Akonadi
 {
+/*!
+ * \brief The ClearCacheFoldersJob class
+ */
 class AKONADIWIDGETS_EXPORT ClearCacheFoldersJob : public QObject
 {
     Q_OBJECT
 public:
+    /*!
+     */
     explicit ClearCacheFoldersJob(const Akonadi::Collection &folder, QObject *parent = nullptr);
+    /*!
+     */
     explicit ClearCacheFoldersJob(const Akonadi::Collection::List &folders, QObject *parent = nullptr);
+    /*!
+     */
     ~ClearCacheFoldersJob() override;
 
+    /*!
+     */
     void start();
 
+    /*!
+     */
     [[nodiscard]] bool canStart() const;
 
+    /*!
+     */
     [[nodiscard]] QWidget *parentWidget() const;
+    /*!
+     */
     void setParentWidget(QWidget *newParentWidget);
 
+    /*!
+     */
     [[nodiscard]] bool canceled() const;
+    /*!
+     */
     void setCanceled(bool newCanceled);
 
 Q_SIGNALS:
+    /*!
+     */
     void clearCacheDone();
+    /*!
+     */
     void clearNextFolder();
+    /*!
+     */
     void finished(bool success);
 
 private:

@@ -10,5 +10,7 @@ class QSqlDatabase;
 
 namespace DbAccess
 {
+/*!
+ */
 AKONADIWIDGETS_EXPORT QSqlDatabase database();
 }

@@ -28,10 +28,18 @@ class AKONADIWIDGETS_EXPORT TagSelectWidget : public QWidget
 {
     Q_OBJECT
 public:
+    /*!
+     */
     explicit TagSelectWidget(QWidget *parent = nullptr);
+    /*!
+     */
     ~TagSelectWidget() override;
 
+    /*!
+     */
     void setSelection(const Akonadi::Tag::List &tags);
+    /*!
+     */
     [[nodiscard]] Akonadi::Tag::List selection() const;
 
     /**

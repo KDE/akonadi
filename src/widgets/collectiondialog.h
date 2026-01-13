@@ -59,7 +59,8 @@ class AKONADIWIDGETS_EXPORT CollectionDialog : public QDialog
     Q_DISABLE_COPY(CollectionDialog)
 
 public:
-    /* @since 4.6
+    /*
+     * @since 4.6
      */
     enum CollectionDialogOption {
         None = 0,

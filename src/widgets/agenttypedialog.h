@@ -74,6 +74,8 @@ public:
     [[nodiscard]] AgentFilterProxyModel *agentFilterProxyModel() const;
 
 public Q_SLOTS:
+    /*!
+     */
     void done(int result) override;
 
 private:

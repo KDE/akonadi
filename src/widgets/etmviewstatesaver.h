@@ -22,14 +22,28 @@ class AKONADIWIDGETS_EXPORT ETMViewStateSaver : public KConfigViewStateSaver
 {
     Q_OBJECT
 public:
+    /*!
+     */
     explicit ETMViewStateSaver(QObject *parent = nullptr);
 
+    /*!
+     */
     void selectCollections(const Akonadi::Collection::List &list);
+    /*!
+     */
     void selectCollections(const QList<Akonadi::Collection::Id> &list);
+    /*!
+     */
     void selectItems(const Akonadi::Item::List &list);
+    /*!
+     */
     void selectItems(const QList<Akonadi::Item::Id> &list);
 
+    /*!
+     */
     void setCurrentItem(const Akonadi::Item &item);
+    /*!
+     */
     void setCurrentCollection(const Akonadi::Collection &collection);
 
 protected:

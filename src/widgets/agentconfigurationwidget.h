@@ -27,13 +27,23 @@ class AKONADIWIDGETS_EXPORT AgentConfigurationWidget : public QWidget
 {
     Q_OBJECT
 public:
+    /*!
+     */
     explicit AgentConfigurationWidget(const Akonadi::AgentInstance &instance, QWidget *parent = nullptr);
+    /*!
+     */
     ~AgentConfigurationWidget() override;
 
+    /*!
+     */
     void load();
+    /*!
+     */
     void save();
 
 Q_SIGNALS:
+    /*!
+     */
     void enableOkButton(bool enabled);
 
 protected:

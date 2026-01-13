@@ -19,13 +19,23 @@ class AKONADIWIDGETS_EXPORT CollectionMaintenancePage : public Akonadi::Collecti
 {
     Q_OBJECT
 public:
+    /*!
+     */
     explicit CollectionMaintenancePage(QWidget *parent = nullptr);
+    /*!
+     */
     ~CollectionMaintenancePage() override;
 
+    /*!
+     */
     void load(const Akonadi::Collection &col) override;
+    /*!
+     */
     void save(Akonadi::Collection &col) override;
 
 protected:
+    /*!
+     */
     void init(const Akonadi::Collection &);
 
 private:

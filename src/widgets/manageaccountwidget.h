@@ -20,12 +20,18 @@ namespace Akonadi
 class AgentInstance;
 class ManageAccountWidgetPrivate;
 class AccountActivitiesAbstract;
-
+/*!
+ * \brief The ManageAccountWidget class
+ */
 class AKONADIWIDGETS_EXPORT ManageAccountWidget : public QWidget
 {
     Q_OBJECT
 public:
+    /*!
+     */
     explicit ManageAccountWidget(QWidget *parent);
+    /*!
+     */
     ~ManageAccountWidget() override;
 
     /**
@@ -34,34 +40,66 @@ public:
      */
     void setDescriptionLabelText(const QString &text);
 
+    /*!
+     */
     void setSpecialCollectionIdentifier(const QString &identifier);
 
+    /*!
+     */
     [[nodiscard]] QStringList mimeTypeFilter() const;
+    /*!
+     */
     void setMimeTypeFilter(const QStringList &mimeTypeFilter);
 
+    /*!
+     */
     [[nodiscard]] QStringList capabilityFilter() const;
+    /*!
+     */
     void setCapabilityFilter(const QStringList &capabilityFilter);
 
+    /*!
+     */
     [[nodiscard]] QStringList excludeCapabilities() const;
+    /*!
+     */
     void setExcludeCapabilities(const QStringList &excludeCapabilities);
 
+    /*!
+     */
     void setItemDelegate(QAbstractItemDelegate *delegate);
 
+    /*!
+     */
     [[nodiscard]] QAbstractItemView *view() const;
 
+    /*!
+     */
     [[nodiscard]] QPushButton *addAccountButton() const;
+    /*!
+     */
     void disconnectAddAccountButton();
+    /*!
+     */
 
     [[nodiscard]] bool enablePlasmaActivities() const;
+    /*!
+     */
     void setEnablePlasmaActivities(bool newEnablePlasmaActivities);
 
+    /*!
+     */
     [[nodiscard]] AccountActivitiesAbstract *accountActivitiesAbstract() const;
+    /*!
+     */
     void setAccountActivitiesAbstract(AccountActivitiesAbstract *abstract);
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
 
 public Q_SLOTS:
+    /*!
+     */
     void slotAddAccount();
 
 private:

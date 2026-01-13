@@ -31,15 +31,29 @@ class AKONADIWIDGETS_EXPORT TagWidget : public QWidget
 {
     Q_OBJECT
 public:
+    /*!
+     */
     explicit TagWidget(QWidget *parent = nullptr);
+    /*!
+     */
     ~TagWidget() override;
 
+    /*!
+     */
     void setSelection(const Akonadi::Tag::List &tags);
+    /*!
+     */
     [[nodiscard]] Akonadi::Tag::List selection() const;
 
+    /*!
+     */
     void clearTags();
+    /*!
+     */
     void setReadOnly(bool readOnly);
 Q_SIGNALS:
+    /*!
+     */
     void selectionChanged(const Akonadi::Tag::List &tags);
 
 private:

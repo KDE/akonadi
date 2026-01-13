@@ -17,13 +17,25 @@ namespace Akonadi
 class AgentInstance;
 class AgentConfigurationDialogPrivate;
 
+/*!
+ * \brief The AgentConfigurationDialog class
+ */
 class AKONADIWIDGETS_EXPORT AgentConfigurationDialog : public QDialog
 {
     Q_OBJECT
 public:
+    /*!
+     * \brief AgentConfigurationDialog
+     * \param instance
+     * \param parent
+     */
     explicit AgentConfigurationDialog(const AgentInstance &instance, QWidget *parent = nullptr);
+    /*!
+     */
     ~AgentConfigurationDialog() override;
 
+    /*!
+     */
     void accept() override;
 
 private:

@@ -33,16 +33,30 @@ class AKONADIWIDGETS_EXPORT TagSelectionDialog : public QDialog
 {
     Q_OBJECT
 public:
+    /*!
+     */
     explicit TagSelectionDialog(QWidget *parent = nullptr);
+    /*!
+     */
     TagSelectionDialog(TagModel *model, QWidget *parent = nullptr);
+    /*!
+     */
     ~TagSelectionDialog() override;
 
+    /*!
+     */
     void setSelection(const Akonadi::Tag::List &tags);
+    /*!
+     */
     [[nodiscard]] Akonadi::Tag::List selection() const;
 
+    /*!
+     */
     [[nodiscard]] QDialogButtonBox *buttons() const;
 
 Q_SIGNALS:
+    /*!
+     */
     void selectionChanged(const Akonadi::Tag::List &tags);
 
 private:
