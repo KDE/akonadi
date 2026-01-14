@@ -209,14 +209,14 @@ public:
      * Returns the delivery options
      * @since 4.13
      */
-    DeliveryOptions deliveryOptions() const;
+    [[nodiscard]] DeliveryOptions deliveryOptions() const;
 
     /**
      * Returns the total number of retrieved items.
      * This works also without the ItemGetter DeliveryOption.
      * @since 4.14
      */
-    int count() const;
+    [[nodiscard]] int count() const;
 
     /**
      * Sets the limit of fetched items.
