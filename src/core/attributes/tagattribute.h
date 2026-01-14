@@ -51,15 +51,35 @@ public:
      */
     [[nodiscard]] QString iconName() const;
 
+    /*!
+     */
     void setBackgroundColor(const QColor &color);
+    /*!
+     */
     [[nodiscard]] QColor backgroundColor() const;
+    /*!
+     */
     void setTextColor(const QColor &color);
+    /*!
+     */
     [[nodiscard]] QColor textColor() const;
+    /*!
+     */
     void setFont(const QString &fontKey);
+    /*!
+     */
     [[nodiscard]] QString font() const;
+    /*!
+     */
     void setInToolbar(bool inToolbar);
+    /*!
+     */
     [[nodiscard]] bool inToolbar() const;
+    /*!
+     */
     void setShortcut(const QString &shortcut);
+    /*!
+     */
     [[nodiscard]] QString shortcut() const;
 
     /**

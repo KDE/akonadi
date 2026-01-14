@@ -10,19 +10,34 @@
 #include <QObject>
 namespace Akonadi
 {
+/*!
+ * \brief The AccountActivitiesAbstract class
+ */
 class AKONADICORE_EXPORT AccountActivitiesAbstract : public QObject
 {
     Q_OBJECT
 public:
+    /*!
+     */
     explicit AccountActivitiesAbstract(QObject *parent = nullptr);
+    /*!
+     */
     ~AccountActivitiesAbstract() override;
 
+    /*!
+     */
     [[nodiscard]] virtual bool filterAcceptsRow(const QStringList &activities) const = 0;
 
+    /*!
+     */
     [[nodiscard]] virtual bool hasActivitySupport() const = 0;
 
+    /*!
+     */
     [[nodiscard]] virtual QString currentActivity() const = 0;
 Q_SIGNALS:
+    /*!
+     */
     void activitiesChanged();
 };
 }

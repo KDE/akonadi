@@ -30,19 +30,41 @@ namespace Akonadi
 class AKONADICORE_EXPORT EntityAnnotationsAttribute : public Akonadi::Attribute
 {
 public:
+    /*!
+     */
     explicit EntityAnnotationsAttribute() = default;
+    /*!
+     */
     explicit EntityAnnotationsAttribute(const QMap<QByteArray, QByteArray> &annotations);
 
+    /*!
+     */
     void setAnnotations(const QMap<QByteArray, QByteArray> &annotations);
+    /*!
+     */
     [[nodiscard]] QMap<QByteArray, QByteArray> annotations() const;
 
+    /*!
+     */
     void insert(const QByteArray &key, const QString &value);
+    /*!
+     */
     [[nodiscard]] QString value(const QByteArray &key) const;
+    /*!
+     */
     [[nodiscard]] bool contains(const QByteArray &key) const;
 
+    /*!
+     */
     [[nodiscard]] QByteArray type() const override;
+    /*!
+     */
     Attribute *clone() const override;
+    /*!
+     */
     [[nodiscard]] QByteArray serialized() const override;
+    /*!
+     */
     void deserialize(const QByteArray &data) override;
 
 private:

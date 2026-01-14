@@ -95,6 +95,8 @@ public:
      * @param parent The parent object.
      */
     explicit SelectionProxyModel(QItemSelectionModel *selectionModel, QObject *parent = nullptr);
+    /*!
+     */
     ~SelectionProxyModel() override;
 
 private:

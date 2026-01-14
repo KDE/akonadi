@@ -125,6 +125,8 @@ public:
     void setCurrentPage(const QString &name);
 
 Q_SIGNALS:
+    /*!
+     */
     void settingsSaved();
 
 private:

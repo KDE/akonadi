@@ -37,15 +37,29 @@ public:
      * Sets an identifier for the collection.
      */
     void setIdentifier(const QByteArray &identifier);
+    /*!
+     */
     [[nodiscard]] QByteArray identifier() const;
 
+    /*!
+     */
     void setMail(const QByteArray &);
+    /*!
+     */
     [[nodiscard]] QByteArray mail() const;
 
+    /*!
+     */
     void setOu(const QByteArray &);
+    /*!
+     */
     [[nodiscard]] QByteArray ou() const;
 
+    /*!
+     */
     void setName(const QByteArray &);
+    /*!
+     */
     [[nodiscard]] QByteArray name() const;
 
     /**
@@ -56,10 +70,20 @@ public:
      * * "shared" for a collection shared by a person.
      */
     void setCollectionNamespace(const QByteArray &ns);
+    /*!
+     */
     [[nodiscard]] QByteArray collectionNamespace() const;
+    /*!
+     */
     [[nodiscard]] QByteArray type() const override;
+    /*!
+     */
     Attribute *clone() const override;
+    /*!
+     */
     [[nodiscard]] QByteArray serialized() const override;
+    /*!
+     */
     void deserialize(const QByteArray &data) override;
 
 private:

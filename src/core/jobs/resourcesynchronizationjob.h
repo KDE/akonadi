@@ -91,6 +91,8 @@ public:
      * @since 5.1
      */
     void setTimeoutCountLimit(int count);
+    /*!
+     */
     [[nodiscard]] int timeoutCountLimit() const;
 
 private:

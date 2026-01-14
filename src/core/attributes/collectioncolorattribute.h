@@ -26,17 +26,35 @@ namespace Akonadi
 class AKONADICORE_EXPORT CollectionColorAttribute : public Akonadi::Attribute
 {
 public:
+    /*!
+     */
     explicit CollectionColorAttribute() = default;
+    /*!
+     */
     explicit CollectionColorAttribute(const QColor &color);
 
+    /*!
+     */
     ~CollectionColorAttribute() override = default;
 
+    /*!
+     */
     void setColor(const QColor &color);
+    /*!
+     */
     [[nodiscard]] QColor color() const;
 
+    /*!
+     */
     [[nodiscard]] QByteArray type() const override;
+    /*!
+     */
     CollectionColorAttribute *clone() const override;
+    /*!
+     */
     [[nodiscard]] QByteArray serialized() const override;
+    /*!
+     */
     void deserialize(const QByteArray &data) override;
 
 private:

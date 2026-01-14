@@ -77,10 +77,18 @@ public:
      */
     void excludeCapabilities(const QString &capability);
 
+    /*!
+     */
     [[nodiscard]] bool enablePlasmaActivities() const;
+    /*!
+     */
     void setEnablePlasmaActivities(bool newEnablePlasmaActivities);
 
+    /*!
+     */
     [[nodiscard]] AccountActivitiesAbstract *accountActivitiesAbstract() const;
+    /*!
+     */
     void setAccountActivitiesAbstract(AccountActivitiesAbstract *abstract);
 
 protected:

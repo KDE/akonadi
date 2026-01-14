@@ -59,6 +59,8 @@ public:
      */
     void setTargetCollection(const Collection &collection);
 
+    /*!
+     */
     [[nodiscard]] Item::List items() const;
 
 protected:

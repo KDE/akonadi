@@ -83,9 +83,17 @@ public:
      */
     [[nodiscard]] qint64 maximumValue() const;
 
+    /*!
+     */
     QByteArray type() const override;
+    /*!
+     */
     Attribute *clone() const override;
+    /*!
+     */
     [[nodiscard]] QByteArray serialized() const override;
+    /*!
+     */
     void deserialize(const QByteArray &data) override;
 
 private:

@@ -14,12 +14,22 @@ namespace Akonadi
 class AKONADICORE_EXPORT FavoriteCollectionAttribute : public Attribute
 {
 public:
+    /*!
+     */
     explicit FavoriteCollectionAttribute() = default;
 
+    /*!
+     */
     Attribute *clone() const override;
+    /*!
+     */
     [[nodiscard]] QByteArray type() const override;
 
+    /*!
+     */
     void deserialize(const QByteArray &data) override;
+    /*!
+     */
     [[nodiscard]] QByteArray serialized() const override;
 };
 

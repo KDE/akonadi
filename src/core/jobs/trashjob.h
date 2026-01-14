@@ -104,6 +104,8 @@ public:
      */
     void deleteIfInTrash(bool enable);
 
+    /*!
+     */
     [[nodiscard]] Item::List items() const;
 
 protected:

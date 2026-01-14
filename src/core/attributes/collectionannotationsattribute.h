@@ -24,18 +24,41 @@ namespace Akonadi
 class AKONADICORE_EXPORT CollectionAnnotationsAttribute : public Akonadi::Attribute
 {
 public:
+    /*!
+     * \brief CollectionAnnotationsAttribute
+     */
     CollectionAnnotationsAttribute();
+    /*!
+     * \brief CollectionAnnotationsAttribute
+     * \param annotations
+     */
     explicit CollectionAnnotationsAttribute(const QMap<QByteArray, QByteArray> &annotations);
+    /*!
+     */
     ~CollectionAnnotationsAttribute() override = default;
 
+    /*!
+     */
     void setAnnotations(const QMap<QByteArray, QByteArray> &annotations);
+    /*!
+     */
     [[nodiscard]] QMap<QByteArray, QByteArray> annotations() const;
 
+    /*!
+     */
     [[nodiscard]] QByteArray type() const override;
+    /*!
+     */
     CollectionAnnotationsAttribute *clone() const override;
+    /*!
+     */
     [[nodiscard]] QByteArray serialized() const override;
+    /*!
+     */
     void deserialize(const QByteArray &data) override;
 
+    /*!
+     */
     bool operator==(const CollectionAnnotationsAttribute &other) const;
 
 private:

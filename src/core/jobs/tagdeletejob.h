@@ -24,7 +24,11 @@ class AKONADICORE_EXPORT TagDeleteJob : public Job
     Q_OBJECT
 
 public:
+    /*!
+     */
     explicit TagDeleteJob(const Tag &tag, QObject *parent = nullptr);
+    /*!
+     */
     explicit TagDeleteJob(const Tag::List &tag, QObject *parent = nullptr);
 
     /**

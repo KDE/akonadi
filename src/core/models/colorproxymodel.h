@@ -19,16 +19,34 @@ public:
     };
     Q_ENUM(Roles)
 
+    /*!
+     */
     explicit ColorProxyModel(QObject *parent = nullptr);
+    /*!
+     */
     [[nodiscard]] QVariant data(const QModelIndex &index, int role) const override;
+    /*!
+     */
     [[nodiscard]] Qt::ItemFlags flags(const QModelIndex &index) const override;
+    /*!
+     */
     [[nodiscard]] QHash<int, QByteArray> roleNames() const override;
+    /*!
+     */
     bool lessThan(const QModelIndex &sourceLeft, const QModelIndex &sourceRight) const override;
 
+    /*!
+     */
     [[nodiscard]] QColor getCollectionColor(Akonadi::Collection collection) const;
+    /*!
+     */
     [[nodiscard]] QColor color(Akonadi::Collection::Id collectionId) const;
+    /*!
+     */
     void setColor(Akonadi::Collection::Id collectionId, const QColor &color);
 
+    /*!
+     */
     void setStandardCollectionId(Akonadi::Collection::Id standardCollectionId);
 
 private:
