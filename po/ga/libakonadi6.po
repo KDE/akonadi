@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdepim/libakonadi.po\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-30 00:41+0000\n"
+"POT-Creation-Date: 2026-01-15 00:43+0000\n"
 "PO-Revision-Date: 2007-07-11 08:14-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -80,7 +80,7 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr ""
 
-#: agentbase/resourcebase.cpp:533
+#: agentbase/resourcebase.cpp:513
 #, fuzzy, kde-format
 #| msgctxt "@label commandline option"
 #| msgid "Resource identifier"
@@ -88,38 +88,38 @@ msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "Aitheantóir acmhainne"
 
-#: agentbase/resourcebase.cpp:539
+#: agentbase/resourcebase.cpp:519
 #, fuzzy, kde-format
 #| msgctxt "@title application name"
 #| msgid "Akonadi Resource"
 msgid "Akonadi Resource"
 msgstr "Acmhainn Akonadi"
 
-#: agentbase/resourcebase.cpp:581
+#: agentbase/resourcebase.cpp:561
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Fuarthas mír neamhbhailí"
 
-#: agentbase/resourcebase.cpp:604
+#: agentbase/resourcebase.cpp:584
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Earráid agus mír á cruthú: %1"
 
-#: agentbase/resourcebase.cpp:628
+#: agentbase/resourcebase.cpp:608
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Earráid agus bailiúchán á nuashonrú: %1"
 
-#: agentbase/resourcebase.cpp:715
+#: agentbase/resourcebase.cpp:695
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Níorbh fhéidir an bailiúchán logánta a nuashonrú: %1."
 
-#: agentbase/resourcebase.cpp:720
+#: agentbase/resourcebase.cpp:700
 #, fuzzy, kde-format
 #| msgctxt "@info"
 #| msgid "Updating local collection failed: %1."
@@ -127,29 +127,29 @@ msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Níorbh fhéidir an bailiúchán logánta a nuashonrú: %1."
 
-#: agentbase/resourcebase.cpp:739
+#: agentbase/resourcebase.cpp:719
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Ní féidir mír a fháil sa mhód as líne."
 
-#: agentbase/resourcebase.cpp:921
+#: agentbase/resourcebase.cpp:901
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Fillteán '%1' á shioncrónú"
 
-#: agentbase/resourcebase.cpp:941 agentbase/resourcebase.cpp:948
+#: agentbase/resourcebase.cpp:921 agentbase/resourcebase.cpp:928
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr ""
 
-#: agentbase/resourcebase.cpp:989
+#: agentbase/resourcebase.cpp:969
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr ""
 
-#: agentbase/resourcebase.cpp:1035
+#: agentbase/resourcebase.cpp:1015
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Níl an mhír iarrtha ann a thuilleadh"
