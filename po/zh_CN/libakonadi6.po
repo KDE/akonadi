@@ -231,7 +231,7 @@ msgstr "没有找到代理 \"%1\""
 #, kde-format
 msgctxt "Name for the folder containing searches"
 msgid "Search"
-msgstr ""
+msgstr "查找"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
