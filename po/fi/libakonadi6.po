@@ -1,6 +1,6 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# SPDX-FileCopyrightText: 2010, 2011, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Tommi Nieminen <translator@legisign.org>
+# SPDX-FileCopyrightText: 2010, 2011, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026 Tommi Nieminen <translator@legisign.org>
 # Lasse Liehu <lasse.liehu@gmail.com>, 2011, 2012, 2013, 2014, 2015, 2016, 2018.
 # Tommi Nieminen <translator@legisign.org>, 2024.
 #
@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-15 00:43+0000\n"
-"PO-Revision-Date: 2025-08-22 17:02+0300\n"
+"PO-Revision-Date: 2026-01-16 17:46+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -696,11 +696,10 @@ msgid "You won't be able to revert this action."
 msgstr "Tätä toimenpidettä ei voi kumota."
 
 #: quick/qml/TagManagerPage.qml:53
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "There are no tags"
-msgstr "Luo uusi luokitus"
+msgstr "Luokituksia ei ole"
 
 #: quick/qml/TagManagerPage.qml:141
 #, kde-format
