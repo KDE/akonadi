@@ -34,3 +34,4 @@ Options:
    - autotests/libs/searchquerytest.cpp
  run-gcovr: "--gcov-ignore-parse-errors=negative_hits.warn"
  run-qmllint: true
+ enable-lsan: True
