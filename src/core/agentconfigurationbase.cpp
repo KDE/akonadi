@@ -15,8 +15,9 @@ namespace Akonadi
 class AgentConfigurationBasePrivate
 {
 public:
-    AgentConfigurationBasePrivate(const KSharedConfigPtr &config, const QVariantList &args)
+    AgentConfigurationBasePrivate(const KSharedConfigPtr &config, QWidget *parentWidget, const QVariantList &args)
         : config(config)
+        , parentWidget(parentWidget)
     {
         Q_ASSERT(!args.empty());
         if (args.empty()) {
@@ -28,14 +29,15 @@ public:
 
     KSharedConfigPtr config;
     QString identifier;
+    QWidget *const parentWidget;
 };
 } // namespace Akonadi
 
 using namespace Akonadi;
 
-AgentConfigurationBase::AgentConfigurationBase(const KSharedConfigPtr &config, QObject *parent, const QVariantList &args)
-    : QObject(parent)
-    , d(new AgentConfigurationBasePrivate(config, args))
+AgentConfigurationBase::AgentConfigurationBase(const KSharedConfigPtr &config, QWidget *parentWidget, const QVariantList &args)
+    : QObject(reinterpret_cast<QObject *>(parentWidget))
+    , d(new AgentConfigurationBasePrivate(config, parentWidget, args))
 {
 }
 
@@ -63,6 +65,11 @@ bool AgentConfigurationBase::save() const
     d->config->sync();
     d->config->reparseConfiguration();
     return true;
+}
+
+QWidget *AgentConfigurationBase::parentWidget() const
+{
+    return d->parentWidget;
 }
 
 void AgentConfigurationBase::saveActivitiesSettings(const ActivitySettings &activities) const

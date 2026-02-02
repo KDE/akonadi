@@ -74,9 +74,12 @@ public:
     /**
      * Creates a new AgentConfigurationBase objects.
      *
+     * The @p parentWidget should be used as a parent widget for the configuration
+     * widgets.
+     *
      * Subclasses must provide a constructor with this exact signature.
      */
-    explicit AgentConfigurationBase(const KSharedConfigPtr &config, QObject *parent, const QVariantList &args);
+    explicit AgentConfigurationBase(const KSharedConfigPtr &config, QWidget *parentWidget, const QVariantList &args);
 
     ~AgentConfigurationBase() override;
 
