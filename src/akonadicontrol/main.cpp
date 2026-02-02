@@ -68,8 +68,10 @@ int main(int argc, char **argv)
     ControlManager controlManager;
     AgentManager agentManager(app.commandLineArguments().isSet(QStringLiteral("verbose")));
 
+    std::unique_ptr<OnlineAccountsIntegration> accountsIntegration;
+
     if (QDBusConnection::sessionBus().interface()->isServiceRegistered(u"org.kde.KOnlineAccounts"_s)) {
-        OnlineAccountsIntegration onlineAccountsIntegration(agentManager);
+        accountsIntegration = std::make_unique<OnlineAccountsIntegration>(agentManager);
     }
 
     KCrash::setEmergencySaveFunction(crashHandler);
