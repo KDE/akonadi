@@ -14,6 +14,8 @@
 
 #include <QCoreApplication>
 #include <QDBusConnection>
+#include <QDBusConnectionInterface>
+#include <QDBusReply>
 #include <QProcess>
 #include <QStandardPaths>
 #include <QTimer>
@@ -33,6 +35,17 @@ AkonadiStarter::AkonadiStarter(QObject *parent)
 bool AkonadiStarter::start(bool verbose)
 {
     qCInfo(AKONADICTL_LOG) << "Starting Akonadi Server...";
+
+    if (!verbose && !Akonadi::Instance::hasIdentifier()) {
+        QDBusConnectionInterface *const busIface = QDBusConnection::sessionBus().interface();
+        QDBusReply<void> reply = busIface->startService(Akonadi::DBus::serviceName(Akonadi::DBus::Control));
+
+        if (reply.isValid()) {
+            return true;
+        } else {
+            qCWarning(AKONADICTL_LOG) << "Failed to start Akonadi via DBus" << reply.error().message();
+        }
+    }
 
     QStringList serverArgs;
     if (Akonadi::Instance::hasIdentifier()) {
