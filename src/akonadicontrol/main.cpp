@@ -68,7 +68,7 @@ int main(int argc, char **argv)
     ControlManager controlManager;
     AgentManager agentManager(app.commandLineArguments().isSet(QStringLiteral("verbose")));
 
-    if (QDBusConnection::sessionBus().interface()->isServiceRegistered(u"org.kde.konlineaccounts"_s)) {
+    if (QDBusConnection::sessionBus().interface()->isServiceRegistered(u"org.kde.KOnlineAccounts"_s)) {
         OnlineAccountsIntegration onlineAccountsIntegration(agentManager);
     }
 
