@@ -11,6 +11,7 @@
 #include <QDBusMessage>
 #include <QDBusReply>
 
+#include "accountinterface.h"
 #include "agenttype.h"
 #include "akonadicontrol_debug.h"
 
@@ -98,16 +99,13 @@ void OnlineAccountsIntegration::slotAccountCreationFinished(const QDBusObjectPat
         const auto serviceName = Akonadi::DBus::agentServiceName(identifier, Akonadi::DBus::Resource);
 
         QDBusServiceWatcher *watcher = new QDBusServiceWatcher(serviceName, QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForRegistration);
-        connect(watcher, &QDBusServiceWatcher::serviceRegistered, this, [identifier, path, watcher](const QString & /*service*/) {
+        connect(watcher, &QDBusServiceWatcher::serviceRegistered, this, [serviceName, path, watcher](const QString & /*service*/) {
             watcher->deleteLater();
 
-            QDBusMessage msg = QDBusMessage::createMethodCall(u"org.freedesktop.Akonadi.Resource." + identifier,
-                                                              u"/Accounts"_s,
-                                                              u"org.kde.Akonadi.Accounts"_s,
-                                                              u"setAccount"_s);
-            msg.setArguments({path});
+            org::freedesktop::Akonadi::Agent::Account iface(serviceName, u"/Account"_s, QDBusConnection::sessionBus());
 
-            QDBusReply<void> reply = QDBusConnection::sessionBus().call(msg);
+            QDBusPendingReply<void> reply = iface.setAccountId(path.path());
+            reply.waitForFinished();
 
             if (!reply.isValid()) {
                 qCWarning(AKONADICONTROL_LOG) << "Error when setting up setAccount" << reply.error().message();
@@ -124,8 +122,12 @@ void OnlineAccountsIntegration::slotAccountRemoved(const QDBusObjectPath &path)
 
     for (const QString &agentId : agents) {
         const auto serviceName = Akonadi::DBus::agentServiceName(agentId, Akonadi::DBus::Resource);
-        QDBusMessage msg = QDBusMessage::createMethodCall(serviceName, u"/Accounts"_s, u"org.kde.Akonadi.Accounts"_s, u"account"_s);
-        QDBusReply<QDBusObjectPath> reply = QDBusConnection::sessionBus().call(msg);
+        org::freedesktop::Akonadi::Agent::Account iface(serviceName, u"/Account"_s, QDBusConnection::sessionBus());
+        QDBusPendingReply<QDBusObjectPath> reply = iface.accountId();
+
+        if (!reply.isValid()) {
+            continue;
+        }
 
         if (reply.value() == path) {
             qCDebug(AKONADICONTROL_LOG) << "Removing agent" << agentId;

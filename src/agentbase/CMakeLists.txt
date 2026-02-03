@@ -12,6 +12,7 @@ ecm_qt_declare_logging_category(KPim6AkonadiAgentBase HEADER akonadiagentbase_de
 
 ecm_generate_headers(AkonadiAgentBase_CC_HEADERS
     HEADER_NAMES
+    AccountBase
     AgentBase
     AgentSearchInterface
     PreprocessorBase
@@ -44,10 +45,14 @@ qt_add_dbus_adaptor(akonadiagentbase_SRCS ../interfaces/org.freedesktop.Akonadi.
 qt_add_dbus_adaptor(akonadiagentbase_SRCS ../interfaces/org.freedesktop.Akonadi.Agent.Search.xml
                      agentsearchinterface_p.h Akonadi::AgentSearchInterfacePrivate searchadaptor Akonadi__SearchAdaptor
 )
+qt_add_dbus_adaptor(akonadiagentbase_SRCS ../interfaces/org.freedesktop.Akonadi.Agent.Account.xml accountbase_p.h
+    Akonadi::AccountBasePrivate accountadaptor Akonadi__AccountAdaptor
+)
 
 target_sources(
     KPim6AkonadiAgentBase
     PRIVATE
+        accountbase.cpp
         agentbase.cpp
         agentsearchinterface.cpp
         preprocessorbase.cpp
