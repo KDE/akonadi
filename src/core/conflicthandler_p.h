@@ -18,7 +18,7 @@ namespace Akonadi
 class Session;
 
 /**
- * @short A class to handle conflicts in Akonadi
+ * \short A class to handle conflicts in Akonadi
  *
  * \author Tobias Koenig <tokoe@kde.org>
  */
@@ -49,16 +49,16 @@ public:
     /**
      * Creates a new conflict handler.
      *
-     * @param type The type of the conflict that should be resolved.
-     * @param parent The parent object.
+     * \param type The type of the conflict that should be resolved.
+     * \param parent The parent object.
      */
     explicit ConflictHandler(ConflictType type, QObject *parent = nullptr);
 
     /**
      * Sets the items that causes the conflict.
      *
-     * @param changedItem The item that has been changed, it needs the complete payload set.
-     * @param conflictingItem The item from the Akonadi storage that is conflicting.
+     * \param changedItem The item that has been changed, it needs the complete payload set.
+     * \param conflictingItem The item from the Akonadi storage that is conflicting.
      *                        This needs only the id set, the payload will be refetched automatically.
      */
     void setConflictingItems(const Akonadi::Item &changedItem, const Akonadi::Item &conflictingItem);
@@ -80,7 +80,7 @@ Q_SIGNALS:
      * This signal is emitted whenever an error occurred during the conflict
      * handling.
      *
-     * @param message A user visible string that describes the error.
+     * \param message A user visible string that describes the error.
      */
     void error(const QString &message);
 

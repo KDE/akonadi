@@ -19,20 +19,20 @@ class ErrorOverlay;
 namespace Akonadi
 {
 /**
- * @internal
+ * \internal
  * Overlay widget to block Akonadi-dependent widgets if the Akonadi server
  * is unavailable.
- * @todo handle initial parent == 0 case correctly, reparent later and hide as long as parent widget is 0
- * @todo fix hiding in dock widget tabs
+ * \todo handle initial parent == 0 case correctly, reparent later and hide as long as parent widget is 0
+ * \todo fix hiding in dock widget tabs
  */
 class ErrorOverlay : public QWidget
 {
     Q_OBJECT
 public:
     /**
-     * Create an overlay widget for @p baseWidget.
-     * @p baseWidget must not be null.
-     * @p parent must not be equal to @p baseWidget
+     * Create an overlay widget for \p baseWidget.
+     * \p baseWidget must not be null.
+     * \p parent must not be equal to \p baseWidget
      */
     explicit ErrorOverlay(QWidget *baseWidget, QWidget *parent = nullptr);
     ~ErrorOverlay() override;

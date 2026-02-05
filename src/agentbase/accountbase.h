@@ -16,7 +16,11 @@ namespace Akonadi
 {
 class AccountBasePrivate;
 
-/**
+/*!
+ * \class Akonadi::AccountBase
+ * \inheaders Akonadi/AccountBase
+ * \inmodule AkonadiAgentBase
+ *
  * Base class for agents that support integration with online accounts.
  *
  * Inherit from this additionally to Akonadi::AgentBase (or Akonadi::ResourceBase).
@@ -24,13 +28,13 @@ class AccountBasePrivate;
 class AKONADIAGENTBASE_EXPORT AccountBase
 {
 public:
-    /**
+    /*!
      *
      */
     explicit AccountBase(AgentBase *agent);
     virtual ~AccountBase();
 
-    /**
+    /*!
      * Called when the account is initially configured
      */
     virtual void initAccount() = 0;

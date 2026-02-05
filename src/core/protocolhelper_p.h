@@ -42,12 +42,12 @@ struct ProtocolHelperValuePool {
 };
 
 /**
-  @internal
+  \internal
   Helper methods for converting between libakonadi objects and their protocol
   representation.
 
-  @todo Add unit tests for this.
-  @todo Use exceptions for a useful error handling
+  \todo Add unit tests for this.
+  \todo Use exceptions for a useful error handling
 */
 class ProtocolHelper
 {
@@ -61,8 +61,8 @@ public:
 
     /**
       Parse a cache policy definition.
-      @param policy The parsed cache policy.
-      @returns Akonadi::CachePolicy
+      \param policy The parsed cache policy.
+      \returns Akonadi::CachePolicy
     */
     static CachePolicy parseCachePolicy(const Protocol::CachePolicy &policy);
 
@@ -84,8 +84,8 @@ public:
     /**
       Convert a ancestor chain from its protocol representation into an Item object.
 
-      This method allows to pass a @p valuePool which acts as cache, so ancestor paths for the
-      same @p parentCollection don't have to be parsed twice.
+      This method allows to pass a \p valuePool which acts as cache, so ancestor paths for the
+      same \p parentCollection don't have to be parsed twice.
     */
     static void
     parseAncestorsCached(const QList<Protocol::Ancestor> &ancestors, Item *item, Collection::Id parentCollection, ProtocolHelperValuePool *valuePool = nullptr);
@@ -93,8 +93,8 @@ public:
     /**
       Convert a ancestor chain from its protocol representation into an Collection object.
 
-      This method allows to pass a @p valuePool which acts as cache, so ancestor paths for the
-      same @p parentCollection don't have to be parsed twice.
+      This method allows to pass a \p valuePool which acts as cache, so ancestor paths for the
+      same \p parentCollection don't have to be parsed twice.
     */
     static void parseAncestorsCached(const QList<Protocol::Ancestor> &ancestors,
                                      Collection *collection,
@@ -102,9 +102,9 @@ public:
                                      ProtocolHelperValuePool *valuePool = nullptr);
     /**
       Parse a collection description.
-      @param data The input data.
-      @param requireParent Whether or not we require a parent as part of the data.
-      @returns The parsed collection
+      \param data The input data.
+      \param requireParent Whether or not we require a parent as part of the data.
+      \returns The parsed collection
     */
     static Collection parseCollection(const Protocol::FetchCollectionsResponse &data, bool requireParent = true);
 
@@ -181,13 +181,13 @@ public:
 
     /**
       Converts the given collection's hierarchical RID into a protocol representation.
-      Assumes @p col has a valid hierarchical RID, so check that before!
+      Assumes \p col has a valid hierarchical RID, so check that before!
     */
     static Scope hierarchicalRidToScope(const Collection &col);
 
     /**
       Converts the HRID of the given item into an ASAP protocol representation.
-      Assumes @p item has a valid HRID.
+      Assumes \p item has a valid HRID.
     */
     static Scope hierarchicalRidToScope(const Item &item);
 

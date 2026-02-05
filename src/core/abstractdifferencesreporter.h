@@ -10,7 +10,7 @@
 namespace Akonadi
 {
 /**
- * @short An interface to report differences between two arbitrary objects.
+ * \short An interface to report differences between two arbitrary objects.
  *
  * This interface can be used to report differences between two arbitrary objects
  * by describing a virtual table with three columns. The first column contains the name
@@ -25,7 +25,7 @@ namespace Akonadi
  *
  * Example:
  *
- * @code
+ * \code
  * // add differences of a contact
  * const KContacts::Addressee contact1 = ...
  * const KContacts::Addressee contact2 = ...
@@ -70,10 +70,10 @@ namespace Akonadi
  *                            QString(), rightEmail );
  * }
  *
- * @endcode
+ * \endcode
  *
  * @author Tobias Koenig <tokoe@kde.org>
- * @since 4.6
+ * \since 4.6
  */
 class AbstractDifferencesReporter
 {
@@ -94,18 +94,18 @@ public:
     virtual ~AbstractDifferencesReporter() = default;
 
     /**
-     * Sets the @p title of the property name column.
+     * Sets the \p title of the property name column.
      */
     virtual void setPropertyNameTitle(const QString &title) = 0;
 
     /**
-     * Sets the @p title of the column that shows the property values
+     * Sets the \p title of the column that shows the property values
      * of the left object.
      */
     virtual void setLeftPropertyValueTitle(const QString &title) = 0;
 
     /**
-     * Sets the @p title of the column that shows the property values
+     * Sets the \p title of the column that shows the property values
      * of the right object.
      */
     virtual void setRightPropertyValueTitle(const QString &title) = 0;
@@ -113,11 +113,11 @@ public:
     /**
      * Adds a new property entry to the table.
      *
-     * @param mode Describes the mode of the property. If mode is AdditionalLeftMode or AdditionalRightMode, rightValue resp. leftValue
+     * \param mode Describes the mode of the property. If mode is AdditionalLeftMode or AdditionalRightMode, rightValue resp. leftValue
      *             should be QString().
-     * @param name The user visible name of the property.
-     * @param leftValue The user visible property value of the left object.
-     * @param rightValue The user visible property value of the right object.
+     * \param name The user visible name of the property.
+     * \param leftValue The user visible property value of the left object.
+     * \param rightValue The user visible property value of the right object.
      */
     virtual void addProperty(Mode mode, const QString &name, const QString &leftValue, const QString &rightValue) = 0;
 

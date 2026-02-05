@@ -21,7 +21,7 @@ class Session;
 
   Helper methods for pasting/dropping content into a collection.
 
-  @todo Use in item/collection models as well for dnd
+  \todo Use in item/collection models as well for dnd
 */
 namespace PasteHelper
 {

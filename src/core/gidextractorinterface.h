@@ -13,10 +13,10 @@ namespace Akonadi
 class Item;
 
 /**
- * @short An interface to extract the GID of an object contained in an akonadi item.
+ * \short An interface to extract the GID of an object contained in an akonadi item.
  *
  * @author Christian Mollekopf <mollekopf@kolabsys.com>
- * @since 4.11
+ * \since 4.11
  */
 class GidExtractorInterface
 {
@@ -28,7 +28,7 @@ public:
     {
     }
     /**
-     * Extracts the globally unique id of @p item
+     * Extracts the globally unique id of \p item
      *
      * If you want to clear the gid from the database return QString("").
      */

@@ -17,7 +17,7 @@ class QTextBrowser;
 namespace Akonadi
 {
 /**
- * @short A dialog to ask the user for a resolve strategy for conflicts.
+ * \short A dialog to ask the user for a resolve strategy for conflicts.
  *
  * \author Tobias Koenig <tokoe@kde.org>
  */
@@ -29,7 +29,7 @@ public:
     /**
      * Creates a new conflict resolve dialog.
      *
-     * @param parent The parent widget.
+     * \param parent The parent widget.
      */
     explicit ConflictResolveDialog(QWidget *parent = nullptr);
 
@@ -38,10 +38,10 @@ public:
     /**
      * Sets the items that causes the conflict.
      *
-     * @param localItem The local item which causes the conflict.
-     * @param otherItem The conflicting item from the Akonadi storage.
+     * \param localItem The local item which causes the conflict.
+     * \param otherItem The conflicting item from the Akonadi storage.
      *
-     * @note Both items need the full payload set.
+     * \note Both items need the full payload set.
      */
     void setConflictingItems(const Akonadi::Item &localItem, const Akonadi::Item &otherItem);
 

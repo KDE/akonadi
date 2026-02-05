@@ -14,7 +14,7 @@ namespace Akonadi
 /// @cond PRIVATE
 
 /**
- * @internal
+ * \internal
  */
 class CollectionGeneralPropertiesPage : public CollectionPropertiesPage
 {

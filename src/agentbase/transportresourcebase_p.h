@@ -16,8 +16,8 @@ namespace Akonadi
 {
 class TransportResourceBase;
 
-/**
-  @internal
+/*!
+  \internal
   This class hosts the D-Bus adaptor for TransportResourceBase.
 */
 class TransportResourceBasePrivate : public QObject
@@ -27,12 +27,12 @@ public:
     explicit TransportResourceBasePrivate(TransportResourceBase *qq);
 
 Q_SIGNALS:
-    /**
+    /*!
      * Emitted when an item has been sent.
-     * @param item The id of the item that was sent.
-     * @param result The result of the sending operation.
-     * @param message An optional textual explanation of the result.
-     * @since 4.4
+     * \param item The id of the item that was sent.
+     * \param result The result of the sending operation.
+     * \param message An optional textual explanation of the result.
+     * \since 4.4
      */
     void transportResult(qlonglong item, int result, const QString &message); // D-Bus signal
 

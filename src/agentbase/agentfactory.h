@@ -20,31 +20,35 @@ namespace Akonadi
 {
 class AgentFactoryBasePrivate;
 
-/**
- * @short A factory base class for in-process agents.
+/*!
+ * \class Akonadi::AgentFactoryBase
+ * \inheaders Akonadi/AgentFactory
+ * \inmodule AkonadiAgentBase
  *
- * @see AKONADI_AGENT_FACTORY()
- * @internal
- * @since 4.6
+ * \short A factory base class for in-process agents.
+ *
+ * \see AKONADI_AGENT_FACTORY()
+ * \internal
+ * \since 4.6
  */
 class AKONADIAGENTBASE_EXPORT AgentFactoryBase : public QObject
 {
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new agent factory.
      * Executed in the main thread, performs KDE infrastructure setup.
      *
-     * @param catalogName The translation catalog of this resource.
-     * @param parent The parent object.
+     * \param catalogName The translation catalog of this resource.
+     * \param parent The parent object.
      */
     explicit AgentFactoryBase(const char *catalogName, QObject *parent = nullptr);
 
     ~AgentFactoryBase() override;
 
 public Q_SLOTS:
-    /**
+    /*!
      * Creates a new agent instance with the given identifier.
      */
     virtual QObject *createInstance(const QString &identifier) const = 0;
@@ -56,12 +60,12 @@ private:
     std::unique_ptr<AgentFactoryBasePrivate> const d;
 };
 
-/**
- * @short A factory for in-process agents.
+/*!
+ * \short A factory for in-process agents.
  *
- * @see AKONADI_AGENT_FACTORY()
- * @internal
- * @since 4.6
+ * \see AKONADI_AGENT_FACTORY()
+ * \internal
+ * \since 4.6
  */
 template<typename T>
 class AgentFactory : public AgentFactoryBase

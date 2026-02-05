@@ -14,10 +14,10 @@
 
 namespace Akonadi
 {
-/**
+/*!
  * Helper class for expanding inter-resource collection moves inside ResourceBase.
  *
- * @note This is intentionally not an Akonadi::Job since we don't need autostarting
+ * \note This is intentionally not an Akonadi::Job since we don't need autostarting
  * here.
  */
 class RecursiveMover : public KCompositeJob

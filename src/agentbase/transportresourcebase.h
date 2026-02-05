@@ -18,8 +18,12 @@ namespace Akonadi
 {
 class TransportResourceBasePrivate;
 
-/**
-  * @short Resource implementing mail transport capability.
+/*!
+  * \class Akonadi::TransportResourceBase
+  * \inheaders Akonadi/TransportResourceBase
+  * \inmodule AkonadiAgentBase
+  *
+  * \short Resource implementing mail transport capability.
   *
   * This class allows a resource to provide mail transport (i.e. sending
   * mail). A resource than can provide mail transport inherits from both
@@ -36,22 +40,22 @@ class TransportResourceBasePrivate;
   * kdepim/runtime/resources/mailtransport_dummy
   *
   * \author Constantin Berzan <exit3219@gmail.com>
-  * @since 4.4
+  * \since 4.4
  */
 class AKONADIAGENTBASE_EXPORT TransportResourceBase
 {
 public:
-    /**
+    /*!
      * Creates a new transport resource base.
      */
     TransportResourceBase();
 
-    /**
+    /*!
      * Destroys the transport resource base.
      */
     virtual ~TransportResourceBase();
 
-    /**
+    /*!
      * Describes the result of the transport process.
      */
     enum TransportResult {
@@ -59,25 +63,25 @@ public:
         TransportFailed ///< The transport process failed.
     };
 
-    /**
-     * This method is called when the given @p item shall be send.
+    /*!
+     * This method is called when the given \p item shall be send.
      * When the sending is done or an error occurred during
      * sending, call itemSent() with the appropriate result flag.
      *
-     * @param item The message item to be send.
-     * @see itemSent().
+     * \param item The message item to be send.
+     * \see itemSent().
      */
     virtual void sendItem(const Akonadi::Item &item) = 0;
 
-    /**
-     * This method marks the sending of the passed @p item
+    /*!
+     * This method marks the sending of the passed \p item
      * as finished.
      *
-     * @param item The item that was sent.
-     * @param result The result that indicates whether the sending
+     * \param item The item that was sent.
+     * \param result The result that indicates whether the sending
      *               was successful or not.
-     * @param message An optional text explanation of the result.
-     * @see Transport.
+     * \param message An optional text explanation of the result.
+     * \see Transport.
      */
     void itemSent(const Akonadi::Item &item, TransportResult result, const QString &message = QString());
 

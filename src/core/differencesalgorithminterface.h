@@ -13,10 +13,10 @@ class AbstractDifferencesReporter;
 class Item;
 
 /**
- * @short An interface to find out differences between two Akonadi objects.
+ * \short An interface to find out differences between two Akonadi objects.
  *
  * @author Tobias Koenig <tokoe@kde.org>
- * @since 4.6
+ * \since 4.6
  */
 class DifferencesAlgorithmInterface
 {
@@ -32,9 +32,9 @@ public:
      * Calculates the differences between two Akonadi objects and reports
      * them to a reporter object.
      *
-     * @param reporter The reporter object that will be used for reporting the differences.
-     * @param leftItem The left-hand side item that will be compared.
-     * @param rightItem The right-hand side item that will be compared.
+     * \param reporter The reporter object that will be used for reporting the differences.
+     * \param leftItem The left-hand side item that will be compared.
+     * \param rightItem The right-hand side item that will be compared.
      */
     virtual void compare(AbstractDifferencesReporter *reporter, const Akonadi::Item &leftItem, const Akonadi::Item &rightItem) = 0;
 };

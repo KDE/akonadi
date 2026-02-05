@@ -22,7 +22,7 @@ namespace Akonadi
 class AgentManager;
 
 /**
- * @internal
+ * \internal
  */
 class AgentManagerPrivate : public QObject
 {

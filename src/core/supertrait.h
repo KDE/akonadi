@@ -17,8 +17,8 @@ struct check_type {
 }
 
 /**
-  @internal
-  @see SuperClass
+  \internal
+  \see SuperClass
 */
 template<typename Super, typename = void>
 struct SuperClassTrait {
@@ -35,12 +35,12 @@ struct SuperClassTrait<Class, typename Internal::check_type<typename Class::Supe
   Used eg. for the Akonadi payload mechanism.
 
   To provide base class introspection for own types, extend this trait as follows:
-  @code
+  \code
   namespace Akonadi
   {
     template <> struct SuperClass<MyClass> : public SuperClassTrait<MyBaseClass>{};
   }
-  @endcode
+  \endcode
 
   Alternatively, define a typedef "SuperClass" in your type, pointing to the base class.
   This avoids having to include this header file if that's inconvenient from a dependency

@@ -18,7 +18,7 @@
 using namespace Akonadi;
 
 /**
- * @internal
+ * \internal
  */
 class Akonadi::CollectionPrivate : public QSharedData
 {

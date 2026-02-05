@@ -17,16 +17,16 @@ public:
     explicit DragDropManager(QAbstractItemView *view);
 
     /**
-     * @returns True if the drop described in @p event is allowed.
+     * \returns True if the drop described in \p event is allowed.
      */
     bool dropAllowed(QDragMoveEvent *event) const;
 
     /**
      * Process an attempted drop event.
      *
-     * Attempts to show a popup menu with possible actions for @p event.
+     * Attempts to show a popup menu with possible actions for \p event.
      *
-     * @returns True if the event should be further processed, and false otherwise.
+     * \returns True if the event should be further processed, and false otherwise.
      */
     bool processDropEvent(QDropEvent *event, bool &menuCanceled, bool dropOnItem = true);
 
@@ -39,7 +39,7 @@ public:
     void startDrag(Qt::DropActions supportedActions);
 
     /**
-     * Sets whether to @p show the drop action menu on drop operation.
+     * Sets whether to \p show the drop action menu on drop operation.
      */
     void setShowDropActionMenu(bool show);
 

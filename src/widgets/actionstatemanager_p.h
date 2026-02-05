@@ -14,7 +14,7 @@ class QObject;
 namespace Akonadi
 {
 /**
- * @short A helper class to manage action states.
+ * \short A helper class to manage action states.
  *
  * \author Tobias Koenig <tokoe@kde.org>
  */
@@ -30,22 +30,22 @@ public:
 
     /**
      * Updates the states according to the selected collections and items.
-     * @param collections selected collections (from the folder tree)
-     * @param favoriteCollections selected collections (among the ones marked as favorites)
-     * @param items selected items
-     * @param clipboardUrls content of the clipboard (list of URLs)
+     * \param collections selected collections (from the folder tree)
+     * \param favoriteCollections selected collections (among the ones marked as favorites)
+     * \param items selected items
+     * \param clipboardUrls content of the clipboard (list of URLs)
      */
     void
     updateState(const Collection::List &collections, const Collection::List &favoriteCollections, const Item::List &items, const QList<QUrl> &clipboardUrls);
 
     /**
-     * Sets the @p receiver object that will actually update the states.
+     * Sets the \p receiver object that will actually update the states.
      *
      * The object must provide the following three slots:
      *   - void enableAction( int, bool )
      *   - void updatePluralLabel( int, int )
      *   - bool isFavoriteCollection( const Akonadi::Collection& )
-     * @param receiver object that will actually update the states.
+     * \param receiver object that will actually update the states.
      */
     void setReceiver(QObject *receiver);
 

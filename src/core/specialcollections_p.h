@@ -25,7 +25,7 @@ class SpecialCollections;
 class Monitor;
 
 /**
-  @internal
+  \internal
 */
 class AKONADI_TESTS_EXPORT SpecialCollectionsPrivate
 {
@@ -43,7 +43,7 @@ public:
     /**
       Forgets all folders owned by the given resource.
       This method is used by SpecialCollectionsRequestJob.
-      @param resourceId the identifier of the resource for which to forget folders
+      \param resourceId the identifier of the resource for which to forget folders
     */
     void forgetFoldersForResource(const QString &resourceId);
 
@@ -56,7 +56,7 @@ public:
     void beginBatchRegister();
 
     /**
-      @see beginBatchRegister()
+      \see beginBatchRegister()
       This method is used by SpecialCollectionsRequestJob.
     */
     void endBatchRegister();

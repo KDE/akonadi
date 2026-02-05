@@ -18,8 +18,8 @@ class QNetworkConfigurationManager;
 
 namespace Akonadi
 {
-/**
- * @internal
+/*!
+ * \internal
  */
 class AgentBasePrivate : public QObject
 {

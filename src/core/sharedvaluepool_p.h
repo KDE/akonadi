@@ -20,7 +20,7 @@ template<typename T, template<typename> class Container>
 class SharedValuePool
 {
 public:
-    /** Returns the shared value equal to @p value .*/
+    /** Returns the shared value equal to \p value .*/
     T sharedValue(const T &value)
     {
         // for small pool sizes this is actually faster than using lower_bound and a sorted vector

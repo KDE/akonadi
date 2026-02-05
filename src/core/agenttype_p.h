@@ -13,7 +13,7 @@
 namespace Akonadi
 {
 /**
- * @internal
+ * \internal
  */
 class AgentTypePrivate : public QSharedData
 {

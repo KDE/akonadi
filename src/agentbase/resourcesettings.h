@@ -11,6 +11,11 @@
 
 namespace Akonadi
 {
+/*!
+ * \class Akonadi::ResourceSettings
+ * \inheaders Akonadi/ResourceSettings
+ * \inmodule AkonadiAgentBase
+ */
 class AKONADIAGENTBASE_EXPORT ResourceSettings : public Akonadi::ResourceBaseSettings
 {
     Q_OBJECT

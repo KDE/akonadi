@@ -20,12 +20,12 @@ class RecursiveMover;
 
 /// @cond PRIVATE
 
-/**
-  @internal
+/*!
+  \internal
 
   Manages synchronization and fetch requests for a resource.
 
-  @todo Attach to the ResourceBase Monitor,
+  \todo Attach to the ResourceBase Monitor,
 */
 class ResourceScheduler : public QObject
 {
@@ -82,124 +82,124 @@ public:
 
     explicit ResourceScheduler(QObject *parent = nullptr);
 
-    /**
+    /*!
       Schedules a full synchronization.
     */
     void scheduleFullSync();
 
-    /**
+    /*!
       Schedules a collection tree sync.
     */
     void scheduleCollectionTreeSync();
 
-    /**
+    /*!
       Schedules the synchronization of a single collection.
-      @param col The collection to synchronize.
+      \param col The collection to synchronize.
     */
     void scheduleSync(const Collection &col);
 
-    /**
+    /*!
       Schedules synchronizing the attributes of a single collection.
-      @param collection The collection to synchronize attributes from.
+      \param collection The collection to synchronize attributes from.
     */
     void scheduleAttributesSync(const Collection &collection);
 
     void scheduleTagSync();
     void scheduleRelationSync();
 
-    /**
+    /*!
       Schedules fetching of a single PIM item.
 
       This task is only ever used if the resource still uses the old deprecated
       retrieveItem() (instead of retrieveItems(Item::List)) method. This task has
       a special meaning to the scheduler and instead of replying to the DBus message
-      after the single @p item is retrieved, the items are accumulated until all
+      after the single \p item is retrieved, the items are accumulated until all
       tasks from the same messages are fetched.
 
-      @param items The items to fetch.
-      @param parts List of names of the parts of the item to fetch.
-      @param msg The associated D-Bus message.
-      @param parentId ID of the original ItemsFetch task that this task was created from.
+      \param items The items to fetch.
+      \param parts List of names of the parts of the item to fetch.
+      \param msg The associated D-Bus message.
+      \param parentId ID of the original ItemsFetch task that this task was created from.
                       We can use this ID to group the tasks together
     */
     void scheduleItemFetch(const Item &item, const QSet<QByteArray> &parts, const QList<QDBusMessage> &msgs, const qint64 parentId);
 
-    /**
+    /*!
       Schedules batch-fetching of PIM items.
-      @param items The items to fetch.
-      @param parts List of names of the parts of the item to fetch.
-      @param msg The associated D-Bus message.
+      \param items The items to fetch.
+      \param parts List of names of the parts of the item to fetch.
+      \param msg The associated D-Bus message.
     */
     void scheduleItemsFetch(const Item::List &item, const QSet<QByteArray> &parts, const QDBusMessage &msg);
 
-    /**
+    /*!
       Schedules deletion of the resource collection.
       This method is used to implement the ResourceBase::clearCache() functionality.
      */
     void scheduleResourceCollectionDeletion();
 
-    /**
-     * Schedule cache invalidation for @p collection.
-     * @see ResourceBase::invalidateCache()
+    /*!
+     * Schedule cache invalidation for \p collection.
+     * \see ResourceBase::invalidateCache()
      */
     void scheduleCacheInvalidation(const Collection &collection);
 
-    /**
+    /*!
       Insert synchronization completion marker into the task queue.
     */
     void scheduleFullSyncCompletion();
 
-    /**
+    /*!
       Insert collection tree synchronization completion marker into the task queue.
     */
     void scheduleCollectionTreeSyncCompletion();
 
-    /**
+    /*!
       Insert a custom task.
-      @param methodName The method name, without signature, do not use the SLOT() macro
+      \param methodName The method name, without signature, do not use the SLOT() macro
     */
     void
     scheduleCustomTask(QObject *receiver, const char *methodName, const QVariant &argument, ResourceBase::SchedulePriority priority = ResourceBase::Append);
 
-    /**
+    /*!
      * Schedule a recursive move replay.
      */
     void scheduleMoveReplay(const Collection &movedCollection, RecursiveMover *mover);
 
-    /**
+    /*!
       Returns true if no tasks are running or in the queue.
     */
     bool isEmpty();
 
-    /**
+    /*!
       Returns the current task.
     */
     Task currentTask() const;
 
     Task &currentTask();
 
-    /**
+    /*!
       Sets the online state.
     */
     void setOnline(bool state);
 
-    /**
+    /*!
        Print debug output showing the state of the scheduler.
     */
     void dump() const;
-    /**
+    /*!
        Print debug output showing the state of the scheduler.
     */
     [[nodiscard]] QString dumpToString() const;
 
-    /**
+    /*!
        Clear the state of the scheduler. Warning: this is intended to be
        used purely in debugging scenarios, as it might cause loss of uncommitted
        local changes.
     */
     void clear();
 
-    /**
+    /*!
        Cancel everything the scheduler has still in queue. Keep the current task running though.
        It can be seen as a less aggressive clear() used when the user requested the resource to
        abort its activities. It properly cancel all the tasks in there.
@@ -207,28 +207,28 @@ public:
     void cancelQueues();
 
 public Q_SLOTS:
-    /**
+    /*!
       Schedules replaying changes.
     */
     void scheduleChangeReplay();
 
-    /**
+    /*!
       The current task has been finished
     */
     void taskDone();
 
-    /**
+    /*!
       Like taskDone(), but special case for ItemFetch task
     */
     void itemFetchDone(const QString &msg);
 
-    /**
+    /*!
       The current task can't be finished now and will be rescheduled later
     */
     void deferTask();
 
-    /**
-      Remove tasks that affect @p collection.
+    /*!
+      Remove tasks that affect \p collection.
     */
     void collectionRemoved(const Akonadi::Collection &collection);
 

@@ -14,7 +14,7 @@
 namespace Akonadi
 {
 /**
- * @internal
+ * \internal
  */
 class ItemMonitorPrivate : public QObject
 {

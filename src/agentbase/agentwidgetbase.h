@@ -21,17 +21,17 @@ namespace Akonadi
 class AKONADIAGENTWIDGETBASE_EXPORT AgentWidgetBase : public AgentBase
 {
 public:
-    /**
+    /*!
      * Use this method in the main function of your agent
      * application to initialize your agent subclass.
      * This method also takes care of creating a QApplication
      * object and parsing command line arguments.
      *
-     * @note In case the given class is also derived from AgentBase::Observer
+     * \note In case the given class is also derived from AgentBase::Observer
      *       it gets registered as its own observer (see AgentBase::Observer), e.g.
      *       <tt>agentInstance->registerObserver( agentInstance );</tt>
      *
-     * @code
+     * \code
      *
      *   class MyAgent : public AgentBase
      *   {
@@ -40,10 +40,10 @@ public:
      *
      *   AKONADI_AGENT_MAIN( MyAgent )
      *
-     * @endcode
+     * \endcode
      *
-     * @param argc number of arguments
-     * @param argv arguments for the function
+     * \param argc number of arguments
+     * \param argv arguments for the function
      */
     template<typename T>
     static int init(int argc, char **argv)
@@ -75,7 +75,7 @@ private:
 }
 
 #ifndef AKONADI_AGENT_MAIN
-/**
+/*!
  * Convenience Macro for the most common main() function for Akonadi agents.
  */
 #define AKONADI_AGENT_MAIN(agentClass)                                                                                                                         \

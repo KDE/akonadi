@@ -140,7 +140,7 @@ using PayloadContainer = std::vector<_detail::TypedPayload>;
 namespace Akonadi
 {
 /**
- * @internal
+ * \internal
  */
 class ItemPrivate : public QSharedData
 {

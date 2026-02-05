@@ -139,7 +139,7 @@ struct get_hierarchy_root<std::shared_ptr<T>> {
 };
 
 /**
-  @internal
+  \internal
   Payload type traits. Implements specialized handling for polymorphic types and smart pointers.
   The default one is never used (as isPolymorphic is always false) and only contains safe dummy
   implementations to make the compiler happy (in practice it will always optimized away anyway).
@@ -166,26 +166,26 @@ struct PayloadTrait {
     /// indicates if this payload is polymorphic, that it is a shared pointer
     /// and has a known super class
     static const bool isPolymorphic = false;
-    /// checks an object of this payload type for being @c null
+    /// checks an object of this payload type for being \c null
     static inline bool isNull(const Type &p)
     {
         Q_UNUSED(p)
         return true;
     }
-    /// casts to Type from @c U
+    /// casts to Type from \c U
     /// throws a PayloadException if casting failed
     template<typename U>
     static inline Type castFrom(const U &)
     {
         throw PayloadException("you should never get here");
     }
-    /// tests if casting from @c U to Type is possible
+    /// tests if casting from \c U to Type is possible
     template<typename U>
     static inline bool canCastFrom(const U &)
     {
         return false;
     }
-    /// cast to @c U from Type
+    /// cast to \c U from Type
     template<typename U>
     static inline U castTo(const Type &)
     {
@@ -201,7 +201,7 @@ struct PayloadTrait {
 };
 
 /**
-  @internal
+  \internal
   Payload type trait specialization for QSharedPointer
   for documentation of the various members, see above
 */
@@ -253,7 +253,7 @@ struct PayloadTrait<QSharedPointer<T>> {
 };
 
 /**
-  @internal
+  \internal
   Payload type trait specialization for std::shared_ptr
   for documentation of the various members, see above
 */
@@ -305,7 +305,7 @@ struct PayloadTrait<std::shared_ptr<T>> {
 };
 
 /**
- * @internal
+ * \internal
  * Non-template base class for the payload container.
  */
 struct PayloadBase {
@@ -321,7 +321,7 @@ private:
 };
 
 /**
- * @internal
+ * \internal
  * Container for the actual payload object.
  */
 template<typename T>
@@ -345,7 +345,7 @@ struct Payload : public PayloadBase {
 };
 
 /**
- * @internal
+ * \internal
  * abstract, will therefore always fail to compile for pointer payloads
  */
 template<typename T>
@@ -353,7 +353,7 @@ struct Payload<T *> : public PayloadBase {
 };
 
 /**
-  @internal
+  \internal
   Basically a dynamic_cast that also works across DSO boundaries.
 */
 template<typename T>

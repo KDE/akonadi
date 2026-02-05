@@ -14,7 +14,7 @@
 namespace Akonadi
 {
 /**
- * @internal
+ * \internal
  */
 class MimeTypeCheckerPrivate : public QSharedData
 {

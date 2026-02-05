@@ -113,7 +113,7 @@ class StandardActionManagerPrivate;
  *
  * \endcode
  *
- * @todo collection deleting and sync do not support multi-selection yet
+ * \todo collection deleting and sync do not support multi-selection yet
  *
  * \author Volker Krause <vkrause@kde.org>
  */

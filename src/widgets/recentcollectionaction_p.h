@@ -14,10 +14,10 @@ class QMenu;
 class QAbstractItemModel;
 class QAction;
 /**
- * @short A class to manage recent selected folder.
+ * \short A class to manage recent selected folder.
  *
  * \author Montel Laurent <montel@kde.org>
- * @since 4.8
+ * \since 4.8
  */
 
 namespace Akonadi
@@ -48,8 +48,8 @@ public:
     /**
      * Add a new collection to the global list.
      *
-     * @param id the collection ID
-     * @since 5.18
+     * \param id the collection ID
+     * \since 5.18
      */
     static QStringList addRecentCollection(Akonadi::Collection::Id id);
 

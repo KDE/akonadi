@@ -23,7 +23,7 @@ namespace Akonadi
 class Item;
 
 /**
-  @internal
+  \internal
   Serialization/Deserialization of item parts, serializer plugin management.
 */
 class AKONADI_TESTS_EXPORT ItemSerializer
@@ -46,9 +46,9 @@ public:
 
     /**
      * Throws ItemSerializerException on failure.
-     * @param item the item to apply to
-     * @param other the item to get values from
-     * @since 4.4
+     * \param item the item to apply to
+     * \param other the item to get values from
+     * \since 4.4
      */
     static void apply(Item &item, const Item &other);
 
@@ -59,8 +59,8 @@ public:
 
     /**
      * Returns a list of parts available remotely in the item payload.
-     * @param item the item for which to list payload parts
-     * @since 4.4
+     * \param item the item for which to list payload parts
+     * \since 4.4
      */
     static QSet<QByteArray> availableParts(const Item &item);
 
@@ -68,7 +68,7 @@ public:
      * Returns list of parts of the item payload that can be stored using
      * foreign payload.
      *
-     * @since 5.7
+     * \since 5.7
      */
     static QSet<QByteArray> allowedForeignParts(const Item &item);
 
@@ -76,26 +76,26 @@ public:
      * Tries to convert the payload in \a item into type with
      * metatype-id \a metaTypeId.
      * Throws ItemSerializerException or returns an Item w/o payload on failure.
-     * @param item the item to convert
-     * @param metaTypeId the meta type id used to convert items payload
-     * @since 4.6
+     * \param item the item to convert
+     * \param metaTypeId the meta type id used to convert items payload
+     * \since 4.6
      */
     static Item convert(const Item &item, int metaTypeId);
 
     /**
-     * Override the plugin-lookup with @p plugin.
+     * Override the plugin-lookup with \p plugin.
      *
-     * After calling this each lookup will always return @p plugin.
+     * After calling this each lookup will always return \p plugin.
      * This is useful to inject a special plugin for testing purposes.
      * To reset the plugin, set to 0.
      *
-     * @since 4.12
+     * \since 4.12
      */
     static void overridePluginLookup(QObject *plugin);
 };
 
 /**
-  @internal
+  \internal
   Default implementation for serializer plugin.
 */
 class DefaultItemSerializerPlugin : public QObject, public ItemSerializerPlugin
@@ -110,7 +110,7 @@ public:
 };
 
 /**
- @internal
+ \internal
  Serializer plugin implementation for std::string
 */
 class StdStringItemSerializerPlugin : public QObject, public ItemSerializerPlugin

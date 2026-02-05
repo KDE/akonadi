@@ -31,7 +31,7 @@ Q_DECLARE_METATYPE(QList<qint64>)
 namespace Akonadi
 {
 /**
-  @internal
+  \internal
   QObject part of EntityCache.
 */
 class AKONADI_TESTS_EXPORT EntityCacheBase : public QObject
@@ -71,7 +71,7 @@ struct EntityCacheNode {
 };
 
 /**
- * @internal
+ * \internal
  * A in-memory FIFO cache for a small amount of Item or Collection objects.
  */
 template<typename T, typename FetchJob, typename FetchScope_>
@@ -135,7 +135,7 @@ public:
         }
     }
 
-    /** Requests the object to be cached if it is not yet in the cache. @returns @c true if it was in the cache already. */
+    /** Requests the object to be cached if it is not yet in the cache. \returns \c true if it was in the cache already. */
     virtual bool ensureCached(typename T::Id id, const FetchScope &scope)
     {
         EntityCacheNode<T> *node = cacheNodeForId(id);
@@ -147,7 +147,7 @@ public:
     }
 
     /**
-      Asks the cache to retrieve @p id. @p request is used as
+      Asks the cache to retrieve \p id. \p request is used as
       a token to indicate which request has been finished in the
       dataAvailable() signal.
     */
@@ -320,7 +320,7 @@ public:
         return list;
     }
 
-    /** Requests the object to be cached if it is not yet in the cache. @returns @c true if it was in the cache already. */
+    /** Requests the object to be cached if it is not yet in the cache. \returns \c true if it was in the cache already. */
     bool ensureCached(const QList<typename T::Id> &ids, const FetchScope &scope)
     {
         QList<typename T::Id> toRequest;
@@ -379,7 +379,7 @@ public:
     }
 
     /**
-      Asks the cache to retrieve @p id. @p request is used as
+      Asks the cache to retrieve \p id. \p request is used as
       a token to indicate which request has been finished in the
       dataAvailable() signal.
     */
