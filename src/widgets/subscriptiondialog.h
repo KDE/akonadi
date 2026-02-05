@@ -17,6 +17,10 @@ namespace Akonadi
 class SubscriptionDialogPrivate;
 
 /*!
+ * \class Akonadi::SubscriptionDialog
+ * \inheaders Akonadi/SubscriptionDialog
+ * \inmodule AkonadiWidgets
+ *
  * Local subscription dialog.
  */
 class AKONADIWIDGETS_EXPORT SubscriptionDialog : public QDialog

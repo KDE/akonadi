@@ -36,6 +36,10 @@ class AgentTypeWidgetPrivate;
  *
  * If you want a dialog, you can use the Akonadi::AgentTypeDialog.
  *
+ * \class Akonadi::AgentTypeWidget
+ * \inheaders Akonadi/AgentTypeWidget
+ * \inmodule AkonadiWidgets
+ *
  * \author Tobias Koenig <tokoe@kde.org>
  */
 class AKONADIWIDGETS_EXPORT AgentTypeWidget : public QWidget

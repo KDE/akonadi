@@ -17,8 +17,8 @@ namespace Akonadi
 class Collection;
 class CollectionAttributesSynchronizationJobPrivate;
 
-/**
- * @short Job that synchronizes the attributes of a collection.
+/*!
+ * \brief Job that synchronizes the attributes of a collection.
  *
  * This job will trigger a resource to synchronize the attributes of
  * a collection based on what the backend is reporting to store them in the
@@ -26,33 +26,34 @@ class CollectionAttributesSynchronizationJobPrivate;
  *
  * Example:
  *
- * @code
+ * \code
  * using namespace Akonadi;
  *
  * const Collection collection = ...;
  *
  * auto job = new CollectionAttributesSynchronizationJob(collection);
  * connect(job, &KJob::result, this, &MyClass::synchronizationFinished);
- * @endcode
+ * \endcode
  *
- * @note This is a KJob not an Akonadi::Job, so it won't auto-start!
+ * \
+ote This is a KJob not an Akonadi::Job, so it won't auto-start!
  *
  * \author Volker Krause <vkrause@kde.org>
- * @since 4.6
+ * \since 4.6
  */
 class AKONADICORE_EXPORT CollectionAttributesSynchronizationJob : public KJob
 {
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new synchronization job for the given collection.
      *
-     * @param collection The collection to synchronize.
+     * \a collection The collection to synchronize.
      */
     explicit CollectionAttributesSynchronizationJob(const Collection &collection, QObject *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the synchronization job.
      */
     ~CollectionAttributesSynchronizationJob() override;
@@ -61,10 +62,8 @@ public:
     void start() override;
 
 private:
-    /// @cond PRIVATE
     friend class CollectionAttributesSynchronizationJobPrivate;
     std::unique_ptr<CollectionAttributesSynchronizationJobPrivate> const d;
-    /// @endcond
 };
 
 }

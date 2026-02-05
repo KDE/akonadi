@@ -13,10 +13,10 @@ namespace Akonadi
 {
 class ResourceSelectJobPrivate;
 
-/**
- * @internal
+/*!
+ * \internal
  *
- * @short Job that selects a resource context for remote identifier based operations.
+ * \brief Job that selects a resource context for remote identifier based operations.
  *
  * This job selects a resource context that is used whenever remote identifier
  * based operations ( e.g. fetch items or collections by remote identifier ) are
@@ -24,7 +24,7 @@ class ResourceSelectJobPrivate;
  *
  * Example:
  *
- * @code
+ * \code
  *
  * using namespace Akonadi;
  *
@@ -60,7 +60,7 @@ class ResourceSelectJobPrivate;
  *   qDebug() << "Remote id" << item.remoteId() << "has akonadi id" << item.id();
  * }
  *
- * @endcode
+ * \endcode
  *
  * \author Volker Krause <vkrause@kde.org>
  */
@@ -68,13 +68,13 @@ class AKONADICORE_EXPORT ResourceSelectJob : public Job
 {
     Q_OBJECT
 public:
-    /**
+    /*!
      * Selects the specified resource for all following remote identifier
      * based operations in the same session.
      *
-     * @param identifier The resource identifier, or any empty string to reset
+     * \a identifier The resource identifier, or any empty string to reset
      *                   the selection.
-     * @param parent The parent object.
+     * \a parent The parent object.
      */
     explicit ResourceSelectJob(const QString &identifier, QObject *parent = nullptr);
 
@@ -83,9 +83,7 @@ protected:
     bool doHandleResponse(qint64 tag, const Protocol::CommandPtr &response) override;
 
 private:
-    /// @cond PRIVATE
     Q_DECLARE_PRIVATE(ResourceSelectJob)
-    /// @endcond
 };
 
 }

@@ -16,8 +16,8 @@ namespace Akonadi
 class Collection;
 class PersistentSearchAttributePrivate;
 
-/**
- * @short An attribute to store query properties of persistent search collections.
+/*!
+ * \brief An attribute to store query properties of persistent search collections.
  *
  * This attribute is attached to persistent search collections automatically when
  * creating a new persistent search with SearchCreateJob.
@@ -26,7 +26,7 @@ class PersistentSearchAttributePrivate;
  *
  * Example:
  *
- * @code
+ * \code
  *
  * const QString name = "My search folder";
  * const QString query = "...";
@@ -55,56 +55,56 @@ class PersistentSearchAttributePrivate;
  *   ...
  * }
  *
- * @endcode
+ * \endcode
  *
  * \author Volker Krause <vkrause@kde.org>
- * @since 4.5
+ * \since 4.5
  */
 class AKONADICORE_EXPORT PersistentSearchAttribute : public Akonadi::Attribute
 {
 public:
-    /**
+    /*!
      * Creates a new persistent search attribute.
      */
     explicit PersistentSearchAttribute();
 
-    /**
+    /*!
      * Destroys the persistent search attribute.
      */
     ~PersistentSearchAttribute() override;
 
-    /**
+    /*!
      * Returns the query string used for this search.
      */
     [[nodiscard]] QString queryString() const;
 
-    /**
+    /*!
      * Sets the query string to be used for this search.
-     * @param query The query string.
+     * \a query The query string.
      */
     void setQueryString(const QString &query);
 
-    /**
+    /*!
      * Returns IDs of collections that will be queried
-     * @since 4.13
+     * \since 4.13
      */
     [[nodiscard]] QList<qint64> queryCollections() const;
 
-    /**
+    /*!
      * Sets collections to be queried.
-     * @param collections List of collections to be queries
-     * @since 4.13
+     * \a collections List of collections to be queries
+     * \since 4.13
      */
     void setQueryCollections(const QList<Collection> &collections);
 
-    /**
+    /*!
      * Sets IDs of collections to be queries
-     * @param collectionsIds IDs of collections to query
-     * @since 4.13
+     * \a collectionsIds IDs of collections to query
+     * \since 4.13
      */
     void setQueryCollections(const QList<qint64> &collectionsIds);
 
-    /**
+    /*!
      * Sets whether resources should be queried too.
      *
      * When set to true, Akonadi will search local indexed items and will also
@@ -119,47 +119,43 @@ public:
      * be searched. With remote search, even those emails can be included in search
      * results.
      *
-     * @param enabled Whether remote search is enabled
-     * @since 4.13
+     * \a enabled Whether remote search is enabled
+     * \since 4.13
      */
     void setRemoteSearchEnabled(bool enabled);
 
-    /**
+    /*!
      * Returns whether remote search is enabled.
      *
-     * @since 4.13
+     * \since 4.13
      */
     [[nodiscard]] bool isRemoteSearchEnabled() const;
 
-    /**
+    /*!
      * Sets whether the search should recurse into collections
      *
      * When set to true, all child collections of the specific collections will
      * be search recursively.
      *
-     * @param recursive Whether to search recursively
-     * @since 4.13
+     * \a recursive Whether to search recursively
+     * \since 4.13
      */
     void setRecursive(bool recursive);
 
-    /**
+    /*!
      * Returns whether the search is recursive
      *
-     * @since 4.13
+     * \since 4.13
      */
     [[nodiscard]] bool isRecursive() const;
 
-    /// @cond PRIVATE
     [[nodiscard]] QByteArray type() const override;
     Attribute *clone() const override;
     [[nodiscard]] QByteArray serialized() const override;
     void deserialize(const QByteArray &data) override;
-    /// @endcond
 
 private:
-    /// @cond PRIVATE
     const std::unique_ptr<PersistentSearchAttributePrivate> d;
-    /// @endcond
 };
 
 } // namespace Akonadi

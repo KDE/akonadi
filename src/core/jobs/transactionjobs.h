@@ -31,8 +31,8 @@ private:
 
 class TransactionJobPrivate;
 
-/**
- * @short Job that begins a session-global transaction.
+/*!
+ * \brief Job that begins a session-global transaction.
  *
  * Sometimes you want to execute a sequence of commands in
  * an atomic way, so that either all commands or none shall
@@ -40,7 +40,8 @@ class TransactionJobPrivate;
  * TransactionRollbackJob provide these functionality for the
  * Akonadi Job classes.
  *
- * @note This will only have an effect when used as a subjob or with a Session.
+ * \
+ote This will only have an effect when used as a subjob or with a Session.
  *
  * \author Volker Krause <vkrause@kde.org>
  */
@@ -49,27 +50,28 @@ class AKONADICORE_EXPORT TransactionBeginJob : public TransactionJob
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new transaction begin job.
      *
-     * @param parent The parent job or Session, must not be 0.
+     * \a parent The parent job or Session, must not be 0.
      */
     explicit TransactionBeginJob(QObject *parent);
 
-    /**
+    /*!
      * Destroys the transaction begin job.
      */
     ~TransactionBeginJob() override;
 };
 
-/**
- * @short Job that aborts a session-global transaction.
+/*!
+ * \brief Job that aborts a session-global transaction.
  *
  * If a job inside a TransactionBeginJob has been failed,
  * the TransactionRollbackJob can be used to rollback all changes done by these
  * jobs.
  *
- * @note This will only have an effect when used as a subjob or with a Session.
+ * \
+ote This will only have an effect when used as a subjob or with a Session.
  *
  * \author Volker Krause <vkrause@kde.org>
  */
@@ -78,22 +80,22 @@ class AKONADICORE_EXPORT TransactionRollbackJob : public TransactionJob
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new transaction rollback job.
      * The parent must be the same parent as for the TransactionBeginJob.
      *
-     * @param parent The parent job or Session, must not be 0.
+     * \a parent The parent job or Session, must not be 0.
      */
     explicit TransactionRollbackJob(QObject *parent);
 
-    /**
+    /*!
      * Destroys the transaction rollback job.
      */
     ~TransactionRollbackJob() override;
 };
 
-/**
- * @short Job that commits a session-global transaction.
+/*!
+ * \brief Job that commits a session-global transaction.
  *
  * This job commits all changes of this transaction.
  *
@@ -104,15 +106,15 @@ class AKONADICORE_EXPORT TransactionCommitJob : public TransactionJob
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new transaction commit job.
      * The parent must be the same parent as for the TransactionBeginJob.
      *
-     * @param parent The parent job or Session, must not be 0.
+     * \a parent The parent job or Session, must not be 0.
      */
     explicit TransactionCommitJob(QObject *parent);
 
-    /**
+    /*!
      * Destroys the transaction commit job.
      */
     ~TransactionCommitJob() override;

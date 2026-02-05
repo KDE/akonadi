@@ -16,21 +16,21 @@ namespace Akonadi
 {
 class AgentInstanceModelPrivate;
 
-/**
- * @short Provides a data model for agent instances.
+/*!
+ * \brief Provides a data model for agent instances.
  *
  * This class provides the interface of a QAbstractItemModel to
  * access all available agent instances: their name, identifier,
  * supported mimetypes and capabilities.
  *
- * @code
+ * \code
  *
  * Akonadi::AgentInstanceModel *model = new Akonadi::AgentInstanceModel( this );
  *
  * QListView *view = new QListView( this );
  * view->setModel( model );
  *
- * @endcode
+ * \endcode
  *
  * To show only agent instances that match a given mime type or special
  * capabilities, use the AgentFilterProxyModel on top of this model.
@@ -42,7 +42,7 @@ class AKONADICORE_EXPORT AgentInstanceModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Describes the roles of this model.
      */
     enum Roles {
@@ -64,14 +64,14 @@ public:
         UserRole = Qt::UserRole + 42 ///< Role for user extensions
     };
 
-    /**
+    /*!
      * Creates a new agent instance model.
      *
-     * @param parent The parent object.
+     * \a parent The parent object.
      */
     explicit AgentInstanceModel(QObject *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the agent instance model.
      */
     ~AgentInstanceModel() override;
@@ -87,10 +87,8 @@ public:
     [[nodiscard]] bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
 private:
-    /// @cond PRIVATE
     friend class AgentInstanceModelPrivate;
     std::unique_ptr<AgentInstanceModelPrivate> const d;
-    /// @endcond
 };
 
 }

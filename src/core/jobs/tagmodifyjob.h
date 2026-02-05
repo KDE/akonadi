@@ -14,24 +14,24 @@ namespace Akonadi
 class Tag;
 class TagModifyJobPrivate;
 
-/**
- * @short Job that modifies a tag in the Akonadi storage.
- * @since 4.13
+/*!
+ * \brief Job that modifies a tag in the Akonadi storage.
+ * \since 4.13
  */
 class AKONADICORE_EXPORT TagModifyJob : public Job
 {
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new tag modify job.
      *
-     * @param tag The tag to modify.
-     * @param parent The parent object.
+     * \a tag The tag to modify.
+     * \a parent The parent object.
      */
     explicit TagModifyJob(const Tag &tag, QObject *parent = nullptr);
 
-    /**
+    /*!
      * Returns the modified tag.
      */
     [[nodiscard]] Tag tag() const;

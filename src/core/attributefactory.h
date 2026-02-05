@@ -15,14 +15,14 @@ namespace Akonadi
 {
 class AttributeFactoryPrivate;
 
-/**
- * @short Provides the functionality of registering and creating arbitrary
+/*!
+ * \brief Provides the functionality of registering and creating arbitrary
  *        entity attributes.
  *
  * This class provides the functionality of registering and creating arbitrary Attributes for Entity
  * and its subclasses (e.g. Item and Collection).
  *
- * @code
+ * \code
  *
  * // register the type first
  * Akonadi::AttributeFactory::registerAttribute<SecrecyAttribute>();
@@ -32,18 +32,20 @@ class AttributeFactoryPrivate;
  * // use it anywhere else in the application
  * SecrecyAttribute *attr = Akonadi::AttributeFactory::createAttribute( "secrecy" );
  *
- * @endcode
+ * \endcode
+ *
+ * \class Akonadi::AttributeFactory
+ * \inheaders Akonadi/AttributeFactory
+ * \inmodule AkonadiCore
  *
  * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT AttributeFactory
 {
 public:
-    /// @cond PRIVATE
     ~AttributeFactory();
-    /// @endcond
 
-    /**
+    /*!
      * Registers a custom attribute of type T.
      * The same attribute cannot be registered more than once.
      */
@@ -54,16 +56,15 @@ public:
         AttributeFactory::self()->registerAttribute(std::unique_ptr<T>{new T{}});
     }
 
-    /**
+    /*!
      * Creates an entity attribute object of the given type.
      * If the type has not been registered, creates a DefaultAttribute.
      *
-     * @param type The attribute type.
+     * \a type The attribute type.
      */
     static Attribute *createAttribute(const QByteArray &type);
 
 protected:
-    /// @cond PRIVATE
     explicit AttributeFactory();
 
 private:
@@ -72,7 +73,6 @@ private:
     void registerAttribute(std::unique_ptr<Attribute> attribute);
 
     const std::unique_ptr<AttributeFactoryPrivate> d;
-    /// @endcond
 };
 
 } // namespace Akonadi

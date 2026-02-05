@@ -14,16 +14,16 @@ namespace Akonadi
 class Collection;
 class InvalidateCacheJobPrivate;
 
-/**
+/*!
  * Helper job to invalidate item cache for an entire collection.
- * @since 4.8
+ * \since 4.8
  */
 class AKONADICORE_EXPORT InvalidateCacheJob : public Akonadi::Job
 {
     Q_OBJECT
 public:
-    /**
-     * Create a job to invalidate all cached content in @p collection.
+    /*!
+     * Create a job to invalidate all cached content in \ collection.
      */
     explicit InvalidateCacheJob(const Collection &collection, QObject *parent);
 

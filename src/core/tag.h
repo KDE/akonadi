@@ -20,7 +20,11 @@ namespace Akonadi
 class TagModifyJob;
 class TagPrivate;
 
-/**
+/*!
+ * \class Akonadi::Tag
+ * \inheaders Akonadi/Tag
+ * \inmodule AkonadiCore
+ *
  * An Akonadi Tag.
  */
 class AKONADICORE_EXPORT Tag
@@ -29,7 +33,7 @@ public:
     using List = QList<Tag>;
     using Id = qint64;
 
-    /**
+    /*!
      * The PLAIN type has the following properties:
      * * gid == displayName
      * * immutable
@@ -39,7 +43,7 @@ public:
      */
     static const char PLAIN[];
 
-    /**
+    /*!
      * The GENERIC type has the following properties:
      * * mutable
      * * gid is RFC 4122 compatible
@@ -51,7 +55,7 @@ public:
 
     Tag();
     explicit Tag(Id id);
-    /**
+    /*!
      * Creates a PLAIN tag
      */
     explicit Tag(const QString &name);
@@ -70,46 +74,47 @@ public:
 
     static Tag fromUrl(const QUrl &url);
 
-    /**
+    /*!
      * Adds an attribute to the entity.
      *
      * If an attribute of the same type name already exists, it is deleted and
      * replaced with the new one.
      *
-     * @param attribute The new attribute.
+     * \a attribute The new attribute.
      *
-     * @note The entity takes the ownership of the attribute.
+     * \
+ote The entity takes the ownership of the attribute.
      */
     void addAttribute(Attribute *attribute);
 
-    /**
-     * Removes and deletes the attribute of the given type @p name.
+    /*!
+     * Removes and deletes the attribute of the given type \a name.
      */
     void removeAttribute(const QByteArray &name);
 
-    /**
-     * Returns @c true if the entity has an attribute of the given type @p name,
+    /*!
+     * Returns \\ true if the entity has an attribute of the given type \a name,
      * false otherwise.
      */
     bool hasAttribute(const QByteArray &name) const;
 
-    /**
+    /*!
      * Returns a list of all attributes of the entity.
      */
     Attribute::List attributes() const;
 
-    /**
+    /*!
      * Removes and deletes all attributes of the entity.
      */
     void clearAttributes();
 
-    /**
-     * Returns the attribute of the given type @p name if available, 0 otherwise.
+    /*!
+     * Returns the attribute of the given type \a name if available, 0 otherwise.
      */
     const Attribute *attribute(const QByteArray &name) const;
     Attribute *attribute(const QByteArray &name);
 
-    /**
+    /*!
      * Describes the options that can be passed to access attributes.
      */
     enum CreateOption {
@@ -117,45 +122,45 @@ public:
         DontCreate ///< Does not create an attribute if it is missing (default)
     };
 
-    /**
+    /*!
      * Returns the attribute of the requested type.
      * If the entity has no attribute of that type yet, a new one
      * is created and added to the entity.
      *
-     * @param option The create options.
+     * \a option The create options.
      */
     template<typename T>
     inline T *attribute(CreateOption option = DontCreate);
 
-    /**
+    /*!
      * Returns the attribute of the requested type or 0 if it is not available.
      */
     template<typename T>
     inline const T *attribute() const;
 
-    /**
+    /*!
      * Removes and deletes the attribute of the requested type.
      */
     template<typename T>
     inline void removeAttribute();
 
-    /**
+    /*!
      * Returns whether the entity has an attribute of the requested type.
      */
     template<typename T>
     inline bool hasAttribute() const;
 
-    /**
+    /*!
      * Returns the url of the tag.
      */
     QUrl url() const;
 
-    /**
-     * Sets the unique @p identifier of the tag.
+    /*!
+     * Sets the unique \a identifier of the tag.
      */
     void setId(Id identifier);
 
-    /**
+    /*!
      * Returns the unique identifier of the tag.
      */
     Id id() const;
@@ -177,13 +182,13 @@ public:
 
     bool isValid() const;
 
-    /**
+    /*!
      * Returns true if the tag is immutable (cannot be modified after creation).
      * Note that the immutability does not affect the attributes.
      */
     bool isImmutable() const;
 
-    /**
+    /*!
      * Returns a GENERIC tag with the given name and a valid gid
      */
     static Tag genericTag(const QString &name);
@@ -192,13 +197,11 @@ private:
     bool checkAttribute(const Attribute *attr, const QByteArray &type) const;
     void markAttributeModified(const QByteArray &type);
 
-    /// @cond PRIVATE
     friend class TagModifyJob;
     friend class TagFetchJob;
     friend class ProtocolHelper;
 
     QSharedDataPointer<TagPrivate> d_ptr;
-    /// @endcond
 };
 
 AKONADICORE_EXPORT size_t qHash(const Akonadi::Tag &, size_t sed = 0) noexcept;

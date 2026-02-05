@@ -17,13 +17,13 @@ namespace Akonadi
 {
 class StatisticsProxyModelPrivate;
 
-/**
- * @short A proxy model that exposes collection statistics through extra columns.
+/*!
+ * \brief A proxy model that exposes collection statistics through extra columns.
  *
  * This class can be used on top of an EntityTreeModel to display extra columns
  * summarizing statistics of collections.
  *
- * @code
+ * \code
  *
  *   Akonadi::EntityTreeModel *model = new Akonadi::EntityTreeModel( ... );
  *
@@ -33,46 +33,46 @@ class StatisticsProxyModelPrivate;
  *   Akonadi::EntityTreeView *view = new Akonadi::EntityTreeView( this );
  *   view->setModel( proxy );
  *
- * @endcode
+ * \endcode
  *
  * \author Kevin Ottens <ervin@kde.org>, now maintained by David Faure <faure@kde.org>
- * @since 4.4
+ * \since 4.4
  */
 class AKONADICORE_EXPORT StatisticsProxyModel : public KExtraColumnsProxyModel
 {
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new statistics proxy model.
      *
-     * @param parent The parent object.
+     * \a parent The parent object.
      */
     explicit StatisticsProxyModel(QObject *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the statistics proxy model.
      */
     ~StatisticsProxyModel() override;
 
-    /**
-     * @param enable Display tooltips
+    /*!
+     * \a enable Display tooltips
      * By default, tooltips are disabled.
      */
     void setToolTipEnabled(bool enable);
 
-    /**
+    /*!
      * Return true if we display tooltips, otherwise false
      */
     [[nodiscard]] bool isToolTipEnabled() const;
 
-    /**
-     * @param enable Display extra statistics columns
+    /*!
+     * \a enable Display extra statistics columns
      * By default, the extra columns are enabled.
      */
     void setExtraColumnsEnabled(bool enable);
 
-    /**
+    /*!
      * Return true if we display extra statistics columns, otherwise false
      */
     [[nodiscard]] bool isExtraColumnsEnabled() const;
@@ -90,9 +90,7 @@ public:
     void setSourceModel(QAbstractItemModel *model) override;
 
 private:
-    /// @cond PRIVATE
     std::unique_ptr<StatisticsProxyModelPrivate> const d;
-    /// @endcond
 };
 
 }

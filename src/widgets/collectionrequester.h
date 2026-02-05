@@ -45,6 +45,10 @@ class CollectionRequesterPrivate;
  *
  * \author Ingo Klöcker <kloecker@kde.org>
  * \since 4.3
+ *
+ * \class Akonadi::CollectionRequester
+ * \inheaders Akonadi/CollectionRequester
+ * \inmodule AkonadiWidgets
  */
 class AKONADIWIDGETS_EXPORT CollectionRequester : public QWidget
 {

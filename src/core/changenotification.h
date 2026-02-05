@@ -23,13 +23,17 @@ using ChangeNotificationPtr = QSharedPointer<ChangeNotification>;
 
 class ChangeNotificationPrivate;
 
-/**
+/*!
+ * \class Akonadi::ChangeNotification
+ * \inheaders Akonadi/ChangeNotification
+ * \inmodule AkonadiCore
+ *
  * Emitted by Monitor::debugNotification() signal.
  *
  * This is purely for debugging purposes and should never be used in regular
  * applications.
  *
- * @since 5.4
+ * \since 5.4
  */
 class AKONADICORE_EXPORT ChangeNotification
 {

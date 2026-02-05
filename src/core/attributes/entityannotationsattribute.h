@@ -14,7 +14,7 @@
 
 namespace Akonadi
 {
-/**
+/*!
  * An attribute for annotations.
  *
  * The attribute is inspired by RFC5257(IMAP ANNOTATION) and RFC5464(IMAP METADATA), but serves
@@ -25,7 +25,7 @@ namespace Akonadi
  * for a shared note:
  * /shared/comment
  *
- * @since 4.13
+ * \since 4.13
  */
 class AKONADICORE_EXPORT EntityAnnotationsAttribute : public Akonadi::Attribute
 {

@@ -15,9 +15,9 @@ namespace Akonadi
 class Tag;
 class TagDeleteJobPrivate;
 
-/**
- * @short Job that deletes tags.
- * @since 4.13
+/*!
+ * \brief Job that deletes tags.
+ * \since 4.13
  */
 class AKONADICORE_EXPORT TagDeleteJob : public Job
 {
@@ -31,7 +31,7 @@ public:
      */
     explicit TagDeleteJob(const Tag::List &tag, QObject *parent = nullptr);
 
-    /**
+    /*!
      * Returns the tags passed to the constructor.
      */
     [[nodiscard]] Tag::List tags() const;

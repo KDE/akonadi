@@ -15,13 +15,13 @@ namespace Akonadi
 {
 class CollectionIdentificationAttributePrivate;
 
-/**
- * @short Attribute that stores additional information on a collection that can be used for searching.
+/*!
+ * \brief Attribute that stores additional information on a collection that can be used for searching.
  *
  * Additional indexed properties that can be used for searching.
  *
  * \author Christian Mollekopf <mollekopf@kolabsys.com>
- * @since 4.15
+ * \since 4.15
  */
 class AKONADICORE_EXPORT CollectionIdentificationAttribute : public Akonadi::Attribute
 {
@@ -33,7 +33,7 @@ public:
                                                const QByteArray &mail = QByteArray());
     ~CollectionIdentificationAttribute() override;
 
-    /**
+    /*!
      * Sets an identifier for the collection.
      */
     void setIdentifier(const QByteArray &identifier);
@@ -62,7 +62,7 @@ public:
      */
     [[nodiscard]] QByteArray name() const;
 
-    /**
+    /*!
      * Sets a namespace the collection is in.
      *
      * Initially used are:
@@ -87,9 +87,7 @@ public:
     void deserialize(const QByteArray &data) override;
 
 private:
-    /// @cond PRIVATE
     const std::unique_ptr<CollectionIdentificationAttributePrivate> d;
-    /// @endcond
 };
 
 } // namespace Akonadi

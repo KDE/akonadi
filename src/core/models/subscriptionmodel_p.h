@@ -19,8 +19,8 @@ namespace Akonadi
 class Monitor;
 class SubscriptionModelPrivate;
 
-/**
- * @internal
+/*!
+ * \internal
  *
  * A proxy model to be used on top of ETM to display a checkable tree of collections
  * for user to select which collections should be locally subscribed.
@@ -31,23 +31,23 @@ class AKONADICORE_EXPORT SubscriptionModel : public QIdentityProxyModel
 {
     Q_OBJECT
 public:
-    /** Additional roles. */
+    /*! Additional roles. */
     enum Roles {
         SubscriptionChangedRole = EntityTreeModel::UserRole + 1 ///< Indicate the subscription status has been changed.
     };
 
-    /**
+    /*!
       Create a new subscription model.
-      @param parent The parent object.
+      \ parent The parent object.
     */
     explicit SubscriptionModel(Monitor *monitor, QObject *parent = nullptr);
 
-    /**
+    /*!
       Destructor.
     */
     ~SubscriptionModel() override;
 
-    /**
+    /*!
      * Sets a source model for the SubscriptionModel.
      *
      * Should be based on an ETM with only collections.
@@ -61,9 +61,9 @@ public:
     [[nodiscard]] Collection::List subscribed() const;
     [[nodiscard]] Collection::List unsubscribed() const;
 
-    /**
-     * @param showHidden shows hidden collections if set as @c true
-     * @since: 4.9
+    /*!
+     * \ showHidden shows hidden collections if set as \\ true
+     * \since: 4.9
      */
     void setShowHiddenCollections(bool showHidden);
     [[nodiscard]] bool showHiddenCollections() const;

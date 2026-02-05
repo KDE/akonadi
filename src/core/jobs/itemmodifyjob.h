@@ -14,8 +14,8 @@ namespace Akonadi
 {
 class ItemModifyJobPrivate;
 
-/**
- * @short Job that modifies an existing item in the Akonadi storage.
+/*!
+ * \brief Job that modifies an existing item in the Akonadi storage.
  *
  * This job is used to writing back items to the Akonadi storage, after
  * the user has changed them in any way.
@@ -24,7 +24,7 @@ class ItemModifyJobPrivate;
  *
  * Example:
  *
- * @code
+ * \code
  *
  * // Fetch item with unique id 125
  * Akonadi::ItemFetchJob *fetchJob = new Akonadi::ItemFetchJob( Akonadi::Item( 125 ) );
@@ -57,7 +57,7 @@ class ItemModifyJobPrivate;
  *     qDebug() << "Item modified successfully";
  * }
  *
- * @endcode
+ * \endcode
  *
  * <h3>Conflict Resolution</h3>
 
@@ -85,15 +85,15 @@ class AKONADICORE_EXPORT ItemModifyJob : public Job
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new item modify job.
      *
-     * @param item The modified item object to store.
-     * @param parent The parent object.
+     * \a item The modified item object to store.
+     * \a parent The parent object.
      */
     explicit ItemModifyJob(const Item &item, QObject *parent = nullptr);
 
-    /**
+    /*!
      * Creates a new item modify job for bulk modifications.
      *
      * Using this is different from running a modification job per item.
@@ -104,73 +104,77 @@ public:
      * Currently the following modifications are supported:
      * - flag changes
      *
-     * @note Since this does not do payload modifications, it implies
+     * \
+ote Since this does not do payload modifications, it implies
      *       setIgnorePayload( true ) and disableRevisionCheck().
-     * @param items The list of items to modify, must not be empty.
-     * @since 4.6
+     * \a items The list of items to modify, must not be empty.
+     * \since 4.6
      */
     explicit ItemModifyJob(const Item::List &items, QObject *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the item modify job.
      */
     ~ItemModifyJob() override;
 
-    /**
+    /*!
      * Sets whether the payload of the modified item shall be
      * omitted from transmission to the Akonadi storage.
-     * The default is @c false, however it can be set for
+     * The default is \\ false, however it can be set for
      * performance reasons.
-     * @param ignore ignores payload if set as @c true
+     * \a ignore ignores payload if set as \\ true
      */
     void setIgnorePayload(bool ignore);
 
-    /**
+    /*!
      * Returns whether the payload of the modified item shall be
      * omitted from transmission to the Akonadi storage.
      */
     [[nodiscard]] bool ignorePayload() const;
 
-    /**
+    /*!
      * Sets whether the GID shall be updated either from the gid parameter or
      * by extracting it from the payload.
-     * The default is @c false to avoid unnecessarily update the GID,
+     * The default is \\ false to avoid unnecessarily update the GID,
      * as it should never change once set, and the ItemCreateJob already sets it.
-     * @param update update the GID if set as @c true
+     * \a update update the GID if set as \\ true
      *
-     * @note If disabled the GID will not be updated, but still be used for identification of the item.
-     * @since 4.12
+     * \
+ote If disabled the GID will not be updated, but still be used for identification of the item.
+     * \since 4.12
      */
     void setUpdateGid(bool update);
 
-    /**
+    /*!
      * Returns whether the GID should be updated.
-     * @since 4.12
+     * \since 4.12
      */
     [[nodiscard]] bool updateGid() const;
 
-    /**
+    /*!
      * Disables the check of the revision number.
      *
-     * @note If disabled, no conflict detection is available.
+     * \
+ote If disabled, no conflict detection is available.
      */
     void disableRevisionCheck();
 
-    /**
+    /*!
      * Returns the modified and stored item including the changed revision number.
      *
-     * @note Use this method only when using the single item constructor.
+     * \
+ote Use this method only when using the single item constructor.
      */
     [[nodiscard]] Item item() const;
 
-    /**
+    /*!
      * Returns the modified and stored items including the changed revision number.
      *
-     * @since 4.6
+     * \since 4.6
      */
     [[nodiscard]] Item::List items() const;
 
-    /**
+    /*!
      * Disables the automatic handling of conflicts.
      *
      * By default the item modify job will bring up a dialog to resolve
@@ -178,7 +182,7 @@ public:
      * Calling this method will avoid that and the job returns with an
      * error in case of a conflict.
      *
-     * @since 4.6
+     * \since 4.6
      */
     void disableAutomaticConflictHandling();
 
@@ -187,9 +191,7 @@ protected:
     bool doHandleResponse(qint64 tag, const Protocol::CommandPtr &response) override;
 
 private:
-    /// @cond PRIVATE
     Q_DECLARE_PRIVATE(ItemModifyJob)
-    /// @endcond
 };
 
 }

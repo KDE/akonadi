@@ -21,8 +21,8 @@ class ModifyItemsCommand;
 using ModifyItemsCommandPtr = QSharedPointer<ModifyItemsCommand>;
 }
 
-/**
- * @internal
+/*!
+ * \internal
  */
 class AKONADICORE_EXPORT ItemModifyJobPrivate : public JobPrivate
 {

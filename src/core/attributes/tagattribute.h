@@ -18,10 +18,10 @@ namespace Akonadi
 {
 class TagAttributePrivate;
 
-/**
- * @short Attribute that stores the properties that are used to display a tag.
+/*!
+ * \brief Attribute that stores the properties that are used to display a tag.
  *
- * @since 4.13
+ * \since 4.13
  */
 class AKONADICORE_EXPORT TagAttribute : public Attribute
 {
@@ -30,23 +30,23 @@ public:
 
     ~TagAttribute() override;
 
-    /**
-     * Sets the @p name that should be used for display.
+    /*!
+     * Sets the \a name that should be used for display.
      */
     void setDisplayName(const QString &name);
 
-    /**
+    /*!
      * Returns the name that should be used for display.
      * Users of this should fall back to Collection::name() if this is empty.
      */
     [[nodiscard]] QString displayName() const;
 
-    /**
-     * Sets the icon @p name for the default icon.
+    /*!
+     * Sets the icon \a name for the default icon.
      */
     void setIconName(const QString &name);
 
-    /**
+    /*!
      * Returns the icon name of the icon returned by icon().
      */
     [[nodiscard]] QString iconName() const;
@@ -82,7 +82,7 @@ public:
      */
     [[nodiscard]] QString shortcut() const;
 
-    /**
+    /*!
      * Sets the priority of the tag.
      * The priority is primarily used for presentation, e.g. for sorting.
      * If only one tag can be displayed for a given item, the one with the highest
@@ -90,7 +90,7 @@ public:
      */
     void setPriority(int priority);
 
-    /**
+    /*!
      * Returns the priority of the tag.
      * The default value is -1
      */
@@ -105,9 +105,7 @@ public:
 private:
     TagAttribute(const TagAttribute &other);
     TagAttribute &operator=(const TagAttribute &other);
-    /// @cond PRIVATE
     const std::unique_ptr<TagAttributePrivate> d;
-    /// @endcond
 };
 
 } // namespace Akonadi

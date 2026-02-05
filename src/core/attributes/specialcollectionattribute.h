@@ -17,33 +17,33 @@ namespace Akonadi
 {
 class SpecialCollectionAttributePrivate;
 
-/**
- * @short An Attribute that stores the special collection type of a collection.
+/*!
+ * \brief An Attribute that stores the special collection type of a collection.
  *
  * All collections registered with SpecialCollections must have this attribute set.
  *
  * \author Constantin Berzan <exit3219@gmail.com>
- * @since 4.4
+ * \since 4.4
  */
 class AKONADICORE_EXPORT SpecialCollectionAttribute : public Akonadi::Attribute
 {
 public:
-    /**
+    /*!
      * Creates a new special collection attribute.
      */
     explicit SpecialCollectionAttribute(const QByteArray &type = QByteArray());
 
-    /**
+    /*!
      * Destroys the special collection attribute.
      */
     ~SpecialCollectionAttribute() override;
 
-    /**
-     * Sets the special collections @p type of the collection.
+    /*!
+     * Sets the special collections \a type of the collection.
      */
     void setCollectionType(const QByteArray &type);
 
-    /**
+    /*!
      * Returns the special collections type of the collection.
      */
     [[nodiscard]] QByteArray collectionType() const;
@@ -61,9 +61,7 @@ public:
     void deserialize(const QByteArray &data) override;
 
 private:
-    /// @cond PRIVATE
     const std::unique_ptr<SpecialCollectionAttributePrivate> d;
-    /// @endcond
 };
 
 } // namespace Akonadi

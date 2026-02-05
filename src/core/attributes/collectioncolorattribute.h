@@ -14,13 +14,13 @@
 
 namespace Akonadi
 {
-/**
- * @short Attribute that stores colors of a collection.
+/*!
+ * \brief Attribute that stores colors of a collection.
  *
  * Storing color in Akonadi makes it possible to sync them between client and server.
  *
  * \author Sandro Knauß <knauss@kolabsys.com>
- * @since 5.3
+ * \since 5.3
  */
 
 class AKONADICORE_EXPORT CollectionColorAttribute : public Akonadi::Attribute

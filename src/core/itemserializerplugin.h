@@ -17,8 +17,8 @@ class QIODevice;
 
 namespace Akonadi
 {
-/**
- * @short The base class for item type serializer plugins.
+/*!
+ * \brief The base class for item type serializer plugins.
  *
  * Serializer plugins convert between the payload of Akonadi::Item objects and
  * a textual or binary representation of the actual content data.
@@ -28,16 +28,16 @@ namespace Akonadi
  * a new data type PimNote.
  *
  * The PimNote data structure:
- * @code
+ * \code
  * typedef struct {
  *   QString author;
  *   QDateTime dateTime;
  *   QString text;
  * } PimNote;
- * @endcode
+ * \endcode
  *
  * The serializer plugin code:
- * @code
+ * \code
  * #include <qplugin.h>
  *
  * class SerializerPluginPimNote : public QObject, public Akonadi::ItemSerializerPlugin
@@ -87,10 +87,10 @@ namespace Akonadi
  *
  * Q_EXPORT_PLUGIN2( akonadi_serializer_pimnote, SerializerPluginPimNote )
  *
- * @endcode
+ * \endcode
  *
  * The desktop file:
- * @code
+ * \code
  * [Misc]
  * Name=Pim Note Serializer
  * Comment=An Akonadi serializer plugin for note objects
@@ -98,102 +98,106 @@ namespace Akonadi
  * [Plugin]
  * Type=application/x-pimnote
  * X-KDE-Library=akonadi_serializer_pimnote
- * @endcode
+ * \endcode
+ *
+ * \class Akonadi::ItemSerializerPlugin
+ * \inheaders Akonadi/ItemSerializerPlugin
+ * \inmodule AkonadiCore
  *
  * \author Till Adam <adam@kde.org>, Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT ItemSerializerPlugin
 {
 public:
-    /**
+    /*!
      * Destroys the item serializer plugin.
      */
     virtual ~ItemSerializerPlugin();
 
-    /**
-     * Converts serialized item data provided in @p data into payload for @p item.
+    /*!
+     * Converts serialized item data provided in \a data into payload for \a item.
      *
-     * @param item The item to which the payload should be added.
+     * \a item The item to which the payload should be added.
      *             It is guaranteed to have a mime type matching one of the supported
      *             mime types of this plugin.
      *             However it might contain a unsuited payload added manually
      *             by the application developer.
      *             Verifying the payload type in case a payload is already available
      *             is recommended therefore.
-     * @param label The part identifier of the part to deserialize.
-     *              @p label might be an unsupported item part, return @c false if this is the case.
-     * @param data A QIODevice providing access to the serialized data.
+     * \a label The part identifier of the part to deserialize.
+     *              \a label might be an unsupported item part, return \\ false if this is the case.
+     * \a data A QIODevice providing access to the serialized data.
      *             The QIODevice is opened in read-only mode and positioned at the beginning.
      *             The QIODevice is guaranteed to be valid.
-     * @param version The version of the data format as set by the user in serialize() or @c 0 (default).
-     * @return @c false if the specified part is not supported by this plugin, @c true if the part
+     * \a version The version of the data format as set by the user in serialize() or \\ 0 (default).
+     * Returns \\ false if the specified part is not supported by this plugin, \\ true if the part
      *            could be de-serialized successfully.
      */
     virtual bool deserialize(Item &item, const QByteArray &label, QIODevice &data, int version) = 0;
 
-    /**
-     * Convert the payload object provided in @p item into its serialized form into @p data.
+    /*!
+     * Convert the payload object provided in \a item into its serialized form into \a data.
      *
-     * @param item The item which contains the payload.
+     * \a item The item which contains the payload.
      *             It is guaranteed to have a mimetype matching one of the supported
      *             mimetypes of this plugin as well as the existence of a payload object.
      *             However it might contain an unsupported payload added manually by
      *             the application developer.
      *             Verifying the payload type is recommended therefore.
-     * @param label The part identifier of the part to serialize.
-     *              @p label will be one of the item parts returned by parts().
-     * @param data The QIODevice where the serialized data should be written to.
+     * \a label The part identifier of the part to serialize.
+     *              \a label will be one of the item parts returned by parts().
+     * \a data The QIODevice where the serialized data should be written to.
      *             The QIODevice is opened in write-only mode and positioned at the beginning.
      *             The QIODevice is guaranteed to be valid.
-     * @param version The version of the data format. Can be set by the user to handle different
+     * \a version The version of the data format. Can be set by the user to handle different
      *                versions.
      */
     virtual void serialize(const Item &item, const QByteArray &label, QIODevice &data, int &version) = 0;
 
-    /**
+    /*!
      * Returns a list of available parts for the given item payload.
      * The default implementation returns Item::FullPayload if a payload is set.
      *
-     * @param item The item.
+     * \a item The item.
      */
     virtual QSet<QByteArray> parts(const Item &item) const;
 
-    /**
-     * Override the plugin-lookup with @p plugin.
+    /*!
+     * Override the plugin-lookup with \a plugin.
      *
-     * After calling this each lookup will always return @p plugin.
+     * After calling this each lookup will always return \a plugin.
      * This is useful to inject a special plugin for testing purposes.
      * To reset the plugin, set to 0.
      *
-     * @since 4.12
+     * \since 4.12
      */
     static void overridePluginLookup(QObject *plugin);
 
-    /**
-     * Merges the payload parts in @p other into @p item.
+    /*!
+     * Merges the payload parts in \a other into \a item.
      *
-     * The default implementation is slow as it requires serializing @p other, and deserializing @p item multiple times.
+     * The default implementation is slow as it requires serializing \a other, and deserializing \a item multiple times.
      * Reimplementing this is recommended if your type uses payload parts.
-     * @param item receives merged parts from @p other
-     * @param other the paylod parts to merge into @p item
-     * @since 4.4
+     * \a item receives merged parts from \a other
+     * \a other the paylod parts to merge into \a item
+     * \since 4.4
      */
     virtual void apply(Item &item, const Item &other);
 
-    /**
-     * Returns the parts available in the item @p item.
+    /*!
+     * Returns the parts available in the item \a item.
      *
      * This should be reimplemented to return available parts.
      *
      * The default implementation returns an empty set if the item has a payload,
      * and a set containing Item::FullPayload if the item has no payload.
-     * @param item the item for which to list payload parts
-     * @since 4.4
+     * \a item the item for which to list payload parts
+     * \since 4.4
      */
     virtual QSet<QByteArray> availableParts(const Item &item) const;
 
-    /**
-     * Returns the parts available in the item @p item that can be stored using
+    /*!
+     * Returns the parts available in the item \a item that can be stored using
      * foreign payload mechanism. Is only called for items whose payload has been
      * set via Item::setPayloadPath().
      *
@@ -201,7 +205,7 @@ public:
      * Some implementations can also allow "HEAD" to be stored as foreign payload,
      * if HEAD is only a subset of RFC822 part.
      *
-     * @since 5.7
+     * \since 5.7
      */
     virtual QSet<QByteArray> allowedForeignParts(const Item &item) const;
 

@@ -17,8 +17,8 @@ namespace Akonadi
 {
 class SpecialCollectionsDiscoveryJobPrivate;
 
-/**
- * @short A job to discover all SpecialCollections.
+/*!
+ * \brief A job to discover all SpecialCollections.
  *
  * The collections get registered into SpecialCollections.
  *
@@ -26,14 +26,14 @@ class SpecialCollectionsDiscoveryJobPrivate;
  * specific special collection request jobs.
  *
  * \author David Faure <faure@kde.org>
- * @since 4.11
+ * \since 4.11
  */
 class AKONADICORE_EXPORT SpecialCollectionsDiscoveryJob : public KCompositeJob
 {
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Destroys the special collections request job.
      */
     ~SpecialCollectionsDiscoveryJob() override;
@@ -41,11 +41,11 @@ public:
     void start() override;
 
 protected:
-    /**
+    /*!
      * Creates a new special collections request job.
      *
-     * @param collections The SpecialCollections object that shall be used.
-     * @param parent The parent object.
+     * \a collections The SpecialCollections object that shall be used.
+     * \a parent The parent object.
      */
     explicit SpecialCollectionsDiscoveryJob(SpecialCollections *collections, const QStringList &mimeTypes, QObject *parent = nullptr);
 
@@ -53,9 +53,7 @@ protected:
     void slotResult(KJob *job) override;
 
 private:
-    /// @cond PRIVATE
     std::unique_ptr<SpecialCollectionsDiscoveryJobPrivate> const d;
-    /// @endcond
 };
 
 } // namespace Akonadi

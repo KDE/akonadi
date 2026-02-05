@@ -26,8 +26,8 @@ class Session;
 
 class EntityTreeModelPrivate;
 
-/**
- * @short A model for collections and items together.
+/*!
+ * \brief A model for collections and items together.
  *
  * Akonadi models and views provide a high level way to interact with the Akonadi server.
  * Most applications will use these classes.
@@ -36,7 +36,8 @@ class EntityTreeModelPrivate;
  * Additionally, the models are updated automatically if another application changes the
  * data or inserts or deletes items etc.
  *
- * @note The EntityTreeModel should be used with the EntityTreeView or the EntityListView class
+ * \
+ote The EntityTreeModel should be used with the EntityTreeView or the EntityListView class
  * either directly or indirectly via proxy models.
  *
  * <h3>Retrieving Collections and Items from the model</h3>
@@ -44,9 +45,9 @@ class EntityTreeModelPrivate;
  * If you want to retrieve and Item or Collection from the model, and already have a valid
  * QModelIndex for the correct row, the Collection can be retrieved like this:
  *
- * @code
+ * \code
  * Collection col = index.data(EntityTreeModel::CollectionRole).value<Collection>();
- * @endcode
+ * \endcode
  *
  * And similarly for Items. This works even if there is a proxy model between the calling code
  * and the EntityTreeModel.
@@ -70,7 +71,7 @@ class EntityTreeModelPrivate;
  * The following code creates a model which fetches items and collections relevant to
  * addressees (contacts), and automatically manages keeping the items up to date.
  *
- * @code
+ * \code
  *
  *   auto monitor = new Monitor(this);
  *   monitor->setCollectionMonitored(Collection::root());
@@ -82,75 +83,77 @@ class EntityTreeModelPrivate;
  *   auto view = new EntityTreeView(this);
  *   view->setModel(model);
  *
- * @endcode
+ * \endcode
  *
  * The EntityTreeModel will show items of a different type by changing the line
  *
- * @code
+ * \code
  * monitor->setMimeTypeMonitored(KContacts::Addressee::mimeType());
- * @endcode
+ * \endcode
  *
  * to a different mimetype. KContacts::Addressee::mimeType() is an alias for "text/directory". If changed to KMime::Message::mimeType()
  * (an alias for "message/rfc822") the model would instead contain emails. The model can be configured to contain items of any mimetype
  * known to %Akonadi.
  *
- * @note The EntityTreeModel does some extra configuration on the Monitor, such as setting itemFetchScope() and collectionFetchScope()
+ * \
+ote The EntityTreeModel does some extra configuration on the Monitor, such as setting itemFetchScope() and collectionFetchScope()
  * to retrieve all ancestors. This is necessary for proper function of the model.
  *
- * @see Akonadi::ItemFetchScope::AncestorRetrieval.
+ * \sa Akonadi::ItemFetchScope::AncestorRetrieval.
  *
- * @see akonadi-mimetypes.
+ * \sa akonadi-mimetypes.
  *
  * The EntityTreeModel can be further configured for certain behaviours such as fetching of collections and items.
  *
  * The model can be configured to not fetch items into the model (ie, fetch collections only) by setting
  *
- * @code
+ * \code
  * entityTreeModel->setItemPopulationStrategy(EntityTreeModel::NoItemPopulation);
- * @endcode
+ * \endcode
  *
  * The items may be fetched lazily, i.e. not inserted into the model until request by the user for performance reasons.
  *
  * The Collection tree is always built immediately if Collections are to be fetched.
  *
- * @code
+ * \code
  * entityTreeModel->setItemPopulationStrategy(EntityTreeModel::LazyPopulation);
- * @endcode
+ * \endcode
  *
  * This will typically be used with a EntityMimeTypeFilterModel in a configuration such as KMail or AkonadiConsole.
  *
  * The CollectionFetchStrategy determines how the model will be populated with Collections. That is, if FetchNoCollections is set,
  * no collections beyond the root of the model will be fetched. This can be used in combination with setting a particular Collection to monitor.
  *
- * @code
+ * \code
  * // Get an collection id from a config file.
  * Collection::Id id;
  * monitor->setCollectionMonitored(Collection(id));
  * // ... Other initialization code.
  * entityTree->setCollectionFetchStrategy(FetchNoCollections);
- * @endcode
+ * \endcode
  *
  * This has the effect of creating a model of only a list of Items, and not collections. This is similar in behaviour and aims to the ItemModel.
  * By using FetchFirstLevelCollections instead, a mixed list of entities can be created.
  *
- * @note It is important that you set only one Collection to be monitored in the monitor object. This one collection will be the root of the tree.
+ * \
+ote It is important that you set only one Collection to be monitored in the monitor object. This one collection will be the root of the tree.
  * If you need a model with a more complex structure, consider monitoring a common ancestor and using a SelectionProxyModel.
  *
- * @see lazy-model-population
+ * \sa lazy-model-population
  *
  * It is also possible to show the root Collection as part of the selectable model:
  *
- * @code
+ * \code
  * entityTree->setIncludeRootCollection(true);
- * @endcode
+ * \endcode
  *
  *
  * By default the displayed name of the root collection is '[*]', because it doesn't require i18n, and is generic. It can be changed too.
  *
- * @code
+ * \code
  * entityTree->setIncludeRootCollection(true);
  * entityTree->setRootCollectionDisplayName(i18nc("Name of top level for all addressbooks in the application", "[All AddressBooks]"))
- * @endcode
+ * \endcode
  *
  * This feature is used in KAddressBook.
  *
@@ -158,17 +161,17 @@ class EntityTreeModelPrivate;
  * are to be fetched, using the ItemFetchScope class. By default, only the basic metadata is
  * fetched. To fetch all item data, including all attributes:
  *
- * @code
+ * \code
  * monitor->itemFetchScope().fetchFullPayload();
  * monitor->itemFetchScope().fetchAllAttributes();
- * @endcode
+ * \endcode
  *
  * <h2>Using EntityTreeModel with Proxy models</h2>
  *
  * An Akonadi::SelectionProxyModel can be used to simplify managing selection in one view through multiple proxy models to a representation in another view.
  * The selectionModel of the initial view is used to create a proxied model which filters out anything not related to the current selection.
  *
- * @code
+ * \code
  * // ... create an EntityTreeModel
  *
  * collectionTree = new EntityMimeTypeFilterModel(this);
@@ -195,7 +198,7 @@ class EntityTreeModelPrivate;
  *
  * auto itemView = new EntityTreeView(splitter);
  * itemView->setModel(itemList);
- * @endcode
+ * \endcode
  *
  * The SelectionProxyModel can handle complex selections.
  *
@@ -210,7 +213,7 @@ class EntityTreeModelPrivate;
  *
  * A KDescendantsProxyModel can be used to represent all descendants of a model as a flat list.
  * For example, to show all descendant items in a selected Collection in a list:
- * @code
+ * \code
  * auto collectionTree = new EntityMimeTypeFilterModel(this);
  * collectionTree->setSourceModel(entityTreeModel);
  *
@@ -235,7 +238,7 @@ class EntityTreeModelPrivate;
  *
  * listView = new EntityTreeView(this);
  * listView->setModel(itemList);
- * @endcode
+ * \endcode
  *
  *
  * Note that it is important in this case to use the KDescendantsProxyModel before the EntityMimeTypeFilterModel.
@@ -279,15 +282,16 @@ class EntityTreeModelPrivate;
  * -- Implement to return the data for a particular item and column. In the case of email for example, this would be the actual subject, sender and date of the
  * email.
  *
- * @note The entityData methods are just for convenience. the QAbstractItemModel::data method can be overridden if required.
+ * \
+ote The entityData methods are just for convenience. the QAbstractItemModel::data method can be overridden if required.
  *
  * The application writer must then properly configure proxy models for the views, so that the correct data is shown in the correct view.
  * That is the purpose of these lines in the above example
  *
- * @code
+ * \code
  * collectionTree->setHeaderGroup(EntityTreeModel::CollectionTreeHeaders);
  * itemList->setHeaderGroup(EntityTreeModel::ItemListHeaders);
- * @endcode
+ * \endcode
  *
  * <h3>Progress reporting</h3>
  *
@@ -300,14 +304,14 @@ class EntityTreeModelPrivate;
  * listing of the items in that collection is underway, otherwise the state is IdleState.
  *
  * \author Stephen Kelly <steveire@gmail.com>
- * @since 4.4
+ * \since 4.4
  */
 class AKONADICORE_EXPORT EntityTreeModel : public QAbstractItemModel
 {
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Describes the roles for items. Roles for collections are defined by the superclass.
      */
     enum Roles {
@@ -326,18 +330,18 @@ public:
         RemoteIdRole, ///< The remoteId of the entity
         CollectionChildOrderRole, ///< Ordered list of child items if available
         ParentCollectionRole, ///< The parent collection of the entity
-        ColumnCountRole, ///< @internal Used by proxies to determine the number of columns for a header group.
+        ColumnCountRole, ///< \internal Used by proxies to determine the number of columns for a header group.
         LoadedPartsRole, ///< Parts available in the model for the item
         AvailablePartsRole, ///< Parts available in the Akonadi server for the item
-        SessionRole, ///< @internal The Session used by this model
-        CollectionRefRole, ///< @internal Used to increase the reference count on a Collection
-        CollectionDerefRole, ///< @internal Used to decrease the reference count on a Collection
+        SessionRole, ///< \internal The Session used by this model
+        CollectionRefRole, ///< \internal Used to increase the reference count on a Collection
+        CollectionDerefRole, ///< \internal Used to decrease the reference count on a Collection
         PendingCutRole, ///< Used to indicate items which are to be cut
         EntityUrlRole, ///< The akonadi:/ Url of the entity as a string. Item urls will contain the mimetype.
-        UnreadCountRole, ///< Returns the number of unread items in a collection. @since 4.5
-        FetchStateRole, ///< Returns the FetchState of a particular item. @since 4.5
-        IsPopulatedRole, ///< Returns whether a Collection has been populated, i.e. whether its items have been fetched. @since 4.10
-        OriginalCollectionNameRole, ///< Returns original name for collection @since 4.14
+        UnreadCountRole, ///< Returns the number of unread items in a collection. \since 4.5
+        FetchStateRole, ///< Returns the FetchState of a particular item. \since 4.5
+        IsPopulatedRole, ///< Returns whether a Collection has been populated, i.e. whether its items have been fetched. \since 4.10
+        OriginalCollectionNameRole, ///< Returns original name for collection \since 4.14
         DisplayNameRole, ///< Returns the same as Qt::DisplayRole
         UserRole = Qt::UserRole + 500, ///< First role for user extensions.
         TerminalUserRole = 2000, ///< Last role for user extensions. Don't use a role beyond this or headerData will break.
@@ -345,19 +349,19 @@ public:
     };
     Q_ENUM(Roles)
 
-    /**
+    /*!
      * Describes the state of fetch jobs related to particular collections.
      *
-     * @code
+     * \code
      *   QModelIndex collectionIndex = getIndex();
      *   if (collectionIndex.data(EntityTreeModel::FetchStateRole).toLongLong() == FetchingState) {
      *     // There is a fetch underway
      *   } else {
      *     // There is no fetch underway.
      *   }
-     * @endcode
+     * \endcode
      *
-     * @since 4.5
+     * \since 4.5
      */
     enum FetchState {
         IdleState, ///< There is no fetch of items in this collection in progress.
@@ -366,7 +370,7 @@ public:
     };
     Q_ENUM(FetchState)
 
-    /**
+    /*!
      * Describes what header information the model shall return.
      */
     enum HeaderGroup {
@@ -378,20 +382,20 @@ public:
                             // Note that we're splitting up available roles for the header data hack and int(EndRole / TerminalUserRole) == 32
     };
 
-    /**
+    /*!
      * Creates a new entity tree model.
      *
-     * @param monitor The Monitor whose entities should be represented in the model.
-     * @param parent The parent object.
+     * \a monitor The Monitor whose entities should be represented in the model.
+     * \a parent The parent object.
      */
     explicit EntityTreeModel(Monitor *monitor, QObject *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the entity tree model.
      */
     ~EntityTreeModel() override;
 
-    /**
+    /*!
      * Describes how the model should populated its items.
      */
     enum ItemPopulationStrategy {
@@ -400,87 +404,88 @@ public:
         LazyPopulation ///< Fetch items only when requested (using canFetchMore/fetchMore)
     };
 
-    /**
+    /*!
      * Some Entities are hidden in the model, but exist for internal purposes, for example, custom object
      * directories in groupware resources.
-     * They are hidden by default, but can be shown by setting @p show to true.
-     * @param show enabled displaying of hidden entities if set as @c true
+     * They are hidden by default, but can be shown by setting \a show to true.
+     * \a show enabled displaying of hidden entities if set as \\ true
      * Most applications will not need to use this feature.
      */
     void setShowSystemEntities(bool show);
 
-    /**
-     * Returns @c true if internal system entities are shown, and @c false otherwise.
+    /*!
+     * Returns \\ true if internal system entities are shown, and \\ false otherwise.
      */
     [[nodiscard]] bool systemEntitiesShown() const;
 
-    /**
+    /*!
      * Returns the currently used listfilter.
      *
-     * @since 4.14
+     * \since 4.14
      */
     [[nodiscard]] Akonadi::CollectionFetchScope::ListFilter listFilter() const;
 
-    /**
+    /*!
      * Sets the currently used listfilter.
      *
-     * @since 4.14
+     * \since 4.14
      */
     void setListFilter(Akonadi::CollectionFetchScope::ListFilter filter);
 
-    /**
+    /*!
      * Monitors the specified collections and resets the model.
      *
-     * @since 4.14
+     * \since 4.14
      */
     void setCollectionsMonitored(const Akonadi::Collection::List &collections);
 
-    /**
+    /*!
      * Adds or removes a specific collection from the monitored set without resetting the model.
      * Only call this if you're monitoring specific collections (not mimetype/resources/items).
      *
-     * @since 4.14
-     * @see setCollectionsMonitored()
+     * \since 4.14
+     * \sa setCollectionsMonitored()
      */
     void setCollectionMonitored(const Akonadi::Collection &col, bool monitored = true);
 
-    /**
-     * Sets the item population @p strategy of the model.
+    /*!
+     * Sets the item population \a strategy of the model.
      */
     void setItemPopulationStrategy(ItemPopulationStrategy strategy);
 
-    /**
+    /*!
      * Returns the item population strategy of the model.
      */
     [[nodiscard]] ItemPopulationStrategy itemPopulationStrategy() const;
 
-    /**
+    /*!
      * Sets whether the root collection shall be provided by the model.
-     * @param include enables root collection if set as @c true
-     * @see setRootCollectionDisplayName()
+     * \a include enables root collection if set as \\ true
+     * \sa setRootCollectionDisplayName()
      */
     void setIncludeRootCollection(bool include);
 
-    /**
+    /*!
      * Returns whether the root collection is provided by the model.
      */
     [[nodiscard]] bool includeRootCollection() const;
 
-    /**
-     * Sets the display @p name of the root collection of the model.
+    /*!
+     * Sets the display \a name of the root collection of the model.
      * The default display name is "[*]".
-     * @param name the name to display for the root collection
-     * @note The display name for the root collection is only used if
+     * \a name the name to display for the root collection
+     * \
+ote The display name for the root collection is only used if
      *       the root collection has been included with setIncludeRootCollection().
      */
     void setRootCollectionDisplayName(const QString &name);
 
-    /**
+    /*!
      * Returns the display name of the root collection.
      */
     [[nodiscard]] QString rootCollectionDisplayName() const;
 
-    /**
+    /*!
      * Describes what collections shall be fetched by and represent in the model.
      */
     enum CollectionFetchStrategy {
@@ -488,15 +493,15 @@ public:
         FetchFirstLevelChildCollections, ///< Fetches first level collections in the root collection.
         FetchCollectionsRecursive, ///< Fetches collections in the root collection recursively. This is the default.
         FetchCollectionsMerged ///< Fetches items from collections, but merges them into a flat list as direct child items of the model.
-                               ///< The ParentCollectionRole can still be used to retrieve the parent collection of an Item. @since 4.5
+                               ///< The ParentCollectionRole can still be used to retrieve the parent collection of an Item. \since 4.5
     };
 
-    /**
-     * Sets the collection fetch @p strategy of the model.
+    /*!
+     * Sets the collection fetch \a strategy of the model.
      */
     void setCollectionFetchStrategy(CollectionFetchStrategy strategy);
 
-    /**
+    /*!
      * Returns the collection fetch strategy of the model.
      */
     [[nodiscard]] CollectionFetchStrategy collectionFetchStrategy() const;
@@ -525,34 +530,34 @@ public:
     void fetchMore(const QModelIndex &parent) override;
     [[nodiscard]] bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
 
-    /**
+    /*!
      * Returns whether the collection tree has been fetched at initialisation.
      *
-     * @see collectionTreeFetched
-     * @since 4.10
+     * \sa collectionTreeFetched
+     * \since 4.10
      */
     [[nodiscard]] bool isCollectionTreeFetched() const;
 
-    /**
+    /*!
      * Returns whether the collection has been populated.
      *
-     * @see collectionPopulated
-     * @since 4.12
+     * \sa collectionPopulated
+     * \since 4.12
      */
     [[nodiscard]] bool isCollectionPopulated(Akonadi::Collection::Id) const;
 
-    /**
+    /*!
      * Returns whether the model is fully populated.
      *
      * Returns true once the collection tree has been fetched and all collections have been populated.
      *
-     * @see isCollectionPopulated
-     * @see isCollectionTreeFetched
-     * @since 4.14
+     * \sa isCollectionPopulated
+     * \sa isCollectionTreeFetched
+     * \since 4.14
      */
     [[nodiscard]] bool isFullyPopulated() const;
 
-    /**
+    /*!
      * Reimplemented to handle the AmazingCompletionRole.
      */
     [[nodiscard]] QModelIndexList match(const QModelIndex &start,
@@ -561,10 +566,10 @@ public:
                                         int hits = 1,
                                         Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
 
-    /**
-     * Returns a QModelIndex in @p model which points to @p collection.
-     * This method can be used through proxy models if @p model is a proxy model.
-     * @code
+    /*!
+     * Returns a QModelIndex in \a model which points to \a collection.
+     * This method can be used through proxy models if \a model is a proxy model.
+     * \code
      * EntityTreeModel *model = getEntityTreeModel();
      * QSortFilterProxyModel *proxy1 = new QSortFilterProxyModel;
      * proxy1->setSourceModel(model);
@@ -582,29 +587,29 @@ public:
      * Collection collection = idx.data( EntityTreeModel::CollectionRole ).value<Collection>();
      * // collection has the id colId, and all other attributes already fetched by the model such as name, remoteId, Akonadi::Attributes etc.
      *
-     * @endcode
+     * \endcode
      *
      * This can be useful for example if an id is stored in a config file and needs to be used in the application.
      *
      * Note however, that to restore view state such as scrolling, selection and expansion of items in trees, the ETMViewStateSaver can be used for convenience.
      *
-     * @see modelIndexesForItem
-     * @since 4.5
+     * \sa modelIndexesForItem
+     * \since 4.5
      */
     static QModelIndex modelIndexForCollection(const QAbstractItemModel *model, const Collection &collection);
 
-    /**
-     * Returns a QModelIndex in @p model which points to @p item.
-     * This method can be used through proxy models if @p model is a proxy model.
-     * @param model the model to query for the item
-     * @param item the item to look for
-     * @see modelIndexForCollection
-     * @since 4.5
+    /*!
+     * Returns a QModelIndex in \a model which points to \a item.
+     * This method can be used through proxy models if \a model is a proxy model.
+     * \a model the model to query for the item
+     * \a item the item to look for
+     * \sa modelIndexForCollection
+     * \since 4.5
      */
     static QModelIndexList modelIndexesForItem(const QAbstractItemModel *model, const Item &item);
 
-    /**
-     * Returns an Akonadi::Collection from the @p model based on given @p collectionId.
+    /*!
+     * Returns an Akonadi::Collection from the \a model based on given \a collectionId.
      *
      * This is faster and simpler than retrieving a full Collection from the ETM
      * by using modelIndexForCollection() and then querying for the index data.
@@ -613,57 +618,57 @@ public:
     static Collection updatedCollection(const QAbstractItemModel *model, const Collection &col);
 
 Q_SIGNALS:
-    /**
+    /*!
      * Signal emitted when the collection tree has been fetched for the first time.
-     * @param collections  list of collections which have been fetched
+     * \a collections  list of collections which have been fetched
      *
-     * @see isCollectionTreeFetched, collectionPopulated
-     * @since 4.10
+     * \sa isCollectionTreeFetched, collectionPopulated
+     * \since 4.10
      */
     void collectionTreeFetched(const Akonadi::Collection::List &collections);
 
-    /**
+    /*!
      * Signal emitted when a collection has been populated, i.e. its items have been fetched.
-     * @param collectionId  id of the collection which has been populated
+     * \a collectionId  id of the collection which has been populated
      *
-     * @see collectionTreeFetched
-     * @since 4.10
+     * \sa collectionTreeFetched
+     * \since 4.10
      */
     void collectionPopulated(Akonadi::Collection::Id collectionId);
-    /**
+    /*!
      * Emitted once a collection has been fetched for the very first time.
      * This is like a dataChanged(), but specific to the initial loading, in order to update
      * the GUI (window caption, state of actions).
      * Usually, the GUI uses Akonadi::Monitor to be notified of further changes to the collections.
-     * @param collectionId the identifier of the fetched collection
-     * @since 4.9.3
+     * \a collectionId the identifier of the fetched collection
+     * \since 4.9.3
      */
     void collectionFetched(int collectionId);
 
-    /**
+    /*!
      * Emitted when an error occurred.
-     * @since 6.4.0
+     * \since 6.4.0
      */
     void errorOccurred(const QString &message);
 
 protected:
-    /**
+    /*!
      * Clears and resets the model. Always call this instead of the reset method in the superclass.
      * Using the reset method will not reliably clear or refill the model.
      */
     void clearAndReset();
 
-    /**
+    /*!
      * Provided for convenience of subclasses.
      */
     virtual QVariant entityData(const Item &item, int column, int role = Qt::DisplayRole) const;
 
-    /**
+    /*!
      * Provided for convenience of subclasses.
      */
     virtual QVariant entityData(const Collection &collection, int column, int role = Qt::DisplayRole) const;
 
-    /**
+    /*!
      * Reimplement this to provide different header data. This is needed when using one model
      * with multiple proxies and views, and each should show different header data.
      */
@@ -672,14 +677,11 @@ protected:
     virtual int entityColumnCount(HeaderGroup headerGroup) const;
 
 protected:
-    /// @cond PRIVATE
     Q_DECLARE_PRIVATE(EntityTreeModel)
     std::unique_ptr<EntityTreeModelPrivate> const d_ptr;
     EntityTreeModel(Monitor *monitor, EntityTreeModelPrivate *d, QObject *parent = nullptr);
-    /// @endcond
 
 private:
-    /// @cond PRIVATE
     // Make these private, they shouldn't be called by applications
     bool insertRows(int row, int count, const QModelIndex &index = QModelIndex()) override;
     bool insertColumns(int column, int count, const QModelIndex &index = QModelIndex()) override;
@@ -722,7 +724,6 @@ private:
 
     Q_PRIVATE_SLOT(d_func(), void agentInstanceRemoved(Akonadi::AgentInstance))
     Q_PRIVATE_SLOT(d_func(), void monitoredItemsRetrieved(KJob *job))
-    /// @endcond
 };
 
 } // namespace

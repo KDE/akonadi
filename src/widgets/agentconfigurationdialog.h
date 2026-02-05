@@ -18,6 +18,10 @@ class AgentInstance;
 class AgentConfigurationDialogPrivate;
 
 /*!
+ * \class Akonadi::AgentConfigurationDialog
+ * \inheaders Akonadi/AgentConfigurationDialog
+ * \inmodule AkonadiWidgets
+ *
  * \brief The AgentConfigurationDialog class
  */
 class AKONADIWIDGETS_EXPORT AgentConfigurationDialog : public QDialog

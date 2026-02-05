@@ -13,6 +13,11 @@
 
 namespace Akonadi
 {
+/*!
+ * \class Akonadi::TagSync
+ * \inheaders Akonadi/TagSync
+ * \inmodule AkonadiCore
+ */
 class AKONADICORE_EXPORT TagSync : public Akonadi::Job
 {
     Q_OBJECT

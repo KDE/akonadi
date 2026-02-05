@@ -14,8 +14,8 @@
 
 namespace Akonadi
 {
-/**
- * @internal
+/*!
+ * \internal
  */
 namespace CollectionUtils
 {
@@ -118,8 +118,8 @@ namespace CollectionUtils
     return !item.remoteId().isEmpty() && hasValidHierarchicalRID(item.parentCollection());
 }
 
-/** Returns the collection represented by @p index.
- *  @param index has to be provided by an EntityTreeModel instance or a proxy model on top of one.
+/*! Returns the collection represented by \a index.
+ *  \a index has to be provided by an EntityTreeModel instance or a proxy model on top of one.
  */
 [[nodiscard]] AKONADICORE_EXPORT Collection fromIndex(const QModelIndex &index);
 }

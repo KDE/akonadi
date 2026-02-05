@@ -19,8 +19,8 @@ class Collection;
 class ItemFetchScope;
 class RecursiveItemFetchJobPrivate;
 
-/**
- * @short Job that fetches all items of a collection recursive.
+/*!
+ * \brief Job that fetches all items of a collection recursive.
  *
  * This job takes a collection as argument and returns a list of
  * all items that are part of the passed collection and its child
@@ -30,7 +30,7 @@ class RecursiveItemFetchJobPrivate;
  *
  * Example:
  *
- * @code
+ * \code
  *
  * // Assume the following Akonadi storage tree structure:
  * //
@@ -65,44 +65,44 @@ class RecursiveItemFetchJobPrivate;
  *   // do something with the items
  * }
  *
- * @endcode
+ * \endcode
  *
  * \author Tobias Koenig <tokoe@kde.org>
- * @since 4.6
+ * \since 4.6
  */
 class AKONADICORE_EXPORT RecursiveItemFetchJob : public KJob
 {
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new recursive item fetch job.
      *
-     * @param collection The collection that shall be fetched recursive.
-     * @param mimeTypes The list of mime types that will be used for filtering.
-     * @param parent The parent object.
+     * \a collection The collection that shall be fetched recursive.
+     * \a mimeTypes The list of mime types that will be used for filtering.
+     * \a parent The parent object.
      */
     explicit RecursiveItemFetchJob(const Akonadi::Collection &collection, const QStringList &mimeTypes, QObject *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the recursive item fetch job.
      */
     ~RecursiveItemFetchJob() override;
 
-    /**
+    /*!
      * Sets the item fetch scope.
      *
      * The ItemFetchScope controls how much of an item's data is fetched
      * from the server, e.g. whether to fetch the full item payload or
      * only meta data.
      *
-     * @param fetchScope The new scope for item fetch operations.
+     * \a fetchScope The new scope for item fetch operations.
      *
-     * @see fetchScope()
+     * \sa fetchScope()
      */
     void setFetchScope(const Akonadi::ItemFetchScope &fetchScope);
 
-    /**
+    /*!
      * Returns the item fetch scope.
      *
      * Since this returns a reference it can be used to conveniently modify the
@@ -110,27 +110,25 @@ public:
      * without storing it in a local variable. See the ItemFetchScope documentation
      * for an example.
      *
-     * @return a reference to the current item fetch scope
+     * Returns a reference to the current item fetch scope
      *
-     * @see setFetchScope() for replacing the current item fetch scope
+     * \sa setFetchScope() for replacing the current item fetch scope
      */
     Akonadi::ItemFetchScope &fetchScope();
 
-    /**
+    /*!
      * Returns the list of fetched items.
      */
     [[nodiscard]] Akonadi::Item::List items() const;
 
-    /**
+    /*!
      * Starts the recursive item fetch job.
      */
     void start() override;
 
 private:
-    /// @cond PRIVATE
     friend class RecursiveItemFetchJobPrivate;
     std::unique_ptr<RecursiveItemFetchJobPrivate> const d;
-    /// @endcond
 };
 
 }

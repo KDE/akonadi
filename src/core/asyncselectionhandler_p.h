@@ -17,8 +17,8 @@ class QModelIndex;
 
 namespace Akonadi
 {
-/**
- * @internal
+/*!
+ * \internal
  *
  * A helper class to set a current index on a widget with
  * delayed model loading.
@@ -30,7 +30,7 @@ class AKONADICORE_EXPORT AsyncSelectionHandler : public QObject
     Q_OBJECT
 
 public:
-    /**
+    /*!
      */
     explicit AsyncSelectionHandler(QAbstractItemModel *model, QObject *parent = nullptr);
 

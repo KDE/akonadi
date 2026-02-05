@@ -59,6 +59,10 @@ class EntityListViewPrivate;
  * \author Volker Krause <vkrause@kde.org>
  * \author Stephen Kelly <steveire@gmail.com>
  * \since 4.4
+ *
+ * \class Akonadi::EntityListView
+ * \inheaders Akonadi/EntityListView
+ * \inmodule AkonadiWidgets
  */
 class AKONADIWIDGETS_EXPORT EntityListView : public QListView
 {

@@ -14,15 +14,19 @@ namespace Akonadi
 {
 class TagFetchScopePrivate;
 
-/**
- * @short Specifies which parts of a tag should be fetched from the Akonadi storage.
+/*!
+ * \class Akonadi::TagFetchScope
+ * \inheaders Akonadi/TagFetchScope
+ * \inmodule AkonadiCore
  *
- * @since 4.13
+ * \brief Specifies which parts of a tag should be fetched from the Akonadi storage.
+ *
+ * \since 4.13
  */
 class AKONADICORE_EXPORT TagFetchScope
 {
 public:
-    /**
+    /*!
      * Creates an empty tag fetch scope.
      *
      * Using an empty scope will only fetch the very basic meta data of tags,
@@ -30,64 +34,64 @@ public:
      */
     TagFetchScope();
 
-    /**
-     * Creates a new tag fetch scope from an @p other.
+    /*!
+     * Creates a new tag fetch scope from an \a other.
      */
     TagFetchScope(const TagFetchScope &other);
 
-    /**
+    /*!
      * Destroys the tag fetch scope.
      */
     ~TagFetchScope();
 
-    /**
-     * Assigns the @p other to this scope and returns a reference to this scope.
+    /*!
+     * Assigns the \a other to this scope and returns a reference to this scope.
      */
     TagFetchScope &operator=(const TagFetchScope &other);
 
-    /**
+    /*!
      * Returns all explicitly fetched attributes.
      *
      * Undefined if fetchAllAttributes() returns true.
      *
-     * @see fetchAttribute()
+     * \sa fetchAttribute()
      */
     [[nodiscard]] QSet<QByteArray> attributes() const;
 
-    /**
+    /*!
      * Sets whether to fetch tag remote ID.
      *
      * This option only has effect for Resources.
      */
     void setFetchRemoteId(bool fetchRemoteId);
 
-    /**
+    /*!
      * Returns whether tag remote ID should be fetched.
      */
     [[nodiscard]] bool fetchRemoteId() const;
 
-    /**
+    /*!
      * Sets whether to fetch all attributes.
      */
     void setFetchAllAttributes(bool fetchAllAttributes);
 
-    /**
+    /*!
      * Returns whether to fetch all attributes
      */
     [[nodiscard]] bool fetchAllAttributes() const;
 
-    /**
-     * Sets whether the attribute of the given @p type should be fetched.
+    /*!
+     * Sets whether the attribute of the given \a type should be fetched.
      *
-     * @param type The attribute type to fetch.
-     * @param fetch @c true if the attribute should be fetched, @c false otherwise.
+     * \a type The attribute type to fetch.
+     * \a fetch \\ true if the attribute should be fetched, \\ false otherwise.
      */
     void fetchAttribute(const QByteArray &type, bool fetch = true);
 
-    /**
+    /*!
      * Sets whether the attribute of the requested type should be fetched.
      *
-     * @param fetch @c true if the attribute should be fetched, @c false otherwise.
+     * \a fetch \\ true if the attribute should be fetched, \\ false otherwise.
      */
     template<typename T>
     inline void fetchAttribute(bool fetch = true)
@@ -96,27 +100,25 @@ public:
         fetchAttribute(dummy.type(), fetch);
     }
 
-    /**
+    /*!
      * Sets whether only the id or the complete tag should be fetched.
      *
-     * The default is @c false.
+     * The default is false.
      *
-     * @since 4.15
+     * \since 4.15
      */
     void setFetchIdOnly(bool fetchIdOnly);
 
-    /**
+    /*!
      * Sets whether only the id of the tags should be retrieved or the complete tag.
      *
-     * @see tagFetchScope()
-     * @since 4.15
+     * \sa tagFetchScope()
+     * \since 4.15
      */
     [[nodiscard]] bool fetchIdOnly() const;
 
 private:
-    /// @cond PRIVATE
     QSharedPointer<TagFetchScopePrivate> d;
-    /// @endcond
 };
 
 }

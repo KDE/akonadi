@@ -14,8 +14,8 @@
 namespace Akonadi
 {
 class TrashRestoreJobPrivate;
-/**
- * @short Job that restores entities from trash
+/*!
+ * \brief Job that restores entities from trash
  *
  * This job restores the given entities from trash.
  * The EntityDeletedAttribute is removed and the item is restored to the stored restore collection.
@@ -25,23 +25,23 @@ class TrashRestoreJobPrivate;
  *
  * Example:
  *
- * @code
+ * \code
  *
  * const Akonadi::Item::List items = ...
  *
  * TrashRestoreJob *job = new TrashRestoreJob( items );
  * connect( job, SIGNAL(result(KJob*)), this, SLOT(restoreResult(KJob*)) );
  *
- * @endcode
+ * \endcode
  *
  * \author Christian Mollekopf <chrigi_1@fastmail.fm>
- * @since 4.8
+ * \since 4.8
  */
 class AKONADICORE_EXPORT TrashRestoreJob : public Job
 {
     Q_OBJECT
 public:
-    /**
+    /*!
      * All items need to be from the same resource
      */
     explicit TrashRestoreJob(const Item &item, QObject *parent = nullptr);
@@ -52,10 +52,10 @@ public:
 
     ~TrashRestoreJob() override;
 
-    /**
+    /*!
      * Sets the target collection, where the item is moved to.
      * If not set the item will be restored in the collection saved in the EntityDeletedAttribute.
-     * @param collection the collection to set as target
+     * \a collection the collection to set as target
      */
     void setTargetCollection(const Collection &collection);
 
@@ -67,9 +67,7 @@ protected:
     void doStart() override;
 
 private:
-    /// @cond PRIVATE
     Q_DECLARE_PRIVATE(TrashRestoreJob)
-    /// @endcond
 };
 
 }

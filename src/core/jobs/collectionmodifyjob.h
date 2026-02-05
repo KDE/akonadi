@@ -15,17 +15,17 @@ class CachePolicy;
 class Collection;
 class CollectionModifyJobPrivate;
 
-/**
- * @short Job that modifies a collection in the Akonadi storage.
+/*!
+ * \brief Job that modifies a collection in the Akonadi storage.
  *
  * This job modifies the properties of an existing collection.
  *
- * @code
+ * \code
  * Akonadi::Collection collection = ...
  *
  * auto job = new Akonadi::CollectionModifyJob(collection);
  * connect(job, &KJob::result, this, &MyClass::modifyResult);
- * @endcode
+ * \endcode
  *
  * If the collection has attributes, it is recommended only to supply values for
  * any attributes whose values are to be updated. This will help to avoid
@@ -34,7 +34,7 @@ class CollectionModifyJobPrivate;
  * are not needed, create a new instance of the collection and explicitly set
  * attributes to be updated, e.g.
  *
- * @code
+ * \code
  * // Update the 'MyAttribute' attribute of 'collection'.
  * Akonadi::Collection c(collection.id());
  * auto attribute = c.attribute<MyAttribute>(Collection::AddIfMissing);
@@ -44,17 +44,17 @@ class CollectionModifyJobPrivate;
  * // Update the value of 'attribute' ...
  * auto job = new Akonadi::CollectionModifyJob(c);
  * connect(job, &KJob::result, this, &MyClass::modifyResult);
- * @endcode
+ * \endcode
  *
  * To update only the collection, and not change any attributes:
  *
- * @code
+ * \code
  * // Update the cache policy for 'collection' to 'newPolicy'.
  * Akonadi::Collection c(collection.id());
  * c.setCachePolicy(newPolicy);
  * auto job = new Akonadi::CollectionModifyJob(c);
  * connect(job, &KJob::result, this, &MyClass::modifyResult);
- * @endcode
+ * \endcode
  *
  * \author Volker Krause <vkrause@kde.org>
  */
@@ -63,27 +63,27 @@ class AKONADICORE_EXPORT CollectionModifyJob : public Job
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new collection modify job for the given collection. The collection can be
      * identified either by its unique identifier or its remote identifier. Since the remote
      * identifier is not necessarily globally unique, identification by remote identifier only
      * works inside a resource context (that is from within ResourceBase) and is therefore
      * limited to one resource.
      *
-     * @param collection The collection to modify.
-     * @param parent The parent object.
+     * \a collection The collection to modify.
+     * \a parent The parent object.
      */
     explicit CollectionModifyJob(const Collection &collection, QObject *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the collection modify job.
      */
     ~CollectionModifyJob() override;
 
-    /**
+    /*!
      * Returns the modified collection.
      *
-     * @since 4.4
+     * \since 4.4
      */
     [[nodiscard]] Collection collection() const;
 

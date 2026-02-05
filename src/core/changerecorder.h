@@ -15,8 +15,8 @@ namespace Akonadi
 {
 class ChangeRecorderPrivate;
 
-/**
- * @short Records and replays change notification.
+/*!
+ * \brief Records and replays change notification.
  *
  * This class is responsible for recording change notifications while
  * an agent is not online and replaying the notifications when the agent
@@ -29,64 +29,68 @@ class ChangeRecorderPrivate;
  * which means you only need to connect to signals you are actually interested
  * in.
  *
+ * \class Akonadi::ChangeRecorder
+ * \inheaders Akonadi/ChangeRecorder
+ * \inmodule AkonadiCore
+ *
  * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT ChangeRecorder : public Monitor
 {
     Q_OBJECT
 public:
-    /**
+    /*!
      * Creates a new change recorder.
      */
     explicit ChangeRecorder(QObject *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the change recorder.
      * All not yet processed changes are written back to the config file.
      */
     ~ChangeRecorder() override;
 
-    /**
+    /*!
      * Sets the QSettings object used for persistent recorded changes.
      */
     void setConfig(QSettings *settings);
 
-    /**
+    /*!
      * Returns whether there are recorded changes.
      */
     [[nodiscard]] bool isEmpty() const;
 
-    /**
+    /*!
      * Removes the previously emitted change from the records.
      */
     void changeProcessed();
 
-    /**
+    /*!
      * Enables change recording. If change recording is disabled, this class
      * behaves exactly like Akonadi::Monitor.
      * Change recording is enabled by default.
-     * @param enable @c false to disable change recording. @c true by default
+     * \a enable \\ false to disable change recording. \\ true by default
      */
     void setChangeRecordingEnabled(bool enable);
 
-    /**
+    /*!
      * Debugging: dump current list of notifications, as saved on disk.
      */
     [[nodiscard]] QString dumpNotificationListToString() const;
 
 public Q_SLOTS:
-    /**
+    /*!
      * Replay the next change notification and erase the previous one from the record.
      */
     void replayNext();
 
 Q_SIGNALS:
-    /**
+    /*!
      * Emitted when new changes are recorded.
      */
     void changesAdded();
 
-    /**
+    /*!
      * Emitted when replayNext() was called, but there was no valid change to replay.
      * This can happen when all pending changes have been filtered out, for example.
      * You only need to connect to this signal if you rely on one signal being emitted
@@ -95,14 +99,10 @@ Q_SIGNALS:
     void nothingToReplay();
 
 protected:
-    /// @cond PRIVATE
     explicit ChangeRecorder(ChangeRecorderPrivate *d, QObject *parent = nullptr);
-    /// @endcond
 
 private:
-    /// @cond PRIVATE
     Q_DECLARE_PRIVATE(ChangeRecorder)
-    /// @endcond
 };
 
 }

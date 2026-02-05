@@ -21,8 +21,8 @@ namespace Akonadi
 class AgentInstance;
 class SpecialCollectionsPrivate;
 
-/**
-  @short An interface to special collections.
+/*!
+  \brief An interface to special collections.
 
   This class is the central interface to special collections like inbox or
   outbox in a mail resource or recent contacts in a contacts resource.
@@ -45,109 +45,112 @@ class SpecialCollectionsPrivate;
   the special collections for a resource change (i.e. some became available or some
   become unavailable).
 
+  \class Akonadi::SpecialCollections
+  \inheaders Akonadi/SpecialCollections
+  \inmodule AkonadiCore
+
   \author Constantin Berzan <exit3219@gmail.com>
-  @since 4.4
+  \since 4.4
 */
 class AKONADICORE_EXPORT SpecialCollections : public QObject
 {
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Destroys the special collections object.
      */
     ~SpecialCollections() override;
 
-    /**
-     * Returns whether the given agent @p instance has a special collection of
-     * the given @p type.
+    /*!
+     * Returns whether the given agent \a instance has a special collection of
+     * the given \a type.
      */
     [[nodiscard]] bool hasCollection(const QByteArray &type, const AgentInstance &instance) const;
 
-    /**
-     * Returns the special collection of the given @p type in the given agent
-     * @p instance, or an invalid collection if such a collection is unknown.
+    /*!
+     * Returns the special collection of the given \a type in the given agent
+     * \a instance, or an invalid collection if such a collection is unknown.
      */
     [[nodiscard]] Akonadi::Collection collection(const QByteArray &type, const AgentInstance &instance) const;
 
-    /**
-     * Registers the given @p collection as a special collection
-     * with the given @p type.
-     * @param type the special type of @c collection
-     * @param collection the given collection to register
+    /*!
+     * Registers the given \a collection as a special collection
+     * with the given \a type.
+     * \a type the special type of \\ collection
+     * \a collection the given collection to register
      * The collection must be owned by a valid resource.
      * Registering a new collection of a previously registered type forgets the
      * old collection.
      */
     bool registerCollection(const QByteArray &type, const Akonadi::Collection &collection);
 
-    /**
-     * Unregisters the given @p collection as a special collection.
-     * @param type the special type of @c collection
-     * @since 4.12
+    /*!
+     * Unregisters the given \a collection as a special collection.
+     * \a type the special type of \\ collection
+     * \since 4.12
      */
     bool unregisterCollection(const Collection &collection);
 
-    /**
-     * unsets the special collection attribute which marks @p collection as being a special
+    /*!
+     * unsets the special collection attribute which marks \a collection as being a special
      * collection.
-     * @since 4.12
+     * \since 4.12
      */
     static void unsetSpecialCollection(const Akonadi::Collection &collection);
 
-    /**
-     * Sets the special collection attribute which marks @p collection as being a special
-     * collection of type @p type.
+    /*!
+     * Sets the special collection attribute which marks \a collection as being a special
+     * collection of type \a type.
      * This is typically used by configuration dialog for resources, when the user can choose
      * a specific special collection (ex: IMAP trash).
      *
-     * @since 4.11
+     * \since 4.11
      */
     static void setSpecialCollectionType(const QByteArray &type, const Akonadi::Collection &collection);
 
-    /**
+    /*!
      * Returns whether the default resource has a special collection of
-     * the given @p type.
+     * the given \a type.
      */
     [[nodiscard]] bool hasDefaultCollection(const QByteArray &type) const;
 
-    /**
-     * Returns the special collection of given @p type in the default
+    /*!
+     * Returns the special collection of given \a type in the default
      * resource, or an invalid collection if such a collection is unknown.
      */
     [[nodiscard]] Akonadi::Collection defaultCollection(const QByteArray &type) const;
 
-    /**
+    /*!
      * Returns whether the instanceIdentifier is a special agent that should not be deleted.
      */
     [[nodiscard]] bool isSpecialAgent(const QString &instanceIdentifier) const;
 
 Q_SIGNALS:
-    /**
+    /*!
      * Emitted when the special collections for a resource have been changed
      * (for example, some become available, or some become unavailable).
      *
-     * @param instance The instance of the resource the collection belongs to.
+     * \a instance The instance of the resource the collection belongs to.
      */
     void collectionsChanged(const Akonadi::AgentInstance &instance);
 
-    /**
+    /*!
      * Emitted when the special collections for the default resource have
      * been changed (for example, some become available, or some become unavailable).
      */
     void defaultCollectionsChanged();
 
 protected:
-    /**
+    /*!
      * Creates a new special collections object.
      *
-     * @param config The configuration skeleton that provides the default resource id.
-     * @param parent The parent object.
+     * \a config The configuration skeleton that provides the default resource id.
+     * \a parent The parent object.
      */
     explicit SpecialCollections(KCoreConfigSkeleton *config, QObject *parent = nullptr);
 
 private:
-    /// @cond PRIVATE
     friend class SpecialCollectionsRequestJob;
     friend class SpecialCollectionsRequestJobPrivate;
     friend class SpecialCollectionsPrivate;
@@ -157,7 +160,6 @@ private:
 #endif
 
     std::unique_ptr<SpecialCollectionsPrivate> const d;
-    /// @endcond
 };
 
 } // namespace Akonadi

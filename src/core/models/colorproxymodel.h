@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 Carl Schwan <carl@carlschwan.eu>
+// SPDX-FileCopyrightText: 2022 Carl Schwan <carl\\arlschwan.eu>
 // SPDX-FileCopyrightText: 2022 Claudio Cambra <claudio.cambra@gmail.com>
 // SPDX-License-Identifier: GPL-2.0-or-later
 

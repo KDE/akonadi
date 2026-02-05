@@ -51,6 +51,10 @@ class AccountActivitiesAbstract;
  *
  * \endcode
  *
+ * \class Akonadi::AgentInstanceWidget
+ * \inheaders Akonadi/AgentInstanceWidget
+ * \inmodule AkonadiWidgets
+ *
  * \author Tobias Koenig <tokoe@kde.org>
  */
 class AKONADIWIDGETS_EXPORT AgentInstanceWidget : public QWidget

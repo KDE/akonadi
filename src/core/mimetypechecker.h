@@ -19,8 +19,8 @@ class Collection;
 class Item;
 class MimeTypeCheckerPrivate;
 
-/**
- * @short Helper for checking MIME types of Collections and Items.
+/*!
+ * \brief Helper for checking MIME types of Collections and Items.
  *
  * When it is necessary to decide whether an item has a certain MIME type
  * or whether a collection can contain a certain MIME type, direct string
@@ -28,16 +28,17 @@ class MimeTypeCheckerPrivate;
  * have aliases and be a node in an "inheritance" hierarchy.
  *
  * For example a check like this
- * @code
+ * \code
  * if ( item.mimeType() == QLatin1StringView( "text/directory" ) )
- * @endcode
- * would fail to detect @c "text/x-vcard" as being the same MIME type.
+ * \endcode
+ * would fail to detect \\ "text/x-vcard" as being the same MIME type.
  *
- * @note KDE deals with this inside the KMimeType framework, this class is just
+ * \
+ote KDE deals with this inside the KMimeType framework, this class is just
  * a convenience helper for common Akonadi related checks.
  *
  * Example: Checking whether an Akonadi::Item is contact MIME type
- * @code
+ * \code
  * Akonadi::MimeTypeChecker checker;
  * checker.addWantedMimeType( KContacts::Addressee::mimeType() );
  *
@@ -45,37 +46,37 @@ class MimeTypeCheckerPrivate;
  *   // item.mimeType() is equal KContacts::Addressee::mimeType(), an aliases
  *   // or a sub type.
  * }
- * @endcode
+ * \endcode
  *
  * Example: Checking whether an Akonadi::Collection could contain calendar
  * items
- * @code
+ * \code
  * Akonadi::MimeTypeChecker checker;
  * checker.addWantedMimeType( QLatin1StringView( "text/calendar" ) );
  *
  * if ( checker.isWantedCollection( collection ) ) {
- *   // collection.contentMimeTypes() contains @c "text/calendar"
+ *   // collection.contentMimeTypes() contains \\ "text/calendar"
  *   // or a sub type.
  * }
- * @endcode
+ * \endcode
  *
  * Example: Checking whether an Akonadi::Collection could contain
  * Calendar Event items (i.e. KCal::Event), making use of the respective
  * MIME type "subclassing" provided by Akonadi's MIME type extensions.
- * @code
+ * \code
  * Akonadi::MimeTypeChecker checker;
  * checker.addWantedMimeType( QLatin1StringView( "application/x-vnd.akonadi.calendar.event" ) );
  *
  * if ( checker.isWantedCollection( collection ) ) {
- *   // collection.contentMimeTypes() contains @c "application/x-vnd.akonadi.calendar.event"
- *   // or a sub type, but just containing @c "text/calendar" would not
+ *   // collection.contentMimeTypes() contains \\ "application/x-vnd.akonadi.calendar.event"
+ *   // or a sub type, but just containing \\ "text/calendar" would not
  *   // get here
  * }
- * @endcode
+ * \endcode
  *
  * Example: Checking for items of more than one MIME type and treat one
  * of them specially.
- * @code
+ * \code
  * Akonadi::MimeTypeChecker mimeFilter;
  * mimeFilter.setWantedMimeTypes( QStringList() << KContacts::Addressee::mimeType()
  *                                << KContacts::ContactGroup::mimeType() );
@@ -85,169 +86,172 @@ class MimeTypeCheckerPrivate;
  *     // treat contact group's differently
  *   }
  * }
- * @endcode
+ * \endcode
  *
  * This class is implicitly shared.
  *
+ * \class Akonadi::MimeTypeChecker
+ * \inheaders Akonadi/MimeTypeChecker
+ * \inmodule AkonadiCore
+ *
  * \author Kevin Krammer <kevin.krammer@gmx.at>
  *
- * @since 4.3
+ * \since 4.3
  */
 class AKONADICORE_EXPORT MimeTypeChecker
 {
 public:
-    /**
+    /*!
      * Creates an empty MIME type checker.
      *
      * An empty checker will not report any items or collections as wanted.
      */
     MimeTypeChecker();
 
-    /**
-     * Creates a new MIME type checker from an @p other.
+    /*!
+     * Creates a new MIME type checker from an \a other.
      */
     MimeTypeChecker(const MimeTypeChecker &other);
 
-    /**
+    /*!
      * Destroys the MIME type checker.
      */
     ~MimeTypeChecker();
 
-    /**
-     * Assigns the @p other to this checker and returns a reference to this checker.
+    /*!
+     * Assigns the \a other to this checker and returns a reference to this checker.
      */
     MimeTypeChecker &operator=(const MimeTypeChecker &other);
 
-    /**
+    /*!
      * Returns the list of wanted MIME types this instance checks against.
      *
-     * @note Don't use this just to check whether there are any wanted mimetypes.
-     * It is much faster to call @c hasWantedMimeTypes() instead for that purpose.
+     * \
+ote Don't use this just to check whether there are any wanted mimetypes.
+     * It is much faster to call \\ hasWantedMimeTypes() instead for that purpose.
      *
-     * @see setWantedMimeTypes(), hasWantedMimeTypes()
+     * \sa setWantedMimeTypes(), hasWantedMimeTypes()
      */
     [[nodiscard]] QStringList wantedMimeTypes() const;
 
-    /**
+    /*!
      * Checks whether any wanted MIME types are set.
      *
-     * @return @c true if any wanted MIME types are set, false otherwise.
+     * Returns \\ true if any wanted MIME types are set, false otherwise.
      *
-     * @since 5.6.43
+     * \since 5.6.43
      */
     [[nodiscard]] bool hasWantedMimeTypes() const;
 
-    /**
+    /*!
      * Sets the list of wanted MIME types this instance checks against.
      *
-     * @param mimeTypes The list of MIME types to check against.
+     * \a mimeTypes The list of MIME types to check against.
      *
-     * @see wantedMimeTypes()
+     * \sa wantedMimeTypes()
      */
     void setWantedMimeTypes(const QStringList &mimeTypes);
 
-    /**
+    /*!
      * Adds another MIME type to the list of wanted MIME types this instance checks against.
      *
-     * @param mimeType The MIME types to add to the checklist.
+     * \a mimeType The MIME types to add to the checklist.
      *
-     * @see setWantedMimeTypes()
+     * \sa setWantedMimeTypes()
      */
     void addWantedMimeType(const QString &mimeType);
 
-    /**
+    /*!
      * Removes a MIME type from the list of wanted MIME types this instance checks against.
      *
-     * @param mimeType The MIME type to remove from the checklist.
+     * \a mimeType The MIME type to remove from the checklist.
      *
-     * @see addWantedMimeType()
+     * \sa addWantedMimeType()
      */
     void removeWantedMimeType(const QString &mimeType);
 
-    /**
-     * Checks whether a given @p item has one of the wanted MIME types
+    /*!
+     * Checks whether a given \a item has one of the wanted MIME types
      *
-     * @param item The item to check the MIME type of.
+     * \a item The item to check the MIME type of.
      *
-     * @return @c true if the @p item MIME type is one of the wanted ones,
-     *         @c false if it isn't, the item is invalid or has an empty MIME type.
+     * Returns \\ true if the \a item MIME type is one of the wanted ones,
+     *         \\ false if it isn't, the item is invalid or has an empty MIME type.
      *
-     * @see setWantedMimeTypes()
-     * @see Item::mimeType()
+     * \sa setWantedMimeTypes()
+     * \sa Item::mimeType()
      */
     [[nodiscard]] bool isWantedItem(const Item &item) const;
 
-    /**
-     * Checks whether a given @p collection has one of the wanted MIME types
+    /*!
+     * Checks whether a given \a collection has one of the wanted MIME types
      *
-     * @param collection The collection to check the content MIME types of.
+     * \a collection The collection to check the content MIME types of.
      *
-     * @return @c true if one of the @p collection content MIME types is
-     *         one of the wanted ones, @c false if non is, the collection
+     * Returns \\ true if one of the \a collection content MIME types is
+     *         one of the wanted ones, \\ false if non is, the collection
      *         is invalid or has an empty content MIME type list.
      *
-     * @see setWantedMimeTypes()
-     * @see Collection::contentMimeTypes()
+     * \sa setWantedMimeTypes()
+     * \sa Collection::contentMimeTypes()
      */
     [[nodiscard]] bool isWantedCollection(const Collection &collection) const;
 
-    /**
+    /*!
      * Checks whether a given mime type is covered by one of the wanted MIME types.
      *
-     * @param mimeType The mime type to check.
+     * \a mimeType The mime type to check.
      *
-     * @return @c true if the mime type @p mimeType is covered by one of the
-     *         wanted MIME types, @c false otherwise.
+     * Returns \\ true if the mime type \a mimeType is covered by one of the
+     *         wanted MIME types, \\ false otherwise.
      *
-     * @since 4.6
+     * \since 4.6
      */
     [[nodiscard]] bool isWantedMimeType(const QString &mimeType) const;
 
-    /**
+    /*!
      * Checks whether any of the given MIME types is covered by one of the wanted MIME types.
      *
-     * @param mimeTypes The MIME types to check.
+     * \a mimeTypes The MIME types to check.
      *
-     * @return @c true if any of the MIME types in @p mimeTypes is covered by one of the
-     *         wanted MIME types, @c false otherwise.
+     * Returns \\ true if any of the MIME types in \a mimeTypes is covered by one of the
+     *         wanted MIME types, \\ false otherwise.
      *
-     * @since 4.6
+     * \since 4.6
      */
     [[nodiscard]] bool containsWantedMimeType(const QStringList &mimeTypes) const;
 
-    /**
-     * Checks whether a given @p item has the given wanted MIME type
+    /*!
+     * Checks whether a given \a item has the given wanted MIME type
      *
-     * @param item The item to check the MIME type of.
-     * @param wantedMimeType The MIME type to check against.
+     * \a item The item to check the MIME type of.
+     * \a wantedMimeType The MIME type to check against.
      *
-     * @return @c true if the @p item MIME type is the given one,
-     *         @c false if it isn't, the item is invalid or has an empty MIME type.
+     * Returns \\ true if the \a item MIME type is the given one,
+     *         \\ false if it isn't, the item is invalid or has an empty MIME type.
      *
-     * @see setWantedMimeTypes()
-     * @see Item::mimeType()
+     * \sa setWantedMimeTypes()
+     * \sa Item::mimeType()
      */
     [[nodiscard]] static bool isWantedItem(const Item &item, const QString &wantedMimeType);
 
-    /**
-     * Checks whether a given @p collection has the given MIME type
+    /*!
+     * Checks whether a given \a collection has the given MIME type
      *
-     * @param collection The collection to check the content MIME types of.
-     * @param wantedMimeType The MIME type to check against.
+     * \a collection The collection to check the content MIME types of.
+     * \a wantedMimeType The MIME type to check against.
      *
-     * @return @c true if one of the @p collection content MIME types is
-     *         the given wanted one, @c false if it isn't, the collection
+     * Returns \\ true if one of the \a collection content MIME types is
+     *         the given wanted one, \\ false if it isn't, the collection
      *         is invalid or has an empty content MIME type list.
      *
-     * @see setWantedMimeTypes()
-     * @see Collection::contentMimeTypes()
+     * \sa setWantedMimeTypes()
+     * \sa Collection::contentMimeTypes()
      */
     [[nodiscard]] static bool isWantedCollection(const Collection &collection, const QString &wantedMimeType);
 
 private:
-    /// @cond PRIVATE
     QSharedDataPointer<MimeTypeCheckerPrivate> d;
-    /// @endcond
 };
 
 }

@@ -16,21 +16,21 @@ namespace Akonadi
 {
 class AgentTypeModelPrivate;
 
-/**
- * @short Provides a data model for agent types.
+/*!
+ * \brief Provides a data model for agent types.
  *
  * This class provides the interface of a QAbstractItemModel to
  * access all available agent types: their name, identifier,
  * supported mimetypes and capabilities.
  *
- * @code
+ * \code
  *
  * Akonadi::AgentTypeModel *model = new Akonadi::AgentTypeModel( this );
  *
  * QListView *view = new QListView( this );
  * view->setModel( model );
  *
- * @endcode
+ * \endcode
  *
  * To show only agent types that match a given mime type or special
  * capabilities, use the AgentFilterProxyModel on top of this model.
@@ -42,7 +42,7 @@ class AKONADICORE_EXPORT AgentTypeModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Describes the roles of this model.
      */
     enum Roles {
@@ -56,12 +56,12 @@ public:
         UserRole = Qt::UserRole + 42 ///< Role for user extensions
     };
 
-    /**
+    /*!
      * Creates a new agent type model.
      */
     explicit AgentTypeModel(QObject *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the agent type model.
      */
     ~AgentTypeModel() override;
@@ -75,9 +75,7 @@ public:
     [[nodiscard]] QHash<int, QByteArray> roleNames() const override;
 
 private:
-    /// @cond PRIVATE
     std::unique_ptr<AgentTypeModelPrivate> const d;
-    /// @endcond
 };
 
 }

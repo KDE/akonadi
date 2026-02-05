@@ -61,8 +61,8 @@ inline size_t qHash(SignalId sig, size_t seed = 0) noexcept
     return ::qHashBits(sig.data, SignalId::Size, seed);
 }
 
-/**
- * @internal
+/*!
+ * \internal
  */
 class AKONADICORE_EXPORT MonitorPrivate
 {
@@ -137,16 +137,16 @@ public:
     void flushPipeline();
 
     bool ensureDataAvailable(const Protocol::ChangeNotificationPtr &msg);
-    /**
-     * Sends out the change notification @p msg.
-     * @param msg the change notification to send
-     * @return @c true if the notification was actually send to someone, @c false if no one was listening.
+    /*!
+     * Sends out the change notification \a msg.
+     * \a msg the change notification to send
+     * Returns \\ true if the notification was actually send to someone, \\ false if no one was listening.
      */
     virtual bool emitNotification(const Protocol::ChangeNotificationPtr &msg);
     void updatePendingStatistics(const Protocol::ChangeNotificationPtr &msg);
     void invalidateCaches(const Protocol::ChangeNotificationPtr &msg);
 
-    /** Used by ResourceBase to inform us about collection changes before the notifications are emitted,
+    /*! Used by ResourceBase to inform us about collection changes before the notifications are emitted,
         needed to avoid the missing RID race on change replay.
     */
     void invalidateCache(const Collection &col);
@@ -160,8 +160,8 @@ public:
     void slotStatisticsChangedFinished(KJob *job);
     void slotFlushRecentlyChangedCollections();
 
-    /**
-      Returns whether a message was appended to @p notificationQueue
+    /*!
+      Returns whether a message was appended to \a notificationQueue
     */
     int translateAndCompress(QQueue<Protocol::ChangeNotificationPtr> &notificationQueue, const Protocol::ChangeNotificationPtr &msg);
 
@@ -169,17 +169,17 @@ public:
 
     virtual void slotNotify(const Protocol::ChangeNotificationPtr &msg);
 
-    /**
+    /*!
      * Sends out a change notification for an item.
-     * @return @c true if the notification was actually send to someone, @c false if no one was listening.
+     * Returns \\ true if the notification was actually send to someone, \\ false if no one was listening.
      */
     bool emitItemsNotification(const Protocol::ItemChangeNotification &msg,
                                const Item::List &items = Item::List(),
                                const Collection &collection = Collection(),
                                const Collection &collectionDest = Collection());
-    /**
+    /*!
      * Sends out a change notification for a collection.
-     * @return @c true if the notification was actually send to someone, @c false if no one was listening.
+     * Returns \\ true if the notification was actually send to someone, \\ false if no one was listening.
      */
     bool emitCollectionNotification(const Protocol::CollectionChangeNotification &msg,
                                     const Collection &col = Collection(),
@@ -194,17 +194,17 @@ public:
 
     void serverStateChanged(Akonadi::ServerManager::State state);
 
-    /**
+    /*!
      * This method is called by the ChangeMediator to enforce an invalidation of the passed collection.
      */
     void invalidateCollectionCache(qint64 collectionId);
 
-    /**
+    /*!
      * This method is called by the ChangeMediator to enforce an invalidation of the passed item.
      */
     void invalidateItemCache(qint64 itemId);
 
-    /**
+    /*!
      * This method is called by the ChangeMediator to enforce an invalidation of the passed tag.
      */
     void invalidateTagCache(qint64 tagId);
@@ -232,8 +232,8 @@ public:
 
     static Protocol::ModifySubscriptionCommand::ChangeType monitorTypeToProtocol(Monitor::Type type);
 
-    /**
-      @brief Class used to determine when to purge items in a Collection
+    /*!
+      \brief Class used to determine when to purge items in a Collection
 
       The buffer method can be used to buffer a Collection. This may cause another Collection
       to be purged if it is removed from the buffer.
@@ -254,15 +254,15 @@ public:
         {
         }
 
-        /**
-          Adds @p id to the Collections to be buffered
+        /*!
+          Adds \a id to the Collections to be buffered
 
-          @returns The collection id which was removed form the buffer or -1 if none.
+          Returns The collection id which was removed form the buffer or -1 if none.
         */
         Collection::Id buffer(Collection::Id id);
 
-        /**
-        Removes @p id from the Collections being buffered
+        /*!
+        Removes \a id from the Collections being buffered
         */
         void purge(Collection::Id id);
 
@@ -282,7 +282,7 @@ public:
     void ref(Collection::Id id);
     Collection::Id deref(Collection::Id id);
 
-    /**
+    /*!
      * Returns true if the collection is monitored by monitor.
      *
      * A collection is always monitored if useRefCounting is false.
@@ -298,14 +298,14 @@ private:
     QSet<Collection::Id> recentlyChangedCollections;
     QTimer statisticsCompressionTimer;
 
-    /**
-      @returns True if @p msg should be ignored. Otherwise appropriate signals are emitted for it.
+    /*!
+      Returns True if \a msg should be ignored. Otherwise appropriate signals are emitted for it.
     */
     bool isLazilyIgnored(const Protocol::ChangeNotificationPtr &msg, bool allowModifyFlagsConversion = false) const;
 
-    /**
-      Sets @p needsSplit to True when @p msg contains more than one item and there's at least one
-      listener that does not support batch operations. Sets @p batchSupported to True when
+    /*!
+      Sets \a needsSplit to True when \a msg contains more than one item and there's at least one
+      listener that does not support batch operations. Sets \a batchSupported to True when
       there's at least one listener that supports batch operations.
     */
     void checkBatchSupport(const Protocol::ChangeNotificationPtr &msg, bool &needsSplit, bool &batchSupported) const;

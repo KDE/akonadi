@@ -21,15 +21,15 @@ class CachePolicy;
 class CollectionPrivate;
 class CollectionStatistics;
 
-/**
- * @short Represents a collection of PIM items.
+/*!
+ * \brief Represents a collection of PIM items.
  *
  * This class represents a collection of PIM items, such as a folder on a mail- or
  * groupware-server.
  *
  * Collections are hierarchical, i.e., they may have a parent collection.
  *
- * @code
+ * \code
  *
  * using namespace Akonadi;
  *
@@ -54,7 +54,11 @@ class CollectionStatistics;
  *   }
  * }
  *
- * @endcode
+ * \endcode
+ *
+ * \class Akonadi::Collection
+ * \inheaders Akonadi/Collection
+ * \inmodule AkonadiCore
  *
  * \author Volker Krause <vkrause@kde.org>
  */
@@ -76,17 +80,17 @@ class AKONADICORE_EXPORT Collection
     Q_PROPERTY(CachePolicy cachePolicy READ cachePolicy)
 
 public:
-    /**
+    /*!
      * Describes the unique id type.
      */
     using Id = qint64;
 
-    /**
+    /*!
      * Describes a list of collections.
      */
     using List = QList<Collection>;
 
-    /**
+    /*!
      * Describes rights of a collection.
      */
     enum Right {
@@ -97,187 +101,193 @@ public:
         CanChangeCollection = 0x8, ///< Can change this collection
         CanCreateCollection = 0x10, ///< Can create new subcollections in this collection
         CanDeleteCollection = 0x20, ///< Can delete this collection
-        CanLinkItem = 0x40, ///< Can create links to existing items in this virtual collection @since 4.4
-        CanUnlinkItem = 0x80, ///< Can remove links to items in this virtual collection @since 4.4
+        CanLinkItem = 0x40, ///< Can create links to existing items in this virtual collection \since 4.4
+        CanUnlinkItem = 0x80, ///< Can remove links to items in this virtual collection \since 4.4
         AllRights = (CanChangeItem | CanCreateItem | CanDeleteItem | CanChangeCollection | CanCreateCollection
                      | CanDeleteCollection) ///< Has all rights on this storage collection
     };
     Q_DECLARE_FLAGS(Rights, Right)
     Q_ENUM(Right)
 
-    /**
+    /*!
      * Creates an invalid collection.
      */
     Collection();
 
-    /**
+    /*!
      * Create a new collection.
      *
-     * @param id The unique identifier of the collection.
+     * \a id The unique identifier of the collection.
      */
     explicit Collection(Id id);
 
-    /**
+    /*!
      * Destroys the collection.
      */
     ~Collection();
 
-    /**
-     * Creates a collection from an @p other collection.
+    /*!
+     * Creates a collection from an \a other collection.
      */
     Collection(const Collection &other);
 
-    /**
+    /*!
      * Move constructor.
      */
     Collection(Collection &&other) noexcept;
 
-    /**
-     * Creates a collection from the given @p url.
+    /*!
+     * Creates a collection from the given \a url.
      */
     static Collection fromUrl(const QUrl &url);
 
-    /**
-     * Sets the unique @p identifier of the collection.
+    /*!
+     * Sets the unique \a identifier of the collection.
      */
     void setId(Id identifier);
 
-    /**
+    /*!
      * Returns the unique identifier of the collection.
      */
     [[nodiscard]] Id id() const;
 
-    /**
-     * Sets the remote @p id of the collection.
+    /*!
+     * Sets the remote \a id of the collection.
      */
     void setRemoteId(const QString &id);
 
-    /**
+    /*!
      * Returns the remote id of the collection.
      */
     [[nodiscard]] QString remoteId() const;
 
-    /**
-     * Sets the remote @p revision of the collection.
-     * @param revision the collections's remote revision
+    /*!
+     * Sets the remote \a revision of the collection.
+     * \a revision the collections's remote revision
      * The remote revision can be used by resources to store some
      * revision information of the backend to detect changes there.
      *
-     * @note This method is supposed to be used by resources only.
-     * @since 4.5
+     * \
+ote This method is supposed to be used by resources only.
+     * \since 4.5
      */
     void setRemoteRevision(const QString &revision);
 
-    /**
+    /*!
      * Returns the remote revision of the collection.
      *
-     * @note This method is supposed to be used by resources only.
-     * @since 4.5
+     * \
+ote This method is supposed to be used by resources only.
+     * \since 4.5
      */
     [[nodiscard]] QString remoteRevision() const;
 
-    /**
+    /*!
      * Returns whether the collection is valid.
      */
     [[nodiscard]] bool isValid() const;
 
-    /**
+    /*!
      * Returns whether this collections's id equals the
-     * id of the @p other collection.
+     * id of the \a other collection.
      */
     [[nodiscard]] bool operator==(const Collection &other) const;
 
-    /**
+    /*!
      * Returns whether the collection's id does not equal the id
-     * of the @p other collection.
+     * of the \a other collection.
      */
     [[nodiscard]] bool operator!=(const Collection &other) const;
 
-    /**
-     * Assigns the @p other to this collection and returns a reference to this
+    /*!
+     * Assigns the \a other to this collection and returns a reference to this
      * collection.
-     * @param other the collection to assign
+     * \a other the collection to assign
      */
     Collection &operator=(const Collection &other);
 
-    /**
-     * @internal For use with containers only.
+    /*!
+     * \internal For use with containers only.
      *
-     * @since 4.8
+     * \since 4.8
      */
     [[nodiscard]] bool operator<(const Collection &other) const;
 
-    /**
+    /*!
      * Returns the parent collection of this object.
-     * @note This will of course only return a useful value if it was explicitly retrieved
+     * \
+ote This will of course only return a useful value if it was explicitly retrieved
      *       from the Akonadi server.
-     * @since 4.4
+     * \since 4.4
      */
     [[nodiscard]] Collection parentCollection() const;
 
-    /**
+    /*!
      * Returns a reference to the parent collection of this object.
-     * @note This will of course only return a useful value if it was explicitly retrieved
+     * \
+ote This will of course only return a useful value if it was explicitly retrieved
      *       from the Akonadi server.
-     * @since 4.4
+     * \since 4.4
      */
     [[nodiscard]] Collection &parentCollection();
 
-    /**
+    /*!
      * Set the parent collection of this object.
-     * @note Calling this method has no immediate effect for the object itself,
+     * \
+ote Calling this method has no immediate effect for the object itself,
      *       such as being moved to another collection.
      *       It is mainly relevant to provide a context for RID-based operations
      *       inside resources.
-     * @param parent The parent collection.
-     * @since 4.4
+     * \a parent The parent collection.
+     * \since 4.4
      */
     void setParentCollection(const Collection &parent);
 
-    /**
+    /*!
      * Adds an attribute to the collection.
      *
      * If an attribute of the same type name already exists, it is deleted and
      * replaced with the new one.
      *
-     * @param attribute The new attribute.
+     * \a attribute The new attribute.
      *
-     * @note The collection takes the ownership of the attribute.
+     * \
+ote The collection takes the ownership of the attribute.
      */
     void addAttribute(Attribute *attribute);
 
-    /**
-     * Removes and deletes the attribute of the given type @p name.
+    /*!
+     * Removes and deletes the attribute of the given type \a name.
      */
     void removeAttribute(const QByteArray &name);
 
-    /**
-     * Returns @c true if the collection has an attribute of the given type @p name,
+    /*!
+     * Returns \\ true if the collection has an attribute of the given type \a name,
      * false otherwise.
      */
     bool hasAttribute(const QByteArray &name) const;
 
-    /**
+    /*!
      * Returns a list of all attributes of the collection.
      *
-     * @warning Do not modify the attributes returned from this method,
+     * \warning Do not modify the attributes returned from this method,
      * the change will not be reflected when updating the Collection
      * through CollectionModifyJob.
      */
     [[nodiscard]] Attribute::List attributes() const;
 
-    /**
+    /*!
      * Removes and deletes all attributes of the collection.
      */
     void clearAttributes();
 
-    /**
-     * Returns the attribute of the given type @p name if available, 0 otherwise.
+    /*!
+     * Returns the attribute of the given type \a name if available, 0 otherwise.
      */
     Attribute *attribute(const QByteArray &name);
     const Attribute *attribute(const QByteArray &name) const;
 
-    /**
+    /*!
      * Describes the options that can be passed to access attributes.
      */
     enum CreateOption {
@@ -285,157 +295,157 @@ public:
         DontCreate ///< Default value
     };
 
-    /**
+    /*!
      * Returns the attribute of the requested type.
      * If the collection has no attribute of that type yet, passing AddIfMissing
      * as an argument will create and add it to the entity
      *
-     * @param option The create options.
+     * \a option The create options.
      */
     template<typename T>
     inline T *attribute(CreateOption option = DontCreate);
 
-    /**
+    /*!
      * Returns the attribute of the requested type or 0 if it is not available.
      */
     template<typename T>
     inline const T *attribute() const;
 
-    /**
+    /*!
      * Removes and deletes the attribute of the requested type.
      */
     template<typename T>
     inline void removeAttribute();
 
-    /**
+    /*!
      * Returns whether the collection has an attribute of the requested type.
      */
     template<typename T>
     inline bool hasAttribute() const;
 
-    /**
+    /*!
      * Returns the i18n'ed name of the collection.
      */
     [[nodiscard]] QString name() const;
 
-    /**
+    /*!
      * Returns the display name (EntityDisplayAttribute::displayName()) if set,
      * and Collection::name() otherwise. For human-readable strings this is preferred
      * over Collection::name().
      *
-     * @since 4.11
+     * \since 4.11
      */
     [[nodiscard]] QString displayName() const;
 
-    /**
+    /*!
      * Sets the i18n'ed name of the collection.
      *
-     * @param name The new collection name.
+     * \a name The new collection name.
      */
     void setName(const QString &name);
 
-    /**
+    /*!
      * Returns the rights the user has on the collection.
      */
     [[nodiscard]] Rights rights() const;
 
-    /**
-     * Sets the @p rights the user has on the collection.
+    /*!
+     * Sets the \a rights the user has on the collection.
      */
     void setRights(Rights rights);
 
-    /**
+    /*!
      * Returns a list of possible content mimetypes,
      * e.g. message/rfc822, x-akonadi/collection for a mail folder that
      * supports sub-folders.
      */
     [[nodiscard]] QStringList contentMimeTypes() const;
 
-    /**
-     * Sets the list of possible content mime @p types.
+    /*!
+     * Sets the list of possible content mime \a types.
      */
     void setContentMimeTypes(const QStringList &types);
 
-    /**
+    /*!
      * Returns the root collection.
      */
     [[nodiscard]] static Collection root();
 
-    /**
+    /*!
      * Returns the mimetype used for collections.
      */
     [[nodiscard]] static QString mimeType();
 
-    /**
+    /*!
      * Returns the mimetype used for virtual collections
      *
-     * @since 4.11
+     * \since 4.11
      */
     [[nodiscard]] static QString virtualMimeType();
 
-    /**
+    /*!
      * Returns the identifier of the resource owning the collection.
      */
     [[nodiscard]] QString resource() const;
 
-    /**
-     * Sets the @p identifier of the resource owning the collection.
+    /*!
+     * Sets the \a identifier of the resource owning the collection.
      */
     void setResource(const QString &identifier);
 
-    /**
+    /*!
      * Returns the cache policy of the collection.
      */
     [[nodiscard]] CachePolicy cachePolicy() const;
 
-    /**
-     * Sets the cache @p policy of the collection.
+    /*!
+     * Sets the cache \a policy of the collection.
      */
     void setCachePolicy(const CachePolicy &policy);
 
-    /**
+    /*!
      * Returns the collection statistics of the collection.
      */
     [[nodiscard]] CollectionStatistics statistics() const;
 
-    /**
-     * Sets the collection @p statistics for the collection.
+    /*!
+     * Sets the collection \a statistics for the collection.
      */
     void setStatistics(const CollectionStatistics &statistics);
 
-    /**
+    /*!
      * Describes the type of url which is returned in url().
      *
-     * @since 4.7
+     * \since 4.7
      */
     enum UrlType {
         UrlShort = 0, ///< A short url which contains the identifier only (equivalent to url())
         UrlWithName = 1 ///< A url with identifier and name
     };
 
-    /**
+    /*!
      * Returns the url of the collection.
-     * @param type the type of url
-     * @since 4.7
+     * \a type the type of url
+     * \since 4.7
      */
     [[nodiscard]] QUrl url(UrlType type = UrlShort) const;
 
-    /**
+    /*!
      * Returns whether the collection is virtual, for example a search collection.
      *
-     * @since 4.6
+     * \since 4.6
      */
     [[nodiscard]] bool isVirtual() const;
 
-    /**
+    /*!
      * Sets whether the collection is virtual or not.
      * Virtual collections can't be converted to non-virtual and vice versa.
-     * @param isVirtual virtual collection if @c true, otherwise a normal collection
-     * @since 4.10
+     * \a isVirtual virtual collection if \\ true, otherwise a normal collection
+     * \since 4.10
      */
     void setVirtual(bool isVirtual);
 
-    /**
+    /*!
      * Sets the collection's enabled state.
      *
      * Use this mechanism to set if a collection should be available
@@ -451,22 +461,22 @@ public:
      * The enabled state can be synchronized by backends.
      * E.g. an imap resource may synchronize this with the subscription state.
      *
-     * @since 4.14
-     * @see setLocalListPreference, setShouldList
+     * \since 4.14
+     * \sa setLocalListPreference, setShouldList
      */
     void setEnabled(bool enabled);
 
-    /**
+    /*!
      * Returns the collection's enabled state.
-     * @since 4.14
-     * @see localListPreference
+     * \since 4.14
+     * \sa localListPreference
      */
     [[nodiscard]] bool enabled() const;
 
-    /**
+    /*!
      * Describes the list preference value
      *
-     * @since 4.14
+     * \since 4.14
      */
     enum ListPreference {
         ListEnabled, ///< Enable collection for specified purpose
@@ -474,10 +484,10 @@ public:
         ListDefault ///< Fallback to enabled state
     };
 
-    /**
+    /*!
      * Describes the purpose of the listing
      *
-     * @since 4.14
+     * \since 4.14
      */
     enum ListPurpose {
         ListSync, ///< Listing for synchronization
@@ -485,7 +495,7 @@ public:
         ListIndex ///< Listing for indexing the content
     };
 
-    /**
+    /*!
      * Sets the local list preference for the specified purpose.
      *
      * The local list preference overrides the enabled state unless set to ListDefault.
@@ -493,46 +503,46 @@ public:
      *
      * The default value is ListDefault.
      *
-     * @since 4.14
-     * @see shouldList, setEnabled
+     * \since 4.14
+     * \sa shouldList, setEnabled
      */
     void setLocalListPreference(ListPurpose purpose, ListPreference preference);
 
-    /**
+    /*!
      * Returns the local list preference for the specified purpose.
-     * @since 4.14
-     * @see setLocalListPreference
+     * \since 4.14
+     * \sa setLocalListPreference
      */
     [[nodiscard]] ListPreference localListPreference(ListPurpose purpose) const;
 
-    /**
+    /*!
      * Returns whether the collection should be listed or not for the specified purpose
      * Takes enabled state and local preference into account.
      *
-     * @since 4.14
-     * @see setLocalListPreference, setEnabled
+     * \since 4.14
+     * \sa setLocalListPreference, setEnabled
      */
     [[nodiscard]] bool shouldList(ListPurpose purpose) const;
 
-    /**
+    /*!
      * Sets whether the collection should be listed or not for the specified purpose.
      * Takes enabled state and local preference into account.
      *
      * Use this instead of sestEnabled and setLocalListPreference to automatically set
      * the right setting.
      *
-     * @since 4.14
-     * @see setLocalListPreference, setEnabled
+     * \since 4.14
+     * \sa setLocalListPreference, setEnabled
      */
     void setShouldList(ListPurpose purpose, bool shouldList);
 
-    /**
+    /*!
      * Set during sync to indicate that the provided parts are only default values;
-     * @since 4.15
+     * \since 4.15
      */
     void setKeepLocalChanges(const QSet<QByteArray> &parts);
 
-    /**
+    /*!
      * Returns what parts are only default values.
      */
     QSet<QByteArray> keepLocalChanges() const;
@@ -545,10 +555,8 @@ private:
 
     void markAttributeModified(const QByteArray &type);
 
-    /// @cond PRIVATE
     QSharedDataPointer<CollectionPrivate> d_ptr;
     friend class CollectionPrivate;
-    /// @endcond
 };
 
 AKONADICORE_EXPORT size_t qHash(const Akonadi::Collection &collection, size_t seed = 0) noexcept;
@@ -600,7 +608,7 @@ inline bool Akonadi::Collection::hasAttribute() const
 
 } // namespace Akonadi
 
-/**
+/*!
  * Allows to output a collection for debugging purposes.
  */
 AKONADICORE_EXPORT QDebug operator<<(QDebug d, const Akonadi::Collection &collection);

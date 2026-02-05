@@ -18,15 +18,15 @@ namespace Akonadi
 class AgentInstance;
 class AgentInstanceCreateJobPrivate;
 
-/**
- * @short Job for creating new agent instances.
+/*!
+ * \brief Job for creating new agent instances.
  *
  * This class encapsulates the procedure of creating a new agent instance
  * and optionally configuring it immediately.
  *
  * Example:
  *
- * @code
+ * \code
  * using namespace Qt::StringLiterals;
  *
  * MyClass::MyClass(QWidget *parent)
@@ -61,9 +61,10 @@ class AgentInstanceCreateJobPrivate;
  *
  *     qDebug() << "Created agent instance:" << createJob->instance().identifier();
  * }
- * @endcode
+ * \endcode
  *
- * @note This is a KJob not an Akonadi::Job, so it won't auto-start!
+ * \
+ote This is a KJob not an Akonadi::Job, so it won't auto-start!
  *
  * \author Volker Krause <vkrause@kde.org>
  */
@@ -72,43 +73,41 @@ class AKONADICORE_EXPORT AgentInstanceCreateJob : public KJob
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new agent instance create job.
      *
-     * @param type The type of the agent to create.
-     * @param parent The parent object.
+     * \a type The type of the agent to create.
+     * \a parent The parent object.
      */
     explicit AgentInstanceCreateJob(const AgentType &type, QObject *parent = nullptr);
 
-    /**
+    /*!
      * Creates a new agent instance create job.
      *
-     * @param typeId The identifier of type of the agent to create.
-     * @param parent The parent object.
-     * @since 4.5
+     * \a typeId The identifier of type of the agent to create.
+     * \a parent The parent object.
+     * \since 4.5
      */
     explicit AgentInstanceCreateJob(const QString &typeId, QObject *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the agent instance create job.
      */
     ~AgentInstanceCreateJob() override;
 
-    /**
+    /*!
      * Returns the AgentInstance object of the newly created agent instance.
      */
     [[nodiscard]] AgentInstance instance() const;
 
-    /**
+    /*!
      * Starts the instance creation.
      */
     void start() override;
 
 private:
-    /// @cond PRIVATE
     friend class Akonadi::AgentInstanceCreateJobPrivate;
     std::unique_ptr<AgentInstanceCreateJobPrivate> const d;
-    /// @endcond
 };
 
 }

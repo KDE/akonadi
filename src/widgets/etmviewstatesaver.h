@@ -18,6 +18,11 @@
 
 namespace Akonadi
 {
+/*!
+ * \class Akonadi::ETMViewStateSaver
+ * \inheaders Akonadi/ETMViewStateSaver
+ * \inmodule AkonadiWidgets
+ */
 class AKONADIWIDGETS_EXPORT ETMViewStateSaver : public KConfigViewStateSaver
 {
     Q_OBJECT

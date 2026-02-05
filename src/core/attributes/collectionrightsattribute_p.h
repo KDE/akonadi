@@ -17,39 +17,39 @@ namespace Akonadi
 {
 class CollectionRightsAttributePrivate;
 
-/**
- * @internal
+/*!
+ * \internal
  *
- * @short Attribute that stores the rights of a collection.
+ * \brief Attribute that stores the rights of a collection.
  *
  * Every collection can have rights set which describes whether
  * the collection is readable or writable. That information is stored
  * in this custom attribute.
  *
- * @note You shouldn't use this class directly but the convenience methods
+ * \note You shouldn't use this class directly but the convenience methods
  * Collection::rights() and Collection::setRights() instead.
  *
- * @author Tobias Koenig <tokoe@kde.org>
+ * \author Tobias Koenig <tokoe@kde.org>
  */
 class AKONADICORE_EXPORT CollectionRightsAttribute : public Attribute
 {
 public:
-    /**
+    /*!
      * Creates a new collection rights attribute.
      */
     explicit CollectionRightsAttribute();
 
-    /**
+    /*!
      * Destroys the collection rights attribute.
      */
     ~CollectionRightsAttribute() override;
 
-    /**
-     * Sets the @p rights of the collection.
+    /*!
+     * Sets the \a rights of the collection.
      */
     void setRights(Collection::Rights rights);
 
-    /**
+    /*!
      * Returns the rights of the collection.
      */
     Collection::Rights rights() const;
@@ -63,9 +63,7 @@ public:
     void deserialize(const QByteArray &data) override;
 
 private:
-    /// @cond PRIVATE
     const std::unique_ptr<CollectionRightsAttributePrivate> d;
-    /// @endcond
 };
 
 } // namespace Akonadi

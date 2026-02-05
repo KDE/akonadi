@@ -20,6 +20,10 @@ namespace Akonadi
 class AgentTypeDialogPrivate;
 
 /*!
+ * \class Akonadi::AgentTypeDialog
+ * \inheaders Akonadi/AgentTypeDialog
+ * \inmodule AkonadiWidgets
+ *
  * \brief A dialog to select an available agent type.
  *
  * This dialogs allows the user to select an agent type from the

@@ -48,7 +48,11 @@ class CollectionDialogPrivate;
  *   ...
  * }
  *
- * \endcode
+ * \ endcode
+ *
+ * \class Akonadi::CollectionDialog
+ * \inheaders Akonadi/CollectionDialog
+ * \inmodule AkonadiWidgets
  *
  * \author Ingo Klöcker <kloecker@kde.org>
  * \since 4.3

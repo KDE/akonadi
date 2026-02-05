@@ -13,13 +13,13 @@
 namespace Akonadi
 {
 
-/**
+/*!
  *  Collection annotations attribute.
  *
  *  This is primarily meant for storing IMAP ANNOTATION (RFC5257) data for resources
  *  supporting that.
  *
- *  @since 5.23.43
+ *  \since 5.23.43
  */
 class AKONADICORE_EXPORT CollectionAnnotationsAttribute : public Akonadi::Attribute
 {

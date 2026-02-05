@@ -16,8 +16,8 @@ namespace Akonadi
 {
 class TrashFilterProxyModelPrivate;
 
-/**
- * @short Filter model which hides/shows entities marked as trash
+/*!
+ * \brief Filter model which hides/shows entities marked as trash
  *
  * Filter model which either hides all entities marked as trash, or the ones not marked.
  * Subentities of collections marked as trash are also shown in the trash.
@@ -26,7 +26,7 @@ class TrashFilterProxyModelPrivate;
  *
  * Example:
  *
- * @code
+ * \code
  *
  * ChangeRecorder *monitor = new Akonadi::ChangeRecorder( this );
  * monitor->itemFetchScope().fetchAttribute<Akonadi::EntityDisplayAttribute>(true);
@@ -37,10 +37,10 @@ class TrashFilterProxyModelPrivate;
  * model->setDynamicSortFilter(true);
  * model->setSourceModel(sourcemodel);
  *
- * @endcode
+ * \endcode
  *
  * \author Christian Mollekopf <chrigi_1@fastmail.fm>
- * @since 4.8
+ * \since 4.8
  */
 class AKONADICORE_EXPORT TrashFilterProxyModel : public QSortFilterProxyModel
 {
@@ -54,16 +54,14 @@ public:
     [[nodiscard]] bool trashIsShown() const;
 
 protected:
-    /**
+    /*!
      * Sort filter criteria, according to how expensive the operation is
      */
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
 private:
-    /// @cond PRIVATE
     std::unique_ptr<TrashFilterProxyModelPrivate> const d_ptr;
     Q_DECLARE_PRIVATE(TrashFilterProxyModel)
-    /// @endcond
 };
 
 }

@@ -12,8 +12,8 @@
 
 namespace Akonadi
 {
-/**
- * @short Provides interface for custom attributes for Entity.
+/*!
+ * \brief Provides interface for custom attributes for Entity.
  *
  * This class is an interface for custom attributes, that can be stored
  * in an entity. Attributes should be meta data, e.g. ACLs, quotas etc.
@@ -25,7 +25,7 @@ namespace Akonadi
  * To provide custom attributes, you have to subclass from this interface
  * and reimplement the pure virtual methods.
  *
- * @code
+ * \code
  *
  * class SecrecyAttribute : public Akonadi::Attribute
  * {
@@ -89,14 +89,14 @@ namespace Akonadi
  *     }
  * }
  *
- * @endcode
+ * \endcode
  *
  * Additionally, you need to register your attribute with Akonadi::AttributeFactory
  * for automatic deserialization during retrieving of collections or items:
  *
- * @code
+ * \code
  * AttributeFactory::registerAttribute<SecrecyAttribute>();
- * @endcode
+ * \endcode
  *
  * Third party attributes need to be registered once by each application that uses
  * them. So the above snippet needs to be in the resource that adds the attribute,
@@ -104,17 +104,17 @@ namespace Akonadi
  *
  * The custom attributes can be used in the following way:
  *
- * @code
+ * \code
  *
  * Akonadi::Item item(QStringLiteral("text/directory"));
  * SecrecyAttribute* attr = item.attribute<SecrecyAttribute>(Item::AddIfMissing);
  * attr->setSecrecy(SecrecyAttribute::Confidential);
  *
- * @endcode
+ * \endcode
  *
  * and
  *
- * @code
+ * \code
  *
  * Akonadi::Item item = ...
  *
@@ -124,44 +124,44 @@ namespace Akonadi
  *   SecrecyAttribute::Secrecy secrecy = attr->secrecy();
  *   ...
  * }
- * @endcode
+ * \endcode
  *
  * @author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT Attribute // clazy:exclude=copyable-polymorphic
 {
 public:
-    /**
+    /*!
      * Describes a list of attributes.
      */
     using List = QList<Attribute *>;
 
-    /**
+    /*!
      * Returns the type of the attribute.
      */
     virtual QByteArray type() const = 0;
 
-    /**
+    /*!
      * Destroys this attribute.
      */
     virtual ~Attribute();
 
-    /**
+    /*!
      * Creates a copy of this attribute.
      */
     virtual Attribute *clone() const = 0;
 
-    /**
+    /*!
      * Returns a QByteArray representation of the attribute which will be
      * storaged. This can be raw binary data, no encoding needs to be applied.
      */
     virtual QByteArray serialized() const = 0;
 
-    /**
+    /*!
      * Sets the data of this attribute, using the same encoding
      * as returned by toByteArray().
      *
-     * @param data The encoded attribute data.
+     * \a data The encoded attribute data.
      */
     virtual void deserialize(const QByteArray &data) = 0;
 

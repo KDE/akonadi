@@ -14,8 +14,8 @@ namespace Akonadi
 {
 class EntityDeletedAttributePrivate;
 
-/**
- * @short An Attribute that marks that an entity was marked as deleted
+/*!
+ * \brief An Attribute that marks that an entity was marked as deleted
  *
  * This class represents the attribute of all hidden items. The hidden
  * items shouldn't be displayed in UI applications (unless in some kind
@@ -23,66 +23,64 @@ class EntityDeletedAttributePrivate;
  *
  * Example:
  *
- * @code
+ * \code
  *
- * @endcode
+ * \endcode
  *
  * \author Christian Mollekopf <chrigi_1@fastmail.fm>
- * @see Akonadi::Attribute
- * @since 4.8
+ * \sa Akonadi::Attribute
+ * \since 4.8
  */
 class AKONADICORE_EXPORT EntityDeletedAttribute : public Attribute
 {
 public:
-    /**
+    /*!
      * Creates a new entity deleted attribute.
      */
     explicit EntityDeletedAttribute();
 
-    /**
+    /*!
      * Destroys the entity deleted attribute.
      */
     ~EntityDeletedAttribute() override;
-    /**
+    /*!
      * Sets the collection used to restore items which have been moved to trash using a TrashJob
      * If the Resource is set on the collection, the resource root will be used as fallback during the restore operation.
      */
     void setRestoreCollection(const Collection &col);
 
-    /**
+    /*!
      * Returns the original collection of an item that has been moved to trash using a TrashJob
      */
     [[nodiscard]] Collection restoreCollection() const;
 
-    /**
+    /*!
      * Returns the resource of the restoreCollection
      */
     [[nodiscard]] QString restoreResource() const;
 
-    /**
+    /*!
      * Reimplemented from Attribute
      */
     [[nodiscard]] QByteArray type() const override;
 
-    /**
+    /*!
      * Reimplemented from Attribute
      */
     EntityDeletedAttribute *clone() const override;
 
-    /**
+    /*!
      * Reimplemented from Attribute
      */
     [[nodiscard]] QByteArray serialized() const override;
 
-    /**
+    /*!
      * Reimplemented from Attribute
      */
     void deserialize(const QByteArray &data) override;
 
 private:
-    /// @cond PRIVATE
     const std::unique_ptr<EntityDeletedAttributePrivate> d;
-    /// @endcond
 };
 
 } // namespace Akonadi

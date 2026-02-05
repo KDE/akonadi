@@ -21,6 +21,10 @@ namespace Akonadi
 class TagSelectionComboBoxPrivate;
 
 /*!
+ * \class Akonadi::TagSelectionComboBox
+ * \inheaders Akonadi/TagSelectionComboBox
+ * \inmodule AkonadiWidgets
+ *
  * \brief The TagSelectionCombo class
  */
 class AKONADIWIDGETS_EXPORT TagSelectionComboBox : public QComboBox

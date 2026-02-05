@@ -17,8 +17,8 @@ namespace Akonadi
 class AgentInstance;
 class ResourceSynchronizationJobPrivate;
 
-/**
- * @short Job that synchronizes a resource.
+/*!
+ * \brief Job that synchronizes a resource.
  *
  * This job will trigger a resource to synchronize the backend it is
  * responsible for (e.g. a local file or a groupware server) with the
@@ -30,7 +30,7 @@ class ResourceSynchronizationJobPrivate;
  *
  * Example:
  *
- * @code
+ * \code
  * using namespace Akonadi;
  *
  * const AgentInstance resource = AgentManager::self()->instance( "myresourceidentifier" );
@@ -39,47 +39,48 @@ class ResourceSynchronizationJobPrivate;
  * connect( job, SIGNAL(result(KJob*)), SLOT(synchronizationFinished(KJob*)) );
  * job->start();
  *
- * @endcode
+ * \endcode
  *
- * @note This is a KJob, not an Akonadi::Job, so it won't auto-start!
+ * \
+ote This is a KJob, not an Akonadi::Job, so it won't auto-start!
  *
  * \author Volker Krause <vkrause@kde.org>
- * @since 4.4
+ * \since 4.4
  */
 class AKONADICORE_EXPORT ResourceSynchronizationJob : public KJob
 {
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new synchronization job for the given resource.
      *
-     * @param instance The resource instance to synchronize.
+     * \a instance The resource instance to synchronize.
      */
     explicit ResourceSynchronizationJob(const AgentInstance &instance, QObject *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the synchronization job.
      */
     ~ResourceSynchronizationJob() override;
 
-    /**
+    /*!
      * Returns whether a full synchronization will be done, or just the collection tree (without items).
-     * The default is @c false, i.e. a full sync will be requested.
+     * The default is \\ false, i.e. a full sync will be requested.
      *
-     * @since 4.8
+     * \since 4.8
      */
     [[nodiscard]] bool collectionTreeOnly() const;
 
-    /**
+    /*!
      * Sets the collectionTreeOnly property.
      *
-     * @param collectionTreeOnly If set, only the collection tree will be synchronized.
-     * @since 4.8
+     * \a collectionTreeOnly If set, only the collection tree will be synchronized.
+     * \since 4.8
      */
     void setCollectionTreeOnly(bool collectionTreeOnly);
 
-    /**
+    /*!
      * Returns the resource that has been synchronized.
      */
     [[nodiscard]] AgentInstance resource() const;
@@ -88,7 +89,7 @@ public:
     void start() override;
 
     /*
-     * @since 5.1
+     * \since 5.1
      */
     void setTimeoutCountLimit(int count);
     /*!
@@ -96,10 +97,8 @@ public:
     [[nodiscard]] int timeoutCountLimit() const;
 
 private:
-    /// @cond PRIVATE
     friend class ResourceSynchronizationJobPrivate;
     std::unique_ptr<ResourceSynchronizationJobPrivate> const d;
-    /// @endcond
 };
 
 }

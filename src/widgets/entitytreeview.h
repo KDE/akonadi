@@ -24,6 +24,10 @@ class Item;
 class EntityTreeViewPrivate;
 
 /*!
+ * \class Akonadi::EntityTreeView
+ * \inheaders Akonadi/EntityTreeView
+ * \inmodule AkonadiWidgets
+ *
  * \brief A view to show an item/collection tree provided by an EntityTreeModel.
  *
  * When a KXmlGuiWindow is passed to the constructor, the XMLGUI

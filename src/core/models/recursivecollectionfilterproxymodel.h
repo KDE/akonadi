@@ -17,77 +17,77 @@ namespace Akonadi
 {
 class RecursiveCollectionFilterProxyModelPrivate;
 
-/**
- * @short A model to filter out collections of non-matching content types.
+/*!
+ * \brief A model to filter out collections of non-matching content types.
  *
  * \author Stephen Kelly <steveire@gmail.com>
- * @since 4.6
+ * \since 4.6
  */
 class AKONADICORE_EXPORT RecursiveCollectionFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new recursive collection filter proxy model.
      *
-     * @param parent The parent object.
+     * \a parent The parent object.
      */
     explicit RecursiveCollectionFilterProxyModel(QObject *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the recursive collection filter proxy model.
      */
     ~RecursiveCollectionFilterProxyModel() override;
 
-    /**
+    /*!
      * Add content mime type to be shown by the filter.
      *
-     * @param mimeType A mime type to be shown.
+     * \a mimeType A mime type to be shown.
      */
     void addContentMimeTypeInclusionFilter(const QString &mimeType);
 
-    /**
+    /*!
      * Add content mime types to be shown by the filter.
      *
-     * @param mimeTypes A list of content mime types to be included.
+     * \a mimeTypes A list of content mime types to be included.
      */
     void addContentMimeTypeInclusionFilters(const QStringList &mimeTypes);
 
-    /**
+    /*!
      * Clears the current filters.
      */
     void clearFilters();
 
-    /**
+    /*!
      * Replace the content mime types to be shown by the filter.
      *
-     * @param mimeTypes A list of content mime types to be included.
+     * \a mimeTypes A list of content mime types to be included.
      */
     void setContentMimeTypeInclusionFilters(const QStringList &mimeTypes);
 
-    /**
+    /*!
      * Returns the currently included mimetypes in the filter.
      */
     [[nodiscard]] QStringList contentMimeTypeInclusionFilters() const;
 
-    /**
+    /*!
      * Add search pattern
-     * @param pattern the search pattern to add
-     * @since 4.8.1
+     * \a pattern the search pattern to add
+     * \since 4.8.1
      */
     void setSearchPattern(const QString &pattern);
 
-    /**
+    /*!
      * Show only checked item
-     * @param checked only shows checked item if set as @c true
-     * @since 4.9
+     * \a checked only shows checked item if set as \\ true
+     * \since 4.9
      */
     void setIncludeCheckedOnly(bool checked);
 
-    /**
+    /*!
      * Don't show unified mailbox
-     * @since 5.18.0
+     * \since 5.18.0
      */
     void setExcludeUnifiedMailBox(bool exclude);
 

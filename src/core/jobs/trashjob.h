@@ -15,8 +15,8 @@ namespace Akonadi
 {
 class TrashJobPrivate;
 
-/**
- * @short Job that moves items/collection to trash.
+/*!
+ * \brief Job that moves items/collection to trash.
  *
  * This job marks the given entities as trash and moves them to a given trash collection, if available.
  *
@@ -37,69 +37,69 @@ class TrashJobPrivate;
  *
  * Example:
  *
- * @code
+ * \code
  *
  * const Akonadi::Item::List items = ...
  *
  * TrashJob *job = new TrashJob( items );
  * connect( job, SIGNAL(result(KJob*)), this, SLOT(deletionResult(KJob*)) );
  *
- * @endcode
+ * \endcode
  *
  * \author Christian Mollekopf <chrigi_1@fastmail.fm>
- * @since 4.8
+ * \since 4.8
  */
 class AKONADICORE_EXPORT TrashJob : public Job
 {
     Q_OBJECT
 
 public:
-    /**
-     * Creates a new trash job that marks @p item as trash, and moves it to the configured trash collection.
+    /*!
+     * Creates a new trash job that marks \a item as trash, and moves it to the configured trash collection.
      *
-     * If @p keepTrashInCollection is set, the item will not be moved to the configured trash collection.
+     * If \a keepTrashInCollection is set, the item will not be moved to the configured trash collection.
      *
-     * @param item The item to mark as trash.
-     * @param parent The parent object.
+     * \a item The item to mark as trash.
+     * \a parent The parent object.
      */
     explicit TrashJob(const Item &item, QObject *parent = nullptr);
 
-    /**
+    /*!
      * Creates a new trash job that marks all items in the list
-     * @p items as trash, and moves it to the configured trash collection.
+     * \a items as trash, and moves it to the configured trash collection.
      * The items can be in different collections/resources and will still be moved to the correct trash collection.
      *
-     * If @p keepTrashInCollection is set, the item will not be moved to the configured trash collection.
+     * If \a keepTrashInCollection is set, the item will not be moved to the configured trash collection.
      *
-     * @param items The items to mark as trash.
-     * @param parent The parent object.
+     * \a items The items to mark as trash.
+     * \a parent The parent object.
      */
     explicit TrashJob(const Item::List &items, QObject *parent = nullptr);
 
-    /**
-     * Creates a new trash job that marks @p collection as trash, and moves it to the configured trash collection.
+    /*!
+     * Creates a new trash job that marks \a collection as trash, and moves it to the configured trash collection.
      * The subentities of the collection are also marked as trash.
      *
-     * If @p keepTrashInCollection is set, the item will not be moved to the configured trash collection.
+     * If \a keepTrashInCollection is set, the item will not be moved to the configured trash collection.
      *
-     * @param collection The collection to mark as trash.
-     * @param parent The parent object.
+     * \a collection The collection to mark as trash.
+     * \a parent The parent object.
      */
     explicit TrashJob(const Collection &collection, QObject *parent = nullptr);
 
     ~TrashJob() override;
 
-    /**
+    /*!
      * Ignore configured Trash collections and keep all items local
      */
     void keepTrashInCollection(bool enable);
 
-    /**
+    /*!
      * Moves all entities to the give collection
      */
     void setTrashCollection(const Collection &trashcollection);
 
-    /**
+    /*!
      * Delete Items which are already in trash, instead of ignoring them
      */
     void deleteIfInTrash(bool enable);
@@ -112,9 +112,7 @@ protected:
     void doStart() override;
 
 private:
-    /// @cond PRIVATE
     Q_DECLARE_PRIVATE(TrashJob)
-    /// @endcond
 };
 
 }

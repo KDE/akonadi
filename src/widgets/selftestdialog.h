@@ -17,6 +17,10 @@ namespace Akonadi
 /*!
  * \internal
  *
+ * \class Akonadi::SelfTestDialog
+ * \inheaders Akonadi/SelfTestDialog
+ * \inmodule AkonadiWidgets
+ *
  * \brief A dialog that checks the current status of the Akonadi system.
  *
  * This dialog checks the current status of the Akonadi system and

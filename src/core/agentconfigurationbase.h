@@ -18,8 +18,8 @@ namespace Akonadi
 {
 class AgentConfigurationBasePrivate;
 
-/**
- * @brief Base class for configuration UI for Akonadi agents
+/*!
+ * \brief Base class for configuration UI for Akonadi agents
  *
  * Each agent that has a graphical configuration should subclass this class
  * and create its configuration UI there.
@@ -50,31 +50,34 @@ class AgentConfigurationBasePrivate;
  * AKONADI_AGENTCONFIG_FACTORY macro.
  *
  * The metadata JSON file then must contain the following values:
- * @code
+ * \code
  * {
  *     "X-Akonadi-PluginType": "AgentConfig",
  *     "X-Akonadi-Library": "exampleresourceconfig",
  *     "X-Akonadi-AgentConfig-Type": "akonadi_example_resource"
  * }
- * @endcode
+ * \endcode
  *
- * The @p X-Akonadi-Library value must match the name of the plugin binary without
- * the (optional) "lib" prefix and file extension. The @p X-Akonadi-AgentConfig-Type
- * value must match the name of the @p X-Akonadi-Identifier value from the agent's
+ * The \a X-Akonadi-Library value must match the name of the plugin binary without
+ * the (optional) "lib" prefix and file extension. The \a X-Akonadi-AgentConfig-Type
+ * value must match the name of the \a X-Akonadi-Identifier value from the agent's
  * desktop file.
  *
  * The plugin binary should be installed into pim<version>/akonadi/config subdirectory in one
  * of the paths search by QCoreApplication::libraryPaths().
+ *
+ * \class Akonadi::AgentConfigurationBase
+ * \inheaders Akonadi/AgentConfigurationBase
+ * \inmodule AkonadiCore
  */
-
 class AKONADICORE_EXPORT AgentConfigurationBase : public QObject
 {
     Q_OBJECT
 public:
-    /**
+    /*!
      * Creates a new AgentConfigurationBase objects.
      *
-     * The @p parentWidget should be used as a parent widget for the configuration
+     * The \a parentWidget should be used as a parent widget for the configuration
      * widgets.
      *
      * Subclasses must provide a constructor with this exact signature.
@@ -83,26 +86,26 @@ public:
 
     ~AgentConfigurationBase() override;
 
-    /**
+    /*!
      * Reimplement to load settings from the configuration object into widgets.
      *
-     * @warning Always call the base class implementation at the beginning of
+     * \warning Always call the base class implementation at the beginning of
      * your overridden method!
      *
-     * @see config(), save()
+     * \sa config(), save()
      */
     virtual void load();
 
-    /**
+    /*!
      * Reimplement to save new settings into the configuration object.
      *
      * Return true if the configuration has been successfully saved and should
      * be applied to the agent, return false otherwise.
      *
-     * @warning Always remember call the base class implementation at the end
+     * \warning Always remember call the base class implementation at the end
      * of your overridden method!
      *
-     * @see config(), load()
+     * \sa config(), load()
      */
     virtual bool save() const;
 
@@ -111,28 +114,28 @@ public:
         QStringList activities;
     };
 
-    /**
-     * @brief saveActivitiesSettings
-     * @param activities
+    /*!
+     * \brief saveActivitiesSettings
+     * \a activities
      * save activities settings
      */
     void saveActivitiesSettings(const ActivitySettings &activities) const;
 
-    /**
-     * @brief restoreActivitiesSettings
-     * @return activities settings
+    /*!
+     * \brief restoreActivitiesSettings
+     * Returns activities settings
      */
     [[nodiscard]] ActivitySettings restoreActivitiesSettings() const;
 
 protected:
     QWidget *parentWidget() const;
 
-    /**
+    /*!
      * Returns KConfig object belonging to the current Akonadi agent instance.
      */
     KSharedConfigPtr config() const;
 
-    /**
+    /*!
      * Returns identifier of the Akonadi agent instance currently being configured.
      */
     [[nodiscard]] QString identifier() const;

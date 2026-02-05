@@ -16,8 +16,8 @@ namespace Akonadi
 {
 class ControlPrivate;
 
-/**
- * @short Provides methods to control the Akonadi server process.
+/*!
+ * \brief Provides methods to control the Akonadi server process.
  *
  * This class provides synchronous methods (ie. use a sub-eventloop)
  * to control the Akonadi service. For asynchronous methods see
@@ -35,7 +35,7 @@ class ControlPrivate;
  *
  * Example:
  *
- * @code
+ * \code
  *
  * if ( !Akonadi::Control::start() ) {
  *   qDebug() << "Unable to start Akonadi server, exit application";
@@ -44,55 +44,57 @@ class ControlPrivate;
  *   ...
  * }
  *
- * @endcode
+ * \endcode
+ *
+ * \class Akonadi::Control
+ * \inheaders Akonadi/Control
+ * \inmodule AkonadiCore
  *
  * \author Volker Krause <vkrause@kde.org>
  *
- * @see Akonadi::ServerManager
+ * \sa Akonadi::ServerManager
  */
 class AKONADICORE_EXPORT Control : public QObject
 {
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Destroys the control object.
      */
     ~Control() override;
 
-    /**
+    /*!
      * Starts the Akonadi server synchronously if it is not already running.
-     * @return @c true if the server was started successfully or was already
-     * running, @c false otherwise
+     * Returns \\ true if the server was started successfully or was already
+     * running, \\ false otherwise
      */
     static bool start();
 
-    /**
+    /*!
      * Stops the Akonadi server synchronously if it is currently running.
-     * @return @c true if the server was shutdown successfully or was
-     * not running at all, @c false otherwise.
-     * @since 4.2
+     * Returns \\ true if the server was shutdown successfully or was
+     * not running at all, \\ false otherwise.
+     * \since 4.2
      */
     static bool stop();
 
-    /**
+    /*!
      * Restarts the Akonadi server synchronously.
-     * @return @c true if the restart was successful, @c false otherwise,
+     * Returns \\ true if the restart was successful, \\ false otherwise,
      * the server state is undefined in this case.
-     * @since 4.2
+     * \since 4.2
      */
     static bool restart();
 
 protected:
-    /**
+    /*!
      * Creates the control object.
      */
     Control();
 
 private:
-    /// @cond PRIVATE
     std::unique_ptr<ControlPrivate> const d;
-    /// @endcond
 };
 
 }

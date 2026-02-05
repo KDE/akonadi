@@ -21,6 +21,10 @@ namespace Akonadi
 class CollectionComboBoxPrivate;
 
 /*!
+ * \class Akonadi::CollectionComboBox
+ * \inheaders Akonadi/CollectionComboBox
+ * \inmodule AkonadiWidgets
+ *
  * \brief A combobox for selecting an Akonadi collection.
  *
  * This widget provides a combobox to select a collection

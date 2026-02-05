@@ -21,38 +21,38 @@ namespace Akonadi
 {
 class EntityOrderProxyModelPrivate;
 
-/**
- * @short A model that keeps the order of entities persistent.
+/*!
+ * \brief A model that keeps the order of entities persistent.
  *
  * This proxy maintains the order of entities in a tree. The user can re-order
  * items and the new order will be persisted restored on reset or restart.
  *
  * \author Stephen Kelly <stephen@kdab.com>
- * @since 4.6
+ * \since 4.6
  */
 class AKONADICORE_EXPORT EntityOrderProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new entity order proxy model.
      *
-     * @param parent The parent object.
+     * \a parent The parent object.
      */
     explicit EntityOrderProxyModel(QObject *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the entity order proxy model.
      */
     ~EntityOrderProxyModel() override;
 
-    /**
-     * Sets the config @p group that will be used for storing the order.
+    /*!
+     * Sets the config \a group that will be used for storing the order.
      */
     void setOrderConfig(const KConfigGroup &group);
 
-    /**
+    /*!
      * Saves the order.
      */
     void saveOrder();
@@ -60,18 +60,18 @@ public:
     void clearOrder(const QModelIndex &index);
     void clearTreeOrder();
 
-    /**
-     * @reimp
+    /*!
+     * \reimp
      */
     [[nodiscard]] bool lessThan(const QModelIndex &left, const QModelIndex &right) const override;
 
-    /**
-     * @reimp
+    /*!
+     * \reimp
      */
     [[nodiscard]] bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
 
-    /**
-     * @reimp
+    /*!
+     * \reimp
      */
     [[nodiscard]] QModelIndexList match(const QModelIndex &start,
                                         int role,
@@ -89,9 +89,7 @@ protected:
 private:
     QStringList configStringsForDroppedUrls(const QList<QUrl> &urls, const Akonadi::Collection &parentCol, bool *containsMove) const;
 
-    /// @cond PRIVATE
     Q_DECLARE_PRIVATE(EntityOrderProxyModel)
-    /// @endcond
 };
 
 }

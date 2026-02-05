@@ -37,6 +37,10 @@ class CollectionPropertiesDialogPrivate;
  *
  * \sa Akonadi::CollectionPropertiesPage
  *
+ * \class Akonadi::CollectionPropertiesDialog
+ * \inheaders Akonadi/CollectionPropertiesDialog
+ * \inmodule AkonadiWidgets
+ *
  * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADIWIDGETS_EXPORT CollectionPropertiesDialog : public QDialog

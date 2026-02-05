@@ -19,8 +19,8 @@ namespace Akonadi
 class AgentType;
 class AgentInstancePrivate;
 
-/**
- * @short A representation of an agent instance.
+/*!
+ * \brief A representation of an agent instance.
  *
  * The agent instance is a representation of a running agent process.
  * It provides information about the instance and a reference to the
@@ -28,18 +28,22 @@ class AgentInstancePrivate;
  *
  * All available agent instances can be retrieved from the AgentManager.
  *
- * @code
+ * \code
  *
  * Akonadi::AgentInstance::List instances = Akonadi::AgentManager::self()->instances();
  * for( const Akonadi::AgentInstance &instance : instances ) {
  *   qDebug() << "Name:" << instance.name() << "(" << instance.identifier() << ")";
  * }
  *
- * @endcode
+ * \endcode
  *
- * @note To find the collections belonging to an AgentInstance, use
+ * \note To find the collections belonging to an AgentInstance, use
  * CollectionFetchJob and supply AgentInstance::identifier() as the parameter
  * to CollectionFetchScope::setResource().
+ *
+ * \class Akonadi::AgentInstance
+ * \inheaders Akonadi/AgentInstance
+ * \inmodule AkonadiCore
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
@@ -58,12 +62,12 @@ class AKONADICORE_EXPORT AgentInstance
     friend class AgentManagerPrivate;
 
 public:
-    /**
+    /*!
      * Describes a list of agent instances.
      */
     using List = QList<AgentInstance>;
 
-    /**
+    /*!
      * Describes the status of the agent instance.
      */
     enum Status {
@@ -74,150 +78,148 @@ public:
     };
     Q_ENUM(Status)
 
-    /**
+    /*!
      * Creates a new agent instance object.
      */
     AgentInstance();
 
-    /**
-     * Creates an agent instance from an @p other agent instance.
+    /*!
+     * Creates an agent instance from an \a other agent instance.
      */
     AgentInstance(const AgentInstance &other);
 
-    /**
+    /*!
      * Destroys the agent instance object.
      */
     ~AgentInstance();
 
-    /**
+    /*!
      * Returns whether the agent instance object is valid.
      */
     [[nodiscard]] bool isValid() const;
 
-    /**
+    /*!
      * Returns the agent type of this instance.
      */
     [[nodiscard]] AgentType type() const;
 
-    /**
+    /*!
      * Returns the unique identifier of the agent instance.
      */
     [[nodiscard]] QString identifier() const;
 
-    /**
+    /*!
      * Returns the user visible name of the agent instance.
      */
     [[nodiscard]] QString name() const;
 
-    /**
-     * Sets the user visible @p name of the agent instance.
+    /*!
+     * Sets the user visible \a name of the agent instance.
      */
     void setName(const QString &name);
 
-    /**
+    /*!
      * Returns the status of the agent instance.
      */
     [[nodiscard]] Status status() const;
 
-    /**
+    /*!
      * Returns a textual presentation of the status of the agent instance.
      */
     [[nodiscard]] QString statusMessage() const;
 
-    /**
+    /*!
      * Returns the progress of the agent instance in percent, or -1 if no
      * progress information are available.
      */
     [[nodiscard]] int progress() const;
 
-    /**
+    /*!
      * Returns whether the agent instance is online currently.
      */
     [[nodiscard]] bool isOnline() const;
 
-    /**
-     * Sets @p online status of the agent instance.
+    /*!
+     * Sets \a online status of the agent instance.
      */
     void setIsOnline(bool online);
 
-    /**
+    /*!
      * Triggers the agent instance to show its configuration dialog.
      *
-     * @deprecated Use the new Akonadi::AgentConfigurationWidget and
+     * \deprecated Use the new Akonadi::AgentConfigurationWidget and
      * Akonadi::AgentConfigurationDialog to display configuration dialogs
      * in-process
      *
-     * @param parent Parent window for the configuration dialog.
+     * \a parent Parent window for the configuration dialog.
      */
     AKONADICORE_DEPRECATED void configure(qlonglong winId = 0);
 
-    /**
+    /*!
      * Triggers the agent instance to start synchronization.
      */
     void synchronize();
 
-    /**
+    /*!
      * Triggers a synchronization of the collection tree by the given agent instance.
      */
     void synchronizeCollectionTree();
 
-    /**
+    /*!
      * Triggers a synchronization of tags by the given agent instance.
      */
     void synchronizeTags();
 
-    /**
-     * @internal
-     * @param other other agent instance
+    /*!
+     * \internal
+     * \a other other agent instance
      */
     AgentInstance &operator=(const AgentInstance &other);
 
-    /**
-     * @internal
-     * @param other other agent instance
+    /*!
+     * \internal
+     * \a other other agent instance
      */
     [[nodiscard]] bool operator==(const AgentInstance &other) const;
 
-    /**
+    /*!
      * Tell the agent to abort its current operation.
-     * @since 4.4
+     * \since 4.4
      */
     void abortCurrentTask() const;
 
-    /**
+    /*!
      * Tell the agent that its configuration has been changed remotely via D-Bus
      */
     void reconfigure() const;
 
-    /**
+    /*!
      * Restart the agent process.
      */
     void restart() const;
 
-    /**
+    /*!
      * Returns a list of activities of the agent instance.
      */
     [[nodiscard]] QStringList activities() const;
 
-    /**
+    /*!
      * Sets list of activities of the agent instance
      */
     void setActivities(const QStringList &online);
 
-    /**
+    /*!
      * Returns true if agent instance has activities support enabled.
      */
     [[nodiscard]] bool activitiesEnabled() const;
 
-    /**
+    /*!
      * Sets activities support enabled
      */
     void setActivitiesEnabled(bool enabled);
 
 private:
-    /// @cond PRIVATE
     QSharedDataPointer<AgentInstancePrivate> d;
-    /// @endcond
 };
 
 }

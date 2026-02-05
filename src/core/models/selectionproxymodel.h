@@ -16,8 +16,8 @@ namespace Akonadi
 {
 class SelectionProxyModelPrivate;
 
-/**
- * @short A proxy model used to reference count selected Akonadi::Collection in a view
+/*!
+ * \brief A proxy model used to reference count selected Akonadi::Collection in a view
  *
  * Only selected Collections will be populated and monitored for changes. Unselected
  * Collections will be ignored.
@@ -32,7 +32,7 @@ class SelectionProxyModelPrivate;
  *
  * Example:
  *
- * @code
+ * \code
  *
  * using namespace Akonadi;
  *
@@ -76,23 +76,23 @@ class SelectionProxyModelPrivate;
  *
  * EntityListView *itemView = new EntityListView( this );
  * itemView->setModel( itemModel );
- * @endcode
+ * \endcode
  *
  * See \ref libakonadi_integration "Integration in your Application" for further guidance on the use of this class.
 
  * \author Stephen Kelly <steveire@gmail.com>
- * @since 4.4
+ * \since 4.4
  */
 class AKONADICORE_EXPORT SelectionProxyModel : public KSelectionProxyModel
 {
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new selection proxy model.
      *
-     * @param selectionModel The selection model of the source view.
-     * @param parent The parent object.
+     * \a selectionModel The selection model of the source view.
+     * \a parent The parent object.
      */
     explicit SelectionProxyModel(QItemSelectionModel *selectionModel, QObject *parent = nullptr);
     /*!
@@ -100,13 +100,11 @@ public:
     ~SelectionProxyModel() override;
 
 private:
-    /// @cond PRIVATE
     Q_DECLARE_PRIVATE(SelectionProxyModel)
     std::unique_ptr<SelectionProxyModelPrivate> const d_ptr;
 
     Q_PRIVATE_SLOT(d_func(), void rootIndexAdded(const QModelIndex &))
     Q_PRIVATE_SLOT(d_func(), void rootIndexAboutToBeRemoved(const QModelIndex &))
-    /// @endcond
 };
 
 }

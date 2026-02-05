@@ -14,12 +14,12 @@ namespace Akonadi
 class Collection;
 class CollectionMoveJobPrivate;
 
-/**
- * @short Job that moves a collection in the Akonadi storage to a new parent collection.
+/*!
+ * \brief Job that moves a collection in the Akonadi storage to a new parent collection.
  *
  * This job moves an existing collection to a new parent collection.
  *
- * @code
+ * \code
  *
  * const Akonadi::Collection collection = ...
  * const Akonadi::Collection newParent = ...
@@ -27,9 +27,9 @@ class CollectionMoveJobPrivate;
  * Akonadi::CollectionMoveJob *job = new Akonadi::CollectionMoveJob( collection, newParent );
  * connect( job, SIGNAL(result(KJob*)), this, SLOT(moveResult(KJob*)) );
  *
- * @endcode
+ * \endcode
  *
- * @since 4.4
+ * \since 4.4
  * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT CollectionMoveJob : public Job
@@ -37,12 +37,12 @@ class AKONADICORE_EXPORT CollectionMoveJob : public Job
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new collection move job for the given collection and destination
      *
-     * @param collection The collection to move.
-     * @param destination The destination collection where @p collection should be moved to.
-     * @param parent The parent object.
+     * \a collection The collection to move.
+     * \a destination The destination collection where \a collection should be moved to.
+     * \a parent The parent object.
      */
     CollectionMoveJob(const Collection &collection, const Collection &destination, QObject *parent = nullptr);
 

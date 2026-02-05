@@ -48,6 +48,10 @@ class CollectionStatisticsDelegatePrivate;
  * proxy model may appear anywhere in the chain.
  *
  * \author Thomas McGuire <thomas.mcguire@gmx.net>
+ *
+ * \class Akonadi::CollectionStatisticsDelegate
+ * \inheaders Akonadi/CollectionStatisticsDelegate
+ * \inmodule AkonadiWidgets
  */
 class AKONADIWIDGETS_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
 {

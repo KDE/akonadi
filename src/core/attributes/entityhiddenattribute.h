@@ -1,4 +1,4 @@
-/******************************************************************************
+/*!****************************************************************************
  *
  *  SPDX-FileCopyrightText: 2009 Szymon Stefanek <s.stefanek at gmail dot com>
  *
@@ -17,8 +17,8 @@ namespace Akonadi
 {
 class EntityHiddenAttributePrivate;
 
-/**
- * @short An Attribute that marks that an entity should be hidden in the UI.
+/*!
+ * \brief An Attribute that marks that an entity should be hidden in the UI.
  *
  * This class represents the attribute of all hidden items. The hidden
  * items shouldn't be displayed in UI applications (unless in some kind
@@ -26,7 +26,7 @@ class EntityHiddenAttributePrivate;
  *
  * Example:
  *
- * @code
+ * \code
  *
  * using namespace Akonadi;
  *
@@ -42,49 +42,47 @@ class EntityHiddenAttributePrivate;
  * else
  *   qDebug() << "collection is visible";
  *
- * @endcode
+ * \endcode
  *
  * \author Szymon Stefanek <s.stefanek@gmail.com>
- * @see Akonadi::Attribute
- * @since 4.4
+ * \sa Akonadi::Attribute
+ * \since 4.4
  */
 class AKONADICORE_EXPORT EntityHiddenAttribute : public Attribute
 {
 public:
-    /**
+    /*!
      * Creates a new entity hidden attribute.
      */
     explicit EntityHiddenAttribute();
 
-    /**
+    /*!
      * Destroys the entity hidden attribute.
      */
     ~EntityHiddenAttribute() override;
 
-    /**
+    /*!
      * Reimplemented from Attribute
      */
     [[nodiscard]] QByteArray type() const override;
 
-    /**
+    /*!
      * Reimplemented from Attribute
      */
     EntityHiddenAttribute *clone() const override;
 
-    /**
+    /*!
      * Reimplemented from Attribute
      */
     [[nodiscard]] QByteArray serialized() const override;
 
-    /**
+    /*!
      * Reimplemented from Attribute
      */
     void deserialize(const QByteArray &data) override;
 
 private:
-    /// @cond PRIVATE
     const std::unique_ptr<EntityHiddenAttributePrivate> d;
-    /// @endcond
 };
 
 } // namespace Akonadi

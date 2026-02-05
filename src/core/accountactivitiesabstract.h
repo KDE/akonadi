@@ -11,6 +11,10 @@
 namespace Akonadi
 {
 /*!
+ * \class Akonadi::AccountActivitiesAbstract
+ * \inheaders Akonadi/AccountActivitiesAbstract
+ * \inmodule AkonadiCore
+ *
  * \brief The AccountActivitiesAbstract class
  */
 class AKONADICORE_EXPORT AccountActivitiesAbstract : public QObject

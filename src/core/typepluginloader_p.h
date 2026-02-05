@@ -19,8 +19,8 @@ namespace Akonadi
 {
 class ItemSerializerPlugin;
 
-/**
- * @internal
+/*!
+ * \internal
  *
  * With KDE 4.6 we are on the way to change the ItemSerializer plugins into general TypePlugins
  * which provide several type specific actions, namely:
@@ -42,36 +42,36 @@ enum Option {
 };
 Q_DECLARE_FLAGS(Options, Option)
 
-/**
- * Returns the default item serializer plugin that matches the given @p mimetype.
+/*!
+ * Returns the default item serializer plugin that matches the given \a mimetype.
  */
 AKONADICORE_EXPORT ItemSerializerPlugin *defaultPluginForMimeType(const QString &mimetype);
 
-/**
+/*!
  * Returns the item serializer plugin that matches the given
- * @p mimetype, and any of the classes described by @p metaTypeIds.
+ * \a mimetype, and any of the classes described by \a metaTypeIds.
  */
 AKONADICORE_EXPORT ItemSerializerPlugin *pluginForMimeTypeAndClass(const QString &mimetype, const QList<int> &metaTypeIds, Options options = NoOptions);
 
-/**
- * Returns the default type plugin object that matches the given @p mimetype.
+/*!
+ * Returns the default type plugin object that matches the given \a mimetype.
  */
 AKONADICORE_EXPORT QObject *defaultObjectForMimeType(const QString &mimetype);
 
-/**
- * Returns the type plugin object that matches the given @p mimetype,
- * and any of the classes described by @p metaTypeIds.
+/*!
+ * Returns the type plugin object that matches the given \a mimetype,
+ * and any of the classes described by \a metaTypeIds.
  */
 AKONADICORE_EXPORT QObject *objectForMimeTypeAndClass(const QString &mimetype, const QList<int> &metaTypeIds, Options options = NoOptions);
 
-/**
- * Override the plugin-lookup with @p plugin.
+/*!
+ * Override the plugin-lookup with \a plugin.
  *
- * After calling this each lookup will always return @p plugin.
+ * After calling this each lookup will always return \a plugin.
  * This is useful to inject a special plugin for testing purposes.
  * To reset the plugin, set to 0.
  *
- * @since 4.12
+ * \since 4.12
  */
 AKONADICORE_EXPORT void overridePluginLookup(QObject *plugin);
 

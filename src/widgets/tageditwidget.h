@@ -22,6 +22,10 @@ class TagModel;
 class TagEditWidgetPrivate;
 
 /*!
+ * \class Akonadi::TagEditWidget
+ * \inheaders Akonadi/TagEditWidget
+ * \inmodule AkonadiWidgets
+ *
  * A widget that offers facilities to add/remove tags and optionally provides a way to select tags.
  *
  * \since 4.13

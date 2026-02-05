@@ -23,40 +23,44 @@ namespace Akonadi
 #endif
 
 class ExceptionPrivate;
-/**
-  Base class for exceptions used by the Akonadi library.
-*/
+/*!
+ * \class Akonadi::Exception
+ * \inheaders Akonadi/ExceptionBase
+ * \inmodule AkonadiCore
+ *
+ * Base class for exceptions used by the Akonadi library.
+ */
 class AKONADICORE_EXPORT Exception : public std::exception
 {
 public:
-    /**
-      Creates a new exception with the error message @p what.
+    /*!
+      Creates a new exception with the error message \a what.
     */
     explicit Exception(const char *what);
 
-    /**
-      Creates a new exception with the error message @p what.
+    /*!
+      Creates a new exception with the error message \a what.
     */
     explicit Exception(const QByteArray &what);
 
-    /**
-      Creates a new exception with the error message @p what.
+    /*!
+      Creates a new exception with the error message \a what.
     */
     explicit Exception(const QString &what);
 
     Exception(Exception &&) noexcept;
 
-    /**
+    /*!
       Destructor.
     */
     ~Exception() override;
 
-    /**
+    /*!
       Returns the error message associated with this exception.
     */
     const char *what() const noexcept override;
 
-    /**
+    /*!
       Returns the type of this exception.
     */
     virtual QByteArray type() const; // ### Akonadi 2: return const char *

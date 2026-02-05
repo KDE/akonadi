@@ -14,38 +14,38 @@ namespace Akonadi
 {
 class SubscriptionJobPrivate;
 
-/**
- * @internal
+/*!
+ * \internal
  *
- * @short Job to manipulate the local subscription state of a set of collections.
+ * \brief Job to manipulate the local subscription state of a set of collections.
  */
 class AKONADICORE_EXPORT SubscriptionJob : public Job
 {
     Q_OBJECT
 public:
-    /**
+    /*!
      * Creates a new subscription job.
      *
-     * @param parent The parent object.
+     * \a parent The parent object.
      */
     explicit SubscriptionJob(QObject *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the subscription job.
      */
     ~SubscriptionJob() override;
 
-    /**
+    /*!
      * Subscribes to the given list of collections.
      *
-     * @param collections List of collections to subscribe to.
+     * \a collections List of collections to subscribe to.
      */
     void subscribe(const Collection::List &collections);
 
-    /**
+    /*!
      * Unsubscribes from the given list of collections.
      *
-     * @param collections List of collections to unsubscribe from.
+     * \a collections List of collections to unsubscribe from.
      */
     void unsubscribe(const Collection::List &collections);
 

@@ -15,8 +15,8 @@ class Collection;
 class Item;
 class ItemCreateJobPrivate;
 
-/**
- * @short Job that creates a new item in the Akonadi storage.
+/*!
+ * \brief Job that creates a new item in the Akonadi storage.
  *
  * This job creates a new item with all the set properties in the
  * given target collection.
@@ -27,7 +27,7 @@ class ItemCreateJobPrivate;
  *
  * Example:
  *
- * @code
+ * \code
  *
  * // Create a contact item in the root collection
  *
@@ -53,7 +53,7 @@ class ItemCreateJobPrivate;
  *     qDebug() << "Contact item created successfully";
  * }
  *
- * @endcode
+ * \endcode
  *
  * \author Volker Krause <vkrause@kde.org>
  */
@@ -62,22 +62,23 @@ class AKONADICORE_EXPORT ItemCreateJob : public Job
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new item create job.
      *
-     * @param item The item to create.
-     *             @note It must have a mime type set.
-     * @param collection The parent collection where the new item shall be located in.
-     * @param parent The parent object.
+     * \a item The item to create.
+     *             \
+ote It must have a mime type set.
+     * \a collection The parent collection where the new item shall be located in.
+     * \a parent The parent object.
      */
     ItemCreateJob(const Item &item, const Collection &collection, QObject *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the item create job.
      */
     ~ItemCreateJob() override;
 
-    /**
+    /*!
      * Returns the created item with the new unique id, or an invalid item if the job failed.
      */
     [[nodiscard]] Item item() const;
@@ -90,7 +91,7 @@ public:
     };
     Q_DECLARE_FLAGS(MergeOptions, MergeOption)
 
-    /**
+    /*!
      * Merge this item into an existing one if available.
      *
      * If an item with same GID and/or remote ID as the created item exists in
@@ -105,8 +106,8 @@ public:
      *
      * By default, merging is disabled.
      *
-     * @param options Merge options.
-     * @since 4.14
+     * \a options Merge options.
+     * \since 4.14
      */
     void setMerge(MergeOptions options);
 

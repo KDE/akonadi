@@ -15,8 +15,8 @@ namespace Akonadi
 {
 class CollectionStatisticsPrivate;
 
-/**
- * @short Provides statistics information of a Collection.
+/*!
+ * \brief Provides statistics information of a Collection.
  *
  * This class contains information such as total number of items,
  * number of new and unread items, etc.
@@ -27,7 +27,7 @@ class CollectionStatisticsPrivate;
  *
  * Example:
  *
- * @code
+ * \code
  *
  * Akonadi::Collection collection = ...
  *
@@ -49,9 +49,13 @@ class CollectionStatisticsPrivate;
  *   qDebug() << "Unread items:" << statistics.unreadCount();
  * }
  *
- * @endcode
+ * \endcode
  *
  * This class is implicitly shared.
+ *
+ * \class Akonadi::CollectionStatistics
+ * \inheaders Akonadi/CollectionStatistics
+ * \inmodule AkonadiCore
  *
  * \author Volker Krause <vkrause@kde.org>
  */
@@ -62,87 +66,85 @@ class AKONADICORE_EXPORT CollectionStatistics
     Q_PROPERTY(int size READ size)
 
 public:
-    /**
+    /*!
      * Creates a new collection statistics object.
      */
     CollectionStatistics();
 
-    /**
-     * Creates a collection statistics object from an @p other one.
+    /*!
+     * Creates a collection statistics object from an \a other one.
      */
     CollectionStatistics(const CollectionStatistics &other);
 
-    /**
+    /*!
      * Destroys the collection statistics object.
      */
     ~CollectionStatistics();
 
-    /**
-     * Returns the number of items in this collection or @c -1 if
+    /*!
+     * Returns the number of items in this collection or \\ -1 if
      * this information is not available.
      *
-     * @see setCount()
-     * @see unreadCount()
+     * \sa setCount()
+     * \sa unreadCount()
      */
     [[nodiscard]] qint64 count() const;
 
-    /**
+    /*!
      * Sets the number of items in this collection.
      *
-     * @param count The number of items.
-     * @see count()
+     * \a count The number of items.
+     * \sa count()
      */
     void setCount(qint64 count);
 
-    /**
-     * Returns the number of unread items in this collection or @c -1 if
+    /*!
+     * Returns the number of unread items in this collection or \\ -1 if
      * this information is not available.
      *
-     * @see setUnreadCount()
-     * @see count()
+     * \sa setUnreadCount()
+     * \sa count()
      */
     [[nodiscard]] qint64 unreadCount() const;
 
-    /**
+    /*!
      * Sets the number of unread items in this collection.
      *
-     * @param count The number of unread messages.
-     * @see unreadCount()
+     * \a count The number of unread messages.
+     * \sa unreadCount()
      */
     void setUnreadCount(qint64 count);
 
-    /**
-     * Returns the total size of the items in this collection or @c -1 if
+    /*!
+     * Returns the total size of the items in this collection or \\ -1 if
      * this information is not available.
      *
-     * @see setSize()
-     * @since 4.3
+     * \sa setSize()
+     * \since 4.3
      */
     [[nodiscard]] qint64 size() const;
 
-    /**
+    /*!
      * Sets the total size of the items in this collection.
      *
-     * @param size The total size of the items
-     * @see size()
-     * @since 4.3
+     * \a size The total size of the items
+     * \sa size()
+     * \since 4.3
      */
     void setSize(qint64 size);
 
-    /**
-     * Assigns @p other to this statistics object and returns a reference to this one.
+    /*!
+     * Assigns \a other to this statistics object and returns a reference to this one.
      */
     CollectionStatistics &operator=(const CollectionStatistics &other);
 
 private:
-    /// @cond PRIVATE
     QSharedDataPointer<CollectionStatisticsPrivate> d;
-    /// @endcond
 };
 
 }
 
-/**
+/*!
  * Allows to output the collection statistics for debugging purposes.
  */
 AKONADICORE_EXPORT QDebug operator<<(QDebug d, const Akonadi::CollectionStatistics &);

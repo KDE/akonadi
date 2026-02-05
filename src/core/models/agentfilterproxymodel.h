@@ -14,14 +14,14 @@
 namespace Akonadi
 {
 class AgentFilterProxyModelPrivate;
-/**
- * @short A proxy model for filtering AgentType or AgentInstance
+/*!
+ * \brief A proxy model for filtering AgentType or AgentInstance
  *
  * This filter proxy model works on top of a AgentTypeModel or AgentInstanceModel
  * and can be used to show only AgentType or AgentInstance objects
  * which provide a given mime type or capability.
  *
- * @code
+ * \code
  *
  * // Show only running agent instances that provide contacts
  * Akonadi::AgentInstanceModel *model = new Akonadi::AgentInstanceModel( this );
@@ -34,7 +34,7 @@ class AgentFilterProxyModelPrivate;
  * QListView *view = new QListView( this );
  * view->setModel( proxy );
  *
- * @endcode
+ * \endcode
  *
  * \author Volker Krause <vkrause@kde.org>
  */
@@ -42,37 +42,37 @@ class AKONADICORE_EXPORT AgentFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
-    /**
+    /*!
      * Create a new agent filter proxy model.
      * By default no filtering is done.
-     * @param parent parent object
+     * \a parent parent object
      */
     explicit AgentFilterProxyModel(QObject *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the agent filter proxy model.
      */
     ~AgentFilterProxyModel() override;
 
-    /**
-     * Accept agents supporting @p mimeType.
+    /*!
+     * Accept agents supporting \a mimeType.
      */
     void addMimeTypeFilter(const QString &mimeType);
 
-    /**
-     * Accept agents with the given @p capability.
+    /*!
+     * Accept agents with the given \a capability.
      */
     void addCapabilityFilter(const QString &capability);
 
-    /**
+    /*!
      * Clear the filters ( mimeTypes & capabilities ).
      */
     void clearFilters();
 
-    /**
-     * Excludes agents with the given @p capability.
-     * @param capability undesired agent capability
-     * @since 4.6
+    /*!
+     * Excludes agents with the given \a capability.
+     * \a capability undesired agent capability
+     * \since 4.6
      */
     void excludeCapabilities(const QString &capability);
 
@@ -80,9 +80,7 @@ protected:
     bool filterAcceptsRow(int row, const QModelIndex &parent) const override;
 
 private:
-    /// @cond PRIVATE
     std::unique_ptr<AgentFilterProxyModelPrivate> const d;
-    /// @endcond
 };
 
 }

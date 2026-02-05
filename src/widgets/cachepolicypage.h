@@ -25,6 +25,10 @@ class CachePolicyPagePrivate;
  *
  * \sa Akonadi::CollectionPropertiesDialog, Akonadi::CollectionPropertiesPageFactory
  *
+ * \class Akonadi::CachePolicyPage
+ * \inheaders Akonadi/CachePolicyPage
+ * \inmodule AkonadiWidgets
+ *
  * \author Till Adam <adam@kde.org>
  * \since 4.6
  */

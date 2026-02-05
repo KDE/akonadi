@@ -18,13 +18,13 @@ class ItemFetchScope;
 class ItemSearchJobPrivate;
 class SearchQuery;
 
-/**
- * @short Job that searches for items in the Akonadi storage.
+/*!
+ * \brief Job that searches for items in the Akonadi storage.
  *
  * This job searches for items that match a given search query and returns
  * the list of matching item.
  *
- * @code
+ * \code
  *
  * SearchQuery query;
  * query.addTerm(SearchTerm("From", "user1@domain.example", SearchTerm::CondEqual));
@@ -45,59 +45,59 @@ class SearchQuery;
  *   }
  * }
  *
- * @endcode
+ * \endcode
  *
  * \author Tobias Koenig <tokoe@kde.org>
- * @since 4.4
+ * \since 4.4
  */
 class AKONADICORE_EXPORT ItemSearchJob : public Job
 {
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates an invalid search job.
      *
-     * @param parent The parent object.
-     * @since 5.1
+     * \a parent The parent object.
+     * \since 5.1
      */
     explicit ItemSearchJob(QObject *parent = nullptr);
 
-    /**
+    /*!
      * Creates an item search job.
      *
-     * @param query The search query.
-     * @param parent The parent object.
-     * @since 4.13
+     * \a query The search query.
+     * \a parent The parent object.
+     * \since 4.13
      */
     explicit ItemSearchJob(const SearchQuery &query, QObject *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the item search job.
      */
     ~ItemSearchJob() override;
 
-    /**
-     * Sets the search @p query.
+    /*!
+     * Sets the search \a query.
      *
-     * @since 4.13
+     * \since 4.13
      */
     void setQuery(const SearchQuery &query);
 
-    /**
+    /*!
      * Sets the item fetch scope.
      *
      * The ItemFetchScope controls how much of an matching item's data is fetched
      * from the server, e.g. whether to fetch the full item payload or
      * only meta data.
      *
-     * @param fetchScope The new scope for item fetch operations.
+     * \a fetchScope The new scope for item fetch operations.
      *
-     * @see fetchScope()
+     * \sa fetchScope()
      */
     void setFetchScope(const ItemFetchScope &fetchScope);
 
-    /**
+    /*!
      * Returns the item fetch scope.
      *
      * Since this returns a reference it can be used to conveniently modify the
@@ -105,13 +105,13 @@ public:
      * without storing it in a local variable. See the ItemFetchScope documentation
      * for an example.
      *
-     * @return a reference to the current item fetch scope
+     * Returns a reference to the current item fetch scope
      *
-     * @see setFetchScope() for replacing the current item fetch scope
+     * \sa setFetchScope() for replacing the current item fetch scope
      */
     ItemFetchScope &fetchScope();
 
-    /**
+    /*!
      * Sets the tag fetch scope.
      *
      * The tag fetch scope affects what scope of tags for each Item will be
@@ -119,7 +119,7 @@ public:
      */
     void setTagFetchScope(const TagFetchScope &fetchScope);
 
-    /**
+    /*!
      * Returns the tag fetch scope.
      *
      * Since this returns a reference it can be used to conveniently modify
@@ -127,26 +127,26 @@ public:
      */
     TagFetchScope &tagFetchScope();
 
-    /**
+    /*!
      * Returns the items that matched the search query.
      */
     [[nodiscard]] Item::List items() const;
 
-    /**
+    /*!
      * Search only for items of given mime types.
      *
-     * @since 4.13
+     * \since 4.13
      */
     void setMimeTypes(const QStringList &mimeTypes);
 
-    /**
+    /*!
      * Returns list of mime types to search in
      *
-     * @since 4.13
+     * \since 4.13
      */
     [[nodiscard]] QStringList mimeTypes() const;
 
-    /**
+    /*!
      * Search only in given collections.
      *
      * When recursive search is enabled, all child collections of each specified
@@ -154,40 +154,40 @@ public:
      *
      * By default all collections are be searched.
      *
-     * @param collections Collections to search
-     * @since 4.13
+     * \a collections Collections to search
+     * \since 4.13
      */
     void setSearchCollections(const Collection::List &collections);
 
-    /**
+    /*!
      * Returns list of collections to search.
      *
      * This list does not include child collections that will be searched when
      * recursive search is enabled
      *
-     * @since 4.13
+     * \since 4.13
      */
     [[nodiscard]] Collection::List searchCollections() const;
 
-    /**
+    /*!
      * Sets whether the search should recurse into collections
      *
      * When set to true, all child collections of the specific collections will
      * be search recursively.
      *
-     * @param recursive Whether to search recursively
-     * @since 4.13
+     * \a recursive Whether to search recursively
+     * \since 4.13
      */
     void setRecursive(bool recursive);
 
-    /**
+    /*!
      * Returns whether the search is recursive
      *
-     * @since 4.13
+     * \since 4.13
      */
     [[nodiscard]] bool isRecursive() const;
 
-    /**
+    /*!
      * Sets whether resources should be queried too.
      *
      * When set to true, Akonadi will search local indexed items and will also
@@ -208,27 +208,28 @@ public:
      * so this job can take some time to finish, but will deliver initial results
      * from local index fairly quickly.
      *
-     * @param enabled Whether remote search is enabled
-     * @since 4.13
+     * \a enabled Whether remote search is enabled
+     * \since 4.13
      */
     void setRemoteSearchEnabled(bool enabled);
 
-    /**
+    /*!
      * Returns whether remote search is enabled.
      *
-     * @since 4.13
+     * \since 4.13
      */
     [[nodiscard]] bool isRemoteSearchEnabled() const;
 
 Q_SIGNALS:
-    /**
+    /*!
      * This signal is emitted whenever new matching items have been fetched completely.
      *
-     * @note This is an optimization, instead of waiting for the end of the job
+     * \
+ote This is an optimization, instead of waiting for the end of the job
      *       and calling items(), you can connect to this signal and get the items
      *       incrementally.
      *
-     * @param items The matching items.
+     * \a items The matching items.
      */
     void itemsReceived(const Akonadi::Item::List &items);
 
@@ -237,11 +238,9 @@ protected:
     bool doHandleResponse(qint64 tag, const Protocol::CommandPtr &response) override;
 
 private:
-    /// @cond PRIVATE
     Q_DECLARE_PRIVATE(ItemSearchJob)
 
     Q_PRIVATE_SLOT(d_func(), void timeout())
-    /// @endcond
 };
 
 }

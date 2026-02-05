@@ -16,8 +16,8 @@ namespace Akonadi
 {
 class CollectionSyncPrivate;
 
-/**
-  @internal
+/*!
+  \internal
 
   Syncs remote and local collections.
 
@@ -46,61 +46,61 @@ class AKONADICORE_EXPORT CollectionSync : public Job
     Q_OBJECT
 
 public:
-    /**
+    /*!
       Creates a new collection synchronzier.
-      @param resourceId The identifier of the resource we are syncing.
-      @param parent The parent object.
+      \a resourceId The identifier of the resource we are syncing.
+      \a parent The parent object.
     */
     explicit CollectionSync(const QString &resourceId, QObject *parent = nullptr);
 
-    /**
+    /*!
       Destroys this job.
     */
     ~CollectionSync() override;
 
-    /**
+    /*!
       Sets the result of a full remote collection listing.
-      @param remoteCollections A list of collections.
+      \a remoteCollections A list of collections.
       Important: All of these need a unique remote identifier and parent remote
       identifier.
     */
     void setRemoteCollections(const Collection::List &remoteCollections);
 
-    /**
+    /*!
       Sets the result of an incremental remote collection listing.
-      @param changedCollections A list of remotely added or changed collections.
-      @param removedCollections A list of remotely deleted collections.
+      \a changedCollections A list of remotely added or changed collections.
+      \a removedCollections A list of remotely deleted collections.
     */
     void setRemoteCollections(const Collection::List &changedCollections, const Collection::List &removedCollections);
 
-    /**
+    /*!
       Enables streaming, that is not all collections are delivered at once.
       Use setRemoteCollections() multiple times when streaming is enabled and call
       retrievalDone() when all collections have been retrieved.
       Must be called before the first call to setRemoteCollections().
-      @param streaming enables streaming if set as @c true
+      \a streaming enables streaming if set as \\ true
     */
     void setStreamingEnabled(bool streaming);
 
-    /**
+    /*!
       Indicate that all collections have been retrieved in streaming mode.
     */
     void retrievalDone();
 
-    /**
+    /*!
       Indicate whether the resource supplies collections with hierarchical or
-      global remote identifiers. @c false by default.
+      global remote identifiers. \\ false by default.
       Must be called before the first call to setRemoteCollections().
-      @param hierarchical @c true if collection remote IDs are relative to their parents' remote IDs
+      \a hierarchical \\ true if collection remote IDs are relative to their parents' remote IDs
     */
     void setHierarchicalRemoteIds(bool hierarchical);
 
-    /**
+    /*!
       Do a rollback operation if needed. In read only cases this is a noop.
     */
     void rollback();
 
-    /**
+    /*!
      * Allows to specify parts of the collection that should not be changed if locally available.
      *
      * This is useful for resources to provide default values during the collection sync, while
@@ -108,7 +108,7 @@ public:
      *
      * Use CONTENTMIMETYPES as identifier to not overwrite the content mimetypes.
      *
-     * @since 4.14
+     * \since 4.14
      */
     void setKeepLocalChanges(const QSet<QByteArray> &parts);
 

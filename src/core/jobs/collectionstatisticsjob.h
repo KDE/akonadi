@@ -15,14 +15,14 @@ class Collection;
 class CollectionStatistics;
 class CollectionStatisticsJobPrivate;
 
-/**
- * @short Job that fetches collection statistics from the Akonadi storage.
+/*!
+ * \brief Job that fetches collection statistics from the Akonadi storage.
  *
  * This class fetches the CollectionStatistics object for a given collection.
  *
  * Example:
  *
- * @code
+ * \code
  *
  * Akonadi::Collection collection = ...
  *
@@ -44,7 +44,7 @@ class CollectionStatisticsJobPrivate;
  *   qDebug() << "Unread items:" << statistics.unreadCount();
  * }
  *
- * @endcode
+ * \endcode
  *
  * \author Volker Krause <vkrause@kde.org>
  */
@@ -53,25 +53,25 @@ class AKONADICORE_EXPORT CollectionStatisticsJob : public Job
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new collection statistics job.
      *
-     * @param collection The collection to fetch the statistics from.
-     * @param parent The parent object.
+     * \a collection The collection to fetch the statistics from.
+     * \a parent The parent object.
      */
     explicit CollectionStatisticsJob(const Collection &collection, QObject *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the collection statistics job.
      */
     ~CollectionStatisticsJob() override;
 
-    /**
+    /*!
      * Returns the fetched collection statistics.
      */
     [[nodiscard]] CollectionStatistics statistics() const;
 
-    /**
+    /*!
      * Returns the corresponding collection, if the job was executed successfully,
      * the collection is already updated.
      */

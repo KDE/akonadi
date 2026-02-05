@@ -27,8 +27,8 @@ namespace Protocol
 class Command;
 }
 
-/**
- * @internal
+/*!
+ * \internal
  */
 class AKONADICORE_EXPORT SessionPrivate
 {
@@ -59,9 +59,9 @@ public:
     void doStartNext();
     void startJob(Job *job);
 
-    /**
-      @internal For testing purposes only. See FakeSesson.
-      @param job the job to end
+    /*!
+      \internal For testing purposes only. See FakeSesson.
+      \a job the job to end
     */
     void endJob(Job *job);
 
@@ -71,40 +71,40 @@ public:
 
     bool canPipelineNext();
 
-    /**
+    /*!
      * Creates a new default session for this thread with
-     * the given @p sessionId. The session can be accessed
+     * the given \a sessionId. The session can be accessed
      * later by defaultSession().
      *
      * You only need to call this method if you want that the
      * default session has a special custom id, otherwise a random unique
      * id is used automatically.
-     * @param sessionId the id of new default session
+     * \a sessionId the id of new default session
      */
     static void createDefaultSession(const QByteArray &sessionId);
 
-    /**
+    /*!
      * Sets the default session.
-     * @internal Only for unit tests.
+     * \internal Only for unit tests.
      */
     static void setDefaultSession(Session *session);
 
-    /**
+    /*!
       Associates the given Job object with this session.
     */
     virtual void addJob(Job *job);
 
-    /**
+    /*!
       Returns the next IMAP tag.
     */
     [[nodiscard]] qint64 nextTag();
 
-    /**
+    /*!
       Sends the given command to server
     */
     void sendCommand(qint64 tag, const Protocol::CommandPtr &command);
 
-    /**
+    /*!
      * Propagate item revision changes to following jobs.
      */
     void itemRevisionChanged(Akonadi::Item::Id itemId, int oldRevision, int newRevision);

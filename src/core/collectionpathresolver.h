@@ -14,8 +14,8 @@ namespace Akonadi
 {
 class CollectionPathResolverPrivate;
 
-/**
- * @internal
+/*!
+ * \internal
  *
  * Converts between collection id and collection path.
  *
@@ -23,63 +23,65 @@ class CollectionPathResolverPrivate;
  * be necessary in some cases (eg. a command line client) to use the
  * collection path instead. Use this class to get a collection id
  * from a collection path.
- *
- * \author Volker Krause <vkrause@kde.org>
+ * * \class Akonadi::CollectionPathResolver
+ * \inheaders Akonadi/CollectionPathResolver
+ * \inmodule AkonadiCore
+ * * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT CollectionPathResolver : public Job
 {
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new collection path resolver to convert a path into a id.
      *
      * Equivalent to calling CollectionPathResolver(path, Collection:root(), parent)
      *
-     * @param path The collection path.
-     * @param parent The parent object.
+     * \a path The collection path.
+     * \a parent The parent object.
      */
     explicit CollectionPathResolver(const QString &path, QObject *parent = nullptr);
 
-    /**
+    /*!
      * Create a new collection path resolver to convert a path into an id.
      *
-     * The @p path is resolved relatively to @p parentCollection. This can be
+     * The \a path is resolved relatively to \a parentCollection. This can be
      * useful for resource, which now the root collection.
      *
-     * @param path The collection path.
-     * @param parentCollection Collection relatively to which the path will be resolved.
-     * @param parent The parent object.
+     * \a path The collection path.
+     * \a parentCollection Collection relatively to which the path will be resolved.
+     * \a parent The parent object.
      *
-     * @since 4.14
+     * \since 4.14
      */
     explicit CollectionPathResolver(const QString &path, const Collection &parentCollection, QObject *parent = nullptr);
 
-    /**
+    /*!
      * Creates a new collection path resolver to determine the path of
      * the given collection.
      *
-     * @param collection The collection.
-     * @param parent The parent object.
+     * \a collection The collection.
+     * \a parent The parent object.
      */
     explicit CollectionPathResolver(const Collection &collection, QObject *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the collection path resolver.
      */
     ~CollectionPathResolver() override;
 
-    /**
+    /*!
      * Returns the collection id. Only valid after the job succeeded.
      */
     [[nodiscard]] Collection::Id collection() const;
 
-    /**
+    /*!
      * Returns the collection path. Only valid after the job succeeded.
      */
     [[nodiscard]] QString path() const;
 
-    /**
+    /*!
      * Returns the path delimiter for collections.
      */
     [[nodiscard]] static QString pathDelimiter();

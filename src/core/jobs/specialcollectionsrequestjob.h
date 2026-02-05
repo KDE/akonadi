@@ -19,8 +19,8 @@ namespace Akonadi
 {
 class SpecialCollectionsRequestJobPrivate;
 
-/**
- * @short A job to request SpecialCollections.
+/*!
+ * \brief A job to request SpecialCollections.
  *
  * Use this job to request the SpecialCollections you need. You can request both
  * default SpecialCollections and SpecialCollections in a given resource. The default
@@ -36,66 +36,66 @@ class SpecialCollectionsRequestJobPrivate;
  * specific special collection request jobs.
  *
  * \author Constantin Berzan <exit3219@gmail.com>
- * @since 4.4
+ * \since 4.4
  */
 class AKONADICORE_EXPORT SpecialCollectionsRequestJob : public TransactionSequence
 {
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Destroys the special collections request job.
      */
     ~SpecialCollectionsRequestJob() override;
 
-    /**
-     * Requests a special collection of the given @p type in the default resource.
+    /*!
+     * Requests a special collection of the given \a type in the default resource.
      */
     void requestDefaultCollection(const QByteArray &type);
 
-    /**
-     * Requests a special collection of the given @p type in the given resource @p instance.
+    /*!
+     * Requests a special collection of the given \a type in the given resource \a instance.
      */
     void requestCollection(const QByteArray &type, const AgentInstance &instance);
 
-    /**
+    /*!
      * Returns the requested collection.
      */
     [[nodiscard]] Collection collection() const;
 
 protected:
-    /**
+    /*!
      * Creates a new special collections request job.
      *
-     * @param collections The SpecialCollections object that shall be used.
-     * @param parent The parent object.
+     * \a collections The SpecialCollections object that shall be used.
+     * \a parent The parent object.
      */
     explicit SpecialCollectionsRequestJob(SpecialCollections *collections, QObject *parent = nullptr);
 
-    /**
-     * Sets the @p type of the resource that shall be created if the requested
+    /*!
+     * Sets the \a type of the resource that shall be created if the requested
      * special collection does not exist yet.
      */
     void setDefaultResourceType(const QString &type);
 
-    /**
-     * Sets the configuration @p options that shall be applied to the new resource
+    /*!
+     * Sets the configuration \a options that shall be applied to the new resource
      * that is created if the requested special collection does not exist yet.
      */
     void setDefaultResourceOptions(const QVariantMap &options);
 
-    /**
-     * Sets the list of well known special collection @p types.
+    /*!
+     * Sets the list of well known special collection \a types.
      */
     void setTypes(const QList<QByteArray> &types);
 
-    /**
-     * Sets the @p map of special collection types to display names.
+    /*!
+     * Sets the \a map of special collection types to display names.
      */
     void setNameForTypeMap(const QMap<QByteArray, QString> &map);
 
-    /**
-     * Sets the @p map of special collection types to icon names.
+    /*!
+     * Sets the \a map of special collection types to icon names.
      */
     void setIconForTypeMap(const QMap<QByteArray, QString> &map);
 
@@ -105,7 +105,6 @@ protected:
     void slotResult(KJob *job) override;
 
 private:
-    /// @cond PRIVATE
     friend class SpecialCollectionsRequestJobPrivate;
     friend class DefaultResourceJobPrivate;
 
@@ -114,7 +113,6 @@ private:
     Q_PRIVATE_SLOT(d, void releaseLock())
     Q_PRIVATE_SLOT(d, void resourceScanResult(KJob *))
     Q_PRIVATE_SLOT(d, void collectionCreateResult(KJob *))
-    /// @endcond
 };
 
 } // namespace Akonadi

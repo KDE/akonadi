@@ -22,6 +22,10 @@ namespace Akonadi
 class TagManagementDialogPrivate;
 
 /*!
+ * \class Akonadi::TagManagementDialog
+ * \inheaders Akonadi/TagManagementDialog
+ * \inmodule AkonadiWidgets
+ *
  * A dialog to manage tags.
  *
  * \since 4.13

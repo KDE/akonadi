@@ -14,8 +14,8 @@ namespace Akonadi
 class Collection;
 class CollectionCreateJobPrivate;
 
-/**
- * @short Job that creates a new collection in the Akonadi storage.
+/*!
+ * \brief Job that creates a new collection in the Akonadi storage.
  *
  * This job creates a new collection with all the set properties.
  * You have to use setParentCollection() to define the collection the
@@ -23,7 +23,7 @@ class CollectionCreateJobPrivate;
  *
  * Example:
  *
- * @code
+ * \code
  * using namespace Qt::StringLiterals;
  *
  * // create a new top-level collection
@@ -34,7 +34,7 @@ class CollectionCreateJobPrivate;
  *
  * auto job = new Akonadi::CollectionCreateJob(collection);
  * connect(job, &KJob::result, this, &MyClass::createResult);
- * @endcode
+ * \endcode
  *
  * \author Volker Krause <vkrause@kde.org>
  */
@@ -42,23 +42,23 @@ class AKONADICORE_EXPORT CollectionCreateJob : public Job
 {
     Q_OBJECT
 public:
-    /**
+    /*!
      * Creates a new collection create job.
      *
-     * @param collection The new collection. @p collection must have a parent collection
+     * \a collection The new collection. \a collection must have a parent collection
      * set with a unique identifier. If a resource context is specified in the current session
      * (that is you are using it within Akonadi::ResourceBase), the parent collection can be
      * identified by its remote identifier as well.
-     * @param parent The parent object.
+     * \a parent The parent object.
      */
     explicit CollectionCreateJob(const Collection &collection, QObject *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the collection create job.
      */
     ~CollectionCreateJob() override;
 
-    /**
+    /*!
      * Returns the created collection if the job was executed successfully.
      */
     [[nodiscard]] Collection collection() const;

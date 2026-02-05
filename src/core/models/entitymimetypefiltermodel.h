@@ -18,13 +18,13 @@ namespace Akonadi
 {
 class EntityMimeTypeFilterModelPrivate;
 
-/**
- * @short A proxy model that filters entities by mime type.
+/*!
+ * \brief A proxy model that filters entities by mime type.
  *
  * This class can be used on top of an EntityTreeModel to exclude entities by mimetype
  * or to include only certain mimetypes.
  *
- * @code
+ * \code
  *
  *   Akonadi::EntityTreeModel *model = new Akonadi::EntityTreeModel( this );
  *
@@ -35,7 +35,7 @@ class EntityMimeTypeFilterModelPrivate;
  *   Akonadi::EntityTreeView *view = new Akonadi::EntityTreeView( this );
  *   view->setModel( proxy );
  *
- * @endcode
+ * \endcode
  *
  * @li If a mimetype is in both the exclusion list and the inclusion list, it is excluded.
  * @li If the mimeTypeInclusionFilter is empty, all mimetypes are
@@ -44,71 +44,71 @@ class EntityMimeTypeFilterModelPrivate;
  *
  * \author Bruno Virlet <bruno.virlet@gmail.com>
  * \author Stephen Kelly <steveire@gmail.com>
- * @since 4.4
+ * \since 4.4
  */
 class AKONADICORE_EXPORT EntityMimeTypeFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new entity mime type filter model.
      *
-     * @param parent The parent object.
+     * \a parent The parent object.
      */
     explicit EntityMimeTypeFilterModel(QObject *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the entity mime type filter model.
      */
     ~EntityMimeTypeFilterModel() override;
 
-    /**
+    /*!
      * Add mime types to be shown by the filter.
      *
-     * @param mimeTypes A list of mime types to be included.
+     * \a mimeTypes A list of mime types to be included.
      */
     void addMimeTypeInclusionFilters(const QStringList &mimeTypes);
 
-    /**
+    /*!
      * Add mimetypes to filter out
      *
-     * @param mimeTypes A list to exclude from the model.
+     * \a mimeTypes A list to exclude from the model.
      */
     void addMimeTypeExclusionFilters(const QStringList &mimeTypes);
 
-    /**
+    /*!
      * Add mime type to be shown by the filter.
      *
-     * @param mimeType A mime type to be shown.
+     * \a mimeType A mime type to be shown.
      */
     void addMimeTypeInclusionFilter(const QString &mimeType);
 
-    /**
+    /*!
      * Add mime type to be excluded by the filter.
      *
-     * @param mimeType A mime type to be excluded.
+     * \a mimeType A mime type to be excluded.
      */
     void addMimeTypeExclusionFilter(const QString &mimeType);
 
-    /**
+    /*!
      * Returns the list of mime type inclusion filters.
      */
     [[nodiscard]] QStringList mimeTypeInclusionFilters() const;
 
-    /**
+    /*!
      * Returns the list of mime type exclusion filters.
      */
     [[nodiscard]] QStringList mimeTypeExclusionFilters() const;
 
-    /**
+    /*!
      * Clear all mime type filters.
      */
     void clearFilters();
 
-    /**
-     * Sets the header @p set of the filter model.
-     * @param headerGroup the header to set.
+    /*!
+     * Sets the header \a set of the filter model.
+     * \a headerGroup the header to set.
      * \sa EntityTreeModel::HeaderGroup
      */
     void setHeaderGroup(EntityTreeModel::HeaderGroup headerGroup);
@@ -132,10 +132,8 @@ protected:
     bool filterAcceptsColumn(int sourceColumn, const QModelIndex &sourceParent) const override;
 
 private:
-    /// @cond PRIVATE
     Q_DECLARE_PRIVATE(EntityMimeTypeFilterModel)
     std::unique_ptr<EntityMimeTypeFilterModelPrivate> const d_ptr;
-    /// @endcond
 };
 
 }

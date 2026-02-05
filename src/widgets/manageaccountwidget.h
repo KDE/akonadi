@@ -21,6 +21,10 @@ class AgentInstance;
 class ManageAccountWidgetPrivate;
 class AccountActivitiesAbstract;
 /*!
+ * \class Akonadi::ManageAccountWidget
+ * \inheaders Akonadi/ManageAccountWidget
+ * \inmodule AkonadiWidgets
+ *
  * \brief The ManageAccountWidget class
  */
 class AKONADIWIDGETS_EXPORT ManageAccountWidget : public QWidget

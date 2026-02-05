@@ -29,6 +29,10 @@ class FavoriteCollectionsModel;
 class StandardActionManagerPrivate;
 
 /*!
+ * \class Akonadi::StandardActionManager
+ * \inheaders Akonadi/StandardActionManager
+ * \inmodule AkonadiWidgets
+ *
  * \brief Manages generic actions for collection and item views.
  *
  * Manages generic Akonadi actions common for all types. This covers
