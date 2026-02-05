@@ -23,11 +23,11 @@ namespace Akonadi
 class TagModel;
 class TagSelectionDialogPrivate;
 
-/**
+/*!
  * A widget that shows a tag selection and provides means to edit that selection.
  *
  * TODO A standalone dialog version that takes an item and takes care of writing back the changes would be useful.
- * @since 4.13
+ * \since 4.13
  */
 class AKONADIWIDGETS_EXPORT TagSelectionDialog : public QDialog
 {

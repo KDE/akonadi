@@ -29,7 +29,7 @@ class ItemMoveJobPrivate;
  *
  * @endcode
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT ItemMoveJob : public Job
 {

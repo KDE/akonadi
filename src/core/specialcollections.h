@@ -45,7 +45,7 @@ class SpecialCollectionsPrivate;
   the special collections for a resource change (i.e. some became available or some
   become unavailable).
 
-  @author Constantin Berzan <exit3219@gmail.com>
+  \author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
 class AKONADICORE_EXPORT SpecialCollections : public QObject

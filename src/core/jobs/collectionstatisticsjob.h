@@ -46,7 +46,7 @@ class CollectionStatisticsJobPrivate;
  *
  * @endcode
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT CollectionStatisticsJob : public Job
 {

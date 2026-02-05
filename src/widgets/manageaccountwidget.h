@@ -34,7 +34,7 @@ public:
      */
     ~ManageAccountWidget() override;
 
-    /**
+    /*!
      * Sets the text of the label above the list of accounts.
      * Example: "Incoming accounts:" in an email client, or "Calendars:" in an organizer.
      */

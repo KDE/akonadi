@@ -41,7 +41,7 @@ class EntityRightsFilterModelPrivate;
  * @li For collections the access rights are checked against the collections own rights.
  * @li For items the access rights are checked against the item's parent collection rights.
  *
- * @author Tobias Koenig <tokoe@kde.org>
+ * \author Tobias Koenig <tokoe@kde.org>
  * @since 4.6
  */
 class AKONADICORE_EXPORT EntityRightsFilterModel : public QSortFilterProxyModel

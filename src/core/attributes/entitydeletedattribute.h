@@ -27,7 +27,7 @@ class EntityDeletedAttributePrivate;
  *
  * @endcode
  *
- * @author Christian Mollekopf <chrigi_1@fastmail.fm>
+ * \author Christian Mollekopf <chrigi_1@fastmail.fm>
  * @see Akonadi::Attribute
  * @since 4.8
  */

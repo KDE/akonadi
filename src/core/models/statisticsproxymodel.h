@@ -35,7 +35,7 @@ class StatisticsProxyModelPrivate;
  *
  * @endcode
  *
- * @author Kevin Ottens <ervin@kde.org>, now maintained by David Faure <faure@kde.org>
+ * \author Kevin Ottens <ervin@kde.org>, now maintained by David Faure <faure@kde.org>
  * @since 4.4
  */
 class AKONADICORE_EXPORT StatisticsProxyModel : public KExtraColumnsProxyModel

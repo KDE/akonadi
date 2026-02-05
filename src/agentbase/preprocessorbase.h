@@ -34,7 +34,7 @@ class PreprocessorBasePrivate;
  *
  * The method all the preprocessors must implement is processItem().
  *
- * @author Szymon Stefanek <s.stefanek@gmail.com>
+ * \author Szymon Stefanek <s.stefanek@gmail.com>
  * @since 4.4
  */
 class AKONADIAGENTBASE_EXPORT PreprocessorBase : public AgentBase

@@ -65,7 +65,7 @@ class AgentInstanceCreateJobPrivate;
  *
  * @note This is a KJob not an Akonadi::Job, so it won't auto-start!
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT AgentInstanceCreateJob : public KJob
 {

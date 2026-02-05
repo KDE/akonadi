@@ -75,7 +75,7 @@ class SessionPrivate;
  * @note KJob-derived objects delete itself, it is thus not possible
  * to create job objects on the stack!
  *
- * @author Volker Krause <vkrause@kde.org>, Tobias Koenig <tokoe@kde.org>, Marc Mutz <mutz@kde.org>
+ * \author Volker Krause <vkrause@kde.org>, Tobias Koenig <tokoe@kde.org>, Marc Mutz <mutz@kde.org>
  */
 class AKONADICORE_EXPORT Job : public KCompositeJob
 {

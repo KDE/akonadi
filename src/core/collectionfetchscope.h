@@ -49,7 +49,7 @@ class CollectionFetchScopePrivate;
  *
  * This class is implicitly shared.
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  * @since 4.4
  */
 class AKONADICORE_EXPORT CollectionFetchScope

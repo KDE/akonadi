@@ -35,7 +35,7 @@ class SpecialCollectionsRequestJobPrivate;
  * This class is not meant to be used directly but as a base class for type
  * specific special collection request jobs.
  *
- * @author Constantin Berzan <exit3219@gmail.com>
+ * \author Constantin Berzan <exit3219@gmail.com>
  * @since 4.4
  */
 class AKONADICORE_EXPORT SpecialCollectionsRequestJob : public TransactionSequence

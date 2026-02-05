@@ -24,7 +24,7 @@ class CollectionPathResolverPrivate;
  * collection path instead. Use this class to get a collection id
  * from a collection path.
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT CollectionPathResolver : public Job
 {

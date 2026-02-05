@@ -68,7 +68,7 @@ class Item;
  * multithreading bug in libdbus. Instead one should use
  * QDBusConnection::sessionBus() which works around this problem.
  *
- * @author Till Adam <adam@kde.org>, Volker Krause <vkrause@kde.org>
+ * \author Till Adam <adam@kde.org>, Volker Krause <vkrause@kde.org>
  */
 class AKONADIAGENTBASE_EXPORT AgentBase : public QObject, protected QDBusContext
 {
@@ -172,7 +172,7 @@ public:
      * }
      * @endcode
      *
-     * @author Kevin Krammer <kevin.krammer@gmx.at>
+     * \author Kevin Krammer <kevin.krammer@gmx.at>
      *
      * @deprecated Use ObserverV2 instead
      */

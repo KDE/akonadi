@@ -47,7 +47,7 @@ class SearchQuery;
  *
  * @endcode
  *
- * @author Tobias Koenig <tokoe@kde.org>
+ * \author Tobias Koenig <tokoe@kde.org>
  * @since 4.4
  */
 class AKONADICORE_EXPORT ItemSearchJob : public Job

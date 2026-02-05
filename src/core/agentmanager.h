@@ -38,7 +38,7 @@ class Collection;
  *
  * @endcode
  *
- * @author Tobias Koenig <tokoe@kde.org>
+ * \author Tobias Koenig <tokoe@kde.org>
  */
 class AKONADICORE_EXPORT AgentManager : public QObject
 {

@@ -42,7 +42,7 @@ class TransactionJobPrivate;
  *
  * @note This will only have an effect when used as a subjob or with a Session.
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT TransactionBeginJob : public TransactionJob
 {
@@ -71,7 +71,7 @@ public:
  *
  * @note This will only have an effect when used as a subjob or with a Session.
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT TransactionRollbackJob : public TransactionJob
 {
@@ -97,7 +97,7 @@ public:
  *
  * This job commits all changes of this transaction.
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT TransactionCommitJob : public TransactionJob
 {

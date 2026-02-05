@@ -25,7 +25,7 @@ class SpecialCollectionsDiscoveryJobPrivate;
  * This class is not meant to be used directly but as a base class for type
  * specific special collection request jobs.
  *
- * @author David Faure <faure@kde.org>
+ * \author David Faure <faure@kde.org>
  * @since 4.11
  */
 class AKONADICORE_EXPORT SpecialCollectionsDiscoveryJob : public KCompositeJob

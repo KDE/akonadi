@@ -18,10 +18,10 @@ namespace Akonadi
 {
 class TagSelectWidgetPrivate;
 
-/**
+/*!
  * A widget that offers facilities to add/remove tags and provides a way to select tags.
  *
- * @since 4.14.6
+ * \since 4.14.6
  */
 
 class AKONADIWIDGETS_EXPORT TagSelectWidget : public QWidget
@@ -42,19 +42,17 @@ public:
      */
     [[nodiscard]] Akonadi::Tag::List selection() const;
 
-    /**
-     * @brief tagToStringList
-     * @return QStringList from selected tag (List of Url)
+    /*!
+     * \brief tagToStringList
+     * Returns QStringList from selected tag (List of Url)
      */
     [[nodiscard]] QStringList tagToStringList() const;
-    /**
-     * @brief setSelectionFromStringList, convert a QStringList to Tag (converted from url)
+    /*!
+     * \brief setSelectionFromStringList, convert a QStringList to Tag (converted from url)
      */
     void setSelectionFromStringList(const QStringList &lst);
 
 private:
-    /// @cond PRIVATE
     std::unique_ptr<TagSelectWidgetPrivate> const d;
-    /// @endcond
 };
 }

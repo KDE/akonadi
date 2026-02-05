@@ -52,7 +52,7 @@ class TagFetchScope;
  *
  * This class is implicitly shared.
  *
- * @author Kevin Krammer <kevin.krammer@gmx.at>
+ * \author Kevin Krammer <kevin.krammer@gmx.at>
  */
 class AKONADICORE_EXPORT ItemFetchScope
 {

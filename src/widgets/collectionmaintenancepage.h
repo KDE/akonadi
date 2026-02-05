@@ -39,9 +39,7 @@ protected:
     void init(const Akonadi::Collection &);
 
 private:
-    /// @cond PRIVATE
     std::unique_ptr<CollectionMaintenancePagePrivate> const d;
-    /// @endcond
 };
 
 AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CollectionMaintenancePageFactory, CollectionMaintenancePage)

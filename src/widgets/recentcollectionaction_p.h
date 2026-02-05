@@ -16,7 +16,7 @@ class QAction;
 /**
  * @short A class to manage recent selected folder.
  *
- * @author Montel Laurent <montel@kde.org>
+ * \author Montel Laurent <montel@kde.org>
  * @since 4.8
  */
 

@@ -27,7 +27,7 @@ class EntityOrderProxyModelPrivate;
  * This proxy maintains the order of entities in a tree. The user can re-order
  * items and the new order will be persisted restored on reset or restart.
  *
- * @author Stephen Kelly <stephen@kdab.com>
+ * \author Stephen Kelly <stephen@kdab.com>
  * @since 4.6
  */
 class AKONADICORE_EXPORT EntityOrderProxyModel : public QSortFilterProxyModel

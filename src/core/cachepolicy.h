@@ -55,7 +55,7 @@ class CachePolicyPrivate;
  * @todo Do we also need a size limit for the cache as well?
  * @todo on a POP3 account, is should not be possible to change locally cached parts, find a solution for that
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT CachePolicy
 {

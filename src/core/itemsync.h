@@ -35,7 +35,7 @@ class ItemSyncPrivate;
  *       however it is strongly recommended to use single item jobs whenever
  *       possible, e.g. ItemCreateJob, ItemModifyJob and ItemDeleteJob
  *
- * @author Tobias Koenig <tokoe@kde.org>
+ * \author Tobias Koenig <tokoe@kde.org>
  */
 class AKONADICORE_EXPORT ItemSync : public Job
 {

@@ -28,7 +28,7 @@ class ResourceScanJobPrivate;
   A Job that fetches all the collections of a resource, and returns only
   those that have a SpecialCollectionAttribute.
 
-  @author Constantin Berzan <exit3219@gmail.com>
+  \author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
 class AKONADI_TESTS_EXPORT ResourceScanJob : public Job
@@ -96,7 +96,7 @@ class DefaultResourceJobPrivate;
      before that, it recovers the folders based on name. For instance, it will
      give a folder named outbox a SpecialCollectionAttribute of type Outbox.
 
-  @author Constantin Berzan <exit3219@gmail.com>
+  \author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
 class AKONADI_TESTS_EXPORT DefaultResourceJob : public ResourceScanJob
@@ -170,7 +170,7 @@ class GetLockJobPrivate;
 
   Use the releaseLock() function to release the lock.
 
-  @author Constantin Berzan <exit3219@gmail.com>
+  \author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
 class AKONADI_TESTS_EXPORT GetLockJob : public KJob

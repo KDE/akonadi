@@ -299,7 +299,7 @@ class EntityTreeModelPrivate;
  * FetchState returned from a QModelIndex representing a Akonadi::Collection will be FetchingState if a
  * listing of the items in that collection is underway, otherwise the state is IdleState.
  *
- * @author Stephen Kelly <steveire@gmail.com>
+ * \author Stephen Kelly <steveire@gmail.com>
  * @since 4.4
  */
 class AKONADICORE_EXPORT EntityTreeModel : public QAbstractItemModel

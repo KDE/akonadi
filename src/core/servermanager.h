@@ -21,7 +21,7 @@ class ServerManagerPrivate;
  * Asynchronous, low-level control of the Akonadi server.
  * Akonadi::Control provides a synchronous interface to some of the methods in here.
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  * @see Akonadi::Control
  * @since 4.2
  */

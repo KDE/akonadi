@@ -29,7 +29,7 @@ class ChangeRecorderPrivate;
  * which means you only need to connect to signals you are actually interested
  * in.
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT ChangeRecorder : public Monitor
 {

@@ -42,8 +42,8 @@ class EntityMimeTypeFilterModelPrivate;
  *     accepted (except if they are in the exclusion filter of course).
  *
  *
- * @author Bruno Virlet <bruno.virlet@gmail.com>
- * @author Stephen Kelly <steveire@gmail.com>
+ * \author Bruno Virlet <bruno.virlet@gmail.com>
+ * \author Stephen Kelly <steveire@gmail.com>
  * @since 4.4
  */
 class AKONADICORE_EXPORT EntityMimeTypeFilterModel : public QSortFilterProxyModel

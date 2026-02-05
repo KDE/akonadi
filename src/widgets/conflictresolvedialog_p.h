@@ -19,7 +19,7 @@ namespace Akonadi
 /**
  * @short A dialog to ask the user for a resolve strategy for conflicts.
  *
- * @author Tobias Koenig <tokoe@kde.org>
+ * \author Tobias Koenig <tokoe@kde.org>
  */
 class AKONADIWIDGET_TESTS_EXPORT ConflictResolveDialog : public QDialog
 {

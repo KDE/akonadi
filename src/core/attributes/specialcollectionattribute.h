@@ -22,7 +22,7 @@ class SpecialCollectionAttributePrivate;
  *
  * All collections registered with SpecialCollections must have this attribute set.
  *
- * @author Constantin Berzan <exit3219@gmail.com>
+ * \author Constantin Berzan <exit3219@gmail.com>
  * @since 4.4
  */
 class AKONADICORE_EXPORT SpecialCollectionAttribute : public Akonadi::Attribute

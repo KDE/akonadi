@@ -62,7 +62,7 @@ class ResourceSelectJobPrivate;
  *
  * @endcode
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT ResourceSelectJob : public Job
 {

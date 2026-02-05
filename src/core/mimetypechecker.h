@@ -89,7 +89,7 @@ class MimeTypeCheckerPrivate;
  *
  * This class is implicitly shared.
  *
- * @author Kevin Krammer <kevin.krammer@gmx.at>
+ * \author Kevin Krammer <kevin.krammer@gmx.at>
  *
  * @since 4.3
  */

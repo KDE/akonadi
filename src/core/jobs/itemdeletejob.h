@@ -42,7 +42,7 @@ class ItemDeleteJobPrivate;
  *
  * @endcode
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT ItemDeleteJob : public Job
 {

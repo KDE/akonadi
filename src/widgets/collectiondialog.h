@@ -20,8 +20,8 @@ namespace Akonadi
 {
 class CollectionDialogPrivate;
 
-/**
- * @short A collection selection dialog.
+/*!
+ * \brief A collection selection dialog.
  *
  * Provides a dialog that lists collections that are available
  * on the Akonadi storage and allows the selection of one or multiple
@@ -33,7 +33,7 @@ class CollectionDialogPrivate;
  *
  * Example:
  *
- * @code
+ * \code
  *
  * using namespace Akonadi;
  *
@@ -48,10 +48,10 @@ class CollectionDialogPrivate;
  *   ...
  * }
  *
- * @endcode
+ * \endcode
  *
- * @author Ingo Klöcker <kloecker@kde.org>
- * @since 4.3
+ * \author Ingo Klöcker <kloecker@kde.org>
+ * \since 4.3
  */
 class AKONADIWIDGETS_EXPORT CollectionDialog : public QDialog
 {
@@ -60,7 +60,7 @@ class AKONADIWIDGETS_EXPORT CollectionDialog : public QDialog
 
 public:
     /*
-     * @since 4.6
+     * \since 4.6
      */
     enum CollectionDialogOption {
         None = 0,
@@ -70,137 +70,135 @@ public:
 
     Q_DECLARE_FLAGS(CollectionDialogOptions, CollectionDialogOption)
 
-    /**
+    /*!
      * Creates a new collection dialog.
      *
-     * @param parent The parent widget.
+     * \a parent The parent widget.
      */
     explicit CollectionDialog(QWidget *parent = nullptr);
 
-    /**
-     * Creates a new collection dialog with a custom @p model.
+    /*!
+     * Creates a new collection dialog with a custom \a model.
      *
      * The filtering by content mime type and access rights is done
      * on top of the custom model.
      *
-     * @param model The custom model to use.
-     * @param parent The parent widget.
+     * \a model The custom model to use.
+     * \a parent The parent widget.
      *
-     * @since 4.4
+     * \since 4.4
      */
     explicit CollectionDialog(QAbstractItemModel *model, QWidget *parent = nullptr);
 
-    /**
-     * Creates a new collection dialog with a custom @p model.
+    /*!
+     * Creates a new collection dialog with a custom \a model.
      *
      * The filtering by content mime type and access rights is done
      * on top of the custom model.
      *
-     * @param options The collection dialog options.
-     * @param model The custom model to use.
-     * @param parent The parent widget.
+     * \a options The collection dialog options.
+     * \a model The custom model to use.
+     * \a parent The parent widget.
      *
-     * @since 4.6
+     * \since 4.6
      */
 
     explicit CollectionDialog(CollectionDialogOptions options, QAbstractItemModel *model = nullptr, QWidget *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the collection dialog.
      */
     ~CollectionDialog() override;
 
-    /**
+    /*!
      * Sets the mime types any of which the selected collection(s) shall support.
      * Note that mime types are not enabled by default.
-     * @param mimeTypes MIME type filter values
+     * \a mimeTypes MIME type filter values
      */
     void setMimeTypeFilter(const QStringList &mimeTypes);
 
-    /**
+    /*!
      * Returns the mime types any of which the selected collection(s) shall support.
      */
     [[nodiscard]] QStringList mimeTypeFilter() const;
 
-    /**
-     * Sets the access @p rights that the listed collections shall match with.
-     * @param rights access rights filter values
-     * @since 4.4
+    /*!
+     * Sets the access \a rights that the listed collections shall match with.
+     * \a rights access rights filter values
+     * \since 4.4
      */
     void setAccessRightsFilter(Collection::Rights rights);
 
-    /**
-     * Sets the access @p rights that the listed collections shall match with.
+    /*!
+     * Sets the access \a rights that the listed collections shall match with.
      *
-     * @since 4.4
+     * \since 4.4
      */
     [[nodiscard]] Collection::Rights accessRightsFilter() const;
 
-    /**
-     * Sets the @p text that will be shown in the dialog.
-     * @param text the dialog's description text
-     * @since 4.4
+    /*!
+     * Sets the \a text that will be shown in the dialog.
+     * \a text the dialog's description text
+     * \since 4.4
      */
     void setDescription(const QString &text);
 
-    /**
-     * Sets the @p collection that shall be selected by default.
-     * @param collection the dialog's pre-selected collection
-     * @since 4.4
+    /*!
+     * Sets the \a collection that shall be selected by default.
+     * \a collection the dialog's pre-selected collection
+     * \since 4.4
      */
     void setDefaultCollection(const Collection &collection);
 
-    /**
+    /*!
      * Sets the selection mode. The initial default mode is
      * QAbstractItemView::SingleSelection.
-     * @param mode the selection mode to use
-     * @see QAbstractItemView::setSelectionMode()
+     * \a mode the selection mode to use
+     * \sa QAbstractItemView::setSelectionMode()
      */
     void setSelectionMode(QAbstractItemView::SelectionMode mode);
 
-    /**
+    /*!
      * Returns the selection mode.
-     * @see QAbstractItemView::selectionMode()
+     * \sa QAbstractItemView::selectionMode()
      */
     [[nodiscard]] QAbstractItemView::SelectionMode selectionMode() const;
 
-    /**
+    /*!
      * Returns the selected collection if the selection mode is
      * QAbstractItemView::SingleSelection. If another selection mode was set,
      * or nothing is selected, an invalid collection is returned.
      */
     [[nodiscard]] Akonadi::Collection selectedCollection() const;
 
-    /**
+    /*!
      * Returns the list of selected collections.
      */
     [[nodiscard]] Akonadi::Collection::List selectedCollections() const;
 
-    /**
+    /*!
      * Change collection dialog options.
-     * @param options the collection dialog options to change
-     * @since 4.6
+     * \a options the collection dialog options to change
+     * \since 4.6
      */
     void changeCollectionDialogOptions(CollectionDialogOptions options);
 
-    /**
-     * @since 4.13
+    /*!
+     * \since 4.13
      */
     void setUseFolderByDefault(bool b);
-    /**
-     * @since 4.13
+    /*!
+     * \since 4.13
      */
     [[nodiscard]] bool useFolderByDefault() const;
-    /**
+    /*!
      * Allow to specify collection content mimetype when we create new one.
-     * @since 4.14.6
+     * \since 4.14.6
      */
     void setContentMimeTypes(const QStringList &mimetypes);
 
 private:
-    /// @cond PRIVATE
     std::unique_ptr<CollectionDialogPrivate> const d;
-    /// @endcond
 };
 
 } // namespace Akonadi

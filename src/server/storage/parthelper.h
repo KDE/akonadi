@@ -21,7 +21,7 @@ AKONADI_EXCEPTION_MAKE_INSTANCE(PartHelperException);
 /**
  * Helper methods that store data in a file instead of the database.
  *
- * @author Andras Mantia <amantia@kde.org>
+ * \author Andras Mantia <amantia@kde.org>
  *
  * @todo Use exceptions for error handling in all these methods. Requires that all callers
  * can handle that first though.

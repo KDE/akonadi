@@ -20,8 +20,8 @@ namespace Akonadi
 {
 class CollectionComboBoxPrivate;
 
-/**
- * @short A combobox for selecting an Akonadi collection.
+/*!
+ * \brief A combobox for selecting an Akonadi collection.
  *
  * This widget provides a combobox to select a collection
  * from the Akonadi storage.
@@ -30,7 +30,7 @@ class CollectionComboBoxPrivate;
  *
  * Example:
  *
- * @code
+ * \code
  *
  * using namespace Akonadi;
  *
@@ -45,95 +45,93 @@ class CollectionComboBoxPrivate;
  *
  * const Collection collection = box->currentCollection();
  *
- * @endcode
+ * \endcode
  *
- * @author Tobias Koenig <tokoe@kde.org>
- * @since 4.4
+ * \author Tobias Koenig <tokoe@kde.org>
+ * \since 4.4
  */
 class AKONADIWIDGETS_EXPORT CollectionComboBox : public QComboBox
 {
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new collection combobox.
      *
-     * @param parent The parent widget.
+     * \a parent The parent widget.
      */
     explicit CollectionComboBox(QWidget *parent = nullptr);
 
-    /**
-     * Creates a new collection combobox with a custom @p model.
+    /*!
+     * Creates a new collection combobox with a custom \a model.
      *
      * The filtering by content mime type and access rights is done
      * on top of the custom model.
      *
-     * @param model The custom model to use.
-     * @param parent The parent widget.
+     * \a model The custom model to use.
+     * \a parent The parent widget.
      */
     explicit CollectionComboBox(QAbstractItemModel *model, QWidget *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the collection combobox.
      */
     ~CollectionComboBox() override;
 
-    /**
-     * Sets the content @p mimetypes the collections shall be filtered by.
+    /*!
+     * Sets the content \a mimetypes the collections shall be filtered by.
      */
     void setMimeTypeFilter(const QStringList &mimetypes);
 
-    /**
+    /*!
      * Returns the content mimetype the collections are filtered by.
      * Don't assume this list has the original order.
      */
     [[nodiscard]] QStringList mimeTypeFilter() const;
 
-    /**
-     * Sets the access @p rights the collections shall be filtered by.
+    /*!
+     * Sets the access \a rights the collections shall be filtered by.
      */
     void setAccessRightsFilter(Collection::Rights rights);
 
-    /**
+    /*!
      * Returns the access rights the collections are filtered by.
      */
     [[nodiscard]] Collection::Rights accessRightsFilter() const;
 
-    /**
-     * Sets the @p collection that shall be selected by default.
+    /*!
+     * Sets the \a collection that shall be selected by default.
      */
     void setDefaultCollection(const Collection &collection);
 
-    /**
+    /*!
      * Returns the current selection.
      */
     [[nodiscard]] Akonadi::Collection currentCollection() const;
 
-    /**
-     * @since 4.12
+    /*!
+     * \since 4.12
      */
     void setExcludeVirtualCollections(bool b);
-    /**
-     * @since 4.12
+    /*!
+     * \since 4.12
      */
     [[nodiscard]] bool excludeVirtualCollections() const;
 
 Q_SIGNALS:
-    /**
+    /*!
      * This signal is emitted whenever the current selection
      * has been changed.
      *
-     * @param collection The current selection.
+     * \a collection The current selection.
      */
     void currentChanged(const Akonadi::Collection &collection);
 
 private:
-    /// @cond PRIVATE
     std::unique_ptr<CollectionComboBoxPrivate> const d;
 
     Q_PRIVATE_SLOT(d, void activated(int))
     Q_PRIVATE_SLOT(d, void activated(const QModelIndex &))
-    /// @endcond
 };
 
 }

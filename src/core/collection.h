@@ -56,7 +56,7 @@ class CollectionStatistics;
  *
  * @endcode
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT Collection
 {

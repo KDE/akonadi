@@ -14,28 +14,28 @@ class QStandardItem;
 class QStandardItemModel;
 namespace Akonadi
 {
-/**
- * @internal
+/*!
+ * \internal
  *
- * @short A dialog that checks the current status of the Akonadi system.
+ * \brief A dialog that checks the current status of the Akonadi system.
  *
  * This dialog checks the current status of the Akonadi system and
  * displays a summary of the checks.
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADIWIDGETS_EXPORT SelfTestDialog : public QDialog
 {
     Q_OBJECT
 public:
-    /**
+    /*!
      * Creates a new self test dialog.
      *
-     * @param parent The parent widget.
+     * \a parent The parent widget.
      */
     explicit SelfTestDialog(QWidget *parent = nullptr);
 
-    /**
+    /*!
      * Hides the label with the introduction message.
      */
     void hideIntroduction();

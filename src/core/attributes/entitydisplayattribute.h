@@ -23,7 +23,7 @@ class EntityDisplayAttributePrivate;
  *
  * Display properties of a collection or item, such as translated names and icons.
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  * @since 4.2
  */
 class AKONADICORE_EXPORT EntityDisplayAttribute : public Attribute

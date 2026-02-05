@@ -45,7 +45,7 @@ class UnlinkJobPrivate;
  *
  * @endcode
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  * @since 4.2
  * @see LinkJob
  */

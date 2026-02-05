@@ -20,7 +20,7 @@ class Session;
 /**
  * @short A class to handle conflicts in Akonadi
  *
- * @author Tobias Koenig <tokoe@kde.org>
+ * \author Tobias Koenig <tokoe@kde.org>
  */
 class ConflictHandler : public QObject
 {

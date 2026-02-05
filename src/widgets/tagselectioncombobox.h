@@ -20,8 +20,8 @@ namespace Akonadi
 {
 class TagSelectionComboBoxPrivate;
 
-/**
- * @brief The TagSelectionCombo class
+/*!
+ * \brief The TagSelectionCombo class
  */
 class AKONADIWIDGETS_EXPORT TagSelectionComboBox : public QComboBox
 {

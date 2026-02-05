@@ -35,7 +35,7 @@ class TransportResourceBasePrivate;
   * For an example of a transport-enabled resource, see
   * kdepim/runtime/resources/mailtransport_dummy
   *
-  * @author Constantin Berzan <exit3219@gmail.com>
+  * \author Constantin Berzan <exit3219@gmail.com>
   * @since 4.4
  */
 class AKONADIAGENTBASE_EXPORT TransportResourceBase

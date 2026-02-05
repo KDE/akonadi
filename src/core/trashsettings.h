@@ -18,7 +18,7 @@ namespace Akonadi
  *
  * All settings concerning the trashhandling should go here.
  *
- * @author Christian Mollekopf <chrigi_1@fastmail.fm>
+ * \author Christian Mollekopf <chrigi_1@fastmail.fm>
  * @since 4.8
  */
 // TODO setting for time before items are deleted by janitor agent

@@ -30,7 +30,7 @@ class CollectionMoveJobPrivate;
  * @endcode
  *
  * @since 4.4
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT CollectionMoveJob : public Job
 {

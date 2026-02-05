@@ -23,7 +23,7 @@ namespace Akonadi
  * A helper class to set a current index on a widget with
  * delayed model loading.
  *
- * @author Tobias Koenig <tokoe@kde.org>
+ * \author Tobias Koenig <tokoe@kde.org>
  */
 class AKONADICORE_EXPORT AsyncSelectionHandler : public QObject
 {

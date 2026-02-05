@@ -18,8 +18,8 @@ namespace Akonadi
 {
 class CollectionStatisticsDelegatePrivate;
 
-/**
- * @short A delegate that draws unread and total count for StatisticsProxyModel.
+/*!
+ * \brief A delegate that draws unread and total count for StatisticsProxyModel.
  *
  * The delegate provides the following features:
  *
@@ -31,7 +31,7 @@ class CollectionStatisticsDelegatePrivate;
  *      foldername, see toggleUnreadAfterFolderName().
  *
  * Example:
- * @code
+ * \code
  *
  * Akonadi::EntityTreeView *view = new Akonadi::EntityTreeView( this );
  *
@@ -41,86 +41,84 @@ class CollectionStatisticsDelegatePrivate;
  * Akonadi::CollectionStatisticsDelegate *delegate = new Akonadi::CollectionStatisticsDelegate( view );
  * view->setItemDelegate( delegate );
  *
- * @endcode
+ * \endcode
  *
- * @note This proxy model is intended to be used on top of the EntityTreeModel. One of the proxies
+ * \note This proxy model is intended to be used on top of the EntityTreeModel. One of the proxies
  * between the EntityTreeModel (the root model) and the view must be a StatisticsProxyModel. That
  * proxy model may appear anywhere in the chain.
  *
- * @author Thomas McGuire <thomas.mcguire@gmx.net>
+ * \author Thomas McGuire <thomas.mcguire@gmx.net>
  */
 class AKONADIWIDGETS_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new collection statistics delegate.
      *
-     * @param parent The parent item view, which will also take ownership.
+     * \a parent The parent item view, which will also take ownership.
      *
-     * @since 4.6
+     * \since 4.6
      */
     explicit CollectionStatisticsDelegate(QAbstractItemView *parent);
 
-    /**
+    /*!
      * Creates a new collection statistics delegate.
      *
-     * @param parent The parent tree view, which will also take ownership.
+     * \a parent The parent tree view, which will also take ownership.
      */
     explicit CollectionStatisticsDelegate(QTreeView *parent);
 
-    /**
+    /*!
      * Destroys the collection statistics delegate.
      */
     ~CollectionStatisticsDelegate() override;
 
-    /**
-     * @since 4.9.1
+    /*!
+     * \since 4.9.1
      */
     void updatePalette();
 
-    /**
+    /*!
      * Sets whether the unread count is drawn next to the folder name.
      *
      * You probably want to enable this when the unread count is hidden only.
      * This is disabled by default.
      *
-     * @param enable If @c true, the unread count is drawn next to the folder name,
-     *               if @c false, the folder name will be drawn normally.
+     * \a enable If \\ true, the unread count is drawn next to the folder name,
+     *               if \\ false, the folder name will be drawn normally.
      */
     void setUnreadCountShown(bool enable);
 
-    /**
+    /*!
      * Returns whether the unread count is drawn next to the folder name.
      */
     [[nodiscard]] bool unreadCountShown() const;
 
-    /**
-     * @param enable new mode of progress animation
+    /*!
+     * \a enable new mode of progress animation
      */
     void setProgressAnimationEnabled(bool enable);
 
     [[nodiscard]] bool progressAnimationEnabled() const;
 
 protected:
-    /**
-     * @param painter pointer for QPainter to use in method
-     * @param option style options
-     * @param index model index (QModelIndex)
+    /*!
+     * \a painter pointer for QPainter to use in method
+     * \a option style options
+     * \a index model index (QModelIndex)
      */
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
-    /**
-     * @param option style option view item
-     * @param index model index (QModelIndex)
+    /*!
+     * \a option style option view item
+     * \a index model index (QModelIndex)
      */
     void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const override;
 
 private:
-    /// @cond PRIVATE
     std::unique_ptr<CollectionStatisticsDelegatePrivate> const d_ptr;
-    /// @endcond
 
     Q_DECLARE_PRIVATE(CollectionStatisticsDelegate)
 };

@@ -43,7 +43,7 @@ class ResourceSynchronizationJobPrivate;
  *
  * @note This is a KJob, not an Akonadi::Job, so it won't auto-start!
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  * @since 4.4
  */
 class AKONADICORE_EXPORT ResourceSynchronizationJob : public KJob

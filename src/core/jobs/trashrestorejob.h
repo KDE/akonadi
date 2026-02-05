@@ -34,7 +34,7 @@ class TrashRestoreJobPrivate;
  *
  * @endcode
  *
- * @author Christian Mollekopf <chrigi_1@fastmail.fm>
+ * \author Christian Mollekopf <chrigi_1@fastmail.fm>
  * @since 4.8
  */
 class AKONADICORE_EXPORT TrashRestoreJob : public Job

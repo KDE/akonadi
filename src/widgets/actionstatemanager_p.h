@@ -16,7 +16,7 @@ namespace Akonadi
 /**
  * @short A helper class to manage action states.
  *
- * @author Tobias Koenig <tokoe@kde.org>
+ * \author Tobias Koenig <tokoe@kde.org>
  */
 class ActionStateManager
 {

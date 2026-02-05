@@ -80,7 +80,7 @@ class SelectionProxyModelPrivate;
  *
  * See \ref libakonadi_integration "Integration in your Application" for further guidance on the use of this class.
 
- * @author Stephen Kelly <steveire@gmail.com>
+ * \author Stephen Kelly <steveire@gmail.com>
  * @since 4.4
  */
 class AKONADICORE_EXPORT SelectionProxyModel : public KSelectionProxyModel

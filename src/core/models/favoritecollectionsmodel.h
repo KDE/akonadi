@@ -46,7 +46,7 @@ class FavoriteCollectionsModelPrivate;
  *
  * @endcode
  *
- * @author Kevin Ottens <ervin@kde.org>
+ * \author Kevin Ottens <ervin@kde.org>
  * @since 4.4
  */
 class AKONADICORE_EXPORT FavoriteCollectionsModel : public KSelectionProxyModel

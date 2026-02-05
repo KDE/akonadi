@@ -54,7 +54,7 @@ class PartFetcherPrivate;
  *
  * @endcode
  *
- * @author Stephen Kelly <steveire@gmail.com>
+ * \author Stephen Kelly <steveire@gmail.com>
  * @since 4.4
  */
 class AKONADICORE_EXPORT PartFetcher : public KJob

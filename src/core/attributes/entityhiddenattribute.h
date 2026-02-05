@@ -44,7 +44,7 @@ class EntityHiddenAttributePrivate;
  *
  * @endcode
  *
- * @author Szymon Stefanek <s.stefanek@gmail.com>
+ * \author Szymon Stefanek <s.stefanek@gmail.com>
  * @see Akonadi::Attribute
  * @since 4.4
  */

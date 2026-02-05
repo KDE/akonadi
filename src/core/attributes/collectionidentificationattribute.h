@@ -20,7 +20,7 @@ class CollectionIdentificationAttributePrivate;
  *
  * Additional indexed properties that can be used for searching.
  *
- * @author Christian Mollekopf <mollekopf@kolabsys.com>
+ * \author Christian Mollekopf <mollekopf@kolabsys.com>
  * @since 4.15
  */
 class AKONADICORE_EXPORT CollectionIdentificationAttribute : public Akonadi::Attribute

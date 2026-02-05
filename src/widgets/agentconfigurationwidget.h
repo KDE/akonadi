@@ -18,8 +18,8 @@ class AgentInstance;
 class AgentConfigurationDialog;
 class AgentConfigurationWidgetPrivate;
 
-/**
- * @brief A widget for displaying agent configuration in applications.
+/*!
+ * \brief A widget for displaying agent configuration in applications.
  *
  * To implement an agent configuration widget, see AgentConfigurationBase.
  */

@@ -94,7 +94,7 @@ class ItemPrivate;
  * payloads can be retrieved by using payload() and set by using setPayload(). Refer
  * to the documentation of those methods for more details.
  *
- * @author Volker Krause <vkrause@kde.org>, Till Adam <adam@kde.org>, Marc Mutz <mutz@kde.org>
+ * \author Volker Krause <vkrause@kde.org>, Till Adam <adam@kde.org>, Marc Mutz <mutz@kde.org>
  */
 class AKONADICORE_EXPORT Item
 {

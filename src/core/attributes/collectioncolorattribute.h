@@ -19,7 +19,7 @@ namespace Akonadi
  *
  * Storing color in Akonadi makes it possible to sync them between client and server.
  *
- * @author Sandro Knauß <knauss@kolabsys.com>
+ * \author Sandro Knauß <knauss@kolabsys.com>
  * @since 5.3
  */
 

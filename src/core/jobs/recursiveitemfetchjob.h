@@ -67,7 +67,7 @@ class RecursiveItemFetchJobPrivate;
  *
  * @endcode
  *
- * @author Tobias Koenig <tokoe@kde.org>
+ * \author Tobias Koenig <tokoe@kde.org>
  * @since 4.6
  */
 class AKONADICORE_EXPORT RecursiveItemFetchJob : public KJob

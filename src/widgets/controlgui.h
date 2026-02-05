@@ -16,8 +16,8 @@ namespace Akonadi
 {
 class ControlGuiPrivate;
 
-/**
- * @short Provides methods to ControlGui the Akonadi server process.
+/*!
+ * \brief Provides methods to ControlGui the Akonadi server process.
  *
  * This class provides synchronous methods (ie. use a sub-eventloop)
  * to ControlGui the Akonadi service. For asynchronous methods see
@@ -35,7 +35,7 @@ class ControlGuiPrivate;
  *
  * Example:
  *
- * @code
+ * \code
  *
  * if ( !Akonadi::ControlGui::start() ) {
  *   qDebug() << "Unable to start Akonadi server, exit application";
@@ -44,85 +44,83 @@ class ControlGuiPrivate;
  *   ...
  * }
  *
- * @endcode
+ * \endcode
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  *
- * @see Akonadi::ServerManager
+ * \sa Akonadi::ServerManager
  */
 class AKONADIWIDGETS_EXPORT ControlGui : public QObject
 {
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Destroys the ControlGui object.
      */
     ~ControlGui() override;
 
-    /**
+    /*!
      * Starts the Akonadi server synchronously if it is not already running.
-     * @return @c true if the server was started successfully or was already
-     * running, @c false otherwise
+     * Returns \\ true if the server was started successfully or was already
+     * running, \\ false otherwise
      */
     static bool start();
 
-    /**
+    /*!
      * Same as start(), but with GUI feedback.
-     * @param parent The parent widget.
-     * @since 4.2
+     * \a parent The parent widget.
+     * \since 4.2
      */
     static bool start(QWidget *parent);
 
-    /**
+    /*!
      * Stops the Akonadi server synchronously if it is currently running.
-     * @return @c true if the server was shutdown successfully or was
-     * not running at all, @c false otherwise.
-     * @since 4.2
+     * Returns \\ true if the server was shutdown successfully or was
+     * not running at all, \\ false otherwise.
+     * \since 4.2
      */
     static bool stop();
 
-    /**
+    /*!
      * Same as stop(), but with GUI feedback.
-     * @param parent The parent widget.
-     * @since 4.2
+     * \a parent The parent widget.
+     * \since 4.2
      */
     static bool stop(QWidget *parent);
 
-    /**
+    /*!
      * Restarts the Akonadi server synchronously.
-     * @return @c true if the restart was successful, @c false otherwise,
+     * Returns \\ true if the restart was successful, \\ false otherwise,
      * the server state is undefined in this case.
-     * @since 4.2
+     * \since 4.2
      */
     static bool restart();
 
-    /**
+    /*!
      * Same as restart(), but with GUI feedback.
-     * @param parent The parent widget.
-     * @since 4.2
+     * \a parent The parent widget.
+     * \since 4.2
      */
     static bool restart(QWidget *parent);
 
-    /**
+    /*!
      * Disable the given widget when Akonadi is not operational and show
      * an error overlay (given enough space). Cascading use is automatically
      * detected and resolved.
-     * @param widget The widget depending on Akonadi being operational.
-     * @since 4.2
+     * \a widget The widget depending on Akonadi being operational.
+     * \since 4.2
      */
     static void widgetNeedsAkonadi(QWidget *widget);
 
 protected:
-    /**
+    /*!
      * Creates the ControlGui object.
      */
     ControlGui();
 
 private:
-    /// @cond PRIVATE
     std::unique_ptr<ControlGuiPrivate> const d;
-    /// @endcond
 };
 
 }

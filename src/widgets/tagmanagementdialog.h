@@ -21,10 +21,10 @@ namespace Akonadi
 {
 class TagManagementDialogPrivate;
 
-/**
+/*!
  * A dialog to manage tags.
  *
- * @since 4.13
+ * \since 4.13
  */
 class AKONADIWIDGETS_EXPORT TagManagementDialog : public QDialog
 {

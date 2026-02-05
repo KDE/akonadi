@@ -36,7 +36,7 @@ class CollectionCreateJobPrivate;
  * connect(job, &KJob::result, this, &MyClass::createResult);
  * @endcode
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT CollectionCreateJob : public Job
 {

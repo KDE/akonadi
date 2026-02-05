@@ -100,7 +100,7 @@ namespace Akonadi
  * X-KDE-Library=akonadi_serializer_pimnote
  * @endcode
  *
- * @author Till Adam <adam@kde.org>, Volker Krause <vkrause@kde.org>
+ * \author Till Adam <adam@kde.org>, Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT ItemSerializerPlugin
 {

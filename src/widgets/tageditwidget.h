@@ -21,10 +21,10 @@ namespace Akonadi
 class TagModel;
 class TagEditWidgetPrivate;
 
-/**
+/*!
  * A widget that offers facilities to add/remove tags and optionally provides a way to select tags.
  *
- * @since 4.13
+ * \since 4.13
  */
 class AKONADIWIDGETS_EXPORT TagEditWidget : public QWidget
 {

@@ -37,7 +37,7 @@ class AccountActivitiesAbstract;
  *
  * @endcode
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT AgentInstanceFilterProxyModel : public QSortFilterProxyModel
 {

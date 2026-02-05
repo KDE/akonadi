@@ -33,7 +33,7 @@ class CollectionFetchJobPrivate;
  *
  * @endcode
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT CollectionFetchJob : public Job
 {

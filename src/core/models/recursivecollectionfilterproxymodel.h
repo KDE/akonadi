@@ -20,7 +20,7 @@ class RecursiveCollectionFilterProxyModelPrivate;
 /**
  * @short A model to filter out collections of non-matching content types.
  *
- * @author Stephen Kelly <steveire@gmail.com>
+ * \author Stephen Kelly <steveire@gmail.com>
  * @since 4.6
  */
 class AKONADICORE_EXPORT RecursiveCollectionFilterProxyModel : public QSortFilterProxyModel

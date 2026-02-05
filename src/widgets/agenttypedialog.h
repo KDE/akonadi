@@ -19,14 +19,14 @@ namespace Akonadi
 {
 class AgentTypeDialogPrivate;
 
-/**
- * @short A dialog to select an available agent type.
+/*!
+ * \brief A dialog to select an available agent type.
  *
  * This dialogs allows the user to select an agent type from the
  * list of all available agent types. The list can be filtered
  * by the proxy model returned by agentFilterProxyModel().
  *
- * @code
+ * \code
  *
  * Akonadi::AgentTypeDialog dlg( this );
  *
@@ -38,35 +38,35 @@ class AgentTypeDialogPrivate;
  *   ...
  * }
  *
- * @endcode
+ * \endcode
  *
- * @author Tom Albers <tomalbers@kde.nl>
- * @since 4.2
+ * \author Tom Albers <tomalbers@kde.nl>
+ * \since 4.2
  */
 class AKONADIWIDGETS_EXPORT AgentTypeDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * Creates a new agent type dialog.
      *
-     * @param parent The parent widget of the dialog.
+     * \a parent The parent widget of the dialog.
      */
     explicit AgentTypeDialog(QWidget *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the agent type dialog.
      */
     ~AgentTypeDialog() override;
 
-    /**
+    /*!
      * Returns the agent type that was selected by the user,
      * or an empty agent type object if no agent type has been selected.
      */
     [[nodiscard]] AgentType agentType() const;
 
-    /**
+    /*!
      * Returns the agent filter proxy model that can be used
      * to filter the agent types that shall be shown in the
      * dialog.
@@ -79,9 +79,7 @@ public Q_SLOTS:
     void done(int result) override;
 
 private:
-    /// @cond PRIVATE
     std::unique_ptr<AgentTypeDialogPrivate> const d;
-    /// @endcond
 };
 
 }

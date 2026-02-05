@@ -37,7 +37,7 @@ class CollectionComboBoxModelPrivate;
  * }
  * @endcode
  *
- * @author Carl Schwan <carl@carlschwan.eu>
+ * \author Carl Schwan <carl@carlschwan.eu>
  */
 class CollectionComboBoxModel : public QSortFilterProxyModel
 {

@@ -35,7 +35,7 @@ class CollectionQuotaAttributePrivate;
  *
  * @endcode
  *
- * @author Kevin Ottens <ervin@kde.org>
+ * \author Kevin Ottens <ervin@kde.org>
  * @since 4.4
  */
 class AKONADICORE_EXPORT CollectionQuotaAttribute : public Akonadi::Attribute

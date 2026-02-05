@@ -53,7 +53,7 @@ class CollectionStatisticsPrivate;
  *
  * This class is implicitly shared.
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT CollectionStatistics
 {

@@ -76,7 +76,7 @@ class ItemModifyJobPrivate;
  * on completion of the first ItemModifyJob. This can be obtained by, for
  * example, calling item().revision() in the job's result slot.
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT ItemModifyJob : public Job
 {

@@ -65,7 +65,7 @@ class Command;
  * @todo Distinguish between monitoring collection properties and collection content.
  * @todo Special case for collection content counts changed
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT Monitor : public QObject
 {

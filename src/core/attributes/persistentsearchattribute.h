@@ -57,7 +57,7 @@ class PersistentSearchAttributePrivate;
  *
  * @endcode
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  * @since 4.5
  */
 class AKONADICORE_EXPORT PersistentSearchAttribute : public Akonadi::Attribute

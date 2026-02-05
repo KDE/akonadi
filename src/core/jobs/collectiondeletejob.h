@@ -41,7 +41,7 @@ class CollectionDeleteJobPrivate;
  * }
  * @endcode
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT CollectionDeleteJob : public Job
 {

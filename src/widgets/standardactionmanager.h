@@ -28,8 +28,8 @@ namespace Akonadi
 class FavoriteCollectionsModel;
 class StandardActionManagerPrivate;
 
-/**
- * @short Manages generic actions for collection and item views.
+/*!
+ * \brief Manages generic actions for collection and item views.
  *
  * Manages generic Akonadi actions common for all types. This covers
  * creating of the actions with appropriate labels, icons, shortcuts
@@ -52,25 +52,25 @@ class StandardActionManagerPrivate;
  * the actionStateUpdated() signal and adjust the state accordingly.
  *
  * The following actions are provided (KAction name in parenthesis):
- * - Creation of a new collection (@c akonadi_collection_create)
- * - Copying of selected collections (@c akonadi_collection_copy)
- * - Deletion of selected collections (@c akonadi_collection_delete)
- * - Synchronization of selected collections (@c akonadi_collection_sync)
- * - Showing the collection properties dialog for the current collection (@c akonadi_collection_properties)
- * - Copying of selected items (@c akonadi_itemcopy)
- * - Pasting collections, items or raw data (@c akonadi_paste)
- * - Deleting of selected items (@c akonadi_item_delete)
- * - Managing local subscriptions (@c akonadi_manage_local_subscriptions)
+ * - Creation of a new collection (\\ akonadi_collection_create)
+ * - Copying of selected collections (\\ akonadi_collection_copy)
+ * - Deletion of selected collections (\\ akonadi_collection_delete)
+ * - Synchronization of selected collections (\\ akonadi_collection_sync)
+ * - Showing the collection properties dialog for the current collection (\\ akonadi_collection_properties)
+ * - Copying of selected items (\\ akonadi_itemcopy)
+ * - Pasting collections, items or raw data (\\ akonadi_paste)
+ * - Deleting of selected items (\\ akonadi_item_delete)
+ * - Managing local subscriptions (\\ akonadi_manage_local_subscriptions)
  *
  * The following example shows how to use standard actions in your application:
  *
- * @code
+ * \code
  *
  * Akonadi::StandardActionManager *actMgr = new Akonadi::StandardActionManager( actionCollection(), this );
  * actMgr->setCollectionSelectionModel( collectionView->collectionSelectionModel() );
  * actMgr->createAllActions();
  *
- * @endcode
+ * \endcode
  *
  * Additionally you have to add the actions to the KXMLGUI file of your application,
  * using the names listed above.
@@ -83,7 +83,7 @@ class StandardActionManagerPrivate;
  * you want to handle yourself and connect the slot with your own implementation
  * to the triggered() signal of the action:
  *
- * @code
+ * \code
  *
  * using namespace Akonadi;
  *
@@ -107,17 +107,17 @@ class StandardActionManagerPrivate;
  *   }
  * }
  *
- * @endcode
+ * \endcode
  *
  * @todo collection deleting and sync do not support multi-selection yet
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADIWIDGETS_EXPORT StandardActionManager : public QObject
 {
     Q_OBJECT
 public:
-    /**
+    /*!
      * Describes the supported actions.
      */
     enum Type {
@@ -130,41 +130,41 @@ public:
         Paste, ///< Paste collections or items
         DeleteItems, ///< Deletes the selected items
         ManageLocalSubscriptions, ///< Manages local subscriptions
-        AddToFavoriteCollections, ///< Add the collection to the favorite collections model @since 4.4
-        RemoveFromFavoriteCollections, ///< Remove the collection from the favorite collections model @since 4.4
-        RenameFavoriteCollection, ///< Rename the collection of the favorite collections model @since 4.4
-        CopyCollectionToMenu, ///< Menu allowing to quickly copy a collection into another collection @since 4.4
-        CopyItemToMenu, ///< Menu allowing to quickly copy an item into a collection @since 4.4
-        MoveItemToMenu, ///< Menu allowing to move item into a collection @since 4.4
-        MoveCollectionToMenu, ///< Menu allowing to move a collection into another collection @since 4.4
-        CutItems, ///< Cuts the selected items @since 4.4
-        CutCollections, ///< Cuts the selected collections @since 4.4
-        CreateResource, ///< Creates a new resource @since 4.6
-        DeleteResources, ///< Deletes the selected resources @since 4.6
-        ResourceProperties, ///< Provides the resource properties @since 4.6
-        SynchronizeResources, ///< Synchronizes the selected resources @since 4.6
-        ToggleWorkOffline, ///< Toggles the work offline state of all resources @since 4.6
-        CopyCollectionToDialog, ///< Copy a collection into another collection, select the target in a dialog @since 4.6
-        MoveCollectionToDialog, ///< Move a collection into another collection, select the target in a dialog @since 4.6
-        CopyItemToDialog, ///< Copy an item into a collection, select the target in a dialog @since 4.6
-        MoveItemToDialog, ///< Move an item into a collection, select the target in a dialog @since 4.6
-        SynchronizeCollectionsRecursive, ///< Synchronizes collections in a recursive way @since 4.6
-        MoveCollectionsToTrash, ///< Moves the selected collection to trash and marks it as deleted, needs EntityDeletedAttribute @since 4.8
-        MoveItemsToTrash, ///< Moves the selected items to trash and marks them as deleted, needs EntityDeletedAttribute @since 4.8
-        RestoreCollectionsFromTrash, ///< Restores the selected collection from trash, needs EntityDeletedAttribute @since 4.8
-        RestoreItemsFromTrash, ///< Restores the selected items from trash, needs EntityDeletedAttribute @since 4.8
-        MoveToTrashRestoreCollection, ///< Move Collection to Trash or Restore it from Trash, needs EntityDeletedAttribute @since 4.8
+        AddToFavoriteCollections, ///< Add the collection to the favorite collections model \since 4.4
+        RemoveFromFavoriteCollections, ///< Remove the collection from the favorite collections model \since 4.4
+        RenameFavoriteCollection, ///< Rename the collection of the favorite collections model \since 4.4
+        CopyCollectionToMenu, ///< Menu allowing to quickly copy a collection into another collection \since 4.4
+        CopyItemToMenu, ///< Menu allowing to quickly copy an item into a collection \since 4.4
+        MoveItemToMenu, ///< Menu allowing to move item into a collection \since 4.4
+        MoveCollectionToMenu, ///< Menu allowing to move a collection into another collection \since 4.4
+        CutItems, ///< Cuts the selected items \since 4.4
+        CutCollections, ///< Cuts the selected collections \since 4.4
+        CreateResource, ///< Creates a new resource \since 4.6
+        DeleteResources, ///< Deletes the selected resources \since 4.6
+        ResourceProperties, ///< Provides the resource properties \since 4.6
+        SynchronizeResources, ///< Synchronizes the selected resources \since 4.6
+        ToggleWorkOffline, ///< Toggles the work offline state of all resources \since 4.6
+        CopyCollectionToDialog, ///< Copy a collection into another collection, select the target in a dialog \since 4.6
+        MoveCollectionToDialog, ///< Move a collection into another collection, select the target in a dialog \since 4.6
+        CopyItemToDialog, ///< Copy an item into a collection, select the target in a dialog \since 4.6
+        MoveItemToDialog, ///< Move an item into a collection, select the target in a dialog \since 4.6
+        SynchronizeCollectionsRecursive, ///< Synchronizes collections in a recursive way \since 4.6
+        MoveCollectionsToTrash, ///< Moves the selected collection to trash and marks it as deleted, needs EntityDeletedAttribute \since 4.8
+        MoveItemsToTrash, ///< Moves the selected items to trash and marks them as deleted, needs EntityDeletedAttribute \since 4.8
+        RestoreCollectionsFromTrash, ///< Restores the selected collection from trash, needs EntityDeletedAttribute \since 4.8
+        RestoreItemsFromTrash, ///< Restores the selected items from trash, needs EntityDeletedAttribute \since 4.8
+        MoveToTrashRestoreCollection, ///< Move Collection to Trash or Restore it from Trash, needs EntityDeletedAttribute \since 4.8
         MoveToTrashRestoreCollectionAlternative, ///< Helper type for MoveToTrashRestoreCollection, do not create directly. Use this to override texts of the
-                                                 ///< restore action. @since 4.8
-        MoveToTrashRestoreItem, ///< Move Item to Trash or Restore it from Trash, needs EntityDeletedAttribute @since 4.8
+                                                 ///< restore action. \since 4.8
+        MoveToTrashRestoreItem, ///< Move Item to Trash or Restore it from Trash, needs EntityDeletedAttribute \since 4.8
         MoveToTrashRestoreItemAlternative, ///< Helper type for MoveToTrashRestoreItem, do not create directly. Use this to override texts of the restore
-                                           ///< action. @since 4.8
-        SynchronizeFavoriteCollections, ///< Synchronize favorite collections @since 4.8
-        SynchronizeCollectionTree, ///< Synchronize collection tree @since 4.15
+                                           ///< action. \since 4.8
+        SynchronizeFavoriteCollections, ///< Synchronize favorite collections \since 4.8
+        SynchronizeCollectionTree, ///< Synchronize collection tree \since 4.15
         LastType ///< Marks last action
     };
 
-    /**
+    /*!
      * Describes the text context that can be customized.
      */
     enum TextContext {
@@ -177,185 +177,185 @@ public:
         ErrorMessageText ///< The text of an error message
     };
 
-    /**
+    /*!
      * Creates a new standard action manager.
      *
-     * @param actionCollection The action collection to operate on.
-     * @param parent The parent widget.
+     * \a actionCollection The action collection to operate on.
+     * \a parent The parent widget.
      */
     explicit StandardActionManager(KActionCollection *actionCollection, QWidget *parent = nullptr);
 
-    /**
+    /*!
      * Destroys the standard action manager.
      */
     ~StandardActionManager() override;
 
-    /**
+    /*!
      * Sets the collection selection model based on which the collection
      * related actions should operate. If none is set, all collection actions
      * will be disabled.
      *
-     * @param selectionModel model to be set for collection
+     * \a selectionModel model to be set for collection
      */
     void setCollectionSelectionModel(QItemSelectionModel *selectionModel);
 
-    /**
+    /*!
      * Sets the item selection model based on which the item related actions
      * should operate. If none is set, all item actions will be disabled.
      *
-     * @param selectionModel selection model for items
+     * \a selectionModel selection model for items
      */
     void setItemSelectionModel(QItemSelectionModel *selectionModel);
 
-    /**
+    /*!
      * Sets the favorite collections model based on which the collection
      * relatedactions should operate. If none is set, the "Add to Favorite Folders" action
      * will be disabled.
      *
-     * @param favoritesModel model for the user's favorite collections
-     * @since 4.4
+     * \a favoritesModel model for the user's favorite collections
+     * \since 4.4
      */
     void setFavoriteCollectionsModel(FavoriteCollectionsModel *favoritesModel);
 
-    /**
+    /*!
      * Sets the favorite collection selection model based on which the favorite
      * collection related actions should operate. If none is set, all favorite modifications
      * actions will be disabled.
      *
-     * @param selectionModel selection model for favorite collections
-     * @since 4.4
+     * \a selectionModel selection model for favorite collections
+     * \since 4.4
      */
     void setFavoriteSelectionModel(QItemSelectionModel *selectionModel);
 
-    /**
+    /*!
      * Creates the action of the given type and adds it to the action collection
      * specified in the constructor if it does not exist yet. The action is
      * connected to its default implementation provided by this class.
      *
-     * @param type action to be created
+     * \a type action to be created
      */
     QAction *createAction(Type type);
 
-    /**
+    /*!
      * Convenience method to create all standard actions.
-     * @see createAction()
+     * \sa createAction()
      */
     void createAllActions();
 
-    /**
+    /*!
      * Returns the action of the given type, 0 if it has not been created (yet).
-     * @param type action type
+     * \a type action type
      */
     QAction *action(Type type) const;
 
-    /**
-     * Sets the label of the action @p type to @p text, which is used during
+    /*!
+     * Sets the label of the action \a type to \a text, which is used during
      * updating the action state and substituted according to the number of
      * selected objects. This is mainly useful to customize the label of actions
      * that can operate on multiple objects.
-     * @param type the action to set a text for
-     * @param text the text to display for the given action
+     * \a type the action to set a text for
+     * \a text the text to display for the given action
      * Example:
-     * @code
+     * \code
      * acctMgr->setActionText( Akonadi::StandardActionManager::CopyItems,
      *                         ki18np( "Copy Mail", "Copy %1 Mails" ) );
-     * @endcode
+     * \endcode
      */
     void setActionText(Type type, const KLocalizedString &text);
 
-    /**
-     * Sets whether the default implementation for the given action @p type
+    /*!
+     * Sets whether the default implementation for the given action \a type
      * shall be executed when the action is triggered.
      *
-     * @param type action type
-     * @param intercept If @c false, the default implementation will be executed,
-     *                  if @c true no action is taken.
+     * \a type action type
+     * \a intercept If \\ false, the default implementation will be executed,
+     *                  if \\ true no action is taken.
      *
-     * @since 4.6
+     * \since 4.6
      */
     void interceptAction(Type type, bool intercept = true);
 
-    /**
+    /*!
      * Returns the list of collections that are currently selected.
      * The list is empty if no collection is currently selected.
      *
-     * @since 4.6
+     * \since 4.6
      */
     Akonadi::Collection::List selectedCollections() const;
 
-    /**
+    /*!
      * Returns the list of items that are currently selected.
      * The list is empty if no item is currently selected.
      *
-     * @since 4.6
+     * \since 4.6
      */
     Akonadi::Item::List selectedItems() const;
 
-    /**
-     * Sets the @p text of the action @p type for the given @p context.
+    /*!
+     * Sets the \a text of the action \a type for the given \a context.
      *
-     * @param type action type
-     * @param context context for action
-     * @param text content to set for the action
-     * @since 4.6
+     * \a type action type
+     * \a context context for action
+     * \a text content to set for the action
+     * \since 4.6
      */
     void setContextText(Type type, TextContext context, const QString &text);
 
-    /**
-     * Sets the @p text of the action @p type for the given @p context.
+    /*!
+     * Sets the \a text of the action \a type for the given \a context.
      *
-     * @param type action type
-     * @param context context for action
-     * @param text content to set for the action
-     * @since 4.6
+     * \a type action type
+     * \a context context for action
+     * \a text content to set for the action
+     * \since 4.6
      */
     void setContextText(Type type, TextContext context, const KLocalizedString &text);
 
-    /**
+    /*!
      * Sets the mime type filter that will be used when creating new resources.
      *
-     * @param mimeTypes filter for creating new resources
-     * @since 4.6
+     * \a mimeTypes filter for creating new resources
+     * \since 4.6
      */
     void setMimeTypeFilter(const QStringList &mimeTypes);
 
-    /**
+    /*!
      * Sets the capability filter that will be used when creating new resources.
      *
-     * @param capabilities filter for creating new resources
-     * @since 4.6
+     * \a capabilities filter for creating new resources
+     * \since 4.6
      */
     void setCapabilityFilter(const QStringList &capabilities);
 
-    /**
-     * Sets the page @p names of the config pages that will be used by the
+    /*!
+     * Sets the page \a names of the config pages that will be used by the
      * built-in collection properties dialog.
      *
-     * @param names list of names which will be used
-     * @since 4.6
+     * \a names list of names which will be used
+     * \since 4.6
      */
     void setCollectionPropertiesPageNames(const QStringList &names);
 
-    /**
+    /*!
      * Create a popup menu.
      *
-     * @param menu parent menu for a popup
-     * @param type action type
-     * @since 4.8
+     * \a menu parent menu for a popup
+     * \a type action type
+     * \since 4.8
      */
     void createActionFolderMenu(QMenu *menu, Type type);
 
-    /**
+    /*!
      * Add a collection to the global recent collection list.
      *
-     * @param id the collection ID
-     * @since 5.18
+     * \a id the collection ID
+     * \since 5.18
      */
     void addRecentCollection(Akonadi::Collection::Id id) const;
 
 Q_SIGNALS:
 
-    /**
+    /*!
      * This signal is emitted whenever one of the selections has changed
      * (selected collections, selected favorites collections, selected items)
      * This allows other action managers to update their actions accordingly
@@ -365,7 +365,7 @@ Q_SIGNALS:
                            const Akonadi::Collection::List &selectedFavoriteCollectionsList,
                            const Akonadi::Item::List &selectedItems);
 
-    /**
+    /*!
      * This signal is emitted whenever the action state has been updated.
      * In case you have special needs for changing the state of some actions,
      * connect to this signal and adjust the action state.
@@ -373,7 +373,6 @@ Q_SIGNALS:
     void actionStateUpdated();
 
 private:
-    /// @cond PRIVATE
     friend class StandardActionManagerPrivate;
     std::unique_ptr<StandardActionManagerPrivate> const d;
 
@@ -425,7 +424,6 @@ private:
     Q_PRIVATE_SLOT(d, void updatePluralLabel(int, int))
     Q_PRIVATE_SLOT(d, void updateAlternatingAction(int))
     Q_PRIVATE_SLOT(d, bool isFavoriteCollection(const Akonadi::Collection &))
-    /// @endcond
 };
 
 }

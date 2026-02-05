@@ -56,7 +56,7 @@ class CollectionModifyJobPrivate;
  * connect(job, &KJob::result, this, &MyClass::modifyResult);
  * @endcode
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT CollectionModifyJob : public Job
 {

@@ -36,7 +36,7 @@ class AgentFilterProxyModelPrivate;
  *
  * @endcode
  *
- * @author Volker Krause <vkrause@kde.org>
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT AgentFilterProxyModel : public QSortFilterProxyModel
 {
