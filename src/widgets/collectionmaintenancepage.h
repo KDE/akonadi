@@ -15,6 +15,13 @@ namespace Akonadi
 {
 class CollectionMaintenancePagePrivate;
 
+/*!
+ * \brief The collection maintenance page for collection properties dialog.
+ *
+ * \class Akonadi::CollectionMaintenancePage
+ * \inheaderfile Akonadi/CollectionMaintenancePage
+ * \inmodule AkonadiWidgets
+ */
 class AKONADIWIDGETS_EXPORT CollectionMaintenancePage : public Akonadi::CollectionPropertiesPage
 {
     Q_OBJECT

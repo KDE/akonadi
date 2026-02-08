@@ -83,6 +83,10 @@ class CollectionPropertiesPagePrivate;
  *
  * \sa Akonadi::CollectionPropertiesDialog, Akonadi::CollectionPropertiesPageFactory
  *
+ * \class Akonadi::CollectionPropertiesPage
+ * \inheaderfile Akonadi/CollectionPropertiesPage
+ * \inmodule AkonadiWidgets
+ *
  * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADIWIDGETS_EXPORT CollectionPropertiesPage : public QWidget
@@ -148,6 +152,10 @@ private:
  * dialog page.
  * You can use the AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY macro
  * to create a factory class automatically.
+ *
+ * \class Akonadi::CollectionPropertiesPageFactory
+ * \inheaderfile Akonadi/CollectionPropertiesPage
+ * \inmodule AkonadiWidgets
  *
  * \author Volker Krause <vkrause@kde.org>
  */

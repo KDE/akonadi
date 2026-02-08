@@ -21,6 +21,10 @@ class TagSelectWidgetPrivate;
 /*!
  * A widget that offers facilities to add/remove tags and provides a way to select tags.
  *
+ * \class Akonadi::TagSelectWidget
+ * \inheaderfile Akonadi/TagSelectWidget
+ * \inmodule AkonadiWidgets
+ *
  * \since 4.14.6
  */
 

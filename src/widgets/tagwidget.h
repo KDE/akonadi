@@ -24,6 +24,10 @@ class TagWidgetPrivate;
 /*!
  * A widget that shows a tag selection and provides means to edit that selection.
  *
+ * \class Akonadi::TagWidget
+ * \inheaderfile Akonadi/TagWidget
+ * \inmodule AkonadiWidgets
+ *
  * TODO A standalone dialog version that takes an item and takes care of writing back the changes would be useful.
  * \since 4.13
  */

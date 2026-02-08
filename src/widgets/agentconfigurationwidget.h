@@ -22,6 +22,10 @@ class AgentConfigurationWidgetPrivate;
  * \brief A widget for displaying agent configuration in applications.
  *
  * To implement an agent configuration widget, see AgentConfigurationBase.
+ *
+ * \class Akonadi::AgentConfigurationWidget
+ * \inheaderfile Akonadi/AgentConfigurationWidget
+ * \inmodule AkonadiWidgets
  */
 class AKONADIWIDGETS_EXPORT AgentConfigurationWidget : public QWidget
 {
