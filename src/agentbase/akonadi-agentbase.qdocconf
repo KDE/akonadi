@@ -1,0 +1,33 @@
+include($KDE_DOCS/global/qt-module-defaults.qdocconf)
+
+project = AkonadiAgentBase
+description = PIM Storage Framework.
+
+
+documentationinheaders = true
+
+headerdirs += .
+sourcedirs += .
+
+outputformats = HTML
+
+depends += \
+    qtcore
+
+navigation.landingpage = "AkonadiAgentBase"
+
+qhp.projects            = akonadiagentbase
+
+qhp.akonadiagentbase.file                = akonadiagentbase.qhp
+qhp.akonadiagentbase.namespace           = org.kde.akonadiagentbase.$QT_VERSION_TAG
+qhp.akonadiagentbase.virtualFolder       = akonadiagentbase
+qhp.akonadiagentbase.indexTitle          = akonadiagentbase
+qhp.akonadiagentbase.indexRoot           =
+
+qhp.akonadiagentbase.subprojects         = classes
+qhp.akonadiagentbase.subprojects.classes.title = C++ Classes
+qhp.akonadiagentbase.subprojects.classes.indexTitle = Akonadi Agent Base C++ Classes
+qhp.akonadiagentbase.subprojects.classes.selectors = class fake:headerfile
+qhp.akonadiagentbase.subprojects.classes.sortPages = true
+
+tagfile = akonadiagentbase.tags

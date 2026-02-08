@@ -17,5 +17,6 @@
     \list
         \li \l{Akonadi Core C++ Classes}
         \li \l{Akonadi Widgets C++ Classes}
+        \li \l{Akonadi Agent Base C++ Classes}
     \endlist
 */

@@ -210,3 +210,4 @@ install(
     DESTINATION ${AkonadiAgentWidgetBase_INSTALL_INCLUDEDIR}/Akonadi
     COMPONENT Devel
 )
+ecm_generate_qdoc(KPim6AkonadiAgentBase akonadi-agentbase.qdocconf)
