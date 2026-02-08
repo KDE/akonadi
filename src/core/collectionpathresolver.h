@@ -15,18 +15,20 @@ namespace Akonadi
 class CollectionPathResolverPrivate;
 
 /*!
- * \internal
+ * \brief Converts between collection id and collection path.
  *
- * Converts between collection id and collection path.
+ * \internal
  *
  * While it is generally recommended to use collection ids, it can
  * be necessary in some cases (eg. a command line client) to use the
  * collection path instead. Use this class to get a collection id
  * from a collection path.
- * * \class Akonadi::CollectionPathResolver
+ *
+ * \class Akonadi::CollectionPathResolver
  * \inheaderfile Akonadi/CollectionPathResolver
  * \inmodule AkonadiCore
- * * \author Volker Krause <vkrause@kde.org>
+ *
+ * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT CollectionPathResolver : public Job
 {

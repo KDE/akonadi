@@ -17,9 +17,9 @@ namespace Akonadi
 class CollectionSyncPrivate;
 
 /*!
-  \internal
+  \brief Synchronizes remote and local collections.
 
-  Syncs remote and local collections.
+  \internal
 
   Basic terminology:
   - "local": The current state in the Akonadi server
@@ -40,6 +40,9 @@ class CollectionSyncPrivate;
     have different advantages and disadvantages, esp. regarding moving. Which one
     to chose mostly depends on what the backend provides in this regard.
 
+  \class Akonadi::CollectionSync
+  \inheaderfile Akonadi/CollectionSync
+  \inmodule AkonadiCore
 */
 class AKONADICORE_EXPORT CollectionSync : public Job
 {

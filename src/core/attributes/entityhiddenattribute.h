@@ -44,6 +44,10 @@ class EntityHiddenAttributePrivate;
  *
  * \endcode
  *
+ * \class Akonadi::EntityHiddenAttribute
+ * \inheaderfile Akonadi/EntityHiddenAttribute
+ * \inmodule AkonadiCore
+ *
  * \author Szymon Stefanek <s.stefanek@gmail.com>
  * \sa Akonadi::Attribute
  * \since 4.4

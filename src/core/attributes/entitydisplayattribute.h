@@ -23,6 +23,10 @@ class EntityDisplayAttributePrivate;
  *
  * Display properties of a collection or item, such as translated names and icons.
  *
+ * \class Akonadi::EntityDisplayAttribute
+ * \inheaderfile Akonadi/EntityDisplayAttribute
+ * \inmodule AkonadiCore
+ *
  * \author Volker Krause <vkrause@kde.org>
  * \since 4.2
  */

@@ -21,6 +21,10 @@ class IndexPolicyAttributePrivate;
  * This attribute can be attached to any collection and should be honored by indexing
  * agents.
  *
+ * \class Akonadi::IndexPolicyAttribute
+ * \inheaderfile Akonadi/IndexPolicyAttribute
+ * \inmodule AkonadiCore
+ *
  * \since 4.6
  */
 class AKONADICORE_EXPORT IndexPolicyAttribute : public Akonadi::Attribute

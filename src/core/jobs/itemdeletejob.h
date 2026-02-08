@@ -42,6 +42,10 @@ class ItemDeleteJobPrivate;
  *
  * \endcode
  *
+ * \class Akonadi::ItemDeleteJob
+ * \inheaderfile Akonadi/ItemDeleteJob
+ * \inmodule AkonadiCore
+ *
  * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT ItemDeleteJob : public Job

@@ -18,10 +18,14 @@ class QModelIndex;
 namespace Akonadi
 {
 /*!
+ * \brief A helper class to set a current index on a widget with
+ * delayed model loading.
+ *
  * \internal
  *
- * A helper class to set a current index on a widget with
- * delayed model loading.
+ * \class Akonadi::AsyncSelectionHandler
+ * \inheaderfile Akonadi/AsyncSelectionHandler
+ * \inmodule AkonadiCore
  *
  * \author Tobias Koenig <tokoe@kde.org>
  */

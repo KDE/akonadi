@@ -11,6 +11,13 @@
 
 namespace Akonadi
 {
+/*!
+ * \brief Marks a collection as a favorite.
+ *
+ * \class Akonadi::FavoriteCollectionAttribute
+ * \inheaderfile Akonadi/FavoriteCollectionAttribute
+ * \inmodule AkonadiCore
+ */
 class AKONADICORE_EXPORT FavoriteCollectionAttribute : public Attribute
 {
 public:

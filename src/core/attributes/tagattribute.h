@@ -21,6 +21,10 @@ class TagAttributePrivate;
 /*!
  * \brief Attribute that stores the properties that are used to display a tag.
  *
+ * \class Akonadi::TagAttribute
+ * \inheaderfile Akonadi/TagAttribute
+ * \inmodule AkonadiCore
+ *
  * \since 4.13
  */
 class AKONADICORE_EXPORT TagAttribute : public Attribute

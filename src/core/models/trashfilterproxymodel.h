@@ -39,6 +39,10 @@ class TrashFilterProxyModelPrivate;
  *
  * \endcode
  *
+ * \class Akonadi::TrashFilterProxyModel
+ * \inheaderfile Akonadi/TrashFilterProxyModel
+ * \inmodule AkonadiCore
+ *
  * \author Christian Mollekopf <chrigi_1@fastmail.fm>
  * \since 4.8
  */

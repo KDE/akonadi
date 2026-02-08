@@ -63,8 +63,11 @@ class AgentInstanceCreateJobPrivate;
  * }
  * \endcode
  *
- * \
-ote This is a KJob not an Akonadi::Job, so it won't auto-start!
+ * \class Akonadi::AgentInstanceCreateJob
+ * \inheaderfile Akonadi/AgentInstanceCreateJob
+ * \inmodule AkonadiCore
+ *
+ * \note This is a KJob not an Akonadi::Job, so it won't auto-start!
  *
  * \author Volker Krause <vkrause@kde.org>
  */

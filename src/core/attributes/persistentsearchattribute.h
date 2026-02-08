@@ -57,6 +57,10 @@ class PersistentSearchAttributePrivate;
  *
  * \endcode
  *
+ * \class Akonadi::PersistentSearchAttribute
+ * \inheaderfile Akonadi/PersistentSearchAttribute
+ * \inmodule AkonadiCore
+ *
  * \author Volker Krause <vkrause@kde.org>
  * \since 4.5
  */

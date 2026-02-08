@@ -45,6 +45,10 @@ class UnlinkJobPrivate;
  *
  * \endcode
  *
+ * \class Akonadi::UnlinkJob
+ * \inheaderfile Akonadi/UnlinkJob
+ * \inmodule AkonadiCore
+ *
  * \author Volker Krause <vkrause@kde.org>
  * \since 4.2
  * \sa LinkJob

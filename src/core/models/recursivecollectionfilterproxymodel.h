@@ -20,6 +20,10 @@ class RecursiveCollectionFilterProxyModelPrivate;
 /*!
  * \brief A model to filter out collections of non-matching content types.
  *
+ * \class Akonadi::RecursiveCollectionFilterProxyModel
+ * \inheaderfile Akonadi/RecursiveCollectionFilterProxyModel
+ * \inmodule AkonadiCore
+ *
  * \author Stephen Kelly <steveire@gmail.com>
  * \since 4.6
  */

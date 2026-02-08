@@ -42,6 +42,10 @@ class CollectionCopyJobPrivate;
  *
  * \endcode
  *
+ * \class Akonadi::CollectionCopyJob
+ * \inheaderfile Akonadi/CollectionCopyJob
+ * \inmodule AkonadiCore
+ *
  * \author Volker Krause <vkrause@kde.org>
  */
 class AKONADICORE_EXPORT CollectionCopyJob : public Job

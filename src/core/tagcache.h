@@ -22,10 +22,14 @@ namespace Akonadi
 class TagCachePrivate;
 
 /*!
- * Client-side cache of all exist tags.
+ * \brief Client-side cache of all exist tags.
  *
  * This can be instantiated explicitly or used as a singleton for
  * process-wide sharing.
+ *
+ * \class Akonadi::TagCache
+ * \inheaderfile Akonadi/TagCache
+ * \inmodule AkonadiCore
  *
  * \since 5.20.43
  */

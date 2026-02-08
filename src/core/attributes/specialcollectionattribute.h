@@ -22,6 +22,10 @@ class SpecialCollectionAttributePrivate;
  *
  * All collections registered with SpecialCollections must have this attribute set.
  *
+ * \class Akonadi::SpecialCollectionAttribute
+ * \inheaderfile Akonadi/SpecialCollectionAttribute
+ * \inmodule AkonadiCore
+ *
  * \author Constantin Berzan <exit3219@gmail.com>
  * \since 4.4
  */

@@ -35,6 +35,10 @@ class AgentTypeModelPrivate;
  * To show only agent types that match a given mime type or special
  * capabilities, use the AgentFilterProxyModel on top of this model.
  *
+ * \class Akonadi::AgentTypeModel
+ * \inheaderfile Akonadi/AgentTypeModel
+ * \inmodule AkonadiCore
+ *
  * \author Tobias Koenig <tokoe@kde.org>
  */
 class AKONADICORE_EXPORT AgentTypeModel : public QAbstractItemModel

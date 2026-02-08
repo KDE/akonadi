@@ -22,6 +22,15 @@ class SessionThread;
 class SessionPrivate;
 class CommandBuffer;
 
+/*!
+ * \brief Private implementation of the Akonadi connection.
+ *
+ * \internal
+ *
+ * \class Akonadi::Connection
+ * \inheaderfile Akonadi/Connection
+ * \inmodule AkonadiCore
+ */
 class AKONADICORE_EXPORT Connection : public QObject
 {
     Q_OBJECT

@@ -28,7 +28,13 @@ class Command;
 }
 
 /*!
+ * \brief Private implementation of Session.
+ *
  * \internal
+ *
+ * \class Akonadi::SessionPrivate
+ * \inheaderfile Akonadi/Session
+ * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT SessionPrivate
 {

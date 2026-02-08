@@ -8,7 +8,15 @@
 #include <Akonadi/EntityTreeModel>
 #include <QColor>
 
-/// Despite the name, this handles the presentation of collections including display text and icons, not just colors.
+/*!
+ * \brief A proxy model for handling collection presentation including display text and icons.
+ *
+ * Despite the name, this handles the presentation of collections including display text and icons, not just colors.
+ *
+ * \class Akonadi::ColorProxyModel
+ * \inheaderfile Akonadi/ColorProxyModel
+ * \inmodule AkonadiCore
+ */
 class AKONADICORE_EXPORT ColorProxyModel : public Akonadi::CollectionFilterProxyModel
 {
     Q_OBJECT
