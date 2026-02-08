@@ -56,6 +56,10 @@ class ItemCreateJobPrivate;
  * \endcode
  *
  * \author Volker Krause <vkrause@kde.org>
+ *
+ * \class Akonadi::ItemCreateJob
+ * \inheaderfile Akonadi/ItemCreateJob
+ * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT ItemCreateJob : public Job
 {

@@ -16,6 +16,10 @@ namespace Akonadi
 class CollectionQuotaAttributePrivate;
 
 /*!
+ * \class Akonadi::CollectionQuotaAttribute
+ * \inheaderfile Akonadi/CollectionQuotaAttribute
+ * \inmodule AkonadiCore
+ *
  * \brief Attribute that provides quota information for a collection.
  *
  * This attribute class provides quota information (e.g. current fill value

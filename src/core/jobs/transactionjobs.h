@@ -12,6 +12,12 @@
 namespace Akonadi
 {
 class TransactionJobPrivate;
+
+/*!
+ * \class Akonadi::TransactionJob
+ * \inheaderfile Akonadi/TransactionJob
+ * \inmodule AkonadiCore
+ */
 class AKONADICORE_EXPORT TransactionJob : public Job
 {
     Q_OBJECT

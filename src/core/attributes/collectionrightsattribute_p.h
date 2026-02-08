@@ -18,6 +18,10 @@ namespace Akonadi
 class CollectionRightsAttributePrivate;
 
 /*!
+ * \class Akonadi::CollectionRightsAttribute
+ * \inheaderfile Akonadi/CollectionRightsAttribute
+ * \inmodule AkonadiCore
+ *
  * \internal
  *
  * \brief Attribute that stores the rights of a collection.

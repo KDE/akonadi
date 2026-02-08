@@ -36,6 +36,10 @@ class EntityTreeModelPrivate;
  * Additionally, the models are updated automatically if another application changes the
  * data or inserts or deletes items etc.
  *
+ * \class Akonadi::EntityTreeModel
+ * \inheaderfile Akonadi/EntityTreeModel
+ * \inmodule AkonadiCore
+ *
  * \
 ote The EntityTreeModel should be used with the EntityTreeView or the EntityListView class
  * either directly or indirectly via proxy models.

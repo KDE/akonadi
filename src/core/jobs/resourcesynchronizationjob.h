@@ -28,6 +28,10 @@ class ResourceSynchronizationJobPrivate;
  * interested in the result, using Akonadi::AgentInstance::synchronize() is enough.
  * If you want to wait until it's finished, use this class.
  *
+ * \class Akonadi::ResourceSynchronizationJob
+ * \inheaderfile Akonadi/ResourceSynchronizationJob
+ * \inmodule AkonadiCore
+ *
  * Example:
  *
  * \code

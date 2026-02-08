@@ -31,6 +31,10 @@ class CollectionMoveJobPrivate;
  *
  * \since 4.4
  * \author Volker Krause <vkrause@kde.org>
+ *
+ * \class Akonadi::CollectionMoveJob
+ * \inheaderfile Akonadi/CollectionMoveJob
+ * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT CollectionMoveJob : public Job
 {

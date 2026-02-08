@@ -37,6 +37,10 @@ class AgentFilterProxyModelPrivate;
  * \endcode
  *
  * \author Volker Krause <vkrause@kde.org>
+ *
+ * \class Akonadi::AgentFilterProxyModel
+ * \inheaderfile Akonadi/AgentFilterProxyModel
+ * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT AgentFilterProxyModel : public QSortFilterProxyModel
 {

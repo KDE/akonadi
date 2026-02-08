@@ -45,6 +45,10 @@ class EntityMimeTypeFilterModelPrivate;
  * \author Bruno Virlet <bruno.virlet@gmail.com>
  * \author Stephen Kelly <steveire@gmail.com>
  * \since 4.4
+ *
+ * \class Akonadi::EntityMimeTypeFilterModel
+ * \inheaderfile Akonadi/EntityMimeTypeFilterModel
+ * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT EntityMimeTypeFilterModel : public QSortFilterProxyModel
 {

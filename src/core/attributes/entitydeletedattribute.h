@@ -15,6 +15,10 @@ namespace Akonadi
 class EntityDeletedAttributePrivate;
 
 /*!
+ * \class Akonadi::EntityDeletedAttribute
+ * \inheaderfile Akonadi/EntityDeletedAttribute
+ * \inmodule AkonadiCore
+ *
  * \brief An Attribute that marks that an entity was marked as deleted
  *
  * This class represents the attribute of all hidden items. The hidden

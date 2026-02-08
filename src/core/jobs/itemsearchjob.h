@@ -21,6 +21,10 @@ class SearchQuery;
 /*!
  * \brief Job that searches for items in the Akonadi storage.
  *
+ * \class Akonadi::ItemSearchJob
+ * \inheaderfile Akonadi/ItemSearchJob
+ * \inmodule AkonadiCore
+ *
  * This job searches for items that match a given search query and returns
  * the list of matching item.
  *

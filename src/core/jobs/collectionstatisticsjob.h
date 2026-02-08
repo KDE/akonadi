@@ -47,6 +47,10 @@ class CollectionStatisticsJobPrivate;
  * \endcode
  *
  * \author Volker Krause <vkrause@kde.org>
+ *
+ * \class Akonadi::CollectionStatisticsJob
+ * \inheaderfile Akonadi/CollectionStatisticsJob
+ * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT CollectionStatisticsJob : public Job
 {

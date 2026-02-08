@@ -17,6 +17,11 @@ class TagDeleteJobPrivate;
 
 /*!
  * \brief Job that deletes tags.
+ *
+ * \class Akonadi::TagDeleteJob
+ * \inheaderfile Akonadi/TagDeleteJob
+ * \inmodule AkonadiCore
+ *
  * \since 4.13
  */
 class AKONADICORE_EXPORT TagDeleteJob : public Job

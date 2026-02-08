@@ -16,6 +16,11 @@ class TagModifyJobPrivate;
 
 /*!
  * \brief Job that modifies a tag in the Akonadi storage.
+ *
+ * \class Akonadi::TagModifyJob
+ * \inheaderfile Akonadi/TagModifyJob
+ * \inmodule AkonadiCore
+ *
  * \since 4.13
  */
 class AKONADICORE_EXPORT TagModifyJob : public Job

@@ -32,6 +32,9 @@ class TrashRestoreJobPrivate;
  * TrashRestoreJob *job = new TrashRestoreJob( items );
  * connect( job, SIGNAL(result(KJob*)), this, SLOT(restoreResult(KJob*)) );
  *
+ * \class Akonadi::TrashRestoreJob
+ * \inheaderfile Akonadi/TrashRestoreJob
+ * \inmodule AkonadiCore
  * \endcode
  *
  * \author Christian Mollekopf <chrigi_1@fastmail.fm>

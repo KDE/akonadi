@@ -18,6 +18,10 @@ class SubscriptionJobPrivate;
  * \internal
  *
  * \brief Job to manipulate the local subscription state of a set of collections.
+ *
+ * \class Akonadi::SubscriptionJob
+ * \inheaderfile Akonadi/SubscriptionJob
+ * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT SubscriptionJob : public Job
 {

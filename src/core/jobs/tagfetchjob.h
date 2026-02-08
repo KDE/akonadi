@@ -23,6 +23,10 @@ class TagFetchJobPrivate;
  * If you want to fetch all items with given tag, use ItemFetchJob and the
  * ItemFetchJob(const Tag &tag, QObject *parent = nullptr) constructor (since 4.14)
  *
+ * \class Akonadi::TagFetchJob
+ * \inheaderfile Akonadi/TagFetchJob
+ * \inmodule AkonadiCore
+ *
  * \since 4.13
  */
 class AKONADICORE_EXPORT TagFetchJob : public Job

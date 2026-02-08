@@ -18,6 +18,10 @@ class TrashJobPrivate;
 /*!
  * \brief Job that moves items/collection to trash.
  *
+ * \class Akonadi::TrashJob
+ * \inheaderfile Akonadi/TrashJob
+ * \inmodule AkonadiCore
+ *
  * This job marks the given entities as trash and moves them to a given trash collection, if available.
  *
  * Priorities of trash collections are the following:

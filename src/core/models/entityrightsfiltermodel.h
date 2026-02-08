@@ -43,6 +43,10 @@ class EntityRightsFilterModelPrivate;
  *
  * \author Tobias Koenig <tokoe@kde.org>
  * \since 4.6
+ *
+ * \class Akonadi::EntityRightsFilterModel
+ * \inheaderfile Akonadi/EntityRightsFilterModel
+ * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT EntityRightsFilterModel : public QSortFilterProxyModel
 {

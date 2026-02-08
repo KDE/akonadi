@@ -50,6 +50,10 @@ class TransactionSequencePrivate;
  * \endcode
  *
  * \author Volker Krause <vkrause@kde.org>
+ *
+ * \class Akonadi::TransactionSequence
+ * \inheaderfile Akonadi/TransactionSequence
+ * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT TransactionSequence : public Job
 {

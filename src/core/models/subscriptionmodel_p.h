@@ -25,6 +25,10 @@ class SubscriptionModelPrivate;
  * A proxy model to be used on top of ETM to display a checkable tree of collections
  * for user to select which collections should be locally subscribed.
  *
+ * \class Akonadi::SubscriptionModel
+ * \inheaderfile Akonadi/SubscriptionModel
+ * \inmodule AkonadiCore
+ *
  * Used in SubscriptionDialog
  */
 class AKONADICORE_EXPORT SubscriptionModel : public QIdentityProxyModel

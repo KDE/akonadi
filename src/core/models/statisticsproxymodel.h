@@ -37,6 +37,10 @@ class StatisticsProxyModelPrivate;
  *
  * \author Kevin Ottens <ervin@kde.org>, now maintained by David Faure <faure@kde.org>
  * \since 4.4
+ *
+ * \class Akonadi::StatisticsProxyModel
+ * \inheaderfile Akonadi/StatisticsProxyModel
+ * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT StatisticsProxyModel : public KExtraColumnsProxyModel
 {

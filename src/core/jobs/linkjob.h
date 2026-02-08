@@ -48,6 +48,10 @@ class LinkJobPrivate;
  * \author Volker Krause <vkrause@kde.org>
  * \since 4.2
  * \sa UnlinkJob
+ *
+ * \class Akonadi::LinkJob
+ * \inheaderfile Akonadi/LinkJob
+ * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT LinkJob : public Job
 {

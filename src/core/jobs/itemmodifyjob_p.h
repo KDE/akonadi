@@ -23,6 +23,10 @@ using ModifyItemsCommandPtr = QSharedPointer<ModifyItemsCommand>;
 
 /*!
  * \internal
+ *
+ * \class Akonadi::ItemModifyJobPrivate
+ * \inheaderfile Akonadi/ItemModifyJob
+ * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT ItemModifyJobPrivate : public JobPrivate
 {

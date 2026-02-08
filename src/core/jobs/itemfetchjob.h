@@ -19,6 +19,10 @@ class ItemFetchScope;
 /*!
  * \brief Job that fetches items from the Akonadi storage.
  *
+ * \class Akonadi::ItemFetchJob
+ * \inheaderfile Akonadi/ItemFetchJob
+ * \inmodule AkonadiCore
+ *
  * This class is used to fetch items from the Akonadi storage.
  * Which parts of the items (e.g. headers only, attachments or all)
  * can be specified by the ItemFetchScope.

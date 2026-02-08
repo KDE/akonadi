@@ -38,6 +38,10 @@ class AccountActivitiesAbstract;
  * \endcode
  *
  * \author Volker Krause <vkrause@kde.org>
+ *
+ * \class Akonadi::AgentInstanceFilterProxyModel
+ * \inheaderfile Akonadi/AgentInstanceFilterProxyModel
+ * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT AgentInstanceFilterProxyModel : public QSortFilterProxyModel
 {

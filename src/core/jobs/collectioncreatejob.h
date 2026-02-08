@@ -37,6 +37,10 @@ class CollectionCreateJobPrivate;
  * \endcode
  *
  * \author Volker Krause <vkrause@kde.org>
+ *
+ * \class Akonadi::CollectionCreateJob
+ * \inheaderfile Akonadi/CollectionCreateJob
+ * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT CollectionCreateJob : public Job
 {

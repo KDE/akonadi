@@ -16,6 +16,10 @@ namespace Akonadi
 class CollectionIdentificationAttributePrivate;
 
 /*!
+ * \class Akonadi::CollectionIdentificationAttribute
+ * \inheaderfile Akonadi/CollectionIdentificationAttribute
+ * \inmodule AkonadiCore
+ *
  * \brief Attribute that stores additional information on a collection that can be used for searching.
  *
  * Additional indexed properties that can be used for searching.

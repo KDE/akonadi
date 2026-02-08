@@ -43,6 +43,10 @@ class ItemCopyJobPrivate;
  * \endcode
  *
  * \author Volker Krause <vkrause@kde.org>
+ *
+ * \class Akonadi::ItemCopyJob
+ * \inheaderfile Akonadi/ItemCopyJob
+ * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT ItemCopyJob : public Job
 {

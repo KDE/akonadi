@@ -19,6 +19,10 @@ namespace Akonadi
  *
  * Storing color in Akonadi makes it possible to sync them between client and server.
  *
+ * \class Akonadi::CollectionColorAttribute
+ * \inheaderfile Akonadi/CollectionColorAttribute
+ * \inmodule AkonadiCore
+ *
  * \author Sandro Knauß <knauss@kolabsys.com>
  * \since 5.3
  */

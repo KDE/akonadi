@@ -14,6 +14,13 @@ namespace Akonadi
 class SearchResultJobPrivate;
 class Collection;
 
+/*!
+ * \class Akonadi::SearchResultJob
+ * \inheaderfile Akonadi/SearchResultJob
+ * \inmodule AkonadiCore
+ *
+ * \internal
+ */
 class AKONADICORE_EXPORT SearchResultJob : public Akonadi::Job
 {
     Q_OBJECT

@@ -24,6 +24,10 @@ class CollectionAttributesSynchronizationJobPrivate;
  * a collection based on what the backend is reporting to store them in the
  * Akonadi storage.
  *
+ * \class Akonadi::CollectionAttributesSynchronizationJob
+ * \inheaderfile Akonadi/CollectionAttributesSynchronizationJob
+ * \inmodule AkonadiCore
+ *
  * Example:
  *
  * \code

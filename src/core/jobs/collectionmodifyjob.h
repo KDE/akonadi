@@ -18,6 +18,10 @@ class CollectionModifyJobPrivate;
 /*!
  * \brief Job that modifies a collection in the Akonadi storage.
  *
+ * \class Akonadi::CollectionModifyJob
+ * \inheaderfile Akonadi/CollectionModifyJob
+ * \inmodule AkonadiCore
+ *
  * This job modifies the properties of an existing collection.
  *
  * \code

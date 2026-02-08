@@ -17,6 +17,10 @@ class CollectionDeleteJobPrivate;
 /*!
  * \brief Job that deletes a collection in the Akonadi storage.
  *
+ * \class Akonadi::CollectionDeleteJob
+ * \inheaderfile Akonadi/CollectionDeleteJob
+ * \inmodule AkonadiCore
+ *
  * This job deletes a collection and all its sub-collections as well as all associated content.
  *
  * \code

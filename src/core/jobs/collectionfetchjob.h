@@ -18,6 +18,10 @@ class CollectionFetchJobPrivate;
 /*!
  * \brief Job that fetches collections from the Akonadi storage.
  *
+ * \class Akonadi::CollectionFetchJob
+ * \inheaderfile Akonadi/CollectionFetchJob
+ * \inmodule AkonadiCore
+ *
  * This class can be used to retrieve the complete or partial collection tree
  * from the Akonadi storage. This fetches collection data, not item data.
  *

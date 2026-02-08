@@ -16,6 +16,11 @@ class InvalidateCacheJobPrivate;
 
 /*!
  * Helper job to invalidate item cache for an entire collection.
+ *
+ * \class Akonadi::InvalidateCacheJob
+ * \inheaderfile Akonadi/InvalidateCacheJob
+ * \inmodule AkonadiCore
+ *
  * \since 4.8
  */
 class AKONADICORE_EXPORT InvalidateCacheJob : public Akonadi::Job

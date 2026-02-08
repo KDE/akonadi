@@ -30,6 +30,10 @@ class ItemMoveJobPrivate;
  * \endcode
  *
  * \author Volker Krause <vkrause@kde.org>
+ *
+ * \class Akonadi::ItemMoveJob
+ * \inheaderfile Akonadi/ItemMoveJob
+ * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT ItemMoveJob : public Job
 {

@@ -16,6 +16,11 @@ class TagCreateJobPrivate;
 
 /*!
  * \brief Job that creates a new tag in the Akonadi storage.
+ *
+ * \class Akonadi::TagCreateJob
+ * \inheaderfile Akonadi/TagCreateJob
+ * \inmodule AkonadiCore
+ *
  * \since 4.13
  */
 class AKONADICORE_EXPORT TagCreateJob : public Job

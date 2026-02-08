@@ -39,6 +39,10 @@ class CollectionFilterProxyModelPrivate;
  * \endcode
  *
  * @author Bruno Virlet <bruno.virlet@gmail.com>
+ *
+ * \class Akonadi::CollectionFilterProxyModel
+ * \inheaderfile Akonadi/CollectionFilterProxyModel
+ * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
 {

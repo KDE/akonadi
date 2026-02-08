@@ -22,6 +22,10 @@ class ResourceSelectJobPrivate;
  * based operations ( e.g. fetch items or collections by remote identifier ) are
  * executed.
  *
+ * \class Akonadi::ResourceSelectJob
+ * \inheaderfile Akonadi/ResourceSelectJob
+ * \inmodule AkonadiCore
+ *
  * Example:
  *
  * \code

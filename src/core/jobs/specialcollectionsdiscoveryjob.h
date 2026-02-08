@@ -27,6 +27,10 @@ class SpecialCollectionsDiscoveryJobPrivate;
  *
  * \author David Faure <faure@kde.org>
  * \since 4.11
+ *
+ * \class Akonadi::SpecialCollectionsDiscoveryJob
+ * \inheaderfile Akonadi/SpecialCollectionsDiscoveryJob
+ * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT SpecialCollectionsDiscoveryJob : public KCompositeJob
 {

@@ -37,6 +37,10 @@ class SpecialCollectionsRequestJobPrivate;
  *
  * \author Constantin Berzan <exit3219@gmail.com>
  * \since 4.4
+ *
+ * \class Akonadi::SpecialCollectionsRequestJob
+ * \inheaderfile Akonadi/SpecialCollectionsRequestJob
+ * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT SpecialCollectionsRequestJob : public TransactionSequence
 {

@@ -48,6 +48,10 @@ class FavoriteCollectionsModelPrivate;
  *
  * \author Kevin Ottens <ervin@kde.org>
  * \since 4.4
+ *
+ * \class Akonadi::FavoriteCollectionsModel
+ * \inheaderfile Akonadi/FavoriteCollectionsModel
+ * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT FavoriteCollectionsModel : public KSelectionProxyModel
 {

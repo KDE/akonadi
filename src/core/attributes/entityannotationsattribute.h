@@ -25,6 +25,10 @@ namespace Akonadi
  * for a shared note:
  * /shared/comment
  *
+ * \class Akonadi::EntityAnnotationsAttribute
+ * \inheaderfile Akonadi/EntityAnnotationsAttribute
+ * \inmodule AkonadiCore
+ *
  * \since 4.13
  */
 class AKONADICORE_EXPORT EntityAnnotationsAttribute : public Akonadi::Attribute

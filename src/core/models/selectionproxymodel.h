@@ -82,6 +82,10 @@ class SelectionProxyModelPrivate;
 
  * \author Stephen Kelly <steveire@gmail.com>
  * \since 4.4
+ *
+ * \class Akonadi::SelectionProxyModel
+ * \inheaderfile Akonadi/SelectionProxyModel
+ * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT SelectionProxyModel : public KSelectionProxyModel
 {

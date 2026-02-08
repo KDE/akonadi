@@ -18,6 +18,11 @@ namespace Akonadi
 class Monitor;
 class TagModelPrivate;
 
+/*!
+ * \class Akonadi::TagModel
+ * \inheaderfile Akonadi/TagModel
+ * \inmodule AkonadiCore
+ */
 class AKONADICORE_EXPORT TagModel : public QAbstractItemModel
 {
     Q_OBJECT

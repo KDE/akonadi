@@ -77,6 +77,10 @@ class ItemModifyJobPrivate;
  * example, calling item().revision() in the job's result slot.
  *
  * \author Volker Krause <vkrause@kde.org>
+ *
+ * \class Akonadi::ItemModifyJob
+ * \inheaderfile Akonadi/ItemModifyJob
+ * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT ItemModifyJob : public Job
 {
