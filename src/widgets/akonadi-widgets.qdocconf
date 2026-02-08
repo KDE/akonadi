@@ -1,0 +1,33 @@
+include($KDE_DOCS/global/qt-module-defaults.qdocconf)
+
+project = AkonadiWidgets
+description = PIM Storage Framework.
+
+
+documentationinheaders = true
+
+headerdirs += .
+sourcedirs += .
+
+outputformats = HTML
+
+depends += \
+    qtcore
+
+navigation.landingpage = "AkonadiWidgets"
+
+qhp.projects            = akonadiwidgets
+
+qhp.akonadiwidgets.file                = akonadiwidgets.qhp
+qhp.akonadiwidgets.namespace           = org.kde.akonadiwidgets.$QT_VERSION_TAG
+qhp.akonadiwidgets.virtualFolder       = akonadiwidgets
+qhp.akonadiwidgets.indexTitle          = akonadiwidgets
+qhp.akonadiwidgets.indexRoot           =
+
+qhp.akonadiwidgets.subprojects         = classes
+qhp.akonadiwidgets.subprojects.classes.title = C++ Classes
+qhp.akonadiwidgets.subprojects.classes.indexTitle = Akonadi Widgets C++ Classes
+qhp.akonadiwidgets.subprojects.classes.selectors = class fake:headerfile
+qhp.akonadiwidgets.subprojects.classes.sortPages = true
+
+tagfile = akonadiwidgets.tags

@@ -243,3 +243,4 @@ if(BUILD_DESIGNERPLUGIN)
         COMPONENT Devel
     )
 endif()
+ecm_generate_qdoc(KPim6AkonadiWidgets akonadi-widgets.qdocconf)
