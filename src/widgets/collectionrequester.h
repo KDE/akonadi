@@ -26,6 +26,10 @@ class CollectionRequesterPrivate;
  * the currently chosen collection and a button invoking a dialog
  * for choosing a collection.
  *
+ * \class Akonadi::CollectionRequester
+ * \inheaderfile Akonadi/CollectionRequester
+ * \inmodule AkonadiWidgets
+ *
  * Example:
  *
  * \code

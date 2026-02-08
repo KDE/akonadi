@@ -27,6 +27,10 @@ class CollectionDialogPrivate;
  * on the Akonadi storage and allows the selection of one or multiple
  * collections.
  *
+ * \class Akonadi::CollectionDialog
+ * \inheaderfile Akonadi/CollectionDialog
+ * \inmodule AkonadiWidgets
+ *
  * The list of shown collections can be filtered by mime type and access
  * rights. Note that mime types are not enabled by default, so
  * setMimeTypeFilter() must be called to enable the desired mime types.

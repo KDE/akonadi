@@ -23,6 +23,10 @@ class ControlGuiPrivate;
  * to ControlGui the Akonadi service. For asynchronous methods see
  * Akonadi::ServerManager.
  *
+ * \class Akonadi::ControlGui
+ * \inheaderfile Akonadi/ControlGui
+ * \inmodule AkonadiWidgets
+ *
  * The most important method in here is widgetNeedsAkonadi(). It is
  * recommended to call it with every top-level widget of your application
  * as argument, assuming your application relies on Akonadi being operational

@@ -28,6 +28,10 @@ class AccountActivitiesAbstract;
  * widget is updated automatically as soon as new agent instances
  * are added to or removed from the system.
  *
+ * \class Akonadi::AgentInstanceWidget
+ * \inheaderfile Akonadi/AgentInstanceWidget
+ * \inmodule AkonadiWidgets
+ *
  * \code
  *
  * MyWidget::MyWidget( QWidget *parent )
@@ -50,10 +54,6 @@ class AccountActivitiesAbstract;
  * }
  *
  * \endcode
- *
- * \class Akonadi::AgentInstanceWidget
- * \inheaderfile Akonadi/AgentInstanceWidget
- * \inmodule AkonadiWidgets
  *
  * \author Tobias Koenig <tokoe@kde.org>
  */

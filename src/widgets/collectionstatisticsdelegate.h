@@ -21,6 +21,10 @@ class CollectionStatisticsDelegatePrivate;
 /*!
  * \brief A delegate that draws unread and total count for StatisticsProxyModel.
  *
+ * \class Akonadi::CollectionStatisticsDelegate
+ * \inheaderfile Akonadi/CollectionStatisticsDelegate
+ * \inmodule AkonadiWidgets
+ *
  * The delegate provides the following features:
  *
  *    - Collections with unread items will have the foldername and the unread

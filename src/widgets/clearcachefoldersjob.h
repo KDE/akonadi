@@ -14,6 +14,10 @@ namespace Akonadi
 {
 /*!
  * \brief The ClearCacheFoldersJob class
+ *
+ * \class Akonadi::ClearCacheFoldersJob
+ * \inheaderfile Akonadi/ClearCacheFoldersJob
+ * \inmodule AkonadiWidgets
  */
 class AKONADIWIDGETS_EXPORT ClearCacheFoldersJob : public QObject
 {
