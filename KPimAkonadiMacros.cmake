@@ -84,7 +84,11 @@ function(add_akonadi_isolated_test)
             )
                 list(LENGTH "${backends}" backendsLen)
                 string(TOLOWER ${backend} lcbackend)
-                list(FIND "${backends}" ${lcbackend} enableBackend)
+                list(
+                    FIND "${backends}"
+                    ${lcbackend}
+                    enableBackend
+                )
                 if(${backendsLen} EQUAL 0 OR ${enableBackend} GREATER -1)
                     set(configFile ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config.xml)
                     if(AKONADI_TESTS_XML)

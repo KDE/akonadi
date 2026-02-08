@@ -43,7 +43,6 @@ repos:
   rev: 0.23.2
   hooks:
   - id: gersemi
-    args: ["--no-warn-about-unknown-commands"]
 #- repo: https://github.com/DavidAnson/markdownlint-cli2
 #  rev: v0.18.1
 #  hooks:

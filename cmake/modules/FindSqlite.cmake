@@ -70,8 +70,7 @@ if(EXISTS ${SQLITE_INCLUDE_DIR}/sqlite3.h)
 
     if(SQLITE_VERSION_OK)
         file(
-            WRITE
-            ${CMAKE_BINARY_DIR}/sqlite_check_unlock_notify.cpp
+            WRITE ${CMAKE_BINARY_DIR}/sqlite_check_unlock_notify.cpp
             "#include <sqlite3.h>
           int main(int argc, char **argv) {
             return sqlite3_unlock_notify(0, 0, 0);
