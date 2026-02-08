@@ -518,3 +518,4 @@ install(
 )
 
 install(FILES kcfg2dbus.xsl DESTINATION ${KDE_INSTALL_DATADIR_KF}/akonadi)
+ecm_generate_qdoc(KPim6AkonadiCore akonadi-core.qdocconf)

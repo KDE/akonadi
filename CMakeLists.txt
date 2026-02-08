@@ -83,6 +83,7 @@ include(ECMSetupQtPluginMacroNames)
 include(ECMQmlModule)
 include(ECMConfiguredInstall)
 include(ECMGenerateDBusServiceFile)
+include(ECMGenerateQDoc)
 
 include(AkonadiMacros)
 
