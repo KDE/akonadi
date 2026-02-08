@@ -35,7 +35,7 @@ class AttributeFactoryPrivate;
  * \endcode
  *
  * \class Akonadi::AttributeFactory
- * \inheaders Akonadi/AttributeFactory
+ * \inheaderfile Akonadi/AttributeFactory
  * \inmodule AkonadiCore
  *
  * \author Volker Krause <vkrause@kde.org>

@@ -18,7 +18,7 @@ class AccountBasePrivate;
 
 /*!
  * \class Akonadi::AccountBase
- * \inheaders Akonadi/AccountBase
+ * \inheaderfile Akonadi/AccountBase
  * \inmodule AkonadiAgentBase
  *
  * Base class for agents that support integration with online accounts.

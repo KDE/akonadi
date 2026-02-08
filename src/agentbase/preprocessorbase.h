@@ -35,7 +35,7 @@ class PreprocessorBasePrivate;
  * The method all the preprocessors must implement is processItem().
  *
  * \class Akonadi::PreprocessorBase
- * \inheaders Akonadi/PreprocessorBase
+ * \inheaderfile Akonadi/PreprocessorBase
  * \inmodule AkonadiAgentBase
  *
  * \author Szymon Stefanek <s.stefanek@gmail.com>

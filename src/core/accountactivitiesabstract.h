@@ -12,7 +12,7 @@ namespace Akonadi
 {
 /*!
  * \class Akonadi::AccountActivitiesAbstract
- * \inheaders Akonadi/AccountActivitiesAbstract
+ * \inheaderfile Akonadi/AccountActivitiesAbstract
  * \inmodule AkonadiCore
  *
  * \brief The AccountActivitiesAbstract class

@@ -22,7 +22,7 @@ class CollectionComboBoxPrivate;
 
 /*!
  * \class Akonadi::CollectionComboBox
- * \inheaders Akonadi/CollectionComboBox
+ * \inheaderfile Akonadi/CollectionComboBox
  * \inmodule AkonadiWidgets
  *
  * \brief A combobox for selecting an Akonadi collection.

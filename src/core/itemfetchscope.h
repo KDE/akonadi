@@ -53,7 +53,7 @@ class TagFetchScope;
  * This class is implicitly shared.
  *
  * \class Akonadi::ItemFetchScope
- * \inheaders Akonadi/ItemFetchScope
+ * \inheaderfile Akonadi/ItemFetchScope
  * \inmodule AkonadiCore
  *
  * \author Kevin Krammer <kevin.krammer@gmx.at>

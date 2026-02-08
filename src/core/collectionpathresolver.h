@@ -24,7 +24,7 @@ class CollectionPathResolverPrivate;
  * collection path instead. Use this class to get a collection id
  * from a collection path.
  * * \class Akonadi::CollectionPathResolver
- * \inheaders Akonadi/CollectionPathResolver
+ * \inheaderfile Akonadi/CollectionPathResolver
  * \inmodule AkonadiCore
  * * \author Volker Krause <vkrause@kde.org>
  */

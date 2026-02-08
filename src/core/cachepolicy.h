@@ -56,7 +56,7 @@ class CachePolicyPrivate;
  * \todo on a POP3 account, is should not be possible to change locally cached parts, find a solution for that
  *
  * \class Akonadi::CachePolicy
- * \inheaders Akonadi/CachePolicy
+ * \inheaderfile Akonadi/CachePolicy
  * \inmodule AkonadiCore
  *
  * \author Volker Krause <vkrause@kde.org>

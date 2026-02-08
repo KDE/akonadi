@@ -91,7 +91,7 @@ ote KDE deals with this inside the KMimeType framework, this class is just
  * This class is implicitly shared.
  *
  * \class Akonadi::MimeTypeChecker
- * \inheaders Akonadi/MimeTypeChecker
+ * \inheaderfile Akonadi/MimeTypeChecker
  * \inmodule AkonadiCore
  *
  * \author Kevin Krammer <kevin.krammer@gmx.at>

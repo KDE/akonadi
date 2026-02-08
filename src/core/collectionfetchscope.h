@@ -50,7 +50,7 @@ class CollectionFetchScopePrivate;
  * This class is implicitly shared.
  *
  * \class Akonadi::CollectionFetchScope
- * \inheaders Akonadi/CollectionFetchScope
+ * \inheaderfile Akonadi/CollectionFetchScope
  * \inmodule AkonadiCore
  *
  * \author Volker Krause <vkrause@kde.org>

@@ -22,7 +22,7 @@ class TagPrivate;
 
 /*!
  * \class Akonadi::Tag
- * \inheaders Akonadi/Tag
+ * \inheaderfile Akonadi/Tag
  * \inmodule AkonadiCore
  *
  * An Akonadi Tag.

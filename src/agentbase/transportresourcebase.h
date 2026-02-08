@@ -20,7 +20,7 @@ class TransportResourceBasePrivate;
 
 /*!
   * \class Akonadi::TransportResourceBase
-  * \inheaders Akonadi/TransportResourceBase
+  * \inheaderfile Akonadi/TransportResourceBase
   * \inmodule AkonadiAgentBase
   *
   * \short Resource implementing mail transport capability.

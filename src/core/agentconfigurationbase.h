@@ -67,7 +67,7 @@ class AgentConfigurationBasePrivate;
  * of the paths search by QCoreApplication::libraryPaths().
  *
  * \class Akonadi::AgentConfigurationBase
- * \inheaders Akonadi/AgentConfigurationBase
+ * \inheaderfile Akonadi/AgentConfigurationBase
  * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT AgentConfigurationBase : public QObject

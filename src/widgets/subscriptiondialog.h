@@ -18,7 +18,7 @@ class SubscriptionDialogPrivate;
 
 /*!
  * \class Akonadi::SubscriptionDialog
- * \inheaders Akonadi/SubscriptionDialog
+ * \inheaderfile Akonadi/SubscriptionDialog
  * \inmodule AkonadiWidgets
  *
  * Local subscription dialog.

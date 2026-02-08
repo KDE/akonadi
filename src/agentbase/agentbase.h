@@ -69,7 +69,7 @@ class Item;
  * QDBusConnection::sessionBus() which works around this problem.
  *
  * \class Akonadi::AgentBase
- * \inheaders Akonadi/AgentBase
+ * \inheaderfile Akonadi/AgentBase
  * \inmodule AkonadiAgentBase
  *
  * \author Till Adam <adam@kde.org>, Volker Krause <vkrause@kde.org>
@@ -240,7 +240,7 @@ public:
      * \since 4.4
      *
      * \class Akonadi::AgentBase::ObserverV2
-     * \inheaders Akonadi/AgentBase
+     * \inheaderfile Akonadi/AgentBase
      * \inmodule AkonadiAgentBase
      */
     class AKONADIAGENTBASE_EXPORT ObserverV2 : public Observer
@@ -308,7 +308,7 @@ public:
      * \since 4.11
      *
      * \class Akonadi::AgentBase::ObserverV3
-     * \inheaders Akonadi/AgentBase
+     * \inheaderfile Akonadi/AgentBase
      * \inmodule AkonadiAgentBase
      */
     class AKONADIAGENTBASE_EXPORT ObserverV3 : public ObserverV2
@@ -363,7 +363,7 @@ public:
 
     /*!
      * \class Akonadi::AgentBase::TagObserver
-     * \inheaders Akonadi/AgentBase
+     * \inheaderfile Akonadi/AgentBase
      * \inmodule AkonadiAgentBase
      */
     class AKONADIAGENTBASE_EXPORT TagObserver

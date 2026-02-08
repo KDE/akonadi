@@ -51,7 +51,7 @@ class ChangeNotificationDependenciesFactory;
  * \endcode
  *
  * \class Akonadi::Session
- * \inheaders Akonadi/Session
+ * \inheaderfile Akonadi/Session
  * \inmodule AkonadiCore
  *
  * \author Volker Krause <vkrause@kde.org>

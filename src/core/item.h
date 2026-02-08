@@ -95,7 +95,7 @@ class ItemPrivate;
  * to the documentation of those methods for more details.
  *
  * \class Akonadi::Item
- * \inheaders Akonadi/Item
+ * \inheaderfile Akonadi/Item
  * \inmodule AkonadiCore
  *
  * \author Volker Krause <vkrause@kde.org>, Till Adam <adam@kde.org>, Marc Mutz <mutz@kde.org>

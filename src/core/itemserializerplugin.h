@@ -101,7 +101,7 @@ namespace Akonadi
  * \endcode
  *
  * \class Akonadi::ItemSerializerPlugin
- * \inheaders Akonadi/ItemSerializerPlugin
+ * \inheaderfile Akonadi/ItemSerializerPlugin
  * \inmodule AkonadiCore
  *
  * \author Till Adam <adam@kde.org>, Volker Krause <vkrause@kde.org>

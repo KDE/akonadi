@@ -131,7 +131,7 @@ class ResourceBasePrivate;
  * \todo Convenience base class for collection-less resources
  *
  * \class Akonadi::ResourceBase
- * \inheaders Akonadi/ResourceBase
+ * \inheaderfile Akonadi/ResourceBase
  * \inmodule AkonadiAgentBase
  */
 // FIXME_API: API dox need to be updated for Observer approach (kevin)

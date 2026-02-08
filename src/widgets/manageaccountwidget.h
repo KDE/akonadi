@@ -22,7 +22,7 @@ class ManageAccountWidgetPrivate;
 class AccountActivitiesAbstract;
 /*!
  * \class Akonadi::ManageAccountWidget
- * \inheaders Akonadi/ManageAccountWidget
+ * \inheaderfile Akonadi/ManageAccountWidget
  * \inmodule AkonadiWidgets
  *
  * \brief The ManageAccountWidget class

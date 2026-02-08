@@ -30,7 +30,7 @@ class StandardActionManagerPrivate;
 
 /*!
  * \class Akonadi::StandardActionManager
- * \inheaders Akonadi/StandardActionManager
+ * \inheaderfile Akonadi/StandardActionManager
  * \inmodule AkonadiWidgets
  *
  * \brief Manages generic actions for collection and item views.

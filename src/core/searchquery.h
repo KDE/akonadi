@@ -16,7 +16,7 @@ class SearchTermPrivate;
 
 /*!
  * \class Akonadi::SearchTerm
- * \inheaders Akonadi/SearchQuery
+ * \inheaderfile Akonadi/SearchQuery
  * \inmodule AkonadiCore
  *
  * Search term represents the actual condition within query.
@@ -114,7 +114,7 @@ class SearchQueryPrivate;
 
 /*!
  * \class Akonadi::SearchQuery
- * \inheaders Akonadi/SearchQuery
+ * \inheaderfile Akonadi/SearchQuery
  * \inmodule AkonadiCore
  *
  * \brief A query that can be passed to ItemSearchJob or others.
@@ -182,7 +182,7 @@ private:
  * A search term for an email field.
  *
  * \class Akonadi::EmailSearchTerm
- * \inheaders Akonadi/SearchQuery
+ * \inheaderfile Akonadi/SearchQuery
  * \inmodule AkonadiCore
  *
  * This class can be used to create queries that akonadi email search backends understand.
@@ -242,7 +242,7 @@ public:
  * This class can be used to create queries that akonadi contact search backends understand.
  *
  * \class Akonadi::ContactSearchTerm
- * \inheaders Akonadi/SearchQuery
+ * \inheaderfile Akonadi/SearchQuery
  * \inmodule AkonadiCore
  *
  * \since 4.13
@@ -278,7 +278,7 @@ public:
  * This class can be used to create queries that akonadi incidence search backends understand.
  *
  * \class Akonadi::IncidenceSearchTerm
- * \inheaders Akonadi/SearchQuery
+ * \inheaderfile Akonadi/SearchQuery
  * \inmodule AkonadiCore
  *
  * \since 5.0

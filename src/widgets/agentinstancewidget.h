@@ -52,7 +52,7 @@ class AccountActivitiesAbstract;
  * \endcode
  *
  * \class Akonadi::AgentInstanceWidget
- * \inheaders Akonadi/AgentInstanceWidget
+ * \inheaderfile Akonadi/AgentInstanceWidget
  * \inmodule AkonadiWidgets
  *
  * \author Tobias Koenig <tokoe@kde.org>

@@ -50,7 +50,7 @@ class CollectionStatisticsDelegatePrivate;
  * \author Thomas McGuire <thomas.mcguire@gmx.net>
  *
  * \class Akonadi::CollectionStatisticsDelegate
- * \inheaders Akonadi/CollectionStatisticsDelegate
+ * \inheaderfile Akonadi/CollectionStatisticsDelegate
  * \inmodule AkonadiWidgets
  */
 class AKONADIWIDGETS_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate

@@ -22,7 +22,7 @@ class TagSelectionComboBoxPrivate;
 
 /*!
  * \class Akonadi::TagSelectionComboBox
- * \inheaders Akonadi/TagSelectionComboBox
+ * \inheaderfile Akonadi/TagSelectionComboBox
  * \inmodule AkonadiWidgets
  *
  * \brief The TagSelectionCombo class

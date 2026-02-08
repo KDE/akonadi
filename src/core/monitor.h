@@ -66,7 +66,7 @@ class Command;
  * \todo Special case for collection content counts changed
  *
  * \class Akonadi::Monitor
- * \inheaders Akonadi/Monitor
+ * \inheaderfile Akonadi/Monitor
  * \inmodule AkonadiCore
  *
  * \author Volker Krause <vkrause@kde.org>

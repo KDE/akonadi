@@ -57,7 +57,7 @@ class CollectionStatistics;
  * \endcode
  *
  * \class Akonadi::Collection
- * \inheaders Akonadi/Collection
+ * \inheaderfile Akonadi/Collection
  * \inmodule AkonadiCore
  *
  * \author Volker Krause <vkrause@kde.org>

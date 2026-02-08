@@ -46,7 +46,7 @@ class SpecialCollectionsPrivate;
   become unavailable).
 
   \class Akonadi::SpecialCollections
-  \inheaders Akonadi/SpecialCollections
+  \inheaderfile Akonadi/SpecialCollections
   \inmodule AkonadiCore
 
   \author Constantin Berzan <exit3219@gmail.com>

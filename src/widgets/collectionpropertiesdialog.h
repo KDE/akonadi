@@ -38,7 +38,7 @@ class CollectionPropertiesDialogPrivate;
  * \sa Akonadi::CollectionPropertiesPage
  *
  * \class Akonadi::CollectionPropertiesDialog
- * \inheaders Akonadi/CollectionPropertiesDialog
+ * \inheaderfile Akonadi/CollectionPropertiesDialog
  * \inmodule AkonadiWidgets
  *
  * \author Volker Krause <vkrause@kde.org>

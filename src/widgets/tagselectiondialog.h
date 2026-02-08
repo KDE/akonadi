@@ -25,7 +25,7 @@ class TagSelectionDialogPrivate;
 
 /*!
  * \class Akonadi::TagSelectionDialog
- * \inheaders Akonadi/TagSelectionDialog
+ * \inheaderfile Akonadi/TagSelectionDialog
  * \inmodule AkonadiWidgets
  *
  * A widget that shows a tag selection and provides means to edit that selection.

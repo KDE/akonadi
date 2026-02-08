@@ -19,7 +19,7 @@ class ImapSet;
 
 /*!
  * \class Akonadi::AgentSearchInterface
- * \inheaders Akonadi/AgentSearchInterface
+ * \inheaderfile Akonadi/AgentSearchInterface
  * \inmodule AkonadiAgentBase
  *
  * \short An interface for agents (or resources) that support searching in their backend.

@@ -42,7 +42,7 @@ class AgentInstancePrivate;
  * to CollectionFetchScope::setResource().
  *
  * \class Akonadi::AgentInstance
- * \inheaders Akonadi/AgentInstance
+ * \inheaderfile Akonadi/AgentInstance
  * \inmodule AkonadiCore
  *
  * @author Tobias Koenig <tokoe@kde.org>

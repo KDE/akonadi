@@ -25,7 +25,7 @@ class EntityTreeViewPrivate;
 
 /*!
  * \class Akonadi::EntityTreeView
- * \inheaders Akonadi/EntityTreeView
+ * \inheaderfile Akonadi/EntityTreeView
  * \inmodule AkonadiWidgets
  *
  * \brief A view to show an item/collection tree provided by an EntityTreeModel.

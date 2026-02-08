@@ -16,7 +16,7 @@ namespace Akonadi
 class AgentConfigurationBase;
 /*!
  * \class Akonadi::AgentConfigurationFactoryBase
- * \inheaders Akonadi/AgentConfigurationFactoryBase
+ * \inheaderfile Akonadi/AgentConfigurationFactoryBase
  * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT AgentConfigurationFactoryBase : public QObject

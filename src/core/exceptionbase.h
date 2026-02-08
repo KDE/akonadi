@@ -25,7 +25,7 @@ namespace Akonadi
 class ExceptionPrivate;
 /*!
  * \class Akonadi::Exception
- * \inheaders Akonadi/ExceptionBase
+ * \inheaderfile Akonadi/ExceptionBase
  * \inmodule AkonadiCore
  *
  * Base class for exceptions used by the Akonadi library.

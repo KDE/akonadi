@@ -16,7 +16,7 @@ class TagFetchScopePrivate;
 
 /*!
  * \class Akonadi::TagFetchScope
- * \inheaders Akonadi/TagFetchScope
+ * \inheaderfile Akonadi/TagFetchScope
  * \inmodule AkonadiCore
  *
  * \brief Specifies which parts of a tag should be fetched from the Akonadi storage.

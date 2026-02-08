@@ -30,7 +30,7 @@ class ChangeRecorderPrivate;
  * in.
  *
  * \class Akonadi::ChangeRecorder
- * \inheaders Akonadi/ChangeRecorder
+ * \inheaderfile Akonadi/ChangeRecorder
  * \inmodule AkonadiCore
  *
  * \author Volker Krause <vkrause@kde.org>

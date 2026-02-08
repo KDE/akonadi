@@ -19,7 +19,7 @@ class AgentConfigurationDialogPrivate;
 
 /*!
  * \class Akonadi::AgentConfigurationDialog
- * \inheaders Akonadi/AgentConfigurationDialog
+ * \inheaderfile Akonadi/AgentConfigurationDialog
  * \inmodule AkonadiWidgets
  *
  * \brief The AgentConfigurationDialog class

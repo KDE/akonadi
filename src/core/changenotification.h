@@ -25,7 +25,7 @@ class ChangeNotificationPrivate;
 
 /*!
  * \class Akonadi::ChangeNotification
- * \inheaders Akonadi/ChangeNotification
+ * \inheaderfile Akonadi/ChangeNotification
  * \inmodule AkonadiCore
  *
  * Emitted by Monitor::debugNotification() signal.

@@ -54,7 +54,7 @@ class CollectionStatisticsPrivate;
  * This class is implicitly shared.
  *
  * \class Akonadi::CollectionStatistics
- * \inheaders Akonadi/CollectionStatistics
+ * \inheaderfile Akonadi/CollectionStatistics
  * \inmodule AkonadiCore
  *
  * \author Volker Krause <vkrause@kde.org>

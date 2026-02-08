@@ -17,7 +17,7 @@ class NotificationSubscriberPrivate;
 
 /*!
  * \class Akonadi::NotificationSubscriber
- * \inheaders Akonadi/NotificationSubscriber
+ * \inheaderfile Akonadi/NotificationSubscriber
  * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT NotificationSubscriber

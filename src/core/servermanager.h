@@ -22,7 +22,7 @@ class ServerManagerPrivate;
  * Akonadi::Control provides a synchronous interface to some of the methods in here.
  *
  * \class Akonadi::ServerManager
- * \inheaders Akonadi/ServerManager
+ * \inheaderfile Akonadi/ServerManager
  * \inmodule AkonadiCore
  *
  * \author Volker Krause <vkrause@kde.org>

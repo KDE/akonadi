@@ -26,7 +26,7 @@ class AgentActionManagerPrivate;
 
 /*!
  * \class Akonadi::AgentActionManager
- * \inheaders Akonadi/AgentActionManager
+ * \inheaderfile Akonadi/AgentActionManager
  * \inmodule AkonadiWidgets
  *
  * \brief Manages generic actions for agent and agent instance views.

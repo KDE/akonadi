@@ -65,7 +65,7 @@ class ItemMonitorPrivate;
  * \endcode
  *
  * \class Akonadi::ItemMonitor
- * \inheaders Akonadi/ItemMonitor
+ * \inheaderfile Akonadi/ItemMonitor
  * \inmodule AkonadiCore
  *
  * \author Tobias Koenig <tokoe@kde.org>

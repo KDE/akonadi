@@ -39,7 +39,7 @@ class AgentTypePrivate;
  * \endcode
  *
  * \class Akonadi::AgentType
- * \inheaders Akonadi/AgentType
+ * \inheaderfile Akonadi/AgentType
  * \inmodule AkonadiCore
  *
  * \author Tobias Koenig <tokoe@kde.org>

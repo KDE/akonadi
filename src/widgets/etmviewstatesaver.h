@@ -20,7 +20,7 @@ namespace Akonadi
 {
 /*!
  * \class Akonadi::ETMViewStateSaver
- * \inheaders Akonadi/ETMViewStateSaver
+ * \inheaderfile Akonadi/ETMViewStateSaver
  * \inmodule AkonadiWidgets
  */
 class AKONADIWIDGETS_EXPORT ETMViewStateSaver : public KConfigViewStateSaver

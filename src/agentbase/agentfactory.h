@@ -22,7 +22,7 @@ class AgentFactoryBasePrivate;
 
 /*!
  * \class Akonadi::AgentFactoryBase
- * \inheaders Akonadi/AgentFactory
+ * \inheaderfile Akonadi/AgentFactory
  * \inmodule AkonadiAgentBase
  *
  * \short A factory base class for in-process agents.

@@ -47,7 +47,7 @@ class ControlPrivate;
  * \endcode
  *
  * \class Akonadi::Control
- * \inheaders Akonadi/Control
+ * \inheaderfile Akonadi/Control
  * \inmodule AkonadiCore
  *
  * \author Volker Krause <vkrause@kde.org>

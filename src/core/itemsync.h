@@ -37,7 +37,7 @@ ote This is provided for convenience to implement "save all" like behavior,
  *       possible, e.g. ItemCreateJob, ItemModifyJob and ItemDeleteJob
  *
  * \class Akonadi::ItemSync
- * \inheaders Akonadi/ItemSync
+ * \inheaderfile Akonadi/ItemSync
  * \inmodule AkonadiCore
  *
  * \author Tobias Koenig <tokoe@kde.org>

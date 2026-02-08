@@ -39,7 +39,7 @@ class Collection;
  * \endcode
  *
  * \class Akonadi::AgentManager
- * \inheaders Akonadi/AgentManager
+ * \inheaderfile Akonadi/AgentManager
  * \inmodule AkonadiCore
  *
  * \author Tobias Koenig <tokoe@kde.org>

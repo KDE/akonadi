@@ -55,7 +55,7 @@ class PartFetcherPrivate;
  * \endcode
  *
  * \class Akonadi::PartFetcher
- * \inheaders Akonadi/PartFetcher
+ * \inheaderfile Akonadi/PartFetcher
  * \inmodule AkonadiCore
  *
  * \author Stephen Kelly <steveire@gmail.com>

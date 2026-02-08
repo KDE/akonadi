@@ -47,7 +47,7 @@ class CollectionRequesterPrivate;
  * \since 4.3
  *
  * \class Akonadi::CollectionRequester
- * \inheaders Akonadi/CollectionRequester
+ * \inheaderfile Akonadi/CollectionRequester
  * \inmodule AkonadiWidgets
  */
 class AKONADIWIDGETS_EXPORT CollectionRequester : public QWidget

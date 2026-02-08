@@ -15,7 +15,7 @@ namespace Akonadi
 {
 /*!
  * \class Akonadi::TagSync
- * \inheaders Akonadi/TagSync
+ * \inheaderfile Akonadi/TagSync
  * \inmodule AkonadiCore
  */
 class AKONADICORE_EXPORT TagSync : public Akonadi::Job
