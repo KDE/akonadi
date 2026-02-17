@@ -33,26 +33,34 @@ class AKONADIWIDGETS_EXPORT TagSelectWidget : public QWidget
     Q_OBJECT
 public:
     /*!
+     * Creates a new tag select widget.
+     * \a parent The parent widget.
      */
     explicit TagSelectWidget(QWidget *parent = nullptr);
     /*!
+     * Destroys the tag select widget.
      */
     ~TagSelectWidget() override;
 
     /*!
+     * Sets the selected tags.
+     * \a tags The list of tags to select.
      */
     void setSelection(const Akonadi::Tag::List &tags);
     /*!
+     * Returns the currently selected tags.
+     * \return A list of selected tags.
      */
     [[nodiscard]] Akonadi::Tag::List selection() const;
 
     /*!
-     * \brief tagToStringList
-     * Returns QStringList from selected tag (List of Url)
+     * Converts the selected tags to a string list of URLs.
+     * \return A list of tag URL strings.
      */
     [[nodiscard]] QStringList tagToStringList() const;
     /*!
-     * \brief setSelectionFromStringList, convert a QStringList to Tag (converted from url)
+     * Sets the selection from a string list of tag URLs.
+     * \a lst A list of tag URL strings.
      */
     void setSelectionFromStringList(const QStringList &lst);
 

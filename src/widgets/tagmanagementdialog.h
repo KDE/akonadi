@@ -35,13 +35,18 @@ class AKONADIWIDGETS_EXPORT TagManagementDialog : public QDialog
     Q_OBJECT
 public:
     /*!
+     * Creates a new tag management dialog.
+     * \a parent The parent widget.
      */
     explicit TagManagementDialog(QWidget *parent = nullptr);
     /*!
+     * Destroys the tag management dialog.
      */
     ~TagManagementDialog() override;
 
     /*!
+     * Returns the button box of the dialog.
+     * \return The dialog button box.
      */
     [[nodiscard]] QDialogButtonBox *buttons() const;
 

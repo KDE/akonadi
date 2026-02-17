@@ -29,16 +29,18 @@ class AKONADIWIDGETS_EXPORT AgentConfigurationDialog : public QDialog
     Q_OBJECT
 public:
     /*!
-     * \brief AgentConfigurationDialog
-     * \param instance
-     * \param parent
+     * Creates a new agent configuration dialog for the given agent instance.
+     * \a instance The agent instance to configure.
+     * \a parent The parent widget.
      */
     explicit AgentConfigurationDialog(const AgentInstance &instance, QWidget *parent = nullptr);
     /*!
+     * Destroys the agent configuration dialog.
      */
     ~AgentConfigurationDialog() override;
 
     /*!
+     * Accepts the dialog and saves the agent configuration.
      */
     void accept() override;
 

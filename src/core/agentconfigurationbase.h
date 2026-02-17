@@ -84,6 +84,9 @@ public:
      */
     explicit AgentConfigurationBase(const KSharedConfigPtr &config, QWidget *parentWidget, const QVariantList &args);
 
+    /*!
+     * Destructor.
+     */
     ~AgentConfigurationBase() override;
 
     /*!
@@ -128,19 +131,29 @@ public:
     [[nodiscard]] ActivitySettings restoreActivitiesSettings() const;
 
 protected:
+    /*!
+     * Returns the parent widget for the configuration UI.
+     * \return The parent widget passed during construction.
+     */
     QWidget *parentWidget() const;
 
     /*!
-     * Returns KConfig object belonging to the current Akonadi agent instance.
+     * Returns the KConfig object belonging to the current Akonadi agent instance.
+     * \return A KSharedConfigPtr to the agent's configuration object.
      */
     KSharedConfigPtr config() const;
 
     /*!
-     * Returns identifier of the Akonadi agent instance currently being configured.
+     * Returns the identifier of the Akonadi agent instance currently being configured.
+     * \return The agent instance identifier as a string.
      */
     [[nodiscard]] QString identifier() const;
 
 Q_SIGNALS:
+    /*!
+     * Emitted to control the enabled state of the OK button in the configuration dialog.
+     * \a enabled True to enable the OK button, false to disable it.
+     */
     void enableOkButton(bool enabled);
 
 private:

@@ -32,48 +32,69 @@ class AKONADIWIDGETS_EXPORT ManageAccountWidget : public QWidget
     Q_OBJECT
 public:
     /*!
+     * Creates a new manage account widget.
+     * \a parent The parent widget.
      */
     explicit ManageAccountWidget(QWidget *parent);
     /*!
+     * Destroys the manage account widget.
      */
     ~ManageAccountWidget() override;
 
     /*!
-     * Sets the text of the label above the list of accounts.
-     * Example: "Incoming accounts:" in an email client, or "Calendars:" in an organizer.
+     * Sets the description label text displayed above the account list.
+     * \a text The description text (e.g., "Incoming accounts:").
      */
     void setDescriptionLabelText(const QString &text);
 
     /*!
+     * Sets the special collection identifier for filtering.
+     * \a identifier The special collection identifier.
      */
     void setSpecialCollectionIdentifier(const QString &identifier);
 
     /*!
+     * Returns the MIME type filter for accounts.
+     * \return The list of MIME types to filter by.
      */
     [[nodiscard]] QStringList mimeTypeFilter() const;
     /*!
+     * Sets the MIME type filter for accounts.
+     * \a mimeTypeFilter The list of MIME types to filter by.
      */
     void setMimeTypeFilter(const QStringList &mimeTypeFilter);
 
     /*!
+     * Returns the capability filter for accounts.
+     * \return The list of capabilities to filter by.
      */
     [[nodiscard]] QStringList capabilityFilter() const;
     /*!
+     * Sets the capability filter for accounts.
+     * \a capabilityFilter The list of capabilities to filter by.
      */
     void setCapabilityFilter(const QStringList &capabilityFilter);
 
     /*!
+     * Returns the excluded capabilities list.
+     * \return The list of excluded capabilities.
      */
     [[nodiscard]] QStringList excludeCapabilities() const;
     /*!
+     * Sets the capabilities to exclude from the account list.
+     * \a excludeCapabilities The list of capabilities to exclude.
      */
     void setExcludeCapabilities(const QStringList &excludeCapabilities);
 
     /*!
+     * Sets a custom item delegate for the account list view.
+     * \a delegate The custom delegate.
      */
     void setItemDelegate(QAbstractItemDelegate *delegate);
 
     /*!
+     * Returns the item view used to display accounts.
+     * \return The account view.
      */
     [[nodiscard]] QAbstractItemView *view() const;
 

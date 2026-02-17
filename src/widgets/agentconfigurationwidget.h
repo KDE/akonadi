@@ -32,21 +32,29 @@ class AKONADIWIDGETS_EXPORT AgentConfigurationWidget : public QWidget
     Q_OBJECT
 public:
     /*!
+     * Creates a new agent configuration widget for the given agent instance.
+     * \a instance The agent instance to configure.
+     * \a parent The parent widget.
      */
     explicit AgentConfigurationWidget(const Akonadi::AgentInstance &instance, QWidget *parent = nullptr);
     /*!
+     * Destroys the agent configuration widget.
      */
     ~AgentConfigurationWidget() override;
 
     /*!
+     * Loads the agent configuration into the widget.
      */
     void load();
     /*!
+     * Saves the configuration from the widget to the agent.
      */
     void save();
 
 Q_SIGNALS:
     /*!
+     * Emitted to control the enabled state of the OK button.
+     * \a enabled True to enable the OK button, false to disable it.
      */
     void enableOkButton(bool enabled);
 

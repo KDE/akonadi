@@ -38,28 +38,42 @@ class AKONADIWIDGETS_EXPORT TagSelectionDialog : public QDialog
     Q_OBJECT
 public:
     /*!
+     * Creates a new tag selection dialog.
+     * \a parent The parent widget.
      */
     explicit TagSelectionDialog(QWidget *parent = nullptr);
     /*!
+     * Creates a new tag selection dialog with a custom tag model.
+     * \a model The tag model to use.
+     * \a parent The parent widget.
      */
     TagSelectionDialog(TagModel *model, QWidget *parent = nullptr);
     /*!
+     * Destroys the tag selection dialog.
      */
     ~TagSelectionDialog() override;
 
     /*!
+     * Sets the selected tags in the dialog.
+     * \a tags The list of tags to select.
      */
     void setSelection(const Akonadi::Tag::List &tags);
     /*!
+     * Returns the tags selected in the dialog.
+     * \return A list of selected tags.
      */
     [[nodiscard]] Akonadi::Tag::List selection() const;
 
     /*!
+     * Returns the button box of the dialog.
+     * \return The dialog button box.
      */
     [[nodiscard]] QDialogButtonBox *buttons() const;
 
 Q_SIGNALS:
     /*!
+     * Emitted when the tag selection has changed.
+     * \a tags The new list of selected tags.
      */
     void selectionChanged(const Akonadi::Tag::List &tags);
 
