@@ -39,11 +39,10 @@ msgid "%1 of type %2"
 msgstr ""
 
 #: agentbase/agentbase.cpp:818
-#, fuzzy, kde-format
-#| msgid "Agent identifier"
+#, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
-msgstr "Aitheantóir gníomhaire"
+msgstr ""
 
 #: agentbase/agentbase.cpp:824
 #, kde-format
@@ -81,19 +80,15 @@ msgid "Not configured"
 msgstr ""
 
 #: agentbase/resourcebase.cpp:513
-#, fuzzy, kde-format
-#| msgctxt "@label commandline option"
-#| msgid "Resource identifier"
+#, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
-msgstr "Aitheantóir acmhainne"
+msgstr ""
 
 #: agentbase/resourcebase.cpp:519
-#, fuzzy, kde-format
-#| msgctxt "@title application name"
-#| msgid "Akonadi Resource"
+#, kde-format
 msgid "Akonadi Resource"
-msgstr "Acmhainn Akonadi"
+msgstr ""
 
 #: agentbase/resourcebase.cpp:561
 #, kde-format
@@ -120,12 +115,10 @@ msgid "Updating local collection failed: %1."
 msgstr "Níorbh fhéidir an bailiúchán logánta a nuashonrú: %1."
 
 #: agentbase/resourcebase.cpp:700
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Updating local collection failed: %1."
+#, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
-msgstr "Níorbh fhéidir an bailiúchán logánta a nuashonrú: %1."
+msgstr ""
 
 #: agentbase/resourcebase.cpp:719
 #, kde-format
@@ -161,10 +154,9 @@ msgid "Job canceled."
 msgstr ""
 
 #: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
-msgstr "Gníomhaire Akonadi"
+msgstr ""
 
 #: akonadictl/main.cpp:220
 #, kde-format
@@ -211,10 +203,9 @@ msgid "© 2025 Carl Schwan <carl@carlschwan.eu>"
 msgstr ""
 
 #: configdialog/main.cpp:30
-#, fuzzy, kde-format
-#| msgid "Agent identifier"
+#, kde-format
 msgid "The agent identifier"
-msgstr "Aitheantóir gníomhaire"
+msgstr ""
 
 #: configdialog/main.cpp:36
 #, kde-format
@@ -222,19 +213,15 @@ msgid "Required identifier argument missing."
 msgstr ""
 
 #: configdialog/main.cpp:51
-#, fuzzy, kde-format
-#| msgid "No resource agents found."
+#, kde-format
 msgid "No such agent found \"%1\""
-msgstr "Níor aimsíodh aon ghníomhairí acmhainne."
+msgstr ""
 
 #: core/collection.cpp:221
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@info/plain Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
+#, kde-format
 msgctxt "Name for the folder containing searches"
 msgid "Search"
-msgstr "Cuardaigh"
+msgstr ""
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format
@@ -289,16 +276,14 @@ msgid "Collection attributes synchronization timed out."
 msgstr ""
 
 #: core/jobs/collectioncopyjob.cpp:54
-#, fuzzy, kde-format
-#| msgid "Invalid collection"
+#, kde-format
 msgid "Invalid collection to copy"
-msgstr "Bailiúchán neamhbhailí"
+msgstr ""
 
 #: core/jobs/collectioncopyjob.cpp:60
-#, fuzzy, kde-format
-#| msgid "Invalid collection"
+#, kde-format
 msgid "Invalid destination collection"
-msgstr "Bailiúchán neamhbhailí"
+msgstr ""
 
 #: core/jobs/collectioncreatejob.cpp:50
 #, kde-format
@@ -306,11 +291,9 @@ msgid "Invalid parent"
 msgstr "Máthair neamhbhailí"
 
 #: core/jobs/collectioncreatejob.cpp:98
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Unable to fetch collection in replay mode."
+#, kde-format
 msgid "Failed to parse Collection from response"
-msgstr "Ní féidir bailiúchán a fháil sa mhód athdhéanta."
+msgstr ""
 
 #: core/jobs/collectiondeletejob.cpp:52
 #, kde-format
@@ -339,10 +322,9 @@ msgid "Invalid collection."
 msgstr "Bailiúchán neamhbhailí."
 
 #: core/jobs/itemcreatejob.cpp:115
-#, fuzzy, kde-format
-#| msgid "Invalid collection"
+#, kde-format
 msgid "Invalid parent collection"
-msgstr "Bailiúchán neamhbhailí"
+msgstr ""
 
 #: core/jobs/job.cpp:335
 #, kde-format
@@ -410,10 +392,9 @@ msgid "Timeout trying to get lock."
 msgstr "Thar am ag iarraidh glas a fháil."
 
 #: core/jobs/tagcreatejob.cpp:49
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgid "Failed to create tag."
-msgstr "Níorbh fhéidir gníomhaire a chruthú."
+msgstr ""
 
 #: core/jobs/trashjob.cpp:155
 #, kde-format
@@ -447,12 +428,10 @@ msgid "Name"
 msgstr "Ainm"
 
 #: core/models/colorproxymodel.cpp:85
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Offline"
+#, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Offline)"
-msgstr "As Líne"
+msgstr ""
 
 #: core/models/colorproxymodel.cpp:88
 #, kde-format
@@ -461,11 +440,10 @@ msgid "%1 (Default)"
 msgstr ""
 
 #: core/models/entitytreemodel.cpp:206
-#, fuzzy, kde-format
-#| msgid "Loading..."
+#, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
-msgstr "Á Luchtú..."
+msgstr ""
 
 #: core/models/entitytreemodel.cpp:497
 #, kde-format
@@ -481,39 +459,34 @@ msgid "Name"
 msgstr "Ainm"
 
 #: core/models/entitytreemodel_p.cpp:1338
-#, fuzzy, kde-format
-#| msgid "Could not copy item:"
+#, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
-msgstr "Níorbh fhéidir an mhír a chóipeáil:"
+msgstr ""
 
 #: core/models/entitytreemodel_p.cpp:1340
-#, fuzzy, kde-format
-#| msgid "Could not copy collection:"
+#, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
-msgstr "Níorbh fhéidir an bailiúchán a chóipeáil:"
+msgstr ""
 
 #: core/models/entitytreemodel_p.cpp:1342
-#, fuzzy, kde-format
-#| msgid "Could not move item:"
+#, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
-msgstr "Níorbh fhéidir an mhír a bhogadh:"
+msgstr ""
 
 #: core/models/entitytreemodel_p.cpp:1344
-#, fuzzy, kde-format
-#| msgid "Could not move collection:"
+#, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
-msgstr "Níorbh fhéidir an bailiúchán a bhogadh:"
+msgstr ""
 
 #: core/models/entitytreemodel_p.cpp:1346
-#, fuzzy, kde-format
-#| msgid "Could not link entity:"
+#, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
-msgstr "Níorbh fhéidir aonán a nascadh:"
+msgstr ""
 
 #: core/models/favoritecollectionsmodel.cpp:398
 #, kde-format
@@ -635,11 +608,10 @@ msgid ""
 msgstr ""
 
 #: quick/qml/AgentConfigurationForm.qml:35
-#, fuzzy, kde-format
-#| msgid "&Configure Agent Instance"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
-msgstr "&Cumraigh Gníomhaire"
+msgstr ""
 
 #: quick/qml/AgentConfigurationForm.qml:41
 #, kde-format
@@ -654,11 +626,10 @@ msgid "Modify"
 msgstr ""
 
 #: quick/qml/AgentConfigurationForm.qml:66
-#, fuzzy, kde-format
-#| msgid "Delete"
+#, kde-format
 msgctxt "@action:button"
 msgid "Delete"
-msgstr "Scrios"
+msgstr ""
 
 #: quick/qml/AgentConfigurationForm.qml:115
 #, kde-format
@@ -679,12 +650,10 @@ msgid "Confirm Tag Deletion"
 msgstr ""
 
 #: quick/qml/TagManagerPage.qml:31
-#, fuzzy, kde-format
-#| msgid "Do you really want to delete this resource?"
-#| msgid_plural "Do you really want to delete %1 resources?"
+#, kde-format
 msgctxt "@info"
 msgid "Are you sure you want to delete tag <b>%1</b>?"
-msgstr "An bhfuil tú cinnte gur mian leat an acmhainn seo a scriosadh?"
+msgstr ""
 
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
@@ -692,18 +661,16 @@ msgid "You won't be able to revert this action."
 msgstr ""
 
 #: quick/qml/TagManagerPage.qml:53
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "There are no tags"
-msgstr "Níorbh fhéidir gníomhaire a chruthú."
+msgstr ""
 
 #: quick/qml/TagManagerPage.qml:141
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
-msgstr "Níorbh fhéidir gníomhaire a chruthú."
+msgstr ""
 
 #: quick/qml/TagManagerPage.qml:152
 #, kde-format
@@ -712,16 +679,14 @@ msgid "Add Tag"
 msgstr ""
 
 #: selftest/main.cpp:19
-#, fuzzy, kde-format
-#| msgid "Akonadi Server Self-Test"
+#, kde-format
 msgid "Akonadi Self Test"
-msgstr "Féintástáil Fhreastalaí Akonadi"
+msgstr ""
 
 #: selftest/main.cpp:21
-#, fuzzy, kde-format
-#| msgid "Cannot connect to the Akonadi service."
+#, kde-format
 msgid "Checks and reports state of Akonadi server"
-msgstr "Ní féidir ceangal leis an tseirbhís Akonadi."
+msgstr ""
 
 #: selftest/main.cpp:23
 #, kde-format
@@ -758,11 +723,10 @@ msgid "Could not create agent instance: %1"
 msgstr "Níorbh fhéidir gníomhaire a chruthú: %1"
 
 #: widgets/agentactionmanager.cpp:60
-#, fuzzy, kde-format
-#| msgid "Agent instance creation timed out."
+#, kde-format
 msgctxt "@title:window"
 msgid "Agent Instance Creation Failed"
-msgstr "Cruthú an ghníomhaire thar am."
+msgstr ""
 
 #: widgets/agentactionmanager.cpp:62
 #, kde-format
@@ -797,10 +761,9 @@ msgid "Configuration for %1 is already opened elsewhere."
 msgstr ""
 
 #: widgets/agentconfigurationwidget.cpp:125
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgid "Failed to register %1 configuration dialog."
-msgstr "Níorbh fhéidir gníomhaire a chruthú."
+msgstr ""
 
 #: widgets/agentinstancewidget.cpp:259
 #, kde-format
@@ -809,20 +772,16 @@ msgid "(%1%)"
 msgstr ""
 
 #: widgets/agenttypedialog.cpp:66
-#, fuzzy, kde-format
-#| msgid "&Configure Agent Instance"
+#, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
-msgstr "&Cumraigh Gníomhaire"
+msgstr ""
 
 #: widgets/agenttypedialog.cpp:74
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@info/plain Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
+#, kde-format
 msgctxt "@item:textbox"
 msgid "Search types"
-msgstr "Cuardaigh"
+msgstr ""
 
 #: widgets/cachepolicypage.cpp:43 widgets/cachepolicypage.cpp:48
 #, kde-format
@@ -847,19 +806,15 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, syncOnDemand)
 #: widgets/cachepolicypage.ui:33
-#, fuzzy, kde-format
-#| msgid "Synchronize Folder"
-#| msgid_plural "Synchronize %1 Folders"
+#, kde-format
 msgid "Synchronize when selecting this folder"
-msgstr "Sioncrónaigh Fillteán"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: widgets/cachepolicypage.ui:40
-#, fuzzy, kde-format
-#| msgid "Synchronize Folder"
-#| msgid_plural "Synchronize %1 Folders"
+#, kde-format
 msgid "Synchronize after:"
-msgstr "Sioncrónaigh Fillteán"
+msgstr ""
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, checkInterval)
 #: widgets/cachepolicypage.ui:47
@@ -877,10 +832,9 @@ msgstr "nóiméad"
 
 #. i18n: ectx: property (text), widget (QLabel, localPartsLabel)
 #: widgets/cachepolicypage.ui:66
-#, fuzzy, kde-format
-#| msgid "Locally Cached Parts"
+#, kde-format
 msgid "Locally cached parts:"
-msgstr "Páirteanna i dTaisce Logánta"
+msgstr ""
 
 #. i18n: ectx: property (title), widget (KEditListWidget, localParts)
 #: widgets/cachepolicypage.ui:87
@@ -933,13 +887,10 @@ msgid ""
 msgstr ""
 
 #: widgets/collectiondialog.cpp:58
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@info/plain Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
+#, kde-format
 msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
 msgid "Search"
-msgstr "Cuardaigh"
+msgstr ""
 
 #: widgets/collectiondialog.cpp:66
 #, kde-format
@@ -948,11 +899,10 @@ msgid "Use folder by default"
 msgstr ""
 
 #: widgets/collectiondialog.cpp:226
-#, fuzzy, kde-format
-#| msgid "&New Subfolder..."
+#, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
-msgstr "Fofhillteán &Nua..."
+msgstr ""
 
 #: widgets/collectiondialog.cpp:228
 #, kde-format
@@ -978,11 +928,10 @@ msgid "Could not create folder: %1"
 msgstr "Níorbh fhéidir an fillteán a chruthú: %1"
 
 #: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:422
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
-msgstr "Theip ar chruthú an fhillteáin"
+msgstr ""
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
 #, kde-format
@@ -1061,11 +1010,9 @@ msgid "Maintenance"
 msgstr ""
 
 #: widgets/collectionmaintenancepage.cpp:131
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Error while creating item: %1"
+#, kde-format
 msgid "Error while retrieving indexed items count"
-msgstr "Earráid agus mír á cruthú: %1"
+msgstr ""
 
 #: widgets/collectionmaintenancepage.cpp:134
 #, kde-format
@@ -1073,9 +1020,6 @@ msgid "Indexed %1 item in this folder"
 msgid_plural "Indexed %1 items in this folder"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
 
 #: widgets/collectionmaintenancepage.cpp:138
 #, kde-format
@@ -1084,10 +1028,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/collectionmaintenancepage.ui:17
-#, fuzzy, kde-format
-#| msgid "Folder &Properties"
+#, kde-format
 msgid "Folder type:"
-msgstr "&Airíonna an Fhillteáin"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, folderTypeLbl)
 #. i18n: ectx: property (text), widget (QLabel, folderSizeLbl)
@@ -1109,17 +1052,15 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: widgets/collectionmaintenancepage.ui:45
-#, fuzzy, kde-format
-#| msgid "Total Messages"
+#, kde-format
 msgid "Total items:"
-msgstr "Teachtaireachtaí Iomlána"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: widgets/collectionmaintenancepage.ui:59
-#, fuzzy, kde-format
-#| msgid "Unread Messages"
+#, kde-format
 msgid "Unread items:"
-msgstr "Teachtaireachtaí Gan Léamh"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, indexingLabel)
 #: widgets/collectionmaintenancepage.ui:73
@@ -1135,39 +1076,33 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, indexedCountLbl)
 #: widgets/collectionmaintenancepage.ui:87
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Error while creating item: %1"
+#, kde-format
 msgid "Retrieving indexed items count..."
-msgstr "Earráid agus mír á cruthú: %1"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, reindexButton)
 #: widgets/collectionmaintenancepage.ui:94
-#, fuzzy, kde-format
-#| msgid "Recent Folder"
+#, kde-format
 msgid "Reindex folder"
-msgstr "Fillteán Le Déanaí"
+msgstr ""
 
 #: widgets/collectionrequester.cpp:113
-#, fuzzy, kde-format
-#| msgid "No Folder"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No Folder"
-msgstr "Gan Fillteán"
+msgstr ""
 
 #: widgets/collectionrequester.cpp:122
-#, fuzzy, kde-format
-#| msgid "Open collection dialog"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
-msgstr "Oscail dialóg bhailiúcháin"
+msgstr ""
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgid "Select a collection"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
-msgstr "Roghnaigh bailiúchán"
+msgstr ""
 
 #: widgets/conflictresolvedialog.cpp:129
 #, kde-format
@@ -1256,21 +1191,19 @@ msgid "C&ancel"
 msgstr "Ce&alaigh"
 
 #: widgets/erroroverlay.cpp:224
-#, fuzzy, kde-format
-#| msgid "Cannot connect to the Akonadi service."
+#, kde-format
 msgctxt "%1 is a reason why"
 msgid ""
 "Cannot connect to the Personal information management service.\n"
 "\n"
 "%1"
-msgstr "Ní féidir ceangal leis an tseirbhís Akonadi."
+msgstr ""
 
 #: widgets/erroroverlay.cpp:228
-#, fuzzy, kde-format
-#| msgid "Personal information management service is starting..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
-msgstr "Bainisteoir faisnéise phearsanta á thosú..."
+msgstr ""
 
 #: widgets/erroroverlay.cpp:229
 #, kde-format
@@ -1278,11 +1211,10 @@ msgid "Personal information management service is starting..."
 msgstr "Bainisteoir faisnéise phearsanta á thosú..."
 
 #: widgets/erroroverlay.cpp:233
-#, fuzzy, kde-format
-#| msgid "Personal information management service is shutting down..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
-msgstr "Bainisteoir faisnéise phearsanta á mhúchadh..."
+msgstr ""
 
 #: widgets/erroroverlay.cpp:234
 #, kde-format
@@ -1290,12 +1222,11 @@ msgid "Personal information management service is shutting down..."
 msgstr "Bainisteoir faisnéise phearsanta á mhúchadh..."
 
 #: widgets/erroroverlay.cpp:238
-#, fuzzy, kde-format
-#| msgid "Personal information management service is starting..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
-msgstr "Bainisteoir faisnéise phearsanta á thosú..."
+msgstr ""
 
 #: widgets/erroroverlay.cpp:240
 #, kde-format
@@ -1348,10 +1279,9 @@ msgid "Details..."
 msgstr "Mionsonraí..."
 
 #: widgets/manageaccountwidget.cpp:232
-#, fuzzy, kde-format
-#| msgid "Do you really want to delete the search view '%1'?"
+#, kde-format
 msgid "Do you want to remove account '%1'?"
-msgstr "An bhfuil tú cinnte gur mian leat amharc cuardaigh '%1' a scriosadh?"
+msgstr ""
 
 #: widgets/manageaccountwidget.cpp:233
 #, kde-format
@@ -1397,11 +1327,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, mRestartAccountButton)
 #: widgets/manageaccountwidget.ui:84
-#, fuzzy, kde-format
-#| msgctxt "@action:button Start the Akonadi server"
-#| msgid "Start"
+#, kde-format
 msgid "Restart"
-msgstr "Tosaigh"
+msgstr ""
 
 #: widgets/recentcollectionaction.cpp:43
 #, kde-format
@@ -1416,18 +1344,15 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/renamefavoritedialog.ui:35
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox name of the folder"
-#| msgid "Name:"
+#, kde-format
 msgid "Name:"
-msgstr "Ainm:"
+msgstr ""
 
 #: widgets/selftestdialog.cpp:60
-#, fuzzy, kde-format
-#| msgid "Akonadi Server Self-Test"
+#, kde-format
 msgctxt "@title:window"
 msgid "Akonadi Server Self-Test"
-msgstr "Féintástáil Fhreastalaí Akonadi"
+msgstr ""
 
 #: widgets/selftestdialog.cpp:71
 #, kde-format
@@ -1971,12 +1896,10 @@ msgid "Save Test Report"
 msgstr ""
 
 #: widgets/selftestdialog.cpp:650
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Error."
+#, kde-format
 msgctxt "@title:window"
 msgid "Error"
-msgstr "Earráid."
+msgstr ""
 
 #: widgets/selftestdialog.cpp:650
 #, kde-format
@@ -2015,22 +1938,16 @@ msgid "New"
 msgstr "Nua"
 
 #: widgets/standardactionmanager.cpp:89
-#, fuzzy
-#| msgid "&Delete Folder"
-#| msgid_plural "&Delete %1 Folders"
 msgid "&Delete Folder"
-msgstr "&Scrios Fillteán"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:90
 msgid "Delete"
 msgstr "Scrios"
 
 #: widgets/standardactionmanager.cpp:97
-#, fuzzy
-#| msgid "&Synchronize Folder"
-#| msgid_plural "&Synchronize %1 Folders"
 msgid "&Synchronize Folder"
-msgstr "&Sioncrónaigh Fillteán"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:98 widgets/standardactionmanager.cpp:207
 #: widgets/standardactionmanager.cpp:314
@@ -2112,44 +2029,32 @@ msgid "Move Folder To..."
 msgstr "Bog Fillteán Go..."
 
 #: widgets/standardactionmanager.cpp:179
-#, fuzzy
-#| msgid "&Cut Item"
-#| msgid_plural "&Cut %1 Items"
 msgid "&Cut Item"
-msgstr "&Gearr Mír"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:179 widgets/standardactionmanager.cpp:180
 msgid "Cut"
 msgstr "Gearr"
 
 #: widgets/standardactionmanager.cpp:180
-#, fuzzy
-#| msgid "&Cut Folder"
-#| msgid_plural "&Cut %1 Folders"
 msgid "&Cut Folder"
-msgstr "&Gearr Fillteán"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:182
 msgid "Create Resource"
 msgstr "Cruthaigh Acmhainn"
 
 #: widgets/standardactionmanager.cpp:190
-#, fuzzy
-#| msgid "Delete Resource"
-#| msgid_plural "Delete %1 Resources"
 msgid "Delete Resource"
-msgstr "Scrios Acmhainn"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:198
 msgid "&Resource Properties"
 msgstr "&Airíonna na hAcmhainne"
 
 #: widgets/standardactionmanager.cpp:206
-#, fuzzy
-#| msgid "Synchronize Resource"
-#| msgid_plural "Synchronize %1 Resources"
 msgid "Synchronize Resource"
-msgstr "Sioncrónaigh Acmhainn"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:214
 msgid "Work Offline"
@@ -2214,11 +2119,8 @@ msgid "Synchronize Favorite Folders"
 msgstr ""
 
 #: widgets/standardactionmanager.cpp:313
-#, fuzzy
-#| msgid "Synchronize Folder"
-#| msgid_plural "Synchronize %1 Folders"
 msgid "Synchronize Folder Tree"
-msgstr "Sioncrónaigh Fillteán"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:399
 #, kde-format
@@ -2241,30 +2143,20 @@ msgstr[3] "&Cóipeáil %1 Mír"
 msgstr[4] "&Cóipeáil %1 Mír"
 
 #: widgets/standardactionmanager.cpp:401
-#, fuzzy, kde-format
-#| msgid "&Cut Item"
-#| msgid_plural "&Cut %1 Items"
+#, kde-format
 msgctxt "@action"
 msgid "&Cut Item"
 msgid_plural "&Cut %1 Items"
-msgstr[0] "&Gearr Mír"
-msgstr[1] "&Gearr %1 Mhír"
-msgstr[2] "&Gearr %1 Mhír"
-msgstr[3] "&Gearr %1 Mír"
-msgstr[4] "&Gearr %1 Mír"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:402
-#, fuzzy, kde-format
-#| msgid "&Cut Folder"
-#| msgid_plural "&Cut %1 Folders"
+#, kde-format
 msgctxt "@action"
 msgid "&Cut Folder"
 msgid_plural "&Cut %1 Folders"
-msgstr[0] "&Gearr Fillteán"
-msgstr[1] "&Gearr %1 Fhillteán"
-msgstr[2] "&Gearr %1 Fhillteán"
-msgstr[3] "&Gearr %1 bhFillteán"
-msgstr[4] "&Gearr %1 Fillteán"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:403
 #, kde-format
@@ -2277,30 +2169,20 @@ msgstr[3] "&Scrios %1 Mír"
 msgstr[4] "&Scrios %1 Mír"
 
 #: widgets/standardactionmanager.cpp:404
-#, fuzzy, kde-format
-#| msgid "&Delete Folder"
-#| msgid_plural "&Delete %1 Folders"
+#, kde-format
 msgctxt "@action"
 msgid "&Delete Folder"
 msgid_plural "&Delete %1 Folders"
-msgstr[0] "&Scrios Fillteán"
-msgstr[1] "&Scrios %1 Fhillteán"
-msgstr[2] "&Scrios %1 Fhillteán"
-msgstr[3] "&Scrios %1 bhFillteán"
-msgstr[4] "&Scrios %1 Fillteán"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:405
-#, fuzzy, kde-format
-#| msgid "&Synchronize Folder"
-#| msgid_plural "&Synchronize %1 Folders"
+#, kde-format
 msgctxt "@action"
 msgid "&Synchronize Folder"
 msgid_plural "&Synchronize %1 Folders"
-msgstr[0] "&Sioncrónaigh Fillteán"
-msgstr[1] "&Sioncrónaigh %1 Fhillteán"
-msgstr[2] "&Sioncrónaigh %1 Fhillteán"
-msgstr[3] "&Sioncrónaigh %1 bhFillteán"
-msgstr[4] "&Sioncrónaigh %1 Fillteán"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:406
 #, kde-format
@@ -2393,38 +2275,26 @@ msgstr[3] "Sioncrónaigh %1 bhFillteán"
 msgstr[4] "Sioncrónaigh %1 Fillteán"
 
 #: widgets/standardactionmanager.cpp:416
-#, fuzzy, kde-format
-#| msgid "Delete Resource"
-#| msgid_plural "Delete %1 Resources"
+#, kde-format
 msgctxt "@action"
 msgid "Delete Resource"
 msgid_plural "Delete %1 Resources"
-msgstr[0] "Scrios Acmhainn"
-msgstr[1] "Scrios %1 Acmhainn"
-msgstr[2] "Scrios %1 Acmhainn"
-msgstr[3] "Scrios %1 nAcmhainn"
-msgstr[4] "Scrios %1 Acmhainn"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:417
-#, fuzzy, kde-format
-#| msgid "Synchronize Resource"
-#| msgid_plural "Synchronize %1 Resources"
+#, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
 msgid_plural "Synchronize %1 Resources"
-msgstr[0] "Sioncrónaigh Acmhainn"
-msgstr[1] "Sioncrónaigh %1 Acmhainn"
-msgstr[2] "Sioncrónaigh %1 Acmhainn"
-msgstr[3] "Sioncrónaigh %1 nAcmhainn"
-msgstr[4] "Sioncrónaigh %1 Acmhainn"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:420
-#, fuzzy, kde-format
-#| msgctxt "@title:column, name of a thing"
-#| msgid "Name"
+#, kde-format
 msgctxt "@label:textbox name of Akonadi folder"
 msgid "Name"
-msgstr "Ainm"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:427
 #, kde-format
@@ -2448,17 +2318,12 @@ msgstr[4] ""
 "gach fofhillteán atá iontu?"
 
 #: widgets/standardactionmanager.cpp:430
-#, fuzzy, kde-format
-#| msgid "Delete Folder"
-#| msgid_plural "Delete %1 Folders"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "Scrios Fillteán"
-msgstr[1] "Scrios %1 Fhillteán"
-msgstr[2] "Scrios %1 Fhillteán"
-msgstr[3] "Scrios %1 bhFillteán"
-msgstr[4] "Scrios %1 Fillteán"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:431
 #, kde-format
@@ -2466,11 +2331,10 @@ msgid "Could not delete folder: %1"
 msgstr "Níorbh fhéidir an fillteán a scriosadh: %1"
 
 #: widgets/standardactionmanager.cpp:432
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
-msgstr "Theip ar scriosadh an fhillteáin"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:434
 #, kde-format
@@ -2491,17 +2355,12 @@ msgstr[3] "An bhfuil tú cinnte gur mian leat na %1 mír roghnaithe a scriosadh?
 msgstr[4] "An bhfuil tú cinnte gur mian leat na %1 mír roghnaithe a scriosadh?"
 
 #: widgets/standardactionmanager.cpp:439
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "Scrios Mír"
-msgstr[1] "Scrios %1 Mhír"
-msgstr[2] "Scrios %1 Mhír"
-msgstr[3] "Scrios %1 Mír"
-msgstr[4] "Scrios %1 Mír"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/standardactionmanager.cpp:440
 #, kde-format
@@ -2509,11 +2368,10 @@ msgid "Could not delete item: %1"
 msgstr "Níorbh fhéidir an mhír a scriosadh: %1"
 
 #: widgets/standardactionmanager.cpp:441
-#, fuzzy, kde-format
-#| msgid "Item deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
-msgstr "Theip ar scriosadh"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:443
 #, kde-format
@@ -2539,11 +2397,10 @@ msgid "Could not create resource: %1"
 msgstr "Níorbh fhéidir an acmhainn a chruthú: %1"
 
 #: widgets/standardactionmanager.cpp:448
-#, fuzzy, kde-format
-#| msgid "Resource creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
-msgstr "Theip ar chruthú"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:452
 #, kde-format
@@ -2572,11 +2429,10 @@ msgid "Could not paste data: %1"
 msgstr "Níorbh fhéidir na sonraí a ghreamú: %1"
 
 #: widgets/standardactionmanager.cpp:458
-#, fuzzy, kde-format
-#| msgid "Paste failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
-msgstr "Theip ar ghreamú"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:825
 #, kde-format
@@ -2584,12 +2440,10 @@ msgid "We can not add \"/\" in folder name."
 msgstr ""
 
 #: widgets/standardactionmanager.cpp:825 widgets/standardactionmanager.cpp:829
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "New Folder"
+#, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
-msgstr "Fillteán Nua"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:829
 #, kde-format
@@ -2609,11 +2463,10 @@ msgid "Account \"%1\" is offline"
 msgstr ""
 
 #: widgets/standardactionmanager.cpp:1070
-#, fuzzy, kde-format
-#| msgid "Work Offline"
+#, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
-msgstr "Oibrigh As Líne"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:1684
 #, kde-format
@@ -2626,24 +2479,21 @@ msgid "Copy to This Folder"
 msgstr "Cóipeáil an Fillteán Seo"
 
 #: widgets/subscriptiondialog.cpp:99
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgid "Failed to update subscription: %1"
-msgstr "Níorbh fhéidir gníomhaire a chruthú."
+msgstr ""
 
 #: widgets/subscriptiondialog.cpp:99
-#, fuzzy, kde-format
-#| msgid "Local Subscriptions"
+#, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
-msgstr "Síntiúis Logánta"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, SubscriptionDialog)
 #: widgets/subscriptiondialog.ui:14
-#, fuzzy, kde-format
-#| msgid "Local Subscriptions"
+#, kde-format
 msgid "Local Subscriptions"
-msgstr "Síntiúis Logánta"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/subscriptiondialog.ui:22
@@ -2653,62 +2503,50 @@ msgstr "Cuardaigh:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, subscribedOnlyCheckBox)
 #: widgets/subscriptiondialog.ui:36
-#, fuzzy, kde-format
-#| msgid "Subscribed only"
+#, kde-format
 msgid "&Subscribed only"
-msgstr "Liostáilte amháin"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, subscribeButton)
 #: widgets/subscriptiondialog.ui:62
-#, fuzzy, kde-format
-#| msgid "Subscribe"
+#, kde-format
 msgid "Su&bscribe"
-msgstr "Liostáil"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, unsubscribeButton)
 #: widgets/subscriptiondialog.ui:69
-#, fuzzy, kde-format
-#| msgid "Unsubscribe"
+#, kde-format
 msgid "&Unsubscribe"
-msgstr "Díliostáil"
+msgstr ""
 
 #: widgets/tageditwidget.cpp:119
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgid "Failed to create a new tag"
-msgstr "Níorbh fhéidir gníomhaire a chruthú."
+msgstr ""
 
 #: widgets/tageditwidget.cpp:119
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Error while creating item: %1"
+#, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
-msgstr "Earráid agus mír á cruthú: %1"
+msgstr ""
 
 #: widgets/tageditwidget.cpp:167
-#, fuzzy, kde-kuit-format
-#| msgid "Do you really want to delete this resource?"
-#| msgid_plural "Do you really want to delete %1 resources?"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
-msgstr "An bhfuil tú cinnte gur mian leat an acmhainn seo a scriosadh?"
+msgstr ""
 
 #: widgets/tageditwidget.cpp:168
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
-msgstr "Scrios Mír"
+msgstr ""
 
 #: widgets/tageditwidget.cpp:193
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@info"
 msgid "Delete tag"
-msgstr "Scrios Mír"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, selectLabel)
 #: widgets/tageditwidget.ui:29
@@ -2718,18 +2556,15 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:54
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgid "Create new tag"
-msgstr "Níorbh fhéidir gníomhaire a chruthú."
+msgstr ""
 
 #: widgets/tagselectioncombobox.cpp:126
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
-msgstr "Scrios Mír"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
 #: widgets/tagselectiondialog.ui:14
@@ -2780,10 +2615,9 @@ msgid "No filename specified"
 msgstr ""
 
 #: xml/xmldocument.cpp:129
-#, fuzzy, kde-format
-#| msgid "Unable to obtain agent type '%1'."
+#, kde-format
 msgid "Unable to open data file '%1'."
-msgstr "Níorbh fhéidir cineál gníomhaire '%1' a fháil."
+msgstr ""
 
 #: xml/xmldocument.cpp:134
 #, kde-format
@@ -2791,10 +2625,9 @@ msgid "File %1 does not exist."
 msgstr ""
 
 #: xml/xmldocument.cpp:142
-#, fuzzy, kde-format
-#| msgid "Unable to obtain agent type '%1'."
+#, kde-format
 msgid "Unable to parse data file '%1'."
-msgstr "Níorbh fhéidir cineál gníomhaire '%1' a fháil."
+msgstr ""
 
 #: xml/xmldocument.cpp:150
 #, kde-format
@@ -2802,205 +2635,31 @@ msgid "Schema definition could not be loaded and parsed."
 msgstr ""
 
 #: xml/xmldocument.cpp:155
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgid "Unable to create schema parser context."
-msgstr "Níorbh fhéidir gníomhaire a chruthú."
+msgstr ""
 
 #: xml/xmldocument.cpp:160
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgid "Unable to create schema."
-msgstr "Níorbh fhéidir gníomhaire a chruthú."
+msgstr ""
 
 #: xml/xmldocument.cpp:165
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
+#, kde-format
 msgid "Unable to create schema validation context."
-msgstr "Níorbh fhéidir gníomhaire a chruthú."
+msgstr ""
 
 #: xml/xmldocument.cpp:170
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Invalid item retrieved"
+#, kde-format
 msgid "Invalid file format."
-msgstr "Fuarthas mír neamhbhailí"
+msgstr ""
 
 #: xml/xmldocument.cpp:177
-#, fuzzy, kde-format
-#| msgid "Could not paste data: %1"
+#, kde-format
 msgid "Unable to parse data file: %1"
-msgstr "Níorbh fhéidir na sonraí a ghreamú: %1"
+msgstr ""
 
 #: xml/xmldocument.cpp:302
-#, fuzzy, kde-format
-#| msgid "Invalid collection"
+#, kde-format
 msgid "Unable to find collection %1"
-msgstr "Bailiúchán neamhbhailí"
-
-#, fuzzy
-#~| msgctxt "@info:status"
-#~| msgid "Error."
-#~ msgctxt "@window:title"
-#~ msgid "Error"
-#~ msgstr "Earráid."
-
-#, fuzzy
-#~| msgid "Personal information management service is starting..."
-#~ msgid "A required background service is not operational."
-#~ msgstr "Bainisteoir faisnéise phearsanta á thosú..."
-
-#, fuzzy
-#~| msgid "Unable to create agent instance."
-#~ msgid "Failed to create relation."
-#~ msgstr "Níorbh fhéidir gníomhaire a chruthú."
-
-#~ msgid "Quota"
-#~ msgstr "Cuóta"
-
-#, fuzzy
-#~| msgctxt "@info:status"
-#~| msgid "Error."
-#~ msgid "Error"
-#~ msgstr "Earráid."
-
-#~ msgctxt "@title:window"
-#~ msgid "Delete folder?"
-#~ msgid_plural "Delete folders?"
-#~ msgstr[0] "Scrios an fillteán?"
-#~ msgstr[1] "Scrios na fillteáin?"
-#~ msgstr[2] "Scrios na fillteáin?"
-#~ msgstr[3] "Scrios na fillteáin?"
-#~ msgstr[4] "Scrios na fillteáin?"
-
-#~ msgctxt "@title:window"
-#~ msgid "Delete item?"
-#~ msgid_plural "Delete items?"
-#~ msgstr[0] "&Scrios an mhír"
-#~ msgstr[1] "&Scrios na míreanna"
-#~ msgstr[2] "&Scrios na míreanna"
-#~ msgstr[3] "&Scrios na míreanna"
-#~ msgstr[4] "&Scrios na míreanna"
-
-#~ msgid "&Move here"
-#~ msgstr "&Bog anseo"
-
-#~ msgid "&Copy here"
-#~ msgstr "&Cóipeáil anseo"
-
-#~ msgid "Cancel"
-#~ msgstr "Cealaigh"
-
-#, fuzzy
-#~| msgid "Cut Item"
-#~| msgid_plural "Cut %1 Items"
-#~ msgid "Items"
-#~ msgstr "Gearr Mír"
-
-#~ msgid "Id"
-#~ msgstr "Aitheantas"
-
-#~ msgid "Remote Id"
-#~ msgstr "Aitheantas Cianda"
-
-#~ msgid "MimeType"
-#~ msgstr "Cineál MIME"
-
-#~ msgid "Form"
-#~ msgstr "Foirm"
-
-#~ msgid "Default Name"
-#~ msgstr "Ainm Réamhshocraithe"
-
-#, fuzzy
-#~| msgid "Cancel"
-#~ msgctxt "@action:button"
-#~ msgid "Cancel"
-#~ msgstr "Cealaigh"
-
-#~ msgctxt "@title:column, number of unread messages"
-#~ msgid "Unread"
-#~ msgstr "Gan léamh"
-
-#~ msgctxt "@title:column, total number of messages"
-#~ msgid "Total"
-#~ msgstr "Iomlán"
-
-#~ msgctxt "@title:column, total size (in bytes) of the collection"
-#~ msgid "Size"
-#~ msgstr "Méid"
-
-#~ msgctxt "@title application description"
-#~ msgid "Akonadi Resource"
-#~ msgstr "Acmhainn Akonadi"
-
-#~ msgctxt "@label:textbox name of a thing"
-#~ msgid "Name"
-#~ msgstr "Ainm"
-
-#~ msgid "Invalid collection specified"
-#~ msgstr "Sonraíodh bailiúchán neamhbhailí"
-
-#~ msgid "Protocol version %1 found, expected at least %2"
-#~ msgstr ""
-#~ "Aimsíodh leagan %1 an phrótacail, bhíothas ag súil le %2 ar a laghad"
-
-#~ msgid "Inconsistent local collection tree detected."
-#~ msgstr "Braitheadh crann bailiúcháin logánta atá neamhréireach."
-
-#~ msgid "KDE Test Program"
-#~ msgstr "Ríomhchlár Tástála KDE"
-
-#~ msgid "Nepomuk search service registered at D-Bus."
-#~ msgstr "Cláraíodh seirbhís chuardaigh Nepomuk le D-Bus."
-
-#~ msgid ""
-#~ "The Nepomuk search service is registered at D-Bus which typically "
-#~ "indicates it is operational."
-#~ msgstr ""
-#~ "Cláraíodh seirbhís chuardaigh Nepomuk le D-Bus, rud a chiallaíonn go "
-#~ "bhfuil sé i bhfeidhm de ghnáth."
-
-#~ msgid "Nepomuk search service not registered at D-Bus."
-#~ msgstr "Níl seirbhís chuardaigh Nepomuk cláraithe le D-Bus."
-
-#~ msgid "Cache"
-#~ msgstr "Taisce"
-
-#~ msgid "Inherit cache policy from parent"
-#~ msgstr "Faigh polasaí taisce le hoidhreacht"
-
-#~ msgid "Cache Policy"
-#~ msgstr "Polasaí Taisce"
-
-#~ msgid "Interval check time:"
-#~ msgstr "Eatramh idir sheiceáil:"
-
-#~ msgid "Local cache timeout:"
-#~ msgstr "Teorainn ama an taisce logánta:"
-
-#~ msgid "Synchronize on demand"
-#~ msgstr "Sioncrónaigh ar éileamh"
-
-#~ msgid "Manage which folders you want to see in the folder tree"
-#~ msgstr "Bainistigh cé acu fillteáin is mian leat a fheiceáil sa chrann"
-
-#~ msgid "<b>Available Folders</b>"
-#~ msgstr "<b>Fillteáin atá ar fáil</b>"
-
-#~ msgid "<b>Current Changes</b>"
-#~ msgstr "<b>Athruithe Reatha</b>"
-
-#~ msgid "Unsubscribe from selected folder"
-#~ msgstr "Díliostáil ón fhillteán roghnaithe"
-
-#~ msgid "TODO"
-#~ msgstr "LE DÉANAMH"
-
-#~ msgctxt "@title, application description"
-#~ msgid "Akonadi Resource"
-#~ msgstr "Acmhainn Akonadi"
-
-#~ msgctxt "@info, purpose of application"
-#~ msgid "Akonadi Resource"
-#~ msgstr "Acmhainn Akonadi"
+msgstr ""

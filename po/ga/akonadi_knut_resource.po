@@ -29,11 +29,10 @@ msgid "Akonadi Knut Data File"
 msgstr "Comhad Sonraí Knut Akonadi"
 
 #: accountwidget.cpp:50
-#, fuzzy, kde-format
-#| msgid "Select Data File"
+#, kde-format
 msgctxt "@label"
 msgid "Data Files:"
-msgstr "Roghnaigh Comhad Sonraí"
+msgstr ""
 
 #: accountwidget.cpp:52
 #, kde-format
@@ -95,9 +94,3 @@ msgstr ""
 #, kde-format
 msgid "Deleted item not found in DOM tree."
 msgstr ""
-
-#~ msgid "Path to the Knut data file."
-#~ msgstr "Conair go dtí an comhad sonraí Knut."
-
-#~ msgid "Do not change the actual backend data."
-#~ msgstr "Ná hathraigh na sonraí féin."
