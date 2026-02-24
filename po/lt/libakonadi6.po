@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-12-14 02:32+0000\n"
-"PO-Revision-Date: 2024-11-13 01:45+0200\n"
+"PO-Revision-Date: 2026-02-24 01:59+0200\n"
 "Last-Translator: Liudas Ališauskas <liudas@akmc.lt>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.8\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -203,11 +203,9 @@ msgid "Command to execute"
 msgstr "Komanda, kurią vykdyti"
 
 #: configdialog/main.cpp:23
-#, fuzzy, kde-format
-#| msgctxt "@title:window, %1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgid "Configuration Dialog"
-msgstr "%1 konfigūracija"
+msgstr "Konfigūracijos dialogas"
 
 #: configdialog/main.cpp:25
 #, kde-format
@@ -217,12 +215,10 @@ msgstr ""
 #: configdialog/main.cpp:27
 #, kde-format
 msgid "© 2025 Carl Schwan <carl@carlschwan.eu>"
-msgstr ""
+msgstr "© 2025 Carl Schwan <carl@carlschwan.eu>"
 
 #: configdialog/main.cpp:30
-#, fuzzy, kde-format
-#| msgctxt "@info:shell"
-#| msgid "Agent identifier"
+#, kde-format
 msgid "The agent identifier"
 msgstr "Agento identifikatorius"
 
@@ -627,15 +623,13 @@ msgstr "Atsijungęs"
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
-msgstr ""
+msgstr "%1 (Numatytasis)"
 
 #: quick/qml/AgentConfigurationForm.qml:35
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Configure Account"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
-msgstr "Konfigūruoti paskyrą"
+msgstr "Konfigūruoti %1"
 
 #: quick/qml/AgentConfigurationForm.qml:41
 #, kde-format
@@ -644,11 +638,10 @@ msgid "Modify or delete this account agent."
 msgstr ""
 
 #: quick/qml/AgentConfigurationForm.qml:57
-#, fuzzy, kde-format
-#| msgid "&Modify..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Modify"
-msgstr "&Modifikuoti..."
+msgstr "Modifikuoti"
 
 #: quick/qml/AgentConfigurationForm.qml:66
 #, kde-format
@@ -660,7 +653,7 @@ msgstr "Trinti"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
-msgstr ""
+msgstr "Pridėti paskyrą"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
@@ -669,20 +662,16 @@ msgid "Manage Tags"
 msgstr "Tvarkyti žymes"
 
 #: quick/qml/TagManagerPage.qml:27
-#, fuzzy, kde-format
-#| msgctxt "@title:window, %1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Confirm Tag Deletion"
-msgstr "%1 konfigūracija"
+msgstr "Patvirtinti žymės ištrynimą"
 
 #: quick/qml/TagManagerPage.qml:31
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-format
 msgctxt "@info"
 msgid "Are you sure you want to delete tag <b>%1</b>?"
-msgstr "Ar tikrai norite pašalinti žymę <resource>%1</resource>?"
+msgstr "Ar tikrai norite ištrinti žymę „<b>%1</b>“?"
 
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
@@ -690,17 +679,16 @@ msgid "You won't be able to revert this action."
 msgstr ""
 
 #: quick/qml/TagManagerPage.qml:132
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
-msgstr "Sukurti naują žymę"
+msgstr "Sukurti naują žymę…"
 
 #: quick/qml/TagManagerPage.qml:143
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Tag"
-msgstr ""
+msgstr "Pridėti žymę"
 
 #: selftest/main.cpp:19
 #, kde-format
@@ -876,10 +864,9 @@ msgstr "Atsiuntimo parinktys"
 
 #. i18n: ectx: property (text), widget (QRadioButton, retrieveFullMessages)
 #: widgets/cachepolicypage.ui:101
-#, fuzzy, kde-format
-#| msgid "Always retrieve full messages"
+#, kde-format
 msgid "Always retrieve full &messages"
-msgstr "Visada gauti pilnus laiškus"
+msgstr "Visada gauti &laiškus visu pavidalu"
 
 #. i18n: ectx: property (text), widget (QRadioButton, retrieveOnlyHeaders)
 #: widgets/cachepolicypage.ui:111
@@ -934,11 +921,10 @@ msgid "&New Subfolder..."
 msgstr "&Naujas poaplankis..."
 
 #: widgets/collectiondialog.cpp:228
-#, fuzzy, kde-format
-#| msgid "Create a new subfolder under the currently selected folder"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
-msgstr "Sukurti naują paaplankį šiuo metu pažymėtama aplanke"
+msgstr "Sukurti naują poaplankį šiuo metu pažymėtame aplanke"
 
 #: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:419
 #, kde-format
@@ -1172,11 +1158,10 @@ msgid "Take their version"
 msgstr ""
 
 #: widgets/conflictresolvedialog.cpp:204
-#, fuzzy, kde-format
-#| msgid "Keep both"
+#, kde-format
 msgctxt "@action:button"
 msgid "Keep both versions"
-msgstr "Išlaikyti abu"
+msgstr "Palikti abi versijas"
 
 #: widgets/conflictresolvedialog.cpp:217
 #, kde-format
@@ -1399,11 +1384,10 @@ msgid "Name:"
 msgstr "Pavadinimas:"
 
 #: widgets/selftestdialog.cpp:60
-#, fuzzy, kde-format
-#| msgid "Akonadi Server Self-Test"
+#, kde-format
 msgctxt "@title:window"
 msgid "Akonadi Server Self-Test"
-msgstr "Akonadi serverio savi testas"
+msgstr "Akonadi serverio savikontrolė"
 
 #: widgets/selftestdialog.cpp:71
 #, kde-format
@@ -2101,7 +2085,7 @@ msgstr "Ištekliaus sa&vybės"
 
 #: widgets/standardactionmanager.cpp:206
 msgid "Synchronize Resource"
-msgstr ""
+msgstr "Sinchronizuoti išteklių"
 
 #: widgets/standardactionmanager.cpp:214
 msgid "Work Offline"
@@ -2109,11 +2093,11 @@ msgstr "Dirbti neprisijungus"
 
 #: widgets/standardactionmanager.cpp:240
 msgid "&Synchronize Folder Recursively"
-msgstr ""
+msgstr "&Sinchronizuoti aplanką rekursyviai"
 
 #: widgets/standardactionmanager.cpp:241
 msgid "Synchronize Recursively"
-msgstr ""
+msgstr "Sinchronizuoti rekursyviai"
 
 #: widgets/standardactionmanager.cpp:248
 msgid "&Move Folder To Trash"
@@ -2159,11 +2143,11 @@ msgstr "Atkurti rinkinį iš šiukšlinės"
 
 #: widgets/standardactionmanager.cpp:305
 msgid "&Synchronize Favorite Folders"
-msgstr ""
+msgstr "&Sinchronizuoti mėgstamus aplankus"
 
 #: widgets/standardactionmanager.cpp:306
 msgid "Synchronize Favorite Folders"
-msgstr ""
+msgstr "Sinchronizuoti mėgstamus aplankus"
 
 #: widgets/standardactionmanager.cpp:313
 #, fuzzy
@@ -2190,9 +2174,7 @@ msgstr[2] "&Kopijuoti %1 elementų"
 msgstr[3] "&Kopijuoti %1 elementą"
 
 #: widgets/standardactionmanager.cpp:401
-#, fuzzy, kde-format
-#| msgid "&Cut Item"
-#| msgid_plural "&Cut %1 Items"
+#, kde-format
 msgctxt "@action"
 msgid "&Cut Item"
 msgid_plural "&Cut %1 Items"
@@ -2202,9 +2184,7 @@ msgstr[2] "&Iškirpti %1 elementų"
 msgstr[3] "&Iškirpti %1 elementą"
 
 #: widgets/standardactionmanager.cpp:402
-#, fuzzy, kde-format
-#| msgid "&Cut Folder"
-#| msgid_plural "&Cut %1 Folders"
+#, kde-format
 msgctxt "@action"
 msgid "&Cut Folder"
 msgid_plural "&Cut %1 Folders"
@@ -2223,27 +2203,24 @@ msgstr[2] "Iš&trinti %1 elementų"
 msgstr[3] "Iš&trinti %1 elementą"
 
 #: widgets/standardactionmanager.cpp:404
-#, fuzzy, kde-format
-#| msgid "&Delete Folder"
-#| msgid_plural "&Delete %1 Folders"
+#, kde-format
 msgctxt "@action"
 msgid "&Delete Folder"
 msgid_plural "&Delete %1 Folders"
-msgstr[0] "&Trinti aplanką"
-msgstr[1] "&Trinti %1 aplankus"
-msgstr[2] "&Trinti %1 aplankų"
-msgstr[3] "&Trinti %1 aplanką"
+msgstr[0] "Iš&trinti aplanką"
+msgstr[1] "Iš&trinti %1 aplankus"
+msgstr[2] "Iš&trinti %1 aplankų"
+msgstr[3] "Iš&trinti %1 aplanką"
 
 #: widgets/standardactionmanager.cpp:405
-#, fuzzy, kde-format
-#| msgid "Synchronize"
+#, kde-format
 msgctxt "@action"
 msgid "&Synchronize Folder"
 msgid_plural "&Synchronize %1 Folders"
-msgstr[0] "Sinchronizuoti"
-msgstr[1] "Sinchronizuoti"
-msgstr[2] "Sinchronizuoti"
-msgstr[3] "Sinchronizuoti"
+msgstr[0] "&Sinchronizuoti aplanką"
+msgstr[1] "&Sinchronizuoti %1 aplankus"
+msgstr[2] "&Sinchronizuoti %1 aplankų"
+msgstr[3] "&Sinchronizuoti %1 aplanką"
 
 #: widgets/standardactionmanager.cpp:406
 #, kde-format
@@ -2258,10 +2235,10 @@ msgstr[3] "Iš&trinti %1 išteklių"
 #, kde-format
 msgid "&Synchronize Resource"
 msgid_plural "&Synchronize %1 Resources"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "&Sinchronizuoti išteklių"
+msgstr[1] "&Sinchronizuoti %1 išteklius"
+msgstr[2] "&Sinchronizuoti %1 išteklių"
+msgstr[3] "&Sinchronizuoti %1 išteklių"
 
 #: widgets/standardactionmanager.cpp:409
 #, kde-format
@@ -2321,38 +2298,33 @@ msgstr[3] "Ištrinti %1 aplanką"
 #, kde-format
 msgid "Synchronize Folder"
 msgid_plural "Synchronize %1 Folders"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Sinchronizuoti aplanką"
+msgstr[1] "Sinchronizuoti %1 aplankus"
+msgstr[2] "Sinchronizuoti %1 aplankų"
+msgstr[3] "Sinchronizuoti %1 aplanką"
 
 #: widgets/standardactionmanager.cpp:416
-#, fuzzy, kde-format
-#| msgid "Delete Resource"
-#| msgid_plural "Delete %1 Resources"
+#, kde-format
 msgctxt "@action"
 msgid "Delete Resource"
 msgid_plural "Delete %1 Resources"
-msgstr[0] "Šalinti išteklį"
-msgstr[1] "Šalinti %1 išteklius"
-msgstr[2] "Šalinti %1 išteklių"
-msgstr[3] "Šalinti %1 išteklį"
+msgstr[0] "Ištrinti išteklių"
+msgstr[1] "Ištrinti %1 išteklius"
+msgstr[2] "Ištrinti %1 išteklių"
+msgstr[3] "Ištrinti %1 išteklių"
 
 #: widgets/standardactionmanager.cpp:417
-#, fuzzy, kde-format
-#| msgid "Synchronize"
+#, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
 msgid_plural "Synchronize %1 Resources"
-msgstr[0] "Sinchronizuoti"
-msgstr[1] "Sinchronizuoti"
-msgstr[2] "Sinchronizuoti"
-msgstr[3] "Sinchronizuoti"
+msgstr[0] "Sinchronizuoti išteklių"
+msgstr[1] "Sinchronizuoti %1 išteklius"
+msgstr[2] "Sinchronizuoti %1 išteklių"
+msgstr[3] "Sinchronizuoti %1 išteklių"
 
 #: widgets/standardactionmanager.cpp:420
-#, fuzzy, kde-format
-#| msgctxt "@title:column, name of a thing"
-#| msgid "Name"
+#, kde-format
 msgctxt "@label:textbox name of Akonadi folder"
 msgid "Name"
 msgstr "Pavadinimas"
@@ -2368,16 +2340,14 @@ msgstr[2] "Ar tikrai norite ištrinti %1 aplankų ir visus jų poaplankius?"
 msgstr[3] "Ar tikrai norite ištrinti %1 aplanką ir visus jų poaplankius?"
 
 #: widgets/standardactionmanager.cpp:430
-#, fuzzy, kde-format
-#| msgid "Delete Folder"
-#| msgid_plural "Delete %1 Folders"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "Trinti aplanką"
-msgstr[1] "Trinti %1 aplankus"
-msgstr[2] "Trinti %1 aplankų"
-msgstr[3] "Trinti %1 aplanką"
+msgstr[0] "Ištrinti aplanką?"
+msgstr[1] "Ištrinti aplankus?"
+msgstr[2] "Ištrinti aplankus?"
+msgstr[3] "Ištrinti aplankus?"
 
 #: widgets/standardactionmanager.cpp:431
 #, kde-format
@@ -2385,11 +2355,10 @@ msgid "Could not delete folder: %1"
 msgstr "Nepavyko ištrinti aplanko: %1"
 
 #: widgets/standardactionmanager.cpp:432
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
-msgstr "Aplanko pašalinti nepavyko"
+msgstr "Nepavyko ištrinti aplanko"
 
 #: widgets/standardactionmanager.cpp:434
 #, kde-format
@@ -2407,16 +2376,14 @@ msgstr[2] ""
 msgstr[3] ""
 
 #: widgets/standardactionmanager.cpp:439
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "Trinti elementą"
-msgstr[1] "Trinti %1 elementus"
-msgstr[2] "Trinti %1 elementų"
-msgstr[3] "Trinti %1 elementą"
+msgstr[0] "Ištrinti elementą?"
+msgstr[1] "Ištrinti elementus?"
+msgstr[2] "Ištrinti elementus?"
+msgstr[3] "Ištrinti elementus?"
 
 #: widgets/standardactionmanager.cpp:440
 #, kde-format
@@ -2424,11 +2391,10 @@ msgid "Could not delete item: %1"
 msgstr "Nepavyko ištrinti elemento: %1"
 
 #: widgets/standardactionmanager.cpp:441
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
-msgstr "Aplanko pašalinti nepavyko"
+msgstr "Nepavyko ištrinti elemento"
 
 #: widgets/standardactionmanager.cpp:443
 #, kde-format
@@ -2470,17 +2436,14 @@ msgstr[2] ""
 msgstr[3] ""
 
 #: widgets/standardactionmanager.cpp:455
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Delete Resource?"
-#| msgid_plural "Delete Resources?"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Resource?"
 msgid_plural "Delete Resources?"
-msgstr[0] "Trinti išteklį?"
-msgstr[1] "Trinti %1 išteklius?"
-msgstr[2] "Trinti %1 išteklių?"
-msgstr[3] "Trinti %1 išteklį?"
+msgstr[0] "Ištrinti išteklių?"
+msgstr[1] "Ištrinti išteklius?"
+msgstr[2] "Ištrinti išteklius?"
+msgstr[3] "Ištrinti išteklius?"
 
 #: widgets/standardactionmanager.cpp:457
 #, kde-format
@@ -2667,7 +2630,7 @@ msgstr ""
 #: xml/akonadi2xml.cpp:29
 #, kde-format
 msgid "(c) 2009 Volker Krause <vkrause@kde.org>"
-msgstr ""
+msgstr "(c) 2009 Volker Krause <vkrause@kde.org>"
 
 #: xml/xmldocument.cpp:83
 #, kde-format
@@ -2727,7 +2690,7 @@ msgstr ""
 #: xml/xmldocument.cpp:302
 #, kde-format
 msgid "Unable to find collection %1"
-msgstr "Nepavyko rasti kolekcijos %1"
+msgstr "Nepavyko rasti rinkinio %1"
 
 #~ msgid "About %1"
 #~ msgstr "Apie %1"
