@@ -65,6 +65,7 @@ public:
         OnlineRole, ///< The current online/offline status
         ActivitiesRole, ///< A list of activities
         ActivitiesEnabledRole, ///< Return true if activities is enabled on agent
+        AccountIdRole, ///< The online account id, if any
         UserRole = Qt::UserRole + 42 ///< Role for user extensions
     };
 

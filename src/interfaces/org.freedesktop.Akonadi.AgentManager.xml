@@ -162,5 +162,15 @@
       <arg type="b" direction="out"/>
       <arg name="identifier" type="s" direction="in"/>
     </method>
+
+    <method name="agentInstanceAccountId">
+        <arg type="s" direction="out"/>
+        <arg name="identifier" type="s" direction="in"/>
+    </method>
+    <signal name="agentInstanceAccountIdChanged">
+        <arg name="agentIdentifier" type="s" direction="out"/>
+        <arg name="accountId" type="s" direction="out"/>
+    </signal>
+
   </interface>
 </node>

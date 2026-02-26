@@ -80,6 +80,14 @@ public:
      */
     void excludeCapabilities(const QString &capability);
 
+    /*!
+     * Set whether or not agents created from a system online
+     * account are included.
+     *
+     * Default: true
+     */
+    void setIncludeSystemAccounts(bool includeSystemAccounts);
+
 protected:
     bool filterAcceptsRow(int row, const QModelIndex &parent) const override;
 
