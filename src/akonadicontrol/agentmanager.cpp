@@ -450,6 +450,20 @@ bool AgentManager::agentInstanceActivitiesEnabled(const QString &identifier)
     return mAgentInstances.value(identifier)->resourceInterface()->activitiesEnabled();
 }
 
+QString AgentManager::agentInstanceAccountId(const QString &identifier)
+{
+    if (!checkInstance(identifier)) {
+        return QString();
+    }
+
+    if (!mAgentInstances.value(identifier)->hasAccountInterface()) {
+        qCWarning(AKONADICONTROL_LOG) << "Agent instance (agentInstanceAccountId) " << identifier << " has no agent account interface.";
+        return QString();
+    }
+
+    return mAgentInstances.value(identifier)->accountId();
+}
+
 // resource specific methods //
 void AgentManager::setAgentInstanceName(const QString &identifier, const QString &name)
 {

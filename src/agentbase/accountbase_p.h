@@ -22,6 +22,8 @@ public:
     explicit AccountBasePrivate(AccountBase *qq, AgentBase *agent);
 
 Q_SIGNALS:
+    void accountIdChanged(const QString &accountId);
+
 private:
     friend class AccountBase;
     friend class ::Akonadi__AccountAdaptor;

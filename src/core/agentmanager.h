@@ -188,6 +188,8 @@ Q_SIGNALS:
      */
     void instanceOnline(const Akonadi::AgentInstance &instance, bool online);
 
+    void instanceAccountIdChanged(const Akonadi::AgentInstance &instance, const QString &accountId);
+
 private:
     explicit AgentManager();
 

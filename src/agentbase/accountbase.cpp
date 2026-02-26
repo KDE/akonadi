@@ -39,6 +39,8 @@ void AccountBasePrivate::setAccountId(const QString &accountId)
     agent->setAccountId(accountId);
 
     q->initAccount();
+
+    Q_EMIT accountIdChanged(accountId);
 }
 
 } // namespace Akonadi
