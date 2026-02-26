@@ -106,6 +106,7 @@ QHash<int, QByteArray> AgentInstanceModel::roleNames() const
     roles.insert(ProgressRole, QByteArrayLiteral("progress"));
     roles.insert(OnlineRole, QByteArrayLiteral("online"));
     roles.insert(IconNameRole, QByteArrayLiteral("iconName"));
+    roles.insert(AccountIdRole, QByteArrayLiteral("accountId"));
     return roles;
 }
 
@@ -160,6 +161,8 @@ QVariant AgentInstanceModel::data(const QModelIndex &index, int role) const
         return instance.activities();
     case ActivitiesEnabledRole:
         return instance.activitiesEnabled();
+    case AccountIdRole:
+        return instance.accountId();
     case TypeRole: {
         QVariant var;
         var.setValue(instance.type());
@@ -174,6 +177,7 @@ QVariant AgentInstanceModel::data(const QModelIndex &index, int role) const
     case MimeTypesRole:
         return instance.type().mimeTypes();
     }
+
     return QVariant();
 }
 

@@ -30,6 +30,7 @@ public:
     QStringList mimeTypes;
     QStringList capabilities;
     QStringList excludeCapabilities;
+    bool includeSystemAccounts = true;
     [[nodiscard]] bool filterAcceptRegExp(const QModelIndex &index, const QRegularExpression &filterRegExpStr);
 };
 
@@ -80,6 +81,19 @@ void AgentFilterProxyModel::excludeCapabilities(const QString &capability)
 #endif
 }
 
+void AgentFilterProxyModel::setIncludeSystemAccounts(bool includeSystemAccounts)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    beginFilterChange();
+#endif
+    d->includeSystemAccounts = includeSystemAccounts;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+    endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
+    invalidateFilter();
+#endif
+}
+
 void AgentFilterProxyModel::clearFilters()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
@@ -88,6 +102,7 @@ void AgentFilterProxyModel::clearFilters()
     d->capabilities.clear();
     d->mimeTypes.clear();
     d->excludeCapabilities.clear();
+    d->includeSystemAccounts = true;
 #if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
     endFilterChange(QSortFilterProxyModel::Direction::Rows);
 #else
@@ -165,6 +180,13 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex & /*sour
             }
         }
     }
+
+    if (!d->includeSystemAccounts) {
+        if (!index.data(AgentInstanceModel::AccountIdRole).toString().isEmpty()) {
+            return false;
+        }
+    }
+
     const bool result = d->filterAcceptRegExp(index, filterRegularExpression());
     return result;
 }

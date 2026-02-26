@@ -52,6 +52,7 @@ Akonadi::AgentFilterProxyModel *AgentConfiguration::runningAgents()
     }
     m_runningAgents->setSourceModel(agentInstanceModel);
     m_runningAgents->addCapabilityFilter(QStringLiteral("Resource")); // show only resources, no agents
+    m_runningAgents->setIncludeSystemAccounts(false); // don't show agents backed by system accounts
     return m_runningAgents;
 }
 
