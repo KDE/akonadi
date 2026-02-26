@@ -42,3 +42,5 @@ void AccountBasePrivate::setAccountId(const QString &accountId)
 }
 
 } // namespace Akonadi
+
+#include "moc_accountbase_p.cpp"
