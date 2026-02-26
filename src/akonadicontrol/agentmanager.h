@@ -219,6 +219,8 @@ public:
     void setAgentInstanceActivitiesEnabled(const QString &identifier, bool enabled);
     [[nodiscard]] bool agentInstanceActivitiesEnabled(const QString &identifier);
 
+    [[nodiscard]] QString agentInstanceAccountId(const QString &identifier);
+
 Q_SIGNALS:
     /**
      * This signal is emitted whenever a new agent type was installed on the system.
@@ -305,6 +307,8 @@ Q_SIGNALS:
      * Emitted when the online state of an agent changed.
      */
     void agentInstanceOnlineChanged(const QString &agentIdentifier, bool state);
+
+    void agentInstanceAccountIdChanged(const QString &agentIdentifier, const QString &accountId);
 
 private Q_SLOTS:
     void updatePluginInfos();

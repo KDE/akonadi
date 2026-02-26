@@ -218,6 +218,10 @@ public:
      */
     void setActivitiesEnabled(bool enabled);
 
+    /**
+     */
+    [[nodiscard]] QString accountId() const;
+
 private:
     QSharedDataPointer<AgentInstancePrivate> d;
 };

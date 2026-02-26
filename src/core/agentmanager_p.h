@@ -50,6 +50,7 @@ public:
     void agentInstanceWarning(const QString &identifier, const QString &msg);
     void agentInstanceError(const QString &identifier, const QString &msg);
     void agentInstanceOnlineChanged(const QString &identifier, bool state);
+    void agentInstanceAccountIdChanged(const QString &identifier, const QString &accountId);
 
     /**
      * Reads the information about all known agent types from the serverside

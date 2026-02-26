@@ -47,6 +47,7 @@ bool AgentInstance::obtainAgentInterface()
     }
 
     mSearchInterface = findInterface<org::freedesktop::Akonadi::Agent::Search>(Akonadi::DBus::Agent, "/Search");
+    mAccountInterface = findInterface<org::freedesktop::Akonadi::Agent::Account>(Akonadi::DBus::Agent, "/Account");
 
     connect(mAgentStatusInterface.get(),
             qOverload<int, const QString &>(&OrgFreedesktopAkonadiAgentStatusInterface::status),
@@ -57,6 +58,17 @@ bool AgentInstance::obtainAgentInterface()
     connect(mAgentStatusInterface.get(), &OrgFreedesktopAkonadiAgentStatusInterface::warning, this, &AgentInstance::warning);
     connect(mAgentStatusInterface.get(), &OrgFreedesktopAkonadiAgentStatusInterface::error, this, &AgentInstance::error);
     connect(mAgentStatusInterface.get(), &OrgFreedesktopAkonadiAgentStatusInterface::onlineChanged, this, &AgentInstance::onlineChanged);
+
+    QDBusReply<QString> accountIdReply = mAccountInterface->accountId();
+
+    if (accountIdReply.error().type() == QDBusError::UnknownObject) {
+        // doesn't actually exist
+        mAccountInterface.reset();
+    } else {
+        connect(mAccountInterface.get(), &OrgFreedesktopAkonadiAgentAccountInterface::accountIdChanged, this, &AgentInstance::accountIdChanged);
+
+        mAccountId = mAccountInterface->accountId();
+    }
 
     mDBusServiceRegistered = true;
     refreshAgentStatus();
@@ -146,6 +158,15 @@ void AgentInstance::resourceNameChanged(const QString &name)
     }
     mResourceName = name;
     Q_EMIT mManager.agentInstanceNameChanged(mIdentifier, name);
+}
+
+void AgentInstance::accountIdChanged(const QString &accountId)
+{
+    if (accountId == mAccountId) {
+        return;
+    }
+    mAccountId = accountId;
+    Q_EMIT mManager.agentInstanceAccountIdChanged(mIdentifier, accountId);
 }
 
 void AgentInstance::refreshAgentStatus()

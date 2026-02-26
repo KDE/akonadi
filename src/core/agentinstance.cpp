@@ -188,4 +188,9 @@ void AgentInstance::setActivitiesEnabled(bool enabled)
     AgentManager::self()->d->setActivitiesEnabled(*this, enabled);
 }
 
+QString AgentInstance::accountId() const
+{
+    return d->mAccountId;
+}
+
 #include "moc_agentinstance.cpp"

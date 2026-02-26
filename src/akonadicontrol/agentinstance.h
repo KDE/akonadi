@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "accountinterface.h"
 #include "controlinterface.h"
 #include "preprocessorinterface.h"
 #include "resourceinterface.h"
@@ -81,6 +82,11 @@ public:
         return mResourceName;
     }
 
+    [[nodiscard]] QString accountId() const
+    {
+        return mAccountId;
+    }
+
     [[nodiscard]] bool dbusServiceRegistered() const
     {
         return mDBusServiceRegistered;
@@ -107,6 +113,11 @@ public:
         return mPreprocessorInterface != nullptr;
     }
 
+    [[nodiscard]] bool hasAccountInterface() const
+    {
+        return mAccountInterface != nullptr;
+    }
+
     org::freedesktop::Akonadi::Agent::Control *controlInterface() const
     {
         return mAgentControlInterface.get();
@@ -120,6 +131,11 @@ public:
     org::freedesktop::Akonadi::Agent::Search *searchInterface() const
     {
         return mSearchInterface.get();
+    }
+
+    org::freedesktop::Akonadi::Agent::Account *accountInterface() const
+    {
+        return mAccountInterface.get();
     }
 
     org::freedesktop::Akonadi::Resource *resourceInterface() const
@@ -146,6 +162,7 @@ protected Q_SLOTS:
     void error(const QString &msg);
     void onlineChanged(bool state);
     void resourceNameChanged(const QString &name);
+    void accountIdChanged(const QString &accountId);
 
     void refreshAgentStatus();
     void refreshResourceStatus();
@@ -169,6 +186,7 @@ private:
     std::unique_ptr<org::freedesktop::Akonadi::Agent::Control> mAgentControlInterface;
     std::unique_ptr<org::freedesktop::Akonadi::Agent::Status> mAgentStatusInterface;
     std::unique_ptr<org::freedesktop::Akonadi::Agent::Search> mSearchInterface;
+    std::unique_ptr<org::freedesktop::Akonadi::Agent::Account> mAccountInterface;
     std::unique_ptr<org::freedesktop::Akonadi::Resource> mResourceInterface;
     std::unique_ptr<org::freedesktop::Akonadi::Preprocessor> mPreprocessorInterface;
 
@@ -179,4 +197,5 @@ private:
     bool mDBusServiceRegistered = false;
     bool mOnline = false;
     bool mPendingQuit = false;
+    QString mAccountId;
 };

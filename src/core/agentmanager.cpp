@@ -172,6 +172,18 @@ void AgentManagerPrivate::agentInstanceOnlineChanged(const QString &identifier, 
     Q_EMIT mParent->instanceOnline(instance, state);
 }
 
+void AgentManagerPrivate::agentInstanceAccountIdChanged(const QString &identifier, const QString &accountId)
+{
+    auto it = mInstances.find(identifier);
+    if (it == mInstances.cend()) {
+        return;
+    }
+
+    AgentInstance &instance = it.value();
+    instance.d->mAccountId = accountId;
+    Q_EMIT mParent->instanceAccountIdChanged(instance, accountId);
+}
+
 void AgentManagerPrivate::agentInstanceNameChanged(const QString &identifier, const QString &name)
 {
     auto it = mInstances.find(identifier);
@@ -286,6 +298,7 @@ AgentInstance AgentManagerPrivate::fillAgentInstance(const QString &identifier) 
     instance.d->mStatusMessage = mManager->agentInstanceStatusMessage(identifier);
     instance.d->mProgress = mManager->agentInstanceProgress(identifier);
     instance.d->mIsOnline = mManager->agentInstanceOnline(identifier);
+    instance.d->mAccountId = mManager->agentInstanceAccountId(identifier);
     // FIXME need to reactivate it
     // FIXME activities instance.d->mActivities = mManager->agentInstanceActivities(identifier);
     // FIXME activities instance.d->mActivitiesEnabled = mManager->agentInstanceActivitiesEnabled(identifier);
@@ -327,6 +340,7 @@ void AgentManagerPrivate::createDBusInterface()
     connect(mManager.get(), &AgentManagerIface::agentInstanceWarning, this, &AgentManagerPrivate::agentInstanceWarning);
     connect(mManager.get(), &AgentManagerIface::agentInstanceError, this, &AgentManagerPrivate::agentInstanceError);
     connect(mManager.get(), &AgentManagerIface::agentInstanceOnlineChanged, this, &AgentManagerPrivate::agentInstanceOnlineChanged);
+    connect(mManager.get(), &AgentManagerIface::agentInstanceAccountIdChanged, this, &AgentManagerPrivate::agentInstanceAccountIdChanged);
 
     if (mManager->isValid()) {
         readAgentTypes();
