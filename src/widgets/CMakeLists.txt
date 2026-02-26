@@ -45,6 +45,8 @@ target_sources(
         tagmanagementdialog.cpp
         tagselectioncombobox.cpp
         tagselectiondialog.cpp
+        tagsfilterproxymodel.h
+        tagsfilterproxymodel.cpp
         tagwidget.cpp
         tagselectwidget.cpp
         actionstatemanager_p.h
