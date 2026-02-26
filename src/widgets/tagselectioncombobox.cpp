@@ -283,6 +283,8 @@ bool TagSelectionComboBox::eventFilter(QObject *receiver, QEvent *event)
         case Qt::Key_Escape:
             hidePopup();
             return true;
+        default:
+            break;
         }
         break;
     case QEvent::MouseButtonDblClick:
