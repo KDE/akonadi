@@ -12,6 +12,7 @@
 #include "tagdeletejob.h"
 #include "tagfetchscope.h"
 #include "tagmodel.h"
+#include "tagsfilterproxymodel.h"
 #include "ui_tageditwidget.h"
 
 #include <KCheckableProxyModel>
@@ -216,7 +217,7 @@ void TagEditWidget::setSelectionEnabled(bool enabled)
             d->initCheckableProxy(d->m_model);
         }
         if (!d->m_filterProxyModel) {
-            d->m_filterProxyModel = new QSortFilterProxyModel(this);
+            d->m_filterProxyModel = new TagsFilterProxyModel(this);
         }
         d->m_filterProxyModel->setSourceModel(d->m_checkableProxy.get());
         d->ui.tagsView->setModel(d->m_filterProxyModel);
@@ -243,13 +244,13 @@ void TagEditWidget::setModel(TagModel *model)
         if (d->m_checkableProxy) {
             d->initCheckableProxy(d->m_model);
             if (!d->m_filterProxyModel) {
-                d->m_filterProxyModel = new QSortFilterProxyModel(this);
+                d->m_filterProxyModel = new TagsFilterProxyModel(this);
             }
             d->m_filterProxyModel->setSourceModel(d->m_checkableProxy.get());
             d->ui.tagsView->setModel(d->m_filterProxyModel);
         } else {
             if (!d->m_filterProxyModel) {
-                d->m_filterProxyModel = new QSortFilterProxyModel(this);
+                d->m_filterProxyModel = new TagsFilterProxyModel(this);
             }
             d->m_filterProxyModel->setSourceModel(d->m_model);
             d->ui.tagsView->setModel(d->m_filterProxyModel);
