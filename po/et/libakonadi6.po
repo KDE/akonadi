@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-15 00:43+0000\n"
+"POT-Creation-Date: 2026-02-28 00:44+0000\n"
 "PO-Revision-Date: 2020-05-07 13:23+0300\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -2646,25 +2646,25 @@ msgstr "T&elli"
 msgid "&Unsubscribe"
 msgstr "Tü&hista tellimus"
 
-#: widgets/tageditwidget.cpp:119
+#: widgets/tageditwidget.cpp:120
 #, kde-format
 msgid "Failed to create a new tag"
 msgstr "Uue sildi loomine nurjus"
 
-#: widgets/tageditwidget.cpp:119
+#: widgets/tageditwidget.cpp:120
 #, fuzzy, kde-format
 #| msgid "An error occurred while creating a new tag"
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Tõrge uue sildi loomisel"
 
-#: widgets/tageditwidget.cpp:167
+#: widgets/tageditwidget.cpp:168
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Kas tõesti eemaldada silt <resource>%1</resource>?"
 
-#: widgets/tageditwidget.cpp:168
+#: widgets/tageditwidget.cpp:169
 #, fuzzy, kde-format
 #| msgctxt "@title"
 #| msgid "Delete tag"
@@ -2672,7 +2672,7 @@ msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Sildi kustutamine"
 
-#: widgets/tageditwidget.cpp:193
+#: widgets/tageditwidget.cpp:194
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"

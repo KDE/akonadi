@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-15 00:43+0000\n"
+"POT-Creation-Date: 2026-02-28 00:44+0000\n"
 "PO-Revision-Date: 2024-09-19 14:56+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -2630,30 +2630,30 @@ msgstr "Εγγ&ραφή"
 msgid "&Unsubscribe"
 msgstr "&Απεγγραφή"
 
-#: widgets/tageditwidget.cpp:119
+#: widgets/tageditwidget.cpp:120
 #, kde-format
 msgid "Failed to create a new tag"
 msgstr "Αποτυχία δημιουργίας νέας ετικέτας"
 
-#: widgets/tageditwidget.cpp:119
+#: widgets/tageditwidget.cpp:120
 #, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Παρουσιάστηκε σφάλμα κατά τη δημιουργία νέας ετικέτας"
 
-#: widgets/tageditwidget.cpp:167
+#: widgets/tageditwidget.cpp:168
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Θέλετε πράγματι να αφαιρέσετε την ετικέτα <resource>%1</resource>;"
 
-#: widgets/tageditwidget.cpp:168
+#: widgets/tageditwidget.cpp:169
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Διαγραφή ετικέτας"
 
-#: widgets/tageditwidget.cpp:193
+#: widgets/tageditwidget.cpp:194
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"

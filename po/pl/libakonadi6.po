@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-15 00:43+0000\n"
+"POT-Creation-Date: 2026-02-28 00:44+0000\n"
 "PO-Revision-Date: 2026-01-01 12:40+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -2617,30 +2617,30 @@ msgstr "Su&bskrybuj"
 msgid "&Unsubscribe"
 msgstr "Wyłącz s&ubskrypcję"
 
-#: widgets/tageditwidget.cpp:119
+#: widgets/tageditwidget.cpp:120
 #, kde-format
 msgid "Failed to create a new tag"
 msgstr "Nie udało się utworzyć nowego znacznika"
 
-#: widgets/tageditwidget.cpp:119
+#: widgets/tageditwidget.cpp:120
 #, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Wystąpił błąd przy tworzeniu nowego znacznika"
 
-#: widgets/tageditwidget.cpp:167
+#: widgets/tageditwidget.cpp:168
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Czy na pewno usunąć znacznik <resource>%1</resource>?"
 
-#: widgets/tageditwidget.cpp:168
+#: widgets/tageditwidget.cpp:169
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Usuń znacznik"
 
-#: widgets/tageditwidget.cpp:193
+#: widgets/tageditwidget.cpp:194
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-15 00:43+0000\n"
+"POT-Creation-Date: 2026-02-28 00:44+0000\n"
 "PO-Revision-Date: 2025-12-30 09:16+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -2664,30 +2664,30 @@ msgstr "П&ідписатися"
 msgid "&Unsubscribe"
 msgstr "&Відписатися"
 
-#: widgets/tageditwidget.cpp:119
+#: widgets/tageditwidget.cpp:120
 #, kde-format
 msgid "Failed to create a new tag"
 msgstr "Не вдалося створити мітку"
 
-#: widgets/tageditwidget.cpp:119
+#: widgets/tageditwidget.cpp:120
 #, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Під час спроби створення мітки сталася помилка"
 
-#: widgets/tageditwidget.cpp:167
+#: widgets/tageditwidget.cpp:168
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Ви справді хочете вилучити мітку <resource>%1</resource>?"
 
-#: widgets/tageditwidget.cpp:168
+#: widgets/tageditwidget.cpp:169
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Вилучення мітки"
 
-#: widgets/tageditwidget.cpp:193
+#: widgets/tageditwidget.cpp:194
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"

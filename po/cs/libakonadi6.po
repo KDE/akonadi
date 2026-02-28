@@ -1,34 +1,35 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# SPDX-FileCopyrightText: 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2023, 2024 Vít Pelčák <vit@pelcak.org>
+# SPDX-FileCopyrightText: 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2023, 2024, 2026 Vít Pelčák <vit@pelcak.org>
 # Lukáš Tinkl <ltinkl@redhat.com>, 2011, 2012.
 # Tomáš Chvátal <tomas.chvatal@gmail.com>, 2012.
 # SPDX-FileCopyrightText: 2021, 2023, 2024 Vit Pelcak <vit@pelcak.org>
+# SPDX-FileCopyrightText: 2026 Libor Filípek <filipek.libor@protonmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-15 00:43+0000\n"
-"PO-Revision-Date: 2024-11-14 14:03+0100\n"
-"Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
+"POT-Creation-Date: 2026-02-28 00:44+0000\n"
+"PO-Revision-Date: 2026-02-25 17:12+0100\n"
+"Last-Translator:  Vít Pelčák <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 24.08.3\n"
+"X-Generator: Lokalize 25.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Vít Pelčák, Tomáš Chvátal"
+msgstr "Vít Pelčák,Tomáš Chvátal,Libor Filípek"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "vit@pelcak.org, tomas.chvatal@gmail.com"
+msgstr "vit@pelcak.org,tomas.chvatal@gmail.com,libor.filipek@gmail.com"
 
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
@@ -179,6 +180,20 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"Manipulační nástroj Akonadi serveru\n"
+"\n"
+"Commands:\n"
+"  start          Start Akonadi server se všemi jeho procesy\n"
+"  stop           Zastavení Akonadi serveru a všech jeho procesů\n"
+"  restart        Restart Akonadi serveru se všemi jeho procesy\n"
+"  status         Zobrazit přehled stavu Akonadi serveru\n"
+"  instances      Seznam všech existujících Akonadi instancí\n"
+"  vacuum         Vyčistit vnitřní úložiště (Varování: vyžaduje mnoho času a "
+"prostoru\n"
+"                 na disku!)\n"
+"  fsck           Kontrola (a případně oprava) konzistence interního "
+"úložiště\n"
+"                 (může to chvíli trvat)"
 
 #: akonadictl/main.cpp:239
 #, kde-format
@@ -198,31 +213,31 @@ msgstr "Dialogové okno nastavení"
 #: configdialog/main.cpp:25
 #, kde-format
 msgid "Allows to configure an agent or resource"
-msgstr ""
+msgstr "Umožňuje konfigurovat agenta nebo zdroj"
 
 #: configdialog/main.cpp:27
 #, kde-format
 msgid "© 2025 Carl Schwan <carl@carlschwan.eu>"
-msgstr ""
+msgstr "© 2025 Carl Schwan <carl@carlschwan.eu>"
 
 #: configdialog/main.cpp:30
 #, kde-format
 msgid "The agent identifier"
-msgstr ""
+msgstr "Identifikátor agenta"
 
 #: configdialog/main.cpp:36
 #, kde-format
 msgid "Required identifier argument missing."
-msgstr ""
+msgstr "Chybí požadovaný identifikátor argumentu."
 
 #: configdialog/main.cpp:51
 #, kde-format
 msgid "No such agent found \"%1\""
-msgstr ""
+msgstr "Žádný takový agent nebyl nalezen \"%1\""
 
 #: core/collection.cpp:221
 #, fuzzy, kde-format
-#| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
+#| msgctxt "Name for the folder containing searches"
 #| msgid "Search"
 msgctxt "Name for the folder containing searches"
 msgid "Search"
@@ -404,7 +419,7 @@ msgstr "Nelze vytvořit značku."
 #: core/jobs/trashjob.cpp:155
 #, kde-format
 msgid "Move to trash collection failed, aborting trash operation"
-msgstr ""
+msgstr "Přesunutí do koše se nezdařilo, operace s košem byla přerušena"
 
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format
@@ -414,17 +429,18 @@ msgstr "Předány neplatné položky"
 #: core/jobs/trashjob.cpp:258 core/jobs/trashrestorejob.cpp:201
 #, kde-format
 msgid "Invalid collection passed"
-msgstr ""
+msgstr "Neplatná kolekce"
 
 #: core/jobs/trashjob.cpp:375 core/jobs/trashrestorejob.cpp:343
 #, kde-format
 msgid "No valid collection or empty itemlist"
-msgstr ""
+msgstr "Žádný platný seznam položek nebo prázdný seznam položek"
 
 #: core/jobs/trashrestorejob.cpp:86
 #, kde-format
 msgid "Could not find restore collection and restore resource is not available"
 msgstr ""
+"Nelze najít kolekci pro obnovení a prostředek pro obnovení není k dispozici"
 
 #: core/models/agentinstancemodel.cpp:192
 #, kde-format
@@ -514,7 +530,7 @@ msgstr "Nepřečtené zprávy"
 #, kde-format
 msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
 msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
-msgstr ""
+msgstr "<strong>Kvóta</strong>: %1% (%2/%3)<br>\n"
 
 #: core/models/statisticsproxymodel.cpp:103
 #, kde-format
@@ -562,7 +578,7 @@ msgstr "Index již není dostupný"
 #: core/partfetcher.cpp:114
 #, kde-format
 msgid "Payload part '%1' is not available for this index"
-msgstr ""
+msgstr "Část obsahu \"%1\" není pro tento index k dispozici"
 
 #: core/partfetcher.cpp:123
 #, kde-format
@@ -592,6 +608,10 @@ msgid ""
 "If you recently updated your system please log out and back in to make sure "
 "all applications use the correct protocol version."
 msgstr ""
+"Verze protokolu serveru Akonadi se liší od verze protokolu používané touto "
+"aplikací.\n"
+"Pokud jste nedávno aktualizovali systém, odhlaste se a znovu se přihlaste, "
+"abyste se ujistili, že všechny aplikace používají správnou verzi protokolu."
 
 #: core/servermanager.cpp:288
 #, kde-format
@@ -607,6 +627,8 @@ msgid ""
 "Protocol version mismatch. Server version is older (%1) than ours (%2). If "
 "you updated your system recently please restart the Akonadi server."
 msgstr ""
+"Neshoda verzí protokolu. Verze serveru je starší (%1) než naše (%2). Pokud "
+"jste nedávno aktualizovali systém, restartujte prosím server Akonadi."
 
 #: core/session.cpp:193
 #, kde-format
@@ -614,18 +636,21 @@ msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
 "you updated your system recently please restart all KDE PIM applications."
 msgstr ""
+"Neshoda verzí protokolu. Verze serveru je novější (%1) než naše (%2). Pokud "
+"jste nedávno aktualizovali systém, restartujte prosím všechny aplikace KDE "
+"PIM."
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
-msgstr ""
+msgstr "Nastavit %1"
 
 #: quick/qml/AgentConfigurationForm.qml:41
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
-msgstr ""
+msgstr "Upravit nebo odstranit tohoto agenta účtu."
 
 #: quick/qml/AgentConfigurationForm.qml:57
 #, kde-format
@@ -643,7 +668,7 @@ msgstr "Smazat"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
-msgstr ""
+msgstr "Přidat účet"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
@@ -661,7 +686,7 @@ msgstr "Potvrdit smazání značky"
 #, kde-format
 msgctxt "@info"
 msgid "Are you sure you want to delete tag <b>%1</b>?"
-msgstr ""
+msgstr "Opravdu chcete odstranit značku <b>%1</b>?"
 
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
@@ -670,22 +695,23 @@ msgstr "Tento krok nelze vrátit."
 
 #: quick/qml/TagManagerPage.qml:53
 #, fuzzy, kde-format
-#| msgid "Create new tag"
+#| msgctxt "@info:placeholder"
+#| msgid "There are no tags"
 msgctxt "@info:placeholder"
 msgid "There are no tags"
-msgstr "Vytvořit novou značku"
+msgstr "Zde nejsou žádné značky"
 
 #: quick/qml/TagManagerPage.qml:141
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
-msgstr ""
+msgstr "Vytvořit novou značku…"
 
 #: quick/qml/TagManagerPage.qml:152
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Tag"
-msgstr ""
+msgstr "Přidat značku"
 
 #: selftest/main.cpp:19
 #, kde-format
@@ -707,6 +733,7 @@ msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
+"Jmenný prostor pro spuštění více instancí Akonadi ve stejné relaci uživatele"
 
 #: widgets/agentactionmanager.cpp:36
 msgid "&New Agent Instance..."
@@ -790,7 +817,7 @@ msgstr "Nastavení účtu"
 #, kde-format
 msgctxt "@item:textbox"
 msgid "Search types"
-msgstr ""
+msgstr "Typy vyhledávání"
 
 #: widgets/cachepolicypage.cpp:43 widgets/cachepolicypage.cpp:48
 #, kde-format
@@ -883,7 +910,7 @@ msgstr "Napořád"
 #: widgets/clearcachefoldersjob.cpp:41
 #, kde-format
 msgid "Collection cache cleared. You should restart Akonadi now."
-msgstr ""
+msgstr "Mezipaměť kolekce byla vymazána. Nyní byste měli restartovat Akonadi."
 
 #: widgets/clearcachefoldersjob.cpp:69
 #, kde-format
@@ -892,6 +919,9 @@ msgid ""
 "likely never uploaded to the destination server, so clearing this collection "
 "means that those <b>data will be lost</b>. Are you sure you want to proceed?"
 msgstr ""
+"Kolekce '%1' obsahuje %2 položky bez vzdáleného ID. Tyto položky "
+"pravděpodobně nebyly nikdy nahrány na cílový server, takže vymazání této "
+"kolekce znamená, že <b>data budou ztracena</b>. Opravdu chcete pokračovat?"
 
 #: widgets/collectiondialog.cpp:58
 #, kde-format
@@ -1007,7 +1037,7 @@ msgstr "0 Bajtů"
 #: widgets/collectionmaintenancepage.cpp:46
 #, kde-format
 msgid "Remember that indexing can take some minutes."
-msgstr ""
+msgstr "Nezapomeňte, že indexování může trvat několik minut."
 
 #: widgets/collectionmaintenancepage.cpp:72
 #, kde-format
@@ -1160,6 +1190,12 @@ msgid ""
 "editor\"</a> to keep a copy of the texts, then select which version is most "
 "correct, then re-open it and modify it again to add what's missing."
 msgstr ""
+"<qt>Vaše změny jsou v rozporu se změnami, které mezitím provedl někdo jiný."
+"<br>Pokud nelze jednu verzi jednoduše odstranit, budete muset tyto změny "
+"integrovat ručně.<br>Klikněte na <a href=\"opentexteditor\">\"Otevřít "
+"textový editor\"</a>, abyste si uchovali kopii textů, poté vyberte verzi, "
+"která je nejvíce správná, znovu ji otevřete a upravte tak, aby obsahovala "
+"chybějící části."
 
 #: widgets/conflictresolvedialog.cpp:266
 #, kde-format
@@ -1246,6 +1282,10 @@ msgid ""
 "Depending on the amount of personal information, this might take a few "
 "minutes."
 msgstr ""
+"Služba správy osobních údajů provádí aktualizaci databáze.\n"
+"K tomu dochází po aktualizaci softwaru a je to nezbytné pro optimalizaci "
+"výkonu.\n"
+"V závislosti na množství osobních údajů to může trvat několik minut."
 
 #. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
@@ -1255,6 +1295,8 @@ msgid ""
 "A required background service is not running. This application cannot be "
 "used without it."
 msgstr ""
+"Požadovaná služba na pozadí není spuštěna. Bez ní nelze tuto aplikaci "
+"používat."
 
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #: widgets/erroroverlay.ui:116
@@ -1270,6 +1312,8 @@ msgid ""
 "A required background service is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
 msgstr ""
+"Požadovaná služba na pozadí není funkční.\n"
+"Kliknutím na \"Podrobnosti...\" získáte podrobné informace o tomto problému."
 
 #. i18n: ectx: property (text), widget (QLabel, brokenDescription)
 #: widgets/erroroverlay.ui:208
@@ -1280,6 +1324,10 @@ msgid ""
 "Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> for "
 "troubleshooting tips.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Požadovaná služba na pozadí není funkční. </p><p>Tipy "
+"pro řešení problémů najdete v sekci <a href=\"https://userbase.kde.org/"
+"Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">Často kladené otázky</"
+"a>.</p></body></html>"
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
@@ -1379,6 +1427,8 @@ msgid ""
 "The QtSQL driver '%1' is required by your current Akonadi server "
 "configuration and was found on your system."
 msgstr ""
+"Ovladač QtSQL \"%1\" je vyžadován vaší aktuální konfigurací serveru Akonadi "
+"a byl nalezen ve vašem systému."
 
 #: widgets/selftestdialog.cpp:191
 #, kde-format
@@ -1388,6 +1438,10 @@ msgid ""
 "The following drivers are installed: %2.\n"
 "Make sure the required driver is installed."
 msgstr ""
+"Ovladač QtSQL \"%1\" je vyžadován vaší aktuální konfigurací serveru "
+"Akonadi.\n"
+"Jsou nainstalovány následující ovladače: %2.\n"
+"Ujistěte se, že je nainstalován požadovaný ovladač."
 
 #: widgets/selftestdialog.cpp:198
 #, kde-format
@@ -1419,6 +1473,12 @@ msgid ""
 "executable. The server executable is typically called 'mysqld'; its location "
 "varies depending on the distribution."
 msgstr ""
+"V současné době máte Akonadi nakonfigurováno tak, aby používalo server MySQL "
+"‚%1‘.\n"
+"Ujistěte se, že máte nainstalován server MySQL, nastavte správnou cestu a "
+"ujistěte se, že máte potřebná práva pro čtení a spouštění na serveru. "
+"Spustitelný soubor serveru se obvykle nazývá 'mysqld'; jeho umístění se liší "
+"v závislosti na distribuci."
 
 #: widgets/selftestdialog.cpp:224
 #, kde-format
@@ -1438,7 +1498,7 @@ msgstr "Server MySQL nespustitelný."
 #: widgets/selftestdialog.cpp:230
 #, kde-format
 msgid "MySQL found with unexpected name."
-msgstr ""
+msgstr "Server MySQL nalezen s neočekávaným názvem."
 
 #: widgets/selftestdialog.cpp:232
 #, kde-format
@@ -1460,6 +1520,7 @@ msgstr "Server MySQL je spustitelný."
 msgid ""
 "Executing the MySQL server '%1' failed with the following error message: '%2'"
 msgstr ""
+"Spuštění serveru MySQL '%1' selhalo s následující chybovou zprávou: '%2'"
 
 #: widgets/selftestdialog.cpp:242
 #, kde-format
@@ -1469,12 +1530,12 @@ msgstr "Selhalo spuštění MySQL serveru."
 #: widgets/selftestdialog.cpp:249
 #, kde-format
 msgid "MySQL server error log not tested."
-msgstr ""
+msgstr "Chybový protokol serveru MySQL nebyl testován."
 
 #: widgets/selftestdialog.cpp:257
 #, kde-format
 msgid "No current MySQL error log found."
-msgstr ""
+msgstr "Nebyly nalezeny žádné aktuální protokoly chyb MySQL."
 
 #: widgets/selftestdialog.cpp:258
 #, kde-format
@@ -1482,16 +1543,18 @@ msgid ""
 "The MySQL server did not report any errors during this startup. The log can "
 "be found in '%1'."
 msgstr ""
+"MySQL server během tohoto spuštění nehlásil žádné chyby. Protokol lze najít "
+"v '%1'."
 
 #: widgets/selftestdialog.cpp:264
 #, kde-format
 msgid "MySQL error log not readable."
-msgstr ""
+msgstr "Chybový protokol MySQL není čitelný."
 
 #: widgets/selftestdialog.cpp:265
 #, kde-format
 msgid "A MySQL server error log file was found but is not readable: %1"
-msgstr ""
+msgstr "Byl nalezen soubor protokolu chyb serveru MySQL, ale není čitelný: %1"
 
 #: widgets/selftestdialog.cpp:274
 #, kde-format
@@ -1501,7 +1564,7 @@ msgstr "Záznam MySQL serveru obsahuje chyby."
 #: widgets/selftestdialog.cpp:275
 #, kde-format
 msgid "The MySQL server error log file '%1' contains errors."
-msgstr ""
+msgstr "Soubor protokolu chyb serveru MySQL \"%1\" obsahuje chyby."
 
 #: widgets/selftestdialog.cpp:285
 #, kde-format
@@ -1522,6 +1585,7 @@ msgstr "Záznam serveru MySQL neobsahuje chyby."
 #, kde-format
 msgid "The MySQL server log file '%1' does not contain any errors or warnings."
 msgstr ""
+"Soubor protokolu serveru MySQL '%1' neobsahuje žádné chyby ani varování."
 
 #: widgets/selftestdialog.cpp:300
 #, kde-format
@@ -1539,6 +1603,7 @@ msgid ""
 "The default configuration for the MySQL server was found and is readable at "
 "%1."
 msgstr ""
+"Byla nalezena výchozí konfigurace serveru MySQL, která je čitelná v %1."
 
 #: widgets/selftestdialog.cpp:314
 #, kde-format
@@ -1552,33 +1617,38 @@ msgid ""
 "readable. Check your Akonadi installation is complete and you have all "
 "required access rights."
 msgstr ""
+"Výchozí konfigurace pro server MySQL nebyla nalezena nebo nebyla čitelná. "
+"Zkontrolujte, zda je instalace Akonadi kompletní a zda máte všechna "
+"požadovaná přístupová práva."
 
 #: widgets/selftestdialog.cpp:323
 #, kde-format
 msgid "MySQL server custom configuration not available."
-msgstr ""
+msgstr "Vlastní konfigurace serveru MySQL není k dispozici."
 
 #: widgets/selftestdialog.cpp:324
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was not found but is optional."
 msgstr ""
+"Vlastní konfigurace pro server MySQL nebyla nalezena, ale je volitelná."
 
 #: widgets/selftestdialog.cpp:327
 #, kde-format
 msgid "MySQL server custom configuration found."
-msgstr ""
+msgstr "Byla nalezena vlastní konfigurace serveru MySQL."
 
 #: widgets/selftestdialog.cpp:328
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was found and is readable at %1"
 msgstr ""
+"Bylo nalezeno vlastní nastavení pro server MySQL, které je k dispozici v %1."
 
 #: widgets/selftestdialog.cpp:332
 #, kde-format
 msgid "MySQL server custom configuration not readable."
-msgstr ""
+msgstr "Vlastní konfigurace serveru MySQL není čitelná."
 
 #: widgets/selftestdialog.cpp:333
 #, kde-format
@@ -1586,16 +1656,18 @@ msgid ""
 "The custom configuration for the MySQL server was found at %1 but is not "
 "readable. Check your access rights."
 msgstr ""
+"Vlastní konfigurace pro server MySQL byla nalezena v %1, ale není čitelná. "
+"Zkontrolujte svá přístupová práva."
 
 #: widgets/selftestdialog.cpp:342
 #, kde-format
 msgid "MySQL server configuration not found or not readable."
-msgstr ""
+msgstr "Konfigurace serveru MySQL nebyla nalezena nebo není čitelná."
 
 #: widgets/selftestdialog.cpp:343
 #, kde-format
 msgid "The MySQL server configuration was not found or is not readable."
-msgstr ""
+msgstr "Konfigurace serveru MySQL nebyla nalezena nebo není čitelná."
 
 #: widgets/selftestdialog.cpp:346
 #, kde-format
@@ -1610,7 +1682,7 @@ msgstr "V %1 bylo nalezeno čitelné nastavení serveru MySQL."
 #: widgets/selftestdialog.cpp:376
 #, kde-format
 msgid "Cannot connect to PostgreSQL server."
-msgstr ""
+msgstr "Nelze se připojit k serveru PostgreSQL."
 
 #: widgets/selftestdialog.cpp:378
 #, kde-format
@@ -1620,7 +1692,7 @@ msgstr "Server PostgreSQL nalezen."
 #: widgets/selftestdialog.cpp:378
 #, kde-format
 msgid "The PostgreSQL server was found and connection is working."
-msgstr ""
+msgstr "Server PostgreSQL byl nalezen a připojení funguje."
 
 #: widgets/selftestdialog.cpp:388
 #, kde-format
@@ -1633,6 +1705,8 @@ msgid ""
 "The program 'akonadictl' needs to be accessible in $PATH. Make sure you have "
 "the Akonadi server installed."
 msgstr ""
+"Program 'akonadictl' musí být přístupný v $PATH. Ujistěte se, že máte "
+"nainstalovaný server Akonadi."
 
 #: widgets/selftestdialog.cpp:396
 #, kde-format
@@ -1682,6 +1756,8 @@ msgid ""
 "The Akonadi control process is registered at D-Bus which typically indicates "
 "it is operational."
 msgstr ""
+"Proces řízení Akonadi je registrován v D-Bus, což obvykle znamená, že je "
+"funkční."
 
 #: widgets/selftestdialog.cpp:420
 #, kde-format
@@ -1694,6 +1770,8 @@ msgid ""
 "The Akonadi control process is not registered at D-Bus which typically means "
 "it was not started or encountered a fatal error during startup."
 msgstr ""
+"Proces řízení Akonadi není registrován v D-Bus, což obvykle znamená, že "
+"nebyl spuštěn nebo došlo k fatální chybě během spouštění."
 
 #: widgets/selftestdialog.cpp:427
 #, kde-format
@@ -1706,6 +1784,8 @@ msgid ""
 "The Akonadi server process is registered at D-Bus which typically indicates "
 "it is operational."
 msgstr ""
+"Proces serveru Akonadi je registrován v D-Bus, což obvykle znamená, že je "
+"funkční."
 
 #: widgets/selftestdialog.cpp:431
 #, kde-format
@@ -1718,6 +1798,8 @@ msgid ""
 "The Akonadi server process is not registered at D-Bus which typically means "
 "it was not started or encountered a fatal error during startup."
 msgstr ""
+"Proces serveru Akonadi není registrován v D-Bus, což obvykle znamená, že "
+"nebyl spuštěn nebo došlo k fatální chybě během spouštění."
 
 #: widgets/selftestdialog.cpp:441
 #, kde-format
@@ -1730,6 +1812,8 @@ msgid ""
 "Without a connection to the server it is not possible to check if the "
 "protocol version meets the requirements."
 msgstr ""
+"Bez připojení k serveru není možné zkontrolovat, zda verze protokolu splňuje "
+"požadavky."
 
 #: widgets/selftestdialog.cpp:447
 #, kde-format
@@ -1743,6 +1827,8 @@ msgid ""
 "If you recently updated KDE PIM, please make sure to restart both Akonadi "
 "and KDE PIM applications."
 msgstr ""
+"Verze protokolu serveru je %1, ale klient vyžaduje verzi %2. Pokud jste "
+"nedávno aktualizovali KDE PIM, restartujte prosím aplikace Akonadi i KDE PIM."
 
 #: widgets/selftestdialog.cpp:454
 #, kde-format
@@ -1783,6 +1869,11 @@ msgid ""
 "XDG_DATA_DIRS environment variable is set to '%2'; make sure this includes "
 "all paths where Akonadi agents are installed."
 msgstr ""
+"Nebyly nalezeny žádné agenty zdrojů, Akonadi nelze používat bez alespoň "
+"jednoho z nich. To obvykle znamená, že nejsou nainstalovány žádné agenty "
+"zdrojů nebo že došlo k problému s nastavením. Byly prohledány následující "
+"cesty: '%1'. Proměnná prostředí XDG_DATA_DIRS je nastavena na '%2'; ujistěte "
+"se, že obsahuje všechny cesty, kde jsou nainstalovány agenti Akonadi."
 
 #: widgets/selftestdialog.cpp:499
 #, kde-format
@@ -1806,6 +1897,8 @@ msgid ""
 "The Akonadi server reported errors during its current startup. The log can "
 "be found in %1."
 msgstr ""
+"Server Akonadi nahlásil chyby během aktuálního spuštění. Protokol najdete v "
+"%1."
 
 #: widgets/selftestdialog.cpp:512
 #, kde-format
@@ -1829,6 +1922,8 @@ msgid ""
 "The Akonadi server reported errors during its previous startup. The log can "
 "be found in %1."
 msgstr ""
+"Server Akonadi nahlásil chyby během předchozího spuštění. Protokol najdete v "
+"%1."
 
 #: widgets/selftestdialog.cpp:529
 #, kde-format
@@ -1841,6 +1936,7 @@ msgid ""
 "The Akonadi control process did not report any errors during its current "
 "startup."
 msgstr ""
+"Proces řízení Akonadi nehlásil žádné chyby během svého aktuálního spuštění."
 
 #: widgets/selftestdialog.cpp:534
 #, kde-format
@@ -1853,6 +1949,8 @@ msgid ""
 "The Akonadi control process reported errors during its current startup. The "
 "log can be found in %1."
 msgstr ""
+"Proces řízení Akonadi nahlásil chyby během aktuálního spuštění. Protokol "
+"naleznete v %1."
 
 #: widgets/selftestdialog.cpp:543
 #, kde-format
@@ -1865,6 +1963,7 @@ msgid ""
 "The Akonadi control process did not report any errors during its previous "
 "startup."
 msgstr ""
+"Proces řízení Akonadi nehlásil žádné chyby během svého předchozího spuštění."
 
 #: widgets/selftestdialog.cpp:548
 #, kde-format
@@ -1877,11 +1976,13 @@ msgid ""
 "The Akonadi control process reported errors during its previous startup. The "
 "log can be found in %1."
 msgstr ""
+"Proces řízení Akonadi nahlásil chyby během předchozího spuštění. Protokol "
+"naleznete v %1."
 
 #: widgets/selftestdialog.cpp:559
 #, kde-format
 msgid "Akonadi was started as root"
-msgstr ""
+msgstr "Akonadi byl spuštěn jako root"
 
 #: widgets/selftestdialog.cpp:560
 #, kde-format
@@ -1890,11 +1991,14 @@ msgid ""
 "many security risks. MySQL, used by this Akonadi installation, will not "
 "allow itself to run as root, to protect you from these risks."
 msgstr ""
+"Spouštění aplikací připojených k internetu jako root/správce vás vystavuje "
+"mnoha bezpečnostním rizikům. MySQL, používaný touto instalací Akonadi, "
+"neumožňuje spuštění jako root, aby vás před těmito riziky chránil."
 
 #: widgets/selftestdialog.cpp:564
 #, kde-format
 msgid "Akonadi is not running as root"
-msgstr ""
+msgstr "Akonadi neběží jako root"
 
 #: widgets/selftestdialog.cpp:565
 #, kde-format
@@ -1902,6 +2006,8 @@ msgid ""
 "Akonadi is not running as a root/administrator user, which is the "
 "recommended setup for a secure system."
 msgstr ""
+"Akonadi není spuštěno jako uživatel root/správce, což je doporučené "
+"nastavení pro zabezpečený systém."
 
 #: widgets/selftestdialog.cpp:643
 #, kde-format
@@ -1927,6 +2033,9 @@ msgid ""
 "self-tests are supposed to help with tracking down and solving this problem. "
 "When requesting support or reporting bugs, please always include this report."
 msgstr ""
+"Při spuštění serveru Akonadi došlo k chybě. Následující autotesty by měly "
+"pomoci při vyhledávání a řešení tohoto problému. Při žádosti o podporu nebo "
+"hlášení chyb prosím vždy přiložte tuto zprávu."
 
 #. i18n: ectx: property (title), widget (QGroupBox, detailsGroup)
 #: widgets/selftestdialog.ui:39
@@ -2389,8 +2498,9 @@ msgstr "Vytvoření zdroje selhalo"
 #, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Opravdu chcete tento zdroj odstranit?"
+msgstr[1] "Opravdu chcete odstranit tyto %1 zdroje?"
+msgstr[2] "Opravdu chcete odstranit těchto %1 zdrojů?"
 
 #: widgets/standardactionmanager.cpp:455
 #, kde-format
@@ -2415,7 +2525,7 @@ msgstr "Vložení selhalo"
 #: widgets/standardactionmanager.cpp:825
 #, kde-format
 msgid "We can not add \"/\" in folder name."
-msgstr ""
+msgstr "Do názvu složky nelze přidat znak \"/\"."
 
 #: widgets/standardactionmanager.cpp:825 widgets/standardactionmanager.cpp:829
 #, kde-format
@@ -2426,7 +2536,7 @@ msgstr "Chyba při vytváření nové složky"
 #: widgets/standardactionmanager.cpp:829
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
-msgstr ""
+msgstr "Na začátek ani na konec názvu složky nelze přidat \".\"."
 
 #: widgets/standardactionmanager.cpp:1068
 #, kde-format
@@ -2434,6 +2544,8 @@ msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
 "you want to make it online?"
 msgstr ""
+"Před synchronizací složky \"%1\" je nutné mít zdroj online. Chcete jej "
+"přepnout do online režimu?"
 
 #: widgets/standardactionmanager.cpp:1069
 #, kde-format
@@ -2459,7 +2571,7 @@ msgstr "Zkopírovat do této složky"
 #: widgets/subscriptiondialog.cpp:99
 #, kde-format
 msgid "Failed to update subscription: %1"
-msgstr ""
+msgstr "Aktualizace registrace se nezdařila: %1"
 
 #: widgets/subscriptiondialog.cpp:99
 #, kde-format
@@ -2497,30 +2609,30 @@ msgstr "Zare&gistrovat"
 msgid "&Unsubscribe"
 msgstr "&Zrušit registraci"
 
-#: widgets/tageditwidget.cpp:119
+#: widgets/tageditwidget.cpp:120
 #, kde-format
 msgid "Failed to create a new tag"
 msgstr "Nelze vytvořit značku"
 
-#: widgets/tageditwidget.cpp:119
+#: widgets/tageditwidget.cpp:120
 #, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Při vytváření nové značky došlo k chybě"
 
-#: widgets/tageditwidget.cpp:167
+#: widgets/tageditwidget.cpp:168
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Opravdu si přejete odstranit značku <resource>%1</resource>?"
 
-#: widgets/tageditwidget.cpp:168
+#: widgets/tageditwidget.cpp:169
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Odstranit značku"
 
-#: widgets/tageditwidget.cpp:193
+#: widgets/tageditwidget.cpp:194
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"
@@ -2610,12 +2722,12 @@ msgstr "Datový soubor '%1' nelze zpracovat."
 #: xml/xmldocument.cpp:150
 #, kde-format
 msgid "Schema definition could not be loaded and parsed."
-msgstr ""
+msgstr "Definici schématu se nepodařilo načíst a analyzovat."
 
 #: xml/xmldocument.cpp:155
 #, kde-format
 msgid "Unable to create schema parser context."
-msgstr ""
+msgstr "Nelze vytvořit kontext analyzátoru schématu."
 
 #: xml/xmldocument.cpp:160
 #, kde-format
@@ -2625,7 +2737,7 @@ msgstr "Nelze vytvořit schéma."
 #: xml/xmldocument.cpp:165
 #, kde-format
 msgid "Unable to create schema validation context."
-msgstr ""
+msgstr "Nelze vytvořit kontext ověření schématu."
 
 #: xml/xmldocument.cpp:170
 #, kde-format
