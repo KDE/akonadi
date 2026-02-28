@@ -1,31 +1,32 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the akonadi package.
-# SPDX-FileCopyrightText: 2024 Vit Pelcak <vit@pelcak.org>
+# SPDX-FileCopyrightText: 2024, 2026 Vit Pelcak <vit@pelcak.org>
+# SPDX-FileCopyrightText: 2026 Libor Filípek <filipek.libor@protonmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 14:40+0000\n"
-"PO-Revision-Date: 2024-07-19 10:03+0200\n"
-"Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
+"PO-Revision-Date: 2026-02-25 17:07+0100\n"
+"Last-Translator:  Vít Pelčák <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 24.05.2\n"
+"X-Generator: Lokalize 25.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Vít Pelčák"
+msgstr "Vít Pelčák,Libor Filípek"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "vit@pelcak.org"
+msgstr "vit@pelcak.org,libor.filipek@gmail.com"
 
 #: dbmigrator.cpp:449
 #, kde-format
@@ -37,13 +38,13 @@ msgstr "Zastavuji službu Akonadi..."
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: timeout while waiting for Akonadi to stop."
-msgstr ""
+msgstr "Chyba: časová prodleva při čekání na zastavení Akonadi."
 
 #: dbmigrator.cpp:459
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: couldn't acquire DBus lock for Akonadi."
-msgstr ""
+msgstr "Chyba: nelze získat zámek DBus pro Akonadi."
 
 #: dbmigrator.cpp:468
 #, kde-format
@@ -64,42 +65,46 @@ msgid ""
 "Invalid database engine \"%1\" - valid values are \"sqlite\", \"mysql\" and "
 "\"postgres\"."
 msgstr ""
+"Neplatný databázový engine „%1“ – platné hodnoty jsou \"sqlite\", \"mysql\" "
+"a \"postgres\"."
 
 #: dbmigrator.cpp:517
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure source database server."
-msgstr ""
+msgstr "Chyba: nepodařilo se nastavit zdrojový databázový server."
 
 #: dbmigrator.cpp:522
 #, kde-format
 msgctxt "@info:shell"
 msgid "Source and destination database engines are the same."
-msgstr ""
+msgstr "Zdrojové a cílové databázové stroje jsou stejné."
 
 #: dbmigrator.cpp:529
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to obtain path to source database data file or directory."
 msgstr ""
+"Chyba: nepodařilo se získat cestu k datovému souboru nebo adresáři zdrojové "
+"databáze."
 
 #: dbmigrator.cpp:536
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure the new database server."
-msgstr ""
+msgstr "Chyba: nepodařilo se nastavit nový databázový server."
 
 #: dbmigrator.cpp:542
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open existing database to migrate data from."
-msgstr ""
+msgstr "Chyba: nepodařilo se otevřít existující databázi pro migraci dat."
 
 #: dbmigrator.cpp:547
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open new database to migrate data to."
-msgstr ""
+msgstr "Chyba: nepodařilo se otevřít novou databázi pro migraci dat."
 
 #: dbmigrator.cpp:552
 #, kde-format
@@ -111,31 +116,31 @@ msgstr "Spouštím fsck na zdroji databáze."
 #, kde-format
 msgctxt "@info:status %2 is error message"
 msgid "Error: failed to remove temporary database directory %1: %2"
-msgstr ""
+msgstr "Chyba: nepodařilo se odstranit dočasný adresář databáze %1: %2"
 
 #: dbmigrator.cpp:578
 #, kde-format
 msgctxt "@info:shell"
 msgid "Backing up original database..."
-msgstr ""
+msgstr "Zálohování původní databáze..."
 
 #: dbmigrator.cpp:586
 #, kde-format
 msgctxt "@info:status"
 msgid "Restoring database from backup %1 to %2"
-msgstr ""
+msgstr "Obnovení databáze ze zálohy %1 do %2"
 
 #: dbmigrator.cpp:588
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to restore database from backup: %1"
-msgstr ""
+msgstr "Chyba: nepodařilo se obnovit databázi ze zálohy: %1"
 
 #: dbmigrator.cpp:620 dbmigrator.cpp:631
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error has occurred while migrating table %1"
-msgstr ""
+msgstr "Při migraci tabulky %1 došlo k chybě."
 
 #: dbmigrator.cpp:650
 #, kde-format
@@ -143,73 +148,78 @@ msgctxt "@label"
 msgid ""
 "Backup directory already exists. Do you want to overwrite the previous "
 "backup?"
-msgstr ""
+msgstr "Záložní adresář již existuje. Chcete přepsat předchozí zálohu?"
 
 #: dbmigrator.cpp:655
 #, kde-format
 msgctxt "@info:shell"
 msgid "Cannot proceed without backup. Migration interrupted."
-msgstr ""
+msgstr "Bez zálohy nelze pokračovat. Migrace byla přerušena."
 
 #: dbmigrator.cpp:660
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to remove previous backup directory."
-msgstr ""
+msgstr "Nepodařilo se odstranit předchozí adresář zálohy."
 
 #: dbmigrator.cpp:673
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to move database to backup location: %1"
-msgstr ""
+msgstr "Nepodařilo se přesunout databázi do záložního umístění: %1"
 
 #: dbmigrator.cpp:687
 #, kde-format
 msgctxt "@label"
 msgid "Backup file %1 already exists. Overwrite?"
-msgstr ""
+msgstr "Záložní soubor %1 již existuje. Přepsat?"
 
 #: dbmigrator.cpp:689
 #, kde-format
 msgctxt "@info:status"
 msgid "Cannot proceed without backup. Migration interrupted."
-msgstr ""
+msgstr "Bez zálohy nelze pokračovat. Migrace byla přerušena."
 
 #: dbmigrator.cpp:695
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: Failed to remove existing backup file %1: %2"
-msgstr ""
+msgstr "Chyba: Nepodařilo se odstranit existující záložní soubor %1: %2"
 
 #: dbmigrator.cpp:702
 #, kde-format
 msgctxt "@info:status"
 msgid "Failed to back up Akonadi Server configuration: %1"
-msgstr ""
+msgstr "Selhání zálohování konfigurace serveru Akonadi: %1"
 
 #: dbmigrator.cpp:719
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move migrated database to the primary location: %1"
 msgstr ""
+"Chyba: nepodařilo se přesunout migrovanou databázi do primárního umístění: %1"
 
 #: dbmigrator.cpp:738
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to remove original akonadiserverrc: %1"
-msgstr ""
+msgstr "Chyba: nepodařilo se odstranit původní soubor akonadiserverrc: %1"
 
 #: dbmigrator.cpp:744
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move new akonadiserverrc to the primary location: %1"
 msgstr ""
+"Chyba: nepodařilo se přesunout nový soubor akonadiserverrc do primárního "
+"umístění: %1"
 
 #: dbmigrator.cpp:835
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to update autoincrement value for table %1"
 msgstr ""
+"Chyba: nepodařilo se aktualizovat hodnotu automatického přírůstku pro "
+"tabulku %1"
 
 #: dbmigrator.cpp:840
 #, kde-format
@@ -221,7 +231,7 @@ msgstr "Optimalizuji tabulku %1..."
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to optimize table %1"
-msgstr ""
+msgstr "Chyba: optimalizace tabulky %1 se nezdařila."
 
 #: main.cpp:31
 #, kde-format
@@ -267,18 +277,20 @@ msgid ""
 "The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and "
 "\"postgres\""
 msgstr ""
+"Nový databázový engine, který se má použít. Možné hodnoty jsou \"sqlite\", "
+"\"mysql\" a \"postgres\""
 
 #: main.cpp:92
 #, kde-format
 msgctxt "@info:shell"
 msgid "Invalid target engine: %1."
-msgstr ""
+msgstr "Neplatný cílový engine: %1."
 
 #: main.cpp:106
 #, kde-format
 msgctxt "@info:status"
 msgid "Migration completed successfully."
-msgstr ""
+msgstr "Migrace byla úspěšně dokončena."
 
 #: main.cpp:108
 #, kde-format
@@ -290,7 +302,7 @@ msgstr "Převod selhal."
 #, kde-format
 msgctxt "@info:progress"
 msgid "Migrating table %1 (%2/%3)..."
-msgstr ""
+msgstr "Migrace tabulky %1 (%2/%3)..."
 
 #: main.cpp:127
 #, kde-format
