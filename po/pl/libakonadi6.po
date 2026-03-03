@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-28 00:44+0000\n"
+"POT-Creation-Date: 2026-03-03 00:47+0000\n"
 "PO-Revision-Date: 2026-01-01 12:40+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -439,7 +439,7 @@ msgstr ""
 "Nie można znaleźć zbioru do przywrócenia i zasób przywracania jest "
 "niedostępny"
 
-#: core/models/agentinstancemodel.cpp:192
+#: core/models/agentinstancemodel.cpp:196
 #, kde-format
 msgctxt "@title:column, name of a thing"
 msgid "Name"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.3\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-28 00:44+0000\n"
+"POT-Creation-Date: 2026-03-03 00:47+0000\n"
 "PO-Revision-Date: 2025-07-31 22:29+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -444,7 +444,7 @@ msgstr ""
 "Nem található a visszaállítás gyűjtemény és a visszaállítás erőforrás nem "
 "érhető el"
 
-#: core/models/agentinstancemodel.cpp:192
+#: core/models/agentinstancemodel.cpp:196
 #, kde-format
 msgctxt "@title:column, name of a thing"
 msgid "Name"

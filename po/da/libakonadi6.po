@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-28 00:44+0000\n"
+"POT-Creation-Date: 2026-03-03 00:47+0000\n"
 "PO-Revision-Date: 2024-07-29 12:41+0200\n"
 "Last-Translator: rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -445,7 +445,7 @@ msgid "Could not find restore collection and restore resource is not available"
 msgstr ""
 "Kunne ikke finde genskabssamling og genskabsressourcen er ikke tilgængelig"
 
-#: core/models/agentinstancemodel.cpp:192
+#: core/models/agentinstancemodel.cpp:196
 #, kde-format
 msgctxt "@title:column, name of a thing"
 msgid "Name"

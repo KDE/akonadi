@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-28 00:44+0000\n"
+"POT-Creation-Date: 2026-03-03 00:47+0000\n"
 "PO-Revision-Date: 2025-12-30 09:16+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -441,7 +441,7 @@ msgid "Could not find restore collection and restore resource is not available"
 msgstr ""
 "Не вдалося знайти збірку для відновлення, ресурс відновлення недоступний."
 
-#: core/models/agentinstancemodel.cpp:192
+#: core/models/agentinstancemodel.cpp:196
 #, kde-format
 msgctxt "@title:column, name of a thing"
 msgid "Name"

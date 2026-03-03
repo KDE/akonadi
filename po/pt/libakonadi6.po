@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-28 00:44+0000\n"
+"POT-Creation-Date: 2026-03-03 00:47+0000\n"
 "PO-Revision-Date: 2026-02-01 16:25+0000\n"
 "Last-Translator: César A. P. Cláudio <cesarapclaudio@gmail.com>\n"
 "Language-Team: pt\n"
@@ -440,7 +440,7 @@ msgstr ""
 "Não foi possível encontrar a coleção para restaurar e os recursos da mesma "
 "não estão disponíveis"
 
-#: core/models/agentinstancemodel.cpp:192
+#: core/models/agentinstancemodel.cpp:196
 #, kde-format
 msgctxt "@title:column, name of a thing"
 msgid "Name"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-28 00:44+0000\n"
+"POT-Creation-Date: 2026-03-03 00:47+0000\n"
 "PO-Revision-Date: 2012-07-11 10:23+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -447,7 +447,7 @@ msgstr "គ្មាន​សម្រាំង​ត្រឹមត្រូវ
 msgid "Could not find restore collection and restore resource is not available"
 msgstr "រក​មិន​ឃើញ​សម្រាំង​ដែល​បាន​ស្ដារ ឬ​មិន​មាន​ធនធាន​ដែល​បាន​ស្ដារ"
 
-#: core/models/agentinstancemodel.cpp:192
+#: core/models/agentinstancemodel.cpp:196
 #, kde-format
 msgctxt "@title:column, name of a thing"
 msgid "Name"
