@@ -61,7 +61,7 @@ msgstr "لم يُعثر على عنصر لِـ remoteid ‏%1"
 #: knutresource.cpp:160
 #, kde-format
 msgid "Parent collection not found in DOM tree."
-msgstr "التّجميعة الأبّ لم يُعثر عليها في شجرة DOM."
+msgstr "التّجميعة الأب لم يُعثر عليها في شجرة DOM."
 
 #: knutresource.cpp:168
 #, kde-format
@@ -81,7 +81,7 @@ msgstr "التّجميعة المحذوفة لم يُعثر عليها في شج
 #: knutresource.cpp:224 knutresource.cpp:282 knutresource.cpp:289
 #, kde-format
 msgid "Parent collection '%1' not found in DOM tree."
-msgstr "التّجميعة الأبّ '%1' لم يُعثر عليها في شجرة DOM."
+msgstr "التّجميعة الأب '%1' لم يُعثر عليها في شجرة DOM."
 
 #: knutresource.cpp:232 knutresource.cpp:302
 #, kde-format
