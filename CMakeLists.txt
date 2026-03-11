@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.27)
 
 set(PIM_VERSION "6.7.40")
-project(Akonadi VERSION "6.6.41")
+project(Akonadi VERSION ${PIM_VERSION})
 
 # ECM setup
 set(KF_MIN_VERSION "6.22.0")
