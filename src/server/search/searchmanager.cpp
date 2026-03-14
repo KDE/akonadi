@@ -141,7 +141,7 @@ void SearchManager::loadSearchPlugins()
         qCDebug(AKONADISERVER_SEARCH_LOG) << "SEARCH MANAGER: searching in " << path << ":" << fileNames;
         for (const QString &fileName : fileNames) {
             const QString filePath = path % u'/' % fileName;
-            std::unique_ptr<QPluginLoader> loader(new QPluginLoader(filePath));
+            auto loader = std::make_unique<QPluginLoader>(filePath);
             const QVariantMap metadata = loader->metaData().value(QStringLiteral("MetaData")).toVariant().toMap();
             if (metadata.value(QStringLiteral("X-Akonadi-PluginType")).toString() != QLatin1StringView("SearchPlugin")) {
                 continue;
@@ -170,7 +170,7 @@ void SearchManager::loadSearchPlugins()
                 continue;
             }
 
-            mPluginLoaders << loader.release();
+            mPluginLoaders.push_back(std::move(loader));
             loadedPlugins << libraryName;
         }
     }
@@ -178,7 +178,7 @@ void SearchManager::loadSearchPlugins()
 
 void SearchManager::initSearchPlugins()
 {
-    for (QPluginLoader *loader : std::as_const(mPluginLoaders)) {
+    for (const auto &loader : mPluginLoaders) {
         if (!loader->load()) {
             qCCritical(AKONADISERVER_SEARCH_LOG) << "Failed to load search plugin" << loader->fileName() << ":" << loader->errorString();
             continue;

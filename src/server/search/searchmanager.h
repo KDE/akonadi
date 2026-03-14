@@ -98,7 +98,7 @@ private:
 
     SearchTaskManager &mAgentSearchManager;
     QStringList mEngineNames;
-    QList<QPluginLoader *> mPluginLoaders;
+    std::vector<std::unique_ptr<QPluginLoader>> mPluginLoaders;
     QList<AbstractSearchEngine *> mEngines;
     QList<AbstractSearchPlugin *> mPlugins;
 
