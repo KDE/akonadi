@@ -55,7 +55,6 @@ ecm_qt_declare_logging_category(akonadi_quick_plugin
 target_link_libraries(
     akonadi_quick_plugin
     PRIVATE
-        KF6::WindowSystem
         KF6::I18n
         KPim6AkonadiCore
         KPim6AkonadiWidgets # Needed for AgentConfigurationDialog
