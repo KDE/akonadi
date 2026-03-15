@@ -4,6 +4,10 @@
 remove_definitions(-DQT_GUI_LIB)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
+# Ensure empty CMAKE_SHARED_LINKER_FLAGS_ASAN if it is not provided in command-line.
+if(NOT DEFINED CMAKE_SHARED_LINKER_FLAGS_ASAN)
+    set(CMAKE_SHARED_LINKER_FLAGS_ASAN)
+endif()
 
 akonadi_run_xsltproc(
     XSL ${Akonadi_SOURCE_DIR}/src/server/storage/schema.xsl

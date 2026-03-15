@@ -1,5 +1,10 @@
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 
+# Ensure empty CMAKE_EXE_LINKER_FLAGS_ASAN if it is not provided in command-line.
+if(NOT DEFINED CMAKE_EXE_LINKER_FLAGS_ASAN)
+    set(CMAKE_EXE_LINKER_FLAGS_ASAN)
+endif()
+
 macro(add_unit_test _source)
     set(_test ${_source})
     get_filename_component(_name ${_source} NAME_WE)

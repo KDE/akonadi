@@ -498,7 +498,6 @@ install(
         ${AkonadiCore_attributes_HEADERS}
         ${AkonadiCore_models_HEADERS}
         ${AkonadiCore_jobs_HEADERS}
-        ${AkonadiCore_HEADERS}
         qtest_akonadi.h
         itempayloadinternals_p.h
         ${Akonadi_BINARY_DIR}/config-akonadi.h
@@ -512,7 +511,6 @@ install(
         ${AkonadiCore_attributes_CC_HEADERS}
         ${AkonadiCore_models_CC_HEADERS}
         ${AkonadiCore_jobs_CC_HEADERS}
-        ${AkonadiCore_CC_HEADERS}
     DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}/Akonadi
     COMPONENT Devel
 )
