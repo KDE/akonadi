@@ -472,6 +472,9 @@ install(
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/KPim6/AkonadiCore
     COMPONENT Devel
 )
+
+install(FILES org.kde.akonadi.desktop DESTINATION ${KDE_INSTALL_APPDIR})
+
 if(GIT_SOURCE_TARBALL)
     if(DEFINED kde_configure_git_pre_commit_hook)
         kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
