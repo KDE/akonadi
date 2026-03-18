@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-03-03 00:47+0000\n"
-"PO-Revision-Date: 2026-02-25 17:12+0100\n"
+"PO-Revision-Date: 2026-03-16 11:28+0100\n"
 "Last-Translator:  Vít Pelčák <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 25.12.2\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -236,9 +236,7 @@ msgid "No such agent found \"%1\""
 msgstr "Žádný takový agent nebyl nalezen \"%1\""
 
 #: core/collection.cpp:221
-#, fuzzy, kde-format
-#| msgctxt "Name for the folder containing searches"
-#| msgid "Search"
+#, kde-format
 msgctxt "Name for the folder containing searches"
 msgid "Search"
 msgstr "Hledat"
@@ -694,9 +692,7 @@ msgid "You won't be able to revert this action."
 msgstr "Tento krok nelze vrátit."
 
 #: quick/qml/TagManagerPage.qml:53
-#, fuzzy, kde-format
-#| msgctxt "@info:placeholder"
-#| msgid "There are no tags"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "There are no tags"
 msgstr "Zde nejsou žádné značky"
