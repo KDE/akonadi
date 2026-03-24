@@ -52,13 +52,6 @@ FormCard.FormComboBoxDelegate {
      */
     property alias accessRightsFilter: collectionComboBoxModel.accessRightsFilter
 
-    readonly property var collection: if (currentIndex >= 0) {
-        const selectedModelIndex = collectionComboBoxModel.index(currentIndex, 0);
-        return collectionComboBoxModel.data(selectedModelIndex, Akonadi.EntityTreeModel.CollectionRole);
-    } else {
-        null
-    }
-
     signal userSelectedCollection(var collection)
 
     currentIndex: 0
