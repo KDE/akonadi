@@ -18,7 +18,6 @@ macro(add_unit_test _source)
         KPim6::AkonadiPrivate
         Qt::Network
         Qt::Test
-        ${CMAKE_EXE_LINKER_FLAGS_ASAN}
     )
 endmacro()
 

@@ -96,7 +96,6 @@ macro(add_server_test _source)
         Qt::Test
         Qt::Sql
         Qt::Network
-        ${CMAKE_SHARED_LINKER_FLAGS_ASAN}
     )
 endmacro()
 

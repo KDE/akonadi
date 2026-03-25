@@ -16,7 +16,6 @@ macro(add_unit_test _source)
         ${_name}
         akonadi_shared
         Qt::Test
-        ${CMAKE_EXE_LINKER_FLAGS_ASAN}
     )
 endmacro()
 

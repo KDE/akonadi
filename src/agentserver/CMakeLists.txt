@@ -78,7 +78,11 @@ target_link_libraries(
 )
 
 # Install both helper apps.
-install(TARGETS akonadi_agent_launcher DESTINATION ${BIN_INSTALL_DIR})
+install(
+    TARGETS
+        akonadi_agent_launcher
+        ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
+)
 
 install(
     TARGETS

@@ -25,7 +25,6 @@ macro(add_unit_test _source)
         KPim6::AkonadiPrivate
         Qt::Test
         KF6::ConfigCore
-        ${CMAKE_EXE_LINKER_FLAGS_ASAN}
     )
 endmacro()
 

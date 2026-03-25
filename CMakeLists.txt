@@ -263,14 +263,18 @@ else()
     message(STATUS "MySQL scripts location was not found. Use -DMYSQLD_SCRIPTS_PATH to point to the install location.")
 endif()
 
+set(PGLIB "lib")
+if(LIB_SUFFIX) # might be specified on the command line
+    set(PGLIB "${PGLIB}${LIB_SUFFIX}")
+endif()
 find_path(
     POSTGRES_PATH
     NAMES
         pg_ctl
     HINTS
-        /usr/lib${LIB_SUFFIX}/postgresql/8.4/bin
-        /usr/lib${LIB_SUFFIX}/postgresql/9.0/bin
-        /usr/lib${LIB_SUFFIX}/postgresql/9.1/bin
+        /usr/${PGLIB}/postgresql/8.4/bin
+        /usr/${PGLIB}/postgresql/9.0/bin
+        /usr/${PGLIB}/postgresql/9.1/bin
     DOC "The pg_ctl executable path. ONLY needed at runtime by the PostgreSQL backend"
 )
 
