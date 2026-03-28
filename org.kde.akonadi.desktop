@@ -3,6 +3,15 @@
 
 [Desktop Entry]
 Name=KDE PIM
+Name[ca]=KDE PIM
+Name[ca@valencia]=KDE PIM
+Name[es]=KDE PIM
+Name[ia]=KDE PIM
+Name[ka]=KDE PIM
+Name[nl]=KDE PIM
+Name[pt_BR]=KDE PIM
+Name[sl]=KDE PIM
+Name[uk]=KDE PIM
 Icon=org.kde.kontact
 Type=Application
 NoDisplay=true
