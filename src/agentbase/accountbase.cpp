@@ -27,6 +27,12 @@ AccountBasePrivate::AccountBasePrivate(AccountBase *qq, AgentBase *agent)
 {
     new Akonadi__AccountAdaptor(this);
     QDBusConnection::sessionBus().registerObject(u"/Account"_s, this, QDBusConnection::ExportAdaptors);
+
+    QDBusMessage rm =
+        QDBusMessage::createMethodCall(u"org.kde.KOnlineAccounts"_s, u"/org/kde/KOnlineAccounts"_s, u"org.kde.KOnlineAccounts.Manager"_s, u"registerApp"_s);
+
+    rm.setArguments({u"org.kde.akonadi"_s});
+    QDBusConnection::sessionBus().call(rm);
 }
 
 QString AccountBasePrivate::accountId() const
