@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Carl Schwan <carl@carlschwan.eu>
 // SPDX-License-Identifier: LGPL-2.0-or-later
 
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import org.kde.akonadi as Akonadi
 import org.kde.kirigami as Kirigami
@@ -99,11 +101,11 @@ FormCard.FormComboBoxDelegate {
     comboBoxDelegate: Delegates.RoundedItemDelegate {
         id: delegate
 
-        required property string displayName
+        required property var model
         required property var decoration
         required property var collectionColor
 
-        text: display
+        text: model[comboBox.textRole]
         icon.source: decoration
 
         Rectangle {
