@@ -165,6 +165,26 @@ set_package_properties(
             REQUIRED
 )
 
+option(BUILD_PYTHON_BINDINGS "Build Python bindings" ON)
+
+# Only Linux and FreeBSD CI has the relevant packages
+if(ANDROID OR APPLE OR WIN32 OR HAIKU OR NOT BUILD_SHARED_LIBS)
+    set(BUILD_PYTHON_BINDINGS OFF)
+endif()
+
+if(BUILD_PYTHON_BINDINGS)
+    find_package(
+        Python3
+        3.9
+        REQUIRED
+        COMPONENTS
+            Interpreter
+            Development
+    )
+    find_package(Shiboken6 REQUIRED)
+    find_package(PySide6 REQUIRED)
+endif()
+
 if(BUILD_TESTING)
     set(AKONADI_TESTS_EXPORT AKONADICORE_EXPORT)
     set(AKONADIWIDGET_TESTS_EXPORT AKONADIWIDGETS_EXPORT)
@@ -430,6 +450,11 @@ endif()
 
 if(INSTALL_APPARMOR)
     add_subdirectory(apparmor)
+endif()
+
+if(BUILD_PYTHON_BINDINGS)
+    include(ECMGeneratePythonBindings)
+    add_subdirectory(python)
 endif()
 
 ############### install stuff ###############
