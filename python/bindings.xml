@@ -1,0 +1,253 @@
+<?xml version="1.0"?>
+<!--
+    SPDX-FileCopyrightText: 2026 Noham Devillers <nde@enioka.com>
+
+    SPDX-License-Identifier: LGPL-2.0-or-later
+
+-->
+<typesystem package="AkonadiCore">
+
+    <load-typesystem name="typesystem_core.xml" generate="no"/>
+    <load-typesystem name="typesystem_kcoreaddons.xml" generate="no"/>
+
+    <!-- Types in global namespace -->
+
+    <object-type name="ColorProxyModel">
+        <include file-name="colorproxymodel.h" location="local"/>
+
+        <enum-type name="Roles"/>
+    </object-type>
+
+    <!-- Types in Akonadi namespace -->
+    <namespace-type name="Akonadi">
+
+        <!-- /core/attributes types -->
+
+        <object-type name="Attribute"/>
+
+        <object-type name="CollectionAnnotationsAttribute"/>
+        <object-type name="CollectionColorAttribute"/>
+        <object-type name="CollectionIdentificationAttribute"/>
+        <object-type name="CollectionQuotaAttribute"/>
+
+        <object-type name="EntityAnnotationsAttribute"/>
+        <object-type name="EntityDeletedAttribute"/>
+        <object-type name="EntityDisplayAttribute"/>
+        <object-type name="EntityHiddenAttribute"/>
+
+        <object-type name="FavoriteCollectionAttribute"/>
+
+        <object-type name="IndexPolicyAttribute"/>
+
+        <object-type name="PersistentSearchAttribute"/>
+
+        <object-type name="SpecialCollectionAttribute"/>
+
+        <object-type name="TagAttribute"/>
+
+        <!-- /core/jobs types -->
+
+        <object-type name="AgentInstanceCreateJob"/>
+
+        <object-type name="CollectionAttributesSynchronizationJob"/>
+        <object-type name="CollectionCopyJob"/>
+        <object-type name="CollectionCreateJob"/>
+        <object-type name="CollectionDeleteJob"/>
+        <object-type name="CollectionFetchJob">
+            <extra-includes>
+                <include file-name="pysidesignal.h" location="global" />
+            </extra-includes>
+            <enum-type name="Type"/>
+        </object-type>
+        <object-type name="CollectionModifyJob"/>
+        <object-type name="CollectionMoveJob"/>
+        <object-type name="CollectionStatisticsJob"/>
+
+        <object-type name="ItemCopyJob"/>
+        <object-type name="ItemCreateJob">
+            <enum-type name="MergeOption" flags="MergeOptions"/>
+        </object-type>
+        <object-type name="ItemDeleteJob"/>
+        <object-type name="ItemFetchJob">
+            <extra-includes>
+                <include file-name="pysidesignal.h" location="global" />
+            </extra-includes>
+            <enum-type name="DeliveryOption" flags="DeliveryOptions"/>
+        </object-type>
+        <object-type name="ItemModifyJob"/>
+        <object-type name="ItemMoveJob"/>
+        <object-type name="ItemSearchJob"/>
+
+        <object-type name="Job">
+            <extra-includes>
+                <include file-name="pysidesignal.h" location="global" />
+            </extra-includes>
+
+            <enum-type name="Error"/>
+        </object-type>
+
+        <object-type name="RecursiveItemFetchJob"/>
+
+        <object-type name="ResourceSynchronizationJob"/>
+
+        <object-type name="SearchCreateJob"/>
+
+        <object-type name="SpecialCollectionsDiscoveryJob"/>
+        <object-type name="SpecialCollectionsRequestJob"/>
+
+        <object-type name="TagCreateJob"/>
+        <object-type name="TagDeleteJob"/>
+        <object-type name="TagFetchJob"/>
+        <object-type name="TagModifyJob">
+            <modify-function signature="tag() const" remove="all"/>
+        </object-type>
+
+        <object-type name="TransactionJob"/>
+        <object-type name="TransactionSequence"/>
+
+        <object-type name="TrashJob"/>
+        <object-type name="TrashRestoreJob"/>
+
+        <!-- <object-type name="LinkJob"/> -->
+        <!-- <object-type name=UnlinkJob/> -->
+
+        <!-- /core/models types -->
+
+        <object-type name="AgentFilterProxyModel"/>
+        <object-type name="AgentInstanceFilterProxyModel"/>
+        <object-type name="AgentInstanceModel">
+            <enum-type name="Roles"/>
+        </object-type>
+        <object-type name="AgentTypeModel">
+            <enum-type name="Roles"/>
+        </object-type>
+
+        <object-type name="CollectionFilterProxyModel"/>
+
+        <object-type name="EntityMimeTypeFilterModel"/>
+        <object-type name="EntityOrderProxyModel"/>
+        <object-type name="EntityRightsFilterModel"/>
+        <object-type name="EntityTreeModel">
+            <enum-type name="Roles"/>
+            <enum-type name="FetchState"/>
+            <enum-type name="HeaderGroup"/>
+            <enum-type name="ItemPopulationStrategy"/>
+            <enum-type name="CollectionFetchStrategy"/>
+        </object-type>
+
+        <object-type name="FavoriteCollectionsModel">
+            <extra-includes>
+                <include file-name="kselectionproxymodel.h" location="global" />
+            </extra-includes>
+        </object-type>
+
+        <object-type name="RecursiveCollectionFilterProxyModel"/>
+
+        <object-type name="SelectionProxyModel"/>
+
+        <object-type name="StatisticsProxyModel"/>
+
+        <object-type name="TagModel">
+            <enum-type name="Roles"/>
+        </object-type>
+
+        <object-type name="TrashFilterProxyModel"/>
+
+        <!-- /core types -->
+
+        <object-type name="AbstractDifferencesReporter">
+            <enum-type name="Mode"/>
+        </object-type>
+
+        <object-type name="AccountActivitiesAbstract"/>
+
+        <object-type name="AgentConfigurationBase"/>
+        <value-type name="AgentInstance">
+            <enum-type name="Status"/>
+        </value-type>
+        <object-type name="AgentManager"/>
+        <value-type name="AgentType"/>
+
+        <object-type name="AttributeFactory"/>
+
+        <value-type name="CachePolicy"/>
+
+        <value-type name="ChangeNotification">
+            <enum-type name="Type"/>
+        </value-type>
+        <object-type name="ChangeRecorder"/>
+
+        <value-type name="Collection">
+            <enum-type name="Right" flags="Rights"/>
+            <enum-type name="CreateOption"/>
+            <enum-type name="UrlType"/>
+            <enum-type name="ListPreference"/>
+            <enum-type name="ListPurpose"/>
+        </value-type>
+        <value-type name="CollectionFetchScope">
+            <enum-type name="AncestorRetrieval"/>
+            <enum-type name="ListFilter"/>
+        </value-type>
+        <object-type name="CollectionPathResolver"/>
+        <value-type name="CollectionStatistics"/>
+        <namespace-type name="CollectionUtils"/>
+
+        <object-type name="Control"/>
+
+        <object-type name="DifferencesAlgorithmInterface"/>
+
+        <object-type name="Exception"/>
+
+        <object-type name="GidExtractorInterface"/>
+
+        <value-type name="Item" hash-function="qHash">
+            <enum-type name="CreateOption"/>
+            <enum-type name="UrlType"/>
+        </value-type>
+        <value-type name="ItemFetchScope">
+            <enum-type name="AncestorRetrieval"/>
+        </value-type>
+        <object-type name="ItemMonitor"/>
+        <object-type name="ItemSync">
+            <enum-type name="MergeMode"/>
+            <enum-type name="TransactionMode"/>
+        </object-type>
+
+        <value-type name="MimeTypeChecker"/>
+
+        <object-type name="Monitor">
+            <enum-type name="Type"/>
+        </object-type>
+
+        <value-type name="NotificationSubscriber"/>
+
+        <object-type name="PartFetcher"/>
+
+        <value-type name="SearchQuery"/>
+        <value-type name="SearchTerm">
+            <enum-type name="Relation"/>
+            <enum-type name="Condition"/>
+        </value-type>
+
+        <object-type name="ServerManager">
+            <enum-type name="State"/>
+            <enum-type name="ServiceType"/>
+            <enum-type name="ServiceAgentType"/>
+            <enum-type name="OpenMode"/>
+        </object-type>
+
+        <object-type name="Session"/>
+
+        <object-type name="SpecialCollections"/>
+
+        <value-type name="Tag">
+            <enum-type name="CreateOption"/>
+        </value-type>
+        <object-type name="TagCache"/>
+        <value-type name="TagFetchScope"/>
+        <object-type name="TagSync"/>
+
+        <namespace-type name="TrashSettings"/>
+    </namespace-type>
+
+</typesystem>
