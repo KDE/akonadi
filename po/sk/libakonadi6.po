@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 21.12.3\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Lokalize 21.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -39,8 +39,7 @@ msgid "%1 of type %2"
 msgstr "%1 typu %2"
 
 #: agentbase/agentbase.cpp:818
-#, fuzzy, kde-format
-#| msgid "Agent identifier"
+#, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Identifikátor agenta"
@@ -155,10 +154,9 @@ msgid "Job canceled."
 msgstr "Úloha zrušená."
 
 #: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
-msgstr "Akonadi Agent"
+msgstr "Riadenie Akonadi"
 
 #: akonadictl/main.cpp:220
 #, kde-format
@@ -178,55 +176,63 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
+"Nástroj na manipuláciu servera Akonadi\n"
+"\n"
+"Príkazy:\n"
+"  start          Spustí server Akonadi so všetkými jeho procesmi\n"
+"  stop           Zastaví server Akonadi a všetky jeho procesy cleanly\n"
+"  restart        Restart Akonadi server with all its processes\n"
+"  status         Shows a status overview of the Akonadi server\n"
+"  instances      List all existing Akonadi instances\n"
+"  vacuum         Vacuum internal storage (WARNING: needs a lot of time and "
+"disk\n"
+"                 space!)\n"
+"  fsck           Skontrolovať (a pokúsiť sa opraviť) konzistenciu interného "
+"úložiska\n"
+"                 (can take some time)"
 
 #: akonadictl/main.cpp:239
 #, kde-format
 msgid "Wait for server shutdown to complete."
-msgstr ""
+msgstr "Čakajte na dokončenie vypnutia servera."
 
 #: akonadictl/main.cpp:241
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "Príkaz na vykonanie"
 
 #: configdialog/main.cpp:23
-#, fuzzy, kde-format
-#| msgctxt "@title:window, %1 = agent name"
-#| msgid "%1 Configuration"
+#, kde-format
 msgid "Configuration Dialog"
-msgstr "Nastavenie %1"
+msgstr "Dialóg nastavenia"
 
 #: configdialog/main.cpp:25
 #, kde-format
 msgid "Allows to configure an agent or resource"
-msgstr ""
+msgstr "Umožňuje konfiguráciu agenta alebo zdroja"
 
 #: configdialog/main.cpp:27
 #, kde-format
 msgid "© 2025 Carl Schwan <carl@carlschwan.eu>"
-msgstr ""
+msgstr "© 2025 Carl Schwan <carl@carlschwan.eu>"
 
 #: configdialog/main.cpp:30
-#, fuzzy, kde-format
-#| msgid "Agent identifier"
+#, kde-format
 msgid "The agent identifier"
 msgstr "Identifikátor agenta"
 
 #: configdialog/main.cpp:36
 #, kde-format
 msgid "Required identifier argument missing."
-msgstr ""
+msgstr "Chýba povinný argument identifikátora."
 
 #: configdialog/main.cpp:51
-#, fuzzy, kde-format
-#| msgid "No resource agents found."
+#, kde-format
 msgid "No such agent found \"%1\""
-msgstr "Nenájdený zdrojový agenti."
+msgstr "Nebol nájdený žiadny takýto agent „%1\"."
 
 #: core/collection.cpp:221
-#, fuzzy, kde-format
-#| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
+#, kde-format
 msgctxt "Name for the folder containing searches"
 msgid "Search"
 msgstr "Hľadať"
@@ -436,18 +442,16 @@ msgid "Name"
 msgstr "Meno"
 
 #: core/models/colorproxymodel.cpp:85
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Offline"
+#, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Offline)"
-msgstr "Offline"
+msgstr "%1 (Offline)"
 
 #: core/models/colorproxymodel.cpp:88
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
-msgstr ""
+msgstr "%1 (Default)"
 
 #: core/models/entitytreemodel.cpp:206
 #, kde-format
@@ -519,7 +523,7 @@ msgstr "Neprečítaných správ"
 #, kde-format
 msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
 msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
-msgstr ""
+msgstr "<strong>Kvóta</strong>: %1% (%2/%3)<br>\n"
 
 #: core/models/statisticsproxymodel.cpp:103
 #, kde-format
@@ -631,25 +635,22 @@ msgstr ""
 "aplikácie."
 
 #: quick/qml/AgentConfigurationForm.qml:35
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Configure Account"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
-msgstr "Nastaviť účet"
+msgstr "Konfigurovať %1"
 
 #: quick/qml/AgentConfigurationForm.qml:41
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
-msgstr ""
+msgstr "Upraviť alebo odstrániť tohto agenta účtu."
 
 #: quick/qml/AgentConfigurationForm.qml:57
-#, fuzzy, kde-format
-#| msgid "&Modify..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Modify"
-msgstr "&Upraviť..."
+msgstr "Zmeniť"
 
 #: quick/qml/AgentConfigurationForm.qml:66
 #, kde-format
@@ -661,7 +662,7 @@ msgstr "Odstrániť"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
-msgstr ""
+msgstr "Pridať účet"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
@@ -670,36 +671,30 @@ msgid "Manage Tags"
 msgstr "Spravovať značky"
 
 #: quick/qml/TagManagerPage.qml:27
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Conflict Resolution"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Confirm Tag Deletion"
-msgstr "Riešenie konfliktu"
+msgstr "Potvrdiť odstránenie značky"
 
 #: quick/qml/TagManagerPage.qml:31
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-format
 msgctxt "@info"
 msgid "Are you sure you want to delete tag <b>%1</b>?"
-msgstr "Naozaj chcete odstrániť značku <resource>%1</resource>?"
+msgstr "Naozaj chcete odstrániť značku <b>%1</b>?"
 
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
 msgid "You won't be able to revert this action."
-msgstr ""
+msgstr "Túto akciu nebudete môcť vrátiť späť"
 
 #: quick/qml/TagManagerPage.qml:53
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "There are no tags"
-msgstr "Vytvoriť novú značku"
+msgstr "Nie sú žiadne značky"
 
 #: quick/qml/TagManagerPage.qml:141
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
 msgstr "Vytvoriť novú značku"
@@ -708,7 +703,7 @@ msgstr "Vytvoriť novú značku"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Tag"
-msgstr ""
+msgstr "Pridať značku"
 
 #: selftest/main.cpp:19
 #, kde-format
@@ -730,6 +725,8 @@ msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
+"Menný priestor na spustenie viacerých inštancií Akonadi v rovnakej relácii "
+"používateľa"
 
 #: widgets/agentactionmanager.cpp:36
 msgid "&New Agent Instance..."
@@ -801,7 +798,7 @@ msgstr "Zlyhalo registrovanie dialógového okna s nastaveniami %1"
 #, kde-format
 msgctxt "Status percent value"
 msgid "(%1%)"
-msgstr ""
+msgstr "(%1%)"
 
 #: widgets/agenttypedialog.cpp:66
 #, kde-format
@@ -810,12 +807,10 @@ msgid "Configure Account"
 msgstr "Nastaviť účet"
 
 #: widgets/agenttypedialog.cpp:74
-#, fuzzy, kde-format
-#| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
+#, kde-format
 msgctxt "@item:textbox"
 msgid "Search types"
-msgstr "Hľadať"
+msgstr "Typy hľadania"
 
 #: widgets/cachepolicypage.cpp:43 widgets/cachepolicypage.cpp:48
 #, kde-format
@@ -931,22 +926,19 @@ msgid "Search"
 msgstr "Hľadať"
 
 #: widgets/collectiondialog.cpp:66
-#, fuzzy, kde-format
-#| msgid "Use folder by default"
+#, kde-format
 msgctxt "@option:check"
 msgid "Use folder by default"
 msgstr "Použiť priečinok predvolene"
 
 #: widgets/collectiondialog.cpp:226
-#, fuzzy, kde-format
-#| msgid "&New Subfolder..."
+#, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
 msgstr "Nový po&dpriečinok..."
 
 #: widgets/collectiondialog.cpp:228
-#, fuzzy, kde-format
-#| msgid "Create a new subfolder under the currently selected folder"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Vytvoriť nový podpriečinok pod aktuálne vybraným priečinkom"
@@ -1127,15 +1119,13 @@ msgid "Reindex folder"
 msgstr "Preindexovať priečinok"
 
 #: widgets/collectionrequester.cpp:113
-#, fuzzy, kde-format
-#| msgid "No Folder"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No Folder"
 msgstr "Žiaden priečinok"
 
 #: widgets/collectionrequester.cpp:122
-#, fuzzy, kde-format
-#| msgid "Open collection dialog"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
 msgstr "Otvoriť dialóg kolekcií"
@@ -1187,14 +1177,7 @@ msgid "Keep both versions"
 msgstr "Ponechať obe verzie"
 
 #: widgets/conflictresolvedialog.cpp:217
-#, fuzzy, kde-format
-#| msgid ""
-#| "<qt>Your changes conflict with those made by someone else meanwhile."
-#| "<br>Unless one version can just be thrown away, you will have to "
-#| "integrate those changes manually.<br>Click on <a href=\"opentexteditor\">"
-#| "\"Open text editor\"</a> to keep a copy of the texts, then select which "
-#| "version is most correct, then re-open it and modify it again to add "
-#| "what's missing."
+#, kde-format
 msgctxt "@label:textbox"
 msgid ""
 "<qt>Your changes conflict with those made by someone else meanwhile."
@@ -1258,8 +1241,7 @@ msgstr ""
 "%1"
 
 #: widgets/erroroverlay.cpp:228
-#, fuzzy, kde-format
-#| msgid "Personal information management service is starting..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
 msgstr "Služba správy osobných informácií sa spúšťa..."
@@ -1270,8 +1252,7 @@ msgid "Personal information management service is starting..."
 msgstr "Služba správy osobných informácií sa spúšťa..."
 
 #: widgets/erroroverlay.cpp:233
-#, fuzzy, kde-format
-#| msgid "Personal information management service is shutting down..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr "Služba správy osobných informácií sa vypína..."
@@ -1282,9 +1263,7 @@ msgid "Personal information management service is shutting down..."
 msgstr "Služba správy osobných informácií sa vypína..."
 
 #: widgets/erroroverlay.cpp:238
-#, fuzzy, kde-format
-#| msgid ""
-#| "Personal information management service is performing a database upgrade."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Personal information management service is performing a database upgrade."
@@ -1307,10 +1286,7 @@ msgstr ""
 #. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
 #: widgets/erroroverlay.ui:21 widgets/erroroverlay.ui:71
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management service is not running. This "
-#| "application cannot be used without it."
+#, kde-format
 msgid ""
 "A required background service is not running. This application cannot be "
 "used without it."
@@ -1327,11 +1303,7 @@ msgstr "Spustiť"
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
-#, fuzzy, kde-format
-#| msgid ""
-#| "The Akonadi personal information management framework is not "
-#| "operational.\n"
-#| "Click on \"Details...\" to obtain detailed information on this problem."
+#, kde-format
 msgid ""
 "A required background service is not operational.\n"
 "Click on \"Details...\" to obtain detailed information on this problem."
@@ -1349,6 +1321,10 @@ msgid ""
 "Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> for "
 "troubleshooting tips.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>A required background service is not operational.</"
+"p><p>See <a href=\"https://userbase.kde.org/"
+"Akonadi#If_Akonadi_Reports_Broken_or_Non-operational\">FAQ</a> for "
+"troubleshooting tips.</p></body></html>"
 
 #. i18n: ectx: property (text), widget (QPushButton, selfTestButton)
 #: widgets/erroroverlay.ui:259
@@ -1371,7 +1347,7 @@ msgstr "Odstrániť účet?"
 #: widgets/manageaccountwidget.ui:19
 #, kde-format
 msgid "Show only account on current activity"
-msgstr ""
+msgstr "Zobraziť iba účet v aktuálnej aktivite"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/manageaccountwidget.ui:26
@@ -2791,8 +2767,6 @@ msgstr "Nemôžem nájsť kolekciu %1"
 #~ msgstr "Chyba"
 
 #, fuzzy
-#~| msgid ""
-#~| "The Akonadi personal information management service is not operational."
 #~ msgid "A required background service is not operational."
 #~ msgstr "Služba správy osobných informácií Akonadi nie je funkčná."
 
