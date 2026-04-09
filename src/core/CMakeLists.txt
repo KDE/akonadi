@@ -166,6 +166,7 @@ ecm_generate_headers(AkonadiCore_base_CC_HEADERS
     Tag
     TagCache
     TagFetchScope
+    TagSync
     TrashSettings
     CollectionPathResolver
     AccountActivitiesAbstract
