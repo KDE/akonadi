@@ -98,9 +98,7 @@
         <object-type name="TagCreateJob"/>
         <object-type name="TagDeleteJob"/>
         <object-type name="TagFetchJob"/>
-        <object-type name="TagModifyJob">
-            <modify-function signature="tag() const" remove="all"/>
-        </object-type>
+        <object-type name="TagModifyJob"/>
 
         <object-type name="TransactionJob"/>
         <object-type name="TransactionSequence"/>
