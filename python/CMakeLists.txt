@@ -4,7 +4,7 @@
 set(bindings_library "AkonadiCore")
 
 set(wrapped_header ${CMAKE_CURRENT_SOURCE_DIR}/bindings.h)
-set(typesystem_file ${CMAKE_CURRENT_SOURCE_DIR}/bindings.xml)
+set(typesystem_file ${CMAKE_CURRENT_SOURCE_DIR}/typesystem_akonadi.xml)
 
 set(dependencies
     KPim6::AkonadiCore
