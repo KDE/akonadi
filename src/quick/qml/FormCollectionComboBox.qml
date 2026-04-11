@@ -69,18 +69,15 @@ FormCard.FormComboBoxDelegate {
 
     spacing: Kirigami.Units.smallSpacing
 
-    indicator: Rectangle {
+    trailing: Rectangle {
         id: indicatorDot
 
-        // Make sure to check the currentValue property directly or risk listening to something that won't necessarily emit a changed() signal'
+        // Make sure to check the currentValue property directly or risk listening to something that won't necessarily emit a changed() signal
         readonly property var selectedModelIndex: comboBox.currentValue > -1 ? comboBox.model.index(comboBox.currentIndex, 0) : null
         readonly property var selectedCollectionColor: comboBox.currentValue > -1 ? comboBox.model.data(selectedModelIndex, Akonadi.EntityTreeModel.CollectionColorRole) : null
 
         implicitHeight: comboBox.implicitHeight * 0.2
         implicitWidth: implicitHeight
-
-        x: comboBox.mirrored ? comboBox.leftPadding : comboBox.leftPadding + comboBox.availableWidth + comboBox.spacing
-        y: comboBox.topPadding + (comboBox.availableHeight - height) / 2
 
         radius: width * 0.5
         color: selectedCollectionColor
