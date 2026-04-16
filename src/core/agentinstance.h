@@ -183,6 +183,17 @@ public:
     [[nodiscard]] bool operator==(const AgentInstance &other) const;
 
     /*!
+     * Request over D-Bus the current list of tasks to process.
+     *
+     * This will be available for resources not the other agent types.
+     *
+     * Note: this is meant for tooling or debug purpose, don't rely on it for
+     * application code.
+     * \since 26.04
+     */
+    QStringList taskList() const;
+
+    /*!
      * Tell the agent to abort its current operation.
      * \since 4.4
      */

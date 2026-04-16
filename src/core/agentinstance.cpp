@@ -123,6 +123,23 @@ bool AgentInstance::operator==(const AgentInstance &other) const
     return (d->mIdentifier == other.d->mIdentifier);
 }
 
+QStringList AgentInstance::taskList() const
+{
+    QDBusInterface iface(ServerManager::agentServiceName(ServerManager::Agent, identifier()),
+                         QStringLiteral("/"),
+                         QStringLiteral("org.freedesktop.Akonadi.Resource"));
+    if (iface.isValid()) {
+        QDBusReply<QStringList> reply = iface.call(QStringLiteral("taskList"));
+        if (!reply.isValid()) {
+            qCWarning(AKONADICORE_LOG) << "Failed to place D-Bus call.";
+        }
+        return reply;
+    } else {
+        qCWarning(AKONADICORE_LOG) << "taskList called, but the agent isn't a resource";
+        return {};
+    }
+}
+
 void AgentInstance::abortCurrentTask() const
 {
     QDBusInterface iface(ServerManager::agentServiceName(ServerManager::Agent, identifier()),
