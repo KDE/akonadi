@@ -191,6 +191,10 @@ public:
        Print debug output showing the state of the scheduler.
     */
     [[nodiscard]] QString dumpToString() const;
+    /*!
+       Returns the list of tasks in the scheduler (current task first, then the other ones) in string form.
+    */
+    [[nodiscard]] QStringList dumpTaskList() const;
 
     /*!
        Clear the state of the scheduler. Warning: this is intended to be

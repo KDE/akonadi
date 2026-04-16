@@ -604,6 +604,28 @@ QString ResourceScheduler::dumpToString() const
     return ret;
 }
 
+QStringList ResourceScheduler::dumpTaskList() const
+{
+    QStringList ret;
+    QString taskString;
+    QTextStream stream(&taskString);
+
+    if (mCurrentTask.type != TaskType::Invalid) {
+        stream << mCurrentTask;
+        ret << taskString;
+        taskString.clear();
+    }
+    for (int i = 0; i < NQueueCount; ++i) {
+        const TaskList &queue = mTaskList[i];
+        for (const Task &task : queue) {
+            stream << task;
+            ret << taskString;
+            taskString.clear();
+        }
+    }
+    return ret;
+}
+
 void ResourceScheduler::clear()
 {
     qCDebug(AKONADIAGENTBASE_LOG) << "Clearing ResourceScheduler queues:";
