@@ -109,7 +109,6 @@ set(generated_sources
     ${CMAKE_CURRENT_BINARY_DIR}/AkonadiCore/akonadi_tag_wrapper.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/AkonadiCore/akonadi_tagcache_wrapper.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/AkonadiCore/akonadi_tagfetchscope_wrapper.cpp
-    ${CMAKE_CURRENT_BINARY_DIR}/AkonadiCore/akonadi_tagsync_wrapper.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/AkonadiCore/akonadi_trashsettings_wrapper.cpp
 )
 

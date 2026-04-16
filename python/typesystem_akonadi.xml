@@ -243,7 +243,7 @@
         </value-type>
         <object-type name="TagCache"/>
         <value-type name="TagFetchScope"/>
-        <object-type name="TagSync"/>
+        <!-- <object-type name="TagSync"/> -->
 
         <namespace-type name="TrashSettings"/>
     </namespace-type>

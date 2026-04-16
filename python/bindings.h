@@ -182,6 +182,10 @@
 #include <Akonadi/Tag>
 #include <Akonadi/TagCache>
 #include <Akonadi/TagFetchScope>
-#include <Akonadi/TagSync>
+
+// This causes an error in modules built on top of this one
+// due to the unfortunate #include "jobs/job.h" there...
+// Since it's mostly unused anyway, let's not expose it
+// #include <Akonadi/TagSync>
 
 #include <Akonadi/TrashSettings>
