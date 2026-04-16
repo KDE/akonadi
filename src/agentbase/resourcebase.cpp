@@ -712,6 +712,12 @@ void ResourceBase::changeCommitted(const Tag &tag)
     connect(job, &KJob::result, d, &ResourceBasePrivate::changeCommittedResult);
 }
 
+QStringList ResourceBase::taskList()
+{
+    Q_D(ResourceBase);
+    return d->scheduler->dumpTaskList();
+}
+
 void ResourceBase::requestItemDelivery(const QList<qint64> &uids, const QByteArrayList &parts)
 {
     Q_D(ResourceBase);

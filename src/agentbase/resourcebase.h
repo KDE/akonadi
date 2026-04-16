@@ -766,6 +766,7 @@ private:
     // dbus resource interface
     friend class ::Akonadi__ResourceAdaptor;
 
+    QStringList taskList();
     void requestItemDelivery(const QList<qint64> &uids, const QByteArrayList &parts);
 
 private:

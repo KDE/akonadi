@@ -9,6 +9,9 @@
       <arg type="x" name="collectionId"/>
     </signal>
     <signal name="collectionTreeSynchronized"/>
+    <method name="taskList">
+      <arg type="as" direction="out"/>
+    </method>
     <method name="requestItemDelivery">
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QList&lt;qlonglong&gt;"/>
       <arg name="uids" type="ax" direction="in"/>
