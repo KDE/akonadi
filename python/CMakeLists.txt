@@ -3,6 +3,14 @@
 
 set(bindings_library "AkonadiCore")
 
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    # clear warnings caused by the generated code
+    add_compile_options(
+        -Wno-keyword-macro
+        -Wno-shadow
+    )
+endif()
+
 set(wrapped_header ${CMAKE_CURRENT_SOURCE_DIR}/bindings.h)
 set(typesystem_file ${CMAKE_CURRENT_SOURCE_DIR}/typesystem_akonadi.xml)
 
