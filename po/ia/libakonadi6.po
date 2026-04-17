@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-03 00:47+0000\n"
+"POT-Creation-Date: 2026-04-17 00:44+0000\n"
 "PO-Revision-Date: 2026-04-06 19:06+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -120,29 +120,29 @@ msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Il falleva actualisar elementos local: %1."
 
-#: agentbase/resourcebase.cpp:719
+#: agentbase/resourcebase.cpp:725
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Non pote recercar elemento quando de modo foras de linea."
 
-#: agentbase/resourcebase.cpp:901
+#: agentbase/resourcebase.cpp:907
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Synchronisante dossier ' %1' "
 
-#: agentbase/resourcebase.cpp:921 agentbase/resourcebase.cpp:928
+#: agentbase/resourcebase.cpp:927 agentbase/resourcebase.cpp:934
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Il falleva rcuperar le collection per syncronisation."
 
-#: agentbase/resourcebase.cpp:969
+#: agentbase/resourcebase.cpp:975
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Il falleva rcuperar le collection per syncronisation de attribute."
 
-#: agentbase/resourcebase.cpp:1015
+#: agentbase/resourcebase.cpp:1021
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Le elemento requirite non existe plus"

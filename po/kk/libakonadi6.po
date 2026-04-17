@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-03 00:47+0000\n"
+"POT-Creation-Date: 2026-04-17 00:44+0000\n"
 "PO-Revision-Date: 2013-07-14 03:20+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -127,31 +127,31 @@ msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Жергілікті жинақты жаңарту жаңылысы: %1."
 
-#: agentbase/resourcebase.cpp:719
+#: agentbase/resourcebase.cpp:725
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Желіден тыс режімде керегі алынбайды."
 
-#: agentbase/resourcebase.cpp:901
+#: agentbase/resourcebase.cpp:907
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "'%1' қапшығын қадамдастыру"
 
-#: agentbase/resourcebase.cpp:921 agentbase/resourcebase.cpp:928
+#: agentbase/resourcebase.cpp:927 agentbase/resourcebase.cpp:934
 #, fuzzy, kde-format
 #| msgid "Failed to fetch the resource collection."
 msgid "Failed to retrieve collection for sync."
 msgstr "Дерек жинағын алу жаңылысы."
 
-#: agentbase/resourcebase.cpp:969
+#: agentbase/resourcebase.cpp:975
 #, fuzzy, kde-format
 #| msgid "Failed to fetch the resource collection."
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Дерек жинағын алу жаңылысы."
 
-#: agentbase/resourcebase.cpp:1015
+#: agentbase/resourcebase.cpp:1021
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Сұралғаны енді жоқ екен"

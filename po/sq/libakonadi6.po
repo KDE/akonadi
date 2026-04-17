@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-03 00:47+0000\n"
+"POT-Creation-Date: 2026-04-17 00:44+0000\n"
 "PO-Revision-Date: 2025-12-29 13:13-0500\n"
 "Last-Translator: Agron Selimaj <as9902613@gmail.com>\n"
 "Language-Team: sq\n"
@@ -120,29 +120,29 @@ msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr ""
 
-#: agentbase/resourcebase.cpp:719
+#: agentbase/resourcebase.cpp:725
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr ""
 
-#: agentbase/resourcebase.cpp:901
+#: agentbase/resourcebase.cpp:907
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr ""
 
-#: agentbase/resourcebase.cpp:921 agentbase/resourcebase.cpp:928
+#: agentbase/resourcebase.cpp:927 agentbase/resourcebase.cpp:934
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr ""
 
-#: agentbase/resourcebase.cpp:969
+#: agentbase/resourcebase.cpp:975
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr ""
 
-#: agentbase/resourcebase.cpp:1015
+#: agentbase/resourcebase.cpp:1021
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr ""

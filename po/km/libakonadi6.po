@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-03 00:47+0000\n"
+"POT-Creation-Date: 2026-04-17 00:44+0000\n"
 "PO-Revision-Date: 2012-07-11 10:23+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -134,31 +134,31 @@ msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "បាន​បរាជ័យ​ក្នុង​ការ​ធ្វើ​បច្ចុប្បន្នភាព​​សម្រាំង​មូលដ្ឋាន​ ​៖ %1 ។"
 
-#: agentbase/resourcebase.cpp:719
+#: agentbase/resourcebase.cpp:725
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "មិនអាច​ទៅ​យក​ធាតុ​នៅ​ក្នុង​របៀប​ក្រៅបណ្ដាញ​បាន​ទេ ។"
 
-#: agentbase/resourcebase.cpp:901
+#: agentbase/resourcebase.cpp:907
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "ធ្វើ​សមកាលកម្ម​ថត '%1'"
 
-#: agentbase/resourcebase.cpp:921 agentbase/resourcebase.cpp:928
+#: agentbase/resourcebase.cpp:927 agentbase/resourcebase.cpp:934
 #, fuzzy, kde-format
 #| msgid "Failed to fetch the resource collection."
 msgid "Failed to retrieve collection for sync."
 msgstr "បាន​បរាជ័យ​ក្នុង​ការ​ទៅ​ប្រមូល​យក​​​សម្រាំង​ធនធាន ។"
 
-#: agentbase/resourcebase.cpp:969
+#: agentbase/resourcebase.cpp:975
 #, fuzzy, kde-format
 #| msgid "Failed to fetch the resource collection."
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "បាន​បរាជ័យ​ក្នុង​ការ​ទៅ​ប្រមូល​យក​​​សម្រាំង​ធនធាន ។"
 
-#: agentbase/resourcebase.cpp:1015
+#: agentbase/resourcebase.cpp:1021
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "គ្មាន​ធាតុ​ដែល​បាន​ទាមទារ​ទៀត​ឡើយ​​"
