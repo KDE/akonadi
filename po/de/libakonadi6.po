@@ -1,8 +1,8 @@
-# SPDX-FileCopyrightText: 2010, 2023, 2024 Johannes Obermayr <johannesobermayr@gmx.de>
-# SPDX-FileCopyrightText: 2007, 2008, 2009 Thomas Reitelbach <tr@erdfunkstelle.de>
-# SPDX-FileCopyrightText: 2008, 2010, 2011, 2012, 2013, 2015, 2016, 2018, 2020, 2022, 2023 Frederik Schwarzer <schwarzer@kde.org>
-# SPDX-FileCopyrightText: 2008, 2009, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021 Burkhard Lück <lueck@hube-lueck.de>
+# SPDX-FileCopyrightText: 2007-2009 Thomas Reitelbach <tr@erdfunkstelle.de>
+# SPDX-FileCopyrightText: 2008, 2010-2013, 2015-2016, 2018, 2020, 2022-2023 Frederik Schwarzer <schwarzer@kde.org>
+# SPDX-FileCopyrightText: 2008-2009, 2011-2021 Burkhard Lück <lueck@hube-lueck.de>
 # SPDX-FileCopyrightText: 2010 Panagiotis Papadopoulos <pano_90@gmx.net>
+# SPDX-FileCopyrightText: 2010, 2023-2024 Johannes Obermayr <johannesobermayr@gmx.de>
 # SPDX-FileCopyrightText: 2011 Torbjörn Klatt <opensource@torbjoern-klatt.de>
 # SPDX-FileCopyrightText: 2012 Rolf Eike Beer <kde@opensource.sf-tec.de>
 # SPDX-FileCopyrightText: 2013 Markus Slopianka <markus.s@kdemail.net>
@@ -71,7 +71,7 @@ msgstr "Offline"
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing..."
-msgstr "Abgleich läuft ..."
+msgstr "Abgleich läuft …"
 
 #: agentbase/agentbase_p.h:62
 #, kde-format
@@ -468,7 +468,7 @@ msgstr "%1 (Standard)"
 #, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
-msgstr "Wird geladen ..."
+msgstr "Wird geladen …"
 
 #: core/models/entitytreemodel.cpp:497
 #, kde-format
@@ -709,7 +709,7 @@ msgstr "Keine Stichwörter vorhanden"
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
-msgstr "Neues Stichwort erstellen …"
+msgstr "Neues Stichwort erstellen …"
 
 #: quick/qml/TagManagerPage.qml:152
 #, kde-format
@@ -742,7 +742,7 @@ msgstr ""
 
 #: widgets/agentactionmanager.cpp:36
 msgid "&New Agent Instance..."
-msgstr "&Neue Agent-Instanz ..."
+msgstr "&Neue Agent-Instanz …"
 
 #: widgets/agentactionmanager.cpp:37
 msgid "&Delete Agent Instance"
@@ -948,7 +948,7 @@ msgstr "Ordner als Standard verwenden"
 #, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
-msgstr "&Neuer Unterordner …"
+msgstr "&Neuer Unterordner …"
 
 #: widgets/collectiondialog.cpp:228
 #, kde-format
@@ -1067,7 +1067,7 @@ msgstr[1] "%1 Einträge in diesem Ordner indiziert"
 #: widgets/collectionmaintenancepage.cpp:138
 #, kde-format
 msgid "Calculating indexed items..."
-msgstr "Indizierte Einträge werden berechnet ..."
+msgstr "Indizierte Einträge werden berechnet …"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/collectionmaintenancepage.ui:17
@@ -1121,7 +1121,7 @@ msgstr "Volltextindizierung aktivieren"
 #: widgets/collectionmaintenancepage.ui:87
 #, kde-format
 msgid "Retrieving indexed items count..."
-msgstr "Anzahl der indizierten Einträge wird abgeholt ..."
+msgstr "Anzahl der indizierten Einträge wird abgeholt …"
 
 #. i18n: ectx: property (text), widget (QPushButton, reindexButton)
 #: widgets/collectionmaintenancepage.ui:94
@@ -1213,12 +1213,12 @@ msgstr "Daten"
 #: widgets/controlgui.cpp:223
 #, kde-format
 msgid "Starting Akonadi server..."
-msgstr "Akonadi-Server wird gestartet ..."
+msgstr "Akonadi-Server wird gestartet …"
 
 #: widgets/controlgui.cpp:229
 #, kde-format
 msgid "Stopping Akonadi server..."
-msgstr "Akonadi-Server wird angehalten ..."
+msgstr "Akonadi-Server wird angehalten …"
 
 #: widgets/dragdropmanager.cpp:212
 #, kde-format
@@ -1257,25 +1257,25 @@ msgstr ""
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is starting..."
-msgstr "Der Dienst zur persönlichen Informationsverwaltung wird gestartet …"
+msgstr "Der Dienst zur persönlichen Informationsverwaltung wird gestartet …"
 
 #: widgets/erroroverlay.cpp:229
 #, kde-format
 msgid "Personal information management service is starting..."
-msgstr "Der Dienst zur persönlichen Informationsverwaltung wird gestartet ..."
+msgstr "Der Dienst zur persönlichen Informationsverwaltung wird gestartet …"
 
 #: widgets/erroroverlay.cpp:233
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Personal information management service is shutting down..."
 msgstr ""
-"Der Dienst zur persönlichen Informationsverwaltung wird heruntergefahren …"
+"Der Dienst zur persönlichen Informationsverwaltung wird heruntergefahren …"
 
 #: widgets/erroroverlay.cpp:234
 #, kde-format
 msgid "Personal information management service is shutting down..."
 msgstr ""
-"Der Dienst zur persönlichen Informationsverwaltung wird heruntergefahren ..."
+"Der Dienst zur persönlichen Informationsverwaltung wird heruntergefahren …"
 
 #: widgets/erroroverlay.cpp:238
 #, kde-format
@@ -1349,7 +1349,7 @@ msgstr ""
 #: widgets/erroroverlay.ui:259
 #, kde-format
 msgid "Details..."
-msgstr "Details ..."
+msgstr "Details …"
 
 #: widgets/manageaccountwidget.cpp:232
 #, kde-format
@@ -1378,19 +1378,19 @@ msgstr "Eingangspostfächer (fügen Sie mindestens eines hinzu):"
 #: widgets/manageaccountwidget.ui:33
 #, kde-format
 msgid "Filter…"
-msgstr "Filtern ..."
+msgstr "Filtern …"
 
 #. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
 #: widgets/manageaccountwidget.ui:47
 #, kde-format
 msgid "A&dd..."
-msgstr "&Hinzufügen ..."
+msgstr "&Hinzufügen …"
 
 #. i18n: ectx: property (text), widget (QPushButton, mModifyAccountButton)
 #: widgets/manageaccountwidget.ui:57
 #, kde-format
 msgid "&Modify..."
-msgstr "&Bearbeiten ..."
+msgstr "&Bearbeiten …"
 
 #. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
 #: widgets/manageaccountwidget.ui:67
@@ -1407,7 +1407,7 @@ msgstr "Neu starten"
 #: widgets/recentcollectionaction.cpp:43
 #, kde-format
 msgid "Recent Folder"
-msgstr "Zuletzt benutzte Ordner"
+msgstr "Zuletzt verwendete Ordner"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, RenameFavoriteDialog)
 #: widgets/renamefavoritedialog.ui:26
@@ -1430,7 +1430,7 @@ msgstr "Selbsttest des Akonadi-Servers"
 #: widgets/selftestdialog.cpp:71
 #, kde-format
 msgid "Save Report..."
-msgstr "Bericht speichern ..."
+msgstr "Bericht speichern …"
 
 #: widgets/selftestdialog.cpp:73
 #, kde-format
@@ -2090,7 +2090,7 @@ msgstr ""
 
 #: widgets/standardactionmanager.cpp:79
 msgid "&New Folder..."
-msgstr "&Neuer Ordner ..."
+msgstr "&Neuer Ordner …"
 
 #: widgets/standardactionmanager.cpp:79
 msgid "New"
@@ -2155,7 +2155,7 @@ msgstr "Aus Favoriten entfernen"
 
 #: widgets/standardactionmanager.cpp:140
 msgid "Rename Favorite..."
-msgstr "Bevorzugten Ordner umbenennen ..."
+msgstr "Bevorzugten Ordner umbenennen …"
 
 #: widgets/standardactionmanager.cpp:141
 msgid "Rename"
@@ -2163,7 +2163,7 @@ msgstr "Umbenennen"
 
 #: widgets/standardactionmanager.cpp:148 widgets/standardactionmanager.cpp:222
 msgid "Copy Folder To..."
-msgstr "Ordner kopieren nach ..."
+msgstr "Ordner kopieren nach …"
 
 #: widgets/standardactionmanager.cpp:149 widgets/standardactionmanager.cpp:157
 #: widgets/standardactionmanager.cpp:223 widgets/standardactionmanager.cpp:237
@@ -2172,11 +2172,11 @@ msgstr "Kopieren nach"
 
 #: widgets/standardactionmanager.cpp:156 widgets/standardactionmanager.cpp:237
 msgid "Copy Item To..."
-msgstr "Eintrag kopieren nach ..."
+msgstr "Eintrag kopieren nach …"
 
 #: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:238
 msgid "Move Item To..."
-msgstr "Eintrag verschieben nach ..."
+msgstr "Eintrag verschieben nach …"
 
 #: widgets/standardactionmanager.cpp:165 widgets/standardactionmanager.cpp:173
 #: widgets/standardactionmanager.cpp:231 widgets/standardactionmanager.cpp:238
@@ -2185,7 +2185,7 @@ msgstr "Verschieben nach"
 
 #: widgets/standardactionmanager.cpp:172 widgets/standardactionmanager.cpp:230
 msgid "Move Folder To..."
-msgstr "Ordner verschieben nach ..."
+msgstr "Ordner verschieben nach …"
 
 #: widgets/standardactionmanager.cpp:179
 msgid "&Cut Item"
@@ -2667,7 +2667,7 @@ msgstr "Neues Stichwort erstellen"
 #, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
-msgstr "Stichwörter auswählen ..."
+msgstr "Stichwörter auswählen …"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
 #: widgets/tagselectiondialog.ui:14
