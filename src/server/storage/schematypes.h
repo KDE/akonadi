@@ -9,7 +9,7 @@
 
 #include <QList>
 #include <QMap>
-#include <QString>
+
 #include <QStringList>
 
 namespace Akonadi

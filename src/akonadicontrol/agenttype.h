@@ -7,7 +7,7 @@
 #pragma once
 
 #include <QHash>
-#include <QString>
+
 #include <QStringList>
 #include <QVariantMap>
 

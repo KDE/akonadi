@@ -11,7 +11,6 @@
 
 #include <QSharedDataPointer>
 
-#include <QString>
 class QJsonObject;
 #include <QStringList>
 
