@@ -27,7 +27,7 @@ class ItemDeleteJobPrivate;
  * const Akonadi::Item item = ...
  *
  * ItemDeleteJob *job = new ItemDeleteJob(item);
- * connect(job, SIGNAL(result(KJob*)), this, SLOT(deletionResult(KJob*)));
+ * connect(job, &KJob::result, this, &MyClass::deletionResult);
  *
  * \endcode
  *
@@ -38,7 +38,7 @@ class ItemDeleteJobPrivate;
  * const Akonadi::Item::List items = ...
  *
  * ItemDeleteJob *job = new ItemDeleteJob(items);
- * connect(job, SIGNAL(result(KJob*)), this, SLOT(deletionResult(KJob*)));
+ * connect(job, &KJob::result, this, &MyClass::deletionResult);
  *
  * \endcode
  *

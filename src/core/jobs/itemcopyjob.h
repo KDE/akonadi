@@ -28,7 +28,7 @@ class ItemCopyJobPrivate;
  * Akonadi::Collection collection = ...
  *
  * Akonadi::ItemCopyJob *job = new Akonadi::ItemCopyJob( items, collection );
- * connect( job, SIGNAL(result(KJob*)), SLOT(jobFinished(KJob*)) );
+ * connect(job, &KJob::result, this, &MyClass::jobFinished);
  *
  * ...
  *

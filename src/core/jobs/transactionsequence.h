@@ -29,7 +29,7 @@ class TransactionSequencePrivate;
  *
  * // Delete a couple of items inside a transaction
  * Akonadi::TransactionSequence *transaction = new Akonadi::TransactionSequence;
- * connect( transaction, SIGNAL(result(KJob*)), SLOT(transactionFinished(KJob*)) );
+ * connect(transaction, &KJob::result, this, &MyClass::transactionFinished);
  *
  * const Akonadi::Item::List items = ...
  *

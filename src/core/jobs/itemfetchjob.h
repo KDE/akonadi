@@ -46,7 +46,7 @@ class ItemFetchScope;
  * const Collection collection = getCollection();
  *
  * Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(collection);
- * connect(job, SIGNAL(result(KJob*)), SLOT(jobFinished(KJob*)));
+ * connect(job, &KJob::result, this, &MyClass::jobFinished);
  * job->fetchScope().fetchFullPayload();
  *
  * ...

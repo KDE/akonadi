@@ -30,7 +30,7 @@ class TrashRestoreJobPrivate;
  * const Akonadi::Item::List items = ...
  *
  * TrashRestoreJob *job = new TrashRestoreJob( items );
- * connect( job, SIGNAL(result(KJob*)), this, SLOT(restoreResult(KJob*)) );
+ * connect(job, &KJob::result, this, &MyClass::restoreResult);
  *
  * \class Akonadi::TrashRestoreJob
  * \inheaderfile Akonadi/TrashRestoreJob

@@ -31,7 +31,7 @@ class LinkJobPrivate;
  * const Akonadi::Item::List items = ...
  *
  * Akonadi::LinkJob *job = new Akonadi::LinkJob( virtualCollection, items );
- * connect( job, SIGNAL(result(KJob*)), SLOT(jobFinished(KJob*)) );
+ * connect(job, &KJob::result, this, &MyClass::jobFinished);
  *
  * ...
  *

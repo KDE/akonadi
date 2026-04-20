@@ -52,7 +52,7 @@ class RecursiveItemFetchJobPrivate;
  *
  * Akonadi::RecursiveItemFetchJob *job = new Akonadi::RecursiveItemFetchJob( contactsCollection, mimeTypes );
  * job->fetchScope().fetchFullPayload();
- * connect( job, SIGNAL(result(KJob*)), this, SLOT(fetchResult(KJob*)) );
+ * connect(job, &KJob::result, this, &MyClass::fetchResult);
  *
  * job->start();
  *

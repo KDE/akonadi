@@ -28,7 +28,7 @@ class ItemModifyJobPrivate;
  *
  * // Fetch item with unique id 125
  * Akonadi::ItemFetchJob *fetchJob = new Akonadi::ItemFetchJob( Akonadi::Item( 125 ) );
- * connect( fetchJob, SIGNAL(result(KJob*)), SLOT(fetchFinished(KJob*)) );
+ * connect(job, &KJob::result, this, &MyClass::fetchFinished);
  *
  * ...
  *
@@ -46,7 +46,7 @@ class ItemModifyJobPrivate;
  *
  *   // Store back modified item
  *   Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( item );
- *   connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyFinished(KJob*)) );
+ *   connect(modifyJob, &KJob::result, this, &MyClass::modifyFinished);
  * }
  *
  * MyClass::modifyFinished( KJob *job )

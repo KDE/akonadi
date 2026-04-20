@@ -37,8 +37,7 @@ class SessionPrivate;
  * \code
  *
  *  Akonadi::Job *job = new Akonadi::SomeJob( some parameter );
- *  connect( job, SIGNAL(result(KJob*)),
- *           this, SLOT(slotResult(KJob*)) );
+ *  connect(job, &KJob::result, this, &MyClass::slotResult);
  *
  * \endcode
  *

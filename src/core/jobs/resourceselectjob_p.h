@@ -39,10 +39,10 @@ class ResourceSelectJobPrivate;
  *
  * ResourceSelectJob *job = new ResourceSelectJob( "my_mail_resource", resourceSession );
  *
- * connect( job, SIGNAL(result(KJob*)), SLOT(resourceSelected(KJob*)) );
+ * connect(job, &KJob::result, this, &MyClass::resourceSelected);
  * ...
  *
- * void resourceSelected( KJob *job )
+ * void MyClass::resourceSelected( KJob *job )
  * {
  *   if ( job->error() )
  *     return;
@@ -51,10 +51,10 @@ class ResourceSelectJobPrivate;
  *   item.setRemoteIdentifier( "d1627013c6d5a2e7bb58c12560c27047" );
  *
  *   ItemFetchJob *fetchJob = new ItemFetchJob( item, m_resourceSession );
- *   connect( fetchJob, SIGNAL(result(KJob*)), SLOT(itemFetched(KJob*)) );
+ *   connect(job, &KJob::result, this, &MyClass::itemFetched);
  * }
  *
- * void itemFetched( KJob *job )
+ * void MyClass::itemFetched( KJob *job )
  * {
  *   if ( job->error() )
  *     return;

@@ -46,7 +46,7 @@ class TrashJobPrivate;
  * const Akonadi::Item::List items = ...
  *
  * TrashJob *job = new TrashJob( items );
- * connect( job, SIGNAL(result(KJob*)), this, SLOT(deletionResult(KJob*)) );
+ * connect(job, &KJob::result, this, &MyClass::deletionResult);
  *
  * \endcode
  *

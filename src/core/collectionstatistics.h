@@ -32,7 +32,7 @@ class CollectionStatisticsPrivate;
  * Akonadi::Collection collection = ...
  *
  * Akonadi::CollectionStatisticsJob *job = new Akonadi::CollectionStatisticsJob( collection );
- * connect( job, SIGNAL(result(KJob*)), SLOT(jobFinished(KJob*)) );
+ * connect(job, &KJob::result, this, &MyClass::jobFinished);
  *
  * ...
  *

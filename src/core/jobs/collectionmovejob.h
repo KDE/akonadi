@@ -25,7 +25,7 @@ class CollectionMoveJobPrivate;
  * const Akonadi::Collection newParent = ...
  *
  * Akonadi::CollectionMoveJob *job = new Akonadi::CollectionMoveJob( collection, newParent );
- * connect( job, SIGNAL(result(KJob*)), this, SLOT(moveResult(KJob*)) );
+ * connect(job, &KJob::result, this, &MyClass::moveResult);
  *
  * \endcode
  *

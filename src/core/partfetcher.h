@@ -34,7 +34,7 @@ class PartFetcherPrivate;
  * const QModelIndex index = view->selectionModel()->currentIndex();
  *
  * PartFetcher *fetcher = new PartFetcher( index, Akonadi::MessagePart::Envelope );
- * connect( fetcher, SIGNAL(result(KJob*)), SLOT(fetchResult(KJob*)) );
+ * connect(fetcher, &KJob::result, this, &MyClass::fetchResult);
  * fetcher->start();
  *
  * ...

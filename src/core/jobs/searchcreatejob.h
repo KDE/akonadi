@@ -28,7 +28,7 @@ class SearchCreateJobPrivate;
  * const QString query = "...";
  *
  * Akonadi::SearchCreateJob *job = new Akonadi::SearchCreateJob( name, query );
- * connect( job, SIGNAL(result(KJob*)), SLOT(jobFinished(KJob*)) );
+ * connect(job, &KJob::result, this, &MyClass::jobFinished);
  *
  * MyClass::jobFinished( KJob *job )
  * {

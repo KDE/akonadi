@@ -40,7 +40,7 @@ class ResourceSynchronizationJobPrivate;
  * const AgentInstance resource = AgentManager::self()->instance( "myresourceidentifier" );
  *
  * ResourceSynchronizationJob *job = new ResourceSynchronizationJob( resource );
- * connect( job, SIGNAL(result(KJob*)), SLOT(synchronizationFinished(KJob*)) );
+ * connect(job, &KJob::result, this, &MyClass::synchronizationFinished);
  * job->start();
  *
  * \endcode

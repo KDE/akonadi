@@ -41,7 +41,7 @@ class ItemCreateJobPrivate;
  * Akonadi::Collection collection = getCollection();
  *
  * Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection );
- * connect( job, SIGNAL(result(KJob*)), SLOT(jobFinished(KJob*)) );
+ * connect(job, &KJob::result, this, &MyClass::jobFinished);
  *
  * ...
  *

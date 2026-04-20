@@ -32,7 +32,7 @@ class PersistentSearchAttributePrivate;
  * const QString query = "...";
  *
  * Akonadi::SearchCreateJob *job = new Akonadi::SearchCreateJob( name, query );
- * connect( job, SIGNAL(result(KJob*)), SLOT(jobFinished(KJob*)) );
+ * connect(job, &KJob::result, this, &MyClass::jobFinished);
  *
  * MyClass::jobFinished( KJob *job )
  * {
@@ -50,7 +50,7 @@ class PersistentSearchAttributePrivate;
  *     attribute->setQueryString( "... another query string ..." );
  *
  *     Akonadi::CollectionModifyJob *modifyJob = new Akonadi::CollectionModifyJob( searchCollection );
- *     connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyFinished(KJob*)) );
+ *     connect(modifyJob, &KJob::result, this, &MyClass::modifyFinished);
  *   }
  *   ...
  * }

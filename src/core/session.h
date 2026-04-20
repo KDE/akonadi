@@ -46,7 +46,7 @@ class ChangeNotificationDependenciesFactory;
  *                                                   CollectionFetchJob::Recursive,
  *                                                   session );
  *
- * connect( job, SIGNAL(result(KJob*)), this, SLOT(slotResult(KJob*)) );
+ * connect(job, &KJob::result, this, &MyClass::slotResult);
  *
  * \endcode
  *

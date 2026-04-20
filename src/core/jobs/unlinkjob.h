@@ -31,7 +31,7 @@ class UnlinkJobPrivate;
  * const Akonadi::Item::List items = ...
  *
  * Akonadi::UnlinkJob *job = new Akonadi::UnlinkJob( virtualCollection, items );
- * connect( job, SIGNAL(result(KJob*)), SLOT(jobFinished(KJob*)) );
+ * connect(job, &KJob::result, this, &MyClass::jobFinished);
  *
  * ...
  *

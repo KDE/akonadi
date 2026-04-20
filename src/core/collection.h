@@ -35,7 +35,7 @@ class CollectionStatistics;
  *
  * // fetching all collections recursive, starting at the root collection
  * CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
- * connect( job, SIGNAL(result(KJob*)), SLOT(fetchFinished(KJob*)) );
+ * connect(job, &KJob::result, this, &MyClass::fetchFinished);
  *
  * ...
  *
