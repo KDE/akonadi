@@ -19,7 +19,7 @@ private:
     void testCache()
     {
         EntityCache<T, FetchJob, FetchScope> cache(2);
-        QSignalSpy spy(&cache, SIGNAL(dataAvailable()));
+        QSignalSpy spy(&cache, &EntityCache<T, FetchJob, FetchScope>::dataAvailable);
         QVERIFY(spy.isValid());
 
         QVERIFY(!cache.isCached(1));

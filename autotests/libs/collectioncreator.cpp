@@ -63,7 +63,7 @@ private Q_SLOTS:
             if (useTransaction) {
                 lastJob = new TransactionCommitJob(this);
             }
-            AkonadiTest::akWaitForSignal(lastJob, SIGNAL(result(KJob *)), 15000);
+            AkonadiTest::akWaitForSignal(lastJob, &KJob::result), 15000);
         }
     }
 };

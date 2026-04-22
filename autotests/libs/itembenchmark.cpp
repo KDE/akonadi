@@ -83,7 +83,7 @@ private Q_SLOTS:
                 lastJob = new ItemCreateJob(item, parent, this);
                 connect(lastJob, SIGNAL(result(KJob *)), SLOT(createResult(KJob *)));
             }
-            AkonadiTest::akWaitForSignal(lastJob, SIGNAL(result(KJob *)));
+            AkonadiTest::akWaitForSignal(lastJob, &KJob::result);
         }
     }
 
@@ -111,7 +111,7 @@ private Q_SLOTS:
             fetchJob->fetchScope().fetchFullPayload();
             fetchJob->fetchScope().setCacheOnly(true);
             connect(fetchJob, SIGNAL(result(KJob *)), SLOT(fetchResult(KJob *)));
-            AkonadiTest::akWaitForSignal(fetchJob, SIGNAL(result(KJob *)));
+            AkonadiTest::akWaitForSignal(fetchJob, &KJob::result);
         }
     }
 
@@ -140,7 +140,7 @@ private Q_SLOTS:
                 lastJob = job;
                 connect(lastJob, SIGNAL(result(KJob *)), SLOT(modifyResult(KJob *)));
             }
-            AkonadiTest::akWaitForSignal(lastJob, SIGNAL(result(KJob *)));
+            AkonadiTest::akWaitForSignal(lastJob, &KJob::result);
         }
     }
 
@@ -165,7 +165,7 @@ private Q_SLOTS:
                 items << mCreatedItems[size].takeFirst();
             }
             lastJob = new ItemDeleteJob(items, this);
-            AkonadiTest::akWaitForSignal(lastJob, SIGNAL(result(KJob *)));
+            AkonadiTest::akWaitForSignal(lastJob, &KJob::result);
         }
 
         if (emptyItemArrayIterations) {
