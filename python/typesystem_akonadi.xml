@@ -8,6 +8,7 @@
 <typesystem package="AkonadiCore">
 
     <load-typesystem name="typesystem_core.xml" generate="no"/>
+    <load-typesystem name="typesystem_gui.xml" generate="no"/>
     <load-typesystem name="typesystem_kcoreaddons.xml" generate="no"/>
 
     <!-- Types in global namespace -->
