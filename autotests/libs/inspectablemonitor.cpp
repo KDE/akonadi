@@ -28,8 +28,11 @@ InspectableMonitor::InspectableMonitor(FakeMonitorDependenciesFactory *dependenc
     connect(this, &Akonadi::Monitor::itemRemoved, this, &InspectableMonitor::dummySignal);
     connect(this, &Akonadi::Monitor::itemUnlinked, this, &InspectableMonitor::dummySignal);
     connect(this, &Akonadi::Monitor::collectionAdded, this, &InspectableMonitor::dummySignal);
-    connect(this, SIGNAL(collectionChanged(Akonadi::Collection)), SIGNAL(dummySignal()));
-    connect(this, SIGNAL(collectionChanged(Akonadi::Collection, QSet<QByteArray>)), SIGNAL(dummySignal()));
+    connect(this, qOverload<const Akonadi::Collection &>(&Akonadi::Monitor::collectionChanged), this, &InspectableMonitor::dummySignal);
+    connect(this,
+            qOverload<const Akonadi::Collection &, const QSet<QByteArray> &>(&Akonadi::Monitor::collectionChanged),
+            this,
+            &InspectableMonitor::dummySignal);
     connect(this, &Akonadi::Monitor::collectionMoved, this, &InspectableMonitor::dummySignal);
     connect(this, &Akonadi::Monitor::collectionRemoved, this, &InspectableMonitor::dummySignal);
     connect(this, &Akonadi::Monitor::collectionStatisticsChanged, this, &InspectableMonitor::dummySignal);

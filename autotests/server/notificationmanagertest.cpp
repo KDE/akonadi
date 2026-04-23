@@ -39,7 +39,7 @@ private Q_SLOTS:
     void testAggregatedFetchScope()
     {
         NotificationManager manager(AkThread::NoThread);
-        QMetaObject::invokeMethod(&manager, "init", Qt::DirectConnection);
+        QMetaObject::invokeMethod(&manager, &NotificationManager::init, Qt::DirectConnection);
 
         // first subscriber, A
         TestableNotificationSubscriber subscriberA(&manager);

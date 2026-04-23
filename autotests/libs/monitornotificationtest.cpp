@@ -260,7 +260,7 @@ void MonitorNotificationTest::testMonitor_impl(MonitorImpl *monitor, FakeCollect
     collectionCache->insert(col6);
 
     qRegisterMetaType<Akonadi::Collection>();
-    QSignalSpy collectionAddedSpy(monitor, SIGNAL(collectionAdded(Akonadi::Collection, Akonadi::Collection)));
+    QSignalSpy collectionAddedSpy(monitor, &Monitor::collectionAdded);
 
     collectionCache->emitDataAvailable();
 

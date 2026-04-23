@@ -77,11 +77,11 @@ private Q_SLOTS:
         item.setPayload(QByteArray(size, 'X'));
         item.setSize(size);
 
-        Job *lastJob = 0;
+        Job *lastJob = nullptr;
         QBENCHMARK {
             for (int i = 0; i < count; ++i) {
                 lastJob = new ItemCreateJob(item, parent, this);
-                connect(lastJob, SIGNAL(result(KJob *)), SLOT(createResult(KJob *)));
+                connect(lastJob, &KJob::result, this, &ItemBenchmark::createResult);
             }
             AkonadiTest::akWaitForSignal(lastJob, &KJob::result);
         }
@@ -110,7 +110,7 @@ private Q_SLOTS:
             ItemFetchJob *fetchJob = new ItemFetchJob(items, this);
             fetchJob->fetchScope().fetchFullPayload();
             fetchJob->fetchScope().setCacheOnly(true);
-            connect(fetchJob, SIGNAL(result(KJob *)), SLOT(fetchResult(KJob *)));
+            connect(fetchJob, &KJob::result, this, &ItemBenchmark::fetchResult);
             AkonadiTest::akWaitForSignal(fetchJob, &KJob::result);
         }
     }
@@ -129,7 +129,7 @@ private Q_SLOTS:
         // be there.
         QVERIFY(mCreatedItems.value(size).count() >= count);
 
-        Job *lastJob = 0;
+        Job *lastJob = nullptr;
         const int newSize = qMax(size, 1);
         QBENCHMARK {
             for (int i = 0; i < count; ++i) {
@@ -138,7 +138,7 @@ private Q_SLOTS:
                 ItemModifyJob *job = new ItemModifyJob(item, this);
                 job->disableRevisionCheck();
                 lastJob = job;
-                connect(lastJob, SIGNAL(result(KJob *)), SLOT(modifyResult(KJob *)));
+                connect(lastJob, &KJob::result, this, &ItemBenchmark::modifyResult);
             }
             AkonadiTest::akWaitForSignal(lastJob, &KJob::result);
         }
@@ -153,7 +153,7 @@ private Q_SLOTS:
         QFETCH(int, count);
         QFETCH(int, size);
 
-        Job *lastJob = 0;
+        Job *lastJob = nullptr;
         int emptyItemArrayIterations = 0;
         QBENCHMARK {
             if (mCreatedItems[size].isEmpty()) {

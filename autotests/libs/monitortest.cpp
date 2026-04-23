@@ -94,7 +94,7 @@ void MonitorTest::testMonitor()
     qRegisterMetaType<Akonadi::CollectionStatistics>();
     qRegisterMetaType<QSet<QByteArray>>();
     QSignalSpy caddspy(&monitor, &Monitor::collectionAdded);
-    QSignalSpy cmodspy(&monitor, SIGNAL(collectionChanged(Akonadi::Collection, QSet<QByteArray>)));
+    QSignalSpy cmodspy(&monitor, qOverload<const Akonadi::Collection &, const QSet<QByteArray> &>(&Monitor::collectionChanged));
     QSignalSpy cmvspy(&monitor, &Monitor::collectionMoved);
     QSignalSpy crmspy(&monitor, &Monitor::collectionRemoved);
     QSignalSpy cstatspy(&monitor, &Monitor::collectionStatisticsChanged);

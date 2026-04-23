@@ -105,7 +105,7 @@ private:
     CollectionSync *prepareBenchmarkSyncer(const Collection::List &collections)
     {
         auto syncer = new CollectionSync(QStringLiteral("akonadi_knut_resource_0"));
-        connect(syncer, SIGNAL(percent(KJob *, ulong)), this, SLOT(syncBenchmarkProgress(KJob *, ulong)));
+        connect(syncer, &KJob::percentChanged, this, &CollectionSyncTest::syncBenchmarkProgress);
         syncer->setHierarchicalRemoteIds(false);
         syncer->setRemoteCollections(collections);
         return syncer;

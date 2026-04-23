@@ -30,9 +30,9 @@ private Q_SLOTS:
 
     void testStartStop()
     {
-        QSignalSpy startSpy(ServerManager::self(), SIGNAL(started()));
+        QSignalSpy startSpy(ServerManager::self(), &ServerManager::started);
         QVERIFY(startSpy.isValid());
-        QSignalSpy stopSpy(ServerManager::self(), SIGNAL(stopped()));
+        QSignalSpy stopSpy(ServerManager::self(), &ServerManager::stopped);
         QVERIFY(stopSpy.isValid());
 
         QVERIFY(ServerManager::isRunning());
@@ -42,7 +42,7 @@ private Q_SLOTS:
         QVERIFY(stopSpy.isEmpty());
 
         {
-            QSignalSpy spy(ServerManager::self(), SIGNAL(stopped()));
+            QSignalSpy spy(ServerManager::self(), &ServerManager::stopped);
             QVERIFY(ServerManager::stop());
             QTRY_VERIFY(spy.count() >= 1);
         }
@@ -52,7 +52,7 @@ private Q_SLOTS:
 
         QVERIFY(!ServerManager::stop());
         {
-            QSignalSpy spy(ServerManager::self(), SIGNAL(started()));
+            QSignalSpy spy(ServerManager::self(), &ServerManager::started);
             QVERIFY(ServerManager::start());
             QTRY_VERIFY(spy.count() >= 1);
         }
@@ -64,7 +64,7 @@ private Q_SLOTS:
     void testRestart()
     {
         QVERIFY(ServerManager::isRunning());
-        QSignalSpy startSpy(ServerManager::self(), SIGNAL(started()));
+        QSignalSpy startSpy(ServerManager::self(), &ServerManager::started);
         QVERIFY(startSpy.isValid());
 
         QVERIFY(Control::restart());
