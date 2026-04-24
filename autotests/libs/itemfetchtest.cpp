@@ -276,7 +276,7 @@ void ItemFetchTest::testFetchBatching()
     AKVERIFYEXEC(resolver);
     int colId = resolver->collection();
 
-    auto *itemCountJob = new ItemFetchJob(Collection(colId));
+    auto itemCountJob = new ItemFetchJob(Collection(colId));
     AKVERIFYEXEC(itemCountJob);
     const auto origItemsCount = itemCountJob->items().size();
 
@@ -302,7 +302,7 @@ void ItemFetchTest::testFetchBatching()
 
     // Now try to fetch all the 20'010 items by explicitly listing them all
     qDebug() << "Fetching" << items.size() << "items";
-    auto *fetchJob = new ItemFetchJob(items, this);
+    auto fetchJob = new ItemFetchJob(items, this);
     AKVERIFYEXEC(fetchJob);
     qDebug() << "Done";
 
@@ -310,7 +310,7 @@ void ItemFetchTest::testFetchBatching()
 
     // And now try to delete all of them by listing them explicitly
     qDebug() << "Deleting" << items.size() << "items";
-    auto *deleteJob = new ItemDeleteJob(items, this);
+    auto deleteJob = new ItemDeleteJob(items, this);
     AKVERIFYEXEC(deleteJob);
     qDebug() << "Done";
 

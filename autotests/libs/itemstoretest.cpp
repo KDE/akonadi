@@ -463,13 +463,13 @@ void ItemStoreTest::testModifyLargeBatch()
 
     qDebug() << "Updating items";
     // And update them all
-    auto *modifyJob = new ItemModifyJob(items, this);
+    auto modifyJob = new ItemModifyJob(items, this);
     AKVERIFYEXEC(modifyJob);
     qDebug() << "Done";
 
     // Fetch everything again, verify they all have the flag
     qDebug() << "Verifying flags";
-    auto *fetchJob = new ItemFetchJob(items, this);
+    auto fetchJob = new ItemFetchJob(items, this);
     AKVERIFYEXEC(fetchJob);
     const auto fetchedItems = fetchJob->items();
     QCOMPARE(fetchedItems.size(), ItemCount);
