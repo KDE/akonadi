@@ -8,10 +8,10 @@
 #include "collectionstatisticsdelegate.h"
 
 #include "akonadiwidgets_debug.h"
-#include <KColorScheme>
 #include <KFormat>
 
 #include <QAbstractItemView>
+#include <QGuiApplication>
 #include <QPainter>
 #include <QStyle>
 #include <QStyleOption>
@@ -71,8 +71,8 @@ public:
     {
         static constexpr std::array states = {QPalette::Active, QPalette::Disabled, QPalette::Inactive};
         for (const auto state : states) {
-            mSelectedUnreadColor[state] = KColorScheme(state, KColorScheme::Selection).foreground(KColorScheme::ActiveText).color();
-            mDeselectedUnreadColor[state] = KColorScheme(state, KColorScheme::View).foreground(KColorScheme::ActiveText).color();
+            mSelectedUnreadColor[state] = qApp->palette().color(state, QPalette::HighlightedText);
+            mDeselectedUnreadColor[state] = qApp->palette().color(state, QPalette::Highlight);
         }
     }
 };

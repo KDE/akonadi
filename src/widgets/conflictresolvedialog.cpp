@@ -15,6 +15,7 @@
 
 #include <QDesktopServices>
 #include <QDir>
+#include <QGuiApplication>
 #include <QLabel>
 #include <QPushButton>
 #include <QScreen>
@@ -22,8 +23,8 @@
 #include <QVBoxLayout>
 #include <QWindow>
 
-#include <KColorScheme>
 #include <KLocalizedString>
+#include <KSharedConfig>
 #include <KWindowConfig>
 #include <QDialogButtonBox>
 #include <QTextBrowser>
@@ -97,9 +98,7 @@ private:
     QString header() const
     {
         QString header = QStringLiteral("<html>");
-        header += QStringLiteral("<body text=\"%1\" bgcolor=\"%2\">")
-                      .arg(KColorScheme(QPalette::Active, KColorScheme::View).foreground().color().name(),
-                           KColorScheme(QPalette::Active, KColorScheme::View).background().color().name());
+        header += QStringLiteral("<body text=\"%1\" bgcolor=\"%2\">").arg(qApp->palette().text().color().name(), qApp->palette().base().color().name());
         header += QLatin1StringView("<center><table>");
         header += QStringLiteral("<tr><th align=\"center\">%1</th><th align=\"center\">%2</th><td>&nbsp;</td><th align=\"center\">%3</th></tr>")
                       .arg(mNameTitle, mLeftTitle, mRightTitle);

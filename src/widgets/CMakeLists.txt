@@ -174,7 +174,6 @@ target_link_libraries(
         KF6::IconThemes
         KF6::IconWidgets
         KF6::XmlGui
-        KF6::ColorScheme
         Qt::Sql
         KPim6::AkonadiPrivate
 )
