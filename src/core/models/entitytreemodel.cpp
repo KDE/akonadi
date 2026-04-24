@@ -14,7 +14,7 @@
 #include <QMimeData>
 
 #include <KLocalizedString>
-#include <QUrl>
+
 #include <QUrlQuery>
 
 #include "collectionmodifyjob.h"

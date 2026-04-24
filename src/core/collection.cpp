@@ -17,7 +17,6 @@
 #include <QString>
 #include <QStringList>
 
-#include <QUrl>
 #include <QUrlQuery>
 
 #include <KLocalizedString>

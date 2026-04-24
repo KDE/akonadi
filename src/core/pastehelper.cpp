@@ -21,7 +21,6 @@
 
 #include "akonadicore_debug.h"
 
-#include <QUrl>
 #include <QUrlQuery>
 
 #include <QByteArray>

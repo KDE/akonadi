@@ -10,7 +10,6 @@
 #include "itemserializer_p.h"
 #include "private/protocol_p.h"
 
-#include <QUrl>
 #include <QUrlQuery>
 
 #include <QReadWriteLock>

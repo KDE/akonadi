@@ -15,7 +15,7 @@
 
 #include <KLocalizedString>
 #include <QMimeData>
-#include <QUrl>
+
 #include <QUrlQuery>
 
 #include "collection.h"
