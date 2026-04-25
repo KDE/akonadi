@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-17 00:44+0000\n"
+"POT-Creation-Date: 2026-04-25 00:45+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -227,7 +227,7 @@ msgstr "缺少所需标识符参数。"
 msgid "No such agent found \"%1\""
 msgstr "没有找到代理 \"%1\""
 
-#: core/collection.cpp:221
+#: core/collection.cpp:220
 #, kde-format
 msgctxt "Name for the folder containing searches"
 msgid "Search"
@@ -1113,47 +1113,47 @@ msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "选择集合"
 
-#: widgets/conflictresolvedialog.cpp:129
+#: widgets/conflictresolvedialog.cpp:128
 #, kde-format
 msgid "Modification Time"
 msgstr "修改时间"
 
-#: widgets/conflictresolvedialog.cpp:141
+#: widgets/conflictresolvedialog.cpp:140
 #, kde-format
 msgid "Flags"
 msgstr "标记"
 
-#: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
-#: widgets/conflictresolvedialog.cpp:174
+#: widgets/conflictresolvedialog.cpp:155 widgets/conflictresolvedialog.cpp:163
+#: widgets/conflictresolvedialog.cpp:173
 #, kde-format
 msgid "Attribute: %1"
 msgstr "属性：%1"
 
-#: widgets/conflictresolvedialog.cpp:186
+#: widgets/conflictresolvedialog.cpp:185
 #, kde-format
 msgctxt "@title:window"
 msgid "Conflict Resolution"
 msgstr "冲突解决"
 
-#: widgets/conflictresolvedialog.cpp:192
+#: widgets/conflictresolvedialog.cpp:191
 #, kde-format
 msgctxt "@action:button"
 msgid "Take my version"
 msgstr "采用我的版本"
 
-#: widgets/conflictresolvedialog.cpp:198
+#: widgets/conflictresolvedialog.cpp:197
 #, kde-format
 msgctxt "@action:button"
 msgid "Take their version"
 msgstr "采用他们的版本"
 
-#: widgets/conflictresolvedialog.cpp:204
+#: widgets/conflictresolvedialog.cpp:203
 #, kde-format
 msgctxt "@action:button"
 msgid "Keep both versions"
 msgstr "保留两个版本"
 
-#: widgets/conflictresolvedialog.cpp:217
+#: widgets/conflictresolvedialog.cpp:216
 #, kde-format
 msgctxt "@label:textbox"
 msgid ""
@@ -1167,7 +1167,7 @@ msgstr ""
 "并这些更改。<br>单击<a href=\"opentexteditor\">“打开文本编辑器”</a>以保留文本"
 "副本，然后选择哪个版本是最正确的，之后重新打开并再次修改它以添加缺少的内容。"
 
-#: widgets/conflictresolvedialog.cpp:266
+#: widgets/conflictresolvedialog.cpp:265
 #, kde-format
 msgid "Data"
 msgstr "数据"

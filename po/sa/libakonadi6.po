@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-17 00:44+0000\n"
+"POT-Creation-Date: 2026-04-25 00:45+0000\n"
 "PO-Revision-Date: 2024-12-25 19:45+0530\n"
 "Last-Translator: kali <shreekantkalwar@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -236,7 +236,7 @@ msgstr ""
 msgid "No such agent found \"%1\""
 msgstr "न संसाधन एजेण्ट् लब्धम्।"
 
-#: core/collection.cpp:221
+#: core/collection.cpp:220
 #, fuzzy, kde-format
 #| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
 #| msgid "Search"
@@ -1147,47 +1147,47 @@ msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "एकं संग्रहं चिनोतु"
 
-#: widgets/conflictresolvedialog.cpp:129
+#: widgets/conflictresolvedialog.cpp:128
 #, kde-format
 msgid "Modification Time"
 msgstr "परिवर्तन समय"
 
-#: widgets/conflictresolvedialog.cpp:141
+#: widgets/conflictresolvedialog.cpp:140
 #, kde-format
 msgid "Flags"
 msgstr "ध्वजाः"
 
-#: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
-#: widgets/conflictresolvedialog.cpp:174
+#: widgets/conflictresolvedialog.cpp:155 widgets/conflictresolvedialog.cpp:163
+#: widgets/conflictresolvedialog.cpp:173
 #, kde-format
 msgid "Attribute: %1"
 msgstr "विशेषताः %1"
 
-#: widgets/conflictresolvedialog.cpp:186
+#: widgets/conflictresolvedialog.cpp:185
 #, kde-format
 msgctxt "@title:window"
 msgid "Conflict Resolution"
 msgstr "द्वन्द्वनिराकरणम्"
 
-#: widgets/conflictresolvedialog.cpp:192
+#: widgets/conflictresolvedialog.cpp:191
 #, kde-format
 msgctxt "@action:button"
 msgid "Take my version"
 msgstr "मम संस्करणं गृहाण"
 
-#: widgets/conflictresolvedialog.cpp:198
+#: widgets/conflictresolvedialog.cpp:197
 #, kde-format
 msgctxt "@action:button"
 msgid "Take their version"
 msgstr "तेषां संस्करणं गृह्यताम्"
 
-#: widgets/conflictresolvedialog.cpp:204
+#: widgets/conflictresolvedialog.cpp:203
 #, kde-format
 msgctxt "@action:button"
 msgid "Keep both versions"
 msgstr "उभयसंस्करणं स्थापयन्तु"
 
-#: widgets/conflictresolvedialog.cpp:217
+#: widgets/conflictresolvedialog.cpp:216
 #, kde-format
 msgctxt "@label:textbox"
 msgid ""
@@ -1203,7 +1203,7 @@ msgstr ""
 "editor&quot;</a> इत्यत्र क्लिक् कुर्वन्तु, ततः कः संस्करणः अधिकतया सम्यक् इति चिनोतु, ततः "
 "पुनः उद्घाट्य पुनः परिवर्त्य किं लुप्तं तत् योजयन्तु ।"
 
-#: widgets/conflictresolvedialog.cpp:266
+#: widgets/conflictresolvedialog.cpp:265
 #, kde-format
 msgid "Data"
 msgstr "दत्तांश"

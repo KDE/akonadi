@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-17 00:44+0000\n"
+"POT-Creation-Date: 2026-04-25 00:45+0000\n"
 "PO-Revision-Date: 2025-08-25 09:08+0300\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -235,7 +235,7 @@ msgstr "Trūkst nepieciešamā identifikatora parametra."
 msgid "No such agent found \"%1\""
 msgstr "Nav atrasts aģents „%1“"
 
-#: core/collection.cpp:221
+#: core/collection.cpp:220
 #, fuzzy, kde-format
 #| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
 #| msgid "Search"
@@ -1136,47 +1136,47 @@ msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "Atlasīt kolekciju"
 
-#: widgets/conflictresolvedialog.cpp:129
+#: widgets/conflictresolvedialog.cpp:128
 #, kde-format
 msgid "Modification Time"
 msgstr "Modifikācijas laiks"
 
-#: widgets/conflictresolvedialog.cpp:141
+#: widgets/conflictresolvedialog.cpp:140
 #, kde-format
 msgid "Flags"
 msgstr "Karodziņi"
 
-#: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
-#: widgets/conflictresolvedialog.cpp:174
+#: widgets/conflictresolvedialog.cpp:155 widgets/conflictresolvedialog.cpp:163
+#: widgets/conflictresolvedialog.cpp:173
 #, kde-format
 msgid "Attribute: %1"
 msgstr "Atribūts: %1"
 
-#: widgets/conflictresolvedialog.cpp:186
+#: widgets/conflictresolvedialog.cpp:185
 #, kde-format
 msgctxt "@title:window"
 msgid "Conflict Resolution"
 msgstr "Konfliktu risināšana"
 
-#: widgets/conflictresolvedialog.cpp:192
+#: widgets/conflictresolvedialog.cpp:191
 #, kde-format
 msgctxt "@action:button"
 msgid "Take my version"
 msgstr "Ņemt manu versiju"
 
-#: widgets/conflictresolvedialog.cpp:198
+#: widgets/conflictresolvedialog.cpp:197
 #, kde-format
 msgctxt "@action:button"
 msgid "Take their version"
 msgstr "Ņemt viņu versiju"
 
-#: widgets/conflictresolvedialog.cpp:204
+#: widgets/conflictresolvedialog.cpp:203
 #, kde-format
 msgctxt "@action:button"
 msgid "Keep both versions"
 msgstr "Paturēt abas versijas"
 
-#: widgets/conflictresolvedialog.cpp:217
+#: widgets/conflictresolvedialog.cpp:216
 #, kde-format
 msgctxt "@label:textbox"
 msgid ""
@@ -1193,7 +1193,7 @@ msgstr ""
 "kopiju, pēc tam atlasiet, kura versija ir pareizāka, un tad no jauna to "
 "atveriet un pievienojiet trūkstošo."
 
-#: widgets/conflictresolvedialog.cpp:266
+#: widgets/conflictresolvedialog.cpp:265
 #, kde-format
 msgid "Data"
 msgstr "Dati"

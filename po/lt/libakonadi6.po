@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-17 00:44+0000\n"
+"POT-Creation-Date: 2026-04-25 00:45+0000\n"
 "PO-Revision-Date: 2026-02-24 01:59+0200\n"
 "Last-Translator: Liudas Ališauskas <liudas@akmc.lt>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -222,7 +222,7 @@ msgstr ""
 msgid "No such agent found \"%1\""
 msgstr ""
 
-#: core/collection.cpp:221
+#: core/collection.cpp:220
 #, fuzzy, kde-format
 #| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
 #| msgid "Search"
@@ -1126,48 +1126,48 @@ msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "Pasirinkti rinkinį"
 
-#: widgets/conflictresolvedialog.cpp:129
+#: widgets/conflictresolvedialog.cpp:128
 #, kde-format
 msgid "Modification Time"
 msgstr "Modifikavimo laikas"
 
-#: widgets/conflictresolvedialog.cpp:141
+#: widgets/conflictresolvedialog.cpp:140
 #, kde-format
 msgid "Flags"
 msgstr "Vėliavėlės"
 
-#: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
-#: widgets/conflictresolvedialog.cpp:174
+#: widgets/conflictresolvedialog.cpp:155 widgets/conflictresolvedialog.cpp:163
+#: widgets/conflictresolvedialog.cpp:173
 #, kde-format
 msgid "Attribute: %1"
 msgstr "Atributas: %1"
 
-#: widgets/conflictresolvedialog.cpp:186
+#: widgets/conflictresolvedialog.cpp:185
 #, kde-format
 msgctxt "@title:window"
 msgid "Conflict Resolution"
 msgstr ""
 
-#: widgets/conflictresolvedialog.cpp:192
+#: widgets/conflictresolvedialog.cpp:191
 #, fuzzy, kde-format
 #| msgid "Take right one"
 msgctxt "@action:button"
 msgid "Take my version"
 msgstr "Rinktis dešinįjį"
 
-#: widgets/conflictresolvedialog.cpp:198
+#: widgets/conflictresolvedialog.cpp:197
 #, kde-format
 msgctxt "@action:button"
 msgid "Take their version"
 msgstr ""
 
-#: widgets/conflictresolvedialog.cpp:204
+#: widgets/conflictresolvedialog.cpp:203
 #, kde-format
 msgctxt "@action:button"
 msgid "Keep both versions"
 msgstr "Palikti abi versijas"
 
-#: widgets/conflictresolvedialog.cpp:217
+#: widgets/conflictresolvedialog.cpp:216
 #, kde-format
 msgctxt "@label:textbox"
 msgid ""
@@ -1178,7 +1178,7 @@ msgid ""
 "correct, then re-open it and modify it again to add what's missing."
 msgstr ""
 
-#: widgets/conflictresolvedialog.cpp:266
+#: widgets/conflictresolvedialog.cpp:265
 #, kde-format
 msgid "Data"
 msgstr "Duomenys"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-17 00:44+0000\n"
+"POT-Creation-Date: 2026-04-25 00:45+0000\n"
 "PO-Revision-Date: 2026-04-12 13:06+0200\n"
 "Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -238,7 +238,7 @@ msgstr "Erforderliches Bezeichnerargument fehlt."
 msgid "No such agent found \"%1\""
 msgstr "Kein solcher Agent gefunden „%1“"
 
-#: core/collection.cpp:221
+#: core/collection.cpp:220
 #, kde-format
 msgctxt "Name for the folder containing searches"
 msgid "Search"
@@ -1147,47 +1147,47 @@ msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "Wählen Sie eine Sammlung"
 
-#: widgets/conflictresolvedialog.cpp:129
+#: widgets/conflictresolvedialog.cpp:128
 #, kde-format
 msgid "Modification Time"
 msgstr "Änderungszeit"
 
-#: widgets/conflictresolvedialog.cpp:141
+#: widgets/conflictresolvedialog.cpp:140
 #, kde-format
 msgid "Flags"
 msgstr "Flaggen"
 
-#: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
-#: widgets/conflictresolvedialog.cpp:174
+#: widgets/conflictresolvedialog.cpp:155 widgets/conflictresolvedialog.cpp:163
+#: widgets/conflictresolvedialog.cpp:173
 #, kde-format
 msgid "Attribute: %1"
 msgstr "Attribut: %1"
 
-#: widgets/conflictresolvedialog.cpp:186
+#: widgets/conflictresolvedialog.cpp:185
 #, kde-format
 msgctxt "@title:window"
 msgid "Conflict Resolution"
 msgstr "Konfliktlösung"
 
-#: widgets/conflictresolvedialog.cpp:192
+#: widgets/conflictresolvedialog.cpp:191
 #, kde-format
 msgctxt "@action:button"
 msgid "Take my version"
 msgstr "Meine Version wählen"
 
-#: widgets/conflictresolvedialog.cpp:198
+#: widgets/conflictresolvedialog.cpp:197
 #, kde-format
 msgctxt "@action:button"
 msgid "Take their version"
 msgstr "Andere Version wählen"
 
-#: widgets/conflictresolvedialog.cpp:204
+#: widgets/conflictresolvedialog.cpp:203
 #, kde-format
 msgctxt "@action:button"
 msgid "Keep both versions"
 msgstr "Beide Versionen behalten"
 
-#: widgets/conflictresolvedialog.cpp:217
+#: widgets/conflictresolvedialog.cpp:216
 #, kde-format
 msgctxt "@label:textbox"
 msgid ""
@@ -1205,7 +1205,7 @@ msgstr ""
 "größeren Teil richtig ist, öffnen sie erneut und fügen den fehlenden Text "
 "ein."
 
-#: widgets/conflictresolvedialog.cpp:266
+#: widgets/conflictresolvedialog.cpp:265
 #, kde-format
 msgid "Data"
 msgstr "Daten"
