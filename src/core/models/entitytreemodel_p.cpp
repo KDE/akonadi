@@ -64,7 +64,9 @@ EntityTreeModelPrivate::EntityTreeModelPrivate(EntityTreeModel *parent)
     qRegisterMetaType<Collection>();
 
     Akonadi::AgentManager *agentManager = Akonadi::AgentManager::self();
-    QObject::connect(agentManager, SIGNAL(instanceRemoved(Akonadi::AgentInstance)), q_ptr, SLOT(agentInstanceRemoved(Akonadi::AgentInstance)));
+    QObject::connect(agentManager, &AgentManager::instanceRemoved, q_ptr, [this](const AgentInstance &instance) {
+        agentInstanceRemoved(instance);
+    });
 }
 
 EntityTreeModelPrivate::~EntityTreeModelPrivate()
@@ -127,7 +129,9 @@ void EntityTreeModelPrivate::init(Monitor *monitor)
                SLOT(monitoredCollectionStatisticsChanged(Akonadi::Collection::Id, Akonadi::CollectionStatistics)));
 
     Akonadi::ServerManager *serverManager = Akonadi::ServerManager::self();
-    q->connect(serverManager, SIGNAL(started()), SLOT(serverStarted()));
+    q->connect(serverManager, &ServerManager::started, q_ptr, [this]() {
+        serverStarted();
+    });
 
     fillModel();
 }
@@ -249,9 +253,13 @@ void EntityTreeModelPrivate::fetchCollections(Akonadi::CollectionFetchJob *job)
     } else {
         job->fetchScope().setIncludeStatistics(m_includeStatistics);
         job->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::All);
-        q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)), q, SLOT(collectionsFetched(Akonadi::Collection::List)));
+        q->connect(job, &CollectionFetchJob::collectionsReceived, q, [this](const Akonadi::Collection::List &cols) {
+            collectionsFetched(cols);
+        });
     }
-    q->connect(job, SIGNAL(result(KJob *)), q, SLOT(collectionFetchJobDone(KJob *)));
+    q->connect(job, &CollectionFetchJob::result, q, [this](KJob *job) {
+        collectionFetchJobDone(job);
+    });
 
     jobTimeTracker[job].start();
 }
@@ -623,8 +631,12 @@ bool EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collec
     if (job) {
         job->fetchScope().setListFilter(m_listFilter);
         job->fetchScope().setIncludeStatistics(m_includeStatistics);
-        q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)), q, SLOT(ancestorsFetched(Akonadi::Collection::List)));
-        q->connect(job, SIGNAL(result(KJob *)), q, SLOT(collectionFetchJobDone(KJob *)));
+        q->connect(job, &CollectionFetchJob::collectionsReceived, q, [this](const Collection::List &cols) {
+            ancestorsFetched(cols);
+        });
+        q->connect(job, &CollectionFetchJob::result, q, [this](KJob *job) {
+            collectionFetchJobDone(job);
+        });
     }
 
     if (!parentCollection.isValid()) {
@@ -1434,12 +1446,16 @@ void EntityTreeModelPrivate::startFirstListJob()
     }
 }
 
-void EntityTreeModelPrivate::fetchTopLevelCollections() const
+void EntityTreeModelPrivate::fetchTopLevelCollections()
 {
     Q_Q(const EntityTreeModel);
     auto job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::FirstLevel, m_session);
-    q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)), q, SLOT(topLevelCollectionsFetched(Akonadi::Collection::List)));
-    q->connect(job, SIGNAL(result(KJob *)), q, SLOT(collectionFetchJobDone(KJob *)));
+    q->connect(job, &CollectionFetchJob::collectionsReceived, q, [this](const Collection::List &cols) {
+        topLevelCollectionsFetched(cols);
+    });
+    q->connect(job, &CollectionFetchJob::result, q, [this](KJob *job) {
+        collectionFetchJobDone(job);
+    });
     qCDebug(DebugETM) << "EntityTreeModelPrivate::fetchTopLevelCollections";
     jobTimeTracker[job].start();
 }
@@ -1786,7 +1802,9 @@ void EntityTreeModelPrivate::fillModel()
         auto itemFetch = new ItemFetchJob(items, m_session);
         itemFetch->setFetchScope(m_monitor->itemFetchScope());
         itemFetch->fetchScope().setIgnoreRetrievalErrors(true);
-        q->connect(itemFetch, SIGNAL(finished(KJob *)), q, SLOT(monitoredItemsRetrieved(KJob *)));
+        q->connect(itemFetch, &ItemFetchJob::finished, q, [this](KJob *job) {
+            monitoredItemsRetrieved(job);
+        });
         return;
     }
     // In case there is only a single collection monitored, we can use this
@@ -1799,11 +1817,15 @@ void EntityTreeModelPrivate::fillModel()
     }
 
     if (m_rootCollection == Collection::root()) {
-        QTimer::singleShot(0, q, SLOT(startFirstListJob()));
+        QTimer::singleShot(0, q, [this]() {
+            startFirstListJob();
+        });
     } else {
         Q_ASSERT(m_rootCollection.isValid());
         auto rootFetchJob = new CollectionFetchJob(m_rootCollection, CollectionFetchJob::Base, m_session);
-        q->connect(rootFetchJob, SIGNAL(result(KJob *)), SLOT(rootFetchJobDone(KJob *)));
+        q->connect(rootFetchJob, &CollectionFetchJob::result, q, [this](KJob *job) {
+            rootFetchJobDone(job);
+        });
         qCDebug(DebugETM) << "";
         jobTimeTracker[rootFetchJob].start();
     }

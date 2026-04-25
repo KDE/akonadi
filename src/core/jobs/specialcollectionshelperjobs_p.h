@@ -194,8 +194,6 @@ public:
 private:
     friend class GetLockJobPrivate;
     std::unique_ptr<GetLockJobPrivate> const d;
-
-    Q_PRIVATE_SLOT(d, void doStart())
 };
 
 // ===================== helper functions ============================

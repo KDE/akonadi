@@ -519,7 +519,10 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
                 return false;
             }
 
-            connect(job, SIGNAL(result(KJob *)), SLOT(pasteJobDone(KJob *)));
+            connect(job, &KJob::result, this, [this](KJob *job) {
+                Q_D(EntityTreeModel);
+                d->pasteJobDone(job);
+            });
 
             // Accept the event so that it doesn't propagate.
             return true;

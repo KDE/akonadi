@@ -117,8 +117,6 @@ protected:
 
 private:
     Q_DECLARE_PRIVATE(TagFetchJob)
-
-    Q_PRIVATE_SLOT(d_func(), void timeout())
 };
 
 }

@@ -48,7 +48,7 @@ protected:
 Q_SIGNALS:
     void dataAvailable();
 
-private Q_SLOTS:
+public Q_SLOTS:
     virtual void processResult(KJob *job) = 0;
 };
 
@@ -158,7 +158,7 @@ public:
         auto node = new EntityCacheNode<T>(id);
         FetchJob *job = createFetchJob(id, scope);
         job->setProperty("EntityCacheNode", QVariant::fromValue<typename T::Id>(id));
-        connect(job, SIGNAL(result(KJob *)), SLOT(processResult(KJob *)));
+        connect(job, &KJob::result, this, &EntityCacheBase::processResult);
         mCache.enqueue(node);
     }
 
@@ -393,7 +393,7 @@ public:
         }
         FetchJob *job = createFetchJob(ids, scope);
         job->setProperty("EntityListCacheIds", QVariant::fromValue<QList<typename T::Id>>(ids));
-        connect(job, SIGNAL(result(KJob *)), SLOT(processResult(KJob *)));
+        connect(job, &KJob::result, this, &EntityCacheBase::processResult);
     }
 
     bool isNotRequested(const QList<typename T::Id> &ids) const
