@@ -113,10 +113,6 @@ private:
     friend class DefaultResourceJobPrivate;
 
     std::unique_ptr<SpecialCollectionsRequestJobPrivate> const d;
-
-    Q_PRIVATE_SLOT(d, void releaseLock())
-    Q_PRIVATE_SLOT(d, void resourceScanResult(KJob *))
-    Q_PRIVATE_SLOT(d, void collectionCreateResult(KJob *))
 };
 
 } // namespace Akonadi

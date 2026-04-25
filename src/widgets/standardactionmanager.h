@@ -380,8 +380,6 @@ private:
     friend class StandardActionManagerPrivate;
     std::unique_ptr<StandardActionManagerPrivate> const d;
 
-    Q_PRIVATE_SLOT(d, void updateActions())
-
     Q_PRIVATE_SLOT(d, void slotCreateCollection())
     Q_PRIVATE_SLOT(d, void slotCopyCollections())
     Q_PRIVATE_SLOT(d, void slotCutCollections())

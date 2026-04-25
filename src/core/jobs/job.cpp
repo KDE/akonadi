@@ -124,7 +124,12 @@ void JobPrivate::publishJob()
         // Note: we never reset s_jobtracker to 0 when a call fails; but if we did
         // then we should restart s_lastTime.
     }
-    QMetaObject::invokeMethod(q, "signalCreationToJobTracker", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(
+        q,
+        [this]() {
+            signalCreationToJobTracker();
+        },
+        Qt::QueuedConnection);
 }
 
 void JobPrivate::signalCreationToJobTracker()
@@ -190,7 +195,12 @@ void JobPrivate::startQueued()
     QTimer::singleShot(0, q, [this]() {
         startNext();
     });
-    QMetaObject::invokeMethod(q, "signalStartedToJobTracker", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(
+        q,
+        [this]() {
+            signalStartedToJobTracker();
+        },
+        Qt::QueuedConnection);
 }
 
 void JobPrivate::lostConnection()

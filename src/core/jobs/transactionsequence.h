@@ -115,9 +115,6 @@ protected Q_SLOTS:
 
 private:
     Q_DECLARE_PRIVATE(TransactionSequence)
-
-    Q_PRIVATE_SLOT(d_func(), void commitResult(KJob *))
-    Q_PRIVATE_SLOT(d_func(), void rollbackResult(KJob *))
 };
 
 }

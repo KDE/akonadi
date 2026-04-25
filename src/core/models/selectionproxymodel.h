@@ -106,9 +106,6 @@ public:
 private:
     Q_DECLARE_PRIVATE(SelectionProxyModel)
     std::unique_ptr<SelectionProxyModelPrivate> const d_ptr;
-
-    Q_PRIVATE_SLOT(d_func(), void rootIndexAdded(const QModelIndex &))
-    Q_PRIVATE_SLOT(d_func(), void rootIndexAboutToBeRemoved(const QModelIndex &))
 };
 
 }

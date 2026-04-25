@@ -161,13 +161,9 @@ Q_SIGNALS:
 private:
     std::unique_ptr<AgentActionManagerPrivate> const d;
 
-    Q_PRIVATE_SLOT(d, void updateActions())
-
     Q_PRIVATE_SLOT(d, void slotCreateAgentInstance())
     Q_PRIVATE_SLOT(d, void slotDeleteAgentInstance())
     Q_PRIVATE_SLOT(d, void slotConfigureAgentInstance())
-
-    Q_PRIVATE_SLOT(d, void slotAgentInstanceCreationResult(KJob *))
 };
 
 }

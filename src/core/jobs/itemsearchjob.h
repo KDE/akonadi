@@ -243,8 +243,6 @@ protected:
 
 private:
     Q_DECLARE_PRIVATE(ItemSearchJob)
-
-    Q_PRIVATE_SLOT(d_func(), void timeout())
 };
 
 }

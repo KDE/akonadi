@@ -694,23 +694,15 @@ private:
 
     Q_PRIVATE_SLOT(d_func(), void monitoredCollectionStatisticsChanged(Akonadi::Collection::Id, const Akonadi::CollectionStatistics &))
 
-    Q_PRIVATE_SLOT(d_func(), void startFirstListJob())
-    Q_PRIVATE_SLOT(d_func(), void serverStarted())
-
-    Q_PRIVATE_SLOT(d_func(), void collectionFetchJobDone(KJob *job))
-    Q_PRIVATE_SLOT(d_func(), void rootFetchJobDone(KJob *job))
-    Q_PRIVATE_SLOT(d_func(), void pasteJobDone(KJob *job))
-    Q_PRIVATE_SLOT(d_func(), void updateJobDone(KJob *job))
-
-    Q_PRIVATE_SLOT(d_func(), void itemsFetched(const Akonadi::Item::List &))
-    Q_PRIVATE_SLOT(d_func(), void collectionsFetched(Akonadi::Collection::List))
-    Q_PRIVATE_SLOT(d_func(), void topLevelCollectionsFetched(Akonadi::Collection::List))
-    Q_PRIVATE_SLOT(d_func(), void ancestorsFetched(Akonadi::Collection::List))
-
     Q_PRIVATE_SLOT(d_func(), void monitoredMimeTypeChanged(const QString &, bool))
     Q_PRIVATE_SLOT(d_func(), void monitoredCollectionsChanged(const Akonadi::Collection &, bool))
     Q_PRIVATE_SLOT(d_func(), void monitoredItemsChanged(const Akonadi::Item &, bool))
     Q_PRIVATE_SLOT(d_func(), void monitoredResourcesChanged(const QByteArray &, bool))
+    Q_PRIVATE_SLOT(d_func(), void changeFetchState(const Akonadi::Collection &))
+
+    // all slots below are used by FakeAkonadiServerCommand::connectForwardingSignals
+    Q_PRIVATE_SLOT(d_func(), void itemsFetched(const Akonadi::Item::List &))
+    Q_PRIVATE_SLOT(d_func(), void collectionsFetched(Akonadi::Collection::List))
 
     Q_PRIVATE_SLOT(d_func(), void monitoredCollectionAdded(const Akonadi::Collection &, const Akonadi::Collection &))
     Q_PRIVATE_SLOT(d_func(), void monitoredCollectionRemoved(const Akonadi::Collection &))
@@ -724,10 +716,6 @@ private:
 
     Q_PRIVATE_SLOT(d_func(), void monitoredItemLinked(const Akonadi::Item &, const Akonadi::Collection &))
     Q_PRIVATE_SLOT(d_func(), void monitoredItemUnlinked(const Akonadi::Item &, const Akonadi::Collection &))
-    Q_PRIVATE_SLOT(d_func(), void changeFetchState(const Akonadi::Collection &))
-
-    Q_PRIVATE_SLOT(d_func(), void agentInstanceRemoved(Akonadi::AgentInstance))
-    Q_PRIVATE_SLOT(d_func(), void monitoredItemsRetrieved(KJob *job))
 };
 
 } // namespace

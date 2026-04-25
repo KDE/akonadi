@@ -133,9 +133,6 @@ Q_SIGNALS:
 
 private:
     std::unique_ptr<CollectionComboBoxPrivate> const d;
-
-    Q_PRIVATE_SLOT(d, void activated(int))
-    Q_PRIVATE_SLOT(d, void activated(const QModelIndex &))
 };
 
 }

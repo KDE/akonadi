@@ -207,11 +207,6 @@ protected:
 
 private:
     Q_DECLARE_PRIVATE(Job)
-
-    Q_PRIVATE_SLOT(d_func(), void startNext())
-    Q_PRIVATE_SLOT(d_func(), void signalCreationToJobTracker())
-    Q_PRIVATE_SLOT(d_func(), void signalStartedToJobTracker())
-    Q_PRIVATE_SLOT(d_func(), void delayedEmitResult())
 };
 
 }

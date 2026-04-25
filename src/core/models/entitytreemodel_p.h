@@ -317,7 +317,7 @@ public:
 
     Q_DECLARE_PUBLIC(EntityTreeModel)
 
-    void fetchTopLevelCollections() const;
+    void fetchTopLevelCollections();
     void topLevelCollectionsFetched(const Akonadi::Collection::List &collectionList);
 
     /**
