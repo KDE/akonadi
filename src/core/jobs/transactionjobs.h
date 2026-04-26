@@ -46,8 +46,7 @@ class TransactionJobPrivate;
  * TransactionRollbackJob provide these functionality for the
  * Akonadi Job classes.
  *
- * \
-ote This will only have an effect when used as a subjob or with a Session.
+ * \note This will only have an effect when used as a subjob or with a Session.
  *
  * \author Volker Krause <vkrause@kde.org>
  */
@@ -76,8 +75,7 @@ public:
  * the TransactionRollbackJob can be used to rollback all changes done by these
  * jobs.
  *
- * \
-ote This will only have an effect when used as a subjob or with a Session.
+ * \note This will only have an effect when used as a subjob or with a Session.
  *
  * \author Volker Krause <vkrause@kde.org>
  */

@@ -189,8 +189,7 @@ public:
      * has been recreated and thus some of the configuration (for example
      * collection IDs stored in a config file) must be invalidated.
      *
-     * \
-ote Note that the generation number is only available if the server
+     * \note Note that the generation number is only available if the server
      * is running. If this function is called before the server starts it will
      * return 0.
      *

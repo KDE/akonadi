@@ -45,8 +45,7 @@ class ResourceSynchronizationJobPrivate;
  *
  * \endcode
  *
- * \
-ote This is a KJob, not an Akonadi::Job, so it won't auto-start!
+ * \note This is a KJob, not an Akonadi::Job, so it won't auto-start!
  *
  * \author Volker Krause <vkrause@kde.org>
  * \since 4.4

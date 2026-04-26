@@ -145,8 +145,7 @@ public:
      *
      * This returns an empty list when not using the ItemGetter DeliveryOption.
      *
-     * \
-ote The items are invalid before the result(KJob*)
+     * \note The items are invalid before the result(KJob*)
      *       signal has been emitted or if an error occurred.
      */
     [[nodiscard]] Item::List items() const;
@@ -239,8 +238,7 @@ Q_SIGNALS:
     /*!
      * This signal is emitted whenever new items have been fetched completely.
      *
-     * \
-ote This is an optimization; instead of waiting for the end of the job
+     * \note This is an optimization; instead of waiting for the end of the job
      *       and calling items(), you can connect to this signal and get the items
      *       incrementally.
      *

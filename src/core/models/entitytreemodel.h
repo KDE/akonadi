@@ -40,8 +40,7 @@ class EntityTreeModelPrivate;
  * \inheaderfile Akonadi/EntityTreeModel
  * \inmodule AkonadiCore
  *
- * \
-ote The EntityTreeModel should be used with the EntityTreeView or the EntityListView class
+ * \note The EntityTreeModel should be used with the EntityTreeView or the EntityListView class
  * either directly or indirectly via proxy models.
  *
  * <h3>Retrieving Collections and Items from the model</h3>
@@ -99,8 +98,7 @@ ote The EntityTreeModel should be used with the EntityTreeView or the EntityList
  * (an alias for "message/rfc822") the model would instead contain emails. The model can be configured to contain items of any mimetype
  * known to %Akonadi.
  *
- * \
-ote The EntityTreeModel does some extra configuration on the Monitor, such as setting itemFetchScope() and collectionFetchScope()
+ * \note The EntityTreeModel does some extra configuration on the Monitor, such as setting itemFetchScope() and collectionFetchScope()
  * to retrieve all ancestors. This is necessary for proper function of the model.
  *
  * \sa Akonadi::ItemFetchScope::AncestorRetrieval.
@@ -139,8 +137,7 @@ ote The EntityTreeModel does some extra configuration on the Monitor, such as se
  * This has the effect of creating a model of only a list of Items, and not collections. This is similar in behaviour and aims to the ItemModel.
  * By using FetchFirstLevelCollections instead, a mixed list of entities can be created.
  *
- * \
-ote It is important that you set only one Collection to be monitored in the monitor object. This one collection will be the root of the tree.
+ * \note It is important that you set only one Collection to be monitored in the monitor object. This one collection will be the root of the tree.
  * If you need a model with a more complex structure, consider monitoring a common ancestor and using a SelectionProxyModel.
  *
  * \sa lazy-model-population
@@ -286,8 +283,7 @@ ote It is important that you set only one Collection to be monitored in the moni
  * -- Implement to return the data for a particular item and column. In the case of email for example, this would be the actual subject, sender and date of the
  * email.
  *
- * \
-ote The entityData methods are just for convenience. the QAbstractItemModel::data method can be overridden if required.
+ * \note The entityData methods are just for convenience. the QAbstractItemModel::data method can be overridden if required.
  *
  * The application writer must then properly configure proxy models for the views, so that the correct data is shown in the correct view.
  * That is the purpose of these lines in the above example
@@ -478,8 +474,7 @@ public:
      * Sets the display \a name of the root collection of the model.
      * The default display name is "[*]".
      * \a name the name to display for the root collection
-     * \
-ote The display name for the root collection is only used if
+     * \note The display name for the root collection is only used if
      *       the root collection has been included with setIncludeRootCollection().
      */
     void setRootCollectionDisplayName(const QString &name);

@@ -108,8 +108,7 @@ public:
      * Currently the following modifications are supported:
      * - flag changes
      *
-     * \
-ote Since this does not do payload modifications, it implies
+     * \note Since this does not do payload modifications, it implies
      *       setIgnorePayload( true ) and disableRevisionCheck().
      * \a items The list of items to modify, must not be empty.
      * \since 4.6
@@ -143,8 +142,7 @@ ote Since this does not do payload modifications, it implies
      * as it should never change once set, and the ItemCreateJob already sets it.
      * \a update update the GID if set as \\ true
      *
-     * \
-ote If disabled the GID will not be updated, but still be used for identification of the item.
+     * \note If disabled the GID will not be updated, but still be used for identification of the item.
      * \since 4.12
      */
     void setUpdateGid(bool update);
@@ -158,16 +156,14 @@ ote If disabled the GID will not be updated, but still be used for identificatio
     /*!
      * Disables the check of the revision number.
      *
-     * \
-ote If disabled, no conflict detection is available.
+     * \note If disabled, no conflict detection is available.
      */
     void disableRevisionCheck();
 
     /*!
      * Returns the modified and stored item including the changed revision number.
      *
-     * \
-ote Use this method only when using the single item constructor.
+     * \note Use this method only when using the single item constructor.
      */
     [[nodiscard]] Item item() const;
 

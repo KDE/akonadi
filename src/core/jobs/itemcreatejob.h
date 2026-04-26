@@ -70,8 +70,7 @@ public:
      * Creates a new item create job.
      *
      * \a item The item to create.
-     *             \
-ote It must have a mime type set.
+     * \note It must have a mime type set.
      * \a collection The parent collection where the new item shall be located in.
      * \a parent The parent object.
      */

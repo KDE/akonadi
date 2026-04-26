@@ -228,8 +228,7 @@ Q_SIGNALS:
     /*!
      * This signal is emitted whenever new matching items have been fetched completely.
      *
-     * \
-ote This is an optimization, instead of waiting for the end of the job
+     * \note This is an optimization, instead of waiting for the end of the job
      *       and calling items(), you can connect to this signal and get the items
      *       incrementally.
      *

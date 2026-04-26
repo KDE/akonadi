@@ -33,8 +33,7 @@ class MimeTypeCheckerPrivate;
  * \endcode
  * would fail to detect \\ "text/x-vcard" as being the same MIME type.
  *
- * \
-ote KDE deals with this inside the KMimeType framework, this class is just
+ * \note KDE deals with this inside the KMimeType framework, this class is just
  * a convenience helper for common Akonadi related checks.
  *
  * Example: Checking whether an Akonadi::Item is contact MIME type
@@ -126,8 +125,7 @@ public:
     /*!
      * Returns the list of wanted MIME types this instance checks against.
      *
-     * \
-ote Don't use this just to check whether there are any wanted mimetypes.
+     * \note Don't use this just to check whether there are any wanted mimetypes.
      * It is much faster to call \\ hasWantedMimeTypes() instead for that purpose.
      *
      * \sa setWantedMimeTypes(), hasWantedMimeTypes()

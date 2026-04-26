@@ -95,8 +95,7 @@ public:
          * additional information about them. This is only for debugging purposes
          * and should not be used in real applications.
          *
-         * \
-ote Enabling monitoring this type has performance impact on the
+         * \note Enabling monitoring this type has performance impact on the
          * Akonadi Server.
          *
          * \since 5.4
@@ -651,8 +650,7 @@ Q_SIGNALS:
      * \a subscriber The new subscriber
      * \since 5.4
      *
-     * \
-ote Monitoring for subscribers and listening to this signal only makes
+     * \note Monitoring for subscribers and listening to this signal only makes
      * sense if you want to globally debug Monitors. There is no reason to use
      * this in regular applications.
      */
@@ -665,8 +663,7 @@ ote Monitoring for subscribers and listening to this signal only makes
      * \a subscriber The changed subscriber
      * \since 5.4
      *
-     * \
-ote Monitoring for subscribers and listening to this signal only makes
+     * \note Monitoring for subscribers and listening to this signal only makes
      * sense if you want to globally debug Monitors. There is no reason to use
      * this in regular applications.
      */
@@ -679,8 +676,7 @@ ote Monitoring for subscribers and listening to this signal only makes
      * \a subscriber The removed subscriber
      * \since 5.4
      *
-     * \
-ote Monitoring for subscribers and listening to this signal only makes
+     * \note Monitoring for subscribers and listening to this signal only makes
      * sense if you want to globally debug Monitors. There is no reason to use
      * this in regular applications.
      */
@@ -692,8 +688,7 @@ ote Monitoring for subscribers and listening to this signal only makes
      *
      * \since 5.4
      *
-     * \
-ote Getting introspection into all change notifications only makes sense
+     * \note Getting introspection into all change notifications only makes sense
      * if you want to globally debug Notifications. There is no reason to use
      * this in regular applications.
      */

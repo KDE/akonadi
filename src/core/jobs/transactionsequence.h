@@ -98,8 +98,7 @@ public:
      * Use this when you want to add jobs to this sequence after execution
      * has been started, usually that is outside of the constructor or the
      * method that creates this transaction sequence.
-     * \
-ote Calling this method after execution of this job has been started
+     * \note Calling this method after execution of this job has been started
      * has no effect.
      * \a enable \\ true to enable autocommitting (default), \\ false to disable it
      * \since 4.5

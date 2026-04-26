@@ -167,8 +167,7 @@ public:
      * The remote revision can be used by resources to store some
      * revision information of the backend to detect changes there.
      *
-     * \
-ote This method is supposed to be used by resources only.
+     * \note This method is supposed to be used by resources only.
      * \since 4.5
      */
     void setRemoteRevision(const QString &revision);
@@ -176,8 +175,7 @@ ote This method is supposed to be used by resources only.
     /*!
      * Returns the remote revision of the collection.
      *
-     * \
-ote This method is supposed to be used by resources only.
+     * \note This method is supposed to be used by resources only.
      * \since 4.5
      */
     [[nodiscard]] QString remoteRevision() const;
@@ -215,8 +213,7 @@ ote This method is supposed to be used by resources only.
 
     /*!
      * Returns the parent collection of this object.
-     * \
-ote This will of course only return a useful value if it was explicitly retrieved
+     * \note This will of course only return a useful value if it was explicitly retrieved
      *       from the Akonadi server.
      * \since 4.4
      */
@@ -224,8 +221,7 @@ ote This will of course only return a useful value if it was explicitly retrieve
 
     /*!
      * Returns a reference to the parent collection of this object.
-     * \
-ote This will of course only return a useful value if it was explicitly retrieved
+     * \note This will of course only return a useful value if it was explicitly retrieved
      *       from the Akonadi server.
      * \since 4.4
      */
@@ -233,8 +229,7 @@ ote This will of course only return a useful value if it was explicitly retrieve
 
     /*!
      * Set the parent collection of this object.
-     * \
-ote Calling this method has no immediate effect for the object itself,
+     * \note Calling this method has no immediate effect for the object itself,
      *       such as being moved to another collection.
      *       It is mainly relevant to provide a context for RID-based operations
      *       inside resources.
@@ -251,8 +246,7 @@ ote Calling this method has no immediate effect for the object itself,
      *
      * \a attribute The new attribute.
      *
-     * \
-ote The collection takes the ownership of the attribute.
+     * \note The collection takes the ownership of the attribute.
      */
     void addAttribute(Attribute *attribute);
 

@@ -31,8 +31,7 @@ class ItemSyncPrivate;
  *   are new or modified and one for items which should be removed. Any item not
  *   part of either list but currently stored in Akonadi will not be changed.
  *
- * \
-ote This is provided for convenience to implement "save all" like behavior,
+ * \note This is provided for convenience to implement "save all" like behavior,
  *       however it is strongly recommended to use single item jobs whenever
  *       possible, e.g. ItemCreateJob, ItemModifyJob and ItemDeleteJob
  *
@@ -141,8 +140,7 @@ public:
 
     /*!
      * Set the transaction mode to use for this sync.
-     * \
-ote You must call this method before starting the sync, changes afterwards lead to undefined results.
+     * \note You must call this method before starting the sync, changes afterwards lead to undefined results.
      * \a mode the transaction mode to use
      * \since 4.6
      */
@@ -162,8 +160,7 @@ ote You must call this method before starting the sync, changes afterwards lead 
      *
      * The default is 10.
      *
-     * \
-ote You must call this method before starting the sync, changes afterwards lead to undefined results.
+     * \note You must call this method before starting the sync, changes afterwards lead to undefined results.
      * \sa batchSize()
      * \since 4.14
      */
@@ -177,8 +174,7 @@ ote You must call this method before starting the sync, changes afterwards lead 
      * is called, while still making it possible to use the progress
      * reporting of the ItemSync.
      *
-     * \
-ote You must call this method before starting the sync, changes afterwards lead to undefined results.
+     * \note You must call this method before starting the sync, changes afterwards lead to undefined results.
      * \sa setTotalItems
      * \since 4.14
      */
@@ -199,8 +195,7 @@ ote You must call this method before starting the sync, changes afterwards lead 
      *
      * See ItemCreateJob for details on Item merging.
      *
-     * \
-ote You must call this method before starting the sync, changes afterwards lead to undefined results.
+     * \note You must call this method before starting the sync, changes afterwards lead to undefined results.
      * \sa mergeMode
      * \since 4.14.11
      */

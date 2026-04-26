@@ -82,8 +82,7 @@ public:
      *
      * \a attribute The new attribute.
      *
-     * \
-ote The entity takes the ownership of the attribute.
+     * \note The entity takes the ownership of the attribute.
      */
     void addAttribute(Attribute *attribute);
 

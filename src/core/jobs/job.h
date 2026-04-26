@@ -71,8 +71,7 @@ class SessionPrivate;
  *
  * Subclasses must reimplement doStart().
  *
- * \
-ote KJob-derived objects delete itself, it is thus not possible
+ * \note KJob-derived objects delete itself, it is thus not possible
  * to create job objects on the stack!
  *
  * \author Volker Krause <vkrause@kde.org>, Tobias Koenig <tokoe@kde.org>, Marc Mutz <mutz@kde.org>
