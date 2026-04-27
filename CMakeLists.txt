@@ -134,6 +134,7 @@ find_package(KF6ItemModels ${KF_MIN_VERSION} CONFIG REQUIRED)
 find_package(KF6WidgetsAddons ${KF_MIN_VERSION} CONFIG REQUIRED)
 find_package(KF6XmlGui ${KF_MIN_VERSION} CONFIG REQUIRED)
 find_package(KF6Crash ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF6ColorScheme ${KF_MIN_VERSION} CONFIG REQUIRED)
 find_package(Qt6Designer NO_MODULE)
 set_package_properties(
     Qt6Designer
