@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-25 00:45+0000\n"
+"POT-Creation-Date: 2026-04-28 00:45+0000\n"
 "PO-Revision-Date: 2026-01-01 12:40+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -1139,47 +1139,47 @@ msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "Wybierz zbiór"
 
-#: widgets/conflictresolvedialog.cpp:128
+#: widgets/conflictresolvedialog.cpp:129
 #, kde-format
 msgid "Modification Time"
 msgstr "Czas zmiany"
 
-#: widgets/conflictresolvedialog.cpp:140
+#: widgets/conflictresolvedialog.cpp:141
 #, kde-format
 msgid "Flags"
 msgstr "Flagi"
 
-#: widgets/conflictresolvedialog.cpp:155 widgets/conflictresolvedialog.cpp:163
-#: widgets/conflictresolvedialog.cpp:173
+#: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
+#: widgets/conflictresolvedialog.cpp:174
 #, kde-format
 msgid "Attribute: %1"
 msgstr "Atrybut: %1"
 
-#: widgets/conflictresolvedialog.cpp:185
+#: widgets/conflictresolvedialog.cpp:186
 #, kde-format
 msgctxt "@title:window"
 msgid "Conflict Resolution"
 msgstr "Rozwiązywanie niejednoznaczności"
 
-#: widgets/conflictresolvedialog.cpp:191
+#: widgets/conflictresolvedialog.cpp:192
 #, kde-format
 msgctxt "@action:button"
 msgid "Take my version"
 msgstr "Wybierz moją wersję"
 
-#: widgets/conflictresolvedialog.cpp:197
+#: widgets/conflictresolvedialog.cpp:198
 #, kde-format
 msgctxt "@action:button"
 msgid "Take their version"
 msgstr "Wybierz ich wersję"
 
-#: widgets/conflictresolvedialog.cpp:203
+#: widgets/conflictresolvedialog.cpp:204
 #, kde-format
 msgctxt "@action:button"
 msgid "Keep both versions"
 msgstr "Zachowaj obie wersje"
 
-#: widgets/conflictresolvedialog.cpp:216
+#: widgets/conflictresolvedialog.cpp:217
 #, kde-format
 msgctxt "@label:textbox"
 msgid ""
@@ -1196,7 +1196,7 @@ msgstr ""
 "najbardziej poprawna, następnie otwórz ją ponownie i zmień, tak aby dodać, "
 "to czego brakuje."
 
-#: widgets/conflictresolvedialog.cpp:265
+#: widgets/conflictresolvedialog.cpp:266
 #, kde-format
 msgid "Data"
 msgstr "Dane"

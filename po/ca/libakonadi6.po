@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-25 00:45+0000\n"
+"POT-Creation-Date: 2026-04-28 00:45+0000\n"
 "PO-Revision-Date: 2025-12-30 08:46+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -1145,47 +1145,47 @@ msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "Selecció d'una col·lecció"
 
-#: widgets/conflictresolvedialog.cpp:128
+#: widgets/conflictresolvedialog.cpp:129
 #, kde-format
 msgid "Modification Time"
 msgstr "Hora de modificació"
 
-#: widgets/conflictresolvedialog.cpp:140
+#: widgets/conflictresolvedialog.cpp:141
 #, kde-format
 msgid "Flags"
 msgstr "Indicadors"
 
-#: widgets/conflictresolvedialog.cpp:155 widgets/conflictresolvedialog.cpp:163
-#: widgets/conflictresolvedialog.cpp:173
+#: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
+#: widgets/conflictresolvedialog.cpp:174
 #, kde-format
 msgid "Attribute: %1"
 msgstr "Atribut: %1"
 
-#: widgets/conflictresolvedialog.cpp:185
+#: widgets/conflictresolvedialog.cpp:186
 #, kde-format
 msgctxt "@title:window"
 msgid "Conflict Resolution"
 msgstr "Resolució de conflictes"
 
-#: widgets/conflictresolvedialog.cpp:191
+#: widgets/conflictresolvedialog.cpp:192
 #, kde-format
 msgctxt "@action:button"
 msgid "Take my version"
 msgstr "Agafa la meva versió"
 
-#: widgets/conflictresolvedialog.cpp:197
+#: widgets/conflictresolvedialog.cpp:198
 #, kde-format
 msgctxt "@action:button"
 msgid "Take their version"
 msgstr "Agafa la seva versió"
 
-#: widgets/conflictresolvedialog.cpp:203
+#: widgets/conflictresolvedialog.cpp:204
 #, kde-format
 msgctxt "@action:button"
 msgid "Keep both versions"
 msgstr "Mantén ambdues versions"
 
-#: widgets/conflictresolvedialog.cpp:216
+#: widgets/conflictresolvedialog.cpp:217
 #, kde-format
 msgctxt "@label:textbox"
 msgid ""
@@ -1201,7 +1201,7 @@ msgstr ""
 "una còpia dels textos, seleccioneu la versió més correcta, torneu-la a obrir "
 "i modifiqueu-la de nou per a afegir-hi el que falta."
 
-#: widgets/conflictresolvedialog.cpp:265
+#: widgets/conflictresolvedialog.cpp:266
 #, kde-format
 msgid "Data"
 msgstr "Dades"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-25 00:45+0000\n"
+"POT-Creation-Date: 2026-04-28 00:45+0000\n"
 "PO-Revision-Date: 2026-04-26 22:51+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -1122,47 +1122,47 @@ msgctxt "@title:window"
 msgid "Select a Collection"
 msgstr "모음집 선택"
 
-#: widgets/conflictresolvedialog.cpp:128
+#: widgets/conflictresolvedialog.cpp:129
 #, kde-format
 msgid "Modification Time"
 msgstr "수정 시간"
 
-#: widgets/conflictresolvedialog.cpp:140
+#: widgets/conflictresolvedialog.cpp:141
 #, kde-format
 msgid "Flags"
 msgstr "플래그"
 
-#: widgets/conflictresolvedialog.cpp:155 widgets/conflictresolvedialog.cpp:163
-#: widgets/conflictresolvedialog.cpp:173
+#: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
+#: widgets/conflictresolvedialog.cpp:174
 #, kde-format
 msgid "Attribute: %1"
 msgstr "속성: %1"
 
-#: widgets/conflictresolvedialog.cpp:185
+#: widgets/conflictresolvedialog.cpp:186
 #, kde-format
 msgctxt "@title:window"
 msgid "Conflict Resolution"
 msgstr "충돌 해결"
 
-#: widgets/conflictresolvedialog.cpp:191
+#: widgets/conflictresolvedialog.cpp:192
 #, kde-format
 msgctxt "@action:button"
 msgid "Take my version"
 msgstr "내 버전 사용"
 
-#: widgets/conflictresolvedialog.cpp:197
+#: widgets/conflictresolvedialog.cpp:198
 #, kde-format
 msgctxt "@action:button"
 msgid "Take their version"
 msgstr "상대방 버전 사용"
 
-#: widgets/conflictresolvedialog.cpp:203
+#: widgets/conflictresolvedialog.cpp:204
 #, kde-format
 msgctxt "@action:button"
 msgid "Keep both versions"
 msgstr "둘 다 유지"
 
-#: widgets/conflictresolvedialog.cpp:216
+#: widgets/conflictresolvedialog.cpp:217
 #, kde-format
 msgctxt "@label:textbox"
 msgid ""
@@ -1178,7 +1178,7 @@ msgstr ""
 "지한 다음, 더 정확한 내용이 들어 있는 버전을 선택하고, 다시 열어서 빠진 내용"
 "을 수정하십시오."
 
-#: widgets/conflictresolvedialog.cpp:265
+#: widgets/conflictresolvedialog.cpp:266
 #, kde-format
 msgid "Data"
 msgstr "데이터"
