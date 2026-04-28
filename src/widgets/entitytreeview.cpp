@@ -105,9 +105,14 @@ void EntityTreeViewPrivate::slotSelectionChanged(const QItemSelection &selected,
         }
 
         for (int row = index.row(); row <= range.bottomRight().row(); ++row) {
+            const QModelIndex sibling = mParent->model()->index(row, column, index.parent());
+            if (!sibling.isValid()) {
+                continue;
+            }
+
             // Don't use canFetchMore here. We need to bypass the check in
             // the EntityFilterModel when it shows only collections.
-            mParent->model()->fetchMore(index.sibling(row, column));
+            mParent->model()->fetchMore(sibling);
         }
     }
 
