@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-03-03 00:47+0000\n"
-"PO-Revision-Date: 2026-01-01 19:52+0100\n"
+"PO-Revision-Date: 2026-04-03 00:05+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -635,7 +635,7 @@ msgid ""
 msgstr ""
 "Несъответствие на версията на протокола. Версията на сървъра е по-нова (%1) "
 "от нашата (%2). Ако сте актуализирали системата си наскоро, моля, "
-"рестартирайте всички KDE PIM приложения."
+"рестартирайте всички приложения на KDE за лични данни."
 
 #: quick/qml/AgentConfigurationForm.qml:35
 #, kde-format
@@ -1835,8 +1835,8 @@ msgid ""
 "and KDE PIM applications."
 msgstr ""
 "Версията на сървърния протокол е %1, но версията %2 се изисква от клиента. "
-"Ако наскоро сте актуализирали KDE PIM, моля, уверете се, че сте рестартирали "
-"приложенията Akonadi и KDE PIM."
+"Ако наскоро сте актуализирали приложението за лични данни на KDE, моля, "
+"уверете се, че сте рестартирали приложенията Akonadi и KDE PIM."
 
 #: widgets/selftestdialog.cpp:454
 #, kde-format

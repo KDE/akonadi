@@ -176,20 +176,15 @@ msgid ""
 "storage\n"
 "                 (can take some time)"
 msgstr ""
-"Nástroj na manipuláciu servera Akonadi\n"
-"\n"
-"Príkazy:\n"
-"  start          Spustí server Akonadi so všetkými jeho procesmi\n"
-"  stop           Zastaví server Akonadi a všetky jeho procesy cleanly\n"
-"  restart        Restart Akonadi server with all its processes\n"
-"  status         Shows a status overview of the Akonadi server\n"
-"  instances      List all existing Akonadi instances\n"
-"  vacuum         Vacuum internal storage (WARNING: needs a lot of time and "
-"disk\n"
-"                 space!)\n"
-"  fsck           Skontrolovať (a pokúsiť sa opraviť) konzistenciu interného "
-"úložiska\n"
-"                 (can take some time)"
+"Nástroj na manipuláciu servera Akonadi\\n\\nPríkazy:\\n  start          "
+"Spustí server Akonadi so všetkými jeho procesmi\\n  stop           Zastaví "
+"server Akonadi a všetky jeho procesy čisto\\n  restart        Reštartuje "
+"server Akonadi so všetkými jeho procesmi\\n  status         Zobrazí prehľad "
+"stavu servera Akonadi\\n  instances      Vypíše všetky existujúce inštancie "
+"Akonadi\\n  vacuum         Vyčistí interné úložisko (VAROVANIE: vyžaduje "
+"veľa času a miesta\\n                 na disku!)\\n  fsck           "
+"Skontrolovať (a pokúsiť sa opraviť) konzistenciu interného úložiska"
+"\\n                 (môže chvíľu trvať)"
 
 #: akonadictl/main.cpp:239
 #, kde-format
@@ -357,7 +352,7 @@ msgstr ""
 #: core/jobs/job.cpp:341
 #, kde-format
 msgid "User canceled operation."
-msgstr "Operácia zrušená uživateľom."
+msgstr "Operácia zrušená užívateľom."
 
 #: core/jobs/job.cpp:346
 #, kde-format
@@ -1278,10 +1273,9 @@ msgid ""
 "Depending on the amount of personal information, this might take a few "
 "minutes."
 msgstr ""
-"Služba správy osobných informácií vykonáva inováciu databázy.\n"
-"Toto sa deje po aktualizácii softvéru a je to potrebné na optimalizáciu "
-"výkonu.\n"
-"V závislosti od množstva osobných informácií, môže to chvíľu trvať."
+"Služba správy osobných informácií vykonáva inováciu databázy.\\nToto sa deje "
+"po aktualizácii softvéru a je to potrebné na optimalizáciu výkonu.\\nV "
+"závislosti od množstva osobných informácií, môže to chvíľu trvať."
 
 #. i18n: ectx: property (toolTip), widget (QWidget, notRunningPage)
 #. i18n: ectx: property (text), widget (QLabel, notRunningDescription)
@@ -1618,29 +1612,29 @@ msgstr ""
 #: widgets/selftestdialog.cpp:323
 #, kde-format
 msgid "MySQL server custom configuration not available."
-msgstr "Uživateľská konfigurácia MySQL servera nedostupná."
+msgstr "Užívateľská konfigurácia MySQL servera nedostupná."
 
 #: widgets/selftestdialog.cpp:324
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was not found but is optional."
-msgstr "Uživateľská konfigurácia MySQL servera nenájdená ale je voliteľná."
+msgstr "Užívateľská konfigurácia MySQL servera nenájdená ale je voliteľná."
 
 #: widgets/selftestdialog.cpp:327
 #, kde-format
 msgid "MySQL server custom configuration found."
-msgstr "Nájdená uživateľská konfigurácia MySQL servera."
+msgstr "Nájdená užívateľská konfigurácia MySQL servera."
 
 #: widgets/selftestdialog.cpp:328
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was found and is readable at %1"
-msgstr "Nájdená uživateľská konfigurácia MySQL servera a je  čitateľná na %1."
+msgstr "Nájdená užívateľská konfigurácia MySQL servera a je  čitateľná na %1."
 
 #: widgets/selftestdialog.cpp:332
 #, kde-format
 msgid "MySQL server custom configuration not readable."
-msgstr "Uživateľská konfigurácia MySQL servera nie je na čítanie."
+msgstr "Užívateľská konfigurácia MySQL servera nie je na čítanie."
 
 #: widgets/selftestdialog.cpp:333
 #, kde-format
@@ -1648,7 +1642,7 @@ msgid ""
 "The custom configuration for the MySQL server was found at %1 but is not "
 "readable. Check your access rights."
 msgstr ""
-"Uživateľská konfigurácia MySQL servera bola nájdená na %1 ale nie je na "
+"Užívateľská konfigurácia MySQL servera bola nájdená na %1 ale nie je na "
 "čítanie. Skontrolujte si prístupové práva."
 
 #: widgets/selftestdialog.cpp:342
@@ -1805,7 +1799,7 @@ msgid ""
 "Without a connection to the server it is not possible to check if the "
 "protocol version meets the requirements."
 msgstr ""
-"Bez pripojenia k serveru nie je možné skontrolovať či verzia protokolu spľňa "
+"Bez pripojenia k serveru nie je možné skontrolovať či verzia protokolu spĺňa "
 "požiadavky."
 
 #: widgets/selftestdialog.cpp:447
