@@ -7,6 +7,7 @@
 #include "attributefactory.h"
 
 #include "collectionannotationsattribute.h"
+#include "collectioncolorattribute.h"
 #include "collectionidentificationattribute.h"
 #include "collectionquotaattribute.h"
 #include "collectionrightsattribute_p.h"
@@ -92,6 +93,7 @@ public:
             AttributeFactory::registerAttribute<FavoriteCollectionAttribute>();
             AttributeFactory::registerAttribute<CollectionIdentificationAttribute>();
             AttributeFactory::registerAttribute<CollectionAnnotationsAttribute>();
+            AttributeFactory::registerAttribute<CollectionColorAttribute>();
         }
     }
     bool initialized = false;
