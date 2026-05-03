@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-28 00:45+0000\n"
-"PO-Revision-Date: 2026-03-18 17:32+0300\n"
+"PO-Revision-Date: 2026-05-02 19:50+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -28,7 +28,7 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Serdar Soytetir, Volkan Gezer, Emir SARI"
+msgstr "Serdar SOYTETİR, Volkan GEZER, Emir SARI"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
@@ -473,7 +473,7 @@ msgid ""
 "a collection with name '%2'."
 msgstr ""
 "“%1” hedef koleksiyonu\n"
-"“%2” adıyla halihazırda var."
+"“%2” adıyla hâlihazırda var."
 
 #: core/models/entitytreemodel.cpp:668
 #, kde-format
@@ -792,7 +792,7 @@ msgstr "Yapılandırma penceresi başka bir pencerede açıldı"
 #: widgets/agentconfigurationwidget.cpp:123
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
-msgstr "%1 yapılandırması başka bir yerde halihazırda açık."
+msgstr "%1 yapılandırması başka bir yerde hâlihazırda açık."
 
 #: widgets/agentconfigurationwidget.cpp:125
 #, kde-format
