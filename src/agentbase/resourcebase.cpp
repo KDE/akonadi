@@ -1126,7 +1126,7 @@ Collection ResourceBase::currentCollection() const
     Q_D(const ResourceBase);
     Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::SyncCollection,
                "ResourceBase::currentCollection()",
-               "Trying to access current collection although no item retrieval is in progress");
+               "Trying to access current collection although no collection retrieval is in progress");
     return d->currentCollection;
 }
 
