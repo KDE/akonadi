@@ -1234,19 +1234,22 @@ void ResourceBase::synchronizeCollection(qint64 collectionId, bool recursive)
 
 void ResourceBasePrivate::slotCollectionListDone(KJob *job)
 {
-    if (!job->error()) {
-        const Collection::List list = static_cast<CollectionFetchJob *>(job)->collections();
-        for (const Collection &collection : list) {
-            // We also get collections that should not be synced but are part of the tree.
-            if (collection.shouldList(Collection::ListSync)) {
-                if (mScheduleAttributeSyncBeforeCollectionSync) {
-                    scheduler->scheduleAttributesSync(collection);
-                }
-                scheduler->scheduleSync(collection);
-            }
-        }
-    } else {
+    Q_Q(ResourceBase);
+    if (job->error()) {
         qCWarning(AKONADIAGENTBASE_LOG) << "Failed to fetch collection for collection sync: " << job->errorString();
+        q->cancelTask(i18n("Failed to fetch collection for collection sync."));
+        return;
+    }
+
+    const Collection::List list = static_cast<CollectionFetchJob *>(job)->collections();
+    for (const Collection &collection : list) {
+        // We also get collections that should not be synced but are part of the tree.
+        if (collection.shouldList(Collection::ListSync)) {
+            if (mScheduleAttributeSyncBeforeCollectionSync) {
+                scheduler->scheduleAttributesSync(collection);
+            }
+            scheduler->scheduleSync(collection);
+        }
     }
 }
 
@@ -1267,14 +1270,18 @@ void ResourceBase::synchronizeCollectionAttributes(qint64 collectionId)
 
 void ResourceBasePrivate::slotCollectionListForAttributesDone(KJob *job)
 {
-    if (!job->error()) {
-        const Collection::List list = static_cast<CollectionFetchJob *>(job)->collections();
-        if (!list.isEmpty()) {
-            const Collection &col = list.first();
-            scheduler->scheduleAttributesSync(col);
-        }
+    Q_Q(ResourceBase);
+    if (job->error()) {
+        qCWarning(AKONADIAGENTBASE_LOG) << "Failed to fetch collection for collection attributes sync: " << job->errorString();
+        q->cancelTask(i18n("Failed to fetch collection for collection attributes sync."));
+        return;
     }
-    // TODO: error handling
+
+    const Collection::List list = static_cast<CollectionFetchJob *>(job)->collections();
+    if (!list.isEmpty()) {
+        const Collection &col = list.first();
+        scheduler->scheduleAttributesSync(col);
+    }
 }
 
 void ResourceBase::setTotalItems(int amount)
