@@ -976,8 +976,10 @@ void ResourceBasePrivate::slotAttributeRetrievalCollectionFetchDone(KJob *job)
         return;
     }
     auto fetchJob = static_cast<Akonadi::CollectionFetchJob *>(job);
-    // FIXME: Why not call q-> directly?
-    QMetaObject::invokeMethod(q, "retrieveCollectionAttributes", Q_ARG(Akonadi::Collection, fetchJob->collections().at(0)));
+    const auto collection = fetchJob->collections().at(0);
+    QMetaObject::invokeMethod(q, [q, collection] {
+        q->retrieveCollectionAttributes(collection);
+    });
 }
 
 void ResourceBasePrivate::slotSynchronizeTags()
