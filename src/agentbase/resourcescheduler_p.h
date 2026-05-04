@@ -45,7 +45,7 @@ public:
         ChangeReplay,
         RecursiveMoveReplay,
         DeleteResourceCollection,
-        InvalideCacheForCollection,
+        InvalidateCacheForCollection,
         SyncAllDone,
         SyncCollectionTreeDone,
         Custom

@@ -18,6 +18,7 @@
 
 using namespace Akonadi;
 using namespace std::chrono_literals;
+using namespace Qt::StringLiterals;
 qint64 ResourceScheduler::Task::latestSerial = 0;
 static QDBusAbstractInterface *s_resourcetracker = nullptr;
 
@@ -163,14 +164,14 @@ void ResourceScheduler::scheduleResourceCollectionDeletion()
 void ResourceScheduler::scheduleCacheInvalidation(const Collection &collection)
 {
     Task t;
-    t.type = InvalideCacheForCollection;
+    t.type = InvalidateCacheForCollection;
     t.collection = collection;
     TaskList &queue = queueForTaskType(t.type);
     if (queue.contains(t) || mCurrentTask == t) {
         return;
     }
     queue << t;
-    signalTaskToTracker(t, "InvalideCacheForCollection", QString::number(collection.id()));
+    signalTaskToTracker(t, "InvalidateCacheForCollection", QString::number(collection.id()));
     scheduleNext();
 }
 
@@ -401,7 +402,7 @@ void ResourceScheduler::executeNext()
     case DeleteResourceCollection:
         Q_EMIT executeResourceCollectionDeletion();
         break;
-    case InvalideCacheForCollection:
+    case InvalidateCacheForCollection:
         Q_EMIT executeCacheInvalidation(mCurrentTask.collection);
         break;
     case ChangeReplay:
@@ -683,21 +684,21 @@ void Akonadi::ResourceScheduler::cancelQueues()
     }
 }
 
-static const char s_taskTypes[][27] = {"Invalid (no task)",
-                                       "SyncAll",
-                                       "SyncCollectionTree",
-                                       "SyncCollection",
-                                       "SyncCollectionAttributes",
-                                       "SyncTags",
-                                       "FetchItem",
-                                       "FetchItems",
-                                       "ChangeReplay",
-                                       "RecursiveMoveReplay",
-                                       "DeleteResourceCollection",
-                                       "InvalideCacheForCollection",
-                                       "SyncAllDone",
-                                       "SyncCollectionTreeDone",
-                                       "Custom"};
+static constexpr auto s_taskTypes = std::to_array<QLatin1StringView>({"Invalid (no task)"_L1,
+                                                                      "SyncAll"_L1,
+                                                                      "SyncCollectionTree"_L1,
+                                                                      "SyncCollection"_L1,
+                                                                      "SyncCollectionAttributes"_L1,
+                                                                      "SyncTags"_L1,
+                                                                      "FetchItem"_L1,
+                                                                      "FetchItems"_L1,
+                                                                      "ChangeReplay"_L1,
+                                                                      "RecursiveMoveReplay"_L1,
+                                                                      "DeleteResourceCollection"_L1,
+                                                                      "InvalidateCacheForCollection"_L1,
+                                                                      "SyncAllDone"_L1,
+                                                                      "SyncCollectionTreeDone"_L1,
+                                                                      "Custom"_L1});
 
 QTextStream &Akonadi::operator<<(QTextStream &d, const ResourceScheduler::Task &task)
 {
