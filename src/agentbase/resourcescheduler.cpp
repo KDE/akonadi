@@ -647,6 +647,7 @@ QStringList ResourceScheduler::dumpTaskList() const
         stream << mCurrentTask;
         ret << taskString;
         taskString.clear();
+        stream.reset();
     }
     for (int i = 0; i < NQueueCount; ++i) {
         const TaskList &queue = mTaskList[i];
@@ -654,6 +655,7 @@ QStringList ResourceScheduler::dumpTaskList() const
             stream << task;
             ret << taskString;
             taskString.clear();
+            stream.reset();
         }
     }
     return ret;
