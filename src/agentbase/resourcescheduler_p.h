@@ -257,6 +257,7 @@ private Q_SLOTS:
 
 private:
     void signalTaskToTracker(const Task &task, const QByteArray &taskType, const QString &debugString = QString());
+    void enqueueTask(Task &task, const QByteArray &taskType, const QString &debugString = QString(), bool checkCurrentTask = true);
 
     // We have a number of task queues, by order of priority.
     // * PrependTaskQueue is for deferring the current task

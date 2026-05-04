@@ -33,39 +33,21 @@ void ResourceScheduler::scheduleFullSync()
 {
     Task t;
     t.type = SyncAll;
-    TaskList &queue = queueForTaskType(t.type);
-    if (queue.contains(t) || mCurrentTask == t) {
-        return;
-    }
-    queue << t;
-    signalTaskToTracker(t, "SyncAll");
-    scheduleNext();
+    enqueueTask(t, "SyncAll");
 }
 
 void ResourceScheduler::scheduleCollectionTreeSync()
 {
     Task t;
     t.type = SyncCollectionTree;
-    TaskList &queue = queueForTaskType(t.type);
-    if (queue.contains(t) || mCurrentTask == t) {
-        return;
-    }
-    queue << t;
-    signalTaskToTracker(t, "SyncCollectionTree");
-    scheduleNext();
+    enqueueTask(t, "SyncCollectionTree");
 }
 
 void ResourceScheduler::scheduleTagSync()
 {
     Task t;
     t.type = SyncTags;
-    TaskList &queue = queueForTaskType(t.type);
-    if (queue.contains(t) || mCurrentTask == t) {
-        return;
-    }
-    queue << t;
-    signalTaskToTracker(t, "SyncTags");
-    scheduleNext();
+    enqueueTask(t, "SyncTags");
 }
 
 void ResourceScheduler::scheduleSync(const Collection &col)
@@ -73,13 +55,7 @@ void ResourceScheduler::scheduleSync(const Collection &col)
     Task t;
     t.type = SyncCollection;
     t.collection = col;
-    TaskList &queue = queueForTaskType(t.type);
-    if (queue.contains(t) || mCurrentTask == t) {
-        return;
-    }
-    queue << t;
-    signalTaskToTracker(t, "SyncCollection", QString::number(col.id()));
-    scheduleNext();
+    enqueueTask(t, "SyncCollection", QString::number(col.id()));
 }
 
 void ResourceScheduler::scheduleAttributesSync(const Collection &collection)
@@ -87,14 +63,7 @@ void ResourceScheduler::scheduleAttributesSync(const Collection &collection)
     Task t;
     t.type = SyncCollectionAttributes;
     t.collection = collection;
-
-    TaskList &queue = queueForTaskType(t.type);
-    if (queue.contains(t) || mCurrentTask == t) {
-        return;
-    }
-    queue << t;
-    signalTaskToTracker(t, "SyncCollectionAttributes", QString::number(collection.id()));
-    scheduleNext();
+    enqueueTask(t, "SyncCollectionAttributes", QString::number(collection.id()));
 }
 
 void ResourceScheduler::scheduleItemFetch(const Akonadi::Item &item, const QSet<QByteArray> &parts, const QList<QDBusMessage> &msgs, qint64 parentId)
@@ -152,13 +121,7 @@ void ResourceScheduler::scheduleResourceCollectionDeletion()
 {
     Task t;
     t.type = DeleteResourceCollection;
-    TaskList &queue = queueForTaskType(t.type);
-    if (queue.contains(t) || mCurrentTask == t) {
-        return;
-    }
-    queue << t;
-    signalTaskToTracker(t, "DeleteResourceCollection");
-    scheduleNext();
+    enqueueTask(t, "DeleteResourceCollection");
 }
 
 void ResourceScheduler::scheduleCacheInvalidation(const Collection &collection)
@@ -166,27 +129,15 @@ void ResourceScheduler::scheduleCacheInvalidation(const Collection &collection)
     Task t;
     t.type = InvalidateCacheForCollection;
     t.collection = collection;
-    TaskList &queue = queueForTaskType(t.type);
-    if (queue.contains(t) || mCurrentTask == t) {
-        return;
-    }
-    queue << t;
-    signalTaskToTracker(t, "InvalidateCacheForCollection", QString::number(collection.id()));
-    scheduleNext();
+    enqueueTask(t, "InvalidateCacheForCollection", QString::number(collection.id()));
 }
 
 void ResourceScheduler::scheduleChangeReplay()
 {
     Task t;
     t.type = ChangeReplay;
-    TaskList &queue = queueForTaskType(t.type);
     // see ResourceBase::changeProcessed() for why we do not check for mCurrentTask == t here like in the other tasks
-    if (queue.contains(t)) {
-        return;
-    }
-    queue << t;
-    signalTaskToTracker(t, "ChangeReplay");
-    scheduleNext();
+    enqueueTask(t, "ChangeReplay", {}, /*checkCurrentTask=*/false);
 }
 
 void ResourceScheduler::scheduleMoveReplay(const Collection &movedCollection, RecursiveMover *mover)
@@ -195,15 +146,7 @@ void ResourceScheduler::scheduleMoveReplay(const Collection &movedCollection, Re
     t.type = RecursiveMoveReplay;
     t.collection = movedCollection;
     t.argument = QVariant::fromValue(mover);
-    TaskList &queue = queueForTaskType(t.type);
-
-    if (queue.contains(t) || mCurrentTask == t) {
-        return;
-    }
-
-    queue << t;
-    signalTaskToTracker(t, "RecursiveMoveReplay", QString::number(t.collection.id()));
-    scheduleNext();
+    enqueueTask(t, "RecursiveMoveReplay", QString::number(movedCollection.id()));
 }
 
 void Akonadi::ResourceScheduler::scheduleFullSyncCompletion()
@@ -496,6 +439,17 @@ void ResourceScheduler::setOnline(bool state)
             }
         }
     }
+}
+
+void ResourceScheduler::enqueueTask(Task &task, const QByteArray &taskType, const QString &debugString, bool checkCurrentTask)
+{
+    TaskList &queue = queueForTaskType(task.type);
+    if (queue.contains(task) || (checkCurrentTask && mCurrentTask == task)) {
+        return;
+    }
+    queue << task;
+    signalTaskToTracker(task, taskType, debugString);
+    scheduleNext();
 }
 
 void ResourceScheduler::signalTaskToTracker(const Task &task, const QByteArray &taskType, const QString &debugString)
