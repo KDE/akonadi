@@ -105,7 +105,6 @@ public:
     void scheduleAttributesSync(const Collection &collection);
 
     void scheduleTagSync();
-    void scheduleRelationSync();
 
     /*!
       Schedules fetching of a single PIM item.
@@ -245,7 +244,6 @@ Q_SIGNALS:
     void executeCollectionSync(const Akonadi::Collection &col);
     void executeCollectionTreeSync();
     void executeTagSync();
-    void executeRelationSync();
     void executeItemFetch(const Akonadi::Item &item, const QSet<QByteArray> &parts);
     void executeItemsFetch(const QList<Akonadi::Item> &items, const QSet<QByteArray> &parts);
     void executeResourceCollectionDeletion();
