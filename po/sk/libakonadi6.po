@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-28 00:45+0000\n"
+"POT-Creation-Date: 2026-05-04 00:44+0000\n"
 "PO-Revision-Date: 2023-10-02 18:38+0200\n"
 "Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
 "Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
@@ -335,12 +335,12 @@ msgstr "Neplatná kolekcia."
 msgid "Invalid parent collection"
 msgstr "Neplatná rodičovská kolekcia"
 
-#: core/jobs/job.cpp:335
+#: core/jobs/job.cpp:345
 #, kde-format
 msgid "Cannot connect to the Akonadi service."
 msgstr "Nie je možné sa pripojiť ku službe Akonadi."
 
-#: core/jobs/job.cpp:338
+#: core/jobs/job.cpp:348
 #, kde-format
 msgid ""
 "The protocol version of the Akonadi server is incompatible. Make sure you "
@@ -349,17 +349,17 @@ msgstr ""
 "Verzia protokolu Akonadi serveru je nekompatibilná. Uistite sa že máte "
 "nainštalovanú kompatibilnú verziu."
 
-#: core/jobs/job.cpp:341
+#: core/jobs/job.cpp:351
 #, kde-format
 msgid "User canceled operation."
 msgstr "Operácia zrušená užívateľom."
 
-#: core/jobs/job.cpp:346
+#: core/jobs/job.cpp:356
 #, kde-format
 msgid "Unknown error."
 msgstr "Neznáma chyba."
 
-#: core/jobs/job.cpp:385
+#: core/jobs/job.cpp:395
 #, kde-format
 msgid "Unexpected response"
 msgstr "Neočakávaná odpoveď"
@@ -463,37 +463,37 @@ msgstr ""
 "Cieľová kolekcia '%1' už obsahuje\n"
 "kolekciu s názvom '%2'."
 
-#: core/models/entitytreemodel.cpp:668
+#: core/models/entitytreemodel.cpp:671
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Názov"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1350
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Nemôžem kopírovať položku: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1340
+#: core/models/entitytreemodel_p.cpp:1352
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Nemôžem kopírovať kolekciu: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1342
+#: core/models/entitytreemodel_p.cpp:1354
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Nemôžem presunúť položku: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1344
+#: core/models/entitytreemodel_p.cpp:1356
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Nemôžem presunúť kolekciu: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1346
+#: core/models/entitytreemodel_p.cpp:1358
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"

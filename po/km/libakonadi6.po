@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-28 00:45+0000\n"
+"POT-Creation-Date: 2026-05-04 00:44+0000\n"
 "PO-Revision-Date: 2012-07-11 10:23+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -352,12 +352,12 @@ msgstr "សម្រាំង​មិន​ត្រឹម​ត្រូវ �
 msgid "Invalid parent collection"
 msgstr "សម្រាំង​មិន​ត្រឹម​ត្រូវ​"
 
-#: core/jobs/job.cpp:335
+#: core/jobs/job.cpp:345
 #, kde-format
 msgid "Cannot connect to the Akonadi service."
 msgstr "មិន​អាច​តភ្ជាប់​ទៅ​កាន់​សេវា Akonadi បាន​ទេ ។"
 
-#: core/jobs/job.cpp:338
+#: core/jobs/job.cpp:348
 #, kde-format
 msgid ""
 "The protocol version of the Akonadi server is incompatible. Make sure you "
@@ -365,17 +365,17 @@ msgid ""
 msgstr ""
 "កំណែ​ពិធីការ​របស់​ម៉ាស៊ីន​បម្រើ Akonadi មិន​ឆប​គ្នា​ទេ ។ សូម​ប្រាកដ​ថា អ្នក​​បាន​ដំឡើង​កំណែ​ដែល​ឆបគ្នា ។"
 
-#: core/jobs/job.cpp:341
+#: core/jobs/job.cpp:351
 #, kde-format
 msgid "User canceled operation."
 msgstr "ប្រតិបត្តិការ​ត្រូវ​បាន​បោះបង់​ដោយ​អ្នកប្រើ ។"
 
-#: core/jobs/job.cpp:346
+#: core/jobs/job.cpp:356
 #, kde-format
 msgid "Unknown error."
 msgstr "កំហុស​ដែល​មិន​ស្គាល់ ។"
 
-#: core/jobs/job.cpp:385
+#: core/jobs/job.cpp:395
 #, kde-format
 msgid "Unexpected response"
 msgstr ""
@@ -483,41 +483,41 @@ msgstr ""
 "មាន​កា​រជ្រើសរើស​គោលដៅ '%1' ដែល​មាន​ឈ្មោះ\n"
 " '%2' រួច​ហើយ ។"
 
-#: core/models/entitytreemodel.cpp:668
+#: core/models/entitytreemodel.cpp:671
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "ឈ្មោះ​"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1350
 #, fuzzy, kde-format
 #| msgid "Could not copy item:"
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "មិន​អាច​ចម្លង​​ធាតុ​បាន​ឡើយ​ ៖​"
 
-#: core/models/entitytreemodel_p.cpp:1340
+#: core/models/entitytreemodel_p.cpp:1352
 #, fuzzy, kde-format
 #| msgid "Could not copy collection:"
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "មិន​អាច​ចម្លង​សម្រាំង​បាន​ឡើយ​ ៖"
 
-#: core/models/entitytreemodel_p.cpp:1342
+#: core/models/entitytreemodel_p.cpp:1354
 #, fuzzy, kde-format
 #| msgid "Could not move item:"
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "មិន​អាច​ផ្លាស់ទី​ធាតុ​បាន​ឡើយ​ ៖"
 
-#: core/models/entitytreemodel_p.cpp:1344
+#: core/models/entitytreemodel_p.cpp:1356
 #, fuzzy, kde-format
 #| msgid "Could not move collection:"
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "មិន​អាច​ផ្លាស់​ទី​សម្រាំង​បាន​ឡើយ​ ៖"
 
-#: core/models/entitytreemodel_p.cpp:1346
+#: core/models/entitytreemodel_p.cpp:1358
 #, fuzzy, kde-format
 #| msgid "Could not link entity:"
 msgctxt "@info"

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-28 00:45+0000\n"
+"POT-Creation-Date: 2026-05-04 00:44+0000\n"
 "PO-Revision-Date: 2014-09-23 21:56+0200\n"
 "Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -330,12 +330,12 @@ msgstr "Ugyldig samling."
 msgid "Invalid parent collection"
 msgstr ""
 
-#: core/jobs/job.cpp:335
+#: core/jobs/job.cpp:345
 #, kde-format
 msgid "Cannot connect to the Akonadi service."
 msgstr "Kan ikke koble til Akonadi-tjenesten."
 
-#: core/jobs/job.cpp:338
+#: core/jobs/job.cpp:348
 #, kde-format
 msgid ""
 "The protocol version of the Akonadi server is incompatible. Make sure you "
@@ -344,17 +344,17 @@ msgstr ""
 "Protokollversjonen til Akonadi-tjeneren er ikke kompatibel. Pass på at du "
 "har en kompatibel versjon installert."
 
-#: core/jobs/job.cpp:341
+#: core/jobs/job.cpp:351
 #, kde-format
 msgid "User canceled operation."
 msgstr "Bruker avbrøt handlinga."
 
-#: core/jobs/job.cpp:346
+#: core/jobs/job.cpp:356
 #, kde-format
 msgid "Unknown error."
 msgstr "Ukjent feil."
 
-#: core/jobs/job.cpp:385
+#: core/jobs/job.cpp:395
 #, kde-format
 msgid "Unexpected response"
 msgstr ""
@@ -462,37 +462,37 @@ msgstr ""
 "Målsamlingen «%1» inneholdder fra før\n"
 "en samling som heter «%2»."
 
-#: core/models/entitytreemodel.cpp:668
+#: core/models/entitytreemodel.cpp:671
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Navn"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1350
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr ""
 
-#: core/models/entitytreemodel_p.cpp:1340
+#: core/models/entitytreemodel_p.cpp:1352
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr ""
 
-#: core/models/entitytreemodel_p.cpp:1342
+#: core/models/entitytreemodel_p.cpp:1354
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr ""
 
-#: core/models/entitytreemodel_p.cpp:1344
+#: core/models/entitytreemodel_p.cpp:1356
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr ""
 
-#: core/models/entitytreemodel_p.cpp:1346
+#: core/models/entitytreemodel_p.cpp:1358
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"

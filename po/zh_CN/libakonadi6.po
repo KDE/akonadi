@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-28 00:45+0000\n"
+"POT-Creation-Date: 2026-05-04 00:44+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -336,29 +336,29 @@ msgstr "无效的集合。"
 msgid "Invalid parent collection"
 msgstr "无效的父集合"
 
-#: core/jobs/job.cpp:335
+#: core/jobs/job.cpp:345
 #, kde-format
 msgid "Cannot connect to the Akonadi service."
 msgstr "无法连接到 Akonadi 服务。"
 
-#: core/jobs/job.cpp:338
+#: core/jobs/job.cpp:348
 #, kde-format
 msgid ""
 "The protocol version of the Akonadi server is incompatible. Make sure you "
 "have a compatible version installed."
 msgstr "和当前 Akonadi 服务器使用的协议版本不兼容。请确认您安装的是兼容版本。"
 
-#: core/jobs/job.cpp:341
+#: core/jobs/job.cpp:351
 #, kde-format
 msgid "User canceled operation."
 msgstr "用户取消了操作。"
 
-#: core/jobs/job.cpp:346
+#: core/jobs/job.cpp:356
 #, kde-format
 msgid "Unknown error."
 msgstr "未知错误。"
 
-#: core/jobs/job.cpp:385
+#: core/jobs/job.cpp:395
 #, kde-format
 msgid "Unexpected response"
 msgstr "意外的响应"
@@ -462,37 +462,37 @@ msgstr ""
 "目标集合“%1”已包含\n"
 "名为“%2”的集合。"
 
-#: core/models/entitytreemodel.cpp:668
+#: core/models/entitytreemodel.cpp:671
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "名称"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1350
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "无法复制项目: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1340
+#: core/models/entitytreemodel_p.cpp:1352
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "无法复制集合：<message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1342
+#: core/models/entitytreemodel_p.cpp:1354
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "无法移动项目: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1344
+#: core/models/entitytreemodel_p.cpp:1356
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "无法移动集合：<message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1346
+#: core/models/entitytreemodel_p.cpp:1358
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"

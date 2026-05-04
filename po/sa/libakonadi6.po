@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-28 00:45+0000\n"
+"POT-Creation-Date: 2026-05-04 00:44+0000\n"
 "PO-Revision-Date: 2024-12-25 19:45+0530\n"
 "Last-Translator: kali <shreekantkalwar@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -347,12 +347,12 @@ msgstr "अमान्य संग्रह।"
 msgid "Invalid parent collection"
 msgstr "अमान्य मातापितृसङ्ग्रह"
 
-#: core/jobs/job.cpp:335
+#: core/jobs/job.cpp:345
 #, kde-format
 msgid "Cannot connect to the Akonadi service."
 msgstr "अकोनाडी सेवायाः सह सम्बद्धं कर्तुं न शक्नोति।"
 
-#: core/jobs/job.cpp:338
+#: core/jobs/job.cpp:348
 #, kde-format
 msgid ""
 "The protocol version of the Akonadi server is incompatible. Make sure you "
@@ -361,17 +361,17 @@ msgstr ""
 "अकोनाडी सर्वरस्य प्रोटोकॉलसंस्करणं असङ्गतम् अस्ति । भवतः सङ्गतसंस्करणं संस्थापितम् अस्ति इति "
 "सुनिश्चितं कुर्वन्तु ।"
 
-#: core/jobs/job.cpp:341
+#: core/jobs/job.cpp:351
 #, kde-format
 msgid "User canceled operation."
 msgstr "उपयोक्ता रद्दीकृतं संचालनम्।"
 
-#: core/jobs/job.cpp:346
+#: core/jobs/job.cpp:356
 #, kde-format
 msgid "Unknown error."
 msgstr "अज्ञातदोषः ।"
 
-#: core/jobs/job.cpp:385
+#: core/jobs/job.cpp:395
 #, kde-format
 msgid "Unexpected response"
 msgstr "अप्रत्याशित प्रतिक्रिया"
@@ -477,37 +477,37 @@ msgstr ""
 "लक्ष्यसङ्ग्रहे '%1' पूर्वमेव अस्ति\n"
 "'%2' इति नाम्ना संग्रहः ।"
 
-#: core/models/entitytreemodel.cpp:668
+#: core/models/entitytreemodel.cpp:671
 #, kde-format
 msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "नामः"
 
-#: core/models/entitytreemodel_p.cpp:1338
+#: core/models/entitytreemodel_p.cpp:1350
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "द्रव्यस्य प्रतिलिपिं कर्तुं न शक्यते: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1340
+#: core/models/entitytreemodel_p.cpp:1352
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "संग्रहस्य प्रतिलिपिं कर्तुं न शक्यते: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1342
+#: core/models/entitytreemodel_p.cpp:1354
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "द्रव्यं स्थानान्तरयितुं न शक्तम्: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1344
+#: core/models/entitytreemodel_p.cpp:1356
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "संग्रहं स्थानान्तरयितुं न शक्तम्: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1346
+#: core/models/entitytreemodel_p.cpp:1358
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
