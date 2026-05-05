@@ -43,14 +43,16 @@ void Akonadi::SpecialCollectionsDiscoveryJob::start()
     auto job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, this);
     job->fetchScope().setContentMimeTypes(d->mMimeTypes);
     addSubjob(job);
+    connect(job, &CollectionFetchJob::result, this, &Akonadi::SpecialCollectionsDiscoveryJob::slotResult);
 }
 
 void Akonadi::SpecialCollectionsDiscoveryJob::slotResult(KJob *job)
 {
     if (job->error()) {
         qCWarning(AKONADICORE_LOG) << job->errorString();
-        return;
+        return; // handled by KCompositeJob
     }
+
     auto fetchJob = qobject_cast<Akonadi::CollectionFetchJob *>(job);
     const Akonadi::Collection::List lstCollections = fetchJob->collections();
     for (const Akonadi::Collection &collection : lstCollections) {
