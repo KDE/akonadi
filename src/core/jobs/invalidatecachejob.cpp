@@ -70,7 +70,7 @@ void InvalidateCacheJobPrivate::itemFetchResult(KJob *job)
 {
     Q_Q(InvalidateCacheJob);
     if (job->error()) {
-        return;
+        return; // handled by KCompositeJob
     }
     auto fetchJob = qobject_cast<ItemFetchJob *>(job);
     Q_ASSERT(fetchJob);
@@ -79,24 +79,26 @@ void InvalidateCacheJobPrivate::itemFetchResult(KJob *job)
         return;
     }
 
-    ItemModifyJob *modJob = nullptr;
     const Akonadi::Item::List itemsLst = fetchJob->items();
     for (Item item : itemsLst) {
         item.clearPayload();
-        modJob = new ItemModifyJob(item, q);
+        auto modJob = new ItemModifyJob(item, q);
+        QObject::connect(modJob, &KJob::result, q, [this](KJob *job) {
+            itemStoreResult(job);
+        });
     }
-    QObject::connect(modJob, &KJob::result, q, [this](KJob *job) {
-        itemStoreResult(job);
-    });
 }
 
 void InvalidateCacheJobPrivate::itemStoreResult(KJob *job)
 {
     Q_Q(InvalidateCacheJob);
     if (job->error()) {
-        return;
+        return; // handled by KCompositeJob
     }
-    q->emitResult();
+    q->removeSubjob(job);
+    if (!q->hasSubjobs()) {
+        q->emitResult();
+    }
 }
 
 InvalidateCacheJob::InvalidateCacheJob(const Collection &collection, QObject *parent)
