@@ -37,7 +37,7 @@ public Q_SLOTS:
     void slotPercent(int progress);
     void slotWarning(const QString &message);
     void slotError(const QString &message);
-    void slotNetworkStatusChange(bool isOnline);
+    void slotNetworkStatusChange();
     void slotResumedFromSuspend();
     void slotTemporaryOfflineTimeout();
 

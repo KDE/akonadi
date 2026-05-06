@@ -713,9 +713,8 @@ void AgentBasePrivate::slotError(const QString &message)
     mTracer->error(QStringLiteral("AgentBase(%1)").arg(mId), message);
 }
 
-void AgentBasePrivate::slotNetworkStatusChange(bool isOnline)
+void AgentBasePrivate::slotNetworkStatusChange()
 {
-    Q_UNUSED(isOnline)
     Q_Q(AgentBase);
     q->setOnlineInternal(mDesiredOnlineState);
 }
@@ -723,7 +722,7 @@ void AgentBasePrivate::slotNetworkStatusChange(bool isOnline)
 void AgentBasePrivate::slotResumedFromSuspend()
 {
     if (mNeedsNetwork && QNetworkInformation::instance()) {
-        slotNetworkStatusChange(QNetworkInformation::instance()->reachability() != QNetworkInformation::Reachability::Online);
+        slotNetworkStatusChange();
     }
 }
 
@@ -907,14 +906,11 @@ void AgentBase::setNeedsNetwork(bool needsNetwork)
 
     d->mNeedsNetwork = needsNetwork;
     if (QNetworkInformation::loadBackendByFeatures(QNetworkInformation::Feature::Reachability)) {
-        connect(
-            QNetworkInformation::instance(),
-            &QNetworkInformation::reachabilityChanged,
-            this,
-            [d](auto reachability) {
-                d->slotNetworkStatusChange(reachability == QNetworkInformation::Reachability::Online);
-            },
-            Qt::UniqueConnection);
+        connect(QNetworkInformation::instance(),
+                &QNetworkInformation::reachabilityChanged,
+                d,
+                &AgentBasePrivate::slotNetworkStatusChange,
+                Qt::UniqueConnection);
     }
 }
 

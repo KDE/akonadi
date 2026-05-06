@@ -834,7 +834,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotPercent(int))
     Q_PRIVATE_SLOT(d_func(), void slotWarning(const QString &))
     Q_PRIVATE_SLOT(d_func(), void slotError(const QString &))
-    Q_PRIVATE_SLOT(d_func(), void slotNetworkStatusChange(bool))
+    Q_PRIVATE_SLOT(d_func(), void slotNetworkStatusChange)
     Q_PRIVATE_SLOT(d_func(), void slotResumedFromSuspend())
     Q_PRIVATE_SLOT(d_func(), void slotTemporaryOfflineTimeout())
 
