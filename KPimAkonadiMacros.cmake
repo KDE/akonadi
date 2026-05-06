@@ -158,13 +158,6 @@ function(add_akonadi_isolated_test)
     endif()
 endfunction()
 
-function(add_akonadi_isolated_test_advanced source additional_sources link_libraries)
-    add_akonadi_isolated_test(SOURCE ${source}
-                              ADDITIONAL_SOURCES "${additional_sources}"
-                              LINK_LIBRARIES "${link_libraries}"
-    )
-endfunction()
-
 function(kcfg_generate_dbus_interface _kcfg _name)
     find_program(XSLTPROC_EXECUTABLE xsltproc)
     if(NOT XSLTPROC_EXECUTABLE)
