@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-04 00:44+0000\n"
+"POT-Creation-Date: 2026-05-06 00:46+0000\n"
 "PO-Revision-Date: 2024-12-15 18:58+0530\n"
 "Last-Translator: Kali <EMAIL@ADDRESS>\n"
 "Language-Team: Hindi <fedora-trans-hi@redhat.com>\n"
@@ -143,10 +143,22 @@ msgstr "सिंक के लिए संग्रह प्राप्त �
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "विशेषता समन्वयन के लिए संग्रह प्राप्त करने में विफल."
 
-#: agentbase/resourcebase.cpp:1021
+#: agentbase/resourcebase.cpp:1023
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "अनुरोधित आइटम अब मौजूद नहीं है"
+
+#: agentbase/resourcebase.cpp:1242
+#, fuzzy, kde-format
+#| msgid "Failed to retrieve collection for sync."
+msgid "Failed to fetch collection for collection sync."
+msgstr "सिंक के लिए संग्रह प्राप्त करने में विफल."
+
+#: agentbase/resourcebase.cpp:1278
+#, fuzzy, kde-format
+#| msgid "Failed to retrieve collection for attribute sync."
+msgid "Failed to fetch collection for collection attributes sync."
+msgstr "विशेषता समन्वयन के लिए संग्रह प्राप्त करने में विफल."
 
 #: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
 #, kde-format

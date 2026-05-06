@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdepim/libakonadi.po\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-04 00:44+0000\n"
+"POT-Creation-Date: 2026-05-06 00:46+0000\n"
 "PO-Revision-Date: 2007-07-11 08:14-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -142,10 +142,20 @@ msgstr ""
 msgid "Failed to retrieve collection for attribute sync."
 msgstr ""
 
-#: agentbase/resourcebase.cpp:1021
+#: agentbase/resourcebase.cpp:1023
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Níl an mhír iarrtha ann a thuilleadh"
+
+#: agentbase/resourcebase.cpp:1242
+#, kde-format
+msgid "Failed to fetch collection for collection sync."
+msgstr ""
+
+#: agentbase/resourcebase.cpp:1278
+#, kde-format
+msgid "Failed to fetch collection for collection attributes sync."
+msgstr ""
 
 #: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
 #, kde-format

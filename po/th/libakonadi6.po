@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-04 00:44+0000\n"
+"POT-Creation-Date: 2026-05-06 00:46+0000\n"
 "PO-Revision-Date: 2010-02-26 23:20+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -147,10 +147,22 @@ msgstr ""
 msgid "Failed to retrieve collection for attribute sync."
 msgstr ""
 
-#: agentbase/resourcebase.cpp:1021
+#: agentbase/resourcebase.cpp:1023
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr ""
+
+#: agentbase/resourcebase.cpp:1242
+#, fuzzy, kde-format
+#| msgid "Folder &Properties"
+msgid "Failed to fetch collection for collection sync."
+msgstr "&คุณสมบัติของโฟลเดอร์"
+
+#: agentbase/resourcebase.cpp:1278
+#, fuzzy, kde-format
+#| msgid "Folder &Properties"
+msgid "Failed to fetch collection for collection attributes sync."
+msgstr "&คุณสมบัติของโฟลเดอร์"
 
 #: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
 #, kde-format

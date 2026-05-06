@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-04 00:44+0000\n"
+"POT-Creation-Date: 2026-05-06 00:46+0000\n"
 "PO-Revision-Date: 2026-04-06 19:06+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -142,10 +142,22 @@ msgstr "Il falleva rcuperar le collection per syncronisation."
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Il falleva rcuperar le collection per syncronisation de attribute."
 
-#: agentbase/resourcebase.cpp:1021
+#: agentbase/resourcebase.cpp:1023
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Le elemento requirite non existe plus"
+
+#: agentbase/resourcebase.cpp:1242
+#, fuzzy, kde-format
+#| msgid "Failed to retrieve collection for sync."
+msgid "Failed to fetch collection for collection sync."
+msgstr "Il falleva rcuperar le collection per syncronisation."
+
+#: agentbase/resourcebase.cpp:1278
+#, fuzzy, kde-format
+#| msgid "Failed to retrieve collection for attribute sync."
+msgid "Failed to fetch collection for collection attributes sync."
+msgstr "Il falleva rcuperar le collection per syncronisation de attribute."
 
 #: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
 #, kde-format

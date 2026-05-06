@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-04 00:44+0000\n"
+"POT-Creation-Date: 2026-05-06 00:46+0000\n"
 "PO-Revision-Date: 2025-09-14 14:02+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
@@ -142,10 +142,22 @@ msgstr "ஒத்திசைவுக்கு திரட்டைப் ப�
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "பண்பு ஒத்திசைவுக்கு திரட்டைப் பெற முடியவில்லை"
 
-#: agentbase/resourcebase.cpp:1021
+#: agentbase/resourcebase.cpp:1023
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "கோரியது தற்போது இருப்பில் இல்லை"
+
+#: agentbase/resourcebase.cpp:1242
+#, fuzzy, kde-format
+#| msgid "Failed to retrieve collection for sync."
+msgid "Failed to fetch collection for collection sync."
+msgstr "ஒத்திசைவுக்கு திரட்டைப் பெற முடியவில்லை"
+
+#: agentbase/resourcebase.cpp:1278
+#, fuzzy, kde-format
+#| msgid "Failed to retrieve collection for attribute sync."
+msgid "Failed to fetch collection for collection attributes sync."
+msgstr "பண்பு ஒத்திசைவுக்கு திரட்டைப் பெற முடியவில்லை"
 
 #: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
 #, kde-format

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-04 00:44+0000\n"
+"POT-Creation-Date: 2026-05-06 00:46+0000\n"
 "PO-Revision-Date: 2013-07-14 03:20+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -151,10 +151,22 @@ msgstr "Дерек жинағын алу жаңылысы."
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Дерек жинағын алу жаңылысы."
 
-#: agentbase/resourcebase.cpp:1021
+#: agentbase/resourcebase.cpp:1023
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Сұралғаны енді жоқ екен"
+
+#: agentbase/resourcebase.cpp:1242
+#, fuzzy, kde-format
+#| msgid "Failed to fetch the resource collection."
+msgid "Failed to fetch collection for collection sync."
+msgstr "Дерек жинағын алу жаңылысы."
+
+#: agentbase/resourcebase.cpp:1278
+#, fuzzy, kde-format
+#| msgid "Failed to fetch the resource collection."
+msgid "Failed to fetch collection for collection attributes sync."
+msgstr "Дерек жинағын алу жаңылысы."
 
 #: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
 #, kde-format
