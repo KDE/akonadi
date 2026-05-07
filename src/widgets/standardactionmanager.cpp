@@ -1769,7 +1769,8 @@ public:
 
     QString contextText(StandardActionManager::Type type, StandardActionManager::TextContext context) const
     {
-        return contextTexts[type].value(context).text;
+        const auto &text = contextTexts.value(type).value(context);
+        return text.localizedText.isEmpty() ? text.text : text.localizedText.toString();
     }
 
     QString contextText(StandardActionManager::Type type, StandardActionManager::TextContext context, const QString &value) const
@@ -1814,7 +1815,6 @@ public:
     struct ContextTextEntry {
         QString text;
         KLocalizedString localizedText;
-        bool isLocalized;
     };
 
     using ContextTexts = QHash<StandardActionManager::TextContext, ContextTextEntry>;

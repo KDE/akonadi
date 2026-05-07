@@ -138,7 +138,7 @@ public:
      *
      * \since 4.6
      */
-    void setContextText(Type type, TextContext context, const QString &text);
+    [[deprecated("use KLocalizedString overload")]] void setContextText(Type type, TextContext context, const QString &text);
 
     /*!
      * Sets the \a text of the action \a type for the given \a context.
