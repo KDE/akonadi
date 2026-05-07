@@ -47,8 +47,6 @@ bool hasCompatibleMimeTypes(const Akonadi::Collection &collection)
 ColorProxyModel::ColorProxyModel(QObject *parent)
     : Akonadi::CollectionFilterProxyModel(parent)
 {
-    // Needed to read colorattribute of collections for incidence colors
-    Akonadi::AttributeFactory::registerAttribute<Akonadi::CollectionColorAttribute>();
 }
 
 QVariant ColorProxyModel::data(const QModelIndex &index, int role) const
