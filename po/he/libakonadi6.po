@@ -1,13 +1,13 @@
 # Copyright (C) 2025 This file is copyright:
 # This file is distributed under the same license as the akonadi package.
 #
-# SPDX-FileCopyrightText: 2025, 2026 Yaron Shahrabani <sh.yaron@gmail.com>
+# SPDX-FileCopyrightText: 2025-2026 Yaron Shahrabani <sh.yaron@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-06 00:46+0000\n"
-"PO-Revision-Date: 2026-04-13 21:19+0300\n"
+"PO-Revision-Date: 2026-05-06 21:20+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Lokalize 25.12.3\n"
+"X-Generator: Lokalize 26.04.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -149,16 +149,14 @@ msgid "The requested item no longer exists"
 msgstr "הפריט המבוקש לא קיים יותר"
 
 #: agentbase/resourcebase.cpp:1242
-#, fuzzy, kde-format
-#| msgid "Failed to retrieve collection for sync."
+#, kde-format
 msgid "Failed to fetch collection for collection sync."
-msgstr "משיכת האוסף לסנכרון נכשל."
+msgstr "משיכת האוסף לסנכרון אוספים נכשלה."
 
 #: agentbase/resourcebase.cpp:1278
-#, fuzzy, kde-format
-#| msgid "Failed to retrieve collection for attribute sync."
+#, kde-format
 msgid "Failed to fetch collection for collection attributes sync."
-msgstr "משיכת האוסף לסנכרון מאפיינים נכשל."
+msgstr "משיכת האוסף לסנכרון מאפייני אוספים נכשלה."
 
 #: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
 #, kde-format

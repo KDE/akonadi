@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-06 00:46+0000\n"
-"PO-Revision-Date: 2025-12-30 06:19+0100\n"
+"PO-Revision-Date: 2026-05-06 04:51+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.9\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -149,14 +149,12 @@ msgid "The requested item no longer exists"
 msgstr "მოთხოვნილი ჩანაწერი აღარ არსებობს"
 
 #: agentbase/resourcebase.cpp:1242
-#, fuzzy, kde-format
-#| msgid "Failed to retrieve collection for sync."
+#, kde-format
 msgid "Failed to fetch collection for collection sync."
-msgstr "სინქრონიზაციისთვის კოლექციის მიღების შეცდომა."
+msgstr "კოლექციის სინქრონიზაციისთვის კოლექციის მიღების შეცდომა."
 
 #: agentbase/resourcebase.cpp:1278
-#, fuzzy, kde-format
-#| msgid "Failed to retrieve collection for attribute sync."
+#, kde-format
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr "ატრიბუტის სინქრონიზაციისთვის კოლექციის მიღების შეცდომა."
 

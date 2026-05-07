@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-06 00:46+0000\n"
-"PO-Revision-Date: 2026-04-06 19:06+0200\n"
+"PO-Revision-Date: 2026-05-06 10:56+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 25.04.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -135,12 +135,12 @@ msgstr "Synchronisante dossier ' %1' "
 #: agentbase/resourcebase.cpp:927 agentbase/resourcebase.cpp:934
 #, kde-format
 msgid "Failed to retrieve collection for sync."
-msgstr "Il falleva rcuperar le collection per syncronisation."
+msgstr "Il falleva recuperar le collection per syncronisation."
 
 #: agentbase/resourcebase.cpp:975
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
-msgstr "Il falleva rcuperar le collection per syncronisation de attribute."
+msgstr "Il falleva recuperar le collection per syncronisation de attribute."
 
 #: agentbase/resourcebase.cpp:1023
 #, kde-format
@@ -148,16 +148,16 @@ msgid "The requested item no longer exists"
 msgstr "Le elemento requirite non existe plus"
 
 #: agentbase/resourcebase.cpp:1242
-#, fuzzy, kde-format
-#| msgid "Failed to retrieve collection for sync."
+#, kde-format
 msgid "Failed to fetch collection for collection sync."
-msgstr "Il falleva rcuperar le collection per syncronisation."
+msgstr "Il falleva recuperar le collection per syncronisation de collection"
 
 #: agentbase/resourcebase.cpp:1278
-#, fuzzy, kde-format
-#| msgid "Failed to retrieve collection for attribute sync."
+#, kde-format
 msgid "Failed to fetch collection for collection attributes sync."
-msgstr "Il falleva rcuperar le collection per syncronisation de attribute."
+msgstr ""
+"Il falleva recuperar le collection per syncronisation de attributes de "
+"collection."
 
 #: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
 #, kde-format
