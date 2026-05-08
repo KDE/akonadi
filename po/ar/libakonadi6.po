@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-06 00:46+0000\n"
-"PO-Revision-Date: 2026-01-07 19:01+0400\n"
+"POT-Creation-Date: 2026-05-08 00:44+0000\n"
+"PO-Revision-Date: 2026-05-07 13:16+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -152,16 +152,14 @@ msgid "The requested item no longer exists"
 msgstr "لم يعد العنصر المطلوب موجودًا"
 
 #: agentbase/resourcebase.cpp:1242
-#, fuzzy, kde-format
-#| msgid "Failed to retrieve collection for sync."
+#, kde-format
 msgid "Failed to fetch collection for collection sync."
-msgstr "فشل جلب التجميعة للمزامنة."
+msgstr "فشل استرداد المجموعة من أجل مزامنة المجموعات."
 
 #: agentbase/resourcebase.cpp:1278
-#, fuzzy, kde-format
-#| msgid "Failed to retrieve collection for attribute sync."
+#, kde-format
 msgid "Failed to fetch collection for collection attributes sync."
-msgstr "فشل جلب التجميعة لمزامنة الصفات."
+msgstr "فشل استرداد المجموعة الخاصة بمزامنة سمات المجموعة."
 
 #: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
 #, kde-format
@@ -456,13 +454,13 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "الاسم"
 
-#: core/models/colorproxymodel.cpp:85
+#: core/models/colorproxymodel.cpp:83
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Offline)"
 msgstr "‏%1 (غير متّصل)"
 
-#: core/models/colorproxymodel.cpp:88
+#: core/models/colorproxymodel.cpp:86
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"

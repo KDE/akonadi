@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-06 00:46+0000\n"
+"POT-Creation-Date: 2026-05-08 00:44+0000\n"
 "PO-Revision-Date: 2010-02-26 23:20+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -449,7 +449,7 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "ชื่อ"
 
-#: core/models/colorproxymodel.cpp:85
+#: core/models/colorproxymodel.cpp:83
 #, fuzzy, kde-format
 #| msgctxt "@info:status"
 #| msgid "Offline"
@@ -457,7 +457,7 @@ msgctxt "@item this is the default calendar"
 msgid "%1 (Offline)"
 msgstr "ออฟไลน์"
 
-#: core/models/colorproxymodel.cpp:88
+#: core/models/colorproxymodel.cpp:86
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
