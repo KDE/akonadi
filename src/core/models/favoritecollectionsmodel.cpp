@@ -302,18 +302,6 @@ void FavoriteCollectionsModel::removeCollection(const Collection &collection)
     d->saveConfig();
 }
 
-Akonadi::Collection::List FavoriteCollectionsModel::collections() const
-{
-    Collection::List cols;
-    cols.reserve(d->collectionIds.count());
-    for (const Collection::Id &colId : std::as_const(d->collectionIds)) {
-        const QModelIndex idx = EntityTreeModel::modelIndexForCollection(sourceModel(), Collection(colId));
-        const auto collection = sourceModel()->data(idx, EntityTreeModel::CollectionRole).value<Collection>();
-        cols << collection;
-    }
-    return cols;
-}
-
 QList<Collection::Id> FavoriteCollectionsModel::collectionIds() const
 {
     return d->collectionIds;

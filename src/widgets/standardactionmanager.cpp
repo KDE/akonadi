@@ -1268,8 +1268,9 @@ public:
     void slotSynchronizeFavoriteCollections()
     {
         Q_ASSERT(favoritesModel);
-        const auto collections = favoritesModel->collections();
-        for (const auto &collection : collections) {
+        for (int row = 0; row < favoritesModel->rowCount(); ++row) {
+            const auto idx = favoritesModel->index(row, 0);
+            const auto collection = idx.data(EntityTreeModel::CollectionRole).value<Collection>();
             // there might be virtual collections in favorites which cannot be checked
             // so let's be safe here, agentmanager asserts otherwise
             if (!collection.resource().isEmpty()) {

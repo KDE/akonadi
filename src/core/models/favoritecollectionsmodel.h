@@ -75,12 +75,6 @@ public:
     ~FavoriteCollectionsModel() override;
 
     /*!
-     * Returns the list of favorite collections.
-     * \deprecated Use collectionIds instead.
-     */
-    [[nodiscard]] AKONADICORE_DEPRECATED Collection::List collections() const;
-
-    /*!
      * Returns the list of ids of favorite collections set on the FavoriteCollectionsModel.
      *
      * Note that if you want Collections with actual data
@@ -98,7 +92,7 @@ public:
      *   }
      * \endcode
      *
-     * Note that due to the asynchronous nature of the model, this method returns collection ids
+     * \note Due to the asynchronous nature of the model, this method returns collection ids
      * of collections which may not be in the model yet. If you want the ids of the collections
      * that are actually in the model, use a loop similar to above with the CollectionIdRole.
      */
