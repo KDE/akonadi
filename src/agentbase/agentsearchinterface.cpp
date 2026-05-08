@@ -11,7 +11,6 @@
 #include "collection.h"
 #include "collectionfetchjob.h"
 #include "collectionfetchscope.h"
-#include "private/imapset_p.h"
 #include "searchadaptor.h"
 #include "searchresultjob_p.h"
 #include "servermanager.h"
@@ -102,37 +101,6 @@ void AgentSearchInterface::searchFinished(const QList<qint64> &result, ResultSco
 
     auto resultJob = new SearchResultJob(d->mSearchId, Collection(d->mCollectionId), d.get());
     resultJob->setResult(result);
-}
-
-void AgentSearchInterface::searchFinished(const ImapSet &result, ResultScope scope)
-{
-    if (scope == Akonadi::AgentSearchInterface::Rid) {
-        QList<QByteArray> rids;
-        const ImapInterval::List lstInterval = result.intervals();
-        for (const ImapInterval &interval : lstInterval) {
-            const int endInterval(interval.end());
-            for (int i = interval.begin(); i <= endInterval; ++i) {
-                rids << QByteArray::number(i);
-            }
-        }
-
-        searchFinished(rids);
-        return;
-    }
-
-    QList<qint64> ids;
-    for (const auto &interval : result.intervals()) {
-        if (!interval.hasDefinedBegin() || !interval.hasDefinedEnd()) {
-            qCWarning(AKONADIAGENTBASE_LOG) << "Search results must not have an open interval! Results will be incomplete.";
-            continue;
-        }
-        for (int i = interval.begin(), end = interval.end(); i <= end; ++i) {
-            ids << i;
-        }
-    }
-
-    auto resultJob = new SearchResultJob(d->mSearchId, Collection(d->mCollectionId), d.get());
-    resultJob->setResult(ids);
 }
 
 void AgentSearchInterface::searchFinished(const QList<QByteArray> &result)

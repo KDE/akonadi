@@ -15,7 +15,6 @@ namespace Akonadi
 {
 class Collection;
 class AgentSearchInterfacePrivate;
-class ImapSet;
 
 /*!
  * \class Akonadi::AgentSearchInterface
@@ -75,8 +74,6 @@ public:
     virtual void search(const QString &query, const Collection &collection) = 0;
 
     void searchFinished(const QList<qint64> &result, ResultScope scope);
-    Q_DECL_DEPRECATED_X("Use searchFinished(const QList<qint64> &, ResultScope) instead")
-    void searchFinished(const ImapSet &result, ResultScope scope);
     void searchFinished(const QList<QByteArray> &result);
 
 private:
