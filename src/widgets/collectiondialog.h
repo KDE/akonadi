@@ -153,7 +153,7 @@ public:
 
     /*!
      * Sets the \a collection that shall be selected by default.
-     * \a collection the dialog's pre-selected collection
+     * \a collection the dialog's preselected collection
      * \since 4.4
      */
     void setDefaultCollection(const Collection &collection);

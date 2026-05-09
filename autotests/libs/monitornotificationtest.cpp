@@ -98,7 +98,7 @@ void MonitorNotificationTest::testSingleMessage_impl(MonitorImpl *monitor, FakeC
     msg->setParentCollection(parent.id());
     msg->setOperation(Protocol::CollectionChangeNotification::Add);
     msg->setCollection(Protocol::FetchCollectionsResponse(added.id()));
-    // With notification payloads most requests by-pass the pipeline as the
+    // With notification payloads most requests bypass the pipeline as the
     // notification already contains everything. To force pipelineing we set
     // the internal metadata (normally set by ChangeRecorder)
     msg->addMetadata("FETCH_COLLECTION");
