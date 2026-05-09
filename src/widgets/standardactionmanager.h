@@ -303,16 +303,6 @@ public:
      * \a text content to set for the action
      * \since 4.6
      */
-    [[deprecated("use KLocalizedString overload")]] void setContextText(Type type, TextContext context, const QString &text);
-
-    /*!
-     * Sets the \a text of the action \a type for the given \a context.
-     *
-     * \a type action type
-     * \a context context for action
-     * \a text content to set for the action
-     * \since 4.6
-     */
     void setContextText(Type type, TextContext context, const KLocalizedString &text);
 
     /*!

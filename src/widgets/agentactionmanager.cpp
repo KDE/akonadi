@@ -51,19 +51,19 @@ public:
     {
         mActions.fill(nullptr, AgentActionManager::LastType);
 
-        setContextText(AgentActionManager::CreateAgentInstance, AgentActionManager::DialogTitle, i18nc("@title:window", "New Agent Instance"));
+        setContextText(AgentActionManager::CreateAgentInstance, AgentActionManager::DialogTitle, ki18nc("@title:window", "New Agent Instance"));
 
         setContextText(AgentActionManager::CreateAgentInstance, AgentActionManager::ErrorMessageText, ki18n("Could not create agent instance: %1"));
 
         setContextText(AgentActionManager::CreateAgentInstance,
                        AgentActionManager::ErrorMessageTitle,
-                       i18nc("@title:window", "Agent Instance Creation Failed"));
+                       ki18nc("@title:window", "Agent Instance Creation Failed"));
 
-        setContextText(AgentActionManager::DeleteAgentInstance, AgentActionManager::MessageBoxTitle, i18nc("@title:window", "Delete Agent Instance?"));
+        setContextText(AgentActionManager::DeleteAgentInstance, AgentActionManager::MessageBoxTitle, ki18nc("@title:window", "Delete Agent Instance?"));
 
         setContextText(AgentActionManager::DeleteAgentInstance,
                        AgentActionManager::MessageBoxText,
-                       i18n("Do you really want to delete the selected agent instance?"));
+                       ki18n("Do you really want to delete the selected agent instance?"));
     }
 
     void enableAction(AgentActionManager::Type type, bool enable)
@@ -123,7 +123,7 @@ public:
     void slotCreateAgentInstance()
     {
         QPointer<Akonadi::AgentTypeDialog> dlg(new Akonadi::AgentTypeDialog(mParentWidget));
-        dlg->setWindowTitle(contextText(AgentActionManager::CreateAgentInstance, AgentActionManager::DialogTitle));
+        dlg->setWindowTitle(contextText(AgentActionManager::CreateAgentInstance, AgentActionManager::DialogTitle).toString());
 
         for (const QString &mimeType : std::as_const(mMimeTypeFilter)) {
             dlg->agentFilterProxyModel()->addMimeTypeFilter(mimeType);
@@ -162,8 +162,8 @@ public:
         const AgentInstance::List instances = selectedAgentInstances();
         if (!instances.isEmpty()) {
             if (KMessageBox::questionTwoActions(mParentWidget,
-                                                contextText(AgentActionManager::DeleteAgentInstance, AgentActionManager::MessageBoxText),
-                                                contextText(AgentActionManager::DeleteAgentInstance, AgentActionManager::MessageBoxTitle),
+                                                contextText(AgentActionManager::DeleteAgentInstance, AgentActionManager::MessageBoxText).toString(),
+                                                contextText(AgentActionManager::DeleteAgentInstance, AgentActionManager::MessageBoxTitle).toString(),
                                                 KStandardGuiItem::del(),
                                                 KStandardGuiItem::cancel(),
                                                 QString(),
@@ -192,22 +192,17 @@ public:
     {
         if (job->error()) {
             KMessageBox::error(mParentWidget,
-                               contextText(AgentActionManager::CreateAgentInstance, AgentActionManager::ErrorMessageText).arg(job->errorString()),
-                               contextText(AgentActionManager::CreateAgentInstance, AgentActionManager::ErrorMessageTitle));
+                               contextText(AgentActionManager::CreateAgentInstance, AgentActionManager::ErrorMessageText).subs(job->errorString()).toString(),
+                               contextText(AgentActionManager::CreateAgentInstance, AgentActionManager::ErrorMessageTitle).toString());
         }
-    }
-
-    void setContextText(AgentActionManager::Type type, AgentActionManager::TextContext context, const QString &data)
-    {
-        mContextTexts[type].insert(context, data);
     }
 
     void setContextText(AgentActionManager::Type type, AgentActionManager::TextContext context, const KLocalizedString &data)
     {
-        mContextTexts[type].insert(context, data.toString());
+        mContextTexts[type].insert(context, data);
     }
 
-    QString contextText(AgentActionManager::Type type, AgentActionManager::TextContext context) const
+    KLocalizedString contextText(AgentActionManager::Type type, AgentActionManager::TextContext context) const
     {
         return mContextTexts[type].value(context);
     }
@@ -220,7 +215,7 @@ public:
     QStringList mMimeTypeFilter;
     QStringList mCapabilityFilter;
 
-    using ContextTexts = QHash<AgentActionManager::TextContext, QString>;
+    using ContextTexts = QHash<AgentActionManager::TextContext, KLocalizedString>;
     QHash<AgentActionManager::Type, ContextTexts> mContextTexts;
 };
 
@@ -316,11 +311,6 @@ void AgentActionManager::interceptAction(Type type, bool intercept)
 AgentInstance::List AgentActionManager::selectedAgentInstances() const
 {
     return d->selectedAgentInstances();
-}
-
-void AgentActionManager::setContextText(Type type, TextContext context, const QString &text)
-{
-    d->setContextText(type, context, text);
 }
 
 void AgentActionManager::setContextText(Type type, TextContext context, const KLocalizedString &text)

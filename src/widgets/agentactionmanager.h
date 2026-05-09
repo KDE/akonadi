@@ -132,17 +132,6 @@ public:
     /*!
      * Sets the \a text of the action \a type for the given \a context.
      *
-     * \a type action type
-     * \a context context of the given action
-     * \a text text for the given action type
-     *
-     * \since 4.6
-     */
-    [[deprecated("use KLocalizedString overload")]] void setContextText(Type type, TextContext context, const QString &text);
-
-    /*!
-     * Sets the \a text of the action \a type for the given \a context.
-     *
      * \since 4.8
      * \a type action type
      * \a context context of the given action type

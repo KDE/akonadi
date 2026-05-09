@@ -416,10 +416,10 @@ public:
         pluralIconLabels.insert(StandardActionManager::DeleteResources, ki18ncp("@action", "Delete Resource", "Delete %1 Resources"));
         pluralIconLabels.insert(StandardActionManager::SynchronizeResources, ki18ncp("@action", "Synchronize Resource", "Synchronize %1 Resources"));
 
-        setContextText(StandardActionManager::CreateCollection, StandardActionManager::DialogTitle, i18nc("@title:window", "New Folder"));
-        setContextText(StandardActionManager::CreateCollection, StandardActionManager::DialogText, i18nc("@label:textbox name of Akonadi folder", "Name"));
+        setContextText(StandardActionManager::CreateCollection, StandardActionManager::DialogTitle, ki18nc("@title:window", "New Folder"));
+        setContextText(StandardActionManager::CreateCollection, StandardActionManager::DialogText, ki18nc("@label:textbox name of Akonadi folder", "Name"));
         setContextText(StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageText, ki18n("Could not create folder: %1"));
-        setContextText(StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle, i18nc("@title:window", "Folder Creation Failed"));
+        setContextText(StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle, ki18nc("@title:window", "Folder Creation Failed"));
 
         setContextText(
             StandardActionManager::DeleteCollections,
@@ -429,7 +429,7 @@ public:
                        StandardActionManager::MessageBoxTitle,
                        ki18ncp("@title:window", "Delete Folder?", "Delete Folders?"));
         setContextText(StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText, ki18n("Could not delete folder: %1"));
-        setContextText(StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle, i18nc("@title:window", "Folder Deletion Failed"));
+        setContextText(StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle, ki18nc("@title:window", "Folder Deletion Failed"));
 
         setContextText(StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle, ki18nc("@title:window", "Properties of Folder %1"));
 
@@ -438,14 +438,16 @@ public:
                        ki18np("Do you really want to delete the selected item?", "Do you really want to delete %1 items?"));
         setContextText(StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle, ki18ncp("@title:window", "Delete Item?", "Delete Items?"));
         setContextText(StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageText, ki18n("Could not delete item: %1"));
-        setContextText(StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageTitle, i18nc("@title:window", "Item Deletion Failed"));
+        setContextText(StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageTitle, ki18nc("@title:window", "Item Deletion Failed"));
 
-        setContextText(StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle, i18nc("@title:window", "Rename Favorite"));
-        setContextText(StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogText, i18nc("@label:textbox name of the folder", "Name:"));
+        setContextText(StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle, ki18nc("@title:window", "Rename Favorite"));
+        setContextText(StandardActionManager::RenameFavoriteCollection,
+                       StandardActionManager::DialogText,
+                       ki18nc("@label:textbox name of the folder", "Name:"));
 
-        setContextText(StandardActionManager::CreateResource, StandardActionManager::DialogTitle, i18nc("@title:window", "New Resource"));
+        setContextText(StandardActionManager::CreateResource, StandardActionManager::DialogTitle, ki18nc("@title:window", "New Resource"));
         setContextText(StandardActionManager::CreateResource, StandardActionManager::ErrorMessageText, ki18n("Could not create resource: %1"));
-        setContextText(StandardActionManager::CreateResource, StandardActionManager::ErrorMessageTitle, i18nc("@title:window", "Resource Creation Failed"));
+        setContextText(StandardActionManager::CreateResource, StandardActionManager::ErrorMessageTitle, ki18nc("@title:window", "Resource Creation Failed"));
 
         setContextText(StandardActionManager::DeleteResources,
                        StandardActionManager::MessageBoxText,
@@ -455,7 +457,7 @@ public:
                        ki18ncp("@title:window", "Delete Resource?", "Delete Resources?"));
 
         setContextText(StandardActionManager::Paste, StandardActionManager::ErrorMessageText, ki18n("Could not paste data: %1"));
-        setContextText(StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle, i18nc("@title:window", "Paste Failed"));
+        setContextText(StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle, ki18nc("@title:window", "Paste Failed"));
 
         mDelayedUpdateTimer.setSingleShot(true);
         QObject::connect(&mDelayedUpdateTimer, &QTimer::timeout, q, [this]() {
@@ -1752,45 +1754,25 @@ public:
         }
     }
 
-    void setContextText(StandardActionManager::Type type, StandardActionManager::TextContext context, const QString &data)
-    {
-        ContextTextEntry entry;
-        entry.text = data;
-
-        contextTexts[type].insert(context, entry);
-    }
-
     void setContextText(StandardActionManager::Type type, StandardActionManager::TextContext context, const KLocalizedString &data)
     {
-        ContextTextEntry entry;
-        entry.localizedText = data;
-
-        contextTexts[type].insert(context, entry);
+        contextTexts[type].insert(context, data);
     }
 
     QString contextText(StandardActionManager::Type type, StandardActionManager::TextContext context) const
     {
-        const auto &text = contextTexts.value(type).value(context);
-        return text.localizedText.isEmpty() ? text.text : text.localizedText.toString();
+        return contextTexts.value(type).value(context).toString();
     }
 
     QString contextText(StandardActionManager::Type type, StandardActionManager::TextContext context, const QString &value) const
     {
-        KLocalizedString text = contextTexts[type].value(context).localizedText;
-        if (text.isEmpty()) {
-            return contextTexts[type].value(context).text;
-        }
-
+        KLocalizedString text = contextTexts[type].value(context);
         return text.subs(value).toString();
     }
 
     QString contextText(StandardActionManager::Type type, StandardActionManager::TextContext context, int count, const QString &value) const
     {
-        KLocalizedString text = contextTexts[type].value(context).localizedText;
-        if (text.isEmpty()) {
-            return contextTexts[type].value(context).text;
-        }
-
+        KLocalizedString text = contextTexts[type].value(context);
         const QString str = text.subs(count).toString();
         const int argCount = str.count(QRegularExpression(QStringLiteral("%[0-9]")));
         if (argCount > 0) {
@@ -1813,12 +1795,7 @@ public:
     QHash<StandardActionManager::Type, KLocalizedString> pluralIconLabels;
     QTimer mDelayedUpdateTimer;
 
-    struct ContextTextEntry {
-        QString text;
-        KLocalizedString localizedText;
-    };
-
-    using ContextTexts = QHash<StandardActionManager::TextContext, ContextTextEntry>;
+    using ContextTexts = QHash<StandardActionManager::TextContext, KLocalizedString>;
     QHash<StandardActionManager::Type, ContextTexts> contextTexts;
 
     ActionStateManager mActionStateManager;
@@ -2042,11 +2019,6 @@ Item::List StandardActionManager::selectedItems() const
     }
 
     return items;
-}
-
-void StandardActionManager::setContextText(Type type, TextContext context, const QString &text)
-{
-    d->setContextText(type, context, text);
 }
 
 void StandardActionManager::setContextText(Type type, TextContext context, const KLocalizedString &text)
