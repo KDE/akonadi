@@ -148,16 +148,14 @@ msgid "The requested item no longer exists"
 msgstr "Vyžadovaná položka už neexistuje"
 
 #: agentbase/resourcebase.cpp:1242
-#, fuzzy, kde-format
-#| msgid "Failed to retrieve collection for sync."
+#, kde-format
 msgid "Failed to fetch collection for collection sync."
-msgstr "Zlyhalo získanie kolekcie pre sync."
+msgstr "Zlyhalo načítanie kolekcie pre synchronizáciu kolekcie."
 
 #: agentbase/resourcebase.cpp:1278
-#, fuzzy, kde-format
-#| msgid "Failed to retrieve collection for attribute sync."
+#, kde-format
 msgid "Failed to fetch collection for collection attributes sync."
-msgstr "Zlyhalo získanie kolekcie pre atribút sync."
+msgstr "Zlyhalo načítanie kolekcie pre synchronizáciu atribútov kolekcie."
 
 #: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
 #, kde-format
