@@ -56,80 +56,6 @@ using namespace Akonadi;
 
 /// @cond PRIVATE
 
-enum ActionType {
-    NormalAction,
-    ActionWithAlternative, // Normal action, but with an alternative state
-    ActionAlternative, // Alternative state of the ActionWithAlternative
-    MenuAction,
-    ToggleAction
-};
-
-struct StandardActionData { // NOLINT(clang-analyzer-optin.performance.Padding) FIXME
-    const char *name;
-    const KLazyLocalizedString label;
-    const KLazyLocalizedString iconLabel;
-    const char *icon;
-    const char *altIcon;
-    QKeySequence shortcut;
-    const char *slot;
-    ActionType actionType;
-};
-
-// clang-format off
-static const StandardActionData standardActionData[] = {
-    {"akonadi_collection_create", kli18n("&New Folder..."), kli18n("New"), "folder-new", nullptr, {}, SLOT(slotCreateCollection()), NormalAction},
-    {"akonadi_collection_copy", {}, {}, "edit-copy", nullptr, {}, SLOT(slotCopyCollections()), NormalAction},
-    {"akonadi_collection_delete", kli18n("&Delete Folder"), kli18n("Delete"), "edit-delete", nullptr, {}, SLOT(slotDeleteCollection()), NormalAction},
-    {"akonadi_collection_sync", kli18n("&Synchronize Folder"), kli18n("Synchronize"), "view-refresh", nullptr, Qt::Key_F5, SLOT(slotSynchronizeCollection()), NormalAction},
-    {"akonadi_collection_properties", kli18n("Folder &Properties"), kli18n("Properties"), "configure", nullptr, {}, SLOT(slotCollectionProperties()), NormalAction},
-    {"akonadi_item_copy", {}, {}, "edit-copy", nullptr, 0, SLOT(slotCopyItems()), NormalAction},
-    {"akonadi_paste", kli18n("&Paste"), kli18n("Paste"), "edit-paste", nullptr, Qt::CTRL | Qt::Key_V, SLOT(slotPaste()), NormalAction},
-    {"akonadi_item_delete", {}, {}, "edit-delete", nullptr, 0, SLOT(slotDeleteItems()), NormalAction},
-    {"akonadi_manage_local_subscriptions", kli18n("Manage Local &Subscriptions..."), kli18n("Manage Local Subscriptions"), "folder-bookmarks", nullptr, {}, SLOT(slotLocalSubscription()), NormalAction},
-    {"akonadi_collection_add_to_favorites", kli18n("Add to Favorite Folders"), kli18n("Add to Favorite"), "bookmark-new", nullptr, {}, SLOT(slotAddToFavorites()), NormalAction},
-    {"akonadi_collection_remove_from_favorites", kli18n("Remove from Favorite Folders"), kli18n("Remove from Favorite"), "edit-delete", nullptr, {}, SLOT(slotRemoveFromFavorites()), NormalAction},
-    {"akonadi_collection_rename_favorite", kli18n("Rename Favorite..."), kli18n("Rename"), "edit-rename", nullptr, {}, SLOT(slotRenameFavorite()), NormalAction},
-    {"akonadi_collection_copy_to_menu", kli18n("Copy Folder To..."), kli18n("Copy To"), "edit-copy", nullptr, {}, SLOT(slotCopyCollectionTo(QAction *)), MenuAction},
-    {"akonadi_item_copy_to_menu", kli18n("Copy Item To..."), kli18n("Copy To"), "edit-copy", nullptr, {}, SLOT(slotCopyItemTo(QAction *)), MenuAction},
-    {"akonadi_item_move_to_menu", kli18n("Move Item To..."), kli18n("Move To"), "edit-move", "go-jump", {}, SLOT(slotMoveItemTo(QAction *)), MenuAction},
-    {"akonadi_collection_move_to_menu", kli18n("Move Folder To..."), kli18n("Move To"), "edit-move", "go-jump", {}, SLOT(slotMoveCollectionTo(QAction *)), MenuAction},
-    {"akonadi_item_cut", kli18n("&Cut Item"), kli18n("Cut"), "edit-cut", nullptr, Qt::CTRL | Qt::Key_X, SLOT(slotCutItems()), NormalAction},
-    {"akonadi_collection_cut", kli18n("&Cut Folder"), kli18n("Cut"), "edit-cut", nullptr, Qt::CTRL | Qt::Key_X, SLOT(slotCutCollections()), NormalAction},
-    {"akonadi_resource_create", kli18n("Create Resource"), {}, "folder-new", nullptr, {}, SLOT(slotCreateResource()), NormalAction},
-    {"akonadi_resource_delete", kli18n("Delete Resource"), {}, "edit-delete", nullptr, {}, SLOT(slotDeleteResource()), NormalAction},
-    {"akonadi_resource_properties", kli18n("&Resource Properties"), kli18n("Properties"), "configure", nullptr, {}, SLOT(slotResourceProperties()), NormalAction},
-    {"akonadi_resource_synchronize", kli18n("Synchronize Resource"), kli18n("Synchronize"), "view-refresh", nullptr, {}, SLOT(slotSynchronizeResource()), NormalAction},
-    {"akonadi_work_offline", kli18n("Work Offline"), {}, "user-offline", nullptr, {}, SLOT(slotToggleWorkOffline(bool)), ToggleAction},
-    {"akonadi_collection_copy_to_dialog", kli18n("Copy Folder To..."), kli18n("Copy To"), "edit-copy", nullptr, {}, SLOT(slotCopyCollectionTo()), NormalAction},
-    {"akonadi_collection_move_to_dialog", kli18n("Move Folder To..."), kli18n("Move To"), "edit-move", "go-jump", {}, SLOT(slotMoveCollectionTo()), NormalAction},
-    {"akonadi_item_copy_to_dialog", kli18n("Copy Item To..."), kli18n("Copy To"), "edit-copy", nullptr, {}, SLOT(slotCopyItemTo()), NormalAction},
-    {"akonadi_item_move_to_dialog", kli18n("Move Item To..."), kli18n("Move To"), "edit-move", "go-jump", {}, SLOT(slotMoveItemTo()), NormalAction},
-    {"akonadi_collection_sync_recursive", kli18n("&Synchronize Folder Recursively"), kli18n("Synchronize Recursively"), "view-refresh", nullptr, Qt::CTRL | Qt::Key_F5, SLOT(slotSynchronizeCollectionRecursive()), NormalAction},
-    {"akonadi_move_collection_to_trash", kli18n("&Move Folder To Trash"), kli18n("Move Folder To Trash"), "edit-delete", nullptr, {}, SLOT(slotMoveCollectionToTrash()), NormalAction},
-    {"akonadi_move_item_to_trash", kli18n("&Move Item To Trash"), kli18n("Move Item To Trash"), "edit-delete", nullptr, {}, SLOT(slotMoveItemToTrash()), NormalAction},
-    {"akonadi_restore_collection_from_trash", kli18n("&Restore Folder From Trash"), kli18n("Restore Folder From Trash"), "view-refresh", nullptr, {}, SLOT(slotRestoreCollectionFromTrash()), NormalAction},
-    {"akonadi_restore_item_from_trash", kli18n("&Restore Item From Trash"), kli18n("Restore Item From Trash"), "view-refresh", nullptr, {}, SLOT(slotRestoreItemFromTrash()), NormalAction},
-    {"akonadi_collection_trash_restore", kli18n("&Restore Folder From Trash"), kli18n("Restore Folder From Trash"), "edit-delete", nullptr, {}, SLOT(slotTrashRestoreCollection()), ActionWithAlternative},
-    {nullptr, kli18n("&Restore Collection From Trash"), kli18n("Restore Collection From Trash"), "view-refresh", nullptr, {}, nullptr, ActionAlternative},
-    {"akonadi_item_trash_restore", kli18n("&Restore Item From Trash"), kli18n("Restore Item From Trash"), "edit-delete", nullptr, 0, SLOT(slotTrashRestoreItem()), ActionWithAlternative},
-    {nullptr, kli18n("&Restore Item From Trash"), kli18n("Restore Item From Trash"), "view-refresh", nullptr, {}, nullptr, ActionAlternative},
-    {"akonadi_collection_sync_favorite_folders", kli18n("&Synchronize Favorite Folders"), kli18n("Synchronize Favorite Folders"), "view-refresh", nullptr, Qt::CTRL | Qt::SHIFT | Qt::Key_L, SLOT(slotSynchronizeFavoriteCollections()), NormalAction},
-    {"akonadi_resource_synchronize_collectiontree", kli18n("Synchronize Folder Tree"), kli18n("Synchronize"), "view-refresh", nullptr, {}, SLOT(slotSynchronizeCollectionTree()), NormalAction},
-};
-// clang-format on
-
-static const int numStandardActionData = sizeof standardActionData / sizeof *standardActionData;
-
-static QIcon standardActionDataIcon(const StandardActionData &data)
-{
-    if (data.altIcon) {
-        return QIcon::fromTheme(QString::fromLatin1(data.icon), QIcon::fromTheme(QString::fromLatin1(data.altIcon)));
-    }
-    return QIcon::fromTheme(QString::fromLatin1(data.icon));
-}
-
-static_assert(numStandardActionData == StandardActionManager::LastType, "StandardActionData table does not match StandardActionManager types");
-
 static bool canCreateCollection(const Akonadi::Collection &collection)
 {
     return !!(collection.rights() & Akonadi::Collection::CanCreateCollection);
@@ -271,34 +197,7 @@ public:
         enableAction(static_cast<StandardActionManager::Type>(type), enable);
     }
 
-    void enableAction(StandardActionManager::Type type, bool enable)
-    {
-        Q_ASSERT(type < StandardActionManager::LastType);
-        if (actions[type]) {
-            actions[type]->setEnabled(enable);
-        }
-
-        // Update the action menu
-        auto actionMenu = qobject_cast<KActionMenu *>(actions[type]);
-        if (actionMenu) {
-            // get rid of the submenus, they are re-created in enableAction. clear() is not enough, doesn't remove the submenu object instances.
-            QMenu *menu = actionMenu->menu();
-            // Not necessary to delete and recreate menu when it was not created
-            if (menu->property("actionType").isValid() && menu->isEmpty()) {
-                return;
-            }
-            mRecentCollectionsMenu.remove(type);
-            delete menu;
-            menu = new QMenu();
-
-            menu->setProperty("actionType", static_cast<int>(type));
-            q->connect(menu, &QMenu::aboutToShow, q, [this]() {
-                aboutToShowMenu();
-            });
-            q->connect(menu, SIGNAL(triggered(QAction *)), standardActionData[type].slot); // clazy:exclude=old-style-connect
-            actionMenu->setMenu(menu);
-        }
-    }
+    void enableAction(StandardActionManager::Type type, bool enable);
 
     void aboutToShowMenu()
     {
@@ -336,47 +235,7 @@ public:
         updateAlternatingAction(static_cast<StandardActionManager::Type>(type));
     }
 
-    void updateAlternatingAction(StandardActionManager::Type type)
-    {
-        Q_ASSERT(type < StandardActionManager::LastType);
-        if (!actions[type]) {
-            return;
-        }
-
-        /*
-         * The same action is stored at the ActionWithAlternative indexes as well as the corresponding ActionAlternative indexes in the actions array.
-         * The following simply changes the standardActionData
-         */
-        if ((standardActionData[type].actionType == ActionWithAlternative) || (standardActionData[type].actionType == ActionAlternative)) {
-            actions[type]->setText(standardActionData[type].label.toString());
-            actions[type]->setIcon(standardActionDataIcon(standardActionData[type]));
-
-            if (pluralLabels.contains(type) && !pluralLabels.value(type).isEmpty()) {
-                actions[type]->setText(pluralLabels.value(type).subs(1).toString());
-            } else if (!standardActionData[type].label.isEmpty()) {
-                actions[type]->setText(standardActionData[type].label.toString());
-            }
-            if (pluralIconLabels.contains(type) && !pluralIconLabels.value(type).isEmpty()) {
-                actions[type]->setIconText(pluralIconLabels.value(type).subs(1).toString());
-            } else if (!standardActionData[type].iconLabel.isEmpty()) {
-                actions[type]->setIconText(standardActionData[type].iconLabel.toString());
-            }
-            if (standardActionData[type].icon) {
-                actions[type]->setIcon(standardActionDataIcon(standardActionData[type]));
-            }
-
-            // actions[type]->setShortcut( standardActionData[type].shortcut );
-
-            /*if ( standardActionData[type].slot ) {
-              switch ( standardActionData[type].actionType ) {
-              case NormalAction:
-              case ActionWithAlternative:
-                  connect( action, SIGNAL(triggered()), standardActionData[type].slot );
-                  break;
-              }
-            }*/
-        }
-    }
+    void updateAlternatingAction(StandardActionManager::Type type);
 
     void updatePluralLabel(int type, int count) // private slot, called by ActionStateManager
     {
@@ -409,7 +268,7 @@ public:
         }
 
 #ifndef QT_NO_CLIPBOARD
-        auto model = const_cast<QAbstractItemModel *>(selectionModel->model());
+        auto model = selectionModel->model();
         QMimeData *mimeData = selectionModel->model()->mimeData(safeSelectedRows(selectionModel));
         model->setData(QModelIndex(), false, EntityTreeModel::PendingCutRole);
         markCutAction(mimeData, cut);
@@ -502,8 +361,9 @@ public:
         }
 
         QList<QUrl> urls = mimeData->urls();
-        if (clipboardUrls == urls)
+        if (clipboardUrls == urls) {
             return;
+        }
 
         clipboardUrls = std::move(urls);
         updateActions();
@@ -942,7 +802,7 @@ public:
 
 #ifndef QT_NO_CLIPBOARD
         // TODO: Copy or move? We can't seem to cut yet
-        auto model = const_cast<QAbstractItemModel *>(collectionSelectionModel->model());
+        auto model = collectionSelectionModel->model();
         const QMimeData *mimeData = QApplication::clipboard()->mimeData();
         model->dropMimeData(mimeData, isCutAction(mimeData) ? Qt::MoveAction : Qt::CopyAction, -1, -1, index);
         model->setData(QModelIndex(), false, EntityTreeModel::PendingCutRole);
@@ -1607,6 +1467,149 @@ public:
     QList<QUrl> clipboardUrls;
 #endif
 };
+
+enum ActionType {
+    NormalAction,
+    ActionWithAlternative, // Normal action, but with an alternative state
+    ActionAlternative, // Alternative state of the ActionWithAlternative
+    MenuAction,
+    ToggleAction
+};
+
+struct StandardActionData { // NOLINT(clang-analyzer-optin.performance.Padding) FIXME
+    const char *name;
+    const KLazyLocalizedString label;
+    const KLazyLocalizedString iconLabel;
+    const char *icon;
+    const char *altIcon;
+    QKeySequence shortcut;
+    const char *slot;
+    ActionType actionType;
+};
+
+// clang-format off
+static const StandardActionData standardActionData[] = {
+    {"akonadi_collection_create", kli18n("&New Folder..."), kli18n("New"), "folder-new", nullptr, {}, SLOT(slotCreateCollection()), NormalAction},
+    {"akonadi_collection_copy", {}, {}, "edit-copy", nullptr, {}, SLOT(slotCopyCollections()), NormalAction},
+    {"akonadi_collection_delete", kli18n("&Delete Folder"), kli18n("Delete"), "edit-delete", nullptr, {}, SLOT(slotDeleteCollection()), NormalAction},
+    {"akonadi_collection_sync", kli18n("&Synchronize Folder"), kli18n("Synchronize"), "view-refresh", nullptr, Qt::Key_F5, SLOT(slotSynchronizeCollection()), NormalAction},
+    {"akonadi_collection_properties", kli18n("Folder &Properties"), kli18n("Properties"), "configure", nullptr, {}, SLOT(slotCollectionProperties()), NormalAction},
+    {"akonadi_item_copy", {}, {}, "edit-copy", nullptr, 0, SLOT(slotCopyItems()), NormalAction},
+    {"akonadi_paste", kli18n("&Paste"), kli18n("Paste"), "edit-paste", nullptr, Qt::CTRL | Qt::Key_V, SLOT(slotPaste()), NormalAction},
+    {"akonadi_item_delete", {}, {}, "edit-delete", nullptr, 0, SLOT(slotDeleteItems()), NormalAction},
+    {"akonadi_manage_local_subscriptions", kli18n("Manage Local &Subscriptions..."), kli18n("Manage Local Subscriptions"), "folder-bookmarks", nullptr, {}, SLOT(slotLocalSubscription()), NormalAction},
+    {"akonadi_collection_add_to_favorites", kli18n("Add to Favorite Folders"), kli18n("Add to Favorite"), "bookmark-new", nullptr, {}, SLOT(slotAddToFavorites()), NormalAction},
+    {"akonadi_collection_remove_from_favorites", kli18n("Remove from Favorite Folders"), kli18n("Remove from Favorite"), "edit-delete", nullptr, {}, SLOT(slotRemoveFromFavorites()), NormalAction},
+    {"akonadi_collection_rename_favorite", kli18n("Rename Favorite..."), kli18n("Rename"), "edit-rename", nullptr, {}, SLOT(slotRenameFavorite()), NormalAction},
+    {"akonadi_collection_copy_to_menu", kli18n("Copy Folder To..."), kli18n("Copy To"), "edit-copy", nullptr, {}, SLOT(slotCopyCollectionTo(QAction *)), MenuAction},
+    {"akonadi_item_copy_to_menu", kli18n("Copy Item To..."), kli18n("Copy To"), "edit-copy", nullptr, {}, SLOT(slotCopyItemTo(QAction *)), MenuAction},
+    {"akonadi_item_move_to_menu", kli18n("Move Item To..."), kli18n("Move To"), "edit-move", "go-jump", {}, SLOT(slotMoveItemTo(QAction *)), MenuAction},
+    {"akonadi_collection_move_to_menu", kli18n("Move Folder To..."), kli18n("Move To"), "edit-move", "go-jump", {}, SLOT(slotMoveCollectionTo(QAction *)), MenuAction},
+    {"akonadi_item_cut", kli18n("&Cut Item"), kli18n("Cut"), "edit-cut", nullptr, Qt::CTRL | Qt::Key_X, SLOT(slotCutItems()), NormalAction},
+    {"akonadi_collection_cut", kli18n("&Cut Folder"), kli18n("Cut"), "edit-cut", nullptr, Qt::CTRL | Qt::Key_X, SLOT(slotCutCollections()), NormalAction},
+    {"akonadi_resource_create", kli18n("Create Resource"), {}, "folder-new", nullptr, {}, SLOT(slotCreateResource()), NormalAction},
+    {"akonadi_resource_delete", kli18n("Delete Resource"), {}, "edit-delete", nullptr, {}, SLOT(slotDeleteResource()), NormalAction},
+    {"akonadi_resource_properties", kli18n("&Resource Properties"), kli18n("Properties"), "configure", nullptr, {}, SLOT(slotResourceProperties()), NormalAction},
+    {"akonadi_resource_synchronize", kli18n("Synchronize Resource"), kli18n("Synchronize"), "view-refresh", nullptr, {}, SLOT(slotSynchronizeResource()), NormalAction},
+    {"akonadi_work_offline", kli18n("Work Offline"), {}, "user-offline", nullptr, {}, SLOT(slotToggleWorkOffline(bool)), ToggleAction},
+    {"akonadi_collection_copy_to_dialog", kli18n("Copy Folder To..."), kli18n("Copy To"), "edit-copy", nullptr, {}, SLOT(slotCopyCollectionTo()), NormalAction},
+    {"akonadi_collection_move_to_dialog", kli18n("Move Folder To..."), kli18n("Move To"), "edit-move", "go-jump", {}, SLOT(slotMoveCollectionTo()), NormalAction},
+    {"akonadi_item_copy_to_dialog", kli18n("Copy Item To..."), kli18n("Copy To"), "edit-copy", nullptr, {}, SLOT(slotCopyItemTo()), NormalAction},
+    {"akonadi_item_move_to_dialog", kli18n("Move Item To..."), kli18n("Move To"), "edit-move", "go-jump", {}, SLOT(slotMoveItemTo()), NormalAction},
+    {"akonadi_collection_sync_recursive", kli18n("&Synchronize Folder Recursively"), kli18n("Synchronize Recursively"), "view-refresh", nullptr, Qt::CTRL | Qt::Key_F5, SLOT(slotSynchronizeCollectionRecursive()), NormalAction},
+    {"akonadi_move_collection_to_trash", kli18n("&Move Folder To Trash"), kli18n("Move Folder To Trash"), "edit-delete", nullptr, {}, SLOT(slotMoveCollectionToTrash()), NormalAction},
+    {"akonadi_move_item_to_trash", kli18n("&Move Item To Trash"), kli18n("Move Item To Trash"), "edit-delete", nullptr, {}, SLOT(slotMoveItemToTrash()), NormalAction},
+    {"akonadi_restore_collection_from_trash", kli18n("&Restore Folder From Trash"), kli18n("Restore Folder From Trash"), "view-refresh", nullptr, {}, SLOT(slotRestoreCollectionFromTrash()), NormalAction},
+    {"akonadi_restore_item_from_trash", kli18n("&Restore Item From Trash"), kli18n("Restore Item From Trash"), "view-refresh", nullptr, {}, SLOT(slotRestoreItemFromTrash()), NormalAction},
+    {"akonadi_collection_trash_restore", kli18n("&Restore Folder From Trash"), kli18n("Restore Folder From Trash"), "edit-delete", nullptr, {}, SLOT(slotTrashRestoreCollection()), ActionWithAlternative},
+    {nullptr, kli18n("&Restore Collection From Trash"), kli18n("Restore Collection From Trash"), "view-refresh", nullptr, {}, nullptr, ActionAlternative},
+    {"akonadi_item_trash_restore", kli18n("&Restore Item From Trash"), kli18n("Restore Item From Trash"), "edit-delete", nullptr, 0, SLOT(slotTrashRestoreItem()), ActionWithAlternative},
+    {nullptr, kli18n("&Restore Item From Trash"), kli18n("Restore Item From Trash"), "view-refresh", nullptr, {}, nullptr, ActionAlternative},
+    {"akonadi_collection_sync_favorite_folders", kli18n("&Synchronize Favorite Folders"), kli18n("Synchronize Favorite Folders"), "view-refresh", nullptr, Qt::CTRL | Qt::SHIFT | Qt::Key_L, SLOT(slotSynchronizeFavoriteCollections()), NormalAction},
+    {"akonadi_resource_synchronize_collectiontree", kli18n("Synchronize Folder Tree"), kli18n("Synchronize"), "view-refresh", nullptr, {}, SLOT(slotSynchronizeCollectionTree()), NormalAction},
+};
+// clang-format on
+
+static QIcon standardActionDataIcon(const StandardActionData &data)
+{
+    if (data.altIcon) {
+        return QIcon::fromTheme(QString::fromLatin1(data.icon), QIcon::fromTheme(QString::fromLatin1(data.altIcon)));
+    }
+    return QIcon::fromTheme(QString::fromLatin1(data.icon));
+}
+
+static_assert(std::size(standardActionData) == StandardActionManager::LastType, "StandardActionData table does not match StandardActionManager types");
+
+void StandardActionManagerPrivate::enableAction(StandardActionManager::Type type, bool enable)
+{
+    Q_ASSERT(type < StandardActionManager::LastType);
+    if (actions[type]) {
+        actions[type]->setEnabled(enable);
+    }
+
+    // Update the action menu
+    auto actionMenu = qobject_cast<KActionMenu *>(actions[type]);
+    if (actionMenu) {
+        // get rid of the submenus, they are re-created in enableAction. clear() is not enough, doesn't remove the submenu object instances.
+        QMenu *menu = actionMenu->menu();
+        // Not necessary to delete and recreate menu when it was not created
+        if (menu->property("actionType").isValid() && menu->isEmpty()) {
+            return;
+        }
+        mRecentCollectionsMenu.remove(type);
+        delete menu;
+        menu = new QMenu();
+
+        menu->setProperty("actionType", static_cast<int>(type));
+        q->connect(menu, &QMenu::aboutToShow, q, [this]() {
+            aboutToShowMenu();
+        });
+        q->connect(menu, SIGNAL(triggered(QAction *)), standardActionData[type].slot); // clazy:exclude=old-style-connect
+        actionMenu->setMenu(menu);
+    }
+}
+
+void StandardActionManagerPrivate::updateAlternatingAction(StandardActionManager::Type type)
+{
+    Q_ASSERT(type < StandardActionManager::LastType);
+    if (!actions[type]) {
+        return;
+    }
+
+    /*
+     * The same action is stored at the ActionWithAlternative indexes as well as the corresponding ActionAlternative indexes in the actions array.
+     * The following simply changes the standardActionData
+     */
+    if ((standardActionData[type].actionType == ActionWithAlternative) || (standardActionData[type].actionType == ActionAlternative)) {
+        actions[type]->setText(standardActionData[type].label.toString());
+        actions[type]->setIcon(standardActionDataIcon(standardActionData[type]));
+
+        if (pluralLabels.contains(type) && !pluralLabels.value(type).isEmpty()) {
+            actions[type]->setText(pluralLabels.value(type).subs(1).toString());
+        } else if (!standardActionData[type].label.isEmpty()) {
+            actions[type]->setText(standardActionData[type].label.toString());
+        }
+        if (pluralIconLabels.contains(type) && !pluralIconLabels.value(type).isEmpty()) {
+            actions[type]->setIconText(pluralIconLabels.value(type).subs(1).toString());
+        } else if (!standardActionData[type].iconLabel.isEmpty()) {
+            actions[type]->setIconText(standardActionData[type].iconLabel.toString());
+        }
+        if (standardActionData[type].icon) {
+            actions[type]->setIcon(standardActionDataIcon(standardActionData[type]));
+        }
+
+        // actions[type]->setShortcut( standardActionData[type].shortcut );
+
+        /*if ( standardActionData[type].slot ) {
+            switch ( standardActionData[type].actionType ) {
+            case NormalAction:
+            case ActionWithAlternative:
+                connect( action, SIGNAL(triggered()), standardActionData[type].slot );
+                break;
+            }
+        }*/
+    }
+}
 
 /// @endcond
 
