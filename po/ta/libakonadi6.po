@@ -1,13 +1,13 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the akonadi package.
 #
-# SPDX-FileCopyrightText: 2024, 2025 Kishore G <kishore96@gmail.com>
+# SPDX-FileCopyrightText: 2024-2026 Kishore G <kishore96@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-03-03 00:47+0000\n"
-"PO-Revision-Date: 2025-09-14 14:02+0530\n"
+"PO-Revision-Date: 2026-05-10 14:24+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
 "Language: ta\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 25.08.0\n"
+"X-Generator: Lokalize 26.04.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -42,12 +42,12 @@ msgstr "%2 வகையான %1"
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
-msgstr ""
+msgstr "பின்னணி சேவையின் அடையாளம்"
 
 #: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
-msgstr ""
+msgstr "Akonadi பின்னணி சேவை"
 
 #: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:268
 #, kde-format
@@ -156,7 +156,7 @@ msgstr "பணி ரத்துசெய்யப்பட்டது."
 #: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
 #, kde-format
 msgid "Akonadi Control"
-msgstr ""
+msgstr "Akonadi கட்டுப்பாடு"
 
 #: akonadictl/main.cpp:220
 #, kde-format
@@ -218,12 +218,10 @@ msgid "No such agent found \"%1\""
 msgstr "'%1' என்ற பின்னணி சேவை இல்லை"
 
 #: core/collection.cpp:221
-#, fuzzy, kde-format
-#| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
+#, kde-format
 msgctxt "Name for the folder containing searches"
 msgid "Search"
-msgstr "தேடு"
+msgstr "தேடல்கள்"
 
 #: core/collectionpathresolver.cpp:98 core/collectionpathresolver.cpp:117
 #, kde-format

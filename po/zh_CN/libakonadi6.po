@@ -20,12 +20,13 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "KDE 中国, Eric Zhao, Guo Yunhe"
+msgstr "KDE 中国, Eric Zhao, Guo Yunhe, Tyson Tan"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "kde-china@kde.org, zxybbb7892020@outlook.com, i@guoyunhe.me"
+msgstr ""
+"kde-china@kde.org, zxybbb7892020@outlook.com, i@guoyunhe.me, tds00@qq.com"
 
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
