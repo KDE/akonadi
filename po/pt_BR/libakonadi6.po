@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-08 00:44+0000\n"
+"POT-Creation-Date: 2026-05-11 00:44+0000\n"
 "PO-Revision-Date: 2026-05-06 09:13-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -523,7 +523,7 @@ msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "Não foi possível associar a entidade: <message>%1</message>"
 
-#: core/models/favoritecollectionsmodel.cpp:398
+#: core/models/favoritecollectionsmodel.cpp:386
 #, kde-format
 msgid "Favorite Folders"
 msgstr "Pastas favoritas"
@@ -2485,37 +2485,37 @@ msgctxt "@title:window"
 msgid "Rename Favorite"
 msgstr "Renomear favorito"
 
-#: widgets/standardactionmanager.cpp:444
+#: widgets/standardactionmanager.cpp:446
 #, kde-format
 msgctxt "@label:textbox name of the folder"
 msgid "Name:"
 msgstr "Nome:"
 
-#: widgets/standardactionmanager.cpp:446
+#: widgets/standardactionmanager.cpp:448
 #, kde-format
 msgctxt "@title:window"
 msgid "New Resource"
 msgstr "Novo recurso"
 
-#: widgets/standardactionmanager.cpp:447
+#: widgets/standardactionmanager.cpp:449
 #, kde-format
 msgid "Could not create resource: %1"
 msgstr "Não foi possível criar o recurso: %1"
 
-#: widgets/standardactionmanager.cpp:448
+#: widgets/standardactionmanager.cpp:450
 #, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "Falha na criação do recurso"
 
-#: widgets/standardactionmanager.cpp:452
+#: widgets/standardactionmanager.cpp:454
 #, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
 msgstr[0] "Deseja realmente excluir este recurso?"
 msgstr[1] "Deseja realmente excluir os %1 recursos?"
 
-#: widgets/standardactionmanager.cpp:455
+#: widgets/standardactionmanager.cpp:457
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Resource?"
@@ -2523,36 +2523,36 @@ msgid_plural "Delete Resources?"
 msgstr[0] "Excluir o recurso?"
 msgstr[1] "Excluir os recursos?"
 
-#: widgets/standardactionmanager.cpp:457
+#: widgets/standardactionmanager.cpp:459
 #, kde-format
 msgid "Could not paste data: %1"
 msgstr "Não foi possível colar os dados: %1"
 
-#: widgets/standardactionmanager.cpp:458
+#: widgets/standardactionmanager.cpp:460
 #, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Falha ao colar"
 
-#: widgets/standardactionmanager.cpp:825
+#: widgets/standardactionmanager.cpp:827
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "Não é possível adicionar o caractere \"/\" no nome da pasta."
 
-#: widgets/standardactionmanager.cpp:825 widgets/standardactionmanager.cpp:829
+#: widgets/standardactionmanager.cpp:827 widgets/standardactionmanager.cpp:831
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Erro na criação da nova pasta"
 
-#: widgets/standardactionmanager.cpp:829
+#: widgets/standardactionmanager.cpp:831
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr ""
 "Não é possível adicionar o caractere \".\" no início ou no final do nome da "
 "pasta."
 
-#: widgets/standardactionmanager.cpp:1068
+#: widgets/standardactionmanager.cpp:1070
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2561,23 +2561,23 @@ msgstr ""
 "Antes de sincronizar a pasta \"%1\" é necessário estar conectado ao recurso. "
 "Deseja conectar-se?"
 
-#: widgets/standardactionmanager.cpp:1069
+#: widgets/standardactionmanager.cpp:1071
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "A conta \"%1\" está desconectada"
 
-#: widgets/standardactionmanager.cpp:1070
+#: widgets/standardactionmanager.cpp:1072
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Conectar"
 
-#: widgets/standardactionmanager.cpp:1684
+#: widgets/standardactionmanager.cpp:1687
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Mover para esta pasta"
 
-#: widgets/standardactionmanager.cpp:1684
+#: widgets/standardactionmanager.cpp:1687
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Copiar para esta pasta"

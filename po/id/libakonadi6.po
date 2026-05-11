@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-08 00:44+0000\n"
+"POT-Creation-Date: 2026-05-11 00:44+0000\n"
 "PO-Revision-Date: 2024-09-30 18:09+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: https://t.me/Localizations_KDE_Indonesia\n"
@@ -525,7 +525,7 @@ msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "Tidak dapat menautkan entitas: <message>%1</message>"
 
-#: core/models/favoritecollectionsmodel.cpp:398
+#: core/models/favoritecollectionsmodel.cpp:386
 #, kde-format
 msgid "Favorite Folders"
 msgstr "Folder Favorit"
@@ -2486,37 +2486,37 @@ msgctxt "@title:window"
 msgid "Rename Favorite"
 msgstr "Ubah Nama Favorit"
 
-#: widgets/standardactionmanager.cpp:444
+#: widgets/standardactionmanager.cpp:446
 #, kde-format
 msgctxt "@label:textbox name of the folder"
 msgid "Name:"
 msgstr "Nama:"
 
-#: widgets/standardactionmanager.cpp:446
+#: widgets/standardactionmanager.cpp:448
 #, kde-format
 msgctxt "@title:window"
 msgid "New Resource"
 msgstr "Sumberdaya Baru"
 
-#: widgets/standardactionmanager.cpp:447
+#: widgets/standardactionmanager.cpp:449
 #, kde-format
 msgid "Could not create resource: %1"
 msgstr "Tidak dapat membuat sumberdaya: %1"
 
-#: widgets/standardactionmanager.cpp:448
+#: widgets/standardactionmanager.cpp:450
 #, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "Gagal Membuat Sumberdaya"
 
-#: widgets/standardactionmanager.cpp:452
+#: widgets/standardactionmanager.cpp:454
 #, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
 msgstr[0] "Apakah kamu benar-benar ingin menghapus sumberdaya?"
 msgstr[1] "Apakah kamu benar-benar ingin menghapus %1 sumberdaya?"
 
-#: widgets/standardactionmanager.cpp:455
+#: widgets/standardactionmanager.cpp:457
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Resource?"
@@ -2524,34 +2524,34 @@ msgid_plural "Delete Resources?"
 msgstr[0] "Hapus Sumberdaya?"
 msgstr[1] "Hapus Sumberdaya-sumberdaya?"
 
-#: widgets/standardactionmanager.cpp:457
+#: widgets/standardactionmanager.cpp:459
 #, kde-format
 msgid "Could not paste data: %1"
 msgstr "Tidak dapat menempel data: %1"
 
-#: widgets/standardactionmanager.cpp:458
+#: widgets/standardactionmanager.cpp:460
 #, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Gagal Tempel"
 
-#: widgets/standardactionmanager.cpp:825
+#: widgets/standardactionmanager.cpp:827
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "Kita tidak bisa menambahkan \"/\" di dalam nama folder."
 
-#: widgets/standardactionmanager.cpp:825 widgets/standardactionmanager.cpp:829
+#: widgets/standardactionmanager.cpp:827 widgets/standardactionmanager.cpp:831
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Galat Membuat Folder Baru"
 
-#: widgets/standardactionmanager.cpp:829
+#: widgets/standardactionmanager.cpp:831
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "Kita tidak bisa menambahkan \".\" di awalan atau akhiran nama folder."
 
-#: widgets/standardactionmanager.cpp:1068
+#: widgets/standardactionmanager.cpp:1070
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2560,23 +2560,23 @@ msgstr ""
 "Sebelum menyinkronkan folder \"%1\" itu perlu memiliki sumberdaya onlen. "
 "Apakah kamu ingin membuatnya onlen? "
 
-#: widgets/standardactionmanager.cpp:1069
+#: widgets/standardactionmanager.cpp:1071
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "Akun \"%1\" sedang oflen"
 
-#: widgets/standardactionmanager.cpp:1070
+#: widgets/standardactionmanager.cpp:1072
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Menuju Onlen"
 
-#: widgets/standardactionmanager.cpp:1684
+#: widgets/standardactionmanager.cpp:1687
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Pindah ke Folder Ini"
 
-#: widgets/standardactionmanager.cpp:1684
+#: widgets/standardactionmanager.cpp:1687
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Salin ke Folder Ini"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-08 00:44+0000\n"
+"POT-Creation-Date: 2026-05-11 00:44+0000\n"
 "PO-Revision-Date: 2026-05-06 06:39+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -522,7 +522,7 @@ msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr "Entitete ni bilo mogoče povezati: <message>%1</message>"
 
-#: core/models/favoritecollectionsmodel.cpp:398
+#: core/models/favoritecollectionsmodel.cpp:386
 #, kde-format
 msgid "Favorite Folders"
 msgstr "Priljubljene mape"
@@ -2514,30 +2514,30 @@ msgctxt "@title:window"
 msgid "Rename Favorite"
 msgstr "Preimenuj priljubljeno"
 
-#: widgets/standardactionmanager.cpp:444
+#: widgets/standardactionmanager.cpp:446
 #, kde-format
 msgctxt "@label:textbox name of the folder"
 msgid "Name:"
 msgstr "Ime:"
 
-#: widgets/standardactionmanager.cpp:446
+#: widgets/standardactionmanager.cpp:448
 #, kde-format
 msgctxt "@title:window"
 msgid "New Resource"
 msgstr "Nov vir"
 
-#: widgets/standardactionmanager.cpp:447
+#: widgets/standardactionmanager.cpp:449
 #, kde-format
 msgid "Could not create resource: %1"
 msgstr "Vira ni bilo mogoče ustvariti: %1"
 
-#: widgets/standardactionmanager.cpp:448
+#: widgets/standardactionmanager.cpp:450
 #, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "Ustvarjanje vira ni uspelo"
 
-#: widgets/standardactionmanager.cpp:452
+#: widgets/standardactionmanager.cpp:454
 #, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
@@ -2546,7 +2546,7 @@ msgstr[1] "Ali resnično želite izbrisati %1 vir?"
 msgstr[2] "Ali resnično želite izbrisati %1 vira?"
 msgstr[3] "Ali resnično želite izbrisati %1 vire?"
 
-#: widgets/standardactionmanager.cpp:455
+#: widgets/standardactionmanager.cpp:457
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Resource?"
@@ -2556,34 +2556,34 @@ msgstr[1] "Izbrišem vir?"
 msgstr[2] "Izbrišem vira?"
 msgstr[3] "Izbrišem vire?"
 
-#: widgets/standardactionmanager.cpp:457
+#: widgets/standardactionmanager.cpp:459
 #, kde-format
 msgid "Could not paste data: %1"
 msgstr "Podatkov ni bilo mogoče prilepiti: %1"
 
-#: widgets/standardactionmanager.cpp:458
+#: widgets/standardactionmanager.cpp:460
 #, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Lepljenje ni uspelo"
 
-#: widgets/standardactionmanager.cpp:825
+#: widgets/standardactionmanager.cpp:827
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "Znaka »/« ni mogoče dodati v ime mape."
 
-#: widgets/standardactionmanager.cpp:825 widgets/standardactionmanager.cpp:829
+#: widgets/standardactionmanager.cpp:827 widgets/standardactionmanager.cpp:831
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Napaka pri ustvarjanju nove mape"
 
-#: widgets/standardactionmanager.cpp:829
+#: widgets/standardactionmanager.cpp:831
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "Pike ni mogoče dodati na začetek ali konec imena mape."
 
-#: widgets/standardactionmanager.cpp:1068
+#: widgets/standardactionmanager.cpp:1070
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2591,23 +2591,23 @@ msgid ""
 msgstr ""
 "Pred usklajevanjem mape »%1« mora biti vir povezan. Ali ga želite povezati?"
 
-#: widgets/standardactionmanager.cpp:1069
+#: widgets/standardactionmanager.cpp:1071
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "Račun »%1« ni povezan"
 
-#: widgets/standardactionmanager.cpp:1070
+#: widgets/standardactionmanager.cpp:1072
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Postani povezan"
 
-#: widgets/standardactionmanager.cpp:1684
+#: widgets/standardactionmanager.cpp:1687
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Premakni v to mapo"
 
-#: widgets/standardactionmanager.cpp:1684
+#: widgets/standardactionmanager.cpp:1687
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Kopiraj v to mapo"

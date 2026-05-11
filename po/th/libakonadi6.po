@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-08 00:44+0000\n"
+"POT-Creation-Date: 2026-05-11 00:44+0000\n"
 "PO-Revision-Date: 2010-02-26 23:20+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -514,7 +514,7 @@ msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
 msgstr ""
 
-#: core/models/favoritecollectionsmodel.cpp:398
+#: core/models/favoritecollectionsmodel.cpp:386
 #, kde-format
 msgid "Favorite Folders"
 msgstr ""
@@ -2457,7 +2457,7 @@ msgctxt "@title:window"
 msgid "Rename Favorite"
 msgstr "เปลี่ยนชื่อรายการโปรด"
 
-#: widgets/standardactionmanager.cpp:444
+#: widgets/standardactionmanager.cpp:446
 #, fuzzy, kde-format
 #| msgctxt "@label:textbox New name of the folder."
 #| msgid "Name:"
@@ -2465,34 +2465,34 @@ msgctxt "@label:textbox name of the folder"
 msgid "Name:"
 msgstr "ชื่อ:"
 
-#: widgets/standardactionmanager.cpp:446
+#: widgets/standardactionmanager.cpp:448
 #, fuzzy, kde-format
 #| msgid "&Delete Folder"
 msgctxt "@title:window"
 msgid "New Resource"
 msgstr "&ลบโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:447
+#: widgets/standardactionmanager.cpp:449
 #, fuzzy, kde-format
 #| msgid "Could not create folder: %1"
 msgid "Could not create resource: %1"
 msgstr "ไม่สามารถสร้างโฟลเดอร์ต่อไปนี้ได้: %1"
 
-#: widgets/standardactionmanager.cpp:448
+#: widgets/standardactionmanager.cpp:450
 #, fuzzy, kde-format
 #| msgid "Folder creation failed"
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "ล้มเหลวในการสร้างโฟลเดอร์"
 
-#: widgets/standardactionmanager.cpp:452
+#: widgets/standardactionmanager.cpp:454
 #, fuzzy, kde-format
 #| msgid "Do you really want to delete all selected items?"
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
 msgstr[0] "คุณต้องการจะลบรายการทั้งหมดที่เลือกไว้จริงหรือไม่ ?"
 
-#: widgets/standardactionmanager.cpp:455
+#: widgets/standardactionmanager.cpp:457
 #, fuzzy, kde-format
 #| msgid "Delete folder?"
 msgctxt "@title:window"
@@ -2500,24 +2500,24 @@ msgid "Delete Resource?"
 msgid_plural "Delete Resources?"
 msgstr[0] "ลบโฟลเดอร์หรือไม่ ?"
 
-#: widgets/standardactionmanager.cpp:457
+#: widgets/standardactionmanager.cpp:459
 #, kde-format
 msgid "Could not paste data: %1"
 msgstr "ไม่สามารถวางข้อมูลต่อไปนี้ได้: %1"
 
-#: widgets/standardactionmanager.cpp:458
+#: widgets/standardactionmanager.cpp:460
 #, fuzzy, kde-format
 #| msgid "Paste failed"
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "ล้มเหลวในการวาง"
 
-#: widgets/standardactionmanager.cpp:825
+#: widgets/standardactionmanager.cpp:827
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:825 widgets/standardactionmanager.cpp:829
+#: widgets/standardactionmanager.cpp:827 widgets/standardactionmanager.cpp:831
 #, fuzzy, kde-format
 #| msgctxt "@title:window"
 #| msgid "New Folder"
@@ -2525,24 +2525,24 @@ msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "โฟลเดอร์ใหม่"
 
-#: widgets/standardactionmanager.cpp:829
+#: widgets/standardactionmanager.cpp:831
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:1068
+#: widgets/standardactionmanager.cpp:1070
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
 "you want to make it online?"
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:1069
+#: widgets/standardactionmanager.cpp:1071
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr ""
 
-#: widgets/standardactionmanager.cpp:1070
+#: widgets/standardactionmanager.cpp:1072
 #, fuzzy, kde-format
 #| msgctxt "@info:status"
 #| msgid "Offline"
@@ -2550,12 +2550,12 @@ msgctxt "@action:button"
 msgid "Go Online"
 msgstr "ออฟไลน์"
 
-#: widgets/standardactionmanager.cpp:1684
+#: widgets/standardactionmanager.cpp:1687
 #, kde-format
 msgid "Move to This Folder"
 msgstr "ย้ายมายังโฟลเดอร์นี้"
 
-#: widgets/standardactionmanager.cpp:1684
+#: widgets/standardactionmanager.cpp:1687
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "คัดลอกมายังโฟลเดอร์นี้"
