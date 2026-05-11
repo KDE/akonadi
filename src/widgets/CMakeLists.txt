@@ -12,7 +12,6 @@ target_sources(
     KPim6AkonadiWidgets
     PRIVATE
         actionstatemanager.cpp
-        agentactionmanager.cpp
         agentconfigurationdialog.cpp
         agentconfigurationwidget.cpp
         agentinstancewidget.cpp
@@ -50,7 +49,6 @@ target_sources(
         tagwidget.cpp
         tagselectwidget.cpp
         actionstatemanager_p.h
-        agentactionmanager.h
         agentconfigurationdialog.h
         agentconfigurationwidget.h
         agentinstancewidget.h
@@ -116,7 +114,6 @@ set(akonadiwidgets_UI
 
 ecm_generate_headers(AkonadiWidgets_CC_HEADERS
     HEADER_NAMES
-    AgentActionManager
     AgentConfigurationDialog
     AgentConfigurationWidget
     AgentInstanceWidget
