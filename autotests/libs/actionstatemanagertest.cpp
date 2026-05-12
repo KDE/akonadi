@@ -28,6 +28,8 @@ public:
 
 protected:
     bool hasResourceCapability(const Collection &collection, const QString &capability) const override;
+    bool isFavoriteCollection(const Collection &collection) const override;
+    void enableAction(int action, bool state) override;
 
 private:
     ActionStateManagerTest *mReceiver = nullptr;
@@ -93,26 +95,15 @@ public:
         return mCapabilityMap.value(capability).contains(collection);
     }
 
-public Q_SLOTS:
+public:
     void enableAction(int type, bool enable)
     {
         mStateMap.insert(static_cast<StandardActionManager::Type>(type), enable);
     }
 
-    void updatePluralLabel(int type, int count)
-    {
-        Q_UNUSED(type)
-        Q_UNUSED(count)
-    }
-
     bool isFavoriteCollection(const Akonadi::Collection &collection)
     {
         return mFavoriteCollectionMap.contains(collection.id());
-    }
-
-    void updateAlternatingAction(int action)
-    {
-        Q_UNUSED(action)
     }
 
 private Q_SLOTS:
@@ -613,12 +604,21 @@ private:
 UnitActionStateManager::UnitActionStateManager(ActionStateManagerTest *receiver)
     : mReceiver(receiver)
 {
-    setReceiver(receiver);
 }
 
 bool UnitActionStateManager::hasResourceCapability(const Collection &collection, const QString &capability) const
 {
     return mReceiver->hasResourceCapability(collection, capability);
+}
+
+bool UnitActionStateManager::isFavoriteCollection(const Collection &collection) const
+{
+    return mReceiver->isFavoriteCollection(collection);
+}
+
+void UnitActionStateManager::enableAction(int type, bool enable)
+{
+    mReceiver->enableAction(type, enable);
 }
 
 QTEST_AKONADI_CORE_MAIN(ActionStateManagerTest)
