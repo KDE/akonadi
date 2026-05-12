@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2026-04-12 13:06+0200\n"
 "Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -752,46 +752,6 @@ msgid ""
 msgstr ""
 "Namensraum zum Starten mehrerer Instanzen von Akonadi in der selben "
 "Benutzersitzung"
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr "&Neue Agent-Instanz …"
-
-#: widgets/agentactionmanager.cpp:37
-msgid "&Delete Agent Instance"
-msgstr "Agent-Instanz &löschen"
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr "Agent-Instanz &konfigurieren"
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr "Neue Agent-Instanz"
-
-#: widgets/agentactionmanager.cpp:56
-#, kde-format
-msgid "Could not create agent instance: %1"
-msgstr "Agent-Instanz kann nicht erstellt werden: %1"
-
-#: widgets/agentactionmanager.cpp:60
-#, kde-format
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr "Das Erstellen einer Agent-Instanz ist fehlgeschlagen."
-
-#: widgets/agentactionmanager.cpp:62
-#, kde-format
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr "Agent-Instanz löschen?"
-
-#: widgets/agentactionmanager.cpp:66
-#, kde-format
-msgid "Do you really want to delete the selected agent instance?"
-msgstr "Möchten Sie die ausgewählte Agent-Instanz wirklich löschen?"
 
 #: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
@@ -2781,6 +2741,33 @@ msgstr "Datei kann nicht verarbeitet werden: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Die Sammlung %1 wurde nicht gefunden"
+
+#~ msgid "&New Agent Instance..."
+#~ msgstr "&Neue Agent-Instanz …"
+
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "Agent-Instanz &löschen"
+
+#~ msgid "&Configure Agent Instance"
+#~ msgstr "Agent-Instanz &konfigurieren"
+
+#~ msgctxt "@title:window"
+#~ msgid "New Agent Instance"
+#~ msgstr "Neue Agent-Instanz"
+
+#~ msgid "Could not create agent instance: %1"
+#~ msgstr "Agent-Instanz kann nicht erstellt werden: %1"
+
+#~ msgctxt "@title:window"
+#~ msgid "Agent Instance Creation Failed"
+#~ msgstr "Das Erstellen einer Agent-Instanz ist fehlgeschlagen."
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete Agent Instance?"
+#~ msgstr "Agent-Instanz löschen?"
+
+#~ msgid "Do you really want to delete the selected agent instance?"
+#~ msgstr "Möchten Sie die ausgewählte Agent-Instanz wirklich löschen?"
 
 #~ msgid "There is currently no account configured."
 #~ msgstr "Es ist zur Zeit kein Zugang eingerichtet."

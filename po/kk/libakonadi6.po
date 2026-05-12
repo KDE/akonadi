@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2013-07-14 03:20+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -750,47 +750,6 @@ msgstr ""
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr "&Жана агент данасы..."
-
-#: widgets/agentactionmanager.cpp:37
-msgid "&Delete Agent Instance"
-msgstr "Агент данасын ө&шіру"
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr "Агент данасын &баптау"
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr "Жана агент данасы"
-
-#: widgets/agentactionmanager.cpp:56
-#, kde-format
-msgid "Could not create agent instance: %1"
-msgstr "Агент данасы құрылмады: %1"
-
-#: widgets/agentactionmanager.cpp:60
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr "Агент данасын құру жаңылысы"
-
-#: widgets/agentactionmanager.cpp:62
-#, kde-format
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr "Агент данасын өшірмексіз бе?"
-
-#: widgets/agentactionmanager.cpp:66
-#, kde-format
-msgid "Do you really want to delete the selected agent instance?"
-msgstr "Шынымен таңдалған агент данасын өшірмексіз бе?"
 
 #: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
@@ -2836,6 +2795,35 @@ msgstr "Дерек орналастырылмады: %1"
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"
 msgstr "Жарамсыз жинақ"
+
+#~ msgid "&New Agent Instance..."
+#~ msgstr "&Жана агент данасы..."
+
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "Агент данасын ө&шіру"
+
+#~ msgid "&Configure Agent Instance"
+#~ msgstr "Агент данасын &баптау"
+
+#~ msgctxt "@title:window"
+#~ msgid "New Agent Instance"
+#~ msgstr "Жана агент данасы"
+
+#~ msgid "Could not create agent instance: %1"
+#~ msgstr "Агент данасы құрылмады: %1"
+
+#, fuzzy
+#~| msgid "Agent instance creation failed"
+#~ msgctxt "@title:window"
+#~ msgid "Agent Instance Creation Failed"
+#~ msgstr "Агент данасын құру жаңылысы"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete Agent Instance?"
+#~ msgstr "Агент данасын өшірмексіз бе?"
+
+#~ msgid "Do you really want to delete the selected agent instance?"
+#~ msgstr "Шынымен таңдалған агент данасын өшірмексіз бе?"
 
 #, fuzzy
 #~| msgctxt "@info:status"

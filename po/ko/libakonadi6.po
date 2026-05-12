@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2026-04-26 22:51+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -734,46 +734,6 @@ msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
 "같은 사용자 세션에서 여러 Akonadi 인스턴스를 시작할 때 사용할 네임스페이스"
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr "새 에이전트 인스턴스(&N)..."
-
-#: widgets/agentactionmanager.cpp:37
-msgid "&Delete Agent Instance"
-msgstr "에이전트 인스턴스 삭제(&D)"
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr "에이전트 인스턴스 설정(&C)"
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr "새 에이전트 인스턴스"
-
-#: widgets/agentactionmanager.cpp:56
-#, kde-format
-msgid "Could not create agent instance: %1"
-msgstr "에이전트 인스턴스를 만들 수 없음: %1"
-
-#: widgets/agentactionmanager.cpp:60
-#, kde-format
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr "에이전트 인스턴스 생성 실패"
-
-#: widgets/agentactionmanager.cpp:62
-#, kde-format
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr "에이전트 인스턴스를 삭제하시겠습니까?"
-
-#: widgets/agentactionmanager.cpp:66
-#, kde-format
-msgid "Do you really want to delete the selected agent instance?"
-msgstr "선택한 에이전트 인스턴스를 삭제하시겠습니까?"
 
 #: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
@@ -2677,6 +2637,33 @@ msgstr "데이터 파일을 해석할 수 없음: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "모음집 %1을(를) 찾을 수 없음"
+
+#~ msgid "&New Agent Instance..."
+#~ msgstr "새 에이전트 인스턴스(&N)..."
+
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "에이전트 인스턴스 삭제(&D)"
+
+#~ msgid "&Configure Agent Instance"
+#~ msgstr "에이전트 인스턴스 설정(&C)"
+
+#~ msgctxt "@title:window"
+#~ msgid "New Agent Instance"
+#~ msgstr "새 에이전트 인스턴스"
+
+#~ msgid "Could not create agent instance: %1"
+#~ msgstr "에이전트 인스턴스를 만들 수 없음: %1"
+
+#~ msgctxt "@title:window"
+#~ msgid "Agent Instance Creation Failed"
+#~ msgstr "에이전트 인스턴스 생성 실패"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete Agent Instance?"
+#~ msgstr "에이전트 인스턴스를 삭제하시겠습니까?"
+
+#~ msgid "Do you really want to delete the selected agent instance?"
+#~ msgstr "선택한 에이전트 인스턴스를 삭제하시겠습니까?"
 
 #~ msgid "There is currently no account configured."
 #~ msgstr "계정을 설정하지 않았습니다."

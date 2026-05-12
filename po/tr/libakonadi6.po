@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2026-05-06 13:15+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -742,46 +742,6 @@ msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
 "Aynı kullanıcı oturumunda birden çok Akonadi örneğini başlatmak için ad alanı"
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr "&Yeni Aracı Örneği…"
-
-#: widgets/agentactionmanager.cpp:37
-msgid "&Delete Agent Instance"
-msgstr "A&racı Örneğini Sil"
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr "Ara&cı Örneğini Yapılandır"
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr "Yeni Aracı Örneği"
-
-#: widgets/agentactionmanager.cpp:56
-#, kde-format
-msgid "Could not create agent instance: %1"
-msgstr "Aracı örneği oluşturulamadı: %1"
-
-#: widgets/agentactionmanager.cpp:60
-#, kde-format
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr "Aracı Örneği Oluşturulamadı"
-
-#: widgets/agentactionmanager.cpp:62
-#, kde-format
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr "Aracı Örneği Silinsin mi?"
-
-#: widgets/agentactionmanager.cpp:66
-#, kde-format
-msgid "Do you really want to delete the selected agent instance?"
-msgstr "Seçili aracı örneğini silmeyi gerçekten istiyor musunuz?"
 
 #: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
@@ -2734,6 +2694,33 @@ msgstr "Veri dosyası ayrıştırılamadı: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "%1 koleksiyonu bulunamıyor"
+
+#~ msgid "&New Agent Instance..."
+#~ msgstr "&Yeni Aracı Örneği…"
+
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "A&racı Örneğini Sil"
+
+#~ msgid "&Configure Agent Instance"
+#~ msgstr "Ara&cı Örneğini Yapılandır"
+
+#~ msgctxt "@title:window"
+#~ msgid "New Agent Instance"
+#~ msgstr "Yeni Aracı Örneği"
+
+#~ msgid "Could not create agent instance: %1"
+#~ msgstr "Aracı örneği oluşturulamadı: %1"
+
+#~ msgctxt "@title:window"
+#~ msgid "Agent Instance Creation Failed"
+#~ msgstr "Aracı Örneği Oluşturulamadı"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete Agent Instance?"
+#~ msgstr "Aracı Örneği Silinsin mi?"
+
+#~ msgid "Do you really want to delete the selected agent instance?"
+#~ msgstr "Seçili aracı örneğini silmeyi gerçekten istiyor musunuz?"
 
 #~ msgid "There is currently no account configured."
 #~ msgstr "Şu anda yapılandırılmış bir hesap yok."

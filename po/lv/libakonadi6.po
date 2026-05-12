@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2025-08-25 09:08+0300\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -742,46 +742,6 @@ msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
 "Nosaukumvieta, lai sāktu vairākas „Akonadi“ instances vienā lietotāja sesijā"
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr "&Jauna aģenta instance..."
-
-#: widgets/agentactionmanager.cpp:37
-msgid "&Delete Agent Instance"
-msgstr "&Dzēst aģenta instanci"
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr "&Konfigurēt aģenta instanci"
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr "Jauna aģenta instance"
-
-#: widgets/agentactionmanager.cpp:56
-#, kde-format
-msgid "Could not create agent instance: %1"
-msgstr "Neizdevās izveidot aģenta instanci: %1"
-
-#: widgets/agentactionmanager.cpp:60
-#, kde-format
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr "Neizdevās aģenta instances izveidošana"
-
-#: widgets/agentactionmanager.cpp:62
-#, kde-format
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr "Vai dzēst aģenta instanci?"
-
-#: widgets/agentactionmanager.cpp:66
-#, kde-format
-msgid "Do you really want to delete the selected agent instance?"
-msgstr "Vai tiešām vēlaties dzēst atlasīto aģenta instanci?"
 
 #: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
@@ -2761,6 +2721,33 @@ msgstr "Neizdevās parsēt datni: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Neizdevās atrast kolekciju „%1“"
+
+#~ msgid "&New Agent Instance..."
+#~ msgstr "&Jauna aģenta instance..."
+
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "&Dzēst aģenta instanci"
+
+#~ msgid "&Configure Agent Instance"
+#~ msgstr "&Konfigurēt aģenta instanci"
+
+#~ msgctxt "@title:window"
+#~ msgid "New Agent Instance"
+#~ msgstr "Jauna aģenta instance"
+
+#~ msgid "Could not create agent instance: %1"
+#~ msgstr "Neizdevās izveidot aģenta instanci: %1"
+
+#~ msgctxt "@title:window"
+#~ msgid "Agent Instance Creation Failed"
+#~ msgstr "Neizdevās aģenta instances izveidošana"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete Agent Instance?"
+#~ msgstr "Vai dzēst aģenta instanci?"
+
+#~ msgid "Do you really want to delete the selected agent instance?"
+#~ msgstr "Vai tiešām vēlaties dzēst atlasīto aģenta instanci?"
 
 #~ msgid "There is currently no account configured."
 #~ msgstr "Šobrīd nav konfigurēta konta"

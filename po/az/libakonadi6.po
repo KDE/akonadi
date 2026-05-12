@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2023-02-19 14:32+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -748,46 +748,6 @@ msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr "&Yeni Təmsilçi Nümunəsi Yaratmaq..."
-
-#: widgets/agentactionmanager.cpp:37
-msgid "&Delete Agent Instance"
-msgstr "Təmsilçi Nümunəsini &silin"
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr "Təmsilçi Nümunəsini &Ayarlamaq"
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr "Yeni Təmsilçi Nümunəsi"
-
-#: widgets/agentactionmanager.cpp:56
-#, kde-format
-msgid "Could not create agent instance: %1"
-msgstr "Yaradıla bilməyən təmsilçi nümunəsi: %1"
-
-#: widgets/agentactionmanager.cpp:60
-#, kde-format
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr "Təmsilçi nümunəsi yaratmaq mümkün olmadı"
-
-#: widgets/agentactionmanager.cpp:62
-#, kde-format
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr "Təmsilçi nümunəsi silinsin?"
-
-#: widgets/agentactionmanager.cpp:66
-#, kde-format
-msgid "Do you really want to delete the selected agent instance?"
-msgstr "Seçilmiş təmsilçi nümunəsini silmək istədiyinizə əminsiniz?"
 
 #: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
@@ -2769,6 +2729,33 @@ msgstr "Təhlil edilə bilməyən verilənlər faylı: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "%1 kolleksiyası tapmaq mümkün olmadı"
+
+#~ msgid "&New Agent Instance..."
+#~ msgstr "&Yeni Təmsilçi Nümunəsi Yaratmaq..."
+
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "Təmsilçi Nümunəsini &silin"
+
+#~ msgid "&Configure Agent Instance"
+#~ msgstr "Təmsilçi Nümunəsini &Ayarlamaq"
+
+#~ msgctxt "@title:window"
+#~ msgid "New Agent Instance"
+#~ msgstr "Yeni Təmsilçi Nümunəsi"
+
+#~ msgid "Could not create agent instance: %1"
+#~ msgstr "Yaradıla bilməyən təmsilçi nümunəsi: %1"
+
+#~ msgctxt "@title:window"
+#~ msgid "Agent Instance Creation Failed"
+#~ msgstr "Təmsilçi nümunəsi yaratmaq mümkün olmadı"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete Agent Instance?"
+#~ msgstr "Təmsilçi nümunəsi silinsin?"
+
+#~ msgid "Do you really want to delete the selected agent instance?"
+#~ msgstr "Seçilmiş təmsilçi nümunəsini silmək istədiyinizə əminsiniz?"
 
 #~ msgid "There is currently no account configured."
 #~ msgstr "Hal-hazırda konfiqurasiya edilmiş hesab yoxdur."

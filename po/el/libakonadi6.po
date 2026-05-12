@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2024-09-19 14:56+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -774,46 +774,6 @@ msgid ""
 msgstr ""
 "Χώρος ονομάτων για την εκκίνηση πολλαπλών διεργασιών Akonadi στην ίδια "
 "συνεδρία χρήστη"
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr "&Νέος πράκτορας..."
-
-#: widgets/agentactionmanager.cpp:37
-msgid "&Delete Agent Instance"
-msgstr "&Διαγραφή πράκτορα"
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr "&Διαμόρφωση πράκτορα"
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr "Νέος πράκτορας"
-
-#: widgets/agentactionmanager.cpp:56
-#, kde-format
-msgid "Could not create agent instance: %1"
-msgstr "Αδυναμία δημιουργίας πράκτορα: %1"
-
-#: widgets/agentactionmanager.cpp:60
-#, kde-format
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr "Αποτυχία δημιουργίας πράκτορα"
-
-#: widgets/agentactionmanager.cpp:62
-#, kde-format
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr "Να διαγραφεί η διεργασία πράκτορα;"
-
-#: widgets/agentactionmanager.cpp:66
-#, kde-format
-msgid "Do you really want to delete the selected agent instance?"
-msgstr "Θέλετε πράγματι να διαγραφεί η επιλεγμένη διεργασία πράκτορα;"
 
 #: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
@@ -2786,6 +2746,33 @@ msgstr "Αδυναμία ανάλυσης αρχείου δεδομένων: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Αδυναμία εύρεσης συλλογής %1"
+
+#~ msgid "&New Agent Instance..."
+#~ msgstr "&Νέος πράκτορας..."
+
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "&Διαγραφή πράκτορα"
+
+#~ msgid "&Configure Agent Instance"
+#~ msgstr "&Διαμόρφωση πράκτορα"
+
+#~ msgctxt "@title:window"
+#~ msgid "New Agent Instance"
+#~ msgstr "Νέος πράκτορας"
+
+#~ msgid "Could not create agent instance: %1"
+#~ msgstr "Αδυναμία δημιουργίας πράκτορα: %1"
+
+#~ msgctxt "@title:window"
+#~ msgid "Agent Instance Creation Failed"
+#~ msgstr "Αποτυχία δημιουργίας πράκτορα"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete Agent Instance?"
+#~ msgstr "Να διαγραφεί η διεργασία πράκτορα;"
+
+#~ msgid "Do you really want to delete the selected agent instance?"
+#~ msgstr "Θέλετε πράγματι να διαγραφεί η επιλεγμένη διεργασία πράκτορα;"
 
 #~ msgid "There is currently no account configured."
 #~ msgstr "Προς το παρόν δεν υπάρχει διαμορφωμένος λογαριασμός"

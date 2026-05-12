@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2026-05-06 06:39+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -745,46 +745,6 @@ msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr "Imenski prostor za zagon več pojavkov Akonadi v isti uporabnikovi seji"
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr "&Nov primerek posrednika …"
-
-#: widgets/agentactionmanager.cpp:37
-msgid "&Delete Agent Instance"
-msgstr "Izbriši primerek posrednika"
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr "Nastavi primerek posrednika"
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr "Nov primerek posrednika"
-
-#: widgets/agentactionmanager.cpp:56
-#, kde-format
-msgid "Could not create agent instance: %1"
-msgstr "Primerka posrednika ni bilo mogoče ustvariti: %1"
-
-#: widgets/agentactionmanager.cpp:60
-#, kde-format
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr "Ustvarjanje primerka posrednika ni uspelo"
-
-#: widgets/agentactionmanager.cpp:62
-#, kde-format
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr "Izbrišem primerek posrednika?"
-
-#: widgets/agentactionmanager.cpp:66
-#, kde-format
-msgid "Do you really want to delete the selected agent instance?"
-msgstr "Ali res želite izbrisati izbran primerek posrednika?"
 
 #: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
@@ -2797,6 +2757,33 @@ msgstr "Ni mogoče razčleniti podatkovne datoteke: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Ni mogoče najti zbirke %1"
+
+#~ msgid "&New Agent Instance..."
+#~ msgstr "&Nov primerek posrednika …"
+
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "Izbriši primerek posrednika"
+
+#~ msgid "&Configure Agent Instance"
+#~ msgstr "Nastavi primerek posrednika"
+
+#~ msgctxt "@title:window"
+#~ msgid "New Agent Instance"
+#~ msgstr "Nov primerek posrednika"
+
+#~ msgid "Could not create agent instance: %1"
+#~ msgstr "Primerka posrednika ni bilo mogoče ustvariti: %1"
+
+#~ msgctxt "@title:window"
+#~ msgid "Agent Instance Creation Failed"
+#~ msgstr "Ustvarjanje primerka posrednika ni uspelo"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete Agent Instance?"
+#~ msgstr "Izbrišem primerek posrednika?"
+
+#~ msgid "Do you really want to delete the selected agent instance?"
+#~ msgstr "Ali res želite izbrisati izbran primerek posrednika?"
 
 #~ msgid "There is currently no account configured."
 #~ msgstr "Trenutno ni nastavljenega računa."

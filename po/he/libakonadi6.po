@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2026-05-06 21:20+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -729,46 +729,6 @@ msgstr "‏(c) 2008 וולקר קראוזה <vkrause@kde.org>"
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr "מתחם שם להפעלת מגוון מופעים של Akonadi באותה הפעלת משתמש"
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr "מופע סוכן &חדש…"
-
-#: widgets/agentactionmanager.cpp:37
-msgid "&Delete Agent Instance"
-msgstr "מ&חיקת מופע סוכן"
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr "ה&גדרת מופע סוכן"
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr "מופע סוכן חדש"
-
-#: widgets/agentactionmanager.cpp:56
-#, kde-format
-msgid "Could not create agent instance: %1"
-msgstr "לא ניתן ליצור מופע סוכן: %1"
-
-#: widgets/agentactionmanager.cpp:60
-#, kde-format
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr "יצירת מופע סוכן נכשלה"
-
-#: widgets/agentactionmanager.cpp:62
-#, kde-format
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr "למחוק מופע סוכן?"
-
-#: widgets/agentactionmanager.cpp:66
-#, kde-format
-msgid "Do you really want to delete the selected agent instance?"
-msgstr "למחוק את מופע הסוכן הנבחר?"
 
 #: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
@@ -2748,6 +2708,33 @@ msgstr "לא ניתן לפענח את קובץ הנתונים: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "לא ניתן למצוא את האוסף %1"
+
+#~ msgid "&New Agent Instance..."
+#~ msgstr "מופע סוכן &חדש…"
+
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "מ&חיקת מופע סוכן"
+
+#~ msgid "&Configure Agent Instance"
+#~ msgstr "ה&גדרת מופע סוכן"
+
+#~ msgctxt "@title:window"
+#~ msgid "New Agent Instance"
+#~ msgstr "מופע סוכן חדש"
+
+#~ msgid "Could not create agent instance: %1"
+#~ msgstr "לא ניתן ליצור מופע סוכן: %1"
+
+#~ msgctxt "@title:window"
+#~ msgid "Agent Instance Creation Failed"
+#~ msgstr "יצירת מופע סוכן נכשלה"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete Agent Instance?"
+#~ msgstr "למחוק מופע סוכן?"
+
+#~ msgid "Do you really want to delete the selected agent instance?"
+#~ msgstr "למחוק את מופע הסוכן הנבחר?"
 
 #~ msgid "There is currently no account configured."
 #~ msgstr "לא מוגדר אף חשבון כרגע."

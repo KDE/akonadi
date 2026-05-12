@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2021-05-15 17:47-0700\n"
 "Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -739,48 +739,6 @@ msgstr ""
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr ""
-
-#: widgets/agentactionmanager.cpp:37
-msgid "&Delete Agent Instance"
-msgstr "エージェントのインスタンスを削除(&D)"
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr "エージェントのインスタンスを設定(&C)"
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr "新しいエージェントのインスタンス"
-
-#: widgets/agentactionmanager.cpp:56
-#, fuzzy, kde-format
-#| msgid "Unable to create agent instance."
-msgid "Could not create agent instance: %1"
-msgstr "エージェントのインスタンスを作成できません。"
-
-#: widgets/agentactionmanager.cpp:60
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr "エージェントのインスタンスの作成が失敗しました。"
-
-#: widgets/agentactionmanager.cpp:62
-#, kde-format
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr "エージェントのインスタンスを削除しますか？"
-
-#: widgets/agentactionmanager.cpp:66
-#, kde-format
-msgid "Do you really want to delete the selected agent instance?"
-msgstr "本当に選択したエージェントのインスタンスを削除しますか？"
 
 #: widgets/agentconfigurationdialog.cpp:46
 #, fuzzy, kde-format
@@ -2755,6 +2713,34 @@ msgstr "データファイルを解析できませんでした: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "コレクション %1 は見つかりませんでした。"
+
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "エージェントのインスタンスを削除(&D)"
+
+#~ msgid "&Configure Agent Instance"
+#~ msgstr "エージェントのインスタンスを設定(&C)"
+
+#~ msgctxt "@title:window"
+#~ msgid "New Agent Instance"
+#~ msgstr "新しいエージェントのインスタンス"
+
+#, fuzzy
+#~| msgid "Unable to create agent instance."
+#~ msgid "Could not create agent instance: %1"
+#~ msgstr "エージェントのインスタンスを作成できません。"
+
+#, fuzzy
+#~| msgid "Agent instance creation failed"
+#~ msgctxt "@title:window"
+#~ msgid "Agent Instance Creation Failed"
+#~ msgstr "エージェントのインスタンスの作成が失敗しました。"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete Agent Instance?"
+#~ msgstr "エージェントのインスタンスを削除しますか？"
+
+#~ msgid "Do you really want to delete the selected agent instance?"
+#~ msgstr "本当に選択したエージェントのインスタンスを削除しますか？"
 
 #~ msgid "%1 Handbook"
 #~ msgstr "%1 のハンドブック"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -725,46 +725,6 @@ msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr "用于在同一用户会话中启动多个 Akonadi 实例时的命名空间"
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr "新建代理实例(&N)..."
-
-#: widgets/agentactionmanager.cpp:37
-msgid "&Delete Agent Instance"
-msgstr "删除代理实例(&D)"
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr "配置代理实例(&C)"
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr "新建代理实例"
-
-#: widgets/agentactionmanager.cpp:56
-#, kde-format
-msgid "Could not create agent instance: %1"
-msgstr "无法创建代理实例：%1"
-
-#: widgets/agentactionmanager.cpp:60
-#, kde-format
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr "代理实例创建失败"
-
-#: widgets/agentactionmanager.cpp:62
-#, kde-format
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr "删除代理实例？"
-
-#: widgets/agentactionmanager.cpp:66
-#, kde-format
-msgid "Do you really want to delete the selected agent instance?"
-msgstr "您真的想要删除选中的代理实例吗？"
 
 #: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
@@ -2646,3 +2606,30 @@ msgstr "无法解析数据文件：%1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "无法找到集合 %1"
+
+#~ msgid "&New Agent Instance..."
+#~ msgstr "新建代理实例(&N)..."
+
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "删除代理实例(&D)"
+
+#~ msgid "&Configure Agent Instance"
+#~ msgstr "配置代理实例(&C)"
+
+#~ msgctxt "@title:window"
+#~ msgid "New Agent Instance"
+#~ msgstr "新建代理实例"
+
+#~ msgid "Could not create agent instance: %1"
+#~ msgstr "无法创建代理实例：%1"
+
+#~ msgctxt "@title:window"
+#~ msgid "Agent Instance Creation Failed"
+#~ msgstr "代理实例创建失败"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete Agent Instance?"
+#~ msgstr "删除代理实例？"
+
+#~ msgid "Do you really want to delete the selected agent instance?"
+#~ msgstr "您真的想要删除选中的代理实例吗？"

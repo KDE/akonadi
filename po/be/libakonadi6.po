@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2007-07-27 15:55+0300\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian <i18n@mova.org>\n"
@@ -719,49 +719,6 @@ msgstr ""
 #, kde-format
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
-msgstr ""
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr ""
-
-#: widgets/agentactionmanager.cpp:37
-#, fuzzy
-#| msgid "Delete Folder"
-msgid "&Delete Agent Instance"
-msgstr "Выдаліць тэчку"
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr ""
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr ""
-
-#: widgets/agentactionmanager.cpp:56
-#, kde-format
-msgid "Could not create agent instance: %1"
-msgstr ""
-
-#: widgets/agentactionmanager.cpp:60
-#, kde-format
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr ""
-
-#: widgets/agentactionmanager.cpp:62
-#, fuzzy, kde-format
-#| msgid "Delete Folder"
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr "Выдаліць тэчку"
-
-#: widgets/agentactionmanager.cpp:66
-#, kde-format
-msgid "Do you really want to delete the selected agent instance?"
 msgstr ""
 
 #: widgets/agentconfigurationdialog.cpp:46
@@ -2729,6 +2686,17 @@ msgstr ""
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Delete Folder"
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "Выдаліць тэчку"
+
+#, fuzzy
+#~| msgid "Delete Folder"
+#~ msgctxt "@title:window"
+#~ msgid "Delete Agent Instance?"
+#~ msgstr "Выдаліць тэчку"
 
 #, fuzzy
 #~| msgid "Total"

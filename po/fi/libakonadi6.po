@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2026-03-01 17:01+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -745,46 +745,6 @@ msgid ""
 msgstr ""
 "Nimiavaruus useiden Akonadi-ilmentymien käynnistymiseksi samaan "
 "käyttäjäistuntoon"
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr "&Uusi agentti-ilmentymä…"
-
-#: widgets/agentactionmanager.cpp:37
-msgid "&Delete Agent Instance"
-msgstr "&Poista agentti-ilmentymä"
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr "&Muokkaa agentti-ilmentymä"
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr "Uusi agentti-ilmentymä"
-
-#: widgets/agentactionmanager.cpp:56
-#, kde-format
-msgid "Could not create agent instance: %1"
-msgstr "Agentti-ilmentymää ei voitu luoda: %1"
-
-#: widgets/agentactionmanager.cpp:60
-#, kde-format
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr "Agentti-ilmentymän luominen epäonnistui"
-
-#: widgets/agentactionmanager.cpp:62
-#, kde-format
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr "Poistetaanko agentti-ilmentymä?"
-
-#: widgets/agentactionmanager.cpp:66
-#, kde-format
-msgid "Do you really want to delete the selected agent instance?"
-msgstr "Haluatko varmasti poistaa valitun agentti-ilmentymän?"
 
 #: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
@@ -2742,6 +2702,33 @@ msgstr "Datatiedostoa ei saada jäsennetyksi: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Kokoelmaa %1 ei löydy"
+
+#~ msgid "&New Agent Instance..."
+#~ msgstr "&Uusi agentti-ilmentymä…"
+
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "&Poista agentti-ilmentymä"
+
+#~ msgid "&Configure Agent Instance"
+#~ msgstr "&Muokkaa agentti-ilmentymä"
+
+#~ msgctxt "@title:window"
+#~ msgid "New Agent Instance"
+#~ msgstr "Uusi agentti-ilmentymä"
+
+#~ msgid "Could not create agent instance: %1"
+#~ msgstr "Agentti-ilmentymää ei voitu luoda: %1"
+
+#~ msgctxt "@title:window"
+#~ msgid "Agent Instance Creation Failed"
+#~ msgstr "Agentti-ilmentymän luominen epäonnistui"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete Agent Instance?"
+#~ msgstr "Poistetaanko agentti-ilmentymä?"
+
+#~ msgid "Do you really want to delete the selected agent instance?"
+#~ msgstr "Haluatko varmasti poistaa valitun agentti-ilmentymän?"
 
 #~ msgid "There is currently no account configured."
 #~ msgstr "Tilejä ei ole asetettu."

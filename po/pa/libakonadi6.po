@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2023-12-31 09:30-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -736,50 +736,6 @@ msgstr "(c) 2008 Volker Krause <vkrause@kde.org>"
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr ""
-
-#: widgets/agentactionmanager.cpp:37
-msgid "&Delete Agent Instance"
-msgstr "ਏਜੰਟ ਮੌਕੇ ਨੂੰ ਹਟਾਓ(&D)"
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr ""
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr "ਨਵਾਂ ਏਜੰਟ ਮੌਕਾ"
-
-#: widgets/agentactionmanager.cpp:56
-#, fuzzy, kde-format
-#| msgid "Could not paste data: %1"
-msgid "Could not create agent instance: %1"
-msgstr "ਡਾਟਾ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ: %1"
-
-#: widgets/agentactionmanager.cpp:60
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr "ਫੋਲਡਰ ਬਣਾਉਣਾ ਫੇਲ੍ਹ"
-
-#: widgets/agentactionmanager.cpp:62
-#, fuzzy, kde-format
-#| msgid "Delete folder?"
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr "ਫੋਲਡਰ ਹਟਾਉਣਾ ਹੈ?"
-
-#: widgets/agentactionmanager.cpp:66
-#, fuzzy, kde-format
-#| msgid "Do you really want to delete all selected items?"
-msgid "Do you really want to delete the selected agent instance?"
-msgstr "ਕੀ ਤੁਸੀਂ ਸਭ ਚੁਣੀਆਂ ਆਈਟਮਾਂ ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?"
 
 #: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
@@ -2759,6 +2715,35 @@ msgstr "ਡਾਟਾ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ:
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"
 msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ"
+
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "ਏਜੰਟ ਮੌਕੇ ਨੂੰ ਹਟਾਓ(&D)"
+
+#~ msgctxt "@title:window"
+#~ msgid "New Agent Instance"
+#~ msgstr "ਨਵਾਂ ਏਜੰਟ ਮੌਕਾ"
+
+#, fuzzy
+#~| msgid "Could not paste data: %1"
+#~ msgid "Could not create agent instance: %1"
+#~ msgstr "ਡਾਟਾ ਪਾਰਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ: %1"
+
+#, fuzzy
+#~| msgid "Folder creation failed"
+#~ msgctxt "@title:window"
+#~ msgid "Agent Instance Creation Failed"
+#~ msgstr "ਫੋਲਡਰ ਬਣਾਉਣਾ ਫੇਲ੍ਹ"
+
+#, fuzzy
+#~| msgid "Delete folder?"
+#~ msgctxt "@title:window"
+#~ msgid "Delete Agent Instance?"
+#~ msgstr "ਫੋਲਡਰ ਹਟਾਉਣਾ ਹੈ?"
+
+#, fuzzy
+#~| msgid "Do you really want to delete all selected items?"
+#~ msgid "Do you really want to delete the selected agent instance?"
+#~ msgstr "ਕੀ ਤੁਸੀਂ ਸਭ ਚੁਣੀਆਂ ਆਈਟਮਾਂ ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?"
 
 #~ msgid "There is currently no account configured."
 #~ msgstr "ਹਾਲੇ ਕੋਈ ਖਾਤਾ ਸੰਰਚਿਤ ਨਹੀਂ ਹੈ।"

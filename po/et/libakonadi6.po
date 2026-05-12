@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2020-05-07 13:23+0300\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -742,47 +742,6 @@ msgstr "(c) 2008: Volker Krause <vkrause@kde.org>"
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr "&Uus agendi isend..."
-
-#: widgets/agentactionmanager.cpp:37
-msgid "&Delete Agent Instance"
-msgstr "&Kustuta agendi isend"
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr "&Seadista agendi isendit"
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr "Uus agendi isend"
-
-#: widgets/agentactionmanager.cpp:56
-#, kde-format
-msgid "Could not create agent instance: %1"
-msgstr "Agendi isendi loomine nurjus: %1"
-
-#: widgets/agentactionmanager.cpp:60
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr "Agendi isendi loomine nurjus"
-
-#: widgets/agentactionmanager.cpp:62
-#, kde-format
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr "Kas kustutada agendi isend?"
-
-#: widgets/agentactionmanager.cpp:66
-#, kde-format
-msgid "Do you really want to delete the selected agent instance?"
-msgstr "Kas tõesti kustutada kõik valitud agendi isendid?"
 
 #: widgets/agentconfigurationdialog.cpp:46
 #, fuzzy, kde-format
@@ -2805,6 +2764,35 @@ msgstr "Andmefaili parsimine nurjus: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Kogu %1 ei leitud"
+
+#~ msgid "&New Agent Instance..."
+#~ msgstr "&Uus agendi isend..."
+
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "&Kustuta agendi isend"
+
+#~ msgid "&Configure Agent Instance"
+#~ msgstr "&Seadista agendi isendit"
+
+#~ msgctxt "@title:window"
+#~ msgid "New Agent Instance"
+#~ msgstr "Uus agendi isend"
+
+#~ msgid "Could not create agent instance: %1"
+#~ msgstr "Agendi isendi loomine nurjus: %1"
+
+#, fuzzy
+#~| msgid "Agent instance creation failed"
+#~ msgctxt "@title:window"
+#~ msgid "Agent Instance Creation Failed"
+#~ msgstr "Agendi isendi loomine nurjus"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete Agent Instance?"
+#~ msgstr "Kas kustutada agendi isend?"
+
+#~ msgid "Do you really want to delete the selected agent instance?"
+#~ msgstr "Kas tõesti kustutada kõik valitud agendi isendid?"
 
 #~ msgid "There is currently no account configured."
 #~ msgstr "Praegu ei ole ühtegi kontot seadistatud."

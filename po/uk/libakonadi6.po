@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2026-05-06 10:52+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -745,46 +745,6 @@ msgid ""
 msgstr ""
 "Простір назв для запуску декількох екземплярів Akonadi у тому самому сеансі "
 "користувача"
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr "С&творити екземпляр агента…"
-
-#: widgets/agentactionmanager.cpp:37
-msgid "&Delete Agent Instance"
-msgstr "Ви&лучити екземпляр агента"
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr "&Налаштувати екземпляр агента"
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr "Новий екземпляр агента"
-
-#: widgets/agentactionmanager.cpp:56
-#, kde-format
-msgid "Could not create agent instance: %1"
-msgstr "Не вдалося створити екземпляр агента: %1"
-
-#: widgets/agentactionmanager.cpp:60
-#, kde-format
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr "Спроба створення агента зазнала невдачі"
-
-#: widgets/agentactionmanager.cpp:62
-#, kde-format
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr "Вилучити екземпляр агента?"
-
-#: widgets/agentactionmanager.cpp:66
-#, kde-format
-msgid "Do you really want to delete the selected agent instance?"
-msgstr "Ви справді бажаєте вилучити позначений екземпляр агента?"
 
 #: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
@@ -2818,6 +2778,33 @@ msgstr "Не вдалося обробити файл даних: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Не вдалося знайти збірку %1"
+
+#~ msgid "&New Agent Instance..."
+#~ msgstr "С&творити екземпляр агента…"
+
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "Ви&лучити екземпляр агента"
+
+#~ msgid "&Configure Agent Instance"
+#~ msgstr "&Налаштувати екземпляр агента"
+
+#~ msgctxt "@title:window"
+#~ msgid "New Agent Instance"
+#~ msgstr "Новий екземпляр агента"
+
+#~ msgid "Could not create agent instance: %1"
+#~ msgstr "Не вдалося створити екземпляр агента: %1"
+
+#~ msgctxt "@title:window"
+#~ msgid "Agent Instance Creation Failed"
+#~ msgstr "Спроба створення агента зазнала невдачі"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete Agent Instance?"
+#~ msgstr "Вилучити екземпляр агента?"
+
+#~ msgid "Do you really want to delete the selected agent instance?"
+#~ msgstr "Ви справді бажаєте вилучити позначений екземпляр агента?"
 
 #~ msgid "There is currently no account configured."
 #~ msgstr "Зараз не налаштовано жодного облікового запису."

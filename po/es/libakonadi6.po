@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2026-05-07 00:02+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -756,46 +756,6 @@ msgid ""
 msgstr ""
 "Espacio de nombres para iniciar múltiples instancias de Akonadi en la misma "
 "sesión de usuario"
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr "&Nueva instancia de agente…"
-
-#: widgets/agentactionmanager.cpp:37
-msgid "&Delete Agent Instance"
-msgstr "&Borrar instancia de agente"
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr "&Configurar instancia de agente"
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr "Nueva instancia de agente"
-
-#: widgets/agentactionmanager.cpp:56
-#, kde-format
-msgid "Could not create agent instance: %1"
-msgstr "No se ha podido crear la instancia del agente: %1"
-
-#: widgets/agentactionmanager.cpp:60
-#, kde-format
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr "La creación de la instancia del agente ha fallado"
-
-#: widgets/agentactionmanager.cpp:62
-#, kde-format
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr "¿Borrar instancia de agente?"
-
-#: widgets/agentactionmanager.cpp:66
-#, kde-format
-msgid "Do you really want to delete the selected agent instance?"
-msgstr "¿Seguro qué desea borrar la instancia de agente seleccionada?"
 
 #: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
@@ -2771,3 +2731,30 @@ msgstr "No es posible analizar el archivo de datos «%1»"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "No es posible encontrar la colección %1"
+
+#~ msgid "&New Agent Instance..."
+#~ msgstr "&Nueva instancia de agente…"
+
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "&Borrar instancia de agente"
+
+#~ msgid "&Configure Agent Instance"
+#~ msgstr "&Configurar instancia de agente"
+
+#~ msgctxt "@title:window"
+#~ msgid "New Agent Instance"
+#~ msgstr "Nueva instancia de agente"
+
+#~ msgid "Could not create agent instance: %1"
+#~ msgstr "No se ha podido crear la instancia del agente: %1"
+
+#~ msgctxt "@title:window"
+#~ msgid "Agent Instance Creation Failed"
+#~ msgstr "La creación de la instancia del agente ha fallado"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete Agent Instance?"
+#~ msgstr "¿Borrar instancia de agente?"
+
+#~ msgid "Do you really want to delete the selected agent instance?"
+#~ msgstr "¿Seguro qué desea borrar la instancia de agente seleccionada?"

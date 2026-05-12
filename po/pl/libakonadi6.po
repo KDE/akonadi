@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2026-05-09 15:54+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -741,46 +741,6 @@ msgid ""
 msgstr ""
 "Przestrzeń nazw do uruchamiania wielu wystąpień Akonadi w posiedzeniu tego "
 "samego użytkownika"
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr "&Nowe wystąpienie usługi..."
-
-#: widgets/agentactionmanager.cpp:37
-msgid "&Delete Agent Instance"
-msgstr "&Usuń wystąpienie usługi"
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr "&Ustaw wystąpienie usługi"
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr "Nowe wystąpienie usługi"
-
-#: widgets/agentactionmanager.cpp:56
-#, kde-format
-msgid "Could not create agent instance: %1"
-msgstr "Nie można utworzyć wystąpienia usługi: %1"
-
-#: widgets/agentactionmanager.cpp:60
-#, kde-format
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr "Nie udało się utworzyć wystąpienia usługi"
-
-#: widgets/agentactionmanager.cpp:62
-#, kde-format
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr "Usunąć wystąpienie usługi?"
-
-#: widgets/agentactionmanager.cpp:66
-#, kde-format
-msgid "Do you really want to delete the selected agent instance?"
-msgstr "Czy na pewno usunąć zaznaczone wystąpienie usługi?"
 
 #: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
@@ -2771,6 +2731,33 @@ msgstr "Nie można przetworzyć pliku danych: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Nie można znaleźć zbioru %1"
+
+#~ msgid "&New Agent Instance..."
+#~ msgstr "&Nowe wystąpienie usługi..."
+
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "&Usuń wystąpienie usługi"
+
+#~ msgid "&Configure Agent Instance"
+#~ msgstr "&Ustaw wystąpienie usługi"
+
+#~ msgctxt "@title:window"
+#~ msgid "New Agent Instance"
+#~ msgstr "Nowe wystąpienie usługi"
+
+#~ msgid "Could not create agent instance: %1"
+#~ msgstr "Nie można utworzyć wystąpienia usługi: %1"
+
+#~ msgctxt "@title:window"
+#~ msgid "Agent Instance Creation Failed"
+#~ msgstr "Nie udało się utworzyć wystąpienia usługi"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete Agent Instance?"
+#~ msgstr "Usunąć wystąpienie usługi?"
+
+#~ msgid "Do you really want to delete the selected agent instance?"
+#~ msgstr "Czy na pewno usunąć zaznaczone wystąpienie usługi?"
 
 #~ msgid "There is currently no account configured."
 #~ msgstr "Obecnie żadne konto nie ma ustawionego żadnego konta."

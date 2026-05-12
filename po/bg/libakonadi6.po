@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2026-04-03 00:05+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -742,46 +742,6 @@ msgid ""
 msgstr ""
 "Пространство от имена за стартиране на няколко инстанции на Akonadi в една и "
 "съща потребителска сесия"
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr "&Нова инстанция на агент…"
-
-#: widgets/agentactionmanager.cpp:37
-msgid "&Delete Agent Instance"
-msgstr "&Изтриване на инстанция на агент"
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr "&Конфигуриране на инстанция на агент"
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr "Нов инстанция на агент"
-
-#: widgets/agentactionmanager.cpp:56
-#, kde-format
-msgid "Could not create agent instance: %1"
-msgstr "Не можа да се създаде инстанция на агент: %1"
-
-#: widgets/agentactionmanager.cpp:60
-#, kde-format
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr "Създаването на инстанция на агент е неуспешно"
-
-#: widgets/agentactionmanager.cpp:62
-#, kde-format
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr "Да се ​​изтрие ли инстанция на агент?"
-
-#: widgets/agentactionmanager.cpp:66
-#, kde-format
-msgid "Do you really want to delete the selected agent instance?"
-msgstr "Наистина ли искате да изтриете избраната инстанция на агент?"
 
 #: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
@@ -2755,6 +2715,33 @@ msgstr "Не може да се анализира файл с данни: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Не може да се намери колекция %1"
+
+#~ msgid "&New Agent Instance..."
+#~ msgstr "&Нова инстанция на агент…"
+
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "&Изтриване на инстанция на агент"
+
+#~ msgid "&Configure Agent Instance"
+#~ msgstr "&Конфигуриране на инстанция на агент"
+
+#~ msgctxt "@title:window"
+#~ msgid "New Agent Instance"
+#~ msgstr "Нов инстанция на агент"
+
+#~ msgid "Could not create agent instance: %1"
+#~ msgstr "Не можа да се създаде инстанция на агент: %1"
+
+#~ msgctxt "@title:window"
+#~ msgid "Agent Instance Creation Failed"
+#~ msgstr "Създаването на инстанция на агент е неуспешно"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete Agent Instance?"
+#~ msgstr "Да се ​​изтрие ли инстанция на агент?"
+
+#~ msgid "Do you really want to delete the selected agent instance?"
+#~ msgstr "Наистина ли искате да изтриете избраната инстанция на агент?"
 
 #~ msgid "There is currently no account configured."
 #~ msgstr "Понастоящем няма конфигуриран профил."

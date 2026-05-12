@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2026-05-06 04:51+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
@@ -736,46 +736,6 @@ msgid ""
 msgstr ""
 "სახელების სივრცე ერთზე მეტი Akonadi-ის გაშვებული ასლის შესაქმნელად იგივე "
 "მომხმარებლის სესიაში"
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr "&აგენტის ახალი გაშვებული ასლი..."
-
-#: widgets/agentactionmanager.cpp:37
-msgid "&Delete Agent Instance"
-msgstr "&აგენტის გაშვებული ასლის წაშლა"
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr "&აგენტის ინტერფეისის მორგება"
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr "ახალი აგენტის ინტერფეისი"
-
-#: widgets/agentactionmanager.cpp:56
-#, kde-format
-msgid "Could not create agent instance: %1"
-msgstr "აგენტის ინტერფეისის შექმნის შეცდომა: %1"
-
-#: widgets/agentactionmanager.cpp:60
-#, kde-format
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr "აგენტის გაშვებული ასლის შექმნის შეცდომა"
-
-#: widgets/agentactionmanager.cpp:62
-#, kde-format
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr "წავშალო აგენტის ინტერფეისი?"
-
-#: widgets/agentactionmanager.cpp:66
-#, kde-format
-msgid "Do you really want to delete the selected agent instance?"
-msgstr "მართლა გნებავთ აგენტის ამ გაშვებული ასლის წაშლა?"
 
 #: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
@@ -2728,6 +2688,33 @@ msgstr "მონაცემების ფაილის დამუშა�
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "კოლექციის (%1) პოვნა შეუძლებელია"
+
+#~ msgid "&New Agent Instance..."
+#~ msgstr "&აგენტის ახალი გაშვებული ასლი..."
+
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "&აგენტის გაშვებული ასლის წაშლა"
+
+#~ msgid "&Configure Agent Instance"
+#~ msgstr "&აგენტის ინტერფეისის მორგება"
+
+#~ msgctxt "@title:window"
+#~ msgid "New Agent Instance"
+#~ msgstr "ახალი აგენტის ინტერფეისი"
+
+#~ msgid "Could not create agent instance: %1"
+#~ msgstr "აგენტის ინტერფეისის შექმნის შეცდომა: %1"
+
+#~ msgctxt "@title:window"
+#~ msgid "Agent Instance Creation Failed"
+#~ msgstr "აგენტის გაშვებული ასლის შექმნის შეცდომა"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete Agent Instance?"
+#~ msgstr "წავშალო აგენტის ინტერფეისი?"
+
+#~ msgid "Do you really want to delete the selected agent instance?"
+#~ msgstr "მართლა გნებავთ აგენტის ამ გაშვებული ასლის წაშლა?"
 
 #~ msgid "There is currently no account configured."
 #~ msgstr "ამჟამად არც ერთი ანგარიშ მორგებული არაა."

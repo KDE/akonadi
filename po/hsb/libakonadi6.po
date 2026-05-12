@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2021-11-13 21:43+0100\n"
 "Last-Translator: Edward Wornar <edi.werner@gmx.de>\n"
 "Language-Team: Upper Sorbian <kde-i18n-doc@kde.org>\n"
@@ -719,47 +719,6 @@ msgstr ""
 #, kde-format
 msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
-msgstr ""
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr "&Nowa instanca agenta..."
-
-#: widgets/agentactionmanager.cpp:37
-msgid "&Delete Agent Instance"
-msgstr "Instancu agenta &wotstronić"
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr "Instancu agenta &připrawić"
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr "Nowa instanca agenta"
-
-#: widgets/agentactionmanager.cpp:56
-#, kde-format
-msgid "Could not create agent instance: %1"
-msgstr "Njemóžach instancu agenta wutworić: %1"
-
-#: widgets/agentactionmanager.cpp:60
-#, fuzzy, kde-format
-#| msgid "Agent instance creation failed"
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr "Wutworjenje instancy agenta zwrěšćene"
-
-#: widgets/agentactionmanager.cpp:62
-#, kde-format
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr ""
-
-#: widgets/agentactionmanager.cpp:66
-#, kde-format
-msgid "Do you really want to delete the selected agent instance?"
 msgstr ""
 
 #: widgets/agentconfigurationdialog.cpp:46
@@ -2675,6 +2634,28 @@ msgstr ""
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr ""
+
+#~ msgid "&New Agent Instance..."
+#~ msgstr "&Nowa instanca agenta..."
+
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "Instancu agenta &wotstronić"
+
+#~ msgid "&Configure Agent Instance"
+#~ msgstr "Instancu agenta &připrawić"
+
+#~ msgctxt "@title:window"
+#~ msgid "New Agent Instance"
+#~ msgstr "Nowa instanca agenta"
+
+#~ msgid "Could not create agent instance: %1"
+#~ msgstr "Njemóžach instancu agenta wutworić: %1"
+
+#, fuzzy
+#~| msgid "Agent instance creation failed"
+#~ msgctxt "@title:window"
+#~ msgid "Agent Instance Creation Failed"
+#~ msgstr "Wutworjenje instancy agenta zwrěšćene"
 
 #~ msgid "There is currently no account configured."
 #~ msgstr "Tuchwilu njeje žane konto zarjadowane."

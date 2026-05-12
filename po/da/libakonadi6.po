@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2024-07-29 12:41+0200\n"
 "Last-Translator: rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -761,46 +761,6 @@ msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
 "Navnerum, når der startes flere Akonadi-instanser i den samme brugersession"
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr "&Ny agentinstans..."
-
-#: widgets/agentactionmanager.cpp:37
-msgid "&Delete Agent Instance"
-msgstr "&Slet agentinstans"
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr "&Indstil agentinstans"
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr "Ny agentinstans"
-
-#: widgets/agentactionmanager.cpp:56
-#, kde-format
-msgid "Could not create agent instance: %1"
-msgstr "Kunne ikke oprette agentinstans: %1"
-
-#: widgets/agentactionmanager.cpp:60
-#, kde-format
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr "Oprettelse af agentinstans mislykkedes"
-
-#: widgets/agentactionmanager.cpp:62
-#, kde-format
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr "Vil du slette agentinstansen?"
-
-#: widgets/agentactionmanager.cpp:66
-#, kde-format
-msgid "Do you really want to delete the selected agent instance?"
-msgstr "Vil du virkelig slette den markerede agentinstans?"
 
 #: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
@@ -2757,6 +2717,33 @@ msgstr "Kan ikke fortolke datafilen: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Kan ikke finde samlingen %1"
+
+#~ msgid "&New Agent Instance..."
+#~ msgstr "&Ny agentinstans..."
+
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "&Slet agentinstans"
+
+#~ msgid "&Configure Agent Instance"
+#~ msgstr "&Indstil agentinstans"
+
+#~ msgctxt "@title:window"
+#~ msgid "New Agent Instance"
+#~ msgstr "Ny agentinstans"
+
+#~ msgid "Could not create agent instance: %1"
+#~ msgstr "Kunne ikke oprette agentinstans: %1"
+
+#~ msgctxt "@title:window"
+#~ msgid "Agent Instance Creation Failed"
+#~ msgstr "Oprettelse af agentinstans mislykkedes"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete Agent Instance?"
+#~ msgstr "Vil du slette agentinstansen?"
+
+#~ msgid "Do you really want to delete the selected agent instance?"
+#~ msgstr "Vil du virkelig slette den markerede agentinstans?"
 
 #~ msgid "There is currently no account configured."
 #~ msgstr "Der er i øjeblikket ikke konfigureret nogen konto."

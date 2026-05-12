@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-11 00:44+0000\n"
+"POT-Creation-Date: 2026-05-12 00:45+0000\n"
 "PO-Revision-Date: 2024-09-30 18:09+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: https://t.me/Localizations_KDE_Indonesia\n"
@@ -761,46 +761,6 @@ msgid ""
 msgstr ""
 "Ruang nama untuk memulai beberapa instansi Akonadi dalam sesi pengguna yang "
 "sama"
-
-#: widgets/agentactionmanager.cpp:36
-msgid "&New Agent Instance..."
-msgstr "Instansi Agen &Baru..."
-
-#: widgets/agentactionmanager.cpp:37
-msgid "&Delete Agent Instance"
-msgstr "&Hapus Instansi Agen..."
-
-#: widgets/agentactionmanager.cpp:38
-msgid "&Configure Agent Instance"
-msgstr "&Konfigurasikan Instansi Agen"
-
-#: widgets/agentactionmanager.cpp:54
-#, kde-format
-msgctxt "@title:window"
-msgid "New Agent Instance"
-msgstr "Instansi Agen Baru"
-
-#: widgets/agentactionmanager.cpp:56
-#, kde-format
-msgid "Could not create agent instance: %1"
-msgstr "Tidak dapat membuat instansi agen: %1"
-
-#: widgets/agentactionmanager.cpp:60
-#, kde-format
-msgctxt "@title:window"
-msgid "Agent Instance Creation Failed"
-msgstr "Gagal Membuat Instansi Agen"
-
-#: widgets/agentactionmanager.cpp:62
-#, kde-format
-msgctxt "@title:window"
-msgid "Delete Agent Instance?"
-msgstr "Hapus Instansi Agen?"
-
-#: widgets/agentactionmanager.cpp:66
-#, kde-format
-msgid "Do you really want to delete the selected agent instance?"
-msgstr "Apakah kamu benar-benar ingin menghapus instansi agen yang dipilih?"
 
 #: widgets/agentconfigurationdialog.cpp:46
 #, kde-format
@@ -2768,6 +2728,33 @@ msgstr "Tak bisa mengurai data file: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Tak bisa menemukan koleksi %1"
+
+#~ msgid "&New Agent Instance..."
+#~ msgstr "Instansi Agen &Baru..."
+
+#~ msgid "&Delete Agent Instance"
+#~ msgstr "&Hapus Instansi Agen..."
+
+#~ msgid "&Configure Agent Instance"
+#~ msgstr "&Konfigurasikan Instansi Agen"
+
+#~ msgctxt "@title:window"
+#~ msgid "New Agent Instance"
+#~ msgstr "Instansi Agen Baru"
+
+#~ msgid "Could not create agent instance: %1"
+#~ msgstr "Tidak dapat membuat instansi agen: %1"
+
+#~ msgctxt "@title:window"
+#~ msgid "Agent Instance Creation Failed"
+#~ msgstr "Gagal Membuat Instansi Agen"
+
+#~ msgctxt "@title:window"
+#~ msgid "Delete Agent Instance?"
+#~ msgstr "Hapus Instansi Agen?"
+
+#~ msgid "Do you really want to delete the selected agent instance?"
+#~ msgstr "Apakah kamu benar-benar ingin menghapus instansi agen yang dipilih?"
 
 #~ msgid "There is currently no account configured."
 #~ msgstr "Saat ini belum ada akun yang dikonfigurasi."
