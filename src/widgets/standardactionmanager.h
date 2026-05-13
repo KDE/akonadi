@@ -411,11 +411,6 @@ private:
     Q_PRIVATE_SLOT(d, void moveItemToTrashResult(KJob *))
     Q_PRIVATE_SLOT(d, void resourceCreationResult(KJob *))
     Q_PRIVATE_SLOT(d, void pasteResult(KJob *))
-
-    Q_PRIVATE_SLOT(d, void enableAction(int, bool))
-    Q_PRIVATE_SLOT(d, void updatePluralLabel(int, int))
-    Q_PRIVATE_SLOT(d, void updateAlternatingAction(int))
-    Q_PRIVATE_SLOT(d, bool isFavoriteCollection(const Akonadi::Collection &))
 };
 
 }

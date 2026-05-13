@@ -453,11 +453,6 @@ StandardActionManagerPrivate::StandardActionManagerPrivate(StandardActionManager
     qRegisterMetaType<Akonadi::Item::List>("Akonadi::Item::List");
 }
 
-void StandardActionManagerPrivate::enableAction(int type, bool enable) // private slot, called by ActionStateManager
-{
-    enableAction(static_cast<StandardActionManager::Type>(type), enable);
-}
-
 void StandardActionManagerPrivate::enableAction(StandardActionManager::Type type, bool enable)
 {
     Q_ASSERT(type < StandardActionManager::LastType);
@@ -518,11 +513,6 @@ void StandardActionManagerPrivate::createActionFolderMenu(QMenu *menu, StandardA
     }
 }
 
-void StandardActionManagerPrivate::updateAlternatingAction(int type) // private slot, called by ActionStateManager
-{
-    updateAlternatingAction(static_cast<StandardActionManager::Type>(type));
-}
-
 void StandardActionManagerPrivate::updateAlternatingAction(StandardActionManager::Type type)
 {
     Q_ASSERT(type < StandardActionManager::LastType);
@@ -565,12 +555,7 @@ void StandardActionManagerPrivate::updateAlternatingAction(StandardActionManager
     }
 }
 
-void StandardActionManagerPrivate::updatePluralLabel(int type, int count) // private slot, called by ActionStateManager
-{
-    updatePluralLabel(static_cast<StandardActionManager::Type>(type), count);
-}
-
-void StandardActionManagerPrivate::updatePluralLabel(StandardActionManager::Type type, int count) // private slot, called by ActionStateManager
+void StandardActionManagerPrivate::updatePluralLabel(StandardActionManager::Type type, int count)
 {
     Q_ASSERT(type < StandardActionManager::LastType);
     if (actions[type] && pluralLabels.contains(type) && !pluralLabels.value(type).isEmpty()) {
@@ -578,7 +563,7 @@ void StandardActionManagerPrivate::updatePluralLabel(StandardActionManager::Type
     }
 }
 
-bool StandardActionManagerPrivate::isFavoriteCollection(const Akonadi::Collection &collection) const // private slot, called by ActionStateManager
+bool StandardActionManagerPrivate::isFavoriteCollection(const Akonadi::Collection &collection) const
 {
     if (!favoritesModel) {
         return false;
@@ -1753,13 +1738,14 @@ StandardActionManagerPrivate::contextText(StandardActionManager::Type type, Stan
 }
 /// @endcond
 
+#ifndef BUILD_ACTION_STATE_MANAGER_TEST
 StandardActionManager::StandardActionManager(KActionCollection *actionCollection, QWidget *parent)
     : QObject(parent)
     , d(new StandardActionManagerPrivate(this))
 {
     d->parentWidget = parent;
     d->actionCollection = actionCollection;
-    d->mActionStateManager.setReceiver(this);
+    d->mActionStateManager.setReceiver(d.get());
 #ifndef QT_NO_CLIPBOARD
     connect(QApplication::clipboard(), &QClipboard::dataChanged, this, [this]() {
         d->clipboardChanged();
@@ -1994,3 +1980,4 @@ void StandardActionManager::addRecentCollection(Akonadi::Collection::Id id) cons
 }
 
 #include "moc_standardactionmanager.cpp"
+#endif

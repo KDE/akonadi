@@ -8,8 +8,7 @@
 
 #include "collection.h"
 #include "item.h"
-
-class QObject;
+#include "standardactionmanager.h"
 
 namespace Akonadi
 {
@@ -47,7 +46,7 @@ public:
      *   - bool isFavoriteCollection( const Akonadi::Collection& )
      * \param receiver object that will actually update the states.
      */
-    void setReceiver(QObject *receiver);
+    void setReceiver(StandardActionManagerPrivate *receiver);
 
 protected:
     virtual bool isRootCollection(const Collection &collection) const;
@@ -58,14 +57,14 @@ protected:
     virtual bool hasResourceCapability(const Collection &collection, const QString &capability) const;
     virtual bool collectionCanHaveItems(const Collection &collection) const;
 
-    virtual void enableAction(int action, bool state);
-    virtual void updatePluralLabel(int action, int count);
-    virtual void updateAlternatingAction(int action);
+    virtual void enableAction(StandardActionManager::Type action, bool state);
+    virtual void updatePluralLabel(StandardActionManager::Type action, int count);
+    virtual void updateAlternatingAction(StandardActionManager::Type action);
 
 private:
     Q_DISABLE_COPY_MOVE(ActionStateManager)
 
-    QObject *mReceiver = nullptr;
+    StandardActionManagerPrivate *mReceiver = nullptr;
 };
 
 }

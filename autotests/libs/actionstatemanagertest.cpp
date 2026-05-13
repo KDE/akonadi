@@ -12,6 +12,9 @@
 
 #define QT_NO_CLIPBOARD // allow running without GUI
 #include "../src/widgets/actionstatemanager.cpp"
+#define BUILD_ACTION_STATE_MANAGER_TEST
+#include "../src/widgets/standardactionmanager.cpp"
+#undef BUILD_ACTION_STATE_MANAGER_TEST
 #undef QT_NO_CLIPBOARD
 
 using StateMap = QHash<Akonadi::StandardActionManager::Type, bool>;
@@ -29,7 +32,7 @@ public:
 protected:
     bool hasResourceCapability(const Collection &collection, const QString &capability) const override;
     bool isFavoriteCollection(const Collection &collection) const override;
-    void enableAction(int action, bool state) override;
+    void enableAction(StandardActionManager::Type action, bool state) override;
 
 private:
     ActionStateManagerTest *mReceiver = nullptr;
@@ -616,7 +619,7 @@ bool UnitActionStateManager::isFavoriteCollection(const Collection &collection) 
     return mReceiver->isFavoriteCollection(collection);
 }
 
-void UnitActionStateManager::enableAction(int type, bool enable)
+void UnitActionStateManager::enableAction(StandardActionManager::Type type, bool enable)
 {
     mReceiver->enableAction(type, enable);
 }

@@ -70,6 +70,13 @@ add_akonadi_test(collectioncolorattributetest.cpp)
 add_akonadi_test(entitydisplayattributetest.cpp)
 add_akonadi_test(proxymodelstest.cpp)
 add_akonadi_test_widgets(actionstatemanagertest.cpp)
+target_sources(
+    actionstatemanagertest
+    PRIVATE
+        ../../src/widgets/recentcollectionaction.cpp
+        ../../src/widgets/renamefavoritedialog.cpp
+)
+target_link_libraries(actionstatemanagertest KF6::XmlGui)
 add_akonadi_test_widgets(conflictresolvedialogtest.cpp conflictresolvedialogtest.h)
 add_akonadi_test(tagmodeltest.cpp)
 add_akonadi_test(statisticsproxymodeltest.cpp)

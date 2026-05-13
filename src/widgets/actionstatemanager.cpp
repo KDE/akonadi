@@ -11,7 +11,7 @@
 #include "entitydeletedattribute.h"
 #include "pastehelper_p.h"
 #include "specialcollectionattribute.h"
-#include "standardactionmanager.h"
+#include "standardactionmanager_p.h"
 
 #include <QApplication>
 #include <QClipboard>
@@ -45,7 +45,7 @@ static inline bool canContainItems(const Collection &collection)
     return true;
 }
 
-void ActionStateManager::setReceiver(QObject *object)
+void ActionStateManager::setReceiver(StandardActionManagerPrivate *object)
 {
     mReceiver = object;
 }
@@ -361,11 +361,7 @@ bool ActionStateManager::isFavoriteCollection(const Collection &collection) cons
     if (!mReceiver) {
         return false;
     }
-
-    bool result = false;
-    QMetaObject::invokeMethod(mReceiver, "isFavoriteCollection", Qt::DirectConnection, Q_RETURN_ARG(bool, result), Q_ARG(Akonadi::Collection, collection));
-
-    return result;
+    return mReceiver->isFavoriteCollection(collection);
 }
 
 bool ActionStateManager::hasResourceCapability(const Collection &collection, const QString &capability) const
@@ -380,29 +376,26 @@ bool ActionStateManager::collectionCanHaveItems(const Collection &collection) co
     return !(collection.contentMimeTypes() == (QStringList() << QStringLiteral("inode/directory")) || CollectionUtils::isStructural(collection));
 }
 
-void ActionStateManager::enableAction(int action, bool state)
+void ActionStateManager::enableAction(StandardActionManager::Type action, bool state)
 {
     if (!mReceiver) {
         return;
     }
-
-    QMetaObject::invokeMethod(mReceiver, "enableAction", Qt::DirectConnection, Q_ARG(int, action), Q_ARG(bool, state));
+    mReceiver->enableAction(action, state);
 }
 
-void ActionStateManager::updatePluralLabel(int action, int count)
+void ActionStateManager::updatePluralLabel(StandardActionManager::Type action, int count)
 {
     if (!mReceiver) {
         return;
     }
-
-    QMetaObject::invokeMethod(mReceiver, "updatePluralLabel", Qt::DirectConnection, Q_ARG(int, action), Q_ARG(int, count));
+    mReceiver->updatePluralLabel(action, count);
 }
 
-void ActionStateManager::updateAlternatingAction(int action)
+void ActionStateManager::updateAlternatingAction(StandardActionManager::Type action)
 {
     if (!mReceiver) {
         return;
     }
-
-    QMetaObject::invokeMethod(mReceiver, "updateAlternatingAction", Qt::DirectConnection, Q_ARG(int, action));
+    mReceiver->updateAlternatingAction(action);
 }

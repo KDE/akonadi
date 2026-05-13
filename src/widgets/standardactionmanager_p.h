@@ -24,19 +24,16 @@ class StandardActionManagerPrivate
 public:
     explicit StandardActionManagerPrivate(StandardActionManager *parent);
 
-    void enableAction(int type, bool enable); // private slot, called by ActionStateManager
     void enableAction(StandardActionManager::Type type, bool enable);
 
     void aboutToShowMenu();
     void createActionFolderMenu(QMenu *menu, StandardActionManager::Type type);
 
-    void updateAlternatingAction(int type); // private slot, called by ActionStateManager
     void updateAlternatingAction(StandardActionManager::Type type);
 
-    void updatePluralLabel(int type, int count); // private slot, called by ActionStateManager
-    void updatePluralLabel(StandardActionManager::Type type, int count); // private slot, called by ActionStateManager
+    void updatePluralLabel(StandardActionManager::Type type, int count);
 
-    bool isFavoriteCollection(const Akonadi::Collection &collection) const; // private slot, called by ActionStateManager
+    bool isFavoriteCollection(const Akonadi::Collection &collection) const;
 
     void encodeToClipboard(QItemSelectionModel *selectionModel, bool cut = false);
 
