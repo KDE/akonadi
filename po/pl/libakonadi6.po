@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-12 00:45+0000\n"
+"POT-Creation-Date: 2026-05-14 00:44+0000\n"
 "PO-Revision-Date: 2026-05-09 15:54+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -916,7 +916,7 @@ msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Utwórz nowy podkatalog w obecnie wybranym katalogu"
 
-#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:419
+#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:407
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
@@ -928,12 +928,12 @@ msgctxt "@label:textbox, name of a thing"
 msgid "Name"
 msgstr "Nazwa"
 
-#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:421
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:409
 #, kde-format
 msgid "Could not create folder: %1"
 msgstr "Nie można utworzyć katalogu: %1"
 
-#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:422
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:410
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
@@ -2031,200 +2031,200 @@ msgstr ""
 "<p>Więcej porad na temat rozwiązywania problemów można znaleźć na <a href="
 "\"https://userbase.kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
 
-#: widgets/standardactionmanager.cpp:79
+#: widgets/standardactionmanager.cpp:80
 msgid "&New Folder..."
 msgstr "&Nowy katalog..."
 
-#: widgets/standardactionmanager.cpp:79
+#: widgets/standardactionmanager.cpp:80
 msgid "New"
 msgstr "Nowy"
 
-#: widgets/standardactionmanager.cpp:89
+#: widgets/standardactionmanager.cpp:90
 msgid "&Delete Folder"
 msgstr "&Usuń katalog"
 
-#: widgets/standardactionmanager.cpp:90
+#: widgets/standardactionmanager.cpp:91
 msgid "Delete"
 msgstr "Usuń"
 
-#: widgets/standardactionmanager.cpp:97
+#: widgets/standardactionmanager.cpp:98
 msgid "&Synchronize Folder"
 msgstr "&Synchronizuj katalog"
 
-#: widgets/standardactionmanager.cpp:98 widgets/standardactionmanager.cpp:207
-#: widgets/standardactionmanager.cpp:314
+#: widgets/standardactionmanager.cpp:99 widgets/standardactionmanager.cpp:208
+#: widgets/standardactionmanager.cpp:315
 msgid "Synchronize"
 msgstr "Synchronizuj"
 
-#: widgets/standardactionmanager.cpp:105
+#: widgets/standardactionmanager.cpp:106
 msgid "Folder &Properties"
 msgstr "&Właściwości katalogu"
 
-#: widgets/standardactionmanager.cpp:106 widgets/standardactionmanager.cpp:199
+#: widgets/standardactionmanager.cpp:107 widgets/standardactionmanager.cpp:200
 msgid "Properties"
 msgstr "Właściwości"
 
-#: widgets/standardactionmanager.cpp:113
+#: widgets/standardactionmanager.cpp:114
 msgid "&Paste"
 msgstr "&Wklej"
 
-#: widgets/standardactionmanager.cpp:113
+#: widgets/standardactionmanager.cpp:114
 msgid "Paste"
 msgstr "Wklej"
 
-#: widgets/standardactionmanager.cpp:116
+#: widgets/standardactionmanager.cpp:117
 msgid "Manage Local &Subscriptions..."
 msgstr "Zarządzanie lokalnymi &subskrypcjami.."
 
-#: widgets/standardactionmanager.cpp:117
+#: widgets/standardactionmanager.cpp:118
 msgid "Manage Local Subscriptions"
 msgstr "Zarządzanie lokalnymi subskrypcjami"
 
-#: widgets/standardactionmanager.cpp:124
+#: widgets/standardactionmanager.cpp:125
 msgid "Add to Favorite Folders"
 msgstr "Dodaj do katalogów ulubionych"
 
-#: widgets/standardactionmanager.cpp:125
+#: widgets/standardactionmanager.cpp:126
 msgid "Add to Favorite"
 msgstr "Dodaj do ulubionych"
 
-#: widgets/standardactionmanager.cpp:132
+#: widgets/standardactionmanager.cpp:133
 msgid "Remove from Favorite Folders"
 msgstr "Usuń z ulubionych katalogów"
 
-#: widgets/standardactionmanager.cpp:133
+#: widgets/standardactionmanager.cpp:134
 msgid "Remove from Favorite"
 msgstr "Usuń z ulubionych"
 
-#: widgets/standardactionmanager.cpp:140
+#: widgets/standardactionmanager.cpp:141
 msgid "Rename Favorite..."
 msgstr "Zmień nazwę ulubionych..."
 
-#: widgets/standardactionmanager.cpp:141
+#: widgets/standardactionmanager.cpp:142
 msgid "Rename"
 msgstr "Zmień nazwę"
 
-#: widgets/standardactionmanager.cpp:148 widgets/standardactionmanager.cpp:222
+#: widgets/standardactionmanager.cpp:149 widgets/standardactionmanager.cpp:223
 msgid "Copy Folder To..."
 msgstr "Skopiuj katalog do..."
 
-#: widgets/standardactionmanager.cpp:149 widgets/standardactionmanager.cpp:157
-#: widgets/standardactionmanager.cpp:223 widgets/standardactionmanager.cpp:237
+#: widgets/standardactionmanager.cpp:150 widgets/standardactionmanager.cpp:158
+#: widgets/standardactionmanager.cpp:224 widgets/standardactionmanager.cpp:238
 msgid "Copy To"
 msgstr "Skopiuj do"
 
-#: widgets/standardactionmanager.cpp:156 widgets/standardactionmanager.cpp:237
+#: widgets/standardactionmanager.cpp:157 widgets/standardactionmanager.cpp:238
 msgid "Copy Item To..."
 msgstr "Skopiuj element do..."
 
-#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:238
+#: widgets/standardactionmanager.cpp:165 widgets/standardactionmanager.cpp:239
 msgid "Move Item To..."
 msgstr "Przenieś element do..."
 
-#: widgets/standardactionmanager.cpp:165 widgets/standardactionmanager.cpp:173
-#: widgets/standardactionmanager.cpp:231 widgets/standardactionmanager.cpp:238
+#: widgets/standardactionmanager.cpp:166 widgets/standardactionmanager.cpp:174
+#: widgets/standardactionmanager.cpp:232 widgets/standardactionmanager.cpp:239
 msgid "Move To"
 msgstr "Przenieś do"
 
-#: widgets/standardactionmanager.cpp:172 widgets/standardactionmanager.cpp:230
+#: widgets/standardactionmanager.cpp:173 widgets/standardactionmanager.cpp:231
 msgid "Move Folder To..."
 msgstr "Przenieś katalog do..."
 
-#: widgets/standardactionmanager.cpp:179
+#: widgets/standardactionmanager.cpp:180
 msgid "&Cut Item"
 msgstr "&Wytnij element"
 
-#: widgets/standardactionmanager.cpp:179 widgets/standardactionmanager.cpp:180
+#: widgets/standardactionmanager.cpp:180 widgets/standardactionmanager.cpp:181
 msgid "Cut"
 msgstr "Wytnij"
 
-#: widgets/standardactionmanager.cpp:180
+#: widgets/standardactionmanager.cpp:181
 msgid "&Cut Folder"
 msgstr "&Wytnij katalog"
 
-#: widgets/standardactionmanager.cpp:182
+#: widgets/standardactionmanager.cpp:183
 msgid "Create Resource"
 msgstr "Utwórz zasób"
 
-#: widgets/standardactionmanager.cpp:190
+#: widgets/standardactionmanager.cpp:191
 msgid "Delete Resource"
 msgstr "Usuń zasób"
 
-#: widgets/standardactionmanager.cpp:198
+#: widgets/standardactionmanager.cpp:199
 msgid "&Resource Properties"
 msgstr "&Właściwości zasobu"
 
-#: widgets/standardactionmanager.cpp:206
+#: widgets/standardactionmanager.cpp:207
 msgid "Synchronize Resource"
 msgstr "Synchronizuj zasób"
 
-#: widgets/standardactionmanager.cpp:214
+#: widgets/standardactionmanager.cpp:215
 msgid "Work Offline"
 msgstr "Pracuj w trybie bez sieci"
 
-#: widgets/standardactionmanager.cpp:240
+#: widgets/standardactionmanager.cpp:241
 msgid "&Synchronize Folder Recursively"
 msgstr "&Synchronizuj katalog wgłąb"
 
-#: widgets/standardactionmanager.cpp:241
+#: widgets/standardactionmanager.cpp:242
 msgid "Synchronize Recursively"
 msgstr "Synchronizuj wgłąb"
 
-#: widgets/standardactionmanager.cpp:248
+#: widgets/standardactionmanager.cpp:249
 msgid "&Move Folder To Trash"
 msgstr "&Przenieś katalog do kosza"
 
-#: widgets/standardactionmanager.cpp:249
+#: widgets/standardactionmanager.cpp:250
 msgid "Move Folder To Trash"
 msgstr "Przenieś katalog do kosza"
 
-#: widgets/standardactionmanager.cpp:256
+#: widgets/standardactionmanager.cpp:257
 msgid "&Move Item To Trash"
 msgstr "&Przenieś element do kosza"
 
-#: widgets/standardactionmanager.cpp:257
+#: widgets/standardactionmanager.cpp:258
 msgid "Move Item To Trash"
 msgstr "Przenieś element do kosza"
 
-#: widgets/standardactionmanager.cpp:264 widgets/standardactionmanager.cpp:280
+#: widgets/standardactionmanager.cpp:265 widgets/standardactionmanager.cpp:281
 msgid "&Restore Folder From Trash"
 msgstr "P&rzywróć katalog z kosza"
 
-#: widgets/standardactionmanager.cpp:265 widgets/standardactionmanager.cpp:281
+#: widgets/standardactionmanager.cpp:266 widgets/standardactionmanager.cpp:282
 msgid "Restore Folder From Trash"
 msgstr "P&rzywróć katalog z kosza"
 
-#: widgets/standardactionmanager.cpp:272 widgets/standardactionmanager.cpp:296
-#: widgets/standardactionmanager.cpp:303
+#: widgets/standardactionmanager.cpp:273 widgets/standardactionmanager.cpp:297
+#: widgets/standardactionmanager.cpp:304
 msgid "&Restore Item From Trash"
 msgstr "P&rzywróć element z kosza"
 
-#: widgets/standardactionmanager.cpp:273 widgets/standardactionmanager.cpp:297
-#: widgets/standardactionmanager.cpp:303
+#: widgets/standardactionmanager.cpp:274 widgets/standardactionmanager.cpp:298
+#: widgets/standardactionmanager.cpp:304
 msgid "Restore Item From Trash"
 msgstr "Przywróć element z kosza"
 
-#: widgets/standardactionmanager.cpp:288
+#: widgets/standardactionmanager.cpp:289
 msgid "&Restore Collection From Trash"
 msgstr "P&rzywróć zbiór z kosza"
 
-#: widgets/standardactionmanager.cpp:289
+#: widgets/standardactionmanager.cpp:290
 msgid "Restore Collection From Trash"
 msgstr "Przywróć zbiór z kosza"
 
-#: widgets/standardactionmanager.cpp:305
+#: widgets/standardactionmanager.cpp:306
 msgid "&Synchronize Favorite Folders"
 msgstr "&Synchronizuj ulubione katalogi"
 
-#: widgets/standardactionmanager.cpp:306
+#: widgets/standardactionmanager.cpp:307
 msgid "Synchronize Favorite Folders"
 msgstr "Synchronizuj ulubione katalogi"
 
-#: widgets/standardactionmanager.cpp:313
+#: widgets/standardactionmanager.cpp:314
 msgid "Synchronize Folder Tree"
 msgstr "Synchronizuj drzewo katalogu"
 
-#: widgets/standardactionmanager.cpp:399
+#: widgets/standardactionmanager.cpp:387
 #, kde-format
 msgid "&Copy Folder"
 msgid_plural "&Copy %1 Folders"
@@ -2232,7 +2232,7 @@ msgstr[0] "S&kopiuj katalog"
 msgstr[1] "S&kopiuj %1 katalogi"
 msgstr[2] "S&kopiuj %1 katalogów"
 
-#: widgets/standardactionmanager.cpp:400
+#: widgets/standardactionmanager.cpp:388
 #, kde-format
 msgid "&Copy Item"
 msgid_plural "&Copy %1 Items"
@@ -2240,7 +2240,7 @@ msgstr[0] "S&kopiuj element"
 msgstr[1] "S&kopiuj %1 elementy"
 msgstr[2] "S&kopiuj %1 elementów"
 
-#: widgets/standardactionmanager.cpp:401
+#: widgets/standardactionmanager.cpp:389
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Item"
@@ -2249,7 +2249,7 @@ msgstr[0] "&Wytnij element"
 msgstr[1] "&Wytnij %1 elementy"
 msgstr[2] "&Wytnij %1 elementów"
 
-#: widgets/standardactionmanager.cpp:402
+#: widgets/standardactionmanager.cpp:390
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Folder"
@@ -2258,7 +2258,7 @@ msgstr[0] "&Wytnij katalog"
 msgstr[1] "&Wytnij %1 katalogi"
 msgstr[2] "&Wytnij %1 katalogów"
 
-#: widgets/standardactionmanager.cpp:403
+#: widgets/standardactionmanager.cpp:391
 #, kde-format
 msgid "&Delete Item"
 msgid_plural "&Delete %1 Items"
@@ -2266,7 +2266,7 @@ msgstr[0] "&Usuń element"
 msgstr[1] "&Usuń %1 elementy"
 msgstr[2] "&Usuń %1 elementów"
 
-#: widgets/standardactionmanager.cpp:404
+#: widgets/standardactionmanager.cpp:392
 #, kde-format
 msgctxt "@action"
 msgid "&Delete Folder"
@@ -2275,7 +2275,7 @@ msgstr[0] "&Usuń katalog"
 msgstr[1] "Usuń %1 &katalogi"
 msgstr[2] "Usuń %1 &katalogów"
 
-#: widgets/standardactionmanager.cpp:405
+#: widgets/standardactionmanager.cpp:393
 #, kde-format
 msgctxt "@action"
 msgid "&Synchronize Folder"
@@ -2284,7 +2284,7 @@ msgstr[0] "&Synchronizuj katalog"
 msgstr[1] "&Synchronizuj %1 katalogi"
 msgstr[2] "&Synchronizuj %1 katalogów"
 
-#: widgets/standardactionmanager.cpp:406
+#: widgets/standardactionmanager.cpp:394
 #, kde-format
 msgid "&Delete Resource"
 msgid_plural "&Delete %1 Resources"
@@ -2292,7 +2292,7 @@ msgstr[0] "&Usuń zasób"
 msgstr[1] "&Usuń %1 zasoby"
 msgstr[2] "&Usuń %1 zasobów"
 
-#: widgets/standardactionmanager.cpp:407
+#: widgets/standardactionmanager.cpp:395
 #, kde-format
 msgid "&Synchronize Resource"
 msgid_plural "&Synchronize %1 Resources"
@@ -2300,7 +2300,7 @@ msgstr[0] "&Synchronizuj zasób"
 msgstr[1] "&Synchronizuj %1 zasoby"
 msgstr[2] "&Synchronizuj %1 zasobów"
 
-#: widgets/standardactionmanager.cpp:409
+#: widgets/standardactionmanager.cpp:397
 #, kde-format
 msgid "Copy Folder"
 msgid_plural "Copy %1 Folders"
@@ -2308,7 +2308,7 @@ msgstr[0] "Skopiuj katalog"
 msgstr[1] "Skopiuj %1 katalogi"
 msgstr[2] "Skopiuj %1 katalogów"
 
-#: widgets/standardactionmanager.cpp:410
+#: widgets/standardactionmanager.cpp:398
 #, kde-format
 msgid "Copy Item"
 msgid_plural "Copy %1 Items"
@@ -2316,7 +2316,7 @@ msgstr[0] "Skopiuj element"
 msgstr[1] "Skopiuj %1 elementy"
 msgstr[2] "Skopiuj %1 elementów"
 
-#: widgets/standardactionmanager.cpp:411
+#: widgets/standardactionmanager.cpp:399
 #, kde-format
 msgid "Cut Item"
 msgid_plural "Cut %1 Items"
@@ -2324,7 +2324,7 @@ msgstr[0] "Wytnij element"
 msgstr[1] "Wytnij %1 elementy"
 msgstr[2] "Wytnij %1 elementów"
 
-#: widgets/standardactionmanager.cpp:412
+#: widgets/standardactionmanager.cpp:400
 #, kde-format
 msgid "Cut Folder"
 msgid_plural "Cut %1 Folders"
@@ -2332,7 +2332,7 @@ msgstr[0] "Wytnij katalog"
 msgstr[1] "Wytnij %1 katalogi"
 msgstr[2] "Wytnij %1 katalogów"
 
-#: widgets/standardactionmanager.cpp:413
+#: widgets/standardactionmanager.cpp:401
 #, kde-format
 msgid "Delete Item"
 msgid_plural "Delete %1 Items"
@@ -2340,7 +2340,7 @@ msgstr[0] "Usuń element"
 msgstr[1] "Usuń %1 elementy"
 msgstr[2] "Usuń %1 elementów"
 
-#: widgets/standardactionmanager.cpp:414
+#: widgets/standardactionmanager.cpp:402
 #, kde-format
 msgid "Delete Folder"
 msgid_plural "Delete %1 Folders"
@@ -2348,7 +2348,7 @@ msgstr[0] "Usuń katalog"
 msgstr[1] "Usuń %1 katalogi"
 msgstr[2] "Usuń %1 katalogów"
 
-#: widgets/standardactionmanager.cpp:415
+#: widgets/standardactionmanager.cpp:403
 #, kde-format
 msgid "Synchronize Folder"
 msgid_plural "Synchronize %1 Folders"
@@ -2356,7 +2356,7 @@ msgstr[0] "Synchronizuj katalog"
 msgstr[1] "Synchronizuj %1 katalogi"
 msgstr[2] "Synchronizuj %1 katalogów"
 
-#: widgets/standardactionmanager.cpp:416
+#: widgets/standardactionmanager.cpp:404
 #, kde-format
 msgctxt "@action"
 msgid "Delete Resource"
@@ -2365,7 +2365,7 @@ msgstr[0] "Usuń zasób"
 msgstr[1] "Usuń %1 zasoby"
 msgstr[2] "Usuń %1 zasobów"
 
-#: widgets/standardactionmanager.cpp:417
+#: widgets/standardactionmanager.cpp:405
 #, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
@@ -2374,13 +2374,13 @@ msgstr[0] "Synchronizuj zasób"
 msgstr[1] "Synchronizuj %1 zasoby"
 msgstr[2] "Synchronizuj %1 zasobów"
 
-#: widgets/standardactionmanager.cpp:420
+#: widgets/standardactionmanager.cpp:408
 #, kde-format
 msgctxt "@label:textbox name of Akonadi folder"
 msgid "Name"
 msgstr "Nazwa"
 
-#: widgets/standardactionmanager.cpp:427
+#: widgets/standardactionmanager.cpp:415
 #, kde-format
 msgid "Do you really want to delete this folder and all its sub-folders?"
 msgid_plural ""
@@ -2389,7 +2389,7 @@ msgstr[0] "Czy na pewno usunąć ten katalog i wszystkie jego podkatalogi?"
 msgstr[1] "Czy na pewno usunąć %1 katalogi i wszystkie ich podkatalogi?"
 msgstr[2] "Czy na pewno usunąć %1 katalogów i wszystkie ich podkatalogi?"
 
-#: widgets/standardactionmanager.cpp:430
+#: widgets/standardactionmanager.cpp:418
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
@@ -2398,24 +2398,24 @@ msgstr[0] "Usunąć katalog?"
 msgstr[1] "Usunąć katalogi?"
 msgstr[2] "Usunąć katalogi?"
 
-#: widgets/standardactionmanager.cpp:431
+#: widgets/standardactionmanager.cpp:419
 #, kde-format
 msgid "Could not delete folder: %1"
 msgstr "Nie można usunąć katalogu: %1"
 
-#: widgets/standardactionmanager.cpp:432
+#: widgets/standardactionmanager.cpp:420
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "Nieudane usuwanie katalogu"
 
-#: widgets/standardactionmanager.cpp:434
+#: widgets/standardactionmanager.cpp:422
 #, kde-format
 msgctxt "@title:window"
 msgid "Properties of Folder %1"
 msgstr "Właściwości katalogu %1"
 
-#: widgets/standardactionmanager.cpp:438
+#: widgets/standardactionmanager.cpp:426
 #, kde-format
 msgid "Do you really want to delete the selected item?"
 msgid_plural "Do you really want to delete %1 items?"
@@ -2423,7 +2423,7 @@ msgstr[0] "Czy na pewno usunąć zaznaczoną rzecz?"
 msgstr[1] "Czy na pewno usunąć %1 rzeczy?"
 msgstr[2] "Czy na pewno usunąć %1 rzeczy?"
 
-#: widgets/standardactionmanager.cpp:439
+#: widgets/standardactionmanager.cpp:427
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
@@ -2432,47 +2432,47 @@ msgstr[0] "Usunąć rzecz?"
 msgstr[1] "Usuń rzeczy?"
 msgstr[2] "Usuń rzeczy?"
 
-#: widgets/standardactionmanager.cpp:440
+#: widgets/standardactionmanager.cpp:428
 #, kde-format
 msgid "Could not delete item: %1"
 msgstr "Nie można usunąć rzeczy: %1"
 
-#: widgets/standardactionmanager.cpp:441
+#: widgets/standardactionmanager.cpp:429
 #, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "Nieudane usuwanie rzeczy"
 
-#: widgets/standardactionmanager.cpp:443
+#: widgets/standardactionmanager.cpp:431
 #, kde-format
 msgctxt "@title:window"
 msgid "Rename Favorite"
 msgstr "Zmień nazwę ulubionych"
 
-#: widgets/standardactionmanager.cpp:446
+#: widgets/standardactionmanager.cpp:432
 #, kde-format
 msgctxt "@label:textbox name of the folder"
 msgid "Name:"
 msgstr "Nazwa:"
 
-#: widgets/standardactionmanager.cpp:448
+#: widgets/standardactionmanager.cpp:434
 #, kde-format
 msgctxt "@title:window"
 msgid "New Resource"
 msgstr "Nowy zasób"
 
-#: widgets/standardactionmanager.cpp:449
+#: widgets/standardactionmanager.cpp:435
 #, kde-format
 msgid "Could not create resource: %1"
 msgstr "Nie udało się utworzyć zasobu: %1"
 
-#: widgets/standardactionmanager.cpp:450
+#: widgets/standardactionmanager.cpp:436
 #, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "Nieudane tworzenie zasobu"
 
-#: widgets/standardactionmanager.cpp:454
+#: widgets/standardactionmanager.cpp:440
 #, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
@@ -2480,7 +2480,7 @@ msgstr[0] "Czy na pewno usunąć ten zasób?"
 msgstr[1] "Czy na pewno usunąć %1 zasoby?"
 msgstr[2] "Czy na pewno usunąć %1 zasobów?"
 
-#: widgets/standardactionmanager.cpp:457
+#: widgets/standardactionmanager.cpp:443
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Resource?"
@@ -2489,34 +2489,34 @@ msgstr[0] "Usunąć zasób?"
 msgstr[1] "Usunąć zasoby?"
 msgstr[2] "Usunąć zasoby?"
 
-#: widgets/standardactionmanager.cpp:459
+#: widgets/standardactionmanager.cpp:445
 #, kde-format
 msgid "Could not paste data: %1"
 msgstr "Nie można wkleić danych: %1"
 
-#: widgets/standardactionmanager.cpp:460
+#: widgets/standardactionmanager.cpp:446
 #, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Wklejanie nieudane"
 
-#: widgets/standardactionmanager.cpp:827
+#: widgets/standardactionmanager.cpp:791
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "Nie można dodać \"/\" do nazwy katalogu."
 
-#: widgets/standardactionmanager.cpp:827 widgets/standardactionmanager.cpp:831
+#: widgets/standardactionmanager.cpp:791 widgets/standardactionmanager.cpp:795
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Błąd tworzenia nowego katalogu"
 
-#: widgets/standardactionmanager.cpp:831
+#: widgets/standardactionmanager.cpp:795
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "Nie można dodać \".\" ani do początku ani do końca nazwy katalogu."
 
-#: widgets/standardactionmanager.cpp:1070
+#: widgets/standardactionmanager.cpp:1034
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2525,23 +2525,23 @@ msgstr ""
 "Przed synchronizacją katalogu \"%1\" konieczne jest podłączenie go do sieci. "
 "Czy chcesz podłączyć go do sieci?"
 
-#: widgets/standardactionmanager.cpp:1071
+#: widgets/standardactionmanager.cpp:1035
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "Konto \"%1\" odłączono od sieci"
 
-#: widgets/standardactionmanager.cpp:1072
+#: widgets/standardactionmanager.cpp:1036
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Przejdź do trybu z siecią"
 
-#: widgets/standardactionmanager.cpp:1687
+#: widgets/standardactionmanager.cpp:1656
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Przenieś do tego katalogu"
 
-#: widgets/standardactionmanager.cpp:1687
+#: widgets/standardactionmanager.cpp:1656
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Skopiuj do tego katalogu"

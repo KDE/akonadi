@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-12 00:45+0000\n"
+"POT-Creation-Date: 2026-05-14 00:44+0000\n"
 "PO-Revision-Date: 2026-05-09 09:24+0200\n"
 "Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -913,7 +913,7 @@ msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Vytvořit podsložku ve vybrané složce"
 
-#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:419
+#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:407
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
@@ -925,12 +925,12 @@ msgctxt "@label:textbox, name of a thing"
 msgid "Name"
 msgstr "Název"
 
-#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:421
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:409
 #, kde-format
 msgid "Could not create folder: %1"
 msgstr "Nelze vytvořit složku: %1"
 
-#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:422
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:410
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
@@ -2019,200 +2019,200 @@ msgstr ""
 "<p>Pro více informací o řešení problémů prosím navštivte  <a href=\"https://"
 "userbase.kde.org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
 
-#: widgets/standardactionmanager.cpp:79
+#: widgets/standardactionmanager.cpp:80
 msgid "&New Folder..."
 msgstr "&Nová složka..."
 
-#: widgets/standardactionmanager.cpp:79
+#: widgets/standardactionmanager.cpp:80
 msgid "New"
 msgstr "Nový"
 
-#: widgets/standardactionmanager.cpp:89
+#: widgets/standardactionmanager.cpp:90
 msgid "&Delete Folder"
 msgstr "S&mazat složku"
 
-#: widgets/standardactionmanager.cpp:90
+#: widgets/standardactionmanager.cpp:91
 msgid "Delete"
 msgstr "Smazat"
 
-#: widgets/standardactionmanager.cpp:97
+#: widgets/standardactionmanager.cpp:98
 msgid "&Synchronize Folder"
 msgstr "&Synchronizovat složku"
 
-#: widgets/standardactionmanager.cpp:98 widgets/standardactionmanager.cpp:207
-#: widgets/standardactionmanager.cpp:314
+#: widgets/standardactionmanager.cpp:99 widgets/standardactionmanager.cpp:208
+#: widgets/standardactionmanager.cpp:315
 msgid "Synchronize"
 msgstr "Synchronizovat"
 
-#: widgets/standardactionmanager.cpp:105
+#: widgets/standardactionmanager.cpp:106
 msgid "Folder &Properties"
 msgstr "&Vlastnosti složky"
 
-#: widgets/standardactionmanager.cpp:106 widgets/standardactionmanager.cpp:199
+#: widgets/standardactionmanager.cpp:107 widgets/standardactionmanager.cpp:200
 msgid "Properties"
 msgstr "Vlastnosti"
 
-#: widgets/standardactionmanager.cpp:113
+#: widgets/standardactionmanager.cpp:114
 msgid "&Paste"
 msgstr "V&ložit"
 
-#: widgets/standardactionmanager.cpp:113
+#: widgets/standardactionmanager.cpp:114
 msgid "Paste"
 msgstr "Vložit"
 
-#: widgets/standardactionmanager.cpp:116
+#: widgets/standardactionmanager.cpp:117
 msgid "Manage Local &Subscriptions..."
 msgstr "&Spravovat lokální přihlášení..."
 
-#: widgets/standardactionmanager.cpp:117
+#: widgets/standardactionmanager.cpp:118
 msgid "Manage Local Subscriptions"
 msgstr "Spravovat lokální přihlášení"
 
-#: widgets/standardactionmanager.cpp:124
+#: widgets/standardactionmanager.cpp:125
 msgid "Add to Favorite Folders"
 msgstr "Přidat do oblíbených složek"
 
-#: widgets/standardactionmanager.cpp:125
+#: widgets/standardactionmanager.cpp:126
 msgid "Add to Favorite"
 msgstr "Přidat do oblíbených"
 
-#: widgets/standardactionmanager.cpp:132
+#: widgets/standardactionmanager.cpp:133
 msgid "Remove from Favorite Folders"
 msgstr "Odstranit z oblíbených složek"
 
-#: widgets/standardactionmanager.cpp:133
+#: widgets/standardactionmanager.cpp:134
 msgid "Remove from Favorite"
 msgstr "Odstranit z oblíbených"
 
-#: widgets/standardactionmanager.cpp:140
+#: widgets/standardactionmanager.cpp:141
 msgid "Rename Favorite..."
 msgstr "Přejmenovat oblíbenou..."
 
-#: widgets/standardactionmanager.cpp:141
+#: widgets/standardactionmanager.cpp:142
 msgid "Rename"
 msgstr "Přejmenovat"
 
-#: widgets/standardactionmanager.cpp:148 widgets/standardactionmanager.cpp:222
+#: widgets/standardactionmanager.cpp:149 widgets/standardactionmanager.cpp:223
 msgid "Copy Folder To..."
 msgstr "Kopírovat složku do..."
 
-#: widgets/standardactionmanager.cpp:149 widgets/standardactionmanager.cpp:157
-#: widgets/standardactionmanager.cpp:223 widgets/standardactionmanager.cpp:237
+#: widgets/standardactionmanager.cpp:150 widgets/standardactionmanager.cpp:158
+#: widgets/standardactionmanager.cpp:224 widgets/standardactionmanager.cpp:238
 msgid "Copy To"
 msgstr "Kopírovat do"
 
-#: widgets/standardactionmanager.cpp:156 widgets/standardactionmanager.cpp:237
+#: widgets/standardactionmanager.cpp:157 widgets/standardactionmanager.cpp:238
 msgid "Copy Item To..."
 msgstr "Kopírovat položku do..."
 
-#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:238
+#: widgets/standardactionmanager.cpp:165 widgets/standardactionmanager.cpp:239
 msgid "Move Item To..."
 msgstr "Přesunout položku do ..."
 
-#: widgets/standardactionmanager.cpp:165 widgets/standardactionmanager.cpp:173
-#: widgets/standardactionmanager.cpp:231 widgets/standardactionmanager.cpp:238
+#: widgets/standardactionmanager.cpp:166 widgets/standardactionmanager.cpp:174
+#: widgets/standardactionmanager.cpp:232 widgets/standardactionmanager.cpp:239
 msgid "Move To"
 msgstr "Přesunout do"
 
-#: widgets/standardactionmanager.cpp:172 widgets/standardactionmanager.cpp:230
+#: widgets/standardactionmanager.cpp:173 widgets/standardactionmanager.cpp:231
 msgid "Move Folder To..."
 msgstr "Přesunout složku do..."
 
-#: widgets/standardactionmanager.cpp:179
+#: widgets/standardactionmanager.cpp:180
 msgid "&Cut Item"
 msgstr "&Vyjmout položku"
 
-#: widgets/standardactionmanager.cpp:179 widgets/standardactionmanager.cpp:180
+#: widgets/standardactionmanager.cpp:180 widgets/standardactionmanager.cpp:181
 msgid "Cut"
 msgstr "Vyjmout"
 
-#: widgets/standardactionmanager.cpp:180
+#: widgets/standardactionmanager.cpp:181
 msgid "&Cut Folder"
 msgstr "&Vyjmout složku"
 
-#: widgets/standardactionmanager.cpp:182
+#: widgets/standardactionmanager.cpp:183
 msgid "Create Resource"
 msgstr "Vytvořit zdroj"
 
-#: widgets/standardactionmanager.cpp:190
+#: widgets/standardactionmanager.cpp:191
 msgid "Delete Resource"
 msgstr "Smazat zdroj"
 
-#: widgets/standardactionmanager.cpp:198
+#: widgets/standardactionmanager.cpp:199
 msgid "&Resource Properties"
 msgstr "Vlastnosti zd&roje"
 
-#: widgets/standardactionmanager.cpp:206
+#: widgets/standardactionmanager.cpp:207
 msgid "Synchronize Resource"
 msgstr "Synchronizovat zdroj"
 
-#: widgets/standardactionmanager.cpp:214
+#: widgets/standardactionmanager.cpp:215
 msgid "Work Offline"
 msgstr "Pracovat v odpojeném režimu"
 
-#: widgets/standardactionmanager.cpp:240
+#: widgets/standardactionmanager.cpp:241
 msgid "&Synchronize Folder Recursively"
 msgstr "&Synchronizovat složku rekurzivně"
 
-#: widgets/standardactionmanager.cpp:241
+#: widgets/standardactionmanager.cpp:242
 msgid "Synchronize Recursively"
 msgstr "Synchronizovat rekurzivně"
 
-#: widgets/standardactionmanager.cpp:248
+#: widgets/standardactionmanager.cpp:249
 msgid "&Move Folder To Trash"
 msgstr "Přesu&nout složku do koše"
 
-#: widgets/standardactionmanager.cpp:249
+#: widgets/standardactionmanager.cpp:250
 msgid "Move Folder To Trash"
 msgstr "Přesunout složku do koše"
 
-#: widgets/standardactionmanager.cpp:256
+#: widgets/standardactionmanager.cpp:257
 msgid "&Move Item To Trash"
 msgstr "Přesu&nout položku do koše"
 
-#: widgets/standardactionmanager.cpp:257
+#: widgets/standardactionmanager.cpp:258
 msgid "Move Item To Trash"
 msgstr "Přesunout položku do koše"
 
-#: widgets/standardactionmanager.cpp:264 widgets/standardactionmanager.cpp:280
+#: widgets/standardactionmanager.cpp:265 widgets/standardactionmanager.cpp:281
 msgid "&Restore Folder From Trash"
 msgstr "Obnovit složku z koše"
 
-#: widgets/standardactionmanager.cpp:265 widgets/standardactionmanager.cpp:281
+#: widgets/standardactionmanager.cpp:266 widgets/standardactionmanager.cpp:282
 msgid "Restore Folder From Trash"
 msgstr "Obnovit složku z koše"
 
-#: widgets/standardactionmanager.cpp:272 widgets/standardactionmanager.cpp:296
-#: widgets/standardactionmanager.cpp:303
+#: widgets/standardactionmanager.cpp:273 widgets/standardactionmanager.cpp:297
+#: widgets/standardactionmanager.cpp:304
 msgid "&Restore Item From Trash"
 msgstr "&Obnovit položku z koše"
 
-#: widgets/standardactionmanager.cpp:273 widgets/standardactionmanager.cpp:297
-#: widgets/standardactionmanager.cpp:303
+#: widgets/standardactionmanager.cpp:274 widgets/standardactionmanager.cpp:298
+#: widgets/standardactionmanager.cpp:304
 msgid "Restore Item From Trash"
 msgstr "Obnovit položku z koše"
 
-#: widgets/standardactionmanager.cpp:288
+#: widgets/standardactionmanager.cpp:289
 msgid "&Restore Collection From Trash"
 msgstr "&Obnovit sbírku z koše"
 
-#: widgets/standardactionmanager.cpp:289
+#: widgets/standardactionmanager.cpp:290
 msgid "Restore Collection From Trash"
 msgstr "Obnovit sbírku z koše"
 
-#: widgets/standardactionmanager.cpp:305
+#: widgets/standardactionmanager.cpp:306
 msgid "&Synchronize Favorite Folders"
 msgstr "&Synchronizovat oblíbené složky"
 
-#: widgets/standardactionmanager.cpp:306
+#: widgets/standardactionmanager.cpp:307
 msgid "Synchronize Favorite Folders"
 msgstr "Synchronizovat oblíbené složky"
 
-#: widgets/standardactionmanager.cpp:313
+#: widgets/standardactionmanager.cpp:314
 msgid "Synchronize Folder Tree"
 msgstr "Synchronizovat strom složky"
 
-#: widgets/standardactionmanager.cpp:399
+#: widgets/standardactionmanager.cpp:387
 #, kde-format
 msgid "&Copy Folder"
 msgid_plural "&Copy %1 Folders"
@@ -2220,7 +2220,7 @@ msgstr[0] "&Kopírovat složku"
 msgstr[1] "&Kopírovat %1 složky"
 msgstr[2] "&Kopírovat %1 složek"
 
-#: widgets/standardactionmanager.cpp:400
+#: widgets/standardactionmanager.cpp:388
 #, kde-format
 msgid "&Copy Item"
 msgid_plural "&Copy %1 Items"
@@ -2228,7 +2228,7 @@ msgstr[0] "&Kopírovat položku"
 msgstr[1] "&Kopírovat %1 položky"
 msgstr[2] "&Kopírovat %1 položek"
 
-#: widgets/standardactionmanager.cpp:401
+#: widgets/standardactionmanager.cpp:389
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Item"
@@ -2237,7 +2237,7 @@ msgstr[0] "&Vyjmout položku"
 msgstr[1] "&Vyjmout %1 položky"
 msgstr[2] "&Vyjmout %1 položek"
 
-#: widgets/standardactionmanager.cpp:402
+#: widgets/standardactionmanager.cpp:390
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Folder"
@@ -2246,7 +2246,7 @@ msgstr[0] "&Vyjmout složku"
 msgstr[1] "&Vyjmout %1 složky"
 msgstr[2] "&Vyjmout %1 složek"
 
-#: widgets/standardactionmanager.cpp:403
+#: widgets/standardactionmanager.cpp:391
 #, kde-format
 msgid "&Delete Item"
 msgid_plural "&Delete %1 Items"
@@ -2254,7 +2254,7 @@ msgstr[0] "S&mazat položku"
 msgstr[1] "S&mazat %1 položky"
 msgstr[2] "S&mazat %1 položek"
 
-#: widgets/standardactionmanager.cpp:404
+#: widgets/standardactionmanager.cpp:392
 #, kde-format
 msgctxt "@action"
 msgid "&Delete Folder"
@@ -2263,7 +2263,7 @@ msgstr[0] "S&mazat složku"
 msgstr[1] "S&mazat %1 složky"
 msgstr[2] "S&mazat %1 složek"
 
-#: widgets/standardactionmanager.cpp:405
+#: widgets/standardactionmanager.cpp:393
 #, kde-format
 msgctxt "@action"
 msgid "&Synchronize Folder"
@@ -2272,7 +2272,7 @@ msgstr[0] "&Synchronizovat složku"
 msgstr[1] "&Synchronizovat %1 složky"
 msgstr[2] "&Synchronizovat %1 složek"
 
-#: widgets/standardactionmanager.cpp:406
+#: widgets/standardactionmanager.cpp:394
 #, kde-format
 msgid "&Delete Resource"
 msgid_plural "&Delete %1 Resources"
@@ -2280,7 +2280,7 @@ msgstr[0] "Smazat z&droj"
 msgstr[1] "Smazat %1 z&droje"
 msgstr[2] "Smazat %1 z&drojů"
 
-#: widgets/standardactionmanager.cpp:407
+#: widgets/standardactionmanager.cpp:395
 #, kde-format
 msgid "&Synchronize Resource"
 msgid_plural "&Synchronize %1 Resources"
@@ -2288,7 +2288,7 @@ msgstr[0] "&Synchronizovat zdroj"
 msgstr[1] "&Synchronizovat %1 zdroje"
 msgstr[2] "&Synchronizovat %1 zdrojů"
 
-#: widgets/standardactionmanager.cpp:409
+#: widgets/standardactionmanager.cpp:397
 #, kde-format
 msgid "Copy Folder"
 msgid_plural "Copy %1 Folders"
@@ -2296,7 +2296,7 @@ msgstr[0] "Kopírovat složku"
 msgstr[1] "Kopírovat %1 složky"
 msgstr[2] "Kopírovat %1 složek"
 
-#: widgets/standardactionmanager.cpp:410
+#: widgets/standardactionmanager.cpp:398
 #, kde-format
 msgid "Copy Item"
 msgid_plural "Copy %1 Items"
@@ -2304,7 +2304,7 @@ msgstr[0] "Kopírovat položku"
 msgstr[1] "Kopírovat %1 položky"
 msgstr[2] "Kopírovat %1 položek"
 
-#: widgets/standardactionmanager.cpp:411
+#: widgets/standardactionmanager.cpp:399
 #, kde-format
 msgid "Cut Item"
 msgid_plural "Cut %1 Items"
@@ -2312,7 +2312,7 @@ msgstr[0] "Vyjmout položku"
 msgstr[1] "Vyjmout %1 položky"
 msgstr[2] "Vyjmout %1 položek"
 
-#: widgets/standardactionmanager.cpp:412
+#: widgets/standardactionmanager.cpp:400
 #, kde-format
 msgid "Cut Folder"
 msgid_plural "Cut %1 Folders"
@@ -2320,7 +2320,7 @@ msgstr[0] "Vyjmout složku"
 msgstr[1] "Vyjmout %1 složky"
 msgstr[2] "Vyjmout %1 složek"
 
-#: widgets/standardactionmanager.cpp:413
+#: widgets/standardactionmanager.cpp:401
 #, kde-format
 msgid "Delete Item"
 msgid_plural "Delete %1 Items"
@@ -2328,7 +2328,7 @@ msgstr[0] "Smazat položku"
 msgstr[1] "Smazat %1 položky"
 msgstr[2] "Smazat %1 položek"
 
-#: widgets/standardactionmanager.cpp:414
+#: widgets/standardactionmanager.cpp:402
 #, kde-format
 msgid "Delete Folder"
 msgid_plural "Delete %1 Folders"
@@ -2336,7 +2336,7 @@ msgstr[0] "Smazat složku"
 msgstr[1] "Smazat %1 složky"
 msgstr[2] "Smazat %1 složek"
 
-#: widgets/standardactionmanager.cpp:415
+#: widgets/standardactionmanager.cpp:403
 #, kde-format
 msgid "Synchronize Folder"
 msgid_plural "Synchronize %1 Folders"
@@ -2344,7 +2344,7 @@ msgstr[0] "Synchronizovat složku"
 msgstr[1] "Synchronizovat %1 složky"
 msgstr[2] "Synchronizovat %1 složek"
 
-#: widgets/standardactionmanager.cpp:416
+#: widgets/standardactionmanager.cpp:404
 #, kde-format
 msgctxt "@action"
 msgid "Delete Resource"
@@ -2353,7 +2353,7 @@ msgstr[0] "Smazat zdroj"
 msgstr[1] "Smazat %1 zdroje"
 msgstr[2] "Smazat %1 zdrojů"
 
-#: widgets/standardactionmanager.cpp:417
+#: widgets/standardactionmanager.cpp:405
 #, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
@@ -2362,13 +2362,13 @@ msgstr[0] "Synchronizovat zdroj"
 msgstr[1] "Synchronizovat %1 zdroje"
 msgstr[2] "Synchronizovat %1 zdrojů"
 
-#: widgets/standardactionmanager.cpp:420
+#: widgets/standardactionmanager.cpp:408
 #, kde-format
 msgctxt "@label:textbox name of Akonadi folder"
 msgid "Name"
 msgstr "Název"
 
-#: widgets/standardactionmanager.cpp:427
+#: widgets/standardactionmanager.cpp:415
 #, kde-format
 msgid "Do you really want to delete this folder and all its sub-folders?"
 msgid_plural ""
@@ -2377,7 +2377,7 @@ msgstr[0] "Opravdu si přejete smazat tuto složku a všechny její podsložky?"
 msgstr[1] "Opravdu si přejete smazat %1 složky a všechny jejich podsložky?"
 msgstr[2] "Opravdu si přejete smazat %1 složky a všechny jejich podsložky?"
 
-#: widgets/standardactionmanager.cpp:430
+#: widgets/standardactionmanager.cpp:418
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
@@ -2386,24 +2386,24 @@ msgstr[0] "Smazat složku?"
 msgstr[1] "Smazat složky?"
 msgstr[2] "Smazat složky?"
 
-#: widgets/standardactionmanager.cpp:431
+#: widgets/standardactionmanager.cpp:419
 #, kde-format
 msgid "Could not delete folder: %1"
 msgstr "Nelze smazat složku: %1"
 
-#: widgets/standardactionmanager.cpp:432
+#: widgets/standardactionmanager.cpp:420
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "Smazání složky selhalo"
 
-#: widgets/standardactionmanager.cpp:434
+#: widgets/standardactionmanager.cpp:422
 #, kde-format
 msgctxt "@title:window"
 msgid "Properties of Folder %1"
 msgstr "Vlastnosti složky %1"
 
-#: widgets/standardactionmanager.cpp:438
+#: widgets/standardactionmanager.cpp:426
 #, kde-format
 msgid "Do you really want to delete the selected item?"
 msgid_plural "Do you really want to delete %1 items?"
@@ -2411,7 +2411,7 @@ msgstr[0] "Opravdu si přejete smazat zvolenou položku?"
 msgstr[1] "Opravdu si přejete smazat %1 zvolené položky?"
 msgstr[2] "Opravdu si přejete smazat %1 zvolených položek?"
 
-#: widgets/standardactionmanager.cpp:439
+#: widgets/standardactionmanager.cpp:427
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
@@ -2420,47 +2420,47 @@ msgstr[0] "Smazat položku?"
 msgstr[1] "Smazat položky?"
 msgstr[2] "Smazat položky?"
 
-#: widgets/standardactionmanager.cpp:440
+#: widgets/standardactionmanager.cpp:428
 #, kde-format
 msgid "Could not delete item: %1"
 msgstr "Nelze smazat položku: %1"
 
-#: widgets/standardactionmanager.cpp:441
+#: widgets/standardactionmanager.cpp:429
 #, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "Smazání položky selhalo"
 
-#: widgets/standardactionmanager.cpp:443
+#: widgets/standardactionmanager.cpp:431
 #, kde-format
 msgctxt "@title:window"
 msgid "Rename Favorite"
 msgstr "Přejmenovat oblíbenou"
 
-#: widgets/standardactionmanager.cpp:446
+#: widgets/standardactionmanager.cpp:432
 #, kde-format
 msgctxt "@label:textbox name of the folder"
 msgid "Name:"
 msgstr "Název:"
 
-#: widgets/standardactionmanager.cpp:448
+#: widgets/standardactionmanager.cpp:434
 #, kde-format
 msgctxt "@title:window"
 msgid "New Resource"
 msgstr "Nový zdroj"
 
-#: widgets/standardactionmanager.cpp:449
+#: widgets/standardactionmanager.cpp:435
 #, kde-format
 msgid "Could not create resource: %1"
 msgstr "Nelze vytvořit zdroj: %1"
 
-#: widgets/standardactionmanager.cpp:450
+#: widgets/standardactionmanager.cpp:436
 #, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "Vytvoření zdroje selhalo"
 
-#: widgets/standardactionmanager.cpp:454
+#: widgets/standardactionmanager.cpp:440
 #, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
@@ -2468,7 +2468,7 @@ msgstr[0] "Opravdu chcete tento zdroj odstranit?"
 msgstr[1] "Opravdu chcete odstranit tyto %1 zdroje?"
 msgstr[2] "Opravdu chcete odstranit těchto %1 zdrojů?"
 
-#: widgets/standardactionmanager.cpp:457
+#: widgets/standardactionmanager.cpp:443
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Resource?"
@@ -2477,34 +2477,34 @@ msgstr[0] "Smazat zdroj?"
 msgstr[1] "Smazat zdroje?"
 msgstr[2] "Smazat zdroje?"
 
-#: widgets/standardactionmanager.cpp:459
+#: widgets/standardactionmanager.cpp:445
 #, kde-format
 msgid "Could not paste data: %1"
 msgstr "Nelze vložit data: %1"
 
-#: widgets/standardactionmanager.cpp:460
+#: widgets/standardactionmanager.cpp:446
 #, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "Vložení selhalo"
 
-#: widgets/standardactionmanager.cpp:827
+#: widgets/standardactionmanager.cpp:791
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "Do názvu složky nelze přidat znak \"/\"."
 
-#: widgets/standardactionmanager.cpp:827 widgets/standardactionmanager.cpp:831
+#: widgets/standardactionmanager.cpp:791 widgets/standardactionmanager.cpp:795
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "Chyba při vytváření nové složky"
 
-#: widgets/standardactionmanager.cpp:831
+#: widgets/standardactionmanager.cpp:795
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "Na začátek ani na konec názvu složky nelze přidat \".\"."
 
-#: widgets/standardactionmanager.cpp:1070
+#: widgets/standardactionmanager.cpp:1034
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2513,23 +2513,23 @@ msgstr ""
 "Před synchronizací složky \"%1\" je nutné mít zdroj online. Chcete jej "
 "přepnout do online režimu?"
 
-#: widgets/standardactionmanager.cpp:1071
+#: widgets/standardactionmanager.cpp:1035
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "Účet \"%1\" je odpojen"
 
-#: widgets/standardactionmanager.cpp:1072
+#: widgets/standardactionmanager.cpp:1036
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Přepnout na stav připojen"
 
-#: widgets/standardactionmanager.cpp:1687
+#: widgets/standardactionmanager.cpp:1656
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Přesunout do této složky"
 
-#: widgets/standardactionmanager.cpp:1687
+#: widgets/standardactionmanager.cpp:1656
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Zkopírovat do této složky"

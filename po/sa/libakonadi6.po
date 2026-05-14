@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-12 00:45+0000\n"
+"POT-Creation-Date: 2026-05-14 00:44+0000\n"
 "PO-Revision-Date: 2024-12-25 19:45+0530\n"
 "Last-Translator: kali <shreekantkalwar@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -928,7 +928,7 @@ msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "वर्तमान चयनितपुटस्य अधः नूतनं उपपुटं रचयन्तु"
 
-#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:419
+#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:407
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
@@ -940,12 +940,12 @@ msgctxt "@label:textbox, name of a thing"
 msgid "Name"
 msgstr "नामः"
 
-#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:421
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:409
 #, kde-format
 msgid "Could not create folder: %1"
 msgstr "पुटं निर्मातुं न शक्तम्: %1"
 
-#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:422
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:410
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
@@ -2007,214 +2007,214 @@ msgstr ""
 "<p>अधिकसमस्यानिवारणयुक्तीनां कृते कृपया <a href=\"https://userbase.kde.org/Akonadi"
 "\">userbase.kde.org/Akonadi</a> पश्यन्तु ।</p>"
 
-#: widgets/standardactionmanager.cpp:79
+#: widgets/standardactionmanager.cpp:80
 msgid "&New Folder..."
 msgstr "&नवीन फोल्डर..."
 
-#: widgets/standardactionmanager.cpp:79
+#: widgets/standardactionmanager.cpp:80
 msgid "New"
 msgstr "नूतनम्‌"
 
-#: widgets/standardactionmanager.cpp:89
+#: widgets/standardactionmanager.cpp:90
 msgid "&Delete Folder"
 msgstr "&पुटं विलोपयन्तु"
 
-#: widgets/standardactionmanager.cpp:90
+#: widgets/standardactionmanager.cpp:91
 msgid "Delete"
 msgstr "लुप्"
 
-#: widgets/standardactionmanager.cpp:97
+#: widgets/standardactionmanager.cpp:98
 msgid "&Synchronize Folder"
 msgstr "&Synchronize Folder"
 
-#: widgets/standardactionmanager.cpp:98 widgets/standardactionmanager.cpp:207
-#: widgets/standardactionmanager.cpp:314
+#: widgets/standardactionmanager.cpp:99 widgets/standardactionmanager.cpp:208
+#: widgets/standardactionmanager.cpp:315
 msgid "Synchronize"
 msgstr "समन्वयनम्"
 
-#: widgets/standardactionmanager.cpp:105
+#: widgets/standardactionmanager.cpp:106
 msgid "Folder &Properties"
 msgstr "फोल्डर &गुण"
 
-#: widgets/standardactionmanager.cpp:106 widgets/standardactionmanager.cpp:199
+#: widgets/standardactionmanager.cpp:107 widgets/standardactionmanager.cpp:200
 msgid "Properties"
 msgstr "गुणाः"
 
-#: widgets/standardactionmanager.cpp:113
+#: widgets/standardactionmanager.cpp:114
 msgid "&Paste"
 msgstr "&पेस्ट"
 
-#: widgets/standardactionmanager.cpp:113
+#: widgets/standardactionmanager.cpp:114
 msgid "Paste"
 msgstr "चिनोतु"
 
-#: widgets/standardactionmanager.cpp:116
+#: widgets/standardactionmanager.cpp:117
 msgid "Manage Local &Subscriptions..."
 msgstr "स्थानीय &सदस्यता प्रबन्ध..."
 
-#: widgets/standardactionmanager.cpp:117
+#: widgets/standardactionmanager.cpp:118
 msgid "Manage Local Subscriptions"
 msgstr "स्थानीयसदस्यतां प्रबन्धयन्तु"
 
-#: widgets/standardactionmanager.cpp:124
+#: widgets/standardactionmanager.cpp:125
 msgid "Add to Favorite Folders"
 msgstr "प्रियपुटेषु योजयतु"
 
-#: widgets/standardactionmanager.cpp:125
+#: widgets/standardactionmanager.cpp:126
 msgid "Add to Favorite"
 msgstr "प्रियं योजयतु"
 
-#: widgets/standardactionmanager.cpp:132
+#: widgets/standardactionmanager.cpp:133
 msgid "Remove from Favorite Folders"
 msgstr "प्रियपुटतः निष्कासयन्तु"
 
-#: widgets/standardactionmanager.cpp:133
+#: widgets/standardactionmanager.cpp:134
 msgid "Remove from Favorite"
 msgstr "प्रियतः निष्कासयन्तु"
 
-#: widgets/standardactionmanager.cpp:140
+#: widgets/standardactionmanager.cpp:141
 msgid "Rename Favorite..."
 msgstr "प्रियं नाम परिवर्तयतु..."
 
-#: widgets/standardactionmanager.cpp:141
+#: widgets/standardactionmanager.cpp:142
 msgid "Rename"
 msgstr "पुनर्नाम"
 
-#: widgets/standardactionmanager.cpp:148 widgets/standardactionmanager.cpp:222
+#: widgets/standardactionmanager.cpp:149 widgets/standardactionmanager.cpp:223
 msgid "Copy Folder To..."
 msgstr "Copy Folder To..."
 
-#: widgets/standardactionmanager.cpp:149 widgets/standardactionmanager.cpp:157
-#: widgets/standardactionmanager.cpp:223 widgets/standardactionmanager.cpp:237
+#: widgets/standardactionmanager.cpp:150 widgets/standardactionmanager.cpp:158
+#: widgets/standardactionmanager.cpp:224 widgets/standardactionmanager.cpp:238
 msgid "Copy To"
 msgstr "प्रतिलिपि To"
 
-#: widgets/standardactionmanager.cpp:156 widgets/standardactionmanager.cpp:237
+#: widgets/standardactionmanager.cpp:157 widgets/standardactionmanager.cpp:238
 msgid "Copy Item To..."
 msgstr "Copy Item To..."
 
-#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:238
+#: widgets/standardactionmanager.cpp:165 widgets/standardactionmanager.cpp:239
 msgid "Move Item To..."
 msgstr "Move Item To..."
 
-#: widgets/standardactionmanager.cpp:165 widgets/standardactionmanager.cpp:173
-#: widgets/standardactionmanager.cpp:231 widgets/standardactionmanager.cpp:238
+#: widgets/standardactionmanager.cpp:166 widgets/standardactionmanager.cpp:174
+#: widgets/standardactionmanager.cpp:232 widgets/standardactionmanager.cpp:239
 msgid "Move To"
 msgstr "Move To इति"
 
-#: widgets/standardactionmanager.cpp:172 widgets/standardactionmanager.cpp:230
+#: widgets/standardactionmanager.cpp:173 widgets/standardactionmanager.cpp:231
 msgid "Move Folder To..."
 msgstr "पुटं स्थानान्तरयन्तु..."
 
-#: widgets/standardactionmanager.cpp:179
+#: widgets/standardactionmanager.cpp:180
 msgid "&Cut Item"
 msgstr "&कट आइटम"
 
-#: widgets/standardactionmanager.cpp:179 widgets/standardactionmanager.cpp:180
+#: widgets/standardactionmanager.cpp:180 widgets/standardactionmanager.cpp:181
 msgid "Cut"
 msgstr "छिन्न"
 
-#: widgets/standardactionmanager.cpp:180
+#: widgets/standardactionmanager.cpp:181
 msgid "&Cut Folder"
 msgstr "&कट फोल्डर"
 
-#: widgets/standardactionmanager.cpp:182
+#: widgets/standardactionmanager.cpp:183
 msgid "Create Resource"
 msgstr "संसाधनं रचयन्तु"
 
-#: widgets/standardactionmanager.cpp:190
+#: widgets/standardactionmanager.cpp:191
 msgid "Delete Resource"
 msgstr "संसाधनं विलोपयन्तु"
 
-#: widgets/standardactionmanager.cpp:198
+#: widgets/standardactionmanager.cpp:199
 msgid "&Resource Properties"
 msgstr "&संसाधन गुण"
 
-#: widgets/standardactionmanager.cpp:206
+#: widgets/standardactionmanager.cpp:207
 msgid "Synchronize Resource"
 msgstr "संसाधनं समन्वययन्तु"
 
-#: widgets/standardactionmanager.cpp:214
+#: widgets/standardactionmanager.cpp:215
 msgid "Work Offline"
 msgstr "अफलाइन कार्यं कुर्वन्तु"
 
-#: widgets/standardactionmanager.cpp:240
+#: widgets/standardactionmanager.cpp:241
 msgid "&Synchronize Folder Recursively"
 msgstr "&पुटं पुनरावर्तनीयरूपेण समन्वययन्तु"
 
-#: widgets/standardactionmanager.cpp:241
+#: widgets/standardactionmanager.cpp:242
 msgid "Synchronize Recursively"
 msgstr "पुनरावर्तनीयरूपेण समन्वयनम्"
 
-#: widgets/standardactionmanager.cpp:248
+#: widgets/standardactionmanager.cpp:249
 msgid "&Move Folder To Trash"
 msgstr "&पुटं कचरे स्थानान्तरयन्तु"
 
-#: widgets/standardactionmanager.cpp:249
+#: widgets/standardactionmanager.cpp:250
 msgid "Move Folder To Trash"
 msgstr "Folder To Trash इति स्थानान्तरयन्तु"
 
-#: widgets/standardactionmanager.cpp:256
+#: widgets/standardactionmanager.cpp:257
 msgid "&Move Item To Trash"
 msgstr "&Move Item To Trash"
 
-#: widgets/standardactionmanager.cpp:257
+#: widgets/standardactionmanager.cpp:258
 msgid "Move Item To Trash"
 msgstr "Item To Trash इति स्थानान्तरयन्तु"
 
-#: widgets/standardactionmanager.cpp:264 widgets/standardactionmanager.cpp:280
+#: widgets/standardactionmanager.cpp:265 widgets/standardactionmanager.cpp:281
 msgid "&Restore Folder From Trash"
 msgstr "&Restore Folder From Trash"
 
-#: widgets/standardactionmanager.cpp:265 widgets/standardactionmanager.cpp:281
+#: widgets/standardactionmanager.cpp:266 widgets/standardactionmanager.cpp:282
 msgid "Restore Folder From Trash"
 msgstr "Restore Folder From Trash इति"
 
-#: widgets/standardactionmanager.cpp:272 widgets/standardactionmanager.cpp:296
-#: widgets/standardactionmanager.cpp:303
+#: widgets/standardactionmanager.cpp:273 widgets/standardactionmanager.cpp:297
+#: widgets/standardactionmanager.cpp:304
 msgid "&Restore Item From Trash"
 msgstr "&Restore Item From Trash"
 
-#: widgets/standardactionmanager.cpp:273 widgets/standardactionmanager.cpp:297
-#: widgets/standardactionmanager.cpp:303
+#: widgets/standardactionmanager.cpp:274 widgets/standardactionmanager.cpp:298
+#: widgets/standardactionmanager.cpp:304
 msgid "Restore Item From Trash"
 msgstr "Restore Item From Trash इति"
 
-#: widgets/standardactionmanager.cpp:288
+#: widgets/standardactionmanager.cpp:289
 msgid "&Restore Collection From Trash"
 msgstr "&कचरातः संग्रहं पुनर्स्थापयन्तु"
 
-#: widgets/standardactionmanager.cpp:289
+#: widgets/standardactionmanager.cpp:290
 msgid "Restore Collection From Trash"
 msgstr "कचरातः संग्रहं पुनर्स्थापयन्तु"
 
-#: widgets/standardactionmanager.cpp:305
+#: widgets/standardactionmanager.cpp:306
 msgid "&Synchronize Favorite Folders"
 msgstr "&प्रिय समुच्चय समन्वयनम्"
 
-#: widgets/standardactionmanager.cpp:306
+#: widgets/standardactionmanager.cpp:307
 msgid "Synchronize Favorite Folders"
 msgstr "प्रियपुटस्य समन्वयनम्"
 
-#: widgets/standardactionmanager.cpp:313
+#: widgets/standardactionmanager.cpp:314
 msgid "Synchronize Folder Tree"
 msgstr "Folder Tree इत्यस्य समन्वयनम्"
 
-#: widgets/standardactionmanager.cpp:399
+#: widgets/standardactionmanager.cpp:387
 #, kde-format
 msgid "&Copy Folder"
 msgid_plural "&Copy %1 Folders"
 msgstr[0] "&कॉपी फोल्डर"
 msgstr[1] "&कॉपी %1 फोल्डर"
 
-#: widgets/standardactionmanager.cpp:400
+#: widgets/standardactionmanager.cpp:388
 #, kde-format
 msgid "&Copy Item"
 msgid_plural "&Copy %1 Items"
 msgstr[0] "&प्रतिलिपि मद"
 msgstr[1] "&प्रतिलिपि %1 मद"
 
-#: widgets/standardactionmanager.cpp:401
+#: widgets/standardactionmanager.cpp:389
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Item"
@@ -2222,7 +2222,7 @@ msgid_plural "&Cut %1 Items"
 msgstr[0] "&कट आइटम"
 msgstr[1] "&Cut %1 द्रव्यम्"
 
-#: widgets/standardactionmanager.cpp:402
+#: widgets/standardactionmanager.cpp:390
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Folder"
@@ -2230,14 +2230,14 @@ msgid_plural "&Cut %1 Folders"
 msgstr[0] "&कट फोल्डर"
 msgstr[1] "&%1 समुच्चयस् कटयन्तु"
 
-#: widgets/standardactionmanager.cpp:403
+#: widgets/standardactionmanager.cpp:391
 #, kde-format
 msgid "&Delete Item"
 msgid_plural "&Delete %1 Items"
 msgstr[0] "&मद विलोपयन्तु"
 msgstr[1] "&%1 मद विलोपयन्तु"
 
-#: widgets/standardactionmanager.cpp:404
+#: widgets/standardactionmanager.cpp:392
 #, kde-format
 msgctxt "@action"
 msgid "&Delete Folder"
@@ -2245,7 +2245,7 @@ msgid_plural "&Delete %1 Folders"
 msgstr[0] "&पुटं विलोपयन्तु"
 msgstr[1] "&%1 पुटं विलोपयन्तु"
 
-#: widgets/standardactionmanager.cpp:405
+#: widgets/standardactionmanager.cpp:393
 #, kde-format
 msgctxt "@action"
 msgid "&Synchronize Folder"
@@ -2253,70 +2253,70 @@ msgid_plural "&Synchronize %1 Folders"
 msgstr[0] "&Synchronize Folder"
 msgstr[1] "&%1 पुटं समन्वययन्तु"
 
-#: widgets/standardactionmanager.cpp:406
+#: widgets/standardactionmanager.cpp:394
 #, kde-format
 msgid "&Delete Resource"
 msgid_plural "&Delete %1 Resources"
 msgstr[0] "&संसाधनं विलोपयन्तु"
 msgstr[1] "&%1 संसाधनं विलोपयन्तु"
 
-#: widgets/standardactionmanager.cpp:407
+#: widgets/standardactionmanager.cpp:395
 #, kde-format
 msgid "&Synchronize Resource"
 msgid_plural "&Synchronize %1 Resources"
 msgstr[0] "&संसाधन समन्वयन"
 msgstr[1] "&%1 संसाधनानाम् समन्वयनम्"
 
-#: widgets/standardactionmanager.cpp:409
+#: widgets/standardactionmanager.cpp:397
 #, kde-format
 msgid "Copy Folder"
 msgid_plural "Copy %1 Folders"
 msgstr[0] "प्रतिलिपि पुटम्"
 msgstr[1] "%1 पुटं प्रतिलिख्यताम्"
 
-#: widgets/standardactionmanager.cpp:410
+#: widgets/standardactionmanager.cpp:398
 #, kde-format
 msgid "Copy Item"
 msgid_plural "Copy %1 Items"
 msgstr[0] "प्रतिलिपि मद"
 msgstr[1] "%1 वस्तूनि प्रतिलिख्यताम्"
 
-#: widgets/standardactionmanager.cpp:411
+#: widgets/standardactionmanager.cpp:399
 #, kde-format
 msgid "Cut Item"
 msgid_plural "Cut %1 Items"
 msgstr[0] "कट आइटम"
 msgstr[1] "%1 वस्तूनि कटयतु"
 
-#: widgets/standardactionmanager.cpp:412
+#: widgets/standardactionmanager.cpp:400
 #, kde-format
 msgid "Cut Folder"
 msgid_plural "Cut %1 Folders"
 msgstr[0] "कट फोल्डर"
 msgstr[1] "%1 पुटं कटयन्तु"
 
-#: widgets/standardactionmanager.cpp:413
+#: widgets/standardactionmanager.cpp:401
 #, kde-format
 msgid "Delete Item"
 msgid_plural "Delete %1 Items"
 msgstr[0] "Delete Item"
 msgstr[1] "%1 वस्तूनि विलोपयन्तु"
 
-#: widgets/standardactionmanager.cpp:414
+#: widgets/standardactionmanager.cpp:402
 #, kde-format
 msgid "Delete Folder"
 msgid_plural "Delete %1 Folders"
 msgstr[0] "पुटं विलोपयन्तु"
 msgstr[1] "%1 पुटं विलोपयन्तु"
 
-#: widgets/standardactionmanager.cpp:415
+#: widgets/standardactionmanager.cpp:403
 #, kde-format
 msgid "Synchronize Folder"
 msgid_plural "Synchronize %1 Folders"
 msgstr[0] "पुटस्य समन्वयनम्"
 msgstr[1] "%1 पुटं समन्वययन्तु"
 
-#: widgets/standardactionmanager.cpp:416
+#: widgets/standardactionmanager.cpp:404
 #, kde-format
 msgctxt "@action"
 msgid "Delete Resource"
@@ -2324,7 +2324,7 @@ msgid_plural "Delete %1 Resources"
 msgstr[0] "संसाधनं विलोपयन्तु"
 msgstr[1] "%1 संसाधनं विलोपयन्तु"
 
-#: widgets/standardactionmanager.cpp:417
+#: widgets/standardactionmanager.cpp:405
 #, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
@@ -2332,13 +2332,13 @@ msgid_plural "Synchronize %1 Resources"
 msgstr[0] "संसाधनं समन्वययन्तु"
 msgstr[1] "%1 संसाधनानाम् समन्वयनम्"
 
-#: widgets/standardactionmanager.cpp:420
+#: widgets/standardactionmanager.cpp:408
 #, kde-format
 msgctxt "@label:textbox name of Akonadi folder"
 msgid "Name"
 msgstr "नामः"
 
-#: widgets/standardactionmanager.cpp:427
+#: widgets/standardactionmanager.cpp:415
 #, kde-format
 msgid "Do you really want to delete this folder and all its sub-folders?"
 msgid_plural ""
@@ -2346,7 +2346,7 @@ msgid_plural ""
 msgstr[0] "किं भवान् वास्तवमेव एतत् पुटं तस्य सर्वाणि उपपुटं च विलोपयितुम् इच्छति?"
 msgstr[1] "किं भवान् वास्तवमेव %1 पुटं तेषां सर्वाणि उपपुटं च विलोपयितुम् इच्छति?"
 
-#: widgets/standardactionmanager.cpp:430
+#: widgets/standardactionmanager.cpp:418
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
@@ -2354,31 +2354,31 @@ msgid_plural "Delete Folders?"
 msgstr[0] "फोल्डरं विलोपयन्तु?"
 msgstr[1] "समुच्चय विलोपयन्तु?"
 
-#: widgets/standardactionmanager.cpp:431
+#: widgets/standardactionmanager.cpp:419
 #, kde-format
 msgid "Could not delete folder: %1"
 msgstr "पुटं विलोपयितुं न शक्तम्: %1"
 
-#: widgets/standardactionmanager.cpp:432
+#: widgets/standardactionmanager.cpp:420
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "पुटस्य विलोपनं विफलम्"
 
-#: widgets/standardactionmanager.cpp:434
+#: widgets/standardactionmanager.cpp:422
 #, kde-format
 msgctxt "@title:window"
 msgid "Properties of Folder %1"
 msgstr "%1 पुटस्य गुणाः"
 
-#: widgets/standardactionmanager.cpp:438
+#: widgets/standardactionmanager.cpp:426
 #, kde-format
 msgid "Do you really want to delete the selected item?"
 msgid_plural "Do you really want to delete %1 items?"
 msgstr[0] "किं भवान् वास्तवमेव चयनितं द्रव्यं विलोपयितुम् इच्छति?"
 msgstr[1] "किं भवान् वास्तवमेव %1 वस्तूनि विलोपयितुम् इच्छति?"
 
-#: widgets/standardactionmanager.cpp:439
+#: widgets/standardactionmanager.cpp:427
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
@@ -2386,54 +2386,54 @@ msgid_plural "Delete Items?"
 msgstr[0] "मदं विलोपयन्तु?"
 msgstr[1] "वस्तूनि विलोपयन्तु?"
 
-#: widgets/standardactionmanager.cpp:440
+#: widgets/standardactionmanager.cpp:428
 #, kde-format
 msgid "Could not delete item: %1"
 msgstr "द्रव्यं विलोपयितुं न शक्तम्: %1"
 
-#: widgets/standardactionmanager.cpp:441
+#: widgets/standardactionmanager.cpp:429
 #, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "मदविलोपनं विफलम्"
 
-#: widgets/standardactionmanager.cpp:443
+#: widgets/standardactionmanager.cpp:431
 #, kde-format
 msgctxt "@title:window"
 msgid "Rename Favorite"
 msgstr "प्रियं नाम परिवर्तयतु"
 
-#: widgets/standardactionmanager.cpp:446
+#: widgets/standardactionmanager.cpp:432
 #, kde-format
 msgctxt "@label:textbox name of the folder"
 msgid "Name:"
 msgstr "नामः:"
 
-#: widgets/standardactionmanager.cpp:448
+#: widgets/standardactionmanager.cpp:434
 #, kde-format
 msgctxt "@title:window"
 msgid "New Resource"
 msgstr "नवीन संसाधन"
 
-#: widgets/standardactionmanager.cpp:449
+#: widgets/standardactionmanager.cpp:435
 #, kde-format
 msgid "Could not create resource: %1"
 msgstr "संसाधनं निर्मातुं न शक्तम्: %1"
 
-#: widgets/standardactionmanager.cpp:450
+#: widgets/standardactionmanager.cpp:436
 #, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "संसाधननिर्माणं विफलम्"
 
-#: widgets/standardactionmanager.cpp:454
+#: widgets/standardactionmanager.cpp:440
 #, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
 msgstr[0] "किं भवान् वास्तवमेव एतत् संसाधनं विलोपयितुम् इच्छति ?"
 msgstr[1] "किं भवान् वास्तवमेव %1 संसाधनं विलोपयितुम् इच्छति?"
 
-#: widgets/standardactionmanager.cpp:457
+#: widgets/standardactionmanager.cpp:443
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Resource?"
@@ -2441,34 +2441,34 @@ msgid_plural "Delete Resources?"
 msgstr[0] "संसाधनं विलोपयन्तु ?"
 msgstr[1] "संसाधनं विलोपयन्तु ?"
 
-#: widgets/standardactionmanager.cpp:459
+#: widgets/standardactionmanager.cpp:445
 #, kde-format
 msgid "Could not paste data: %1"
 msgstr "दत्तांशं चिनोतुम् न शक्तम्: %1"
 
-#: widgets/standardactionmanager.cpp:460
+#: widgets/standardactionmanager.cpp:446
 #, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "पेस्ट् विफलम्"
 
-#: widgets/standardactionmanager.cpp:827
+#: widgets/standardactionmanager.cpp:791
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "वयं समुच्चय नाम्ने \"/\" योजयितुं न शक्नुमः ।"
 
-#: widgets/standardactionmanager.cpp:827 widgets/standardactionmanager.cpp:831
+#: widgets/standardactionmanager.cpp:791 widgets/standardactionmanager.cpp:795
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "New Folder Error रचयन्तु"
 
-#: widgets/standardactionmanager.cpp:831
+#: widgets/standardactionmanager.cpp:795
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "\"\" इति योजयितुं न शक्नुमः । पुटनामस्य आरम्भे अथवा अन्ते ।"
 
-#: widgets/standardactionmanager.cpp:1070
+#: widgets/standardactionmanager.cpp:1034
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2477,23 +2477,23 @@ msgstr ""
 "\"%1\" पुटस्य समन्वयनात् पूर्वं संसाधनं ऑनलाइन भवितुं आवश्यकम् । किं भवन्तः तत् ऑनलाइन कर्तुम् "
 "इच्छन्ति ?"
 
-#: widgets/standardactionmanager.cpp:1071
+#: widgets/standardactionmanager.cpp:1035
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "खाता \"%1\" अफलाइन अस्ति"
 
-#: widgets/standardactionmanager.cpp:1072
+#: widgets/standardactionmanager.cpp:1036
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Online गच्छतु"
 
-#: widgets/standardactionmanager.cpp:1687
+#: widgets/standardactionmanager.cpp:1656
 #, kde-format
 msgid "Move to This Folder"
 msgstr "This Folder इत्यत्र गच्छन्तु"
 
-#: widgets/standardactionmanager.cpp:1687
+#: widgets/standardactionmanager.cpp:1656
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "This Folder इत्यत्र प्रतिलिख्यताम्"

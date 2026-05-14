@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-12 00:45+0000\n"
+"POT-Creation-Date: 2026-05-14 00:44+0000\n"
 "PO-Revision-Date: 2026-05-06 21:20+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -902,7 +902,7 @@ msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "ליצור תת־תיקייה תחת התיקייה הנבחרת"
 
-#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:419
+#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:407
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
@@ -914,12 +914,12 @@ msgctxt "@label:textbox, name of a thing"
 msgid "Name"
 msgstr "שם"
 
-#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:421
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:409
 #, kde-format
 msgid "Could not create folder: %1"
 msgstr "לא ניתן ליצור תיקייה: %1"
 
-#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:422
+#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:410
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
@@ -1986,200 +1986,200 @@ msgstr ""
 "<p>לפרטים נוספים על פתרון בעיות נא לפנות אל <a href=\"https://userbase.kde."
 "org/Akonadi\">userbase.kde.org/Akonadi</a>.</p>"
 
-#: widgets/standardactionmanager.cpp:79
+#: widgets/standardactionmanager.cpp:80
 msgid "&New Folder..."
 msgstr "&תיקייה חדשה…"
 
-#: widgets/standardactionmanager.cpp:79
+#: widgets/standardactionmanager.cpp:80
 msgid "New"
 msgstr "חדש"
 
-#: widgets/standardactionmanager.cpp:89
+#: widgets/standardactionmanager.cpp:90
 msgid "&Delete Folder"
 msgstr "מ&חיקת תיקייה"
 
-#: widgets/standardactionmanager.cpp:90
+#: widgets/standardactionmanager.cpp:91
 msgid "Delete"
 msgstr "מחיקה"
 
-#: widgets/standardactionmanager.cpp:97
+#: widgets/standardactionmanager.cpp:98
 msgid "&Synchronize Folder"
 msgstr "&סנכרון תיקיה"
 
-#: widgets/standardactionmanager.cpp:98 widgets/standardactionmanager.cpp:207
-#: widgets/standardactionmanager.cpp:314
+#: widgets/standardactionmanager.cpp:99 widgets/standardactionmanager.cpp:208
+#: widgets/standardactionmanager.cpp:315
 msgid "Synchronize"
 msgstr "סנכרון"
 
-#: widgets/standardactionmanager.cpp:105
+#: widgets/standardactionmanager.cpp:106
 msgid "Folder &Properties"
 msgstr "מ&אפייני תיקייה"
 
-#: widgets/standardactionmanager.cpp:106 widgets/standardactionmanager.cpp:199
+#: widgets/standardactionmanager.cpp:107 widgets/standardactionmanager.cpp:200
 msgid "Properties"
 msgstr "מאפיינים"
 
-#: widgets/standardactionmanager.cpp:113
+#: widgets/standardactionmanager.cpp:114
 msgid "&Paste"
 msgstr "ה&דבקה"
 
-#: widgets/standardactionmanager.cpp:113
+#: widgets/standardactionmanager.cpp:114
 msgid "Paste"
 msgstr "הדבקה"
 
-#: widgets/standardactionmanager.cpp:116
+#: widgets/standardactionmanager.cpp:117
 msgid "Manage Local &Subscriptions..."
 msgstr "&ניהול מינויים מקומיים…"
 
-#: widgets/standardactionmanager.cpp:117
+#: widgets/standardactionmanager.cpp:118
 msgid "Manage Local Subscriptions"
 msgstr "ניהול מינויים מקומיים"
 
-#: widgets/standardactionmanager.cpp:124
+#: widgets/standardactionmanager.cpp:125
 msgid "Add to Favorite Folders"
 msgstr "הוספה לתיקיות המועדפים"
 
-#: widgets/standardactionmanager.cpp:125
+#: widgets/standardactionmanager.cpp:126
 msgid "Add to Favorite"
 msgstr "הוספה למועדפים"
 
-#: widgets/standardactionmanager.cpp:132
+#: widgets/standardactionmanager.cpp:133
 msgid "Remove from Favorite Folders"
 msgstr "הסרה מתיקיות מועדפים"
 
-#: widgets/standardactionmanager.cpp:133
+#: widgets/standardactionmanager.cpp:134
 msgid "Remove from Favorite"
 msgstr "הסרה מהמועדפים"
 
-#: widgets/standardactionmanager.cpp:140
+#: widgets/standardactionmanager.cpp:141
 msgid "Rename Favorite..."
 msgstr "שינוי שם מועדף…"
 
-#: widgets/standardactionmanager.cpp:141
+#: widgets/standardactionmanager.cpp:142
 msgid "Rename"
 msgstr "שינוי שם"
 
-#: widgets/standardactionmanager.cpp:148 widgets/standardactionmanager.cpp:222
+#: widgets/standardactionmanager.cpp:149 widgets/standardactionmanager.cpp:223
 msgid "Copy Folder To..."
 msgstr "העתקת תיקייה אל…"
 
-#: widgets/standardactionmanager.cpp:149 widgets/standardactionmanager.cpp:157
-#: widgets/standardactionmanager.cpp:223 widgets/standardactionmanager.cpp:237
+#: widgets/standardactionmanager.cpp:150 widgets/standardactionmanager.cpp:158
+#: widgets/standardactionmanager.cpp:224 widgets/standardactionmanager.cpp:238
 msgid "Copy To"
 msgstr "העתקה אל"
 
-#: widgets/standardactionmanager.cpp:156 widgets/standardactionmanager.cpp:237
+#: widgets/standardactionmanager.cpp:157 widgets/standardactionmanager.cpp:238
 msgid "Copy Item To..."
 msgstr "העתקת פריט אל…"
 
-#: widgets/standardactionmanager.cpp:164 widgets/standardactionmanager.cpp:238
+#: widgets/standardactionmanager.cpp:165 widgets/standardactionmanager.cpp:239
 msgid "Move Item To..."
 msgstr "העברת פריט אל…"
 
-#: widgets/standardactionmanager.cpp:165 widgets/standardactionmanager.cpp:173
-#: widgets/standardactionmanager.cpp:231 widgets/standardactionmanager.cpp:238
+#: widgets/standardactionmanager.cpp:166 widgets/standardactionmanager.cpp:174
+#: widgets/standardactionmanager.cpp:232 widgets/standardactionmanager.cpp:239
 msgid "Move To"
 msgstr "העברה אל"
 
-#: widgets/standardactionmanager.cpp:172 widgets/standardactionmanager.cpp:230
+#: widgets/standardactionmanager.cpp:173 widgets/standardactionmanager.cpp:231
 msgid "Move Folder To..."
 msgstr "העברת תיקייה אל…"
 
-#: widgets/standardactionmanager.cpp:179
+#: widgets/standardactionmanager.cpp:180
 msgid "&Cut Item"
 msgstr "גזירת &פריט"
 
-#: widgets/standardactionmanager.cpp:179 widgets/standardactionmanager.cpp:180
+#: widgets/standardactionmanager.cpp:180 widgets/standardactionmanager.cpp:181
 msgid "Cut"
 msgstr "גזירה"
 
-#: widgets/standardactionmanager.cpp:180
+#: widgets/standardactionmanager.cpp:181
 msgid "&Cut Folder"
 msgstr "ג&זירת תיקייה"
 
-#: widgets/standardactionmanager.cpp:182
+#: widgets/standardactionmanager.cpp:183
 msgid "Create Resource"
 msgstr "יצירת משאב"
 
-#: widgets/standardactionmanager.cpp:190
+#: widgets/standardactionmanager.cpp:191
 msgid "Delete Resource"
 msgstr "מחיקת משאב"
 
-#: widgets/standardactionmanager.cpp:198
+#: widgets/standardactionmanager.cpp:199
 msgid "&Resource Properties"
 msgstr "מאפייני מ&שאב"
 
-#: widgets/standardactionmanager.cpp:206
+#: widgets/standardactionmanager.cpp:207
 msgid "Synchronize Resource"
 msgstr "סנכרון משאב"
 
-#: widgets/standardactionmanager.cpp:214
+#: widgets/standardactionmanager.cpp:215
 msgid "Work Offline"
 msgstr "עבודה לא מקוונת"
 
-#: widgets/standardactionmanager.cpp:240
+#: widgets/standardactionmanager.cpp:241
 msgid "&Synchronize Folder Recursively"
 msgstr "סנכרון התיקייה רקורסיבית"
 
-#: widgets/standardactionmanager.cpp:241
+#: widgets/standardactionmanager.cpp:242
 msgid "Synchronize Recursively"
 msgstr "סנכרון רקורסיבי"
 
-#: widgets/standardactionmanager.cpp:248
+#: widgets/standardactionmanager.cpp:249
 msgid "&Move Folder To Trash"
 msgstr "העברת &תיקייה לאשפה"
 
-#: widgets/standardactionmanager.cpp:249
+#: widgets/standardactionmanager.cpp:250
 msgid "Move Folder To Trash"
 msgstr "העברת תיקייה לאשפה"
 
-#: widgets/standardactionmanager.cpp:256
+#: widgets/standardactionmanager.cpp:257
 msgid "&Move Item To Trash"
 msgstr "העברת &פריט לאשפה"
 
-#: widgets/standardactionmanager.cpp:257
+#: widgets/standardactionmanager.cpp:258
 msgid "Move Item To Trash"
 msgstr "העברת פריט לאשפה"
 
-#: widgets/standardactionmanager.cpp:264 widgets/standardactionmanager.cpp:280
+#: widgets/standardactionmanager.cpp:265 widgets/standardactionmanager.cpp:281
 msgid "&Restore Folder From Trash"
 msgstr "שחזור &תיקייה מהאשפה"
 
-#: widgets/standardactionmanager.cpp:265 widgets/standardactionmanager.cpp:281
+#: widgets/standardactionmanager.cpp:266 widgets/standardactionmanager.cpp:282
 msgid "Restore Folder From Trash"
 msgstr "שחזור תיקייה מהאשפה"
 
-#: widgets/standardactionmanager.cpp:272 widgets/standardactionmanager.cpp:296
-#: widgets/standardactionmanager.cpp:303
+#: widgets/standardactionmanager.cpp:273 widgets/standardactionmanager.cpp:297
+#: widgets/standardactionmanager.cpp:304
 msgid "&Restore Item From Trash"
 msgstr "שחזור &פריט מהאשפה"
 
-#: widgets/standardactionmanager.cpp:273 widgets/standardactionmanager.cpp:297
-#: widgets/standardactionmanager.cpp:303
+#: widgets/standardactionmanager.cpp:274 widgets/standardactionmanager.cpp:298
+#: widgets/standardactionmanager.cpp:304
 msgid "Restore Item From Trash"
 msgstr "שחזור פריט מהאשפה"
 
-#: widgets/standardactionmanager.cpp:288
+#: widgets/standardactionmanager.cpp:289
 msgid "&Restore Collection From Trash"
 msgstr "שחזור &אוסף מהאשפה"
 
-#: widgets/standardactionmanager.cpp:289
+#: widgets/standardactionmanager.cpp:290
 msgid "Restore Collection From Trash"
 msgstr "שחזור אוסף מהאשפה"
 
-#: widgets/standardactionmanager.cpp:305
+#: widgets/standardactionmanager.cpp:306
 msgid "&Synchronize Favorite Folders"
 msgstr "סנכרון &תיקיות מועדפות"
 
-#: widgets/standardactionmanager.cpp:306
+#: widgets/standardactionmanager.cpp:307
 msgid "Synchronize Favorite Folders"
 msgstr "סנכרון תיקיות מועדפות"
 
-#: widgets/standardactionmanager.cpp:313
+#: widgets/standardactionmanager.cpp:314
 msgid "Synchronize Folder Tree"
 msgstr "סנכרון עץ תיקיות"
 
-#: widgets/standardactionmanager.cpp:399
+#: widgets/standardactionmanager.cpp:387
 #, kde-format
 msgid "&Copy Folder"
 msgid_plural "&Copy %1 Folders"
@@ -2188,7 +2188,7 @@ msgstr[1] "ה&עתקת שתי תיקיות"
 msgstr[2] "ה&עתקת %1 תיקיות"
 msgstr[3] "ה&עתקת %1 תיקיות"
 
-#: widgets/standardactionmanager.cpp:400
+#: widgets/standardactionmanager.cpp:388
 #, kde-format
 msgid "&Copy Item"
 msgid_plural "&Copy %1 Items"
@@ -2197,7 +2197,7 @@ msgstr[1] "הע&תקת שני פריטים"
 msgstr[2] "הע&תקת %1 פריטים"
 msgstr[3] "הע&תקת %1 פריטים"
 
-#: widgets/standardactionmanager.cpp:401
+#: widgets/standardactionmanager.cpp:389
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Item"
@@ -2207,7 +2207,7 @@ msgstr[1] "&גזירת שני פריטים"
 msgstr[2] "&גזירת %1 פריטים"
 msgstr[3] "&גזירת %1 פריטים"
 
-#: widgets/standardactionmanager.cpp:402
+#: widgets/standardactionmanager.cpp:390
 #, kde-format
 msgctxt "@action"
 msgid "&Cut Folder"
@@ -2217,7 +2217,7 @@ msgstr[1] "&גזירת שתי תיקיות"
 msgstr[2] "&גזירת %1 תיקיות"
 msgstr[3] "&גזירת %1 תיקיות"
 
-#: widgets/standardactionmanager.cpp:403
+#: widgets/standardactionmanager.cpp:391
 #, kde-format
 msgid "&Delete Item"
 msgid_plural "&Delete %1 Items"
@@ -2226,7 +2226,7 @@ msgstr[1] "מ&חיקת שני פריטים"
 msgstr[2] "מ&חיקת %1 פריטים"
 msgstr[3] "מ&חיקת %1 פריטים"
 
-#: widgets/standardactionmanager.cpp:404
+#: widgets/standardactionmanager.cpp:392
 #, kde-format
 msgctxt "@action"
 msgid "&Delete Folder"
@@ -2236,7 +2236,7 @@ msgstr[1] "מ&חיקת שתי תיקיות"
 msgstr[2] "מ&חיקת %1 תיקיות"
 msgstr[3] "מ&חיקת %1 תיקיות"
 
-#: widgets/standardactionmanager.cpp:405
+#: widgets/standardactionmanager.cpp:393
 #, kde-format
 msgctxt "@action"
 msgid "&Synchronize Folder"
@@ -2246,7 +2246,7 @@ msgstr[1] "&סנכרון שתי תיקיות"
 msgstr[2] "&סנכרון %1 תיקיות"
 msgstr[3] "&סנכרון %1 תיקיות"
 
-#: widgets/standardactionmanager.cpp:406
+#: widgets/standardactionmanager.cpp:394
 #, kde-format
 msgid "&Delete Resource"
 msgid_plural "&Delete %1 Resources"
@@ -2255,7 +2255,7 @@ msgstr[1] "מחיקת שני מ&שאבים"
 msgstr[2] "מחיקת %1 מ&שאבים"
 msgstr[3] "מחיקת %1 מ&שאבים"
 
-#: widgets/standardactionmanager.cpp:407
+#: widgets/standardactionmanager.cpp:395
 #, kde-format
 msgid "&Synchronize Resource"
 msgid_plural "&Synchronize %1 Resources"
@@ -2264,7 +2264,7 @@ msgstr[1] "&סנכרון שני משאבים"
 msgstr[2] "&סנכרון %1 משאבים"
 msgstr[3] "&סנכרון %1 משאבים"
 
-#: widgets/standardactionmanager.cpp:409
+#: widgets/standardactionmanager.cpp:397
 #, kde-format
 msgid "Copy Folder"
 msgid_plural "Copy %1 Folders"
@@ -2273,7 +2273,7 @@ msgstr[1] "העתקת שתי תיקיות"
 msgstr[2] "העתקת %1 תיקיות"
 msgstr[3] "העתקת %1 תיקיות"
 
-#: widgets/standardactionmanager.cpp:410
+#: widgets/standardactionmanager.cpp:398
 #, kde-format
 msgid "Copy Item"
 msgid_plural "Copy %1 Items"
@@ -2282,7 +2282,7 @@ msgstr[1] "העתקת שני פריטים"
 msgstr[2] "העתקת %1 פריטים"
 msgstr[3] "העתקת %1 פריטים"
 
-#: widgets/standardactionmanager.cpp:411
+#: widgets/standardactionmanager.cpp:399
 #, kde-format
 msgid "Cut Item"
 msgid_plural "Cut %1 Items"
@@ -2291,7 +2291,7 @@ msgstr[1] "גזירת שני פריטים"
 msgstr[2] "גזירת %1 פריטים"
 msgstr[3] "גזירת %1 פריטים"
 
-#: widgets/standardactionmanager.cpp:412
+#: widgets/standardactionmanager.cpp:400
 #, kde-format
 msgid "Cut Folder"
 msgid_plural "Cut %1 Folders"
@@ -2300,7 +2300,7 @@ msgstr[1] "גזירת שתי תיקיות"
 msgstr[2] "גזירת %1 תיקיות"
 msgstr[3] "גזירת %1 תיקיות"
 
-#: widgets/standardactionmanager.cpp:413
+#: widgets/standardactionmanager.cpp:401
 #, kde-format
 msgid "Delete Item"
 msgid_plural "Delete %1 Items"
@@ -2309,7 +2309,7 @@ msgstr[1] "מחיקת שני פריטים"
 msgstr[2] "מחיקת %1 פריטים"
 msgstr[3] "מחיקת %1 פריטים"
 
-#: widgets/standardactionmanager.cpp:414
+#: widgets/standardactionmanager.cpp:402
 #, kde-format
 msgid "Delete Folder"
 msgid_plural "Delete %1 Folders"
@@ -2318,7 +2318,7 @@ msgstr[1] "מחיקת שתי תיקיות"
 msgstr[2] "מחיקת %1 תיקיות"
 msgstr[3] "מחיקת %1 תיקיות"
 
-#: widgets/standardactionmanager.cpp:415
+#: widgets/standardactionmanager.cpp:403
 #, kde-format
 msgid "Synchronize Folder"
 msgid_plural "Synchronize %1 Folders"
@@ -2327,7 +2327,7 @@ msgstr[1] "סנכרון שתי תיקיות"
 msgstr[2] "סנכרון %1 תיקיות"
 msgstr[3] "סנכרון %1 תיקיות"
 
-#: widgets/standardactionmanager.cpp:416
+#: widgets/standardactionmanager.cpp:404
 #, kde-format
 msgctxt "@action"
 msgid "Delete Resource"
@@ -2337,7 +2337,7 @@ msgstr[1] "מחיקת שני משאבים"
 msgstr[2] "מחיקת %1 משאבים"
 msgstr[3] "מחיקת %1 משאבים"
 
-#: widgets/standardactionmanager.cpp:417
+#: widgets/standardactionmanager.cpp:405
 #, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
@@ -2347,13 +2347,13 @@ msgstr[1] "סנכרון שני משאבים"
 msgstr[2] "סנכרון %1 משאבים"
 msgstr[3] "סנכרון %1 משאבים"
 
-#: widgets/standardactionmanager.cpp:420
+#: widgets/standardactionmanager.cpp:408
 #, kde-format
 msgctxt "@label:textbox name of Akonadi folder"
 msgid "Name"
 msgstr "שם"
 
-#: widgets/standardactionmanager.cpp:427
+#: widgets/standardactionmanager.cpp:415
 #, kde-format
 msgid "Do you really want to delete this folder and all its sub-folders?"
 msgid_plural ""
@@ -2363,7 +2363,7 @@ msgstr[1] "למחוק את שתי התיקיות על תת־תיקיותיהן?"
 msgstr[2] "למחוק את %1 התיקיות על תת־תיקיותיהן?"
 msgstr[3] "למחוק את %1 התיקיות על תת־תיקיותיהן?"
 
-#: widgets/standardactionmanager.cpp:430
+#: widgets/standardactionmanager.cpp:418
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
@@ -2373,24 +2373,24 @@ msgstr[1] "למחוק את התיקיות?"
 msgstr[2] "למחוק את התיקיות?"
 msgstr[3] "למחוק את התיקיות?"
 
-#: widgets/standardactionmanager.cpp:431
+#: widgets/standardactionmanager.cpp:419
 #, kde-format
 msgid "Could not delete folder: %1"
 msgstr "לא ניתן למחוק את התיקייה: %1"
 
-#: widgets/standardactionmanager.cpp:432
+#: widgets/standardactionmanager.cpp:420
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
 msgstr "מחיקת התיקייה נכשלה"
 
-#: widgets/standardactionmanager.cpp:434
+#: widgets/standardactionmanager.cpp:422
 #, kde-format
 msgctxt "@title:window"
 msgid "Properties of Folder %1"
 msgstr "מאפיינים לתיקייה %1"
 
-#: widgets/standardactionmanager.cpp:438
+#: widgets/standardactionmanager.cpp:426
 #, kde-format
 msgid "Do you really want to delete the selected item?"
 msgid_plural "Do you really want to delete %1 items?"
@@ -2399,7 +2399,7 @@ msgstr[1] "למחוק את שני הפריטים הנבחרים?"
 msgstr[2] "למחוק את %1 הפריטים הנבחרים?"
 msgstr[3] "למחוק את %1 הפריטים הנבחרים?"
 
-#: widgets/standardactionmanager.cpp:439
+#: widgets/standardactionmanager.cpp:427
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
@@ -2409,47 +2409,47 @@ msgstr[1] "למחוק את הפריטים?"
 msgstr[2] "למחוק את הפריטים?"
 msgstr[3] "למחוק את הפריטים?"
 
-#: widgets/standardactionmanager.cpp:440
+#: widgets/standardactionmanager.cpp:428
 #, kde-format
 msgid "Could not delete item: %1"
 msgstr "לא ניתן למחוק פריט: %1"
 
-#: widgets/standardactionmanager.cpp:441
+#: widgets/standardactionmanager.cpp:429
 #, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
 msgstr "מחיקת פריט נכשלה"
 
-#: widgets/standardactionmanager.cpp:443
+#: widgets/standardactionmanager.cpp:431
 #, kde-format
 msgctxt "@title:window"
 msgid "Rename Favorite"
 msgstr "שינוי שם מועדף"
 
-#: widgets/standardactionmanager.cpp:446
+#: widgets/standardactionmanager.cpp:432
 #, kde-format
 msgctxt "@label:textbox name of the folder"
 msgid "Name:"
 msgstr "שם:"
 
-#: widgets/standardactionmanager.cpp:448
+#: widgets/standardactionmanager.cpp:434
 #, kde-format
 msgctxt "@title:window"
 msgid "New Resource"
 msgstr "משאב חדש"
 
-#: widgets/standardactionmanager.cpp:449
+#: widgets/standardactionmanager.cpp:435
 #, kde-format
 msgid "Could not create resource: %1"
 msgstr "לא ניתן ליצור משאב: %1"
 
-#: widgets/standardactionmanager.cpp:450
+#: widgets/standardactionmanager.cpp:436
 #, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
 msgstr "יצירת משאב נכשלה"
 
-#: widgets/standardactionmanager.cpp:454
+#: widgets/standardactionmanager.cpp:440
 #, kde-format
 msgid "Do you really want to delete this resource?"
 msgid_plural "Do you really want to delete %1 resources?"
@@ -2458,7 +2458,7 @@ msgstr[1] "למחוק את שני המשאבים האלה?"
 msgstr[2] "למחוק את %1 המשאבים האלה?"
 msgstr[3] "למחוק את %1 המשאבים האלה?"
 
-#: widgets/standardactionmanager.cpp:457
+#: widgets/standardactionmanager.cpp:443
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Resource?"
@@ -2468,57 +2468,57 @@ msgstr[1] "למחוק משאבים?"
 msgstr[2] "למחוק משאבים?"
 msgstr[3] "למחוק משאבים?"
 
-#: widgets/standardactionmanager.cpp:459
+#: widgets/standardactionmanager.cpp:445
 #, kde-format
 msgid "Could not paste data: %1"
 msgstr "לא ניתן להדביק נתונים: %1"
 
-#: widgets/standardactionmanager.cpp:460
+#: widgets/standardactionmanager.cpp:446
 #, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "ההדבקה נכשלה"
 
-#: widgets/standardactionmanager.cpp:827
+#: widgets/standardactionmanager.cpp:791
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "איננו יכולים להוסיף „/” לשם תיקייה."
 
-#: widgets/standardactionmanager.cpp:827 widgets/standardactionmanager.cpp:831
+#: widgets/standardactionmanager.cpp:791 widgets/standardactionmanager.cpp:795
 #, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "שגיאת יצירת תיקייה חדשה"
 
-#: widgets/standardactionmanager.cpp:831
+#: widgets/standardactionmanager.cpp:795
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "איננו יכולים להוסיף „.” בתחילת או בסוף שם תיקייה."
 
-#: widgets/standardactionmanager.cpp:1070
+#: widgets/standardactionmanager.cpp:1034
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
 "you want to make it online?"
 msgstr "לפני סנכרון התיקייה „%1” המשאב צריך להיות מקוון. להפוך אותו למקוון?"
 
-#: widgets/standardactionmanager.cpp:1071
+#: widgets/standardactionmanager.cpp:1035
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "החשבון „%1” מנותק"
 
-#: widgets/standardactionmanager.cpp:1072
+#: widgets/standardactionmanager.cpp:1036
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "התחברות"
 
-#: widgets/standardactionmanager.cpp:1687
+#: widgets/standardactionmanager.cpp:1656
 #, kde-format
 msgid "Move to This Folder"
 msgstr "העברה לתיקייה הזאת"
 
-#: widgets/standardactionmanager.cpp:1687
+#: widgets/standardactionmanager.cpp:1656
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "העתקה לתיקייה הזאת"
