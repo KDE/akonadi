@@ -2668,26 +2668,3 @@ msgstr "Klarer ikke tolke datafil: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Klarer ikke finne samling %1"
-
-#~ msgid "&New Agent Instance..."
-#~ msgstr "&Ny agentinstans …"
-
-#~ msgid "&Delete Agent Instance"
-#~ msgstr "&Slett agentinstans"
-
-#~ msgid "&Configure Agent Instance"
-#~ msgstr "&Sett opp agentinstans"
-
-#~ msgctxt "@title:window"
-#~ msgid "New Agent Instance"
-#~ msgstr "Ny agentinstans"
-
-#~ msgid "Could not create agent instance: %1"
-#~ msgstr "Klarte ikke å opprette en instans av agenten: %1"
-
-#~ msgctxt "@title:window"
-#~ msgid "Delete Agent Instance?"
-#~ msgstr "Slett agentinstans?"
-
-#~ msgid "Do you really want to delete the selected agent instance?"
-#~ msgstr "Er du sikker på at du vil slette den valgte agentinstansen?"
