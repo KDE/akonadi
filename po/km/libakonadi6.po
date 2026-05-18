@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:44+0000\n"
+"POT-Creation-Date: 2026-05-18 00:44+0000\n"
 "PO-Revision-Date: 2012-07-11 10:23+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -2519,25 +2519,25 @@ msgctxt "@title:window"
 msgid "Paste Failed"
 msgstr "បាន​បរាជ័យ​ក្នុង​ការ​បិទភ្ជាប់"
 
-#: widgets/standardactionmanager.cpp:791
+#: widgets/standardactionmanager.cpp:776
 #, kde-format
 msgid "We can not add \"/\" in folder name."
 msgstr "យើង​មិន​អាច​បន្ថែម \"/\" ទៅ​ក្នុង​ឈ្មោះ​ថត​បាន​ទេ ។"
 
-#: widgets/standardactionmanager.cpp:791 widgets/standardactionmanager.cpp:795
+#: widgets/standardactionmanager.cpp:776 widgets/standardactionmanager.cpp:780
 #, fuzzy, kde-format
 #| msgid "Create new folder error"
 msgctxt "@title:window"
 msgid "Create New Folder Error"
 msgstr "បង្កើត​កំហុស​ថត​ថ្មី"
 
-#: widgets/standardactionmanager.cpp:795
+#: widgets/standardactionmanager.cpp:780
 #, fuzzy, kde-format
 #| msgid "We can not add \"/\" in folder name."
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "យើង​មិន​អាច​បន្ថែម \"/\" ទៅ​ក្នុង​ឈ្មោះ​ថត​បាន​ទេ ។"
 
-#: widgets/standardactionmanager.cpp:1034
+#: widgets/standardactionmanager.cpp:1019
 #, fuzzy, kde-format
 #| msgid ""
 #| "Before to sync folder \"%1\" it's necessary to have resource online. Do "
@@ -2549,24 +2549,24 @@ msgstr ""
 "មុន​នឹង​ធ្វើ​សមកាលកម្ម​ថត \"%1\" ចាំបាច់​ត្រូវតែ​មាន​ធនធាន​នៅ​លើ​បណ្ដាញ ។ តើ​អ្នក​ចង់​បង្កើត​ធនធាន​នៅ​លើ​"
 "បណ្ដាញ​ដែរ​ឬ​ទេ ?"
 
-#: widgets/standardactionmanager.cpp:1035
+#: widgets/standardactionmanager.cpp:1020
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "គណនី \"%1\" នៅ​ក្រៅបណ្ដាញ"
 
-#: widgets/standardactionmanager.cpp:1036
+#: widgets/standardactionmanager.cpp:1021
 #, fuzzy, kde-format
 #| msgid "Work Offline"
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "កិច្ច​ការ​ក្រៅ​បណ្ដាញ"
 
-#: widgets/standardactionmanager.cpp:1656
+#: widgets/standardactionmanager.cpp:1641
 #, kde-format
 msgid "Move to This Folder"
 msgstr "ផ្លាស់​ទី​​ទៅ​​ថត​នេះ "
 
-#: widgets/standardactionmanager.cpp:1656
+#: widgets/standardactionmanager.cpp:1641
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "ចម្លង​ទៅ​ថត​នេះ​"
