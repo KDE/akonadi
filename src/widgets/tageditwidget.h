@@ -12,6 +12,7 @@
 // AkonadiCore
 #include "akonadi/tag.h"
 
+#include <QListView>
 #include <QWidget>
 
 #include <memory>
@@ -83,6 +84,13 @@ public:
      * \return A list of selected tags.
      */
     [[nodiscard]] Akonadi::Tag::List selection() const;
+
+    /*!
+     * Returns the currently used QListView.
+     * \return a pointer to a QListView
+     * \since 6.8
+     */
+    [[nodiscard]] QListView *listView();
 
 protected:
     bool eventFilter(QObject *watched, QEvent *event) override;

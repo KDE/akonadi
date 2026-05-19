@@ -70,6 +70,9 @@ public:
      */
     [[nodiscard]] QDialogButtonBox *buttons() const;
 
+private:
+    void init();
+
 Q_SIGNALS:
     /*!
      * Emitted when the tag selection has changed.

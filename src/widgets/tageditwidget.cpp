@@ -266,6 +266,11 @@ void TagEditWidget::setModel(TagModel *model)
     }
 }
 
+QListView *TagEditWidget::listView()
+{
+    return d->ui.tagsView;
+}
+
 TagModel *TagEditWidget::model() const
 {
     return d->m_model;

@@ -15,6 +15,8 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 
+#include <QPushButton>
+
 using namespace Akonadi;
 namespace
 {
@@ -33,6 +35,8 @@ public:
 
     QDialog *const q;
     Ui::TagSelectionDialog ui;
+    QStringList mInitialTagNames;
+    QPushButton *mOkButton = nullptr;
 };
 
 void TagSelectionDialogPrivate::writeConfig() const
@@ -48,6 +52,21 @@ void TagSelectionDialogPrivate::readConfig() const
     if (sizeDialog.isValid()) {
         q->resize(sizeDialog);
     }
+}
+
+void TagSelectionDialog::init()
+{
+    d->mOkButton = buttons()->button(QDialogButtonBox::Ok);
+    d->mOkButton->setEnabled(false);
+
+    connect(d->ui.tagWidget->listView(), &QAbstractItemView::clicked, this, [this]([[maybe_unused]] const QModelIndex &index) {
+        QStringList selectedTagNames;
+        for (const Akonadi::Tag &tag : selection()) {
+            selectedTagNames << tag.name();
+        }
+        selectedTagNames.sort();
+        d->mOkButton->setEnabled(d->mInitialTagNames != selectedTagNames);
+    });
 }
 
 TagSelectionDialog::TagSelectionDialog(QWidget *parent)
@@ -66,6 +85,8 @@ TagSelectionDialog::TagSelectionDialog(QWidget *parent)
     d->readConfig();
 
     ControlGui::widgetNeedsAkonadi(this);
+
+    init();
 }
 
 TagSelectionDialog::TagSelectionDialog(TagModel *model, QWidget *parent)
@@ -80,6 +101,8 @@ TagSelectionDialog::TagSelectionDialog(TagModel *model, QWidget *parent)
     d->readConfig();
 
     ControlGui::widgetNeedsAkonadi(this);
+
+    init();
 }
 
 TagSelectionDialog::~TagSelectionDialog()
@@ -99,6 +122,13 @@ Tag::List TagSelectionDialog::selection() const
 
 void TagSelectionDialog::setSelection(const Tag::List &tags)
 {
+    if (d->mInitialTagNames.isEmpty()) {
+        for (const Akonadi::Tag &tag : tags) {
+            d->mInitialTagNames << tag.name();
+        }
+    }
+    d->mInitialTagNames.sort();
+
     d->ui.tagWidget->setSelection(tags);
 }
 
