@@ -10,7 +10,6 @@
 #include "collectionfetchscope.h"
 #include "itemfetchscope.h"
 #include "monitor_p.h"
-#include "notificationsource_p.h"
 #include "private/protocol_p.h"
 
 template<typename T, typename Cache>
@@ -59,52 +58,6 @@ private:
 };
 using FakeCollectionCache = FakeEntityCache<Akonadi::Collection, Akonadi::CollectionCache>;
 using FakeItemCache = FakeEntityCache<Akonadi::Item, Akonadi::ItemCache>;
-
-class AKONADITESTFAKE_EXPORT FakeNotificationSource : public QObject
-{
-    Q_OBJECT
-public:
-    explicit FakeNotificationSource(QObject *parent = nullptr)
-        : QObject(parent)
-    {
-    }
-
-public Q_SLOTS:
-    void setAllMonitored(bool allMonitored)
-    {
-        Q_UNUSED(allMonitored)
-    }
-    void setMonitoredCollection(qlonglong id, bool monitored)
-    {
-        Q_UNUSED(id)
-        Q_UNUSED(monitored)
-    }
-    void setMonitoredItem(qlonglong id, bool monitored)
-    {
-        Q_UNUSED(id)
-        Q_UNUSED(monitored)
-    }
-    void setMonitoredResource(const QByteArray &resource, bool monitored)
-    {
-        Q_UNUSED(resource)
-        Q_UNUSED(monitored)
-    }
-    void setMonitoredMimeType(const QString &mimeType, bool monitored)
-    {
-        Q_UNUSED(mimeType)
-        Q_UNUSED(monitored)
-    }
-    void setIgnoredSession(const QByteArray &session, bool ignored)
-    {
-        Q_UNUSED(session)
-        Q_UNUSED(ignored)
-    }
-
-    void setSession(const QByteArray &session)
-    {
-        Q_UNUSED(session)
-    }
-};
 
 class AKONADITESTFAKE_EXPORT FakeNotificationConnection : public Akonadi::Connection
 {

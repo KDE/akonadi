@@ -14,12 +14,13 @@
 #include "collectionfetchjob.h"
 #include "collectionstatistics.h"
 #include "itemfetchjob.h"
-#include "notificationmanagerinterface.h"
 #include "notificationsubscriber.h"
 #include "protocolhelper_p.h"
 #include "session.h"
 
 #include "shared/akranges.h"
+
+#include <QMetaMethod>
 
 #include <utility>
 
