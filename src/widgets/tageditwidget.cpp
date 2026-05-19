@@ -61,6 +61,7 @@ public:
 
     Akonadi::Tag::List m_tags;
     Akonadi::TagModel *m_model = nullptr;
+    QString m_newTagName;
     QScopedPointer<KCheckableProxyModel> m_checkableProxy;
     QModelIndex m_deleteCandidate;
     QSortFilterProxyModel *m_filterProxyModel = nullptr;
@@ -108,6 +109,7 @@ void TagEditWidgetPrivate::slotCreateTag()
         auto createJob = new TagCreateJob(Akonadi::Tag(ui.newTagEdit->text()), this);
         connect(createJob, &TagCreateJob::finished, this, &TagEditWidgetPrivate::slotCreateTagFinished);
 
+        m_newTagName = ui.newTagEdit->text();
         ui.newTagEdit->clear();
         ui.newTagEdit->setEnabled(false);
         ui.newTagButton->setEnabled(false);
@@ -118,6 +120,10 @@ void TagEditWidgetPrivate::slotCreateTagFinished(KJob *job)
 {
     if (job->error()) {
         KMessageBox::error(d, i18n("Failed to create a new tag"), i18nc("@title:window", "An Error Occurred while Creating a New Tag"));
+    } else {
+        // Append the new tag to our global tags list. Now the new tag is automatically selected.
+        Akonadi::Tag newTag(m_newTagName);
+        m_tags.append(newTag);
     }
 
     ui.newTagEdit->setEnabled(true);
