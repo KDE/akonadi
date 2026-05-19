@@ -35,7 +35,8 @@ public:
 public Q_SLOTS:
     void slotTextEdited(const QString &text);
     void slotItemEntered(const QModelIndex &index);
-    void deleteTag();
+    void slotDeleteTag();
+    void slotDeleteTagFinished(KJob *job);
     void slotCreateTag();
     void slotCreateTagFinished(KJob *job);
     void onRowsInserted(const QModelIndex &parent, int start, int end);
@@ -119,11 +120,16 @@ void TagEditWidgetPrivate::slotCreateTag()
 void TagEditWidgetPrivate::slotCreateTagFinished(KJob *job)
 {
     if (job->error()) {
-        KMessageBox::error(d, i18n("Failed to create a new tag"), i18nc("@title:window", "An Error Occurred while Creating a New Tag"));
+        ui.mMessageWidget->setText(i18nc("@info", "Failed to create new tag %1: %2", m_newTagName, job->errorString()));
+        ui.mMessageWidget->setMessageType(KMessageWidget::Warning);
+        ui.mMessageWidget->show();
     } else {
         // Append the new tag to our global tags list. Now the new tag is automatically selected.
         Akonadi::Tag newTag(m_newTagName);
         m_tags.append(newTag);
+        ui.mMessageWidget->setText(i18nc("@info", "Tag %1 successfully added", m_newTagName));
+        ui.mMessageWidget->setMessageType(KMessageWidget::Information);
+        ui.mMessageWidget->show();
     }
 
     ui.newTagEdit->setEnabled(true);
@@ -167,22 +173,39 @@ void TagEditWidgetPrivate::slotItemEntered(const QModelIndex &index)
     m_deleteButton->show();
 }
 
-void TagEditWidgetPrivate::deleteTag()
+void TagEditWidgetPrivate::slotDeleteTag()
 {
     Q_ASSERT(m_deleteCandidate.isValid());
     const auto tag = m_deleteCandidate.data(Akonadi::TagModel::TagRole).value<Akonadi::Tag>();
     const QString text = xi18nc("@info", "Do you really want to remove the tag <resource>%1</resource>?", tag.name());
     const QString caption = i18nc("@title:window", "Delete Tag");
     if (KMessageBox::questionTwoActions(d, text, caption, KStandardGuiItem::del(), KStandardGuiItem::cancel()) == KMessageBox::ButtonCode::PrimaryAction) {
-        new TagDeleteJob(tag, this);
+        auto deleteJob = new TagDeleteJob(tag, this);
+        connect(deleteJob, &TagDeleteJob::finished, this, &TagEditWidgetPrivate::slotDeleteTagFinished);
     }
 }
 
+void TagEditWidgetPrivate::slotDeleteTagFinished(KJob *job)
+{
+    const auto tag = m_deleteCandidate.data(Akonadi::TagModel::TagRole).value<Akonadi::Tag>();
+    if (job->error()) {
+        ui.mMessageWidget->setText(i18nc("@info", "Failed to delete tag %1: %2", tag.name(), job->errorString()));
+        ui.mMessageWidget->setMessageType(KMessageWidget::Warning);
+        ui.mMessageWidget->show();
+    } else {
+        ui.mMessageWidget->setText(i18nc("@info", "Tag %1 successfully removed", tag.name()));
+        ui.mMessageWidget->setMessageType(KMessageWidget::Information);
+        ui.mMessageWidget->show();
+    }
+
+    ui.newTagEdit->setEnabled(true);
+}
 TagEditWidget::TagEditWidget(QWidget *parent)
     : QWidget(parent)
     , d(new TagEditWidgetPrivate(this))
 {
     d->ui.setupUi(this);
+    d->ui.mMessageWidget->hide();
     KLineEditEventHandler::catchReturnKey(d->ui.newTagEdit);
 
     d->ui.tagsView->installEventFilter(this);
@@ -199,7 +222,7 @@ TagEditWidget::TagEditWidget(QWidget *parent)
     d->m_deleteButton->setIcon(QIcon::fromTheme(QStringLiteral("edit-delete")));
     d->m_deleteButton->setToolTip(i18nc("@info", "Delete tag"));
     d->m_deleteButton->hide();
-    connect(d->m_deleteButton, &QAbstractButton::clicked, d.get(), &TagEditWidgetPrivate::deleteTag);
+    connect(d->m_deleteButton, &QAbstractButton::clicked, d.get(), &TagEditWidgetPrivate::slotDeleteTag);
 }
 
 TagEditWidget::TagEditWidget(Akonadi::TagModel *model, QWidget *parent, bool enableSelection)

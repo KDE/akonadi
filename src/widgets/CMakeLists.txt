@@ -166,6 +166,7 @@ target_link_libraries(
         KF6::ItemModels
         Qt::Widgets
         KF6::ConfigWidgets
+        KF6::WidgetsAddons
     PRIVATE
         KF6::I18n
         KF6::IconThemes

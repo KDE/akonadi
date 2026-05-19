@@ -31,12 +31,19 @@
     </widget>
    </item>
    <item>
+    <widget class="KMessageWidget" name="mMessageWidget">
+     <property name="closeButtonVisible">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QListView" name="tagsView">
      <property name="mouseTracking">
       <bool>true</bool>
      </property>
      <property name="selectionMode">
-      <enum>QAbstractItemView::NoSelection</enum>
+      <enum>QAbstractItemView::SelectionMode::NoSelection</enum>
      </property>
     </widget>
    </item>
@@ -59,6 +66,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KMessageWidget</class>
+   <extends>QFrame</extends>
+   <header>kmessagewidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
