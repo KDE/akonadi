@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-18 00:44+0000\n"
+"POT-Creation-Date: 2026-05-20 00:45+0000\n"
 "PO-Revision-Date: 2021-09-27 23:52+0630\n"
 "Last-Translator: ဇေယျာလွင် <lw1nzayar@yandex.com>\n"
 "Language-Team: Burmese <kde-i18n-doc@kde.org>\n"
@@ -2436,12 +2436,12 @@ msgstr ""
 msgid "&Unsubscribe"
 msgstr "&Uစာရင်းမသွင်းတော့ပါ"
 
-#: widgets/tageditwidget.cpp:120
+#: widgets/tageditwidget.cpp:122
 #, kde-format
 msgid "Failed to create a new tag"
 msgstr "တပ်ဂ်အသစ်ကိုမဖန်တီးနိုင်ခဲ့ပါ"
 
-#: widgets/tageditwidget.cpp:120
+#: widgets/tageditwidget.cpp:122
 #, fuzzy, kde-format
 #| msgctxt "@info"
 #| msgid "Error while creating item: %1"
@@ -2449,13 +2449,13 @@ msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "အိုင်တမ်ဖန်တီးနေစဥ်အမှားဖြစ်ပေါ်ခဲ့သည်- %1"
 
-#: widgets/tageditwidget.cpp:168
+#: widgets/tageditwidget.cpp:174
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr ""
 
-#: widgets/tageditwidget.cpp:169
+#: widgets/tageditwidget.cpp:175
 #, fuzzy, kde-format
 #| msgctxt "@title"
 #| msgid "Delete tag"
@@ -2463,7 +2463,7 @@ msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "တပ်ဂ် ဖျက်မည်"
 
-#: widgets/tageditwidget.cpp:194
+#: widgets/tageditwidget.cpp:200
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"

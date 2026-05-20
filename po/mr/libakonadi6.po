@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-18 00:44+0000\n"
+"POT-Creation-Date: 2026-05-20 00:45+0000\n"
 "PO-Revision-Date: 2013-03-08 10:11+0530\n"
 "Last-Translator: Chetan Khona <chetan@kompkin.com>\n"
 "Language-Team: Marathi <kde-i18n-doc@kde.org>\n"
@@ -2460,31 +2460,31 @@ msgstr "सबस्क्राइब"
 msgid "&Unsubscribe"
 msgstr "सबस्क्राइब"
 
-#: widgets/tageditwidget.cpp:120
+#: widgets/tageditwidget.cpp:122
 #, kde-format
 msgid "Failed to create a new tag"
 msgstr ""
 
-#: widgets/tageditwidget.cpp:120
+#: widgets/tageditwidget.cpp:122
 #, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr ""
 
-#: widgets/tageditwidget.cpp:168
+#: widgets/tageditwidget.cpp:174
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr ""
 
-#: widgets/tageditwidget.cpp:169
+#: widgets/tageditwidget.cpp:175
 #, fuzzy, kde-format
 #| msgid "Delete"
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "काढून टाका"
 
-#: widgets/tageditwidget.cpp:194
+#: widgets/tageditwidget.cpp:200
 #, fuzzy, kde-format
 #| msgid "Delete"
 msgctxt "@info"

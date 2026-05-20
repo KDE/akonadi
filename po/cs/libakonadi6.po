@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-18 00:44+0000\n"
+"POT-Creation-Date: 2026-05-20 00:45+0000\n"
 "PO-Revision-Date: 2026-05-09 09:24+0200\n"
 "Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -2575,30 +2575,30 @@ msgstr "Zare&gistrovat"
 msgid "&Unsubscribe"
 msgstr "&Zrušit registraci"
 
-#: widgets/tageditwidget.cpp:120
+#: widgets/tageditwidget.cpp:122
 #, kde-format
 msgid "Failed to create a new tag"
 msgstr "Nelze vytvořit značku"
 
-#: widgets/tageditwidget.cpp:120
+#: widgets/tageditwidget.cpp:122
 #, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr "Při vytváření nové značky došlo k chybě"
 
-#: widgets/tageditwidget.cpp:168
+#: widgets/tageditwidget.cpp:174
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Opravdu si přejete odstranit značku <resource>%1</resource>?"
 
-#: widgets/tageditwidget.cpp:169
+#: widgets/tageditwidget.cpp:175
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Odstranit značku"
 
-#: widgets/tageditwidget.cpp:194
+#: widgets/tageditwidget.cpp:200
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"

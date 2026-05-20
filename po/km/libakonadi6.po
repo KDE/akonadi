@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-18 00:44+0000\n"
+"POT-Creation-Date: 2026-05-20 00:45+0000\n"
 "PO-Revision-Date: 2012-07-11 10:23+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -2618,19 +2618,19 @@ msgstr "តែ​អ្វី​ដែល​បាន​ជាវ​ប៉ុណ
 msgid "&Unsubscribe"
 msgstr "តែ​អ្វី​ដែល​បាន​ជាវ​ប៉ុណ្ណោះ"
 
-#: widgets/tageditwidget.cpp:120
+#: widgets/tageditwidget.cpp:122
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Failed to create a new tag"
 msgstr "មិន​អាច​បង្កើត​ធាតុ​ភ្នាក់ងារ​បាន​ឡើយ ។"
 
-#: widgets/tageditwidget.cpp:120
+#: widgets/tageditwidget.cpp:122
 #, kde-format
 msgctxt "@title:window"
 msgid "An Error Occurred while Creating a New Tag"
 msgstr ""
 
-#: widgets/tageditwidget.cpp:168
+#: widgets/tageditwidget.cpp:174
 #, fuzzy, kde-kuit-format
 #| msgid "Do you really want to delete this resource?"
 #| msgid_plural "Do you really want to delete %1 resources?"
@@ -2638,7 +2638,7 @@ msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "តើ​អ្នក​ពិតជា​ចង់​លុប​ធនធាន​​ %1 ឬ ?"
 
-#: widgets/tageditwidget.cpp:169
+#: widgets/tageditwidget.cpp:175
 #, fuzzy, kde-format
 #| msgid "Delete Item"
 #| msgid_plural "Delete %1 Items"
@@ -2646,7 +2646,7 @@ msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "លុប​ធាតុ %1​"
 
-#: widgets/tageditwidget.cpp:194
+#: widgets/tageditwidget.cpp:200
 #, fuzzy, kde-format
 #| msgid "Delete Item"
 #| msgid_plural "Delete %1 Items"
