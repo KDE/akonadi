@@ -7,8 +7,8 @@
 #include "collectionattributessynchronizationjob.h"
 #include "akonadicore_debug.h"
 #include "kjobprivatebase_p.h"
+#include "resourceinterface.h"
 #include "servermanager.h"
-#include <QDBusConnection>
 
 #include "agentinstance.h"
 #include "agentmanager.h"
@@ -16,6 +16,7 @@
 
 #include <KLocalizedString>
 
+#include <QDBusConnection>
 #include <QDBusInterface>
 #include <QTimer>
 
@@ -39,7 +40,7 @@ public:
     CollectionAttributesSynchronizationJob *const q;
     AgentInstance instance;
     Collection collection;
-    QDBusInterface *interface = nullptr;
+    OrgFreedesktopAkonadiResourceInterface *interface = nullptr;
     QTimer safetyTimer;
     int timeoutCount = 0;
     static const int timeoutCountLimit;
@@ -82,20 +83,21 @@ void CollectionAttributesSynchronizationJobPrivate::doStart()
         return;
     }
 
-    interface = new QDBusInterface(ServerManager::agentServiceName(ServerManager::Resource, instance.identifier()),
-                                   QStringLiteral("/"),
-                                   QStringLiteral("org.freedesktop.Akonadi.Resource"),
-                                   QDBusConnection::sessionBus(),
-                                   this);
-    connect(interface, SIGNAL(attributesSynchronized(qlonglong)), this, SLOT(slotSynchronized(qlonglong))); // clazy:exclude=old-style-connect
+    interface = new OrgFreedesktopAkonadiResourceInterface(ServerManager::agentServiceName(ServerManager::Resource, instance.identifier()),
+                                                           QStringLiteral("/"),
+                                                           QDBusConnection::sessionBus(),
+                                                           this);
+    connect(
+        interface,
+        &OrgFreedesktopAkonadiResourceInterface::attributesSynchronized,
+        this,
+        [this](qlonglong id) {
+            slotSynchronized(id);
+        },
+        Qt::SingleShotConnection);
 
     if (interface->isValid()) {
-        const QDBusMessage reply = interface->call(QStringLiteral("synchronizeCollectionAttributes"), collection.id());
-        if (reply.type() == QDBusMessage::ErrorMessage) {
-            // This means that the resource doesn't provide a synchronizeCollectionAttributes method, so we just finish the job
-            q->emitResult();
-            return;
-        }
+        interface->synchronizeCollectionAttributes(collection.id());
         safetyTimer.start();
     } else {
         q->setError(KJob::UserDefinedError);
@@ -108,7 +110,6 @@ void CollectionAttributesSynchronizationJobPrivate::doStart()
 void CollectionAttributesSynchronizationJobPrivate::slotSynchronized(qlonglong id)
 {
     if (id == collection.id()) {
-        disconnect(interface, SIGNAL(attributesSynchronized(qlonglong)), this, SLOT(slotSynchronized(qlonglong))); // clazy:exclude=old-style-connect
         safetyTimer.stop();
         q->emitResult();
     }
