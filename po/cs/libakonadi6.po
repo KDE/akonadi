@@ -11,15 +11,15 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-03-03 00:47+0000\n"
-"PO-Revision-Date: 2026-04-04 00:13+0200\n"
-"Last-Translator: Libor Filípek <filipek.libor@protonmail.com>\n"
+"PO-Revision-Date: 2026-05-21 23:47+0200\n"
+"Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 26.04.1\n"
+"X-Generator: Poedit 3.8\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -110,7 +110,7 @@ msgstr "Chyba při vytváření položky: %1"
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
-msgstr "Chyba při aktualizaci místní sbírky: %1."
+msgstr "Chyba při aktualizaci místní sbírky: %1"
 
 #: agentbase/resourcebase.cpp:695
 #, kde-format
@@ -733,7 +733,7 @@ msgstr ""
 
 #: widgets/agentactionmanager.cpp:36
 msgid "&New Agent Instance..."
-msgstr "&Nová instance agenta"
+msgstr "&Nová instance agenta..."
 
 #: widgets/agentactionmanager.cpp:37
 msgid "&Delete Agent Instance"
@@ -1639,7 +1639,7 @@ msgstr "Byla nalezena vlastní konfigurace serveru MySQL."
 msgid ""
 "The custom configuration for the MySQL server was found and is readable at %1"
 msgstr ""
-"Bylo nalezeno vlastní nastavení pro server MySQL, které je k dispozici v %1."
+"Bylo nalezeno vlastní nastavení pro server MySQL, které je k dispozici v %1"
 
 #: widgets/selftestdialog.cpp:332
 #, kde-format
