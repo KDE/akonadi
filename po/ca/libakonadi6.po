@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-20 00:45+0000\n"
+"POT-Creation-Date: 2026-05-25 00:44+0000\n"
 "PO-Revision-Date: 2026-05-06 09:51+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -285,24 +285,24 @@ msgstr "No s'ha pogut obtenir el tipus de l'agent «%1»."
 msgid "Unable to create agent instance."
 msgstr "No s'ha pogut crear la instància de l'agent."
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:73
+#: core/jobs/collectionattributessynchronizationjob.cpp:74
 #, kde-format
 msgid "Invalid collection instance."
 msgstr "Instància de la col·lecció no vàlida."
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:80
+#: core/jobs/collectionattributessynchronizationjob.cpp:81
 #: core/jobs/resourcesynchronizationjob.cpp:88
 #, kde-format
 msgid "Invalid resource instance."
 msgstr "Instància del recurs no vàlida."
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:102
+#: core/jobs/collectionattributessynchronizationjob.cpp:104
 #: core/jobs/resourcesynchronizationjob.cpp:113
 #, kde-format
 msgid "Unable to obtain D-Bus interface for resource '%1'"
 msgstr "No s'ha pogut obtenir la interfície de D-Bus per al recurs «%1»"
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:125
+#: core/jobs/collectionattributessynchronizationjob.cpp:126
 #, kde-format
 msgid "Collection attributes synchronization timed out."
 msgstr "La sincronització dels atributs de la col·lecció ha excedit el temps."

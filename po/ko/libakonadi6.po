@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-20 00:45+0000\n"
+"POT-Creation-Date: 2026-05-25 00:44+0000\n"
 "PO-Revision-Date: 2026-04-26 22:51+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -277,24 +277,24 @@ msgstr "에이전트 종류 '%1'을(를) 가져올 수 없습니다."
 msgid "Unable to create agent instance."
 msgstr "에이전트 인스턴스를 만들 수 없습니다."
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:73
+#: core/jobs/collectionattributessynchronizationjob.cpp:74
 #, kde-format
 msgid "Invalid collection instance."
 msgstr "잘못된 모음집 인스턴스입니다."
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:80
+#: core/jobs/collectionattributessynchronizationjob.cpp:81
 #: core/jobs/resourcesynchronizationjob.cpp:88
 #, kde-format
 msgid "Invalid resource instance."
 msgstr "잘못된 리소스 인스턴스입니다."
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:102
+#: core/jobs/collectionattributessynchronizationjob.cpp:104
 #: core/jobs/resourcesynchronizationjob.cpp:113
 #, kde-format
 msgid "Unable to obtain D-Bus interface for resource '%1'"
 msgstr "리소스 '%1'의 DBus 인터페이스를 가져올 수 없음"
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:125
+#: core/jobs/collectionattributessynchronizationjob.cpp:126
 #, kde-format
 msgid "Collection attributes synchronization timed out."
 msgstr "모음집 속성 동기화 시간이 초과되었습니다."

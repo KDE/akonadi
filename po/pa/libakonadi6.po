@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-20 00:45+0000\n"
+"POT-Creation-Date: 2026-05-25 00:44+0000\n"
 "PO-Revision-Date: 2023-12-31 09:30-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -275,25 +275,25 @@ msgstr ""
 msgid "Unable to create agent instance."
 msgstr ""
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:73
+#: core/jobs/collectionattributessynchronizationjob.cpp:74
 #, fuzzy, kde-format
 #| msgid "Invalid collection given."
 msgid "Invalid collection instance."
 msgstr "ਅਢੁੱਕਵਾਂ ਭੰਡਾਰ ਦਿੱਤਾ ਹੈ।"
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:80
+#: core/jobs/collectionattributessynchronizationjob.cpp:81
 #: core/jobs/resourcesynchronizationjob.cpp:88
 #, kde-format
 msgid "Invalid resource instance."
 msgstr ""
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:102
+#: core/jobs/collectionattributessynchronizationjob.cpp:104
 #: core/jobs/resourcesynchronizationjob.cpp:113
 #, kde-format
 msgid "Unable to obtain D-Bus interface for resource '%1'"
 msgstr ""
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:125
+#: core/jobs/collectionattributessynchronizationjob.cpp:126
 #, kde-format
 msgid "Collection attributes synchronization timed out."
 msgstr ""

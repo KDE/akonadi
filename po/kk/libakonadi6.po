@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-20 00:45+0000\n"
+"POT-Creation-Date: 2026-05-25 00:44+0000\n"
 "PO-Revision-Date: 2013-07-14 03:20+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -280,24 +280,24 @@ msgstr "Агенттің '%1' түрі туралы мәлімет алынба�
 msgid "Unable to create agent instance."
 msgstr "Агент данасын құруға болмайды."
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:73
+#: core/jobs/collectionattributessynchronizationjob.cpp:74
 #, kde-format
 msgid "Invalid collection instance."
 msgstr "Жарамсыз жинақ данасы."
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:80
+#: core/jobs/collectionattributessynchronizationjob.cpp:81
 #: core/jobs/resourcesynchronizationjob.cpp:88
 #, kde-format
 msgid "Invalid resource instance."
 msgstr "Жармсыз деректер көзінің данасы."
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:102
+#: core/jobs/collectionattributessynchronizationjob.cpp:104
 #: core/jobs/resourcesynchronizationjob.cpp:113
 #, kde-format
 msgid "Unable to obtain D-Bus interface for resource '%1'"
 msgstr "'%1' дерек көзінің D-Bus интерфейсі қол жеткізбеді"
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:125
+#: core/jobs/collectionattributessynchronizationjob.cpp:126
 #, kde-format
 msgid "Collection attributes synchronization timed out."
 msgstr "Жинақ атрибуттарын қадамдастыруын күту уақыты өтті."

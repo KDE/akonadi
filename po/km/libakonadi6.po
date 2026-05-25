@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-20 00:45+0000\n"
+"POT-Creation-Date: 2026-05-25 00:44+0000\n"
 "PO-Revision-Date: 2012-07-11 10:23+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -287,24 +287,24 @@ msgstr "មិន​អាច​ទទួល​យក​ប្រភេទ​ភ
 msgid "Unable to create agent instance."
 msgstr "មិន​អាច​បង្កើត​ធាតុ​ភ្នាក់ងារ​បាន​ឡើយ ។"
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:73
+#: core/jobs/collectionattributessynchronizationjob.cpp:74
 #, kde-format
 msgid "Invalid collection instance."
 msgstr "ធាតុ​សម្រាំង​មិន​ត្រឹមត្រូវ​ ។"
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:80
+#: core/jobs/collectionattributessynchronizationjob.cpp:81
 #: core/jobs/resourcesynchronizationjob.cpp:88
 #, kde-format
 msgid "Invalid resource instance."
 msgstr "ធាតុ​ធន​ធាន​មិន​ត្រឹម​ត្រូវ ។"
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:102
+#: core/jobs/collectionattributessynchronizationjob.cpp:104
 #: core/jobs/resourcesynchronizationjob.cpp:113
 #, kde-format
 msgid "Unable to obtain D-Bus interface for resource '%1'"
 msgstr "មិន​អាច​​ទៅយក​​ចំណុច​ប្រទាក់ D-Bus សម្រាប់​ធន​ធាន '%1' បាន​ទេ​"
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:125
+#: core/jobs/collectionattributessynchronizationjob.cpp:126
 #, kde-format
 msgid "Collection attributes synchronization timed out."
 msgstr "អស់​ពេល​​ធ្វើ​សម​កាល​កម្ម​គុណ​លក្ខណៈ​​​សម្រាំង​ ។"
