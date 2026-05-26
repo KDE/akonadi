@@ -23,9 +23,9 @@ Options:
  cppcheck-arguments:
    - --enable=warning,performance,portability,style
    - --suppress-xml=cppcheck-suppressions.xml
-   - -DQTEST_AKONADIMAIN(X)=
-   - -DQTEST_AKONADI_CORE_MAIN(X)=
-   - -D__GLIBC_PREREQ(X,Y)=1
+   - -DQTEST_AKONADIMAIN\(X\)=
+   - -DQTEST_AKONADI_CORE_MAIN\(X\)=
+   - -D__GLIBC_PREREQ\(X,Y\)=1
    - -DPOSTGRES_PATH="/path/to/pg_ctl"
    - -DMYSQLD_EXECUTABLE="/path/to/mysqld"
    - -DMYSQLD_SCRIPTS_PATH="/path/to/mysqld"
