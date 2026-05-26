@@ -50,12 +50,25 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLineEdit" name="newTagEdit"/>
+      <widget class="QLineEdit" name="newTagEdit">
+       <property name="toolTip">
+        <string>Enter the name for a new tag</string>
+       </property>
+       <property name="whatsThis">
+        <string>To create and select a new tag, enter a name for the new tag and then press the &quot;Create new tag&quot; button.</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="newTagButton">
        <property name="enabled">
         <bool>false</bool>
+       </property>
+       <property name="toolTip">
+        <string>Create and select a new tag</string>
+       </property>
+       <property name="whatsThis">
+        <string>Press this button to create a new tag with the name specified in the adjacent line editor.  The new tag is automatically selected.</string>
        </property>
        <property name="text">
         <string>Create new tag</string>
