@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-25 00:44+0000\n"
+"POT-Creation-Date: 2026-05-27 00:45+0000\n"
 "PO-Revision-Date: 2013-07-14 03:20+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -2629,21 +2629,36 @@ msgstr "Жазылу"
 msgid "&Unsubscribe"
 msgstr "Жазылудан айну"
 
-#: widgets/tageditwidget.cpp:122
+#: widgets/tageditwidget.cpp:123
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
-msgid "Failed to create a new tag"
+msgctxt "@info"
+msgid "Failed to create new tag %1: %2"
 msgstr "Агент данасын құруға болмайды."
 
-#: widgets/tageditwidget.cpp:122
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Error while creating item: %1"
-msgctxt "@title:window"
-msgid "An Error Occurred while Creating a New Tag"
-msgstr "Аталымды құру қатесі: %1"
+#: widgets/tageditwidget.cpp:130
+#, kde-format
+msgctxt "@info"
+msgid "Tag %1 successfully added"
+msgstr ""
 
 #: widgets/tageditwidget.cpp:174
+#, fuzzy, kde-kuit-format
+#| msgid "Do you really want to delete this resource?"
+#| msgid_plural "Do you really want to delete %1 resources?"
+msgctxt "@info"
+msgid "Delete Tag  <resource>%1</resource>"
+msgstr "Шынымен %1 ресурсты өшірмексіз бе?"
+
+#: widgets/tageditwidget.cpp:176
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"Press this button to show a dialog that asks permission to remove the "
+"<resource>%1</resource> tag from Akonadi."
+msgstr ""
+
+#: widgets/tageditwidget.cpp:184
 #, fuzzy, kde-kuit-format
 #| msgid "Do you really want to delete this resource?"
 #| msgid_plural "Do you really want to delete %1 resources?"
@@ -2651,7 +2666,7 @@ msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Шынымен %1 ресурсты өшірмексіз бе?"
 
-#: widgets/tageditwidget.cpp:175
+#: widgets/tageditwidget.cpp:185
 #, fuzzy, kde-format
 #| msgid "Delete Item"
 #| msgid_plural "Delete %1 Items"
@@ -2659,7 +2674,20 @@ msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "%1 аталымды өшіру"
 
+#: widgets/tageditwidget.cpp:196
+#, fuzzy, kde-format
+#| msgid "Unable to create agent instance."
+msgctxt "@info"
+msgid "Failed to delete tag %1: %2"
+msgstr "Агент данасын құруға болмайды."
+
 #: widgets/tageditwidget.cpp:200
+#, kde-format
+msgctxt "@info"
+msgid "Tag %1 successfully removed"
+msgstr ""
+
+#: widgets/tageditwidget.cpp:227
 #, fuzzy, kde-format
 #| msgid "Delete Item"
 #| msgid_plural "Delete %1 Items"
@@ -2673,8 +2701,37 @@ msgstr "%1 аталымды өшіру"
 msgid "Select tags that should be applied."
 msgstr ""
 
+#. i18n: ectx: property (toolTip), widget (QLineEdit, newTagEdit)
+#: widgets/tageditwidget.ui:55
+#, kde-format
+msgid "Enter the name for a new tag"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QLineEdit, newTagEdit)
+#: widgets/tageditwidget.ui:58
+#, kde-format
+msgid ""
+"To create and select a new tag, enter a name for the new tag and then press "
+"the \"Create new tag\" button."
+msgstr ""
+
+#. i18n: ectx: property (toolTip), widget (QPushButton, newTagButton)
+#: widgets/tageditwidget.ui:68
+#, fuzzy, kde-format
+#| msgid "Unable to create agent instance."
+msgid "Create and select a new tag"
+msgstr "Агент данасын құруға болмайды."
+
+#. i18n: ectx: property (whatsThis), widget (QPushButton, newTagButton)
+#: widgets/tageditwidget.ui:71
+#, kde-format
+msgid ""
+"Press this button to create a new tag with the name specified in the "
+"adjacent line editor.  The new tag is automatically selected."
+msgstr ""
+
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
-#: widgets/tageditwidget.ui:54
+#: widgets/tageditwidget.ui:74
 #, fuzzy, kde-format
 #| msgid "Unable to create agent instance."
 msgid "Create new tag"
@@ -2795,6 +2852,13 @@ msgstr "Дерек орналастырылмады: %1"
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"
 msgstr "Жарамсыз жинақ"
+
+#, fuzzy
+#~| msgctxt "@info"
+#~| msgid "Error while creating item: %1"
+#~ msgctxt "@title:window"
+#~ msgid "An Error Occurred while Creating a New Tag"
+#~ msgstr "Аталымды құру қатесі: %1"
 
 #~ msgid "&New Agent Instance..."
 #~ msgstr "&Жана агент данасы..."

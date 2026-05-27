@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-25 00:44+0000\n"
+"POT-Creation-Date: 2026-05-27 00:45+0000\n"
 "PO-Revision-Date: 2026-05-12 03:14+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -2464,30 +2464,61 @@ msgstr "訂閱(&B)"
 msgid "&Unsubscribe"
 msgstr "取消訂閱(&U)"
 
-#: widgets/tageditwidget.cpp:122
-#, kde-format
-msgid "Failed to create a new tag"
+#: widgets/tageditwidget.cpp:123
+#, fuzzy, kde-format
+#| msgid "Failed to create a new tag"
+msgctxt "@info"
+msgid "Failed to create new tag %1: %2"
 msgstr "建立新標籤時失敗"
 
-#: widgets/tageditwidget.cpp:122
+#: widgets/tageditwidget.cpp:130
 #, kde-format
-msgctxt "@title:window"
-msgid "An Error Occurred while Creating a New Tag"
-msgstr "建立新標籤時發生錯誤"
+msgctxt "@info"
+msgid "Tag %1 successfully added"
+msgstr ""
 
 #: widgets/tageditwidget.cpp:174
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+msgctxt "@info"
+msgid "Delete Tag  <resource>%1</resource>"
+msgstr "您確定要刪除標籤 <resource>%1</resource> 嗎？"
+
+#: widgets/tageditwidget.cpp:176
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"Press this button to show a dialog that asks permission to remove the "
+"<resource>%1</resource> tag from Akonadi."
+msgstr ""
+
+#: widgets/tageditwidget.cpp:184
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "您確定要刪除標籤 <resource>%1</resource> 嗎？"
 
-#: widgets/tageditwidget.cpp:175
+#: widgets/tageditwidget.cpp:185
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "刪除標籤"
 
+#: widgets/tageditwidget.cpp:196
+#, fuzzy, kde-format
+#| msgid "Failed to create tag."
+msgctxt "@info"
+msgid "Failed to delete tag %1: %2"
+msgstr "建立標籤時失敗。"
+
 #: widgets/tageditwidget.cpp:200
+#, kde-format
+msgctxt "@info"
+msgid "Tag %1 successfully removed"
+msgstr ""
+
+#: widgets/tageditwidget.cpp:227
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"
@@ -2499,8 +2530,37 @@ msgstr "刪除標籤"
 msgid "Select tags that should be applied."
 msgstr "選取應該要被套用的標籤。"
 
+#. i18n: ectx: property (toolTip), widget (QLineEdit, newTagEdit)
+#: widgets/tageditwidget.ui:55
+#, kde-format
+msgid "Enter the name for a new tag"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QLineEdit, newTagEdit)
+#: widgets/tageditwidget.ui:58
+#, kde-format
+msgid ""
+"To create and select a new tag, enter a name for the new tag and then press "
+"the \"Create new tag\" button."
+msgstr ""
+
+#. i18n: ectx: property (toolTip), widget (QPushButton, newTagButton)
+#: widgets/tageditwidget.ui:68
+#, fuzzy, kde-format
+#| msgid "Create new tag"
+msgid "Create and select a new tag"
+msgstr "建立新標籤"
+
+#. i18n: ectx: property (whatsThis), widget (QPushButton, newTagButton)
+#: widgets/tageditwidget.ui:71
+#, kde-format
+msgid ""
+"Press this button to create a new tag with the name specified in the "
+"adjacent line editor.  The new tag is automatically selected."
+msgstr ""
+
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
-#: widgets/tageditwidget.ui:54
+#: widgets/tageditwidget.ui:74
 #, kde-format
 msgid "Create new tag"
 msgstr "建立新標籤"
@@ -2608,6 +2668,10 @@ msgstr "無法剖析資料檔：%1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "無法找到收藏 %1"
+
+#~ msgctxt "@title:window"
+#~ msgid "An Error Occurred while Creating a New Tag"
+#~ msgstr "建立新標籤時發生錯誤"
 
 #~ msgid "&New Agent Instance..."
 #~ msgstr "新增代理程式實體(&N)..."

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-25 00:44+0000\n"
+"POT-Creation-Date: 2026-05-27 00:45+0000\n"
 "PO-Revision-Date: 2026-05-06 09:13-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -2583,30 +2583,61 @@ msgstr "&Inscrever"
 msgid "&Unsubscribe"
 msgstr "&Cancelar inscrição"
 
-#: widgets/tageditwidget.cpp:122
-#, kde-format
-msgid "Failed to create a new tag"
+#: widgets/tageditwidget.cpp:123
+#, fuzzy, kde-format
+#| msgid "Failed to create a new tag"
+msgctxt "@info"
+msgid "Failed to create new tag %1: %2"
 msgstr "Ocorreu uma falha ao criar uma nova etiqueta"
 
-#: widgets/tageditwidget.cpp:122
+#: widgets/tageditwidget.cpp:130
 #, kde-format
-msgctxt "@title:window"
-msgid "An Error Occurred while Creating a New Tag"
-msgstr "Ocorreu um erro ao criar uma nova etiqueta"
+msgctxt "@info"
+msgid "Tag %1 successfully added"
+msgstr ""
 
 #: widgets/tageditwidget.cpp:174
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+msgctxt "@info"
+msgid "Delete Tag  <resource>%1</resource>"
+msgstr "Deseja realmente remover a etiqueta <resource>%1</resource>?"
+
+#: widgets/tageditwidget.cpp:176
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"Press this button to show a dialog that asks permission to remove the "
+"<resource>%1</resource> tag from Akonadi."
+msgstr ""
+
+#: widgets/tageditwidget.cpp:184
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Deseja realmente remover a etiqueta <resource>%1</resource>?"
 
-#: widgets/tageditwidget.cpp:175
+#: widgets/tageditwidget.cpp:185
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Excluir etiqueta"
 
+#: widgets/tageditwidget.cpp:196
+#, fuzzy, kde-format
+#| msgid "Failed to create tag."
+msgctxt "@info"
+msgid "Failed to delete tag %1: %2"
+msgstr "Ocorreu uma falha ao criar a marca."
+
 #: widgets/tageditwidget.cpp:200
+#, kde-format
+msgctxt "@info"
+msgid "Tag %1 successfully removed"
+msgstr ""
+
+#: widgets/tageditwidget.cpp:227
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"
@@ -2618,8 +2649,37 @@ msgstr "Excluir etiqueta"
 msgid "Select tags that should be applied."
 msgstr "Selecionar as etiquetas que devem ser aplicadas."
 
+#. i18n: ectx: property (toolTip), widget (QLineEdit, newTagEdit)
+#: widgets/tageditwidget.ui:55
+#, kde-format
+msgid "Enter the name for a new tag"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QLineEdit, newTagEdit)
+#: widgets/tageditwidget.ui:58
+#, kde-format
+msgid ""
+"To create and select a new tag, enter a name for the new tag and then press "
+"the \"Create new tag\" button."
+msgstr ""
+
+#. i18n: ectx: property (toolTip), widget (QPushButton, newTagButton)
+#: widgets/tageditwidget.ui:68
+#, fuzzy, kde-format
+#| msgid "Create new tag"
+msgid "Create and select a new tag"
+msgstr "Criar nova etiqueta"
+
+#. i18n: ectx: property (whatsThis), widget (QPushButton, newTagButton)
+#: widgets/tageditwidget.ui:71
+#, kde-format
+msgid ""
+"Press this button to create a new tag with the name specified in the "
+"adjacent line editor.  The new tag is automatically selected."
+msgstr ""
+
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
-#: widgets/tageditwidget.ui:54
+#: widgets/tageditwidget.ui:74
 #, kde-format
 msgid "Create new tag"
 msgstr "Criar nova etiqueta"
@@ -2727,6 +2787,10 @@ msgstr "Não foi possível analisar o arquivo de dados: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Não foi possível encontrar a coleção %1"
+
+#~ msgctxt "@title:window"
+#~ msgid "An Error Occurred while Creating a New Tag"
+#~ msgstr "Ocorreu um erro ao criar uma nova etiqueta"
 
 #~ msgid "&New Agent Instance..."
 #~ msgstr "&Nova instância do agente..."
