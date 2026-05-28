@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <QtPlugin>
+
 namespace Akonadi
 {
 class AbstractDifferencesReporter;
