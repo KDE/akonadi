@@ -211,3 +211,25 @@ install(
     COMPONENT Devel
 )
 ecm_generate_qdoc(KPim6AkonadiAgentBase akonadi-agentbase.qdocconf)
+
+ecm_add_installed_library_check(KPim6AkonadiAgentBase
+    PACKAGE_NAME "KPim6Akonadi"
+    PACKAGE_VERSION ${PROJECT_VERSION}
+    PACKAGE_TARGET_NAMESPACE "KPim6::"
+)
+
+ecm_installed_library_check_include_strings(KPim6AkonadiAgentBase
+    HEADERS ${AkonadiAgentBase_CC_HEADERS}
+    PREFIX Akonadi
+)
+
+ecm_add_installed_library_check(KPim6AkonadiAgentWidgetBase
+    PACKAGE_NAME "KPim6Akonadi"
+    PACKAGE_VERSION ${PROJECT_VERSION}
+    PACKAGE_TARGET_NAMESPACE "KPim6::"
+)
+
+ecm_installed_library_check_include_strings(KPim6AkonadiAgentWidgetBase
+    HEADERS ${AkonadiAgentWidgetBase_CC_HEADERS}
+    PREFIX Akonadi
+)

@@ -50,3 +50,5 @@ ecm_generate_headers(shared_CC_HEADERS
 # public stuff to core
 install(FILES ${shared_HEADERS} DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}/akonadi COMPONENT Devel)
 install(FILES ${shared_CC_HEADERS} DESTINATION ${AkonadiCore_INSTALL_INCLUDEDIR}/Akonadi COMPONENT Devel)
+
+# TODO:; how to deploy ecm_add_installed_library_check with this kind of static lib?

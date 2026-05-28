@@ -504,3 +504,18 @@ install(
 
 install(FILES kcfg2dbus.xsl DESTINATION ${KDE_INSTALL_DATADIR_KF}/akonadi)
 ecm_generate_qdoc(KPim6AkonadiCore akonadi-core.qdocconf)
+
+ecm_add_installed_library_check(KPim6AkonadiCore
+    PACKAGE_NAME "KPim6Akonadi"
+    PACKAGE_VERSION ${PROJECT_VERSION}
+    PACKAGE_TARGET_NAMESPACE "KPim6::"
+)
+
+ecm_installed_library_check_include_strings(KPim6AkonadiCore
+    HEADERS
+        ${AkonadiCore_base_CC_HEADERS}
+        ${AkonadiCore_attributes_CC_HEADERS}
+        ${AkonadiCore_models_CC_HEADERS}
+        ${AkonadiCore_jobs_CC_HEADERS}
+    PREFIX Akonadi
+)

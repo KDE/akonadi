@@ -119,3 +119,14 @@ install(
 install(FILES ${AkonadiXml_CC_HEADERS} DESTINATION ${AkonadiXml_INSTALL_INCLUDEDIR}/Akonadi COMPONENT Devel)
 
 install(FILES akonadi-xml.xsd DESTINATION ${KDE_INSTALL_DATADIR_KF}/akonadi/)
+
+ecm_add_installed_library_check(KPim6AkonadiXml
+    PACKAGE_NAME "KPim6Akonadi"
+    PACKAGE_VERSION ${PROJECT_VERSION}
+    PACKAGE_TARGET_NAMESPACE "KPim6::"
+)
+
+ecm_installed_library_check_include_strings(KPim6AkonadiXml
+    HEADERS ${AkonadiXml_CC_HEADERS}
+    PREFIX Akonadi
+)

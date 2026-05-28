@@ -103,6 +103,7 @@ include(ECMQmlModule)
 include(ECMConfiguredInstall)
 include(ECMGenerateDBusServiceFile)
 include(ECMGenerateQDoc)
+include(ECMInstalledLibraryCheck)
 
 include(AkonadiMacros)
 

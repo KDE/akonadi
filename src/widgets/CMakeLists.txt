@@ -244,3 +244,14 @@ if(BUILD_DESIGNERPLUGIN)
     )
 endif()
 ecm_generate_qdoc(KPim6AkonadiWidgets akonadi-widgets.qdocconf)
+
+ecm_add_installed_library_check(KPim6AkonadiWidgets
+    PACKAGE_NAME "KPim6Akonadi"
+    PACKAGE_VERSION ${PROJECT_VERSION}
+    PACKAGE_TARGET_NAMESPACE "KPim6::"
+)
+
+ecm_installed_library_check_include_strings(KPim6AkonadiWidgets
+    HEADERS ${AkonadiWidgets_CC_HEADERS}
+    PREFIX Akonadi
+)
