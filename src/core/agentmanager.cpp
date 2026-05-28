@@ -9,6 +9,7 @@
 
 #include "agentinstance_p.h"
 #include "agenttype_p.h"
+#include "akonadicore_debug.h"
 #include "collection.h"
 #include "servermanager.h"
 #include <QDBusConnection>
@@ -311,10 +312,16 @@ AgentInstance AgentManagerPrivate::fillAgentInstanceLight(const QString &identif
     AgentInstance instance;
 
     const QString agentTypeIdentifier = mManager->agentInstanceType(identifier);
-    Q_ASSERT_X(mTypes.contains(agentTypeIdentifier), "fillAgentInstanceLight", "Requests non-existing agent type");
+    // If akonadiserver isn't running properly agentTypeIdentifier will be empty.
+    if (!agentTypeIdentifier.isEmpty()) {
+        Q_ASSERT_X(mTypes.contains(agentTypeIdentifier), "fillAgentInstanceLight", "Requests non-existing agent type");
 
-    instance.d->mType = mTypes.value(agentTypeIdentifier);
-    instance.d->mIdentifier = identifier;
+        instance.d->mType = mTypes.value(agentTypeIdentifier);
+        instance.d->mIdentifier = identifier;
+    } else {
+        qCWarning(AKONADICORE_LOG) << "An empty agent instance for identifier " << identifier
+                                   << " was encountered indicating that the Akonadi server is not operational. Returning an invalid instance.";
+    }
 
     return instance;
 }
