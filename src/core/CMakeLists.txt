@@ -454,6 +454,7 @@ target_link_libraries(
     KPim6AkonadiCore
     PUBLIC
         KF6::CoreAddons # for KJob
+        KF6::ConfigCore # for KSharedConfig
         KF6::ItemModels
         Qt::Gui # for QColor
         KPim6::AkonadiPrivate
@@ -461,7 +462,6 @@ target_link_libraries(
         Qt::Network
         KF6::I18n
         KF6::IconThemes
-        KF6::ConfigCore
         akonadi_shared
 )
 
