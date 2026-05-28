@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <QtClassHelperMacros>
+
 namespace Akonadi
 {
 /**
