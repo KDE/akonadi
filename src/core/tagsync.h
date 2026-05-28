@@ -8,7 +8,7 @@
 #include "akonadicore_export.h"
 
 #include "item.h"
-#include "jobs/job.h"
+#include "job.h"
 #include "tag.h"
 
 namespace Akonadi
