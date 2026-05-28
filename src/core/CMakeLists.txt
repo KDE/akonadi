@@ -447,7 +447,7 @@ target_include_directories(
     PUBLIC
         "$<BUILD_INTERFACE:${Akonadi_BINARY_DIR};${Akonadi_SOURCE_DIR}/src/core/jobs;${Akonadi_SOURCE_DIR}/src/core/models;${Akonadi_SOURCE_DIR}/src/core/attributes>"
 )
-
+target_compile_features(KPim6AkonadiCore PUBLIC cxx_std_20)
 kde_target_enable_exceptions(KPim6AkonadiCore PUBLIC)
 
 target_link_libraries(
