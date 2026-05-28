@@ -15,6 +15,7 @@ find_dependency(
     ECM
     "@KF_MIN_VERSION@"
 )
+list(APPEND CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 find_dependency(
     KF6Config
     "@KF_MIN_VERSION@"
