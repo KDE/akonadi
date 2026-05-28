@@ -16,6 +16,9 @@ set(CMAKE_MODULE_PATH
     ${ECM_MODULE_PATH}
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules
 )
+if(${ECM_VERSION} VERSION_LESS 6.30)
+    list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ecmcopy)
+endif()
 
 include(KDEInstallDirs)
 include(KDECMakeSettings)
@@ -106,6 +109,7 @@ include(ECMQmlModule)
 include(ECMConfiguredInstall)
 include(ECMGenerateDBusServiceFile)
 include(ECMGenerateQDoc)
+include(ECMInstalledLibraryCheck)
 
 include(AkonadiMacros)
 

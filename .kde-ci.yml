@@ -36,3 +36,4 @@ Options:
  run-qmllint: true
  require-passing-tests-on: ['Linux']
  enable-lsan: True
+ run-installed-library-check: True
