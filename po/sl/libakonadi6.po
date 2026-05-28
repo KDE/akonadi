@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-27 00:45+0000\n"
-"PO-Revision-Date: 2026-05-06 06:39+0200\n"
+"PO-Revision-Date: 2026-05-27 06:12+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -2614,25 +2614,22 @@ msgid "&Unsubscribe"
 msgstr "Odjavi naročnino"
 
 #: widgets/tageditwidget.cpp:123
-#, fuzzy, kde-format
-#| msgid "Failed to create a new tag"
+#, kde-format
 msgctxt "@info"
 msgid "Failed to create new tag %1: %2"
-msgstr "Ni bilo mogoče ustvariti nove oznake"
+msgstr "Ni bilo mogoče ustvariti nove oznake %1: %2"
 
 #: widgets/tageditwidget.cpp:130
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully added"
-msgstr ""
+msgstr "Oznaka %1 je bila uspešno dodana"
 
 #: widgets/tageditwidget.cpp:174
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Delete Tag  <resource>%1</resource>"
-msgstr "Ali resnično želite odstraniti oznako <resource>%1</resource>?"
+msgstr "Odstrani oznako  <resource>%1</resource>"
 
 #: widgets/tageditwidget.cpp:176
 #, kde-kuit-format
@@ -2641,6 +2638,8 @@ msgid ""
 "Press this button to show a dialog that asks permission to remove the "
 "<resource>%1</resource> tag from Akonadi."
 msgstr ""
+"Pritisnite ta gumb, da prikažete pogovorno okno, ki zahteva dovoljenje za "
+"odstranitev oznake <resource>%1</resource> iz Akonadija."
 
 #: widgets/tageditwidget.cpp:184
 #, kde-kuit-format
@@ -2655,17 +2654,16 @@ msgid "Delete Tag"
 msgstr "Izbriši oznako"
 
 #: widgets/tageditwidget.cpp:196
-#, fuzzy, kde-format
-#| msgid "Failed to create tag."
+#, kde-format
 msgctxt "@info"
 msgid "Failed to delete tag %1: %2"
-msgstr "Ni bilo mogoče ustvariti oznake."
+msgstr "Ni bilo mogoče zbrisati oznake %1: %2"
 
 #: widgets/tageditwidget.cpp:200
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully removed"
-msgstr ""
+msgstr "Oznaka %1 uspešno odstranjena"
 
 #: widgets/tageditwidget.cpp:227
 #, kde-format
@@ -2683,7 +2681,7 @@ msgstr "Izberite oznake, ki naj bodo uveljavljene."
 #: widgets/tageditwidget.ui:55
 #, kde-format
 msgid "Enter the name for a new tag"
-msgstr ""
+msgstr "Vnesite ime za novo oznako"
 
 #. i18n: ectx: property (whatsThis), widget (QLineEdit, newTagEdit)
 #: widgets/tageditwidget.ui:58
@@ -2692,13 +2690,14 @@ msgid ""
 "To create and select a new tag, enter a name for the new tag and then press "
 "the \"Create new tag\" button."
 msgstr ""
+"Če želite ustvariti in izbrati novo oznako, vnesite ime za novo oznako in "
+"nato pritisnite gumb \"Ustvari novo oznako\""
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:68
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgid "Create and select a new tag"
-msgstr "Ustvari novo oznako"
+msgstr "Ustvari in izberi novo oznako"
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:71
@@ -2707,6 +2706,8 @@ msgid ""
 "Press this button to create a new tag with the name specified in the "
 "adjacent line editor.  The new tag is automatically selected."
 msgstr ""
+"Pritisnite ta gumb, da ustvarite novo oznako z imenom, določenim v sosednjem "
+"urejevalniku vrstic. Nova oznaka je samodejno izbrana."
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:74

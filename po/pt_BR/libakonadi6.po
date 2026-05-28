@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-27 00:45+0000\n"
-"PO-Revision-Date: 2026-05-06 09:13-0300\n"
+"PO-Revision-Date: 2026-05-27 06:37-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 26.04.0\n"
+"X-Generator: Lokalize 26.04.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -423,7 +423,7 @@ msgstr "Expirou o tempo-limite para obter o bloqueio."
 #: core/jobs/tagcreatejob.cpp:49
 #, kde-format
 msgid "Failed to create tag."
-msgstr "Ocorreu uma falha ao criar a marca."
+msgstr "Ocorreu uma falha ao criar a etiqueta."
 
 #: core/jobs/trashjob.cpp:155
 #, kde-format
@@ -575,7 +575,7 @@ msgstr "Tamanho"
 #: core/models/tagmodel.cpp:64
 #, kde-format
 msgid "Tag"
-msgstr "Marca"
+msgstr "Etiqueta"
 
 #: core/partfetcher.cpp:49
 #, kde-format
@@ -2584,25 +2584,22 @@ msgid "&Unsubscribe"
 msgstr "&Cancelar inscrição"
 
 #: widgets/tageditwidget.cpp:123
-#, fuzzy, kde-format
-#| msgid "Failed to create a new tag"
+#, kde-format
 msgctxt "@info"
 msgid "Failed to create new tag %1: %2"
-msgstr "Ocorreu uma falha ao criar uma nova etiqueta"
+msgstr "Ocorreu uma falha ao criar a nova etiqueta %1:%2"
 
 #: widgets/tageditwidget.cpp:130
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully added"
-msgstr ""
+msgstr "A etiqueta %1 foi adicionada com sucesso"
 
 #: widgets/tageditwidget.cpp:174
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Delete Tag  <resource>%1</resource>"
-msgstr "Deseja realmente remover a etiqueta <resource>%1</resource>?"
+msgstr "Excluir a etiqueta <resource>%1</resource>"
 
 #: widgets/tageditwidget.cpp:176
 #, kde-kuit-format
@@ -2611,6 +2608,8 @@ msgid ""
 "Press this button to show a dialog that asks permission to remove the "
 "<resource>%1</resource> tag from Akonadi."
 msgstr ""
+"Pressione este botão para exibir uma caixa de diálogo que solicita permissão "
+"para remover a etiqueta <resource>%1</resource> do Akonadi."
 
 #: widgets/tageditwidget.cpp:184
 #, kde-kuit-format
@@ -2625,17 +2624,16 @@ msgid "Delete Tag"
 msgstr "Excluir etiqueta"
 
 #: widgets/tageditwidget.cpp:196
-#, fuzzy, kde-format
-#| msgid "Failed to create tag."
+#, kde-format
 msgctxt "@info"
 msgid "Failed to delete tag %1: %2"
-msgstr "Ocorreu uma falha ao criar a marca."
+msgstr "Ocorreu uma falha ao excluir a etiqueta %1: %2"
 
 #: widgets/tageditwidget.cpp:200
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully removed"
-msgstr ""
+msgstr "A etiqueta %1 foi removida com sucesso"
 
 #: widgets/tageditwidget.cpp:227
 #, kde-format
@@ -2653,7 +2651,7 @@ msgstr "Selecionar as etiquetas que devem ser aplicadas."
 #: widgets/tageditwidget.ui:55
 #, kde-format
 msgid "Enter the name for a new tag"
-msgstr ""
+msgstr "Digite o nome para uma nova etiqueta"
 
 #. i18n: ectx: property (whatsThis), widget (QLineEdit, newTagEdit)
 #: widgets/tageditwidget.ui:58
@@ -2662,13 +2660,14 @@ msgid ""
 "To create and select a new tag, enter a name for the new tag and then press "
 "the \"Create new tag\" button."
 msgstr ""
+"Para criar e selecionar uma nova etiqueta, insira um nome para a nova "
+"etiqueta e pressione o botão \"Criar nova etiqueta\"."
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:68
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgid "Create and select a new tag"
-msgstr "Criar nova etiqueta"
+msgstr "Criar e selecionar uma nova etiqueta"
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:71
@@ -2677,6 +2676,8 @@ msgid ""
 "Press this button to create a new tag with the name specified in the "
 "adjacent line editor.  The new tag is automatically selected."
 msgstr ""
+"Pressione este botão para criar uma nova etiqueta com o nome especificado no "
+"editor de linha adjacente. A nova etiqueta será selecionada automaticamente."
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:74

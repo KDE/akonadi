@@ -4,24 +4,24 @@
 #
 # SPDX-FileCopyrightText: 2007 Enrique Matias Sanchez (aka Quique) <cronopios@gmail.com>
 # SPDX-FileCopyrightText: 2008 Santi <santi@kde-es.org>
-# SPDX-FileCopyrightText: 2008, 2009 Dario Andres Rodriguez <andresbajotierra@gmail.com>
+# SPDX-FileCopyrightText: 2008-2009 Dario Andres Rodriguez <andresbajotierra@gmail.com>
 # SPDX-FileCopyrightText: 2009, 2011, 2019-2026 Eloy Cuadra <ecuadra@eloihr.net>
-# SPDX-FileCopyrightText: 2009, 2010, 2011 Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>
-# SPDX-FileCopyrightText: 2009, 2010 Adrián Martínez <sfxgt3@gmail.com>
-# SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019 Javier Vinal <fjvinal@gmail.com>
+# SPDX-FileCopyrightText: 2009-2011 Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>
+# SPDX-FileCopyrightText: 2009-2010 Adrián Martínez <sfxgt3@gmail.com>
+# SPDX-FileCopyrightText: 2011-2019 Javier Vinal <fjvinal@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-27 00:45+0000\n"
-"PO-Revision-Date: 2026-05-07 00:02+0100\n"
+"PO-Revision-Date: 2026-05-27 11:24+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 26.04.0\n"
+"X-Generator: Lokalize 26.04.1\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -2588,25 +2588,22 @@ msgid "&Unsubscribe"
 msgstr "&Darse de baja"
 
 #: widgets/tageditwidget.cpp:123
-#, fuzzy, kde-format
-#| msgid "Failed to create a new tag"
+#, kde-format
 msgctxt "@info"
 msgid "Failed to create new tag %1: %2"
-msgstr "Ha fallado al crear una nueva etiqueta"
+msgstr "No se ha podido crear la nueva etiqueta %1: %2"
 
 #: widgets/tageditwidget.cpp:130
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully added"
-msgstr ""
+msgstr "Etiqueta %1 añadida correctamente"
 
 #: widgets/tageditwidget.cpp:174
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Delete Tag  <resource>%1</resource>"
-msgstr "¿Seguro qué desea eliminar la etiqueta <resource>%1</resource>?"
+msgstr "Borrar etiqueta <resource>%1</resource>"
 
 #: widgets/tageditwidget.cpp:176
 #, kde-kuit-format
@@ -2615,6 +2612,8 @@ msgid ""
 "Press this button to show a dialog that asks permission to remove the "
 "<resource>%1</resource> tag from Akonadi."
 msgstr ""
+"Pulse este botón para mostrar un diálogo que solicite permiso para eliminar "
+"la etiqueta <resource>%1</resource> de Akonadi."
 
 #: widgets/tageditwidget.cpp:184
 #, kde-kuit-format
@@ -2629,17 +2628,16 @@ msgid "Delete Tag"
 msgstr "Borrar etiqueta"
 
 #: widgets/tageditwidget.cpp:196
-#, fuzzy, kde-format
-#| msgid "Failed to create tag."
+#, kde-format
 msgctxt "@info"
 msgid "Failed to delete tag %1: %2"
-msgstr "Ha fallado al crear etiqueta."
+msgstr "No se ha podido borrar la etiqueta %1: %2"
 
 #: widgets/tageditwidget.cpp:200
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully removed"
-msgstr ""
+msgstr "Etiqueta %1 eliminada correctamente"
 
 #: widgets/tageditwidget.cpp:227
 #, kde-format
@@ -2657,7 +2655,7 @@ msgstr "Seleccione las etiquetas que se deben aplicar."
 #: widgets/tageditwidget.ui:55
 #, kde-format
 msgid "Enter the name for a new tag"
-msgstr ""
+msgstr "Introduzca el nombre de la nueva etiqueta"
 
 #. i18n: ectx: property (whatsThis), widget (QLineEdit, newTagEdit)
 #: widgets/tageditwidget.ui:58
@@ -2666,13 +2664,14 @@ msgid ""
 "To create and select a new tag, enter a name for the new tag and then press "
 "the \"Create new tag\" button."
 msgstr ""
+"Pare crear y selecciona una nueva etiqueta, introduzca el nombre de la "
+"etiqueta y pulsa el botón «Crear nueva etiqueta»."
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:68
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgid "Create and select a new tag"
-msgstr "Crear nueva etiqueta"
+msgstr "Crear y seleccionar una nueva etiqueta"
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:71
@@ -2681,6 +2680,8 @@ msgid ""
 "Press this button to create a new tag with the name specified in the "
 "adjacent line editor.  The new tag is automatically selected."
 msgstr ""
+"Pulse este botón para crear una nueva etiqueta con el nombre indicado en la "
+"línea de edición adyacente. La nueva etiqueta se selecciona automáticamente."
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:74
@@ -2791,34 +2792,3 @@ msgstr "No es posible analizar el archivo de datos «%1»"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "No es posible encontrar la colección %1"
-
-#~ msgctxt "@title:window"
-#~ msgid "An Error Occurred while Creating a New Tag"
-#~ msgstr "Ha ocurrido un error al crear una nueva etiqueta"
-
-#~ msgid "&New Agent Instance..."
-#~ msgstr "&Nueva instancia de agente…"
-
-#~ msgid "&Delete Agent Instance"
-#~ msgstr "&Borrar instancia de agente"
-
-#~ msgid "&Configure Agent Instance"
-#~ msgstr "&Configurar instancia de agente"
-
-#~ msgctxt "@title:window"
-#~ msgid "New Agent Instance"
-#~ msgstr "Nueva instancia de agente"
-
-#~ msgid "Could not create agent instance: %1"
-#~ msgstr "No se ha podido crear la instancia del agente: %1"
-
-#~ msgctxt "@title:window"
-#~ msgid "Agent Instance Creation Failed"
-#~ msgstr "La creación de la instancia del agente ha fallado"
-
-#~ msgctxt "@title:window"
-#~ msgid "Delete Agent Instance?"
-#~ msgstr "¿Borrar instancia de agente?"
-
-#~ msgid "Do you really want to delete the selected agent instance?"
-#~ msgstr "¿Seguro qué desea borrar la instancia de agente seleccionada?"

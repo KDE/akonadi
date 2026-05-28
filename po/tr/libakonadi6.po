@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-27 00:45+0000\n"
-"PO-Revision-Date: 2026-05-06 13:15+0300\n"
+"PO-Revision-Date: 2026-05-27 12:58+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -2551,25 +2551,22 @@ msgid "&Unsubscribe"
 msgstr "Abonelik&ten Ayrıl"
 
 #: widgets/tageditwidget.cpp:123
-#, fuzzy, kde-format
-#| msgid "Failed to create a new tag"
+#, kde-format
 msgctxt "@info"
 msgid "Failed to create new tag %1: %2"
-msgstr "Yeni künye oluşturulamadı"
+msgstr "Yeni %1 künyesi oluşturulamadı: %2"
 
 #: widgets/tageditwidget.cpp:130
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully added"
-msgstr ""
+msgstr "%1 künyesi başarıyla eklendi"
 
 #: widgets/tageditwidget.cpp:174
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Delete Tag  <resource>%1</resource>"
-msgstr "<resource>%1</resource> künyesini silmeyi gerçekten istiyor musunuz?"
+msgstr "<resource>%1</resource> künyesini sil"
 
 #: widgets/tageditwidget.cpp:176
 #, kde-kuit-format
@@ -2578,6 +2575,8 @@ msgid ""
 "Press this button to show a dialog that asks permission to remove the "
 "<resource>%1</resource> tag from Akonadi."
 msgstr ""
+"Akonadi’den <resource>%1</resource> ögesini kaldırmak için izin isteyen bir "
+"iletişim kutusu görüntülemek üzere bu düğmeye basın."
 
 #: widgets/tageditwidget.cpp:184
 #, kde-kuit-format
@@ -2592,17 +2591,16 @@ msgid "Delete Tag"
 msgstr "Künyeyi Sil"
 
 #: widgets/tageditwidget.cpp:196
-#, fuzzy, kde-format
-#| msgid "Failed to create tag."
+#, kde-format
 msgctxt "@info"
 msgid "Failed to delete tag %1: %2"
-msgstr "Künye oluşturulamadı."
+msgstr "%1 künyesi silinemedi: %2"
 
 #: widgets/tageditwidget.cpp:200
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully removed"
-msgstr ""
+msgstr "%1 künyesi başarıyla kaldırıldı"
 
 #: widgets/tageditwidget.cpp:227
 #, kde-format
@@ -2620,7 +2618,7 @@ msgstr "Uygulanacak künyeleri seçin."
 #: widgets/tageditwidget.ui:55
 #, kde-format
 msgid "Enter the name for a new tag"
-msgstr ""
+msgstr "Yeni künye için bir ad girin"
 
 #. i18n: ectx: property (whatsThis), widget (QLineEdit, newTagEdit)
 #: widgets/tageditwidget.ui:58
@@ -2629,13 +2627,14 @@ msgid ""
 "To create and select a new tag, enter a name for the new tag and then press "
 "the \"Create new tag\" button."
 msgstr ""
+"Yeni bir künye oluşturmak ve seçmek üzere yeni künye için bir ad girin ve "
+"ardından “Yeni Künye Oluştur” düğmesine basın."
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:68
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgid "Create and select a new tag"
-msgstr "Yeni Künye Oluştur"
+msgstr "Yeni künye oluştur ve onu seç"
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:71
@@ -2644,6 +2643,8 @@ msgid ""
 "Press this button to create a new tag with the name specified in the "
 "adjacent line editor.  The new tag is automatically selected."
 msgstr ""
+"Yan taraftaki satır düzenleyicisinde belirtilen adla yeni bir künye "
+"oluşturmak için bu düğmeye basın. Yeni künye kendiliğinden seçilir."
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:74

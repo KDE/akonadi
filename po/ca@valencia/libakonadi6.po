@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-27 00:45+0000\n"
-"PO-Revision-Date: 2026-05-06 09:51+0200\n"
+"PO-Revision-Date: 2026-05-27 09:14+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -2587,25 +2587,22 @@ msgid "&Unsubscribe"
 msgstr "Cancel·la la s&ubscripció"
 
 #: widgets/tageditwidget.cpp:123
-#, fuzzy, kde-format
-#| msgid "Failed to create a new tag"
+#, kde-format
 msgctxt "@info"
 msgid "Failed to create new tag %1: %2"
-msgstr "Ha fallat mentre es creava una etiqueta nova"
+msgstr "Ha fallat mentre es creava l'etiqueta nova %1: %2"
 
 #: widgets/tageditwidget.cpp:130
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully added"
-msgstr ""
+msgstr "L'etiqueta %1 s'ha afegit correctament"
 
 #: widgets/tageditwidget.cpp:174
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Delete Tag  <resource>%1</resource>"
-msgstr "Segur que voleu eliminar l'etiqueta <resource>%1</resource>?"
+msgstr "Suprimix l'etiqueta <resource>%1</resource>"
 
 #: widgets/tageditwidget.cpp:176
 #, kde-kuit-format
@@ -2614,6 +2611,8 @@ msgid ""
 "Press this button to show a dialog that asks permission to remove the "
 "<resource>%1</resource> tag from Akonadi."
 msgstr ""
+"Premeu este botó per a mostrar un diàleg que demane permís per a eliminar "
+"l'etiqueta <resource>%1</resource> d'Akonadi."
 
 #: widgets/tageditwidget.cpp:184
 #, kde-kuit-format
@@ -2628,17 +2627,16 @@ msgid "Delete Tag"
 msgstr "Suprimix l'etiqueta"
 
 #: widgets/tageditwidget.cpp:196
-#, fuzzy, kde-format
-#| msgid "Failed to create tag."
+#, kde-format
 msgctxt "@info"
 msgid "Failed to delete tag %1: %2"
-msgstr "Ha fallat mentre es creava l'etiqueta."
+msgstr "Ha fallat mentre se suprimia l'etiqueta %1: %2"
 
 #: widgets/tageditwidget.cpp:200
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully removed"
-msgstr ""
+msgstr "L'etiqueta %1 s'ha eliminat correctament"
 
 #: widgets/tageditwidget.cpp:227
 #, kde-format
@@ -2656,7 +2654,7 @@ msgstr "Tria les etiquetes que s'hauran d'aplicar."
 #: widgets/tageditwidget.ui:55
 #, kde-format
 msgid "Enter the name for a new tag"
-msgstr ""
+msgstr "Introduïu el nom de l'etiqueta nova"
 
 #. i18n: ectx: property (whatsThis), widget (QLineEdit, newTagEdit)
 #: widgets/tageditwidget.ui:58
@@ -2665,13 +2663,14 @@ msgid ""
 "To create and select a new tag, enter a name for the new tag and then press "
 "the \"Create new tag\" button."
 msgstr ""
+"Per a crear i triar una etiqueta nova, introduïu un nom de l'etiqueta nova i "
+"premeu el botó «Crea una etiqueta nova»."
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:68
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgid "Create and select a new tag"
-msgstr "Crea una etiqueta nova"
+msgstr "Crea i tria una etiqueta nova"
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:71
@@ -2680,6 +2679,8 @@ msgid ""
 "Press this button to create a new tag with the name specified in the "
 "adjacent line editor.  The new tag is automatically selected."
 msgstr ""
+"Premeu este botó per a crear una etiqueta nova amb el nom especificat a "
+"l'editor de línia adjacent. L'etiqueta nova se selecciona automàticament."
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:74
@@ -2790,34 +2791,3 @@ msgstr "No s'ha pogut analitzar el fitxer de dades: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "No s'ha pogut trobar la col·lecció %1"
-
-#~ msgctxt "@title:window"
-#~ msgid "An Error Occurred while Creating a New Tag"
-#~ msgstr "S'ha produït un error mentre es creava una etiqueta nova"
-
-#~ msgid "&New Agent Instance..."
-#~ msgstr "Instància &nova de l'agent…"
-
-#~ msgid "&Delete Agent Instance"
-#~ msgstr "Sup&rimix la instància de l'agent"
-
-#~ msgid "&Configure Agent Instance"
-#~ msgstr "&Configura la instància de l'agent"
-
-#~ msgctxt "@title:window"
-#~ msgid "New Agent Instance"
-#~ msgstr "Instància nova de l'agent"
-
-#~ msgid "Could not create agent instance: %1"
-#~ msgstr "No s'ha pogut crear la instància de l'agent: %1"
-
-#~ msgctxt "@title:window"
-#~ msgid "Agent Instance Creation Failed"
-#~ msgstr "La creació de la instància de l'agent ha fallat"
-
-#~ msgctxt "@title:window"
-#~ msgid "Delete Agent Instance?"
-#~ msgstr "Voleu suprimir la instància de l'agent?"
-
-#~ msgid "Do you really want to delete the selected agent instance?"
-#~ msgstr "Segur que voleu suprimir la instància seleccionada de l'agent?"

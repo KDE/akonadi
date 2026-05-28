@@ -11,14 +11,14 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-27 00:45+0000\n"
-"PO-Revision-Date: 2026-05-06 16:53+0200\n"
+"PO-Revision-Date: 2026-05-27 12:02+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 26.04.0\n"
+"X-Generator: Lokalize 26.04.1\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -26,7 +26,7 @@ msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
 "Bram Schoenmakers - 2007; 2008,Rinse de Vries - 2007; 2008,Antoon Tolboom - "
-"2008,Freek de Kruijf - 2009 t/m 2025"
+"2008,Freek de Kruijf - 2009 t/m 2026"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
@@ -2586,25 +2586,22 @@ msgid "&Unsubscribe"
 msgstr "&Uitschrijven"
 
 #: widgets/tageditwidget.cpp:123
-#, fuzzy, kde-format
-#| msgid "Failed to create a new tag"
+#, kde-format
 msgctxt "@info"
 msgid "Failed to create new tag %1: %2"
-msgstr "Een nieuwe tag aanmaken is mislukt"
+msgstr "Een nieuwe tag %1 aanmaken is mislukt: %2"
 
 #: widgets/tageditwidget.cpp:130
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully added"
-msgstr ""
+msgstr "Tag %1 is met succes toegevoegd"
 
 #: widgets/tageditwidget.cpp:174
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Delete Tag  <resource>%1</resource>"
-msgstr "Wilt u de tag <resource>%1</resource> verwijderen?"
+msgstr "Tag <resource>%1</resource> verwijderen"
 
 #: widgets/tageditwidget.cpp:176
 #, kde-kuit-format
@@ -2613,6 +2610,8 @@ msgid ""
 "Press this button to show a dialog that asks permission to remove the "
 "<resource>%1</resource> tag from Akonadi."
 msgstr ""
+"Druk op deze knop om een ​​dialoogvenster te openen waarin u toestemming wordt "
+"gevraagd om de tag <resource>%1</resource> uit Akonadi te verwijderen."
 
 #: widgets/tageditwidget.cpp:184
 #, kde-kuit-format
@@ -2627,17 +2626,16 @@ msgid "Delete Tag"
 msgstr "Tag verwijderen"
 
 #: widgets/tageditwidget.cpp:196
-#, fuzzy, kde-format
-#| msgid "Failed to create tag."
+#, kde-format
 msgctxt "@info"
 msgid "Failed to delete tag %1: %2"
-msgstr "Een tag aanmaken is mislukt."
+msgstr "Tag %1 verwijderen is mislukt: %2"
 
 #: widgets/tageditwidget.cpp:200
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully removed"
-msgstr ""
+msgstr "Tag %1 is met succes verwijderd"
 
 #: widgets/tageditwidget.cpp:227
 #, kde-format
@@ -2655,7 +2653,7 @@ msgstr "Tags selecteren om toegepast te worden."
 #: widgets/tageditwidget.ui:55
 #, kde-format
 msgid "Enter the name for a new tag"
-msgstr ""
+msgstr "Voer de naam voor en nieuwe tag in"
 
 #. i18n: ectx: property (whatsThis), widget (QLineEdit, newTagEdit)
 #: widgets/tageditwidget.ui:58
@@ -2664,13 +2662,14 @@ msgid ""
 "To create and select a new tag, enter a name for the new tag and then press "
 "the \"Create new tag\" button."
 msgstr ""
+"Om een ​​nieuwe tag aan te maken en te selecteren, voert u een naam voor de "
+"nieuwe tag in en drukt u vervolgens op de knop 'Nieuwe tag aanmaken'."
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:68
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgid "Create and select a new tag"
-msgstr "Nieuwe tag aanmaken"
+msgstr "Maak een nieuwe tag aan en selecteer deze"
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:71
@@ -2679,6 +2678,8 @@ msgid ""
 "Press this button to create a new tag with the name specified in the "
 "adjacent line editor.  The new tag is automatically selected."
 msgstr ""
+"Druk op deze knop om een ​​nieuwe tag te maken met de naam die is opgegeven in "
+"de bijbehorende bewerker. De nieuwe tag wordt automatisch geselecteerd."
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:74
