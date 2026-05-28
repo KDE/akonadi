@@ -9,6 +9,8 @@
 
 #include <QtClassHelperMacros>
 
+class QString;
+
 namespace Akonadi
 {
 /**
