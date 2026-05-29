@@ -2743,9 +2743,3 @@ msgstr "Не може да се анализира файл с данни: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Не може да се намери колекция %1"
-
-#~ msgid "There is currently no account configured."
-#~ msgstr "Понастоящем няма конфигуриран профил."
-
-#~ msgid "Accounts integration is not supported"
-#~ msgstr "Интегрирането на профили не се поддържа"
