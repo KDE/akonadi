@@ -1644,7 +1644,7 @@ msgid ""
 "Result:\n"
 "%2"
 msgstr ""
-"成功找到可用的 Akonadi 服务器控制程序“%1”。\n"
+"已找到用于控制 Akonadi 服务器的程序“%1”，且成功执行。\n"
 "结果：\n"
 "%2"
 
@@ -1662,10 +1662,10 @@ msgid ""
 "%2\n"
 "Make sure the Akonadi server is installed correctly."
 msgstr ""
-"已经找到 Akonadi 服务器控制程序“%1”，但无法成功执行。\n"
+"已找到用于控制 Akonadi 服务器的程序“%1”，但无法成功执行。\n"
 "结果：\n"
 "%2\n"
-"请确认您已经正确安装了 Akonadi 服务器。"
+"请确保 Akonadi 服务器已正确安装。"
 
 #: widgets/selftestdialog.cpp:416
 #, kde-format
@@ -2463,25 +2463,22 @@ msgid "&Unsubscribe"
 msgstr "退订(&U)"
 
 #: widgets/tageditwidget.cpp:123
-#, fuzzy, kde-format
-#| msgid "Failed to create a new tag"
+#, kde-format
 msgctxt "@info"
 msgid "Failed to create new tag %1: %2"
-msgstr "新建标签失败"
+msgstr "创建新标签 %1 失败：%2"
 
 #: widgets/tageditwidget.cpp:130
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully added"
-msgstr ""
+msgstr "标签 %1 成功添加"
 
 #: widgets/tageditwidget.cpp:174
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Delete Tag  <resource>%1</resource>"
-msgstr "您确定要删除标签 <resource>%1</resource>吗？"
+msgstr "删除标签  <resource>%1</resource>"
 
 #: widgets/tageditwidget.cpp:176
 #, kde-kuit-format
@@ -2490,6 +2487,8 @@ msgid ""
 "Press this button to show a dialog that asks permission to remove the "
 "<resource>%1</resource> tag from Akonadi."
 msgstr ""
+"点击此按钮将弹出一个对话框，请求允许从 Akonadi 中移除 <resource>%1</"
+"resource> 标签。"
 
 #: widgets/tageditwidget.cpp:184
 #, kde-kuit-format
@@ -2504,17 +2503,16 @@ msgid "Delete Tag"
 msgstr "删除标签"
 
 #: widgets/tageditwidget.cpp:196
-#, fuzzy, kde-format
-#| msgid "Failed to create tag."
+#, kde-format
 msgctxt "@info"
 msgid "Failed to delete tag %1: %2"
-msgstr "无法创建标签。"
+msgstr "删除 %1 标签失败：%2"
 
 #: widgets/tageditwidget.cpp:200
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully removed"
-msgstr ""
+msgstr "标签 %1 成功移除"
 
 #: widgets/tageditwidget.cpp:227
 #, kde-format
@@ -2532,7 +2530,7 @@ msgstr "选择要应用的标签。"
 #: widgets/tageditwidget.ui:55
 #, kde-format
 msgid "Enter the name for a new tag"
-msgstr ""
+msgstr "输入新标签的名称"
 
 #. i18n: ectx: property (whatsThis), widget (QLineEdit, newTagEdit)
 #: widgets/tageditwidget.ui:58
@@ -2540,14 +2538,13 @@ msgstr ""
 msgid ""
 "To create and select a new tag, enter a name for the new tag and then press "
 "the \"Create new tag\" button."
-msgstr ""
+msgstr "要创建并选择一个新标签，请输入新标签的名称，然后点击“创建新标签”按钮。"
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:68
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgid "Create and select a new tag"
-msgstr "新建标签"
+msgstr "创建并选择一个新标签"
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:71
@@ -2556,6 +2553,8 @@ msgid ""
 "Press this button to create a new tag with the name specified in the "
 "adjacent line editor.  The new tag is automatically selected."
 msgstr ""
+"点击此按钮，程序将使用相邻行编辑器中指定的名称创建一个新标签。新标签将自动被"
+"选中。"
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:74
@@ -2666,7 +2665,3 @@ msgstr "无法解析数据文件：%1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "无法找到集合 %1"
-
-#~ msgctxt "@title:window"
-#~ msgid "An Error Occurred while Creating a New Tag"
-#~ msgstr "新建标签时发生错误"

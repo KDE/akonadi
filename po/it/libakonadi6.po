@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-27 00:45+0000\n"
-"PO-Revision-Date: 2026-05-06 18:20+0200\n"
+"PO-Revision-Date: 2026-05-27 15:12+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 26.04.0\n"
+"X-Generator: Lokalize 26.04.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -206,7 +206,7 @@ msgstr ""
 "  status         Mostra una panoramica dello stato del server Akonadi\n"
 "  instances      Elenca tutte le istanze Akonadi esistenti\n"
 "  vacuum         Stoccaggio interno sottovuoto (ATTENZIONE: richiede molto "
-"tempo espazio\n"
+"tempo e spazio\n"
 "                 disco!)\n"
 "   fsck           Controlla (e tenta di correggere) la coerenza "
 "dell'archiviazione interna\n"
@@ -735,7 +735,7 @@ msgstr "Aggiungi etichetta"
 #: selftest/main.cpp:19
 #, kde-format
 msgid "Akonadi Self Test"
-msgstr "Autodiagnostica di Akonadi"
+msgstr "Auto-diagnostica di Akonadi"
 
 #: selftest/main.cpp:21
 #, kde-format
@@ -2607,25 +2607,22 @@ msgid "&Unsubscribe"
 msgstr "Canc&ella sottoscrizione"
 
 #: widgets/tageditwidget.cpp:123
-#, fuzzy, kde-format
-#| msgid "Failed to create a new tag"
+#, kde-format
 msgctxt "@info"
 msgid "Failed to create new tag %1: %2"
-msgstr "Impossibile creare una nuova etichetta"
+msgstr "Creazione della nuova etichetta %1 non riuscita: %2"
 
 #: widgets/tageditwidget.cpp:130
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully added"
-msgstr ""
+msgstr "Etichetta %1 aggiunta correttamente"
 
 #: widgets/tageditwidget.cpp:174
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Delete Tag  <resource>%1</resource>"
-msgstr "Vuoi davvero eliminare l'etichetta <resource>%1</resource>?"
+msgstr "Elimina l'etichetta <resource>%1</resource>"
 
 #: widgets/tageditwidget.cpp:176
 #, kde-kuit-format
@@ -2634,6 +2631,9 @@ msgid ""
 "Press this button to show a dialog that asks permission to remove the "
 "<resource>%1</resource> tag from Akonadi."
 msgstr ""
+"Premi questo pulsante per visualizzare una finestra che richiede "
+"l'autorizzazione per rimuovere l'etichetta <resource>%1</resource> da "
+"Akonadi."
 
 #: widgets/tageditwidget.cpp:184
 #, kde-kuit-format
@@ -2648,17 +2648,16 @@ msgid "Delete Tag"
 msgstr "Elimina etichetta"
 
 #: widgets/tageditwidget.cpp:196
-#, fuzzy, kde-format
-#| msgid "Failed to create tag."
+#, kde-format
 msgctxt "@info"
 msgid "Failed to delete tag %1: %2"
-msgstr "Impossibile creare un'etichetta."
+msgstr "Eliminazione dell'etichetta %1 non riuscita: %2"
 
 #: widgets/tageditwidget.cpp:200
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully removed"
-msgstr ""
+msgstr "Etichetta %1 rimossa correttamente"
 
 #: widgets/tageditwidget.cpp:227
 #, kde-format
@@ -2676,7 +2675,7 @@ msgstr "Seleziona le etichette che dovrebbero essere applicate."
 #: widgets/tageditwidget.ui:55
 #, kde-format
 msgid "Enter the name for a new tag"
-msgstr ""
+msgstr "Digita il nome per una nuova etichetta"
 
 #. i18n: ectx: property (whatsThis), widget (QLineEdit, newTagEdit)
 #: widgets/tageditwidget.ui:58
@@ -2685,13 +2684,14 @@ msgid ""
 "To create and select a new tag, enter a name for the new tag and then press "
 "the \"Create new tag\" button."
 msgstr ""
+"Per creare e selezionare una nuova etichetta, digita un nome per la nuova "
+"etichetta e poi premi il pulsante «Crea nuova etichetta»."
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:68
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgid "Create and select a new tag"
-msgstr "Crea nuova etichetta"
+msgstr "Crea e seleziona una nuova etichetta"
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:71
@@ -2700,6 +2700,9 @@ msgid ""
 "Press this button to create a new tag with the name specified in the "
 "adjacent line editor.  The new tag is automatically selected."
 msgstr ""
+"Premi questo pulsante per creare una nuova etichetta con il nome specificato "
+"nell'editor di riga adiacente. a nuova etichetta sarà selezionata "
+"automaticamente."
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:74

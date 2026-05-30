@@ -2570,25 +2570,22 @@ msgid "&Unsubscribe"
 msgstr "Odhlásiť sa"
 
 #: widgets/tageditwidget.cpp:123
-#, fuzzy, kde-format
-#| msgid "Failed to create a new tag"
+#, kde-format
 msgctxt "@info"
 msgid "Failed to create new tag %1: %2"
-msgstr "Zlyhalo vytvorenie novej značky"
+msgstr "Zlyhalo vytvorenie novej značky %1: %2"
 
 #: widgets/tageditwidget.cpp:130
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully added"
-msgstr ""
+msgstr "Značka %1 bola úspešne pridaná"
 
 #: widgets/tageditwidget.cpp:174
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Delete Tag  <resource>%1</resource>"
-msgstr "Naozaj chcete odstrániť značku <resource>%1</resource>?"
+msgstr "Vymazať značku <resource>%1</resource>"
 
 #: widgets/tageditwidget.cpp:176
 #, kde-kuit-format
@@ -2597,6 +2594,8 @@ msgid ""
 "Press this button to show a dialog that asks permission to remove the "
 "<resource>%1</resource> tag from Akonadi."
 msgstr ""
+"Stlačením tohto tlačidla zobrazíte dialógové okno, ktoré žiada o povolenie "
+"odstrániť značku <resource>%1</resource> z Akonadi."
 
 #: widgets/tageditwidget.cpp:184
 #, kde-kuit-format
@@ -2611,17 +2610,16 @@ msgid "Delete Tag"
 msgstr "Vymazať značku"
 
 #: widgets/tageditwidget.cpp:196
-#, fuzzy, kde-format
-#| msgid "Failed to create tag."
+#, kde-format
 msgctxt "@info"
 msgid "Failed to delete tag %1: %2"
-msgstr "Zlyhalo vytvorenie značky."
+msgstr "Zlyhalo odstránenie značky %1: %2"
 
 #: widgets/tageditwidget.cpp:200
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully removed"
-msgstr ""
+msgstr "Značka %1 bola úspešne odstránená"
 
 #: widgets/tageditwidget.cpp:227
 #, kde-format
@@ -2639,7 +2637,7 @@ msgstr "Vyberte, ktoré značky majú byť použité."
 #: widgets/tageditwidget.ui:55
 #, kde-format
 msgid "Enter the name for a new tag"
-msgstr ""
+msgstr "Zadajte názov novej značky"
 
 #. i18n: ectx: property (whatsThis), widget (QLineEdit, newTagEdit)
 #: widgets/tageditwidget.ui:58
@@ -2648,13 +2646,14 @@ msgid ""
 "To create and select a new tag, enter a name for the new tag and then press "
 "the \"Create new tag\" button."
 msgstr ""
+"Ak chcete vytvoriť a vybrať novú značku, zadajte názov novej značky a potom "
+"stlačte tlačidlo „Vytvoriť novú značku\"."
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:68
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgid "Create and select a new tag"
-msgstr "Vytvoriť novú značku"
+msgstr "Vytvoriť a vybrať novú značku"
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:71
@@ -2663,6 +2662,8 @@ msgid ""
 "Press this button to create a new tag with the name specified in the "
 "adjacent line editor.  The new tag is automatically selected."
 msgstr ""
+"Stlačením tohto tlačidla vytvoríte novú značku s názvom zadaným v susednom "
+"textovom poli. Nová značka sa automaticky vyberie."
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:74
