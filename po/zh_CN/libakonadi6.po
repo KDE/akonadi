@@ -1674,7 +1674,7 @@ msgid ""
 "Result:\n"
 "%2"
 msgstr ""
-"成功找到可用的 Akonadi 服务器控制程序“%1”。\n"
+"已找到用于控制 Akonadi 服务器的程序“%1”，且成功执行。\n"
 "结果：\n"
 "%2"
 
@@ -1692,10 +1692,10 @@ msgid ""
 "%2\n"
 "Make sure the Akonadi server is installed correctly."
 msgstr ""
-"已经找到 Akonadi 服务器控制程序“%1”，但无法成功执行。\n"
+"已找到用于控制 Akonadi 服务器的程序“%1”，但无法成功执行。\n"
 "结果：\n"
 "%2\n"
-"请确认您已经正确安装了 Akonadi 服务器。"
+"请确保 Akonadi 服务器已正确安装。"
 
 #: widgets/selftestdialog.cpp:416
 #, kde-format
