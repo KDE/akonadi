@@ -123,13 +123,13 @@ void OnlineAccountsIntegration::slotAccountRemoved(const QDBusObjectPath &path)
     for (const QString &agentId : agents) {
         const auto serviceName = Akonadi::DBus::agentServiceName(agentId, Akonadi::DBus::Resource);
         org::freedesktop::Akonadi::Agent::Account iface(serviceName, u"/Account"_s, QDBusConnection::sessionBus());
-        QDBusPendingReply<QDBusObjectPath> reply = iface.accountId();
+        QDBusPendingReply<QString> reply = iface.accountId();
 
         if (!reply.isValid()) {
             continue;
         }
 
-        if (reply.value() == path) {
+        if (reply.value() == path.path()) {
             qCDebug(AKONADICONTROL_LOG) << "Removing agent" << agentId;
             mAgentManager.removeAgentInstance(agentId);
         }
