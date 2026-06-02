@@ -8,24 +8,25 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-27 00:45+0000\n"
-"PO-Revision-Date: 2013-09-08 07:05+0900\n"
-"Last-Translator: Gheyret Kenji <gheyret@gmail.com>\n"
+"PO-Revision-Date: 2026-05-28 16:51-0400\n"
+"Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
 "Language: ug\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.9\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "ئابدۇقادىر ئابلىز, غەيرەت كەنجى"
+msgstr "ئابدۇقادىر ئابلىز، غەيرەت كەنجى"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "sahran.ug@gmail.com,  gheyret@gmail.com"
+msgstr "sahranbay@gmail.com, gheyret@gmail.com"
 
 #: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
@@ -47,7 +48,7 @@ msgstr ""
 #: agentbase/agentbase.cpp:824
 #, kde-format
 msgid "Akonadi Agent"
-msgstr "Akonadi Agent"
+msgstr ""
 
 #: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:268
 #, kde-format
@@ -59,7 +60,7 @@ msgstr "تەييار"
 #, kde-format
 msgctxt "@info:status"
 msgid "Offline"
-msgstr "توردا يوق"
+msgstr "تورسىز"
 
 #: agentbase/agentbase_p.h:57
 #, kde-format
@@ -86,9 +87,7 @@ msgid "Resource identifier"
 msgstr ""
 
 #: agentbase/resourcebase.cpp:519
-#, fuzzy, kde-format
-#| msgctxt "@title application name"
-#| msgid "Akonadi Resource"
+#, kde-format
 msgid "Akonadi Resource"
 msgstr "Akonadi مەنبەسى"
 
@@ -166,10 +165,9 @@ msgid "Job canceled."
 msgstr ""
 
 #: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Control"
-msgstr "Akonadi Agent"
+msgstr ""
 
 #: akonadictl/main.cpp:220
 #, kde-format
@@ -198,7 +196,7 @@ msgstr ""
 #: akonadictl/main.cpp:241
 #, kde-format
 msgid "Command to execute"
-msgstr ""
+msgstr "ئىجرا قىلىدىغان بۇيرۇق"
 
 #: configdialog/main.cpp:23
 #, kde-format
@@ -231,10 +229,7 @@ msgid "No such agent found \"%1\""
 msgstr ""
 
 #: core/collection.cpp:220
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@info/plain Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
+#, kde-format
 msgctxt "Name for the folder containing searches"
 msgid "Search"
 msgstr "ئىزدە"
@@ -442,25 +437,22 @@ msgid "Name"
 msgstr "ئاتى"
 
 #: core/models/colorproxymodel.cpp:83
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Offline"
+#, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Offline)"
-msgstr "توردا يوق"
+msgstr ""
 
 #: core/models/colorproxymodel.cpp:86
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
-msgstr ""
+msgstr "%1 (كۆڭۈلدىكى)"
 
 #: core/models/entitytreemodel.cpp:206
-#, fuzzy, kde-format
-#| msgid "Loading..."
+#, kde-format
 msgctxt "@info:status"
 msgid "Loading..."
-msgstr "ئوقۇۋاتىدۇ…"
+msgstr "يۈكلەۋاتىدۇ…"
 
 #: core/models/entitytreemodel.cpp:497
 #, kde-format
@@ -518,7 +510,7 @@ msgstr ""
 #: core/models/statisticsproxymodel.cpp:86
 #, kde-format
 msgid "Unread Messages"
-msgstr "ئوقۇلمىغان ئۇچۇرلار"
+msgstr "ئوقۇلمىغان ئۇچۇر"
 
 #: core/models/statisticsproxymodel.cpp:95
 #, kde-format
@@ -557,7 +549,7 @@ msgstr "چوڭلۇقى"
 #: core/models/tagmodel.cpp:64
 #, kde-format
 msgid "Tag"
-msgstr ""
+msgstr "بەلگە"
 
 #: core/partfetcher.cpp:49
 #, kde-format
@@ -628,7 +620,7 @@ msgstr ""
 #, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
-msgstr ""
+msgstr "%1 نى سەپلە"
 
 #: quick/qml/AgentConfigurationForm.qml:41
 #, kde-format
@@ -640,11 +632,10 @@ msgstr ""
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify"
-msgstr ""
+msgstr "ئۆزگەرت"
 
 #: quick/qml/AgentConfigurationForm.qml:66
-#, fuzzy, kde-format
-#| msgid "Delete"
+#, kde-format
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "ئۆچۈر"
@@ -653,7 +644,7 @@ msgstr "ئۆچۈر"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
-msgstr ""
+msgstr "ھېساب قوش"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
 #: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
@@ -662,12 +653,10 @@ msgid "Manage Tags"
 msgstr ""
 
 #: quick/qml/TagManagerPage.qml:27
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Conflict Resolution"
+#, kde-format
 msgctxt "@title:dialog"
 msgid "Confirm Tag Deletion"
-msgstr "توقۇنۇش ھەل قىلىش"
+msgstr ""
 
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
@@ -699,10 +688,9 @@ msgid "Add Tag"
 msgstr ""
 
 #: selftest/main.cpp:19
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgid "Akonadi Self Test"
-msgstr "Akonadi Agent"
+msgstr ""
 
 #: selftest/main.cpp:21
 #, kde-format
@@ -759,13 +747,10 @@ msgid "Configure Account"
 msgstr ""
 
 #: widgets/agenttypedialog.cpp:74
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@info/plain Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
+#, kde-format
 msgctxt "@item:textbox"
 msgid "Search types"
-msgstr "ئىزدە"
+msgstr ""
 
 #: widgets/cachepolicypage.cpp:43 widgets/cachepolicypage.cpp:48
 #, kde-format
@@ -792,10 +777,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: widgets/cachepolicypage.ui:40
-#, fuzzy, kde-format
-#| msgid "Synchronize"
+#, kde-format
 msgid "Synchronize after:"
-msgstr "قەدەمداش"
+msgstr ""
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, checkInterval)
 #: widgets/cachepolicypage.ui:47
@@ -825,10 +809,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, retrievalOptionsLabel)
 #: widgets/cachepolicypage.ui:94
-#, fuzzy, kde-format
-#| msgid "Retrieval Options"
+#, kde-format
 msgid "Retrieval Options:"
-msgstr "ئېلىش تاللانمىلىرى"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QRadioButton, retrieveFullMessages)
 #: widgets/cachepolicypage.ui:101
@@ -869,10 +852,7 @@ msgid ""
 msgstr ""
 
 #: widgets/collectiondialog.cpp:58
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@info/plain Displayed grayed-out inside the textbox, verb to search"
-#| msgid "Search"
+#, kde-format
 msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
 msgid "Search"
 msgstr "ئىزدە"
@@ -884,18 +864,16 @@ msgid "Use folder by default"
 msgstr ""
 
 #: widgets/collectiondialog.cpp:226
-#, fuzzy, kde-format
-#| msgid "&New Subfolder..."
+#, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
-msgstr "يېڭى تارماق مۇندەرىجە(&N)…"
+msgstr ""
 
 #: widgets/collectiondialog.cpp:228
-#, fuzzy, kde-format
-#| msgid "Create a new subfolder under the currently selected folder"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
-msgstr "نۆۋەتتە تاللانغان قىسقۇچ ئاستىغا يېڭى تارماق قىسقۇچ قۇرىدۇ"
+msgstr ""
 
 #: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:407
 #, kde-format
@@ -915,11 +893,10 @@ msgid "Could not create folder: %1"
 msgstr "قىسقۇچ قۇرالمىدى: %1"
 
 #: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:410
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
-msgstr "قىسقۇچ قۇرۇش مەغلۇپ بولدى"
+msgstr ""
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
 #, kde-format
@@ -956,7 +933,7 @@ msgstr "قىسقۇچ"
 #: widgets/collectiongeneralpropertiespage.ui:62
 #, kde-format
 msgid "Statistics"
-msgstr "ستاتىستىكا"
+msgstr "ئىستاتىستىكا"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: widgets/collectiongeneralpropertiespage.ui:68
@@ -1025,13 +1002,13 @@ msgstr ""
 #: widgets/collectionmaintenancepage.ui:66
 #, kde-format
 msgid "unknown"
-msgstr ""
+msgstr "يوچۇن"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: widgets/collectionmaintenancepage.ui:38
 #, kde-format
 msgid "File size:"
-msgstr ""
+msgstr "ھۆججەت چوڭلۇقى:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: widgets/collectionmaintenancepage.ui:45
@@ -1041,10 +1018,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: widgets/collectionmaintenancepage.ui:59
-#, fuzzy, kde-format
-#| msgid "Unread Messages"
+#, kde-format
 msgid "Unread items:"
-msgstr "ئوقۇلمىغان ئۇچۇرلار"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, indexingLabel)
 #: widgets/collectionmaintenancepage.ui:73
@@ -1066,20 +1042,15 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, reindexButton)
 #: widgets/collectionmaintenancepage.ui:94
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Delete folder?"
-#| msgid_plural "Delete folders?"
+#, kde-format
 msgid "Reindex folder"
-msgstr "قىسقۇچلار ئۆچۈرەمسىز؟"
+msgstr ""
 
 #: widgets/collectionrequester.cpp:113
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "New Folder"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No Folder"
-msgstr "يېڭى قىسقۇچ"
+msgstr ""
 
 #: widgets/collectionrequester.cpp:122
 #, kde-format
@@ -1088,11 +1059,10 @@ msgid "Open collection dialog"
 msgstr ""
 
 #: widgets/collectionrequester.cpp:143
-#, fuzzy, kde-format
-#| msgid "No such collection."
+#, kde-format
 msgctxt "@title:window"
 msgid "Select a Collection"
-msgstr "بۇنداق توپلام يوق."
+msgstr ""
 
 #: widgets/conflictresolvedialog.cpp:129
 #, kde-format
@@ -1102,13 +1072,13 @@ msgstr ""
 #: widgets/conflictresolvedialog.cpp:141
 #, kde-format
 msgid "Flags"
-msgstr "بەلگىلەر"
+msgstr "بايراق"
 
 #: widgets/conflictresolvedialog.cpp:156 widgets/conflictresolvedialog.cpp:164
 #: widgets/conflictresolvedialog.cpp:174
 #, kde-format
 msgid "Attribute: %1"
-msgstr ""
+msgstr "خاسلىق: %1"
 
 #: widgets/conflictresolvedialog.cpp:186
 #, kde-format
@@ -1148,7 +1118,7 @@ msgstr ""
 #: widgets/conflictresolvedialog.cpp:266
 #, kde-format
 msgid "Data"
-msgstr "سانلىق-مەلۇمات"
+msgstr "سانلىق مەلۇمات"
 
 #: widgets/controlgui.cpp:223
 #, kde-format
@@ -1242,7 +1212,7 @@ msgstr ""
 #, kde-format
 msgctxt "@action:button Start the Akonadi server"
 msgid "Start"
-msgstr "باشلاش"
+msgstr "باشلا"
 
 #. i18n: ectx: property (toolTip), widget (QWidget, brokenPage)
 #: widgets/erroroverlay.ui:158
@@ -1266,7 +1236,7 @@ msgstr ""
 #: widgets/erroroverlay.ui:259
 #, kde-format
 msgid "Details..."
-msgstr "تەپسىلاتلار…"
+msgstr "تەپسىلاتى…"
 
 #: widgets/manageaccountwidget.cpp:232
 #, kde-format
@@ -1295,7 +1265,7 @@ msgstr ""
 #: widgets/manageaccountwidget.ui:33
 #, kde-format
 msgid "Filter…"
-msgstr ""
+msgstr "سۈزگۈچ…"
 
 #. i18n: ectx: property (text), widget (QPushButton, mAddAccountButton)
 #: widgets/manageaccountwidget.ui:47
@@ -1307,21 +1277,19 @@ msgstr ""
 #: widgets/manageaccountwidget.ui:57
 #, kde-format
 msgid "&Modify..."
-msgstr ""
+msgstr "ئۆزگەرت(&M)..."
 
 #. i18n: ectx: property (text), widget (QPushButton, mRemoveAccountButton)
 #: widgets/manageaccountwidget.ui:67
 #, kde-format
 msgid "R&emove"
-msgstr ""
+msgstr "چىقىرىۋەت(&E)"
 
 #. i18n: ectx: property (text), widget (QPushButton, mRestartAccountButton)
 #: widgets/manageaccountwidget.ui:84
-#, fuzzy, kde-format
-#| msgctxt "@action:button Start the Akonadi server"
-#| msgid "Start"
+#, kde-format
 msgid "Restart"
-msgstr "باشلاش"
+msgstr "قايتا قوزغات"
 
 #: widgets/recentcollectionaction.cpp:43
 #, kde-format
@@ -1336,18 +1304,15 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/renamefavoritedialog.ui:35
-#, fuzzy, kde-format
-#| msgctxt "@label:textbox name of the folder"
-#| msgid "Name:"
+#, kde-format
 msgid "Name:"
 msgstr "ئاتى:"
 
 #: widgets/selftestdialog.cpp:60
-#, fuzzy, kde-format
-#| msgid "Akonadi Agent"
+#, kde-format
 msgctxt "@title:window"
 msgid "Akonadi Server Self-Test"
-msgstr "Akonadi Agent"
+msgstr ""
 
 #: widgets/selftestdialog.cpp:71
 #, kde-format
@@ -1887,12 +1852,10 @@ msgid "Save Test Report"
 msgstr ""
 
 #: widgets/selftestdialog.cpp:650
-#, fuzzy, kde-format
-#| msgctxt "@info:status"
-#| msgid "Error."
+#, kde-format
 msgctxt "@title:window"
 msgid "Error"
-msgstr "خاتا."
+msgstr "خاتالىق"
 
 #: widgets/selftestdialog.cpp:650
 #, kde-format
@@ -1912,7 +1875,7 @@ msgstr ""
 #: widgets/selftestdialog.ui:39
 #, kde-format
 msgid "Details"
-msgstr "تەپسىلاتلار"
+msgstr "تەپسىلاتى"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/selftestdialog.ui:61
@@ -1931,11 +1894,8 @@ msgid "New"
 msgstr "يېڭى"
 
 #: widgets/standardactionmanager.cpp:90
-#, fuzzy
-#| msgid "&Delete Folder"
-#| msgid_plural "&Delete %1 Folders"
 msgid "&Delete Folder"
-msgstr "%1 قىسقۇچ ئۆچۈر(&D)"
+msgstr "قىسقۇچ ئۆچۈر(&D)"
 
 #: widgets/standardactionmanager.cpp:91
 msgid "Delete"
@@ -2041,11 +2001,8 @@ msgid "Create Resource"
 msgstr ""
 
 #: widgets/standardactionmanager.cpp:191
-#, fuzzy
-#| msgid "Delete Resource"
-#| msgid_plural "Delete %1 Resources"
 msgid "Delete Resource"
-msgstr "%1 مەنبە ئۆچۈر"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:199
 msgid "&Resource Properties"
@@ -2118,10 +2075,8 @@ msgid "Synchronize Favorite Folders"
 msgstr ""
 
 #: widgets/standardactionmanager.cpp:314
-#, fuzzy
-#| msgid "Synchronize"
 msgid "Synchronize Folder Tree"
-msgstr "قەدەمداش"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:387
 #, kde-format
@@ -2136,22 +2091,18 @@ msgid_plural "&Copy %1 Items"
 msgstr[0] ""
 
 #: widgets/standardactionmanager.cpp:389
-#, fuzzy, kde-format
-#| msgid "Cut Item"
-#| msgid_plural "Cut %1 Items"
+#, kde-format
 msgctxt "@action"
 msgid "&Cut Item"
 msgid_plural "&Cut %1 Items"
-msgstr[0] "%1 تۈرنى كەس"
+msgstr[0] ""
 
 #: widgets/standardactionmanager.cpp:390
-#, fuzzy, kde-format
-#| msgid "Cut Folder"
-#| msgid_plural "Cut %1 Folders"
+#, kde-format
 msgctxt "@action"
 msgid "&Cut Folder"
 msgid_plural "&Cut %1 Folders"
-msgstr[0] "%1 قىسقۇچنى كەس"
+msgstr[0] ""
 
 #: widgets/standardactionmanager.cpp:391
 #, kde-format
@@ -2160,21 +2111,18 @@ msgid_plural "&Delete %1 Items"
 msgstr[0] ""
 
 #: widgets/standardactionmanager.cpp:392
-#, fuzzy, kde-format
-#| msgid "&Delete Folder"
-#| msgid_plural "&Delete %1 Folders"
+#, kde-format
 msgctxt "@action"
 msgid "&Delete Folder"
 msgid_plural "&Delete %1 Folders"
 msgstr[0] "%1 قىسقۇچ ئۆچۈر(&D)"
 
 #: widgets/standardactionmanager.cpp:393
-#, fuzzy, kde-format
-#| msgid "Synchronize"
+#, kde-format
 msgctxt "@action"
 msgid "&Synchronize Folder"
 msgid_plural "&Synchronize %1 Folders"
-msgstr[0] "قەدەمداش"
+msgstr[0] ""
 
 #: widgets/standardactionmanager.cpp:394
 #, kde-format
@@ -2231,26 +2179,21 @@ msgid_plural "Synchronize %1 Folders"
 msgstr[0] ""
 
 #: widgets/standardactionmanager.cpp:404
-#, fuzzy, kde-format
-#| msgid "Delete Resource"
-#| msgid_plural "Delete %1 Resources"
+#, kde-format
 msgctxt "@action"
 msgid "Delete Resource"
 msgid_plural "Delete %1 Resources"
-msgstr[0] "%1 مەنبە ئۆچۈر"
+msgstr[0] ""
 
 #: widgets/standardactionmanager.cpp:405
-#, fuzzy, kde-format
-#| msgid "Synchronize"
+#, kde-format
 msgctxt "@action"
 msgid "Synchronize Resource"
 msgid_plural "Synchronize %1 Resources"
-msgstr[0] "قەدەمداش"
+msgstr[0] ""
 
 #: widgets/standardactionmanager.cpp:408
-#, fuzzy, kde-format
-#| msgctxt "@title:column, name of a thing"
-#| msgid "Name"
+#, kde-format
 msgctxt "@label:textbox name of Akonadi folder"
 msgid "Name"
 msgstr "ئاتى"
@@ -2263,13 +2206,11 @@ msgid_plural ""
 msgstr[0] "قىسقۇچ %1 ۋە ئۇنىڭ ئىچىدىكى بارلىق تارماق قىسقۇچلارنى ئۆچۈرەمسىز؟"
 
 #: widgets/standardactionmanager.cpp:418
-#, fuzzy, kde-format
-#| msgid "Delete Folder"
-#| msgid_plural "Delete %1 Folders"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Folder?"
 msgid_plural "Delete Folders?"
-msgstr[0] "%1 قىسقۇچ ئۆچۈر"
+msgstr[0] ""
 
 #: widgets/standardactionmanager.cpp:419
 #, kde-format
@@ -2277,17 +2218,16 @@ msgid "Could not delete folder: %1"
 msgstr "قىسقۇچنى ئۆچۈرگىلى بولمىدى: %1"
 
 #: widgets/standardactionmanager.cpp:420
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
-msgstr "قىسقۇچ ئۆچۈرۈش مەغلۇپ بولدى"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:422
 #, kde-format
 msgctxt "@title:window"
 msgid "Properties of Folder %1"
-msgstr "قىسقۇچ ‹%1› نىڭ خاسلىقى"
+msgstr "قىسقۇچ «%1» نىڭ خاسلىقى"
 
 #: widgets/standardactionmanager.cpp:426
 #, kde-format
@@ -2296,13 +2236,11 @@ msgid_plural "Do you really want to delete %1 items?"
 msgstr[0] ""
 
 #: widgets/standardactionmanager.cpp:427
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Item?"
 msgid_plural "Delete Items?"
-msgstr[0] "%1 تۈر ئۆچۈر"
+msgstr[0] ""
 
 #: widgets/standardactionmanager.cpp:428
 #, kde-format
@@ -2310,11 +2248,10 @@ msgid "Could not delete item: %1"
 msgstr ""
 
 #: widgets/standardactionmanager.cpp:429
-#, fuzzy, kde-format
-#| msgid "Folder deletion failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
-msgstr "قىسقۇچ ئۆچۈرۈش مەغلۇپ بولدى"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:431
 #, kde-format
@@ -2340,11 +2277,10 @@ msgid "Could not create resource: %1"
 msgstr ""
 
 #: widgets/standardactionmanager.cpp:436
-#, fuzzy, kde-format
-#| msgid "Folder creation failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
-msgstr "قىسقۇچ قۇرۇش مەغلۇپ بولدى"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:440
 #, kde-format
@@ -2365,11 +2301,10 @@ msgid "Could not paste data: %1"
 msgstr ""
 
 #: widgets/standardactionmanager.cpp:446
-#, fuzzy, kde-format
-#| msgid "Paste failed"
+#, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
-msgstr "چاپلاش مەغلۇپ بولدى"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:776
 #, kde-format
@@ -2377,12 +2312,10 @@ msgid "We can not add \"/\" in folder name."
 msgstr ""
 
 #: widgets/standardactionmanager.cpp:776 widgets/standardactionmanager.cpp:780
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "New Folder"
+#, kde-format
 msgctxt "@title:window"
 msgid "Create New Folder Error"
-msgstr "يېڭى قىسقۇچ"
+msgstr ""
 
 #: widgets/standardactionmanager.cpp:780
 #, kde-format
@@ -2423,18 +2356,16 @@ msgid "Failed to update subscription: %1"
 msgstr ""
 
 #: widgets/subscriptiondialog.cpp:99
-#, fuzzy, kde-format
-#| msgid "Local Subscriptions"
+#, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
-msgstr "يەرلىك مۇشتەرىلەر"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, SubscriptionDialog)
 #: widgets/subscriptiondialog.ui:14
-#, fuzzy, kde-format
-#| msgid "Local Subscriptions"
+#, kde-format
 msgid "Local Subscriptions"
-msgstr "يەرلىك مۇشتەرىلەر"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: widgets/subscriptiondialog.ui:22
@@ -2444,24 +2375,21 @@ msgstr "ئىزدە:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, subscribedOnlyCheckBox)
 #: widgets/subscriptiondialog.ui:36
-#, fuzzy, kde-format
-#| msgid "Subscribe"
+#, kde-format
 msgid "&Subscribed only"
-msgstr "مۇشتەرى"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, subscribeButton)
 #: widgets/subscriptiondialog.ui:62
-#, fuzzy, kde-format
-#| msgid "Subscribe"
+#, kde-format
 msgid "Su&bscribe"
-msgstr "مۇشتەرى"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, unsubscribeButton)
 #: widgets/subscriptiondialog.ui:69
-#, fuzzy, kde-format
-#| msgid "Unsubscribe"
+#, kde-format
 msgid "&Unsubscribe"
-msgstr "مۇشتەرىلىكتىن ئايرىلىش"
+msgstr ""
 
 #: widgets/tageditwidget.cpp:123
 #, kde-format
@@ -2496,12 +2424,10 @@ msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr ""
 
 #: widgets/tageditwidget.cpp:185
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
-msgstr "%1 تۈر ئۆچۈر"
+msgstr "بەلگە ئۆچۈر"
 
 #: widgets/tageditwidget.cpp:196
 #, kde-format
@@ -2516,12 +2442,10 @@ msgid "Tag %1 successfully removed"
 msgstr ""
 
 #: widgets/tageditwidget.cpp:227
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@info"
 msgid "Delete tag"
-msgstr "%1 تۈر ئۆچۈر"
+msgstr "بەلگە ئۆچۈر"
 
 #. i18n: ectx: property (text), widget (QLabel, selectLabel)
 #: widgets/tageditwidget.ui:29
@@ -2564,12 +2488,10 @@ msgid "Create new tag"
 msgstr ""
 
 #: widgets/tagselectioncombobox.cpp:126
-#, fuzzy, kde-format
-#| msgid "Delete Item"
-#| msgid_plural "Delete %1 Items"
+#, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
-msgstr "%1 تۈر ئۆچۈر"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagSelectionDialog)
 #: widgets/tagselectiondialog.ui:14
@@ -2580,7 +2502,7 @@ msgstr ""
 #: widgets/tagwidget.cpp:45
 #, kde-format
 msgid "Clear"
-msgstr ""
+msgstr "تازىلا"
 
 #. i18n: ectx: property (placeholderText), widget (Akonadi::TagView, tagView)
 #: widgets/tagwidget.ui:32
@@ -2592,7 +2514,7 @@ msgstr ""
 #: widgets/tagwidget.ui:39
 #, kde-format
 msgid "..."
-msgstr ""
+msgstr "…"
 
 #: xml/akonadi2xml.cpp:25
 #, kde-format
@@ -2617,13 +2539,12 @@ msgstr ""
 #: xml/xmldocument.cpp:121
 #, kde-format
 msgid "No filename specified"
-msgstr ""
+msgstr "ھۆججەت ئاتى بەلگىلەنمىگەن"
 
 #: xml/xmldocument.cpp:129
-#, fuzzy, kde-format
-#| msgid "Could not open file '%1'"
+#, kde-format
 msgid "Unable to open data file '%1'."
-msgstr "ھۆججەت «%1» نى ئاچالمايدۇ"
+msgstr ""
 
 #: xml/xmldocument.cpp:134
 #, kde-format
@@ -2670,13 +2591,11 @@ msgstr ""
 msgid "Unable to find collection %1"
 msgstr ""
 
-#, fuzzy
 #~| msgid "Folder creation failed"
 #~ msgctxt "@title:window"
 #~ msgid "Agent Instance Creation Failed"
 #~ msgstr "قىسقۇچ قۇرۇش مەغلۇپ بولدى"
 
-#, fuzzy
 #~| msgctxt "@info:status"
 #~| msgid "Error."
 #~ msgctxt "@window:title"
@@ -2686,7 +2605,6 @@ msgstr ""
 #~ msgid "Quota"
 #~ msgstr "نورما"
 
-#, fuzzy
 #~| msgctxt "@info:status"
 #~| msgid "Error."
 #~ msgid "Error"
@@ -2706,7 +2624,6 @@ msgstr ""
 #~ msgid "Cancel"
 #~ msgstr "ئەمەلدىن قالدۇر"
 
-#, fuzzy
 #~| msgid "Cut Item"
 #~| msgid_plural "Cut %1 Items"
 #~ msgid "Items"
@@ -2715,7 +2632,6 @@ msgstr ""
 #~ msgid "Id"
 #~ msgstr "Id"
 
-#, fuzzy
 #~| msgid "Cancel"
 #~ msgctxt "@action:button"
 #~ msgid "Cancel"
