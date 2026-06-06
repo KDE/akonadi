@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-27 00:45+0000\n"
-"PO-Revision-Date: 2026-05-07 13:16+0400\n"
+"PO-Revision-Date: 2026-06-05 13:50+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -2632,25 +2632,22 @@ msgid "&Unsubscribe"
 msgstr "أ&زل الاشتراك"
 
 #: widgets/tageditwidget.cpp:123
-#, fuzzy, kde-format
-#| msgid "Failed to create a new tag"
+#, kde-format
 msgctxt "@info"
 msgid "Failed to create new tag %1: %2"
-msgstr "فشل إنشاء وسم جديد"
+msgstr "فشل إنشاء وسم جديد %1: %2"
 
 #: widgets/tageditwidget.cpp:130
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully added"
-msgstr ""
+msgstr "أُضيف الوسم %1 بنجاح."
 
 #: widgets/tageditwidget.cpp:174
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Delete Tag  <resource>%1</resource>"
-msgstr "أمتأكّد من إزالة الوسم <resource>%1</resource>؟"
+msgstr "احذف الوسم  <resource>%1</resource>"
 
 #: widgets/tageditwidget.cpp:176
 #, kde-kuit-format
@@ -2659,6 +2656,8 @@ msgid ""
 "Press this button to show a dialog that asks permission to remove the "
 "<resource>%1</resource> tag from Akonadi."
 msgstr ""
+"اضغط هذا الزر لعرض حوار يطلب الإذن لإزالة وسم <resource>%1</resource> من "
+"أكونادي."
 
 #: widgets/tageditwidget.cpp:184
 #, kde-kuit-format
@@ -2673,17 +2672,16 @@ msgid "Delete Tag"
 msgstr "حذف الوسم"
 
 #: widgets/tageditwidget.cpp:196
-#, fuzzy, kde-format
-#| msgid "Failed to create tag."
+#, kde-format
 msgctxt "@info"
 msgid "Failed to delete tag %1: %2"
-msgstr "فشل إنشاء الوسم."
+msgstr "فشل في حذف وسم %1: %2"
 
 #: widgets/tageditwidget.cpp:200
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully removed"
-msgstr ""
+msgstr "الوسم %1 أُزيل بنجاح"
 
 #: widgets/tageditwidget.cpp:227
 #, kde-format
@@ -2701,7 +2699,7 @@ msgstr "حدد الوسوم التي يجب تطبيقها."
 #: widgets/tageditwidget.ui:55
 #, kde-format
 msgid "Enter the name for a new tag"
-msgstr ""
+msgstr "أدخل اسم الوسم الجديد"
 
 #. i18n: ectx: property (whatsThis), widget (QLineEdit, newTagEdit)
 #: widgets/tageditwidget.ui:58
@@ -2710,13 +2708,14 @@ msgid ""
 "To create and select a new tag, enter a name for the new tag and then press "
 "the \"Create new tag\" button."
 msgstr ""
+"لإنشاء وسم جديد واختياره، أدخل اسمًا للوسم الجديد ثم اضغط على زر \"أنشئ وسم "
+"جديد\"."
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:68
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgid "Create and select a new tag"
-msgstr "أنشئ وسمًا جديدًا"
+msgstr "أنشئ وحدد وسمًا جديدًا"
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:71
@@ -2725,6 +2724,8 @@ msgid ""
 "Press this button to create a new tag with the name specified in the "
 "adjacent line editor.  The new tag is automatically selected."
 msgstr ""
+"اضغط هذا الزر لإنشاء وسم جديد بالاسم المحدد في محرر السطر المجاور. يُحدد "
+"الوسم الجديد آليًا."
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:74
