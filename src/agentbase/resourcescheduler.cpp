@@ -273,6 +273,7 @@ void ResourceScheduler::taskDone()
         s_resourcetracker->asyncCallWithArgumentList(QStringLiteral("jobEnded"), argumentList);
     }
 
+    Q_ASSERT(mCurrentTaskPendingJobs.isEmpty());
     mCurrentTask = Task();
     mCurrentTasksQueue = -1;
     scheduleNext();
@@ -327,7 +328,7 @@ void ResourceScheduler::deferTask()
     }
 
     Task t = mCurrentTask;
-    mCurrentTask = Task();
+    clearCurrentTask();
 
     Q_ASSERT(mCurrentTasksQueue >= 0 && mCurrentTasksQueue < NQueueCount);
     mTaskList[mCurrentTasksQueue].prepend(t);
@@ -465,7 +466,7 @@ void ResourceScheduler::setOnline(bool state)
         if (mCurrentTask.type != Invalid) {
             // abort running task
             queueForTaskType(mCurrentTask.type).prepend(mCurrentTask);
-            mCurrentTask = Task();
+            clearCurrentTask();
             mCurrentTasksQueue = -1;
         }
         // abort pending synchronous tasks, might take longer until the resource goes online again
@@ -520,6 +521,37 @@ void ResourceScheduler::signalTaskToTracker(const Task &task, const QByteArray &
             ;
         s_resourcetracker->asyncCallWithArgumentList(QStringLiteral("jobCreated"), argumentList);
     }
+}
+
+void ResourceScheduler::appendCurrentTaskPendingJob(KJob *job)
+{
+    Q_ASSERT(job);
+    Q_ASSERT(mCurrentTask.type != Invalid);
+    Q_ASSERT(!mCurrentTaskPendingJobs.contains(job));
+
+    connect(job, &KJob::finished, this, [this, job] {
+        mCurrentTaskPendingJobs.removeAll(job);
+    });
+    mCurrentTaskPendingJobs << job;
+}
+
+void ResourceScheduler::clearCurrentTaskPendingJobs()
+{
+    for (auto *job : std::as_const(mCurrentTaskPendingJobs)) {
+        // Disconnect this job completely and let it complete
+        // without disturbing anything else
+        disconnect(job, nullptr);
+    }
+
+    mCurrentTaskPendingJobs.clear();
+}
+
+void ResourceScheduler::clearCurrentTask()
+{
+    Q_ASSERT(mCurrentTask.type != Invalid);
+
+    clearCurrentTaskPendingJobs();
+    mCurrentTask = Task();
 }
 
 void ResourceScheduler::collectionRemoved(const Akonadi::Collection &collection)
@@ -633,7 +665,7 @@ void ResourceScheduler::clear()
         TaskList &queue = mTaskList[i];
         queue.clear();
     }
-    mCurrentTask = Task();
+    clearCurrentTask();
     mCurrentTasksQueue = -1;
 }
 

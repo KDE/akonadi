@@ -210,6 +210,9 @@ public:
     */
     void cancelQueues();
 
+    void appendCurrentTaskPendingJob(KJob *job);
+    void clearCurrentTaskPendingJobs();
+
 public Q_SLOTS:
     /*!
       Schedules replaying changes.
@@ -259,6 +262,7 @@ private Q_SLOTS:
 
 private:
     void signalTaskToTracker(const Task &task, const QByteArray &taskType, const QString &debugString = QString());
+    void clearCurrentTask();
 
     // We have a number of task queues, by order of priority.
     // * PrependTaskQueue is for deferring the current task
@@ -287,6 +291,7 @@ private:
     TaskList mTaskList[NQueueCount];
 
     Task mCurrentTask;
+    QList<KJob *> mCurrentTaskPendingJobs;
     int mCurrentTasksQueue = -1; // queue mCurrentTask came from
     bool mOnline = false;
 };

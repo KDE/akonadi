@@ -172,6 +172,7 @@ public:
                    "Calling items retrieval methods although no item retrieval is in progress");
         if (!mItemSyncer) {
             mItemSyncer = new ItemSync(q->currentCollection(), mCollectionSyncTimestamp);
+            scheduler->appendCurrentTaskPendingJob(mItemSyncer);
             mItemSyncer->setTransactionMode(mItemTransactionMode);
             mItemSyncer->setBatchSize(mItemSyncBatchSize);
             mItemSyncer->setMergeMode(mItemMergeMode);
@@ -570,6 +571,7 @@ void ResourceBase::itemRetrieved(const Item &item)
     }
 
     auto job = new ItemModifyJob(item);
+    d->scheduler->appendCurrentTaskPendingJob(job);
     job->d_func()->setSilent(true);
     // FIXME: remove once the item with which we call retrieveItem() has a revision number
     job->disableRevisionCheck();
@@ -596,13 +598,20 @@ void ResourceBase::collectionAttributesRetrieved(const Collection &collection)
         return;
     }
 
+    if (d->scheduler->currentTask().type == ResourceScheduler::Invalid) {
+        return;
+    }
     auto job = new CollectionModifyJob(collection);
+    d->scheduler->appendCurrentTaskPendingJob(job);
     connect(job, &KJob::result, d, &ResourceBasePrivate::slotCollectionAttributesSyncDone);
 }
 
 void ResourceBasePrivate::slotCollectionAttributesSyncDone(KJob *job)
 {
     Q_Q(ResourceBase);
+    if (scheduler->currentTask().type == ResourceScheduler::Invalid) {
+        return;
+    }
     Q_ASSERT(scheduler->currentTask().type == ResourceScheduler::SyncCollectionAttributes);
     if (job->error()) {
         Q_EMIT q->error(i18nc("@info", "Error while updating collection: %1", job->errorString()));
@@ -616,6 +625,7 @@ void ResourceBasePrivate::slotDeleteResourceCollection()
     Q_Q(ResourceBase);
 
     auto job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::FirstLevel);
+    scheduler->appendCurrentTaskPendingJob(job);
     job->fetchScope().setResource(q->identifier());
     connect(job, &KJob::result, this, &ResourceBasePrivate::slotDeleteResourceCollectionDone);
 }
@@ -631,6 +641,7 @@ void ResourceBasePrivate::slotDeleteResourceCollectionDone(KJob *job)
 
         if (!fetchJob->collections().isEmpty()) {
             auto job = new CollectionDeleteJob(fetchJob->collections().at(0));
+            scheduler->appendCurrentTaskPendingJob(job);
             connect(job, &KJob::result, this, &ResourceBasePrivate::slotCollectionDeletionDone);
         } else {
             // there is no resource collection, so just ignore the request
@@ -653,6 +664,7 @@ void ResourceBasePrivate::slotInvalidateCache(const Akonadi::Collection &collect
 {
     Q_Q(ResourceBase);
     auto job = new InvalidateCacheJob(collection, q);
+    scheduler->appendCurrentTaskPendingJob(job);
     connect(job, &KJob::result, scheduler, &ResourceScheduler::taskDone);
 }
 
@@ -665,6 +677,7 @@ void ResourceBase::changesCommitted(const Item::List &items)
 {
     Q_D(ResourceBase);
     auto transaction = new TransactionSequence(this);
+    d->scheduler->appendCurrentTaskPendingJob(transaction);
     connect(transaction, &KJob::finished, d, &ResourceBasePrivate::changeCommittedResult);
 
     // Modify the items one-by-one, because STORE does not support mass RID change
@@ -680,6 +693,7 @@ void ResourceBase::changeCommitted(const Collection &collection)
 {
     Q_D(ResourceBase);
     auto job = new CollectionModifyJob(collection);
+    d->scheduler->appendCurrentTaskPendingJob(job);
     connect(job, &KJob::result, d, &ResourceBasePrivate::changeCommittedResult);
 }
 
@@ -709,6 +723,7 @@ void ResourceBase::changeCommitted(const Tag &tag)
 {
     Q_D(ResourceBase);
     auto job = new TagModifyJob(tag);
+    d->scheduler->appendCurrentTaskPendingJob(job);
     connect(job, &KJob::result, d, &ResourceBasePrivate::changeCommittedResult);
 }
 
@@ -823,6 +838,7 @@ void ResourceBasePrivate::slotCollectionSyncDone(KJob *job)
     } else {
         if (scheduler->currentTask().type == ResourceScheduler::SyncAll) {
             auto list = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive);
+            scheduler->appendCurrentTaskPendingJob(list);
             list->setFetchScope(q->changeRecorder()->collectionFetchScope());
             list->fetchScope().fetchAttribute<SpecialCollectionAttribute>();
             list->fetchScope().fetchAttribute<FavoriteCollectionAttribute>();
@@ -909,6 +925,7 @@ void ResourceBasePrivate::slotSynchronizeCollection(const Collection &col)
 
             qCDebug(AKONADIAGENTBASE_LOG) << "Preparing collection sync of collection" << currentCollection.id() << currentCollection.displayName();
             auto fetchJob = new Akonadi::CollectionFetchJob(col, CollectionFetchJob::Base, this);
+            scheduler->appendCurrentTaskPendingJob(fetchJob);
             fetchJob->setFetchScope(q->changeRecorder()->collectionFetchScope());
             connect(fetchJob, &KJob::result, this, &ResourceBasePrivate::slotItemRetrievalCollectionFetchDone);
             mCurrentCollectionFetchJob = fetchJob;
@@ -935,6 +952,10 @@ void ResourceBasePrivate::slotItemRetrievalCollectionFetchDone(KJob *job)
         return;
     }
     mCollectionSyncTimestamp = QDateTime::currentDateTimeUtc();
+
+    if (scheduler->currentTask().type == ResourceScheduler::Invalid) {
+        return;
+    }
     q->retrieveItems(collections.at(0));
 }
 
@@ -960,6 +981,7 @@ void ResourceBasePrivate::slotSynchronizeCollectionAttributes(const Collection &
 {
     Q_Q(ResourceBase);
     auto fetchJob = new Akonadi::CollectionFetchJob(col, CollectionFetchJob::Base, this);
+    scheduler->appendCurrentTaskPendingJob(fetchJob);
     fetchJob->setFetchScope(q->changeRecorder()->collectionFetchScope());
     connect(fetchJob, &KJob::result, this, &ResourceBasePrivate::slotAttributeRetrievalCollectionFetchDone);
     Q_ASSERT(!mCurrentCollectionFetchJob);
@@ -994,6 +1016,7 @@ void ResourceBasePrivate::slotPrepareItemRetrieval(const Item &item)
 {
     Q_Q(ResourceBase);
     auto fetch = new ItemFetchJob(item, this);
+    scheduler->appendCurrentTaskPendingJob(fetch);
     // we always need at least parent so we can use ItemCreateJob to merge
     fetch->fetchScope().setAncestorRetrieval(qMax(ItemFetchScope::Parent, q->changeRecorder()->itemFetchScope().ancestorRetrieval()));
     fetch->fetchScope().setCacheOnly(true);
@@ -1033,6 +1056,7 @@ void ResourceBasePrivate::slotPrepareItemsRetrieval(const QList<Item> &items)
 {
     Q_Q(ResourceBase);
     auto fetch = new ItemFetchJob(items, this);
+    scheduler->appendCurrentTaskPendingJob(fetch);
     // we always need at least parent so we can use ItemCreateJob to merge
     fetch->fetchScope().setAncestorRetrieval(qMax(ItemFetchScope::Parent, q->changeRecorder()->itemFetchScope().ancestorRetrieval()));
     fetch->fetchScope().setCacheOnly(true);
@@ -1193,6 +1217,7 @@ void ResourceBase::cancelTask()
         }
         break;
     default:
+        d->scheduler->clearCurrentTaskPendingJobs();
         d->scheduler->taskDone();
     }
 }
@@ -1319,6 +1344,7 @@ void ResourceBase::itemsRetrieved(const Item::List &items)
     Q_D(ResourceBase);
     if (d->scheduler->currentTask().type == ResourceScheduler::FetchItems) {
         auto trx = new TransactionSequence(this);
+        d->scheduler->appendCurrentTaskPendingJob(trx);
         connect(trx, &KJob::result, d, &ResourceBasePrivate::slotItemSyncDone);
         for (const Item &item : items) {
             Q_ASSERT(item.parentCollection().isValid());
