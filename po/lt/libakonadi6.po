@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-27 00:45+0000\n"
+"POT-Creation-Date: 2026-06-12 00:44+0000\n"
 "PO-Revision-Date: 2026-02-24 01:59+0200\n"
 "Last-Translator: Liudas Ališauskas <liudas@akmc.lt>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -84,87 +84,87 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "Nesukonfigūruota"
 
-#: agentbase/resourcebase.cpp:513
+#: agentbase/resourcebase.cpp:514
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "Ištekliaus identifikatorius"
 
-#: agentbase/resourcebase.cpp:519
+#: agentbase/resourcebase.cpp:520
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "Akonadi išteklius"
 
-#: agentbase/resourcebase.cpp:561
+#: agentbase/resourcebase.cpp:562
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Gautas neteisingas elementas"
 
-#: agentbase/resourcebase.cpp:584
+#: agentbase/resourcebase.cpp:586
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Klaida kuriant elementą: %1"
 
-#: agentbase/resourcebase.cpp:608
+#: agentbase/resourcebase.cpp:617
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Klaida atnaujinant rinkinį: %1"
 
-#: agentbase/resourcebase.cpp:695
+#: agentbase/resourcebase.cpp:709
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Nepavyko atnaujinti vietinio rinkinio: %1."
 
-#: agentbase/resourcebase.cpp:700
+#: agentbase/resourcebase.cpp:714
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Nepavyko atnaujinti vietinių elementų: %1."
 
-#: agentbase/resourcebase.cpp:725
+#: agentbase/resourcebase.cpp:740
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Nepavyko gauti elemento veiksenoje „Atsijungęs“."
 
-#: agentbase/resourcebase.cpp:907
+#: agentbase/resourcebase.cpp:923
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Sinchronizuojamas aplankas „%1“"
 
-#: agentbase/resourcebase.cpp:927 agentbase/resourcebase.cpp:934
+#: agentbase/resourcebase.cpp:944 agentbase/resourcebase.cpp:951
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Nepavyko gauti rinkinio sinchronizavimui."
 
-#: agentbase/resourcebase.cpp:975
+#: agentbase/resourcebase.cpp:997
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Nepavyko gauti rinkinio atributo sinchronizavimui."
 
-#: agentbase/resourcebase.cpp:1023
+#: agentbase/resourcebase.cpp:1046
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Užklausto elemento daugiau nebėra"
 
-#: agentbase/resourcebase.cpp:1242
+#: agentbase/resourcebase.cpp:1267
 #, fuzzy, kde-format
 #| msgid "Failed to retrieve collection for sync."
 msgid "Failed to fetch collection for collection sync."
 msgstr "Nepavyko gauti rinkinio sinchronizavimui."
 
-#: agentbase/resourcebase.cpp:1278
+#: agentbase/resourcebase.cpp:1303
 #, fuzzy, kde-format
 #| msgid "Failed to retrieve collection for attribute sync."
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr "Nepavyko gauti rinkinio atributo sinchronizavimui."
 
-#: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
+#: agentbase/resourcescheduler.cpp:485 agentbase/resourcescheduler.cpp:491
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."

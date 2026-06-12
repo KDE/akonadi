@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-27 00:45+0000\n"
+"POT-Creation-Date: 2026-06-12 00:44+0000\n"
 "PO-Revision-Date: 2026-05-27 09:14+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -84,89 +84,89 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "Sense configurar"
 
-#: agentbase/resourcebase.cpp:513
+#: agentbase/resourcebase.cpp:514
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "Identificador del recurs"
 
-#: agentbase/resourcebase.cpp:519
+#: agentbase/resourcebase.cpp:520
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "Recurs d'Akonadi"
 
-#: agentbase/resourcebase.cpp:561
+#: agentbase/resourcebase.cpp:562
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "S'ha recuperat un element no vàlid"
 
-#: agentbase/resourcebase.cpp:584
+#: agentbase/resourcebase.cpp:586
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "S'ha produït un error mentre es creava l'element: %1"
 
-#: agentbase/resourcebase.cpp:608
+#: agentbase/resourcebase.cpp:617
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "S'ha produït un error mentre s'actualitzava la col·lecció: %1"
 
-#: agentbase/resourcebase.cpp:695
+#: agentbase/resourcebase.cpp:709
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "No s'ha pogut fer l'actualització de la col·lecció local: %1."
 
-#: agentbase/resourcebase.cpp:700
+#: agentbase/resourcebase.cpp:714
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "No s'ha pogut fer l'actualització dels elements locals: %1."
 
-#: agentbase/resourcebase.cpp:725
+#: agentbase/resourcebase.cpp:740
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "No es pot recuperar l'element en el mode desconnectat."
 
-#: agentbase/resourcebase.cpp:907
+#: agentbase/resourcebase.cpp:923
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "S'està sincronitzant la carpeta «%1»"
 
-#: agentbase/resourcebase.cpp:927 agentbase/resourcebase.cpp:934
+#: agentbase/resourcebase.cpp:944 agentbase/resourcebase.cpp:951
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Ha fallat mentre es recuperava la col·lecció per a sincronitzar-la."
 
-#: agentbase/resourcebase.cpp:975
+#: agentbase/resourcebase.cpp:997
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr ""
 "Ha fallat mentre es recuperava la col·lecció per a la sincronització dels "
 "atributs."
 
-#: agentbase/resourcebase.cpp:1023
+#: agentbase/resourcebase.cpp:1046
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "L'element sol·licitat ja no existix"
 
-#: agentbase/resourcebase.cpp:1242
+#: agentbase/resourcebase.cpp:1267
 #, kde-format
 msgid "Failed to fetch collection for collection sync."
 msgstr "Ha fallat mentre es recuperava la col·lecció per a sincronitzar-la."
 
-#: agentbase/resourcebase.cpp:1278
+#: agentbase/resourcebase.cpp:1303
 #, kde-format
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr ""
 "Ha fallat mentre es recuperava la col·lecció per a la sincronització dels "
 "atributs."
 
-#: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
+#: agentbase/resourcescheduler.cpp:485 agentbase/resourcescheduler.cpp:491
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."

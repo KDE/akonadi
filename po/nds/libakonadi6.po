@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-27 00:45+0000\n"
+"POT-Creation-Date: 2026-06-12 00:44+0000\n"
 "PO-Revision-Date: 2014-09-18 22:53+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -82,7 +82,7 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "Nich instellt"
 
-#: agentbase/resourcebase.cpp:513
+#: agentbase/resourcebase.cpp:514
 #, fuzzy, kde-format
 #| msgctxt "@label commandline option"
 #| msgid "Resource identifier"
@@ -90,85 +90,85 @@ msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "Ressourcekennen"
 
-#: agentbase/resourcebase.cpp:519
+#: agentbase/resourcebase.cpp:520
 #, fuzzy, kde-format
 #| msgctxt "@title application name"
 #| msgid "Akonadi Resource"
 msgid "Akonadi Resource"
 msgstr "Akonadi-Ressource"
 
-#: agentbase/resourcebase.cpp:561
+#: agentbase/resourcebase.cpp:562
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Leeg Element haalt"
 
-#: agentbase/resourcebase.cpp:584
+#: agentbase/resourcebase.cpp:586
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Fehler bi't Opstellen vun en Indrag: %1"
 
-#: agentbase/resourcebase.cpp:608
+#: agentbase/resourcebase.cpp:617
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Fehler bi't Opfrischen vun en Sammeln: %1"
 
-#: agentbase/resourcebase.cpp:695
+#: agentbase/resourcebase.cpp:709
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Opfrischen vun en lokaal Sammeln is fehlslaan: %1"
 
-#: agentbase/resourcebase.cpp:700
+#: agentbase/resourcebase.cpp:714
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Opfrischen vun lokaal Indrääg is fehlslaan: %1"
 
-#: agentbase/resourcebase.cpp:725
+#: agentbase/resourcebase.cpp:740
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Element lett sik bi Afkokppelbedrief nich halen"
 
-#: agentbase/resourcebase.cpp:907
+#: agentbase/resourcebase.cpp:923
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Orner \"%1\" warrt synkroniseert"
 
-#: agentbase/resourcebase.cpp:927 agentbase/resourcebase.cpp:934
+#: agentbase/resourcebase.cpp:944 agentbase/resourcebase.cpp:951
 #, fuzzy, kde-format
 #| msgid "Failed to fetch the resource collection."
 msgid "Failed to retrieve collection for sync."
 msgstr "De Ressource-Sammeln lett sik nich halen."
 
-#: agentbase/resourcebase.cpp:975
+#: agentbase/resourcebase.cpp:997
 #, fuzzy, kde-format
 #| msgid "Failed to fetch the resource collection."
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "De Ressource-Sammeln lett sik nich halen."
 
-#: agentbase/resourcebase.cpp:1023
+#: agentbase/resourcebase.cpp:1046
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Anfraagt Objekt nich mehr vörhannen."
 
-#: agentbase/resourcebase.cpp:1242
+#: agentbase/resourcebase.cpp:1267
 #, fuzzy, kde-format
 #| msgid "Failed to fetch the resource collection."
 msgid "Failed to fetch collection for collection sync."
 msgstr "De Ressource-Sammeln lett sik nich halen."
 
-#: agentbase/resourcebase.cpp:1278
+#: agentbase/resourcebase.cpp:1303
 #, fuzzy, kde-format
 #| msgid "Failed to fetch the resource collection."
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr "De Ressource-Sammeln lett sik nich halen."
 
-#: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
+#: agentbase/resourcescheduler.cpp:485 agentbase/resourcescheduler.cpp:491
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."

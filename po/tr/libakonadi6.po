@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-27 00:45+0000\n"
+"POT-Creation-Date: 2026-06-12 00:44+0000\n"
 "PO-Revision-Date: 2026-05-27 12:58+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -87,85 +87,85 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "Yapılandırılmamış"
 
-#: agentbase/resourcebase.cpp:513
+#: agentbase/resourcebase.cpp:514
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "Özkaynak tanımlayıcı"
 
-#: agentbase/resourcebase.cpp:519
+#: agentbase/resourcebase.cpp:520
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "Akonadi Özkaynağı"
 
-#: agentbase/resourcebase.cpp:561
+#: agentbase/resourcebase.cpp:562
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Geçersiz öge alındı"
 
-#: agentbase/resourcebase.cpp:584
+#: agentbase/resourcebase.cpp:586
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Öge oluştururken hata: %1"
 
-#: agentbase/resourcebase.cpp:608
+#: agentbase/resourcebase.cpp:617
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Yerel koleksiyon güncellenirken hata: %1"
 
-#: agentbase/resourcebase.cpp:695
+#: agentbase/resourcebase.cpp:709
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Yerel koleksiyon güncellenemedi: %1."
 
-#: agentbase/resourcebase.cpp:700
+#: agentbase/resourcebase.cpp:714
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Yerel ögeler güncellenemedi: %1."
 
-#: agentbase/resourcebase.cpp:725
+#: agentbase/resourcebase.cpp:740
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Çevrim dışı kipte ögeler alınamaz."
 
-#: agentbase/resourcebase.cpp:907
+#: agentbase/resourcebase.cpp:923
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "“%1” klasörü eşzamanlanıyor"
 
-#: agentbase/resourcebase.cpp:927 agentbase/resourcebase.cpp:934
+#: agentbase/resourcebase.cpp:944 agentbase/resourcebase.cpp:951
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Eşleme için koleksiyon alınamadı."
 
-#: agentbase/resourcebase.cpp:975
+#: agentbase/resourcebase.cpp:997
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Öznitelik eşzamanlaması için koleksiyon alınamadı."
 
-#: agentbase/resourcebase.cpp:1023
+#: agentbase/resourcebase.cpp:1046
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "İstenilen öge artık yok"
 
-#: agentbase/resourcebase.cpp:1242
+#: agentbase/resourcebase.cpp:1267
 #, kde-format
 msgid "Failed to fetch collection for collection sync."
 msgstr "Koleksiyon, koleksiyon eşzamanlaması için getirilemedi."
 
-#: agentbase/resourcebase.cpp:1278
+#: agentbase/resourcebase.cpp:1303
 #, kde-format
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr "Koleksiyon, koleksiyon öznitelikleri eşzamanlaması için getirilemedi."
 
-#: agentbase/resourcescheduler.cpp:484 agentbase/resourcescheduler.cpp:490
+#: agentbase/resourcescheduler.cpp:485 agentbase/resourcescheduler.cpp:491
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."
