@@ -785,9 +785,14 @@ void StandardActionManagerPrivate::slotCreateCollection()
     collection.setName(name);
     collection.setParentCollection(parentCollection);
     if (actions[StandardActionManager::CreateCollection]) {
-        const QStringList mts = actions[StandardActionManager::CreateCollection]->property("ContentMimeTypes").toStringList();
+        const auto *action = actions[StandardActionManager::CreateCollection];
+        const QStringList mts = action->property("ContentMimeTypes").toStringList();
         if (!mts.isEmpty()) {
             collection.setContentMimeTypes(mts);
+        }
+        const auto rights = action->property("Rights");
+        if (rights.isValid() && rights.canConvert<Collection::Rights>()) {
+            collection.setRights(rights.value<Collection::Rights>());
         }
     }
     if (parentCollection.contentMimeTypes().contains(Collection::virtualMimeType())) {
