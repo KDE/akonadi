@@ -86,6 +86,7 @@ FormCard.FormCard {
             required property string iconName
             required property string name
             required property string statusMessage
+            required property int progress
             required property bool online
 
             leadingPadding: Kirigami.Units.largeSpacing
@@ -96,7 +97,7 @@ FormCard.FormCard {
             }
 
             text: name
-            description: statusMessage
+            description: progress > 0 ? i18ndc("libakonadi6", "status message, progress percentage", "%1 (%2%)", statusMessage, progress) : statusMessage
 
             onClicked: {
                 dialog.agentDelegate = agentDelegate;
