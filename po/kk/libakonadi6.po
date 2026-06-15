@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-12 00:44+0000\n"
+"POT-Creation-Date: 2026-06-15 00:44+0000\n"
 "PO-Revision-Date: 2013-07-14 03:20+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -675,7 +675,13 @@ msgctxt "@action:button"
 msgid "Delete"
 msgstr "Өшіру"
 
-#: quick/qml/AgentConfigurationForm.qml:115
+#: quick/qml/AgentConfigurationForm.qml:100
+#, kde-format
+msgctxt "status message, progress percentage"
+msgid "%1 (%2%)"
+msgstr ""
+
+#: quick/qml/AgentConfigurationForm.qml:116
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"

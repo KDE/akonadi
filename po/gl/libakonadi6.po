@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-12 00:44+0000\n"
+"POT-Creation-Date: 2026-06-15 00:44+0000\n"
 "PO-Revision-Date: 2025-03-20 08:01+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.gal>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -691,7 +691,13 @@ msgctxt "@action:button"
 msgid "Delete"
 msgstr "Eliminar"
 
-#: quick/qml/AgentConfigurationForm.qml:115
+#: quick/qml/AgentConfigurationForm.qml:100
+#, kde-format
+msgctxt "status message, progress percentage"
+msgid "%1 (%2%)"
+msgstr ""
+
+#: quick/qml/AgentConfigurationForm.qml:116
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"

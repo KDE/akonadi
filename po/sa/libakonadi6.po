@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-12 00:44+0000\n"
+"POT-Creation-Date: 2026-06-15 00:44+0000\n"
 "PO-Revision-Date: 2024-12-25 19:45+0530\n"
 "Last-Translator: kali <shreekantkalwar@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -681,7 +681,13 @@ msgctxt "@action:button"
 msgid "Delete"
 msgstr "लुप्"
 
-#: quick/qml/AgentConfigurationForm.qml:115
+#: quick/qml/AgentConfigurationForm.qml:100
+#, kde-format
+msgctxt "status message, progress percentage"
+msgid "%1 (%2%)"
+msgstr ""
+
+#: quick/qml/AgentConfigurationForm.qml:116
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
