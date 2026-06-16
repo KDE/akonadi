@@ -608,9 +608,8 @@ void AgentBasePrivate::collectionChanged(const Akonadi::Collection &collection, 
     auto observer2 = dynamic_cast<AgentBase::ObserverV2 *>(mObserver);
     if (observer2) {
         observer2->collectionChanged(collection, changedAttributes);
-    } else {
-        changeProcessed();
     }
+    // If not ObserverV2, we are handled in the legacy event
 }
 
 void AgentBasePrivate::collectionMoved(const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &dest)
