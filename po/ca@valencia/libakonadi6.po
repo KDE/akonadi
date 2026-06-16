@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-06-15 00:44+0000\n"
-"PO-Revision-Date: 2026-05-27 09:14+0200\n"
+"PO-Revision-Date: 2026-06-15 09:00+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -688,7 +688,7 @@ msgstr "Suprimix"
 #, kde-format
 msgctxt "status message, progress percentage"
 msgid "%1 (%2%)"
-msgstr ""
+msgstr "%1 (%2%)"
 
 #: quick/qml/AgentConfigurationForm.qml:116
 #, kde-format
@@ -1283,7 +1283,7 @@ msgid ""
 "A required background service is not running. This application cannot be "
 "used without it."
 msgstr ""
-"Un servei necessari no està executant-se en segon pla. Esta aplicació no es "
+"Un servei necessari no s'està executant en segon pla. Esta aplicació no es "
 "pot utilitzar sense ell."
 
 #. i18n: ectx: property (text), widget (QPushButton, startButton)

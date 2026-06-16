@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-06-15 00:44+0000\n"
-"PO-Revision-Date: 2026-05-27 12:58+0300\n"
+"PO-Revision-Date: 2026-06-15 19:24+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -678,7 +678,7 @@ msgstr "Sil"
 #, kde-format
 msgctxt "status message, progress percentage"
 msgid "%1 (%2%)"
-msgstr ""
+msgstr "%1 (%%2)"
 
 #: quick/qml/AgentConfigurationForm.qml:116
 #, kde-format
