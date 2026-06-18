@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-06-15 00:44+0000\n"
-"PO-Revision-Date: 2026-06-07 16:16+0900\n"
+"PO-Revision-Date: 2026-06-17 12:59+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -665,7 +665,7 @@ msgstr "刪除"
 #, kde-format
 msgctxt "status message, progress percentage"
 msgid "%1 (%2%)"
-msgstr ""
+msgstr "%1 (%2%)"
 
 #: quick/qml/AgentConfigurationForm.qml:116
 #, kde-format
