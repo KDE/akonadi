@@ -708,7 +708,7 @@ void StorageJanitor::findRIDDuplicates()
 void StorageJanitor::vacuum()
 {
     const DbType::Type dbType = DbType::type(m_dataStore->database());
-    if (dbType == DbType::MySQL || dbType == DbType::PostgreSQL) {
+    if (dbType == DbType::MySQL || dbType == DbType::PostgreSQL || dbType == DbType::Sqlite) {
         inform("vacuuming database, that'll take some time and require a lot of temporary disk space...");
         const auto tables = allDatabaseTables();
         for (const QString &table : tables) {
@@ -719,6 +719,8 @@ void StorageJanitor::vacuum()
                 queryStr = QLatin1StringView("OPTIMIZE TABLE ") + table;
             } else if (dbType == DbType::PostgreSQL) {
                 queryStr = QLatin1StringView("VACUUM FULL ANALYZE ") + table;
+            } else if (dbType == DbType::Sqlite) {
+                queryStr = QLatin1StringView("VACUUM ") + table;
             } else {
                 continue;
             }
@@ -728,8 +730,6 @@ void StorageJanitor::vacuum()
             }
         }
         inform("vacuum done");
-    } else {
-        inform("Vacuum not supported for this database backend. (Sqlite backend)");
     }
 
     Q_EMIT done();
