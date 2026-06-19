@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-15 00:44+0000\n"
+"POT-Creation-Date: 2026-06-19 00:44+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -39,13 +39,13 @@ msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "类型 %2 的 %1"
 
-#: agentbase/agentbase.cpp:818
+#: agentbase/agentbase.cpp:817
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "代理标识符"
 
-#: agentbase/agentbase.cpp:824
+#: agentbase/agentbase.cpp:823
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi 代理"
@@ -662,7 +662,7 @@ msgstr "删除"
 #, kde-format
 msgctxt "status message, progress percentage"
 msgid "%1 (%2%)"
-msgstr ""
+msgstr "%1 (%2%)"
 
 #: quick/qml/AgentConfigurationForm.qml:116
 #, kde-format

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-15 00:44+0000\n"
+"POT-Creation-Date: 2026-06-19 00:44+0000\n"
 "PO-Revision-Date: 2007-09-11 22:44+0200\n"
 "Last-Translator: Northern Sami translation team <l10n-no@nuug.no>\n"
 "Language-Team: Northern Sami <l10n-no@nuug.no>\n"
@@ -39,13 +39,13 @@ msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr ""
 
-#: agentbase/agentbase.cpp:818
+#: agentbase/agentbase.cpp:817
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr ""
 
-#: agentbase/agentbase.cpp:824
+#: agentbase/agentbase.cpp:823
 #, kde-format
 msgid "Akonadi Agent"
 msgstr ""
