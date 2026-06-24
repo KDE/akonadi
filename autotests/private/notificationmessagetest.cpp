@@ -69,6 +69,23 @@ void NotificationMessageTest::testCompress3()
     QCOMPARE(list.count(), 1);
 }
 
+void NotificationMessageTest::testCompressDifferentSessionId()
+{
+    ChangeNotificationList list;
+    FetchCollectionsResponse collection(1);
+    CollectionChangeNotification msg;
+    msg.setCollection(std::move(collection));
+    msg.setOperation(CollectionChangeNotification::Modify);
+    msg.setSessionId("Source1");
+
+    QVERIFY(CollectionChangeNotification::appendAndCompress(list, CollectionChangeNotificationPtr::create(msg)));
+    QCOMPARE(list.count(), 1);
+
+    msg.setSessionId("Source2");
+    QVERIFY(CollectionChangeNotification::appendAndCompress(list, CollectionChangeNotificationPtr::create(msg)));
+    QCOMPARE(list.count(), 2);
+}
+
 void NotificationMessageTest::testPartModificationMerge()
 {
     ChangeNotificationList list;

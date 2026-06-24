@@ -725,7 +725,8 @@ bool ChangeNotification::appendAndCompress(ChangeNotificationList &list, const C
             // matching notification
             for (auto iter = list.end(), begin = list.begin(); iter != begin;) {
                 --iter;
-                if ((*iter)->type() == Protocol::Command::CollectionChangeNotification) {
+                const bool sameSource = iter->data()->sessionId() == msg->sessionId();
+                if (sameSource && (*iter)->type() == Protocol::Command::CollectionChangeNotification) {
                     auto &it = Protocol::cmdCast<class CollectionChangeNotification>(*iter);
                     const auto &msgCol = cmsg.collection();
                     const auto &itCol = it.collection();
