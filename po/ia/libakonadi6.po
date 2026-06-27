@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-06-19 00:44+0000\n"
-"PO-Revision-Date: 2026-05-06 10:56+0200\n"
+"PO-Revision-Date: 2026-06-26 17:47+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -678,7 +678,7 @@ msgstr "Dele"
 #, kde-format
 msgctxt "status message, progress percentage"
 msgid "%1 (%2%)"
-msgstr ""
+msgstr "%1 (%2%)"
 
 #: quick/qml/AgentConfigurationForm.qml:116
 #, kde-format
@@ -2581,25 +2581,22 @@ msgid "&Unsubscribe"
 msgstr "De-s&ubscribe"
 
 #: widgets/tageditwidget.cpp:123
-#, fuzzy, kde-format
-#| msgid "Failed to create a new tag"
+#, kde-format
 msgctxt "@info"
 msgid "Failed to create new tag %1: %2"
-msgstr "Incapace de crear un nove etiquetta"
+msgstr "Falleva a crear un nove etiquetta %1:%2"
 
 #: widgets/tageditwidget.cpp:130
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully added"
-msgstr ""
+msgstr "Etiquetta %1 addite  con successo"
 
 #: widgets/tageditwidget.cpp:174
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Delete Tag  <resource>%1</resource>"
-msgstr "Tu vermente vole remover le etiquetta <resource>%1</resource>?"
+msgstr "Dele etiquetta <resource>%1</resource>"
 
 #: widgets/tageditwidget.cpp:176
 #, kde-kuit-format
@@ -2608,6 +2605,8 @@ msgid ""
 "Press this button to show a dialog that asks permission to remove the "
 "<resource>%1</resource> tag from Akonadi."
 msgstr ""
+"Pressa iste button per monstrar un dialogo que demanda permission a remover "
+"le etiquetta <resource>%1</resource> ex Akonadi."
 
 #: widgets/tageditwidget.cpp:184
 #, kde-kuit-format
@@ -2622,17 +2621,16 @@ msgid "Delete Tag"
 msgstr "Dele etiquetta"
 
 #: widgets/tageditwidget.cpp:196
-#, fuzzy, kde-format
-#| msgid "Failed to create tag."
+#, kde-format
 msgctxt "@info"
 msgid "Failed to delete tag %1: %2"
-msgstr "Incapace de crear etiquetta."
+msgstr "Falleva a deler etiquetta  %1: %2"
 
 #: widgets/tageditwidget.cpp:200
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully removed"
-msgstr ""
+msgstr "Etiquetta %1 removite  con successo"
 
 #: widgets/tageditwidget.cpp:227
 #, kde-format
@@ -2650,7 +2648,7 @@ msgstr "Configura qual etiquettas deberea esser applicate."
 #: widgets/tageditwidget.ui:55
 #, kde-format
 msgid "Enter the name for a new tag"
-msgstr ""
+msgstr "Inserta le nomine per un nove etiquetta"
 
 #. i18n: ectx: property (whatsThis), widget (QLineEdit, newTagEdit)
 #: widgets/tageditwidget.ui:58
@@ -2659,13 +2657,14 @@ msgid ""
 "To create and select a new tag, enter a name for the new tag and then press "
 "the \"Create new tag\" button."
 msgstr ""
+"Per crear e seliger un nove etiquetta,inserta un nomine per le nove "
+"etiquetta e post pressa le button \"Crea Nove Etiquetta\"."
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:68
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgid "Create and select a new tag"
-msgstr "Crea nove etiquetta"
+msgstr "Crea e selige un nove etiquetta"
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:71
@@ -2674,6 +2673,9 @@ msgid ""
 "Press this button to create a new tag with the name specified in the "
 "adjacent line editor.  The new tag is automatically selected."
 msgstr ""
+"Pressa iste button pro crear un nove etiquetta con le nomine specificate  in "
+"le editor de linea adjacente. Le nove etiquetta es selectionate "
+"automaticamente."
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:74
