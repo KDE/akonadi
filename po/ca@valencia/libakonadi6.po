@@ -1002,7 +1002,7 @@ msgstr "&Nom:"
 #: widgets/collectiongeneralpropertiespage.ui:29
 #, kde-format
 msgid "&Use custom icon:"
-msgstr "Utilit&za una icona personalitzada:"
+msgstr "&Utilitza una icona personalitzada:"
 
 #. i18n: ectx: property (icon), widget (KIconButton, customIcon)
 #: widgets/collectiongeneralpropertiespage.ui:39
@@ -1305,7 +1305,7 @@ msgid ""
 "A required background service is not running. This application cannot be "
 "used without it."
 msgstr ""
-"Un servei necessari no està executant-se en segon pla. Esta aplicació no es "
+"Un servei necessari no s'està executant en segon pla. Esta aplicació no es "
 "pot utilitzar sense ell."
 
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
