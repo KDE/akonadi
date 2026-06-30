@@ -760,6 +760,7 @@ protected:
     void connectNotify(const QMetaMethod &signal) override;
     void disconnectNotify(const QMetaMethod &signal) override;
 
+    friend class ChangeMediator;
     friend class EntityTreeModel;
     friend class EntityTreeModelPrivate;
     std::unique_ptr<MonitorPrivate> const d_ptr;
@@ -769,9 +770,6 @@ private:
     Q_DECLARE_PRIVATE(Monitor)
 
     Q_PRIVATE_SLOT(d_ptr, void handleCommands())
-    Q_PRIVATE_SLOT(d_ptr, void invalidateCollectionCache(qint64))
-    Q_PRIVATE_SLOT(d_ptr, void invalidateItemCache(qint64))
-    Q_PRIVATE_SLOT(d_ptr, void invalidateTagCache(qint64))
 
     friend class ResourceBasePrivate;
 };
