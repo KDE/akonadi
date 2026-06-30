@@ -17,6 +17,7 @@ class JobPrivate;
 
 class Collection;
 class Item;
+class Monitor;
 class Tag;
 
 class ChangeMediator : public QObject
@@ -25,8 +26,8 @@ class ChangeMediator : public QObject
 public:
     static ChangeMediator *instance();
 
-    static void registerMonitor(QObject *monitor);
-    static void unregisterMonitor(QObject *monitor);
+    static void registerMonitor(const Monitor *monitor);
+    static void unregisterMonitor(const Monitor *monitor);
 
     static void invalidateCollection(const Akonadi::Collection &collection);
     static void invalidateItem(const Akonadi::Item &item);
@@ -36,7 +37,7 @@ protected:
     explicit ChangeMediator(QObject *parent = nullptr);
     Q_DISABLE_COPY_MOVE(ChangeMediator)
 
-    QList<QObject *> m_monitors;
+    QList<const Monitor *> m_monitors;
 };
 
 }

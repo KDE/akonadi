@@ -11,6 +11,8 @@
 
 #include "collection.h"
 #include "item.h"
+#include "monitor.h"
+#include "monitor_p.h"
 
 using namespace Akonadi;
 
@@ -39,7 +41,7 @@ ChangeMediator::ChangeMediator(QObject *parent)
 }
 
 /* static */
-void ChangeMediator::registerMonitor(QObject *monitor)
+void ChangeMediator::registerMonitor(const Monitor *monitor)
 {
     QMetaObject::invokeMethod(instance(), [monitor]() {
         instance()->m_monitors.push_back(monitor);
@@ -47,7 +49,7 @@ void ChangeMediator::registerMonitor(QObject *monitor)
 }
 
 /* static */
-void ChangeMediator::unregisterMonitor(QObject *monitor)
+void ChangeMediator::unregisterMonitor(const Monitor *monitor)
 {
     QMetaObject::invokeMethod(instance(), [monitor]() {
         instance()->m_monitors.removeAll(monitor);
@@ -59,9 +61,7 @@ void ChangeMediator::invalidateCollection(const Akonadi::Collection &collection)
 {
     QMetaObject::invokeMethod(instance(), [colId = collection.id()]() {
         for (auto monitor : std::as_const(instance()->m_monitors)) {
-            const bool ok = QMetaObject::invokeMethod(monitor, "invalidateCollectionCache", Q_ARG(qint64, colId));
-            Q_ASSERT(ok);
-            Q_UNUSED(ok)
+            monitor->d_ptr->invalidateCollectionCache(colId);
         }
     });
 }
@@ -71,9 +71,7 @@ void ChangeMediator::invalidateItem(const Akonadi::Item &item)
 {
     QMetaObject::invokeMethod(instance(), [itemId = item.id()]() {
         for (auto monitor : std::as_const(instance()->m_monitors)) {
-            const bool ok = QMetaObject::invokeMethod(monitor, "invalidateItemCache", Q_ARG(qint64, itemId));
-            Q_ASSERT(ok);
-            Q_UNUSED(ok)
+            monitor->d_ptr->invalidateItemCache(itemId);
         }
     });
 }
@@ -83,9 +81,7 @@ void ChangeMediator::invalidateTag(const Tag &tag)
 {
     QMetaObject::invokeMethod(instance(), [tagId = tag.id()]() {
         for (auto monitor : std::as_const(instance()->m_monitors)) {
-            const bool ok = QMetaObject::invokeMethod(monitor, "invalidateTagCache", Q_ARG(qint64, tagId));
-            Q_ASSERT(ok);
-            Q_UNUSED(ok)
+            monitor->d_ptr->invalidateTagCache(tagId);
         }
     });
 }
