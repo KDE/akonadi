@@ -132,7 +132,7 @@ void CollectionJobTest::testFolderList()
     QCOMPARE(count, list.count());
 
     // check if everything is there
-    QCOMPARE(list.count(), 4);
+    QCOMPARE(list.count(), 5);
     Collection col;
     QStringList contentTypes;
 
@@ -223,7 +223,7 @@ void CollectionJobTest::testResourceFolderList()
     AKVERIFYEXEC(job);
 
     Collection::List list = job->collections();
-    QCOMPARE(list.count(), 5);
+    QCOMPARE(list.count(), 6);
     QVERIFY(findCol(list, QStringLiteral("res1")).isValid());
     QVERIFY(findCol(list, QStringLiteral("foo")).isValid());
     QVERIFY(findCol(list, QStringLiteral("bar")).isValid());
@@ -248,7 +248,7 @@ void CollectionJobTest::testMimeTypeFilter()
     AKVERIFYEXEC(job);
 
     Collection::List list = job->collections();
-    QCOMPARE(list.count(), 2);
+    QCOMPARE(list.count(), 3);
     QVERIFY(findCol(list, QStringLiteral("res1")).isValid());
     QVERIFY(findCol(list, QStringLiteral("foo")).isValid());
     int fooId = findCol(list, QStringLiteral("foo")).id();
@@ -648,7 +648,7 @@ void CollectionJobTest::testRecursiveMultiList()
     QCOMPARE(count, list.count());
 
     // check if everything is there
-    QCOMPARE(list.count(), 4 + 2);
+    QCOMPARE(list.count(), 5 + 2);
     QVERIFY(findCol(list, QStringLiteral("foo")).isValid());
     QVERIFY(findCol(list, QStringLiteral("bar")).isValid());
     QVERIFY(findCol(list, QStringLiteral("bla")).isValid()); // There are two bla folders, but we only check for one.

@@ -73,6 +73,12 @@
     <attribute type="HEAD">From: &lt;test14@user.tst&gt;</attribute>
    </item>
   </collection>
+  <collection rid="13" name="foo2" content="inode/directory,application/octet-stream,text/directory,text/calendar,message/rfc822">
+   <item rid="E" mimetype="application/octet-stream">
+    <payload>testmailbodyfoo2</payload>
+    <attribute type="HEAD">From: &lt;testfoo2@user.tst&gt;</attribute>
+   </item>
+  </collection>
  </collection>
  <tag name="name" type="type" gid="taggid" rid="tagrid"></tag>
 </knut>
