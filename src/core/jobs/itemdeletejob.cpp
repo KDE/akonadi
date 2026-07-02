@@ -80,6 +80,16 @@ ItemDeleteJob::ItemDeleteJob(const Item &item, QObject *parent)
     d->mRemainingItems = std::span(d->mItems);
 }
 
+ItemDeleteJob::ItemDeleteJob(const Item &item, const Collection &collection, QObject *parent)
+    : Job(new ItemDeleteJobPrivate(this), parent)
+{
+    Q_D(ItemDeleteJob);
+
+    d->mItems << item;
+    d->mRemainingItems = std::span(d->mItems);
+    d->mCollection = collection;
+}
+
 ItemDeleteJob::ItemDeleteJob(const Item::List &items, QObject *parent)
     : Job(new ItemDeleteJobPrivate(this), parent)
 {
@@ -87,6 +97,16 @@ ItemDeleteJob::ItemDeleteJob(const Item::List &items, QObject *parent)
 
     d->mItems = items;
     d->mRemainingItems = std::span(d->mItems);
+}
+
+ItemDeleteJob::ItemDeleteJob(const Item::List &items, const Collection &collection, QObject *parent)
+    : Job(new ItemDeleteJobPrivate(this), parent)
+{
+    Q_D(ItemDeleteJob);
+
+    d->mItems = items;
+    d->mRemainingItems = std::span(d->mItems);
+    d->mCollection = collection;
 }
 
 ItemDeleteJob::ItemDeleteJob(const Collection &collection, QObject *parent)
