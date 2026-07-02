@@ -135,6 +135,66 @@ private Q_SLOTS:
         }
     }
 
+    // Check that an RID delete does not delete items with the same RID in different collections
+    void testRidDeleteMultipleCollections()
+    {
+        auto monitor = AkonadiTest::getTestMonitor();
+        QSignalSpy spy(monitor.get(), &Monitor::itemsRemoved);
+
+        {
+            auto select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
+            AKVERIFYEXEC(select);
+        }
+        Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
+        QVERIFY(col.isValid());
+
+        Collection col2(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo2")));
+        QVERIFY(col2.isValid());
+
+        Item i;
+        i.setRemoteId(QStringLiteral("E"));
+
+        // Check that we have an item with the same remote id in each collection
+        auto fjob = new ItemFetchJob(i, this);
+        fjob->setCollection(col);
+        AKVERIFYEXEC(fjob);
+        auto items = fjob->items();
+        QCOMPARE(items.count(), 1);
+
+        auto fjob2 = new ItemFetchJob(i, this);
+        fjob2->setCollection(col2);
+        AKVERIFYEXEC(fjob2);
+        auto items2 = fjob2->items();
+        QCOMPARE(items2.count(), 1);
+
+        // Delete the item from the first collection
+        Item itemToDelete;
+        itemToDelete.setRemoteId(QStringLiteral("E"));
+        auto djob = new ItemDeleteJob(itemToDelete, col, this);
+        AKVERIFYEXEC(djob);
+
+        QTRY_COMPARE(spy.count(), 1);
+        auto ntfItems = spy.at(0).at(0).value<Akonadi::Item::List>();
+        QCOMPARE(ntfItems.count(), 1);
+        QCOMPARE(ntfItems.at(0).id(), items[0].id());
+        QVERIFY(ntfItems.at(0).parentCollection().isValid());
+
+        // The item is deleted in the first collection, not the second
+        fjob = new ItemFetchJob(i, this);
+        fjob->setCollection(col);
+        QVERIFY(!fjob->exec());
+
+        fjob2 = new ItemFetchJob(i, this);
+        fjob2->setCollection(col2);
+        AKVERIFYEXEC(fjob2);
+        items2 = fjob2->items();
+        QCOMPARE(items2.count(), 1);
+        {
+            auto select = new ResourceSelectJob(QStringLiteral(""));
+            AKVERIFYEXEC(select);
+        }
+    }
+
     void testTagDelete()
     {
         auto monitor = AkonadiTest::getTestMonitor();
