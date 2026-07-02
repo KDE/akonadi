@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-19 00:44+0000\n"
+"POT-Creation-Date: 2026-07-02 00:45+0000\n"
 "PO-Revision-Date: 2025-08-25 09:08+0300\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -2512,7 +2512,7 @@ msgstr "Jaunas mapes izveidošanas kļūda"
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "Mapes nosaukums nedrīkst sākties vai beigties ar punktu (.)."
 
-#: widgets/standardactionmanager.cpp:1019
+#: widgets/standardactionmanager.cpp:1024
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2521,23 +2521,23 @@ msgstr ""
 "Pirms mapes „%1“ sinhronizēšanas ir svarīgi, lai resurss atrastos "
 "tiešsaistē. Vai vēlaties, lai tas ir tiešsaistē?"
 
-#: widgets/standardactionmanager.cpp:1020
+#: widgets/standardactionmanager.cpp:1025
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "Konts „%1“ ir nesaistē"
 
-#: widgets/standardactionmanager.cpp:1021
+#: widgets/standardactionmanager.cpp:1026
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Ieslēgt tiešsaisti"
 
-#: widgets/standardactionmanager.cpp:1641
+#: widgets/standardactionmanager.cpp:1646
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Pārvietot uz šo mapi"
 
-#: widgets/standardactionmanager.cpp:1641
+#: widgets/standardactionmanager.cpp:1646
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Kopēt uz šo mapi"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-19 00:44+0000\n"
+"POT-Creation-Date: 2026-07-02 00:45+0000\n"
 "PO-Revision-Date: 2026-06-15 09:00+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -2521,7 +2521,7 @@ msgstr "S'ha produït un error mentre es creava una carpeta nova"
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "No es pot afegir «.» a l'inici o al final del nom de la carpeta."
 
-#: widgets/standardactionmanager.cpp:1019
+#: widgets/standardactionmanager.cpp:1024
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2530,23 +2530,23 @@ msgstr ""
 "Abans de sincronitzar la carpeta «%1» cal tindre el recurs en línia. Voleu "
 "posar-lo en línia?"
 
-#: widgets/standardactionmanager.cpp:1020
+#: widgets/standardactionmanager.cpp:1025
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "El compte «%1» està desconnectat"
 
-#: widgets/standardactionmanager.cpp:1021
+#: widgets/standardactionmanager.cpp:1026
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Connecta"
 
-#: widgets/standardactionmanager.cpp:1641
+#: widgets/standardactionmanager.cpp:1646
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Mou cap a esta carpeta"
 
-#: widgets/standardactionmanager.cpp:1641
+#: widgets/standardactionmanager.cpp:1646
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Copia a esta carpeta"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-19 00:44+0000\n"
+"POT-Creation-Date: 2026-07-02 00:45+0000\n"
 "PO-Revision-Date: 2024-12-15 18:58+0530\n"
 "Last-Translator: Kali <EMAIL@ADDRESS>\n"
 "Language-Team: Hindi <fedora-trans-hi@redhat.com>\n"
@@ -2481,7 +2481,7 @@ msgstr "नया फ़ोल्डर बनाने में त्रु�
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "हम फ़ोल्डर नाम के आरंभ या अंत में \".\" नहीं जोड़ सकते।"
 
-#: widgets/standardactionmanager.cpp:1019
+#: widgets/standardactionmanager.cpp:1024
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2490,23 +2490,23 @@ msgstr ""
 "फ़ोल्डर \"%1\" को सिंक करने से पहले संसाधन को ऑनलाइन करना आवश्यक है। क्या आप इसे ऑनलाइन "
 "करना चाहते हैं?"
 
-#: widgets/standardactionmanager.cpp:1020
+#: widgets/standardactionmanager.cpp:1025
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "खाता \"%1\" ऑफ़लाइन है"
 
-#: widgets/standardactionmanager.cpp:1021
+#: widgets/standardactionmanager.cpp:1026
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "ऑनलाइन जाओ"
 
-#: widgets/standardactionmanager.cpp:1641
+#: widgets/standardactionmanager.cpp:1646
 #, kde-format
 msgid "Move to This Folder"
 msgstr "इस फ़ोल्डर में ले जाएँ"
 
-#: widgets/standardactionmanager.cpp:1641
+#: widgets/standardactionmanager.cpp:1646
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "इस फ़ोल्डर में कॉपी करें"

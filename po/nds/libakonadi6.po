@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-06-19 00:44+0000\n"
+"POT-Creation-Date: 2026-07-02 00:45+0000\n"
 "PO-Revision-Date: 2014-09-18 22:53+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -2593,7 +2593,7 @@ msgstr "Fehler bi't Opstellen vun en niegen Orner"
 msgid "We can not add \".\" at begin or end of folder name."
 msgstr "En Ornernaam lett sik keen \".\" vör- oder achteranstellen."
 
-#: widgets/standardactionmanager.cpp:1019
+#: widgets/standardactionmanager.cpp:1024
 #, kde-format
 msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
@@ -2602,23 +2602,23 @@ msgstr ""
 "Ehr Du den Orner \"%1\" synkroniseren kannst, muttst Du de Ressource "
 "tokoppeln. Wullt Du ehr nu tokoppeln?"
 
-#: widgets/standardactionmanager.cpp:1020
+#: widgets/standardactionmanager.cpp:1025
 #, kde-format
 msgid "Account \"%1\" is offline"
 msgstr "Konto \"%1\" is afkoppelt"
 
-#: widgets/standardactionmanager.cpp:1021
+#: widgets/standardactionmanager.cpp:1026
 #, kde-format
 msgctxt "@action:button"
 msgid "Go Online"
 msgstr "Tokoppeln"
 
-#: widgets/standardactionmanager.cpp:1641
+#: widgets/standardactionmanager.cpp:1646
 #, kde-format
 msgid "Move to This Folder"
 msgstr "Na dissen Orner verschuven"
 
-#: widgets/standardactionmanager.cpp:1641
+#: widgets/standardactionmanager.cpp:1646
 #, kde-format
 msgid "Copy to This Folder"
 msgstr "Na dissen Orner koperen"
