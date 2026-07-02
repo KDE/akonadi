@@ -69,6 +69,16 @@ public:
     explicit ItemDeleteJob(const Item &item, QObject *parent = nullptr);
 
     /*!
+     * Creates a new item delete job that deletes \a item in the given \a collection. The item
+     * needs to have a unique identifier or a remote identifier set.
+     *
+     * \a item The item to delete.
+     * \a collection The collection context
+     * \a parent The parent object.
+     */
+    explicit ItemDeleteJob(const Item &item, const Collection &collection, QObject *parent = nullptr);
+
+    /*!
      * Creates a new item delete job that deletes all items in the list
      * \a items. Each item needs to have a unique identifier set. These items
      * can be located in any collection.
@@ -85,6 +95,18 @@ public:
      * \since 4.3
      */
     explicit ItemDeleteJob(const Item::List &items, QObject *parent = nullptr);
+
+    /*!
+     * Creates a new item delete job that deletes all items of the collection \a collection in the list
+     * \a items. Each item needs to have a unique identifier or a remote identifier set.
+     *
+     * \a items The items to delete.
+     * \a collection the collection context
+     * \a parent The parent object.
+     *
+     * \since 4.3
+     */
+    explicit ItemDeleteJob(const Item::List &items, const Collection &collection, QObject *parent = nullptr);
 
     /*!
      * Creates a new item delete job that deletes all items in the collection

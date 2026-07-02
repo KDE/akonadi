@@ -411,7 +411,7 @@ void ItemSyncPrivate::deleteItems(const Item::List &itemsToDelete)
     }
 
     mPendingJobs++;
-    auto job = new ItemDeleteJob(itemsToDelete, subjobParent());
+    auto job = new ItemDeleteJob(itemsToDelete, mSyncCollection, subjobParent());
     q->connect(job, &ItemDeleteJob::result, q, [this](KJob *job) {
         slotLocalDeleteDone(job);
     });
