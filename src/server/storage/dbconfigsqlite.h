@@ -67,6 +67,12 @@ public:
     void apply(QSqlDatabase &database) override;
 
     /**
+     * Do session setup/initialization work on @p database.
+     * For SQLite, it's necessary to set per-session settings such as enabling foreign keys.
+     */
+    void initSession(const QSqlDatabase &database) override;
+
+    /**
      * Returns whether an internal server needs to be used.
      */
     bool useInternalServer() const override;
@@ -83,7 +89,9 @@ public:
     bool enableConstraintChecks(const QSqlDatabase &db) override;
 
 private:
-    bool setPragma(QSqlDatabase &db, QSqlQuery &query, const QString &pragma);
+    bool setPragma(const QSqlDatabase &db, QSqlQuery &query, const QString &pragma);
+
+    bool setSessionSettings(const QSqlDatabase &db);
 
     QString mDatabaseName;
     QString mHostName;

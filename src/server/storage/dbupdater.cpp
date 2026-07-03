@@ -31,6 +31,9 @@
 #include <QFile>
 #include <QSqlResult>
 
+#include <expected>
+
+using namespace Qt::Literals;
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
@@ -564,6 +567,71 @@ bool DbUpdater::complexUpdate_36()
     if (!query.exec(QStringLiteral("VACUUM"))) {
         qCWarning(AKONADISERVER_LOG) << "Vacuum failed (not fatal, update will continue)";
         qCWarning(AKONADISERVER_LOG) << "Error:" << query.lastError().text();
+    }
+
+    return true;
+}
+
+[[nodiscard]] std::expected<QHash<QString, QList<qint64>>, QSqlError> fetchForeignKeyViolations(QSqlQuery &query)
+{
+    // List every row that violates a FK constraint: table | rowid | parent-table | fk-index
+    if (!query.exec(QStringLiteral("PRAGMA foreign_key_check"))) {
+        return std::unexpected{query.lastError()};
+    }
+
+    // Collect violating row ids per table in a single pass before issuing DELETE's
+    auto violations = QHash<QString, QList<qint64>>();
+    while (query.next()) {
+        violations[query.value(0).toString()] << query.value(1).toLongLong();
+    }
+    return violations;
+}
+
+bool DbUpdater::complexUpdate_43()
+{
+    qCDebug(AKONADISERVER_LOG, "Starting database update to version 43");
+    Q_ASSERT(DbType::type(m_database) == DbType::Sqlite);
+
+    QSqlQuery query(m_database);
+
+    // Disable FK enforcement so that row changes don't trigger errors
+    if (!query.exec(QStringLiteral("PRAGMA foreign_keys=OFF"))) {
+        qCCritical(AKONADISERVER_LOG, "Failed to disable foreign keys!");
+        return false;
+    }
+
+    // Cleaning up with disabled FK might create new violations, so we iterate until there are no more
+    auto violations = fetchForeignKeyViolations(query);
+    while (violations && !violations->empty()) {
+        // Since a row can cause multiple violation, we track those we already deleted
+        QSet<qint64> deletedRows;
+
+        // Iterate over all violations: the schema's violation can only be CASCADE, we delete them
+        for (auto it = violations->cbegin(); it != violations->cend(); ++it) {
+            qCWarning(AKONADISERVER_LOG) << "Removing" << it.value().size() << "FK-violating orphan row(s) from" << it.key();
+
+            auto deleteQuery = QSqlQuery(m_database);
+            deleteQuery.prepare(u"DELETE FROM %1 WHERE rowid = ?"_s.arg(it.key()));
+
+            for (const auto rowid : it.value()) {
+                if (deletedRows.contains(rowid)) {
+                    continue;
+                }
+                deleteQuery.bindValue(0, rowid);
+                if (!deleteQuery.exec()) {
+                    qCCritical(AKONADISERVER_LOG) << "Failed to delete row" << rowid << "from" << it.key() << ':' << deleteQuery.lastError().text();
+                    return false;
+                }
+                deletedRows << rowid;
+            }
+        }
+
+        violations = fetchForeignKeyViolations(query);
+    }
+
+    if (!violations) {
+        qCCritical(AKONADISERVER_LOG, "Failed to fetch FK violations: %s", qUtf8Printable(violations.error().text()));
+        return false;
     }
 
     return true;

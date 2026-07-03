@@ -339,4 +339,9 @@
     <raw-sql backends="mysql">ALTER TABLE PimItemTable ROW_FORMAT=DYNAMIC</raw-sql>
     <raw-sql backends="mysql">ALTER TABLE PimItemTable MODIFY COLUMN remoteId VARBINARY(1024)</raw-sql>
   </update>
+
+  <update version="43" abortOnFailure="true">
+    <!-- Migrate database to respect FK that were previously not enforced with SQLite //-->
+    <complex-update backends="sqlite" />
+  </update>
 </updates>

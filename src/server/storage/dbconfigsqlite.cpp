@@ -142,12 +142,17 @@ void DbConfigSqlite::apply(QSqlDatabase &database)
     Q_ASSERT(database.driver()->hasFeature(QSqlDriver::LastInsertId));
 }
 
+void DbConfigSqlite::initSession(const QSqlDatabase &db)
+{
+    setSessionSettings(db);
+}
+
 bool DbConfigSqlite::useInternalServer() const
 {
     return false;
 }
 
-bool DbConfigSqlite::setPragma(QSqlDatabase &db, QSqlQuery &query, const QString &pragma)
+bool DbConfigSqlite::setPragma(const QSqlDatabase &db, QSqlQuery &query, const QString &pragma)
 {
     if (!query.exec(QStringLiteral("PRAGMA %1").arg(pragma))) {
         qCCritical(AKONADISERVER_LOG) << "Could not set sqlite PRAGMA " << pragma;
@@ -223,13 +228,6 @@ void DbConfigSqlite::setup()
         const QStringList list = sqliteVersion.split(u'.');
         const int sqliteVersionMajor = list[0].toInt();
         const int sqliteVersionMinor = list[1].toInt();
-
-        // set synchronous mode to NORMAL; see http://www.sqlite.org/pragma.html#pragma_synchronous
-        if (!setPragma(db, query, QStringLiteral("synchronous=1"))) {
-            db.close();
-            return;
-        }
-
         if (sqliteVersionMajor < 3 && sqliteVersionMinor < 7) {
             // wal mode is only supported with >= sqlite 3.7.0
             db.close();
@@ -260,20 +258,7 @@ void DbConfigSqlite::setup()
             return;
         }
 
-        // set cache_size to 100000 pages; see https://www.sqlite.org/pragma.html#pragma_cache_size
-        if (!setPragma(db, query, QStringLiteral("cache_size=100000"))) {
-            db.close();
-            return;
-        }
-
-        // construct temporary tables in memory; see https://www.sqlite.org/pragma.html#pragma_temp_store
-        if (!setPragma(db, query, QStringLiteral("temp_store=MEMORY"))) {
-            db.close();
-            return;
-        }
-
-        // enable foreign key support; see https://www.sqlite.org/pragma.html#pragma_foreign_keys
-        if (!setPragma(db, query, QStringLiteral("foreign_keys=ON"))) {
+        if (!setSessionSettings(db)) {
             db.close();
             return;
         }
@@ -294,4 +279,41 @@ bool DbConfigSqlite::enableConstraintChecks(const QSqlDatabase &db)
 {
     QSqlQuery query(db);
     return query.exec(QStringLiteral("PRAGMA ignore_check_constraints=OFF"));
+}
+
+bool DbConfigSqlite::setSessionSettings(const QSqlDatabase &db)
+{
+    // Some settings need to be set for each sqlite connection while persistent are defined in setup()
+    QSqlQuery query(db);
+    bool success = true;
+
+    // set synchronous mode to NORMAL; see http://www.sqlite.org/pragma.html#pragma_synchronous
+    if (!setPragma(db, query, QStringLiteral("synchronous=1"))) {
+        qCCritical(AKONADISERVER_LOG) << "Failed to set sqlite synchronous mode";
+        qCCritical(AKONADISERVER_LOG) << "Database error: " << db.lastError().text();
+        success = false;
+    }
+
+    // set cache_size to 100000 pages; see https://www.sqlite.org/pragma.html#pragma_cache_size
+    if (!setPragma(db, query, QStringLiteral("cache_size=100000"))) {
+        qCCritical(AKONADISERVER_LOG) << "Failed to set sqlite cache_size";
+        qCCritical(AKONADISERVER_LOG) << "Database error: " << db.lastError().text();
+        success = false;
+    }
+
+    // construct temporary tables in memory; see https://www.sqlite.org/pragma.html#pragma_temp_store
+    if (!setPragma(db, query, QStringLiteral("temp_store=MEMORY"))) {
+        qCCritical(AKONADISERVER_LOG) << "Failed to set sqlite temp_store";
+        qCCritical(AKONADISERVER_LOG) << "Database error: " << db.lastError().text();
+        success = false;
+    }
+
+    // enable foreign key support; see https://www.sqlite.org/pragma.html#pragma_foreign_keys
+    if (!setPragma(db, query, QStringLiteral("foreign_keys=ON"))) {
+        qCCritical(AKONADISERVER_LOG) << "Failed to set sqlite foreign_keys";
+        qCCritical(AKONADISERVER_LOG) << "Database error: " << db.lastError().text();
+        success = false;
+    }
+
+    return success;
 }

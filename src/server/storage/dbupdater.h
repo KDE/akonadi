@@ -64,6 +64,7 @@ public:
 private Q_SLOTS:
     bool complexUpdate_25();
     bool complexUpdate_36();
+    bool complexUpdate_43();
 
 private:
     friend class ::DbUpdaterTest;
