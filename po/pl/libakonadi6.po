@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-02 00:45+0000\n"
-"PO-Revision-Date: 2026-05-09 15:54+0200\n"
+"PO-Revision-Date: 2026-07-04 15:41+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
 "Language: pl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 26.04.0\n"
+"X-Generator: Lokalize 26.04.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -676,7 +676,7 @@ msgstr "Usuń"
 #, kde-format
 msgctxt "status message, progress percentage"
 msgid "%1 (%2%)"
-msgstr ""
+msgstr "%1 (%2%)"
 
 #: quick/qml/AgentConfigurationForm.qml:116
 #, kde-format
@@ -1180,12 +1180,12 @@ msgstr "Dane"
 #: widgets/controlgui.cpp:223
 #, kde-format
 msgid "Starting Akonadi server..."
-msgstr "Uruchamianie serwera Akonadi..."
+msgstr "Uruchamianie serwera Akonadi…"
 
 #: widgets/controlgui.cpp:229
 #, kde-format
 msgid "Stopping Akonadi server..."
-msgstr "Zatrzymywanie serwera Akonadi..."
+msgstr "Zatrzymywanie serwera Akonadi…"
 
 #: widgets/dragdropmanager.cpp:212
 #, kde-format
@@ -2594,25 +2594,22 @@ msgid "&Unsubscribe"
 msgstr "Wyłącz s&ubskrypcję"
 
 #: widgets/tageditwidget.cpp:123
-#, fuzzy, kde-format
-#| msgid "Failed to create a new tag"
+#, kde-format
 msgctxt "@info"
 msgid "Failed to create new tag %1: %2"
-msgstr "Nie udało się utworzyć nowego znacznika"
+msgstr "Nie udało się utworzyć nowego znacznika %1: %2"
 
 #: widgets/tageditwidget.cpp:130
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully added"
-msgstr ""
+msgstr "Pomyślnie dodano znacznik %1"
 
 #: widgets/tageditwidget.cpp:174
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Delete Tag  <resource>%1</resource>"
-msgstr "Czy na pewno usunąć znacznik <resource>%1</resource>?"
+msgstr "Usuń znacznik <resource>%1</resource>"
 
 #: widgets/tageditwidget.cpp:176
 #, kde-kuit-format
@@ -2621,6 +2618,8 @@ msgid ""
 "Press this button to show a dialog that asks permission to remove the "
 "<resource>%1</resource> tag from Akonadi."
 msgstr ""
+"Naciśnij ten przycisk, aby pokazać okno z pytaniem o usunięcie znacznika "
+"<resource>%1</resource> z Akonadi."
 
 #: widgets/tageditwidget.cpp:184
 #, kde-kuit-format
@@ -2635,17 +2634,16 @@ msgid "Delete Tag"
 msgstr "Usuń znacznik"
 
 #: widgets/tageditwidget.cpp:196
-#, fuzzy, kde-format
-#| msgid "Failed to create tag."
+#, kde-format
 msgctxt "@info"
 msgid "Failed to delete tag %1: %2"
-msgstr "Nieudane tworzenie znacznika."
+msgstr "Nie udało się usunąć znacznika %1: %2"
 
 #: widgets/tageditwidget.cpp:200
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully removed"
-msgstr ""
+msgstr "Pomyślnie usunięto znacznik %1"
 
 #: widgets/tageditwidget.cpp:227
 #, kde-format
@@ -2663,7 +2661,7 @@ msgstr "Wybierz znaczniki, które zastosować."
 #: widgets/tageditwidget.ui:55
 #, kde-format
 msgid "Enter the name for a new tag"
-msgstr ""
+msgstr "Wpisz nazwę dla nowego znacznika"
 
 #. i18n: ectx: property (whatsThis), widget (QLineEdit, newTagEdit)
 #: widgets/tageditwidget.ui:58
@@ -2672,13 +2670,14 @@ msgid ""
 "To create and select a new tag, enter a name for the new tag and then press "
 "the \"Create new tag\" button."
 msgstr ""
+"Aby utworzyć i zaznaczyć nowy znacznik, wpisz nazwę dla niego i naciśnij "
+"przycisk \"Utwórz nowy znacznik\"."
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:68
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgid "Create and select a new tag"
-msgstr "Utwórz nowy znacznik"
+msgstr "Utwórz i zaznacz nowy znacznik"
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:71
@@ -2687,6 +2686,8 @@ msgid ""
 "Press this button to create a new tag with the name specified in the "
 "adjacent line editor.  The new tag is automatically selected."
 msgstr ""
+"Naciśnij ten przycisk, aby utworzyć nowy znacznik o nazwie podanej w "
+"sąsiednim edytorze. Nowy znacznik zostanie także zaznaczony."
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:74
