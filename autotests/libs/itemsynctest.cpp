@@ -470,6 +470,72 @@ private Q_SLOTS:
     }
 
     /*
+     * This test verifies that in the case of multiple items sharing the same RID across collections, deleting
+     * one of the items does not delete the other items sharing the same RID
+     */
+    void testIncrementalSyncDuplicateRidDeletion()
+    {
+        // we don't want to delete any items from this collection
+        const Collection colNoDelete = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
+        // the collection where the item should be deleted
+        const Collection colDeleted = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo2")));
+        QVERIFY(colNoDelete.isValid());
+        QVERIFY(colDeleted.isValid());
+        Item::List origItems = fetchItems(colNoDelete);
+        Item::List origItems2 = fetchItems(colDeleted);
+
+        QCOMPARE(origItems2.size(), 1);
+        auto deletedRID = origItems2[0].remoteId();
+        QVERIFY(std::any_of(origItems.cbegin(), origItems.cend(), [deletedRID](const Item &it) {
+            return it.remoteId() == deletedRID;
+        }));
+
+        auto monitor = createCollectionMonitor(colDeleted);
+        QSignalSpy deletedSpy(monitor.get(), &Monitor::itemRemoved);
+        QSignalSpy addedSpy(monitor.get(), &Monitor::itemAdded);
+        QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
+
+        auto syncer = new ItemSync(colDeleted);
+        syncer->setTransactionMode(ItemSync::SingleTransaction);
+        QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
+        QVERIFY(transactionSpy.isValid());
+        syncer->setAutoDelete(false);
+        QSignalSpy spy(syncer, &KJob::result);
+        QVERIFY(spy.isValid());
+        syncer->setStreamingEnabled(true);
+        QTest::qWait(0);
+        QCOMPARE(spy.count(), 0);
+
+        Item itemToDelete;
+        itemToDelete.setRemoteId(deletedRID);
+        syncer->setIncrementalSyncItems({}, {itemToDelete});
+        syncer->deliveryDone();
+        QTRY_COMPARE(spy.count(), 1);
+        KJob *job = spy.at(0).at(0).value<KJob *>();
+        QCOMPARE(job, syncer);
+        QCOMPARE(job->error(), 0);
+        QCOMPARE(transactionSpy.count(), 1);
+
+        Item::List resultItems = fetchItems(colNoDelete);
+        QCOMPARE(resultItems.count(), origItems.count());
+
+        Item::List resultItems2 = fetchItems(colDeleted);
+        QCOMPARE(resultItems2.count(), 0);
+
+        // verify the item in the first collection has not been deleted
+        QVERIFY(std::any_of(resultItems.cbegin(), resultItems.cend(), [itemToDelete](const Item &it) {
+            return it.remoteId() == itemToDelete.remoteId();
+        }));
+
+        delete syncer;
+
+        QTest::qWait(100);
+        QCOMPARE(changedSpy.count(), 0);
+        QCOMPARE(addedSpy.count(), 0);
+        QTRY_COMPARE(deletedSpy.count(), 1);
+    }
+
+    /*
      * This test verifies that ItemSync doesn't prematurely emit its result if a job inside a transaction fails.
      * ItemSync is supposed to continue the sync but simply ignoring all delivered data.
      */
