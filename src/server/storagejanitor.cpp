@@ -728,8 +728,23 @@ void StorageJanitor::vacuum()
             }
         }
         inform("vacuum done");
+    } else if (dbType == DbType::Sqlite) {
+        inform(
+            "vacuuming database, that'll take some time and require a lot of "
+            "temporary disk space...");
+        QSqlQuery q(m_dataStore->database());
+        if (!q.exec(QLatin1StringView("VACUUM"))) {
+            qCCritical(AKONADISERVER_LOG) << "failed to optimize database:" << q.lastError().text();
+        }
+        if (!q.exec(QLatin1StringView("PRAGMA wal_checkpoint(TRUNCATE)"))) {
+            // Not critical since the WAL will eventually truncate, but it does
+            // mean the total database size is twice its actual size
+            qCWarning(AKONADISERVER_LOG) << "Unable to clear the write-ahead log:" << q.lastError().text()
+                                         << ". Restart akonadi to free up additional disk space.";
+        }
+        inform("vacuum done");
     } else {
-        inform("Vacuum not supported for this database backend. (Sqlite backend)");
+        inform("Vacuum not supported for this database backend.");
     }
 
     Q_EMIT done();
