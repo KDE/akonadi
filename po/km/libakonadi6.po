@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-02 00:45+0000\n"
+"POT-Creation-Date: 2026-07-13 00:44+0000\n"
 "PO-Revision-Date: 2012-07-11 10:23+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -54,7 +54,7 @@ msgstr "គ្រឿង​សម្គាល់​ភ្នាក់​ងារ
 msgid "Akonadi Agent"
 msgstr "ភ្នាក់ងារ​របស់ Akonadi"
 
-#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:268
+#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:212
 #, kde-format
 msgctxt "@info:status Application ready for work"
 msgid "Ready"
@@ -175,7 +175,7 @@ msgstr "បាន​បរាជ័យ​ក្នុង​ការ​ទៅ​
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr "បាន​បរាជ័យ​ក្នុង​ការ​ទៅ​ប្រមូល​យក​​​សម្រាំង​ធនធាន ។"
 
-#: agentbase/resourcescheduler.cpp:485 agentbase/resourcescheduler.cpp:491
+#: agentbase/resourcescheduler.cpp:429 agentbase/resourcescheduler.cpp:435
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."

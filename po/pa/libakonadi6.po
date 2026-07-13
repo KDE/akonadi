@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-02 00:45+0000\n"
+"POT-Creation-Date: 2026-07-13 00:44+0000\n"
 "PO-Revision-Date: 2023-12-31 09:30-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -52,7 +52,7 @@ msgstr "ਏਜੰਟ ਪਛਾਣ"
 msgid "Akonadi Agent"
 msgstr "ਅਕੋਂਡੀ ਏਜੰਟ"
 
-#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:268
+#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:212
 #, kde-format
 msgctxt "@info:status Application ready for work"
 msgid "Ready"
@@ -162,7 +162,7 @@ msgstr "ਫੋਲਡਰ ਵਿਸ਼ੇਸ਼ਤਾ(&P)"
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr "ਫੋਲਡਰ ਵਿਸ਼ੇਸ਼ਤਾ(&P)"
 
-#: agentbase/resourcescheduler.cpp:485 agentbase/resourcescheduler.cpp:491
+#: agentbase/resourcescheduler.cpp:429 agentbase/resourcescheduler.cpp:435
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."

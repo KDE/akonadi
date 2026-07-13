@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-02 00:45+0000\n"
+"POT-Creation-Date: 2026-07-13 00:44+0000\n"
 "PO-Revision-Date: 2021-11-13 21:43+0100\n"
 "Last-Translator: Edward Wornar <edi.werner@gmx.de>\n"
 "Language-Team: Upper Sorbian <kde-i18n-doc@kde.org>\n"
@@ -50,7 +50,7 @@ msgstr "Agentowy identifikator"
 msgid "Akonadi Agent"
 msgstr "Akonadi Agent"
 
-#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:268
+#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:212
 #, kde-format
 msgctxt "@info:status Application ready for work"
 msgid "Ready"
@@ -160,7 +160,7 @@ msgstr "Njemóžach zběrku wobstarać za synchronizowanje."
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr "Njemóžach zběrku wobstarać za synchronizowanje atributow."
 
-#: agentbase/resourcescheduler.cpp:485 agentbase/resourcescheduler.cpp:491
+#: agentbase/resourcescheduler.cpp:429 agentbase/resourcescheduler.cpp:435
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."

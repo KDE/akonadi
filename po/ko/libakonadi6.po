@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-02 00:45+0000\n"
+"POT-Creation-Date: 2026-07-13 00:44+0000\n"
 "PO-Revision-Date: 2026-06-06 11:45+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -49,7 +49,7 @@ msgstr "에이전트 식별자"
 msgid "Akonadi Agent"
 msgstr "Akonadi 에이전트"
 
-#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:268
+#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:212
 #, kde-format
 msgctxt "@info:status Application ready for work"
 msgid "Ready"
@@ -157,7 +157,7 @@ msgstr "모음집 동기화에 사용할 모음집을 가져올 수 없습니다
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr "모음집 속성 동기화에 사용할 모음집을 가져올 수 없습니다."
 
-#: agentbase/resourcescheduler.cpp:485 agentbase/resourcescheduler.cpp:491
+#: agentbase/resourcescheduler.cpp:429 agentbase/resourcescheduler.cpp:435
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."

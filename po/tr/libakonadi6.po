@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-02 00:45+0000\n"
+"POT-Creation-Date: 2026-07-13 00:44+0000\n"
 "PO-Revision-Date: 2026-06-15 19:24+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -57,7 +57,7 @@ msgstr "Aracı tanımlayıcısı"
 msgid "Akonadi Agent"
 msgstr "Akonadi Aracısı"
 
-#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:268
+#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:212
 #, kde-format
 msgctxt "@info:status Application ready for work"
 msgid "Ready"
@@ -165,7 +165,7 @@ msgstr "Koleksiyon, koleksiyon eşzamanlaması için getirilemedi."
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr "Koleksiyon, koleksiyon öznitelikleri eşzamanlaması için getirilemedi."
 
-#: agentbase/resourcescheduler.cpp:485 agentbase/resourcescheduler.cpp:491
+#: agentbase/resourcescheduler.cpp:429 agentbase/resourcescheduler.cpp:435
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."
