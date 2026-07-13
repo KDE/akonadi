@@ -609,8 +609,8 @@ void DbConfigMysql::stopInternalServer()
     }
 
     mDatabaseProcess->terminate();
-    const bool result = mDatabaseProcess->waitForFinished(3000);
-    // We've waited nicely for 3 seconds, to no avail, let's be rude.
+    const bool result = mDatabaseProcess->waitForFinished(30000);
+    // We've waited nicely for 30 seconds, to no avail, let's be rude.
     if (!result) {
         mDatabaseProcess->kill();
     }
