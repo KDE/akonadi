@@ -267,6 +267,9 @@ QVariant StatisticsProxyModel::extraColumnData(const QModelIndex &parent, int ro
 
 QVariant StatisticsProxyModel::data(const QModelIndex &index, int role) const
 {
+    if (!index.isValid()) {
+        return {};
+    }
     if (role == Qt::ToolTipRole && d->mToolTipEnabled) {
         const QModelIndex firstColumn = index.sibling(index.row(), 0);
         const auto collection = data(firstColumn, EntityTreeModel::CollectionRole).value<Collection>();
