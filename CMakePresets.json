@@ -21,6 +21,19 @@
             ]
         },
         {
+            "name": "check-cmake",
+            "displayName": "Configure with strict warning",
+            "inherits": [
+                "dev-mold"
+            ],
+            "errors": {
+                "dev": true
+            },
+            "warnings": {
+                "uninitialized": true
+            }
+        },
+        {
             "name": "dev-mold",
             "displayName": "Build as debug + using mold linker",
             "cacheVariables": {
