@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.29)
 
-set(PIM_VERSION "6.7.80")
+set(PIM_VERSION "6.7.90")
 project(Akonadi VERSION ${PIM_VERSION})
 
 # ECM setup
@@ -106,7 +106,7 @@ include(ECMGenerateQDoc)
 
 include(AkonadiMacros)
 
-set(RELEASE_SERVICE_VERSION "26.07.80")
+set(RELEASE_SERVICE_VERSION "26.07.90")
 set(AKONADI_FULL_VERSION "${PIM_VERSION} (${RELEASE_SERVICE_VERSION})")
 
 configure_file(akonadifull-version.h.in ${CMAKE_CURRENT_BINARY_DIR}/akonadifull-version.h @ONLY)
