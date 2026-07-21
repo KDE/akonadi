@@ -21,10 +21,8 @@ PluginMetaData::PluginMetaData()
 {
 }
 
-PluginMetaData::PluginMetaData(const QString &lib, const QString &name, const QString &comment, const QString &cname)
+PluginMetaData::PluginMetaData(const QString &lib, const QString &cname)
     : library(lib)
-    , nameLabel(name)
-    , descriptionLabel(comment)
     , className(cname)
     , loaded(false)
 {
@@ -113,7 +111,7 @@ void PluginLoader::scan()
         for (const QString &file : fileNames) {
             const QString entry = dir + u'/' + file;
             KConfig config(entry, KConfig::SimpleConfig);
-            if (config.hasGroup(QLatin1StringView("Misc")) && config.hasGroup(QLatin1StringView("Plugin"))) {
+            if (config.hasGroup(QLatin1StringView("Plugin"))) {
                 KConfigGroup group(&config, QStringLiteral("Plugin"));
 
                 const QString type = group.readEntry("Type").toLower();
@@ -137,20 +135,6 @@ void PluginLoader::scan()
                     continue;
                 }
 
-                KConfigGroup group2(&config, QStringLiteral("Misc"));
-
-                QString name = group2.readEntry("Name");
-                if (name.isEmpty()) {
-                    qCWarning(AKONADICORE_LOG) << "missing or empty [Misc]Name value in \"" << entry << "\" - inserting default name";
-                    name = i18n("Unnamed plugin");
-                }
-
-                QString comment = group2.readEntry("Comment");
-                if (comment.isEmpty()) {
-                    qCWarning(AKONADICORE_LOG) << "missing or empty [Misc]Comment value in \"" << entry << "\" - inserting default name";
-                    comment = i18n("No description available");
-                }
-
                 QString cname = group.readEntry("X-KDE-ClassName");
                 if (cname.isEmpty()) {
                     qCWarning(AKONADICORE_LOG) << "missing or empty X-KDE-ClassName value in \"" << entry << "\"";
@@ -161,13 +145,13 @@ void PluginLoader::scan()
                 qCDebug(AKONADICORE_LOG) << "registering Desktop file" << entry << "for" << mimeTypes << '@' << classes;
                 for (const QString &mimeType : mimeTypes) {
                     for (const QString &classType : classes) {
-                        mPluginInfos.insert(mimeType + u'@' + classType, PluginMetaData(library, name, comment, cname));
+                        mPluginInfos.insert(mimeType + u'@' + classType, PluginMetaData(library, cname));
                     }
                 }
 
             } else {
                 qCWarning(AKONADICORE_LOG) << "Desktop file \"" << entry << "\" doesn't seem to describe a plugin "
-                                           << "(misses Misc and/or Plugin group)";
+                                           << "(misses Plugin group)";
             }
         }
     }
