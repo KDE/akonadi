@@ -259,7 +259,7 @@ void AgentInstanceWidgetDelegate::paint(QPainter *painter, const QStyleOptionVie
         statusMessage.append(QStringLiteral(" ") + i18nc("Status percent value", "(%1%)", progress));
     }
 
-    const QPixmap iconPixmap = icon.pixmap(style->pixelMetric(QStyle::PM_MessageBoxIconSize));
+    const QPixmap iconPixmap = icon.pixmap(style->pixelMetric(QStyle::PM_ToolBarIconSize));
     QRect innerRect = option.rect.adjusted(s_delegatePaddingSize,
                                            s_delegatePaddingSize,
                                            -s_delegatePaddingSize,
