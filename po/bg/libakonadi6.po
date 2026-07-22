@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2026-06-15 20:25+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -595,16 +595,6 @@ msgstr "Няма налична сесия за този индекс"
 #, kde-format
 msgid "No item available for this index"
 msgstr "Няма наличен елемент за този индекс"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "Неозаглавена приставка"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "Няма налично описание"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2781,3 +2771,9 @@ msgstr "Не може да се анализира файл с данни: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Не може да се намери колекция %1"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "Неозаглавена приставка"
+
+#~ msgid "No description available"
+#~ msgstr "Няма налично описание"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2021-02-13 12:56+0100\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@nuug.no>\n"
@@ -585,16 +585,6 @@ msgstr "Det finst ikkje noko tilgjengeleg økt for indeksen"
 #, kde-format
 msgid "No item available for this index"
 msgstr "Det finst ingen element tilgjengelege for indeksen"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "Programtillegg utan namn"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "Inga skildring tilgjengeleg"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2688,3 +2678,9 @@ msgstr "Klarte ikkje lima inn data: %1"
 #, fuzzy, kde-format
 msgid "Unable to find collection %1"
 msgstr "Ugyldig samling"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "Programtillegg utan namn"
+
+#~ msgid "No description available"
+#~ msgstr "Inga skildring tilgjengeleg"

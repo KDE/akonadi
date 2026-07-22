@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2014-09-18 22:53+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -608,16 +608,6 @@ msgstr "Keen Törn för dissen Index verföögbor"
 #, kde-format
 msgid "No item available for this index"
 msgstr "Keen Indrag för dissen Index verföögbor"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "Moduul ahn Naam"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "Keen Beschrieven verföögbor"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2885,6 +2875,12 @@ msgstr "Datendatei lett sik nich inlesen: „%1“"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Sammeln „%1“ lett sik nich finnen"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "Moduul ahn Naam"
+
+#~ msgid "No description available"
+#~ msgstr "Keen Beschrieven verföögbor"
 
 #, fuzzy
 #~| msgid "An error occurred while creating a new tag"

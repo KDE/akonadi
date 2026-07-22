@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2021-05-15 17:47-0700\n"
 "Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -598,16 +598,6 @@ msgstr "説明はありません"
 #, kde-format
 msgid "No item available for this index"
 msgstr ""
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "名前のないプラグイン"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "説明はありません"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2779,6 +2769,12 @@ msgstr "データファイルを解析できませんでした: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "コレクション %1 は見つかりませんでした。"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "名前のないプラグイン"
+
+#~ msgid "No description available"
+#~ msgstr "説明はありません"
 
 #~ msgid "&Delete Agent Instance"
 #~ msgstr "エージェントのインスタンスを削除(&D)"

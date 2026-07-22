@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2024-12-15 18:58+0530\n"
 "Last-Translator: Kali <EMAIL@ADDRESS>\n"
 "Language-Team: Hindi <fedora-trans-hi@redhat.com>\n"
@@ -601,16 +601,6 @@ msgstr "इस इंडेक्स के लिए कोई सत्र उ
 #, kde-format
 msgid "No item available for this index"
 msgstr "इस सूचकांक के लिए कोई आइटम उपलब्ध नहीं है"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "अनाम प्लगइन"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "कोई विवरण उपलब्ध नहीं"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2756,6 +2746,12 @@ msgstr "डेटा फ़ाइल पार्स करने में अ�
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "संग्रह %1 ढूँढने में असमर्थ"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "अनाम प्लगइन"
+
+#~ msgid "No description available"
+#~ msgstr "कोई विवरण उपलब्ध नहीं"
 
 #~ msgctxt "@title:window"
 #~ msgid "An Error Occurred while Creating a New Tag"

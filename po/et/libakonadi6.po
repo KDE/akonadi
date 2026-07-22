@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2020-05-07 13:23+0300\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -591,16 +591,6 @@ msgstr "Indeksile pole saadaval ühtegi seanssi"
 #, kde-format
 msgid "No item available for this index"
 msgstr "Indeksile pole saadaval ühtegi elementi"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "Nimetu plugin"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "Kirjeldus puudub"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2829,6 +2819,12 @@ msgstr "Andmefaili parsimine nurjus: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Kogu %1 ei leitud"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "Nimetu plugin"
+
+#~ msgid "No description available"
+#~ msgstr "Kirjeldus puudub"
 
 #, fuzzy
 #~| msgid "An error occurred while creating a new tag"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2013-07-14 03:20+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -608,16 +608,6 @@ msgstr "Бұл индекстің сеансы табылмады"
 #, kde-format
 msgid "No item available for this index"
 msgstr "Бұл индексте аталымдар жоқ"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "Атаусыз плагині"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "Сипаттамасы жоқ"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2858,6 +2848,12 @@ msgstr "Дерек орналастырылмады: %1"
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"
 msgstr "Жарамсыз жинақ"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "Атаусыз плагині"
+
+#~ msgid "No description available"
+#~ msgstr "Сипаттамасы жоқ"
 
 #, fuzzy
 #~| msgctxt "@info"

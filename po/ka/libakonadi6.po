@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2026-06-15 04:52+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
@@ -593,16 +593,6 @@ msgstr "ამ ინდექსისთვის სესია ვერ �
 #, kde-format
 msgid "No item available for this index"
 msgstr "ამ ინდექსისთვის ჩანაწერი ვერ ვიპოვე"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "უსახელო დამატება"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "აღწერის გარეშე"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2755,3 +2745,9 @@ msgstr "მონაცემების ფაილის დამუშა�
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "კოლექციის (%1) პოვნა შეუძლებელია"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "უსახელო დამატება"
+
+#~ msgid "No description available"
+#~ msgstr "აღწერის გარეშე"

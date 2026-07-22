@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2012-07-11 10:23+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -614,16 +614,6 @@ msgstr "គ្មាន​សម័យ​​សម្រាប់​លិបិ
 #, kde-format
 msgid "No item available for this index"
 msgstr "គ្មាន​ធាតុ​សម្រាប់​លិបិក្រម​នេះ​ឡើយ​"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "កម្មវិធី​ជំនួយ​គ្មាន​ឈ្មោះ"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "មិន​មាន​សេចក្ដី​អធិប្បាយ"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2846,6 +2836,12 @@ msgstr "មិនអាច​បិទភ្ជាប់​​ទិន្នន
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"
 msgstr "សម្រាំង​មិន​ត្រឹម​ត្រូវ​"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "កម្មវិធី​ជំនួយ​គ្មាន​ឈ្មោះ"
+
+#~ msgid "No description available"
+#~ msgstr "មិន​មាន​សេចក្ដី​អធិប្បាយ"
 
 #~ msgid "&New Agent Instance..."
 #~ msgstr "ធាតុ​ភ្នាក់ងារ​ថ្មី​​..."

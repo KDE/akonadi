@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdepim/libakonadi.po\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2007-07-11 08:14-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -576,16 +576,6 @@ msgstr "Níl aon seisiún ar fáil don innéacs seo"
 #, kde-format
 msgid "No item available for this index"
 msgstr "Níl aon mhír ar fáil don innéacs seo"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "Breiseán gan ainm"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "Níl cur síos ar fáil"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2695,6 +2685,12 @@ msgstr ""
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr ""
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "Breiseán gan ainm"
+
+#~ msgid "No description available"
+#~ msgstr "Níl cur síos ar fáil"
 
 #~ msgid "&New Agent Instance..."
 #~ msgstr "Gníomhaire &Nua..."

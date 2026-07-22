@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2021-11-13 21:43+0100\n"
 "Last-Translator: Edward Wornar <edi.werner@gmx.de>\n"
 "Language-Team: Upper Sorbian <kde-i18n-doc@kde.org>\n"
@@ -585,16 +585,6 @@ msgstr "Žane posedźenje za tutón indeks"
 #, kde-format
 msgid "No item available for this index"
 msgstr "Žadyn element za tutón indeks"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "Zašćěpka bjez mjena"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "Žane wopisanje namakał"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2694,6 +2684,12 @@ msgstr ""
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr ""
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "Zašćěpka bjez mjena"
+
+#~ msgid "No description available"
+#~ msgstr "Žane wopisanje namakał"
 
 #, fuzzy
 #~| msgctxt "@info"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2023-02-19 14:32+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -594,16 +594,6 @@ msgstr "Bu indeks üçün sesiya yoxdur"
 #, kde-format
 msgid "No item available for this index"
 msgstr "Bu indeks üçün element yoxdur"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "Naməlum əlavə"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "Açıklaması yoxdur"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2795,6 +2785,12 @@ msgstr "Təhlil edilə bilməyən verilənlər faylı: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "%1 kolleksiyası tapmaq mümkün olmadı"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "Naməlum əlavə"
+
+#~ msgid "No description available"
+#~ msgstr "Açıklaması yoxdur"
 
 #~ msgctxt "@title:window"
 #~ msgid "An Error Occurred while Creating a New Tag"

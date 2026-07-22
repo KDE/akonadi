@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2026-01-01 20:50+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -603,16 +603,6 @@ msgstr "Indize honetarako ez dago saiorik erabilgarri"
 #, kde-format
 msgid "No item available for this index"
 msgstr "Indize honetarako ez dago elementurik erabilgarri"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "Izengabeko plugina"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "Ez dago azalpen erabilgarririk"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2790,6 +2780,12 @@ msgstr "Ezin da datu-fitxategiaren sintaxia aztertu: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Ezin izan da «%1» bilduma aurkitu"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "Izengabeko plugina"
+
+#~ msgid "No description available"
+#~ msgstr "Ez dago azalpen erabilgarririk"
 
 #~ msgctxt "@title:window"
 #~ msgid "An Error Occurred while Creating a New Tag"

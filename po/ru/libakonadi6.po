@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2026-06-25 13:46+0200\n"
 "Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -609,16 +609,6 @@ msgstr "С данным индексом не связана сессия"
 #, kde-format
 msgid "No item available for this index"
 msgstr "Нет элемента для данного индекса"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "Неизвестный модуль"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "Описание недоступно"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2829,6 +2819,12 @@ msgstr "Не удалось интерпретировать содержимо�
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Не удалось найти коллекцию %1"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "Неизвестный модуль"
+
+#~ msgid "No description available"
+#~ msgstr "Описание недоступно"
 
 #~ msgctxt "@title:window"
 #~ msgid "An Error Occurred while Creating a New Tag"

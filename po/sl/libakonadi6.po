@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2026-06-15 06:30+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -602,16 +602,6 @@ msgstr "Za to kazalo ni na voljo nobene seje"
 #, kde-format
 msgid "No item available for this index"
 msgstr "Za to kazalo ni na voljo nobenega predmeta"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "Neimenovan vstavek"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "Opis ni na voljo"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2824,6 +2814,12 @@ msgstr "Ni mogoče razčleniti podatkovne datoteke: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Ni mogoče najti zbirke %1"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "Neimenovan vstavek"
+
+#~ msgid "No description available"
+#~ msgstr "Opis ni na voljo"
 
 #~ msgctxt "@title:window"
 #~ msgid "An Error Occurred while Creating a New Tag"

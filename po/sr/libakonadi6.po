@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2017-12-17 18:01+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -607,16 +607,6 @@ msgstr "Сесија није доступна за овај индекс"
 #, kde-format
 msgid "No item available for this index"
 msgstr "Ставка није доступна за овај индекс"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "неименовани прикључак"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "Нема описа"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2940,6 +2930,12 @@ msgstr "Не могу да рашчланим фајл са подацима: %1
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Не могу да нађем збирку „%1“."
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "неименовани прикључак"
+
+#~ msgid "No description available"
+#~ msgstr "Нема описа"
 
 #, fuzzy
 #~| msgid "An error occurred while creating a new tag"

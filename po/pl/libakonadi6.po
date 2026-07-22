@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2026-07-04 15:41+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -596,16 +596,6 @@ msgstr "Brak sesji dla tego spisu"
 #, kde-format
 msgid "No item available for this index"
 msgstr "Brak dostępnych elementów dla tego spisu"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "Nienazwana wtyczka"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "Brak opisu"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2798,6 +2788,12 @@ msgstr "Nie można przetworzyć pliku danych: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Nie można znaleźć zbioru %1"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "Nienazwana wtyczka"
+
+#~ msgid "No description available"
+#~ msgstr "Brak opisu"
 
 #~ msgctxt "@title:window"
 #~ msgid "An Error Occurred while Creating a New Tag"

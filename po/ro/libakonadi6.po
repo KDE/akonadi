@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2013-01-13 00:43+0200\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -614,16 +614,6 @@ msgstr "Nu este nicio sesiune disponibilă pentru acest index"
 #, kde-format
 msgid "No item available for this index"
 msgstr "Nu este niciun element disponibil pentru acest index"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "Extensie fără denumire"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "Nicio descriere disponibilă"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2937,6 +2927,12 @@ msgstr "Datele nu pot fi lipite: %1"
 #| msgid "Invalid collection"
 msgid "Unable to find collection %1"
 msgstr "Colecție nevalidă"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "Extensie fără denumire"
+
+#~ msgid "No description available"
+#~ msgstr "Nicio descriere disponibilă"
 
 #, fuzzy
 #~| msgctxt "@info"

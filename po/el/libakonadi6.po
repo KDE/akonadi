@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2024-09-19 14:56+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -617,16 +617,6 @@ msgstr "Μη διαθέσιμη συνεδρία για αυτό το ευρετ
 #, kde-format
 msgid "No item available for this index"
 msgstr "Μη διαθέσιμο αντικείμενο για αυτό το ευρετήριο"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "Πρόσθετο χωρίς όνομα"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "Μη διαθέσιμη περιγραφή"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2812,6 +2802,12 @@ msgstr "Αδυναμία ανάλυσης αρχείου δεδομένων: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Αδυναμία εύρεσης συλλογής %1"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "Πρόσθετο χωρίς όνομα"
+
+#~ msgid "No description available"
+#~ msgstr "Μη διαθέσιμη περιγραφή"
 
 #~ msgctxt "@title:window"
 #~ msgid "An Error Occurred while Creating a New Tag"

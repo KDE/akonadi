@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2024-12-25 19:45+0530\n"
 "Last-Translator: kali <shreekantkalwar@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -603,16 +603,6 @@ msgstr "अस्य अनुक्रमणिकायाः कृते क
 #, kde-format
 msgid "No item available for this index"
 msgstr "अस्य अनुक्रमणिकायाः कृते कोऽपि द्रव्यः उपलब्धः नास्ति"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "अनाम प्लगिन्"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "न वर्णनं लभ्यते"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2749,6 +2739,12 @@ msgstr "दत्तांशसञ्चिकां विश्लेषण�
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "संग्रहं %1 अन्वेष्टुं असमर्थः"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "अनाम प्लगिन्"
+
+#~ msgid "No description available"
+#~ msgstr "न वर्णनं लभ्यते"
 
 #~ msgctxt "@title:window"
 #~ msgid "An Error Occurred while Creating a New Tag"

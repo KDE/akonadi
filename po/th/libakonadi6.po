@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2010-02-26 23:20+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -592,16 +592,6 @@ msgstr ""
 #: core/partfetcher.cpp:132
 #, kde-format
 msgid "No item available for this index"
-msgstr ""
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr ""
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
 msgstr ""
 
 #: core/servermanager.cpp:271

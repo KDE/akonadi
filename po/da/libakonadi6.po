@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2024-07-29 12:41+0200\n"
 "Last-Translator: rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -607,16 +607,6 @@ msgstr "Ingen session tilgængelig for dette indeks"
 #, kde-format
 msgid "No item available for this index"
 msgstr "Intet element tilgængeligt for dette indeks"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "Unavngivet plugin"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "Ingen beskrivelse tilgængelig"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2783,6 +2773,12 @@ msgstr "Kan ikke fortolke datafilen: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Kan ikke finde samlingen %1"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "Unavngivet plugin"
+
+#~ msgid "No description available"
+#~ msgstr "Ingen beskrivelse tilgængelig"
 
 #~ msgctxt "@title:window"
 #~ msgid "An Error Occurred while Creating a New Tag"

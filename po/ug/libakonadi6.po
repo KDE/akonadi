@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2026-05-28 16:51-0400\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -575,16 +575,6 @@ msgstr ""
 #, kde-format
 msgid "No item available for this index"
 msgstr ""
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "ئاتسىز قىستۇرما"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "چۈشەندۈرۈشى يوق"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2596,6 +2586,12 @@ msgstr ""
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr ""
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "ئاتسىز قىستۇرما"
+
+#~ msgid "No description available"
+#~ msgstr "چۈشەندۈرۈشى يوق"
 
 #~| msgid "Folder creation failed"
 #~ msgctxt "@title:window"

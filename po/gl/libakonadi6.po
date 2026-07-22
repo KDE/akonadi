@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2025-03-20 08:01+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.gal>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -611,16 +611,6 @@ msgstr "Non hai sesión dispoñíbel para este índice"
 #, kde-format
 msgid "No item available for this index"
 msgstr "Non hai elemento dispoñíbel para este índice"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "Complemento sen nome"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "Non se dispón de descrición"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2803,6 +2793,12 @@ msgstr "Non é posíbel procesar o ficheiro de datos: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Non é posíbel atopar a colección %1"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "Complemento sen nome"
+
+#~ msgid "No description available"
+#~ msgstr "Non se dispón de descrición"
 
 #~ msgctxt "@title:window"
 #~ msgid "An Error Occurred while Creating a New Tag"

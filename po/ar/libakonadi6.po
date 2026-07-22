@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2026-06-15 17:46+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -595,16 +595,6 @@ msgstr "لا جلسات متوفّرة لهذا الفهرس"
 #, kde-format
 msgid "No item available for this index"
 msgstr "لا عناصر متوفّرة لهذا الفهرس"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "ملحقة غير مسمّاة"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "لا يتوفّر وصف"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2842,6 +2832,12 @@ msgstr "تعذّر تحليل ملف البيانات: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "تعذّر العثور على التجميعة %1"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "ملحقة غير مسمّاة"
+
+#~ msgid "No description available"
+#~ msgstr "لا يتوفّر وصف"
 
 #~ msgctxt "@title:window"
 #~ msgid "An Error Occurred while Creating a New Tag"

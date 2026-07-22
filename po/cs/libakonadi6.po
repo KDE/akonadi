@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2026-06-26 23:16+0200\n"
 "Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -597,16 +597,6 @@ msgstr "Pro index nejsou dostupná žádná sezení"
 #, kde-format
 msgid "No item available for this index"
 msgstr "Pro index nejsou dostupné žádné položky"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "Nepojmenovaný modul"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "Popis není dostupný"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2786,6 +2776,12 @@ msgstr "Datový soubor nelze zpracovat: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Nelze najít sbírku %1"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "Nepojmenovaný modul"
+
+#~ msgid "No description available"
+#~ msgstr "Popis není dostupný"
 
 #~ msgctxt "@title:window"
 #~ msgid "An Error Occurred while Creating a New Tag"

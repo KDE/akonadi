@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2026-06-15 19:24+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -599,16 +599,6 @@ msgstr "Bu indeks için bir oturum yok"
 #, kde-format
 msgid "No item available for this index"
 msgstr "Bu indeks için kullanılabilir öge yok"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "Adsız eklenti"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "Açıklama yok"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2761,6 +2751,12 @@ msgstr "Veri dosyası ayrıştırılamadı: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "%1 koleksiyonu bulunamıyor"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "Adsız eklenti"
+
+#~ msgid "No description available"
+#~ msgstr "Açıklama yok"
 
 #~ msgctxt "@title:window"
 #~ msgid "An Error Occurred while Creating a New Tag"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2026-04-12 13:06+0200\n"
 "Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -606,16 +606,6 @@ msgstr "Für diesen Index ist keine Sitzung verfügbar."
 #, kde-format
 msgid "No item available for this index"
 msgstr "Für diesen Index ist kein Eintrag verfügbar."
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "Unbenanntes Modul"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "Keine Beschreibung verfügbar"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2807,6 +2797,12 @@ msgstr "Datei kann nicht verarbeitet werden: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Die Sammlung %1 wurde nicht gefunden"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "Unbenanntes Modul"
+
+#~ msgid "No description available"
+#~ msgstr "Keine Beschreibung verfügbar"
 
 #~ msgctxt "@title:window"
 #~ msgid "An Error Occurred while Creating a New Tag"

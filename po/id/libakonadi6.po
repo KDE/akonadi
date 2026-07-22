@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2024-09-30 18:09+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: https://t.me/Localizations_KDE_Indonesia\n"
@@ -604,16 +604,6 @@ msgstr "Tidak ada sesi yang tersedia untuk indeks ini"
 #, kde-format
 msgid "No item available for this index"
 msgstr "Tidak ada item yang tersedia untuk indeks ini"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "Plugin tak bernama"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "Tidak ada deskripsi yang tersedia"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2795,6 +2785,12 @@ msgstr "Tak bisa mengurai data file: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Tak bisa menemukan koleksi %1"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "Plugin tak bernama"
+
+#~ msgid "No description available"
+#~ msgstr "Tidak ada deskripsi yang tersedia"
 
 #~ msgctxt "@title:window"
 #~ msgid "An Error Occurred while Creating a New Tag"

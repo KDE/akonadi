@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2026-07-05 17:08+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -597,16 +597,6 @@ msgstr "Ingen session tillgänglig för detta index"
 #, kde-format
 msgid "No item available for this index"
 msgstr "Inget objekt tillgängligt för detta index"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "Namnlöst insticksprogram"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "Ingen beskrivning tillgänglig"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2762,6 +2752,12 @@ msgstr "Kan inte tolka datafilen: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Kan inte hitta samlingen %1"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "Namnlöst insticksprogram"
+
+#~ msgid "No description available"
+#~ msgstr "Ingen beskrivning tillgänglig"
 
 #~ msgctxt "@title:window"
 #~ msgid "An Error Occurred while Creating a New Tag"

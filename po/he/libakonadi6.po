@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-13 00:44+0000\n"
+"POT-Creation-Date: 2026-07-22 00:45+0000\n"
 "PO-Revision-Date: 2026-06-16 09:58+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -590,16 +590,6 @@ msgstr "אין הפעלה זמינה למפתח הזה"
 #, kde-format
 msgid "No item available for this index"
 msgstr "אין פריטים זמינים למפתח הזה"
-
-#: core/pluginloader.cpp:145
-#, kde-format
-msgid "Unnamed plugin"
-msgstr "תוסף ללא שם"
-
-#: core/pluginloader.cpp:151
-#, kde-format
-msgid "No description available"
-msgstr "אין תיאור זמין"
 
 #: core/servermanager.cpp:271
 #, kde-format
@@ -2775,6 +2765,12 @@ msgstr "לא ניתן לפענח את קובץ הנתונים: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "לא ניתן למצוא את האוסף %1"
+
+#~ msgid "Unnamed plugin"
+#~ msgstr "תוסף ללא שם"
+
+#~ msgid "No description available"
+#~ msgstr "אין תיאור זמין"
 
 #~ msgctxt "@title:window"
 #~ msgid "An Error Occurred while Creating a New Tag"
