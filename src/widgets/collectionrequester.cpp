@@ -242,8 +242,9 @@ void CollectionRequester::setContentMimeTypes(const QStringList &mimetypes)
 void CollectionRequester::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::WindowTitleChange) {
-        if (d->collectionDialog) {
-            d->collectionDialog->setWindowTitle(windowTitle());
+        const QString title = windowTitle();
+        if (d->collectionDialog && !title.isEmpty()) {
+            d->collectionDialog->setWindowTitle(title);
         }
     } else if (event->type() == QEvent::EnabledChange) {
         if (d->collectionDialog) {
