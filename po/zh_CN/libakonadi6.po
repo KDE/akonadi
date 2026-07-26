@@ -2661,9 +2661,3 @@ msgstr "无法解析数据文件：%1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "无法找到集合 %1"
-
-#~ msgid "Unnamed plugin"
-#~ msgstr "未命名插件"
-
-#~ msgid "No description available"
-#~ msgstr "没有可用的描述"

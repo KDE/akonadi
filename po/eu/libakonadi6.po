@@ -1,7 +1,7 @@
 # Translation for libakonadi5.po to Euskara/Basque (eu).
 # Copyright (C) 2020-2026 This file is copyright:
 # This file is distributed under the same license as the akonadi package.
-# SPDX-FileCopyrightText: 2023, 2024, 2025, 2026 KDE euskaratzeko proiektuaren arduraduna <xalba@ni.eus>
+# SPDX-FileCopyrightText: 2023-2026 KDE euskaratzeko proiektuaren arduraduna <xalba@ni.eus>
 #
 # Translators:
 # Iñigo Salvador Azurmendi <xalba@ni.eus>, 2020, 2021, 2022, 2023, 2024, 2025, 2026.
@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-22 00:45+0000\n"
-"PO-Revision-Date: 2026-01-01 20:50+0100\n"
+"PO-Revision-Date: 2026-07-26 00:36+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.12.0\n"
+"X-Generator: Lokalize 26.04.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -115,13 +115,13 @@ msgstr "Errorea bilduma eguneratzean: %1"
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
-msgstr "Bilduma lokala eguneratzea huts egin du: %1."
+msgstr "Bilduma lokala eguneratzean huts egin du: %1."
 
 #: agentbase/resourcebase.cpp:714
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
-msgstr "Elementu lokalak eguneratzea huts egin du: %1."
+msgstr "Elementu lokalak eguneratzean huts egin du: %1."
 
 #: agentbase/resourcebase.cpp:740
 #, kde-format
@@ -138,12 +138,12 @@ msgstr "«%1» karpeta sinkronizatzea"
 #: agentbase/resourcebase.cpp:944 agentbase/resourcebase.cpp:951
 #, kde-format
 msgid "Failed to retrieve collection for sync."
-msgstr "Huts egin du bilduma sinkronizatzeko eskuratzeak."
+msgstr "Sinkronizatzeko bilduma eskuratzean huts egin du."
 
 #: agentbase/resourcebase.cpp:997
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
-msgstr "Huts egin du atributuak sinkronizatzeko bilduma eskuratzeak."
+msgstr "Atributuak sinkronizatzeko bilduma eskuratzean huts egin du."
 
 #: agentbase/resourcebase.cpp:1046
 #, kde-format
@@ -151,16 +151,14 @@ msgid "The requested item no longer exists"
 msgstr "Eskatutako elementua ez existitzen dagoeneko"
 
 #: agentbase/resourcebase.cpp:1267
-#, fuzzy, kde-format
-#| msgid "Failed to retrieve collection for sync."
+#, kde-format
 msgid "Failed to fetch collection for collection sync."
-msgstr "Huts egin du bilduma sinkronizatzeko eskuratzeak."
+msgstr "Ezin izan du bilduma sinkronizatzeko bilduma eskuratu."
 
 #: agentbase/resourcebase.cpp:1303
-#, fuzzy, kde-format
-#| msgid "Failed to retrieve collection for attribute sync."
+#, kde-format
 msgid "Failed to fetch collection for collection attributes sync."
-msgstr "Huts egin du atributuak sinkronizatzeko bilduma eskuratzeak."
+msgstr "Bilduma sinkronizatzeko bilduma eskuratzean huts egin du."
 
 #: agentbase/resourcescheduler.cpp:429 agentbase/resourcescheduler.cpp:435
 #, kde-format
@@ -324,7 +322,7 @@ msgstr "Guraso baliogabea"
 #: core/jobs/collectioncreatejob.cpp:98
 #, kde-format
 msgid "Failed to parse Collection from response"
-msgstr "Huts egin du erantzunetik bilduma sintaktikoki aztertzeak"
+msgstr "Erantzunetik bilduma sintaktikoki aztertzean huts egin du"
 
 #: core/jobs/collectiondeletejob.cpp:52
 #, kde-format
@@ -410,12 +408,12 @@ msgstr "«%1» baliabide-identifikatzaile baliogabea"
 #: core/jobs/specialcollectionshelperjobs.cpp:350
 #, kde-format
 msgid "Failed to configure default resource via D-Bus."
-msgstr "Huts egin du baliabide lehenetsia D-Bus bidez konfiguratzeak."
+msgstr "Baliabide lehenetsia D-Bus bidez konfiguratzean huts egin du."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:415
 #, kde-format
 msgid "Failed to fetch the resource collection."
-msgstr "Huts egin du baliabide-bilduma ekartzeak."
+msgstr "Baliabide-bilduma ekartzean huts egin du."
 
 #: core/jobs/specialcollectionshelperjobs.cpp:599
 #, kde-format
@@ -425,14 +423,14 @@ msgstr "Denbora-muga gainditu da giltzatzeko saiakeran."
 #: core/jobs/tagcreatejob.cpp:49
 #, kde-format
 msgid "Failed to create tag."
-msgstr "Huts egin du etiketa sortzeak."
+msgstr "Etiketa sortzeak huts egin du."
 
 #: core/jobs/trashjob.cpp:155
 #, kde-format
 msgid "Move to trash collection failed, aborting trash operation"
 msgstr ""
-"Zakarrontzi bildumara mugitzea huts egin du, zakarrontziko eragiketa "
-"galarazten"
+"Zakarrontzi-bildumara mugitzean huts egin du, zakarrontziko eragiketa bertan "
+"behera utziko da"
 
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format
@@ -674,7 +672,7 @@ msgstr "Ezabatu"
 #, kde-format
 msgctxt "status message, progress percentage"
 msgid "%1 (%2%)"
-msgstr ""
+msgstr "%1 (%%2)"
 
 #: quick/qml/AgentConfigurationForm.qml:116
 #, kde-format
@@ -770,7 +768,7 @@ msgstr "«%1» konfiguratzekoa jada beste nonbait irekita dago."
 #: widgets/agentconfigurationwidget.cpp:125
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
-msgstr "Huts egin du «%1» konfiguratzeko elkarrizketa-koadroa erregistratzeak."
+msgstr "%1 konfigurazio elkarrizketa-koadroa erregistratzean huts egin du."
 
 #: widgets/agentinstancewidget.cpp:259
 #, kde-format
@@ -939,7 +937,7 @@ msgstr "Ezin du karpeta sortu: %1"
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
-msgstr "Karpeta sortzea huts egin du"
+msgstr "Karpeta sortzeak huts egin du"
 
 #: widgets/collectiongeneralpropertiespage.cpp:27
 #, kde-format
@@ -1490,13 +1488,13 @@ msgstr "MySQL zerbitzaria exekutagarria da."
 msgid ""
 "Executing the MySQL server '%1' failed with the following error message: '%2'"
 msgstr ""
-"«%1» MySQL zerbitzaria exekutatzea ondoko errore mezuarekin huts egin du: "
-"«%2»"
+"'%1' MySQL zerbitzaria exekutatzean ondoko errore-mezuarekin huts egin du: "
+"'%2'"
 
 #: widgets/selftestdialog.cpp:242
 #, kde-format
 msgid "Executing the MySQL server failed."
-msgstr "MySQL zerbitzaria exekutatzea huts egin du."
+msgstr "MySQL zerbitzaria exekutatzeak huts egin du."
 
 #: widgets/selftestdialog.cpp:249
 #, kde-format
@@ -2398,7 +2396,7 @@ msgstr "Ezin izan da karpeta ezabatu: %1"
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Deletion Failed"
-msgstr "Karpeta ezabatzea huts egin du"
+msgstr "Karpeta ezabatzeak huts egin du"
 
 #: widgets/standardactionmanager.cpp:422
 #, kde-format
@@ -2430,7 +2428,7 @@ msgstr "Ezin izan du elementua ezabatu: %1"
 #, kde-format
 msgctxt "@title:window"
 msgid "Item Deletion Failed"
-msgstr "Elementu ezabatzea huts egin du"
+msgstr "Elementua ezabatzeak huts egin du"
 
 #: widgets/standardactionmanager.cpp:431
 #, kde-format
@@ -2459,7 +2457,7 @@ msgstr "Ezin izan da baliabidea sortu: %1"
 #, kde-format
 msgctxt "@title:window"
 msgid "Resource Creation Failed"
-msgstr "Baliabide sorrerak huts egin du"
+msgstr "Baliabidea sortzeak huts egin du"
 
 #: widgets/standardactionmanager.cpp:440
 #, kde-format
@@ -2485,7 +2483,7 @@ msgstr "Ezin izan da daturik itsatsi: %1"
 #, kde-format
 msgctxt "@title:window"
 msgid "Paste Failed"
-msgstr "Itsastea huts egin du"
+msgstr "Itsasteak huts egin du"
 
 #: widgets/standardactionmanager.cpp:776
 #, kde-format
@@ -2536,7 +2534,7 @@ msgstr "Kopiatu karpeta honetara"
 #: widgets/subscriptiondialog.cpp:99
 #, kde-format
 msgid "Failed to update subscription: %1"
-msgstr "Huts egin du harpidetza eguneratzeak: %1"
+msgstr "Harpidetza eguneratzean huts egin du: %1"
 
 #: widgets/subscriptiondialog.cpp:99
 #, kde-format
@@ -2575,25 +2573,22 @@ msgid "&Unsubscribe"
 msgstr "Harpidetza &kentzea"
 
 #: widgets/tageditwidget.cpp:123
-#, fuzzy, kde-format
-#| msgid "Failed to create a new tag"
+#, kde-format
 msgctxt "@info"
 msgid "Failed to create new tag %1: %2"
-msgstr "Huts egin du etiketa berri bat sortzeak"
+msgstr "%1 etiketa berria sortzean huts egin du: %2"
 
 #: widgets/tageditwidget.cpp:130
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully added"
-msgstr ""
+msgstr "%1 etiketa ondo gehitu da"
 
 #: widgets/tageditwidget.cpp:174
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Delete Tag  <resource>%1</resource>"
-msgstr "Benetan kendu nahi duzu <resource>%1</resource> etiketa?"
+msgstr "<resource>%1</resource> etiketa ezabatu"
 
 #: widgets/tageditwidget.cpp:176
 #, kde-kuit-format
@@ -2602,6 +2597,8 @@ msgid ""
 "Press this button to show a dialog that asks permission to remove the "
 "<resource>%1</resource> tag from Akonadi."
 msgstr ""
+"Sakatu botoi hau Akonaditik <resource>%1</resource> etiketa kentzeko baimena "
+"eskatzen duen elkarrizketa-koadroa erakusteko.\""
 
 #: widgets/tageditwidget.cpp:184
 #, kde-kuit-format
@@ -2616,17 +2613,16 @@ msgid "Delete Tag"
 msgstr "Ezabatu etiketa"
 
 #: widgets/tageditwidget.cpp:196
-#, fuzzy, kde-format
-#| msgid "Failed to create tag."
+#, kde-format
 msgctxt "@info"
 msgid "Failed to delete tag %1: %2"
-msgstr "Huts egin du etiketa sortzeak."
+msgstr "%1 etiketa ezabatzean huts egin du: %2"
 
 #: widgets/tageditwidget.cpp:200
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully removed"
-msgstr ""
+msgstr "%1 etiketa ondo kendu da"
 
 #: widgets/tageditwidget.cpp:227
 #, kde-format
@@ -2644,7 +2640,7 @@ msgstr "Hautatu aplikatu beharreko etiketak."
 #: widgets/tageditwidget.ui:55
 #, kde-format
 msgid "Enter the name for a new tag"
-msgstr ""
+msgstr "Sartu etiketa berriaren izena"
 
 #. i18n: ectx: property (whatsThis), widget (QLineEdit, newTagEdit)
 #: widgets/tageditwidget.ui:58
@@ -2653,13 +2649,14 @@ msgid ""
 "To create and select a new tag, enter a name for the new tag and then press "
 "the \"Create new tag\" button."
 msgstr ""
+"Etiketa berri bat sortu eta hautatzeko, sartu etiketa berriaren izena eta "
+"sakatu \"Sortu etiketa berria\" botoia."
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:68
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgid "Create and select a new tag"
-msgstr "Sortu etiketa berria"
+msgstr "Etiketa berria sortu eta hautatu"
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:71
@@ -2668,6 +2665,8 @@ msgid ""
 "Press this button to create a new tag with the name specified in the "
 "adjacent line editor.  The new tag is automatically selected."
 msgstr ""
+"Sakatu botoi hau alboko lerro-editorean zehaztutako izenarekin etiketa berri "
+"bat sortzeko. Etiketa berria automatikoki hautatuko da."
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:74
