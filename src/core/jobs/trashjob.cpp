@@ -152,7 +152,7 @@ void TrashJobPrivate::setAttribute(KJob *job)
         qCWarning(AKONADICORE_LOG) << job->objectName();
         qCWarning(AKONADICORE_LOG) << job->errorString();
         q->setError(Job::Unknown);
-        q->setErrorText(i18n("Move to trash collection failed, aborting trash operation"));
+        q->setErrorText(i18n("Failed to move to the trash collection; aborting the trash operation"));
         return;
     }
 
