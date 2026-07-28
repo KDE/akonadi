@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-02 00:45+0000\n"
+"POT-Creation-Date: 2026-07-28 02:43+0000\n"
 "PO-Revision-Date: 2021-09-05 23:20-0700\n"
 "Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
 "Language-Team: Tajik Language Support\n"
@@ -406,7 +406,7 @@ msgstr ""
 
 #: core/jobs/trashjob.cpp:155
 #, kde-format
-msgid "Move to trash collection failed, aborting trash operation"
+msgid "Failed to move to the trash collection; aborting the trash operation"
 msgstr ""
 
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151

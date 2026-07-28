@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-02 00:45+0000\n"
+"POT-Creation-Date: 2026-07-28 02:43+0000\n"
 "PO-Revision-Date: 2013-01-13 00:43+0200\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -431,8 +431,9 @@ msgid "Failed to create tag."
 msgstr "Nu se poate crea instanța de agent."
 
 #: core/jobs/trashjob.cpp:155
-#, kde-format
-msgid "Move to trash collection failed, aborting trash operation"
+#, fuzzy, kde-format
+#| msgid "Move to trash collection failed, aborting trash operation"
+msgid "Failed to move to the trash collection; aborting the trash operation"
 msgstr ""
 "Mutarea în colecția gunoiului a eșuat, se abandonează operația de mutare la "
 "gunoi"

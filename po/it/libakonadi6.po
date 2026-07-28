@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-02 00:45+0000\n"
+"POT-Creation-Date: 2026-07-28 02:43+0000\n"
 "PO-Revision-Date: 2026-06-15 09:54+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -433,8 +433,9 @@ msgid "Failed to create tag."
 msgstr "Impossibile creare un'etichetta."
 
 #: core/jobs/trashjob.cpp:155
-#, kde-format
-msgid "Move to trash collection failed, aborting trash operation"
+#, fuzzy, kde-format
+#| msgid "Move to trash collection failed, aborting trash operation"
+msgid "Failed to move to the trash collection; aborting the trash operation"
 msgstr ""
 "Cestinamento non riuscito nella collezione, interruzione dell'operazione di "
 "cestinamento"

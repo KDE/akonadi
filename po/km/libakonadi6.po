@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-02 00:45+0000\n"
+"POT-Creation-Date: 2026-07-28 02:43+0000\n"
 "PO-Revision-Date: 2012-07-11 10:23+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -435,8 +435,9 @@ msgid "Failed to create tag."
 msgstr "មិន​អាច​បង្កើត​ធាតុ​ភ្នាក់ងារ​បាន​ឡើយ ។"
 
 #: core/jobs/trashjob.cpp:155
-#, kde-format
-msgid "Move to trash collection failed, aborting trash operation"
+#, fuzzy, kde-format
+#| msgid "Move to trash collection failed, aborting trash operation"
+msgid "Failed to move to the trash collection; aborting the trash operation"
 msgstr "បាន​បរាជ័យ​ក្នុង​ការ​ផ្លាស់ទី​សម្រាំង​ធុងសំរាម សូម​បោះបង់​ប្រតិបត្តិការ​សម្អាត"
 
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-02 00:45+0000\n"
+"POT-Creation-Date: 2026-07-28 02:43+0000\n"
 "PO-Revision-Date: 2026-04-12 13:06+0200\n"
 "Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -431,8 +431,9 @@ msgid "Failed to create tag."
 msgstr "Erstellung des Stichworts ist fehlgeschlagen."
 
 #: core/jobs/trashjob.cpp:155
-#, kde-format
-msgid "Move to trash collection failed, aborting trash operation"
+#, fuzzy, kde-format
+#| msgid "Move to trash collection failed, aborting trash operation"
+msgid "Failed to move to the trash collection; aborting the trash operation"
 msgstr ""
 "Das Verschieben in die Papierkorb-Sammlung ist fehlgeschlagen. Diese "
 "Papierkorb-Aktion wird abgebrochen."

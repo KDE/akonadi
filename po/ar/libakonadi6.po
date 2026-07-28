@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-02 00:45+0000\n"
+"POT-Creation-Date: 2026-07-28 02:43+0000\n"
 "PO-Revision-Date: 2026-06-15 17:46+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -424,8 +424,9 @@ msgid "Failed to create tag."
 msgstr "فشل إنشاء الوسم."
 
 #: core/jobs/trashjob.cpp:155
-#, kde-format
-msgid "Move to trash collection failed, aborting trash operation"
+#, fuzzy, kde-format
+#| msgid "Move to trash collection failed, aborting trash operation"
+msgid "Failed to move to the trash collection; aborting the trash operation"
 msgstr "فشل نقل التجميعة إلى المهملات، أجهضتُ عملية الرمي"
 
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
