@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-28 00:45+0000\n"
-"PO-Revision-Date: 2026-06-15 04:52+0200\n"
+"PO-Revision-Date: 2026-07-28 06:18+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -421,10 +421,9 @@ msgid "Failed to create tag."
 msgstr "ჭდის შექმნის შეცდომა."
 
 #: core/jobs/trashjob.cpp:155
-#, fuzzy, kde-format
-#| msgid "Move to trash collection failed, aborting trash operation"
+#, kde-format
 msgid "Failed to move to the trash collection; aborting the trash operation"
-msgstr "კოლექციის ნაგავში გადატანის შეცდომა. გადატანის ოპერაცია გაუქმდა"
+msgstr "კოლექციის ნაგავში გადატანის შეცდომა. გადატანის ოპერაცია შეწყდა"
 
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format

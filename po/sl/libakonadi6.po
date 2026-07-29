@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-28 00:45+0000\n"
-"PO-Revision-Date: 2026-06-15 06:30+0200\n"
+"PO-Revision-Date: 2026-07-28 11:28+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -428,10 +428,10 @@ msgid "Failed to create tag."
 msgstr "Ni bilo mogoče ustvariti oznake."
 
 #: core/jobs/trashjob.cpp:155
-#, fuzzy, kde-format
-#| msgid "Move to trash collection failed, aborting trash operation"
+#, kde-format
 msgid "Failed to move to the trash collection; aborting the trash operation"
-msgstr "Premikanje v zbirko smeti ni uspelo, prekinjanje opravila"
+msgstr ""
+"Premikanje v zbirko odpadkov ni uspelo; postopek premikanja v koš se prekinja"
 
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format
@@ -2688,7 +2688,7 @@ msgid ""
 "the \"Create new tag\" button."
 msgstr ""
 "Če želite ustvariti in izbrati novo oznako, vnesite ime za novo oznako in "
-"nato pritisnite gumb \"Ustvari novo oznako\""
+"nato pritisnite gumb \"Ustvari novo oznako\"."
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:68
