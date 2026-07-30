@@ -73,7 +73,6 @@ class ItemFetchScope;
 class AKONADICORE_EXPORT ItemFetchJob : public Job
 {
     Q_OBJECT
-    Q_FLAGS(DeliveryOptions)
 public:
     /*!
      * Creates a new item fetch job that retrieves all items inside the given collection.
@@ -202,6 +201,7 @@ public:
         Default = ItemGetter | EmitItemsInBatches
     };
     Q_DECLARE_FLAGS(DeliveryOptions, DeliveryOption)
+    Q_FLAG(DeliveryOptions)
 
     /*!
      * Sets the mechanisms by which the items should be fetched
