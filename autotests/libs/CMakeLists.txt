@@ -67,6 +67,7 @@ target_sources(
 )
 target_link_libraries(actionstatemanagertest KF6::XmlGui)
 add_akonadi_test_widgets(conflictresolvedialogtest.cpp conflictresolvedialogtest.h)
+add_akonadi_test_widgets(etmviewstatesavertest.cpp)
 add_akonadi_test(tagmodeltest.cpp)
 add_akonadi_test(statisticsproxymodeltest.cpp)
 

@@ -8,6 +8,9 @@
 
 #include "etmviewstatesaver.h"
 
+#include <KConfigGroup>
+
+#include <QItemSelectionModel>
 #include <QModelIndex>
 
 #include "entitytreemodel.h"
@@ -19,8 +22,77 @@ ETMViewStateSaver::ETMViewStateSaver(QObject *parent)
 {
 }
 
+void ETMViewStateSaver::setKeyFormat(KeyFormat format)
+{
+    mKeyFormat = format;
+}
+
+ETMViewStateSaver::KeyFormat ETMViewStateSaver::keyFormat() const
+{
+    return mKeyFormat;
+}
+
+// The remoteId chain is joined with '/', so percent-encode any literal '/' inside a remoteId
+// (and '%' itself, to keep the encoding reversible). Backslash escaping would be more in line
+// with Akonadi::CollectionPathResolver, but KConfig escapes backslashes twice over, which turns
+// a DAV url into an unreadable wall of '\\\\/'.
+static QString escapeSegment(const QString &segment)
+{
+    QString escaped = segment;
+    escaped.replace(u'%', QStringLiteral("%25"));
+    escaped.replace(u'/', QStringLiteral("%2F"));
+    return escaped;
+}
+
+QString ETMViewStateSaver::stableKeyForIndex(const QModelIndex &index) const
+{
+    const auto collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+    if (!collection.isValid()) {
+        return QString(); // an item, not a collection
+    }
+    const QString resource = collection.resource();
+    if (resource.isEmpty()) {
+        return QString(); // can't anchor to a resource
+    }
+
+    // Collect remoteIds from the collection up to, but not including, the
+    // resource-root collection (the top-level row, whose parent index is invalid).
+    // resource() already identifies that root, so its own remoteId is redundant.
+    QStringList segments;
+    for (QModelIndex idx = index; idx.parent().isValid(); idx = idx.parent()) {
+        const auto col = idx.data(EntityTreeModel::CollectionRole).value<Collection>();
+        if (col.remoteId().isEmpty()) {
+            return QString(); // pathless node -> caller falls back to the id key
+        }
+        segments.prepend(escapeSegment(col.remoteId()));
+    }
+    // A resource with a single collection (the root itself) yields an empty path,
+    // which still uniquely denotes that root via the resource anchor.
+    return QStringLiteral("r%1/%2").arg(escapeSegment(resource), segments.join(u'/'));
+}
+
+QModelIndex ETMViewStateSaver::indexForStableKey(const QAbstractItemModel *model, const QString &key, const QModelIndex &parent) const
+{
+    const int rows = model->rowCount(parent);
+    for (int row = 0; row < rows; ++row) {
+        const QModelIndex idx = model->index(row, 0, parent);
+        if (stableKeyForIndex(idx) == key) {
+            return idx;
+        }
+        const QModelIndex child = indexForStableKey(model, key, idx);
+        if (child.isValid()) {
+            return child;
+        }
+    }
+    return QModelIndex();
+}
+
 QModelIndex ETMViewStateSaver::indexFromConfigString(const QAbstractItemModel *model, const QString &key) const
 {
+    if (key.startsWith(u'r')) {
+        return indexForStableKey(model, key, QModelIndex());
+    }
+
     if (key.startsWith(u'x')) {
         return QModelIndex();
     }
@@ -53,6 +125,13 @@ QString ETMViewStateSaver::indexToConfigString(const QModelIndex &index) const
     }
     const auto c = index.data(EntityTreeModel::CollectionRole).value<Collection>();
     if (c.isValid()) {
+        if (mKeyFormat == RemotePathKeys) {
+            const QString key = stableKeyForIndex(index);
+            if (!key.isEmpty()) {
+                return key;
+            }
+            // No usable remote path (e.g. a search/virtual collection): fall back to the id key.
+        }
         return QStringLiteral("c%1").arg(c.id());
     }
     auto id = index.data(EntityTreeModel::ItemIdRole).value<Item::Id>();
@@ -60,6 +139,43 @@ QString ETMViewStateSaver::indexToConfigString(const QModelIndex &index) const
         return QStringLiteral("i%1").arg(id);
     }
     return QString();
+}
+
+void ETMViewStateSaver::saveState(KConfigGroup &configGroup)
+{
+    // Same key KConfigViewStateSaver stores the selection under.
+    static const char selectionKey[] = "Selection";
+
+    // Only path keys benefit from (and are safe for) keeping missing collections, so id-based
+    // users get the base behavior unchanged.
+    if (mKeyFormat != RemotePathKeys || !selectionModel()) {
+        KConfigViewStateSaver::saveState(configGroup);
+        return;
+    }
+
+    const QStringList previous = configGroup.readEntry(selectionKey, QStringList());
+    KConfigViewStateSaver::saveState(configGroup);
+    if (previous.isEmpty()) {
+        return;
+    }
+
+    // Keep stable path keys whose collections are currently missing from the model: restoring is
+    // asynchronous, so saving on shutdown before the model is populated would otherwise drop them.
+    const QAbstractItemModel *model = selectionModel()->model();
+    QStringList keys = configGroup.readEntry(selectionKey, QStringList());
+    for (const QString &key : previous) {
+        if (!key.startsWith(u'r')) {
+            continue;
+        }
+        if (keys.contains(key)) {
+            continue;
+        }
+        if (indexFromConfigString(model, key).isValid()) {
+            continue; // the collection is there, so the user really unchecked it
+        }
+        keys.append(key);
+    }
+    configGroup.writeEntry(selectionKey, keys);
 }
 
 void ETMViewStateSaver::selectCollections(const Akonadi::Collection::List &list)
