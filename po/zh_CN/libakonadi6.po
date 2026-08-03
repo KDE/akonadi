@@ -416,10 +416,9 @@ msgid "Failed to create tag."
 msgstr "无法创建标签。"
 
 #: core/jobs/trashjob.cpp:155
-#, fuzzy, kde-format
-#| msgid "Move to trash collection failed, aborting trash operation"
+#, kde-format
 msgid "Failed to move to the trash collection; aborting the trash operation"
-msgstr "移动到回收站集合失败，中止操作"
+msgstr ""
 
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format
