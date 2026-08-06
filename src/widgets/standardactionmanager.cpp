@@ -507,7 +507,7 @@ void StandardActionManagerPrivate::createActionFolderMenu(QMenu *menu, StandardA
     if (type == StandardActionManager::CopyCollectionToMenu || type == StandardActionManager::CopyItemToMenu || type == StandardActionManager::MoveItemToMenu
         || type == StandardActionManager::MoveCollectionToMenu) {
         new RecentCollectionAction(type, Akonadi::Collection::List(), collectionSelectionModel->model(), menu);
-        Collection::List selectedCollectionsList = selectedCollections();
+        const Collection::List selectedCollectionsList = selectedCollections();
         const QSet<QString> mimeTypes = mimeTypesOfSelection(type);
         fillFoldersMenu(selectedCollectionsList, mimeTypes, type, menu, collectionSelectionModel->model(), QModelIndex());
     }
