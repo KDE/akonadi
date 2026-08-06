@@ -58,6 +58,61 @@ private Q_SLOTS:
         QCOMPARE(saver.indexToConfigString(calendar->index()), QStringLiteral("rres1/https:%2F%2Fs%2Fcal%2Fwork%2F"));
     }
 
+    void shouldBuildStableKeyFromCollectionChain()
+    {
+        // The Collection-based helper (no model) must produce the same key as the index-based one,
+        // walking parentCollection() instead of model indexes.
+        Collection root(1);
+        root.setResource(QStringLiteral("res1"));
+        root.setRemoteId(QStringLiteral("res1root"));
+        root.setParentCollection(Collection::root());
+
+        Collection calendar(2);
+        calendar.setResource(QStringLiteral("res1"));
+        calendar.setRemoteId(QStringLiteral("https://s/cal/work/"));
+        calendar.setParentCollection(root);
+
+        QCOMPARE(EntityTreeModel::stableKeyForCollection(calendar), QStringLiteral("rres1/https:%2F%2Fs%2Fcal%2Fwork%2F"));
+
+        // A single-collection resource (the root itself) is keyed by the resource anchor alone.
+        QCOMPARE(EntityTreeModel::stableKeyForCollection(root), QStringLiteral("rres1/"));
+
+        // A collection with no resource has no stable key.
+        Collection noResource(3);
+        noResource.setRemoteId(QStringLiteral("x"));
+        QVERIFY(EntityTreeModel::stableKeyForCollection(noResource).isEmpty());
+    }
+
+    void shouldMatchIndexAndCollectionKeys()
+    {
+        // The index-based and Collection-based helpers must agree for the same collection.
+        Collection root(1);
+        root.setResource(QStringLiteral("res1"));
+        root.setRemoteId(QStringLiteral("res1root"));
+        root.setParentCollection(Collection::root());
+
+        Collection mid(2);
+        mid.setResource(QStringLiteral("res1"));
+        mid.setRemoteId(QStringLiteral("home"));
+        mid.setParentCollection(root);
+
+        Collection leaf(3);
+        leaf.setResource(QStringLiteral("res1"));
+        leaf.setRemoteId(QStringLiteral("2026"));
+        leaf.setParentCollection(mid);
+
+        QStandardItemModel model;
+        auto *rootItem = collectionItem(1, QStringLiteral("res1"), QStringLiteral("res1root"));
+        auto *midItem = collectionItem(2, QStringLiteral("res1"), QStringLiteral("home"));
+        auto *leafItem = collectionItem(3, QStringLiteral("res1"), QStringLiteral("2026"));
+        midItem->appendRow(leafItem);
+        rootItem->appendRow(midItem);
+        model.appendRow(rootItem);
+
+        QCOMPARE(EntityTreeModel::stableKeyForCollection(leaf), EntityTreeModel::stableKeyForCollectionIndex(leafItem->index()));
+        QCOMPARE(EntityTreeModel::stableKeyForCollection(leaf), QStringLiteral("rres1/home/2026"));
+    }
+
     void shouldRoundTripStableRemotePathKey()
     {
         QStandardItemModel model;

@@ -104,12 +104,6 @@ protected:
     QString indexToConfigString(const QModelIndex &index) const override;
 
 private:
-    /// Builds the stable "r<resource>/<rid>/..." key for a collection index, or an empty string
-    /// if it has no usable remote path (item, or a collection with an empty remoteId anywhere in the chain).
-    [[nodiscard]] QString stableKeyForIndex(const QModelIndex &index) const;
-    /// Depth-first search for the collection index whose stableKeyForIndex() equals \a key.
-    [[nodiscard]] QModelIndex indexForStableKey(const QAbstractItemModel *model, const QString &key, const QModelIndex &parent) const;
-
     KeyFormat mKeyFormat = IdKeys;
 };
 

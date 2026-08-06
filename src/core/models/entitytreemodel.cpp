@@ -1085,6 +1085,87 @@ QModelIndex EntityTreeModel::modelIndexForCollection(const QAbstractItemModel *m
     return proxiedIndex(idx, proxy);
 }
 
+// The remoteId chain is joined with '/', so percent-encode any literal '/' inside a remoteId
+// (and '%' itself, to keep the encoding reversible). Backslash escaping would be more in line
+// with Akonadi::CollectionPathResolver, but KConfig escapes backslashes twice over, which turns
+// a DAV url into an unreadable wall of '\\\\/'.
+static QString escapeStableKeySegment(const QString &segment)
+{
+    QString escaped = segment;
+    escaped.replace(u'%', QStringLiteral("%25"));
+    escaped.replace(u'/', QStringLiteral("%2F"));
+    return escaped;
+}
+
+// Escapes and assembles the "r<resource>/<rid>/..." key from a root-to-leaf chain of remoteIds, or
+// an empty string if any remoteId in the chain is empty (a pathless node). An empty chain denotes
+// the resource-root collection itself. `resource` must be non-empty.
+static QString stableKeyFromRemoteIds(const QString &resource, const QStringList &remoteIdsRootToLeaf)
+{
+    QStringList segments;
+    segments.reserve(remoteIdsRootToLeaf.size());
+    for (const QString &remoteId : remoteIdsRootToLeaf) {
+        if (remoteId.isEmpty()) {
+            return QString();
+        }
+        segments.append(escapeStableKeySegment(remoteId));
+    }
+    return QStringLiteral("r%1/%2").arg(escapeStableKeySegment(resource), segments.join(u'/'));
+}
+
+QString EntityTreeModel::stableKeyForCollectionIndex(const QModelIndex &collectionIndex)
+{
+    const auto collection = collectionIndex.data(EntityTreeModel::CollectionRole).value<Collection>();
+    if (!collection.isValid() || collection.resource().isEmpty()) {
+        return QString(); // an item, or a collection not anchored to a resource
+    }
+
+    // Collect remoteIds from the collection up to, but not including, the resource-root collection
+    // (the top-level row, whose parent index is invalid). resource() already identifies that root,
+    // so its own remoteId is redundant. Each ancestor's remoteId is read from its own model node.
+    QStringList remoteIds;
+    for (QModelIndex idx = collectionIndex; idx.parent().isValid(); idx = idx.parent()) {
+        remoteIds.prepend(idx.data(EntityTreeModel::CollectionRole).value<Collection>().remoteId());
+    }
+    return stableKeyFromRemoteIds(collection.resource(), remoteIds);
+}
+
+QString EntityTreeModel::stableKeyForCollection(const Collection &collection)
+{
+    if (!collection.isValid() || collection.resource().isEmpty()) {
+        return QString();
+    }
+
+    // Same as the index-based version, but walking parentCollection(). The resource-root collection
+    // is the one whose parent is Collection::root() (id 0), and it is excluded from the path.
+    QStringList remoteIds;
+    for (Collection col = collection; col.parentCollection().isValid() && col.parentCollection().id() > 0; col = col.parentCollection()) {
+        remoteIds.prepend(col.remoteId());
+    }
+    return stableKeyFromRemoteIds(collection.resource(), remoteIds);
+}
+
+static QModelIndex stableKeyIndexSearch(const QAbstractItemModel *model, const QString &key, const QModelIndex &parent)
+{
+    const int rows = model->rowCount(parent);
+    for (int row = 0; row < rows; ++row) {
+        const QModelIndex idx = model->index(row, 0, parent);
+        if (EntityTreeModel::stableKeyForCollectionIndex(idx) == key) {
+            return idx;
+        }
+        const QModelIndex child = stableKeyIndexSearch(model, key, idx);
+        if (child.isValid()) {
+            return child;
+        }
+    }
+    return QModelIndex();
+}
+
+QModelIndex EntityTreeModel::modelIndexForStableKey(const QAbstractItemModel *model, const QString &key)
+{
+    return stableKeyIndexSearch(model, key, QModelIndex());
+}
+
 QModelIndexList EntityTreeModel::modelIndexesForItem(const QAbstractItemModel *model, const Item &item)
 {
     const auto &[proxy, etm] = proxiesAndModel(model);

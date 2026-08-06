@@ -616,6 +616,46 @@ public:
     static Collection updatedCollection(const QAbstractItemModel *model, qint64 collectionId);
     static Collection updatedCollection(const QAbstractItemModel *model, const Collection &col);
 
+    /*!
+     * Returns a stable string identifying the collection at \a collectionIndex by its resource
+     * identifier and the chain of remoteIds up to the resource root, or an empty string if it has
+     * no usable remote path (an item, or a collection with an empty remoteId anywhere in the chain,
+     * e.g. a search/virtual collection).
+     *
+     * Unlike a numeric Collection::Id, this key survives a resource re-listing its collections with
+     * new ids, so it is suited for persisting a collection reference (a selection, a default) in a
+     * config file. Resolve it back with modelIndexForStableKey().
+     *
+     * \a collectionIndex an index whose CollectionRole holds the collection
+     * \sa modelIndexForStableKey
+     * \since 6.9
+     */
+    static QString stableKeyForCollectionIndex(const QModelIndex &collectionIndex);
+
+    /*!
+     * Same as stableKeyForCollectionIndex(), but computed from \a collection and its
+     * parentCollection() chain rather than from a model. Use this when no model is available, for
+     * example resolving against the result of a CollectionFetchJob with ancestor retrieval. The
+     * ancestors must be populated (their remoteId in particular), otherwise an empty string is
+     * returned.
+     *
+     * \a collection a collection with its ancestor chain populated
+     * \sa stableKeyForCollectionIndex
+     * \since 6.9
+     */
+    static QString stableKeyForCollection(const Collection &collection);
+
+    /*!
+     * Returns the index in \a model whose stableKeyForCollectionIndex() equals \a key, or an
+     * invalid index if none matches. This can be used through proxy models if \a model is a proxy.
+     *
+     * \a model the model to search
+     * \a key a key produced by stableKeyForCollectionIndex()
+     * \sa stableKeyForCollectionIndex
+     * \since 6.9
+     */
+    static QModelIndex modelIndexForStableKey(const QAbstractItemModel *model, const QString &key);
+
 Q_SIGNALS:
     /*!
      * Signal emitted when the collection tree has been fetched for the first time.
