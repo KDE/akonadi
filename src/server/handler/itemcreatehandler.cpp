@@ -55,7 +55,6 @@ bool ItemCreateHandler::buildPimItem(const Protocol::CreateItemCommand &cmd, Pim
     item.setSize(cmd.itemSize());
     item.setMimeTypeId(mimeType.id());
     item.setCollectionId(parentCol.id());
-    item.setDatetime(cmd.dateTime());
     if (cmd.remoteId().isEmpty()) {
         // from application
         item.setDirty(true);
@@ -67,7 +66,8 @@ bool ItemCreateHandler::buildPimItem(const Protocol::CreateItemCommand &cmd, Pim
     item.setRemoteRevision(cmd.remoteRevision());
     item.setGid(cmd.gid());
 
-    item.setAtime(cmd.modificationTime().isValid() ? cmd.modificationTime() : QDateTime::currentDateTimeUtc());
+    item.setDatetime(cmd.modificationTime().isValid() ? cmd.modificationTime() : QDateTime::currentDateTimeUtc());
+    item.setAtime(item.datetime());
 
     return true;
 }

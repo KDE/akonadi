@@ -145,7 +145,7 @@ public:
         cmd->setRemoteRevision(pimItem.remoteRevision());
         cmd->setMimeType(pimItem.mimeType().name());
         cmd->setGid(pimItem.gid());
-        cmd->setDateTime(dt);
+        cmd->setModificationTime(dt);
         cmd->setParts(parts);
 
         return cmd;
