@@ -4,7 +4,7 @@ set(PIM_VERSION "6.8.40")
 project(Akonadi VERSION ${PIM_VERSION})
 
 # ECM setup
-set(KF_MIN_VERSION "6.26.0")
+set(KF_MIN_VERSION "6.27.0")
 set(QT_REQUIRED_VERSION "6.9.0")
 
 set(CMAKE_CXX_STANDARD 23)
