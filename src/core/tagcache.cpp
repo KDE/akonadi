@@ -13,6 +13,8 @@
 #include <Akonadi/TagFetchScope>
 #include <Akonadi/TagModifyJob>
 
+#include <QCoreApplication>
+
 namespace Akonadi
 {
 class TagCachePrivate
@@ -115,8 +117,21 @@ void TagCache::setTagColor(const QString &tagName, const QColor &color)
 
 TagCache *TagCache::instance()
 {
-    static TagCache s_instance;
-    return &s_instance;
+    static std::unique_ptr<TagCache> s_instance;
+    if (QCoreApplication::closingDown()) {
+        return nullptr;
+    }
+    if (!s_instance) {
+        s_instance = std::make_unique<TagCache>();
+        connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, s_instance.get(), [&]() {
+            s_instance.reset();
+        });
+        // for QTest, we dont get aboutToQuit there
+        connect(QCoreApplication::instance(), &QObject::destroyed, s_instance.get(), [&]() {
+            s_instance.reset();
+        });
+    }
+    return s_instance.get();
 }
 
 #include "moc_tagcache.cpp"
