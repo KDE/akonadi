@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-28 02:43+0000\n"
-"PO-Revision-Date: 2026-07-04 15:41+0200\n"
+"PO-Revision-Date: 2026-08-08 12:26+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
 "Language: pl\n"
@@ -423,10 +423,9 @@ msgid "Failed to create tag."
 msgstr "Nieudane tworzenie znacznika."
 
 #: core/jobs/trashjob.cpp:155
-#, fuzzy, kde-format
-#| msgid "Move to trash collection failed, aborting trash operation"
+#, kde-format
 msgid "Failed to move to the trash collection; aborting the trash operation"
-msgstr "Nieudane przeniesienie zbioru do kosza, przerywanie operacji kosza"
+msgstr "Nie udało się przenieś do zbioru kosza, przerywanie działania kosza"
 
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format
