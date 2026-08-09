@@ -17,10 +17,10 @@ namespace Akonadi
 class ControlGuiPrivate;
 
 /*!
- * \brief Provides methods to ControlGui the Akonadi server process.
+ * \brief Provides methods to control the Akonadi server process.
  *
  * This class provides synchronous methods (ie. use a sub-eventloop)
- * to ControlGui the Akonadi service. For asynchronous methods see
+ * to control the Akonadi service. For asynchronous methods see
  * Akonadi::ServerManager.
  *
  * \class Akonadi::ControlGui
