@@ -173,7 +173,7 @@ void TagEditWidgetPrivate::slotItemEntered(const QModelIndex &index)
     const auto tag = m_deleteCandidate.data(Akonadi::TagModel::TagRole).value<Akonadi::Tag>();
     m_deleteButton->setToolTip(xi18nc("@info", "Delete Tag  <resource>%1</resource>", tag.name()));
     m_deleteButton->setToolTip(
-        xi18nc("@info", "Press this button to show a dialog that asks permission to remove the <resource>%1</resource> tag from Akonadi."));
+        xi18nc("@info", "Press this button to show a dialog that asks permission to remove the <resource>%1</resource> tag from Akonadi.", tag.name()));
     m_deleteButton->show();
 }
 
