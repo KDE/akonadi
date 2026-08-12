@@ -2403,7 +2403,7 @@ msgstr[0] "زامِن المورد"
 msgstr[1] "زامِن المورد"
 msgstr[2] "زامِن الموردين"
 msgstr[3] "زامِن %1 موارد"
-msgstr[4] "زامِن %1 مورداً"
+msgstr[4] "زامِن %1 موردًا"
 msgstr[5] "زامِن %1 مورد"
 
 #: widgets/standardactionmanager.cpp:408
