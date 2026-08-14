@@ -292,14 +292,17 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadItemNotificatio
                 item.setTags(loadTags(stream));
                 stream >> i64v;
                 item.setVirtualReferences(i64v);
-                stream >> cnt;
-                for (int k = 0; k < cnt; ++k) {
-                    stream >> i64; // left
-                    stream >> ba; // left mimetype
-                    stream >> i64; // right
-                    stream >> ba; // right mimetype
-                    stream >> ba; // type
-                    stream >> ba; // remoteid
+                if (version <= 8) {
+                    // load (and ignore) relations stored in old journals
+                    stream >> cnt;
+                    for (int k = 0; k < cnt; ++k) {
+                        stream >> i64; // left
+                        stream >> ba; // left mimetype
+                        stream >> i64; // right
+                        stream >> ba; // right mimetype
+                        stream >> ba; // type
+                        stream >> ba; // remoteid
+                    }
                 }
                 stream >> cnt;
                 QList<Protocol::Ancestor> ancestors;
