@@ -416,10 +416,9 @@ msgid "Failed to create tag."
 msgstr "Zlyhalo vytvorenie značky."
 
 #: core/jobs/trashjob.cpp:155
-#, fuzzy, kde-format
-#| msgid "Move to trash collection failed, aborting trash operation"
+#, kde-format
 msgid "Failed to move to the trash collection; aborting the trash operation"
-msgstr "Presun do kolekcie koša zlyhal, ruší sa operácia koša"
+msgstr "Nepodarilo sa presunúť do kolekcie koša; ruší sa operácia koša"
 
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format
@@ -668,7 +667,7 @@ msgstr "Odstrániť"
 #, kde-format
 msgctxt "status message, progress percentage"
 msgid "%1 (%2%)"
-msgstr ""
+msgstr "%1 (%2 %)"
 
 #: quick/qml/AgentConfigurationForm.qml:116
 #, kde-format
