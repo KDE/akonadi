@@ -418,7 +418,7 @@ msgstr "无法创建标签。"
 #: core/jobs/trashjob.cpp:155
 #, kde-format
 msgid "Failed to move to the trash collection; aborting the trash operation"
-msgstr ""
+msgstr "无法移动到回收站集合；正在中止移动到回收站操作"
 
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format
