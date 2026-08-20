@@ -35,6 +35,7 @@ profile mariadbd_akonadi {
   /usr/bin/mariadb-install-db mrix,
   /usr/bin/mariadb-upgrade mrix,
   /usr/{,s}bin/mariadbd mrix,
+  /usr/{,s}bin/mariadb mrix,
   /usr/share/mysql/** r,
   owner @{xdg_data_home}/akonadi/** rwk,
   owner @{PROC}/@{pid}/loginuid r,
