@@ -4,19 +4,19 @@
 Dependencies:
  - 'on': ['Linux', 'FreeBSD', 'Windows']
    'require':
-    'frameworks/extra-cmake-modules': '@latest-kf6'
-    'frameworks/kconfig': '@latest-kf6'
-    'frameworks/kconfigwidgets': '@latest-kf6'
-    'frameworks/kcoreaddons': '@latest-kf6'
-    'frameworks/ki18n': '@latest-kf6'
-    'frameworks/kiconthemes': '@latest-kf6'
-    'frameworks/kitemmodels': '@latest-kf6'
-    'frameworks/kwidgetsaddons': '@latest-kf6'
-    'frameworks/kwindowsystem': '@latest-kf6'
-    'frameworks/kxmlgui': '@latest-kf6'
-    'frameworks/kcrash': '@latest-kf6'
-    'frameworks/kirigami': '@latest-kf6'
-    'libraries/kirigami-addons': '@latest-kf6'
+    'frameworks/extra-cmake-modules': 'Frameworks/6.24'
+    'frameworks/kconfig': 'Frameworks/6.24'
+    'frameworks/kconfigwidgets': 'Frameworks/6.24'
+    'frameworks/kcoreaddons': 'Frameworks/6.24'
+    'frameworks/ki18n': 'Frameworks/6.24'
+    'frameworks/kiconthemes': 'Frameworks/6.24'
+    'frameworks/kitemmodels': 'Frameworks/6.24'
+    'frameworks/kwidgetsaddons': 'Frameworks/6.24'
+    'frameworks/kwindowsystem': 'Frameworks/6.24'
+    'frameworks/kxmlgui': 'Frameworks/6.24'
+    'frameworks/kcrash': 'Frameworks/6.24'
+    'frameworks/kirigami': 'Frameworks/6.24'
+    'libraries/kirigami-addons': 'v1.11.0'
 
 Options:
  cmake-options: "-DAKONADI_RUN_MYSQL_ISOLATED_TESTS=FALSE -DAKONADI_RUN_PGSQL_ISOLATED_TESTS=FALSE -DAKONADI_RUN_SQLITE_ISOLATED_TESTS=FALSE"
