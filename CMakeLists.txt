@@ -16,7 +16,6 @@ set(KF_MIN_VERSION "6.28.0")
 set(QT_REQUIRED_VERSION "6.9.0")
 
 set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(ECM ${KF_MIN_VERSION} CONFIG REQUIRED)
 
@@ -442,7 +441,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     # see e.g. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=56556 or https://gcc.gnu.org/bugzilla/show_bug.cgi?id=79328
     string(APPEND CMAKE_CXX_FLAGS " -Wshadow")
 endif()
-ecm_set_disabled_deprecation_versions(QT 6.12.0  KF 6.29.0)
+ecm_set_disabled_deprecation_versions(QT 6.12.0  KF 6.30.0)
 
 add_subdirectory(src)
 add_subdirectory(icons)
