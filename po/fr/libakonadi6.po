@@ -227,7 +227,7 @@ msgstr "Commande à exécuter"
 #: configdialog/main.cpp:23
 #, kde-format
 msgid "Configuration Dialog"
-msgstr "Boîte de dialogue de configuration"
+msgstr "Boite de dialogue de configuration"
 
 #: configdialog/main.cpp:25
 #, kde-format
@@ -2650,7 +2650,7 @@ msgid ""
 "Press this button to show a dialog that asks permission to remove the "
 "<resource>%1</resource> tag from Akonadi."
 msgstr ""
-"Appuyez sur ce bouton pour afficher une boîte de dialogue demandant "
+"Appuyez sur ce bouton pour afficher une boite de dialogue demandant "
 "l'autorisation de supprimer l'étiquette <resource>%1</resource> de Akonadi."
 
 #: widgets/tageditwidget.cpp:184
