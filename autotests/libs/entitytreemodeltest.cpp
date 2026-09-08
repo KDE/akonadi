@@ -6,6 +6,7 @@
 
 #include "qtest_akonadi.h"
 
+#include "collectionfetchjob.h"
 #include "entitydisplayattribute.h"
 #include "entitytreemodel.h"
 #include "entitytreemodel_p.h"
@@ -14,6 +15,9 @@
 #include "fakesession.h"
 #include "imapparser_p.h"
 #include "modelspy.h"
+
+#include <QPointer>
+#include <QSignalSpy>
 
 static const char serverContent1[] =
     // The format of these lines are first a type, either 'C' or 'I' for Item and collection.
@@ -87,6 +91,7 @@ private Q_SLOTS:
     void testItemChanged_data();
     void testItemChanged();
     void testRemoveCollectionOnChanged();
+    void testAncestorPopulatedAfterReAdd();
 
 private:
     QPair<FakeServerData *, Akonadi::EntityTreeModel *> populateModel(const QString &serverContent, const QString &mimeType = QString())
@@ -659,6 +664,74 @@ void EntityTreeModelTest::testRemoveCollectionOnChanged()
     QTest::qWait(0);
 
     QVERIFY(m_modelSpy->isEmpty());
+}
+
+void EntityTreeModelTest::testAncestorPopulatedAfterReAdd()
+{
+    // A resource re-creating its collections: removing the only wanted child also removes the
+    // unwanted parent, then a new wanted child brings the parent back through ancestor retrieval.
+    // The parent must be considered populated again, as after the initial fetch.
+    const auto serverContent = QStringLiteral(
+        "- C (inode/directory)                  'Col 1'     2"
+        "- - C (text/directory)                 'Col 2'     1"
+        "- - - I text/directory                 'Item 1'");
+
+    const auto testDrivers = populateModel(serverContent, QStringLiteral("text/directory"));
+    auto const serverData = testDrivers.first;
+    auto const model = testDrivers.second;
+
+    QCOMPARE(model->rowCount(), 1);
+    auto const col1Index = model->index(0, 0);
+    QCOMPARE(col1Index.data().toString(), QStringLiteral("Col 1"));
+    QVERIFY(col1Index.data(EntityTreeModel::IsPopulatedRole).toBool());
+    auto const col1 = col1Index.data(EntityTreeModel::CollectionRole).value<Collection>();
+
+    // Removing the only wanted child removes the parent too
+    serverData->setCommands({new FakeCollectionRemovedCommand(QStringLiteral("Col 2"), QStringLiteral("Col 1"), serverData)});
+    serverData->processNotifications();
+    QCOMPARE(model->rowCount(), 0);
+
+    // A new wanted child appears under the removed parent, so the model fetches the ancestor.
+    // jobAdded is emitted from the Job constructor, so the jobs can only be cast to their real type later.
+    // The fake session ends jobs immediately, so they are only alive until the event loop runs.
+    QList<QPointer<Job>> addedJobs;
+    QObject connectionContext;
+    connect(m_fakeSession, &FakeSession::jobAdded, &connectionContext, [&addedJobs](Job *job) {
+        addedJobs.append(job);
+    });
+    QSignalSpy populatedSpy(model, &EntityTreeModel::collectionPopulated);
+
+    Collection parent(col1.id());
+    parent.setParentCollection(Collection::root());
+    Collection col3;
+    col3.setId(serverData->nextCollectionId());
+    col3.setName(QStringLiteral("Col 3"));
+    col3.setContentMimeTypes({QStringLiteral("text/directory")});
+    col3.setParentCollection(parent);
+    serverData->setCommands({new FakeCollectionAddedCommand(col3, serverData)});
+    serverData->processNotifications();
+
+    QCOMPARE(model->rowCount(), 1);
+    auto const parentIndex = model->index(0, 0);
+    QCOMPARE(parentIndex.data(EntityTreeModel::CollectionIdRole).toLongLong(), col1.id());
+    QCOMPARE(model->rowCount(parentIndex), 1);
+    // The placeholder can't be considered populated before its mimetypes are known
+    QVERIFY(!parentIndex.data(EntityTreeModel::IsPopulatedRole).toBool());
+    QCOMPARE(populatedSpy.count(), 0);
+
+    QList<CollectionFetchJob *> ancestorFetchJobs;
+    for (const auto &job : std::as_const(addedJobs)) {
+        if (auto fetchJob = qobject_cast<CollectionFetchJob *>(job.data())) {
+            ancestorFetchJobs.append(fetchJob);
+        }
+    }
+    QCOMPARE(ancestorFetchJobs.size(), 1);
+
+    // The ancestor fetch returns the real parent, which contains no wanted mimetype
+    Q_EMIT ancestorFetchJobs.first()->collectionsReceived({col1});
+    QVERIFY(parentIndex.data(EntityTreeModel::IsPopulatedRole).toBool());
+    QCOMPARE(populatedSpy.count(), 1);
+    QCOMPARE(populatedSpy.at(0).at(0).toLongLong(), col1.id());
 }
 
 #include "entitytreemodeltest.moc"

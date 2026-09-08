@@ -193,6 +193,8 @@ public:
     void fetchCollections(const Collection::List &collections, CollectionFetchJob::Type type = CollectionFetchJob::FirstLevel);
     void fetchCollections(Akonadi::CollectionFetchJob *job);
     void fetchItems(const Collection &collection);
+    [[nodiscard]] bool canContainWantedItems(const Collection &collection) const;
+    void markCollectionPopulated(const Collection &collection);
     void collectionsFetched(const Akonadi::Collection::List &collections);
     void itemsFetched(const Akonadi::Item::List &items);
     void itemsFetched(const Collection::Id collectionId, const Akonadi::Item::List &items);

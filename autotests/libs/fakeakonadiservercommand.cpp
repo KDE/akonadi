@@ -354,6 +354,11 @@ void FakeCollectionMovedCommand::doCommand()
 
 void FakeCollectionAddedCommand::doCommand()
 {
+    if (m_collection.isValid()) {
+        Q_EMIT emit_monitoredCollectionAdded(m_collection, m_collection.parentCollection());
+        return;
+    }
+
     Collection parent = getCollectionByDisplayName(m_parentName);
 
     Q_ASSERT(parent.isValid());
