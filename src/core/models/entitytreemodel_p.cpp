@@ -439,19 +439,29 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
         if (m_itemPopulation == EntityTreeModel::ImmediatePopulation) {
             for (const auto collectionId : subtree) {
                 const auto col = m_collections.value(collectionId);
-                if (!m_mimeChecker.hasWantedMimeTypes() || m_mimeChecker.isWantedCollection(col)) {
+                if (canContainWantedItems(col)) {
                     fetchItems(col);
                 } else {
-                    // Consider collections that don't contain relevant mimetypes to be populated
-                    m_populatedCols.insert(collectionId);
-                    Q_EMIT q_ptr->collectionPopulated(collectionId);
-                    const auto idx = indexForCollection(Collection(collectionId));
-                    Q_ASSERT(idx.isValid());
-                    dataChanged(idx, idx);
+                    markCollectionPopulated(col);
                 }
             }
         }
     }
+}
+
+bool EntityTreeModelPrivate::canContainWantedItems(const Collection &collection) const
+{
+    return !m_mimeChecker.hasWantedMimeTypes() || m_mimeChecker.isWantedCollection(collection);
+}
+
+// Collections that can't contain wanted items are considered populated, since there is nothing to fetch
+void EntityTreeModelPrivate::markCollectionPopulated(const Collection &collection)
+{
+    m_populatedCols.insert(collection.id());
+    Q_EMIT q_ptr->collectionPopulated(collection.id());
+    const auto idx = indexForCollection(collection);
+    Q_ASSERT(idx.isValid());
+    dataChanged(idx, idx);
 }
 
 // Used by entitytreemodeltest
@@ -681,7 +691,21 @@ void EntityTreeModelPrivate::ancestorsFetched(const Akonadi::Collection::List &c
 
         const QModelIndex index = indexForCollection(collection);
         Q_ASSERT(index.isValid());
-        dataChanged(index, index);
+        if (!index.isValid()) {
+            // Recursive fetch from retrieveAncestors(): the collection was not inserted in the tree
+            continue;
+        }
+
+        // retrieveAncestors() only inserted a placeholder. Now that the mimetypes are known, consider it
+        // populated if it can't contain wanted items, like collectionsFetched() does.
+        // Ancestors that can contain wanted items are left alone: they only end up as placeholders
+        // when the list filter, the hidden attribute or explicit monitoring excludes them, and the
+        // items of such collections are not shown after the initial fetch either.
+        if (m_itemPopulation == EntityTreeModel::ImmediatePopulation && !canContainWantedItems(collection)) {
+            markCollectionPopulated(collection);
+        } else {
+            dataChanged(index, index);
+        }
     }
 }
 
@@ -751,7 +775,7 @@ bool EntityTreeModelPrivate::shouldBePartOfModel(const Collection &collection) c
 
     // Some collection trees contain multiple mimetypes. Even though server side filtering ensures we
     // only get the ones we're interested in from the job, we have to filter on collections received through signals too.
-    if (m_mimeChecker.hasWantedMimeTypes() && !m_mimeChecker.isWantedCollection(collection)) {
+    if (!canContainWantedItems(collection)) {
         return false;
     }
 

@@ -131,9 +131,17 @@ public:
     {
     }
 
+    /// The parent is taken from the collection, so it doesn't have to be in the model
+    FakeCollectionAddedCommand(const Akonadi::Collection &collection, FakeServerData *serverData)
+        : FakeMonitorCommand(serverData)
+        , m_collection(collection)
+    {
+    }
+
     void doCommand() override;
 
 private:
+    Akonadi::Collection m_collection;
     QString m_collectionName;
     QString m_parentName;
 };
