@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-28 02:43+0000\n"
+"POT-Creation-Date: 2026-09-09 02:59+0000\n"
 "PO-Revision-Date: 2026-08-08 12:26+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -488,31 +488,31 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "Nazwa"
 
-#: core/models/entitytreemodel_p.cpp:1350
+#: core/models/entitytreemodel_p.cpp:1374
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "Nie udało się skopiować elementu: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1352
+#: core/models/entitytreemodel_p.cpp:1376
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "Nie można skopiować zbioru: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1354
+#: core/models/entitytreemodel_p.cpp:1378
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "Nie udało się przenieść elementu: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1356
+#: core/models/entitytreemodel_p.cpp:1380
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "Nie można przenieść zbioru: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1358
+#: core/models/entitytreemodel_p.cpp:1382
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-28 02:43+0000\n"
+"POT-Creation-Date: 2026-09-09 02:59+0000\n"
 "PO-Revision-Date: 2024-12-25 19:45+0530\n"
 "Last-Translator: kali <shreekantkalwar@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -496,31 +496,31 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "नामः"
 
-#: core/models/entitytreemodel_p.cpp:1350
+#: core/models/entitytreemodel_p.cpp:1374
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "द्रव्यस्य प्रतिलिपिं कर्तुं न शक्यते: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1352
+#: core/models/entitytreemodel_p.cpp:1376
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "संग्रहस्य प्रतिलिपिं कर्तुं न शक्यते: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1354
+#: core/models/entitytreemodel_p.cpp:1378
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "द्रव्यं स्थानान्तरयितुं न शक्तम्: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1356
+#: core/models/entitytreemodel_p.cpp:1380
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "संग्रहं स्थानान्तरयितुं न शक्तम्: <message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1358
+#: core/models/entitytreemodel_p.cpp:1382
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-28 02:43+0000\n"
+"POT-Creation-Date: 2026-09-09 02:59+0000\n"
 "PO-Revision-Date: 2026-08-04 06:47+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -481,31 +481,31 @@ msgctxt "@title:column Name of a thing"
 msgid "Name"
 msgstr "名稱"
 
-#: core/models/entitytreemodel_p.cpp:1350
+#: core/models/entitytreemodel_p.cpp:1374
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy item: <message>%1</message>"
 msgstr "無法複製項目：<message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1352
+#: core/models/entitytreemodel_p.cpp:1376
 #, kde-format
 msgctxt "@info"
 msgid "Could not copy collection: <message>%1</message>"
 msgstr "無法複製收藏：<message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1354
+#: core/models/entitytreemodel_p.cpp:1378
 #, kde-format
 msgctxt "@info"
 msgid "Could not move item: <message>%1</message>"
 msgstr "無法移動項目：<message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1356
+#: core/models/entitytreemodel_p.cpp:1380
 #, kde-format
 msgctxt "@info"
 msgid "Could not move collection: <message>%1</message>"
 msgstr "無法移動收藏：<message>%1</message>"
 
-#: core/models/entitytreemodel_p.cpp:1358
+#: core/models/entitytreemodel_p.cpp:1382
 #, kde-format
 msgctxt "@info"
 msgid "Could not link entity: <message>%1</message>"
