@@ -11,6 +11,7 @@
 #include "dragdropmanager_p.h"
 
 #include <QApplication>
+#include <QDragLeaveEvent>
 #include <QDragMoveEvent>
 #include <QHeaderView>
 #include <QMenu>
@@ -52,6 +53,11 @@ public:
 
     EntityTreeView *const mParent;
     QBasicTimer mDragExpandTimer;
+    // Position (in viewport coordinates) of the last drag move event. We can not use
+    // QCursor::pos() here: on Wayland the pointer position is not updated while a drag
+    // is in progress (the motion is delivered by the compositor as drag events only),
+    // so QCursor::pos() would return a stale position and the row would never expand.
+    QPoint mDragExpandPos{-1, -1};
     DragDropManager *mDragDropManager = nullptr;
     KXMLGUIClient *mXmlGuiClient = nullptr;
     QString mDefaultPopupMenu;
@@ -218,9 +224,9 @@ void EntityTreeView::setModel(QAbstractItemModel *model)
 void EntityTreeView::timerEvent(QTimerEvent *event)
 {
     if (event->timerId() == d->mDragExpandTimer.timerId()) {
-        const QPoint pos = viewport()->mapFromGlobal(QCursor::pos());
-        if (state() == QAbstractItemView::DraggingState && viewport()->rect().contains(pos)) {
-            setExpanded(indexAt(pos), true);
+        d->mDragExpandTimer.stop();
+        if (state() == QAbstractItemView::DraggingState && viewport()->rect().contains(d->mDragExpandPos)) {
+            setExpanded(indexAt(d->mDragExpandPos), true);
         }
     }
 
@@ -230,7 +236,14 @@ void EntityTreeView::timerEvent(QTimerEvent *event)
 #ifndef QT_NO_DRAGANDDROP
 void EntityTreeView::dragMoveEvent(QDragMoveEvent *event)
 {
-    d->mDragExpandTimer.start(QApplication::startDragTime(), this);
+    const QPoint pos = event->position().toPoint();
+    // Only restart the timer when the cursor actually moved to another row, otherwise
+    // a compositor sending a continuous stream of drag motion events would keep
+    // resetting the timer and the row would never expand.
+    if (indexAt(pos) != indexAt(d->mDragExpandPos) || !d->mDragExpandTimer.isActive()) {
+        d->mDragExpandTimer.start(QApplication::startDragTime(), this);
+    }
+    d->mDragExpandPos = pos;
 
     if (d->mDragDropManager->dropAllowed(event)) {
         // All urls are supported. process the event.
@@ -241,9 +254,17 @@ void EntityTreeView::dragMoveEvent(QDragMoveEvent *event)
     event->setDropAction(Qt::IgnoreAction);
 }
 
+void EntityTreeView::dragLeaveEvent(QDragLeaveEvent *event)
+{
+    d->mDragExpandTimer.stop();
+    d->mDragExpandPos = QPoint(-1, -1);
+    QTreeView::dragLeaveEvent(event);
+}
+
 void EntityTreeView::dropEvent(QDropEvent *event)
 {
     d->mDragExpandTimer.stop();
+    d->mDragExpandPos = QPoint(-1, -1);
     bool menuCanceled = false;
     if (d->mDragDropManager->processDropEvent(event, menuCanceled, (dropIndicatorPosition() == QAbstractItemView::OnItem))) {
         QTreeView::dropEvent(event);

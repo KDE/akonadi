@@ -15,6 +15,7 @@
 #include <memory>
 
 class KXMLGUIClient;
+class QDragLeaveEvent;
 class QDragMoveEvent;
 
 namespace Akonadi
@@ -213,6 +214,7 @@ protected:
 #ifndef QT_NO_DRAGANDDROP
     void startDrag(Qt::DropActions supportedActions) override;
     void dragMoveEvent(QDragMoveEvent *event) override;
+    void dragLeaveEvent(QDragLeaveEvent *event) override;
     void dropEvent(QDropEvent *event) override;
 #endif
     void timerEvent(QTimerEvent *event) override;
