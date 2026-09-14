@@ -50,10 +50,11 @@ void CollectionGeneralPropertiesPage::load(const Collection &collection)
     }
     ui.customIconCheckbox->setChecked(!iconName.isEmpty());
 
-    if (collection.statistics().count() >= 0) {
-        ui.countLabel->setText(i18ncp("@label", "One object", "%1 objects", collection.statistics().count()));
+    const auto statistics = collection.statistics();
+    if (statistics.count() >= 0) {
+        ui.countLabel->setText(i18ncp("@label", "One object", "%1 objects", statistics.count()));
         KFormat format;
-        ui.sizeLabel->setText(format.formatByteSize(collection.statistics().size()));
+        ui.sizeLabel->setText(format.formatByteSize(statistics.size()));
     } else {
         ui.statsBox->hide();
     }

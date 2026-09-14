@@ -576,19 +576,19 @@ void StandardActionManagerPrivate::encodeToClipboard(QItemSelectionModel *select
 {
     Q_UNUSED(cut);
     Q_ASSERT(selectionModel);
-    if (safeSelectedRows(selectionModel).isEmpty()) {
+    const auto listRows = safeSelectedRows(selectionModel);
+    if (listRows.isEmpty()) {
         return;
     }
 
 #ifndef QT_NO_CLIPBOARD
     auto model = const_cast<QAbstractItemModel *>(selectionModel->model());
-    QMimeData *mimeData = selectionModel->model()->mimeData(safeSelectedRows(selectionModel));
+    QMimeData *mimeData = selectionModel->model()->mimeData(listRows);
     model->setData(QModelIndex(), false, EntityTreeModel::PendingCutRole);
     markCutAction(mimeData, cut);
     QApplication::clipboard()->setMimeData(mimeData);
     if (cut) {
-        const auto rows = safeSelectedRows(selectionModel);
-        for (const auto &index : rows) {
+        for (const auto &index : listRows) {
             model->setData(index, true, EntityTreeModel::PendingCutRole);
         }
     }
