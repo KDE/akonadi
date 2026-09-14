@@ -45,8 +45,6 @@ void CollectionPropertiesPage::setPageTitle(const QString &title)
     d->title = title;
 }
 
-CollectionPropertiesPageFactory::~CollectionPropertiesPageFactory()
-{
-}
+CollectionPropertiesPageFactory::~CollectionPropertiesPageFactory() = default;
 
 #include "moc_collectionpropertiespage.cpp"

@@ -28,9 +28,7 @@ public:
     {
     }
 
-    ~CollectionRequesterPrivate()
-    {
-    }
+    ~CollectionRequesterPrivate() = default;
 
     void fetchCollection(const Collection &collection);
 

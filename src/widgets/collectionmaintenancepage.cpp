@@ -29,9 +29,7 @@ using namespace Akonadi;
 class Akonadi::CollectionMaintenancePagePrivate
 {
 public:
-    CollectionMaintenancePagePrivate()
-    {
-    }
+    CollectionMaintenancePagePrivate() = default;
 
     void slotReindexCollection()
     {

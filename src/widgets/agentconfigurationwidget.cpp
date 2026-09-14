@@ -30,9 +30,7 @@ AgentConfigurationWidgetPrivate::AgentConfigurationWidgetPrivate(const AgentInst
 {
 }
 
-AgentConfigurationWidgetPrivate::~AgentConfigurationWidgetPrivate()
-{
-}
+AgentConfigurationWidgetPrivate::~AgentConfigurationWidgetPrivate() = default;
 
 void AgentConfigurationWidgetPrivate::setupErrorWidget(QWidget *parent, const QString &text)
 {
