@@ -131,7 +131,9 @@ void CollectionRequesterPrivate::init()
     });
 
     auto openAction = new QAction(q);
-    openAction->setShortcut(KStandardShortcut::Open);
+    openAction->setShortcuts(KStandardShortcut::open());
+    openAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
+    q->addAction(openAction);
     q->connect(openAction, &QAction::triggered, q, [this]() {
         _k_slotOpenDialog();
     });
