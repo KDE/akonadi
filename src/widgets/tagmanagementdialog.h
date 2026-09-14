@@ -44,12 +44,6 @@ public:
      */
     ~TagManagementDialog() override;
 
-    /*!
-     * Returns the button box of the dialog.
-     * \return The dialog button box.
-     */
-    [[nodiscard]] QDialogButtonBox *buttons() const;
-
 private:
     std::unique_ptr<TagManagementDialogPrivate> const d;
 };

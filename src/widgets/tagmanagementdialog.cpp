@@ -35,7 +35,6 @@ public:
 
     Ui::TagManagementDialog ui;
     QDialog *const q;
-    QDialogButtonBox *buttonBox = nullptr;
 };
 
 void TagManagementDialogPrivate::writeConfig() const
@@ -73,11 +72,6 @@ TagManagementDialog::TagManagementDialog(QWidget *parent)
 TagManagementDialog::~TagManagementDialog()
 {
     d->writeConfig();
-}
-
-QDialogButtonBox *TagManagementDialog::buttons() const
-{
-    return d->buttonBox;
 }
 
 #include "moc_tagmanagementdialog.cpp"
