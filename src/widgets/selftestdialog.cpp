@@ -18,7 +18,6 @@
 #include <QMessageBox>
 #include <QSqlDatabase>
 #include <QSqlError>
-#include <QStandardPaths>
 #include <QUrl>
 
 #include <QApplication>

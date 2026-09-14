@@ -17,7 +17,6 @@
 #include <KLocalizedString>
 
 #include <QContextMenuEvent>
-#include <QHBoxLayout>
 #include <QLocale>
 #include <QMenu>
 #include <QToolButton>

@@ -13,9 +13,6 @@
 #include "specialcollectionattribute.h"
 #include "standardactionmanager_p.h"
 
-#include <QApplication>
-#include <QClipboard>
-
 using namespace Akonadi;
 
 static bool canCreateSubCollection(const Collection &collection)

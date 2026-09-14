@@ -8,7 +8,6 @@
 #include "agenttypedialog.h"
 #include "agentfilterproxymodel.h"
 
-#include <KConfig>
 #include <QVBoxLayout>
 
 #include <KConfigGroup>

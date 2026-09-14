@@ -10,8 +10,6 @@
 #include "agentconfigurationwidget_p.h"
 #include "core/agentmanager.h"
 
-#include <QAction>
-#include <QDebug>
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
