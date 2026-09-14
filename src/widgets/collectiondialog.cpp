@@ -252,7 +252,7 @@ bool CollectionDialogPrivate::canCreateCollection(const Akonadi::Collection &par
                 return true;
             }
         }
-        return true;
+        return false;
     }
     return false;
 }
