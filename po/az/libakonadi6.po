@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-09 00:50+0000\n"
+"POT-Creation-Date: 2026-09-15 00:44+0000\n"
 "PO-Revision-Date: 2023-02-19 14:32+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -746,28 +746,28 @@ msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr ""
 
-#: widgets/agentconfigurationdialog.cpp:46
+#: widgets/agentconfigurationdialog.cpp:44
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 tənzimləməsi"
 
-#: widgets/agentconfigurationwidget.cpp:94
+#: widgets/agentconfigurationwidget.cpp:92
 #, kde-format
 msgid "Unable to access D-Bus interface of created agent."
 msgstr "Yaradılmış təmsilçinin D-Bus interfeysinə girişi mümkün deyil."
 
-#: widgets/agentconfigurationwidget.cpp:116
+#: widgets/agentconfigurationwidget.cpp:114
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "Tənzimləmə dialoqu pəncərəsi başqa pəncərədə açılıb"
 
-#: widgets/agentconfigurationwidget.cpp:123
+#: widgets/agentconfigurationwidget.cpp:121
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "%1 üçün tənzimləmə artıq başqa bir yerdə açılıb."
 
-#: widgets/agentconfigurationwidget.cpp:125
+#: widgets/agentconfigurationwidget.cpp:123
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "%1 tənzimləmə dialoqunun qeydiyyatı baş tutmadı."
@@ -778,13 +778,13 @@ msgctxt "Status percent value"
 msgid "(%1%)"
 msgstr ""
 
-#: widgets/agenttypedialog.cpp:66
+#: widgets/agenttypedialog.cpp:65
 #, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
 msgstr "Hesabı tənzimlə"
 
-#: widgets/agenttypedialog.cpp:74
+#: widgets/agenttypedialog.cpp:73
 #, fuzzy, kde-format
 #| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
 #| msgid "Search"
@@ -799,7 +799,7 @@ msgid_plural "minutes"
 msgstr[0] "dəqiqə"
 msgstr[1] "dəqiqələr"
 
-#: widgets/cachepolicypage.cpp:70
+#: widgets/cachepolicypage.cpp:69
 #, kde-format
 msgid "Retrieval"
 msgstr "Bərpa edilmə"
@@ -953,7 +953,7 @@ msgctxt "@title:tab general properties page"
 msgid "General"
 msgstr "Əsas"
 
-#: widgets/collectiongeneralpropertiespage.cpp:54
+#: widgets/collectiongeneralpropertiespage.cpp:55
 #, kde-format
 msgctxt "@label"
 msgid "One object"
@@ -1010,29 +1010,29 @@ msgstr "Ölçüsü:"
 msgid "0 Byte"
 msgstr "0 bayt"
 
-#: widgets/collectionmaintenancepage.cpp:46
+#: widgets/collectionmaintenancepage.cpp:44
 #, kde-format
 msgid "Remember that indexing can take some minutes."
 msgstr "İndeksləmə bir neçə dəqiqə vaxta ala bilər."
 
-#: widgets/collectionmaintenancepage.cpp:72
+#: widgets/collectionmaintenancepage.cpp:70
 #, kde-format
 msgid "Maintenance"
 msgstr "Xidmət göstərmək"
 
-#: widgets/collectionmaintenancepage.cpp:131
+#: widgets/collectionmaintenancepage.cpp:129
 #, kde-format
 msgid "Error while retrieving indexed items count"
 msgstr "İndekslənmiş elementlərin sayının alınması xətası"
 
-#: widgets/collectionmaintenancepage.cpp:134
+#: widgets/collectionmaintenancepage.cpp:132
 #, kde-format
 msgid "Indexed %1 item in this folder"
 msgid_plural "Indexed %1 items in this folder"
 msgstr[0] "%1 element bu qovluqda indekslənib"
 msgstr[1] "%1 element bu qovluqda indekslənib"
 
-#: widgets/collectionmaintenancepage.cpp:138
+#: widgets/collectionmaintenancepage.cpp:136
 #, kde-format
 msgid "Calculating indexed items..."
 msgstr "İndekslənmiş elementlər hesablanır..."
@@ -1097,14 +1097,14 @@ msgstr "İndekslənmiş elementlərin sayı alınır..."
 msgid "Reindex folder"
 msgstr "Qovluqları yenidən indeksləmək"
 
-#: widgets/collectionrequester.cpp:113
+#: widgets/collectionrequester.cpp:111
 #, fuzzy, kde-format
 #| msgid "No Folder"
 msgctxt "@info:placeholder"
 msgid "No Folder"
 msgstr "Qovluq yoxdur"
 
-#: widgets/collectionrequester.cpp:122
+#: widgets/collectionrequester.cpp:120
 #, fuzzy, kde-format
 #| msgid "Open collection dialog"
 msgctxt "@info:tooltip"
@@ -1398,23 +1398,23 @@ msgstr "Seçmə qovluqların aını dəyişmək"
 msgid "Name:"
 msgstr "Adı:"
 
-#: widgets/selftestdialog.cpp:60
+#: widgets/selftestdialog.cpp:59
 #, kde-format
 msgctxt "@title:window"
 msgid "Akonadi Server Self-Test"
 msgstr "Daxili Akonadi server yoxlaması"
 
-#: widgets/selftestdialog.cpp:71
+#: widgets/selftestdialog.cpp:70
 #, kde-format
 msgid "Save Report..."
 msgstr "Hesabatı saxlamaq..."
 
-#: widgets/selftestdialog.cpp:73
+#: widgets/selftestdialog.cpp:72
 #, kde-format
 msgid "Copy Report to Clipboard"
 msgstr "Hesabatı mübadilə beferinə kopyalamaq"
 
-#: widgets/selftestdialog.cpp:189
+#: widgets/selftestdialog.cpp:188
 #, kde-format
 msgid ""
 "The QtSQL driver '%1' is required by your current Akonadi server "
@@ -1423,7 +1423,7 @@ msgstr ""
 "\"%1\" QtSQL sürücüsü sizin cari Akonadi serverinin ayarını tələb edir və bu "
 "ayar sisteminizdə tapıldı"
 
-#: widgets/selftestdialog.cpp:191
+#: widgets/selftestdialog.cpp:190
 #, kde-format
 msgid ""
 "The QtSQL driver '%1' is required by your current Akonadi server "
@@ -1435,28 +1435,28 @@ msgstr ""
 "Bu sürücülər quraşdırılıb: %2\n"
 "Əmin olun ki, tələb olunan sürücülər quraşdırılıb."
 
-#: widgets/selftestdialog.cpp:198
+#: widgets/selftestdialog.cpp:197
 #, kde-format
 msgid "Database driver found."
 msgstr "Verilənlər bazası sürücüsü tapıldı."
 
-#: widgets/selftestdialog.cpp:200
+#: widgets/selftestdialog.cpp:199
 #, kde-format
 msgid "Database driver not found."
 msgstr "Verilənlər bazası sürücüsü tapılmadı."
 
-#: widgets/selftestdialog.cpp:208
+#: widgets/selftestdialog.cpp:207
 #, kde-format
 msgid "MySQL server executable not tested."
 msgstr "MySQL icra faylı test edilmədi."
 
-#: widgets/selftestdialog.cpp:208 widgets/selftestdialog.cpp:249
-#: widgets/selftestdialog.cpp:300
+#: widgets/selftestdialog.cpp:207 widgets/selftestdialog.cpp:248
+#: widgets/selftestdialog.cpp:299
 #, kde-format
 msgid "The current configuration does not require an internal MySQL server."
 msgstr "Cari tənzimləmə daxili MySQL serveri tələb etmir."
 
-#: widgets/selftestdialog.cpp:216
+#: widgets/selftestdialog.cpp:215
 #, kde-format
 msgid ""
 "You have currently configured Akonadi to use the MySQL server '%1'.\n"
@@ -1471,63 +1471,63 @@ msgstr ""
 "MySQL serverinin icra faylı adətən 'mysqld' adlanır və onun yerləşmə yeri "
 "ditribütordan asılı olaraq fərlənir."
 
-#: widgets/selftestdialog.cpp:224
+#: widgets/selftestdialog.cpp:223
 #, kde-format
 msgid "MySQL server not found."
 msgstr "MySQL serveri tapılmadı."
 
-#: widgets/selftestdialog.cpp:226
+#: widgets/selftestdialog.cpp:225
 #, kde-format
 msgid "MySQL server not readable."
 msgstr "MySQL serveri oxuna bilən deyil."
 
-#: widgets/selftestdialog.cpp:228
+#: widgets/selftestdialog.cpp:227
 #, kde-format
 msgid "MySQL server not executable."
 msgstr "MySQL serveri icra faylı icra edilə bilən deyil."
 
-#: widgets/selftestdialog.cpp:230
+#: widgets/selftestdialog.cpp:229
 #, kde-format
 msgid "MySQL found with unexpected name."
 msgstr "MySQL gözlənilməz adla tapıldı."
 
-#: widgets/selftestdialog.cpp:232
+#: widgets/selftestdialog.cpp:231
 #, kde-format
 msgid "MySQL server found."
 msgstr "MySQL serveri tapıldı."
 
-#: widgets/selftestdialog.cpp:238
+#: widgets/selftestdialog.cpp:237
 #, kde-format
 msgid "MySQL server found: %1"
 msgstr "MySQL serveri tapıldı: %1"
 
-#: widgets/selftestdialog.cpp:239
+#: widgets/selftestdialog.cpp:238
 #, kde-format
 msgid "MySQL server is executable."
 msgstr "MySQL serveri icra faylı icra edilə biləndir."
 
-#: widgets/selftestdialog.cpp:241
+#: widgets/selftestdialog.cpp:240
 #, kde-format
 msgid ""
 "Executing the MySQL server '%1' failed with the following error message: '%2'"
 msgstr "\"%1\" MySQL serverinin işə salınması xətası: \"%2\""
 
-#: widgets/selftestdialog.cpp:242
+#: widgets/selftestdialog.cpp:241
 #, kde-format
 msgid "Executing the MySQL server failed."
 msgstr "MySQL serverinin işə salınması baş tutmadı."
 
-#: widgets/selftestdialog.cpp:249
+#: widgets/selftestdialog.cpp:248
 #, kde-format
 msgid "MySQL server error log not tested."
 msgstr "MySQL serveri jurnalı yoxlanılmadı."
 
-#: widgets/selftestdialog.cpp:257
+#: widgets/selftestdialog.cpp:256
 #, kde-format
 msgid "No current MySQL error log found."
 msgstr "Cari MySQL xəta qeydləri jurnalı tapılmadı"
 
-#: widgets/selftestdialog.cpp:258
+#: widgets/selftestdialog.cpp:257
 #, kde-format
 msgid ""
 "The MySQL server did not report any errors during this startup. The log can "
@@ -1536,70 +1536,70 @@ msgstr ""
 "MySQL serveri başladılan zaman heç bir xəta hesabatı göndərmədi. Jurnal "
 "\"%1\" faylında tapıla bilər."
 
-#: widgets/selftestdialog.cpp:264
+#: widgets/selftestdialog.cpp:263
 #, kde-format
 msgid "MySQL error log not readable."
 msgstr "MySQL xəta jurnalı oxuna bilən deyil."
 
-#: widgets/selftestdialog.cpp:265
+#: widgets/selftestdialog.cpp:264
 #, kde-format
 msgid "A MySQL server error log file was found but is not readable: %1"
 msgstr "MySQL sever xəta qyedləri faylı tapıldı, lakin, oxuna bilən deyil: %1"
 
-#: widgets/selftestdialog.cpp:274
+#: widgets/selftestdialog.cpp:273
 #, kde-format
 msgid "MySQL server log contains errors."
 msgstr "MySQL server jurnalında səhvlər var."
 
-#: widgets/selftestdialog.cpp:275
+#: widgets/selftestdialog.cpp:274
 #, kde-format
 msgid "The MySQL server error log file '%1' contains errors."
 msgstr "MySQL serveri xəta qeydləri \"%1\" faylında xətalar var."
 
-#: widgets/selftestdialog.cpp:285
+#: widgets/selftestdialog.cpp:284
 #, kde-format
 msgid "MySQL server log contains warnings."
 msgstr "MySQL serveri jurnalında xəbərdarlıqlar var."
 
-#: widgets/selftestdialog.cpp:286
+#: widgets/selftestdialog.cpp:285
 #, kde-format
 msgid "The MySQL server log file '%1' contains warnings."
 msgstr "\"%1\" MySQL serveri jurnalında xəbərdarlıqlar var."
 
-#: widgets/selftestdialog.cpp:289
+#: widgets/selftestdialog.cpp:288
 #, kde-format
 msgid "MySQL server log contains no errors."
 msgstr "MySQL serveri jurnalında xətalar yoxdur."
 
-#: widgets/selftestdialog.cpp:290
+#: widgets/selftestdialog.cpp:289
 #, kde-format
 msgid "The MySQL server log file '%1' does not contain any errors or warnings."
 msgstr ""
 "\"%1\" MySQL serveri jurnalında hər hansı xəta və ya xəbərdarlıq yoxdur."
 
-#: widgets/selftestdialog.cpp:300
+#: widgets/selftestdialog.cpp:299
 #, kde-format
 msgid "MySQL server configuration not tested."
 msgstr "MySQL serverinin tənzimləmələri yoxlanılmayıb."
 
-#: widgets/selftestdialog.cpp:309
+#: widgets/selftestdialog.cpp:308
 #, kde-format
 msgid "MySQL server default configuration found."
 msgstr "MySQL serveri standart tənzimləmələri tapıldı."
 
-#: widgets/selftestdialog.cpp:310
+#: widgets/selftestdialog.cpp:309
 #, kde-format
 msgid ""
 "The default configuration for the MySQL server was found and is readable at "
 "%1."
 msgstr "MySQL serveri üçün standart tənzimləməsi tapıldı və %1-də oxunandır."
 
-#: widgets/selftestdialog.cpp:314
+#: widgets/selftestdialog.cpp:313
 #, kde-format
 msgid "MySQL server default configuration not found."
 msgstr "MySQL serverinin standart tənzimləməsi tapılmadı."
 
-#: widgets/selftestdialog.cpp:315
+#: widgets/selftestdialog.cpp:314
 #, kde-format
 msgid ""
 "The default configuration for the MySQL server was not found or was not "
@@ -1610,12 +1610,12 @@ msgstr ""
 "Akonadi serverinin tam quraşdırıldığını və tələb olunan giriş "
 "imtiyazlarınızın mövcudluğunu yoxlayın."
 
-#: widgets/selftestdialog.cpp:323
+#: widgets/selftestdialog.cpp:322
 #, kde-format
 msgid "MySQL server custom configuration not available."
 msgstr "Ayarlanmış MySQL tənzimləmələri mövcud deyil."
 
-#: widgets/selftestdialog.cpp:324
+#: widgets/selftestdialog.cpp:323
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was not found but is optional."
@@ -1623,23 +1623,23 @@ msgstr ""
 "MySQL severi üçün ayarlanmış tənzimləmələr tapılmadı, ancaq bu o qədər də "
 "lazımlı deyil."
 
-#: widgets/selftestdialog.cpp:327
+#: widgets/selftestdialog.cpp:326
 #, kde-format
 msgid "MySQL server custom configuration found."
 msgstr "MySQL ayarlanmış tənziçləmələri tapıldı."
 
-#: widgets/selftestdialog.cpp:328
+#: widgets/selftestdialog.cpp:327
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was found and is readable at %1"
 msgstr "MySQL serveri üçün ayarlanmış tənzimləməsi tapıldı və %1-də oxunandır"
 
-#: widgets/selftestdialog.cpp:332
+#: widgets/selftestdialog.cpp:331
 #, kde-format
 msgid "MySQL server custom configuration not readable."
 msgstr "Ayarlanmış MySQL serveri tənzimləmələri oxuna bilən deyil."
 
-#: widgets/selftestdialog.cpp:333
+#: widgets/selftestdialog.cpp:332
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was found at %1 but is not "
@@ -1648,47 +1648,47 @@ msgstr ""
 "MySQL serveri üçün ayarlanmış tənzimləməsi %1-də(da) tapıldı, lakin oxuna "
 "bilən deyil. Giriş imtiyazlarınızı yoxlayın."
 
-#: widgets/selftestdialog.cpp:342
+#: widgets/selftestdialog.cpp:341
 #, kde-format
 msgid "MySQL server configuration not found or not readable."
 msgstr "MySQL serveri tənzimləmələri tapılmadı və ya oxuna bilən deyil."
 
-#: widgets/selftestdialog.cpp:343
+#: widgets/selftestdialog.cpp:342
 #, kde-format
 msgid "The MySQL server configuration was not found or is not readable."
 msgstr "MySQL server tənzimləmələri tapılmadı və ya oxuna biləb deyil."
 
-#: widgets/selftestdialog.cpp:346
+#: widgets/selftestdialog.cpp:345
 #, kde-format
 msgid "MySQL server configuration is usable."
 msgstr "MySQL server tənzimləmələri istifadə üçün yararlıdır."
 
-#: widgets/selftestdialog.cpp:347
+#: widgets/selftestdialog.cpp:346
 #, kde-format
 msgid "The MySQL server configuration was found at %1 and is readable."
 msgstr "%1-də MySQL serveri tənzimləmələri tapıldı və oxuna biləndir."
 
-#: widgets/selftestdialog.cpp:376
+#: widgets/selftestdialog.cpp:375
 #, kde-format
 msgid "Cannot connect to PostgreSQL server."
 msgstr "PostgreSQL serverinə qoşulmaq mümkün deyil."
 
-#: widgets/selftestdialog.cpp:378
+#: widgets/selftestdialog.cpp:377
 #, kde-format
 msgid "PostgreSQL server found."
 msgstr "PostgreSQL serveri tapıldı."
 
-#: widgets/selftestdialog.cpp:378
+#: widgets/selftestdialog.cpp:377
 #, kde-format
 msgid "The PostgreSQL server was found and connection is working."
 msgstr "PostgreSQL server tapıldı və şəbəkə əlaqəsi işləyir."
 
-#: widgets/selftestdialog.cpp:388
+#: widgets/selftestdialog.cpp:387
 #, kde-format
 msgid "akonadictl not found"
 msgstr "akonadictl tapılmadı"
 
-#: widgets/selftestdialog.cpp:389
+#: widgets/selftestdialog.cpp:388
 #, kde-format
 msgid ""
 "The program 'akonadictl' needs to be accessible in $PATH. Make sure you have "
@@ -1697,12 +1697,12 @@ msgstr ""
 "\"akonadictl\" proqramının $PATH daxilində əlçatan olması lazımdır. Əmin "
 "olun ki, Akonadi serveri quraşdırılıb."
 
-#: widgets/selftestdialog.cpp:396
+#: widgets/selftestdialog.cpp:395
 #, kde-format
 msgid "akonadictl found and usable"
 msgstr "akonadictl tapıldı və istifadəyə yararlıdır"
 
-#: widgets/selftestdialog.cpp:397
+#: widgets/selftestdialog.cpp:396
 #, kde-format
 msgid ""
 "The program '%1' to control the Akonadi server was found and could be "
@@ -1715,12 +1715,12 @@ msgstr ""
 "Nəticə:\n"
 "%2"
 
-#: widgets/selftestdialog.cpp:403
+#: widgets/selftestdialog.cpp:402
 #, kde-format
 msgid "akonadictl found but not usable"
 msgstr "akonadictl tapıldı ancaq istifadəyə yararlı deyil"
 
-#: widgets/selftestdialog.cpp:404
+#: widgets/selftestdialog.cpp:403
 #, kde-format
 msgid ""
 "The program '%1' to control the Akonadi server was found but could not be "
@@ -1735,12 +1735,12 @@ msgstr ""
 "%2\n"
 "Əmin olun ki, Akonadi serveri düzgün quraşdırılıb."
 
-#: widgets/selftestdialog.cpp:416
+#: widgets/selftestdialog.cpp:415
 #, kde-format
 msgid "Akonadi control process registered at D-Bus."
 msgstr "Akonadi idarəetmə prosesi D-Bus-da qeydə alınıb."
 
-#: widgets/selftestdialog.cpp:417
+#: widgets/selftestdialog.cpp:416
 #, kde-format
 msgid ""
 "The Akonadi control process is registered at D-Bus which typically indicates "
@@ -1749,12 +1749,12 @@ msgstr ""
 "Akonadi idarəetmə prosesi D-Bus-da qeydə alınıb, bu da adətən onun "
 "istifadəyə hazır olduğunu göstərir."
 
-#: widgets/selftestdialog.cpp:420
+#: widgets/selftestdialog.cpp:419
 #, kde-format
 msgid "Akonadi control process not registered at D-Bus."
 msgstr "Akonadi idarəetmə prosesi D-Bus-da qeydə alınmayıb."
 
-#: widgets/selftestdialog.cpp:421
+#: widgets/selftestdialog.cpp:420
 #, kde-format
 msgid ""
 "The Akonadi control process is not registered at D-Bus which typically means "
@@ -1763,12 +1763,12 @@ msgstr ""
 "Akonadi idarəetmə prosesi D-Bus-da qeydə alınmayıb, bu da adətən onu "
 "göstəriri ki, o işə salına bilmədi və ya başladıldıqda ciddi xəta baş verdi."
 
-#: widgets/selftestdialog.cpp:427
+#: widgets/selftestdialog.cpp:426
 #, kde-format
 msgid "Akonadi server process registered at D-Bus."
 msgstr "Akonadi serveri prosesi D-Bus-da qeydə alınıb."
 
-#: widgets/selftestdialog.cpp:428
+#: widgets/selftestdialog.cpp:427
 #, kde-format
 msgid ""
 "The Akonadi server process is registered at D-Bus which typically indicates "
@@ -1777,12 +1777,12 @@ msgstr ""
 "Akonadi serveri prosesi D-Bus-da qeydə alınıb, bu da adətən onun istifadəyə "
 "hazır olduğunu göstərir."
 
-#: widgets/selftestdialog.cpp:431
+#: widgets/selftestdialog.cpp:430
 #, kde-format
 msgid "Akonadi server process not registered at D-Bus."
 msgstr "Akonadi serveri prosesi D-Bus-da qeydə alınmayıb."
 
-#: widgets/selftestdialog.cpp:432
+#: widgets/selftestdialog.cpp:431
 #, kde-format
 msgid ""
 "The Akonadi server process is not registered at D-Bus which typically means "
@@ -1791,12 +1791,12 @@ msgstr ""
 "Akonadi serveri prosesi D-Bus-da qeydə alınmayıb, bu da adətən onu göstəriri "
 "ki, o işə salına bilmədi və ya başladıldıqda ciddi xəta baş verdi."
 
-#: widgets/selftestdialog.cpp:441
+#: widgets/selftestdialog.cpp:440
 #, kde-format
 msgid "Protocol version check not possible."
 msgstr "Protokolun versiyasını yoxlamaq mümkün deyil."
 
-#: widgets/selftestdialog.cpp:442
+#: widgets/selftestdialog.cpp:441
 #, kde-format
 msgid ""
 "Without a connection to the server it is not possible to check if the "
@@ -1805,12 +1805,12 @@ msgstr ""
 "Serverə qoşulmadan, protokol versiyasının tələblərə uyğun olub olmadığını "
 "yoxlamaq mümkün deyil."
 
-#: widgets/selftestdialog.cpp:447
+#: widgets/selftestdialog.cpp:446
 #, kde-format
 msgid "Server protocol version is too old."
 msgstr "Server protokol versiyası çox köhnədir."
 
-#: widgets/selftestdialog.cpp:448 widgets/selftestdialog.cpp:455
+#: widgets/selftestdialog.cpp:447 widgets/selftestdialog.cpp:454
 #, kde-format
 msgid ""
 "The server protocol version is %1, but version %2 is required by the client. "
@@ -1821,37 +1821,37 @@ msgstr ""
 "tələb olunur. Əgər KDE PİM-i yenicə yeniləmisinizsə, lütfən hər iki - "
 "Akonadi və KDE PİM tətbiqlərini yenidən başladın."
 
-#: widgets/selftestdialog.cpp:454
+#: widgets/selftestdialog.cpp:453
 #, kde-format
 msgid "Server protocol version is too new."
 msgstr "Sever protokolunun versiyası çox yenidir."
 
-#: widgets/selftestdialog.cpp:460
+#: widgets/selftestdialog.cpp:459
 #, kde-format
 msgid "Server protocol version matches."
 msgstr "Server protokolunun versiyası uyğundur."
 
-#: widgets/selftestdialog.cpp:460
+#: widgets/selftestdialog.cpp:459
 #, kde-format
 msgid "The current Protocol version is %1."
 msgstr "Caro protokol versiyası %1."
 
-#: widgets/selftestdialog.cpp:478
+#: widgets/selftestdialog.cpp:477
 #, kde-format
 msgid "Resource agents found."
 msgstr "Mənbə təmsilçiləri tapıldı."
 
-#: widgets/selftestdialog.cpp:478
+#: widgets/selftestdialog.cpp:477
 #, kde-format
 msgid "At least one resource agent has been found."
 msgstr "Əna azı bir mənbə təmsilçisi tapıldı."
 
-#: widgets/selftestdialog.cpp:481
+#: widgets/selftestdialog.cpp:480
 #, kde-format
 msgid "No resource agents found."
 msgstr "Mənbə təmsilçiləri tapılmadı"
 
-#: widgets/selftestdialog.cpp:482
+#: widgets/selftestdialog.cpp:481
 #, kde-format
 msgid ""
 "No resource agents have been found, Akonadi is not usable without at least "
@@ -1867,23 +1867,23 @@ msgstr ""
 "bunun Akonadi təmsilçilərinin quraşdırıldığı bütün yollardan ibarət oduğuna "
 "əmin olun."
 
-#: widgets/selftestdialog.cpp:499
+#: widgets/selftestdialog.cpp:498
 #, kde-format
 msgid "No current Akonadi server error log found."
 msgstr "Cari Akonadi serveri xəta jurnalı tapılmadı."
 
-#: widgets/selftestdialog.cpp:499
+#: widgets/selftestdialog.cpp:498
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its current startup."
 msgstr "Akonadi serveri sonuncu işə düşmə zamanı hər hansı xəta bildirmədi."
 
-#: widgets/selftestdialog.cpp:503
+#: widgets/selftestdialog.cpp:502
 #, kde-format
 msgid "Current Akonadi server error log found."
 msgstr "Cari Akonadi serveri xəta qeydləri tapıldı."
 
-#: widgets/selftestdialog.cpp:504
+#: widgets/selftestdialog.cpp:503
 #, kde-format
 msgid ""
 "The Akonadi server reported errors during its current startup. The log can "
@@ -1892,24 +1892,24 @@ msgstr ""
 "Akonadi serveri hazırkı işə düşmə zamanı xətalar olduğunu bildirdi.Bu xəta "
 "hesabatını %1 faylında tapa bilərsiniz."
 
-#: widgets/selftestdialog.cpp:512
+#: widgets/selftestdialog.cpp:511
 #, kde-format
 msgid "No previous Akonadi server error log found."
 msgstr "Əvvəlki Akonadi serveri xəta qeydləri tapıldı."
 
-#: widgets/selftestdialog.cpp:513
+#: widgets/selftestdialog.cpp:512
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its previous startup."
 msgstr ""
 "Akonadi  serveri əvvəlki işə düşmə zamanı hər hansı xəta hesabatı bildirmədi."
 
-#: widgets/selftestdialog.cpp:517
+#: widgets/selftestdialog.cpp:516
 #, kde-format
 msgid "Previous Akonadi server error log found."
 msgstr "Əvvəlki Akonadi serveri xəta jurnalı tapıldı."
 
-#: widgets/selftestdialog.cpp:518
+#: widgets/selftestdialog.cpp:517
 #, kde-format
 msgid ""
 "The Akonadi server reported errors during its previous startup. The log can "
@@ -1918,12 +1918,12 @@ msgstr ""
 "Akonadi serveri onun əvvəlki işə düşməsi zamanı xətaların olduğunu bildirdi. "
 "Bu xətanı %1 faylında tapa bilərsiniz."
 
-#: widgets/selftestdialog.cpp:529
+#: widgets/selftestdialog.cpp:528
 #, kde-format
 msgid "No current Akonadi control error log found."
 msgstr "Cari Akonadi idarəetmə xəta qeydi tapılmadı."
 
-#: widgets/selftestdialog.cpp:530
+#: widgets/selftestdialog.cpp:529
 #, kde-format
 msgid ""
 "The Akonadi control process did not report any errors during its current "
@@ -1931,12 +1931,12 @@ msgid ""
 msgstr ""
 "Akonadi idarəetmə prosesi onun işə düşməsi zamanı hər hansı xəta bildirmədi."
 
-#: widgets/selftestdialog.cpp:534
+#: widgets/selftestdialog.cpp:533
 #, kde-format
 msgid "Current Akonadi control error log found."
 msgstr "Cari Akonadi idarəetmə xəta qeydi tapıldı."
 
-#: widgets/selftestdialog.cpp:535
+#: widgets/selftestdialog.cpp:534
 #, kde-format
 msgid ""
 "The Akonadi control process reported errors during its current startup. The "
@@ -1945,12 +1945,12 @@ msgstr ""
 "Akonadi idarəetmə prosesi onun işə düşməsi zamanı xətalar olduğunu bildirdi. "
 "Bu xəta haesabatını %1 faylında tapa bilərsiniz."
 
-#: widgets/selftestdialog.cpp:543
+#: widgets/selftestdialog.cpp:542
 #, kde-format
 msgid "No previous Akonadi control error log found."
 msgstr "Əvvəlki Akonadi idarəetmə xəta qeydləri tapılmadı."
 
-#: widgets/selftestdialog.cpp:544
+#: widgets/selftestdialog.cpp:543
 #, kde-format
 msgid ""
 "The Akonadi control process did not report any errors during its previous "
@@ -1958,12 +1958,12 @@ msgid ""
 msgstr ""
 "Akonadi idarəetmə prosesi əvvəlki işə düşmə zamanı hər hansı xəta bildirmədi."
 
-#: widgets/selftestdialog.cpp:548
+#: widgets/selftestdialog.cpp:547
 #, kde-format
 msgid "Previous Akonadi control error log found."
 msgstr "Əvvəlki Akonadi idarəetmə xəta jurnalı tapıldı."
 
-#: widgets/selftestdialog.cpp:549
+#: widgets/selftestdialog.cpp:548
 #, kde-format
 msgid ""
 "The Akonadi control process reported errors during its previous startup. The "
@@ -1972,12 +1972,12 @@ msgstr ""
 "Akonadi idarəetmə orosesi onun işə düşməsi zamanı xətalar olduğunu bildirdi. "
 "Xəta qeydlərini %1 faylında tapa bilərsiniz."
 
-#: widgets/selftestdialog.cpp:559
+#: widgets/selftestdialog.cpp:558
 #, kde-format
 msgid "Akonadi was started as root"
 msgstr "Akonadi kök imtiyazı ilə başladıldı."
 
-#: widgets/selftestdialog.cpp:560
+#: widgets/selftestdialog.cpp:559
 #, kde-format
 msgid ""
 "Running Internet-facing applications as root/administrator exposes you to "
@@ -1989,12 +1989,12 @@ msgstr ""
 "quraşdırıcısını istifadə edərək sisteminizi təhlükələrdən qorumaq üçün kök/"
 "inzibatçı imtiyazları ilə işləməyə icazə vermir."
 
-#: widgets/selftestdialog.cpp:564
+#: widgets/selftestdialog.cpp:563
 #, kde-format
 msgid "Akonadi is not running as root"
 msgstr "Akonadi kök imtiyazları ilə işləmir"
 
-#: widgets/selftestdialog.cpp:565
+#: widgets/selftestdialog.cpp:564
 #, kde-format
 msgid ""
 "Akonadi is not running as a root/administrator user, which is the "
@@ -2003,18 +2003,18 @@ msgstr ""
 "Akonadi kök/inzibatçı istifadəçisi adından başladılmır, hansı ki, bu yalnız "
 "təhlükəsiz sistemlər üçün tövsiyyə olunur."
 
-#: widgets/selftestdialog.cpp:643
+#: widgets/selftestdialog.cpp:642
 #, kde-format
 msgid "Save Test Report"
 msgstr "Hesabatı saxlamaq"
 
-#: widgets/selftestdialog.cpp:650
+#: widgets/selftestdialog.cpp:649
 #, kde-format
 msgctxt "@title:window"
 msgid "Error"
 msgstr "Xəta"
 
-#: widgets/selftestdialog.cpp:650
+#: widgets/selftestdialog.cpp:649
 #, kde-format
 msgid "Could not open file '%1'"
 msgstr "Fayl '%1' açıla bilmir"
@@ -2593,15 +2593,7 @@ msgctxt "@info"
 msgid "Tag %1 successfully added"
 msgstr ""
 
-#: widgets/tageditwidget.cpp:174
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
-msgctxt "@info"
-msgid "Delete Tag  <resource>%1</resource>"
-msgstr "Siz <resource>%1</resource> yarlığını silmək istəyirsiniz?"
-
-#: widgets/tageditwidget.cpp:176
+#: widgets/tageditwidget.cpp:175
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -2609,32 +2601,32 @@ msgid ""
 "<resource>%1</resource> tag from Akonadi."
 msgstr ""
 
-#: widgets/tageditwidget.cpp:184
+#: widgets/tageditwidget.cpp:183
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Siz <resource>%1</resource> yarlığını silmək istəyirsiniz?"
 
-#: widgets/tageditwidget.cpp:185
+#: widgets/tageditwidget.cpp:184
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Yarlığı sil"
 
-#: widgets/tageditwidget.cpp:196
+#: widgets/tageditwidget.cpp:195
 #, fuzzy, kde-format
 #| msgid "Failed to create tag."
 msgctxt "@info"
 msgid "Failed to delete tag %1: %2"
 msgstr "Yarlıq yaradılması baş tutmadı."
 
-#: widgets/tageditwidget.cpp:200
+#: widgets/tageditwidget.cpp:199
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully removed"
 msgstr ""
 
-#: widgets/tageditwidget.cpp:227
+#: widgets/tageditwidget.cpp:226
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"
@@ -2693,7 +2685,7 @@ msgstr "Yerlıqları seçin..."
 msgid "Select Tags"
 msgstr "Yerlıqları seçin"
 
-#: widgets/tagwidget.cpp:45
+#: widgets/tagwidget.cpp:44
 #, kde-format
 msgid "Clear"
 msgstr "Təmizləmək"
@@ -2786,6 +2778,13 @@ msgstr "Təhlil edilə bilməyən verilənlər faylı: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "%1 kolleksiyası tapmaq mümkün olmadı"
+
+#, fuzzy
+#~| msgctxt "@info"
+#~| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#~ msgctxt "@info"
+#~ msgid "Delete Tag  <resource>%1</resource>"
+#~ msgstr "Siz <resource>%1</resource> yarlığını silmək istəyirsiniz?"
 
 #~ msgid "Unnamed plugin"
 #~ msgstr "Naməlum əlavə"

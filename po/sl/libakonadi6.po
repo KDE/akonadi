@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-09 00:50+0000\n"
+"POT-Creation-Date: 2026-09-15 00:44+0000\n"
 "PO-Revision-Date: 2026-07-28 11:28+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -743,28 +743,28 @@ msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr "Imenski prostor za zagon več pojavkov Akonadi v isti uporabnikovi seji"
 
-#: widgets/agentconfigurationdialog.cpp:46
+#: widgets/agentconfigurationdialog.cpp:44
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 konfiguracija"
 
-#: widgets/agentconfigurationwidget.cpp:94
+#: widgets/agentconfigurationwidget.cpp:92
 #, kde-format
 msgid "Unable to access D-Bus interface of created agent."
 msgstr "Ni mogoče dostopati do vmesnika D-Bus ustvarjenega posrednika."
 
-#: widgets/agentconfigurationwidget.cpp:116
+#: widgets/agentconfigurationwidget.cpp:114
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "Pogovor za nastavitve je bil odprt v drugem oknu"
 
-#: widgets/agentconfigurationwidget.cpp:123
+#: widgets/agentconfigurationwidget.cpp:121
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "Nastavitev %1 je že odprta drugje."
 
-#: widgets/agentconfigurationwidget.cpp:125
+#: widgets/agentconfigurationwidget.cpp:123
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Ni bilo mogoče registrirati nastavitve %1."
@@ -775,13 +775,13 @@ msgctxt "Status percent value"
 msgid "(%1%)"
 msgstr "(%1%)"
 
-#: widgets/agenttypedialog.cpp:66
+#: widgets/agenttypedialog.cpp:65
 #, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
 msgstr "Konfiguriraj račun"
 
-#: widgets/agenttypedialog.cpp:74
+#: widgets/agenttypedialog.cpp:73
 #, kde-format
 msgctxt "@item:textbox"
 msgid "Search types"
@@ -796,7 +796,7 @@ msgstr[1] "minuta"
 msgstr[2] "minuti"
 msgstr[3] "minute"
 
-#: widgets/cachepolicypage.cpp:70
+#: widgets/cachepolicypage.cpp:69
 #, kde-format
 msgid "Retrieval"
 msgstr "Pridobivanje"
@@ -946,7 +946,7 @@ msgctxt "@title:tab general properties page"
 msgid "General"
 msgstr "Splošno"
 
-#: widgets/collectiongeneralpropertiespage.cpp:54
+#: widgets/collectiongeneralpropertiespage.cpp:55
 #, kde-format
 msgctxt "@label"
 msgid "One object"
@@ -1005,22 +1005,22 @@ msgstr "Velikost:"
 msgid "0 Byte"
 msgstr "0 bajtov"
 
-#: widgets/collectionmaintenancepage.cpp:46
+#: widgets/collectionmaintenancepage.cpp:44
 #, kde-format
 msgid "Remember that indexing can take some minutes."
 msgstr "Zapomnite si, da lahko izgrajevanje kazala traja nekaj minut."
 
-#: widgets/collectionmaintenancepage.cpp:72
+#: widgets/collectionmaintenancepage.cpp:70
 #, kde-format
 msgid "Maintenance"
 msgstr "Vzdrževanje"
 
-#: widgets/collectionmaintenancepage.cpp:131
+#: widgets/collectionmaintenancepage.cpp:129
 #, kde-format
 msgid "Error while retrieving indexed items count"
 msgstr "Napaka med pridobivanjem števila predmetov iz kazala"
 
-#: widgets/collectionmaintenancepage.cpp:134
+#: widgets/collectionmaintenancepage.cpp:132
 #, kde-format
 msgid "Indexed %1 item in this folder"
 msgid_plural "Indexed %1 items in this folder"
@@ -1029,7 +1029,7 @@ msgstr[1] "%1 predmet iz te mape je bil dodan v kazalo"
 msgstr[2] "%1 predmeta iz te mape sta bila dodana v kazalo"
 msgstr[3] "%1 predmeti iz te mape so bili dodani v kazalo"
 
-#: widgets/collectionmaintenancepage.cpp:138
+#: widgets/collectionmaintenancepage.cpp:136
 #, kde-format
 msgid "Calculating indexed items..."
 msgstr "Preračunavanje predmetov v kazalu …"
@@ -1094,13 +1094,13 @@ msgstr "Pridobivanje števila predmetov v kazalu …"
 msgid "Reindex folder"
 msgstr "Znova izgradi kazalo mape"
 
-#: widgets/collectionrequester.cpp:113
+#: widgets/collectionrequester.cpp:111
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No Folder"
 msgstr "Ni mape"
 
-#: widgets/collectionrequester.cpp:122
+#: widgets/collectionrequester.cpp:120
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
@@ -1379,23 +1379,23 @@ msgstr "Preimenuj priljubljeno"
 msgid "Name:"
 msgstr "Ime:"
 
-#: widgets/selftestdialog.cpp:60
+#: widgets/selftestdialog.cpp:59
 #, kde-format
 msgctxt "@title:window"
 msgid "Akonadi Server Self-Test"
 msgstr "Samodejni preizkus strežnika Akonadi"
 
-#: widgets/selftestdialog.cpp:71
+#: widgets/selftestdialog.cpp:70
 #, kde-format
 msgid "Save Report..."
 msgstr "Shrani poročilo …"
 
-#: widgets/selftestdialog.cpp:73
+#: widgets/selftestdialog.cpp:72
 #, kde-format
 msgid "Copy Report to Clipboard"
 msgstr "Kopiraj poročilo v odložišče"
 
-#: widgets/selftestdialog.cpp:189
+#: widgets/selftestdialog.cpp:188
 #, kde-format
 msgid ""
 "The QtSQL driver '%1' is required by your current Akonadi server "
@@ -1404,7 +1404,7 @@ msgstr ""
 "Trenutne nastavitve strežnika Akonadi zahtevajo gonilnik QtSQL %1, ki je bil "
 "najden na sistemu."
 
-#: widgets/selftestdialog.cpp:191
+#: widgets/selftestdialog.cpp:190
 #, kde-format
 msgid ""
 "The QtSQL driver '%1' is required by your current Akonadi server "
@@ -1416,28 +1416,28 @@ msgstr ""
 "Nameščeni so naslednji gonilniki: %2.\n"
 "Prepričajte se, da je zahtevan gonilnik nameščen."
 
-#: widgets/selftestdialog.cpp:198
+#: widgets/selftestdialog.cpp:197
 #, kde-format
 msgid "Database driver found."
 msgstr "Gonilnik podatkovne zbirke je bil najden."
 
-#: widgets/selftestdialog.cpp:200
+#: widgets/selftestdialog.cpp:199
 #, kde-format
 msgid "Database driver not found."
 msgstr "Gonilnik podatkovne zbirke ni bil najden."
 
-#: widgets/selftestdialog.cpp:208
+#: widgets/selftestdialog.cpp:207
 #, kde-format
 msgid "MySQL server executable not tested."
 msgstr "Izvedljivi program strežnika MySQL ni bil preizkušen."
 
-#: widgets/selftestdialog.cpp:208 widgets/selftestdialog.cpp:249
-#: widgets/selftestdialog.cpp:300
+#: widgets/selftestdialog.cpp:207 widgets/selftestdialog.cpp:248
+#: widgets/selftestdialog.cpp:299
 #, kde-format
 msgid "The current configuration does not require an internal MySQL server."
 msgstr "Trenutne nastavitve ne zahtevajo notranjega strežnika MySQL."
 
-#: widgets/selftestdialog.cpp:216
+#: widgets/selftestdialog.cpp:215
 #, kde-format
 msgid ""
 "You have currently configured Akonadi to use the MySQL server '%1'.\n"
@@ -1452,42 +1452,42 @@ msgstr ""
 "izvajanje. Izvedljivi program strežnika se običajno imenuje »mysqld«, "
 "njegovo mesto pa je odvisno od distribucije operacijskega sistema."
 
-#: widgets/selftestdialog.cpp:224
+#: widgets/selftestdialog.cpp:223
 #, kde-format
 msgid "MySQL server not found."
 msgstr "Strežnik MySQL ni bil najden."
 
-#: widgets/selftestdialog.cpp:226
+#: widgets/selftestdialog.cpp:225
 #, kde-format
 msgid "MySQL server not readable."
 msgstr "Strežnik MySQL ni berljiv."
 
-#: widgets/selftestdialog.cpp:228
+#: widgets/selftestdialog.cpp:227
 #, kde-format
 msgid "MySQL server not executable."
 msgstr "Strežnik MySQL ni izvedljiv."
 
-#: widgets/selftestdialog.cpp:230
+#: widgets/selftestdialog.cpp:229
 #, kde-format
 msgid "MySQL found with unexpected name."
 msgstr "Strežnik MySQL je bil najden, vendar ima nepričakovano ime."
 
-#: widgets/selftestdialog.cpp:232
+#: widgets/selftestdialog.cpp:231
 #, kde-format
 msgid "MySQL server found."
 msgstr "Strežnik MySQL je bil najden."
 
-#: widgets/selftestdialog.cpp:238
+#: widgets/selftestdialog.cpp:237
 #, kde-format
 msgid "MySQL server found: %1"
 msgstr "Strežnik MySQL je bil najden: %1"
 
-#: widgets/selftestdialog.cpp:239
+#: widgets/selftestdialog.cpp:238
 #, kde-format
 msgid "MySQL server is executable."
 msgstr "Strežnik MySQL je izvedljiv."
 
-#: widgets/selftestdialog.cpp:241
+#: widgets/selftestdialog.cpp:240
 #, kde-format
 msgid ""
 "Executing the MySQL server '%1' failed with the following error message: '%2'"
@@ -1495,22 +1495,22 @@ msgstr ""
 "Izvajanje strežnika MySQL »%1« je spodletelo z naslednjim sporočilom o "
 "napaki: »%2«"
 
-#: widgets/selftestdialog.cpp:242
+#: widgets/selftestdialog.cpp:241
 #, kde-format
 msgid "Executing the MySQL server failed."
 msgstr "Izvajanje strežnika MySQL ni uspelo."
 
-#: widgets/selftestdialog.cpp:249
+#: widgets/selftestdialog.cpp:248
 #, kde-format
 msgid "MySQL server error log not tested."
 msgstr "Dnevnik napak strežnika MySQL ni bil preizkušen."
 
-#: widgets/selftestdialog.cpp:257
+#: widgets/selftestdialog.cpp:256
 #, kde-format
 msgid "No current MySQL error log found."
 msgstr "Trenutni dnevnik napak MySQL ni bil najden."
 
-#: widgets/selftestdialog.cpp:258
+#: widgets/selftestdialog.cpp:257
 #, kde-format
 msgid ""
 "The MySQL server did not report any errors during this startup. The log can "
@@ -1519,73 +1519,73 @@ msgstr ""
 "Strežnik MySQL med tem zagonom ni poročal o napakah. Dnevnik lahko najdete v "
 "»%1«."
 
-#: widgets/selftestdialog.cpp:264
+#: widgets/selftestdialog.cpp:263
 #, kde-format
 msgid "MySQL error log not readable."
 msgstr "Dnevnik napak MySQL ni berljiv."
 
-#: widgets/selftestdialog.cpp:265
+#: widgets/selftestdialog.cpp:264
 #, kde-format
 msgid "A MySQL server error log file was found but is not readable: %1"
 msgstr ""
 "Datoteka dnevnika napak strežnika MySQL je bila najdena, vendar ni berljiva: "
 "%1"
 
-#: widgets/selftestdialog.cpp:274
+#: widgets/selftestdialog.cpp:273
 #, kde-format
 msgid "MySQL server log contains errors."
 msgstr "Dnevnik strežnika MySQL vsebuje napake."
 
-#: widgets/selftestdialog.cpp:275
+#: widgets/selftestdialog.cpp:274
 #, kde-format
 msgid "The MySQL server error log file '%1' contains errors."
 msgstr "Datoteka dnevnika napak strežnika MySQL »%1« vsebuje napake."
 
-#: widgets/selftestdialog.cpp:285
+#: widgets/selftestdialog.cpp:284
 #, kde-format
 msgid "MySQL server log contains warnings."
 msgstr "Dnevnik strežnika MySQL vsebuje opozorila."
 
-#: widgets/selftestdialog.cpp:286
+#: widgets/selftestdialog.cpp:285
 #, kde-format
 msgid "The MySQL server log file '%1' contains warnings."
 msgstr "Datoteka dnevnika strežnika MySQL »%1« vsebuje opozorila."
 
-#: widgets/selftestdialog.cpp:289
+#: widgets/selftestdialog.cpp:288
 #, kde-format
 msgid "MySQL server log contains no errors."
 msgstr "Dnevnik strežnika MySQL ne vsebuje napak."
 
-#: widgets/selftestdialog.cpp:290
+#: widgets/selftestdialog.cpp:289
 #, kde-format
 msgid "The MySQL server log file '%1' does not contain any errors or warnings."
 msgstr ""
 "Datoteka dnevnika strežnika MySQL »%1« ne vsebuje nobene napake ali "
 "opozorila."
 
-#: widgets/selftestdialog.cpp:300
+#: widgets/selftestdialog.cpp:299
 #, kde-format
 msgid "MySQL server configuration not tested."
 msgstr "Nastavitve strežnika MySQL niso bile preizkušene."
 
-#: widgets/selftestdialog.cpp:309
+#: widgets/selftestdialog.cpp:308
 #, kde-format
 msgid "MySQL server default configuration found."
 msgstr "Najdene so bile privzete nastavitve strežnika MySQL."
 
-#: widgets/selftestdialog.cpp:310
+#: widgets/selftestdialog.cpp:309
 #, kde-format
 msgid ""
 "The default configuration for the MySQL server was found and is readable at "
 "%1."
 msgstr "V %1 so bile najdene berljive privzete nastavitve strežnika MySQL."
 
-#: widgets/selftestdialog.cpp:314
+#: widgets/selftestdialog.cpp:313
 #, kde-format
 msgid "MySQL server default configuration not found."
 msgstr "Privzete nastavitve strežnika MySQL niso bile najdene."
 
-#: widgets/selftestdialog.cpp:315
+#: widgets/selftestdialog.cpp:314
 #, kde-format
 msgid ""
 "The default configuration for the MySQL server was not found or was not "
@@ -1596,12 +1596,12 @@ msgstr ""
 "Preverite, ali je namestitev Akonadija pravilna in ali imate vsa potrebna "
 "dovoljenja za dostop."
 
-#: widgets/selftestdialog.cpp:323
+#: widgets/selftestdialog.cpp:322
 #, kde-format
 msgid "MySQL server custom configuration not available."
 msgstr "Prilagojene nastavitve strežnika MySQL niso na voljo."
 
-#: widgets/selftestdialog.cpp:324
+#: widgets/selftestdialog.cpp:323
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was not found but is optional."
@@ -1609,23 +1609,23 @@ msgstr ""
 "Prilagojene nastavitve strežnika MySQL niso bile najdene, vendar tudi niso "
 "obvezne."
 
-#: widgets/selftestdialog.cpp:327
+#: widgets/selftestdialog.cpp:326
 #, kde-format
 msgid "MySQL server custom configuration found."
 msgstr "Najdene so bile prilagojene nastavitve strežnika MySQL."
 
-#: widgets/selftestdialog.cpp:328
+#: widgets/selftestdialog.cpp:327
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was found and is readable at %1"
 msgstr "V %1 so bile najdene berljive prilagojene nastavitve strežnika MySQL"
 
-#: widgets/selftestdialog.cpp:332
+#: widgets/selftestdialog.cpp:331
 #, kde-format
 msgid "MySQL server custom configuration not readable."
 msgstr "Prilagojene nastavitve strežnika MySQL niso berljive."
 
-#: widgets/selftestdialog.cpp:333
+#: widgets/selftestdialog.cpp:332
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was found at %1 but is not "
@@ -1634,47 +1634,47 @@ msgstr ""
 "V %1 so bile najdene berljive prilagojene nastavitve strežnika MySQL, vendar "
 "niso berljive. Preverite svoja dovoljenja za dostop."
 
-#: widgets/selftestdialog.cpp:342
+#: widgets/selftestdialog.cpp:341
 #, kde-format
 msgid "MySQL server configuration not found or not readable."
 msgstr "Nastavitve strežnika MySQL niso bile najdene ali pa niso berljive."
 
-#: widgets/selftestdialog.cpp:343
+#: widgets/selftestdialog.cpp:342
 #, kde-format
 msgid "The MySQL server configuration was not found or is not readable."
 msgstr "Nastavitve strežnika MySQL niso bile najdene ali pa niso berljive."
 
-#: widgets/selftestdialog.cpp:346
+#: widgets/selftestdialog.cpp:345
 #, kde-format
 msgid "MySQL server configuration is usable."
 msgstr "Nastavitve strežnika MySQL so uporabne."
 
-#: widgets/selftestdialog.cpp:347
+#: widgets/selftestdialog.cpp:346
 #, kde-format
 msgid "The MySQL server configuration was found at %1 and is readable."
 msgstr "Nastavitve strežnika MySQL so bile najdene v %1 in so berljive."
 
-#: widgets/selftestdialog.cpp:376
+#: widgets/selftestdialog.cpp:375
 #, kde-format
 msgid "Cannot connect to PostgreSQL server."
 msgstr "Ni se bilo mogoče povezati s strežnikom PostgreSQL."
 
-#: widgets/selftestdialog.cpp:378
+#: widgets/selftestdialog.cpp:377
 #, kde-format
 msgid "PostgreSQL server found."
 msgstr "Strežnik PostgreSQL je bil najden."
 
-#: widgets/selftestdialog.cpp:378
+#: widgets/selftestdialog.cpp:377
 #, kde-format
 msgid "The PostgreSQL server was found and connection is working."
 msgstr "Strežnik PostgreSQL je bil najden, povezava pa je delujoča."
 
-#: widgets/selftestdialog.cpp:388
+#: widgets/selftestdialog.cpp:387
 #, kde-format
 msgid "akonadictl not found"
 msgstr "akonadictl ni bil najden"
 
-#: widgets/selftestdialog.cpp:389
+#: widgets/selftestdialog.cpp:388
 #, kde-format
 msgid ""
 "The program 'akonadictl' needs to be accessible in $PATH. Make sure you have "
@@ -1683,12 +1683,12 @@ msgstr ""
 "Program »akonadictl« mora biti dostopen v eni izmed map iz spremenljivke "
 "$PATH. Prepričajte se, da je strežnik Akonadi nameščen."
 
-#: widgets/selftestdialog.cpp:396
+#: widgets/selftestdialog.cpp:395
 #, kde-format
 msgid "akonadictl found and usable"
 msgstr "akonadictl je bil najden in je uporaben"
 
-#: widgets/selftestdialog.cpp:397
+#: widgets/selftestdialog.cpp:396
 #, kde-format
 msgid ""
 "The program '%1' to control the Akonadi server was found and could be "
@@ -1701,12 +1701,12 @@ msgstr ""
 "Rezultat:\n"
 "%2"
 
-#: widgets/selftestdialog.cpp:403
+#: widgets/selftestdialog.cpp:402
 #, kde-format
 msgid "akonadictl found but not usable"
 msgstr "akonadictl je bil najden, vendar ni uporaben"
 
-#: widgets/selftestdialog.cpp:404
+#: widgets/selftestdialog.cpp:403
 #, kde-format
 msgid ""
 "The program '%1' to control the Akonadi server was found but could not be "
@@ -1721,12 +1721,12 @@ msgstr ""
 "%2\n"
 "Poskrbite, da je strežnik Akonadi nameščen pravilno."
 
-#: widgets/selftestdialog.cpp:416
+#: widgets/selftestdialog.cpp:415
 #, kde-format
 msgid "Akonadi control process registered at D-Bus."
 msgstr "Nadzorno opravilo Akondija je registrirano na D-Bus."
 
-#: widgets/selftestdialog.cpp:417
+#: widgets/selftestdialog.cpp:416
 #, kde-format
 msgid ""
 "The Akonadi control process is registered at D-Bus which typically indicates "
@@ -1735,12 +1735,12 @@ msgstr ""
 "Nadzorno opravilo Akondija je registrirano na D-Bus, kar običajno pomeni, da "
 "je delujoče."
 
-#: widgets/selftestdialog.cpp:420
+#: widgets/selftestdialog.cpp:419
 #, kde-format
 msgid "Akonadi control process not registered at D-Bus."
 msgstr "Nadzorno opravilo Akondija ni registrirano na D-Bus."
 
-#: widgets/selftestdialog.cpp:421
+#: widgets/selftestdialog.cpp:420
 #, kde-format
 msgid ""
 "The Akonadi control process is not registered at D-Bus which typically means "
@@ -1749,12 +1749,12 @@ msgstr ""
 "Nadzorno opravilo Akondija ni registrirano na D-Bus, kar običajno pomeni, da "
 "ni bilo zagnano ali pa je med zagonom naletelo na usodno napako."
 
-#: widgets/selftestdialog.cpp:427
+#: widgets/selftestdialog.cpp:426
 #, kde-format
 msgid "Akonadi server process registered at D-Bus."
 msgstr "Strežniško opravilo Akondija je registrirano na D-Bus."
 
-#: widgets/selftestdialog.cpp:428
+#: widgets/selftestdialog.cpp:427
 #, kde-format
 msgid ""
 "The Akonadi server process is registered at D-Bus which typically indicates "
@@ -1763,12 +1763,12 @@ msgstr ""
 "Strežniško opravilo Akondija je registrirano na D-Bus, kar običajno pomeni, "
 "da je delujoče."
 
-#: widgets/selftestdialog.cpp:431
+#: widgets/selftestdialog.cpp:430
 #, kde-format
 msgid "Akonadi server process not registered at D-Bus."
 msgstr "Strežniško opravilo Akondija ni registrirano na D-Bus."
 
-#: widgets/selftestdialog.cpp:432
+#: widgets/selftestdialog.cpp:431
 #, kde-format
 msgid ""
 "The Akonadi server process is not registered at D-Bus which typically means "
@@ -1777,12 +1777,12 @@ msgstr ""
 "Strežniško opravilo Akondija ni registrirano na D-Bus, kar običajno pomeni, "
 "da ni bilo zagnano ali pa je med zagonom naletelo na usodno napako."
 
-#: widgets/selftestdialog.cpp:441
+#: widgets/selftestdialog.cpp:440
 #, kde-format
 msgid "Protocol version check not possible."
 msgstr "Preverjanje različice protokola ni mogoče."
 
-#: widgets/selftestdialog.cpp:442
+#: widgets/selftestdialog.cpp:441
 #, kde-format
 msgid ""
 "Without a connection to the server it is not possible to check if the "
@@ -1791,12 +1791,12 @@ msgstr ""
 "Brez povezave s strežnikom ni mogoče preveriti, ali različica protokola "
 "ustreza zahtevam."
 
-#: widgets/selftestdialog.cpp:447
+#: widgets/selftestdialog.cpp:446
 #, kde-format
 msgid "Server protocol version is too old."
 msgstr "Različica protokola strežnika je prestara."
 
-#: widgets/selftestdialog.cpp:448 widgets/selftestdialog.cpp:455
+#: widgets/selftestdialog.cpp:447 widgets/selftestdialog.cpp:454
 #, kde-format
 msgid ""
 "The server protocol version is %1, but version %2 is required by the client. "
@@ -1807,37 +1807,37 @@ msgstr ""
 "ste nedavno posodobili KDE PIM, znova zaženite tako programe KDE PIM kot "
 "tudi Akonadi."
 
-#: widgets/selftestdialog.cpp:454
+#: widgets/selftestdialog.cpp:453
 #, kde-format
 msgid "Server protocol version is too new."
 msgstr "Različica protokola strežnika je preveč nova."
 
-#: widgets/selftestdialog.cpp:460
+#: widgets/selftestdialog.cpp:459
 #, kde-format
 msgid "Server protocol version matches."
 msgstr "Različica protokola strežnika se ujema."
 
-#: widgets/selftestdialog.cpp:460
+#: widgets/selftestdialog.cpp:459
 #, kde-format
 msgid "The current Protocol version is %1."
 msgstr "Trenutna različica protokola je %1."
 
-#: widgets/selftestdialog.cpp:478
+#: widgets/selftestdialog.cpp:477
 #, kde-format
 msgid "Resource agents found."
 msgstr "Posredniki virov so bili najdeni."
 
-#: widgets/selftestdialog.cpp:478
+#: widgets/selftestdialog.cpp:477
 #, kde-format
 msgid "At least one resource agent has been found."
 msgstr "Najden je bil vsaj en posrednik vira."
 
-#: widgets/selftestdialog.cpp:481
+#: widgets/selftestdialog.cpp:480
 #, kde-format
 msgid "No resource agents found."
 msgstr "Brez najdenih posrednikov virov."
 
-#: widgets/selftestdialog.cpp:482
+#: widgets/selftestdialog.cpp:481
 #, kde-format
 msgid ""
 "No resource agents have been found, Akonadi is not usable without at least "
@@ -1852,23 +1852,23 @@ msgstr ""
 "spremenljivka XDG_DATA_DIRS je nastavljena na »%2«. Prepričajte se, da to "
 "vsebuje vse mape, kjer so nameščeni Akonadijevi posredniki."
 
-#: widgets/selftestdialog.cpp:499
+#: widgets/selftestdialog.cpp:498
 #, kde-format
 msgid "No current Akonadi server error log found."
 msgstr "Trenutni dnevnik napak strežnika Akonadi ni bil najden."
 
-#: widgets/selftestdialog.cpp:499
+#: widgets/selftestdialog.cpp:498
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its current startup."
 msgstr "Strežnik Akonadi med trenutnim zagonom ni poročal o napakah."
 
-#: widgets/selftestdialog.cpp:503
+#: widgets/selftestdialog.cpp:502
 #, kde-format
 msgid "Current Akonadi server error log found."
 msgstr "Najden je bil trenutni dnevnik napak strežnika Akonadi."
 
-#: widgets/selftestdialog.cpp:504
+#: widgets/selftestdialog.cpp:503
 #, kde-format
 msgid ""
 "The Akonadi server reported errors during its current startup. The log can "
@@ -1877,23 +1877,23 @@ msgstr ""
 "Strežnik Akonadi je med trenutnim zagonom poročal o napakah. Dnevnik lahko "
 "najdete v %1."
 
-#: widgets/selftestdialog.cpp:512
+#: widgets/selftestdialog.cpp:511
 #, kde-format
 msgid "No previous Akonadi server error log found."
 msgstr "Prejšnji dnevnik napak strežnika Akonadi ni bil najden."
 
-#: widgets/selftestdialog.cpp:513
+#: widgets/selftestdialog.cpp:512
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its previous startup."
 msgstr "Strežnik Akonadi med prejšnjim zagonom ni poročal o napakah."
 
-#: widgets/selftestdialog.cpp:517
+#: widgets/selftestdialog.cpp:516
 #, kde-format
 msgid "Previous Akonadi server error log found."
 msgstr "Najden je bil prejšnji dnevnik napak strežnika Akonadi."
 
-#: widgets/selftestdialog.cpp:518
+#: widgets/selftestdialog.cpp:517
 #, kde-format
 msgid ""
 "The Akonadi server reported errors during its previous startup. The log can "
@@ -1902,12 +1902,12 @@ msgstr ""
 "Strežnik Akonadi je med prejšnjim zagonom poročal o napakah. Dnevnik lahko "
 "najdete v %1."
 
-#: widgets/selftestdialog.cpp:529
+#: widgets/selftestdialog.cpp:528
 #, kde-format
 msgid "No current Akonadi control error log found."
 msgstr "Trenutni dnevnik napak nadzora Akonadija ni bil najden."
 
-#: widgets/selftestdialog.cpp:530
+#: widgets/selftestdialog.cpp:529
 #, kde-format
 msgid ""
 "The Akonadi control process did not report any errors during its current "
@@ -1915,12 +1915,12 @@ msgid ""
 msgstr ""
 "Nadzorno opravilo Akonadija med trenutnim zagonom ni poročalo o napakah."
 
-#: widgets/selftestdialog.cpp:534
+#: widgets/selftestdialog.cpp:533
 #, kde-format
 msgid "Current Akonadi control error log found."
 msgstr "Najden je bil trenutni dnevnik napak nadzora Akonadija."
 
-#: widgets/selftestdialog.cpp:535
+#: widgets/selftestdialog.cpp:534
 #, kde-format
 msgid ""
 "The Akonadi control process reported errors during its current startup. The "
@@ -1929,12 +1929,12 @@ msgstr ""
 "Nadzorno opravilo Akonadija je med trenutnim zagonom poročalo o napakah. "
 "Dnevnik lahko najdete v %1."
 
-#: widgets/selftestdialog.cpp:543
+#: widgets/selftestdialog.cpp:542
 #, kde-format
 msgid "No previous Akonadi control error log found."
 msgstr "Prejšnji dnevnik napak nadzora Akonadija ni bil najden."
 
-#: widgets/selftestdialog.cpp:544
+#: widgets/selftestdialog.cpp:543
 #, kde-format
 msgid ""
 "The Akonadi control process did not report any errors during its previous "
@@ -1942,12 +1942,12 @@ msgid ""
 msgstr ""
 "Nadzorno opravilo Akonadija med prejšnjim zagonom ni poročalo o napakah."
 
-#: widgets/selftestdialog.cpp:548
+#: widgets/selftestdialog.cpp:547
 #, kde-format
 msgid "Previous Akonadi control error log found."
 msgstr "Najden je bil prejšnji dnevnik napak nadzora Akonadija."
 
-#: widgets/selftestdialog.cpp:549
+#: widgets/selftestdialog.cpp:548
 #, kde-format
 msgid ""
 "The Akonadi control process reported errors during its previous startup. The "
@@ -1956,12 +1956,12 @@ msgstr ""
 "Nadzorno opravilo Akonadija je med prejšnjim zagonom poročalo o napakah. "
 "Dnevnik lahko najdete v %1."
 
-#: widgets/selftestdialog.cpp:559
+#: widgets/selftestdialog.cpp:558
 #, kde-format
 msgid "Akonadi was started as root"
 msgstr "Akonadi je bil zagnan pod uporabnikom root"
 
-#: widgets/selftestdialog.cpp:560
+#: widgets/selftestdialog.cpp:559
 #, kde-format
 msgid ""
 "Running Internet-facing applications as root/administrator exposes you to "
@@ -1973,12 +1973,12 @@ msgstr ""
 "Akonadija, ne bo dovolil zaganjanja pod uporabnikom root in vas tako "
 "obvaroval pred tveganji."
 
-#: widgets/selftestdialog.cpp:564
+#: widgets/selftestdialog.cpp:563
 #, kde-format
 msgid "Akonadi is not running as root"
 msgstr "Akonadi ne teče pod uporabnikom root"
 
-#: widgets/selftestdialog.cpp:565
+#: widgets/selftestdialog.cpp:564
 #, kde-format
 msgid ""
 "Akonadi is not running as a root/administrator user, which is the "
@@ -1987,18 +1987,18 @@ msgstr ""
 "Akonadi ne teče pod uporabnikom root (skrbnikom), kar je priporočena "
 "nastavitev za varen sistem."
 
-#: widgets/selftestdialog.cpp:643
+#: widgets/selftestdialog.cpp:642
 #, kde-format
 msgid "Save Test Report"
 msgstr "Shrani poročilo o preizkusu"
 
-#: widgets/selftestdialog.cpp:650
+#: widgets/selftestdialog.cpp:649
 #, kde-format
 msgctxt "@title:window"
 msgid "Error"
 msgstr "Napaka"
 
-#: widgets/selftestdialog.cpp:650
+#: widgets/selftestdialog.cpp:649
 #, kde-format
 msgid "Could not open file '%1'"
 msgstr "Ni bilo mogoče odpreti datoteke »%1«"
@@ -2622,13 +2622,7 @@ msgctxt "@info"
 msgid "Tag %1 successfully added"
 msgstr "Oznaka %1 je bila uspešno dodana"
 
-#: widgets/tageditwidget.cpp:174
-#, kde-kuit-format
-msgctxt "@info"
-msgid "Delete Tag  <resource>%1</resource>"
-msgstr "Odstrani oznako  <resource>%1</resource>"
-
-#: widgets/tageditwidget.cpp:176
+#: widgets/tageditwidget.cpp:175
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -2638,31 +2632,31 @@ msgstr ""
 "Pritisnite ta gumb, da prikažete pogovorno okno, ki zahteva dovoljenje za "
 "odstranitev oznake <resource>%1</resource> iz Akonadija."
 
-#: widgets/tageditwidget.cpp:184
+#: widgets/tageditwidget.cpp:183
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Ali resnično želite odstraniti oznako <resource>%1</resource>?"
 
-#: widgets/tageditwidget.cpp:185
+#: widgets/tageditwidget.cpp:184
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Izbriši oznako"
 
-#: widgets/tageditwidget.cpp:196
+#: widgets/tageditwidget.cpp:195
 #, kde-format
 msgctxt "@info"
 msgid "Failed to delete tag %1: %2"
 msgstr "Ni bilo mogoče zbrisati oznake %1: %2"
 
-#: widgets/tageditwidget.cpp:200
+#: widgets/tageditwidget.cpp:199
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully removed"
 msgstr "Oznaka %1 uspešno odstranjena"
 
-#: widgets/tageditwidget.cpp:227
+#: widgets/tageditwidget.cpp:226
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"
@@ -2724,7 +2718,7 @@ msgstr "Izbor oznak …"
 msgid "Select Tags"
 msgstr "Izberi oznake"
 
-#: widgets/tagwidget.cpp:45
+#: widgets/tagwidget.cpp:44
 #, kde-format
 msgid "Clear"
 msgstr "Počisti"
@@ -2815,6 +2809,10 @@ msgstr "Ni mogoče razčleniti podatkovne datoteke: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Ni mogoče najti zbirke %1"
+
+#~ msgctxt "@info"
+#~ msgid "Delete Tag  <resource>%1</resource>"
+#~ msgstr "Odstrani oznako  <resource>%1</resource>"
 
 #~ msgid "Unnamed plugin"
 #~ msgstr "Neimenovan vstavek"

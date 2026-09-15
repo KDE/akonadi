@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-09 00:50+0000\n"
+"POT-Creation-Date: 2026-09-15 00:44+0000\n"
 "PO-Revision-Date: 2024-09-19 14:56+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -772,28 +772,28 @@ msgstr ""
 "Χώρος ονομάτων για την εκκίνηση πολλαπλών διεργασιών Akonadi στην ίδια "
 "συνεδρία χρήστη"
 
-#: widgets/agentconfigurationdialog.cpp:46
+#: widgets/agentconfigurationdialog.cpp:44
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 Διαμόρφωση"
 
-#: widgets/agentconfigurationwidget.cpp:94
+#: widgets/agentconfigurationwidget.cpp:92
 #, kde-format
 msgid "Unable to access D-Bus interface of created agent."
 msgstr "Αδυναμία πρόσβασης στη D-Bus διεπαφή του δημιουργημένου πράκτορα."
 
-#: widgets/agentconfigurationwidget.cpp:116
+#: widgets/agentconfigurationwidget.cpp:114
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "Ο διάλογος διαμόρφωσης έχει ανοίξει σε άλλο παράθυρο"
 
-#: widgets/agentconfigurationwidget.cpp:123
+#: widgets/agentconfigurationwidget.cpp:121
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "Η διαμόρφωση για το %1 είναι ήδη ανοιχτή κάπου αλλού."
 
-#: widgets/agentconfigurationwidget.cpp:125
+#: widgets/agentconfigurationwidget.cpp:123
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "Αποτυχία εγγραφής %1 διαλόγου διαμόρφωσης."
@@ -804,13 +804,13 @@ msgctxt "Status percent value"
 msgid "(%1%)"
 msgstr "(%1%)"
 
-#: widgets/agenttypedialog.cpp:66
+#: widgets/agenttypedialog.cpp:65
 #, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
 msgstr "Διαμόρφωση λογαριασμού"
 
-#: widgets/agenttypedialog.cpp:74
+#: widgets/agenttypedialog.cpp:73
 #, fuzzy, kde-format
 #| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
 #| msgid "Search"
@@ -825,7 +825,7 @@ msgid_plural "minutes"
 msgstr[0] "λεπτό"
 msgstr[1] "λεπτά"
 
-#: widgets/cachepolicypage.cpp:70
+#: widgets/cachepolicypage.cpp:69
 #, kde-format
 msgid "Retrieval"
 msgstr "Ανάκτηση"
@@ -977,7 +977,7 @@ msgctxt "@title:tab general properties page"
 msgid "General"
 msgstr "Γενικά"
 
-#: widgets/collectiongeneralpropertiespage.cpp:54
+#: widgets/collectiongeneralpropertiespage.cpp:55
 #, kde-format
 msgctxt "@label"
 msgid "One object"
@@ -1034,29 +1034,29 @@ msgstr "Μέγεθος:"
 msgid "0 Byte"
 msgstr "0 Byte"
 
-#: widgets/collectionmaintenancepage.cpp:46
+#: widgets/collectionmaintenancepage.cpp:44
 #, kde-format
 msgid "Remember that indexing can take some minutes."
 msgstr "Θυμηθείτε ότι η δεικτοδότηση απαιτεί κάποιο χρόνο."
 
-#: widgets/collectionmaintenancepage.cpp:72
+#: widgets/collectionmaintenancepage.cpp:70
 #, kde-format
 msgid "Maintenance"
 msgstr "Συντήρηση"
 
-#: widgets/collectionmaintenancepage.cpp:131
+#: widgets/collectionmaintenancepage.cpp:129
 #, kde-format
 msgid "Error while retrieving indexed items count"
 msgstr "Σφάλμα κατά την ανάκτηση του πλήθους των δεικτοδοτημένων αντικειμένων"
 
-#: widgets/collectionmaintenancepage.cpp:134
+#: widgets/collectionmaintenancepage.cpp:132
 #, kde-format
 msgid "Indexed %1 item in this folder"
 msgid_plural "Indexed %1 items in this folder"
 msgstr[0] "Δεικτοδοτήθηκε %1 αντικείμενο σε αυτόν το φάκελο"
 msgstr[1] "Δεικτοδοτήθηκαν %1 αντικείμενα σε αυτόν το φάκελο"
 
-#: widgets/collectionmaintenancepage.cpp:138
+#: widgets/collectionmaintenancepage.cpp:136
 #, kde-format
 msgid "Calculating indexed items..."
 msgstr "Υπολογισμός δεικτοδοτημένων αντικειμένων..."
@@ -1121,13 +1121,13 @@ msgstr "Ανάκτηση πλήθους δεικτοδοτημένων αντι�
 msgid "Reindex folder"
 msgstr "Αναδεικτοδότηση φακέλου"
 
-#: widgets/collectionrequester.cpp:113
+#: widgets/collectionrequester.cpp:111
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No Folder"
 msgstr "Κανείς φάκελος"
 
-#: widgets/collectionrequester.cpp:122
+#: widgets/collectionrequester.cpp:120
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
@@ -1404,23 +1404,23 @@ msgstr "Μετονομασία προτιμώμενου"
 msgid "Name:"
 msgstr "Όνομα:"
 
-#: widgets/selftestdialog.cpp:60
+#: widgets/selftestdialog.cpp:59
 #, kde-format
 msgctxt "@title:window"
 msgid "Akonadi Server Self-Test"
 msgstr "Αυτοέλεγχος εξυπηρετητή Akonadi"
 
-#: widgets/selftestdialog.cpp:71
+#: widgets/selftestdialog.cpp:70
 #, kde-format
 msgid "Save Report..."
 msgstr "Αποθήκευση αναφοράς..."
 
-#: widgets/selftestdialog.cpp:73
+#: widgets/selftestdialog.cpp:72
 #, kde-format
 msgid "Copy Report to Clipboard"
 msgstr "Αντιγραφή αναφοράς στο πρόχειρο"
 
-#: widgets/selftestdialog.cpp:189
+#: widgets/selftestdialog.cpp:188
 #, kde-format
 msgid ""
 "The QtSQL driver '%1' is required by your current Akonadi server "
@@ -1429,7 +1429,7 @@ msgstr ""
 "Ο οδηγός QtSQL '%1' απαιτείται από την τρέχουσα διαμόρφωση του εξυπηρετητή "
 "Akonadi και βρέθηκε στο σύστημά σας."
 
-#: widgets/selftestdialog.cpp:191
+#: widgets/selftestdialog.cpp:190
 #, kde-format
 msgid ""
 "The QtSQL driver '%1' is required by your current Akonadi server "
@@ -1442,28 +1442,28 @@ msgstr ""
 "Οι παρακάτω οδηγοί είναι εγκατεστημένοι: %2.\n"
 "Σιγουρευτείτε ότι ο απαιτούμενος οδηγός είναι εγκατεστημένος."
 
-#: widgets/selftestdialog.cpp:198
+#: widgets/selftestdialog.cpp:197
 #, kde-format
 msgid "Database driver found."
 msgstr "Βρέθηκε οδηγός βάσης δεδομένων."
 
-#: widgets/selftestdialog.cpp:200
+#: widgets/selftestdialog.cpp:199
 #, kde-format
 msgid "Database driver not found."
 msgstr "Δε βρέθηκε οδηγός βάσης δεδομένων."
 
-#: widgets/selftestdialog.cpp:208
+#: widgets/selftestdialog.cpp:207
 #, kde-format
 msgid "MySQL server executable not tested."
 msgstr "Το εκτελέσιμο του εξυπηρετητή MySQL δεν ελέγχθηκε."
 
-#: widgets/selftestdialog.cpp:208 widgets/selftestdialog.cpp:249
-#: widgets/selftestdialog.cpp:300
+#: widgets/selftestdialog.cpp:207 widgets/selftestdialog.cpp:248
+#: widgets/selftestdialog.cpp:299
 #, kde-format
 msgid "The current configuration does not require an internal MySQL server."
 msgstr "Οι τρέχουσες ρυθμίσεις δεν απαιτούν έναν εσωτερικό εξυπηρετητή MySQL."
 
-#: widgets/selftestdialog.cpp:216
+#: widgets/selftestdialog.cpp:215
 #, kde-format
 msgid ""
 "You have currently configured Akonadi to use the MySQL server '%1'.\n"
@@ -1478,42 +1478,42 @@ msgstr ""
 "εκτελέσιμο του εξυπηρετητή. Το εκτελέσιμο συνήθως ονομάζεται 'mysqld', με τη "
 "θέση του να διαφέρει ανάλογα με τη διανομή."
 
-#: widgets/selftestdialog.cpp:224
+#: widgets/selftestdialog.cpp:223
 #, kde-format
 msgid "MySQL server not found."
 msgstr "Δε βρέθηκε ο εξυπηρετητής MySQL."
 
-#: widgets/selftestdialog.cpp:226
+#: widgets/selftestdialog.cpp:225
 #, kde-format
 msgid "MySQL server not readable."
 msgstr "Αδύνατη η ανάγνωση του εξυπηρετητή MySQL."
 
-#: widgets/selftestdialog.cpp:228
+#: widgets/selftestdialog.cpp:227
 #, kde-format
 msgid "MySQL server not executable."
 msgstr "Μη εκτελέσιμος ο εξυπηρετητής MySQL."
 
-#: widgets/selftestdialog.cpp:230
+#: widgets/selftestdialog.cpp:229
 #, kde-format
 msgid "MySQL found with unexpected name."
 msgstr "Βρέθηκε η MySQL με μη αναμενόμενο όνομα."
 
-#: widgets/selftestdialog.cpp:232
+#: widgets/selftestdialog.cpp:231
 #, kde-format
 msgid "MySQL server found."
 msgstr "Βρέθηκε ο εξυπηρετητής MySQL."
 
-#: widgets/selftestdialog.cpp:238
+#: widgets/selftestdialog.cpp:237
 #, kde-format
 msgid "MySQL server found: %1"
 msgstr "Βρέθηκε ο εξυπηρετητής MySQL: %1"
 
-#: widgets/selftestdialog.cpp:239
+#: widgets/selftestdialog.cpp:238
 #, kde-format
 msgid "MySQL server is executable."
 msgstr "Ο εξυπηρετητής MySQL είναι εκτελέσιμος."
 
-#: widgets/selftestdialog.cpp:241
+#: widgets/selftestdialog.cpp:240
 #, kde-format
 msgid ""
 "Executing the MySQL server '%1' failed with the following error message: '%2'"
@@ -1521,22 +1521,22 @@ msgstr ""
 "Η εκτέλεση του εξυπηρετητή MySQL '%1' απέτυχε με το παρακάτω μήνυμα "
 "σφάλματος: '%2'"
 
-#: widgets/selftestdialog.cpp:242
+#: widgets/selftestdialog.cpp:241
 #, kde-format
 msgid "Executing the MySQL server failed."
 msgstr "Αποτυχία εκτέλεσης του εξυπηρετητή MySQL."
 
-#: widgets/selftestdialog.cpp:249
+#: widgets/selftestdialog.cpp:248
 #, kde-format
 msgid "MySQL server error log not tested."
 msgstr "Δεν ελέγχθηκε η καταγραφή σφαλμάτων του εξυπηρετητή MySQL."
 
-#: widgets/selftestdialog.cpp:257
+#: widgets/selftestdialog.cpp:256
 #, kde-format
 msgid "No current MySQL error log found."
 msgstr "Δε βρέθηκε τρέχουσα καταγραφή σφαλμάτων MySQL."
 
-#: widgets/selftestdialog.cpp:258
+#: widgets/selftestdialog.cpp:257
 #, kde-format
 msgid ""
 "The MySQL server did not report any errors during this startup. The log can "
@@ -1545,61 +1545,61 @@ msgstr ""
 "Ο εξυπηρετητής MySQL δεν ανέφερε σφάλματα κατά την εκκίνηση. Η καταγραφή "
 "βρίσκεται στο '%1'."
 
-#: widgets/selftestdialog.cpp:264
+#: widgets/selftestdialog.cpp:263
 #, kde-format
 msgid "MySQL error log not readable."
 msgstr "Αδύνατη η ανάγνωση της καταγραφής σφαλμάτων MySQL."
 
-#: widgets/selftestdialog.cpp:265
+#: widgets/selftestdialog.cpp:264
 #, kde-format
 msgid "A MySQL server error log file was found but is not readable: %1"
 msgstr ""
 "Βρέθηκε αρχείο καταγραφής σφαλμάτων MySQL αλλά δεν είναι αναγνώσιμο: %1"
 
-#: widgets/selftestdialog.cpp:274
+#: widgets/selftestdialog.cpp:273
 #, kde-format
 msgid "MySQL server log contains errors."
 msgstr "Η καταγραφή του εξυπηρετητή MySQL περιέχει σφάλματα."
 
-#: widgets/selftestdialog.cpp:275
+#: widgets/selftestdialog.cpp:274
 #, kde-format
 msgid "The MySQL server error log file '%1' contains errors."
 msgstr "Το αρχείο καταγραφής σφαλμάτων MySQL '%1' περιέχει σφάλματα."
 
-#: widgets/selftestdialog.cpp:285
+#: widgets/selftestdialog.cpp:284
 #, kde-format
 msgid "MySQL server log contains warnings."
 msgstr "Η καταγραφή του εξυπηρετητή MySQL περιέχει προειδοποιήσεις."
 
-#: widgets/selftestdialog.cpp:286
+#: widgets/selftestdialog.cpp:285
 #, kde-format
 msgid "The MySQL server log file '%1' contains warnings."
 msgstr ""
 "Το αρχείο καταγραφής του εξυπηρετητή MySQL '%1' περιέχει προειδοποιήσεις."
 
-#: widgets/selftestdialog.cpp:289
+#: widgets/selftestdialog.cpp:288
 #, kde-format
 msgid "MySQL server log contains no errors."
 msgstr "Η καταγραφή του εξυπηρετητή MySQL δεν περιέχει σφάλματα."
 
-#: widgets/selftestdialog.cpp:290
+#: widgets/selftestdialog.cpp:289
 #, kde-format
 msgid "The MySQL server log file '%1' does not contain any errors or warnings."
 msgstr ""
 "Το αρχείο καταγραφής σφαλμάτων MySQL '%1' δεν περιέχει σφάλματα ή "
 "προειδοποιήσεις."
 
-#: widgets/selftestdialog.cpp:300
+#: widgets/selftestdialog.cpp:299
 #, kde-format
 msgid "MySQL server configuration not tested."
 msgstr "Δεν ελέγχθηκαν οι ρυθμίσεις του εξυπηρετητή MySQL."
 
-#: widgets/selftestdialog.cpp:309
+#: widgets/selftestdialog.cpp:308
 #, kde-format
 msgid "MySQL server default configuration found."
 msgstr "Βρέθηκαν οι προκαθορισμένες ρυθμίσεις του εξυπηρετητή MySQL."
 
-#: widgets/selftestdialog.cpp:310
+#: widgets/selftestdialog.cpp:309
 #, kde-format
 msgid ""
 "The default configuration for the MySQL server was found and is readable at "
@@ -1608,12 +1608,12 @@ msgstr ""
 "Οι προκαθορισμένες ρυθμίσεις του εξυπηρετητή MySQL βρέθηκαν και είναι "
 "αναγνώσιμες στο %1."
 
-#: widgets/selftestdialog.cpp:314
+#: widgets/selftestdialog.cpp:313
 #, kde-format
 msgid "MySQL server default configuration not found."
 msgstr "Δε βρέθηκαν οι προκαθορισμένες ρυθμίσεις του εξυπηρετητή MySQL."
 
-#: widgets/selftestdialog.cpp:315
+#: widgets/selftestdialog.cpp:314
 #, kde-format
 msgid ""
 "The default configuration for the MySQL server was not found or was not "
@@ -1623,12 +1623,12 @@ msgstr ""
 "Οι προκαθορισμένες ρυθμίσεις του εξυπηρετητή MySQL δε βρέθηκαν ή δεν ήταν  αναγνώσιμες. Ελέγξτε την εγκατάσταση του Akonadi και ότι έχετε τις "
 "απαραίτητες άδειες πρόσβασης."
 
-#: widgets/selftestdialog.cpp:323
+#: widgets/selftestdialog.cpp:322
 #, kde-format
 msgid "MySQL server custom configuration not available."
 msgstr "Μη διαθέσιμες οι προσαρμοσμένες ρυθμίσεις του εξυπηρετητή MySQL."
 
-#: widgets/selftestdialog.cpp:324
+#: widgets/selftestdialog.cpp:323
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was not found but is optional."
@@ -1636,12 +1636,12 @@ msgstr ""
 "Οι προσαρμοσμένες ρυθμίσεις του εξυπηρετητή MySQL δε βρέθηκαν αλλά είναι "
 "προαιρετικές."
 
-#: widgets/selftestdialog.cpp:327
+#: widgets/selftestdialog.cpp:326
 #, kde-format
 msgid "MySQL server custom configuration found."
 msgstr "Βρέθηκαν προσαρμοσμένες ρυθμίσεις του εξυπηρετητή MySQL."
 
-#: widgets/selftestdialog.cpp:328
+#: widgets/selftestdialog.cpp:327
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was found and is readable at %1"
@@ -1649,12 +1649,12 @@ msgstr ""
 "Οι προσαρμοσμένες ρυθμίσεις του εξυπηρετητή MySQL βρέθηκαν και είναι "
 "αναγνώσιμες στο %1"
 
-#: widgets/selftestdialog.cpp:332
+#: widgets/selftestdialog.cpp:331
 #, kde-format
 msgid "MySQL server custom configuration not readable."
 msgstr "Αδύνατη η ανάγνωση των προσαρμοσμένων ρυθμίσεων του εξυπηρετητή MySQL."
 
-#: widgets/selftestdialog.cpp:333
+#: widgets/selftestdialog.cpp:332
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was found at %1 but is not "
@@ -1663,50 +1663,50 @@ msgstr ""
 "Οι προσαρμοσμένες ρυθμίσεις του εξυπηρετητή MySQL βρέθηκαν στο %1 αλλά δεν "
 "είναι  αναγνώσιμες. Ελέγξτε τις άδειες σας πρόσβασης."
 
-#: widgets/selftestdialog.cpp:342
+#: widgets/selftestdialog.cpp:341
 #, kde-format
 msgid "MySQL server configuration not found or not readable."
 msgstr ""
 "Δε βρέθηκαν οι ρυθμίσεις του εξυπηρετητή MySQL ή δεν είναι αναγνώσιμες."
 
-#: widgets/selftestdialog.cpp:343
+#: widgets/selftestdialog.cpp:342
 #, kde-format
 msgid "The MySQL server configuration was not found or is not readable."
 msgstr ""
 "Δε βρέθηκαν οι ρυθμίσεις του εξυπηρετητή MySQL ή δεν είναι αναγνώσιμες."
 
-#: widgets/selftestdialog.cpp:346
+#: widgets/selftestdialog.cpp:345
 #, kde-format
 msgid "MySQL server configuration is usable."
 msgstr "Οι ρυθμίσεις του εξυπηρετητή MySQL μπορούν να χρησιμοποιηθούν."
 
-#: widgets/selftestdialog.cpp:347
+#: widgets/selftestdialog.cpp:346
 #, kde-format
 msgid "The MySQL server configuration was found at %1 and is readable."
 msgstr ""
 "Βρέθηκαν οι ρυθμίσεις του εξυπηρετητή MySQL στο %1 και είναι αναγνώσιμες."
 
-#: widgets/selftestdialog.cpp:376
+#: widgets/selftestdialog.cpp:375
 #, kde-format
 msgid "Cannot connect to PostgreSQL server."
 msgstr "Αδυναμία σύνδεσης στον εξυπηρετητή PostgreSQL."
 
-#: widgets/selftestdialog.cpp:378
+#: widgets/selftestdialog.cpp:377
 #, kde-format
 msgid "PostgreSQL server found."
 msgstr "Βρέθηκε ο εξυπηρετητής PostgreSQL."
 
-#: widgets/selftestdialog.cpp:378
+#: widgets/selftestdialog.cpp:377
 #, kde-format
 msgid "The PostgreSQL server was found and connection is working."
 msgstr "Ο εξυπηρετητής PostgreSQL βρέθηκε και η σύνδεση λειτουργεί."
 
-#: widgets/selftestdialog.cpp:388
+#: widgets/selftestdialog.cpp:387
 #, kde-format
 msgid "akonadictl not found"
 msgstr "δε βρέθηκε το akonadictl"
 
-#: widgets/selftestdialog.cpp:389
+#: widgets/selftestdialog.cpp:388
 #, kde-format
 msgid ""
 "The program 'akonadictl' needs to be accessible in $PATH. Make sure you have "
@@ -1715,12 +1715,12 @@ msgstr ""
 "Το πρόγραμμα 'akonadictl' πρέπει να είναι προσβάσιμο από το $PATH. "
 "Σιγουρευτείτε ότι ο εξυπηρετητής Akonadi είναι εγκατεστημένος."
 
-#: widgets/selftestdialog.cpp:396
+#: widgets/selftestdialog.cpp:395
 #, kde-format
 msgid "akonadictl found and usable"
 msgstr "βρέθηκε το akonadictl και μπορεί να χρησιμοποιηθεί"
 
-#: widgets/selftestdialog.cpp:397
+#: widgets/selftestdialog.cpp:396
 #, kde-format
 msgid ""
 "The program '%1' to control the Akonadi server was found and could be "
@@ -1733,12 +1733,12 @@ msgstr ""
 "Αποτέλεσμα:\n"
 "%2"
 
-#: widgets/selftestdialog.cpp:403
+#: widgets/selftestdialog.cpp:402
 #, kde-format
 msgid "akonadictl found but not usable"
 msgstr "βρέθηκε το akonadictl αλλά δεν μπορεί να χρησιμοποιηθεί"
 
-#: widgets/selftestdialog.cpp:404
+#: widgets/selftestdialog.cpp:403
 #, kde-format
 msgid ""
 "The program '%1' to control the Akonadi server was found but could not be "
@@ -1753,12 +1753,12 @@ msgstr ""
 "%2\n"
 "Σιγουρευτείτε ότι ο εξυπηρετητής Akonadi είναι εγκατεστημένος σωστά."
 
-#: widgets/selftestdialog.cpp:416
+#: widgets/selftestdialog.cpp:415
 #, kde-format
 msgid "Akonadi control process registered at D-Bus."
 msgstr "Η διεργασία ελέγχου του Akonadi καταχωρήθηκε στο D-Bus."
 
-#: widgets/selftestdialog.cpp:417
+#: widgets/selftestdialog.cpp:416
 #, kde-format
 msgid ""
 "The Akonadi control process is registered at D-Bus which typically indicates "
@@ -1767,12 +1767,12 @@ msgstr ""
 "Η διεργασία ελέγχου του Akonadi καταχωρήθηκε στο D-Bus το οποίο υποδηλώνει "
 "και τη λειτουργικότητά του."
 
-#: widgets/selftestdialog.cpp:420
+#: widgets/selftestdialog.cpp:419
 #, kde-format
 msgid "Akonadi control process not registered at D-Bus."
 msgstr "Η διεργασία ελέγχου του Akonadi δεν καταχωρήθηκε στο D-Bus."
 
-#: widgets/selftestdialog.cpp:421
+#: widgets/selftestdialog.cpp:420
 #, kde-format
 msgid ""
 "The Akonadi control process is not registered at D-Bus which typically means "
@@ -1781,12 +1781,12 @@ msgstr ""
 "Η διεργασία ελέγχου του Akonadi δεν καταχωρήθηκε στο D-Bus το οποίο "
 "υποδηλώνει ότι δεν εκκίνησε ή συνέβη κάποιο κρίσιμο σφάλμα κατά την εκκίνηση."
 
-#: widgets/selftestdialog.cpp:427
+#: widgets/selftestdialog.cpp:426
 #, kde-format
 msgid "Akonadi server process registered at D-Bus."
 msgstr "Η διεργασία εξυπηρετητή του Akonadi καταχωρήθηκε στο D-Bus."
 
-#: widgets/selftestdialog.cpp:428
+#: widgets/selftestdialog.cpp:427
 #, kde-format
 msgid ""
 "The Akonadi server process is registered at D-Bus which typically indicates "
@@ -1795,12 +1795,12 @@ msgstr ""
 "Η διεργασία εξυπηρετητή του Akonadi καταχωρήθηκε στο D-Bus το οποίο "
 "υποδηλώνει και τη λειτουργικότητά του."
 
-#: widgets/selftestdialog.cpp:431
+#: widgets/selftestdialog.cpp:430
 #, kde-format
 msgid "Akonadi server process not registered at D-Bus."
 msgstr "Η διεργασία εξυπηρετητή του Akonadi δεν καταχωρήθηκε στο D-Bus."
 
-#: widgets/selftestdialog.cpp:432
+#: widgets/selftestdialog.cpp:431
 #, kde-format
 msgid ""
 "The Akonadi server process is not registered at D-Bus which typically means "
@@ -1810,24 +1810,24 @@ msgstr ""
 "υποδηλώνει ότι δεν εκκίνησε ή συνέβη ένα κρίσιμο σφάλμα κατά την εκκίνησή "
 "του."
 
-#: widgets/selftestdialog.cpp:441
+#: widgets/selftestdialog.cpp:440
 #, kde-format
 msgid "Protocol version check not possible."
 msgstr "Αδύνατος ο έλεγχος έκδοσης του πρωτοκόλλου."
 
-#: widgets/selftestdialog.cpp:442
+#: widgets/selftestdialog.cpp:441
 #, kde-format
 msgid ""
 "Without a connection to the server it is not possible to check if the "
 "protocol version meets the requirements."
 msgstr "Χωρίς σύνδεση με τον εξυπηρετητή δεν είναι δυνατός ο έλεγχος της  έκδοσης πρωτοκόλλου και αν αυτή συμμορφώνεται με τις απαιτήσεις."
 
-#: widgets/selftestdialog.cpp:447
+#: widgets/selftestdialog.cpp:446
 #, kde-format
 msgid "Server protocol version is too old."
 msgstr "Η έκδοση πρωτοκόλλου του εξυπηρετητή είναι πολύ παλιά."
 
-#: widgets/selftestdialog.cpp:448 widgets/selftestdialog.cpp:455
+#: widgets/selftestdialog.cpp:447 widgets/selftestdialog.cpp:454
 #, kde-format
 msgid ""
 "The server protocol version is %1, but version %2 is required by the client. "
@@ -1838,37 +1838,37 @@ msgstr ""
 "%2. Αν έχετε ενημερώσει το KDE PIM πρόσφατα, βεβαιωθείτε ότι έχετε "
 "επανεκκινήσει και το Akonadi και τις εφαρμογές KDE PIM."
 
-#: widgets/selftestdialog.cpp:454
+#: widgets/selftestdialog.cpp:453
 #, kde-format
 msgid "Server protocol version is too new."
 msgstr "Η έκδοση πρωτοκόλλου του εξυπηρετητή είναι πολύ νέα."
 
-#: widgets/selftestdialog.cpp:460
+#: widgets/selftestdialog.cpp:459
 #, kde-format
 msgid "Server protocol version matches."
 msgstr "Η έκδοση πρωτοκόλλου του εξυπηρετητή ταιριάζει."
 
-#: widgets/selftestdialog.cpp:460
+#: widgets/selftestdialog.cpp:459
 #, kde-format
 msgid "The current Protocol version is %1."
 msgstr "Η τρέχουσα έκδοση πρωτοκόλλου είναι η %1."
 
-#: widgets/selftestdialog.cpp:478
+#: widgets/selftestdialog.cpp:477
 #, kde-format
 msgid "Resource agents found."
 msgstr "Βρέθηκαν πελάτες πόρων."
 
-#: widgets/selftestdialog.cpp:478
+#: widgets/selftestdialog.cpp:477
 #, kde-format
 msgid "At least one resource agent has been found."
 msgstr "Βρέθηκε τουλάχιστον ένας πελάτης πόρου."
 
-#: widgets/selftestdialog.cpp:481
+#: widgets/selftestdialog.cpp:480
 #, kde-format
 msgid "No resource agents found."
 msgstr "Δε βρέθηκαν πελάτες πόρων."
 
-#: widgets/selftestdialog.cpp:482
+#: widgets/selftestdialog.cpp:481
 #, kde-format
 msgid ""
 "No resource agents have been found, Akonadi is not usable without at least "
@@ -1884,24 +1884,24 @@ msgstr ""
 "ότι αυτό περιλαμβάνει όλες τις διαδρομές όπου είναι εγκατεστημένοι πελάτες "
 "του Akonadi."
 
-#: widgets/selftestdialog.cpp:499
+#: widgets/selftestdialog.cpp:498
 #, kde-format
 msgid "No current Akonadi server error log found."
 msgstr "Δε βρέθηκε η τρέχουσα καταγραφή σφαλμάτων του Akonadi."
 
-#: widgets/selftestdialog.cpp:499
+#: widgets/selftestdialog.cpp:498
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its current startup."
 msgstr ""
 "Ο εξυπηρετητής Akonadi δεν ανέφερε σφάλματα κατά την τρέχουσα εκκίνησή του."
 
-#: widgets/selftestdialog.cpp:503
+#: widgets/selftestdialog.cpp:502
 #, kde-format
 msgid "Current Akonadi server error log found."
 msgstr "Βρέθηκε τρέχουσα καταγραφή σφαλμάτων του εξυπηρετητή Akonadi."
 
-#: widgets/selftestdialog.cpp:504
+#: widgets/selftestdialog.cpp:503
 #, kde-format
 msgid ""
 "The Akonadi server reported errors during its current startup. The log can "
@@ -1910,12 +1910,12 @@ msgstr ""
 "Ο εξυπηρετητής Akonadi ανέφερε σφάλματα κατά την τρέχουσα εκκίνησή του. Η "
 "καταγραφή μπορεί να βρεθεί στο %1."
 
-#: widgets/selftestdialog.cpp:512
+#: widgets/selftestdialog.cpp:511
 #, kde-format
 msgid "No previous Akonadi server error log found."
 msgstr "Δε βρέθηκε προηγούμενη καταγραφή σφαλμάτων του εξυπηρετητή Akonadi."
 
-#: widgets/selftestdialog.cpp:513
+#: widgets/selftestdialog.cpp:512
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its previous startup."
@@ -1923,12 +1923,12 @@ msgstr ""
 "Ο εξυπηρετητής Akonadi δεν ανέφερε σφάλματα κατά την προηγούμενη εκκίνησή "
 "του."
 
-#: widgets/selftestdialog.cpp:517
+#: widgets/selftestdialog.cpp:516
 #, kde-format
 msgid "Previous Akonadi server error log found."
 msgstr "Βρέθηκε προηγούμενη καταγραφή σφαλμάτων του εξυπηρετητή Akonadi."
 
-#: widgets/selftestdialog.cpp:518
+#: widgets/selftestdialog.cpp:517
 #, kde-format
 msgid ""
 "The Akonadi server reported errors during its previous startup. The log can "
@@ -1937,12 +1937,12 @@ msgstr ""
 "Ο εξυπηρετητής Akonadi ανέφερε σφάλματα κατά την προηγούμενη εκκίνησή του. Η "
 "καταγραφή μπορεί να βρεθεί στο %1."
 
-#: widgets/selftestdialog.cpp:529
+#: widgets/selftestdialog.cpp:528
 #, kde-format
 msgid "No current Akonadi control error log found."
 msgstr "Δε βρέθηκε τρέχουσα καταγραφή σφαλμάτων ελέγχου του Akonadi."
 
-#: widgets/selftestdialog.cpp:530
+#: widgets/selftestdialog.cpp:529
 #, kde-format
 msgid ""
 "The Akonadi control process did not report any errors during its current "
@@ -1950,24 +1950,24 @@ msgid ""
 msgstr ""
 "Η διεργασία ελέγχου του Akonadi δεν ανέφερε σφάλματα κατά την τρέχουσα  εκκίνησή του."
 
-#: widgets/selftestdialog.cpp:534
+#: widgets/selftestdialog.cpp:533
 #, kde-format
 msgid "Current Akonadi control error log found."
 msgstr "Βρέθηκε τρέχουσα καταγραφή σφαλμάτων ελέγχου του Akonadi."
 
-#: widgets/selftestdialog.cpp:535
+#: widgets/selftestdialog.cpp:534
 #, kde-format
 msgid ""
 "The Akonadi control process reported errors during its current startup. The "
 "log can be found in %1."
 msgstr "Η διεργασία ελέγχου του Akonadi ανέφερε σφάλματα κατά την τρέχουσα  εκκίνησή του. Η καταγραφή βρίσκεται στο %1."
 
-#: widgets/selftestdialog.cpp:543
+#: widgets/selftestdialog.cpp:542
 #, kde-format
 msgid "No previous Akonadi control error log found."
 msgstr "Δε βρέθηκε προηγούμενη καταγραφή σφαλμάτων ελέγχου του Akonadi."
 
-#: widgets/selftestdialog.cpp:544
+#: widgets/selftestdialog.cpp:543
 #, kde-format
 msgid ""
 "The Akonadi control process did not report any errors during its previous "
@@ -1976,12 +1976,12 @@ msgstr ""
 "Η διεργασία ελέγχου του Akonadi δεν ανέφερε σφάλματα κατά την προηγούμενη "
 "εκκίνησή της."
 
-#: widgets/selftestdialog.cpp:548
+#: widgets/selftestdialog.cpp:547
 #, kde-format
 msgid "Previous Akonadi control error log found."
 msgstr "Βρέθηκε προηγούμενη καταγραφή σφαλμάτων ελέγχου του Akonadi."
 
-#: widgets/selftestdialog.cpp:549
+#: widgets/selftestdialog.cpp:548
 #, kde-format
 msgid ""
 "The Akonadi control process reported errors during its previous startup. The "
@@ -1990,12 +1990,12 @@ msgstr ""
 "Η διεργασία ελέγχου του Akonadi ανέφερε σφάλματα κατά την προηγούμενη "
 "εκκίνησή της. Η καταγραφή βρίσκεται στο %1."
 
-#: widgets/selftestdialog.cpp:559
+#: widgets/selftestdialog.cpp:558
 #, kde-format
 msgid "Akonadi was started as root"
 msgstr "Το akonadi ξεκίνησε ως root"
 
-#: widgets/selftestdialog.cpp:560
+#: widgets/selftestdialog.cpp:559
 #, kde-format
 msgid ""
 "Running Internet-facing applications as root/administrator exposes you to "
@@ -2007,12 +2007,12 @@ msgstr ""
 "του Akonadi, δεν θα εκτελεστεί ως root για να σας προστατέψει από αυτούς "
 "τους κινδύνους."
 
-#: widgets/selftestdialog.cpp:564
+#: widgets/selftestdialog.cpp:563
 #, kde-format
 msgid "Akonadi is not running as root"
 msgstr "Το akonadi δεν εκτελείται ως root"
 
-#: widgets/selftestdialog.cpp:565
+#: widgets/selftestdialog.cpp:564
 #, kde-format
 msgid ""
 "Akonadi is not running as a root/administrator user, which is the "
@@ -2021,18 +2021,18 @@ msgstr ""
 "Το Akonadi δεν εκτελείται με χρήστη root/διαχειριστή και αυτή είναι η "
 "συνιστώμενη ρύθμιση για ένα ασφαλές σύστημα."
 
-#: widgets/selftestdialog.cpp:643
+#: widgets/selftestdialog.cpp:642
 #, kde-format
 msgid "Save Test Report"
 msgstr "Αποθήκευση αναφοράς ελέγχου"
 
-#: widgets/selftestdialog.cpp:650
+#: widgets/selftestdialog.cpp:649
 #, kde-format
 msgctxt "@title:window"
 msgid "Error"
 msgstr "Σφάλμα"
 
-#: widgets/selftestdialog.cpp:650
+#: widgets/selftestdialog.cpp:649
 #, kde-format
 msgid "Could not open file '%1'"
 msgstr "Αδύνατο το άνοιγμα του αρχείου '%1'"
@@ -2612,15 +2612,7 @@ msgctxt "@info"
 msgid "Tag %1 successfully added"
 msgstr ""
 
-#: widgets/tageditwidget.cpp:174
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
-msgctxt "@info"
-msgid "Delete Tag  <resource>%1</resource>"
-msgstr "Θέλετε πράγματι να αφαιρέσετε την ετικέτα <resource>%1</resource>;"
-
-#: widgets/tageditwidget.cpp:176
+#: widgets/tageditwidget.cpp:175
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -2628,32 +2620,32 @@ msgid ""
 "<resource>%1</resource> tag from Akonadi."
 msgstr ""
 
-#: widgets/tageditwidget.cpp:184
+#: widgets/tageditwidget.cpp:183
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Θέλετε πράγματι να αφαιρέσετε την ετικέτα <resource>%1</resource>;"
 
-#: widgets/tageditwidget.cpp:185
+#: widgets/tageditwidget.cpp:184
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Διαγραφή ετικέτας"
 
-#: widgets/tageditwidget.cpp:196
+#: widgets/tageditwidget.cpp:195
 #, fuzzy, kde-format
 #| msgid "Failed to create tag."
 msgctxt "@info"
 msgid "Failed to delete tag %1: %2"
 msgstr "Αδυναμία δημιουργίας ετικέτας."
 
-#: widgets/tageditwidget.cpp:200
+#: widgets/tageditwidget.cpp:199
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully removed"
 msgstr ""
 
-#: widgets/tageditwidget.cpp:227
+#: widgets/tageditwidget.cpp:226
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"
@@ -2712,7 +2704,7 @@ msgstr "Επιλογή ετικετών..."
 msgid "Select Tags"
 msgstr "Επιλογή ετικετών"
 
-#: widgets/tagwidget.cpp:45
+#: widgets/tagwidget.cpp:44
 #, kde-format
 msgid "Clear"
 msgstr "Καθαρισμός"
@@ -2803,6 +2795,13 @@ msgstr "Αδυναμία ανάλυσης αρχείου δεδομένων: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Αδυναμία εύρεσης συλλογής %1"
+
+#, fuzzy
+#~| msgctxt "@info"
+#~| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#~ msgctxt "@info"
+#~ msgid "Delete Tag  <resource>%1</resource>"
+#~ msgstr "Θέλετε πράγματι να αφαιρέσετε την ετικέτα <resource>%1</resource>;"
 
 #~ msgid "Unnamed plugin"
 #~ msgstr "Πρόσθετο χωρίς όνομα"

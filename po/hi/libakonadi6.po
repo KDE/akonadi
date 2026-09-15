@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-09 00:50+0000\n"
+"POT-Creation-Date: 2026-09-15 00:44+0000\n"
 "PO-Revision-Date: 2024-12-15 18:58+0530\n"
 "Last-Translator: Kali <EMAIL@ADDRESS>\n"
 "Language-Team: Hindi <fedora-trans-hi@redhat.com>\n"
@@ -749,28 +749,28 @@ msgid ""
 "Namespace for starting multiple Akonadi instances in the same user session"
 msgstr "एक ही उपयोगकर्ता सत्र में एकाधिक Akonadi इंस्टेंस शुरू करने के लिए नामस्थान"
 
-#: widgets/agentconfigurationdialog.cpp:46
+#: widgets/agentconfigurationdialog.cpp:44
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 कॉन्फ़िगरेशन"
 
-#: widgets/agentconfigurationwidget.cpp:94
+#: widgets/agentconfigurationwidget.cpp:92
 #, kde-format
 msgid "Unable to access D-Bus interface of created agent."
 msgstr "निर्मित एजेंट के D-Bus इंटरफ़ेस तक पहुँचने में असमर्थ."
 
-#: widgets/agentconfigurationwidget.cpp:116
+#: widgets/agentconfigurationwidget.cpp:114
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "कॉन्फ़िगरेशन संवाद किसी अन्य विंडो में खोला गया है"
 
-#: widgets/agentconfigurationwidget.cpp:123
+#: widgets/agentconfigurationwidget.cpp:121
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "%1 के लिए कॉन्फ़िगरेशन पहले से ही अन्यत्र खोला गया है।"
 
-#: widgets/agentconfigurationwidget.cpp:125
+#: widgets/agentconfigurationwidget.cpp:123
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "%1 कॉन्फ़िगरेशन संवाद पंजीकृत करने में विफल."
@@ -781,13 +781,13 @@ msgctxt "Status percent value"
 msgid "(%1%)"
 msgstr "(%1%)"
 
-#: widgets/agenttypedialog.cpp:66
+#: widgets/agenttypedialog.cpp:65
 #, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
 msgstr "खाता कॉन्फ़िगर करें"
 
-#: widgets/agenttypedialog.cpp:74
+#: widgets/agenttypedialog.cpp:73
 #, fuzzy, kde-format
 #| msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
 #| msgid "Search"
@@ -802,7 +802,7 @@ msgid_plural "minutes"
 msgstr[0] "मिनट"
 msgstr[1] "मिनट"
 
-#: widgets/cachepolicypage.cpp:70
+#: widgets/cachepolicypage.cpp:69
 #, kde-format
 msgid "Retrieval"
 msgstr "बहाली"
@@ -951,7 +951,7 @@ msgctxt "@title:tab general properties page"
 msgid "General"
 msgstr "सामान्य"
 
-#: widgets/collectiongeneralpropertiespage.cpp:54
+#: widgets/collectiongeneralpropertiespage.cpp:55
 #, kde-format
 msgctxt "@label"
 msgid "One object"
@@ -1008,29 +1008,29 @@ msgstr "आकार:"
 msgid "0 Byte"
 msgstr "0 बाइट"
 
-#: widgets/collectionmaintenancepage.cpp:46
+#: widgets/collectionmaintenancepage.cpp:44
 #, kde-format
 msgid "Remember that indexing can take some minutes."
 msgstr "याद रखें कि अनुक्रमण में कुछ मिनट लग सकते हैं।"
 
-#: widgets/collectionmaintenancepage.cpp:72
+#: widgets/collectionmaintenancepage.cpp:70
 #, kde-format
 msgid "Maintenance"
 msgstr "रखरखाव"
 
-#: widgets/collectionmaintenancepage.cpp:131
+#: widgets/collectionmaintenancepage.cpp:129
 #, kde-format
 msgid "Error while retrieving indexed items count"
 msgstr "अनुक्रमित आइटम की संख्या प्राप्त करते समय त्रुटि"
 
-#: widgets/collectionmaintenancepage.cpp:134
+#: widgets/collectionmaintenancepage.cpp:132
 #, kde-format
 msgid "Indexed %1 item in this folder"
 msgid_plural "Indexed %1 items in this folder"
 msgstr[0] "इस फ़ोल्डर में %1 आइटम अनुक्रमित किए गए"
 msgstr[1] "इस फ़ोल्डर में %1 आइटम अनुक्रमित किए गए"
 
-#: widgets/collectionmaintenancepage.cpp:138
+#: widgets/collectionmaintenancepage.cpp:136
 #, kde-format
 msgid "Calculating indexed items..."
 msgstr "अनुक्रमित आइटम की गणना की जा रही है..."
@@ -1095,13 +1095,13 @@ msgstr "अनुक्रमित आइटम की गिनती प्�
 msgid "Reindex folder"
 msgstr "फ़ोल्डर पुनः अनुक्रमित करें"
 
-#: widgets/collectionrequester.cpp:113
+#: widgets/collectionrequester.cpp:111
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No Folder"
 msgstr "कोई फ़ोल्डर नहीं"
 
-#: widgets/collectionrequester.cpp:122
+#: widgets/collectionrequester.cpp:120
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
@@ -1372,23 +1372,23 @@ msgstr "पसंदीदा का नाम बदलें"
 msgid "Name:"
 msgstr "नाम:"
 
-#: widgets/selftestdialog.cpp:60
+#: widgets/selftestdialog.cpp:59
 #, kde-format
 msgctxt "@title:window"
 msgid "Akonadi Server Self-Test"
 msgstr "अकोनाडी सर्वर स्व-परीक्षण"
 
-#: widgets/selftestdialog.cpp:71
+#: widgets/selftestdialog.cpp:70
 #, kde-format
 msgid "Save Report..."
 msgstr "रिपोर्ट सहेजें..."
 
-#: widgets/selftestdialog.cpp:73
+#: widgets/selftestdialog.cpp:72
 #, kde-format
 msgid "Copy Report to Clipboard"
 msgstr "रिपोर्ट को क्लिपबोर्ड पर कॉपी करें"
 
-#: widgets/selftestdialog.cpp:189
+#: widgets/selftestdialog.cpp:188
 #, kde-format
 msgid ""
 "The QtSQL driver '%1' is required by your current Akonadi server "
@@ -1397,7 +1397,7 @@ msgstr ""
 "QtSQL ड्राइवर '%1' आपके वर्तमान Akonadi सर्वर कॉन्फ़िगरेशन के लिए आवश्यक है और यह आपके "
 "सिस्टम पर पाया गया है।"
 
-#: widgets/selftestdialog.cpp:191
+#: widgets/selftestdialog.cpp:190
 #, kde-format
 msgid ""
 "The QtSQL driver '%1' is required by your current Akonadi server "
@@ -1409,28 +1409,28 @@ msgstr ""
 "निम्नलिखित ड्राइवर स्थापित हैं: %2.\n"
 "सुनिश्चित करें कि आवश्यक ड्राइवर स्थापित है।"
 
-#: widgets/selftestdialog.cpp:198
+#: widgets/selftestdialog.cpp:197
 #, kde-format
 msgid "Database driver found."
 msgstr "डाटाबेस ड्राइवर मिला."
 
-#: widgets/selftestdialog.cpp:200
+#: widgets/selftestdialog.cpp:199
 #, kde-format
 msgid "Database driver not found."
 msgstr "डाटाबेस ड्राइवर नहीं मिला."
 
-#: widgets/selftestdialog.cpp:208
+#: widgets/selftestdialog.cpp:207
 #, kde-format
 msgid "MySQL server executable not tested."
 msgstr "MySQL सर्वर निष्पादनयोग्य का परीक्षण नहीं किया गया।"
 
-#: widgets/selftestdialog.cpp:208 widgets/selftestdialog.cpp:249
-#: widgets/selftestdialog.cpp:300
+#: widgets/selftestdialog.cpp:207 widgets/selftestdialog.cpp:248
+#: widgets/selftestdialog.cpp:299
 #, kde-format
 msgid "The current configuration does not require an internal MySQL server."
 msgstr "वर्तमान कॉन्फ़िगरेशन को आंतरिक MySQL सर्वर की आवश्यकता नहीं है।"
 
-#: widgets/selftestdialog.cpp:216
+#: widgets/selftestdialog.cpp:215
 #, kde-format
 msgid ""
 "You have currently configured Akonadi to use the MySQL server '%1'.\n"
@@ -1444,63 +1444,63 @@ msgstr ""
 "पास सर्वर निष्पादन योग्य पर आवश्यक पढ़ने और निष्पादन अधिकार हैं। सर्वर निष्पादन योग्य को "
 "आम तौर पर 'mysqld' कहा जाता है; इसका स्थान वितरण के आधार पर भिन्न होता है।"
 
-#: widgets/selftestdialog.cpp:224
+#: widgets/selftestdialog.cpp:223
 #, kde-format
 msgid "MySQL server not found."
 msgstr "MySQL सर्वर नहीं मिला."
 
-#: widgets/selftestdialog.cpp:226
+#: widgets/selftestdialog.cpp:225
 #, kde-format
 msgid "MySQL server not readable."
 msgstr "MySQL सर्वर पठनीय नहीं है."
 
-#: widgets/selftestdialog.cpp:228
+#: widgets/selftestdialog.cpp:227
 #, kde-format
 msgid "MySQL server not executable."
 msgstr "MySQL सर्वर निष्पादन योग्य नहीं है."
 
-#: widgets/selftestdialog.cpp:230
+#: widgets/selftestdialog.cpp:229
 #, kde-format
 msgid "MySQL found with unexpected name."
 msgstr "MySQL अप्रत्याशित नाम के साथ मिला।"
 
-#: widgets/selftestdialog.cpp:232
+#: widgets/selftestdialog.cpp:231
 #, kde-format
 msgid "MySQL server found."
 msgstr "MySQL सर्वर मिला."
 
-#: widgets/selftestdialog.cpp:238
+#: widgets/selftestdialog.cpp:237
 #, kde-format
 msgid "MySQL server found: %1"
 msgstr "MySQL सर्वर मिला: %1"
 
-#: widgets/selftestdialog.cpp:239
+#: widgets/selftestdialog.cpp:238
 #, kde-format
 msgid "MySQL server is executable."
 msgstr "MySQL सर्वर निष्पादन योग्य है."
 
-#: widgets/selftestdialog.cpp:241
+#: widgets/selftestdialog.cpp:240
 #, kde-format
 msgid ""
 "Executing the MySQL server '%1' failed with the following error message: '%2'"
 msgstr "MySQL सर्वर '%1' का निष्पादन निम्न त्रुटि संदेश के साथ विफल हुआ: '%2'"
 
-#: widgets/selftestdialog.cpp:242
+#: widgets/selftestdialog.cpp:241
 #, kde-format
 msgid "Executing the MySQL server failed."
 msgstr "MySQL सर्वर का निष्पादन विफल हुआ."
 
-#: widgets/selftestdialog.cpp:249
+#: widgets/selftestdialog.cpp:248
 #, kde-format
 msgid "MySQL server error log not tested."
 msgstr "MySQL सर्वर त्रुटि लॉग का परीक्षण नहीं किया गया।"
 
-#: widgets/selftestdialog.cpp:257
+#: widgets/selftestdialog.cpp:256
 #, kde-format
 msgid "No current MySQL error log found."
 msgstr "कोई वर्तमान MySQL त्रुटि लॉग नहीं मिला."
 
-#: widgets/selftestdialog.cpp:258
+#: widgets/selftestdialog.cpp:257
 #, kde-format
 msgid ""
 "The MySQL server did not report any errors during this startup. The log can "
@@ -1509,69 +1509,69 @@ msgstr ""
 "MySQL सर्वर ने इस स्टार्टअप के दौरान कोई त्रुटि रिपोर्ट नहीं की। लॉग '%1' में पाया जा "
 "सकता है।"
 
-#: widgets/selftestdialog.cpp:264
+#: widgets/selftestdialog.cpp:263
 #, kde-format
 msgid "MySQL error log not readable."
 msgstr "MySQL त्रुटि लॉग पठनीय नहीं है."
 
-#: widgets/selftestdialog.cpp:265
+#: widgets/selftestdialog.cpp:264
 #, kde-format
 msgid "A MySQL server error log file was found but is not readable: %1"
 msgstr "MySQL सर्वर त्रुटि लॉग फ़ाइल मिली लेकिन पढ़ने योग्य नहीं है: %1"
 
-#: widgets/selftestdialog.cpp:274
+#: widgets/selftestdialog.cpp:273
 #, kde-format
 msgid "MySQL server log contains errors."
 msgstr "MySQL सर्वर लॉग में त्रुटियाँ हैं."
 
-#: widgets/selftestdialog.cpp:275
+#: widgets/selftestdialog.cpp:274
 #, kde-format
 msgid "The MySQL server error log file '%1' contains errors."
 msgstr "MySQL सर्वर त्रुटि लॉग फ़ाइल '%1' में त्रुटियाँ हैं।"
 
-#: widgets/selftestdialog.cpp:285
+#: widgets/selftestdialog.cpp:284
 #, kde-format
 msgid "MySQL server log contains warnings."
 msgstr "MySQL सर्वर लॉग में चेतावनियाँ हैं."
 
-#: widgets/selftestdialog.cpp:286
+#: widgets/selftestdialog.cpp:285
 #, kde-format
 msgid "The MySQL server log file '%1' contains warnings."
 msgstr "MySQL सर्वर लॉग फ़ाइल '%1' में चेतावनियाँ हैं."
 
-#: widgets/selftestdialog.cpp:289
+#: widgets/selftestdialog.cpp:288
 #, kde-format
 msgid "MySQL server log contains no errors."
 msgstr "MySQL सर्वर लॉग में कोई त्रुटि नहीं है."
 
-#: widgets/selftestdialog.cpp:290
+#: widgets/selftestdialog.cpp:289
 #, kde-format
 msgid "The MySQL server log file '%1' does not contain any errors or warnings."
 msgstr "MySQL सर्वर लॉग फ़ाइल '%1' में कोई त्रुटि या चेतावनी नहीं है।"
 
-#: widgets/selftestdialog.cpp:300
+#: widgets/selftestdialog.cpp:299
 #, kde-format
 msgid "MySQL server configuration not tested."
 msgstr "MySQL सर्वर कॉन्फ़िगरेशन का परीक्षण नहीं किया गया."
 
-#: widgets/selftestdialog.cpp:309
+#: widgets/selftestdialog.cpp:308
 #, kde-format
 msgid "MySQL server default configuration found."
 msgstr "MySQL सर्वर डिफ़ॉल्ट कॉन्फ़िगरेशन मिला."
 
-#: widgets/selftestdialog.cpp:310
+#: widgets/selftestdialog.cpp:309
 #, kde-format
 msgid ""
 "The default configuration for the MySQL server was found and is readable at "
 "%1."
 msgstr "MySQL सर्वर के लिए डिफ़ॉल्ट कॉन्फ़िगरेशन पाया गया और %1 पर पढ़ने योग्य है।"
 
-#: widgets/selftestdialog.cpp:314
+#: widgets/selftestdialog.cpp:313
 #, kde-format
 msgid "MySQL server default configuration not found."
 msgstr "MySQL सर्वर डिफ़ॉल्ट कॉन्फ़िगरेशन नहीं मिला."
 
-#: widgets/selftestdialog.cpp:315
+#: widgets/selftestdialog.cpp:314
 #, kde-format
 msgid ""
 "The default configuration for the MySQL server was not found or was not "
@@ -1581,34 +1581,34 @@ msgstr ""
 "MySQL सर्वर के लिए डिफ़ॉल्ट कॉन्फ़िगरेशन नहीं मिला या पढ़ने योग्य नहीं था। जाँच करें कि "
 "आपका Akonadi इंस्टॉलेशन पूरा हो गया है और आपके पास सभी आवश्यक एक्सेस अधिकार हैं।"
 
-#: widgets/selftestdialog.cpp:323
+#: widgets/selftestdialog.cpp:322
 #, kde-format
 msgid "MySQL server custom configuration not available."
 msgstr "MySQL सर्वर कस्टम कॉन्फ़िगरेशन उपलब्ध नहीं है."
 
-#: widgets/selftestdialog.cpp:324
+#: widgets/selftestdialog.cpp:323
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was not found but is optional."
 msgstr "MySQL सर्वर के लिए कस्टम कॉन्फ़िगरेशन नहीं मिला लेकिन यह वैकल्पिक है।"
 
-#: widgets/selftestdialog.cpp:327
+#: widgets/selftestdialog.cpp:326
 #, kde-format
 msgid "MySQL server custom configuration found."
 msgstr "MySQL सर्वर कस्टम कॉन्फ़िगरेशन मिला."
 
-#: widgets/selftestdialog.cpp:328
+#: widgets/selftestdialog.cpp:327
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was found and is readable at %1"
 msgstr "MySQL सर्वर के लिए कस्टम कॉन्फ़िगरेशन पाया गया और %1 पर पढ़ने योग्य है"
 
-#: widgets/selftestdialog.cpp:332
+#: widgets/selftestdialog.cpp:331
 #, kde-format
 msgid "MySQL server custom configuration not readable."
 msgstr "MySQL सर्वर कस्टम कॉन्फ़िगरेशन पठनीय नहीं है।"
 
-#: widgets/selftestdialog.cpp:333
+#: widgets/selftestdialog.cpp:332
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was found at %1 but is not "
@@ -1617,47 +1617,47 @@ msgstr ""
 "MySQL सर्वर के लिए कस्टम कॉन्फ़िगरेशन %1 पर पाया गया लेकिन पढ़ने योग्य नहीं है। अपने एक्सेस "
 "अधिकारों की जाँच करें।"
 
-#: widgets/selftestdialog.cpp:342
+#: widgets/selftestdialog.cpp:341
 #, kde-format
 msgid "MySQL server configuration not found or not readable."
 msgstr "MySQL सर्वर कॉन्फ़िगरेशन नहीं मिला या पढ़ने योग्य नहीं है।"
 
-#: widgets/selftestdialog.cpp:343
+#: widgets/selftestdialog.cpp:342
 #, kde-format
 msgid "The MySQL server configuration was not found or is not readable."
 msgstr "MySQL सर्वर कॉन्फ़िगरेशन नहीं मिला या पढ़ने योग्य नहीं है।"
 
-#: widgets/selftestdialog.cpp:346
+#: widgets/selftestdialog.cpp:345
 #, kde-format
 msgid "MySQL server configuration is usable."
 msgstr "MySQL सर्वर कॉन्फ़िगरेशन प्रयोग योग्य है."
 
-#: widgets/selftestdialog.cpp:347
+#: widgets/selftestdialog.cpp:346
 #, kde-format
 msgid "The MySQL server configuration was found at %1 and is readable."
 msgstr "MySQL सर्वर कॉन्फ़िगरेशन %1 पर पाया गया और पठनीय है।"
 
-#: widgets/selftestdialog.cpp:376
+#: widgets/selftestdialog.cpp:375
 #, kde-format
 msgid "Cannot connect to PostgreSQL server."
 msgstr "PostgreSQL सर्वर से कनेक्ट नहीं हो सकता."
 
-#: widgets/selftestdialog.cpp:378
+#: widgets/selftestdialog.cpp:377
 #, kde-format
 msgid "PostgreSQL server found."
 msgstr "PostgreSQL सर्वर मिला."
 
-#: widgets/selftestdialog.cpp:378
+#: widgets/selftestdialog.cpp:377
 #, kde-format
 msgid "The PostgreSQL server was found and connection is working."
 msgstr "PostgreSQL सर्वर मिल गया है और कनेक्शन काम कर रहा है।"
 
-#: widgets/selftestdialog.cpp:388
+#: widgets/selftestdialog.cpp:387
 #, kde-format
 msgid "akonadictl not found"
 msgstr "akonadictl नहीं मिला"
 
-#: widgets/selftestdialog.cpp:389
+#: widgets/selftestdialog.cpp:388
 #, kde-format
 msgid ""
 "The program 'akonadictl' needs to be accessible in $PATH. Make sure you have "
@@ -1666,12 +1666,12 @@ msgstr ""
 "प्रोग्राम 'akonadictl' को $PATH में एक्सेस करने की आवश्यकता है। सुनिश्चित करें कि आपके पास "
 "Akonadi सर्वर स्थापित है।"
 
-#: widgets/selftestdialog.cpp:396
+#: widgets/selftestdialog.cpp:395
 #, kde-format
 msgid "akonadictl found and usable"
 msgstr "akonadictl पाया और प्रयोग करने योग्य"
 
-#: widgets/selftestdialog.cpp:397
+#: widgets/selftestdialog.cpp:396
 #, kde-format
 msgid ""
 "The program '%1' to control the Akonadi server was found and could be "
@@ -1684,12 +1684,12 @@ msgstr ""
 "परिणाम:\n"
 "%2"
 
-#: widgets/selftestdialog.cpp:403
+#: widgets/selftestdialog.cpp:402
 #, kde-format
 msgid "akonadictl found but not usable"
 msgstr "akonadictl मिला लेकिन प्रयोग योग्य नहीं"
 
-#: widgets/selftestdialog.cpp:404
+#: widgets/selftestdialog.cpp:403
 #, kde-format
 msgid ""
 "The program '%1' to control the Akonadi server was found but could not be "
@@ -1704,12 +1704,12 @@ msgstr ""
 "%2\n"
 "सुनिश्चित करें कि अकोनाडी सर्वर सही तरीके से स्थापित है।"
 
-#: widgets/selftestdialog.cpp:416
+#: widgets/selftestdialog.cpp:415
 #, kde-format
 msgid "Akonadi control process registered at D-Bus."
 msgstr "अकोनाडी नियंत्रण प्रक्रिया डी-बस पर पंजीकृत।"
 
-#: widgets/selftestdialog.cpp:417
+#: widgets/selftestdialog.cpp:416
 #, kde-format
 msgid ""
 "The Akonadi control process is registered at D-Bus which typically indicates "
@@ -1718,12 +1718,12 @@ msgstr ""
 "अकोनाडी नियंत्रण प्रक्रिया डी-बस पर पंजीकृत होती है जो आमतौर पर यह इंगित करती है कि "
 "यह क्रियाशील है।"
 
-#: widgets/selftestdialog.cpp:420
+#: widgets/selftestdialog.cpp:419
 #, kde-format
 msgid "Akonadi control process not registered at D-Bus."
 msgstr "अकोनाडी नियंत्रण प्रक्रिया डी-बस पर पंजीकृत नहीं है।"
 
-#: widgets/selftestdialog.cpp:421
+#: widgets/selftestdialog.cpp:420
 #, kde-format
 msgid ""
 "The Akonadi control process is not registered at D-Bus which typically means "
@@ -1732,12 +1732,12 @@ msgstr ""
 "अकोनाडी नियंत्रण प्रक्रिया डी-बस पर पंजीकृत नहीं है, जिसका सामान्यतः अर्थ यह है कि इसे "
 "शुरू नहीं किया गया था या स्टार्टअप के दौरान इसमें कोई घातक त्रुटि आई थी।"
 
-#: widgets/selftestdialog.cpp:427
+#: widgets/selftestdialog.cpp:426
 #, kde-format
 msgid "Akonadi server process registered at D-Bus."
 msgstr "अकोनाडी सर्वर प्रक्रिया डी-बस पर पंजीकृत है।"
 
-#: widgets/selftestdialog.cpp:428
+#: widgets/selftestdialog.cpp:427
 #, kde-format
 msgid ""
 "The Akonadi server process is registered at D-Bus which typically indicates "
@@ -1745,12 +1745,12 @@ msgid ""
 msgstr ""
 "अकोनाडी सर्वर प्रक्रिया डी-बस पर पंजीकृत है जो आमतौर पर यह इंगित करती है कि यह चालू है।"
 
-#: widgets/selftestdialog.cpp:431
+#: widgets/selftestdialog.cpp:430
 #, kde-format
 msgid "Akonadi server process not registered at D-Bus."
 msgstr "अकोनाडी सर्वर प्रक्रिया डी-बस पर पंजीकृत नहीं है।"
 
-#: widgets/selftestdialog.cpp:432
+#: widgets/selftestdialog.cpp:431
 #, kde-format
 msgid ""
 "The Akonadi server process is not registered at D-Bus which typically means "
@@ -1759,12 +1759,12 @@ msgstr ""
 "अकोनाडी सर्वर प्रक्रिया डी-बस पर पंजीकृत नहीं है, जिसका सामान्यतः अर्थ यह होता है कि "
 "इसे शुरू नहीं किया गया था या स्टार्टअप के दौरान इसमें कोई घातक त्रुटि आई थी।"
 
-#: widgets/selftestdialog.cpp:441
+#: widgets/selftestdialog.cpp:440
 #, kde-format
 msgid "Protocol version check not possible."
 msgstr "प्रोटोकॉल संस्करण जाँच संभव नहीं है."
 
-#: widgets/selftestdialog.cpp:442
+#: widgets/selftestdialog.cpp:441
 #, kde-format
 msgid ""
 "Without a connection to the server it is not possible to check if the "
@@ -1773,12 +1773,12 @@ msgstr ""
 "सर्वर से कनेक्शन के बिना यह जांचना संभव नहीं है कि प्रोटोकॉल संस्करण आवश्यकताओं को पूरा "
 "करता है या नहीं।"
 
-#: widgets/selftestdialog.cpp:447
+#: widgets/selftestdialog.cpp:446
 #, kde-format
 msgid "Server protocol version is too old."
 msgstr "सर्वर प्रोटोकॉल संस्करण बहुत पुराना है."
 
-#: widgets/selftestdialog.cpp:448 widgets/selftestdialog.cpp:455
+#: widgets/selftestdialog.cpp:447 widgets/selftestdialog.cpp:454
 #, kde-format
 msgid ""
 "The server protocol version is %1, but version %2 is required by the client. "
@@ -1789,37 +1789,37 @@ msgstr ""
 "ही में KDE PIM अपडेट किया है, तो कृपया Akonadi और KDE PIM दोनों अनुप्रयोगों को पुनः "
 "आरंभ करना सुनिश्चित करें।"
 
-#: widgets/selftestdialog.cpp:454
+#: widgets/selftestdialog.cpp:453
 #, kde-format
 msgid "Server protocol version is too new."
 msgstr "सर्वर प्रोटोकॉल संस्करण बहुत नया है."
 
-#: widgets/selftestdialog.cpp:460
+#: widgets/selftestdialog.cpp:459
 #, kde-format
 msgid "Server protocol version matches."
 msgstr "सर्वर प्रोटोकॉल संस्करण मेल खाता है."
 
-#: widgets/selftestdialog.cpp:460
+#: widgets/selftestdialog.cpp:459
 #, kde-format
 msgid "The current Protocol version is %1."
 msgstr "वर्तमान प्रोटोकॉल संस्करण %1 है."
 
-#: widgets/selftestdialog.cpp:478
+#: widgets/selftestdialog.cpp:477
 #, kde-format
 msgid "Resource agents found."
 msgstr "संसाधन एजेंट पाए गए."
 
-#: widgets/selftestdialog.cpp:478
+#: widgets/selftestdialog.cpp:477
 #, kde-format
 msgid "At least one resource agent has been found."
 msgstr "कम से कम एक संसाधन एजेंट पाया गया है."
 
-#: widgets/selftestdialog.cpp:481
+#: widgets/selftestdialog.cpp:480
 #, kde-format
 msgid "No resource agents found."
 msgstr "कोई संसाधन एजेंट नहीं मिला."
 
-#: widgets/selftestdialog.cpp:482
+#: widgets/selftestdialog.cpp:481
 #, kde-format
 msgid ""
 "No resource agents have been found, Akonadi is not usable without at least "
@@ -1833,23 +1833,23 @@ msgstr ""
 "निम्नलिखित पथ खोजे गए हैं: '%1'। XDG_DATA_DIRS पर्यावरण चर '%2' पर सेट है; सुनिश्चित "
 "करें कि इसमें वे सभी पथ शामिल हैं जहाँ Akonadi एजेंट स्थापित हैं।"
 
-#: widgets/selftestdialog.cpp:499
+#: widgets/selftestdialog.cpp:498
 #, kde-format
 msgid "No current Akonadi server error log found."
 msgstr "कोई वर्तमान Akonadi सर्वर त्रुटि लॉग नहीं मिला."
 
-#: widgets/selftestdialog.cpp:499
+#: widgets/selftestdialog.cpp:498
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its current startup."
 msgstr "अकोनाडी सर्वर ने अपने वर्तमान स्टार्टअप के दौरान कोई त्रुटि रिपोर्ट नहीं की।"
 
-#: widgets/selftestdialog.cpp:503
+#: widgets/selftestdialog.cpp:502
 #, kde-format
 msgid "Current Akonadi server error log found."
 msgstr "वर्तमान Akonadi सर्वर त्रुटि लॉग पाया गया."
 
-#: widgets/selftestdialog.cpp:504
+#: widgets/selftestdialog.cpp:503
 #, kde-format
 msgid ""
 "The Akonadi server reported errors during its current startup. The log can "
@@ -1858,23 +1858,23 @@ msgstr ""
 "अकोनाडी सर्वर ने अपने वर्तमान स्टार्टअप के दौरान त्रुटियों की सूचना दी। लॉग %1 में पाया "
 "जा सकता है।"
 
-#: widgets/selftestdialog.cpp:512
+#: widgets/selftestdialog.cpp:511
 #, kde-format
 msgid "No previous Akonadi server error log found."
 msgstr "कोई पिछला Akonadi सर्वर त्रुटि लॉग नहीं मिला."
 
-#: widgets/selftestdialog.cpp:513
+#: widgets/selftestdialog.cpp:512
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its previous startup."
 msgstr "अकोनाडी सर्वर ने अपने पिछले स्टार्टअप के दौरान कोई त्रुटि रिपोर्ट नहीं की थी।"
 
-#: widgets/selftestdialog.cpp:517
+#: widgets/selftestdialog.cpp:516
 #, kde-format
 msgid "Previous Akonadi server error log found."
 msgstr "पिछला Akonadi सर्वर त्रुटि लॉग मिला."
 
-#: widgets/selftestdialog.cpp:518
+#: widgets/selftestdialog.cpp:517
 #, kde-format
 msgid ""
 "The Akonadi server reported errors during its previous startup. The log can "
@@ -1883,12 +1883,12 @@ msgstr ""
 "अकोनाडी सर्वर ने अपने पिछले स्टार्टअप के दौरान त्रुटियाँ रिपोर्ट कीं। लॉग %1 में पाया जा "
 "सकता है।"
 
-#: widgets/selftestdialog.cpp:529
+#: widgets/selftestdialog.cpp:528
 #, kde-format
 msgid "No current Akonadi control error log found."
 msgstr "कोई वर्तमान अकोनाडी नियंत्रण त्रुटि लॉग नहीं मिला."
 
-#: widgets/selftestdialog.cpp:530
+#: widgets/selftestdialog.cpp:529
 #, kde-format
 msgid ""
 "The Akonadi control process did not report any errors during its current "
@@ -1896,12 +1896,12 @@ msgid ""
 msgstr ""
 "अकोनाडी नियंत्रण प्रक्रिया ने अपने वर्तमान स्टार्टअप के दौरान कोई त्रुटि रिपोर्ट नहीं की।"
 
-#: widgets/selftestdialog.cpp:534
+#: widgets/selftestdialog.cpp:533
 #, kde-format
 msgid "Current Akonadi control error log found."
 msgstr "वर्तमान अकोनाडी नियंत्रण त्रुटि लॉग पाया गया।"
 
-#: widgets/selftestdialog.cpp:535
+#: widgets/selftestdialog.cpp:534
 #, kde-format
 msgid ""
 "The Akonadi control process reported errors during its current startup. The "
@@ -1910,12 +1910,12 @@ msgstr ""
 "अकोनाडी नियंत्रण प्रक्रिया ने अपने वर्तमान स्टार्टअप के दौरान त्रुटियों की सूचना दी। लॉग "
 "%1 में पाया जा सकता है।"
 
-#: widgets/selftestdialog.cpp:543
+#: widgets/selftestdialog.cpp:542
 #, kde-format
 msgid "No previous Akonadi control error log found."
 msgstr "कोई पिछला अकोनाडी नियंत्रण त्रुटि लॉग नहीं मिला."
 
-#: widgets/selftestdialog.cpp:544
+#: widgets/selftestdialog.cpp:543
 #, kde-format
 msgid ""
 "The Akonadi control process did not report any errors during its previous "
@@ -1923,12 +1923,12 @@ msgid ""
 msgstr ""
 "अकोनाडी नियंत्रण प्रक्रिया ने अपने पिछले स्टार्टअप के दौरान कोई त्रुटि रिपोर्ट नहीं की थी।"
 
-#: widgets/selftestdialog.cpp:548
+#: widgets/selftestdialog.cpp:547
 #, kde-format
 msgid "Previous Akonadi control error log found."
 msgstr "पिछला अकोनाडी नियंत्रण त्रुटि लॉग मिला."
 
-#: widgets/selftestdialog.cpp:549
+#: widgets/selftestdialog.cpp:548
 #, kde-format
 msgid ""
 "The Akonadi control process reported errors during its previous startup. The "
@@ -1937,12 +1937,12 @@ msgstr ""
 "अकोनाडी नियंत्रण प्रक्रिया ने अपने पिछले स्टार्टअप के दौरान त्रुटियों की सूचना दी। लॉग %1 "
 "में पाया जा सकता है।"
 
-#: widgets/selftestdialog.cpp:559
+#: widgets/selftestdialog.cpp:558
 #, kde-format
 msgid "Akonadi was started as root"
 msgstr "अकोनाडी की शुरुआत रूट के रूप में हुई थी"
 
-#: widgets/selftestdialog.cpp:560
+#: widgets/selftestdialog.cpp:559
 #, kde-format
 msgid ""
 "Running Internet-facing applications as root/administrator exposes you to "
@@ -1953,12 +1953,12 @@ msgstr ""
 "सकते हैं। इस अकोनाडी इंस्टॉलेशन द्वारा उपयोग किया जाने वाला MySQL, आपको इन जोखिमों से "
 "बचाने के लिए, खुद को रूट के रूप में चलाने की अनुमति नहीं देगा।"
 
-#: widgets/selftestdialog.cpp:564
+#: widgets/selftestdialog.cpp:563
 #, kde-format
 msgid "Akonadi is not running as root"
 msgstr "अकोनाडी रूट के रूप में नहीं चल रहा है"
 
-#: widgets/selftestdialog.cpp:565
+#: widgets/selftestdialog.cpp:564
 #, kde-format
 msgid ""
 "Akonadi is not running as a root/administrator user, which is the "
@@ -1967,18 +1967,18 @@ msgstr ""
 "अकोनाडी रूट/एडमिनिस्ट्रेटर उपयोगकर्ता के रूप में नहीं चल रहा है, जो कि सुरक्षित सिस्टम के "
 "लिए अनुशंसित सेटअप है।"
 
-#: widgets/selftestdialog.cpp:643
+#: widgets/selftestdialog.cpp:642
 #, kde-format
 msgid "Save Test Report"
 msgstr "परीक्षण रिपोर्ट सहेजें"
 
-#: widgets/selftestdialog.cpp:650
+#: widgets/selftestdialog.cpp:649
 #, kde-format
 msgctxt "@title:window"
 msgid "Error"
 msgstr "गलती"
 
-#: widgets/selftestdialog.cpp:650
+#: widgets/selftestdialog.cpp:649
 #, kde-format
 msgid "Could not open file '%1'"
 msgstr "फ़ाइल '%1' नहीं खोली जा सकी"
@@ -2556,15 +2556,7 @@ msgctxt "@info"
 msgid "Tag %1 successfully added"
 msgstr ""
 
-#: widgets/tageditwidget.cpp:174
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Do you really want to remove the tag <resource>%1</resource>?"
-msgctxt "@info"
-msgid "Delete Tag  <resource>%1</resource>"
-msgstr "क्या आप सचमुच <resource>%1</resource> टैग हटाना चाहते हैं?"
-
-#: widgets/tageditwidget.cpp:176
+#: widgets/tageditwidget.cpp:175
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -2572,32 +2564,32 @@ msgid ""
 "<resource>%1</resource> tag from Akonadi."
 msgstr ""
 
-#: widgets/tageditwidget.cpp:184
+#: widgets/tageditwidget.cpp:183
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "क्या आप सचमुच <resource>%1</resource> टैग हटाना चाहते हैं?"
 
-#: widgets/tageditwidget.cpp:185
+#: widgets/tageditwidget.cpp:184
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "टैग हटाएं"
 
-#: widgets/tageditwidget.cpp:196
+#: widgets/tageditwidget.cpp:195
 #, fuzzy, kde-format
 #| msgid "Failed to create tag."
 msgctxt "@info"
 msgid "Failed to delete tag %1: %2"
 msgstr "टैग बनाने में विफल."
 
-#: widgets/tageditwidget.cpp:200
+#: widgets/tageditwidget.cpp:199
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully removed"
 msgstr ""
 
-#: widgets/tageditwidget.cpp:227
+#: widgets/tageditwidget.cpp:226
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"
@@ -2656,7 +2648,7 @@ msgstr "टैग चुनें..."
 msgid "Select Tags"
 msgstr "टैग चुनें"
 
-#: widgets/tagwidget.cpp:45
+#: widgets/tagwidget.cpp:44
 #, kde-format
 msgid "Clear"
 msgstr "स्पष्ट"
@@ -2747,6 +2739,13 @@ msgstr "डेटा फ़ाइल पार्स करने में अ�
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "संग्रह %1 ढूँढने में असमर्थ"
+
+#, fuzzy
+#~| msgctxt "@info"
+#~| msgid "Do you really want to remove the tag <resource>%1</resource>?"
+#~ msgctxt "@info"
+#~ msgid "Delete Tag  <resource>%1</resource>"
+#~ msgstr "क्या आप सचमुच <resource>%1</resource> टैग हटाना चाहते हैं?"
 
 #~ msgid "Unnamed plugin"
 #~ msgstr "अनाम प्लगइन"

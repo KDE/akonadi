@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-09 00:50+0000\n"
+"POT-Creation-Date: 2026-09-15 00:44+0000\n"
 "PO-Revision-Date: 2026-07-28 06:18+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgia <kde-i18n-doc@kde.org>\n"
@@ -733,28 +733,28 @@ msgstr ""
 "სახელების სივრცე ერთზე მეტი Akonadi-ის გაშვებული ასლის შესაქმნელად იგივე "
 "მომხმარებლის სესიაში"
 
-#: widgets/agentconfigurationdialog.cpp:46
+#: widgets/agentconfigurationdialog.cpp:44
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
 msgstr "%1 კონფიგურაცია"
 
-#: widgets/agentconfigurationwidget.cpp:94
+#: widgets/agentconfigurationwidget.cpp:92
 #, kde-format
 msgid "Unable to access D-Bus interface of created agent."
 msgstr "შექმნილი აგენტი D-Bus-ის ინტერფეისთან წვდომა აკრძალულია."
 
-#: widgets/agentconfigurationwidget.cpp:116
+#: widgets/agentconfigurationwidget.cpp:114
 #, kde-format
 msgid "The configuration dialog has been opened in another window"
 msgstr "მორგების დიალოგი სხვა ფანჯარაში გაიხსნა"
 
-#: widgets/agentconfigurationwidget.cpp:123
+#: widgets/agentconfigurationwidget.cpp:121
 #, kde-format
 msgid "Configuration for %1 is already opened elsewhere."
 msgstr "%1-ის მორგების ფანჯარა უკვე ღიაა."
 
-#: widgets/agentconfigurationwidget.cpp:125
+#: widgets/agentconfigurationwidget.cpp:123
 #, kde-format
 msgid "Failed to register %1 configuration dialog."
 msgstr "%1 კონფიგურაციის ფანჯრის რეგისტრაციის შეცდომა."
@@ -765,13 +765,13 @@ msgctxt "Status percent value"
 msgid "(%1%)"
 msgstr "(%1%)"
 
-#: widgets/agenttypedialog.cpp:66
+#: widgets/agenttypedialog.cpp:65
 #, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
 msgstr "ანგარიშის მორგება"
 
-#: widgets/agenttypedialog.cpp:74
+#: widgets/agenttypedialog.cpp:73
 #, kde-format
 msgctxt "@item:textbox"
 msgid "Search types"
@@ -784,7 +784,7 @@ msgid_plural "minutes"
 msgstr[0] "წუთი"
 msgstr[1] "წუთი"
 
-#: widgets/cachepolicypage.cpp:70
+#: widgets/cachepolicypage.cpp:69
 #, kde-format
 msgid "Retrieval"
 msgstr "მიღება"
@@ -935,7 +935,7 @@ msgctxt "@title:tab general properties page"
 msgid "General"
 msgstr "მთავარი"
 
-#: widgets/collectiongeneralpropertiespage.cpp:54
+#: widgets/collectiongeneralpropertiespage.cpp:55
 #, kde-format
 msgctxt "@label"
 msgid "One object"
@@ -992,29 +992,29 @@ msgstr "ზომა:"
 msgid "0 Byte"
 msgstr "0 ბაიტი"
 
-#: widgets/collectionmaintenancepage.cpp:46
+#: widgets/collectionmaintenancepage.cpp:44
 #, kde-format
 msgid "Remember that indexing can take some minutes."
 msgstr "დაიმახსოვრეთ, რომ ინდექსირებას რამდენიმე წუთი შეიძლება დასჭირდეს."
 
-#: widgets/collectionmaintenancepage.cpp:72
+#: widgets/collectionmaintenancepage.cpp:70
 #, kde-format
 msgid "Maintenance"
 msgstr "შეკეთება"
 
-#: widgets/collectionmaintenancepage.cpp:131
+#: widgets/collectionmaintenancepage.cpp:129
 #, kde-format
 msgid "Error while retrieving indexed items count"
 msgstr "დაინდექსებული ელემენტების რაოდენობის მიღების შეცდომა"
 
-#: widgets/collectionmaintenancepage.cpp:134
+#: widgets/collectionmaintenancepage.cpp:132
 #, kde-format
 msgid "Indexed %1 item in this folder"
 msgid_plural "Indexed %1 items in this folder"
 msgstr[0] "ამ საქაღალდეში დაინდექსებულია %1 ელემენტი"
 msgstr[1] "ამ საქაღალდეში დაინდექსებულია %1 ელემენტი"
 
-#: widgets/collectionmaintenancepage.cpp:138
+#: widgets/collectionmaintenancepage.cpp:136
 #, kde-format
 msgid "Calculating indexed items..."
 msgstr "დაინდექსებული ელემენტების გამოთვლა..."
@@ -1079,13 +1079,13 @@ msgstr "დაინდექსებული ელემენტები�
 msgid "Reindex folder"
 msgstr "საქაღალდის თავიდან ინდექსირება"
 
-#: widgets/collectionrequester.cpp:113
+#: widgets/collectionrequester.cpp:111
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No Folder"
 msgstr "საქაღალდის გარეშე"
 
-#: widgets/collectionrequester.cpp:122
+#: widgets/collectionrequester.cpp:120
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Open collection dialog"
@@ -1363,23 +1363,23 @@ msgstr "სანიშნის გადარქმევა"
 msgid "Name:"
 msgstr "სახელი:"
 
-#: widgets/selftestdialog.cpp:60
+#: widgets/selftestdialog.cpp:59
 #, kde-format
 msgctxt "@title:window"
 msgid "Akonadi Server Self-Test"
 msgstr "Akonadi-ის სერვერის თვითტესტი"
 
-#: widgets/selftestdialog.cpp:71
+#: widgets/selftestdialog.cpp:70
 #, kde-format
 msgid "Save Report..."
 msgstr "ანგარიშის შენახვა…"
 
-#: widgets/selftestdialog.cpp:73
+#: widgets/selftestdialog.cpp:72
 #, kde-format
 msgid "Copy Report to Clipboard"
 msgstr "ანგარიშის მიმოცვლის ბაფერში კოპირება"
 
-#: widgets/selftestdialog.cpp:189
+#: widgets/selftestdialog.cpp:188
 #, kde-format
 msgid ""
 "The QtSQL driver '%1' is required by your current Akonadi server "
@@ -1388,7 +1388,7 @@ msgstr ""
 "თქვენი მიმდინარე Akonadi-ის სერვერის კონფიგურაციას QtSQL -ის დრაივერი '%1' "
 "ესაჭიროება და ის აღმოჩენილია თქვენს სისტემაში."
 
-#: widgets/selftestdialog.cpp:191
+#: widgets/selftestdialog.cpp:190
 #, kde-format
 msgid ""
 "The QtSQL driver '%1' is required by your current Akonadi server "
@@ -1401,28 +1401,28 @@ msgstr ""
 "დაყენებულია შემდეგი დრაივერები: %2.\n"
 "დარწმუნდით, რომ საჭირო დრაივერი დაყენებულია."
 
-#: widgets/selftestdialog.cpp:198
+#: widgets/selftestdialog.cpp:197
 #, kde-format
 msgid "Database driver found."
 msgstr "ბაზის დრაივერი ნაპოვნია."
 
-#: widgets/selftestdialog.cpp:200
+#: widgets/selftestdialog.cpp:199
 #, kde-format
 msgid "Database driver not found."
 msgstr "ბაზის დრაივერის გარეშე."
 
-#: widgets/selftestdialog.cpp:208
+#: widgets/selftestdialog.cpp:207
 #, kde-format
 msgid "MySQL server executable not tested."
 msgstr "MySQL-ის სერვერის გამშვები ფაილი არ დატესტილა."
 
-#: widgets/selftestdialog.cpp:208 widgets/selftestdialog.cpp:249
-#: widgets/selftestdialog.cpp:300
+#: widgets/selftestdialog.cpp:207 widgets/selftestdialog.cpp:248
+#: widgets/selftestdialog.cpp:299
 #, kde-format
 msgid "The current configuration does not require an internal MySQL server."
 msgstr "მიმდინარე კონფიგურაცია შიდა MySQL სერვერს არ მოითხოვს."
 
-#: widgets/selftestdialog.cpp:216
+#: widgets/selftestdialog.cpp:215
 #, kde-format
 msgid ""
 "You have currently configured Akonadi to use the MySQL server '%1'.\n"
@@ -1437,63 +1437,63 @@ msgstr ""
 "სერვერის გამშვებ ფაილზე. სერვერის გამშვებ ფაილს ჩვეულებრივ 'mysqld' ჰქვია, "
 "მდებარეობა კი დისტრიბუტივზე დამოკიდებულებით იცვლება."
 
-#: widgets/selftestdialog.cpp:224
+#: widgets/selftestdialog.cpp:223
 #, kde-format
 msgid "MySQL server not found."
 msgstr "MySQL სერვერი ვერ ვიპოვე."
 
-#: widgets/selftestdialog.cpp:226
+#: widgets/selftestdialog.cpp:225
 #, kde-format
 msgid "MySQL server not readable."
 msgstr "MySQL სერვერი კითხვადი არაა."
 
-#: widgets/selftestdialog.cpp:228
+#: widgets/selftestdialog.cpp:227
 #, kde-format
 msgid "MySQL server not executable."
 msgstr "MySQL სერვერი შესრულებადი არაა."
 
-#: widgets/selftestdialog.cpp:230
+#: widgets/selftestdialog.cpp:229
 #, kde-format
 msgid "MySQL found with unexpected name."
 msgstr "MySQL სერვერი მოულოდნელი სახელით."
 
-#: widgets/selftestdialog.cpp:232
+#: widgets/selftestdialog.cpp:231
 #, kde-format
 msgid "MySQL server found."
 msgstr "MySQL სერვერი ნაპოვნია."
 
-#: widgets/selftestdialog.cpp:238
+#: widgets/selftestdialog.cpp:237
 #, kde-format
 msgid "MySQL server found: %1"
 msgstr "MySQL სერვერი ნაპოვნია: %1"
 
-#: widgets/selftestdialog.cpp:239
+#: widgets/selftestdialog.cpp:238
 #, kde-format
 msgid "MySQL server is executable."
 msgstr "MySQL სერვერი გაშვებადია."
 
-#: widgets/selftestdialog.cpp:241
+#: widgets/selftestdialog.cpp:240
 #, kde-format
 msgid ""
 "Executing the MySQL server '%1' failed with the following error message: '%2'"
 msgstr "MySQL სერვერის '%1' გაშვების შეცდომა: '%2'"
 
-#: widgets/selftestdialog.cpp:242
+#: widgets/selftestdialog.cpp:241
 #, kde-format
 msgid "Executing the MySQL server failed."
 msgstr "MySQL სერვერის გაშვების შეცდომა."
 
-#: widgets/selftestdialog.cpp:249
+#: widgets/selftestdialog.cpp:248
 #, kde-format
 msgid "MySQL server error log not tested."
 msgstr "MySQL სერვერის შეცდომის ჟურნალი არ შემოწმებულა."
 
-#: widgets/selftestdialog.cpp:257
+#: widgets/selftestdialog.cpp:256
 #, kde-format
 msgid "No current MySQL error log found."
 msgstr "მიმდინარე MySQL-ის შეცდომის ჟურნალი ვერ ვიპოვე."
 
-#: widgets/selftestdialog.cpp:258
+#: widgets/selftestdialog.cpp:257
 #, kde-format
 msgid ""
 "The MySQL server did not report any errors during this startup. The log can "
@@ -1502,70 +1502,70 @@ msgstr ""
 "MySQL სერვერმა გაშვებისას შეცდომები არ გამოიტანა. ჟურნალის ნახვა შეგიძლიათ: "
 "'%1'."
 
-#: widgets/selftestdialog.cpp:264
+#: widgets/selftestdialog.cpp:263
 #, kde-format
 msgid "MySQL error log not readable."
 msgstr "MySQL -ის შეცდომების ჟურნალი წაკითხვადი არაა."
 
-#: widgets/selftestdialog.cpp:265
+#: widgets/selftestdialog.cpp:264
 #, kde-format
 msgid "A MySQL server error log file was found but is not readable: %1"
 msgstr "MySQL სერვერის ჟურნალის ფაილი '%1' ვიპოვე, მაგრამ წაკითხვადი არაა"
 
-#: widgets/selftestdialog.cpp:274
+#: widgets/selftestdialog.cpp:273
 #, kde-format
 msgid "MySQL server log contains errors."
 msgstr "MySQL სერვერის ჟურნალი შეცდომებს შეიცავს."
 
-#: widgets/selftestdialog.cpp:275
+#: widgets/selftestdialog.cpp:274
 #, kde-format
 msgid "The MySQL server error log file '%1' contains errors."
 msgstr "MySQL სერვერის ჟურნალის ფაილი '%1' შეცდომებს შეიცავს."
 
-#: widgets/selftestdialog.cpp:285
+#: widgets/selftestdialog.cpp:284
 #, kde-format
 msgid "MySQL server log contains warnings."
 msgstr "MySQL სერვერის ჟურნალი გაფრთხილებებს შეიცავს."
 
-#: widgets/selftestdialog.cpp:286
+#: widgets/selftestdialog.cpp:285
 #, kde-format
 msgid "The MySQL server log file '%1' contains warnings."
 msgstr "MySQL სერვერის ჟურნალის ფაილი '%1' გაფრთხილებებს შეიცავს."
 
-#: widgets/selftestdialog.cpp:289
+#: widgets/selftestdialog.cpp:288
 #, kde-format
 msgid "MySQL server log contains no errors."
 msgstr "MySQL სერვერის ჟურნალი შეცდომებს არ შეიცავს."
 
-#: widgets/selftestdialog.cpp:290
+#: widgets/selftestdialog.cpp:289
 #, kde-format
 msgid "The MySQL server log file '%1' does not contain any errors or warnings."
 msgstr ""
 "MySQL სერვერის ჟურნალის ფაილი '%1' შეცდომებს და გაფრთხილებებს არ შეიცავს."
 
-#: widgets/selftestdialog.cpp:300
+#: widgets/selftestdialog.cpp:299
 #, kde-format
 msgid "MySQL server configuration not tested."
 msgstr "MySQL სერვერის კონფიგურაცია არ დატესტილა."
 
-#: widgets/selftestdialog.cpp:309
+#: widgets/selftestdialog.cpp:308
 #, kde-format
 msgid "MySQL server default configuration found."
 msgstr "MySQL -ის ნაგულისხმევი კონფიგურაცია აღმოჩენილია."
 
-#: widgets/selftestdialog.cpp:310
+#: widgets/selftestdialog.cpp:309
 #, kde-format
 msgid ""
 "The default configuration for the MySQL server was found and is readable at "
 "%1."
 msgstr "MySQL სერვერის ნაგულისხმევი კონფიგურაცია ნაპოვნია და კითხვადია %1."
 
-#: widgets/selftestdialog.cpp:314
+#: widgets/selftestdialog.cpp:313
 #, kde-format
 msgid "MySQL server default configuration not found."
 msgstr "MySQL სერვერის ნაგულისხმევი კონფიგურაცია ვერ ვიპოვე."
 
-#: widgets/selftestdialog.cpp:315
+#: widgets/selftestdialog.cpp:314
 #, kde-format
 msgid ""
 "The default configuration for the MySQL server was not found or was not "
@@ -1575,35 +1575,35 @@ msgstr ""
 "MySQL სერვერის ნაგულისხმევი კონფიგურაცია ვერ ვიპოვე ან წაკითხვადი არაა. "
 "შეამოწმეთ თქვენი Akonadi-ის კონფიგურაციის სისრულე და წვდომის უფლებები."
 
-#: widgets/selftestdialog.cpp:323
+#: widgets/selftestdialog.cpp:322
 #, kde-format
 msgid "MySQL server custom configuration not available."
 msgstr "MySQL სერვერის კონფიგურაციის მორგება ხელმიუწვდომელია."
 
-#: widgets/selftestdialog.cpp:324
+#: widgets/selftestdialog.cpp:323
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was not found but is optional."
 msgstr ""
 "MySQL სერვერის მითითებული კონფიგურაცია ვერ ვიპოვე, მაგრამ ის არასავალდებულოა."
 
-#: widgets/selftestdialog.cpp:327
+#: widgets/selftestdialog.cpp:326
 #, kde-format
 msgid "MySQL server custom configuration found."
 msgstr "ნაპოვნია MySQL სერვერის მორგებული კონფიგურაცია."
 
-#: widgets/selftestdialog.cpp:328
+#: widgets/selftestdialog.cpp:327
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was found and is readable at %1"
 msgstr "MySQL სერვერის მითითებული კონფიგურაცია ვიპოვე და კითხვადია %1"
 
-#: widgets/selftestdialog.cpp:332
+#: widgets/selftestdialog.cpp:331
 #, kde-format
 msgid "MySQL server custom configuration not readable."
 msgstr "MySQL სერვერის მორგებული კონფიგურაცია წაკითხვადი არაა."
 
-#: widgets/selftestdialog.cpp:333
+#: widgets/selftestdialog.cpp:332
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was found at %1 but is not "
@@ -1612,47 +1612,47 @@ msgstr ""
 "MySQL სერვერის მითითებული კონფიგურაცია აღმოჩენილია (%1) მაგრამ მისი წაკითხვა "
 "შეუძლებელია. შეამოწმეთ თქვენი წვდომის უფლებები."
 
-#: widgets/selftestdialog.cpp:342
+#: widgets/selftestdialog.cpp:341
 #, kde-format
 msgid "MySQL server configuration not found or not readable."
 msgstr "MySQL სერვერის კონფიგურაცია ვერ ვიპოვე ან წაკითხვადი არაა."
 
-#: widgets/selftestdialog.cpp:343
+#: widgets/selftestdialog.cpp:342
 #, kde-format
 msgid "The MySQL server configuration was not found or is not readable."
 msgstr "MySQL სერვერის კონფიგურაცია ვერ ვიპოვე ან წაკითხვადი არაა."
 
-#: widgets/selftestdialog.cpp:346
+#: widgets/selftestdialog.cpp:345
 #, kde-format
 msgid "MySQL server configuration is usable."
 msgstr "MySQL სერვერის კონფიგურაცია გამოყენებადია."
 
-#: widgets/selftestdialog.cpp:347
+#: widgets/selftestdialog.cpp:346
 #, kde-format
 msgid "The MySQL server configuration was found at %1 and is readable."
 msgstr "MySQL სერვერის კონფიგურაცია მისამართზე %1 აღმოჩენილი და წაკითხვადია."
 
-#: widgets/selftestdialog.cpp:376
+#: widgets/selftestdialog.cpp:375
 #, kde-format
 msgid "Cannot connect to PostgreSQL server."
 msgstr "PostgreSQL სერვერთან მიერთების შეცდომა."
 
-#: widgets/selftestdialog.cpp:378
+#: widgets/selftestdialog.cpp:377
 #, kde-format
 msgid "PostgreSQL server found."
 msgstr "PostgreSQL სერვერი ნაპოვნია."
 
-#: widgets/selftestdialog.cpp:378
+#: widgets/selftestdialog.cpp:377
 #, kde-format
 msgid "The PostgreSQL server was found and connection is working."
 msgstr "PostgreSQL სერვერი ნაპოვნია და მიერთება მუშაობს."
 
-#: widgets/selftestdialog.cpp:388
+#: widgets/selftestdialog.cpp:387
 #, kde-format
 msgid "akonadictl not found"
 msgstr "akonadictl ვერ ვიპოვე"
 
-#: widgets/selftestdialog.cpp:389
+#: widgets/selftestdialog.cpp:388
 #, kde-format
 msgid ""
 "The program 'akonadictl' needs to be accessible in $PATH. Make sure you have "
@@ -1661,12 +1661,12 @@ msgstr ""
 "პროგრამა akonadictl ხელმისაწვდომი უნდა იყოს $PATH-ში. დარწმუნდით, რომ "
 "Akonadi-ის სერვერი დაყენებულია."
 
-#: widgets/selftestdialog.cpp:396
+#: widgets/selftestdialog.cpp:395
 #, kde-format
 msgid "akonadictl found and usable"
 msgstr "akonadictl ვიპოვე, მუშაა"
 
-#: widgets/selftestdialog.cpp:397
+#: widgets/selftestdialog.cpp:396
 #, kde-format
 msgid ""
 "The program '%1' to control the Akonadi server was found and could be "
@@ -1679,12 +1679,12 @@ msgstr ""
 "შედეგი:\n"
 "%2"
 
-#: widgets/selftestdialog.cpp:403
+#: widgets/selftestdialog.cpp:402
 #, kde-format
 msgid "akonadictl found but not usable"
 msgstr "akonadictl ვიპოვე, მაგრამ არ მუშაობს"
 
-#: widgets/selftestdialog.cpp:404
+#: widgets/selftestdialog.cpp:403
 #, kde-format
 msgid ""
 "The program '%1' to control the Akonadi server was found but could not be "
@@ -1698,12 +1698,12 @@ msgstr ""
 "%2\n"
 "დარწმუნდით, რომ Akonadi-ის სერვერი სწორადაა დაყენებული."
 
-#: widgets/selftestdialog.cpp:416
+#: widgets/selftestdialog.cpp:415
 #, kde-format
 msgid "Akonadi control process registered at D-Bus."
 msgstr "Akonadi -ის საკონტროლო პროცესი დარეგსტრირდა D-Bus-თან."
 
-#: widgets/selftestdialog.cpp:417
+#: widgets/selftestdialog.cpp:416
 #, kde-format
 msgid ""
 "The Akonadi control process is registered at D-Bus which typically indicates "
@@ -1712,12 +1712,12 @@ msgstr ""
 "ფაქტი, რომ Akonadi-ის კონტროლის პროცესი რეგისტრირებულია D-Bus-ში ჩვეულებრივ "
 "ნიშნავს, რომ ის მუშაობს."
 
-#: widgets/selftestdialog.cpp:420
+#: widgets/selftestdialog.cpp:419
 #, kde-format
 msgid "Akonadi control process not registered at D-Bus."
 msgstr "Akonadi -ის საკონტროლო პროცესი D-Bus-თან დარეგისტრირებული არაა."
 
-#: widgets/selftestdialog.cpp:421
+#: widgets/selftestdialog.cpp:420
 #, kde-format
 msgid ""
 "The Akonadi control process is not registered at D-Bus which typically means "
@@ -1727,12 +1727,12 @@ msgstr ""
 "ნიშნავს, რომ ის გაშვებული არაა ან მისი გაშვებისას ფატალური შეცდომებია "
 "დაფიქსირებული."
 
-#: widgets/selftestdialog.cpp:427
+#: widgets/selftestdialog.cpp:426
 #, kde-format
 msgid "Akonadi server process registered at D-Bus."
 msgstr "Akonadi-ის სერვერის პროცესი დარეგისტრირებულია D-Bus-თან."
 
-#: widgets/selftestdialog.cpp:428
+#: widgets/selftestdialog.cpp:427
 #, kde-format
 msgid ""
 "The Akonadi server process is registered at D-Bus which typically indicates "
@@ -1741,12 +1741,12 @@ msgstr ""
 "ფაქტი, რომ Akonadi-ის სერვერის პროცესი რეგისტრირებულია D-Bus-ში ჩვეულებრივ "
 "ნიშნავს, რომ ის მუშაობს."
 
-#: widgets/selftestdialog.cpp:431
+#: widgets/selftestdialog.cpp:430
 #, kde-format
 msgid "Akonadi server process not registered at D-Bus."
 msgstr "Akonadi-ის სერვერის პროცესი D-Bus-თან დარეგისტრირებული არაა."
 
-#: widgets/selftestdialog.cpp:432
+#: widgets/selftestdialog.cpp:431
 #, kde-format
 msgid ""
 "The Akonadi server process is not registered at D-Bus which typically means "
@@ -1756,12 +1756,12 @@ msgstr ""
 "ნიშნავს, რომ ის გაშვებული არაა ან მისი გაშვებისას ფატალური შეცდომებია "
 "დაფიქსირებული."
 
-#: widgets/selftestdialog.cpp:441
+#: widgets/selftestdialog.cpp:440
 #, kde-format
 msgid "Protocol version check not possible."
 msgstr "პროტოკოლის ვერსიის შემოწმება შეუძლებელია."
 
-#: widgets/selftestdialog.cpp:442
+#: widgets/selftestdialog.cpp:441
 #, kde-format
 msgid ""
 "Without a connection to the server it is not possible to check if the "
@@ -1770,12 +1770,12 @@ msgstr ""
 "პროტოკოლის ვერსიის თავსებადობის შემოწმება სერვერთან მიერთების გარეშე "
 "შეუძლებელია."
 
-#: widgets/selftestdialog.cpp:447
+#: widgets/selftestdialog.cpp:446
 #, kde-format
 msgid "Server protocol version is too old."
 msgstr "სერვერის პროტოკოლი მეტისმეტად ძველია."
 
-#: widgets/selftestdialog.cpp:448 widgets/selftestdialog.cpp:455
+#: widgets/selftestdialog.cpp:447 widgets/selftestdialog.cpp:454
 #, kde-format
 msgid ""
 "The server protocol version is %1, but version %2 is required by the client. "
@@ -1786,37 +1786,37 @@ msgstr ""
 "PIM ახლახანს განაახლეთ, დარწმუნდით, რომ ორივე, Akonadi-ის და KDE PIM-ის "
 "აპლიკაციები გადატვირთეთ."
 
-#: widgets/selftestdialog.cpp:454
+#: widgets/selftestdialog.cpp:453
 #, kde-format
 msgid "Server protocol version is too new."
 msgstr "სერვერის პროტოკოლის ვერსია ძალიან ახალია."
 
-#: widgets/selftestdialog.cpp:460
+#: widgets/selftestdialog.cpp:459
 #, kde-format
 msgid "Server protocol version matches."
 msgstr "სერვერის პროტოკოლის ვერსია ემთხვევა."
 
-#: widgets/selftestdialog.cpp:460
+#: widgets/selftestdialog.cpp:459
 #, kde-format
 msgid "The current Protocol version is %1."
 msgstr "პროტოკოლის მიმდინარე ვერსიაა %1."
 
-#: widgets/selftestdialog.cpp:478
+#: widgets/selftestdialog.cpp:477
 #, kde-format
 msgid "Resource agents found."
 msgstr "ნაპოვნია რესურსის აგენტები."
 
-#: widgets/selftestdialog.cpp:478
+#: widgets/selftestdialog.cpp:477
 #, kde-format
 msgid "At least one resource agent has been found."
 msgstr "ნაპოვნია სულ ცოტა ერთი რესურსის აგენტი."
 
-#: widgets/selftestdialog.cpp:481
+#: widgets/selftestdialog.cpp:480
 #, kde-format
 msgid "No resource agents found."
 msgstr "რესურსის აგენტები აღმოჩენილი არაა."
 
-#: widgets/selftestdialog.cpp:482
+#: widgets/selftestdialog.cpp:481
 #, kde-format
 msgid ""
 "No resource agents have been found, Akonadi is not usable without at least "
@@ -1831,23 +1831,23 @@ msgstr ""
 "გარსის ცვლადის მნიშვნელობაა '%2'. დარწმუნდით, რომ ის ყველა ბილიკს შეიცავს, "
 "სადაც Akonadi-ის აგენტებია დაყენებული."
 
-#: widgets/selftestdialog.cpp:499
+#: widgets/selftestdialog.cpp:498
 #, kde-format
 msgid "No current Akonadi server error log found."
 msgstr "მიმდინარე Akonadi-ის ჟურნალი ნაპოვნი არაა."
 
-#: widgets/selftestdialog.cpp:499
+#: widgets/selftestdialog.cpp:498
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its current startup."
 msgstr "ამჟამინდელი გაშვებისას Akonadi-ის სერვერს შეცდომები არ ჰქონია."
 
-#: widgets/selftestdialog.cpp:503
+#: widgets/selftestdialog.cpp:502
 #, kde-format
 msgid "Current Akonadi server error log found."
 msgstr "აღმოჩენილია Akonadi-ის სერვერის მიმდინარე ჟურნალი."
 
-#: widgets/selftestdialog.cpp:504
+#: widgets/selftestdialog.cpp:503
 #, kde-format
 msgid ""
 "The Akonadi server reported errors during its current startup. The log can "
@@ -1856,23 +1856,23 @@ msgstr ""
 "Akonadi-ის სერვერის ამჟამინდელი გაშვებისას დაფიქსირდა შეცდომები. ჟურნალის "
 "პოვნა აქ შეგიძლიათ: %1."
 
-#: widgets/selftestdialog.cpp:512
+#: widgets/selftestdialog.cpp:511
 #, kde-format
 msgid "No previous Akonadi server error log found."
 msgstr "Akonadi-ის სერვერის შეცდომების წინა ჟურნალი არ არსებობს."
 
-#: widgets/selftestdialog.cpp:513
+#: widgets/selftestdialog.cpp:512
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its previous startup."
 msgstr "წინა გაშვებისას Akonadi-ის სერვერს შეცდომები არ ჰქონია."
 
-#: widgets/selftestdialog.cpp:517
+#: widgets/selftestdialog.cpp:516
 #, kde-format
 msgid "Previous Akonadi server error log found."
 msgstr "აღმოჩენილია Akonadi-ის სერვერის შეცდომების წინა ჟურნალი."
 
-#: widgets/selftestdialog.cpp:518
+#: widgets/selftestdialog.cpp:517
 #, kde-format
 msgid ""
 "The Akonadi server reported errors during its previous startup. The log can "
@@ -1881,12 +1881,12 @@ msgstr ""
 "Akonadi-ის სერვერის წინა გაშვებისას დაფიქსირდა შეცდომები. ჟურნალის პოვნა აქ "
 "შეგიძლიათ: %1."
 
-#: widgets/selftestdialog.cpp:529
+#: widgets/selftestdialog.cpp:528
 #, kde-format
 msgid "No current Akonadi control error log found."
 msgstr "Akonadi -ის მიმდინარე კონტროლის შეცდომის ჟურნალი აღმოჩენილი არაა."
 
-#: widgets/selftestdialog.cpp:530
+#: widgets/selftestdialog.cpp:529
 #, kde-format
 msgid ""
 "The Akonadi control process did not report any errors during its current "
@@ -1894,12 +1894,12 @@ msgid ""
 msgstr ""
 "ამჟამინდელი გაშვებისას Akonadi-ის კონტროლის პროცესს შეცდომები არ ჰქონია."
 
-#: widgets/selftestdialog.cpp:534
+#: widgets/selftestdialog.cpp:533
 #, kde-format
 msgid "Current Akonadi control error log found."
 msgstr "აღმოჩენილია Akonadi -ის მიმდინარე შეცდომის ჟურნალი."
 
-#: widgets/selftestdialog.cpp:535
+#: widgets/selftestdialog.cpp:534
 #, kde-format
 msgid ""
 "The Akonadi control process reported errors during its current startup. The "
@@ -1908,24 +1908,24 @@ msgstr ""
 "Akonadi-ის კონტროლის პროცესის ამჟამინდელი გაშვებისას დაფიქსირდა შეცდომები. "
 "ჟურნალის პოვნა აქ შეგიძლიათ: %1."
 
-#: widgets/selftestdialog.cpp:543
+#: widgets/selftestdialog.cpp:542
 #, kde-format
 msgid "No previous Akonadi control error log found."
 msgstr "Akonadi -ის წინა კონტროლის შეცდომის ჟურნალი აღმოჩენილი არაა."
 
-#: widgets/selftestdialog.cpp:544
+#: widgets/selftestdialog.cpp:543
 #, kde-format
 msgid ""
 "The Akonadi control process did not report any errors during its previous "
 "startup."
 msgstr "წინა გაშვებისას Akonadi-ის კონტროლის პროცესს შეცდომები არ ჰქონია."
 
-#: widgets/selftestdialog.cpp:548
+#: widgets/selftestdialog.cpp:547
 #, kde-format
 msgid "Previous Akonadi control error log found."
 msgstr "აღმოჩენილია Akonadi -ის წინა კონტროლის შეცდომის ჟურნალი."
 
-#: widgets/selftestdialog.cpp:549
+#: widgets/selftestdialog.cpp:548
 #, kde-format
 msgid ""
 "The Akonadi control process reported errors during its previous startup. The "
@@ -1934,12 +1934,12 @@ msgstr ""
 "Akonadi-ის კონტროლის პროცესის წინა გაშვებისას დაფიქსირდა შეცდომები. ჟურნალის "
 "პოვნა აქ შეგიძლიათ: %1."
 
-#: widgets/selftestdialog.cpp:559
+#: widgets/selftestdialog.cpp:558
 #, kde-format
 msgid "Akonadi was started as root"
 msgstr "Akonadi -ი root მომხმარებლით გაეშვა"
 
-#: widgets/selftestdialog.cpp:560
+#: widgets/selftestdialog.cpp:559
 #, kde-format
 msgid ""
 "Running Internet-facing applications as root/administrator exposes you to "
@@ -1950,12 +1950,12 @@ msgstr ""
 "მეტისმეტად დიდი რისკია. MySQL, რომელსაც Akonadi იყენებს, არ გაეშვება root-"
 "ით, რითიც ამ რისკებისგან დაგიცავთ."
 
-#: widgets/selftestdialog.cpp:564
+#: widgets/selftestdialog.cpp:563
 #, kde-format
 msgid "Akonadi is not running as root"
 msgstr "Akonadi -ი root მომხმარებლით არაა გაშვებული"
 
-#: widgets/selftestdialog.cpp:565
+#: widgets/selftestdialog.cpp:564
 #, kde-format
 msgid ""
 "Akonadi is not running as a root/administrator user, which is the "
@@ -1964,18 +1964,18 @@ msgstr ""
 "Akonadi არაა გაშვებული root/administrator მომხმარებლით, რაც დაცული "
 "სისტემებისთვის რეკომენდებული მიდგომაა."
 
-#: widgets/selftestdialog.cpp:643
+#: widgets/selftestdialog.cpp:642
 #, kde-format
 msgid "Save Test Report"
 msgstr "ტესტის ანგარიშის შენახვა"
 
-#: widgets/selftestdialog.cpp:650
+#: widgets/selftestdialog.cpp:649
 #, kde-format
 msgctxt "@title:window"
 msgid "Error"
 msgstr "შეცდომა"
 
-#: widgets/selftestdialog.cpp:650
+#: widgets/selftestdialog.cpp:649
 #, kde-format
 msgid "Could not open file '%1'"
 msgstr "ფაილ %1-ის გახსნა შეუძლებელია"
@@ -2552,13 +2552,7 @@ msgctxt "@info"
 msgid "Tag %1 successfully added"
 msgstr "ჭდე %1 წარმატებით დაემატა"
 
-#: widgets/tageditwidget.cpp:174
-#, kde-kuit-format
-msgctxt "@info"
-msgid "Delete Tag  <resource>%1</resource>"
-msgstr "ჭდის  <resource>%1</resource> წაშლა"
-
-#: widgets/tageditwidget.cpp:176
+#: widgets/tageditwidget.cpp:175
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -2568,31 +2562,31 @@ msgstr ""
 "დააჭირეთ ამ ღილაკს, რომ ნაჩვენები იყო დიალოგი, რომელიც ითხოვს ნებართვას, "
 "Akonadi-ისგან წაიშალოს ჭდე <resource>%1</resource>."
 
-#: widgets/tageditwidget.cpp:184
+#: widgets/tageditwidget.cpp:183
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "მართლა გნებავთ წაშალოთ ჭდე:<resource>%1</resource>?"
 
-#: widgets/tageditwidget.cpp:185
+#: widgets/tageditwidget.cpp:184
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "ჭდის წაშლა"
 
-#: widgets/tageditwidget.cpp:196
+#: widgets/tageditwidget.cpp:195
 #, kde-format
 msgctxt "@info"
 msgid "Failed to delete tag %1: %2"
 msgstr "ჭდის %1 წაშლა ჩავარდა: %2"
 
-#: widgets/tageditwidget.cpp:200
+#: widgets/tageditwidget.cpp:199
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully removed"
 msgstr "ჭდე %1 წარმატებით წაიშალა"
 
-#: widgets/tageditwidget.cpp:227
+#: widgets/tageditwidget.cpp:226
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"
@@ -2654,7 +2648,7 @@ msgstr "აირჩიეთ ჭდეები..."
 msgid "Select Tags"
 msgstr "აირჩიეთ ჭდეები"
 
-#: widgets/tagwidget.cpp:45
+#: widgets/tagwidget.cpp:44
 #, kde-format
 msgid "Clear"
 msgstr "გაწმენდა"
@@ -2745,6 +2739,10 @@ msgstr "მონაცემების ფაილის დამუშა�
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "კოლექციის (%1) პოვნა შეუძლებელია"
+
+#~ msgctxt "@info"
+#~ msgid "Delete Tag  <resource>%1</resource>"
+#~ msgstr "ჭდის  <resource>%1</resource> წაშლა"
 
 #~ msgid "Unnamed plugin"
 #~ msgstr "უსახელო დამატება"
