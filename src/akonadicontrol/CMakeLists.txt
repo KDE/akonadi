@@ -57,19 +57,6 @@ endif()
 
 target_include_directories(akonadi_control BEFORE PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
 
-set_target_properties(
-    akonadi_control
-    PROPERTIES
-        MACOSX_BUNDLE
-            FALSE
-)
-set_target_properties(
-    akonadi_control
-    PROPERTIES
-        OUTPUT_NAME
-            akonadi_control
-)
-
 if(WIN32)
     set_target_properties(
         akonadi_control
@@ -78,6 +65,14 @@ if(WIN32)
                 TRUE
     )
     target_link_libraries(akonadi_control ${QT_QTMAIN_LIBRARY})
+endif()
+
+if(APPLE)
+    embed_info_plist(
+        akonadi_control
+        "org.kde.Akonadi.akonadicontrol"
+        "KDE Akonadi Control Process"
+    )
 endif()
 
 target_link_libraries(

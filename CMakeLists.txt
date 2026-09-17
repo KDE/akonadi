@@ -116,6 +116,10 @@ include(ECMGenerateQDoc)
 
 include(AkonadiMacros)
 
+if(APPLE)
+    include(MacOSSupport)
+endif()
+
 set(RELEASE_SERVICE_VERSION "26.11.40")
 set(AKONADI_FULL_VERSION "${PIM_VERSION} (${RELEASE_SERVICE_VERSION})")
 
