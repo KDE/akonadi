@@ -2717,10 +2717,3 @@ msgstr "Klarer ikke tolke datafil: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Klarer ikke finne samling %1"
-
-#, fuzzy
-#~| msgctxt "@info"
-#~| msgid "Do you really want to remove the tag <resource>%1</resource>?"
-#~ msgctxt "@info"
-#~ msgid "Delete Tag  <resource>%1</resource>"
-#~ msgstr "Er du sikker på at du vil fjerne etiketten <resource>%1</resource>?"
