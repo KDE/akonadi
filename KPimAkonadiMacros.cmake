@@ -16,7 +16,7 @@ include(ECMMarkAsTest)
 function(add_akonadi_isolated_test)
     function(add_akonadi_isolated_test_impl)
         set(options)
-        set(oneValueArgs SOURCE)
+        set(oneValueArgs SOURCE NAME_PREFIX)
         set(multiValueArgs
             BACKENDS
             ADDITIONAL_SOURCES
@@ -99,7 +99,7 @@ function(add_akonadi_isolated_test)
                             "${TEST_RESULT_OUTPUT_PATH}/${lcbackend}-${name}.xml"
                         )
                     endif()
-                    set(_test_name akonadi-${lcbackend}-${name})
+                    set(_test_name ${CONFIG_NAME_PREFIX}akonadi-${lcbackend}-${name})
                     add_test(
                         NAME ${_test_name}
                         COMMAND
