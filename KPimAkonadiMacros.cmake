@@ -16,31 +16,37 @@ include(ECMMarkAsTest)
 function(add_akonadi_isolated_test)
     function(add_akonadi_isolated_test_impl)
         set(options)
-        set(oneValueArgs SOURCE NAME_PREFIX)
+        set(oneValueArgs SOURCE NAME_PREFIX TEST_NAME)
         set(multiValueArgs
             BACKENDS
             ADDITIONAL_SOURCES
             LINK_LIBRARIES
+            COMMAND
         )
         cmake_parse_arguments(CONFIG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-        set(_test ${CONFIG_SOURCE})
-        get_filename_component(_name ${CONFIG_SOURCE} NAME_WE)
-        add_executable(
-            ${_name}
-            ${_test}
-            ${CONFIG_ADDITIONAL_SOURCES}
-        )
-        ecm_mark_as_test(${_name})
-        target_link_libraries(
-            ${_name}
-            Qt::Test
-            Qt::Gui
-            Qt::Network
-            KPim6::AkonadiCore
-            KPim6::AkonadiPrivate
-            Qt::DBus
-            ${CONFIG_LINK_LIBRARIES}
-        )
+        if(CONFIG_COMMAND)
+            set(_name ${CONFIG_TEST_NAME})
+            set(_executable ${CONFIG_COMMAND})
+        else()
+            set(_test ${CONFIG_SOURCE})
+            get_filename_component(_name ${CONFIG_SOURCE} NAME_WE)
+            add_executable(
+                ${_name}
+                ${_test}
+                ${CONFIG_ADDITIONAL_SOURCES}
+            )
+            ecm_mark_as_test(${_name})
+            target_link_libraries(
+                ${_name}
+                Qt::Test
+                Qt::Gui
+                Qt::Network
+                KPim6::AkonadiCore
+                KPim6::AkonadiPrivate
+                Qt::DBus
+                ${CONFIG_LINK_LIBRARIES}
+            )
+        endif()
 
         if(NOT DEFINED _testrunner)
             if(${PROJECT_NAME} STREQUAL Akonadi AND TARGET akonaditest)
@@ -63,9 +69,11 @@ function(add_akonadi_isolated_test)
         endif()
 
         # based on kde4_add_unit_test
-        set(_executable $<TARGET_FILE:${_name}>)
-        if(APPLE)
-            set(_executable ${_executable}.app/Contents/MacOS/${_name})
+        if(NOT CONFIG_COMMAND)
+            set(_executable $<TARGET_FILE:${_name}>)
+            if(APPLE)
+                set(_executable ${_executable}.app/Contents/MacOS/${_name})
+            endif()
         endif()
 
         function(_defineTest name backend)
