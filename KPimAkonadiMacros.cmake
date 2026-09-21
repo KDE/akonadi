@@ -16,7 +16,11 @@ include(ECMMarkAsTest)
 function(add_akonadi_isolated_test)
     function(add_akonadi_isolated_test_impl)
         set(options)
-        set(oneValueArgs SOURCE NAME_PREFIX TEST_NAME)
+        set(oneValueArgs
+            SOURCE
+            NAME_PREFIX
+            TEST_NAME
+        )
         set(multiValueArgs
             BACKENDS
             ADDITIONAL_SOURCES
