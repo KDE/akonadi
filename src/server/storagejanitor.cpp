@@ -368,30 +368,72 @@ void StorageJanitor::findOrphanedPimItemFlags()
 }
 
 struct RelationDesc {
+    // The table to operate on
     QString tableName;
+    // Name of the column with IDs of the duplicated entities (Flags, MimeTypes, PartTypes, etc.)
     QString deduplEntityIdColumnName;
+    // Name of the column with IDs of the entity being referenced (PimItem, Part, etc.)
+    QString refEntityIdColumnName;
 };
 
 template<typename DeduplEntity>
-std::optional<int> findDuplicatesImpl(DataStore *dataStore, const QString &nameColumn, const RelationDesc &relation)
+static bool processDuplicates(DataStore *dataStore,
+                              const RelationDesc &relation,
+                              qint64 refEntityId,
+                              const QList<qint64> &duplicates,
+                              bool isLinkedToFirstId,
+                              qint64 firstId)
 {
-    QueryBuilder sqb(dataStore, DeduplEntity::tableName(), QueryBuilder::Select);
-    sqb.addColumns({DeduplEntity::idColumn(), nameColumn});
-    sqb.addSortColumn(DeduplEntity::idColumn());
-    if (!sqb.exec()) {
-        return std::nullopt;
+    Transaction transaction(dataStore, QStringLiteral("StorageJanitor deduplicate %1 - ref entity %2").arg(DeduplEntity::tableName()).arg(refEntityId));
+    // If the current reference entity (e.g. PimItem) is not linked to the deduplicated `firstId`,
+    // we pick one of the duplicated records and update the ID to point to the `firstId` (the deduplicated)
+    // one.
+    // If it already exists, we can skip this step.
+    if (!isLinkedToFirstId) {
+        QueryBuilder updateQb(dataStore, relation.tableName, QueryBuilder::Update);
+        updateQb.setColumnValue(relation.deduplEntityIdColumnName, firstId);
+        updateQb.addValueCondition(relation.refEntityIdColumnName, Query::Equals, refEntityId);
+        updateQb.addValueCondition(relation.deduplEntityIdColumnName, Query::Equals, duplicates.front());
+        if (!updateQb.exec()) {
+            return false;
+        }
     }
 
-    QMap<QString, QVariantList> duplicates;
-    while (sqb.query().next()) {
-        const auto id = sqb.query().value(0).toLongLong();
-        const auto name = sqb.query().value(1).toString();
+    // And now we delete all the records for the reference entity that link it with the duplicated
+    // entities.
+    QueryBuilder delQb(dataStore, relation.tableName, QueryBuilder::Delete);
+    delQb.addValueCondition(relation.refEntityIdColumnName, Query::Equals, refEntityId);
+    delQb.addValueCondition(relation.deduplEntityIdColumnName, Query::In, duplicates);
+    if (!delQb.exec()) {
+        return false;
+    }
 
-        auto it = duplicates.find(name.trimmed());
-        if (it == duplicates.end()) {
-            it = duplicates.insert(name.trimmed(), QVariantList{});
+    return transaction.commit();
+}
+
+template<typename DeduplEntity>
+static std::optional<int> findDuplicatesImpl(DataStore *dataStore, const QString &nameColumn, const RelationDesc &relation)
+{
+    // Create a map name->(list of IDs) for all entities
+    QMap<QString, QVariantList> duplicates;
+    {
+        QueryBuilder sqb(dataStore, DeduplEntity::tableName(), QueryBuilder::Select);
+        sqb.addColumns({DeduplEntity::idColumn(), nameColumn});
+        sqb.addSortColumn(DeduplEntity::idColumn());
+        if (!sqb.exec()) {
+            return std::nullopt;
         }
-        it->push_back(id);
+
+        while (sqb.query().next()) {
+            const auto id = sqb.query().value(0).toLongLong();
+            const auto name = sqb.query().value(1).toString();
+
+            auto it = duplicates.find(name.trimmed());
+            if (it == duplicates.end()) {
+                it = duplicates.insert(name.trimmed(), QVariantList{});
+            }
+            it->push_back(id);
+        }
     }
 
     int removed = 0;
@@ -401,29 +443,63 @@ std::optional<int> findDuplicatesImpl(DataStore *dataStore, const QString &nameC
             continue;
         }
 
-        Transaction transaction(dataStore, QStringLiteral("StorageJanitor deduplicate %1 %2").arg(DeduplEntity::tableName(), duplicateName));
+        // We want to use the first ID as the deduplicated one
+        const auto firstId = duplicateIds.at(0).toLongLong();
 
-        // Update all relations with duplicated entity to use the lowest entity ID, so we can remove the
-        // duplicates afterwards
-        const auto firstId = duplicateIds.takeFirst();
+        // Query all records that reference any of the duplicated IDs.
+        // For each referenced entity (e.g. PimItem) we decide what to do with it
+        QueryBuilder qb(dataStore, relation.tableName, QueryBuilder::Select);
+        qb.addColumn(relation.refEntityIdColumnName);
+        qb.addColumn(relation.deduplEntityIdColumnName);
+        qb.addValueCondition(relation.deduplEntityIdColumnName, Query::In, duplicateIds);
+        qb.addSortColumn(relation.refEntityIdColumnName);
+        if (!qb.exec()) {
+            return std::nullopt;
+        }
+        auto &query = qb.query();
 
-        QueryBuilder updateQb(dataStore, relation.tableName, QueryBuilder::Update);
-        updateQb.setColumnValue(relation.deduplEntityIdColumnName, firstId);
-        updateQb.addValueCondition(relation.deduplEntityIdColumnName, Query::In, duplicateIds);
-        if (!updateQb.exec()) {
-            continue;
+        qint64 currentRefEntityId = -1;
+        QList<qint64> currentDuplicates;
+        bool isLinkedToFirstId = false;
+        while (query.next()) {
+            const qint64 refEntityId = query.value(0).toLongLong();
+            const qint64 deduplId = query.value(1).toLongLong();
+
+            if (refEntityId != currentRefEntityId && currentRefEntityId > -1) {
+                if (!currentDuplicates.empty()) {
+                    if (!processDuplicates<DeduplEntity>(dataStore, relation, currentRefEntityId, currentDuplicates, isLinkedToFirstId, firstId)) {
+                        return removed;
+                    }
+                }
+
+                isLinkedToFirstId = false;
+                currentDuplicates.clear();
+            }
+
+            if (deduplId == firstId) {
+                // The referenced entity (e.g. PimItem) is already linked to the "deduplicated" entity ID
+                isLinkedToFirstId = true;
+            } else {
+                currentDuplicates.push_back(deduplId);
+            }
+
+            currentRefEntityId = refEntityId;
         }
 
-        // Remove the duplicated entities
-        QueryBuilder removeQb(dataStore, DeduplEntity::tableName(), QueryBuilder::Delete);
-        removeQb.addValueCondition(DeduplEntity::idColumn(), Query::In, duplicateIds);
-        if (!removeQb.exec()) {
-            continue;
+        if (currentRefEntityId > -1 && !currentDuplicates.empty()) {
+            if (!processDuplicates<DeduplEntity>(dataStore, relation, currentRefEntityId, currentDuplicates, isLinkedToFirstId, firstId)) {
+                return removed;
+            }
         }
 
-        ++removed;
+        // Remove the ID that we actually want to keep
+        duplicateIds.pop_front();
 
-        transaction.commit();
+        QueryBuilder delQb(dataStore, DeduplEntity::tableName(), QueryBuilder::Delete);
+        delQb.addValueCondition(DeduplEntity::idColumn(), Query::In, duplicateIds);
+        if (delQb.exec()) {
+            ++removed;
+        }
     }
 
     return removed;
@@ -431,8 +507,9 @@ std::optional<int> findDuplicatesImpl(DataStore *dataStore, const QString &nameC
 
 void StorageJanitor::findDuplicateFlags()
 {
-    const auto removed =
-        findDuplicatesImpl<Flag>(m_dataStore.get(), Flag::nameFullColumnName(), {PimItemFlagRelation::tableName(), PimItemFlagRelation::rightFullColumnName()});
+    const auto removed = findDuplicatesImpl<Flag>(m_dataStore.get(),
+                                                  Flag::nameFullColumnName(),
+                                                  {PimItemFlagRelation::tableName(), PimItemFlagRelation::rightColumn(), PimItemFlagRelation::leftColumn()});
     if (removed) {
         inform(u"Removed " % QString::number(*removed) % u" duplicate item flags");
     } else {
@@ -442,8 +519,9 @@ void StorageJanitor::findDuplicateFlags()
 
 void StorageJanitor::findDuplicateMimeTypes()
 {
-    const auto removed =
-        findDuplicatesImpl<MimeType>(m_dataStore.get(), MimeType::nameFullColumnName(), {PimItem::tableName(), PimItem::mimeTypeIdFullColumnName()});
+    const auto removed = findDuplicatesImpl<MimeType>(m_dataStore.get(),
+                                                      MimeType::nameFullColumnName(),
+                                                      {PimItem::tableName(), PimItem::mimeTypeIdColumn(), PimItem::idColumn()});
     if (removed) {
         inform(u"Removed " % QString::number(*removed) % u" duplicate mime types");
     } else {
@@ -463,7 +541,7 @@ void StorageJanitor::findDuplicatePartTypes()
 
     const auto removed = findDuplicatesImpl<PartType>(m_dataStore.get(),
                                                       nameColumn.arg(PartType::nsFullColumnName(), PartType::nameFullColumnName()),
-                                                      {Part::tableName(), Part::partTypeIdFullColumnName()});
+                                                      {Part::tableName(), Part::partTypeIdColumn(), Part::idColumn()});
     if (removed) {
         inform(u"Removed " % QString::number(*removed) % u" duplicate part types");
     } else {
@@ -473,7 +551,8 @@ void StorageJanitor::findDuplicatePartTypes()
 
 void StorageJanitor::findDuplicateTagTypes()
 {
-    const auto removed = findDuplicatesImpl<TagType>(m_dataStore.get(), TagType::nameFullColumnName(), {Tag::tableName(), Tag::typeIdFullColumnName()});
+    const auto removed =
+        findDuplicatesImpl<TagType>(m_dataStore.get(), TagType::nameFullColumnName(), {Tag::tableName(), Tag::typeIdFullColumnName(), Tag::idColumn()});
     if (removed) {
         inform(u"Removed " % QString::number(*removed) % u" duplicate tag types");
     } else {
