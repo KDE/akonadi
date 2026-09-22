@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:52+0000\n"
-"PO-Revision-Date: 2026-05-28 16:50-0400\n"
+"PO-Revision-Date: 2026-09-22 18:02+0900\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur <kde-i18n-doc@kde.org>\n"
 "Language: ug\n"
@@ -236,7 +236,7 @@ msgstr ""
 #, kde-format
 msgctxt "Letter for option \"(y)es\" prompted from command line"
 msgid "y"
-msgstr "y"
+msgstr ""
 
 #: main.cpp:49
 #, kde-format
@@ -250,7 +250,7 @@ msgstr ""
 #, kde-format
 msgctxt "Letter for option \"(s)kip\" prompted from command line"
 msgid "s"
-msgstr "s"
+msgstr ""
 
 #: main.cpp:75 main.cpp:77
 #, kde-format
@@ -297,4 +297,4 @@ msgstr ""
 #, kde-format
 msgctxt "@info:progress"
 msgid "%1%..."
-msgstr "%1%..."
+msgstr ""
