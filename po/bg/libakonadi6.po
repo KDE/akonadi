@@ -2764,7 +2764,3 @@ msgstr "Не може да се анализира файл с данни: %1"
 #, kde-format
 msgid "Unable to find collection %1"
 msgstr "Не може да се намери колекция %1"
-
-#~ msgctxt "@info"
-#~ msgid "Delete Tag  <resource>%1</resource>"
-#~ msgstr "Изтриване на етикет  <resource>%1</resource>"
