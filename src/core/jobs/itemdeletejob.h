@@ -53,6 +53,10 @@ class AKONADICORE_EXPORT ItemDeleteJob : public Job
     Q_OBJECT
 
 public:
+    enum Error {
+        ItemNotFound = Job::UserError,
+    };
+
     /*!
      * Creates a new item delete job that deletes \a item. The item
      * needs to have a unique identifier set.
@@ -150,6 +154,7 @@ public:
 protected:
     void doStart() override;
     bool doHandleResponse(qint64 tag, const Protocol::CommandPtr &response) override;
+    void doHandleResponseError(qint64 tag, const Protocol::ResponsePtr &response) override;
 
 private:
     Q_DECLARE_PRIVATE(ItemDeleteJob)

@@ -36,6 +36,7 @@ private Q_SLOTS:
     {
         auto djob = new ItemDeleteJob(Item(INT_MAX), this);
         QVERIFY(!djob->exec());
+        QCOMPARE(djob->error(), static_cast<int>(ItemDeleteJob::ItemNotFound));
 
         // make sure a failed delete doesn't leave a transaction open (the kpilot bug)
         auto tjob = new TransactionRollbackJob(this);
@@ -269,6 +270,7 @@ private Q_SLOTS:
         // delete from empty collection
         djob = new ItemDeleteJob(col, this);
         QVERIFY(!djob->exec()); // error: no items found
+        QCOMPARE(djob->error(), static_cast<int>(ItemDeleteJob::ItemNotFound));
 
         fjob = new ItemFetchJob(col, this);
         AKVERIFYEXEC(fjob);

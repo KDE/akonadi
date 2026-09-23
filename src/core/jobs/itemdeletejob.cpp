@@ -163,4 +163,25 @@ bool ItemDeleteJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &res
     return true;
 }
 
+void ItemDeleteJob::doHandleResponseError(qint64 tag, const Protocol::ResponsePtr &response)
+{
+    if (response->type() != Protocol::Command::DeleteItems) {
+        Job::doHandleResponseError(tag, response);
+        return;
+    }
+
+    const auto &resp = Protocol::cmdCast<Protocol::DeleteItemsResponse>(response);
+    switch (static_cast<Protocol::CommandError>(resp.errorCode())) {
+    case Protocol::CommandError::TargetNotFound:
+        setError(ItemDeleteJob::Error::ItemNotFound);
+        break;
+    default:
+        setError(Job::Unknown);
+        break;
+    }
+
+    setErrorText(resp.errorMessage());
+    emitResult();
+}
+
 #include "moc_itemdeletejob.cpp"

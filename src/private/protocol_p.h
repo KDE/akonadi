@@ -52,6 +52,7 @@ namespace Protocol
 {
 enum class CommandError : int {
     Unknown = 1,
+    TargetNotFound,
 };
 
 AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream, const Akonadi::Protocol::Command &cmd);
