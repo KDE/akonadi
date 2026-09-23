@@ -208,12 +208,27 @@ bool Handler::failureResponse(const QByteArray &failureMessage)
     return failureResponse(QString::fromUtf8(failureMessage));
 }
 
+bool Handler::failureResponse(const QByteArray &response, Protocol::CommandError error)
+{
+    return failureResponse(QString::fromUtf8(response), error);
+}
+
 bool Handler::failureResponse(const char *failureMessage)
 {
     return failureResponse(QString::fromUtf8(failureMessage));
 }
 
-bool Handler::failureResponse(const QString &failureMessage)
+bool Handler::failureResponse(const char *response, Protocol::CommandError error)
+{
+    return failureResponse(QString::fromUtf8(response), error);
+}
+
+bool Handler::failureResponse(const QString &response)
+{
+    return failureResponse(response, Protocol::CommandError::Unknown);
+}
+
+bool Handler::failureResponse(const QString &response, Protocol::CommandError error)
 {
     // Prevent sending multiple error responses from a single handler (or from
     // a handler and then from Connection, since clients only expect a single
@@ -221,8 +236,7 @@ bool Handler::failureResponse(const QString &failureMessage)
     if (!m_sentFailureResponse) {
         m_sentFailureResponse = true;
         Protocol::ResponsePtr r = Protocol::Factory::response(m_command->type());
-        // FIXME: Error enums?
-        r->setError(1, failureMessage);
+        r->setError(static_cast<int>(error), response);
 
         m_connection->sendResponse(m_tag, r);
     }

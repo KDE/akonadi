@@ -41,9 +41,7 @@ void JobPrivate::handleResponse(qint64 tag, const Protocol::CommandPtr &response
         if (response->isResponse()) {
             const auto &resp = Protocol::cmdCast<Protocol::Response>(response);
             if (resp.isError()) {
-                q->setError(Job::Unknown);
-                q->setErrorText(resp.errorMessage());
-                q->emitResult();
+                q->doHandleResponseError(tag, response.staticCast<Protocol::Response>());
                 return;
             }
         }
@@ -395,6 +393,16 @@ bool Akonadi::Job::doHandleResponse(qint64 tag, const Akonadi::Protocol::Command
     setErrorText(i18n("Unexpected response"));
     emitResult();
     return true;
+}
+
+void Job::doHandleResponseError(qint64 tag, const Protocol::ResponsePtr &response)
+{
+    const auto &resp = Protocol::cmdCast<Protocol::Response>(response);
+    Q_ASSERT(resp.isError());
+
+    setErrorText(resp.errorMessage());
+    setError(Job::Unknown);
+    emitResult();
 }
 
 void Job::slotResult(KJob *job)

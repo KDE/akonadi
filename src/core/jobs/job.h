@@ -21,7 +21,9 @@ namespace Akonadi
 namespace Protocol
 {
 class Command;
+class Response;
 using CommandPtr = QSharedPointer<Command>;
+using ResponsePtr = QSharedPointer<Response>;
 }
 
 class JobPrivate;
@@ -196,6 +198,18 @@ protected:
      * \sa writeFinished()
      */
     void emitWriteFinished();
+
+    /*!
+     * This method should be reimplemented in the concrete jobs in case you want to
+     * handle an incoming response error. It will be called once when receiving an error.
+     * The default implementation emits an unknown error with the response error message.
+     *
+     * \a tag The tag of the corresponding command, empty if this is an untagged response.
+     * \a response The received response
+     *
+     * \since 26.12
+     */
+    virtual void doHandleResponseError(qint64 tag, const Protocol::ResponsePtr &response);
 
 protected Q_SLOTS:
     void slotResult(KJob *job) override;

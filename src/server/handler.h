@@ -85,8 +85,11 @@ public:
     AkonadiServer &akonadi() const;
 
     bool failureResponse(const char *response);
+    bool failureResponse(const char *response, Protocol::CommandError error);
     bool failureResponse(const QByteArray &response);
+    bool failureResponse(const QByteArray &response, Protocol::CommandError error);
     bool failureResponse(const QString &response);
+    bool failureResponse(const QString &response, Protocol::CommandError error);
 
     template<typename T>
     inline bool successResponse();
