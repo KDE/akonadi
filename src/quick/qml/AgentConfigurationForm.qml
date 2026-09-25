@@ -20,6 +20,8 @@ FormCard.FormCard {
     required property string addPageTitle
     property alias specialCollections: _configuration.specialCollections
 
+    Component.onCompleted: autoSeparators = true
+
     readonly property AgentConfiguration _configuration: AgentConfiguration {
         id: _configuration
 
@@ -104,11 +106,6 @@ FormCard.FormCard {
                 dialog.open();
             }
         }
-    }
-
-    FormCard.FormDelegateSeparator {
-        below: addAccountDelegate
-        visible: runningAgentsRepeater.count > 0
     }
 
     FormCard.FormButtonDelegate {
