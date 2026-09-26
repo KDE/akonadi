@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-15 00:44+0000\n"
+"POT-Creation-Date: 2026-09-26 00:46+0000\n"
 "PO-Revision-Date: 2024-09-19 14:56+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -662,7 +662,7 @@ msgstr ""
 "από τη δική μας (%2). Αν έχετε ενημερώσει το σύστημά σας πρόσφατα "
 "επανεκκινήστε όλες τις KDE PIM εφαρμογές."
 
-#: quick/qml/AgentConfigurationForm.qml:35
+#: quick/qml/AgentConfigurationForm.qml:37
 #, fuzzy, kde-format
 #| msgctxt "@title:window"
 #| msgid "Configure Account"
@@ -670,33 +670,33 @@ msgctxt "@title:dialog"
 msgid "Configure %1"
 msgstr "Διαμόρφωση λογαριασμού"
 
-#: quick/qml/AgentConfigurationForm.qml:41
+#: quick/qml/AgentConfigurationForm.qml:43
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
 msgstr ""
 
-#: quick/qml/AgentConfigurationForm.qml:57
+#: quick/qml/AgentConfigurationForm.qml:59
 #, fuzzy, kde-format
 #| msgid "&Modify..."
 msgctxt "@action:button"
 msgid "Modify"
 msgstr "&Τροποποίηση..."
 
-#: quick/qml/AgentConfigurationForm.qml:66
+#: quick/qml/AgentConfigurationForm.qml:68
 #, fuzzy, kde-format
 #| msgid "Delete?"
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "Διαγραφή;"
 
-#: quick/qml/AgentConfigurationForm.qml:100
+#: quick/qml/AgentConfigurationForm.qml:102
 #, kde-format
 msgctxt "status message, progress percentage"
 msgid "%1 (%2%)"
 msgstr ""
 
-#: quick/qml/AgentConfigurationForm.qml:116
+#: quick/qml/AgentConfigurationForm.qml:113
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"

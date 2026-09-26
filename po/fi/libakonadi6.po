@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-15 00:44+0000\n"
+"POT-Creation-Date: 2026-09-26 00:46+0000\n"
 "PO-Revision-Date: 2026-03-01 17:01+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -643,37 +643,37 @@ msgstr ""
 "ohjelman (%2). Jos olet vastikään päivittänyt järjestelmän, käynnistä kaikki "
 "KDE:n PIM-sovellukset uudelleen."
 
-#: quick/qml/AgentConfigurationForm.qml:35
+#: quick/qml/AgentConfigurationForm.qml:37
 #, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
 msgstr "%1 – asetukset"
 
-#: quick/qml/AgentConfigurationForm.qml:41
+#: quick/qml/AgentConfigurationForm.qml:43
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
 msgstr "Muuta tätä tiliagenttia tai poista se."
 
-#: quick/qml/AgentConfigurationForm.qml:57
+#: quick/qml/AgentConfigurationForm.qml:59
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify"
 msgstr "Muuta"
 
-#: quick/qml/AgentConfigurationForm.qml:66
+#: quick/qml/AgentConfigurationForm.qml:68
 #, kde-format
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "Poista"
 
-#: quick/qml/AgentConfigurationForm.qml:100
+#: quick/qml/AgentConfigurationForm.qml:102
 #, kde-format
 msgctxt "status message, progress percentage"
 msgid "%1 (%2%)"
 msgstr ""
 
-#: quick/qml/AgentConfigurationForm.qml:116
+#: quick/qml/AgentConfigurationForm.qml:113
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-15 00:44+0000\n"
+"POT-Creation-Date: 2026-09-26 00:46+0000\n"
 "PO-Revision-Date: 2026-07-28 09:45+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -644,37 +644,37 @@ msgstr ""
 "(%1) gurea baino (%2). Zure sistema azkenaldian eguneratu baduzu, "
 "berrabiarazi zure KDE PIMeko aplikazio guztiak."
 
-#: quick/qml/AgentConfigurationForm.qml:35
+#: quick/qml/AgentConfigurationForm.qml:37
 #, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
 msgstr "Konfiguratu %1"
 
-#: quick/qml/AgentConfigurationForm.qml:41
+#: quick/qml/AgentConfigurationForm.qml:43
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
 msgstr "Aldatu edo ezabatu kontuaren agente hau."
 
-#: quick/qml/AgentConfigurationForm.qml:57
+#: quick/qml/AgentConfigurationForm.qml:59
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify"
 msgstr "Aldatu"
 
-#: quick/qml/AgentConfigurationForm.qml:66
+#: quick/qml/AgentConfigurationForm.qml:68
 #, kde-format
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "Ezabatu"
 
-#: quick/qml/AgentConfigurationForm.qml:100
+#: quick/qml/AgentConfigurationForm.qml:102
 #, kde-format
 msgctxt "status message, progress percentage"
 msgid "%1 (%2%)"
 msgstr "%1 (%%2)"
 
-#: quick/qml/AgentConfigurationForm.qml:116
+#: quick/qml/AgentConfigurationForm.qml:113
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
