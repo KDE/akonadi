@@ -16,6 +16,7 @@
 #include <QDateTime>
 #include <QFile>
 #include <QFileInfo>
+#include <QScopedValueRollback>
 #include <QSettings>
 #include <QTimer>
 
@@ -226,16 +227,9 @@ void Connection::handleIncomingData()
     if (!mSocket) { // not connected yet
         return;
     }
-
-    // temporarily stop handling readyRead() signal to avoid re-entering this function when we
-    // call waitForData() deep inside Protocol::deserialize
     if (mIncomingDataRecursing) {
         return;
     }
-    mIncomingDataRecursing = true;
-    auto notRecursingAnymore = qScopeGuard([this] {
-        mIncomingDataRecursing = false;
-    });
 
     while (mSocket->bytesAvailable() >= int(sizeof(qint64))) {
         Protocol::DataStream stream(mSocket.data());
@@ -244,6 +238,10 @@ void Connection::handleIncomingData()
 
         Protocol::CommandPtr cmd;
         try {
+            // temporarily stop handling readyRead() signal to avoid re-entering this function when we
+            // call waitForData() deep inside Protocol::deserialize
+            QScopedValueRollback recursionGuard(mIncomingDataRecursing, true);
+
             cmd = Protocol::deserialize(mSocket.data());
         } catch (const Akonadi::ProtocolException &e) {
             qCWarning(AKONADICORE_LOG) << "Protocol exception:" << e.what();
