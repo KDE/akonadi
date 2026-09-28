@@ -34,7 +34,10 @@ private Q_SLOTS:
 
     void testIllegalDelete()
     {
-        auto djob = new ItemDeleteJob(Item(INT_MAX), this);
+        // will fail due to deleting using remoteId without resource/collection context
+        Item item;
+        item.setRemoteId(QStringLiteral("ridWithoutContext"));
+        auto djob = new ItemDeleteJob(item, this);
         QVERIFY(!djob->exec());
 
         // make sure a failed delete doesn't leave a transaction open (the kpilot bug)
@@ -268,7 +271,7 @@ private Q_SLOTS:
 
         // delete from empty collection
         djob = new ItemDeleteJob(col, this);
-        QVERIFY(!djob->exec()); // error: no items found
+        QVERIFY(djob->exec());
 
         fjob = new ItemFetchJob(col, this);
         AKVERIFYEXEC(fjob);

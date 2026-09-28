@@ -42,9 +42,6 @@ bool ItemDeleteHandler::parseStream()
     }
 
     const QList<PimItem> items = qb.result();
-    if (items.isEmpty()) {
-        return failureResponse("No items found");
-    }
     if (!store->cleanupPimItems(items)) {
         return failureResponse("Deletion failed");
     }
