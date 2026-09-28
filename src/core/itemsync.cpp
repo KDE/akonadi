@@ -415,15 +415,6 @@ void ItemSyncPrivate::deleteItems(const Item::List &itemsToDelete)
     q->connect(job, &ItemDeleteJob::result, q, [this](KJob *job) {
         slotLocalDeleteDone(job);
     });
-
-    // It can happen that the groupware servers report us deleted items
-    // twice, in this case this item delete job will fail on the second try.
-    // To avoid a rollback of the complete transaction we gracefully allow the job
-    // to fail :)
-    auto transaction = qobject_cast<TransactionSequence *>(subjobParent());
-    if (transaction) {
-        transaction->setIgnoreJobFailure(job);
-    }
 }
 
 void ItemSyncPrivate::slotLocalDeleteDone(KJob *job)
