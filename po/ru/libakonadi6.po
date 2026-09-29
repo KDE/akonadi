@@ -1094,7 +1094,6 @@ msgstr "Индексирование:"
 msgid "Enable fulltext indexing"
 msgstr "Использовать полнотекстовый поиск"
 
-# BUGME: please remove space before ellipsis --aspotashev
 #. i18n: ectx: property (text), widget (QLabel, indexedCountLbl)
 #: widgets/collectionmaintenancepage.ui:87
 #, kde-format
