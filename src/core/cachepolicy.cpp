@@ -20,6 +20,7 @@ public:
     int interval = -1;
     bool inherit = true;
     bool syncOnDemand = false;
+    CachePolicy::PushNotifications pushNotifications = CachePolicy::Unavailable;
 };
 
 CachePolicy::CachePolicy()
@@ -47,7 +48,7 @@ bool Akonadi::CachePolicy::operator==(const CachePolicy &other) const
 {
     if (!d->inherit && !other.d->inherit) {
         return d->localParts == other.d->localParts && d->timeout == other.d->timeout && d->interval == other.d->interval
-            && d->syncOnDemand == other.d->syncOnDemand;
+            && d->syncOnDemand == other.d->syncOnDemand && d->pushNotifications == other.d->pushNotifications;
     }
     return d->inherit == other.d->inherit;
 }
@@ -102,6 +103,16 @@ void CachePolicy::setSyncOnDemand(bool enable)
     d->syncOnDemand = enable;
 }
 
+CachePolicy::PushNotifications CachePolicy::pushNotifications() const
+{
+    return d->pushNotifications;
+}
+
+void CachePolicy::setPushNotifications(CachePolicy::PushNotifications state)
+{
+    d->pushNotifications = state;
+}
+
 QDebug operator<<(QDebug d, const CachePolicy &c)
 {
     return d << "CachePolicy: \n"
@@ -109,6 +120,7 @@ QDebug operator<<(QDebug d, const CachePolicy &c)
              << "   interval:" << c.intervalCheckTime() << '\n'
              << "   timeout:" << c.cacheTimeout() << '\n'
              << "   sync on demand:" << c.syncOnDemand() << '\n'
+             << "   enable push notifications:" << c.pushNotifications() << '\n'
              << "   local parts:" << c.localParts();
 }
 

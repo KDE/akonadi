@@ -40,10 +40,17 @@
   </class>
 
   <class name="CachePolicy">
+    <enum name="PushNotifications">
+      <value name="Unavailable" value="0"/>
+      <value name="Enabled" />
+      <value name="Disabled" />
+    </enum>
+
     <param name="inherit" type="bool" default="true" />
     <param name="checkInterval" type="int" default="-1" />
     <param name="cacheTimeout" type="int" default="-1" />
     <param name="syncOnDemand" type="bool" />
+    <param name="pushNotifications" type="CachePolicy::PushNotifications" default="CachePolicy::PushNotifications::Unavailable" />
     <param name="localParts" type="QStringList" />
   </class>
 

@@ -76,6 +76,7 @@ Protocol::CachePolicy HandlerHelper::cachePolicyResponse(const Collection &col)
         cachePolicy.setLocalParts(col.cachePolicyLocalParts().split(u' '));
     }
     cachePolicy.setSyncOnDemand(col.cachePolicySyncOnDemand());
+    cachePolicy.setPushNotifications(static_cast<Protocol::CachePolicy::PushNotifications>(col.cachePolicyPushNotifications()));
     return cachePolicy;
 }
 

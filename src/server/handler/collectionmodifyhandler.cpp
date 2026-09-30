@@ -106,6 +106,11 @@ bool CollectionModifyHandler::parseStream()
             collection.setCachePolicySyncOnDemand(newCp.syncOnDemand());
             changed = true;
         }
+        const auto newPushState = static_cast<Collection::PushNotifications>(newCp.pushNotifications());
+        if (collection.cachePolicyPushNotifications() != newPushState) {
+            collection.setCachePolicyPushNotifications(newPushState);
+            changed = true;
+        }
 
         if (changed) {
             changes.append(AKONADI_PARAM_CACHEPOLICY);

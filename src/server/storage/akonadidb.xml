@@ -54,7 +54,7 @@
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" allowNull="false"/>
     <column name="generation" type="int" default="0" allowNull="false" />
-    <data columns="version" values="43"/>
+    <data columns="version" values="44"/>
   </table>
 
   <table name="Resource">
@@ -70,6 +70,11 @@
       <value name="False"/>
       <value name="True"/>
       <value name="Undefined"/>
+    </enum>
+    <enum name="PushNotifications">
+      <value name="Unavailable"/>
+      <value name="Enabled"/>
+      <value name="Disabled"/>
     </enum>
 
     <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
@@ -87,6 +92,7 @@
     <column name="cachePolicyCacheTimeout" type="int" default="-1" allowNull="false"/>
     <column name="cachePolicySyncOnDemand" type="bool" default="false" allowNull="false"/>
     <column name="cachePolicyLocalParts" type="QString"/>
+    <column name="cachePolicyPushNotifications" type="enum" enumType="PushNotifications" default="PushNotifications::Unavailable" allowNull="false"/>
     <column name="queryString" type="QString" size="32768"/>
     <column name="queryAttributes" type="QString"/>
     <column name="queryCollections" type="QString"/>

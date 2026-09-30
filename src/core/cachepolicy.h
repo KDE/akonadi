@@ -69,8 +69,19 @@ class AKONADICORE_EXPORT CachePolicy
     Q_PROPERTY(int cacheTimeout READ cacheTimeout WRITE setCacheTimeout)
     Q_PROPERTY(int intervalCheckTime READ intervalCheckTime WRITE setIntervalCheckTime)
     Q_PROPERTY(bool syncOnDemand READ syncOnDemand WRITE setSyncOnDemand)
+    Q_PROPERTY(PushNotifications pushNotifications READ pushNotifications WRITE setPushNotifications)
 
 public:
+    /*!
+     * The state of the push notifications
+     */
+    enum PushNotifications {
+        Unavailable = 0,
+        Enabled,
+        Disabled
+    };
+    Q_ENUM(PushNotifications)
+
     /*!
      * Creates an empty cache policy.
      */
@@ -141,6 +152,17 @@ public:
      * \a enable If \\ true the collection is synced.
      */
     void setSyncOnDemand(bool enable);
+
+    /*!
+     * Returns whether push notifications are enabled for this collection.
+     */
+    [[nodiscard]] PushNotifications pushNotifications() const;
+
+    /*!
+     * Sets whether push notifications are enabled for this collection.
+     * \a enable If \\ true push notifications are enabled.
+     */
+    void setPushNotifications(PushNotifications state);
 
     /*!
      * \internal.

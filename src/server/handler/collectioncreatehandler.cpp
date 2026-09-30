@@ -103,6 +103,7 @@ bool CollectionCreateHandler::parseStream()
     collection.setCachePolicyInherit(cp.inherit());
     collection.setCachePolicyLocalParts(cp.localParts().join(u' '));
     collection.setCachePolicySyncOnDemand(cp.syncOnDemand());
+    collection.setCachePolicyPushNotifications(static_cast<Collection::PushNotifications>(cp.pushNotifications()));
 
     DataStore *db = connection()->storageBackend();
     Transaction transaction(db, QStringLiteral("CREATE"));

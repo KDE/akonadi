@@ -35,6 +35,20 @@ CachePolicy ProtocolHelper::parseCachePolicy(const Protocol::CachePolicy &policy
     cp.setIntervalCheckTime(policy.checkInterval());
     cp.setInheritFromParent(policy.inherit());
     cp.setSyncOnDemand(policy.syncOnDemand());
+    switch (policy.pushNotifications()) {
+    case Protocol::CachePolicy::PushNotifications::Disabled:
+        cp.setPushNotifications(CachePolicy::PushNotifications::Disabled);
+        break;
+    case Protocol::CachePolicy::PushNotifications::Enabled:
+        cp.setPushNotifications(CachePolicy::PushNotifications::Enabled);
+        break;
+    case Protocol::CachePolicy::PushNotifications::Unavailable:
+        cp.setPushNotifications(CachePolicy::PushNotifications::Unavailable);
+        break;
+    default:
+        Q_ASSERT(false);
+        break;
+    }
     cp.setLocalParts(policy.localParts());
     return cp;
 }
@@ -46,6 +60,20 @@ Protocol::CachePolicy ProtocolHelper::cachePolicyToProtocol(const CachePolicy &p
     proto.setCheckInterval(policy.intervalCheckTime());
     proto.setInherit(policy.inheritFromParent());
     proto.setSyncOnDemand(policy.syncOnDemand());
+    switch (policy.pushNotifications()) {
+    case CachePolicy::Disabled:
+        proto.setPushNotifications(Protocol::CachePolicy::PushNotifications::Disabled);
+        break;
+    case CachePolicy::Enabled:
+        proto.setPushNotifications(Protocol::CachePolicy::PushNotifications::Enabled);
+        break;
+    case CachePolicy::Unavailable:
+        proto.setPushNotifications(Protocol::CachePolicy::PushNotifications::Unavailable);
+        break;
+    default:
+        Q_ASSERT(false);
+        break;
+    }
     proto.setLocalParts(policy.localParts());
     return proto;
 }
