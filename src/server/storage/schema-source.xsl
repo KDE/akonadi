@@ -82,6 +82,7 @@ QList&lt;TableDescription&gt; <xsl:value-of select="$className"/>::tables()
              <xsl:otherwise><xsl:value-of select="position() - 1"/></xsl:otherwise>
             </xsl:choose> }<xsl:if test="position() != last()">,</xsl:if>
         </xsl:for-each>
+        <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>
       };
       </xsl:if>
