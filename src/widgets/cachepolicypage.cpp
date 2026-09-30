@@ -36,6 +36,8 @@ public:
 
     Ui::CachePolicyPage *const mUi;
     CachePolicyPage::GuiMode mode;
+
+    bool pushNotificationsAvailable = false;
 };
 
 void CachePolicyPagePrivate::slotIntervalValueChanged(int interval)
@@ -58,6 +60,10 @@ void CachePolicyPagePrivate::slotRetrievalOptionsGroupBoxDisabled(bool disable)
     if (!disable) {
         mUi->label->setEnabled(mUi->retrieveOnlyHeaders->isChecked());
         mUi->localCacheTimeout->setEnabled(mUi->retrieveOnlyHeaders->isChecked());
+    }
+    if (!pushNotificationsAvailable) {
+        mUi->enablePushNotifications->setEnabled(false);
+        mUi->enablePushNotifications->setToolTip(i18n("Push notifications are not supported by the server"));
     }
 }
 
@@ -111,9 +117,19 @@ void CachePolicyPage::load(const Collection &collection)
         cache = 0;
     }
 
+    auto pushNotificationsState = policy.pushNotifications();
+    d->pushNotificationsAvailable = pushNotificationsState != CachePolicy::PushNotifications::Unavailable;
+
     d->mUi->checkInterval->setValue(interval);
     d->mUi->localCacheTimeout->setValue(cache);
     d->mUi->syncOnDemand->setChecked(policy.syncOnDemand());
+    if (!d->pushNotificationsAvailable) {
+        d->mUi->enablePushNotifications->setEnabled(false);
+        d->mUi->enablePushNotifications->setToolTip(i18n("Push notifications are not supported by the server"));
+    } else {
+        d->mUi->enablePushNotifications->setToolTip(QString());
+    }
+    d->mUi->enablePushNotifications->setChecked(pushNotificationsState == CachePolicy::PushNotifications::Enabled);
     d->mUi->localParts->setItems(policy.localParts());
 
     const bool fetchBodies = policy.localParts().contains(QLatin1StringView("RFC822"));
@@ -133,6 +149,10 @@ void CachePolicyPage::load(const Collection &collection)
     d->mUi->retrieveOnlyHeaders->setVisible(containsEmails);
     d->mUi->label->setVisible(containsEmails);
     d->mUi->localCacheTimeout->setVisible(containsEmails);
+
+    const bool isCalendar = collection.contentMimeTypes().contains(QLatin1StringView("text/calendar"))
+        || collection.contentMimeTypes().contains(QLatin1StringView("application/x-vnd.akonadi.calendar.event"));
+    d->mUi->enablePushNotifications->setVisible(isCalendar);
 }
 
 void CachePolicyPage::save(Collection &collection)
@@ -152,6 +172,12 @@ void CachePolicyPage::save(Collection &collection)
     policy.setIntervalCheckTime(interval);
     policy.setCacheTimeout(cache);
     policy.setSyncOnDemand(d->mUi->syncOnDemand->isChecked());
+    if (!d->pushNotificationsAvailable) {
+        policy.setPushNotifications(CachePolicy::Unavailable);
+    } else {
+        policy.setPushNotifications(d->mUi->enablePushNotifications->isChecked() ? CachePolicy::PushNotifications::Enabled
+                                                                                 : CachePolicy::PushNotifications::Disabled);
+    }
 
     QStringList localParts = d->mUi->localParts->items();
 

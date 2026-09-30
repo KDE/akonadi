@@ -140,7 +140,14 @@
      </property>
     </widget>
    </item>
-   <item row="7">
+   <item row="7" column="1">
+    <widget class="QCheckBox" name="enablePushNotifications">
+     <property name="text">
+      <string>Enable push notifications</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -216,6 +223,22 @@
    <sender>inherit</sender>
    <signal>toggled(bool)</signal>
    <receiver>syncOnDemand</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>304</x>
+     <y>18</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>304</x>
+     <y>39</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>inherit</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>enablePushNotifications</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
