@@ -93,6 +93,9 @@ AgentInstanceModel::AgentInstanceModel(QObject *parent)
     connect(AgentManager::self(), &AgentManager::instanceOnline, this, [this](const Akonadi::AgentInstance &inst) {
         d->instanceChanged(inst);
     });
+    connect(AgentManager::self(), &AgentManager::instanceActivitiesChanged, this, [this](const Akonadi::AgentInstance &inst) {
+        d->instanceChanged(inst);
+    });
 }
 
 AgentInstanceModel::~AgentInstanceModel() = default;

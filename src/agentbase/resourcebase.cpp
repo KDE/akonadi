@@ -478,6 +478,8 @@ ResourceBase::ResourceBase(const QString &id)
     connect(this, &ResourceBase::synchronized, d->scheduler, &ResourceScheduler::taskDone);
     connect(this, &ResourceBase::collectionTreeSynchronized, d->scheduler, &ResourceScheduler::taskDone);
     connect(this, &AgentBase::agentNameChanged, this, &ResourceBase::nameChanged);
+    connect(this, &AgentBase::agentActivitiesChanged, this, &ResourceBase::activitiesChanged);
+    connect(this, &AgentBase::agentActivitiesEnabledChanged, this, &ResourceBase::activitiesEnabledChanged);
     connect(&d->mProgressEmissionCompressor, &QTimer::timeout, d, &ResourceBasePrivate::slotDelayedEmitProgress);
 
     d->scheduler->setOnline(d->mOnline);

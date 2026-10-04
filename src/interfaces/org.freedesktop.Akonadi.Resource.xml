@@ -4,6 +4,12 @@
     <signal name="nameChanged">
       <arg name="name" type="s" direction="out"/>
     </signal>
+    <signal name="activitiesChanged">
+      <arg name="activities" type="as" direction="out"/>
+    </signal>
+    <signal name="activitiesEnabledChanged">
+      <arg name="enabled" type="b" direction="out"/>
+    </signal>
     <signal name="synchronized"/>
     <signal name="attributesSynchronized">
       <arg type="x" name="collectionId"/>

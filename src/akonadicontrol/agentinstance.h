@@ -87,6 +87,16 @@ public:
         return mAccountId;
     }
 
+    [[nodiscard]] QStringList activities() const
+    {
+        return mActivities;
+    }
+
+    [[nodiscard]] bool activitiesEnabled() const
+    {
+        return mActivitiesEnabled;
+    }
+
     [[nodiscard]] bool dbusServiceRegistered() const
     {
         return mDBusServiceRegistered;
@@ -163,6 +173,8 @@ protected Q_SLOTS:
     void onlineChanged(bool state);
     void resourceNameChanged(const QString &name);
     void accountIdChanged(const QString &accountId);
+    void activitiesChanged(const QStringList &activities);
+    void activitiesEnabledChanged(bool enabled);
 
     void refreshAgentStatus();
     void refreshResourceStatus();
@@ -198,4 +210,6 @@ private:
     bool mOnline = false;
     bool mPendingQuit = false;
     QString mAccountId;
+    QStringList mActivities;
+    bool mActivitiesEnabled = false;
 };

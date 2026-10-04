@@ -173,6 +173,22 @@ Q_SIGNALS:
     void nameChanged(const QString &name);
 
     /*!
+     * This signal is emitted whenever the activities of the resource have changed.
+     *
+     * \param activities The new list of activities.
+     * \since 6.9
+     */
+    void activitiesChanged(const QStringList &activities);
+
+    /*!
+     * This signal is emitted whenever the activities support of the resource has been enabled or disabled.
+     *
+     * \param enabled Whether activities support is enabled.
+     * \since 6.9
+     */
+    void activitiesEnabledChanged(bool enabled);
+
+    /*!
      * Emitted when a full synchronization has been completed.
      */
     void synchronized();

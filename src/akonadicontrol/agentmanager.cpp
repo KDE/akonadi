@@ -410,7 +410,7 @@ void AgentManager::setAgentInstanceOnline(const QString &identifier, bool state)
 
 void AgentManager::setAgentInstanceActivities(const QString &identifier, const QStringList &activities)
 {
-    if (!checkAgentInterfaces(identifier, QStringLiteral("setAgentInstanceActivities"))) {
+    if (!checkResourceInterface(identifier, QStringLiteral("setAgentInstanceActivities"))) {
         return;
     }
 
@@ -419,19 +419,16 @@ void AgentManager::setAgentInstanceActivities(const QString &identifier, const Q
 
 QStringList AgentManager::agentInstanceActivities(const QString &identifier)
 {
-    if (!checkAgentInterfaces(identifier, QStringLiteral("agentInstanceActivities"))) {
-        return {};
-    }
-    if (!mAgentInstances.value(identifier)->resourceInterface()) {
+    if (!checkInstance(identifier)) {
         return {};
     }
 
-    return mAgentInstances.value(identifier)->resourceInterface()->activities();
+    return mAgentInstances.value(identifier)->activities();
 }
 
 void AgentManager::setAgentInstanceActivitiesEnabled(const QString &identifier, bool enabled)
 {
-    if (!checkAgentInterfaces(identifier, QStringLiteral("setAgentInstanceActivitiesEnabled"))) {
+    if (!checkResourceInterface(identifier, QStringLiteral("setAgentInstanceActivitiesEnabled"))) {
         return;
     }
 
@@ -440,14 +437,11 @@ void AgentManager::setAgentInstanceActivitiesEnabled(const QString &identifier, 
 
 bool AgentManager::agentInstanceActivitiesEnabled(const QString &identifier)
 {
-    if (!checkAgentInterfaces(identifier, QStringLiteral("agentInstanceActivitiesEnabled"))) {
-        return false;
-    }
-    if (!mAgentInstances.value(identifier)->resourceInterface()) {
+    if (!checkInstance(identifier)) {
         return false;
     }
 
-    return mAgentInstances.value(identifier)->resourceInterface()->activitiesEnabled();
+    return mAgentInstances.value(identifier)->activitiesEnabled();
 }
 
 QString AgentManager::agentInstanceAccountId(const QString &identifier)

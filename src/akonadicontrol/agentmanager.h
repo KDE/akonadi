@@ -310,6 +310,16 @@ Q_SIGNALS:
 
     void agentInstanceAccountIdChanged(const QString &agentIdentifier, const QString &accountId);
 
+    /**
+     * Emitted when the activities of an agent changed.
+     */
+    void agentInstanceActivitiesChanged(const QString &agentIdentifier, const QStringList &activities);
+
+    /**
+     * Emitted when the activities support of an agent has been enabled or disabled.
+     */
+    void agentInstanceActivitiesEnabledChanged(const QString &agentIdentifier, bool enabled);
+
 private Q_SLOTS:
     void updatePluginInfos();
     void serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner);

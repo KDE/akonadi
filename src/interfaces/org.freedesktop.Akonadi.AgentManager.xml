@@ -163,6 +163,15 @@
       <arg name="identifier" type="s" direction="in"/>
     </method>
 
+    <signal name="agentInstanceActivitiesChanged">
+      <arg name="agentIdentifier" type="s" direction="out"/>
+      <arg name="activities" type="as" direction="out"/>
+    </signal>
+    <signal name="agentInstanceActivitiesEnabledChanged">
+      <arg name="agentIdentifier" type="s" direction="out"/>
+      <arg name="enabled" type="b" direction="out"/>
+    </signal>
+
     <method name="agentInstanceAccountId">
         <arg type="s" direction="out"/>
         <arg name="identifier" type="s" direction="in"/>

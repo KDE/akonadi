@@ -185,6 +185,30 @@ void AgentManagerPrivate::agentInstanceAccountIdChanged(const QString &identifie
     Q_EMIT mParent->instanceAccountIdChanged(instance, accountId);
 }
 
+void AgentManagerPrivate::agentInstanceActivitiesChanged(const QString &identifier, const QStringList &activities)
+{
+    auto it = mInstances.find(identifier);
+    if (it == mInstances.cend()) {
+        return;
+    }
+
+    AgentInstance &instance = it.value();
+    instance.d->mActivities = activities;
+    Q_EMIT mParent->instanceActivitiesChanged(instance);
+}
+
+void AgentManagerPrivate::agentInstanceActivitiesEnabledChanged(const QString &identifier, bool enabled)
+{
+    auto it = mInstances.find(identifier);
+    if (it == mInstances.cend()) {
+        return;
+    }
+
+    AgentInstance &instance = it.value();
+    instance.d->mActivitiesEnabled = enabled;
+    Q_EMIT mParent->instanceActivitiesChanged(instance);
+}
+
 void AgentManagerPrivate::agentInstanceNameChanged(const QString &identifier, const QString &name)
 {
     auto it = mInstances.find(identifier);
@@ -300,9 +324,8 @@ AgentInstance AgentManagerPrivate::fillAgentInstance(const QString &identifier) 
     instance.d->mProgress = mManager->agentInstanceProgress(identifier);
     instance.d->mIsOnline = mManager->agentInstanceOnline(identifier);
     instance.d->mAccountId = mManager->agentInstanceAccountId(identifier);
-    // FIXME need to reactivate it
-    // FIXME activities instance.d->mActivities = mManager->agentInstanceActivities(identifier);
-    // FIXME activities instance.d->mActivitiesEnabled = mManager->agentInstanceActivitiesEnabled(identifier);
+    instance.d->mActivities = mManager->agentInstanceActivities(identifier);
+    instance.d->mActivitiesEnabled = mManager->agentInstanceActivitiesEnabled(identifier);
 
     return instance;
 }
@@ -348,6 +371,8 @@ void AgentManagerPrivate::createDBusInterface()
     connect(mManager.get(), &AgentManagerIface::agentInstanceError, this, &AgentManagerPrivate::agentInstanceError);
     connect(mManager.get(), &AgentManagerIface::agentInstanceOnlineChanged, this, &AgentManagerPrivate::agentInstanceOnlineChanged);
     connect(mManager.get(), &AgentManagerIface::agentInstanceAccountIdChanged, this, &AgentManagerPrivate::agentInstanceAccountIdChanged);
+    connect(mManager.get(), &AgentManagerIface::agentInstanceActivitiesChanged, this, &AgentManagerPrivate::agentInstanceActivitiesChanged);
+    connect(mManager.get(), &AgentManagerIface::agentInstanceActivitiesEnabledChanged, this, &AgentManagerPrivate::agentInstanceActivitiesEnabledChanged);
 
     if (mManager->isValid()) {
         readAgentTypes();

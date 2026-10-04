@@ -84,6 +84,8 @@ bool AgentInstance::obtainResourceInterface()
     }
 
     connect(mResourceInterface.get(), &OrgFreedesktopAkonadiResourceInterface::nameChanged, this, &AgentInstance::resourceNameChanged);
+    connect(mResourceInterface.get(), &OrgFreedesktopAkonadiResourceInterface::activitiesChanged, this, &AgentInstance::activitiesChanged);
+    connect(mResourceInterface.get(), &OrgFreedesktopAkonadiResourceInterface::activitiesEnabledChanged, this, &AgentInstance::activitiesEnabledChanged);
     mDBusServiceRegistered = true;
     refreshResourceStatus();
     return true;
@@ -169,6 +171,24 @@ void AgentInstance::accountIdChanged(const QString &accountId)
     Q_EMIT mManager.agentInstanceAccountIdChanged(mIdentifier, accountId);
 }
 
+void AgentInstance::activitiesChanged(const QStringList &activities)
+{
+    if (activities == mActivities) {
+        return;
+    }
+    mActivities = activities;
+    Q_EMIT mManager.agentInstanceActivitiesChanged(mIdentifier, activities);
+}
+
+void AgentInstance::activitiesEnabledChanged(bool enabled)
+{
+    if (enabled == mActivitiesEnabled) {
+        return;
+    }
+    mActivitiesEnabled = enabled;
+    Q_EMIT mManager.agentInstanceActivitiesEnabledChanged(mIdentifier, enabled);
+}
+
 void AgentInstance::refreshAgentStatus()
 {
     if (!hasAgentInterface()) {
@@ -194,6 +214,16 @@ void AgentInstance::refreshResourceStatus()
 
     // async call so we are not blocked by misbehaving resources
     mResourceInterface->callWithCallback(QStringLiteral("name"), QList<QVariant>(), this, SLOT(resourceNameChanged(QString)), SLOT(errorHandler(QDBusError)));
+    mResourceInterface->callWithCallback(QStringLiteral("activities"),
+                                         QList<QVariant>(),
+                                         this,
+                                         SLOT(activitiesChanged(QStringList)),
+                                         SLOT(errorHandler(QDBusError)));
+    mResourceInterface->callWithCallback(QStringLiteral("activitiesEnabled"),
+                                         QList<QVariant>(),
+                                         this,
+                                         SLOT(activitiesEnabledChanged(bool)),
+                                         SLOT(errorHandler(QDBusError)));
 }
 
 void AgentInstance::errorHandler(const QDBusError &error)

@@ -190,6 +190,14 @@ Q_SIGNALS:
 
     void instanceAccountIdChanged(const Akonadi::AgentInstance &instance, const QString &accountId);
 
+    /*!
+     * This signal is emitted whenever the activities or the activities support of an agent instance changed.
+     *
+     * \a instance The agent instance that changed.
+     * \since 6.9
+     */
+    void instanceActivitiesChanged(const Akonadi::AgentInstance &instance);
+
 private:
     explicit AgentManager();
 
