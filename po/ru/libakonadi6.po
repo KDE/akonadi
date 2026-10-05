@@ -203,7 +203,7 @@ msgstr ""
 "Инструмент для управления службой Akonadi\n"
 "\n"
 "Команды:\n"
-"  start          Запуск службу Akonadi и всех зависимых процессов;\n"
+"  start          Запуск службы Akonadi и всех зависимых процессов;\n"
 "  stop          Остановка службы Akonadi и всех запущенных процессов с \n"
 "ожиданием завершения выполнения операций;\n"
 "  restart        Перезапуск службы Akonadi и всех зависимых процессов;\n"
@@ -233,7 +233,7 @@ msgstr "Диалог настройки"
 #: configdialog/main.cpp:25
 #, kde-format
 msgid "Allows to configure an agent or resource"
-msgstr "Разрешить настраивать агент или ресурс"
+msgstr "Позволяет настроить агент или источник данных"
 
 #: configdialog/main.cpp:27
 #, kde-format
@@ -279,7 +279,7 @@ msgstr "Не удалось найти второй объект для разр
 #: core/jobs/agentinstancecreatejob.cpp:58
 #, kde-format
 msgid "Agent instance creation timed out."
-msgstr "Ошибка создания экземпляра агента."
+msgstr "Истекло время ожидания создания экземпляра агента."
 
 #: core/jobs/agentinstancecreatejob.cpp:108
 #, kde-format
@@ -550,7 +550,7 @@ msgstr "Непрочитанных сообщений"
 #, kde-format
 msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
 msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
-msgstr "<strong>Макс. допустимый объём</strong>: %1% (%2/%3)<br>\n"
+msgstr "<strong>Квота</strong>: %1% (%2/%3)<br>\n"
 
 #: core/models/statisticsproxymodel.cpp:103
 #, kde-format
@@ -560,7 +560,7 @@ msgstr "Размер на диске"
 #: core/models/statisticsproxymodel.cpp:109
 #, kde-format
 msgid "Subfolder Storage Size"
-msgstr "Размер подпапки на диске"
+msgstr "Размер подпапок на диске"
 
 #: core/models/statisticsproxymodel.cpp:220
 #, kde-format
@@ -594,7 +594,7 @@ msgstr "Не удалось выбрать элемент для индекса"
 #: core/partfetcher.cpp:64
 #, kde-format
 msgid "Index is no longer available"
-msgstr "Индекс более не доступен"
+msgstr "Индекс более недоступен"
 
 #: core/partfetcher.cpp:114
 #, kde-format
@@ -604,7 +604,7 @@ msgstr "Часть данных «%1» недоступна для выбран�
 #: core/partfetcher.cpp:123
 #, kde-format
 msgid "No session available for this index"
-msgstr "С данным индексом не связана сессия"
+msgstr "С данным индексом не связан сеанс"
 
 #: core/partfetcher.cpp:132
 #, kde-format
@@ -630,7 +630,7 @@ msgstr ""
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
 "installation."
-msgstr "Отсутствуют доступные агенты Akonadi. Проверьте установку KDE PIM. "
+msgstr "Отсутствуют доступные агенты Akonadi. Проверьте установку KDE PIM."
 
 #: core/session.cpp:184
 #, kde-format
@@ -638,7 +638,7 @@ msgid ""
 "Protocol version mismatch. Server version is older (%1) than ours (%2). If "
 "you updated your system recently please restart the Akonadi server."
 msgstr ""
-"Версии протокола не совпадают. Версия на стороне сервера (%1) старее, чем на "
+"Версии протокола не совпадают. Версия на стороне сервера (%1) старше, чем на "
 "стороне клиента (%2). Если вы обновляли программное обеспечение, "
 "перезапустите сервер Akonadi."
 
@@ -709,7 +709,7 @@ msgstr "Удалить метку <b>%1</b>?"
 #: quick/qml/TagManagerPage.qml:31
 #, kde-format
 msgid "You won't be able to revert this action."
-msgstr "Это действие будет нельзя отменить."
+msgstr "Это действие нельзя будет отменить."
 
 #: quick/qml/TagManagerPage.qml:53
 #, kde-format
@@ -732,7 +732,7 @@ msgstr "Добавить метку"
 #: selftest/main.cpp:19
 #, kde-format
 msgid "Akonadi Self Test"
-msgstr "Внутренние тесты Akonadi"
+msgstr "Самопроверка Akonadi"
 
 #: selftest/main.cpp:21
 #, kde-format
@@ -808,7 +808,7 @@ msgstr[3] "минута"
 #: widgets/cachepolicypage.cpp:69
 #, kde-format
 msgid "Retrieval"
-msgstr "Синхронизация"
+msgstr "Получение"
 
 #. i18n: ectx: property (text), widget (QCheckBox, inherit)
 #: widgets/cachepolicypage.ui:20
@@ -859,7 +859,7 @@ msgstr "Части в локальном кэше"
 #: widgets/cachepolicypage.ui:94
 #, kde-format
 msgid "Retrieval Options:"
-msgstr "Параметры синхронизации:"
+msgstr "Параметры получения:"
 
 #. i18n: ectx: property (text), widget (QRadioButton, retrieveFullMessages)
 #: widgets/cachepolicypage.ui:101
@@ -899,8 +899,8 @@ msgid ""
 "likely never uploaded to the destination server, so clearing this collection "
 "means that those <b>data will be lost</b>. Are you sure you want to proceed?"
 msgstr ""
-"В коллекции «%1» находятся %2 объекта(-ов) без указного идентификатора "
-"удалённого сервера. Скорее всего, эти объекты не были связанны с сервером, "
+"В коллекции «%1» находятся %2 объекта(-ов) без указанного идентификатора "
+"удалённого сервера. Скорее всего, эти объекты не были отправлены на сервер, "
 "поэтому очистка коллекции <b>приведёт к потере этих данных</b>. Продолжить "
 "выполнение?"
 
@@ -933,7 +933,7 @@ msgstr "Создать вложенную папку"
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
-msgstr "Новая папка"
+msgstr "Создание папки"
 
 #: widgets/collectiondialog.cpp:266
 #, kde-format
@@ -956,7 +956,7 @@ msgstr "Ошибка создания папки"
 #, kde-format
 msgctxt "@title:tab general properties page"
 msgid "General"
-msgstr "Главное"
+msgstr "Общие"
 
 #: widgets/collectiongeneralpropertiespage.cpp:55
 #, kde-format
@@ -978,7 +978,7 @@ msgstr "&Название:"
 #: widgets/collectiongeneralpropertiespage.ui:29
 #, kde-format
 msgid "&Use custom icon:"
-msgstr "&Значок:"
+msgstr "&Использовать нестандартный значок:"
 
 #. i18n: ectx: property (icon), widget (KIconButton, customIcon)
 #: widgets/collectiongeneralpropertiespage.ui:39
@@ -1092,7 +1092,7 @@ msgstr "Индексирование:"
 #: widgets/collectionmaintenancepage.ui:80
 #, kde-format
 msgid "Enable fulltext indexing"
-msgstr "Использовать полнотекстовый поиск"
+msgstr "Включить полнотекстовое индексирование"
 
 #. i18n: ectx: property (text), widget (QLabel, indexedCountLbl)
 #: widgets/collectionmaintenancepage.ui:87
@@ -1225,7 +1225,7 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
-"Не удалось подключиться к службе персонального информационного менеджера.\n"
+"Не удалось подключиться к службе управления личной информацией.\n"
 "\n"
 "%1"
 
@@ -1396,7 +1396,7 @@ msgstr "Введите новое имя папки:"
 #, kde-format
 msgctxt "@title:window"
 msgid "Akonadi Server Self-Test"
-msgstr "Внутренние тесты сервера Akonadi"
+msgstr "Самопроверка сервера Akonadi"
 
 #: widgets/selftestdialog.cpp:70
 #, kde-format
@@ -1652,7 +1652,7 @@ msgstr "Конфигурация сервера MySQL не найдена или
 #: widgets/selftestdialog.cpp:345
 #, kde-format
 msgid "MySQL server configuration is usable."
-msgstr "Конфигурация сервера MySQL настроена."
+msgstr "Конфигурация сервера MySQL пригодна к использованию."
 
 #: widgets/selftestdialog.cpp:346
 #, kde-format
@@ -1719,7 +1719,7 @@ msgid ""
 "%2\n"
 "Make sure the Akonadi server is installed correctly."
 msgstr ""
-"Программа управления сервером Akonadi «%1» найдена, но запускается c "
+"Программа управления сервером Akonadi «%1» найдена, но запускается с "
 "ошибкой.\n"
 "Результат запуска:\n"
 "%2\n"
@@ -1756,7 +1756,7 @@ msgstr ""
 #: widgets/selftestdialog.cpp:426
 #, kde-format
 msgid "Akonadi server process registered at D-Bus."
-msgstr "Процесс управления сервером Akonadi зарегистрирован в D-Bus."
+msgstr "Процесс сервера Akonadi зарегистрирован в D-Bus."
 
 #: widgets/selftestdialog.cpp:427
 #, kde-format
@@ -1764,13 +1764,13 @@ msgid ""
 "The Akonadi server process is registered at D-Bus which typically indicates "
 "it is operational."
 msgstr ""
-"Процесс управления сервером Akonadi зарегистрирован в D-Bus, что обычно "
-"показывает готовность к использованию."
+"Процесс сервера Akonadi зарегистрирован в D-Bus, что обычно показывает "
+"готовность к использованию."
 
 #: widgets/selftestdialog.cpp:430
 #, kde-format
 msgid "Akonadi server process not registered at D-Bus."
-msgstr "Процесс управления сервером Akonadi не зарегистрирован в D-Bus."
+msgstr "Процесс сервера Akonadi не зарегистрирован в D-Bus."
 
 #: widgets/selftestdialog.cpp:431
 #, kde-format
@@ -1778,8 +1778,8 @@ msgid ""
 "The Akonadi server process is not registered at D-Bus which typically means "
 "it was not started or encountered a fatal error during startup."
 msgstr ""
-"Процесс управления сервером Akonadi не зарегистрирован в D-Bus, что обычно "
-"означает ошибку при запуске или то, что сервер не запущен."
+"Процесс сервера Akonadi не зарегистрирован в D-Bus, что обычно означает "
+"ошибку при запуске или то, что сервер не запущен."
 
 #: widgets/selftestdialog.cpp:440
 #, kde-format
@@ -1972,7 +1972,7 @@ msgid ""
 msgstr ""
 "Запуск приложений, доступных из Интернета, с правами администратора/root "
 "может угрожать вашей безопасности. Поэтому база данных MySQL, используемая "
-"этой инсталляцией Akonadi, не позволяет запускать себя под именем root."
+"этой установкой Akonadi, не позволяет запускать себя под именем root."
 
 #: widgets/selftestdialog.cpp:563
 #, kde-format
@@ -2249,10 +2249,10 @@ msgstr[3] "&Копировать объект"
 msgctxt "@action"
 msgid "&Cut Item"
 msgid_plural "&Cut %1 Items"
-msgstr[0] "&Копировать %1 объект"
-msgstr[1] "&Копировать %1 объекта"
-msgstr[2] "&Копировать %1 объектов"
-msgstr[3] "&Копировать объект"
+msgstr[0] "В&ырезать %1 объект"
+msgstr[1] "В&ырезать %1 объекта"
+msgstr[2] "В&ырезать %1 объектов"
+msgstr[3] "В&ырезать объект"
 
 #: widgets/standardactionmanager.cpp:390
 #, kde-format
@@ -2529,7 +2529,7 @@ msgstr "Ошибка вставки"
 #: widgets/standardactionmanager.cpp:776
 #, kde-format
 msgid "We can not add \"/\" in folder name."
-msgstr "Мы не можем включить «/» в имя папки."
+msgstr "Имя папки не может содержать «/»."
 
 #: widgets/standardactionmanager.cpp:776 widgets/standardactionmanager.cpp:780
 #, kde-format
@@ -2540,7 +2540,7 @@ msgstr "Ошибка создания новой папки"
 #: widgets/standardactionmanager.cpp:780
 #, kde-format
 msgid "We can not add \".\" at begin or end of folder name."
-msgstr "Мы не можем вставить «.» в начало или конец имени папки."
+msgstr "Имя папки не может начинаться или заканчиваться символом «.»."
 
 #: widgets/standardactionmanager.cpp:1024
 #, kde-format
@@ -2548,8 +2548,8 @@ msgid ""
 "Before syncing folder \"%1\" it is necessary to have the resource online. Do "
 "you want to make it online?"
 msgstr ""
-"Для синхронизации папки «%1», нужно, чтобы этот ресурс был подключен. Вы "
-"хотите подключить его?"
+"Для синхронизации папки «%1» источник данных должен быть подключён к сети. "
+"Подключить его?"
 
 #: widgets/standardactionmanager.cpp:1025
 #, kde-format

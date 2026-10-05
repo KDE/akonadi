@@ -56,7 +56,7 @@ msgstr "Запуск службы Akonadi…"
 #, kde-format
 msgctxt "@info:status"
 msgid "Database fsck completed"
-msgstr "Проверка файловой системы базы данных завершена"
+msgstr "Проверка целостности базы данных завершена"
 
 #: dbmigrator.cpp:495
 #, kde-format
@@ -109,7 +109,7 @@ msgstr "Ошибка: не удалось открыть новую базу д�
 #, kde-format
 msgctxt "@info:status"
 msgid "Running fsck on the source database"
-msgstr "Выполняется проверка файловой системы исходной базы данных"
+msgstr "Выполняется проверка целостности исходной базы данных"
 
 #: dbmigrator.cpp:571
 #, kde-format
@@ -278,8 +278,8 @@ msgid ""
 "The new DB engine to use. Possible values are  \"sqlite\", \"mysql\" and "
 "\"postgres\""
 msgstr ""
-"Механизм хранения новой базы данных Допустимые значения: «sqlite», «mysql» и "
-"«postgres»"
+"Механизм хранения новой базы данных. Допустимые значения: «sqlite», «mysql» "
+"и «postgres»"
 
 #: main.cpp:92
 #, kde-format
@@ -309,4 +309,4 @@ msgstr "Перенос таблицы «%1» (%2/%3)…"
 #, kde-format
 msgctxt "@info:progress"
 msgid "%1%..."
-msgstr "%1%..."
+msgstr "%1%…"
