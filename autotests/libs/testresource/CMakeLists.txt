@@ -78,3 +78,36 @@ target_link_libraries(
     KPim6::AkonadiCore
     KPim6::AkonadiAgentBase
 )
+
+kcoreaddons_add_plugin(knutconfigquick
+    INSTALL_NAMESPACE "pim6/akonadi/config"
+)
+
+target_sources(
+    knutconfigquick
+    PRIVATE
+        knutconfigquick.cpp
+        knutconfigquick.h
+        ${knut_common_SRCS}
+)
+
+qt_add_qml_module(knutconfigquick
+    URI org.kde.akonadi.knutconfig
+    RESOURCE_PREFIX /qt/qml
+    NO_PLUGIN
+    IMPORT_PATH ${CMAKE_BINARY_DIR}/src
+    DEPENDENCIES org.kde.akonadi org.kde.ki18n
+    QML_FILES ConfigurationPage.qml
+)
+
+add_dependencies(knutconfigquick akonadi_quick_plugin)
+
+target_link_libraries(
+    knutconfigquick
+    PRIVATE
+        KF6::ConfigGui
+        KF6::I18n
+        KPim6::AkonadiCore
+        Qt::Qml
+        Qt::Quick
+)
