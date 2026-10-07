@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LGPL-2.0-or-later
 
 #include "agentconfiguration.h"
+#include "agentconfigurationsession.h"
 
 #include <Akonadi/AgentConfigurationDialog>
 #include <Akonadi/AgentInstanceCreateJob>
@@ -9,7 +10,9 @@
 #include <Akonadi/AgentManager>
 #include <Akonadi/AgentTypeModel>
 
+#include <QMetaMethod>
 #include <QPointer>
+#include <QQmlEngine>
 
 using namespace Akonadi;
 
@@ -68,12 +71,7 @@ void AgentConfiguration::createNew(int index)
                 Q_EMIT errorOccurred(job->errorText());
                 return;
             }
-            const auto configureDialog = new Akonadi::AgentConfigurationDialog(job->instance(), nullptr);
-            configureDialog->setAttribute(Qt::WA_DeleteOnClose);
-            connect(configureDialog, &QDialog::rejected, this, [instance = job->instance()] {
-                Akonadi::AgentManager::self()->removeInstance(instance);
-            });
-            configureDialog->show();
+            showConfiguration(job->instance(), true);
         });
         job->start();
     }
@@ -96,10 +94,29 @@ void AgentConfiguration::editIdentifier(const QString &resourceIdentifier)
 void AgentConfiguration::setupEdit(Akonadi::AgentInstance instance)
 {
     if (instance.isValid()) {
-        QPointer<AgentConfigurationDialog> dlg(new AgentConfigurationDialog(instance, nullptr));
-        dlg->setAttribute(Qt::WA_DeleteOnClose);
-        dlg->show();
+        showConfiguration(instance, false);
     }
+}
+
+void AgentConfiguration::showConfiguration(const Akonadi::AgentInstance &instance, bool removeOnCancel)
+{
+    if (isSignalConnected(QMetaMethod::fromSignal(&AgentConfiguration::configurationRequested))) {
+        auto session = new AgentConfigurationSession(instance, qmlEngine(this), removeOnCancel, qmlEngine(this));
+        if (session->isValid()) {
+            Q_EMIT configurationRequested(session);
+            return;
+        }
+        delete session;
+    }
+
+    QPointer<AgentConfigurationDialog> dialog(new AgentConfigurationDialog(instance, nullptr));
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    if (removeOnCancel) {
+        connect(dialog, &QDialog::rejected, this, [instance] {
+            AgentManager::self()->removeInstance(instance);
+        });
+    }
+    dialog->show();
 }
 
 void AgentConfiguration::restart(int index)

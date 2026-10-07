@@ -76,7 +76,7 @@ bool AgentConfigurationManager::isInstanceRegistered(const QString &instance) co
     return QDBusConnection::sessionBus().interface()->isServiceRegistered(serviceName);
 }
 
-QString AgentConfigurationManager::findConfigPlugin(const QString &type) const
+QString AgentConfigurationManager::findConfigPlugin(const QString &type, Ui ui) const
 {
     const auto libPaths = QCoreApplication::libraryPaths();
     const QString prefixPluginPath = QStringLiteral("pim6/akonadi/config");
@@ -93,7 +93,12 @@ QString AgentConfigurationManager::findConfigPlugin(const QString &type) const
             if (md.value(QStringLiteral("X-Akonadi-PluginType")).toString() != QLatin1StringView("AgentConfig")) {
                 continue;
             }
-            if (!type.startsWith(md.value(QStringLiteral("X-Akonadi-AgentConfig-Type")).toString())) {
+            const auto configUi = md.value(QStringLiteral("X-Akonadi-ConfigUi")).toString();
+            if (ui == Ui::Quick ? configUi != QLatin1StringView("Quick") : !configUi.isEmpty() && configUi != QLatin1StringView("Widgets")) {
+                continue;
+            }
+            const auto configType = md.value(QStringLiteral("X-Akonadi-AgentConfig-Type")).toString();
+            if (configType.isEmpty() || !type.startsWith(configType)) {
                 continue;
             }
             return loader.fileName();

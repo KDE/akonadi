@@ -21,6 +21,8 @@ target_sources(
     PRIVATE
         agentconfiguration.cpp
         agentconfiguration.h
+        agentconfigurationsession.cpp
+        agentconfigurationsession.h
         collectioncomboboxmodel.cpp
         collectioncomboboxmodel.h
         collectionpickermodel.cpp
@@ -39,6 +41,7 @@ target_sources(
 
 ecm_target_qml_sources(akonadi_quick_plugin SOURCES
     qml/AgentConfigurationForm.qml
+    qml/AgentConfigurationPage.qml
     qml/CollectionComboBox.qml
     qml/CollectionChooserPage.qml
     qml/FormCollectionComboBox.qml
@@ -59,6 +62,7 @@ target_link_libraries(
         KF6::I18n
         KPim6AkonadiCore
         KPim6AkonadiWidgets # Needed for AgentConfigurationDialog
+        Qt6::Qml
 )
 
 ecm_finalize_qml_module(akonadi_quick_plugin

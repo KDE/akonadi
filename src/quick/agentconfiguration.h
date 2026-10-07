@@ -17,6 +17,8 @@ struct AgentDataChange {
     int status;
 };
 
+class AgentConfigurationSession;
+
 class AgentConfiguration : public QObject
 {
     Q_OBJECT
@@ -65,9 +67,11 @@ Q_SIGNALS:
     void availableAgentsChanged();
     void errorOccurred(const QString &error);
     void specialCollectionsChanged();
+    void configurationRequested(AgentConfigurationSession *session);
 
 private:
     void setupEdit(Akonadi::AgentInstance instance);
+    void showConfiguration(const Akonadi::AgentInstance &instance, bool removeOnCancel);
     void setupRemove(const Akonadi::AgentInstance &instance);
     void setupRestart(Akonadi::AgentInstance instance);
 

@@ -5,6 +5,7 @@ set(AkonadiCore_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR}/KPim6/AkonadiCore"
 
 set(akonadicore_base_SRCS
     agentconfigurationbase.cpp
+    agentconfigurationquickbase.cpp
     agentconfigurationfactorybase.cpp
     agentconfigurationmanager.cpp
     agentinstance.cpp
@@ -64,6 +65,7 @@ set(akonadicore_base_SRCS
     trashsettings.cpp
     typepluginloader.cpp
     agentconfigurationbase.h
+    agentconfigurationquickbase.h
     agentconfigurationfactorybase.h
     agentconfigurationmanager_p.h
     agentinstance_p.h
@@ -131,6 +133,7 @@ ecm_generate_headers(AkonadiCore_base_CC_HEADERS
     HEADER_NAMES
     AbstractDifferencesReporter
     AgentConfigurationBase
+    AgentConfigurationQuickBase
     AgentConfigurationFactoryBase
     AgentInstance
     AgentManager

@@ -20,6 +20,10 @@ class AKONADICORE_EXPORT AgentConfigurationManager : public QObject
 {
     Q_OBJECT
 public:
+    enum class Ui {
+        Widgets,
+        Quick
+    };
     static AgentConfigurationManager *self();
     ~AgentConfigurationManager() override;
 
@@ -28,7 +32,7 @@ public:
 
     [[nodiscard]] bool isInstanceRegistered(const QString &instance) const;
 
-    [[nodiscard]] QString findConfigPlugin(const QString &type) const;
+    [[nodiscard]] QString findConfigPlugin(const QString &type, Ui ui = Ui::Widgets) const;
 
 private:
     AgentConfigurationManager(QObject *parent = nullptr);

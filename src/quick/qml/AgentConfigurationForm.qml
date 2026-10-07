@@ -33,6 +33,16 @@ FormCard.FormCard {
 
         mimetypes: root.mimetypes
         onErrorOccurred: (error) => (root.QQC2.ApplicationWindow.window as Kirigami.ApplicationWindow).showPassiveNotification(error)
+        onConfigurationRequested: (session) => {
+            const stack = (root.QQC2.ApplicationWindow.window as Kirigami.ApplicationWindow).pageStack;
+            const page = stack.pushDialogLayer(session.page, {configuration: session});
+            if (!page) {
+                session.cancel();
+                return;
+            }
+            session.finished.connect(() => page.closeDialog());
+            page.Component.destruction.connect(() => session.cancel());
+        }
     }
 
     Components.MessageDialog {
