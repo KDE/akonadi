@@ -170,11 +170,11 @@ void IndexerPrivate::loadIndexingPlugins()
 
     const QStringList dirs = QCoreApplication::libraryPaths();
     for (const QString &pluginDir : dirs) {
-        QDir dir(pluginDir + QLatin1String("/akonadi"));
+        QDir dir(pluginDir + QLatin1StringView("/pim6/akonadi"));
         const QStringList fileNames = dir.entryList(QDir::Files);
-        qCDebug(AKONADISERVER_LOG) << "INDEXER: searching in " << pluginDir + QLatin1String("/akonadi") << ":" << fileNames;
+        qCDebug(AKONADISERVER_LOG) << "INDEXER: searching in " << pluginDir + QLatin1StringView("/pim6/akonadi") << ":" << fileNames;
         for (const QString &fileName : fileNames) {
-            const QString filePath = pluginDir % QLatin1String("/akonadi/") % fileName;
+            const QString filePath = pluginDir % QLatin1StringView("/pim6/akonadi/") % fileName;
             std::unique_ptr<QPluginLoader> loader(new QPluginLoader(filePath));
             const QVariantMap metadata = loader->metaData().value(QStringLiteral("MetaData")).toVariant().toMap();
             if (metadata.value(QStringLiteral("X-Akonadi-PluginType")).toString() != QLatin1String("IndexingPlugin")) {
@@ -213,7 +213,7 @@ void IndexerPrivate::loadIndexingPlugins()
 
 void IndexerPrivate::initIndexingPlugins()
 {
-    for (QPluginLoader *loader : qAsConst(pluginLoaders)) {
+    for (QPluginLoader *loader : std::as_const(pluginLoaders)) {
         if (!loader->load()) {
             qCCritical(AKONADISERVER_LOG) << "Failed to load search plugin" << loader->fileName() << ":" << loader->errorString();
             continue;
@@ -253,6 +253,12 @@ Indexer::Indexer()
 
 Indexer::~Indexer()
 {
+    {
+        QMutexLocker locker(&d->lock);
+        d->shouldStop = true;
+    }
+    d->cond.wakeAll();
+
     quitThread();
 
     sInstance = nullptr;
@@ -306,7 +312,9 @@ void Indexer::indexerLoop()
     QMutexLocker locker(&d->lock);
 
     Q_FOREVER {
-        d->cond.wait(&d->lock);
+        while (d->queue.isEmpty() && !d->shouldStop) {
+            d->cond.wait(&d->lock);
+        }
 
         if (d->shouldStop) {
             break;
@@ -315,7 +323,7 @@ void Indexer::indexerLoop()
         auto task = d->queue.dequeue();
         locker.unlock();
 
-        for (auto indexer : qAsConst(d->indexers)) {
+        for (auto indexer : std::as_const(d->indexers)) {
             bool result = false;
             switch (task.taskType) {
             case IndexerTask::Invalid:
@@ -337,7 +345,7 @@ void Indexer::indexerLoop()
                 result = indexer->removeItem(task.mimeTypes.first(), task.entityId);
                 break;
             case IndexerTask::RemoveCollection:
-                for (const auto &mt : qAsConst(task.mimeTypes)) {
+                for (const auto &mt : std::as_const(task.mimeTypes)) {
                     result = indexer->removeCollection(mt, task.entityId);
                     if (!result) {
                         break;

@@ -14,6 +14,7 @@
 #include "fakeintervalcheck.h"
 #include "fakeitemretrievalmanager.h"
 #include "fakesearchmanager.h"
+#include "indexer/indexer.h"
 #include "inspectablenotificationcollector.h"
 #include "resourcemanager.h"
 #include "search/searchtaskmanager.h"
@@ -215,6 +216,7 @@ void FakeAkonadiServer::initFake()
     mIntervalCheck = AkThread::create<FakeIntervalCheck>(*mItemRetrieval);
     mSearchManager = AkThread::create<FakeSearchManager>(*mAgentSearchManager);
     mStorageJanitor = AkThread::create<StorageJanitor>(this);
+    mIndexer = std::make_unique<Indexer>();
 
     qDebug() << "==== Fake Akonadi Server started ====";
 }
@@ -238,6 +240,7 @@ bool FakeAkonadiServer::quit()
     mConnection.reset();
     mClient.reset();
 
+    mIndexer.reset();
     mStorageJanitor.reset();
     mSearchManager.reset();
     mIntervalCheck.reset();

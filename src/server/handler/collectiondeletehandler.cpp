@@ -20,6 +20,7 @@
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
+using namespace AkRanges;
 
 CollectionDeleteHandler::CollectionDeleteHandler(AkonadiServer &akonadi)
     : Handler(akonadi)

@@ -68,7 +68,7 @@ bool TypeHelper::isAssociativeContainer(const QString &type)
 {
     const int tplB = type.indexOf(QLatin1Char('<'));
     const int tplE = type.lastIndexOf(QLatin1Char('>'));
-    return tplB > -1 && tplE > -1 && tplB < tplE && type.midRef(tplB, tplE).contains(QLatin1Char(','));
+    return tplB > -1 && tplE > -1 && tplB < tplE && QStringView(type).mid(tplB, tplE - tplB).contains(QLatin1Char(','));
 }
 
 QString TypeHelper::containerType(const QString &type)

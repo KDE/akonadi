@@ -153,7 +153,7 @@ bool PersistentQueue::rewrite()
     f.close();
 
     mStoreFile.close();
-    if (!mStoreFile.rename(baseName + QLatin1Literal("~"))) {
+    if (!mStoreFile.rename(baseName + QLatin1StringView("~"))) {
         qCCritical(AKONADISERVER_LOG) << "Failed to create backup file for indexer journal:" << mStoreFile.errorString();
         return false;
     }

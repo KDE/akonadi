@@ -150,6 +150,7 @@ QDataStream &operator<<(QDataStream &stream, const IndexerTask &task)
          << task.dstId
          << task.sourceCollectionId
          << task.destinationCollectionId;
+    ds.flush();
     stream << buffer.buffer();
     return stream;
 }
