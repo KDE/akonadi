@@ -67,7 +67,14 @@ target_link_libraries(
 
 add_library(KPim6AkonadiXml ${akonadixml_SRCS})
 
-generate_export_header(KPim6AkonadiXml BASE_NAME akonadi-xml)
+ecm_generate_export_header(KPim6AkonadiXml
+    BASE_NAME akonadi_xml
+    EXPORT_FILE_NAME akonadi-xml_export.h
+    VERSION ${AKONADI_VERSION}
+    DEPRECATED_BASE_VERSION 0
+    VERSION_BASE_NAME AKONADI
+    USE_VERSION_HEADER akonadi_version.h
+)
 
 add_library(KPim6::AkonadiXml ALIAS KPim6AkonadiXml)
 
@@ -119,3 +126,27 @@ install(
 install(FILES ${AkonadiXml_CC_HEADERS} DESTINATION ${AkonadiXml_INSTALL_INCLUDEDIR}/Akonadi COMPONENT Devel)
 
 install(FILES akonadi-xml.xsd DESTINATION ${KDE_INSTALL_DATADIR_KF}/akonadi/)
+
+ecm_add_installed_library_check(KPim6AkonadiXml
+    PACKAGE_NAME "KPim6Akonadi"
+    PACKAGE_VERSION ${AKONADI_VERSION}
+    PACKAGE_TARGET_NAMESPACE "KPim6::"
+)
+
+ecm_installed_library_check_include_strings(KPim6AkonadiXml
+    HEADERS
+    ${AkonadiXml_HEADERS}
+    PREFIX akonadi
+)
+
+ecm_installed_library_check_include_strings(KPim6AkonadiXml
+    HEADERS
+    ${AkonadiXml_CC_HEADERS}
+    PREFIX Akonadi
+)
+
+ecm_installed_library_check_version_preprocessor_macros(KPim6AkonadiXml
+    PREFIX AKONADI
+    VERSION ${AKONADI_VERSION}
+    SILENT
+)

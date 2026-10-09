@@ -84,7 +84,13 @@ if(COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     )
 endif()
 
-generate_export_header(KPim6AkonadiAgentBase BASE_NAME akonadiagentbase)
+ecm_generate_export_header(KPim6AkonadiAgentBase
+    BASE_NAME akonadiagentbase
+    VERSION ${AKONADI_VERSION}
+    DEPRECATED_BASE_VERSION 0
+    VERSION_BASE_NAME AKONADI
+    USE_VERSION_HEADER akonadi_version.h
+)
 
 target_include_directories(
     KPim6AkonadiAgentBase
@@ -130,6 +136,30 @@ install(
 
 install(FILES ${AkonadiAgentBase_CC_HEADERS} DESTINATION ${AkonadiAgentBase_INSTALL_INCLUDEDIR}/Akonadi COMPONENT Devel)
 
+ecm_add_installed_library_check(KPim6AkonadiAgentBase
+    PACKAGE_NAME "KPim6Akonadi"
+    PACKAGE_VERSION ${AKONADI_VERSION}
+    PACKAGE_TARGET_NAMESPACE "KPim6::"
+)
+
+ecm_installed_library_check_include_strings(KPim6AkonadiAgentBase
+    HEADERS
+    ${AkonadiAgentBase_HEADERS}
+    PREFIX akonadi
+)
+
+ecm_installed_library_check_include_strings(KPim6AkonadiAgentBase
+    HEADERS
+    ${AkonadiAgentBase_CC_HEADERS}
+    PREFIX Akonadi
+)
+
+ecm_installed_library_check_version_preprocessor_macros(KPim6AkonadiAgentBase
+    PREFIX AKONADI
+    VERSION ${AKONADI_VERSION}
+    SILENT
+)
+
 install(FILES resourcebase.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR})
 
 ## Widgets
@@ -165,7 +195,13 @@ if(COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     )
 endif()
 
-generate_export_header(KPim6AkonadiAgentWidgetBase BASE_NAME akonadiagentwidgetbase)
+ecm_generate_export_header(KPim6AkonadiAgentWidgetBase
+    BASE_NAME akonadiagentwidgetbase
+    VERSION ${AKONADI_VERSION}
+    DEPRECATED_BASE_VERSION 0
+    VERSION_BASE_NAME AKONADI
+    USE_VERSION_HEADER akonadi_version.h
+)
 
 target_include_directories(
     KPim6AkonadiAgentWidgetBase
@@ -211,3 +247,27 @@ install(
     COMPONENT Devel
 )
 ecm_generate_qdoc(KPim6AkonadiAgentBase akonadi-agentbase.qdocconf)
+
+ecm_add_installed_library_check(KPim6AkonadiAgentWidgetBase
+    PACKAGE_NAME "KPim6Akonadi"
+    PACKAGE_VERSION ${AKONADI_VERSION}
+    PACKAGE_TARGET_NAMESPACE "KPim6::"
+)
+
+ecm_installed_library_check_include_strings(KPim6AkonadiAgentWidgetBase
+    HEADERS
+    ${AkonadiAgentWidgetBase_HEADERS}
+    PREFIX akonadi
+)
+
+ecm_installed_library_check_include_strings(KPim6AkonadiAgentWidgetBase
+    HEADERS
+    ${AkonadiAgentWidgetBase_CC_HEADERS}
+    PREFIX Akonadi
+)
+
+ecm_installed_library_check_version_preprocessor_macros(KPim6AkonadiAgentWidgetBase
+    PREFIX AKONADI
+    VERSION ${AKONADI_VERSION}
+    SILENT
+)

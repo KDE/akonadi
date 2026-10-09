@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "akonadicore_export.h"
+
 namespace Akonadi
 {
 namespace Internal

@@ -21,6 +21,13 @@
             ]
         },
         {
+            "name": "all_installed_library_check",
+            "displayName": "Build as debug + using mold linker (need for check libs)",
+            "inherits": [
+                "dev-mold"
+            ]
+        },
+        {
             "name": "check-cmake",
             "displayName": "Configure with strict warning",
             "inherits": [
@@ -157,6 +164,13 @@
             "targets": [
                 "prepare_docs",
                 "generate_docs"
+            ]
+        },
+        {
+            "name": "all_installed_library_check",
+            "configurePreset": "all_installed_library_check",
+            "targets": [
+                "all_installed_library_check"
             ]
         },
         {

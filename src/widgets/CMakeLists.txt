@@ -155,7 +155,13 @@ if(COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     )
 endif()
 
-generate_export_header(KPim6AkonadiWidgets BASE_NAME akonadiwidgets)
+ecm_generate_export_header(KPim6AkonadiWidgets
+    BASE_NAME akonadiwidgets
+    VERSION ${AKONADI_VERSION}
+    DEPRECATED_BASE_VERSION 0
+    VERSION_BASE_NAME AKONADI
+    USE_VERSION_HEADER akonadi_version.h
+)
 
 target_include_directories(KPim6AkonadiWidgets INTERFACE "$<INSTALL_INTERFACE:${AkonadiWidgets_INSTALL_INCLUDEDIR}>")
 
@@ -244,3 +250,27 @@ if(BUILD_DESIGNERPLUGIN)
     )
 endif()
 ecm_generate_qdoc(KPim6AkonadiWidgets akonadi-widgets.qdocconf)
+
+ecm_add_installed_library_check(KPim6AkonadiWidgets
+    PACKAGE_NAME "KPim6Akonadi"
+    PACKAGE_VERSION ${AKONADI_VERSION}
+    PACKAGE_TARGET_NAMESPACE "KPim6::"
+)
+
+ecm_installed_library_check_include_strings(KPim6AkonadiWidgets
+    HEADERS
+    ${AkonadiWidgets_HEADERS}
+    PREFIX akonadi
+)
+
+ecm_installed_library_check_include_strings(KPim6AkonadiWidgets
+    HEADERS
+    ${AkonadiWidgets_CC_HEADERS}
+    PREFIX Akonadi
+)
+
+ecm_installed_library_check_version_preprocessor_macros(KPim6AkonadiWidgets
+    PREFIX AKONADI
+    VERSION ${AKONADI_VERSION}
+    SILENT
+)

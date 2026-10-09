@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "akonadicore_export.h"
+
 #include <QtClassHelperMacros>
 
 class QString;

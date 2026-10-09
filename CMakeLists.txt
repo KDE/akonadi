@@ -12,6 +12,7 @@ set(CMAKE_CXX_STANDARD 23)
 find_package(ECM ${KF_MIN_VERSION} CONFIG REQUIRED)
 
 set(CMAKE_MODULE_PATH
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ecmcopy
     ${ECM_MODULE_PATH}
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules
 )
@@ -21,7 +22,9 @@ include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
 
 include(GenerateExportHeader)
+include(ECMGenerateExportHeader)
 include(ECMGenerateHeaders)
+include(ECMInstalledLibraryCheck)
 
 include(ECMSetupVersion)
 file(

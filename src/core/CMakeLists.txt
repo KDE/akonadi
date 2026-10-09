@@ -433,7 +433,13 @@ qt_extract_metatypes(KPim6AkonadiCore)
 #    set_target_properties(KPim6AkonadiCore PROPERTIES UNITY_BUILD ON)
 #endif()
 
-generate_export_header(KPim6AkonadiCore BASE_NAME akonadicore)
+ecm_generate_export_header(KPim6AkonadiCore
+    BASE_NAME akonadicore
+    VERSION ${AKONADI_VERSION}
+    DEPRECATED_BASE_VERSION 0
+    VERSION_BASE_NAME AKONADI
+    USE_VERSION_HEADER akonadi_version.h
+)
 
 add_library(KPim6::AkonadiCore ALIAS KPim6AkonadiCore)
 target_include_directories(KPim6AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${AkonadiCore_INSTALL_INCLUDEDIR}>")
@@ -504,3 +510,33 @@ install(
 
 install(FILES kcfg2dbus.xsl DESTINATION ${KDE_INSTALL_DATADIR_KF}/akonadi)
 ecm_generate_qdoc(KPim6AkonadiCore akonadi-core.qdocconf)
+
+ecm_add_installed_library_check(KPim6AkonadiCore
+    PACKAGE_NAME "KPim6Akonadi"
+    PACKAGE_VERSION ${AKONADI_VERSION}
+    PACKAGE_TARGET_NAMESPACE "KPim6::"
+)
+
+ecm_installed_library_check_include_strings(KPim6AkonadiCore
+    HEADERS
+    ${AkonadiCore_base_HEADERS}
+    ${AkonadiCore_attributes_HEADERS}
+    ${AkonadiCore_models_HEADERS}
+    ${AkonadiCore_jobs_HEADERS}
+    PREFIX akonadi
+)
+
+ecm_installed_library_check_include_strings(KPim6AkonadiCore
+    HEADERS
+    ${AkonadiCore_base_CC_HEADERS}
+    ${AkonadiCore_attributes_CC_HEADERS}
+    ${AkonadiCore_models_CC_HEADERS}
+    ${AkonadiCore_jobs_CC_HEADERS}
+    PREFIX Akonadi
+)
+
+ecm_installed_library_check_version_preprocessor_macros(KPim6AkonadiCore
+    PREFIX AKONADI
+    VERSION ${AKONADI_VERSION}
+    SILENT
+)
