@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-26 00:46+0000\n"
+"POT-Creation-Date: 2026-10-10 00:47+0000\n"
 "PO-Revision-Date: 2026-07-28 15:02+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -83,84 +83,84 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "Non configurato"
 
-#: agentbase/resourcebase.cpp:514
+#: agentbase/resourcebase.cpp:516
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "Identificatore di risorsa"
 
-#: agentbase/resourcebase.cpp:520
+#: agentbase/resourcebase.cpp:522
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "Risorsa di Akonadi"
 
-#: agentbase/resourcebase.cpp:562
+#: agentbase/resourcebase.cpp:564
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Recuperato elemento non valido"
 
-#: agentbase/resourcebase.cpp:586
+#: agentbase/resourcebase.cpp:588
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Errore durante la creazione dell'elemento: %1"
 
-#: agentbase/resourcebase.cpp:617
+#: agentbase/resourcebase.cpp:619
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Errore durante l'aggiornamento della collezione: %1"
 
-#: agentbase/resourcebase.cpp:709
+#: agentbase/resourcebase.cpp:711
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Aggiornamento della collezione locale non riuscito: %1."
 
-#: agentbase/resourcebase.cpp:714
+#: agentbase/resourcebase.cpp:716
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Aggiornamento degli elementi locali non riuscito: %1."
 
-#: agentbase/resourcebase.cpp:740
+#: agentbase/resourcebase.cpp:742
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Impossibile caricare l'elemento durante la modalità non in linea."
 
-#: agentbase/resourcebase.cpp:923
+#: agentbase/resourcebase.cpp:925
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Sincronizzazione cartella «%1»"
 
-#: agentbase/resourcebase.cpp:944 agentbase/resourcebase.cpp:951
+#: agentbase/resourcebase.cpp:946 agentbase/resourcebase.cpp:953
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Recupero della collezione non riuscito per la sincronizzazione."
 
-#: agentbase/resourcebase.cpp:997
+#: agentbase/resourcebase.cpp:999
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr ""
 "Recupero della collezione non riuscito per la sincronizzazione degli "
 "attributi."
 
-#: agentbase/resourcebase.cpp:1046
+#: agentbase/resourcebase.cpp:1048
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "L'elemento richiesto non esiste più"
 
-#: agentbase/resourcebase.cpp:1267
+#: agentbase/resourcebase.cpp:1269
 #, kde-format
 msgid "Failed to fetch collection for collection sync."
 msgstr ""
 "Impossibile recuperare la collezione per la sincronizzazione della "
 "collezione."
 
-#: agentbase/resourcebase.cpp:1303
+#: agentbase/resourcebase.cpp:1305
 #, kde-format
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr ""
@@ -461,7 +461,7 @@ msgstr ""
 "Impossibile trovare la collezione di ripristino e la risorsa di ripristino "
 "non è disponibile"
 
-#: core/models/agentinstancemodel.cpp:196
+#: core/models/agentinstancemodel.cpp:199
 #, kde-format
 msgctxt "@title:column, name of a thing"
 msgid "Name"

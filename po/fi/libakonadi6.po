@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-26 00:46+0000\n"
+"POT-Creation-Date: 2026-10-10 00:47+0000\n"
 "PO-Revision-Date: 2026-09-12 18:01+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -85,80 +85,80 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "Ei määritetty"
 
-#: agentbase/resourcebase.cpp:514
+#: agentbase/resourcebase.cpp:516
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "Resurssin tunniste"
 
-#: agentbase/resourcebase.cpp:520
+#: agentbase/resourcebase.cpp:522
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "Akonadi-resurssi"
 
-#: agentbase/resourcebase.cpp:562
+#: agentbase/resourcebase.cpp:564
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Saatiin virheellinen tietue"
 
-#: agentbase/resourcebase.cpp:586
+#: agentbase/resourcebase.cpp:588
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Virhe luotaessa tietuetta: %1"
 
-#: agentbase/resourcebase.cpp:617
+#: agentbase/resourcebase.cpp:619
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Virhe virkistettäessä kokoelmaa: %1"
 
-#: agentbase/resourcebase.cpp:709
+#: agentbase/resourcebase.cpp:711
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Paikallisen kokoelman virkistäminen epäonnistui: %1."
 
-#: agentbase/resourcebase.cpp:714
+#: agentbase/resourcebase.cpp:716
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Paikallisten tietueiden päivittäminen epäonnistui: %1."
 
-#: agentbase/resourcebase.cpp:740
+#: agentbase/resourcebase.cpp:742
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Tietuetta ei voi noutaa yhteydettömässä tilassa."
 
-#: agentbase/resourcebase.cpp:923
+#: agentbase/resourcebase.cpp:925
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Synkronoidaan kansiota ”%1”"
 
-#: agentbase/resourcebase.cpp:944 agentbase/resourcebase.cpp:951
+#: agentbase/resourcebase.cpp:946 agentbase/resourcebase.cpp:953
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Kokoelmaa ei saatu noudetuksi synkronointia varten."
 
-#: agentbase/resourcebase.cpp:997
+#: agentbase/resourcebase.cpp:999
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Kokoelmaa ei saatu noudetuksi määritteen synkronointia varten."
 
-#: agentbase/resourcebase.cpp:1046
+#: agentbase/resourcebase.cpp:1048
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Pyydettyä kohdetta ei ole enää olemassa"
 
-#: agentbase/resourcebase.cpp:1267
+#: agentbase/resourcebase.cpp:1269
 #, kde-format
 msgid "Failed to fetch collection for collection sync."
 msgstr "Kokoelmaa ei saatu noudetuksi tahdistusta varten."
 
-#: agentbase/resourcebase.cpp:1303
+#: agentbase/resourcebase.cpp:1305
 #, kde-format
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr "Kokoelmaa ei saatu noudetuksi määritteiden tahdistusta varten."
@@ -452,7 +452,7 @@ msgstr "Ei kelvollista kokoelmaa tai tietueluettelo on tyhjä"
 msgid "Could not find restore collection and restore resource is not available"
 msgstr "Palautuskokoelmaa ei löydetty ja palautusresurssi ei ole saatavilla"
 
-#: core/models/agentinstancemodel.cpp:196
+#: core/models/agentinstancemodel.cpp:199
 #, kde-format
 msgctxt "@title:column, name of a thing"
 msgid "Name"

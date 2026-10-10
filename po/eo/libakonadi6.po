@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-09-26 00:46+0000\n"
+"POT-Creation-Date: 2026-10-10 00:47+0000\n"
 "PO-Revision-Date: 2025-03-22 22:36+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -80,81 +80,81 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "Ne agordita"
 
-#: agentbase/resourcebase.cpp:514
+#: agentbase/resourcebase.cpp:516
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "Rimeda identigilo"
 
-#: agentbase/resourcebase.cpp:520
+#: agentbase/resourcebase.cpp:522
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "Akonadi Rimedo"
 
-#: agentbase/resourcebase.cpp:562
+#: agentbase/resourcebase.cpp:564
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Malvalida ero retrovita"
 
-#: agentbase/resourcebase.cpp:586
+#: agentbase/resourcebase.cpp:588
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Eraro dum kreado de ero: %1"
 
-#: agentbase/resourcebase.cpp:617
+#: agentbase/resourcebase.cpp:619
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Eraro dum ĝisdatigo de kolekto: %1"
 
-#: agentbase/resourcebase.cpp:709
+#: agentbase/resourcebase.cpp:711
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "Ĝisdatigo de loka kolekto malsukcesis: %1."
 
-#: agentbase/resourcebase.cpp:714
+#: agentbase/resourcebase.cpp:716
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "Ĝisdatigi lokajn aĵojn malsukcesis: %1."
 
-#: agentbase/resourcebase.cpp:740
+#: agentbase/resourcebase.cpp:742
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Ne povas preni objekton en eksterreta reĝimo."
 
-#: agentbase/resourcebase.cpp:923
+#: agentbase/resourcebase.cpp:925
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "Sinkronigante dosierujon '%1'"
 
-#: agentbase/resourcebase.cpp:944 agentbase/resourcebase.cpp:951
+#: agentbase/resourcebase.cpp:946 agentbase/resourcebase.cpp:953
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Malsukcesis preni kolekton por sinkronigo."
 
-#: agentbase/resourcebase.cpp:997
+#: agentbase/resourcebase.cpp:999
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Malsukcesis preni kolekton por atributsinkronigo."
 
-#: agentbase/resourcebase.cpp:1046
+#: agentbase/resourcebase.cpp:1048
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "La petita objekto ne plu ekzistas"
 
-#: agentbase/resourcebase.cpp:1267
+#: agentbase/resourcebase.cpp:1269
 #, fuzzy, kde-format
 #| msgid "Failed to retrieve collection for sync."
 msgid "Failed to fetch collection for collection sync."
 msgstr "Malsukcesis preni kolekton por sinkronigo."
 
-#: agentbase/resourcebase.cpp:1303
+#: agentbase/resourcebase.cpp:1305
 #, fuzzy, kde-format
 #| msgid "Failed to retrieve collection for attribute sync."
 msgid "Failed to fetch collection for collection attributes sync."
@@ -452,7 +452,7 @@ msgstr "Neniu valida kolekto aŭ malplena objektolisto"
 msgid "Could not find restore collection and restore resource is not available"
 msgstr "Ne eblis trovi restarigi kolekton kaj restarigi rimedon ne haveblas"
 
-#: core/models/agentinstancemodel.cpp:196
+#: core/models/agentinstancemodel.cpp:199
 #, kde-format
 msgctxt "@title:column, name of a thing"
 msgid "Name"
