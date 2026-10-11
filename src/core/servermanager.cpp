@@ -24,7 +24,7 @@
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 #include <QDBusInterface>
-#include <QDBusReply>
+#include <QDBusPendingCallWatcher>
 #include <QDBusServiceWatcher>
 #include <QProcess>
 #include <QScopedPointer>
@@ -202,19 +202,34 @@ bool ServerManager::start()
         args << QStringLiteral("--instance") << instanceIdentifier();
     }
 
-    QDBusReply<void> reply = busIface->startService(ServerManager::serviceName(ServerManager::Control));
-    if (!reply.isValid()) {
-        qCDebug(AKONADICORE_LOG) << "Akonadi server could not be started via D-Bus: " << reply.error().message();
-        qCDebug(AKONADICORE_LOG) << "Falling back to running akonadi_control via QProcess";
-        const QString exec = QStandardPaths::findExecutable(QStringLiteral("akonadi_control"));
+    // StartServiceByName is answered only once akonadi_control registers its service name, after akonadiserver
+    // and the autostart agents are up, which can take longer than the D-Bus timeout.
+    const QDBusPendingCall call =
+        busIface->asyncCall(QStringLiteral("StartServiceByName"), ServerManager::serviceName(ServerManager::Control), static_cast<uint>(0));
+    // The watcher is a child of the ServerManager and the connection uses it as context, so both end with it.
+    ServerManager *const manager = sInstance->instance;
+    auto watcher = new QDBusPendingCallWatcher(call, manager);
+    QObject::connect(watcher, &QDBusPendingCallWatcher::finished, manager, [args](QDBusPendingCallWatcher *watcher) {
+        watcher->deleteLater();
+        if (!watcher->isError()) {
+            return;
+        }
+        qCDebug(AKONADICORE_LOG) << "Akonadi server could not be started via D-Bus: " << watcher->error().message();
 
-        if (exec.isEmpty() || !QProcess::startDetached(exec, args)) {
-            qCDebug(AKONADICORE_LOG) << "Could not run akonadi_control via QProcess either";
-            return false;
+        QDBusConnectionInterface *const busIface = QDBusConnection::sessionBus().interface();
+        if (busIface->isServiceRegistered(ServerManager::serviceName(ServerManager::ControlLock))
+            || busIface->isServiceRegistered(ServerManager::serviceName(ServerManager::Control))) {
+            qCDebug(AKONADICORE_LOG) << "Akonadi server is already starting up";
+            return;
         }
 
-        return true;
-    }
+        qCDebug(AKONADICORE_LOG) << "Falling back to running akonadi_control via QProcess";
+        const QString exec = QStandardPaths::findExecutable(QStringLiteral("akonadi_control"));
+        if (exec.isEmpty() || !QProcess::startDetached(exec, args)) {
+            qCDebug(AKONADICORE_LOG) << "Could not run akonadi_control via QProcess either";
+            sInstance->setState(Broken);
+        }
+    });
 
     sInstance->setState(Starting);
     return true;
