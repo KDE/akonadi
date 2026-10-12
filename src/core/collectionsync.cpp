@@ -55,10 +55,7 @@ public:
         return ridChain.isEmpty();
     }
 
-    inline bool operator==(const RemoteId &other) const
-    {
-        return ridChain == other.ridChain;
-    }
+    bool operator==(const RemoteId &other) const = default;
 
     QStringList ridChain;
 

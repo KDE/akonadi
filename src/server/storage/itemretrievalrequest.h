@@ -28,10 +28,7 @@ public:
             : mValue(value)
         {
         }
-        bool operator==(Id other) const
-        {
-            return mValue == other.mValue;
-        }
+        bool operator==(const Id &other) const = default;
 
     private:
         uint32_t mValue;

@@ -149,11 +149,6 @@ Command::Command(quint8 type)
 {
 }
 
-bool Command::operator==(const Command &other) const
-{
-    return mType == other.mType;
-}
-
 void Command::toJson(QJsonObject &json) const
 {
     json[QStringLiteral("response")] = static_cast<bool>(mType & Command::_ResponseBit);
@@ -457,11 +452,6 @@ ResponsePtr Factory::response(Command::Type type)
 
 /******************************************************************************/
 
-bool ItemFetchScope::operator==(const ItemFetchScope &other) const
-{
-    return mRequestedParts == other.mRequestedParts && mChangedSince == other.mChangedSince && mAncestorDepth == other.mAncestorDepth && mFlags == other.mFlags;
-}
-
 QList<QByteArray> ItemFetchScope::requestedPayloads() const
 {
     QList<QByteArray> rv;
@@ -557,11 +547,6 @@ ScopeContext::ScopeContext(Type type, const QString &ctx)
     } else if (type == ScopeContext::Collection) {
         mColCtx = ctx;
     }
-}
-
-bool ScopeContext::operator==(const ScopeContext &other) const
-{
-    return mColCtx == other.mColCtx && mTagCtx == other.mTagCtx;
 }
 
 void ScopeContext::toJson(QJsonObject &json) const

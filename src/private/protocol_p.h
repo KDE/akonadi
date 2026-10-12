@@ -128,7 +128,7 @@ public:
     Command &operator=(const Command &) = default;
     Command &operator=(Command &&) = default;
 
-    bool operator==(const Command &other) const;
+    bool operator==(const Command &other) const = default;
     inline bool operator!=(const Command &other) const
     {
         return !operator==(other);
@@ -323,7 +323,7 @@ public:
     ItemFetchScope &operator=(const ItemFetchScope &) = default;
     ItemFetchScope &operator=(ItemFetchScope &&) = default;
 
-    bool operator==(const ItemFetchScope &other) const;
+    bool operator==(const ItemFetchScope &other) const = default;
     inline bool operator!=(const ItemFetchScope &other) const
     {
         return !operator==(other);
@@ -460,7 +460,7 @@ public:
     ScopeContext &operator=(const ScopeContext &) = default;
     ScopeContext &operator=(ScopeContext &&) = default;
 
-    bool operator==(const ScopeContext &other) const;
+    bool operator==(const ScopeContext &other) const = default;
     inline bool operator!=(const ScopeContext &other) const
     {
         return !operator==(other);
