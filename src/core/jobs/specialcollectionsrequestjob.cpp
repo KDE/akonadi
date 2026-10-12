@@ -176,7 +176,9 @@ void SpecialCollectionsRequestJobPrivate::resourceScanResult(KJob *job)
         // This is the default resource.
         if (resourceId != mSpecialCollections->d->defaultResourceId()) {
             qCWarning(AKONADICORE_LOG) << "Resource id's don't match: " << resourceId << mSpecialCollections->d->defaultResourceId();
-            Q_ASSERT(false);
+            // winterz:20260825:whenever I hit this assert I'm getting an extra local folders resource created
+            // Q_ASSERT(false);
+            return;
         }
         // mToForget.append( mSpecialCollections->defaultResourceId() );
         createRequestedFolders(resjob, mDefaultFolders);
