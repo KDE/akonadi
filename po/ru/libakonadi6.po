@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-10 00:47+0000\n"
+"POT-Creation-Date: 2026-10-13 00:46+0000\n"
 "PO-Revision-Date: 2026-08-25 10:52+0300\n"
 "Last-Translator: Olesya Gerasimenko <goa@altlinux.org>\n"
 "Language-Team: Basealt Translation Team\n"
@@ -266,7 +266,7 @@ msgstr "Папка поиска"
 msgid "No such collection."
 msgstr "Коллекция не найдена."
 
-#: core/collectionsync.cpp:505 core/collectionsync.cpp:650
+#: core/collectionsync.cpp:502 core/collectionsync.cpp:647
 #, kde-format
 msgid "Found unresolved orphan collections"
 msgstr "Найдены нераспознанные брошенные коллекции"

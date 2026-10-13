@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-10 00:47+0000\n"
+"POT-Creation-Date: 2026-10-13 00:46+0000\n"
 "PO-Revision-Date: 2024-12-25 19:45+0530\n"
 "Last-Translator: kali <shreekantkalwar@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -261,7 +261,7 @@ msgstr "अन्वेषण"
 msgid "No such collection."
 msgstr "न तादृशः संग्रहः।"
 
-#: core/collectionsync.cpp:505 core/collectionsync.cpp:650
+#: core/collectionsync.cpp:502 core/collectionsync.cpp:647
 #, kde-format
 msgid "Found unresolved orphan collections"
 msgstr "अनवधान अनाथ संग्रह प्राप्त"

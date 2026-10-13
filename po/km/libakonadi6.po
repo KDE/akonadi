@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-10 00:47+0000\n"
+"POT-Creation-Date: 2026-10-13 00:46+0000\n"
 "PO-Revision-Date: 2012-07-11 10:23+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -262,7 +262,7 @@ msgstr "ស្វែងរក "
 msgid "No such collection."
 msgstr "គ្មាន​សម្រាំង​បែប​នេះ​ទេ ។​​"
 
-#: core/collectionsync.cpp:505 core/collectionsync.cpp:650
+#: core/collectionsync.cpp:502 core/collectionsync.cpp:647
 #, kde-format
 msgid "Found unresolved orphan collections"
 msgstr "បាន​រក​ឃើញ​សម្រាំង​តែ​មួយ​​ដែល​មិន​ទាន់​ដោះស្រាយ"

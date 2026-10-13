@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-10 00:47+0000\n"
+"POT-Creation-Date: 2026-10-13 00:46+0000\n"
 "PO-Revision-Date: 2026-07-28 08:31+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -255,7 +255,7 @@ msgstr "Пошук"
 msgid "No such collection."
 msgstr "Немає такої збірки."
 
-#: core/collectionsync.cpp:505 core/collectionsync.cpp:650
+#: core/collectionsync.cpp:502 core/collectionsync.cpp:647
 #, kde-format
 msgid "Found unresolved orphan collections"
 msgstr "Знайдено непов’язані збірки"

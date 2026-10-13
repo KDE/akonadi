@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-10 00:47+0000\n"
+"POT-Creation-Date: 2026-10-13 00:46+0000\n"
 "PO-Revision-Date: 2013-07-14 03:20+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -255,7 +255,7 @@ msgstr "Іздеу"
 msgid "No such collection."
 msgstr "Бұндай жинақ жоқ."
 
-#: core/collectionsync.cpp:505 core/collectionsync.cpp:650
+#: core/collectionsync.cpp:502 core/collectionsync.cpp:647
 #, kde-format
 msgid "Found unresolved orphan collections"
 msgstr "Түзелмейтіндей зақымдалған жинаққа тап болды"

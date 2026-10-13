@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-10 00:47+0000\n"
+"POT-Creation-Date: 2026-10-13 00:46+0000\n"
 "PO-Revision-Date: 2026-09-21 15:02+0200\n"
 "Last-Translator: Shinjo Park <peremen@gmail.com>\n"
 "Language-Team: Korean\n"
@@ -250,7 +250,7 @@ msgstr "검색"
 msgid "No such collection."
 msgstr "모음집이 없습니다."
 
-#: core/collectionsync.cpp:505 core/collectionsync.cpp:650
+#: core/collectionsync.cpp:502 core/collectionsync.cpp:647
 #, kde-format
 msgid "Found unresolved orphan collections"
 msgstr "부모를 찾을 수 없는 고아 모음집 찾음"
