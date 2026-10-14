@@ -8,36 +8,47 @@ ECMInstalledLibraryCheck
 
 Generates a check to test artifacts of the library installation, like the
 self-containedness of the CMake config files as well as of the official public
-headers in the deployed layout.
+headers in the deployed directory layout.
 
 ::
 
   ecm_add_installed_library_check(<library_target>
       [PACKAGE_NAME <package_name>]
       [PACKAGE_VERSION <package_version>]
+      {NO_PACKAGE_VERSION]
       [PACKAGE_TARGET_NAMESPACE <package_target_namespace>]
       [NO_PACKAGE_TARGET_NAMESPACE]
       [COMPILE_DEFINITIONS <definition> [...]]
       [EXTRA_DEPENDENCIES <dependency> [<version>] [...]]
-      [EXTRA_LINK_LIBRARIES <library> [...]])
+      [EXTRA_LINK_LIBRARIES <library> [...]]
+  )
 
-The function creates a target "<library_target>_installed_library_check" which
-can be invoked after the installation to check if the installed library artifacts
-are self-contained when used from a consumer.
+The function creates a target ``<library_target>_installed_library_check`` which
+can be invoked after the installation to check if the installed library
+artifacts are self-contained when used by a consumer.
 All these targets are added as dependency to a target
-"all_installed_library_check", which is created at the level where this module
-is first included.
-The check generates a CMake project with a dummy library which searches the given
-package for any specified version, links to the exported target as imported from
-the package's Cmake config file and as its sources for each given include strings
-adds a C++ source file with just the content "#include <include_string>".
-This project then is configured with cmake and all these sources are built.
+``all_installed_library_check``, which is created at the level where this module
+is included, if there is none yet.
+
+The check generates a CMake project with a dummy library which searches the
+given package for any specified version, links to the exported target as
+imported from the package's CMake config file and as its sources add for each
+given include strings a source file with just the content
+``#include <include_string>``. Additionally checks are added to the CMake code
+and the source files for any CMake variables, compile definitions and
+preprocessor macros as configured by the additional functions (see below).
+This project then is configured with CMake and all these sources are built. The
+check is considered as passed, when the build completes.
 
 ``PACKAGE_NAME`` specifies the name of the CMake package to check for.
-The default is "${PROJECT_NAME}".
+The default is ``${PROJECT_NAME}``.
 
 ``PACKAGE_VERSION`` specifies the version of the CMake package to check for.
-The default is "${PROJECT_VERSION}" if set, otherwise none.
+The default is ``${PROJECT_VERSION}`` if set and ``NO_PACKAGE_VERSION`` not
+being used, otherwise none.
+
+``NO_PACKAGE_VERSION`` defines that the CMake package has no version to check
+for.
 
 ``PACKAGE_TARGET_NAMESPACE`` specifies what namespace the exported target
 name of the library is placed in. The default is the value estimated for
@@ -50,58 +61,75 @@ in the package without any namespace.
 builds against the headers.
 
 ``EXTRA_DEPENDENCIES`` can be used to add custom dependencies to search for
-with "find_package()`. This can be used if the current dependencies declared
-in the installed CMake config are not complete, but can not be changed.
+with ``find_package()``. This can be used if the current dependencies declared
+in the installed CMake config file are not complete, but can not be changed.
 
 ``EXTRA_LINK_LIBRARIES`` can be used to add custom libraries to link to with
-"target_link_libraries()`. This can be used if the current list of libraries
+``target_link_libraries()``. This can be used if the current list of libraries
 in the public interface is not complete, but can not be changed.
 
 ::
 
   ecm_installed_library_check_include_strings(<library_target>
-      HEADERS <package_name>
-      [PREFIX <prefix>])
+      HEADERS <header> [...]
+      [PREFIX <prefix>]
+  )
 
+This function registers include strings with the check, by listing files
+which will be used as official public headers.
 
 ``HEADERS`` specifies the header files whose base names will be available as
-public include strings.
+public include strings. The actual path of any file listed is ignored, it also
+does not need to reference any existing file.
 
-``PREFIX`` specifies a prefix, which consumers need to append next to the base names
-of the headers passed to ``HEADERS``. The argument <prefix> is specified without a
-trailing "/". Default is none.
+``PREFIX`` specifies a prefix which consumers need to prepend to the base
+names of the headers passed to ``HEADERS``. The argument ``<prefix>`` is
+specified without a trailing "/". Default is none.
 
 ::
 
   ecm_installed_library_check_cmake_variable(<library_target>
       NAME <name>
-      VALUE <value>
-      [TYPE <type>])
+      [VALUE <value>]
+      [UNDEFINED]
+      [TYPE <type>]
+  )
 
+This function registers a CMake variable with the check which should be tested
+for presence and its value after the library's CMake package has been found.
 
 ``NAME`` specifies the name of a variable expected to be set after finding the
 package.
 
-``VALUE`` specifies the value expected to be set for the variable. For variables
-of the type "BOOL" the usual evaluation of CMake to a boolean value is compared.
+``VALUE`` specifies the value expected to be set for the variable. For
+variables of the type ``BOOL`` the usual evaluation of CMake to a boolean value
+is checked. If this argument is not passed, the variable. is only tested for
+being defined.
 
-``TYPE`` specifies the type of the variable. The options are "BOOL", "STRING".
-Default is "STRING"
+``UNDEFINED`` specifies if the variable should be tested for being undefined.
+
+``TYPE`` specifies the type of the variable. The options are ``BOOL``,
+``STRING``. Default is ``STRING``.
 
 ::
 
   ecm_installed_library_check_compile_definition(<library_target>
       NAME <name>
       [VALUE <value>]
-      [UNDEFINED])
+      [UNDEFINED]
+  )
 
+This function registers a compile definition with the check which should be
+tested for being set on the imported library target.
 
-``NAME`` specifies the name of a macro to test.
+``NAME`` specifies the name of the compile definition to test.
 
-``VALUE`` specifies the value expected to be set for the macro If not passed,
-the macro is only tested for being defined. Only numeric values are supported.
+``VALUE`` specifies the value expected to be set for the compile definition.
+If this argument is not passed, the compile definition is only tested for being
+defined. Only numeric values are supported.
 
-``UNDEFINED`` specifies if the macro should be tested for being undefined.
+``UNDEFINED`` specifies if the compile definition should be tested for being
+undefined.
 
 ::
 
@@ -109,33 +137,47 @@ the macro is only tested for being defined. Only numeric values are supported.
       NAME <name>
       [VALUE <value>]
       [UNDEFINED]
-      [SILENT])
+  )
 
+This function registers a preprocessor macro with the check which should be
+tested for being present with all registered include strings.
 
-``NAME`` specifies the name of a macro to test.
+``NAME`` specifies the name of the macro to test.
 
-``VALUE`` specifies the value expected to be set for the macro If not passed,
-the macro is only tested for being defined. Only numeric values are supported.
+``VALUE`` specifies the value expected to be set for the macro. If this argument
+is not passed, the macro is only tested for being defined. Only numeric values
+are supported.
 
 ``UNDEFINED`` specifies if the macro should be tested for being undefined.
-
-``SILENT`` specifies if the positive result should not be reported.
 
 ::
 
   ecm_installed_library_check_version_preprocessor_macros(<library_target>
-      PREFIX <prefix>
+      [PREFIX <prefix>]
       [VERSION <version>]
-      [SILENT])
+  )
 
+This function is a convenience utility to register a usual set of preprocessor
+macros with the check which should be tested for being present with all
+registered include strings and match the given version. Such macros are e.g.
+created by the macro ``ecm_setup_version()`` from the module
+:module:`ECMSetupVersion` when using the ``VERSION_HEADER`` argument to
+generate a version header.
 
-``PREFIX`` specifies the prefix of the version macros to test. The expected macro
-names are: "<prefix>_VERSION" (hexadecimal number), "<prefix>_VERSION_MAJOR",
-"<prefix>_VERSION_MINOR" and "<prefix>_VERSION_PATCH".
+``PREFIX`` specifies the prefix of the version macros to test. The expected
+macro names are:
 
-``VERSION`` specifies the version string "<major>.<minor>.<patch>".
+* ``<prefix>_VERSION`` (hexadecimal number in ``0xMMmmpp`` format)
+* ``<prefix>_VERSION_MAJOR``
+* ``<prefix>_VERSION_MINOR``
+* ``<prefix>_VERSION_PATCH``
 
-``SILENT`` specifies if the positive results should not be reported.
+Default is the library target name in upper case.
+
+``VERSION`` specifies the version string "<major>.<minor>.<patch>" with the
+expected version values. The default is any "VERSION" property set on the
+target, otherwise any package version defined for the check, or otherwise
+``${PROJECT_VERSION}``.
 
 Example usage:
 
@@ -168,20 +210,21 @@ Example usage:
       PREFIX ML
   )
 
-Since 6.29
+Since 6.30
 #]=======================================================================]
 
 cmake_policy(VERSION 3.29)
 
+# create global target, at include level
 if(NOT TARGET all_installed_library_check)
     add_custom_target(all_installed_library_check)
 endif()
 
-# Purpose: testing basic self-containedness of public headers and cmake config files
-# no testing of actual symbols or template methods
-# TODO: support testing with other build metadata formats, like pkgconfig?
 function(ecm_add_installed_library_check _target)
-    set(options NO_PACKAGE_TARGET_NAMESPACE)
+    set(options
+        NO_PACKAGE_TARGET_NAMESPACE
+        NO_PACKAGE_VERSION
+    )
     set(oneValueArgs
         PACKAGE_NAME
         PACKAGE_VERSION
@@ -208,6 +251,12 @@ function(ecm_add_installed_library_check _target)
             "ecm_add_installed_library_check cannot be called with both NO_PACKAGE_TARGET_NAMESPACE and PACKAGE_TARGET_NAMESPACE args."
         )
     endif()
+    if(ARG_NO_PACKAGE_VERSION AND ARG_PACKAGE_VERSION)
+        message(
+            FATAL_ERROR
+            "ecm_add_installed_library_check cannot be called with both NO_PACKAGE_VERSION and PACKAGE_VERSION args."
+        )
+    endif()
     set(_library_types
         "STATIC_LIBRARY"
         "SHARED_LIBRARY"
@@ -230,16 +279,11 @@ function(ecm_add_installed_library_check _target)
     if(ARG_PACKAGE_VERSION)
         set(_package_version ${ARG_PACKAGE_VERSION})
     else()
-        if(PROJECT_VERSION)
+        if(NOT ARG_NO_PACKAGE_VERSION AND PROJECT_VERSION)
             set(_package_version ${PROJECT_VERSION})
         else()
             set(_package_version)
         endif()
-    endif()
-    if(_package_version)
-        set(_package_version_exact "EXACT")
-    else()
-        set(_package_version_exact)
     endif()
     if(ARG_PACKAGE_TARGET_NAMESPACE)
         set(_library_target_namespace ${ARG_PACKAGE_TARGET_NAMESPACE})
@@ -250,38 +294,6 @@ function(ecm_add_installed_library_check _target)
             set(_library_target_namespace "${_package_name}::")
         endif()
     endif()
-    set(_extra_find_packages_statements)
-    if(ARG_EXTRA_DEPENDENCIES)
-        list(LENGTH ARG_EXTRA_DEPENDENCIES _deps_count)
-        set(_i 0)
-        while(${_i} LESS ${_deps_count})
-            list(GET ARG_EXTRA_DEPENDENCIES ${_i} _extra_package_name)
-            math(EXPR _i "${_i} + 1")
-            set(_extra_package_version_string)
-            # check next arg if it is version and thus to be consumed
-            if(${_i} LESS ${_deps_count})
-                list(GET ARG_EXTRA_DEPENDENCIES ${_i} _extra_package_version)
-                if(_extra_package_version MATCHES "^([0-9]+)\\.([0-9]+)(\\.([0-9]+))?$")
-                    set(_extra_package_version_string " ${_extra_package_version}")
-                    math(EXPR _i "${_i} + 1")
-                endif()
-            endif()
-            set(_extra_find_packages_statements
-                "find_package(${_extra_package_name}${_extra_package_version_string} REQUIRED)\n"
-            )
-        endwhile()
-    endif()
-    set(_extra_link_libraries_list)
-    foreach(_link_library IN LISTS ARG_EXTRA_LINK_LIBRARIES)
-        string(APPEND _extra_link_libraries_list "\n    ${_link_library}")
-    endforeach()
-    set(_compile_definitions_statement)
-    if(ARG_COMPILE_DEFINITIONS)
-        set(_compile_definitions_statement
-            "target_compile_definitions(InstalledLibraryCheck PRIVATE ${ARG_COMPILE_DEFINITIONS})\n"
-        )
-    endif()
-    set(_prefix_path "${CMAKE_INSTALL_PREFIX}")
 
     set(_compiler_propagation)
     foreach(_compiler IN ITEMS CMAKE_C_COMPILER CMAKE_CXX_COMPILER)
@@ -292,85 +304,82 @@ function(ecm_add_installed_library_check _target)
 
     set(_languages)
     if(CMAKE_C_COMPILER)
-        string(APPEND _languages " C")
+        list(APPEND _languages "C")
     endif()
     if(CMAKE_CXX_COMPILER)
-        string(APPEND _languages " CXX")
-    endif()
-    if(_languages)
-        string(PREPEND _languages " LANGUAGES")
+        list(APPEND _languages "CXX")
     endif()
 
-    # prepare (generator) expressions
     set(_installed_library_check_dir "${CMAKE_CURRENT_BINARY_DIR}/${_target}_ECMInstalledLibraryCheck")
+
+    # prepare (generator) expressions, to pick up data for the check set only after this function's call
     set(_include_strings "$<TARGET_PROPERTY:${_target},ECM_INSTALLED_LIBRARY_INCLUDE_STRINGS>")
     set(_include_strings_sorted "$<LIST:SORT,${_include_strings}>")
-    set(_include_strings_lines "$<JOIN:${_include_strings_sorted},\n    >")
+
     set(_exported_target_name "$<TARGET_PROPERTY:${_target},EXPORT_NAME>")
     set(_library_target_name
         "${_library_target_namespace}$<IF:$<BOOL:${_exported_target_name}>,${_exported_target_name},${_target}>"
     )
 
-    set(_cmake_variables_check_statements
-        "$<TARGET_PROPERTY:${_target},ECM_INSTALLED_LIBRARY_CMAKE_VARIABLES_CHECK_CODE>"
+    set(_cmake_variables_check_data "$<TARGET_PROPERTY:${_target},ECM_INSTALLED_LIBRARY_CMAKE_VARIABLES_CHECK_DATA>")
+
+    set(_compile_definitions_check_data
+        "$<TARGET_PROPERTY:${_target},ECM_INSTALLED_LIBRARY_COMPILE_DEFINITIONS_CHECK_DATA>"
     )
 
-    set(_compile_definitions_check_statements
-        "$<TARGET_PROPERTY:${_target},ECM_INSTALLED_LIBRARY_COMPILE_DEFINITIONS_CHECK_CODE>"
+    set(_preprocessor_macro_check_data
+        "$<TARGET_PROPERTY:${_target},ECM_INSTALLED_LIBRARY_PREPROCESSOR_MACRO_CHECK_DATA>"
     )
-    set(_source_file "ecm_installed_library_check_compile_definitions.cpp")
-    set(_compile_definitions_check_code
-        "$<IF:$<BOOL:${_compile_definitions_check_statements}>,
-file(GENERATE OUTPUT ${_source_file} CONTENT \"${_compile_definitions_check_statements}\")\n
-target_sources(InstalledLibraryCheck PRIVATE ${_source_file})\n,>"
+    set(_version_check_prefix
+        "$<TARGET_PROPERTY:${_target},ECM_INSTALLED_LIBRARY_VERSION_PREPROCESSOR_MACRO_CHECK_PREFIX>"
     )
-
-    set(_preprocessor_macro_check_statements
-        "$<TARGET_PROPERTY:${_target},ECM_INSTALLED_LIBRARY_PREPROCESSOR_MACRO_CHECK_CODE>"
-    )
-    set(_preprocessor_macro_check_code
-        "$<IF:$<BOOL:${_preprocessor_macro_check_statements}>,
-\"${_preprocessor_macro_check_statements}\",>"
+    set(_version_check_data "$<TARGET_PROPERTY:${_target},ECM_INSTALLED_LIBRARY_VERSION_PREPROCESSOR_MACRO_CHECK_DATA>")
+    set(_version_preprocessor_macro_check_data
+        "$<$<BOOL:${_version_check_data}>:${_version_check_prefix}:>${_version_check_data}$<$<STREQUAL:${_version_check_data},DEFAULT>:|$<TARGET_PROPERTY:${_target},VERSION>|${_package_version}>"
     )
 
-    file(
-        GENERATE OUTPUT "${_installed_library_check_dir}/CMakeLists.txt"
-        CONTENT
-            "# This file was generated by ecm_add_installed_library_check(). DO NOT EDIT!
-cmake_minimum_required(VERSION 3.29)
-
-project(InstalledLibraryCheck${_languages})
-
-find_package(${_package_name} ${_package_version} ${_package_version_exact} CONFIG REQUIRED NO_DEFAULT_PATH
-    PATHS \"${_prefix_path}\"
-)
-${_extra_find_packages_statements}
-include(FeatureSummary)
-feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
-${_cmake_variables_check_statements}
-add_library(InstalledLibraryCheck MODULE)
-target_link_libraries(InstalledLibraryCheck
-    ${_library_target_name}${_extra_link_libraries_list}
-)
-${_compile_definitions_statement}
-set(_include_strings
-    ${_include_strings_lines}
-)
-${_compile_definitions_check_code}
-set(_preprocessor_macro_check_statements${_preprocessor_macro_check_code})
-
-foreach(_include_string IN LISTS _include_strings)
-    string(REPLACE \"/\" \"__\" _escaped_include_string \${_include_string})
-    set(_source_file \"\${CMAKE_CURRENT_BINARY_DIR}/\${_escaped_include_string}.cpp\")
-    file(GENERATE OUTPUT \${_source_file} CONTENT \"#include <\${_include_string}>\\n\${_preprocessor_macro_check_statements}\")
-    target_sources(InstalledLibraryCheck PRIVATE \${_source_file})
-endforeach()
-"
+    # prepare non-generator-expression list values for passing as command
+    # avoids space being used as list separator when expanding there even inside ""
+    list(
+        JOIN _languages
+        $<SEMICOLON>
+        _languages
     )
+    list(
+        JOIN ARG_EXTRA_DEPENDENCIES
+        $<SEMICOLON>
+        _extra_dependencies
+    )
+    list(
+        JOIN ARG_EXTRA_LINK_LIBRARIES
+        $<SEMICOLON>
+        _extra_link_libraries
+    )
+    list(
+        JOIN ARG_COMPILE_DEFINITIONS
+        $<SEMICOLON>
+        _compile_definitions
+    )
+
+    # prepare dir
+    file(MAKE_DIRECTORY ${_installed_library_check_dir})
 
     set(_check_target_name ${_target}_installed_library_check)
+
     add_custom_target(
         ${_check_target_name}
+        COMMENT "Running installed library check for ${_target}"
+        COMMAND
+            ${CMAKE_COMMAND} -DOUTPUT_DIR="${_installed_library_check_dir}" -DLANGUAGES="${_languages}"
+            -DPACKAGE_NAME="${_package_name}" -DPACKAGE_VERSION="${_package_version}"
+            -DPACKAGE_INSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}" -DLIBRARY_TARGET_NAME="${_library_target_name}"
+            -DEXTRA_DEPENDENCIES="${_extra_dependencies}" -DEXTRA_LINK_LIBRARIES="${_extra_link_libraries}"
+            -DEXTRA_COMPILE_DEFINITIONS="${_compile_definitions}" -DINCLUDE_STRINGS="${_include_strings_sorted}"
+            -DCMAKE_VARIABLES_CHECK_DATA="${_cmake_variables_check_data}"
+            -DCOMPILE_DEFINITIONS_CHECK_DATA="${_compile_definitions_check_data}"
+            -DPREPROCESSOR_MACRO_CHECK_DATA="${_preprocessor_macro_check_data}"
+            -DVERSION_PREPROCESSOR_MACRO_CHECK_DATA="${_version_preprocessor_macro_check_data}" -P
+            "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/ecm_create_installed_library_check.cmake"
         COMMAND
             ${CMAKE_COMMAND}
             # TODO: other options to pass on? e.g. for cross-compilation, tool-chain file?
@@ -408,6 +417,8 @@ function(ecm_installed_library_check_include_strings _target)
     if(ARG_PREFIX)
         string(APPEND ARG_PREFIX "/")
     endif()
+
+    # turn file names into include strings, with optional prefix
     foreach(_header IN LISTS ARG_HEADERS)
         cmake_path(GET _header FILENAME _name)
         list(APPEND _names "${ARG_PREFIX}${_name}")
@@ -422,7 +433,7 @@ function(ecm_installed_library_check_include_strings _target)
 endfunction()
 
 function(ecm_installed_library_check_cmake_variable _target)
-    set(options)
+    set(options UNDEFINED)
     set(oneValueArgs NAME TYPE VALUE)
     set(multiValueArgs)
 
@@ -436,9 +447,12 @@ function(ecm_installed_library_check_cmake_variable _target)
         )
     endif()
     if(NOT DEFINED ARG_NAME)
+        message(FATAL_ERROR "Missing NAME argument to ecm_installed_library_check_cmake_variable().")
+    endif()
+    if(DEFINED ARG_VALUE AND ARG_UNDEFINED)
         message(
             FATAL_ERROR
-            "Missing NAME argument to ecm_installed_library_check_cmake_variable(): \"${ARG_UNPARSED_ARGUMENTS}\""
+            "ecm_installed_library_check_cmake_variable cannot be called with both VALUE and UNDEFINED args."
         )
     endif()
     if(ARG_TYPE)
@@ -453,143 +467,43 @@ function(ecm_installed_library_check_cmake_variable _target)
         set(ARG_TYPE "STRING")
     endif()
 
-    # store code with library target
-    get_target_property(_code ${_target} ECM_INSTALLED_LIBRARY_CMAKE_VARIABLES_CHECK_CODE)
-    if(_code STREQUAL "_code-NOTFOUND")
-        set(_code "\nmessage(STATUS \"Checking CMake variables\")\n")
+    # store data with library target
+    get_target_property(_data ${_target} ECM_INSTALLED_LIBRARY_CMAKE_VARIABLES_CHECK_DATA)
+    if(_data STREQUAL "_data-NOTFOUND")
+        set(_data)
     endif()
 
+    if(DEFINED ARG_VALUE)
+        set(_var_check_data "${ARG_NAME}=${ARG_VALUE}")
+    elseif(ARG_UNDEFINED)
+        set(_var_check_data "${ARG_NAME}!")
+    else() # defined
+        set(_var_check_data "${ARG_NAME}?")
+    endif()
     if(${ARG_TYPE} STREQUAL "BOOL")
-        if(${ARG_VALUE})
-            set(_value_condition_code "\${${ARG_NAME}}")
-            set(_value_error_report "is FALSE, expecting TRUE")
-        else()
-            set(_value_condition_code "NOT \${${ARG_NAME}}")
-            set(_value_error_report "is TRUE, expecting FALSE")
-        endif()
+        string(PREPEND _var_check_data "B:")
     else() # STRING
-        set(_value_condition_code "\${${ARG_NAME}} STREQUAL \"${ARG_VALUE}\"")
-        set(_value_error_report "is '\${${ARG_NAME}}', expecting '${ARG_VALUE}'")
+        string(PREPEND _var_check_data "S:")
     endif()
 
-    set(_var_check_code
-        "if(NOT DEFINED ${ARG_NAME})
-    message(SEND_ERROR \"${ARG_NAME}: not defined\")
-else()
-    if (${_value_condition_code})
-        message(STATUS \"${ARG_NAME}: passed\")
-    else()
-        message(SEND_ERROR \"${ARG_NAME}: ${_value_error_report}\")
-    endif()
-endif()
-"
-    )
-
-    string(APPEND _code "${_var_check_code}")
-
+    list(APPEND _data "${_var_check_data}")
     set_target_properties(
         ${_target}
         PROPERTIES
-            ECM_INSTALLED_LIBRARY_CMAKE_VARIABLES_CHECK_CODE
-                "${_code}"
+            ECM_INSTALLED_LIBRARY_CMAKE_VARIABLES_CHECK_DATA
+                "${_data}"
     )
 endfunction()
 
-function(
-    _ecm_installed_library_check_get_check_code
-    _target
-    _var_name
-    _property_name
-    _subject_name
-    _silent
-)
-    get_target_property(_check_code ${_target} ${_property_name})
-    if(_check_code STREQUAL "_check_code-NOTFOUND")
-        if(_silent)
-            set(_check_code "")
-        else()
-            set(_check_code "#pragma message(\\\"Checking ${_subject_name}\\\")\n")
-        endif()
-        string(
-            APPEND _check_code
-            "#define _ECM_INSTALLED_LIBRARY_CHECK_VALUE_TO_STRING(x) #x
-#define _ECM_INSTALLED_LIBRARY_CHECK_VALUE(x) _ECM_INSTALLED_LIBRARY_CHECK_VALUE_TO_STRING(x)
-"
-        )
+function(_ecm_installed_library_check_preprocessor_macro_check_data _var_name _name _check_type _value)
+    if(_check_type STREQUAL "VALUE")
+        set(_var_check_data "${_name}=${_value}")
+    elseif(_check_type STREQUAL "UNDEFINED")
+        set(_var_check_data "${_name}!")
+    else() # "DEFINED"
+        set(_var_check_data "${_name}?")
     endif()
-    set(${_var_name} ${_check_code} PARENT_SCOPE)
-endfunction()
-
-function(_ecm_installed_library_check_macro_value_check_code _var_name _name _value _silent)
-    set(_check_code
-        "#if !defined(${_name})
-    #error(\\\"${_name}: not defined\\\")
-#else
-    #if ${_name} != ${_value}
-        #pragma message(\\\"${_name}: is '\\\" _ECM_INSTALLED_LIBRARY_CHECK_VALUE(${_name}) \\\"'\\\")
-        #error(\\\"${_name}: expecting '${_value}'\\\")
-"
-    )
-    if(NOT _silent)
-        string(
-            APPEND _check_code
-            "    #else
-       #pragma message(\\\"${_name}: passed\\\")
-"
-        )
-    endif()
-    string(
-        APPEND _check_code
-        "    #endif
-#endif
-"
-    )
-    set(${_var_name} ${_check_code} PARENT_SCOPE)
-endfunction()
-
-function(_ecm_installed_library_check_macro_defined_check_code _var_name _name _silent)
-    set(_check_code
-        "#if !defined(${_name})
-    #error(\\\"${_name}: is undefined, expecting defined\\\")
-"
-    )
-    if(NOT _silent)
-        string(
-            APPEND _check_code
-            "#else
-    #pragma message(\\\"${_name}: passed\\\")
-"
-        )
-    endif()
-    string(
-        APPEND _check_code
-        "#endif
-"
-    )
-
-    set(${_var_name} ${_check_code} PARENT_SCOPE)
-endfunction()
-
-function(_ecm_installed_library_check_macro_undefined_check_code _var_name _name _silent)
-    set(_check_code
-        "#if defined(${_name})
-    #error(\\\"${_name}: is defined, expecting undefined\\\")
-"
-    )
-    if(NOT _silent)
-        string(
-            APPEND _check_code
-            "#else
-    #pragma message(\\\"${_name}: passed\\\")
-"
-        )
-    endif()
-    string(
-        APPEND _check_code
-        "#endif
-"
-    )
-    set(${_var_name} ${_check_code} PARENT_SCOPE)
+    set(${_var_name} "${_var_check_data}" PARENT_SCOPE)
 endfunction()
 
 function(ecm_installed_library_check_compile_definition _target)
@@ -607,46 +521,42 @@ function(ecm_installed_library_check_compile_definition _target)
         )
     endif()
     if(NOT DEFINED ARG_NAME)
-        message(
-            FATAL_ERROR
-            "Missing NAME argument to ecm_installed_library_check_compile_definition(): \"${ARG_UNPARSED_ARGUMENTS}\""
-        )
+        message(FATAL_ERROR "Missing NAME argument to ecm_installed_library_check_compile_definition().")
     endif()
-    if(ARG_VALUE AND ARG_UNDEFINED)
+    if(DEFINED ARG_VALUE AND ARG_UNDEFINED)
         message(
             FATAL_ERROR
             "ecm_installed_library_check_compile_definition cannot be called with both VALUE and UNDEFINED args."
         )
     endif()
 
-    # store code with library target
-    _ecm_installed_library_check_get_check_code(${_target} _code
-        ECM_INSTALLED_LIBRARY_COMPILE_DEFINITIONS_CHECK_CODE "compile definitions" FALSE
-    )
-
-    if(DEFINED ARG_VALUE)
-        _ecm_installed_library_check_macro_value_check_code(_var_check_code ${ARG_NAME} ${ARG_VALUE} FALSE)
-    elseif(ARG_UNDEFINED)
-        _ecm_installed_library_check_macro_undefined_check_code(_var_check_code ${ARG_NAME} FALSE)
-    else()
-        _ecm_installed_library_check_macro_defined_check_code(_var_check_code ${ARG_NAME} FALSE)
+    # store data with library target
+    get_target_property(_data ${_target} ECM_INSTALLED_LIBRARY_COMPILE_DEFINITIONS_CHECK_DATA)
+    if(_data STREQUAL "_data-NOTFOUND")
+        set(_data)
     endif()
 
-    string(APPEND _code "${_var_check_code}")
+    if(DEFINED ARG_VALUE)
+        set(_check_type "VALUE")
+    elseif(ARG_UNDEFINED)
+        set(_check_type "UNDEFINED")
+    else()
+        set(_check_type "DEFINED")
+    endif()
 
+    _ecm_installed_library_check_preprocessor_macro_check_data(_var_check_data ${ARG_NAME} ${_check_type} "${ARG_VALUE}")
+
+    list(APPEND _data "${_var_check_data}")
     set_target_properties(
         ${_target}
         PROPERTIES
-            ECM_INSTALLED_LIBRARY_COMPILE_DEFINITIONS_CHECK_CODE
-                "${_code}"
+            ECM_INSTALLED_LIBRARY_COMPILE_DEFINITIONS_CHECK_DATA
+                "${_data}"
     )
 endfunction()
 
 function(ecm_installed_library_check_preprocessor_macro _target)
-    set(options
-        UNDEFINED
-        SILENT
-    )
+    set(options UNDEFINED)
     set(oneValueArgs NAME VALUE)
     set(multiValueArgs)
 
@@ -660,10 +570,7 @@ function(ecm_installed_library_check_preprocessor_macro _target)
         )
     endif()
     if(NOT DEFINED ARG_NAME)
-        message(
-            FATAL_ERROR
-            "Missing NAME argument to ecm_installed_library_check_preprocessor_macro(): \"${ARG_UNPARSED_ARGUMENTS}\""
-        )
+        message(FATAL_ERROR "Missing NAME argument to ecm_installed_library_check_preprocessor_macro().")
     endif()
     if(ARG_VALUE AND ARG_UNDEFINED)
         message(
@@ -672,37 +579,33 @@ function(ecm_installed_library_check_preprocessor_macro _target)
         )
     endif()
 
-    # store code with library target
-    _ecm_installed_library_check_get_check_code(${_target} _code
-        ECM_INSTALLED_LIBRARY_PREPROCESSOR_MACRO_CHECK_CODE "preprocessor macros" ${ARG_SILENT}
-    )
-
-    if(ARG_SILENT)
-        set(_silent TRUE)
-    else()
-        set(_silent FALSE)
+    # store data with library target
+    get_target_property(_data ${_target} ECM_INSTALLED_LIBRARY_PREPROCESSOR_MACRO_CHECK_DATA)
+    if(_data STREQUAL "_data-NOTFOUND")
+        set(_data)
     endif()
 
     if(DEFINED ARG_VALUE)
-        _ecm_installed_library_check_macro_value_check_code(_var_check_code ${ARG_NAME} ${ARG_VALUE} ${_silent})
+        set(_check_type "VALUE")
     elseif(ARG_UNDEFINED)
-        _ecm_installed_library_check_macro_undefined_check_code(_var_check_code ${ARG_NAME} ${_silent})
+        set(_check_type "UNDEFINED")
     else()
-        _ecm_installed_library_check_macro_defined_check_code(_var_check_code ${ARG_NAME} ${_silent})
+        set(_check_type "DEFINED")
     endif()
 
-    string(APPEND _code "${_var_check_code}")
+    _ecm_installed_library_check_preprocessor_macro_check_data(_var_check_data ${ARG_NAME} ${_check_type} "${ARG_VALUE}")
 
+    list(APPEND _data "${_var_check_data}")
     set_target_properties(
         ${_target}
         PROPERTIES
-            ECM_INSTALLED_LIBRARY_PREPROCESSOR_MACRO_CHECK_CODE
-                "${_code}"
+            ECM_INSTALLED_LIBRARY_PREPROCESSOR_MACRO_CHECK_DATA
+                "${_data}"
     )
 endfunction()
 
 function(ecm_installed_library_check_version_preprocessor_macros _target)
-    set(options SILENT)
+    set(options)
     set(oneValueArgs
         PREFIX
         VERSION
@@ -718,52 +621,30 @@ function(ecm_installed_library_check_version_preprocessor_macros _target)
             "Unknown keywords given to ecm_installed_library_check_version_preprocessor_macros(): \"${ARG_UNPARSED_ARGUMENTS}\""
         )
     endif()
-    if(NOT DEFINED ARG_PREFIX)
-        message(
-            FATAL_ERROR
-            "Missing NAME argument to ecm_installed_library_check_version_preprocessor_macros(): \"${ARG_UNPARSED_ARGUMENTS}\""
-        )
-    endif()
 
-    if(NOT DEFINED ARG_VERSION)
-        set(ARG_VERSION "${PROJECT_VERSION}")
-    endif()
-    if(ARG_SILENT)
-        set(_silent SILENT)
+    if(DEFINED ARG_PREFIX)
+        set(_prefix "${ARG_PREFIX}")
     else()
-        set(_silent)
+        string(TOUPPER "${_target}" _prefix)
     endif()
 
-    string(REGEX MATCH "^0*([0-9]+)\\.0*([0-9]+)\\.0*([0-9]+)$" _ ${ARG_VERSION})
-    set(_version_major ${CMAKE_MATCH_1})
-    set(_version_minor ${CMAKE_MATCH_2})
-    set(_version_patch ${CMAKE_MATCH_3})
-
-    math(
-        EXPR
-        _hex_number
-        "${_version_major}*65536 + ${_version_minor}*256 + ${_version_patch}"
-        OUTPUT_FORMAT HEXADECIMAL
+    # storing separately, as *_DATA will need to be generator-expression-compared to "DEFAULT"
+    set_target_properties(
+        ${_target}
+        PROPERTIES
+            ECM_INSTALLED_LIBRARY_VERSION_PREPROCESSOR_MACRO_CHECK_PREFIX
+                "${_prefix}"
     )
 
-    ecm_installed_library_check_preprocessor_macro(${_target}
-        NAME ${ARG_PREFIX}_VERSION
-        VALUE ${_hex_number}
-        ${_silent}
-    )
-    ecm_installed_library_check_preprocessor_macro(${_target}
-        NAME ${ARG_PREFIX}_VERSION_MAJOR
-        VALUE ${_version_major}
-        ${_silent}
-    )
-    ecm_installed_library_check_preprocessor_macro(${_target}
-        NAME ${ARG_PREFIX}_VERSION_MINOR
-        VALUE ${_version_minor}
-        ${_silent}
-    )
-    ecm_installed_library_check_preprocessor_macro(${_target}
-        NAME ${ARG_PREFIX}_VERSION_PATCH
-        VALUE ${_version_patch}
-        ${_silent}
+    if(DEFINED ARG_VERSION)
+        set(_version "${ARG_VERSION}")
+    else()
+        set(_version "DEFAULT")
+    endif()
+    set_target_properties(
+        ${_target}
+        PROPERTIES
+            ECM_INSTALLED_LIBRARY_VERSION_PREPROCESSOR_MACRO_CHECK_DATA
+                "${_version}"
     )
 endfunction()
