@@ -148,5 +148,4 @@ ecm_installed_library_check_include_strings(KPim6AkonadiXml
 ecm_installed_library_check_version_preprocessor_macros(KPim6AkonadiXml
     PREFIX AKONADI
     VERSION ${AKONADI_VERSION}
-    SILENT
 )
