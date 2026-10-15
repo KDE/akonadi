@@ -20,7 +20,7 @@
 using namespace Akonadi;
 namespace
 {
-static const char myTagSelectionDialogGroupName[] = "TagSelectionDialog";
+const char myTagSelectionDialogGroupName[] = "TagSelectionDialog";
 }
 class Akonadi::TagSelectionDialogPrivate
 {

@@ -21,7 +21,7 @@
 using namespace Akonadi;
 namespace
 {
-static const char myAgentTypeDialogGroupName[] = "AgentTypeDialog";
+const char myAgentTypeDialogGroupName[] = "AgentTypeDialog";
 }
 class Akonadi::AgentTypeDialogPrivate
 {

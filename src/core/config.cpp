@@ -24,10 +24,10 @@ QString getConfigName()
     }
 }
 
-static constexpr char group_PayloadCompression[] = "PayloadCompression";
+constexpr char group_PayloadCompression[] = "PayloadCompression";
 
 // Payload compression
-static constexpr char key_PC_Enabled[] = "enabled";
+constexpr char key_PC_Enabled[] = "enabled";
 
 } // namespace
 

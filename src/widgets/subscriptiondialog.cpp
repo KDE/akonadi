@@ -36,7 +36,7 @@ using namespace Akonadi;
 
 namespace
 {
-static const char mySubscriptionDialogGroupName[] = "SubscriptionDialog";
+const char mySubscriptionDialogGroupName[] = "SubscriptionDialog";
 }
 /**
  * @internal
