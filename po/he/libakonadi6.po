@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-13 00:46+0000\n"
+"POT-Creation-Date: 2026-10-16 00:48+0000\n"
 "PO-Revision-Date: 2026-07-28 08:37+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -591,7 +591,7 @@ msgstr "אין הפעלה זמינה למפתח הזה"
 msgid "No item available for this index"
 msgstr "אין פריטים זמינים למפתח הזה"
 
-#: core/servermanager.cpp:271
+#: core/servermanager.cpp:286
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -603,7 +603,7 @@ msgstr ""
 "אם עדכנת את המערכת שלך לאחרונה נא לצאת מהמערכת ולהיכנס בחזרה כדי לוודא שכל "
 "היישומים משתמשים בגרסת הפרוטוקול הנכונה."
 
-#: core/servermanager.cpp:288
+#: core/servermanager.cpp:303
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "

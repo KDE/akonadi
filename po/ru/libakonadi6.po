@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-13 00:46+0000\n"
+"POT-Creation-Date: 2026-10-16 00:48+0000\n"
 "PO-Revision-Date: 2026-08-25 10:52+0300\n"
 "Last-Translator: Olesya Gerasimenko <goa@altlinux.org>\n"
 "Language-Team: Basealt Translation Team\n"
@@ -611,7 +611,7 @@ msgstr "С данным индексом не связан сеанс"
 msgid "No item available for this index"
 msgstr "Нет элемента для данного индекса"
 
-#: core/servermanager.cpp:271
+#: core/servermanager.cpp:286
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -625,7 +625,7 @@ msgstr ""
 "в систему, чтобы удостовериться, что все приложения используют "
 "соответствующую версию протокола."
 
-#: core/servermanager.cpp:288
+#: core/servermanager.cpp:303
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "

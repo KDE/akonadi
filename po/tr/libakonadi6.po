@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-13 00:46+0000\n"
+"POT-Creation-Date: 2026-10-16 00:48+0000\n"
 "PO-Revision-Date: 2026-07-28 21:03+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -600,7 +600,7 @@ msgstr "Bu indeks için bir oturum yok"
 msgid "No item available for this index"
 msgstr "Bu indeks için kullanılabilir öge yok"
 
-#: core/servermanager.cpp:271
+#: core/servermanager.cpp:286
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -613,7 +613,7 @@ msgstr ""
 "Sisteminizi yeni güncellediyseniz tüm uygulamaların doğru protokol sürümünü "
 "kullandığından emin olmak için oturumunuzu kapatıp yeniden açın."
 
-#: core/servermanager.cpp:288
+#: core/servermanager.cpp:303
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "

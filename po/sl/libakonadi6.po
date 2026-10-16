@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-13 00:46+0000\n"
+"POT-Creation-Date: 2026-10-16 00:48+0000\n"
 "PO-Revision-Date: 2026-07-28 11:28+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -604,7 +604,7 @@ msgstr "Za to kazalo ni na voljo nobene seje"
 msgid "No item available for this index"
 msgstr "Za to kazalo ni na voljo nobenega predmeta"
 
-#: core/servermanager.cpp:271
+#: core/servermanager.cpp:286
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -617,7 +617,7 @@ msgstr ""
 "Če ste nedavno posodobili vaš sistem, se odjavite in znova prijavite, da se "
 "prepričate, da vsi programi uporabljajo pravilno različico protokola."
 
-#: core/servermanager.cpp:288
+#: core/servermanager.cpp:303
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "

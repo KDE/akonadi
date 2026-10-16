@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-13 00:46+0000\n"
+"POT-Creation-Date: 2026-10-16 00:48+0000\n"
 "PO-Revision-Date: 2024-12-15 18:58+0530\n"
 "Last-Translator: Kali <EMAIL@ADDRESS>\n"
 "Language-Team: Hindi <fedora-trans-hi@redhat.com>\n"
@@ -603,7 +603,7 @@ msgstr "इस इंडेक्स के लिए कोई सत्र उ
 msgid "No item available for this index"
 msgstr "इस सूचकांक के लिए कोई आइटम उपलब्ध नहीं है"
 
-#: core/servermanager.cpp:271
+#: core/servermanager.cpp:286
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -616,7 +616,7 @@ msgstr ""
 "यदि आपने हाल ही में अपना सिस्टम अपडेट किया है तो कृपया लॉग आउट करें और वापस लॉग इन करें "
 "ताकि यह सुनिश्चित हो सके कि सभी एप्लिकेशन सही प्रोटोकॉल संस्करण का उपयोग करते हैं।"
 
-#: core/servermanager.cpp:288
+#: core/servermanager.cpp:303
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "

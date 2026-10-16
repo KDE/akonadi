@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-13 00:46+0000\n"
+"POT-Creation-Date: 2026-10-16 00:48+0000\n"
 "PO-Revision-Date: 2026-09-21 15:02+0200\n"
 "Last-Translator: Shinjo Park <peremen@gmail.com>\n"
 "Language-Team: Korean\n"
@@ -591,7 +591,7 @@ msgstr "인덱스에 해당하는 세션 없음"
 msgid "No item available for this index"
 msgstr "인덱스에 해당하는 항목 없음"
 
-#: core/servermanager.cpp:271
+#: core/servermanager.cpp:286
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -604,7 +604,7 @@ msgstr ""
 "시스템을 최근에 업데이트했다면 모든 앱이 올바른 프로토콜 버전을 사용하도록 로"
 "그아웃한 후 다시 로그인하십시오."
 
-#: core/servermanager.cpp:288
+#: core/servermanager.cpp:303
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
