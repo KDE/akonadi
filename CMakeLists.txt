@@ -4,7 +4,7 @@ set(PIM_VERSION "6.8.40")
 project(Akonadi VERSION ${PIM_VERSION})
 
 # ECM setup
-set(KF_MIN_VERSION "6.29.0")
+set(KF_MIN_VERSION "6.30.0")
 set(QT_REQUIRED_VERSION "6.9.0")
 
 set(CMAKE_CXX_STANDARD 23)
@@ -12,7 +12,6 @@ set(CMAKE_CXX_STANDARD 23)
 find_package(ECM ${KF_MIN_VERSION} CONFIG REQUIRED)
 
 set(CMAKE_MODULE_PATH
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ecmcopy
     ${ECM_MODULE_PATH}
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules
 )
