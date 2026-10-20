@@ -13,11 +13,10 @@
 #include <QCommandLineParser>
 
 using namespace Qt::StringLiterals;
-using namespace std::chrono_literals;
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+    const QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData about(u"akonadiagentconfigdialog"_s,
                      i18n("Configuration Dialog"),
@@ -34,6 +33,7 @@ int main(int argc, char *argv[])
     const auto positionalArguments = parser.positionalArguments();
     if (positionalArguments.isEmpty()) {
         KMessageBox::error(nullptr, i18n("Required identifier argument missing."));
+        return 1;
     }
     auto identifier = positionalArguments.at(0);
     if (identifier.startsWith(u"akonadi:")) { // KIO::ApplicationLauncherJob uses Urls
@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
         dlg->show();
     } else {
         KMessageBox::error(nullptr, i18n("No such agent found \"%1\"", identifier));
+        return 1;
     }
 
     return app.exec();
