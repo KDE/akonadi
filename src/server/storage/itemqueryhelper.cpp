@@ -133,12 +133,14 @@ void ItemQueryHelper::scopeToQuery(const Scope &scope, const CommandContext &con
         return;
     } else if (scope.scope() == Scope::HierarchicalRid) {
         QList<Scope::HRID> hridChain = scope.hridChain();
-        const Scope::HRID itemHRID = hridChain.takeFirst();
-        const Collection parentCol = CollectionQueryHelper::resolveHierarchicalRID(hridChain, context.resource().id());
-        const Collection oldSelection = context.collection();
-        CommandContext tmpContext(context);
-        tmpContext.setCollection(parentCol);
-        remoteIdToQuery(QStringList() << itemHRID.remoteId, tmpContext, qb);
+        if (!hridChain.isEmpty()) {
+            const Scope::HRID itemHRID = hridChain.takeFirst();
+            const Collection parentCol = CollectionQueryHelper::resolveHierarchicalRID(hridChain, context.resource().id());
+            const Collection oldSelection = context.collection();
+            CommandContext tmpContext(context);
+            tmpContext.setCollection(parentCol);
+            remoteIdToQuery(QStringList() << itemHRID.remoteId, tmpContext, qb);
+        }
         return;
     }
 
