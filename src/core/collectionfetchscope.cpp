@@ -57,23 +57,13 @@ CollectionFetchScope::CollectionFetchScope()
 {
 }
 
-CollectionFetchScope::CollectionFetchScope(const CollectionFetchScope &other)
-    : d(other.d)
-{
-}
+CollectionFetchScope::CollectionFetchScope(const CollectionFetchScope &other) = default;
 
 CollectionFetchScope::~CollectionFetchScope()
 {
 }
 
-CollectionFetchScope &CollectionFetchScope::operator=(const CollectionFetchScope &other)
-{
-    if (&other != this) {
-        d = other.d;
-    }
-
-    return *this;
-}
+CollectionFetchScope &CollectionFetchScope::operator=(const CollectionFetchScope &other) = default;
 
 bool CollectionFetchScope::isEmpty() const
 {

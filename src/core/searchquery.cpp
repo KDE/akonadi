@@ -105,18 +105,11 @@ SearchTerm::SearchTerm(const QString &key, const QVariant &value, SearchTerm::Co
     d->condition = condition;
 }
 
-SearchTerm::SearchTerm(const SearchTerm &other)
-    : d(other.d)
-{
-}
+SearchTerm::SearchTerm(const SearchTerm &other) = default;
 
 SearchTerm::~SearchTerm() = default;
 
-SearchTerm &SearchTerm::operator=(const SearchTerm &other)
-{
-    d = other.d;
-    return *this;
-}
+SearchTerm &SearchTerm::operator=(const SearchTerm &other) = default;
 
 bool SearchTerm::operator==(const SearchTerm &other) const
 {
@@ -174,20 +167,13 @@ SearchQuery::SearchQuery(SearchTerm::Relation rel)
     d->rootTerm = SearchTerm(rel);
 }
 
-SearchQuery::SearchQuery(const SearchQuery &other)
-    : d(other.d)
-{
-}
+SearchQuery::SearchQuery(const SearchQuery &other) = default;
 
 SearchQuery::~SearchQuery()
 {
 }
 
-SearchQuery &SearchQuery::operator=(const SearchQuery &other)
-{
-    d = other.d;
-    return *this;
-}
+SearchQuery &SearchQuery::operator=(const SearchQuery &other) = default;
 
 bool SearchQuery::operator==(const SearchQuery &other) const
 {

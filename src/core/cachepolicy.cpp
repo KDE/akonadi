@@ -28,20 +28,13 @@ CachePolicy::CachePolicy()
     d = sharedPrivate;
 }
 
-CachePolicy::CachePolicy(const CachePolicy &other)
-    : d(other.d)
-{
-}
+CachePolicy::CachePolicy(const CachePolicy &other) = default;
 
 CachePolicy::~CachePolicy()
 {
 }
 
-CachePolicy &CachePolicy::operator=(const CachePolicy &other)
-{
-    d = other.d;
-    return *this;
-}
+CachePolicy &CachePolicy::operator=(const CachePolicy &other) = default;
 
 bool Akonadi::CachePolicy::operator==(const CachePolicy &other) const
 {

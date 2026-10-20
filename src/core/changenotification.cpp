@@ -27,20 +27,13 @@ ChangeNotification::ChangeNotification()
 {
 }
 
-ChangeNotification::ChangeNotification(const ChangeNotification &other)
-    : d(other.d)
-{
-}
+ChangeNotification::ChangeNotification(const ChangeNotification &other) = default;
 
 ChangeNotification::~ChangeNotification()
 {
 }
 
-ChangeNotification &ChangeNotification::operator=(const ChangeNotification &other)
-{
-    d = other.d;
-    return *this;
-}
+ChangeNotification &ChangeNotification::operator=(const ChangeNotification &other) = default;
 
 bool ChangeNotification::isValid() const
 {

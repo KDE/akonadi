@@ -16,10 +16,7 @@ AgentType::AgentType()
 {
 }
 
-AgentType::AgentType(const AgentType &other)
-    : d(other.d)
-{
-}
+AgentType::AgentType(const AgentType &other) = default;
 
 AgentType::~AgentType()
 {
@@ -70,14 +67,7 @@ QVariantMap AgentType::customProperties() const
     return d->mCustomProperties;
 }
 
-AgentType &AgentType::operator=(const AgentType &other)
-{
-    if (this != &other) {
-        d = other.d;
-    }
-
-    return *this;
-}
+AgentType &AgentType::operator=(const AgentType &other) = default;
 
 bool AgentType::operator==(const AgentType &other) const
 {

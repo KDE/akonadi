@@ -18,23 +18,13 @@ MimeTypeChecker::MimeTypeChecker()
 {
 }
 
-MimeTypeChecker::MimeTypeChecker(const MimeTypeChecker &other)
-    : d(other.d)
-{
-}
+MimeTypeChecker::MimeTypeChecker(const MimeTypeChecker &other) = default;
 
 MimeTypeChecker::~MimeTypeChecker()
 {
 }
 
-MimeTypeChecker &MimeTypeChecker::operator=(const MimeTypeChecker &other)
-{
-    if (&other != this) {
-        d = other.d;
-    }
-
-    return *this;
-}
+MimeTypeChecker &MimeTypeChecker::operator=(const MimeTypeChecker &other) = default;
 
 QStringList MimeTypeChecker::wantedMimeTypes() const
 {

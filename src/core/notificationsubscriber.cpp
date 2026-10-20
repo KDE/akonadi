@@ -39,20 +39,13 @@ NotificationSubscriber::NotificationSubscriber()
 {
 }
 
-NotificationSubscriber::NotificationSubscriber(const NotificationSubscriber &other)
-    : d(other.d)
-{
-}
+NotificationSubscriber::NotificationSubscriber(const NotificationSubscriber &other) = default;
 
 NotificationSubscriber::~NotificationSubscriber()
 {
 }
 
-NotificationSubscriber &NotificationSubscriber::operator=(const NotificationSubscriber &other)
-{
-    d = other.d;
-    return *this;
-}
+NotificationSubscriber &NotificationSubscriber::operator=(const NotificationSubscriber &other) = default;
 
 bool NotificationSubscriber::isValid() const
 {
