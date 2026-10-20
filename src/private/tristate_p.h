@@ -6,10 +6,11 @@
 
 #pragma once
 
-#include <QDebug>
 #include <QMetaType>
 
 #include "akonadiprivate_export.h"
+
+class QDebug;
 
 namespace Akonadi
 {

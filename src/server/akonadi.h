@@ -6,10 +6,10 @@
 
 #pragma once
 
-#include <QList>
 #include <QObject>
 
 #include <memory>
+#include <vector>
 
 class QDBusServiceWatcher;
 class QSettings;

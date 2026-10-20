@@ -9,6 +9,9 @@
 
 #include "accountadaptor.h"
 
+#include <QDBusConnection>
+#include <QDBusMessage>
+
 using namespace Qt::Literals;
 
 namespace Akonadi

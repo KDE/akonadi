@@ -23,7 +23,6 @@ namespace Akonadi
 namespace Server
 {
 class PreprocessorManager;
-class AgentInstance;
 class Tracer;
 
 /**

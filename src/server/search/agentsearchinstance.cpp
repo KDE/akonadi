@@ -10,6 +10,9 @@
 
 #include "private/dbus_p.h"
 
+#include <QDBusConnection>
+#include <QDBusServiceWatcher>
+
 using namespace Akonadi;
 using namespace Akonadi::Server;
 

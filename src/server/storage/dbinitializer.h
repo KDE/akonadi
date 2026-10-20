@@ -9,7 +9,6 @@
 #include "dbintrospector.h"
 #include "schematypes.h"
 
-#include <QHash>
 #include <QSharedPointer>
 #include <QSqlDatabase>
 #include <QStringList>

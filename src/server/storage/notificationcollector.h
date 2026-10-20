@@ -12,6 +12,7 @@
 
 #include <QByteArray>
 #include <QList>
+#include <QSet>
 #include <QString>
 
 namespace Akonadi

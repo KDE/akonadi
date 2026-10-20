@@ -7,10 +7,11 @@
 #include "tagfetchhelper.h"
 #include "connection.h"
 #include "handler.h"
-#include "protocol_p.h"
 #include "storage/querybuilder.h"
 #include "storage/tagqueryhelper.h"
 #include "utils.h"
+
+#include <optional>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

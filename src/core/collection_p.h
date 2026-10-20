@@ -15,8 +15,6 @@
 
 #include <QSharedData>
 
-using namespace Akonadi;
-
 /**
  * \internal
  */

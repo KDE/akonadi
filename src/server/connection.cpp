@@ -9,14 +9,10 @@
 
 #include <QEventLoop>
 #include <QSettings>
-#include <QThreadStorage>
 
 #include "handler.h"
-#include "notificationmanager.h"
 #include "storage/datastore.h"
 #include "storage/dbdeadlockcatcher.h"
-
-#include <cassert>
 
 #ifndef Q_OS_WIN
 #include <cxxabi.h>
@@ -372,7 +368,7 @@ void Connection::setState(ConnectionState state)
     m_connectionState = state;
     switch (m_connectionState) {
     case NonAuthenticated:
-        assert(0); // can't happen, it's only the initial state, we can't go back to it
+        Q_ASSERT(false); // can't happen, it's only the initial state, we can't go back to it
         break;
     case Authenticated:
         break;

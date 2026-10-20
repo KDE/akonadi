@@ -10,7 +10,7 @@
 #include <QObject>
 #include <QProcess>
 
-class QSqlDatabase;
+#include <memory>
 
 namespace Akonadi
 {

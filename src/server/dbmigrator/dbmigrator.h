@@ -9,10 +9,8 @@
 
 #include <QObject>
 
-#include <functional>
 #include <memory>
-#include <system_error>
-#include <variant>
+#include <optional>
 
 class QThread;
 

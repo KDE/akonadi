@@ -7,10 +7,7 @@
 #include "querybuilder.h"
 #include "akonadiserver_debug.h"
 #include "dbexception.h"
-#include "entities.h"
-#include "storage/query.h"
 #include "utils.h"
-#include <memory>
 
 #ifndef QUERYBUILDER_UNITTEST
 #include "storage/datastore.h"

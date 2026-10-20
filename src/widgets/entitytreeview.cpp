@@ -11,11 +11,11 @@
 #include "dragdropmanager_p.h"
 
 #include <QApplication>
+#include <QBasicTimer>
 #include <QDragLeaveEvent>
 #include <QDragMoveEvent>
 #include <QHeaderView>
 #include <QMenu>
-#include <QTimer>
 
 #include "collection.h"
 #include "controlgui.h"

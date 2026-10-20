@@ -8,10 +8,8 @@
 
 #include "akonadi.h"
 #include "connection.h"
-#include "global.h"
 #include "handlerhelper.h"
 #include "storage/collectionstatistics.h"
-#include "storage/datastore.h"
 
 #include "private/scope_p.h"
 

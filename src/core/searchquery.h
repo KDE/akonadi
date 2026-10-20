@@ -6,7 +6,10 @@
 
 #pragma once
 
-#include <QSharedPointer>
+#include <QList>
+#include <QSharedDataPointer>
+#include <QString>
+#include <QVariant>
 
 #include "akonadicore_export.h"
 

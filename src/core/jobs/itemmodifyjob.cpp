@@ -9,7 +9,6 @@
 #include "itemmodifyjob_p.h"
 
 #include "changemediator_p.h"
-#include "collection.h"
 #include "conflicthandler_p.h"
 #include "item_p.h"
 #include "itemserializer_p.h"
@@ -17,8 +16,6 @@
 
 #include "gidextractor_p.h"
 #include "protocolhelper_p.h"
-
-#include <functional>
 
 #include <QFile>
 

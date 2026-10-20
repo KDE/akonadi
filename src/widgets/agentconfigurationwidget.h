@@ -7,7 +7,6 @@
 #pragma once
 
 #include "akonadiwidgets_export.h"
-#include <QDialogButtonBox>
 #include <QWidget>
 
 #include <memory>
@@ -15,7 +14,6 @@
 namespace Akonadi
 {
 class AgentInstance;
-class AgentConfigurationDialog;
 class AgentConfigurationWidgetPrivate;
 
 /*!
@@ -63,7 +61,6 @@ protected:
 
 private:
     friend class AgentConfigurationWidgetPrivate;
-    friend class AgentConfigurationDialog;
     std::unique_ptr<AgentConfigurationWidgetPrivate> const d;
 };
 

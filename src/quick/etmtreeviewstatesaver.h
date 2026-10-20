@@ -5,6 +5,8 @@
 
 #include <QAbstractItemModel>
 #include <QObject>
+#include <QSet>
+#include <QStringList>
 #include <qqmlregistration.h>
 
 #include <KDescendantsProxyModel>

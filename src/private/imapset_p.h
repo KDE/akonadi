@@ -12,6 +12,7 @@
 #include <QDebug>
 #include <QList>
 #include <QMetaType>
+#include <QSet>
 #include <QSharedDataPointer>
 
 namespace Akonadi

@@ -11,6 +11,8 @@
 #include <KSharedConfig>
 #include <QObject>
 
+class QWidget;
+
 namespace Akonadi
 {
 class AgentConfigurationBase;

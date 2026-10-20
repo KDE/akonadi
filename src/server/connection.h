@@ -28,9 +28,7 @@ namespace Akonadi
 namespace Server
 {
 class Handler;
-class Response;
 class DataStore;
-class Collection;
 
 /**
     An Connection represents one connection of a client to the server.

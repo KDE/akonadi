@@ -7,7 +7,6 @@
 #include "agentthread.h"
 #include "akonadiagentserver_debug.h"
 
-#include "shared/akdebug.h"
 #include <QMetaObject>
 
 using namespace Akonadi;
@@ -21,7 +20,7 @@ AgentThread::AgentThread(const QString &identifier, QObject *factory, QObject *p
 
 void AgentThread::run()
 {
-    // // clang-format off
+    // clang-format off
     const bool invokeSucceeded =
         QMetaObject::invokeMethod(m_factory, "createInstance", Qt::DirectConnection, Q_RETURN_ARG(QObject *, m_instance), Q_ARG(QString, m_identifier));
     // clang-format on

@@ -9,6 +9,7 @@
 #include <QDir>
 #include <QPluginLoader>
 #include <QSettings>
+#include <QStandardPaths>
 #include <QString>
 #include <QStringList>
 
@@ -24,7 +25,6 @@
 
 #include "private/dbus_p.h"
 #include "private/instance_p.h"
-#include "private/protocol_p.h"
 #include "private/standarddirs_p.h"
 
 #include <chrono>

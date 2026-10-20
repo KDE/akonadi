@@ -17,7 +17,6 @@ class KJob;
 
 namespace Akonadi
 {
-class EntityTreeModel;
 class FavoriteCollectionsModelPrivate;
 
 /*!

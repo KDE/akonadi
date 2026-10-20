@@ -12,8 +12,8 @@
 #include <QHash>
 #include <QList>
 #include <QMutex>
+#include <QString>
 
-class QString;
 class QByteArray;
 class QThread;
 

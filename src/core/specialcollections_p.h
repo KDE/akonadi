@@ -7,13 +7,13 @@
 #pragma once
 
 #include <QHash>
+#include <QSet>
 #include <QString>
 
 #include "akonaditests_export.h"
 
 #include "collection.h"
 #include "collectionstatistics.h"
-#include "item.h"
 
 class KCoreConfigSkeleton;
 class KJob;

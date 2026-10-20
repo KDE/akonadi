@@ -9,18 +9,11 @@
 #include "agentinstance.h"
 #include "agentmanager.h"
 #include "agentmanager_p.h"
-#include "controlinterface.h"
 #include "kjobprivatebase_p.h"
-#include <QDBusConnection>
 
 #include <KLocalizedString>
 
 #include <QTimer>
-
-#ifdef Q_OS_UNIX
-#include <csignal>
-#include <sys/types.h>
-#endif
 
 using namespace Akonadi;
 

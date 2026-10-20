@@ -3,8 +3,7 @@
 
 #pragma once
 
-#include <Akonadi/Monitor>
-#include <Akonadi/TagModel>
+#include <Akonadi/Tag>
 #include <QObject>
 #include <QSortFilterProxyModel>
 #include <qqmlregistration.h>

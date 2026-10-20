@@ -9,6 +9,8 @@
 
 #include <QSharedData>
 
+#include <algorithm>
+#include <iterator>
 #include <limits>
 
 namespace Akonadi

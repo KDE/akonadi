@@ -33,6 +33,7 @@ set(akonadiprivate_SRCS
     datastream_p.cpp
     externalpartstorage.cpp
     protocol.cpp
+    protocol_exception.cpp
     scope.cpp
     tristate.cpp
     standarddirs.cpp

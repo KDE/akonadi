@@ -12,10 +12,11 @@
 #include "handler.h"
 #include "handlerhelper.h"
 #include "shared/akranges.h"
+#include "storage/datastore.h"
 #include "storage/itemqueryhelper.h"
 #include "storage/itemretrievalmanager.h"
+#include "storage/itemretriever.h"
 #include "storage/parttypehelper.h"
-#include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
 
 #include "agentmanagerinterface.h"
@@ -30,7 +31,7 @@
 #include <QStringList>
 #include <QVariant>
 
-#include <QElapsedTimer>
+#include <climits>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -38,6 +39,8 @@ using namespace AkRanges;
 
 #define ENABLE_FETCH_PROFILING 0
 #if ENABLE_FETCH_PROFILING
+#include <QElapsedTimer>
+
 #define BEGIN_TIMER(name)                                                                                                                                      \
     QElapsedTimer name##Timer;                                                                                                                                 \
     name##Timer.start();

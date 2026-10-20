@@ -6,11 +6,8 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 #include "tageditwidget.h"
-#include "changerecorder.h"
-#include "tagattribute.h"
 #include "tagcreatejob.h"
 #include "tagdeletejob.h"
-#include "tagfetchscope.h"
 #include "tagmodel.h"
 #include "tagsfilterproxymodel.h"
 #include "ui_tageditwidget.h"

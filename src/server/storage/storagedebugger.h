@@ -7,9 +7,7 @@
 
 #pragma once
 
-#include <QFile>
 #include <QList>
-#include <QMap>
 #include <QMutex>
 #include <QObject>
 #include <QVariant>
@@ -19,6 +17,7 @@
 
 class QSqlQuery;
 class QDBusArgument;
+class QFile;
 
 struct DbConnection {
     qint64 id;

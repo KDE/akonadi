@@ -7,6 +7,7 @@
 
 #include "agenttypedialog.h"
 #include "agentfilterproxymodel.h"
+#include "agenttypewidget.h"
 
 #include <QVBoxLayout>
 

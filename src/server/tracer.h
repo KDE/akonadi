@@ -20,12 +20,6 @@ class QSettings;
 
 namespace Akonadi
 {
-namespace Protocol
-{
-class Command;
-using CommandPtr = QSharedPointer<Command>;
-}
-
 namespace Server
 {
 /**

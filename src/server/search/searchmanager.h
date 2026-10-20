@@ -13,6 +13,9 @@
 #include <QMutex>
 #include <QSet>
 
+#include <memory>
+#include <vector>
+
 class QTimer;
 class QPluginLoader;
 

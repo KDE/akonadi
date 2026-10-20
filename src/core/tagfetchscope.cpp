@@ -5,7 +5,6 @@
 */
 
 #include "tagfetchscope.h"
-#include <QSet>
 
 using namespace Akonadi;
 

@@ -8,12 +8,13 @@
 
 #include "akonaditests_export.h"
 #include "collection.h"
-#include "specialcollections.h"
-#include "transactionsequence.h"
+#include "job.h"
 
 #include <QVariant>
 
 #include <memory>
+
+class KCoreConfigSkeleton;
 
 namespace Akonadi
 {

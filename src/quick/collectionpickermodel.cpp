@@ -9,14 +9,11 @@
 
 #include <Akonadi/CollectionFetchScope>
 #include <Akonadi/CollectionFilterProxyModel>
-#include <Akonadi/CollectionUtils>
 #include <Akonadi/EntityRightsFilterModel>
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/Monitor>
-#include <Akonadi/Session>
 
 #include "colorproxymodel.h"
-#include <QAbstractItemModel>
 
 using namespace Akonadi::Quick;
 

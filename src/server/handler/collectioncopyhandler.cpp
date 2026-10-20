@@ -10,7 +10,6 @@
 #include "cachecleaner.h"
 #include "connection.h"
 #include "handlerhelper.h"
-#include "protocol_p.h"
 #include "shared/akranges.h"
 #include "storage/collectionqueryhelper.h"
 #include "storage/datastore.h"

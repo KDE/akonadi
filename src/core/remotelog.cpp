@@ -7,7 +7,6 @@
 #include "shared/akremotelog.h"
 
 #include <QCoreApplication>
-#include <QThread>
 #include <QTimer>
 
 namespace

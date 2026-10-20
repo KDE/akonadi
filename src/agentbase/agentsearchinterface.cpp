@@ -15,6 +15,9 @@
 #include "searchresultjob_p.h"
 #include "servermanager.h"
 #include <QDBusConnection>
+#include <QDBusInterface>
+#include <QDBusMessage>
+#include <QTimer>
 
 using namespace Akonadi;
 using namespace std::chrono_literals;

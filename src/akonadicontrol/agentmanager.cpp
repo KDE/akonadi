@@ -21,14 +21,15 @@
 
 #include "private/dbus_p.h"
 #include "private/instance_p.h"
-#include "private/protocol_p.h"
 #include "private/standarddirs_p.h"
 
 #include "shared/akapplication.h"
 
 #include <QCoreApplication>
 #include <QDBusConnection>
+#include <QDBusConnectionInterface>
 #include <QDir>
+#include <QFile>
 #include <QScopedPointer>
 #include <QSettings>
 

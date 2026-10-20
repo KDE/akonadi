@@ -6,14 +6,17 @@
 
 #pragma once
 
-#include "agentbase_p.h"
 #include "collection.h"
 #include "item.h"
 
 #include <KCompositeJob>
 
+#include <QHash>
+
 namespace Akonadi
 {
+class AgentBasePrivate;
+
 /*!
  * Helper class for expanding inter-resource collection moves inside ResourceBase.
  *

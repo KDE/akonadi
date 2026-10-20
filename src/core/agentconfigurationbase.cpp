@@ -8,7 +8,6 @@
 #include "akonadicore_debug.h"
 
 #include <KConfigGroup>
-#include <QSize>
 
 namespace Akonadi
 {

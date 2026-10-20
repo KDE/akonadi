@@ -12,6 +12,8 @@
 #include "entitydisplayattribute.h"
 #include "item.h"
 
+class QModelIndex;
+
 namespace Akonadi
 {
 /*!

@@ -10,7 +10,6 @@
 #include <KConfig>
 #include <KConfigGroup>
 
-#include <QHash>
 #include <QString>
 
 using namespace Akonadi;

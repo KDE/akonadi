@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "akonadicore_export.h"
-
 #include <QtPlugin>
 
 namespace Akonadi

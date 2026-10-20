@@ -13,8 +13,6 @@ class QObject;
 
 #include "private/protocol_p.h"
 
-#include "akonadicore_debug.h"
-
 namespace Akonadi
 {
 class CommandBufferLocker;

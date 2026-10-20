@@ -7,6 +7,7 @@
 #pragma once
 
 #include <concepts>
+#include <iterator>
 #include <utility>
 
 namespace AkTraits

@@ -7,6 +7,8 @@
 
 #include <QTime>
 
+#include <tuple>
+
 using namespace Akonadi::Server;
 
 FileTracer::FileTracer(const QString &fileName)

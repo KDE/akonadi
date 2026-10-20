@@ -8,6 +8,8 @@
 
 #include "dbconfig.h"
 
+class QSqlQuery;
+
 namespace Akonadi
 {
 namespace Server

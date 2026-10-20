@@ -11,11 +11,10 @@
 #include <QObject>
 
 class Akonadi__TransportAdaptor;
+class KJob;
 
 namespace Akonadi
 {
-class TransportResourceBase;
-
 /*!
   \internal
   This class hosts the D-Bus adaptor for TransportResourceBase.

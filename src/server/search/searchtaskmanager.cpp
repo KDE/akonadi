@@ -5,18 +5,19 @@
 */
 
 #include "searchtaskmanager.h"
+#include "agentmanagerinterface.h"
 #include "agentsearchinstance.h"
 #include "akonadiserver_search_debug.h"
 #include "connection.h"
 #include "entities.h"
-#include "storage/selectquerybuilder.h"
+#include "storage/querybuilder.h"
 
 #include "private/dbus_p.h"
 
 #include <QDBusConnection>
+#include <QDateTime>
 #include <QDeadlineTimer>
 #include <QSqlError>
-#include <QTime>
 #include <QTimer>
 using namespace Akonadi;
 using namespace Akonadi::Server;

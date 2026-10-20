@@ -12,12 +12,14 @@
 #include "preprocessormanager.h"
 #include "akonadiserver_debug.h"
 
-#include "akonadi.h"
 #include "entities.h" // Akonadi::Server::PimItem
 #include "storage/datastore.h"
 #include "tracer.h"
 
 #include "preprocessormanageradaptor.h"
+
+#include <QDBusConnection>
+#include <QTimer>
 
 namespace Akonadi
 {

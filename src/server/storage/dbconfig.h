@@ -6,8 +6,10 @@
 
 #pragma once
 
-#include <QSettings>
-#include <QSqlDatabase>
+#include <QStringList>
+
+class QSettings;
+class QSqlDatabase;
 
 namespace Akonadi
 {

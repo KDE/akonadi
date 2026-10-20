@@ -9,7 +9,6 @@
 #include "../exception.h"
 #include "entities.h"
 
-class QString;
 class QVariant;
 
 namespace Akonadi

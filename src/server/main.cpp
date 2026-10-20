@@ -18,7 +18,6 @@
 
 #include <KAboutData>
 #include <KCrash>
-#include <cstdlib>
 
 #ifdef QT_STATICPLUGIN
 

@@ -10,13 +10,14 @@
 
 #include "tagwidget.h"
 
-#include "changerecorder.h"
+#include "monitor.h"
 #include "tagmodel.h"
 #include "tagselectiondialog.h"
 
 #include <KLocalizedString>
 
 #include <QContextMenuEvent>
+#include <QLineEdit>
 #include <QLocale>
 #include <QMenu>
 #include <QToolButton>

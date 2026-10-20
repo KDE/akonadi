@@ -10,9 +10,12 @@
 
 #include <QSqlError>
 #include <QSqlQuery>
-#include <QSqlRecord>
 
 #include <QDBusConnection>
+#include <QDBusMetaType>
+#include <QDateTime>
+#include <QFile>
+#include <QTextStream>
 
 Akonadi::Server::StorageDebugger *Akonadi::Server::StorageDebugger::mSelf = nullptr;
 QMutex Akonadi::Server::StorageDebugger::mMutex;

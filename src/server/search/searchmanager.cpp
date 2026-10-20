@@ -10,9 +10,7 @@
 #include "akonadiserver_search_debug.h"
 
 #include "agentsearchengine.h"
-#include "akonadi.h"
 #include "handler/searchhelper.h"
-#include "notificationmanager.h"
 #include "searchrequest.h"
 #include "searchtaskmanager.h"
 #include "storage/datastore.h"
@@ -22,6 +20,7 @@
 
 #include "private/protocol_p.h"
 
+#include <QCoreApplication>
 #include <QDBusConnection>
 #include <QDir>
 #include <QPluginLoader>

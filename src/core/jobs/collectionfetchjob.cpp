@@ -17,8 +17,7 @@
 
 #include <KLocalizedString>
 
-#include <QHash>
-#include <QObject>
+#include <QSet>
 #include <QTimer>
 
 using namespace Akonadi;

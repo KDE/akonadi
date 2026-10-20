@@ -8,7 +8,6 @@
 #pragma once
 
 #include <QDateTime>
-#include <QTimeZone>
 #include <QVariant>
 
 #include "storage/datastore.h"

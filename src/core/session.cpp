@@ -21,12 +21,10 @@
 
 #include <QPointer>
 #include <QRandomGenerator>
-#include <QThread>
 #include <QThreadStorage>
 #include <QTimer>
 
 #include <QCoreApplication>
-#include <QHostAddress>
 
 // ### FIXME pipelining got broken by switching result emission in JobPrivate::handleResponse to delayed emission
 // in order to work around exec() deadlocks. As a result of that Session knows to late about a finished job and still

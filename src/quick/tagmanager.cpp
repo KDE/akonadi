@@ -4,8 +4,10 @@
 #include "tagmanager.h"
 #include "akonadi_quick_debug.h"
 
+#include <Akonadi/Monitor>
 #include <Akonadi/TagCreateJob>
 #include <Akonadi/TagDeleteJob>
+#include <Akonadi/TagModel>
 #include <Akonadi/TagModifyJob>
 #include <KDescendantsProxyModel>
 

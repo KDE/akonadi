@@ -7,7 +7,12 @@
 #pragma once
 
 #include "collection.h"
-#include <QAbstractItemView>
+#include <Qt>
+
+class QAbstractItemView;
+class QDragMoveEvent;
+class QDropEvent;
+class QModelIndex;
 
 namespace Akonadi
 {

@@ -12,9 +12,13 @@
 
 #include <QByteArray>
 #include <QList>
+#include <QSet>
+#include <QString>
 #include <QVarLengthArray>
 
 #include <memory>
+
+class QDateTime;
 
 namespace Akonadi
 {

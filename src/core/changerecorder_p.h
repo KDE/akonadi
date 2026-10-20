@@ -12,7 +12,6 @@
 
 namespace Akonadi
 {
-class ChangeRecorder;
 class ChangeNotificationDependenciesFactory;
 
 class AKONADI_TESTS_EXPORT ChangeRecorderPrivate : public Akonadi::MonitorPrivate

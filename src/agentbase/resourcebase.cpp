@@ -14,7 +14,6 @@
 #include "resourceadaptor.h"
 #include "resourcescheduler_p.h"
 #include "tagsync.h"
-#include "tracerinterface.h"
 #include <QDBusConnection>
 
 #include "changerecorder.h"
@@ -39,16 +38,20 @@
 #include "akonadiagentbase_debug.h"
 
 #include "shared/akranges.h"
+#include <algorithm>
 #include <cstdlib>
-#include <iterator>
 
-#include <KAboutData>
-#include <KCrash>
 #include <KLocalizedString>
 
+#include <QCommandLineParser>
 #include <QCoreApplication>
+#include <QDateTime>
+#include <QFileInfo>
 #include <QHash>
+#include <QPointer>
+#include <QThread>
 #include <QTimer>
+#include <QTranslator>
 
 using namespace Akonadi;
 using namespace AkRanges;

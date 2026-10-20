@@ -7,10 +7,8 @@
 #pragma once
 
 #include <QList>
-#include <QMutex>
 #include <QObject>
 #include <QSqlDatabase>
-#include <QThreadStorage>
 
 class QSqlQuery;
 class QTimer;
@@ -38,8 +36,6 @@ protected:
 private:
     Q_DISABLE_COPY_MOVE(DataStoreFactory)
 };
-
-class NotificationCollector;
 
 /**
   This class handles all the database access.

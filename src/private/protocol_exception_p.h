@@ -9,7 +9,6 @@
 #include "akonadiprivate_export.h"
 
 #include <exception>
-#include <iostream>
 
 #include <QByteArray>
 
@@ -18,17 +17,12 @@ namespace Akonadi
 class AKONADIPRIVATE_EXPORT ProtocolException : public std::exception
 {
 public:
-    explicit ProtocolException(const char *what)
-        : std::exception()
-        , mWhat(what)
-    {
-        std::cerr << "ProtocolException thrown:" << what << std::endl;
-    }
+    explicit ProtocolException(const char *what);
 
     ProtocolException(const ProtocolException &) = default;
     ProtocolException &operator=(const ProtocolException &) = default;
 
-    const char *what() const throw() override
+    const char *what() const noexcept override
     {
         return mWhat.constData();
     }

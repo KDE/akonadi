@@ -14,13 +14,13 @@
 #include "akonadifull-version.h"
 #include "changerecorder.h"
 #include "controladaptor.h"
-#include "itemfetchjob.h"
-#include "monitor_p.h"
-#include "private/standarddirs_p.h"
+#include "itemfetchscope.h"
+#include "servermanager.h"
 #include "servermanager_p.h"
 #include "session.h"
 #include "session_p.h"
 #include "statusadaptor.h"
+#include "tagfetchscope.h"
 
 #include "akonadiagentbase_debug.h"
 
@@ -29,11 +29,18 @@
 #include <KLocalizedString>
 
 #include <QCommandLineParser>
+#include <QDBusConnectionInterface>
+#include <QDBusInterface>
+#include <QDBusMessage>
+#include <QFile>
+#include <QFileInfo>
 #include <QNetworkInformation>
-#include <QPointer>
+#include <QRegularExpression>
 #include <QSettings>
 #include <QStandardPaths>
+#include <QTextStream>
 #include <QTimer>
+#include <QTranslator>
 
 #include <stdlib.h>
 #if defined __GLIBC__
@@ -42,12 +49,10 @@
 
 #ifdef Q_OS_WIN
 #include <Windows.h>
+#include <thread>
 #endif
 
 #include <chrono>
-#include <csignal>
-#include <sstream>
-#include <thread>
 
 using namespace Akonadi;
 using namespace std::chrono_literals;

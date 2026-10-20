@@ -7,7 +7,7 @@
 #pragma once
 
 #include "akonadicore_export.h"
-#include <qglobal.h>
+#include <QtGlobal>
 
 #include <memory>
 

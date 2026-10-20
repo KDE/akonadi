@@ -14,7 +14,6 @@
 #include "tagmodel.h"
 
 #include <KConfigGroup>
-#include <KLocalizedString>
 #include <KSharedConfig>
 
 using namespace Akonadi;

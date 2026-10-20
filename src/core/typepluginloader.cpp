@@ -7,7 +7,6 @@
 
 #include "typepluginloader_p.h"
 
-#include "item.h"
 #include "itemserializer_p.h"
 #include "itemserializerplugin.h"
 
@@ -19,14 +18,12 @@
 #include <QMimeDatabase>
 #include <QMimeType>
 #include <QRegularExpression>
-#include <QStack>
 #include <QString>
 #include <QStringList>
 
 // temporary
 #include "pluginloader_p.h"
 
-#include <cassert>
 #include <vector>
 
 static const char LEGACY_NAME[] = "legacy";

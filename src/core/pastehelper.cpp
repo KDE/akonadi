@@ -12,7 +12,6 @@
 #include "item.h"
 #include "itemcopyjob.h"
 #include "itemcreatejob.h"
-#include "itemmodifyjob.h"
 #include "itemmovejob.h"
 #include "linkjob.h"
 #include "session.h"
@@ -25,8 +24,6 @@
 
 #include <QByteArray>
 #include <QMimeData>
-
-#include <functional>
 
 using namespace Akonadi;
 

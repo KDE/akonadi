@@ -13,6 +13,9 @@
 
 #include "akonadicore_debug.h"
 
+#include <QDBusInterface>
+#include <QDBusReply>
+
 using namespace Akonadi;
 
 AgentInstance::AgentInstance()

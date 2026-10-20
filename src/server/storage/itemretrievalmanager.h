@@ -8,13 +8,13 @@
 
 #include "akthread.h"
 #include "itemretrievalrequest.h"
-#include "itemretriever.h"
 
 #include <QHash>
-class QObject;
 #include <QReadWriteLock>
 #include <QWaitCondition>
 
+#include <list>
+#include <memory>
 #include <unordered_map>
 
 class OrgFreedesktopAkonadiResourceInterface;
@@ -23,8 +23,6 @@ namespace Akonadi
 {
 namespace Server
 {
-class Collection;
-class ItemRetrievalJob;
 class AbstractItemRetrievalJob;
 
 class AbstractItemRetrievalJobFactory

@@ -13,6 +13,8 @@
 #include "akthread.h"
 #include "entities.h"
 
+#include <chrono>
+
 namespace Akonadi
 {
 namespace Server

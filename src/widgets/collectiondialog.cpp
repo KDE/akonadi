@@ -12,16 +12,15 @@
 #include "collectioncreatejob.h"
 #include "collectionfetchscope.h"
 #include "collectionfilterproxymodel.h"
-#include "collectionutils.h"
 #include "entityrightsfiltermodel.h"
 #include "entitytreemodel.h"
 #include "entitytreeview.h"
 #include "monitor.h"
-#include "session.h"
 
 #include <QCheckBox>
 #include <QDialogButtonBox>
 #include <QHeaderView>
+#include <QIcon>
 #include <QLabel>
 #include <QVBoxLayout>
 

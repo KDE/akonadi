@@ -8,13 +8,8 @@
 #include "notificationmanager.h"
 #include "aggregatedfetchscope.h"
 #include "akonadiserver_debug.h"
-#include "handlerhelper.h"
 #include "notificationsubscriber.h"
-#include "storage/collectionstatistics.h"
-#include "storage/notificationcollector.h"
-#include "tracer.h"
 
-#include "private/scope_p.h"
 #include "private/standarddirs_p.h"
 #include "shared/akranges.h"
 

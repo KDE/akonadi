@@ -16,7 +16,6 @@
 
 #include <QDateTime>
 #include <QSqlQuery>
-#include <QStringList>
 
 #include <algorithm>
 

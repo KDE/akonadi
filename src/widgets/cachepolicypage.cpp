@@ -10,7 +10,6 @@
 
 #include "cachepolicy.h"
 #include "collection.h"
-#include "collectionutils.h"
 
 #include <KLocalizedString>
 

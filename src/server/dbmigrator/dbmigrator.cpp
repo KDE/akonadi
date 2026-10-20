@@ -8,7 +8,6 @@
 #include "dbmigrator.h"
 #include "ControlManager.h"
 #include "akonadidbmigrator_debug.h"
-#include "akonadifull-version.h"
 #include "akonadischema.h"
 #include "akranges.h"
 #include "entities.h"
@@ -27,12 +26,8 @@
 #include "storagejanitor.h"
 #include "utils.h"
 
-#include <QCommandLineOption>
-#include <QCommandLineParser>
-#include <QCoreApplication>
 #include <QDBusConnection>
-#include <QDBusError>
-#include <QDBusInterface>
+#include <QDBusConnectionInterface>
 #include <QDir>
 #include <QElapsedTimer>
 #include <QFile>
@@ -42,12 +37,15 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
-#include <QSqlRecord>
 #include <QThread>
 
 #include <KLocalizedString>
 
+#include <algorithm>
 #include <chrono>
+#include <filesystem>
+#include <functional>
+#include <system_error>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

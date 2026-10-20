@@ -5,8 +5,8 @@
  ***************************************************************************/
 #include "tracer.h"
 
+#include <QDBusConnection>
 #include <QSettings>
-#include <QString>
 
 #include "traceradaptor.h"
 

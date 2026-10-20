@@ -26,9 +26,10 @@
 
 #include <QDBusConnectionInterface>
 #include <QDBusInterface>
+#include <QDBusReply>
 #include <QDBusServiceWatcher>
+#include <QHash>
 #include <QMetaMethod>
-#include <QTime>
 #include <QTimer>
 
 #define LOCK_WAIT_TIMEOUT_SECONDS 30

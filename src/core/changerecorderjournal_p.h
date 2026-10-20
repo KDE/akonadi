@@ -10,6 +10,10 @@
 #include "akonaditests_export.h"
 #include "private/protocol_p.h"
 
+#include <QQueue>
+
+class QDataStream;
+class QIODevice;
 class QSettings;
 class QFile;
 

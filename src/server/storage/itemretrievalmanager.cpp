@@ -14,7 +14,7 @@
 
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
-#include <QScopedPointer>
+#include <QTimer>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

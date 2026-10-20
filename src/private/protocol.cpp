@@ -10,13 +10,13 @@
 #include "scope_p.h"
 
 #include <type_traits>
-#include <typeinfo>
 
 #include <QHash>
 #include <QJsonArray>
 #include <QJsonObject>
 
-#include <cassert>
+#include <algorithm>
+#include <iterator>
 
 // clazy:excludeall=function-args-by-value
 

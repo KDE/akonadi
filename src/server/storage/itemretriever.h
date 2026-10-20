@@ -14,7 +14,10 @@
 
 #include "private/scope_p.h"
 
+#include <list>
 #include <optional>
+
+class QSqlQuery;
 
 AKONADI_EXCEPTION_MAKE_INSTANCE(ItemRetrieverException);
 

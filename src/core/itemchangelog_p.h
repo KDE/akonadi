@@ -12,6 +12,8 @@
 #include "akonaditests_export.h"
 #include "attributestorage_p.h"
 
+#include <QHash>
+
 namespace Akonadi
 {
 class AKONADI_TESTS_EXPORT ItemChangeLog

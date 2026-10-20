@@ -24,8 +24,6 @@
 #include <typeinfo>
 
 class QUrl;
-template<typename T>
-class QList;
 
 namespace Akonadi
 {

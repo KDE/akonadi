@@ -14,13 +14,11 @@
 #include "handlerhelper.h"
 #include "intervalcheck.h"
 #include "notificationmanager.h"
-#include "protocol_p.h"
 #include "search/searchmanager.h"
 #include "selectquerybuilder.h"
 #include "shared/akranges.h"
 #include "storage/collectionstatistics.h"
 #include "storage/datastore.h"
-#include "storage/entity.h"
 
 #include "akonadiserver_debug.h"
 

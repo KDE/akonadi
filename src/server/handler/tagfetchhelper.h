@@ -6,10 +6,12 @@
 
 #pragma once
 
-#include <QSqlQuery>
+#include <QMap>
 
 #include "private/protocol_p.h"
 #include "private/scope_p.h"
+
+#include <functional>
 
 namespace Akonadi
 {

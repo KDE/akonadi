@@ -12,7 +12,6 @@
 #include <QPointer>
 
 using namespace Akonadi;
-using namespace Qt::Literals::StringLiterals;
 
 AgentConfiguration::AgentConfiguration(QObject *parent)
     : QObject(parent)

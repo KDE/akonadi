@@ -13,6 +13,7 @@
 #include <Akonadi/TagFetchScope>
 #include <Akonadi/TagModifyJob>
 
+#include <QColor>
 #include <QCoreApplication>
 
 namespace Akonadi

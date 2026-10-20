@@ -9,14 +9,11 @@
 #pragma once
 
 #include "akonadiwidgets_export.h"
-// AkonadiCore
-#include "akonadi/tag.h"
 
 #include <QDialog>
 
 #include <memory>
 
-class QDialogButtonBox;
 namespace Akonadi
 {
 class TagManagementDialogPrivate;

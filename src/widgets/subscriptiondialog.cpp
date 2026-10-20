@@ -23,14 +23,9 @@
 #include <KMessageBox>
 #include <QCheckBox>
 #include <QDialogButtonBox>
-#include <QHBoxLayout>
-#include <QHeaderView>
-#include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QTreeView>
-#include <QVBoxLayout>
-#include <qnamespace.h>
 
 using namespace Akonadi;
 

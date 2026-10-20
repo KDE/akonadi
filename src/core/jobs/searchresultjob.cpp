@@ -4,6 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
+#include "collection.h"
 #include "job_p.h"
 #include "searchresultjob_p.h"
 

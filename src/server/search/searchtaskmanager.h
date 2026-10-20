@@ -8,7 +8,6 @@
 
 #include "akthread.h"
 
-#include "agentmanagerinterface.h"
 #include "exception.h"
 #include <QList>
 #include <QMap>

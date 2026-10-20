@@ -17,6 +17,8 @@
 #include "private/standarddirs_p.h"
 
 #include <QProcess>
+#include <QSettings>
+#include <QSqlDatabase>
 #include <memory>
 
 using namespace Akonadi;

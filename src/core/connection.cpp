@@ -8,17 +8,17 @@
 #include "commandbuffer_p.h"
 #include "connection_p.h"
 #include "private/instance_p.h"
-#include "servermanager_p.h"
-#include "session_p.h"
+#include "servermanager.h"
 
-#include <QAbstractEventDispatcher>
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QFile>
 #include <QFileInfo>
 #include <QScopedValueRollback>
 #include <QSettings>
+#include <QThread>
 #include <QTimer>
+#include <QUrl>
 
 #include "private/datastream_p_p.h"
 #include "private/protocol_exception_p.h"

@@ -9,9 +9,7 @@
 #include "akonaditests_export.h"
 #include "attribute.h"
 #include <QExplicitlySharedDataPointer>
-#include <QHash>
 #include <QSet>
-#include <set>
 #include <vector>
 
 namespace Akonadi

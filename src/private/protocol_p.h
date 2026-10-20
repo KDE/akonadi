@@ -16,10 +16,13 @@
 #include <QDebug>
 #include <QJsonObject>
 #include <QList>
+#include <QMap>
 #include <QSharedPointer>
 
 #include "scope_p.h"
 #include "tristate_p.h"
+
+class QIODevice;
 
 // clazy:excludeall=function-args-by-value
 

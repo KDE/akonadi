@@ -8,7 +8,6 @@
 
 #include "changemediator_p.h"
 #include "collection_p.h"
-#include "collectionstatistics.h"
 #include "job_p.h"
 #include "persistentsearchattribute.h"
 #include "private/protocol_p.h"

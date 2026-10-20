@@ -10,6 +10,7 @@
 #include "ui_selftestdialog.h"
 #include <QDialog>
 
+class KLocalizedString;
 class QStandardItem;
 class QStandardItemModel;
 namespace Akonadi

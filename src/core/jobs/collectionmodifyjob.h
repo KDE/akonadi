@@ -11,7 +11,6 @@
 
 namespace Akonadi
 {
-class CachePolicy;
 class Collection;
 class CollectionModifyJobPrivate;
 

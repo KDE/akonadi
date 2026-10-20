@@ -29,10 +29,10 @@
 #include <QMimeDatabase>
 #include <QMimeType>
 #include <QPointer>
+#include <QQueue>
 
 namespace Akonadi
 {
-class Monitor;
 class ChangeNotification;
 
 // A helper struct to wrap pointer to member function (which cannot be contained

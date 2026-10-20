@@ -13,8 +13,12 @@
 #include "private/instance_p.h"
 #include <KLocalizedString>
 
+#include <QDBusConnectionInterface>
 #include <QDBusInterface>
+#include <QTextStream>
 #include <QTimer>
+
+#include <array>
 
 using namespace Akonadi;
 using namespace std::chrono_literals;

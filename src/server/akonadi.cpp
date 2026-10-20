@@ -7,10 +7,10 @@
 #include "akonadi.h"
 #include "akonadiserver_debug.h"
 #include "connection.h"
-#include "handler.h"
 #include "serveradaptor.h"
 
 #include "aklocalserver.h"
+#include "akthread.h"
 #include "cachecleaner.h"
 #include "debuginterface.h"
 #include "intervalcheck.h"
@@ -36,10 +36,14 @@
 #include <QSqlQuery>
 
 #include <QCoreApplication>
+#include <QDBusConnection>
 #include <QDBusServiceWatcher>
 #include <QDir>
+#include <QFile>
 #include <QSettings>
 #include <QTimer>
+
+#include <algorithm>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

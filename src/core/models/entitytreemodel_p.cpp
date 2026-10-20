@@ -6,7 +6,6 @@
 
 #include "entitytreemodel_p.h"
 
-#include "agentmanagerinterface.h"
 #include "akranges.h"
 #include "monitor_p.h" // For friend ref/deref
 #include "servermanager.h"
@@ -23,16 +22,17 @@
 #include "entityhiddenattribute.h"
 #include "itemcopyjob.h"
 #include "itemfetchjob.h"
+#include "itemfetchscope.h"
 #include "itemmovejob.h"
 #include "linkjob.h"
 #include "monitor.h"
-#include "private/protocol_p.h"
 #include "session.h"
 
 #include "akonadicore_debug.h"
 
 #include <QElapsedTimer>
 #include <QIcon>
+#include <QList>
 #include <unordered_map>
 
 // clazy:excludeall=old-style-connect
@@ -333,7 +333,7 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
     QElapsedTimer t;
     t.start();
 
-    QVectorIterator<Akonadi::Collection> it(collections);
+    QListIterator<Akonadi::Collection> it(collections);
 
     QHash<Collection::Id, Collection> collectionsToInsert;
 

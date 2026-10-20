@@ -9,11 +9,12 @@
 #include "collectionstatistics.h"
 #include "akonadiserver_debug.h"
 #include "countquerybuilder.h"
-#include "datastore.h"
 #include "entities.h"
 #include "querybuilder.h"
 
 #include "private/protocol_p.h"
+
+#include <vector>
 
 using namespace Akonadi::Server;
 

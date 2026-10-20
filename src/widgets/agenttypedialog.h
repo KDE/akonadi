@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "agenttypewidget.h"
+#include "akonadiwidgets_export.h"
 // AkonadiCore
 #include "akonadi/agenttype.h"
 
@@ -17,6 +17,7 @@
 
 namespace Akonadi
 {
+class AgentFilterProxyModel;
 class AgentTypeDialogPrivate;
 
 /*!

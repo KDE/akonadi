@@ -7,7 +7,6 @@
 #include "collectionrequester.h"
 #include "collectionfetchjob.h"
 #include "collectionfetchscope.h"
-#include "entitydisplayattribute.h"
 
 #include <KLocalizedString>
 #include <KStandardShortcut>
@@ -16,6 +15,7 @@
 #include <QAction>
 #include <QEvent>
 #include <QHBoxLayout>
+#include <QIcon>
 #include <QPushButton>
 
 using namespace Akonadi;

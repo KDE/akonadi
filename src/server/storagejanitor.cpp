@@ -24,10 +24,14 @@
 #include "private/externalpartstorage_p.h"
 #include "private/standarddirs_p.h"
 
+#include <QDBusConnection>
+#include <QDBusInterface>
 #include <QDateTime>
 #include <QDir>
 #include <QDirIterator>
-#include <QRegularExpression>
+#include <QFile>
+#include <QFileInfo>
+#include <QSet>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QStringBuilder>

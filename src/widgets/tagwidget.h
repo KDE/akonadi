@@ -13,7 +13,7 @@
 // AkonadiCore
 #include "akonadi/tag.h"
 
-#include <QLineEdit>
+#include <QWidget>
 
 #include <memory>
 

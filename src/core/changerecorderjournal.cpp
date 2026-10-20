@@ -7,11 +7,9 @@
 
 #include "akonadicore_debug.h"
 #include "changerecorderjournal_p.h"
-#include "protocol_p.h"
 
 #include <QDataStream>
 #include <QFile>
-#include <QQueue>
 #include <QSettings>
 
 using namespace Akonadi;

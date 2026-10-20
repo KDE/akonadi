@@ -14,7 +14,6 @@
 #include "session.h"
 #include "session_p.h"
 #include <QDBusConnection>
-#include <QTime>
 
 #include <KLocalizedString>
 

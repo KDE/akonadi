@@ -9,6 +9,7 @@
 #include "entities.h"
 
 #include <QByteArray>
+#include <QSet>
 #include <QStack>
 #include <QString>
 

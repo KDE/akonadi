@@ -10,7 +10,6 @@
 #include "agentmanager.h"
 #include "agenttype.h"
 #include "firstrun_p.h"
-#include "session_p.h"
 
 #include "akonadicore_debug.h"
 
@@ -30,7 +29,6 @@
 #include <QScopedPointer>
 #include <QStandardPaths>
 #include <QTimer>
-#include <qnamespace.h>
 
 using namespace Akonadi;
 

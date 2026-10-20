@@ -6,7 +6,6 @@
 
 #include <Akonadi/AgentInstance>
 #include <Akonadi/AgentManager>
-#include <Akonadi/AttributeFactory>
 #include <Akonadi/CollectionColorAttribute>
 #include <Akonadi/CollectionModifyJob>
 #include <Akonadi/CollectionUtils>
@@ -16,6 +15,8 @@
 #include <KSharedConfig>
 #include <QFont>
 #include <QRandomGenerator>
+
+#include <array>
 
 using namespace Qt::StringLiterals;
 

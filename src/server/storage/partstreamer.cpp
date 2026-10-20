@@ -7,7 +7,6 @@
 
 #include "partstreamer.h"
 #include "akonadiserver_debug.h"
-#include "capabilities_p.h"
 #include "connection.h"
 #include "dbconfig.h"
 #include "parthelper.h"
@@ -17,11 +16,6 @@
 #include "private/externalpartstorage_p.h"
 #include "private/protocol_p.h"
 #include "private/standarddirs_p.h"
-
-#include <config-akonadi.h>
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif
 
 #include <QFile>
 #include <QFileInfo>

@@ -8,6 +8,7 @@
 
 #include <QList>
 #include <QMultiMap>
+#include <QString>
 
 class Node
 {

@@ -27,8 +27,6 @@
 using namespace Akonadi;
 using namespace AkRanges;
 
-class operation;
-
 static const int PipelineSize = 5;
 
 MonitorPrivate::MonitorPrivate(ChangeNotificationDependenciesFactory *dependenciesFactory_, Monitor *parent)

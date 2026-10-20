@@ -10,12 +10,10 @@
 
 #include <Akonadi/CollectionFetchScope>
 #include <Akonadi/CollectionFilterProxyModel>
-#include <Akonadi/CollectionUtils>
 #include <Akonadi/ColorProxyModel>
 #include <Akonadi/EntityRightsFilterModel>
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/Monitor>
-#include <Akonadi/Session>
 
 #include <KDescendantsProxyModel>
 

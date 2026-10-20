@@ -25,7 +25,7 @@
 #include <QDir>
 #include <QMetaMethod>
 #include <QMetaObject>
-#include <QStandardPaths>
+#include <QVariant>
 
 static const char FIRSTRUN_DBUSLOCK[] = "org.kde.Akonadi.Firstrun.lock";
 

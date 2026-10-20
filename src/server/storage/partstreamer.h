@@ -25,8 +25,6 @@ namespace Server
 {
 AKONADI_EXCEPTION_MAKE_INSTANCE(PartStreamerException);
 
-class PimItem;
-class Part;
 class Connection;
 
 class PartStreamer

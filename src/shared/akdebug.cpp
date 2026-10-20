@@ -18,10 +18,9 @@
 #include <QFileInfo>
 #include <QLoggingCategory>
 #include <QMutex>
+#include <QTextStream>
 
 #include <KCrash>
-
-#include <cassert>
 
 class FileDebugStream : public QIODevice
 {

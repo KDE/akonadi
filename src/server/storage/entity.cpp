@@ -5,6 +5,7 @@
  ***************************************************************************/
 
 #include "entity.h"
+#include "akonadiserver_debug.h"
 #include "countquerybuilder.h"
 #include "datastore.h"
 

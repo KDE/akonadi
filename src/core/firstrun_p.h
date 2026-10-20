@@ -8,11 +8,9 @@
 
 #include <QObject>
 #include <QStringList>
-#include <QVariant>
 
 class KConfig;
 class KJob;
-struct QMetaObject;
 
 namespace Akonadi
 {

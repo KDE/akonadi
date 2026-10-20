@@ -7,6 +7,8 @@
 #pragma once
 
 #include <QList>
+#include <QPair>
+#include <QSet>
 #include <QString>
 #include <QVariant>
 

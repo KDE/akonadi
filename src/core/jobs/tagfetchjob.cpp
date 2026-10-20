@@ -10,6 +10,8 @@
 #include "tagfetchscope.h"
 #include <QTimer>
 
+#include <chrono>
+
 using namespace Akonadi;
 using namespace std::chrono_literals;
 class Akonadi::TagFetchJobPrivate : public JobPrivate
@@ -155,6 +157,3 @@ Tag::List TagFetchJob::tags() const
 }
 
 #include "moc_tagfetchjob.cpp"
-#include <chrono>
-
-using namespace std::chrono_literals;

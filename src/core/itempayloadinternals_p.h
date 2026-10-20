@@ -10,6 +10,7 @@
 
 #include <QSharedPointer>
 
+#include <cstring>
 #include <memory>
 #include <type_traits>
 #include <typeinfo>
@@ -361,7 +362,7 @@ inline Payload<T> *payload_cast(PayloadBase *payloadBase)
 {
     auto p = dynamic_cast<Payload<T> *>(payloadBase);
     // try harder to cast, workaround for some gcc issue with template instances in multiple DSO's
-    if (!p && payloadBase && strcmp(payloadBase->typeName(), typeid(p).name()) == 0) {
+    if (!p && payloadBase && std::strcmp(payloadBase->typeName(), typeid(p).name()) == 0) {
         p = static_cast<Payload<T> *>(payloadBase);
     }
     return p;

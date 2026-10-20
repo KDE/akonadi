@@ -21,6 +21,8 @@
 
 #include "private/instance_p.h"
 
+#include <memory>
+
 #define AKONADICONSOLE_SERVICE "org.kde.akonadiconsole"
 #define AKONADICONSOLE_LOGGER_PATH "/logger"
 #define AKONADICONSOLE_LOGGER_INTERFACE "org.kde.akonadiconsole.logger"

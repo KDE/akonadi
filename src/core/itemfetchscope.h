@@ -13,9 +13,6 @@
 #include <QSet>
 #include <QSharedDataPointer>
 
-template<typename T>
-class QSet;
-
 namespace Akonadi
 {
 class ItemFetchScopePrivate;

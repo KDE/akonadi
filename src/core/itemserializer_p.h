@@ -14,8 +14,6 @@
 
 #include "itemserializerplugin.h"
 
-#include <memory>
-
 class QIODevice;
 
 namespace Akonadi

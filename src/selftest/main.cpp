@@ -7,6 +7,7 @@
 #include "selftestdialog.h"
 
 #include <KAboutData>
+#include <KLocalizedString>
 
 #include <QApplication>
 #include <QCommandLineParser>

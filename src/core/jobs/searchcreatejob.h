@@ -12,7 +12,6 @@
 
 namespace Akonadi
 {
-class Collection;
 class SearchQuery;
 class SearchCreateJobPrivate;
 

@@ -10,7 +10,6 @@ class KJob;
 
 #include "collectionfetchjob.h"
 #include "item.h"
-#include "itemfetchscope.h"
 #include "mimetypechecker.h"
 
 #include "entitytreemodel.h"
@@ -25,6 +24,7 @@ namespace Akonadi
 {
 class Monitor;
 class AgentInstance;
+class Session;
 }
 
 struct Node {

@@ -9,10 +9,8 @@
 #include "private/standarddirs_p.h"
 #include <KConfig>
 #include <KConfigGroup>
-#include <KLocalizedString>
 #include <QDir>
 #include <QPluginLoader>
-#include <QStandardPaths>
 
 using namespace Akonadi;
 

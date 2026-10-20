@@ -7,13 +7,11 @@
 #include "searchcreatehandler.h"
 
 #include "akonadi.h"
-#include "akonadiserver_debug.h"
 #include "connection.h"
 #include "handlerhelper.h"
 #include "search/searchmanager.h"
 #include "shared/akranges.h"
 #include "storage/datastore.h"
-#include "storage/entity.h"
 #include "storage/transaction.h"
 
 using namespace Akonadi;

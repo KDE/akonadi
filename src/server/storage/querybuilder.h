@@ -10,11 +10,14 @@
 #include "query.h"
 
 #include <QList>
+#include <QMap>
 #include <QPair>
+#include <QSet>
 #include <QSqlQuery>
 #include <QString>
 #include <QStringList>
 #include <QVariant>
+#include <functional>
 #include <optional>
 
 #ifdef QUERYBUILDER_UNITTEST

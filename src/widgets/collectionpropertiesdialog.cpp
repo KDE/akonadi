@@ -6,7 +6,6 @@
 
 #include "collectionpropertiesdialog.h"
 
-#include "cachepolicy.h"
 #include "cachepolicypage.h"
 #include "collection.h"
 #include "collectiongeneralpropertiespage_p.h"
@@ -19,6 +18,9 @@
 #include <QTabWidget>
 
 #include <QDialogButtonBox>
+#include <QHash>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace Akonadi;
 

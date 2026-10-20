@@ -27,6 +27,8 @@
 #include <QDate>
 #include <QDesktopServices>
 #include <QDialogButtonBox>
+#include <QDir>
+#include <QFile>
 #include <QFileInfo>
 #include <QProcess>
 #include <QPushButton>

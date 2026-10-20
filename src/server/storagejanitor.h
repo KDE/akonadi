@@ -11,6 +11,8 @@
 
 #include <QDBusConnection>
 
+#include <memory>
+
 namespace Akonadi
 {
 namespace Server

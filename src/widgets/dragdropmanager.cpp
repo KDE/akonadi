@@ -5,9 +5,9 @@
 */
 
 #include "akonadiwidgets_debug.h"
-#include "collectionutils.h"
 #include "dragdropmanager_p.h"
 #include "specialcollectionattribute.h"
+#include <QAbstractItemView>
 #include <QApplication>
 #include <QDrag>
 #include <QDropEvent>
@@ -18,7 +18,6 @@
 
 #include <QUrlQuery>
 
-#include "collection.h"
 #include "entitytreemodel.h"
 
 using namespace Akonadi;

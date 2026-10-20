@@ -14,6 +14,9 @@
 #include <QSet>
 #include <QSharedDataPointer>
 #include <QSharedPointer>
+
+#include <algorithm>
+
 namespace
 {
 class Dummy;

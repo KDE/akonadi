@@ -6,14 +6,11 @@
 
 #include "itemfetchjob.h"
 
-#include "akonadicore_debug.h"
-#include "attributefactory.h"
 #include "collection.h"
 #include "itemfetchscope.h"
 #include "job_p.h"
 #include "private/protocol_p.h"
 #include "protocolhelper_p.h"
-#include "session_p.h"
 #include "tagfetchscope.h"
 
 #include <QTimer>

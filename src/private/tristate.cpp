@@ -6,6 +6,8 @@
 
 #include "tristate_p.h"
 
+#include <QDebug>
+
 using namespace Akonadi;
 
 QDebug operator<<(QDebug dbg, Tristate tristate)

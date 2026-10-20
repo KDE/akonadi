@@ -32,7 +32,8 @@
 #include "handler/tagfetchhandler.h"
 #include "handler/tagmodifyhandler.h"
 #include "handler/transactionhandler.h"
-#include "storage/querybuilder.h"
+
+#include <algorithm>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

@@ -8,8 +8,6 @@
 #include "instance_p.h"
 
 #include <QList>
-#include <QString>
-#include <QStringList>
 #include <QStringView>
 
 #include <array>

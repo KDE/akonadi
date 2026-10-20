@@ -21,6 +21,8 @@
 #include <KLocalizedString>
 
 #include <algorithm>
+#include <functional>
+#include <iterator>
 #include <variant>
 
 using namespace Akonadi;

@@ -19,10 +19,7 @@
 namespace Akonadi
 {
 class CollectionStatistics;
-class Item;
-class ItemFetchScope;
 class Monitor;
-class Session;
 
 class EntityTreeModelPrivate;
 

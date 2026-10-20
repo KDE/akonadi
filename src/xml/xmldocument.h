@@ -11,6 +11,7 @@
 // AkonadiCore
 #include "akonadi/collection.h"
 #include "akonadi/item.h"
+#include "akonadi/tag.h"
 
 #include <QDomDocument>
 

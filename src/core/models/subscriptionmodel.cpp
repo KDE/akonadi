@@ -11,7 +11,6 @@
 #include "subscriptionmodel_p.h"
 
 #include "shared/akranges.h"
-#include <qnamespace.h>
 
 #include <QFont>
 #include <QSortFilterProxyModel>

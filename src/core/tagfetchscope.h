@@ -8,6 +8,7 @@
 
 #include "akonadicore_export.h"
 
+#include <QSet>
 #include <QSharedPointer>
 
 namespace Akonadi

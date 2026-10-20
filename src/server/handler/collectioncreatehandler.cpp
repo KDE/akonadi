@@ -9,7 +9,6 @@
 #include "handlerhelper.h"
 #include "shared/akranges.h"
 #include "storage/datastore.h"
-#include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
 
 #include "private/scope_p.h"

@@ -15,6 +15,10 @@
 
 #include "private/scope_p.h"
 
+#include <QStack>
+
+#include <climits>
+
 using namespace Akonadi;
 using namespace Akonadi::Server;
 

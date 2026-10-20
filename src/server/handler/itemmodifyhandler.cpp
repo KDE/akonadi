@@ -11,19 +11,15 @@
 #include "private/externalpartstorage_p.h"
 #include "shared/akranges.h"
 #include "storage/datastore.h"
-#include "storage/dbconfig.h"
+#include "storage/dbtype.h"
 #include "storage/itemqueryhelper.h"
-#include "storage/itemretriever.h"
-#include "storage/parthelper.h"
 #include "storage/partstreamer.h"
-#include "storage/parttypehelper.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
 
 #include "akonadiserver_debug.h"
 
-#include <algorithm>
-#include <functional>
+#include <utility>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

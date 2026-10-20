@@ -7,9 +7,7 @@
 #include "searchrequest.h"
 
 #include "abstractsearchplugin.h"
-#include "akonadi.h"
 #include "akonadiserver_search_debug.h"
-#include "connection.h"
 #include "searchmanager.h"
 #include "searchtaskmanager.h"
 

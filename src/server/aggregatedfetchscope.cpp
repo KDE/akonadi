@@ -7,6 +7,7 @@
 #include "aggregatedfetchscope.h"
 #include "shared/akranges.h"
 
+#include <QHash>
 #include <QMutexLocker>
 #include <QRecursiveMutex>
 

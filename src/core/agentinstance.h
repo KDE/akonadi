@@ -12,7 +12,6 @@
 #include <QSharedDataPointer>
 
 class QString;
-class QWidget;
 
 namespace Akonadi
 {

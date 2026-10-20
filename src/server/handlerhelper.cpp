@@ -17,6 +17,9 @@
 #include "private/protocol_p.h"
 #include "private/scope_p.h"
 
+#include <algorithm>
+#include <iterator>
+
 using namespace Akonadi;
 using namespace Akonadi::Server;
 

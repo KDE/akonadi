@@ -25,10 +25,7 @@
 #include <algorithm>
 #include <cassert>
 #include <functional>
-#include <set>
 #include <type_traits>
-
-using namespace AkRanges;
 
 namespace Akonadi
 {
@@ -148,7 +145,7 @@ public:
         using namespace std::placeholders;
 
         if (std::all_of(objects.cbegin(), objects.cend(), std::mem_fn(&T::isValid))) {
-            return Scope(objects | Views::transform(std::mem_fn(&T::id)) | Actions::toQList);
+            return Scope(objects | AkRanges::Views::transform(std::mem_fn(&T::id)) | AkRanges::Actions::toQList);
         }
 
         if (entitySetHasGID(objects)) {

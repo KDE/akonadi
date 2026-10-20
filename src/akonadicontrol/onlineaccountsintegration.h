@@ -9,7 +9,7 @@
 #include <QDBusObjectPath>
 #include <QObject>
 
-#include "agentmanager.h"
+class AgentManager;
 
 class OnlineAccountsIntegration : public QObject
 {

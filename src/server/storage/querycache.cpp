@@ -5,17 +5,15 @@
  */
 
 #include "querycache.h"
-#include "datastore.h"
 #include "dbtype.h"
 
-#include <QHash>
-#include <QSqlDriver>
 #include <QSqlQuery>
 #include <QThreadStorage>
 #include <QTimer>
 
 #include <chrono>
 #include <list>
+#include <unordered_map>
 
 using namespace std::chrono_literals;
 using namespace Akonadi;

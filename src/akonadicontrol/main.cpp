@@ -7,7 +7,6 @@
 #include "agentmanager.h"
 #include "akonadi_version.h"
 #include "akonadicontrol_debug.h"
-#include "config-akonadi.h"
 #include "controlmanager.h"
 #include "onlineaccountsintegration.h"
 
@@ -17,16 +16,12 @@
 
 #include <QDBusConnection>
 #include <QGuiApplication>
-#include <QSessionManager>
 
 #include <KAboutData>
 #include <KCrash>
 #include <KLocalizedString>
 
-#include <stdlib.h>
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif
+#include <cstdlib>
 
 using namespace Qt::Literals;
 

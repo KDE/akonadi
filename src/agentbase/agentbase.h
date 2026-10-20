@@ -33,8 +33,6 @@ namespace Akonadi
 {
 class AgentBasePrivate;
 class ChangeRecorder;
-class Collection;
-class Item;
 
 /*!
  * \short The base class for all Akonadi agents and resources.

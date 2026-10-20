@@ -7,11 +7,13 @@
 #include "onlineaccountsintegration.h"
 
 #include <QDBusConnection>
-#include <QDBusInterface>
 #include <QDBusMessage>
 #include <QDBusReply>
+#include <QDBusServiceWatcher>
+#include <QSet>
 
 #include "accountinterface.h"
+#include "agentmanager.h"
 #include "agenttype.h"
 #include "akonadicontrol_debug.h"
 

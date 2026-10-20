@@ -7,7 +7,6 @@
 #include "collection.h"
 #include "collection_p.h"
 
-#include "attributefactory.h"
 #include "cachepolicy.h"
 #include "collectionrightsattribute_p.h"
 #include "collectionstatistics.h"

@@ -5,17 +5,18 @@
 */
 
 #include "agentconfigurationdialog.h"
-#include "agentconfigurationbase.h"
 #include "agentconfigurationwidget.h"
-#include "agentconfigurationwidget_p.h"
-#include "core/agentmanager.h"
+#include "agentinstance.h"
+#include "agenttype.h"
 
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QWindow>
 
+#include <KConfigGroup>
 #include <KLocalizedString>
+#include <KSharedConfig>
 #include <KWindowConfig>
 
 namespace Akonadi

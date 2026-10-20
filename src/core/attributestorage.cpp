@@ -6,7 +6,10 @@
 
 #include "attributestorage_p.h"
 
+#include <QHash>
 #include <QSharedData>
+
+#include <set>
 
 using namespace Akonadi;
 

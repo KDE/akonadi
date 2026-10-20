@@ -6,8 +6,6 @@
 
 #pragma once
 
-#include <QHash>
-
 #include <QStringList>
 #include <QVariantMap>
 

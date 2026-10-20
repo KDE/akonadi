@@ -28,7 +28,6 @@
 #include "private/externalpartstorage_p.h"
 #include <shared/akranges.h>
 
-#include <QCoreApplication>
 #include <QElapsedTimer>
 #include <QFile>
 #include <QSqlDriver>
@@ -38,11 +37,11 @@
 #include <QString>
 #include <QStringList>
 #include <QThread>
+#include <QThreadStorage>
 #include <QTimer>
 #include <QUuid>
 #include <QVariant>
 
-#include <functional>
 #include <shared_mutex>
 
 using namespace Akonadi;

@@ -8,17 +8,13 @@
 #include "akonadicore_debug.h"
 #include "item_p.h"
 #include "itemserializer_p.h"
-#include "private/protocol_p.h"
 
 #include <QUrlQuery>
 
-#include <QReadWriteLock>
 #include <QScopedValueRollback>
 #include <QStringList>
 
 #include <algorithm>
-#include <map>
-#include <utility>
 
 using namespace Akonadi;
 

@@ -14,7 +14,6 @@
 #include <QAbstractItemView>
 #include <QPainter>
 #include <QStyle>
-#include <QStyleOption>
 #include <QStyleOptionViewItem>
 #include <QTreeView>
 

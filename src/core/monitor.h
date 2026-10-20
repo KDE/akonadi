@@ -19,18 +19,12 @@ namespace Akonadi
 {
 class CollectionFetchScope;
 class CollectionStatistics;
-class Item;
 class ItemFetchScope;
 class MonitorPrivate;
 class Session;
 class TagFetchScope;
 class NotificationSubscriber;
 class ChangeNotification;
-
-namespace Protocol
-{
-class Command;
-}
 
 /*!
  * \brief Monitors an item or collection for changes.

@@ -8,28 +8,24 @@
 #include "akonadischema.h"
 #include "akonadiserver_debug.h"
 #include "datastore.h"
-#include "dbconfig.h"
-#include "dbinitializer_p.h"
-#include "dbintrospector.h"
+#include "dbinitializer.h"
 #include "dbtype.h"
 #include "entities.h"
 #include "querybuilder.h"
-#include "selectquerybuilder.h"
 
 #include "private/dbus_p.h"
 
-#include <QCoreApplication>
 #include <QDBusConnection>
 #include <QDBusError>
+#include <QHash>
 #include <QMetaMethod>
+#include <QSet>
 #include <QSqlError>
 #include <QSqlQuery>
-#include <QThread>
 
 #include <QDomDocument>
 #include <QElapsedTimer>
 #include <QFile>
-#include <QSqlResult>
 
 #include <expected>
 

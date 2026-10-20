@@ -11,7 +11,6 @@
 #include "cachecleaner.h"
 #include "connection.h"
 #include "handlerhelper.h"
-#include "intervalcheck.h"
 #include "search/searchmanager.h"
 #include "shared/akranges.h"
 #include "storage/collectionqueryhelper.h"

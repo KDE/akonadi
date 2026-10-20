@@ -7,10 +7,11 @@
 
 #include "searchhelper.h"
 
+#include "akonadiserver_debug.h"
 #include "entities.h"
-#include "storage/countquerybuilder.h"
+#include "storage/querybuilder.h"
 
-#include "private/protocol_p.h"
+#include <QMap>
 
 using namespace Akonadi::Server;
 

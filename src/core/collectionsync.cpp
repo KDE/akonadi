@@ -20,6 +20,7 @@
 #include <QHash>
 #include <QList>
 
+#include <algorithm>
 #include <functional>
 
 using namespace Akonadi;

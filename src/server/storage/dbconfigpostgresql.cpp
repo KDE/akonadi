@@ -12,21 +12,20 @@
 #include "shared/akranges.h"
 
 #include <QDir>
-#include <QDirIterator>
+#include <QFile>
+#include <QFileInfo>
 #include <QProcess>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
+#include <QSettings>
+#include <QSqlDatabase>
 #include <QSqlDriver>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QStandardPaths>
 
-#include <config-akonadi.h>
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif
 #include <chrono>
-#include <filesystem>
+#include <config-akonadi.h>
 
 using namespace std::chrono_literals;
 

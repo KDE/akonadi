@@ -12,6 +12,8 @@
 #include <lzma.h>
 
 #include <array>
+#include <cstdio>
+#include <cstring>
 
 using namespace Akonadi;
 

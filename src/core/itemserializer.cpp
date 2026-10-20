@@ -8,8 +8,6 @@
 #include "config_p.h"
 #include "item.h"
 #include "itemserializer_p.h"
-#include "itemserializerplugin.h"
-#include "protocolhelper_p.h"
 #include "typepluginloader_p.h"
 
 #include "private/compressionstream_p.h"

@@ -17,8 +17,6 @@ namespace Akonadi
 {
 namespace Server
 {
-class ItemRetrievalRequest;
-
 class AbstractItemRetrievalJob : public QObject
 {
     Q_OBJECT

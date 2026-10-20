@@ -9,13 +9,11 @@
 #include "itemsync.h"
 
 #include "collection.h"
-#include "item_p.h"
 #include "itemcreatejob.h"
 #include "itemdeletejob.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
 #include "job_p.h"
-#include "protocol_p.h"
 #include "transactionsequence.h"
 
 #include "akonadicore_debug.h"

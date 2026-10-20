@@ -12,9 +12,9 @@
 
 #include <KLocalizedString>
 
+class QDBusInterface;
 class QSettings;
 class QTimer;
-class QNetworkConfigurationManager;
 
 namespace Akonadi
 {

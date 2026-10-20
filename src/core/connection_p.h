@@ -8,7 +8,6 @@
 
 #include <QLocalSocket>
 #include <QScopedPointer>
-#include <QThread>
 
 #include "private/protocol_p.h"
 

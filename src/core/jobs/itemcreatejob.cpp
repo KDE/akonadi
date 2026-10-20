@@ -9,7 +9,6 @@
 #include "itemcreatejob.h"
 
 #include "collection.h"
-#include "gidextractor_p.h"
 #include "item.h"
 #include "item_p.h"
 #include "itemserializer_p.h"

@@ -17,8 +17,6 @@ namespace Akonadi
 {
 namespace Server
 {
-class ItemRetrievalRequest;
-
 /// Details of a single item retrieval request
 class ItemRetrievalRequest
 {

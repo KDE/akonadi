@@ -7,9 +7,8 @@
 #pragma once
 
 #include "commandcontext.h"
-#include "storage/countquerybuilder.h"
-#include "storage/datastore.h"
-#include "storage/itemretriever.h"
+#include "entities.h"
+#include "storage/querybuilder.h"
 
 #include "private/protocol_p.h"
 #include "private/scope_p.h"
@@ -24,6 +23,7 @@ namespace Server
 {
 class Connection;
 class AkonadiServer;
+class DataStore;
 
 class ItemFetchHelper
 {

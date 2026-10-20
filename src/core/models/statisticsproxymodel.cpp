@@ -19,8 +19,6 @@
 #include <KLocalizedString>
 
 #include <QGuiApplication>
-#include <QMetaMethod>
-#include <QPalette>
 
 using namespace Akonadi;
 

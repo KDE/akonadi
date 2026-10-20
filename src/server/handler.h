@@ -15,9 +15,6 @@ namespace Akonadi
 {
 namespace Server
 {
-class AkonadiServer;
-class Response;
-
 AKONADI_EXCEPTION_MAKE_INSTANCE(HandlerException);
 
 /**

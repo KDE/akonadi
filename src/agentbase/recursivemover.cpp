@@ -4,11 +4,14 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
+#include "agentbase_p.h"
 #include "collectionfetchjob.h"
 #include "collectionfetchscope.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
 #include "recursivemover_p.h"
+
+#include <QQueue>
 
 using namespace Akonadi;
 

@@ -13,6 +13,7 @@
 #include "private/standarddirs_p.h"
 
 #include <QDir>
+#include <QFile>
 #include <QFileInfo>
 #include <QHostInfo>
 #include <QSettings>
@@ -20,6 +21,7 @@
 #if !defined(Q_OS_WIN)
 #include <cerrno>
 #include <cstdlib>
+#include <cstring>
 #include <sys/types.h>
 #include <sys/un.h>
 #include <unistd.h>

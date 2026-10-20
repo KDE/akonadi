@@ -11,7 +11,6 @@
 
 #include <memory>
 
-class KJob;
 class FakeSession;
 class FakeNotificationConnection;
 

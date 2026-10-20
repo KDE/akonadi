@@ -35,8 +35,6 @@ private:
     Q_DECLARE_PRIVATE(TransactionJob)
 };
 
-class TransactionJobPrivate;
-
 /*!
  * \brief Job that begins a session-global transaction.
  *

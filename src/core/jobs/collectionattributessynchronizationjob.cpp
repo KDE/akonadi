@@ -17,7 +17,6 @@
 #include <KLocalizedString>
 
 #include <QDBusConnection>
-#include <QDBusInterface>
 #include <QTimer>
 
 namespace Akonadi

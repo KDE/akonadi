@@ -6,6 +6,8 @@
 #include <Akonadi/CollectionModifyJob>
 #include <Akonadi/EntityDisplayAttribute>
 
+#include <QDebug>
+
 CollectionEditorController::CollectionEditorController(QObject *parent)
     : QObject(parent)
 {

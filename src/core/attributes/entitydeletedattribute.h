@@ -10,6 +10,8 @@
 #include "attribute.h"
 #include "collection.h"
 
+#include <memory>
+
 namespace Akonadi
 {
 class EntityDeletedAttributePrivate;

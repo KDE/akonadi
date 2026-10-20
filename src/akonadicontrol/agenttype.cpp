@@ -14,6 +14,8 @@
 #include <KConfigGroup>
 #include <KDesktopFile>
 
+#include <QSettings>
+
 using namespace Akonadi;
 
 const QLatin1StringView AgentType::CapabilityUnique = QLatin1StringView(AKONADI_AGENT_CAPABILITY_UNIQUE);

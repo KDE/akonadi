@@ -11,8 +11,6 @@
 #include "private/standarddirs_p.h"
 #include "processcontrol.h"
 
-#include <QStandardPaths>
-
 using namespace Akonadi;
 
 AgentProcessInstance::AgentProcessInstance(AgentManager &manager)

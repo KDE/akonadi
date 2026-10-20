@@ -6,13 +6,12 @@
 
 #pragma once
 
-#include "agentbase.h"
-#include "collection.h"
-#include "item.h"
 #include "resourcebase.h"
 
 #include <QDBusMessage>
 #include <QObject>
+
+class KJob;
 
 namespace Akonadi
 {
