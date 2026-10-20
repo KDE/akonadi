@@ -6,6 +6,7 @@
 
 #include "tagattribute.h"
 
+#include "akonadiprivate_debug.h"
 #include "private/imapparser_p.h"
 
 using namespace Akonadi;
@@ -122,8 +123,12 @@ void TagAttribute::deserialize(const QByteArray &data)
 {
     QList<QByteArray> l;
     ImapParser::parseParenthesizedList(data, l);
-    int size = l.size();
+    const int size = l.size();
     Q_ASSERT(size >= 7);
+    if (l.size() < 7) {
+        qCWarning(AKONADIPRIVATE_LOG) << "Invalid deserialize value (size < 7)";
+        return;
+    }
     d->name = QString::fromUtf8(l[0]);
     d->icon = QString::fromUtf8(l[1]);
     d->font = QString::fromUtf8(l[2]);
