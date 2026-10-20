@@ -48,21 +48,14 @@ AttributeStorage::AttributeStorage()
 {
 }
 
-AttributeStorage::AttributeStorage(const AttributeStorage &other)
-    : d(other.d)
-{
-}
+AttributeStorage::AttributeStorage(const AttributeStorage &other) = default;
 
 AttributeStorage::AttributeStorage(AttributeStorage &&other) noexcept
 {
     d.swap(other.d);
 }
 
-AttributeStorage &AttributeStorage::operator=(const AttributeStorage &other)
-{
-    d = other.d;
-    return *this;
-}
+AttributeStorage &AttributeStorage::operator=(const AttributeStorage &other) = default;
 
 AttributeStorage &AttributeStorage::operator=(AttributeStorage &&other) noexcept
 {

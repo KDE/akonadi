@@ -57,10 +57,7 @@ ImapInterval::ImapInterval()
 {
 }
 
-ImapInterval::ImapInterval(const ImapInterval &other)
-    : d(other.d)
-{
-}
+ImapInterval::ImapInterval(const ImapInterval &other) = default;
 
 ImapInterval::ImapInterval(Id begin, Id end)
     : d(new ImapIntervalPrivate)
@@ -71,14 +68,7 @@ ImapInterval::ImapInterval(Id begin, Id end)
 
 ImapInterval::~ImapInterval() = default;
 
-ImapInterval &ImapInterval::operator=(const ImapInterval &other)
-{
-    if (this != &other) {
-        d = other.d;
-    }
-
-    return *this;
-}
+ImapInterval &ImapInterval::operator=(const ImapInterval &other) = default;
 
 bool ImapInterval::operator==(const ImapInterval &other) const
 {
@@ -175,10 +165,7 @@ ImapSet::ImapSet(const ImapInterval &interval)
     add(interval);
 }
 
-ImapSet::ImapSet(const ImapSet &other)
-    : d(other.d)
-{
-}
+ImapSet::ImapSet(const ImapSet &other) = default;
 
 ImapSet::~ImapSet()
 {
@@ -191,14 +178,7 @@ ImapSet ImapSet::all()
     return set;
 }
 
-ImapSet &ImapSet::operator=(const ImapSet &other)
-{
-    if (this != &other) {
-        d = other.d;
-    }
-
-    return *this;
-}
+ImapSet &ImapSet::operator=(const ImapSet &other) = default;
 
 bool ImapSet::operator==(const ImapSet &other) const
 {

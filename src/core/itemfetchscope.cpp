@@ -50,14 +50,7 @@ ItemFetchScope::ItemFetchScope(const ItemFetchScope &other) = default;
 
 ItemFetchScope::~ItemFetchScope() = default;
 
-ItemFetchScope &ItemFetchScope::operator=(const ItemFetchScope &other)
-{
-    if (&other != this) {
-        d = other.d;
-    }
-
-    return *this;
-}
+ItemFetchScope &ItemFetchScope::operator=(const ItemFetchScope &other) = default;
 
 QSet<QByteArray> ItemFetchScope::payloadParts() const
 {

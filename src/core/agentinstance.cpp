@@ -23,10 +23,7 @@ AgentInstance::AgentInstance()
 {
 }
 
-AgentInstance::AgentInstance(const AgentInstance &other)
-    : d(other.d)
-{
-}
+AgentInstance::AgentInstance(const AgentInstance &other) = default;
 
 AgentInstance::~AgentInstance()
 {
@@ -112,14 +109,7 @@ void AgentInstance::synchronizeTags()
     AgentManager::self()->d->synchronizeTags(*this);
 }
 
-AgentInstance &AgentInstance::operator=(const AgentInstance &other)
-{
-    if (this != &other) {
-        d = other.d;
-    }
-
-    return *this;
-}
+AgentInstance &AgentInstance::operator=(const AgentInstance &other) = default;
 
 bool AgentInstance::operator==(const AgentInstance &other) const
 {

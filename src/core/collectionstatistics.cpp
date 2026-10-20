@@ -27,10 +27,7 @@ CollectionStatistics::CollectionStatistics()
 {
 }
 
-CollectionStatistics::CollectionStatistics(const CollectionStatistics &other)
-    : d(other.d)
-{
-}
+CollectionStatistics::CollectionStatistics(const CollectionStatistics &other) = default;
 
 CollectionStatistics::~CollectionStatistics() = default;
 
@@ -64,11 +61,7 @@ void CollectionStatistics::setSize(qint64 size)
     d->size = size;
 }
 
-CollectionStatistics &CollectionStatistics::operator=(const CollectionStatistics &other)
-{
-    d = other.d;
-    return *this;
-}
+CollectionStatistics &CollectionStatistics::operator=(const CollectionStatistics &other) = default;
 
 QDebug operator<<(QDebug d, const CollectionStatistics &s)
 {
