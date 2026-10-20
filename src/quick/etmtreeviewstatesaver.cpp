@@ -26,6 +26,9 @@ int ETMTreeViewStateSaver::currentIndex() const
 
 void ETMTreeViewStateSaver::setCurrentIndex(const int currentIndex, bool signal)
 {
+    if (!m_model) {
+        return;
+    }
     if (m_currentIndex == currentIndex) {
         return;
     }
