@@ -6,7 +6,7 @@
 
 #include "tagattribute.h"
 
-#include "akonadiprivate_debug.h"
+#include "akonadicore_debug.h"
 #include "private/imapparser_p.h"
 
 using namespace Akonadi;
@@ -126,7 +126,7 @@ void TagAttribute::deserialize(const QByteArray &data)
     const int size = l.size();
     Q_ASSERT(size >= 7);
     if (l.size() < 7) {
-        qCWarning(AKONADIPRIVATE_LOG) << "Invalid deserialize value (size < 7)";
+        qCWarning(AKONADICORE_LOG) << "Invalid deserialize value (size < 7)";
         return;
     }
     d->name = QString::fromUtf8(l[0]);
