@@ -81,7 +81,7 @@ enum NtfField {
     NtfAddedTags = (1 << 11),
     NtfRemovedTags = (1 << 12),
 
-    NtfFlags = NtfAddedFlags | NtfRemovedTags,
+    NtfFlags = NtfAddedFlags | NtfRemovedFlags,
     NtfTags = NtfAddedTags | NtfRemovedTags,
     NtfAll = NtfType | NtfOperation | NtfSession | NtfEntities | NtfResource | NtfCollection | NtfDestResource | NtfDestCollection | NtfFlags | NtfTags
 };
