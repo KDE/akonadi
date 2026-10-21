@@ -7,6 +7,7 @@
 #include "agentmanager.h"
 #include "akonadi_version.h"
 #include "akonadicontrol_debug.h"
+#include "backgroundportalintegration.h"
 #include "controlmanager.h"
 #include "onlineaccountsintegration.h"
 
@@ -64,6 +65,8 @@ int main(int argc, char **argv)
     AgentManager agentManager(app.commandLineArguments().isSet(QStringLiteral("verbose")));
 
     std::unique_ptr<OnlineAccountsIntegration> accountsIntegration;
+
+    BackgroundPortalIntegration backgroundPortalIntegration;
 
     if (QDBusConnection::sessionBus().interface()->isServiceRegistered(u"org.kde.KOnlineAccounts"_s)) {
         accountsIntegration = std::make_unique<OnlineAccountsIntegration>(agentManager);
