@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.3\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-16 00:48+0000\n"
+"POT-Creation-Date: 2026-10-21 00:51+0000\n"
 "PO-Revision-Date: 2026-03-12 21:35+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -30,29 +30,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "ulysses@fsf.hu"
 
-#: agentbase/agentbase.cpp:307 agentbase/preprocessorbase_p.cpp:26
+#: agentbase/agentbase.cpp:312 agentbase/preprocessorbase_p.cpp:26
 #, kde-format
 msgid "Unable to register object at dbus: %1"
 msgstr "Nem sikerült regisztrálni az objektumot a dbus-on: %1"
 
-#: agentbase/agentbase.cpp:400
+#: agentbase/agentbase.cpp:405
 #, kde-format
 msgctxt "Name and type of Akonadi resource"
 msgid "%1 of type %2"
 msgstr "%2 típusú %1"
 
-#: agentbase/agentbase.cpp:817
+#: agentbase/agentbase.cpp:822
 #, kde-format
 msgctxt "@info:shell"
 msgid "Agent identifier"
 msgstr "Azonosító"
 
-#: agentbase/agentbase.cpp:823
+#: agentbase/agentbase.cpp:828
 #, kde-format
 msgid "Akonadi Agent"
 msgstr "Akonadi szolgáltatás"
 
-#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:212
+#: agentbase/agentbase_p.h:50 agentbase/resourcescheduler.cpp:216
 #, kde-format
 msgctxt "@info:status Application ready for work"
 msgid "Ready"
@@ -82,93 +82,93 @@ msgctxt "@info:status"
 msgid "Not configured"
 msgstr "Nincs beállítva"
 
-#: agentbase/resourcebase.cpp:516
+#: agentbase/resourcebase.cpp:519
 #, kde-format
 msgctxt "@label command line option"
 msgid "Resource identifier"
 msgstr "Erőforrás-azonosító"
 
-#: agentbase/resourcebase.cpp:522
+#: agentbase/resourcebase.cpp:525
 #, kde-format
 msgid "Akonadi Resource"
 msgstr "Akonadi-erőforrás"
 
-#: agentbase/resourcebase.cpp:564
+#: agentbase/resourcebase.cpp:567
 #, kde-format
 msgctxt "@info"
 msgid "Invalid item retrieved"
 msgstr "Érvénytelen elem lett fogadva"
 
-#: agentbase/resourcebase.cpp:588
+#: agentbase/resourcebase.cpp:591
 #, kde-format
 msgctxt "@info"
 msgid "Error while creating item: %1"
 msgstr "Hiba az elem létrehozása közben: %1"
 
-#: agentbase/resourcebase.cpp:619
+#: agentbase/resourcebase.cpp:622
 #, kde-format
 msgctxt "@info"
 msgid "Error while updating collection: %1"
 msgstr "Hiba a gyűjtemény frissítése közben: %1"
 
-#: agentbase/resourcebase.cpp:711
+#: agentbase/resourcebase.cpp:714
 #, kde-format
 msgctxt "@info"
 msgid "Updating local collection failed: %1."
 msgstr "A helyi gyűjtemény frissítése nem sikerült: %1."
 
-#: agentbase/resourcebase.cpp:716
+#: agentbase/resourcebase.cpp:719
 #, kde-format
 msgctxt "@info"
 msgid "Updating local items failed: %1."
 msgstr "A helyi elemek frissítése nem sikerült: %1."
 
-#: agentbase/resourcebase.cpp:742
+#: agentbase/resourcebase.cpp:745
 #, kde-format
 msgctxt "@info"
 msgid "Cannot fetch item in offline mode."
 msgstr "Nem lehet elemet letölteni kapcsolat nélküli módban."
 
-#: agentbase/resourcebase.cpp:925
+#: agentbase/resourcebase.cpp:928
 #, kde-format
 msgctxt "@info:status"
 msgid "Syncing folder '%1'"
 msgstr "„%1” mappa szinkronizálása"
 
-#: agentbase/resourcebase.cpp:946 agentbase/resourcebase.cpp:953
+#: agentbase/resourcebase.cpp:949 agentbase/resourcebase.cpp:956
 #, kde-format
 msgid "Failed to retrieve collection for sync."
 msgstr "Nem sikerült letölteni az erőforrás gyűjteményt szinkronizáláshoz."
 
-#: agentbase/resourcebase.cpp:999
+#: agentbase/resourcebase.cpp:1002
 #, kde-format
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Nem sikerült letölteni a gyűjteményt attribútumszinkronizáláshoz."
 
-#: agentbase/resourcebase.cpp:1048
+#: agentbase/resourcebase.cpp:1051
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "A kért elem már nem létezik"
 
-#: agentbase/resourcebase.cpp:1269
+#: agentbase/resourcebase.cpp:1272
 #, fuzzy, kde-format
 #| msgid "Failed to retrieve collection for sync."
 msgid "Failed to fetch collection for collection sync."
 msgstr "Nem sikerült letölteni az erőforrás gyűjteményt szinkronizáláshoz."
 
-#: agentbase/resourcebase.cpp:1305
+#: agentbase/resourcebase.cpp:1308
 #, fuzzy, kde-format
 #| msgid "Failed to retrieve collection for attribute sync."
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr "Nem sikerült letölteni a gyűjteményt attribútumszinkronizáláshoz."
 
-#: agentbase/resourcescheduler.cpp:429 agentbase/resourcescheduler.cpp:435
+#: agentbase/resourcescheduler.cpp:433 agentbase/resourcescheduler.cpp:439
 #, kde-format
 msgctxt "@info"
 msgid "Job canceled."
 msgstr "Feladat megszakítva."
 
-#: akonadicontrol/main.cpp:53 akonadicontrol/main.cpp:55
+#: akonadicontrol/main.cpp:48 akonadicontrol/main.cpp:50
 #, kde-format
 msgid "Akonadi Control"
 msgstr "Akonadi vezérlő"
@@ -217,27 +217,27 @@ msgstr "Várja meg a kiszolgáló leállításának befejezését."
 msgid "Command to execute"
 msgstr "A végrehajtandó parancs"
 
-#: configdialog/main.cpp:23
+#: configdialog/main.cpp:22
 #, kde-format
 msgid "Configuration Dialog"
 msgstr "Beállítás párbeszédablak"
 
-#: configdialog/main.cpp:25
+#: configdialog/main.cpp:24
 #, kde-format
 msgid "Allows to configure an agent or resource"
 msgstr "Lehetővé teszi egy ügynök vagy erőforrás beállítását"
 
-#: configdialog/main.cpp:27
+#: configdialog/main.cpp:26
 #, kde-format
 msgid "© 2025 Carl Schwan <carl@carlschwan.eu>"
 msgstr "© Carl Schwan <carl@carlschwan.eu>, 2025."
 
-#: configdialog/main.cpp:30
+#: configdialog/main.cpp:29
 #, kde-format
 msgid "The agent identifier"
 msgstr "Az ügynökazonosító"
 
-#: configdialog/main.cpp:36
+#: configdialog/main.cpp:35
 #, kde-format
 msgid "Required identifier argument missing."
 msgstr "Hiányzik a szükséges azonosító argumentum."
@@ -247,7 +247,7 @@ msgstr "Hiányzik a szükséges azonosító argumentum."
 msgid "No such agent found \"%1\""
 msgstr "Nem található „%1” ügynök"
 
-#: core/collection.cpp:220
+#: core/collection.cpp:219
 #, kde-format
 msgctxt "Name for the folder containing searches"
 msgid "Search"
@@ -258,7 +258,7 @@ msgstr "Keresés"
 msgid "No such collection."
 msgstr "Nem létezik ilyen gyűjtemény."
 
-#: core/collectionsync.cpp:502 core/collectionsync.cpp:647
+#: core/collectionsync.cpp:503 core/collectionsync.cpp:648
 #, kde-format
 msgid "Found unresolved orphan collections"
 msgstr "Feloldatlan árva gyűjtemények találhatók"
@@ -268,39 +268,39 @@ msgstr "Feloldatlan árva gyűjtemények találhatók"
 msgid "Did not find other item for conflict handling"
 msgstr "Nem található egyéb elem az ütközéskezeléshez."
 
-#: core/jobs/agentinstancecreatejob.cpp:58
+#: core/jobs/agentinstancecreatejob.cpp:51
 #, kde-format
 msgid "Agent instance creation timed out."
 msgstr "Az ügynökpéldány létrehozása túllépte az időkorlátot."
 
-#: core/jobs/agentinstancecreatejob.cpp:108
+#: core/jobs/agentinstancecreatejob.cpp:101
 #, kde-format
 msgid "Unable to obtain agent type '%1'."
 msgstr "Nem sikerült megszerezni a(z) „%1” ügynöktípust."
 
-#: core/jobs/agentinstancecreatejob.cpp:116
+#: core/jobs/agentinstancecreatejob.cpp:109
 #, kde-format
 msgid "Unable to create agent instance."
 msgstr "Nem sikerült új ügynökpéldányt létrehozni."
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:74
+#: core/jobs/collectionattributessynchronizationjob.cpp:73
 #, kde-format
 msgid "Invalid collection instance."
 msgstr "Érvénytelen gyűjteménypéldány."
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:81
-#: core/jobs/resourcesynchronizationjob.cpp:88
+#: core/jobs/collectionattributessynchronizationjob.cpp:80
+#: core/jobs/resourcesynchronizationjob.cpp:87
 #, kde-format
 msgid "Invalid resource instance."
 msgstr "Érvénytelen erőforráspéldány."
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:104
-#: core/jobs/resourcesynchronizationjob.cpp:113
+#: core/jobs/collectionattributessynchronizationjob.cpp:103
+#: core/jobs/resourcesynchronizationjob.cpp:112
 #, kde-format
 msgid "Unable to obtain D-Bus interface for resource '%1'"
 msgstr "Nem sikerült megszerezni a(z) „%1” erőforrás D-Bus interfészét"
 
-#: core/jobs/collectionattributessynchronizationjob.cpp:126
+#: core/jobs/collectionattributessynchronizationjob.cpp:125
 #, kde-format
 msgid "Collection attributes synchronization timed out."
 msgstr "A gyűjtemény jellemzőinek szinkronizálása túllépte az időkorlátot."
@@ -315,12 +315,12 @@ msgstr "Érvénytelen gyűjtemény, nem másolható"
 msgid "Invalid destination collection"
 msgstr "Érvénytelen célgyűjtemény"
 
-#: core/jobs/collectioncreatejob.cpp:50
+#: core/jobs/collectioncreatejob.cpp:51
 #, kde-format
 msgid "Invalid parent"
 msgstr "Érvénytelen szülő"
 
-#: core/jobs/collectioncreatejob.cpp:98
+#: core/jobs/collectioncreatejob.cpp:99
 #, kde-format
 msgid "Failed to parse Collection from response"
 msgstr "A válaszban kapott gyűjtemény feldolgozása sikertelen"
@@ -330,7 +330,7 @@ msgstr "A válaszban kapott gyűjtemény feldolgozása sikertelen"
 msgid "Invalid collection"
 msgstr "Érvénytelen gyűjtemény"
 
-#: core/jobs/collectionfetchjob.cpp:212
+#: core/jobs/collectionfetchjob.cpp:211
 #, kde-format
 msgid "Invalid collection given."
 msgstr "Érvénytelen gyűjtemény lett megadva."
@@ -351,17 +351,17 @@ msgstr "Nincs megadva érvényes cél"
 msgid "Invalid collection."
 msgstr "Érvénytelen gyűjtemény."
 
-#: core/jobs/itemcreatejob.cpp:115
+#: core/jobs/itemcreatejob.cpp:114
 #, kde-format
 msgid "Invalid parent collection"
 msgstr "Érvénytelen szülőgyűjtemény"
 
-#: core/jobs/job.cpp:345
+#: core/jobs/job.cpp:344
 #, kde-format
 msgid "Cannot connect to the Akonadi service."
 msgstr "Nem sikerült csatlakozni az Akonadi szolgáltatáshoz."
 
-#: core/jobs/job.cpp:348
+#: core/jobs/job.cpp:347
 #, kde-format
 msgid ""
 "The protocol version of the Akonadi server is incompatible. Make sure you "
@@ -370,53 +370,53 @@ msgstr ""
 "Az Akonadi szolgáltatás verziója nem megfelelő. Biztosítani kell, hogy a "
 "telepített szolgáltatás verziója megfelelő legyen."
 
-#: core/jobs/job.cpp:351
+#: core/jobs/job.cpp:350
 #, kde-format
 msgid "User canceled operation."
 msgstr "A felhasználó megszakította a műveletet."
 
-#: core/jobs/job.cpp:356
+#: core/jobs/job.cpp:355
 #, kde-format
 msgid "Unknown error."
 msgstr "Ismeretlen hiba."
 
-#: core/jobs/job.cpp:395
+#: core/jobs/job.cpp:394
 #, kde-format
 msgid "Unexpected response"
 msgstr "Nem várt válasz"
 
-#: core/jobs/resourcesynchronizationjob.cpp:139
+#: core/jobs/resourcesynchronizationjob.cpp:138
 #, kde-format
 msgid "Resource synchronization timed out."
 msgstr "Az erőforrás szinkronizálása túllépte az időkorlátot."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:145
+#: core/jobs/specialcollectionshelperjobs.cpp:146
 #, kde-format
 msgid "Could not fetch root collection of resource %1."
 msgstr "Nem sikerült lekérni a(z) „%1” erőforrás gyökérgyűjteményét."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:189
+#: core/jobs/specialcollectionshelperjobs.cpp:190
 #, kde-format
 msgid "No resource ID given."
 msgstr "Nincs megadva erőforrás-azonosító."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:326
+#: core/jobs/specialcollectionshelperjobs.cpp:327
 #, kde-format
 msgid "Invalid resource identifier '%1'"
 msgstr "Érvénytelen erőforrás-azonosító: „%1”"
 
-#: core/jobs/specialcollectionshelperjobs.cpp:342
-#: core/jobs/specialcollectionshelperjobs.cpp:350
+#: core/jobs/specialcollectionshelperjobs.cpp:343
+#: core/jobs/specialcollectionshelperjobs.cpp:351
 #, kde-format
 msgid "Failed to configure default resource via D-Bus."
 msgstr "Nem sikerült beállítani az alapértelmezett erőforrást a D-Bus által."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:415
+#: core/jobs/specialcollectionshelperjobs.cpp:416
 #, kde-format
 msgid "Failed to fetch the resource collection."
 msgstr "Nem sikerült letölteni az erőforrás gyűjteményt."
 
-#: core/jobs/specialcollectionshelperjobs.cpp:599
+#: core/jobs/specialcollectionshelperjobs.cpp:600
 #, kde-format
 msgid "Timeout trying to get lock."
 msgstr "Időtúllépés a zár megszerzésének kísérlete közben."
@@ -461,13 +461,13 @@ msgctxt "@title:column, name of a thing"
 msgid "Name"
 msgstr "Név"
 
-#: core/models/colorproxymodel.cpp:83
+#: core/models/colorproxymodel.cpp:84
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Offline)"
 msgstr "%1 (offline)"
 
-#: core/models/colorproxymodel.cpp:86
+#: core/models/colorproxymodel.cpp:87
 #, kde-format
 msgctxt "@item this is the default calendar"
 msgid "%1 (Default)"
@@ -529,45 +529,45 @@ msgstr "Nem sikerült összekapcsolni a bejegyzést: <message>%1</message>"
 msgid "Favorite Folders"
 msgstr "Kedvenc mappák"
 
-#: core/models/statisticsproxymodel.cpp:84
+#: core/models/statisticsproxymodel.cpp:82
 #, kde-format
 msgid "Total Messages"
 msgstr "Összes üzenet"
 
-#: core/models/statisticsproxymodel.cpp:86
+#: core/models/statisticsproxymodel.cpp:84
 #, kde-format
 msgid "Unread Messages"
 msgstr "Olvasatlan üzenetek"
 
-#: core/models/statisticsproxymodel.cpp:95
+#: core/models/statisticsproxymodel.cpp:93
 #, kde-format
 msgctxt "@info:tooltip Quota: 10% (300 MiB/3 GiB)"
 msgid "<strong>Quota</strong>: %1% (%2/%3)<br>\n"
 msgstr "<strong>Kvóta</strong>: %1% (%2 / %3)<br>\n"
 
-#: core/models/statisticsproxymodel.cpp:103
+#: core/models/statisticsproxymodel.cpp:101
 #, kde-format
 msgid "Storage Size"
 msgstr "Tárolóméret"
 
-#: core/models/statisticsproxymodel.cpp:109
+#: core/models/statisticsproxymodel.cpp:107
 #, kde-format
 msgid "Subfolder Storage Size"
 msgstr "Almappa tárolóméret"
 
-#: core/models/statisticsproxymodel.cpp:220
+#: core/models/statisticsproxymodel.cpp:218
 #, kde-format
 msgctxt "number of unread entities in the collection"
 msgid "Unread"
 msgstr "Olvasatlan"
 
-#: core/models/statisticsproxymodel.cpp:221
+#: core/models/statisticsproxymodel.cpp:219
 #, kde-format
 msgctxt "number of entities in the collection"
 msgid "Total"
 msgstr "Összesen"
 
-#: core/models/statisticsproxymodel.cpp:222
+#: core/models/statisticsproxymodel.cpp:220
 #, kde-format
 msgctxt "collection size"
 msgid "Size"
@@ -603,7 +603,7 @@ msgstr "Nincs elérhető munkamenet ehhez az indexhez"
 msgid "No item available for this index"
 msgstr "Nincs elérhető elem ehhez az indexhez"
 
-#: core/servermanager.cpp:286
+#: core/servermanager.cpp:284
 #, kde-format
 msgid ""
 "The Akonadi server protocol version differs from the protocol version used "
@@ -616,14 +616,14 @@ msgstr ""
 "Ha nemrég frissítette a rendszert, jelentkezzen ki és be, hogy az "
 "alkalmazások biztosan a megfelelő protokollverziót használják."
 
-#: core/servermanager.cpp:303
+#: core/servermanager.cpp:301
 #, kde-format
 msgid ""
 "There are no Akonadi Agents available. Please verify your KDE PIM "
 "installation."
 msgstr "Nem érhető el Akonadi ügynök. Ellenőrizze a KDE PIM telepítését."
 
-#: core/session.cpp:184
+#: core/session.cpp:182
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is older (%1) than ours (%2). If "
@@ -632,7 +632,7 @@ msgstr ""
 "A protokollverziók eltérnek. A kiszolgálóé (%1) régebbi, mint az Öné (%2). "
 "Ha nemrég frissítette a rendszert, indítsa újra az Akonadi kiszolgálót."
 
-#: core/session.cpp:193
+#: core/session.cpp:191
 #, kde-format
 msgid ""
 "Protocol version mismatch. Server version is newer (%1) than ours (%2). If "
@@ -718,17 +718,17 @@ msgctxt "@action:button"
 msgid "Add Tag"
 msgstr "Címke hozzáadása"
 
-#: selftest/main.cpp:19
+#: selftest/main.cpp:20
 #, kde-format
 msgid "Akonadi Self Test"
 msgstr "Akonadi önteszt"
 
-#: selftest/main.cpp:21
+#: selftest/main.cpp:22
 #, kde-format
 msgid "Checks and reports state of Akonadi server"
 msgstr "Ellenőrzi és jelenti az Akonadi kiszolgáló állapotát"
 
-#: selftest/main.cpp:23
+#: selftest/main.cpp:24
 #, kde-format
 msgid "(c) 2008 Volker Krause <vkrause@kde.org>"
 msgstr "© Volker Krause, 2008. <vkrause@kde.org>"
@@ -741,7 +741,7 @@ msgstr ""
 "Névtér több Akonadi példány indításához ugyanabban a felhasználói "
 "munkamenetben"
 
-#: widgets/agentconfigurationdialog.cpp:44
+#: widgets/agentconfigurationdialog.cpp:45
 #, kde-format
 msgctxt "@title:window, %1 = agent name"
 msgid "%1 Configuration"
@@ -773,26 +773,26 @@ msgctxt "Status percent value"
 msgid "(%1%)"
 msgstr "(%1%)"
 
-#: widgets/agenttypedialog.cpp:65
+#: widgets/agenttypedialog.cpp:66
 #, kde-format
 msgctxt "@title:window"
 msgid "Configure Account"
 msgstr "Fiókbeállítás"
 
-#: widgets/agenttypedialog.cpp:73
+#: widgets/agenttypedialog.cpp:74
 #, kde-format
 msgctxt "@item:textbox"
 msgid "Search types"
 msgstr "Keresési típusok"
 
-#: widgets/cachepolicypage.cpp:43 widgets/cachepolicypage.cpp:48
+#: widgets/cachepolicypage.cpp:42 widgets/cachepolicypage.cpp:47
 #, kde-format
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "perc"
 msgstr[1] "perc"
 
-#: widgets/cachepolicypage.cpp:69
+#: widgets/cachepolicypage.cpp:68
 #, kde-format
 msgid "Retrieval"
 msgstr "Letöltés"
@@ -889,48 +889,48 @@ msgstr ""
 "gyűjtemény törlése ezen <b>adatok elvesztését</b> jelenti. Biztosan "
 "folytatni szeretné?"
 
-#: widgets/collectiondialog.cpp:58
+#: widgets/collectiondialog.cpp:57
 #, kde-format
 msgctxt "@info Displayed grayed-out inside the textbox, verb to search"
 msgid "Search"
 msgstr "Keresés"
 
-#: widgets/collectiondialog.cpp:66
+#: widgets/collectiondialog.cpp:65
 #, kde-format
 msgctxt "@option:check"
 msgid "Use folder by default"
 msgstr "Mappa használata alapértelmezettként"
 
-#: widgets/collectiondialog.cpp:226
+#: widgets/collectiondialog.cpp:225
 #, kde-format
 msgctxt "@action:button"
 msgid "&New Subfolder..."
 msgstr "Ú&j almappa…"
 
-#: widgets/collectiondialog.cpp:228
+#: widgets/collectiondialog.cpp:227
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Create a new subfolder under the currently selected folder"
 msgstr "Új almappa létrehozása a jelenleg kiválasztott mappa alá"
 
-#: widgets/collectiondialog.cpp:266 widgets/standardactionmanager.cpp:407
+#: widgets/collectiondialog.cpp:265 widgets/standardactionmanager.cpp:407
 #, kde-format
 msgctxt "@title:window"
 msgid "New Folder"
 msgstr "Új mappa"
 
-#: widgets/collectiondialog.cpp:266
+#: widgets/collectiondialog.cpp:265
 #, kde-format
 msgctxt "@label:textbox, name of a thing"
 msgid "Name"
 msgstr "Név"
 
-#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:409
+#: widgets/collectiondialog.cpp:286 widgets/standardactionmanager.cpp:409
 #, kde-format
 msgid "Could not create folder: %1"
 msgstr "Nem sikerült létrehozni ezt a mappát: %1"
 
-#: widgets/collectiondialog.cpp:287 widgets/standardactionmanager.cpp:410
+#: widgets/collectiondialog.cpp:286 widgets/standardactionmanager.cpp:410
 #, kde-format
 msgctxt "@title:window"
 msgid "Folder Creation Failed"
@@ -1175,22 +1175,22 @@ msgstr "Az Akonadi szolgáltatás elindul..."
 msgid "Stopping Akonadi server..."
 msgstr "Az Akonadi szolgáltatás leáll..."
 
-#: widgets/dragdropmanager.cpp:212
+#: widgets/dragdropmanager.cpp:211
 #, kde-format
 msgid "&Move Here"
 msgstr "Át&helyezés ide"
 
-#: widgets/dragdropmanager.cpp:218
+#: widgets/dragdropmanager.cpp:217
 #, kde-format
 msgid "&Copy Here"
 msgstr "&Másolás ide"
 
-#: widgets/dragdropmanager.cpp:224
+#: widgets/dragdropmanager.cpp:223
 #, kde-format
 msgid "&Link Here"
 msgstr "&Hivatkozás ide"
 
-#: widgets/dragdropmanager.cpp:229
+#: widgets/dragdropmanager.cpp:228
 #, kde-format
 msgid "C&ancel"
 msgstr "&Mégse"
@@ -1370,23 +1370,23 @@ msgstr "Kedvenc átnevezése"
 msgid "Name:"
 msgstr "Név:"
 
-#: widgets/selftestdialog.cpp:59
+#: widgets/selftestdialog.cpp:61
 #, kde-format
 msgctxt "@title:window"
 msgid "Akonadi Server Self-Test"
 msgstr "Akonadi kiszolgáló önteszt"
 
-#: widgets/selftestdialog.cpp:70
+#: widgets/selftestdialog.cpp:72
 #, kde-format
 msgid "Save Report..."
 msgstr "Jelentés mentése…"
 
-#: widgets/selftestdialog.cpp:72
+#: widgets/selftestdialog.cpp:74
 #, kde-format
 msgid "Copy Report to Clipboard"
 msgstr "Jelentés másolása a vágólapra"
 
-#: widgets/selftestdialog.cpp:188
+#: widgets/selftestdialog.cpp:190
 #, kde-format
 msgid ""
 "The QtSQL driver '%1' is required by your current Akonadi server "
@@ -1395,7 +1395,7 @@ msgstr ""
 "A(z) „%1” QtSQL-illesztőprogramra szüksége van a jelenlegi Akonadi "
 "kiszolgáló beállításainak és nem található a rendszerén."
 
-#: widgets/selftestdialog.cpp:190
+#: widgets/selftestdialog.cpp:192
 #, kde-format
 msgid ""
 "The QtSQL driver '%1' is required by your current Akonadi server "
@@ -1408,28 +1408,28 @@ msgstr ""
 "Ezek az illesztőprogramok vannak telepítve: %2.\n"
 "Kérjük telepítse a szükséges illesztőprogramot."
 
-#: widgets/selftestdialog.cpp:197
+#: widgets/selftestdialog.cpp:199
 #, kde-format
 msgid "Database driver found."
 msgstr "Adatbázis-illesztőprogram elérhető."
 
-#: widgets/selftestdialog.cpp:199
+#: widgets/selftestdialog.cpp:201
 #, kde-format
 msgid "Database driver not found."
 msgstr "Nem található adatbázis-illesztőprogram."
 
-#: widgets/selftestdialog.cpp:207
+#: widgets/selftestdialog.cpp:209
 #, kde-format
 msgid "MySQL server executable not tested."
 msgstr "A MySQL kiszolgáló programfájlja ne lett letesztelve."
 
-#: widgets/selftestdialog.cpp:207 widgets/selftestdialog.cpp:248
-#: widgets/selftestdialog.cpp:299
+#: widgets/selftestdialog.cpp:209 widgets/selftestdialog.cpp:250
+#: widgets/selftestdialog.cpp:301
 #, kde-format
 msgid "The current configuration does not require an internal MySQL server."
 msgstr "A mostani beállítások mellett nincs szükség belső MySQL kiszolgálóra."
 
-#: widgets/selftestdialog.cpp:215
+#: widgets/selftestdialog.cpp:217
 #, kde-format
 msgid ""
 "You have currently configured Akonadi to use the MySQL server '%1'.\n"
@@ -1444,42 +1444,42 @@ msgstr ""
 "végrehajtási jogok a kiszolgáló programfájljára. A kiszolgáló programfájl "
 "neve tipikusan „mysqld”, de a helye változik a disztribúciótól függően."
 
-#: widgets/selftestdialog.cpp:223
+#: widgets/selftestdialog.cpp:225
 #, kde-format
 msgid "MySQL server not found."
 msgstr "Nem található MySQL kiszolgáló."
 
-#: widgets/selftestdialog.cpp:225
+#: widgets/selftestdialog.cpp:227
 #, kde-format
 msgid "MySQL server not readable."
 msgstr "A MySQL kiszolgáló nem olvasható."
 
-#: widgets/selftestdialog.cpp:227
+#: widgets/selftestdialog.cpp:229
 #, kde-format
 msgid "MySQL server not executable."
 msgstr "A MySQL kiszolgáló nem végrehajtható."
 
-#: widgets/selftestdialog.cpp:229
+#: widgets/selftestdialog.cpp:231
 #, kde-format
 msgid "MySQL found with unexpected name."
 msgstr "A MySQL programfájl neve eltér a várttól."
 
-#: widgets/selftestdialog.cpp:231
+#: widgets/selftestdialog.cpp:233
 #, kde-format
 msgid "MySQL server found."
 msgstr "MySQL kiszolgáló elérhető."
 
-#: widgets/selftestdialog.cpp:237
+#: widgets/selftestdialog.cpp:239
 #, kde-format
 msgid "MySQL server found: %1"
 msgstr "Elérhető MySQL kiszolgáló: %1"
 
-#: widgets/selftestdialog.cpp:238
+#: widgets/selftestdialog.cpp:240
 #, kde-format
 msgid "MySQL server is executable."
 msgstr "A MySQL kiszolgáló végrehajtható."
 
-#: widgets/selftestdialog.cpp:240
+#: widgets/selftestdialog.cpp:242
 #, kde-format
 msgid ""
 "Executing the MySQL server '%1' failed with the following error message: '%2'"
@@ -1487,22 +1487,22 @@ msgstr ""
 "Nem sikerült elindítani ezt a MySQL kiszolgálót: \"%1\". A hibaüzenet: "
 "\"%2\"."
 
-#: widgets/selftestdialog.cpp:241
+#: widgets/selftestdialog.cpp:243
 #, kde-format
 msgid "Executing the MySQL server failed."
 msgstr "Nem sikerült elindítani a MySQL kiszolgálót."
 
-#: widgets/selftestdialog.cpp:248
+#: widgets/selftestdialog.cpp:250
 #, kde-format
 msgid "MySQL server error log not tested."
 msgstr "A MySQL kiszolgáló naplófájlja nem tesztelt."
 
-#: widgets/selftestdialog.cpp:256
+#: widgets/selftestdialog.cpp:258
 #, kde-format
 msgid "No current MySQL error log found."
 msgstr "Nem érhető el aktuális MySQL naplófájl."
 
-#: widgets/selftestdialog.cpp:257
+#: widgets/selftestdialog.cpp:259
 #, kde-format
 msgid ""
 "The MySQL server did not report any errors during this startup. The log can "
@@ -1511,59 +1511,59 @@ msgstr ""
 "A MySQL kiszolgáló nem jelzett hibát indulás közben. A napló megtalálható "
 "itt: „%1”."
 
-#: widgets/selftestdialog.cpp:263
+#: widgets/selftestdialog.cpp:265
 #, kde-format
 msgid "MySQL error log not readable."
 msgstr "A MySQL naplófájl nem olvasható."
 
-#: widgets/selftestdialog.cpp:264
+#: widgets/selftestdialog.cpp:266
 #, kde-format
 msgid "A MySQL server error log file was found but is not readable: %1"
 msgstr "A MySQL kiszolgáló naplófájlja elérhető, de nem olvasható: %1"
 
-#: widgets/selftestdialog.cpp:273
+#: widgets/selftestdialog.cpp:275
 #, kde-format
 msgid "MySQL server log contains errors."
 msgstr "A MySQL naplófájlja hibákat tartalmaz."
 
-#: widgets/selftestdialog.cpp:274
+#: widgets/selftestdialog.cpp:276
 #, kde-format
 msgid "The MySQL server error log file '%1' contains errors."
 msgstr "A MySQL kiszolgáló naplófájlja („%1”) hibákat tartalmaz."
 
-#: widgets/selftestdialog.cpp:284
+#: widgets/selftestdialog.cpp:286
 #, kde-format
 msgid "MySQL server log contains warnings."
 msgstr "A MySQL kiszolgáló naplófájlja figyelmeztetéseket tartalmaz."
 
-#: widgets/selftestdialog.cpp:285
+#: widgets/selftestdialog.cpp:287
 #, kde-format
 msgid "The MySQL server log file '%1' contains warnings."
 msgstr "A MySQL kiszolgáló naplófájlja („%1”) figyelmeztetéseket tartalmaz."
 
-#: widgets/selftestdialog.cpp:288
+#: widgets/selftestdialog.cpp:290
 #, kde-format
 msgid "MySQL server log contains no errors."
 msgstr "A MySQL kiszolgáló naplófájlja nem tartalmaz hibákat."
 
-#: widgets/selftestdialog.cpp:289
+#: widgets/selftestdialog.cpp:291
 #, kde-format
 msgid "The MySQL server log file '%1' does not contain any errors or warnings."
 msgstr ""
 "A MySQL kiszolgáló naplófájlja („%1”) nem tartalmaz hibákat vagy "
 "figyelmeztetéseket."
 
-#: widgets/selftestdialog.cpp:299
+#: widgets/selftestdialog.cpp:301
 #, kde-format
 msgid "MySQL server configuration not tested."
 msgstr "A MySQL kiszolgáló beállításai nem lettek tesztelve."
 
-#: widgets/selftestdialog.cpp:308
+#: widgets/selftestdialog.cpp:310
 #, kde-format
 msgid "MySQL server default configuration found."
 msgstr "A MySQL kiszolgáló alapértelmezett beállítófájlja elérhető."
 
-#: widgets/selftestdialog.cpp:309
+#: widgets/selftestdialog.cpp:311
 #, kde-format
 msgid ""
 "The default configuration for the MySQL server was found and is readable at "
@@ -1572,12 +1572,12 @@ msgstr ""
 "A MySQL kiszolgáló alapértelmezett beállítófájlja elérhető és olvasható itt: "
 "%1."
 
-#: widgets/selftestdialog.cpp:313
+#: widgets/selftestdialog.cpp:315
 #, kde-format
 msgid "MySQL server default configuration not found."
 msgstr "A MySQL kiszolgáló alapértelmezett beállítófájlja nem található."
 
-#: widgets/selftestdialog.cpp:314
+#: widgets/selftestdialog.cpp:316
 #, kde-format
 msgid ""
 "The default configuration for the MySQL server was not found or was not "
@@ -1588,35 +1588,35 @@ msgstr ""
 "olvasható. Ellenőrizze, hogy az Akonadi teljesen telepítve van-e és "
 "megfelelőek-e a jogosultságok."
 
-#: widgets/selftestdialog.cpp:322
+#: widgets/selftestdialog.cpp:324
 #, kde-format
 msgid "MySQL server custom configuration not available."
 msgstr "Nem található egyedi MySQL beállítófájl."
 
-#: widgets/selftestdialog.cpp:323
+#: widgets/selftestdialog.cpp:325
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was not found but is optional."
 msgstr ""
 "Nem található egyedi MySQL beállítófájl, de erre nincs feltétlenül szükség."
 
-#: widgets/selftestdialog.cpp:326
+#: widgets/selftestdialog.cpp:328
 #, kde-format
 msgid "MySQL server custom configuration found."
 msgstr "Elérhető egyedi MySQL beállítófájl."
 
-#: widgets/selftestdialog.cpp:327
+#: widgets/selftestdialog.cpp:329
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was found and is readable at %1"
 msgstr "Egy egyedi MySQL beállítófájl elérhető és olvasható itt: %1"
 
-#: widgets/selftestdialog.cpp:331
+#: widgets/selftestdialog.cpp:333
 #, kde-format
 msgid "MySQL server custom configuration not readable."
 msgstr "Nem olvasható egy egyedi MySQL beállítófájl."
 
-#: widgets/selftestdialog.cpp:332
+#: widgets/selftestdialog.cpp:334
 #, kde-format
 msgid ""
 "The custom configuration for the MySQL server was found at %1 but is not "
@@ -1625,47 +1625,47 @@ msgstr ""
 "Egy egyedi beállítófájl található a MySQL kiszolgálóhoz itt: %1, de a fájl "
 "nem olvasható. Ellenőrizze a hozzáférési jogosultságot."
 
-#: widgets/selftestdialog.cpp:341
+#: widgets/selftestdialog.cpp:343
 #, kde-format
 msgid "MySQL server configuration not found or not readable."
 msgstr "Nem található vagy nem olvasható a MySQL kiszolgáló beállítófájlja."
 
-#: widgets/selftestdialog.cpp:342
+#: widgets/selftestdialog.cpp:344
 #, kde-format
 msgid "The MySQL server configuration was not found or is not readable."
 msgstr "Nem található vagy nem olvasható a MySQL kiszolgáló beállítófájlja."
 
-#: widgets/selftestdialog.cpp:345
+#: widgets/selftestdialog.cpp:347
 #, kde-format
 msgid "MySQL server configuration is usable."
 msgstr "Található beállítófájl a MySQL kiszolgálóhoz."
 
-#: widgets/selftestdialog.cpp:346
+#: widgets/selftestdialog.cpp:348
 #, kde-format
 msgid "The MySQL server configuration was found at %1 and is readable."
 msgstr "Elérhető és olvasható a következő MySQL beállítófájl: %1."
 
-#: widgets/selftestdialog.cpp:375
+#: widgets/selftestdialog.cpp:377
 #, kde-format
 msgid "Cannot connect to PostgreSQL server."
 msgstr "Nem lehet kapcsolódni a PostgreSQL kiszolgálóhoz."
 
-#: widgets/selftestdialog.cpp:377
+#: widgets/selftestdialog.cpp:379
 #, kde-format
 msgid "PostgreSQL server found."
 msgstr "PostgreSQL kiszolgáló található."
 
-#: widgets/selftestdialog.cpp:377
+#: widgets/selftestdialog.cpp:379
 #, kde-format
 msgid "The PostgreSQL server was found and connection is working."
 msgstr "PostgreSQL kiszolgáló található és a kapcsolat működik."
 
-#: widgets/selftestdialog.cpp:387
+#: widgets/selftestdialog.cpp:389
 #, kde-format
 msgid "akonadictl not found"
 msgstr "nem található: akonadictl"
 
-#: widgets/selftestdialog.cpp:388
+#: widgets/selftestdialog.cpp:390
 #, kde-format
 msgid ""
 "The program 'akonadictl' needs to be accessible in $PATH. Make sure you have "
@@ -1675,12 +1675,12 @@ msgstr ""
 "környezeti változó). Ellenőrizze, hogy az Akonadi szolgáltatás telepítve van-"
 "e."
 
-#: widgets/selftestdialog.cpp:395
+#: widgets/selftestdialog.cpp:397
 #, kde-format
 msgid "akonadictl found and usable"
 msgstr "akonadictl program: elérhető és használható"
 
-#: widgets/selftestdialog.cpp:396
+#: widgets/selftestdialog.cpp:398
 #, kde-format
 msgid ""
 "The program '%1' to control the Akonadi server was found and could be "
@@ -1693,12 +1693,12 @@ msgstr ""
 "Az eredmény:\n"
 "%2"
 
-#: widgets/selftestdialog.cpp:402
+#: widgets/selftestdialog.cpp:404
 #, kde-format
 msgid "akonadictl found but not usable"
 msgstr "akonadictl program: elérhető, de nem használható"
 
-#: widgets/selftestdialog.cpp:403
+#: widgets/selftestdialog.cpp:405
 #, kde-format
 msgid ""
 "The program '%1' to control the Akonadi server was found but could not be "
@@ -1713,12 +1713,12 @@ msgstr ""
 "%2\n"
 "Ellenőrizze, megfelelően telepítve van-e az Akonadi szolgáltatás."
 
-#: widgets/selftestdialog.cpp:415
+#: widgets/selftestdialog.cpp:417
 #, kde-format
 msgid "Akonadi control process registered at D-Bus."
 msgstr "Az Akonadi vezérlőfolyamat regisztrálva a D-Bus-ban."
 
-#: widgets/selftestdialog.cpp:416
+#: widgets/selftestdialog.cpp:418
 #, kde-format
 msgid ""
 "The Akonadi control process is registered at D-Bus which typically indicates "
@@ -1727,12 +1727,12 @@ msgstr ""
 "Az Akonadi vezérlőfolyamat regisztrálva van a D-Bus-ban, amely általában azt "
 "jelenti, hogy működik."
 
-#: widgets/selftestdialog.cpp:419
+#: widgets/selftestdialog.cpp:421
 #, kde-format
 msgid "Akonadi control process not registered at D-Bus."
 msgstr "Az Akonadi vezérlőfolyamat nincs regisztrálva a D-Bus-ban."
 
-#: widgets/selftestdialog.cpp:420
+#: widgets/selftestdialog.cpp:422
 #, kde-format
 msgid ""
 "The Akonadi control process is not registered at D-Bus which typically means "
@@ -1741,12 +1741,12 @@ msgstr ""
 "Az Akonadi vezérlőfolyamat nincs regisztrálva a D-Bus-ban, amely általában "
 "azt jelenti, hogy nem indult el vagy egy hiba miatt kilépett."
 
-#: widgets/selftestdialog.cpp:426
+#: widgets/selftestdialog.cpp:428
 #, kde-format
 msgid "Akonadi server process registered at D-Bus."
 msgstr "Az Akonadi kiszolgálófolyamat regisztrálva van a D-Bus-ban."
 
-#: widgets/selftestdialog.cpp:427
+#: widgets/selftestdialog.cpp:429
 #, kde-format
 msgid ""
 "The Akonadi server process is registered at D-Bus which typically indicates "
@@ -1755,12 +1755,12 @@ msgstr ""
 "Az Akonadi kiszolgálófolyamat regisztrálva van a D-Bus-ban, amely általában "
 "azt jelenti, hogy működik."
 
-#: widgets/selftestdialog.cpp:430
+#: widgets/selftestdialog.cpp:432
 #, kde-format
 msgid "Akonadi server process not registered at D-Bus."
 msgstr "Az Akonadi kiszolgálófolyamat nincs regisztrálva a D-Bus-ban."
 
-#: widgets/selftestdialog.cpp:431
+#: widgets/selftestdialog.cpp:433
 #, kde-format
 msgid ""
 "The Akonadi server process is not registered at D-Bus which typically means "
@@ -1769,12 +1769,12 @@ msgstr ""
 "Az Akonadi kiszolgálófolyamat nincs regisztrálva a D-Bus-ban, amely "
 "általában azt jelenti, hogy nem indult el vagy egy hiba miatt kilépett."
 
-#: widgets/selftestdialog.cpp:440
+#: widgets/selftestdialog.cpp:442
 #, kde-format
 msgid "Protocol version check not possible."
 msgstr "Nem lehet ellenőrizni a protokollverziót."
 
-#: widgets/selftestdialog.cpp:441
+#: widgets/selftestdialog.cpp:443
 #, kde-format
 msgid ""
 "Without a connection to the server it is not possible to check if the "
@@ -1783,12 +1783,12 @@ msgstr ""
 "Nincs kapcsolat a szolgáltatással, ezért nem lehet letesztelni a "
 "protokollverziót."
 
-#: widgets/selftestdialog.cpp:446
+#: widgets/selftestdialog.cpp:448
 #, kde-format
 msgid "Server protocol version is too old."
 msgstr "A szolgáltatás protokollverziója túl régi."
 
-#: widgets/selftestdialog.cpp:447 widgets/selftestdialog.cpp:454
+#: widgets/selftestdialog.cpp:449 widgets/selftestdialog.cpp:456
 #, kde-format
 msgid ""
 "The server protocol version is %1, but version %2 is required by the client. "
@@ -1799,37 +1799,37 @@ msgstr ""
 "frissítette a KDE PIM-et, indítsa újra az Akonadi és KDE PIM alkalmazásokat "
 "is."
 
-#: widgets/selftestdialog.cpp:453
+#: widgets/selftestdialog.cpp:455
 #, kde-format
 msgid "Server protocol version is too new."
 msgstr "A szolgáltatás protokollverziója túl új."
 
-#: widgets/selftestdialog.cpp:459
+#: widgets/selftestdialog.cpp:461
 #, kde-format
 msgid "Server protocol version matches."
 msgstr "A kiszolgáló protokollverziója egyezik."
 
-#: widgets/selftestdialog.cpp:459
+#: widgets/selftestdialog.cpp:461
 #, kde-format
 msgid "The current Protocol version is %1."
 msgstr "A jelenlegi protokollverzió: %1."
 
-#: widgets/selftestdialog.cpp:477
+#: widgets/selftestdialog.cpp:479
 #, kde-format
 msgid "Resource agents found."
 msgstr "Erőforrás ügynökök elérhetők."
 
-#: widgets/selftestdialog.cpp:477
+#: widgets/selftestdialog.cpp:479
 #, kde-format
 msgid "At least one resource agent has been found."
 msgstr "Legalább egy erőforrás ügynök elérhető."
 
-#: widgets/selftestdialog.cpp:480
+#: widgets/selftestdialog.cpp:482
 #, kde-format
 msgid "No resource agents found."
 msgstr "Erőforrás ügynökök nem találhatók."
 
-#: widgets/selftestdialog.cpp:481
+#: widgets/selftestdialog.cpp:483
 #, kde-format
 msgid ""
 "No resource agents have been found, Akonadi is not usable without at least "
@@ -1845,23 +1845,23 @@ msgstr ""
 "róla, hogy ez tartalmaz minden olyan útvonalat, ahová az Akonadi ügynökök "
 "telepítve vannak."
 
-#: widgets/selftestdialog.cpp:498
+#: widgets/selftestdialog.cpp:500
 #, kde-format
 msgid "No current Akonadi server error log found."
 msgstr "Jelenlegi Akonadi kiszolgáló hibanapló nem található."
 
-#: widgets/selftestdialog.cpp:498
+#: widgets/selftestdialog.cpp:500
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its current startup."
 msgstr "Az Akonadi kiszolgáló nem jelzett hibát a jelenlegi induláskor."
 
-#: widgets/selftestdialog.cpp:502
+#: widgets/selftestdialog.cpp:504
 #, kde-format
 msgid "Current Akonadi server error log found."
 msgstr "Jelenlegi Akonadi kiszolgáló hibanapló található."
 
-#: widgets/selftestdialog.cpp:503
+#: widgets/selftestdialog.cpp:505
 #, kde-format
 msgid ""
 "The Akonadi server reported errors during its current startup. The log can "
@@ -1870,23 +1870,23 @@ msgstr ""
 "Az Akonadi kiszolgáló hibákat jelzett a jelenlegi induláskor. A napló "
 "megtalálható itt: %1."
 
-#: widgets/selftestdialog.cpp:511
+#: widgets/selftestdialog.cpp:513
 #, kde-format
 msgid "No previous Akonadi server error log found."
 msgstr "Korábbi Akonadi kiszolgáló hibanapló nem található."
 
-#: widgets/selftestdialog.cpp:512
+#: widgets/selftestdialog.cpp:514
 #, kde-format
 msgid ""
 "The Akonadi server did not report any errors during its previous startup."
 msgstr "Az Akonadi kiszolgáló nem jelzett hibát az előző induláskor."
 
-#: widgets/selftestdialog.cpp:516
+#: widgets/selftestdialog.cpp:518
 #, kde-format
 msgid "Previous Akonadi server error log found."
 msgstr "Korábbi Akonadi kiszolgáló hibanapló található."
 
-#: widgets/selftestdialog.cpp:517
+#: widgets/selftestdialog.cpp:519
 #, kde-format
 msgid ""
 "The Akonadi server reported errors during its previous startup. The log can "
@@ -1895,24 +1895,24 @@ msgstr ""
 "Az Akonadi kiszolgáló hibákat jelzett az előző induláskor. A napló "
 "megtalálható itt: %1."
 
-#: widgets/selftestdialog.cpp:528
+#: widgets/selftestdialog.cpp:530
 #, kde-format
 msgid "No current Akonadi control error log found."
 msgstr "Jelenlegi Akonadi vezérlő hibanapló nem található."
 
-#: widgets/selftestdialog.cpp:529
+#: widgets/selftestdialog.cpp:531
 #, kde-format
 msgid ""
 "The Akonadi control process did not report any errors during its current "
 "startup."
 msgstr "Az Akonadi vezérlő folyamat nem jelzett hibát a jelenlegi induláskor."
 
-#: widgets/selftestdialog.cpp:533
+#: widgets/selftestdialog.cpp:535
 #, kde-format
 msgid "Current Akonadi control error log found."
 msgstr "Jelenlegi Akonadi vezérlő hibanapló található."
 
-#: widgets/selftestdialog.cpp:534
+#: widgets/selftestdialog.cpp:536
 #, kde-format
 msgid ""
 "The Akonadi control process reported errors during its current startup. The "
@@ -1921,24 +1921,24 @@ msgstr ""
 "Az Akonadi vezérlő folyamat hibákat jelzett a jelenlegi induláskor. A napló "
 "megtalálható itt: %1."
 
-#: widgets/selftestdialog.cpp:542
+#: widgets/selftestdialog.cpp:544
 #, kde-format
 msgid "No previous Akonadi control error log found."
 msgstr "Nem található korábbi naplófájl az Akonadi-vezérlőhöz."
 
-#: widgets/selftestdialog.cpp:543
+#: widgets/selftestdialog.cpp:545
 #, kde-format
 msgid ""
 "The Akonadi control process did not report any errors during its previous "
 "startup."
 msgstr "Az Akonadi-vezérlő nem jelzett hibákat az előző induláskor."
 
-#: widgets/selftestdialog.cpp:547
+#: widgets/selftestdialog.cpp:549
 #, kde-format
 msgid "Previous Akonadi control error log found."
 msgstr "Korábbi Akonadi vezérlő hibanapló található."
 
-#: widgets/selftestdialog.cpp:548
+#: widgets/selftestdialog.cpp:550
 #, kde-format
 msgid ""
 "The Akonadi control process reported errors during its previous startup. The "
@@ -1947,12 +1947,12 @@ msgstr ""
 "Az Akonadi vezérlő folyamat hibákat jelzett az előző induláskor. A napló "
 "megtalálható itt: %1."
 
-#: widgets/selftestdialog.cpp:558
+#: widgets/selftestdialog.cpp:560
 #, kde-format
 msgid "Akonadi was started as root"
 msgstr "Az Akonadi rendszergazdaként lett indítva"
 
-#: widgets/selftestdialog.cpp:559
+#: widgets/selftestdialog.cpp:561
 #, kde-format
 msgid ""
 "Running Internet-facing applications as root/administrator exposes you to "
@@ -1964,12 +1964,12 @@ msgstr ""
 "fogja lehetővé tenni a rendszergazdaként való futtatást, hogy megvédje önt "
 "ezektől a kockázatoktól."
 
-#: widgets/selftestdialog.cpp:563
+#: widgets/selftestdialog.cpp:565
 #, kde-format
 msgid "Akonadi is not running as root"
 msgstr "Az Akonadi nem rendszergazdaként fut"
 
-#: widgets/selftestdialog.cpp:564
+#: widgets/selftestdialog.cpp:566
 #, kde-format
 msgid ""
 "Akonadi is not running as a root/administrator user, which is the "
@@ -1978,18 +1978,18 @@ msgstr ""
 "Az Akonadi nem rendszergazda felhasználóként fut, amely javasolt beállítás a "
 "biztonságos rendszerhez."
 
-#: widgets/selftestdialog.cpp:642
+#: widgets/selftestdialog.cpp:644
 #, kde-format
 msgid "Save Test Report"
 msgstr "A tesztjelentés elmentése"
 
-#: widgets/selftestdialog.cpp:649
+#: widgets/selftestdialog.cpp:651
 #, kde-format
 msgctxt "@title:window"
 msgid "Error"
 msgstr "Hiba"
 
-#: widgets/selftestdialog.cpp:649
+#: widgets/selftestdialog.cpp:651
 #, kde-format
 msgid "Could not open file '%1'"
 msgstr "Nem sikerült megnyitni ezt a fájlt: \"%1\""
@@ -2514,12 +2514,12 @@ msgstr "Áthelyezés ebbe a mappába"
 msgid "Copy to This Folder"
 msgstr "Másolás ebbe a mappába"
 
-#: widgets/subscriptiondialog.cpp:99
+#: widgets/subscriptiondialog.cpp:94
 #, kde-format
 msgid "Failed to update subscription: %1"
 msgstr "Nem sikerült frissíteni a feliratkozást: %1"
 
-#: widgets/subscriptiondialog.cpp:99
+#: widgets/subscriptiondialog.cpp:94
 #, kde-format
 msgctxt "@title:window"
 msgid "Subscription Error"
@@ -2555,20 +2555,20 @@ msgstr "&Feliratkozás"
 msgid "&Unsubscribe"
 msgstr "&Leiratkozás"
 
-#: widgets/tageditwidget.cpp:123
+#: widgets/tageditwidget.cpp:120
 #, fuzzy, kde-format
 #| msgid "Failed to create a new tag"
 msgctxt "@info"
 msgid "Failed to create new tag %1: %2"
 msgstr "Nem sikerült létrehozni új címkét"
 
-#: widgets/tageditwidget.cpp:130
+#: widgets/tageditwidget.cpp:127
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully added"
 msgstr ""
 
-#: widgets/tageditwidget.cpp:175
+#: widgets/tageditwidget.cpp:172
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -2576,32 +2576,32 @@ msgid ""
 "<resource>%1</resource> tag from Akonadi."
 msgstr ""
 
-#: widgets/tageditwidget.cpp:183
+#: widgets/tageditwidget.cpp:180
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Do you really want to remove the tag <resource>%1</resource>?"
 msgstr "Valóban el akarja távolítani a címkét: <resource>%1</resource>?"
 
-#: widgets/tageditwidget.cpp:184
+#: widgets/tageditwidget.cpp:181
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Tag"
 msgstr "Címke törlése"
 
-#: widgets/tageditwidget.cpp:195
+#: widgets/tageditwidget.cpp:192
 #, fuzzy, kde-format
 #| msgid "Failed to create tag."
 msgctxt "@info"
 msgid "Failed to delete tag %1: %2"
 msgstr "Nem sikerült címkét létrehozni."
 
-#: widgets/tageditwidget.cpp:199
+#: widgets/tageditwidget.cpp:196
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully removed"
 msgstr ""
 
-#: widgets/tageditwidget.cpp:226
+#: widgets/tageditwidget.cpp:223
 #, kde-format
 msgctxt "@info"
 msgid "Delete tag"
@@ -2648,7 +2648,7 @@ msgstr ""
 msgid "Create new tag"
 msgstr "Új címke létrehozása"
 
-#: widgets/tagselectioncombobox.cpp:126
+#: widgets/tagselectioncombobox.cpp:128
 #, kde-format
 msgctxt "@label Placeholder text in tag selection combobox"
 msgid "Select tags..."
@@ -2660,7 +2660,7 @@ msgstr "Címkék kiválasztása…"
 msgid "Select Tags"
 msgstr "Címkék kiválasztása"
 
-#: widgets/tagwidget.cpp:44
+#: widgets/tagwidget.cpp:45
 #, kde-format
 msgid "Clear"
 msgstr "Törlés"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:52+0000\n"
+"POT-Creation-Date: 2026-10-21 00:51+0000\n"
 "PO-Revision-Date: 2024-02-09 22:38+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -28,37 +28,37 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "kekcuha@gmail.com"
 
-#: dbmigrator.cpp:449
+#: dbmigrator.cpp:447
 #, kde-format
 msgctxt "@info:status"
 msgid "Stopping Akonadi service..."
 msgstr "Остановка службы Akonadi…"
 
-#: dbmigrator.cpp:452
+#: dbmigrator.cpp:450
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: timeout while waiting for Akonadi to stop."
 msgstr "Ошибка: превышено время ожидания остановки службы Akonadi."
 
-#: dbmigrator.cpp:459
+#: dbmigrator.cpp:457
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: couldn't acquire DBus lock for Akonadi."
 msgstr "Ошибка: не удалось выполнить блокировку DBus службой Akonadi."
 
-#: dbmigrator.cpp:468
+#: dbmigrator.cpp:466
 #, kde-format
 msgctxt "@info:status"
 msgid "Starting Akonadi service..."
 msgstr "Запуск службы Akonadi…"
 
-#: dbmigrator.cpp:481
+#: dbmigrator.cpp:479
 #, kde-format
 msgctxt "@info:status"
 msgid "Database fsck completed"
 msgstr "Проверка целостности базы данных завершена"
 
-#: dbmigrator.cpp:495
+#: dbmigrator.cpp:493
 #, kde-format
 msgctxt "@info:status"
 msgid ""
@@ -68,80 +68,80 @@ msgstr ""
 "Недопустимый механизм базы данных «%1». Допустимые значения: «sqlite», "
 "«mysql» и «postgres»."
 
-#: dbmigrator.cpp:517
+#: dbmigrator.cpp:515
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure source database server."
 msgstr "Ошибка: не удалось настроить сервер исходной базы данных."
 
-#: dbmigrator.cpp:522
+#: dbmigrator.cpp:520
 #, kde-format
 msgctxt "@info:shell"
 msgid "Source and destination database engines are the same."
 msgstr "Механизмы исходной и целевой базы данных не отличаются."
 
-#: dbmigrator.cpp:529
+#: dbmigrator.cpp:527
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to obtain path to source database data file or directory."
 msgstr ""
 "Ошибка: не удалось определить путь к каталогу или файлу исходной базы данных."
 
-#: dbmigrator.cpp:536
+#: dbmigrator.cpp:534
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to configure the new database server."
 msgstr "Ошибка: не удалось настроить сервер новой базы данных."
 
-#: dbmigrator.cpp:542
+#: dbmigrator.cpp:540
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open existing database to migrate data from."
 msgstr "Ошибка: не удалось открыть исходную базу данных."
 
-#: dbmigrator.cpp:547
+#: dbmigrator.cpp:545
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error: failed to open new database to migrate data to."
 msgstr "Ошибка: не удалось открыть новую базу данных."
 
-#: dbmigrator.cpp:552
+#: dbmigrator.cpp:550
 #, kde-format
 msgctxt "@info:status"
 msgid "Running fsck on the source database"
 msgstr "Выполняется проверка целостности исходной базы данных"
 
-#: dbmigrator.cpp:571
+#: dbmigrator.cpp:569
 #, kde-format
 msgctxt "@info:status %2 is error message"
 msgid "Error: failed to remove temporary database directory %1: %2"
 msgstr "Ошибка: не удалось удалить каталог временной базы данных %1: %2"
 
-#: dbmigrator.cpp:578
+#: dbmigrator.cpp:576
 #, kde-format
 msgctxt "@info:shell"
 msgid "Backing up original database..."
 msgstr "Резервное копирование исходной базы данных…"
 
-#: dbmigrator.cpp:586
+#: dbmigrator.cpp:584
 #, kde-format
 msgctxt "@info:status"
 msgid "Restoring database from backup %1 to %2"
 msgstr "Восстановление данных из резервной копии %1 в %2"
 
-#: dbmigrator.cpp:588
+#: dbmigrator.cpp:586
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to restore database from backup: %1"
 msgstr "Ошибка: не удалось восстановить данные из резервной копии: %1"
 
-#: dbmigrator.cpp:620 dbmigrator.cpp:631
+#: dbmigrator.cpp:618 dbmigrator.cpp:629
 #, kde-format
 msgctxt "@info:shell"
 msgid "Error has occurred while migrating table %1"
 msgstr "Ошибка при переносе таблицы %1"
 
-#: dbmigrator.cpp:650
+#: dbmigrator.cpp:648
 #, kde-format
 msgctxt "@label"
 msgid ""
@@ -151,62 +151,62 @@ msgstr ""
 "Каталог резервной копии уже существует. Перезаписать предыдущую резервную "
 "копию?"
 
-#: dbmigrator.cpp:655
+#: dbmigrator.cpp:653
 #, kde-format
 msgctxt "@info:shell"
 msgid "Cannot proceed without backup. Migration interrupted."
 msgstr "Операция прервана: отсутствует резервная копия данных."
 
-#: dbmigrator.cpp:660
+#: dbmigrator.cpp:658
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to remove previous backup directory."
 msgstr "Ошибка удаления предыдущей резервной копии."
 
-#: dbmigrator.cpp:673
+#: dbmigrator.cpp:671
 #, kde-format
 msgctxt "@info:shell"
 msgid "Failed to move database to backup location: %1"
 msgstr "Не удалось переместить базу данных в расположение резервной копии: %1"
 
-#: dbmigrator.cpp:687
+#: dbmigrator.cpp:685
 #, kde-format
 msgctxt "@label"
 msgid "Backup file %1 already exists. Overwrite?"
 msgstr "Резервная копия %1 уже существует. Перезаписать?"
 
-#: dbmigrator.cpp:689
+#: dbmigrator.cpp:687
 #, kde-format
 msgctxt "@info:status"
 msgid "Cannot proceed without backup. Migration interrupted."
 msgstr "Операция прервана: отсутствует резервная копия данных."
 
-#: dbmigrator.cpp:695
+#: dbmigrator.cpp:693
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: Failed to remove existing backup file %1: %2"
 msgstr "Ошибка: не удалось удалить существующий файл резервной копии %1: %2"
 
-#: dbmigrator.cpp:702
+#: dbmigrator.cpp:700
 #, kde-format
 msgctxt "@info:status"
 msgid "Failed to back up Akonadi Server configuration: %1"
 msgstr "Не удалось создать резервную копию конфигурации службы Akonadi: %1"
 
-#: dbmigrator.cpp:719
+#: dbmigrator.cpp:717
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move migrated database to the primary location: %1"
 msgstr ""
 "Ошибка: не удалось переместить новую базу данных в основное расположение: %1"
 
-#: dbmigrator.cpp:738
+#: dbmigrator.cpp:736
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to remove original akonadiserverrc: %1"
 msgstr "Ошибка: не удалось удалить исходный файл «akonadiserverrc»: %1"
 
-#: dbmigrator.cpp:744
+#: dbmigrator.cpp:742
 #, kde-format
 msgctxt "@info:status %1 is error message"
 msgid "Error: failed to move new akonadiserverrc to the primary location: %1"
@@ -214,7 +214,7 @@ msgstr ""
 "Ошибка: не удалось переместить новый файл «akonadiserverrc» в основное "
 "расположение: %1"
 
-#: dbmigrator.cpp:835
+#: dbmigrator.cpp:833
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to update autoincrement value for table %1"
@@ -222,13 +222,13 @@ msgstr ""
 "Ошибка: не удалось обновить автоматически возрастающее значение в таблице "
 "«%1»"
 
-#: dbmigrator.cpp:840
+#: dbmigrator.cpp:838
 #, kde-format
 msgctxt "@info:status"
 msgid "Optimizing table %1..."
 msgstr "Оптимизация таблицы «%1»…"
 
-#: dbmigrator.cpp:843
+#: dbmigrator.cpp:841
 #, kde-format
 msgctxt "@info:status"
 msgid "Error: failed to optimize table %1"
