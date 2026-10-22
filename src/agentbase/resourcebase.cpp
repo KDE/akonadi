@@ -1003,10 +1003,13 @@ void ResourceBasePrivate::slotAttributeRetrievalCollectionFetchDone(KJob *job)
         return;
     }
     auto fetchJob = static_cast<Akonadi::CollectionFetchJob *>(job);
-    const auto collection = fetchJob->collections().at(0);
-    QMetaObject::invokeMethod(q, [q, collection] {
-        q->retrieveCollectionAttributes(collection);
-    });
+    const auto collections = fetchJob->collections();
+    if (!collections.isEmpty()) {
+        const auto collection = collections.constFirst();
+        QMetaObject::invokeMethod(q, [q, collection] {
+            q->retrieveCollectionAttributes(collection);
+        });
+    }
 }
 
 void ResourceBasePrivate::slotSynchronizeTags()
