@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-21 00:51+0000\n"
+"POT-Creation-Date: 2026-10-23 00:49+0000\n"
 "PO-Revision-Date: 2026-09-12 18:01+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -148,17 +148,17 @@ msgstr "Kokoelmaa ei saatu noudetuksi synkronointia varten."
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Kokoelmaa ei saatu noudetuksi määritteen synkronointia varten."
 
-#: agentbase/resourcebase.cpp:1051
+#: agentbase/resourcebase.cpp:1054
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Pyydettyä kohdetta ei ole enää olemassa"
 
-#: agentbase/resourcebase.cpp:1272
+#: agentbase/resourcebase.cpp:1275
 #, kde-format
 msgid "Failed to fetch collection for collection sync."
 msgstr "Kokoelmaa ei saatu noudetuksi tahdistusta varten."
 
-#: agentbase/resourcebase.cpp:1308
+#: agentbase/resourcebase.cpp:1311
 #, kde-format
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr "Kokoelmaa ei saatu noudetuksi määritteiden tahdistusta varten."

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-21 00:51+0000\n"
+"POT-Creation-Date: 2026-10-23 00:49+0000\n"
 "PO-Revision-Date: 2026-07-29 08:44+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: fr\n"
@@ -153,17 +153,17 @@ msgid "Failed to retrieve collection for attribute sync."
 msgstr ""
 "Échec de la réception de la collection pour synchronisation des attributs."
 
-#: agentbase/resourcebase.cpp:1051
+#: agentbase/resourcebase.cpp:1054
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "L'élément demandé n'existe plus"
 
-#: agentbase/resourcebase.cpp:1272
+#: agentbase/resourcebase.cpp:1275
 #, kde-format
 msgid "Failed to fetch collection for collection sync."
 msgstr "Échec de la réception de la collection pour synchronisation."
 
-#: agentbase/resourcebase.cpp:1308
+#: agentbase/resourcebase.cpp:1311
 #, kde-format
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr ""

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-21 00:51+0000\n"
+"POT-Creation-Date: 2026-10-23 00:49+0000\n"
 "PO-Revision-Date: 2026-08-08 12:26+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -143,17 +143,17 @@ msgstr "Nie udało się pobrać zbioru dla synchronizacji."
 msgid "Failed to retrieve collection for attribute sync."
 msgstr "Nie udało się pobrać zbioru dla synchronizacji atrybutów."
 
-#: agentbase/resourcebase.cpp:1051
+#: agentbase/resourcebase.cpp:1054
 #, kde-format
 msgid "The requested item no longer exists"
 msgstr "Żądany element już nie istnieje"
 
-#: agentbase/resourcebase.cpp:1272
+#: agentbase/resourcebase.cpp:1275
 #, kde-format
 msgid "Failed to fetch collection for collection sync."
 msgstr "Nie udało się pobrać zbioru do synchronizacji zbiorów."
 
-#: agentbase/resourcebase.cpp:1308
+#: agentbase/resourcebase.cpp:1311
 #, kde-format
 msgid "Failed to fetch collection for collection attributes sync."
 msgstr "Nie udało się pobrać zbioru dla synchronizacji atrybutów zbiorów."
