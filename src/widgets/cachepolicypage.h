@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include "akonadiwidgets_export.h"
 #include "collectionpropertiespage.h"
 
 #include <memory>
@@ -32,7 +31,7 @@ class CachePolicyPagePrivate;
  * \author Till Adam <adam@kde.org>
  * \since 4.6
  */
-class AKONADIWIDGETS_EXPORT CachePolicyPage : public CollectionPropertiesPage
+class CachePolicyPage : public CollectionPropertiesPage
 {
     Q_OBJECT
 
