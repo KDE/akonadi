@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 00:49+0000\n"
+"POT-Creation-Date: 2026-10-27 01:00+0000\n"
 "PO-Revision-Date: 2014-09-18 22:53+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -1200,6 +1200,12 @@ msgstr "Akonadi-Server warrt opropen..."
 #, kde-format
 msgid "Stopping Akonadi server..."
 msgstr "Akonadi-Server warrt anhollen..."
+
+#: widgets/dbaccess.cpp:43
+#, fuzzy, kde-format
+#| msgid "Failed to create a new tag"
+msgid "Failed to connect to database: %1"
+msgstr "Slötelwoort lett sik nich opstellen"
 
 #: widgets/dragdropmanager.cpp:211
 #, kde-format

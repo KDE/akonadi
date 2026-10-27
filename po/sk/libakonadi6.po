@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 00:49+0000\n"
+"POT-Creation-Date: 2026-10-27 01:00+0000\n"
 "PO-Revision-Date: 2023-10-02 18:38+0200\n"
 "Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
 "Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
@@ -1168,6 +1168,13 @@ msgstr "Spúšťa sa Akonadi server..."
 #, kde-format
 msgid "Stopping Akonadi server..."
 msgstr "Zastavuje sa Akonadi server..."
+
+#: widgets/dbaccess.cpp:43
+#, fuzzy, kde-format
+#| msgctxt "@info"
+#| msgid "Failed to create new tag %1: %2"
+msgid "Failed to connect to database: %1"
+msgstr "Zlyhalo vytvorenie novej značky %1: %2"
 
 #: widgets/dragdropmanager.cpp:211
 #, kde-format

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 00:49+0000\n"
+"POT-Creation-Date: 2026-10-27 01:00+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -1148,6 +1148,13 @@ msgstr "正在启动 Akonadi 服务器..."
 #, kde-format
 msgid "Stopping Akonadi server..."
 msgstr "正在停止 Akonadi 服务器..."
+
+#: widgets/dbaccess.cpp:43
+#, fuzzy, kde-format
+#| msgctxt "@info"
+#| msgid "Failed to create new tag %1: %2"
+msgid "Failed to connect to database: %1"
+msgstr "创建新标签 %1 失败：%2"
 
 #: widgets/dragdropmanager.cpp:211
 #, kde-format

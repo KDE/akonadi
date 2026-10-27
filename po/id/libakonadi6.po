@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 00:49+0000\n"
+"POT-Creation-Date: 2026-10-27 01:00+0000\n"
 "PO-Revision-Date: 2024-09-30 18:09+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: https://t.me/Localizations_KDE_Indonesia\n"
@@ -1195,6 +1195,12 @@ msgstr "Memulai server Akonadi..."
 #, kde-format
 msgid "Stopping Akonadi server..."
 msgstr "Menghentikan server Akonadi..."
+
+#: widgets/dbaccess.cpp:43
+#, fuzzy, kde-format
+#| msgid "Failed to create a new tag"
+msgid "Failed to connect to database: %1"
+msgstr "Gagal membuat sebuah tag baru"
 
 #: widgets/dragdropmanager.cpp:211
 #, kde-format

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 00:49+0000\n"
+"POT-Creation-Date: 2026-10-27 01:00+0000\n"
 "PO-Revision-Date: 2026-09-21 15:02+0200\n"
 "Last-Translator: Shinjo Park <peremen@gmail.com>\n"
 "Language-Team: Korean\n"
@@ -1158,6 +1158,13 @@ msgstr "Akonadi 서버 시작 중..."
 #, kde-format
 msgid "Stopping Akonadi server..."
 msgstr "Akonadi 서버 정지 중..."
+
+#: widgets/dbaccess.cpp:43
+#, fuzzy, kde-format
+#| msgctxt "@info"
+#| msgid "Failed to create new tag %1: %2"
+msgid "Failed to connect to database: %1"
+msgstr "새 태그 %1을(를) 만들 수 없음: %2"
 
 #: widgets/dragdropmanager.cpp:211
 #, kde-format

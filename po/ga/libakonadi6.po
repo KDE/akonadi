@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdepim/libakonadi.po\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 00:49+0000\n"
+"POT-Creation-Date: 2026-10-27 01:00+0000\n"
 "PO-Revision-Date: 2007-07-11 08:14-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -1135,6 +1135,11 @@ msgstr "Freastalaí Akonadi á thosú..."
 #, kde-format
 msgid "Stopping Akonadi server..."
 msgstr "Freastalaí Akonadi á stopadh..."
+
+#: widgets/dbaccess.cpp:43
+#, kde-format
+msgid "Failed to connect to database: %1"
+msgstr ""
 
 #: widgets/dragdropmanager.cpp:211
 #, kde-format

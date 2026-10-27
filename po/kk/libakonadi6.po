@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 00:49+0000\n"
+"POT-Creation-Date: 2026-10-27 01:00+0000\n"
 "PO-Revision-Date: 2013-07-14 03:20+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -1199,6 +1199,12 @@ msgstr "Akonadi серверін жегу..."
 #, kde-format
 msgid "Stopping Akonadi server..."
 msgstr "Akonadi серверін тоқтату..."
+
+#: widgets/dbaccess.cpp:43
+#, fuzzy, kde-format
+#| msgid "Unable to create agent instance."
+msgid "Failed to connect to database: %1"
+msgstr "Агент данасын құруға болмайды."
 
 #: widgets/dragdropmanager.cpp:211
 #, kde-format

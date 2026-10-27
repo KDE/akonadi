@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 00:49+0000\n"
+"POT-Creation-Date: 2026-10-27 01:00+0000\n"
 "PO-Revision-Date: 2021-09-27 23:52+0630\n"
 "Last-Translator: ဇေယျာလွင် <lw1nzayar@yandex.com>\n"
 "Language-Team: Burmese <kde-i18n-doc@kde.org>\n"
@@ -1152,6 +1152,12 @@ msgstr "အကွန်နဒီဆာဗာစတင်နေသည်..."
 #, kde-format
 msgid "Stopping Akonadi server..."
 msgstr "အကွန်နဒီဆာဗာကို ရပ်တန့်နေသည်..."
+
+#: widgets/dbaccess.cpp:43
+#, fuzzy, kde-format
+#| msgid "Failed to create a new tag"
+msgid "Failed to connect to database: %1"
+msgstr "တပ်ဂ်အသစ်ကိုမဖန်တီးနိုင်ခဲ့ပါ"
 
 #: widgets/dragdropmanager.cpp:211
 #, kde-format

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 00:49+0000\n"
+"POT-Creation-Date: 2026-10-27 01:00+0000\n"
 "PO-Revision-Date: 2017-12-17 18:01+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -1230,6 +1230,12 @@ msgstr "Покрећем сервер Аконадија..."
 #, kde-format
 msgid "Stopping Akonadi server..."
 msgstr "Заустављам сервер Аконадија..."
+
+#: widgets/dbaccess.cpp:43
+#, fuzzy, kde-format
+#| msgid "Failed to create a new tag"
+msgid "Failed to connect to database: %1"
+msgstr "Не могу да направим нову ознаку."
 
 #: widgets/dragdropmanager.cpp:211
 #, kde-format

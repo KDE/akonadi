@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 00:49+0000\n"
+"POT-Creation-Date: 2026-10-27 01:00+0000\n"
 "PO-Revision-Date: 2024-12-25 19:45+0530\n"
 "Last-Translator: kali <shreekantkalwar@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -1186,6 +1186,12 @@ msgstr "अकोनाडी सर्वरं आरभ्य..."
 #, kde-format
 msgid "Stopping Akonadi server..."
 msgstr "अकोनाडी सर्वरं स्थगयति..."
+
+#: widgets/dbaccess.cpp:43
+#, fuzzy, kde-format
+#| msgid "Failed to create a new tag"
+msgid "Failed to connect to database: %1"
+msgstr "नूतनं टैग् निर्मातुं असफलम्"
 
 #: widgets/dragdropmanager.cpp:211
 #, kde-format

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi6\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 00:49+0000\n"
+"POT-Creation-Date: 2026-10-27 01:00+0000\n"
 "PO-Revision-Date: 2026-07-28 15:42+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -1190,6 +1190,13 @@ msgstr "Iniciando servidor Akonadi…"
 #, kde-format
 msgid "Stopping Akonadi server..."
 msgstr "Deteniendo servidor Akonadi…"
+
+#: widgets/dbaccess.cpp:43
+#, fuzzy, kde-format
+#| msgctxt "@info"
+#| msgid "Failed to create new tag %1: %2"
+msgid "Failed to connect to database: %1"
+msgstr "No se ha podido crear la nueva etiqueta %1: %2"
 
 #: widgets/dragdropmanager.cpp:211
 #, kde-format

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 00:49+0000\n"
+"POT-Creation-Date: 2026-10-27 01:00+0000\n"
 "PO-Revision-Date: 2013-01-13 00:43+0200\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -1211,6 +1211,12 @@ msgstr "Se pornește serverul Akonadi..."
 #, kde-format
 msgid "Stopping Akonadi server..."
 msgstr "Se oprește serverul Akonadi..."
+
+#: widgets/dbaccess.cpp:43
+#, fuzzy, kde-format
+#| msgid "Unable to create agent instance."
+msgid "Failed to connect to database: %1"
+msgstr "Nu se poate crea instanța de agent."
 
 #: widgets/dragdropmanager.cpp:211
 #, kde-format

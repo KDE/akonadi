@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 00:49+0000\n"
+"POT-Creation-Date: 2026-10-27 01:00+0000\n"
 "PO-Revision-Date: 2026-07-28 21:03+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -1173,6 +1173,13 @@ msgstr "Akonadi sunucusu başlatılıyor…"
 #, kde-format
 msgid "Stopping Akonadi server..."
 msgstr "Akonadi sunucusu durduruluyor…"
+
+#: widgets/dbaccess.cpp:43
+#, fuzzy, kde-format
+#| msgctxt "@info"
+#| msgid "Failed to create new tag %1: %2"
+msgid "Failed to connect to database: %1"
+msgstr "Yeni %1 künyesi oluşturulamadı: %2"
 
 #: widgets/dragdropmanager.cpp:211
 #, kde-format

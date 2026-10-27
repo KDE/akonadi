@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 00:49+0000\n"
+"POT-Creation-Date: 2026-10-27 01:00+0000\n"
 "PO-Revision-Date: 2026-09-12 18:01+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -1179,6 +1179,13 @@ msgstr "Käynnistetään Akonadi-palvelinta…"
 #, kde-format
 msgid "Stopping Akonadi server..."
 msgstr "Pysäytetään Akonadi-palvelinta…"
+
+#: widgets/dbaccess.cpp:43
+#, fuzzy, kde-format
+#| msgctxt "@info"
+#| msgid "Failed to create new tag %1: %2"
+msgid "Failed to connect to database: %1"
+msgstr "Uuden luokituksen %1 luominen epäonnistui: %2"
 
 #: widgets/dragdropmanager.cpp:211
 #, kde-format

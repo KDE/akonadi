@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-23 00:49+0000\n"
+"POT-Creation-Date: 2026-10-27 01:00+0000\n"
 "PO-Revision-Date: 2013-03-08 10:11+0530\n"
 "Last-Translator: Chetan Khona <chetan@kompkin.com>\n"
 "Language-Team: Marathi <kde-i18n-doc@kde.org>\n"
@@ -1134,6 +1134,11 @@ msgstr ""
 #: widgets/controlgui.cpp:229
 #, kde-format
 msgid "Stopping Akonadi server..."
+msgstr ""
+
+#: widgets/dbaccess.cpp:43
+#, kde-format
+msgid "Failed to connect to database: %1"
 msgstr ""
 
 #: widgets/dragdropmanager.cpp:211
