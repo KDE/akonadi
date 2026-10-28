@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-27 01:00+0000\n"
-"PO-Revision-Date: 2026-07-28 08:31+0300\n"
+"PO-Revision-Date: 2026-10-27 12:09+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -1184,11 +1184,9 @@ msgid "Stopping Akonadi server..."
 msgstr "Зупинка сервера Akonadi..."
 
 #: widgets/dbaccess.cpp:43
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Failed to create new tag %1: %2"
+#, kde-format
 msgid "Failed to connect to database: %1"
-msgstr "Не вдалося створити мітку %1: %2"
+msgstr "Не вдалося встановити з'єднання із базою даних: %1"
 
 #: widgets/dragdropmanager.cpp:211
 #, kde-format
