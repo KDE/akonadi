@@ -187,8 +187,6 @@ set(akonadicore_attributes_SRCS
     attributes/entityannotationsattribute.h
     attributes/entitydeletedattribute.cpp
     attributes/entitydeletedattribute.h
-    attributes/entitydeletedattribute.cpp
-    attributes/entitydeletedattribute.h
     attributes/entitydisplayattribute.cpp
     attributes/entitydisplayattribute.h
     attributes/entityhiddenattribute.cpp

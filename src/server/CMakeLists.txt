@@ -103,7 +103,6 @@ set(libakonadiserver_SRCS
     storage/schematypes.cpp
     storage/tagqueryhelper.cpp
     storage/transaction.cpp
-    storage/parthelper.cpp
     storage/partstreamer.cpp
     storage/storagedebugger.cpp
     tracer.cpp
@@ -185,7 +184,6 @@ set(libakonadiserver_SRCS
     storage/itemretrievaljob.h
     storage/itemretrievalrequest.h
     storage/notificationcollector.h
-    storage/parthelper.h
     storage/parttypehelper.h
     storage/query.h
     storage/querybuilder.h
