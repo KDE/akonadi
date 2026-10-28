@@ -21,7 +21,7 @@ qhp.projects            = akonadiagentbase
 qhp.akonadiagentbase.file                = akonadiagentbase.qhp
 qhp.akonadiagentbase.namespace           = org.kde.akonadiagentbase.$QT_VERSION_TAG
 qhp.akonadiagentbase.virtualFolder       = akonadiagentbase
-qhp.akonadiagentbase.indexTitle          = akonadiagentbase
+qhp.akonadiagentbase.indexTitle          = AkonadiAgentBase
 qhp.akonadiagentbase.indexRoot           =
 
 qhp.akonadiagentbase.subprojects         = classes

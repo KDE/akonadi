@@ -249,7 +249,7 @@ if(BUILD_DESIGNERPLUGIN)
         COMPONENT Devel
     )
 endif()
-ecm_generate_qdoc(KPim6AkonadiWidgets akonadi-widgets.qdocconf)
+ecm_generate_qdoc(KPim6AkonadiWidgets akonadiwidgets.qdocconf)
 
 ecm_add_installed_library_check(KPim6AkonadiWidgets
     PACKAGE_NAME "KPim6Akonadi"

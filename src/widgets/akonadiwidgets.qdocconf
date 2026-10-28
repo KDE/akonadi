@@ -21,7 +21,7 @@ qhp.projects            = akonadiwidgets
 qhp.akonadiwidgets.file                = akonadiwidgets.qhp
 qhp.akonadiwidgets.namespace           = org.kde.akonadiwidgets.$QT_VERSION_TAG
 qhp.akonadiwidgets.virtualFolder       = akonadiwidgets
-qhp.akonadiwidgets.indexTitle          = akonadiwidgets
+qhp.akonadiwidgets.indexTitle          = AkonadiWidgets
 qhp.akonadiwidgets.indexRoot           =
 
 qhp.akonadiwidgets.subprojects         = classes

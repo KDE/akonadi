@@ -21,7 +21,7 @@ qhp.projects            = akonadicore
 qhp.akonadicore.file                = akonadicore.qhp
 qhp.akonadicore.namespace           = org.kde.akonadicore.$QT_VERSION_TAG
 qhp.akonadicore.virtualFolder       = akonadicore
-qhp.akonadicore.indexTitle          = akonadicore
+qhp.akonadicore.indexTitle          = AkonadiCore
 qhp.akonadicore.indexRoot           =
 
 qhp.akonadicore.subprojects         = classes
