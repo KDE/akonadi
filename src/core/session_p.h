@@ -50,8 +50,6 @@ public:
         return mSessionThread;
     }
 
-    void enqueueCommand(qint64 tag, const Protocol::CommandPtr &cmd);
-
     void startNext();
     /// Disconnects a previously existing connection and tries to reconnect
     void forceReconnect();
@@ -60,7 +58,6 @@ public:
     void serverStateChanged(ServerManager::State);
     void socketDisconnected();
     void socketError(const QString &error);
-    void dataReceived();
     virtual bool handleCommands();
     void doStartNext();
     void startJob(Job *job);

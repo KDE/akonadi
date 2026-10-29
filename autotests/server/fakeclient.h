@@ -33,7 +33,6 @@ public:
 
     void start();
     void startScenario();
-    void cleanup();
 
 private Q_SLOTS:
     void do_connectToServer();

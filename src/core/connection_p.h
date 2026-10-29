@@ -18,7 +18,6 @@ class QFile;
 namespace Akonadi
 {
 class SessionThread;
-class SessionPrivate;
 class CommandBuffer;
 
 /*!
@@ -44,8 +43,6 @@ public:
     explicit Connection(ConnectionType connType, const QByteArray &sessionId, CommandBuffer *commandBuffer, QObject *parent = nullptr);
     ~Connection() override;
 
-    void setSession(SessionPrivate *session);
-
     QLocalSocket *socket() const;
 
     Q_INVOKABLE void reconnect();
@@ -69,7 +66,6 @@ private Q_SLOTS:
 private:
     void handleIncomingData();
     QString defaultAddressForTypeAndMethod(ConnectionType type, const QString &method);
-    bool handleCommand(qint64 tag, const Protocol::CommandPtr &cmd);
 
     ConnectionType mConnectionType;
     QScopedPointer<QLocalSocket> mSocket;
