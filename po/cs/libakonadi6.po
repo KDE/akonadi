@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-27 01:00+0000\n"
-"PO-Revision-Date: 2026-07-28 12:09+0200\n"
+"PO-Revision-Date: 2026-10-28 23:01+0100\n"
 "Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 26.04.3\n"
+"X-Generator: Lokalize 26.08.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1175,11 +1175,9 @@ msgid "Stopping Akonadi server..."
 msgstr "Zastavuji server Akonadi..."
 
 #: widgets/dbaccess.cpp:43
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Failed to create new tag %1: %2"
+#, kde-format
 msgid "Failed to connect to database: %1"
-msgstr "Vytvoření nové značky %1 se nezdařilo: %2"
+msgstr "Chyba při připojení k databázi: %1"
 
 #: widgets/dragdropmanager.cpp:211
 #, kde-format
