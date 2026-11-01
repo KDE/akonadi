@@ -677,7 +677,9 @@ msgid "Modify"
 msgstr "&Modificar…"
 
 #: quick/qml/AgentConfigurationForm.qml:68
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@action:button"
+#| msgid "Delete"
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "Eliminar"

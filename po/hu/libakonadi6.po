@@ -4,13 +4,13 @@
 # Tamas Szanto <tszanto@interware.hu>, 2008.
 # Kristóf Kiszel <ulysses@kubuntu.org>, 2010, 2011, 2012, 2014, 2020, 2021.
 # Balázs Úr <urbalazs@gmail.com>, 2012, 2013, 2014.
-# SPDX-FileCopyrightText: 2024, 2025, 2026 Kristof Kiszel <ulysses@fsf.hu>
+# SPDX-FileCopyrightText: 2024-2026 Kristof Kiszel <ulysses@fsf.hu>
 msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.3\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-27 01:00+0000\n"
-"PO-Revision-Date: 2026-03-12 21:35+0100\n"
+"PO-Revision-Date: 2026-10-31 22:31+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.12.2\n"
+"X-Generator: Lokalize 26.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -151,16 +151,16 @@ msgid "The requested item no longer exists"
 msgstr "A kért elem már nem létezik"
 
 #: agentbase/resourcebase.cpp:1275
-#, fuzzy, kde-format
-#| msgid "Failed to retrieve collection for sync."
+#, kde-format
 msgid "Failed to fetch collection for collection sync."
-msgstr "Nem sikerült letölteni az erőforrás gyűjteményt szinkronizáláshoz."
+msgstr "Nem sikerült letölteni a gyűjteményt a gyűjteményszinkronizáláshoz."
 
 #: agentbase/resourcebase.cpp:1311
-#, fuzzy, kde-format
-#| msgid "Failed to retrieve collection for attribute sync."
+#, kde-format
 msgid "Failed to fetch collection for collection attributes sync."
-msgstr "Nem sikerült letölteni a gyűjteményt attribútumszinkronizáláshoz."
+msgstr ""
+"Nem sikerült letölteni a gyűjteményt a gyűjteményattribútumok "
+"szinkronizálásához."
 
 #: agentbase/resourcescheduler.cpp:433 agentbase/resourcescheduler.cpp:439
 #, kde-format
@@ -427,11 +427,10 @@ msgid "Failed to create tag."
 msgstr "Nem sikerült címkét létrehozni."
 
 #: core/jobs/trashjob.cpp:155
-#, fuzzy, kde-format
-#| msgid "Move to trash collection failed, aborting trash operation"
+#, kde-format
 msgid "Failed to move to the trash collection; aborting the trash operation"
 msgstr ""
-"Nem sikerült a gyűjtemény áthelyezése a kukába, a kuka művelet megszakítása"
+"Nem sikerült áthelyezni a kukagyűjteménybe, a kuka művelet megszakítása"
 
 #: core/jobs/trashjob.cpp:218 core/jobs/trashrestorejob.cpp:151
 #, kde-format
@@ -669,7 +668,7 @@ msgstr "Törlés"
 #, kde-format
 msgctxt "status message, progress percentage"
 msgid "%1 (%2%)"
-msgstr ""
+msgstr "%1 (%2%)"
 
 #: quick/qml/AgentConfigurationForm.qml:113
 #, kde-format
@@ -2562,17 +2561,16 @@ msgid "&Unsubscribe"
 msgstr "&Leiratkozás"
 
 #: widgets/tageditwidget.cpp:120
-#, fuzzy, kde-format
-#| msgid "Failed to create a new tag"
+#, kde-format
 msgctxt "@info"
 msgid "Failed to create new tag %1: %2"
-msgstr "Nem sikerült létrehozni új címkét"
+msgstr "Nem sikerült létrehozni az új %1 címkét: %2"
 
 #: widgets/tageditwidget.cpp:127
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully added"
-msgstr ""
+msgstr "A(z) %1 címke sikeresen hozzáadva"
 
 #: widgets/tageditwidget.cpp:172
 #, kde-kuit-format
@@ -2581,6 +2579,9 @@ msgid ""
 "Press this button to show a dialog that asks permission to remove the "
 "<resource>%1</resource> tag from Akonadi."
 msgstr ""
+"Nyomja meg ezt a gombot, hogy megjelenjen egy párbeszédablak, amely "
+"engedélyt kér a(z)<resource>%1</resource> címke eltávolításához az "
+"Akonadiból."
 
 #: widgets/tageditwidget.cpp:180
 #, kde-kuit-format
@@ -2595,17 +2596,16 @@ msgid "Delete Tag"
 msgstr "Címke törlése"
 
 #: widgets/tageditwidget.cpp:192
-#, fuzzy, kde-format
-#| msgid "Failed to create tag."
+#, kde-format
 msgctxt "@info"
 msgid "Failed to delete tag %1: %2"
-msgstr "Nem sikerült címkét létrehozni."
+msgstr "A(z) %1 címke törlése nem sikerült: %2"
 
 #: widgets/tageditwidget.cpp:196
 #, kde-format
 msgctxt "@info"
 msgid "Tag %1 successfully removed"
-msgstr ""
+msgstr "A(z) %1 címke sikeresen eltávolítva"
 
 #: widgets/tageditwidget.cpp:223
 #, kde-format
@@ -2623,7 +2623,7 @@ msgstr "Alkalmazandó címkék kiválasztása."
 #: widgets/tageditwidget.ui:55
 #, kde-format
 msgid "Enter the name for a new tag"
-msgstr ""
+msgstr "Írja be az új címke nevét"
 
 #. i18n: ectx: property (whatsThis), widget (QLineEdit, newTagEdit)
 #: widgets/tageditwidget.ui:58
@@ -2632,13 +2632,14 @@ msgid ""
 "To create and select a new tag, enter a name for the new tag and then press "
 "the \"Create new tag\" button."
 msgstr ""
+"Új címke létrehozásához és kiválasztásához írja be az új címke nevét, majd "
+"kattintsonaz „Új címke létrehozása” gombra."
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:68
-#, fuzzy, kde-format
-#| msgid "Create new tag"
+#, kde-format
 msgid "Create and select a new tag"
-msgstr "Új címke létrehozása"
+msgstr "Új címke létrehozása és kiválasztása"
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:71
@@ -2647,6 +2648,9 @@ msgid ""
 "Press this button to create a new tag with the name specified in the "
 "adjacent line editor.  The new tag is automatically selected."
 msgstr ""
+"Nyomja meg ezt a gombot, hogy létrehozzon egy új címkét amellette lévő "
+"sorban található szerkesztőben megadott névvel. Az új címke automatikusan "
+"kiválasztásra kerül."
 
 #. i18n: ectx: property (text), widget (QPushButton, newTagButton)
 #: widgets/tageditwidget.ui:74

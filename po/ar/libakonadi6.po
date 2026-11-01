@@ -1,7 +1,7 @@
 # translation of libakonadi.po to
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# SPDX-FileCopyrightText: 2022, 2023, 2024, 2025, 2026 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
+# SPDX-FileCopyrightText: 2022-2026 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
 # Youssef Chahibi <chahibi@gmail.com>, 2007.
 # Safa Alfulaij <safa1996alfulaij@gmail.com>, 2018.
 # Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2024.
@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-10-27 01:00+0000\n"
-"PO-Revision-Date: 2026-08-10 12:56+0400\n"
+"PO-Revision-Date: 2026-10-31 17:05+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Lokalize 25.12.3\n"
+"X-Generator: Lokalize 26.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1179,11 +1179,9 @@ msgid "Stopping Akonadi server..."
 msgstr "يُوقف خادم «أكونادي»…"
 
 #: widgets/dbaccess.cpp:43
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Failed to create new tag %1: %2"
+#, kde-format
 msgid "Failed to connect to database: %1"
-msgstr "فشل إنشاء وسم جديد %1: %2"
+msgstr "فشل الاتصال بقاعدة البيانات %1"
 
 #: widgets/dragdropmanager.cpp:211
 #, kde-format
