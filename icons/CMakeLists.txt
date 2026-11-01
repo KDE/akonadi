@@ -8,7 +8,7 @@ set(icons
     64-apps-akonadi.png
     128-apps-akonadi.png
     256-apps-akonadi.png
-    sc-apps-akonadi.svgz
+    sc-apps-akonadi.svg
 )
 
 ecm_install_icons(ICONS ${icons} DESTINATION ${KDE_INSTALL_ICONDIR})
