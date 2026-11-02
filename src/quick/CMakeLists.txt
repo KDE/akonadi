@@ -8,6 +8,7 @@ ecm_add_qml_module(akonadi_quick_plugin
     DEPENDENCIES
         QtQuick
         QtCore
+        org.kde.ki18n
         org.kde.kirigami
         org.kde.kirigamiaddons.delegates
         org.kde.kirigamiaddons.formcard

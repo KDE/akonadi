@@ -8,6 +8,7 @@ import QtQuick.Layouts
 import QtQuick.Controls as QQC2
 
 import org.kde.kirigami as Kirigami
+import org.kde.ki18n
 import org.kde.kirigamiaddons.formcard as FormCard
 import org.kde.kirigamiaddons.delegates as Delegates
 import org.kde.kirigamiaddons.components as Components
@@ -22,6 +23,11 @@ FormCard.FormCard {
 
     Component.onCompleted: autoSeparators = true
 
+    KI18nContext {
+        id: _tr
+        translationDomain: "libakonadi6"
+    }
+
     readonly property AgentConfiguration _configuration: AgentConfiguration {
         id: _configuration
 
@@ -34,13 +40,13 @@ FormCard.FormCard {
 
         property var agentDelegate
 
-        title: i18ndc("libakonadi6", "@title:dialog", "Configure %1", agentDelegate?.name)
+        title: _tr.i18nc("@title:dialog", "Configure %1", agentDelegate?.name)
         parent: root.QQC2.Overlay.overlay
         standardButtons: Kirigami.Dialog.NoButton
         iconName: ''
 
         QQC2.Label {
-            text: i18ndc("libakonadi6", "@info", "Modify or delete this account agent.")
+            text: _tr.i18nc("@info", "Modify or delete this account agent.")
             wrapMode: Text.WordWrap
             Layout.fillWidth: true
         }
@@ -56,7 +62,7 @@ FormCard.FormCard {
             onRejected: dialog.close()
 
             QQC2.Button {
-                text: i18ndc("libakonadi6", "@action:button", "Modify")
+                text: _tr.i18nc("@action:button", "Modify")
                 icon.name: "edit-entry-symbolic"
                 onClicked: {
                     root._configuration.edit(dialog.agentDelegate.index);
@@ -65,7 +71,7 @@ FormCard.FormCard {
             }
 
             QQC2.Button {
-                text: i18ndc("libakonadi6", "@action:button", "Delete")
+                text: _tr.i18nc("@action:button", "Delete")
                 icon.name: "delete-symbolic"
                 onClicked: {
                     root._configuration.remove(dialog.agentDelegate.index);
@@ -99,7 +105,7 @@ FormCard.FormCard {
             }
 
             text: name
-            description: progress > 0 ? i18ndc("libakonadi6", "status message, progress percentage", "%1 (%2%)", statusMessage, progress) : statusMessage
+            description: progress > 0 ? _tr.i18nc("status message, progress percentage", "%1 (%2%)", statusMessage, progress) : statusMessage
 
             onClicked: {
                 dialog.agentDelegate = agentDelegate;
@@ -110,7 +116,7 @@ FormCard.FormCard {
 
     FormCard.FormButtonDelegate {
         id: addAccountDelegate
-        text: i18ndc("libakonadi6", "@action:button", "Add Account")
+        text: _tr.i18nc("@action:button", "Add Account")
         icon.name: "list-add-symbolic"
         onClicked: (root.QQC2.ApplicationWindow.window as Kirigami.ApplicationWindow).pageStack.pushDialogLayer(addAccountPage)
     }

@@ -8,13 +8,19 @@ import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 import org.kde.akonadi as Akonadi
 import org.kde.kirigami as Kirigami
+import org.kde.ki18n
 import org.kde.kirigamiaddons.components as Components
 import org.kde.kirigamiaddons.delegates as Delegates
 
 Kirigami.ScrollablePage {
     id: root
 
-    title: i18n("Manage Tags")
+    title: _tr.i18n("Manage Tags")
+
+    KI18nContext {
+        id: _tr
+        translationDomain: "libakonadi6"
+    }
 
     Components.MessageDialog {
         id: deleteConfirmSheet
@@ -24,11 +30,11 @@ Kirigami.ScrollablePage {
 
         parent: root
 
-        title: i18ndc("libakonadi6", "@title:dialog",  "Confirm Tag Deletion")
+        title: _tr.i18nc("@title:dialog",  "Confirm Tag Deletion")
         dialogType: Components.MessageDialog.Warning
 
         contentItem: QQC2.Label {
-            text: i18ndc("libakonadi6", "@info", "Are you sure you want to delete tag <b>%1</b>?", deleteConfirmSheet.tagName) + " " + i18n("You won't be able to revert this action.")
+            text: _tr.i18nc("@info", "Are you sure you want to delete tag <b>%1</b>?", deleteConfirmSheet.tagName) + " " + _tr.i18n("You won't be able to revert this action.")
             wrapMode: Text.Wrap
         }
 
@@ -50,7 +56,7 @@ Kirigami.ScrollablePage {
         Kirigami.PlaceholderMessage {
             anchors.centerIn: parent
             width: parent.width - Kirigami.Units.largeSpacing * 4
-            text: i18nc("@info:placeholder", "There are no tags")
+            text: _tr.i18nc("@info:placeholder", "There are no tags")
             visible: tagList.count === 0
         }
 
@@ -138,7 +144,7 @@ Kirigami.ScrollablePage {
             QQC2.TextField {
                 id: newTagField
 
-                placeholderText: i18ndc("libakonadi6", "@info:placeholder", "Create a New Tag…")
+                placeholderText: _tr.i18nc("@info:placeholder", "Create a New Tag…")
                 maximumLength: 50
                 onAccepted: addTagButton.click()
                 background: null
@@ -149,7 +155,7 @@ Kirigami.ScrollablePage {
             QQC2.ToolButton {
                 id: addTagButton
                 icon.name: "tag-new-symbolic"
-                text: i18ndc("libakonadi6", "@action:button", "Add Tag")
+                text: _tr.i18nc("@action:button", "Add Tag")
                 display: QQC2.ToolButton.IconOnly
 
                 onClicked: if (newTagField.text.length > 0) {
