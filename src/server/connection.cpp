@@ -227,9 +227,7 @@ void Connection::handleIncomingData()
             // Tag context and collection context is not persistent.
             m_context.setTag(std::nullopt);
             m_context.setCollection({});
-            if (m_akonadi.tracer().currentTracer() != QLatin1StringView("null")) {
-                m_akonadi.tracer().connectionInput(m_identifier, tag, cmd);
-            }
+            m_akonadi.tracer().connectionInput(m_identifier, tag, cmd);
 
             m_currentHandler = findHandlerForCommand(cmd->type());
             if (!m_currentHandler) {
@@ -452,9 +450,7 @@ void Connection::reportTime() const
 
 void Connection::sendResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
-    if (m_akonadi.tracer().currentTracer() != QLatin1StringView("null")) {
-        m_akonadi.tracer().connectionOutput(m_identifier, tag, response);
-    }
+    m_akonadi.tracer().connectionOutput(m_identifier, tag, response);
     Protocol::DataStream stream(m_socket.get());
     stream << tag;
     Protocol::serialize(stream, response);
