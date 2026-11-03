@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-27 01:00+0000\n"
+"POT-Creation-Date: 2026-11-03 00:55+0000\n"
 "PO-Revision-Date: 2023-02-19 14:32+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -638,7 +638,7 @@ msgstr ""
 "tərəfindəki versiyadan (%2) köhnədir. Əgər sisteminizi yenicə "
 "yeniləmisinizsə bütün KDE PİM tətbiqlərinii yenidən başladın."
 
-#: quick/qml/AgentConfigurationForm.qml:37
+#: quick/qml/AgentConfigurationForm.qml:43
 #, fuzzy, kde-format
 #| msgctxt "@title:window"
 #| msgid "Configure Account"
@@ -646,45 +646,45 @@ msgctxt "@title:dialog"
 msgid "Configure %1"
 msgstr "Hesabı tənzimlə"
 
-#: quick/qml/AgentConfigurationForm.qml:43
+#: quick/qml/AgentConfigurationForm.qml:49
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
 msgstr ""
 
-#: quick/qml/AgentConfigurationForm.qml:59
+#: quick/qml/AgentConfigurationForm.qml:65
 #, fuzzy, kde-format
 #| msgid "&Modify..."
 msgctxt "@action:button"
 msgid "Modify"
 msgstr "Dəyişdir&mək..."
 
-#: quick/qml/AgentConfigurationForm.qml:68
+#: quick/qml/AgentConfigurationForm.qml:74
 #, fuzzy, kde-format
 #| msgid "Delete"
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "Silmək"
 
-#: quick/qml/AgentConfigurationForm.qml:102
+#: quick/qml/AgentConfigurationForm.qml:108
 #, kde-format
 msgctxt "status message, progress percentage"
 msgid "%1 (%2%)"
 msgstr ""
 
-#: quick/qml/AgentConfigurationForm.qml:113
+#: quick/qml/AgentConfigurationForm.qml:119
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
 msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
-#: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
+#: quick/qml/TagManagerPage.qml:18 widgets/tagmanagementdialog.ui:14
 #, kde-format
 msgid "Manage Tags"
 msgstr "Yarlıqları idarə etmək"
 
-#: quick/qml/TagManagerPage.qml:27
+#: quick/qml/TagManagerPage.qml:33
 #, fuzzy, kde-format
 #| msgctxt "@title:window"
 #| msgid "Conflict Resolution"
@@ -692,7 +692,7 @@ msgctxt "@title:dialog"
 msgid "Confirm Tag Deletion"
 msgstr "Ziddiyyətllərin həlli"
 
-#: quick/qml/TagManagerPage.qml:31
+#: quick/qml/TagManagerPage.qml:37
 #, fuzzy, kde-format
 #| msgctxt "@info"
 #| msgid "Do you really want to remove the tag <resource>%1</resource>?"
@@ -700,26 +700,26 @@ msgctxt "@info"
 msgid "Are you sure you want to delete tag <b>%1</b>?"
 msgstr "Siz <resource>%1</resource> yarlığını silmək istəyirsiniz?"
 
-#: quick/qml/TagManagerPage.qml:31
+#: quick/qml/TagManagerPage.qml:37
 #, kde-format
 msgid "You won't be able to revert this action."
 msgstr ""
 
-#: quick/qml/TagManagerPage.qml:53
+#: quick/qml/TagManagerPage.qml:59
 #, fuzzy, kde-format
 #| msgid "Create new tag"
 msgctxt "@info:placeholder"
 msgid "There are no tags"
 msgstr "Yeni yarlıq yaratmaq"
 
-#: quick/qml/TagManagerPage.qml:141
+#: quick/qml/TagManagerPage.qml:147
 #, fuzzy, kde-format
 #| msgid "Create new tag"
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
 msgstr "Yeni yarlıq yaratmaq"
 
-#: quick/qml/TagManagerPage.qml:152
+#: quick/qml/TagManagerPage.qml:158
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Tag"

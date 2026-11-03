@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: akonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-27 01:00+0000\n"
+"POT-Creation-Date: 2026-11-03 00:55+0000\n"
 "PO-Revision-Date: 2026-10-28 16:44+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -637,78 +637,78 @@ msgstr ""
 "от нашата (%2). Ако сте актуализирали системата си наскоро, моля, "
 "рестартирайте всички приложения на KDE за лични данни."
 
-#: quick/qml/AgentConfigurationForm.qml:37
+#: quick/qml/AgentConfigurationForm.qml:43
 #, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
 msgstr "Настройване на %1"
 
-#: quick/qml/AgentConfigurationForm.qml:43
+#: quick/qml/AgentConfigurationForm.qml:49
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
 msgstr "Промяна или изтриване на този агент за акаунт."
 
-#: quick/qml/AgentConfigurationForm.qml:59
+#: quick/qml/AgentConfigurationForm.qml:65
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify"
 msgstr "Промяна"
 
-#: quick/qml/AgentConfigurationForm.qml:68
+#: quick/qml/AgentConfigurationForm.qml:74
 #, kde-format
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "Изтриване"
 
-#: quick/qml/AgentConfigurationForm.qml:102
+#: quick/qml/AgentConfigurationForm.qml:108
 #, kde-format
 msgctxt "status message, progress percentage"
 msgid "%1 (%2%)"
 msgstr "%1 (%2%)"
 
-#: quick/qml/AgentConfigurationForm.qml:113
+#: quick/qml/AgentConfigurationForm.qml:119
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
 msgstr "Добавяне на акаунт"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
-#: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
+#: quick/qml/TagManagerPage.qml:18 widgets/tagmanagementdialog.ui:14
 #, kde-format
 msgid "Manage Tags"
 msgstr "Управление на етикети"
 
-#: quick/qml/TagManagerPage.qml:27
+#: quick/qml/TagManagerPage.qml:33
 #, kde-format
 msgctxt "@title:dialog"
 msgid "Confirm Tag Deletion"
 msgstr "Потвърждаване на изтриване на етикет"
 
-#: quick/qml/TagManagerPage.qml:31
+#: quick/qml/TagManagerPage.qml:37
 #, kde-format
 msgctxt "@info"
 msgid "Are you sure you want to delete tag <b>%1</b>?"
 msgstr "Сигурни ли сте, че искате да изтриете етикет <b>%1</b>?"
 
-#: quick/qml/TagManagerPage.qml:31
+#: quick/qml/TagManagerPage.qml:37
 #, kde-format
 msgid "You won't be able to revert this action."
 msgstr "Няма да можете да отмените това действие."
 
-#: quick/qml/TagManagerPage.qml:53
+#: quick/qml/TagManagerPage.qml:59
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "There are no tags"
 msgstr "Няма етикети"
 
-#: quick/qml/TagManagerPage.qml:141
+#: quick/qml/TagManagerPage.qml:147
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
 msgstr "Създаване на нов етикет…"
 
-#: quick/qml/TagManagerPage.qml:152
+#: quick/qml/TagManagerPage.qml:158
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Tag"

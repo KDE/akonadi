@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-27 01:00+0000\n"
+"POT-Creation-Date: 2026-11-03 00:55+0000\n"
 "PO-Revision-Date: 2026-09-12 18:01+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -641,78 +641,78 @@ msgstr ""
 "ohjelman (%2). Jos olet vastikään päivittänyt järjestelmän, käynnistä kaikki "
 "KDE:n PIM-sovellukset uudelleen."
 
-#: quick/qml/AgentConfigurationForm.qml:37
+#: quick/qml/AgentConfigurationForm.qml:43
 #, kde-format
 msgctxt "@title:dialog"
 msgid "Configure %1"
 msgstr "%1 – asetukset"
 
-#: quick/qml/AgentConfigurationForm.qml:43
+#: quick/qml/AgentConfigurationForm.qml:49
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
 msgstr "Muuta tätä tiliagenttia tai poista se."
 
-#: quick/qml/AgentConfigurationForm.qml:59
+#: quick/qml/AgentConfigurationForm.qml:65
 #, kde-format
 msgctxt "@action:button"
 msgid "Modify"
 msgstr "Muuta"
 
-#: quick/qml/AgentConfigurationForm.qml:68
+#: quick/qml/AgentConfigurationForm.qml:74
 #, kde-format
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "Poista"
 
-#: quick/qml/AgentConfigurationForm.qml:102
+#: quick/qml/AgentConfigurationForm.qml:108
 #, kde-format
 msgctxt "status message, progress percentage"
 msgid "%1 (%2%)"
 msgstr "%1 (%2 %)"
 
-#: quick/qml/AgentConfigurationForm.qml:113
+#: quick/qml/AgentConfigurationForm.qml:119
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
 msgstr "Lisää tili"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
-#: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
+#: quick/qml/TagManagerPage.qml:18 widgets/tagmanagementdialog.ui:14
 #, kde-format
 msgid "Manage Tags"
 msgstr "Hallitse luokituksia"
 
-#: quick/qml/TagManagerPage.qml:27
+#: quick/qml/TagManagerPage.qml:33
 #, kde-format
 msgctxt "@title:dialog"
 msgid "Confirm Tag Deletion"
 msgstr "Vahvista luokituksen poistaminen"
 
-#: quick/qml/TagManagerPage.qml:31
+#: quick/qml/TagManagerPage.qml:37
 #, kde-format
 msgctxt "@info"
 msgid "Are you sure you want to delete tag <b>%1</b>?"
 msgstr "Haluatko varmasti poistaa luokituksen <b>%1</b>?"
 
-#: quick/qml/TagManagerPage.qml:31
+#: quick/qml/TagManagerPage.qml:37
 #, kde-format
 msgid "You won't be able to revert this action."
 msgstr "Tätä toimenpidettä ei voi kumota."
 
-#: quick/qml/TagManagerPage.qml:53
+#: quick/qml/TagManagerPage.qml:59
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "There are no tags"
 msgstr "Luokituksia ei ole"
 
-#: quick/qml/TagManagerPage.qml:141
+#: quick/qml/TagManagerPage.qml:147
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
 msgstr "Luo uusi luokitus…"
 
-#: quick/qml/TagManagerPage.qml:152
+#: quick/qml/TagManagerPage.qml:158
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Tag"

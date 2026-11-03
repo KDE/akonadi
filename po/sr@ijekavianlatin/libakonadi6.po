@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libakonadi5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-10-27 01:00+0000\n"
+"POT-Creation-Date: 2026-11-03 00:55+0000\n"
 "PO-Revision-Date: 2017-12-17 18:01+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -648,54 +648,54 @@ msgstr ""
 "(%2). Ako ste nedavno ažurirali sistem, ponovo pokrenite sve programe iz "
 "KDE‑PIM‑a."
 
-#: quick/qml/AgentConfigurationForm.qml:37
+#: quick/qml/AgentConfigurationForm.qml:43
 #, fuzzy, kde-format
 #| msgid "&Configure Agent Instance"
 msgctxt "@title:dialog"
 msgid "Configure %1"
 msgstr "&Podesi primjerak agenta"
 
-#: quick/qml/AgentConfigurationForm.qml:43
+#: quick/qml/AgentConfigurationForm.qml:49
 #, kde-format
 msgctxt "@info"
 msgid "Modify or delete this account agent."
 msgstr ""
 
-#: quick/qml/AgentConfigurationForm.qml:59
+#: quick/qml/AgentConfigurationForm.qml:65
 #, fuzzy, kde-format
 #| msgid "&Modify..."
 msgctxt "@action:button"
 msgid "Modify"
 msgstr "&Izmeni..."
 
-#: quick/qml/AgentConfigurationForm.qml:68
+#: quick/qml/AgentConfigurationForm.qml:74
 #, fuzzy, kde-format
 #| msgid "Delete"
 msgctxt "@action:button"
 msgid "Delete"
 msgstr "Obriši"
 
-#: quick/qml/AgentConfigurationForm.qml:102
+#: quick/qml/AgentConfigurationForm.qml:108
 #, kde-format
 msgctxt "status message, progress percentage"
 msgid "%1 (%2%)"
 msgstr ""
 
-#: quick/qml/AgentConfigurationForm.qml:113
+#: quick/qml/AgentConfigurationForm.qml:119
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Account"
 msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, TagManagementDialog)
-#: quick/qml/TagManagerPage.qml:17 widgets/tagmanagementdialog.ui:14
+#: quick/qml/TagManagerPage.qml:18 widgets/tagmanagementdialog.ui:14
 #, fuzzy, kde-format
 #| msgctxt "@title:window"
 #| msgid "Manage Tags"
 msgid "Manage Tags"
 msgstr "Upravljanje oznakama"
 
-#: quick/qml/TagManagerPage.qml:27
+#: quick/qml/TagManagerPage.qml:33
 #, fuzzy, kde-format
 #| msgctxt "@title:window"
 #| msgid "Conflict Resolution"
@@ -703,7 +703,7 @@ msgctxt "@title:dialog"
 msgid "Confirm Tag Deletion"
 msgstr "Razrješenje sukoba"
 
-#: quick/qml/TagManagerPage.qml:31
+#: quick/qml/TagManagerPage.qml:37
 #, fuzzy, kde-format
 #| msgctxt "@info"
 #| msgid "Do you really want to remove the tag <resource>%1</resource>?"
@@ -711,13 +711,13 @@ msgctxt "@info"
 msgid "Are you sure you want to delete tag <b>%1</b>?"
 msgstr "Želite li zaista da uklonite oznaku <resource>%1</resource>?"
 
-#: quick/qml/TagManagerPage.qml:31
+#: quick/qml/TagManagerPage.qml:37
 #, kde-format
 msgid "You won't be able to revert this action."
 msgstr ""
 
 # >> @action:button
-#: quick/qml/TagManagerPage.qml:53
+#: quick/qml/TagManagerPage.qml:59
 #, fuzzy, kde-format
 #| msgctxt "@label"
 #| msgid "Create new tag"
@@ -726,7 +726,7 @@ msgid "There are no tags"
 msgstr "Napravi novu oznaku"
 
 # >> @action:button
-#: quick/qml/TagManagerPage.qml:141
+#: quick/qml/TagManagerPage.qml:147
 #, fuzzy, kde-format
 #| msgctxt "@label"
 #| msgid "Create new tag"
@@ -734,7 +734,7 @@ msgctxt "@info:placeholder"
 msgid "Create a New Tag…"
 msgstr "Napravi novu oznaku"
 
-#: quick/qml/TagManagerPage.qml:152
+#: quick/qml/TagManagerPage.qml:158
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Tag"
