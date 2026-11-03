@@ -49,6 +49,10 @@ public:
     template<typename T>
     typename std::enable_if<std::is_base_of<Protocol::Command, T>::value>::type connectionOutput(const QString &identifier, qint64 tag, const T &cmd)
     {
+        if (!mTracerBackend) {
+            return;
+        }
+
         QByteArray msg;
         if (mTracerBackend->connectionFormat() == TracerInterface::Json) {
             QJsonObject json;
