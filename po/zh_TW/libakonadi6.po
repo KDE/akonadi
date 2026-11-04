@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libakonadi\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-03 00:55+0000\n"
-"PO-Revision-Date: 2026-08-04 06:47+0900\n"
+"PO-Revision-Date: 2026-11-03 19:43+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -1154,11 +1154,9 @@ msgid "Stopping Akonadi server..."
 msgstr "Akonadi 伺服器停止中..."
 
 #: widgets/dbaccess.cpp:43
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Failed to create new tag %1: %2"
+#, kde-format
 msgid "Failed to connect to database: %1"
-msgstr "建立新標籤 %1 時失敗：%2"
+msgstr "連線到伺服器失敗：%1"
 
 #: widgets/dragdropmanager.cpp:211
 #, kde-format
