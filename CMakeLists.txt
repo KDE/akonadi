@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.29)
 
-set(PIM_VERSION "6.8.40")
+set(PIM_VERSION "6.9.40")
 project(Akonadi VERSION ${PIM_VERSION})
 # use a different SOVERSION for each minor release because we don't guarantee any ABI stability;
 # bump the SOVERSION with the first development version, i.e. major.minor.40
@@ -122,7 +122,7 @@ if(APPLE)
     include(MacOSSupport)
 endif()
 
-set(RELEASE_SERVICE_VERSION "26.11.40")
+set(RELEASE_SERVICE_VERSION "27.03.40")
 set(AKONADI_FULL_VERSION "${PIM_VERSION} (${RELEASE_SERVICE_VERSION})")
 
 configure_file(akonadifull-version.h.in ${CMAKE_CURRENT_BINARY_DIR}/akonadifull-version.h @ONLY)
