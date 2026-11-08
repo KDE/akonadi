@@ -33,10 +33,8 @@ template<typename T>
 struct has_clone_method {
 private:
     template<typename S, S *(S::*)() const>
-    struct sfinae {
-    };
-    struct No {
-    };
+    struct sfinae { };
+    struct No { };
     struct Yes {
         No no[2];
     };
@@ -70,8 +68,7 @@ struct clone_traits_helper<T, true> {
 };
 
 template<typename T>
-struct clone_traits : clone_traits_helper<T, has_clone_method<T>::value> {
-};
+struct clone_traits : clone_traits_helper<T, has_clone_method<T>::value> { };
 
 template<typename T>
 struct shared_pointer_traits {
@@ -118,16 +115,13 @@ template<typename T>
 struct get_hierarchy_root;
 
 template<typename T, typename S>
-struct get_hierarchy_root_recurse : get_hierarchy_root<S> {
-};
+struct get_hierarchy_root_recurse : get_hierarchy_root<S> { };
 
 template<typename T>
-struct get_hierarchy_root_recurse<T, T> : identity<T> {
-};
+struct get_hierarchy_root_recurse<T, T> : identity<T> { };
 
 template<typename T>
-struct get_hierarchy_root : get_hierarchy_root_recurse<T, typename Akonadi::SuperClass<T>::Type> {
-};
+struct get_hierarchy_root : get_hierarchy_root_recurse<T, typename Akonadi::SuperClass<T>::Type> { };
 
 template<typename T>
 struct get_hierarchy_root<QSharedPointer<T>> {
@@ -350,8 +344,7 @@ struct Payload : public PayloadBase {
  * abstract, will therefore always fail to compile for pointer payloads
  */
 template<typename T>
-struct Payload<T *> : public PayloadBase {
-};
+struct Payload<T *> : public PayloadBase { };
 
 /**
   \internal

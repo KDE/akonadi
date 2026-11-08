@@ -134,7 +134,7 @@ bool Akonadi::Collection::operator!=(const Collection &other) const
     return (isValid() || other.isValid()) && (d_ptr->mId != other.d_ptr->mId);
 }
 
-Collection &Collection ::operator=(const Collection &other)
+Collection &Collection::operator=(const Collection &other)
 {
     if (this != &other) {
         assignCollectionPrivate(d_ptr, other.d_ptr);

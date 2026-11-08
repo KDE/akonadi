@@ -344,10 +344,8 @@ struct ToAssocTag_ {
     using OuputContainer = Cont<Key, Value>;
 };
 
-struct ValuesTag_ {
-};
-struct KeysTag_ {
-};
+struct ValuesTag_ { };
+struct KeysTag_ { };
 
 template<typename UnaryOperation>
 struct TransformTag_ {

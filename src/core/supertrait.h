@@ -49,6 +49,5 @@ struct SuperClassTrait<Class, typename Internal::check_type<typename Class::Supe
   point of view.
 */
 template<typename Class>
-struct SuperClass : public SuperClassTrait<Class> {
-};
+struct SuperClass : public SuperClassTrait<Class> { };
 }

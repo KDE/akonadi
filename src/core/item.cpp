@@ -96,7 +96,7 @@ bool Akonadi::Item::operator!=(const Item &other) const
     return (isValid() || other.isValid()) && (d_ptr->mId != other.d_ptr->mId);
 }
 
-Item &Item ::operator=(const Item &other)
+Item &Item::operator=(const Item &other)
 {
     if (this != &other) {
         d_ptr = other.d_ptr;

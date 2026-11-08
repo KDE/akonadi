@@ -72,8 +72,7 @@ const LZMAErrorCategory &lzmaErrorCategory()
 namespace std
 {
 template<>
-struct is_error_code_enum<lzma_ret> : std::true_type {
-};
+struct is_error_code_enum<lzma_ret> : std::true_type { };
 
 std::error_condition make_error_condition(lzma_ret ret)
 {
