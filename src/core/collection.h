@@ -66,7 +66,7 @@ class AKONADICORE_EXPORT Collection
 {
     Q_GADGET
     Q_PROPERTY(Id id READ id WRITE setId)
-    Q_PROPERTY(QString remoteIdd READ remoteId WRITE setRemoteId)
+    Q_PROPERTY(QString remoteId READ remoteId WRITE setRemoteId)
     Q_PROPERTY(bool isValid READ isValid)
     Q_PROPERTY(QString remoteRevision READ remoteRevision WRITE setRemoteRevision)
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled)

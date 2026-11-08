@@ -546,6 +546,8 @@ QString ResourceBase::parseArguments(int argc, char **argv)
     auto translator = new QTranslator(QCoreApplication::instance());
     if (translator->load(catalog)) {
         QCoreApplication::installTranslator(translator);
+    } else {
+        delete translator;
     }
 
     return identifier;

@@ -169,7 +169,7 @@ void AgentManager::cleanup()
     }
     mAgentInstances.clear();
 
-    mStorageController.reset();
+    mAgentServer.reset();
     mStorageController.reset();
 }
 
