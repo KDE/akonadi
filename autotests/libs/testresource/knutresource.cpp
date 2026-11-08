@@ -330,15 +330,11 @@ void KnutResource::search(const QString &query, const Collection &collection)
 
 void KnutResource::addSearch(const QString &query, const QString &queryLanguage, const Collection &resultCollection)
 {
-    Q_UNUSED(query)
-    Q_UNUSED(queryLanguage)
-    Q_UNUSED(resultCollection)
     qCDebug(KNUTRESOURCE_LOG) << "addSearch: query=" << query << ", queryLanguage=" << queryLanguage << ", resultCollection=" << resultCollection.id();
 }
 
 void KnutResource::removeSearch(const Collection &resultCollection)
 {
-    Q_UNUSED(resultCollection)
     qCDebug(KNUTRESOURCE_LOG) << "removeSearch:" << resultCollection.id();
 }
 

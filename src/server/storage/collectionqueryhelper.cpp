@@ -49,7 +49,6 @@ void CollectionQueryHelper::scopeToQuery(const Scope &scope, const CommandContex
 
 bool CollectionQueryHelper::hasAllowedName(const Collection &collection, const QString &name, Collection::Id parent)
 {
-    Q_UNUSED(collection)
     SelectQueryBuilder<Collection> qb;
     if (parent > 0) {
         qb.addValueCondition(Collection::parentIdColumn(), Query::Equals, parent);

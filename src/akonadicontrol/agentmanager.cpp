@@ -716,7 +716,6 @@ void AgentManager::setupSingleShotConnection(const AgentInstance::Ptr &instance)
 
 void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner)
 {
-    Q_UNUSED(oldOwner)
     // This is called by the D-Bus server when a service comes up, goes down or changes ownership for some reason
     // and this is where we "hook up" our different Agent interfaces.
 

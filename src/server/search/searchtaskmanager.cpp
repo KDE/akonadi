@@ -127,8 +127,6 @@ void SearchTaskManager::addTask(SearchTask *task)
 
 void SearchTaskManager::pushResults(const QByteArray &searchId, const QSet<qint64> &ids, Connection *connection)
 {
-    Q_UNUSED(searchId)
-
     const auto resourceName = connection->context().resource().name();
     qCDebug(AKONADISERVER_SEARCH_LOG) << ids.count() << "results for search" << searchId << "pushed from" << resourceName;
 

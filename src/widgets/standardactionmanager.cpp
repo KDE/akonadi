@@ -574,7 +574,9 @@ bool StandardActionManagerPrivate::isFavoriteCollection(const Akonadi::Collectio
 
 void StandardActionManagerPrivate::encodeToClipboard(QItemSelectionModel *selectionModel, bool cut)
 {
+#ifdef QT_NO_CLIPBOARD
     Q_UNUSED(cut);
+#endif
     Q_ASSERT(selectionModel);
     const auto listRows = safeSelectedRows(selectionModel);
     if (listRows.isEmpty()) {
