@@ -710,26 +710,23 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadTagNotification
         stream >> operation;
         stream >> entityCnt;
         if (version >= 7) {
-            QByteArray ba;
-            QMap<QByteArray, QByteArray> attrs;
+            qint64 id;
+            qint64 parentId;
+            QByteArray gid;
+            QByteArray type;
+            QByteArray tagRemoteId;
+            Protocol::Attributes attrs;
+
+            stream >> id >> parentId >> gid >> type >> tagRemoteId >> attrs >> resource;
 
             Protocol::FetchTagsResponse tag;
-
-            stream >> uid;
-            tag.setId(uid);
-            stream >> ba;
-            tag.setParentId(uid);
-            stream >> attrs;
-            tag.setGid(ba);
-            stream >> ba;
-            tag.setType(ba);
-            stream >> uid;
-            tag.setRemoteId(ba);
-            stream >> ba;
+            tag.setId(id);
+            tag.setParentId(parentId);
+            tag.setGid(gid);
+            tag.setType(type);
+            tag.setRemoteId(tagRemoteId);
             tag.setAttributes(attrs);
             msg->setTag(std::move(tag));
-
-            stream >> resource;
         } else {
             for (int j = 0; j < entityCnt; ++j) {
                 stream >> uid;
