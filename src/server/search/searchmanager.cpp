@@ -22,6 +22,7 @@
 
 #include <QCoreApplication>
 #include <QDBusConnection>
+#include <QDateTime>
 #include <QDir>
 #include <QPluginLoader>
 #include <QTimer>

@@ -21,7 +21,6 @@
 
 #include <memory>
 #include <type_traits>
-#include <typeinfo>
 
 class QUrl;
 

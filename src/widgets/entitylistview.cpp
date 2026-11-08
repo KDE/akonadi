@@ -13,7 +13,6 @@
 #include <QDragMoveEvent>
 #include <QMenu>
 
-#include "akonadiwidgets_debug.h"
 #include <KXMLGUIClient>
 #include <KXMLGUIFactory>
 

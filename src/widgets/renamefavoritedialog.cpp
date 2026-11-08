@@ -6,8 +6,6 @@
 
 #include "renamefavoritedialog_p.h"
 
-#include <KLocalizedString>
-
 #include <QPushButton>
 
 using namespace Akonadi;

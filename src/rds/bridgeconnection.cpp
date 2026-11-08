@@ -16,6 +16,7 @@
 #include <QTcpSocket>
 
 #ifdef Q_OS_UNIX
+#include <cstring>
 #include <sys/socket.h>
 #include <sys/un.h>
 #endif
@@ -86,7 +87,7 @@ void DBusBridgeConnection::connectLocal()
             struct sockaddr_un dbus_socket_addr;
             dbus_socket_addr.sun_family = PF_UNIX;
             dbus_socket_addr.sun_path[0] = '\0'; // this marks an abstract unix socket on linux, something QLocalSocket doesn't support
-            memcpy(dbus_socket_addr.sun_path + 1, dbusPath.toLatin1().data(), dbusPath.toLatin1().size() + 1);
+            std::memcpy(dbus_socket_addr.sun_path + 1, dbusPath.toLatin1().data(), dbusPath.toLatin1().size() + 1);
             /*sizeof(dbus_socket_addr) gives me a too large value for some reason, although that's what QLocalSocket uses*/
             const int result = ::connect(fd,
                                          reinterpret_cast<struct sockaddr *>(&dbus_socket_addr),

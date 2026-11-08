@@ -9,7 +9,6 @@
 #include "collection.h"
 #include "job_p.h"
 #include "linkjobimpl_p.h"
-#include "protocol_p.h"
 
 using namespace Akonadi;
 

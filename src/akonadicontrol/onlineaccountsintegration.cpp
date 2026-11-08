@@ -14,8 +14,8 @@
 
 #include "accountinterface.h"
 #include "agentmanager.h"
-#include "agenttype.h"
 #include "akonadicontrol_debug.h"
+#include "private/dbus_p.h"
 
 using namespace Qt::Literals;
 

@@ -19,7 +19,6 @@ namespace Akonadi
 {
 namespace Server
 {
-class Collection;
 class PauseableTimer;
 
 class CollectionScheduler : public AkThread

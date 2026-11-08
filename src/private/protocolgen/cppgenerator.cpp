@@ -9,7 +9,9 @@
 #include "nodetree.h"
 #include "typehelper.h"
 
-#include <QDebug>
+#include <QStringList>
+
+#include <algorithm>
 
 #include <iostream>
 

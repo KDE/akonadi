@@ -7,6 +7,7 @@
 #include "controlmanager.h"
 
 #include <QCoreApplication>
+#include <QDBusConnection>
 #include <QTimer>
 
 #include "controlmanageradaptor.h"

@@ -23,7 +23,6 @@
 #include "shared/akranges.h"
 
 #include <QFile>
-#include <QVarLengthArray>
 
 using namespace Akonadi;
 using namespace AkRanges;

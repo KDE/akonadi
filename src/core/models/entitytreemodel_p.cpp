@@ -33,6 +33,7 @@
 #include <QElapsedTimer>
 #include <QIcon>
 #include <QList>
+#include <QTimer>
 #include <unordered_map>
 
 // clazy:excludeall=old-style-connect

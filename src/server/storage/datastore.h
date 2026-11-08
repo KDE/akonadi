@@ -22,6 +22,7 @@ namespace Akonadi
 {
 namespace Server
 {
+class AkonadiServer;
 class DbConfig;
 class DataStore;
 class DataStoreFactory

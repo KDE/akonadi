@@ -12,9 +12,6 @@
 
 namespace Akonadi
 {
-class Job;
-class JobPrivate;
-
 class Collection;
 class Item;
 class Monitor;

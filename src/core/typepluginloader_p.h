@@ -8,7 +8,7 @@
 #pragma once
 
 #include "akonadicore_export.h"
-#include <qglobal.h>
+#include <QFlags>
 
 class QObject;
 class QString;

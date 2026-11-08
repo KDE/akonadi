@@ -7,7 +7,6 @@
 
 #include "parthelper.h"
 #include "dbconfig.h"
-#include "parttypehelper.h"
 #include "selectquerybuilder.h"
 
 #include "private/externalpartstorage_p.h"

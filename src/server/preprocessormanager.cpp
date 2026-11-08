@@ -16,6 +16,7 @@
 #include "storage/datastore.h"
 #include "tracer.h"
 
+#include "preprocessorinstance.h"
 #include "preprocessormanageradaptor.h"
 
 #include <QDBusConnection>

@@ -10,6 +10,7 @@
 #include "standarddirs_p.h"
 
 #include <QDir>
+#include <QFile>
 #include <QFileInfo>
 #include <QMutexLocker>
 #include <QThread>

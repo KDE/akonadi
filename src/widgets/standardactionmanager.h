@@ -18,6 +18,7 @@
 
 class QAction;
 class KActionCollection;
+class KJob;
 class KLocalizedString;
 class QItemSelectionModel;
 class QWidget;

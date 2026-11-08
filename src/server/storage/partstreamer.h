@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include <QSharedPointer>
-
 #include "entities.h"
 #include "exception.h"
 
@@ -17,8 +15,6 @@ namespace Akonadi
 namespace Protocol
 {
 class PartMetaData;
-class Command;
-using CommandPtr = QSharedPointer<Command>;
 }
 
 namespace Server

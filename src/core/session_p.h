@@ -12,10 +12,8 @@
 #include "servermanager.h"
 #include "session.h"
 
-#include <QFile>
 #include <QMetaObject>
 #include <QQueue>
-#include <QThreadStorage>
 
 namespace Akonadi
 {
@@ -132,8 +130,6 @@ public:
     QQueue<Job *> pipeline;
     Job *currentJob = nullptr;
     bool jobRunning;
-
-    QFile *logFile = nullptr;
 };
 
 }

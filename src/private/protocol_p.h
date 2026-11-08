@@ -18,6 +18,7 @@
 #include <QList>
 #include <QMap>
 #include <QSharedPointer>
+#include <QVariant>
 
 #include "scope_p.h"
 #include "tristate_p.h"

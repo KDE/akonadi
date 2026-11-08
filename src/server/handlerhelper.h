@@ -24,7 +24,6 @@ class CachePolicy;
 class FetchCollectionsResponse;
 class TagFetchScope;
 class FetchTagsResponse;
-using FetchTagsResponsePtr = QSharedPointer<FetchTagsResponse>;
 }
 
 namespace Server

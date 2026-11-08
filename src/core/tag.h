@@ -11,7 +11,7 @@
 
 #include <QMetaType>
 #include <QSet>
-#include <QSharedPointer>
+#include <QSharedDataPointer>
 #include <QString>
 #include <QUrl>
 class QDebug;

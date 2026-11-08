@@ -42,6 +42,7 @@
 #include <QFile>
 #include <QSettings>
 #include <QTimer>
+#include <QUrl>
 
 #include <algorithm>
 

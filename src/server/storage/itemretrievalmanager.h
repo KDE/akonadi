@@ -11,7 +11,6 @@
 
 #include <QHash>
 #include <QReadWriteLock>
-#include <QWaitCondition>
 
 #include <list>
 #include <memory>
@@ -82,8 +81,6 @@ protected:
 
     /// Protects mPendingRequests and every Request object posted to it
     QReadWriteLock mLock;
-    /// Used to let requesting threads wait until the request has been processed
-    QWaitCondition mWaitCondition;
 
     /// Pending requests queues, one per resource
     std::unordered_map<QString, std::list<ItemRetrievalRequest>> mPendingRequests;

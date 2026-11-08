@@ -23,7 +23,9 @@
 #include <QWindow>
 
 #include <KColorScheme>
+#include <KConfigGroup>
 #include <KLocalizedString>
+#include <KSharedConfig>
 #include <KWindowConfig>
 #include <QDialogButtonBox>
 #include <QTextBrowser>

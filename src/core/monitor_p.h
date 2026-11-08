@@ -26,8 +26,6 @@
 #include <QObject>
 #include <QTimer>
 
-#include <QMimeDatabase>
-#include <QMimeType>
 #include <QPointer>
 #include <QQueue>
 
@@ -97,7 +95,6 @@ public:
     CollectionCache *collectionCache = nullptr;
     ItemListCache *itemCache = nullptr;
     TagListCache *tagCache = nullptr;
-    QMimeDatabase mimeDatabase;
     QHash<SignalId, quint16> listeners;
 
     CommandBuffer mCommandBuffer;
@@ -323,26 +320,6 @@ private:
         if (collections.contains(Collection::root())) {
             return true;
         }
-        return false;
-    }
-
-    bool isMimeTypeMonitored(const QString &mimetype) const
-    {
-        if (mimetypes.contains(mimetype)) {
-            return true;
-        }
-
-        const QMimeType mimeType = mimeDatabase.mimeTypeForName(mimetype);
-        if (!mimeType.isValid()) {
-            return false;
-        }
-
-        for (const QString &mt : mimetypes) {
-            if (mimeType.inherits(mt)) {
-                return true;
-            }
-        }
-
         return false;
     }
 

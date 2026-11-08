@@ -20,14 +20,13 @@
 
 class QTimer;
 
-#include "preprocessorinstance.h"
-
 namespace Akonadi
 {
 namespace Server
 {
 class PimItem;
 class DataStore;
+class PreprocessorInstance;
 class Tracer;
 
 /**

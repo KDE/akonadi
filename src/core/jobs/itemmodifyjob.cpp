@@ -19,8 +19,6 @@
 
 #include <QFile>
 
-#include <span>
-
 using namespace Akonadi;
 
 ItemModifyJobPrivate::ItemModifyJobPrivate(ItemModifyJob *parent)

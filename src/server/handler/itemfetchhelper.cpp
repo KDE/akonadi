@@ -28,7 +28,6 @@
 
 #include <QDateTime>
 #include <QSqlQuery>
-#include <QStringList>
 #include <QVariant>
 
 #include <climits>

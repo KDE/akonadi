@@ -3,11 +3,6 @@
 
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
-namespace Akonadi
-{
-class Item;
-}
-
 #include "tagsync.h"
 #include "akonadicore_debug.h"
 #include "itemfetchscope.h"

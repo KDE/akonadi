@@ -8,6 +8,8 @@
 
 #include "tag.h"
 
+#include <QHash>
+
 class QModelIndex;
 class KJob;
 

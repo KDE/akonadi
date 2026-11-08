@@ -16,7 +16,6 @@ namespace Akonadi
 namespace Protocol
 {
 class PartMetaData;
-class Command;
 class ModifyItemsCommand;
 using ModifyItemsCommandPtr = QSharedPointer<ModifyItemsCommand>;
 }
